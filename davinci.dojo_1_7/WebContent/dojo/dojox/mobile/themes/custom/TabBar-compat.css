@@ -2,6 +2,9 @@
 .dj_ie6 .mblTabBarButtonDiv, .dj_ie7 .mblTabBarButtonDiv {
 	left: auto;
 }
+.dj_ie6 .mblTabBar .mblTabBarButton {
+  display: inline; 
+}
 .mblTabPanelHeader {
 	background-image: url(compat/heading-bg.png);
 }

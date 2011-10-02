@@ -1,19 +1,13 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/mobile/RoundRectCategory",["dijit/_WidgetBase","dijit/_Contained"],function(_1,_2){
-return dojo.declare("dojox.mobile.RoundRectCategory",[dijit._WidgetBase,dijit._Contained],{label:"",buildRendering:function(){
-this.domNode=this.containerNode=this.srcNodeRef||dojo.doc.createElement("H2");
+define("dojox/mobile/RoundRectCategory",["dojo/_base/declare","dojo/_base/window","dijit/_Contained","dijit/_WidgetBase"],function(_1,_2,_3,_4){
+return _1("dojox.mobile.RoundRectCategory",[_4,_3],{label:"",buildRendering:function(){
+this.domNode=this.containerNode=this.srcNodeRef||_2.doc.createElement("H2");
 this.domNode.className="mblRoundRectCategory";
 if(!this.label){
 this.label=this.domNode.innerHTML;
 }
-},_setLabelAttr:function(_3){
-this.label=_3;
-this.domNode.innerHTML=this._cv(_3);
+},_setLabelAttr:function(_5){
+this.label=_5;
+this.domNode.innerHTML=this._cv?this._cv(_5):_5;
 }});
 });

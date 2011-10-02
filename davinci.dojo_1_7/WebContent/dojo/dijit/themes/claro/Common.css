@@ -15,10 +15,10 @@
 }
 .claro .dijitFocusedLabel {
   
-  outline: 1px dotted #4a4a4a;
+  outline: 1px dotted #494949;
 }
 .claro .dojoDndItemBefore, .claro .dojoDndItemAfter {
-  border-top: 1px solid #769dc0;
+  border-top: 1px solid #759dc0;
 }
 .claro .dojoDndItemOver {
   cursor: pointer;

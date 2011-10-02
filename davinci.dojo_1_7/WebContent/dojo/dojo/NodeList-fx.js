@@ -5,35 +5,35 @@
 */
 
 //>>built
-define("dojo/NodeList-fx",["./main","./fx"],function(_1){
-_1.extend(_1.NodeList,{_anim:function(_2,_3,_4){
-_4=_4||{};
-var a=_1.fx.combine(this.map(function(_5){
-var _6={node:_5};
-_1.mixin(_6,_4);
-return _2[_3](_6);
+define("dojo/NodeList-fx",["dojo/_base/NodeList","./_base/lang","./_base/connect","./_base/fx","./fx"],function(_1,_2,_3,_4,_5){
+_2.extend(_1,{_anim:function(_6,_7,_8){
+_8=_8||{};
+var a=_5.combine(this.map(function(_9){
+var _a={node:_9};
+_2.mixin(_a,_8);
+return _6[_7](_a);
 }));
-return _4.auto?a.play()&&this:a;
-},wipeIn:function(_7){
-return this._anim(_1.fx,"wipeIn",_7);
-},wipeOut:function(_8){
-return this._anim(_1.fx,"wipeOut",_8);
-},slideTo:function(_9){
-return this._anim(_1.fx,"slideTo",_9);
-},fadeIn:function(_a){
-return this._anim(_1,"fadeIn",_a);
-},fadeOut:function(_b){
-return this._anim(_1,"fadeOut",_b);
-},animateProperty:function(_c){
-return this._anim(_1,"animateProperty",_c);
-},anim:function(_d,_e,_f,_10,_11){
-var _12=_1.fx.combine(this.map(function(_13){
-return _1.animateProperty({node:_13,properties:_d,duration:_e||350,easing:_f});
+return _8.auto?a.play()&&this:a;
+},wipeIn:function(_b){
+return this._anim(_5,"wipeIn",_b);
+},wipeOut:function(_c){
+return this._anim(_5,"wipeOut",_c);
+},slideTo:function(_d){
+return this._anim(_5,"slideTo",_d);
+},fadeIn:function(_e){
+return this._anim(_4,"fadeIn",_e);
+},fadeOut:function(_f){
+return this._anim(_4,"fadeOut",_f);
+},animateProperty:function(_10){
+return this._anim(_4,"animateProperty",_10);
+},anim:function(_11,_12,_13,_14,_15){
+var _16=_5.combine(this.map(function(_17){
+return _4.animateProperty({node:_17,properties:_11,duration:_12||350,easing:_13});
 }));
-if(_10){
-_1.connect(_12,"onEnd",_10);
+if(_14){
+_3.connect(_16,"onEnd",_14);
 }
-return _12.play(_11||0);
+return _16.play(_15||0);
 }});
-return _1.NodeList;
+return _1;
 });

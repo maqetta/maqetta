@@ -1,122 +1,116 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/grid/enhanced/plugins/Exporter",["dojo","dojox","../_Plugin","../../_RowSelector"],function(_1,_2){
-_1.declare("dojox.grid.enhanced.plugins.Exporter",_2.grid.enhanced._Plugin,{name:"exporter",constructor:function(_3,_4){
-this.grid=_3;
-this.formatter=(_4&&_1.isObject(_4))&&_4.exportFormatter;
+define("dojox/grid/enhanced/plugins/Exporter",["dojo/_base/declare","dojo/_base/array","dojo/_base/lang","../_Plugin","../../_RowSelector","../../EnhancedGrid","../../cells/_base"],function(_1,_2,_3,_4,_5,_6){
+var _7=_3.getObject("dojox.grid.cells");
+var _8=_1("dojox.grid.enhanced.plugins.Exporter",_4,{name:"exporter",constructor:function(_9,_a){
+this.grid=_9;
+this.formatter=(_a&&_3.isObject(_a))&&_a.exportFormatter;
 this._mixinGrid();
 },_mixinGrid:function(){
 var g=this.grid;
-g.exportTo=_1.hitch(this,this.exportTo);
-g.exportGrid=_1.hitch(this,this.exportGrid);
-g.exportSelected=_1.hitch(this,this.exportSelected);
-g.setExportFormatter=_1.hitch(this,this.setExportFormatter);
-},setExportFormatter:function(_5){
-this.formatter=_5;
-},exportGrid:function(_6,_7,_8){
-if(_1.isFunction(_7)){
-_8=_7;
-_7={};
+g.exportTo=_3.hitch(this,this.exportTo);
+g.exportGrid=_3.hitch(this,this.exportGrid);
+g.exportSelected=_3.hitch(this,this.exportSelected);
+g.setExportFormatter=_3.hitch(this,this.setExportFormatter);
+},setExportFormatter:function(_b){
+this.formatter=_b;
+},exportGrid:function(_c,_d,_e){
+if(_3.isFunction(_d)){
+_e=_d;
+_d={};
 }
-if(!_1.isString(_6)||!_1.isFunction(_8)){
+if(!_3.isString(_c)||!_3.isFunction(_e)){
 return;
 }
-_7=_7||{};
-var g=this.grid,_9=this,_a=this._getExportWriter(_6,_7.writerArgs),_b=(_7.fetchArgs&&_1.isObject(_7.fetchArgs))?_7.fetchArgs:{},_c=_b.onComplete;
+_d=_d||{};
+var g=this.grid,_f=this,_10=this._getExportWriter(_c,_d.writerArgs),_11=(_d.fetchArgs&&_3.isObject(_d.fetchArgs))?_d.fetchArgs:{},_12=_11.onComplete;
 if(g.store){
-_b.onComplete=function(_d,_e){
-if(_c){
-_c(_d,_e);
+_11.onComplete=function(_13,_14){
+if(_12){
+_12(_13,_14);
 }
-_8(_9._goThroughGridData(_d,_a));
+_e(_f._goThroughGridData(_13,_10));
 };
-_b.sort=_b.sort||g.getSortProps();
-g._storeLayerFetch(_b);
+_11.sort=_11.sort||g.getSortProps();
+g._storeLayerFetch(_11);
 }else{
-var _f=_b.start||0,_10=_b.count||-1,_11=[];
-for(var i=_f;i!=_f+_10&&i<g.rowCount;++i){
-_11.push(g.getItem(i));
+var _15=_11.start||0,_16=_11.count||-1,_17=[];
+for(var i=_15;i!=_15+_16&&i<g.rowCount;++i){
+_17.push(g.getItem(i));
 }
-_8(this._goThroughGridData(_11,_a));
+_e(this._goThroughGridData(_17,_10));
 }
-},exportSelected:function(_12,_13){
-if(!_1.isString(_12)){
+},exportSelected:function(_18,_19){
+if(!_3.isString(_18)){
 return "";
 }
-var _14=this._getExportWriter(_12,_13);
-return this._goThroughGridData(this.grid.selection.getSelected(),_14);
-},_buildRow:function(_15,_16){
-var _17=this;
-_1.forEach(_15._views,function(_18,_19){
-_15.view=_18;
-_15.viewIdx=_19;
-if(_16.beforeView(_15)){
-_1.forEach(_18.structure.cells,function(_1a,_1b){
-_15.subrow=_1a;
-_15.subrowIdx=_1b;
-if(_16.beforeSubrow(_15)){
-_1.forEach(_1a,function(_1c,_1d){
-if(_15.isHeader&&_17._isSpecialCol(_1c)){
-_15.spCols.push(_1c.index);
+var _1a=this._getExportWriter(_18,_19);
+return this._goThroughGridData(this.grid.selection.getSelected(),_1a);
+},_buildRow:function(_1b,_1c){
+var _1d=this;
+_2.forEach(_1b._views,function(_1e,_1f){
+_1b.view=_1e;
+_1b.viewIdx=_1f;
+if(_1c.beforeView(_1b)){
+_2.forEach(_1e.structure.cells,function(_20,_21){
+_1b.subrow=_20;
+_1b.subrowIdx=_21;
+if(_1c.beforeSubrow(_1b)){
+_2.forEach(_20,function(_22,_23){
+if(_1b.isHeader&&_1d._isSpecialCol(_22)){
+_1b.spCols.push(_22.index);
 }
-_15.cell=_1c;
-_15.cellIdx=_1d;
-_16.handleCell(_15);
+_1b.cell=_22;
+_1b.cellIdx=_23;
+_1c.handleCell(_1b);
 });
-_16.afterSubrow(_15);
-}
-});
-_16.afterView(_15);
+_1c.afterSubrow(_1b);
 }
 });
-},_goThroughGridData:function(_1e,_1f){
-var _20=this.grid,_21=_1.filter(_20.views.views,function(_22){
-return !(_22 instanceof _2.grid._RowSelector);
-}),_23={"grid":_20,"isHeader":true,"spCols":[],"_views":_21,"colOffset":(_21.length<_20.views.views.length?-1:0)};
-if(_1f.beforeHeader(_20)){
-this._buildRow(_23,_1f);
-_1f.afterHeader();
+_1c.afterView(_1b);
 }
-_23.isHeader=false;
-if(_1f.beforeContent(_1e)){
-_1.forEach(_1e,function(_24,_25){
-_23.row=_24;
-_23.rowIdx=_25;
-if(_1f.beforeContentRow(_23)){
-this._buildRow(_23,_1f);
-_1f.afterContentRow(_23);
+});
+},_goThroughGridData:function(_24,_25){
+var _26=this.grid,_27=_2.filter(_26.views.views,function(_28){
+return !(_28 instanceof _5);
+}),_29={"grid":_26,"isHeader":true,"spCols":[],"_views":_27,"colOffset":(_27.length<_26.views.views.length?-1:0)};
+if(_25.beforeHeader(_26)){
+this._buildRow(_29,_25);
+_25.afterHeader();
+}
+_29.isHeader=false;
+if(_25.beforeContent(_24)){
+_2.forEach(_24,function(_2a,_2b){
+_29.row=_2a;
+_29.rowIdx=_2b;
+if(_25.beforeContentRow(_29)){
+this._buildRow(_29,_25);
+_25.afterContentRow(_29);
 }
 },this);
-_1f.afterContent();
+_25.afterContent();
 }
-return _1f.toString();
-},_isSpecialCol:function(_26){
-return _26.isRowSelector||_26 instanceof _2.grid.cells.RowIndex;
-},_getExportWriter:function(_27,_28){
-var _29,cls,_2a=_2.grid.enhanced.plugins.Exporter;
-if(_2a.writerNames){
-_29=_2a.writerNames[_27.toLowerCase()];
-cls=_1.getObject(_29);
+return _25.toString();
+},_isSpecialCol:function(_2c){
+return _2c.isRowSelector||_2c instanceof _7.RowIndex;
+},_getExportWriter:function(_2d,_2e){
+var _2f,cls,_30=_8;
+if(_30.writerNames){
+_2f=_30.writerNames[_2d.toLowerCase()];
+cls=_3.getObject(_2f);
 if(cls){
-var _2b=new cls(_28);
-_2b.formatter=this.formatter;
-return _2b;
+var _31=new cls(_2e);
+_31.formatter=this.formatter;
+return _31;
 }else{
-throw new Error("Please make sure class \""+_29+"\" is required.");
+throw new Error("Please make sure class \""+_2f+"\" is required.");
 }
 }
-throw new Error("The writer for \""+_27+"\" has not been registered.");
+throw new Error("The writer for \""+_2d+"\" has not been registered.");
 }});
-_2.grid.enhanced.plugins.Exporter.registerWriter=function(_2c,_2d){
-var _2e=_2.grid.enhanced.plugins.Exporter;
-_2e.writerNames=_2e.writerNames||{};
-_2e.writerNames[_2c]=_2d;
+_8.registerWriter=function(_32,_33){
+_8.writerNames=_8.writerNames||{};
+_8.writerNames[_32]=_33;
 };
-_2.grid.EnhancedGrid.registerPlugin(_2.grid.enhanced.plugins.Exporter);
-return _2.grid.enhanced.plugins.Exporter;
+_6.registerPlugin(_8);
+return _8;
 });

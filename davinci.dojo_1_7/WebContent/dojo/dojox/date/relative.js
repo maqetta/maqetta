@@ -1,32 +1,26 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/date/relative",["dojo/_base/kernel","dojo/_base/lang","dojo/date/locale","dojo/i18n"],function(d,_1,_2,_3){
-dojo.getObject("date.relative",true,dojox);
-var _4=1000*60*60*24,_5=6*_4,_6=d.delegate,_7=_2._getGregorianBundle,_8=_2.format;
-function _9(_a){
-_a=new Date(_a);
-_a.setHours(0,0,0,0);
-return _a;
+define("dojox/date/relative",["dojo/_base/kernel","dojo/_base/lang","dojo/date/locale","dojo/i18n"],function(_1,_2,_3,_4){
+_1.getObject("date.relative",true,dojox);
+var _5=1000*60*60*24,_6=6*_5,_7=_1.delegate,_8=_3._getGregorianBundle,_9=_3.format;
+function _a(_b){
+_b=new Date(_b);
+_b.setHours(0,0,0,0);
+return _b;
 };
-dojox.date.relative.format=function(_b,_c){
-_c=_c||{};
-var _d=_9(_c.relativeDate||new Date()),_e=_d.getTime()-_9(_b).getTime(),_f={locale:_c.locale};
-if(_e===0){
-return _8(_b,_6(_f,{selector:"time"}));
+dojox.date.relative.format=function(_c,_d){
+_d=_d||{};
+var _e=_a(_d.relativeDate||new Date()),_f=_e.getTime()-_a(_c).getTime(),_10={locale:_d.locale};
+if(_f===0){
+return _9(_c,_7(_10,{selector:"time"}));
 }else{
-if(_e<=_5&&_e>0&&_c.weekCheck!==false){
-return _8(_b,_6(_f,{selector:"date",datePattern:"EEE"}))+" "+_8(_b,_6(_f,{selector:"time",formatLength:"short"}));
+if(_f<=_6&&_f>0&&_d.weekCheck!==false){
+return _9(_c,_7(_10,{selector:"date",datePattern:"EEE"}))+" "+_9(_c,_7(_10,{selector:"time",formatLength:"short"}));
 }else{
-if(_b.getFullYear()==_d.getFullYear()){
-var _10=_7(_3.normalizeLocale(_c.locale));
-return _8(_b,_6(_f,{selector:"date",datePattern:_10["dateFormatItem-MMMd"]}));
+if(_c.getFullYear()==_e.getFullYear()){
+var _11=_8(_4.normalizeLocale(_d.locale));
+return _9(_c,_7(_10,{selector:"date",datePattern:_11["dateFormatItem-MMMd"]}));
 }else{
-return _8(_b,_6(_f,{selector:"date",formatLength:"medium",locale:_c.locale}));
+return _9(_c,_7(_10,{selector:"date",formatLength:"medium",locale:_d.locale}));
 }
 }
 }

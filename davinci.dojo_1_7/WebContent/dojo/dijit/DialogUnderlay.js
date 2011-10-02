@@ -1,36 +1,29 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dijit/DialogUnderlay",["dojo/_base/kernel",".","dojo/window","./_Widget","./_TemplatedMixin","./BackgroundIframe","dojo/_base/declare","dojo/_base/html","dojo/_base/window"],function(_1,_2){
-_1.declare("dijit.DialogUnderlay",[_2._Widget,_2._TemplatedMixin],{templateString:"<div class='dijitDialogUnderlayWrapper'><div class='dijitDialogUnderlay' dojoAttachPoint='node'></div></div>",dialogId:"","class":"",_setDialogIdAttr:function(id){
-_1.attr(this.node,"id",id+"_underlay");
+define("dijit/DialogUnderlay",["dojo/_base/declare","dojo/dom-attr","dojo/_base/window","dojo/window","./_Widget","./_TemplatedMixin","./BackgroundIframe"],function(_1,_2,_3,_4,_5,_6,_7){
+return _1("dijit.DialogUnderlay",[_5,_6],{templateString:"<div class='dijitDialogUnderlayWrapper'><div class='dijitDialogUnderlay' data-dojo-attach-point='node'></div></div>",dialogId:"","class":"",_setDialogIdAttr:function(id){
+_2.set(this.node,"id",id+"_underlay");
 this._set("dialogId",id);
-},_setClassAttr:function(_3){
-this.node.className="dijitDialogUnderlay "+_3;
-this._set("class",_3);
+},_setClassAttr:function(_8){
+this.node.className="dijitDialogUnderlay "+_8;
+this._set("class",_8);
 },postCreate:function(){
-_1.body().appendChild(this.domNode);
+_3.body().appendChild(this.domNode);
 },layout:function(){
 var is=this.node.style,os=this.domNode.style;
 os.display="none";
-var _4=_1.window.getBox();
-os.top=_4.t+"px";
-os.left=_4.l+"px";
-is.width=_4.w+"px";
-is.height=_4.h+"px";
+var _9=_4.getBox();
+os.top=_9.t+"px";
+os.left=_9.l+"px";
+is.width=_9.w+"px";
+is.height=_9.h+"px";
 os.display="block";
 },show:function(){
 this.domNode.style.display="block";
 this.layout();
-this.bgIframe=new _2.BackgroundIframe(this.domNode);
+this.bgIframe=new _7(this.domNode);
 },hide:function(){
 this.bgIframe.destroy();
 delete this.bgIframe;
 this.domNode.style.display="none";
 }});
-return _2.DialogUnderlay;
 });

@@ -1,14 +1,11 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/xmpp/sasl",["dojo","dijit","dojox","dojox/xmpp/util","dojo/AdapterRegistry","dojox/encoding/digests/MD5"],function(_1,_2,_3){
-_1.getObject("dojox.xmpp.sasl",1);
+define(["dijit","dojo","dojox","dojo/require!dojox/xmpp/util,dojo/AdapterRegistry,dojox/encoding/digests/MD5"],function(_1,_2,_3){
+_2.provide("dojox.xmpp.sasl");
+_2.require("dojox.xmpp.util");
+_2.require("dojo.AdapterRegistry");
+_2.require("dojox.encoding.digests.MD5");
 _3.xmpp.sasl.saslNS="urn:ietf:params:xml:ns:xmpp-sasl";
-_1.declare("dojox.xmpp.sasl._Base",null,{mechanism:null,closeAuthTag:true,constructor:function(_4){
+_2.declare("dojox.xmpp.sasl._Base",null,{mechanism:null,closeAuthTag:true,constructor:function(_4){
 this.session=_4;
 this.startAuth();
 },startAuth:function(){
@@ -28,8 +25,8 @@ this.onSecondChallenge(_7);
 },onSuccess:function(){
 this.session.sendRestart();
 }});
-_1.declare("dojox.xmpp.sasl.SunWebClientAuth",_3.xmpp.sasl._Base,{mechanism:"SUN-COMMS-CLIENT-PROXY-AUTH"});
-_1.declare("dojox.xmpp.sasl.Plain",_3.xmpp.sasl._Base,{mechanism:"PLAIN",closeAuthTag:false,appendToAuth:function(_8){
+_2.declare("dojox.xmpp.sasl.SunWebClientAuth",_3.xmpp.sasl._Base,{mechanism:"SUN-COMMS-CLIENT-PROXY-AUTH"});
+_2.declare("dojox.xmpp.sasl.Plain",_3.xmpp.sasl._Base,{mechanism:"PLAIN",closeAuthTag:false,appendToAuth:function(_8){
 var id=this.session.jid;
 var _9=this.session.jid.indexOf("@");
 if(_9!=-1){
@@ -41,7 +38,7 @@ _8.append(_a);
 _8.append("</auth>");
 delete this.session.password;
 }});
-_1.declare("dojox.xmpp.sasl.DigestMD5",_3.xmpp.sasl._Base,{mechanism:"DIGEST-MD5",onFirstChallenge:function(_b){
+_2.declare("dojox.xmpp.sasl.DigestMD5",_3.xmpp.sasl._Base,{mechanism:"DIGEST-MD5",onFirstChallenge:function(_b){
 var _c=_3.encoding.digests;
 var _d=_3.encoding.digests.outputTypes;
 var _e=function(n){
@@ -96,7 +93,7 @@ this.session.dispatchPacket(_19.toString());
 }else{
 }
 }});
-_3.xmpp.sasl.registry=new _1.AdapterRegistry();
+_3.xmpp.sasl.registry=new _2.AdapterRegistry();
 _3.xmpp.sasl.registry.register("SUN-COMMS-CLIENT-PROXY-AUTH",function(_1a){
 return _1a=="SUN-COMMS-CLIENT-PROXY-AUTH";
 },function(_1b,_1c){
@@ -112,6 +109,4 @@ return _20=="PLAIN";
 },function(_21,_22){
 return new _3.xmpp.sasl.Plain(_22);
 });
-return _1.getObject("dojox.xmpp.sasl");
 });
-require(["dojox/xmpp/sasl"]);

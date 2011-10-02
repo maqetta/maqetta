@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/io/scriptFrame",["dojo/_base/html","dojo/io/script","dojo/io/iframe"],function(_1,_2,_3){
+define("dojox/io/scriptFrame",["dojo/main","dojo/io/script","dojo/io/iframe"],function(_1,_2,_3){
 _1.deprecated("dojox.io.scriptFrame","dojo.io.script now supports parallel requests without dojox.io.scriptFrame","2.0");
 _1.getObject("io.scriptFrame",true,dojox);
 dojox.io.scriptFrame={_waiters:{},_loadedIds:{},_getWaiters:function(_4){

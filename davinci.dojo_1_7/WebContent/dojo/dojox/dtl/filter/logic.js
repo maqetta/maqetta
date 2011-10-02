@@ -1,13 +1,7 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/dtl/filter/logic",["dojo/_base/kernel"],function(_1){
-_1.getObject("dtl.filter.logic",true,dojox);
-_1.mixin(dojox.dtl.filter.logic,{default_:function(_2,_3){
+define("dojox/dtl/filter/logic",["dojo/_base/lang","../_base"],function(_1,dd){
+_1.getObject("dojox.dtl.filter.logic",true);
+_1.mixin(dd.filter.logic,{default_:function(_2,_3){
 return _2||_3||"";
 },default_if_none:function(_4,_5){
 return (_4===null)?_5||"":_4||"";

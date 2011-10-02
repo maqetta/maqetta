@@ -1,51 +1,44 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/grid/enhanced/plugins/filter/FilterStatusTip",["dojo","dijit","dojox","dojo/string","dojo/date/locale","dijit/TooltipDialog","dijit/_base/popup","dijit/form/Button","dojo/i18n!../../nls/Filter"],function(_1,_2,_3){
-var _4="",_5="",_6="",_7="",_8="dojoxGridFStatusTipOddRow",_9="dojoxGridFStatusTipHandle",_a="dojoxGridFStatusTipCondition",_b="dojoxGridFStatusTipDelRuleBtnIcon",_c="</tbody></table>";
-_1.declare("dojox.grid.enhanced.plugins.filter.FilterStatusTip",null,{constructor:function(_d){
-var _e=this.plugin=_d.plugin;
-this._statusHeader=["<table border='0' cellspacing='0' class='",_4,"'><thead><tr class='",_5,"'><th class='",_6,"'><div>",_e.nls["statusTipHeaderColumn"],"</div></th><th class='",_6," lastColumn'><div>",_e.nls["statusTipHeaderCondition"],"</div></th></tr></thead><tbody>"].join("");
+define("dojox/grid/enhanced/plugins/filter/FilterStatusTip",["dojo/_base/declare","dojo/_base/array","dojo/_base/lang","dojo/query","dojo/cache","dojo/string","dojo/date/locale","dijit/_Widget","dijit/_TemplatedMixin","dijit/_WidgetsInTemplateMixin","dijit/TooltipDialog","dijit/form/Button","dijit/_base/popup","dojo/i18n!../../nls/Filter"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b,_c,_d){
+var _e="",_f="",_10="",_11="",_12="dojoxGridFStatusTipOddRow",_13="dojoxGridFStatusTipHandle",_14="dojoxGridFStatusTipCondition",_15="dojoxGridFStatusTipDelRuleBtnIcon",_16="</tbody></table>";
+var _17=_1("dojox.grid.enhanced.plugins.filter.FilterStatusPane",[_8,_9],{templateString:_5("dojox.grid","enhanced/templates/FilterStatusPane.html")});
+return _1("dojox.grid.enhanced.plugins.filter.FilterStatusTip",null,{constructor:function(_18){
+var _19=this.plugin=_18.plugin;
+this._statusHeader=["<table border='0' cellspacing='0' class='",_e,"'><thead><tr class='",_f,"'><th class='",_10,"'><div>",_19.nls["statusTipHeaderColumn"],"</div></th><th class='",_10," lastColumn'><div>",_19.nls["statusTipHeaderCondition"],"</div></th></tr></thead><tbody>"].join("");
 this._removedCriterias=[];
 this._rules=[];
-this.statusPane=new _3.grid.enhanced.plugins.filter.FilterStatusPane();
-this._dlg=new _2.TooltipDialog({"class":"dojoxGridFStatusTipDialog",content:this.statusPane,autofocus:false,onMouseLeave:_1.hitch(this,function(){
-this.closeDialog();
-})});
-this._dlg.connect(this._dlg.domNode,"click",_1.hitch(this,this._modifyFilter));
+this.statusPane=new _17();
+this._dlg=new _b({"class":"dojoxGridFStatusTipDialog",content:this.statusPane,autofocus:false});
+this._dlg.connect(this._dlg.domNode,"onmouseleave",_3.hitch(this,this.closeDialog));
+this._dlg.connect(this._dlg.domNode,"click",_3.hitch(this,this._modifyFilter));
 },destroy:function(){
 this._dlg.destroyRecursive();
-},showDialog:function(_f,_10,_11){
-this._pos={x:_f,y:_10};
-_2.popup.close(this._dlg);
+},showDialog:function(_1a,_1b,_1c){
+this._pos={x:_1a,y:_1b};
+_d.close(this._dlg);
 this._removedCriterias=[];
 this._rules=[];
-this._updateStatus(_11);
-_2.popup.open({popup:this._dlg,parent:this.plugin.filterBar,x:_f-12,y:_10-3});
+this._updateStatus(_1c);
+_d.open({popup:this._dlg,parent:this.plugin.filterBar,onCancel:function(){
+},x:_1a-12,y:_1b-3});
 },closeDialog:function(){
-_2.popup.close(this._dlg);
+_d.close(this._dlg);
 if(this._removedCriterias.length){
 this.plugin.filterDefDialog.removeCriteriaBoxes(this._removedCriterias);
 this._removedCriterias=[];
 this.plugin.filterDefDialog.onFilter();
 }
-},_updateStatus:function(_12){
+},_updateStatus:function(_1d){
 var res,p=this.plugin,nls=p.nls,sp=this.statusPane,fdg=p.filterDefDialog;
 if(fdg.getCriteria()===0){
 sp.statusTitle.innerHTML=nls["statusTipTitleNoFilter"];
-sp.statusRel.innerHTML=sp.statusRelPre.innerHTML=sp.statusRelPost.innerHTML="";
-var _13=p.grid.layout.cells[_12];
-var _14=_13?"'"+(_13.name||_13.field)+"'":nls["anycolumn"];
-res=_1.string.substitute(nls["statusTipMsg"],[_14]);
+sp.statusRel.innerHTML="";
+var _1e=p.grid.layout.cells[_1d];
+var _1f=_1e?"'"+(_1e.name||_1e.field)+"'":nls["anycolumn"];
+res=_6.substitute(nls["statusTipMsg"],[_1f]);
 }else{
 sp.statusTitle.innerHTML=nls["statusTipTitleHasFilter"];
-sp.statusRelPre.innerHTML=nls["statusTipRelPre"]+"&nbsp;";
-sp.statusRelPost.innerHTML="&nbsp;"+nls["statusTipRelPost"];
-sp.statusRel.innerHTML=fdg._relOpCls=="logicall"?nls["all"]:nls["any"];
+sp.statusRel.innerHTML=fdg._relOpCls=="logicall"?nls["statusTipRelAll"]:nls["statusTipRelAny"];
 this._rules=[];
 var i=0,c=fdg.getCriteria(i++);
 while(c){
@@ -58,13 +51,13 @@ res=this._createStatusDetail();
 sp.statusDetailNode.innerHTML=res;
 this._addButtonForRules();
 },_createStatusDetail:function(){
-return this._statusHeader+_1.map(this._rules,function(_15,i){
-return this._getCriteriaStr(_15,i);
-},this).join("")+_c;
+return this._statusHeader+_2.map(this._rules,function(_20,i){
+return this._getCriteriaStr(_20,i);
+},this).join("")+_16;
 },_addButtonForRules:function(){
 if(this._rules.length>1){
-_1.query("."+_9,this.statusPane.statusDetailNode).forEach(_1.hitch(this,function(nd,idx){
-(new _2.form.Button({label:this.plugin.nls["removeRuleButton"],showLabel:false,iconClass:_b,onClick:_1.hitch(this,function(e){
+_4("."+_13,this.statusPane.statusDetailNode).forEach(_3.hitch(this,function(nd,idx){
+(new _c({label:this.plugin.nls["removeRuleButton"],showLabel:false,iconClass:_15,onClick:_3.hitch(this,function(e){
 e.stopPropagation();
 this._removedCriterias.push(this._rules[idx].index);
 this._rules.splice(idx,1);
@@ -73,14 +66,13 @@ this._addButtonForRules();
 })})).placeAt(nd,"last");
 }));
 }
-},_getCriteriaStr:function(c,_16){
-var res=["<tr class='",_7," ",(_16%2?_8:""),"'><td class='",_6,"'>",c.colTxt,"</td><td class='",_6,"'><div class='",_9,"'><span class='",_a,"'>",c.condTxt,"&nbsp;</span>",c.formattedVal,"</div></td></tr>"];
+},_getCriteriaStr:function(c,_21){
+var res=["<tr class='",_11," ",(_21%2?_12:""),"'><td class='",_10,"'>",c.colTxt,"</td><td class='",_10,"'><div class='",_13,"'><span class='",_14,"'>",c.condTxt,"&nbsp;</span>",c.formattedVal,"</div></td></tr>"];
 return res.join("");
 },_modifyFilter:function(){
 this.closeDialog();
 var p=this.plugin;
 p.filterDefDialog.showDialog(p.filterBar.getColumnIdx(this._pos.x));
 }});
-_1.declare("dojox.grid.enhanced.plugins.filter.FilterStatusPane",[_2._Widget,_2._TemplatedMixin],{templateString:_1.cache("dojox.grid","enhanced/templates/FilterStatusPane.html")});
-return _3.grid.enhanced.plugins.filter.FilterStatusTip;
+return FilterStatusTip;
 });

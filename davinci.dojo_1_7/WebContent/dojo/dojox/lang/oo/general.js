@@ -1,14 +1,9 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/lang/oo/general",["dojo","dijit","dojox","dojox/lang/oo/Decorator"],function(_1,_2,_3){
-_1.getObject("dojox.lang.oo.general",1);
+define(["dijit","dojo","dojox","dojo/require!dojox/lang/oo/Decorator"],function(_1,_2,_3){
+_2.provide("dojox.lang.oo.general");
+_2.require("dojox.lang.oo.Decorator");
 (function(){
-var oo=_3.lang.oo,md=oo.makeDecorator,_4=oo.general,_5=_1.isFunction;
+var oo=_3.lang.oo,md=oo.makeDecorator,_4=oo.general,_5=_2.isFunction;
 _4.augment=md(function(_6,_7,_8){
 return typeof _8=="undefined"?_7:_8;
 });
@@ -44,6 +39,4 @@ return _19.apply(this,arguments);
 }:_19;
 });
 })();
-return _1.getObject("dojox.lang.oo.general");
 });
-require(["dojox/lang/oo/general"]);

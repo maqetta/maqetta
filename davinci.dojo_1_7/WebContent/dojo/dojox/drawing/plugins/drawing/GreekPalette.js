@@ -1,140 +1,134 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/drawing/plugins/drawing/GreekPalette",["dojo","dijit","dojox","dojo/i18n","dojox/editor/plugins/nls/latinEntities"],function(_1,_2,_3){
-_1.getObject("dojox.drawing.plugins.drawing.GreekPalette",1);
-define(["dojo","dijit","dijit/focus","dijit/_base/popup","../../library/greek","dijit/_Widget","dijit/_TemplatedMixin","dijit/_PaletteMixin","dojo/i18n"],function(_4,_5){
-_4.getObject("drawing.plugins.drawing",true,_3);
-_4.requireLocalization("dojox.editor.plugins","latinEntities");
-_4.declare("dojox.drawing.plugins.drawing.GreekPalette",[_5._Widget,_5._TemplatedMixin,_5._PaletteMixin],{postMixInProperties:function(){
-var _6=_3.drawing.library.greek;
-var _7=0;
-var _8;
-for(_8 in _6){
-_7++;
+define(["dijit","dojo","dojox","dojo/i18n!dojox/editor/plugins/nls/latinEntities","dojo/require!dojox/drawing/library/greek,dijit/focus,dijit/_Widget,dijit/_TemplatedMixin,dijit/_PaletteMixin,dojo/i18n"],function(_1,_2,_3){
+_2.provide("dojox.drawing.plugins.drawing.GreekPalette");
+_2.require("dojox.drawing.library.greek");
+_2.require("dijit.focus");
+_2.require("dijit._Widget");
+_2.require("dijit._TemplatedMixin");
+_2.require("dijit._PaletteMixin");
+_2.require("dojo.i18n");
+_2.requireLocalization("dojox.editor.plugins","latinEntities");
+_2.declare("dojox.drawing.plugins.drawing.GreekPalette",[_1._Widget,_1._TemplatedMixin,_1._PaletteMixin],{postMixInProperties:function(){
+var _4=_3.drawing.library.greek;
+var _5=0;
+var _6;
+for(_6 in _4){
+_5++;
 }
-var _9=Math.floor(Math.sqrt(_7));
-var _a=_9;
-var _b=0;
-var _c=[];
-var _d=[];
-for(_8 in _6){
-_b++;
-_d.push(_8);
-if(_b%_a===0){
-_c.push(_d);
-_d=[];
+var _7=Math.floor(Math.sqrt(_5));
+var _8=_7;
+var _9=0;
+var _a=[];
+var _b=[];
+for(_6 in _4){
+_9++;
+_b.push(_6);
+if(_9%_8===0){
+_a.push(_b);
+_b=[];
 }
 }
-if(_d.length>0){
-_c.push(_d);
+if(_b.length>0){
+_a.push(_b);
 }
-this._palette=_c;
-},show:function(_e){
-_4.mixin(_e,{popup:this});
-_5.popup.open(_e);
-},onChange:function(_f){
-var _10=this._textBlock;
-_5.popup.hide(this);
-_10.insertText(this._pushChangeTo,_f);
-_10._dropMode=false;
-},onCancel:function(_11){
-_5.popup.hide(this);
+this._palette=_a;
+},show:function(_c){
+_2.mixin(_c,{popup:this});
+_1.popup.open(_c);
+},onChange:function(_d){
+var _e=this._textBlock;
+_1.popup.hide(this);
+_e.insertText(this._pushChangeTo,_d);
+_e._dropMode=false;
+},onCancel:function(_f){
+_1.popup.hide(this);
 this._textBlock._dropMode=false;
 },templateString:"<div class=\"dojoxEntityPalette\">\n"+"\t<table>\n"+"\t\t<tbody>\n"+"\t\t\t<tr>\n"+"\t\t\t\t<td>\n"+"\t\t\t\t\t<table class=\"dijitPaletteTable\">\n"+"\t\t\t\t\t\t<tbody dojoAttachPoint=\"gridNode\"></tbody>\n"+"\t\t\t\t   </table>\n"+"\t\t\t\t</td>\n"+"\t\t\t</tr>\n"+"\t\t\t<tr>\n"+"\t\t\t\t<td>\n"+"\t\t\t\t\t<table dojoAttachPoint=\"previewPane\" class=\"dojoxEntityPalettePreviewTable\">\n"+"\t\t\t\t\t\t<tbody>\n"+"\t\t\t\t\t\t\t<tr>\n"+"\t\t\t\t\t\t\t\t<td class=\"dojoxEntityPalettePreviewDetailEntity\">Type: <span class=\"dojoxEntityPalettePreviewDetail\" dojoAttachPoint=\"previewNode\"></span></td>\n"+"\t\t\t\t\t\t\t</tr>\n"+"\t\t\t\t\t\t</tbody>\n"+"\t\t\t\t\t</table>\n"+"\t\t\t\t</td>\n"+"\t\t\t</tr>\n"+"\t\t</tbody>\n"+"\t</table>\n"+"</div>",baseClass:"dojoxEntityPalette",showPreview:true,dyeClass:"dojox.drawing.plugins.Greeks",paletteClass:"editorLatinEntityPalette",cellClass:"dojoxEntityPaletteCell",buildRendering:function(){
 this.inherited(arguments);
-var _12=_4.i18n.getLocalization("dojox.editor.plugins","latinEntities");
-this._preparePalette(this._palette,_12);
-var _13=_4.query(".dojoxEntityPaletteCell",this.gridNode);
-_4.forEach(_13,function(_14){
-this.connect(_14,"onmouseenter","_onCellMouseEnter");
+var _10=_2.i18n.getLocalization("dojox.editor.plugins","latinEntities");
+this._preparePalette(this._palette,_10);
+var _11=_2.query(".dojoxEntityPaletteCell",this.gridNode);
+_2.forEach(_11,function(_12){
+this.connect(_12,"onmouseenter","_onCellMouseEnter");
 },this);
 },_onCellMouseEnter:function(e){
 if(this.showPreview){
 this._displayDetails(e.target);
 }
 },_onCellClick:function(evt){
-var _15=evt.type=="click"?evt.currentTarget:this._currentFocus,_16=this._getDye(_15).getValue();
-this._setCurrent(_15);
-setTimeout(_4.hitch(this,function(){
-_5.focus(_15);
-this._setValueAttr(_16,true);
+var _13=evt.type=="click"?evt.currentTarget:this._currentFocus,_14=this._getDye(_13).getValue();
+this._setCurrent(_13);
+setTimeout(_2.hitch(this,function(){
+_1.focus(_13);
+this._setValueAttr(_14,true);
 }));
-_4.removeClass(_15,"dijitPaletteCellHover");
-_4.stopEvent(evt);
+_2.removeClass(_13,"dijitPaletteCellHover");
+_2.stopEvent(evt);
 },postCreate:function(){
 this.inherited(arguments);
 if(!this.showPreview){
-_4.style(this.previewNode,"display","none");
+_2.style(this.previewNode,"display","none");
 }
-_5.popup.moveOffScreen(this);
-},_setCurrent:function(_17){
+_1.popup.moveOffScreen(this);
+},_setCurrent:function(_15){
 if("_currentFocus" in this){
-_4.attr(this._currentFocus,"tabIndex","-1");
-_4.removeClass(this._currentFocus,"dojoxEntityPaletteCellHover");
+_2.attr(this._currentFocus,"tabIndex","-1");
+_2.removeClass(this._currentFocus,"dojoxEntityPaletteCellHover");
 }
-this._currentFocus=_17;
-if(_17){
-_4.attr(_17,"tabIndex",this.tabIndex);
-_4.addClass(this._currentFocus,"dojoxEntityPaletteCellHover");
+this._currentFocus=_15;
+if(_15){
+_2.attr(_15,"tabIndex",this.tabIndex);
+_2.addClass(this._currentFocus,"dojoxEntityPaletteCellHover");
 }
 if(this.showPreview){
-this._displayDetails(_17);
+this._displayDetails(_15);
 }
-},_displayDetails:function(_18){
-var dye=this._getDye(_18);
+},_displayDetails:function(_16){
+var dye=this._getDye(_16);
 if(dye){
-var _19=dye.getValue();
-var _1a=dye._alias;
-this.previewNode.innerHTML=_19;
+var _17=dye.getValue();
+var _18=dye._alias;
+this.previewNode.innerHTML=_17;
 }else{
 this.previewNode.innerHTML="";
 this.descNode.innerHTML="";
 }
-},_preparePalette:function(_1b,_1c){
+},_preparePalette:function(_19,_1a){
 this._cells=[];
 var url=this._blankGif;
-var _1d=_4.getObject(this.dyeClass);
-for(var row=0;row<_1b.length;row++){
-var _1e=_4.create("tr",{tabIndex:"-1"},this.gridNode);
-for(var col=0;col<_1b[row].length;col++){
-var _1f=_1b[row][col];
-if(_1f){
-var _20=new _1d(_1f);
-var _21=_4.create("td",{"class":this.cellClass,tabIndex:"-1",title:_1c[_1f]});
-_20.fillCell(_21,url);
-this.connect(_21,"ondijitclick","_onCellClick");
-this._trackMouseState(_21,this.cellClass);
-_4.place(_21,_1e);
-_21.index=this._cells.length;
-this._cells.push({node:_21,dye:_20});
+var _1b=_2.getObject(this.dyeClass);
+for(var row=0;row<_19.length;row++){
+var _1c=_2.create("tr",{tabIndex:"-1"},this.gridNode);
+for(var col=0;col<_19[row].length;col++){
+var _1d=_19[row][col];
+if(_1d){
+var _1e=new _1b(_1d);
+var _1f=_2.create("td",{"class":this.cellClass,tabIndex:"-1",title:_1a[_1d]});
+_1e.fillCell(_1f,url);
+this.connect(_1f,"ondijitclick","_onCellClick");
+this._trackMouseState(_1f,this.cellClass);
+_2.place(_1f,_1c);
+_1f.index=this._cells.length;
+this._cells.push({node:_1f,dye:_1e});
 }
 }
 }
-this._xDim=_1b[0].length;
-this._yDim=_1b.length;
+this._xDim=_19[0].length;
+this._yDim=_19.length;
 },_navigateByArrow:function(evt){
-var _22={38:-this._xDim,40:this._xDim,39:this.isLeftToRight()?1:-1,37:this.isLeftToRight()?-1:1};
-var _23=_22[evt.keyCode];
-var _24=this._currentFocus.index+_23;
-if(_24<this._cells.length&&_24>-1){
-var _25=this._cells[_24].node;
-this._setCurrent(_25);
+var _20={38:-this._xDim,40:this._xDim,39:this.isLeftToRight()?1:-1,37:this.isLeftToRight()?-1:1};
+var _21=_20[evt.keyCode];
+var _22=this._currentFocus.index+_21;
+if(_22<this._cells.length&&_22>-1){
+var _23=this._cells[_22].node;
+this._setCurrent(_23);
 }
 }});
-_4.declare("dojox.drawing.plugins.Greeks",null,{constructor:function(_26){
-this._alias=_26;
+_2.declare("dojox.drawing.plugins.Greeks",null,{constructor:function(_24){
+this._alias=_24;
 },getValue:function(){
 return this._alias;
-},fillCell:function(_27){
-_27.innerHTML="&"+this._alias+";";
+},fillCell:function(_25){
+_25.innerHTML="&"+this._alias+";";
 }});
-return _3.drawing.plugins.drawing.GreekPalette;
 });
-return _1.getObject("dojox.drawing.plugins.drawing.GreekPalette");
-});
-require(["dojox/drawing/plugins/drawing/GreekPalette"]);

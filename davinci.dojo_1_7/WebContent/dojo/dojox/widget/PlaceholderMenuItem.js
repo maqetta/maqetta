@@ -1,12 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/widget/PlaceholderMenuItem",["dojo","dijit","dojox","dijit/Menu"],function(_1,_2,_3){
-_1.getObject("dojox.widget.PlaceholderMenuItem",1);
+define("dojox/widget/PlaceholderMenuItem",["dojo","dijit","dojox","dijit/Menu","dijit/MenuItem"],function(_1,_2,_3){
 _1.experimental("dojox.widget.PlaceholderMenuItem");
 _1.declare("dojox.widget.PlaceholderMenuItem",_2.MenuItem,{_replaced:false,_replacedWith:null,_isPlaceholder:true,postCreate:function(){
 this.domNode.style.display="none";
@@ -71,6 +64,5 @@ r=r.concat(_d.getPlaceholders(_9));
 },this);
 return r;
 }});
-return _1.getObject("dojox.widget.PlaceholderMenuItem");
+return _3.widget.PlaceholderMenuItem;
 });
-require(["dojox/widget/PlaceholderMenuItem"]);

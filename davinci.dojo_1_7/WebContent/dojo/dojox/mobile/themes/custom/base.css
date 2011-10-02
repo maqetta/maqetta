@@ -1,6 +1,3 @@
-body {
-  visibility: hidden;
-}
 html.mobile, .mobile body {
   width: 100%;
   margin: 0px;
@@ -15,20 +12,20 @@ html.mobile, .mobile body {
 }
 .mblColorBlue {
   background-color: #366EDF;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
 }
 .mblColorDefault {
-  background-color: #abd6ff;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
+  background-color: #5cb0ff;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
 }
 .mblColorDefault.mblDomButton {
-  background-color: #abd6ff;
+  background-color: #5cb0ff;
 }
 .mblColorDefaultSel {
-  background-color: #128bff;
+  background-color: #0064c2;
 }
 .mblColorDefaultSel.mblDomButton {
-  background-color: #128bff;
+  background-color: #0064c2;
 }
 .mblHeading {
   position: relative;
@@ -40,7 +37,7 @@ html.mobile, .mobile body {
   z-index: 1;
   padding: 0;
   height: 40px;
-  background-color: #abd6ff;
+  background-color: #5cb0ff;
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(2.5%, #ffffff), color-stop(2.5%, rgba(255, 255, 255, 0.14)), color-stop(5%, rgba(255, 255, 255, 0.14)), color-stop(5%, rgba(255, 255, 255, 0.52)), color-stop(7.5%, rgba(255, 255, 255, 0.52)), color-stop(7.5%, rgba(255, 255, 255, 0.68)), color-stop(10%, rgba(255, 255, 255, 0.68)), color-stop(1, rgba(255, 255, 255, 0)));
   border-bottom: 1px solid #769dc0;
   color: #131313;
@@ -79,11 +76,14 @@ html.mobile, .mobile body {
   left: 17px;
   width: 21px;
   height: 21px;
-  border: 1px inset #b5bcc7;
+  border: 1px solid #b5bcc7;
   -webkit-transform-origin: left top;
   -webkit-transform: scale(0.9, 0.99) rotate(45deg);
-  background-color: #abd6ff;
-  background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
+  background-color: #5cb0ff;
+  background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
+}
+.dj_chrome .mblArrowButtonHead {
+  border-style: inset;
 }
 .mblArrowButtonBody {
   position: absolute;
@@ -104,97 +104,97 @@ html.mobile, .mobile body {
   line-height: 30px;
   -webkit-border-top-right-radius: 2px;
   -webkit-border-bottom-right-radius: 2px;
-  background-color: #abd6ff;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
+  background-color: #5cb0ff;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
 }
-.mblArrowButtonNeck {
-  position: absolute;
-  visibility: hidden;
-}
-.mblArrowButtonSelected .mblArrowButtonHead {
-  background-color: #128bff;
-}
-.mblArrowButtonSelected .mblArrowButtonBody, .mblArrowButtonSelected .mblArrowButtonNeck {
-  background-color: #128bff;
+.mblArrowButtonSelected .mblArrowButtonHead, .mblArrowButtonSelected .mblArrowButtonBody {
+  background-color: #0064c2;
 }
 .mblSlide.mblOut {
-	-webkit-animation-duration: .4s;
-	-webkit-animation-name: mblSlideOut;
-	-webkit-animation-timing-function: linear;
-	-webkit-transform: translateX(-100%);
+	-webkit-transition-property: none;
+	-webkit-transition-duration: 0s;
+	-webkit-transform: translate3d(0%,0px,0px) !important;
+}
+.mblSlide.mblOut.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transition-duration: .3s;
+	-webkit-transform: translate3d(-100%,0px,0px) !important;
 }
 .mblSlide.mblIn {
-	-webkit-animation-duration: .4s;
-	-webkit-animation-name: mblSlideIn;
-	-webkit-animation-timing-function: linear;
-	-webkit-transform: translateX(0px);
+	position: absolute !important;
+	-webkit-transition-property: none;
+	-webkit-transition-duration: 0s;
+	-webkit-transform: translate3d(100%,0px,0px) !important;
+}
+.mblSlide.mblIn.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transition-duration: .3s;
+	-webkit-transform: translate3d(0%,0px,0px) !important;
 }
 .mblSlide.mblOut.mblReverse {
-	-webkit-animation-name: mblSlideOutReverse;
+	-webkit-transition-property: none;
+	-webkit-transform: translate3d(0%,0px,0px) !important;
+}
+.mblSlide.mblOut.mblReverse.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transform: translate3d(100%,0px,0px) !important;
 }
 .mblSlide.mblIn.mblReverse {
-	-webkit-animation-name: mblSlideInReverse;
+	-webkit-transform: translate3d(-100%,0px,0px) !important;
 }
-@-webkit-keyframes mblSlideOut {
-	from { -webkit-transform: translateX(0px); }
-	to { -webkit-transform: translateX(-100%); }
-}
-@-webkit-keyframes mblSlideIn {
-	from { -webkit-transform: translateX(100%); }
-	to { -webkit-transform: translateX(0px); }
-}
-@-webkit-keyframes mblSlideOutReverse {
-	from { -webkit-transform: translateX(0px); }
-	to { -webkit-transform: translateX(100%); }
-}
-@-webkit-keyframes mblSlideInReverse {
-	from { -webkit-transform: translateX(-100%); }
-	to { -webkit-transform: translateX(0px); }
+.mblSlide.mblIn.mblReverse.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transform: translate3d(0%,0px,0px) !important;
 }
 .mblFlip.mblOut {
-	-webkit-animation-duration: .6s;
-	-webkit-animation-name: mblFlipOut;
-	-webkit-animation-timing-function: ease-in;
-	-webkit-transform: rotateY(90deg) scale(.8);
+	-webkit-transition-property: none;
+	-webkit-transition-duration: 0s;
+	opacity: 1;
+	-webkit-transform: scale(1,1) skew(0,0) !important;
+}
+.mblFlip.mblOut.mblTransition {
+	-webkit-transition-property: all;
+	-webkit-transition-duration: .2s;
+	-webkit-transition-timing-function: linear;
+	opacity: 0;
+	-webkit-transform: scale(0,0.8) skew(0,30deg) !important;
 }
 .mblFlip.mblIn {
-	-webkit-animation-duration: .6s;
-	-webkit-animation-name: mblFlipIn;
-	-webkit-animation-timing-function: ease-out;
-	-webkit-transform: rotateY(0deg) scale(1);
+	position: absolute;
+	-webkit-transition-property: none;
+	-webkit-transition-duration: 0s;
+	opacity: 0;
+	-webkit-transform: scale(0,0.8) skew(0,-30deg) !important;
 }
-@-webkit-keyframes mblFlipOut {
-	0% { -webkit-transform: rotateY(0deg) scale(1); }
-	50% { -webkit-transform: rotateY(90deg) scale(.8); }
-	100% { -webkit-transform: rotateY(90deg) scale(.8); }
-}
-@-webkit-keyframes mblFlipIn {
-	0% { -webkit-transform: rotateY(90deg) scale(.8); }
-	50% { -webkit-transform: rotateY(90deg) scale(.8); }
-	100% { -webkit-transform: rotateY(0deg) scale(1); }
+.mblFlip.mblIn.mblTransition {
+	-webkit-transition-property: all;
+	-webkit-transition-delay: .2s;
+	-webkit-transition-duration: .2s;
+	-webkit-transition-timing-function: linear;
+	opacity: 1;
+	-webkit-transform: scale(1,1) skew(0,0) !important;
 }
 .mblFade.mblOut {
-	z-index: -100;
-	-webkit-animation-duration: 1s;
-	-webkit-animation-name: mblFadeOut;
-	-webkit-animation-timing-function: ease-in;
+	-webkit-transition-property: none;
+	-webkit-transition-duration: 0s;
+	opacity: 1;
 }
-.mblFade.mblOut.mblFast {
-	-webkit-animation-duration: 0.3s;
+.mblFade.mblOut.mblTransition {
+	-webkit-transition-property: opacity;
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: ease-out;
+	opacity: 0;
 }
 .mblFade.mblIn {
-	z-index: 0;
-	-webkit-animation-duration: 1s;
-	-webkit-animation-name: mblFadeIn;
-	-webkit-animation-timing-function: ease-out;
+	-webkit-transition-property: none;
+	-webkit-transition-duration: 0s;
+	opacity: 0;
 }
-@-webkit-keyframes mblFadeOut {
-	from {}
-	to {}
-}
-@-webkit-keyframes mblFadeIn {
-	from { opacity: 0; }
-	to { opacity: 1; }
+.mblFade.mblIn.mblTransition {
+	-webkit-transition-property: opacity;
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: ease-in;
+	opacity: 1;
 }
 .mblView {
   position: relative;
@@ -210,13 +210,13 @@ html.mobile, .mobile body {
   position: absolute !important;
   width: 100%;
 }
-.mblToolbarButton {
+.mblToolBarButton {
   float: left;
   position: relative;
+  overflow: hidden;
   cursor: pointer;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
   margin: 8px;
-  padding: 0px 8px;
   height: 30px;
   border: 1px inset #b5bcc7;
   -webkit-border-radius: 2px;
@@ -228,11 +228,18 @@ html.mobile, .mobile body {
   line-height: 30px;
   text-align: center;
 }
-.mblToolbarButton.mblArrowButtonText {
-  margin: 5px 8px;
+.mblToolBarButton.mblArrowButtonText {
+  margin: 6px 8px;
 }
-div.mblToolbarButtonDomButton {
-  width: 11px;
+.mblToolBarButtonIcon {
+  position: relative;
+  top: 2px;
+}
+.mblToolBarButtonSpriteIcon {
+  position: absolute;
+}
+.mblToolBarButtonText {
+  padding: 0px 10px;
 }
 .mblRoundRect {
   margin: 8px 8px 12px;
@@ -257,7 +264,7 @@ div.mblToolbarButtonDomButton {
   padding: 0 8px;
   height: 30px;
   border-bottom: 1px solid #b5bcc7;
-  background-color: #abd6ff;
+  background-color: #5cb0ff;
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(2.5%, #ffffff), color-stop(2.5%, rgba(255, 255, 255, 0.14)), color-stop(5%, rgba(255, 255, 255, 0.14)), color-stop(5%, rgba(255, 255, 255, 0.52)), color-stop(7.5%, rgba(255, 255, 255, 0.52)), color-stop(7.5%, rgba(255, 255, 255, 0.68)), color-stop(10%, rgba(255, 255, 255, 0.68)), color-stop(1, rgba(255, 255, 255, 0)));
   font-size: 14px;
   font-family: Helvetica;
@@ -313,7 +320,7 @@ div.mblToolbarButtonDomButton {
 	width: 20px;
 	height: 29px;
 }
-.mblDomButtonGrayArrow > DIV, .mblDomButtonArrow > DIV {
+.mblDomButtonGrayArrow > div, .mblDomButtonArrow > div {
 	position: absolute;
 	top: 10px;
 	left: 6px;
@@ -330,7 +337,7 @@ div.mblToolbarButtonDomButton {
 	width: 20px;
 	height: 29px;
 }
-.mblDomButtonDarkBlueCheck > DIV, .mblDomButtonCheck > DIV {
+.mblDomButtonDarkBlueCheck > div, .mblDomButtonCheck > div {
 	position: absolute;
 	left: 0px;
 	top: 8px;
@@ -374,17 +381,17 @@ div.mblToolbarButtonDomButton {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0.2);
 }
 .mblItemSelected {
-  background-color: #abd6ff;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
+  background-color: #5cb0ff;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
 }
 .mblItemSelected .mblListItemAnchor {
   color: #000000;
 }
-.mblItemSelected .mblDomButton DIV {
+.mblItemSelected .mblDomButton div {
   border-color: white;
 }
 .mblListItemTextBoxSelected {
-  background-color: #abd6ff;
+  background-color: #5cb0ff;
 }
 .mblListItemChecked {
   color: #000000;
@@ -392,25 +399,26 @@ div.mblToolbarButtonDomButton {
 .mblListItemIcon {
   float: left;
   line-height: normal;
-  margin-top: 7px;
+  margin-top: 10.5px;
   margin-right: 11px;
 }
 .mblListItemSpriteIcon {
   position: absolute;
-  margin-top: 7px;
+  margin-top: 10.5px;
+  margin-left: 8px;
 }
 .mblListItemRightIcon, .mblListItemRightIcon2 {
   position: relative;
   float: right;
-  margin-top: 7px;
-  margin-bottom: -7px;
+  line-height: normal;
+  margin-top: 10.5px;
 }
 .mblListItemRightText {
   position: relative;
   float: right;
   line-height: normal;
   color: #131313;
-  margin: 11px 4px 0 0;
+  margin: 14px 4px 0 0;
 }
 .mblListItemTextBox {
   overflow: hidden;
@@ -635,36 +643,37 @@ div.mblToolbarButtonDomButton {
 	left: 42px;
 }
 .mblItemSwitch {
-  top: 8px;
+  top: 12px;
 }
 .mblSwitchBg {
   border-color: #b5bcc7;
   -webkit-border-radius: 2px;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
 }
 .mblSwitchBgLeft {
-  background-color: #45a4ff;
+  background-color: #007ef5;
   color: #131313;
 }
 .mblSwitchBgRight {
-  background-color: #deefff;
+  background-color: #8fc9ff;
 }
 .mblSwitchKnob {
-  background-color: #abd6ff;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
+  border-color: #7b879b;
+  background-color: #5cb0ff;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
   -webkit-border-radius: 2px;
 }
 .mblProgContainer {
   position: absolute;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   top: 180px;
   left: 50%;
   margin: -18px 0px 0px -18px;
 }
 .mblProg {
   position: absolute;
-  left: 0px;
+  left: 2px;
   top: 0px;
   width: 11px;
   font-size: 1px;
@@ -676,7 +685,7 @@ div.mblToolbarButtonDomButton {
   -moz-border-radius: 2px;
 }
 .mblProg0 {
-  -webkit-transform: translate(18px, 10px) rotate(-90deg);
+  -webkit-transform: translate(18px, 10px) rotate(-90.1deg);
 }
 .mblProg1 {
   -webkit-transform: translate(22px, 11px) rotate(-60deg);
@@ -694,7 +703,7 @@ div.mblToolbarButtonDomButton {
   -webkit-transform: translate(22px, 25px) rotate(60deg);
 }
 .mblProg6 {
-  -webkit-transform: translate(18px, 26px) rotate(90deg);
+  -webkit-transform: translate(18px, 26px) rotate(90.1deg);
 }
 .mblProg7 {
   -webkit-transform: translate(14px, 25px) rotate(120deg);

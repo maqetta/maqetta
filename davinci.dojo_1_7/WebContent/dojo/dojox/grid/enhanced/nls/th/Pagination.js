@@ -1,9 +1,3 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
 define(
 //begin v1.x content
@@ -22,7 +16,8 @@ define(
 	"dialogIndication": "ระบุหมายเลขหน้า",
 	"pageCountIndication": " (${0} หน้า)",
 	"dialogConfirm": "ไปที่",
-	"dialogCancel": "ยกเลิก"
+	"dialogCancel": "ยกเลิก",
+	"all": "ทั้งหมด"
 })
 //end v1.x content
 );

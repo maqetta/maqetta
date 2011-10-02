@@ -1,110 +1,104 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/grid/enhanced/plugins/_RowMapLayer",["dojo","dojox","./_StoreLayer"],function(_1,_2){
-var _3=function(a){
+define("dojox/grid/enhanced/plugins/_RowMapLayer",["dojo/_base/declare","dojo/_base/array","dojo/_base/lang","./_StoreLayer"],function(_1,_2,_3,_4){
+var _5=function(a){
 a.sort(function(v1,v2){
 return v1-v2;
 });
-var _4=[[a[0]]];
+var _6=[[a[0]]];
 for(var i=1,j=0;i<a.length;++i){
 if(a[i]==a[i-1]+1){
-_4[j].push(a[i]);
+_6[j].push(a[i]);
 }else{
-_4[++j]=[a[i]];
+_6[++j]=[a[i]];
 }
 }
-return _4;
-},_5=function(_6,_7){
-return _7?_1.hitch(_6||_1.global,_7):function(){
+return _6;
+},_7=function(_8,_9){
+return _9?_3.hitch(_8||_3.global,_9):function(){
 };
 };
-_1.declare("dojox.grid.enhanced.plugins._RowMapLayer",_2.grid.enhanced.plugins._StoreLayer,{tags:["reorder"],constructor:function(_8){
+return _1("dojox.grid.enhanced.plugins._RowMapLayer",_4._StoreLayer,{tags:["reorder"],constructor:function(_a){
 this._map={};
 this._revMap={};
-this.grid=_8;
-this._oldOnDelete=_8._onDelete;
-var _9=this;
-_8._onDelete=function(_a){
-_9._onDelete(_a);
-_9._oldOnDelete.call(_8,_a);
+this.grid=_a;
+this._oldOnDelete=_a._onDelete;
+var _b=this;
+_a._onDelete=function(_c){
+_b._onDelete(_c);
+_b._oldOnDelete.call(_a,_c);
 };
-this._oldSort=_8.sort;
-_8.sort=function(){
-_9.clearMapping();
-_9._oldSort.apply(_8,arguments);
+this._oldSort=_a.sort;
+_a.sort=function(){
+_b.clearMapping();
+_b._oldSort.apply(_a,arguments);
 };
 },uninitialize:function(){
 this.grid._onDelete=this._oldOnDelete;
 this.grid.sort=this._oldSort;
-},setMapping:function(_b){
-this._store.forEachLayer(function(_c){
-if(_c.name()==="rowmap"){
+},setMapping:function(_d){
+this._store.forEachLayer(function(_e){
+if(_e.name()==="rowmap"){
 return false;
 }else{
-if(_c.onRowMappingChange){
-_c.onRowMappingChange(_b);
+if(_e.onRowMappingChange){
+_e.onRowMappingChange(_d);
 }
 }
 return true;
 },false);
-var _d,to,_e,_f={};
-for(_d in _b){
-_d=parseInt(_d,10);
-to=_b[_d];
+var _f,to,_10,_11={};
+for(_f in _d){
+_f=parseInt(_f,10);
+to=_d[_f];
 if(typeof to=="number"){
-if(_d in this._revMap){
-_e=this._revMap[_d];
-delete this._revMap[_d];
+if(_f in this._revMap){
+_10=this._revMap[_f];
+delete this._revMap[_f];
 }else{
-_e=_d;
+_10=_f;
 }
-if(_e==to){
-delete this._map[_e];
-_f[to]="eq";
+if(_10==to){
+delete this._map[_10];
+_11[to]="eq";
 }else{
-this._map[_e]=to;
-_f[to]=_e;
+this._map[_10]=to;
+_11[to]=_10;
 }
 }
 }
-for(to in _f){
-if(_f[to]==="eq"){
+for(to in _11){
+if(_11[to]==="eq"){
 delete this._revMap[parseInt(to,10)];
 }else{
-this._revMap[parseInt(to,10)]=_f[to];
+this._revMap[parseInt(to,10)]=_11[to];
 }
 }
 },clearMapping:function(){
 this._map={};
 this._revMap={};
-},_onDelete:function(_10){
-var idx=this.grid._getItemIndex(_10,true);
+},_onDelete:function(_12){
+var idx=this.grid._getItemIndex(_12,true);
 if(idx in this._revMap){
-var _11=[],r,i,_12=this._revMap[idx];
-delete this._map[_12];
+var _13=[],r,i,_14=this._revMap[idx];
+delete this._map[_14];
 delete this._revMap[idx];
 for(r in this._revMap){
 r=parseInt(r,10);
-if(this._revMap[r]>_12){
+if(this._revMap[r]>_14){
 --this._revMap[r];
 }
 }
 for(r in this._revMap){
 r=parseInt(r,10);
 if(r>idx){
-_11.push(r);
+_13.push(r);
 }
 }
-_11.sort(function(a,b){
+_13.sort(function(a,b){
 return b-a;
 });
-for(i=_11.length-1;i>=0;--i){
-r=_11[i];
+for(i=_13.length-1;i>=0;--i){
+r=_13[i];
 this._revMap[r-1]=this._revMap[r];
 delete this._revMap[r];
 }
@@ -113,78 +107,77 @@ for(r in this._revMap){
 this._map[this._revMap[r]]=r;
 }
 }
-},_fetch:function(_13){
-var _14=0,r;
-var _15=_13.start||0;
+},_fetch:function(_15){
+var _16=0,r;
+var _17=_15.start||0;
 for(r in this._revMap){
 r=parseInt(r,10);
-if(r>=_15){
-++_14;
+if(r>=_17){
+++_16;
 }
 }
-if(_14>0){
-var _16=[],i,map={},_17=_13.count>0?_13.count:-1;
-if(_17>0){
-for(i=0;i<_17;++i){
-r=_15+i;
+if(_16>0){
+var _18=[],i,map={},_19=_15.count>0?_15.count:-1;
+if(_19>0){
+for(i=0;i<_19;++i){
+r=_17+i;
 r=r in this._revMap?this._revMap[r]:r;
 map[r]=i;
-_16.push(r);
+_18.push(r);
 }
 }else{
 for(i=0;;++i){
-r=_15+i;
+r=_17+i;
 if(r in this._revMap){
---_14;
+--_16;
 r=this._revMap[r];
 }
 map[r]=i;
-_16.push(r);
-if(_14<=0){
+_18.push(r);
+if(_16<=0){
 break;
 }
 }
 }
-this._subFetch(_13,this._getRowArrays(_16),0,[],map,_13.onComplete,_15,_17);
-return _13;
+this._subFetch(_15,this._getRowArrays(_18),0,[],map,_15.onComplete,_17,_19);
+return _15;
 }else{
-return _1.hitch(this._store,this._originFetch)(_13);
+return _3.hitch(this._store,this._originFetch)(_15);
 }
-},_getRowArrays:function(_18){
-return _3(_18);
-},_subFetch:function(_19,_1a,_1b,_1c,map,_1d,_1e,_1f){
-var arr=_1a[_1b],_20=this;
-var _21=_19.start=arr[0];
-_19.count=arr[arr.length-1]-arr[0]+1;
-_19.onComplete=function(_22){
-_1.forEach(_22,function(_23,i){
-var r=_21+i;
+},_getRowArrays:function(_1a){
+return _5(_1a);
+},_subFetch:function(_1b,_1c,_1d,_1e,map,_1f,_20,_21){
+var arr=_1c[_1d],_22=this;
+var _23=_1b.start=arr[0];
+_1b.count=arr[arr.length-1]-arr[0]+1;
+_1b.onComplete=function(_24){
+_2.forEach(_24,function(_25,i){
+var r=_23+i;
 if(r in map){
-_1c[map[r]]=_23;
+_1e[map[r]]=_25;
 }
 });
-if(++_1b==_1a.length){
-if(_1f>0){
-_19.start=_1e;
-_19.count=_1f;
-_19.onComplete=_1d;
-_5(_19.scope,_1d)(_1c,_19);
+if(++_1d==_1c.length){
+if(_21>0){
+_1b.start=_20;
+_1b.count=_21;
+_1b.onComplete=_1f;
+_7(_1b.scope,_1f)(_1e,_1b);
 }else{
-_19.start=_19.start+_22.length;
-delete _19.count;
-_19.onComplete=function(_24){
-_1c=_1c.concat(_24);
-_19.start=_1e;
-_19.onComplete=_1d;
-_5(_19.scope,_1d)(_1c,_19);
+_1b.start=_1b.start+_24.length;
+delete _1b.count;
+_1b.onComplete=function(_26){
+_1e=_1e.concat(_26);
+_1b.start=_20;
+_1b.onComplete=_1f;
+_7(_1b.scope,_1f)(_1e,_1b);
 };
-_20.originFetch(_19);
+_22.originFetch(_1b);
 }
 }else{
-_20._subFetch(_19,_1a,_1b,_1c,map,_1d,_1e,_1f);
+_22._subFetch(_1b,_1c,_1d,_1e,map,_1f,_20,_21);
 }
 };
-_20.originFetch(_19);
+_22.originFetch(_1b);
 }});
-return _2.grid.enhanced.plugins._RowMapLayer;
 });

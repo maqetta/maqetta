@@ -559,6 +559,9 @@
 .tundra .dojoxGridRowOdd .dojoxGridSubRowAlt {
 	background-color: #EDEFF3;
 }
+.dojoxGridRowSelector {
+	cursor: pointer;
+}
 .dojoxGridRowSelectorStatusText{
 	visibility:hidden;
 }
@@ -761,7 +764,7 @@
 .dojoxGridFCBox .dojoxGridFCBoxColSelect, 
 .dojoxGridFCBox .dojoxGridFCBoxCondSelect, 
 .dojoxGridFCBox .dojoxGridFCBoxValueBox {
-	margin: 5px 0 0 0;
+	margin: 0.1em 0 0 0;
 	width: 100%;
 	
 	display: inline-table;
@@ -1005,6 +1008,10 @@
 	width: 220px!important;
 	text-align: right;
 }
+.dojoxGridButtonFocus {
+	outline: none;
+	border: 0.5px dotted darkblue !important;
+}
 .dojoxGridBorderDIV {
 	width:2px;
 	background-color: gray;
@@ -1086,6 +1093,7 @@
 .dojoxGrid .dojoxGridSortNode {
 	position: relative;
 	border: 1px solid transparent;
+	cursor: pointer;
 }
 .dj_ie6 .dojoxGrid .dojoxGridSortNode,
 .dj_ie7 .dojoxGrid .dojoxGridSortNode {
@@ -1094,7 +1102,7 @@
 }
 .dojoxGrid .dojoxGridSortNoWrap {
 	white-space:nowrap;
-	cursor: pointer;
+	word-wrap: normal;
 }
 .dojoxGridSortBtn {
 	width: 10px;
@@ -1247,13 +1255,9 @@ html > body .dojoxGridSorted .dojoxGridCellSortFocus .dojoxGridSortBtnNested {
 	color:#fff;
 }
 .dijitToasterWarning .dijitToasterContent{
-	padding:1em;
-	padding-top:0.25em;
 	background:#d4d943;
 } 
 .dijitToasterError .dijitToasterContent{
-	padding:1em;
-	padding-top:0.25em;
 	background:#c46600;
 }
  
@@ -1267,9 +1271,8 @@ html > body .dojoxGridSorted .dojoxGridCellSortFocus .dojoxGridSortBtnNested {
 	position: absolute;
 	width: 17.5em;
 	margin: 0px;
-	font:0.75em Tahoma, Helvetica, Verdana, Arial;
+	font:0.75em;
 }
- 
 .dojoxEllipsis,
 .dojoxEllipsisShown {
 	white-space: nowrap;

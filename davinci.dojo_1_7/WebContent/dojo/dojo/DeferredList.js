@@ -5,49 +5,49 @@
 */
 
 //>>built
-define("dojo/DeferredList",["./_base/kernel","./_base/Deferred","./_base/array"],function(_1){
-_1.DeferredList=function(_2,_3,_4,_5,_6){
-var _7=[];
-_1.Deferred.call(this);
-var _8=this;
-if(_2.length===0&&!_3){
+define("dojo/DeferredList",["./_base/kernel","./_base/Deferred","./_base/array"],function(_1,_2,_3){
+_1.DeferredList=function(_4,_5,_6,_7,_8){
+var _9=[];
+_2.call(this);
+var _a=this;
+if(_4.length===0&&!_5){
 this.resolve([0,[]]);
 }
-var _9=0;
-_1.forEach(_2,function(_a,i){
-_a.then(function(_b){
-if(_3){
-_8.resolve([i,_b]);
-}else{
-_c(true,_b);
-}
-},function(_d){
-if(_4){
-_8.reject(_d);
-}else{
-_c(false,_d);
-}
+var _b=0;
+_3.forEach(_4,function(_c,i){
+_c.then(function(_d){
 if(_5){
+_a.resolve([i,_d]);
+}else{
+_e(true,_d);
+}
+},function(_f){
+if(_6){
+_a.reject(_f);
+}else{
+_e(false,_f);
+}
+if(_7){
 return null;
 }
-throw _d;
+throw _f;
 });
-function _c(_e,_f){
-_7[i]=[_e,_f];
-_9++;
-if(_9===_2.length){
-_8.resolve(_7);
+function _e(_10,_11){
+_9[i]=[_10,_11];
+_b++;
+if(_b===_4.length){
+_a.resolve(_9);
 }
 };
 });
 };
-_1.DeferredList.prototype=new _1.Deferred();
-_1.DeferredList.prototype.gatherResults=function(_10){
-var d=new _1.DeferredList(_10,false,true,false);
-d.addCallback(function(_11){
+_1.DeferredList.prototype=new _2();
+_1.DeferredList.prototype.gatherResults=function(_12){
+var d=new _1.DeferredList(_12,false,true,false);
+d.addCallback(function(_13){
 var ret=[];
-_1.forEach(_11,function(_12){
-ret.push(_12[1]);
+_3.forEach(_13,function(_14){
+ret.push(_14[1]);
 });
 return ret;
 });

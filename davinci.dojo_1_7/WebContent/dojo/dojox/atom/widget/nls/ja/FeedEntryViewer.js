@@ -1,5 +1,7 @@
 //>>built
-define(({
+define(
+//begin v1.x content
+({
 	displayOptions: "[表示オプション]",
 	title: "タイトル",
 	authors: "作成者",
@@ -9,4 +11,6 @@ define(({
 	updated: "更新",
 	summary: "要約",
 	content: "内容"
-}));
+})
+//end v1.x content
+);

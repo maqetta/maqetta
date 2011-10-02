@@ -1,15 +1,10 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/lang/functional/util",["dojo","dijit","dojox","dojox/lang/functional/lambda"],function(_1,_2,_3){
-_1.getObject("dojox.lang.functional.util",1);
+define(["dijit","dojo","dojox","dojo/require!dojox/lang/functional/lambda"],function(_1,_2,_3){
+_2.provide("dojox.lang.functional.util");
+_2.require("dojox.lang.functional.lambda");
 (function(){
 var df=_3.lang.functional;
-_1.mixin(df,{inlineLambda:function(_4,_5,_6){
+_2.mixin(df,{inlineLambda:function(_4,_5,_6){
 var s=df.rawLambda(_4);
 if(_6){
 df.forEach(s.args,_6);
@@ -28,6 +23,4 @@ a[j]="))";
 return a.join("");
 }});
 })();
-return _1.getObject("dojox.lang.functional.util");
 });
-require(["dojox/lang/functional/util"]);

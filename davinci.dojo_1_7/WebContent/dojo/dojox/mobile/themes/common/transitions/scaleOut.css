@@ -24,14 +24,10 @@
 	}
 }
 @-webkit-keyframes mblScaleOutOutAndroid {
-	from {
-		-webkit-transform: scale(1.0);
-	}
-	to {
-		-webkit-transform: scale(0.0);
-	}
+	from { -webkit-transform: scale(1.0); }
+	to { -webkit-transform: scale(0.0); }
 }
 @-webkit-keyframes mblScaleOutIn {
-	from {}
-	to {}
+	from { -webkit-transform: scale(1.0); }
+	to { -webkit-transform: scale(1.0); }
 }

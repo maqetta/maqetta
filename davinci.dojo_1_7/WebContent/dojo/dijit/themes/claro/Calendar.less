@@ -103,18 +103,18 @@
 	display: none;
 }
 
-
-.claro .dijitDayLabels th {
-	padding:0 4px 0 4px;
-	font-weight:bold;
-	text-align:center;
-}
 .claro .dijitCalendarDayLabelTemplate {
 	padding-bottom:0;
 	text-align:center;
 	border-bottom:1px solid @border-color;
-	font-size:0.909em;
 	padding:0 3px 2px;
+}
+.claro .dijitCalendarDayLabel {
+	padding:0 4px 0 4px;
+	font-weight:bold;
+	font-size:0.909em;
+	text-align:center;
+	color: @text-color;
 }
 .claro .dijitCalendarDateTemplate {
 	text-align:center;
@@ -129,6 +129,7 @@
 	font-weight:bold;
 	letter-spacing:.05em;
 	text-align:center;
+	color: @text-color;
 }
 .dj_ie6 .claro .dijitCalendarDateTemplate {
 	background-image: none;
@@ -161,8 +162,9 @@
 	padding: 1px 2px 2px 2px;
 }
 .claro .dijitCalendarYearLabel {
-	padding:2px 0 0 0;
-	margin:0;
+	padding: 2px 0 0 0;
+	margin: 0;
+	font-size: 1.17em;
 }
 .claro .dijitCalendarYearLabel span {
 	/* trying to center next/current/previous year vertically, doesn't work on IE6/7 though */
@@ -226,7 +228,11 @@
 /* Disabled Calendar Style*/
 .claro .dijitCalendarDisabledDate .dijitCalendarDateLabel {
 	text-decoration:line-through;
-	
+}
+
+.claro .dijitCalendarDisabledDate .dijitCalendarDateLabel,
+.claro .dijitCalendarDisabledDate:hover .dijitCalendarDateLabel,
+.claro .dijitCalendarDisabledDate:active .dijitCalendarDateLabel {
 	/* override hover effects above, hover and click on disabled date should have no effect */
 	background-color: transparent;
 	border-width: 0;

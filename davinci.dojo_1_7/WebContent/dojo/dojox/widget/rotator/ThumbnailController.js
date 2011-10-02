@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/widget/rotator/ThumbnailController",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.widget.rotator.ThumbnailController",1);
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.widget.rotator.ThumbnailController");
 (function(d){
 var _4="dojoxRotatorThumb",_5=_4+"Selected";
 d.declare("dojox.widget.rotator.ThumbnailController",null,{rotator:null,constructor:function(_6,_7){
@@ -44,7 +38,5 @@ d.addClass(n[r.idx],_5);
 }
 }
 }});
-})(_1);
-return _1.getObject("dojox.widget.rotator.ThumbnailController");
+})(_2);
 });
-require(["dojox/widget/rotator/ThumbnailController"]);

@@ -1,13 +1,7 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/dtl/filter/integers",["dojo/_base/kernel"],function(_1){
-_1.getObject("dtl.filter.integers",true,dojox);
-_1.mixin(dojox.dtl.filter.integers,{add:function(_2,_3){
+define("dojox/dtl/filter/integers",["dojo/_base/lang","../_base"],function(_1,dd){
+_1.getObject("dojox.dtl.filter.integers",true);
+_1.mixin(dd.filter.integers,{add:function(_2,_3){
 _2=parseInt(_2,10);
 _3=parseInt(_3,10);
 return isNaN(_3)?_2:_2+_3;

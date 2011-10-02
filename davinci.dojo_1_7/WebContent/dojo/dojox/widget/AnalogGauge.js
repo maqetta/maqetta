@@ -1,14 +1,8 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/widget/AnalogGauge",["dojo","dijit","dojox","dojox/widget/gauge/_Gauge","dojox/gauges/AnalogGauge"],function(_1,_2,_3){
-_1.getObject("dojox.widget.AnalogGauge",1);
+define(["dijit","dojo","dojox","dojo/require!dojox/widget/gauge/_Gauge,dojox/gauges/AnalogGauge"],function(_1,_2,_3){
+_2.provide("dojox.widget.AnalogGauge");
+_2.require("dojox.widget.gauge._Gauge");
+_2.require("dojox.gauges.AnalogGauge");
 _3.widget.AnalogGauge=_3.gauges.AnalogGauge;
 _3.widget.gauge.AnalogLineIndicator=_3.gauges.AnalogLineIndicator;
-return _1.getObject("dojox.widget.AnalogGauge");
 });
-require(["dojox/widget/AnalogGauge"]);

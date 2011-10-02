@@ -1,64 +1,58 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/validate/_base",["dojo/_base/lang","dojo/regexp","dojo/number","./regexp"],function(_1,_2,_3,_4){
-_1.getObject("validate",true,dojox);
-dojox.validate.isText=function(_5,_6){
-_6=(typeof _6=="object")?_6:{};
-if(/^\s*$/.test(_5)){
+define("dojox/validate/_base",["dojo/_base/kernel","dojo/regexp","dojo/number","./regexp"],function(_1,_2,_3,_4){
+var _5=_1.getObject("dojox.validate",true);
+_5.isText=function(_6,_7){
+_7=(typeof _7=="object")?_7:{};
+if(/^\s*$/.test(_6)){
 return false;
 }
-if(typeof _6.length=="number"&&_6.length!=_5.length){
+if(typeof _7.length=="number"&&_7.length!=_6.length){
 return false;
 }
-if(typeof _6.minlength=="number"&&_6.minlength>_5.length){
+if(typeof _7.minlength=="number"&&_7.minlength>_6.length){
 return false;
 }
-if(typeof _6.maxlength=="number"&&_6.maxlength<_5.length){
+if(typeof _7.maxlength=="number"&&_7.maxlength<_6.length){
 return false;
 }
 return true;
 };
-dojox.validate._isInRangeCache={};
-dojox.validate.isInRange=function(_7,_8){
-_7=_3.parse(_7,_8);
-if(isNaN(_7)){
+_5._isInRangeCache={};
+_5.isInRange=function(_8,_9){
+_8=_3.parse(_8,_9);
+if(isNaN(_8)){
 return false;
 }
-_8=(typeof _8=="object")?_8:{};
-var _9=(typeof _8.max=="number")?_8.max:Infinity,_a=(typeof _8.min=="number")?_8.min:-Infinity,_b=(typeof _8.decimal=="string")?_8.decimal:".",_c=dojox.validate._isInRangeCache,_d=_7+"max"+_9+"min"+_a+"dec"+_b;
-if(typeof _c[_d]!="undefined"){
-return _c[_d];
+_9=(typeof _9=="object")?_9:{};
+var _a=(typeof _9.max=="number")?_9.max:Infinity,_b=(typeof _9.min=="number")?_9.min:-Infinity,_c=(typeof _9.decimal=="string")?_9.decimal:".",_d=dojox.validate._isInRangeCache,_e=_8+"max"+_a+"min"+_b+"dec"+_c;
+if(typeof _d[_e]!="undefined"){
+return _d[_e];
 }
-_c[_d]=!(_7<_a||_7>_9);
-return _c[_d];
+_d[_e]=!(_8<_b||_8>_a);
+return _d[_e];
 };
-dojox.validate.isNumberFormat=function(_e,_f){
-var re=new RegExp("^"+_4.numberFormat(_f)+"$","i");
-return re.test(_e);
+_5.isNumberFormat=function(_f,_10){
+var re=new RegExp("^"+_4.numberFormat(_10)+"$","i");
+return re.test(_f);
 };
-dojox.validate.isValidLuhn=function(_10){
-var sum=0,_11,_12;
-if(!_1.isString(_10)){
-_10=String(_10);
+_5.isValidLuhn=function(_11){
+var sum=0,_12,_13;
+if(!_1.isString(_11)){
+_11=String(_11);
 }
-_10=_10.replace(/[- ]/g,"");
-_11=_10.length%2;
-for(var i=0;i<_10.length;i++){
-_12=parseInt(_10.charAt(i));
-if(i%2==_11){
-_12*=2;
+_11=_11.replace(/[- ]/g,"");
+_12=_11.length%2;
+for(var i=0;i<_11.length;i++){
+_13=parseInt(_11.charAt(i));
+if(i%2==_12){
+_13*=2;
 }
-if(_12>9){
-_12-=9;
+if(_13>9){
+_13-=9;
 }
-sum+=_12;
+sum+=_13;
 }
 return !(sum%10);
 };
-return dojox.validate;
+return _5;
 });

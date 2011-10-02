@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/lang/functional/listcomp",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.lang.functional.listcomp",1);
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.lang.functional.listcomp");
 (function(){
 var _4=/\bfor\b|\bif\b/gm;
 var _5=function(s){
@@ -21,7 +15,7 @@ _9.push("}");
 }
 return _8.join("")+"r.push("+_6[0]+");"+_9.join("")+"return r;";
 };
-_1.mixin(_3.lang.functional,{buildListcomp:function(s){
+_2.mixin(_3.lang.functional,{buildListcomp:function(s){
 return "function(){"+_5(s)+"}";
 },compileListcomp:function(s){
 return new Function([],_5(s));
@@ -29,6 +23,4 @@ return new Function([],_5(s));
 return (new Function([],_5(s)))();
 }});
 })();
-return _1.getObject("dojox.lang.functional.listcomp");
 });
-require(["dojox/lang/functional/listcomp"]);

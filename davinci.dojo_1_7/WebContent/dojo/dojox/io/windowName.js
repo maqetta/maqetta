@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/io/windowName",["dojo/_base/window","dojo/_base/xhr","dojo/_base/sniff","dojo/_base/url","domReady!"],function(_1){
+define("dojox/io/windowName",["dojo/_base/kernel","dojo/_base/window","dojo/_base/xhr","dojo/_base/sniff","dojo/_base/url","dojo/domReady!"],function(_1){
 _1.getObject("io.windowName",true,dojox);
 dojox.io.windowName={send:function(_2,_3){
 _3.url+=(_3.url.match(/\?/)?"&":"?")+"windowname="+(_3.authElement?"auth":true);

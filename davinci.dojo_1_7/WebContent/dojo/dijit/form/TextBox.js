@@ -1,31 +1,25 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-require.cache["dijit/form/templates/TextBox.html"]="<div class=\"dijit dijitReset dijitInline dijitLeft\" id=\"widget_${id}\" role=\"presentation\"\n\t><div class=\"dijitReset dijitInputField dijitInputContainer\"\n\t\t><input class=\"dijitReset dijitInputInner\" dojoAttachPoint='textbox,focusNode' autocomplete=\"off\"\n\t\t\t${!nameAttrSetting} type='${type}'\n\t/></div\n></div>\n";
-define("dijit/form/TextBox",["dojo/_base/kernel","..","dojo/text!./templates/TextBox.html","./_FormWidget","./_TextBoxMixin","dojo/_base/declare","dojo/_base/html","dojo/_base/lang","dojo/_base/sniff","dojo/_base/window"],function(_1,_2,_3){
-_1.declare("dijit.form.TextBox",[_2.form._FormValueWidget,_2.form._TextBoxMixin],{templateString:_3,_singleNodeTemplate:"<input class=\"dijit dijitReset dijitLeft dijitInputField\" dojoAttachPoint=\"textbox,focusNode\" autocomplete=\"off\" type=\"${type}\" ${!nameAttrSetting} />",_buttonInputDisabled:_1.isIE?"disabled":"",baseClass:"dijitTextBox",postMixInProperties:function(){
-var _4=this.type.toLowerCase();
-if(this.templateString&&this.templateString.toLowerCase()=="input"||((_4=="hidden"||_4=="file")&&this.templateString==_2.form.TextBox.prototype.templateString)){
+require({cache:{"url:dijit/form/templates/TextBox.html":"<div class=\"dijit dijitReset dijitInline dijitLeft\" id=\"widget_${id}\" role=\"presentation\"\n\t><div class=\"dijitReset dijitInputField dijitInputContainer\"\n\t\t><input class=\"dijitReset dijitInputInner\" data-dojo-attach-point='textbox,focusNode' autocomplete=\"off\"\n\t\t\t${!nameAttrSetting} type='${type}'\n\t/></div\n></div>\n"}});
+define("dijit/form/TextBox",["dojo/_base/declare","dojo/dom-construct","dojo/dom-style","dojo/_base/kernel","dojo/_base/lang","dojo/_base/sniff","dojo/_base/window","./_FormValueWidget","./_TextBoxMixin","dojo/text!./templates/TextBox.html",".."],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b){
+var _c=_1([_8,_9],{templateString:_a,_singleNodeTemplate:"<input class=\"dijit dijitReset dijitLeft dijitInputField\" data-dojo-attach-point=\"textbox,focusNode\" autocomplete=\"off\" type=\"${type}\" ${!nameAttrSetting} />",_buttonInputDisabled:_6("ie")?"disabled":"",baseClass:"dijitTextBox",postMixInProperties:function(){
+var _d=this.type.toLowerCase();
+if(this.templateString&&this.templateString.toLowerCase()=="input"||((_d=="hidden"||_d=="file")&&this.templateString==this.constructor.prototype.templateString)){
 this.templateString=this._singleNodeTemplate;
 }
 this.inherited(arguments);
 },_onInput:function(e){
 this.inherited(arguments);
 if(this.intermediateChanges){
-var _5=this;
+var _e=this;
 setTimeout(function(){
-_5._handleOnChange(_5.get("value"),false);
+_e._handleOnChange(_e.get("value"),false);
 },0);
 }
 },_setPlaceHolderAttr:function(v){
 this._set("placeHolder",v);
 if(!this._phspan){
 this._attachPoints.push("_phspan");
-this._phspan=_1.create("span",{className:"dijitPlaceHolder dijitInputField"},this.textbox,"after");
+this._phspan=_2.create("span",{className:"dijitPlaceHolder dijitInputField"},this.textbox,"after");
 }
 this._phspan.innerHTML="";
 this._phspan.appendChild(document.createTextNode(v));
@@ -34,15 +28,15 @@ this._updatePlaceHolder();
 if(this._phspan){
 this._phspan.style.display=(this.placeHolder&&!this.focused&&!this.textbox.value)?"":"none";
 }
-},_setValueAttr:function(_6,_7,_8){
+},_setValueAttr:function(_f,_10,_11){
 this.inherited(arguments);
 this._updatePlaceHolder();
 },getDisplayedValue:function(){
-_1.deprecated(this.declaredClass+"::getDisplayedValue() is deprecated. Use set('displayedValue') instead.","","2.0");
+_4.deprecated(this.declaredClass+"::getDisplayedValue() is deprecated. Use set('displayedValue') instead.","","2.0");
 return this.get("displayedValue");
-},setDisplayedValue:function(_9){
-_1.deprecated(this.declaredClass+"::setDisplayedValue() is deprecated. Use set('displayedValue', ...) instead.","","2.0");
-this.set("displayedValue",_9);
+},setDisplayedValue:function(_12){
+_4.deprecated(this.declaredClass+"::setDisplayedValue() is deprecated. Use set('displayedValue', ...) instead.","","2.0");
+this.set("displayedValue",_12);
 },_onBlur:function(e){
 if(this.disabled){
 return;
@@ -56,46 +50,54 @@ return;
 this.inherited(arguments);
 this._updatePlaceHolder();
 }});
-if(_1.isIE){
-_2.form.TextBox=_1.declare(_2.form.TextBox,{_isTextSelected:function(){
-var _a=_1.doc.selection.createRange();
-var _b=_a.parentElement();
-return _b==this.textbox&&_a.text.length==0;
+if(_6("ie")){
+_c=_1(_c,{declaredClass:"dijit.form.TextBox",_isTextSelected:function(){
+var _13=_7.doc.selection.createRange();
+var _14=_13.parentElement();
+return _14==this.textbox&&_13.text.length==0;
 },postCreate:function(){
 this.inherited(arguments);
-setTimeout(_1.hitch(this,function(){
-var s=_1.getComputedStyle(this.domNode);
+setTimeout(_5.hitch(this,function(){
+try{
+var s=_3.getComputedStyle(this.domNode);
 if(s){
 var ff=s.fontFamily;
 if(ff){
-var _c=this.domNode.getElementsByTagName("INPUT");
-if(_c){
-for(var i=0;i<_c.length;i++){
-_c[i].style.fontFamily=ff;
+var _15=this.domNode.getElementsByTagName("INPUT");
+if(_15){
+for(var i=0;i<_15.length;i++){
+_15[i].style.fontFamily=ff;
 }
 }
 }
+}
+}
+catch(e){
 }
 }),0);
 }});
-_2._setSelectionRange=function(_d,_e,_f){
-if(_d.createTextRange){
-var r=_d.createTextRange();
+_b._setSelectionRange=_9._setSelectionRange=function(_16,_17,_18){
+if(_16.createTextRange){
+var r=_16.createTextRange();
 r.collapse(true);
 r.moveStart("character",-99999);
-r.moveStart("character",_e);
-r.moveEnd("character",_f-_e);
+r.moveStart("character",_17);
+r.moveEnd("character",_18-_17);
 r.select();
 }
-};_2.form.TextBox.prototype.declaredClass = "dijit.form.TextBox";
-}
-if(_1.isMoz){
-_2.form.TextBox=_1.declare(_2.form.TextBox,{_onBlur:function(e){
+};
+}else{
+if(_6("mozilla")){
+_c=_1(_c,{declaredClass:"dijit.form.TextBox",_onBlur:function(e){
 this.inherited(arguments);
 if(this.selectOnClick){
 this.textbox.selectionStart=this.textbox.selectionEnd=undefined;
 }
-}});_2.form.TextBox.prototype.declaredClass = "dijit.form.TextBox";
+}});
+}else{
+_c.prototype.declaredClass="dijit.form.TextBox";
 }
-return _2.form.TextBox;
+}
+_5.setObject("dijit.form.TextBox",_c);
+return _c;
 });

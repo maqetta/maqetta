@@ -1,107 +1,36 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/geo/openlayers/Patch",["dojo/_base/kernel"],function(_1){
-dojox.geo.openlayers.Patch={destroyMap:function(){
-if(!this.unloadDestroy){
-return false;
-}
-if(this.panTween){
-this.panTween.stop();
-this.panTween=null;
-}
-OpenLayers.Event.stopObserving(window,"unload",this.unloadDestroy);
-this.unloadDestroy=null;
-if(this.updateSizeDestroy){
-OpenLayers.Event.stopObserving(window,"resize",this.updateSizeDestroy);
-}else{
-this.events.unregister("resize",this,this.updateSize);
-}
-this.paddingForPopups=null;
-if(this.controls!=null){
-for(var i=this.controls.length-1;i>=0;--i){
-this.controls[i].destroy();
-}
-this.controls=null;
-}
-if(this.layers!=null){
-for(var i=this.layers.length-1;i>=0;--i){
-this.layers[i].destroy(false);
-}
-this.layers=null;
-}
-if(this.viewPortDiv){
-var _2=this.div==this.viewPortDiv.parentNode;
-if(_2){
-this.div.removeChild(this.viewPortDiv);
-}
-}
-this.viewPortDiv=null;
-if(this.eventListeners){
-this.events.un(this.eventListeners);
-this.eventListeners=null;
-}
-this.events.destroy();
-this.events=null;
-},removeLayerMap:function(_3,_4){
-if(_4==null){
-_4=true;
-}
-var _5;
-if(_3.isFixed){
-_5=this.viewPortDiv==_3.div.parentNode;
-if(_5){
-this.viewPortDiv.removeChild(_3.div);
-}
-}else{
-_5=this.layerContainerDiv==_3.div.parentNode;
-if(_5){
-this.layerContainerDiv.removeChild(_3.div);
-}
-}
-OpenLayers.Util.removeItem(this.layers,_3);
-_3.removeMap(this);
-_3.map=null;
-if(this.baseLayer==_3){
-this.baseLayer=null;
-if(_4){
-for(var i=0,_6=this.layers.length;i<_6;i++){
-var _7=this.layers[i];
-if(_7.isBaseLayer||this.allOverlays){
-this.setBaseLayer(_7);
-break;
-}
-}
-}
-}
-this.resetLayersZIndex();
-this.events.triggerEvent("removelayer",{layer:_3});
-},controlPanzoomRemoveButton:function(_8){
-OpenLayers.Event.stopObservingElement(_8);
-_8.map=null;
-_8.getSlideFactor=null;
-var _9=this.div==_8.parentNode;
+define("dojox/geo/openlayers/Patch",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/sniff","dojox/gfx","dojox/gfx/shape"],function(_1,_2,_3,_4,_5){
+var _6=_2.getObject("geo.openlayers",true,dojox);
+_6.Patch={patchMethod:function(_7,_8,_9,_a){
+var _b=_7.prototype[_8];
+_7.prototype[_8]=function(){
+var _c=_8;
 if(_9){
-this.div.removeChild(_8);
+_9.call(this,_c,arguments);
 }
-OpenLayers.Util.removeItem(this.buttons,_8);
-},layerGetResolution:function(){
-if(!this.map){
-return;
+var _d=_b.apply(this,arguments);
+if(_a){
+_d=_a.call(this,_c,_d,arguments)||_d;
 }
-var _a=this.map.getZoom();
-return this.getResolutionForZoom(_a);
-},patchOpenLayers:function(){
-if(_1.isIE){
-_1.extend(OpenLayers.Map,{removeLayer:this.removeLayerMap,destroy:this.destroyMap});
+return _d;
+};
+},patchGFX:function(){
+var _e=function(){
+if(!this.rawNode.path){
+this.rawNode.path={};
 }
-if(_1.isIE){
-_1.extend(OpenLayers.Control.PanZoom,{_removeButton:this.controlPanzoomRemoveButton});
+};
+var _f=function(){
+if(this.rawNode.fill&&!this.rawNode.fill.colors){
+this.rawNode.fill.colors={};
 }
-_1.extend(OpenLayers.Layer,{getResolution:this.layerGetResolution});
+};
+if(_3.isIE<=8){
+dojox.geo.openlayers.Patch.patchMethod(_4.Line,"setShape",_e,null);
+dojox.geo.openlayers.Patch.patchMethod(_4.Polyline,"setShape",_e,null);
+dojox.geo.openlayers.Patch.patchMethod(_4.Path,"setShape",_e,null);
+dojox.geo.openlayers.Patch.patchMethod(_5.Shape,"setFill",_f,null);
+}
 }};
+return _6.Patch;
 });

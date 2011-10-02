@@ -5,24 +5,24 @@
 */
 
 //>>built
-define("dojo/data/util/filter",["../.."],function(_1){
-_1.getObject("data.util.filter",true,_1);
-_1.data.util.filter.patternToRegExp=function(_2,_3){
-var _4="^";
+define("dojo/data/util/filter",["dojo/_base/lang"],function(_1){
+var _2=_1.getObject("dojo.data.util.filter",true);
+_2.patternToRegExp=function(_3,_4){
+var _5="^";
 var c=null;
-for(var i=0;i<_2.length;i++){
-c=_2.charAt(i);
+for(var i=0;i<_3.length;i++){
+c=_3.charAt(i);
 switch(c){
 case "\\":
-_4+=c;
+_5+=c;
 i++;
-_4+=_2.charAt(i);
+_5+=_3.charAt(i);
 break;
 case "*":
-_4+=".*";
+_5+=".*";
 break;
 case "?":
-_4+=".";
+_5+=".";
 break;
 case "$":
 case "^":
@@ -36,17 +36,17 @@ case "{":
 case "}":
 case "[":
 case "]":
-_4+="\\";
+_5+="\\";
 default:
-_4+=c;
+_5+=c;
 }
 }
-_4+="$";
-if(_3){
-return new RegExp(_4,"mi");
+_5+="$";
+if(_4){
+return new RegExp(_5,"mi");
 }else{
-return new RegExp(_4,"m");
+return new RegExp(_5,"m");
 }
 };
-return _1.data.util.filter;
+return _2;
 });

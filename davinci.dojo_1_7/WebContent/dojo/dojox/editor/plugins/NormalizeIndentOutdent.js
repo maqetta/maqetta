@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/editor/plugins/NormalizeIndentOutdent",["dojo","dijit","dojox","dijit/_editor/selection","dijit/_editor/_Plugin"],function(_1,_2,_3){
+define("dojox/editor/plugins/NormalizeIndentOutdent",["dojo","dijit","dojox","dijit/_editor/range","dijit/_editor/selection","dijit/_editor/_Plugin","dojo/_base/connect","dojo/_base/declare"],function(_1,_2,_3){
 _1.declare("dojox.editor.plugins.NormalizeIndentOutdent",_2._editor._Plugin,{indentBy:40,indentUnits:"px",setEditor:function(_4){
 this.editor=_4;
 _4._indentImpl=_1.hitch(this,this._indentImpl);

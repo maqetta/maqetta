@@ -1,9 +1,3 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
 define(
 //begin v1.x content
@@ -14,6 +8,7 @@ define(
 	"nextTip": "次のページ",
 	"prevTip": "前のページ",
 	"itemTitle": "項目",
+	"singularItemTitle": "項目",
 	"pageStepLabelTemplate": "ページ ${0}",
 	"pageSizeLabelTemplate": "ページ当たり ${0} 項目",
 	"allItemsLabelTemplate": "すべての項目",
@@ -21,8 +16,9 @@ define(
 	"dialogTitle": "ページの移動",
 	"dialogIndication": "ページ番号を指定してください",
 	"pageCountIndication": " (${0} ページ)",
-	"dialogConfirm": "移動",
-	"dialogCancel": "キャンセル"
+	"dialogConfirm": "実行",
+	"dialogCancel": "キャンセル",
+	"all": "すべて"
 })
 //end v1.x content
 );

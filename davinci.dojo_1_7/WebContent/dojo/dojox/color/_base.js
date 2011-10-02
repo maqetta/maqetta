@@ -1,35 +1,29 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
 define("dojox/color/_base",["dojo/_base/kernel","../main","dojo/_base/lang","dojo/_base/Color","dojo/colors"],function(_1,_2,_3,_4,_5){
-_1.getObject("color",true,_2);
-_2.color.Color=_4;
-_2.color.blend=_1.blendColors;
-_2.color.fromRgb=_1.colorFromRgb;
-_2.color.fromHex=_1.colorFromHex;
-_2.color.fromArray=_1.colorFromArray;
-_2.color.fromString=_1.colorFromString;
-_2.color.greyscale=_5.makeGrey;
-_1.mixin(_2.color,{fromCmy:function(_6,_7,_8){
-if(_1.isArray(_6)){
+var cx=_3.getObject("dojox.color",true);
+cx.Color=_4;
+cx.blend=_4.blendColors;
+cx.fromRgb=_4.fromRgb;
+cx.fromHex=_4.fromHex;
+cx.fromArray=_4.fromArray;
+cx.fromString=_4.fromString;
+cx.greyscale=_5.makeGrey;
+_3.mixin(cx,{fromCmy:function(_6,_7,_8){
+if(_3.isArray(_6)){
 _7=_6[1],_8=_6[2],_6=_6[0];
 }else{
-if(_1.isObject(_6)){
+if(_3.isObject(_6)){
 _7=_6.m,_8=_6.y,_6=_6.c;
 }
 }
 _6/=100,_7/=100,_8/=100;
 var r=1-_6,g=1-_7,b=1-_8;
-return new _2.color.Color({r:Math.round(r*255),g:Math.round(g*255),b:Math.round(b*255)});
+return new _4({r:Math.round(r*255),g:Math.round(g*255),b:Math.round(b*255)});
 },fromCmyk:function(_9,_a,_b,_c){
-if(_1.isArray(_9)){
+if(_3.isArray(_9)){
 _a=_9[1],_b=_9[2],_c=_9[3],_9=_9[0];
 }else{
-if(_1.isObject(_9)){
+if(_3.isObject(_9)){
 _a=_9.m,_b=_9.y,_c=_9.b,_9=_9.c;
 }
 }
@@ -38,12 +32,12 @@ var r,g,b;
 r=1-Math.min(1,_9*(1-_c)+_c);
 g=1-Math.min(1,_a*(1-_c)+_c);
 b=1-Math.min(1,_b*(1-_c)+_c);
-return new _2.color.Color({r:Math.round(r*255),g:Math.round(g*255),b:Math.round(b*255)});
+return new _4({r:Math.round(r*255),g:Math.round(g*255),b:Math.round(b*255)});
 },fromHsl:function(_d,_e,_f){
-if(_1.isArray(_d)){
+if(_3.isArray(_d)){
 _e=_d[1],_f=_d[2],_d=_d[0];
 }else{
-if(_1.isObject(_d)){
+if(_3.isObject(_d)){
 _e=_d.s,_f=_d.l,_d=_d.h;
 }
 }
@@ -75,12 +69,13 @@ r=(1-_f)*r+2*_f-1;
 g=(1-_f)*g+2*_f-1;
 b=(1-_f)*b+2*_f-1;
 }
-return new _2.color.Color({r:Math.round(r*255),g:Math.round(g*255),b:Math.round(b*255)});
-},fromHsv:function(hue,_10,_11){
-if(_1.isArray(hue)){
+return new _4({r:Math.round(r*255),g:Math.round(g*255),b:Math.round(b*255)});
+}});
+cx.fromHsv=function(hue,_10,_11){
+if(_3.isArray(hue)){
 _10=hue[1],_11=hue[2],hue=hue[0];
 }else{
-if(_1.isObject(hue)){
+if(_3.isObject(hue)){
 _10=hue.s,_11=hue.v,hue=hue.h;
 }
 }
@@ -118,9 +113,9 @@ r=_11,g=p,b=q;
 break;
 }
 }
-return new _2.color.Color({r:Math.round(r*255),g:Math.round(g*255),b:Math.round(b*255)});
-}});
-_1.extend(_2.color.Color,{toCmy:function(){
+return new _4({r:Math.round(r*255),g:Math.round(g*255),b:Math.round(b*255)});
+};
+_3.extend(_4,{toCmy:function(){
 var _13=1-(this.r/255),_14=1-(this.g/255),_15=1-(this.b/255);
 return {c:Math.round(_13*100),m:Math.round(_14*100),y:Math.round(_15*100)};
 },toCmyk:function(){
@@ -175,5 +170,5 @@ h+=360;
 }
 return {h:h,s:Math.round(s*100),v:Math.round(max*100)};
 }});
-return _2.color;
+return cx;
 });

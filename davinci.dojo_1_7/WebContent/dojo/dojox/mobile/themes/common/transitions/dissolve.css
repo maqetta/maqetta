@@ -1,14 +1,12 @@
 .mblDissolve.mblOut {
-	z-index: -100;
 	-webkit-animation-duration: 1s;
 	-webkit-animation-name: mblDissolveOut;
-	-webkit-animation-timing-function: ease-in;
+	-webkit-animation-timing-function: cubic-bezier(.25,1,.75,0);
 }
 .mblDissolve.mblIn {
-	z-index: 0;
 	-webkit-animation-duration: 1s;
 	-webkit-animation-name: mblDissolveIn;
-	-webkit-animation-timing-function: ease-out;
+	-webkit-animation-timing-function: cubic-bezier(.25,1,.75,0);
 }
 @-webkit-keyframes mblDissolveOut {
 	from { opacity: 1; }

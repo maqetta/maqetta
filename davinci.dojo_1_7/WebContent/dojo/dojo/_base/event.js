@@ -5,37 +5,32 @@
 */
 
 //>>built
-define("dojo/_base/event",["./kernel","../on","../has"],function(_1,on,_2){
-_2.add("dom-addeventlistener",!!document.addEventListener);
+define("dojo/_base/event",["./kernel","../on","../has","../dom-geometry"],function(_1,on,_2,_3){
 if(on._fixEvent){
-var _3=on._fixEvent;
-on._fixEvent=function(_4,se){
-_4=_3(_4,se);
-if(_4){
-var _5=(se&&se.ownerDocument)||document;
-var _6=((_1.isIE<6)||(_5["compatMode"]=="BackCompat"))?_5.body:_5.documentElement;
-var _7=_1._getIeDocumentElementOffset();
-_4.pageX=_4.clientX+_1._fixIeBiDiScrollLeft(_6.scrollLeft||0)-_7.x;
-_4.pageY=_4.clientY+(_6.scrollTop||0)-_7.y;
+var _4=on._fixEvent;
+on._fixEvent=function(_5,se){
+_5=_4(_5,se);
+if(_5){
+_3.normalizeEvent(_5);
 }
-return _4;
+return _5;
 };
 }
-_1.fixEvent=function(_8,_9){
+_1.fixEvent=function(_6,_7){
 if(on._fixEvent){
-return on._fixEvent(_8,_9);
+return on._fixEvent(_6,_7);
 }
-return _8;
+return _6;
 };
-_1.stopEvent=function(_a){
-if(_2("dom-addeventlistener")||(_a&&_a.preventDefault)){
-_a.preventDefault();
-_a.stopPropagation();
+_1.stopEvent=function(_8){
+if(_2("dom-addeventlistener")||(_8&&_8.preventDefault)){
+_8.preventDefault();
+_8.stopPropagation();
 }else{
-_a=_a||window.event;
-_a.cancelBubble=true;
-on._preventDefault.call(_a);
+_8=_8||window.event;
+_8.cancelBubble=true;
+on._preventDefault.call(_8);
 }
 };
-return {fixEvent:_1.fixEvent,stopEvent:_1.stopEvent};
+return {fix:_1.fixEvent,stop:_1.stopEvent};
 });

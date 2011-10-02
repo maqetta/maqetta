@@ -1,33 +1,27 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/charting/action2d/MouseZoomAndPan",["dojo/_base/kernel","dojo/_base/html","dojo/_base/declare","dojo/_base/window","dojo/_base/connect","./ChartAction"],function(_1,_2,_3,_4,_5,_6){
-var _7=_1.isMozilla?-3:120;
-var _8={none:function(_9){
-return !_9.ctrlKey&&!_9.altKey&&!_9.shiftKey;
-},ctrl:function(_a){
-return _a.ctrlKey&&!_a.altKey&&!_a.shiftKey;
-},alt:function(_b){
-return !_b.ctrlKey&&_b.altKey&&!_b.shiftKey;
-},shift:function(_c){
-return !_c.ctrlKey&&!_c.altKey&&_c.shiftKey;
+define("dojox/charting/action2d/MouseZoomAndPan",["dojo/_base/html","dojo/_base/declare","dojo/_base/window","dojo/_base/array","dojo/_base/event","dojo/_base/connect","./ChartAction","dojo/_base/sniff","dojo/dom-prop","dojo/keys"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a){
+var _b=_8("mozilla")?-3:120;
+var _c={none:function(_d){
+return !_d.ctrlKey&&!_d.altKey&&!_d.shiftKey;
+},ctrl:function(_e){
+return _e.ctrlKey&&!_e.altKey&&!_e.shiftKey;
+},alt:function(_f){
+return !_f.ctrlKey&&_f.altKey&&!_f.shiftKey;
+},shift:function(_10){
+return !_10.ctrlKey&&!_10.altKey&&_10.shiftKey;
 }};
-return _1.declare("dojox.charting.action2d.MouseZoomAndPan",dojox.charting.action2d.ChartAction,{defaultParams:{axis:"x",scaleFactor:1.2,maxScale:100,enableScroll:true,enableDoubleClickZoom:true,enableKeyZoom:true,keyZoomModifier:"ctrl"},optionalParams:{},constructor:function(_d,_e,_f){
-this._listeners=[{eventName:!_1.isMozilla?"onmousewheel":"DOMMouseScroll",methodName:"onMouseWheel"}];
-if(!_f){
-_f={};
+return _2("dojox.charting.action2d.MouseZoomAndPan",_7,{defaultParams:{axis:"x",scaleFactor:1.2,maxScale:100,enableScroll:true,enableDoubleClickZoom:true,enableKeyZoom:true,keyZoomModifier:"ctrl"},optionalParams:{},constructor:function(_11,_12,_13){
+this._listeners=[{eventName:!_8("mozilla")?"onmousewheel":"DOMMouseScroll",methodName:"onMouseWheel"}];
+if(!_13){
+_13={};
 }
-this.axis=_f.axis?_f.axis:"x";
-this.scaleFactor=_f.scaleFactor?_f.scaleFactor:1.2;
-this.maxScale=_f.maxScale?_f.maxScale:100;
-this.enableScroll=_f.enableScroll!=undefined?_f.enableScroll:true;
-this.enableDoubleClickZoom=_f.enableDoubleClickZoom!=undefined?_f.enableDoubleClickZoom:true;
-this.enableKeyZoom=_f.enableKeyZoom!=undefined?_f.enableKeyZoom:true;
-this.keyZoomModifier=_f.keyZoomModifier?_f.keyZoomModifier:"ctrl";
+this.axis=_13.axis?_13.axis:"x";
+this.scaleFactor=_13.scaleFactor?_13.scaleFactor:1.2;
+this.maxScale=_13.maxScale?_13.maxScale:100;
+this.enableScroll=_13.enableScroll!=undefined?_13.enableScroll:true;
+this.enableDoubleClickZoom=_13.enableDoubleClickZoom!=undefined?_13.enableDoubleClickZoom:true;
+this.enableKeyZoom=_13.enableKeyZoom!=undefined?_13.enableKeyZoom:true;
+this.keyZoomModifier=_13.keyZoomModifier?_13.keyZoomModifier:"ctrl";
 if(this.enableScroll){
 this._listeners.push({eventName:"onmousedown",methodName:"onMouseDown"});
 }
@@ -40,95 +34,95 @@ this._listeners.push({eventName:"keypress",methodName:"onKeyPress"});
 this._handles=[];
 this.connect();
 },_disconnectHandles:function(){
-if(_1.isIE){
+if(_8("ie")){
 this.chart.node.releaseCapture();
 }
-_1.forEach(this._handles,_1.disconnect);
+_4.forEach(this._handles,_6.disconnect);
 this._handles=[];
 },connect:function(){
 this.inherited(arguments);
 if(this.enableKeyZoom){
-_1.attr(this.chart.node,"tabindex","0");
+_9.set(this.chart.node,"tabindex","0");
 }
 },disconnect:function(){
 this.inherited(arguments);
 if(this.enableKeyZoom){
-_1.attr(this.chart.node,"tabindex","-1");
+_9.set(this.chart.node,"tabindex","-1");
 }
 this._disconnectHandles();
-},onMouseDown:function(_10){
-var _11=this.chart,_12=_11.getAxis(this.axis);
-if(!_12.vertical){
-this._startCoord=_10.pageX;
+},onMouseDown:function(_14){
+var _15=this.chart,_16=_15.getAxis(this.axis);
+if(!_16.vertical){
+this._startCoord=_14.pageX;
 }else{
-this._startCoord=_10.pageY;
+this._startCoord=_14.pageY;
 }
-this._startOffset=_12.getWindowOffset();
+this._startOffset=_16.getWindowOffset();
 this._isPanning=true;
-if(_1.isIE){
-this._handles.push(_1.connect(this.chart.node,"onmousemove",this,"onMouseMove"));
-this._handles.push(_1.connect(this.chart.node,"onmouseup",this,"onMouseUp"));
+if(_8("ie")){
+this._handles.push(_6.connect(this.chart.node,"onmousemove",this,"onMouseMove"));
+this._handles.push(_6.connect(this.chart.node,"onmouseup",this,"onMouseUp"));
 this.chart.node.setCapture();
 }else{
-this._handles.push(_1.connect(_1.doc,"onmousemove",this,"onMouseMove"));
-this._handles.push(_1.connect(_1.doc,"onmouseup",this,"onMouseUp"));
+this._handles.push(_6.connect(_3.doc,"onmousemove",this,"onMouseMove"));
+this._handles.push(_6.connect(_3.doc,"onmouseup",this,"onMouseUp"));
 }
-_11.node.focus();
-_1.stopEvent(_10);
-},onMouseMove:function(_13){
+_15.node.focus();
+_5.stop(_14);
+},onMouseMove:function(_17){
 if(this._isPanning){
-var _14=this.chart,_15=_14.getAxis(this.axis);
-var _16=_15.vertical?(this._startCoord-_13.pageY):(_13.pageX-this._startCoord);
-var _17=_15.getScaler().bounds,s=_17.span/(_17.upper-_17.lower);
-var _18=_15.getWindowScale();
-_14.setAxisWindow(this.axis,_18,this._startOffset-_16/s/_18);
-_14.render();
+var _18=this.chart,_19=_18.getAxis(this.axis);
+var _1a=_19.vertical?(this._startCoord-_17.pageY):(_17.pageX-this._startCoord);
+var _1b=_19.getScaler().bounds,s=_1b.span/(_1b.upper-_1b.lower);
+var _1c=_19.getWindowScale();
+_18.setAxisWindow(this.axis,_1c,this._startOffset-_1a/s/_1c);
+_18.render();
 }
-},onMouseUp:function(_19){
+},onMouseUp:function(_1d){
 this._isPanning=false;
 this._disconnectHandles();
-},onMouseWheel:function(_1a){
-var _1b=_1a[(_1.isMozilla?"detail":"wheelDelta")]/_7;
-if(_1b>-1&&_1b<0){
-_1b=-1;
+},onMouseWheel:function(_1e){
+var _1f=_1e[(_8("mozilla")?"detail":"wheelDelta")]/_b;
+if(_1f>-1&&_1f<0){
+_1f=-1;
 }else{
-if(_1b>0&&_1b<1){
-_1b=1;
+if(_1f>0&&_1f<1){
+_1f=1;
 }
 }
-this._onZoom(_1b,_1a);
-},onKeyPress:function(_1c){
-if(_8[this.keyZoomModifier](_1c)){
-if(_1c.keyChar=="+"||_1c.keyCode==_1.keys.NUMPAD_PLUS){
-this._onZoom(1,_1c);
+this._onZoom(_1f,_1e);
+},onKeyPress:function(_20){
+if(_c[this.keyZoomModifier](_20)){
+if(_20.keyChar=="+"||_20.keyCode==_a.NUMPAD_PLUS){
+this._onZoom(1,_20);
 }else{
-if(_1c.keyChar=="-"||_1c.keyCode==_1.keys.NUMPAD_MINUS){
-this._onZoom(-1,_1c);
+if(_20.keyChar=="-"||_20.keyCode==_a.NUMPAD_MINUS){
+this._onZoom(-1,_20);
 }
 }
 }
-},onDoubleClick:function(_1d){
-var _1e=this.chart,_1f=_1e.getAxis(this.axis);
-var _20=1/this.scaleFactor;
-if(_1f.getWindowScale()==1){
-var _21=_1f.getScaler(),_22=_21.bounds.from,end=_21.bounds.to,_23=(_22+end)/2,_24=this.plot.toData({x:_1d.pageX,y:_1d.pageY})[this.axis],_25=_20*(_22-_23)+_24,_26=_20*(end-_23)+_24;
-_1e.zoomIn(this.axis,[_25,_26]);
+},onDoubleClick:function(_21){
+var _22=this.chart,_23=_22.getAxis(this.axis);
+var _24=1/this.scaleFactor;
+if(_23.getWindowScale()==1){
+var _25=_23.getScaler(),_26=_25.bounds.from,end=_25.bounds.to,_27=(_26+end)/2,_28=this.plot.toData({x:_21.pageX,y:_21.pageY})[this.axis],_29=_24*(_26-_27)+_28,_2a=_24*(end-_27)+_28;
+_22.zoomIn(this.axis,[_29,_2a]);
 }else{
-_1e.setAxisWindow(this.axis,1,0);
-_1e.render();
+_22.setAxisWindow(this.axis,1,0);
+_22.render();
 }
-_1.stopEvent(_1d);
-},_onZoom:function(_27,_28){
-var _29=(_27<0?Math.abs(_27)*this.scaleFactor:1/(Math.abs(_27)*this.scaleFactor));
-var _2a=this.chart,_2b=_2a.getAxis(this.axis);
-var _2c=_2b.getWindowScale();
-if(_2c/_29>this.maxScale){
+_5.stop(_21);
+},_onZoom:function(_2b,_2c){
+var _2d=(_2b<0?Math.abs(_2b)*this.scaleFactor:1/(Math.abs(_2b)*this.scaleFactor));
+var _2e=this.chart,_2f=_2e.getAxis(this.axis);
+var _30=_2f.getWindowScale();
+if(_30/_2d>this.maxScale){
 return;
 }
-var _2d=_2b.getScaler(),_2e=_2d.bounds.from,end=_2d.bounds.to;
-var _2f=(_28.type=="keypress")?(_2e+end)/2:this.plot.toData({x:_28.pageX,y:_28.pageY})[this.axis];
-var _30=_29*(_2e-_2f)+_2f,_31=_29*(end-_2f)+_2f;
-_2a.zoomIn(this.axis,[_30,_31]);
-_1.stopEvent(_28);
+var _31=_2f.getScaler(),_32=_31.bounds.from,end=_31.bounds.to;
+var _33=(_2c.type=="keypress")?(_32+end)/2:this.plot.toData({x:_2c.pageX,y:_2c.pageY})[this.axis];
+var _34=_2d*(_32-_33)+_33,_35=_2d*(end-_33)+_33;
+_2e.zoomIn(this.axis,[_34,_35]);
+_5.stop(_2c);
 }});
 });

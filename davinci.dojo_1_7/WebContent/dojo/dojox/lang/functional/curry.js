@@ -1,12 +1,7 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/lang/functional/curry",["dojo","dijit","dojox","dojox/lang/functional/lambda"],function(_1,_2,_3){
-_1.getObject("dojox.lang.functional.curry",1);
+define(["dijit","dojo","dojox","dojo/require!dojox/lang/functional/lambda"],function(_1,_2,_3){
+_2.provide("dojox.lang.functional.curry");
+_2.require("dojox.lang.functional.lambda");
 (function(){
 var df=_3.lang.functional,ap=Array.prototype;
 var _4=function(_5){
@@ -18,7 +13,7 @@ return _4({func:_5.func,arity:_5.arity,args:_6});
 return _5.func.apply(this,_6);
 };
 };
-_1.mixin(df,{curry:function(f,_7){
+_2.mixin(df,{curry:function(f,_7){
 f=df.lambda(f);
 _7=typeof _7=="number"?_7:f.length;
 return _4({func:f,arity:_7,args:[]});
@@ -59,6 +54,4 @@ return f.apply(this,t);
 };
 }});
 })();
-return _1.getObject("dojox.lang.functional.curry");
 });
-require(["dojox/lang/functional/curry"]);

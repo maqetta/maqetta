@@ -1,13 +1,7 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/charting/plot2d/Candlesticks",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","./Base","./common","dojox/lang/functional","dojox/lang/functional/reversed","dojox/lang/utils","dojox/gfx/fx"],function(_1,_2,_3,_4,dc,df,_5,du,fx){
-var _6=df.lambda("item.purgeGroup()");
-return _1.declare("dojox.charting.plot2d.Candlesticks",dojox.charting.plot2d.Base,{defaultParams:{hAxis:"x",vAxis:"y",gap:2,animate:null},optionalParams:{minBarSize:1,maxBarSize:1,stroke:{},outline:{},shadow:{},fill:{},font:"",fontColor:""},constructor:function(_7,_8){
+define("dojox/charting/plot2d/Candlesticks",["dojo/_base/lang","dojo/_base/declare","dojo/_base/array","./Base","./common","dojox/lang/functional","dojox/lang/functional/reversed","dojox/lang/utils","dojox/gfx/fx"],function(_1,_2,_3,_4,dc,df,_5,du,fx){
+var _6=_5.lambda("item.purgeGroup()");
+return _2("dojox.charting.plot2d.Candlesticks",_4,{defaultParams:{hAxis:"x",vAxis:"y",gap:2,animate:null},optionalParams:{minBarSize:1,maxBarSize:1,stroke:{},outline:{},shadow:{},fill:{},font:"",fontColor:""},constructor:function(_7,_8){
 this.opt=_1.clone(this.defaultParams);
 du.updateWithObject(this.opt,_8);
 du.updateWithPattern(this.opt,_8,this.optionalParams);
@@ -24,7 +18,7 @@ continue;
 }
 var _c=_a.vmin,_d=_a.vmax;
 if(!("ymin" in _b)||!("ymax" in _b)){
-_1.forEach(_b.data,function(_e,_f){
+_3.forEach(_b.data,function(_e,_f){
 if(_e!==null){
 var x=_e.x||_f+1;
 _a.hmin=Math.min(_a.hmin,x);
@@ -54,7 +48,7 @@ return this.performZoom(dim,_11);
 this.resetEvents();
 this.dirty=this.isDirty();
 if(this.dirty){
-_1.forEach(this.series,_6);
+_3.forEach(this.series,_6);
 this._eventSeries={};
 this.cleanGroup();
 var s=this.group;

@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/uuid/generateTimeBasedUuid",["dojo/_base/kernel","./_base"],function(_1){
+define("dojox/uuid/generateTimeBasedUuid",["dojo/_base/lang","./_base"],function(_1){
 dojox.uuid.generateTimeBasedUuid=function(_2){
 var _3=dojox.uuid.generateTimeBasedUuid._generator.generateUuidString(_2);
 return _3;

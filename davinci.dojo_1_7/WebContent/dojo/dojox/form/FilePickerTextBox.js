@@ -1,46 +1,40 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/form/FilePickerTextBox",["dojo","dijit","dojox","dojo/window","dijit/form/ValidationTextBox","dijit/_HasDropDown","dijit/_base/focus","dojox/widget/FilePicker"],function(_1,_2,_3){
-_1.getObject("dojox.form.FilePickerTextBox",1);
-_1.declare("dojox.form.FilePickerTextBox",[_2.form.ValidationTextBox,_2._HasDropDown],{baseClass:"dojoxFilePickerTextBox",templateString:_1.cache("dojox.form","resources/FilePickerTextBox.html","<div class=\"dijit dijitReset dijitInlineTable dijitLeft\"\n\tid=\"widget_${id}\"\n\trole=\"combobox\" tabIndex=\"-1\"\n\t><div style=\"overflow:hidden;\"\n\t\t><div class='dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton'\n\t\t\tdojoAttachPoint=\"downArrowNode,_buttonNode,_popupStateNode\" role=\"presentation\"\n\t\t\t><div class=\"dijitArrowButtonInner\">&thinsp;</div\n\t\t\t><div class=\"dijitArrowButtonChar\">&#9660;</div\n\t\t></div\n\t\t><div class=\"dijitReset dijitValidationIcon\"><br></div\n\t\t><div class=\"dijitReset dijitValidationIconText\">&Chi;</div\n\t\t><div class=\"dijitReset dijitInputField\"\n\t\t\t><input type=\"text\" autocomplete=\"off\" ${!nameAttrSetting} class='dijitReset'\n\t\t\t\tdojoAttachEvent='onkeypress:_onKey' \n\t\t\t\tdojoAttachPoint='textbox,focusNode' role=\"textbox\" aria-haspopup=\"true\" aria-autocomplete=\"list\"\n\t\t/></div\n\t></div\n></div>\n"),searchDelay:500,valueItem:null,numPanes:2.25,postMixInProperties:function(){
+require({cache:{"url:dojox/form/resources/FilePickerTextBox.html":"<div class=\"dijit dijitReset dijitInlineTable dijitLeft\"\n\tid=\"widget_${id}\"\n\trole=\"combobox\" tabIndex=\"-1\"\n\t><div style=\"overflow:hidden;\"\n\t\t><div class='dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton'\n\t\t\tdojoAttachPoint=\"downArrowNode,_buttonNode,_popupStateNode\" role=\"presentation\"\n\t\t\t><div class=\"dijitArrowButtonInner\">&thinsp;</div\n\t\t\t><div class=\"dijitArrowButtonChar\">&#9660;</div\n\t\t></div\n\t\t><div class=\"dijitReset dijitValidationIcon\"><br></div\n\t\t><div class=\"dijitReset dijitValidationIconText\">&Chi;</div\n\t\t><div class=\"dijitReset dijitInputField\"\n\t\t\t><input type=\"text\" autocomplete=\"off\" ${!nameAttrSetting} class='dijitReset'\n\t\t\t\tdojoAttachEvent='onkeypress:_onKey' \n\t\t\t\tdojoAttachPoint='textbox,focusNode' role=\"textbox\" aria-haspopup=\"true\" aria-autocomplete=\"list\"\n\t\t/></div\n\t></div\n></div>\n"}});
+define("dojox/form/FilePickerTextBox",["dojo/_base/lang","dojo/_base/array","dojo/_base/event","dojo/window","dijit/focus","dijit/registry","dijit/form/_TextBoxMixin","dijit/form/ValidationTextBox","dijit/_HasDropDown","dojox/widget/FilePicker","dojo/text!./resources/FilePickerTextBox.html","dojo/_base/declare","dojo/keys"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b,_c,_d){
+return _c("dojox.form.FilePickerTextBox",[_8,_9],{baseClass:"dojoxFilePickerTextBox",templateString:_b,searchDelay:500,valueItem:null,numPanes:2.25,postMixInProperties:function(){
 this.inherited(arguments);
-this.dropDown=new _3.widget.FilePicker(this.constraints);
+this.dropDown=new _a(this.constraints);
 },postCreate:function(){
 this.inherited(arguments);
 this.connect(this.dropDown,"onChange",this._onWidgetChange);
 this.connect(this.focusNode,"onblur","_focusBlur");
 this.connect(this.focusNode,"onfocus","_focusFocus");
 this.connect(this.focusNode,"ondblclick",function(){
-_2.selectInputText(this.focusNode);
+_7.selectInputText(this.focusNode);
 });
-},_setValueAttr:function(_4,_5,_6){
+},_setValueAttr:function(_e,_f,_10){
 if(!this._searchInProgress){
 this.inherited(arguments);
-_4=_4||"";
-var _7=this.dropDown.get("pathValue")||"";
-if(_4!==_7){
+_e=_e||"";
+var _11=this.dropDown.get("pathValue")||"";
+if(_e!==_11){
 this._skip=true;
 var fx=_1.hitch(this,"_setBlurValue");
-this.dropDown._setPathValueAttr(_4,!_6,this._settingBlurValue?fx:null);
+this.dropDown._setPathValueAttr(_e,!_10,this._settingBlurValue?fx:null);
 }
 }
-},_onWidgetChange:function(_8){
-if(!_8&&this.focusNode.value){
+},_onWidgetChange:function(_12){
+if(!_12&&this.focusNode.value){
 this._hasValidPath=false;
 this.focusNode.value="";
 }else{
-this.valueItem=_8;
-var _9=this.dropDown._getPathValueAttr(_8);
-if(_9){
+this.valueItem=_12;
+var _13=this.dropDown._getPathValueAttr(_12);
+if(_13){
 this._hasValidPath=true;
 }
 if(!this._skip){
-this._setValueAttr(_9,undefined,true);
+this._setValueAttr(_13,undefined,true);
 }
 delete this._skip;
 }
@@ -79,11 +73,11 @@ if(this._menuFocus){
 this.dropDown._updateClass(this._menuFocus,"Item",{"Hover":false});
 }
 delete this._menuFocus;
-var _a=_2.getFocus(this);
-if(_a&&_a.node){
-_a=_2.byNode(_a.node);
-if(_a){
-this._menuFocus=_a.domNode;
+var _14=_5.curNode;
+if(_14){
+_14=_6.byNode(_14);
+if(_14){
+this._menuFocus=_14.domNode;
 }
 }
 if(this._menuFocus){
@@ -102,91 +96,91 @@ this.set("value",this.focusNode.value);
 delete this._settingBlurValue;
 this.inherited(arguments);
 }
-},parse:function(_b,_c){
+},parse:function(_15,_16){
 if(this._hasValidPath||this._hasSelection){
-return _b;
+return _15;
 }
-var dd=this.dropDown,_d=dd.topDir,_e=dd.pathSeparator;
-var _f=dd.get("pathValue");
-var _10=function(v){
-if(_d.length&&v.indexOf(_d)===0){
-v=v.substring(_d.length);
+var dd=this.dropDown,_17=dd.topDir,sep=dd.pathSeparator;
+var _18=dd.get("pathValue");
+var _19=function(v){
+if(_17.length&&v.indexOf(_17)===0){
+v=v.substring(_17.length);
 }
-if(_e&&v[v.length-1]==_e){
+if(sep&&v[v.length-1]==sep){
 v=v.substring(0,v.length-1);
 }
 return v;
 };
-_f=_10(_f);
-var val=_10(_b);
-if(val==_f){
-return _b;
+_18=_19(_18);
+var val=_19(_15);
+if(val==_18){
+return _15;
 }
 return undefined;
 },_startSearchFromInput:function(){
 var dd=this.dropDown,fn=this.focusNode;
-var val=fn.value,_11=val,_12=dd.topDir;
+var val=fn.value,_1a=val,_1b=dd.topDir;
 if(this._hasSelection){
-_2.selectInputText(fn,_11.length);
+_7.selectInputText(fn,_1a.length);
 }
 this._hasSelection=false;
-if(_12.length&&val.indexOf(_12)===0){
-val=val.substring(_12.length);
+if(_1b.length&&val.indexOf(_1b)===0){
+val=val.substring(_1b.length);
 }
-var _13=val.split(dd.pathSeparator);
-var _14=_1.hitch(this,function(idx){
-var dir=_13[idx];
-var _15=dd.getChildren()[idx];
-var _16;
+var _1c=val.split(dd.pathSeparator);
+var _1d=_1.hitch(this,function(idx){
+var dir=_1c[idx];
+var _1e=dd.getChildren()[idx];
+var _1f;
 this._searchInProgress=true;
-var _17=_1.hitch(this,function(){
+var _20=_1.hitch(this,function(){
 delete this._searchInProgress;
 });
-if((dir||_15)&&!this._opened){
+if((dir||_1e)&&!this._opened){
 this.toggleDropDown();
 }
-if(dir&&_15){
+if(dir&&_1e){
 var fx=_1.hitch(this,function(){
-if(_16){
-this.disconnect(_16);
+if(_1f){
+this.disconnect(_1f);
 }
-delete _16;
-var _18=_15._menu.getChildren();
-var _19=_1.filter(_18,function(i){
+delete _1f;
+var _21=_1e._menu.getChildren();
+var _22=_2.filter(_21,function(i){
 return i.label==dir;
 })[0];
-var _1a=_1.filter(_18,function(i){
+var _23=_2.filter(_21,function(i){
 return (i.label.indexOf(dir)===0);
 })[0];
-if(_19&&((_13.length>idx+1&&_19.children)||(!_19.children))){
+if(_22&&((_1c.length>idx+1&&_22.children)||(!_22.children))){
 idx++;
-_15._menu.onItemClick(_19,{type:"internal",stopPropagation:function(){
+_1e._menu.onItemClick(_22,{type:"internal",stopPropagation:function(){
 },preventDefault:function(){
 }});
-if(_13[idx]){
-_14(idx);
+if(_1c[idx]){
+_1d(idx);
 }else{
-_17();
+_20();
 }
 }else{
-_15._setSelected(null);
-if(_1a&&_13.length===idx+1){
+_1e._setSelected(null);
+if(_23&&_1c.length===idx+1){
 dd._setInProgress=true;
-dd._removeAfter(_15);
+dd._removeAfter(_1e);
 delete dd._setInProgress;
-var _1b=_1a.label;
-if(_1a.children){
-_1b+=dd.pathSeparator;
+var _24=_23.label;
+if(_23.children){
+_24+=dd.pathSeparator;
 }
-_1b=_1b.substring(dir.length);
+_24=_24.substring(dir.length);
 window.setTimeout(function(){
-_1.window.scrollIntoView(_1a.domNode);
+_4.scrollIntoView(_23.domNode);
 },1);
-fn.value=_11+_1b;
-_2.selectInputText(fn,_11.length);
+fn.value=_1a+_24;
+_7.selectInputText(fn,_1a.length);
 this._hasSelection=true;
 try{
-_1a.focusNode.focus();
+_23.focusNode.focus();
 }
 catch(e){
 }
@@ -196,67 +190,64 @@ this.dropDown._updateClass(this._menuFocus,"Item",{"Hover":false,"Focus":false})
 }
 delete this._menuFocus;
 }
-_17();
+_20();
 }
 });
-if(!_15.isLoaded){
-_16=this.connect(_15,"onLoad",fx);
+if(!_1e.isLoaded){
+_1f=this.connect(_1e,"onLoad",fx);
 }else{
 fx();
 }
 }else{
-if(_15){
-_15._setSelected(null);
+if(_1e){
+_1e._setSelected(null);
 dd._setInProgress=true;
-dd._removeAfter(_15);
+dd._removeAfter(_1e);
 delete dd._setInProgress;
 }
-_17();
+_20();
 }
 });
-_14(0);
+_1d(0);
 },_onKey:function(e){
 if(this.disabled||this.readOnly){
 return;
 }
-var dk=_1.keys;
 var c=e.charOrCode;
-if(c==dk.DOWN_ARROW){
+if(c==_d.DOWN_ARROW){
 this._allowBlur=true;
 }
-if(c==dk.ENTER&&this._opened){
+if(c==_d.ENTER&&this._opened){
 this.dropDown.onExecute();
-_2.selectInputText(this.focusNode,this.focusNode.value.length);
+_7.selectInputText(this.focusNode,this.focusNode.value.length);
 this._hasSelection=false;
-_1.stopEvent(e);
+_3.stop(e);
 return;
 }
-if((c==dk.RIGHT_ARROW||c==dk.LEFT_ARROW||c==dk.TAB)&&this._hasSelection){
+if((c==_d.RIGHT_ARROW||c==_d.LEFT_ARROW||c==_d.TAB)&&this._hasSelection){
 this._startSearchFromInput();
-_1.stopEvent(e);
+_3.stop(e);
 return;
 }
 this.inherited(arguments);
-var _1c=false;
-if((c==dk.BACKSPACE||c==dk.DELETE)&&this._hasSelection){
+var _25=false;
+if((c==_d.BACKSPACE||c==_d.DELETE)&&this._hasSelection){
 this._hasSelection=false;
 }else{
-if(c==dk.BACKSPACE||c==dk.DELETE||c==" "){
-_1c=true;
+if(c==_d.BACKSPACE||c==_d.DELETE||c==" "){
+_25=true;
 }else{
-_1c=e.keyChar!=="";
+_25=e.keyChar!=="";
 }
 }
 if(this._searchTimer){
 window.clearTimeout(this._searchTimer);
 }
 delete this._searchTimer;
-if(_1c){
+if(_25){
 this._hasValidPath=false;
 this._hasSelection=false;
 this._searchTimer=window.setTimeout(_1.hitch(this,"_startSearchFromInput"),this.searchDelay+1);
 }
 }});
-return _1.getObject("dojox.form.FilePickerTextBox");
 });
-require(["dojox/form/FilePickerTextBox"]);

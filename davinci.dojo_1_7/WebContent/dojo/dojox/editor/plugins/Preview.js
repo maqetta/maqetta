@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/editor/plugins/Preview",["dojo","dijit","dojox","dijit/form/Button","dijit/_editor/_Plugin","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/Preview"],function(_1,_2,_3){
+define("dojox/editor/plugins/Preview",["dojo","dijit","dojox","dijit/form/Button","dijit/_editor/_Plugin","dojo/_base/connect","dojo/_base/declare","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/Preview"],function(_1,_2,_3){
 _1.declare("dojox.editor.plugins.Preview",_2._editor._Plugin,{useDefaultCommand:false,styles:"",stylesheets:null,iconClassPrefix:"dijitAdditionalEditorIcon",_initButton:function(){
 this._nlsResources=_1.i18n.getLocalization("dojox.editor.plugins","Preview");
 this.button=new _2.form.Button({label:this._nlsResources["preview"],showLabel:false,iconClass:this.iconClassPrefix+" "+this.iconClassPrefix+"Preview",tabIndex:"-1",onClick:_1.hitch(this,"_preview")});

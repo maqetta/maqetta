@@ -1,40 +1,33 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/grid/enhanced/plugins/filter/_ConditionExpr",["dojo","dojox"],function(_1,_2){
-var _3=_1.getObject("grid.enhanced.plugins.filter",true,_2);
-_1.declare("dojox.grid.enhanced.plugins.filter._ConditionExpr",null,{_name:"expr",applyRow:function(_4,_5){
+define("dojox/grid/enhanced/plugins/filter/_ConditionExpr",["dojo/_base/declare","dojo/_base/lang","dojo/_base/array"],function(_1,_2,_3){
+var _4=_1("dojox.grid.enhanced.plugins.filter._ConditionExpr",null,{_name:"expr",applyRow:function(_5,_6){
 throw new Error("_ConditionExpr.applyRow: unimplemented interface");
 },toObject:function(){
 return {};
 },getName:function(){
 return this._name;
 }});
-_1.declare("dojox.grid.enhanced.plugins.filter._DataExpr",_3._ConditionExpr,{_name:"data",constructor:function(_6,_7,_8){
-this._convertArgs=_8||{};
-if(_1.isFunction(this._convertArgs.convert)){
-this._convertData=_1.hitch(this._convertArgs.scope,this._convertArgs.convert);
+var _7=_1("dojox.grid.enhanced.plugins.filter._DataExpr",_4,{_name:"data",constructor:function(_8,_9,_a){
+this._convertArgs=_a||{};
+if(_2.isFunction(this._convertArgs.convert)){
+this._convertData=_2.hitch(this._convertArgs.scope,this._convertArgs.convert);
 }
-if(_7){
-this._colArg=_6;
+if(_9){
+this._colArg=_8;
 }else{
-this._value=this._convertData(_6,this._convertArgs);
+this._value=this._convertData(_8,this._convertArgs);
 }
 },getValue:function(){
 return this._value;
-},applyRow:function(_9,_a){
-return typeof this._colArg=="undefined"?this:new (_1.getObject(this.declaredClass))(this._convertData(_a(_9,this._colArg),this._convertArgs));
-},_convertData:function(_b){
-return _b;
+},applyRow:function(_b,_c){
+return typeof this._colArg=="undefined"?this:new (_2.getObject(this.declaredClass))(this._convertData(_c(_b,this._colArg),this._convertArgs));
+},_convertData:function(_d){
+return _d;
 },toObject:function(){
 return {op:this.getName(),data:this._colArg===undefined?this._value:this._colArg,isCol:this._colArg!==undefined};
 }});
-_1.declare("dojox.grid.enhanced.plugins.filter._OperatorExpr",_3._ConditionExpr,{_name:"operator",constructor:function(){
-if(_1.isArray(arguments[0])){
+var _e=_1("dojox.grid.enhanced.plugins.filter._OperatorExpr",_4,{_name:"operator",constructor:function(){
+if(_2.isArray(arguments[0])){
 this._operands=arguments[0];
 }else{
 this._operands=[];
@@ -43,29 +36,29 @@ this._operands.push(arguments[i]);
 }
 }
 },toObject:function(){
-return {op:this.getName(),data:_1.map(this._operands,function(_c){
-return _c.toObject();
+return {op:this.getName(),data:_3.map(this._operands,function(_f){
+return _f.toObject();
 })};
 }});
-_1.declare("dojox.grid.enhanced.plugins.filter._UniOpExpr",_3._OperatorExpr,{_name:"uniOperator",applyRow:function(_d,_e){
-if(!(this._operands[0] instanceof _3._ConditionExpr)){
+var _10=_1("dojox.grid.enhanced.plugins.filter._UniOpExpr",_e,{_name:"uniOperator",applyRow:function(_11,_12){
+if(!(this._operands[0] instanceof _4)){
 throw new Error("_UniOpExpr: operand is not expression.");
 }
-return this._calculate(this._operands[0],_d,_e);
-},_calculate:function(_f,_10,_11){
+return this._calculate(this._operands[0],_11,_12);
+},_calculate:function(_13,_14,_15){
 throw new Error("_UniOpExpr._calculate: unimplemented interface");
 }});
-_1.declare("dojox.grid.enhanced.plugins.filter._BiOpExpr",_3._OperatorExpr,{_name:"biOperator",applyRow:function(_12,_13){
-if(!(this._operands[0] instanceof _3._ConditionExpr)){
+var _16=_1("dojox.grid.enhanced.plugins.filter._BiOpExpr",_e,{_name:"biOperator",applyRow:function(_17,_18){
+if(!(this._operands[0] instanceof _4)){
 throw new Error("_BiOpExpr: left operand is not expression.");
 }else{
-if(!(this._operands[1] instanceof _3._ConditionExpr)){
+if(!(this._operands[1] instanceof _4)){
 throw new Error("_BiOpExpr: right operand is not expression.");
 }
 }
-return this._calculate(this._operands[0],this._operands[1],_12,_13);
-},_calculate:function(_14,_15,_16,_17){
+return this._calculate(this._operands[0],this._operands[1],_17,_18);
+},_calculate:function(_19,_1a,_1b,_1c){
 throw new Error("_BiOpExpr._calculate: unimplemented interface");
 }});
-return _2.grid.enhanced.plugins.filter._ConditionExpr;
+return {_ConditionExpr:_4,_DataExpr:_7,_OperatorExpr:_e,_UniOpExpr:_10,_BiOpExpr:_16};
 });

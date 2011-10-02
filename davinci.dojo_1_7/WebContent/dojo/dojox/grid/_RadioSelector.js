@@ -1,10 +1,4 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/grid/_RadioSelector",["dojox","./_Selector"],function(_1){
+define("dojox/grid/_RadioSelector",["../main","./_Selector"],function(_1){
 return _1.grid._RadioSelector;
 });

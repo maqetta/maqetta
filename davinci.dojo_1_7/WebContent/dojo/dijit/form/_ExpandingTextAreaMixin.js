@@ -1,54 +1,48 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dijit/form/_ExpandingTextAreaMixin",["dojo/_base/kernel","..","dojo/_base/declare","dojo/_base/html","dojo/_base/lang","dojo/_base/window"],function(_1,_2){
-var _3;
-_1.declare("dijit.form._ExpandingTextAreaMixin",null,{_setValueAttr:function(){
+define("dijit/form/_ExpandingTextAreaMixin",["dojo/_base/declare","dojo/dom-construct","dojo/_base/lang","dojo/_base/window"],function(_1,_2,_3,_4){
+var _5;
+return _1("dijit.form._ExpandingTextAreaMixin",null,{_setValueAttr:function(){
 this.inherited(arguments);
 this.resize();
 },postCreate:function(){
 this.inherited(arguments);
-var _4=this.textbox;
-if(_3==undefined){
-var te=_1.create("textarea",{rows:"5",cols:"20",value:" ",style:{zoom:1,overflow:"hidden",visibility:"hidden",position:"absolute",border:"0px solid black",padding:"0px"}},_1.body(),"last");
-_3=te.scrollHeight>=te.clientHeight;
-_1.body().removeChild(te);
+var _6=this.textbox;
+if(_5==undefined){
+var te=_2.create("textarea",{rows:"5",cols:"20",value:" ",style:{zoom:1,overflow:"hidden",visibility:"hidden",position:"absolute",border:"0px solid black",padding:"0px"}},_4.body(),"last");
+_5=te.scrollHeight>=te.clientHeight;
+_4.body().removeChild(te);
 }
-this.connect(_4,"onscroll","_resizeLater");
-this.connect(_4,"onresize","_resizeLater");
-this.connect(_4,"onfocus","_resizeLater");
-_4.style.overflowY="hidden";
+this.connect(_6,"onscroll","_resizeLater");
+this.connect(_6,"onresize","_resizeLater");
+this.connect(_6,"onfocus","_resizeLater");
+_6.style.overflowY="hidden";
 this._estimateHeight();
 this._resizeLater();
 },_onInput:function(e){
 this.inherited(arguments);
 this.resize();
 },_estimateHeight:function(){
-var _5=this.textbox;
-_5.style.height="auto";
-_5.rows=(_5.value.match(/\n/g)||[]).length+2;
+var _7=this.textbox;
+_7.style.height="auto";
+_7.rows=(_7.value.match(/\n/g)||[]).length+2;
 },_resizeLater:function(){
-setTimeout(_1.hitch(this,"resize"),0);
+setTimeout(_3.hitch(this,"resize"),0);
 },resize:function(){
-function _6(){
-var _7=false;
-if(_8.value===""){
-_8.value=" ";
-_7=true;
+function _8(){
+var _9=false;
+if(_a.value===""){
+_a.value=" ";
+_9=true;
 }
-var sh=_8.scrollHeight;
-if(_7){
-_8.value="";
+var sh=_a.scrollHeight;
+if(_9){
+_a.value="";
 }
 return sh;
 };
-var _8=this.textbox;
-if(_8.style.overflowY=="hidden"){
-_8.scrollTop=0;
+var _a=this.textbox;
+if(_a.style.overflowY=="hidden"){
+_a.scrollTop=0;
 }
 if(this.resizeTimer){
 clearTimeout(this.resizeTimer);
@@ -58,28 +52,28 @@ if(this.busyResizing){
 return;
 }
 this.busyResizing=true;
-if(_6()||_8.offsetHeight){
-var _9=_8.style.height;
-if(!(/px/.test(_9))){
-_9=_6();
-_8.rows=1;
-_8.style.height=_9+"px";
+if(_8()||_a.offsetHeight){
+var _b=_a.style.height;
+if(!(/px/.test(_b))){
+_b=_8();
+_a.rows=1;
+_a.style.height=_b+"px";
 }
-var _a=Math.max(parseInt(_9)-_8.clientHeight,0)+_6();
-var _b=_a+"px";
-if(_b!=_8.style.height){
-_8.rows=1;
-_8.style.height=_b;
+var _c=Math.max(parseInt(_b)-_a.clientHeight,0)+_8();
+var _d=_c+"px";
+if(_d!=_a.style.height){
+_a.rows=1;
+_a.style.height=_d;
 }
-if(_3){
-var _c=_6();
-_8.style.height="auto";
-if(_6()<_c){
-_b=_a-_c+_6()+"px";
+if(_5){
+var _e=_8();
+_a.style.height="auto";
+if(_8()<_e){
+_d=_c-_e+_8()+"px";
 }
-_8.style.height=_b;
+_a.style.height=_d;
 }
-_8.style.overflowY=_6()>_8.clientHeight?"auto":"hidden";
+_a.style.overflowY=_8()>_a.clientHeight?"auto":"hidden";
 }else{
 this._estimateHeight();
 }
@@ -93,5 +87,4 @@ clearTimeout(this.shrinkTimer);
 }
 this.inherited(arguments);
 }});
-return _2.form._ExpandingTextAreaMixin;
 });

@@ -1,20 +1,14 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/calc/FuncGen",["dojo","dijit/_Templated","dojox/math/_base","dijit/dijit","dijit/form/ComboBox","dijit/form/SimpleTextarea","dijit/form/Button","dojo/data/ItemFileWriteStore"],function(_1){
-_1.experimental("dojox.calc.FuncGen");
-_1.declare("dojox.calc.FuncGen",[dijit._Widget,dijit._Templated],{templateString:_1.cache("dojox.calc","templates/FuncGen.html"),widgetsInTemplate:true,onSelect:function(){
+require({cache:{"url:dojox/calc/templates/FuncGen.html":"<div style=\"border:1px solid black;\">\n\t<select data-dojo-type=\"dijit.form.ComboBox\" placeholder=\"functionName\" data-dojo-attach-point='combo' style=\"width:45%;\" class=\"dojoxCalcFuncGenNameBox\" data-dojo-attach-event='onChange:onSelect'></select>\n\t<input data-dojo-type=\"dijit.form.TextBox\" placeholder=\"arguments\" class=\"dojoxCalcFuncGenTextBox\" style=\"width:50%;\" data-dojo-attach-point='args' />\n\t<BR>\n\t<TEXTAREA data-dojo-type=\"dijit.form.SimpleTextarea\" placeholder=\"function body\" class=\"dojoxCalcFuncGenTextArea\" style=\"text-align:left;width:95%;\" rows=10 data-dojo-attach-point='textarea' value=\"\" data-dojo-attach-event='onClick:readyStatus'></TEXTAREA>\n\t<BR>\n\t<input data-dojo-type=\"dijit.form.Button\" class=\"dojoxCalcFuncGenSave\" data-dojo-attach-point='saveButton' label=\"Save\" data-dojo-attach-event='onClick:onSaved' />\n\t<input data-dojo-type=\"dijit.form.Button\" class=\"dojoxCalcFuncGenReset\" data-dojo-attach-point='resetButton' label=\"Reset\" data-dojo-attach-event='onClick:onReset' />\n\t<input data-dojo-type=\"dijit.form.Button\" class=\"dojoxCalcFuncGenClear\" data-dojo-attach-point='clearButton' label=\"Clear\" data-dojo-attach-event='onClick:onClear' />\n\t<input data-dojo-type=\"dijit.form.Button\" class=\"dojoxCalcFuncGenClose\" data-dojo-attach-point='closeButton' label=\"Close\" />\n\t<BR><BR>\n\t<input data-dojo-type=\"dijit.form.Button\" class=\"dojoxCalcFuncGenDelete\" data-dojo-attach-point='deleteButton' label=\"Delete\" data-dojo-attach-event='onClick:onDelete' />\n\t<BR>\n\t<input data-dojo-type=\"dijit.form.TextBox\" style=\"width:45%;\" data-dojo-attach-point='status' class=\"dojoxCalcFuncGenStatusTextBox\" readonly value=\"Ready\" />\n</div>\n"}});
+define("dojox/calc/FuncGen",["dojo/_base/declare","dojo/_base/lang","dojo/dom-style","dijit/_WidgetBase","dijit/_WidgetsInTemplateMixin","dijit/_TemplatedMixin","dojox/math/_base","dijit/registry","dojo/text!./templates/FuncGen.html","dojox/calc/_Executor","dijit/form/ComboBox","dijit/form/SimpleTextarea","dijit/form/Button","dijit/form/TextBox"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a){
+var _b=_1("dojox.calc.FuncGen",[_4,_6,_5],{templateString:_9,onSelect:function(){
 this.reset();
 },onClear:function(){
-var _2=confirm("Do you want to clear the name, argument, and body text?");
-if(_2){
+var _c=confirm("Do you want to clear the name, argument, and body text?");
+if(_c){
 this.clear();
 }
-},saveFunction:function(_3,_4,_5){
+},saveFunction:function(_d,_e,_f){
 },onSaved:function(){
 },clear:function(){
 this.textarea.set("value","");
@@ -27,29 +21,29 @@ this.args.set("value",this.functions[this.combo.get("value")].args);
 }
 },onReset:function(){
 if(this.combo.get("value") in this.functions){
-var _6=confirm("Do you want to reset this function?");
-if(_6){
+var _10=confirm("Do you want to reset this function?");
+if(_10){
 this.reset();
 this.status.set("value","The function has been reset to its last save point.");
 }
 }
-},deleteThing:function(_7){
-if(this.writeStore.isItem(_7)){
-this.writeStore.deleteItem(_7);
+},deleteThing:function(_11){
+if(this.writeStore.isItem(_11)){
+this.writeStore.deleteItem(_11);
 this.writeStore.save();
 }else{
 }
-},deleteFunction:function(_8){
+},deleteFunction:function(_12){
 },onDelete:function(){
-var _9;
-if((_9=this.combo.get("value")) in this.functions){
-var _a=confirm("Do you want to delete this function?");
-if(_a){
-var _b=this.combo.item;
-this.writeStore.deleteItem(_b);
+var _13;
+if((_13=this.combo.get("value")) in this.functions){
+var _14=confirm("Do you want to delete this function?");
+if(_14){
+var _15=this.combo.item;
+this.writeStore.deleteItem(_15);
 this.writeStore.save();
-this.deleteFunction(_9);
-delete this.functions[_9];
+this.deleteFunction(_13);
+delete this.functions[_13];
 this.clear();
 }
 }else{
@@ -60,12 +54,12 @@ this.status.set("value","Ready");
 },writeStore:null,readStore:null,functions:null,startup:function(){
 this.combo.set("store",this.writeStore);
 this.inherited(arguments);
-var _c=dijit.getEnclosingWidget(this.domNode.parentNode);
-if(_c&&typeof _c.close=="function"){
-this.closeButton.set("onClick",_1.hitch(_c,"close"));
+var _16=_8.getEnclosingWidget(this.domNode.parentNode);
+if(_16&&typeof _16.close=="function"){
+this.closeButton.set("onClick",_2.hitch(_16,"close"));
 }else{
-_1.style(this.closeButton.domNode,"display","none");
+_3.set(this.closeButton.domNode,{display:"none"});
 }
 }});
-return dojox.calc.FuncGen;
+return _2.mixin(_a,{FuncGen:_b});
 });

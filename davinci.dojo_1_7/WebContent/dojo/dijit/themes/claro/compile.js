@@ -1,41 +1,52 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
+// Script to process all the less files and convert them to CSS files
+// Run from themes/dijit/claro like:
+//
+//	$ node compile.js
 
-//>>built
-require.paths.unshift("/opt/less/lib","C:/less/lib");
-var fs=require("fs"),path=require("path"),less=require("less");
-var options={compress:false,optimization:1,silent:false};
-var allFiles=[].concat(fs.readdirSync("."),fs.readdirSync("form").map(function(_1){
-return "form/"+_1;
-}),fs.readdirSync("layout").map(function(_2){
-return "layout/"+_2;
-})),lessFiles=allFiles.filter(function(_3){
-return _3&&_3!="variables.less"&&/\.less$/.test(_3);
-});
-lessFiles.forEach(function(_4){
-fs.readFile(_4,"utf-8",function(e,_5){
-if(e){
-console.error("lessc: "+e.message);
-process.exit(1);
-}
-new (less.Parser)({paths:[path.dirname(_4)],optimization:options.optimization,filename:_4}).parse(_5,function(_6,_7){
-if(_6){
-less.writeError(_6,options);
-process.exit(1);
-}else{
-try{
-var _8=_7.toCSS({compress:options.compress}),_9=_4.replace(".less",".css");
-var fd=fs.openSync(_9,"w");
-fs.writeSync(fd,_8,0,"utf8");
-}
-catch(e){
-less.writeError(e,options);
-process.exit(2);
-}
-}
-});
-});
+var fs = require('fs'),		// file system access
+	path = require('path'),	// get directory from file name
+	less = require('../../../util/less');	// less processor
+
+var options = {
+	compress: false,
+	optimization: 1,
+	silent: false
+};
+
+var allFiles = [].concat(
+		fs.readdirSync("."),
+		fs.readdirSync("form").map(function(fname){ return "form/"+fname; }),
+		fs.readdirSync("layout").map(function(fname){ return "layout/"+fname; })
+	),
+	lessFiles = allFiles.filter(function(name){ return name && name != "variables.less" && /\.less$/.test(name); });
+
+lessFiles.forEach(function(fname){
+	console.log("=== " + fname);
+	fs.readFile(fname, 'utf-8', function(e, data){
+		if(e){
+			console.error("lessc: " + e.message);
+			process.exit(1);
+		}
+
+		new(less.Parser)({
+			paths: [path.dirname(fname)],
+			optimization: options.optimization,
+			filename: fname
+		}).parse(data, function(err, tree){
+			if(err){
+				less.writeError(err, options);
+				process.exit(1);
+			}else{
+				try{
+					var css = tree.toCSS({ compress: options.compress }),
+						outputFname = fname.replace('.less', '.css');
+					var fd = fs.openSync(outputFname, "w");
+					fs.writeSync(fd, css, 0, "utf8");
+				}catch(e){
+					less.writeError(e, options);
+					process.exit(2);
+				}
+			}
+		});
+	});
 });

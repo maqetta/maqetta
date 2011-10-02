@@ -3,6 +3,6 @@
 	background-image: url(compat/mblDomButtonGrayArrow.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonGrayArrow DIV, .mblDomButtonArrow DIV {
+.mblDomButtonGrayArrow div, .mblDomButtonArrow div {
 	display: none;
 }

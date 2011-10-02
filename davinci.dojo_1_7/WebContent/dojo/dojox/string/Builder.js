@@ -1,13 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/string/Builder",["dojo/_base/kernel"],function(_1){
-_1.getObject("string",true,dojox);
-dojox.string.Builder=function(_2){
+define("dojox/string/Builder",["dojo/_base/lang"],function(_1){
+_1.getObject("string",true,dojox).Builder=function(_2){
 var b="";
 this.length=0;
 this.append=function(s){

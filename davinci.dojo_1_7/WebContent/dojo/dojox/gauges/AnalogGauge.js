@@ -1,16 +1,9 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/gauges/AnalogGauge",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/lang","dojo/_base/html","dojo/_base/event","./_Gauge","dojox/gfx","./AnalogLineIndicator"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9){
-_1.experimental("dojox.gauges.AnalogGauge");
-return _1.declare("dojox.gauges.AnalogGauge",_7,{startAngle:-90,endAngle:90,cx:0,cy:0,radius:0,orientation:"clockwise",_defaultIndicator:_9,startup:function(){
+define("dojox/gauges/AnalogGauge",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/lang","dojo/_base/html","dojo/_base/event","dojox/gfx","./_Gauge","./AnalogLineIndicator","dojo/dom-geometry"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a){
+return _2("dojox.gauges.AnalogGauge",_8,{startAngle:-90,endAngle:90,cx:0,cy:0,radius:0,orientation:"clockwise",_defaultIndicator:_9,startup:function(){
 if(this.getChildren){
-_1.forEach(this.getChildren(),function(_a){
-_a.startup();
+_3.forEach(this.getChildren(),function(_b){
+_b.startup();
 });
 }
 this.startAngle=Number(this.startAngle);
@@ -28,81 +21,81 @@ if(!this.radius){
 this.radius=Math.min(this.cx,this.cy)-25;
 }
 this.inherited(arguments);
-},_getAngle:function(_b){
-var v=Number(_b);
-var _c;
-if(_b==null||isNaN(v)||v<=this.min){
-_c=this._mod360(this.startAngle);
+},_getAngle:function(_c){
+var v=Number(_c);
+var _d;
+if(_c==null||isNaN(v)||v<=this.min){
+_d=this._mod360(this.startAngle);
 }else{
 if(v>=this.max){
-_c=this._mod360(this.endAngle);
+_d=this._mod360(this.endAngle);
 }else{
-var _d=this._mod360(this.startAngle);
-var _e=(v-this.min);
+var _e=this._mod360(this.startAngle);
+var _f=(v-this.min);
 if(this.orientation!="clockwise"){
-_e=-_e;
+_f=-_f;
 }
-_c=this._mod360(_d+this._getAngleRange()*_e/Math.abs(this.min-this.max));
+_d=this._mod360(_e+this._getAngleRange()*_f/Math.abs(this.min-this.max));
 }
 }
-return _c;
-},_getValueForAngle:function(_f){
-var _10=this._mod360(this.startAngle);
-var _11=this._mod360(this.endAngle);
-if(!this._angleInRange(_f)){
-var _12=this._mod360(_10-_f);
-var _13=360-_12;
-var _14=this._mod360(_11-_f);
-var _15=360-_14;
-if(Math.min(_12,_13)<Math.min(_14,_15)){
+return _d;
+},_getValueForAngle:function(_10){
+var _11=this._mod360(this.startAngle);
+var _12=this._mod360(this.endAngle);
+if(!this._angleInRange(_10)){
+var _13=this._mod360(_11-_10);
+var _14=360-_13;
+var _15=this._mod360(_12-_10);
+var _16=360-_15;
+if(Math.min(_13,_14)<Math.min(_15,_16)){
 return this.min;
 }else{
 return this.max;
 }
 }else{
-var _16=Math.abs(this.max-this.min);
-var _17=this._mod360(this.orientation=="clockwise"?(_f-_10):(-_f+_10));
-return this.min+_16*_17/this._getAngleRange();
+var _17=Math.abs(this.max-this.min);
+var _18=this._mod360(this.orientation=="clockwise"?(_10-_11):(-_10+_11));
+return this.min+_17*_18/this._getAngleRange();
 }
 },_getAngleRange:function(){
-var _18;
-var _19=this._mod360(this.startAngle);
-var _1a=this._mod360(this.endAngle);
-if(_19==_1a){
+var _19;
+var _1a=this._mod360(this.startAngle);
+var _1b=this._mod360(this.endAngle);
+if(_1a==_1b){
 return 360;
 }
 if(this.orientation=="clockwise"){
-if(_1a<_19){
-_18=360-(_19-_1a);
+if(_1b<_1a){
+_19=360-(_1a-_1b);
 }else{
-_18=_1a-_19;
+_19=_1b-_1a;
 }
 }else{
-if(_1a<_19){
-_18=_19-_1a;
+if(_1b<_1a){
+_19=_1a-_1b;
 }else{
-_18=360-(_1a-_19);
+_19=360-(_1b-_1a);
 }
 }
-return _18;
-},_angleInRange:function(_1b){
-var _1c=this._mod360(this.startAngle);
-var _1d=this._mod360(this.endAngle);
-if(_1c==_1d){
+return _19;
+},_angleInRange:function(_1c){
+var _1d=this._mod360(this.startAngle);
+var _1e=this._mod360(this.endAngle);
+if(_1d==_1e){
 return true;
 }
-_1b=this._mod360(_1b);
+_1c=this._mod360(_1c);
 if(this.orientation=="clockwise"){
-if(_1c<_1d){
-return _1b>=_1c&&_1b<=_1d;
+if(_1d<_1e){
+return _1c>=_1d&&_1c<=_1e;
 }else{
-return !(_1b>_1d&&_1b<_1c);
+return !(_1c>_1e&&_1c<_1d);
 }
 }else{
-if(_1c<_1d){
-return !(_1b>_1c&&_1b<_1d);
+if(_1d<_1e){
+return !(_1c>_1d&&_1c<_1e);
 }else{
-return _1b>=_1d&&_1b<=_1c;
+return _1c>=_1e&&_1c<=_1d;
 }
 }
 },_isScaleCircular:function(){
@@ -115,77 +108,77 @@ while(v<0){
 v=v+360;
 }
 return v;
-},_getRadians:function(_1e){
-return _1e*Math.PI/180;
-},_getDegrees:function(_1f){
-return _1f*180/Math.PI;
-},drawRange:function(_20,_21){
-var _22;
-if(_21.shape){
-_21.shape.parent.remove(_21.shape);
-_21.shape=null;
+},_getRadians:function(_1f){
+return _1f*Math.PI/180;
+},_getDegrees:function(_20){
+return _20*180/Math.PI;
+},drawRange:function(_21,_22){
+var _23;
+if(_22.shape){
+_22.shape.parent.remove(_22.shape);
+_22.shape=null;
 }
 var a1,a2;
-if((_21.low==this.min)&&(_21.high==this.max)&&((this._mod360(this.endAngle)==this._mod360(this.startAngle)))){
-_22=_20.createCircle({cx:this.cx,cy:this.cy,r:this.radius});
+if((_22.low==this.min)&&(_22.high==this.max)&&((this._mod360(this.endAngle)==this._mod360(this.startAngle)))){
+_23=_21.createCircle({cx:this.cx,cy:this.cy,r:this.radius});
 }else{
-a1=this._getRadians(this._getAngle(_21.low));
-a2=this._getRadians(this._getAngle(_21.high));
+a1=this._getRadians(this._getAngle(_22.low));
+a2=this._getRadians(this._getAngle(_22.high));
 if(this.orientation=="cclockwise"){
 var a=a2;
 a2=a1;
 a1=a;
 }
 var x1=this.cx+this.radius*Math.sin(a1),y1=this.cy-this.radius*Math.cos(a1),x2=this.cx+this.radius*Math.sin(a2),y2=this.cy-this.radius*Math.cos(a2),big=0;
-var _23;
+var _24;
 if(a1<=a2){
-_23=a2-a1;
+_24=a2-a1;
 }else{
-_23=2*Math.PI-a1+a2;
+_24=2*Math.PI-a1+a2;
 }
-if(_23>Math.PI){
+if(_24>Math.PI){
 big=1;
 }
-_22=_20.createPath();
-if(_21.size){
-_22.moveTo(this.cx+(this.radius-_21.size)*Math.sin(a1),this.cy-(this.radius-_21.size)*Math.cos(a1));
+_23=_21.createPath();
+if(_22.size){
+_23.moveTo(this.cx+(this.radius-_22.size)*Math.sin(a1),this.cy-(this.radius-_22.size)*Math.cos(a1));
 }else{
-_22.moveTo(this.cx,this.cy);
+_23.moveTo(this.cx,this.cy);
 }
-_22.lineTo(x1,y1);
-_22.arcTo(this.radius,this.radius,0,big,1,x2,y2);
-if(_21.size){
-_22.lineTo(this.cx+(this.radius-_21.size)*Math.sin(a2),this.cy-(this.radius-_21.size)*Math.cos(a2));
-_22.arcTo((this.radius-_21.size),(this.radius-_21.size),0,big,0,this.cx+(this.radius-_21.size)*Math.sin(a1),this.cy-(this.radius-_21.size)*Math.cos(a1));
+_23.lineTo(x1,y1);
+_23.arcTo(this.radius,this.radius,0,big,1,x2,y2);
+if(_22.size){
+_23.lineTo(this.cx+(this.radius-_22.size)*Math.sin(a2),this.cy-(this.radius-_22.size)*Math.cos(a2));
+_23.arcTo((this.radius-_22.size),(this.radius-_22.size),0,big,0,this.cx+(this.radius-_22.size)*Math.sin(a1),this.cy-(this.radius-_22.size)*Math.cos(a1));
 }
-_22.closePath();
+_23.closePath();
 }
-if(_1.isArray(_21.color)||_1.isString(_21.color)){
-_22.setStroke({color:_21.color});
-_22.setFill(_21.color);
+if(_4.isArray(_22.color)||_4.isString(_22.color)){
+_23.setStroke({color:_22.color});
+_23.setFill(_22.color);
 }else{
-if(_21.color.type){
-a1=this._getRadians(this._getAngle(_21.low));
-a2=this._getRadians(this._getAngle(_21.high));
-_21.color.x1=this.cx+(this.radius*Math.sin(a1))/2;
-_21.color.x2=this.cx+(this.radius*Math.sin(a2))/2;
-_21.color.y1=this.cy-(this.radius*Math.cos(a1))/2;
-_21.color.y2=this.cy-(this.radius*Math.cos(a2))/2;
-_22.setFill(_21.color);
-_22.setStroke({color:_21.color.colors[0].color});
+if(_22.color.type){
+a1=this._getRadians(this._getAngle(_22.low));
+a2=this._getRadians(this._getAngle(_22.high));
+_22.color.x1=this.cx+(this.radius*Math.sin(a1))/2;
+_22.color.x2=this.cx+(this.radius*Math.sin(a2))/2;
+_22.color.y1=this.cy-(this.radius*Math.cos(a1))/2;
+_22.color.y2=this.cy-(this.radius*Math.cos(a2))/2;
+_23.setFill(_22.color);
+_23.setStroke({color:_22.color.colors[0].color});
 }else{
-if(_8.svg){
-_22.setStroke({color:"green"});
-_22.setFill("green");
-_22.getEventSource().setAttribute("class",_21.color.style);
+if(_7.svg){
+_23.setStroke({color:"green"});
+_23.setFill("green");
+_23.getEventSource().setAttribute("class",_22.color.style);
 }
 }
 }
-_22.connect("onmouseover",_1.hitch(this,this._handleMouseOverRange,_21));
-_22.connect("onmouseout",_1.hitch(this,this._handleMouseOutRange,_21));
-_21.shape=_22;
-},getRangeUnderMouse:function(_24){
-var _25=null,pos=_1.coords(this.gaugeContent),x=_24.clientX-pos.x,y=_24.clientY-pos.y,r=Math.sqrt((y-this.cy)*(y-this.cy)+(x-this.cx)*(x-this.cx));
+_23.connect("onmouseover",_4.hitch(this,this._handleMouseOverRange,_22));
+_23.connect("onmouseout",_4.hitch(this,this._handleMouseOutRange,_22));
+_22.shape=_23;
+},getRangeUnderMouse:function(e){
+var _25=null,pos=_a.getContentBox(this.gaugeContent),x=e.clientX-pos.x,y=e.clientY-pos.y,r=Math.sqrt((y-this.cy)*(y-this.cy)+(x-this.cx)*(x-this.cx));
 if(r<this.radius){
 var _26=this._getDegrees(Math.atan2(y-this.cy,x-this.cx)+Math.PI/2),_27=this._getValueForAngle(_26);
 if(this._rangeData){
@@ -197,16 +190,16 @@ _25=this._rangeData[i];
 }
 }
 return _25;
-},_dragIndicator:function(_28,_29){
-this._dragIndicatorAt(_28,_29.pageX,_29.pageY);
-_1.stopEvent(_29);
-},_dragIndicatorAt:function(_2a,x,y){
-var pos=_1.position(_2a.gaugeContent,true),xf=x-pos.x,yf=y-pos.y,_2b=_2a._getDegrees(Math.atan2(yf-_2a.cy,xf-_2a.cx)+Math.PI/2);
-value=_2a._getValueForAngle(_2b);
-value=Math.min(Math.max(value,_2a.min),_2a.max);
-_2a._drag.value=_2a._drag.currentValue=value;
-_2a._drag.onDragMove(_2a._drag);
-_2a._drag.draw(this._indicatorsGroup,true);
-_2a._drag.valueChanged();
+},_dragIndicator:function(_28,e){
+this._dragIndicatorAt(_28,e.pageX,e.pageY);
+_6.stop(e);
+},_dragIndicatorAt:function(_29,x,y){
+var pos=_a.position(_29.gaugeContent,true),xf=x-pos.x,yf=y-pos.y,_2a=_29._getDegrees(Math.atan2(yf-_29.cy,xf-_29.cx)+Math.PI/2);
+var _2b=_29._getValueForAngle(_2a);
+_2b=Math.min(Math.max(_2b,_29.min),_29.max);
+_29._drag.value=_29._drag.currentValue=_2b;
+_29._drag.onDragMove(_29._drag);
+_29._drag.draw(this._indicatorsGroup,true);
+_29._drag.valueChanged();
 }});
 });

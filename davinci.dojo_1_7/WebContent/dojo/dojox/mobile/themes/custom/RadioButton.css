@@ -10,14 +10,14 @@
   height: 1em;
   font-size: 18px;
   border: 1px outset #b5bcc7;
-  background-color: #abd6ff;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
+  background-color: #5cb0ff;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
   -webkit-border-radius: 0.5em;
   -webkit-transform: translatey(0.45em);
 }
 .mblRadioButtonChecked, .mblRadioButton:checked {
   border-color: #769dc0;
-  background-color: #45a4ff;
+  background-color: #007ef5;
 }
 .mblRadioButtonChecked::after, .mblRadioButton:checked::after {
   position: absolute;
@@ -34,7 +34,7 @@
 }
 .mblRadioButtonChecked.mblRadioButtonSelected, .mblRadioButton:checked.mblRadioButtonSelected {
   border-color: #769dc0;
-  background-color: #128bff;
+  background-color: #0064c2;
 }
 .mblRadioButtonChecked.mblRadioButtonSelected::after, .mblRadioButton:checked.mblRadioButtonSelected::after {
   border-color: #000000;

@@ -5,35 +5,35 @@
 */
 
 //>>built
-define("dojo/store/util/QueryResults",["../../_base/kernel","../../_base/lang","../../_base/Deferred"],function(_1){
-_1.getObject("store.util",true,_1);
-_1.store.util.QueryResults=function(_2){
-if(!_2){
-return _2;
+define("dojo/store/util/QueryResults",["../../_base/kernel","../../_base/lang","../../_base/Deferred"],function(_1,_2,_3){
+var _4=_2.getObject("dojo.store.util",true);
+_4.QueryResults=function(_5){
+if(!_5){
+return _5;
 }
-if(_2.then){
-_2=_1.delegate(_2);
+if(_5.then){
+_5=_2.delegate(_5);
 }
-function _3(_4){
-if(!_2[_4]){
-_2[_4]=function(){
-var _5=arguments;
-return _1.when(_2,function(_6){
-Array.prototype.unshift.call(_5,_6);
-return _1.store.util.QueryResults(_1[_4].apply(_1,_5));
+function _6(_7){
+if(!_5[_7]){
+_5[_7]=function(){
+var _8=arguments;
+return _3.when(_5,function(_9){
+Array.prototype.unshift.call(_8,_9);
+return _4.QueryResults(dojo[_7].apply(dojo,_8));
 });
 };
 }
 };
-_3("forEach");
-_3("filter");
-_3("map");
-if(!_2.total){
-_2.total=_1.when(_2,function(_7){
-return _7.length;
+_6("forEach");
+_6("filter");
+_6("map");
+if(!_5.total){
+_5.total=_3.when(_5,function(_a){
+return _a.length;
 });
 }
-return _2;
+return _5;
 };
-return _1.store.util.QueryResults;
+return _4.QueryResults;
 });

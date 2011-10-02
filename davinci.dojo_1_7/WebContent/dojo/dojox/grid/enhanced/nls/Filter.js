@@ -1,9 +1,3 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
 define({ root:
 //begin v1.x content
@@ -37,7 +31,7 @@ define({ root:
 	"waiRelAll": "Match all of the following rules:",
 	"relationAny": "any rules",
 	"waiRelAny": "Match any of the following rules:",
-	"relationMsgFront": "Match",
+	"relationMsgFront": "Match:",
 	"relationMsgTail": "",
 	"and": "and",
 	"or": "or",
@@ -71,8 +65,8 @@ define({ root:
 	"anycolumn": "any column",
 	"statusTipTitleNoFilter": "Filter Bar",
 	"statusTipTitleHasFilter": "Filter",
-	"statusTipRelPre": "Match",
-	"statusTipRelPost": "rules.",
+	"statusTipRelAny": "Match any rules.",
+	"statusTipRelAll": "Match all rules.",
 	
 	"defaultItemsName": "items",
 	"filterBarMsgHasFilterTemplate": "${0} of ${1} ${2} shown.",

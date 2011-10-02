@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/editor/plugins/InsertEntity",["dojo","dijit","dojox","dijit/TooltipDialog","dijit/_editor/_Plugin","dijit/form/DropDownButton","dojox/html/entities","dojox/editor/plugins/EntityPalette","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/InsertEntity"],function(_1,_2,_3){
+define("dojox/editor/plugins/InsertEntity",["dojo","dijit","dojox","dijit/TooltipDialog","dijit/_editor/_Plugin","dijit/form/DropDownButton","dojo/_base/connect","dojo/_base/declare","dojo/i18n","dojox/html/entities","dojox/editor/plugins/EntityPalette","dojo/i18n!dojox/editor/plugins/nls/InsertEntity"],function(_1,_2,_3){
 _1.declare("dojox.editor.plugins.InsertEntity",_2._editor._Plugin,{iconClassPrefix:"dijitAdditionalEditorIcon",_initButton:function(){
 this.dropDown=new _3.editor.plugins.EntityPalette({showCode:this.showCode,showEntityName:this.showEntityName});
 this.connect(this.dropDown,"onChange",function(_4){

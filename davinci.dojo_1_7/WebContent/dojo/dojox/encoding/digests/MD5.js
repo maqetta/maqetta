@@ -1,12 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/encoding/digests/MD5",["dojo/_base/kernel","dojox/encoding/digests/_base"],function(_1,_2){
-_1.getObject("encoding.digests.MD5",true,dojox);
+define("dojox/encoding/digests/MD5",["dojo/_base/kernel","./_base"],function(_1,_2){
 var _3=8;
 function R(n,c){
 return (n<<c)|(n>>>(32-c));
@@ -150,5 +143,5 @@ default:
 return _2.wordToBase64(wa);
 }
 };
-return dojox.encoding.digests.MD5;
+return _2.MD5;
 });

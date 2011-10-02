@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/charting/action2d/TouchZoomAndPan",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/event","./ChartAction","../Element","dojo/gesture/tap","../plot2d/common"],function(_1,_2,_3,_4,_5,_6,_7,_8){
-var _9=_1.declare(_6,{constructor:function(_a){
+define("dojox/charting/action2d/TouchZoomAndPan",["dojo/_base/lang","dojo/_base/declare","dojo/_base/event","dojo/_base/sniff","./ChartAction","../Element","dojox/gesture/tap","../plot2d/common"],function(_1,_2,_3,_4,_5,_6,_7,_8){
+var _9=_2("dojox.charting.action2d._GlassView",[_6],{constructor:function(_a){
 },render:function(){
 if(!this.isDirty()){
 return;
@@ -29,7 +23,7 @@ return this;
 },isDirty:function(){
 return this.dirty;
 }});
-return _1.declare("dojox.charting.action2d.TouchZoomAndPan",dojox.charting.action2d.ChartAction,{defaultParams:{axis:"x",scaleFactor:1.2,maxScale:100,enableScroll:true,enableZoom:true},optionalParams:{},constructor:function(_c,_d,_e){
+return _2("dojox.charting.action2d.TouchZoomAndPan",_5,{defaultParams:{axis:"x",scaleFactor:1.2,maxScale:100,enableScroll:true,enableZoom:true},optionalParams:{},constructor:function(_c,_d,_e){
 this._listeners=[{eventName:"ontouchstart",methodName:"onTouchStart"},{eventName:"ontouchmove",methodName:"onTouchMove"},{eventName:"ontouchend",methodName:"onTouchEnd"},{eventName:_7.doubletap,methodName:"onDoubleTap"}];
 if(!_e){
 _e={};
@@ -39,16 +33,16 @@ this.scaleFactor=_e.scaleFactor?_e.scaleFactor:1.2;
 this.maxScale=_e.maxScale?_e.maxScale:100;
 this.enableScroll=_e.enableScroll!=undefined?_e.enableScroll:true;
 this.enableZoom=_e.enableScroll!=undefined?_e.enableZoom:true;
-this.uName="touchZoomPan"+this.axis;
+this._uName="touchZoomPan"+this.axis;
 this.connect();
 },connect:function(){
 this.inherited(arguments);
-if(_1.isSafari&&this.chart.surface.declaredClass.indexOf("svg")!=-1){
-this.chart.addPlot(this.uName,{type:_9});
+if(_4("safari")&&this.chart.surface.declaredClass.indexOf("svg")!=-1){
+this.chart.addPlot(this._uName,{type:_9});
 }
 },disconnect:function(){
-if(_1.isSafari&&this.chart.surface.declaredClass.indexOf("svg")!=-1){
-this.chart.removePlot(this.uName);
+if(_4("safari")&&this.chart.surface.declaredClass.indexOf("svg")!=-1){
+this.chart.removePlot(this._uName);
 }
 this.inherited(arguments);
 },onTouchStart:function(_f){
@@ -72,7 +66,7 @@ this._endCoord=_14.bounds.to;
 }else{
 if(this.enableScroll){
 this._startScroll(_11);
-_1.stopEvent(_f);
+_3.stop(_f);
 }
 }
 },onTouchMove:function(_15){
@@ -88,13 +82,13 @@ return;
 var _1d=this._initData(_1b)[this.axis];
 var _1e=_1c*(this._startCoord-_1d)+this._middleCoord,_1f=_1c*(this._endCoord-_1d)+this._middleCoord;
 _16.zoomIn(this.axis,[_1e,_1f]);
-_1.stopEvent(_15);
+_3.stop(_15);
 }else{
 if(this.enableScroll){
 var _20=_17.vertical?(this._startPageCoord[_1a]-_15.touches[0][_19]):(_15.touches[0][_19]-this._startPageCoord[_1a]);
 _16.setAxisWindow(this.axis,this._lastScale,this._initOffset-_20/this._lastFactor/this._lastScale);
 _16.delayedRender();
-_1.stopEvent(_15);
+_3.stop(_15);
 }
 }
 },onTouchEnd:function(_21){
@@ -118,6 +112,6 @@ _27.zoomIn(this.axis,[_2e,_2f]);
 _27.setAxisWindow(this.axis,1,0);
 _27.render();
 }
-_1.stopEvent(_26);
+_3.stop(_26);
 }});
 });

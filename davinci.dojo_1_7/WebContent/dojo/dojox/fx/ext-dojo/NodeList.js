@@ -1,22 +1,16 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/fx/ext-dojo/NodeList",["dojox/fx","dojo/_base/NodeList","dojo/NodeList-fx"],function(){
-dojo.experimental("dojox.fx.ext-dojo.NodeList");
-dojo.extend(dojo.NodeList,{sizeTo:function(_1){
-return this._anim(dojox.fx,"sizeTo",_1);
-},slideBy:function(_2){
-return this._anim(dojox.fx,"slideBy",_2);
-},highlight:function(_3){
-return this._anim(dojox.fx,"highlight",_3);
-},fadeTo:function(_4){
-return this._anim(dojo,"_fade",_4);
-},wipeTo:function(_5){
-return this._anim(dojox.fx,"wipeTo",_5);
+define("dojox/fx/ext-dojo/NodeList",["dojo/_base/kernel","dojo/_base/lang","dojox/fx","dojo/NodeList-fx"],function(_1,_2,_3,_4){
+_1.experimental("dojox.fx.ext-dojo.NodeList");
+_2.extend(_4,{sizeTo:function(_5){
+return this._anim(_3,"sizeTo",_5);
+},slideBy:function(_6){
+return this._anim(_3,"slideBy",_6);
+},highlight:function(_7){
+return this._anim(_3,"highlight",_7);
+},fadeTo:function(_8){
+return this._anim(_3,"_fade",_8);
+},wipeTo:function(_9){
+return this._anim(_3,"wipeTo",_9);
 }});
-return dojo.NodeList;
+return _4;
 });

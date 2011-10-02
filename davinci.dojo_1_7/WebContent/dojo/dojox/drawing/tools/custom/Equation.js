@@ -1,14 +1,9 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/drawing/tools/custom/Equation",["../../util/oo","../TextBlock"],function(){
-dojox.drawing.tools.custom.Equation=dojox.drawing.util.oo.declare(dojox.drawing.tools.TextBlock,function(_1){
+define(["dijit","dojo","dojox","dojo/require!dojox/drawing/tools/TextBlock"],function(_1,_2,_3){
+_2.provide("dojox.drawing.tools.custom.Equation");
+_2.require("dojox.drawing.tools.TextBlock");
+_3.drawing.tools.custom.Equation=_3.drawing.util.oo.declare(_3.drawing.tools.TextBlock,function(_4){
 },{customType:"equation"});
-dojox.drawing.tools.custom.Equation.setup={name:"dojox.drawing.tools.custom.Equation",tooltip:"Equation Tool",iconClass:"iconEq"};
-dojox.drawing.register(dojox.drawing.tools.custom.Equation.setup,"tool");
-return dojox.drawing.tools.custom.Equation;
+_3.drawing.tools.custom.Equation.setup={name:"dojox.drawing.tools.custom.Equation",tooltip:"Equation Tool",iconClass:"iconEq"};
+_3.drawing.register(_3.drawing.tools.custom.Equation.setup,"tool");
 });

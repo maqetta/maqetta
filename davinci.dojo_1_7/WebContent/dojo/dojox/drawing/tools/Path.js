@@ -1,22 +1,17 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/drawing/tools/Path",["../stencil/Path","../util/oo","../manager/_registry"],function(){
-dojox.drawing.tools.Path=dojox.drawing.util.oo.declare(dojox.drawing.stencil.Path,function(){
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.drawing.tools.Path");
+_3.drawing.tools.Path=_3.drawing.util.oo.declare(_3.drawing.stencil.Path,function(){
 this.pathMode="";
 this.currentPathMode="";
 this._started=false;
 this.oddEvenClicks=0;
-},{draws:true,onDown:function(_1){
+},{draws:true,onDown:function(_4){
 if(!this._started){
-this.onStartPath(_1);
+this.onStartPath(_4);
 }
-},makeSubPath:function(_2){
-if(_2){
+},makeSubPath:function(_5){
+if(_5){
 if(this.currentPathMode=="Q"){
 this.points.push({x:this.points[0].x,y:this.points[0].y});
 }
@@ -25,18 +20,18 @@ this.render();
 }
 this.currentPathMode="";
 this.pathMode="M";
-},onStartPath:function(_3){
+},onStartPath:function(_6){
 this._started=true;
 this.revertRenderHit=this.renderHit;
 this.renderHit=false;
 this.closePath=false;
 this.mouse.setEventMode("PathEdit");
-this.closePoint={x:_3.x,y:_3.y};
+this.closePoint={x:_6.x,y:_6.y};
 this._kc1=this.connect(this.keys,"onEsc",this,function(){
 this.onCompletePath(false);
 });
-this._kc2=this.connect(this.keys,"onKeyUp",this,function(_4){
-switch(_4.letter){
+this._kc2=this.connect(this.keys,"onKeyUp",this,function(_7){
+switch(_7.letter){
 case "c":
 this.onCompletePath(true);
 break;
@@ -57,17 +52,17 @@ this.makeSubPath(true);
 break;
 }
 });
-},onCompletePath:function(_5){
+},onCompletePath:function(_8){
 this.remove(this.closeGuide,this.guide);
-var _6=this.getBounds();
-if(_6.w<this.minimumSize&&_6.h<this.minimumSize){
+var _9=this.getBounds();
+if(_9.w<this.minimumSize&&_9.h<this.minimumSize){
 this.remove(this.hit,this.shape,this.closeGuide);
 this._started=false;
 this.mouse.setEventMode("");
 this.setPoints([]);
 return;
 }
-if(_5){
+if(_8){
 if(this.currentPathMode=="Q"){
 this.points.push({x:this.points[0].x,y:this.points[0].y});
 }
@@ -79,14 +74,14 @@ this.onRender(this);
 this.disconnect([this._kc1,this._kc2]);
 this.mouse.setEventMode("");
 this.render();
-},onUp:function(_7){
-if(!this._started||!_7.withinCanvas){
+},onUp:function(_a){
+if(!this._started||!_a.withinCanvas){
 return;
 }
-if(this.points.length>2&&this.closeRadius>this.util.distance(_7.x,_7.y,this.closePoint.x,this.closePoint.y)){
+if(this.points.length>2&&this.closeRadius>this.util.distance(_a.x,_a.y,this.closePoint.x,this.closePoint.y)){
 this.onCompletePath(true);
 }else{
-var p={x:_7.x,y:_7.y};
+var p={x:_a.x,y:_a.y};
 this.oddEvenClicks++;
 if(this.currentPathMode!=this.pathMode){
 if(this.pathMode=="Q"){
@@ -98,7 +93,7 @@ p.t="L";
 }else{
 if(this.pathMode=="M"){
 p.t="M";
-this.closePoint={x:_7.x,y:_7.y};
+this.closePoint={x:_a.x,y:_a.y};
 }
 }
 }
@@ -110,42 +105,41 @@ this.remove(this.guide);
 this.render();
 }
 }
-},createGuide:function(_8){
+},createGuide:function(_b){
 if(!this.points.length){
 return;
 }
-var _9=[].concat(this.points);
-var pt={x:_8.x,y:_8.y};
+var _c=[].concat(this.points);
+var pt={x:_b.x,y:_b.y};
 if(this.currentPathMode=="Q"&&this.oddEvenClicks%2){
 pt.t="L";
 }
 this.points.push(pt);
 this.render();
-this.points=_9;
-var _a=this.util.distance(_8.x,_8.y,this.closePoint.x,this.closePoint.y);
+this.points=_c;
+var _d=this.util.distance(_b.x,_b.y,this.closePoint.x,this.closePoint.y);
 if(this.points.length>1){
-if(_a<this.closeRadius&&!this.closeGuide){
+if(_d<this.closeRadius&&!this.closeGuide){
 var c={cx:this.closePoint.x,cy:this.closePoint.y,rx:this.closeRadius,ry:this.closeRadius};
 this.closeGuide=this.container.createEllipse(c).setFill(this.closeColor);
 }else{
-if(_a>this.closeRadius&&this.closeGuide){
+if(_d>this.closeRadius&&this.closeGuide){
 this.remove(this.closeGuide);
 this.closeGuide=null;
 }
 }
 }
-},onMove:function(_b){
+},onMove:function(_e){
 if(!this._started){
 return;
 }
-this.createGuide(_b);
-},onDrag:function(_c){
+this.createGuide(_e);
+},onDrag:function(_f){
 if(!this._started){
 return;
 }
-this.createGuide(_c);
+this.createGuide(_f);
 }});
-dojox.drawing.tools.Path.setup={name:"dojox.drawing.tools.Path",tooltip:"Path Tool",iconClass:"iconLine"};
-dojox.drawing.register(dojox.drawing.tools.Path.setup,"tool");
-return dojox.drawing.tools.Path;
+_3.drawing.tools.Path.setup={name:"dojox.drawing.tools.Path",tooltip:"Path Tool",iconClass:"iconLine"};
+_3.drawing.register(_3.drawing.tools.Path.setup,"tool");
 });

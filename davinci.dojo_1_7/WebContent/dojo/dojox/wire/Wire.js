@@ -1,21 +1,16 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/wire/Wire",["dojo","dijit","dojox","dojox/wire/_base"],function(_1,_2,_3){
-_1.getObject("dojox.wire.Wire",1);
-_1.declare("dojox.wire.Wire",null,{_wireClass:"dojox.wire.Wire",constructor:function(_4){
-_1.mixin(this,_4);
+define(["dijit","dojo","dojox","dojo/require!dojox/wire/_base"],function(_1,_2,_3){
+_2.provide("dojox.wire.Wire");
+_2.require("dojox.wire._base");
+_2.declare("dojox.wire.Wire",null,{_wireClass:"dojox.wire.Wire",constructor:function(_4){
+_2.mixin(this,_4);
 if(this.converter){
-if(_1.isString(this.converter)){
-var _5=_1.getObject(this.converter);
-if(_1.isFunction(_5)){
+if(_2.isString(this.converter)){
+var _5=_2.getObject(this.converter);
+if(_2.isFunction(_5)){
 try{
 var _6=new _5();
-if(_6&&!_1.isFunction(_6["convert"])){
+if(_6&&!_2.isFunction(_6["convert"])){
 this.converter={convert:_5};
 }else{
 this.converter=_6;
@@ -24,13 +19,13 @@ this.converter=_6;
 catch(e){
 }
 }else{
-if(_1.isObject(_5)){
-if(_1.isFunction(_5["convert"])){
+if(_2.isObject(_5)){
+if(_2.isFunction(_5["convert"])){
 this.converter=_5;
 }
 }
 }
-if(_1.isString(this.converter)){
+if(_2.isString(this.converter)){
 var _7=_3.wire._getClass(this.converter);
 if(_7){
 this.converter=new _7();
@@ -39,7 +34,7 @@ this.converter=undefined;
 }
 }
 }else{
-if(_1.isFunction(this.converter)){
+if(_2.isFunction(this.converter)){
 this.converter={convert:this.converter};
 }
 }
@@ -78,7 +73,7 @@ if(this.type=="boolean"){
 _b=(_b!="false");
 }else{
 if(this.type=="array"){
-if(!_1.isArray(_b)){
+if(!_2.isArray(_b)){
 _b=[_b];
 }
 }
@@ -162,7 +157,7 @@ _17=_13;
 }else{
 _14=_14.substring(0,i1);
 _17=this._getPropertyValue(_13,_14);
-if(_17&&!_1.isArray(_17)){
+if(_17&&!_2.isArray(_17)){
 _17=[_17];
 }
 }
@@ -229,23 +224,21 @@ _19[_1a]=_1b;
 }
 },_useGet:function(_1f){
 var _20=false;
-if(_1.isFunction(_1f.get)){
+if(_2.isFunction(_1f.get)){
 _20=true;
 }
 return _20;
 },_useSet:function(_21){
 var _22=false;
-if(_1.isFunction(_21.set)){
+if(_2.isFunction(_21.set)){
 _22=true;
 }
 return _22;
 },_useAttr:function(_23){
 var _24=false;
-if(_1.isFunction(_23.attr)){
+if(_2.isFunction(_23.attr)){
 _24=true;
 }
 return _24;
 }});
-return _1.getObject("dojox.wire.Wire");
 });
-require(["dojox/wire/Wire"]);

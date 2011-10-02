@@ -1,39 +1,32 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/grid/_SelectionPreserver",["dojo","dojox"],function(_1,_2){
-_1.declare("dojox.grid._SelectionPreserver",null,{constructor:function(_3){
-this.selection=_3;
-var _4=this.grid=_3.grid;
+define("dojox/grid/_SelectionPreserver",["dojo/_base/declare","dojo/_base/connect","dojo/_base/lang","dojo/_base/array"],function(_1,_2,_3,_4){
+return _1("dojox.grid._SelectionPreserver",null,{constructor:function(_5){
+this.selection=_5;
+var _6=this.grid=_5.grid;
 this.reset();
-this._connects=[_1.connect(_4,"_setStore",this,"reset"),_1.connect(_4,"_addItem",this,"_reSelectById"),_1.connect(_3,"addToSelection",_1.hitch(this,"_selectById",true)),_1.connect(_3,"deselect",_1.hitch(this,"_selectById",false))];
+this._connects=[_2.connect(_6,"_setStore",this,"reset"),_2.connect(_6,"_addItem",this,"_reSelectById"),_2.connect(_5,"addToSelection",_3.hitch(this,"_selectById",true)),_2.connect(_5,"deselect",_3.hitch(this,"_selectById",false)),_2.connect(_5,"deselectAll",this,"reset")];
 },destroy:function(){
 this.reset();
-_1.forEach(this._connects,_1.disconnect);
+_4.forEach(this._connects,_2.disconnect);
 delete this._connects;
 },reset:function(){
 this._selectedById={};
-},_reSelectById:function(_5,_6){
-if(_5&&this.grid._hasIdentity){
-this.selection.selected[_6]=this._selectedById[this.grid.store.getIdentity(_5)];
+},_reSelectById:function(_7,_8){
+if(_7&&this.grid._hasIdentity){
+this.selection.selected[_8]=this._selectedById[this.grid.store.getIdentity(_7)];
 }
-},_selectById:function(_7,_8){
+},_selectById:function(_9,_a){
 if(this.selection.mode=="none"||!this.grid._hasIdentity){
 return;
 }
-var _9=_8,g=this.grid;
-if(typeof _8=="number"||typeof _8=="string"){
-var _a=g._by_idx[_8];
-_9=_a&&_a.item;
+var _b=_a,g=this.grid;
+if(typeof _a=="number"||typeof _a=="string"){
+var _c=g._by_idx[_a];
+_b=_c&&_c.item;
 }
-if(_9){
-this._selectedById[g.store.getIdentity(_9)]=!!_7;
+if(_b){
+this._selectedById[g.store.getIdentity(_b)]=!!_9;
 }
-return _9;
+return _b;
 }});
-return _2.grid._SelectionPreserver;
 });

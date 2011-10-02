@@ -3,6 +3,6 @@
 	background-image: url(compat/mblDomButtonGreenBall.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonGreenBall > DIV {
+.mblDomButtonGreenBall > div {
 	display: none;
 }

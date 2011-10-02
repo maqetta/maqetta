@@ -38,17 +38,19 @@
 }
 .mblTabBarButtonDiv {
   position: relative;
-  height: 34px;
+  margin-left: auto;
+  margin-right: auto;
   width: 29px;
-  left: 50%;
-}
-.mblTabBarButtonDivInner {
-  left: -50%;
+  height: 32px;
+  margin-top: 2px;
 }
 .mblTabBarButtonIcon {
   position: absolute;
   left: 0px;
-  top: 2px;
+  top: 0px;
+}
+.mblTabBarButtonSpriteIcon {
+  position: absolute;
 }
 .mblTabBarButtonTextBox {
   font-family: "Helvetica Neue", Helvetica;
@@ -60,6 +62,12 @@
 .mblTabBarNoIcons .mblTabBarButtonTextBox {
   line-height: 34px;
   font-size: 20px;
+}
+.mblTabBarTop .mblTabButton .mblTabBarButtonDiv {
+  height: 38px;
+}
+.mblTabBarHead .mblTabButton .mblTabBarButtonDiv {
+  margin-top: -2px;
 }
 .mblTabButton {
   position: relative;
@@ -80,10 +88,7 @@
   color: white;
   text-align: center;
 }
-.mblTabButton .mblTabBarButtonDiv {
-  height: 40px;
-}
-.mblTabButton IMG {
+.mblTabButton img {
   position: absolute;
   left: 0px;
   margin-top: 8px;
@@ -126,7 +131,7 @@
 .mblTabPanelHeader .mblTabButtonDomButton {
   width: 43px;
 }
-.mblTabPanelHeader .mblDomButton {
+.mblTabPanelHeader .mblTabButtonDomButtonClass {
   left: 8px;
 }
 .mblHeading .mblTabPanelHeader {
@@ -135,21 +140,16 @@
 .mblHeading .mblTabPanelHeader .mblTabButton {
   margin-top: 0;
   margin-right: 0;
-  height: 23px;
+  height: 22px;
+  line-height: 23px;
   border-width: 1px 1px 1px 0px;
-  border-style: inset;
-  border-color: #3F3E3E;
+  border-style: solid;
+  border-color: #555555;
   background-color: #ADADAD;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#e5e5e5), to(#7f7f7f), color-stop(0.5, #adadad), color-stop(0.5, #909090));
 }
 .mblHeading .mblTabPanelHeader .mblTabButton:first-child {
-  -webkit-border-top-left-radius: 5px;
-  -webkit-border-bottom-left-radius: 5px;
   border-left-width: 1px;
-}
-.mblHeading .mblTabPanelHeader .mblTabButton:last-child {
-  -webkit-border-top-right-radius: 5px;
-  -webkit-border-bottom-right-radius: 5px;
 }
 .mblHeading .mblTabPanelHeader .mblTabButtonSelected {
   background-color: #FFC700;

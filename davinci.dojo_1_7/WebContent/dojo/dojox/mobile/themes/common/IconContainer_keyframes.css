@@ -1,5 +1,5 @@
 
-@-webkit-keyframes .mblVibrate{
+@-webkit-keyframes mblVibrate{
 	0%{
 		-webkit-transform: rotate(-2deg);
 		bottom: -1px;

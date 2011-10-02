@@ -22,6 +22,6 @@
 	to { -webkit-transform: rotate(360deg) scale(0.0); }
 }
 @-webkit-keyframes mblSwirlIn {
-	from {}
-	to {}
+	from { -webkit-transform: scale(1.0); }
+	to { -webkit-transform: scale(1.0); }
 }

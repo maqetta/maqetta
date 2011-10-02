@@ -1,81 +1,75 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/gfx/gradient",["./matrix"],function(m){
-dojo.getObject("dojox.gfx.gradient",true);
-var d=dojo,C=d.Color;
-dojox.gfx.gradient.rescale=function(_1,_2,to){
-var _3=_1.length,_4=(to<_2),_5;
-if(_4){
-var _6=_2;
-_2=to;
-to=_6;
+define("dojox/gfx/gradient",["dojo/_base/lang","./matrix","dojo/_base/Color"],function(_1,m,_2){
+var _3=_1.getObject("dojox.gfx.gradient",true);
+var C=_2;
+_3.rescale=function(_4,_5,to){
+var _6=_4.length,_7=(to<_5),_8;
+if(_7){
+var _9=_5;
+_5=to;
+to=_9;
 }
-if(!_3){
+if(!_6){
 return [];
 }
-if(to<=_1[0].offset){
-_5=[{offset:0,color:_1[0].color},{offset:1,color:_1[0].color}];
+if(to<=_4[0].offset){
+_8=[{offset:0,color:_4[0].color},{offset:1,color:_4[0].color}];
 }else{
-if(_2>=_1[_3-1].offset){
-_5=[{offset:0,color:_1[_3-1].color},{offset:1,color:_1[_3-1].color}];
+if(_5>=_4[_6-1].offset){
+_8=[{offset:0,color:_4[_6-1].color},{offset:1,color:_4[_6-1].color}];
 }else{
-var _7=to-_2,_8,_9,i;
-_5=[];
-if(_2<0){
-_5.push({offset:0,color:new C(_1[0].color)});
+var _a=to-_5,_b,_c,i;
+_8=[];
+if(_5<0){
+_8.push({offset:0,color:new C(_4[0].color)});
 }
-for(i=0;i<_3;++i){
-_8=_1[i];
-if(_8.offset>=_2){
+for(i=0;i<_6;++i){
+_b=_4[i];
+if(_b.offset>=_5){
 break;
 }
 }
 if(i){
-_9=_1[i-1];
-_5.push({offset:0,color:d.blendColors(new C(_9.color),new C(_8.color),(_2-_9.offset)/(_8.offset-_9.offset))});
+_c=_4[i-1];
+_8.push({offset:0,color:_2.blendColors(new C(_c.color),new C(_b.color),(_5-_c.offset)/(_b.offset-_c.offset))});
 }else{
-_5.push({offset:0,color:new C(_8.color)});
+_8.push({offset:0,color:new C(_b.color)});
 }
-for(;i<_3;++i){
-_8=_1[i];
-if(_8.offset>=to){
+for(;i<_6;++i){
+_b=_4[i];
+if(_b.offset>=to){
 break;
 }
-_5.push({offset:(_8.offset-_2)/_7,color:new C(_8.color)});
+_8.push({offset:(_b.offset-_5)/_a,color:new C(_b.color)});
 }
-if(i<_3){
-_9=_1[i-1];
-_5.push({offset:1,color:d.blendColors(new C(_9.color),new C(_8.color),(to-_9.offset)/(_8.offset-_9.offset))});
+if(i<_6){
+_c=_4[i-1];
+_8.push({offset:1,color:_2.blendColors(new C(_c.color),new C(_b.color),(to-_c.offset)/(_b.offset-_c.offset))});
 }else{
-_5.push({offset:1,color:new C(_1[_3-1].color)});
+_8.push({offset:1,color:new C(_4[_6-1].color)});
 }
 }
 }
-if(_4){
-_5.reverse();
-for(i=0,_3=_5.length;i<_3;++i){
-_8=_5[i];
-_8.offset=1-_8.offset;
+if(_7){
+_8.reverse();
+for(i=0,_6=_8.length;i<_6;++i){
+_b=_8[i];
+_b.offset=1-_b.offset;
 }
 }
-return _5;
+return _8;
 };
-function _a(x,y,_b,_c,_d,_e){
-var r=m.multiplyPoint(_b,x,y),p=m.multiplyPoint(_c,r);
-return {r:r,p:p,o:m.multiplyPoint(_d,p).x/_e};
+function _d(x,y,_e,_f,_10,_11){
+var r=m.multiplyPoint(_e,x,y),p=m.multiplyPoint(_f,r);
+return {r:r,p:p,o:m.multiplyPoint(_10,p).x/_11};
 };
-function _f(a,b){
+function _12(a,b){
 return a.o-b.o;
 };
-dojox.gfx.gradient.project=function(_10,_11,tl,rb,ttl,trb){
-_10=_10||m.identity;
-var f1=m.multiplyPoint(_10,_11.x1,_11.y1),f2=m.multiplyPoint(_10,_11.x2,_11.y2),_12=Math.atan2(f2.y-f1.y,f2.x-f1.x),_13=m.project(f2.x-f1.x,f2.y-f1.y),pf1=m.multiplyPoint(_13,f1),pf2=m.multiplyPoint(_13,f2),_14=new m.Matrix2D([m.rotate(-_12),{dx:-pf1.x,dy:-pf1.y}]),_15=m.multiplyPoint(_14,pf2).x,_16=[_a(tl.x,tl.y,_10,_13,_14,_15),_a(rb.x,rb.y,_10,_13,_14,_15),_a(tl.x,rb.y,_10,_13,_14,_15),_a(rb.x,tl.y,_10,_13,_14,_15)].sort(_f),_17=_16[0].o,to=_16[3].o,_18=dojox.gfx.gradient.rescale(_11.colors,_17,to),_19=Math.atan2(_16[3].r.y-_16[0].r.y,_16[3].r.x-_16[0].r.x);
-return {type:"linear",x1:_16[0].p.x,y1:_16[0].p.y,x2:_16[3].p.x,y2:_16[3].p.y,colors:_18,angle:_12};
+_3.project=function(_13,_14,tl,rb,ttl,trb){
+_13=_13||m.identity;
+var f1=m.multiplyPoint(_13,_14.x1,_14.y1),f2=m.multiplyPoint(_13,_14.x2,_14.y2),_15=Math.atan2(f2.y-f1.y,f2.x-f1.x),_16=m.project(f2.x-f1.x,f2.y-f1.y),pf1=m.multiplyPoint(_16,f1),pf2=m.multiplyPoint(_16,f2),_17=new m.Matrix2D([m.rotate(-_15),{dx:-pf1.x,dy:-pf1.y}]),_18=m.multiplyPoint(_17,pf2).x,_19=[_d(tl.x,tl.y,_13,_16,_17,_18),_d(rb.x,rb.y,_13,_16,_17,_18),_d(tl.x,rb.y,_13,_16,_17,_18),_d(rb.x,tl.y,_13,_16,_17,_18)].sort(_12),_1a=_19[0].o,to=_19[3].o,_1b=_3.rescale(_14.colors,_1a,to),_1c=Math.atan2(_19[3].r.y-_19[0].r.y,_19[3].r.x-_19[0].r.x);
+return {type:"linear",x1:_19[0].p.x,y1:_19[0].p.y,x2:_19[3].p.x,y2:_19[3].p.y,colors:_1b,angle:_15};
 };
-return dojox.gfx.gradient;
+return _3;
 });

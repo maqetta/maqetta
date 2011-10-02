@@ -1,85 +1,63 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/calc/Standard",["dojo","dijit/_Templated","dojox/math/_base","dijit/dijit","dijit/Menu","dijit/MenuItem","dijit/form/ComboButton","dijit/TooltipDialog","dijit/form/TextBox","dijit/form/Button","dojox/calc/_Executor"],function(_1){
-_1.experimental("dojox.calc.Standard");
-_1.declare("dojox.calc.Standard",[dijit._Widget,dijit._Templated],{templateString:_1.cache("dojox.calc","templates/Standard.html"),readStore:null,writeStore:null,functions:[],widgetsInTemplate:true,executorLoaded:function(){
-_1.addOnLoad(_1.hitch(this,function(){
+require({cache:{"url:dojox/calc/templates/Standard.html":"<div class=\"dijitReset dijitInline dojoxCalc\"\n><table class=\"dijitReset dijitInline dojoxCalcLayout\" data-dojo-attach-point=\"calcTable\" rules=\"none\" cellspacing=0 cellpadding=0 border=0>\n\t<tr\n\t\t><td colspan=\"4\" class=\"dojoxCalcInputContainer\"\n\t\t\t><input data-dojo-type=\"dijit.form.TextBox\" data-dojo-attach-event=\"onBlur:onBlur,onKeyPress:onKeyPress\" data-dojo-attach-point='textboxWidget'\n\t\t/></td\n\t></tr>\n\t<tr>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"seven\" label=\"7\" value='7' data-dojo-attach-event='onClick:insertText' />\n\t\t</td>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"eight\" label=\"8\" value='8' data-dojo-attach-event='onClick:insertText' />\n\t\t</td>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"nine\" label=\"9\" value='9' data-dojo-attach-event='onClick:insertText' />\n\t\t</td>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"divide\" label=\"/\" value='/' data-dojo-attach-event='onClick:insertOperator' />\n\t\t</td>\n\t</tr>\n\t<tr>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"four\" label=\"4\" value='4' data-dojo-attach-event='onClick:insertText' />\n\t\t</td>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"five\" label=\"5\" value='5' data-dojo-attach-event='onClick:insertText' />\n\t\t</td>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"six\" label=\"6\" value='6' data-dojo-attach-event='onClick:insertText' />\n\t\t</td>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"multiply\" label=\"*\" value='*' data-dojo-attach-event='onClick:insertOperator' />\n\t\t</td>\n\t</tr>\n\t<tr>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"one\" label=\"1\" value='1' data-dojo-attach-event='onClick:insertText' />\n\t\t</td>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"two\" label=\"2\" value='2' data-dojo-attach-event='onClick:insertText' />\n\t\t</td>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"three\" label=\"3\" value='3' data-dojo-attach-event='onClick:insertText' />\n\t\t</td>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"add\" label=\"+\" value='+' data-dojo-attach-event='onClick:insertOperator' />\n\t\t</td>\n\t</tr>\n\t<tr>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"decimal\" label=\".\" value='.' data-dojo-attach-event='onClick:insertText' />\n\t\t</td>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"zero\" label=\"0\" value='0' data-dojo-attach-event='onClick:insertText' />\n\t\t</td>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"equals\" label=\"x=y\" value='=' data-dojo-attach-event='onClick:insertText' />\n\t\t</td>\n\t\t<td class=\"dojoxCalcMinusButtonContainer\">\n\t\t\t<span data-dojo-type=\"dijit.form.ComboButton\" data-dojo-attach-point=\"subtract\" label='-' value='-' data-dojo-attach-event='onClick:insertOperator'>\n\n\t\t\t\t<div data-dojo-type=\"dijit.Menu\" style=\"display:none;\">\n\t\t\t\t\t<div data-dojo-type=\"dijit.MenuItem\" data-dojo-attach-event=\"onClick:insertMinus\">\n\t\t\t\t\t\t(-)\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</span>\n\t\t</td>\n\t</tr>\n\t<tr>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"clear\" label=\"Clear\" data-dojo-attach-event='onClick:clearText' />\n\t\t</td>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"sqrt\" label=\"&#x221A;\" value=\"&#x221A;\" data-dojo-attach-event='onClick:insertText' />\n\t\t</td>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"power\" label=\"^\" value=\"^\" data-dojo-attach-event='onClick:insertOperator' />\n\t\t</td>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"comma\" label=\",\" value=',' data-dojo-attach-event='onClick:insertText' />\n\t\t</td>\n\t</tr>\n\t<tr>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"AnsButton\" label=\"Ans\" value=\"Ans\" data-dojo-attach-event='onClick:insertText' />\n\t\t</td>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"LeftParenButton\" label=\"(\" value=\"(\" data-dojo-attach-event='onClick:insertText' />\n\t\t</td>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"RightParenButton\" label=\")\" value=\")\" data-dojo-attach-event='onClick:insertText' />\n\t\t</td>\n\t\t<td class=\"dojoxCalcButtonContainer\">\n\t\t\t<button data-dojo-type=\"dijit.form.Button\" data-dojo-attach-point=\"enter\" label=\"Enter\" data-dojo-attach-event='onClick:parseTextbox' />\n\t\t</td>\n\t</tr>\n</table>\n<span data-dojo-attach-point=\"executor\" data-dojo-type=\"dojox.calc._Executor\" data-dojo-attach-event=\"onLoad:executorLoaded\"></span>\n</div>\n"}});
+define("dojox/calc/Standard",["dojo/_base/declare","dojo/_base/lang","dojo/_base/sniff","dojo/_base/window","dojo/_base/event","dojo/dom-style","dojo/ready","dojo/keys","dijit/registry","dijit/typematic","dijit/_WidgetBase","dijit/_WidgetsInTemplateMixin","dijit/_TemplatedMixin","dijit/form/_TextBoxMixin","dojox/math/_base","dijit/TooltipDialog","dojo/text!./templates/Standard.html","dojox/calc/_Executor","dijit/Menu","dijit/MenuItem","dijit/form/ComboButton","dijit/form/Button","dijit/form/TextBox"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b,_c,_d,_e,_f,_10,_11,_12){
+return _1("dojox.calc.Standard",[_b,_d,_c],{templateString:_11,readStore:null,writeStore:null,functions:[],executorLoaded:function(){
+_7(_2.hitch(this,function(){
 this.loadStore(this.readStore,true);
 this.loadStore(this.writeStore);
 }));
-},saveFunction:function(_2,_3,_4){
-this.functions[_2]=this.executor.normalizedFunction(_2,_3,_4);
-this.functions[_2].args=_3;
-this.functions[_2].body=_4;
-},loadStore:function(_5,_6){
-function _7(_8){
-for(var i=0;i<_8.length;i++){
-this.saveFunction(_8[i].name[0],_8[i].args[0],_8[i].body[0]);
-}
-};
-function _9(_a){
-for(var i=0;i<_a.length;i++){
-this.executor.normalizedFunction(_a[i].name[0],_a[i].args[0],_a[i].body[0]);
-}
-};
-if(_5==null){
+},saveFunction:function(_13,_14,_15){
+this.functions[_13]=this.executor.normalizedFunction(_13,_14,_15);
+this.functions[_13].args=_14;
+this.functions[_13].body=_15;
+},loadStore:function(_16,_17){
+if(!_16){
 return;
 }
-if(_6){
-_5.fetch({onComplete:_1.hitch(this,_9),onError:function(_b){
-console.error(_b);
-}});
-}else{
-_5.fetch({onComplete:_1.hitch(this,_7),onError:function(_c){
-console.error(_c);
-}});
-}
+_16.query({}).forEach(_2.hitch(this,function(_18){
+_2.hitch(this,_17?this.executor.normalizedFunction:this.saveFunction)(_18.name,_18.args,_18.body);
+}));
 },parseTextbox:function(){
-var _d=this.textboxWidget.textbox.value;
-if(_d==""&&this.commandList.length>0){
+var _19=this.textboxWidget.textbox.value;
+if(_19==""&&this.commandList.length>0){
 this.setTextboxValue(this.textboxWidget,this.commandList[this.commandList.length-1]);
-_d=this.textboxWidget.textbox.value;
+_19=this.textboxWidget.textbox.value;
 }
-if(_d!=""){
-var _e=this.executor.eval(_d);
-if((typeof _e=="number"&&isNaN(_e))){
-if(this.commandList.length==0||this.commandList[this.commandList.length-1]!=_d){
-this.commandList.push(_d);
+if(_19!=""){
+var ans=this.executor.eval(_19);
+if((typeof ans=="number"&&isNaN(ans))){
+if(this.commandList.length==0||this.commandList[this.commandList.length-1]!=_19){
+this.commandList.push(_19);
 }
-this.print(_d,false);
+this.print(_19,false);
 this.print("Not a Number",true);
 }else{
-if(((typeof _e=="object"&&"length" in _e)||typeof _e!="object")&&typeof _e!="function"&&_e!=null){
-this.executor.eval("Ans="+_e);
-if(this.commandList.length==0||this.commandList[this.commandList.length-1]!=_d){
-this.commandList.push(_d);
+if(((typeof ans=="object"&&"length" in ans)||typeof ans!="object")&&typeof ans!="function"&&ans!=null){
+this.executor.eval("Ans="+ans);
+if(this.commandList.length==0||this.commandList[this.commandList.length-1]!=_19){
+this.commandList.push(_19);
 }
-this.print(_d,false);
-this.print(_e,true);
+this.print(_19,false);
+this.print(ans,true);
 }
 }
 this.commandIndex=this.commandList.length-1;
 if(this.hasDisplay){
 this.displayBox.scrollTop=this.displayBox.scrollHeight;
 }
-dijit.selectInputText(this.textboxWidget.textbox);
+_e.selectInputText(this.textboxWidget.textbox);
 }else{
 this.textboxWidget.focus();
 }
-},cycleCommands:function(_f,_10,_11){
-if(_f==-1||this.commandList.length==0){
+},cycleCommands:function(_1a,_1b,_1c){
+if(_1a==-1||this.commandList.length==0){
 return;
 }
-var _12=_11.charOrCode;
-if(_12==_1.keys.UP_ARROW){
+var _1d=_1c.charOrCode;
+if(_1d==_8.UP_ARROW){
 this.cycleCommandUp();
 }else{
-if(_12==_1.keys.DOWN_ARROW){
+if(_1d==_8.DOWN_ARROW){
 this.cycleCommandDown();
 }
 }
@@ -99,34 +77,34 @@ this.commandIndex++;
 this.setTextboxValue(this.textboxWidget,this.commandList[this.commandIndex]);
 }
 },onBlur:function(){
-if(_1.isIE){
-var tr=_1.doc.selection.createRange().duplicate();
-var _13=tr.text||"";
+if(_3("ie")){
+var tr=_4.doc.selection.createRange().duplicate();
+var _1e=tr.text||"";
 var ntr=this.textboxWidget.textbox.createTextRange();
 tr.move("character",0);
 ntr.move("character",0);
 try{
 ntr.setEndPoint("EndToEnd",tr);
-this.textboxWidget.textbox.selectionEnd=(this.textboxWidget.textbox.selectionStart=String(ntr.text).replace(/\r/g,"").length)+_13.length;
+this.textboxWidget.textbox.selectionEnd=(this.textboxWidget.textbox.selectionStart=String(ntr.text).replace(/\r/g,"").length)+_1e.length;
 }
 catch(e){
 }
 }
-},onKeyPress:function(_14){
-if(_14.charOrCode==_1.keys.ENTER){
+},onKeyPress:function(e){
+if(e.charOrCode==_8.ENTER){
 this.parseTextbox();
-_1.stopEvent(_14);
+_5.stop(e);
 }else{
-if(_14.charOrCode=="!"||_14.charOrCode=="^"||_14.charOrCode=="*"||_14.charOrCode=="/"||_14.charOrCode=="-"||_14.charOrCode=="+"){
-if(_1.isIE){
-var tr=_1.doc.selection.createRange().duplicate();
-var _15=tr.text||"";
+if(e.charOrCode=="!"||e.charOrCode=="^"||e.charOrCode=="*"||e.charOrCode=="/"||e.charOrCode=="-"||e.charOrCode=="+"){
+if(_3("ie")){
+var tr=_4.doc.selection.createRange().duplicate();
+var _1f=tr.text||"";
 var ntr=this.textboxWidget.textbox.createTextRange();
 tr.move("character",0);
 ntr.move("character",0);
 try{
 ntr.setEndPoint("EndToEnd",tr);
-this.textboxWidget.textbox.selectionEnd=(this.textboxWidget.textbox.selectionStart=String(ntr.text).replace(/\r/g,"").length)+_15.length;
+this.textboxWidget.textbox.selectionEnd=(this.textboxWidget.textbox.selectionStart=String(ntr.text).replace(/\r/g,"").length)+_1f.length;
 }
 catch(e){
 }
@@ -134,39 +112,39 @@ catch(e){
 if(this.textboxWidget.get("value")==""){
 this.setTextboxValue(this.textboxWidget,"Ans");
 }else{
-if(this.putInAnsIfTextboxIsHighlighted(this.textboxWidget.textbox,_14.charOrCode)){
+if(this.putInAnsIfTextboxIsHighlighted(this.textboxWidget.textbox,_5.charOrCode)){
 this.setTextboxValue(this.textboxWidget,"Ans");
-dijit.selectInputText(this.textboxWidget.textbox,this.textboxWidget.textbox.value.length,this.textboxWidget.textbox.value.length);
+_e.selectInputText(this.textboxWidget.textbox,this.textboxWidget.textbox.value.length,this.textboxWidget.textbox.value.length);
 }
 }
 }
 }
 },insertMinus:function(){
 this.insertText("-");
-},print:function(_16,_17){
+},print:function(_20,_21){
 var t="<span style='display:block;";
-if(_17){
+if(_21){
 t+="text-align:right;'>";
 }else{
 t+="text-align:left;'>";
 }
-t+=_16+"<br></span>";
+t+=_20+"<br></span>";
 if(this.hasDisplay){
 this.displayBox.innerHTML+=t;
 }else{
-this.setTextboxValue(this.textboxWidget,_16);
+this.setTextboxValue(this.textboxWidget,_20);
 }
-},setTextboxValue:function(_18,val){
-_18.set("value",val);
-},putInAnsIfTextboxIsHighlighted:function(_19){
-if(typeof _19.selectionStart=="number"){
-if(_19.selectionStart==0&&_19.selectionEnd==_19.value.length){
+},setTextboxValue:function(_22,val){
+_22.set("value",val);
+},putInAnsIfTextboxIsHighlighted:function(_23){
+if(typeof _23.selectionStart=="number"){
+if(_23.selectionStart==0&&_23.selectionEnd==_23.value.length){
 return true;
 }
 }else{
 if(document.selection){
-var _1a=document.selection.createRange();
-if(_19.value==_1a.text){
+var _24=document.selection.createRange();
+if(_23.value==_24.text){
 return true;
 }
 }
@@ -179,46 +157,46 @@ this.displayBox.innerHTML="";
 this.setTextboxValue(this.textboxWidget,"");
 }
 this.textboxWidget.focus();
-},insertOperator:function(_1b){
-if(typeof _1b=="object"){
-_1b=_1b=dijit.getEnclosingWidget(_1b["target"]).value;
+},insertOperator:function(_25){
+if(typeof _25=="object"){
+_25=_25=_9.getEnclosingWidget(_25["target"]).value;
 }
 if(this.textboxWidget.get("value")==""||this.putInAnsIfTextboxIsHighlighted(this.textboxWidget.textbox)){
-_1b="Ans"+_1b;
+_25="Ans"+_25;
 }
-this.insertText(_1b);
-},insertText:function(_1c){
-setTimeout(_1.hitch(this,function(){
-var _1d=this.textboxWidget.textbox;
-if(_1d.value==""){
-_1d.selectionStart=0;
-_1d.selectionEnd=0;
+this.insertText(_25);
+},insertText:function(_26){
+setTimeout(_2.hitch(this,function(){
+var _27=this.textboxWidget.textbox;
+if(_27.value==""){
+_27.selectionStart=0;
+_27.selectionEnd=0;
 }
-if(typeof _1c=="object"){
-_1c=_1c=dijit.getEnclosingWidget(_1c["target"]).value;
+if(typeof _26=="object"){
+_26=_26=_9.getEnclosingWidget(_26["target"]).value;
 }
-var _1e=_1d.value.replace(/\r/g,"");
-if(typeof _1d.selectionStart=="number"){
-var pos=_1d.selectionStart;
+var _28=_27.value.replace(/\r/g,"");
+if(typeof _27.selectionStart=="number"){
+var pos=_27.selectionStart;
 var cr=0;
-if(navigator.userAgent.indexOf("Opera")!=-1){
-cr=(_1d.value.substring(0,pos).match(/\r/g)||[]).length;
+if(_3("opera")){
+cr=(_27.value.substring(0,pos).match(/\r/g)||[]).length;
 }
-_1d.value=_1e.substring(0,_1d.selectionStart-cr)+_1c+_1e.substring(_1d.selectionEnd-cr);
-_1d.focus();
-pos+=_1c.length;
-dijit.selectInputText(this.textboxWidget.textbox,pos,pos);
+_27.value=_28.substring(0,_27.selectionStart-cr)+_26+_28.substring(_27.selectionEnd-cr);
+_27.focus();
+pos+=_26.length;
+_e.selectInputText(this.textboxWidget.textbox,pos,pos);
 }else{
 if(document.selection){
 if(this.handle){
 clearTimeout(this.handle);
 this.handle=null;
 }
-_1d.focus();
+_27.focus();
 this.handle=setTimeout(function(){
-var _1f=document.selection.createRange();
-_1f.text=_1c;
-_1f.select();
+var _29=document.selection.createRange();
+_29.text=_26;
+_29.select();
 this.handle=null;
 },0);
 }
@@ -231,18 +209,17 @@ this.commandIndex=0;
 if(this.displayBox){
 this.hasDisplay=true;
 }
-if(this.toFracButton&&!dojox.calc.toFrac){
-_1.style(this.toFracButton.domNode,{visibility:"hidden"});
+if(this.toFracButton&&!_12.toFrac){
+_6.set(this.toFracButton.domNode,{visibility:"hidden"});
 }
-if(this.functionMakerButton&&!dojox.calc.FuncGen){
-_1.style(this.functionMakerButton.domNode,{visibility:"hidden"});
+if(this.functionMakerButton&&!_12.FuncGen){
+_6.set(this.functionMakerButton.domNode,{visibility:"hidden"});
 }
-if(this.grapherMakerButton&&!dojox.calc.Grapher){
-_1.style(this.grapherMakerButton.domNode,{visibility:"hidden"});
+if(this.grapherMakerButton&&!_12.Grapher){
+_6.set(this.grapherMakerButton.domNode,{visibility:"hidden"});
 }
-this._connects.push(dijit.typematic.addKeyListener(this.textboxWidget.textbox,{charOrCode:_1.keys.UP_ARROW,shiftKey:false,metaKey:false,ctrlKey:false},this,this.cycleCommands,200,200));
-this._connects.push(dijit.typematic.addKeyListener(this.textboxWidget.textbox,{charOrCode:_1.keys.DOWN_ARROW,shiftKey:false,metaKey:false,ctrlKey:false},this,this.cycleCommands,200,200));
+this._connects.push(_a.addKeyListener(this.textboxWidget.textbox,{charOrCode:_8.UP_ARROW,shiftKey:false,metaKey:false,ctrlKey:false},this,this.cycleCommands,200,200));
+this._connects.push(_a.addKeyListener(this.textboxWidget.textbox,{charOrCode:_8.DOWN_ARROW,shiftKey:false,metaKey:false,ctrlKey:false},this,this.cycleCommands,200,200));
 this.startup();
 }});
-return dojox.calc.Standard;
 });

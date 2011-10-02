@@ -578,8 +578,9 @@
 }
 .claro .dojoxGridExpandoNode {
 	background-image: url('../../../dijit/themes/claro/images/treeExpandImages.png');
-    width: 16px;
-    height: 16px;
+	width: 16px;
+	height: 16px;
+	cursor: pointer;
 	background-position: 1px 0px; 
 }
 .dj_ie6 .claro .dojoxGridExpandoNode {

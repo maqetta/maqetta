@@ -1,143 +1,147 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/form/uploader/plugins/HTML5",["dojo"],function(_1){
-_1.declare("dojox.form.uploader.plugins.HTML5",[],{errMsg:"Error uploading files. Try checking permissions",uploadType:"html5",postCreate:function(){
+define("dojox/form/uploader/plugins/HTML5",["dojo/_base/declare","dojo/_base/lang","dojo/_base/array","dojo"],function(_1,_2,_3,_4){
+var _5=_1("dojox.form.uploader.plugins.HTML5",[],{errMsg:"Error uploading files. Try checking permissions",uploadType:"html5",postCreate:function(){
 this.connectForm();
 this.inherited(arguments);
 if(this.uploadOnSelect){
-this.connect(this,"onChange","upload");
+this.connect(this,"onChange",function(_6){
+this.upload(_6[0]);
+});
 }
-},upload:function(_2){
+},_drop:function(e){
+_4.stopEvent(e);
+var dt=e.dataTransfer;
+this._files=dt.files;
+this.onChange(this.getFileList());
+},upload:function(_7){
 this.onBegin(this.getFileList());
 if(this.supports("FormData")){
-this.uploadWithFormData(_2);
+this.uploadWithFormData(_7);
 }else{
 if(this.supports("sendAsBinary")){
-this.sendAsBinary(_2);
+this.sendAsBinary(_7);
 }
 }
-},submit:function(_3){
-_3=!!_3?_3.tagName?_3:this.getForm():this.getForm();
-var _4=_1.formToObject(_3);
-this.upload(_4);
-},sendAsBinary:function(_5){
+},addDropTarget:function(_8,_9){
+if(!_9){
+this.connect(_8,"dragenter",_4.stopEvent);
+this.connect(_8,"dragover",_4.stopEvent);
+this.connect(_8,"dragleave",_4.stopEvent);
+}
+this.connect(_8,"drop","_drop");
+},sendAsBinary:function(_a){
 if(!this.getUrl()){
 console.error("No upload url found.",this);
 return;
 }
-var _6="---------------------------"+(new Date).getTime();
-var _7=this.createXhr();
-_7.setRequestHeader("Content-Type","multipart/form-data; boundary="+_6);
-var _8=this._buildRequestBody(_5,_6);
-if(!_8){
+var _b="---------------------------"+(new Date).getTime();
+var _c=this.createXhr();
+_c.setRequestHeader("Content-Type","multipart/form-data; boundary="+_b);
+var _d=this._buildRequestBody(_a,_b);
+if(!_d){
 this.onError(this.errMsg);
 }else{
-_7.sendAsBinary(_8);
+_c.sendAsBinary(_d);
 }
-},uploadWithFormData:function(_9){
+},uploadWithFormData:function(_e){
 if(!this.getUrl()){
 console.error("No upload url found.",this);
 return;
 }
 var fd=new FormData();
-_1.forEach(this.inputNode.files,function(f,i){
+_3.forEach(this._files,function(f,i){
 fd.append(this.name+"s[]",f);
 },this);
-if(_9){
-for(var nm in _9){
-fd.append(nm,_9[nm]);
+if(_e){
+for(var nm in _e){
+fd.append(nm,_e[nm]);
 }
 }
-var _a=this.createXhr();
-_a.send(fd);
-},_xhrProgress:function(_b){
-if(_b.lengthComputable){
-var o={bytesLoaded:_b.loaded,bytesTotal:_b.total,type:_b.type,timeStamp:_b.timeStamp};
-if(_b.type=="load"){
+var _f=this.createXhr();
+_f.send(fd);
+},_xhrProgress:function(evt){
+if(evt.lengthComputable){
+var o={bytesLoaded:evt.loaded,bytesTotal:evt.total,type:evt.type,timeStamp:evt.timeStamp};
+if(evt.type=="load"){
 o.percent="100%",o.decimal=1;
 }else{
-o.decimal=_b.loaded/_b.total;
-o.percent=Math.ceil((_b.loaded/_b.total)*100)+"%";
+o.decimal=evt.loaded/evt.total;
+o.percent=Math.ceil((evt.loaded/evt.total)*100)+"%";
 }
 this.onProgress(o);
 }
 },createXhr:function(){
-var _c=new XMLHttpRequest();
-var _d;
-_c.upload.addEventListener("progress",_1.hitch(this,"_xhrProgress"),false);
-_c.addEventListener("load",_1.hitch(this,"_xhrProgress"),false);
-_c.addEventListener("error",_1.hitch(this,function(_e){
-this.onError(_e);
-clearInterval(_d);
+var xhr=new XMLHttpRequest();
+var _10;
+xhr.upload.addEventListener("progress",_2.hitch(this,"_xhrProgress"),false);
+xhr.addEventListener("load",_2.hitch(this,"_xhrProgress"),false);
+xhr.addEventListener("error",_2.hitch(this,function(evt){
+this.onError(evt);
+clearInterval(_10);
 }),false);
-_c.addEventListener("abort",_1.hitch(this,function(_f){
-this.onAbort(_f);
-clearInterval(_d);
+xhr.addEventListener("abort",_2.hitch(this,function(evt){
+this.onAbort(evt);
+clearInterval(_10);
 }),false);
-_c.onreadystatechange=_1.hitch(this,function(){
-if(_c.readyState===4){
-clearInterval(_d);
-this.onComplete(JSON.parse(_c.responseText));
+xhr.onreadystatechange=_2.hitch(this,function(){
+if(xhr.readyState===4){
+clearInterval(_10);
+this.onComplete(JSON.parse(xhr.responseText.replace(/^\{\}&&/,"")));
 }
 });
-_c.open("POST",this.getUrl());
-_d=setInterval(_1.hitch(this,function(){
+xhr.open("POST",this.getUrl());
+_10=setInterval(_2.hitch(this,function(){
 try{
-if(typeof (_c.statusText)){
+if(typeof (xhr.statusText)){
 }
 }
 catch(e){
-clearInterval(_d);
+clearInterval(_10);
 }
 }),250);
-return _c;
-},_buildRequestBody:function(_10,_11){
+return xhr;
+},_buildRequestBody:function(_11,_12){
 var EOL="\r\n";
-var _12="";
-_11="--"+_11;
-var _13=[];
-_1.forEach(this.inputNode.files,function(f,i){
-var _14=this.name+"s[]";
-var _15=this.inputNode.files[i].fileName;
-var _16;
+var _13="";
+_12="--"+_12;
+var _14=[],_15=this._files;
+_3.forEach(_15,function(f,i){
+var _16=this.name+"s[]";
+var _17=f.fileName;
+var _18;
 try{
-_16=this.inputNode.files[i].getAsBinary()+EOL;
-_12+=_11+EOL;
-_12+="Content-Disposition: form-data; ";
-_12+="name=\""+_14+"\"; ";
-_12+="filename=\""+_15+"\""+EOL;
-_12+="Content-Type: "+this.getMimeType()+EOL+EOL;
-_12+=_16;
+_18=f.getAsBinary()+EOL;
+_13+=_12+EOL;
+_13+="Content-Disposition: form-data; ";
+_13+="name=\""+_16+"\"; ";
+_13+="filename=\""+_17+"\""+EOL;
+_13+="Content-Type: "+this.getMimeType()+EOL+EOL;
+_13+=_18;
 }
 catch(e){
-_13.push({index:i,name:_15});
+_14.push({index:i,name:_17});
 }
 },this);
-if(_13.length){
-if(_13.length>=this.inputNode.files.length){
-this.onError({message:this.errMsg,filesInError:_13});
-_12=false;
+if(_14.length){
+if(_14.length>=_15.length){
+this.onError({message:this.errMsg,filesInError:_14});
+_13=false;
 }
 }
-if(!_12){
+if(!_13){
 return false;
 }
-if(_10){
-for(var nm in _10){
-_12+=_11+EOL;
-_12+="Content-Disposition: form-data; ";
-_12+="name=\""+nm+"\""+EOL+EOL;
-_12+=_10[nm]+EOL;
+if(_11){
+for(var nm in _11){
+_13+=_12+EOL;
+_13+="Content-Disposition: form-data; ";
+_13+="name=\""+nm+"\""+EOL+EOL;
+_13+=_11[nm]+EOL;
 }
 }
-_12+=_11+"--"+EOL;
-return _12;
+_13+=_12+"--"+EOL;
+return _13;
 }});
-dojox.form.addUploaderPlugin(dojox.form.uploader.plugins.HTML5);
-return dojox.form.uploader.plugins.HTML5;
+dojox.form.addUploaderPlugin(_5);
+return _5;
 });

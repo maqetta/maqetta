@@ -104,9 +104,6 @@ return this;
 },destroy:function(){
 _1.dnd.Selector.superclass.destroy.call(this);
 this.selection=this.anchor=null;
-},markupFactory:function(_c,_d){
-_c._skipStartup=true;
-return new _1.dnd.Selector(_d,_c);
 },onMouseDown:function(e){
 if(this.autoSync){
 this.sync();
@@ -135,18 +132,18 @@ this.selection[this.anchor.id]=1;
 if(this.anchor!=this.current){
 var i=0;
 for(;i<c.length;++i){
-var _e=c[i];
-if(_e==this.anchor||_e==this.current){
+var _c=c[i];
+if(_c==this.anchor||_c==this.current){
 break;
 }
 }
 for(++i;i<c.length;++i){
-var _e=c[i];
-if(_e==this.anchor||_e==this.current){
+var _c=c[i];
+if(_c==this.anchor||_c==this.current){
 break;
 }
-this._addItemClass(_e,"Selected");
-this.selection[_e.id]=1;
+this._addItemClass(_c,"Selected");
+this.selection[_c.id]=1;
 }
 this._addItemClass(this.current,"Selected");
 this.selection[this.current.id]=1;
@@ -218,9 +215,9 @@ for(var i in this.selection){
 if(i in e){
 continue;
 }
-var _f=_1.byId(i);
-if(_f){
-this._removeItemClass(_f,"Selected");
+var _d=_1.byId(i);
+if(_d){
+this._removeItemClass(_d,"Selected");
 }
 }
 this.selection={};

@@ -1,4 +1,7 @@
 
+.claro .dijitTextBox, .claro .dijitInputInner {
+  color: #000000;
+}
 .claro .dijitTextBoxError .dijitValidationContainer {
   background-color: #d46464;
   background-image: url('images/error.png');
@@ -35,13 +38,13 @@
   background-color: #ffffff;
 }
 .claro .dijitTextBoxHover, .claro .dijitTextBoxHover .dijitButtonNode {
-  border-color: #769dc0;
+  border-color: #759dc0;
   -webkit-transition-duration: 0.25s;
   -moz-transition-duration: 0.25s;
   transition-duration: 0.25s;
 }
 .claro .dijitTextBoxHover {
-  background-color: #e9f4fe;
+  background-color: #e5f2fe;
   background-image: url('images/textBox_back.png');
   background-repeat: repeat-x;
 }
@@ -52,7 +55,7 @@
   background-color: #ffffff;
 }
 .claro .dijitTextBoxFocused, .claro .dijitTextBoxFocused .dijitButtonNode {
-  border-color: #769dc0;
+  border-color: #759dc0;
   -webkit-transition-duration: 0.1s;
   -moz-transition-duration: 0.1s;
   transition-duration: 0.1s;
@@ -66,7 +69,7 @@
   background: #ffffff;
 }
 .claro .dijitTextBoxErrorFocused, .claro .dijitTextBoxErrorFocused .dijitButtonNode {
-  border-color: #ce4f4f;
+  border-color: #ce5050;
 }
 .claro .dijitTextBoxDisabled, .claro .dijitTextBoxDisabled .dijitButtonNode {
   border-color: #d3d3d3;
@@ -74,7 +77,17 @@
 .claro .dijitTextBoxDisabled, .claro .dijitTextBoxDisabled .dijitInputContainer {
   background-color: #efefef;
   background-image: none;
+}
+.claro .dijitTextBoxDisabled, .claro .dijitTextBoxDisabled .dijitInputInner {
   color: #818181;
+}
+.dj_webkit .claro .dijitTextBoxDisabled input {
+  
+  color: #757575;
+}
+.dj_webkit .claro textarea.dijitTextAreaDisabled {
+  
+  color: #1b1b1b;
 }
 .claro .dijitComboBox .dijitArrowButtonInner {
   background-image: url("images/commonFormArrows.png");
@@ -105,7 +118,7 @@
   background-position: -70px 53%;
 }
 .claro .dijitComboBox .dijitHasDropDownOpen {
-  background-color: #7dbefa;
+  background-color: #7dbdfa;
   background-position: 0 -177px;
   padding: 1px;
 }

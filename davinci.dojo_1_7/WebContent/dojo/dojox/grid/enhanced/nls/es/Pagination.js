@@ -1,9 +1,3 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
 define(
 //begin v1.x content
@@ -14,6 +8,7 @@ define(
 	"nextTip": "Página siguiente",
 	"prevTip": "Página anterior",
 	"itemTitle": "elementos",
+	"singularItemTitle": "elemento",
 	"pageStepLabelTemplate": "Página ${0}",
 	"pageSizeLabelTemplate": "${0} elementos por página",
 	"allItemsLabelTemplate": "Todos los elementos",
@@ -22,7 +17,8 @@ define(
 	"dialogIndication": "Especifique el número de página",
 	"pageCountIndication": " (${0} páginas)",
 	"dialogConfirm": "Ir",
-	"dialogCancel": "Cancelar"
+	"dialogCancel": "Cancelar",
+	"all": "todas"
 })
 //end v1.x content
 );

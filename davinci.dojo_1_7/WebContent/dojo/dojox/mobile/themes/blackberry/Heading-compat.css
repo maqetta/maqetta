@@ -8,7 +8,7 @@
 .mblArrowButtonHead {
 	position: absolute;
 	top: 0px;
-	left: 6px;
+	left: 2px;
 	width: 19px;
 	height: 30px;
 	border-style: none;
@@ -17,9 +17,7 @@
 .mblArrowButtonBody {
 	padding: 0px 10px 0px 10px;
 	line-height: 28px;
+	-moz-border-radius-topright: 6px;
+	-moz-border-radius-bottomright: 6px;
 	background-image: url(compat/arrow-button-bg.png);
-}
-.mblArrowButtonNeck {
-	background-image: url(compat/arrow-button-bg.png);
-	border-width: 1px 0px 1px 0px;
 }

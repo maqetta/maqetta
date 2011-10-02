@@ -1,23 +1,17 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/fx/ext-dojo/NodeList-style",["dojo/_base/NodeList","dojo/NodeList-fx","../style"],function(){
-dojo.extend(dojo.NodeList,{addClassFx:function(_1,_2){
-return dojo.fx.combine(this.map(function(n){
-return dojox.fx.addClass(n,_1,_2);
+define("dojox/fx/ext-dojo/NodeList-style",["dojo/_base/lang","dojo/_base/NodeList","dojo/NodeList-fx","dojo/fx","../style"],function(_1,_2,_3,_4,_5){
+_1.extend(_2,{addClassFx:function(_6,_7){
+return _4.combine(this.map(function(n){
+return _5.addClass(n,_6,_7);
 }));
-},removeClassFx:function(_3,_4){
-return dojo.fx.combine(this.map(function(n){
-return dojox.fx.removeClass(n,_3,_4);
+},removeClassFx:function(_8,_9){
+return _4.combine(this.map(function(n){
+return _5.removeClass(n,_8,_9);
 }));
-},toggleClassFx:function(_5,_6,_7){
-return dojo.fx.combine(this.map(function(n){
-return dojox.fx.toggleClass(n,_5,_6,_7);
+},toggleClassFx:function(_a,_b,_c){
+return _4.combine(this.map(function(n){
+return _5.toggleClass(n,_a,_b,_c);
 }));
 }});
-return dojo.NodeList;
+return _2;
 });

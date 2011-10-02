@@ -1,13 +1,7 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/charting/plot2d/Columns",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","./Base","./common","dojox/lang/functional","dojox/lang/functional/reversed","dojox/lang/utils","dojox/gfx/fx"],function(_1,_2,_3,_4,dc,df,_5,du,fx){
-var _6=df.lambda("item.purgeGroup()");
-return _1.declare("dojox.charting.plot2d.Columns",dojox.charting.plot2d.Base,{defaultParams:{hAxis:"x",vAxis:"y",gap:0,animate:null,enableCache:false},optionalParams:{minBarSize:1,maxBarSize:1,stroke:{},outline:{},shadow:{},fill:{},font:"",fontColor:""},constructor:function(_7,_8){
+define("dojox/charting/plot2d/Columns",["dojo/_base/lang","dojo/_base/array","dojo/_base/declare","./Base","./common","dojox/lang/functional","dojox/lang/functional/reversed","dojox/lang/utils","dojox/gfx/fx"],function(_1,_2,_3,_4,dc,df,_5,du,fx){
+var _6=_5.lambda("item.purgeGroup()");
+return _3("dojox.charting.plot2d.Columns",_4,{defaultParams:{hAxis:"x",vAxis:"y",gap:0,animate:null,enableCache:false},optionalParams:{minBarSize:1,maxBarSize:1,stroke:{},outline:{},shadow:{},fill:{},font:"",fontColor:""},constructor:function(_7,_8){
 this.opt=_1.clone(this.defaultParams);
 du.updateWithObject(this.opt,_8);
 du.updateWithPattern(this.opt,_8,this.optionalParams);
@@ -41,7 +35,7 @@ var t=this.getSeriesStats();
 this.resetEvents();
 this.dirty=this.isDirty();
 if(this.dirty){
-_1.forEach(this.series,_6);
+_2.forEach(this.series,_6);
 this._eventSeries={};
 this.cleanGroup();
 var s=this.group;
@@ -71,7 +65,7 @@ for(var j=min;j<l;++j){
 var _17=run.data[j];
 if(_17!==null){
 var v=typeof _17=="number"?_17:_17.y,vv=vt(v),_18=vv-_13,h=Math.abs(_18),_19=typeof _17!="number"?t.addMixin(_15,"column",_17,true):t.post(_15,"column");
-if(_11>=1&&h>=1){
+if(_11>=1&&h>=0){
 var _1a={x:_f.l+ht(j+0.5)+gap,y:_e.height-_f.b-(v>_12?vv:_13),width:_11,height:h};
 var _1b=this._plotFill(_19.series.fill,_e,_f);
 _1b=this._shapeFill(_1b,_1a);

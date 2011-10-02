@@ -1,14 +1,8 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/lang/async",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.lang.async",1);
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.lang.async");
 (function(){
-var d=_1,_4=d.Deferred,_5=d.forEach,_6=d.some,_7=_3.lang.async,_8=Array.prototype.slice,_9=Object.prototype.toString;
+var d=_2,_4=d.Deferred,_5=d.forEach,_6=d.some,_7=_3.lang.async,_8=Array.prototype.slice,_9=Object.prototype.toString;
 _7.seq=function(x){
 var fs=_9.call(x)=="[object Array]"?x:arguments;
 return function(_a){
@@ -158,6 +152,4 @@ return y;
 };
 };
 })();
-return _1.getObject("dojox.lang.async");
 });
-require(["dojox/lang/async"]);

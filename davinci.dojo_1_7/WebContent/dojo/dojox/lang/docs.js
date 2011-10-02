@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/lang/docs",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.lang.docs",1);
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.lang.docs");
 (function(){
 function _4(_5){
 };
@@ -37,7 +31,7 @@ if(_e=="bool"){
 _e="boolean";
 }else{
 if(_e){
-_f=_1.getObject(_e)||{};
+_f=_2.getObject(_e)||{};
 _12=true;
 }else{
 _f={};
@@ -104,33 +98,33 @@ _1a.returns=_1e;
 }
 var _1f=_16.superclass;
 if(_1f){
-_14["extends"]=_1.getObject(_1f);
+_14["extends"]=_2.getObject(_1f);
 }
 }
 };
 var _20=function(_21){
 _7.push(_21);
 };
-var _22=_1.declare;
-_1.declare=function(_23){
+var _22=_2.declare;
+_2.declare=function(_23){
 var _24=_22.apply(this,arguments);
 _9(_24,_23);
 return _24;
 };
-_1.mixin(_1.declare,_22);
+_2.mixin(_2.declare,_22);
 var _25;
-var _26=_1.require;
-_1.require=function(_27){
+var _26=_2.require;
+_2.require=function(_27){
 _20(_27);
 var _28=_26.apply(this,arguments);
 return _28;
 };
 _3.lang.docs.init=function(_29){
 function _2a(){
-_1.require=_26;
+_2.require=_26;
 _7=null;
 try{
-_1.xhrGet({sync:!_29,url:_1.baseUrl+"../util/docscripts/api.json",handleAs:"text"}).addCallbacks(function(obj){
+_2.xhrGet({sync:!_29,url:_2.baseUrl+"../util/docscripts/api.json",handleAs:"text"}).addCallbacks(function(obj){
 _8=(new Function("return "+obj))();
 obj=null;
 _9=_13;
@@ -149,7 +143,7 @@ return null;
 }
 _25=true;
 var _2b=function(_2c,_2d){
-return _1.xhrGet({sync:_2d||!_29,url:_1.baseUrl+"../util/docscripts/api/"+_2c+".json",handleAs:"text"}).addCallback(function(obj){
+return _2.xhrGet({sync:_2d||!_29,url:_2.baseUrl+"../util/docscripts/api/"+_2c+".json",handleAs:"text"}).addCallback(function(obj){
 obj=(new Function("return "+obj))();
 for(var _2e in obj){
 if(!_8[_2e]){
@@ -171,7 +165,7 @@ _8[_30]={};
 }
 }
 };
-_1.forEach(_7,function(mod){
+_2.forEach(_7,function(mod){
 _20(mod);
 });
 _7=null;
@@ -188,6 +182,4 @@ _2a();
 return null;
 };
 })();
-return _1.getObject("dojox.lang.docs");
 });
-require(["dojox/lang/docs"]);

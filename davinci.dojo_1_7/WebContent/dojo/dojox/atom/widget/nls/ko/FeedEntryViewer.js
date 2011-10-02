@@ -1,5 +1,7 @@
 //>>built
-define(({
+define(
+//begin v1.x content
+({
 	displayOptions: "[옵션 표시]",
 	title: "제목",
 	authors: "작성자",
@@ -10,4 +12,5 @@ define(({
 	summary: "요약",
 	content: "컨텐츠"
 })
+//end v1.x content
 );

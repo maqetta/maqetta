@@ -21,7 +21,7 @@
 @theme-highlight-text-shadow: rgba(0,0,0,0.2) 0px 1px 2px;
 @theme-highlight-color: #000000;	// numerical color value
 @theme-highlight-border-color: #769DC0;	// numerical color value
-@theme-highlight-background-color: #ABD6FF;	// numerical color value
+@theme-highlight-background-color: #5CB0FF;	// numerical color value
 
 //----------------------------------------------------------------
 // 2. Variables for typical style setting
@@ -93,16 +93,20 @@
 ._background-image-gradient-mask-ui-widget () {
 	@delta: 1% / @theme-ui-widget-height * 100;
 	// claro gradation
-	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(255, 255, 255, 1)), color-stop(@delta * 1, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(255, 255, 255, 1)), color-stop(@delta * 1, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
 }
 ._background-image-gradient-mask-ui-widget-r () { // for .mblArrowButtonHead-styles
 	@delta: 1% / @theme-ui-widget-height * 100;
 	// claro gradation
-	background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0, rgba(255, 255, 255, 1)), color-stop(@delta * 1, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
+	background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0, rgba(255, 255, 255, 1)), color-stop(@delta * 1, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
 }
 
 // dojox.mobile fixed variables
 @mbl-dom-button-size: 29px;
+@mbl-switch-height: 27px;
+
+// Application's customizable variables
+@appl-list-item-icon-size: 29px; // size of ListItemIcon
 
 //----------------------------------------------------------------
 // 3. Variables for dojox.mobile Widgets
@@ -169,11 +173,14 @@
 	left: @_heading-inner-margin + @theme-ui-widget-height * 0.4; // = 0.5 * 0.9 
 	width: @theme-ui-widget-height * 0.7;
 	height: @theme-ui-widget-height * 0.7;
-	border: 1px inset @theme-ui-widget-border-color;
+	border: 1px solid @theme-ui-widget-border-color;
 	-webkit-transform-origin: left top;
 	-webkit-transform: scale(0.9,0.99) rotate(45deg);
 	background-color: @theme-ui-widget-background-color;
 	._background-image-gradient-mask-ui-widget-r;
+}
+.mblArrowButtonHeadChrome-styles () {
+	border-style: inset;
 }
 .mblArrowButtonBody-styles () {
 	top: @_heading-inner-margin;
@@ -194,28 +201,19 @@
 	background-color: @theme-ui-widget-background-color;
 	._background-image-gradient-mask-ui-widget;
 }
-.mblArrowButtonNeck-styles () {
-	visibility: hidden;
-//	top: @_heading-inner-margin;
-//	left: @_heading-inner-margin + @theme-ui-widget-height * 0.4;
-//	width: 3px;
-//	height: @theme-ui-widget-height;
-//	border-width: 1px 0px 1px 0px;
-//	border-style: inset;
-//	border-color: @theme-ui-widget-border-color;
-//	background-color: @theme-ui-widget-background-color;
-//	._background-image-gradient-mask-ui-widget;
-}
 .mblArrowButtonSelected-styles () {
 	background-color: @theme-ui-widget-selected-background-color;
+}
+.mblArrowButtonHeadSelected-styles () {
+}
+.mblArrowButtonBodySelected-styles () {
 }
 
 //----------------------------------------------------------------
 // ToolBarButton.less
 //----------------------------------------------------------------
-.mblToolbarButton-styles () {
+.mblToolBarButton-styles () {
 	margin: @theme-default-margin;
-	padding: 0px @theme-default-padding;
 	height: @theme-ui-widget-height;
 	border: 1px inset @theme-ui-widget-border-color;
 	-webkit-border-radius: @theme-ui-widget-border-radius;
@@ -227,10 +225,13 @@
 	line-height: @theme-ui-widget-height;
 	text-align: center;
 	&.mblArrowButtonText {
-		margin: @_heading-inner-margin @theme-default-margin;
+		margin: ((@theme-heading-height + 2 - @theme-ui-widget-height) * 0.5) @theme-default-margin;
 	}
 }
-.mblToolbarButtonDomButton-styles () {
+.mblToolBarButtonDomButton-styles () {
+}
+.mblToolBarButtonIcon-styles () {
+	top: 2px;
 }
 
 //----------------------------------------------------------------
@@ -294,9 +295,13 @@
 	background-color: @theme-list-item-background-color;
 	-webkit-box-shadow: @theme-round-rect-box-shadow;
 }
+.mblRoundRectList-withCategory-styles () {
+}	
 .mblRoundRectList-FirstListItem-styles () {
 	-webkit-border-top-left-radius: @theme-default-border-radius;
 	-webkit-border-top-right-radius: @theme-default-border-radius;
+}
+.mblRoundRectList-withCategory-FirstListItem-styles () {
 }
 .mblRoundRectList-LastListItem-styles () {
 	border-bottom-width: 0px;
@@ -358,19 +363,19 @@
 	color: @theme-highlight-color;
 }
 .mblListItemIcon-styles () {
-	margin-top: 7px;
+	margin-top: (@theme-list-item-height - @appl-list-item-icon-size) * 0.5;
 	margin-right: 11px;
 }
 .mblListItemSpriteIcon-styles () {
-	margin-top: 7px;
+	margin-top: (@theme-list-item-height - @appl-list-item-icon-size) * 0.5;
+	margin-left: 8px;
 }
 .mblListItemRightIcon-styles () {
-	margin-top: 7px;
-	margin-bottom: -7px;
+	margin-top: (@theme-list-item-height - @appl-list-item-icon-size) * 0.5;
 }
 .mblListItemRightText-styles () {
 	color: @theme-default-color;
-	margin: 11px 4px 0 0;
+	margin: ((@theme-list-item-height - (@theme-list-item-font-size + 4)) * 0.5) 4px 0 0;
 }
 .mblListItemTextBox-styles () {
 }
@@ -383,7 +388,7 @@
 // Switch.less
 //----------------------------------------------------------------
 .mblItemSwitch-styles () {
-	top: @theme-default-margin;
+	top: (@theme-list-item-height - @mbl-switch-height + 1) * 0.5;
 }
 .mblSwitchBg-styles () {
 	border-color: @theme-ui-widget-border-color;
@@ -398,6 +403,7 @@
 	background-color: @theme-ui-widget-disabled-background-color;
 }
 .mblSwitchKnob-styles () {
+	border-color: darken(@theme-ui-widget-border-color, 20%);
 	background-color: @theme-ui-widget-background-color;
 	._background-image-gradient-mask-ui-widget;
 	-webkit-border-radius: @theme-ui-widget-border-radius;
@@ -549,13 +555,6 @@
 	font-weight: @theme-default-font-weight;
 	font-size: @theme-default-font-size;
 }
-.mblIconArea-div-styles () {
-	height: @theme-icon-item-height;
-}
-.mblIconArea-img-styles () {
-	top: 0;
-	left: @theme-default-margin / 2;
-}
 .mblContent-styles () {
 	padding-bottom: @theme-default-margin;
 }
@@ -662,7 +661,6 @@
 .mblTabBarButtonDiv-styles () {
 	height: @mbl-dom-button-size;
 	width: @mbl-dom-button-size;
-	left: 50%;
 }
 .mblTabBarButtonIcon-styles () {
 	left: 0;
@@ -697,8 +695,10 @@
 .mblTabButton-TabBarButtonAnchor-styles () {
 	height: @theme-ui-widget-height;
 }
-.mblTabButton-TabBarButtonDiv-styles () {
+.mblTabBarTop-TabButton-TabBarButtonDiv-styles () {
 	display: none;
+}
+.mblTabBarHead-TabButton-TabBarButtonDiv-styles () {
 }
 .mblTabButton-FirstTabButtom-styles () {
 	-webkit-border-top-left-radius: @theme-ui-widget-border-radius;
@@ -740,7 +740,7 @@
 	line-height: @theme-heading-height + 2;
 }
 .mblTabPanelHeader-TabButton-styles () {
-	margin-top: (@theme-heading-height - @theme-ui-widget-height - 2) / 2;
+	margin-top: (@theme-heading-height - @theme-ui-widget-height - 2) * 0.5;
 }
 .mblTabPanelHeader-TabButtonSelected-styles () {
 	background-color: @theme-ui-widget-selected-background-color;
@@ -748,13 +748,15 @@
 .mblTabPanelHeader-TabButtonDomButton-styles () {
 	width: 43px;
 }
-.mblTabPanelHeader-DomButton-styles () {
+.mblTabPanelHeader-TabButtonDomButtonClass-styles () {
 	left: 8px;
+}
+.mblTabPanelHeader-DomButton-styles () {
 }
 .mblTabPanelHeader-inHeading-styles () {
 }
 .mblTabPanelHeader-TabButton-inHeading-styles () {
-	margin-top: (@theme-heading-height - @theme-ui-widget-height) / 2;
+	margin-top: (@theme-heading-height - @theme-ui-widget-height) * 0.5;
 }
 .mblTabPanelHeader-TabButton-FirstTabButtom-inHeading-styles () {
 	-webkit-border-top-left-radius: @theme-ui-widget-border-radius;

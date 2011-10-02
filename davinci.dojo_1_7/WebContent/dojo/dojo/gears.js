@@ -5,39 +5,39 @@
 */
 
 //>>built
-define("dojo/gears",["./main"],function(_1){
-_1.getObject("gears",true,_1);
+define("dojo/gears",["./_base/kernel","./_base/lang","./_base/sniff"],function(_1,_2,_3){
+_2.getObject("gears",true,_1);
 _1.gears._gearsObject=function(){
-var _2;
-var _3=_1.getObject("google.gears");
-if(_3){
-return _3;
+var _4;
+var _5=_2.getObject("google.gears");
+if(_5){
+return _5;
 }
 if(typeof GearsFactory!="undefined"){
-_2=new GearsFactory();
+_4=new GearsFactory();
 }else{
-if(_1.isIE){
+if(_3("ie")){
 try{
-_2=new ActiveXObject("Gears.Factory");
+_4=new ActiveXObject("Gears.Factory");
 }
 catch(e){
 }
 }else{
 if(navigator.mimeTypes["application/x-googlegears"]){
-_2=document.createElement("object");
-_2.setAttribute("type","application/x-googlegears");
-_2.setAttribute("width",0);
-_2.setAttribute("height",0);
-_2.style.display="none";
-document.documentElement.appendChild(_2);
+_4=document.createElement("object");
+_4.setAttribute("type","application/x-googlegears");
+_4.setAttribute("width",0);
+_4.setAttribute("height",0);
+_4.style.display="none";
+document.documentElement.appendChild(_4);
 }
 }
 }
-if(!_2){
+if(!_4){
 return null;
 }
-_1.setObject("google.gears.factory",_2);
-return _1.getObject("google.gears");
+_2.setObject("google.gears.factory",_4);
+return _2.getObject("google.gears");
 };
 _1.gears.available=(!!_1.gears._gearsObject())||0;
 return _1.gears;

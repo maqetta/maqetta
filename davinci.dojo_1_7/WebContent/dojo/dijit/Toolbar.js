@@ -1,20 +1,13 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dijit/Toolbar",["dojo/_base/kernel",".","require","./_Widget","./_KeyNavContainer","./_TemplatedMixin","dojo/_base/connect","dojo/_base/declare"],function(_1,_2,_3){
-_1.declare("dijit.Toolbar",[_2._Widget,_2._TemplatedMixin,_2._KeyNavContainer],{templateString:"<div class=\"dijit\" role=\"toolbar\" tabIndex=\"${tabIndex}\" dojoAttachPoint=\"containerNode\">"+"</div>",baseClass:"dijitToolbar",postCreate:function(){
-this.inherited(arguments);
-this.connectKeyNavHandlers(this.isLeftToRight()?[_1.keys.LEFT_ARROW]:[_1.keys.RIGHT_ARROW],this.isLeftToRight()?[_1.keys.RIGHT_ARROW]:[_1.keys.LEFT_ARROW]);
-}});
-if(!_1.isAsync){
-_1.ready(0,function(){
-var _4=["dijit/ToolbarSeparator"];
-_3(_4);
+define("dijit/Toolbar",["require","dojo/_base/declare","dojo/_base/kernel","dojo/keys","dojo/ready","./_Widget","./_KeyNavContainer","./_TemplatedMixin"],function(_1,_2,_3,_4,_5,_6,_7,_8){
+if(!_3.isAsync){
+_5(0,function(){
+var _9=["dijit/ToolbarSeparator"];
+_1(_9);
 });
 }
-return _2.Toolbar;
+return _2("dijit.Toolbar",[_6,_8,_7],{templateString:"<div class=\"dijit\" role=\"toolbar\" tabIndex=\"${tabIndex}\" data-dojo-attach-point=\"containerNode\">"+"</div>",baseClass:"dijitToolbar",postCreate:function(){
+this.inherited(arguments);
+this.connectKeyNavHandlers(this.isLeftToRight()?[_4.LEFT_ARROW]:[_4.RIGHT_ARROW],this.isLeftToRight()?[_4.RIGHT_ARROW]:[_4.LEFT_ARROW]);
+}});
 });

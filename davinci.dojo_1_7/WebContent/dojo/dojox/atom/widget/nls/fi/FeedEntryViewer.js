@@ -1,5 +1,7 @@
 //>>built
-define(({
+define(
+//begin v1.x content
+({
 	displayOptions: "[näyttöasetukset]",
 	title: "Otsikko",
 	authors: "Tekijät",
@@ -10,5 +12,5 @@ define(({
 	summary: "Tiivistelmä",
 	content: "Sisältö"
 })
-
+//end v1.x content
 );

@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
 define("dojox/geo/openlayers/Feature",["dojo/_base/kernel","dojo/_base/declare","dojox/geo/openlayers/Map"],function(_1,_2,_3){
-return _1.declare("dojox.geo.openlayers.Feature",null,{constructor:function(){
+return _2("dojox.geo.openlayers.Feature",null,{constructor:function(){
 this._layer=null;
 this._coordSys=dojox.geo.openlayers.EPSG4326;
 },getCoordinateSystem:function(){

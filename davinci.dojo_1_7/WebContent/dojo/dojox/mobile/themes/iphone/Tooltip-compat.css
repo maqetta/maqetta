@@ -31,7 +31,7 @@
 	*overflow: visible;
 	*line-height: normal;
 }
-.mblTooltip .mblHeading .mblToolbarButton {
+.mblTooltip .mblHeading .mblToolBarButton {
 	background-color: #000924;
 	background-image: url(compat/tooltip-button-bg.png);
 	*margin: auto 6px;

@@ -1,186 +1,180 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/charting/Theme",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojox/color/_base","dojox/color/Palette","dojox/lang/utils","dojox/gfx/gradutils"],function(_1,_2,_3,_4,_5,_6,_7){
-_1.declare("dojox.charting.Theme",null,{shapeSpaces:{shape:1,shapeX:1,shapeY:1},constructor:function(_8){
-_8=_8||{};
-var _9=dojox.charting.Theme.defaultTheme;
-_1.forEach(["chart","plotarea","axis","series","marker","indicator"],function(_a){
-this[_a]=_1.delegate(_9[_a],_8[_a]);
+define("dojox/charting/Theme",["dojo/_base/lang","dojo/_base/array","dojo/_base/declare","dojo/_base/Color","dojox/color/_base","dojox/color/Palette","dojox/lang/utils","dojox/gfx/gradutils"],function(_1,_2,_3,_4,_5,_6,_7,_8){
+var _9=_3("dojox.charting.Theme",null,{shapeSpaces:{shape:1,shapeX:1,shapeY:1},constructor:function(_a){
+_a=_a||{};
+var _b=_9.defaultTheme;
+_2.forEach(["chart","plotarea","axis","series","marker","indicator"],function(_c){
+this[_c]=_1.delegate(_b[_c],_a[_c]);
 },this);
-if(_8.seriesThemes&&_8.seriesThemes.length){
+if(_a.seriesThemes&&_a.seriesThemes.length){
 this.colors=null;
-this.seriesThemes=_8.seriesThemes.slice(0);
+this.seriesThemes=_a.seriesThemes.slice(0);
 }else{
 this.seriesThemes=null;
-this.colors=(_8.colors||dojox.charting.Theme.defaultColors).slice(0);
+this.colors=(_a.colors||_9.defaultColors).slice(0);
 }
 this.markerThemes=null;
-if(_8.markerThemes&&_8.markerThemes.length){
-this.markerThemes=_8.markerThemes.slice(0);
+if(_a.markerThemes&&_a.markerThemes.length){
+this.markerThemes=_a.markerThemes.slice(0);
 }
-this.markers=_8.markers?_1.clone(_8.markers):_1.delegate(dojox.charting.Theme.defaultMarkers);
-this.noGradConv=_8.noGradConv;
-this.noRadialConv=_8.noRadialConv;
-if(_8.reverseFills){
+this.markers=_a.markers?_1.clone(_a.markers):_1.delegate(_9.defaultMarkers);
+this.noGradConv=_a.noGradConv;
+this.noRadialConv=_a.noRadialConv;
+if(_a.reverseFills){
 this.reverseFills();
 }
 this._current=0;
 this._buildMarkerArray();
 },clone:function(){
-var _b=new dojox.charting.Theme({chart:this.chart,plotarea:this.plotarea,axis:this.axis,series:this.series,marker:this.marker,colors:this.colors,markers:this.markers,indicator:this.indicator,seriesThemes:this.seriesThemes,markerThemes:this.markerThemes,noGradConv:this.noGradConv,noRadialConv:this.noRadialConv});
-_1.forEach(["clone","clear","next","skip","addMixin","post","getTick"],function(_c){
-if(this.hasOwnProperty(_c)){
-_b[_c]=this[_c];
+var _d=new _9({chart:this.chart,plotarea:this.plotarea,axis:this.axis,series:this.series,marker:this.marker,colors:this.colors,markers:this.markers,indicator:this.indicator,seriesThemes:this.seriesThemes,markerThemes:this.markerThemes,noGradConv:this.noGradConv,noRadialConv:this.noRadialConv});
+_2.forEach(["clone","clear","next","skip","addMixin","post","getTick"],function(_e){
+if(this.hasOwnProperty(_e)){
+_d[_e]=this[_e];
 }
 },this);
-return _b;
+return _d;
 },clear:function(){
 this._current=0;
-},next:function(_d,_e,_f){
-var _10=_6.merge,_11,_12;
+},next:function(_f,_10,_11){
+var _12=_7.merge,_13,_14;
 if(this.colors){
-_11=_1.delegate(this.series);
-_12=_1.delegate(this.marker);
-var _13=new _1.Color(this.colors[this._current%this.colors.length]),old;
-if(_11.stroke&&_11.stroke.color){
-_11.stroke=_1.delegate(_11.stroke);
-old=new _1.Color(_11.stroke.color);
-_11.stroke.color=new _1.Color(_13);
-_11.stroke.color.a=old.a;
+_13=_1.delegate(this.series);
+_14=_1.delegate(this.marker);
+var _15=new _4(this.colors[this._current%this.colors.length]),old;
+if(_13.stroke&&_13.stroke.color){
+_13.stroke=_1.delegate(_13.stroke);
+old=new _4(_13.stroke.color);
+_13.stroke.color=new _4(_15);
+_13.stroke.color.a=old.a;
 }else{
-_11.stroke={color:_13};
+_13.stroke={color:_15};
 }
-if(_12.stroke&&_12.stroke.color){
-_12.stroke=_1.delegate(_12.stroke);
-old=new _1.Color(_12.stroke.color);
-_12.stroke.color=new _1.Color(_13);
-_12.stroke.color.a=old.a;
+if(_14.stroke&&_14.stroke.color){
+_14.stroke=_1.delegate(_14.stroke);
+old=new _4(_14.stroke.color);
+_14.stroke.color=new _4(_15);
+_14.stroke.color.a=old.a;
 }else{
-_12.stroke={color:_13};
+_14.stroke={color:_15};
 }
-if(!_11.fill||_11.fill.type){
-_11.fill=_13;
+if(!_13.fill||_13.fill.type){
+_13.fill=_15;
 }else{
-old=new _1.Color(_11.fill);
-_11.fill=new _1.Color(_13);
-_11.fill.a=old.a;
+old=new _4(_13.fill);
+_13.fill=new _4(_15);
+_13.fill.a=old.a;
 }
-if(!_12.fill||_12.fill.type){
-_12.fill=_13;
+if(!_14.fill||_14.fill.type){
+_14.fill=_15;
 }else{
-old=new _1.Color(_12.fill);
-_12.fill=new _1.Color(_13);
-_12.fill.a=old.a;
+old=new _4(_14.fill);
+_14.fill=new _4(_15);
+_14.fill.a=old.a;
 }
 }else{
-_11=this.seriesThemes?_10(this.series,this.seriesThemes[this._current%this.seriesThemes.length]):this.series;
-_12=this.markerThemes?_10(this.marker,this.markerThemes[this._current%this.markerThemes.length]):_11;
+_13=this.seriesThemes?_12(this.series,this.seriesThemes[this._current%this.seriesThemes.length]):this.series;
+_14=this.markerThemes?_12(this.marker,this.markerThemes[this._current%this.markerThemes.length]):_13;
 }
-var _14=_12&&_12.symbol||this._markers[this._current%this._markers.length];
-var _15={series:_11,marker:_12,symbol:_14};
+var _16=_14&&_14.symbol||this._markers[this._current%this._markers.length];
+var _17={series:_13,marker:_14,symbol:_16};
 ++this._current;
-if(_e){
-_15=this.addMixin(_15,_d,_e);
+if(_10){
+_17=this.addMixin(_17,_f,_10);
 }
-if(_f){
-_15=this.post(_15,_d);
+if(_11){
+_17=this.post(_17,_f);
 }
-return _15;
+return _17;
 },skip:function(){
 ++this._current;
-},addMixin:function(_16,_17,_18,_19){
-if(_1.isArray(_18)){
-_1.forEach(_18,function(m){
-_16=this.addMixin(_16,_17,m);
+},addMixin:function(_18,_19,_1a,_1b){
+if(_1.isArray(_1a)){
+_2.forEach(_1a,function(m){
+_18=this.addMixin(_18,_19,m);
 },this);
 }else{
 var t={};
-if("color" in _18){
-if(_17=="line"||_17=="area"){
-_1.setObject("series.stroke.color",_18.color,t);
-_1.setObject("marker.stroke.color",_18.color,t);
+if("color" in _1a){
+if(_19=="line"||_19=="area"){
+_1.setObject("series.stroke.color",_1a.color,t);
+_1.setObject("marker.stroke.color",_1a.color,t);
 }else{
-_1.setObject("series.fill",_18.color,t);
+_1.setObject("series.fill",_1a.color,t);
 }
 }
-_1.forEach(["stroke","outline","shadow","fill","font","fontColor","labelWiring"],function(_1a){
-var _1b="marker"+_1a.charAt(0).toUpperCase()+_1a.substr(1),b=_1b in _18;
-if(_1a in _18){
-_1.setObject("series."+_1a,_18[_1a],t);
+_2.forEach(["stroke","outline","shadow","fill","font","fontColor","labelWiring"],function(_1c){
+var _1d="marker"+_1c.charAt(0).toUpperCase()+_1c.substr(1),b=_1d in _1a;
+if(_1c in _1a){
+_1.setObject("series."+_1c,_1a[_1c],t);
 if(!b){
-_1.setObject("marker."+_1a,_18[_1a],t);
+_1.setObject("marker."+_1c,_1a[_1c],t);
 }
 }
 if(b){
-_1.setObject("marker."+_1a,_18[_1b],t);
+_1.setObject("marker."+_1c,_1a[_1d],t);
 }
 });
-if("marker" in _18){
-t.symbol=_18.marker;
+if("marker" in _1a){
+t.symbol=_1a.marker;
 }
-_16=_6.merge(_16,t);
+_18=_7.merge(_18,t);
 }
-if(_19){
-_16=this.post(_16,_17);
+if(_1b){
+_18=this.post(_18,_19);
 }
-return _16;
-},post:function(_1c,_1d){
-var _1e=_1c.series.fill,t;
-if(!this.noGradConv&&this.shapeSpaces[_1e.space]&&_1e.type=="linear"){
-if(_1d=="bar"){
-t={x1:_1e.y1,y1:_1e.x1,x2:_1e.y2,y2:_1e.x2};
+return _18;
+},post:function(_1e,_1f){
+var _20=_1e.series.fill,t;
+if(!this.noGradConv&&this.shapeSpaces[_20.space]&&_20.type=="linear"){
+if(_1f=="bar"){
+t={x1:_20.y1,y1:_20.x1,x2:_20.y2,y2:_20.x2};
 }else{
-if(!this.noRadialConv&&_1e.space=="shape"&&(_1d=="slice"||_1d=="circle")){
+if(!this.noRadialConv&&_20.space=="shape"&&(_1f=="slice"||_1f=="circle")){
 t={type:"radial",cx:0,cy:0,r:100};
 }
 }
 if(t){
-return _6.merge(_1c,{series:{fill:t}});
+return _7.merge(_1e,{series:{fill:t}});
 }
 }
-return _1c;
-},getTick:function(_1f,_20){
-var _21=this.axis.tick,_22=_1f+"Tick",_23=_6.merge;
-if(_21){
-if(this.axis[_22]){
-_21=_23(_21,this.axis[_22]);
-}
-}else{
-_21=this.axis[_22];
-}
-if(_20){
-if(_21){
-if(_20[_22]){
-_21=_23(_21,_20[_22]);
+return _1e;
+},getTick:function(_21,_22){
+var _23=this.axis.tick,_24=_21+"Tick",_25=_7.merge;
+if(_23){
+if(this.axis[_24]){
+_23=_25(_23,this.axis[_24]);
 }
 }else{
-_21=_20[_22];
+_23=this.axis[_24];
+}
+if(_22){
+if(_23){
+if(_22[_24]){
+_23=_25(_23,_22[_24]);
+}
+}else{
+_23=_22[_24];
 }
 }
-return _21;
+return _23;
 },inspectObjects:function(f){
-_1.forEach(["chart","plotarea","axis","series","marker","indicator"],function(_24){
-f(this[_24]);
+_2.forEach(["chart","plotarea","axis","series","marker","indicator"],function(_26){
+f(this[_26]);
 },this);
 if(this.seriesThemes){
-_1.forEach(this.seriesThemes,f);
+_2.forEach(this.seriesThemes,f);
 }
 if(this.markerThemes){
-_1.forEach(this.markerThemes,f);
+_2.forEach(this.markerThemes,f);
 }
 },reverseFills:function(){
 this.inspectObjects(function(o){
 if(o&&o.fill){
-o.fill=_7.reverse(o.fill);
+o.fill=_8.reverse(o.fill);
 }
 });
-},addMarker:function(_25,_26){
-this.markers[_25]=_26;
+},addMarker:function(_27,_28){
+this.markers[_27]=_28;
 this._buildMarkerArray();
 },setMarkers:function(obj){
 this.markers=obj;
@@ -191,39 +185,39 @@ for(var p in this.markers){
 this._markers.push(this.markers[p]);
 }
 }});
-_1.mixin(dojox.charting.Theme,{defaultMarkers:{CIRCLE:"m-3,0 c0,-4 6,-4 6,0 m-6,0 c0,4 6,4 6,0",SQUARE:"m-3,-3 l0,6 6,0 0,-6 z",DIAMOND:"m0,-3 l3,3 -3,3 -3,-3 z",CROSS:"m0,-3 l0,6 m-3,-3 l6,0",X:"m-3,-3 l6,6 m0,-6 l-6,6",TRIANGLE:"m-3,3 l3,-6 3,6 z",TRIANGLE_INVERTED:"m-3,-3 l3,6 3,-6 z"},defaultColors:["#54544c","#858e94","#6e767a","#948585","#474747"],defaultTheme:{chart:{stroke:null,fill:"white",pageStyle:null,titleGap:20,titlePos:"top",titleFont:"normal normal bold 14pt Tahoma",titleFontColor:"#333"},plotarea:{stroke:null,fill:"white"},axis:{stroke:{color:"#333",width:1},tick:{color:"#666",position:"center",font:"normal normal normal 7pt Tahoma",fontColor:"#333",titleGap:15,titleFont:"normal normal normal 11pt Tahoma",titleFontColor:"#333",titleOrientation:"axis"},majorTick:{width:1,length:6},minorTick:{width:0.8,length:3},microTick:{width:0.5,length:1}},series:{stroke:{width:1.5,color:"#333"},outline:{width:0.1,color:"#ccc"},shadow:null,fill:"#ccc",font:"normal normal normal 8pt Tahoma",fontColor:"#000",labelWiring:{width:1,color:"#ccc"}},marker:{stroke:{width:1.5,color:"#333"},outline:{width:0.1,color:"#ccc"},shadow:null,fill:"#ccc",font:"normal normal normal 8pt Tahoma",fontColor:"#000"},indicator:{lineStroke:{width:1.5,color:"#333"},lineOutline:{width:0.1,color:"#ccc"},lineShadow:null,stroke:{width:1.5,color:"#333"},outline:{width:0.1,color:"#ccc"},shadow:null,fill:"#ccc",radius:3,font:"normal normal normal 10pt Tahoma",fontColor:"#000",markerFill:"#ccc",markerSymbol:"m-3,0 c0,-4 6,-4 6,0 m-6,0 c0,4 6,4 6,0",markerStroke:{width:1.5,color:"#333"},markerOutline:{width:0.1,color:"#ccc"},markerShadow:null}},defineColors:function(_27){
-_27=_27||{};
-var l,c=[],n=_27.num||5;
-if(_27.colors){
-l=_27.colors.length;
+_1.mixin(_9,{defaultMarkers:{CIRCLE:"m-3,0 c0,-4 6,-4 6,0 m-6,0 c0,4 6,4 6,0",SQUARE:"m-3,-3 l0,6 6,0 0,-6 z",DIAMOND:"m0,-3 l3,3 -3,3 -3,-3 z",CROSS:"m0,-3 l0,6 m-3,-3 l6,0",X:"m-3,-3 l6,6 m0,-6 l-6,6",TRIANGLE:"m-3,3 l3,-6 3,6 z",TRIANGLE_INVERTED:"m-3,-3 l3,6 3,-6 z"},defaultColors:["#54544c","#858e94","#6e767a","#948585","#474747"],defaultTheme:{chart:{stroke:null,fill:"white",pageStyle:null,titleGap:20,titlePos:"top",titleFont:"normal normal bold 14pt Tahoma",titleFontColor:"#333"},plotarea:{stroke:null,fill:"white"},axis:{stroke:{color:"#333",width:1},tick:{color:"#666",position:"center",font:"normal normal normal 7pt Tahoma",fontColor:"#333",titleGap:15,titleFont:"normal normal normal 11pt Tahoma",titleFontColor:"#333",titleOrientation:"axis"},majorTick:{width:1,length:6},minorTick:{width:0.8,length:3},microTick:{width:0.5,length:1}},series:{stroke:{width:1.5,color:"#333"},outline:{width:0.1,color:"#ccc"},shadow:null,fill:"#ccc",font:"normal normal normal 8pt Tahoma",fontColor:"#000",labelWiring:{width:1,color:"#ccc"}},marker:{stroke:{width:1.5,color:"#333"},outline:{width:0.1,color:"#ccc"},shadow:null,fill:"#ccc",font:"normal normal normal 8pt Tahoma",fontColor:"#000"},indicator:{lineStroke:{width:1.5,color:"#333"},lineOutline:{width:0.1,color:"#ccc"},lineShadow:null,stroke:{width:1.5,color:"#333"},outline:{width:0.1,color:"#ccc"},shadow:null,fill:"#ccc",radius:3,font:"normal normal normal 10pt Tahoma",fontColor:"#000",markerFill:"#ccc",markerSymbol:"m-3,0 c0,-4 6,-4 6,0 m-6,0 c0,4 6,4 6,0",markerStroke:{width:1.5,color:"#333"},markerOutline:{width:0.1,color:"#ccc"},markerShadow:null}},defineColors:function(_29){
+_29=_29||{};
+var l,c=[],n=_29.num||5;
+if(_29.colors){
+l=_29.colors.length;
 for(var i=0;i<n;i++){
-c.push(_27.colors[i%l]);
+c.push(_29.colors[i%l]);
 }
 return c;
 }
-if(_27.hue){
-var s=_27.saturation||100,st=_27.low||30,end=_27.high||90;
+if(_29.hue){
+var s=_29.saturation||100,st=_29.low||30,end=_29.high||90;
 l=(end+st)/2;
-return _4.Palette.generate(_4.fromHsv(_27.hue,s,l),"monochromatic").colors;
+return _5.Palette.generate(_5.fromHsv(_29.hue,s,l),"monochromatic").colors;
 }
-if(_27.generator){
-return _4.Palette.generate(_27.base,_27.generator).colors;
+if(_29.generator){
+return _5.Palette.generate(_29.base,_29.generator).colors;
 }
 return c;
-},generateGradient:function(_28,_29,_2a){
-var _2b=_1.delegate(_28);
-_2b.colors=[{offset:0,color:_29},{offset:1,color:_2a}];
-return _2b;
-},generateHslColor:function(_2c,_2d){
-_2c=new _1.Color(_2c);
-var hsl=_2c.toHsl(),_2e=_4.fromHsl(hsl.h,hsl.s,_2d);
-_2e.a=_2c.a;
-return _2e;
-},generateHslGradient:function(_2f,_30,_31,_32){
-_2f=new _1.Color(_2f);
-var hsl=_2f.toHsl(),_33=_4.fromHsl(hsl.h,hsl.s,_31),_34=_4.fromHsl(hsl.h,hsl.s,_32);
-_33.a=_34.a=_2f.a;
-return dojox.charting.Theme.generateGradient(_30,_33,_34);
+},generateGradient:function(_2a,_2b,_2c){
+var _2d=_1.delegate(_2a);
+_2d.colors=[{offset:0,color:_2b},{offset:1,color:_2c}];
+return _2d;
+},generateHslColor:function(_2e,_2f){
+_2e=new _4(_2e);
+var hsl=_2e.toHsl(),_30=_5.fromHsl(hsl.h,hsl.s,_2f);
+_30.a=_2e.a;
+return _30;
+},generateHslGradient:function(_31,_32,_33,_34){
+_31=new _4(_31);
+var hsl=_31.toHsl(),_35=_5.fromHsl(hsl.h,hsl.s,_33),_36=_5.fromHsl(hsl.h,hsl.s,_34);
+_35.a=_36.a=_31.a;
+return _9.generateGradient(_32,_35,_36);
 }});
-return dojox.charting.Theme;
+return _9;
 });

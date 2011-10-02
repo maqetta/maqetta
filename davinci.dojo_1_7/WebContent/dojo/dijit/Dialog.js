@@ -1,45 +1,39 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-require.cache["dijit/templates/Dialog.html"]="<div class=\"dijitDialog\" role=\"dialog\" aria-labelledby=\"${id}_title\">\n\t<div dojoAttachPoint=\"titleBar\" class=\"dijitDialogTitleBar\">\n\t<span dojoAttachPoint=\"titleNode\" class=\"dijitDialogTitle\" id=\"${id}_title\"></span>\n\t<span dojoAttachPoint=\"closeButtonNode\" class=\"dijitDialogCloseIcon\" dojoAttachEvent=\"ondijitclick: onCancel\" title=\"${buttonCancel}\" role=\"button\" tabIndex=\"-1\">\n\t\t<span dojoAttachPoint=\"closeText\" class=\"closeText\" title=\"${buttonCancel}\">x</span>\n\t</span>\n\t</div>\n\t\t<div dojoAttachPoint=\"containerNode\" class=\"dijitDialogPaneContent\"></div>\n</div>\n";
-define("dijit/Dialog",["dojo/_base/kernel",".","dijit/focus","dojo/text!./templates/Dialog.html","require","./_Widget","./_TemplatedMixin","./_CssStateMixin","./form/_FormMixin","./_DialogMixin","./DialogUnderlay","./layout/ContentPane","./focus","dojo/i18n!./nls/common","dojo/_base/Deferred","dojo/_base/array","dojo/_base/connect","dojo/_base/declare","dojo/_base/event","dojo/_base/fx","dojo/_base/html","dojo/_base/lang","dojo/_base/sniff","dojo/_base/window","dojo/window","dojo/dnd/Moveable","dojo/dnd/TimedMoveable","dojo/i18n"],function(_1,_2,_3,_4,_5){
-_1.declare("dijit._DialogBase",[_2._TemplatedMixin,_2.form._FormMixin,_2._DialogMixin,_2._CssStateMixin],{templateString:_4,baseClass:"dijitDialog",cssStateNodes:{closeButtonNode:"dijitDialogCloseIcon"},_setTitleAttr:[{node:"titleNode",type:"innerHTML"},{node:"titleBar",type:"attribute"}],open:false,duration:_2.defaultDuration,refocus:true,autofocus:true,_firstFocusItem:null,_lastFocusItem:null,doLayout:false,draggable:true,"aria-describedby":"",postMixInProperties:function(){
-var _6=_1.i18n.getLocalization("dijit","common");
-_1.mixin(this,_6);
+require({cache:{"url:dijit/templates/Dialog.html":"<div class=\"dijitDialog\" role=\"dialog\" aria-labelledby=\"${id}_title\">\n\t<div data-dojo-attach-point=\"titleBar\" class=\"dijitDialogTitleBar\">\n\t<span data-dojo-attach-point=\"titleNode\" class=\"dijitDialogTitle\" id=\"${id}_title\"></span>\n\t<span data-dojo-attach-point=\"closeButtonNode\" class=\"dijitDialogCloseIcon\" data-dojo-attach-event=\"ondijitclick: onCancel\" title=\"${buttonCancel}\" role=\"button\" tabIndex=\"-1\">\n\t\t<span data-dojo-attach-point=\"closeText\" class=\"closeText\" title=\"${buttonCancel}\">x</span>\n\t</span>\n\t</div>\n\t\t<div data-dojo-attach-point=\"containerNode\" class=\"dijitDialogPaneContent\"></div>\n</div>\n"}});
+define("dijit/Dialog",["require","dojo/_base/array","dojo/_base/connect","dojo/_base/declare","dojo/_base/Deferred","dojo/dom","dojo/dom-class","dojo/dom-geometry","dojo/dom-style","dojo/_base/event","dojo/_base/fx","dojo/i18n","dojo/_base/kernel","dojo/keys","dojo/_base/lang","dojo/on","dojo/ready","dojo/_base/sniff","dojo/_base/window","dojo/window","dojo/dnd/Moveable","dojo/dnd/TimedMoveable","./focus","./_base/manager","./_Widget","./_TemplatedMixin","./_CssStateMixin","./form/_FormMixin","./_DialogMixin","./DialogUnderlay","./layout/ContentPane","dojo/text!./templates/Dialog.html",".","dojo/i18n!./nls/common"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,fx,_b,_c,_d,_e,on,_f,has,win,_10,_11,_12,_13,_14,_15,_16,_17,_18,_19,_1a,_1b,_1c,_1d){
+var _1e=_4("dijit._DialogBase",[_16,_18,_19,_17],{templateString:_1c,baseClass:"dijitDialog",cssStateNodes:{closeButtonNode:"dijitDialogCloseIcon"},_setTitleAttr:[{node:"titleNode",type:"innerHTML"},{node:"titleBar",type:"attribute"}],open:false,duration:_14.defaultDuration,refocus:true,autofocus:true,_firstFocusItem:null,_lastFocusItem:null,doLayout:false,draggable:true,"aria-describedby":"",postMixInProperties:function(){
+var _1f=_b.getLocalization("dijit","common");
+_e.mixin(this,_1f);
 this.inherited(arguments);
 },postCreate:function(){
-_1.style(this.domNode,{display:"none",position:"absolute"});
-_1.body().appendChild(this.domNode);
+_9.set(this.domNode,{display:"none",position:"absolute"});
+win.body().appendChild(this.domNode);
 this.inherited(arguments);
 this.connect(this,"onExecute","hide");
 this.connect(this,"onCancel","hide");
 this._modalconnects=[];
 },onLoad:function(){
 this._position();
-if(this.autofocus&&_2._DialogLevelManager.isTop(this)){
+if(this.autofocus&&_20.isTop(this)){
 this._getFocusItems(this.domNode);
-_2.focus(this._firstFocusItem);
+_13.focus(this._firstFocusItem);
 }
 this.inherited(arguments);
 },_endDrag:function(){
-var _7=_1.position(this.domNode),_8=_1.window.getBox();
-_7.y=Math.min(Math.max(_7.y,0),(_8.h-_7.h));
-_7.x=Math.min(Math.max(_7.x,0),(_8.w-_7.w));
-this._relativePosition=_7;
+var _21=_8.position(this.domNode),_22=_10.getBox();
+_21.y=Math.min(Math.max(_21.y,0),(_22.h-_21.h));
+_21.x=Math.min(Math.max(_21.x,0),(_22.w-_21.w));
+this._relativePosition=_21;
 this._position();
 },_setup:function(){
-var _9=this.domNode;
+var _23=this.domNode;
 if(this.titleBar&&this.draggable){
-this._moveable=(_1.isIE==6)?new _1.dnd.TimedMoveable(_9,{handle:this.titleBar}):new _1.dnd.Moveable(_9,{handle:this.titleBar,timeout:0});
+this._moveable=new ((has("ie")==6)?_12:_11)(_23,{handle:this.titleBar});
 this.connect(this._moveable,"onMoveStop","_endDrag");
 }else{
-_1.addClass(_9,"dijitDialogFixed");
+_7.add(_23,"dijitDialogFixed");
 }
-this.underlayAttrs={dialogId:this.id,"class":_1.map(this["class"].split(/\s/),function(s){
+this.underlayAttrs={dialogId:this.id,"class":_2.map(this["class"].split(/\s/),function(s){
 return s+"_underlay";
 }).join(" ")};
 },_size:function(){
@@ -50,17 +44,17 @@ this._singleChild.domNode.style.cssText=this._singleChildOriginalStyle;
 }
 delete this._singleChildOriginalStyle;
 }else{
-_1.style(this.containerNode,{width:"auto",height:"auto"});
+_9.set(this.containerNode,{width:"auto",height:"auto"});
 }
-var bb=_1.position(this.domNode);
-var _a=_1.window.getBox();
-if(bb.w>=_a.w||bb.h>=_a.h){
-var w=Math.min(bb.w,Math.floor(_a.w*0.75)),h=Math.min(bb.h,Math.floor(_a.h*0.75));
+var bb=_8.position(this.domNode);
+var _24=_10.getBox();
+if(bb.w>=_24.w||bb.h>=_24.h){
+var w=Math.min(bb.w,Math.floor(_24.w*0.75)),h=Math.min(bb.h,Math.floor(_24.h*0.75));
 if(this._singleChild&&this._singleChild.resize){
 this._singleChildOriginalStyle=this._singleChild.domNode.style.cssText;
 this._singleChild.resize({w:w,h:h});
 }else{
-_1.style(this.containerNode,{width:w+"px",height:h+"px",overflow:"auto",position:"relative"});
+_9.set(this.containerNode,{width:w+"px",height:h+"px",overflow:"auto",position:"relative"});
 }
 }else{
 if(this._singleChild&&this._singleChild.resize){
@@ -68,44 +62,43 @@ this._singleChild.resize();
 }
 }
 },_position:function(){
-if(!_1.hasClass(_1.body(),"dojoMove")){
-var _b=this.domNode,_c=_1.window.getBox(),p=this._relativePosition,bb=p?null:_1.position(_b),l=Math.floor(_c.l+(p?p.x:(_c.w-bb.w)/2)),t=Math.floor(_c.t+(p?p.y:(_c.h-bb.h)/2));
-_1.style(_b,{left:l+"px",top:t+"px"});
+if(!_7.contains(win.body(),"dojoMove")){
+var _25=this.domNode,_26=_10.getBox(),p=this._relativePosition,bb=p?null:_8.position(_25),l=Math.floor(_26.l+(p?p.x:(_26.w-bb.w)/2)),t=Math.floor(_26.t+(p?p.y:(_26.h-bb.h)/2));
+_9.set(_25,{left:l+"px",top:t+"px"});
 }
-},_onKey:function(_d){
-if(_d.charOrCode){
-var dk=_1.keys;
-var _e=_d.target;
-if(_d.charOrCode===dk.TAB){
+},_onKey:function(evt){
+if(evt.charOrCode){
+var _27=evt.target;
+if(evt.charOrCode===_d.TAB){
 this._getFocusItems(this.domNode);
 }
-var _f=(this._firstFocusItem==this._lastFocusItem);
-if(_e==this._firstFocusItem&&_d.shiftKey&&_d.charOrCode===dk.TAB){
-if(!_f){
-_2.focus(this._lastFocusItem);
+var _28=(this._firstFocusItem==this._lastFocusItem);
+if(_27==this._firstFocusItem&&evt.shiftKey&&evt.charOrCode===_d.TAB){
+if(!_28){
+_13.focus(this._lastFocusItem);
 }
-_1.stopEvent(_d);
+_a.stop(evt);
 }else{
-if(_e==this._lastFocusItem&&_d.charOrCode===dk.TAB&&!_d.shiftKey){
-if(!_f){
-_2.focus(this._firstFocusItem);
+if(_27==this._lastFocusItem&&evt.charOrCode===_d.TAB&&!evt.shiftKey){
+if(!_28){
+_13.focus(this._firstFocusItem);
 }
-_1.stopEvent(_d);
+_a.stop(evt);
 }else{
-while(_e){
-if(_e==this.domNode||_1.hasClass(_e,"dijitPopup")){
-if(_d.charOrCode==dk.ESCAPE){
+while(_27){
+if(_27==this.domNode||_7.contains(_27,"dijitPopup")){
+if(evt.charOrCode==_d.ESCAPE){
 this.onCancel();
 }else{
 return;
 }
 }
-_e=_e.parentNode;
+_27=_27.parentNode;
 }
-if(_d.charOrCode!==dk.TAB){
-_1.stopEvent(_d);
+if(evt.charOrCode!==_d.TAB){
+_a.stop(evt);
 }else{
-if(!_1.isOpera){
+if(!has("opera")){
 try{
 this._firstFocusItem.focus();
 }
@@ -130,31 +123,31 @@ this._alreadyInitialized=true;
 if(this._fadeOutDeferred){
 this._fadeOutDeferred.cancel();
 }
-this._modalconnects.push(_1.connect(window,"onscroll",this,"layout"));
-this._modalconnects.push(_1.connect(window,"onresize",this,function(){
-var _10=_1.window.getBox();
-if(!this._oldViewport||_10.h!=this._oldViewport.h||_10.w!=this._oldViewport.w){
+this._modalconnects.push(on(window,"scroll",_e.hitch(this,"layout")));
+this._modalconnects.push(on(window,"resize",_e.hitch(this,function(){
+var _29=_10.getBox();
+if(!this._oldViewport||_29.h!=this._oldViewport.h||_29.w!=this._oldViewport.w){
 this.layout();
-this._oldViewport=_10;
+this._oldViewport=_29;
 }
-}));
-this._modalconnects.push(_1.connect(this.domNode,"onkeypress",this,"_onKey"));
-_1.style(this.domNode,{opacity:0,display:""});
+})));
+this._modalconnects.push(on(this.domNode,_3._keypress,_e.hitch(this,"_onKey")));
+_9.set(this.domNode,{opacity:0,display:""});
 this._set("open",true);
 this._onShow();
 this._size();
 this._position();
-var _11;
-this._fadeInDeferred=new _1.Deferred(_1.hitch(this,function(){
-_11.stop();
+var _2a;
+this._fadeInDeferred=new _5(_e.hitch(this,function(){
+_2a.stop();
 delete this._fadeInDeferred;
 }));
-_11=_1.fadeIn({node:this.domNode,duration:this.duration,beforeBegin:_1.hitch(this,function(){
-_2._DialogLevelManager.show(this,this.underlayAttrs);
-}),onEnd:_1.hitch(this,function(){
-if(this.autofocus&&_2._DialogLevelManager.isTop(this)){
+_2a=fx.fadeIn({node:this.domNode,duration:this.duration,beforeBegin:_e.hitch(this,function(){
+_20.show(this,this.underlayAttrs);
+}),onEnd:_e.hitch(this,function(){
+if(this.autofocus&&_20.isTop(this)){
 this._getFocusItems(this.domNode);
-_2.focus(this._firstFocusItem);
+_13.focus(this._firstFocusItem);
 }
 this._fadeInDeferred.callback(true);
 delete this._fadeInDeferred;
@@ -167,23 +160,25 @@ return;
 if(this._fadeInDeferred){
 this._fadeInDeferred.cancel();
 }
-var _12;
-this._fadeOutDeferred=new _1.Deferred(_1.hitch(this,function(){
-_12.stop();
+var _2b;
+this._fadeOutDeferred=new _5(_e.hitch(this,function(){
+_2b.stop();
 delete this._fadeOutDeferred;
 }));
-this._fadeOutDeferred.then(_1.hitch(this,"onHide"));
-_12=_1.fadeOut({node:this.domNode,duration:this.duration,onEnd:_1.hitch(this,function(){
+this._fadeOutDeferred.then(_e.hitch(this,"onHide"));
+_2b=fx.fadeOut({node:this.domNode,duration:this.duration,onEnd:_e.hitch(this,function(){
 this.domNode.style.display="none";
-_2._DialogLevelManager.hide(this);
+_20.hide(this);
 this._fadeOutDeferred.callback(true);
 delete this._fadeOutDeferred;
 })}).play();
 if(this._scrollConnected){
 this._scrollConnected=false;
 }
-_1.forEach(this._modalconnects,_1.disconnect);
-this._modalconnects=[];
+var h;
+while(h=this._modalconnects.pop()){
+h.remove();
+}
 if(this._relativePosition){
 delete this._relativePosition;
 }
@@ -191,8 +186,8 @@ this._set("open",false);
 return this._fadeOutDeferred;
 },layout:function(){
 if(this.domNode.style.display!="none"){
-if(_2._underlay){
-_2._underlay.layout();
+if(_1d._underlay){
+_1d._underlay.layout();
 }
 this._position();
 }
@@ -206,68 +201,69 @@ this._fadeOutDeferred.cancel();
 if(this._moveable){
 this._moveable.destroy();
 }
-_1.forEach(this._modalconnects,_1.disconnect);
-_2._DialogLevelManager.hide(this);
+var h;
+while(h=this._modalconnects.pop()){
+h.remove();
+}
+_20.hide(this);
 this.inherited(arguments);
 }});
-_1.declare("dijit.Dialog",[_2.layout.ContentPane,_2._DialogBase],{});
-_2._DialogLevelManager={show:function(_13,_14){
-var ds=_2._dialogStack;
-ds[ds.length-1].focus=_3.curNode;
-var _15=_2._underlay;
-if(!_15||_15._destroyed){
-_15=_2._underlay=new _2.DialogUnderlay(_14);
+var _2c=_4("dijit.Dialog",[_1b,_1e],{});
+_2c._DialogBase=_1e;
+var _20=_2c._DialogLevelManager={show:function(_2d,_2e){
+ds[ds.length-1].focus=_13.curNode;
+var _2f=_1d._underlay;
+if(!_2f||_2f._destroyed){
+_2f=_1d._underlay=new _1a(_2e);
 }else{
-_15.set(_13.underlayAttrs);
+_2f.set(_2d.underlayAttrs);
 }
-var _16=ds[ds.length-1].dialog?ds[ds.length-1].zIndex+2:950;
+var _30=ds[ds.length-1].dialog?ds[ds.length-1].zIndex+2:950;
 if(ds.length==1){
-_15.show();
+_2f.show();
 }
-_1.style(_2._underlay.domNode,"zIndex",_16-1);
-_1.style(_13.domNode,"zIndex",_16);
-ds.push({dialog:_13,underlayAttrs:_14,zIndex:_16});
-},hide:function(_17){
-var ds=_2._dialogStack;
-if(ds[ds.length-1].dialog==_17){
+_9.set(_1d._underlay.domNode,"zIndex",_30-1);
+_9.set(_2d.domNode,"zIndex",_30);
+ds.push({dialog:_2d,underlayAttrs:_2e,zIndex:_30});
+},hide:function(_31){
+if(ds[ds.length-1].dialog==_31){
 ds.pop();
 var pd=ds[ds.length-1];
 if(ds.length==1){
-if(!_2._underlay._destroyed){
-_2._underlay.hide();
+if(!_1d._underlay._destroyed){
+_1d._underlay.hide();
 }
 }else{
-_1.style(_2._underlay.domNode,"zIndex",pd.zIndex-1);
-_2._underlay.set(pd.underlayAttrs);
+_9.set(_1d._underlay.domNode,"zIndex",pd.zIndex-1);
+_1d._underlay.set(pd.underlayAttrs);
 }
-if(_17.refocus){
-var _18=pd.focus;
-if(pd.dialog&&(!_18||!_1.isDescendant(_18,pd.dialog.domNode))){
+if(_31.refocus){
+var _32=pd.focus;
+if(pd.dialog&&(!_32||!_6.isDescendant(_32,pd.dialog.domNode))){
 pd.dialog._getFocusItems(pd.dialog.domNode);
-_18=pd.dialog._firstFocusItem;
+_32=pd.dialog._firstFocusItem;
 }
-if(_18){
-_18.focus();
+if(_32){
+_32.focus();
 }
 }
 }else{
-var idx=_1.indexOf(_1.map(ds,function(_19){
-return _19.dialog;
-}),_17);
+var idx=_2.indexOf(_2.map(ds,function(_33){
+return _33.dialog;
+}),_31);
 if(idx!=-1){
 ds.splice(idx,1);
 }
 }
-},isTop:function(_1a){
-var ds=_2._dialogStack;
-return ds[ds.length-1].dialog==_1a;
+},isTop:function(_34){
+return ds[ds.length-1].dialog==_34;
 }};
-_2._dialogStack=[{dialog:null,focus:null,underlayAttrs:null}];
-if(!_1.isAsync){
-_1.ready(0,function(){
-var _1b=["dijit/TooltipDialog"];
-_5(_1b);
+var ds=_2c._dialogStack=[{dialog:null,focus:null,underlayAttrs:null}];
+if(!_c.isAsync){
+_f(0,function(){
+var _35=["dijit/TooltipDialog"];
+_1(_35);
 });
 }
-return _2.Dialog;
+return _2c;
 });

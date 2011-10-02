@@ -1,16 +1,10 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dijit/_editor/plugins/NewPage",["dojo/_base/kernel","../..","../_Plugin","../../form/Button","dojo/i18n","dojo/i18n!../nls/commands","dojo/_base/lang"],function(_1,_2){
-_1.declare("dijit._editor.plugins.NewPage",_2._editor._Plugin,{content:"<br>",_initButton:function(){
-var _3=_1.i18n.getLocalization("dijit._editor","commands"),_4=this.editor;
-this.button=new _2.form.Button({label:_3["newPage"],dir:_4.dir,lang:_4.lang,showLabel:false,iconClass:this.iconClassPrefix+" "+this.iconClassPrefix+"NewPage",tabIndex:"-1",onClick:_1.hitch(this,"_newPage")});
-},setEditor:function(_5){
-this.editor=_5;
+define("dijit/_editor/plugins/NewPage",["dojo/_base/declare","dojo/i18n","dojo/_base/lang","../_Plugin","../../form/Button","dojo/i18n!../nls/commands"],function(_1,_2,_3,_4,_5){
+var _6=_1("dijit._editor.plugins.NewPage",_4,{content:"<br>",_initButton:function(){
+var _7=_2.getLocalization("dijit._editor","commands"),_8=this.editor;
+this.button=new _5({label:_7["newPage"],dir:_8.dir,lang:_8.lang,showLabel:false,iconClass:this.iconClassPrefix+" "+this.iconClassPrefix+"NewPage",tabIndex:"-1",onClick:_3.hitch(this,"_newPage")});
+},setEditor:function(_9){
+this.editor=_9;
 this._initButton();
 },updateState:function(){
 this.button.set("disabled",this.get("disabled"));
@@ -20,14 +14,8 @@ this.editor.set("value",this.content);
 this.editor.endEditing();
 this.editor.focus();
 }});
-_1.subscribe(_2._scopeName+".Editor.getPlugin",null,function(o){
-if(o.plugin){
-return;
-}
-var _6=o.args.name.toLowerCase();
-if(_6==="newpage"){
-o.plugin=new _2._editor.plugins.NewPage({content:("content" in o.args)?o.args.content:"<br>"});
-}
-});
-return _2._editor.plugins.NewPage;
+_4.registry["newPage"]=_4.registry["newpage"]=function(_a){
+return new _6({content:("content" in _a)?_a.content:"<br>"});
+};
+return _6;
 });

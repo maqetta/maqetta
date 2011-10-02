@@ -1,14 +1,7 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
 define("dojox/av/_Media",["dojo"],function(_1){
-_1.getObject("dojox.av",true);
 _1.experimental("dojox.av.FLVideo");
-_1.declare("dojox.av._Media",null,{mediaUrl:"",initialVolume:1,autoPlay:false,bufferTime:2000,minBufferTime:300,updateTime:100,id:"",isDebug:false,percentDownloaded:0,_flashObject:null,flashMedia:null,allowScriptAccess:"always",allowNetworking:"all",wmode:"transparent",allowFullScreen:true,_initStatus:function(){
+return _1.declare("dojox.av._Media",null,{mediaUrl:"",initialVolume:1,autoPlay:false,bufferTime:2000,minBufferTime:300,updateTime:100,id:"",isDebug:false,percentDownloaded:0,_flashObject:null,flashMedia:null,allowScriptAccess:"always",allowNetworking:"all",wmode:"transparent",allowFullScreen:true,_initStatus:function(){
 this.status="ready";
 this._positionHandle=_1.connect(this,"onPosition",this,"_figureStatus");
 },getTime:function(){
@@ -18,6 +11,7 @@ return this.flashMedia.getTime();
 },onClick:function(_4){
 },onSwfSized:function(_5){
 },onMetaData:function(_6,_7){
+console.warn("onMeta",_6);
 this.duration=_6.duration;
 },onPosition:function(_8){
 },onStart:function(_9){
@@ -120,5 +114,4 @@ _1.disconnect(c);
 });
 this._flashObject.destroy();
 }});
-return dojox.av._Media;
 });

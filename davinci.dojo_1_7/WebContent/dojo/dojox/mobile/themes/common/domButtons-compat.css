@@ -3,133 +3,133 @@
 	background-image: url(domButtons/compat/mblDomButtonWhitePlus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonWhitePlus DIV {
+.mblDomButtonWhitePlus div {
 	display: none;
 }
 .mblDomButtonWhiteUpArrow {
 	background-image: url(domButtons/compat/mblDomButtonWhiteUpArrow.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonWhiteUpArrow DIV {
+.mblDomButtonWhiteUpArrow div {
 	display: none;
 }
 .mblDomButtonWhiteDownArrow {
 	background-image: url(domButtons/compat/mblDomButtonWhiteDownArrow.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonWhiteDownArrow DIV {
+.mblDomButtonWhiteDownArrow div {
 	display: none;
 }
 .mblDomButtonWhiteSearch {
 	background-image: url(domButtons/compat/mblDomButtonWhiteSearch.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonWhiteSearch DIV {
+.mblDomButtonWhiteSearch div {
 	display: none;
 }
 .mblDomButtonBlueMinus {
 	background-image: url(domButtons/compat/mblDomButtonBlueMinus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonBlueMinus DIV {
+.mblDomButtonBlueMinus div {
 	display: none;
 }
 .mblDomButtonBluePlus {
 	background-image: url(domButtons/compat/mblDomButtonBluePlus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonBluePlus DIV {
+.mblDomButtonBluePlus div {
 	display: none;
 }
 .mblDomButtonDarkBlueMinus {
 	background-image: url(domButtons/compat/mblDomButtonDarkBlueMinus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonDarkBlueMinus DIV {
+.mblDomButtonDarkBlueMinus div {
 	display: none;
 }
 .mblDomButtonDarkBluePlus {
 	background-image: url(domButtons/compat/mblDomButtonDarkBluePlus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonDarkBluePlus DIV {
+.mblDomButtonDarkBluePlus div {
 	display: none;
 }
 .mblDomButtonRedMinus {
 	background-image: url(domButtons/compat/mblDomButtonRedMinus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonRedMinus DIV {
+.mblDomButtonRedMinus div {
 	display: none;
 }
 .mblDomButtonRedPlus {
 	background-image: url(domButtons/compat/mblDomButtonRedPlus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonRedPlus DIV {
+.mblDomButtonRedPlus div {
 	display: none;
 }
 .mblDomButtonCheckboxOn {
 	background-image: url(domButtons/compat/mblDomButtonCheckboxOn.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonCheckboxOn DIV {
+.mblDomButtonCheckboxOn div {
 	display: none;
 }
 .mblDomButtonCheckboxOff {
 	background-image: url(domButtons/compat/mblDomButtonCheckboxOff.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonCheckboxOff DIV {
+.mblDomButtonCheckboxOff div {
 	display: none;
 }
 .mblDomButtonBlueCircleMinus {
 	background-image: url(domButtons/compat/mblDomButtonBlueCircleMinus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonBlueCircleMinus > DIV {
+.mblDomButtonBlueCircleMinus > div {
 	display: none;
 }
 .mblDomButtonBlueCirclePlus {
 	background-image: url(domButtons/compat/mblDomButtonBlueCirclePlus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonBlueCirclePlus > DIV {
+.mblDomButtonBlueCirclePlus > div {
 	display: none;
 }
 .mblDomButtonBlueCircleArrow {
 	background-image: url(domButtons/compat/mblDomButtonBlueCircleArrow.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonBlueCircleArrow > DIV {
+.mblDomButtonBlueCircleArrow > div {
 	display: none;
 }
 .mblDomButtonRedCircleMinus {
 	background-image: url(domButtons/compat/mblDomButtonRedCircleMinus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonRedCircleMinus > DIV {
+.mblDomButtonRedCircleMinus > div {
 	display: none;
 }
 .mblDomButtonRedCirclePlus {
 	background-image: url(domButtons/compat/mblDomButtonRedCirclePlus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonRedCirclePlus > DIV {
+.mblDomButtonRedCirclePlus > div {
 	display: none;
 }
 .mblDomButtonRedCircleArrow {
 	background-image: url(domButtons/compat/mblDomButtonRedCircleArrow.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonRedCircleArrow > DIV {
+.mblDomButtonRedCircleArrow > div {
 	display: none;
 }
 .mblDomButtonGreenCircleMinus {
 	background-image: url(domButtons/compat/mblDomButtonGreenCircleMinus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonGreenCircleMinus > DIV {
+.mblDomButtonGreenCircleMinus > div {
 	display: none;
 }
 
@@ -137,100 +137,107 @@
 	background-image: url(domButtons/compat/mblDomButtonGreenCirclePlus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonGreenCirclePlus > DIV {
+.mblDomButtonGreenCirclePlus > div {
 	display: none;
 }
 .mblDomButtonGreenCircleArrow {
 	background-image: url(domButtons/compat/mblDomButtonGreenCircleArrow.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonGreenCircleArrow > DIV {
+.mblDomButtonGreenCircleArrow > div {
 	display: none;
 }
-.mblDomButtonGrayRoundRect > DIV {
+.mblDomButtonBlackCircleCross {
+	background-image: url(domButtons/compat/mblDomButtonBlackCircleCross.png);
+	background-repeat: no-repeat;
+}
+.mblDomButtonBlackCircleCross > div {
+	display: none;
+}
+.mblDomButtonGrayRoundRect > div {
 	-moz-border-radius: 4px;
 }
 .mblDomButtonSilverCircleDownArrow {
 	background-image: url(domButtons/compat/mblDomButtonSilverCircleDownArrow.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonSilverCircleDownArrow > DIV {
+.mblDomButtonSilverCircleDownArrow > div {
 	display: none;
 }
 .mblDomButtonSilverCircleGreenButton {
 	background-image: url(domButtons/compat/mblDomButtonSilverCircleGreenButton.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonSilverCircleGreenButton > DIV {
+.mblDomButtonSilverCircleGreenButton > div {
 	display: none;
 }
 .mblDomButtonSilverCircleGrayButton {
 	background-image: url(domButtons/compat/mblDomButtonSilverCircleGrayButton.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonSilverCircleGrayButton > DIV {
+.mblDomButtonSilverCircleGrayButton > div {
 	display: none;
 }
 .mblDomButtonSilverCircleOrangeButton {
 	background-image: url(domButtons/compat/mblDomButtonSilverCircleOrangeButton.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonSilverCircleOrangeButton > DIV {
+.mblDomButtonSilverCircleOrangeButton > div {
 	display: none;
 }
 .mblDomButtonSilverCircleGreenPlus {
 	background-image: url(domButtons/compat/mblDomButtonSilverCircleGreenPlus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonSilverCircleGreenPlus > DIV {
+.mblDomButtonSilverCircleGreenPlus > div {
 	display: none;
 }
 .mblDomButtonSilverCircleRedCross {
 	background-image: url(domButtons/compat/mblDomButtonSilverCircleRedCross.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonSilverCircleRedCross > DIV {
+.mblDomButtonSilverCircleRedCross > div {
 	display: none;
 }
 .mblDomButtonBlueBall {
 	background-image: url(domButtons/compat/mblDomButtonBlueBall.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonBlueBall > DIV {
+.mblDomButtonBlueBall > div {
 	display: none;
 }
 .mblDomButtonGreenBall {
 	background-image: url(domButtons/compat/mblDomButtonGreenBall.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonGreenBall > DIV {
+.mblDomButtonGreenBall > div {
 	display: none;
 }
 .mblDomButtonOrangeBall {
 	background-image: url(domButtons/compat/mblDomButtonOrangeBall.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonOrangeBall > DIV {
+.mblDomButtonOrangeBall > div {
 	display: none;
 }
 .mblDomButtonRedBall {
 	background-image: url(domButtons/compat/mblDomButtonRedBall.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonRedBall > DIV {
+.mblDomButtonRedBall > div {
 	display: none;
 }
 .mblDomButtonYellowStar {
 	background-image: url(domButtons/compat/mblDomButtonYellowStar.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonYellowStar > DIV {
+.mblDomButtonYellowStar > div {
 	display: none;
 }
 .mblDomButtonGrayStar {
 	background-image: url(domButtons/compat/mblDomButtonGrayStar.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonGrayStar > DIV {
+.mblDomButtonGrayStar > div {
 	display: none;
 }

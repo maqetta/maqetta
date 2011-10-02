@@ -1,76 +1,70 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/gfx/renderer",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/sniff"],function(_1){
-var _2=null;
-return {load:function(id,_3,_4){
-if(_2&&id!="force"){
-_4(_2);
+define("dojox/gfx/renderer",["./_base","dojo/_base/lang","dojo/_base/sniff","dojo/_base/window","dojo/_base/config"],function(g,_1,_2,_3,_4){
+var _5=null;
+return {load:function(id,_6,_7){
+if(_5&&id!="force"){
+_7(_5);
 return;
 }
-var _5=_1.config.forceGfxRenderer,_6=!_5&&(_1.isString(_1.config.gfxRenderer)?_1.config.gfxRenderer:"svg,vml,canvas,silverlight").split(","),_7,_8;
-while(!_5&&_6.length){
-switch(_6.shift()){
+var _8=_4.forceGfxRenderer,_9=!_8&&(_1.isString(_4.gfxRenderer)?_4.gfxRenderer:"svg,vml,canvas,silverlight").split(","),_a,_b;
+while(!_8&&_9.length){
+switch(_9.shift()){
 case "svg":
-if("SVGAngle" in _1.global){
-_5="svg";
+if("SVGAngle" in _3.global){
+_8="svg";
 }
 break;
 case "vml":
-if(_1.isIE){
-_5="vml";
+if(_2("ie")){
+_8="vml";
 }
 break;
 case "silverlight":
 try{
-if(_1.isIE){
-_7=new ActiveXObject("AgControl.AgControl");
-if(_7&&_7.IsVersionSupported("1.0")){
-_8=true;
+if(_2("ie")){
+_a=new ActiveXObject("AgControl.AgControl");
+if(_a&&_a.IsVersionSupported("1.0")){
+_b=true;
 }
 }else{
 if(navigator.plugins["Silverlight Plug-In"]){
-_8=true;
+_b=true;
 }
 }
 }
 catch(e){
-_8=false;
+_b=false;
 }
 finally{
-_7=null;
+_a=null;
 }
-if(_8){
-_5="silverlight";
+if(_b){
+_8="silverlight";
 }
 break;
 case "canvas":
-if(_1.global.CanvasRenderingContext2D){
-_5="canvas";
+if(_3.global.CanvasRenderingContext2D){
+_8="canvas";
 }
 break;
 }
 }
-if(_5==="canvas"&&_1.config.canvasEvent!==false){
-_5="canvasWithEvents";
+if(_8==="canvas"&&_4.canvasEvents!==false){
+_8="canvasWithEvents";
 }
-if(_1.config.isDebug){
+if(_4.isDebug){
 }
-function _9(){
-_3(["dojox/gfx/"+_5],function(_a){
-dojox.gfx.renderer=_5;
-_2=_a;
-_4(_a);
+function _c(){
+_6(["dojox/gfx/"+_8],function(_d){
+g.renderer=_8;
+_5=_d;
+_7(_d);
 });
 };
-if(_5=="svg"&&typeof window.svgweb!="undefined"){
-window.svgweb.addOnLoad(_9);
+if(_8=="svg"&&typeof window.svgweb!="undefined"){
+window.svgweb.addOnLoad(_c);
 }else{
-_9();
+_c();
 }
 }};
 });

@@ -1,24 +1,20 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/widget/Portlet",["dojo","dijit","dojox","dijit/TitlePane","dojo/fx"],function(_1,_2,_3){
-_1.getObject("dojox.widget.Portlet",1);
-_1.experimental("dojox.widget.Portlet");
-_1.declare("dojox.widget.Portlet",[_2.TitlePane,_2._Container],{resizeChildren:true,closable:true,_parents:null,_size:null,dragRestriction:false,buildRendering:function(){
+define(["dijit","dojo","dojox","dojo/require!dijit/TitlePane,dojo/fx"],function(_1,_2,_3){
+_2.experimental("dojox.widget.Portlet");
+_2.provide("dojox.widget.Portlet");
+_2.require("dijit.TitlePane");
+_2.require("dojo.fx");
+_2.declare("dojox.widget.Portlet",[_1.TitlePane,_1._Container],{resizeChildren:true,closable:true,_parents:null,_size:null,dragRestriction:false,buildRendering:function(){
 this.inherited(arguments);
-_1.style(this.domNode,"visibility","hidden");
+_2.style(this.domNode,"visibility","hidden");
 },postCreate:function(){
 this.inherited(arguments);
-_1.addClass(this.domNode,"dojoxPortlet");
-_1.removeClass(this.arrowNode,"dijitArrowNode");
-_1.addClass(this.arrowNode,"dojoxPortletIcon dojoxArrowDown");
-_1.addClass(this.titleBarNode,"dojoxPortletTitle");
-_1.addClass(this.hideNode,"dojoxPortletContentOuter");
-_1.addClass(this.domNode,"dojoxPortlet-"+(!this.dragRestriction?"movable":"nonmovable"));
+_2.addClass(this.domNode,"dojoxPortlet");
+_2.removeClass(this.arrowNode,"dijitArrowNode");
+_2.addClass(this.arrowNode,"dojoxPortletIcon dojoxArrowDown");
+_2.addClass(this.titleBarNode,"dojoxPortletTitle");
+_2.addClass(this.hideNode,"dojoxPortletContentOuter");
+_2.addClass(this.domNode,"dojoxPortlet-"+(!this.dragRestriction?"movable":"nonmovable"));
 var _4=this;
 if(this.resizeChildren){
 this.subscribe("/dnd/drop",function(){
@@ -30,8 +26,8 @@ _4.onSizeChange(_5);
 this.connect(window,"onresize",function(){
 _4._updateSize();
 });
-var _6=_1.hitch(this,function(id,_7){
-var _8=_2.byId(id);
+var _6=_2.hitch(this,function(id,_7){
+var _8=_1.byId(id);
 if(_8.selectChild){
 var s=this.subscribe(id+"-selectChild",function(_9){
 var n=_4.domNode.parentNode;
@@ -44,7 +40,7 @@ break;
 n=n.parentNode;
 }
 });
-var _a=_2.byId(_7);
+var _a=_1.byId(_7);
 if(_8&&_a){
 _4._parents.push({parent:_8,child:_a});
 }
@@ -61,8 +57,8 @@ _b=id;
 }
 }
 this.connect(this.titleBarNode,"onmousedown",function(_c){
-if(_1.hasClass(_c.target,"dojoxPortletIcon")){
-_1.stopEvent(_c);
+if(_2.hasClass(_c.target,"dojoxPortletIcon")){
+_2.stopEvent(_c);
 return false;
 }
 return true;
@@ -74,8 +70,8 @@ this.connect(this._wipeIn,"onEnd",function(){
 _4._publish();
 });
 if(this.closable){
-this.closeIcon=this._createIcon("dojoxCloseNode","dojoxCloseNodeHover",_1.hitch(this,"onClose"));
-_1.style(this.closeIcon,"display","");
+this.closeIcon=this._createIcon("dojoxCloseNode","dojoxCloseNodeHover",_2.hitch(this,"onClose"));
+_2.style(this.closeIcon,"display","");
 }
 },startup:function(){
 if(this._started){
@@ -83,7 +79,7 @@ return;
 }
 var _d=this.getChildren();
 this._placeSettingsWidgets();
-_1.forEach(_d,function(_e){
+_2.forEach(_d,function(_e){
 try{
 if(!_e.started&&!_e._started){
 _e.startup();
@@ -93,31 +89,31 @@ catch(e){
 }
 });
 this.inherited(arguments);
-_1.style(this.domNode,"visibility","visible");
+_2.style(this.domNode,"visibility","visible");
 },_placeSettingsWidgets:function(){
-_1.forEach(this.getChildren(),_1.hitch(this,function(_f){
+_2.forEach(this.getChildren(),_2.hitch(this,function(_f){
 if(_f.portletIconClass&&_f.toggle&&!_f.attr("portlet")){
-this._createIcon(_f.portletIconClass,_f.portletIconHoverClass,_1.hitch(_f,"toggle"));
-_1.place(_f.domNode,this.containerNode,"before");
+this._createIcon(_f.portletIconClass,_f.portletIconHoverClass,_2.hitch(_f,"toggle"));
+_2.place(_f.domNode,this.containerNode,"before");
 _f.attr("portlet",this);
 this._settingsWidget=_f;
 }
 }));
 },_createIcon:function(_10,_11,fn){
-var _12=_1.create("div",{"class":"dojoxPortletIcon "+_10,"waiRole":"presentation"});
-_1.place(_12,this.arrowNode,"before");
+var _12=_2.create("div",{"class":"dojoxPortletIcon "+_10,"waiRole":"presentation"});
+_2.place(_12,this.arrowNode,"before");
 this.connect(_12,"onclick",fn);
 if(_11){
 this.connect(_12,"onmouseover",function(){
-_1.addClass(_12,_11);
+_2.addClass(_12,_11);
 });
 this.connect(_12,"onmouseout",function(){
-_1.removeClass(_12,_11);
+_2.removeClass(_12,_11);
 });
 }
 return _12;
 },onClose:function(evt){
-_1.style(this.domNode,"display","none");
+_2.style(this.domNode,"display","none");
 },onSizeChange:function(_13){
 if(_13==this){
 return;
@@ -130,8 +126,8 @@ return;
 if(this._timer){
 clearTimeout(this._timer);
 }
-this._timer=setTimeout(_1.hitch(this,function(){
-var _14={w:_1.style(this.domNode,"width"),h:_1.style(this.domNode,"height")};
+this._timer=setTimeout(_2.hitch(this,function(){
+var _14={w:_2.style(this.domNode,"width"),h:_2.style(this.domNode,"height")};
 for(var i=0;i<this._parents.length;i++){
 var p=this._parents[i];
 var sel=p.parent.selectedChildWidget;
@@ -148,9 +144,9 @@ this._size=_14;
 var fns=["resize","layout"];
 this._timer=null;
 var _15=this.getChildren();
-_1.forEach(_15,function(_16){
+_2.forEach(_15,function(_16){
 for(var i=0;i<fns.length;i++){
-if(_1.isFunction(_16[fns[i]])){
+if(_2.isFunction(_16[fns[i]])){
 try{
 _16[fns[i]]();
 }
@@ -164,7 +160,7 @@ this.onUpdateSize();
 }),100);
 },onUpdateSize:function(){
 },_publish:function(){
-_1.publish("/Portlet/sizechange",[this]);
+_2.publish("/Portlet/sizechange",[this]);
 },_onTitleClick:function(evt){
 if(evt.target==this.arrowNode){
 this.inherited(arguments);
@@ -191,35 +187,35 @@ clearTimeout(this._timer);
 this.inherited(arguments);
 },_setCss:function(){
 this.inherited(arguments);
-_1.style(this.arrowNode,"display",this.toggleable?"":"none");
+_2.style(this.arrowNode,"display",this.toggleable?"":"none");
 }});
-_1.declare("dojox.widget.PortletSettings",[_2._Container,_2.layout.ContentPane],{portletIconClass:"dojoxPortletSettingsIcon",portletIconHoverClass:"dojoxPortletSettingsIconHover",postCreate:function(){
-_1.style(this.domNode,"display","none");
-_1.addClass(this.domNode,"dojoxPortletSettingsContainer");
-_1.removeClass(this.domNode,"dijitContentPane");
+_2.declare("dojox.widget.PortletSettings",[_1._Container,_1.layout.ContentPane],{portletIconClass:"dojoxPortletSettingsIcon",portletIconHoverClass:"dojoxPortletSettingsIconHover",postCreate:function(){
+_2.style(this.domNode,"display","none");
+_2.addClass(this.domNode,"dojoxPortletSettingsContainer");
+_2.removeClass(this.domNode,"dijitContentPane");
 },_setPortletAttr:function(_19){
 this.portlet=_19;
 },toggle:function(){
 var n=this.domNode;
-if(_1.style(n,"display")=="none"){
-_1.style(n,{"display":"block","height":"1px","width":"auto"});
-_1.fx.wipeIn({node:n}).play();
+if(_2.style(n,"display")=="none"){
+_2.style(n,{"display":"block","height":"1px","width":"auto"});
+_2.fx.wipeIn({node:n}).play();
 }else{
-_1.fx.wipeOut({node:n,onEnd:_1.hitch(this,function(){
-_1.style(n,{"display":"none","height":"","width":""});
+_2.fx.wipeOut({node:n,onEnd:_2.hitch(this,function(){
+_2.style(n,{"display":"none","height":"","width":""});
 })}).play();
 }
 }});
-_1.declare("dojox.widget.PortletDialogSettings",_3.widget.PortletSettings,{dimensions:null,constructor:function(_1a,_1b){
+_2.declare("dojox.widget.PortletDialogSettings",_3.widget.PortletSettings,{dimensions:null,constructor:function(_1a,_1b){
 this.dimensions=_1a.dimensions||[300,100];
 },toggle:function(){
 if(!this.dialog){
-_1["require"]("dijit.Dialog");
-this.dialog=new _2.Dialog({title:this.title});
-_1.body().appendChild(this.dialog.domNode);
+_2["require"]("dijit.Dialog");
+this.dialog=new _1.Dialog({title:this.title});
+_2.body().appendChild(this.dialog.domNode);
 this.dialog.containerNode.appendChild(this.domNode);
-_1.style(this.dialog.domNode,{"width":this.dimensions[0]+"px","height":this.dimensions[1]+"px"});
-_1.style(this.domNode,"display","");
+_2.style(this.dialog.domNode,{"width":this.dimensions[0]+"px","height":this.dimensions[1]+"px"});
+_2.style(this.domNode,"display","");
 }
 if(this.dialog.open){
 this.dialog.hide();
@@ -227,6 +223,4 @@ this.dialog.hide();
 this.dialog.show(this.domNode);
 }
 }});
-return _1.getObject("dojox.widget.Portlet");
 });
-require(["dojox/widget/Portlet"]);

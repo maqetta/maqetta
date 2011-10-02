@@ -1,12 +1,7 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/widget/AutoRotator",["dojo","dijit","dojox","dojox/widget/Rotator"],function(_1,_2,_3){
-_1.getObject("dojox.widget.AutoRotator",1);
+define(["dijit","dojo","dojox","dojo/require!dojox/widget/Rotator"],function(_1,_2,_3){
+_2.provide("dojox.widget.AutoRotator");
+_2.require("dojox.widget.Rotator");
 (function(d){
 d.declare("dojox.widget.AutoRotator",_3.widget.Rotator,{suspendOnHover:false,duration:4000,autoStart:true,pauseOnManualChange:false,cycles:-1,random:false,reverse:false,constructor:function(){
 var _4=this;
@@ -98,7 +93,5 @@ if(this.playing){
 this.play();
 }
 }});
-})(_1);
-return _1.getObject("dojox.widget.AutoRotator");
+})(_2);
 });
-require(["dojox/widget/AutoRotator"]);

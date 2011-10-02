@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/mobile/EdgeToEdgeList",["./RoundRectList"],function(_1){
-return dojo.declare("dojox.mobile.EdgeToEdgeList",dojox.mobile.RoundRectList,{buildRendering:function(){
+define("dojox/mobile/EdgeToEdgeList",["dojo/_base/declare","./RoundRectList"],function(_1,_2){
+return _1("dojox.mobile.EdgeToEdgeList",_2,{buildRendering:function(){
 this.inherited(arguments);
 this.domNode.className="mblEdgeToEdgeList";
 }});

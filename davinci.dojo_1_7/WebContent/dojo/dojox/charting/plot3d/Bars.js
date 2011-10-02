@@ -1,34 +1,28 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/charting/plot3d/Bars",["dojo/_base/kernel","dojox/gfx3d","dojo/_base/window","dojo/_base/declare","dojo/_base/Color","./Base"],function(_1,_2,_3,_4,_5,_6){
-var _7=function(a,f,o){
+define("dojox/charting/plot3d/Bars",["dojox/gfx3d","dojo/_base/window","dojo/_base/declare","dojo/_base/Color","./Base"],function(_1,_2,_3,_4,_5){
+var _6=function(a,f,o){
 a=typeof a=="string"?a.split(""):a;
-o=o||_1.global;
+o=o||_2.global;
 var z=a[0];
 for(var i=1;i<a.length;z=f.call(o,z,a[i++])){
 }
 return z;
 };
-return _1.declare("dojox.charting.plot3d.Bars",dojox.charting.plot3d.Base,{constructor:function(_8,_9,_a){
+return _3("dojox.charting.plot3d.Bars",_5,{constructor:function(_7,_8,_9){
 this.depth="auto";
 this.gap=0;
 this.data=[];
 this.material={type:"plastic",finish:"dull",color:"lime"};
-if(_a){
-if("depth" in _a){
-this.depth=_a.depth;
+if(_9){
+if("depth" in _9){
+this.depth=_9.depth;
 }
-if("gap" in _a){
-this.gap=_a.gap;
+if("gap" in _9){
+this.gap=_9.gap;
 }
-if("material" in _a){
-var m=_a.material;
-if(typeof m=="string"||m instanceof _1.Color){
+if("material" in _9){
+var m=_9.material;
+if(typeof m=="string"||m instanceof _4){
 this.material.color=m;
 }else{
 this.material=m;
@@ -44,16 +38,16 @@ w=w/this.data.length;
 return w-2*this.gap;
 }
 return this.depth;
-},generate:function(_b,_c){
+},generate:function(_a,_b){
 if(!this.data){
 return this;
 }
-var _d=this.width/this.data.length,_e=0,_f=this.depth=="auto"?_d-2*this.gap:this.depth,_10=this.height/_7(this.data,Math.max);
-if(!_c){
-_c=_b.view;
+var _c=this.width/this.data.length,_d=0,_e=this.depth=="auto"?_c-2*this.gap:this.depth,_f=this.height/_6(this.data,Math.max);
+if(!_b){
+_b=_a.view;
 }
-for(var i=0;i<this.data.length;++i,_e+=_d){
-_c.createCube({bottom:{x:_e+this.gap,y:0,z:0},top:{x:_e+_d-this.gap,y:this.data[i]*_10,z:_f}}).setFill(this.material);
+for(var i=0;i<this.data.length;++i,_d+=_c){
+_b.createCube({bottom:{x:_d+this.gap,y:0,z:0},top:{x:_d+_c-this.gap,y:this.data[i]*_f,z:_e}}).setFill(this.material);
 }
 }});
 });

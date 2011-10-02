@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/data/restListener",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.data.restListener",1);
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.data.restListener");
 _3.data.restListener=function(_4){
 var _5=_4.channel;
 var jr=_3.rpc.JsonRest;
@@ -32,6 +26,4 @@ break;
 }
 }
 };
-return _1.getObject("dojox.data.restListener");
 });
-require(["dojox/data/restListener"]);

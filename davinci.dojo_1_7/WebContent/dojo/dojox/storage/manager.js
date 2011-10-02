@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/storage/manager",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.storage.manager",1);
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.storage.manager");
 _3.storage.manager=new function(){
 this.currentProvider=null;
 this.available=false;
@@ -26,7 +20,7 @@ this.autodetect=function(){
 if(this._initialized){
 return;
 }
-var _7=_1.config["forceStorageProvider"]||false;
+var _7=_2.config["forceStorageProvider"]||false;
 var _8;
 for(var i=0;i<this.providers.length;i++){
 _8=this.providers[i];
@@ -48,7 +42,7 @@ this.loaded();
 return;
 }
 this.currentProvider=_8;
-_1.mixin(_3.storage,this.currentProvider);
+_2.mixin(_3.storage,this.currentProvider);
 _3.storage.initialize();
 this._initialized=true;
 this.available=true;
@@ -97,7 +91,7 @@ this.loaded=function(){
 this._fireLoaded();
 };
 this._fireLoaded=function(){
-_1.forEach(this._onLoadListeners,function(i){
+_2.forEach(this._onLoadListeners,function(i){
 try{
 i();
 }
@@ -107,12 +101,10 @@ catch(e){
 };
 this.getResourceList=function(){
 var _e=[];
-_1.forEach(_3.storage.manager.providers,function(_f){
+_2.forEach(_3.storage.manager.providers,function(_f){
 _e=_e.concat(_f.getResourceList());
 });
 return _e;
 };
 };
-return _1.getObject("dojox.storage.manager");
 });
-require(["dojox/storage/manager"]);

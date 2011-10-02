@@ -1,5 +1,7 @@
 //>>built
-define(({
+define(
+//begin v1.x content
+({
 	displayOptions: "[volby zobrazení]",
 	title: "Název",
 	authors: "Autoři",
@@ -9,4 +11,6 @@ define(({
 	updated: "Aktualizováno",
 	summary: "Souhrn",
 	content: "Obsah"
-}));
+})
+//end v1.x content
+);

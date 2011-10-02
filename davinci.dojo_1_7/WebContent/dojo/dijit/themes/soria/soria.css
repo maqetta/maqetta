@@ -44,8 +44,8 @@ table.dijitInline {
 	vertical-align: middle;
 	#display: inline;
 }
-.dj_ie INPUT.dijitTextBox,
-.dj_ie .dijitTextBox INPUT {
+.dj_ie input.dijitTextBox,
+.dj_ie .dijitTextBox input {
 	font-size: 100%;
 }
 .dijitTextBox .dijitSpinnerButtonContainer,
@@ -54,7 +54,7 @@ table.dijitInline {
 	float: right;
 	text-align: center;
 }
-.dijitTextBox INPUT.dijitInputField {
+.dijitTextBox input.dijitInputField {
 	
 	padding-left: 0 !important;
 	padding-right: 0 !important;
@@ -115,15 +115,15 @@ table.dijitInline {
 	overflow: hidden;	
 }
 .dijit_a11y .dijitIcon,
-.dijit_a11y DIV.dijitArrowButtonInner, 
-.dijit_a11y SPAN.dijitArrowButtonInner,
-.dijit_a11y IMG.dijitArrowButtonInner,
+.dijit_a11y div.dijitArrowButtonInner, 
+.dijit_a11y span.dijitArrowButtonInner,
+.dijit_a11y img.dijitArrowButtonInner,
 .dijit_a11y .dijitCalendarIncrementControl,
 .dijit_a11y .dijitTreeExpando {
 	
 	display: none;
 }
-.dijitSpinner DIV.dijitArrowButtonInner {
+.dijitSpinner div.dijitArrowButtonInner {
 	display: block; 
 }
 .dijit_a11y .dijitA11ySideArrow {
@@ -132,19 +132,24 @@ table.dijitInline {
 }
 .dijit_a11y .dijitCalendarDateLabel {
 	padding: 1px;
+	border: 0px !important;
 }
 .dijit_a11y .dijitCalendarSelectedDate .dijitCalendarDateLabel {
-	border-style: dotted !important;
-	border-width: 1px;
+	border-style: solid !important;
+	border-width: 1px !important;
 	padding: 0;
 }
 .dijit_a11y .dijitCalendarDateTemplate {
 	padding-bottom: 0.1em !important;	
+	border: 0px !important;
 }
 .dijit_a11y .dijitButtonNode {
 	border: black outset medium !important;
 	
 	padding: 0 !important;
+}
+.dijit_a11y .dijitButtonContents{
+	margin: 0.15em; 
 }
 .dijit_a11y .dijitTextBoxReadOnly .dijitInputField,
 .dijit_a11y .dijitTextBoxReadOnly .dijitButtonNode {
@@ -179,6 +184,9 @@ table.dijitInline {
 	background-position:right top;
 	background-repeat:no-repeat;
 }
+.dj_gecko .dijit_a11y .dijitButtonDisabled .dijitButtonNode {
+	opacity: 0.5;
+}
 .dijitToggleButton,
 .dijitButton,
 .dijitDropDownButton,
@@ -193,7 +201,7 @@ table.dijitInline {
 td.dijitButtonContents {
 	display: table-cell;	
 }
-.dijitButtonNode IMG {
+.dijitButtonNode img {
 	
 	vertical-align:middle;
 	
@@ -247,7 +255,7 @@ td.dijitButtonContents {
 	
 	overflow: visible;
 }
-DIV.dijitArrowButton {
+div.dijitArrowButton {
 	float: right;
 }
 .dijitTextBox {
@@ -260,14 +268,14 @@ DIV.dijitArrowButton {
 .dijitTextBoxDisabled {
 	color: gray;
 }
-.dj_webkit .dijitTextBoxDisabled INPUT {
+.dj_webkit .dijitTextBoxDisabled input {
 	color: #eee; 
 }
-.dj_webkit TEXTAREA.dijitTextAreaDisabled {
+.dj_webkit textarea.dijitTextAreaDisabled {
 	color: #333; 
 }
-.dj_gecko .dijitTextBoxReadOnly INPUT.dijitInputField, 
-.dj_gecko .dijitTextBoxDisabled INPUT {
+.dj_gecko .dijitTextBoxReadOnly input.dijitInputField, 
+.dj_gecko .dijitTextBoxDisabled input {
 	-moz-user-input: none; 
 }
 .dijitPlaceHolder {
@@ -282,13 +290,13 @@ DIV.dijitArrowButton {
 .dijitTimeTextBox {
 	width: 8em;
 }
-.dijitTextBox INPUT:focus {
+.dijitTextBox input:focus {
 	outline: none;	
 }
 .dijitTextBoxFocused {
 	outline: 5px -webkit-focus-ring-color;
 }
-.dijitTextBox INPUT {
+.dijitTextBox input {
 	float: left; 
 }
 .dijitInputInner {
@@ -303,11 +311,11 @@ DIV.dijitArrowButton {
 	margin-left: 0 !important;
 	margin-right: 0 !important;
 }
-.dijit_a11y .dijitTextBox INPUT {
+.dijit_a11y .dijitTextBox input {
 	margin: 0 !important;
 }
-.dijitTextBoxError INPUT.dijitValidationInner,
-.dijitTextBox INPUT.dijitArrowButtonInner {
+.dijitTextBoxError input.dijitValidationInner,
+.dijitTextBox input.dijitArrowButtonInner {
 	
 	text-indent: -1em !important;
 	direction: ltr !important;
@@ -317,26 +325,26 @@ DIV.dijitArrowButton {
 	#letter-spacing: -5em !important;
 	#text-align: right !important;
 }
-.dj_ie .dijitTextBox INPUT,
-.dj_ie INPUT.dijitTextBox {
+.dj_ie .dijitTextBox input,
+.dj_ie input.dijitTextBox {
 	overflow-y: visible; 
 	line-height: normal; 
 }
-.dj_ie7 .dijitTextBox INPUT.dijitValidationInner,
-.dj_ie7 .dijitTextBox INPUT.dijitArrowButtonInner {
+.dj_ie7 .dijitTextBox input.dijitValidationInner,
+.dj_ie7 .dijitTextBox input.dijitArrowButtonInner {
 	line-height: 86%; 
 }
-.dj_ie6 .dijitTextBox INPUT,
-.dj_ie6 INPUT.dijitTextBox,
-.dj_iequirks .dijitTextBox INPUT.dijitValidationInner,
-.dj_iequirks .dijitTextBox INPUT.dijitArrowButtonInner,
-.dj_iequirks .dijitTextBox INPUT.dijitSpinnerButtonInner,
-.dj_iequirks .dijitTextBox INPUT.dijitInputInner,
-.dj_iequirks INPUT.dijitTextBox {
+.dj_ie6 .dijitTextBox input,
+.dj_ie6 input.dijitTextBox,
+.dj_iequirks .dijitTextBox input.dijitValidationInner,
+.dj_iequirks .dijitTextBox input.dijitArrowButtonInner,
+.dj_iequirks .dijitTextBox input.dijitSpinnerButtonInner,
+.dj_iequirks .dijitTextBox input.dijitInputInner,
+.dj_iequirks input.dijitTextBox {
 	line-height: 100%; 
 }
-.dijit_a11y INPUT.dijitValidationInner,
-.dijit_a11y INPUT.dijitArrowButtonInner {
+.dijit_a11y input.dijitValidationInner,
+.dijit_a11y input.dijitArrowButtonInner {
 	
 	text-indent: 0 !important;
 	width: 1em !important;
@@ -389,7 +397,7 @@ DIV.dijitArrowButton {
 }
 .dijit_a11y .dijitTextBox .dijitSpinnerButtonContainer,
 .dijit_a11y .dijitSpinner .dijitArrowButtonInner,
-.dijit_a11y .dijitSpinnerButtonContainer INPUT {
+.dijit_a11y .dijitSpinnerButtonContainer input {
 	width: 1em !important;
 }
 .dijit_a11y .dijitSpinner .dijitArrowButtonInner {
@@ -503,8 +511,8 @@ DIV.dijitArrowButton {
 	background-repeat:no-repeat;
 	overflow: hidden;
 }
-.dijitCheckBox INPUT,
-.dijitRadio INPUT {
+.dijitCheckBox input,
+.dijitRadio input {
 	margin: 0;
 	padding: 0;
 	display: block;
@@ -527,6 +535,11 @@ DIV.dijitArrowButton {
 	filter: none;
 	width: auto;
 	height: auto;
+}
+.dijit_a11y .dijitFocusedLabel {
+	
+	border: 1px dotted;
+	outline: 0px !important;
 }
 .dijitProgressBarEmpty {
 	
@@ -839,12 +852,12 @@ body .dijitAlignClient { position: absolute; }
 .dijitPaletteTable td {
 		padding: 0;
 }
-.dijitColorPalette .dijitPaletteCellHover .dijitPaletteImg {
+.dijitColorPalette .dijitPaletteCell:hover .dijitPaletteImg {
 	
 	border: 1px solid #000;
 }
-.dijitColorPalette .dijitPaletteCellActive .dijitPaletteImg,
-.dijitColorPalette .dijitPaletteCellSelected .dijitPaletteImg {
+.dijitColorPalette .dijitPaletteCell:active .dijitPaletteImg,
+.dijitColorPalette .dijitPaletteTable .dijitPaletteCellSelected .dijitPaletteImg {
 	border: 2px solid #000;
 	margin: 1px 0;	
 }
@@ -886,6 +899,9 @@ body .dijitAlignClient { position: absolute; }
 .dijitCalendarContainer th, .dijitCalendarContainer td {
 	padding: 0;
 	vertical-align: middle;
+}
+.dijitCalendarYearLabel {
+    white-space: nowrap;    
 }
 .dijitCalendarNextYear {
 	margin:0 0 0 0.55em;
@@ -1073,7 +1089,7 @@ body .dijitAlignClient { position: absolute; }
 .dijitTabContainerRight-container {
 	border-right: 0;
 }
-DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
+div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 	cursor: auto;
 }
 .dijitTab {
@@ -1257,7 +1273,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 .dijitSliderMoveableV {
 	right:50%;
 }
-.dijit_a11y DIV.dijitSliderImageHandle,
+.dijit_a11y div.dijitSliderImageHandle,
 .dijitSliderImageHandle {
 	margin:0;
 	padding:0;
@@ -1462,7 +1478,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 .dj_ie .dijit_a11y .dijitSliderDisabled .dijitSliderBar {
 	filter: alpha(opacity=40);
 }
-.dijit_a11y .dijitSlider .dijitSliderButtonContainer DIV {
+.dijit_a11y .dijitSlider .dijitSliderButtonContainer div {
 	font-family: monospace; 
 	font-size: 1em;
 	line-height: 1em;
@@ -2295,7 +2311,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	filter: Alpha(Opacity=60);
 	margin: 0;
 }
-.soria .dijitInputContainer INPUT,
+.soria .dijitInputContainer input,
 .soria .dijitTextBox {
 	margin: 0 0.1em;
 }
@@ -2378,8 +2394,8 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	background:#c3d3e5 url(images/buttonDisabled.png) top repeat-x;
 	opacity: 0.60;
 }
-.dj_ie6 .soria .dijitReadOnly INPUT,
-.dj_ie7 .soria .dijitReadOnly INPUT,
+.dj_ie6 .soria .dijitReadOnly input,
+.dj_ie7 .soria .dijitReadOnly input,
 .dj_ie6 .soria .dijitComboButtonDisabled .dijitButtonText,
 .dj_ie7 .soria .dijitComboButtonDisabled .dijitButtonText {
 	
@@ -2941,9 +2957,11 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	margin:0;
 	padding:0.4em 0 0.25em 0;
 	text-align:center;
+	font-size: 1.17em;
 }
 .soria .dijitCalendarSelectedYear {
 	
+	font-weight:bolder;
 	color:black;
 	padding:0.2em;
 	padding-bottom:0.1em;

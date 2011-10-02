@@ -1,20 +1,14 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/charting/plot2d/ClusteredBars",["dojo/_base/kernel","dojo/_base/array","dojo/_base/declare","./Bars","./common","dojox/lang/functional","dojox/lang/functional/reversed","dojox/lang/utils"],function(_1,_2,_3,_4,dc,df,_5,du){
-var _6=df.lambda("item.purgeGroup()");
-return _1.declare("dojox.charting.plot2d.ClusteredBars",dojox.charting.plot2d.Bars,{render:function(_7,_8){
+define("dojox/charting/plot2d/ClusteredBars",["dojo/_base/lang","dojo/_base/array","dojo/_base/declare","./Bars","./common","dojox/lang/functional","dojox/lang/functional/reversed","dojox/lang/utils"],function(_1,_2,_3,_4,dc,df,_5,du){
+var _6=_5.lambda("item.purgeGroup()");
+return _3("dojox.charting.plot2d.ClusteredBars",_4,{render:function(_7,_8){
 if(this.zoom&&!this.isDataDirty()){
 return this.performZoom(_7,_8);
 }
 this.resetEvents();
 this.dirty=this.isDirty();
 if(this.dirty){
-_1.forEach(this.series,_6);
+_2.forEach(this.series,_6);
 this._eventSeries={};
 this.cleanGroup();
 var s=this.group;
@@ -39,7 +33,7 @@ for(var j=0;j<run.data.length;++j){
 var _13=run.data[j];
 if(_13!==null){
 var v=typeof _13=="number"?_13:_13.y,hv=ht(v),_14=hv-_e,w=Math.abs(_14),_15=typeof _13!="number"?t.addMixin(_11,"bar",_13,true):t.post(_11,"bar");
-if(w>=1&&_b>=1){
+if(w>=0&&_b>=1){
 var _16={x:_8.l+(v<_d?hv:_e),y:_7.height-_8.b-vt(j+1.5)+_a+_10,width:w,height:_b};
 var _17=this._plotFill(_15.series.fill,_7,_8);
 _17=this._shapeFill(_17,_16);

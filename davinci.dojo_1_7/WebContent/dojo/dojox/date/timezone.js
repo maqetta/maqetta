@@ -1,13 +1,7 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/date/timezone",["dojo/main","dojo/date","dojo/date/locale","dojo/_base/array","dojo/_base/xhr"],function(_1,_2,_3){
-dojo.experimental("dojox.date.timezone");
-dojo.getObject("date.timezone",true,dojox);
+define("dojox/date/timezone",["dojo","dojo/date","dojo/date/locale","dojo/_base/array","dojo/_base/xhr"],function(_1,_2,_3){
+_1.experimental("dojox.date.timezone");
+_1.getObject("date.timezone",true,dojox);
 var _4=_1.config;
 var _5=["africa","antarctica","asia","australasia","backward","etcetera","europe","northamerica","pacificnew","southamerica"];
 var _6=1835,_7=2038;

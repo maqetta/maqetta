@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/secure/capability",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.secure.capability",1);
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.secure.capability");
 _3.secure.badProps=/^__|^(apply|call|callee|caller|constructor|eval|prototype|this|unwatch|valueOf|watch)$|__$/;
 _3.secure.capability={keywords:["break","case","catch","const","continue","debugger","default","delete","do","else","enum","false","finally","for","function","if","in","instanceof","new","null","yield","return","switch","throw","true","try","typeof","var","void","while"],validate:function(_4,_5,_6){
 var _7=this.keywords;
@@ -21,7 +15,7 @@ throw new Error("Illegal unicode characters detected");
 if(_4.match(/\/\*@cc_on/)){
 throw new Error("Conditional compilation token is not allowed");
 }
-_4=_4.replace(/\\["'\\\/bfnrtu]/g,"@").replace(/\/\/.*|\/\*[\w\W]*?\*\/|\/(\\[\/\\]|[^*\/])(\\.|[^\/\n\\])*\/[gim]*|("[^"]*")|('[^']*')/g,function(t){
+_4=_4.replace(/\\["'\\\/bfnrtu]/g,"@").replace(/\/\/.*|\/\*[\w\W]*?\*\/|("[^"]*")|('[^']*')/g,function(t){
 return t.match(/^\/\/|^\/\*/)?" ":"0";
 }).replace(/\.\s*([a-z\$_A-Z][\w\$_]*)|([;,{])\s*([a-z\$_A-Z][\w\$_]*\s*):/g,function(t,_a,_b,_c){
 _a=_a||_c;
@@ -98,6 +92,4 @@ throw new Error("Illegal reference to "+i);
 }
 }
 }};
-return _1.getObject("dojox.secure.capability");
 });
-require(["dojox/secure/capability"]);

@@ -1,47 +1,41 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/html/styles",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/array","dojo/_base/window"],function(d){
-var dh=d.getObject("html",true,dojox);
-var _1={};
-var _2={};
-var _3=[];
-dh.insertCssRule=function(_4,_5,_6){
-var ss=dh.getDynamicStyleSheet(_6);
-var _7=_4+" {"+_5+"}";
-if(d.isIE){
-ss.cssText+=_7;
+define("dojox/html/styles",["dojo/_base/lang","dojo/_base/array","dojo/_base/window","dojo/_base/sniff"],function(_1,_2,_3,_4){
+var dh=_1.getObject("dojox.html",true);
+var _5={};
+var _6={};
+var _7=[];
+dh.insertCssRule=function(_8,_9,_a){
+var ss=dh.getDynamicStyleSheet(_a);
+var _b=_8+" {"+_9+"}";
+if(_4("ie")){
+ss.cssText+=_b;
 }else{
 if(ss.sheet){
-ss.sheet.insertRule(_7,ss._indicies.length);
+ss.sheet.insertRule(_b,ss._indicies.length);
 }else{
-ss.appendChild(d.doc.createTextNode(_7));
+ss.appendChild(_3.doc.createTextNode(_b));
 }
 }
-ss._indicies.push(_4+" "+_5);
-return _4;
+ss._indicies.push(_8+" "+_9);
+return _8;
 };
-dh.removeCssRule=function(_8,_9,_a){
+dh.removeCssRule=function(_c,_d,_e){
 var ss;
-var _b=-1;
+var _f=-1;
 var nm;
 var i;
-for(nm in _1){
-if(_a&&_a!==nm){
+for(nm in _5){
+if(_e&&_e!==nm){
 continue;
 }
-ss=_1[nm];
+ss=_5[nm];
 for(i=0;i<ss._indicies.length;i++){
-if(_8+" "+_9===ss._indicies[i]){
-_b=i;
+if(_c+" "+_d===ss._indicies[i]){
+_f=i;
 break;
 }
 }
-if(_b>-1){
+if(_f>-1){
 break;
 }
 }
@@ -49,65 +43,62 @@ if(!ss){
 console.warn("No dynamic style sheet has been created from which to remove a rule.");
 return false;
 }
-if(_b===-1){
+if(_f===-1){
 console.warn("The css rule was not found and could not be removed.");
 return false;
 }
-ss._indicies.splice(_b,1);
-if(d.isIE){
-ss.removeRule(_b);
+ss._indicies.splice(_f,1);
+if(_4("ie")){
+ss.removeRule(_f);
 }else{
 if(ss.sheet){
-ss.sheet.deleteRule(_b);
-}else{
-if(document.styleSheets[0]){
-}
+ss.sheet.deleteRule(_f);
 }
 }
 return true;
 };
-dh.modifyCssRule=function(_c,_d,_e){
+dh.modifyCssRule=function(_10,_11,_12){
 };
-dh.getStyleSheet=function(_f){
-if(_1[_f||"default"]){
-return _1[_f||"default"];
+dh.getStyleSheet=function(_13){
+if(_5[_13||"default"]){
+return _5[_13||"default"];
 }
-if(!_f){
+if(!_13){
 return false;
 }
-var _10=dh.getStyleSheets();
-if(_10[_f]){
-return dh.getStyleSheets()[_f];
+var _14=dh.getStyleSheets();
+if(_14[_13]){
+return dh.getStyleSheets()[_13];
 }
 var nm;
-for(nm in _10){
-if(_10[nm].href&&_10[nm].href.indexOf(_f)>-1){
-return _10[nm];
+for(nm in _14){
+if(_14[nm].href&&_14[nm].href.indexOf(_13)>-1){
+return _14[nm];
 }
 }
 return false;
 };
-dh.getDynamicStyleSheet=function(_11){
-if(!_11){
-_11="default";
+dh.getDynamicStyleSheet=function(_15){
+if(!_15){
+_15="default";
 }
-if(!_1[_11]){
-if(d.doc.createStyleSheet){
-_1[_11]=d.doc.createStyleSheet();
-if(d.isIE<9){
-_1[_11].title=_11;
+if(!_5[_15]){
+if(_3.doc.createStyleSheet){
+_5[_15]=d.doc.createStyleSheet();
+if(_4("ie")<9){
+_5[_15].title=_15;
 }
 }else{
-_1[_11]=d.doc.createElement("style");
-_1[_11].setAttribute("type","text/css");
-d.doc.getElementsByTagName("head")[0].appendChild(_1[_11]);
+_5[_15]=_3.doc.createElement("style");
+_5[_15].setAttribute("type","text/css");
+_3.doc.getElementsByTagName("head")[0].appendChild(_5[_15]);
 }
-_1[_11]._indicies=[];
+_5[_15]._indicies=[];
 }
-return _1[_11];
+return _5[_15];
 };
-dh.enableStyleSheet=function(_12){
-var ss=dh.getStyleSheet(_12);
+dh.enableStyleSheet=function(_16){
+var ss=dh.getStyleSheet(_16);
 if(ss){
 if(ss.sheet){
 ss.sheet.disabled=false;
@@ -116,8 +107,8 @@ ss.disabled=false;
 }
 }
 };
-dh.disableStyleSheet=function(_13){
-var ss=dh.getStyleSheet(_13);
+dh.disableStyleSheet=function(_17){
+var ss=dh.getStyleSheet(_17);
 if(ss){
 if(ss.sheet){
 ss.sheet.disabled=true;
@@ -126,17 +117,17 @@ ss.disabled=true;
 }
 }
 };
-dh.activeStyleSheet=function(_14){
-var _15=dh.getToggledStyleSheets();
+dh.activeStyleSheet=function(_18){
+var _19=dh.getToggledStyleSheets();
 var i;
 if(arguments.length===1){
-d.forEach(_15,function(s){
-s.disabled=(s.title===_14)?false:true;
+_2.forEach(_19,function(s){
+s.disabled=(s.title===_18)?false:true;
 });
 }else{
-for(i=0;i<_15.length;i++){
-if(_15[i].disabled===false){
-return _15[i];
+for(i=0;i<_19.length;i++){
+if(_19[i].disabled===false){
+return _19[i];
 }
 }
 }
@@ -146,51 +137,51 @@ dh.getPreferredStyleSheet=function(){
 };
 dh.getToggledStyleSheets=function(){
 var nm;
-if(!_3.length){
-var _16=dh.getStyleSheets();
-for(nm in _16){
-if(_16[nm].title){
-_3.push(_16[nm]);
+if(!_7.length){
+var _1a=dh.getStyleSheets();
+for(nm in _1a){
+if(_1a[nm].title){
+_7.push(_1a[nm]);
 }
 }
 }
-return _3;
+return _7;
 };
 dh.getStyleSheets=function(){
-if(_2.collected){
-return _2;
+if(_6.collected){
+return _6;
 }
-var _17=d.doc.styleSheets;
-d.forEach(_17,function(n){
+var _1b=_3.doc.styleSheets;
+_2.forEach(_1b,function(n){
 var s=(n.sheet)?n.sheet:n;
-var _18=s.title||s.href;
-if(d.isIE){
+var _1c=s.title||s.href;
+if(_4("ie")){
 if(s.cssText.indexOf("#default#VML")===-1){
 if(s.href){
-_2[_18]=s;
+_6[_1c]=s;
 }else{
 if(s.imports.length){
-d.forEach(s.imports,function(si){
-_2[si.title||si.href]=si;
+_2.forEach(s.imports,function(si){
+_6[si.title||si.href]=si;
 });
 }else{
-_2[_18]=s;
+_6[_1c]=s;
 }
 }
 }
 }else{
-_2[_18]=s;
-_2[_18].id=s.ownerNode.id;
-d.forEach(s.cssRules,function(r){
+_6[_1c]=s;
+_6[_1c].id=s.ownerNode.id;
+_2.forEach(s.cssRules,function(r){
 if(r.href){
-_2[r.href]=r.styleSheet;
-_2[r.href].id=s.ownerNode.id;
+_6[r.href]=r.styleSheet;
+_6[r.href].id=s.ownerNode.id;
 }
 });
 }
 });
-_2.collected=true;
-return _2;
+_6.collected=true;
+return _6;
 };
 return dh;
 });

@@ -1,18 +1,12 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/charting/axis2d/Base",["dojo/_base/kernel","dojo/_base/declare","../Element"],function(_1,_2,_3){
-return _1.declare("dojox.charting.axis2d.Base",dojox.charting.Element,{constructor:function(_4,_5){
-this.vertical=_5&&_5.vertical;
+define("dojox/charting/axis2d/Base",["dojo/_base/declare","../Element"],function(_1,_2){
+return _1("dojox.charting.axis2d.Base",_2,{constructor:function(_3,_4){
+this.vertical=_4&&_4.vertical;
 },clear:function(){
 return this;
 },initialized:function(){
 return false;
-},calculate:function(_6,_7,_8){
+},calculate:function(_5,_6,_7){
 return this;
 },getScaler:function(){
 return null;
@@ -20,7 +14,7 @@ return null;
 return null;
 },getOffsets:function(){
 return {l:0,r:0,t:0,b:0};
-},render:function(_9,_a){
+},render:function(_8,_9){
 this.dirty=false;
 return this;
 }});

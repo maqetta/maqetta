@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/geo/charting/TouchInteractionSupport",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","dojo/_base/window"],function(_1,_2,_3,_4,_5){
-return _1.declare("dojox.geo.charting.TouchInteractionSupport",null,{_map:null,_centerTouchLocation:null,_touchMoveListener:null,_touchEndListener:null,_touchEndTapListener:null,_touchStartListener:null,_initialFingerSpacing:null,_initialScale:null,_tapCount:null,_tapThreshold:null,_lastTap:null,_doubleTapPerformed:false,_oneFingerTouch:false,_tapCancel:false,constructor:function(_6,_7){
+define("dojox/geo/charting/TouchInteractionSupport",["dojo/_base/lang","dojo/_base/declare","dojo/_base/event","dojo/_base/connect","dojo/_base/window"],function(_1,_2,_3,_4,_5){
+return _2("dojox.geo.charting.TouchInteractionSupport",null,{_map:null,_centerTouchLocation:null,_touchMoveListener:null,_touchEndListener:null,_touchEndTapListener:null,_touchStartListener:null,_initialFingerSpacing:null,_initialScale:null,_tapCount:null,_tapThreshold:null,_lastTap:null,_doubleTapPerformed:false,_oneFingerTouch:false,_tapCancel:false,constructor:function(_6,_7){
 this._map=_6;
 this._centerTouchLocation={x:0,y:0};
 this._tapCount=0;
@@ -16,7 +10,7 @@ this._tapThreshold=100;
 _touchStartListener=this._map.surface.connect("touchstart",this,this._touchStartHandler);
 },disconnect:function(){
 if(this._touchStartListener){
-_1.disconnect(this._touchStartListener);
+_4.disconnect(this._touchStartListener);
 this._touchStartListener=null;
 }
 },_getTouchBarycenter:function(_8){
@@ -80,7 +74,7 @@ _1e=this._map.mapObj.features[_1d.gfxTarget.getParent().id];
 }
 return _1e;
 },_touchStartHandler:function(_1f){
-_1.stopEvent(_1f);
+_3.stop(_1f);
 this._oneFingerTouch=(_1f.touches.length==1);
 this._tapCancel=!this._oneFingerTouch;
 this._doubleTapPerformed=false;
@@ -96,13 +90,13 @@ this._centerTouchLocation.y=_21.y;
 this._initialFingerSpacing=this._getFingerSpacing(_1f);
 this._initialScale=this._map.getMapScale();
 if(!this._touchMoveListener){
-this._touchMoveListener=_1.connect(_1.global,"touchmove",this,this._touchMoveHandler);
+this._touchMoveListener=_4.connect(_5.global,"touchmove",this,this._touchMoveHandler);
 }
 if(!this._touchEndTapListener){
 this._touchEndTapListener=this._map.surface.connect("touchend",this,this._touchEndTapHandler);
 }
 if(!this._touchEndListener){
-this._touchEndListener=_1.connect(_1.global,"touchend",this,this._touchEndHandler);
+this._touchEndListener=_4.connect(_5.global,"touchend",this,this._touchEndHandler);
 }
 },_touchEndTapHandler:function(_22){
 var _23=_22.touches;
@@ -123,15 +117,15 @@ this._singleTapHandler(_22);
 this._tapCancel=false;
 }
 },_touchEndHandler:function(_25){
-_1.stopEvent(_25);
+_3.stop(_25);
 var _26=_25.touches;
 if(_26.length==0){
 if(this._touchMoveListener){
-_1.disconnect(this._touchMoveListener);
+_4.disconnect(this._touchMoveListener);
 this._touchMoveListener=null;
 }
 if(this._touchEndListener){
-_1.disconnect(this._touchEndListener);
+_4.disconnect(this._touchEndListener);
 this._touchEndListener=null;
 }
 }else{
@@ -151,7 +145,7 @@ this._map.mapObj.features[_2b].select(false);
 this._map.onFeatureClick(null);
 }
 },_touchMoveHandler:function(_2c){
-_1.stopEvent(_2c);
+_3.stop(_2c);
 if(!this._tapCancel){
 var dx=(_2c.touches[0].pageX-this._lastTap.x),dy=(_2c.touches[0].pageY-this._lastTap.y);
 var _2d=dx*dx+dy*dy;

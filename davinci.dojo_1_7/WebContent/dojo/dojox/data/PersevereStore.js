@@ -1,78 +1,69 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/data/PersevereStore",["dojo","dijit","dojox","dojox/io/xhrScriptPlugin","dojox/io/xhrPlugins"],function(_1,_2,_3){
-_1.getObject("dojox.data.PersevereStore",1);
-define("dojox/data/PersevereStore",["dojo","dojox","dojox/data/JsonQueryRestStore","dojox/rpc/Client","dojo/_base/url"],function(_4,_5){
-_5.json.ref.serializeFunctions=true;
-_4.declare("dojox.data.PersevereStore",_5.data.JsonQueryRestStore,{useFullIdInQueries:true,jsonQueryPagination:false});
-_5.data.PersevereStore.getStores=function(_6,_7){
-_6=(_6&&(_6.match(/\/$/)?_6:(_6+"/")))||"/";
-if(_6.match(/^\w*:\/\//)){
-_5.io.xhrScriptPlugin(_6,"callback",_5.io.xhrPlugins.fullHttpAdapter);
+define("dojox/data/PersevereStore",["dojo","dojox","require","dojox/data/JsonQueryRestStore","dojox/rpc/Client","dojo/_base/url"],function(_1,_2,_3){
+_2.json.ref.serializeFunctions=true;
+_1.declare("dojox.data.PersevereStore",_2.data.JsonQueryRestStore,{useFullIdInQueries:true,jsonQueryPagination:false});
+_2.data.PersevereStore.getStores=function(_4,_5){
+_4=(_4&&(_4.match(/\/$/)?_4:(_4+"/")))||"/";
+if(_4.match(/^\w*:\/\//)){
+_3("dojox/io/xhrScriptPlugin");
+_2.io.xhrScriptPlugin(_4,"callback",_2.io.xhrPlugins.fullHttpAdapter);
 }
-var _8=_4.xhr;
-_4.xhr=function(_9,_a){
-(_a.headers=_a.headers||{})["Server-Methods"]="false";
-return _8.apply(_4,arguments);
+var _6=_1.xhr;
+_1.xhr=function(_7,_8){
+(_8.headers=_8.headers||{})["Server-Methods"]="false";
+return _6.apply(_1,arguments);
 };
-var _b=_5.rpc.Rest(_6,true);
-_5.rpc._sync=_7;
-var _c=_b("Class/");
-var _d;
-var _e={};
-var _f=0;
-_c.addCallback(function(_10){
-_5.json.ref.resolveJson(_10,{index:_5.rpc.Rest._index,idPrefix:"/Class/",assignAbsoluteIds:true});
-function _11(_12){
-if(_12["extends"]&&_12["extends"].prototype){
-if(!_12.prototype||!_12.prototype.isPrototypeOf(_12["extends"].prototype)){
-_11(_12["extends"]);
-_5.rpc.Rest._index[_12.prototype.__id]=_12.prototype=_4.mixin(_4.delegate(_12["extends"].prototype),_12.prototype);
+var _9=_2.rpc.Rest(_4,true);
+_2.rpc._sync=_5;
+var _a=_9("Class/");
+var _b;
+var _c={};
+var _d=0;
+_a.addCallback(function(_e){
+_2.json.ref.resolveJson(_e,{index:_2.rpc.Rest._index,idPrefix:"/Class/",assignAbsoluteIds:true});
+function _f(_10){
+if(_10["extends"]&&_10["extends"].prototype){
+if(!_10.prototype||!_10.prototype.isPrototypeOf(_10["extends"].prototype)){
+_f(_10["extends"]);
+_2.rpc.Rest._index[_10.prototype.__id]=_10.prototype=_1.mixin(_1.delegate(_10["extends"].prototype),_10.prototype);
 }
 }
 };
-function _13(_14,_15){
-if(_14&&_15){
-for(var j in _14){
-var _16=_14[j];
-if(_16.runAt!="client"&&!_15[j]){
-_15[j]=(function(_17){
+function _11(_12,_13){
+if(_12&&_13){
+for(var j in _12){
+var _14=_12[j];
+if(_14.runAt!="client"&&!_13[j]){
+_13[j]=(function(_15){
 return function(){
-var _18=_4.rawXhrPost({url:this.__id,postData:_5.json.ref.toJson({method:_17,id:_f++,params:_4._toArray(arguments)}),handleAs:"json"});
-_18.addCallback(function(_19){
-return _19.error?new Error(_19.error):_19.result;
+var _16=_1.rawXhrPost({url:this.__id,postData:_2.json.ref.toJson({method:_15,id:_d++,params:_1._toArray(arguments)}),handleAs:"json"});
+_16.addCallback(function(_17){
+return _17.error?new Error(_17.error):_17.result;
 });
-return _18;
+return _16;
 };
 })(j);
 }
 }
 }
 };
-for(var i in _10){
-if(typeof _10[i]=="object"){
-var _1a=_10[i];
-_11(_1a);
-_13(_1a.methods,_1a.prototype=_1a.prototype||{});
-_13(_1a.staticMethods,_1a);
-_e[_10[i].id]=new _5.data.PersevereStore({target:new _4._Url(_6,_10[i].id)+"/",schema:_1a});
+for(var i in _e){
+if(typeof _e[i]=="object"){
+var _18=_e[i];
+_f(_18);
+_11(_18.methods,_18.prototype=_18.prototype||{});
+_11(_18.staticMethods,_18);
+_c[_e[i].id]=new _2.data.PersevereStore({target:new _1._Url(_4,_e[i].id)+"/",schema:_18});
 }
 }
-return (_d=_e);
+return (_b=_c);
 });
-_4.xhr=_8;
-return _7?_d:_c;
+_1.xhr=_6;
+return _5?_b:_a;
 };
-_5.data.PersevereStore.addProxy=function(){
-_5.io.xhrPlugins.addProxy("/proxy/");
+_2.data.PersevereStore.addProxy=function(){
+_3("dojox/io/xhrPlugins");
+_2.io.xhrPlugins.addProxy("/proxy/");
 };
-return _5.data.PersevereStore;
+return _2.data.PersevereStore;
 });
-return _1.getObject("dojox.data.PersevereStore");
-});
-require(["dojox/data/PersevereStore"]);

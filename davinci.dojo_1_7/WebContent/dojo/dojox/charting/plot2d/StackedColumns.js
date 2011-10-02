@@ -1,13 +1,7 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/charting/plot2d/StackedColumns",["dojo/_base/kernel","dojo/_base/array","dojo/_base/declare","./Columns","./common","dojox/lang/functional","dojox/lang/functional/reversed","dojox/lang/functional/sequence"],function(_1,_2,_3,_4,dc,df,_5,_6){
-var _7=df.lambda("item.purgeGroup()");
-return _1.declare("dojox.charting.plot2d.StackedColumns",dojox.charting.plot2d.Columns,{getSeriesStats:function(){
+define("dojox/charting/plot2d/StackedColumns",["dojo/_base/lang","dojo/_base/array","dojo/_base/declare","./Columns","./common","dojox/lang/functional","dojox/lang/functional/reversed","dojox/lang/functional/sequence"],function(_1,_2,_3,_4,dc,df,_5,_6){
+var _7=_5.lambda("item.purgeGroup()");
+return _3("dojox.charting.plot2d.StackedColumns",_4,{getSeriesStats:function(){
 var _8=dc.collectStackedStats(this.series);
 this._maxRunLength=_8.hmax;
 _8.hmin-=0.5;
@@ -37,7 +31,7 @@ return this.performZoom(_9,_a);
 this.resetEvents();
 this.dirty=this.isDirty();
 if(this.dirty){
-_1.forEach(this.series,_7);
+_2.forEach(this.series,_7);
 this._eventSeries={};
 this.cleanGroup();
 var s=this.group;
@@ -62,7 +56,7 @@ for(var j=0;j<_b.length;++j){
 var _d=_c.data[j];
 if(_d!==null){
 var v=_b[j],_14=vt(v),_15=typeof _d!="number"?t.addMixin(_12,"column",_d,true):t.post(_12,"column");
-if(_10>=1&&_14>=1){
+if(_10>=1&&_14>=0){
 var _16={x:_a.l+ht(j+0.5)+_f,y:_9.height-_a.b-vt(v),width:_10,height:_14};
 var _17=this._plotFill(_15.series.fill,_9,_a);
 _17=this._shapeFill(_17,_16);

@@ -1,22 +1,16 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/sql/_crypto",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.sql._crypto",1);
-_1.mixin(_3.sql._crypto,{_POOL_SIZE:100,encrypt:function(_4,_5,_6){
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.sql._crypto");
+_2.mixin(_3.sql._crypto,{_POOL_SIZE:100,encrypt:function(_4,_5,_6){
 this._initWorkerPool();
 var _7={plaintext:_4,password:_5};
-_7=_1.toJson(_7);
+_7=_2.toJson(_7);
 _7="encr:"+String(_7);
 this._assignWork(_7,_6);
 },decrypt:function(_8,_9,_a){
 this._initWorkerPool();
 var _b={ciphertext:_8,password:_9};
-_b=_1.toJson(_b);
+_b=_2.toJson(_b);
 _b="decr:"+String(_b);
 this._assignWork(_b,_a);
 },_initWorkerPool:function(){
@@ -289,6 +283,4 @@ gearsWorkerPool.sendMessage(String(_50),_15);
 }
 }
 }});
-return _1.getObject("dojox.sql._crypto");
 });
-require(["dojox/sql/_crypto"]);

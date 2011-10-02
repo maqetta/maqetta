@@ -8,7 +8,7 @@
 .mblArrowButtonHead {
 	position: absolute;
 	top: 0px;
-	left: 8px;
+	left: 3px;
 	width: 19px;
 	height: 29px;
 	border-style: none;
@@ -17,10 +17,6 @@
 .mblArrowButtonBody {
 	padding: 0px 10px 0px 10px;
 	background-image: url(compat/arrow-button-bg.png);
-}
-.mblArrowButtonNeck {
-	background-image: url(compat/arrow-button-bg.png);
-	border-width: 1px 0px 1px 0px;
 }
 .mblRoundCorner {
 	background-color: black;
@@ -151,14 +147,14 @@
 	background-image: url(../common/domButtons/compat/mblDomButtonGrayArrow.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonGrayArrow DIV, .mblDomButtonArrow DIV {
+.mblDomButtonGrayArrow div, .mblDomButtonArrow div {
 	display: none;
 }
 .mblDomButtonDarkBlueCheck, .mblDomButtonCheck {
 	background-image: url(../common/domButtons/compat/mblDomButtonDarkBlueCheck.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonDarkBlueCheck DIV, .mblDomButtonCheck DIV {
+.mblDomButtonDarkBlueCheck div, .mblDomButtonCheck div {
 	display: none;
 }
 *html li.mblListItem.mblVariableHeight { 

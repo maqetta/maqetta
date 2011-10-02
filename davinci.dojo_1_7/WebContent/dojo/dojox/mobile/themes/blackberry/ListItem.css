@@ -4,7 +4,7 @@
 	width: 20px;
 	height: 29px;
 }
-.mblDomButtonGrayArrow > DIV, .mblDomButtonArrow > DIV {
+.mblDomButtonGrayArrow > div, .mblDomButtonArrow > div {
 	position: absolute;
 	top: 10px;
 	left: 6px;
@@ -21,7 +21,7 @@
 	width: 20px;
 	height: 29px;
 }
-.mblDomButtonDarkBlueCheck > DIV, .mblDomButtonCheck > DIV {
+.mblDomButtonDarkBlueCheck > div, .mblDomButtonCheck > div {
 	position: absolute;
 	left: 0px;
 	top: 8px;
@@ -71,7 +71,7 @@
 .mblItemSelected .mblListItemAnchor {
   color: white;
 }
-.mblItemSelected .mblDomButton DIV {
+.mblItemSelected .mblDomButton div {
   border-color: white;
 }
 .mblListItemTextBoxSelected {
@@ -86,10 +86,12 @@
 .mblListItemSpriteIcon {
   position: absolute;
   margin-top: 7px;
+  margin-left: 8px;
 }
 .mblListItemRightIcon, .mblListItemRightIcon2 {
   position: relative;
   float: right;
+  line-height: normal;
   margin-top: 7px;
   margin-bottom: -7px;
 }

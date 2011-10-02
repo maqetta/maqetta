@@ -5,34 +5,34 @@
 */
 
 //>>built
-define("dojo/AdapterRegistry",["./main"],function(_1){
-_1.AdapterRegistry=function(_2){
+define("dojo/AdapterRegistry",["./_base/kernel","./_base/lang"],function(_1,_2){
+var _3=_1.AdapterRegistry=function(_4){
 this.pairs=[];
-this.returnWrappers=_2||false;
+this.returnWrappers=_4||false;
 };
-_1.extend(_1.AdapterRegistry,{register:function(_3,_4,_5,_6,_7){
-this.pairs[((_7)?"unshift":"push")]([_3,_4,_5,_6]);
+_2.extend(_3,{register:function(_5,_6,_7,_8,_9){
+this.pairs[((_9)?"unshift":"push")]([_5,_6,_7,_8]);
 },match:function(){
 for(var i=0;i<this.pairs.length;i++){
-var _8=this.pairs[i];
-if(_8[1].apply(this,arguments)){
-if((_8[3])||(this.returnWrappers)){
-return _8[2];
+var _a=this.pairs[i];
+if(_a[1].apply(this,arguments)){
+if((_a[3])||(this.returnWrappers)){
+return _a[2];
 }else{
-return _8[2].apply(this,arguments);
+return _a[2].apply(this,arguments);
 }
 }
 }
 throw new Error("No match found");
-},unregister:function(_9){
+},unregister:function(_b){
 for(var i=0;i<this.pairs.length;i++){
-var _a=this.pairs[i];
-if(_a[0]==_9){
+var _c=this.pairs[i];
+if(_c[0]==_b){
 this.pairs.splice(i,1);
 return true;
 }
 }
 return false;
 }});
-return _1.AdapterRegistry;
+return _3;
 });

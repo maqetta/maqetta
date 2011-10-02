@@ -1,13 +1,22 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/mvc/_Container",["dojo/_base/declare","dojo/parser","dojo/_base/lang","dijit/_WidgetBase"],function(_1,_2,_3,_4){
-return _1("dojox.mvc._Container",[_4],{stopParser:true,templateString:"",_containedWidgets:[],_createBody:function(){
-this._containedWidgets=_2.parse(this.srcNodeRef,{template:true,inherited:{dir:this.dir,lang:this.lang},propsThis:this,scope:"dojo"});
+define("dojox/mvc/_Container",["dojo/_base/declare","dojo/_base/lang","dijit/_WidgetBase","dojo/regexp"],function(_1,_2,_3,_4){
+return _1("dojox.mvc._Container",[_3],{stopParser:true,exprchar:"$",templateString:"",_containedWidgets:[],_parser:null,_createBody:function(){
+if(!this._parser){
+try{
+this._parser=require("dojo/parser");
+}
+catch(e){
+try{
+this._parser=require("dojox/mobile/parser");
+}
+catch(e){
+console.error("Add explicit require(['dojo/parser']) or explicit require(['dojox/mobile/parser']), one of the parsers is required!");
+}
+}
+}
+if(this._parser){
+this._containedWidgets=this._parser.parse(this.srcNodeRef,{template:true,inherited:{dir:this.dir,lang:this.lang},propsThis:this,scope:"dojo"});
+}
 },_destroyBody:function(){
 if(this._containedWidgets&&this._containedWidgets.length>0){
 for(var n=this._containedWidgets.length-1;n>-1;n--){
@@ -24,10 +33,12 @@ return "";
 }
 var _a=_8.substr(2);
 _a=_a.substr(0,_a.length-1);
-return eval(_a,_6);
+with(_6){
+return eval(_a);
+}
 };
-_7=_3.hitch(this,_7);
-return _5.replace(/\$\{.*?\}/g,function(_b,_c,_d){
+_7=_2.hitch(this,_7);
+return _5.replace(new RegExp(_4.escapeString(this.exprchar)+"({.*?})","g"),function(_b,_c,_d){
 return _7(_b,_c).toString();
 });
 }});

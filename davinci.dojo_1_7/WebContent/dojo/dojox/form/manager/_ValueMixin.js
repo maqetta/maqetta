@@ -1,13 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/form/manager/_ValueMixin",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.form.manager._ValueMixin",1);
-_1.declare("dojox.form.manager._ValueMixin",null,{elementValue:function(_4,_5){
+define("dojox/form/manager/_ValueMixin",["dojo/_base/lang","dojo/_base/kernel","dojo/_base/declare"],function(_1,_2,_3){
+return _3("dojox.form.manager._ValueMixin",null,{elementValue:function(_4,_5){
 if(_4 in this.formWidgets){
 return this.formWidgetValue(_4,_5);
 }
@@ -44,6 +37,4 @@ this.formPointValue(_12,_14);
 }
 return this;
 }});
-return _1.getObject("dojox.form.manager._ValueMixin");
 });
-require(["dojox/form/manager/_ValueMixin"]);

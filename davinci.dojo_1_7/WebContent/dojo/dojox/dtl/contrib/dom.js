@@ -1,126 +1,119 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/dtl/contrib/dom",["dojo/_base/kernel","dojo/_base/lang","../_base","../dom","dojo/_base/html"],function(_1,_2,dd){
-_1.getObject("dtl.contrib.dom",true,dojox);
-var _3=dd.contrib.dom;
-var _4={render:function(){
+define("dojox/dtl/contrib/dom",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/connect","dojo/dom-style","dojo/dom-construct","../_base","../dom"],function(_1,_2,_3,_4,_5,dd,_6){
+var _7=_2.getObject("dojox.dtl.contrib.dom",true);
+var _8={render:function(){
 return this.contents;
 }};
-_3.StyleNode=_1.extend(function(_5){
+_7.StyleNode=_2.extend(function(_9){
 this.contents={};
 this._current={};
-this._styles=_5;
-for(var _6 in _5){
-if(_5[_6].indexOf("{{")!=-1){
-var _7=new dd.Template(_5[_6]);
+this._styles=_9;
+for(var _a in _9){
+if(_9[_a].indexOf("{{")!=-1){
+var _b=new dd.Template(_9[_a]);
 }else{
-var _7=_1.delegate(_4);
-_7.contents=_5[_6];
+var _b=_2.delegate(_8);
+_b.contents=_9[_a];
 }
-this.contents[_6]=_7;
+this.contents[_a]=_b;
 }
-},{render:function(_8,_9){
-for(var _a in this.contents){
-var _b=this.contents[_a].render(_8);
-if(this._current[_a]!=_b){
-_1.style(_9.getParent(),_a,this._current[_a]=_b);
+},{render:function(_c,_d){
+for(var _e in this.contents){
+var _f=this.contents[_e].render(_c);
+if(this._current[_e]!=_f){
+_4.set(_d.getParent(),_e,this._current[_e]=_f);
 }
 }
-return _9;
-},unrender:function(_c,_d){
-this._current={};
 return _d;
-},clone:function(_e){
+},unrender:function(_10,_11){
+this._current={};
+return _11;
+},clone:function(_12){
 return new this.constructor(this._styles);
 }});
-_3.BufferNode=_1.extend(function(_f,_10){
-this.nodelist=_f;
-this.options=_10;
-},{_swap:function(_11,_12){
+_7.BufferNode=_2.extend(function(_13,_14){
+this.nodelist=_13;
+this.options=_14;
+},{_swap:function(_15,_16){
 if(!this.swapped&&this.parent.parentNode){
-if(_11=="node"){
-if((_12.nodeType==3&&!this.options.text)||(_12.nodeType==1&&!this.options.node)){
+if(_15=="node"){
+if((_16.nodeType==3&&!this.options.text)||(_16.nodeType==1&&!this.options.node)){
 return;
 }
 }else{
-if(_11=="class"){
-if(_11!="class"){
+if(_15=="class"){
+if(_15!="class"){
 return;
 }
 }
 }
-this.onAddNode&&_1.disconnect(this.onAddNode);
-this.onRemoveNode&&_1.disconnect(this.onRemoveNode);
-this.onChangeAttribute&&_1.disconnect(this.onChangeAttribute);
-this.onChangeData&&_1.disconnect(this.onChangeData);
+this.onAddNode&&_3.disconnect(this.onAddNode);
+this.onRemoveNode&&_3.disconnect(this.onRemoveNode);
+this.onChangeAttribute&&_3.disconnect(this.onChangeAttribute);
+this.onChangeData&&_3.disconnect(this.onChangeData);
 this.swapped=this.parent.cloneNode(true);
 this.parent.parentNode.replaceChild(this.swapped,this.parent);
 }
-},render:function(_13,_14){
-this.parent=_14.getParent();
+},render:function(_17,_18){
+this.parent=_18.getParent();
 if(this.options.node){
-this.onAddNode=_1.connect(_14,"onAddNode",_1.hitch(this,"_swap","node"));
-this.onRemoveNode=_1.connect(_14,"onRemoveNode",_1.hitch(this,"_swap","node"));
+this.onAddNode=_3.connect(_18,"onAddNode",_2.hitch(this,"_swap","node"));
+this.onRemoveNode=_3.connect(_18,"onRemoveNode",_2.hitch(this,"_swap","node"));
 }
 if(this.options.text){
-this.onChangeData=_1.connect(_14,"onChangeData",_1.hitch(this,"_swap","node"));
+this.onChangeData=_3.connect(_18,"onChangeData",_2.hitch(this,"_swap","node"));
 }
 if(this.options["class"]){
-this.onChangeAttribute=_1.connect(_14,"onChangeAttribute",_1.hitch(this,"_swap","class"));
+this.onChangeAttribute=_3.connect(_18,"onChangeAttribute",_2.hitch(this,"_swap","class"));
 }
-_14=this.nodelist.render(_13,_14);
+_18=this.nodelist.render(_17,_18);
 if(this.swapped){
 this.swapped.parentNode.replaceChild(this.parent,this.swapped);
-_1.destroy(this.swapped);
+_5.destroy(this.swapped);
 }else{
-this.onAddNode&&_1.disconnect(this.onAddNode);
-this.onRemoveNode&&_1.disconnect(this.onRemoveNode);
-this.onChangeAttribute&&_1.disconnect(this.onChangeAttribute);
-this.onChangeData&&_1.disconnect(this.onChangeData);
+this.onAddNode&&_3.disconnect(this.onAddNode);
+this.onRemoveNode&&_3.disconnect(this.onRemoveNode);
+this.onChangeAttribute&&_3.disconnect(this.onChangeAttribute);
+this.onChangeData&&_3.disconnect(this.onChangeData);
 }
 delete this.parent;
 delete this.swapped;
-return _14;
-},unrender:function(_15,_16){
-return this.nodelist.unrender(_15,_16);
-},clone:function(_17){
-return new this.constructor(this.nodelist.clone(_17),this.options);
+return _18;
+},unrender:function(_19,_1a){
+return this.nodelist.unrender(_19,_1a);
+},clone:function(_1b){
+return new this.constructor(this.nodelist.clone(_1b),this.options);
 }});
-_1.mixin(_3,{buffer:function(_18,_19){
-var _1a=_19.contents.split().slice(1);
-var _1b={};
-var _1c=false;
-for(var i=_1a.length;i--;){
-_1c=true;
-_1b[_1a[i]]=true;
+_2.mixin(_7,{buffer:function(_1c,_1d){
+var _1e=_1d.contents.split().slice(1);
+var _1f={};
+var _20=false;
+for(var i=_1e.length;i--;){
+_20=true;
+_1f[_1e[i]]=true;
 }
-if(!_1c){
-_1b.node=true;
+if(!_20){
+_1f.node=true;
 }
-var _1d=_18.parse(["endbuffer"]);
-_18.next_token();
-return new _3.BufferNode(_1d,_1b);
-},html:function(_1e,_1f){
+var _21=_1c.parse(["endbuffer"]);
+_1c.next_token();
+return new _7.BufferNode(_21,_1f);
+},html:function(_22,_23){
 _1.deprecated("{% html someVariable %}","Use {{ someVariable|safe }} instead");
-return _1e.create_variable_node(_1f.contents.slice(5)+"|safe");
-},style_:function(_20,_21){
-var _22={};
-_21=_21.contents.replace(/^style\s+/,"");
-var _23=_21.split(/\s*;\s*/g);
-for(var i=0,_24;_24=_23[i];i++){
-var _25=_24.split(/\s*:\s*/g);
-var key=_25[0];
-var _26=_1.trim(_25[1]);
-if(_26){
-_22[key]=_26;
+return _22.create_variable_node(_23.contents.slice(5)+"|safe");
+},style_:function(_24,_25){
+var _26={};
+_25=_25.contents.replace(/^style\s+/,"");
+var _27=_25.split(/\s*;\s*/g);
+for(var i=0,_28;_28=_27[i];i++){
+var _29=_28.split(/\s*:\s*/g);
+var key=_29[0];
+var _2a=_2.trim(_29[1]);
+if(_2a){
+_26[key]=_2a;
 }
 }
-return new _3.StyleNode(_22);
+return new _7.StyleNode(_26);
 }});
 dd.register.tags("dojox.dtl.contrib",{"dom":["html","attr:style","buffer"]});
 return dojox.dtl.contrib.dom;

@@ -3,6 +3,6 @@
 	background-image: url(compat/mblDomButtonCheckboxOn.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonCheckboxOn DIV {
+.mblDomButtonCheckboxOn div {
 	display: none;
 }

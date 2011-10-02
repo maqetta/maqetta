@@ -1,18 +1,11 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/gfx/silverlight_attach",["./silverlight"],function(){
-dojo.getObject("dojox.gfx.silverlight_attach",true);
-dojo.experimental("dojox.gfx.silverlight_attach");
-var g=dojox.gfx,sl=g.silverlight;
-sl.attachNode=function(_1){
+define("dojox/gfx/silverlight_attach",["dojo/_base/kernel","dojo/_base/lang","./base","./silverlight"],function(_1,_2,g,sl){
+_2.getObject("dojox.gfx.silverlight_attach",true);
+_1.experimental("dojox.gfx.silverlight_attach");
+sl.attachNode=function(_3){
 return null;
 };
-sl.attachSurface=function(_2){
+sl.attachSurface=function(_4){
 return null;
 };
 return sl;

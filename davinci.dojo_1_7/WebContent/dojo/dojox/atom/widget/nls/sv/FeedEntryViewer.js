@@ -1,5 +1,7 @@
 //>>built
-define(({
+define(
+//begin v1.x content
+({
 	displayOptions: "[Visningsalternativ]",
 	title: "Rubrik",
 	authors: "Författare",
@@ -10,4 +12,5 @@ define(({
 	summary: "Sammanfattning",
 	content: "Innehåll"
 })
+//end v1.x content
 );

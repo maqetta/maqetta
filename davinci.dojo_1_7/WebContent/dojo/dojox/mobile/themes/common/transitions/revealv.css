@@ -1,28 +1,26 @@
 .mblRevealv.mblOut {
 	z-index: 0;
-	-webkit-animation-duration: .4s;
-	-webkit-animation-name: mblRevealVOut;
-	-webkit-animation-timing-function: linear;
+	-webkit-transition-property: none;
+	-webkit-transition-duration: 0s;
+	-webkit-transform: translate3d(0px,0%,0px) !important;
+}
+.mblRevealv.mblOut.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transition-duration: .4s;
+	-webkit-transform: translate3d(0px,-100%,0px) !important;
 }
 .mblRevealv.mblIn {
 	z-index: -100;
-	-webkit-animation-duration: .4s;
-	-webkit-animation-name: mblRevealVIn;
-	-webkit-animation-timing-function: linear;
+	-webkit-transition-property: none;
+	-webkit-transition-duration: 0s;
+	-webkit-transform: translate3d(0px,0%,-1px) !important;
 }
-.mblRevealv.mblOut.mblReverse {
-	-webkit-animation-name: mblRevealVOutReverse;
-	-webkit-animation-fill-mode: forwards;
+.mblRevealv.mblIn.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transition-duration: .4s;
+	-webkit-transform: translate3d(0px,0%,0px) !important;
 }
-@-webkit-keyframes mblRevealVOut {
-	from { -webkit-transform: translateY(0px); }
-	to { -webkit-transform: translateY(-100%); }
-}
-@-webkit-keyframes mblRevealVIn {
-	from {}
-	to {}
-}
-@-webkit-keyframes mblRevealVOutReverse {
-	from { -webkit-transform: translateY(0px); }
-	to { -webkit-transform: translateY(100%); }
+.mblRevealv.mblOut.mblReverse.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transform: translate3d(0px,100%,0px) !important;
 }

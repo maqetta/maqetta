@@ -1,17 +1,11 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/gauges/AnalogLineIndicator",["dojo/_base/kernel","dojo/_base/declare","./AnalogIndicatorBase"],function(_1,_2,_3){
-return _1.declare("dojox.gauges.AnalogLineIndicator",[_3],{_getShapes:function(_4){
-var _5=this.direction;
-var _6=this.length;
-if(_5=="inside"){
-_6=-_6;
+define("dojox/gauges/AnalogLineIndicator",["dojo/_base/declare","./AnalogIndicatorBase"],function(_1,_2){
+return _1("dojox.gauges.AnalogLineIndicator",[_2],{_getShapes:function(_3){
+var _4=this.direction;
+var _5=this.length;
+if(_4=="inside"){
+_5=-_5;
 }
-return [_4.createLine({x1:0,y1:-this.offset,x2:0,y2:-_6-this.offset}).setStroke({color:this.color,width:this.width})];
+return [_3.createLine({x1:0,y1:-this.offset,x2:0,y2:-_5-this.offset}).setStroke({color:this.color,width:this.width})];
 }});
 });

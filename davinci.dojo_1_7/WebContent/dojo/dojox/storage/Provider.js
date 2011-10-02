@@ -1,13 +1,7 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/storage/Provider",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.storage.Provider",1);
-_1.declare("dojox.storage.Provider",null,{constructor:function(){
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.storage.Provider");
+_2.declare("dojox.storage.Provider",null,{constructor:function(){
 },SUCCESS:"success",FAILED:"failed",PENDING:"pending",SIZE_NOT_AVAILABLE:"Size not available",SIZE_NO_LIMIT:"No size limit",DEFAULT_NAMESPACE:"default",onHideSettingsUI:null,initialize:function(){
 console.warn("dojox.storage.initialize not implemented");
 },isAvailable:function(){
@@ -45,10 +39,10 @@ for(var i=0;i<_17.length;i++){
 _3.storage.remove(_17[i],_18);
 }
 },isValidKeyArray:function(_19){
-if(_19===null||_19===undefined||!_1.isArray(_19)){
+if(_19===null||_19===undefined||!_2.isArray(_19)){
 return false;
 }
-return !_1.some(_19,function(key){
+return !_2.some(_19,function(key){
 return !this.isValidKey(key);
 },this);
 },hasSettingsUI:function(){
@@ -65,6 +59,4 @@ return /^[0-9A-Za-z_]*$/.test(_1a);
 },getResourceList:function(){
 return [];
 }});
-return _1.getObject("dojox.storage.Provider");
 });
-require(["dojox/storage/Provider"]);

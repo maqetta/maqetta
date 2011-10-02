@@ -1,19 +1,15 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/storage/AirEncryptedLocalStorageProvider",["dojo","dijit","dojox","dojox/storage/manager","dojox/storage/Provider"],function(_1,_2,_3){
-_1.getObject("dojox.storage.AirEncryptedLocalStorageProvider",1);
-if(_1.isAIR){
+define(["dijit","dojo","dojox","dojo/require!dojox/storage/manager,dojox/storage/Provider"],function(_1,_2,_3){
+_2.provide("dojox.storage.AirEncryptedLocalStorageProvider");
+_2.require("dojox.storage.manager");
+_2.require("dojox.storage.Provider");
+if(_2.isAIR){
 (function(){
 if(!_4){
 var _4={};
 }
 _4.ByteArray=window.runtime.flash.utils.ByteArray;
-_4.EncryptedLocalStore=window.runtime.flash.data.EncryptedLocalStore,_1.declare("dojox.storage.AirEncryptedLocalStorageProvider",[_3.storage.Provider],{initialize:function(){
+_4.EncryptedLocalStore=window.runtime.flash.data.EncryptedLocalStore,_2.declare("dojox.storage.AirEncryptedLocalStorageProvider",[_3.storage.Provider],{initialize:function(){
 _3.storage.manager.loaded();
 },isAvailable:function(){
 return true;
@@ -162,6 +158,4 @@ _3.storage.manager.register("dojox.storage.AirEncryptedLocalStorageProvider",new
 _3.storage.manager.initialize();
 })();
 }
-return _1.getObject("dojox.storage.AirEncryptedLocalStorageProvider");
 });
-require(["dojox/storage/AirEncryptedLocalStorageProvider"]);

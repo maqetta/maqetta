@@ -1,14 +1,9 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/drawing/tools/Ellipse",["../stencil/Ellipse","../util/oo","../manager/_registry"],function(){
-dojox.drawing.tools.Ellipse=dojox.drawing.util.oo.declare(dojox.drawing.stencil.Ellipse,function(){
-},{draws:true,onDrag:function(_1){
-var s=_1.start,e=_1;
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.drawing.tools.Ellipse");
+_3.drawing.tools.Ellipse=_3.drawing.util.oo.declare(_3.drawing.stencil.Ellipse,function(){
+},{draws:true,onDrag:function(_4){
+var s=_4.start,e=_4;
 var x=s.x<e.x?s.x:e.x,y=s.y<e.y?s.y:e.y,w=s.x<e.x?e.x-s.x:s.x-e.x,h=s.y<e.y?e.y-s.y:s.y-e.y;
 if(this.keys.shift){
 w=h=Math.max(w,h);
@@ -28,13 +23,13 @@ w=x;
 }
 this.points=[{x:x-w,y:y-h},{x:x+w,y:y-h},{x:x+w,y:y+h},{x:x-w,y:y+h}];
 this.render();
-},onUp:function(_2){
+},onUp:function(_5){
 if(this.created||!this._downOnCanvas){
 return;
 }
 this._downOnCanvas=false;
 if(!this.shape){
-var s=_2.start,e=this.minimumSize*2;
+var s=_5.start,e=this.minimumSize*2;
 this.data={cx:s.x+e,cy:s.y+e,rx:e,ry:e};
 this.dataToPoints();
 this.render();
@@ -47,7 +42,6 @@ return;
 }
 this.onRender(this);
 }});
-dojox.drawing.tools.Ellipse.setup={name:"dojox.drawing.tools.Ellipse",tooltip:"Ellipse Tool",iconClass:"iconEllipse"};
-dojox.drawing.register(dojox.drawing.tools.Ellipse.setup,"tool");
-return dojox.drawing.tools.Ellipse;
+_3.drawing.tools.Ellipse.setup={name:"dojox.drawing.tools.Ellipse",tooltip:"Ellipse Tool",iconClass:"iconEllipse"};
+_3.drawing.register(_3.drawing.tools.Ellipse.setup,"tool");
 });

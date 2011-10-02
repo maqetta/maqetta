@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/editor/plugins/Smiley",["dojo","dijit","dojox","dijit/_editor/_Plugin","dijit/form/DropDownButton","dojox/editor/plugins/_SmileyPalette","dojo/i18n","dojox/html/format","dojo/i18n!dojox/editor/plugins/nls/Smiley"],function(_1,_2,_3){
+define("dojox/editor/plugins/Smiley",["dojo","dijit","dojox","dijit/_editor/_Plugin","dijit/form/DropDownButton","dojo/_base/connect","dojo/_base/declare","dojo/i18n","dojox/editor/plugins/_SmileyPalette","dojox/html/format","dojo/i18n!dojox/editor/plugins/nls/Smiley"],function(_1,_2,_3){
 _1.experimental("dojox.editor.plugins.Smiley");
 _1.declare("dojox.editor.plugins.Smiley",_2._editor._Plugin,{iconClassPrefix:"dijitAdditionalEditorIcon",emoticonMarker:"[]",emoticonImageClass:"dojoEditorEmoticon",_initButton:function(){
 this.dropDown=new _3.editor.plugins._SmileyPalette();

@@ -1,56 +1,50 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dijit/form/_TextBoxMixin",["dojo/_base/kernel","..","dojo/_base/array","dojo/_base/connect","dojo/_base/event","dojo/_base/html","dojo/_base/lang","dojo/_base/window"],function(_1,_2){
-_1.declare("dijit.form._TextBoxMixin",null,{trim:false,uppercase:false,lowercase:false,propercase:false,maxLength:"",selectOnClick:false,placeHolder:"",_getValueAttr:function(){
+define("dijit/form/_TextBoxMixin",["dojo/_base/array","dojo/_base/declare","dojo/dom","dojo/_base/event","dojo/keys","dojo/_base/lang",".."],function(_1,_2,_3,_4,_5,_6,_7){
+var _8=_2("dijit.form._TextBoxMixin",null,{trim:false,uppercase:false,lowercase:false,propercase:false,maxLength:"",selectOnClick:false,placeHolder:"",_getValueAttr:function(){
 return this.parse(this.get("displayedValue"),this.constraints);
-},_setValueAttr:function(_3,_4,_5){
-var _6;
-if(_3!==undefined){
-_6=this.filter(_3);
-if(typeof _5!="string"){
-if(_6!==null&&((typeof _6!="number")||!isNaN(_6))){
-_5=this.filter(this.format(_6,this.constraints));
+},_setValueAttr:function(_9,_a,_b){
+var _c;
+if(_9!==undefined){
+_c=this.filter(_9);
+if(typeof _b!="string"){
+if(_c!==null&&((typeof _c!="number")||!isNaN(_c))){
+_b=this.filter(this.format(_c,this.constraints));
 }else{
-_5="";
+_b="";
 }
 }
 }
-if(_5!=null&&_5!=undefined&&((typeof _5)!="number"||!isNaN(_5))&&this.textbox.value!=_5){
-this.textbox.value=_5;
+if(_b!=null&&_b!=undefined&&((typeof _b)!="number"||!isNaN(_b))&&this.textbox.value!=_b){
+this.textbox.value=_b;
 this._set("displayedValue",this.get("displayedValue"));
 }
 if(this.textDir=="auto"){
-this.applyTextDir(this.focusNode,_5);
+this.applyTextDir(this.focusNode,_b);
 }
-this.inherited(arguments,[_6,_4]);
+this.inherited(arguments,[_c,_a]);
 },displayedValue:"",_getDisplayedValueAttr:function(){
 return this.filter(this.textbox.value);
-},_setDisplayedValueAttr:function(_7){
-if(_7===null||_7===undefined){
-_7="";
+},_setDisplayedValueAttr:function(_d){
+if(_d===null||_d===undefined){
+_d="";
 }else{
-if(typeof _7!="string"){
-_7=String(_7);
+if(typeof _d!="string"){
+_d=String(_d);
 }
 }
-this.textbox.value=_7;
+this.textbox.value=_d;
 this._setValueAttr(this.get("value"),undefined);
 this._set("displayedValue",this.get("displayedValue"));
 if(this.textDir=="auto"){
-this.applyTextDir(this.focusNode,_7);
+this.applyTextDir(this.focusNode,_d);
 }
-},format:function(_8,_9){
-return ((_8==null||_8==undefined)?"":(_8.toString?_8.toString():_8));
-},parse:function(_a,_b){
-return _a;
+},format:function(_e){
+return ((_e==null||_e==undefined)?"":(_e.toString?_e.toString():_e));
+},parse:function(_f){
+return _f;
 },_refreshState:function(){
 },onInput:function(){
-},__skipInputEvent:false,_onInput:function(e){
+},__skipInputEvent:false,_onInput:function(){
 if(this.textDir=="auto"){
 this.applyTextDir(this.focusNode,this.focusNode.value);
 }
@@ -59,23 +53,23 @@ this._set("displayedValue",this.get("displayedValue"));
 },postCreate:function(){
 this.textbox.setAttribute("value",this.textbox.value);
 this.inherited(arguments);
-var _c=function(e){
-var _d=e.charOrCode||e.keyCode||229;
+var _10=function(e){
+var _11=e.charOrCode||e.keyCode||229;
 if(e.type=="keydown"){
-switch(_d){
-case _1.keys.SHIFT:
-case _1.keys.ALT:
-case _1.keys.CTRL:
-case _1.keys.META:
-case _1.keys.CAPS_LOCK:
+switch(_11){
+case _5.SHIFT:
+case _5.ALT:
+case _5.CTRL:
+case _5.META:
+case _5.CAPS_LOCK:
 return;
 default:
-if(_d>=65&&_d<=90){
+if(_11>=65&&_11<=90){
 return;
 }
 }
 }
-if(e.type=="keypress"&&typeof _d!="string"){
+if(e.type=="keypress"&&typeof _11!="string"){
 return;
 }
 if(e.type=="input"){
@@ -86,22 +80,22 @@ return;
 }else{
 this.__skipInputEvent=true;
 }
-var _e=_1.mixin({},e,{charOrCode:_d,wasConsumed:false,preventDefault:function(){
-_e.wasConsumed=true;
+var _12=_6.mixin({},e,{charOrCode:_11,wasConsumed:false,preventDefault:function(){
+_12.wasConsumed=true;
 e.preventDefault();
 },stopPropagation:function(){
 e.stopPropagation();
 }});
-if(this.onInput(_e)===false){
-_1.stopEvent(_e);
+if(this.onInput(_12)===false){
+_4.stop(_12);
 }
-if(_e.wasConsumed){
+if(_12.wasConsumed){
 return;
 }
-setTimeout(_1.hitch(this,"_onInput",_e),0);
+setTimeout(_6.hitch(this,"_onInput",_12),0);
 };
-_1.forEach(["onkeydown","onkeypress","onpaste","oncut","oninput"],function(_f){
-this.connect(this.textbox,_f,_c);
+_1.forEach(["onkeydown","onkeypress","onpaste","oncut","oninput"],function(_13){
+this.connect(this.textbox,_13,_10);
 },this);
 },_blankValue:"",filter:function(val){
 if(val===null){
@@ -111,7 +105,7 @@ if(typeof val!="string"){
 return val;
 }
 if(this.trim){
-val=_1.trim(val);
+val=_6.trim(val);
 }
 if(this.uppercase){
 val=val.toUpperCase();
@@ -120,8 +114,8 @@ if(this.lowercase){
 val=val.toLowerCase();
 }
 if(this.propercase){
-val=val.replace(/[^\s]+/g,function(_10){
-return _10.substring(0,1).toUpperCase()+_10.substring(1);
+val=val.replace(/[^\s]+/g,function(_14){
+return _14.substring(0,1).toUpperCase()+_14.substring(1);
 });
 }
 return val;
@@ -146,7 +140,7 @@ if(this.selectOnClick&&by=="mouse"){
 this._selectOnClickHandle=this.connect(this.domNode,"onmouseup",function(){
 this.disconnect(this._selectOnClickHandle);
 if(this._isTextSelected()){
-_2.selectInputText(this.textbox);
+_8.selectInputText(this.textbox);
 }
 });
 }
@@ -155,33 +149,31 @@ this._refreshState();
 },reset:function(){
 this.textbox.value="";
 this.inherited(arguments);
-},_setTextDirAttr:function(_11){
-if(!this._created||this.textDir!=_11){
-this._set("textDir",_11);
+},_setTextDirAttr:function(_15){
+if(!this._created||this.textDir!=_15){
+this._set("textDir",_15);
 this.applyTextDir(this.focusNode,this.focusNode.value);
 }
 }});
-_2._setSelectionRange=function(_12,_13,_14){
-if(_12.setSelectionRange){
-_12.setSelectionRange(_13,_14);
+_8._setSelectionRange=_7._setSelectionRange=function(_16,_17,_18){
+if(_16.setSelectionRange){
+_16.setSelectionRange(_17,_18);
 }
 };
-_2.selectInputText=function(_15,_16,_17){
-var _18=_1.global;
-var _19=_1.doc;
-_15=_1.byId(_15);
-if(isNaN(_16)){
-_16=0;
+_8.selectInputText=_7.selectInputText=function(_19,_1a,_1b){
+_19=_3.byId(_19);
+if(isNaN(_1a)){
+_1a=0;
 }
-if(isNaN(_17)){
-_17=_15.value?_15.value.length:0;
+if(isNaN(_1b)){
+_1b=_19.value?_19.value.length:0;
 }
 try{
-_15.focus();
-_2._setSelectionRange(_15,_16,_17);
+_19.focus();
+_8._setSelectionRange(_19,_1a,_1b);
 }
 catch(e){
 }
 };
-return _2.form._TextBoxMixin;
+return _8;
 });

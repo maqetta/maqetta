@@ -1,27 +1,21 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/app/model",["dojo","dojox/mvc/StatefulModel"],function(_1){
-return function(_2,_3){
-var _4={};
-if(_3){
-_1.mixin(_4,_3);
+define("dojox/app/model",["dojo/_base/kernel","dojo/_base/Deferred","dojox/mvc/StatefulModel"],function(_1,_2){
+return function(_3,_4){
+var _5={};
+if(_4){
+_1.mixin(_5,_4);
 }
-if(_2){
-for(var _5 in _2){
-if(_5.charAt(0)!=="_"){
-var _6=_2[_5].params?_2[_5].params:{};
-var _7={"store":_6.store.store,"query":_6.store.query?_6.store.query:{}};
-_4[_5]=_1.when(dojox.mvc.newStatefulModel(_7),function(_8){
-return _8;
+if(_3){
+for(var _6 in _3){
+if(_6.charAt(0)!=="_"){
+var _7=_3[_6].params?_3[_6].params:{};
+var _8={"store":_7.store.store,"query":_7.store.query?_7.store.query:{}};
+_5[_6]=_2.when(dojox.mvc.newStatefulModel(_8),function(_9){
+return _9;
 });
 }
 }
 }
-return _4;
+return _5;
 };
 });

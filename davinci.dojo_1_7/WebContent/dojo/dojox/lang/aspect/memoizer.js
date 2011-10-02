@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/lang/aspect/memoizer",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.lang.aspect.memoizer",1);
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.lang.aspect.memoizer");
 (function(){
 var _4=_3.lang.aspect;
 var _5={around:function(_6){
@@ -43,6 +37,4 @@ _4.memoizer=function(_10){
 return arguments.length==0?_5:_b(_10);
 };
 })();
-return _1.getObject("dojox.lang.aspect.memoizer");
 });
-require(["dojox/lang/aspect/memoizer"]);

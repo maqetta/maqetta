@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/editor/plugins/Blockquote",["dojo","dijit","dojox","dijit/_editor/_Plugin","dijit/form/ToggleButton","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/Blockquote"],function(_1,_2,_3){
+define("dojox/editor/plugins/Blockquote",["dojo","dijit","dojox","dijit/_editor/range","dijit/_editor/selection","dijit/_editor/_Plugin","dijit/form/ToggleButton","dojo/_base/connect","dojo/_base/declare","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/Blockquote"],function(_1,_2,_3){
 _1.declare("dojox.editor.plugins.Blockquote",_2._editor._Plugin,{iconClassPrefix:"dijitAdditionalEditorIcon",_initButton:function(){
 this._nlsResources=_1.i18n.getLocalization("dojox.editor.plugins","Blockquote");
 this.button=new _2.form.ToggleButton({label:this._nlsResources["blockquote"],showLabel:false,iconClass:this.iconClassPrefix+" "+this.iconClassPrefix+"Blockquote",tabIndex:"-1",onClick:_1.hitch(this,"_toggleQuote")});

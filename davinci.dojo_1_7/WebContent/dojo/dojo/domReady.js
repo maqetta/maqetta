@@ -23,23 +23,26 @@ _3.readyState="complete";
 while(_7.length){
 (_7.shift())();
 }
-},_b="addEventListener",_c="removeEventListener",_d="",on=function(_e,_f){
-_f=_d+_f;
-_e[_b](_f,_9,false);
+},on=function(_b,_c){
+_b.addEventListener(_c,_9,false);
 _7.push(function(){
-_e[_c](_f,_9,false);
+_b.removeEventListener(_c,_9,false);
 });
 };
 if(!_1("dom-addeventlistener")){
-_b="attachEvent";
-_c="detachEvent";
-_d="on";
-var div=_3.createElement("div");
+on=function(_d,_e){
+_e="on"+_e;
+_d.attachEvent(_e,_9);
+_7.push(function(){
+_d.detachEvent(_e,_9);
+});
+};
+var _f=_3.createElement("div");
 try{
-if(div.doScroll&&_2.frameElement===null){
+if(_f.doScroll&&_2.frameElement===null){
 _8.push(function(){
 try{
-div.doScroll("left");
+_f.doScroll("left");
 return 1;
 }
 catch(e){

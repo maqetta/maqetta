@@ -1,14 +1,8 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/lang/aspect",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.lang.aspect",1);
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.lang.aspect");
 (function(){
-var d=_1,_4=_3.lang.aspect,ap=Array.prototype,_5=[],_6;
+var d=_2,_4=_3.lang.aspect,ap=Array.prototype,_5=[],_6;
 var _7=function(){
 this.next_before=this.prev_before=this.next_around=this.prev_around=this.next_afterReturning=this.prev_afterReturning=this.next_afterThrowing=this.prev_afterThrowing=this;
 this.counter=0;
@@ -208,6 +202,4 @@ return c.advice.around.apply(c.advice,arguments);
 return _25.target.apply(_6.instance,arguments);
 };
 })();
-return _1.getObject("dojox.lang.aspect");
 });
-require(["dojox/lang/aspect"]);

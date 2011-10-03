@@ -319,12 +319,9 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 					};
 				};
 
-				var newEditor = dijit.byId(davinci.Workbench._filename2id(tab.editor.fileName));
 				// resize kludge to make Dijit visualEditor contents resize
 				// seems necessary due to combination of 100%x100% layouts and extraneous width/height measurements serialized in markup
-				if (newEditor && newEditor.editor.visualEditor) {
-					newEditor.editor.visualEditor.context.getTopWidgets().forEach(function (widget) { if (widget.resize) { widget.resize(); } });
-				};
+				context.getTopWidgets().forEach(function (widget) { if (widget.resize) { widget.resize(); } });
 			}));
 	   		// set flow layout on user prefs
 			var flow = this.context.getFlowLayout(); // gets the current layout, but also sets to default if missing..

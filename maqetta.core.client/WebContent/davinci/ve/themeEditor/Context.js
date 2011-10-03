@@ -40,7 +40,7 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 		// side effects which would interfere with operation of the Theme Editor.
 
 		// Hard-code widget replacements for styling.  Need to factor creation out somehow to be data-driven.
-		var mixins = [this.getDijit()._WidgetBase || this.getDijit()._Widget, this.getDijit()._TemplatedMixin || this.getDijit()._Templated]; // Dojo 1.7+ uses _WidgetBase, _TemplatedMixin
+		var mixins = [this.getDijit()._WidgetBase, this.getDijit()._TemplatedMixin];
 		this.getDojo().declare("dijit.davinci.themeEditor.Dialog", mixins, {
 			buttonCancel: "cancel", //TODO: i18n
 			onCancel: function(){},
@@ -55,8 +55,8 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 				"aria-describedby":""
 			})
 ,			_setTitleAttr: [
-							{ node: "titleNode", type: "innerHTML" },
-							{ node: "titleBar", type: "attribute" }
+				{ node: "titleNode", type: "innerHTML" },
+				{ node: "titleBar", type: "attribute" }
 			]
 		});
 
@@ -132,14 +132,11 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 		if(active){
 			dojo.query("> *", this.rootNode).map(davinci.ve.widget.getWidget).forEach(this.attach, this);
 		}
-		var widgets = dojo.query('.dvThemeWidget');
-		//debugger;
-		for (var i=0; i<widgets.length; i++){
-			// remove the styles from all widgets and subwidgets that supported the state
-			this._theme.removeWidgetStyleValues(widgets[i]);
+
+		// remove the styles from all widgets and subwidgets that supported the state
+		dojo.query('.dvThemeWidget').forEach(this._theme.removeWidgetStyleValues);
 			// set the style on all widgets and subwidgets that support the state
 			//this._themeEditor._theme.setWidgetStyleValues(widgets[i],this._currentState);
-		}
 	},
 	
 	attach: function(widget){

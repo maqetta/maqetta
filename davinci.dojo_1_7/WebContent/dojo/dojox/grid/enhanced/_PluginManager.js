@@ -1,156 +1,150 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/grid/enhanced/_PluginManager",["dojo","dojox","./_Events","./_FocusManager"],function(_1,_2){
-_1.declare("dojox.grid.enhanced._PluginManager",null,{_options:null,_plugins:null,_connects:null,constructor:function(_3){
-this.grid=_3;
-this._store=_3.store;
+define("dojox/grid/enhanced/_PluginManager",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/array","dojo/_base/connect","./_Events","./_FocusManager","../util"],function(_1,_2,_3,_4,_5,_6,_7,_8){
+var _9=_3("dojox.grid.enhanced._PluginManager",null,{_options:null,_plugins:null,_connects:null,constructor:function(_a){
+this.grid=_a;
+this._store=_a.store;
 this._options={};
 this._plugins=[];
 this._connects=[];
 this._parseProps(this.grid.plugins);
-_3.connect(_3,"_setStore",_1.hitch(this,function(_4){
-if(this._store!==_4){
-this.forEach("onSetStore",[_4,this._store]);
-this._store=_4;
+_a.connect(_a,"_setStore",_2.hitch(this,function(_b){
+if(this._store!==_b){
+this.forEach("onSetStore",[_b,this._store]);
+this._store=_b;
 }
 }));
 },startup:function(){
 this.forEach("onStartUp");
 },preInit:function(){
 this.grid.focus.destroy();
-this.grid.focus=new _2.grid.enhanced._FocusManager(this.grid);
-new _2.grid.enhanced._Events(this.grid);
+this.grid.focus=new _7(this.grid);
+new _6(this.grid);
 this._init(true);
 this.forEach("onPreInit");
 },postInit:function(){
 this._init(false);
-_1.forEach(this.grid.views.views,this._initView,this);
-this._connects.push(_1.connect(this.grid.views,"addView",_1.hitch(this,this._initView)));
+_4.forEach(this.grid.views.views,this._initView,this);
+this._connects.push(_5.connect(this.grid.views,"addView",_2.hitch(this,this._initView)));
 if(this._plugins.length>0){
-var _5=this.grid.edit;
-if(_5){
-_5.styleRow=function(_6){
+var _c=this.grid.edit;
+if(_c){
+_c.styleRow=function(_d){
 };
 }
 }
 this.forEach("onPostInit");
-},forEach:function(_7,_8){
-_1.forEach(this._plugins,function(p){
-if(!p||!p[_7]){
+},forEach:function(_e,_f){
+_4.forEach(this._plugins,function(p){
+if(!p||!p[_e]){
 return;
 }
-p[_7].apply(p,_8?_8:[]);
+p[_e].apply(p,_f?_f:[]);
 });
-},_parseProps:function(_9){
-if(!_9){
+},_parseProps:function(_10){
+if(!_10){
 return;
 }
-var p,_a={},_b=this._options,_c=this.grid;
-var _d=_2.grid.enhanced._PluginManager.registry;
-for(p in _9){
-if(_9[p]){
-this._normalize(p,_9,_d,_a);
+var p,_11={},_12=this._options,_13=this.grid;
+var _14=_9.registry;
+for(p in _10){
+if(_10[p]){
+this._normalize(p,_10,_14,_11);
 }
 }
-if(_b.dnd||_b.indirectSelection){
-_b.columnReordering=false;
+if(_12.dnd||_12.indirectSelection){
+_12.columnReordering=false;
 }
-_1.mixin(_c,_b);
-},_normalize:function(p,_e,_f,_10){
-if(!_f[p]){
+_2.mixin(_13,_12);
+},_normalize:function(p,_15,_16,_17){
+if(!_16[p]){
 throw new Error("Plugin "+p+" is required.");
 }
-if(_10[p]){
+if(_17[p]){
 throw new Error("Recursive cycle dependency is not supported.");
 }
-var _11=this._options;
-if(_11[p]){
-return _11[p];
+var _18=this._options;
+if(_18[p]){
+return _18[p];
 }
-_10[p]=true;
-_11[p]=_1.mixin({},_f[p],_1.isObject(_e[p])?_e[p]:{});
-var _12=_11[p]["dependency"];
-if(_12){
-if(!_1.isArray(_12)){
-_12=_11[p]["dependency"]=[_12];
+_17[p]=true;
+_18[p]=_2.mixin({},_16[p],_2.isObject(_15[p])?_15[p]:{});
+var _19=_18[p]["dependency"];
+if(_19){
+if(!_2.isArray(_19)){
+_19=_18[p]["dependency"]=[_19];
 }
-_1.forEach(_12,function(_13){
-if(!this._normalize(_13,_e,_f,_10)){
-throw new Error("Plugin "+_13+" is required.");
-}
-},this);
-}
-delete _10[p];
-return _11[p];
-},_init:function(pre){
-var p,_14,_15=this._options;
-for(p in _15){
-_14=_15[p]["preInit"];
-if((pre?_14:!_14)&&_15[p]["class"]&&!this.pluginExisted(p)){
-this.loadPlugin(p);
-}
-}
-},loadPlugin:function(_16){
-var _17=this._options[_16];
-if(!_17){
-return null;
-}
-var _18=this.getPlugin(_16);
-if(_18){
-return _18;
-}
-var _19=_17["dependency"];
-_1.forEach(_19,function(_1a){
-if(!this.loadPlugin(_1a)){
+_4.forEach(_19,function(_1a){
+if(!this._normalize(_1a,_15,_16,_17)){
 throw new Error("Plugin "+_1a+" is required.");
 }
 },this);
-var cls=_17["class"];
-delete _17["class"];
-_18=new this.getPluginClazz(cls)(this.grid,_17);
-this._plugins.push(_18);
-return _18;
-},_initView:function(_1b){
-if(!_1b){
+}
+delete _17[p];
+return _18[p];
+},_init:function(pre){
+var p,_1b,_1c=this._options;
+for(p in _1c){
+_1b=_1c[p]["preInit"];
+if((pre?_1b:!_1b)&&_1c[p]["class"]&&!this.pluginExisted(p)){
+this.loadPlugin(p);
+}
+}
+},loadPlugin:function(_1d){
+var _1e=this._options[_1d];
+if(!_1e){
+return null;
+}
+var _1f=this.getPlugin(_1d);
+if(_1f){
+return _1f;
+}
+var _20=_1e["dependency"];
+_4.forEach(_20,function(_21){
+if(!this.loadPlugin(_21)){
+throw new Error("Plugin "+_21+" is required.");
+}
+},this);
+var cls=_1e["class"];
+delete _1e["class"];
+_1f=new this.getPluginClazz(cls)(this.grid,_1e);
+this._plugins.push(_1f);
+return _1f;
+},_initView:function(_22){
+if(!_22){
 return;
 }
-_2.grid.util.funnelEvents(_1b.contentNode,_1b,"doContentEvent",["mouseup","mousemove"]);
-_2.grid.util.funnelEvents(_1b.headerNode,_1b,"doHeaderEvent",["mouseup"]);
-},pluginExisted:function(_1c){
-return !!this.getPlugin(_1c);
-},getPlugin:function(_1d){
-var _1e=this._plugins;
-_1d=_1d.toLowerCase();
-for(var i=0,len=_1e.length;i<len;i++){
-if(_1d==_1e[i]["name"].toLowerCase()){
-return _1e[i];
+_8.funnelEvents(_22.contentNode,_22,"doContentEvent",["mouseup","mousemove"]);
+_8.funnelEvents(_22.headerNode,_22,"doHeaderEvent",["mouseup"]);
+},pluginExisted:function(_23){
+return !!this.getPlugin(_23);
+},getPlugin:function(_24){
+var _25=this._plugins;
+_24=_24.toLowerCase();
+for(var i=0,len=_25.length;i<len;i++){
+if(_24==_25[i]["name"].toLowerCase()){
+return _25[i];
 }
 }
 return null;
-},getPluginClazz:function(_1f){
-if(_1.isFunction(_1f)){
-return _1f;
+},getPluginClazz:function(_26){
+if(_2.isFunction(_26)){
+return _26;
 }
-var _20="Please make sure Plugin \""+_1f+"\" is existed.";
+var _27="Please make sure Plugin \""+_26+"\" is existed.";
 try{
-var cls=_1.getObject(_1f);
+var cls=_2.getObject(_26);
 if(!cls){
-throw new Error(_20);
+throw new Error(_27);
 }
 return cls;
 }
 catch(e){
-throw new Error(_20);
+throw new Error(_27);
 }
-},isFixedCell:function(_21){
-return _21&&(_21.isRowSelector||_21.fixedPos);
+},isFixedCell:function(_28){
+return _28&&(_28.isRowSelector||_28.fixedPos);
 },destroy:function(){
-_1.forEach(this._connects,_1.disconnect);
+_4.forEach(this._connects,_5.disconnect);
 this.forEach("destroy");
 if(this.grid.unwrap){
 this.grid.unwrap();
@@ -159,14 +153,14 @@ delete this._connects;
 delete this._plugins;
 delete this._options;
 }});
-_2.grid.enhanced._PluginManager.registerPlugin=function(_22,_23){
-if(!_22){
+_9.registerPlugin=function(_29,_2a){
+if(!_29){
 console.warn("Failed to register plugin, class missed!");
 return;
 }
-var cls=_2.grid.enhanced._PluginManager;
+var cls=_9;
 cls.registry=cls.registry||{};
-cls.registry[_22.prototype.name]=_1.mixin({"class":_22},(_23?_23:{}));
+cls.registry[_29.prototype.name]=_2.mixin({"class":_29},(_2a?_2a:{}));
 };
-return _2.grid.enhanced._PluginManager;
+return _9;
 });

@@ -1,20 +1,14 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/mobile/_ListTouchMixin",["dijit/form/_ListBase"],function(_1){
-return dojo.declare("dojox.mobile._ListTouchMixin",dijit.form._ListBase,{postCreate:function(){
+define("dojox/mobile/_ListTouchMixin",["dojo/_base/declare","dojo/_base/event","dijit/form/_ListBase"],function(_1,_2,_3){
+return _1("dojox.mobile._ListTouchMixin",_3,{postCreate:function(){
 this.inherited(arguments);
 this.connect(this.domNode,"onclick","_onClick");
-},_onClick:function(_2){
-dojo.stopEvent(_2);
-var _3=this._getTarget(_2);
-if(_3){
-this._setSelectedAttr(_3);
-this.onClick(_3);
+},_onClick:function(_4){
+_2.stop(_4);
+var _5=this._getTarget(_4);
+if(_5){
+this._setSelectedAttr(_5);
+this.onClick(_5);
 }
 }});
 });

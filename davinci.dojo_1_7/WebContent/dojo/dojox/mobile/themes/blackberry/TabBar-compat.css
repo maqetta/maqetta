@@ -2,6 +2,9 @@
 .dj_ie6 .mblTabBarButtonDiv, .dj_ie7 .mblTabBarButtonDiv {
 	left: auto;
 }
+.dj_ie6 .mblTabBar .mblTabBarButton {
+  display: inline; 
+}
 .mblTabBarButtonIcon {
 	position: absolute;
 	top: 2px;
@@ -10,10 +13,8 @@
 .mblTabPanelHeader {
 }
 .mblTabButton {
-	background-image: url(compat/tab-button-bg.png);
 }
 .mblTabButtonSelected {
-	background-image: url(compat/tab-sel-button-bg.png);
 }
 *html .mblTabButton { 
 	behavior: expression(
@@ -27,9 +28,17 @@
 .dj_ie6 .mblTabPanelHeader .mblDomButton {
 	left: 0px;
 }
-.mblTabButton IMG {
+.mblTabButton img {
 	position: absolute;
 	left: 0px;
 	top: 0px;
 	margin-top: 8px;
+}
+.mblTabButton:first-child {
+  -moz-border-radius-topleft: 6px;
+  -moz-border-radius-bottomleft: 6px;
+}
+.mblTabButton:last-child {
+  -moz-border-radius-topright: 6px;
+  -moz-border-radius-bottomright: 6px;
 }

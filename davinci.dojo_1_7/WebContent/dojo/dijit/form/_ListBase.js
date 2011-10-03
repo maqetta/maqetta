@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dijit/form/_ListBase",["dojo/_base/kernel","..","dojo/window"],function(_1,_2){
-_1.declare("dijit.form._ListBase",null,{selected:null,_getTarget:function(_3){
+define("dijit/form/_ListBase",["dojo/_base/declare","dojo/window"],function(_1,_2){
+return _1("dijit.form._ListBase",null,{selected:null,_getTarget:function(_3){
 var _4=_3.target;
 var _5=this.containerNode;
 if(_4==_5||_4==this.domNode){
@@ -67,7 +61,7 @@ this.selected=null;
 }
 if(_c&&_c.parentNode==this.containerNode){
 this.selected=_c;
-_1.window.scrollIntoView(_c);
+_2.scrollIntoView(_c);
 this.onSelect(_c);
 }
 }else{
@@ -79,5 +73,4 @@ this.onSelect(_c);
 var v=this.selected;
 return (v&&v.parentNode==this.containerNode)?v:(this.selected=null);
 }});
-return _2.form._ListBase;
 });

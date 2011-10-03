@@ -1,58 +1,51 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/gfx/fx",["./matrix"],function(m){
-dojo.getObject("dojox.gfx.fx",true);
-var d=dojo,g=dojox.gfx;
-function _1(_2,_3){
-this.start=_2,this.end=_3;
+define("dojox/gfx/fx",["dojo/_base/lang","./_base","./matrix","dojo/_base/Color","dojo/_base/array","dojo/_base/fx","dojo/_base/connect"],function(_1,g,m,_2,_3,fx,_4){
+var _5=g.fx={};
+function _6(_7,_8){
+this.start=_7,this.end=_8;
 };
-_1.prototype.getValue=function(r){
+_6.prototype.getValue=function(r){
 return (this.end-this.start)*r+this.start;
 };
-function _4(_5,_6,_7){
-this.start=_5,this.end=_6;
-this.units=_7;
+function _9(_a,_b,_c){
+this.start=_a,this.end=_b;
+this.units=_c;
 };
-_4.prototype.getValue=function(r){
+_9.prototype.getValue=function(r){
 return (this.end-this.start)*r+this.start+this.units;
 };
-function _8(_9,_a){
-this.start=_9,this.end=_a;
-this.temp=new dojo.Color();
-};
-_8.prototype.getValue=function(r){
-return d.blendColors(this.start,this.end,r,this.temp);
-};
-function _b(_c){
-this.values=_c;
-this.length=_c.length;
-};
-_b.prototype.getValue=function(r){
-return this.values[Math.min(Math.floor(r*this.length),this.length-1)];
-};
 function _d(_e,_f){
-this.values=_e;
-this.def=_f?_f:{};
+this.start=_e,this.end=_f;
+this.temp=new _2();
 };
 _d.prototype.getValue=function(r){
-var ret=dojo.clone(this.def);
+return _2.blendColors(this.start,this.end,r,this.temp);
+};
+function _10(_11){
+this.values=_11;
+this.length=_11.length;
+};
+_10.prototype.getValue=function(r){
+return this.values[Math.min(Math.floor(r*this.length),this.length-1)];
+};
+function _12(_13,def){
+this.values=_13;
+this.def=def?def:{};
+};
+_12.prototype.getValue=function(r){
+var ret=_1.clone(this.def);
 for(var i in this.values){
 ret[i]=this.values[i].getValue(r);
 }
 return ret;
 };
-function _10(_11,_12){
-this.stack=_11;
-this.original=_12;
+function _14(_15,_16){
+this.stack=_15;
+this.original=_16;
 };
-_10.prototype.getValue=function(r){
+_14.prototype.getValue=function(r){
 var ret=[];
-dojo.forEach(this.stack,function(t){
+_3.forEach(this.stack,function(t){
 if(t instanceof m.Matrix2D){
 ret.push(t);
 return;
@@ -69,156 +62,156 @@ if(typeof f!="function"){
 ret.push(f);
 return;
 }
-var val=dojo.map(t.start,function(v,i){
+var val=_3.map(t.start,function(v,i){
 return (t.end[i]-v)*r+v;
-}),_13=f.apply(m,val);
-if(_13 instanceof m.Matrix2D){
-ret.push(_13);
+}),_17=f.apply(m,val);
+if(_17 instanceof m.Matrix2D){
+ret.push(_17);
 }
 },this);
 return ret;
 };
-var _14=new d.Color(0,0,0,0);
-function _15(_16,obj,_17,def){
-if(_16.values){
-return new _b(_16.values);
+var _18=new _2(0,0,0,0);
+function _19(_1a,obj,_1b,def){
+if(_1a.values){
+return new _10(_1a.values);
 }
-var _18,_19,end;
-if(_16.start){
-_19=g.normalizeColor(_16.start);
+var _1c,_1d,end;
+if(_1a.start){
+_1d=g.normalizeColor(_1a.start);
 }else{
-_19=_18=obj?(_17?obj[_17]:obj):def;
+_1d=_1c=obj?(_1b?obj[_1b]:obj):def;
 }
-if(_16.end){
-end=g.normalizeColor(_16.end);
+if(_1a.end){
+end=g.normalizeColor(_1a.end);
 }else{
-if(!_18){
-_18=obj?(_17?obj[_17]:obj):def;
+if(!_1c){
+_1c=obj?(_1b?obj[_1b]:obj):def;
 }
-end=_18;
+end=_1c;
 }
-return new _8(_19,end);
+return new _d(_1d,end);
 };
-function _1a(_1b,obj,_1c,def){
-if(_1b.values){
-return new _b(_1b.values);
+function _1e(_1f,obj,_20,def){
+if(_1f.values){
+return new _10(_1f.values);
 }
-var _1d,_1e,end;
-if(_1b.start){
-_1e=_1b.start;
+var _21,_22,end;
+if(_1f.start){
+_22=_1f.start;
 }else{
-_1e=_1d=obj?obj[_1c]:def;
+_22=_21=obj?obj[_20]:def;
 }
-if(_1b.end){
-end=_1b.end;
+if(_1f.end){
+end=_1f.end;
 }else{
-if(typeof _1d!="number"){
-_1d=obj?obj[_1c]:def;
+if(typeof _21!="number"){
+_21=obj?obj[_20]:def;
 }
-end=_1d;
+end=_21;
 }
-return new _1(_1e,end);
+return new _6(_22,end);
 };
-g.fx.animateStroke=function(_1f){
-if(!_1f.easing){
-_1f.easing=d._defaultEasing;
+_5.animateStroke=function(_23){
+if(!_23.easing){
+_23.easing=fx._defaultEasing;
 }
-var _20=new d.Animation(_1f),_21=_1f.shape,_22;
-d.connect(_20,"beforeBegin",_20,function(){
-_22=_21.getStroke();
-var _23=_1f.color,_24={},_25,_26,end;
-if(_23){
-_24.color=_15(_23,_22,"color",_14);
+var _24=new fx.Animation(_23),_25=_23.shape,_26;
+_4.connect(_24,"beforeBegin",_24,function(){
+_26=_25.getStroke();
+var _27=_23.color,_28={},_29,_2a,end;
+if(_27){
+_28.color=_19(_27,_26,"color",_18);
 }
-_23=_1f.style;
-if(_23&&_23.values){
-_24.style=new _b(_23.values);
+_27=_23.style;
+if(_27&&_27.values){
+_28.style=new _10(_27.values);
 }
-_23=_1f.width;
-if(_23){
-_24.width=_1a(_23,_22,"width",1);
+_27=_23.width;
+if(_27){
+_28.width=_1e(_27,_26,"width",1);
 }
-_23=_1f.cap;
-if(_23&&_23.values){
-_24.cap=new _b(_23.values);
+_27=_23.cap;
+if(_27&&_27.values){
+_28.cap=new _10(_27.values);
 }
-_23=_1f.join;
-if(_23){
-if(_23.values){
-_24.join=new _b(_23.values);
+_27=_23.join;
+if(_27){
+if(_27.values){
+_28.join=new _10(_27.values);
 }else{
-_26=_23.start?_23.start:(_22&&_22.join||0);
-end=_23.end?_23.end:(_22&&_22.join||0);
-if(typeof _26=="number"&&typeof end=="number"){
-_24.join=new _1(_26,end);
+_2a=_27.start?_27.start:(_26&&_26.join||0);
+end=_27.end?_27.end:(_26&&_26.join||0);
+if(typeof _2a=="number"&&typeof end=="number"){
+_28.join=new _6(_2a,end);
 }
 }
 }
-this.curve=new _d(_24,_22);
+this.curve=new _12(_28,_26);
 });
-d.connect(_20,"onAnimate",_21,"setStroke");
-return _20;
+_4.connect(_24,"onAnimate",_25,"setStroke");
+return _24;
 };
-g.fx.animateFill=function(_27){
-if(!_27.easing){
-_27.easing=d._defaultEasing;
+_5.animateFill=function(_2b){
+if(!_2b.easing){
+_2b.easing=fx._defaultEasing;
 }
-var _28=new d.Animation(_27),_29=_27.shape,_2a;
-d.connect(_28,"beforeBegin",_28,function(){
-_2a=_29.getFill();
-var _2b=_27.color,_2c={};
-if(_2b){
-this.curve=_15(_2b,_2a,"",_14);
+var _2c=new fx.Animation(_2b),_2d=_2b.shape,_2e;
+_4.connect(_2c,"beforeBegin",_2c,function(){
+_2e=_2d.getFill();
+var _2f=_2b.color,_30={};
+if(_2f){
+this.curve=_19(_2f,_2e,"",_18);
 }
 });
-d.connect(_28,"onAnimate",_29,"setFill");
-return _28;
+_4.connect(_2c,"onAnimate",_2d,"setFill");
+return _2c;
 };
-g.fx.animateFont=function(_2d){
-if(!_2d.easing){
-_2d.easing=d._defaultEasing;
+_5.animateFont=function(_31){
+if(!_31.easing){
+_31.easing=fx._defaultEasing;
 }
-var _2e=new d.Animation(_2d),_2f=_2d.shape,_30;
-d.connect(_2e,"beforeBegin",_2e,function(){
-_30=_2f.getFont();
-var _31=_2d.style,_32={},_33,_34,end;
-if(_31&&_31.values){
-_32.style=new _b(_31.values);
+var _32=new fx.Animation(_31),_33=_31.shape,_34;
+_4.connect(_32,"beforeBegin",_32,function(){
+_34=_33.getFont();
+var _35=_31.style,_36={},_37,_38,end;
+if(_35&&_35.values){
+_36.style=new _10(_35.values);
 }
-_31=_2d.variant;
-if(_31&&_31.values){
-_32.variant=new _b(_31.values);
+_35=_31.variant;
+if(_35&&_35.values){
+_36.variant=new _10(_35.values);
 }
-_31=_2d.weight;
-if(_31&&_31.values){
-_32.weight=new _b(_31.values);
+_35=_31.weight;
+if(_35&&_35.values){
+_36.weight=new _10(_35.values);
 }
-_31=_2d.family;
-if(_31&&_31.values){
-_32.family=new _b(_31.values);
+_35=_31.family;
+if(_35&&_35.values){
+_36.family=new _10(_35.values);
 }
-_31=_2d.size;
-if(_31&&_31.units){
-_34=parseFloat(_31.start?_31.start:(_2f.font&&_2f.font.size||"0"));
-end=parseFloat(_31.end?_31.end:(_2f.font&&_2f.font.size||"0"));
-_32.size=new _4(_34,end,_31.units);
+_35=_31.size;
+if(_35&&_35.units){
+_38=parseFloat(_35.start?_35.start:(_33.font&&_33.font.size||"0"));
+end=parseFloat(_35.end?_35.end:(_33.font&&_33.font.size||"0"));
+_36.size=new _9(_38,end,_35.units);
 }
-this.curve=new _d(_32,_30);
+this.curve=new _12(_36,_34);
 });
-d.connect(_2e,"onAnimate",_2f,"setFont");
-return _2e;
+_4.connect(_32,"onAnimate",_33,"setFont");
+return _32;
 };
-g.fx.animateTransform=function(_35){
-if(!_35.easing){
-_35.easing=d._defaultEasing;
+_5.animateTransform=function(_39){
+if(!_39.easing){
+_39.easing=fx._defaultEasing;
 }
-var _36=new d.Animation(_35),_37=_35.shape,_38;
-d.connect(_36,"beforeBegin",_36,function(){
-_38=_37.getTransform();
-this.curve=new _10(_35.transform,_38);
+var _3a=new fx.Animation(_39),_3b=_39.shape,_3c;
+_4.connect(_3a,"beforeBegin",_3a,function(){
+_3c=_3b.getTransform();
+this.curve=new _14(_39.transform,_3c);
 });
-d.connect(_36,"onAnimate",_37,"setTransform");
-return _36;
+_4.connect(_3a,"onAnimate",_3b,"setTransform");
+return _3a;
 };
-return g.fx;
+return _5;
 });

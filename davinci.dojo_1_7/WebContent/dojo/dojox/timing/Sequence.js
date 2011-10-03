@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/timing/Sequence",["dojo/_base/lang","dojo/_base/array","./_base"],function(_1){
+define("dojox/timing/Sequence",["dojo/_base/kernel","dojo/_base/array","dojo/_base/declare","dojo/_base/lang","./_base"],function(_1){
 _1.experimental("dojox.timing.Sequence");
 _1.declare("dojox.timing.Sequence",null,{_goOnPause:0,_running:false,constructor:function(){
 this._defsResolved=[];

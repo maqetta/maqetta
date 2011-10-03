@@ -1,40 +1,34 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/string/tokenize",["dojo/_base/kernel"],function(_1){
-_1.getObject("string",true,dojox);
-dojox.string.tokenize=function(_2,re,_3,_4){
-var _5=[];
-var _6,_7,_8=0;
-while(_6=re.exec(_2)){
-_7=_2.slice(_8,re.lastIndex-_6[0].length);
-if(_7.length){
-_5.push(_7);
+define("dojox/string/tokenize",["dojo/_base/lang","dojo/_base/sniff"],function(_1,_2){
+var _3=_1.getObject("dojox.string",true).tokenize;
+_3=function(_4,re,_5,_6){
+var _7=[];
+var _8,_9,_a=0;
+while(_8=re.exec(_4)){
+_9=_4.slice(_a,re.lastIndex-_8[0].length);
+if(_9.length){
+_7.push(_9);
 }
-if(_3){
-if(_1.isOpera){
-var _9=_6.slice(0);
-while(_9.length<_6.length){
-_9.push(null);
+if(_5){
+if(_2("opera")){
+var _b=_8.slice(0);
+while(_b.length<_8.length){
+_b.push(null);
 }
-_6=_9;
+_8=_b;
 }
-var _a=_3.apply(_4,_6.slice(1).concat(_5.length));
-if(typeof _a!="undefined"){
-_5.push(_a);
+var _c=_5.apply(_6,_8.slice(1).concat(_7.length));
+if(typeof _c!="undefined"){
+_7.push(_c);
 }
 }
-_8=re.lastIndex;
+_a=re.lastIndex;
 }
-_7=_2.slice(_8);
-if(_7.length){
-_5.push(_7);
+_9=_4.slice(_a);
+if(_9.length){
+_7.push(_9);
 }
-return _5;
+return _7;
 };
-return dojox.string.tokenize;
+return _3;
 });

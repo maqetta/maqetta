@@ -1,56 +1,50 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/dtl/filter/dates",["dojo/_base/kernel","../utils/date"],function(dk,_1){
-dojo.getObject("dtl.filter.dates",true,dojox);
-var _2=dojox.dtl.filter.dates;
-dojo.mixin(_2,{_toDate:function(_3){
-if(_3 instanceof Date){
-return _3;
+define("dojox/dtl/filter/dates",["dojo/_base/lang","../_base","../utils/date"],function(_1,dd,_2){
+_1.getObject("dojox.dtl.filter.dates",true);
+var _3=dd.filter.dates;
+_1.mixin(_3,{_toDate:function(_4){
+if(_4 instanceof Date){
+return _4;
 }
-_3=new Date(_3);
-if(_3.getTime()==new Date(0).getTime()){
+_4=new Date(_4);
+if(_4.getTime()==new Date(0).getTime()){
 return "";
 }
-return _3;
-},date:function(_4,_5){
-_4=_2._toDate(_4);
-if(!_4){
+return _4;
+},date:function(_5,_6){
+_5=_3._toDate(_5);
+if(!_5){
 return "";
 }
-_5=_5||"N j, Y";
-return _1.format(_4,_5);
-},time:function(_6,_7){
-_6=_2._toDate(_6);
-if(!_6){
+_6=_6||"N j, Y";
+return _2.format(_5,_6);
+},time:function(_7,_8){
+_7=_3._toDate(_7);
+if(!_7){
 return "";
 }
-_7=_7||"P";
-return _1.format(_6,_7);
-},timesince:function(_8,_9){
-_8=_2._toDate(_8);
-if(!_8){
+_8=_8||"P";
+return _2.format(_7,_8);
+},timesince:function(_9,_a){
+_9=_3._toDate(_9);
+if(!_9){
 return "";
 }
-var _a=_1.timesince;
-if(_9){
-return _a(_9,_8);
+var _b=_2.timesince;
+if(_a){
+return _b(_a,_9);
 }
-return _a(_8);
-},timeuntil:function(_b,_c){
-_b=_2._toDate(_b);
-if(!_b){
+return _b(_9);
+},timeuntil:function(_c,_d){
+_c=_3._toDate(_c);
+if(!_c){
 return "";
 }
-var _d=_1.timesince;
-if(_c){
-return _d(_c,_b);
+var _e=_2.timesince;
+if(_d){
+return _e(_d,_c);
 }
-return _d(new Date(),_b);
+return _e(new Date(),_c);
 }});
 return dojox.dtl.filter.dates;
 });

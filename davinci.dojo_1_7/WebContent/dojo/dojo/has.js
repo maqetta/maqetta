@@ -35,28 +35,31 @@ _2.clearElement=function(_e){
 _e.innerHTML="";
 return _e;
 };
-_2.load=function(id,_f,_10){
-var _11=id.match(/[\?:]|[^:\?]*/g),i=0,get=function(_12){
-var _13=_11[i++];
-if(_13==":"){
-return undefined;
+_2.normalize=function(id,_f){
+var _10=id.match(/[\?:]|[^:\?]*/g),i=0,get=function(_11){
+var _12=_10[i++];
+if(_12==":"){
+return 0;
 }else{
-if(_11[i++]=="?"){
-if(!_12&&_2(_13)){
+if(_10[i++]=="?"){
+if(!_11&&_2(_12)){
 return get();
 }else{
 get(true);
-return get(_12);
+return get(_11);
 }
 }
-return _13;
+return _12||0;
 }
 };
 id=get();
+return id&&_f(id);
+};
+_2.load=function(id,_13,_14){
 if(id){
-_f([id],_10);
+_13([id],_14);
 }else{
-_10();
+_14();
 }
 };
 return _2;

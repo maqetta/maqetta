@@ -1,52 +1,45 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dijit/form/Form",["dojo/_base/kernel","..","../_Widget","../_TemplatedMixin","./_FormMixin","../layout/_ContentPaneResizeMixin","dojo/_base/declare","dojo/_base/event","dojo/_base/html","dojo/_base/sniff"],function(_1,_2){
-_1.declare("dijit.form.Form",[_2._Widget,_2._TemplatedMixin,_2.form._FormMixin,_2.layout._ContentPaneResizeMixin],{name:"",action:"",method:"",encType:"","accept-charset":"",accept:"",target:"",templateString:"<form dojoAttachPoint='containerNode' dojoAttachEvent='onreset:_onReset,onsubmit:_onSubmit' ${!nameAttrSetting}></form>",postMixInProperties:function(){
+define("dijit/form/Form",["dojo/_base/declare","dojo/dom-attr","dojo/_base/event","dojo/_base/kernel","dojo/_base/sniff","../_Widget","../_TemplatedMixin","./_FormMixin","../layout/_ContentPaneResizeMixin"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9){
+return _1("dijit.form.Form",[_6,_7,_8,_9],{name:"",action:"",method:"",encType:"","accept-charset":"",accept:"",target:"",templateString:"<form data-dojo-attach-point='containerNode' data-dojo-attach-event='onreset:_onReset,onsubmit:_onSubmit' ${!nameAttrSetting}></form>",postMixInProperties:function(){
 this.nameAttrSetting=this.name?("name='"+this.name+"'"):"";
 this.inherited(arguments);
-},execute:function(_3){
+},execute:function(){
 },onExecute:function(){
-},_setEncTypeAttr:function(_4){
-this.encType=_4;
-_1.attr(this.domNode,"encType",_4);
-if(_1.isIE){
-this.domNode.encoding=_4;
+},_setEncTypeAttr:function(_a){
+this.encType=_a;
+_2.set(this.domNode,"encType",_a);
+if(_5("ie")){
+this.domNode.encoding=_a;
 }
 },reset:function(e){
-var _5={returnValue:true,preventDefault:function(){
+var _b={returnValue:true,preventDefault:function(){
 this.returnValue=false;
 },stopPropagation:function(){
 },currentTarget:e?e.target:this.domNode,target:e?e.target:this.domNode};
-if(!(this.onReset(_5)===false)&&_5.returnValue){
+if(!(this.onReset(_b)===false)&&_b.returnValue){
 this.inherited(arguments,[]);
 }
-},onReset:function(e){
+},onReset:function(){
 return true;
 },_onReset:function(e){
 this.reset(e);
-_1.stopEvent(e);
+_3.stop(e);
 return false;
 },_onSubmit:function(e){
-var fp=_2.form.Form.prototype;
+var fp=this.constructor.prototype;
 if(this.execute!=fp.execute||this.onExecute!=fp.onExecute){
-_1.deprecated("dijit.form.Form:execute()/onExecute() are deprecated. Use onSubmit() instead.","","2.0");
+_4.deprecated("dijit.form.Form:execute()/onExecute() are deprecated. Use onSubmit() instead.","","2.0");
 this.onExecute();
 this.execute(this.getValues());
 }
 if(this.onSubmit(e)===false){
-_1.stopEvent(e);
+_3.stop(e);
 }
-},onSubmit:function(e){
+},onSubmit:function(){
 return this.isValid();
 },submit:function(){
 if(!(this.onSubmit()===false)){
 this.containerNode.submit();
 }
 }});
-return _2.form.Form;
 });

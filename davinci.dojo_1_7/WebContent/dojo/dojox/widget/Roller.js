@@ -1,9 +1,3 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
 define("dojox/widget/Roller",["dojo","dijit","dijit/_Widget"],function(_1,_2){
 _1.declare("dojox.widget.Roller",_2._Widget,{delay:2000,autoStart:true,itemSelector:"> li",durationIn:400,durationOut:275,_idx:-1,postCreate:function(){

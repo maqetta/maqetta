@@ -1,46 +1,38 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/form/manager/_FormMixin",["dojo","dijit","dojox","dojox/form/manager/_Mixin"],function(_1,_2,_3){
-_1.getObject("dojox.form.manager._FormMixin",1);
-(function(){
-var fm=_3.form.manager,aa=fm.actionAdapter;
-_1.declare("dojox.form.manager._FormMixin",null,{name:"",action:"",method:"",encType:"","accept-charset":"",accept:"",target:"",startup:function(){
+define("dojox/form/manager/_FormMixin",["dojo/_base/lang","dojo/_base/kernel","dojo/_base/event","dojo/window","./_Mixin","dojo/_base/declare"],function(_1,_2,_3,_4,_5,_6){
+var fm=_1.getObject("dojox.form.manager",true),aa=fm.actionAdapter;
+return _6("dojox.form.manager._FormMixin",null,{name:"",action:"",method:"",encType:"","accept-charset":"",accept:"",target:"",startup:function(){
 this.isForm=this.domNode.tagName.toLowerCase()=="form";
 if(this.isForm){
 this.connect(this.domNode,"onreset","_onReset");
 this.connect(this.domNode,"onsubmit","_onSubmit");
 }
 this.inherited(arguments);
-},_onReset:function(_4){
-var _5={returnValue:true,preventDefault:function(){
+},_onReset:function(_7){
+var _8={returnValue:true,preventDefault:function(){
 this.returnValue=false;
 },stopPropagation:function(){
-},currentTarget:_4.currentTarget,target:_4.target};
-if(!(this.onReset(_5)===false)&&_5.returnValue){
+},currentTarget:_7.currentTarget,target:_7.target};
+if(!(this.onReset(_8)===false)&&_8.returnValue){
 this.reset();
 }
-_1.stopEvent(_4);
+_3.stop(_7);
 return false;
 },onReset:function(){
 return true;
 },reset:function(){
-this.inspectFormWidgets(aa(function(_6,_7){
-if(_7.reset){
-_7.reset();
+this.inspectFormWidgets(aa(function(_9,_a){
+if(_a.reset){
+_a.reset();
 }
 }));
 if(this.isForm){
 this.domNode.reset();
 }
 return this;
-},_onSubmit:function(_8){
-if(this.onSubmit(_8)===false){
-_1.stopEvent(_8);
+},_onSubmit:function(_b){
+if(this.onSubmit(_b)===false){
+_3.stop(_b);
 }
 },onSubmit:function(){
 return this.isValid();
@@ -51,35 +43,32 @@ this.domNode.submit();
 }
 }
 },isValid:function(){
-for(var _9 in this.formWidgets){
-var _a=false;
-aa(function(_b,_c){
-if(!_c.get("disabled")&&_c.isValid&&!_c.isValid()){
-_a=true;
+for(var _c in this.formWidgets){
+var _d=false;
+aa(function(_e,_f){
+if(!_f.get("disabled")&&_f.isValid&&!_f.isValid()){
+_d=true;
 }
-}).call(this,null,this.formWidgets[_9].widget);
-if(_a){
+}).call(this,null,this.formWidgets[_c].widget);
+if(_d){
 return false;
 }
 }
 return true;
 },validate:function(){
-var _d=true,_e=this.formWidgets,_f=false,_10;
-for(_10 in _e){
-aa(function(_11,_12){
-_12._hasBeenBlurred=true;
-var _13=_12.disabled||!_12.validate||_12.validate();
-if(!_13&&!_f){
-_1.window.scrollIntoView(_12.containerNode||_12.domNode);
-_12.focus();
-_f=true;
+var _10=true,_11=this.formWidgets,_12=false,_13;
+for(_13 in _11){
+aa(function(_14,_15){
+_15._hasBeenBlurred=true;
+var _16=_15.disabled||!_15.validate||_15.validate();
+if(!_16&&!_12){
+_4.scrollIntoView(_15.containerNode||_15.domNode);
+_15.focus();
+_12=true;
 }
-_d=_d&&_13;
-}).call(this,null,_e[_10].widget);
+_10=_10&&_16;
+}).call(this,null,_11[_13].widget);
 }
-return _d;
+return _10;
 }});
-})();
-return _1.getObject("dojox.form.manager._FormMixin");
 });
-require(["dojox/form/manager/_FormMixin"]);

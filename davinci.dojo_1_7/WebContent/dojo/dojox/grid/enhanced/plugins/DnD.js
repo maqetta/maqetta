@@ -1,45 +1,167 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/grid/enhanced/plugins/DnD",["dojo","dojox","dojo/dnd/move","dojo/dnd/Source","../_Plugin","./Selector","./Rearrange"],function(_1,_2){
-var _3=function(a){
+define("dojox/grid/enhanced/plugins/DnD",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/connect","dojo/_base/array","dojo/_base/lang","dojo/_base/html","dojo/_base/json","dojo/_base/window","dojo/query","dojo/keys","dojo/dnd/Source","dojo/dnd/Avatar","../_Plugin","../../EnhancedGrid","./Selector","./Rearrange","dojo/dnd/Manager"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b,_c,_d,_e){
+var _f=function(a){
 a.sort(function(v1,v2){
 return v1-v2;
 });
-var _4=[[a[0]]];
+var arr=[[a[0]]];
 for(var i=1,j=0;i<a.length;++i){
 if(a[i]==a[i-1]+1){
-_4[j].push(a[i]);
+arr[j].push(a[i]);
 }else{
-_4[++j]=[a[i]];
+arr[++j]=[a[i]];
 }
 }
-return _4;
-},_5=function(_6){
-var a=_6[0];
-for(var i=1;i<_6.length;++i){
-a=a.concat(_6[i]);
+return arr;
+},_10=function(_11){
+var a=_11[0];
+for(var i=1;i<_11.length;++i){
+a=a.concat(_11[i]);
 }
 return a;
 };
-_1.declare("dojox.grid.enhanced.plugins.DnD",_2.grid.enhanced._Plugin,{name:"dnd",_targetAnchorBorderWidth:2,_copyOnly:false,_config:{"row":{"within":true,"in":true,"out":true},"col":{"within":true,"in":true,"out":true},"cell":{"within":true,"in":true,"out":true}},constructor:function(_7,_8){
-this.grid=_7;
-this._config=_1.clone(this._config);
-_8=_1.isObject(_8)?_8:{};
-this.setupConfig(_8.dndConfig);
-this._copyOnly=!!_8.copyOnly;
+var _12=_2("dojox.grid.enhanced.plugins.GridDnDElement",null,{constructor:function(_13){
+this.plugin=_13;
+this.node=_6.create("div");
+this._items={};
+},destroy:function(){
+this.plugin=null;
+_6.destroy(this.node);
+this.node=null;
+this._items=null;
+},createDnDNodes:function(_14){
+this.destroyDnDNodes();
+var _15=["grid/"+_14.type+"s"];
+var _16=this.plugin.grid.id+"_dndItem";
+_4.forEach(_14.selected,function(_17,i){
+var id=_16+i;
+this._items[id]={"type":_15,"data":_17,"dndPlugin":this.plugin};
+this.node.appendChild(_6.create("div",{"id":id}));
+},this);
+},getDnDNodes:function(){
+return _4.map(this.node.childNodes,function(_18){
+return _18;
+});
+},destroyDnDNodes:function(){
+_6.empty(this.node);
+this._items={};
+},getItem:function(_19){
+return this._items[_19];
+}});
+var _1a=_2("dojox.grid.enhanced.plugins.GridDnDSource",_b,{accept:["grid/cells","grid/rows","grid/cols"],constructor:function(_1b,_1c){
+this.grid=_1c.grid;
+this.dndElem=_1c.dndElem;
+this.dndPlugin=_1c.dnd;
+this.sourcePlugin=null;
+},destroy:function(){
+this.inherited(arguments);
+this.grid=null;
+this.dndElem=null;
+this.dndPlugin=null;
+this.sourcePlugin=null;
+},getItem:function(_1d){
+return this.dndElem.getItem(_1d);
+},checkAcceptance:function(_1e,_1f){
+if(this!=_1e&&_1f[0]){
+var _20=_1e.getItem(_1f[0].id);
+if(_20.dndPlugin){
+var _21=_20.type;
+for(var j=0;j<_21.length;++j){
+if(_21[j] in this.accept){
+if(this.dndPlugin._canAccept(_20.dndPlugin)){
+this.sourcePlugin=_20.dndPlugin;
+}else{
+return false;
+}
+break;
+}
+}
+}else{
+if("grid/rows" in this.accept){
+var _22=[];
+_4.forEach(_1f,function(_23){
+var _24=_1e.getItem(_23.id);
+if(_24.data&&_4.indexOf(_24.type,"grid/rows")>=0){
+var _25=_24.data;
+if(typeof _24.data=="string"){
+_25=_7.fromJson(_24.data);
+}
+if(_25){
+_22.push(_25);
+}
+}
+});
+if(_22.length){
+this.sourcePlugin={_dndRegion:{type:"row",selected:[_22]}};
+}else{
+return false;
+}
+}
+}
+}
+return this.inherited(arguments);
+},onDraggingOver:function(){
+this.dndPlugin.onDraggingOver(this.sourcePlugin);
+},onDraggingOut:function(){
+this.dndPlugin.onDraggingOut(this.sourcePlugin);
+},onDndDrop:function(_26,_27,_28,_29){
+this.onDndCancel();
+if(this!=_26&&this==_29){
+this.dndPlugin.onDragIn(this.sourcePlugin,_28);
+}
+}});
+var _2a=_2("dojox.grid.enhanced.plugins.GridDnDAvatar",_c,{construct:function(){
+this._itemType=this.manager._dndPlugin._dndRegion.type;
+this._itemCount=this._getItemCount();
+this.isA11y=_6.hasClass(_8.body(),"dijit_a11y");
+var a=_6.create("table",{"border":"0","cellspacing":"0","class":"dojoxGridDndAvatar","style":{position:"absolute",zIndex:"1999",margin:"0px"}}),_2b=this.manager.source,b=_6.create("tbody",null,a),tr=_6.create("tr",null,b),td=_6.create("td",{"class":"dojoxGridDnDIcon"},tr);
+if(this.isA11y){
+_6.create("span",{"id":"a11yIcon","innerHTML":this.manager.copy?"+":"<"},td);
+}
+td=_6.create("td",{"class":"dojoxGridDnDItemIcon "+this._getGridDnDIconClass()},tr);
+td=_6.create("td",null,tr);
+_6.create("span",{"class":"dojoxGridDnDItemCount","innerHTML":_2b.generateText?this._generateText():""},td);
+_6.style(tr,{"opacity":0.9});
+this.node=a;
+},_getItemCount:function(){
+var _2c=this.manager._dndPlugin._dndRegion.selected,_2d=0;
+switch(this._itemType){
+case "cell":
+_2c=_2c[0];
+var _2e=this.manager._dndPlugin.grid.layout.cells,_2f=_2c.max.col-_2c.min.col+1,_30=_2c.max.row-_2c.min.row+1;
+if(_2f>1){
+for(var i=_2c.min.col;i<=_2c.max.col;++i){
+if(_2e[i].hidden){
+--_2f;
+}
+}
+}
+_2d=_2f*_30;
+break;
+case "row":
+case "col":
+_2d=_10(_2c).length;
+}
+return _2d;
+},_getGridDnDIconClass:function(){
+return {"row":["dojoxGridDnDIconRowSingle","dojoxGridDnDIconRowMulti"],"col":["dojoxGridDnDIconColSingle","dojoxGridDnDIconColMulti"],"cell":["dojoxGridDnDIconCellSingle","dojoxGridDnDIconCellMulti"]}[this._itemType][this._itemCount==1?0:1];
+},_generateText:function(){
+return "("+this._itemCount+")";
+}});
+var DnD=_2("dojox.grid.enhanced.plugins.DnD",_d,{name:"dnd",_targetAnchorBorderWidth:2,_copyOnly:false,_config:{"row":{"within":true,"in":true,"out":true},"col":{"within":true,"in":true,"out":true},"cell":{"within":true,"in":true,"out":true}},constructor:function(_31,_32){
+this.grid=_31;
+this._config=_5.clone(this._config);
+_32=_5.isObject(_32)?_32:{};
+this.setupConfig(_32.dndConfig);
+this._copyOnly=!!_32.copyOnly;
 this._mixinGrid();
-this.selector=_7.pluginMgr.getPlugin("selector");
-this.rearranger=_7.pluginMgr.getPlugin("rearrange");
-this.rearranger.setArgs(_8);
+this.selector=_31.pluginMgr.getPlugin("selector");
+this.rearranger=_31.pluginMgr.getPlugin("rearrange");
+this.rearranger.setArgs(_32);
 this._clear();
-this._elem=new _2.grid.enhanced.plugins.GridDnDElement(this);
-this._source=new _2.grid.enhanced.plugins.GridDnDSource(this._elem.node,{"grid":_7,"dndElem":this._elem,"dnd":this});
-this._container=_1.query(".dojoxGridMasterView",this.grid.domNode)[0];
+this._elem=new _12(this);
+this._source=new _1a(this._elem.node,{"grid":_31,"dndElem":this._elem,"dnd":this});
+this._container=_9(".dojoxGridMasterView",this.grid.domNode)[0];
 this._initEvents();
 },destroy:function(){
 this.inherited(arguments);
@@ -52,52 +174,52 @@ this.selector=null;
 this.rearranger=null;
 this._config=null;
 },_mixinGrid:function(){
-this.grid.setupDnDConfig=_1.hitch(this,"setupConfig");
-this.grid.dndCopyOnly=_1.hitch(this,"copyOnly");
-},setupConfig:function(_9){
-if(_9&&_1.isObject(_9)){
-var _a=["row","col","cell"],_b=["within","in","out"],_c=this._config;
-_1.forEach(_a,function(_d){
-if(_d in _9){
-var t=_9[_d];
-if(t&&_1.isObject(t)){
-_1.forEach(_b,function(_e){
-if(_e in t){
-_c[_d][_e]=!!t[_e];
+this.grid.setupDnDConfig=_5.hitch(this,"setupConfig");
+this.grid.dndCopyOnly=_5.hitch(this,"copyOnly");
+},setupConfig:function(_33){
+if(_33&&_5.isObject(_33)){
+var _34=["row","col","cell"],_35=["within","in","out"],cfg=this._config;
+_4.forEach(_34,function(_36){
+if(_36 in _33){
+var t=_33[_36];
+if(t&&_5.isObject(t)){
+_4.forEach(_35,function(_37){
+if(_37 in t){
+cfg[_36][_37]=!!t[_37];
 }
 });
 }else{
-_1.forEach(_b,function(_f){
-_c[_d][_f]=!!t;
+_4.forEach(_35,function(_38){
+cfg[_36][_38]=!!t;
 });
 }
 }
 });
-_1.forEach(_b,function(_10){
-if(_10 in _9){
-var m=_9[_10];
-if(m&&_1.isObject(m)){
-_1.forEach(_a,function(_11){
-if(_11 in m){
-_c[_11][_10]=!!m[_11];
+_4.forEach(_35,function(_39){
+if(_39 in _33){
+var m=_33[_39];
+if(m&&_5.isObject(m)){
+_4.forEach(_34,function(_3a){
+if(_3a in m){
+cfg[_3a][_39]=!!m[_3a];
 }
 });
 }else{
-_1.forEach(_a,function(_12){
-_c[_12][_10]=!!m;
+_4.forEach(_34,function(_3b){
+cfg[_3b][_39]=!!m;
 });
 }
 }
 });
 }
-},copyOnly:function(_13){
-if(typeof _13!="undefined"){
-this._copyOnly=!!_13;
+},copyOnly:function(_3c){
+if(typeof _3c!="undefined"){
+this._copyOnly=!!_3c;
 }
 return this._copyOnly;
 },_isOutOfGrid:function(evt){
-var _14=_1.position(this.grid.domNode),x=evt.clientX,y=evt.clientY;
-return y<_14.y||y>_14.y+_14.h||x<_14.x||x>_14.x+_14.w;
+var _3d=_6.position(this.grid.domNode),x=evt.clientX,y=evt.clientY;
+return y<_3d.y||y>_3d.y+_3d.h||x<_3d.x||x>_3d.x+_3d.w;
 },_onMouseMove:function(evt){
 if(this._dndRegion&&!this._dnding&&!this._externalDnd){
 this._dnding=true;
@@ -105,11 +227,11 @@ this._startDnd(evt);
 }else{
 if(this._isMouseDown&&!this._dndRegion){
 delete this._isMouseDown;
-this._oldCursor=_1.style(_1.body(),"cursor");
-_1.style(_1.body(),"cursor","not-allowed");
+this._oldCursor=_6.style(_8.body(),"cursor");
+_6.style(_8.body(),"cursor","not-allowed");
 }
-var _15=this._isOutOfGrid(evt);
-if(!this._alreadyOut&&_15){
+var _3e=this._isOutOfGrid(evt);
+if(!this._alreadyOut&&_3e){
 this._alreadyOut=true;
 if(this._dnding){
 this._destroyDnDUI(true,false);
@@ -117,7 +239,7 @@ this._destroyDnDUI(true,false);
 this._moveEvent=evt;
 this._source.onOutEvent();
 }else{
-if(this._alreadyOut&&!_15){
+if(this._alreadyOut&&!_3e){
 this._alreadyOut=false;
 if(this._dnding){
 this._createDnDUI(evt,true);
@@ -129,18 +251,18 @@ this._source.onOverEvent();
 }
 },_onMouseUp:function(){
 if(!this._extDnding&&!this._isSource){
-var _16=this._dnding&&!this._alreadyOut;
-if(_16&&this._config[this._dndRegion.type]["within"]){
+var _3f=this._dnding&&!this._alreadyOut;
+if(_3f&&this._config[this._dndRegion.type]["within"]){
 this._rearrange();
 }
-this._endDnd(_16);
+this._endDnd(_3f);
 }
-_1.style(_1.body(),"cursor",this._oldCursor||"");
+_6.style(_8.body(),"cursor",this._oldCursor||"");
 delete this._isMouseDown;
 },_initEvents:function(){
 var g=this.grid,s=this.selector;
-this.connect(_1.doc,"onmousemove","_onMouseMove");
-this.connect(_1.doc,"onmouseup","_onMouseUp");
+this.connect(_8.doc,"onmousemove","_onMouseMove");
+this.connect(_8.doc,"onmouseup","_onMouseUp");
 this.connect(g,"onCellMouseOver",function(evt){
 if(!this._dnding&&!s.isSelecting()&&!evt.ctrlKey){
 this._dndReady=s.isSelected("cell",evt.rowIndex,evt.cell.index);
@@ -174,23 +296,23 @@ if(this._dndReady&&!evt.ctrlKey&&!evt.shiftKey){
 s.select("cell",evt.rowIndex,evt.cell.index);
 }
 });
-this.connect(g,"onEndAutoScroll",function(_17,_18,_19,_1a,evt){
+this.connect(g,"onEndAutoScroll",function(_40,_41,_42,_43,evt){
 if(this._dnding){
 this._markTargetAnchor(evt);
 }
 });
-this.connect(_1.doc,"onkeydown",function(evt){
-if(evt.keyCode==_1.keys.ESCAPE){
+this.connect(_8.doc,"onkeydown",function(evt){
+if(evt.keyCode==_a.ESCAPE){
 this._endDnd(false);
 }else{
-if(evt.keyCode==_1.keys.CTRL){
+if(evt.keyCode==_a.CTRL){
 s.selectEnabled(true);
 this._isCopy=true;
 }
 }
 });
-this.connect(_1.doc,"onkeyup",function(evt){
-if(evt.keyCode==_1.keys.CTRL){
+this.connect(_8.doc,"onkeyup",function(evt){
+if(evt.keyCode==_a.CTRL){
 s.selectEnabled(!this._dndReady);
 this._isCopy=false;
 }
@@ -205,91 +327,91 @@ this._externalDnd=false;
 this._isSource=false;
 this._alreadyOut=false;
 this._extDnding=false;
-},_getDnDRegion:function(_1b,_1c){
-var s=this.selector,_1d=s._selected,_1e=(!!_1d.cell.length)|(!!_1d.row.length<<1)|(!!_1d.col.length<<2),_1f;
-switch(_1e){
+},_getDnDRegion:function(_44,_45){
+var s=this.selector,_46=s._selected,_47=(!!_46.cell.length)|(!!_46.row.length<<1)|(!!_46.col.length<<2),_48;
+switch(_47){
 case 1:
-_1f="cell";
-if(!this._config[_1f]["within"]&&!this._config[_1f]["out"]){
+_48="cell";
+if(!this._config[_48]["within"]&&!this._config[_48]["out"]){
 return null;
 }
-var _20=this.grid.layout.cells,_21=function(_22){
-var _23=0;
-for(var i=_22.min.col;i<=_22.max.col;++i){
-if(_20[i].hidden){
-++_23;
+var _49=this.grid.layout.cells,_4a=function(_4b){
+var _4c=0;
+for(var i=_4b.min.col;i<=_4b.max.col;++i){
+if(_49[i].hidden){
+++_4c;
 }
 }
-return (_22.max.row-_22.min.row+1)*(_22.max.col-_22.min.col+1-_23);
-},_24=function(_25,_26){
-return _25.row>=_26.min.row&&_25.row<=_26.max.row&&_25.col>=_26.min.col&&_25.col<=_26.max.col;
-},_27={max:{row:-1,col:-1},min:{row:Infinity,col:Infinity}};
-_1.forEach(_1d[_1f],function(_28){
-if(_28.row<_27.min.row){
-_27.min.row=_28.row;
+return (_4b.max.row-_4b.min.row+1)*(_4b.max.col-_4b.min.col+1-_4c);
+},_4d=function(_4e,_4f){
+return _4e.row>=_4f.min.row&&_4e.row<=_4f.max.row&&_4e.col>=_4f.min.col&&_4e.col<=_4f.max.col;
+},_50={max:{row:-1,col:-1},min:{row:Infinity,col:Infinity}};
+_4.forEach(_46[_48],function(_51){
+if(_51.row<_50.min.row){
+_50.min.row=_51.row;
 }
-if(_28.row>_27.max.row){
-_27.max.row=_28.row;
+if(_51.row>_50.max.row){
+_50.max.row=_51.row;
 }
-if(_28.col<_27.min.col){
-_27.min.col=_28.col;
+if(_51.col<_50.min.col){
+_50.min.col=_51.col;
 }
-if(_28.col>_27.max.col){
-_27.max.col=_28.col;
+if(_51.col>_50.max.col){
+_50.max.col=_51.col;
 }
 });
-if(_1.some(_1d[_1f],function(_29){
-return _29.row==_1b&&_29.col==_1c;
+if(_4.some(_46[_48],function(_52){
+return _52.row==_44&&_52.col==_45;
 })){
-if(_21(_27)==_1d[_1f].length&&_1.every(_1d[_1f],function(_2a){
-return _24(_2a,_27);
+if(_4a(_50)==_46[_48].length&&_4.every(_46[_48],function(_53){
+return _4d(_53,_50);
 })){
-return {"type":_1f,"selected":[_27],"handle":{"row":_1b,"col":_1c}};
+return {"type":_48,"selected":[_50],"handle":{"row":_44,"col":_45}};
 }
 }
 return null;
 case 2:
 case 4:
-_1f=_1e==2?"row":"col";
-if(!this._config[_1f]["within"]&&!this._config[_1f]["out"]){
+_48=_47==2?"row":"col";
+if(!this._config[_48]["within"]&&!this._config[_48]["out"]){
 return null;
 }
-var res=s.getSelected(_1f);
+var res=s.getSelected(_48);
 if(res.length){
-return {"type":_1f,"selected":_3(res),"handle":_1e==2?_1b:_1c};
+return {"type":_48,"selected":_f(res),"handle":_47==2?_44:_45};
 }
 return null;
 }
 return null;
 },_startDnd:function(evt){
 this._createDnDUI(evt);
-},_endDnd:function(_2b){
-this._destroyDnDUI(false,_2b);
+},_endDnd:function(_54){
+this._destroyDnDUI(false,_54);
 this._clear();
-},_createDnDUI:function(evt,_2c){
-var _2d=_1.position(this.grid.views.views[0].domNode);
-_1.style(this._container,"height",_2d.h+"px");
+},_createDnDUI:function(evt,_55){
+var _56=_6.position(this.grid.views.views[0].domNode);
+_6.style(this._container,"height",_56.h+"px");
 try{
-if(!_2c){
+if(!_55){
 this._createSource(evt);
 }
 this._createMoveable(evt);
-this._oldCursor=_1.style(_1.body(),"cursor");
-_1.style(_1.body(),"cursor","default");
+this._oldCursor=_6.style(_8.body(),"cursor");
+_6.style(_8.body(),"cursor","default");
 }
 catch(e){
 console.warn("DnD._createDnDUI() error:",e);
 }
-},_destroyDnDUI:function(_2e,_2f){
+},_destroyDnDUI:function(_57,_58){
 try{
-if(_2f){
+if(_58){
 this._destroySource();
 }
 this._unmarkTargetAnchor();
-if(!_2e){
+if(!_57){
 this._destroyMoveable();
 }
-_1.style(_1.body(),"cursor",this._oldCursor);
+_6.style(_8.body(),"cursor",this._oldCursor);
 }
 catch(e){
 console.warn("DnD._destroyDnDUI() error:",this.grid.id,e);
@@ -297,190 +419,190 @@ console.warn("DnD._destroyDnDUI() error:",this.grid.id,e);
 },_createSource:function(evt){
 this._elem.createDnDNodes(this._dndRegion);
 var m=_1.dnd.manager();
-var _30=m.makeAvatar;
+var _59=m.makeAvatar;
 m._dndPlugin=this;
 m.makeAvatar=function(){
-var _31=new _2.grid.enhanced.plugins.GridDnDAvatar(m);
+var _5a=new _2a(m);
 delete m._dndPlugin;
-return _31;
+return _5a;
 };
 m.startDrag(this._source,this._elem.getDnDNodes(),evt.ctrlKey);
-m.makeAvatar=_30;
+m.makeAvatar=_59;
 m.onMouseMove(evt);
 },_destroySource:function(){
-_1.publish("/dnd/cancel");
+_3.publish("/dnd/cancel");
 },_createMoveable:function(evt){
 if(!this._markTagetAnchorHandler){
-this._markTagetAnchorHandler=this.connect(_1.doc,"onmousemove","_markTargetAnchor");
+this._markTagetAnchorHandler=this.connect(_8.doc,"onmousemove","_markTargetAnchor");
 }
 },_destroyMoveable:function(){
 this.disconnect(this._markTagetAnchorHandler);
 delete this._markTagetAnchorHandler;
-},_calcColTargetAnchorPos:function(evt,_32){
-var i,_33,_34,_35,ex=evt.clientX,_36=this.grid.layout.cells,ltr=_1._isBodyLtr(),_37=this._getVisibleHeaders();
-for(i=0;i<_37.length;++i){
-_33=_1.position(_37[i].node);
-if(ltr?((i===0||ex>=_33.x)&&ex<_33.x+_33.w):((i===0||ex<_33.x+_33.w)&&ex>=_33.x)){
-_34=_33.x+(ltr?0:_33.w);
+},_calcColTargetAnchorPos:function(evt,_5b){
+var i,_5c,_5d,_5e,ex=evt.clientX,_5f=this.grid.layout.cells,ltr=_6._isBodyLtr(),_60=this._getVisibleHeaders();
+for(i=0;i<_60.length;++i){
+_5c=_6.position(_60[i].node);
+if(ltr?((i===0||ex>=_5c.x)&&ex<_5c.x+_5c.w):((i===0||ex<_5c.x+_5c.w)&&ex>=_5c.x)){
+_5d=_5c.x+(ltr?0:_5c.w);
 break;
 }else{
-if(ltr?(i===_37.length-1&&ex>=_33.x+_33.w):(i===_37.length-1&&ex<_33.x)){
+if(ltr?(i===_60.length-1&&ex>=_5c.x+_5c.w):(i===_60.length-1&&ex<_5c.x)){
 ++i;
-_34=_33.x+(ltr?_33.w:0);
+_5d=_5c.x+(ltr?_5c.w:0);
 break;
 }
 }
 }
-if(i<_37.length){
-_35=_37[i].cell.index;
-if(this.selector.isSelected("col",_35)&&this.selector.isSelected("col",_35-1)){
-var _38=this._dndRegion.selected;
-for(i=0;i<_38.length;++i){
-if(_1.indexOf(_38[i],_35)>=0){
-_35=_38[i][0];
-_33=_1.position(_36[_35].getHeaderNode());
-_34=_33.x+(ltr?0:_33.w);
+if(i<_60.length){
+_5e=_60[i].cell.index;
+if(this.selector.isSelected("col",_5e)&&this.selector.isSelected("col",_5e-1)){
+var _61=this._dndRegion.selected;
+for(i=0;i<_61.length;++i){
+if(_4.indexOf(_61[i],_5e)>=0){
+_5e=_61[i][0];
+_5c=_6.position(_5f[_5e].getHeaderNode());
+_5d=_5c.x+(ltr?0:_5c.w);
 break;
 }
 }
 }
 }else{
-_35=_36.length;
+_5e=_5f.length;
 }
-this._target=_35;
-return _34-_32.x;
-},_calcRowTargetAnchorPos:function(evt,_39){
-var g=this.grid,top,i=0,_3a=g.layout.cells;
-while(_3a[i].hidden){
+this._target=_5e;
+return _5d-_5b.x;
+},_calcRowTargetAnchorPos:function(evt,_62){
+var g=this.grid,top,i=0,_63=g.layout.cells;
+while(_63[i].hidden){
 ++i;
 }
-var _3b=g.layout.cells[i],_3c=g.scroller.firstVisibleRow,_3d=_3b.getNode(_3c);
-if(!_3d){
+var _64=g.layout.cells[i],_65=g.scroller.firstVisibleRow,_66=_64.getNode(_65);
+if(!_66){
 this._target=-1;
 return 0;
 }
-var _3e=_1.position(_3d);
-while(_3e.y+_3e.h<evt.clientY){
-if(++_3c>=g.rowCount){
+var _67=_6.position(_66);
+while(_67.y+_67.h<evt.clientY){
+if(++_65>=g.rowCount){
 break;
 }
-_3e=_1.position(_3b.getNode(_3c));
+_67=_6.position(_64.getNode(_65));
 }
-if(_3c<g.rowCount){
-if(this.selector.isSelected("row",_3c)&&this.selector.isSelected("row",_3c-1)){
-var _3f=this._dndRegion.selected;
-for(i=0;i<_3f.length;++i){
-if(_1.indexOf(_3f[i],_3c)>=0){
-_3c=_3f[i][0];
-_3e=_1.position(_3b.getNode(_3c));
+if(_65<g.rowCount){
+if(this.selector.isSelected("row",_65)&&this.selector.isSelected("row",_65-1)){
+var _68=this._dndRegion.selected;
+for(i=0;i<_68.length;++i){
+if(_4.indexOf(_68[i],_65)>=0){
+_65=_68[i][0];
+_67=_6.position(_64.getNode(_65));
 break;
 }
 }
 }
-top=_3e.y;
+top=_67.y;
 }else{
-top=_3e.y+_3e.h;
+top=_67.y+_67.h;
 }
-this._target=_3c;
-return top-_39.y;
-},_calcCellTargetAnchorPos:function(evt,_40,_41){
-var s=this._dndRegion.selected[0],_42=this._dndRegion.handle,g=this.grid,ltr=_1._isBodyLtr(),_43=g.layout.cells,_44,_45,_46,_47,_48,_49,_4a,top,_4b,_4c,i,_4d=_42.col-s.min.col,_4e=s.max.col-_42.col,_4f,_50;
-if(!_41.childNodes.length){
-_4f=_1.create("div",{"class":"dojoxGridCellBorderLeftTopDIV"},_41);
-_50=_1.create("div",{"class":"dojoxGridCellBorderRightBottomDIV"},_41);
+this._target=_65;
+return top-_62.y;
+},_calcCellTargetAnchorPos:function(evt,_69,_6a){
+var s=this._dndRegion.selected[0],_6b=this._dndRegion.handle,g=this.grid,ltr=_6._isBodyLtr(),_6c=g.layout.cells,_6d,_6e,_6f,_70,_71,_72,_73,top,_74,_75,i,_76=_6b.col-s.min.col,_77=s.max.col-_6b.col,_78,_79;
+if(!_6a.childNodes.length){
+_78=_6.create("div",{"class":"dojoxGridCellBorderLeftTopDIV"},_6a);
+_79=_6.create("div",{"class":"dojoxGridCellBorderRightBottomDIV"},_6a);
 }else{
-_4f=_1.query(".dojoxGridCellBorderLeftTopDIV",_41)[0];
-_50=_1.query(".dojoxGridCellBorderRightBottomDIV",_41)[0];
+_78=_9(".dojoxGridCellBorderLeftTopDIV",_6a)[0];
+_79=_9(".dojoxGridCellBorderRightBottomDIV",_6a)[0];
 }
-for(i=s.min.col+1;i<_42.col;++i){
-if(_43[i].hidden){
---_4d;
-}
-}
-for(i=_42.col+1;i<s.max.col;++i){
-if(_43[i].hidden){
---_4e;
+for(i=s.min.col+1;i<_6b.col;++i){
+if(_6c[i].hidden){
+--_76;
 }
 }
-_47=this._getVisibleHeaders();
-for(i=_4d;i<_47.length-_4e;++i){
-_44=_1.position(_47[i].node);
-if((evt.clientX>=_44.x&&evt.clientX<_44.x+_44.w)||(i==_4d&&(ltr?evt.clientX<_44.x:evt.clientX>=_44.x+_44.w))||(i==_47.length-_4e-1&&(ltr?evt.clientX>=_44.x+_44.w:evt<_44.x))){
-_4b=_47[i-_4d];
-_4c=_47[i+_4e];
-_45=_1.position(_4b.node);
-_46=_1.position(_4c.node);
-_4b=_4b.cell.index;
-_4c=_4c.cell.index;
-_4a=ltr?_45.x:_46.x;
-_49=ltr?(_46.x+_46.w-_45.x):(_45.x+_45.w-_46.x);
+for(i=_6b.col+1;i<s.max.col;++i){
+if(_6c[i].hidden){
+--_77;
+}
+}
+_70=this._getVisibleHeaders();
+for(i=_76;i<_70.length-_77;++i){
+_6d=_6.position(_70[i].node);
+if((evt.clientX>=_6d.x&&evt.clientX<_6d.x+_6d.w)||(i==_76&&(ltr?evt.clientX<_6d.x:evt.clientX>=_6d.x+_6d.w))||(i==_70.length-_77-1&&(ltr?evt.clientX>=_6d.x+_6d.w:evt<_6d.x))){
+_74=_70[i-_76];
+_75=_70[i+_77];
+_6e=_6.position(_74.node);
+_6f=_6.position(_75.node);
+_74=_74.cell.index;
+_75=_75.cell.index;
+_73=ltr?_6e.x:_6f.x;
+_72=ltr?(_6f.x+_6f.w-_6e.x):(_6e.x+_6e.w-_6f.x);
 break;
 }
 }
 i=0;
-while(_43[i].hidden){
+while(_6c[i].hidden){
 ++i;
 }
-var _51=_43[i],_52=g.scroller.firstVisibleRow,_53=_1.position(_51.getNode(_52));
-while(_53.y+_53.h<evt.clientY){
-if(++_52<g.rowCount){
-_53=_1.position(_51.getNode(_52));
+var _7a=_6c[i],_7b=g.scroller.firstVisibleRow,_7c=_6.position(_7a.getNode(_7b));
+while(_7c.y+_7c.h<evt.clientY){
+if(++_7b<g.rowCount){
+_7c=_6.position(_7a.getNode(_7b));
 }else{
 break;
 }
 }
-var _54=_52>=_42.row-s.min.row?_52-_42.row+s.min.row:0;
-var _55=_54+s.max.row-s.min.row;
-if(_55>=g.rowCount){
-_55=g.rowCount-1;
-_54=_55-s.max.row+s.min.row;
+var _7d=_7b>=_6b.row-s.min.row?_7b-_6b.row+s.min.row:0;
+var _7e=_7d+s.max.row-s.min.row;
+if(_7e>=g.rowCount){
+_7e=g.rowCount-1;
+_7d=_7e-s.max.row+s.min.row;
 }
-_45=_1.position(_51.getNode(_54));
-_46=_1.position(_51.getNode(_55));
-top=_45.y;
-_48=_46.y+_46.h-_45.y;
-this._target={"min":{"row":_54,"col":_4b},"max":{"row":_55,"col":_4c}};
-var _56=(_1.marginBox(_4f).w-_1.contentBox(_4f).w)/2;
-var _57=_1.position(_43[_4b].getNode(_54));
-_1.style(_4f,{"width":(_57.w-_56)+"px","height":(_57.h-_56)+"px"});
-var _58=_1.position(_43[_4c].getNode(_55));
-_1.style(_50,{"width":(_58.w-_56)+"px","height":(_58.h-_56)+"px"});
-return {h:_48,w:_49,l:_4a-_40.x,t:top-_40.y};
+_6e=_6.position(_7a.getNode(_7d));
+_6f=_6.position(_7a.getNode(_7e));
+top=_6e.y;
+_71=_6f.y+_6f.h-_6e.y;
+this._target={"min":{"row":_7d,"col":_74},"max":{"row":_7e,"col":_75}};
+var _7f=(_6.marginBox(_78).w-_6.contentBox(_78).w)/2;
+var _80=_6.position(_6c[_74].getNode(_7d));
+_6.style(_78,{"width":(_80.w-_7f)+"px","height":(_80.h-_7f)+"px"});
+var _81=_6.position(_6c[_75].getNode(_7e));
+_6.style(_79,{"width":(_81.w-_7f)+"px","height":(_81.h-_7f)+"px"});
+return {h:_71,w:_72,l:_73-_69.x,t:top-_69.y};
 },_markTargetAnchor:function(evt){
 try{
 var t=this._dndRegion.type;
 if(this._alreadyOut||(this._dnding&&!this._config[t]["within"])||(this._extDnding&&!this._config[t]["in"])){
 return;
 }
-var _59,_5a,_5b,top,_5c=this._targetAnchor[t],pos=_1.position(this._container);
-if(!_5c){
-_5c=this._targetAnchor[t]=_1.create("div",{"class":(t=="cell")?"dojoxGridCellBorderDIV":"dojoxGridBorderDIV"});
-_1.style(_5c,"display","none");
-this._container.appendChild(_5c);
+var _82,_83,_84,top,_85=this._targetAnchor[t],pos=_6.position(this._container);
+if(!_85){
+_85=this._targetAnchor[t]=_6.create("div",{"class":(t=="cell")?"dojoxGridCellBorderDIV":"dojoxGridBorderDIV"});
+_6.style(_85,"display","none");
+this._container.appendChild(_85);
 }
 switch(t){
 case "col":
-_59=pos.h;
-_5a=this._targetAnchorBorderWidth;
-_5b=this._calcColTargetAnchorPos(evt,pos);
+_82=pos.h;
+_83=this._targetAnchorBorderWidth;
+_84=this._calcColTargetAnchorPos(evt,pos);
 top=0;
 break;
 case "row":
-_59=this._targetAnchorBorderWidth;
-_5a=pos.w;
-_5b=0;
+_82=this._targetAnchorBorderWidth;
+_83=pos.w;
+_84=0;
 top=this._calcRowTargetAnchorPos(evt,pos);
 break;
 case "cell":
-var _5d=this._calcCellTargetAnchorPos(evt,pos,_5c);
-_59=_5d.h;
-_5a=_5d.w;
-_5b=_5d.l;
-top=_5d.t;
+var _86=this._calcCellTargetAnchorPos(evt,pos,_85);
+_82=_86.h;
+_83=_86.w;
+_84=_86.l;
+top=_86.t;
 }
-if(typeof _59=="number"&&typeof _5a=="number"&&typeof _5b=="number"&&typeof top=="number"){
-_1.style(_5c,{"height":_59+"px","width":_5a+"px","left":_5b+"px","top":top+"px"});
-_1.style(_5c,"display","");
+if(typeof _82=="number"&&typeof _83=="number"&&typeof _84=="number"&&typeof top=="number"){
+_6.style(_85,{"height":_82+"px","width":_83+"px","left":_84+"px","top":top+"px"});
+_6.style(_85,"display","");
 }else{
 this._target=null;
 }
@@ -490,292 +612,164 @@ console.warn("DnD._markTargetAnchor() error:",e);
 }
 },_unmarkTargetAnchor:function(){
 if(this._dndRegion){
-var _5e=this._targetAnchor[this._dndRegion.type];
-if(_5e){
-_1.style(this._targetAnchor[this._dndRegion.type],"display","none");
+var _87=this._targetAnchor[this._dndRegion.type];
+if(_87){
+_6.style(this._targetAnchor[this._dndRegion.type],"display","none");
 }
 }
 },_getVisibleHeaders:function(){
-return _1.map(_1.filter(this.grid.layout.cells,function(_5f){
-return !_5f.hidden;
-}),function(_60){
-return {"node":_60.getHeaderNode(),"cell":_60};
+return _4.map(_4.filter(this.grid.layout.cells,function(_88){
+return !_88.hidden;
+}),function(_89){
+return {"node":_89.getHeaderNode(),"cell":_89};
 });
 },_rearrange:function(){
 if(this._target===null){
 return;
 }
 var t=this._dndRegion.type;
-var _61=this._dndRegion.selected;
+var _8a=this._dndRegion.selected;
 if(t==="cell"){
-this.rearranger[(this._isCopy||this._copyOnly)?"copyCells":"moveCells"](_61[0],this._target===-1?null:this._target);
+this.rearranger[(this._isCopy||this._copyOnly)?"copyCells":"moveCells"](_8a[0],this._target===-1?null:this._target);
 }else{
-this.rearranger[t=="col"?"moveColumns":"moveRows"](_5(_61),this._target===-1?null:this._target);
+this.rearranger[t=="col"?"moveColumns":"moveRows"](_10(_8a),this._target===-1?null:this._target);
 }
 this._target=null;
-},onDraggingOver:function(_62){
-if(!this._dnding&&_62){
-_62._isSource=true;
+},onDraggingOver:function(_8b){
+if(!this._dnding&&_8b){
+_8b._isSource=true;
 this._extDnding=true;
 if(!this._externalDnd){
 this._externalDnd=true;
-this._dndRegion=this._mapRegion(_62.grid,_62._dndRegion);
+this._dndRegion=this._mapRegion(_8b.grid,_8b._dndRegion);
 }
 this._createDnDUI(this._moveEvent,true);
 this.grid.pluginMgr.getPlugin("autoScroll").readyForAutoScroll=true;
 }
-},_mapRegion:function(_63,_64){
-if(_64.type==="cell"){
-var _65=_64.selected[0];
-var _66=this.grid.layout.cells;
-var _67=_63.layout.cells;
+},_mapRegion:function(_8c,_8d){
+if(_8d.type==="cell"){
+var _8e=_8d.selected[0];
+var _8f=this.grid.layout.cells;
+var _90=_8c.layout.cells;
 var c,cnt=0;
-for(c=_65.min.col;c<=_65.max.col;++c){
-if(!_67[c].hidden){
+for(c=_8e.min.col;c<=_8e.max.col;++c){
+if(!_90[c].hidden){
 ++cnt;
 }
 }
 for(c=0;cnt>0;++c){
-if(!_66[c].hidden){
+if(!_8f[c].hidden){
 --cnt;
 }
 }
-var _68=_1.clone(_64);
-_68.selected[0].min.col=0;
-_68.selected[0].max.col=c-1;
-for(c=_65.min.col;c<=_64.handle.col;++c){
-if(!_67[c].hidden){
+var _91=_5.clone(_8d);
+_91.selected[0].min.col=0;
+_91.selected[0].max.col=c-1;
+for(c=_8e.min.col;c<=_8d.handle.col;++c){
+if(!_90[c].hidden){
 ++cnt;
 }
 }
 for(c=0;cnt>0;++c){
-if(!_66[c].hidden){
+if(!_8f[c].hidden){
 --cnt;
 }
 }
-_68.handle.col=c;
+_91.handle.col=c;
 }
-return _64;
-},onDraggingOut:function(_69){
+return _8d;
+},onDraggingOut:function(_92){
 if(this._externalDnd){
 this._extDnding=false;
 this._destroyDnDUI(true,false);
-if(_69){
-_69._isSource=false;
+if(_92){
+_92._isSource=false;
 }
 }
-},onDragIn:function(_6a,_6b){
-var _6c=false;
+},onDragIn:function(_93,_94){
+var _95=false;
 if(this._target!==null){
-var _6d=_6a._dndRegion.type;
-var _6e=_6a._dndRegion.selected;
-switch(_6d){
+var _96=_93._dndRegion.type;
+var _97=_93._dndRegion.selected;
+switch(_96){
 case "cell":
-this.rearranger.changeCells(_6a.grid,_6e[0],this._target);
+this.rearranger.changeCells(_93.grid,_97[0],this._target);
 break;
 case "row":
-var _6f=_5(_6e);
-this.rearranger.insertRows(_6a.grid,_6f,this._target);
+var _98=_10(_97);
+this.rearranger.insertRows(_93.grid,_98,this._target);
 break;
 }
-_6c=true;
+_95=true;
 }
 this._endDnd(true);
-if(_6a.onDragOut){
-_6a.onDragOut(_6c&&!_6b);
+if(_93.onDragOut){
+_93.onDragOut(_95&&!_94);
 }
-},onDragOut:function(_70){
-if(_70&&!this._copyOnly){
-var _71=this._dndRegion.type;
-var _72=this._dndRegion.selected;
-switch(_71){
+},onDragOut:function(_99){
+if(_99&&!this._copyOnly){
+var _9a=this._dndRegion.type;
+var _9b=this._dndRegion.selected;
+switch(_9a){
 case "cell":
-this.rearranger.clearCells(_72[0]);
+this.rearranger.clearCells(_9b[0]);
 break;
 case "row":
-this.rearranger.removeRows(_5(_72));
+this.rearranger.removeRows(_10(_9b));
 break;
 }
 }
 this._endDnd(true);
-},_canAccept:function(_73){
-if(!_73){
+},_canAccept:function(_9c){
+if(!_9c){
 return false;
 }
-var _74=_73._dndRegion;
-var _75=_74.type;
-if(!this._config[_75]["in"]||!_73._config[_75]["out"]){
+var _9d=_9c._dndRegion;
+var _9e=_9d.type;
+if(!this._config[_9e]["in"]||!_9c._config[_9e]["out"]){
 return false;
 }
 var g=this.grid;
-var _76=_74.selected;
-var _77=_1.filter(g.layout.cells,function(_78){
-return !_78.hidden;
+var _9f=_9d.selected;
+var _a0=_4.filter(g.layout.cells,function(_a1){
+return !_a1.hidden;
 }).length;
-var _79=g.rowCount;
+var _a2=g.rowCount;
 var res=true;
-switch(_75){
+switch(_9e){
 case "cell":
-_76=_76[0];
-res=g.store.getFeatures()["dojo.data.api.Write"]&&(_76.max.row-_76.min.row)<=_79&&_1.filter(_73.grid.layout.cells,function(_7a){
-return _7a.index>=_76.min.col&&_7a.index<=_76.max.col&&!_7a.hidden;
-}).length<=_77;
+_9f=_9f[0];
+res=g.store.getFeatures()["dojo.data.api.Write"]&&(_9f.max.row-_9f.min.row)<=_a2&&_4.filter(_9c.grid.layout.cells,function(_a3){
+return _a3.index>=_9f.min.col&&_a3.index<=_9f.max.col&&!_a3.hidden;
+}).length<=_a0;
 case "row":
-if(_73._allDnDItemsLoaded()){
+if(_9c._allDnDItemsLoaded()){
 return res;
 }
 }
 return false;
 },_allDnDItemsLoaded:function(){
 if(this._dndRegion){
-var _7b=this._dndRegion.type,_7c=this._dndRegion.selected,_7d=[];
-switch(_7b){
+var _a4=this._dndRegion.type,_a5=this._dndRegion.selected,_a6=[];
+switch(_a4){
 case "cell":
-for(var i=_7c[0].min.row,max=_7c[0].max.row;i<=max;++i){
-_7d.push(i);
+for(var i=_a5[0].min.row,max=_a5[0].max.row;i<=max;++i){
+_a6.push(i);
 }
 break;
 case "row":
-_7d=_5(_7c);
+_a6=_10(_a5);
 break;
 default:
 return false;
 }
-var _7e=this.grid._by_idx;
-return _1.every(_7d,function(_7f){
-return !!_7e[_7f];
+var _a7=this.grid._by_idx;
+return _4.every(_a6,function(_a8){
+return !!_a7[_a8];
 });
 }
 return false;
 }});
-_1.declare("dojox.grid.enhanced.plugins.GridDnDElement",null,{constructor:function(_80){
-this.plugin=_80;
-this.node=_1.create("div");
-this._items={};
-},destroy:function(){
-this.plugin=null;
-_1.destroy(this.node);
-this.node=null;
-this._items=null;
-},createDnDNodes:function(_81){
-this.destroyDnDNodes();
-var _82=["grid/"+_81.type+"s"];
-var _83=this.plugin.grid.id+"_dndItem";
-_1.forEach(_81.selected,function(_84,i){
-var id=_83+i;
-this._items[id]={"type":_82,"data":_84,"dndPlugin":this.plugin};
-this.node.appendChild(_1.create("div",{"id":id}));
-},this);
-},getDnDNodes:function(){
-return _1.map(this.node.childNodes,function(_85){
-return _85;
-});
-},destroyDnDNodes:function(){
-_1.empty(this.node);
-this._items={};
-},getItem:function(_86){
-return this._items[_86];
-}});
-_1.declare("dojox.grid.enhanced.plugins.GridDnDSource",_1.dnd.Source,{accept:["grid/cells","grid/rows","grid/cols"],constructor:function(_87,_88){
-this.grid=_88.grid;
-this.dndElem=_88.dndElem;
-this.dndPlugin=_88.dnd;
-this.sourcePlugin=null;
-},destroy:function(){
-this.inherited(arguments);
-this.grid=null;
-this.dndElem=null;
-this.dndPlugin=null;
-this.sourcePlugin=null;
-},getItem:function(_89){
-return this.dndElem.getItem(_89);
-},checkAcceptance:function(_8a,_8b){
-if(this!=_8a&&_8b[0]){
-var _8c=_8a.getItem(_8b[0].id);
-if(_8c.dndPlugin){
-var _8d=_8c.type;
-for(var j=0;j<_8d.length;++j){
-if(_8d[j] in this.accept){
-if(this.dndPlugin._canAccept(_8c.dndPlugin)){
-this.sourcePlugin=_8c.dndPlugin;
-}else{
-return false;
-}
-break;
-}
-}
-}else{
-if("grid/rows" in this.accept){
-var _8e=[];
-_1.forEach(_8b,function(_8f){
-var _90=_8a.getItem(_8f.id);
-if(_90.data&&_1.indexOf(_90.type,"grid/rows")>=0){
-var _91=_90.data;
-if(typeof _90.data=="string"){
-_91=_1.fromJson(_90.data);
-}
-if(_91){
-_8e.push(_91);
-}
-}
-});
-if(_8e.length){
-this.sourcePlugin={_dndRegion:{type:"row",selected:[_8e]}};
-}else{
-return false;
-}
-}
-}
-}
-return this.inherited(arguments);
-},onDraggingOver:function(){
-this.dndPlugin.onDraggingOver(this.sourcePlugin);
-},onDraggingOut:function(){
-this.dndPlugin.onDraggingOut(this.sourcePlugin);
-},onDndDrop:function(_92,_93,_94,_95){
-this.onDndCancel();
-if(this!=_92&&this==_95){
-this.dndPlugin.onDragIn(this.sourcePlugin,_94);
-}
-}});
-_1.declare("dojox.grid.enhanced.plugins.GridDnDAvatar",_1.dnd.Avatar,{construct:function(){
-this._itemType=this.manager._dndPlugin._dndRegion.type;
-this._itemCount=this._getItemCount();
-this.isA11y=_1.hasClass(_1.body(),"dijit_a11y");
-var a=_1.create("table",{"border":"0","cellspacing":"0","class":"dojoxGridDndAvatar","style":{position:"absolute",zIndex:"1999",margin:"0px"}}),_96=this.manager.source,b=_1.create("tbody",null,a),tr=_1.create("tr",null,b),td=_1.create("td",{"class":"dojoxGridDnDIcon"},tr);
-if(this.isA11y){
-_1.create("span",{"id":"a11yIcon","innerHTML":this.manager.copy?"+":"<"},td);
-}
-td=_1.create("td",{"class":"dojoxGridDnDItemIcon "+this._getGridDnDIconClass()},tr);
-td=_1.create("td",null,tr);
-_1.create("span",{"class":"dojoxGridDnDItemCount","innerHTML":_96.generateText?this._generateText():""},td);
-_1.style(tr,{"opacity":0.9});
-this.node=a;
-},_getItemCount:function(){
-var _97=this.manager._dndPlugin._dndRegion.selected,_98=0;
-switch(this._itemType){
-case "cell":
-_97=_97[0];
-var _99=this.manager._dndPlugin.grid.layout.cells,_9a=_97.max.col-_97.min.col+1,_9b=_97.max.row-_97.min.row+1;
-if(_9a>1){
-for(var i=_97.min.col;i<=_97.max.col;++i){
-if(_99[i].hidden){
---_9a;
-}
-}
-}
-_98=_9a*_9b;
-break;
-case "row":
-case "col":
-_98=_5(_97).length;
-}
-return _98;
-},_getGridDnDIconClass:function(){
-return {"row":["dojoxGridDnDIconRowSingle","dojoxGridDnDIconRowMulti"],"col":["dojoxGridDnDIconColSingle","dojoxGridDnDIconColMulti"],"cell":["dojoxGridDnDIconCellSingle","dojoxGridDnDIconCellMulti"]}[this._itemType][this._itemCount==1?0:1];
-},_generateText:function(){
-return "("+this._itemCount+")";
-}});
-_2.grid.EnhancedGrid.registerPlugin(_2.grid.enhanced.plugins.DnD,{"dependency":["selector","rearrange"]});
-return _2.grid.enhanced.plugins.DnD;
+_e.registerPlugin(DnD,{"dependency":["selector","rearrange"]});
+return DnD;
 });

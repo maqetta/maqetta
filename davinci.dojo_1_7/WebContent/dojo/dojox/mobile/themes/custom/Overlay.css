@@ -1,70 +1,70 @@
 .mblCoverv.mblOut {
 	z-index: -100;
-	-webkit-animation-duration: .6s;
-	-webkit-animation-name: mblCoverVOut;
-	-webkit-animation-timing-function: ease-out;
+	-webkit-transition-property: none;
+	-webkit-transition-duration: 0s;
+	-webkit-transform: translate3d(0px,0%,-1px) !important;
+}
+.mblCoverv.mblOut.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transition-duration: .4s;
+	-webkit-transform: translate3d(0px,0%,0px) !important;
 }
 .mblCoverv.mblIn {
 	z-index: 0;
-	-webkit-animation-duration: .6s;
-	-webkit-animation-name: mblCoverVIn;
-	-webkit-animation-timing-function: ease-out;
+	-webkit-transition-property: none;
+	-webkit-transition-duration: 0s;
+	-webkit-transform: translate3d(0px,100%,0px) !important;
+}
+.mblCoverv.mblIn.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transition-duration: .4s;
+	-webkit-transform: translate3d(0px,0%,0px) !important;
 }
 .mblCoverv.mblIn.mblReverse {
-	-webkit-animation-name: mblCoverVInReverse;
-	-webkit-animation-timing-function: ease-in;
+	-webkit-transition-property: none;
+	-webkit-transform: translate3d(0px,-100%,0px) !important;
 }
-@-webkit-keyframes mblCoverVOut {
-	from {}
-	to {}
-}
-@-webkit-keyframes mblCoverVIn {
-	from { -webkit-transform: translateY(100%); }
-	to { -webkit-transform: translateY(0px); }
-}
-@-webkit-keyframes mblCoverVInReverse {
-	from { -webkit-transform: translateY(-100%); }
-	to { -webkit-transform: translateY(0px); }
+.mblCoverv.mblIn.mblReverse.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transform: translate3d(0px,0%,0px) !important;
 }
 .mblRevealv.mblOut {
 	z-index: 0;
-	-webkit-animation-duration: .4s;
-	-webkit-animation-name: mblRevealVOut;
-	-webkit-animation-timing-function: linear;
+	-webkit-transition-property: none;
+	-webkit-transition-duration: 0s;
+	-webkit-transform: translate3d(0px,0%,0px) !important;
+}
+.mblRevealv.mblOut.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transition-duration: .4s;
+	-webkit-transform: translate3d(0px,-100%,0px) !important;
 }
 .mblRevealv.mblIn {
 	z-index: -100;
-	-webkit-animation-duration: .4s;
-	-webkit-animation-name: mblRevealVIn;
-	-webkit-animation-timing-function: linear;
+	-webkit-transition-property: none;
+	-webkit-transition-duration: 0s;
+	-webkit-transform: translate3d(0px,0%,-1px) !important;
 }
-.mblRevealv.mblOut.mblReverse {
-	-webkit-animation-name: mblRevealVOutReverse;
-	-webkit-animation-fill-mode: forwards;
+.mblRevealv.mblIn.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transition-duration: .4s;
+	-webkit-transform: translate3d(0px,0%,0px) !important;
 }
-@-webkit-keyframes mblRevealVOut {
-	from { -webkit-transform: translateY(0px); }
-	to { -webkit-transform: translateY(-100%); }
-}
-@-webkit-keyframes mblRevealVIn {
-	from {}
-	to {}
-}
-@-webkit-keyframes mblRevealVOutReverse {
-	from { -webkit-transform: translateY(0px); }
-	to { -webkit-transform: translateY(100%); }
+.mblRevealv.mblOut.mblReverse.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transform: translate3d(0px,100%,0px) !important;
 }
 .mblOverlay {
   position: fixed;
+  z-index: 2000;
   left: 0;
   bottom: 0;
   margin: 0;
   width: 100%;
   text-align: -webkit-center;
   background-color: #eff1f3;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
 }
-.mblOverlayHidden *,
-.mblOverlayHidden {
+.mblOverlayHidden *, .mblOverlayHidden {
   visibility: hidden !important;
 }

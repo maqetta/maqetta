@@ -1,67 +1,61 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/io/xhrMultiPart",["dojo/_base/array","dojo/query","dojox/uuid/generateRandomUuid","dojo/_base/xhr"],function(_1,_2,_3){
+define("dojox/io/xhrMultiPart",["dojo/_base/kernel","dojo/_base/array","dojo/_base/xhr","dojo/query","dojox/uuid/generateRandomUuid"],function(_1,_2,_3,_4,_5){
 _1.getObject("io.xhrMultiPart",true,dojox);
-function _4(_5,_6){
-if(!_5["name"]&&!_5["content"]){
+function _6(_7,_8){
+if(!_7["name"]&&!_7["content"]){
 throw new Error("Each part of a multi-part request requires 'name' and 'content'.");
 }
-var _7=[];
-_7.push("--"+_6,"Content-Disposition: form-data; name=\""+_5.name+"\""+(_5["filename"]?"; filename=\""+_5.filename+"\"":""));
-if(_5["contentType"]){
-var ct="Content-Type: "+_5.contentType;
-if(_5["charset"]){
-ct+="; Charset="+_5.charset;
+var _9=[];
+_9.push("--"+_8,"Content-Disposition: form-data; name=\""+_7.name+"\""+(_7["filename"]?"; filename=\""+_7.filename+"\"":""));
+if(_7["contentType"]){
+var ct="Content-Type: "+_7.contentType;
+if(_7["charset"]){
+ct+="; Charset="+_7.charset;
 }
-_7.push(ct);
+_9.push(ct);
 }
-if(_5["contentTransferEncoding"]){
-_7.push("Content-Transfer-Encoding: "+_5.contentTransferEncoding);
+if(_7["contentTransferEncoding"]){
+_9.push("Content-Transfer-Encoding: "+_7.contentTransferEncoding);
 }
-_7.push("",_5.content);
-return _7;
+_9.push("",_7.content);
+return _9;
 };
-function _8(_9,_a){
-var o=_1.formToObject(_9),_b=[];
+function _a(_b,_c){
+var o=_1.formToObject(_b),_d=[];
 for(var p in o){
 if(_1.isArray(o[p])){
-_1.forEach(o[p],function(_c){
-_b=_b.concat(_4({name:p,content:_c},_a));
+_1.forEach(o[p],function(_e){
+_d=_d.concat(_6({name:p,content:_e},_c));
 });
 }else{
-_b=_b.concat(_4({name:p,content:o[p]},_a));
+_d=_d.concat(_6({name:p,content:o[p]},_c));
 }
 }
-return _b;
+return _d;
 };
-dojox.io.xhrMultiPart=function(_d){
-if(!_d["file"]&&!_d["content"]&&!_d["form"]){
+dojox.io.xhrMultiPart=function(_f){
+if(!_f["file"]&&!_f["content"]&&!_f["form"]){
 throw new Error("content, file or form must be provided to dojox.io.xhrMultiPart's arguments");
 }
-var _e=_3(),_f=[],out="";
-if(_d["file"]||_d["content"]){
-var v=_d["file"]||_d["content"];
-_1.forEach((_1.isArray(v)?v:[v]),function(_10){
-_f=_f.concat(_4(_10,_e));
+var _10=_5(),tmp=[],out="";
+if(_f["file"]||_f["content"]){
+var v=_f["file"]||_f["content"];
+_1.forEach((_1.isArray(v)?v:[v]),function(_11){
+tmp=tmp.concat(_6(_11,_10));
 });
 }else{
-if(_d["form"]){
-if(_2("input[type=file]",_d["form"]).length){
+if(_f["form"]){
+if(_4("input[type=file]",_f["form"]).length){
 throw new Error("dojox.io.xhrMultiPart cannot post files that are values of an INPUT TYPE=FILE.  Use dojo.io.iframe.send() instead.");
 }
-_f=_8(_d["form"],_e);
+tmp=_a(_f["form"],_10);
 }
 }
-if(_f.length){
-_f.push("--"+_e+"--","");
-out=_f.join("\r\n");
+if(tmp.length){
+tmp.push("--"+_10+"--","");
+out=tmp.join("\r\n");
 }
-return _1.rawXhrPost(_1.mixin(_d,{contentType:"multipart/form-data; boundary="+_e,postData:out}));
+return _1.rawXhrPost(_1.mixin(_f,{contentType:"multipart/form-data; boundary="+_10,postData:out}));
 };
 return dojox.io.xhrMultiPart;
 });

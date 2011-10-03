@@ -1,29 +1,25 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/wire/ml/RestHandler",["dojo","dijit","dojox","dojox/wire/_base","dojox/wire/ml/util"],function(_1,_2,_3){
-_1.getObject("dojox.wire.ml.RestHandler",1);
-_1.declare("dojox.wire.ml.RestHandler",null,{contentType:"text/plain",handleAs:"text",bind:function(_4,_5,_6,_7){
+define(["dijit","dojo","dojox","dojo/require!dojox/wire/_base,dojox/wire/ml/util"],function(_1,_2,_3){
+_2.provide("dojox.wire.ml.RestHandler");
+_2.require("dojox.wire._base");
+_2.require("dojox.wire.ml.util");
+_2.declare("dojox.wire.ml.RestHandler",null,{contentType:"text/plain",handleAs:"text",bind:function(_4,_5,_6,_7){
 _4=_4.toUpperCase();
 var _8=this;
 var _9={url:this._getUrl(_4,_5,_7),contentType:this.contentType,handleAs:this.handleAs,headers:this.headers,preventCache:this.preventCache};
 var d=null;
 if(_4=="POST"){
 _9.postData=this._getContent(_4,_5);
-d=_1.rawXhrPost(_9);
+d=_2.rawXhrPost(_9);
 }else{
 if(_4=="PUT"){
 _9.putData=this._getContent(_4,_5);
-d=_1.rawXhrPut(_9);
+d=_2.rawXhrPut(_9);
 }else{
 if(_4=="DELETE"){
-d=_1.xhrDelete(_9);
+d=_2.xhrDelete(_9);
 }else{
-d=_1.xhrGet(_9);
+d=_2.xhrGet(_9);
 }
 }
 }
@@ -75,6 +71,4 @@ return null;
 },_getResult:function(_17){
 return _17;
 }});
-return _1.getObject("dojox.wire.ml.RestHandler");
 });
-require(["dojox/wire/ml/RestHandler"]);

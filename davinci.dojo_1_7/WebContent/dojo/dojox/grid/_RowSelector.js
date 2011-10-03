@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/grid/_RowSelector",["dojo","dojox","./_View"],function(_1,_2){
-_1.declare("dojox.grid._RowSelector",_2.grid._View,{defaultWidth:"2em",noscroll:true,padBorderWidth:2,buildRendering:function(){
+define("dojox/grid/_RowSelector",["dojo/_base/declare","./_View"],function(_1,_2){
+return _1("dojox.grid._RowSelector",_2,{defaultWidth:"2em",noscroll:true,padBorderWidth:2,buildRendering:function(){
 this.inherited("buildRendering",arguments);
 this.scrollboxNode.style.overflow="hidden";
 this.headerNode.style.visibility="hidden";
@@ -39,5 +33,4 @@ if(!this.isIntraRowEvent(e)){
 this.grid.onMouseOutRow(e);
 }
 }});
-return _2.grid._RowSelector;
 });

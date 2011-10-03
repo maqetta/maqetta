@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/editor/plugins/FindReplace",["dojo","dijit","dojox","dojo/string","dijit/_base/popup","dijit/_Widget","dijit/_TemplatedMixin","dijit/_WidgetsInTemplateMixin","dijit/TooltipDialog","dijit/Toolbar","dijit/form/CheckBox","dijit/form/TextBox","dijit/_editor/_Plugin","dijit/form/Button","dijit/form/DropDownButton","dojox/editor/plugins/ToolbarLineBreak","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/FindReplace"],function(_1,_2,_3){
+define("dojox/editor/plugins/FindReplace",["dojo","dijit","dojox","dijit/_base/manager","dijit/_base/popup","dijit/_Widget","dijit/_TemplatedMixin","dijit/_KeyNavContainer","dijit/_WidgetsInTemplateMixin","dijit/TooltipDialog","dijit/Toolbar","dijit/form/CheckBox","dijit/form/_TextBoxMixin","dijit/form/TextBox","dijit/_editor/_Plugin","dijit/form/Button","dijit/form/DropDownButton","dijit/form/ToggleButton","dojox/editor/plugins/ToolbarLineBreak","dojo/_base/connect","dojo/_base/declare","dojo/i18n","dojo/string","dojo/i18n!dojox/editor/plugins/nls/FindReplace"],function(_1,_2,_3){
 _1.experimental("dojox.editor.plugins.FindReplace");
 _1.declare("dojox.editor.plugins._FindReplaceCloseBox",[_2._Widget,_2._TemplatedMixin,_2._WidgetsInTemplateMixin],{btnId:"",widget:null,widgetsInTemplate:true,templateString:"<span style='float: right' class='dijitInline' tabindex='-1'>"+"<button class='dijit dijitReset dijitInline' "+"id='${btnId}' dojoAttachPoint='button' dojoType='dijit.form.Button' tabindex='-1' iconClass='dijitEditorIconsFindReplaceClose' showLabel='false'>X</button>"+"</span>",postMixInProperties:function(){
 this.id=_2.getUniqueId(this.declaredClass.replace(/\./g,"_"));
@@ -15,7 +9,7 @@ this.inherited(arguments);
 this.connect(this.button,"onClick","onClick");
 },onClick:function(){
 }});
-_1.declare("dojox.editor.plugins._FindReplaceTextBox",[_2._Widget,_2._TemplatedMixin,_2._WidgetsInTemplateMixin],{textId:"",label:"",toolTip:"",widget:null,widgetsInTemplate:true,templateString:"<span style='white-space: nowrap' class='dijit dijitReset dijitInline dijitEditorFindReplaceTextBox' "+"title='${tooltip}' tabindex='-1'>"+"<label class='dijitLeft dijitInline' for='${textId}' tabindex='-1'>${label}</label>"+"<input dojoType='dijit.form.TextBox' required='false' intermediateChanges='true' class='focusTextBox'"+"tabIndex='0' id='${textId}' dojoAttachPoint='textBox, focusNode' value='' dojoAttachEvent='onKeyPress: _onKeyPress'/>"+"</span>",postMixInProperties:function(){
+_1.declare("dojox.editor.plugins._FindReplaceTextBox",[_2._Widget,_2._TemplatedMixin,_2._WidgetsInTemplateMixin],{textId:"",label:"",toolTip:"",widget:null,widgetsInTemplate:true,templateString:"<span style='white-space: nowrap' class='dijit dijitReset dijitInline dijitEditorFindReplaceTextBox' "+"title='${tooltip}' tabindex='-1'>"+"<label class='dijitLeft dijitInline' for='${textId}' tabindex='-1'>${label}</label>"+"<input dojoType='dijit.form.TextBox' intermediateChanges='true' class='focusTextBox' "+"tabIndex='0' id='${textId}' dojoAttachPoint='textBox, focusNode' value='' dojoAttachEvent='onKeyPress: _onKeyPress'/>"+"</span>",postMixInProperties:function(){
 this.id=_2.getUniqueId(this.declaredClass.replace(/\./g,"_"));
 this.textId=this.id+"_text";
 this.inherited(arguments);
@@ -23,6 +17,7 @@ this.inherited(arguments);
 this.textBox.set("value","");
 this.disabled=this.textBox.get("disabled");
 this.connect(this.textBox,"onChange","onChange");
+_1.attr(this.textBox.textbox,"formnovalidate","true");
 },_setValueAttr:function(_4){
 this.value=_4;
 this.textBox.set("value",_4);
@@ -56,7 +51,7 @@ _1.stopEvent(_7);
 }
 }
 }});
-_1.declare("dojox.editor.plugins._FindReplaceCheckBox",[_2._Widget,_2._TemplatedMixin,_2._WidgetsInTemplateMixin],{checkId:"",label:"",tooltip:"",widget:null,widgetsInTemplate:true,templateString:"<span style='white-space: nowrap' tabindex='-1' "+"class='dijit dijitReset dijitInline dijitEditorFindReplaceCheckBox' title='${tooltip}' >"+"<input dojoType='dijit.form.CheckBox' required=false "+"tabIndex='0' id='${checkId}' dojoAttachPoint='checkBox, focusNode' value=''/>"+"<label tabindex='-1' class='dijitLeft dijitInline' for='${checkId}'>${label}</label>"+"</span>",postMixInProperties:function(){
+_1.declare("dojox.editor.plugins._FindReplaceCheckBox",[_2._Widget,_2._TemplatedMixin,_2._WidgetsInTemplateMixin],{checkId:"",label:"",tooltip:"",widget:null,widgetsInTemplate:true,templateString:"<span style='white-space: nowrap' tabindex='-1' "+"class='dijit dijitReset dijitInline dijitEditorFindReplaceCheckBox' title='${tooltip}' >"+"<input dojoType='dijit.form.CheckBox' "+"tabIndex='0' id='${checkId}' dojoAttachPoint='checkBox, focusNode' value=''/>"+"<label tabindex='-1' class='dijitLeft dijitInline' for='${checkId}'>${label}</label>"+"</span>",postMixInProperties:function(){
 this.id=_2.getUniqueId(this.declaredClass.replace(/\./g,"_"));
 this.checkId=this.id+"_check";
 this.inherited(arguments);

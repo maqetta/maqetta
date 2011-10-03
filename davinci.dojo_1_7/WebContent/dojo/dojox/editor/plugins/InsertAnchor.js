@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/editor/plugins/InsertAnchor",["dojo","dijit","dojox","dojo/string","dijit/_editor/range","dijit/_Templated","dijit/TooltipDialog","dijit/form/ValidationTextBox","dijit/form/Select","dijit/_editor/_Plugin","dijit/form/Button","dijit/form/DropDownButton","dojox/editor/plugins/ToolbarLineBreak","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/InsertAnchor","dojo/i18n!dijit/nls/common"],function(_1,_2,_3){
+define("dojox/editor/plugins/InsertAnchor",["dojo","dijit","dojox","dijit/_base/manager","dijit/_editor/range","dijit/_Templated","dijit/TooltipDialog","dijit/form/ValidationTextBox","dijit/form/Select","dijit/form/Button","dijit/form/DropDownButton","dijit/_editor/range","dijit/_editor/selection","dijit/_editor/_Plugin","dojo/_base/connect","dojo/_base/declare","dojo/i18n","dojo/string","dojox/editor/plugins/ToolbarLineBreak","dojo/i18n!dojox/editor/plugins/nls/InsertAnchor","dojo/i18n!dijit/nls/common"],function(_1,_2,_3){
 _1.declare("dojox.editor.plugins.InsertAnchor",_2._editor._Plugin,{htmlTemplate:"<a name=\"${anchorInput}\" class=\"dijitEditorPluginInsertAnchorStyle\">${textInput}</a>",iconClassPrefix:"dijitAdditionalEditorIcon",_template:["<table><tr><td>","<label for='${id}_anchorInput'>${anchor}</label>","</td><td>","<input dojoType='dijit.form.ValidationTextBox' required='true' "+"id='${id}_anchorInput' name='anchorInput' intermediateChanges='true'>","</td></tr><tr><td>","<label for='${id}_textInput'>${text}</label>","</td><td>","<input dojoType='dijit.form.ValidationTextBox' required='true' id='${id}_textInput' "+"name='textInput' intermediateChanges='true'>","</td></tr>","<tr><td colspan='2'>","<button dojoType='dijit.form.Button' type='submit' id='${id}_setButton'>${set}</button>","<button dojoType='dijit.form.Button' type='button' id='${id}_cancelButton'>${cancel}</button>","</td></tr></table>"].join(""),_initButton:function(){
 var _4=this;
 var _5=_1.i18n.getLocalization("dojox.editor.plugins","InsertAnchor",this.lang);

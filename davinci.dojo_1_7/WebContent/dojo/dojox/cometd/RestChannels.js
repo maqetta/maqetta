@@ -1,32 +1,28 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/cometd/RestChannels",["dojo","dijit","dojox","dojox/rpc/Client","dojo/_base/url"],function(_1,_2,_3){
-_1.getObject("dojox.cometd.RestChannels",1);
-_1.requireIf(_3.data&&!!_3.data.JsonRestStore,"dojox.data.restListener");
+define(["dijit","dojo","dojox","dojo/loadInit!dojox/cometd/RestChannels-loadInit"],function(_1,_2,_3){
+_2.provide("dojox.cometd.RestChannels");
+_2.require("dojox.rpc.Client");
+_2.require("dojo._base.url");
+_2.requireIf(_3.data&&!!_3.data.JsonRestStore,"dojox.data.restListener");
 (function(){
-_1.declare("dojox.cometd.RestChannels",null,{constructor:function(_4){
-_1.mixin(this,_4);
+_2.declare("dojox.cometd.RestChannels",null,{constructor:function(_4){
+_2.mixin(this,_4);
 if(_3.rpc.Rest&&this.autoSubscribeRoot){
 var _5=_3.rpc.Rest._get;
 var _6=this;
 _3.rpc.Rest._get=function(_7,id){
-var _8=_1.xhrGet;
-_1.xhrGet=function(r){
+var _8=_2.xhrGet;
+_2.xhrGet=function(r){
 var _9=_6.autoSubscribeRoot;
 return (_9&&r.url.substring(0,_9.length)==_9)?_6.get(r.url,r):_8(r);
 };
 var _a=_5.apply(this,arguments);
-_1.xhrGet=_8;
+_2.xhrGet=_8;
 return _a;
 };
 }
 },absoluteUrl:function(_b,_c){
-return new _1._Url(_b,_c)+"";
+return new _2._Url(_b,_c)+"";
 },acceptType:"application/rest+json,application/http;q=0.9,*/*;q=0.7",subscriptions:{},subCallbacks:{},autoReconnectTime:3000,reloadDataOnReconnect:true,sendAsJson:false,url:"/channels",autoSubscribeRoot:"/",open:function(){
 this.started=true;
 if(!this.connected){
@@ -35,11 +31,11 @@ var _d=this.createdClientId?"Client-Id":"Create-Client-Id";
 this.createdClientId=true;
 var _e={Accept:this.acceptType};
 _e[_d]=this.connectionId;
-var _f=_1.xhrPost({headers:_e,url:this.url,noStatus:true});
+var _f=_2.xhrPost({headers:_e,url:this.url,noStatus:true});
 var _10=this;
 this.lastIndex=0;
 var _11,_12=function(_13){
-if(typeof _1=="undefined"){
+if(typeof _2=="undefined"){
 return null;
 }
 if(xhr&&xhr.status>400){
@@ -103,13 +99,13 @@ this.connected=true;
 }
 },_send:function(_18,_19,_1a){
 if(this.sendAsJson){
-_19.postData=_1.toJson({target:_19.url,method:_18,content:_1a,params:_19.content,subscribe:_19.headers["Subscribe"]});
+_19.postData=_2.toJson({target:_19.url,method:_18,content:_1a,params:_19.content,subscribe:_19.headers["Subscribe"]});
 _19.url=this.url;
 _18="POST";
 }else{
-_19.postData=_1.toJson(_1a);
+_19.postData=_2.toJson(_1a);
 }
-return _1.xhr(_18,_19,_19.postData);
+return _2.xhr(_18,_19,_19.postData);
 },subscribe:function(_1b,_1c){
 _1c=_1c||{};
 _1c.url=this.absoluteUrl(this.url,_1b);
@@ -187,12 +183,12 @@ if(_2a.event=="connection-conflict"){
 return "conflict";
 }
 try{
-_2a.result=_2a.result||_1.fromJson(_2a.responseText);
+_2a.result=_2a.result||_2.fromJson(_2a.responseText);
 }
 catch(e){
 }
 var _2b=this;
-var loc=_2a.channel=new _1._Url(this.url,_2a.source||_2a.getResponseHeader("Content-Location"))+"";
+var loc=_2a.channel=new _2._Url(this.url,_2a.source||_2a.getResponseHeader("Content-Location"))+"";
 if(loc in this.subscriptions&&_2a.getResponseHeader){
 this.subscriptions[loc]=_2a.getResponseHeader("Last-Modified");
 }
@@ -208,7 +204,7 @@ if(!_2d||_2d.match(/application\/rest\+json/)){
 var _2e=_2c.length;
 _2c=_2c.replace(/^\s*[,\[]?/,"[").replace(/[,\]]?\s*$/,"]");
 try{
-var _2f=_1.fromJson(_2c);
+var _2f=_2.fromJson(_2c);
 this.lastIndex+=_2e;
 }
 catch(e){
@@ -295,7 +291,7 @@ return false;
 };
 _38.deliver=function(_3d){
 };
-_1.connect(this,"receive",null,function(_3e){
+_2.connect(this,"receive",null,function(_3e){
 _3e.data=_3e.result;
 this._cometd._deliver(_3e);
 });
@@ -332,6 +328,4 @@ this.publish(_41,_40.data);
 _3.cometd.connectionTypes.register("rest-channels",_38.check,_38,false,true);
 }
 })();
-return _1.getObject("dojox.cometd.RestChannels");
 });
-require(["dojox/cometd/RestChannels"]);

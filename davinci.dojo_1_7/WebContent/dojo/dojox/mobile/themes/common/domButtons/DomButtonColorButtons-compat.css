@@ -3,41 +3,41 @@
 	background-image: url(compat/mblDomButtonBlueMinus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonBlueMinus DIV {
+.mblDomButtonBlueMinus div {
 	display: none;
 }
 .mblDomButtonBluePlus {
 	background-image: url(compat/mblDomButtonBluePlus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonBluePlus DIV {
+.mblDomButtonBluePlus div {
 	display: none;
 }
 .mblDomButtonDarkBlueMinus {
 	background-image: url(compat/mblDomButtonDarkBlueMinus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonDarkBlueMinus DIV {
+.mblDomButtonDarkBlueMinus div {
 	display: none;
 }
 .mblDomButtonDarkBluePlus {
 	background-image: url(compat/mblDomButtonDarkBluePlus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonDarkBluePlus DIV {
+.mblDomButtonDarkBluePlus div {
 	display: none;
 }
 .mblDomButtonRedMinus {
 	background-image: url(compat/mblDomButtonRedMinus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonRedMinus DIV {
+.mblDomButtonRedMinus div {
 	display: none;
 }
 .mblDomButtonRedPlus {
 	background-image: url(compat/mblDomButtonRedPlus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonRedPlus DIV {
+.mblDomButtonRedPlus div {
 	display: none;
 }

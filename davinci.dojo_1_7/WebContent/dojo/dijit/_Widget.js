@@ -1,54 +1,61 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dijit/_Widget",["dojo/_base/kernel",".","./_WidgetBase","./_OnDijitClickMixin","./_FocusMixin","dojo/_base/lang","dojo/_base/connect","dojo/uacss","dijit/hccss","./_base/manager"],function(_1,_2){
-_2._connectToDomNode=function(_3){
+define("dijit/_Widget",["dojo/aspect","dojo/_base/config","dojo/_base/connect","dojo/_base/declare","dojo/_base/kernel","dojo/_base/lang","dojo/query","dojo/ready","./registry","./_WidgetBase","./_OnDijitClickMixin","./_FocusMixin","dojo/uacss","./hccss"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b,_c){
+function _d(){
 };
-_1.declare("dijit._Widget",[_2._WidgetBase,_2._OnDijitClickMixin,_2._FocusMixin],{onClick:_2._connectToDomNode,onDblClick:_2._connectToDomNode,onKeyDown:_2._connectToDomNode,onKeyPress:_2._connectToDomNode,onKeyUp:_2._connectToDomNode,onMouseDown:_2._connectToDomNode,onMouseMove:_2._connectToDomNode,onMouseOut:_2._connectToDomNode,onMouseOver:_2._connectToDomNode,onMouseLeave:_2._connectToDomNode,onMouseEnter:_2._connectToDomNode,onMouseUp:_2._connectToDomNode,constructor:function(_4){
+function _e(_f){
+return function(obj,_10,_11,_12){
+if(obj&&typeof _10=="string"&&obj[_10]==_d){
+return obj.on(_10.substring(2).toLowerCase(),_6.hitch(_11,_12));
+}
+return _f.apply(_3,arguments);
+};
+};
+_1.around(_3,"connect",_e);
+if(_5.connect){
+_1.around(_5,"connect",_e);
+}
+var _13=_4("dijit._Widget",[_a,_b,_c],{onClick:_d,onDblClick:_d,onKeyDown:_d,onKeyPress:_d,onKeyUp:_d,onMouseDown:_d,onMouseMove:_d,onMouseOut:_d,onMouseOver:_d,onMouseLeave:_d,onMouseEnter:_d,onMouseUp:_d,constructor:function(_14){
 this._toConnect={};
-for(var _5 in _4){
-if(this[_5]===_2._connectToDomNode){
-this._toConnect[_5]=_4[_5];
-delete _4[_5];
+for(var _15 in _14){
+if(this[_15]===_d){
+this._toConnect[_15.replace(/^on/,"").toLowerCase()]=_14[_15];
+delete _14[_15];
 }
 }
 },postCreate:function(){
 this.inherited(arguments);
-for(var _6 in this._toConnect){
-this.on(_6,this._toConnect[_6]);
+for(var _16 in this._toConnect){
+this.on(_16,this._toConnect[_16]);
 }
 delete this._toConnect;
-},on:function(_7,_8){
-_7=_7.replace(/^on/,"");
-if(this["on"+_7.charAt(0).toUpperCase()+_7.substr(1)]===_2._connectToDomNode){
-return _1.connect(this.domNode,_7.toLowerCase(),this,_8);
-}else{
+},on:function(_17,_18){
+if(this[this._onMap(_17)]===_d){
+return _3.connect(this.domNode,_17.toLowerCase(),this,_18);
+}
 return this.inherited(arguments);
+},_setFocusedAttr:function(val){
+this._focused=val;
+this._set("focused",val);
+},setAttribute:function(_19,_1a){
+_5.deprecated(this.declaredClass+"::setAttribute(attr, value) is deprecated. Use set() instead.","","2.0");
+this.set(_19,_1a);
+},attr:function(_1b,_1c){
+if(_2.isDebug){
+var _1d=arguments.callee._ach||(arguments.callee._ach={}),_1e=(arguments.callee.caller||"unknown caller").toString();
+if(!_1d[_1e]){
+_5.deprecated(this.declaredClass+"::attr() is deprecated. Use get() or set() instead, called from "+_1e,"","2.0");
+_1d[_1e]=true;
 }
-},_setFocusedAttr:function(_9){
-this._focused=_9;
-this._set("focused",_9);
-},setAttribute:function(_a,_b){
-_1.deprecated(this.declaredClass+"::setAttribute(attr, value) is deprecated. Use set() instead.","","2.0");
-this.set(_a,_b);
-},attr:function(_c,_d){
-if(_1.config.isDebug){
-var _e=arguments.callee._ach||(arguments.callee._ach={}),_f=(arguments.callee.caller||"unknown caller").toString();
-if(!_e[_f]){
-_1.deprecated(this.declaredClass+"::attr() is deprecated. Use get() or set() instead, called from "+_f,"","2.0");
-_e[_f]=true;
 }
-}
-var _10=arguments.length;
-if(_10>=2||typeof _c==="object"){
+var _1f=arguments.length;
+if(_1f>=2||typeof _1b==="object"){
 return this.set.apply(this,arguments);
 }else{
-return this.get(_c);
+return this.get(_1b);
 }
+},getDescendants:function(){
+_5.deprecated(this.declaredClass+"::getDescendants() is deprecated. Use getChildren() instead.","","2.0");
+return this.containerNode?_7("[widgetId]",this.containerNode).map(_9.byNode):[];
 },_onShow:function(){
 this.onShow();
 },onShow:function(){
@@ -56,11 +63,11 @@ this.onShow();
 },onClose:function(){
 return true;
 }});
-if(!_1.isAsync){
-_1.ready(0,function(){
-var _11=["dijit/_base/focus","dijit/_base/place","dijit/_base/popup","dijit/_base/scroll","dijit/_base/typematic","dijit/_base/wai","dijit/_base/window"];
-require(_11);
+if(!_5.isAsync){
+_8(0,function(){
+var _20=["dijit/_base/focus","dijit/_base/place","dijit/_base/popup","dijit/_base/scroll","dijit/_base/typematic","dijit/_base/wai","dijit/_base/window","dijit/WidgetSet"];
+require(_20);
 });
 }
-return _2._Widget;
+return _13;
 });

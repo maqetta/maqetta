@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/form/uploader/FileList",["dojo","dijit","dojox/form/uploader/Base"],function(_1,_2){
-_1.declare("dojox.form.uploader.FileList",[dojox.form.uploader.Base],{uploaderId:"",uploader:null,headerIndex:"#",headerType:"Type",headerFilename:"File Name",headerFilesize:"Size",_upCheckCnt:0,rowAmt:0,templateString:"<div class=\"dojoxUploaderFileList\">"+"<div dojoAttachPoint=\"progressNode\" class=\"dojoxUploaderFileListProgress\"><div dojoAttachPoint=\"percentBarNode\" class=\"dojoxUploaderFileListProgressBar\"></div><div dojoAttachPoint=\"percentTextNode\" class=\"dojoxUploaderFileListPercentText\">0%</div></div>"+"<table class=\"dojoxUploaderFileListTable\">"+"<tr class=\"dojoxUploaderFileListHeader\"><th class=\"dojoxUploaderIndex\">${headerIndex}</th><th class=\"dojoxUploaderIcon\">${headerType}</th><th class=\"dojoxUploaderFileName\">${headerFilename}</th><th class=\"dojoxUploaderFileSize\">${headerFilesize}</th></tr>"+"<tr ><td colSpan=\"4\" class=\"dojoxUploaderFileListContainer\" dojoAttachPoint=\"containerNode\">"+"<table class=\"dojoxUploaderFileListContent\" dojoAttachPoint=\"listNode\"></table>"+"</td><tr>"+"</table>"+"<div>",postCreate:function(){
+define("dojox/form/uploader/FileList",["dojo/_base/fx","dojo/dom-style","dojo/dom-class","dojo/_base/declare","dojo/_base/lang","dojo/_base/array","dijit/_base/manager","dojox/form/uploader/Base"],function(fx,_1,_2,_3,_4,_5,_6,_7){
+return _3("dojox.form.uploader.FileList",[_7],{uploaderId:"",uploader:null,headerIndex:"#",headerType:"Type",headerFilename:"File Name",headerFilesize:"Size",_upCheckCnt:0,rowAmt:0,templateString:"<div class=\"dojoxUploaderFileList\">"+"<div dojoAttachPoint=\"progressNode\" class=\"dojoxUploaderFileListProgress\"><div dojoAttachPoint=\"percentBarNode\" class=\"dojoxUploaderFileListProgressBar\"></div><div dojoAttachPoint=\"percentTextNode\" class=\"dojoxUploaderFileListPercentText\">0%</div></div>"+"<table class=\"dojoxUploaderFileListTable\">"+"<thead><tr class=\"dojoxUploaderFileListHeader\"><th class=\"dojoxUploaderIndex\">${headerIndex}</th><th class=\"dojoxUploaderIcon\">${headerType}</th><th class=\"dojoxUploaderFileName\">${headerFilename}</th><th class=\"dojoxUploaderFileSize\" dojoAttachPoint=\"sizeHeader\">${headerFilesize}</th></tr></thead>"+"<tbody class=\"dojoxUploaderFileListContent\" dojoAttachPoint=\"listNode\">"+"</tbody>"+"</table>"+"<div>",postCreate:function(){
 this.setUploader();
 this.hideProgress();
 },reset:function(){
@@ -19,7 +13,7 @@ if(!this.uploaderId&&!this.uploader){
 console.warn("uploaderId not passed to UploaderFileList");
 }else{
 if(this.uploaderId&&!this.uploader){
-this.uploader=_2.byId(this.uploaderId);
+this.uploader=_6.byId(this.uploaderId);
 }else{
 if(this._upCheckCnt>4){
 console.warn("uploader not found for ID ",this.uploaderId);
@@ -35,54 +29,58 @@ this.showProgress(true);
 });
 this.connect(this.uploader,"onProgress","_progress");
 this.connect(this.uploader,"onComplete",function(){
-setTimeout(_1.hitch(this,function(){
+setTimeout(_4.hitch(this,function(){
 this.hideProgress(true);
 }),1250);
 });
+if(!(this._fileSizeAvail={"html5":1,"flash":1}[this.uploader.uploadType])){
+this.sizeHeader.style.display="none";
+}
 }else{
 this._upCheckCnt++;
-setTimeout(_1.hitch(this,"setUploader"),250);
+setTimeout(_4.hitch(this,"setUploader"),250);
 }
-},hideProgress:function(_3){
-var o=_3?{ani:true,endDisp:"none",beg:15,end:0}:{endDisp:"none",ani:false};
+},hideProgress:function(_8){
+var o=_8?{ani:true,endDisp:"none",beg:15,end:0}:{endDisp:"none",ani:false};
 this._hideShowProgress(o);
-},showProgress:function(_4){
-var o=_4?{ani:true,endDisp:"block",beg:0,end:15}:{endDisp:"block",ani:false};
+},showProgress:function(_9){
+var o=_9?{ani:true,endDisp:"block",beg:0,end:15}:{endDisp:"block",ani:false};
 this._hideShowProgress(o);
-},_progress:function(_5){
-this.percentTextNode.innerHTML=_5.percent;
-_1.style(this.percentBarNode,"width",_5.percent);
+},_progress:function(_a){
+this.percentTextNode.innerHTML=_a.percent;
+_1.set(this.percentBarNode,"width",_a.percent);
 },_hideShowProgress:function(o){
-var _6=this.progressNode;
-var _7=function(){
-_1.style(_6,"display",o.endDisp);
+var _b=this.progressNode;
+var _c=function(){
+_1.set(_b,"display",o.endDisp);
 };
 if(o.ani){
-_1.style(_6,"display","block");
-_1.animateProperty({node:_6,properties:{height:{start:o.beg,end:o.end,units:"px"}},onEnd:_7}).play();
+_1.set(_b,"display","block");
+fx.animateProperty({node:_b,properties:{height:{start:o.beg,end:o.end,units:"px"}},onEnd:_c}).play();
 }else{
-_7();
+_c();
 }
-},_onUploaderChange:function(_8){
+},_onUploaderChange:function(_d){
 this.reset();
-_1.forEach(_8,function(f,i){
+_5.forEach(_d,function(f,i){
 this._addRow(i+1,this.getFileType(f.name),f.name,f.size);
 },this);
-},_addRow:function(_9,_a,_b,_c){
+},_addRow:function(_e,_f,_10,_11){
 var c,r=this.listNode.insertRow(-1);
 c=r.insertCell(-1);
-_1.addClass(c,"dojoxUploaderIndex");
-c.innerHTML=_9;
+_2.add(c,"dojoxUploaderIndex");
+c.innerHTML=_e;
 c=r.insertCell(-1);
-_1.addClass(c,"dojoxUploaderIcon");
-c.innerHTML=_a;
+_2.add(c,"dojoxUploaderIcon");
+c.innerHTML=_f;
 c=r.insertCell(-1);
-_1.addClass(c,"dojoxUploaderFileName");
-c.innerHTML=_b;
+_2.add(c,"dojoxUploaderFileName");
+c.innerHTML=_10;
+if(this._fileSizeAvail){
 c=r.insertCell(-1);
-_1.addClass(c,"dojoxUploaderSize");
-c.innerHTML=this.convertBytes(_c).value;
+_2.add(c,"dojoxUploaderSize");
+c.innerHTML=this.convertBytes(_11).value;
+}
 this.rowAmt++;
 }});
-return dojox.form.uploader.FileList;
 });

@@ -1,13 +1,9 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/wire/XmlWire",["dojo","dijit","dojox","dojox/xml/parser","dojox/wire/Wire"],function(_1,_2,_3){
-_1.getObject("dojox.wire.XmlWire",1);
-_1.declare("dojox.wire.XmlWire",_3.wire.Wire,{_wireClass:"dojox.wire.XmlWire",constructor:function(_4){
+define(["dijit","dojo","dojox","dojo/require!dojox/xml/parser,dojox/wire/Wire"],function(_1,_2,_3){
+_2.provide("dojox.wire.XmlWire");
+_2.require("dojox.xml.parser");
+_2.require("dojox.wire.Wire");
+_2.declare("dojox.wire.XmlWire",_3.wire.Wire,{_wireClass:"dojox.wire.XmlWire",constructor:function(_4){
 },_getValue:function(_5){
 if(!_5||!this.path){
 return _5;
@@ -129,6 +125,4 @@ return (_22.nodeType==9?_22:_22.ownerDocument);
 return _3.xml.parser.parse();
 }
 }});
-return _1.getObject("dojox.wire.XmlWire");
 });
-require(["dojox/wire/XmlWire"]);

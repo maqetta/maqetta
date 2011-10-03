@@ -5,88 +5,88 @@
 */
 
 //>>built
-define("dojo/behavior",["./main"],function(_1){
+define("dojo/behavior",["./_base/kernel","./_base/lang","./_base/array","./_base/connect","./query","./ready"],function(_1,_2,_3,_4,_5,_6){
 _1.behavior=new function(){
-function _2(_3,_4){
-if(!_3[_4]){
-_3[_4]=[];
+function _7(_8,_9){
+if(!_8[_9]){
+_8[_9]=[];
 }
-return _3[_4];
+return _8[_9];
 };
-var _5=0;
-function _6(_7,_8,_9){
-var _a={};
-for(var x in _7){
-if(typeof _a[x]=="undefined"){
-if(!_9){
-_8(_7[x],x);
+var _a=0;
+function _b(_c,_d,_e){
+var _f={};
+for(var x in _c){
+if(typeof _f[x]=="undefined"){
+if(!_e){
+_d(_c[x],x);
 }else{
-_9.call(_8,_7[x],x);
+_e.call(_d,_c[x],x);
 }
 }
 }
 };
 this._behaviors={};
-this.add=function(_b){
-_6(_b,this,function(_c,_d){
-var _e=_2(this._behaviors,_d);
-if(typeof _e["id"]!="number"){
-_e.id=_5++;
+this.add=function(_10){
+_b(_10,this,function(_11,_12){
+var _13=_7(this._behaviors,_12);
+if(typeof _13["id"]!="number"){
+_13.id=_a++;
 }
-var _f=[];
-_e.push(_f);
-if((_1.isString(_c))||(_1.isFunction(_c))){
-_c={found:_c};
+var _14=[];
+_13.push(_14);
+if((_2.isString(_11))||(_2.isFunction(_11))){
+_11={found:_11};
 }
-_6(_c,function(_10,_11){
-_2(_f,_11).push(_10);
+_b(_11,function(_15,_16){
+_7(_14,_16).push(_15);
 });
 });
 };
-var _12=function(_13,_14,_15){
-if(_1.isString(_14)){
-if(_15=="found"){
-_1.publish(_14,[_13]);
+var _17=function(_18,_19,_1a){
+if(_2.isString(_19)){
+if(_1a=="found"){
+_4.publish(_19,[_18]);
 }else{
-_1.connect(_13,_15,function(){
-_1.publish(_14,arguments);
+_4.connect(_18,_1a,function(){
+_4.publish(_19,arguments);
 });
 }
 }else{
-if(_1.isFunction(_14)){
-if(_15=="found"){
-_14(_13);
+if(_2.isFunction(_19)){
+if(_1a=="found"){
+_19(_18);
 }else{
-_1.connect(_13,_15,_14);
+_4.connect(_18,_1a,_19);
 }
 }
 }
 };
 this.apply=function(){
-_6(this._behaviors,function(_16,id){
-_1.query(id).forEach(function(_17){
-var _18=0;
-var bid="_dj_behavior_"+_16.id;
-if(typeof _17[bid]=="number"){
-_18=_17[bid];
-if(_18==(_16.length)){
+_b(this._behaviors,function(_1b,id){
+_5(id).forEach(function(_1c){
+var _1d=0;
+var bid="_dj_behavior_"+_1b.id;
+if(typeof _1c[bid]=="number"){
+_1d=_1c[bid];
+if(_1d==(_1b.length)){
 return;
 }
 }
-for(var x=_18,_19;_19=_16[x];x++){
-_6(_19,function(_1a,_1b){
-if(_1.isArray(_1a)){
-_1.forEach(_1a,function(_1c){
-_12(_17,_1c,_1b);
+for(var x=_1d,_1e;_1e=_1b[x];x++){
+_b(_1e,function(_1f,_20){
+if(_2.isArray(_1f)){
+_3.forEach(_1f,function(_21){
+_17(_1c,_21,_20);
 });
 }
 });
 }
-_17[bid]=_16.length;
+_1c[bid]=_1b.length;
 });
 });
 };
 };
-_1.ready(_1.behavior,"apply");
+_6(_1.behavior,"apply");
 return _1.behavior;
 });

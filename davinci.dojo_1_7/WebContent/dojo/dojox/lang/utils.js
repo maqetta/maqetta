@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/lang/utils",["..","dojo/_base/kernel","dojo/_base/lang"],function(_1,_2){
+define("dojox/lang/utils",["..","dojo/_base/lang"],function(_1,_2){
 var du=_2.getObject("lang.utils",true,_1);
 var _3={},_4=Object.prototype.toString;
 var _5=function(o){

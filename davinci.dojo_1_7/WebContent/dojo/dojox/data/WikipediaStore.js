@@ -1,22 +1,16 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/data/WikipediaStore",["dojo","dojox","dojo/io/script","dojox/rpc/Service","dojox/data/ServiceStore"],function(_1,_2){
+define("dojox/data/WikipediaStore",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/io/script","dojo/io-query","dojox/rpc/Service","dojox/data/ServiceStore"],function(_1,_2,_3,_4,_5,_6,_7){
 _1.experimental("dojox.data.WikipediaStore");
-_1.declare("dojox.data.WikipediaStore",_2.data.ServiceStore,{constructor:function(_3){
-if(_3&&_3.service){
-this.service=_3.service;
+return _3("dojox.data.WikipediaStore",_7,{constructor:function(_8){
+if(_8&&_8.service){
+this.service=_8.service;
 }else{
-var _4=new _2.rpc.Service(_1.moduleUrl("dojox.rpc.SMDLibrary","wikipedia.smd"));
-this.service=_4.query;
+var _9=new _6(require.toUrl("dojox/rpc/SMDLibrary/wikipedia.smd"));
+this.service=_9.query;
 }
 this.idAttribute=this.labelAttribute="title";
-},fetch:function(_5){
-var rq=_1.mixin({},_5.query);
+},fetch:function(_a){
+var rq=_2.mixin({},_a.query);
 if(rq&&(!rq.action||rq.action==="parse")){
 rq.action="parse";
 rq.page=rq.title;
@@ -26,28 +20,28 @@ if(rq.action==="query"){
 rq.list="search";
 rq.srwhat="text";
 rq.srsearch=rq.text;
-if(_5.start){
-rq.sroffset=_5.start-1;
+if(_a.start){
+rq.sroffset=_a.start-1;
 }
-if(_5.count){
-rq.srlimit=_5.count>=500?500:_5.count;
+if(_a.count){
+rq.srlimit=_a.count>=500?500:_a.count;
 }
 delete rq.text;
 }
 }
-_5.query=rq;
+_a.query=rq;
 return this.inherited(arguments);
-},_processResults:function(_6,_7){
-if(_6.parse){
-_6.parse.title=_1.queryToObject(_7.ioArgs.url.split("?")[1]).page;
-_6=[_6.parse];
+},_processResults:function(_b,_c){
+if(_b.parse){
+_b.parse.title=_5.queryToObject(_c.ioArgs.url.split("?")[1]).page;
+_b=[_b.parse];
 }else{
-if(_6.query&&_6.query.search){
-_6=_6.query.search;
-var _8=this;
-for(var i in _6){
-_6[i]._loadObject=function(_9){
-_8.fetch({query:{action:"parse",title:this.title},onItem:_9});
+if(_b.query&&_b.query.search){
+_b=_b.query.search;
+var _d=this;
+for(var i in _b){
+_b[i]._loadObject=function(_e){
+_d.fetch({query:{action:"parse",title:this.title},onItem:_e});
 delete this._loadObject;
 };
 }
@@ -55,5 +49,4 @@ delete this._loadObject;
 }
 return this.inherited(arguments);
 }});
-return _2.data.WikipediaStore;
 });

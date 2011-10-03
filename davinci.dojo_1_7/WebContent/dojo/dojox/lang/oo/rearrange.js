@@ -1,14 +1,8 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/lang/oo/rearrange",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.lang.oo.rearrange",1);
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.lang.oo.rearrange");
 (function(){
-var _4=_1._extraNames,_5=_4.length,_6=Object.prototype.toString,_7={};
+var _4=_2._extraNames,_5=_4.length,_6=Object.prototype.toString,_7={};
 _3.lang.oo.rearrange=function(_8,_9){
 var _a,_b,_c,i,t;
 for(_a in _9){
@@ -45,6 +39,4 @@ _8[_b]=_c;
 return _8;
 };
 })();
-return _1.getObject("dojox.lang.oo.rearrange");
 });
-require(["dojox/lang/oo/rearrange"]);

@@ -1,66 +1,35 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dijit/tree/_dndContainer",["dojo/_base/kernel","..","dojo/dnd/common","dojo/dnd/Container","dojo/_base/array","dojo/_base/connect","dojo/_base/declare","dojo/_base/html"],function(_1,_2){
-_1.getObject("tree",true,_2);
-_2.tree._compareNodes=function(n1,n2){
-if(n1===n2){
-return 0;
-}
-if("sourceIndex" in document.documentElement){
-return n1.sourceIndex-n2.sourceIndex;
-}else{
-if("compareDocumentPosition" in document.documentElement){
-return n1.compareDocumentPosition(n2)&2?1:-1;
-}else{
-if(document.createRange){
-var r1=doc.createRange();
-r1.setStartBefore(n1);
-var r2=doc.createRange();
-r2.setStartBefore(n2);
-return r1.compareBoundaryPoints(r1.END_TO_END,r2);
-}else{
-throw Error("dijit.tree._compareNodes don't know how to compare two different nodes in this browser");
-}
-}
-}
-};
-_1.declare("dijit.tree._dndContainer",null,{constructor:function(_3,_4){
-this.tree=_3;
-this.node=_3.domNode;
-_1.mixin(this,_4);
-this.map={};
+define("dijit/tree/_dndContainer",["dojo/aspect","dojo/_base/declare","dojo/dom-class","dojo/_base/event","dojo/_base/lang","dojo/mouse","dojo/on"],function(_1,_2,_3,_4,_5,_6,on){
+return _2("dijit.tree._dndContainer",null,{constructor:function(_7,_8){
+this.tree=_7;
+this.node=_7.domNode;
+_5.mixin(this,_8);
 this.current=null;
 this.containerState="";
-_1.addClass(this.node,"dojoDndContainer");
-this.events=[_1.connect(this.node,"onmouseenter",this,"onOverEvent"),_1.connect(this.node,"onmouseleave",this,"onOutEvent"),_1.connect(this.tree,"_onNodeMouseEnter",this,"onMouseOver"),_1.connect(this.tree,"_onNodeMouseLeave",this,"onMouseOut"),_1.connect(this.node,"ondragstart",_1,"stopEvent"),_1.connect(this.node,"onselectstart",_1,"stopEvent")];
-},getItem:function(_5){
-var _6=this.selection[_5];
-return {data:_6,type:["treeNode"]};
+_3.add(this.node,"dojoDndContainer");
+this.events=[on(this.node,_6.enter,_5.hitch(this,"onOverEvent")),on(this.node,_6.leave,_5.hitch(this,"onOutEvent")),_1.after(this.tree,"_onNodeMouseEnter",_5.hitch(this,"onMouseOver"),true),_1.after(this.tree,"_onNodeMouseLeave",_5.hitch(this,"onMouseOut"),true),on(this.node,"dragstart",_5.hitch(_4,"stop")),on(this.node,"selectstart",_5.hitch(_4,"stop"))];
 },destroy:function(){
-_1.forEach(this.events,_1.disconnect);
+var h;
+while(h=this.events.pop()){
+h.remove();
+}
 this.node=this.parent=null;
-},onMouseOver:function(_7,_8){
-this.current=_7;
-},onMouseOut:function(_9,_a){
+},onMouseOver:function(_9){
+this.current=_9;
+},onMouseOut:function(){
 this.current=null;
-},_changeState:function(_b,_c){
-var _d="dojoDnd"+_b;
-var _e=_b.toLowerCase()+"State";
-_1.replaceClass(this.node,_d+_c,_d+this[_e]);
-this[_e]=_c;
-},_addItemClass:function(_f,_10){
-_1.addClass(_f,"dojoDndItem"+_10);
-},_removeItemClass:function(_11,_12){
-_1.removeClass(_11,"dojoDndItem"+_12);
+},_changeState:function(_a,_b){
+var _c="dojoDnd"+_a;
+var _d=_a.toLowerCase()+"State";
+_3.replace(this.node,_c+_b,_c+this[_d]);
+this[_d]=_b;
+},_addItemClass:function(_e,_f){
+_3.add(_e,"dojoDndItem"+_f);
+},_removeItemClass:function(_10,_11){
+_3.remove(_10,"dojoDndItem"+_11);
 },onOverEvent:function(){
 this._changeState("Container","Over");
 },onOutEvent:function(){
 this._changeState("Container","");
 }});
-return _2.tree._dndContainer;
 });

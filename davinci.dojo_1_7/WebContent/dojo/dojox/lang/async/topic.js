@@ -1,14 +1,8 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/lang/async/topic",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.lang.async.topic",1);
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.lang.async.topic");
 (function(){
-var d=_1,_4=_3.lang.async.topic;
+var d=_2,_4=_3.lang.async.topic;
 _4.from=function(_5){
 return function(){
 var h,_6=function(){
@@ -40,6 +34,4 @@ return x;
 };
 };
 })();
-return _1.getObject("dojox.lang.async.topic");
 });
-require(["dojox/lang/async/topic"]);

@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/widget/rotator/Controller",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.widget.rotator.Controller",1);
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.widget.rotator.Controller");
 (function(d){
 var _4="dojoxRotator",_5=_4+"Play",_6=_4+"Pause",_7=_4+"Number",_8=_4+"Tab",_9=_4+"Selected";
 d.declare("dojox.widget.rotator.Controller",null,{rotator:null,commands:"prev,play/pause,info,next",constructor:function(_a,_b){
@@ -82,7 +76,5 @@ s(d.query("."+_8,this._domNode).removeClass(_9));
 break;
 }
 }});
-})(_1);
-return _1.getObject("dojox.widget.rotator.Controller");
+})(_2);
 });
-require(["dojox/widget/rotator/Controller"]);

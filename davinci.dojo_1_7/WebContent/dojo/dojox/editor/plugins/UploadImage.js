@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/editor/plugins/UploadImage",["dojo","dijit","dojox","dojox/form/FileUploader","dijit/_editor/_Plugin"],function(_1,_2,_3){
+define("dojox/editor/plugins/UploadImage",["dojo","dijit","dojox","dijit/_editor/_Plugin","dojo/_base/connect","dojo/_base/declare","dojox/form/FileUploader","dijit/_editor/_Plugin"],function(_1,_2,_3){
 _1.experimental("dojox.editor.plugins.UploadImage");
 _1.declare("dojox.editor.plugins.UploadImage",_2._editor._Plugin,{tempImageUrl:"",iconClassPrefix:"editorIcon",useDefaultCommand:false,uploadUrl:"",button:null,label:"Upload",setToolbar:function(_4){
 this.button.destroy();

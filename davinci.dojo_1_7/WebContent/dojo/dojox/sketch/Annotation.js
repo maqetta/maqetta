@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/sketch/Annotation",["dojo/_base/lang","dojo/_base/declare","dojo/_base/json","./Anchor","./_Plugin"],function(_1){
+define("dojox/sketch/Annotation",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/json","./Anchor","./_Plugin"],function(_1){
 _1.declare("dojox.sketch.AnnotationTool",dojox.sketch._Plugin,{onMouseDown:function(e){
 this._omd=true;
 },onMouseMove:function(e,_2){

@@ -11,7 +11,7 @@
 	background-color: #D6D3D6;
 	background: -webkit-gradient(linear, left top, left bottom, from(#EFF3EF), to(#BDBEBD));
 }
-.mblDomButtonCheckboxOn > DIV {
+.mblDomButtonCheckboxOn > div {
 	position: absolute;
 	top: 15px;
 	left: 3px;
@@ -24,7 +24,7 @@
 	-webkit-border-radius: 2px;
 	-webkit-transform: rotate(50deg);
 }
-.mblDomButtonCheckboxOn > DIV > DIV {
+.mblDomButtonCheckboxOn > div > div {
 	position: absolute;
 	top: -10px;
 	left: 0px;

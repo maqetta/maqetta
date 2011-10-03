@@ -1,70 +1,64 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/charting/action2d/Highlight",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","dojox/color/_base","./PlotAction","dojo/fx/easing","dojox/gfx/fx"],function(_1,_2,_3,_4,c,_5,_6,_7){
-var _8=100,_9=75,_a=50,cc=function(_b){
+define("dojox/charting/action2d/Highlight",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/Color","dojo/_base/connect","dojox/color/_base","./PlotAction","dojo/fx/easing","dojox/gfx/fx"],function(_1,_2,_3,_4,_5,c,_6,_7,_8){
+var _9=100,_a=75,_b=50,cc=function(_c){
 return function(){
-return _b;
+return _c;
 };
-},hl=function(_c){
-var a=new c.Color(_c),x=a.toHsl();
+},hl=function(_d){
+var a=new c.Color(_d),x=a.toHsl();
 if(x.s==0){
 x.l=x.l<50?100:0;
 }else{
-x.s=_8;
-if(x.l<_a){
-x.l=_9;
-}else{
-if(x.l>_9){
+x.s=_9;
+if(x.l<_b){
 x.l=_a;
 }else{
-x.l=x.l-_a>_9-x.l?_a:_9;
+if(x.l>_a){
+x.l=_b;
+}else{
+x.l=x.l-_b>_a-x.l?_b:_a;
 }
 }
 }
 return c.fromHsl(x);
 };
-return _1.declare("dojox.charting.action2d.Highlight",dojox.charting.action2d.PlotAction,{defaultParams:{duration:400,easing:_6.backOut},optionalParams:{highlight:"red"},constructor:function(_d,_e,_f){
-var a=_f&&_f.highlight;
-this.colorFun=a?(_1.isFunction(a)?a:cc(a)):hl;
+return _3("dojox.charting.action2d.Highlight",_6,{defaultParams:{duration:400,easing:_7.backOut},optionalParams:{highlight:"red"},constructor:function(_e,_f,_10){
+var a=_10&&_10.highlight;
+this.colorFun=a?(_2.isFunction(a)?a:cc(a)):hl;
 this.connect();
 },process:function(o){
 if(!o.shape||!(o.type in this.overOutEvents)){
 return;
 }
-var _10=o.run.name,_11=o.index,_12,_13,_14;
-if(_10 in this.anim){
-_12=this.anim[_10][_11];
+var _11=o.run.name,_12=o.index,_13,_14,_15;
+if(_11 in this.anim){
+_13=this.anim[_11][_12];
 }else{
-this.anim[_10]={};
+this.anim[_11]={};
 }
-if(_12){
-_12.action.stop(true);
+if(_13){
+_13.action.stop(true);
 }else{
-var _15=o.shape.getFill();
-if(!_15||!(_15 instanceof _1.Color)){
+var _16=o.shape.getFill();
+if(!_16||!(_16 instanceof _4)){
 return;
 }
-this.anim[_10][_11]=_12={start:_15,end:this.colorFun(_15)};
+this.anim[_11][_12]=_13={start:_16,end:this.colorFun(_16)};
 }
-var _16=_12.start,end=_12.end;
+var _17=_13.start,end=_13.end;
 if(o.type=="onmouseout"){
-var t=_16;
-_16=end;
+var t=_17;
+_17=end;
 end=t;
 }
-_12.action=_7.animateFill({shape:o.shape,duration:this.duration,easing:this.easing,color:{start:_16,end:end}});
+_13.action=_8.animateFill({shape:o.shape,duration:this.duration,easing:this.easing,color:{start:_17,end:end}});
 if(o.type=="onmouseout"){
-_1.connect(_12.action,"onEnd",this,function(){
-if(this.anim[_10]){
-delete this.anim[_10][_11];
+_5.connect(_13.action,"onEnd",this,function(){
+if(this.anim[_11]){
+delete this.anim[_11][_12];
 }
 });
 }
-_12.action.play();
+_13.action.play();
 }});
 });

@@ -1,16 +1,11 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/layout/ext-dijit/layout/StackContainer-touch",["dojo","dijit","dojox","dijit/layout/StackContainer"],function(_1,_2,_3){
-_1.getObject("dojox.layout.ext-dijit.layout.StackContainer-touch",1);
-_1.experimental("dojox.layout.ext-dijit.layout.StackContainer-touch");
-_1.connect(_2.layout.StackContainer.prototype,"postCreate",function(){
+define(["dijit","dojo","dojox","dojo/require!dijit/layout/StackContainer"],function(_1,_2,_3){
+_2.provide("dojox.layout.ext-dijit.layout.StackContainer-touch");
+_2.experimental("dojox.layout.ext-dijit.layout.StackContainer-touch");
+_2.require("dijit.layout.StackContainer");
+_2.connect(_1.layout.StackContainer.prototype,"postCreate",function(){
 this.axis=(this.baseClass=="dijitAccordionContainer")?"Y":"X";
-_1.forEach(["touchstart","touchmove","touchend","touchcancel"],function(p){
+_2.forEach(["touchstart","touchmove","touchend","touchcancel"],function(p){
 this.connect(this.domNode,p,function(e){
 switch(e.type){
 case "touchmove":
@@ -42,6 +37,4 @@ delete this.touchPosition;
 });
 },this);
 });
-return _1.getObject("dojox.layout.ext-dijit.layout.StackContainer-touch");
 });
-require(["dojox/layout/ext-dijit/layout/StackContainer-touch"]);

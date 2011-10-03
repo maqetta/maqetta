@@ -1,17 +1,11 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
 define({ root:
 //begin v1.x content
 ({
 	singleSort: "Single Sort",
 	nestedSort: "Nested Sort",
-	ascending: "Ascending",
-	descending: "Descending",
+	ascending: "Click to sort Ascending",
+	descending: "Click to sort Descending",
 	sortingState: "${0} - ${1}",
 	unsorted: "Do not sort this column",
 	indirectSelectionRadio: "Row ${0}, single selection, radio box",

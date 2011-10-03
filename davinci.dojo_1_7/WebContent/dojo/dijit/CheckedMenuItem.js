@@ -1,17 +1,11 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-require.cache["dijit/templates/CheckedMenuItem.html"]="<tr class=\"dijitReset dijitMenuItem\" dojoAttachPoint=\"focusNode\" role=\"menuitemcheckbox\" tabIndex=\"-1\"\n\t\tdojoAttachEvent=\"onmouseenter:_onHover,onmouseleave:_onUnhover,ondijitclick:_onClick\">\n\t<td class=\"dijitReset dijitMenuItemIconCell\" role=\"presentation\">\n\t\t<img src=\"${_blankGif}\" alt=\"\" class=\"dijitMenuItemIcon dijitCheckedMenuItemIcon\" dojoAttachPoint=\"iconNode\"/>\n\t\t<span class=\"dijitCheckedMenuItemIconChar\">&#10003;</span>\n\t</td>\n\t<td class=\"dijitReset dijitMenuItemLabel\" colspan=\"2\" dojoAttachPoint=\"containerNode,labelNode\"></td>\n\t<td class=\"dijitReset dijitMenuItemAccelKey\" style=\"display: none\" dojoAttachPoint=\"accelKeyNode\"></td>\n\t<td class=\"dijitReset dijitMenuArrowCell\" role=\"presentation\">&nbsp;</td>\n</tr>\n";
-define("dijit/CheckedMenuItem",["dojo/_base/kernel",".","dojo/text!./templates/CheckedMenuItem.html","./hccss","./MenuItem","dojo/_base/declare","dojo/_base/html"],function(_1,_2,_3){
-_1.declare("dijit.CheckedMenuItem",_2.MenuItem,{templateString:_3,checked:false,_setCheckedAttr:function(_4){
-_1.toggleClass(this.domNode,"dijitCheckedMenuItemChecked",_4);
-this.domNode.setAttribute("aria-checked",_4);
-this._set("checked",_4);
-},iconClass:"",onChange:function(_5){
+require({cache:{"url:dijit/templates/CheckedMenuItem.html":"<tr class=\"dijitReset dijitMenuItem\" data-dojo-attach-point=\"focusNode\" role=\"menuitemcheckbox\" tabIndex=\"-1\"\n\t\tdata-dojo-attach-event=\"onmouseenter:_onHover,onmouseleave:_onUnhover,ondijitclick:_onClick\">\n\t<td class=\"dijitReset dijitMenuItemIconCell\" role=\"presentation\">\n\t\t<img src=\"${_blankGif}\" alt=\"\" class=\"dijitMenuItemIcon dijitCheckedMenuItemIcon\" data-dojo-attach-point=\"iconNode\"/>\n\t\t<span class=\"dijitCheckedMenuItemIconChar\">&#10003;</span>\n\t</td>\n\t<td class=\"dijitReset dijitMenuItemLabel\" colspan=\"2\" data-dojo-attach-point=\"containerNode,labelNode\"></td>\n\t<td class=\"dijitReset dijitMenuItemAccelKey\" style=\"display: none\" data-dojo-attach-point=\"accelKeyNode\"></td>\n\t<td class=\"dijitReset dijitMenuArrowCell\" role=\"presentation\">&#160;</td>\n</tr>\n"}});
+define("dijit/CheckedMenuItem",["dojo/_base/declare","dojo/dom-class","./MenuItem","dojo/text!./templates/CheckedMenuItem.html","./hccss"],function(_1,_2,_3,_4){
+return _1("dijit.CheckedMenuItem",_3,{templateString:_4,checked:false,_setCheckedAttr:function(_5){
+_2.toggle(this.domNode,"dijitCheckedMenuItemChecked",_5);
+this.domNode.setAttribute("aria-checked",_5);
+this._set("checked",_5);
+},iconClass:"",onChange:function(){
 },_onClick:function(e){
 if(!this.disabled){
 this.set("checked",!this.checked);
@@ -19,5 +13,4 @@ this.onChange(this.checked);
 }
 this.inherited(arguments);
 }});
-return _2.CheckedMenuItem;
 });

@@ -5,49 +5,52 @@
 */
 
 //>>built
-define("dojo/store/JsonRest",["../_base/kernel","../_base/xhr","../json","../_base/declare","./util/QueryResults"],function(_1,_2,_3,_4,_5){
-return _4("dojo.store.JsonRest",null,{constructor:function(_6){
-_1.safeMixin(this,_6);
-},target:"",idProperty:"id",get:function(id,_7){
-var _8=_7||{};
-_8.Accept="application/javascript, application/json";
-return _2("GET",{url:this.target+id,handleAs:"json",headers:_8});
-},getIdentity:function(_9){
-return _9[this.idProperty];
-},put:function(_a,_b){
-_b=_b||{};
-var id=("id" in _b)?_b.id:this.getIdentity(_a);
-var _c=typeof id!="undefined";
-return _2(_c&&!_b.incremental?"PUT":"POST",{url:_c?this.target+id:this.target,postData:_3.stringify(_a),handleAs:"json",headers:{"Content-Type":"application/json","If-Match":_b.overwrite===true?"*":null,"If-None-Match":_b.overwrite===false?"*":null}});
-},add:function(_d,_e){
-_e=_e||{};
-_e.overwrite=false;
-return this.put(_d,_e);
+define("dojo/store/JsonRest",["../_base/xhr","../json","../_base/declare","./util/QueryResults"],function(_1,_2,_3,_4){
+return _3("dojo.store.JsonRest",null,{constructor:function(_5){
+_3.safeMixin(this,_5);
+},target:"",idProperty:"id",get:function(id,_6){
+var _7=_6||{};
+_7.Accept=this.accepts;
+return _1("GET",{url:this.target+id,handleAs:"json",headers:_7});
+},accepts:"application/javascript, application/json",getIdentity:function(_8){
+return _8[this.idProperty];
+},put:function(_9,_a){
+_a=_a||{};
+var id=("id" in _a)?_a.id:this.getIdentity(_9);
+var _b=typeof id!="undefined";
+return _1(_b&&!_a.incremental?"PUT":"POST",{url:_b?this.target+id:this.target,postData:_2.stringify(_9),handleAs:"json",headers:{"Content-Type":"application/json",Accept:this.accepts,"If-Match":_a.overwrite===true?"*":null,"If-None-Match":_a.overwrite===false?"*":null}});
+},add:function(_c,_d){
+_d=_d||{};
+_d.overwrite=false;
+return this.put(_c,_d);
 },remove:function(id){
-return _2("DELETE",{url:this.target+id});
-},query:function(_f,_10){
-var _11={Accept:"application/javascript, application/json"};
-_10=_10||{};
-if(_10.start>=0||_10.count>=0){
-_11.Range="items="+(_10.start||"0")+"-"+(("count" in _10&&_10.count!=Infinity)?(_10.count+(_10.start||0)-1):"");
+return _1("DELETE",{url:this.target+id});
+},query:function(_e,_f){
+var _10={Accept:this.accepts};
+_f=_f||{};
+if(_f.start>=0||_f.count>=0){
+_10.Range="items="+(_f.start||"0")+"-"+(("count" in _f&&_f.count!=Infinity)?(_f.count+(_f.start||0)-1):"");
 }
-if(_f&&typeof _f=="object"){
-_f=_1.objectToQuery(_f);
-_f=_f?"?"+_f:"";
+if(_e&&typeof _e=="object"){
+_e=_1.objectToQuery(_e);
+_e=_e?"?"+_e:"";
 }
-if(_10&&_10.sort){
-_f+=(_f?"&":"?")+"sort(";
-for(var i=0;i<_10.sort.length;i++){
-var _12=_10.sort[i];
-_f+=(i>0?",":"")+(_12.descending?"-":"+")+encodeURIComponent(_12.attribute);
+if(_f&&_f.sort){
+var _11=this.sortParam;
+_e+=(_e?"&":"?")+(_11?_11+"=":"sort(");
+for(var i=0;i<_f.sort.length;i++){
+var _12=_f.sort[i];
+_e+=(i>0?",":"")+(_12.descending?"-":"+")+encodeURIComponent(_12.attribute);
 }
-_f+=")";
+if(!_11){
+_e+=")";
 }
-var _13=_2("GET",{url:this.target+(_f||""),handleAs:"json",headers:_11});
+}
+var _13=_1("GET",{url:this.target+(_e||""),handleAs:"json",headers:_10});
 _13.total=_13.then(function(){
 var _14=_13.ioArgs.xhr.getResponseHeader("Content-Range");
 return _14&&(_14=_14.match(/\/(.*)/))&&+_14[1];
 });
-return _5(_13);
+return _4(_13);
 }});
 });

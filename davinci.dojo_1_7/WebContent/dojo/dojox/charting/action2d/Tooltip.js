@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/charting/action2d/Tooltip",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","./PlotAction","dijit/Tooltip","dojox/gfx/matrix","dojox/lang/functional","dojox/lang/functional/scan","dojox/lang/functional/fold"],function(_1,_2,_3,_4,_5,m,df){
-var _6=function(o){
+define("dojox/charting/action2d/Tooltip",["dojo/_base/kernel","dijit/Tooltip","dojo/_base/lang","dojo/_base/html","dojo/_base/declare","./PlotAction","dojox/gfx/matrix","dojox/lang/functional","dojox/lang/functional/scan","dojox/lang/functional/fold"],function(_1,_2,_3,_4,_5,_6,m,df,_7,_8){
+var _9=function(o){
 var t=o.run&&o.run.data&&o.run.data[o.index];
 if(t&&typeof t!="number"&&(t.tooltip||t.text)){
 return t.tooltip||t.text;
@@ -16,13 +10,13 @@ return "<table cellpadding=\"1\" cellspacing=\"0\" border=\"0\" style=\"font-siz
 }
 return o.element=="bar"?o.x:o.y;
 };
-var _7=Math.PI/4,_8=Math.PI/2;
-return _1.declare("dojox.charting.action2d.Tooltip",dojox.charting.action2d.PlotAction,{defaultParams:{text:_6},optionalParams:{},constructor:function(_9,_a,_b){
-this.text=_b&&_b.text?_b.text:_6;
+var _a=Math.PI/4,_b=Math.PI/2;
+return _5("dojox.charting.action2d.Tooltip",_6,{defaultParams:{text:_9},optionalParams:{},constructor:function(_c,_d,_e){
+this.text=_e&&_e.text?_e.text:_9;
 this.connect();
 },process:function(o){
 if(o.type==="onplotreset"||o.type==="onmouseout"){
-dijit.hideTooltip(this.aroundRect);
+_2.hide(this.aroundRect);
 this.aroundRect=null;
 if(o.type==="onplotreset"){
 delete this.angles;
@@ -32,28 +26,28 @@ return;
 if(!o.shape||o.type!=="onmouseover"){
 return;
 }
-var _c={type:"rect"},_d=["after","before"];
+var _f={type:"rect"},_10=["after","before"];
 switch(o.element){
 case "marker":
-_c.x=o.cx;
-_c.y=o.cy;
-_c.width=_c.height=1;
+_f.x=o.cx;
+_f.y=o.cy;
+_f.w=_f.h=1;
 break;
 case "circle":
-_c.x=o.cx-o.cr;
-_c.y=o.cy-o.cr;
-_c.width=_c.height=2*o.cr;
+_f.x=o.cx-o.cr;
+_f.y=o.cy-o.cr;
+_f.w=_f.h=2*o.cr;
 break;
 case "column":
-_d=["above","below"];
+_10=["above","below"];
 case "bar":
-_c=_1.clone(o.shape.getShape());
+_f=_3.clone(o.shape.getShape());
 break;
 case "candlestick":
-_c.x=o.x;
-_c.y=o.y;
-_c.width=o.width;
-_c.height=o.height;
+_f.x=o.x;
+_f.y=o.y;
+_f.w=o.width;
+_f.h=o.height;
 break;
 default:
 if(!this.angles){
@@ -63,20 +57,20 @@ this.angles=df.map(df.scanl(o.run.data,"+",0),"* 2 * Math.PI / this",df.foldl(o.
 this.angles=df.map(df.scanl(o.run.data,"a + b.y",0),"* 2 * Math.PI / this",df.foldl(o.run.data,"a + b.y",0));
 }
 }
-var _e=m._degToRad(o.plot.opt.startAngle),_f=(this.angles[o.index]+this.angles[o.index+1])/2+_e;
-_c.x=o.cx+o.cr*Math.cos(_f);
-_c.y=o.cy+o.cr*Math.sin(_f);
-_c.width=_c.height=1;
-if(_f<_7){
+var _11=m._degToRad(o.plot.opt.startAngle),_12=(this.angles[o.index]+this.angles[o.index+1])/2+_11;
+_f.x=o.cx+o.cr*Math.cos(_12);
+_f.y=o.cy+o.cr*Math.sin(_12);
+_f.w=_f.h=1;
+if(_12<_a){
 }else{
-if(_f<_8+_7){
-_d=["below","above"];
+if(_12<_b+_a){
+_10=["below","above"];
 }else{
-if(_f<Math.PI+_7){
-_d=["before","after"];
+if(_12<Math.PI+_a){
+_10=["before","after"];
 }else{
-if(_f<2*Math.PI-_7){
-_d=["above","below"];
+if(_12<2*Math.PI-_a){
+_10=["above","below"];
 }
 }
 }
@@ -84,26 +78,26 @@ _d=["above","below"];
 break;
 }
 var lt=this.chart.getCoords();
-_c.x+=lt.x;
-_c.y+=lt.y;
-_c.x=Math.round(_c.x);
-_c.y=Math.round(_c.y);
-_c.width=Math.ceil(_c.width);
-_c.height=Math.ceil(_c.height);
-this.aroundRect=_c;
-var _10=this.text(o);
+_f.x+=lt.x;
+_f.y+=lt.y;
+_f.x=Math.round(_f.x);
+_f.y=Math.round(_f.y);
+_f.w=Math.ceil(_f.w);
+_f.h=Math.ceil(_f.h);
+this.aroundRect=_f;
+var _13=this.text(o);
 if(this.chart.getTextDir){
-var _11=(_1.style(this.chart.node,"direction")=="rtl");
-var _12=(this.chart.getTextDir(_10)=="rtl");
+var _14=(_4.style(this.chart.node,"direction")=="rtl");
+var _15=(this.chart.getTextDir(_13)=="rtl");
 }
-if(_10){
-if(_12&&!_11){
-dijit.showTooltip("<span dir = 'rtl'>"+_10+"</span>",this.aroundRect,_d);
+if(_13){
+if(_15&&!_14){
+_2.show("<span dir = 'rtl'>"+_13+"</span>",this.aroundRect,_10);
 }else{
-if(!_12&&_11){
-dijit.showTooltip("<span dir = 'ltr'>"+_10+"</span>",this.aroundRect,_d);
+if(!_15&&_14){
+_2.show("<span dir = 'ltr'>"+_13+"</span>",this.aroundRect,_10);
 }else{
-dijit.showTooltip(_10,this.aroundRect,_d);
+_2.show(_13,this.aroundRect,_10);
 }
 }
 }

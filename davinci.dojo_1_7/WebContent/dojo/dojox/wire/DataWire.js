@@ -1,13 +1,8 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/wire/DataWire",["dojo","dijit","dojox","dojox/wire/Wire"],function(_1,_2,_3){
-_1.getObject("dojox.wire.DataWire",1);
-_1.declare("dojox.wire.DataWire",_3.wire.Wire,{_wireClass:"dojox.wire.DataWire",constructor:function(_4){
+define(["dijit","dojo","dojox","dojo/require!dojox/wire/Wire"],function(_1,_2,_3){
+_2.provide("dojox.wire.DataWire");
+_2.require("dojox.wire.Wire");
+_2.declare("dojox.wire.DataWire",_3.wire.Wire,{_wireClass:"dojox.wire.DataWire",constructor:function(_4){
 if(!this.dataStore&&this.parent){
 this.dataStore=this.parent.dataStore;
 }
@@ -79,6 +74,4 @@ this.dataStore.setValues(_12,_13,_16);
 this.dataStore.setValue(_12,_13,_14);
 }
 }});
-return _1.getObject("dojox.wire.DataWire");
 });
-require(["dojox/wire/DataWire"]);

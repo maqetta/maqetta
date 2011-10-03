@@ -1,13 +1,7 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/xmpp/UserService",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.xmpp.UserService",1);
-_1.declare("dojox.xmpp.UserService",null,{constructor:function(_4){
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.xmpp.UserService");
+_2.declare("dojox.xmpp.UserService",null,{constructor:function(_4){
 this.session=_4;
 },getPersonalProfile:function(){
 var _5={id:this.session.getNextIqId(),type:"get"};
@@ -72,6 +66,4 @@ return _10;
 },onGetPersonalProfile:function(_15){
 },onGetPersonalProfileFailure:function(err){
 }});
-return _1.getObject("dojox.xmpp.UserService");
 });
-require(["dojox/xmpp/UserService"]);

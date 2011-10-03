@@ -1,9 +1,3 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
 define(
 //begin v1.x content
@@ -14,15 +8,17 @@ define(
 	"nextTip": "Volgende pagina",
 	"prevTip": "Vorige pagina",
 	"itemTitle": "items",
+	"singularItemTitle": "item",
 	"pageStepLabelTemplate": "Pagina ${0}",
 	"pageSizeLabelTemplate": "${0} items per pagina",
 	"allItemsLabelTemplate": "Alle items",
-	"gotoButtonTitle": "Naar een specifieke pagina gaan",
-	"dialogTitle": "Naar pagina gaan",
-	"dialogIndication": "Geef het paginanummer op:",
+	"gotoButtonTitle": "Ga naar bepaalde pagina",
+	"dialogTitle": "Ga naar pagina",
+	"dialogIndication": "Geef het paginanummer op",
 	"pageCountIndication": " (${0} pagina's)",
-	"dialogConfirm": "Start",
-	"dialogCancel": "Annuleren"
+	"dialogConfirm": "Go",
+	"dialogCancel": "Annuleren",
+	"all": "alle"
 })
 //end v1.x content
 );

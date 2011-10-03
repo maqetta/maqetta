@@ -1,14 +1,8 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/xmpp/RosterService",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.xmpp.RosterService",1);
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.xmpp.RosterService");
 _3.xmpp.roster={ADDED:101,CHANGED:102,REMOVED:103};
-_1.declare("dojox.xmpp.RosterService",null,{constructor:function(_4){
+_2.declare("dojox.xmpp.RosterService",null,{constructor:function(_4){
 this.session=_4;
 },addRosterItem:function(_5,_6,_7){
 if(!_5){
@@ -206,6 +200,4 @@ return def;
 },onVerifyRoster:function(id){
 },onVerifyRosterFailed:function(err){
 }});
-return _1.getObject("dojox.xmpp.RosterService");
 });
-require(["dojox/xmpp/RosterService"]);

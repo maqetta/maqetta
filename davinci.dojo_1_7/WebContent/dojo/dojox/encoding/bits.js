@@ -1,23 +1,17 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/encoding/bits",["dojo/_base/kernel"],function(_1){
-_1.getObject("encoding.bits",true,dojox);
-dojox.encoding.bits.OutputStream=function(){
+define("dojox/encoding/bits",["dojo/_base/kernel","dojo/_base/lang"],function(_1){
+var _2=_1.getObject("dojox.encoding.bits",true);
+_2.OutputStream=function(){
 this.reset();
 };
-_1.extend(dojox.encoding.bits.OutputStream,{reset:function(){
+_1.extend(_2.OutputStream,{reset:function(){
 this.buffer=[];
 this.accumulator=0;
 this.available=8;
-},putBits:function(_2,_3){
-while(_3){
-var w=Math.min(_3,this.available);
-var v=(w<=_3?_2>>>(_3-w):_2)<<(this.available-w);
+},putBits:function(_3,_4){
+while(_4){
+var w=Math.min(_4,this.available);
+var v=(w<=_4?_3>>>(_4-w):_3)<<(this.available-w);
 this.accumulator|=v&(255>>>(8-this.available));
 this.available-=w;
 if(!this.available){
@@ -25,7 +19,7 @@ this.buffer.push(this.accumulator);
 this.accumulator=0;
 this.available=8;
 }
-_3-=w;
+_4-=w;
 }
 },getWidth:function(){
 return this.buffer.length*8+(8-this.available);
@@ -37,15 +31,15 @@ b.push(this.accumulator&(255<<this.available));
 this.reset();
 return b;
 }});
-dojox.encoding.bits.InputStream=function(_4,_5){
-this.buffer=_4;
-this.width=_5;
+_2.InputStream=function(_5,_6){
+this.buffer=_5;
+this.width=_6;
 this.bbyte=this.bit=0;
 };
-_1.extend(dojox.encoding.bits.InputStream,{getBits:function(_6){
+_1.extend(_2.InputStream,{getBits:function(_7){
 var r=0;
-while(_6){
-var w=Math.min(_6,8-this.bit);
+while(_7){
+var w=Math.min(_7,8-this.bit);
 var v=this.buffer[this.bbyte]>>>(8-this.bit-w);
 r<<=w;
 r|=v&~(~0<<w);
@@ -54,11 +48,11 @@ if(this.bit==8){
 ++this.bbyte;
 this.bit=0;
 }
-_6-=w;
+_7-=w;
 }
 return r;
 },getWidth:function(){
 return this.width-this.bbyte*8-this.bit;
 }});
-return dojox.encoding.bits;
+return _2;
 });

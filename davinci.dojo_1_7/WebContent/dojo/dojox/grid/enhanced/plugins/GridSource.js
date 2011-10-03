@@ -1,29 +1,25 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/grid/enhanced/plugins/GridSource",["dojo","dojox","dojo/dnd/Source","./DnD"],function(_1,_2){
-var _3=function(_4){
-var a=_4[0];
-for(var i=1;i<_4.length;++i){
-a=a.concat(_4[i]);
+define("dojox/grid/enhanced/plugins/GridSource",["dojo/_base/declare","dojo/_base/array","dojo/_base/lang","dojo/dnd/Source","./DnD"],function(_1,_2,_3,_4,_5){
+var _6=function(_7){
+var a=_7[0];
+for(var i=1;i<_7.length;++i){
+a=a.concat(_7[i]);
 }
 return a;
 };
-_1.declare("dojox.grid.enhanced.plugins.GridSource",_1.dnd.Source,{accept:["grid/cells","grid/rows","grid/cols","text"],insertNodesForGrid:false,markupFactory:function(_5,_6){
-return new _2.grid.enhanced.plugins.GridSource(_6,_5);
-},checkAcceptance:function(_7,_8){
-if(_7 instanceof _2.grid.enhanced.plugins.GridDnDSource){
-if(_8[0]){
-var _9=_7.getItem(_8[0].id);
-if(_9&&(_1.indexOf(_9.type,"grid/rows")>=0||_1.indexOf(_9.type,"grid/cells")>=0)&&!_7.dndPlugin._allDnDItemsLoaded()){
+var _8=_3.getObject("dojox.grid.enhanced.plugins.GridDnDSource");
+return _1("dojox.grid.enhanced.plugins.GridSource",_4,{accept:["grid/cells","grid/rows","grid/cols","text"],insertNodesForGrid:false,markupFactory:function(_9,_a){
+cls=_3.getObject("dojox.grid.enhanced.plugins.GridSource");
+return new cls(_a,_9);
+},checkAcceptance:function(_b,_c){
+if(_b instanceof _8){
+if(_c[0]){
+var _d=_b.getItem(_c[0].id);
+if(_d&&(_2.indexOf(_d.type,"grid/rows")>=0||_2.indexOf(_d.type,"grid/cells")>=0)&&!_b.dndPlugin._allDnDItemsLoaded()){
 return false;
 }
 }
-this.sourcePlugin=_7.dndPlugin;
+this.sourcePlugin=_b.dndPlugin;
 }
 return this.inherited(arguments);
 },onDraggingOver:function(){
@@ -34,37 +30,37 @@ this.sourcePlugin._isSource=true;
 if(this.sourcePlugin){
 this.sourcePlugin._isSource=false;
 }
-},onDropExternal:function(_a,_b,_c){
-if(_a instanceof _2.grid.enhanced.plugins.GridDnDSource){
-var _d=_1.map(_b,function(_e){
-return _a.getItem(_e.id).data;
+},onDropExternal:function(_e,_f,_10){
+if(_e instanceof _8){
+var _11=_2.map(_f,function(_12){
+return _e.getItem(_12.id).data;
 });
-var _f=_a.getItem(_b[0].id);
-var _10=_f.dndPlugin.grid;
-var _11=_f.type[0];
-var _12;
+var _13=_e.getItem(_f[0].id);
+var _14=_13.dndPlugin.grid;
+var _15=_13.type[0];
+var _16;
 try{
-switch(_11){
+switch(_15){
 case "grid/cells":
-_b[0].innerHTML=this.getCellContent(_10,_d[0].min,_d[0].max)||"";
-this.onDropGridCells(_10,_d[0].min,_d[0].max);
+_f[0].innerHTML=this.getCellContent(_14,_11[0].min,_11[0].max)||"";
+this.onDropGridCells(_14,_11[0].min,_11[0].max);
 break;
 case "grid/rows":
-_12=_3(_d);
-_b[0].innerHTML=this.getRowContent(_10,_12)||"";
-this.onDropGridRows(_10,_12);
+_16=_6(_11);
+_f[0].innerHTML=this.getRowContent(_14,_16)||"";
+this.onDropGridRows(_14,_16);
 break;
 case "grid/cols":
-_12=_3(_d);
-_b[0].innerHTML=this.getColumnContent(_10,_12)||"";
-this.onDropGridColumns(_10,_12);
+_16=_6(_11);
+_f[0].innerHTML=this.getColumnContent(_14,_16)||"";
+this.onDropGridColumns(_14,_16);
 break;
 }
 if(this.insertNodesForGrid){
 this.selectNone();
-this.insertNodes(true,[_b[0]],this.before,this.current);
+this.insertNodes(true,[_f[0]],this.before,this.current);
 }
-_f.dndPlugin.onDragOut(!_c);
+_13.dndPlugin.onDragOut(!_10);
 }
 catch(e){
 console.warn("GridSource.onDropExternal() error:",e);
@@ -72,12 +68,11 @@ console.warn("GridSource.onDropExternal() error:",e);
 }else{
 this.inherited(arguments);
 }
-},getCellContent:function(_13,_14,_15){
-},getRowContent:function(_16,_17){
-},getColumnContent:function(_18,_19){
-},onDropGridCells:function(_1a,_1b,_1c){
-},onDropGridRows:function(_1d,_1e){
-},onDropGridColumns:function(_1f,_20){
+},getCellContent:function(_17,_18,_19){
+},getRowContent:function(_1a,_1b){
+},getColumnContent:function(_1c,_1d){
+},onDropGridCells:function(_1e,_1f,_20){
+},onDropGridRows:function(_21,_22){
+},onDropGridColumns:function(_23,_24){
 }});
-return _2.grid.enhanced.plugins.GridSource;
 });

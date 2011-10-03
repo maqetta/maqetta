@@ -1,12 +1,7 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/widget/rotator/PanFade",["dojo","dijit","dojox","dojo/fx"],function(_1,_2,_3){
-_1.getObject("dojox.widget.rotator.PanFade",1);
+define(["dijit","dojo","dojox","dojo/require!dojo/fx"],function(_1,_2,_3){
+_2.provide("dojox.widget.rotator.PanFade");
+_2.require("dojo.fx");
 (function(d){
 var _4=0,_5=1,UP=2,_6=3;
 function _7(_8,_9){
@@ -69,7 +64,5 @@ return _7(UP,_15);
 },panFadeLeft:function(_16){
 return _7(_6,_16);
 }});
-})(_1);
-return _1.getObject("dojox.widget.rotator.PanFade");
+})(_2);
 });
-require(["dojox/widget/rotator/PanFade"]);

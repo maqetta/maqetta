@@ -1,13 +1,14 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/widget/DataPresentation",["dojo","dijit","dojox","dojox/grid/DataGrid","dojox/charting/Chart2D","dojox/charting/widget/Legend","dojox/charting/action2d/Tooltip","dojox/charting/action2d/Highlight","dojo/colors","dojo/data/ItemFileWriteStore"],function(_1,_2,_3){
-_1.getObject("dojox.widget.DataPresentation",1);
-_1.experimental("dojox.widget.DataPresentation");
+define(["dijit","dojo","dojox","dojo/require!dojox/grid/DataGrid,dojox/charting/Chart2D,dojox/charting/widget/Legend,dojox/charting/action2d/Tooltip,dojox/charting/action2d/Highlight,dojo/colors,dojo/data/ItemFileWriteStore"],function(_1,_2,_3){
+_2.provide("dojox.widget.DataPresentation");
+_2.experimental("dojox.widget.DataPresentation");
+_2.require("dojox.grid.DataGrid");
+_2.require("dojox.charting.Chart2D");
+_2.require("dojox.charting.widget.Legend");
+_2.require("dojox.charting.action2d.Tooltip");
+_2.require("dojox.charting.action2d.Highlight");
+_2.require("dojo.colors");
+_2.require("dojo.data.ItemFileWriteStore");
 (function(){
 var _4=function(_5,_6,_7,_8){
 var _9=[];
@@ -91,7 +92,7 @@ _28=new _3.charting.Chart2D(_1d);
 }
 if(_23){
 _23._clone=function(){
-var _29=new _3.charting.Theme({chart:this.chart,plotarea:this.plotarea,axis:this.axis,series:this.series,marker:this.marker,antiAlias:this.antiAlias,assignColors:this.assignColors,assignMarkers:this.assigneMarkers,colors:_1.delegate(this.colors)});
+var _29=new _3.charting.Theme({chart:this.chart,plotarea:this.plotarea,axis:this.axis,series:this.series,marker:this.marker,antiAlias:this.antiAlias,assignColors:this.assignColors,assignMarkers:this.assigneMarkers,colors:_2.delegate(this.colors)});
 _29.markers=this.markers;
 _29._buildMarkerArray();
 return _29;
@@ -132,7 +133,7 @@ var _35={};
 if(typeof _24=="string"){
 _35.text=function(o){
 var _36=[o.element,o.run.name,_2a[o.index],((_32==="ClusteredBars")||(_32==="StackedBars"))?o.x:o.y];
-return _1.replace(_24,_36);
+return _2.replace(_24,_36);
 };
 }else{
 if(typeof _24=="function"){
@@ -220,18 +221,18 @@ _51=_51[_52[_53]];
 }
 return _51;
 };
-_1.declare("dojox.widget.DataPresentation",null,{type:"chart",chartType:"clusteredBars",reverse:false,animate:null,labelMod:1,legendHorizontal:true,constructor:function(_54,_55){
-_1.mixin(this,_55);
-this.domNode=_1.byId(_54);
+_2.declare("dojox.widget.DataPresentation",null,{type:"chart",chartType:"clusteredBars",reverse:false,animate:null,labelMod:1,legendHorizontal:true,constructor:function(_54,_55){
+_2.mixin(this,_55);
+this.domNode=_2.byId(_54);
 this[this.type+"Node"]=this.domNode;
 if(typeof this.theme=="string"){
-this.theme=_1.getObject(this.theme);
+this.theme=_2.getObject(this.theme);
 }
-this.chartNode=_1.byId(this.chartNode);
-this.legendNode=_1.byId(this.legendNode);
-this.gridNode=_1.byId(this.gridNode);
-this.titleNode=_1.byId(this.titleNode);
-this.footerNode=_1.byId(this.footerNode);
+this.chartNode=_2.byId(this.chartNode);
+this.legendNode=_2.byId(this.legendNode);
+this.gridNode=_2.byId(this.gridNode);
+this.titleNode=_2.byId(this.titleNode);
+this.footerNode=_2.byId(this.footerNode);
 if(this.legendVertical){
 this.legendHorizontal=!this.legendVertical;
 }
@@ -252,7 +253,7 @@ this.url=url||this.url;
 this.urlContent=_56||this.urlContent;
 this.refreshInterval=_57||this.refreshInterval;
 var me=this;
-_1.xhrGet({url:this.url,content:this.urlContent,handleAs:"json-comment-optional",load:function(_58,_59){
+_2.xhrGet({url:this.url,content:this.urlContent,handleAs:"json-comment-optional",load:function(_58,_59){
 me.setData(_58);
 },error:function(xhr,_5a){
 if(me.urlError&&(typeof me.urlError=="function")){
@@ -308,7 +309,7 @@ _6c.push(_69);
 if(_67<=0){
 _6c.push({index:0});
 }
-var _6d=new _1.data.ItemFileWriteStore({data:{identifier:"index",items:_6c}});
+var _6d=new _2.data.ItemFileWriteStore({data:{identifier:"index",items:_6c}});
 if(this.data.title){
 _6d.title=this.data.title;
 }
@@ -409,6 +410,4 @@ this.footerNode.innerHTML="";
 }
 }});
 })();
-return _1.getObject("dojox.widget.DataPresentation");
 });
-require(["dojox/widget/DataPresentation"]);

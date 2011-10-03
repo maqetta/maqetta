@@ -1,24 +1,22 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/storage/GearsStorageProvider",["dojo","dijit","dojox","dojo/gears","dojox/storage/Provider","dojox/storage/manager","dojox/sql"],function(_1,_2,_3){
-_1.getObject("dojox.storage.GearsStorageProvider",1);
-if(_1.gears.available){
+define(["dijit","dojo","dojox","dojo/require!dojo/gears,dojox/storage/Provider,dojox/storage/manager,dojox/sql"],function(_1,_2,_3){
+_2.provide("dojox.storage.GearsStorageProvider");
+_2.require("dojo.gears");
+_2.require("dojox.storage.Provider");
+_2.require("dojox.storage.manager");
+_2.require("dojox.sql");
+if(_2.gears.available){
 (function(){
-_1.declare("dojox.storage.GearsStorageProvider",_3.storage.Provider,{constructor:function(){
+_2.declare("dojox.storage.GearsStorageProvider",_3.storage.Provider,{constructor:function(){
 },TABLE_NAME:"__DOJO_STORAGE",initialized:false,_available:null,_storageReady:false,initialize:function(){
-if(_1.config["disableGearsStorage"]==true){
+if(_2.config["disableGearsStorage"]==true){
 return;
 }
 this.TABLE_NAME="__DOJO_STORAGE";
 this.initialized=true;
 _3.storage.manager.loaded();
 },isAvailable:function(){
-return this._available=_1.gears.available;
+return this._available=_2.gears.available;
 },put:function(_4,_5,_6,_7){
 this._initStorage();
 if(!this.isValidKey(_4)){
@@ -28,10 +26,10 @@ _7=_7||this.DEFAULT_NAMESPACE;
 if(!this.isValidKey(_7)){
 throw new Error("Invalid namespace given: "+_4);
 }
-if(_1.isString(_5)){
+if(_2.isString(_5)){
 _5="string:"+_5;
 }else{
-_5=_1.toJson(_5);
+_5=_2.toJson(_5);
 }
 try{
 _3.sql("DELETE FROM "+this.TABLE_NAME+" WHERE namespace = ? AND key = ?",_7,_4);
@@ -59,10 +57,10 @@ return null;
 }else{
 _a=_a[0].value;
 }
-if(_1.isString(_a)&&(/^string:/.test(_a))){
+if(_2.isString(_a)&&(/^string:/.test(_a))){
 _a=_a.substring("string:".length);
 }else{
-_a=_1.fromJson(_a);
+_a=_2.fromJson(_a);
 }
 return _a;
 },getNamespaces:function(){
@@ -122,10 +120,10 @@ _3.sql.db.execute("BEGIN TRANSACTION");
 var _15="REPLACE INTO "+this.TABLE_NAME+" VALUES (?, ?, ?)";
 for(var i=0;i<_11.length;i++){
 var _16=_12[i];
-if(_1.isString(_16)){
+if(_2.isString(_16)){
 _16="string:"+_16;
 }else{
-_16=_1.toJson(_16);
+_16=_2.toJson(_16);
 }
 _3.sql.db.execute(_15,[_14,_11[i],_16]);
 }
@@ -160,10 +158,10 @@ if(!_1b.length){
 _1a[i]=null;
 }else{
 _1b=_1b[0].value;
-if(_1.isString(_1b)&&(/^string:/.test(_1b))){
+if(_2.isString(_1b)&&(/^string:/.test(_1b))){
 _1a[i]=_1b.substring("string:".length);
 }else{
-_1a[i]=_1.fromJson(_1b);
+_1a[i]=_2.fromJson(_1b);
 }
 }
 }
@@ -222,6 +220,4 @@ this._storageReady=true;
 _3.storage.manager.register("dojox.storage.GearsStorageProvider",new _3.storage.GearsStorageProvider());
 })();
 }
-return _1.getObject("dojox.storage.GearsStorageProvider");
 });
-require(["dojox/storage/GearsStorageProvider"]);

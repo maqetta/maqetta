@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/editor/plugins/ShowBlockNodes",["dojo","dijit","dojox","dijit/_editor/_Plugin","dijit/form/Button","dijit/form/ToggleButton","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/ShowBlockNodes"],function(_1,_2,_3){
+define("dojox/editor/plugins/ShowBlockNodes",["dojo","dijit","dojox","dijit/_editor/_Plugin","dijit/form/Button","dijit/form/ToggleButton","dojo/_base/connect","dojo/_base/declare","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/ShowBlockNodes"],function(_1,_2,_3){
 _1.declare("dojox.editor.plugins.ShowBlockNodes",_2._editor._Plugin,{useDefaultCommand:false,iconClassPrefix:"dijitAdditionalEditorIcon",_styled:false,_initButton:function(){
 var _4=_1.i18n.getLocalization("dojox.editor.plugins","ShowBlockNodes");
 this.button=new _2.form.ToggleButton({label:_4["showBlockNodes"],showLabel:false,iconClass:this.iconClassPrefix+" "+this.iconClassPrefix+"ShowBlockNodes",tabIndex:"-1",onChange:_1.hitch(this,"_showBlocks")});

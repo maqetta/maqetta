@@ -8,8 +8,8 @@
   margin: 15px;
   
   border: 1px outset #b5bcc7;
-  background-color: #deefff;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
+  background-color: #8fc9ff;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
   -webkit-border-radius: 2px;
 }
 .mblSliderH {
@@ -34,16 +34,16 @@
 }
 .mblSliderProgressBar {
   -webkit-border-radius: 2px;
-  background-color: #128bff;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
+  background-color: #0064c2;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
 }
 .mblSliderHandle {
   margin: -10px 0 0 -10px;
   width: 18px;
   height: 18px;
   border: 1px outset #b5bcc7;
-  background-color: #abd6ff;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
+  background-color: #5cb0ff;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
   -webkit-border-radius: 2px;
 }
 .mblSliderTransition {

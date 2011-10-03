@@ -1,17 +1,11 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/analytics/plugins/mouseClick",["dojo/_base/kernel","dojo/_base/lang","../_base"],function(_1,_2,_3){
-_3.plugins.mouseClick=new (function(){
-this.addData=_1.hitch(_3,"addData","mouseClick");
+define("dojox/analytics/plugins/mouseClick",["dojo/_base/lang","../_base","dojo/_base/window","dojo/on"],function(_1,_2,_3,on){
+return (_2.plugins.mouseClick=new (function(){
+this.addData=_1.hitch(_2,"addData","mouseClick");
 this.onClick=function(e){
 this.addData(this.trimEvent(e));
 };
-_1.connect(_1.doc,"onclick",this,"onClick");
+on(_3.doc,"click",_1.hitch(this,"onClick"));
 this.trimEvent=function(e){
 var t={};
 for(var i in e){
@@ -45,6 +39,5 @@ break;
 }
 return t;
 };
-})();
-return dojox.analytics.plugins.mouseClick;
+})());
 });

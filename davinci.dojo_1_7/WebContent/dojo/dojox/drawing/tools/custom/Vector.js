@@ -1,17 +1,14 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/drawing/tools/custom/Vector",["dojo","../Arrow","../../util/positioning"],function(_1){
-dojox.drawing.tools.custom.Vector=dojox.drawing.util.oo.declare(dojox.drawing.tools.Arrow,function(_2){
+define(["dijit","dojo","dojox","dojo/require!dojox/drawing/tools/Arrow,dojox/drawing/util/positioning"],function(_1,_2,_3){
+_2.provide("dojox.drawing.tools.custom.Vector");
+_2.require("dojox.drawing.tools.Arrow");
+_2.require("dojox.drawing.util.positioning");
+_3.drawing.tools.custom.Vector=_3.drawing.util.oo.declare(_3.drawing.tools.Arrow,function(_4){
 this.minimumSize=this.style.arrows.length;
 this.addShadow({size:3,mult:2});
-},{draws:true,type:"dojox.drawing.tools.custom.Vector",minimumSize:30,showAngle:true,changeAxis:function(_3){
-_3=_3!==undefined?_3:this.style.zAxis?0:1;
-if(_3==0){
+},{draws:true,type:"dojox.drawing.tools.custom.Vector",minimumSize:30,showAngle:true,changeAxis:function(_5){
+_5=_5!==undefined?_5:this.style.zAxis?0:1;
+if(_5==0){
 this.style.zAxis=false;
 this.data.cosphi=0;
 }else{
@@ -21,24 +18,24 @@ var pt=this.zPoint();
 this.setPoints([{x:p[0].x,y:p[0].y},{x:pt.x,y:pt.y}]);
 }
 this.render();
-},_createZeroVector:function(_4,d,_5){
-var s=_4=="hit"?this.minimumSize:this.minimumSize/6;
-var f=_4=="hit"?_5.fill:null;
+},_createZeroVector:function(_6,d,_7){
+var s=_6=="hit"?this.minimumSize:this.minimumSize/6;
+var f=_6=="hit"?_7.fill:null;
 d={cx:this.data.x1,cy:this.data.y1,rx:s,ry:s};
-this.remove(this[_4]);
-this[_4]=this.container.createEllipse(d).setStroke(_5).setFill(f);
-this.util.attr(this[_4],"drawingType","stencil");
-},_create:function(_6,d,_7){
 this.remove(this[_6]);
-this[_6]=this.container.createLine(d).setStroke(_7);
-this._setNodeAtts(this[_6]);
-},onDrag:function(_8){
+this[_6]=this.container.createEllipse(d).setStroke(_7).setFill(f);
+this.util.attr(this[_6],"drawingType","stencil");
+},_create:function(_8,d,_9){
+this.remove(this[_8]);
+this[_8]=this.container.createLine(d).setStroke(_9);
+this._setNodeAtts(this[_8]);
+},onDrag:function(_a){
 if(this.created){
 return;
 }
-var x1=_8.start.x,y1=_8.start.y,x2=_8.x,y2=_8.y;
+var x1=_a.start.x,y1=_a.start.y,x2=_a.x,y2=_a.y;
 if(this.keys.shift&&!this.style.zAxis){
-var pt=this.util.snapAngle(_8,45/180);
+var pt=this.util.snapAngle(_a,45/180);
 x2=pt.x;
 y2=pt.y;
 }
@@ -51,13 +48,13 @@ y1-=dy;
 y2-=dy;
 }
 if(this.style.zAxis){
-var _9=this.zPoint(_8);
-x2=_9.x;
-y2=_9.y;
+var _b=this.zPoint(_a);
+x2=_b.x;
+y2=_b.y;
 }
 this.setPoints([{x:x1,y:y1},{x:x2,y:y2}]);
 this.render();
-},onTransform:function(_a){
+},onTransform:function(_c){
 if(!this._isBeingModified){
 this.onTransformBegin();
 }
@@ -67,45 +64,45 @@ this.render();
 if(!this.style.zAxis){
 return null;
 }
-var _b=this.style.zAngle*Math.PI/180;
-var _c=x<0?x>-y:x<-y;
-var dx=_c?x:-y/Math.tan(_b);
-var dy=!_c?y:-Math.tan(_b)*x;
+var _d=this.style.zAngle*Math.PI/180;
+var _e=x<0?x>-y:x<-y;
+var dx=_e?x:-y/Math.tan(_d);
+var dy=!_e?y:-Math.tan(_d)*x;
 return {x:dx,y:dy};
-},zPoint:function(_d){
-if(_d===undefined){
+},zPoint:function(_f){
+if(_f===undefined){
 if(!this.points[0]){
 return null;
 }
 var d=this.pointsToData();
-_d={start:{x:d.x1,y:d.y1},x:d.x2,y:d.y2};
+_f={start:{x:d.x1,y:d.y1},x:d.x2,y:d.y2};
 }
-var _e=this.util.length(_d);
-var _f=this.util.angle(_d);
-_f<0?_f=360+_f:_f;
-_f=_f>135&&_f<315?this.style.zAngle:this.util.oppAngle(this.style.zAngle);
-return this.util.pointOnCircle(_d.start.x,_d.start.y,_e,_f);
+var _10=this.util.length(_f);
+var _11=this.util.angle(_f);
+_11<0?_11=360+_11:_11;
+_11=_11>135&&_11<315?this.style.zAngle:this.util.oppAngle(this.style.zAngle);
+return this.util.pointOnCircle(_f.start.x,_f.start.y,_10,_11);
 },pointsToData:function(p){
 p=p||this.points;
-var _10=0;
+var _12=0;
 var obj={start:{x:p[0].x,y:p[0].y},x:p[1].x,y:p[1].y};
 if(this.style.zAxis&&(this.util.length(obj)>this.minimumSize)){
-var _11=this.util.angle(obj);
-_11<0?_11=360+_11:_11;
-_10=_11>135&&_11<315?1:-1;
+var _13=this.util.angle(obj);
+_13<0?_13=360+_13:_13;
+_12=_13>135&&_13<315?1:-1;
 }
-this.data={x1:p[0].x,y1:p[0].y,x2:p[1].x,y2:p[1].y,cosphi:_10};
+this.data={x1:p[0].x,y1:p[0].y,x2:p[1].x,y2:p[1].y,cosphi:_12};
 return this.data;
 },dataToPoints:function(o){
 o=o||this.data;
 if(o.radius||o.angle){
-var _12=0;
+var _14=0;
 var pt=this.util.pointOnCircle(o.x,o.y,o.radius,o.angle);
 if(this.style.zAxis||(o.cosphi&&o.cosphi!=0)){
 this.style.zAxis=true;
-_12=o.angle>135&&o.angle<315?1:-1;
+_14=o.angle>135&&o.angle<315?1:-1;
 }
-this.data=o={x1:o.x,y1:o.y,x2:pt.x,y2:pt.y,cosphi:_12};
+this.data=o={x1:o.x,y1:o.y,x2:pt.x,y2:pt.y,cosphi:_14};
 }
 this.points=[{x:o.x1,y:o.y1},{x:o.x2,y:o.y2}];
 return this.points;
@@ -142,14 +139,14 @@ this.setPoints([{x:p[0].x,y:p[0].y},{x:pt.x,y:pt.y}]);
 this.renderedOnce=true;
 this.onRender(this);
 }});
-dojox.drawing.tools.custom.Vector.setup={name:"dojox.drawing.tools.custom.Vector",tooltip:"Vector Tool",iconClass:"iconVector"};
-if(dojox.drawing.defaults.zAxisEnabled){
-dojox.drawing.tools.custom.Vector.setup.secondary={name:"vectorSecondary",label:"z-axis",funct:function(_13){
-_13.selected?this.zDeselect(_13):this.zSelect(_13);
-var _14=this.drawing.stencils.selectedStencils;
-for(var nm in _14){
-if(_14[nm].shortType=="vector"&&(_14[nm].style.zAxis!=dojox.drawing.defaults.zAxis)){
-var s=_14[nm];
+_3.drawing.tools.custom.Vector.setup={name:"dojox.drawing.tools.custom.Vector",tooltip:"Vector Tool",iconClass:"iconVector"};
+if(_3.drawing.defaults.zAxisEnabled){
+_3.drawing.tools.custom.Vector.setup.secondary={name:"vectorSecondary",label:"z-axis",funct:function(_15){
+_15.selected?this.zDeselect(_15):this.zSelect(_15);
+var _16=this.drawing.stencils.selectedStencils;
+for(var nm in _16){
+if(_16[nm].shortType=="vector"&&(_16[nm].style.zAxis!=_3.drawing.defaults.zAxis)){
+var s=_16[nm];
 s.changeAxis();
 if(s.style.zAxis){
 s.deselect();
@@ -158,51 +155,51 @@ s.select();
 }
 }
 },setup:function(){
-var _15=dojox.drawing.defaults.zAxis;
-this.zSelect=function(_16){
-if(!_16.enabled){
+var _17=_3.drawing.defaults.zAxis;
+this.zSelect=function(_18){
+if(!_18.enabled){
 return;
 }
-_15=true;
-dojox.drawing.defaults.zAxis=true;
-_16.select();
+_17=true;
+_3.drawing.defaults.zAxis=true;
+_18.select();
 this.vectorTest();
-this.zSelected=_16;
+this.zSelected=_18;
 };
-this.zDeselect=function(_17){
-if(!_17.enabled){
+this.zDeselect=function(_19){
+if(!_19.enabled){
 return;
 }
-_15=false;
-dojox.drawing.defaults.zAxis=false;
-_17.deselect();
+_17=false;
+_3.drawing.defaults.zAxis=false;
+_19.deselect();
 this.vectorTest();
 this.zSelected=null;
 };
 this.vectorTest=function(){
-_1.forEach(this.buttons,function(b){
+_2.forEach(this.buttons,function(b){
 if(b.toolType=="vector"&&b.selected){
-this.drawing.currentStencil.style.zAxis=_15;
+this.drawing.currentStencil.style.zAxis=_17;
 }
 },this);
 };
-_1.connect(this,"onRenderStencil",this,function(){
+_2.connect(this,"onRenderStencil",this,function(){
 if(this.zSelected){
 this.zDeselect(this.zSelected);
 }
 });
-var c=_1.connect(this.drawing,"onSurfaceReady",this,function(){
-_1.disconnect(c);
-_1.connect(this.drawing.stencils,"onSelect",this,function(_18){
-if(_18.shortType=="vector"){
-if(_18.style.zAxis){
-_1.forEach(this.buttons,function(b){
+var c=_2.connect(this.drawing,"onSurfaceReady",this,function(){
+_2.disconnect(c);
+_2.connect(this.drawing.stencils,"onSelect",this,function(_1a){
+if(_1a.shortType=="vector"){
+if(_1a.style.zAxis){
+_2.forEach(this.buttons,function(b){
 if(b.toolType=="vectorSecondary"){
 this.zSelect(b);
 }
 },this);
 }else{
-_1.forEach(this.buttons,function(b){
+_2.forEach(this.buttons,function(b){
 if(b.toolType=="vectorSecondary"){
 this.zDeselect(b);
 }
@@ -212,14 +209,13 @@ this.zDeselect(b);
 });
 });
 },postSetup:function(btn){
-_1.connect(btn,"enable",function(){
-dojox.drawing.defaults.zAxisEnabled=true;
+_2.connect(btn,"enable",function(){
+_3.drawing.defaults.zAxisEnabled=true;
 });
-_1.connect(btn,"disable",function(){
-dojox.drawing.defaults.zAxisEnabled=false;
+_2.connect(btn,"disable",function(){
+_3.drawing.defaults.zAxisEnabled=false;
 });
 }};
 }
-dojox.drawing.register(dojox.drawing.tools.custom.Vector.setup,"tool");
-return dojox.drawing.tools.custom.Vector;
+_3.drawing.register(_3.drawing.tools.custom.Vector.setup,"tool");
 });

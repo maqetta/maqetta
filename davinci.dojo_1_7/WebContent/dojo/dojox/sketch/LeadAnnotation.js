@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/sketch/LeadAnnotation",["dojo/_base/lang","./Annotation","./Anchor"],function(_1){
+define("dojox/sketch/LeadAnnotation",["dojo/_base/kernel","dojo/_base/lang","./Annotation","./Anchor"],function(_1){
 _1.getObject("sketch",true,dojox);
 var ta=dojox.sketch;
 ta.LeadAnnotation=function(_2,id){

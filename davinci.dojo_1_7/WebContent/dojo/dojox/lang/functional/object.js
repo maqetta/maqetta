@@ -1,57 +1,51 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/lang/functional/object",["dojo/_base/kernel","./lambda"],function(_1,df){
-var d=_1,_2={};
-d.mixin(df,{keys:function(_3){
+define("dojox/lang/functional/object",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/window","./lambda"],function(_1,_2,_3,df){
+var _4={};
+_2.mixin(df,{keys:function(_5){
 var t=[];
-for(var i in _3){
-if(!(i in _2)){
+for(var i in _5){
+if(!(i in _4)){
 t.push(i);
 }
 }
 return t;
-},values:function(_4){
+},values:function(_6){
 var t=[];
-for(var i in _4){
-if(!(i in _2)){
-t.push(_4[i]);
+for(var i in _6){
+if(!(i in _4)){
+t.push(_6[i]);
 }
 }
 return t;
-},filterIn:function(_5,f,o){
-o=o||d.global;
+},filterIn:function(_7,f,o){
+o=o||_3.global;
 f=df.lambda(f);
 var t={},v,i;
-for(i in _5){
-if(!(i in _2)){
-v=_5[i];
-if(f.call(o,v,i,_5)){
+for(i in _7){
+if(!(i in _4)){
+v=_7[i];
+if(f.call(o,v,i,_7)){
 t[i]=v;
 }
 }
 }
 return t;
-},forIn:function(_6,f,o){
-o=o||d.global;
+},forIn:function(_8,f,o){
+o=o||_3.global;
 f=df.lambda(f);
-for(var i in _6){
-if(!(i in _2)){
-f.call(o,_6[i],i,_6);
+for(var i in _8){
+if(!(i in _4)){
+f.call(o,_8[i],i,_8);
 }
 }
 return o;
-},mapIn:function(_7,f,o){
-o=o||d.global;
+},mapIn:function(_9,f,o){
+o=o||_3.global;
 f=df.lambda(f);
 var t={},i;
-for(i in _7){
-if(!(i in _2)){
-t[i]=f.call(o,_7[i],i,_7);
+for(i in _9){
+if(!(i in _4)){
+t[i]=f.call(o,_9[i],i,_9);
 }
 }
 return t;

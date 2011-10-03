@@ -1,12 +1,7 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/form/CheckedMultiSelect",["dojo","dijit","dojo/i18n","dijit/_Templated","dijit/_Widget","dijit/Menu","dijit/MenuItem","dijit/Tooltip","dijit/form/_FormSelectWidget","dijit/form/CheckBox","dijit/form/ComboButton","dojo/i18n!dojox/form/nls/CheckedMultiSelect"],function(_1,_2){
-_1.declare("dojox.form._CheckedMultiSelectItem",[_2._Widget,_2._Templated],{widgetsInTemplate:true,templateString:_1.cache("dojox.form","resources/_CheckedMultiSelectItem.html"),baseClass:"dojoxMultiSelectItem",option:null,parent:null,disabled:false,readOnly:false,postMixInProperties:function(){
+require({cache:{"url:dojox/form/resources/_CheckedMultiSelectMenuItem.html":"<tr class=\"dijitReset dijitMenuItem\" dojoAttachPoint=\"focusNode\" role=\"menuitemcheckbox\" tabIndex=\"-1\"\n\tdojoAttachEvent=\"onmouseenter:_onHover,onmouseleave:_onUnhover,ondijitclick:_onClick\"\n\t><td class=\"dijitReset dijitMenuItemIconCell\" role=\"presentation\"\n\t\t><div src=\"${_blankGif}\" alt=\"\" class=\"dijitMenuItemIcon ${_iconClass}\" dojoAttachPoint=\"iconNode\"\n\t\t\t><input class=\"dojoxCheckedMultiSelectCheckBoxInput\" dojoAttachPoint=\"inputNode\" type=\"${_type.type}\"\n\t\t/></div></td\n\t><td class=\"dijitReset dijitMenuItemLabel\" colspan=\"2\" dojoAttachPoint=\"containerNode,labelNode\"></td\n\t><td class=\"dijitReset dijitMenuItemAccelKey\" style=\"display: none\" dojoAttachPoint=\"accelKeyNode\"></td\n\t><td class=\"dijitReset dijitMenuArrowCell\" role=\"presentation\">&nbsp;</td\n></tr>","url:dojox/form/resources/_CheckedMultiSelectItem.html":"<div class=\"dijitReset ${baseClass}\"\n\t><input class=\"${baseClass}Box\" data-dojo-type=\"dijit.form.CheckBox\" data-dojo-attach-point=\"checkBox\" \n\t\tdata-dojo-attach-event=\"_onClick:_changeBox\" type=\"${_type.type}\" baseClass=\"${_type.baseClass}\"\n\t/><div class=\"dijitInline ${baseClass}Label\" data-dojo-attach-point=\"labelNode\" data-dojo-attach-event=\"onclick:_onClick\"></div\n></div>\n","url:dojox/form/resources/CheckedMultiSelect.html":"<div class=\"dijit dijitReset dijitInline dijitLeft\" id=\"widget_${id}\"\n\t><div data-dojo-attach-point=\"comboButtonNode\"\n\t></div\n\t><div data-dojo-attach-point=\"selectNode\" class=\"dijit dijitReset dijitInline ${baseClass}Wrapper\" data-dojo-attach-event=\"onmousedown:_onMouseDown,onclick:focus\"\n\t\t><select class=\"${baseClass}Select dojoxCheckedMultiSelectHidden\" multiple=\"true\" data-dojo-attach-point=\"containerNode,focusNode\"></select\n\t\t><div data-dojo-attach-point=\"wrapperDiv\"></div\n\t></div\n></div>"}});
+define("dojox/form/CheckedMultiSelect",["dojo/_base/declare","dojo/_base/lang","dojo/_base/array","dojo/_base/event","dojo/dom-geometry","dojo/dom-class","dojo/dom-construct","dojo/i18n","dijit/_Widget","dijit/_TemplatedMixin","dijit/_WidgetsInTemplateMixin","dijit/registry","dijit/Menu","dijit/MenuItem","dijit/Tooltip","dijit/form/_FormSelectWidget","dijit/form/ComboButton","dojo/text!dojox/form/resources/_CheckedMultiSelectMenuItem.html","dojo/text!dojox/form/resources/_CheckedMultiSelectItem.html","dojo/text!dojox/form/resources/CheckedMultiSelect.html","dojo/i18n!dojox/form/nls/CheckedMultiSelect","dijit/form/CheckBox"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b,_c,_d,_e,_f,_10,_11,_12,_13,_14,_15){
+var _16=_1("dojox.form._CheckedMultiSelectItem",[_9,_a,_b],{templateString:_13,baseClass:"dojoxMultiSelectItem",option:null,parent:null,disabled:false,readOnly:false,postMixInProperties:function(){
 this._type=this.parent.multiple?{type:"checkbox",baseClass:"dijitCheckBox"}:{type:"radio",baseClass:"dijitRadio"};
 this.disabled=this.option.disabled=this.option.disabled||false;
 this.inherited(arguments);
@@ -26,27 +21,27 @@ this.parent._updateSelection();
 this.parent.focus();
 },_onClick:function(e){
 if(this.get("disabled")||this.get("readOnly")){
-_1.stopEvent(e);
+_4.stop(e);
 }else{
 this.checkBox._onClick(e);
 }
 },_updateBox:function(){
 this.checkBox.set("value",this.option.selected);
-},_setDisabledAttr:function(_3){
-this.disabled=_3||this.option.disabled;
+},_setDisabledAttr:function(_17){
+this.disabled=_17||this.option.disabled;
 this.checkBox.set("disabled",this.disabled);
-_1.toggleClass(this.domNode,"dojoxMultiSelectDisabled",this.disabled);
-},_setReadOnlyAttr:function(_4){
-this.checkBox.set("readOnly",_4);
-this.readOnly=_4;
+_6.toggle(this.domNode,"dojoxMultiSelectDisabled",this.disabled);
+},_setReadOnlyAttr:function(_18){
+this.checkBox.set("readOnly",_18);
+this.readOnly=_18;
 }});
-_1.declare("dojox.form._CheckedMultiSelectMenu",_2.Menu,{multiple:false,buildRendering:function(){
+var _19=_1("dojox.form._CheckedMultiSelectMenu",_d,{multiple:false,buildRendering:function(){
 this.inherited(arguments);
-var o=(this.menuTableNode=this.domNode),n=(this.domNode=_1.create("div",{style:{overflowX:"hidden",overflowY:"scroll"}}));
+var o=(this.menuTableNode=this.domNode),n=(this.domNode=_7.create("div",{style:{overflowX:"hidden",overflowY:"scroll"}}));
 if(o.parentNode){
 o.parentNode.replaceChild(n,o);
 }
-_1.removeClass(o,"dijitMenuTable");
+_6.remove(o,"dijitMenuTable");
 n.className=o.className+" dojoxCheckedMultiSelectMenu";
 o.className="dijitReset dijitMenuTable";
 o.setAttribute("role","listbox");
@@ -54,7 +49,7 @@ n.setAttribute("role","presentation");
 n.appendChild(o);
 },resize:function(mb){
 if(mb){
-_1.marginBox(this.domNode,mb);
+_5.setMarginBox(this.domNode,mb);
 if("w" in mb){
 this.menuTableNode.style.width="100%";
 }
@@ -64,20 +59,20 @@ this.inherited(arguments);
 if(this.menuTableNode){
 this.menuTableNode.style.width="";
 }
-},onItemClick:function(_5,_6){
+},onItemClick:function(_1a,evt){
 if(typeof this.isShowingNow=="undefined"){
 this._markActive();
 }
-this.focusChild(_5);
-if(_5.disabled||_5.readOnly){
+this.focusChild(_1a);
+if(_1a.disabled||_1a.readOnly){
 return false;
 }
 if(!this.multiple){
 this.onExecute();
 }
-_5.onClick(_6);
+_1a.onClick(evt);
 }});
-_1.declare("dojox.form._CheckedMultiSelectMenuItem",_2.MenuItem,{templateString:_1.cache("dojox.form","resources/_CheckedMultiSelectMenuItem.html"),option:null,parent:null,_iconClass:"",postMixInProperties:function(){
+var _1b=_1("dojox.form._CheckedMultiSelectMenuItem",_e,{templateString:_12,option:null,parent:null,_iconClass:"",postMixInProperties:function(){
 if(this.parent.multiple){
 this._iconClass="dojoxCheckedMultiSelectMenuCheckBoxItemIcon";
 this._type={type:"checkbox"};
@@ -90,13 +85,13 @@ this.checked=this.option.selected;
 this.label=this.option.label;
 this.readOnly=this.option.readOnly;
 this.inherited(arguments);
-},onChange:function(_7){
+},onChange:function(_1c){
 },_updateBox:function(){
-_1.toggleClass(this.domNode,"dojoxCheckedMultiSelectMenuItemChecked",!!this.option.selected);
+_6.toggle(this.domNode,"dojoxCheckedMultiSelectMenuItemChecked",!!this.option.selected);
 this.domNode.setAttribute("aria-checked",this.option.selected);
 this.inputNode.checked=this.option.selected;
 if(!this.parent.multiple){
-_1.toggleClass(this.domNode,"dijitSelectSelectedOption",!!this.option.selected);
+_6.toggle(this.domNode,"dijitSelectSelectedOption",!!this.option.selected);
 }
 },_onClick:function(e){
 if(!this.disabled&&!this.readOnly){
@@ -106,8 +101,8 @@ this.parent.onChange();
 this.onChange(this.option.selected);
 }else{
 if(!this.option.selected){
-_1.forEach(this.parent.getChildren(),function(_8){
-_8.option.selected=false;
+_3.forEach(this.parent.getChildren(),function(_1d){
+_1d.option.selected=false;
 });
 this.option.selected=true;
 this.parent.onChange();
@@ -117,20 +112,20 @@ this.onChange(this.option.selected);
 }
 this.inherited(arguments);
 }});
-_1.declare("dojox.form.CheckedMultiSelect",_2.form._FormSelectWidget,{templateString:_1.cache("dojox.form","resources/CheckedMultiSelect.html"),baseClass:"dojoxCheckedMultiSelect",required:false,invalidMessage:"$_unset_$",_message:"",dropDown:false,labelText:"",tooltipPosition:[],setStore:function(_9,_a,_b){
+var _1e=_1("dojox.form.CheckedMultiSelect",_10,{templateString:_14,baseClass:"dojoxCheckedMultiSelect",required:false,invalidMessage:"$_unset_$",_message:"",dropDown:false,labelText:"",tooltipPosition:[],setStore:function(_1f,_20,_21){
 this.inherited(arguments);
-var _c=function(_d){
-var _e=_1.map(_d,function(_f){
-return _f.value[0];
+var _22=function(_23){
+var _24=_3.map(_23,function(_25){
+return _25.value[0];
 });
-if(_e.length){
-this.set("value",_e);
+if(_24.length){
+this.set("value",_24);
 }
 };
-this.store.fetch({query:{selected:true},onComplete:_c,scope:this});
+this.store.fetch({query:{selected:true},onComplete:_22,scope:this});
 },postMixInProperties:function(){
 this.inherited(arguments);
-this._nlsResources=_1.i18n.getLocalization("dojox.form","CheckedMultiSelect",this.lang);
+this._nlsResources=_8.getLocalization("dojox.form","CheckedMultiSelect",this.lang);
 if(this.invalidMessage=="$_unset_$"){
 this.invalidMessage=this._nlsResources.invalidMessage;
 }
@@ -141,115 +136,115 @@ var si=this.srcNodeRef.selectedIndex||0;
 this.value=this.options[si>=0?si:0].value;
 }
 if(this.dropDown){
-_1.toggleClass(this.selectNode,"dojoxCheckedMultiSelectHidden");
-this.dropDownMenu=new dojox.form._CheckedMultiSelectMenu({id:this.id+"_menu",style:"display: none;",multiple:this.multiple,onChange:_1.hitch(this,"_updateSelection")});
+_6.toggle(this.selectNode,"dojoxCheckedMultiSelectHidden");
+this.dropDownMenu=new _19({id:this.id+"_menu",style:"display: none;",multiple:this.multiple,onChange:_2.hitch(this,"_updateSelection")});
 }
 },startup:function(){
 this.inherited(arguments);
 if(this.dropDown){
-this.dropDownButton=new _2.form.ComboButton({label:this.labelText,dropDown:this.dropDownMenu,baseClass:"dojoxCheckedMultiSelectButton",maxHeight:this.maxHeight},this.comboButtonNode);
+this.dropDownButton=new _11({label:this.labelText,dropDown:this.dropDownMenu,baseClass:"dojoxCheckedMultiSelectButton",maxHeight:this.maxHeight},this.comboButtonNode);
 }
 },_onMouseDown:function(e){
-_1.stopEvent(e);
+_4.stop(e);
 },validator:function(){
 if(!this.required){
 return true;
 }
-return _1.some(this.getOptions(),function(opt){
+return _3.some(this.getOptions(),function(opt){
 return opt.selected&&opt.value!=null&&opt.value.toString().length!=0;
 });
-},validate:function(_10){
-_2.hideTooltip(this.domNode);
-var _11=this.isValid(_10);
-if(!_11){
+},validate:function(_26){
+_f.hide(this.domNode);
+var _27=this.isValid(_26);
+if(!_27){
 this.displayMessage(this.invalidMessage);
 }
-return _11;
-},isValid:function(_12){
+return _27;
+},isValid:function(_28){
 return this.validator();
-},getErrorMessage:function(_13){
+},getErrorMessage:function(_29){
 return this.invalidMessage;
-},displayMessage:function(_14){
-_2.hideTooltip(this.domNode);
-if(_14){
-_2.showTooltip(_14,this.domNode,this.tooltipPosition);
+},displayMessage:function(_2a){
+_f.hide(this.domNode);
+if(_2a){
+_f.show(_2a,this.domNode,this.tooltipPosition);
 }
-},onAfterAddOptionItem:function(_15,_16){
-},_addOptionItem:function(_17){
-var _18;
+},onAfterAddOptionItem:function(_2b,_2c){
+},_addOptionItem:function(_2d){
+var _2e;
 if(this.dropDown){
-_18=new dojox.form._CheckedMultiSelectMenuItem({option:_17,parent:this.dropDownMenu});
-this.dropDownMenu.addChild(_18);
+_2e=new _1b({option:_2d,parent:this.dropDownMenu});
+this.dropDownMenu.addChild(_2e);
 }else{
-_18=new dojox.form._CheckedMultiSelectItem({option:_17,parent:this});
-this.wrapperDiv.appendChild(_18.domNode);
+_2e=new _16({option:_2d,parent:this});
+this.wrapperDiv.appendChild(_2e.domNode);
 }
-this.onAfterAddOptionItem(_18,_17);
+this.onAfterAddOptionItem(_2e,_2d);
 },_refreshState:function(){
 this.validate(this.focused);
-},onChange:function(_19){
+},onChange:function(_2f){
 this._refreshState();
 },reset:function(){
 this.inherited(arguments);
-_2.hideTooltip(this.domNode);
+_f.hide(this.domNode);
 },_updateSelection:function(){
 this.inherited(arguments);
 this._handleOnChange(this.value);
-_1.forEach(this._getChildren(),function(_1a){
-_1a._updateBox();
+_3.forEach(this._getChildren(),function(_30){
+_30._updateBox();
 });
 if(this.dropDown&&this.dropDownButton){
-var i=0,_1b="";
-_1.forEach(this.options,function(_1c){
-if(_1c.selected){
+var i=0,_31="";
+_3.forEach(this.options,function(_32){
+if(_32.selected){
 i++;
-_1b=_1c.label;
+_31=_32.label;
 }
 });
-this.dropDownButton.set("label",this.multiple?_1.replace(this._nlsResources.multiSelectLabelText,{num:i}):_1b);
+this.dropDownButton.set("label",this.multiple?_2.replace(this._nlsResources.multiSelectLabelText,{num:i}):_31);
 }
 },_getChildren:function(){
 if(this.dropDown){
 return this.dropDownMenu.getChildren();
 }else{
-return _1.map(this.wrapperDiv.childNodes,function(n){
-return _2.byNode(n);
+return _3.map(this.wrapperDiv.childNodes,function(n){
+return _c.byNode(n);
 });
 }
-},invertSelection:function(_1d){
+},invertSelection:function(_33){
 if(this.multiple){
-_1.forEach(this.options,function(i){
+_3.forEach(this.options,function(i){
 i.selected=!i.selected;
 });
 this._updateSelection();
 }
-},_setDisabledAttr:function(_1e){
+},_setDisabledAttr:function(_34){
 this.inherited(arguments);
 if(this.dropDown){
-this.dropDownButton.set("disabled",_1e);
+this.dropDownButton.set("disabled",_34);
 }
-_1.forEach(this._getChildren(),function(_1f){
-if(_1f&&_1f.set){
-_1f.set("disabled",_1e);
+_3.forEach(this._getChildren(),function(_35){
+if(_35&&_35.set){
+_35.set("disabled",_34);
 }
 });
-},_setReadOnlyAttr:function(_20){
+},_setReadOnlyAttr:function(_36){
 this.inherited(arguments);
 if("readOnly" in this.attributeMap){
-this._attrToDom("readOnly",_20);
+this._attrToDom("readOnly",_36);
 }
-this.readOnly=_20;
-_1.forEach(this._getChildren(),function(_21){
-if(_21&&_21.set){
-_21.set("readOnly",_20);
+this.readOnly=_36;
+_3.forEach(this._getChildren(),function(_37){
+if(_37&&_37.set){
+_37.set("readOnly",_36);
 }
 });
 },uninitialize:function(){
-_2.hideTooltip(this.domNode);
-_1.forEach(this._getChildren(),function(_22){
-_22.destroyRecursive();
+_f.hide(this.domNode);
+_3.forEach(this._getChildren(),function(_38){
+_38.destroyRecursive();
 });
 this.inherited(arguments);
 }});
-return dojox.form.CheckedMultiSelect;
+return _1e;
 });

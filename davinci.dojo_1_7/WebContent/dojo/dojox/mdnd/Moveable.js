@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/mdnd/Moveable",["dojo/_base/kernel","dojo/_base/html","dojo/_base/connect","dojo/_base/sniff","dojo/_base/array","dojo/_base/window","dojo/_base/event"],function(_1){
+define("dojox/mdnd/Moveable",["dojo/_base/kernel","dojo/_base/array","dojo/_base/connect","dojo/_base/declare","dojo/_base/event","dojo/_base/html","dojo/_base/sniff","dojo/_base/window"],function(_1){
 return _1.declare("dojox.mdnd.Moveable",null,{handle:null,skip:true,dragDistance:3,constructor:function(_2,_3){
 this.node=_1.byId(_3);
 this.d=this.node.ownerDocument;

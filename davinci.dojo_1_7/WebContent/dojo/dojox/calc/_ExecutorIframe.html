@@ -1,5 +1,5 @@
 <html><head>
-<script>
+<script type="text/javascript">
 Array.prototype._toString = Array.prototype.toString;
 Array.prototype.toString = function(){ return "[" + this._toString() + "]"; };
 
@@ -519,7 +519,7 @@ Number.prototype.toString = function(radix){ if(!radix || radix==10){ return ""+
 })();
 </script>
 </head><body>
-<script>
+<script type="text/javascript">
 	document.documentElement.removeChild(document.documentElement.firstChild); // remove HEAD to remove debugger access for extra security
 </script>
 </body></html>

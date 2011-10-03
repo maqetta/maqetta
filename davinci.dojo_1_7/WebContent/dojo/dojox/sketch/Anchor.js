@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/sketch/Anchor",["dojo/_base/lang","../gfx"],function(_1){
+define("dojox/sketch/Anchor",["dojo/_base/kernel","dojo/_base/lang","../gfx"],function(_1){
 _1.getObject("sketch",true,dojox);
 dojox.sketch.Anchor=function(an,id,_2){
 var _3=this;

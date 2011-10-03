@@ -5,47 +5,48 @@
 */
 
 //>>built
-define("dojo/store/api/Store",[],function(){
-dojo.declare("dojo.store.api.Store",null,{idProperty:"id",queryEngine:null,get:function(id){
-},getIdentity:function(_1){
-},put:function(_2,_3){
-},add:function(_4,_5){
+define("dojo/store/api/Store",["dojo/_base/declare"],function(_1){
+var _2=_1("dojo.store.api.Store",null,{idProperty:"id",queryEngine:null,get:function(id){
+},getIdentity:function(_3){
+},put:function(_4,_5){
+},add:function(_6,_7){
 },remove:function(id){
 delete this.index[id];
-var _6=this.data,_7=this.idProperty;
-for(var i=0,l=_6.length;i<l;i++){
-if(_6[i][_7]==id){
-_6.splice(i,1);
+var _8=this.data,_9=this.idProperty;
+for(var i=0,l=_8.length;i<l;i++){
+if(_8[i][_9]==id){
+_8.splice(i,1);
 return;
 }
 }
-},query:function(_8,_9){
+},query:function(_a,_b){
 },transaction:function(){
-},getChildren:function(_a,_b){
-},getMetadata:function(_c){
+},getChildren:function(_c,_d){
+},getMetadata:function(_e){
 }});
-dojo.store.api.Store.PutDirectives=function(id,_d,_e,_f){
+_2.PutDirectives=function(id,_f,_10,_11){
 this.id=id;
-this.before=_d;
-this.parent=_e;
-this.overwrite=_f;
+this.before=_f;
+this.parent=_10;
+this.overwrite=_11;
 };
-dojo.store.api.Store.SortInformation=function(_10,_11){
-this.attribute=_10;
-this.descending=_11;
+_2.SortInformation=function(_12,_13){
+this.attribute=_12;
+this.descending=_13;
 };
-dojo.store.api.Store.QueryOptions=function(_12,_13,_14){
-this.sort=_12;
-this.start=_13;
-this.count=_14;
+_2.QueryOptions=function(_14,_15,_16){
+this.sort=_14;
+this.start=_15;
+this.count=_16;
 };
-dojo.declare("dojo.store.api.Store.QueryResults",null,{forEach:function(_15,_16){
-},filter:function(_17,_18){
-},map:function(_19,_1a){
-},then:function(_1b,_1c){
-},observe:function(_1d,_1e){
+_1("dojo.store.api.Store.QueryResults",null,{forEach:function(_17,_18){
+},filter:function(_19,_1a){
+},map:function(_1b,_1c){
+},then:function(_1d,_1e){
+},observe:function(_1f,_20){
 },total:0});
-dojo.declare("dojo.store.api.Store.Transaction",null,{commit:function(){
-},abort:function(_1f,_20){
+_1("dojo.store.api.Store.Transaction",null,{commit:function(){
+},abort:function(_21,_22){
 }});
+return _2;
 });

@@ -1,47 +1,40 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dijit/form/_RadioButtonMixin",["dojo/_base/kernel","..","dojo/_base/NodeList","dojo/_base/array","dojo/_base/declare","dojo/_base/event","dojo/_base/html","dojo/_base/lang","dojo/_base/window","dojo/query"],function(_1,_2){
-_1.declare("dijit.form._RadioButtonMixin",null,{type:"radio",_getRelatedWidgets:function(){
-var _3=[];
-_1.query("input[type=radio]",this.focusNode.form||_1.doc).forEach(_1.hitch(this,function(_4){
-if(_4.name==this.name&&_4.form==this.focusNode.form){
-var _5=_2.getEnclosingWidget(_4);
-if(_5){
-_3.push(_5);
+define("dijit/form/_RadioButtonMixin",["dojo/_base/array","dojo/_base/declare","dojo/dom-attr","dojo/_base/event","dojo/_base/lang","dojo/query","dojo/_base/window","../registry"],function(_1,_2,_3,_4,_5,_6,_7,_8){
+return _2("dijit.form._RadioButtonMixin",null,{type:"radio",_getRelatedWidgets:function(){
+var _9=[];
+_6("input[type=radio]",this.focusNode.form||_7.doc).forEach(_5.hitch(this,function(_a){
+if(_a.name==this.name&&_a.form==this.focusNode.form){
+var _b=_8.getEnclosingWidget(_a);
+if(_b){
+_9.push(_b);
 }
 }
 }));
-return _3;
-},_setCheckedAttr:function(_6){
+return _9;
+},_setCheckedAttr:function(_c){
 this.inherited(arguments);
 if(!this._created){
 return;
 }
-if(_6){
-_1.forEach(this._getRelatedWidgets(),_1.hitch(this,function(_7){
-if(_7!=this&&_7.checked){
-_7.set("checked",false);
+if(_c){
+_1.forEach(this._getRelatedWidgets(),_5.hitch(this,function(_d){
+if(_d!=this&&_d.checked){
+_d.set("checked",false);
 }
 }));
 }
 },_onClick:function(e){
 if(this.checked||this.disabled){
-_1.stopEvent(e);
+_4.stop(e);
 return false;
 }
 if(this.readOnly){
-_1.stopEvent(e);
-_1.forEach(this._getRelatedWidgets(),_1.hitch(this,function(_8){
-_1.attr(this.focusNode||this.domNode,"checked",_8.checked);
+_4.stop(e);
+_1.forEach(this._getRelatedWidgets(),_5.hitch(this,function(_e){
+_3.set(this.focusNode||this.domNode,"checked",_e.checked);
 }));
 return false;
 }
 return this.inherited(arguments);
 }});
-return _2.form._RadioButtonMixin;
 });

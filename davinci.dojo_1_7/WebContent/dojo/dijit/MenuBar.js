@@ -1,37 +1,30 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-require.cache["dijit/templates/MenuBar.html"]="<div class=\"dijitMenuBar dijitMenuPassive\" dojoAttachPoint=\"containerNode\"  role=\"menubar\" tabIndex=\"${tabIndex}\" dojoAttachEvent=\"onkeypress: _onKeyPress\"></div>\n";
-define("dijit/MenuBar",["dojo/_base/kernel",".","dojo/text!./templates/MenuBar.html","./Menu","dojo/_base/connect","dojo/_base/event"],function(_1,_2,_3){
-_1.declare("dijit.MenuBar",_2._MenuBase,{templateString:_3,baseClass:"dijitMenuBar",_isMenuBar:true,postCreate:function(){
-var k=_1.keys,l=this.isLeftToRight();
-this.connectKeyNavHandlers(l?[k.LEFT_ARROW]:[k.RIGHT_ARROW],l?[k.RIGHT_ARROW]:[k.LEFT_ARROW]);
+require({cache:{"url:dijit/templates/MenuBar.html":"<div class=\"dijitMenuBar dijitMenuPassive\" data-dojo-attach-point=\"containerNode\"  role=\"menubar\" tabIndex=\"${tabIndex}\" data-dojo-attach-event=\"onkeypress: _onKeyPress\"></div>\n"}});
+define("dijit/MenuBar",["dojo/_base/declare","dojo/_base/event","dojo/keys","./_MenuBase","dojo/text!./templates/MenuBar.html"],function(_1,_2,_3,_4,_5){
+return _1("dijit.MenuBar",_4,{templateString:_5,baseClass:"dijitMenuBar",_isMenuBar:true,postCreate:function(){
+var l=this.isLeftToRight();
+this.connectKeyNavHandlers(l?[_3.LEFT_ARROW]:[_3.RIGHT_ARROW],l?[_3.RIGHT_ARROW]:[_3.LEFT_ARROW]);
 this._orient=["below"];
-},focusChild:function(_4){
-var _5=this.focusedChild,_6=_5&&_5.popup&&_5.popup.isShowingNow;
+},focusChild:function(_6){
+var _7=this.focusedChild,_8=_7&&_7.popup&&_7.popup.isShowingNow;
 this.inherited(arguments);
-if(_6&&_4.popup&&!_4.disabled){
+if(_8&&_6.popup&&!_6.disabled){
 this._openPopup();
 }
-},_onKeyPress:function(_7){
-if(_7.ctrlKey||_7.altKey){
+},_onKeyPress:function(_9){
+if(_9.ctrlKey||_9.altKey){
 return;
 }
-switch(_7.charOrCode){
-case _1.keys.DOWN_ARROW:
-this._moveToPopup(_7);
-_1.stopEvent(_7);
+switch(_9.charOrCode){
+case _3.DOWN_ARROW:
+this._moveToPopup(_9);
+_2.stop(_9);
 }
-},onItemClick:function(_8,_9){
-if(_8.popup&&_8.popup.isShowingNow){
-_8.popup.onCancel();
+},onItemClick:function(_a,_b){
+if(_a.popup&&_a.popup.isShowingNow){
+_a.popup.onCancel();
 }else{
 this.inherited(arguments);
 }
 }});
-return _2.MenuBar;
 });

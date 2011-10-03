@@ -1,12 +1,8 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/lang/functional/tailrec",["dojo","dijit","dojox","dojox/lang/functional/lambda","dojox/lang/functional/util"],function(_1,_2,_3){
-_1.getObject("dojox.lang.functional.tailrec",1);
+define(["dijit","dojo","dojox","dojo/require!dojox/lang/functional/lambda,dojox/lang/functional/util"],function(_1,_2,_3){
+_2.provide("dojox.lang.functional.tailrec");
+_2.require("dojox.lang.functional.lambda");
+_2.require("dojox.lang.functional.util");
 (function(){
 var df=_3.lang.functional,_4=df.inlineLambda,_5="_x";
 df.tailrec=function(_6,_7,_8){
@@ -46,6 +42,4 @@ f.b=b;
 return f;
 };
 })();
-return _1.getObject("dojox.lang.functional.tailrec");
 });
-require(["dojox/lang/functional/tailrec"]);

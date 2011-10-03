@@ -5,15 +5,16 @@
 */
 
 //>>built
-define("dojo/NodeList-html",[".","./html"],function(_1){
-_1.extend(_1.NodeList,{html:function(_2,_3){
-var _4=new _1.html._ContentSetter(_3||{});
-this.forEach(function(_5){
-_4.node=_5;
-_4.set(_2);
-_4.tearDown();
+define("dojo/NodeList-html",["./query","./_base/lang","./html"],function(_1,_2,_3){
+var _4=_1.NodeList;
+_2.extend(_4,{html:function(_5,_6){
+var _7=new _3._ContentSetter(_6||{});
+this.forEach(function(_8){
+_7.node=_8;
+_7.set(_5);
+_7.tearDown();
 });
 return this;
 }});
-return _1.NodeList;
+return _4;
 });

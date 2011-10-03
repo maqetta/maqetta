@@ -1,61 +1,54 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/gfx/gradutils",["./matrix"],function(m){
-dojo.getObject("dojox.gfx.gradutils",true);
-var d=dojo,C=d.Color;
-function _1(o,c){
+define("dojox/gfx/gradutils",["./_base","dojo/_base/lang","./matrix","dojo/_base/Color"],function(g,_1,m,_2){
+var _3=g.gradutils={};
+function _4(o,c){
 if(o<=0){
 return c[0].color;
 }
-var _2=c.length;
+var _5=c.length;
 if(o>=1){
-return c[_2-1].color;
+return c[_5-1].color;
 }
-for(var i=0;i<_2;++i){
-var _3=c[i];
-if(_3.offset>=o){
+for(var i=0;i<_5;++i){
+var _6=c[i];
+if(_6.offset>=o){
 if(i){
-var _4=c[i-1];
-return d.blendColors(new C(_4.color),new C(_3.color),(o-_4.offset)/(_3.offset-_4.offset));
+var _7=c[i-1];
+return _2.blendColors(new _2(_7.color),new _2(_6.color),(o-_7.offset)/(_6.offset-_7.offset));
 }
-return _3.color;
+return _6.color;
 }
 }
-return c[_2-1].color;
+return c[_5-1].color;
 };
-dojox.gfx.gradutils.getColor=function(_5,pt){
+_3.getColor=function(_8,pt){
 var o;
-if(_5){
-switch(_5.type){
+if(_8){
+switch(_8.type){
 case "linear":
-var _6=Math.atan2(_5.y2-_5.y1,_5.x2-_5.x1),_7=m.rotate(-_6),_8=m.project(_5.x2-_5.x1,_5.y2-_5.y1),p=m.multiplyPoint(_8,pt),_9=m.multiplyPoint(_8,_5.x1,_5.y1),_a=m.multiplyPoint(_8,_5.x2,_5.y2),_b=m.multiplyPoint(_7,_a.x-_9.x,_a.y-_9.y).x;
-o=m.multiplyPoint(_7,p.x-_9.x,p.y-_9.y).x/_b;
+var _9=Math.atan2(_8.y2-_8.y1,_8.x2-_8.x1),_a=m.rotate(-_9),_b=m.project(_8.x2-_8.x1,_8.y2-_8.y1),p=m.multiplyPoint(_b,pt),_c=m.multiplyPoint(_b,_8.x1,_8.y1),_d=m.multiplyPoint(_b,_8.x2,_8.y2),_e=m.multiplyPoint(_a,_d.x-_c.x,_d.y-_c.y).x;
+o=m.multiplyPoint(_a,p.x-_c.x,p.y-_c.y).x/_e;
 break;
 case "radial":
-var dx=pt.x-_5.cx,dy=pt.y-_5.cy;
-o=Math.sqrt(dx*dx+dy*dy)/_5.r;
+var dx=pt.x-_8.cx,dy=pt.y-_8.cy;
+o=Math.sqrt(dx*dx+dy*dy)/_8.r;
 break;
 }
-return _1(o,_5.colors);
+return _4(o,_8.colors);
 }
-return new C(_5||[0,0,0,0]);
+return new _2(_8||[0,0,0,0]);
 };
-dojox.gfx.gradutils.reverse=function(_c){
-if(_c){
-switch(_c.type){
+_3.reverse=function(_f){
+if(_f){
+switch(_f.type){
 case "linear":
 case "radial":
-_c=dojo.delegate(_c);
-if(_c.colors){
-var c=_c.colors,l=c.length,i=0,_d,n=_c.colors=new Array(c.length);
+_f=_1.delegate(_f);
+if(_f.colors){
+var c=_f.colors,l=c.length,i=0,_10,n=_f.colors=new Array(c.length);
 for(;i<l;++i){
-_d=c[i];
-n[i]={offset:1-_d.offset,color:_d.color};
+_10=c[i];
+n[i]={offset:1-_10.offset,color:_10.color};
 }
 n.sort(function(a,b){
 return a.offset-b.offset;
@@ -64,7 +57,7 @@ return a.offset-b.offset;
 break;
 }
 }
-return _c;
+return _f;
 };
-return dojox.gfx.gradutils;
+return _3;
 });

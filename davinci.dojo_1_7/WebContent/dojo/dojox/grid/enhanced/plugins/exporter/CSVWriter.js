@@ -1,48 +1,41 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/grid/enhanced/plugins/exporter/CSVWriter",["dojo","dojox","./_ExportWriter"],function(_1,_2){
-_2.grid.enhanced.plugins.Exporter.registerWriter("csv","dojox.grid.enhanced.plugins.exporter.CSVWriter");
-_1.declare("dojox.grid.enhanced.plugins.exporter.CSVWriter",_2.grid.enhanced.plugins.exporter._ExportWriter,{_separator:",",_newline:"\r\n",constructor:function(_3){
-if(_3){
-this._separator=_3.separator?_3.separator:this._separator;
-this._newline=_3.newline?_3.newline:this._newline;
+define("dojox/grid/enhanced/plugins/exporter/CSVWriter",["dojo/_base/declare","dojo/_base/array","./_ExportWriter","../Exporter"],function(_1,_2,_3,_4){
+_4.registerWriter("csv","dojox.grid.enhanced.plugins.exporter.CSVWriter");
+return _1("dojox.grid.enhanced.plugins.exporter.CSVWriter",_3,{_separator:",",_newline:"\r\n",constructor:function(_5){
+if(_5){
+this._separator=_5.separator?_5.separator:this._separator;
+this._newline=_5.newline?_5.newline:this._newline;
 }
 this._headers=[];
 this._dataRows=[];
-},_formatCSVCell:function(_4){
-if(_4===null||_4===undefined){
+},_formatCSVCell:function(_6){
+if(_6===null||_6===undefined){
 return "";
 }
-var _5=String(_4).replace(/"/g,"\"\"");
-if(_5.indexOf(this._separator)>=0||_5.search(/[" \t\r\n]/)>=0){
-_5="\""+_5+"\"";
+var _7=String(_6).replace(/"/g,"\"\"");
+if(_7.indexOf(this._separator)>=0||_7.search(/[" \t\r\n]/)>=0){
+_7="\""+_7+"\"";
 }
-return _5;
-},beforeContentRow:function(_6){
-var _7=[],_8=this._formatCSVCell;
-_1.forEach(_6.grid.layout.cells,function(_9){
-if(!_9.hidden&&_1.indexOf(_6.spCols,_9.index)<0){
-_7.push(_8(this._getExportDataForCell(_6.rowIndex,_6.row,_9,_6.grid)));
+return _7;
+},beforeContentRow:function(_8){
+var _9=[],_a=this._formatCSVCell;
+_2.forEach(_8.grid.layout.cells,function(_b){
+if(!_b.hidden&&_2.indexOf(_8.spCols,_b.index)<0){
+_9.push(_a(this._getExportDataForCell(_8.rowIndex,_8.row,_b,_8.grid)));
 }
 },this);
-this._dataRows.push(_7);
+this._dataRows.push(_9);
 return false;
-},handleCell:function(_a){
-var _b=_a.cell;
-if(_a.isHeader&&!_b.hidden&&_1.indexOf(_a.spCols,_b.index)<0){
-this._headers.push(_b.name||_b.field);
+},handleCell:function(_c){
+var _d=_c.cell;
+if(_c.isHeader&&!_d.hidden&&_2.indexOf(_c.spCols,_d.index)<0){
+this._headers.push(_d.name||_d.field);
 }
 },toString:function(){
-var _c=this._headers.join(this._separator);
+var _e=this._headers.join(this._separator);
 for(var i=this._dataRows.length-1;i>=0;--i){
 this._dataRows[i]=this._dataRows[i].join(this._separator);
 }
-return _c+this._newline+this._dataRows.join(this._newline);
+return _e+this._newline+this._dataRows.join(this._newline);
 }});
-return _2.grid.enhanced.plugins.exporter.CSVWriter;
 });

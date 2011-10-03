@@ -33,7 +33,7 @@
 }
 .claro .dijitTimePickerMarker {
   
-  background-color: #e9f4fe;
+  background-color: #e5f2fe;
   font-size: 1em;
   white-space: nowrap;
 }
@@ -41,7 +41,7 @@
 .claro .dijitTimePickerMarkerHover,
 .claro .dijitTimePickerMarkerSelected,
 .claro .dijitTimePickerTickSelected {
-  background-color: #7dbefa;
+  background-color: #7dbdfa;
   border: solid 1px #b5bcc7;
   margin-left: -7px;
   margin-right: -7px;

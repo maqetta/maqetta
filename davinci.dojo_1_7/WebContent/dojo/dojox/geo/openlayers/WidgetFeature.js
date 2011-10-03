@@ -1,34 +1,28 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/geo/openlayers/WidgetFeature",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojox/geo/openlayers/Feature"],function(_1,_2,_3,_4){
-return _1.declare("dojox.geo.openlayers.WidgetFeature",dojox.geo.openlayers.Feature,{_widget:null,_bbox:null,constructor:function(_5){
-this._params=_5;
-},setParameters:function(_6){
+define("dojox/geo/openlayers/WidgetFeature",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/lang","dojox/geo/openlayers/Feature"],function(_1,_2,_3,_4,_5){
+return _2("dojox.geo.openlayers.WidgetFeature",dojox.geo.openlayers.Feature,{_widget:null,_bbox:null,constructor:function(_6){
 this._params=_6;
+},setParameters:function(_7){
+this._params=_7;
 },getParameters:function(){
 return this._params;
 },_getWidget:function(){
-var _7=this._params;
-if((this._widget==null)&&(_7!=null)){
+var _8=this._params;
+if((this._widget==null)&&(_8!=null)){
 var w=null;
-if(typeof (_7.createWidget)=="function"){
-w=_7.createWidget.call(this);
+if(typeof (_8.createWidget)=="function"){
+w=_8.createWidget.call(this);
 }else{
-if(_7.dojoType){
-_1["require"](_7.dojoType);
-var c=_1.getObject(_7.dojoType);
-w=new c(_7);
+if(_8.dojoType){
+_1["require"](_8.dojoType);
+var c=_4.getObject(_8.dojoType);
+w=new c(_8);
 }else{
-if(_7.dijitId){
-w=dijit.byId(_7.dijitId);
+if(_8.dijitId){
+w=dijit.byId(_8.dijitId);
 }else{
-if(_7.widget){
-w=_7.widget;
+if(_8.widget){
+w=_8.widget;
 }
 }
 }
@@ -40,7 +34,7 @@ w.startup();
 }
 var n=w.domNode;
 if(n!=null){
-_1.style(n,{position:"absolute"});
+_3.style(n,{position:"absolute"});
 }
 }
 this._widget=w;
@@ -53,7 +47,7 @@ return p.width;
 }
 var w=this._getWidget();
 if(w){
-return _1.style(w.domNode,"width");
+return _3.style(w.domNode,"width");
 }
 },_getWidgetHeight:function(){
 var p=this._params;
@@ -62,42 +56,42 @@ return p.height;
 }
 var w=this._getWidget();
 if(w){
-return _1.style(w.domNode,"height");
+return _3.style(w.domNode,"height");
 }
 },render:function(){
-var _8=this.getLayer();
-var _9=this._getWidget();
-if(_9==null){
+var _9=this.getLayer();
+var _a=this._getWidget();
+if(_a==null){
 return;
 }
-var _a=this._params;
-var _b=_a.longitude;
-var _c=_a.latitude;
-var _d=this.getCoordinateSystem();
-var _e=_8.getDojoMap();
-var p=_e.transformXY(_b,_c,_d);
+var _b=this._params;
+var _c=_b.longitude;
+var _d=_b.latitude;
+var _e=this.getCoordinateSystem();
+var _f=_9.getDojoMap();
+var p=_f.transformXY(_c,_d,_e);
 var a=this._getLocalXY(p);
-var _f=this._getWidgetWidth();
-var _10=this._getWidgetHeight();
-var x=a[0]-_f/2;
-var y=a[1]-_10/2;
-var dom=_9.domNode;
-var p=_8.olLayer.div;
+var _10=this._getWidgetWidth();
+var _11=this._getWidgetHeight();
+var x=a[0]-_10/2;
+var y=a[1]-_11/2;
+var dom=_a.domNode;
+var p=_9.olLayer.div;
 if(dom.parentNode!=p){
 if(dom.parentNode){
 dom.parentNode.removeChild(dom);
 }
 p.appendChild(dom);
 }
-this._updateWidgetPosition({x:x,y:y,width:_f,height:_10});
+this._updateWidgetPosition({x:x,y:y,width:_10,height:_11});
 },_updateWidgetPosition:function(box){
 var w=this._widget;
 var dom=w.domNode;
-_1.style(dom,{position:"absolute",left:box.x+"px",top:box.y+"px",width:box.width+"px",height:box.height+"px"});
+_3.style(dom,{position:"absolute",left:box.x+"px",top:box.y+"px",width:box.width+"px",height:box.height+"px"});
 if(w.srcNodeRef){
-_1.style(w.srcNodeRef,{position:"absolute",left:box.x+"px",top:box.y+"px",width:box.width+"px",height:box.height+"px"});
+_3.style(w.srcNodeRef,{position:"absolute",left:box.x+"px",top:box.y+"px",width:box.width+"px",height:box.height+"px"});
 }
-if(_1.isFunction(w.resize)){
+if(_4.isFunction(w.resize)){
 w.resize({w:box.width,h:box.height});
 }
 },remove:function(){

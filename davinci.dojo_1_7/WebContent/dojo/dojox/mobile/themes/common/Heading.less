@@ -36,21 +36,23 @@
 	position: absolute;
 	.mblArrowButtonHead-styles;
 }
+.dj_chrome .mblArrowButtonHead {
+	.mblArrowButtonHeadChrome-styles;
+}
 .mblArrowButtonBody {
 	position: absolute;
 	cursor: pointer;
 	-webkit-tap-highlight-color: rgba(255,255,255,0);
 	.mblArrowButtonBody-styles;
 }
-.mblArrowButtonNeck {
-	position: absolute;
-	.mblArrowButtonNeck-styles;
-}
 .mblArrowButtonSelected {
-	.mblArrowButtonHead {
+	.mblArrowButtonHead, .mblArrowButtonBody {
 		.mblArrowButtonSelected-styles;
 	}
-	.mblArrowButtonBody, .mblArrowButtonNeck {
-		.mblArrowButtonSelected-styles;
+	.mblArrowButtonHead {
+		.mblArrowButtonHeadSelected-styles;
+	}
+	.mblArrowButtonBody {
+		.mblArrowButtonBodySelected-styles;
 	}
 }

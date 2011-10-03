@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/mdnd/dropMode/VerticalDropMode",["dojo/_base/kernel","dojo/_base/html","dojo/_base/array","dojox/mdnd/AreaManager"],function(_1){
+define("dojox/mdnd/dropMode/VerticalDropMode",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/array","dojox/mdnd/AreaManager"],function(_1){
 var _2=_1.declare("dojox.mdnd.dropMode.VerticalDropMode",null,{_oldXPoint:null,_oldYPoint:null,_oldBehaviour:"up",addArea:function(_3,_4){
 var _5=_3.length;
 var _6=_1.position(_4.node,true);

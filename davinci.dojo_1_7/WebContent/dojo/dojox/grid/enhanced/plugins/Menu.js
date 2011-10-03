@@ -1,73 +1,69 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/grid/enhanced/plugins/Menu",["dojo","dijit","dojox","../_Plugin"],function(_1,_2,_3){
-_1.declare("dojox.grid.enhanced.plugins.Menu",_3.grid.enhanced._Plugin,{name:"menus",types:["headerMenu","rowMenu","cellMenu","selectedRegionMenu"],constructor:function(){
+define("dojox/grid/enhanced/plugins/Menu",["dojo/_base/declare","dojo/_base/array","dojo/_base/lang","dojo/_base/html","dojo/_base/event","dojo/keys","../_Plugin","../../EnhancedGrid"],function(_1,_2,_3,_4,_5,_6,_7,_8){
+var _9=_1("dojox.grid.enhanced.plugins.Menu",_7,{name:"menus",types:["headerMenu","rowMenu","cellMenu","selectedRegionMenu"],constructor:function(){
 var g=this.grid;
-g.showMenu=_1.hitch(g,this.showMenu);
-g._setRowMenuAttr=_1.hitch(this,"_setRowMenuAttr");
-g._setCellMenuAttr=_1.hitch(this,"_setCellMenuAttr");
-g._setSelectedRegionMenuAttr=_1.hitch(this,"_setSelectedRegionMenuAttr");
+g.showMenu=_3.hitch(g,this.showMenu);
+g._setRowMenuAttr=_3.hitch(this,"_setRowMenuAttr");
+g._setCellMenuAttr=_3.hitch(this,"_setCellMenuAttr");
+g._setSelectedRegionMenuAttr=_3.hitch(this,"_setSelectedRegionMenuAttr");
 },onStartUp:function(){
-var _4,_5=this.option;
-for(_4 in _5){
-if(_1.indexOf(this.types,_4)>=0&&_5[_4]){
-this._initMenu(_4,_5[_4]);
+var _a,_b=this.option;
+for(_a in _b){
+if(_2.indexOf(this.types,_a)>=0&&_b[_a]){
+this._initMenu(_a,_b[_a]);
 }
 }
-},_initMenu:function(_6,_7){
+},_initMenu:function(_c,_d){
 var g=this.grid;
-if(!g[_6]){
-var m=this._getMenuWidget(_7);
+if(!g[_c]){
+var m=this._getMenuWidget(_d);
 if(!m){
 return;
 }
-g.set(_6,m);
-if(_6!="headerMenu"){
+g.set(_c,m);
+if(_c!="headerMenu"){
 m._scheduleOpen=function(){
 return;
 };
+}else{
+g.setupHeaderMenu();
 }
 }
-},_getMenuWidget:function(_8){
-return (_8 instanceof _2.Menu)?_8:_2.byId(_8);
-},_setRowMenuAttr:function(_9){
-this._setMenuAttr(_9,"rowMenu");
-},_setCellMenuAttr:function(_a){
-this._setMenuAttr(_a,"cellMenu");
-},_setSelectedRegionMenuAttr:function(_b){
-this._setMenuAttr(_b,"selectedRegionMenu");
-},_setMenuAttr:function(_c,_d){
+},_getMenuWidget:function(_e){
+return (_e instanceof dijit.Menu)?_e:dijit.byId(_e);
+},_setRowMenuAttr:function(_f){
+this._setMenuAttr(_f,"rowMenu");
+},_setCellMenuAttr:function(_10){
+this._setMenuAttr(_10,"cellMenu");
+},_setSelectedRegionMenuAttr:function(_11){
+this._setMenuAttr(_11,"selectedRegionMenu");
+},_setMenuAttr:function(_12,_13){
 var g=this.grid,n=g.domNode;
-if(!_c||!(_c instanceof _2.Menu)){
-console.warn(_d," of Grid ",g.id," is not existed!");
+if(!_12||!(_12 instanceof dijit.Menu)){
+console.warn(_13," of Grid ",g.id," is not existed!");
 return;
 }
-if(g[_d]){
-g[_d].unBindDomNode(n);
+if(g[_13]){
+g[_13].unBindDomNode(n);
 }
-g[_d]=_c;
-g[_d].bindDomNode(n);
+g[_13]=_12;
+g[_13].bindDomNode(n);
 },showMenu:function(e){
-var _e=(e.cellNode&&_1.hasClass(e.cellNode,"dojoxGridRowSelected")||e.rowNode&&(_1.hasClass(e.rowNode,"dojoxGridRowSelected")||_1.hasClass(e.rowNode,"dojoxGridRowbarSelected")));
-if(_e&&this.selectedRegionMenu){
+var _14=(e.cellNode&&_4.hasClass(e.cellNode,"dojoxGridRowSelected")||e.rowNode&&(_4.hasClass(e.rowNode,"dojoxGridRowSelected")||_4.hasClass(e.rowNode,"dojoxGridRowbarSelected")));
+if(_14&&this.selectedRegionMenu){
 this.onSelectedRegionContextMenu(e);
 return;
 }
-var _f={target:e.target,coords:e.keyCode!==_1.keys.F10&&"pageX" in e?{x:e.pageX,y:e.pageY}:null};
-if(this.rowMenu&&(!this.cellMenu||this.selection.isSelected(e.rowIndex)||e.rowNode&&_1.hasClass(e.rowNode,"dojoxGridRowbar"))){
-this.rowMenu._openMyself(_f);
-_1.stopEvent(e);
+var _15={target:e.target,coords:e.keyCode!==_6.F10&&"pageX" in e?{x:e.pageX,y:e.pageY}:null};
+if(this.rowMenu&&(!this.cellMenu||this.selection.isSelected(e.rowIndex)||e.rowNode&&_4.hasClass(e.rowNode,"dojoxGridRowbar"))){
+this.rowMenu._openMyself(_15);
+_5.stop(e);
 return;
 }
 if(this.cellMenu){
-this.cellMenu._openMyself(_f);
+this.cellMenu._openMyself(_15);
 }
-_1.stopEvent(e);
+_5.stop(e);
 },destroy:function(){
 var g=this.grid;
 if(g.headerMenu){
@@ -84,6 +80,6 @@ g.selectedRegionMenu.destroy();
 }
 this.inherited(arguments);
 }});
-_3.grid.EnhancedGrid.registerPlugin(_3.grid.enhanced.plugins.Menu);
-return _3.grid.enhanced.plugins.Menu;
+_8.registerPlugin(_9);
+return _9;
 });

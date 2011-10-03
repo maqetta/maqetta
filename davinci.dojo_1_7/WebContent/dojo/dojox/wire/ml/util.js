@@ -1,12 +1,8 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/wire/ml/util",["dojo","dijit","dojox","dojox/xml/parser","dojox/wire/Wire"],function(_1,_2,_3){
-_1.getObject("dojox.wire.ml.util",1);
+define(["dijit","dojo","dojox","dojo/require!dojox/xml/parser,dojox/wire/Wire"],function(_1,_2,_3){
+_2.provide("dojox.wire.ml.util");
+_2.require("dojox.xml.parser");
+_2.require("dojox.wire.Wire");
 _3.wire.ml._getValue=function(_4,_5){
 if(!_4){
 return undefined;
@@ -21,7 +17,7 @@ if(i>=0){
 _6=_4.substring(i+1);
 _4=_4.substring(0,i);
 }
-var _7=(_2.byId(_4)||_1.byId(_4)||_1.getObject(_4));
+var _7=(_1.byId(_4)||_2.byId(_4)||_2.getObject(_4));
 if(!_7){
 return undefined;
 }
@@ -46,8 +42,8 @@ return;
 var _b=_8.substring(i+1);
 var _c=new _3.wire.Wire({object:_a,property:_b}).setValue(_9);
 };
-_1.declare("dojox.wire.ml.XmlElement",null,{constructor:function(_d){
-if(_1.isString(_d)){
+_2.declare("dojox.wire.ml.XmlElement",null,{constructor:function(_d){
+if(_2.isString(_d)){
 _d=this._getDocument().createElement(_d);
 }
 this.element=_d;
@@ -124,7 +120,7 @@ this.element.removeChild(_19);
 }
 }
 if(_15){
-if(_1.isArray(_15)){
+if(_2.isArray(_15)){
 for(i in _15){
 var e=_15[i];
 if(e.element){
@@ -173,7 +169,7 @@ var p=obj[_1e];
 if(!p){
 obj[_1e]=o;
 }else{
-if(_1.isArray(p)){
+if(_2.isArray(p)){
 p.push(o);
 }else{
 obj[_1e]=[p,o];
@@ -207,6 +203,4 @@ return (this.element.nodeType==9?this.element:this.element.ownerDocument);
 return _3.xml.parser.parse();
 }
 }});
-return _1.getObject("dojox.wire.ml.util");
 });
-require(["dojox/wire/ml/util"]);

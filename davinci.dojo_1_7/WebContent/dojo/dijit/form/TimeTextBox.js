@@ -1,24 +1,21 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dijit/form/TimeTextBox",["dojo/_base/kernel","..","../_TimePicker","./_DateTimeTextBox","dojo/_base/connect","dojo/_base/declare","dojo/_base/lang"],function(_1,_2){
-_1.declare("dijit.form.TimeTextBox",_2.form._DateTimeTextBox,{baseClass:"dijitTextBox dijitComboBox dijitTimeTextBox",popupClass:"dijit._TimePicker",_selector:"time",value:new Date(""),_onKey:function(_3){
+define("dijit/form/TimeTextBox",["dojo/_base/declare","dojo/keys","dojo/_base/lang","../_TimePicker","./_DateTimeTextBox"],function(_1,_2,_3,_4,_5){
+return _1("dijit.form.TimeTextBox",_5,{baseClass:"dijitTextBox dijitComboBox dijitTimeTextBox",popupClass:_4,_selector:"time",value:new Date(""),_onKey:function(_6){
+if(this.disabled||this.readOnly){
+return;
+}
 this.inherited(arguments);
-switch(_3.keyCode){
-case _1.keys.ENTER:
-case _1.keys.TAB:
-case _1.keys.ESCAPE:
-case _1.keys.DOWN_ARROW:
-case _1.keys.UP_ARROW:
+switch(_6.keyCode){
+case _2.ENTER:
+case _2.TAB:
+case _2.ESCAPE:
+case _2.DOWN_ARROW:
+case _2.UP_ARROW:
 break;
 default:
-setTimeout(_1.hitch(this,function(){
-var _4=this.get("displayedValue");
-this.filterString=(_4&&!this.parse(_4,this.constraints))?_4.toLowerCase():"";
+setTimeout(_3.hitch(this,function(){
+var _7=this.get("displayedValue");
+this.filterString=(_7&&!this.parse(_7,this.constraints))?_7.toLowerCase():"";
 if(this._opened){
 this.closeDropDown();
 }
@@ -26,5 +23,4 @@ this.openDropDown();
 }),0);
 }
 }});
-return _2.form.TimeTextBox;
 });

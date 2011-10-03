@@ -1,37 +1,30 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/grid/enhanced/plugins/exporter/_ExportWriter",["dojo","dojox","../Exporter"],function(_1,_2){
-_1.declare("dojox.grid.enhanced.plugins.exporter._ExportWriter",null,{constructor:function(_3){
-},_getExportDataForCell:function(_4,_5,_6,_7){
-var _8=(_6.get||_7.get).call(_6,_4,_5);
+define("dojox/grid/enhanced/plugins/exporter/_ExportWriter",["dojo/_base/declare"],function(_1){
+return _1("dojox.grid.enhanced.plugins.exporter._ExportWriter",null,{constructor:function(_2){
+},_getExportDataForCell:function(_3,_4,_5,_6){
+var _7=(_5.get||_6.get).call(_5,_3,_4);
 if(this.formatter){
-return this.formatter(_8,_6,_4,_5);
+return this.formatter(_7,_5,_3,_4);
 }else{
-return _8;
+return _7;
 }
-},beforeHeader:function(_9){
+},beforeHeader:function(_8){
 return true;
 },afterHeader:function(){
-},beforeContent:function(_a){
+},beforeContent:function(_9){
 return true;
 },afterContent:function(){
-},beforeContentRow:function(_b){
+},beforeContentRow:function(_a){
 return true;
-},afterContentRow:function(_c){
-},beforeView:function(_d){
+},afterContentRow:function(_b){
+},beforeView:function(_c){
 return true;
-},afterView:function(_e){
-},beforeSubrow:function(_f){
+},afterView:function(_d){
+},beforeSubrow:function(_e){
 return true;
-},afterSubrow:function(_10){
-},handleCell:function(_11){
+},afterSubrow:function(_f){
+},handleCell:function(_10){
 },toString:function(){
 return "";
 }});
-return _2.grid.enhanced.plugins.exporter._ExportWriter;
 });

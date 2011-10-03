@@ -1,17 +1,11 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dijit/_editor/plugins/AlwaysShowToolbar",["dojo/_base/kernel","../..","../_Plugin","dojo/_base/array","dojo/_base/connect","dojo/_base/html","dojo/_base/lang","dojo/_base/sniff","dojo/_base/window"],function(_1,_2){
-_1.declare("dijit._editor.plugins.AlwaysShowToolbar",_2._editor._Plugin,{_handleScroll:true,setEditor:function(e){
+define("dijit/_editor/plugins/AlwaysShowToolbar",["dojo/_base/declare","dojo/dom-class","dojo/dom-construct","dojo/dom-geometry","dojo/_base/lang","dojo/_base/sniff","dojo/_base/window","../_Plugin"],function(_1,_2,_3,_4,_5,_6,_7,_8){
+return _1("dijit._editor.plugins.AlwaysShowToolbar",_8,{_handleScroll:true,setEditor:function(e){
 if(!e.iframe){
 return;
 }
 this.editor=e;
-e.onLoadDeferred.addCallback(_1.hitch(this,this.enable));
+e.onLoadDeferred.addCallback(_5.hitch(this,this.enable));
 },enable:function(d){
 this._updateHeight();
 this.connect(window,"onscroll","globalOnScrollHandler");
@@ -25,66 +19,65 @@ return;
 if(e.height){
 return;
 }
-var _3=_1._getMarginSize(e.editNode).h;
-if(_1.isOpera){
-_3=e.editNode.scrollHeight;
+var _9=_4.getMarginSize(e.editNode).h;
+if(_6("opera")){
+_9=e.editNode.scrollHeight;
 }
-if(!_3){
-_3=_1._getMarginSize(e.document.body).h;
+if(!_9){
+_9=_4.getMarginSize(e.document.body).h;
 }
-if(_3==0){
+if(_9==0){
 return;
 }
-if(_1.isIE<=7&&this.editor.minHeight){
-var _4=parseInt(this.editor.minHeight);
-if(_3<_4){
-_3=_4;
+if(_6("ie")<=7&&this.editor.minHeight){
+var _a=parseInt(this.editor.minHeight);
+if(_9<_a){
+_9=_a;
 }
 }
-if(_3!=this._lastHeight){
-this._lastHeight=_3;
-_1.marginBox(e.iframe,{h:this._lastHeight});
+if(_9!=this._lastHeight){
+this._lastHeight=_9;
+_4.setMarginBox(e.iframe,{h:this._lastHeight});
 }
 },_lastHeight:0,globalOnScrollHandler:function(){
-var _5=_1.isIE<7;
+var _b=_6("ie")<7;
 if(!this._handleScroll){
 return;
 }
-var _6=this.editor.header;
-var db=_1.body;
+var _c=this.editor.header;
 if(!this._scrollSetUp){
 this._scrollSetUp=true;
-this._scrollThreshold=_1.position(_6,true).y;
+this._scrollThreshold=_4.position(_c,true).y;
 }
-var _7=_1._docScroll().y;
-var s=_6.style;
-if(_7>this._scrollThreshold&&_7<this._scrollThreshold+this._lastHeight){
+var _d=_4.docScroll().y;
+var s=_c.style;
+if(_d>this._scrollThreshold&&_d<this._scrollThreshold+this._lastHeight){
 if(!this._fixEnabled){
-var _8=_1._getMarginSize(_6);
-this.editor.iframe.style.marginTop=_8.h+"px";
-if(_5){
-s.left=_1.position(_6).x;
-if(_6.previousSibling){
-this._IEOriginalPos=["after",_6.previousSibling];
+var _e=_4.getMarginSize(_c);
+this.editor.iframe.style.marginTop=_e.h+"px";
+if(_b){
+s.left=_4.position(_c).x;
+if(_c.previousSibling){
+this._IEOriginalPos=["after",_c.previousSibling];
 }else{
-if(_6.nextSibling){
-this._IEOriginalPos=["before",_6.nextSibling];
+if(_c.nextSibling){
+this._IEOriginalPos=["before",_c.nextSibling];
 }else{
-this._IEOriginalPos=["last",_6.parentNode];
+this._IEOriginalPos=["last",_c.parentNode];
 }
 }
-_1.body().appendChild(_6);
-_1.addClass(_6,"dijitIEFixedToolbar");
+_7.body().appendChild(_c);
+_2.add(_c,"dijitIEFixedToolbar");
 }else{
 s.position="fixed";
 s.top="0px";
 }
-_1.marginBox(_6,{w:_8.w});
+_4.setMarginBox(_c,{w:_e.w});
 s.zIndex=2000;
 this._fixEnabled=true;
 }
-var _9=(this.height)?parseInt(this.editor.height):this.editor._lastHeight;
-s.display=(_7>this._scrollThreshold+_9)?"none":"";
+var _f=(this.height)?parseInt(this.editor.height):this.editor._lastHeight;
+s.display=(_d>this._scrollThreshold+_f)?"none":"";
 }else{
 if(this._fixEnabled){
 this.editor.iframe.style.marginTop="";
@@ -92,14 +85,14 @@ s.position="";
 s.top="";
 s.zIndex="";
 s.display="";
-if(_5){
+if(_b){
 s.left="";
-_1.removeClass(_6,"dijitIEFixedToolbar");
+_2.remove(_c,"dijitIEFixedToolbar");
 if(this._IEOriginalPos){
-_1.place(_6,this._IEOriginalPos[1],this._IEOriginalPos[0]);
+_3.place(_c,this._IEOriginalPos[1],this._IEOriginalPos[0]);
 this._IEOriginalPos=null;
 }else{
-_1.place(_6,this.editor.iframe,"before");
+_3.place(_c,this.editor.iframe,"before");
 }
 }
 s.width="";
@@ -109,10 +102,9 @@ this._fixEnabled=false;
 },destroy:function(){
 this._IEOriginalPos=null;
 this._handleScroll=false;
-_1.forEach(this._connects,_1.disconnect);
-if(_1.isIE<7){
-_1.removeClass(this.editor.header,"dijitIEFixedToolbar");
+this.inherited(arguments);
+if(_6("ie")<7){
+_2.remove(this.editor.header,"dijitIEFixedToolbar");
 }
 }});
-return _2._editor.plugins.AlwaysShowToolbar;
 });

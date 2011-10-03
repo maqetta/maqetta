@@ -1,14 +1,8 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dijit/form/RangeBoundTextBox",["dojo/_base/kernel","..","./MappedTextBox","dojo/_base/declare","dojo/i18n"],function(_1,_2){
-_1.declare("dijit.form.RangeBoundTextBox",_2.form.MappedTextBox,{rangeMessage:"",rangeCheck:function(_3,_4){
-return ("min" in _4?(this.compare(_3,_4.min)>=0):true)&&("max" in _4?(this.compare(_3,_4.max)<=0):true);
-},isInRange:function(_5){
+define("dijit/form/RangeBoundTextBox",["dojo/_base/declare","dojo/i18n","./MappedTextBox"],function(_1,_2,_3){
+return _1("dijit.form.RangeBoundTextBox",_3,{rangeMessage:"",rangeCheck:function(_4,_5){
+return ("min" in _5?(this.compare(_4,_5.min)>=0):true)&&("max" in _5?(this.compare(_4,_5.max)<=0):true);
+},isInRange:function(){
 return this.rangeCheck(this.get("value"),this.constraints);
 },_isDefinitelyOutOfRange:function(){
 var _6=this.get("value");
@@ -38,7 +32,7 @@ return this.inherited(arguments);
 },postMixInProperties:function(){
 this.inherited(arguments);
 if(!this.rangeMessage){
-this.messages=_1.i18n.getLocalization("dijit.form","validate",this.lang);
+this.messages=_2.getLocalization("dijit.form","validate",this.lang);
 this.rangeMessage=this.messages.rangeMessage;
 }
 },_setConstraintsAttr:function(_d){
@@ -58,7 +52,6 @@ this.focusNode.removeAttribute("aria-valuemax");
 },_setValueAttr:function(_e,_f){
 this.focusNode.setAttribute("aria-valuenow",_e);
 this.inherited(arguments);
-},applyTextDir:function(_10,_11){
+},applyTextDir:function(){
 }});
-return _2.form.RangeBoundTextBox;
 });

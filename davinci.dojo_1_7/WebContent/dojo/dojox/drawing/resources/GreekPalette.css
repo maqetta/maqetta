@@ -14,9 +14,9 @@
 	z-index: 10;
 	text-align: center;
 }
-.dojoxEntityPaletteCellHover, .dojoxEntityPaletteCellActive, .dojoxEntityPaletteCellFocused {
+.dojoxEntityPaletteCell:hover, .dojoxEntityPaletteCell:active, .dojoxEntityPaletteCell:focus {
 	width: 18px;
-        line-height: 16px;
+    line-height: 16px;
 	overflow: hidden;
 	cursor: default;
 	border:1px dashed #000;

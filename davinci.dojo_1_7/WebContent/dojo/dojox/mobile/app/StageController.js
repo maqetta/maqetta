@@ -1,18 +1,13 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/mobile/app/StageController",["dojo","dijit","dojox","dojox/mobile/app/SceneController"],function(_1,_2,_3){
-_1.getObject("dojox.mobile.app.StageController",1);
-_1.experimental("dojox.mobile.app.StageController");
-_1.declare("dojox.mobile.app.StageController",null,{scenes:null,effect:"fade",constructor:function(_4){
+define(["dijit","dojo","dojox","dojo/require!dojox/mobile/app/SceneController"],function(_1,_2,_3){
+_2.provide("dojox.mobile.app.StageController");
+_2.experimental("dojox.mobile.app.StageController");
+_2.require("dojox.mobile.app.SceneController");
+_2.declare("dojox.mobile.app.StageController",null,{scenes:null,effect:"fade",constructor:function(_4){
 this.domNode=_4;
 this.scenes=[];
-if(_1.config.mobileAnim){
-this.effect=_1.config.mobileAnim;
+if(_2.config.mobileAnim){
+this.effect=_2.config.mobileAnim;
 }
 },getActiveSceneController:function(){
 return this.scenes[this.scenes.length-1];
@@ -21,14 +16,14 @@ if(this._opInProgress){
 return;
 }
 this._opInProgress=true;
-var _7=_1.create("div",{"class":"scene-wrapper",style:{visibility:"hidden"}},this.domNode);
+var _7=_2.create("div",{"class":"scene-wrapper",style:{visibility:"hidden"}},this.domNode);
 var _8=new _3.mobile.app.SceneController({},_7);
 if(this.scenes.length>0){
 this.scenes[this.scenes.length-1].assistant.deactivate();
 }
 this.scenes.push(_8);
 var _9=this;
-_1.forEach(this.scenes,this.setZIndex);
+_2.forEach(this.scenes,this.setZIndex);
 _8.stageController=this;
 _8.init(_5,_6).addCallback(function(){
 if(_9.scenes.length==1){
@@ -43,7 +38,7 @@ _9._opInProgress=false;
 }
 });
 },setZIndex:function(_a,_b){
-_1.style(_a.domNode,"zIndex",_b+1);
+_2.style(_a.domNode,"zIndex",_b+1);
 },popScene:function(_c){
 if(this._opInProgress){
 return;
@@ -73,6 +68,4 @@ _10.assistant.deactivate();
 _10.assistant.destroy();
 _10.destroyRecursive();
 }});
-return _1.getObject("dojox.mobile.app.StageController");
 });
-require(["dojox/mobile/app/StageController"]);

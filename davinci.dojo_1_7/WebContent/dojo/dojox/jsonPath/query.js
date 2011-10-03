@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/jsonPath/query",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.jsonPath.query",1);
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.jsonPath.query");
 _3.jsonPath.query=function(_4,_5,_6){
 var re=_3.jsonPath._regularExpressions;
 if(!_6){
@@ -200,6 +194,4 @@ return P.exec(P.normalize(_5).slice(1),_4,_6.evalType=="RESULT");
 }
 return false;
 };
-return _1.getObject("dojox.jsonPath.query");
 });
-require(["dojox/jsonPath/query"]);

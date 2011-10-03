@@ -1,18 +1,16 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/widget/FisheyeList",["dojo","dijit","dojox","dijit/_Widget","dijit/_Templated","dijit/_Container","dijit/_Contained"],function(_1,_2,_3){
-_1.getObject("dojox.widget.FisheyeList",1);
-_1.declare("dojox.widget.FisheyeList",[_2._Widget,_2._Templated,_2._Container],{constructor:function(){
+define(["dijit","dojo","dojox","dojo/require!dijit/_Widget,dijit/_Templated,dijit/_Container,dijit/_Contained"],function(_1,_2,_3){
+_2.provide("dojox.widget.FisheyeList");
+_2.require("dijit._Widget");
+_2.require("dijit._Templated");
+_2.require("dijit._Container");
+_2.require("dijit._Contained");
+_2.declare("dojox.widget.FisheyeList",[_1._Widget,_1._Templated,_1._Container],{constructor:function(){
 this.pos={"x":-1,"y":-1};
 this.timerScale=1;
 },EDGE:{CENTER:0,LEFT:1,RIGHT:2,TOP:3,BOTTOM:4},templateString:"<div class=\"dojoxFisheyeListBar\" dojoAttachPoint=\"containerNode\"></div>",snarfChildDomOutput:true,itemWidth:40,itemHeight:40,itemMaxWidth:150,itemMaxHeight:150,imgNode:null,orientation:"horizontal",isFixed:false,conservativeTrigger:false,effectUnits:2,itemPadding:10,attachEdge:"center",labelEdge:"bottom",postCreate:function(){
 var e=this.EDGE;
-_1.setSelectable(this.domNode,false);
+_2.setSelectable(this.domNode,false);
 var _4=this.isHorizontal=(this.orientation=="horizontal");
 this.selectedNode=-1;
 this.isOver=false;
@@ -79,14 +77,14 @@ this.proximityBottom/=2;
 this.children=this.getChildren();
 this._initializePositioning();
 if(!this.conservativeTrigger){
-this._onMouseMoveHandle=_1.connect(document.documentElement,"onmousemove",this,"_onMouseMove");
+this._onMouseMoveHandle=_2.connect(document.documentElement,"onmousemove",this,"_onMouseMove");
 }
 if(this.isFixed){
-this._onScrollHandle=_1.connect(document,"onscroll",this,"_onScroll");
+this._onScrollHandle=_2.connect(document,"onscroll",this,"_onScroll");
 }
-this._onMouseOutHandle=_1.connect(document.documentElement,"onmouseout",this,"_onBodyOut");
-this._addChildHandle=_1.connect(this,"addChild",this,"_initializePositioning");
-this._onResizeHandle=_1.connect(window,"onresize",this,"_initializePositioning");
+this._onMouseOutHandle=_2.connect(document.documentElement,"onmouseout",this,"_onBodyOut");
+this._addChildHandle=_2.connect(this,"addChild",this,"_initializePositioning");
+this._onResizeHandle=_2.connect(window,"onresize",this,"_initializePositioning");
 },_initializePositioning:function(){
 this.itemCount=this.children.length;
 this.barWidth=(this.isHorizontal?this.itemCount:1)*this.itemWidth;
@@ -131,17 +129,16 @@ _c.imgNode.style.height=(100-2*this.itemPadding)+"%";
 }
 this._calcHitGrid();
 },_overElement:function(_e,e){
-_e=_1.byId(_e);
+_e=_2.byId(_e);
 var _f={x:e.pageX,y:e.pageY};
-var bb=_1._getBorderBox(_e);
-var _10=_1.coords(_e,true);
+var _10=_2.position(_e,true);
 var top=_10.y;
-var _11=top+bb.h;
+var _11=top+_10.h;
 var _12=_10.x;
-var _13=_12+bb.w;
+var _13=_12+_10.w;
 return (_f.x>=_12&&_f.x<=_13&&_f.y>=top&&_f.y<=_11);
 },_onBodyOut:function(e){
-if(this._overElement(_1.body(),e)){
+if(this._overElement(_2.body(),e)){
 return;
 }
 this._setDormant(e);
@@ -151,7 +148,7 @@ return;
 }
 this.isOver=false;
 if(this.conservativeTrigger){
-_1.disconnect(this._onMouseMoveHandle);
+_2.disconnect(this._onMouseMoveHandle);
 }
 this._onGridMouseMove(-1,-1);
 },_setActive:function(e){
@@ -160,7 +157,7 @@ return;
 }
 this.isOver=true;
 if(this.conservativeTrigger){
-this._onMouseMoveHandle=_1.connect(document.documentElement,"onmousemove",this,"_onMouseMove");
+this._onMouseMoveHandle=_2.connect(document.documentElement,"onmousemove",this,"_onMouseMove");
 this.timerScale=0;
 this._onMouseMove(e);
 this._expandSlowly();
@@ -333,7 +330,7 @@ this._positionLabel(this.children[i]);
 },_positionLabel:function(itm){
 var x=0;
 var y=0;
-var mb=_1.marginBox(itm.lblNode);
+var mb=_2.marginBox(itm.lblNode);
 if(this.labelEdge==this.EDGE.TOP){
 x=Math.round((itm.sizeW/2)-(mb.w/2));
 y=-mb.h;
@@ -353,7 +350,7 @@ y=Math.round((itm.sizeH/2)-(mb.h/2));
 itm.lblNode.style.left=x+"px";
 itm.lblNode.style.top=y+"px";
 },_calcHitGrid:function(){
-var pos=_1.coords(this.domNode,true);
+var pos=_2.coords(this.domNode,true);
 this.hitX1=pos.x-this.proximityLeft;
 this.hitY1=pos.y-this.proximityTop;
 this.hitX2=this.hitX1+this.totalWidth;
@@ -367,19 +364,19 @@ return;
 this.timerScale+=0.2;
 this._paint();
 if(this.timerScale<1){
-setTimeout(_1.hitch(this,"_expandSlowly"),10);
+setTimeout(_2.hitch(this,"_expandSlowly"),10);
 }
 },destroyRecursive:function(){
-_1.disconnect(this._onMouseOutHandle);
-_1.disconnect(this._onMouseMoveHandle);
-_1.disconnect(this._addChildHandle);
+_2.disconnect(this._onMouseOutHandle);
+_2.disconnect(this._onMouseMoveHandle);
+_2.disconnect(this._addChildHandle);
 if(this.isFixed){
-_1.disconnect(this._onScrollHandle);
+_2.disconnect(this._onScrollHandle);
 }
-_1.disconnect(this._onResizeHandle);
+_2.disconnect(this._onResizeHandle);
 this.inherited("destroyRecursive",arguments);
 }});
-_1.declare("dojox.widget.FisheyeListItem",[_2._Widget,_2._Templated,_2._Contained],{iconSrc:"",label:"",id:"",templateString:"<div class=\"dojoxFisheyeListItem\">"+"  <img class=\"dojoxFisheyeListItemImage\" dojoAttachPoint=\"imgNode\" dojoAttachEvent=\"onmouseover:onMouseOver,onmouseout:onMouseOut,onclick:onClick\">"+"  <div class=\"dojoxFisheyeListItemLabel\" dojoAttachPoint=\"lblNode\"></div>"+"</div>",_isNode:function(wh){
+_2.declare("dojox.widget.FisheyeListItem",[_1._Widget,_1._Templated,_1._Contained],{iconSrc:"",label:"",id:"",templateString:"<div class=\"dojoxFisheyeListItem\">"+"  <img class=\"dojoxFisheyeListItemImage\" dojoAttachPoint=\"imgNode\" dojoAttachEvent=\"onmouseover:onMouseOver,onmouseout:onMouseOut,onclick:onClick\">"+"  <div class=\"dojoxFisheyeListItemLabel\" dojoAttachPoint=\"lblNode\"></div>"+"</div>",_isNode:function(wh){
 if(typeof Element=="function"){
 try{
 return wh instanceof Element;
@@ -394,7 +391,7 @@ return false;
 return Boolean(_22&&_22.parentNode&&this._isNode(_22.parentNode));
 },postCreate:function(){
 var _23;
-if((this.iconSrc.toLowerCase().substring(this.iconSrc.length-4)==".png")&&_1.isIE<7){
+if((this.iconSrc.toLowerCase().substring(this.iconSrc.length-4)==".png")&&_2.isIE<7){
 if(this._hasParent(this.imgNode)&&this.id!=""){
 _23=this.imgNode.parentNode;
 _23.setAttribute("id",this.id);
@@ -411,7 +408,7 @@ this.imgNode.src=this.iconSrc;
 if(this.lblNode){
 this.lblNode.appendChild(document.createTextNode(this.label));
 }
-_1.setSelectable(this.domNode,false);
+_2.setSelectable(this.domNode,false);
 this.startup();
 },startup:function(){
 this.parent=this.getParent();
@@ -420,13 +417,11 @@ if(!this.parent.isOver){
 this.parent._setActive(e);
 }
 if(this.label!=""){
-_1.addClass(this.lblNode,"dojoxFishSelected");
+_2.addClass(this.lblNode,"dojoxFishSelected");
 this.parent._positionLabel(this);
 }
 },onMouseOut:function(e){
-_1.removeClass(this.lblNode,"dojoxFishSelected");
+_2.removeClass(this.lblNode,"dojoxFishSelected");
 },onClick:function(e){
 }});
-return _1.getObject("dojox.widget.FisheyeList");
 });
-require(["dojox/widget/FisheyeList"]);

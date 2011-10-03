@@ -1,29 +1,23 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dijit/form/_ComboBoxMenu",["dojo/_base/kernel","..","./_ComboBoxMenuMixin","../_WidgetBase","../_TemplatedMixin","./_ListMouseMixin","dojo/_base/connect","dojo/_base/declare","dojo/_base/html"],function(_1,_2){
-_1.declare("dijit.form._ComboBoxMenu",[_2._WidgetBase,_2._TemplatedMixin,_2.form._ListMouseMixin,_2.form._ComboBoxMenuMixin],{templateString:"<div class='dijitReset dijitMenu' dojoAttachPoint='containerNode' style='overflow: auto; overflow-x: hidden;'>"+"<div class='dijitMenuItem dijitMenuPreviousButton' dojoAttachPoint='previousButton' role='option'></div>"+"<div class='dijitMenuItem dijitMenuNextButton' dojoAttachPoint='nextButton' role='option'></div>"+"</div>",baseClass:"dijitComboBoxMenu",_createMenuItem:function(){
-return _1.create("div",{"class":"dijitReset dijitMenuItem"+(this.isLeftToRight()?"":" dijitMenuItemRtl"),role:"option"});
-},onHover:function(_3){
-_1.addClass(_3,"dijitMenuItemHover");
-},onUnhover:function(_4){
-_1.removeClass(_4,"dijitMenuItemHover");
-},onSelect:function(_5){
-_1.addClass(_5,"dijitMenuItemSelected");
-},onDeselect:function(_6){
-_1.removeClass(_6,"dijitMenuItemSelected");
+define("dijit/form/_ComboBoxMenu",["dojo/_base/declare","dojo/dom-class","dojo/dom-construct","dojo/dom-style","dojo/keys","../_WidgetBase","../_TemplatedMixin","./_ComboBoxMenuMixin","./_ListMouseMixin"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9){
+return _1("dijit.form._ComboBoxMenu",[_6,_7,_9,_8],{templateString:"<div class='dijitReset dijitMenu' data-dojo-attach-point='containerNode' style='overflow: auto; overflow-x: hidden;'>"+"<div class='dijitMenuItem dijitMenuPreviousButton' data-dojo-attach-point='previousButton' role='option'></div>"+"<div class='dijitMenuItem dijitMenuNextButton' data-dojo-attach-point='nextButton' role='option'></div>"+"</div>",baseClass:"dijitComboBoxMenu",_createMenuItem:function(){
+return _3.create("div",{"class":"dijitReset dijitMenuItem"+(this.isLeftToRight()?"":" dijitMenuItemRtl"),role:"option"});
+},onHover:function(_a){
+_2.add(_a,"dijitMenuItemHover");
+},onUnhover:function(_b){
+_2.remove(_b,"dijitMenuItemHover");
+},onSelect:function(_c){
+_2.add(_c,"dijitMenuItemSelected");
+},onDeselect:function(_d){
+_2.remove(_d,"dijitMenuItemSelected");
 },_page:function(up){
-var _7=0;
-var _8=this.domNode.scrollTop;
-var _9=_1.style(this.domNode,"height");
+var _e=0;
+var _f=this.domNode.scrollTop;
+var _10=_4.get(this.domNode,"height");
 if(!this.getHighlightedOption()){
 this.selectNextNode();
 }
-while(_7<_9){
+while(_e<_10){
 if(up){
 if(!this.getHighlightedOption().previousSibling||this._highlighted_option.previousSibling.style.display=="none"){
 break;
@@ -35,27 +29,26 @@ break;
 }
 this.selectNextNode();
 }
-var _a=this.domNode.scrollTop;
-_7+=(_a-_8)*(up?-1:1);
-_8=_a;
+var _11=this.domNode.scrollTop;
+_e+=(_11-_f)*(up?-1:1);
+_f=_11;
 }
-},handleKey:function(_b){
-switch(_b.charOrCode){
-case _1.keys.DOWN_ARROW:
+},handleKey:function(evt){
+switch(evt.charOrCode){
+case _5.DOWN_ARROW:
 this.selectNextNode();
 return false;
-case _1.keys.PAGE_DOWN:
+case _5.PAGE_DOWN:
 this._page(false);
 return false;
-case _1.keys.UP_ARROW:
+case _5.UP_ARROW:
 this.selectPreviousNode();
 return false;
-case _1.keys.PAGE_UP:
+case _5.PAGE_UP:
 this._page(true);
 return false;
 default:
 return true;
 }
 }});
-return _2.form._ComboBoxMenu;
 });

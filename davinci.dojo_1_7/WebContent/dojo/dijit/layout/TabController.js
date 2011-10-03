@@ -1,59 +1,36 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-require.cache["dijit/layout/templates/_TabButton.html"]="<div role=\"presentation\" dojoAttachPoint=\"titleNode\" dojoAttachEvent='onclick:onClick'>\n    <div role=\"presentation\" class='dijitTabInnerDiv' dojoAttachPoint='innerDiv'>\n        <div role=\"presentation\" class='dijitTabContent' dojoAttachPoint='tabContent'>\n        \t<div role=\"presentation\" dojoAttachPoint='focusNode'>\n\t\t        <img src=\"${_blankGif}\" alt=\"\" class=\"dijitIcon dijitTabButtonIcon\" dojoAttachPoint='iconNode' />\n\t\t        <span dojoAttachPoint='containerNode' class='tabLabel'></span>\n\t\t        <span class=\"dijitInline dijitTabCloseButton dijitTabCloseIcon\" dojoAttachPoint='closeNode'\n\t\t        \t\tdojoAttachEvent='onclick: onClickCloseButton' role=\"presentation\">\n\t\t            <span dojoAttachPoint='closeText' class='dijitTabCloseText'>[x]</span\n\t\t        ></span>\n\t\t\t</div>\n        </div>\n    </div>\n</div>\n";
-define("dijit/layout/TabController",["dojo/_base/kernel","..","dojo/text!./templates/_TabButton.html","./StackController","../Menu","../MenuItem","dojo/i18n!../nls/common","dojo/_base/html","dojo/_base/lang","dojo/i18n"],function(_1,_2,_3){
-_1.declare("dijit.layout.TabController",_2.layout.StackController,{baseClass:"dijitTabController",templateString:"<div role='tablist' dojoAttachEvent='onkeypress:onkeypress'></div>",tabPosition:"top",buttonWidget:"dijit.layout._TabButton",_rectifyRtlTabList:function(){
-if(0>=this.tabPosition.indexOf("-h")){
-return;
-}
-if(!this.pane2button){
-return;
-}
-var _4=0;
-for(var _5 in this.pane2button){
-var ow=this.pane2button[_5].innerDiv.scrollWidth;
-_4=Math.max(_4,ow);
-}
-for(_5 in this.pane2button){
-this.pane2button[_5].innerDiv.style.width=_4+"px";
-}
-}});
-_1.declare("dijit.layout._TabButton",_2.layout._StackButton,{baseClass:"dijitTab",cssStateNodes:{closeNode:"dijitTabCloseButton"},templateString:_3,scrollOnFocus:false,buildRendering:function(){
+require({cache:{"url:dijit/layout/templates/_TabButton.html":"<div role=\"presentation\" data-dojo-attach-point=\"titleNode\" data-dojo-attach-event='onclick:onClick'>\n    <div role=\"presentation\" class='dijitTabInnerDiv' data-dojo-attach-point='innerDiv'>\n        <div role=\"presentation\" class='dijitTabContent' data-dojo-attach-point='tabContent'>\n        \t<div role=\"presentation\" data-dojo-attach-point='focusNode'>\n\t\t        <img src=\"${_blankGif}\" alt=\"\" class=\"dijitIcon dijitTabButtonIcon\" data-dojo-attach-point='iconNode' />\n\t\t        <span data-dojo-attach-point='containerNode' class='tabLabel'></span>\n\t\t        <span class=\"dijitInline dijitTabCloseButton dijitTabCloseIcon\" data-dojo-attach-point='closeNode'\n\t\t        \t\tdata-dojo-attach-event='onclick: onClickCloseButton' role=\"presentation\">\n\t\t            <span data-dojo-attach-point='closeText' class='dijitTabCloseText'>[x]</span\n\t\t        ></span>\n\t\t\t</div>\n        </div>\n    </div>\n</div>\n"}});
+define("dijit/layout/TabController",["dojo/_base/declare","dojo/dom","dojo/dom-attr","dojo/dom-class","dojo/i18n","dojo/_base/lang","./StackController","../Menu","../MenuItem","dojo/text!./templates/_TabButton.html","dojo/i18n!../nls/common"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a){
+var _b=_1("dijit.layout._TabButton",_7.StackButton,{baseClass:"dijitTab",cssStateNodes:{closeNode:"dijitTabCloseButton"},templateString:_a,scrollOnFocus:false,buildRendering:function(){
 this.inherited(arguments);
-_1.setSelectable(this.containerNode,false);
+_2.setSelectable(this.containerNode,false);
 },startup:function(){
 this.inherited(arguments);
 var n=this.domNode;
 setTimeout(function(){
 n.className=n.className;
 },1);
-},_setCloseButtonAttr:function(_6){
-this._set("closeButton",_6);
-_1.toggleClass(this.innerDiv,"dijitClosable",_6);
-this.closeNode.style.display=_6?"":"none";
-if(_6){
-var _7=_1.i18n.getLocalization("dijit","common");
+},_setCloseButtonAttr:function(_c){
+this._set("closeButton",_c);
+_4.toggle(this.innerDiv,"dijitClosable",_c);
+this.closeNode.style.display=_c?"":"none";
+if(_c){
+var _d=_5.getLocalization("dijit","common");
 if(this.closeNode){
-_1.attr(this.closeNode,"title",_7.itemClose);
+_3.set(this.closeNode,"title",_d.itemClose);
 }
-var _7=_1.i18n.getLocalization("dijit","common");
-this._closeMenu=new _2.Menu({id:this.id+"_Menu",dir:this.dir,lang:this.lang,textDir:this.textDir,targetNodeIds:[this.domNode]});
-this._closeMenu.addChild(new _2.MenuItem({label:_7.itemClose,dir:this.dir,lang:this.lang,textDir:this.textDir,onClick:_1.hitch(this,"onClickCloseButton")}));
+this._closeMenu=new _8({id:this.id+"_Menu",dir:this.dir,lang:this.lang,textDir:this.textDir,targetNodeIds:[this.domNode]});
+this._closeMenu.addChild(new _9({label:_d.itemClose,dir:this.dir,lang:this.lang,textDir:this.textDir,onClick:_6.hitch(this,"onClickCloseButton")}));
 }else{
 if(this._closeMenu){
 this._closeMenu.destroyRecursive();
 delete this._closeMenu;
 }
 }
-},_setLabelAttr:function(_8){
+},_setLabelAttr:function(_e){
 this.inherited(arguments);
 if(!this.showLabel&&!this.params.title){
-this.iconNode.alt=_1.trim(this.containerNode.innerText||this.containerNode.textContent||"");
+this.iconNode.alt=_6.trim(this.containerNode.innerText||this.containerNode.textContent||"");
 }
 },destroy:function(){
 if(this._closeMenu){
@@ -62,5 +39,22 @@ delete this._closeMenu;
 }
 this.inherited(arguments);
 }});
-return _2.layout.TabController;
+var _f=_1("dijit.layout.TabController",_7,{baseClass:"dijitTabController",templateString:"<div role='tablist' data-dojo-attach-event='onkeypress:onkeypress'></div>",tabPosition:"top",buttonWidget:_b,_rectifyRtlTabList:function(){
+if(0>=this.tabPosition.indexOf("-h")){
+return;
+}
+if(!this.pane2button){
+return;
+}
+var _10=0;
+for(var _11 in this.pane2button){
+var ow=this.pane2button[_11].innerDiv.scrollWidth;
+_10=Math.max(_10,ow);
+}
+for(_11 in this.pane2button){
+this.pane2button[_11].innerDiv.style.width=_10+"px";
+}
+}});
+_f.TabButton=_b;
+return _f;
 });

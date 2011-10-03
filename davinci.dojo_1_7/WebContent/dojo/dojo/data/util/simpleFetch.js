@@ -5,59 +5,59 @@
 */
 
 //>>built
-define("dojo/data/util/simpleFetch",["../..","./sorter"],function(_1){
-_1.getObject("data.util.simpleFetch",true,_1);
-_1.data.util.simpleFetch.fetch=function(_2){
-_2=_2||{};
-if(!_2.store){
-_2.store=this;
+define("dojo/data/util/simpleFetch",["dojo/_base/lang","dojo/_base/window","./sorter"],function(_1,_2,_3){
+var _4=_1.getObject("dojo.data.util.simpleFetch",true);
+_4.fetch=function(_5){
+_5=_5||{};
+if(!_5.store){
+_5.store=this;
 }
-var _3=this;
-var _4=function(_5,_6){
-if(_6.onError){
-var _7=_6.scope||_1.global;
-_6.onError.call(_7,_5,_6);
-}
-};
-var _8=function(_9,_a){
-var _b=_a.abort||null;
-var _c=false;
-var _d=_a.start?_a.start:0;
-var _e=(_a.count&&(_a.count!==Infinity))?(_d+_a.count):_9.length;
-_a.abort=function(){
-_c=true;
-if(_b){
-_b.call(_a);
+var _6=this;
+var _7=function(_8,_9){
+if(_9.onError){
+var _a=_9.scope||_2.global;
+_9.onError.call(_a,_8,_9);
 }
 };
-var _f=_a.scope||_1.global;
-if(!_a.store){
-_a.store=_3;
-}
-if(_a.onBegin){
-_a.onBegin.call(_f,_9.length,_a);
-}
-if(_a.sort){
-_9.sort(_1.data.util.sorter.createSortFunction(_a.sort,_3));
-}
-if(_a.onItem){
-for(var i=_d;(i<_9.length)&&(i<_e);++i){
-var _10=_9[i];
-if(!_c){
-_a.onItem.call(_f,_10,_a);
-}
-}
-}
-if(_a.onComplete&&!_c){
-var _11=null;
-if(!_a.onItem){
-_11=_9.slice(_d,_e);
-}
-_a.onComplete.call(_f,_11,_a);
+var _b=function(_c,_d){
+var _e=_d.abort||null;
+var _f=false;
+var _10=_d.start?_d.start:0;
+var _11=(_d.count&&(_d.count!==Infinity))?(_10+_d.count):_c.length;
+_d.abort=function(){
+_f=true;
+if(_e){
+_e.call(_d);
 }
 };
-this._fetchItems(_2,_8,_4);
-return _2;
+var _12=_d.scope||_2.global;
+if(!_d.store){
+_d.store=_6;
+}
+if(_d.onBegin){
+_d.onBegin.call(_12,_c.length,_d);
+}
+if(_d.sort){
+_c.sort(_3.createSortFunction(_d.sort,_6));
+}
+if(_d.onItem){
+for(var i=_10;(i<_c.length)&&(i<_11);++i){
+var _13=_c[i];
+if(!_f){
+_d.onItem.call(_12,_13,_d);
+}
+}
+}
+if(_d.onComplete&&!_f){
+var _14=null;
+if(!_d.onItem){
+_14=_c.slice(_10,_11);
+}
+_d.onComplete.call(_12,_14,_d);
+}
 };
-return _1.data.util.simpleFetch;
+this._fetchItems(_5,_b,_7);
+return _5;
+};
+return _4;
 });

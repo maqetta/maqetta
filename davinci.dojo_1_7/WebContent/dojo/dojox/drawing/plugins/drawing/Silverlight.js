@@ -1,99 +1,93 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/drawing/plugins/drawing/Silverlight",["dojo","../_Plugin","../../util/oo"],function(_1){
-_1.getObject("drawing.plugins.drawing",true,dojox);
-dojox.drawing.plugins.drawing.Silverlight=dojox.drawing.util.oo.declare(function(_2){
-if(dojox.gfx.renderer!="silverlight"){
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.drawing.plugins.drawing.Silverlight");
+_3.drawing.plugins.drawing.Silverlight=_3.drawing.util.oo.declare(function(_4){
+if(_3.gfx.renderer!="silverlight"){
 return;
 }
-this.mouse=_2.mouse;
-this.stencils=_2.stencils;
-this.anchors=_2.anchors;
-this.canvas=_2.canvas;
-this.util=_2.util;
-_1.connect(this.stencils,"register",this,function(_3){
-var c1,c2,c3,c4,c5,_4=this;
-var _5=function(){
-c1=_3.container.connect("onmousedown",function(_6){
-_6.superTarget=_3;
-_4.mouse.down(_6);
+this.mouse=_4.mouse;
+this.stencils=_4.stencils;
+this.anchors=_4.anchors;
+this.canvas=_4.canvas;
+this.util=_4.util;
+_2.connect(this.stencils,"register",this,function(_5){
+var c1,c2,c3,c4,c5,_6=this;
+var _7=function(){
+c1=_5.container.connect("onmousedown",function(_8){
+_8.superTarget=_5;
+_6.mouse.down(_8);
 });
 };
-_5();
-c2=_1.connect(_3,"setTransform",this,function(){
+_7();
+c2=_2.connect(_5,"setTransform",this,function(){
 });
-c3=_1.connect(_3,"onBeforeRender",function(){
+c3=_2.connect(_5,"onBeforeRender",function(){
 });
-c4=_1.connect(_3,"onRender",this,function(){
+c4=_2.connect(_5,"onRender",this,function(){
 });
-c5=_1.connect(_3,"destroy",this,function(){
-_1.forEach([c1,c2,c3,c4,c5],_1.disconnect,_1);
-});
-});
-_1.connect(this.anchors,"onAddAnchor",this,function(_7){
-var c1=_7.shape.connect("onmousedown",this.mouse,function(_8){
-_8.superTarget=_7;
-this.down(_8);
-});
-var c2=_1.connect(_7,"disconnectMouse",this,function(){
-_1.disconnect(c1);
-_1.disconnect(c2);
+c5=_2.connect(_5,"destroy",this,function(){
+_2.forEach([c1,c2,c3,c4,c5],_2.disconnect,_2);
 });
 });
-this.mouse._down=function(_9){
-var _a=this._getXY(_9);
-var x=_a.x-this.origin.x;
-var y=_a.y-this.origin.y;
+_2.connect(this.anchors,"onAddAnchor",this,function(_9){
+var c1=_9.shape.connect("onmousedown",this.mouse,function(_a){
+_a.superTarget=_9;
+this.down(_a);
+});
+var c2=_2.connect(_9,"disconnectMouse",this,function(){
+_2.disconnect(c1);
+_2.disconnect(c2);
+});
+});
+this.mouse._down=function(_b){
+var _c=this._getXY(_b);
+var x=_c.x-this.origin.x;
+var y=_c.y-this.origin.y;
 x*=this.zoom;
 y*=this.zoom;
 this.origin.startx=x;
 this.origin.starty=y;
 this._lastx=x;
 this._lasty=y;
-this.drawingType=this.util.attr(_9,"drawingType")||"";
-var id=this._getId(_9);
-var _b={x:x,y:y,id:id};
-this.onDown(_b);
+this.drawingType=this.util.attr(_b,"drawingType")||"";
+var id=this._getId(_b);
+var _d={x:x,y:y,id:id};
+this.onDown(_d);
 this._clickTime=new Date().getTime();
 if(this._lastClickTime){
 if(this._clickTime-this._lastClickTime<this.doublClickSpeed){
-var _c=this.eventName("doubleClick");
-console.warn("DOUBLE CLICK",_c,_b);
-this._broadcastEvent(_c,_b);
+var _e=this.eventName("doubleClick");
+console.warn("DOUBLE CLICK",_e,_d);
+this._broadcastEvent(_e,_d);
 }else{
 }
 }
 this._lastClickTime=this._clickTime;
 };
-this.mouse.down=function(_d){
+this.mouse.down=function(_f){
 clearTimeout(this.__downInv);
-if(this.util.attr(_d,"drawingType")=="surface"){
-this.__downInv=setTimeout(_1.hitch(this,function(){
-this._down(_d);
+if(this.util.attr(_f,"drawingType")=="surface"){
+this.__downInv=setTimeout(_2.hitch(this,function(){
+this._down(_f);
 }),500);
 return;
 }
-this._down(_d);
+this._down(_f);
 };
-this.mouse._getXY=function(_e){
-if(_e.pageX){
-return {x:_e.pageX,y:_e.pageY,cancelBubble:true};
+this.mouse._getXY=function(evt){
+if(evt.pageX){
+return {x:evt.pageX,y:evt.pageY,cancelBubble:true};
 }
-for(var nm in _e){
+for(var nm in evt){
 }
-if(_e.x!==undefined){
-return {x:_e.x+this.origin.x,y:_e.y+this.origin.y};
+if(evt.x!==undefined){
+return {x:evt.x+this.origin.x,y:evt.y+this.origin.y};
 }else{
-return {x:_e.pageX,y:_e.pageY};
+return {x:evt.pageX,y:evt.pageY};
 }
 };
-this.mouse._getId=function(_f){
-return this.util.attr(_f,"id");
+this.mouse._getId=function(evt){
+return this.util.attr(evt,"id");
 };
 this.util.attr=function(_10,_11,_12,_13){
 if(!_10){
@@ -122,7 +116,7 @@ if(t.tagName){
 if(_11=="drawingType"&&t.tagName.toLowerCase()=="object"){
 return "surface";
 }
-var r=_1.attr(t,_11);
+var r=_2.attr(t,_11);
 }
 var r=t[_11];
 return r;
@@ -134,5 +128,4 @@ return false;
 }
 };
 },{});
-return dojox.drawing.plugins.drawing.Silverlight;
 });

@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/widget/rotator/Slide",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.widget.rotator.Slide",1);
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.widget.rotator.Slide");
 (function(d){
 var _4=0,_5=1,UP=2,_6=3;
 function _7(_8,_9){
@@ -27,7 +21,5 @@ return _7(UP,_d);
 },slideLeft:function(_e){
 return _7(_6,_e);
 }});
-})(_1);
-return _1.getObject("dojox.widget.rotator.Slide");
+})(_2);
 });
-require(["dojox/widget/rotator/Slide"]);

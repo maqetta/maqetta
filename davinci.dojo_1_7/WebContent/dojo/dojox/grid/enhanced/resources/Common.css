@@ -1,4 +1,7 @@
 
+.dojoxGridRowSelector {
+	cursor: pointer;
+}
 .dojoxGridRowSelectorStatusText{
 	visibility:hidden;
 }

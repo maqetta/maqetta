@@ -1,41 +1,36 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/drawing/util/positioning",["dojo","./common"],function(_1){
-var _2=4;
-var _3=20;
-dojox.drawing.util.positioning={};
-dojox.drawing.util.positioning.label=function(_4,_5){
-var x=0.5*(_4.x+_5.x);
-var y=0.5*(_4.y+_5.y);
-var _6=dojox.drawing.util.common.slope(_4,_5);
-var _7=_2/Math.sqrt(1+_6*_6);
-if(_5.y>_4.y&&_5.x>_4.x||_5.y<_4.y&&_5.x<_4.x){
-_7=-_7;
-y-=_3;
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.drawing.util.positioning");
+(function(){
+var _4=4;
+var _5=20;
+_3.drawing.util.positioning.label=function(_6,_7){
+var x=0.5*(_6.x+_7.x);
+var y=0.5*(_6.y+_7.y);
+var _8=_3.drawing.util.common.slope(_6,_7);
+var _9=_4/Math.sqrt(1+_8*_8);
+if(_7.y>_6.y&&_7.x>_6.x||_7.y<_6.y&&_7.x<_6.x){
+_9=-_9;
+y-=_5;
 }
-x+=-_7*_6;
-y+=_7;
-var _8=_5.x<_4.x?"end":"start";
-return {x:x,y:y,foo:"bar",align:_8};
+x+=-_9*_8;
+y+=_9;
+var _a=_7.x<_6.x?"end":"start";
+return {x:x,y:y,foo:"bar",align:_a};
 };
-dojox.drawing.util.positioning.angle=function(_9,_a){
-var x=0.7*_9.x+0.3*_a.x;
-var y=0.7*_9.y+0.3*_a.y;
-var _b=dojox.drawing.util.common.slope(_9,_a);
-var _c=_2/Math.sqrt(1+_b*_b);
-if(_a.x<_9.x){
-_c=-_c;
+_3.drawing.util.positioning.angle=function(_b,_c){
+var x=0.7*_b.x+0.3*_c.x;
+var y=0.7*_b.y+0.3*_c.y;
+var _d=_3.drawing.util.common.slope(_b,_c);
+var _e=_4/Math.sqrt(1+_d*_d);
+if(_c.x<_b.x){
+_e=-_e;
 }
-x+=-_c*_b;
-y+=_c;
-var _d=_a.y>_9.y?"end":"start";
-y+=_a.x>_9.x?0.5*_3:-0.5*_3;
-return {x:x,y:y,align:_d};
+x+=-_e*_d;
+y+=_e;
+var _f=_c.y>_b.y?"end":"start";
+y+=_c.x>_b.x?0.5*_5:-0.5*_5;
+return {x:x,y:y,align:_f};
 };
-return dojox.drawing.util.positioning;
+})();
 });

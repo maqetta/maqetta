@@ -1,81 +1,88 @@
 .mblSlide.mblOut {
-	-webkit-animation-duration: .4s;
-	-webkit-animation-name: mblSlideOut;
-	-webkit-animation-timing-function: linear;
-	-webkit-transform: translateX(-100%);
+	-webkit-transition-property: none;
+	-webkit-transition-duration: 0s;
+	-webkit-transform: translate3d(0%,0px,0px) !important;
+}
+.mblSlide.mblOut.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transition-duration: .3s;
+	-webkit-transform: translate3d(-100%,0px,0px) !important;
 }
 .mblSlide.mblIn {
-	-webkit-animation-duration: .4s;
-	-webkit-animation-name: mblSlideIn;
-	-webkit-animation-timing-function: linear;
-	-webkit-transform: translateX(0px);
+	position: absolute !important;
+	-webkit-transition-property: none;
+	-webkit-transition-duration: 0s;
+	-webkit-transform: translate3d(100%,0px,0px) !important;
+}
+.mblSlide.mblIn.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transition-duration: .3s;
+	-webkit-transform: translate3d(0%,0px,0px) !important;
 }
 .mblSlide.mblOut.mblReverse {
-	-webkit-animation-name: mblSlideOutReverse;
+	-webkit-transition-property: none;
+	-webkit-transform: translate3d(0%,0px,0px) !important;
+}
+.mblSlide.mblOut.mblReverse.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transform: translate3d(100%,0px,0px) !important;
 }
 .mblSlide.mblIn.mblReverse {
-	-webkit-animation-name: mblSlideInReverse;
+	-webkit-transform: translate3d(-100%,0px,0px) !important;
 }
-@-webkit-keyframes mblSlideOut {
-	from { -webkit-transform: translateX(0px); }
-	to { -webkit-transform: translateX(-100%); }
-}
-@-webkit-keyframes mblSlideIn {
-	from { -webkit-transform: translateX(100%); }
-	to { -webkit-transform: translateX(0px); }
-}
-@-webkit-keyframes mblSlideOutReverse {
-	from { -webkit-transform: translateX(0px); }
-	to { -webkit-transform: translateX(100%); }
-}
-@-webkit-keyframes mblSlideInReverse {
-	from { -webkit-transform: translateX(-100%); }
-	to { -webkit-transform: translateX(0px); }
+.mblSlide.mblIn.mblReverse.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transform: translate3d(0%,0px,0px) !important;
 }
 .mblFlip.mblOut {
-	-webkit-animation-duration: .6s;
-	-webkit-animation-name: mblFlipOut;
-	-webkit-animation-timing-function: ease-in;
-	-webkit-transform: rotateY(90deg) scale(.8);
+	-webkit-transition-property: none;
+	-webkit-transition-duration: 0s;
+	opacity: 1;
+	-webkit-transform: scale(1,1) skew(0,0) !important;
+}
+.mblFlip.mblOut.mblTransition {
+	-webkit-transition-property: all;
+	-webkit-transition-duration: .2s;
+	-webkit-transition-timing-function: linear;
+	opacity: 0;
+	-webkit-transform: scale(0,0.8) skew(0,30deg) !important;
 }
 .mblFlip.mblIn {
-	-webkit-animation-duration: .6s;
-	-webkit-animation-name: mblFlipIn;
-	-webkit-animation-timing-function: ease-out;
-	-webkit-transform: rotateY(0deg) scale(1);
+	position: absolute;
+	-webkit-transition-property: none;
+	-webkit-transition-duration: 0s;
+	opacity: 0;
+	-webkit-transform: scale(0,0.8) skew(0,-30deg) !important;
 }
-@-webkit-keyframes mblFlipOut {
-	0% { -webkit-transform: rotateY(0deg) scale(1); }
-	50% { -webkit-transform: rotateY(90deg) scale(.8); }
-	100% { -webkit-transform: rotateY(90deg) scale(.8); }
-}
-@-webkit-keyframes mblFlipIn {
-	0% { -webkit-transform: rotateY(90deg) scale(.8); }
-	50% { -webkit-transform: rotateY(90deg) scale(.8); }
-	100% { -webkit-transform: rotateY(0deg) scale(1); }
+.mblFlip.mblIn.mblTransition {
+	-webkit-transition-property: all;
+	-webkit-transition-delay: .2s;
+	-webkit-transition-duration: .2s;
+	-webkit-transition-timing-function: linear;
+	opacity: 1;
+	-webkit-transform: scale(1,1) skew(0,0) !important;
 }
 .mblFade.mblOut {
-	z-index: -100;
-	-webkit-animation-duration: 1s;
-	-webkit-animation-name: mblFadeOut;
-	-webkit-animation-timing-function: ease-in;
+	-webkit-transition-property: none;
+	-webkit-transition-duration: 0s;
+	opacity: 1;
 }
-.mblFade.mblOut.mblFast {
-	-webkit-animation-duration: 0.3s;
+.mblFade.mblOut.mblTransition {
+	-webkit-transition-property: opacity;
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: ease-out;
+	opacity: 0;
 }
 .mblFade.mblIn {
-	z-index: 0;
-	-webkit-animation-duration: 1s;
-	-webkit-animation-name: mblFadeIn;
-	-webkit-animation-timing-function: ease-out;
+	-webkit-transition-property: none;
+	-webkit-transition-duration: 0s;
+	opacity: 0;
 }
-@-webkit-keyframes mblFadeOut {
-	from {}
-	to {}
-}
-@-webkit-keyframes mblFadeIn {
-	from { opacity: 0; }
-	to { opacity: 1; }
+.mblFade.mblIn.mblTransition {
+	-webkit-transition-property: opacity;
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: ease-in;
+	opacity: 1;
 }
 .mblView {
   position: relative;

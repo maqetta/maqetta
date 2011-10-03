@@ -1,18 +1,12 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/mobile/RoundRect",["dijit/_WidgetBase","dijit/_Contained","dijit/_Container"],function(_1,_2,_3){
-return dojo.declare("dojox.mobile.RoundRect",[dijit._WidgetBase,dijit._Container,dijit._Contained],{shadow:false,buildRendering:function(){
-this.domNode=this.containerNode=this.srcNodeRef||dojo.doc.createElement("DIV");
+define("dojox/mobile/RoundRect",["dojo/_base/array","dojo/_base/declare","dojo/_base/window","dijit/_Contained","dijit/_Container","dijit/_WidgetBase"],function(_1,_2,_3,_4,_5,_6){
+return _2("dojox.mobile.RoundRect",[_6,_5,_4],{shadow:false,buildRendering:function(){
+this.domNode=this.containerNode=this.srcNodeRef||_3.doc.createElement("DIV");
 this.domNode.className=this.shadow?"mblRoundRect mblShadow":"mblRoundRect";
 },resize:function(){
-dojo.forEach(this.getChildren(),function(_4){
-if(_4.resize){
-_4.resize();
+_1.forEach(this.getChildren(),function(_7){
+if(_7.resize){
+_7.resize();
 }
 });
 }});

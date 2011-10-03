@@ -1,15 +1,8 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/gauges/BarGauge",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","dojo/_base/array","dojo/_base/html","dojo/_base/event","dojox/gfx","./_Gauge","./BarLineIndicator"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9){
-_1.experimental("dojox.gauges.BarGauge");
-return _1.declare("dojox.gauges.BarGauge",_8,{dataX:5,dataY:5,dataWidth:0,dataHeight:0,_defaultIndicator:_9,startup:function(){
+define("dojox/gauges/BarGauge",["dojo/_base/declare","dojo/_base/lang","dojo/_base/array","dojo/_base/html","dojo/_base/event","dojox/gfx","./_Gauge","./BarLineIndicator","dojo/dom-geometry"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9){
+return _1("dojox.gauges.BarGauge",_7,{dataX:5,dataY:5,dataWidth:0,dataHeight:0,_defaultIndicator:_8,startup:function(){
 if(this.getChildren){
-_1.forEach(this.getChildren(),function(_a){
+_3.forEach(this.getChildren(),function(_a){
 _a.startup();
 });
 }
@@ -32,7 +25,7 @@ _e.shape=null;
 var x1=this._getPosition(_e.low);
 var x2=this._getPosition(_e.high);
 var _f=_d.createRect({x:x1,y:this.dataY,width:x2-x1,height:this.dataHeight});
-if(_1.isArray(_e.color)||_1.isString(_e.color)){
+if(_2.isArray(_e.color)||_2.isString(_e.color)){
 _f.setStroke({color:_e.color});
 _f.setFill(_e.color);
 }else{
@@ -45,45 +38,45 @@ _e.color.y2=y;
 _f.setFill(_e.color);
 _f.setStroke({color:_e.color.colors[0].color});
 }else{
-if(_7.svg){
+if(_6.svg){
 _f.setStroke({color:"green"});
 _f.setFill("green");
 _f.getEventSource().setAttribute("class",_e.color.style);
 }
 }
 }
-_f.connect("onmouseover",_1.hitch(this,this._handleMouseOverRange,_e));
-_f.connect("onmouseout",_1.hitch(this,this._handleMouseOutRange,_e));
+_f.connect("onmouseover",_2.hitch(this,this._handleMouseOverRange,_e));
+_f.connect("onmouseout",_2.hitch(this,this._handleMouseOutRange,_e));
 _e.shape=_f;
-},getRangeUnderMouse:function(_10){
-var _11=null;
-var pos=_1.coords(this.gaugeContent);
-var x=_10.clientX-pos.x;
-var _12=this._getValueForPosition(x);
+},getRangeUnderMouse:function(e){
+var _10=null;
+var pos=_9.getContentBox(this.gaugeContent);
+var x=e.clientX-pos.x;
+var _11=this._getValueForPosition(x);
 if(this._rangeData){
-for(var i=0;(i<this._rangeData.length)&&!_11;i++){
-if((Number(this._rangeData[i].low)<=_12)&&(Number(this._rangeData[i].high)>=_12)){
-_11=this._rangeData[i];
+for(var i=0;(i<this._rangeData.length)&&!_10;i++){
+if((Number(this._rangeData[i].low)<=_11)&&(Number(this._rangeData[i].high)>=_11)){
+_10=this._rangeData[i];
 }
 }
 }
-return _11;
-},_dragIndicator:function(_13,_14){
-this._dragIndicatorAt(_13,_14.pageX,_14.pageY);
-_1.stopEvent(_14);
-},_dragIndicatorAt:function(_15,x,y){
-var pos=_1.position(_15.gaugeContent,true);
+return _10;
+},_dragIndicator:function(_12,e){
+this._dragIndicatorAt(_12,e.pageX,e.pageY);
+_5.stop(e);
+},_dragIndicatorAt:function(_13,x,y){
+var pos=_9.position(_13.gaugeContent,true);
 var xl=x-pos.x;
-var _16=_15._getValueForPosition(xl);
-if(_16<_15.min){
-_16=_15.min;
+var _14=_13._getValueForPosition(xl);
+if(_14<_13.min){
+_14=_13.min;
 }
-if(_16>_15.max){
-_16=_15.max;
+if(_14>_13.max){
+_14=_13.max;
 }
-_15._drag.value=_16;
-_15._drag.onDragMove(_15._drag);
-_15._drag.draw(this._indicatorsGroup,true);
-_15._drag.valueChanged();
+_13._drag.value=_14;
+_13._drag.onDragMove(_13._drag);
+_13._drag.draw(this._indicatorsGroup,true);
+_13._drag.valueChanged();
 }});
 });

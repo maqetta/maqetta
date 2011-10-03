@@ -1,5 +1,7 @@
 //>>built
-define(({
+define(
+//begin v1.x content
+({
 	displayOptions: "[אפשרויות הצגה]",
 	title: "כותרת",
 	authors: "מחברים",
@@ -10,5 +12,5 @@ define(({
 	summary: "סיכום",
 	content: "תוכן"
 })
-
+//end v1.x content
 );

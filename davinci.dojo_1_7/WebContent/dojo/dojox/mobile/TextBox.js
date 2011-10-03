@@ -1,14 +1,8 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/mobile/TextBox",["dijit/_WidgetBase","dijit/form/_FormValueMixin","dijit/form/_TextBoxMixin"],function(_1,_2,_3){
-return dojo.declare("dojox.mobile.TextBox",[dijit._WidgetBase,dijit.form._FormValueMixin,dijit.form._TextBoxMixin],{baseClass:"mblTextBox",_setPlaceHolderAttr:"textbox",buildRendering:function(){
+define("dojox/mobile/TextBox",["dojo/_base/declare","dojo/dom-construct","dijit/_WidgetBase","dijit/form/_FormValueMixin","dijit/form/_TextBoxMixin"],function(_1,_2,_3,_4,_5){
+return _1("dojox.mobile.TextBox",[_3,_4,_5],{baseClass:"mblTextBox",_setTypeAttr:null,_setPlaceHolderAttr:"textbox",buildRendering:function(){
 if(!this.srcNodeRef){
-this.srcNodeRef=dojo.create("input",{});
+this.srcNodeRef=_2.create("input",{"type":this.type});
 }
 this.inherited(arguments);
 this.textbox=this.focusNode=this.domNode;

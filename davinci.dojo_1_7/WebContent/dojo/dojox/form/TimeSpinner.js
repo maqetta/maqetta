@@ -1,32 +1,23 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/form/TimeSpinner",["dojo","dijit","dojox","dijit/form/_Spinner","dojo/date","dojo/date/locale","dojo/date/stamp"],function(_1,_2,_3){
-_1.getObject("dojox.form.TimeSpinner",1);
-_1.declare("dojox.form.TimeSpinner",[_2.form._Spinner],{required:false,adjust:function(_4,_5){
-return _1.date.add(_4,"minute",_5);
+define("dojox/form/TimeSpinner",["dojo/_base/lang","dojo/_base/event","dijit/form/_Spinner","dojo/keys","dojo/date","dojo/date/locale","dojo/date/stamp","dojo/_base/declare"],function(_1,_2,_3,_4,_5,_6,_7,_8){
+return _8("dojox.form.TimeSpinner",_3,{required:false,adjust:function(_9,_a){
+return _5.add(_9,"minute",_a);
 },isValid:function(){
 return true;
-},smallDelta:5,largeDelta:30,timeoutChangeRate:0.5,parse:function(_6,_7){
-return _1.date.locale.parse(_6,{selector:"time",formatLength:"short"});
-},format:function(_8,_9){
-if(_1.isString(_8)){
-return _8;
+},smallDelta:5,largeDelta:30,timeoutChangeRate:0.5,parse:function(_b,_c){
+return _6.parse(_b,{selector:"time",formatLength:"short"});
+},format:function(_d,_e){
+if(_1.isString(_d)){
+return _d;
 }
-return _1.date.locale.format(_8,{selector:"time",formatLength:"short"});
-},serialize:_1.date.stamp.toISOString,value:"12:00 AM",_onKeyPress:function(e){
-if((e.charOrCode==_1.keys.HOME||e.charOrCode==_1.keys.END)&&!(e.ctrlKey||e.altKey||e.metaKey)&&typeof this.get("value")!="undefined"){
-var _a=this.constraints[(e.charOrCode==_1.keys.HOME?"min":"max")];
-if(_a){
-this._setValueAttr(_a,true);
+return _6.format(_d,{selector:"time",formatLength:"short"});
+},serialize:_7.toISOString,value:"12:00 AM",_onKeyPress:function(e){
+if((e.charOrCode==_4.HOME||e.charOrCode==_4.END)&&!(e.ctrlKey||e.altKey||e.metaKey)&&typeof this.get("value")!="undefined"){
+var _f=this.constraints[(e.charOrCode==_4.HOME?"min":"max")];
+if(_f){
+this._setValueAttr(_f,true);
 }
-_1.stopEvent(e);
+_2.stop(e);
 }
 }});
-return _1.getObject("dojox.form.TimeSpinner");
 });
-require(["dojox/form/TimeSpinner"]);

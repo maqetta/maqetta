@@ -1,164 +1,157 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/atom/io/Connection",["dojo","dijit","dojox","dojox/atom/io/model"],function(_1,_2,_3){
-_1.getObject("dojox.atom.io.Connection",1);
-_1.declare("dojox.atom.io.Connection",null,{constructor:function(_4,_5){
-this.sync=_4;
-this.preventCache=_5;
-},preventCache:false,alertsEnabled:false,getFeed:function(_6,_7,_8,_9){
-this._getXmlDoc(_6,"feed",new _3.atom.io.model.Feed(),_3.atom.io.model._Constants.ATOM_NS,_7,_8,_9);
-},getService:function(_a,_b,_c,_d){
-this._getXmlDoc(_a,"service",new _3.atom.io.model.Service(_a),_3.atom.io.model._Constants.APP_NS,_b,_c,_d);
-},getEntry:function(_e,_f,_10,_11){
-this._getXmlDoc(_e,"entry",new _3.atom.io.model.Entry(),_3.atom.io.model._Constants.ATOM_NS,_f,_10,_11);
-},_getXmlDoc:function(url,_12,_13,_14,_15,_16,_17){
-if(!_17){
-_17=_1.global;
+define("dojox/atom/io/Connection",["dojo/_base/kernel","dojo/_base/xhr","dojo/_base/window","./model","dojo/_base/declare"],function(_1,_2,_3,_4){
+return _1.declare("dojox.atom.io.Connection",null,{constructor:function(_5,_6){
+this.sync=_5;
+this.preventCache=_6;
+},preventCache:false,alertsEnabled:false,getFeed:function(_7,_8,_9,_a){
+this._getXmlDoc(_7,"feed",new _4.Feed(),_4._Constants.ATOM_NS,_8,_9,_a);
+},getService:function(_b,_c,_d,_e){
+this._getXmlDoc(_b,"service",new _4.Service(_b),_4._Constants.APP_NS,_c,_d,_e);
+},getEntry:function(_f,_10,_11,_12){
+this._getXmlDoc(_f,"entry",new _4.Entry(),_4._Constants.ATOM_NS,_10,_11,_12);
+},_getXmlDoc:function(url,_13,_14,_15,_16,_17,_18){
+if(!_18){
+_18=_3.global;
 }
 var ae=this.alertsEnabled;
-var _18={url:url,handleAs:"xml",sync:this.sync,preventCache:this.preventCache,load:function(_19,_1a){
-var _1b=null;
-var _1c=_19;
-var _1d;
-if(_1c){
-if(typeof (_1c.getElementsByTagNameNS)!="undefined"){
-_1d=_1c.getElementsByTagNameNS(_14,_12);
-if(_1d&&_1d.length>0){
-_1b=_1d.item(0);
+var _19={url:url,handleAs:"xml",sync:this.sync,preventCache:this.preventCache,load:function(_1a,_1b){
+var _1c=null;
+var _1d=_1a;
+var _1e;
+if(_1d){
+if(typeof (_1d.getElementsByTagNameNS)!="undefined"){
+_1e=_1d.getElementsByTagNameNS(_15,_13);
+if(_1e&&_1e.length>0){
+_1c=_1e.item(0);
 }else{
-if(_1c.lastChild){
-_1b=_1c.lastChild;
+if(_1d.lastChild){
+_1c=_1d.lastChild;
 }
 }
 }else{
-if(typeof (_1c.getElementsByTagName)!="undefined"){
-_1d=_1c.getElementsByTagName(_12);
-if(_1d&&_1d.length>0){
-for(var i=0;i<_1d.length;i++){
-if(_1d[i].namespaceURI==_14){
-_1b=_1d[i];
+if(typeof (_1d.getElementsByTagName)!="undefined"){
+_1e=_1d.getElementsByTagName(_13);
+if(_1e&&_1e.length>0){
+for(var i=0;i<_1e.length;i++){
+if(_1e[i].namespaceURI==_15){
+_1c=_1e[i];
 break;
 }
 }
 }else{
-if(_1c.lastChild){
-_1b=_1c.lastChild;
+if(_1d.lastChild){
+_1c=_1d.lastChild;
 }
 }
 }else{
-if(_1c.lastChild){
-_1b=_1c.lastChild;
+if(_1d.lastChild){
+_1c=_1d.lastChild;
 }else{
-_15.call(_17,null,null,_1a);
+_16.call(_18,null,null,_1b);
 return;
 }
 }
 }
-_13.buildFromDom(_1b);
-if(_15){
-_15.call(_17,_13,_1c,_1a);
+_14.buildFromDom(_1c);
+if(_16){
+_16.call(_18,_14,_1d,_1b);
 }else{
 if(ae){
 throw new Error("The callback value does not exist.");
 }
 }
 }else{
-_15.call(_17,null,null,_1a);
+_16.call(_18,null,null,_1b);
 }
 }};
 if(this.user&&this.user!==null){
-_18.user=this.user;
+_19.user=this.user;
 }
 if(this.password&&this.password!==null){
-_18.password=this.password;
+_19.password=this.password;
 }
-if(_16){
-_18.error=function(_1e,_1f){
-_16.call(_17,_1e,_1f);
+if(_17){
+_19.error=function(_1f,_20){
+_17.call(_18,_1f,_20);
 };
 }else{
-_18.error=function(){
+_19.error=function(){
 throw new Error("The URL requested cannot be accessed");
 };
 }
-_1.xhrGet(_18);
-},updateEntry:function(_20,_21,_22,_23,_24,_25){
-if(!_25){
-_25=_1.global;
+_2.get(_19);
+},updateEntry:function(_21,_22,_23,_24,_25,_26){
+if(!_26){
+_26=_3.global;
 }
-_20.updated=new Date();
-var url=_20.getEditHref();
+_21.updated=new Date();
+var url=_21.getEditHref();
 if(!url){
 throw new Error("A URL has not been specified for editing this entry.");
 }
-var _26=this;
+var _27=this;
 var ae=this.alertsEnabled;
-var _27={url:url,handleAs:"text",contentType:"text/xml",sync:this.sync,preventCache:this.preventCache,load:function(_28,_29){
-var _2a=null;
-if(_23){
-_2a=_29.xhr.getResponseHeader("Location");
-if(!_2a){
-_2a=url;
+var _28={url:url,handleAs:"text",contentType:"text/xml",sync:this.sync,preventCache:this.preventCache,load:function(_29,_2a){
+var _2b=null;
+if(_24){
+_2b=_2a.xhr.getResponseHeader("Location");
+if(!_2b){
+_2b=url;
 }
-var _2b=function(_2c,dom,_2d){
-if(_21){
-_21.call(_25,_2c,_2a,_2d);
+var _2c=function(_2d,dom,_2e){
+if(_22){
+_22.call(_26,_2d,_2b,_2e);
 }else{
 if(ae){
 throw new Error("The callback value does not exist.");
 }
 }
 };
-_26.getEntry(_2a,_2b);
+_27.getEntry(_2b,_2c);
 }else{
-if(_21){
-_21.call(_25,_20,_29.xhr.getResponseHeader("Location"),_29);
+if(_22){
+_22.call(_26,_21,_2a.xhr.getResponseHeader("Location"),_2a);
 }else{
 if(ae){
 throw new Error("The callback value does not exist.");
 }
 }
 }
-return _28;
+return _29;
 }};
 if(this.user&&this.user!==null){
-_27.user=this.user;
+_28.user=this.user;
 }
 if(this.password&&this.password!==null){
-_27.password=this.password;
+_28.password=this.password;
 }
-if(_22){
-_27.error=function(_2e,_2f){
-_22.call(_25,_2e,_2f);
+if(_23){
+_28.error=function(_2f,_30){
+_23.call(_26,_2f,_30);
 };
 }else{
-_27.error=function(){
+_28.error=function(){
 throw new Error("The URL requested cannot be accessed");
 };
 }
-if(_24){
-_27.postData=_20.toString(true);
-_27.headers={"X-Method-Override":"PUT"};
-_1.rawXhrPost(_27);
+if(_25){
+_28.postData=_21.toString(true);
+_28.headers={"X-Method-Override":"PUT"};
+_2.post(_28);
 }else{
-_27.putData=_20.toString(true);
-var xhr=_1.rawXhrPut(_27);
+_28.putData=_21.toString(true);
+var xhr=_2.put(_28);
 }
-},addEntry:function(_30,url,_31,_32,_33,_34){
-if(!_34){
-_34=_1.global;
+},addEntry:function(_31,url,_32,_33,_34,_35){
+if(!_35){
+_35=_3.global;
 }
-_30.published=new Date();
-_30.updated=new Date();
-var _35=_30.feedUrl;
+_31.published=new Date();
+_31.updated=new Date();
+var _36=_31.feedUrl;
 var ae=this.alertsEnabled;
-if(!url&&_35){
-url=_35;
+if(!url&&_36){
+url=_36;
 }
 if(!url){
 if(ae){
@@ -166,90 +159,88 @@ throw new Error("The request cannot be processed because the URL parameter is mi
 }
 return;
 }
-var _36=this;
-var _37={url:url,handleAs:"text",contentType:"text/xml",sync:this.sync,preventCache:this.preventCache,postData:_30.toString(true),load:function(_38,_39){
-var _3a=_39.xhr.getResponseHeader("Location");
-if(!_3a){
-_3a=url;
+var _37=this;
+var _38={url:url,handleAs:"text",contentType:"text/xml",sync:this.sync,preventCache:this.preventCache,postData:_31.toString(true),load:function(_39,_3a){
+var _3b=_3a.xhr.getResponseHeader("Location");
+if(!_3b){
+_3b=url;
 }
-if(!_39.retrieveEntry){
-if(_31){
-_31.call(_34,_30,_3a,_39);
+if(!_3a.retrieveEntry){
+if(_32){
+_32.call(_35,_31,_3b,_3a);
 }else{
 if(ae){
 throw new Error("The callback value does not exist.");
 }
 }
 }else{
-var _3b=function(_3c,dom,_3d){
-if(_31){
-_31.call(_34,_3c,_3a,_3d);
+var _3c=function(_3d,dom,_3e){
+if(_32){
+_32.call(_35,_3d,_3b,_3e);
 }else{
 if(ae){
 throw new Error("The callback value does not exist.");
 }
 }
 };
-_36.getEntry(_3a,_3b);
+_37.getEntry(_3b,_3c);
 }
-return _38;
+return _39;
 }};
 if(this.user&&this.user!==null){
-_37.user=this.user;
+_38.user=this.user;
 }
 if(this.password&&this.password!==null){
-_37.password=this.password;
+_38.password=this.password;
 }
-if(_32){
-_37.error=function(_3e,_3f){
-_32.call(_34,_3e,_3f);
+if(_33){
+_38.error=function(_3f,_40){
+_33.call(_35,_3f,_40);
 };
 }else{
-_37.error=function(){
+_38.error=function(){
 throw new Error("The URL requested cannot be accessed");
 };
 }
-_1.rawXhrPost(_37);
-},deleteEntry:function(_40,_41,_42,_43,_44){
-if(!_44){
-_44=_1.global;
+_2.post(_38);
+},deleteEntry:function(_41,_42,_43,_44,_45){
+if(!_45){
+_45=_3.global;
 }
 var url=null;
-if(typeof (_40)=="string"){
-url=_40;
+if(typeof (_41)=="string"){
+url=_41;
 }else{
-url=_40.getEditHref();
+url=_41.getEditHref();
 }
 if(!url){
-_41.call(_44,false,null);
+_42.call(_45,false,null);
 throw new Error("The request cannot be processed because the URL parameter is missing.");
 }
-var _45={url:url,handleAs:"text",sync:this.sync,preventCache:this.preventCache,load:function(_46,_47){
-_41.call(_44,_47);
-return _46;
+var _46={url:url,handleAs:"text",sync:this.sync,preventCache:this.preventCache,load:function(_47,_48){
+_42.call(_45,_48);
+return _47;
 }};
 if(this.user&&this.user!==null){
-_45.user=this.user;
+_46.user=this.user;
 }
 if(this.password&&this.password!==null){
-_45.password=this.password;
+_46.password=this.password;
 }
-if(_42){
-_45.error=function(_48,_49){
-_42.call(_44,_48,_49);
+if(_43){
+_46.error=function(_49,_4a){
+_43.call(_45,_49,_4a);
 };
 }else{
-_45.error=function(){
+_46.error=function(){
 throw new Error("The URL requested cannot be accessed");
 };
 }
-if(_43){
-_45.headers={"X-Method-Override":"DELETE"};
-_1.xhrPost(_45);
+if(_44){
+_46.headers={"X-Method-Override":"DELETE"};
+dhxr.post(_46);
 }else{
-_1.xhrDelete(_45);
+_2.del(_46);
 }
 }});
-return _1.getObject("dojox.atom.io.Connection");
 });
-require(["dojox/atom/io/Connection"]);

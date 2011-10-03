@@ -1,63 +1,57 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/grid/util",["dojo","dojox"],function(_1,_2){
-var _3=_1.getObject("grid.util",true,_2);
-_3.na="...";
-_3.rowIndexTag="gridRowIndex";
-_3.gridViewTag="gridView";
-_3.fire=function(ob,ev,_4){
+define("dojox/grid/util",["../main","dojo/_base/lang","dojo/dom"],function(_1,_2,_3){
+var _4=_2.getObject("grid.util",true,_1);
+_4.na="...";
+_4.rowIndexTag="gridRowIndex";
+_4.gridViewTag="gridView";
+_4.fire=function(ob,ev,_5){
 var fn=ob&&ev&&ob[ev];
-return fn&&(_4?fn.apply(ob,_4):ob[ev]());
+return fn&&(_5?fn.apply(ob,_5):ob[ev]());
 };
-_3.setStyleHeightPx=function(_5,_6){
-if(_6>=0){
-var s=_5.style;
-var v=_6+"px";
-if(_5&&s["height"]!=v){
+_4.setStyleHeightPx=function(_6,_7){
+if(_7>=0){
+var s=_6.style;
+var v=_7+"px";
+if(_6&&s["height"]!=v){
 s["height"]=v;
 }
 }
 };
-_3.mouseEvents=["mouseover","mouseout","mousedown","mouseup","click","dblclick","contextmenu"];
-_3.keyEvents=["keyup","keydown","keypress"];
-_3.funnelEvents=function(_7,_8,_9,_a){
-var _b=(_a?_a:_3.mouseEvents.concat(_3.keyEvents));
-for(var i=0,l=_b.length;i<l;i++){
-_8.connect(_7,"on"+_b[i],_9);
+_4.mouseEvents=["mouseover","mouseout","mousedown","mouseup","click","dblclick","contextmenu"];
+_4.keyEvents=["keyup","keydown","keypress"];
+_4.funnelEvents=function(_8,_9,_a,_b){
+var _c=(_b?_b:_4.mouseEvents.concat(_4.keyEvents));
+for(var i=0,l=_c.length;i<l;i++){
+_9.connect(_8,"on"+_c[i],_a);
 }
 };
-_3.removeNode=function(_c){
-_c=_1.byId(_c);
-_c&&_c.parentNode&&_c.parentNode.removeChild(_c);
-return _c;
+_4.removeNode=function(_d){
+_d=_3.byId(_d);
+_d&&_d.parentNode&&_d.parentNode.removeChild(_d);
+return _d;
 };
-_3.arrayCompare=function(_d,_e){
-for(var i=0,l=_d.length;i<l;i++){
-if(_d[i]!=_e[i]){
+_4.arrayCompare=function(_e,_f){
+for(var i=0,l=_e.length;i<l;i++){
+if(_e[i]!=_f[i]){
 return false;
 }
 }
-return (_d.length==_e.length);
+return (_e.length==_f.length);
 };
-_3.arrayInsert=function(_f,_10,_11){
-if(_f.length<=_10){
-_f[_10]=_11;
+_4.arrayInsert=function(_10,_11,_12){
+if(_10.length<=_11){
+_10[_11]=_12;
 }else{
-_f.splice(_10,0,_11);
+_10.splice(_11,0,_12);
 }
 };
-_3.arrayRemove=function(_12,_13){
-_12.splice(_13,1);
+_4.arrayRemove=function(_13,_14){
+_13.splice(_14,1);
 };
-_3.arraySwap=function(_14,inI,inJ){
-var _15=_14[inI];
-_14[inI]=_14[inJ];
-_14[inJ]=_15;
+_4.arraySwap=function(_15,inI,inJ){
+var _16=_15[inI];
+_15[inI]=_15[inJ];
+_15[inJ]=_16;
 };
-return _2.grid.util;
+return _1.grid.util;
 });

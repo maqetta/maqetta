@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/editor/plugins/PrettyPrint",["dojo","dijit","dojox","dijit/_editor/_Plugin","dojox/html/format"],function(_1,_2,_3){
+define("dojox/editor/plugins/PrettyPrint",["dojo","dijit","dojox","dijit/_editor/_Plugin","dojo/_base/connect","dojo/_base/declare","dojox/html/format"],function(_1,_2,_3){
 _1.declare("dojox.editor.plugins.PrettyPrint",_2._editor._Plugin,{indentBy:-1,lineLength:-1,useDefaultCommand:false,entityMap:null,_initButton:function(){
 delete this.command;
 },setToolbar:function(_4){

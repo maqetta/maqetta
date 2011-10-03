@@ -3,6 +3,6 @@
 	background-image: url(compat/mblDomButtonRedCirclePlus.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonRedCirclePlus > DIV {
+.mblDomButtonRedCirclePlus > div {
 	display: none;
 }

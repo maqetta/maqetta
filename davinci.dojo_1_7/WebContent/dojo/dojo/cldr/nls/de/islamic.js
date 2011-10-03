@@ -8,16 +8,12 @@
 define(
 //begin v1.x content
 {
-	"dateFormatItem-yM": "M.y",
 	"dateFormatItem-yyyyMMMEd": "EEE, d. MMM y G",
 	"dateFormatItem-yyMMdd": "dd.MM.y G",
-	"dateFormatItem-yQ": "Q y",
-	"dayPeriods-format-wide-pm": "nachm.",
 	"eraNames": [
 		"AH"
 	],
 	"dateFormatItem-MMMEd": "E, d. MMM",
-	"dateFormatItem-yQQQ": "QQQ y",
 	"dateFormatItem-MMdd": "dd.MM.",
 	"dateFormatItem-MMM": "LLL",
 	"months-standAlone-narrow": [
@@ -34,7 +30,6 @@ define(
 		"11",
 		"12"
 	],
-	"dayPeriods-format-wide-am": "vorm.",
 	"dateFormatItem-yyyy": "y G",
 	"months-standAlone-abbr": [
 		"Muh.",
@@ -51,16 +46,6 @@ define(
 		"Dhuʻl-H."
 	],
 	"dateFormatItem-Ed": "E d.",
-	"dateFormatItem-yMMM": "MMM y",
-	"days-standAlone-narrow": [
-		"S",
-		"M",
-		"D",
-		"M",
-		"D",
-		"F",
-		"S"
-	],
 	"eraAbbr": [
 		"AH"
 	],
@@ -107,18 +92,9 @@ define(
 	],
 	"dateFormatItem-H": "HH 'Uhr'",
 	"dateFormatItem-MMMMdd": "dd. MMMM",
-	"days-format-abbr": [
-		"So.",
-		"Mo.",
-		"Di.",
-		"Mi.",
-		"Do.",
-		"Fr.",
-		"Sa."
-	],
 	"dateFormatItem-M": "L",
-	"dateFormatItem-MEd": "E, d.M.",
 	"dateFormatItem-yyyyQQQ": "QQQ y G",
+	"dateFormatItem-MEd": "E, d.M.",
 	"months-format-narrow": [
 		"1",
 		"2",
@@ -135,11 +111,9 @@ define(
 	],
 	"dateFormat-short": "d.M.y G",
 	"dateFormatItem-yyyyM": "M.y G",
-	"dateFormatItem-yMMMEd": "EEE, d. MMM y",
 	"dateFormat-full": "EEEE d. MMMM y G",
 	"dateFormatItem-Md": "d.M.",
 	"dateFormatItem-yyyyQ": "Q y G",
-	"dateFormatItem-yMEd": "EEE, d.M.y",
 	"months-format-wide": [
 		"Muharram",
 		"Safar",
@@ -156,23 +130,8 @@ define(
 	],
 	"dateFormatItem-yyyyMMM": "MMM y G",
 	"dateFormatItem-d": "d",
-	"quarters-format-wide": [
-		"1. Quartal",
-		"2. Quartal",
-		"3. Quartal",
-		"4. Quartal"
-	],
 	"eraNarrow": [
 		"AH"
-	],
-	"days-format-wide": [
-		"Sonntag",
-		"Montag",
-		"Dienstag",
-		"Mittwoch",
-		"Donnerstag",
-		"Freitag",
-		"Samstag"
 	]
 }
 //end v1.x content

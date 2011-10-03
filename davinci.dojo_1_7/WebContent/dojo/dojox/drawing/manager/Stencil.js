@@ -1,74 +1,69 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/drawing/manager/Stencil",["dojo","../util/oo"],function(_1){
-_1.getObject("drawing.manager",true,dojox);
-var _2,_3;
-dojox.drawing.manager.Stencil=dojox.drawing.util.oo.declare(function(_4){
-_2=_4.surface;
-this.canvas=_4.canvas;
-this.defaults=dojox.drawing.defaults.copy();
-this.undo=_4.undo;
-this.mouse=_4.mouse;
-this.keys=_4.keys;
-this.anchors=_4.anchors;
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.drawing.manager.Stencil");
+(function(){
+var _4,_5;
+_3.drawing.manager.Stencil=_3.drawing.util.oo.declare(function(_6){
+_4=_6.surface;
+this.canvas=_6.canvas;
+this.defaults=_3.drawing.defaults.copy();
+this.undo=_6.undo;
+this.mouse=_6.mouse;
+this.keys=_6.keys;
+this.anchors=_6.anchors;
 this.stencils={};
 this.selectedStencils={};
 this._mouseHandle=this.mouse.register(this);
-_1.connect(this.keys,"onArrow",this,"onArrow");
-_1.connect(this.keys,"onEsc",this,"deselect");
-_1.connect(this.keys,"onDelete",this,"onDelete");
-},{_dragBegun:false,_wasDragged:false,_secondClick:false,_isBusy:false,setRecentStencil:function(_5){
-this.recent=_5;
+_2.connect(this.keys,"onArrow",this,"onArrow");
+_2.connect(this.keys,"onEsc",this,"deselect");
+_2.connect(this.keys,"onDelete",this,"onDelete");
+},{_dragBegun:false,_wasDragged:false,_secondClick:false,_isBusy:false,setRecentStencil:function(_7){
+this.recent=_7;
 },getRecentStencil:function(){
 return this.recent;
-},register:function(_6){
-if(_6.isText&&!_6.editMode&&_6.deleteEmptyCreate&&!_6.getText()){
-console.warn("EMPTY CREATE DELETE",_6);
-_6.destroy();
+},register:function(_8){
+if(_8.isText&&!_8.editMode&&_8.deleteEmptyCreate&&!_8.getText()){
+console.warn("EMPTY CREATE DELETE",_8);
+_8.destroy();
 return false;
 }
-this.stencils[_6.id]=_6;
-this.setRecentStencil(_6);
-if(_6.execText){
-if(_6._text&&!_6.editMode){
-this.selectItem(_6);
+this.stencils[_8.id]=_8;
+this.setRecentStencil(_8);
+if(_8.execText){
+if(_8._text&&!_8.editMode){
+this.selectItem(_8);
 }
-_6.connect("execText",this,function(){
-if(_6.isText&&_6.deleteEmptyModify&&!_6.getText()){
-console.warn("EMPTY MOD DELETE",_6);
-this.deleteItem(_6);
+_8.connect("execText",this,function(){
+if(_8.isText&&_8.deleteEmptyModify&&!_8.getText()){
+console.warn("EMPTY MOD DELETE",_8);
+this.deleteItem(_8);
 }else{
-if(_6.selectOnExec){
-this.selectItem(_6);
+if(_8.selectOnExec){
+this.selectItem(_8);
 }
 }
 });
 }
-_6.connect("deselect",this,function(){
-if(!this._isBusy&&this.isSelected(_6)){
-this.deselectItem(_6);
+_8.connect("deselect",this,function(){
+if(!this._isBusy&&this.isSelected(_8)){
+this.deselectItem(_8);
 }
 });
-_6.connect("select",this,function(){
-if(!this._isBusy&&!this.isSelected(_6)){
-this.selectItem(_6);
+_8.connect("select",this,function(){
+if(!this._isBusy&&!this.isSelected(_8)){
+this.selectItem(_8);
 }
 });
-return _6;
-},unregister:function(_7){
-if(_7){
-_7.selected&&this.onDeselect(_7);
-delete this.stencils[_7.id];
+return _8;
+},unregister:function(_9){
+if(_9){
+_9.selected&&this.onDeselect(_9);
+delete this.stencils[_9.id];
 }
-},onArrow:function(_8){
+},onArrow:function(_a){
 if(this.hasSelected()){
 this.saveThrottledState();
-this.group.applyTransform({dx:_8.x,dy:_8.y});
+this.group.applyTransform({dx:_a.x,dy:_a.y});
 }
 },_throttleVrl:null,_throttle:false,throttleTime:400,_lastmxx:-1,_lastmxy:-1,saveMoveState:function(){
 var mx=this.group.getTransform();
@@ -77,11 +72,11 @@ return;
 }
 this._lastmxx=mx.dx;
 this._lastmxy=mx.dy;
-this.undo.add({before:_1.hitch(this.group,"setTransform",mx)});
+this.undo.add({before:_2.hitch(this.group,"setTransform",mx)});
 },saveThrottledState:function(){
 clearTimeout(this._throttleVrl);
 clearInterval(this._throttleVrl);
-this._throttleVrl=setTimeout(_1.hitch(this,function(){
+this._throttleVrl=setTimeout(_2.hitch(this,function(){
 this._throttle=false;
 this.saveMoveState();
 }),this.throttleTime);
@@ -90,14 +85,14 @@ return;
 }
 this._throttle=true;
 this.saveMoveState();
-},unDelete:function(_9){
-for(var s in _9){
-_9[s].render();
-this.onSelect(_9[s]);
+},unDelete:function(_b){
+for(var s in _b){
+_b[s].render();
+this.onSelect(_b[s]);
 }
-},onDelete:function(_a){
-if(_a!==true){
-this.undo.add({before:_1.hitch(this,"unDelete",this.selectedStencils),after:_1.hitch(this,"onDelete",true)});
+},onDelete:function(_c){
+if(_c!==true){
+this.undo.add({before:_2.hitch(this,"unDelete",this.selectedStencils),after:_2.hitch(this,"onDelete",true)});
 }
 this.withSelected(function(m){
 this.anchors.remove(m);
@@ -106,27 +101,27 @@ m.destroy();
 delete this.stencils[id];
 });
 this.selectedStencils={};
-},deleteItem:function(_b){
+},deleteItem:function(_d){
 if(this.hasSelected()){
-var _c=[];
+var _e=[];
 for(var m in this.selectedStencils){
-if(this.selectedStencils.id==_b.id){
+if(this.selectedStencils.id==_d.id){
 if(this.hasSelected()==1){
 this.onDelete();
 return;
 }
 }else{
-_c.push(this.selectedStencils.id);
+_e.push(this.selectedStencils.id);
 }
 }
 this.deselect();
-this.selectItem(_b);
+this.selectItem(_d);
 this.onDelete();
-_1.forEach(_c,function(id){
+_2.forEach(_e,function(id){
 this.selectItem(id);
 },this);
 }else{
-this.selectItem(_b);
+this.selectItem(_d);
 this.onDelete();
 }
 },removeAll:function(){
@@ -140,10 +135,10 @@ this.withSelected(function(m){
 this.onDeselect(m,true);
 });
 if(this.group){
-_2.remove(this.group);
+_4.remove(this.group);
 this.group.removeShape();
 }
-this.group=_2.createGroup();
+this.group=_4.createGroup();
 this.group.setTransform({dx:0,dy:0});
 this.withSelected(function(m){
 this.group.add(m.container);
@@ -157,34 +152,34 @@ t=Math.min(o.y1,t);
 l=Math.min(o.x1,l);
 });
 this.constrain={l:-l,t:-t};
-},onDeselect:function(_d,_e){
-if(!_e){
-delete this.selectedStencils[_d.id];
+},onDeselect:function(_f,_10){
+if(!_10){
+delete this.selectedStencils[_f.id];
 }
-this.anchors.remove(_d);
-_2.add(_d.container);
-_d.selected&&_d.deselect();
-_d.applyTransform(this.group.getTransform());
-},deselectItem:function(_f){
-this.onDeselect(_f);
+this.anchors.remove(_f);
+_4.add(_f.container);
+_f.selected&&_f.deselect();
+_f.applyTransform(this.group.getTransform());
+},deselectItem:function(_11){
+this.onDeselect(_11);
 },deselect:function(){
 this.withSelected(function(m){
 this.onDeselect(m);
 });
 this._dragBegun=false;
 this._wasDragged=false;
-},onSelect:function(_10){
-if(!_10){
+},onSelect:function(_12){
+if(!_12){
 console.error("null stencil is not selected:",this.stencils);
 }
-if(this.selectedStencils[_10.id]){
+if(this.selectedStencils[_12.id]){
 return;
 }
-this.selectedStencils[_10.id]=_10;
-this.group.add(_10.container);
-_10.select();
+this.selectedStencils[_12.id]=_12;
+this.group.add(_12.container);
+_12.select();
 if(this.hasSelected()==1){
-this.anchors.add(_10,this.group);
+this.anchors.add(_12,this.group);
 }
 },selectAll:function(){
 this._isBusy=true;
@@ -192,11 +187,11 @@ for(var m in this.stencils){
 this.selectItem(m);
 }
 this._isBusy=false;
-},selectItem:function(_11){
-var id=typeof (_11)=="string"?_11:_11.id;
-var _12=this.stencils[id];
+},selectItem:function(_13){
+var id=typeof (_13)=="string"?_13:_13.id;
+var _14=this.stencils[id];
 this.setSelectionGroup();
-this.onSelect(_12);
+this.onSelect(_14);
 this.group.moveToFront();
 this.setConstraint();
 },onLabelDoubleClick:function(obj){
@@ -221,7 +216,7 @@ return;
 this.setRecentStencil(this.stencils[obj.id]);
 this._isBusy=true;
 if(this.selectedStencils[obj.id]&&this.keys.meta){
-if(_1.isMac&&this.keys.cmmd){
+if(_2.isMac&&this.keys.cmmd){
 }
 this.onDeselect(this.selectedStencils[obj.id]);
 if(this.hasSelected()==1){
@@ -286,35 +281,35 @@ this._wasDragged=true;
 },onDown:function(obj){
 this.deselect();
 },onStencilOver:function(obj){
-_1.style(obj.id,"cursor","move");
+_2.style(obj.id,"cursor","move");
 },onStencilOut:function(obj){
-_1.style(obj.id,"cursor","crosshair");
+_2.style(obj.id,"cursor","crosshair");
 },exporter:function(){
-var _13=[];
+var _15=[];
 for(var m in this.stencils){
-this.stencils[m].enabled&&_13.push(this.stencils[m].exporter());
+this.stencils[m].enabled&&_15.push(this.stencils[m].exporter());
 }
-return _13;
+return _15;
 },listStencils:function(){
 return this.stencils;
-},toSelected:function(_14){
-var _15=Array.prototype.slice.call(arguments).splice(1);
+},toSelected:function(_16){
+var _17=Array.prototype.slice.call(arguments).splice(1);
 for(var m in this.selectedStencils){
-var _16=this.selectedStencils[m];
-_16[_14].apply(_16,_15);
+var _18=this.selectedStencils[m];
+_18[_16].apply(_18,_17);
 }
-},withSelected:function(_17){
-var f=_1.hitch(this,_17);
+},withSelected:function(_19){
+var f=_2.hitch(this,_19);
 for(var m in this.selectedStencils){
 f(this.selectedStencils[m]);
 }
-},withUnselected:function(_18){
-var f=_1.hitch(this,_18);
+},withUnselected:function(_1a){
+var f=_2.hitch(this,_1a);
 for(var m in this.stencils){
 !this.stencils[m].selected&&f(this.stencils[m]);
 }
-},withStencils:function(_19){
-var f=_1.hitch(this,_19);
+},withStencils:function(_1b){
+var f=_2.hitch(this,_1b);
 for(var m in this.stencils){
 f(this.stencils[m]);
 }
@@ -324,8 +319,8 @@ for(var m in this.selectedStencils){
 ln++;
 }
 return ln;
-},isSelected:function(_1a){
-return !!this.selectedStencils[_1a.id];
+},isSelected:function(_1c){
+return !!this.selectedStencils[_1c.id];
 }});
-return dojox.drawing.manager.Stencil;
+})();
 });

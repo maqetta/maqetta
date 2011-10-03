@@ -1,35 +1,29 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/charting/StoreSeries",["dojo/_base/kernel","dojo/_base/array","dojo/_base/declare","dojo/_base/Deferred"],function(_1){
-return _1.declare("dojox.charting.StoreSeries",null,{constructor:function(_2,_3,_4){
-this.store=_2;
-this.kwArgs=_3;
-if(_4){
-if(typeof _4=="function"){
-this.value=_4;
+define("dojox/charting/StoreSeries",["dojo/_base/array","dojo/_base/declare","dojo/_base/Deferred"],function(_1,_2,_3){
+return _2("dojox.charting.StoreSeries",null,{constructor:function(_4,_5,_6){
+this.store=_4;
+this.kwArgs=_5;
+if(_6){
+if(typeof _6=="function"){
+this.value=_6;
 }else{
-if(typeof _4=="object"){
-this.value=function(_5){
+if(typeof _6=="object"){
+this.value=function(_7){
 var o={};
-for(var _6 in _4){
-o[_6]=_5[_4[_6]];
+for(var _8 in _6){
+o[_8]=_7[_6[_8]];
 }
 return o;
 };
 }else{
-this.value=function(_7){
-return _7[_4];
+this.value=function(_9){
+return _9[_6];
 };
 }
 }
 }else{
-this.value=function(_8){
-return _8.value;
+this.value=function(_a){
+return _a.value;
 };
 }
 this.data=[];
@@ -38,27 +32,27 @@ this.fetch();
 if(this.observeHandle){
 this.observeHandle.dismiss();
 }
-},setSeriesObject:function(_9){
-this.series=_9;
+},setSeriesObject:function(_b){
+this.series=_b;
 },fetch:function(){
-var _a=this.objects=[];
-var _b=this;
+var _c=this.objects=[];
+var _d=this;
 if(this.observeHandle){
 this.observeHandle.dismiss();
 }
-var _c=this.store.query(this.kwArgs.query,this.kwArgs);
-_1.when(_c,function(_d){
-_b.objects=_d;
-_e();
+var _e=this.store.query(this.kwArgs.query,this.kwArgs);
+_3.when(_e,function(_f){
+_d.objects=_f;
+_10();
 });
-if(_c.observe){
-this.observeHandle=_c.observe(_e,true);
+if(_e.observe){
+this.observeHandle=_e.observe(_10,true);
 }
-function _e(){
-_b.data=_1.map(_b.objects,function(_f){
-return _b.value(_f,_b.store);
+function _10(){
+_d.data=_1.map(_d.objects,function(_11){
+return _d.value(_11,_d.store);
 });
-_b._pushDataChanges();
+_d._pushDataChanges();
 };
 },_pushDataChanges:function(){
 if(this.series){

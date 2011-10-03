@@ -1096,15 +1096,13 @@ dojo.mixin(davinci.Workbench, {
 			davinci.Runtime.arrayAddOnce(davinci.Workbench._state.editors,fileName);
 			davinci.Workbench._switchEditor(tab.editor, keywordArgs.startup);
 		}
-		
-		var self = this;
+
 		setTimeout(function(){
 			var loadIcon = dojo.query('.dijitTabButtonIcon',tab.controlButton.domNode);
 			dojo.removeClass(loadIcon[0],'tabButtonLoadingIcon');
 			dojo.addClass(loadIcon[0],'dijitNoIcon');
 			tab.resize(); //kludge, forces editor to correct size, delayed to force contents to redraw
-		}, 1000);
-//}), 10);
+		}, 100);
 		return tab.editor;
 	},
 
@@ -1391,7 +1389,15 @@ dojo.mixin(davinci.Workbench, {
 		davinci.Workbench._state.activeEditor=newEditor ? newEditor.fileName : null;
 	
 		if(newEditor && newEditor.focus) newEditor.focus();
-		
+
+		setTimeout(function(){
+			// resize kludge to make Dijit visualEditor contents resize
+			// seems necessary due to combination of 100%x100% layouts and extraneous width/height measurements serialized in markup
+			if (newEditor && newEditor.visualEditor) {
+				newEditor.visualEditor.context.getTopWidgets().forEach(function (widget) { if (widget.resize) { widget.resize(); } });
+			};
+		}, 1000);
+
 		if(!startup) {
 			davinci.Workbench._updateWorkbenchState();
 		}

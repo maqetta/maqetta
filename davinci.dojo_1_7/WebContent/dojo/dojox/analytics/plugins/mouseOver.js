@@ -1,27 +1,21 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/analytics/plugins/mouseOver",["dojo/_base/kernel","dojo/_base/lang","../_base"],function(_1,_2,_3){
-_3.plugins.mouseOver=new (function(){
-this.watchMouse=_1.config["watchMouseOver"]||true;
-this.mouseSampleDelay=_1.config["sampleDelay"]||2500;
-this.addData=_1.hitch(_3,"addData","mouseOver");
-this.targetProps=_1.config["targetProps"]||["id","className","localName","href","spellcheck","lang","textContent","value"];
+define("dojox/analytics/plugins/mouseOver",["dojo/_base/lang","../_base","dojo/_base/config","dojo/_base/window","dojo/on"],function(_1,_2,_3,_4,on){
+return (_2.plugins.mouseOver=new (function(){
+this.watchMouse=_3["watchMouseOver"]||true;
+this.mouseSampleDelay=_3["sampleDelay"]||2500;
+this.addData=_1.hitch(_2,"addData","mouseOver");
+this.targetProps=_3["targetProps"]||["id","className","localName","href","spellcheck","lang","textContent","value"];
 this.toggleWatchMouse=function(){
 if(this._watchingMouse){
-_1.disconnect(this._watchingMouse);
+this._watchingMouse.remove();
 delete this._watchingMouse;
 return;
 }
-_1.connect(_1.doc,"onmousemove",this,"sampleMouse");
+on(_4.doc,"mousemove",_1.hitch(this,"sampleMouse"));
 };
 if(this.watchMouse){
-_1.connect(_1.doc,"onmouseover",this,"toggleWatchMouse");
-_1.connect(_1.doc,"onmouseout",this,"toggleWatchMouse");
+on(_4.doc,"mouseover",_1.hitch(this,"toggleWatchMouse"));
+on(_4.doc,"mouseout",_1.hitch(this,"toggleWatchMouse"));
 }
 this.sampleMouse=function(e){
 if(!this._rateLimited){
@@ -43,16 +37,16 @@ var t={};
 for(var i in e){
 switch(i){
 case "target":
-var _4=this.targetProps;
+var _5=this.targetProps;
 t[i]={};
-for(var j=0;j<_4.length;j++){
-if(_1.isObject(e[i])&&_4[j] in e[i]){
-if(_4[j]=="text"||_4[j]=="textContent"){
+for(var j=0;j<_5.length;j++){
+if((typeof e[i]=="object"||typeof e[i]=="function")&&_5[j] in e[i]){
+if(_5[j]=="text"||_5[j]=="textContent"){
 if(e[i]["localName"]&&(e[i]["localName"]!="HTML")&&(e[i]["localName"]!="BODY")){
-t[i][_4[j]]=e[i][_4[j]].substr(0,50);
+t[i][_5[j]]=e[i][_5[j]].substr(0,50);
 }
 }else{
-t[i][_4[j]]=e[i][_4[j]];
+t[i][_5[j]]=e[i][_5[j]];
 }
 }
 }
@@ -60,8 +54,8 @@ break;
 case "x":
 case "y":
 if(e[i]){
-var _5=e[i];
-t[i]=_5+"";
+var _6=e[i];
+t[i]=_6+"";
 }
 break;
 default:
@@ -70,6 +64,5 @@ break;
 }
 return t;
 };
-})();
-return dojox.analytics.plugins.mouseOver;
+})());
 });

@@ -5,22 +5,22 @@
 */
 
 //>>built
-define("dojo/dnd/Moveable",["../main","./Mover"],function(_1){
-_1.declare("dojo.dnd.Moveable",null,{handle:"",delay:0,skip:false,constructor:function(_2,_3){
-this.node=_1.byId(_2);
-if(!_3){
-_3={};
+define("dojo/dnd/Moveable",["../main","../Evented","../touch","./Mover"],function(_1,_2,_3){
+_1.declare("dojo.dnd.Moveable",[_2],{handle:"",delay:0,skip:false,constructor:function(_4,_5){
+this.node=_1.byId(_4);
+if(!_5){
+_5={};
 }
-this.handle=_3.handle?_1.byId(_3.handle):null;
+this.handle=_5.handle?_1.byId(_5.handle):null;
 if(!this.handle){
 this.handle=this.node;
 }
-this.delay=_3.delay>0?_3.delay:0;
-this.skip=_3.skip;
-this.mover=_3.mover?_3.mover:_1.dnd.Mover;
-this.events=[_1.connect(this.handle,"onmousedown",this,"onMouseDown"),_1.connect(this.handle,"ontouchstart",this,"onMouseDown"),_1.connect(this.handle,"ondragstart",this,"onSelectStart"),_1.connect(this.handle,"onselectstart",this,"onSelectStart")];
-},markupFactory:function(_4,_5){
-return new _1.dnd.Moveable(_5,_4);
+this.delay=_5.delay>0?_5.delay:0;
+this.skip=_5.skip;
+this.mover=_5.mover?_5.mover:_1.dnd.Mover;
+this.events=[_1.connect(this.handle,_3.press,this,"onMouseDown"),_1.connect(this.handle,"ondragstart",this,"onSelectStart"),_1.connect(this.handle,"onselectstart",this,"onSelectStart")];
+},markupFactory:function(_6,_7,_8){
+return new _8(_7,_6);
 },destroy:function(){
 _1.forEach(this.events,_1.disconnect);
 this.events=this.node=this.handle=null;
@@ -29,17 +29,15 @@ if(this.skip&&_1.dnd.isFormElement(e)){
 return;
 }
 if(this.delay){
-this.events.push(_1.connect(this.handle,"onmousemove",this,"onMouseMove"),_1.connect(this.handle,"ontouchmove",this,"onMouseMove"),_1.connect(this.handle,"onmouseup",this,"onMouseUp"),_1.connect(this.handle,"ontouchend",this,"onMouseUp"));
-var _6=e.touches?e.touches[0]:e;
-this._lastX=_6.pageX;
-this._lastY=_6.pageY;
+this.events.push(_1.connect(this.handle,_3.move,this,"onMouseMove"),_1.connect(this.handle,_3.release,this,"onMouseUp"));
+this._lastX=e.pageX;
+this._lastY=e.pageY;
 }else{
 this.onDragDetected(e);
 }
 _1.stopEvent(e);
 },onMouseMove:function(e){
-var _7=e.touches?e.touches[0]:e;
-if(Math.abs(_7.pageX-this._lastX)>this.delay||Math.abs(_7.pageY-this._lastY)>this.delay){
+if(Math.abs(e.pageX-this._lastX)>this.delay||Math.abs(e.pageY-this._lastY)>this.delay){
 this.onMouseUp(e);
 this.onDragDetected(e);
 }
@@ -55,23 +53,23 @@ _1.stopEvent(e);
 }
 },onDragDetected:function(e){
 new this.mover(this.node,e,this);
-},onMoveStart:function(_8){
-_1.publish("/dnd/move/start",[_8]);
+},onMoveStart:function(_9){
+_1.publish("/dnd/move/start",[_9]);
 _1.addClass(_1.body(),"dojoMove");
 _1.addClass(this.node,"dojoMoveItem");
-},onMoveStop:function(_9){
-_1.publish("/dnd/move/stop",[_9]);
+},onMoveStop:function(_a){
+_1.publish("/dnd/move/stop",[_a]);
 _1.removeClass(_1.body(),"dojoMove");
 _1.removeClass(this.node,"dojoMoveItem");
-},onFirstMove:function(_a,e){
-},onMove:function(_b,_c,e){
-this.onMoving(_b,_c);
-var s=_b.node.style;
-s.left=_c.l+"px";
-s.top=_c.t+"px";
-this.onMoved(_b,_c);
-},onMoving:function(_d,_e){
-},onMoved:function(_f,_10){
+},onFirstMove:function(_b,e){
+},onMove:function(_c,_d,e){
+this.onMoving(_c,_d);
+var s=_c.node.style;
+s.left=_d.l+"px";
+s.top=_d.t+"px";
+this.onMoved(_c,_d);
+},onMoving:function(_e,_f){
+},onMoved:function(_10,_11){
 }});
 return _1.dnd.Moveable;
 });

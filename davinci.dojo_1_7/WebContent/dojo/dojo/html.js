@@ -5,67 +5,67 @@
 */
 
 //>>built
-define("dojo/html",["./main","./parser"],function(_1){
-_1.getObject("html",true,_1);
-var _2=0,d=_1;
-_1.html._secureForInnerHtml=function(_3){
-return _3.replace(/(?:\s*<!DOCTYPE\s[^>]+>|<title[^>]*>[\s\S]*?<\/title>)/ig,"");
+define("dojo/html",["./_base/kernel","./_base/lang","./_base/array","./_base/declare","./dom","./dom-construct","./parser"],function(_1,_2,_3,_4,_5,_6,_7){
+_2.getObject("html",true,_1);
+var _8=0;
+_1.html._secureForInnerHtml=function(_9){
+return _9.replace(/(?:\s*<!DOCTYPE\s[^>]+>|<title[^>]*>[\s\S]*?<\/title>)/ig,"");
 };
-_1.html._emptyNode=_1.empty;
-_1.html._setNodeContent=function(_4,_5){
-d.empty(_4);
-if(_5){
-if(typeof _5=="string"){
-_5=d._toDom(_5,_4.ownerDocument);
+_1.html._emptyNode=_6.empty;
+_1.html._setNodeContent=function(_a,_b){
+_6.empty(_a);
+if(_b){
+if(typeof _b=="string"){
+_b=_6.toDom(_b,_a.ownerDocument);
 }
-if(!_5.nodeType&&d.isArrayLike(_5)){
-for(var _6=_5.length,i=0;i<_5.length;i=_6==_5.length?i+1:0){
-d.place(_5[i],_4,"last");
+if(!_b.nodeType&&_2.isArrayLike(_b)){
+for(var _c=_b.length,i=0;i<_b.length;i=_c==_b.length?i+1:0){
+_6.place(_b[i],_a,"last");
 }
 }else{
-d.place(_5,_4,"last");
+_6.place(_b,_a,"last");
 }
 }
-return _4;
+return _a;
 };
-_1.declare("dojo.html._ContentSetter",null,{node:"",content:"",id:"",cleanContent:false,extractContent:false,parseContent:false,parserScope:_1._scopeName,startup:true,constructor:function(_7,_8){
-_1.mixin(this,_7||{});
-_8=this.node=_1.byId(this.node||_8);
+_4("dojo.html._ContentSetter",null,{node:"",content:"",id:"",cleanContent:false,extractContent:false,parseContent:false,parserScope:_1._scopeName,startup:true,constructor:function(_d,_e){
+_2.mixin(this,_d||{});
+_e=this.node=_5.byId(this.node||_e);
 if(!this.id){
-this.id=["Setter",(_8)?_8.id||_8.tagName:"",_2++].join("_");
+this.id=["Setter",(_e)?_e.id||_e.tagName:"",_8++].join("_");
 }
-},set:function(_9,_a){
-if(undefined!==_9){
-this.content=_9;
+},set:function(_f,_10){
+if(undefined!==_f){
+this.content=_f;
 }
-if(_a){
-this._mixin(_a);
+if(_10){
+this._mixin(_10);
 }
 this.onBegin();
 this.setContent();
 this.onEnd();
 return this.node;
 },setContent:function(){
-var _b=this.node;
-if(!_b){
+var _11=this.node;
+if(!_11){
 throw new Error(this.declaredClass+": setContent given no node");
 }
 try{
-_b=_1.html._setNodeContent(_b,this.content);
+_11=_1.html._setNodeContent(_11,this.content);
 }
 catch(e){
-var _c=this.onContentError(e);
+var _12=this.onContentError(e);
 try{
-_b.innerHTML=_c;
+_11.innerHTML=_12;
 }
 catch(e){
 console.error("Fatal "+this.declaredClass+".setContent could not change content due to "+e.message,e);
 }
 }
-this.node=_b;
+this.node=_11;
 },empty:function(){
 if(this.parseResults&&this.parseResults.length){
-_1.forEach(this.parseResults,function(w){
+_3.forEach(this.parseResults,function(w){
 if(w.destroy){
 w.destroy();
 }
@@ -74,20 +74,20 @@ delete this.parseResults;
 }
 _1.html._emptyNode(this.node);
 },onBegin:function(){
-var _d=this.content;
-if(_1.isString(_d)){
+var _13=this.content;
+if(_2.isString(_13)){
 if(this.cleanContent){
-_d=_1.html._secureForInnerHtml(_d);
+_13=_1.html._secureForInnerHtml(_13);
 }
 if(this.extractContent){
-var _e=_d.match(/<body[^>]*>\s*([\s\S]+)\s*<\/body>/im);
-if(_e){
-_d=_e[1];
+var _14=_13.match(/<body[^>]*>\s*([\s\S]+)\s*<\/body>/im);
+if(_14){
+_13=_14[1];
 }
 }
 }
 this.empty();
-this.content=_d;
+this.content=_13;
 return this.node;
 },onEnd:function(){
 if(this.parseContent){
@@ -98,49 +98,49 @@ return this.node;
 delete this.parseResults;
 delete this.node;
 delete this.content;
-},onContentError:function(_f){
-return "Error occured setting content: "+_f;
-},_mixin:function(_10){
-var _11={},key;
-for(key in _10){
-if(key in _11){
+},onContentError:function(err){
+return "Error occured setting content: "+err;
+},_mixin:function(_15){
+var _16={},key;
+for(key in _15){
+if(key in _16){
 continue;
 }
-this[key]=_10[key];
+this[key]=_15[key];
 }
 },_parse:function(){
-var _12=this.node;
+var _17=this.node;
 try{
-var _13={};
-_1.forEach(["dir","lang","textDir"],function(_14){
-if(this[_14]){
-_13[_14]=this[_14];
+var _18={};
+_3.forEach(["dir","lang","textDir"],function(_19){
+if(this[_19]){
+_18[_19]=this[_19];
 }
 },this);
-this.parseResults=_1.parser.parse({rootNode:_12,noStart:!this.startup,inherited:_13,scope:this.parserScope});
+this.parseResults=_7.parse({rootNode:_17,noStart:!this.startup,inherited:_18,scope:this.parserScope});
 }
 catch(e){
 this._onError("Content",e,"Error parsing in _ContentSetter#"+this.id);
 }
-},_onError:function(_15,err,_16){
-var _17=this["on"+_15+"Error"].call(this,err);
-if(_16){
-console.error(_16,err);
+},_onError:function(_1a,err,_1b){
+var _1c=this["on"+_1a+"Error"].call(this,err);
+if(_1b){
+console.error(_1b,err);
 }else{
-if(_17){
-_1.html._setNodeContent(this.node,_17,true);
+if(_1c){
+_1.html._setNodeContent(this.node,_1c,true);
 }
 }
 }});
-_1.html.set=function(_18,_19,_1a){
-if(undefined==_19){
+_1.html.set=function(_1d,_1e,_1f){
+if(undefined==_1e){
 console.warn("dojo.html.set: no cont argument provided, using empty string");
-_19="";
+_1e="";
 }
-if(!_1a){
-return _1.html._setNodeContent(_18,_19,true);
+if(!_1f){
+return _1.html._setNodeContent(_1d,_1e,true);
 }else{
-var op=new _1.html._ContentSetter(_1.mixin(_1a,{content:_19,node:_18}));
+var op=new _1.html._ContentSetter(_2.mixin(_1f,{content:_1e,node:_1d}));
 return op.set();
 }
 };

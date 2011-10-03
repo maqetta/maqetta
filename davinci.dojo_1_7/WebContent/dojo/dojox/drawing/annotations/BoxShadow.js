@@ -1,20 +1,15 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/drawing/annotations/BoxShadow",["dojo","../util/oo","./Angle"],function(_1){
-dojox.drawing.annotations.BoxShadow=dojox.drawing.util.oo.declare(function(_2){
-this.stencil=_2.stencil;
-this.util=_2.stencil.util;
-this.mouse=_2.stencil.mouse;
-this.style=_2.stencil.style;
-var _3={size:6,mult:4,alpha:0.05,place:"BR",color:"#646464"};
-delete _2.stencil;
-this.options=_1.mixin(_3,_2);
-this.options.color=new _1.Color(this.options.color);
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.drawing.annotations.BoxShadow");
+_3.drawing.annotations.BoxShadow=_3.drawing.util.oo.declare(function(_4){
+this.stencil=_4.stencil;
+this.util=_4.stencil.util;
+this.mouse=_4.stencil.mouse;
+this.style=_4.stencil.style;
+var _5={size:6,mult:4,alpha:0.05,place:"BR",color:"#646464"};
+delete _4.stencil;
+this.options=_2.mixin(_5,_4);
+this.options.color=new _2.Color(this.options.color);
 this.options.color.a=this.options.alpha;
 switch(this.stencil.shortType){
 case "image":
@@ -46,8 +41,8 @@ this.container.removeShape();
 }
 this.container=this.stencil.container.createGroup();
 this.container.moveToBack();
-var o=this.options,_4=o.size,_5=o.mult,d=this.method=="createForPath"?this.stencil.points:this.stencil.data,r=d.r||1,p=o.place,c=o.color;
-this[this.method](o,_4,_5,d,r,p,c);
+var o=this.options,_6=o.size,_7=o.mult,d=this.method=="createForPath"?this.stencil.points:this.stencil.data,r=d.r||1,p=o.place,c=o.color;
+this[this.method](o,_6,_7,d,r,p,c);
 },hide:function(){
 if(this.showing){
 this.showing=false;
@@ -58,39 +53,39 @@ if(!this.showing){
 this.showing=true;
 this.stencil.container.add(this.container);
 }
-},createForPath:function(o,_6,_7,_8,r,p,c){
-var sh=_6*_7/4,_9=/B/.test(p)?sh:/T/.test(p)?sh*-1:0,_a=/R/.test(p)?sh:/L/.test(p)?sh*-1:0;
-var _b=true;
-for(var i=1;i<=_6;i++){
-var _c=i*_7;
-if(dojox.gfx.renderer=="svg"){
-var _d=[];
-_1.forEach(_8,function(o,i){
+},createForPath:function(o,_8,_9,_a,r,p,c){
+var sh=_8*_9/4,_b=/B/.test(p)?sh:/T/.test(p)?sh*-1:0,_c=/R/.test(p)?sh:/L/.test(p)?sh*-1:0;
+var _d=true;
+for(var i=1;i<=_8;i++){
+var _e=i*_9;
+if(_3.gfx.renderer=="svg"){
+var _f=[];
+_2.forEach(_a,function(o,i){
 if(i==0){
-_d.push("M "+(o.x+_a)+" "+(o.y+_9));
+_f.push("M "+(o.x+_c)+" "+(o.y+_b));
 }else{
-var _e=o.t||"L ";
-_d.push(_e+(o.x+_a)+" "+(o.y+_9));
+var cmd=o.t||"L ";
+_f.push(cmd+(o.x+_c)+" "+(o.y+_b));
 }
 },this);
-if(_b){
-_d.push("Z");
+if(_d){
+_f.push("Z");
 }
-this.container.createPath(_d.join(", ")).setStroke({width:_c,color:c,cap:"round"});
+this.container.createPath(_f.join(", ")).setStroke({width:_e,color:c,cap:"round"});
 }else{
-var _f=this.container.createPath({}).setStroke({width:_c,color:c,cap:"round"});
-_1.forEach(this.points,function(o,i){
+var pth=this.container.createPath({}).setStroke({width:_e,color:c,cap:"round"});
+_2.forEach(this.points,function(o,i){
 if(i==0||o.t=="M"){
-_f.moveTo(o.x+_a,o.y+_9);
+pth.moveTo(o.x+_c,o.y+_b);
 }else{
 if(o.t=="Z"){
-_b&&_f.closePath();
+_d&&pth.closePath();
 }else{
-_f.lineTo(o.x+_a,o.y+_9);
+pth.lineTo(o.x+_c,o.y+_b);
 }
 }
 },this);
-_b&&_f.closePath();
+_d&&pth.closePath();
 }
 }
 },createForLine:function(o,_10,_11,d,r,p,c){
@@ -139,9 +134,9 @@ pts=this.arrowPoints();
 if(!pts){
 return;
 }
-if(dojox.gfx.renderer=="svg"){
+if(_3.gfx.renderer=="svg"){
 var _20=[];
-_1.forEach(pts,function(o,i){
+_2.forEach(pts,function(o,i){
 if(i==0){
 _20.push("M "+(o.x+shx)+" "+(o.y+shy));
 }else{
@@ -155,7 +150,7 @@ _20.push("Z");
 this.container.createPath(_20.join(", ")).setStroke({width:_1f,color:c,cap:"round"}).setFill(c);
 }else{
 var pth=this.container.createPath({}).setStroke({width:_1f,color:c,cap:"round"});
-_1.forEach(pts,function(o,i){
+_2.forEach(pts,function(o,i){
 if(i==0||o.t=="M"){
 pth.moveTo(o.x+shx,o.y+shy);
 }else{
@@ -180,5 +175,4 @@ if(this.container){
 this.container.removeShape();
 }
 }});
-return dojox.drawing.annotations.BoxShadow;
 });

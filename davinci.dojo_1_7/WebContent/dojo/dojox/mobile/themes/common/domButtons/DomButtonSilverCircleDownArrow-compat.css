@@ -3,6 +3,6 @@
 	background-image: url(compat/mblDomButtonSilverCircleDownArrow.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonSilverCircleDownArrow > DIV {
+.mblDomButtonSilverCircleDownArrow > div {
 	display: none;
 }

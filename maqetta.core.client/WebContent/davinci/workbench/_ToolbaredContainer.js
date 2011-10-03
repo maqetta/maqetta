@@ -58,6 +58,7 @@ dojo.declare("davinci.workbench._ToolbaredContainer", [dijit.layout._LayoutWidge
 
 	_createToolbar: function()
 	{		
+		
 		var topAddition=this.getTopAdditions();
 		if (topAddition)
 			this.toolbarDiv.appendChild(topAddition);

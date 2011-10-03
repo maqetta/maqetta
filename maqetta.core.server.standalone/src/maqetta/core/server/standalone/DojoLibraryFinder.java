@@ -67,7 +67,7 @@ public class DojoLibraryFinder implements ILibraryFinder{
 			
 			dojoProps = new Properties();
 			try {
-				dojoProps.load(new InputStreamReader(dojoConfig.toURL().openStream()));
+				dojoProps.load(dojoConfig.toURL().openStream());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				return null;

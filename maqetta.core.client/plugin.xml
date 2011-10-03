@@ -61,6 +61,9 @@
          <jsPlugin
                path="app/davinci/ve/themeEditor/themeEditor"
                resourcePath="WebContent/davinci/ve/themeEditor/themeEditor"/>
+          <jsPlugin
+               path="app/de/de"
+               resourcePath="WebContent/davinci/de/de"/>
       </extension>
 
       

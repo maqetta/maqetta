@@ -4,7 +4,7 @@
 	      The git repos are initialized in the shell script prior to running the build script.
 	      
 	      Internal repo is ${buildDirectory}/repository/maqetta
-	      External repo is ${buildDirectoyr}/repository/maqetta_internal
+	      External repo is ${buildDirectory}/repository/maqetta_internal
 	      Equinox (dep for running war): ${buildDirectory}/repository/rt.equinox.bundles
 	
 	-->

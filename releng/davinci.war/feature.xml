@@ -31,13 +31,6 @@
          unpack="false"/>
 
    <plugin
-         id="davinci.yui_2_6_0"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.apache.commons.fileupload"
          download-size="0"
          install-size="0"
@@ -101,6 +94,20 @@
 
    <plugin
          id="maqetta.core.server.standalone"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="davinci.jqueryui_1_8"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="davinci.yui_2_6_0"
          download-size="0"
          install-size="0"
          version="0.0.0"

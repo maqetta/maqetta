@@ -1,4 +1,4 @@
-package org.davinci.server.mail;
+package maqetta.core.server.mail;
 
 
 import java.io.File;

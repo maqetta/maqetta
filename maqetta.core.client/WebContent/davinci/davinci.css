@@ -345,7 +345,7 @@ BODY{
 #davinci_top_bar {
 	padding:0 8px 0 22px; /* override dijitContentPane */
 	background: #2c2c2c url('img/banner-tile.png') repeat-x;
-	color: #cccccc;
+	color: #ccc;
     font: normal bold 12px Arial, sans-serif;
     text-shadow:none;
     border-top: rgb(45,46,46) 1px;
@@ -363,7 +363,7 @@ BODY{
 .maq_banner_name {
     font: normal normal 10pt Arial, sans-serif;
 	color:white;
-	text-shadow: #000000 1px 1px 1px;
+	text-shadow: #000 1px 1px 1px;
 }
 .maq_banner_component {
     font: normal normal 10pt Arial, sans-serif;
@@ -409,10 +409,10 @@ davinci_top_bar .dijitButtonNode {
 	display: table;
 	margin: 0 auto;
 	padding: 0;
-	height: 32px
+	height: 32px;
 }
 .toolbaredContainer_toolbarDiv {
-	/* no override rules at this time */
+	height: 28px;
 }
 
 #davinci_toolbar_main {

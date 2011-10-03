@@ -203,7 +203,7 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
 	
 	  
 		for (var i=0;i<responseObject.length;i++){
-			var child = this._getChild(responseObject[i].name);
+			var child = this.getChild(responseObject[i].name);
 			var hasChild = (child!=null);
 			
 			if (responseObject[i].isDir || responseObject[i].isLib) {
@@ -246,7 +246,8 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
 	  return result;
   }
 
-  davinci.model.Resource.Folder.prototype._getChild= function(name){
+  /* time to make this public */
+  davinci.model.Resource.Folder.prototype.getChild= function(name){
 	  if (!this.__CASE_SENSITIVE){
 		  name=name.toLowerCase();
 	  }
@@ -258,7 +259,6 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
 		}
 		return null;
   }
-
   
   /**  
    * @class davinci.model.Resource.File

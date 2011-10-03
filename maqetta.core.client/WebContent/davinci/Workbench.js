@@ -17,6 +17,8 @@ dojo.require("davinci.model.Path");
 //dojo.require("davinci.workbench._ToolbaredContainer");
 dojo.require("davinci.workbench.ViewPart");
 dojo.require("davinci.workbench.EditorContainer");
+dojo.require("davinci.de.resource");
+
 //dojo.require("davinci.ui.Panel");
 
 /*

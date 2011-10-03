@@ -3,6 +3,6 @@
 	background-image: url(compat/mblDomButtonDarkBlueCheck.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonDarkBlueCheck DIV, .mblDomButtonCheck DIV {
+.mblDomButtonDarkBlueCheck div, .mblDomButtonCheck div {
 	display: none;
 }

@@ -1,14 +1,8 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/charting/plot2d/Default",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","./Base","./common","dojox/lang/functional","dojox/lang/functional/reversed","dojox/lang/utils","dojox/gfx/fx"],function(_1,_2,_3,_4,dc,df,_5,du,fx){
-var _6=df.lambda("item.purgeGroup()");
+define("dojox/charting/plot2d/Default",["dojo/_base/lang","dojo/_base/declare","dojo/_base/array","./Base","./common","dojox/lang/functional","dojox/lang/functional/reversed","dojox/lang/utils","dojox/gfx/fx"],function(_1,_2,_3,_4,dc,df,_5,du,fx){
+var _6=_5.lambda("item.purgeGroup()");
 var _7=1200;
-return _1.declare("dojox.charting.plot2d.Default",dojox.charting.plot2d.Base,{defaultParams:{hAxis:"x",vAxis:"y",lines:true,areas:false,markers:false,tension:"",animate:false,enableCache:false},optionalParams:{stroke:{},outline:{},shadow:{},fill:{},font:"",fontColor:"",markerStroke:{},markerOutline:{},markerShadow:{},markerFill:{},markerFont:"",markerFontColor:""},constructor:function(_8,_9){
+return _2("dojox.charting.plot2d.Default",_4,{defaultParams:{hAxis:"x",vAxis:"y",lines:true,areas:false,markers:false,tension:"",animate:false,enableCache:false},optionalParams:{stroke:{},outline:{},shadow:{},fill:{},font:"",fontColor:"",markerStroke:{},markerOutline:{},markerShadow:{},markerFill:{},markerFont:"",markerFontColor:""},constructor:function(_8,_9){
 this.opt=_1.clone(this.defaultParams);
 du.updateWithObject(this.opt,_9);
 du.updateWithPattern(this.opt,_9,this.optionalParams);
@@ -36,7 +30,7 @@ return this.performZoom(_e,_f);
 this.resetEvents();
 this.dirty=this.isDirty();
 if(this.dirty){
-_1.forEach(this.series,_6);
+_3.forEach(this.series,_6);
 this._eventSeries={};
 this.cleanGroup();
 this.group.setTransform(null);
@@ -80,11 +74,11 @@ _18=null;
 }
 for(var seg=0;seg<_16.length;seg++){
 if(typeof _16[seg][0]=="number"){
-_19=_1.map(_16[seg],function(v,i){
+_19=_3.map(_16[seg],function(v,i){
 return {x:ht(i+_17[seg]+1)+_f.l,y:_e.height-_f.b-vt(v)};
 },this);
 }else{
-_19=_1.map(_16[seg],function(v,i){
+_19=_3.map(_16[seg],function(v,i){
 return {x:ht(v.x)+_f.l,y:_e.height-_f.b-vt(v.y)};
 },this);
 }
@@ -114,7 +108,7 @@ run.dyn.marker=_15.symbol;
 }
 var _20=null,_21=null,_22=null;
 if(_11&&_15.series.shadow&&_19.length>1){
-var _23=_15.series.shadow,_24=_1.map(_19,function(c){
+var _23=_15.series.shadow,_24=_3.map(_19,function(c){
 return {x:c.x+_23.dx,y:c.y+_23.dy};
 });
 if(this.opt.lines){
@@ -126,7 +120,7 @@ run.dyn.shadow=s.createPolyline(_24).setStroke(_23).getStroke();
 }
 if(this.opt.markers&&_15.marker.shadow){
 _23=_15.marker.shadow;
-_22=_1.map(_24,function(c){
+_22=_3.map(_24,function(c){
 return this.createPath(run,s,"M"+c.x+" "+c.y+" "+_15.symbol).setStroke(_23).setFill(_23.color);
 },this);
 }
@@ -153,7 +147,7 @@ if(_15.marker.outline){
 _12=dc.makeStroke(_15.marker.outline);
 _12.width=2*_12.width+(_15.marker.stroke?_15.marker.stroke.width:0);
 }
-_1.forEach(_19,function(c,i){
+_3.forEach(_19,function(c,i){
 var _25="M"+c.x+" "+c.y+" "+_15.symbol;
 if(_12){
 _21[i]=this.createPath(run,s,_25).setStroke(_12);
@@ -163,7 +157,7 @@ _20[i]=this.createPath(run,s,_25).setStroke(_15.marker.stroke).setFill(_15.marke
 run.dyn.markerFill=_15.marker.fill;
 run.dyn.markerStroke=_15.marker.stroke;
 if(_14){
-_1.forEach(_20,function(s,i){
+_3.forEach(_20,function(s,i){
 var o={element:"marker",index:i+_17[seg],run:run,shape:s,outline:_21[i]||null,shadow:_22&&_22[i]||null,cx:_19[i].x,cy:_19[i].y};
 if(typeof _16[seg][0]=="number"){
 o.x=i+_17[seg]+1;

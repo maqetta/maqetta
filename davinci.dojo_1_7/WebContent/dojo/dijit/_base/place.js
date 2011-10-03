@@ -1,56 +1,50 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dijit/_base/place",["dojo/_base/kernel","..","../place","dojo/window","dojo/_base/array","dojo/_base/lang"],function(_1,_2,_3){
-_2.getViewport=function(){
-return _1.window.getBox();
+define("dijit/_base/place",["dojo/_base/array","dojo/_base/lang","dojo/window","../place",".."],function(_1,_2,_3,_4,_5){
+_5.getViewport=function(){
+return _3.getBox();
 };
-_2.placeOnScreen=_3.at;
-_2.placeOnScreenAroundElement=function(_4,_5,_6,_7){
-var _8;
-if(_1.isArray(_6)){
-_8=_6;
+_5.placeOnScreen=_4.at;
+_5.placeOnScreenAroundElement=function(_6,_7,_8,_9){
+var _a;
+if(_2.isArray(_8)){
+_a=_8;
 }else{
-_8=[];
-for(var _9 in _6){
-_8.push({aroundCorner:_9,corner:_6[_9]});
+_a=[];
+for(var _b in _8){
+_a.push({aroundCorner:_b,corner:_8[_b]});
 }
 }
-return _3.around(_4,_5,_8,true,_7);
+return _4.around(_6,_7,_a,true,_9);
 };
-_2.placeOnScreenAroundNode=_2.placeOnScreenAroundElement;
-_2.placeOnScreenAroundRectangle=_2.placeOnScreenAroundElement;
-_2.getPopupAroundAlignment=function(_a,_b){
-var _c={};
-_1.forEach(_a,function(_d){
-var _e=_b;
-switch(_d){
+_5.placeOnScreenAroundNode=_5.placeOnScreenAroundElement;
+_5.placeOnScreenAroundRectangle=_5.placeOnScreenAroundElement;
+_5.getPopupAroundAlignment=function(_c,_d){
+var _e={};
+_1.forEach(_c,function(_f){
+var ltr=_d;
+switch(_f){
 case "after":
-_c[_b?"BR":"BL"]=_b?"BL":"BR";
+_e[_d?"BR":"BL"]=_d?"BL":"BR";
 break;
 case "before":
-_c[_b?"BL":"BR"]=_b?"BR":"BL";
+_e[_d?"BL":"BR"]=_d?"BR":"BL";
 break;
 case "below-alt":
-_e=!_e;
+ltr=!ltr;
 case "below":
-_c[_e?"BL":"BR"]=_e?"TL":"TR";
-_c[_e?"BR":"BL"]=_e?"TR":"TL";
+_e[ltr?"BL":"BR"]=ltr?"TL":"TR";
+_e[ltr?"BR":"BL"]=ltr?"TR":"TL";
 break;
 case "above-alt":
-_e=!_e;
+ltr=!ltr;
 case "above":
 default:
-_c[_e?"TL":"TR"]=_e?"BL":"BR";
-_c[_e?"TR":"TL"]=_e?"BR":"BL";
+_e[ltr?"TL":"TR"]=ltr?"BL":"BR";
+_e[ltr?"TR":"TL"]=ltr?"BR":"BL";
 break;
 }
 });
-return _c;
+return _e;
 };
-return _2;
+return _5;
 });

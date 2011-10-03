@@ -56,6 +56,8 @@
             category: "",
             pageContent: "Project Settings here"
         },
+        
+        
         {
             name: "Project Settings",
             id: "ProjectPrefs",
@@ -64,8 +66,10 @@
             pane: "davinci.ui.ProjectPreferences",
             defaultValues: {
                 "webContentFolder": "",
-                "themeFolder": "./themes"
-            }
+                "themeFolder": "./themes",
+                "widgetFolder": "./widgets"
+            },
+            
         }
 
     ],

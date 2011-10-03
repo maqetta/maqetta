@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/editor/plugins/TablePlugins",["dojo","dijit","dojox","dijit/_base/popup","dijit/_Widget","dijit/_TemplatedMixin","dijit/_WidgetsInTemplateMixin","dijit/MenuItem","dijit/MenuSeparator","dijit/TooltipDialog","dijit/form/Button","dijit/form/DropDownButton","dijit/Dialog","dijit/form/TextBox","dijit/form/FilteringSelect","dijit/_editor/_Plugin","dijit/_editor/selection","dijit/Menu","dijit/ColorPalette","dojox/widget/ColorPicker","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/TableDialog"],function(_1,_2,_3){
+define("dojox/editor/plugins/TablePlugins",["dojo","dijit","dojox","dijit/_base/popup","dijit/_Widget","dijit/_TemplatedMixin","dijit/_WidgetsInTemplateMixin","dijit/Menu","dijit/MenuItem","dijit/MenuSeparator","dijit/TooltipDialog","dijit/form/Button","dijit/form/DropDownButton","dijit/Dialog","dijit/form/TextBox","dijit/form/FilteringSelect","dijit/popup","dijit/_editor/_Plugin","dijit/_editor/range","dijit/_editor/selection","dijit/ColorPalette","dojox/widget/ColorPicker","dojo/_base/connect","dojo/_base/declare","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/TableDialog"],function(_1,_2,_3){
 _1.experimental("dojox.editor.plugins.TablePlugins");
 _1.declare("dojox.editor.plugins._TableHandler",_2._editor._Plugin,{tablesConnected:false,currentlyAvailable:false,alwaysAvailable:false,availableCurrentlySet:false,initialized:false,tableData:null,shiftKeyDown:false,editorDomNode:null,undoEnabled:true,refCount:0,doMixins:function(){
 _1.mixin(this.editor,{getAncestorElement:function(_4){

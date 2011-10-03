@@ -214,22 +214,23 @@
 	left: 42px;
 }
 .mblItemSwitch {
-  top: 8px;
+  top: 12px;
 }
 .mblSwitchBg {
   border-color: #b5bcc7;
   -webkit-border-radius: 2px;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
 }
 .mblSwitchBgLeft {
-  background-color: #45a4ff;
+  background-color: #007ef5;
   color: #131313;
 }
 .mblSwitchBgRight {
-  background-color: #deefff;
+  background-color: #8fc9ff;
 }
 .mblSwitchKnob {
-  background-color: #abd6ff;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
+  border-color: #7b879b;
+  background-color: #5cb0ff;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
   -webkit-border-radius: 2px;
 }

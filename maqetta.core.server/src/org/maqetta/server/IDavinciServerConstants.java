@@ -60,6 +60,7 @@ public interface IDavinciServerConstants {
 	public static final String EP_TAG_PERSON_MANAGER = "personManager";
 	
 	public static final String EXTENSION_POINT_LIBRARY_MANAGER = "libraryManager";
+	public static final String EXTENSION_POINT_LIBRARYFINDER = "libraryFinder";
 	public static final String EP_TAG_LIBRARY_MANAGER = "libraryManager";
 	public static final String EXTENSION_POINT_USER_MANAGER = "userManager";
 	public static final String EP_TAG_USER_MANAGER = "userManager";

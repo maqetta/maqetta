@@ -442,6 +442,18 @@
                     label: "Save As",
                     toolbarPath: "save"
                 },
+                {
+                    id: "saveasdijit",
+                    iconClass: 'saveAsIcon',
+                    run: "davinci.de.resource.createDijiFromNewDialog()",
+                    isEnabled: function(context) {
+                        var isEnabled = davinci.Workbench.getOpenEditor();
+                        return isEnabled;
+
+                    },
+                    label: "Save As Dijit",
+                    toolbarPath: "save"
+                },
                 // {
                 // id: "saveaswidget",
                 // iconClass: 'saveAsIcon', // XXX

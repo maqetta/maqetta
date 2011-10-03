@@ -1,72 +1,66 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/charting/scaler/linear",["dojo/_base/kernel","../../main","dojo/_base/lang","./common"],function(_1,_2,_3,_4){
-var _5=_1.getObject("charting.scaler.linear",true,_2);
-var _6=3,_7=_4.findString,_8=_4.getNumericLabel;
-var _9=function(_a,_b,_c,_d,_e,_f,_10){
-_c=_1.delegate(_c);
+define("dojox/charting/scaler/linear",["dojo/_base/lang","./common"],function(_1,_2){
+var _3=_1.getObject("dojox.charting.scaler.linear",true);
+var _4=3,_5=_2.findString,_6=_2.getNumericLabel;
+var _7=function(_8,_9,_a,_b,_c,_d,_e){
+_a=_1.delegate(_a);
+if(!_b){
+if(_a.fixUpper=="major"){
+_a.fixUpper="minor";
+}
+if(_a.fixLower=="major"){
+_a.fixLower="minor";
+}
+}
+if(!_c){
+if(_a.fixUpper=="minor"){
+_a.fixUpper="micro";
+}
+if(_a.fixLower=="minor"){
+_a.fixLower="micro";
+}
+}
 if(!_d){
-if(_c.fixUpper=="major"){
-_c.fixUpper="minor";
+if(_a.fixUpper=="micro"){
+_a.fixUpper="none";
 }
-if(_c.fixLower=="major"){
-_c.fixLower="minor";
-}
-}
-if(!_e){
-if(_c.fixUpper=="minor"){
-_c.fixUpper="micro";
-}
-if(_c.fixLower=="minor"){
-_c.fixLower="micro";
+if(_a.fixLower=="micro"){
+_a.fixLower="none";
 }
 }
-if(!_f){
-if(_c.fixUpper=="micro"){
-_c.fixUpper="none";
+var _f=_5(_a.fixLower,["major"])?Math.floor(_a.min/_b)*_b:_5(_a.fixLower,["minor"])?Math.floor(_a.min/_c)*_c:_5(_a.fixLower,["micro"])?Math.floor(_a.min/_d)*_d:_a.min,_10=_5(_a.fixUpper,["major"])?Math.ceil(_a.max/_b)*_b:_5(_a.fixUpper,["minor"])?Math.ceil(_a.max/_c)*_c:_5(_a.fixUpper,["micro"])?Math.ceil(_a.max/_d)*_d:_a.max;
+if(_a.useMin){
+_8=_f;
 }
-if(_c.fixLower=="micro"){
-_c.fixLower="none";
+if(_a.useMax){
+_9=_10;
 }
+var _11=(!_b||_a.useMin&&_5(_a.fixLower,["major"]))?_8:Math.ceil(_8/_b)*_b,_12=(!_c||_a.useMin&&_5(_a.fixLower,["major","minor"]))?_8:Math.ceil(_8/_c)*_c,_13=(!_d||_a.useMin&&_5(_a.fixLower,["major","minor","micro"]))?_8:Math.ceil(_8/_d)*_d,_14=!_b?0:(_a.useMax&&_5(_a.fixUpper,["major"])?Math.round((_9-_11)/_b):Math.floor((_9-_11)/_b))+1,_15=!_c?0:(_a.useMax&&_5(_a.fixUpper,["major","minor"])?Math.round((_9-_12)/_c):Math.floor((_9-_12)/_c))+1,_16=!_d?0:(_a.useMax&&_5(_a.fixUpper,["major","minor","micro"])?Math.round((_9-_13)/_d):Math.floor((_9-_13)/_d))+1,_17=_c?Math.round(_b/_c):0,_18=_d?Math.round(_c/_d):0,_19=_b?Math.floor(Math.log(_b)/Math.LN10):0,_1a=_c?Math.floor(Math.log(_c)/Math.LN10):0,_1b=_e/(_9-_8);
+if(!isFinite(_1b)){
+_1b=1;
 }
-var _11=_7(_c.fixLower,["major"])?Math.floor(_c.min/_d)*_d:_7(_c.fixLower,["minor"])?Math.floor(_c.min/_e)*_e:_7(_c.fixLower,["micro"])?Math.floor(_c.min/_f)*_f:_c.min,_12=_7(_c.fixUpper,["major"])?Math.ceil(_c.max/_d)*_d:_7(_c.fixUpper,["minor"])?Math.ceil(_c.max/_e)*_e:_7(_c.fixUpper,["micro"])?Math.ceil(_c.max/_f)*_f:_c.max;
-if(_c.useMin){
-_a=_11;
-}
-if(_c.useMax){
-_b=_12;
-}
-var _13=(!_d||_c.useMin&&_7(_c.fixLower,["major"]))?_a:Math.ceil(_a/_d)*_d,_14=(!_e||_c.useMin&&_7(_c.fixLower,["major","minor"]))?_a:Math.ceil(_a/_e)*_e,_15=(!_f||_c.useMin&&_7(_c.fixLower,["major","minor","micro"]))?_a:Math.ceil(_a/_f)*_f,_16=!_d?0:(_c.useMax&&_7(_c.fixUpper,["major"])?Math.round((_b-_13)/_d):Math.floor((_b-_13)/_d))+1,_17=!_e?0:(_c.useMax&&_7(_c.fixUpper,["major","minor"])?Math.round((_b-_14)/_e):Math.floor((_b-_14)/_e))+1,_18=!_f?0:(_c.useMax&&_7(_c.fixUpper,["major","minor","micro"])?Math.round((_b-_15)/_f):Math.floor((_b-_15)/_f))+1,_19=_e?Math.round(_d/_e):0,_1a=_f?Math.round(_e/_f):0,_1b=_d?Math.floor(Math.log(_d)/Math.LN10):0,_1c=_e?Math.floor(Math.log(_e)/Math.LN10):0,_1d=_10/(_b-_a);
-if(!isFinite(_1d)){
-_1d=1;
-}
-return {bounds:{lower:_11,upper:_12,from:_a,to:_b,scale:_1d,span:_10},major:{tick:_d,start:_13,count:_16,prec:_1b},minor:{tick:_e,start:_14,count:_17,prec:_1c},micro:{tick:_f,start:_15,count:_18,prec:0},minorPerMajor:_19,microPerMinor:_1a,scaler:_5};
+return {bounds:{lower:_f,upper:_10,from:_8,to:_9,scale:_1b,span:_e},major:{tick:_b,start:_11,count:_14,prec:_19},minor:{tick:_c,start:_12,count:_15,prec:_1a},micro:{tick:_d,start:_13,count:_16,prec:0},minorPerMajor:_17,microPerMinor:_18,scaler:_3};
 };
-return _1.mixin(_5,{buildScaler:function(min,max,_1e,_1f){
+return _1.mixin(_3,{buildScaler:function(min,max,_1c,_1d){
 var h={fixUpper:"none",fixLower:"none",natural:false};
-if(_1f){
-if("fixUpper" in _1f){
-h.fixUpper=String(_1f.fixUpper);
+if(_1d){
+if("fixUpper" in _1d){
+h.fixUpper=String(_1d.fixUpper);
 }
-if("fixLower" in _1f){
-h.fixLower=String(_1f.fixLower);
+if("fixLower" in _1d){
+h.fixLower=String(_1d.fixLower);
 }
-if("natural" in _1f){
-h.natural=Boolean(_1f.natural);
+if("natural" in _1d){
+h.natural=Boolean(_1d.natural);
 }
 }
-if("min" in _1f){
-min=_1f.min;
+if("min" in _1d){
+min=_1d.min;
 }
-if("max" in _1f){
-max=_1f.max;
+if("max" in _1d){
+max=_1d.max;
 }
-if(_1f.includeZero){
+if(_1d.includeZero){
 if(min>0){
 min=0;
 }
@@ -78,136 +72,136 @@ h.min=min;
 h.useMin=true;
 h.max=max;
 h.useMax=true;
-if("from" in _1f){
-min=_1f.from;
+if("from" in _1d){
+min=_1d.from;
 h.useMin=false;
 }
-if("to" in _1f){
-max=_1f.to;
+if("to" in _1d){
+max=_1d.to;
 h.useMax=false;
 }
 if(max<=min){
-return _9(min,max,h,0,0,0,_1e);
+return _7(min,max,h,0,0,0,_1c);
 }
-var mag=Math.floor(Math.log(max-min)/Math.LN10),_20=_1f&&("majorTickStep" in _1f)?_1f.majorTickStep:Math.pow(10,mag),_21=0,_22=0,_23;
-if(_1f&&("minorTickStep" in _1f)){
-_21=_1f.minorTickStep;
+var mag=Math.floor(Math.log(max-min)/Math.LN10),_1e=_1d&&("majorTickStep" in _1d)?_1d.majorTickStep:Math.pow(10,mag),_1f=0,_20=0,_21;
+if(_1d&&("minorTickStep" in _1d)){
+_1f=_1d.minorTickStep;
 }else{
 do{
-_21=_20/10;
-if(!h.natural||_21>0.9){
-_23=_9(min,max,h,_20,_21,0,_1e);
-if(_23.bounds.scale*_23.minor.tick>_6){
+_1f=_1e/10;
+if(!h.natural||_1f>0.9){
+_21=_7(min,max,h,_1e,_1f,0,_1c);
+if(_21.bounds.scale*_21.minor.tick>_4){
 break;
 }
 }
-_21=_20/5;
-if(!h.natural||_21>0.9){
-_23=_9(min,max,h,_20,_21,0,_1e);
-if(_23.bounds.scale*_23.minor.tick>_6){
+_1f=_1e/5;
+if(!h.natural||_1f>0.9){
+_21=_7(min,max,h,_1e,_1f,0,_1c);
+if(_21.bounds.scale*_21.minor.tick>_4){
 break;
 }
 }
-_21=_20/2;
-if(!h.natural||_21>0.9){
-_23=_9(min,max,h,_20,_21,0,_1e);
-if(_23.bounds.scale*_23.minor.tick>_6){
+_1f=_1e/2;
+if(!h.natural||_1f>0.9){
+_21=_7(min,max,h,_1e,_1f,0,_1c);
+if(_21.bounds.scale*_21.minor.tick>_4){
 break;
 }
 }
-return _9(min,max,h,_20,0,0,_1e);
+return _7(min,max,h,_1e,0,0,_1c);
 }while(false);
 }
-if(_1f&&("microTickStep" in _1f)){
-_22=_1f.microTickStep;
-_23=_9(min,max,h,_20,_21,_22,_1e);
+if(_1d&&("microTickStep" in _1d)){
+_20=_1d.microTickStep;
+_21=_7(min,max,h,_1e,_1f,_20,_1c);
 }else{
 do{
-_22=_21/10;
-if(!h.natural||_22>0.9){
-_23=_9(min,max,h,_20,_21,_22,_1e);
-if(_23.bounds.scale*_23.micro.tick>_6){
+_20=_1f/10;
+if(!h.natural||_20>0.9){
+_21=_7(min,max,h,_1e,_1f,_20,_1c);
+if(_21.bounds.scale*_21.micro.tick>_4){
 break;
 }
 }
-_22=_21/5;
-if(!h.natural||_22>0.9){
-_23=_9(min,max,h,_20,_21,_22,_1e);
-if(_23.bounds.scale*_23.micro.tick>_6){
+_20=_1f/5;
+if(!h.natural||_20>0.9){
+_21=_7(min,max,h,_1e,_1f,_20,_1c);
+if(_21.bounds.scale*_21.micro.tick>_4){
 break;
 }
 }
-_22=_21/2;
-if(!h.natural||_22>0.9){
-_23=_9(min,max,h,_20,_21,_22,_1e);
-if(_23.bounds.scale*_23.micro.tick>_6){
+_20=_1f/2;
+if(!h.natural||_20>0.9){
+_21=_7(min,max,h,_1e,_1f,_20,_1c);
+if(_21.bounds.scale*_21.micro.tick>_4){
 break;
 }
 }
-_22=0;
+_20=0;
 }while(false);
 }
-return _22?_23:_9(min,max,h,_20,_21,0,_1e);
-},buildTicks:function(_24,_25){
-var _26,_27,_28,_29=_24.major.start,_2a=_24.minor.start,_2b=_24.micro.start;
-if(_25.microTicks&&_24.micro.tick){
-_26=_24.micro.tick,_27=_2b;
+return _20?_21:_7(min,max,h,_1e,_1f,0,_1c);
+},buildTicks:function(_22,_23){
+var _24,_25,_26,_27=_22.major.start,_28=_22.minor.start,_29=_22.micro.start;
+if(_23.microTicks&&_22.micro.tick){
+_24=_22.micro.tick,_25=_29;
 }else{
-if(_25.minorTicks&&_24.minor.tick){
-_26=_24.minor.tick,_27=_2a;
+if(_23.minorTicks&&_22.minor.tick){
+_24=_22.minor.tick,_25=_28;
 }else{
-if(_24.major.tick){
-_26=_24.major.tick,_27=_29;
+if(_22.major.tick){
+_24=_22.major.tick,_25=_27;
 }else{
 return null;
 }
 }
 }
-var _2c=1/_24.bounds.scale;
-if(_24.bounds.to<=_24.bounds.from||isNaN(_2c)||!isFinite(_2c)||_26<=0||isNaN(_26)||!isFinite(_26)){
+var _2a=1/_22.bounds.scale;
+if(_22.bounds.to<=_22.bounds.from||isNaN(_2a)||!isFinite(_2a)||_24<=0||isNaN(_24)||!isFinite(_24)){
 return null;
 }
-var _2d=[],_2e=[],_2f=[];
-while(_27<=_24.bounds.to+_2c){
-if(Math.abs(_29-_27)<_26/2){
-_28={value:_29};
-if(_25.majorLabels){
-_28.label=_8(_29,_24.major.prec,_25);
+var _2b=[],_2c=[],_2d=[];
+while(_25<=_22.bounds.to+_2a){
+if(Math.abs(_27-_25)<_24/2){
+_26={value:_27};
+if(_23.majorLabels){
+_26.label=_6(_27,_22.major.prec,_23);
 }
-_2d.push(_28);
-_29+=_24.major.tick;
-_2a+=_24.minor.tick;
-_2b+=_24.micro.tick;
+_2b.push(_26);
+_27+=_22.major.tick;
+_28+=_22.minor.tick;
+_29+=_22.micro.tick;
 }else{
-if(Math.abs(_2a-_27)<_26/2){
-if(_25.minorTicks){
-_28={value:_2a};
-if(_25.minorLabels&&(_24.minMinorStep<=_24.minor.tick*_24.bounds.scale)){
-_28.label=_8(_2a,_24.minor.prec,_25);
+if(Math.abs(_28-_25)<_24/2){
+if(_23.minorTicks){
+_26={value:_28};
+if(_23.minorLabels&&(_22.minMinorStep<=_22.minor.tick*_22.bounds.scale)){
+_26.label=_6(_28,_22.minor.prec,_23);
 }
-_2e.push(_28);
+_2c.push(_26);
 }
-_2a+=_24.minor.tick;
-_2b+=_24.micro.tick;
+_28+=_22.minor.tick;
+_29+=_22.micro.tick;
 }else{
-if(_25.microTicks){
-_2f.push({value:_2b});
+if(_23.microTicks){
+_2d.push({value:_29});
 }
-_2b+=_24.micro.tick;
+_29+=_22.micro.tick;
 }
 }
-_27+=_26;
+_25+=_24;
 }
-return {major:_2d,minor:_2e,micro:_2f};
-},getTransformerFromModel:function(_30){
-var _31=_30.bounds.from,_32=_30.bounds.scale;
+return {major:_2b,minor:_2c,micro:_2d};
+},getTransformerFromModel:function(_2e){
+var _2f=_2e.bounds.from,_30=_2e.bounds.scale;
 return function(x){
-return (x-_31)*_32;
+return (x-_2f)*_30;
 };
-},getTransformerFromPlot:function(_33){
-var _34=_33.bounds.from,_35=_33.bounds.scale;
+},getTransformerFromPlot:function(_31){
+var _32=_31.bounds.from,_33=_31.bounds.scale;
 return function(x){
-return x/_35+_34;
+return x/_33+_32;
 };
 }});
 });

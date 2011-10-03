@@ -1,9 +1,3 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
 define(
 //begin v1.x content
@@ -14,6 +8,7 @@ define(
 	"nextTip": "Sljedeća stranica",
 	"prevTip": "Prethodna stranica",
 	"itemTitle": "stavke",
+	"singularItemTitle": "stavka",
 	"pageStepLabelTemplate": "Strana ${0}",
 	"pageSizeLabelTemplate": "${0} stavki po stranici",
 	"allItemsLabelTemplate": "Sve stavke",
@@ -22,7 +17,8 @@ define(
 	"dialogIndication": "Navedite broj stranice",
 	"pageCountIndication": " (${0} stranica)",
 	"dialogConfirm": "Idi",
-	"dialogCancel": "Opoziv"
+	"dialogCancel": "Opoziv",
+	"all": "svi"
 })
 //end v1.x content
 );

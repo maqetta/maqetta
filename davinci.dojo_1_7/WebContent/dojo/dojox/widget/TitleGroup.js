@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/widget/TitleGroup",["dojo","dijit","dijit/_Widget","dijit/TitlePane"],function(_1,_2,_3,_4){
-var d=_1,tp=_4.prototype,_5=function(){
+define("dojox/widget/TitleGroup",["dojo","dijit/registry","dijit/_Widget","dijit/TitlePane"],function(_1,_2,_3,_4){
+var tp=_4.prototype,_5=function(){
 var _6=this._dxfindParent&&this._dxfindParent();
 _6&&_6.selectChild(this);
 };
@@ -18,13 +12,13 @@ return n&&n instanceof dojox.widget.TitleGroup&&n;
 }
 return n;
 };
-d.connect(tp,"_onTitleClick",_5);
-d.connect(tp,"_onTitleKey",function(e){
-if(!(e&&e.type&&e.type=="keypress"&&e.charOrCode==d.keys.TAB)){
+_1.connect(tp,"_onTitleClick",_5);
+_1.connect(tp,"_onTitleKey",function(e){
+if(!(e&&e.type&&e.type=="keypress"&&e.charOrCode==_1.keys.TAB)){
 _5.apply(this,arguments);
 }
 });
-return d.declare("dojox.widget.TitleGroup",_2._Widget,{"class":"dojoxTitleGroup",addChild:function(_7,_8){
+return _1.declare("dojox.widget.TitleGroup",dijit._Widget,{"class":"dojoxTitleGroup",addChild:function(_7,_8){
 return _7.placeAt(this.domNode,_8);
 },removeChild:function(_9){
 this.domNode.removeChild(_9.domNode);

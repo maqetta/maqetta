@@ -1,51 +1,45 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
 define("dojox/encoding/ascii85",["dojo/_base/kernel"],function(_1){
-_1.getObject("encoding.ascii85",true,dojox);
-var c=function(_2,_3,_4){
+var _2=_1.getObject("dojox.encoding.ascii85",true);
+var c=function(_3,_4,_5){
 var i,j,n,b=[0,0,0,0,0];
-for(i=0;i<_3;i+=4){
-n=((_2[i]*256+_2[i+1])*256+_2[i+2])*256+_2[i+3];
+for(i=0;i<_4;i+=4){
+n=((_3[i]*256+_3[i+1])*256+_3[i+2])*256+_3[i+3];
 if(!n){
-_4.push("z");
+_5.push("z");
 }else{
 for(j=0;j<5;b[j++]=n%85+33,n=Math.floor(n/85)){
 }
 }
-_4.push(String.fromCharCode(b[4],b[3],b[2],b[1],b[0]));
+_5.push(String.fromCharCode(b[4],b[3],b[2],b[1],b[0]));
 }
 };
-dojox.encoding.ascii85.encode=function(_5){
-var _6=[],_7=_5.length%4,_8=_5.length-_7;
-c(_5,_8,_6);
-if(_7){
-var t=_5.slice(_8);
+_2.encode=function(_6){
+var _7=[],_8=_6.length%4,_9=_6.length-_8;
+c(_6,_9,_7);
+if(_8){
+var t=_6.slice(_9);
 while(t.length<4){
 t.push(0);
 }
-c(t,4,_6);
-var x=_6.pop();
+c(t,4,_7);
+var x=_7.pop();
 if(x=="z"){
 x="!!!!!";
 }
-_6.push(x.substr(0,_7+1));
+_7.push(x.substr(0,_8+1));
 }
-return _6.join("");
+return _7.join("");
 };
-dojox.encoding.ascii85.decode=function(_9){
-var n=_9.length,r=[],b=[0,0,0,0,0],i,j,t,x,y,d;
+_2.decode=function(_a){
+var n=_a.length,r=[],b=[0,0,0,0,0],i,j,t,x,y,d;
 for(i=0;i<n;++i){
-if(_9.charAt(i)=="z"){
+if(_a.charAt(i)=="z"){
 r.push(0,0,0,0);
 continue;
 }
 for(j=0;j<5;++j){
-b[j]=_9.charCodeAt(i+j)-33;
+b[j]=_a.charCodeAt(i+j)-33;
 }
 d=n-i;
 if(d<5){
@@ -65,5 +59,5 @@ i+=4;
 }
 return r;
 };
-return dojox.encoding.ascii85;
+return _2;
 });

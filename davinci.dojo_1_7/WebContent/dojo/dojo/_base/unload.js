@@ -5,17 +5,17 @@
 */
 
 //>>built
-define("dojo/_base/unload",["./kernel","./connect"],function(_1){
-var _2=window;
-_1.addOnWindowUnload=function(_3,_4){
+define("dojo/_base/unload",["./kernel","./connect"],function(_1,_2){
+var _3=window;
+_1.addOnWindowUnload=function(_4,_5){
 if(!_1.windowUnloaded){
-_1.connect(_2,"unload",(_1.windowUnloaded=function(){
+_2.connect(_3,"unload",(_1.windowUnloaded=function(){
 }));
 }
-_1.connect(_2,"unload",_3,_4);
+_2.connect(_3,"unload",_4,_5);
 };
-_1.addOnUnload=function(_5,_6){
-_1.connect(_2,"beforeunload",_5,_6);
+_1.addOnUnload=function(_6,_7){
+_2.connect(_3,"beforeunload",_6,_7);
 };
 return {addOnWindowUnload:_1.addOnWindowUnload,addOnUnload:_1.addOnUnload};
 });

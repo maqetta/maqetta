@@ -13,7 +13,7 @@ dojo.require('preview.silhouetteiframe');
 dojo.declare("davinci.ve.Context", null, {
 
 	// comma-separated list of modules to load in the iframe
-	_bootstrapModules: "dijit.dijit",
+	_bootstrapModules: "dijit/dijit",
 
 /*=====
 	// keeps track of widgets-per-library loaded in context
@@ -764,18 +764,19 @@ dojo.declare("davinci.ve.Context", null, {
 
 					body._edit_context = context; // TODO: find a better place to stash the root context
 					context._configDojoxMobile();
-					context._bootstrapModules.split(",").forEach(
-							function(module){
-								if (module === 'dijit.dijit-all')
-									win.dojo._postLoad = true; // this is neede for FF4 to keep dijit._editor.RichText from throwing at line 32 dojo 1.5									
-								win.dojo["require"](module);
-							}); // to bootstrap references to base dijit methods in container
+					
+					var requires = context._bootstrapModules.split(",");
+					if (requires.indexOf('dijit/dijit-all') != -1){
+						win.dojo._postLoad = true; // this is needed for FF4 to keep dijit._editor.RichText from throwing at line 32 dojo 1.5						
+					}
+					win.require(requires);  // to bootstrap references to base dijit methods in container
+
 					context.frameNode = frame;
 					// see Dojo ticket #5334
 					// If you do not have this particular dojo.isArray code, DataGrid will not render in the tool.
 					// Also, any array value will be converted to {0: val0, 1: val1, ...}
 					// after swapping back and forth between the design and code views twice. This is not an array!
-					win.dojo.isArray=function(it){
+					win.require("dojo/_base/lang").isArray = win.dojo.isArray=function(it){
 						return it && Object.prototype.toString.call(it)=="[object Array]";
 					};
 				/*} catch(e) {
@@ -1005,7 +1006,7 @@ dojo.declare("davinci.ve.Context", null, {
 			var dj = this.getDojo();
 			dj["require"]("dojo.parser");
 			dj.parser.parse(containerNode);
-		} catch(e){
+		} catch(e) {
 			// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
 			// the dojo parser will throw an exception trying to compute style on hidden containers
 			// so to fix this we catch the exception here and add a subscription to be notified when this editor is seleected by the user
@@ -1019,6 +1020,8 @@ dojo.declare("davinci.ve.Context", null, {
 
 			this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",
 					this, '_editorSelectionChange');
+
+//			throw e;
 		}
 	
 		if(attachWidgets){

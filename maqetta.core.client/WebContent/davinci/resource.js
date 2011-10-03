@@ -205,7 +205,7 @@ dojo.mixin(davinci.resource, {
 					break;
 				}
 //					resource.getChildren(function(){}, true);
-				found=resource=resource._getChild(segments[i]);
+				found=resource=resource.getChild(segments[i]);
 				if (!found) {
 				  return;
 				}
@@ -239,7 +239,7 @@ dojo.mixin(davinci.resource, {
 						if (j+1<foundFile.parents.length)
 						{
 							var name=foundFile.parents[j+1].name;
-							var newResource=loadResource._getChild(name);
+							var newResource=loadResource.getChild(name);
 							if (!newResource) {
 								newResource= new davinci.model.Resource.Folder(name,loadResource);
 							}

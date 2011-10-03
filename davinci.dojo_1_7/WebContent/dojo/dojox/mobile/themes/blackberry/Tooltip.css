@@ -1,6 +1,7 @@
 
 .mblTooltip {
   position: absolute;
+  z-index: 2000;
   display: block;
   margin: 0;
   padding: 5px;
@@ -131,8 +132,7 @@
   border-bottom-width: 0;
   border-top-color: #292C31;
 }
-.mblTooltipHidden,
-.mblTooltipHidden * {
+.mblTooltipHidden, .mblTooltipHidden * {
   visibility: hidden !important;
 }
 .mblTooltip .mblHeading {

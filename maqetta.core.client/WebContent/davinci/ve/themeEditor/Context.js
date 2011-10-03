@@ -9,8 +9,8 @@ dojo.require("davinci.ve.Context");
 dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 
 	// comma-separated list of modules to load in the iframe
-	_bootstrapModules: "dijit.dijit,dijit.dijit-all", // dijit-all hangs FF4 and does not seem to be needed.
-	//_bootstrapModules: "dijit.dijit",
+	_bootstrapModules: "dijit/dijit,dijit/dijit-all", // dijit-all hangs FF4 and does not seem to be needed.
+	//_bootstrapModules: "dijit/dijit",
 
 	constructor: function(args){
 		this._id = "_edit_context_" + davinci.ve._contextCount++;
@@ -40,7 +40,7 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 		// side effects which would interfere with operation of the Theme Editor.
 
 		// Hard-code widget replacements for styling.  Need to factor creation out somehow to be data-driven.
-		var mixins = [this.getDijit()._WidgetBase || this.getDijit()._Widget, this.getDijit()._TemplatedMixin || this.getDijit()._Templated]; // Dojo 1.7+ uses _WidgetBase, _TemplatedMixin
+		var mixins = [this.getDijit()._WidgetBase, this.getDijit()._TemplatedMixin];
 		this.getDojo().declare("dijit.davinci.themeEditor.Dialog", mixins, {
 			buttonCancel: "cancel", //TODO: i18n
 			onCancel: function(){},
@@ -55,8 +55,8 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 				"aria-describedby":""
 			})
 ,			_setTitleAttr: [
-							{ node: "titleNode", type: "innerHTML" },
-							{ node: "titleBar", type: "attribute" }
+				{ node: "titleNode", type: "innerHTML" },
+				{ node: "titleBar", type: "attribute" }
 			]
 		});
 
@@ -113,7 +113,7 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 				var dj = this.getDojo();
 				dj["require"]("dojo.parser");
 				dj.parser.parse(containerNode);
-			} catch(e){
+			} catch(e) {
 				// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
 				// the dojo parser will throw an exception trying to compute style on hidden containers
 				// so to fix this we catch the exception here and add a subscription to be notified when this editor is seleected by the user
@@ -125,19 +125,18 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 					  w.destroy();
 				});
 				this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",  dojo.hitch(this, this._editorSelectionChange));
+
+				//				throw e;
 			}
 		
 		if(active){
 			dojo.query("> *", this.rootNode).map(davinci.ve.widget.getWidget).forEach(this.attach, this);
 		}
-		var widgets = dojo.query('.dvThemeWidget');
-		//debugger;
-		for (var i=0; i<widgets.length; i++){
-			// remove the styles from all widgets and subwidgets that supported the state
-			this._theme.removeWidgetStyleValues(widgets[i]);
+
+		// remove the styles from all widgets and subwidgets that supported the state
+		dojo.query('.dvThemeWidget').forEach(this._theme.removeWidgetStyleValues);
 			// set the style on all widgets and subwidgets that support the state
 			//this._themeEditor._theme.setWidgetStyleValues(widgets[i],this._currentState);
-		}
 	},
 	
 	attach: function(widget){

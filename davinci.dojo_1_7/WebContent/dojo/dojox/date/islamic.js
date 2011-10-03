@@ -1,86 +1,80 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/date/islamic",["dojo/_base/kernel","dojo/date","./islamic/Date"],function(d,dd,_1){
-dojo.getObject("date.islamic",true,dojox);
-dojo.experimental("dojox.date.islamic");
-dojox.date.islamic.getDaysInMonth=function(_2){
-return _2.getDaysInIslamicMonth(_2.getMonth(),_2.getFullYear());
+define("dojox/date/islamic",["dojo/_base/kernel","dojo/date","./islamic/Date"],function(_1,dd,_2){
+_1.getObject("date.islamic",true,dojox);
+_1.experimental("dojox.date.islamic");
+dojox.date.islamic.getDaysInMonth=function(_3){
+return _3.getDaysInIslamicMonth(_3.getMonth(),_3.getFullYear());
 };
-dojox.date.islamic.compare=function(_3,_4,_5){
-if(_3 instanceof _1){
-_3=_3.toGregorian();
-}
-if(_4 instanceof _1){
+dojox.date.islamic.compare=function(_4,_5,_6){
+if(_4 instanceof _2){
 _4=_4.toGregorian();
+}
+if(_5 instanceof _2){
+_5=_5.toGregorian();
 }
 return dd.compare.apply(null,arguments);
 };
-dojox.date.islamic.add=function(_6,_7,_8){
-var _9=new _1(_6);
-switch(_7){
+dojox.date.islamic.add=function(_7,_8,_9){
+var _a=new _2(_7);
+switch(_8){
 case "day":
-_9.setDate(_6.getDate()+_8);
+_a.setDate(_7.getDate()+_9);
 break;
 case "weekday":
-var _a=_6.getDay();
-if(((_a+_8)<5)&&((_a+_8)>0)){
-_9.setDate(_6.getDate()+_8);
+var _b=_7.getDay();
+if(((_b+_9)<5)&&((_b+_9)>0)){
+_a.setDate(_7.getDate()+_9);
 }else{
-var _b=0,_c=0;
-if(_a==5){
-_a=4;
-_c=(_8>0)?-1:1;
+var _c=0,_d=0;
+if(_b==5){
+_b=4;
+_d=(_9>0)?-1:1;
 }else{
-if(_a==6){
-_a=4;
-_c=(_8>0)?-2:2;
+if(_b==6){
+_b=4;
+_d=(_9>0)?-2:2;
 }
 }
-var _d=(_8>0)?(5-_a-1):-_a;
-var _e=_8-_d;
-var _f=parseInt(_e/5);
-if(_e%5!=0){
-_b=(_8>0)?2:-2;
+var _e=(_9>0)?(5-_b-1):-_b;
+var _f=_9-_e;
+var div=parseInt(_f/5);
+if(_f%5!=0){
+_c=(_9>0)?2:-2;
 }
-_b=_b+_f*7+_e%5+_d;
-_9.setDate(_6.getDate()+_b+_c);
+_c=_c+div*7+_f%5+_e;
+_a.setDate(_7.getDate()+_c+_d);
 }
 break;
 case "year":
-_9.setFullYear(_6.getFullYear()+_8);
+_a.setFullYear(_7.getFullYear()+_9);
 break;
 case "week":
-_8*=7;
-_9.setDate(_6.getDate()+_8);
+_9*=7;
+_a.setDate(_7.getDate()+_9);
 break;
 case "month":
-var _10=_6.getMonth();
-_9.setMonth(_10+_8);
+var _10=_7.getMonth();
+_a.setMonth(_10+_9);
 break;
 case "hour":
-_9.setHours(_6.getHours()+_8);
+_a.setHours(_7.getHours()+_9);
 break;
 case "minute":
-_9.setMinutes(_6.getMinutes()+_8);
+_a._addMinutes(_9);
 break;
 case "second":
-_9.setSeconds(_6.getSeconds()+_8);
+_a._addSeconds(_9);
 break;
 case "millisecond":
-_9.setMilliseconds(_6.getMilliseconds()+_8);
+_a._addMilliseconds(_9);
 break;
 }
-return _9;
+return _a;
 };
 dojox.date.islamic.difference=function(_11,_12,_13){
-_12=_12||new _1();
+_12=_12||new _2();
 _13=_13||"day";
-var _14=_11.getFullYear()-_12.getFullYear();
+var _14=_12.getFullYear()-_11.getFullYear();
 var _15=1;
 switch(_13){
 case "weekday":
@@ -91,11 +85,11 @@ if(mod==0){
 _16=_17*5;
 }else{
 var adj=0;
-var _18=_12.getDay();
-var _19=_11.getDay();
+var _18=_11.getDay();
+var _19=_12.getDay();
 _17=parseInt(_16/7);
 mod=_16%7;
-var _1a=new _1(_12);
+var _1a=new _2(_11);
 _1a.setDate(_1a.getDate()+(_17*7));
 var _1b=_1a.getDay();
 if(_16>0){
@@ -144,8 +138,8 @@ case "year":
 _15=_14;
 break;
 case "month":
-var _1c=(_11.toGregorian()>_12.toGregorian())?_11:_12;
-var _1d=(_11.toGregorian()>_12.toGregorian())?_12:_11;
+var _1c=(_12.toGregorian()>_11.toGregorian())?_12:_11;
+var _1d=(_12.toGregorian()>_11.toGregorian())?_11:_12;
 var _1e=_1c.getMonth();
 var _1f=_1d.getMonth();
 if(_14==0){
@@ -159,7 +153,7 @@ for(i;i<e;i++){
 _15+=12;
 }
 }
-if(_11.toGregorian()<_12.toGregorian()){
+if(_12.toGregorian()<_11.toGregorian()){
 _15=-_15;
 }
 break;
@@ -175,7 +169,7 @@ _15/=60;
 case "second":
 _15/=1000;
 case "millisecond":
-_15*=_11.toGregorian().getTime()-_12.toGregorian().getTime();
+_15*=_12.toGregorian().getTime()-_11.toGregorian().getTime();
 }
 return Math.round(_15);
 };

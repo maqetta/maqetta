@@ -4,7 +4,7 @@
 	width: 29px;
 	height: 29px;
 }
-.mblDomButtonGrayStar > DIV {
+.mblDomButtonGrayStar > div {
 	position: absolute;
 	width: 0px;
 	height: 0px;
@@ -15,7 +15,7 @@
 	border-width: 9px 12px 0px 12px;
 	-webkit-transform: rotate(0deg);
 }
-.mblDomButtonGrayStar > DIV > DIV {
+.mblDomButtonGrayStar > div > div {
 	position: absolute;
 	width: 24px;
 	height: 0px;
@@ -25,7 +25,7 @@
 	top: -10px;
 	left: -12px;
 }
-.mblDomButtonGrayStar > DIV > DIV > DIV {
+.mblDomButtonGrayStar > div > div > div {
 	position: absolute;
 	width: 0px;
 	height: 0px;
@@ -36,7 +36,7 @@
 	border-width: 9px 12px 0px 12px;
 	-webkit-transform: rotate(72deg);
 }
-.mblDomButtonGrayStar > DIV > DIV > DIV > DIV {
+.mblDomButtonGrayStar > div > div > div > div {
 	position: absolute;
 	width: 0px;
 	height: 0px;

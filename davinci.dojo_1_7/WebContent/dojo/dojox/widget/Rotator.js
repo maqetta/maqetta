@@ -1,17 +1,12 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/widget/Rotator",["dojo","dijit","dojox","dojo/parser"],function(_1,_2,_3){
-_1.getObject("dojox.widget.Rotator",1);
+define(["dijit","dojo","dojox","dojo/require!dojo/parser"],function(_1,_2,_3){
+_2.provide("dojox.widget.Rotator");
+_2.require("dojo.parser");
 (function(d){
 var _4="dojox.widget.rotator.swap",_5=500,_6="display",_7="none",_8="zIndex";
 d.declare("dojox.widget.Rotator",null,{transition:_4,transitionParams:"duration:"+_5,panes:null,constructor:function(_9,_a){
 d.mixin(this,_9);
-var _b=this,t=_b.transition,tt=_b._transitions={},_c=_b._idMap={},tp=_b.transitionParams=eval("({ "+_b.transitionParams+" })"),_a=_b._domNode=_1.byId(_a),cb=_b._domNodeContentBox=d.contentBox(_a),p={left:0,top:0},_d=function(bt,dt){
+var _b=this,t=_b.transition,tt=_b._transitions={},_c=_b._idMap={},tp=_b.transitionParams=eval("({ "+_b.transitionParams+" })"),_a=_b._domNode=_2.byId(_a),cb=_b._domNodeContentBox=d.contentBox(_a),p={left:0,top:0},_d=function(bt,dt){
 console.warn(_b.declaredClass," - Unable to find transition \"",bt,"\", defaulting to \"",dt,"\".");
 };
 _b.id=_a.id||(new Date()).getTime();
@@ -148,7 +143,5 @@ d.style(_1b.next.node,_6,"");
 this._fire("onEnd");
 }});
 });
-})(_1);
-return _1.getObject("dojox.widget.Rotator");
+})(_2);
 });
-require(["dojox/widget/Rotator"]);

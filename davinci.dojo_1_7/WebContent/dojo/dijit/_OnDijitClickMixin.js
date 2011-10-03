@@ -1,58 +1,49 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dijit/_OnDijitClickMixin",["dojo/_base/kernel","dojo/on","./main","dojo/_base/array","dojo/_base/connect","dojo/_base/declare","dojo/_base/sniff","dojo/_base/unload","dojo/_base/window"],function(_1,on,_2){
-var _3=null;
-if(_1.isIE){
+define("dijit/_OnDijitClickMixin",["dojo/on","dojo/_base/array","dojo/keys","dojo/_base/declare","dojo/_base/sniff","dojo/_base/unload","dojo/_base/window"],function(on,_1,_2,_3,_4,_5,_6){
+var _7=null;
+if(_4("ie")){
 (function(){
-var _4=function(_5){
-_3=_5.srcElement;
+var _8=function(_9){
+_7=_9.srcElement;
 };
-_1.doc.attachEvent("onkeydown",_4);
-_1.addOnWindowUnload(function(){
-_1.doc.detachEvent("onkeydown",_4);
+_6.doc.attachEvent("onkeydown",_8);
+_5.addOnWindowUnload(function(){
+_6.doc.detachEvent("onkeydown",_8);
 });
 })();
 }else{
-_1.doc.addEventListener("keydown",function(_6){
-_3=_6.target;
+_6.doc.addEventListener("keydown",function(_a){
+_7=_a.target;
 },true);
 }
-var _7=function(_8,_9){
-if(/input|button/i.test(_8.nodeName)){
-return function(_a,_b){
-return on(_a,type,_b);
-};
+var _b=function(_c,_d){
+if(/input|button/i.test(_c.nodeName)){
+return on(_c,"click",_d);
 }else{
-function _c(e){
-return (e.keyCode==_1.keys.ENTER||e.keyCode==_1.keys.SPACE)&&!e.ctrlKey&&!e.shiftKey&&!e.altKey&&!e.metaKey;
+function _e(e){
+return (e.keyCode==_2.ENTER||e.keyCode==_2.SPACE)&&!e.ctrlKey&&!e.shiftKey&&!e.altKey&&!e.metaKey;
 };
-var _d=[on(_8,"keypress",function(e){
-if(_c(e)){
-_3=e.target;
+var _f=[on(_c,"keypress",function(e){
+if(_e(e)){
+_7=e.target;
 e.preventDefault();
 }
-}),on(_8,"keyup",function(e){
-if(_c(e)&&e.target==_3){
-_3=null;
-_9.call(this,e);
+}),on(_c,"keyup",function(e){
+if(_e(e)&&e.target==_7){
+_7=null;
+_d.call(this,e);
 }
-}),on(_8,"click",function(e){
-_9.call(this,e);
+}),on(_c,"click",function(e){
+_d.call(this,e);
 })];
 return {remove:function(){
-_1.forEach(_d,function(h){
+_1.forEach(_f,function(h){
 h.remove();
 });
 }};
 }
 };
-_1.declare("dijit._OnDijitClickMixin",null,{connect:function(_e,_f,_10){
-return this.inherited(arguments,[_e,_f=="ondijitclick"?_7:_f,_10]);
+return _3("dijit._OnDijitClickMixin",null,{connect:function(obj,_10,_11){
+return this.inherited(arguments,[obj,_10=="ondijitclick"?_b:_10,_11]);
 }});
-return _2._OnDijitClickMixin;
 });

@@ -1,5 +1,7 @@
 //>>built
-define(({
+define(
+//begin v1.x content
+({
 	displayOptions: "[zobraziť voľby]",
 	title: "Nadpis",
 	authors: "Autori",
@@ -10,5 +12,5 @@ define(({
 	summary: "Súhrn",
 	content: "Obsah"
 })
-
+//end v1.x content
 );

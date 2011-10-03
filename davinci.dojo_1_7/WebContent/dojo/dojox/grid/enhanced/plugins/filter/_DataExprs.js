@@ -1,46 +1,39 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/grid/enhanced/plugins/filter/_DataExprs",["dojo","dojox","dojo/date/locale","./_ConditionExpr"],function(_1,_2){
-var _3=_1.getObject("grid.enhanced.plugins.filter",true,_2);
-_1.declare("dojox.grid.enhanced.plugins.filter.BooleanExpr",_3._DataExpr,{_name:"bool",_convertData:function(_4){
-return !!_4;
+define("dojox/grid/enhanced/plugins/filter/_DataExprs",["dojo/_base/declare","dojo/_base/lang","dojo/date/locale","./_ConditionExpr"],function(_1,_2,_3,_4){
+var _5=_1("dojox.grid.enhanced.plugins.filter.BooleanExpr",_4._DataExpr,{_name:"bool",_convertData:function(_6){
+return !!_6;
 }});
-_1.declare("dojox.grid.enhanced.plugins.filter.StringExpr",_3._DataExpr,{_name:"string",_convertData:function(_5){
-return String(_5);
+var _7=_1("dojox.grid.enhanced.plugins.filter.StringExpr",_4._DataExpr,{_name:"string",_convertData:function(_8){
+return String(_8);
 }});
-_1.declare("dojox.grid.enhanced.plugins.filter.NumberExpr",_3._DataExpr,{_name:"number",_convertDataToExpr:function(_6){
-return parseFloat(_6);
+var _9=_1("dojox.grid.enhanced.plugins.filter.NumberExpr",_4._DataExpr,{_name:"number",_convertDataToExpr:function(_a){
+return parseFloat(_a);
 }});
-_1.declare("dojox.grid.enhanced.plugins.filter.DateExpr",_3._DataExpr,{_name:"date",_convertData:function(_7){
-if(_7 instanceof Date){
-return _7;
+var _b=_1("dojox.grid.enhanced.plugins.filter.DateExpr",_4._DataExpr,{_name:"date",_convertData:function(_c){
+if(_c instanceof Date){
+return _c;
 }else{
-if(typeof _7=="number"){
-return new Date(_7);
+if(typeof _c=="number"){
+return new Date(_c);
 }else{
-var _8=_1.date.locale.parse(String(_7),_1.mixin({selector:this._name},this._convertArgs));
-if(!_8){
-throw new Error("Datetime parse failed: "+_7);
+var _d=_3.parse(String(_c),_2.mixin({selector:this._name},this._convertArgs));
+if(!_d){
+throw new Error("Datetime parse failed: "+_c);
 }
-return _8;
+return _d;
 }
 }
 },toObject:function(){
 if(this._value instanceof Date){
-var _9=this._value;
+var _e=this._value;
 this._value=this._value.valueOf();
-var _a=this.inherited(arguments);
-this._value=_9;
-return _a;
+var _f=this.inherited(arguments);
+this._value=_e;
+return _f;
 }else{
 return this.inherited(arguments);
 }
 }});
-_1.declare("dojox.grid.enhanced.plugins.filter.TimeExpr",_3.DateExpr,{_name:"time"});
-return _2.grid.enhanced.plugins.filter._DataExprs;
+var _10=_1("dojox.grid.enhanced.plugins.filter.TimeExpr",_b,{_name:"time"});
+return _2.mixin({BooleanExpr:_5,StringExpr:_7,NumberExpr:_9,DateExpr:_b,TimeExpr:_10},_4);
 });

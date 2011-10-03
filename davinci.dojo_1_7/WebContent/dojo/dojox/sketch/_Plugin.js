@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/sketch/_Plugin",["dojo/_base/lang","dojo/_base/array","dojo/_base/declare","dojo/_base/connect","dijit/form/ToggleButton"],function(_1){
+define("dojox/sketch/_Plugin",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/array","dojo/_base/declare","dojo/_base/connect","dijit/form/ToggleButton"],function(_1){
 _1.getObject("sketch",true,dojox);
 _1.declare("dojox.sketch._Plugin",null,{constructor:function(_2){
 if(_2){

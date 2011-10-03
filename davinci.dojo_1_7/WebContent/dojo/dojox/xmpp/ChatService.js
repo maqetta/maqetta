@@ -1,14 +1,8 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/xmpp/ChatService",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.xmpp.ChatService",1);
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.xmpp.ChatService");
 _3.xmpp.chat={CHAT_STATE_NS:"http://jabber.org/protocol/chatstates",ACTIVE_STATE:"active",COMPOSING_STATE:"composing",INACTIVE_STATE:"inactive",PAUSED_STATE:"paused",GONE_STATE:"gone"};
-_1.declare("dojox.xmpp.ChatService",null,{state:"",constructor:function(){
+_2.declare("dojox.xmpp.ChatService",null,{state:"",constructor:function(){
 this.state="";
 this.chatid=Math.round(Math.random()*1000000000000000);
 },recieveMessage:function(_4,_5){
@@ -86,6 +80,4 @@ this.session.dispatchPacket(_12.toString());
 },onNewMessage:function(msg){
 },onInvite:function(_13){
 }});
-return _1.getObject("dojox.xmpp.ChatService");
 });
-require(["dojox/xmpp/ChatService"]);

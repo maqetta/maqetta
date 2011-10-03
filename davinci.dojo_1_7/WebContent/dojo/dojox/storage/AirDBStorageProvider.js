@@ -1,13 +1,9 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/storage/AirDBStorageProvider",["dojo","dijit","dojox","dojox/storage/manager","dojox/storage/Provider"],function(_1,_2,_3){
-_1.getObject("dojox.storage.AirDBStorageProvider",1);
-if(_1.isAIR){
+define(["dijit","dojo","dojox","dojo/require!dojox/storage/manager,dojox/storage/Provider"],function(_1,_2,_3){
+_2.provide("dojox.storage.AirDBStorageProvider");
+_2.require("dojox.storage.manager");
+_2.require("dojox.storage.Provider");
+if(_2.isAIR){
 (function(){
 if(!_4){
 var _4={};
@@ -15,7 +11,7 @@ var _4={};
 _4.File=window.runtime.flash.filesystem.File;
 _4.SQLConnection=window.runtime.flash.data.SQLConnection;
 _4.SQLStatement=window.runtime.flash.data.SQLStatement;
-_1.declare("dojox.storage.AirDBStorageProvider",[_3.storage.Provider],{DATABASE_FILE:"dojo.db",TABLE_NAME:"__DOJO_STORAGE",initialized:false,_db:null,initialize:function(){
+_2.declare("dojox.storage.AirDBStorageProvider",[_3.storage.Provider],{DATABASE_FILE:"dojo.db",TABLE_NAME:"__DOJO_STORAGE",initialized:false,_db:null,initialize:function(){
 this.initialized=false;
 try{
 this._db=new _4.SQLConnection();
@@ -171,6 +167,4 @@ _3.storage.manager.register("dojox.storage.AirDBStorageProvider",new _3.storage.
 _3.storage.manager.initialize();
 })();
 }
-return _1.getObject("dojox.storage.AirDBStorageProvider");
 });
-require(["dojox/storage/AirDBStorageProvider"]);

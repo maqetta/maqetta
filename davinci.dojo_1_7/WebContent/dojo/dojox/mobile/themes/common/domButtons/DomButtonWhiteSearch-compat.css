@@ -3,6 +3,6 @@
 	background-image: url(compat/mblDomButtonWhiteSearch.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonWhiteSearch DIV {
+.mblDomButtonWhiteSearch div {
 	display: none;
 }

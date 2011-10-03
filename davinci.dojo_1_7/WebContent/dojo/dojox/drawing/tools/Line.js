@@ -1,32 +1,27 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/drawing/tools/Line",["../stencil/Line","../util/oo","../manager/_registry"],function(){
-dojox.drawing.tools.Line=dojox.drawing.util.oo.declare(dojox.drawing.stencil.Line,function(){
-},{draws:true,showAngle:true,onTransformEnd:function(_1){
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.drawing.tools.Line");
+_3.drawing.tools.Line=_3.drawing.util.oo.declare(_3.drawing.stencil.Line,function(){
+},{draws:true,showAngle:true,onTransformEnd:function(_4){
 this._toggleSelected();
 if(this.getRadius()<this.minimumSize){
 var p=this.points;
 this.setPoints([{x:p[0].x,y:p[0].y},{x:p[0].x,y:p[0].y}]);
 }else{
 var d=this.data;
-var _2={start:{x:d.x1,y:d.y1},x:d.x2,y:d.y2};
-var pt=this.util.snapAngle(_2,this.angleSnap/180);
+var _5={start:{x:d.x1,y:d.y1},x:d.x2,y:d.y2};
+var pt=this.util.snapAngle(_5,this.angleSnap/180);
 this.setPoints([{x:d.x1,y:d.y1},{x:pt.x,y:pt.y}]);
 this._isBeingModified=false;
 this.onModify(this);
 }
-},onDrag:function(_3){
+},onDrag:function(_6){
 if(this.created){
 return;
 }
-var x1=_3.start.x,y1=_3.start.y,x2=_3.x,y2=_3.y;
+var x1=_6.start.x,y1=_6.start.y,x2=_6.x,y2=_6.y;
 if(this.keys.shift){
-var pt=this.util.snapAngle(_3,45/180);
+var pt=this.util.snapAngle(_6,45/180);
 x2=pt.x;
 y2=pt.y;
 }
@@ -40,13 +35,13 @@ y2-=dy;
 }
 this.setPoints([{x:x1,y:y1},{x:x2,y:y2}]);
 this.render();
-},onUp:function(_4){
+},onUp:function(_7){
 if(this.created||!this._downOnCanvas){
 return;
 }
 this._downOnCanvas=false;
 if(!this.shape){
-var s=_4.start,e=this.minimumSize*4;
+var s=_7.start,e=this.minimumSize*4;
 this.setPoints([{x:s.x,y:s.y+e},{x:s.x,y:s.y}]);
 this.render();
 }else{
@@ -55,13 +50,12 @@ this.remove(this.shape,this.hit);
 return;
 }
 }
-var pt=this.util.snapAngle(_4,this.angleSnap/180);
+var pt=this.util.snapAngle(_7,this.angleSnap/180);
 var p=this.points;
 this.setPoints([{x:p[0].x,y:p[0].y},{x:pt.x,y:pt.y}]);
 this.renderedOnce=true;
 this.onRender(this);
 }});
-dojox.drawing.tools.Line.setup={name:"dojox.drawing.tools.Line",tooltip:"Line Tool",iconClass:"iconLine"};
-dojox.drawing.register(dojox.drawing.tools.Line.setup,"tool");
-return dojox.drawing.tools.Line;
+_3.drawing.tools.Line.setup={name:"dojox.drawing.tools.Line",tooltip:"Line Tool",iconClass:"iconLine"};
+_3.drawing.register(_3.drawing.tools.Line.setup,"tool");
 });

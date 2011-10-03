@@ -3,6 +3,6 @@
 	background-image: url(compat/mblDomButtonWhiteUpArrow.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonWhiteUpArrow DIV {
+.mblDomButtonWhiteUpArrow div {
 	display: none;
 }

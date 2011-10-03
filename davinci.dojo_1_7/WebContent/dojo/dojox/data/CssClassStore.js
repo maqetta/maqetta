@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/data/CssClassStore",["dojo","dojox","dojox/data/CssRuleStore"],function(_1,_2){
-_1.declare("dojox.data.CssClassStore",_2.data.CssRuleStore,{_labelAttribute:"class",_idAttribute:"class",_cName:"dojox.data.CssClassStore",getFeatures:function(){
+define("dojox/data/CssClassStore",["dojo/_base/declare","dojox/data/CssRuleStore"],function(_1,_2){
+return _1("dojox.data.CssClassStore",_2,{_labelAttribute:"class",_idAttribute:"class",_cName:"dojox.data.CssClassStore",getFeatures:function(){
 return {"dojo.data.api.Read":true,"dojo.data.api.Identity":true};
 },getAttributes:function(_3){
 this._assertIsItem(_3);
@@ -71,12 +65,12 @@ this._handleFetchByIdentityReturn(_15.request);
 }
 },_handleFetchByIdentityReturn:function(_16){
 var _17=_16._items;
-var _18=_17[(_1.isWebKit?_16.identity.toLowerCase():_16.identity)];
+var _18=_17[_16.identity];
 if(!this.isItem(_18)){
 _18=null;
 }
 if(_16.onItem){
-var _19=_16.scope||_1.global;
+var _19=_16.scope||dojo.global;
 _16.onItem.call(_19,_18);
 }
 },getIdentity:function(_1a){
@@ -98,5 +92,4 @@ this._fetch(_1c);
 }
 return _1c;
 }});
-return _2.data.CssClassStore;
 });

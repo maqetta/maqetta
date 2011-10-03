@@ -1,62 +1,56 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/charting/widget/Chart",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/query","dijit/_Widget","../Chart","dojox/lang/utils","dojox/lang/functional"],function(_1,_2,_3,_4,_5,_6,du,df){
-var _7,_8,_9,_a,_b,_c=function(o){
+define("dojox/charting/widget/Chart",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/array","dojo/_base/html","dojo/_base/declare","dojo/query","dijit/_Widget","../Chart","dojox/lang/utils","dojox/lang/functional","dojox/lang/functional/lambda","dijit/_base/manager"],function(_1,_2,_3,_4,_5,_6,_7,_8,du,df,_9){
+var _a,_b,_c,_d,_e,_f=function(o){
 return o;
-},dc=dojox.charting,d=_1;
-_1.declare("dojox.charting.widget.Chart",dijit._Widget,{theme:null,margins:null,stroke:undefined,fill:undefined,buildRendering:function(){
+},dc=_2.getObject("dojox.charting");
+var _10=_5("dojox.charting.widget.Chart",_7,{theme:null,margins:null,stroke:undefined,fill:undefined,buildRendering:function(){
 this.inherited(arguments);
 n=this.domNode;
-var _d=d.query("> .axis",n).map(_8).filter(_c),_e=d.query("> .plot",n).map(_9).filter(_c),_f=d.query("> .action",n).map(_a).filter(_c),_10=d.query("> .series",n).map(_b).filter(_c);
+var _11=_6("> .axis",n).map(_b).filter(_f),_12=_6("> .plot",n).map(_c).filter(_f),_13=_6("> .action",n).map(_d).filter(_f),_14=_6("> .series",n).map(_e).filter(_f);
 n.innerHTML="";
-var c=this.chart=new _6(n,{margins:this.margins,stroke:this.stroke,fill:this.fill,textDir:this.textDir});
+var c=this.chart=new _8(n,{margins:this.margins,stroke:this.stroke,fill:this.fill,textDir:this.textDir});
 if(this.theme){
 c.setTheme(this.theme);
 }
-_d.forEach(function(_11){
-c.addAxis(_11.name,_11.kwArgs);
+_11.forEach(function(_15){
+c.addAxis(_15.name,_15.kwArgs);
 });
-_e.forEach(function(_12){
-c.addPlot(_12.name,_12.kwArgs);
+_12.forEach(function(_16){
+c.addPlot(_16.name,_16.kwArgs);
 });
-this.actions=_f.map(function(_13){
-return new _13.action(c,_13.plot,_13.kwArgs);
+this.actions=_13.map(function(_17){
+return new _17.action(c,_17.plot,_17.kwArgs);
 });
-var _14=df.foldl(_10,function(_15,_16){
-if(_16.type=="data"){
-c.addSeries(_16.name,_16.data,_16.kwArgs);
-_15=true;
+var _18=df.foldl(_14,function(_19,_1a){
+if(_1a.type=="data"){
+c.addSeries(_1a.name,_1a.data,_1a.kwArgs);
+_19=true;
 }else{
-c.addSeries(_16.name,[0],_16.kwArgs);
+c.addSeries(_1a.name,[0],_1a.kwArgs);
 var kw={};
-du.updateWithPattern(kw,_16.kwArgs,{"query":"","queryOptions":null,"start":0,"count":1},true);
-if(_16.kwArgs.sort){
-kw.sort=_1.clone(_16.kwArgs.sort);
+du.updateWithPattern(kw,_1a.kwArgs,{"query":"","queryOptions":null,"start":0,"count":1},true);
+if(_1a.kwArgs.sort){
+kw.sort=_2.clone(_1a.kwArgs.sort);
 }
-d.mixin(kw,{onComplete:function(_17){
-var _18;
-if("valueFn" in _16.kwArgs){
-var fn=_16.kwArgs.valueFn;
-_18=d.map(_17,function(x){
-return fn(_16.data.getValue(x,_16.field,0));
+_2.mixin(kw,{onComplete:function(_1b){
+var _1c;
+if("valueFn" in _1a.kwArgs){
+var fn=_1a.kwArgs.valueFn;
+_1c=_3.map(_1b,function(x){
+return fn(_1a.data.getValue(x,_1a.field,0));
 });
 }else{
-_18=d.map(_17,function(x){
-return _16.data.getValue(x,_16.field,0);
+_1c=_3.map(_1b,function(x){
+return _1a.data.getValue(x,_1a.field,0);
 });
 }
-c.addSeries(_16.name,_18,_16.kwArgs).render();
+c.addSeries(_1a.name,_1c,_1a.kwArgs).render();
 }});
-_16.data.fetch(kw);
+_1a.data.fetch(kw);
 }
-return _15;
+return _19;
 },false);
-if(_14){
+if(_18){
 c.render();
 }
 },destroy:function(){
@@ -65,45 +59,45 @@ this.inherited(arguments);
 },resize:function(box){
 this.chart.resize(box);
 }});
-_7=function(_19,_1a,kw){
-var dp=eval("("+_1a+".prototype.defaultParams)");
-var x,_1b;
+_a=function(_1d,_1e,kw){
+var dp=eval("("+_1e+".prototype.defaultParams)");
+var x,_1f;
 for(x in dp){
 if(x in kw){
 continue;
 }
-_1b=_19.getAttribute(x);
-kw[x]=du.coerceType(dp[x],_1b==null||typeof _1b=="undefined"?dp[x]:_1b);
+_1f=_1d.getAttribute(x);
+kw[x]=du.coerceType(dp[x],_1f==null||typeof _1f=="undefined"?dp[x]:_1f);
 }
-var op=eval("("+_1a+".prototype.optionalParams)");
+var op=eval("("+_1e+".prototype.optionalParams)");
 for(x in op){
 if(x in kw){
 continue;
 }
-_1b=_19.getAttribute(x);
-if(_1b!=null){
-kw[x]=du.coerceType(op[x],_1b);
+_1f=_1d.getAttribute(x);
+if(_1f!=null){
+kw[x]=du.coerceType(op[x],_1f);
 }
 }
 };
-_8=function(_1c){
-var _1d=_1c.getAttribute("name"),_1e=_1c.getAttribute("type");
-if(!_1d){
+_b=function(_20){
+var _21=_20.getAttribute("name"),_22=_20.getAttribute("type");
+if(!_21){
 return null;
 }
-var o={name:_1d,kwArgs:{}},kw=o.kwArgs;
-if(_1e){
-if(dc.axis2d[_1e]){
-_1e=dojox._scopeName+".charting.axis2d."+_1e;
+var o={name:_21,kwArgs:{}},kw=o.kwArgs;
+if(_22){
+if(dc.axis2d[_22]){
+_22=dojo._scopeName+"x.charting.axis2d."+_22;
 }
-var _1f=eval("("+_1e+")");
-if(_1f){
-kw.type=_1f;
+var _23=eval("("+_22+")");
+if(_23){
+kw.type=_23;
 }
 }else{
-_1e=dojox._scopeName+".charting.axis2d.Default";
+_22=dojo._scopeName+"x.charting.axis2d.Default";
 }
-_7(_1c,_1e,kw);
+_a(_20,_22,kw);
 if(kw.font||kw.fontColor){
 if(!kw.tick){
 kw.tick={};
@@ -117,54 +111,54 @@ kw.tick.fontColor=kw.fontColor;
 }
 return o;
 };
-_9=function(_20){
-var _21=_20.getAttribute("name"),_22=_20.getAttribute("type");
-if(!_21){
+_c=function(_24){
+var _25=_24.getAttribute("name"),_26=_24.getAttribute("type");
+if(!_25){
 return null;
 }
-var o={name:_21,kwArgs:{}},kw=o.kwArgs;
-if(_22){
-if(dc.plot2d&&dc.plot2d[_22]){
-_22=dojox._scopeName+".charting.plot2d."+_22;
-}
-var _23=eval("("+_22+")");
-if(_23){
-kw.type=_23;
-}
-}else{
-_22=dojox._scopeName+".charting.plot2d.Default";
-}
-_7(_20,_22,kw);
-return o;
-};
-_a=function(_24){
-var _25=_24.getAttribute("plot"),_26=_24.getAttribute("type");
-if(!_25){
-_25="default";
-}
-var o={plot:_25,kwArgs:{}},kw=o.kwArgs;
+var o={name:_25,kwArgs:{}},kw=o.kwArgs;
 if(_26){
-if(dc.action2d[_26]){
-_26=dojox._scopeName+".charting.action2d."+_26;
+if(dc.plot2d&&dc.plot2d[_26]){
+_26=dojo._scopeName+"x.charting.plot2d."+_26;
 }
 var _27=eval("("+_26+")");
-if(!_27){
+if(_27){
+kw.type=_27;
+}
+}else{
+_26=dojo._scopeName+"x.charting.plot2d.Default";
+}
+_a(_24,_26,kw);
+return o;
+};
+_d=function(_28){
+var _29=_28.getAttribute("plot"),_2a=_28.getAttribute("type");
+if(!_29){
+_29="default";
+}
+var o={plot:_29,kwArgs:{}},kw=o.kwArgs;
+if(_2a){
+if(dc.action2d[_2a]){
+_2a=dojo._scopeName+"x.charting.action2d."+_2a;
+}
+var _2b=eval("("+_2a+")");
+if(!_2b){
 return null;
 }
-o.action=_27;
+o.action=_2b;
 }else{
 return null;
 }
-_7(_24,_26,kw);
+_a(_28,_2a,kw);
 return o;
 };
-_b=function(_28){
-var ga=d.partial(d.attr,_28);
-var _29=ga("name");
-if(!_29){
+_e=function(_2c){
+var ga=_2.partial(_4.attr,_2c);
+var _2d=ga("name");
+if(!_2d){
 return null;
 }
-var o={name:_29,kwArgs:{}},kw=o.kwArgs,t;
+var o={name:_2d,kwArgs:{}},kw=o.kwArgs,t;
 t=ga("plot");
 if(t!=null){
 kw.plot=t;
@@ -204,7 +198,7 @@ kw.legend=t;
 t=ga("data");
 if(t!=null){
 o.type="data";
-o.data=t?_1.map(String(t).split(","),Number):[];
+o.data=t?_3.map(String(t).split(","),Number):[];
 return o;
 }
 t=ga("array");
@@ -241,11 +235,11 @@ kw.sort=eval("("+t+")");
 }
 t=ga("valueFn");
 if(!!t){
-kw.valueFn=df.lambda(t);
+kw.valueFn=_9.lambda(t);
 }
 return o;
 }
 return null;
 };
-return dojox.charting.widget.Chart;
+return _10;
 });

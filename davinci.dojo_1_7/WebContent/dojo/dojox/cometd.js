@@ -1,12 +1,7 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/cometd",["dojo","dijit","dojox","dojox/cometd/_base","dojox/cometd/longPollTransport","dojox/cometd/callbackPollTransport"],function(_1,_2,_3){
-_1.getObject("dojox.cometd",1);
-return _1.getObject("dojox.cometd");
+define(["dijit","dojo","dojox","dojo/require!dojox/cometd/_base,dojox/cometd/longPollTransport,dojox/cometd/callbackPollTransport"],function(_1,_2,_3){
+_2.provide("dojox.cometd");
+_2.require("dojox.cometd._base");
+_2.require("dojox.cometd.longPollTransport");
+_2.require("dojox.cometd.callbackPollTransport");
 });
-require(["dojox/cometd"]);

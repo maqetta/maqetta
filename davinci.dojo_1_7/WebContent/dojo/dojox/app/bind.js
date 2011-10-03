@@ -1,27 +1,29 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/app/bind",["dojo","dijit"],function(_1,_2){
-return function(_3,_4){
-_1.forEach(_3,function(_5){
-var _6=_1.query("div[dojoType^=\"dojox.mvc\"],div[data-dojo-type^=\"dojox.mvc\"]",_5.domNode);
-_1.forEach(_6,function(_7){
-var _8=_7.getAttribute("ref");
-if(_8===null){
-var _9=_7.getAttribute("data-dojo-props");
-if(_9){
-_8=_9.replace(/^\s*ref\s*:\s*/,"");
+define("dojox/app/bind",["dojo/_base/kernel","dojo/query","dojo/_base/array","dijit","dojo/_base/json"],function(_1,_2,_3,_4,_5){
+return function(_6,_7){
+_3.forEach(_6,function(_8){
+var _9=_2("div[dojoType^=\"dojox.mvc\"],div[data-dojo-type^=\"dojox.mvc\"]",_8.domNode);
+_3.forEach(_9,function(_a){
+var _b=_a.getAttribute("ref");
+if(_b===null){
+var _c=_a.getAttribute("data-dojo-props");
+if(_c){
+try{
+_c=_5.fromJson("{"+_c+"}");
+}
+catch(e){
+throw new Error(e.toString()+" in data-dojo-props='"+extra+"'");
+}
+_b=_c.ref.replace(/^\s*rel\s*:\s*/,"");
 }
 }
-if(_8){
-_8=_8.substring(1,_8.length-1);
-var _a=_1.getObject(_8,false,_4);
-if(_a){
-_2.byNode(_7).set("ref",_a);
+if(_b){
+if(_b[0]==="'"){
+_b=_b.substring(1,_b.length-1);
+}
+var _d=_1.getObject(_b,false,_7);
+if(_d){
+_4.byNode(_a).set("ref",_d);
 }
 }
 },this);

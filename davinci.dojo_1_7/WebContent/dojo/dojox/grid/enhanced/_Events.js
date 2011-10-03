@@ -1,55 +1,48 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/grid/enhanced/_Events",["dojo","dojox"],function(_1,_2){
-_1.declare("dojox.grid.enhanced._Events",null,{_events:null,headerCellActiveClass:"dojoxGridHeaderActive",cellActiveClass:"dojoxGridCellActive",rowActiveClass:"dojoxGridRowActive",constructor:function(_3){
-this._events=new _2.grid._Events();
-_3.mixin(_3,this);
+define("dojox/grid/enhanced/_Events",["dojo/_base/kernel","dojo/_base/declare","dojo/keys","dojo/_base/html","dojo/_base/event","dojox/grid/_Events"],function(_1,_2,_3,_4,_5,_6){
+return _2("dojox.grid.enhanced._Events",null,{_events:null,headerCellActiveClass:"dojoxGridHeaderActive",cellActiveClass:"dojoxGridCellActive",rowActiveClass:"dojoxGridRowActive",constructor:function(_7){
+this._events=new _6();
+_7.mixin(_7,this);
 },dokeyup:function(e){
 this.focus.currentArea().keyup(e);
 },onKeyDown:function(e){
 if(e.altKey||e.metaKey){
 return;
 }
-var dk=_1.keys;
-var _4=this.focus;
-var _5=this.edit.isEditing();
+var _8=this.focus;
+var _9=this.edit.isEditing();
 switch(e.keyCode){
-case dk.TAB:
+case _3.TAB:
 if(e.ctrlKey){
 return;
 }
-_4.tab(e.shiftKey?-1:1,e);
+_8.tab(e.shiftKey?-1:1,e);
 break;
-case dk.UP_ARROW:
-case dk.DOWN_ARROW:
-if(_5){
+case _3.UP_ARROW:
+case _3.DOWN_ARROW:
+if(_9){
 return;
 }
-_4.currentArea().move(e.keyCode==dk.UP_ARROW?-1:1,0,e);
+_8.currentArea().move(e.keyCode==_3.UP_ARROW?-1:1,0,e);
 break;
-case dk.LEFT_ARROW:
-case dk.RIGHT_ARROW:
-if(_5){
+case _3.LEFT_ARROW:
+case _3.RIGHT_ARROW:
+if(_9){
 return;
 }
-var _6=(e.keyCode==dk.LEFT_ARROW)?1:-1;
-if(_1._isBodyLtr()){
-_6*=-1;
+var _a=(e.keyCode==_3.LEFT_ARROW)?1:-1;
+if(_4._isBodyLtr()){
+_a*=-1;
 }
-_4.currentArea().move(0,_6,e);
+_8.currentArea().move(0,_a,e);
 break;
-case dk.F10:
+case _3.F10:
 if(this.menus&&e.shiftKey){
 this.onRowContextMenu(e);
 }
 break;
 default:
-_4.currentArea().keydown(e);
+_8.currentArea().keydown(e);
 break;
 }
 },domouseup:function(e){
@@ -65,11 +58,11 @@ this.onRowSelectorMouseDown(e);
 },onMouseUp:function(e){
 this[e.rowIndex==-1?"onHeaderCellMouseUp":"onCellMouseUp"](e);
 },onCellMouseDown:function(e){
-_1.addClass(e.cellNode,this.cellActiveClass);
-_1.addClass(e.rowNode,this.rowActiveClass);
+_4.addClass(e.cellNode,this.cellActiveClass);
+_4.addClass(e.rowNode,this.rowActiveClass);
 },onCellMouseUp:function(e){
-_1.removeClass(e.cellNode,this.cellActiveClass);
-_1.removeClass(e.rowNode,this.rowActiveClass);
+_4.removeClass(e.cellNode,this.cellActiveClass);
+_4.removeClass(e.rowNode,this.rowActiveClass);
 },onCellClick:function(e){
 this._events.onCellClick.call(this,e);
 this.focus.contentMouseEvent(e);
@@ -83,7 +76,7 @@ this._click[0]=this._click[1]=e;
 this._events.onCellDblClick.call(this,e);
 },onRowClick:function(e){
 this.edit.rowClick(e);
-if(!e.cell||(!e.cell.isRowSelector&&(!this.rowSelectCell||!this.rowSelectCell.disabled(e.rowIndex)))){
+if(!e.cell||!this.plugin("indirectSelection")){
 this.selection.clickSelectEvent(e);
 }
 },onRowContextMenu:function(e){
@@ -92,21 +85,21 @@ this.showMenu(e);
 }
 },onSelectedRegionContextMenu:function(e){
 if(this.selectedRegionMenu){
-this.selectedRegionMenu._openMyself({target:e.target,coords:e.keyCode!==_1.keys.F10&&"pageX" in e?{x:e.pageX,y:e.pageY}:null});
-_1.stopEvent(e);
+this.selectedRegionMenu._openMyself({target:e.target,coords:e.keyCode!==_3.F10&&"pageX" in e?{x:e.pageX,y:e.pageY}:null});
+_5.stop(e);
 }
 },onHeaderCellMouseOut:function(e){
 if(e.cellNode){
-_1.removeClass(e.cellNode,this.cellOverClass);
-_1.removeClass(e.cellNode,this.headerCellActiveClass);
+_4.removeClass(e.cellNode,this.cellOverClass);
+_4.removeClass(e.cellNode,this.headerCellActiveClass);
 }
 },onHeaderCellMouseDown:function(e){
 if(e.cellNode){
-_1.addClass(e.cellNode,this.headerCellActiveClass);
+_4.addClass(e.cellNode,this.headerCellActiveClass);
 }
 },onHeaderCellMouseUp:function(e){
 if(e.cellNode){
-_1.removeClass(e.cellNode,this.headerCellActiveClass);
+_4.removeClass(e.cellNode,this.headerCellActiveClass);
 }
 },onHeaderCellClick:function(e){
 this.focus.currentArea("header");
@@ -123,5 +116,4 @@ this.onRowMouseUp(e);
 }
 },onRowMouseUp:function(e){
 }});
-return _2.grid.enhanced._Events;
 });

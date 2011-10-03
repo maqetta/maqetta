@@ -25,6 +25,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.ajaxLibrary.LibInfo;
 import org.davinci.server.review.user.DesignerUser;
 import org.davinci.server.review.user.Reviewer;
@@ -41,7 +42,7 @@ import org.xml.sax.SAXException;
 public class ReviewManager {
 //	private static final String LS = System.getProperty("line.separator");
 	private static ReviewManager theReviewManager;
-	private HashMap<DavinciProject, HashMap<String, LibInfo[]>> snapshotLibs;
+	private HashMap<DavinciProject, HashMap<String, ILibInfo[]>> snapshotLibs;
 	public File baseDirectory;
 
 
@@ -408,7 +409,7 @@ public class ReviewManager {
 		return baseDirectory;
 	}
 
-	public LibInfo[] getSystemLibs(DavinciProject project){
+	public ILibInfo[] getSystemLibs(DavinciProject project){
 		StringBuilder path = new StringBuilder();
 		path.append(baseDirectory.getAbsolutePath());
 		path.append("/");
@@ -420,16 +421,16 @@ public class ReviewManager {
 		return new LibrarySettings(new File(path.toString())).allLibs();
 	}
 
-	public LibInfo[] getVersionLib(DavinciProject project, String version){
+	public ILibInfo[] getVersionLib(DavinciProject project, String version){
 		if(snapshotLibs == null){
-			snapshotLibs = new HashMap<DavinciProject, HashMap<String, LibInfo[]>>();
+			snapshotLibs = new HashMap<DavinciProject, HashMap<String, ILibInfo[]>>();
 		}
-		HashMap<String, LibInfo[]> versions = snapshotLibs.get(project);
+		HashMap<String, ILibInfo[]> versions = snapshotLibs.get(project);
 		if(versions == null){
-			versions = new HashMap<String, LibInfo[]>();
+			versions = new HashMap<String, ILibInfo[]>();
 			snapshotLibs.put(project, versions);
 		}
-		LibInfo[] libInfos = versions.get(version);
+		ILibInfo[] libInfos = versions.get(version);
 		if(libInfos == null){
 			StringBuilder path = new StringBuilder();
 			path.append(baseDirectory.getAbsolutePath());
@@ -458,8 +459,8 @@ public class ReviewManager {
 		DavinciProject project = new DavinciProject();
 		project.setOwnerId(ownerId);
 		project.setProjectName(projectName);
-		LibInfo[] sysLibs = reviewManager.getSystemLibs(project);
-		LibInfo[] versionLibs = reviewManager.getVersionLib(project, version);
+		ILibInfo[] sysLibs = reviewManager.getSystemLibs(project);
+		ILibInfo[] versionLibs = reviewManager.getVersionLib(project, version);
 
 		// If the lib path is not specified in the review version,
 		// just return the path
@@ -475,11 +476,11 @@ public class ReviewManager {
 		}
 		cp = cp.removeFirstSegments(c);
 		
-		for(LibInfo info : versionLibs){
+		for(ILibInfo info : versionLibs){
 			IPath versionVirtualRoot = new Path(info.getVirtualRoot());
 			if(cp.matchingFirstSegments(versionVirtualRoot) == versionVirtualRoot.segmentCount()){
 				String virtualRoot = null;
-				for(LibInfo lib : sysLibs){
+				for(ILibInfo lib : sysLibs){
 					if(lib.getId().equals(info.getId())){
 						virtualRoot = lib.getVirtualRoot();
 						break;

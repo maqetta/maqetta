@@ -1,13 +1,9 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/storage/LocalStorageProvider",["dojo","dijit","dojox","dojox/storage/Provider","dojox/storage/manager"],function(_1,_2,_3){
-_1.getObject("dojox.storage.LocalStorageProvider",1);
-_1.declare("dojox.storage.LocalStorageProvider",[_3.storage.Provider],{store:null,initialize:function(){
+define(["dijit","dojo","dojox","dojo/require!dojox/storage/Provider,dojox/storage/manager"],function(_1,_2,_3){
+_2.provide("dojox.storage.LocalStorageProvider");
+_2.require("dojox.storage.Provider");
+_2.require("dojox.storage.manager");
+_2.declare("dojox.storage.LocalStorageProvider",[_3.storage.Provider],{store:null,initialize:function(){
 this.store=localStorage;
 this.initialized=true;
 _3.storage.manager.loaded();
@@ -18,7 +14,7 @@ this._assertIsValidKey(_4);
 _7=_7||this.DEFAULT_NAMESPACE;
 this._assertIsValidNamespace(_7);
 var _8=this.getFullKey(_4,_7);
-_5=_1.toJson(_5);
+_5=_2.toJson(_5);
 try{
 this.store.setItem(_8,_5);
 if(_6){
@@ -35,7 +31,7 @@ this._assertIsValidKey(_9);
 _a=_a||this.DEFAULT_NAMESPACE;
 this._assertIsValidNamespace(_a);
 _9=this.getFullKey(_9,_a);
-return _1.fromJson(this.store.getItem(_9));
+return _2.fromJson(this.store.getItem(_9));
 },getKeys:function(_b){
 _b=_b||this.DEFAULT_NAMESPACE;
 this._assertIsValidNamespace(_b);
@@ -59,7 +55,7 @@ if(this._beginsWith(this.store.key(i),_e)){
 _f.push(this.store.key(i));
 }
 }
-_1.forEach(_f,_1.hitch(this.store,"removeItem"));
+_2.forEach(_f,_2.hitch(this.store,"removeItem"));
 },remove:function(key,_10){
 _10=_10||this.DEFAULT_NAMESPACE;
 this._assertIsValidNamespace(_10);
@@ -113,6 +109,4 @@ throw new Error("Invalid key given: "+key);
 }
 }});
 _3.storage.manager.register("dojox.storage.LocalStorageProvider",new _3.storage.LocalStorageProvider());
-return _1.getObject("dojox.storage.LocalStorageProvider");
 });
-require(["dojox/storage/LocalStorageProvider"]);

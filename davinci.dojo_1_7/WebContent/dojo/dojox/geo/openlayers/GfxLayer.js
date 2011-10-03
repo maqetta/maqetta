@@ -1,17 +1,11 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/geo/openlayers/GfxLayer",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/connect","dojo/_base/html","dojox/gfx","dojox/gfx/_base","dojox/gfx/shape","dojox/gfx/path","dojox/geo/openlayers/Feature","dojox/geo/openlayers/Layer"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a){
-return _1.declare("dojox.geo.openlayers.GfxLayer",dojox.geo.openlayers.Layer,{_viewport:null,constructor:function(_b,_c){
+define("dojox/geo/openlayers/GfxLayer",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/connect","dojo/_base/html","dojox/gfx","dojox/gfx/_base","dojox/gfx/shape","dojox/gfx/path","dojox/gfx/matrix","dojox/geo/openlayers/Feature","dojox/geo/openlayers/Layer"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b){
+return _2("dojox.geo.openlayers.GfxLayer",dojox.geo.openlayers.Layer,{_viewport:null,constructor:function(_c,_d){
 var s=dojox.gfx.createSurface(this.olLayer.div,100,100);
 this._surface=s;
 var vp;
-if(_c&&_c.viewport){
-vp=_c.viewport;
+if(_d&&_d.viewport){
+vp=_d.viewport;
 }else{
 vp=s.createGroup();
 }
@@ -28,29 +22,29 @@ this._viewport=g;
 this._surface.add(g);
 },onMapResize:function(){
 this._surfaceSize();
-},setMap:function(_d){
+},setMap:function(_e){
 this.inherited(arguments);
 this._surfaceSize();
 },getDataExtent:function(){
-var _e=this._surface.getDimensions();
-return _e;
+var _f=this._surface.getDimensions();
+return _f;
 },getSurface:function(){
 return this._surface;
 },_surfaceSize:function(){
 var s=this.olLayer.map.getSize();
 this._surface.setDimensions(s.w,s.h);
-},moveTo:function(_f){
+},moveTo:function(_10){
 var s=_1.style(this.olLayer.map.layerContainerDiv);
-var _10=parseInt(s.left);
+var _11=parseInt(s.left);
 var top=parseInt(s.top);
-if(_f.zoomChanged||_10||top){
+if(_10.zoomChanged||_11||top){
 var d=this.olLayer.div;
-_1.style(d,{left:-_10+"px",top:-top+"px"});
+_1.style(d,{left:-_11+"px",top:-top+"px"});
 if(this._features==null){
 return;
 }
 var vp=this.getViewport();
-vp.setTransform(dojox.gfx.matrix.translate(_10,top));
+vp.setTransform(_9.translate(_11,top));
 this.inherited(arguments);
 }
 },added:function(){

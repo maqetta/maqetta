@@ -5,6 +5,9 @@
 .dj_tablet .mblArrowButtonHead {
 	background-image: url(compat/ipad-arrow-button-head.png);
 }
-.dj_tablet .mblArrowButtonBody, .dj_tablet .mblArrowButtonNeck {
+.dj_tablet .mblArrowButtonBody {
 	background-image: url(compat/ipad-arrow-button-bg.png);
+}
+.dj_tablet .mblTabPanelHeader {
+	background-image: url(compat/ipad-heading-bg.png);
 }

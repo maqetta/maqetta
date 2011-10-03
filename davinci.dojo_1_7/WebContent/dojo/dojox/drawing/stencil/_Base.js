@@ -1,46 +1,40 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/drawing/stencil/_Base",["dojo","../..","dojo/fx/easing","../defaults"],function(_1,_2){
-_1.getObject("drawing.stencil",true,_2);
-_1.getObject("drawing.tools.custom",true,_2);
-_2.drawing.stencil._Base=_2.drawing.util.oo.declare(function(_3){
-_1.mixin(this,_3);
-this.style=_3.style||_2.drawing.defaults.copy();
-if(_3.stencil){
-this.stencil=_3.stencil;
-this.util=_3.stencil.util;
-this.mouse=_3.stencil.mouse;
-this.container=_3.stencil.container;
-this.style=_3.stencil.style;
+define(["dijit","dojo","dojox","dojo/require!dojo/fx/easing"],function(_1,_2,_3){
+_2.provide("dojox.drawing.stencil._Base");
+_2.require("dojo.fx.easing");
+_3.drawing.stencil._Base=_3.drawing.util.oo.declare(function(_4){
+_2.mixin(this,_4);
+this.style=_4.style||_3.drawing.defaults.copy();
+if(_4.stencil){
+this.stencil=_4.stencil;
+this.util=_4.stencil.util;
+this.mouse=_4.stencil.mouse;
+this.container=_4.stencil.container;
+this.style=_4.stencil.style;
 }
-var _4=/Line|Vector|Axes|Arrow/;
-var _5=/Text/;
+var _5=/Line|Vector|Axes|Arrow/;
+var _6=/Text/;
 this.shortType=this.util.abbr(this.type);
-this.isText=_5.test(this.type);
-this.isLine=_4.test(this.type);
+this.isText=_6.test(this.type);
+this.isLine=_5.test(this.type);
 this.renderHit=this.style.renderHitLayer;
 if(!this.renderHit&&this.style.renderHitLines&&this.isLine){
 this.renderHit=true;
 }
 if(!this.renderHit&&this.style.useSelectedStyle){
 this.useSelectedStyle=true;
-this.selCopy=_1.clone(this.style.selected);
+this.selCopy=_2.clone(this.style.selected);
 for(var nm in this.style.norm){
 if(this.style.selected[nm]===undefined){
 this.style.selected[nm]=this.style.norm[nm];
 }
 }
-this.textSelected=_1.clone(this.style.text);
+this.textSelected=_2.clone(this.style.text);
 this.textSelected.color=this.style.selected.fill;
 }
 this.angleSnap=this.style.angleSnap||1;
-this.marginZero=_3.marginZero||this.style.anchors.marginZero;
-this.id=_3.id||this.util.uid(this.type);
+this.marginZero=_4.marginZero||this.style.anchors.marginZero;
+this.id=_4.id||this.util.uid(this.type);
 this._cons=[];
 if(!this.annotation&&!this.subShape){
 this.util.attr(this.container,"id",this.id);
@@ -49,73 +43,73 @@ this.connect(this,"onBeforeRender","preventNegativePos");
 this._offX=this.mouse.origin.x;
 this._offY=this.mouse.origin.y;
 if(this.isText){
-this.align=_3.align||this.align;
-this.valign=_3.valign||this.valign;
-if(_3.data&&_3.data.makeFit){
-var _6=this.makeFit(_3.data.text,_3.data.width);
-this.textSize=this.style.text.size=_6.size;
-this._lineHeight=_6.box.h;
+this.align=_4.align||this.align;
+this.valign=_4.valign||this.valign;
+if(_4.data&&_4.data.makeFit){
+var _7=this.makeFit(_4.data.text,_4.data.width);
+this.textSize=this.style.text.size=_7.size;
+this._lineHeight=_7.box.h;
 }else{
 this.textSize=parseInt(this.style.text.size,10);
 this._lineHeight=this.textSize*1.4;
 }
-this.deleteEmptyCreate=_3.deleteEmptyCreate!==undefined?_3.deleteEmptyCreate:this.style.text.deleteEmptyCreate;
-this.deleteEmptyModify=_3.deleteEmptyModify!==undefined?_3.deleteEmptyModify:this.style.text.deleteEmptyModify;
+this.deleteEmptyCreate=_4.deleteEmptyCreate!==undefined?_4.deleteEmptyCreate:this.style.text.deleteEmptyCreate;
+this.deleteEmptyModify=_4.deleteEmptyModify!==undefined?_4.deleteEmptyModify:this.style.text.deleteEmptyModify;
 }
-this.attr(_3.data);
+this.attr(_4.data);
 if(this.noBaseRender){
 return;
 }
-if(_3.points){
-if(_3.data&&_3.data.closePath===false){
+if(_4.points){
+if(_4.data&&_4.data.closePath===false){
 this.closePath=false;
 }
-this.setPoints(_3.points);
+this.setPoints(_4.points);
 this.connect(this,"render",this,"onRender",true);
 this.baseRender&&this.enabled&&this.render();
-_3.label&&this.setLabel(_3.label);
-_3.shadow&&this.addShadow(_3.shadow);
+_4.label&&this.setLabel(_4.label);
+_4.shadow&&this.addShadow(_4.shadow);
 }else{
-if(_3.data){
-_3.data.width=_3.data.width?_3.data.width:this.style.text.minWidth;
-_3.data.height=_3.data.height?_3.data.height:this._lineHeight;
-this.setData(_3.data);
+if(_4.data){
+_4.data.width=_4.data.width?_4.data.width:this.style.text.minWidth;
+_4.data.height=_4.data.height?_4.data.height:this._lineHeight;
+this.setData(_4.data);
 this.connect(this,"render",this,"onRender",true);
-this.baseRender&&this.enabled&&this.render(_3.data.text);
-this.baseRender&&_3.label&&this.setLabel(_3.label);
-this.baseRender&&_3.shadow&&this.addShadow(_3.shadow);
+this.baseRender&&this.enabled&&this.render(_4.data.text);
+this.baseRender&&_4.label&&this.setLabel(_4.label);
+this.baseRender&&_4.shadow&&this.addShadow(_4.shadow);
 }else{
 if(this.draws){
 this.points=[];
 this.data={};
 this.connectMouse();
-this._postRenderCon=_1.connect(this,"render",this,"_onPostRender");
+this._postRenderCon=_2.connect(this,"render",this,"_onPostRender");
 }
 }
 }
 if(this.showAngle){
-this.angleLabel=new _2.drawing.annotations.Angle({stencil:this});
+this.angleLabel=new _3.drawing.annotations.Angle({stencil:this});
 }
 if(!this.enabled){
 this.disable();
 this.moveToBack();
-this.render(_3.data.text);
+this.render(_4.data.text);
 }
-},{type:"dojox.drawing.stencil",minimumSize:10,enabled:true,drawingType:"stencil",setData:function(_7){
-this.data=_7;
+},{type:"dojox.drawing.stencil",minimumSize:10,enabled:true,drawingType:"stencil",setData:function(_8){
+this.data=_8;
 this.points=this.dataToPoints();
-},setPoints:function(_8){
-this.points=_8;
+},setPoints:function(_9){
+this.points=_9;
 if(this.pointsToData){
 this.data=this.pointsToData();
 }
-},onDelete:function(_9){
-},onBeforeRender:function(_a){
-},onModify:function(_b){
-},onChangeData:function(_c){
-},onChangeText:function(_d){
-},onRender:function(_e){
-this._postRenderCon=_1.connect(this,"render",this,"_onPostRender");
+},onDelete:function(_a){
+},onBeforeRender:function(_b){
+},onModify:function(_c){
+},onChangeData:function(_d){
+},onChangeText:function(_e){
+},onRender:function(_f){
+this._postRenderCon=_2.connect(this,"render",this,"_onPostRender");
 this.created=true;
 this.disconnectMouse();
 if(this.shape){
@@ -124,7 +118,7 @@ this.shape.superClass=this;
 this.container.superClass=this;
 }
 this._setNodeAtts(this);
-},onChangeStyle:function(_f){
+},onChangeStyle:function(_10){
 this._isBeingModified=true;
 if(!this.enabled){
 this.style.current=this.style.disabled;
@@ -147,43 +141,43 @@ this.style.currentHit=this.style.hitHighlighted;
 }
 }
 this.render();
-},animate:function(_10,_11){
+},animate:function(_11,_12){
 console.warn("ANIMATE..........................");
-var d=_10.d||_10.duration||1000;
-var ms=_10.ms||20;
-var _12=_10.ease||_1.fx.easing.linear;
-var _13=_10.steps;
+var d=_11.d||_11.duration||1000;
+var ms=_11.ms||20;
+var _13=_11.ease||_2.fx.easing.linear;
+var _14=_11.steps;
 var ts=new Date().getTime();
 var w=100;
 var cnt=0;
-var _14=true;
+var _15=true;
 var sp,ep;
-if(_1.isArray(_10.start)){
-sp=_10.start;
-ep=_10.end;
+if(_2.isArray(_11.start)){
+sp=_11.start;
+ep=_11.end;
 }else{
-if(_1.isObject(_10.start)){
-sp=_10.start;
-ep=_10.end;
-_14=false;
+if(_2.isObject(_11.start)){
+sp=_11.start;
+ep=_11.end;
+_15=false;
 }else{
 console.warn("No data provided to animate");
 }
 }
-var v=setInterval(_1.hitch(this,function(){
+var v=setInterval(_2.hitch(this,function(){
 var t=new Date().getTime()-ts;
-var p=_12(1-t/d);
+var p=_13(1-t/d);
 if(t>d||cnt++>100){
 clearInterval(v);
 return;
 }
-if(_14){
-var _15=[];
-_1.forEach(sp,function(pt,i){
+if(_15){
+var _16=[];
+_2.forEach(sp,function(pt,i){
 var o={x:(ep[i].x-sp[i].x)*p+sp[i].x,y:(ep[i].y-sp[i].y)*p+sp[i].y};
-_15.push(o);
+_16.push(o);
 });
-this.setPoints(_15);
+this.setPoints(_16);
 this.render();
 }else{
 var o={};
@@ -193,20 +187,20 @@ o[nm]=(ep[nm]-sp[nm])*p+sp[nm];
 this.attr(o);
 }
 }),ms);
-},attr:function(key,_16){
+},attr:function(key,_17){
 var n=this.enabled?this.style.norm:this.style.disabled;
 var t=this.enabled?this.style.text:this.style.textDisabled;
-var ts=this.textSelected||{},o,nm,_17,_18=_1.toJson(n),_19=_1.toJson(t);
-var _1a={x:true,y:true,r:true,height:true,width:true,radius:true,angle:true};
-var _1b=false;
+var ts=this.textSelected||{},o,nm,_18,_19=_2.toJson(n),_1a=_2.toJson(t);
+var _1b={x:true,y:true,r:true,height:true,width:true,radius:true,angle:true};
+var _1c=false;
 if(typeof (key)!="object"){
 o={};
-o[key]=_16;
+o[key]=_17;
 }else{
-o=_1.clone(key);
+o=_2.clone(key);
 }
 if(o.width){
-_17=o.width;
+_18=o.width;
 delete o.width;
 }
 for(nm in o){
@@ -219,14 +213,14 @@ t[nm]=o[nm];
 if(nm in ts){
 ts[nm]=o[nm];
 }
-if(nm in _1a){
-_1a[nm]=o[nm];
-_1b=true;
+if(nm in _1b){
+_1b[nm]=o[nm];
+_1c=true;
 if(nm=="radius"&&o.angle===undefined){
-o.angle=_1a.angle=this.getAngle();
+o.angle=_1b.angle=this.getAngle();
 }else{
 if(nm=="angle"&&o.radius===undefined){
-o.radius=_1a.radius=this.getRadius();
+o.radius=_1b.radius=this.getRadius();
 }
 }
 }
@@ -265,8 +259,8 @@ var p=this.points;
 if(o.angle!==undefined){
 this.dataToPoints({x:this.data.x1,y:this.data.y1,angle:o.angle,radius:o.radius});
 }else{
-if(_17!==undefined){
-p[1].x=p[2].x=p[0].x+_17;
+if(_18!==undefined){
+p[1].x=p[2].x=p[0].x+_18;
 this.pointsToData(p);
 }
 }
@@ -277,28 +271,28 @@ this.pointsToData(p);
 if(o.r!==undefined){
 this.data.r=Math.max(0,o.r);
 }
-if(_1b||_19!=_1.toJson(t)||_18!=_1.toJson(n)){
+if(_1c||_1a!=_2.toJson(t)||_19!=_2.toJson(n)){
 this.onChangeStyle(this);
 }
-o.width=_17;
+o.width=_18;
 if(o.cosphi!=undefined){
 !this.data?this.data={cosphi:o.cosphi}:this.data.cosphi=o.cosphi;
 this.style.zAxis=o.cosphi!=0?true:false;
 }
 },exporter:function(){
-var _1c=this.type.substring(this.type.lastIndexOf(".")+1).charAt(0).toLowerCase()+this.type.substring(this.type.lastIndexOf(".")+2);
-var o=_1.clone(this.style.norm);
+var _1d=this.type.substring(this.type.lastIndexOf(".")+1).charAt(0).toLowerCase()+this.type.substring(this.type.lastIndexOf(".")+2);
+var o=_2.clone(this.style.norm);
 o.borderWidth=o.width;
 delete o.width;
-if(_1c=="path"){
+if(_1d=="path"){
 o.points=this.points;
 }else{
-o=_1.mixin(o,this.data);
+o=_2.mixin(o,this.data);
 }
-o.type=_1c;
+o.type=_1d;
 if(this.isText){
 o.text=this.getText();
-o=_1.mixin(o,this.style.text);
+o=_2.mixin(o,this.style.text);
 delete o.minWidth;
 delete o.deleteEmptyCreate;
 delete o.deleteEmptyModify;
@@ -319,9 +313,9 @@ this.onChangeStyle(this);
 },select:function(){
 this.selected=true;
 this.onChangeStyle(this);
-},deselect:function(_1d){
-if(_1d){
-setTimeout(_1.hitch(this,function(){
+},deselect:function(_1e){
+if(_1e){
+setTimeout(_2.hitch(this,function(){
 this.selected=false;
 this.onChangeStyle(this);
 }),200);
@@ -334,7 +328,7 @@ if(!this.selected){
 return;
 }
 this.deselect();
-setTimeout(_1.hitch(this,"select"),0);
+setTimeout(_2.hitch(this,"select"),0);
 },highlight:function(){
 this.highlighted=true;
 this.onChangeStyle(this);
@@ -345,12 +339,12 @@ this.onChangeStyle(this);
 this.container&&this.container.moveToFront();
 },moveToBack:function(){
 this.container&&this.container.moveToBack();
-},onTransformBegin:function(_1e){
+},onTransformBegin:function(_1f){
 this._isBeingModified=true;
-},onTransformEnd:function(_1f){
+},onTransformEnd:function(_20){
 this._isBeingModified=false;
 this.onModify(this);
-},onTransform:function(_20){
+},onTransform:function(_21){
 if(!this._isBeingModified){
 this.onTransformBegin();
 }
@@ -360,16 +354,16 @@ this.render();
 if(!mx.dx&&!mx.dy){
 return;
 }
-var _21=_1.clone(this.points),_22=false;
-_1.forEach(this.points,function(o){
+var _22=_2.clone(this.points),_23=false;
+_2.forEach(this.points,function(o){
 o.x+=mx.dx;
 o.y+=mx.dy;
 if(o.x<this.marginZero||o.y<this.marginZero){
-_22=true;
+_23=true;
 }
 });
-if(_22){
-this.points=_21;
+if(_23){
+this.points=_22;
 console.error("Attempt to set object '"+this.id+"' to less than zero.");
 return;
 }
@@ -381,18 +375,18 @@ this.transformPoints(mx);
 this.attr({x:mx.dx,y:mx.dy});
 },getTransform:function(){
 return this.selected?this.container.getParent().getTransform():{dx:0,dy:0};
-},addShadow:function(_23){
-_23=_23===true?{}:_23;
-_23.stencil=this;
-this.shadow=new _2.drawing.annotations.BoxShadow(_23);
+},addShadow:function(_24){
+_24=_24===true?{}:_24;
+_24.stencil=this;
+this.shadow=new _3.drawing.annotations.BoxShadow(_24);
 },removeShadow:function(){
 this.shadow.destroy();
-},setLabel:function(_24){
+},setLabel:function(_25){
 if(!this._label){
-this._label=new _2.drawing.annotations.Label({text:_24,util:this.util,mouse:this.mouse,stencil:this,annotation:true,container:this.container,labelPosition:this.labelPosition});
+this._label=new _3.drawing.annotations.Label({text:_25,util:this.util,mouse:this.mouse,stencil:this,annotation:true,container:this.container,labelPosition:this.labelPosition});
 }else{
-if(_24!=undefined){
-this._label.setLabel(_24);
+if(_25!=undefined){
+this._label.setLabel(_25);
 }
 }
 },getLabel:function(){
@@ -403,17 +397,17 @@ return null;
 },getAngle:function(){
 var d=this.pointsToData();
 var obj={start:{x:d.x1,y:d.y1},x:d.x2,y:d.y2};
-var _25=this.util.angle(obj,this.angleSnap);
-_25<0?_25=360+_25:_25;
-return _25;
+var _26=this.util.angle(obj,this.angleSnap);
+_26<0?_26=360+_26:_26;
+return _26;
 },getRadius:function(){
 var box=this.getBounds(true);
-var _26={start:{x:box.x1,y:box.y1},x:box.x2,y:box.y2};
-return this.util.length(_26);
-},getBounds:function(_27){
+var _27={start:{x:box.x1,y:box.y1},x:box.x2,y:box.y2};
+return this.util.length(_27);
+},getBounds:function(_28){
 var p=this.points,x1,y1,x2,y2;
 if(p.length==2){
-if(_27){
+if(_28){
 x1=p[0].x;
 y1=p[0].y;
 x2=p[1].x;
@@ -436,31 +430,31 @@ if(!this.points||!this.points.length){
 return;
 }
 if(this.type=="dojox.drawing.tools.custom.Axes"){
-var _28=this.marginZero,_29=this.marginZero;
-_1.forEach(this.points,function(p){
-_28=Math.min(p.y,_28);
+var _29=this.marginZero,_2a=this.marginZero;
+_2.forEach(this.points,function(p){
+_29=Math.min(p.y,_29);
 });
-_1.forEach(this.points,function(p){
-_29=Math.min(p.x,_29);
+_2.forEach(this.points,function(p){
+_2a=Math.min(p.x,_2a);
 });
-if(_28<this.marginZero){
-_1.forEach(this.points,function(p,i){
-p.y=p.y+(this.marginZero-_28);
+if(_29<this.marginZero){
+_2.forEach(this.points,function(p,i){
+p.y=p.y+(this.marginZero-_29);
 },this);
 }
-if(_29<this.marginZero){
-_1.forEach(this.points,function(p){
-p.x+=(this.marginZero-_29);
+if(_2a<this.marginZero){
+_2.forEach(this.points,function(p){
+p.x+=(this.marginZero-_2a);
 },this);
 }
 }else{
-_1.forEach(this.points,function(p){
+_2.forEach(this.points,function(p){
 p.x=p.x<0?this.marginZero:p.x;
 p.y=p.y<0?this.marginZero:p.y;
 });
 }
 this.setPoints(this.points);
-},_onPostRender:function(_2a){
+},_onPostRender:function(_2b){
 if(this._isBeingModified){
 this.onModify(this);
 this._isBeingModified=false;
@@ -468,17 +462,17 @@ this._isBeingModified=false;
 if(!this.created){
 }
 }
-if(!this.editMode&&!this.selected&&this._prevData&&_1.toJson(this._prevData)!=_1.toJson(this.data)){
+if(!this.editMode&&!this.selected&&this._prevData&&_2.toJson(this._prevData)!=_2.toJson(this.data)){
 this.onChangeData(this);
-this._prevData=_1.clone(this.data);
+this._prevData=_2.clone(this.data);
 }else{
 if(!this._prevData&&(!this.isText||this.getText())){
-this._prevData=_1.clone(this.data);
+this._prevData=_2.clone(this.data);
 }
 }
-},_setNodeAtts:function(_2b){
+},_setNodeAtts:function(_2c){
 var att=this.enabled&&(!this.annotation||this.drawingType=="label")?this.drawingType:"";
-this.util.attr(_2b,"drawingType",att);
+this.util.attr(_2c,"drawingType",att);
 },destroy:function(){
 if(this.destroyed){
 return;
@@ -488,7 +482,7 @@ this.onDelete(this);
 }
 this.disconnectMouse();
 this.disconnect(this._cons);
-_1.disconnect(this._postRenderCon);
+_2.disconnect(this._postRenderCon);
 this.remove(this.shape,this.hit);
 this.destroyed=true;
 },remove:function(){
@@ -508,15 +502,15 @@ a[i].removeShape();
 if(arguments.length>1){
 this._cons.push(this.connect.apply(this,arguments));
 }else{
-if(_1.isArray(arguments[0][0])){
-_1.forEach(arguments[0],function(ar){
+if(_2.isArray(arguments[0][0])){
+_2.forEach(arguments[0],function(ar){
 this._cons.push(this.connect.apply(this,ar));
 },this);
 }else{
 this._cons.push(this.connect.apply(this,arguments[0]));
 }
 }
-},connect:function(o,e,s,m,_2c){
+},connect:function(o,e,s,m,_2d){
 var c;
 if(typeof (o)!="object"){
 if(s){
@@ -534,10 +528,10 @@ if(!m){
 m=s;
 s=this;
 }else{
-if(_2c){
-c=_1.connect(o,e,function(evt){
-_1.hitch(s,m)(evt);
-_1.disconnect(c);
+if(_2d){
+c=_2.connect(o,e,function(evt){
+_2.hitch(s,m)(evt);
+_2.disconnect(c);
 });
 this._cons.push(c);
 return c;
@@ -545,31 +539,30 @@ return c;
 }
 }
 }
-c=_1.connect(o,e,s,m);
+c=_2.connect(o,e,s,m);
 this._cons.push(c);
 return c;
-},disconnect:function(_2d){
-if(!_2d){
+},disconnect:function(_2e){
+if(!_2e){
 return;
 }
-if(!_1.isArray(_2d)){
-_2d=[_2d];
+if(!_2.isArray(_2e)){
+_2e=[_2e];
 }
-_1.forEach(_2d,_1.disconnect,_1);
+_2.forEach(_2e,_2.disconnect,_2);
 },connectMouse:function(){
 this._mouseHandle=this.mouse.register(this);
 },disconnectMouse:function(){
 this.mouse.unregister(this._mouseHandle);
 },render:function(){
-},dataToPoints:function(_2e){
-},pointsToData:function(_2f){
+},dataToPoints:function(_2f){
+},pointsToData:function(_30){
 },onDown:function(obj){
 this._downOnCanvas=true;
-_1.disconnect(this._postRenderCon);
+_2.disconnect(this._postRenderCon);
 this._postRenderCon=null;
 },onMove:function(obj){
 },onDrag:function(obj){
 },onUp:function(obj){
 }});
-return _2.drawing.stencil._Base;
 });

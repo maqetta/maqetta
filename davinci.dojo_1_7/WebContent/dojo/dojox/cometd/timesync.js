@@ -1,12 +1,7 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/cometd/timesync",["dojo","dijit","dojox","dojox/cometd/_base"],function(_1,_2,_3){
-_1.getObject("dojox.cometd.timesync",1);
+define(["dijit","dojo","dojox","dojo/require!dojox/cometd/_base"],function(_1,_2,_3){
+_2.provide("dojox.cometd.timesync");
+_2.require("dojox.cometd._base");
 _3.cometd.timesync=new function(){
 this._window=10;
 this._lags=[];
@@ -68,8 +63,6 @@ _b.ext.timesync={tc:_d,l:this.lag,o:this.offset};
 return _b;
 };
 };
-_3.cometd._extendInList.push(_1.hitch(_3.cometd.timesync,"_in"));
-_3.cometd._extendOutList.push(_1.hitch(_3.cometd.timesync,"_out"));
-return _1.getObject("dojox.cometd.timesync");
+_3.cometd._extendInList.push(_2.hitch(_3.cometd.timesync,"_in"));
+_3.cometd._extendOutList.push(_2.hitch(_3.cometd.timesync,"_out"));
 });
-require(["dojox/cometd/timesync"]);

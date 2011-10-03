@@ -5,7 +5,7 @@
 .dijitMenuItemRtl {
 	text-align: right;
 }
-.dj_iequirks .dijitComboButtonRtl BUTTON {
+.dj_iequirks .dijitComboButtonRtl button {
 	
 	float:left;
 }
@@ -19,6 +19,10 @@
 .dijitSpinnerRtl .dijitSpinnerButtonContainer .dijitArrowButton {
 	right: 0;
 	left: auto;
+}
+.dj_ie7 .dijitInputContainer {
+	
+	display: inline-block;
 }
 .dijitTextBoxRtl .dijitSpinnerButtonContainer,
 .dijitTextBoxRtl .dijitValidationContainer,

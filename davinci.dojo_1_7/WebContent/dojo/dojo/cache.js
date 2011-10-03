@@ -5,6 +5,6 @@
 */
 
 //>>built
-define("dojo/cache",["dojo","dojo/text"],function(_1){
+define("dojo/cache",["./_base/kernel","./text"],function(_1,_2){
 return _1.cache;
 });

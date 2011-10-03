@@ -1,112 +1,114 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/calc/toFrac",["dojo"],function(_1){
-var a=[];
-var _2=[2,3,5,6,7,10,11,13,14,15,17,19,21,22,23,26,29,30,31,33,34,35,37,38,39,41,42,43,46,47,51,53,55,57,58,59,61,62,65,66,67,69,70,71,73,74,77,78,79,82,83,85,86,87,89,91,93,94,95,97];
-var _3=false;
-var i=-3;
-var d=2;
-var _4=1e-15/9;
-function _5(_6){
-var m,mt;
-while(i<_2.length){
-switch(i){
-case -3:
-m=1;
-mt="";
-break;
-case -2:
-m=Math.PI;
-mt="pi";
-break;
-case -1:
-m=Math.sqrt(Math.PI);
-mt="√(pi)";
-break;
-default:
-m=Math.sqrt(_2[i]);
-mt="√("+_2[i]+")";
+define("dojox/calc/toFrac",["dojo/_base/lang","dojox/calc/_Executor"],function(_1,_2){
+var _3;
+function _4(){
+var _5=[5,6,7,10,11,13,14,15,17,19,21,22,23,26,29,30,31,33,34,35,37,38,39,41,42,43,46,47,51,53,55,57,58,59,61,62,65,66,67,69,70,71,73,74,77,78,79,82,83,85,86,87,89,91,93,94,95,97];
+_3={"1":1,"√(2)":Math.sqrt(2),"√(3)":Math.sqrt(3),"pi":Math.PI};
+for(var i in _5){
+var n=_5[i];
+_3["√("+n+")"]=Math.sqrt(n);
 }
-while(d<=100){
-for(n=1;n<(m==1?d:100);n++){
-var r=m*n/d;
-var f=dojox.calc.approx(r);
-if(!(f in a)){
-if(n==d){
-n=1;
-d=1;
-}
-a[f]={n:n,d:d,m:m,mt:mt};
-if(f==_6){
-_6=undefined;
-}
-}
-}
-d++;
-if(_6==undefined){
-setTimeout(function(){
-_5();
-},1);
-return;
-}
-}
-d=2;
-i++;
-}
-_3=true;
+_3["√(pi)"]=Math.sqrt(Math.PI);
 };
-function _7(n){
+function _6(_7){
+function _8(_9){
+var _a=Math.floor(1/_9);
+var _b=_2.approx(1/_a);
+if(_b==_9){
+return {n:1,d:_a};
+}
+var _c=_a+1;
+_b=_2.approx(1/_c);
+if(_b==_9){
+return {n:1,d:_c};
+}
+if(_a>=50){
+return null;
+}
+var _d=_a+_c;
+_b=_2.approx(2/_d);
+if(_b==_9){
+return {n:2,d:_d};
+}
+if(_a>=34){
+return null;
+}
+var _e=_9<_b;
+var _f=_d*2+(_e?1:-1);
+_b=_2.approx(4/_f);
+if(_b==_9){
+return {n:4,d:_f};
+}
+var _10=_9<_b;
+if((_e&&!_10)||(!_e&&_10)){
+var _11=(_d+_f)>>1;
+_b=_2.approx(3/_11);
+if(_b==_9){
+return {n:3,d:_11};
+}
+}
+if(_a>=20){
+return null;
+}
+var _12=_d+_a*2;
+var _13=_12+2;
+for(var _14=5;_12<=100;_14++){
+_12+=_a;
+_13+=_c;
+var _15=_e?((_13+_12+1)>>1):_12;
+var _16=_e?_13:((_13+_12-1)>>1);
+_15=_10?((_15+_16)>>1):_15;
+_16=_10?_16:((_15+_16)>>1);
+for(var _17=_15;_17<=_16;_17++){
+if(_14&1==0&&_17&1==0){
+continue;
+}
+_b=_2.approx(_14/_17);
+if(_b==_9){
+return {n:_14,d:_17};
+}
+if(_b<_9){
+break;
+}
+}
+}
+return null;
+};
+_7=Math.abs(_7);
+for(var mt in _3){
+var _18=_3[mt];
+var _19=_7/_18;
+var _1a=Math.floor(_19);
+_19=_2.approx(_19-_1a);
+if(_19==0){
+return {mt:mt,m:_18,n:_1a,d:1};
+}else{
+var a=_8(_19);
+if(!a){
+continue;
+}
+return {mt:mt,m:_18,n:(_1a*a.d+a.n),d:a.d};
+}
+}
+return null;
+};
+_4();
+return _1.mixin(_2,{toFrac:function(_1b){
+var f=_6(_1b);
+return f?((_1b<0?"-":"")+(f.m==1?"":(f.n==1?"":(f.n+"*")))+(f.m==1?f.n:f.mt)+((f.d==1?"":"/"+f.d))):_1b;
+},pow:function(_1c,_1d){
+function _1e(n){
 return Math.floor(n)==n;
 };
-_5();
-function _8(_9){
-function _a(){
-_5(_9);
-return _8(_9);
-};
-_9=Math.abs(_9);
-var f=a[dojox.calc.approx(_9)];
-if(!f&&!_3){
-return _a();
-}
-if(!f){
-var i=Math.floor(_9);
-if(i==0){
-return _3?null:_a();
-}
-var n=_9%1;
-if(n==0){
-return {m:1,mt:1,n:_9,d:1};
-}
-f=a[dojox.calc.approx(n)];
-if(!f||f.m!=1){
-var _b=dojox.calc.approx(1/n);
-return _7(_b)?{m:1,mt:1,n:1,d:_b}:(_3?null:_a());
+if(_1c>0||_1e(_1d)){
+return Math.pow(_1c,_1d);
 }else{
-return {m:1,mt:1,n:(i*f.d+f.n),d:f.d};
-}
-}
-return f;
-};
-_1.mixin(dojox.calc,{toFrac:function(_c){
-var f=_8(_c);
-return f?((_c<0?"-":"")+(f.m==1?"":(f.n==1?"":(f.n+"*")))+(f.m==1?f.n:f.mt)+((f.d==1?"":"/"+f.d))):_c;
-},pow:function(_d,_e){
-if(_d>0||_7(_e)){
-return Math.pow(_d,_e);
+var f=_6(_1d);
+if(_1c>=0){
+return (f&&f.m==1)?Math.pow(Math.pow(_1c,1/f.d),_1d<0?-f.n:f.n):Math.pow(_1c,_1d);
 }else{
-var f=_8(_e);
-if(_d>=0){
-return (f&&f.m==1)?Math.pow(Math.pow(_d,1/f.d),_e<0?-f.n:f.n):Math.pow(_d,_e);
-}else{
-return (f&&f.d&1)?Math.pow(Math.pow(-Math.pow(-_d,1/f.d),_e<0?-f.n:f.n),f.m):NaN;
+return (f&&f.d&1)?Math.pow(Math.pow(-Math.pow(-_1c,1/f.d),_1d<0?-f.n:f.n),f.m):NaN;
 }
 }
 }});
-return dojox.calc.toFrac;
 });

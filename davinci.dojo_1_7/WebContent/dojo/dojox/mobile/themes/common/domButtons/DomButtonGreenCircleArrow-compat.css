@@ -3,6 +3,6 @@
 	background-image: url(compat/mblDomButtonGreenCircleArrow.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonGreenCircleArrow > DIV {
+.mblDomButtonGreenCircleArrow > div {
 	display: none;
 }

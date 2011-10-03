@@ -1,7 +1,9 @@
 //>>built
-define(({
+define(
+({
 name: "Nome",
 path: "Caminho",
 size: "Tamanho (em bytes)"
 })
+
 );

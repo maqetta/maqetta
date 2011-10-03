@@ -1,13 +1,10 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/wire/ml/Data",["dojo","dijit","dojox","dijit/_Widget","dijit/_Container","dojox/wire/ml/util"],function(_1,_2,_3){
-_1.getObject("dojox.wire.ml.Data",1);
-_1.declare("dojox.wire.ml.Data",[_2._Widget,_2._Container],{startup:function(){
+define(["dijit","dojo","dojox","dojo/require!dijit/_Widget,dijit/_Container,dojox/wire/ml/util"],function(_1,_2,_3){
+_2.provide("dojox.wire.ml.Data");
+_2.require("dijit._Widget");
+_2.require("dijit._Container");
+_2.require("dojox.wire.ml.util");
+_2.declare("dojox.wire.ml.Data",[_1._Widget,_1._Container],{startup:function(){
 this._initializeProperties();
 },_initializeProperties:function(_4){
 if(!this._properties||_4){
@@ -25,7 +22,7 @@ return this._properties[_7];
 },setPropertyValue:function(_8,_9){
 this._properties[_8]=_9;
 }});
-_1.declare("dojox.wire.ml.DataProperty",[_2._Widget,_2._Container],{name:"",type:"",value:"",_getValueAttr:function(){
+_2.declare("dojox.wire.ml.DataProperty",[_1._Widget,_1._Container],{name:"",type:"",value:"",_getValueAttr:function(){
 return this.getValue();
 },getValue:function(){
 var _a=this.value;
@@ -73,6 +70,4 @@ _a.setPropertyValue(_c.name,_c.getValue());
 }
 return _a;
 }});
-return _1.getObject("dojox.wire.ml.Data");
 });
-require(["dojox/wire/ml/Data"]);

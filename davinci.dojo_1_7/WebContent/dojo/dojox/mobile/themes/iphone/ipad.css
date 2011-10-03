@@ -31,7 +31,7 @@
 	border-left: 1px solid #2A2D47;
 	-webkit-border-radius: 3px 3px 0 0;
 }
-.dj_tablet .mblTooltip .mblHeading .mblToolbarButton {
+.dj_tablet .mblTooltip .mblHeading .mblToolBarButton {
 	float: left;
 	position: relative;
 	cursor: pointer;
@@ -56,19 +56,15 @@
 }
 .dj_tablet .mblArrowButtonBody {
 	border-color: #C0C0C0;
-	background-color: #5877A2;
+	background-color: #8B919A;
 	background: -webkit-gradient(linear, left top, left bottom, from(#B1B5BB), to(#6A727D));
 	-webkit-tap-highlight-color: rgba(255,255,255,0);
 	text-shadow: rgba(0,0,0,0.6) 0px -1px 0px;
 }
-.dj_tablet .mblArrowButtonNeck {
-	border-color: #C0C0C0 transparent;
-	background: -webkit-gradient(linear, left top, left bottom, from(#B1B5BB), to(#6A727D));
-}
 .dj_tablet .mblArrowButtonSelected .mblArrowButtonHead {
 	background: -webkit-gradient(linear, left top, right bottom, from(#9DA0A3), to(#43484F));
 }
-.dj_tablet .mblArrowButtonSelected .mblArrowButtonBody, .dj_tablet .mblArrowButtonSelected .mblArrowButtonNeck {
+.dj_tablet .mblArrowButtonSelected .mblArrowButtonBody {
 	background: -webkit-gradient(linear, left top, left bottom, from(#9DA0A3), to(#43484F));
 }
 .dj_tablet .mblRoundRect {
@@ -88,4 +84,38 @@
 }
 .dj_tablet .mblHeading + .mblRoundRectList {
 	margin-top: 30px;
+}
+.dj_tablet .mblTabPanelHeader {
+	background-color: #889BB3;
+	background: -webkit-gradient(linear, left top, left bottom, from(#F3F4F6), to(#A7ABB8));
+	border-top: 1px solid #FEFEFE;
+	border-bottom: 1px solid #787E8F;
+	color: #70777F;
+	text-shadow: rgba(256,256,256,0.6) 0px 1px 0px;
+}
+.dj_tablet .mblTabButton {
+	font-weight: bold;
+	color: #70777F;
+	text-shadow: none;
+	border-color: silver;
+	background-color: #CCCED6;
+	background: -webkit-gradient(linear, left top, left bottom, from(#F3F4F6), to(#A7ABB8));
+}
+.dj_tablet .mblTabPanelHeader .mblTabButton.mblTabButtonSelected {
+	color: white;
+	text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0px;
+	background-color: #8B919A;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#B1B5BB), to(#6A727D));
+}
+.dj_tablet .mblToolBarButton {
+	text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0px;
+	border: 1px inset silver;
+}
+.dj_tablet .mblColorDefault {
+	background-color: #8B919A;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#B1B5BB), to(#6A727D));
+}
+.dj_tablet .mblColorDefaultSel {
+	background-color: #515761;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#7A7E85), to(#303845));
 }

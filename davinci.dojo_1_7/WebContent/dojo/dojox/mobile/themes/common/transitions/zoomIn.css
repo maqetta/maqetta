@@ -14,8 +14,8 @@
 	-webkit-animation-name: mblZoomInInAndroid;
 }
 @-webkit-keyframes mblZoomInOut {
-	from {}
-	to {}
+	from { -webkit-transform: scale(1.0); }
+	to { -webkit-transform: scale(1.0); }
 }
 @-webkit-keyframes mblZoomInIn {
 	from {
@@ -28,10 +28,6 @@
 	}
 }
 @-webkit-keyframes mblZoomInInAndroid {
-	from {
-		-webkit-transform: scale(0.0);
-	}
-	to {
-		-webkit-transform: scale(1.0);
-	}
+	from { -webkit-transform: scale(0.0); }
+	to { -webkit-transform: scale(1.0); }
 }

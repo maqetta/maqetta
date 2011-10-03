@@ -1,53 +1,46 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dijit/form/SimpleTextarea",["dojo/_base/kernel","..","./TextBox","dojo/_base/html","dojo/_base/sniff","dojo/_base/window"],function(_1,_2){
-_1.declare("dijit.form.SimpleTextarea",_2.form.TextBox,{baseClass:"dijitTextBox dijitTextArea",rows:"3",cols:"20",templateString:"<textarea ${!nameAttrSetting} dojoAttachPoint='focusNode,containerNode,textbox' autocomplete='off'></textarea>",postMixInProperties:function(){
+define("dijit/form/SimpleTextarea",["dojo/_base/declare","dojo/dom-class","dojo/_base/sniff","dojo/_base/window","./TextBox"],function(_1,_2,_3,_4,_5){
+return _1("dijit.form.SimpleTextarea",_5,{baseClass:"dijitTextBox dijitTextArea",rows:"3",cols:"20",templateString:"<textarea ${!nameAttrSetting} data-dojo-attach-point='focusNode,containerNode,textbox' autocomplete='off'></textarea>",postMixInProperties:function(){
 if(!this.value&&this.srcNodeRef){
 this.value=this.srcNodeRef.value;
 }
 this.inherited(arguments);
 },buildRendering:function(){
 this.inherited(arguments);
-if(_1.isIE&&this.cols){
-_1.addClass(this.textbox,"dijitTextAreaCols");
+if(_3("ie")&&this.cols){
+_2.add(this.textbox,"dijitTextAreaCols");
 }
-},filter:function(_3){
-if(_3){
-_3=_3.replace(/\r/g,"");
+},filter:function(_6){
+if(_6){
+_6=_6.replace(/\r/g,"");
 }
 return this.inherited(arguments);
 },_onInput:function(e){
 if(this.maxLength){
-var _4=parseInt(this.maxLength);
-var _5=this.textbox.value.replace(/\r/g,"");
-var _6=_5.length-_4;
-if(_6>0){
-var _7=this.textbox;
-if(_7.selectionStart){
-var _8=_7.selectionStart;
+var _7=parseInt(this.maxLength);
+var _8=this.textbox.value.replace(/\r/g,"");
+var _9=_8.length-_7;
+if(_9>0){
+var _a=this.textbox;
+if(_a.selectionStart){
+var _b=_a.selectionStart;
 var cr=0;
-if(_1.isOpera){
-cr=(this.textbox.value.substring(0,_8).match(/\r/g)||[]).length;
+if(_3("opera")){
+cr=(this.textbox.value.substring(0,_b).match(/\r/g)||[]).length;
 }
-this.textbox.value=_5.substring(0,_8-_6-cr)+_5.substring(_8-cr);
-_7.setSelectionRange(_8-_6,_8-_6);
+this.textbox.value=_8.substring(0,_b-_9-cr)+_8.substring(_b-cr);
+_a.setSelectionRange(_b-_9,_b-_9);
 }else{
-if(_1.doc.selection){
-_7.focus();
-var _9=_1.doc.selection.createRange();
-_9.moveStart("character",-_6);
-_9.text="";
-_9.select();
+if(_4.doc.selection){
+_a.focus();
+var _c=_4.doc.selection.createRange();
+_c.moveStart("character",-_9);
+_c.text="";
+_c.select();
 }
 }
 }
 }
 this.inherited(arguments);
 }});
-return _2.form.SimpleTextarea;
 });

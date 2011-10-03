@@ -1,13 +1,7 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/lang/observable",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.lang.observable",1);
-_1.experimental("dojox.lang.observable");
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.lang.observable");
+_2.experimental("dojox.lang.observable");
 _3.lang.observable=function(_4,_5,_6,_7){
 return _3.lang.makeObservable(_5,_6,_7)(_4);
 };
@@ -124,7 +118,7 @@ return _23;
 }
 };
 if(!{}.__defineGetter__){
-if(_1.isIE){
+if(_2.isIE){
 var _25;
 if(document.body){
 _25=document.createElement("iframe");
@@ -146,6 +140,4 @@ _3.lang.ReadOnlyProxy=_3.lang.makeObservable(function(obj,i){
 return obj[i];
 },function(obj,i,_26){
 });
-return _1.getObject("dojox.lang.observable");
 });
-require(["dojox/lang/observable"]);

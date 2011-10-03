@@ -178,7 +178,7 @@
 .dojoxGridFCBox .dojoxGridFCBoxColSelect, 
 .dojoxGridFCBox .dojoxGridFCBoxCondSelect, 
 .dojoxGridFCBox .dojoxGridFCBoxValueBox {
-	margin: 5px 0 0 0;
+	margin: 0.1em 0 0 0;
 	width: 100%;
 	
 	display: inline-table;

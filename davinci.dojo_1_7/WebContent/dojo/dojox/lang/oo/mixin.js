@@ -1,13 +1,9 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/lang/oo/mixin",["dojo","dijit","dojox","dojox/lang/oo/Filter","dojox/lang/oo/Decorator"],function(_1,_2,_3){
-_1.getObject("dojox.lang.oo.mixin",1);
-_1.experimental("dojox.lang.oo.mixin");
+define(["dijit","dojo","dojox","dojo/require!dojox/lang/oo/Filter,dojox/lang/oo/Decorator"],function(_1,_2,_3){
+_2.provide("dojox.lang.oo.mixin");
+_2.experimental("dojox.lang.oo.mixin");
+_2.require("dojox.lang.oo.Filter");
+_2.require("dojox.lang.oo.Decorator");
 (function(){
 var oo=_3.lang.oo,_4=oo.Filter,_5=oo.Decorator,_6={},_7=function(_8){
 return _8;
@@ -15,7 +11,7 @@ return _8;
 return _b;
 },_d=function(_e,_f,_10,_11){
 _e[_f]=_10;
-},_12={},_13=_1._extraNames,_14=_13.length,_15=oo.applyDecorator=function(_16,_17,_18,_19){
+},_12={},_13=_2._extraNames,_14=_13.length,_15=oo.applyDecorator=function(_16,_17,_18,_19){
 if(_18 instanceof _5){
 var d=_18.decorator;
 _18=_15(_16,_17,_18.value,_19);
@@ -77,6 +73,4 @@ oo.__mixin(_24,_25,_26,_27,_d);
 return _24;
 };
 })();
-return _1.getObject("dojox.lang.oo.mixin");
 });
-require(["dojox/lang/oo/mixin"]);

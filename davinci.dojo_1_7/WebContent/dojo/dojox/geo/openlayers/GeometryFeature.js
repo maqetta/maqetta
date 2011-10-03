@@ -1,21 +1,15 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/geo/openlayers/GeometryFeature",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/lang","dojox/geo/openlayers/Point","dojox/geo/openlayers/LineString","dojox/geo/openlayers/Collection","dojox/geo/openlayers/Feature"],function(_1,_2,_3,_4,_5,_6,_7,_8){
-return _1.declare("dojox.geo.openlayers.GeometryFeature",dojox.geo.openlayers.Feature,{constructor:function(_9){
-this._geometry=_9;
+define("dojox/geo/openlayers/GeometryFeature",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/lang","dojox/gfx/matrix","dojox/geo/openlayers/Point","dojox/geo/openlayers/LineString","dojox/geo/openlayers/Collection","dojox/geo/openlayers/Feature"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9){
+return _2("dojox.geo.openlayers.GeometryFeature",dojox.geo.openlayers.Feature,{constructor:function(_a){
+this._geometry=_a;
 this._shapeProperties={};
 this._fill=null;
 this._stroke=null;
 },_createCollection:function(g){
-var _a=this.getLayer();
-var s=_a.getSurface();
+var _b=this.getLayer();
+var s=_b.getSurface();
 var c=this.createShape(s,g);
-var vp=_a.getViewport();
+var vp=_b.getViewport();
 vp.add(c);
 return c;
 },_getCollectionShape:function(g){
@@ -30,17 +24,17 @@ if(g==undefined){
 g=this._geometry;
 }
 s=this._getCollectionShape(g);
-var _b=this.getShapeProperties();
-s.setShape(_b);
-_1.forEach(g.coordinates,function(_c){
-if(_c instanceof dojox.geo.openlayers.Point){
-this.renderPoint(_c);
+var _c=this.getShapeProperties();
+s.setShape(_c);
+_3.forEach(g.coordinates,function(_d){
+if(_d instanceof _6){
+this.renderPoint(_d);
 }else{
-if(_c instanceof dojox.geo.openlayers.LineString){
-this.renderLineString(_c);
+if(_d instanceof _7){
+this.renderLineString(_d);
 }else{
-if(_c instanceof dojox.geo.openlayers.Collection){
-this.renderCollection(_c);
+if(_d instanceof _8){
+this.renderCollection(_d);
 }else{
 throw new Error();
 }
@@ -52,13 +46,13 @@ this._applyStyle(g);
 if(g==undefined){
 g=this._geometry;
 }
-if(g instanceof dojox.geo.openlayers.Point){
+if(g instanceof _6){
 this.renderPoint(g);
 }else{
-if(g instanceof dojox.geo.openlayers.LineString){
+if(g instanceof _7){
 this.renderLineString(g);
 }else{
-if(g instanceof dojox.geo.openlayers.Collection){
+if(g instanceof _8){
 this.renderCollection(g);
 }else{
 throw new Error();
@@ -74,31 +68,41 @@ return this;
 if(!g){
 g=this._geometry;
 }
-var _d=null;
-if(g instanceof dojox.geo.openlayers.Point){
-_d=s.createCircle();
+var _e=null;
+if(g instanceof _6){
+_e=s.createCircle();
 }else{
-if(g instanceof dojox.geo.openlayers.LineString){
-_d=s.createPolyline();
+if(g instanceof _7){
+_e=s.createPolyline();
 }else{
-if(g instanceof dojox.geo.openlayers.Collection){
-var _e=s.createGroup();
-_1.forEach(g.coordinates,function(_f){
-var shp=this.createShape(s,_f);
-_e.add(shp);
+if(g instanceof _8){
+var _f=s.createGroup();
+_3.forEach(g.coordinates,function(_10){
+var shp=this.createShape(s,_10);
+_f.add(shp);
 },this);
-_d=_e;
+_e=_f;
 }else{
 throw new Error();
 }
 }
 }
-return _d;
+return _e;
+},getShape:function(){
+var g=this._geometry;
+if(!g){
+return null;
+}
+if(g.shape){
+return g.shape;
+}
+this.render();
+return g.shape;
 },_createPoint:function(g){
-var _10=this.getLayer();
-var s=_10.getSurface();
+var _11=this.getLayer();
+var s=_11.getSurface();
 var c=this.createShape(s,g);
-var vp=_10.getViewport();
+var vp=_11.getViewport();
 vp.add(c);
 return c;
 },_getPointShape:function(g){
@@ -112,30 +116,30 @@ return s;
 if(g==undefined){
 g=this._geometry;
 }
-var _11=this.getLayer();
-var map=_11.getDojoMap();
+var _12=this.getLayer();
+var map=_12.getDojoMap();
 s=this._getPointShape(g);
-var _12=_1.mixin({},this._defaults.pointShape);
-_12=_1.mixin(_12,this.getShapeProperties());
-s.setShape(_12);
-var _13=this.getCoordinateSystem();
-var p=map.transform(g.coordinates,_13);
+var _13=_4.mixin({},this._defaults.pointShape);
+_13=_4.mixin(_13,this.getShapeProperties());
+s.setShape(_13);
+var _14=this.getCoordinateSystem();
+var p=map.transform(g.coordinates,_14);
 var a=this._getLocalXY(p);
 var cx=a[0];
 var cy=a[1];
-var tr=_11.getViewport().getTransform();
+var tr=_12.getViewport().getTransform();
 if(tr){
-s.setTransform(dojox.gfx.matrix.translate(cx-tr.dx,cy-tr.dy));
+s.setTransform(_5.translate(cx-tr.dx,cy-tr.dy));
 }
 this._applyStyle(g);
 },_createLineString:function(g){
-var _14=this.getLayer();
-var s=_14._surface;
-var _15=this.createShape(s,g);
-var vp=_14.getViewport();
-vp.add(_15);
-g.shape=_15;
-return _15;
+var _15=this.getLayer();
+var s=_15._surface;
+var _16=this.createShape(s,g);
+var vp=_15.getViewport();
+vp.add(_16);
+g.shape=_16;
+return _16;
 },_getLineStringShape:function(g){
 var s=g.shape;
 if(s==null){
@@ -147,58 +151,58 @@ return s;
 if(g==undefined){
 g=this._geometry;
 }
-var _16=this.getLayer();
-var map=_16.getDojoMap();
+var _17=this.getLayer();
+var map=_17.getDojoMap();
 var lss=this._getLineStringShape(g);
-var _17=this.getCoordinateSystem();
-var _18=new Array(g.coordinates.length);
-var tr=_16.getViewport().getTransform();
-_1.forEach(g.coordinates,function(c,i,_19){
-var p=map.transform(c,_17);
+var _18=this.getCoordinateSystem();
+var _19=new Array(g.coordinates.length);
+var tr=_17.getViewport().getTransform();
+_3.forEach(g.coordinates,function(c,i,_1a){
+var p=map.transform(c,_18);
 var a=this._getLocalXY(p);
 if(tr){
 a[0]-=tr.dx;
 a[1]-=tr.dy;
 }
-_18[i]={x:a[0],y:a[1]};
+_19[i]={x:a[0],y:a[1]};
 },this);
-var _1a=_1.mixin({},this._defaults.lineStringShape);
-var _1a=_1.mixin(_1a,this.getShapeProperties());
-_1a=_1.mixin(_1a,{points:_18});
-lss.setShape(_1a);
+var _1b=_4.mixin({},this._defaults.lineStringShape);
+_1b=_4.mixin(_1b,this.getShapeProperties());
+_1b=_4.mixin(_1b,{points:_19});
+lss.setShape(_1b);
 this._applyStyle(g);
 },_applyStyle:function(g){
 if(!g||!g.shape){
 return;
 }
 var f=this.getFill();
-var _1b;
-if(!f||_1.isString(f)||_1.isArray(f)){
-_1b=f;
+var _1c;
+if(!f||_4.isString(f)||_4.isArray(f)){
+_1c=f;
 }else{
-_1b=_1.mixin({},this._defaults.fill);
-_1b=_1.mixin(_1b,f);
+_1c=_4.mixin({},this._defaults.fill);
+_1c=_4.mixin(_1c,f);
 }
 var s=this.getStroke();
-var _1c;
-if(!s||_1.isString(s)||_1.isArray(s)){
-_1c=s;
+var _1d;
+if(!s||_4.isString(s)||_4.isArray(s)){
+_1d=s;
 }else{
-_1c=_1.mixin({},this._defaults.stroke);
-_1c=_1.mixin(_1c,s);
+_1d=_4.mixin({},this._defaults.stroke);
+_1d=_4.mixin(_1d,s);
 }
-this._applyRecusiveStyle(g,_1c,_1b);
-},_applyRecusiveStyle:function(g,_1d,_1e){
+this._applyRecusiveStyle(g,_1d,_1c);
+},_applyRecusiveStyle:function(g,_1e,_1f){
 var shp=g.shape;
 if(shp.setFill){
-shp.setFill(_1e);
+shp.setFill(_1f);
 }
 if(shp.setStroke){
-shp.setStroke(_1d);
+shp.setStroke(_1e);
 }
-if(g instanceof dojox.geo.openlayers.Collection){
-_1.forEach(g.coordinates,function(i){
-this._applyRecusiveStyle(i,_1d,_1e);
+if(g instanceof _8){
+_3.forEach(g.coordinates,function(i){
+this._applyRecusiveStyle(i,_1e,_1f);
 },this);
 }
 },setStroke:function(s){
@@ -218,8 +222,8 @@ g.shape=null;
 if(shp){
 shp.removeShape();
 }
-if(g instanceof dojox.geo.openlayers.Collection){
-_1.forEach(g.coordinates,function(i){
+if(g instanceof _8){
+_3.forEach(g.coordinates,function(i){
 this.remove(i);
 },this);
 }

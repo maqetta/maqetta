@@ -1,5 +1,7 @@
 //>>built
-define(({
+define(
+//begin v1.x content
+({
 	displayOptions: "[อ็อพชันการแสดงผล]",
 	title: "ชื่อเรื่อง",
 	authors: "ผู้เขียน",
@@ -10,5 +12,5 @@ define(({
 	summary: "สรุป",
 	content: "เนื้อหา"
 })
-
+//end v1.x content
 );

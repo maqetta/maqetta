@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/gauges/_Indicator",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/fx","dojo/_base/html","dojo/_base/connect","dijit/_Widget"],function(_1,_2,_3,_4,_5,_6,_7){
-return _1.declare("dojox.gauges._Indicator",[_7],{value:0,type:"",color:"black",strokeColor:"",label:"",font:{family:"sans-serif",size:"12px"},length:0,width:0,offset:0,hover:"",front:false,easing:_1._defaultEasing,duration:1000,hideValue:false,noChange:false,interactionMode:"indicator",_gauge:null,title:"",startup:function(){
+define("dojox/gauges/_Indicator",["dojo/_base/lang","dojo/_base/declare","dojo/_base/fx","dojo/_base/html","dojo/_base/connect","dijit/_Widget","dojo/dom-construct","dojo/dom-class"],function(_1,_2,fx,_3,_4,_5,_6,_7){
+return _2("dojox.gauges._Indicator",[_5],{value:0,type:"",color:"black",strokeColor:"",label:"",font:{family:"sans-serif",size:"12px"},length:0,width:0,offset:0,hover:"",front:false,easing:fx._defaultEasing,duration:1000,hideValue:false,noChange:false,interactionMode:"indicator",_gauge:null,title:"",startup:function(){
 if(this.onDragMove){
 this.onDragMove=_1.hitch(this.onDragMove);
 }
@@ -15,22 +9,22 @@ this.strokeColor=undefined;
 }
 },postCreate:function(){
 if(this.title===""){
-_1.style(this.domNode,"display","none");
+_3.style(this.domNode,"display","none");
 }
 if(_1.isString(this.easing)){
 this.easing=_1.getObject(this.easing);
 }
 },buildRendering:function(){
-var n=this.domNode=this.srcNodeRef?this.srcNodeRef:_1.create("div");
-_1.addClass(n,"dojoxGaugeIndicatorDiv");
-var _8=_1.create("label");
+var n=this.domNode=this.srcNodeRef?this.srcNodeRef:_6.create("div");
+_7.add(n,"dojoxGaugeIndicatorDiv");
+var _8=_6.create("label");
 if(this.title){
 _8.innerHTML=this.title+":";
 }
-_1.place(_8,n);
-this.valueNode=_1.create("input",{className:"dojoxGaugeIndicatorInput",size:5,value:this.value});
-_1.place(this.valueNode,n);
-_1.connect(this.valueNode,"onchange",this,this._update);
+_6.place(_8,n);
+this.valueNode=_6.create("input",{className:"dojoxGaugeIndicatorInput",size:5,value:this.value});
+_6.place(this.valueNode,n);
+_4.connect(this.valueNode,"onchange",this,this._update);
 },_update:function(){
 this._updateValue(true);
 },_updateValue:function(_9){

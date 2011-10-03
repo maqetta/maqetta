@@ -32,14 +32,16 @@
 }
 .mblTabBarButtonDiv {
 	position: relative;
+	margin-left: auto;
+	margin-right: auto;
 	.mblTabBarButtonDiv-styles;
-}
-.mblTabBarButtonDivInner {
-	left: -50%;
 }
 .mblTabBarButtonIcon {
 	position: absolute;
 	.mblTabBarButtonIcon-styles;
+}
+.mblTabBarButtonSpriteIcon {
+	position: absolute;
 }
 .mblTabBarButtonTextBox {
 	.mblTabBarButtonTextBox-styles;
@@ -52,6 +54,20 @@
 		.mblTabBarNoIcons-TabBarButtonTextBox-styles;
 	}
 }
+.mblTabBarTop {
+	.mblTabButton {
+		.mblTabBarButtonDiv {
+			.mblTabBarTop-TabButton-TabBarButtonDiv-styles;
+		}
+	}
+}
+.mblTabBarHead {
+	.mblTabButton {
+		.mblTabBarButtonDiv {
+			.mblTabBarHead-TabButton-TabBarButtonDiv-styles;
+		}
+	}
+}
 .mblTabButton {
 	position: relative;
 	float: left;
@@ -59,11 +75,8 @@
 	cursor: pointer;
 	-webkit-tap-highlight-color: rgba(255,255,255,0);
 	.mblTabButton-styles;
-	.mblTabBarButtonAnchor {
+	.mblTabBarButtonAnchor, .mblTabBarButtonDiv {
 		.mblTabButton-TabBarButtonAnchor-styles;
-	}
-	.mblTabBarButtonDiv {
-		.mblTabButton-TabBarButtonDiv-styles;
 	}
 	&:first-child {
 		.mblTabButton-FirstTabButtom-styles;
@@ -71,7 +84,7 @@
 	&:last-child {
 		.mblTabButton-LastTabButton-styles;
 	}
-	IMG {
+	img {
 		.mblTabButton-img-styles;
 	}
 }
@@ -106,6 +119,9 @@
 	}
 	.mblTabButtonDomButton {
 		.mblTabPanelHeader-TabButtonDomButton-styles;
+	}
+	.mblTabButtonDomButtonClass {
+		.mblTabPanelHeader-TabButtonDomButtonClass-styles;
 	}
 	.mblDomButton {
 		.mblTabPanelHeader-DomButton-styles;

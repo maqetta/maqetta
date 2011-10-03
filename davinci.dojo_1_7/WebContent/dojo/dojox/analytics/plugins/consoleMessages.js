@@ -1,22 +1,17 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/analytics/plugins/consoleMessages",["dojo/_base/kernel","dojo/_base/lang","../_base"],function(_1,_2,da){
-this.addData=_1.hitch(da,"addData","consoleMessages");
-var _3=_1.config["consoleLogFuncs"]||["error","warn","info","rlog"];
+define("dojox/analytics/plugins/consoleMessages",["dojo/_base/lang","../_base","dojo/_base/config","dojo/aspect"],function(_1,_2,_3,_4){
+consoleMessages=_1.getObject("dojox.analytics.plugins.consoleMessages",true);
+this.addData=_1.hitch(_2,"addData","consoleMessages");
+var _5=_3["consoleLogFuncs"]||["error","warn","info","rlog"];
 if(!console){
 console={};
 }
-for(var i=0;i<_3.length;i++){
-if(console[_3[i]]){
-_1.connect(console,_3[i],_1.hitch(this,"addData",_3[i]));
+for(var i=0;i<_5.length;i++){
+if(console[_5[i]]){
+_4.after(console,_5[i],_1.hitch(this,"addData",_5[i]),true);
 }else{
-console[_3[i]]=_1.hitch(this,"addData",_3[i]);
+console[_5[i]]=_1.hitch(this,"addData",_5[i]);
 }
 }
-return dojox.analytics.plugins.consoleMessages;
+return consoleMessages;
 });

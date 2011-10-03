@@ -199,18 +199,21 @@
 		</java>
 		
 		<!-- Copy over original app.css with comments.  There is no build option to preserve CSS comments AND inline. -->
+		<!--
 		<copy toFile="${target.folder}/WebContent/release/dojo/project/base/app.css" file="${target.folder}/WebContent/project/base/app.css" overwrite="true" />
-		
+		-->
 		<!-- Copy over original workspace/maqetta folder -->
+		<!--
 		<copy todir="${target.folder}/WebContent/release/dojo/project/base/maqetta">
 			<fileset dir="${target.folder}/WebContent/project/base/maqetta"/>
 		</copy>
-	
+		-->
 		<mkdir dir="${dojo.cache.directory}"/>
-		
+		<!--
 		<copy todir="${dojo.cache.directory}">
 				<fileset dir="${target.folder}/WebContent/project/base/maqetta"/>
 		</copy>
+		-->
 		<echo message="caching dojo build.."/>
 		<copy todir="${dojo.cache.directory}" failonerror="true" overwrite="true" description="move Dojo build">
 					<fileset dir="${target.folder}/WebContent/release/dojo">

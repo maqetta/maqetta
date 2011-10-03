@@ -1,12 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/sql",["dojo","dijit","dojox","dojox/sql/_base"],function(_1,_2,_3){
-_1.getObject("dojox.sql",1);
-return _1.getObject("dojox.sql");
+define(["dijit","dojo","dojox","dojo/require!dojox/sql/_base"],function(_1,_2,_3){
+_2.provide("dojox.sql");
+_2.require("dojox.sql._base");
 });
-require(["dojox/sql"]);

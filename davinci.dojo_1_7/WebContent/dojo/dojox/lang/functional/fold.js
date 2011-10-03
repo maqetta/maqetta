@@ -1,20 +1,14 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/lang/functional/fold",["dojo/_base/kernel","dojo/_base/array","./lambda"],function(_1,_2,df){
-var d=_1,_3={};
-d.mixin(df,{foldl:function(a,f,z,o){
+define("dojox/lang/functional/fold",["dojo/_base/lang","dojo/_base/array","dojo/_base/window","./lambda"],function(_1,_2,_3,df){
+var _4={};
+_1.mixin(df,{foldl:function(a,f,z,o){
 if(typeof a=="string"){
 a=a.split("");
 }
-o=o||d.global;
+o=o||_3.global;
 f=df.lambda(f);
 var i,n;
-if(d.isArray(a)){
+if(_1.isArray(a)){
 for(i=0,n=a.length;i<n;z=f.call(o,z,a[i],i,a),++i){
 }
 }else{
@@ -23,7 +17,7 @@ for(i=0;a.hasNext();z=f.call(o,z,a.next(),i++,a)){
 }
 }else{
 for(i in a){
-if(!(i in _3)){
+if(!(i in _4)){
 z=f.call(o,z,a[i],i,a);
 }
 }
@@ -34,10 +28,10 @@ return z;
 if(typeof a=="string"){
 a=a.split("");
 }
-o=o||d.global;
+o=o||_3.global;
 f=df.lambda(f);
 var z,i,n;
-if(d.isArray(a)){
+if(_1.isArray(a)){
 z=a[0];
 for(i=1,n=a.length;i<n;z=f.call(o,z,a[i],i,a),++i){
 }
@@ -49,12 +43,12 @@ for(i=1;a.hasNext();z=f.call(o,z,a.next(),i++,a)){
 }
 }
 }else{
-var _4=true;
+var _5=true;
 for(i in a){
-if(!(i in _3)){
-if(_4){
+if(!(i in _4)){
+if(_5){
 z=a[i];
-_4=false;
+_5=false;
 }else{
 z=f.call(o,z,a[i],i,a);
 }
@@ -67,7 +61,7 @@ return z;
 if(typeof a=="string"){
 a=a.split("");
 }
-o=o||d.global;
+o=o||_3.global;
 f=df.lambda(f);
 for(var i=a.length;i>0;--i,z=f.call(o,z,a[i],i,a)){
 }
@@ -76,7 +70,7 @@ return z;
 if(typeof a=="string"){
 a=a.split("");
 }
-o=o||d.global;
+o=o||_3.global;
 f=df.lambda(f);
 var n=a.length,z=a[n-1],i=n-1;
 for(;i>0;--i,z=f.call(o,z,a[i],i,a)){
@@ -87,7 +81,7 @@ return arguments.length<3?df.foldl1(a,f):df.foldl(a,f,z);
 },reduceRight:function(a,f,z){
 return arguments.length<3?df.foldr1(a,f):df.foldr(a,f,z);
 },unfold:function(pr,f,g,z,o){
-o=o||d.global;
+o=o||_3.global;
 f=df.lambda(f);
 g=df.lambda(g);
 pr=df.lambda(pr);

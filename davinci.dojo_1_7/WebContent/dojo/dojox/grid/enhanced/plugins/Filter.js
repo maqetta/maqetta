@@ -1,29 +1,26 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/grid/enhanced/plugins/Filter",["dojo","dojox","../_Plugin","./Dialog","./filter/FilterLayer","./filter/FilterBar","./filter/FilterDefDialog","./filter/FilterStatusTip","./filter/ClearFilterConfirm","dojo/i18n!../nls/Filter"],function(_1,_2){
-var ns=_1.getObject("grid.enhanced.plugins",true,_2),_3=_1.getObject("grid.enhanced.plugins.filter",true,_2);
-_1.declare("dojox.grid.enhanced.plugins.Filter",_2.grid.enhanced._Plugin,{name:"filter",constructor:function(_4,_5){
-this.grid=_4;
-this.nls=_1.i18n.getLocalization("dojox.grid.enhanced","Filter");
-_5=this.args=_1.isObject(_5)?_5:{};
-if(typeof _5.ruleCount!="number"||_5.ruleCount<0){
-_5.ruleCount=3;
+define("dojox/grid/enhanced/plugins/Filter",["dojo/_base/declare","dojo/_base/lang","dojo/i18n","../_Plugin","./Dialog","./filter/FilterLayer","./filter/FilterBar","./filter/FilterDefDialog","./filter/FilterStatusTip","./filter/ClearFilterConfirm","../../EnhancedGrid","dojo/i18n!../nls/Filter"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b){
+var _c=_1("dojox.grid.enhanced.plugins.Filter",_4,{name:"filter",constructor:function(_d,_e){
+this.grid=_d;
+this.nls=_3.getLocalization("dojox.grid.enhanced","Filter");
+_e=this.args=_2.isObject(_e)?_e:{};
+if(typeof _e.ruleCount!="number"||_e.ruleCount<0){
+_e.ruleCount=3;
+}
+var rc=this.ruleCountToConfirmClearFilter=_e.ruleCountToConfirmClearFilter;
+if(rc===undefined){
+this.ruleCountToConfirmClearFilter=2;
 }
 this._wrapStore();
-var _6={"plugin":this};
-this.clearFilterDialog=new _2.grid.enhanced.plugins.Dialog({refNode:this.grid.domNode,title:this.nls["clearFilterDialogTitle"],content:new _3.ClearFilterConfirm(_6)});
-this.filterDefDialog=new _3.FilterDefDialog(_6);
-this.filterBar=new _3.FilterBar(_6);
-this.filterStatusTip=new _3.FilterStatusTip(_6);
-_4.onFilterDefined=function(){
+var _f={"plugin":this};
+this.clearFilterDialog=new _5({refNode:this.grid.domNode,title:this.nls["clearFilterDialogTitle"],content:new _a(_f)});
+this.filterDefDialog=new _8(_f);
+this.filterBar=new _7(_f);
+this.filterStatusTip=new _9(_f);
+_d.onFilterDefined=function(){
 };
-this.connect(_4.layer("filter"),"onFilterDefined",function(_7){
-_4.onFilterDefined(_4.getFilter(),_4.getFilterRelation());
+this.connect(_d.layer("filter"),"onFilterDefined",function(_10){
+_d.onFilterDefined(_d.getFilter(),_d.getFilterRelation());
 });
 },destroy:function(){
 this.inherited(arguments);
@@ -46,15 +43,15 @@ console.warn("Filter.destroy() error:",e);
 }
 },_wrapStore:function(){
 var g=this.grid;
-var _8=this.args;
-var _9=_8.isServerSide?new _3.ServerSideFilterLayer(_8):new _3.ClientSideFilterLayer({cacheSize:_8.filterCacheSize,fetchAll:_8.fetchAllOnFirstFilter,getter:this._clientFilterGetter});
-ns.wrap(g,"_storeLayerFetch",_9);
-this.connect(g,"_onDelete",_1.hitch(_9,"invalidate"));
-},onSetStore:function(_a){
+var _11=this.args;
+var _12=_11.isServerSide?new _6.ServerSideFilterLayer(_11):new _6.ClientSideFilterLayer({cacheSize:_11.filterCacheSize,fetchAll:_11.fetchAllOnFirstFilter,getter:this._clientFilterGetter});
+_6.wrap(g,"_storeLayerFetch",_12);
+this.connect(g,"_onDelete",_2.hitch(_12,"invalidate"));
+},onSetStore:function(_13){
 this.filterDefDialog.clearFilter(true);
-},_clientFilterGetter:function(_b,_c,_d){
-return _c.get(_d,_b);
+},_clientFilterGetter:function(_14,_15,_16){
+return _15.get(_16,_14);
 }});
-_2.grid.EnhancedGrid.registerPlugin(_2.grid.enhanced.plugins.Filter);
-return _2.grid.enhanced.plugins.Filter;
+_b.registerPlugin(_c);
+return _c;
 });

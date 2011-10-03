@@ -1,26 +1,19 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dijit/layout/LayoutContainer",["dojo/_base/kernel","..","../_WidgetBase","./_LayoutWidget"],function(_1,_2){
-_1.declare("dijit.layout.LayoutContainer",_2.layout._LayoutWidget,{baseClass:"dijitLayoutContainer",constructor:function(){
+define("dijit/layout/LayoutContainer",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","../_WidgetBase","./_LayoutWidget","./utils"],function(_1,_2,_3,_4,_5,_6){
+_2.extend(_4,{layoutAlign:"none"});
+return _3("dijit.layout.LayoutContainer",_5,{baseClass:"dijitLayoutContainer",constructor:function(){
 _1.deprecated("dijit.layout.LayoutContainer is deprecated","use BorderContainer instead",2);
 },layout:function(){
-_2.layout.layoutChildren(this.domNode,this._contentBox,this.getChildren());
-},addChild:function(_3,_4){
+_6.layoutChildren(this.domNode,this._contentBox,this.getChildren());
+},addChild:function(_7,_8){
 this.inherited(arguments);
 if(this._started){
-_2.layout.layoutChildren(this.domNode,this._contentBox,this.getChildren());
+_6.layoutChildren(this.domNode,this._contentBox,this.getChildren());
 }
-},removeChild:function(_5){
+},removeChild:function(_9){
 this.inherited(arguments);
 if(this._started){
-_2.layout.layoutChildren(this.domNode,this._contentBox,this.getChildren());
+_6.layoutChildren(this.domNode,this._contentBox,this.getChildren());
 }
 }});
-_1.extend(_2._WidgetBase,{layoutAlign:"none"});
-return _2.layout.LayoutContainer;
 });

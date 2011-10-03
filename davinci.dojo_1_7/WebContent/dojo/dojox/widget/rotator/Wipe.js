@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/widget/rotator/Wipe",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.widget.rotator.Wipe",1);
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.widget.rotator.Wipe");
 (function(d){
 var _4=2,_5=3,UP=0,_6=1;
 function _7(_8,w,h,x){
@@ -47,7 +41,5 @@ return _b(UP,_11);
 },wipeLeft:function(_12){
 return _b(_6,_12);
 }});
-})(_1);
-return _1.getObject("dojox.widget.rotator.Wipe");
+})(_2);
 });
-require(["dojox/widget/rotator/Wipe"]);

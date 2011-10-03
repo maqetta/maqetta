@@ -1,31 +1,22 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/form/Manager",["dojo","dijit","dojox","dijit/_Widget","dijit/_TemplatedMixin","dojox/form/manager/_Mixin","dojox/form/manager/_NodeMixin","dojox/form/manager/_FormMixin","dojox/form/manager/_ValueMixin","dojox/form/manager/_EnableMixin","dojox/form/manager/_DisplayMixin","dojox/form/manager/_ClassMixin"],function(_1,_2,_3){
-_1.getObject("dojox.form.Manager",1);
-_1.declare("dojox.form.Manager",[_2._Widget,_3.form.manager._Mixin,_3.form.manager._NodeMixin,_3.form.manager._FormMixin,_3.form.manager._ValueMixin,_3.form.manager._EnableMixin,_3.form.manager._DisplayMixin,_3.form.manager._ClassMixin],{buildRendering:function(){
-var _4=(this.domNode=this.srcNodeRef);
+define("dojox/form/Manager",["dijit/_Widget","dijit/_TemplatedMixin","./manager/_Mixin","./manager/_NodeMixin","./manager/_FormMixin","./manager/_ValueMixin","./manager/_EnableMixin","./manager/_DisplayMixin","./manager/_ClassMixin","dojo/_base/declare"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a){
+return _a("dojox.form.Manager",[_1,_3,_4,_5,_6,_7,_8,_9],{buildRendering:function(){
+var _b=(this.domNode=this.srcNodeRef);
 if(!this.containerNode){
-this.containerNode=_4;
+this.containerNode=_b;
 }
 this.inherited(arguments);
 this._attachPoints=[];
 this._attachEvents=[];
-_2._TemplatedMixin.prototype._attachTemplateNodes.call(this,_4,function(n,p){
+_2.prototype._attachTemplateNodes.call(this,_b,function(n,p){
 return n.getAttribute(p);
 });
-},destroyRendering:function(_5){
+},destroyRendering:function(_c){
 if(!this.__ctm){
 this.__ctm=true;
-_2._TemplatedMixin.prototype.destroyRendering.apply(this,arguments);
+_2.prototype.destroyRendering.apply(this,arguments);
 delete this.__ctm;
 this.inherited(arguments);
 }
 }});
-return _1.getObject("dojox.form.Manager");
 });
-require(["dojox/form/Manager"]);

@@ -1,63 +1,57 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/encoding/compression/lzw",["dojo/_base/kernel","dojox/encoding/bits"],function(_1){
-_1.getObject("encoding.compression.lzw",true,dojox);
-var _2=function(x){
+define("dojox/encoding/compression/lzw",["dojo/_base/kernel","dojo/_base/lang","../bits"],function(_1){
+var _2=_1.getObject("dojox.encoding.compression.lzw",true);
+var _3=function(x){
 var w=1;
 for(var v=2;x>=v;v<<=1,++w){
 }
 return w;
 };
-dojox.encoding.compression.lzw.Encoder=function(n){
+_2.Encoder=function(n){
 this.size=n;
 this.init();
 };
-_1.extend(dojox.encoding.compression.lzw.Encoder,{init:function(){
+_1.extend(_2.Encoder,{init:function(){
 this.dict={};
 for(var i=0;i<this.size;++i){
 this.dict[String.fromCharCode(i)]=i;
 }
-this.width=_2(this.code=this.size);
+this.width=_3(this.code=this.size);
 this.p="";
-},encode:function(_3,_4){
-var c=String.fromCharCode(_3),p=this.p+c,r=0;
+},encode:function(_4,_5){
+var c=String.fromCharCode(_4),p=this.p+c,r=0;
 if(p in this.dict){
 this.p=p;
 return r;
 }
-_4.putBits(this.dict[this.p],this.width);
+_5.putBits(this.dict[this.p],this.width);
 if((this.code&(this.code+1))==0){
-_4.putBits(this.code++,r=this.width++);
+_5.putBits(this.code++,r=this.width++);
 }
 this.dict[p]=this.code++;
 this.p=c;
 return r+this.width;
-},flush:function(_5){
+},flush:function(_6){
 if(this.p.length==0){
 return 0;
 }
-_5.putBits(this.dict[this.p],this.width);
+_6.putBits(this.dict[this.p],this.width);
 this.p="";
 return this.width;
 }});
-dojox.encoding.compression.lzw.Decoder=function(n){
+_2.Decoder=function(n){
 this.size=n;
 this.init();
 };
-_1.extend(dojox.encoding.compression.lzw.Decoder,{init:function(){
+_1.extend(_2.Decoder,{init:function(){
 this.codes=new Array(this.size);
 for(var i=0;i<this.size;++i){
 this.codes[i]=String.fromCharCode(i);
 }
-this.width=_2(this.size);
+this.width=_3(this.size);
 this.p=-1;
-},decode:function(_6){
-var c=_6.getBits(this.width),v;
+},decode:function(_7){
+var c=_7.getBits(this.width),v;
 if(c<this.codes.length){
 v=this.codes[c];
 if(this.p>=0){
@@ -76,5 +70,5 @@ this.codes.push(v);
 this.p=c;
 return v;
 }});
-return dojox.encoding.compression.lzw;
+return _2;
 });

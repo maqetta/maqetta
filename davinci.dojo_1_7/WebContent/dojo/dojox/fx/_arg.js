@@ -1,18 +1,13 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/fx/_arg",["."],function(){
-dojox.fx._arg.StyleArgs=function(_1){
-this.node=_1.node;
-this.cssClass=_1.cssClass;
+define("dojox/fx/_arg",["dojo/_base/lang"],function(_1){
+var _2=_1.getObject("dojox.fx._arg",true);
+_2.StyleArgs=function(_3){
+this.node=_3.node;
+this.cssClass=_3.cssClass;
 };
-dojox.fx._arg.ShadowResizeArgs=function(_2){
-this.x=_2.x;
-this.y=_2.y;
+_2.ShadowResizeArgs=function(_4){
+this.x=_4.x;
+this.y=_4.y;
 };
-return {StyleArgs:dojox.fx._arg.StyleArgs,ShadowResizeArgs:dojox.fx._arg.ShadowResizeArgs};
+return _2;
 });

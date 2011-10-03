@@ -1,152 +1,145 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/gfx/utils",["dojox/gfx"],function(){
-var gu=dojo.getObject("dojox.gfx.utils",true);
-var d=dojo,g=dojox.gfx;
-dojo.mixin(gu,{forEach:function(_1,f,o){
-o=o||d.global;
-f.call(o,_1);
-if(_1 instanceof g.Surface||_1 instanceof g.Group){
-d.forEach(_1.children,function(_2){
-gu.forEach(_2,f,o);
+define("dojox/gfx/utils",["dojo/_base/kernel","dojo/_base/lang","./_base","dojo/_base/html","dojo/_base/array","dojo/_base/window","dojo/_base/json","dojo/_base/Deferred","dojo/_base/sniff","require","dojo/_base/config"],function(_1,_2,g,_3,_4,_5,_6,_7,_8,_9,_a){
+var gu=g.utils={};
+_2.mixin(gu,{forEach:function(_b,f,o){
+o=o||_5.global;
+f.call(o,_b);
+if(_b instanceof g.Surface||_b instanceof g.Group){
+_4.forEach(_b.children,function(_c){
+gu.forEach(_c,f,o);
 });
 }
-},serialize:function(_3){
-var t={},v,_4=_3 instanceof g.Surface;
-if(_4||_3 instanceof g.Group){
-t.children=d.map(_3.children,gu.serialize);
-if(_4){
+},serialize:function(_d){
+var t={},v,_e=_d instanceof g.Surface;
+if(_e||_d instanceof g.Group){
+t.children=_4.map(_d.children,gu.serialize);
+if(_e){
 return t.children;
 }
 }else{
-t.shape=_3.getShape();
+t.shape=_d.getShape();
 }
-if(_3.getTransform){
-v=_3.getTransform();
+if(_d.getTransform){
+v=_d.getTransform();
 if(v){
 t.transform=v;
 }
 }
-if(_3.getStroke){
-v=_3.getStroke();
+if(_d.getStroke){
+v=_d.getStroke();
 if(v){
 t.stroke=v;
 }
 }
-if(_3.getFill){
-v=_3.getFill();
+if(_d.getFill){
+v=_d.getFill();
 if(v){
 t.fill=v;
 }
 }
-if(_3.getFont){
-v=_3.getFont();
+if(_d.getFont){
+v=_d.getFont();
 if(v){
 t.font=v;
 }
 }
 return t;
-},toJson:function(_5,_6){
-return d.toJson(gu.serialize(_5),_6);
-},deserialize:function(_7,_8){
-if(_8 instanceof Array){
-return d.map(_8,d.hitch(null,gu.deserialize,_7));
+},toJson:function(_f,_10){
+return _6.toJson(gu.serialize(_f),_10);
+},deserialize:function(_11,_12){
+if(_12 instanceof Array){
+return _4.map(_12,_2.hitch(null,gu.deserialize,_11));
 }
-var _9=("shape" in _8)?_7.createShape(_8.shape):_7.createGroup();
-if("transform" in _8){
-_9.setTransform(_8.transform);
+var _13=("shape" in _12)?_11.createShape(_12.shape):_11.createGroup();
+if("transform" in _12){
+_13.setTransform(_12.transform);
 }
-if("stroke" in _8){
-_9.setStroke(_8.stroke);
+if("stroke" in _12){
+_13.setStroke(_12.stroke);
 }
-if("fill" in _8){
-_9.setFill(_8.fill);
+if("fill" in _12){
+_13.setFill(_12.fill);
 }
-if("font" in _8){
-_9.setFont(_8.font);
+if("font" in _12){
+_13.setFont(_12.font);
 }
-if("children" in _8){
-d.forEach(_8.children,d.hitch(null,gu.deserialize,_9));
+if("children" in _12){
+_4.forEach(_12.children,_2.hitch(null,gu.deserialize,_13));
 }
-return _9;
-},fromJson:function(_a,_b){
-return gu.deserialize(_a,d.fromJson(_b));
-},toSvg:function(_c){
-var _d=new dojo.Deferred();
-if(dojox.gfx.renderer==="svg"){
+return _13;
+},fromJson:function(_14,_15){
+return gu.deserialize(_14,_6.fromJson(_15));
+},toSvg:function(_16){
+var _17=new _7();
+if(g.renderer==="svg"){
 try{
-var _e=gu._cleanSvg(gu._innerXML(_c.rawNode));
-_d.callback(_e);
+var svg=gu._cleanSvg(gu._innerXML(_16.rawNode));
+_17.callback(svg);
 }
 catch(e){
-_d.errback(e);
+_17.errback(e);
 }
 }else{
 if(!gu._initSvgSerializerDeferred){
 gu._initSvgSerializer();
 }
-var _f=dojox.gfx.utils.toJson(_c);
-var _10=function(){
+var _18=gu.toJson(_16);
+var _19=function(){
 try{
-var _11=_c.getDimensions();
-var _12=_11.width;
-var _13=_11.height;
-var _14=gu._gfxSvgProxy.document.createElement("div");
-gu._gfxSvgProxy.document.body.appendChild(_14);
-dojo.withDoc(gu._gfxSvgProxy.document,function(){
-dojo.style(_14,"width",_12);
-dojo.style(_14,"height",_13);
+var _1a=_16.getDimensions();
+var _1b=_1a.width;
+var _1c=_1a.height;
+var _1d=gu._gfxSvgProxy.document.createElement("div");
+gu._gfxSvgProxy.document.body.appendChild(_1d);
+_5.withDoc(gu._gfxSvgProxy.document,function(){
+_3.style(_1d,"width",_1b);
+_3.style(_1d,"height",_1c);
 },this);
-var ts=gu._gfxSvgProxy[dojox._scopeName].gfx.createSurface(_14,_12,_13);
-var _15=function(_16){
+var ts=gu._gfxSvgProxy[dojox._scopeName].gfx.createSurface(_1d,_1b,_1c);
+var _1e=function(_1f){
 try{
-gu._gfxSvgProxy[dojox._scopeName].gfx.utils.fromJson(_16,_f);
-var svg=gu._cleanSvg(_14.innerHTML);
-_16.clear();
-_16.destroy();
-gu._gfxSvgProxy.document.body.removeChild(_14);
-_d.callback(svg);
+gu._gfxSvgProxy[dojox._scopeName].gfx.utils.fromJson(_1f,_18);
+var svg=gu._cleanSvg(_1d.innerHTML);
+_1f.clear();
+_1f.destroy();
+gu._gfxSvgProxy.document.body.removeChild(_1d);
+_17.callback(svg);
 }
 catch(e){
-_d.errback(e);
+_17.errback(e);
 }
 };
-ts.whenLoaded(null,_15);
+ts.whenLoaded(null,_1e);
 }
 catch(ex){
-_d.errback(ex);
+_17.errback(ex);
 }
 };
 if(gu._initSvgSerializerDeferred.fired>0){
-_10();
+_19();
 }else{
-gu._initSvgSerializerDeferred.addCallback(_10);
+gu._initSvgSerializerDeferred.addCallback(_19);
 }
 }
-return _d;
+return _17;
 },_gfxSvgProxy:null,_initSvgSerializerDeferred:null,_svgSerializerInitialized:function(){
 gu._initSvgSerializerDeferred.callback(true);
 },_initSvgSerializer:function(){
 if(!gu._initSvgSerializerDeferred){
-gu._initSvgSerializerDeferred=new dojo.Deferred();
-var f=dojo.doc.createElement("iframe");
-dojo.style(f,{display:"none",position:"absolute",width:"1em",height:"1em",top:"-10000px"});
-var _17;
-if(dojo.isIE){
+gu._initSvgSerializerDeferred=new _7();
+var f=_5.doc.createElement("iframe");
+_3.style(f,{display:"none",position:"absolute",width:"1em",height:"1em",top:"-10000px"});
+var _20;
+if(_8("ie")){
 f.onreadystatechange=function(){
 if(f.contentWindow.document.readyState=="complete"){
 f.onreadystatechange=function(){
 };
-_17=setInterval(function(){
-if(f.contentWindow[dojo._scopeName]&&f.contentWindow[dojox._scopeName].gfx&&f.contentWindow[dojox._scopeName].gfx.utils){
-clearInterval(_17);
-f.contentWindow.parent[dojox._scopeName].gfx.utils._gfxSvgProxy=f.contentWindow;
-f.contentWindow.parent[dojox._scopeName].gfx.utils._svgSerializerInitialized();
+_20=setInterval(function(){
+if(f.contentWindow[_1.scopeMap["dojo"][1]._scopeName]&&f.contentWindow[_1.scopeMap["dojox"][1]._scopeName].gfx&&f.contentWindow[_1.scopeMap["dojox"][1]._scopeName].gfx.utils){
+clearInterval(_20);
+f.contentWindow.parent[_1.scopeMap["dojox"][1]._scopeName].gfx.utils._gfxSvgProxy=f.contentWindow;
+f.contentWindow.parent[_1.scopeMap["dojox"][1]._scopeName].gfx.utils._svgSerializerInitialized();
 }
 },50);
 }
@@ -155,28 +148,28 @@ f.contentWindow.parent[dojox._scopeName].gfx.utils._svgSerializerInitialized();
 f.onload=function(){
 f.onload=function(){
 };
-_17=setInterval(function(){
-if(f.contentWindow[dojo._scopeName]&&f.contentWindow[dojox._scopeName].gfx&&f.contentWindow[dojox._scopeName].gfx.utils){
-clearInterval(_17);
-f.contentWindow.parent[dojox._scopeName].gfx.utils._gfxSvgProxy=f.contentWindow;
-f.contentWindow.parent[dojox._scopeName].gfx.utils._svgSerializerInitialized();
+_20=setInterval(function(){
+if(f.contentWindow[_1.scopeMap["dojo"][1]._scopeName]&&f.contentWindow[_1.scopeMap["dojox"][1]._scopeName].gfx&&f.contentWindow[_1.scopeMap["dojox"][1]._scopeName].gfx.utils){
+clearInterval(_20);
+f.contentWindow.parent[_1.scopeMap["dojox"][1]._scopeName].gfx.utils._gfxSvgProxy=f.contentWindow;
+f.contentWindow.parent[_1.scopeMap["dojox"][1]._scopeName].gfx.utils._svgSerializerInitialized();
 }
 },50);
 };
 }
-var uri=(dojo.config["dojoxGfxSvgProxyFrameUrl"]||dojo.moduleUrl("dojox","gfx/resources/gfxSvgProxyFrame.html"));
+var uri=(_a["dojoxGfxSvgProxyFrameUrl"]||_9.toUrl("dojox/gfx/resources/gfxSvgProxyFrame.html"));
 f.setAttribute("src",uri.toString());
-dojo.body().appendChild(f);
+_5.body().appendChild(f);
 }
-},_innerXML:function(_18){
-if(_18.innerXML){
-return _18.innerXML;
+},_innerXML:function(_21){
+if(_21.innerXML){
+return _21.innerXML;
 }else{
-if(_18.xml){
-return _18.xml;
+if(_21.xml){
+return _21.xml;
 }else{
 if(typeof XMLSerializer!="undefined"){
-return (new XMLSerializer()).serializeToString(_18);
+return (new XMLSerializer()).serializeToString(_21);
 }
 }
 }
@@ -187,7 +180,15 @@ if(svg.indexOf("xmlns=\"http://www.w3.org/2000/svg\"")==-1){
 svg=svg.substring(4,svg.length);
 svg="<svg xmlns=\"http://www.w3.org/2000/svg\""+svg;
 }
+if(svg.indexOf("xmlns:xlink=\"http://www.w3.org/1999/xlink\"")==-1){
+svg=svg.substring(4,svg.length);
+svg="<svg xmlns:xlink=\"http://www.w3.org/1999/xlink\""+svg;
+}
+if(svg.indexOf("xlink:href")===-1){
+svg=svg.replace(/href\s*=/g,"xlink:href=");
+}
 svg=svg.replace(/\bdojoGfx\w*\s*=\s*(['"])\w*\1/g,"");
+svg=svg.replace(/\b__gfxObject__\s*=\s*(['"])\w*\1/g,"");
 svg=svg.replace(/[=]([^"']+?)(\s|>)/g,"=\"$1\"$2");
 }
 return svg;

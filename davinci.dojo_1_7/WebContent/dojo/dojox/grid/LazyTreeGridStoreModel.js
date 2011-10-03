@@ -1,29 +1,23 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/grid/LazyTreeGridStoreModel",["dojo","dijit","dojox","dijit/tree/ForestStoreModel"],function(_1,_2,_3){
-_1.declare("dojox.grid.LazyTreeGridStoreModel",_2.tree.ForestStoreModel,{serverStore:false,constructor:function(_4){
-this.serverStore=_4.serverStore===true?true:false;
-},mayHaveChildren:function(_5){
-var _6=null;
-return _1.some(this.childrenAttrs,function(_7){
-_6=this.store.getValue(_5,_7);
-if(_1.isString(_6)){
-return parseInt(_6,10)>0||_6.toLowerCase()==="true"?true:false;
+define("dojox/grid/LazyTreeGridStoreModel",["dojo/_base/declare","dojo/_base/array","dojo/_base/lang","dijit/tree/ForestStoreModel"],function(_1,_2,_3,_4){
+return _1("dojox.grid.LazyTreeGridStoreModel",_4,{serverStore:false,constructor:function(_5){
+this.serverStore=!!_5.serverStore;
+},mayHaveChildren:function(_6){
+var _7=null;
+return _2.some(this.childrenAttrs,function(_8){
+_7=this.store.getValue(_6,_8);
+if(_3.isString(_7)){
+return parseInt(_7,10)>0||_7.toLowerCase()==="true"?true:false;
 }else{
-if(typeof _6=="number"){
-return _6>0;
+if(typeof _7=="number"){
+return _7>0;
 }else{
-if(typeof _6=="boolean"){
-return _6;
+if(typeof _7=="boolean"){
+return _7;
 }else{
-if(this.store.isItem(_6)){
-_6=this.store.getValues(_5,_7);
-return _1.isArray(_6)?_6.length>0:false;
+if(this.store.isItem(_7)){
+_7=this.store.getValues(_6,_8);
+return _3.isArray(_7)?_7.length>0:false;
 }else{
 return false;
 }
@@ -31,32 +25,32 @@ return false;
 }
 }
 },this);
-},getChildren:function(_8,_9,_a,_b){
-if(_b){
-var _c=_b.start||0,_d=_b.count,_e=_b.parentId,_f=_b.sort;
-if(_8===this.root){
+},getChildren:function(_9,_a,_b,_c){
+if(_c){
+var _d=_c.start||0,_e=_c.count,_f=_c.parentId,_10=_c.sort;
+if(_9===this.root){
 this.root.size=0;
-this.store.fetch({start:_c,count:_d,sort:_f,query:this.query,onBegin:_1.hitch(this,function(_10){
-this.root.size=_10;
-}),onComplete:_1.hitch(this,function(_11){
-_9(_11,_b,this.root.size);
-}),onError:_a});
+this.store.fetch({start:_d,count:_e,sort:_10,query:this.query,onBegin:_3.hitch(this,function(_11){
+this.root.size=_11;
+}),onComplete:_3.hitch(this,function(_12){
+_a(_12,_c,this.root.size);
+}),onError:_b});
 }else{
-var _12=this.store;
-if(!_12.isItemLoaded(_8)){
-var _13=_1.hitch(this,arguments.callee);
-_12.loadItem({item:_8,onItem:function(_14){
-_13(_14,_9,_a,_b);
-},onError:_a});
+var _13=this.store;
+if(!_13.isItemLoaded(_9)){
+var _14=_3.hitch(this,arguments.callee);
+_13.loadItem({item:_9,onItem:function(_15){
+_14(_15,_a,_b,_c);
+},onError:_b});
 return;
 }
-if(this.serverStore&&!this._isChildrenLoaded(_8)){
+if(this.serverStore&&!this._isChildrenLoaded(_9)){
 this.childrenSize=0;
-this.store.fetch({start:_c,count:_d,sort:_f,query:_1.mixin({parentId:_e},this.query||{}),onBegin:_1.hitch(this,function(_15){
-this.childrenSize=_15;
-}),onComplete:_1.hitch(this,function(_16){
-_9(_16,_b,this.childrenSize);
-}),onError:_a});
+this.store.fetch({start:_d,count:_e,sort:_10,query:_3.mixin({parentId:_f},this.query||{}),onBegin:_3.hitch(this,function(_16){
+this.childrenSize=_16;
+}),onComplete:_3.hitch(this,function(_17){
+_a(_17,_c,this.childrenSize);
+}),onError:_b});
 }else{
 this.inherited(arguments);
 }
@@ -64,14 +58,15 @@ this.inherited(arguments);
 }else{
 this.inherited(arguments);
 }
-},_isChildrenLoaded:function(_17){
-var _18=null;
-return _1.every(this.childrenAttrs,function(_19){
-_18=this.store.getValues(_17,_19);
-return _1.every(_18,function(c){
+},_isChildrenLoaded:function(_18){
+var _19=null;
+return _2.every(this.childrenAttrs,function(_1a){
+_19=this.store.getValues(_18,_1a);
+return _2.every(_19,function(c){
 return this.store.isItemLoaded(c);
 },this);
 },this);
+},onNewItem:function(_1b,_1c){
+},onDeleteItem:function(_1d){
 }});
-return _3.grid.LazyTreeGridStoreModel;
 });

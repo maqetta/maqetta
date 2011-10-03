@@ -1,29 +1,23 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/charting/scaler/primitive",["dojo/_base/kernel","../../main"],function(_1,_2){
-var _3=_1.getObject("charting.scaler.primitive",true,_2);
-return _1.mixin(_3,{buildScaler:function(_4,_5,_6,_7){
-if(_4==_5){
-_4-=0.5;
-_5+=0.5;
+define("dojox/charting/scaler/primitive",["dojo/_base/lang"],function(_1){
+var _2=_1.getObject("dojox.charting.scaler.primitive",true);
+return _1.mixin(_2,{buildScaler:function(_3,_4,_5,_6){
+if(_3==_4){
+_3-=0.5;
+_4+=0.5;
 }
-return {bounds:{lower:_4,upper:_5,from:_4,to:_5,scale:_6/(_5-_4),span:_6},scaler:_3};
-},buildTicks:function(_8,_9){
+return {bounds:{lower:_3,upper:_4,from:_3,to:_4,scale:_5/(_4-_3),span:_5},scaler:_2};
+},buildTicks:function(_7,_8){
 return {major:[],minor:[],micro:[]};
-},getTransformerFromModel:function(_a){
-var _b=_a.bounds.from,_c=_a.bounds.scale;
+},getTransformerFromModel:function(_9){
+var _a=_9.bounds.from,_b=_9.bounds.scale;
 return function(x){
-return (x-_b)*_c;
+return (x-_a)*_b;
 };
-},getTransformerFromPlot:function(_d){
-var _e=_d.bounds.from,_f=_d.bounds.scale;
+},getTransformerFromPlot:function(_c){
+var _d=_c.bounds.from,_e=_c.bounds.scale;
 return function(x){
-return x/_f+_e;
+return x/_e+_d;
 };
 }});
 });

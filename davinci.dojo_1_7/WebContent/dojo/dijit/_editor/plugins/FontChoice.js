@@ -1,260 +1,247 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dijit/_editor/plugins/FontChoice",["dojo/_base/kernel","../..","../../_Widget","../../_TemplatedMixin","../../_WidgetsInTemplateMixin","../_Plugin","../range","../selection","../../form/FilteringSelect","dojo/store/Memory","dojo/i18n","dojo/i18n!../nls/FontChoice","dojo/_base/array","dojo/_base/html","dojo/_base/lang","dojo/_base/window"],function(_1,_2){
-_1.declare("dijit._editor.plugins._FontDropDown",[_2._Widget,_2._TemplatedMixin,_2._WidgetsInTemplateMixin],{label:"",plainText:false,templateString:"<span style='white-space: nowrap' class='dijit dijitReset dijitInline'>"+"<label class='dijitLeft dijitInline' for='${selectId}'>${label}</label>"+"<input dojoType='dijit.form.FilteringSelect' required='false' labelType='html' labelAttr='label' searchAttr='name' "+"tabIndex='-1' id='${selectId}' dojoAttachPoint='select' value=''/>"+"</span>",postMixInProperties:function(){
+define("dijit/_editor/plugins/FontChoice",["dojo/_base/array","dojo/_base/declare","dojo/dom-construct","dojo/i18n","dojo/_base/lang","dojo/store/Memory","dojo/_base/window","../../registry","../../_Widget","../../_TemplatedMixin","../../_WidgetsInTemplateMixin","../../form/FilteringSelect","../_Plugin","../range","../selection","dojo/i18n!../nls/FontChoice"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b,_c,_d,_e,_f){
+var _10=_2("dijit._editor.plugins._FontDropDown",[_9,_a,_b],{label:"",plainText:false,templateString:"<span style='white-space: nowrap' class='dijit dijitReset dijitInline'>"+"<label class='dijitLeft dijitInline' for='${selectId}'>${label}</label>"+"<input data-dojo-type='dijit.form.FilteringSelect' required='false' "+"data-dojo-props='labelType:\"html\", labelAttr:\"label\", searchAttr:\"name\"' "+"tabIndex='-1' id='${selectId}' data-dojo-attach-point='select' value=''/>"+"</span>",postMixInProperties:function(){
 this.inherited(arguments);
-this.strings=_1.i18n.getLocalization("dijit._editor","FontChoice");
+this.strings=_4.getLocalization("dijit._editor","FontChoice");
 this.label=this.strings[this.command];
-this.id=_2.getUniqueId(this.declaredClass.replace(/\./g,"_"));
+this.id=_8.getUniqueId(this.declaredClass.replace(/\./g,"_"));
 this.selectId=this.id+"_select";
 this.inherited(arguments);
 },postCreate:function(){
-this.select.set("store",new _1.store.Memory({idProperty:"value",data:_1.map(this.values,function(_3){
-var _4=this.strings[_3]||_3;
-return {label:this.getLabel(_3,_4),name:_4,value:_3};
+this.select.set("store",new _6({idProperty:"value",data:_1.map(this.values,function(_11){
+var _12=this.strings[_11]||_11;
+return {label:this.getLabel(_11,_12),name:_12,value:_11};
 },this)}));
 this.select.set("value","",false);
 this.disabled=this.select.get("disabled");
-},_setValueAttr:function(_5,_6){
-_6=_6!==false;
-this.select.set("value",_1.indexOf(this.values,_5)<0?"":_5,_6);
-if(!_6){
+},_setValueAttr:function(_13,_14){
+_14=_14!==false;
+this.select.set("value",_1.indexOf(this.values,_13)<0?"":_13,_14);
+if(!_14){
 this.select._lastValueReported=null;
 }
 },_getValueAttr:function(){
 return this.select.get("value");
 },focus:function(){
 this.select.focus();
-},_setDisabledAttr:function(_7){
-this.disabled=_7;
-this.select.set("disabled",_7);
+},_setDisabledAttr:function(_15){
+this.disabled=_15;
+this.select.set("disabled",_15);
 }});
-_1.declare("dijit._editor.plugins._FontNameDropDown",_2._editor.plugins._FontDropDown,{generic:false,command:"fontName",postMixInProperties:function(){
+var _16=_2("dijit._editor.plugins._FontNameDropDown",_10,{generic:false,command:"fontName",postMixInProperties:function(){
 if(!this.values){
 this.values=this.generic?["serif","sans-serif","monospace","cursive","fantasy"]:["Arial","Times New Roman","Comic Sans MS","Courier New"];
 }
 this.inherited(arguments);
-},getLabel:function(_8,_9){
+},getLabel:function(_17,_18){
 if(this.plainText){
-return _9;
+return _18;
 }else{
-return "<div style='font-family: "+_8+"'>"+_9+"</div>";
+return "<div style='font-family: "+_17+"'>"+_18+"</div>";
 }
-},_setValueAttr:function(_a,_b){
-_b=_b!==false;
+},_setValueAttr:function(_19,_1a){
+_1a=_1a!==false;
 if(this.generic){
-var _c={"Arial":"sans-serif","Helvetica":"sans-serif","Myriad":"sans-serif","Times":"serif","Times New Roman":"serif","Comic Sans MS":"cursive","Apple Chancery":"cursive","Courier":"monospace","Courier New":"monospace","Papyrus":"fantasy"};
-_a=_c[_a]||_a;
+var map={"Arial":"sans-serif","Helvetica":"sans-serif","Myriad":"sans-serif","Times":"serif","Times New Roman":"serif","Comic Sans MS":"cursive","Apple Chancery":"cursive","Courier":"monospace","Courier New":"monospace","Papyrus":"fantasy","Estrangelo Edessa":"cursive","Gabriola":"fantasy"};
+_19=map[_19]||_19;
 }
-this.inherited(arguments,[_a,_b]);
+this.inherited(arguments,[_19,_1a]);
 }});
-_1.declare("dijit._editor.plugins._FontSizeDropDown",_2._editor.plugins._FontDropDown,{command:"fontSize",values:[1,2,3,4,5,6,7],getLabel:function(_d,_e){
+var _1b=_2("dijit._editor.plugins._FontSizeDropDown",_10,{command:"fontSize",values:[1,2,3,4,5,6,7],getLabel:function(_1c,_1d){
 if(this.plainText){
-return _e;
+return _1d;
 }else{
-return "<font size="+_d+"'>"+_e+"</font>";
+return "<font size="+_1c+"'>"+_1d+"</font>";
 }
-},_setValueAttr:function(_f,_10){
-_10=_10!==false;
-if(_f.indexOf&&_f.indexOf("px")!=-1){
-var _11=parseInt(_f,10);
-_f={10:1,13:2,16:3,18:4,24:5,32:6,48:7}[_11]||_f;
+},_setValueAttr:function(_1e,_1f){
+_1f=_1f!==false;
+if(_1e.indexOf&&_1e.indexOf("px")!=-1){
+var _20=parseInt(_1e,10);
+_1e={10:1,13:2,16:3,18:4,24:5,32:6,48:7}[_20]||_1e;
 }
-this.inherited(arguments,[_f,_10]);
+this.inherited(arguments,[_1e,_1f]);
 }});
-_1.declare("dijit._editor.plugins._FormatBlockDropDown",_2._editor.plugins._FontDropDown,{command:"formatBlock",values:["noFormat","p","h1","h2","h3","pre"],postCreate:function(){
+var _21=_2("dijit._editor.plugins._FormatBlockDropDown",_10,{command:"formatBlock",values:["noFormat","p","h1","h2","h3","pre"],postCreate:function(){
 this.inherited(arguments);
 this.set("value","noFormat",false);
-},getLabel:function(_12,_13){
-if(this.plainText||_12=="noFormat"){
-return _13;
+},getLabel:function(_22,_23){
+if(this.plainText||_22=="noFormat"){
+return _23;
 }else{
-return "<"+_12+">"+_13+"</"+_12+">";
+return "<"+_22+">"+_23+"</"+_22+">";
 }
-},_execCommand:function(_14,_15,_16){
-if(_16==="noFormat"){
-var _17;
+},_execCommand:function(_24,_25,_26){
+if(_26==="noFormat"){
+var _27;
 var end;
-var sel=_2.range.getSelection(_14.window);
+var sel=_e.getSelection(_24.window);
 if(sel&&sel.rangeCount>0){
-var _18=sel.getRangeAt(0);
-var _19,tag;
-if(_18){
-_17=_18.startContainer;
-end=_18.endContainer;
-while(_17&&_17!==_14.editNode&&_17!==_14.document.body&&_17.nodeType!==1){
-_17=_17.parentNode;
+var _28=sel.getRangeAt(0);
+var _29,tag;
+if(_28){
+_27=_28.startContainer;
+end=_28.endContainer;
+while(_27&&_27!==_24.editNode&&_27!==_24.document.body&&_27.nodeType!==1){
+_27=_27.parentNode;
 }
-while(end&&end!==_14.editNode&&end!==_14.document.body&&end.nodeType!==1){
+while(end&&end!==_24.editNode&&end!==_24.document.body&&end.nodeType!==1){
 end=end.parentNode;
 }
-var _1a=_1.hitch(this,function(_1b,_1c){
-if(_1b.childNodes&&_1b.childNodes.length){
+var _2a=_5.hitch(this,function(_2b,ary){
+if(_2b.childNodes&&_2b.childNodes.length){
 var i;
-for(i=0;i<_1b.childNodes.length;i++){
-var c=_1b.childNodes[i];
+for(i=0;i<_2b.childNodes.length;i++){
+var c=_2b.childNodes[i];
 if(c.nodeType==1){
-if(_1.withGlobal(_14.window,"inSelection",_2._editor.selection,[c])){
+if(_7.withGlobal(_24.window,"inSelection",_f,[c])){
 var tag=c.tagName?c.tagName.toLowerCase():"";
 if(_1.indexOf(this.values,tag)!==-1){
-_1c.push(c);
+ary.push(c);
 }
-_1a(c,_1c);
-}
-}
+_2a(c,ary);
 }
 }
-});
-var _1d=_1.hitch(this,function(_1e){
-if(_1e&&_1e.length){
-_14.beginEditing();
-while(_1e.length){
-this._removeFormat(_14,_1e.pop());
 }
-_14.endEditing();
 }
 });
-var _1f=[];
-if(_17==end){
-var _20;
-_19=_17;
-while(_19&&_19!==_14.editNode&&_19!==_14.document.body){
-if(_19.nodeType==1){
-tag=_19.tagName?_19.tagName.toLowerCase():"";
+var _2c=_5.hitch(this,function(_2d){
+if(_2d&&_2d.length){
+_24.beginEditing();
+while(_2d.length){
+this._removeFormat(_24,_2d.pop());
+}
+_24.endEditing();
+}
+});
+var _2e=[];
+if(_27==end){
+var _2f;
+_29=_27;
+while(_29&&_29!==_24.editNode&&_29!==_24.document.body){
+if(_29.nodeType==1){
+tag=_29.tagName?_29.tagName.toLowerCase():"";
 if(_1.indexOf(this.values,tag)!==-1){
-_20=_19;
+_2f=_29;
 break;
 }
 }
-_19=_19.parentNode;
+_29=_29.parentNode;
 }
-_1a(_17,_1f);
-if(_20){
-_1f=[_20].concat(_1f);
+_2a(_27,_2e);
+if(_2f){
+_2e=[_2f].concat(_2e);
 }
-_1d(_1f);
+_2c(_2e);
 }else{
-_19=_17;
-while(_1.withGlobal(_14.window,"inSelection",_2._editor.selection,[_19])){
-if(_19.nodeType==1){
-tag=_19.tagName?_19.tagName.toLowerCase():"";
+_29=_27;
+while(_7.withGlobal(_24.window,"inSelection",_f,[_29])){
+if(_29.nodeType==1){
+tag=_29.tagName?_29.tagName.toLowerCase():"";
 if(_1.indexOf(this.values,tag)!==-1){
-_1f.push(_19);
+_2e.push(_29);
 }
-_1a(_19,_1f);
+_2a(_29,_2e);
 }
-_19=_19.nextSibling;
+_29=_29.nextSibling;
 }
-_1d(_1f);
+_2c(_2e);
 }
-_14.onDisplayChanged();
+_24.onDisplayChanged();
 }
 }
 }else{
-_14.execCommand(_15,_16);
+_24.execCommand(_25,_26);
 }
-},_removeFormat:function(_21,_22){
-if(_21.customUndo){
-while(_22.firstChild){
-_1.place(_22.firstChild,_22,"before");
+},_removeFormat:function(_30,_31){
+if(_30.customUndo){
+while(_31.firstChild){
+_3.place(_31.firstChild,_31,"before");
 }
-_22.parentNode.removeChild(_22);
+_31.parentNode.removeChild(_31);
 }else{
-_1.withGlobal(_21.window,"selectElementChildren",_2._editor.selection,[_22]);
-var _23=_1.withGlobal(_21.window,"getSelectedHtml",_2._editor.selection,[null]);
-_1.withGlobal(_21.window,"selectElement",_2._editor.selection,[_22]);
-_21.execCommand("inserthtml",_23||"");
+_7.withGlobal(_30.window,"selectElementChildren",_f,[_31]);
+var _32=_7.withGlobal(_30.window,"getSelectedHtml",_f,[null]);
+_7.withGlobal(_30.window,"selectElement",_f,[_31]);
+_30.execCommand("inserthtml",_32||"");
 }
 }});
-_1.declare("dijit._editor.plugins.FontChoice",_2._editor._Plugin,{useDefaultCommand:false,_initButton:function(){
-var _24={fontName:_2._editor.plugins._FontNameDropDown,fontSize:_2._editor.plugins._FontSizeDropDown,formatBlock:_2._editor.plugins._FormatBlockDropDown}[this.command],_25=this.params;
+var _33=_2("dijit._editor.plugins.FontChoice",_d,{useDefaultCommand:false,_initButton:function(){
+var _34={fontName:_16,fontSize:_1b,formatBlock:_21}[this.command],_35=this.params;
 if(this.params.custom){
-_25.values=this.params.custom;
+_35.values=this.params.custom;
 }
-var _26=this.editor;
-this.button=new _24(_1.delegate({dir:_26.dir,lang:_26.lang},_25));
-this.connect(this.button.select,"onChange",function(_27){
+var _36=this.editor;
+this.button=new _34(_5.delegate({dir:_36.dir,lang:_36.lang},_35));
+this.connect(this.button.select,"onChange",function(_37){
 this.editor.focus();
-if(this.command=="fontName"&&_27.indexOf(" ")!=-1){
-_27="'"+_27+"'";
+if(this.command=="fontName"&&_37.indexOf(" ")!=-1){
+_37="'"+_37+"'";
 }
 if(this.button._execCommand){
-this.button._execCommand(this.editor,this.command,_27);
+this.button._execCommand(this.editor,this.command,_37);
 }else{
-this.editor.execCommand(this.command,_27);
+this.editor.execCommand(this.command,_37);
 }
 });
 },updateState:function(){
-var _28=this.editor;
-var _29=this.command;
-if(!_28||!_28.isLoaded||!_29.length){
+var _38=this.editor;
+var _39=this.command;
+if(!_38||!_38.isLoaded||!_39.length){
 return;
 }
 if(this.button){
-var _2a=this.get("disabled");
-this.button.set("disabled",_2a);
-if(_2a){
+var _3a=this.get("disabled");
+this.button.set("disabled",_3a);
+if(_3a){
 return;
 }
-var _2b;
+var _3b;
 try{
-_2b=_28.queryCommandValue(_29)||"";
+_3b=_38.queryCommandValue(_39)||"";
 }
 catch(e){
-_2b="";
+_3b="";
 }
-var _2c=_1.isString(_2b)&&_2b.match(/'([^']*)'/);
-if(_2c){
-_2b=_2c[1];
+var _3c=_5.isString(_3b)&&_3b.match(/'([^']*)'/);
+if(_3c){
+_3b=_3c[1];
 }
-if(_29==="formatBlock"){
-if(!_2b||_2b=="p"){
-_2b=null;
-var _2d;
-var sel=_2.range.getSelection(this.editor.window);
+if(_39==="formatBlock"){
+if(!_3b||_3b=="p"){
+_3b=null;
+var _3d;
+var sel=_e.getSelection(this.editor.window);
 if(sel&&sel.rangeCount>0){
-var _2e=sel.getRangeAt(0);
-if(_2e){
-_2d=_2e.endContainer;
+var _3e=sel.getRangeAt(0);
+if(_3e){
+_3d=_3e.endContainer;
 }
 }
-while(_2d&&_2d!==_28.editNode&&_2d!==_28.document){
-var tg=_2d.tagName?_2d.tagName.toLowerCase():"";
+while(_3d&&_3d!==_38.editNode&&_3d!==_38.document){
+var tg=_3d.tagName?_3d.tagName.toLowerCase():"";
 if(tg&&_1.indexOf(this.button.values,tg)>-1){
-_2b=tg;
+_3b=tg;
 break;
 }
-_2d=_2d.parentNode;
+_3d=_3d.parentNode;
 }
-if(!_2b){
-_2b="noFormat";
+if(!_3b){
+_3b="noFormat";
 }
 }else{
-if(_1.indexOf(this.button.values,_2b)<0){
-_2b="noFormat";
+if(_1.indexOf(this.button.values,_3b)<0){
+_3b="noFormat";
 }
 }
 }
-if(_2b!==this.button.get("value")){
-this.button.set("value",_2b,false);
+if(_3b!==this.button.get("value")){
+this.button.set("value",_3b,false);
 }
 }
 }});
-_1.subscribe(_2._scopeName+".Editor.getPlugin",null,function(o){
-if(o.plugin){
-return;
-}
-switch(o.args.name){
-case "fontName":
-case "fontSize":
-case "formatBlock":
-o.plugin=new _2._editor.plugins.FontChoice({command:o.args.name,plainText:o.args.plainText?o.args.plainText:false});
-}
+_1.forEach(["fontName","fontSize","formatBlock"],function(_3f){
+_d.registry[_3f]=function(_40){
+return new _33({command:_3f,plainText:_40.plainText});
+};
 });
-return _2._editor.plugins.FontChoice;
 });

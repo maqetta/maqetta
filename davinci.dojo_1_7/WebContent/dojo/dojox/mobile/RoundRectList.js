@@ -1,27 +1,27 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/mobile/RoundRectList",["dijit/_WidgetBase","dijit/_Container","dijit/_Contained"],function(_1,_2,_3){
-return dojo.declare("dojox.mobile.RoundRectList",[dijit._WidgetBase,dijit._Container,dijit._Contained],{transition:"slide",iconBase:"",iconPos:"",select:"",stateful:false,buildRendering:function(){
-this.domNode=this.containerNode=this.srcNodeRef||dojo.doc.createElement("UL");
+define("dojox/mobile/RoundRectList",["dojo/_base/array","dojo/_base/declare","dojo/_base/window","dijit/_Contained","dijit/_Container","dijit/_WidgetBase"],function(_1,_2,_3,_4,_5,_6){
+return _2("dojox.mobile.RoundRectList",[_6,_5,_4],{transition:"slide",iconBase:"",iconPos:"",select:"",stateful:false,buildRendering:function(){
+this.domNode=this.containerNode=this.srcNodeRef||_3.doc.createElement("UL");
 this.domNode.className="mblRoundRectList";
-},onCheckStateChanged:function(_4,_5){
-},_setStatefulAttr:function(_6){
-this.stateful=_6;
-dojo.forEach(this.getChildren(),function(_7){
-_7.setArrow&&_7.setArrow();
+},resize:function(){
+_1.forEach(this.getChildren(),function(_7){
+if(_7.resize){
+_7.resize();
+}
 });
-},deselectItem:function(_8){
-_8.deselectItem();
+},onCheckStateChanged:function(_8,_9){
+},_setStatefulAttr:function(_a){
+this.stateful=_a;
+_1.forEach(this.getChildren(),function(_b){
+_b.setArrow&&_b.setArrow();
+});
+},deselectItem:function(_c){
+_c.deselect();
 },deselectAll:function(){
-dojo.forEach(this.getChildren(),function(_9){
-_9.deselect&&_9.deselect();
+_1.forEach(this.getChildren(),function(_d){
+_d.deselect&&_d.deselect();
 });
-},selectItem:function(_a){
-_a.select();
+},selectItem:function(_e){
+_e.select();
 }});
 });

@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
 define("dojox/validate/isbn",["dojo/_base/lang","./_base"],function(_1,_2){
-dojox.validate.isValidIsbn=function(_3){
+_2.isValidIsbn=function(_3){
 var _4,_5=0,_6;
 if(!_1.isString(_3)){
 _3=String(_3);
@@ -35,5 +29,5 @@ break;
 }
 return false;
 };
-return dojox.validate.isValidIsbn;
+return _2.isValidIsbn;
 });

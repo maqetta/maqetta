@@ -5,21 +5,20 @@
 */
 
 //>>built
-define("dojo/dnd/Mover",["../main","./common","./autoscroll"],function(_1){
-_1.declare("dojo.dnd.Mover",null,{constructor:function(_2,e,_3){
-this.node=_1.byId(_2);
-var _4=e.touches?e.touches[0]:e;
-this.marginBox={l:_4.pageX,t:_4.pageY};
+define("dojo/dnd/Mover",["../main","../Evented","../touch","./common","./autoscroll"],function(_1,_2,_3){
+_1.declare("dojo.dnd.Mover",[_2],{constructor:function(_4,e,_5){
+this.node=_1.byId(_4);
+this.marginBox={l:e.pageX,t:e.pageY};
 this.mouseButton=e.button;
-var h=(this.host=_3),d=_2.ownerDocument;
-this.events=[_1.connect(d,"onmousemove",this,"onFirstMove"),_1.connect(d,"ontouchmove",this,"onFirstMove"),_1.connect(d,"onmousemove",this,"onMouseMove"),_1.connect(d,"ontouchmove",this,"onMouseMove"),_1.connect(d,"onmouseup",this,"onMouseUp"),_1.connect(d,"ontouchend",this,"onMouseUp"),_1.connect(d,"ondragstart",_1.stopEvent),_1.connect(d.body,"onselectstart",_1.stopEvent)];
+var h=(this.host=_5),d=_4.ownerDocument;
+this.events=[_1.connect(d,_3.move,this,"onFirstMove"),_1.connect(d,_3.move,this,"onMouseMove"),_1.connect(d,_3.release,this,"onMouseUp"),_1.connect(d,"ondragstart",_1.stopEvent),_1.connect(d.body,"onselectstart",_1.stopEvent)];
 if(h&&h.onMoveStart){
 h.onMoveStart(this);
 }
 },onMouseMove:function(e){
 _1.dnd.autoScroll(e);
-var m=this.marginBox,_5=e.touches?e.touches[0]:e;
-this.host.onMove(this,{l:m.l+_5.pageX,t:m.t+_5.pageY},e);
+var m=this.marginBox;
+this.host.onMove(this,{l:m.l+e.pageX,t:m.t+e.pageY},e);
 _1.stopEvent(e);
 },onMouseUp:function(e){
 if(_1.isWebKit&&_1.isMac&&this.mouseButton==2?e.button==0:this.mouseButton==e.button){
@@ -50,7 +49,6 @@ this.marginBox.t=t-this.marginBox.t;
 if(h&&h.onFirstMove){
 h.onFirstMove(this,e);
 }
-_1.disconnect(this.events.shift());
 _1.disconnect(this.events.shift());
 },destroy:function(){
 _1.forEach(this.events,_1.disconnect);

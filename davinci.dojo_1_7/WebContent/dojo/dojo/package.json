@@ -1,6 +1,6 @@
 {
 	"name": "dojo",
-	"version":"1.7.0b3",
+	"version":"1.7.0b6",
 	"directories": {
 		"lib": "."
 	},
@@ -19,13 +19,5 @@
 	"bugs": "http://bugs.dojotoolkit.org/",
 	"keywords": ["JavaScript", "Dojo", "Toolkit"],
 	"homepage": "http://dojotoolkit.org/",
-	"dojoBuild": {
-		"resourceTags":{
-			"test": [".*/dojo/tests.*", ".*dojo/robot.*"],
-			"amd": "return /\\.js$/.test(name) && !/\\/nls\\//.test(name) && !/_base\\/config.+/.test(name) && !/OpenAjax\\.js$/.test(name) && !/resources\\/_modules\\.js/.test(name);"
-		},
-		"trees": [
-			[".", ".", "/\\.", "~$"]
-		]
-	}
+	"dojoBuild": "dojo.profile.js"
 }

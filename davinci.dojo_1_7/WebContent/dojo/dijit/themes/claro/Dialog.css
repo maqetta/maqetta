@@ -1,13 +1,13 @@
 
 .claro .dijitDialog {
-  border: 1px solid #769dc0;
+  border: 1px solid #759dc0;
   -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
   -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
 }
 .claro .dijitDialogPaneContent {
   background: #ffffff repeat-x top left;
-  border-top: 1px solid #769dc0;
+  border-top: 1px solid #759dc0;
   padding: 10px 8px;
   position: relative;
 }
@@ -40,6 +40,7 @@
   
   padding: 0 1px;
   font-size: 1.091em;
+  color: #000000;
 }
 .claro .dijitDialogCloseIcon {
   
@@ -82,7 +83,7 @@
   background-image: url("images/tooltipGradient.png");
   background-repeat: repeat-x;
   background-position: bottom;
-  border: 1px solid #769dc0;
+  border: 1px solid #759dc0;
   padding: 6px 8px;
   -moz-border-radius: 4px;
   border-radius: 4px;
@@ -90,6 +91,7 @@
   -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
   font-size: 1em;
+  color: #000000;
 }
 .dj_ie6 .claro .dijitTooltipContainer {
   background-image: none;

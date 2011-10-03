@@ -4,7 +4,7 @@
 	width: 30px;
 	height: 30px;
 }
-.mblDomButtonSilverCircleGreenPlus > DIV {
+.mblDomButtonSilverCircleGreenPlus > div {
 	position: relative;
 	top: 0px;
 	left: 0px;
@@ -15,7 +15,7 @@
 	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
 	background: -webkit-gradient(linear, left top, left bottom, from(#EFEFEF), to(#C2C2C2));
 }
-.mblDomButtonSilverCircleGreenPlus > DIV > DIV {
+.mblDomButtonSilverCircleGreenPlus > div > div {
 	position: absolute;
 	top: 11px;
 	left: 4px;
@@ -25,7 +25,7 @@
 	font-size: 1px;
 	background-color: #17DF25;
 }
-.mblDomButtonSilverCircleGreenPlus > DIV > DIV > DIV {
+.mblDomButtonSilverCircleGreenPlus > div > div > div {
 	position: absolute;
 	top: -7px;
 	left: 7px;

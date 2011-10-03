@@ -38,17 +38,18 @@
 }
 .mblTabBarButtonDiv {
   position: relative;
+  margin-left: auto;
+  margin-right: auto;
   height: 34px;
   width: 29px;
-  left: 50%;
-}
-.mblTabBarButtonDivInner {
-  left: -50%;
 }
 .mblTabBarButtonIcon {
   position: absolute;
   left: 0px;
   top: 2px;
+}
+.mblTabBarButtonSpriteIcon {
+  position: absolute;
 }
 .mblTabBarButtonTextBox {
   color: #979797;
@@ -61,6 +62,9 @@
 .mblTabBarNoIcons .mblTabBarButtonTextBox {
   line-height: 34px;
   font-size: 20px;
+}
+.mblTabBarTop .mblTabButton .mblTabBarButtonDiv {
+  display: none;
 }
 .mblTabButton {
   position: relative;
@@ -81,11 +85,8 @@
   text-align: center;
   line-height: 29px;
 }
-.mblTabButton .mblTabBarButtonAnchor {
-  height: 28px;
-}
-.mblTabButton .mblTabBarButtonDiv {
-  display: none;
+.mblTabButton .mblTabBarButtonAnchor, .mblTabButton .mblTabBarButtonDiv {
+  height: 29px;
 }
 .mblTabButton:first-child {
   -webkit-border-top-left-radius: 5px;
@@ -132,7 +133,7 @@
 .mblTabPanelHeader .mblTabButtonDomButton {
   width: 43px;
 }
-.mblTabPanelHeader .mblDomButton {
+.mblTabPanelHeader .mblTabButtonDomButtonClass {
   left: 8px;
 }
 .mblHeading .mblTabPanelHeader .mblTabButton {

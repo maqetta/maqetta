@@ -1,13 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
 define("dojox/encoding/digests/_base",["dojo/_base/kernel"],function(_1){
-_1.getObject("encoding.digests",true,dojox);
-var d=dojox.encoding.digests;
+var d=_1.getObject("dojox.encoding.digests",true);
 d.outputTypes={Base64:0,Hex:1,String:2,Raw:3};
 d.addWords=function(a,b){
 var l=(a&65535)+(b&65535);

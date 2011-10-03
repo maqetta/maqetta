@@ -1,41 +1,34 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/grid/enhanced/plugins/filter/FilterBuilder",["dojo","dojox","./_FilterExpr"],function(_1,_2){
-var _3=_2.grid.enhanced.plugins.filter,_4=function(_5){
-return _1.partial(function(_6,_7){
-return new _3[_6](_7);
-},_5);
-},_8=function(_9){
-return _1.partial(function(_a,_b){
-return new _3.LogicNOT(new _3[_a](_b));
-},_9);
+define("dojox/grid/enhanced/plugins/filter/FilterBuilder",["dojo/_base/declare","dojo/_base/array","dojo/_base/lang","./_FilterExpr"],function(_1,_2,_3,_4){
+var _5=function(_6){
+return _3.partial(function(_7,_8){
+return new _4[_7](_8);
+},_6);
+},_9=function(_a){
+return _3.partial(function(_b,_c){
+return new _4.LogicNOT(new _4[_b](_c));
+},_a);
 };
-_1.declare("dojox.grid.enhanced.plugins.filter.FilterBuilder",null,{buildExpression:function(_c){
-if("op" in _c){
-return this.supportedOps[_c.op.toLowerCase()](_1.map(_c.data,this.buildExpression,this));
+return _1("dojox.grid.enhanced.plugins.filter.FilterBuilder",null,{buildExpression:function(_d){
+if("op" in _d){
+return this.supportedOps[_d.op.toLowerCase()](_2.map(_d.data,this.buildExpression,this));
 }else{
-var _d=_1.mixin(this.defaultArgs[_c.datatype],_c.args||{});
-return new this.supportedTypes[_c.datatype](_c.data,_c.isColumn,_d);
+var _e=_3.mixin(this.defaultArgs[_d.datatype],_d.args||{});
+return new this.supportedTypes[_d.datatype](_d.data,_d.isColumn,_e);
 }
-},supportedOps:{"equalto":_4("EqualTo"),"lessthan":_4("LessThan"),"lessthanorequalto":_4("LessThanOrEqualTo"),"largerthan":_4("LargerThan"),"largerthanorequalto":_4("LargerThanOrEqualTo"),"contains":_4("Contains"),"startswith":_4("StartsWith"),"endswith":_4("EndsWith"),"notequalto":_8("EqualTo"),"notcontains":_8("Contains"),"notstartswith":_8("StartsWith"),"notendswith":_8("EndsWith"),"isempty":_4("IsEmpty"),"range":function(_e){
-return new _3.LogicALL(new _3.LargerThanOrEqualTo(_e.slice(0,2)),new _3.LessThanOrEqualTo(_e[0],_e[2]));
-},"logicany":_4("LogicANY"),"logicall":_4("LogicALL")},supportedTypes:{"number":_3.NumberExpr,"string":_3.StringExpr,"boolean":_3.BooleanExpr,"date":_3.DateExpr,"time":_3.TimeExpr},defaultArgs:{"boolean":{"falseValue":"false","convert":function(_f,_10){
-var _11=_10.falseValue;
-var _12=_10.trueValue;
-if(_1.isString(_f)){
-if(_12&&_f.toLowerCase()==_12){
+},supportedOps:{"equalto":_5("EqualTo"),"lessthan":_5("LessThan"),"lessthanorequalto":_5("LessThanOrEqualTo"),"largerthan":_5("LargerThan"),"largerthanorequalto":_5("LargerThanOrEqualTo"),"contains":_5("Contains"),"startswith":_5("StartsWith"),"endswith":_5("EndsWith"),"notequalto":_9("EqualTo"),"notcontains":_9("Contains"),"notstartswith":_9("StartsWith"),"notendswith":_9("EndsWith"),"isempty":_5("IsEmpty"),"range":function(_f){
+return new _4.LogicALL(new _4.LargerThanOrEqualTo(_f.slice(0,2)),new _4.LessThanOrEqualTo(_f[0],_f[2]));
+},"logicany":_5("LogicANY"),"logicall":_5("LogicALL")},supportedTypes:{"number":_4.NumberExpr,"string":_4.StringExpr,"boolean":_4.BooleanExpr,"date":_4.DateExpr,"time":_4.TimeExpr},defaultArgs:{"boolean":{"falseValue":"false","convert":function(_10,_11){
+var _12=_11.falseValue;
+var _13=_11.trueValue;
+if(_3.isString(_10)){
+if(_13&&_10.toLowerCase()==_13){
 return true;
 }
-if(_11&&_f.toLowerCase()==_11){
+if(_12&&_10.toLowerCase()==_12){
 return false;
 }
 }
-return !!_f;
+return !!_10;
 }}}});
-return _2.grid.enhanced.plugins.filter.FilterBuilder;
 });

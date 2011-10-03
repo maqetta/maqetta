@@ -1,5 +1,7 @@
 //>>built
-define(({
+define(
+//begin v1.x content
+({
 	displayOptions: "[možnosti prikaza]",
 	title: "Naslov",
 	authors: "Avtorji",
@@ -10,5 +12,5 @@ define(({
 	summary: "Povzetek",
 	content: "Vsebina"
 })
-
+//end v1.x content
 );

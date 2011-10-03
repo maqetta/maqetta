@@ -3,6 +3,6 @@
 	background-image: url(compat/mblDomButtonYellowStar.png);
 	background-repeat: no-repeat;
 }
-.mblDomButtonYellowStar > DIV {
+.mblDomButtonYellowStar > div {
 	display: none;
 }

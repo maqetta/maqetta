@@ -1,59 +1,53 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/dtl/Context",["dojo/_base/kernel","dojo/_base/lang","./_base"],function(_1,_2,dd){
-dojox.dtl.Context=_1.extend(function(_3){
+define("dojox/dtl/Context",["dojo/_base/lang","./_base"],function(_1,dd){
+dd.Context=_1.extend(function(_2){
 this._this={};
-dd._Context.call(this,_3);
+dd._Context.call(this,_2);
 },dd._Context.prototype,{getKeys:function(){
-var _4=[];
-for(var _5 in this){
-if(this.hasOwnProperty(_5)&&_5!="_this"){
-_4.push(_5);
+var _3=[];
+for(var _4 in this){
+if(this.hasOwnProperty(_4)&&_4!="_this"){
+_3.push(_4);
 }
 }
-return _4;
-},extend:function(_6){
-return _1.delegate(this,_6);
-},filter:function(_7){
-var _8=new dd.Context();
-var _9=[];
-var i,_a;
-if(_7 instanceof dd.Context){
-_9=_7.getKeys();
+return _3;
+},extend:function(_5){
+return _1.delegate(this,_5);
+},filter:function(_6){
+var _7=new dd.Context();
+var _8=[];
+var i,_9;
+if(_6 instanceof dd.Context){
+_8=_6.getKeys();
 }else{
-if(typeof _7=="object"){
-for(var _b in _7){
-_9.push(_b);
+if(typeof _6=="object"){
+for(var _a in _6){
+_8.push(_a);
 }
 }else{
-for(i=0;_a=arguments[i];i++){
-if(typeof _a=="string"){
-_9.push(_a);
+for(i=0;_9=arguments[i];i++){
+if(typeof _9=="string"){
+_8.push(_9);
 }
 }
 }
 }
-for(i=0,_b;_b=_9[i];i++){
-_8[_b]=this[_b];
+for(i=0,_a;_a=_8[i];i++){
+_7[_a]=this[_a];
 }
-return _8;
-},setThis:function(_c){
-this._this=_c;
+return _7;
+},setThis:function(_b){
+this._this=_b;
 },getThis:function(){
 return this._this;
-},hasKey:function(_d){
+},hasKey:function(_c){
 if(this._getter){
-var _e=this._getter(_d);
-if(typeof _e!="undefined"){
+var _d=this._getter(_c);
+if(typeof _d!="undefined"){
 return true;
 }
 }
-if(typeof this[_d]!="undefined"){
+if(typeof this[_c]!="undefined"){
 return true;
 }
 return false;

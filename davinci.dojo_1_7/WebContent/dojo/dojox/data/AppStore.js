@@ -1,9 +1,3 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
 define("dojox/data/AppStore",["dojo","dojox","dojo/data/util/simpleFetch","dojo/data/util/filter","dojox/atom/io/Connection"],function(_1,_2){
 _1.experimental("dojox.data.AppStore");
@@ -85,7 +79,7 @@ return _10.categories;
 }
 if(_10[_11]){
 _10=_10[_11];
-if(_10.declaredClass=="dojox.atom.io.model.Content"){
+if(_10.nodeType=="Content"){
 return [_10.value];
 }
 return [_10];

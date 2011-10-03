@@ -1,14 +1,8 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/xmpp/PresenceService",["dojo","dijit","dojox"],function(_1,_2,_3){
-_1.getObject("dojox.xmpp.PresenceService",1);
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.xmpp.PresenceService");
 _3.xmpp.presence={UPDATE:201,SUBSCRIPTION_REQUEST:202,SUBSCRIPTION_SUBSTATUS_NONE:204,SUBSCRIPTION_NONE:"none",SUBSCRIPTION_FROM:"from",SUBSCRIPTION_TO:"to",SUBSCRIPTION_BOTH:"both",SUBSCRIPTION_REQUEST_PENDING:"pending",STATUS_ONLINE:"online",STATUS_AWAY:"away",STATUS_CHAT:"chat",STATUS_DND:"dnd",STATUS_EXTENDED_AWAY:"xa",STATUS_OFFLINE:"offline",STATUS_INVISIBLE:"invisible"};
-_1.declare("dojox.xmpp.PresenceService",null,{constructor:function(_4){
+_2.declare("dojox.xmpp.PresenceService",null,{constructor:function(_4){
 this.session=_4;
 this.isInvisible=false;
 this.avatarHash=null;
@@ -159,6 +153,4 @@ this._manageSubscriptions(_19,"unsubscribed");
 },cancelSubscription:function(_1a){
 this._manageSubscriptions(_1a,"unsubscribed");
 }});
-return _1.getObject("dojox.xmpp.PresenceService");
 });
-require(["dojox/xmpp/PresenceService"]);

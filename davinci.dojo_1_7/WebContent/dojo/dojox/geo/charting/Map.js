@@ -1,66 +1,60 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/geo/charting/Map",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/html","dojo/_base/xhr","dojo/_base/connect","dojo/_base/window","dojox/gfx","dojox/geo/charting/_base","dojox/geo/charting/Feature","dojox/geo/charting/_Marker","dojo/number"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b,_c){
-return _1.declare("dojox.geo.charting.Map",null,{defaultColor:"#B7B7B7",highlightColor:"#D5D5D5",series:[],dataBindingAttribute:null,dataBindingValueFunction:null,dataStore:null,showTooltips:true,enableFeatureZoom:true,colorAnimationDuration:0,_idAttributes:null,_onSetListener:null,_onNewListener:null,_onDeleteListener:null,constructor:function(_d,_e){
-_1.style(_d,"display","block");
-this.container=_d;
-var _f=this._getContainerBounds();
-this.surface=_8.createSurface(_d,_f.w,_f.h);
+define("dojox/geo/charting/Map",["dojo/_base/lang","dojo/_base/array","dojo/_base/declare","dojo/_base/html","dojo/dom","dojo/dom-geometry","dojo/dom-class","dojo/_base/xhr","dojo/_base/connect","dojo/_base/window","dojox/gfx","dojox/geo/charting/_base","dojox/geo/charting/Feature","dojox/geo/charting/_Marker","dojo/number","dojo/_base/sniff"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b,_c,_d,_e,_f,has){
+return _3("dojox.geo.charting.Map",null,{defaultColor:"#B7B7B7",highlightColor:"#D5D5D5",series:[],dataBindingAttribute:null,dataBindingValueFunction:null,dataStore:null,showTooltips:true,enableFeatureZoom:true,colorAnimationDuration:0,_idAttributes:null,_onSetListener:null,_onNewListener:null,_onDeleteListener:null,constructor:function(_10,_11){
+_4.style(_10,"display","block");
+this.container=_10;
+var _12=this._getContainerBounds();
+this.surface=_b.createSurface(_10,_12.w,_12.h);
 this._createZoomingCursor();
-this.mapBackground=this.surface.createRect({x:0,y:0,width:_f.w,height:_f.w}).setFill("rgba(0,0,0,0)");
+this.mapBackground=this.surface.createRect({x:0,y:0,width:_12.w,height:_12.w}).setFill("rgba(0,0,0,0)");
 this.mapObj=this.surface.createGroup();
 this.mapObj.features={};
-if(typeof _e=="object"){
-this._init(_e);
+if(typeof _11=="object"){
+this._init(_11);
 }else{
-if(typeof _e=="string"&&_e.length>0){
-_1.xhrGet({url:_e,handleAs:"json",sync:true,load:_1.hitch(this,"_init")});
+if(typeof _11=="string"&&_11.length>0){
+_8.get({url:_11,handleAs:"json",sync:true,load:_1.hitch(this,"_init")});
 }
 }
 },_getContainerBounds:function(){
-var _10=_1.position(this.container,true);
-var _11=_1.marginBox(this.container);
-var _12=_1.contentBox(this.container);
-this._storedContainerBounds={x:_10.x,y:_10.y,w:_12.w||100,h:_12.h||100};
+var _13=_6.position(this.container,true);
+var _14=_6.getMarginBox(this.container);
+var _15=_6.getContentBox(this.container);
+this._storedContainerBounds={x:_13.x,y:_13.y,w:_15.w||100,h:_15.h||100};
 return this._storedContainerBounds;
-},resize:function(_13,_14,_15){
-var _16=this._storedContainerBounds;
-var _17=this._getContainerBounds();
-if((_16.w==_17.w)&&(_16.h==_17.h)){
+},resize:function(_16,_17,_18){
+var _19=this._storedContainerBounds;
+var _1a=this._getContainerBounds();
+if((_19.w==_1a.w)&&(_19.h==_1a.h)){
 return;
 }
-this.mapBackground.setShape({width:_17.w,height:_17.h});
-this.surface.setDimensions(_17.w,_17.h);
+this.mapBackground.setShape({width:_1a.w,height:_1a.h});
+this.surface.setDimensions(_1a.w,_1a.h);
 this.mapObj.marker.hide();
 this.mapObj.marker._needTooltipRefresh=true;
-if(_13){
-var _18=this.getMapScale();
-var _19=_18;
-if(_14){
-var _1a=this.mapObj.boundBox;
-var _1b=_17.w/_16.w;
-var _1c=_17.h/_16.h;
-_19=_18*Math.sqrt(_1b*_1c);
+if(_16){
+var _1b=this.getMapScale();
+var _1c=_1b;
+if(_17){
+var _1d=this.mapObj.boundBox;
+var _1e=_1a.w/_19.w;
+var _1f=_1a.h/_19.h;
+_1c=_1b*Math.sqrt(_1e*_1f);
 }
-var _1d=this.screenCoordsToMapCoords(_16.w/2,_16.h/2);
-this.setMapCenterAndScale(_1d.x,_1d.y,_19,_15);
+var _20=this.screenCoordsToMapCoords(_19.w/2,_19.h/2);
+this.setMapCenterAndScale(_20.x,_20.y,_1c,_18);
 }
 },_isMobileDevice:function(){
-return (_1.isSafari&&(navigator.userAgent.indexOf("iPhone")>-1||navigator.userAgent.indexOf("iPod")>-1||navigator.userAgent.indexOf("iPad")>-1))||(navigator.userAgent.toLowerCase().indexOf("android")>-1);
-},setMarkerData:function(_1e){
-_1.xhrGet({url:_1e,handleAs:"json",handle:_1.hitch(this,"_appendMarker")});
-},setDataBindingAttribute:function(_1f){
-this.dataBindingAttribute=_1f;
+return (has("safari")&&(navigator.userAgent.indexOf("iPhone")>-1||navigator.userAgent.indexOf("iPod")>-1||navigator.userAgent.indexOf("iPad")>-1))||(navigator.userAgent.toLowerCase().indexOf("android")>-1);
+},setMarkerData:function(_21){
+_8.get({url:_21,handleAs:"json",handle:_1.hitch(this,"_appendMarker")});
+},setDataBindingAttribute:function(_22){
+this.dataBindingAttribute=_22;
 if(this.dataStore){
 this._queryDataStore();
 }
-},setDataBindingValueFunction:function(_20){
-this.dataBindingValueFunction=_20;
+},setDataBindingValueFunction:function(_23){
+this.dataBindingValueFunction=_23;
 if(this.dataStore){
 this._queryDataStore();
 }
@@ -68,193 +62,193 @@ this._queryDataStore();
 if(!this.dataBindingAttribute||(this.dataBindingAttribute.length==0)){
 return;
 }
-var _21=this;
-this.dataStore.fetch({scope:this,onComplete:function(_22){
-this._idAttributes=_21.dataStore.getIdentityAttributes({});
-_1.forEach(_22,function(_23){
-var id=_21.dataStore.getValue(_23,this._idAttributes[0]);
-if(_21.mapObj.features[id]){
+var _24=this;
+this.dataStore.fetch({scope:this,onComplete:function(_25){
+this._idAttributes=_24.dataStore.getIdentityAttributes({});
+_2.forEach(_25,function(_26){
+var id=_24.dataStore.getValue(_26,this._idAttributes[0]);
+if(_24.mapObj.features[id]){
 var val=null;
-var _24=_21.dataStore.getValue(_23,_21.dataBindingAttribute);
-if(_24){
+var _27=_24.dataStore.getValue(_26,_24.dataBindingAttribute);
+if(_27){
 if(this.dataBindingValueFunction){
-val=this.dataBindingValueFunction(_24);
+val=this.dataBindingValueFunction(_27);
 }else{
 if(isNaN(val)){
-val=_c.parse(_24);
+val=_f.parse(_27);
 }else{
-val=_24;
+val=_27;
 }
 }
 }
 if(val){
-_21.mapObj.features[id].setValue(val);
+_24.mapObj.features[id].setValue(val);
 }
 }
 },this);
 }});
-},_onSet:function(_25,_26,_27,_28){
-var id=this.dataStore.getValue(_25,this._idAttributes[0]);
-var _29=this.mapObj.features[id];
-if(_29&&(_26==this.dataBindingAttribute)){
-if(_28){
-_29.setValue(_28);
-}else{
-_29.unsetValue();
-}
-}
-},_onNew:function(_2a,_2b){
-var id=this.dataStore.getValue(item,this._idAttributes[0]);
+},_onSet:function(_28,_29,_2a,_2b){
+var id=this.dataStore.getValue(_28,this._idAttributes[0]);
 var _2c=this.mapObj.features[id];
-if(_2c&&(attribute==this.dataBindingAttribute)){
-_2c.setValue(newValue);
-}
-},_onDelete:function(_2d){
-var id=_2d[this._idAttributes[0]];
-var _2e=this.mapObj.features[id];
-if(_2e){
-_2e.unsetValue();
-}
-},setDataStore:function(_2f,_30){
-if(this.dataStore!=_2f){
-if(this._onSetListener){
-_1.disconnect(this._onSetListener);
-_1.disconnect(this._onNewListener);
-_1.disconnect(this._onDeleteListener);
-}
-this.dataStore=_2f;
-if(_2f){
-_onSetListener=_1.connect(this.dataStore,"onSet",this,this._onSet);
-_onNewListener=_1.connect(this.dataStore,"onNew",this,this._onNew);
-_onDeleteListener=_1.connect(this.dataStore,"onDelete",this,this._onDelete);
-}
-}
-if(_30){
-this.setDataBindingAttribute(_30);
-}
-},addSeries:function(_31){
-if(typeof _31=="object"){
-this._addSeriesImpl(_31);
+if(_2c&&(_29==this.dataBindingAttribute)){
+if(_2b){
+_2c.setValue(_2b);
 }else{
-if(typeof _31=="string"&&_31.length>0){
-_1.xhrGet({url:_31,handleAs:"json",sync:true,load:_1.hitch(this,function(_32){
-this._addSeriesImpl(_32.series);
+_2c.unsetValue();
+}
+}
+},_onNew:function(_2d,_2e){
+var id=this.dataStore.getValue(item,this._idAttributes[0]);
+var _2f=this.mapObj.features[id];
+if(_2f&&(attribute==this.dataBindingAttribute)){
+_2f.setValue(newValue);
+}
+},_onDelete:function(_30){
+var id=_30[this._idAttributes[0]];
+var _31=this.mapObj.features[id];
+if(_31){
+_31.unsetValue();
+}
+},setDataStore:function(_32,_33){
+if(this.dataStore!=_32){
+if(this._onSetListener){
+_9.disconnect(this._onSetListener);
+_9.disconnect(this._onNewListener);
+_9.disconnect(this._onDeleteListener);
+}
+this.dataStore=_32;
+if(_32){
+_onSetListener=_9.connect(this.dataStore,"onSet",this,this._onSet);
+_onNewListener=_9.connect(this.dataStore,"onNew",this,this._onNew);
+_onDeleteListener=_9.connect(this.dataStore,"onDelete",this,this._onDelete);
+}
+}
+if(_33){
+this.setDataBindingAttribute(_33);
+}
+},addSeries:function(_34){
+if(typeof _34=="object"){
+this._addSeriesImpl(_34);
+}else{
+if(typeof _34=="string"&&_34.length>0){
+_8.get({url:_34,handleAs:"json",sync:true,load:_1.hitch(this,function(_35){
+this._addSeriesImpl(_35.series);
 })});
 }
 }
-},_addSeriesImpl:function(_33){
-this.series=_33;
-for(var _34 in this.mapObj.features){
-var _35=this.mapObj.features[_34];
-_35.setValue(_35.value);
+},_addSeriesImpl:function(_36){
+this.series=_36;
+for(var _37 in this.mapObj.features){
+var _38=this.mapObj.features[_37];
+_38.setValue(_38.value);
 }
-},fitToMapArea:function(_36,_37,_38,_39){
-if(!_37){
-_37=0;
+},fitToMapArea:function(_39,_3a,_3b,_3c){
+if(!_3a){
+_3a=0;
 }
-var _3a=_36.w,_3b=_36.h,_3c=this._getContainerBounds(),_3d=Math.min((_3c.w-2*_37)/_3a,(_3c.h-2*_37)/_3b);
-this.setMapCenterAndScale(_36.x+_36.w/2,_36.y+_36.h/2,_3d,_38,_39);
-},fitToMapContents:function(_3e,_3f,_40){
-var _41=this.mapObj.boundBox;
-this.fitToMapArea(_41,_3e,_3f,_40);
-},setMapCenter:function(_42,_43,_44,_45){
-var _46=this.getMapScale();
-this.setMapCenterAndScale(_42,_43,_46,_44,_45);
-},_createAnimation:function(_47,_48,_49,_4a){
-var _4b=_48.dx?_48.dx:0;
-var _4c=_48.dy?_48.dy:0;
-var _4d=_49.dx?_49.dx:0;
-var _4e=_49.dy?_49.dy:0;
-var _4f=_48.xx?_48.xx:1;
-var _50=_49.xx?_49.xx:1;
-var _51=_8.fx.animateTransform({duration:1000,shape:_47,transform:[{name:"translate",start:[_4b,_4c],end:[_4d,_4e]},{name:"scale",start:[_4f],end:[_50]}]});
-if(_4a){
-var _52=_1.connect(_51,"onEnd",this,function(_53){
-_4a(_53);
-_1.disconnect(_52);
+var _3d=_39.w,_3e=_39.h,_3f=this._getContainerBounds(),_40=Math.min((_3f.w-2*_3a)/_3d,(_3f.h-2*_3a)/_3e);
+this.setMapCenterAndScale(_39.x+_39.w/2,_39.y+_39.h/2,_40,_3b,_3c);
+},fitToMapContents:function(_41,_42,_43){
+var _44=this.mapObj.boundBox;
+this.fitToMapArea(_44,_41,_42,_43);
+},setMapCenter:function(_45,_46,_47,_48){
+var _49=this.getMapScale();
+this.setMapCenterAndScale(_45,_46,_49,_47,_48);
+},_createAnimation:function(_4a,_4b,_4c,_4d){
+var _4e=_4b.dx?_4b.dx:0;
+var _4f=_4b.dy?_4b.dy:0;
+var _50=_4c.dx?_4c.dx:0;
+var _51=_4c.dy?_4c.dy:0;
+var _52=_4b.xx?_4b.xx:1;
+var _53=_4c.xx?_4c.xx:1;
+var _54=_b.fx.animateTransform({duration:1000,shape:_4a,transform:[{name:"translate",start:[_4e,_4f],end:[_50,_51]},{name:"scale",start:[_52],end:[_53]}]});
+if(_4d){
+var _55=_9.connect(_54,"onEnd",this,function(_56){
+_4d(_56);
+_9.disconnect(_55);
 });
 }
-return _51;
-},setMapCenterAndScale:function(_54,_55,_56,_57,_58){
-var _59=this.mapObj.boundBox;
-var _5a=this._getContainerBounds();
-var _5b=_5a.w/2-_56*(_54-_59.x);
-var _5c=_5a.h/2-_56*(_55-_59.y);
-var _5d=new _8.matrix.Matrix2D({xx:_56,yy:_56,dx:_5b,dy:_5c});
-var _5e=this.mapObj.getTransform();
-if(!_57||!_5e){
-this.mapObj.setTransform(_5d);
+return _54;
+},setMapCenterAndScale:function(_57,_58,_59,_5a,_5b){
+var _5c=this.mapObj.boundBox;
+var _5d=this._getContainerBounds();
+var _5e=_5d.w/2-_59*(_57-_5c.x);
+var _5f=_5d.h/2-_59*(_58-_5c.y);
+var _60=new _b.matrix.Matrix2D({xx:_59,yy:_59,dx:_5e,dy:_5f});
+var _61=this.mapObj.getTransform();
+if(!_5a||!_61){
+this.mapObj.setTransform(_60);
 }else{
-var _5f=this._createAnimation(this.mapObj,_5e,_5d,_58);
-_5f.play();
+var _62=this._createAnimation(this.mapObj,_61,_60,_5b);
+_62.play();
 }
 },getMapCenter:function(){
-var _60=this._getContainerBounds();
-return this.screenCoordsToMapCoords(_60.w/2,_60.h/2);
-},setMapScale:function(_61,_62,_63){
-var _64=this._getContainerBounds();
-var _65=this.screenCoordsToMapCoords(_64.w/2,_64.h/2);
-this.setMapScaleAt(_61,_65.x,_65.y,_62,_63);
-},setMapScaleAt:function(_66,_67,_68,_69,_6a){
-var _6b=null;
-var _6c=null;
-_6b={x:_67,y:_68};
-_6c=this.mapCoordsToScreenCoords(_6b.x,_6b.y);
-var _6d=this.mapObj.boundBox;
-var _6e=_6c.x-_66*(_6b.x-_6d.x);
-var _6f=_6c.y-_66*(_6b.y-_6d.y);
-var _70=new _8.matrix.Matrix2D({xx:_66,yy:_66,dx:_6e,dy:_6f});
-var _71=this.mapObj.getTransform();
-if(!_69||!_71){
-this.mapObj.setTransform(_70);
+var _63=this._getContainerBounds();
+return this.screenCoordsToMapCoords(_63.w/2,_63.h/2);
+},setMapScale:function(_64,_65,_66){
+var _67=this._getContainerBounds();
+var _68=this.screenCoordsToMapCoords(_67.w/2,_67.h/2);
+this.setMapScaleAt(_64,_68.x,_68.y,_65,_66);
+},setMapScaleAt:function(_69,_6a,_6b,_6c,_6d){
+var _6e=null;
+var _6f=null;
+_6e={x:_6a,y:_6b};
+_6f=this.mapCoordsToScreenCoords(_6e.x,_6e.y);
+var _70=this.mapObj.boundBox;
+var _71=_6f.x-_69*(_6e.x-_70.x);
+var _72=_6f.y-_69*(_6e.y-_70.y);
+var _73=new _b.matrix.Matrix2D({xx:_69,yy:_69,dx:_71,dy:_72});
+var _74=this.mapObj.getTransform();
+if(!_6c||!_74){
+this.mapObj.setTransform(_73);
 }else{
-var _72=this._createAnimation(this.mapObj,_71,_70,_6a);
-_72.play();
+var _75=this._createAnimation(this.mapObj,_74,_73,_6d);
+_75.play();
 }
 },getMapScale:function(){
 var mat=this.mapObj.getTransform();
-var _73=mat?mat.xx:1;
-return _73;
-},mapCoordsToScreenCoords:function(_74,_75){
-var _76=this.mapObj.getTransform();
-var _77=_8.matrix.multiplyPoint(_76,_74,_75);
-return _77;
-},screenCoordsToMapCoords:function(_78,_79){
-var _7a=_8.matrix.invert(this.mapObj.getTransform());
-var _7b=_8.matrix.multiplyPoint(_7a,_78,_79);
-return _7b;
+var _76=mat?mat.xx:1;
+return _76;
+},mapCoordsToScreenCoords:function(_77,_78){
+var _79=this.mapObj.getTransform();
+var _7a=_b.matrix.multiplyPoint(_79,_77,_78);
+return _7a;
+},screenCoordsToMapCoords:function(_7b,_7c){
+var _7d=_b.matrix.invert(this.mapObj.getTransform());
+var _7e=_b.matrix.multiplyPoint(_7d,_7b,_7c);
+return _7e;
 },deselectAll:function(){
-for(var _7c in this.mapObj.features){
-this.mapObj.features[_7c].select(false);
+for(var _7f in this.mapObj.features){
+this.mapObj.features[_7f].select(false);
 }
 this.selectedFeature=null;
 this.focused=false;
-},_init:function(_7d){
-this.mapObj.boundBox={x:_7d.layerExtent[0],y:_7d.layerExtent[1],w:(_7d.layerExtent[2]-_7d.layerExtent[0]),h:_7d.layerExtent[3]-_7d.layerExtent[1]};
+},_init:function(_80){
+this.mapObj.boundBox={x:_80.layerExtent[0],y:_80.layerExtent[1],w:(_80.layerExtent[2]-_80.layerExtent[0]),h:_80.layerExtent[3]-_80.layerExtent[1]};
 this.fitToMapContents(3);
-_1.forEach(_7d.featureNames,function(_7e){
-var _7f=_7d.features[_7e];
-_7f.bbox.x=_7f.bbox[0];
-_7f.bbox.y=_7f.bbox[1];
-_7f.bbox.w=_7f.bbox[2];
-_7f.bbox.h=_7f.bbox[3];
-var _80=new _a(this,_7e,_7f);
-_80.init();
-this.mapObj.features[_7e]=_80;
+_2.forEach(_80.featureNames,function(_81){
+var _82=_80.features[_81];
+_82.bbox.x=_82.bbox[0];
+_82.bbox.y=_82.bbox[1];
+_82.bbox.w=_82.bbox[2];
+_82.bbox.h=_82.bbox[3];
+var _83=new _d(this,_81,_82);
+_83.init();
+this.mapObj.features[_81]=_83;
 },this);
-this.mapObj.marker=new _b({},this);
-},_appendMarker:function(_81){
-this.mapObj.marker=new _b(_81,this);
+this.mapObj.marker=new _e({},this);
+},_appendMarker:function(_84){
+this.mapObj.marker=new _e(_84,this);
 },_createZoomingCursor:function(){
-if(!_1.byId("mapZoomCursor")){
-var _82=_1.doc.createElement("div");
-_1.attr(_82,"id","mapZoomCursor");
-_1.addClass(_82,"mapZoomIn");
-_1.style(_82,"display","none");
-_1.body().appendChild(_82);
+if(!_5.byId("mapZoomCursor")){
+var _85=_a.doc.createElement("div");
+_4.attr(_85,"id","mapZoomCursor");
+_7.add(_85,"mapZoomIn");
+_4.style(_85,"display","none");
+_a.body().appendChild(_85);
 }
-},onFeatureClick:function(_83){
-},onFeatureOver:function(_84){
-},onZoomEnd:function(_85){
+},onFeatureClick:function(_86){
+},onFeatureOver:function(_87){
+},onZoomEnd:function(_88){
 }});
 });

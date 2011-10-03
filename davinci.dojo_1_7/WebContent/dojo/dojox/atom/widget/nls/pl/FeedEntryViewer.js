@@ -1,5 +1,7 @@
 //>>built
-define(({
+define(
+//begin v1.x content
+({
 	displayOptions: "[opcje wyświetlania]",
 	title: "Tytuł",
 	authors: "Autorzy",
@@ -10,5 +12,5 @@ define(({
 	summary: "Podsumowanie",
 	content: "Treść"
 })
-
+//end v1.x content
 );

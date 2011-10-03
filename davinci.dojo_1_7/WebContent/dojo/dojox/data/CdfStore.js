@@ -1,9 +1,3 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
 define("dojox/data/CdfStore",["dojo","dojox","dojo/data/util/sorter"],function(_1,_2){
 _2.data.ASYNC_MODE=0;

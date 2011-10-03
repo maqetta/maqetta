@@ -6,25 +6,21 @@
 
 //>>built
 define("dojo/_base/config",["../has","require"],function(_1,_2){
-true||_1.add("dojo-sniff",1?1:0);
-var _3=this.dojoConfig||this.djConfig||{};
-if(1&&1&&!1){
-for(var _4,_5,_6,_7=document.getElementsByTagName("script"),i=0;i<_7.length&&!_6;i++){
-if((_5=_7[i].getAttribute("src"))&&(_6=_5.match(/(.*)\/?(dojo|require)\.js(\W|$)/i))){
-_4=(_7[i].getAttribute("data-dojo-config")||_7[i].getAttribute("djConfig"));
-if(_4){
-_4=eval("({ "+_4+" })\r\n//@ sourceURL=dojo/config/data-dojo-config");
-for(var p in _4){
+var _3={};
+if(1){
+var _4=_2.rawConfig,p;
+for(p in _4){
 _3[p]=_4[p];
 }
-}
-}
-}
 }else{
-var p,_8=_2.rawConfig||{};
-for(p in _8){
-_3[p]=_8[p];
+var _5=function(_6,_7,_8){
+for(p in _6){
+p!="has"&&_1.add(_7+p,_6[p],0,_8);
 }
+};
+_3=1?_2.rawConfig:this.dojoConfig||this.djConfig||{};
+_5(_3,"config",1);
+_5(_3.has,"",1);
 }
 return _3;
 });

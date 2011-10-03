@@ -5,77 +5,77 @@
 */
 
 //>>built
-define("dojo/date/locale",["../main","../date","../cldr/supplemental","../regexp","../string","../i18n!../cldr/nls/gregorian"],function(_1){
-_1.getObject("date.locale",true,_1);
-function _2(_3,_4,_5,_6){
-return _6.replace(/([a-z])\1*/ig,function(_7){
-var s,_8,c=_7.charAt(0),l=_7.length,_9=["abbr","wide","narrow"];
+define("dojo/date/locale",["../_base/kernel","../_base/lang","../_base/array","../date","../cldr/supplemental","../regexp","../string","../i18n!../cldr/nls/gregorian"],function(_1,_2,_3,_4,_5,_6,_7,_8){
+_2.getObject("date.locale",true,_1);
+function _9(_a,_b,_c,_d){
+return _d.replace(/([a-z])\1*/ig,function(_e){
+var s,_f,c=_e.charAt(0),l=_e.length,_10=["abbr","wide","narrow"];
 switch(c){
 case "G":
-s=_4[(l<4)?"eraAbbr":"eraNames"][_3.getFullYear()<0?0:1];
+s=_b[(l<4)?"eraAbbr":"eraNames"][_a.getFullYear()<0?0:1];
 break;
 case "y":
-s=_3.getFullYear();
+s=_a.getFullYear();
 switch(l){
 case 1:
 break;
 case 2:
-if(!_5.fullYear){
+if(!_c.fullYear){
 s=String(s);
 s=s.substr(s.length-2);
 break;
 }
 default:
-_8=true;
+_f=true;
 }
 break;
 case "Q":
 case "q":
-s=Math.ceil((_3.getMonth()+1)/3);
-_8=true;
+s=Math.ceil((_a.getMonth()+1)/3);
+_f=true;
 break;
 case "M":
-var m=_3.getMonth();
+var m=_a.getMonth();
 if(l<3){
 s=m+1;
-_8=true;
+_f=true;
 }else{
-var _a=["months","format",_9[l-3]].join("-");
-s=_4[_a][m];
+var _11=["months","format",_10[l-3]].join("-");
+s=_b[_11][m];
 }
 break;
 case "w":
-var _b=0;
-s=_1.date.locale._getWeekOfYear(_3,_b);
-_8=true;
+var _12=0;
+s=_1.date.locale._getWeekOfYear(_a,_12);
+_f=true;
 break;
 case "d":
-s=_3.getDate();
-_8=true;
+s=_a.getDate();
+_f=true;
 break;
 case "D":
-s=_1.date.locale._getDayOfYear(_3);
-_8=true;
+s=_1.date.locale._getDayOfYear(_a);
+_f=true;
 break;
 case "E":
-var d=_3.getDay();
+var d=_a.getDay();
 if(l<3){
 s=d+1;
-_8=true;
+_f=true;
 }else{
-var _c=["days","format",_9[l-3]].join("-");
-s=_4[_c][d];
+var _13=["days","format",_10[l-3]].join("-");
+s=_b[_13][d];
 }
 break;
 case "a":
-var _d=(_3.getHours()<12)?"am":"pm";
-s=_5[_d]||_4["dayPeriods-format-wide-"+_d];
+var _14=(_a.getHours()<12)?"am":"pm";
+s=_c[_14]||_b["dayPeriods-format-wide-"+_14];
 break;
 case "h":
 case "H":
 case "K":
 case "k":
-var h=_3.getHours();
+var h=_a.getHours();
 switch(c){
 case "h":
 s=(h%12)||12;
@@ -90,30 +90,30 @@ case "k":
 s=h||24;
 break;
 }
-_8=true;
+_f=true;
 break;
 case "m":
-s=_3.getMinutes();
-_8=true;
+s=_a.getMinutes();
+_f=true;
 break;
 case "s":
-s=_3.getSeconds();
-_8=true;
+s=_a.getSeconds();
+_f=true;
 break;
 case "S":
-s=Math.round(_3.getMilliseconds()*Math.pow(10,l-3));
-_8=true;
+s=Math.round(_a.getMilliseconds()*Math.pow(10,l-3));
+_f=true;
 break;
 case "v":
 case "z":
-s=_1.date.locale._getZone(_3,true,_5);
+s=_1.date.locale._getZone(_a,true,_c);
 if(s){
 break;
 }
 l=4;
 case "Z":
-var _e=_1.date.locale._getZone(_3,false,_5);
-var tz=[(_e<=0?"+":"-"),_1.string.pad(Math.floor(Math.abs(_e)/60),2),_1.string.pad(Math.abs(_e)%60,2)];
+var _15=_1.date.locale._getZone(_a,false,_c);
+var tz=[(_15<=0?"+":"-"),_7.pad(Math.floor(Math.abs(_15)/60),2),_7.pad(Math.abs(_15)%60,2)];
 if(l==4){
 tz.splice(0,0,"GMT");
 tz.splice(3,0,":");
@@ -121,141 +121,141 @@ tz.splice(3,0,":");
 s=tz.join("");
 break;
 default:
-throw new Error("dojo.date.locale.format: invalid pattern char: "+_6);
+throw new Error("dojo.date.locale.format: invalid pattern char: "+_d);
 }
-if(_8){
-s=_1.string.pad(s,l);
+if(_f){
+s=_7.pad(s,l);
 }
 return s;
 });
 };
-_1.date.locale._getZone=function(_f,_10,_11){
-if(_10){
-return _1.date.getTimezoneName(_f);
+_1.date.locale._getZone=function(_16,_17,_18){
+if(_17){
+return _4.getTimezoneName(_16);
 }else{
-return _f.getTimezoneOffset();
+return _16.getTimezoneOffset();
 }
 };
-_1.date.locale.format=function(_12,_13){
-_13=_13||{};
-var _14=_1.i18n.normalizeLocale(_13.locale),_15=_13.formatLength||"short",_16=_1.date.locale._getGregorianBundle(_14),str=[],_17=_1.hitch(this,_2,_12,_16,_13);
-if(_13.selector=="year"){
-return _18(_16["dateFormatItem-yyyy"]||"yyyy",_17);
+_1.date.locale.format=function(_19,_1a){
+_1a=_1a||{};
+var _1b=_1.i18n.normalizeLocale(_1a.locale),_1c=_1a.formatLength||"short",_1d=_1.date.locale._getGregorianBundle(_1b),str=[],_1e=_2.hitch(this,_9,_19,_1d,_1a);
+if(_1a.selector=="year"){
+return _1f(_1d["dateFormatItem-yyyy"]||"yyyy",_1e);
 }
-var _19;
-if(_13.selector!="date"){
-_19=_13.timePattern||_16["timeFormat-"+_15];
-if(_19){
-str.push(_18(_19,_17));
-}
-}
-if(_13.selector!="time"){
-_19=_13.datePattern||_16["dateFormat-"+_15];
-if(_19){
-str.push(_18(_19,_17));
+var _20;
+if(_1a.selector!="date"){
+_20=_1a.timePattern||_1d["timeFormat-"+_1c];
+if(_20){
+str.push(_1f(_20,_1e));
 }
 }
-return str.length==1?str[0]:_16["dateTimeFormat-"+_15].replace(/\{(\d+)\}/g,function(_1a,key){
+if(_1a.selector!="time"){
+_20=_1a.datePattern||_1d["dateFormat-"+_1c];
+if(_20){
+str.push(_1f(_20,_1e));
+}
+}
+return str.length==1?str[0]:_1d["dateTimeFormat-"+_1c].replace(/\{(\d+)\}/g,function(_21,key){
 return str[key];
 });
 };
-_1.date.locale.regexp=function(_1b){
-return _1.date.locale._parseInfo(_1b).regexp;
+_1.date.locale.regexp=function(_22){
+return _1.date.locale._parseInfo(_22).regexp;
 };
-_1.date.locale._parseInfo=function(_1c){
-_1c=_1c||{};
-var _1d=_1.i18n.normalizeLocale(_1c.locale),_1e=_1.date.locale._getGregorianBundle(_1d),_1f=_1c.formatLength||"short",_20=_1c.datePattern||_1e["dateFormat-"+_1f],_21=_1c.timePattern||_1e["timeFormat-"+_1f],_22;
-if(_1c.selector=="date"){
-_22=_20;
+_1.date.locale._parseInfo=function(_23){
+_23=_23||{};
+var _24=_1.i18n.normalizeLocale(_23.locale),_25=_1.date.locale._getGregorianBundle(_24),_26=_23.formatLength||"short",_27=_23.datePattern||_25["dateFormat-"+_26],_28=_23.timePattern||_25["timeFormat-"+_26],_29;
+if(_23.selector=="date"){
+_29=_27;
 }else{
-if(_1c.selector=="time"){
-_22=_21;
+if(_23.selector=="time"){
+_29=_28;
 }else{
-_22=_1e["dateTimeFormat-"+_1f].replace(/\{(\d+)\}/g,function(_23,key){
-return [_21,_20][key];
+_29=_25["dateTimeFormat-"+_26].replace(/\{(\d+)\}/g,function(_2a,key){
+return [_28,_27][key];
 });
 }
 }
-var _24=[],re=_18(_22,_1.hitch(this,_25,_24,_1e,_1c));
-return {regexp:re,tokens:_24,bundle:_1e};
+var _2b=[],re=_1f(_29,_2.hitch(this,_2c,_2b,_25,_23));
+return {regexp:re,tokens:_2b,bundle:_25};
 };
-_1.date.locale.parse=function(_26,_27){
-var _28=/[\u200E\u200F\u202A\u202E]/g,_29=_1.date.locale._parseInfo(_27),_2a=_29.tokens,_2b=_29.bundle,re=new RegExp("^"+_29.regexp.replace(_28,"")+"$",_29.strict?"":"i"),_2c=re.exec(_26&&_26.replace(_28,""));
-if(!_2c){
+_1.date.locale.parse=function(_2d,_2e){
+var _2f=/[\u200E\u200F\u202A\u202E]/g,_30=_1.date.locale._parseInfo(_2e),_31=_30.tokens,_32=_30.bundle,re=new RegExp("^"+_30.regexp.replace(_2f,"")+"$",_30.strict?"":"i"),_33=re.exec(_2d&&_2d.replace(_2f,""));
+if(!_33){
 return null;
 }
-var _2d=["abbr","wide","narrow"],_2e=[1970,0,1,0,0,0,0],_2f="",_30=_1.every(_2c,function(v,i){
+var _34=["abbr","wide","narrow"],_35=[1970,0,1,0,0,0,0],_36="",_37=_1.every(_33,function(v,i){
 if(!i){
 return true;
 }
-var _31=_2a[i-1];
-var l=_31.length;
-switch(_31.charAt(0)){
+var _38=_31[i-1];
+var l=_38.length;
+switch(_38.charAt(0)){
 case "y":
-if(l!=2&&_27.strict){
-_2e[0]=v;
+if(l!=2&&_2e.strict){
+_35[0]=v;
 }else{
 if(v<100){
 v=Number(v);
-var _32=""+new Date().getFullYear(),_33=_32.substring(0,2)*100,_34=Math.min(Number(_32.substring(2,4))+20,99);
-_2e[0]=(v<_34)?_33+v:_33-100+v;
+var _39=""+new Date().getFullYear(),_3a=_39.substring(0,2)*100,_3b=Math.min(Number(_39.substring(2,4))+20,99);
+_35[0]=(v<_3b)?_3a+v:_3a-100+v;
 }else{
-if(_27.strict){
+if(_2e.strict){
 return false;
 }
-_2e[0]=v;
+_35[0]=v;
 }
 }
 break;
 case "M":
 if(l>2){
-var _35=_2b["months-format-"+_2d[l-3]].concat();
-if(!_27.strict){
+var _3c=_32["months-format-"+_34[l-3]].concat();
+if(!_2e.strict){
 v=v.replace(".","").toLowerCase();
-_35=_1.map(_35,function(s){
+_3c=_1.map(_3c,function(s){
 return s.replace(".","").toLowerCase();
 });
 }
-v=_1.indexOf(_35,v);
+v=_1.indexOf(_3c,v);
 if(v==-1){
 return false;
 }
 }else{
 v--;
 }
-_2e[1]=v;
+_35[1]=v;
 break;
 case "E":
 case "e":
-var _36=_2b["days-format-"+_2d[l-3]].concat();
-if(!_27.strict){
+var _3d=_32["days-format-"+_34[l-3]].concat();
+if(!_2e.strict){
 v=v.toLowerCase();
-_36=_1.map(_36,function(d){
+_3d=_1.map(_3d,function(d){
 return d.toLowerCase();
 });
 }
-v=_1.indexOf(_36,v);
+v=_1.indexOf(_3d,v);
 if(v==-1){
 return false;
 }
 break;
 case "D":
-_2e[1]=0;
+_35[1]=0;
 case "d":
-_2e[2]=v;
+_35[2]=v;
 break;
 case "a":
-var am=_27.am||_2b["dayPeriods-format-wide-am"],pm=_27.pm||_2b["dayPeriods-format-wide-pm"];
-if(!_27.strict){
-var _37=/\./g;
-v=v.replace(_37,"").toLowerCase();
-am=am.replace(_37,"").toLowerCase();
-pm=pm.replace(_37,"").toLowerCase();
+var am=_2e.am||_32["dayPeriods-format-wide-am"],pm=_2e.pm||_32["dayPeriods-format-wide-pm"];
+if(!_2e.strict){
+var _3e=/\./g;
+v=v.replace(_3e,"").toLowerCase();
+am=am.replace(_3e,"").toLowerCase();
+pm=pm.replace(_3e,"").toLowerCase();
 }
-if(_27.strict&&v!=am&&v!=pm){
+if(_2e.strict&&v!=am&&v!=pm){
 return false;
 }
-_2f=(v==pm)?"p":(v==am)?"a":"";
+_36=(v==pm)?"p":(v==am)?"a":"";
 break;
 case "K":
 if(v==24){
@@ -267,66 +267,66 @@ case "k":
 if(v>23){
 return false;
 }
-_2e[3]=v;
+_35[3]=v;
 break;
 case "m":
-_2e[4]=v;
+_35[4]=v;
 break;
 case "s":
-_2e[5]=v;
+_35[5]=v;
 break;
 case "S":
-_2e[6]=v;
+_35[6]=v;
 }
 return true;
 });
-var _38=+_2e[3];
-if(_2f==="p"&&_38<12){
-_2e[3]=_38+12;
+var _3f=+_35[3];
+if(_36==="p"&&_3f<12){
+_35[3]=_3f+12;
 }else{
-if(_2f==="a"&&_38==12){
-_2e[3]=0;
+if(_36==="a"&&_3f==12){
+_35[3]=0;
 }
 }
-var _39=new Date(_2e[0],_2e[1],_2e[2],_2e[3],_2e[4],_2e[5],_2e[6]);
-if(_27.strict){
-_39.setFullYear(_2e[0]);
+var _40=new Date(_35[0],_35[1],_35[2],_35[3],_35[4],_35[5],_35[6]);
+if(_2e.strict){
+_40.setFullYear(_35[0]);
 }
-var _3a=_2a.join(""),_3b=_3a.indexOf("d")!=-1,_3c=_3a.indexOf("M")!=-1;
-if(!_30||(_3c&&_39.getMonth()>_2e[1])||(_3b&&_39.getDate()>_2e[2])){
+var _41=_31.join(""),_42=_41.indexOf("d")!=-1,_43=_41.indexOf("M")!=-1;
+if(!_37||(_43&&_40.getMonth()>_35[1])||(_42&&_40.getDate()>_35[2])){
 return null;
 }
-if((_3c&&_39.getMonth()<_2e[1])||(_3b&&_39.getDate()<_2e[2])){
-_39=_1.date.add(_39,"hour",1);
+if((_43&&_40.getMonth()<_35[1])||(_42&&_40.getDate()<_35[2])){
+_40=_4.add(_40,"hour",1);
 }
-return _39;
+return _40;
 };
-function _18(_3d,_3e,_3f,_40){
-var _41=function(x){
+function _1f(_44,_45,_46,_47){
+var _48=function(x){
 return x;
 };
-_3e=_3e||_41;
-_3f=_3f||_41;
-_40=_40||_41;
-var _42=_3d.match(/(''|[^'])+/g),_43=_3d.charAt(0)=="'";
-_1.forEach(_42,function(_44,i){
-if(!_44){
-_42[i]="";
+_45=_45||_48;
+_46=_46||_48;
+_47=_47||_48;
+var _49=_44.match(/(''|[^'])+/g),_4a=_44.charAt(0)=="'";
+_1.forEach(_49,function(_4b,i){
+if(!_4b){
+_49[i]="";
 }else{
-_42[i]=(_43?_3f:_3e)(_44.replace(/''/g,"'"));
-_43=!_43;
+_49[i]=(_4a?_46:_45)(_4b.replace(/''/g,"'"));
+_4a=!_4a;
 }
 });
-return _40(_42.join(""));
+return _47(_49.join(""));
 };
-function _25(_45,_46,_47,_48){
-_48=_1.regexp.escapeString(_48);
-if(!_47.strict){
-_48=_48.replace(" a"," ?a");
+function _2c(_4c,_4d,_4e,_4f){
+_4f=_6.escapeString(_4f);
+if(!_4e.strict){
+_4f=_4f.replace(" a"," ?a");
 }
-return _48.replace(/([a-z])\1*/ig,function(_49){
-var s,c=_49.charAt(0),l=_49.length,p2="",p3="";
-if(_47.strict){
+return _4f.replace(/([a-z])\1*/ig,function(_50){
+var s,c=_50.charAt(0),l=_50.length,p2="",p3="";
+if(_4e.strict){
 if(l>1){
 p2="0"+"{"+(l-1)+"}";
 }
@@ -376,9 +376,9 @@ case "S":
 s="\\d{"+l+"}";
 break;
 case "a":
-var am=_47.am||_46["dayPeriods-format-wide-am"],pm=_47.pm||_46["dayPeriods-format-wide-pm"];
+var am=_4e.am||_4d["dayPeriods-format-wide-am"],pm=_4e.pm||_4d["dayPeriods-format-wide-pm"];
 s=am+"|"+pm;
-if(!_47.strict){
+if(!_4e.strict){
 if(am!=am.toLowerCase()){
 s+="|"+am.toLowerCase();
 }
@@ -394,59 +394,59 @@ break;
 default:
 s=".*";
 }
-if(_45){
-_45.push(_49);
+if(_4c){
+_4c.push(_50);
 }
 return "("+s+")";
 }).replace(/[\xa0 ]/g,"[\\s\\xa0]");
 };
-var _4a=[];
-_1.date.locale.addCustomFormats=function(_4b,_4c){
-_4a.push({pkg:_4b,name:_4c});
+var _51=[];
+_1.date.locale.addCustomFormats=function(_52,_53){
+_51.push({pkg:_52,name:_53});
 };
-_1.date.locale._getGregorianBundle=function(_4d){
-var _4e={};
-_1.forEach(_4a,function(_4f){
-var _50=_1.i18n.getLocalization(_4f.pkg,_4f.name,_4d);
-_4e=_1.mixin(_4e,_50);
+_1.date.locale._getGregorianBundle=function(_54){
+var _55={};
+_1.forEach(_51,function(_56){
+var _57=_1.i18n.getLocalization(_56.pkg,_56.name,_54);
+_55=_2.mixin(_55,_57);
 },this);
-return _4e;
+return _55;
 };
 _1.date.locale.addCustomFormats("dojo.cldr","gregorian");
-_1.date.locale.getNames=function(_51,_52,_53,_54){
-var _55,_56=_1.date.locale._getGregorianBundle(_54),_57=[_51,_53,_52];
-if(_53=="standAlone"){
-var key=_57.join("-");
-_55=_56[key];
-if(_55[0]==1){
-_55=undefined;
+_1.date.locale.getNames=function(_58,_59,_5a,_5b){
+var _5c,_5d=_1.date.locale._getGregorianBundle(_5b),_5e=[_58,_5a,_59];
+if(_5a=="standAlone"){
+var key=_5e.join("-");
+_5c=_5d[key];
+if(_5c[0]==1){
+_5c=undefined;
 }
 }
-_57[1]="format";
-return (_55||_56[_57.join("-")]).concat();
+_5e[1]="format";
+return (_5c||_5d[_5e.join("-")]).concat();
 };
-_1.date.locale.isWeekend=function(_58,_59){
-var _5a=_1.cldr.supplemental.getWeekend(_59),day=(_58||new Date()).getDay();
-if(_5a.end<_5a.start){
-_5a.end+=7;
-if(day<_5a.start){
+_1.date.locale.isWeekend=function(_5f,_60){
+var _61=_5.getWeekend(_60),day=(_5f||new Date()).getDay();
+if(_61.end<_61.start){
+_61.end+=7;
+if(day<_61.start){
 day+=7;
 }
 }
-return day>=_5a.start&&day<=_5a.end;
+return day>=_61.start&&day<=_61.end;
 };
-_1.date.locale._getDayOfYear=function(_5b){
-return _1.date.difference(new Date(_5b.getFullYear(),0,1,_5b.getHours()),_5b)+1;
+_1.date.locale._getDayOfYear=function(_62){
+return _4.difference(new Date(_62.getFullYear(),0,1,_62.getHours()),_62)+1;
 };
-_1.date.locale._getWeekOfYear=function(_5c,_5d){
+_1.date.locale._getWeekOfYear=function(_63,_64){
 if(arguments.length==1){
-_5d=0;
+_64=0;
 }
-var _5e=new Date(_5c.getFullYear(),0,1).getDay(),adj=(_5e-_5d+7)%7,_5f=Math.floor((_1.date.locale._getDayOfYear(_5c)+adj-1)/7);
-if(_5e==_5d){
-_5f++;
+var _65=new Date(_63.getFullYear(),0,1).getDay(),adj=(_65-_64+7)%7,_66=Math.floor((_1.date.locale._getDayOfYear(_63)+adj-1)/7);
+if(_65==_64){
+_66++;
 }
-return _5f;
+return _66;
 };
 return _1.date.locale;
 });

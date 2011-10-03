@@ -1,159 +1,153 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/dtl/tag/loop",["dojo/_base/kernel","dojo/_base/lang","../_base","dojox/string/tokenize","dojo/_base/array"],function(_1,_2,dd,_3){
-_1.getObject("dtl.tag.loop",true,dojox);
-var _4=dd.tag.loop;
-_4.CycleNode=_1.extend(function(_5,_6,_7,_8){
-this.cyclevars=_5;
-this.name=_6;
-this.contents=_7;
-this.shared=_8||{counter:-1,map:{}};
-},{render:function(_9,_a){
-if(_9.forloop&&!_9.forloop.counter0){
+define("dojox/dtl/tag/loop",["dojo/_base/lang","dojo/_base/array","dojo/_base/json","../_base","dojox/string/tokenize"],function(_1,_2,_3,dd,_4){
+_1.getObject("dojox.dtl.tag.loop",true);
+var _5=dd.tag.loop;
+_5.CycleNode=_1.extend(function(_6,_7,_8,_9){
+this.cyclevars=_6;
+this.name=_7;
+this.contents=_8;
+this.shared=_9||{counter:-1,map:{}};
+},{render:function(_a,_b){
+if(_a.forloop&&!_a.forloop.counter0){
 this.shared.counter=-1;
 }
 ++this.shared.counter;
-var _b=this.cyclevars[this.shared.counter%this.cyclevars.length];
-var _c=this.shared.map;
-if(!_c[_b]){
-_c[_b]=new dd._Filter(_b);
+var _c=this.cyclevars[this.shared.counter%this.cyclevars.length];
+var _d=this.shared.map;
+if(!_d[_c]){
+_d[_c]=new dd._Filter(_c);
 }
-_b=_c[_b].resolve(_9,_a);
+_c=_d[_c].resolve(_a,_b);
 if(this.name){
-_9[this.name]=_b;
+_a[this.name]=_c;
 }
-this.contents.set(_b);
-return this.contents.render(_9,_a);
-},unrender:function(_d,_e){
-return this.contents.unrender(_d,_e);
-},clone:function(_f){
-return new this.constructor(this.cyclevars,this.name,this.contents.clone(_f),this.shared);
+this.contents.set(_c);
+return this.contents.render(_a,_b);
+},unrender:function(_e,_f){
+return this.contents.unrender(_e,_f);
+},clone:function(_10){
+return new this.constructor(this.cyclevars,this.name,this.contents.clone(_10),this.shared);
 }});
-_4.IfChangedNode=_1.extend(function(_10,_11,_12){
-this.nodes=_10;
-this._vars=_11;
-this.shared=_12||{last:null,counter:0};
-this.vars=_1.map(_11,function(_13){
-return new dojox.dtl._Filter(_13);
+_5.IfChangedNode=_1.extend(function(_11,_12,_13){
+this.nodes=_11;
+this._vars=_12;
+this.shared=_13||{last:null,counter:0};
+this.vars=_2.map(_12,function(_14){
+return new dojox.dtl._Filter(_14);
 });
-},{render:function(_14,_15){
-if(_14.forloop){
-if(_14.forloop.counter<=this.shared.counter){
+},{render:function(_15,_16){
+if(_15.forloop){
+if(_15.forloop.counter<=this.shared.counter){
 this.shared.last=null;
 }
-this.shared.counter=_14.forloop.counter;
+this.shared.counter=_15.forloop.counter;
 }
-var _16;
+var _17;
 if(this.vars.length){
-_16=_1.toJson(_1.map(this.vars,function(_17){
-return _17.resolve(_14);
+_17=_3.toJson(_2.map(this.vars,function(_18){
+return _18.resolve(_15);
 }));
 }else{
-_16=this.nodes.dummyRender(_14,_15);
+_17=this.nodes.dummyRender(_15,_16);
 }
-if(_16!=this.shared.last){
-var _18=(this.shared.last===null);
-this.shared.last=_16;
-_14=_14.push();
-_14.ifchanged={firstloop:_18};
-_15=this.nodes.render(_14,_15);
-_14=_14.pop();
+if(_17!=this.shared.last){
+var _19=(this.shared.last===null);
+this.shared.last=_17;
+_15=_15.push();
+_15.ifchanged={firstloop:_19};
+_16=this.nodes.render(_15,_16);
+_15=_15.pop();
 }else{
-_15=this.nodes.unrender(_14,_15);
+_16=this.nodes.unrender(_15,_16);
 }
-return _15;
-},unrender:function(_19,_1a){
-return this.nodes.unrender(_19,_1a);
-},clone:function(_1b){
-return new this.constructor(this.nodes.clone(_1b),this._vars,this.shared);
+return _16;
+},unrender:function(_1a,_1b){
+return this.nodes.unrender(_1a,_1b);
+},clone:function(_1c){
+return new this.constructor(this.nodes.clone(_1c),this._vars,this.shared);
 }});
-_4.RegroupNode=_1.extend(function(_1c,key,_1d){
-this._expression=_1c;
-this.expression=new dd._Filter(_1c);
+_5.RegroupNode=_1.extend(function(_1d,key,_1e){
+this._expression=_1d;
+this.expression=new dd._Filter(_1d);
 this.key=key;
-this.alias=_1d;
-},{_push:function(_1e,_1f,_20){
-if(_20.length){
-_1e.push({grouper:_1f,list:_20});
+this.alias=_1e;
+},{_push:function(_1f,_20,_21){
+if(_21.length){
+_1f.push({grouper:_20,list:_21});
 }
-},render:function(_21,_22){
-_21[this.alias]=[];
-var _23=this.expression.resolve(_21);
-if(_23){
-var _24=null;
-var _25=[];
-for(var i=0;i<_23.length;i++){
-var id=_23[i][this.key];
-if(_24!==id){
-this._push(_21[this.alias],_24,_25);
-_24=id;
-_25=[_23[i]];
+},render:function(_22,_23){
+_22[this.alias]=[];
+var _24=this.expression.resolve(_22);
+if(_24){
+var _25=null;
+var _26=[];
+for(var i=0;i<_24.length;i++){
+var id=_24[i][this.key];
+if(_25!==id){
+this._push(_22[this.alias],_25,_26);
+_25=id;
+_26=[_24[i]];
 }else{
-_25.push(_23[i]);
+_26.push(_24[i]);
 }
 }
-this._push(_21[this.alias],_24,_25);
+this._push(_22[this.alias],_25,_26);
 }
-return _22;
-},unrender:function(_26,_27){
-return _27;
-},clone:function(_28,_29){
+return _23;
+},unrender:function(_27,_28){
+return _28;
+},clone:function(_29,_2a){
 return this;
 }});
-_1.mixin(_4,{cycle:function(_2a,_2b){
-var _2c=_2b.split_contents();
-if(_2c.length<2){
+_1.mixin(_5,{cycle:function(_2b,_2c){
+var _2d=_2c.split_contents();
+if(_2d.length<2){
 throw new Error("'cycle' tag requires at least two arguments");
 }
-if(_2c[1].indexOf(",")!=-1){
-var _2d=_2c[1].split(",");
-_2c=[_2c[0]];
-for(var i=0;i<_2d.length;i++){
-_2c.push("\""+_2d[i]+"\"");
+if(_2d[1].indexOf(",")!=-1){
+var _2e=_2d[1].split(",");
+_2d=[_2d[0]];
+for(var i=0;i<_2e.length;i++){
+_2d.push("\""+_2e[i]+"\"");
 }
 }
-if(_2c.length==2){
-var _2e=_2c[_2c.length-1];
-if(!_2a._namedCycleNodes){
-throw new Error("No named cycles in template: '"+_2e+"' is not defined");
+if(_2d.length==2){
+var _2f=_2d[_2d.length-1];
+if(!_2b._namedCycleNodes){
+throw new Error("No named cycles in template: '"+_2f+"' is not defined");
 }
-if(!_2a._namedCycleNodes[_2e]){
-throw new Error("Named cycle '"+_2e+"' does not exist");
+if(!_2b._namedCycleNodes[_2f]){
+throw new Error("Named cycle '"+_2f+"' does not exist");
 }
-return _2a._namedCycleNodes[_2e];
+return _2b._namedCycleNodes[_2f];
 }
-if(_2c.length>4&&_2c[_2c.length-2]=="as"){
-var _2e=_2c[_2c.length-1];
-var _2f=new _4.CycleNode(_2c.slice(1,_2c.length-2),_2e,_2a.create_text_node());
-if(!_2a._namedCycleNodes){
-_2a._namedCycleNodes={};
+if(_2d.length>4&&_2d[_2d.length-2]=="as"){
+var _2f=_2d[_2d.length-1];
+var _30=new _5.CycleNode(_2d.slice(1,_2d.length-2),_2f,_2b.create_text_node());
+if(!_2b._namedCycleNodes){
+_2b._namedCycleNodes={};
 }
-_2a._namedCycleNodes[_2e]=_2f;
+_2b._namedCycleNodes[_2f]=_30;
 }else{
-_2f=new _4.CycleNode(_2c.slice(1),null,_2a.create_text_node());
+_30=new _5.CycleNode(_2d.slice(1),null,_2b.create_text_node());
 }
-return _2f;
-},ifchanged:function(_30,_31){
-var _32=_31.contents.split();
-var _33=_30.parse(["endifchanged"]);
-_30.delete_first_token();
-return new _4.IfChangedNode(_33,_32.slice(1));
-},regroup:function(_34,_35){
-var _36=_3(_35.contents,/(\s+)/g,function(_37){
-return _37;
+return _30;
+},ifchanged:function(_31,_32){
+var _33=_32.contents.split();
+var _34=_31.parse(["endifchanged"]);
+_31.delete_first_token();
+return new _5.IfChangedNode(_34,_33.slice(1));
+},regroup:function(_35,_36){
+var _37=_4(_36.contents,/(\s+)/g,function(_38){
+return _38;
 });
-if(_36.length<11||_36[_36.length-3]!="as"||_36[_36.length-7]!="by"){
+if(_37.length<11||_37[_37.length-3]!="as"||_37[_37.length-7]!="by"){
 throw new Error("Expected the format: regroup list by key as newList");
 }
-var _38=_36.slice(2,-8).join("");
-var key=_36[_36.length-5];
-var _39=_36[_36.length-1];
-return new _4.RegroupNode(_38,key,_39);
+var _39=_37.slice(2,-8).join("");
+var key=_37[_37.length-5];
+var _3a=_37[_37.length-1];
+return new _5.RegroupNode(_39,key,_3a);
 }});
 return dojox.dtl.tag.loop;
 });

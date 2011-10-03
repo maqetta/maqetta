@@ -1,45 +1,36 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/form/MultiComboBox",["dojo","dijit","dojox","dijit/form/ComboBox","dijit/form/ValidationTextBox"],function(_1,_2,_3){
-_1.getObject("dojox.form.MultiComboBox",1);
+define("dojox/form/MultiComboBox",["dojo/_base/kernel","dijit/form/ValidationTextBox","dijit/form/ComboBoxMixin","dojo/_base/declare"],function(_1,_2,_3,_4){
 _1.experimental("dojox.form.MultiComboBox");
-_1.declare("dojox.form.MultiComboBox",[_2.form.ValidationTextBox,_2.form.ComboBoxMixin],{delimiter:",",_previousMatches:false,_setValueAttr:function(_4){
-if(this.delimiter&&_4.length!=0){
-_4=_4+this.delimiter+" ";
-arguments[0]=this._addPreviousMatches(_4);
+return _4("dojox.form.MultiComboBox",[_2,_3],{delimiter:",",_previousMatches:false,_setValueAttr:function(_5){
+if(this.delimiter&&_5.length!=0){
+_5=_5+this.delimiter+" ";
+arguments[0]=this._addPreviousMatches(_5);
 }
 this.inherited(arguments);
-},_addPreviousMatches:function(_5){
+},_addPreviousMatches:function(_6){
 if(this._previousMatches){
-if(!_5.match(new RegExp("^"+this._previousMatches))){
-_5=this._previousMatches+_5;
+if(!_6.match(new RegExp("^"+this._previousMatches))){
+_6=this._previousMatches+_6;
 }
-_5=this._cleanupDelimiters(_5);
-}
-return _5;
-},_cleanupDelimiters:function(_6){
-if(this.delimiter){
-_6=_6.replace(new RegExp("  +")," ");
-_6=_6.replace(new RegExp("^ *"+this.delimiter+"* *"),"");
-_6=_6.replace(new RegExp(this.delimiter+" *"+this.delimiter),this.delimiter);
+_6=this._cleanupDelimiters(_6);
 }
 return _6;
-},_autoCompleteText:function(_7){
-arguments[0]=this._addPreviousMatches(_7);
+},_cleanupDelimiters:function(_7){
+if(this.delimiter){
+_7=_7.replace(new RegExp("  +")," ");
+_7=_7.replace(new RegExp("^ *"+this.delimiter+"* *"),"");
+_7=_7.replace(new RegExp(this.delimiter+" *"+this.delimiter),this.delimiter);
+}
+return _7;
+},_autoCompleteText:function(_8){
+arguments[0]=this._addPreviousMatches(_8);
 this.inherited(arguments);
-},_startSearch:function(_8){
-_8=this._cleanupDelimiters(_8);
+},_startSearch:function(_9){
+_9=this._cleanupDelimiters(_9);
 var re=new RegExp("^.*"+this.delimiter+" *");
-if((this._previousMatches=_8.match(re))){
-arguments[0]=_8.replace(re,"");
+if((this._previousMatches=_9.match(re))){
+arguments[0]=_9.replace(re,"");
 }
 this.inherited(arguments);
 }});
-return _1.getObject("dojox.form.MultiComboBox");
 });
-require(["dojox/form/MultiComboBox"]);

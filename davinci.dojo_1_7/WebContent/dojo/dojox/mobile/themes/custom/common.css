@@ -1,6 +1,3 @@
-body {
-  visibility: hidden;
-}
 html.mobile, .mobile body {
   width: 100%;
   margin: 0px;
@@ -15,18 +12,18 @@ html.mobile, .mobile body {
 }
 .mblColorBlue {
   background-color: #366EDF;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
 }
 .mblColorDefault {
-  background-color: #abd6ff;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
+  background-color: #5cb0ff;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
 }
 .mblColorDefault.mblDomButton {
-  background-color: #abd6ff;
+  background-color: #5cb0ff;
 }
 .mblColorDefaultSel {
-  background-color: #128bff;
+  background-color: #0064c2;
 }
 .mblColorDefaultSel.mblDomButton {
-  background-color: #128bff;
+  background-color: #0064c2;
 }

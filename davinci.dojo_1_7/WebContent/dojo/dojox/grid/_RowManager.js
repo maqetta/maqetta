@@ -1,43 +1,36 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/grid/_RowManager",["dojo","dojox"],function(_1,_2){
-var _3=function(_4,_5){
-if(_4.style.cssText==undefined){
-_4.setAttribute("style",_5);
+define("dojox/grid/_RowManager",["dojo/_base/declare","dojo/_base/lang","dojo/dom-class"],function(_1,_2,_3){
+var _4=function(_5,_6){
+if(_5.style.cssText==undefined){
+_5.setAttribute("style",_6);
 }else{
-_4.style.cssText=_5;
+_5.style.cssText=_6;
 }
 };
-_1.declare("dojox.grid._RowManager",null,{constructor:function(_6){
-this.grid=_6;
-},linesToEms:2,overRow:-2,prepareStylingRow:function(_7,_8){
-return {index:_7,node:_8,odd:Boolean(_7&1),selected:!!this.grid.selection.isSelected(_7),over:this.isOver(_7),customStyles:"",customClasses:"dojoxGridRow"};
-},styleRowNode:function(_9,_a){
-var _b=this.prepareStylingRow(_9,_a);
-this.grid.onStyleRow(_b);
-this.applyStyles(_b);
-},applyStyles:function(_c){
-var i=_c;
+return _1("dojox.grid._RowManager",null,{constructor:function(_7){
+this.grid=_7;
+},linesToEms:2,overRow:-2,prepareStylingRow:function(_8,_9){
+return {index:_8,node:_9,odd:Boolean(_8&1),selected:!!this.grid.selection.isSelected(_8),over:this.isOver(_8),customStyles:"",customClasses:"dojoxGridRow"};
+},styleRowNode:function(_a,_b){
+var _c=this.prepareStylingRow(_a,_b);
+this.grid.onStyleRow(_c);
+this.applyStyles(_c);
+},applyStyles:function(_d){
+var i=_d;
 i.node.className=i.customClasses;
 var h=i.node.style.height;
-_3(i.node,i.customStyles+";"+(i.node._style||""));
+_4(i.node,i.customStyles+";"+(i.node._style||""));
 i.node.style.height=h;
-},updateStyles:function(_d){
-this.grid.updateRowStyles(_d);
-},setOverRow:function(_e){
-var _f=this.overRow;
-this.overRow=_e;
-if((_f!=this.overRow)&&(_1.isString(_f)||_f>=0)){
-this.updateStyles(_f);
+},updateStyles:function(_e){
+this.grid.updateRowStyles(_e);
+},setOverRow:function(_f){
+var _10=this.overRow;
+this.overRow=_f;
+if((_10!=this.overRow)&&(_2.isString(_10)||_10>=0)){
+this.updateStyles(_10);
 }
 this.updateStyles(this.overRow);
-},isOver:function(_10){
-return (this.overRow==_10&&!_1.hasClass(this.grid.domNode,"dojoxGridColumnResizing"));
+},isOver:function(_11){
+return (this.overRow==_11&&!_3.contains(this.grid.domNode,"dojoxGridColumnResizing"));
 }});
-return _2.grid._RowManager;
 });

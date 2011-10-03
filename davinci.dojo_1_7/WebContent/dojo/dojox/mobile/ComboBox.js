@@ -1,17 +1,11 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/mobile/ComboBox",["./TextBox","./_ComboBoxMenu","dijit/form/_AutoCompleterMixin","./common","dijit/popup"],function(_1,_2,_3,_4,_5){
-dojo.experimental("dojox.mobile.ComboBox");
-return dojo.declare("dojox.mobile.ComboBox",[dojox.mobile.TextBox,dijit.form._AutoCompleterMixin],{dropDownClass:"dojox.mobile._ComboBoxMenu",selectOnClick:false,autoComplete:false,dropDown:null,maxHeight:-1,dropDownPosition:["below","above"],_throttleOpenClose:function(){
+define("dojox/mobile/ComboBox",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","dojo/_base/window","dojo/dom-geometry","dojo/dom-style","dojo/window","dijit/form/_AutoCompleterMixin","dijit/popup","./_ComboBoxMenu","./TextBox","./sniff"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b,_c){
+_1.experimental("dojox.mobile.ComboBox");
+return _2("dojox.mobile.ComboBox",[_b,_8],{dropDownClass:"dojox.mobile._ComboBoxMenu",selectOnClick:false,autoComplete:false,dropDown:null,maxHeight:-1,dropDownPosition:["below","above"],_throttleOpenClose:function(){
 if(this._throttleHandler){
 clearTimeout(this._throttleHandler);
 }
-this._throttleHandler=setTimeout(dojo.hitch(this,function(){
+this._throttleHandler=setTimeout(_3.hitch(this,function(){
 this._throttleHandler=null;
 }),500);
 },_onFocus:function(){
@@ -37,69 +31,69 @@ this.disconnect(this.endHandler);
 }
 }
 this.inherited(arguments);
-_5.close(this.dropDown);
+_9.close(this.dropDown);
 this._opened=false;
 },openDropDown:function(){
-var _6=!this._opened;
-var _7=this.dropDown,_8=_7.domNode,_9=this.domNode,_a=this;
+var _d=!this._opened;
+var _e=this.dropDown,_f=_e.domNode,_10=this.domNode,_11=this;
 if(!this._preparedNode){
 this._preparedNode=true;
-if(_8.style.width){
+if(_f.style.width){
 this._explicitDDWidth=true;
 }
-if(_8.style.height){
+if(_f.style.height){
 this._explicitDDHeight=true;
 }
 }
-var _b={display:"",overflow:"hidden",visibility:"hidden"};
+var _12={display:"",overflow:"hidden",visibility:"hidden"};
 if(!this._explicitDDWidth){
-_b.width="";
+_12.width="";
 }
 if(!this._explicitDDHeight){
-_b.height="";
+_12.height="";
 }
-dojo.style(_8,_b);
-var _c=this.maxHeight;
-if(_c==-1){
-var _d=dojo.window.getBox(),_e=dojo.position(_9,false);
-_c=Math.floor(Math.max(_e.y,_d.h-(_e.y+_e.h)));
+_6.set(_f,_12);
+var _13=this.maxHeight;
+if(_13==-1){
+var _14=_7.getBox(),_15=_5.position(_10,false);
+_13=Math.floor(Math.max(_15.y,_14.h-(_15.y+_15.h)));
 }
-_5.moveOffScreen(_7);
-if(_7.startup&&!_7._started){
-_7.startup();
+_9.moveOffScreen(_e);
+if(_e.startup&&!_e._started){
+_e.startup();
 }
-var mb=dojo.position(this.dropDown.containerNode,false);
-var _f=(_c&&mb.h>_c);
-if(_f){
-mb.h=_c;
+var mb=_5.position(this.dropDown.containerNode,false);
+var _16=(_13&&mb.h>_13);
+if(_16){
+mb.h=_13;
 }
-mb.w=Math.max(mb.w,_9.offsetWidth);
-dojo.marginBox(_8,mb);
-var _10=_5.open({parent:this,popup:_7,around:_9,orient:this.dropDownPosition,onExecute:function(){
-_a.closeDropDown();
+mb.w=Math.max(mb.w,_10.offsetWidth);
+_5.setMarginBox(_f,mb);
+var _17=_9.open({parent:this,popup:_e,around:_10,orient:this.dropDownPosition,onExecute:function(){
+_11.closeDropDown();
 },onCancel:function(){
-_a.closeDropDown();
+_11.closeDropDown();
 },onClose:function(){
-_a._opened=false;
+_11._opened=false;
 }});
 this._opened=true;
-if(_6){
-if(_10.aroundCorner.charAt(0)=="B"){
+if(_d){
+if(_17.aroundCorner.charAt(0)=="B"){
 this.domNode.scrollIntoView(true);
 }
-this.startHandler=this.connect(dojo.doc.documentElement,dojox.mobile.hasTouch?"ontouchstart":"onmousedown",dojo.hitch(this,function(){
-var _11=false;
-this.moveHandler=this.connect(dojo.doc.documentElement,dojox.mobile.hasTouch?"ontouchmove":"onmousemove",function(){
-_11=true;
+this.startHandler=this.connect(_4.doc.documentElement,_c("touch")?"ontouchstart":"onmousedown",_3.hitch(this,function(){
+var _18=false;
+this.moveHandler=this.connect(_4.doc.documentElement,_c("touch")?"ontouchmove":"onmousemove",function(){
+_18=true;
 });
-this.endHandler=this.connect(dojo.doc.documentElement,dojox.mobile.hasTouch?"ontouchend":"onmouseup",function(){
-if(!_11){
+this.endHandler=this.connect(_4.doc.documentElement,_c("touch")?"ontouchend":"onmouseup",function(){
+if(!_18){
 this.closeDropDown();
 }
 });
 }));
 }
-return _10;
+return _17;
 },postCreate:function(){
 this.inherited(arguments);
 this.connect(this.domNode,"onclick","_onClick");

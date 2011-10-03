@@ -1,8 +1,10 @@
 //>>built
-define(({
+define(
+({
 name: "Názov",
 path: "Cesta",
 size: "Veľkosť (v bajtoch)"
 })
+
 
 );

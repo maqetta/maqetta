@@ -1,16 +1,8 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/dtl/utils/date",["dojo/_base/kernel","dojo/_base/lang","dojox/date/php"],function(_1,_2,_3){
-_1.getObject("dtl.utils.date",true,dojox);
-dojox.dtl.utils.date.DateFormat=function(_4){
-_3.DateFormat.call(this,_4);
-};
-_1.extend(dojox.dtl.utils.date.DateFormat,_3.DateFormat.prototype,{f:function(){
+define("dojox/dtl/utils/date",["dojo/_base/lang","dojox/date/php","../_base"],function(_1,_2,dd){
+_1.getObject("dojox.dtl.utils.date",true);
+dd.utils.date.DateFormat=_2.DateFormat;
+_1.extend(dd.utils.date.DateFormat,_2.DateFormat.prototype,{f:function(){
 return (!this.date.getMinutes())?this.g():this.g()+":"+this.i();
 },N:function(){
 return dojox.dtl.utils.date._months_ap[this.date.getMonth()];
@@ -23,24 +15,24 @@ return "noon";
 }
 return this.f()+" "+this.a();
 }});
-_1.mixin(dojox.dtl.utils.date,{format:function(_5,_6){
-var df=new dojox.dtl.utils.date.DateFormat(_6);
-return df.format(_5);
-},timesince:function(d,_7){
+_1.mixin(dojox.dtl.utils.date,{format:function(_3,_4){
+var df=new dojox.dtl.utils.date.DateFormat(_4);
+return df.format(_3);
+},timesince:function(d,_5){
 if(!(d instanceof Date)){
 d=new Date(d.year,d.month,d.day);
 }
-if(!_7){
-_7=new Date();
+if(!_5){
+_5=new Date();
 }
-var _8=Math.abs(_7.getTime()-d.getTime());
-for(var i=0,_9;_9=dojox.dtl.utils.date._chunks[i];i++){
-var _a=Math.floor(_8/_9[0]);
-if(_a){
+var _6=Math.abs(_5.getTime()-d.getTime());
+for(var i=0,_7;_7=dojox.dtl.utils.date._chunks[i];i++){
+var _8=Math.floor(_6/_7[0]);
+if(_8){
 break;
 }
 }
-return _a+" "+_9[1](_a);
+return _8+" "+_7[1](_8);
 },_chunks:[[60*60*24*365*1000,function(n){
 return (n==1)?"year":"years";
 }],[60*60*24*30*1000,function(n){

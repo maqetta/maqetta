@@ -1,31 +1,26 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/drawing/tools/Pencil",["../stencil/Path","../util/oo","../manager/_registry"],function(){
-dojox.drawing.tools.Pencil=dojox.drawing.util.oo.declare(dojox.drawing.stencil.Path,function(){
+define(["dijit","dojo","dojox"],function(_1,_2,_3){
+_2.provide("dojox.drawing.tools.Pencil");
+_3.drawing.tools.Pencil=_3.drawing.util.oo.declare(_3.drawing.stencil.Path,function(){
 this._started=false;
-},{draws:true,minDist:15,onDown:function(_1){
+},{draws:true,minDist:15,onDown:function(_4){
 this._started=true;
-var p={x:_1.x,y:_1.y};
+var p={x:_4.x,y:_4.y};
 this.points=[p];
 this.lastPoint=p;
 this.revertRenderHit=this.renderHit;
 this.renderHit=false;
 this.closePath=false;
-},onDrag:function(_2){
-if(!this._started||this.minDist>this.util.distance(_2.x,_2.y,this.lastPoint.x,this.lastPoint.y)){
+},onDrag:function(_5){
+if(!this._started||this.minDist>this.util.distance(_5.x,_5.y,this.lastPoint.x,this.lastPoint.y)){
 return;
 }
-var p={x:_2.x,y:_2.y};
+var p={x:_5.x,y:_5.y};
 this.points.push(p);
 this.render();
-this.checkClosePoint(this.points[0],_2);
+this.checkClosePoint(this.points[0],_5);
 this.lastPoint=p;
-},onUp:function(_3){
+},onUp:function(_6){
 if(!this._started){
 return;
 }
@@ -34,14 +29,14 @@ this._started=false;
 this.points=[];
 return;
 }
-var _4=this.getBounds();
-if(_4.w<this.minimumSize&&_4.h<this.minimumSize){
+var _7=this.getBounds();
+if(_7.w<this.minimumSize&&_7.h<this.minimumSize){
 this.remove(this.hit,this.shape,this.closeGuide);
 this._started=false;
 this.setPoints([]);
 return;
 }
-if(this.checkClosePoint(this.points[0],_3,true)){
+if(this.checkClosePoint(this.points[0],_6,true)){
 this.closePath=true;
 }
 this.renderHit=this.revertRenderHit;
@@ -49,7 +44,6 @@ this.renderedOnce=true;
 this.render();
 this.onRender(this);
 }});
-dojox.drawing.tools.Pencil.setup={name:"dojox.drawing.tools.Pencil",tooltip:"Pencil Tool",iconClass:"iconLine"};
-dojox.drawing.register(dojox.drawing.tools.Pencil.setup,"tool");
-return dojox.drawing.tools.Pencil;
+_3.drawing.tools.Pencil.setup={name:"dojox.drawing.tools.Pencil",tooltip:"Pencil Tool",iconClass:"iconLine"};
+_3.drawing.register(_3.drawing.tools.Pencil.setup,"tool");
 });

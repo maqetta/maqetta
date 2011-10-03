@@ -1,5 +1,7 @@
 //>>built
-define(({
+define(
+//begin v1.x content
+({
 	displayOptions: "[اختيارات العرض]",
 	title: "العنوان",
 	authors: "المؤلفين",
@@ -10,4 +12,5 @@ define(({
 	summary: "الملخص",
 	content: "المحتويات"
 })
+//end v1.x content
 );

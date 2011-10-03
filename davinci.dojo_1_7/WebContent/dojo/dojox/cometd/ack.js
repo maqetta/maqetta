@@ -1,12 +1,7 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/cometd/ack",["dojo","dijit","dojox","dojox/cometd/_base"],function(_1,_2,_3){
-_1.getObject("dojox.cometd.ack",1);
+define(["dijit","dojo","dojox","dojo/require!dojox/cometd/_base"],function(_1,_2,_3){
+_2.provide("dojox.cometd.ack");
+_2.require("dojox.cometd._base");
 _3.cometd._ack=new function(){
 var _4=false;
 var _5=-1;
@@ -38,9 +33,7 @@ _8.ext.ack=_5;
 return _8;
 };
 };
-_3.cometd._extendInList.push(_1.hitch(_3.cometd._ack,"_in"));
-_3.cometd._extendOutList.push(_1.hitch(_3.cometd._ack,"_out"));
+_3.cometd._extendInList.push(_2.hitch(_3.cometd._ack,"_in"));
+_3.cometd._extendOutList.push(_2.hitch(_3.cometd._ack,"_out"));
 _3.cometd.ackEnabled=true;
-return _1.getObject("dojox.cometd.ack");
 });
-require(["dojox/cometd/ack"]);

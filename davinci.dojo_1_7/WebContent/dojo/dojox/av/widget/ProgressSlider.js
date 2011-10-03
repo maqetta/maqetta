@@ -1,9 +1,3 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
 define("dojox/av/widget/ProgressSlider",["dojo","dijit","dijit/_Widget","dijit/_TemplatedMixin"],function(_1,_2){
 _1.declare("dojox.av.widget.ProgressSlider",[_2._Widget,_2._TemplatedMixin],{templateString:_1.cache("dojox.av.widget","resources/ProgressSlider.html"),postCreate:function(){

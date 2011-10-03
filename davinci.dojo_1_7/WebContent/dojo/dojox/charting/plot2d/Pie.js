@@ -1,13 +1,7 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/charting/plot2d/Pie",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","../Element","./_PlotEvents","./common","../axis2d/common","dojox/gfx","dojox/gfx/matrix","dojox/lang/functional","dojox/lang/utils"],function(_1,_2,_3,_4,_5,dc,da,g,m,df,du){
+define("dojox/charting/plot2d/Pie",["dojo/_base/lang","dojo/_base/array","dojo/_base/declare","../Element","./_PlotEvents","./common","../axis2d/common","dojox/gfx","dojox/gfx/matrix","dojox/lang/functional","dojox/lang/utils"],function(_1,_2,_3,_4,_5,dc,da,g,m,df,du){
 var _6=0.2;
-return _1.declare("dojox.charting.plot2d.Pie",[dojox.charting.Element,dojox.charting.plot2d._PlotEvents],{defaultParams:{labels:true,ticks:false,fixed:true,precision:1,labelOffset:20,labelStyle:"default",htmlLabels:true,radGrad:"native",fanSize:5,startAngle:0},optionalParams:{radius:0,stroke:{},outline:{},shadow:{},fill:{},font:"",fontColor:"",labelWiring:{}},constructor:function(_7,_8){
+return _3("dojox.charting.plot2d.Pie",[_4,_5],{defaultParams:{labels:true,ticks:false,fixed:true,precision:1,labelOffset:20,labelStyle:"default",htmlLabels:true,radGrad:"native",fanSize:5,startAngle:0},optionalParams:{radius:0,stroke:{},outline:{},shadow:{},fill:{},font:"",fontColor:"",labelWiring:{}},constructor:function(_7,_8){
 this.opt=_1.clone(this.defaultParams);
 du.updateWithObject(this.opt,_8);
 du.updateWithPattern(this.opt,_8,this.optionalParams);
@@ -49,7 +43,7 @@ return this;
 }
 _14=df.map(_13,"/this",df.foldl(_13,"+",0));
 if(this.opt.labels){
-_15=_1.map(_14,function(x){
+_15=_2.map(_14,function(x){
 return x>0?this._getLabel(x*100)+"%":"";
 },this);
 }
@@ -60,7 +54,7 @@ return this;
 }
 _14=df.map(_13,"/this",df.foldl(_13,"+",0));
 if(this.opt.labels){
-_15=_1.map(_14,function(x,i){
+_15=_2.map(_14,function(x,i){
 if(x<=0){
 return "";
 }
@@ -92,7 +86,7 @@ _17=r-this.opt.labelOffset;
 var _1c={cx:_c.l+rx,cy:_c.t+ry,r:r};
 this.dyn=[];
 var _1d=new Array(_14.length);
-_1.some(_14,function(_1e,i){
+_2.some(_14,function(_1e,i){
 if(_1e<0){
 return false;
 }
@@ -156,7 +150,7 @@ return false;
 if(this.opt.labels){
 if(this.opt.labelStyle=="default"){
 _11=_10;
-_1.some(_14,function(_2b,i){
+_2.some(_14,function(_2b,i){
 if(_2b<=0){
 return false;
 }
@@ -184,7 +178,7 @@ return false;
 if(this.opt.labelStyle=="columns"){
 _11=_10;
 var _2f=[];
-_1.forEach(_14,function(_30,i){
+_2.forEach(_14,function(_30,i){
 var end=_11+_30*2*Math.PI;
 if(i+1==_14.length){
 end=_10+2*Math.PI;
@@ -195,7 +189,7 @@ _11=end;
 });
 var _32=g._base._getTextBox("a",{font:_d}).h;
 this._getProperLabelRadius(_2f,_32,_1c.r*1.1);
-_1.forEach(_2f,function(_33,i){
+_2.forEach(_2f,function(_33,i){
 if(!_33.omit){
 var _34=_1c.cx-_1c.r*2,_35=_1c.cx+_1c.r*2,_36=g._base._getTextBox(_15[i],{font:_d}).w,x=_1c.cx+_33.labelR*Math.cos(_33.angle),y=_1c.cy+_33.labelR*Math.sin(_33.angle),_37=(_33.left)?(_34+_36):(_35-_36),_38=(_33.left)?_34:_37;
 var _39=s.createPath().moveTo(_1c.cx+_1c.r*Math.cos(_33.angle),_1c.cy+_1c.r*Math.sin(_33.angle));

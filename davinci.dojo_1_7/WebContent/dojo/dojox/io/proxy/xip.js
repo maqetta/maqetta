@@ -1,16 +1,10 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/io/proxy/xip",["dojo/_base/lang","dojo/io/iframe","dojox/data/dom","dojo/_base/xhr","dojo/_base/url"],function(_1,_2,_3){
+define("dojox/io/proxy/xip",["dojo/main","dojo/io/iframe","dojox/data/dom","dojo/_base/xhr","dojo/_base/url"],function(_1,_2,_3){
 _1.getObject("io.proxy.xip",true,dojox);
 dojox.io.proxy.xip={xipClientUrl:((_1.config||djConfig)["xipClientUrl"])||_1.moduleUrl("dojox.io.proxy","xip_client.html").toString(),urlLimit:4000,_callbackName:(dojox._scopeName||"dojox")+".io.proxy.xip.fragmentReceived",_state:{},_stateIdCounter:0,_isWebKit:navigator.userAgent.indexOf("WebKit")!=-1,send:function(_4){
 var _5=this.xipClientUrl;
 if(_5.split(":")[0].match(/javascript/i)||_4._ifpServerUrl.split(":")[0].match(/javascript/i)){
-return;
+return null;
 }
 var _6=_5.indexOf(":");
 var _7=_5.indexOf("/");

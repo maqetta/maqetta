@@ -1,23 +1,22 @@
 .mblFade.mblOut {
-	z-index: -100;
-	-webkit-animation-duration: 1s;
-	-webkit-animation-name: mblFadeOut;
-	-webkit-animation-timing-function: ease-in;
+	-webkit-transition-property: none;
+	-webkit-transition-duration: 0s;
+	opacity: 1;
 }
-.mblFade.mblOut.mblFast {
-	-webkit-animation-duration: 0.3s;
+.mblFade.mblOut.mblTransition {
+	-webkit-transition-property: opacity;
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: ease-out;
+	opacity: 0;
 }
 .mblFade.mblIn {
-	z-index: 0;
-	-webkit-animation-duration: 1s;
-	-webkit-animation-name: mblFadeIn;
-	-webkit-animation-timing-function: ease-out;
+	-webkit-transition-property: none;
+	-webkit-transition-duration: 0s;
+	opacity: 0;
 }
-@-webkit-keyframes mblFadeOut {
-	from {}
-	to {}
-}
-@-webkit-keyframes mblFadeIn {
-	from { opacity: 0; }
-	to { opacity: 1; }
+.mblFade.mblIn.mblTransition {
+	-webkit-transition-property: opacity;
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: ease-in;
+	opacity: 1;
 }

@@ -7,6 +7,7 @@
 .mblIconItem {
 	list-style-type: none;
 	float: left;
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 }
 .mblIconItemTerminator {
 	list-style-type: none;
@@ -19,14 +20,18 @@
 }
 .mblIconArea {
 	.mblIconArea-styles;
-	DIV {
+	div {
 		position: relative;
-		.mblIconArea-div-styles;
+		height: 65px;
+		line-height: 65px;
+		text-align: center;
 	}
-	IMG {
-		position: absolute;
-		.mblIconArea-img-styles;
+	img {
+		vertical-align: middle;
 	}
+}
+.mblIconItemSpriteIcon {
+	position: absolute;
 }
 .mblContent {
 	clear: both;

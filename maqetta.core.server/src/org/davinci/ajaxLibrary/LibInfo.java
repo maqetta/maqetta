@@ -1,6 +1,6 @@
 package org.davinci.ajaxLibrary;
 
-public class LibInfo {
+public class LibInfo implements ILibInfo {
     
 	public LibInfo(String id, String name, String version, String virtualRoot) {
         this.setName(name);
@@ -16,6 +16,9 @@ public class LibInfo {
         this.version = version;
     }
 
+    /* (non-Javadoc)
+	 * @see org.davinci.ajaxLibrary.ILibInfo#getVersion()
+	 */
     public String getVersion() {
         return version;
     }
@@ -24,6 +27,9 @@ public class LibInfo {
         this.id = id;
     }
 
+    /* (non-Javadoc)
+	 * @see org.davinci.ajaxLibrary.ILibInfo#getId()
+	 */
     public String getId() {
         return id;
     }
@@ -32,6 +38,9 @@ public class LibInfo {
         this.virtualRoot = virtualRoot;
     }
 
+    /* (non-Javadoc)
+	 * @see org.davinci.ajaxLibrary.ILibInfo#getVirtualRoot()
+	 */
     public String getVirtualRoot() {
         String vr = this.virtualRoot;
 
@@ -49,6 +58,9 @@ public class LibInfo {
         this.name = name;
     }
 
+    /* (non-Javadoc)
+	 * @see org.davinci.ajaxLibrary.ILibInfo#getName()
+	 */
     public String getName() {
         return name;
     }

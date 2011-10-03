@@ -1,32 +1,26 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-require.cache["dijit/layout/templates/TabContainer.html"]="<div class=\"dijitTabContainer\">\n\t<div class=\"dijitTabListWrapper\" dojoAttachPoint=\"tablistNode\"></div>\n\t<div dojoAttachPoint=\"tablistSpacer\" class=\"dijitTabSpacer ${baseClass}-spacer\"></div>\n\t<div class=\"dijitTabPaneWrapper ${baseClass}-container\" dojoAttachPoint=\"containerNode\"></div>\n</div>\n";
-define("dijit/layout/_TabContainerBase",["dojo/_base/kernel","..","dojo/text!./templates/TabContainer.html","./StackContainer","../_TemplatedMixin","dojo/_base/html"],function(_1,_2,_3){
-_1.declare("dijit.layout._TabContainerBase",[_2.layout.StackContainer,_2._TemplatedMixin],{tabPosition:"top",baseClass:"dijitTabContainer",tabStrip:false,nested:false,templateString:_3,postMixInProperties:function(){
+require({cache:{"url:dijit/layout/templates/TabContainer.html":"<div class=\"dijitTabContainer\">\n\t<div class=\"dijitTabListWrapper\" data-dojo-attach-point=\"tablistNode\"></div>\n\t<div data-dojo-attach-point=\"tablistSpacer\" class=\"dijitTabSpacer ${baseClass}-spacer\"></div>\n\t<div class=\"dijitTabPaneWrapper ${baseClass}-container\" data-dojo-attach-point=\"containerNode\"></div>\n</div>\n"}});
+define("dijit/layout/_TabContainerBase",["dojo/text!./templates/TabContainer.html","./StackContainer","./utils","../_TemplatedMixin","dojo/_base/declare","dojo/dom-class","dojo/dom-geometry","dojo/dom-style"],function(_1,_2,_3,_4,_5,_6,_7,_8){
+return _5("dijit.layout._TabContainerBase",[_2,_4],{tabPosition:"top",baseClass:"dijitTabContainer",tabStrip:false,nested:false,templateString:_1,postMixInProperties:function(){
 this.baseClass+=this.tabPosition.charAt(0).toUpperCase()+this.tabPosition.substr(1).replace(/-.*/,"");
-this.srcNodeRef&&_1.style(this.srcNodeRef,"visibility","hidden");
+this.srcNodeRef&&_8.set(this.srcNodeRef,"visibility","hidden");
 this.inherited(arguments);
 },buildRendering:function(){
 this.inherited(arguments);
 this.tablist=this._makeController(this.tablistNode);
 if(!this.doLayout){
-_1.addClass(this.domNode,"dijitTabContainerNoLayout");
+_6.add(this.domNode,"dijitTabContainerNoLayout");
 }
 if(this.nested){
-_1.addClass(this.domNode,"dijitTabContainerNested");
-_1.addClass(this.tablist.containerNode,"dijitTabContainerTabListNested");
-_1.addClass(this.tablistSpacer,"dijitTabContainerSpacerNested");
-_1.addClass(this.containerNode,"dijitTabPaneWrapperNested");
+_6.add(this.domNode,"dijitTabContainerNested");
+_6.add(this.tablist.containerNode,"dijitTabContainerTabListNested");
+_6.add(this.tablistSpacer,"dijitTabContainerSpacerNested");
+_6.add(this.containerNode,"dijitTabPaneWrapperNested");
 }else{
-_1.addClass(this.domNode,"tabStrip-"+(this.tabStrip?"enabled":"disabled"));
+_6.add(this.domNode,"tabStrip-"+(this.tabStrip?"enabled":"disabled"));
 }
-},_setupChild:function(_4){
-_1.addClass(_4.domNode,"dijitTabPane");
+},_setupChild:function(_9){
+_6.add(_9.domNode,"dijitTabPane");
 this.inherited(arguments);
 },startup:function(){
 if(this._started){
@@ -40,11 +34,11 @@ return;
 }
 var sc=this.selectedChildWidget;
 if(this.doLayout){
-var _5=this.tabPosition.replace(/-h/,"");
-this.tablist.layoutAlign=_5;
-var _6=[this.tablist,{domNode:this.tablistSpacer,layoutAlign:_5},{domNode:this.containerNode,layoutAlign:"client"}];
-_2.layout.layoutChildren(this.domNode,this._contentBox,_6);
-this._containerContentBox=_2.layout.marginBox2contentBox(this.containerNode,_6[2]);
+var _a=this.tabPosition.replace(/-h/,"");
+this.tablist.layoutAlign=_a;
+var _b=[this.tablist,{domNode:this.tablistSpacer,layoutAlign:_a},{domNode:this.containerNode,layoutAlign:"client"}];
+_3.layoutChildren(this.domNode,this._contentBox,_b);
+this._containerContentBox=_3.marginBox2contentBox(this.containerNode,_b[2]);
 if(sc&&sc.resize){
 sc.resize(this._containerContentBox);
 }
@@ -52,9 +46,9 @@ sc.resize(this._containerContentBox);
 if(this.tablist.resize){
 var s=this.tablist.domNode.style;
 s.width="0";
-var _7=_1.contentBox(this.domNode).w;
+var _c=_7.getContentBox(this.domNode).w;
 s.width="";
-this.tablist.resize({w:_7});
+this.tablist.resize({w:_c});
 }
 if(sc&&sc.resize){
 sc.resize();
@@ -66,5 +60,4 @@ this.tablist.destroy();
 }
 this.inherited(arguments);
 }});
-return _2.layout._TabContainerBase;
 });

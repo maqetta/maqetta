@@ -1,13 +1,7 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/charting/plot2d/Bubble",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","./Base","./common","dojox/lang/functional","dojox/lang/functional/reversed","dojox/lang/utils","dojox/gfx/fx"],function(_1,_2,_3,_4,dc,df,_5,du,fx){
-var _6=df.lambda("item.purgeGroup()");
-return _1.declare("dojox.charting.plot2d.Bubble",dojox.charting.plot2d.Base,{defaultParams:{hAxis:"x",vAxis:"y",animate:null},optionalParams:{stroke:{},outline:{},shadow:{},fill:{},font:"",fontColor:""},constructor:function(_7,_8){
+define("dojox/charting/plot2d/Bubble",["dojo/_base/lang","dojo/_base/declare","dojo/_base/array","./Base","./common","dojox/lang/functional","dojox/lang/functional/reversed","dojox/lang/utils","dojox/gfx/fx"],function(_1,_2,_3,_4,dc,df,_5,du,fx){
+var _6=_5.lambda("item.purgeGroup()");
+return _2("dojox.charting.plot2d.Bubble",_4,{defaultParams:{hAxis:"x",vAxis:"y",animate:null},optionalParams:{stroke:{},outline:{},shadow:{},fill:{},font:"",fontColor:""},constructor:function(_7,_8){
 this.opt=_1.clone(this.defaultParams);
 du.updateWithObject(this.opt,_8);
 du.updateWithPattern(this.opt,_8,this.optionalParams);
@@ -22,7 +16,7 @@ return this.performZoom(_9,_a);
 this.resetEvents();
 this.dirty=this.isDirty();
 if(this.dirty){
-_1.forEach(this.series,_6);
+_3.forEach(this.series,_6);
 this._eventSeries={};
 this.cleanGroup();
 var s=this.group;
@@ -48,12 +42,12 @@ if(typeof _d.data[0]=="number"){
 console.warn("dojox.charting.plot2d.Bubble: the data in the following series cannot be rendered as a bubble chart; ",_d);
 continue;
 }
-var _e=t.next("circle",[this.opt,_d]),s=_d.group,_f=_1.map(_d.data,function(v,i){
+var _e=t.next("circle",[this.opt,_d]),s=_d.group,_f=_3.map(_d.data,function(v,i){
 return v?{x:ht(v.x)+_a.l,y:_9.height-_a.b-vt(v.y),radius:this._vScaler.bounds.scale*(v.size/2)}:null;
 },this);
 var _10=null,_11=null,_12=null;
 if(_e.series.shadow){
-_12=_1.map(_f,function(_13){
+_12=_3.map(_f,function(_13){
 if(_13!==null){
 var _14=t.addMixin(_e,"circle",_13,true),_15=_14.series.shadow;
 var _16=s.createCircle({cx:_13.x+_15.dx,cy:_13.y+_15.dy,r:_13.radius}).setStroke(_15).setFill(_15.color);
@@ -69,7 +63,7 @@ _d.dyn.shadow=_12[_12.length-1].getStroke();
 }
 }
 if(_e.series.outline){
-_11=_1.map(_f,function(_17){
+_11=_3.map(_f,function(_17){
 if(_17!==null){
 var _18=t.addMixin(_e,"circle",_17,true),_19=dc.makeStroke(_18.series.outline);
 _19.width=2*_19.width+_e.series.stroke.width;
@@ -85,7 +79,7 @@ if(_11.length){
 _d.dyn.outline=_11[_11.length-1].getStroke();
 }
 }
-_10=_1.map(_f,function(_1b){
+_10=_3.map(_f,function(_1b){
 if(_1b!==null){
 var _1c=t.addMixin(_e,"circle",_1b,true),_1d={x:_1b.x-_1b.radius,y:_1b.y-_1b.radius,width:2*_1b.radius,height:2*_1b.radius};
 var _1e=this._plotFill(_1c.series.fill,_9,_a);
@@ -104,7 +98,7 @@ _d.dyn.stroke=_10[_10.length-1].getStroke();
 }
 if(_c){
 var _20=new Array(_10.length);
-_1.forEach(_10,function(s,i){
+_3.forEach(_10,function(s,i){
 if(s!==null){
 var o={element:"circle",index:i,run:_d,shape:s,outline:_11&&_11[i]||null,shadow:_12&&_12[i]||null,x:_d.data[i].x,y:_d.data[i].y,r:_d.data[i].size/2,cx:_f[i].x,cy:_f[i].y,cr:_f[i].radius};
 this._connectEvents(o);

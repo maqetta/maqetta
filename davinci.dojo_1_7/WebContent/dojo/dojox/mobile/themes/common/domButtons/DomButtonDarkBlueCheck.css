@@ -4,7 +4,7 @@
 	width: 20px;
 	height: 29px;
 }
-.mblDomButtonDarkBlueCheck > DIV, .mblDomButtonCheck > DIV {
+.mblDomButtonDarkBlueCheck > div, .mblDomButtonCheck > div {
 	position: absolute;
 	left: 0px;
 	top: 8px;

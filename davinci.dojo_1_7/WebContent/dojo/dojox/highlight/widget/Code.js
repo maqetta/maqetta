@@ -1,9 +1,3 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
 define("dojox/highlight/widget/Code",["dojo","dijit","dijit/_Widget","dijit/_Templated","dojox/highlight"],function(_1,_2){
 _1.declare("dojox.highlight.widget.Code",[_2._Widget,_2._Templated],{url:"",range:null,style:"",listType:"1",lang:"",templateString:"<div class=\"formatted\" style=\"${style}\">"+"<div class=\"titleBar\"></div>"+"<ol type=\"${listType}\" dojoAttachPoint=\"codeList\" class=\"numbers\"></ol>"+"<div style=\"display:none\" dojoAttachPoint=\"containerNode\"></div>"+"</div>",postCreate:function(){

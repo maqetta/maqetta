@@ -1,6 +1,7 @@
 
 .mblTooltip {
   position: absolute;
+  z-index: 2000;
   display: block;
   margin: 0;
   padding: 5px;
@@ -130,8 +131,7 @@
   border-bottom-width: 0;
   border-top-color: #172035;
 }
-.mblTooltipHidden,
-.mblTooltipHidden * {
+.mblTooltipHidden, .mblTooltipHidden * {
   visibility: hidden !important;
 }
 .mblTooltip .mblHeading {
@@ -143,7 +143,7 @@
   background-image: -webkit-gradient(linear, left top, left bottom, from(#5e6167), to(#1a1d24), color-stop(0.5, #2e322b));
   font-weight: normal;
 }
-.mblTooltip .mblHeading .mblToolbarButton {
+.mblTooltip .mblHeading .mblToolBarButton {
   border: 1px inset #434450;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#686f80), to(#000924), color-stop(0.5, #000b29));
   font-weight: normal;

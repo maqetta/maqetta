@@ -5,489 +5,489 @@
 */
 
 //>>built
-define("dojo/data/ItemFileWriteStore",["../main","./ItemFileReadStore"],function(_1){
-_1.declare("dojo.data.ItemFileWriteStore",_1.data.ItemFileReadStore,{constructor:function(_2){
+define("dojo/data/ItemFileWriteStore",["../_base/lang","../_base/declare","../_base/array","../_base/json","../_base/window","./ItemFileReadStore","../date/stamp"],function(_1,_2,_3,_4,_5,_6,_7){
+return _2("dojo.data.ItemFileWriteStore",_6,{constructor:function(_8){
 this._features["dojo.data.api.Write"]=true;
 this._features["dojo.data.api.Notification"]=true;
 this._pending={_newItems:{},_modifiedItems:{},_deletedItems:{}};
 if(!this._datatypeMap["Date"].serialize){
-this._datatypeMap["Date"].serialize=function(_3){
-return _1.date.stamp.toISOString(_3,{zulu:true});
+this._datatypeMap["Date"].serialize=function(_9){
+return _7.toISOString(_9,{zulu:true});
 };
 }
-if(_2&&(_2.referenceIntegrity===false)){
+if(_8&&(_8.referenceIntegrity===false)){
 this.referenceIntegrity=false;
 }
 this._saveInProgress=false;
-},referenceIntegrity:true,_assert:function(_4){
-if(!_4){
+},referenceIntegrity:true,_assert:function(_a){
+if(!_a){
 throw new Error("assertion failed in ItemFileWriteStore");
 }
 },_getIdentifierAttribute:function(){
 return this.getFeatures()["dojo.data.api.Identity"];
-},newItem:function(_5,_6){
+},newItem:function(_b,_c){
 this._assert(!this._saveInProgress);
 if(!this._loadFinished){
 this._forceLoad();
 }
-if(typeof _5!="object"&&typeof _5!="undefined"){
+if(typeof _b!="object"&&typeof _b!="undefined"){
 throw new Error("newItem() was passed something other than an object");
 }
-var _7=null;
-var _8=this._getIdentifierAttribute();
-if(_8===Number){
-_7=this._arrayOfAllItems.length;
+var _d=null;
+var _e=this._getIdentifierAttribute();
+if(_e===Number){
+_d=this._arrayOfAllItems.length;
 }else{
-_7=_5[_8];
-if(typeof _7==="undefined"){
+_d=_b[_e];
+if(typeof _d==="undefined"){
 throw new Error("newItem() was not passed an identity for the new item");
 }
-if(_1.isArray(_7)){
+if(_1.isArray(_d)){
 throw new Error("newItem() was not passed an single-valued identity");
 }
 }
 if(this._itemsByIdentity){
-this._assert(typeof this._itemsByIdentity[_7]==="undefined");
+this._assert(typeof this._itemsByIdentity[_d]==="undefined");
 }
-this._assert(typeof this._pending._newItems[_7]==="undefined");
-this._assert(typeof this._pending._deletedItems[_7]==="undefined");
-var _9={};
-_9[this._storeRefPropName]=this;
-_9[this._itemNumPropName]=this._arrayOfAllItems.length;
+this._assert(typeof this._pending._newItems[_d]==="undefined");
+this._assert(typeof this._pending._deletedItems[_d]==="undefined");
+var _f={};
+_f[this._storeRefPropName]=this;
+_f[this._itemNumPropName]=this._arrayOfAllItems.length;
 if(this._itemsByIdentity){
-this._itemsByIdentity[_7]=_9;
-_9[_8]=[_7];
+this._itemsByIdentity[_d]=_f;
+_f[_e]=[_d];
 }
-this._arrayOfAllItems.push(_9);
-var _a=null;
-if(_6&&_6.parent&&_6.attribute){
-_a={item:_6.parent,attribute:_6.attribute,oldValue:undefined};
-var _b=this.getValues(_6.parent,_6.attribute);
-if(_b&&_b.length>0){
-var _c=_b.slice(0,_b.length);
-if(_b.length===1){
-_a.oldValue=_b[0];
+this._arrayOfAllItems.push(_f);
+var _10=null;
+if(_c&&_c.parent&&_c.attribute){
+_10={item:_c.parent,attribute:_c.attribute,oldValue:undefined};
+var _11=this.getValues(_c.parent,_c.attribute);
+if(_11&&_11.length>0){
+var _12=_11.slice(0,_11.length);
+if(_11.length===1){
+_10.oldValue=_11[0];
 }else{
-_a.oldValue=_b.slice(0,_b.length);
+_10.oldValue=_11.slice(0,_11.length);
 }
-_c.push(_9);
-this._setValueOrValues(_6.parent,_6.attribute,_c,false);
-_a.newValue=this.getValues(_6.parent,_6.attribute);
+_12.push(_f);
+this._setValueOrValues(_c.parent,_c.attribute,_12,false);
+_10.newValue=this.getValues(_c.parent,_c.attribute);
 }else{
-this._setValueOrValues(_6.parent,_6.attribute,_9,false);
-_a.newValue=_9;
+this._setValueOrValues(_c.parent,_c.attribute,_f,false);
+_10.newValue=_f;
 }
 }else{
-_9[this._rootItemPropName]=true;
-this._arrayOfTopLevelItems.push(_9);
+_f[this._rootItemPropName]=true;
+this._arrayOfTopLevelItems.push(_f);
 }
-this._pending._newItems[_7]=_9;
-for(var _d in _5){
-if(_d===this._storeRefPropName||_d===this._itemNumPropName){
+this._pending._newItems[_d]=_f;
+for(var key in _b){
+if(key===this._storeRefPropName||key===this._itemNumPropName){
 throw new Error("encountered bug in ItemFileWriteStore.newItem");
 }
-var _e=_5[_d];
-if(!_1.isArray(_e)){
-_e=[_e];
+var _13=_b[key];
+if(!_1.isArray(_13)){
+_13=[_13];
 }
-_9[_d]=_e;
+_f[key]=_13;
 if(this.referenceIntegrity){
-for(var i=0;i<_e.length;i++){
-var _f=_e[i];
-if(this.isItem(_f)){
-this._addReferenceToMap(_f,_9,_d);
+for(var i=0;i<_13.length;i++){
+var val=_13[i];
+if(this.isItem(val)){
+this._addReferenceToMap(val,_f,key);
 }
 }
 }
 }
-this.onNew(_9,_a);
-return _9;
-},_removeArrayElement:function(_10,_11){
-var _12=_1.indexOf(_10,_11);
-if(_12!=-1){
-_10.splice(_12,1);
+this.onNew(_f,_10);
+return _f;
+},_removeArrayElement:function(_14,_15){
+var _16=_3.indexOf(_14,_15);
+if(_16!=-1){
+_14.splice(_16,1);
 return true;
 }
 return false;
-},deleteItem:function(_13){
+},deleteItem:function(_17){
 this._assert(!this._saveInProgress);
-this._assertIsItem(_13);
-var _14=_13[this._itemNumPropName];
-var _15=this.getIdentity(_13);
+this._assertIsItem(_17);
+var _18=_17[this._itemNumPropName];
+var _19=this.getIdentity(_17);
 if(this.referenceIntegrity){
-var _16=this.getAttributes(_13);
-if(_13[this._reverseRefMap]){
-_13["backup_"+this._reverseRefMap]=_1.clone(_13[this._reverseRefMap]);
+var _1a=this.getAttributes(_17);
+if(_17[this._reverseRefMap]){
+_17["backup_"+this._reverseRefMap]=_1.clone(_17[this._reverseRefMap]);
 }
-_1.forEach(_16,function(_17){
-_1.forEach(this.getValues(_13,_17),function(_18){
-if(this.isItem(_18)){
-if(!_13["backupRefs_"+this._reverseRefMap]){
-_13["backupRefs_"+this._reverseRefMap]=[];
+_3.forEach(_1a,function(_1b){
+_3.forEach(this.getValues(_17,_1b),function(_1c){
+if(this.isItem(_1c)){
+if(!_17["backupRefs_"+this._reverseRefMap]){
+_17["backupRefs_"+this._reverseRefMap]=[];
 }
-_13["backupRefs_"+this._reverseRefMap].push({id:this.getIdentity(_18),attr:_17});
-this._removeReferenceFromMap(_18,_13,_17);
+_17["backupRefs_"+this._reverseRefMap].push({id:this.getIdentity(_1c),attr:_1b});
+this._removeReferenceFromMap(_1c,_17,_1b);
 }
 },this);
 },this);
-var _19=_13[this._reverseRefMap];
-if(_19){
-for(var _1a in _19){
-var _1b=null;
+var _1d=_17[this._reverseRefMap];
+if(_1d){
+for(var _1e in _1d){
+var _1f=null;
 if(this._itemsByIdentity){
-_1b=this._itemsByIdentity[_1a];
+_1f=this._itemsByIdentity[_1e];
 }else{
-_1b=this._arrayOfAllItems[_1a];
+_1f=this._arrayOfAllItems[_1e];
 }
-if(_1b){
-for(var _1c in _19[_1a]){
-var _1d=this.getValues(_1b,_1c)||[];
-var _1e=_1.filter(_1d,function(_1f){
-return !(this.isItem(_1f)&&this.getIdentity(_1f)==_15);
+if(_1f){
+for(var _20 in _1d[_1e]){
+var _21=this.getValues(_1f,_20)||[];
+var _22=_3.filter(_21,function(_23){
+return !(this.isItem(_23)&&this.getIdentity(_23)==_19);
 },this);
-this._removeReferenceFromMap(_13,_1b,_1c);
-if(_1e.length<_1d.length){
-this._setValueOrValues(_1b,_1c,_1e,true);
+this._removeReferenceFromMap(_17,_1f,_20);
+if(_22.length<_21.length){
+this._setValueOrValues(_1f,_20,_22,true);
 }
 }
 }
 }
 }
 }
-this._arrayOfAllItems[_14]=null;
-_13[this._storeRefPropName]=null;
+this._arrayOfAllItems[_18]=null;
+_17[this._storeRefPropName]=null;
 if(this._itemsByIdentity){
-delete this._itemsByIdentity[_15];
+delete this._itemsByIdentity[_19];
 }
-this._pending._deletedItems[_15]=_13;
-if(_13[this._rootItemPropName]){
-this._removeArrayElement(this._arrayOfTopLevelItems,_13);
+this._pending._deletedItems[_19]=_17;
+if(_17[this._rootItemPropName]){
+this._removeArrayElement(this._arrayOfTopLevelItems,_17);
 }
-this.onDelete(_13);
+this.onDelete(_17);
 return true;
-},setValue:function(_20,_21,_22){
-return this._setValueOrValues(_20,_21,_22,true);
-},setValues:function(_23,_24,_25){
-return this._setValueOrValues(_23,_24,_25,true);
-},unsetAttribute:function(_26,_27){
-return this._setValueOrValues(_26,_27,[],true);
-},_setValueOrValues:function(_28,_29,_2a,_2b){
+},setValue:function(_24,_25,_26){
+return this._setValueOrValues(_24,_25,_26,true);
+},setValues:function(_27,_28,_29){
+return this._setValueOrValues(_27,_28,_29,true);
+},unsetAttribute:function(_2a,_2b){
+return this._setValueOrValues(_2a,_2b,[],true);
+},_setValueOrValues:function(_2c,_2d,_2e,_2f){
 this._assert(!this._saveInProgress);
-this._assertIsItem(_28);
-this._assert(_1.isString(_29));
-this._assert(typeof _2a!=="undefined");
-var _2c=this._getIdentifierAttribute();
-if(_29==_2c){
+this._assertIsItem(_2c);
+this._assert(_1.isString(_2d));
+this._assert(typeof _2e!=="undefined");
+var _30=this._getIdentifierAttribute();
+if(_2d==_30){
 throw new Error("ItemFileWriteStore does not have support for changing the value of an item's identifier.");
 }
-var _2d=this._getValueOrValues(_28,_29);
-var _2e=this.getIdentity(_28);
-if(!this._pending._modifiedItems[_2e]){
-var _2f={};
-for(var key in _28){
+var _31=this._getValueOrValues(_2c,_2d);
+var _32=this.getIdentity(_2c);
+if(!this._pending._modifiedItems[_32]){
+var _33={};
+for(var key in _2c){
 if((key===this._storeRefPropName)||(key===this._itemNumPropName)||(key===this._rootItemPropName)){
-_2f[key]=_28[key];
+_33[key]=_2c[key];
 }else{
 if(key===this._reverseRefMap){
-_2f[key]=_1.clone(_28[key]);
+_33[key]=_1.clone(_2c[key]);
 }else{
-_2f[key]=_28[key].slice(0,_28[key].length);
+_33[key]=_2c[key].slice(0,_2c[key].length);
 }
 }
 }
-this._pending._modifiedItems[_2e]=_2f;
+this._pending._modifiedItems[_32]=_33;
 }
-var _30=false;
-if(_1.isArray(_2a)&&_2a.length===0){
-_30=delete _28[_29];
-_2a=undefined;
-if(this.referenceIntegrity&&_2d){
-var _31=_2d;
-if(!_1.isArray(_31)){
-_31=[_31];
+var _34=false;
+if(_1.isArray(_2e)&&_2e.length===0){
+_34=delete _2c[_2d];
+_2e=undefined;
+if(this.referenceIntegrity&&_31){
+var _35=_31;
+if(!_1.isArray(_35)){
+_35=[_35];
 }
-for(var i=0;i<_31.length;i++){
-var _32=_31[i];
-if(this.isItem(_32)){
-this._removeReferenceFromMap(_32,_28,_29);
+for(var i=0;i<_35.length;i++){
+var _36=_35[i];
+if(this.isItem(_36)){
+this._removeReferenceFromMap(_36,_2c,_2d);
 }
 }
 }
 }else{
-var _33;
-if(_1.isArray(_2a)){
-_33=_2a.slice(0,_2a.length);
+var _37;
+if(_1.isArray(_2e)){
+_37=_2e.slice(0,_2e.length);
 }else{
-_33=[_2a];
+_37=[_2e];
 }
 if(this.referenceIntegrity){
-if(_2d){
-var _31=_2d;
-if(!_1.isArray(_31)){
-_31=[_31];
+if(_31){
+var _35=_31;
+if(!_1.isArray(_35)){
+_35=[_35];
 }
 var map={};
-_1.forEach(_31,function(_34){
-if(this.isItem(_34)){
-var id=this.getIdentity(_34);
+_3.forEach(_35,function(_38){
+if(this.isItem(_38)){
+var id=this.getIdentity(_38);
 map[id.toString()]=true;
 }
 },this);
-_1.forEach(_33,function(_35){
-if(this.isItem(_35)){
-var id=this.getIdentity(_35);
+_3.forEach(_37,function(_39){
+if(this.isItem(_39)){
+var id=this.getIdentity(_39);
 if(map[id.toString()]){
 delete map[id.toString()];
 }else{
-this._addReferenceToMap(_35,_28,_29);
+this._addReferenceToMap(_39,_2c,_2d);
 }
 }
 },this);
 for(var rId in map){
-var _36;
+var _3a;
 if(this._itemsByIdentity){
-_36=this._itemsByIdentity[rId];
+_3a=this._itemsByIdentity[rId];
 }else{
-_36=this._arrayOfAllItems[rId];
+_3a=this._arrayOfAllItems[rId];
 }
-this._removeReferenceFromMap(_36,_28,_29);
+this._removeReferenceFromMap(_3a,_2c,_2d);
 }
 }else{
-for(var i=0;i<_33.length;i++){
-var _32=_33[i];
-if(this.isItem(_32)){
-this._addReferenceToMap(_32,_28,_29);
+for(var i=0;i<_37.length;i++){
+var _36=_37[i];
+if(this.isItem(_36)){
+this._addReferenceToMap(_36,_2c,_2d);
 }
 }
 }
 }
-_28[_29]=_33;
-_30=true;
+_2c[_2d]=_37;
+_34=true;
 }
-if(_2b){
-this.onSet(_28,_29,_2d,_2a);
+if(_2f){
+this.onSet(_2c,_2d,_31,_2e);
 }
-return _30;
-},_addReferenceToMap:function(_37,_38,_39){
-var _3a=this.getIdentity(_38);
-var _3b=_37[this._reverseRefMap];
-if(!_3b){
-_3b=_37[this._reverseRefMap]={};
+return _34;
+},_addReferenceToMap:function(_3b,_3c,_3d){
+var _3e=this.getIdentity(_3c);
+var _3f=_3b[this._reverseRefMap];
+if(!_3f){
+_3f=_3b[this._reverseRefMap]={};
 }
-var _3c=_3b[_3a];
-if(!_3c){
-_3c=_3b[_3a]={};
+var _40=_3f[_3e];
+if(!_40){
+_40=_3f[_3e]={};
 }
-_3c[_39]=true;
-},_removeReferenceFromMap:function(_3d,_3e,_3f){
-var _40=this.getIdentity(_3e);
-var _41=_3d[this._reverseRefMap];
-var _42;
-if(_41){
-for(_42 in _41){
-if(_42==_40){
-delete _41[_42][_3f];
-if(this._isEmpty(_41[_42])){
-delete _41[_42];
+_40[_3d]=true;
+},_removeReferenceFromMap:function(_41,_42,_43){
+var _44=this.getIdentity(_42);
+var _45=_41[this._reverseRefMap];
+var _46;
+if(_45){
+for(_46 in _45){
+if(_46==_44){
+delete _45[_46][_43];
+if(this._isEmpty(_45[_46])){
+delete _45[_46];
 }
 }
 }
-if(this._isEmpty(_41)){
-delete _3d[this._reverseRefMap];
+if(this._isEmpty(_45)){
+delete _41[this._reverseRefMap];
 }
 }
 },_dumpReferenceMap:function(){
 var i;
 for(i=0;i<this._arrayOfAllItems.length;i++){
-var _43=this._arrayOfAllItems[i];
-if(_43&&_43[this._reverseRefMap]){
+var _47=this._arrayOfAllItems[i];
+if(_47&&_47[this._reverseRefMap]){
 }
 }
-},_getValueOrValues:function(_44,_45){
-var _46=undefined;
-if(this.hasAttribute(_44,_45)){
-var _47=this.getValues(_44,_45);
-if(_47.length==1){
-_46=_47[0];
+},_getValueOrValues:function(_48,_49){
+var _4a=undefined;
+if(this.hasAttribute(_48,_49)){
+var _4b=this.getValues(_48,_49);
+if(_4b.length==1){
+_4a=_4b[0];
 }else{
-_46=_47;
+_4a=_4b;
 }
 }
-return _46;
-},_flatten:function(_48){
-if(this.isItem(_48)){
-return {_reference:this.getIdentity(_48)};
+return _4a;
+},_flatten:function(_4c){
+if(this.isItem(_4c)){
+return {_reference:this.getIdentity(_4c)};
 }else{
-if(typeof _48==="object"){
-for(var _49 in this._datatypeMap){
-var _4a=this._datatypeMap[_49];
-if(_1.isObject(_4a)&&!_1.isFunction(_4a)){
-if(_48 instanceof _4a.type){
-if(!_4a.serialize){
-throw new Error("ItemFileWriteStore:  No serializer defined for type mapping: ["+_49+"]");
+if(typeof _4c==="object"){
+for(var _4d in this._datatypeMap){
+var _4e=this._datatypeMap[_4d];
+if(_1.isObject(_4e)&&!_1.isFunction(_4e)){
+if(_4c instanceof _4e.type){
+if(!_4e.serialize){
+throw new Error("ItemFileWriteStore:  No serializer defined for type mapping: ["+_4d+"]");
 }
-return {_type:_49,_value:_4a.serialize(_48)};
+return {_type:_4d,_value:_4e.serialize(_4c)};
 }
 }else{
-if(_48 instanceof _4a){
-return {_type:_49,_value:_48.toString()};
+if(_4c instanceof _4e){
+return {_type:_4d,_value:_4c.toString()};
 }
 }
 }
 }
-return _48;
+return _4c;
 }
 },_getNewFileContentString:function(){
-var _4b={};
-var _4c=this._getIdentifierAttribute();
-if(_4c!==Number){
-_4b.identifier=_4c;
+var _4f={};
+var _50=this._getIdentifierAttribute();
+if(_50!==Number){
+_4f.identifier=_50;
 }
 if(this._labelAttr){
-_4b.label=this._labelAttr;
+_4f.label=this._labelAttr;
 }
-_4b.items=[];
+_4f.items=[];
 for(var i=0;i<this._arrayOfAllItems.length;++i){
-var _4d=this._arrayOfAllItems[i];
-if(_4d!==null){
-var _4e={};
-for(var key in _4d){
+var _51=this._arrayOfAllItems[i];
+if(_51!==null){
+var _52={};
+for(var key in _51){
 if(key!==this._storeRefPropName&&key!==this._itemNumPropName&&key!==this._reverseRefMap&&key!==this._rootItemPropName){
-var _4f=this.getValues(_4d,key);
-if(_4f.length==1){
-_4e[key]=this._flatten(_4f[0]);
+var _53=this.getValues(_51,key);
+if(_53.length==1){
+_52[key]=this._flatten(_53[0]);
 }else{
-var _50=[];
-for(var j=0;j<_4f.length;++j){
-_50.push(this._flatten(_4f[j]));
-_4e[key]=_50;
+var _54=[];
+for(var j=0;j<_53.length;++j){
+_54.push(this._flatten(_53[j]));
+_52[key]=_54;
 }
 }
 }
 }
-_4b.items.push(_4e);
+_4f.items.push(_52);
 }
 }
-var _51=true;
-return _1.toJson(_4b,_51);
-},_isEmpty:function(_52){
-var _53=true;
-if(_1.isObject(_52)){
+var _55=true;
+return _4.toJson(_4f,_55);
+},_isEmpty:function(_56){
+var _57=true;
+if(_1.isObject(_56)){
 var i;
-for(i in _52){
-_53=false;
+for(i in _56){
+_57=false;
 break;
 }
 }else{
-if(_1.isArray(_52)){
-if(_52.length>0){
-_53=false;
+if(_1.isArray(_56)){
+if(_56.length>0){
+_57=false;
 }
 }
 }
-return _53;
-},save:function(_54){
+return _57;
+},save:function(_58){
 this._assert(!this._saveInProgress);
 this._saveInProgress=true;
-var _55=this;
-var _56=function(){
-_55._pending={_newItems:{},_modifiedItems:{},_deletedItems:{}};
-_55._saveInProgress=false;
-if(_54&&_54.onComplete){
-var _57=_54.scope||_1.global;
-_54.onComplete.call(_57);
+var _59=this;
+var _5a=function(){
+_59._pending={_newItems:{},_modifiedItems:{},_deletedItems:{}};
+_59._saveInProgress=false;
+if(_58&&_58.onComplete){
+var _5b=_58.scope||_5.global;
+_58.onComplete.call(_5b);
 }
 };
-var _58=function(err){
-_55._saveInProgress=false;
-if(_54&&_54.onError){
-var _59=_54.scope||_1.global;
-_54.onError.call(_59,err);
+var _5c=function(err){
+_59._saveInProgress=false;
+if(_58&&_58.onError){
+var _5d=_58.scope||_5.global;
+_58.onError.call(_5d,err);
 }
 };
 if(this._saveEverything){
-var _5a=this._getNewFileContentString();
-this._saveEverything(_56,_58,_5a);
+var _5e=this._getNewFileContentString();
+this._saveEverything(_5a,_5c,_5e);
 }
 if(this._saveCustom){
-this._saveCustom(_56,_58);
+this._saveCustom(_5a,_5c);
 }
 if(!this._saveEverything&&!this._saveCustom){
-_56();
+_5a();
 }
 },revert:function(){
 this._assert(!this._saveInProgress);
-var _5b;
-for(_5b in this._pending._modifiedItems){
-var _5c=this._pending._modifiedItems[_5b];
-var _5d=null;
+var _5f;
+for(_5f in this._pending._modifiedItems){
+var _60=this._pending._modifiedItems[_5f];
+var _61=null;
 if(this._itemsByIdentity){
-_5d=this._itemsByIdentity[_5b];
+_61=this._itemsByIdentity[_5f];
 }else{
-_5d=this._arrayOfAllItems[_5b];
+_61=this._arrayOfAllItems[_5f];
 }
-_5c[this._storeRefPropName]=this;
-for(var key in _5d){
-delete _5d[key];
+_60[this._storeRefPropName]=this;
+for(var key in _61){
+delete _61[key];
 }
-_1.mixin(_5d,_5c);
+_1.mixin(_61,_60);
 }
-var _5e;
-for(_5b in this._pending._deletedItems){
-_5e=this._pending._deletedItems[_5b];
-_5e[this._storeRefPropName]=this;
-var _5f=_5e[this._itemNumPropName];
-if(_5e["backup_"+this._reverseRefMap]){
-_5e[this._reverseRefMap]=_5e["backup_"+this._reverseRefMap];
-delete _5e["backup_"+this._reverseRefMap];
+var _62;
+for(_5f in this._pending._deletedItems){
+_62=this._pending._deletedItems[_5f];
+_62[this._storeRefPropName]=this;
+var _63=_62[this._itemNumPropName];
+if(_62["backup_"+this._reverseRefMap]){
+_62[this._reverseRefMap]=_62["backup_"+this._reverseRefMap];
+delete _62["backup_"+this._reverseRefMap];
 }
-this._arrayOfAllItems[_5f]=_5e;
+this._arrayOfAllItems[_63]=_62;
 if(this._itemsByIdentity){
-this._itemsByIdentity[_5b]=_5e;
+this._itemsByIdentity[_5f]=_62;
 }
-if(_5e[this._rootItemPropName]){
-this._arrayOfTopLevelItems.push(_5e);
-}
-}
-for(_5b in this._pending._deletedItems){
-_5e=this._pending._deletedItems[_5b];
-if(_5e["backupRefs_"+this._reverseRefMap]){
-_1.forEach(_5e["backupRefs_"+this._reverseRefMap],function(_60){
-var _61;
-if(this._itemsByIdentity){
-_61=this._itemsByIdentity[_60.id];
-}else{
-_61=this._arrayOfAllItems[_60.id];
-}
-this._addReferenceToMap(_61,_5e,_60.attr);
-},this);
-delete _5e["backupRefs_"+this._reverseRefMap];
-}
-}
-for(_5b in this._pending._newItems){
-var _62=this._pending._newItems[_5b];
-_62[this._storeRefPropName]=null;
-this._arrayOfAllItems[_62[this._itemNumPropName]]=null;
 if(_62[this._rootItemPropName]){
-this._removeArrayElement(this._arrayOfTopLevelItems,_62);
+this._arrayOfTopLevelItems.push(_62);
+}
+}
+for(_5f in this._pending._deletedItems){
+_62=this._pending._deletedItems[_5f];
+if(_62["backupRefs_"+this._reverseRefMap]){
+_3.forEach(_62["backupRefs_"+this._reverseRefMap],function(_64){
+var _65;
+if(this._itemsByIdentity){
+_65=this._itemsByIdentity[_64.id];
+}else{
+_65=this._arrayOfAllItems[_64.id];
+}
+this._addReferenceToMap(_65,_62,_64.attr);
+},this);
+delete _62["backupRefs_"+this._reverseRefMap];
+}
+}
+for(_5f in this._pending._newItems){
+var _66=this._pending._newItems[_5f];
+_66[this._storeRefPropName]=null;
+this._arrayOfAllItems[_66[this._itemNumPropName]]=null;
+if(_66[this._rootItemPropName]){
+this._removeArrayElement(this._arrayOfTopLevelItems,_66);
 }
 if(this._itemsByIdentity){
-delete this._itemsByIdentity[_5b];
+delete this._itemsByIdentity[_5f];
 }
 }
 this._pending={_newItems:{},_modifiedItems:{},_deletedItems:{}};
 return true;
-},isDirty:function(_63){
-if(_63){
-var _64=this.getIdentity(_63);
-return new Boolean(this._pending._newItems[_64]||this._pending._modifiedItems[_64]||this._pending._deletedItems[_64]).valueOf();
+},isDirty:function(_67){
+if(_67){
+var _68=this.getIdentity(_67);
+return new Boolean(this._pending._newItems[_68]||this._pending._modifiedItems[_68]||this._pending._deletedItems[_68]).valueOf();
 }else{
 return !this._isEmpty(this._pending._newItems)||!this._isEmpty(this._pending._modifiedItems)||!this._isEmpty(this._pending._deletedItems);
 }
-},onSet:function(_65,_66,_67,_68){
-},onNew:function(_69,_6a){
-},onDelete:function(_6b){
-},close:function(_6c){
+},onSet:function(_69,_6a,_6b,_6c){
+},onNew:function(_6d,_6e){
+},onDelete:function(_6f){
+},close:function(_70){
 if(this.clearOnClose){
 if(!this.isDirty()){
 this.inherited(arguments);
@@ -496,5 +496,4 @@ throw new Error("dojo.data.ItemFileWriteStore: There are unsaved changes present
 }
 }
 }});
-return _1.data.ItemFileWriteStore;
 });

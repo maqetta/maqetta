@@ -1,5 +1,7 @@
 //>>built
-define(({
+define(
+//begin v1.x content
+({
 	displayOptions: "[көрсету параметрлері]",
 	title: "Тақырып",
 	authors: "Авторлар",
@@ -10,5 +12,5 @@ define(({
 	summary: "Жиынтық",
 	content: "Мазмұн"
 })
-
+//end v1.x content
 );

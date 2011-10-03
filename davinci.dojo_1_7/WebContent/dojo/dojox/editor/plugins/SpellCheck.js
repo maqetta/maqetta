@@ -1,32 +1,35 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/editor/plugins/SpellCheck",["dojo","dijit","dojox","dijit/_base/popup","dijit/_Widget","dijit/_Templated","dijit/form/TextBox","dijit/form/DropDownButton","dijit/TooltipDialog","dijit/form/MultiSelect","dojo/io/script","dijit/Menu","dojo/i18n","dojox/editor/plugins/nls/SpellCheck"],function(_1,_2,_3){
-_1.getObject("dojox.editor.plugins.SpellCheck",1);
-_1.requireLocalization("dojox.editor.plugins","SpellCheck");
-_1.experimental("dojox.editor.plugins.SpellCheck");
-_1.declare("dojox.editor.plugins._spellCheckControl",[_2._Widget,_2._Templated],{widgetsInTemplate:true,templateString:"<table class='dijitEditorSpellCheckTable'>"+"<tr><td colspan='3' class='alignBottom'><label for='${textId}' id='${textId}_label'>${unfound}</label>"+"<div class='dijitEditorSpellCheckBusyIcon' id='${id}_progressIcon'></div></td></tr>"+"<tr>"+"<td class='dijitEditorSpellCheckBox'><input dojoType='dijit.form.TextBox' required='false' intermediateChanges='true' "+"class='dijitEditorSpellCheckBox' dojoAttachPoint='unfoundTextBox' id='${textId}'/></td>"+"<td><button dojoType='dijit.form.Button' class='blockButton' dojoAttachPoint='skipButton'>${skip}</button></td>"+"<td><button dojoType='dijit.form.Button' class='blockButton' dojoAttachPoint='skipAllButton'>${skipAll}</button></td>"+"</tr>"+"<tr>"+"<td class='alignBottom'><label for='${selectId}'>${suggestions}</td></label>"+"<td colspan='2'><button dojoType='dijit.form.Button' class='blockButton' dojoAttachPoint='toDicButton'>${toDic}</button></td>"+"</tr>"+"<tr>"+"<td>"+"<select dojoType='dijit.form.MultiSelect' id='${selectId}' "+"class='dijitEditorSpellCheckBox listHeight' dojoAttachPoint='suggestionSelect'></select>"+"</td>"+"<td colspan='2'>"+"<button dojoType='dijit.form.Button' class='blockButton' dojoAttachPoint='replaceButton'>${replace}</button>"+"<div class='topMargin'><button dojoType='dijit.form.Button' class='blockButton' "+"dojoAttachPoint='replaceAllButton'>${replaceAll}</button><div>"+"</td>"+"</tr>"+"<tr>"+"<td><div class='topMargin'><button dojoType='dijit.form.Button' dojoAttachPoint='cancelButton'>${cancel}</button></div></td>"+"<td></td>"+"<td></td>"+"</tr>"+"</table>",constructor:function(){
+define(["dijit","dojo","dojox","dojo/i18n!dojox/editor/plugins/nls/SpellCheck","dojo/require!dijit/_base/popup,dijit/_Widget,dijit/_Templated,dijit/form/TextBox,dijit/form/DropDownButton,dijit/TooltipDialog,dijit/form/MultiSelect,dojo/io/script,dijit/Menu"],function(_1,_2,_3){
+_2.provide("dojox.editor.plugins.SpellCheck");
+_2.require("dijit._base.popup");
+_2.require("dijit._Widget");
+_2.require("dijit._Templated");
+_2.require("dijit.form.TextBox");
+_2.require("dijit.form.DropDownButton");
+_2.require("dijit.TooltipDialog");
+_2.require("dijit.form.MultiSelect");
+_2.require("dojo.io.script");
+_2.require("dijit.Menu");
+_2.requireLocalization("dojox.editor.plugins","SpellCheck");
+_2.experimental("dojox.editor.plugins.SpellCheck");
+_2.declare("dojox.editor.plugins._spellCheckControl",[_1._Widget,_1._Templated],{widgetsInTemplate:true,templateString:"<table class='dijitEditorSpellCheckTable'>"+"<tr><td colspan='3' class='alignBottom'><label for='${textId}' id='${textId}_label'>${unfound}</label>"+"<div class='dijitEditorSpellCheckBusyIcon' id='${id}_progressIcon'></div></td></tr>"+"<tr>"+"<td class='dijitEditorSpellCheckBox'><input dojoType='dijit.form.TextBox' required='false' intermediateChanges='true' "+"class='dijitEditorSpellCheckBox' dojoAttachPoint='unfoundTextBox' id='${textId}'/></td>"+"<td><button dojoType='dijit.form.Button' class='blockButton' dojoAttachPoint='skipButton'>${skip}</button></td>"+"<td><button dojoType='dijit.form.Button' class='blockButton' dojoAttachPoint='skipAllButton'>${skipAll}</button></td>"+"</tr>"+"<tr>"+"<td class='alignBottom'><label for='${selectId}'>${suggestions}</td></label>"+"<td colspan='2'><button dojoType='dijit.form.Button' class='blockButton' dojoAttachPoint='toDicButton'>${toDic}</button></td>"+"</tr>"+"<tr>"+"<td>"+"<select dojoType='dijit.form.MultiSelect' id='${selectId}' "+"class='dijitEditorSpellCheckBox listHeight' dojoAttachPoint='suggestionSelect'></select>"+"</td>"+"<td colspan='2'>"+"<button dojoType='dijit.form.Button' class='blockButton' dojoAttachPoint='replaceButton'>${replace}</button>"+"<div class='topMargin'><button dojoType='dijit.form.Button' class='blockButton' "+"dojoAttachPoint='replaceAllButton'>${replaceAll}</button><div>"+"</td>"+"</tr>"+"<tr>"+"<td><div class='topMargin'><button dojoType='dijit.form.Button' dojoAttachPoint='cancelButton'>${cancel}</button></div></td>"+"<td></td>"+"<td></td>"+"</tr>"+"</table>",constructor:function(){
 this.ignoreChange=false;
 this.isChanged=false;
 this.isOpen=false;
 this.closable=true;
 },postMixInProperties:function(){
-this.id=_2.getUniqueId(this.declaredClass.replace(/\./g,"_"));
+this.id=_1.getUniqueId(this.declaredClass.replace(/\./g,"_"));
 this.textId=this.id+"_textBox";
 this.selectId=this.id+"_select";
 },postCreate:function(){
 var _4=this.suggestionSelect;
-_1.removeAttr(_4.domNode,"multiple");
+_2.removeAttr(_4.domNode,"multiple");
 _4.addItems=function(_5){
 var _6=this;
 var o=null;
 if(_5&&_5.length>0){
-_1.forEach(_5,function(_7,i){
-o=_1.create("option",{innerHTML:_7,value:_7},_6.domNode);
+_2.forEach(_5,function(_7,i){
+o=_2.create("option",{innerHTML:_7,value:_7},_6.domNode);
 if(i==0){
 o.selected=true;
 }
@@ -34,7 +37,7 @@ o.selected=true;
 }
 };
 _4.removeItems=function(){
-_1.empty(this.domNode);
+_2.empty(this.domNode);
 };
 _4.deselectAll=function(){
 this.containerNode.selectedIndex=-1;
@@ -59,23 +62,23 @@ this.connect(this.cancelButton,"onClick","onCancel");
 },focus:function(){
 this.unfoundTextBox.focus();
 },_cancel:function(_8){
-if(_8.keyCode==_1.keys.ESCAPE){
+if(_8.keyCode==_2.keys.ESCAPE){
 this.onCancel();
-_1.stopEvent(_8);
+_2.stopEvent(_8);
 }
 },_enter:function(_9){
-if(_9.keyCode==_1.keys.ENTER){
+if(_9.keyCode==_2.keys.ENTER){
 this.onEnter();
-_1.stopEvent(_9);
+_2.stopEvent(_9);
 }
 },_unfoundTextBoxChange:function(){
 var id=this.textId+"_label";
 if(!this.ignoreChange){
-_1.byId(id).innerHTML=this["replaceWith"];
+_2.byId(id).innerHTML=this["replaceWith"];
 this.isChanged=true;
 this.suggestionSelect.deselectAll();
 }else{
-_1.byId(id).innerHTML=this["unfound"];
+_2.byId(id).innerHTML=this["unfound"];
 }
 },_setUnfoundWordAttr:function(_a){
 _a=_a||"";
@@ -102,9 +105,9 @@ this.replaceButton.set("disabled",_e);
 this.replaceAllButton.set("disabled",_e);
 },_setInProgressAttr:function(_f){
 var id=this.id+"_progressIcon",cmd=_f?"removeClass":"addClass";
-_1[cmd](id,"hidden");
+_2[cmd](id,"hidden");
 }});
-_1.declare("dojox.editor.plugins._SpellCheckScriptMultiPart",null,{ACTION_QUERY:"query",ACTION_UPDATE:"update",callbackHandle:"callback",maxBufferLength:100,delimiter:" ",label:"response",_timeout:30000,SEC:1000,constructor:function(){
+_2.declare("dojox.editor.plugins._SpellCheckScriptMultiPart",null,{ACTION_QUERY:"query",ACTION_UPDATE:"update",callbackHandle:"callback",maxBufferLength:100,delimiter:" ",label:"response",_timeout:30000,SEC:1000,constructor:function(){
 this.serviceEndPoint="";
 this._queue=[];
 this.isWorking=false;
@@ -134,11 +137,11 @@ r++;
 _19.push({l:l,r:r});
 _1a++;
 }while(r<len);
-_1.forEach(_19,function(_1b,_1c){
+_2.forEach(_19,function(_1b,_1c){
 var _1d={url:_14,action:_11,timeout:_17,callbackParamName:_15,handle:function(_1e,_1f){
-if(++_12._counter<=this.size&&!(_1e instanceof Error)&&_1e[_13]&&_1.isArray(_1e[_13])){
+if(++_12._counter<=this.size&&!(_1e instanceof Error)&&_1e[_13]&&_2.isArray(_1e[_13])){
 var _20=this.offset;
-_1.forEach(_1e[_13],function(_21){
+_2.forEach(_1e[_13],function(_21){
 _21.offset+=_20;
 });
 _12._result[this.number]=_1e[_13];
@@ -151,11 +154,11 @@ if(_12._queue.length>0){
 }
 }
 }};
-_1d.content=_16?_1.mixin(_16,{action:_11,content:_10.substring(_1b.l-1,_1b.r)}):{action:_11,content:_10.substring(_1b.l-1,_1b.r)};
+_1d.content=_16?_2.mixin(_16,{action:_11,content:_10.substring(_1b.l-1,_1b.r)}):{action:_11,content:_10.substring(_1b.l-1,_1b.r)};
 _1d.size=_1a;
 _1d.number=_1c;
 _1d.offset=_1b.l-1;
-_1.io.script.get(_1d);
+_2.io.script.get(_1d);
 });
 }
 };
@@ -179,7 +182,7 @@ this._result=[];
 },setWaitingTime:function(_26){
 this._timeout=_26*this.SEC;
 }});
-_1.declare("dojox.editor.plugins.SpellCheck",[_2._editor._Plugin],{url:"",bufferLength:100,interactive:false,timeout:30,button:null,_editor:null,exArgs:null,_cursorSpan:"<span class=\"cursorPlaceHolder\"></span>",_cursorSelector:"cursorPlaceHolder",_incorrectWordsSpan:"<span class='incorrectWordPlaceHolder'>${text}</span>",_ignoredIncorrectStyle:{"cursor":"inherit","borderBottom":"none","backgroundColor":"transparent"},_normalIncorrectStyle:{"cursor":"pointer","borderBottom":"1px dotted red","backgroundColor":"yellow"},_highlightedIncorrectStyle:{"borderBottom":"1px dotted red","backgroundColor":"#b3b3ff"},_selector:"incorrectWordPlaceHolder",_maxItemNumber:3,constructor:function(){
+_2.declare("dojox.editor.plugins.SpellCheck",[_1._editor._Plugin],{url:"",bufferLength:100,interactive:false,timeout:30,button:null,_editor:null,exArgs:null,_cursorSpan:"<span class=\"cursorPlaceHolder\"></span>",_cursorSelector:"cursorPlaceHolder",_incorrectWordsSpan:"<span class='incorrectWordPlaceHolder'>${text}</span>",_ignoredIncorrectStyle:{"cursor":"inherit","borderBottom":"none","backgroundColor":"transparent"},_normalIncorrectStyle:{"cursor":"pointer","borderBottom":"1px dotted red","backgroundColor":"yellow"},_highlightedIncorrectStyle:{"borderBottom":"1px dotted red","backgroundColor":"#b3b3ff"},_selector:"incorrectWordPlaceHolder",_maxItemNumber:3,constructor:function(){
 this._spanList=[];
 this._cache={};
 this._enabled=true;
@@ -190,19 +193,19 @@ this._initButton();
 this._setNetwork();
 this._connectUp();
 },_initButton:function(){
-var _28=this,_29=(this._strings=_1.i18n.getLocalization("dojox.editor.plugins","SpellCheck")),_2a=(this._dialog=new _2.TooltipDialog());
+var _28=this,_29=(this._strings=_2.i18n.getLocalization("dojox.editor.plugins","SpellCheck")),_2a=(this._dialog=new _1.TooltipDialog());
 _2a.set("content",(this._dialogContent=new _3.editor.plugins._spellCheckControl({unfound:_29["unfound"],skip:_29["skip"],skipAll:_29["skipAll"],toDic:_29["toDic"],suggestions:_29["suggestions"],replaceWith:_29["replaceWith"],replace:_29["replace"],replaceAll:_29["replaceAll"],cancel:_29["cancel"]})));
-this.button=new _2.form.DropDownButton({label:_29["widgetLabel"],showLabel:false,iconClass:"dijitEditorSpellCheckIcon",dropDown:_2a,id:_2.getUniqueId(this.declaredClass.replace(/\./g,"_"))+"_dialogPane",closeDropDown:function(_2b){
+this.button=new _1.form.DropDownButton({label:_29["widgetLabel"],showLabel:false,iconClass:"dijitEditorSpellCheckIcon",dropDown:_2a,id:_1.getUniqueId(this.declaredClass.replace(/\./g,"_"))+"_dialogPane",closeDropDown:function(_2b){
 if(_28._dialogContent.closable){
 _28._dialogContent.isOpen=false;
-if(_1.isIE){
+if(_2.isIE){
 var pos=_28._iterator,_2c=_28._spanList;
 if(pos<_2c.length&&pos>=0){
-_1.style(_2c[pos],_28._normalIncorrectStyle);
+_2.style(_2c[pos],_28._normalIncorrectStyle);
 }
 }
 if(this._opened){
-_2.popup.close(this.dropDown);
+_1.popup.close(this.dropDown);
 if(_2b){
 this.focus();
 }
@@ -243,7 +246,7 @@ this.connect(_30,"onReplaceAll","_replaceAll");
 this.connect(_30,"onCancel","_cancel");
 this.connect(_30,"onEnter","_enter");
 _2f.contentPostFilters.push(this._spellCheckFilter);
-_1.publish(_2._scopeName+".Editor.plugin.SpellCheck.getParser",[this]);
+_2.publish(_1._scopeName+".Editor.plugin.SpellCheck.getParser",[this]);
 if(!this.parser){
 console.error("Can not get the word parser!");
 }
@@ -262,7 +265,7 @@ this._enabled=!_32;
 },_keyPress:function(evt){
 if(this.interactive){
 var v=118,V=86,cc=evt.charCode;
-if(!evt.altKey&&cc==_1.keys.SPACE){
+if(!evt.altKey&&cc==_2.keys.SPACE){
 this._submitContent();
 }else{
 if((evt.ctrlKey&&(cc==v||cc==V))||(!evt.ctrlKey&&evt.charCode)){
@@ -273,7 +276,7 @@ this._submitContent(true);
 },_loadData:function(_33){
 var _34=this._cache,_35=this._editor.get("value"),_36=this._dialogContent;
 this._iterator=0;
-_1.forEach(_33,function(d){
+_2.forEach(_33,function(d){
 _34[d.text]=d.suggestion;
 _34[d.text].correct=false;
 });
@@ -319,7 +322,7 @@ _39.set("disabled",true);
 _39.set("inProgress",false);
 }
 setTimeout(function(){
-if(_1.isWebKit){
+if(_2.isWebKit){
 _39.skipButton.focus();
 }
 _39.focus();
@@ -362,7 +365,7 @@ this._skip();
 },_query:function(_45){
 var _46=this._service,_47=this._cache,_48=this.parser.parseIntoWords(this._html2Text(_45))||[];
 var _49=[];
-_1.forEach(_48,function(_4a){
+_2.forEach(_48,function(_4a){
 _4a=_4a.toLowerCase();
 if(!_47[_4a]){
 _47[_4a]=[];
@@ -401,7 +404,7 @@ while(++i<_4f&&_4e.charAt(i)==nv.charAt(i)){
 }
 return i;
 },_moveToBookmark:function(){
-var ed=this._editor,cps=_1.withGlobal(ed.window,"query",_1,["."+this._cursorSelector]),_50=cps&&cps[0];
+var ed=this._editor,cps=_2.withGlobal(ed.window,"query",_2,["."+this._cursorSelector]),_50=cps&&cps[0];
 if(_50){
 ed._sCall("selectElement",[_50]);
 ed._sCall("collapse",[true]);
@@ -442,7 +445,7 @@ if(end<=_65&&!_67){
 _68.splice(_65,0,_64);
 _67=true;
 }
-_68.splice(_6b,len,_1.string.substitute(_5f,{text:_5a.substring(_6b,end)}));
+_68.splice(_6b,len,_2.string.substitute(_5f,{text:_5a.substring(_6b,end)}));
 if(_6b<_65&&_65<end&&!_67){
 var tmp=_68[_6b].split("");
 tmp.splice(_66+_65-_6b,0,_64);
@@ -458,8 +461,8 @@ _67=true;
 _5e.set("value",_68.join(""));
 _5e._cursorToStart=false;
 this._moveToBookmark();
-_69=this._spanList=_1.withGlobal(_5e.window,"query",_1,["."+this._selector]);
-_1.forEach(_69,function(_6c,i){
+_69=this._spanList=_2.withGlobal(_5e.window,"query",_2,["."+this._selector]);
+_2.forEach(_69,function(_6c,i){
 _6c.id=_61+i;
 });
 if(!this.interactive){
@@ -471,31 +474,31 @@ if(_5c._contextMenu){
 _5c._contextMenu.uninitialize();
 _5c._contextMenu=null;
 }
-_5c._contextMenu=new _2.Menu({targetNodeIds:[_5e.iframe],bindDomNode:function(_6d){
-_6d=_1.byId(_6d);
+_5c._contextMenu=new _1.Menu({targetNodeIds:[_5e.iframe],bindDomNode:function(_6d){
+_6d=_2.byId(_6d);
 var cn;
 var _6e,win;
 if(_6d.tagName.toLowerCase()=="iframe"){
 _6e=_6d;
 win=this._iframeContentWindow(_6e);
-cn=_1.withGlobal(win,_1.body);
+cn=_2.withGlobal(win,_2.body);
 }else{
-cn=(_6d==_1.body()?_1.doc.documentElement:_6d);
+cn=(_6d==_2.body()?_2.doc.documentElement:_6d);
 }
 var _6f={node:_6d,iframe:_6e};
-_1.attr(_6d,"_dijitMenu"+this.id,this._bindings.push(_6f));
-var _70=_1.hitch(this,function(cn){
-return [_1.connect(cn,this.leftClickToOpen?"onclick":"oncontextmenu",this,function(evt){
+_2.attr(_6d,"_dijitMenu"+this.id,this._bindings.push(_6f));
+var _70=_2.hitch(this,function(cn){
+return [_2.connect(cn,this.leftClickToOpen?"onclick":"oncontextmenu",this,function(evt){
 var _71=evt.target,_72=_5c._strings;
-if(_1.hasClass(_71,_61)&&!_71.edited){
-_1.stopEvent(evt);
+if(_2.hasClass(_71,_61)&&!_71.edited){
+_2.stopEvent(evt);
 var _73=_5c._maxItemNumber,id=_71.id,_74=id.substring(_61.length),_75=_5b[_71.innerHTML.toLowerCase()],_76=_75.length;
 this.destroyDescendants();
 if(_76==0){
-this.addChild(new _2.MenuItem({label:_72["iMsg"],disabled:true}));
+this.addChild(new _1.MenuItem({label:_72["iMsg"],disabled:true}));
 }else{
 for(var i=0;i<_73&&i<_76;i++){
-this.addChild(new _2.MenuItem({label:_75[i],onClick:(function(){
+this.addChild(new _1.MenuItem({label:_75[i],onClick:(function(){
 var idx=_74,txt=_75[i];
 return function(){
 _5c._replaceWord(idx,txt);
@@ -504,34 +507,34 @@ _5e.focus();
 })()}));
 }
 }
-this.addChild(new _2.MenuSeparator());
-this.addChild(new _2.MenuItem({label:_72["iSkip"],onClick:function(){
+this.addChild(new _1.MenuSeparator());
+this.addChild(new _1.MenuItem({label:_72["iSkip"],onClick:function(){
 _5c._skipWord(_74);
 _5e.focus();
 }}));
-this.addChild(new _2.MenuItem({label:_72["iSkipAll"],onClick:function(){
+this.addChild(new _1.MenuItem({label:_72["iSkipAll"],onClick:function(){
 _5c._skipWordAll(_74);
 _5e.focus();
 }}));
-this.addChild(new _2.MenuSeparator());
-this.addChild(new _2.MenuItem({label:_72["toDic"],onClick:function(){
+this.addChild(new _1.MenuSeparator());
+this.addChild(new _1.MenuItem({label:_72["toDic"],onClick:function(){
 _5c._addWord(_74);
 _5e.focus();
 }}));
 this._scheduleOpen(_71,_6e,{x:evt.pageX,y:evt.pageY});
 }
-}),_1.connect(cn,"onkeydown",this,function(evt){
-if(evt.shiftKey&&evt.keyCode==_1.keys.F10){
-_1.stopEvent(evt);
+}),_2.connect(cn,"onkeydown",this,function(evt){
+if(evt.shiftKey&&evt.keyCode==_2.keys.F10){
+_2.stopEvent(evt);
 this._scheduleOpen(evt.target,_6e);
 }
 })];
 });
 _6f.connects=cn?_70(cn):[];
 if(_6e){
-_6f.onloadHandler=_1.hitch(this,function(){
+_6f.onloadHandler=_2.hitch(this,function(){
 var win=this._iframeContentWindow(_6e);
-cn=_1.withGlobal(win,_1.body);
+cn=_2.withGlobal(win,_2.body);
 _6f.connects=_70(cn);
 });
 if(_6e.addEventListener){
@@ -545,21 +548,21 @@ _6e.attachEvent("onload",_6f.onloadHandler);
 },_selectWord:function(_77){
 var _78=this._spanList,win=this._editor.window;
 if(_77<_78.length&&_78.length>0){
-_1.withGlobal(win,"selectElement",_2._editor.selection,[_78[_77]]);
-_1.withGlobal(win,"collapse",_2._editor.selection,[true]);
+_2.withGlobal(win,"selectElement",_1._editor.selection,[_78[_77]]);
+_2.withGlobal(win,"collapse",_1._editor.selection,[true]);
 this._findText(_78[_77].innerHTML,false,false);
-if(_1.isIE){
-_1.style(_78[_77],this._highlightedIncorrectStyle);
+if(_2.isIE){
+_2.style(_78[_77],this._highlightedIncorrectStyle);
 }
 }
 },_replaceWord:function(_79,_7a){
 var _7b=this._spanList;
 _7b[_79].innerHTML=_7a;
-_1.style(_7b[_79],this._ignoredIncorrectStyle);
+_2.style(_7b[_79],this._ignoredIncorrectStyle);
 _7b[_79].edited=true;
 },_skipWord:function(_7c){
 var _7d=this._spanList;
-_1.style(_7d[_7c],this._ignoredIncorrectStyle);
+_2.style(_7d[_7c],this._ignoredIncorrectStyle);
 this._cache[_7d[_7c].innerHTML.toLowerCase()].correct=true;
 _7d[_7c].edited=true;
 },_skipWordAll:function(_7e,_7f){
@@ -608,7 +611,7 @@ return _86;
 var _8b=/<span class=["']incorrectWordPlaceHolder["'].*?>(.*?)<\/span>/g;
 return _8a.replace(_8b,"$1");
 }});
-_1.subscribe(_2._scopeName+".Editor.getPlugin",null,function(o){
+_2.subscribe(_1._scopeName+".Editor.getPlugin",null,function(o){
 if(o.plugin){
 return;
 }
@@ -617,6 +620,4 @@ if(_8c==="spellcheck"){
 o.plugin=new _3.editor.plugins.SpellCheck({url:("url" in o.args)?o.args.url:"",interactive:("interactive" in o.args)?o.args.interactive:false,bufferLength:("bufferLength" in o.args)?o.args.bufferLength:100,timeout:("timeout" in o.args)?o.args.timeout:30,exArgs:o.args});
 }
 });
-return _1.getObject("dojox.editor.plugins.SpellCheck");
 });
-require(["dojox/editor/plugins/SpellCheck"]);

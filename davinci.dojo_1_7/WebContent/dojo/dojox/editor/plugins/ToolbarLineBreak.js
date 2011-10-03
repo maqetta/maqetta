@@ -1,11 +1,5 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/editor/plugins/ToolbarLineBreak",["dojo","dijit","dojox","dijit/_Widget","dijit/_TemplatedMixin","dijit/_editor/_Plugin"],function(_1,_2,_3){
+define("dojox/editor/plugins/ToolbarLineBreak",["dojo","dijit","dojox","dijit/_Widget","dijit/_TemplatedMixin","dijit/_editor/_Plugin","dojo/_base/connect","dojo/_base/declare"],function(_1,_2,_3){
 _1.declare("dojox.editor.plugins.ToolbarLineBreak",[_2._Widget,_2._TemplatedMixin],{templateString:"<span class='dijit dijitReset'><br></span>",postCreate:function(){
 _1.setSelectable(this.domNode,false);
 },isFocusable:function(){

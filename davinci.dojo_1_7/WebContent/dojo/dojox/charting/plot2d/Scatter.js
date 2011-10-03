@@ -1,13 +1,7 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/charting/plot2d/Scatter",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","./Base","./common","dojox/lang/functional","dojox/lang/functional/reversed","dojox/lang/utils","dojox/gfx/fx","dojox/gfx/gradutils"],function(_1,_2,_3,_4,dc,df,_5,du,fx,_6){
-var _7=df.lambda("item.purgeGroup()");
-return _1.declare("dojox.charting.plot2d.Scatter",dojox.charting.plot2d.Base,{defaultParams:{hAxis:"x",vAxis:"y",shadows:null,animate:null},optionalParams:{markerStroke:{},markerOutline:{},markerShadow:{},markerFill:{},markerFont:"",markerFontColor:""},constructor:function(_8,_9){
+define("dojox/charting/plot2d/Scatter",["dojo/_base/lang","dojo/_base/array","dojo/_base/declare","./Base","./common","dojox/lang/functional","dojox/lang/functional/reversed","dojox/lang/utils","dojox/gfx/fx","dojox/gfx/gradutils"],function(_1,_2,_3,_4,dc,df,_5,du,fx,_6){
+var _7=_5.lambda("item.purgeGroup()");
+return _3("dojox.charting.plot2d.Scatter",_4,{defaultParams:{hAxis:"x",vAxis:"y",shadows:null,animate:null},optionalParams:{markerStroke:{},markerOutline:{},markerShadow:{},markerFill:{},markerFont:"",markerFontColor:""},constructor:function(_8,_9){
 this.opt=_1.clone(this.defaultParams);
 du.updateWithObject(this.opt,_9);
 du.updateWithPattern(this.opt,_9,this.optionalParams);
@@ -22,7 +16,7 @@ return this.performZoom(_a,_b);
 this.resetEvents();
 this.dirty=this.isDirty();
 if(this.dirty){
-_1.forEach(this.series,_7);
+_2.forEach(this.series,_7);
 this._eventSeries={};
 this.cleanGroup();
 var s=this.group;
@@ -46,16 +40,16 @@ continue;
 }
 var _f=t.next("marker",[this.opt,_e]),s=_e.group,_10,ht=this._hScaler.scaler.getTransformerFromModel(this._hScaler),vt=this._vScaler.scaler.getTransformerFromModel(this._vScaler);
 if(typeof _e.data[0]=="number"){
-_10=_1.map(_e.data,function(v,i){
+_10=_2.map(_e.data,function(v,i){
 return {x:ht(i+1)+_b.l,y:_a.height-_b.b-vt(v)};
 },this);
 }else{
-_10=_1.map(_e.data,function(v,i){
+_10=_2.map(_e.data,function(v,i){
 return {x:ht(v.x)+_b.l,y:_a.height-_b.b-vt(v.y)};
 },this);
 }
 var _11=new Array(_10.length),_12=new Array(_10.length),_13=new Array(_10.length);
-_1.forEach(_10,function(c,i){
+_2.forEach(_10,function(c,i){
 var _14=typeof _e.data[i]=="number"?t.post(_f,"marker"):t.addMixin(_f,"marker",_e.data[i],true),_15="M"+c.x+" "+c.y+" "+_14.symbol;
 if(_14.marker.shadow){
 _11[i]=s.createPath("M"+(c.x+_14.marker.shadow.dx)+" "+(c.y+_14.marker.shadow.dy)+" "+_14.symbol).setStroke(_14.marker.shadow).setFill(_14.marker.shadow.color);
@@ -91,7 +85,7 @@ _e.dyn.fill=_12[_12.length-1].getFill();
 }
 if(_d){
 var _1a=new Array(_12.length);
-_1.forEach(_12,function(s,i){
+_2.forEach(_12,function(s,i){
 var o={element:"marker",index:i,run:_e,shape:s,outline:_13&&_13[i]||null,shadow:_11&&_11[i]||null,cx:_10[i].x,cy:_10[i].y};
 if(typeof _e.data[0]=="number"){
 o.x=i+1;

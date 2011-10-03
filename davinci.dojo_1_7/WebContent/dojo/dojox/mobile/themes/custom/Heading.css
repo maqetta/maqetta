@@ -9,7 +9,7 @@
   z-index: 1;
   padding: 0;
   height: 40px;
-  background-color: #abd6ff;
+  background-color: #5cb0ff;
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(2.5%, #ffffff), color-stop(2.5%, rgba(255, 255, 255, 0.14)), color-stop(5%, rgba(255, 255, 255, 0.14)), color-stop(5%, rgba(255, 255, 255, 0.52)), color-stop(7.5%, rgba(255, 255, 255, 0.52)), color-stop(7.5%, rgba(255, 255, 255, 0.68)), color-stop(10%, rgba(255, 255, 255, 0.68)), color-stop(1, rgba(255, 255, 255, 0)));
   border-bottom: 1px solid #769dc0;
   color: #131313;
@@ -48,11 +48,14 @@
   left: 17px;
   width: 21px;
   height: 21px;
-  border: 1px inset #b5bcc7;
+  border: 1px solid #b5bcc7;
   -webkit-transform-origin: left top;
   -webkit-transform: scale(0.9, 0.99) rotate(45deg);
-  background-color: #abd6ff;
-  background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
+  background-color: #5cb0ff;
+  background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
+}
+.dj_chrome .mblArrowButtonHead {
+  border-style: inset;
 }
 .mblArrowButtonBody {
   position: absolute;
@@ -73,16 +76,9 @@
   line-height: 30px;
   -webkit-border-top-right-radius: 2px;
   -webkit-border-bottom-right-radius: 2px;
-  background-color: #abd6ff;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
+  background-color: #5cb0ff;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
 }
-.mblArrowButtonNeck {
-  position: absolute;
-  visibility: hidden;
-}
-.mblArrowButtonSelected .mblArrowButtonHead {
-  background-color: #128bff;
-}
-.mblArrowButtonSelected .mblArrowButtonBody, .mblArrowButtonSelected .mblArrowButtonNeck {
-  background-color: #128bff;
+.mblArrowButtonSelected .mblArrowButtonHead, .mblArrowButtonSelected .mblArrowButtonBody {
+  background-color: #0064c2;
 }

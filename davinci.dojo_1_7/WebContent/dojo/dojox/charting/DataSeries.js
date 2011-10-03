@@ -1,12 +1,6 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojox/charting/DataSeries",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","dojox/lang/functional"],function(_1,_2,_3,_4,df){
-return _1.declare("dojox.charting.DataSeries",null,{constructor:function(_5,_6,_7){
+define("dojox/charting/DataSeries",["dojo/_base/lang","dojo/_base/declare","dojo/_base/array","dojo/_base/connect","dojox/lang/functional"],function(_1,_2,_3,_4,df){
+return _2("dojox.charting.DataSeries",null,{constructor:function(_5,_6,_7){
 this.store=_5;
 this.kwArgs=_6;
 if(_7){
@@ -25,16 +19,16 @@ this.value=_1.hitch(this,"_defaultValue");
 this.data=[];
 this._events=[];
 if(this.store.getFeatures()["dojo.data.api.Notification"]){
-this._events.push(_1.connect(this.store,"onNew",this,"_onStoreNew"),_1.connect(this.store,"onDelete",this,"_onStoreDelete"),_1.connect(this.store,"onSet",this,"_onStoreSet"));
+this._events.push(_4.connect(this.store,"onNew",this,"_onStoreNew"),_4.connect(this.store,"onDelete",this,"_onStoreDelete"),_4.connect(this.store,"onSet",this,"_onStoreSet"));
 }
 this.fetch();
 },destroy:function(){
-_1.forEach(this._events,_1.disconnect);
+_3.forEach(this._events,_4.disconnect);
 },setSeriesObject:function(_8){
 this.series=_8;
 },_dictValue:function(_9,_a,_b,_c){
 var o={};
-_1.forEach(_9,function(_d){
+_3.forEach(_9,function(_d){
 o[_d]=_b.getValue(_c,_a[_d]);
 });
 return o;
@@ -53,7 +47,7 @@ this.store.fetch(_13);
 },_onFetchComplete:function(_14,_15){
 this.items=_14;
 this._buildItemMap();
-this.data=_1.map(this.items,function(_16){
+this.data=_3.map(this.items,function(_16){
 return this.value(this.store,_16);
 },this);
 this._pushDataChanges();
@@ -63,7 +57,7 @@ this._inFlight=false;
 },_buildItemMap:function(){
 if(this.store.getFeatures()["dojo.data.api.Identity"]){
 var _19={};
-_1.forEach(this.items,function(_1a,_1b){
+_3.forEach(this.items,function(_1a,_1b){
 _19[this.store.getIdentity(_1a)]=_1b;
 },this);
 this.itemMap=_19;
@@ -77,7 +71,7 @@ this.series.chart.delayedRender();
 this.fetch();
 },_onStoreDelete:function(_1c){
 if(this.items){
-var _1d=_1.xsome(this.items,function(it,_1e){
+var _1d=_3.some(this.items,function(it,_1e){
 if(it===_1c){
 this.items.splice(_1e,1);
 this._buildItemMap();
@@ -99,7 +93,7 @@ this._pushDataChanges();
 }
 }else{
 if(this.items){
-var _21=_1.some(this.items,function(it,_22){
+var _21=_3.some(this.items,function(it,_22){
 if(it===_1f){
 this.data[_22]=this.value(this.store,it);
 return true;

@@ -11,15 +11,15 @@ return eval("("+js+")");
 };
 _1._escapeString=_2.stringify;
 _1.toJsonIndentStr="\t";
-_1.toJson=function(it,_3,_4){
-return _2.stringify(it,function(_5,_6){
-if(_6){
-var tf=_6.__json__||_6.json;
+_1.toJson=function(it,_3){
+return _2.stringify(it,function(_4,_5){
+if(_5){
+var tf=_5.__json__||_5.json;
 if(typeof tf=="function"){
-return tf.call(_6);
+return tf.call(_5);
 }
 }
-return _6;
+return _5;
 },_3&&_1.toJsonIndentStr);
 };
 return _1;

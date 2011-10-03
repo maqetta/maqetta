@@ -13,7 +13,7 @@ dojo.require('preview.silhouetteiframe');
 dojo.declare("davinci.ve.Context", null, {
 
 	// comma-separated list of modules to load in the iframe
-	_bootstrapModules: "dijit.dijit",
+	_bootstrapModules: "dijit/dijit",
 
 /*=====
 	// keeps track of widgets-per-library loaded in context
@@ -759,12 +759,13 @@ dojo.declare("davinci.ve.Context", null, {
 
 					body._edit_context = context; // TODO: find a better place to stash the root context
 					context._configDojoxMobile();
-					context._bootstrapModules.split(",").forEach(
-							function(module){
-								if (module === 'dijit.dijit-all')
-									win.dojo._postLoad = true; // this is neede for FF4 to keep dijit._editor.RichText from throwing at line 32 dojo 1.5									
-								win.dojo["require"](module);
-							}); // to bootstrap references to base dijit methods in container
+					
+					var requires = context._bootstrapModules.split(",");
+					if (requires.indexOf('dijit/dijit-all') != -1){
+						win.dojo._postLoad = true; // this is needed for FF4 to keep dijit._editor.RichText from throwing at line 32 dojo 1.5						
+					}
+					win.require(requires);  // to bootstrap references to base dijit methods in container
+
 					context.frameNode = frame;
 					// see Dojo ticket #5334
 					// If you do not have this particular dojo.isArray code, DataGrid will not render in the tool.

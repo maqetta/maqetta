@@ -9,8 +9,8 @@ dojo.require("davinci.ve.Context");
 dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 
 	// comma-separated list of modules to load in the iframe
-	_bootstrapModules: "dijit.dijit,dijit.dijit-all", // dijit-all hangs FF4 and does not seem to be needed.
-	//_bootstrapModules: "dijit.dijit",
+	_bootstrapModules: "dijit/dijit,dijit/dijit-all", // dijit-all hangs FF4 and does not seem to be needed.
+	//_bootstrapModules: "dijit/dijit",
 
 	constructor: function(args){
 		this._id = "_edit_context_" + davinci.ve._contextCount++;
@@ -113,7 +113,7 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 				var dj = this.getDojo();
 				dj["require"]("dojo.parser");
 				dj.parser.parse(containerNode);
-			} catch(e){
+			} catch(e) {
 				// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
 				// the dojo parser will throw an exception trying to compute style on hidden containers
 				// so to fix this we catch the exception here and add a subscription to be notified when this editor is seleected by the user
@@ -125,6 +125,8 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 					  w.destroy();
 				});
 				this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",  dojo.hitch(this, this._editorSelectionChange));
+
+				//				throw e;
 			}
 		
 		if(active){

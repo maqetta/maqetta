@@ -1,4 +1,4 @@
-package org.davinci.server.review.command;
+package maqetta.core.server.standalone.command;
 
 import java.io.IOException;
 import java.util.ArrayList;

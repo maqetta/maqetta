@@ -335,6 +335,14 @@ dojo.declare("davinci.ve.Context", null, {
 						libVer = davinci.ve.metadata.query(type, "library")[r.$library].version;
 					}
 					var libRoot = this.getLibraryBase(r.$library, libVer);
+					/*
+					 * need to set the module path for custom user widgets 
+					 */
+					if(r.$library.indexOf("dojo") > -1){
+						var fullLibPath = new davinci.model.Path(this.getBase()).append(libRoot).append(src);
+						this._dojoModulePath = (new davinci.model.Path(this.getBase())).relativeTo(fullLibPath, true).toString();
+					}
+					
 					if (libRoot == null /*empty string OK here, but null isn't. */) {
 						console.warn("No library found for name = '" + r.$library +	"' version = '" + libVer + "'");
 						return false;   // kill dojo.every loop
@@ -371,6 +379,26 @@ dojo.declare("davinci.ve.Context", null, {
 		}, this);
 	},
 
+	_getWidgetFolder : function(){
+		
+		var base = this.getBase();
+		var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+		if(!prefs['widgetFolder']){
+			prefs.widgetFolder = "./WebContent/widgets";
+			davinci.workbench.Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
+		}
+	
+		var folder = prefs['widgetFolder'];
+		while(folder.length>1 && (folder.charAt(0)=="." || folder.charAt(0)=="/"))
+			folder = folder.substring(1);
+		return folder;
+	},
+	_getDojoModulePath : function(){
+		
+		
+		return this._dojoModulePath  ;
+	},
+	
 	_require: function(module){
 		try{
 			this.getDojo()["require"](module);
@@ -713,7 +741,8 @@ dojo.declare("davinci.ve.Context", null, {
 				//  depend on dojo any more.  Once issue, though, is that the callback function
 				//  makes use of dojo and thusly must be invoked only after dojo has loaded.  Need
 				//  to remove Dojo dependencies from callback function first.
-				head += "<script>djConfig={addOnLoad:top.loading" + this._id + ", baseUrl:'"+dojoUrl.substr(0,inx+1)+"' }</script>";
+				var baseUserWorkspace = davinci.resource.getRoot().getURL() + "/" + this._getWidgetFolder();
+				head += "<script>djConfig={addOnLoad:top.loading" + this._id + ", baseUrl:'"+dojoUrl.substr(0,inx+1)+"', modulePaths:{'widgets':'" + baseUserWorkspace +"'} }</script>";
 				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\"></script>";
 			}
 			var helper = davinci.theme.getHelper(this._visualEditor.theme);
@@ -2093,7 +2122,7 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	addJavaScript: function(url, text, doUpdateModel, doUpdateModelDojoRequires, baseSrcPath,skipDomUpdate) {
-
+		
 		if (url) {
 			var isDojoJS = /\/dojo.js$/.test(url);
 			// XXX HACK: Don't add dojo.js to the editor iframe, since it already has an instance.
@@ -2127,8 +2156,12 @@ dojo.declare("davinci.ve.Context", null, {
 				if (isDojoJS) {
 					// XXX Nasty nasty nasty special case for dojo attribute thats
 					// required. Need to generalize in the metadata somehow.
+					var fullPath = new davinci.model.Path(davinci.resource.getRoot().getPath());
+					var urlPath = new davinci.model.Path(url);
+					var relativeUrl = urlPath.relativeTo(fullPath);
+				
 					this.addHeaderScript(url, {
-						djConfig: "parseOnLoad: true"
+						djConfig: "parseOnLoad: true, modulePaths:{'widgets':'"+ this._dojoModulePath + "/" + this._getWidgetFolder()  + "'}"
 					});
 				}else{
 					this.addHeaderScript(url);

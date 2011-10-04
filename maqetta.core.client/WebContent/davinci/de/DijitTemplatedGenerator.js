@@ -26,8 +26,8 @@ dojo.declare("davinci.de.DijitTemplatedGenerator", null, {
 		//var themeMetaobject = davinci.ve.metadata.loadThemeMeta(this._srcDocument);
 
 		var elements = this._srcDocument.find({'elementType' : "HTMLElement"});
-		this.value.js+="dojo.provide('" + dijitName + "');\n\n";
-		this.value.js+="dojo.require('dijit._Templated');\n\n";
+		this.value.js+="dojo." + "provide('" + dijitName + "');\n\n";
+		this.value.js+="dojo." + "require('dijit._Templated');\n\n";
 		
 		
 		/* build the dojo.requires(...) top bits */

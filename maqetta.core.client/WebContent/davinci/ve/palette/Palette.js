@@ -22,6 +22,7 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 	_resource: null,
 	_context: null,
 	_folders: {},
+	_folderNodes : {},
 	
 	postMixInProperties: function() {
 		this._resource = dojo.i18n.getLocalization("davinci.ve", "common");
@@ -37,7 +38,7 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 	},
 	
 	addCustomWidget : function(lib){
-
+		
 		var libraries = {};
 		
 		dojo.mixin(libraries, {custom:lib});
@@ -59,31 +60,50 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
                 descriptorObject[category.name].items.push(newItem);
 		    });
 		}
+		this._generateCssRules(descriptorObject);
 		
-		// Force certain hardcoded ones to top: Containers, Controls, Other, Untested, ...
-		// FIXME: Need a more flexible approach (versus hardcoding in JavaScript)
-		var orderedDescriptors = [];
-		var predefined = ["Dojo Containers", "Dojo Controls", "HTML", "Dojox Mobile", "Untested Dojo & HTML"];
-		dojo.forEach(predefined, function(name) {
-		    if (descriptorObject[name]) {
-		        orderedDescriptors.push(descriptorObject[name]);
-		        delete descriptorObject[name];
-		    }
-		});
-		// For any categories other than the hardcoded ones.
-		for (var category in descriptorObject) {
-            orderedDescriptors.push(descriptorObject[category]);
-            delete descriptorObject[category];
-        }
-		
-		this._generateCssRules(orderedDescriptors);
-		dojo.forEach(orderedDescriptors, function(component) {
-			if (component.name && !this._folders[component.name]) {
-				this._createPalette(component);
-				this._folders[component.name] = true;
-			}
-		}, this);
-		
+		for(var name in descriptorObject){
+			var component = descriptorObject[name];
+			var iconFolder = "ve/resources/images/";
+			var defaultIconFile = "fldr_obj.gif";
+			var	iconFile = defaultIconFile;
+			var iconUri = iconFolder + iconFile;
+			componentIcon = this._getIconUri(component.icon, iconUri);
+			
+			var opt = {
+				paletteId: this.id,
+				icon: componentIcon,
+				displayName: /* XXX component.provider.getDescriptorString(component.name) ||*/ component.name
+			};
+			this._createFolder(opt);
+			dojo.forEach(component.items, function(item){
+		        // XXX For now, we want to keep some items hidden. If item.hidden is set, then don't
+		        //  add this item to palette (see bug 5626).
+		        if (item.hidden) {
+		            return;
+		        }
+	
+				var opt = {
+					icon: item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif"),
+					displayName:
+						item.$library._maqGetString(item.type) ||
+						item.$library._maqGetString(item.name) ||
+						item.name,
+					description: 
+					    item.$library._maqGetString(item.type+"_description") || 
+					    item.$library._maqGetString(item.name+"_description") || 
+						item.description || 
+						item.type,
+					name: item.name,
+					paletteId: this.id,
+					type: item.type,
+					data: item.data || {type: item.type, properties: item.properties, children: item.children},
+					tool: item.tool,
+					category: descriptorObject.name
+				};
+				this._createItem(opt);
+			}, this);
+		}
 	
 	},
 	
@@ -291,9 +311,14 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 	},
 
 	_createFolder: function(opt){
-		var node = new davinci.ve.palette.PaletteFolder(opt);
-		this.addChild(node);
-		return node;
+		
+		if(this._folderNodes[opt.displayName]!=null)
+			return this._folderNodes[opt.displayName];
+		
+		
+		this._folderNodes[opt.displayName] = new davinci.ve.palette.PaletteFolder(opt);
+		this.addChild(this._folderNodes[opt.displayName]);
+		return this._folderNodes[opt.displayName];
 	},
 	
 	_createFolderTemplate: function(){

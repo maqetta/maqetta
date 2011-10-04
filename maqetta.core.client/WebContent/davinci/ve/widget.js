@@ -293,7 +293,7 @@ davinci.ve.widget._getUniqueId = function() {
 };
 
 davinci.ve.widget.createWidget = function(data){
-	//debugger;
+	
 	if(!data || !data.type){
 		return undefined;
 	}

@@ -5,6 +5,7 @@ define("davinci/ve/DijitWidget", ["davinci/ve/_Widget", "davinci/ve/metadata"], 
 	isDijitWidget: true,
 
 	constructor: function(mixin, node, dijitWidget, metadata, srcElement) {
+	
 		if (dojo.isString(dijitWidget)) {
 			var c = davinci.ve.widget._dojo(node).getObject(dijitWidget);
 			// create the instance (follow parser.js)

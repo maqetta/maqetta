@@ -9,7 +9,7 @@ dojo.require("davinci.de.widgets.NewDijit");
 dojo.require("davinci.de.DijitTemplatedGenerator");
 dojo.mixin(davinci.de.resource, {
 	
-	WIDGETS_JSON : {"name":"custom", longName:"Custom Widgets", version:"1.0", localPath:true, "categories":{"custom":{name:"User Widgets", description:"User Widgets", widgetClass:"object"}}, widgets:[]},
+	WIDGETS_JSON : {"name":"custom", longName:"Custom Widgets", version:"1.0", localPath:true, "categories":{"custom":{name:"User Widgets", description:"User Widgets", widgetClass:"dijit"}}, widgets:[]},
 	
 	
 	createDijiFromNewDialog : function(){

@@ -229,7 +229,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 	},
 
 	create: function(args){
-	
+		
 		if(!args || !this._data){
 			return;
 		}

@@ -99,6 +99,71 @@ davinci.library.getMetaData=function(theme){
 	return davinci.library._themesMetaCache[theme.name];
 }
 
+davinci.library.addCustomWidgets=function(base, customWidgetJson){
+	dojo.mixin(davinci.library._customWidgets[base], customWidgetJson);
+	var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+	if(!prefs['widgetFolder']){
+		prefs.widgetFolder = "./widgets";
+		davinci.workbench.Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
+	}
+	
+	davinci.ve.metadata.parseMetaData({descriptor:customWidgetJson, metaPath:prefs['widgetFolder'], localPath:true});
+	dojo.publish("/davinci/ui/addedCustomWidget", [customWidgetJson]);
+}
+
+davinci.library.getCustomWidgets=function(base){
+   
+    
+	if(!davinci.library._customWidgets)
+		davinci.library._customWidgets = {};
+		
+	if(!davinci.library._customWidgets[base]){
+		
+		davinci.library._customWidgets[base] = {};
+		var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+		if(!prefs['widgetFolder']){
+			prefs.widgetFolder = "./widgets";
+			davinci.workbench.Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
+		}
+		davinci.library._customWidgets[base] = {};
+		
+		var widgetFolderSetting = (new davinci.model.Path(base).append(prefs['widgetFolder']));
+		var fullPath = widgetFolderSetting.getSegments();
+		parent = davinci.resource.findResource(fullPath[0]);
+		for(var i=1;i<fullPath.length;i++){
+			var folder = parent.getChild(fullPath[i]);
+			if(folder!=null){
+				parent = folder;
+			}else{
+				parent = parent.createResource(fullPath[i],true);
+			}
+		}
+		
+		var customWidgets = davinci.resource.findResource("*_widgets.json", parent);
+		
+		for(var i=0;i<customWidgets.length;i++){
+			dojo.mixin(davinci.library._customWidgets[base], dojo.fromJson(customWidgets[i].getText()));
+		    dojo.mixin(davinci.library._customWidgets[base], {
+	            /**
+	             * Get a translated string for this library
+	             * @param key
+	             * @returns {String}
+	             */
+	            _maqGetString:  function getDescriptorString(key) {
+	                				return key;
+	            				}
+	        });
+			
+			
+		}
+		davinci.library._customWidgets[base].metaPath=prefs['widgetFolder'];
+		davinci.library._customWidgets[base].localPath = true;
+	}
+	
+	return {custom:davinci.library._customWidgets[base]};
+	
+}
+
 //FIXME: should these be cached?
 davinci.library.getInstalledLibs=function(){
 	if(!davinci.library._serverLibs)

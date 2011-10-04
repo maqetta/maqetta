@@ -54,6 +54,7 @@ davinci.ve.metadata = function() {
     });
     
     function parseLibraryDescriptor(data) {
+    	
     	var path = new davinci.model.Path(data.metaPath),
     		descriptor = data.descriptor;
      
@@ -147,6 +148,7 @@ davinci.ve.metadata = function() {
 //    };
     
     function getMetadata(type) {
+    
         if (!type) {
             return undefined;
         }
@@ -165,16 +167,24 @@ davinci.ve.metadata = function() {
             return undefined;
         }
         
-        var metadata,
-            metadataUrl = [ descriptorPath, "/", type.replace(/\./g, "/"), "_oam.json" ].join('');
-        dojo.xhrGet({
-            url : metadataUrl,
-            handleAs : "json",
-            sync : true, // XXX should be async
-            load : function(data) {
-                metadata = data;
-            }
-        });
+        var metadata = null;
+        var metadataUrl = [ descriptorPath, "/", type.replace(/\./g, "/"), "_oam.json" ].join('');
+        if(!lib.localPath){
+	        
+	        dojo.xhrGet({
+	            url : metadataUrl,
+	            handleAs : "json",
+	            sync : true, // XXX should be async
+	            load : function(data) {
+	                metadata = data;
+	            }
+	        });
+        }else{
+        	var base = davinci.Runtime.getProject();
+        	var resource = davinci.resource.findResource("./"+ base + "/" + metadataUrl);
+        	metadata = dojo.fromJson(resource.getText());
+        }
+        
         if (!metadata) {
             console.error("ERROR: Could not load metadata for type: " + type);
             return null;
@@ -272,8 +282,18 @@ davinci.ve.metadata = function() {
 					parseLibraryDescriptor(data);
 				}
 			});
+			/* add the users custom widgets to the library metadata */
+			var base = davinci.Runtime.getProject();
+			var descriptor = davinci.library.getCustomWidgets(base);
+			if(descriptor.custom) parseLibraryDescriptor({descriptor:descriptor.custom, metaPath:descriptor.custom.metaPath});
+			
 		},
         
+		/* used to update a library descriptor after the fact */
+		parseMetaData : function(data){
+			parseLibraryDescriptor(data);
+		},
+		
         /**
          * Get library metadata.
          * @param {String} [name]

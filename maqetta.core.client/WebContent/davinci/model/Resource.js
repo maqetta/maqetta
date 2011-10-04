@@ -248,6 +248,15 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
 
   /* time to make this public */
   davinci.model.Resource.Folder.prototype.getChild= function(name){
+	  if(!this._isLoaded){
+		  this.getChildren(function(item){this.children=item}, true)
+	  }
+	  return this._getChild(name);
+	  
+  }
+  
+  davinci.model.Resource.Folder.prototype._getChild= function(name){
+	  
 	  if (!this.__CASE_SENSITIVE){
 		  name=name.toLowerCase();
 	  }

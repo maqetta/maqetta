@@ -1,17 +1,18 @@
-dojo.provide("davinci.ve.tools.SelectTool");
+define(["dojo/_base/declare",        
+		"davinci/ve/tools/_Tool",
+		"davinci/ve/widget",
+		"davinci/ve/metadata",
+		"davinci/commands/CompoundCommand",
+		"davinci/ve/commands/MoveCommand",
+		"davinci/ve/commands/ResizeCommand"], function(
+				declare,
+				tool
+		){
 
-dojo.require("davinci.ve.tools._Tool");
-dojo.require("davinci.ve.metadata");
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.commands.CompoundCommand");
-dojo.require("davinci.ve.commands.MoveCommand");
-dojo.require("davinci.ve.commands.ResizeCommand");
 
-
-dojo.declare("davinci.ve.tools.SelectTool", davinci.ve.tools._Tool, {
+return declare("davinci.ve.tools.SelectTool", tool, {
 
 	activate: function(context){
-		
 		this._context = context;
 	},
 
@@ -336,4 +337,5 @@ dojo.declare("davinci.ve.tools.SelectTool", davinci.ve.tools._Tool, {
 		}
 		return next;
 	}
+});
 });

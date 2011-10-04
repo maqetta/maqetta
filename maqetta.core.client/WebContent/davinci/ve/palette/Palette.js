@@ -30,11 +30,61 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 	postCreate: function(){
 
 		dojo.addClass(this.domNode, "dojoyPalette");
-		this._createFolderTemplate();
-		this._createItemTemplate();
-		this._createHeader();
+		this.refresh();
 		this.connectKeyNavHandlers([dojo.keys.UP_ARROW], [dojo.keys.DOWN_ARROW]);
 		dojo.subscribe("/davinci/ui/libraryChanged", this, "refresh" );
+		dojo.subscribe("/davinci/ui/addedCustomWidget", this, "addCustomWidget" );
+	},
+	
+	addCustomWidget : function(lib){
+
+		var libraries = {};
+		
+		dojo.mixin(libraries, {custom:lib});
+		
+		// Merge descriptors that have the same category
+		// XXX Need a better solution for enumerating through descriptor items and creating
+		//    category groups.
+        var descriptorObject = {};
+		for (var name in libraries) if (libraries.hasOwnProperty(name)) {
+		    var lib = libraries[name];
+		    dojo.forEach(lib.widgets, function(item) {
+                var category = lib.categories[item.category];
+                if (!descriptorObject[category.name]) {
+                    descriptorObject[category.name] = dojo.clone(category);
+                    descriptorObject[category.name].items = [];
+                }
+                var newItem = dojo.clone(item);
+                newItem.$library = lib;
+                descriptorObject[category.name].items.push(newItem);
+		    });
+		}
+		
+		// Force certain hardcoded ones to top: Containers, Controls, Other, Untested, ...
+		// FIXME: Need a more flexible approach (versus hardcoding in JavaScript)
+		var orderedDescriptors = [];
+		var predefined = ["Dojo Containers", "Dojo Controls", "HTML", "Dojox Mobile", "Untested Dojo & HTML"];
+		dojo.forEach(predefined, function(name) {
+		    if (descriptorObject[name]) {
+		        orderedDescriptors.push(descriptorObject[name]);
+		        delete descriptorObject[name];
+		    }
+		});
+		// For any categories other than the hardcoded ones.
+		for (var category in descriptorObject) {
+            orderedDescriptors.push(descriptorObject[category]);
+            delete descriptorObject[category];
+        }
+		
+		this._generateCssRules(orderedDescriptors);
+		dojo.forEach(orderedDescriptors, function(component) {
+			if (component.name && !this._folders[component.name]) {
+				this._createPalette(component);
+				this._folders[component.name] = true;
+			}
+		}, this);
+		
+	
 	},
 	
 	setContext: function(context){
@@ -45,13 +95,25 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 
 	refresh : function(){
 		delete this._loaded;
+		this._createFolderTemplate();
+		this._createItemTemplate();
+		this._createHeader();
 		
+		if(this._context){
+			this.LoadPalette();
+			this.startupkeyNavChildren();
+		}
 	},
+	
+	
+
 	
 	_loadPalette: function(){
 		
-		if(this._loaded) return;
 		
+		
+		if(this._loaded) return;
+		//debugger;
 		this._loaded = true; // call this only once
 		var allLibraries = davinci.ve.metadata.getLibrary();
 		var userLibs = davinci.library.getUserLibs(davinci.Runtime.getProject());
@@ -73,7 +135,10 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 			var library = findInAll(userLibs[i].id, userLibs[i].version);
 			if(library!=null) dojo.mixin(libraries, library);
 		}
-
+		
+		var customWidgets = davinci.library.getCustomWidgets(davinci.Runtime.getProject());
+		if(customWidgets!=null) dojo.mixin(libraries, customWidgets);
+		
 		// Merge descriptors that have the same category
 		// XXX Need a better solution for enumerating through descriptor items and creating
 		//    category groups.

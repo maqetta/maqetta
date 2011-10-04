@@ -74,12 +74,7 @@ BODY{
 	padding-bottom: 0.25em;
 }
 
-.viewActionIcon {
-	width: 16px;
-	height: 16px;
-	background-repeat: no-repeat;   
-}
-.editActionIcon {
+.viewActionIcon, .editActionIcon {
 	width: 16px;
 	height: 16px;
 	background-repeat: no-repeat; 
@@ -242,56 +237,29 @@ BODY{
 	padding:1px 0 0 0;
 } 
 
-.propertiesSelectionName,
-.objectSelectionName{
-	background-image:none !important;
-	background-color:#EAEAEA !important;
-    font: normal 900 8pt bold Verdana,sans-serif;
-    text-transform: lowercase;
-    letter-spacing: -0.02em;
-}
 .objectSelectionName{
 	height:2em;
 }
 
-.styleViewCol3{
+.styleViewCol2,
+.styleViewCol3,
+.styleViewCol4,
+.propertiesSelectionName,
+.objectSelectionName {
 	background-image:none !important;
 	background-color:#EAEAEA !important;
     font: normal 900 8pt bold Verdana,sans-serif;
     text-transform: lowercase;
     letter-spacing: -0.02em;
-	
+}
+.styleViewCol1{	
 }
 
-.styleViewCol2{
-	background-image:none !important;
-	background-color:#EAEAEA !important;
-    font: normal 900 8pt bold Verdana,sans-serif;
-    text-transform: lowercase;
-    letter-spacing: -0.02em;
-	
-}
-.styleViewCol1{
-	
-	
-}
-.styleViewCol4{
-	background-image:none !important;
-	background-color:#EAEAEA !important;
-    font: normal 900 8pt bold Verdana,sans-serif;
-    text-transform: lowercase;
-    letter-spacing: -0.02em;
-}
 .propertiesAppliesToToolBar{
-	background-image:none !important;
-    font: normal 900 8pt bold Verdana,sans-serif;
-    text-transform: lowercase;
-    letter-spacing: -0.02em;
-    width:74px !important;
-    background-color:#EAEAEA !important;
-	
+    background-color:#EAEAEA !important;	
 }
 
+.propertiesAppliesToToolBar,
 .propertiesViewToolBar{
     background-image:none !important;
     font: normal 900 8pt bold Verdana,sans-serif;
@@ -299,6 +267,7 @@ BODY{
     letter-spacing: -0.02em;
     width:74px !important;
 }
+
 .propertiesNameColumn,
 .objectNameColumn{
     width:7em;
@@ -321,7 +290,7 @@ BODY{
 }
 
 .themeEditor {
-		background-color: white !important;	
+	background-color: white !important;	
 }
 
 /* Tweaks to Claro for editor toolbar */
@@ -345,7 +314,7 @@ BODY{
 #davinci_top_bar {
 	padding:0 8px 0 22px; /* override dijitContentPane */
 	background: #2c2c2c url('img/banner-tile.png') repeat-x;
-	color: #cccccc;
+	color: #ccc;
     font: normal bold 12px Arial, sans-serif;
     text-shadow:none;
     border-top: rgb(45,46,46) 1px;
@@ -363,7 +332,7 @@ BODY{
 .maq_banner_name {
     font: normal normal 10pt Arial, sans-serif;
 	color:white;
-	text-shadow: #000000 1px 1px 1px;
+	text-shadow: #000 1px 1px 1px;
 }
 .maq_banner_component {
     font: normal normal 10pt Arial, sans-serif;
@@ -409,10 +378,10 @@ davinci_top_bar .dijitButtonNode {
 	display: table;
 	margin: 0 auto;
 	padding: 0;
-	height: 32px
+	height: 32px;
 }
 .toolbaredContainer_toolbarDiv {
-	/* no override rules at this time */
+	height: 28px;
 }
 
 #davinci_toolbar_main {
@@ -432,8 +401,8 @@ davinci_top_bar .dijitButtonNode {
 	border:none;
 	background-color:transparent;
 	background-image:none;
-	padding-left:0px;
-	padding-right:0px;
+	padding-left:0;
+	padding-right:0;
 	padding-bottom:6px; /* For win/chrome - see subsequent rule for other browsers */
 }
 /* Deal with 1-pixel layout difference for win/chrome, which gets padding-bottom:6px
@@ -464,8 +433,8 @@ davinci_top_bar .dijitButtonNode {
 }
 #davinci_top_bar .dijitButtonText {
 	font:normal bold 9pt Arial, sans-serif;
-	color:#cccccc;
-	text-shadow: #000000 1px 1px 1px;
+	color:#ccc;
+	text-shadow: #000 1px 1px 1px;
 }
 
 .claro #davinci_app #davinci_user_container .dijitDropDownButtonHover .dijitButtonNode,
@@ -477,8 +446,8 @@ davinci_top_bar .dijitButtonNode {
 }
 #davinci_user_welcome {
 	font:normal normal 8.75pt Arial, sans-serif;
-	color:#cccccc;
-	text-shadow: #000000 1px 1px 1px;
+	color:#ccc;
+	text-shadow: #000 1px 1px 1px;
 }
 #davinci_user, #davinci_logoff {
 	padding:0 0 2px;	/* Claro puts 2px extra padding-bottom on DropDownMenus */
@@ -662,13 +631,11 @@ davinci_top_bar .dijitButtonNode {
 .dojoyPaletteFolder {
     border-color: #D1D1D1 #989898 #989898 white;
 }
-.claro .dojoyPaletteFolderLow {
+.claro .dojoyPaletteFolderLow,
 /*    background-image: url(images/palette-folder-bg.gif); */
-	 background: #EAEAEA url(../dijit/themes/claro/images/titlebar.png) repeat-x scroll left top;
-}
 .claro .dojoyPaletteFolderHi {
 /*    background-image: url(images/palette-folder-bg-hi.gif); */
-	    background: #EAEAEA url(../dijit/themes/claro/images/titlebar.png) repeat-x scroll left top;
+    background: #EAEAEA url(../dijit/themes/claro/images/titlebar.png) repeat-x scroll left top;
 }
 .dojoyPaletteSearch {
 /*	font-size: 12px;*/
@@ -676,7 +643,7 @@ davinci_top_bar .dijitButtonNode {
     padding-left: 1px;
 }
 
-.maqWidgetsCategory {
+.maqWidgetsCategory { /* use dijitHidden instead? */
 	display: none
 }
 
@@ -696,71 +663,45 @@ davinci_top_bar .dijitButtonNode {
 	background-color:#aaa;
 }
 
-.editCutIcon {
+.toolbaredContainer_toolbarDiv .dijitIcon {
 	background-image: url(img/sprite.png);
-	background-position: 0 -516px;
-	width: 16px;
-	height: 16px;
-}
-.editCopyIcon {
-	background-image: url(img/sprite.png);
-	background-position: 0 -450px;
-	width: 16px;
-	height: 16px;
-}
-.editPasteIcon {
-	background-image: url(img/sprite.png);
-	background-position: -82px -400px;
-	width: 16px;
-	height: 16px;
-}
-.editDeleteIcon {
-	background-image: url(img/sprite.png);
-	background-position: 0 -648px;
-	width: 16px;
-	height: 16px;
 }
 
+.editCutIcon {
+	background-position: 0 -516px;
+}
+.editCopyIcon {
+	background-position: 0 -450px;
+}
+.editPasteIcon {
+	background-position: -82px -400px;
+}
+.editDeleteIcon {
+	background-position: 0 -648px;
+}
 .addStateIcon {
-	background-image: url("img/sprite.png");
 	background-position: -82px -466px;
-	width: 16px;
-	height: 16px;
 }
 .removeStateIcon {
-	background-image: url("img/sprite.png");
 	background-position: 0 -1778px;
-	width: 16px;
-	height: 16px;
 }
 
 .designModeIcon {
-	background-image: url(img/sprite.png);
 	background-position: 0 -1842px;
-	width: 16px;
-	height: 16px;
 }
 
 .sourceModeIcon {
-	background-image: url(img/sprite.png);
 	background-position: 0 -1908px;
-	width: 16px;
-	height: 16px;
 }
 
 .splitVerticalIcon {
-	background-image: url(img/sprite.png);
 	background-position: -82px 0;
-	width: 16px;
-	height: 16px;
 }
 
 .splitHorizontalIcon {
-	background-image: url(img/sprite.png);
 	background-position: -82px -66px;
-	width: 16px;
-	height: 16px;
 }
+
 /* FIXME: I'm hardcoding the dropdown arrow icon from Claro.
 	Instead, we should just use a Dijit DropDownArrow control
 	and then inherit the styling "for free" but current code

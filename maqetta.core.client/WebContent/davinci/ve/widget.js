@@ -339,7 +339,8 @@ davinci.ve.widget.createWidget = function(data){
 	// XXX eventually replace with dojo.place()?
 	// XXX Technically, there can be more than one 'content'
     var uniqueId = davinci.ve.widget._getUniqueId();
-    var content = metadata.content.trim().replace(/\s+/g, ' ').replace(/__WID__/g, uniqueId);
+    var content = data.content ||
+            metadata.content.trim().replace(/\s+/g, ' ').replace(/__WID__/g, uniqueId);
 	var node = dijit.getDocumentWindow(dojo.doc).dojo._toDom(content);
 	// XXX Used to create node like this, which added attributes from metadata, is there still a way to do this?
 	//	var node = dojo.create(metadata.tagName || "div", metadata.attributes);
@@ -658,9 +659,17 @@ davinci.ve.widget.getWidget = function(node){
 	return widget;
 };
 
-dojo.declare("davinci.ve._Widget",null,{
+dojo.declare("davinci.ve._Widget", null, {
+
 	isWidget: true,
+
 	acceptsHTMLChildren: false,
+
+	/**
+	 * @static
+	 */
+	_skipAttrs: ['id', 'style', 'class', 'dir', 'lang', '_children'],
+
 	constructor: function (params,node,type,metadata)
 	{
 	  this.domNode=node;
@@ -934,7 +943,7 @@ dojo.declare("davinci.ve._Widget",null,{
 	},
 
 	getChildrenData: function(options){
-		options = (options ? options : {identify: true});
+		options = options || {identify: true};
 
 		var helper = this.getHelper();
 		if(helper && helper.getChildrenData){
@@ -997,8 +1006,6 @@ dojo.declare("davinci.ve._Widget",null,{
 			if (idProp && idProp.noPersist)
 				data.properties.isTempID=true;
 			data.properties.id = this.id;
-		}else if(options.identify !== false){
-			data.properties.id = this.getId();
 		}
 		if ((options.preserveTagName !== false) && (this.id)) {
 			data.tagName = this._srcElement.tag;
@@ -1006,7 +1013,7 @@ dojo.declare("davinci.ve._Widget",null,{
 
 		// get all properties
 	    var properties = davinci.ve.metadata.query(this, "property");
-	    if (this.domNode && this.domNode.parentNode) { // "widget" could be a string for dojoType
+	    if (this.domNode && this.domNode.parentNode) {
 	        var parent = davinci.ve.widget.getEnclosingWidget(this.domNode.parentNode);
 	        var childProperties = davinci.ve.metadata.query(parent, "childProperties");
 	        if (childProperties) {
@@ -1018,9 +1025,9 @@ dojo.declare("davinci.ve._Widget",null,{
 	        }
 	    }
 
-		if(properties){
-			for(var name in properties){
-				if(name=="_children" || name == "id" || name == "style" || name == "class" || name == "dir" || name == "lang"){
+		if (properties) {
+			for (var name in properties) {
+				if (this._skipAttrs.indexOf(name.toLowerCase()) !== -1) {
 					continue;
 				}
 				var property = properties[name];
@@ -1063,12 +1070,12 @@ dojo.declare("davinci.ve._Widget",null,{
 	},
 
 	getData: function(options){
-		options = (options ? options : {identify: true, preserveStates: true});
+		options = options || {identify: true, preserveStates: true};
 
 		var helper = this.getHelper();
-		var data = null;
+		var data;
 		if(helper && helper.getData){
-			data =  helper.getData.apply(helper, [this, options]);
+			data = helper.getData.apply(helper, [this, options]);
 		}else{
 			data = this._getData( options);
 		}
@@ -1084,6 +1091,9 @@ dojo.declare("davinci.ve._Widget",null,{
 				}
 			}
 		}
+		
+		// Save source for widget
+		data.content = this._getElementSource();
 		
 		// Find "on*" event attributes that are in the model and
 		// place on the data object. Note that Maqetta strips
@@ -1101,7 +1111,32 @@ dojo.declare("davinci.ve._Widget",null,{
 		}
 
 		return data;
+	},
 
+    // Save source for widget, everything except for any widget children.
+	_getElementSource: function() {
+        var srcElement = this._srcElement,
+            content = ['<'];
+        content.push(srcElement.tag);
+        srcElement.attributes.forEach(function(attr) {
+            if (this._skipAttrs.indexOf(attr.name.toLowerCase()) === -1) {
+                content.push(' $n="$v"'.replace('$n', attr.name).replace('$v', attr.value));
+            }
+        }, this);
+        content.push('>');
+        
+        // look for any model children that aren't managed widgets
+        var childWidgets = this.getChildren();
+        srcElement.children.filter(function(child) {
+            return ! childWidgets.some(function(w) {
+                return w._srcElement === child;
+            });
+        }).forEach(function(child) {
+            content.push(child.getText());
+        });
+        
+        content.push('</$t>'.replace('$t', srcElement.tag));
+        return content.join('');
 	},
 
 	getPropertyValue: function(name){

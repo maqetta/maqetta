@@ -57,7 +57,7 @@ dojo.declare("davinci.de.DijitTemplatedGenerator", null, {
     	this.value.js+="\n});";
     	
     	this.metadata.content = "<div></div>";
-    	this.metadata.require.push({type:"javascript", $text:"dojo.require(\'" + dijitName + "');"});
+    	this.metadata.require.push({type:"javascript", $text:"dojo." + "require(\'" + dijitName + "');"});
     	
     	
     	this.value.metadata = dojo.toJson(this.metadata);

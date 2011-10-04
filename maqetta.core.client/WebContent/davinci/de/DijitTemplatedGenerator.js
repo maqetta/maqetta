@@ -42,7 +42,7 @@ dojo.declare("davinci.de.DijitTemplatedGenerator", null, {
             }
         }
         /* build the templated class */
-    	this.value.js+="dojo.declare('" + this.dijitName + "', [dijit._Widget, dijit._Templated],{\n" ;
+    	this.value.js+="dojo." + "declare('" + this.dijitName + "', [dijit._Widget, dijit._Templated],{\n" ;
     	var html =  this._srcDocument.find({'elementType' : "HTMLElement", 'tag':'body'}, true);
     	var bodyChildren = html.children;
     	

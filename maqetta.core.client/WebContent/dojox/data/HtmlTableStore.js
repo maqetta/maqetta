@@ -1,8 +1,11 @@
-define("dojox/data/HtmlTableStore", ["dojo", "dojox", "dojo/data/util/simpleFetch", "dojo/data/util/filter", "dojox/xml/parser"], function(dojo, dojox) {
+define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/lang", "dojo/dom", "dojo/_base/array",
+		"dojo/_base/xhr", "dojo/_base/sniff", "dojo/_base/window", "dojo/data/util/simpleFetch", 
+		"dojo/data/util/filter", "dojox/xml/parser"], 
+  function(kernel, declare, lang, dom, array, xhr, has, winUtil, simpleFetch, filter, xmlParser) {
 
-dojo.declare("dojox.data.HtmlTableStore", null, {
+var HtmlTableStore = declare("dojox.data.HtmlTableStore", null, {
 	constructor: function(/*Object*/args){
-		dojo.deprecated("dojox.data.HtmlTableStore", "Please use dojox.data.HtmlStore");
+		kernel.deprecated("dojox.data.HtmlTableStore", "Please use dojox.data.HtmlStore");
 		//	summary:
 		//		Initializer for the HTML table store.
 		//	description:
@@ -44,10 +47,10 @@ dojo.declare("dojox.data.HtmlTableStore", null, {
 			this.tableId = args.tableId;
 		}else{
 			if(args.tableId){
-				this._rootNode = dojo.byId(args.tableId);
+				this._rootNode = dom.byId(args.tableId);
 				this.tableId = this._rootNode.id;
 			}else{
-				this._rootNode = dojo.byId(this.tableId);
+				this._rootNode = dom.byId(this.tableId);
 			}
 			this._getHeadings();
 			for(var i=0; i<this._rootNode.rows.length; i++){
@@ -69,8 +72,8 @@ dojo.declare("dojox.data.HtmlTableStore", null, {
 		//		Function to load the attribute names from the table header so that the
 		//		attributes (cells in a row), can have a reasonable name.
 		this._headings = [];
-		dojo.forEach(this._rootNode.tHead.rows[0].cells, dojo.hitch(this, function(th){
-			this._headings.push(dojox.xml.parser.textContent(th));
+		array.forEach(this._rootNode.tHead.rows[0].cells, lang.hitch(this, function(th){
+			this._headings.push(xmlParser.textContent(th));
 		}));
 	},
 	
@@ -106,7 +109,7 @@ dojo.declare("dojox.data.HtmlTableStore", null, {
 			throw new Error("dojo.data.HtmlTableStore: a function was passed an attribute argument that was not an attribute name string");
 			return -1;
 		}
-		return dojo.indexOf(this._headings, attribute); //int
+		return array.indexOf(this._headings, attribute); //int
 	},
 
 /***************************************
@@ -131,7 +134,7 @@ dojo.declare("dojox.data.HtmlTableStore", null, {
 		var index = this._assertIsAttribute(attribute);
 
 		if(index>-1){
-			return [dojox.xml.parser.textContent(item.cells[index])] ;
+			return [xmlParser.textContent(item.cells[index])] ;
 		}
 		return []; //Array
 	},
@@ -162,7 +165,7 @@ dojo.declare("dojox.data.HtmlTableStore", null, {
 		//		See dojo.data.api.Read.containsValue()
 		var regexp = undefined;
 		if(typeof value === "string"){
-			regexp = dojo.data.util.filter.patternToRegExp(value, false);
+			regexp = filter.patternToRegExp(value, false);
 		}
 		return this._containsValue(item, attribute, value, regexp); //boolean.
 	},
@@ -246,7 +249,7 @@ dojo.declare("dojox.data.HtmlTableStore", null, {
 			this._finishFetchItems(request, fetchHandler, errorHandler);
 		}else{
 			if(!this.url){
-				this._rootNode = dojo.byId(this.tableId);
+				this._rootNode = dom.byId(this.tableId);
 				this._getHeadings();
 				for(var i=0; i<this._rootNode.rows.length; i++){
 					this._rootNode.rows[i].store = this;
@@ -257,7 +260,7 @@ dojo.declare("dojox.data.HtmlTableStore", null, {
 						handleAs: "text"
 					};
 				var self = this;
-				var getHandler = dojo.xhrGet(getArgs);
+				var getHandler = xhr.get(getArgs);
 				getHandler.addCallback(function(data){
 					var findNode = function(node, id){
 						if(node.id == id){
@@ -307,7 +310,7 @@ dojo.declare("dojox.data.HtmlTableStore", null, {
 			for(key in request.query){
 				value = request.query[key]+'';
 				if(typeof value === "string"){
-					regexpList[key] = dojo.data.util.filter.patternToRegExp(value, ignoreCase);
+					regexpList[key] = filter.patternToRegExp(value, ignoreCase);
 				}
 			}
 
@@ -375,10 +378,10 @@ dojo.declare("dojox.data.HtmlTableStore", null, {
 		//Opera doesn't support the sectionRowIndex,
 		//So, have to call the indexOf to locate it.
 		//Blah.
-		if(!dojo.isOpera){
+		if(!has("opera")){
 			return item.sectionRowIndex; // int
 		}else{
-			return (dojo.indexOf(this._rootNode.rows, item) - 1) // int
+			return (array.indexOf(this._rootNode.rows, item) - 1) // int
 		}
 	},
 
@@ -399,14 +402,14 @@ dojo.declare("dojox.data.HtmlTableStore", null, {
 
 		if(!this._rootNode){
 			if(!this.url){
-				this._rootNode = dojo.byId(this.tableId);
+				this._rootNode = dom.byId(this.tableId);
 				this._getHeadings();
 				for(var i=0; i<this._rootNode.rows.length; i++){
 					this._rootNode.rows[i].store = this;
 				}
 				item = this._rootNode.rows[identity+1];
 				if(keywordArgs.onItem){
-					scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
+					scope = keywordArgs.scope?keywordArgs.scope:winUtil.global;
 					keywordArgs.onItem.call(scope, item);
 				}
 
@@ -415,7 +418,7 @@ dojo.declare("dojox.data.HtmlTableStore", null, {
 						url: this.url,
 						handleAs: "text"
 					};
-				var getHandler = dojo.xhrGet(getArgs);
+				var getHandler = xhr.get(getArgs);
 				getHandler.addCallback(function(data){
 					var findNode = function(node, id){
 						if(node.id == id){
@@ -440,13 +443,13 @@ dojo.declare("dojox.data.HtmlTableStore", null, {
 					}
 					item = self._rootNode.rows[identity+1];
 					if(keywordArgs.onItem){
-						scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
+						scope = keywordArgs.scope?keywordArgs.scope:winUtil.global;
 						keywordArgs.onItem.call(scope, item);
 					}
 				});
 				getHandler.addErrback(function(error){
 					if(keywordArgs.onError){
-						scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
+						scope = keywordArgs.scope?keywordArgs.scope:winUtil.global;
 						keywordArgs.onError.call(scope, error);
 
 					}
@@ -456,14 +459,14 @@ dojo.declare("dojox.data.HtmlTableStore", null, {
 			if(this._rootNode.rows[identity+1]){
 				item = this._rootNode.rows[identity+1];
 				if(keywordArgs.onItem){
-					scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
+					scope = keywordArgs.scope?keywordArgs.scope:winUtil.global;
 					keywordArgs.onItem.call(scope, item);
 				}
 			}
 		}
 	}
 });
-dojo.extend(dojox.data.HtmlTableStore,dojo.data.util.simpleFetch);
+lang.extend(HtmlTableStore,simpleFetch);
 
-return dojox.data.HtmlTableStore;
+return HtmlTableStore;
 });

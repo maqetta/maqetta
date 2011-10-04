@@ -1,13 +1,18 @@
-define("dijit/_DialogMixin", ["dojo", "dijit", "dijit/_Widget"], function(dojo, dijit) {
+define([
+	"dojo/_base/declare", // declare
+	"./a11y"	// _getTabNavigable
+], function(declare, a11y){
 
-dojo.declare("dijit._DialogMixin", null,
-	{
+	// module:
+	//		dijit/_DialogMixin
+	// summary:
+	//		_DialogMixin provides functions useful to Dialog and TooltipDialog
+
+	return declare("dijit._DialogMixin", null, {
 		// summary:
 		//		This provides functions useful to Dialog and TooltipDialog
 
-		attributeMap: dijit._Widget.prototype.attributeMap,
-
-		execute: function(/*Object*/ formContents){
+		execute: function(/*Object*/ /*===== formContents =====*/){
 			// summary:
 			//		Callback when the user hits the submit button.
 			//		Override this method to handle Dialog execution.
@@ -59,13 +64,9 @@ dojo.declare("dijit._DialogMixin", null,
 			// tags:
 			//		protected
 
-			var elems = dijit._getTabNavigable(this.containerNode);
+			var elems = a11y._getTabNavigable(this.containerNode);
 			this._firstFocusItem = elems.lowest || elems.first || this.closeButtonNode || this.domNode;
 			this._lastFocusItem = elems.last || elems.highest || this._firstFocusItem;
 		}
-	}
-);
-
-
-return dijit._DialogMixin;
+	});
 });

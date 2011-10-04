@@ -46,7 +46,7 @@
 		}
 
 		startTime = new Date();
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			var elapsed = new Date().getTime() - startTime;
 			var p = document.createElement("p");
 			p.appendChild(document.createTextNode("Widgets loaded in " + elapsed + "ms"));

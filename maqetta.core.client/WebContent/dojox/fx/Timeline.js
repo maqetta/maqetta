@@ -1,7 +1,8 @@
-dojo.provide("dojox.fx.Timeline");
-dojo.require("dojo.fx.easing");
+define(["dojo/_base/lang","dojo/fx/easing","dojo/_base/fx","dojo/dom","./_base","dojo/_base/connect",
+		"dojo/_base/html", "dojo/_base/array","dojo/_base/Color"],
+ function(lang, easingUtil, baseFx, dom, dojoxFx, connectUtil, htmlUtil, arrayUtil, Color){
 
-dojox.fx.animateTimeline = function(/* Object */options, /* DomNode|String */node){
+dojoxFx.animateTimeline = function(/* Object */options, /* DomNode|String */node){
 	// options: Object
 	// 		The paramters passed to the timeline animation. Includes:
 	// 			keys: Array
@@ -53,26 +54,26 @@ dojox.fx.animateTimeline = function(/* Object */options, /* DomNode|String */nod
 	// 		|	];
 	// 		|	ani = dojox.fx.animateTimeline({keys:keys, duration:2000}, "myDiv").play();
 	//
-	var _curve = new dojox.fx._Timeline(options.keys);
-	var ani = dojo.animateProperty({
-		node:dojo.byId(node || options.node),
+	var _curve = new Timeline(options.keys);
+	var ani = baseFx.animateProperty({
+		node:dom.byId(node || options.node),
 		duration:options.duration || 1000,
 		properties:_curve._properties,
 		// don't change! This easing is for the timeline,
 		// not individual properties
-		easing:dojo.fx.easing.linear,
+		easing:easingUtil.linear,
 		onAnimate: function(v){
 			//console.log("   ani:", v);
 		}
 	});
-	dojo.connect(ani, "onEnd", function(node){
+	connectUtil.connect(ani, "onEnd", function(node){
 		// Setting the final style. Hiccups in the browser
 		// can cause the animation to lose track. This ensures
 		// that it finishes in the proper location.
 		var sty = ani.curve.getValue(ani.reversed ? 0 : 1);
-		dojo.style(node, sty);
+		htmlUtil.style(node, sty);
 	});
-	dojo.connect(ani, "beforeBegin", function(){
+	connectUtil.connect(ani, "beforeBegin", function(){
 		// remove default curve and replace it with Timeline
 		if(ani.curve){ delete ani.curve; }
 		ani.curve = _curve;
@@ -81,16 +82,16 @@ dojox.fx.animateTimeline = function(/* Object */options, /* DomNode|String */nod
 	return ani; // dojo.Animation
 }
 
-dojox.fx._Timeline = function(/* Array */keys){
+var Timeline = function(/* Array */keys){
 	// summary:
 	//		The dojox.fx._Timeline object from which an instance
 	//		is created
 	// tags:
 	//		private
-	this.keys = dojo.isArray(keys) ? this.flatten(keys) : keys;
+	this.keys = lang.isArray(keys) ? this.flatten(keys) : keys;
 }
 
-dojox.fx._Timeline.prototype.flatten = function(keys){
+Timeline.prototype.flatten = function(keys){
 	// summary:
 	//		An internally used function that converts the keyframes
 	//		as used in the example above into a series of key values
@@ -104,9 +105,9 @@ dojox.fx._Timeline.prototype.flatten = function(keys){
 		return parseInt(str, 10) * .01
 	}
 	var p = {}, o = {};
-	dojo.forEach(keys, function(k, i){
+	arrayUtil.forEach(keys, function(k, i){
 		var step = getPercent(k.step, i);
-		var ease = dojo.fx.easing[k.ease] || dojo.fx.easing.linear;
+		var ease = easingUtil[k.ease] || easingUtil.linear;
 		
 		for(var nm in k){
 			if(nm == "step" || nm == "ease" || nm == "from" || nm == "to"){ continue; }
@@ -125,11 +126,11 @@ dojox.fx._Timeline.prototype.flatten = function(keys){
 				}
 			}
 			
-			o[nm].eases.push(dojo.fx.easing[k.ease || "linear"]);
+			o[nm].eases.push(easingUtil[k.ease || "linear"]);
 			
 			o[nm].steps.push(step);
 			if(p[nm].units == "isColor"){
-				o[nm].values.push(new dojo.Color(k[nm]));
+				o[nm].values.push(new Color(k[nm]));
 			}else{
 				o[nm].values.push(parseInt(/\d{1,}/.exec(k[nm]).join("")));
 			}
@@ -148,7 +149,7 @@ dojox.fx._Timeline.prototype.flatten = function(keys){
 	
 }
 
-dojox.fx._Timeline.prototype.getValue = function(/*float*/ p){
+Timeline.prototype.getValue = function(/*float*/ p){
 	// summary:
 	//		Replaces the native getValue in dojo.fx.Animation.
 	//		Returns an object with all propeties used in the animation
@@ -186,8 +187,8 @@ dojox.fx._Timeline.prototype.getValue = function(/*float*/ p){
 					var seg = (1 / (ns - step)) * (p - step);
 					seg = ease(seg);
 					
-					if(beg instanceof dojo.Color){
-						o[nm] = dojo.blendColors(beg, end, seg).toCss(false);
+					if(beg instanceof Color){
+						o[nm] = Color.blendColors(beg, end, seg).toCss(false);
 					}else{
 						var df = end - beg;
 						o[nm] = beg + seg * df + this._properties[nm].units;
@@ -206,5 +207,6 @@ dojox.fx._Timeline.prototype.getValue = function(/*float*/ p){
 	}
 	return o; // Object
 };
-
-
+dojoxFx._Timeline = Timeline;
+return dojoxFx;
+});

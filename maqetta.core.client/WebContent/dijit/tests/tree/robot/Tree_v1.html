@@ -9,15 +9,14 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
 		<script type="text/javascript" src="../../helpers.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_Tree_v1.html');
 
 				doh.register("setup",{
@@ -244,11 +243,14 @@
 							
 							var myTree = dijit.byId("tree2");
 							var children = myTree.rootNode.getChildren();
-							
+
+							// close deeper submenu, then submenu, then context menu
 							doh.robot.keyPress(dojo.keys.ESCAPE, 1000, {}, true);
 							doh.robot.keyPress(dojo.keys.ESCAPE, 1000, {}, true);
 							doh.robot.keyPress(dojo.keys.ESCAPE, 1000, {}, true);
-							
+
+							// close africa node.   (2 mouse moves to work around robot bugs)
+							doh.robot.mouseMoveAt(children[0].expandoNode, 1000, 100);
 							doh.robot.mouseMoveAt(children[0].expandoNode, 1000, 1);
 							doh.robot.mouseClick({left: true}, 1000);
 

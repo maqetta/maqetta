@@ -1,8 +1,6 @@
-dojo.provide("dojox.av.widget.ProgressSlider");
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
+define(['dojo', 'dijit', 'dijit/_Widget', 'dijit/_TemplatedMixin'],function(dojo, dijit){
 
-dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._Templated], {
+dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._TemplatedMixin], {
 	// summary:
 	//		A custom slider widget to use with dojox.av.widget.Player.
 	//	description:
@@ -21,7 +19,7 @@ dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._Templated]
 		this.finalWidth = dim.w
 		this.width = dim.w-this.handleWidth;
 		this.x = dim.x;
-		
+
 		dojo.setSelectable(this.domNode, false);
 		dojo.setSelectable(this.handle, false);
 	},
@@ -44,12 +42,12 @@ dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._Templated]
 		dojo.connect(this.media, "onStart", this, function(){
 			this.posCon = dojo.connect(this.media, "onPosition", this, "setHandle");
 		});
-		
+
 		dojo.connect(this.media, "onDownloaded", this, function(percent){
 			this.setLoadedPosition(percent*.01);
 			this.width = this.finalWidth * .01 * percent;
 		});
-		
+
 	},
 	onDrag: function(/* HTMLEvent */ evt){
 		// summary:
@@ -58,7 +56,7 @@ dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._Templated]
 		var x = evt.clientX - this.x;
 		if(x<0) x = 0;
 		if(x>this.width-this.handleWidth) x=this.width-this.handleWidth;
-		
+
 		var p = x/this.finalWidth;
 		this.media.seek( this.duration * p );
 		dojo.style(this.handle, "marginLeft", x+"px");
@@ -83,7 +81,7 @@ dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._Templated]
 		if(this.cup) dojo.disconnect(this.cup);
 		this.handleOut();
 	},
-	
+
 	setHandle: function(time){
 		// summary:
 		//		Sets the slider handle (when it is not being dragged)
@@ -92,19 +90,19 @@ dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._Templated]
 			var w = this.width-this.handleWidth;
 			var p = time/this.duration;
 			var x = p*w;
-			
+
 			dojo.style(this.handle, "marginLeft", x+"px");
 			dojo.style(this.progressPosition, "width", x+"px");
 		}
 	},
-	
+
 	setLoadedPosition: function(decimal){
 		// summary:
 		//		Sets the download progress bar to the percentage of how much
 		//		the media has been downloaded.
 		dojo.style(this.progressLoaded, "width", (this.finalWidth*decimal)+"px");
 	},
-	
+
 	handleOver: function(){
 		// summary:
 		//		Highlights the slider handle on mouseover, and
@@ -126,7 +124,10 @@ dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._Templated]
 		//		position an download bars.
 		var dim = dojo.coords(this.domNode);
 		this.finalWidth = dim.w;
-		
+
 	}
-	
+
+});
+
+return dojox.av.widget.ProgressSlider;
 });

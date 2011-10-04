@@ -1,11 +1,20 @@
-define("dijit/tree/TreeStoreModel", ["dojo", "dijit"], function(dojo, dijit) {
+define([
+	"dojo/_base/array", // array.filter array.forEach array.indexOf array.some
+	"dojo/aspect", // aspect.after
+	"dojo/_base/declare", // declare
+	"dojo/_base/json", // json.stringify
+	"dojo/_base/lang" // lang.hitch
+], function(array, aspect, declare, json, lang){
 
-dojo.declare(
-		"dijit.tree.TreeStoreModel",
-		null,
-	{
+	// module:
+	//		dijit/tree/TreeStoreModel
+	// summary:
+	//		Implements dijit.Tree.model connecting to a dojo.data store with a single
+	//		root item.
+
+	return declare("dijit.tree.TreeStoreModel", null, {
 		// summary:
-		//		Implements dijit.Tree.model connecting to a store with a single
+		//		Implements dijit.Tree.model connecting to a dojo.data store with a single
 		//		root item.  Any methods passed into the constructor will override
 		//		the ones defined here.
 
@@ -59,7 +68,7 @@ dojo.declare(
 			// tags:
 			//		private
 
-			dojo.mixin(this, args);
+			lang.mixin(this, args);
 
 			this.connects = [];
 
@@ -71,15 +80,16 @@ dojo.declare(
 			// if the store supports Notification, subscribe to the notification events
 			if(store.getFeatures()['dojo.data.api.Notification']){
 				this.connects = this.connects.concat([
-					dojo.connect(store, "onNew", this, "onNewItem"),
-					dojo.connect(store, "onDelete", this, "onDeleteItem"),
-					dojo.connect(store, "onSet", this, "onSetItem")
+					aspect.after(store, "onNew", lang.hitch(this, "onNewItem"), true),
+					aspect.after(store, "onDelete", lang.hitch(this, "onDeleteItem"), true),
+					aspect.after(store, "onSet", lang.hitch(this, "onSetItem"), true)
 				]);
 			}
 		},
 
 		destroy: function(){
-			dojo.forEach(this.connects, dojo.disconnect);
+			var h;
+			while(h = this.connects.pop()){ h.remove(); }
 			// TODO: should cancel any in-progress processing of getRoot(), getChildren()
 		},
 
@@ -95,9 +105,9 @@ dojo.declare(
 			}else{
 				this.store.fetch({
 					query: this.query,
-					onComplete: dojo.hitch(this, function(items){
+					onComplete: lang.hitch(this, function(items){
 						if(items.length != 1){
-							throw new Error(this.declaredClass + ": query " + dojo.toJson(this.query) + " returned " + items.length +
+							throw new Error(this.declaredClass + ": query " + json.stringify(this.query) + " returned " + items.length +
 							 	" items, but must return exactly one item");
 						}
 						this.root = items[0];
@@ -114,7 +124,7 @@ dojo.declare(
 			//		avoids showing +/- expando icon for nodes that we know don't have children.
 			//		(For efficiency reasons we may not want to check if an element actually
 			//		has children until user clicks the expando node)
-			return dojo.some(this.childrenAttrs, function(attr){
+			return array.some(this.childrenAttrs, function(attr){
 				return this.store.hasAttribute(item, attr);
 			}, this);
 		},
@@ -128,7 +138,7 @@ dojo.declare(
 				// The parent is not loaded yet, we must be in deferItemLoadingUntilExpand
 				// mode, so we will load it and just return the children (without loading each
 				// child item)
-				var getChildren = dojo.hitch(this, arguments.callee);
+				var getChildren = lang.hitch(this, arguments.callee);
 				store.loadItem({
 					item: parentItem,
 					onItem: function(parentItem){
@@ -148,7 +158,7 @@ dojo.declare(
 			// count how many items need to be loaded
 			var _waitCount = 0;
 			if(!this.deferItemLoadingUntilExpand){
-				dojo.forEach(childItems, function(item){ if(!store.isItemLoaded(item)){ _waitCount++; } });
+				array.forEach(childItems, function(item){ if(!store.isItemLoaded(item)){ _waitCount++; } });
 			}
 
 			if(_waitCount == 0){
@@ -156,7 +166,7 @@ dojo.declare(
 				onComplete(childItems);
 			}else{
 				// still waiting for some or all of the items to load
-				dojo.forEach(childItems, function(item, idx){
+				array.forEach(childItems, function(item, idx){
 					if(!store.isItemLoaded(item)){
 						store.loadItem({
 							item: item,
@@ -222,7 +232,7 @@ dojo.declare(
 					}else{
 						// Create new item in the tree, based on the drag source.
 						LnewItem=this.store.newItem(args, pInfo);
-						if (LnewItem && (insertIndex!=undefined)){
+						if(LnewItem && (insertIndex!=undefined)){
 							// Move new item to desired position
 							this.pasteItem(LnewItem, parent, parent, false, insertIndex);
 						}
@@ -231,7 +241,7 @@ dojo.declare(
 			}else{
 				// [as far as we know] there is no id so we must assume this is a new item
 				LnewItem=this.store.newItem(args, pInfo);
-				if (LnewItem && (insertIndex!=undefined)){
+				if(LnewItem && (insertIndex!=undefined)){
 					// Move new item to desired position
 					this.pasteItem(LnewItem, parent, parent, false, insertIndex);
 				}
@@ -247,10 +257,10 @@ dojo.declare(
 
 			// remove child from source item, and record the attribute that child occurred in
 			if(oldParentItem){
-				dojo.forEach(this.childrenAttrs, function(attr){
+				array.forEach(this.childrenAttrs, function(attr){
 					if(store.containsValue(oldParentItem, attr, childItem)){
 						if(!bCopy){
-							var values = dojo.filter(store.getValues(oldParentItem, attr), function(x){
+							var values = array.filter(store.getValues(oldParentItem, attr), function(x){
 								return x != childItem;
 							});
 							store.setValues(oldParentItem, attr, values);
@@ -277,7 +287,7 @@ dojo.declare(
 		// =======================================================================
 		// Callbacks
 
-		onChange: function(/*dojo.data.Item*/ item){
+		onChange: function(/*dojo.data.Item*/ /*===== item =====*/){
 			// summary:
 			//		Callback whenever an item has changed, so that Tree
 			//		can update the label, icon, etc.   Note that changes
@@ -287,14 +297,16 @@ dojo.declare(
 			//		callback
 		},
 
-		onChildrenChange: function(/*dojo.data.Item*/ parent, /*dojo.data.Item[]*/ newChildrenList){
+		onChildrenChange: function(/*===== parent, newChildrenList =====*/){
 			// summary:
 			//		Callback to do notifications about new, updated, or deleted items.
+			// parent: dojo.data.Item
+			// newChildrenList: dojo.data.Item[]
 			// tags:
 			//		callback
 		},
 
-		onDelete: function(/*dojo.data.Item*/ parent, /*dojo.data.Item[]*/ newChildrenList){
+		onDelete: function(/*dojo.data.Item*/ /*===== item =====*/){
 			// summary:
 			//		Callback when an item has been deleted.
 			// description:
@@ -330,7 +342,7 @@ dojo.declare(
 			// [ parentInfo.newValue ], although if items in the store has multiple
 			// child attributes (see `childrenAttr`), then it's a superset of parentInfo.newValue,
 			// so call getChildren() to be sure to get right answer.
-			this.getChildren(parentInfo.item, dojo.hitch(this, function(children){
+			this.getChildren(parentInfo.item, lang.hitch(this, function(children){
 				this.onChildrenChange(parentInfo.item, children);
 			}));
 		},
@@ -341,10 +353,7 @@ dojo.declare(
 			this.onDelete(item);
 		},
 
-		onSetItem: function(/* item */ item,
-						/* attribute-name-string */ attribute,
-						/* object | array */ oldValue,
-						/* object | array */ newValue){
+		onSetItem: function(item, attribute /*===== , oldValue, newValue =====*/){
 			// summary:
 			//		Updates the tree view according to changes in the data store.
 			// description:
@@ -352,12 +361,16 @@ dojo.declare(
 			//		other updates to an item by calling onChange().
 			//
 			//		See `onNewItem` for more details on handling updates to an item's children.
+			// item: Item
+			// attribute: attribute-name-string
+			// oldValue: object | array
+			// newValue: object | array
 			// tags:
 			//		extension
 
-			if(dojo.indexOf(this.childrenAttrs, attribute) != -1){
+			if(array.indexOf(this.childrenAttrs, attribute) != -1){
 				// item's children list changed
-				this.getChildren(item, dojo.hitch(this, function(children){
+				this.getChildren(item, lang.hitch(this, function(children){
 					// See comments in onNewItem() about calling getChildren()
 					this.onChildrenChange(item, children);
 				}));
@@ -367,7 +380,4 @@ dojo.declare(
 			}
 		}
 	});
-
-
-return dijit.tree.TreeStoreModel;
 });

@@ -9,13 +9,12 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_focusWidget.html?animate=false');
 
 				// These are objects used to track calls to _onFocus and _onBlur in various widgets
@@ -69,7 +68,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								// Make sure that focus manager caught the focus event
-								doh.is(dojo.byId("first"), dojo.global.dijit._curFocus);
+								doh.is(dojo.byId("first"), dojo.global.dijit.focus.curNode);
 
 								// And that the dijit.form.Form widget is marked as
 								// being "in focus"
@@ -93,7 +92,7 @@
 							handle = dojo.connect(dijit.byId("select").focusNode, "onfocus", d.getTestCallback(function(){
 								// Focus goes to an <input> node deep inside of select.domNode,
 								// but that <input> node has the id of the widget
-								doh.is(dojo.byId("select"), dojo.global.dijit._curFocus);
+								doh.is(dojo.byId("select"), dojo.global.dijit.focus.curNode);
 
 								// The focus stack should show the ComboBox plus all parent widgets
 								var stack = dojo.global.dijit._activeStack;
@@ -200,7 +199,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								// Focus goes to an first item in the drop down menu
-								doh.is(dojo.byId("mi1").id, dojo.global.dijit._curFocus.id);
+								doh.is(dojo.byId("mi1").id, dojo.global.dijit.focus.curNode.id);
 
 								// The focus stack should show the ComboBox plus all parent widgets
 								var stack = dojo.global.dijit._activeStack;
@@ -235,7 +234,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								// Focus goes to an first item in the sub menu
-								doh.is(dojo.byId("smi1"), dojo.global.dijit._curFocus);
+								doh.is(dojo.byId("smi1"), dojo.global.dijit.focus.curNode);
 
 								// The focus stack should show the two submenus and then upwards
 								// to the ComboButton, and the rest

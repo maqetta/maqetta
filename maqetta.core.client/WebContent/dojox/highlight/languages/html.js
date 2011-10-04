@@ -1,9 +1,5 @@
-dojo.provide("dojox.highlight.languages.html");
+define(["dojox/main", "../_base", "./xml"], function(dojox){
 
-dojo.require("dojox.highlight._base");
-dojo.require("dojox.highlight.languages.xml");
-
-(function(){
 	var HTML_TAGS = {
 		'code': 1, 'kbd': 1, 'font': 1, 'noscript': 1, 'style': 1, 'img': 1,
 		'title': 1, 'menu': 1, 'tt': 1, 'tr': 1, 'param': 1, 'li': 1, 'tfoot': 1,
@@ -63,4 +59,7 @@ dojo.require("dojox.highlight.languages.xml");
 		HTML_ATTR: HTML_ATTR,
 		HTML_VALUE: HTML_VALUE
 	};
-})();
+
+	return dhl.html;
+	
+});

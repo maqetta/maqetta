@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	singleSort: "单层排序",
 	nestedSort: "嵌套排序",
@@ -9,4 +11,6 @@
 	indirectSelectionCheckBox: "第 ${0} 行，多选，复选框",
 	selectAll: "全部选中"
 })
+//end v1.x content
+);
 

@@ -19,7 +19,7 @@
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_BorderContainer_full.html');
 
 				doh.register("API", [
@@ -29,7 +29,7 @@
 						doh.t(bc.getChildren().length==5);
 					},
 					
-					function testFullScreen() {
+					function testFullScreen(){
 						var borderContainerPos = dojo.position(dojo.byId("main"));
 						var view = dojo.window.getBox();
 						doh.t( borderContainerPos.h-view.h < 3);

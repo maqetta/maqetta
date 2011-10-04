@@ -13,13 +13,20 @@
 		data-dojo-config="isDebug: true, parseOnLoad: true"></script>
 	<script type="text/javascript">
 		dojo.require("dijit.dijit"); // optimize: load dijit layer
+
 		dojo.require("dijit.form.DateTextBox");
 		dojo.require("dijit.form.ComboBox");
 		dojo.require("dijit.form.NumberSpinner");
-		dojo.require("dijit.form.Button");
+		dojo.require("dijit.form.ComboButton");
+
 		dojo.require("dijit.Menu");
+		dojo.require("dijit.MenuItem");
+		dojo.require("dijit.PopupMenuItem");
+
 		dojo.require("dijit.layout.ContentPane");
 		dojo.require("dijit.Editor");
+
+		dojo.require("dijit._base.focus");
 
 		// This code does animation to change border color and width to show
 		// active vs. non-active widgets.
@@ -57,7 +64,7 @@
 		// This flag controls animation and can be disabled by the test harness in robot/focus_mouse.html
 		animate = !window.location.search.match("animate=false");
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			dojo.subscribe("widgetFocus", function(widget){
 				console.log("focused on widget " + (widget?widget:"nothing"));
 				if(animate){

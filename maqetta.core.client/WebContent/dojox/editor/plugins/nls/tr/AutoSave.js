@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"saveLabel": "Kaydet",
 	"saveSettingLabelOn": "Otomatik Kaydetme Aralığını Ayarla...",
@@ -12,3 +14,5 @@
 	"saveMessageFail": "${0} konumuna kaydedilemedi"
 })
 
+//end v1.x content
+);

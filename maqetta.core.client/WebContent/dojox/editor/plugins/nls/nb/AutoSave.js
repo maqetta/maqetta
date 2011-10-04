@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"saveLabel": "Lagre",
 	"saveSettingLabelOn": "Angi intervall for automatisk lagring...",
@@ -11,3 +13,5 @@
 	"saveMessageSuccess": "Lagret klokken ${0}",
 	"saveMessageFail": "Mislykket lagring klokken ${0}"
 })
+//end v1.x content
+);

@@ -9,8 +9,7 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
 		<!-- functions to help test -->
 		<script type="text/javascript" src="../../helpers.js"></script>
@@ -20,7 +19,7 @@
 			dojo.require("dojo.window");
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_Tree_DnD.html');
 
 				setup();
@@ -69,10 +68,10 @@
 								doh.is("Cereals", children.categories[2]);
 
 								// Check that Vegetables added as child of Fruits
-								var children = getNamesOfChildrenOfItem("Fruits");
-								doh.is(2, children.categories.length, "foods category child");
-								doh.is("Citrus", children.categories[0]);
-								doh.is("Vegetables", children.categories[1]);
+								var children2 = getNamesOfChildrenOfItem("Fruits");
+								doh.is(2, children2.categories.length, "foods category child");
+								doh.is("Citrus", children2.categories[0]);
+								doh.is("Vegetables", children2.categories[1]);
 
 								// Check that new item *wasn't* created
 								var items;
@@ -84,7 +83,7 @@
 								// Check that data store update was reflected in the tree
 								doh.t(fruitsTreeNode.isExpanded, "drop caused the node to expand");
 								var treeNodeChildren = fruitsTreeNode.getChildren();
-								doh.is(2, treeNodeChildren.length, "2 TreeNode children")
+								doh.is(2, treeNodeChildren.length, "2 TreeNode children");
 								doh.is("Citrus", innerText(treeNodeChildren[0].labelNode));
 								doh.is("Vegetables", innerText(treeNodeChildren[1].labelNode));
 							}), 1000);	// 1000ms to wait for 'Fruits' node to expand and show 'Apple' node
@@ -247,10 +246,10 @@
 								doh.is(1003, children.items[0].id, "id of item came from dropped node");
 								doh.is("Banana", children.items[0].name, "name of new item came from dropped node");
 
-								var children = getChildrenOfItem("Fruits");
-								doh.is(1, children.items.length, "banana still a child of fruits");
-								doh.is(1003, children.items[0].id, "id of new item came from dropped node");
-								doh.is("Banana", children.items[0].name, "name of new item came from dropped node");
+								var children2 = getChildrenOfItem("Fruits");
+								doh.is(1, children2.items.length, "banana still a child of fruits");
+								doh.is(1003, children2.items[0].id, "id of new item came from dropped node");
+								doh.is("Banana", children2.items[0].name, "name of new item came from dropped node");
 
 								dojo.global.myStore.fetch({
 									query: { name: "Banana" },
@@ -259,6 +258,52 @@
 								});
 								doh.is(1, items.length, "1 banana item in store (with 2 parents)");
 							}), 1000);
+
+							return d;
+						}
+					}
+				]);
+
+				doh.register("illegal drop", [
+					// This tests dropping a node onto another node when both nodes represent the same item.
+					{
+						name: "try to drop Vegetables as child of Vegetables",
+						timeout: 10000,
+						runTest: function(){
+							var
+								d = new doh.Deferred(),
+								drag = findTreeNodeByPath("itemTree", ["Cereals", "Vegetables"]),
+								aboveDrop = findTreeNodeByPath("itemTree", ["Fruits", "Citrus"]);
+								drop = findTreeNodeByPath("itemTree", ["Fruits", "Citrus", "Vegetables"]);
+
+							doh.is(drop.item.id, drag.item.id, "both nodes point to same item");
+
+							// Drag bottom vegetables node over Citrus
+							doh.robot.mouseMoveAt(drag.domNode, 500, 1);
+							doh.robot.mousePress({left: true}, 500);
+							doh.robot.mouseMoveAt(aboveDrop.labelNode, 0, 500);
+
+							doh.robot.sequence(d.getTestErrback(function(){
+								var avatar = dojo.query(".dojoDndAvatar");
+								doh.t(avatar && avatar[0], "avatar found");
+								doh.t(dojo.hasClass(avatar[0], "dojoDndAvatarCanDrop"), "can drop");
+							}), 500);
+
+							// Now move it to over first Vegetables node.   Should be red icon indicating drop-unallowed
+							doh.robot.mouseMoveAt(drop.labelNode, 0, 500);
+							doh.robot.sequence(d.getTestErrback(function(){
+								var avatar = dojo.query(".dojoDndAvatar");
+								doh.t(avatar && avatar[0], "avatar found");
+								doh.f(dojo.hasClass(avatar[0], "dojoDndAvatarCanDrop"), "can't drop");
+							}), 500);
+
+							// Try to drop anyway, and make sure Tree structure doesn't change
+							doh.robot.mouseRelease({left: true}, 500);
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.is(0, drop.getChildren().length, "drop node has no children");
+								doh.t(drag == findTreeNodeByPath("itemTree", ["Cereals", "Vegetables"]),
+										"drag node still in same place");
+							}), 500);
 
 							return d;
 						}

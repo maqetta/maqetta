@@ -9,16 +9,15 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			data-dojo-config="isDebug: true, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
 		<script type="text/javascript" src="../../helpers.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
-				doh.robot.initRobot('../test_Checkbox.html');
+			dojo.ready(function(){
+				doh.robot.initRobot('../test_CheckBox.html');
 
 				doh.register("Checkbox a11y",[
 					{
@@ -133,9 +132,7 @@
 							var d = new doh.Deferred();
  
 							dijit.byId("g1rb2").focus();
-							doh.robot.sequence(function(){
-								dijit.byId("g1rb3").set("disabled",false);
-							}, 1000); 
+							dijit.byId("g1rb3").set("disabled",false);
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 1000);
 
 							doh.robot.sequence(d.getTestCallback(function(){

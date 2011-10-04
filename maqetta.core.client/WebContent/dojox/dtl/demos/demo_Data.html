@@ -3,13 +3,13 @@
 			<title>Demo using the dojo.data bind_data tag</title>
 	    <script type="text/javascript" src="../../../dojo/dojo.js"
 				djConfig="isDebug: true, parseOnLoad: true"></script>
-	    <script type="text/javascript" src="../../../dijit/dijit.js"></script> 
 	    <script type="text/javascript">
+				dojo.require("dijit._WidgetBase");
 				dojo.require("dojox.dtl._Templated");
 				dojo.require("dojox.data.FlickrRestStore");
 				dojo.require("dojo.parser");
 
-				dojo.declare("demo.Gallery", [dijit._Widget, dojox.dtl._Templated], {
+				dojo.declare("demo.Gallery", [dijit._WidgetBase, dojox.dtl._Templated], {
 					templateString: dojo.cache("dojox.dtl.demos.templates", "gallery.html"),
 					store: new dojox.data.FlickrRestStore(),
 					selectThumbnail: function(e){

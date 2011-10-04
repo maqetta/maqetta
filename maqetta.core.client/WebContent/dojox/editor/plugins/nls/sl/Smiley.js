@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	smiley: "Vstavi čustveni simbol",
 	emoticonSmile: "smeško",
@@ -20,3 +22,5 @@
 	emoticonCrying: "smeško joka"
 })
 
+//end v1.x content
+);

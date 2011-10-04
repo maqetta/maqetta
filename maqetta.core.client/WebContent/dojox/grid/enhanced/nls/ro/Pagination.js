@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} din ${1} ${0}",
 	"firstTip": "Prima pagină",
@@ -13,6 +15,9 @@
 	"dialogIndication": "Specificaţi numărul de pagină",
 	"pageCountIndication": " (${0} pagini)",
 	"dialogConfirm": "Deplasare",
-	"dialogCancel": "Anulare"
+	"dialogCancel": "Anulare",
+	"all": "toate"
 })
+//end v1.x content
+);
 

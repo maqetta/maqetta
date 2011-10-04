@@ -19,6 +19,9 @@ define("dojox/rpc/Rest", ["dojo", "dojox"], function(dojo, dojox) {
 //  	| services.myRestService.put("parameters","data to put in resource");
 //  	| services.myRestService.post("parameters","data to post to the resource");
 //  	| services.myRestService['delete']("parameters");
+
+  dojo.getObject("rpc.Rest", true, dojox);
+
 	if(dojox.rpc && dojox.rpc.transportRegistry){
 		// register it as an RPC service if the registry is available
 		dojox.rpc.transportRegistry.register(

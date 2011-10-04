@@ -1,9 +1,7 @@
-dojo.provide("dojox.color.Colorspace");
-dojo.require("dojox.math.matrix");
+define(["dojo/_base/kernel", "../main", "dojo/_base/lang", "./_base", "dojox/math/matrix"], 
+	function(dojo, dojox, dlang, dxc, dxm){
 
 dojox.color.Colorspace=new (function(){
-	var dxc=dojox.color;
-	var dxm=dojox.math.matrix;
 	var self=this;
 	var wpMap={
 		"2":{
@@ -549,4 +547,7 @@ dojo.extend(dojox.color.Color, {
 		var xyz=dojox.math.matrix([[ r, g, b ]], m);
 		return { X: xyz[0][0], Y: xyz[0][1], Z: xyz[0][2] };	//	Object
 	}
+});
+
+return dojox.color.Colorspace;
 });

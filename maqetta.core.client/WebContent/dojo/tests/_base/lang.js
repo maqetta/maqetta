@@ -1,7 +1,6 @@
-dojo.provide("tests._base.lang");
+define(["dojo", "doh"], function(dojo, doh){
 
-tests.register("tests._base.lang",
-	[
+  doh.register("tests._base.lang", [
 		function mixin(t){
 			t.assertEqual("object", typeof dojo.mixin());
 			t.assertEqual("object", typeof dojo.mixin(undefined));
@@ -276,4 +275,5 @@ tests.register("tests._base.lang",
 			t.is("Hello, Robert Cringely!", s4);
 		}
 	]
-);
+  );
+});

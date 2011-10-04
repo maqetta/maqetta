@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	displayOptions: "[επιλογές παρουσίασης]",
 	title: "Τίτλος",
@@ -9,3 +11,5 @@
 	summary: "Περίληψη",
 	content: "Περιεχόμενο"
 })
+//end v1.x content
+);

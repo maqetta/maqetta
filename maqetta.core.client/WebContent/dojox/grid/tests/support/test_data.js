@@ -1,4 +1,5 @@
 // example sample data and code
+dojo.require("dojo.data.ItemFileWriteStore");
 (function(){
 	// some sample data
 	// global var "data"

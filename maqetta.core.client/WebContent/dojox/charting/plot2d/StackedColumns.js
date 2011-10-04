@@ -1,17 +1,12 @@
-dojo.provide("dojox.charting.plot2d.StackedColumns");
+define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", "./Columns", "./common", 
+	"dojox/lang/functional", "dojox/lang/functional/reversed", "dojox/lang/functional/sequence"], 
+	function(lang, arr, declare, Columns, dc, df, dfr, dfs){
 
-dojo.require("dojox.charting.plot2d.common");
-dojo.require("dojox.charting.plot2d.Columns");
-
-dojo.require("dojox.lang.functional");
-dojo.require("dojox.lang.functional.reversed");
-dojo.require("dojox.lang.functional.sequence");
-
-(function(){
-	var df = dojox.lang.functional, dc = dojox.charting.plot2d.common,
-		purgeGroup = df.lambda("item.purgeGroup()");
-
-	dojo.declare("dojox.charting.plot2d.StackedColumns", dojox.charting.plot2d.Columns, {
+	var	purgeGroup = dfr.lambda("item.purgeGroup()");
+/*=====
+var Columns = dojox.charting.plot2d.Columns;
+=====*/
+	return declare("dojox.charting.plot2d.StackedColumns", Columns, {
 		//	summary:
 		//		The plot object representing a stacked column chart (vertical bars).
 		getSeriesStats: function(){
@@ -58,7 +53,7 @@ dojo.require("dojox.lang.functional.sequence");
 			this.resetEvents();
 			this.dirty = this.isDirty();
 			if(this.dirty){
-				dojo.forEach(this.series, purgeGroup);
+				arr.forEach(this.series, purgeGroup);
 				this._eventSeries = {};
 				this.cleanGroup();
 				var s = this.group;
@@ -89,7 +84,7 @@ dojo.require("dojox.lang.functional.sequence");
 							finalTheme = typeof value != "number" ?
 								t.addMixin(theme, "column", value, true) :
 								t.post(theme, "column");
-						if(width >= 1 && height >= 1){
+						if(width >= 1 && height >= 0){
 							var rect = {
 								x: offsets.l + ht(j + 0.5) + gap,
 								y: dim.height - offsets.b - vt(v),
@@ -134,4 +129,4 @@ dojo.require("dojox.lang.functional.sequence");
 			return this;	//	dojox.charting.plot2d.StackedColumns
 		}
 	});
-})();
+});

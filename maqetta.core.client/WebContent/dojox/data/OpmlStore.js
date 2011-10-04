@@ -1,6 +1,8 @@
-define("dojox/data/OpmlStore", ["dojo", "dojox", "dojo/data/util/simpleFetch", "dojo/data/util/filter"], function(dojo, dojox) {
+define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/xhr", "dojo/data/util/simpleFetch", "dojo/data/util/filter",
+		"dojo/_base/window"], 
+  function(declare, lang, xhr, simpleFetch, filterUtil, winUtil) {
 
-dojo.declare("dojox.data.OpmlStore", null, {
+var OpmlStore = declare("dojox.data.OpmlStore", null, {
 	/* summary:
 	 *   The OpmlStore implements the dojo.data.api.Read API.
 	 */
@@ -55,7 +57,7 @@ dojo.declare("dojox.data.OpmlStore", null, {
 		//      This function tests whether the item passed in is indeed a valid 'attribute' like type for the store.
 		//	attribute:
 		//		The attribute to test for being contained by the store.
-		if(!dojo.isString(attribute)){
+		if(!lang.isString(attribute)){
 			throw new Error("dojox.data.OpmlStore: a function was passed an attribute argument that was not an attribute object nor an attribute name string");
 		}
 	},
@@ -212,7 +214,7 @@ dojo.declare("dojox.data.OpmlStore", null, {
 		//		See dojo.data.api.Read.containsValue()
 		var regexp = undefined;
 		if(typeof value === "string"){
-			regexp = dojo.data.util.filter.patternToRegExp(value, false);
+			regexp = filterUtil.patternToRegExp(value, false);
 		}
 		return this._containsValue(item, attribute, value, regexp); //boolean.
 	},
@@ -320,7 +322,7 @@ dojo.declare("dojox.data.OpmlStore", null, {
 				for(var key in requestArgs.query){
 					var value = requestArgs.query[key];
 					if(typeof value === "string"){
-						regexpList[key] = dojo.data.util.filter.patternToRegExp(value, ignoreCase);
+						regexpList[key] = filterUtil.patternToRegExp(value, ignoreCase);
 					}
 				}
 
@@ -364,7 +366,7 @@ dojo.declare("dojox.data.OpmlStore", null, {
 							handleAs: "xml",
 							preventCache: self.urlPreventCache
 						};
-					var getHandler = dojo.xhrGet(getArgs);
+					var getHandler = xhr.get(getArgs);
 					getHandler.addCallback(function(data){
 						self._processRawXmlTree(data);
 						filter(keywordArgs, self._getItemsArray(keywordArgs.queryOptions));
@@ -430,9 +432,9 @@ dojo.declare("dojox.data.OpmlStore", null, {
 							url: self.url,
 							handleAs: "xml"
 						};
-					var getHandler = dojo.xhrGet(getArgs);
+					var getHandler = xhr.get(getArgs);
 					getHandler.addCallback(function(data){
-						var scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
+						var scope = keywordArgs.scope ? keywordArgs.scope : winUtil.global;
 						try{
 							self._processRawXmlTree(data);
 							var item = self._identityMap[keywordArgs.identity];
@@ -452,7 +454,7 @@ dojo.declare("dojox.data.OpmlStore", null, {
 					getHandler.addErrback(function(error){
 						this._loadInProgress = false;
 						if(keywordArgs.onError){
-							var scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
+							var scope = keywordArgs.scope ? keywordArgs.scope : winUtil.global;
 							keywordArgs.onError.call(scope, error);
 						}
 					});
@@ -465,7 +467,7 @@ dojo.declare("dojox.data.OpmlStore", null, {
 					item = null;
 				}
 				if(keywordArgs.onItem){
-					var scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
+					var scope = keywordArgs.scope ? keywordArgs.scope : winUtil.global;
 					keywordArgs.onItem.call(scope, item);
 				}
 			}
@@ -476,7 +478,7 @@ dojo.declare("dojox.data.OpmlStore", null, {
 				item = null;
 			}
 			if(keywordArgs.onItem){
-				var scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
+				var scope = keywordArgs.scope ? keywordArgs.scope : winUtil.global;
 				keywordArgs.onItem.call(scope, item);
 			}
 		}
@@ -516,8 +518,8 @@ dojo.declare("dojox.data.OpmlStore", null, {
 	}
 });
 //Mix in the simple fetch implementation to this class.
-dojo.extend(dojox.data.OpmlStore,dojo.data.util.simpleFetch);
+lang.extend(OpmlStore, simpleFetch);
 
-return dojox.data.OpmlStore;
+return OpmlStore;
 });
 	

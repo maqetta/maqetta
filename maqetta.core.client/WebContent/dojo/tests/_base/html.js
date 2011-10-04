@@ -1,12 +1,13 @@
-dojo.provide("tests._base.html");
-if(dojo.isBrowser){
-	doh.registerUrl("tests._base.html", dojo.moduleUrl("tests", "_base/html.html"), 15000);
-	doh.registerUrl("tests._base.html_id", dojo.moduleUrl("tests", "_base/html_id.html"), 15000);
-	doh.registerUrl("tests._base.html_element", dojo.moduleUrl("tests", "_base/html_element.html"), 15000);
-	doh.registerUrl("tests._base.html_rtl", dojo.moduleUrl("tests", "_base/html_rtl.html"), 15000);
-	doh.registerUrl("tests._base.html_quirks", dojo.moduleUrl("tests", "_base/html_quirks.html"), 15000);
-	doh.registerUrl("tests._base.html_box", dojo.moduleUrl("tests", "_base/html_box.html"), 35000);
-	doh.registerUrl("tests._base.html_box_quirks", dojo.moduleUrl("tests", "_base/html_box_quirks.html"), 35000);
-	doh.registerUrl("tests._base.html_isBodyLtr", dojo.moduleUrl("tests", "_base/html_isBodyLtr.html"), 35000);
-	doh.registerUrl("tests._base.html_docScroll", dojo.moduleUrl("tests", "_base/html_docScroll.html"), 35000);
-}
+define(["doh", "require"], function(doh, require){
+	if(doh.isBrowser){
+		doh.register("tests._base.html", require.toUrl("./html.html"), 15000);
+		doh.register("tests._base.html_id", require.toUrl("./html_id.html"), 15000);
+		doh.register("tests._base.html_element", require.toUrl("./html_element.html"), 15000);
+		doh.register("tests._base.html_rtl", require.toUrl("./html_rtl.html"), 15000);
+		doh.register("tests._base.html_quirks", require.toUrl("./html_quirks.html"), 15000);
+		doh.register("tests._base.html_box", require.toUrl("./html_box.html"), 35000);
+		doh.register("tests._base.html_box_quirks", require.toUrl("./html_box_quirks.html"), 35000);
+		doh.register("tests._base.html_isBodyLtr", require.toUrl("./html_isBodyLtr.html"), 35000);
+		doh.register("tests._base.html_docScroll", require.toUrl("./html_docScroll.html"), 35000);
+	}
+});

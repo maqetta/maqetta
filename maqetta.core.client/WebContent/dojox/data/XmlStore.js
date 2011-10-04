@@ -1,8 +1,9 @@
-define("dojox/data/XmlStore", ["dojo", "dojox", "dojo/data/util/simpleFetch", "dojo/data/util/filter", "dojox/xml/parser"], function(dojo, dojox) {
+define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/xhr", "dojo/data/util/simpleFetch", 
+		"dojo/_base/query", "dojo/_base/array", "dojo/_base/window", "dojo/data/util/filter", "dojox/xml/parser",
+		"dojox/data/XmlItem"], 
+  function(lang, declare, xhr, simpleFetch, domQuery, array, winUtil, filter, xmlParser, XmlItem) {
 
-dojo.provide("dojox.data.XmlItem");
-
-dojo.declare("dojox.data.XmlStore", null, {
+var XmlStore = declare("dojox.data.XmlStore", null, {
 	//	summary:
 	//		A data store for XML based services or documents
 	//	description:
@@ -397,9 +398,8 @@ dojo.declare("dojox.data.XmlStore", null, {
 		//	errorHandler:
 		//		A function to call on error
 		var url = this._getFetchUrl(request);
-		console.log("XmlStore._fetchItems(): url=" + url);
 		if(!url){
-			errorHandler(new Error("No URL specified."));
+			errorHandler(new Error("No URL specified."), request);
 			return;
 		}
 		var localRequest = (!this.sendQuery ? request : {}); // use request for _getItems()
@@ -410,10 +410,9 @@ dojo.declare("dojox.data.XmlStore", null, {
 				handleAs: "xml",
 				preventCache: self.urlPreventCache
 			};
-		var getHandler = dojo.xhrGet(getArgs);
+		var getHandler = xhr.get(getArgs);
 		getHandler.addCallback(function(data){
 			var items = self._getItems(data, localRequest);
-			console.log("XmlStore._fetchItems(): length=" + (items ? items.length : 0));
 			if(items && items.length > 0){
 				fetchHandler(items, request);
 			}else{
@@ -446,7 +445,7 @@ dojo.declare("dojox.data.XmlStore", null, {
 		if(!query){
 			return this.url;
 		}
-		if(dojo.isString(query)){
+		if(lang.isString(query)){
 			return this.url + query;
 		}
 		var queryString = "";
@@ -496,7 +495,7 @@ dojo.declare("dojox.data.XmlStore", null, {
 		var nodes = null;
 
 		if(this.rootItem !== ""){
-			nodes = dojo.query(this.rootItem, document);
+			nodes = domQuery(this.rootItem, document);
 		}else{
 			nodes = document.documentElement.childNodes;
 		}
@@ -524,7 +523,10 @@ dojo.declare("dojox.data.XmlStore", null, {
 				for(var key in query){
 					value = query[key];
 					if(typeof value === "string"){
-						regexpList[key] = dojo.data.util.filter.patternToRegExp(value, ignoreCase);
+						regexpList[key] = filter.patternToRegExp(value, ignoreCase);
+					}else if(value){
+						// It's an object, possibly regexp, so treat it as one.
+						regexpList[key] = value;
 					}
 				}
 				for(var attribute in query){
@@ -579,7 +581,7 @@ dojo.declare("dojox.data.XmlStore", null, {
 				items.push(item);
 			}
 		}
-		dojo.forEach(items,function(item){
+		array.forEach(items,function(item){
 			if(item.element.parentNode){
 				item.element.parentNode.removeChild(item.element); // make it root
 			}
@@ -624,7 +626,6 @@ dojo.declare("dojox.data.XmlStore", null, {
 		//		An object containing initial attributes
 		//	returns:
 		//		An XML element
-		console.log("XmlStore.newItem()");
 		keywordArgs = (keywordArgs || {});
 		var tagName = keywordArgs.tagName;
 		if(!tagName){
@@ -683,7 +684,7 @@ dojo.declare("dojox.data.XmlStore", null, {
 				this.setValues(parentInfo.parent, parentInfo.attribute, tempValues);
 				pInfo.newValue = this.getValues(parentInfo.parent, parentInfo.attribute);
 			}else{
-				this.setValues(parentInfo.parent, parentInfo.attribute, item);
+				this.setValue(parentInfo.parent, parentInfo.attribute, item);
 				pInfo.newValue = item;
 			}
 		}
@@ -697,7 +698,6 @@ dojo.declare("dojox.data.XmlStore", null, {
 		//		An XML element to delete
 		//	returns:
 		//		True
-		console.log("XmlStore.deleteItem()");
 		var element = item.element;
 		if(element.parentNode){
 			this._backupItem(item);
@@ -957,9 +957,6 @@ dojo.declare("dojox.data.XmlStore", null, {
 		//	Invalidate changes (new and/or modified elements)
 		// returns:
 		//	True
-		console.log("XmlStore.revert() _newItems=" + this._newItems.length);
-		console.log("XmlStore.revert() _deletedItems=" + this._deletedItems.length);
-		console.log("XmlStore.revert() _modifiedItems=" + this._modifiedItems.length);
 		this._newItems = [];
 		this._restoreItems(this._deletedItems);
 		this._deletedItems = [];
@@ -1005,7 +1002,7 @@ dojo.declare("dojox.data.XmlStore", null, {
 		}
 		if(!url){
 			if(keywordArgs.onError){
-				scope = keywordArgs.scope || dojo.global;
+				scope = keywordArgs.scope || winUtil.global;
 				keywordArgs.onError.call(scope, new Error("No URL for saving content: " + this._getPostContent(item)));
 			}
 			return;
@@ -1020,14 +1017,14 @@ dojo.declare("dojox.data.XmlStore", null, {
 		var saveHandler;
 		if(method === "PUT"){
 			saveArgs.putData = this._getPutContent(item);
-			saveHandler = dojo.rawXhrPut(saveArgs);
+			saveHandler = xhr.put(saveArgs);
 		}else if(method === "DELETE"){
-			saveHandler = dojo.xhrDelete(saveArgs);
+			saveHandler = xhr.del(saveArgs);
 		}else{ // POST
 			saveArgs.postData = this._getPostContent(item);
-			saveHandler = dojo.rawXhrPost(saveArgs);
+			saveHandler = xhr.post(saveArgs);
 		}
-		scope = (keywordArgs.scope || dojo.global);
+		scope = (keywordArgs.scope || winUtil. global);
 		var self = this;
 		saveHandler.addCallback(function(data){
 			self._forgetItem(item);
@@ -1104,9 +1101,7 @@ dojo.declare("dojox.data.XmlStore", null, {
 		//		An item to save
 		//	returns:
 		//		A post content
-		var element = item.element;
-		var declaration = "<?xml version=\"1.0\"?>"; // FIXME: encoding?
-		return declaration + dojox.xml.parser.innerXML(element); //XML string
+		return "<?xml version=\'1.0\'?>" + xmlParser.innerXML(item.element); //XML string
 	},
 
 	_getPutContent: function(item){
@@ -1121,9 +1116,7 @@ dojo.declare("dojox.data.XmlStore", null, {
 		//		An item to save
 		//	returns:
 		//		A post content
-		var element = item.element;
-		var declaration = "<?xml version=\"1.0\"?>"; // FIXME: encoding?
-		return declaration + dojox.xml.parser.innerXML(element); //XML string
+		return "<?xml version='1.0'?>" + xmlParser.innerXML(item.element); //XML string
 	},
 
 /* internal API */
@@ -1151,7 +1144,7 @@ dojo.declare("dojox.data.XmlStore", null, {
 			if(this.keyAttribute === ""){
 				q = this._getXPath(element);
 			}
-			return new dojox.data.XmlItem(element, this, q); //object
+			return new XmlItem(element, this, q); //object
 		}catch (e){
 			console.log(e);
 		}
@@ -1182,7 +1175,7 @@ dojo.declare("dojox.data.XmlStore", null, {
 
 	_restoreItems: function(items){
 
-		dojo.forEach(items,function(item){
+		array.forEach(items,function(item){
 			if(item._backup){
 				item.element = item._backup;
 				item._backup = null;
@@ -1210,7 +1203,7 @@ dojo.declare("dojox.data.XmlStore", null, {
 		if(element){
 			return element.ownerDocument; //DOMDocument
 		}else if(!this._document){
-			return dojox.xml.parser.parse(); // DOMDocument
+			return xmlParser.parse(); // DOMDocument
 		}
 		return null; //null
 	},
@@ -1331,7 +1324,7 @@ dojo.declare("dojox.data.XmlStore", null, {
 						request.query[self.keyAttribute] = keywordArgs.identity;
 						request.queryOptions = {deep: true};
 						var items = self._getItems(data,request);
-						scope = keywordArgs.scope || dojo.global;
+						scope = keywordArgs.scope || winUtil.global;
 						if(items.length === 1){
 							if(keywordArgs.onItem){
 								keywordArgs.onItem.call(scope, items[0]);
@@ -1399,7 +1392,7 @@ dojo.declare("dojox.data.XmlStore", null, {
 							}
 						}
 						if(keywordArgs.onItem){
-							scope = keywordArgs.scope || dojo.global;
+							scope = keywordArgs.scope || winUtil.global;
 							keywordArgs.onItem.call(scope, item);
 						}
 					}
@@ -1411,13 +1404,13 @@ dojo.declare("dojox.data.XmlStore", null, {
 				handleAs: "xml",
 				preventCache: self.urlPreventCache
 			};
-			getHandler = dojo.xhrGet(getArgs);
+			getHandler = xhr.get(getArgs);
 			
 			//Add in the callbacks for completion of data load.
 			getHandler.addCallback(handleDocument);
 			if(keywordArgs.onError){
 				getHandler.addErrback(function(error){
-					var s = keywordArgs.scope || dojo.global;
+					var s = keywordArgs.scope || winUtil.global;
 					keywordArgs.onError.call(s, error);
 				});
 			}
@@ -1436,13 +1429,13 @@ dojo.declare("dojox.data.XmlStore", null, {
 							item = items[0];
 						}else{
 							if(keywordArgs.onError){
-								var scope = keywordArgs.scope || dojo.global;
+								var scope = keywordArgs.scope || winUtil.global;
 								keywordArgs.onError.call(scope, new Error("More than one item was returned from the server for the denoted identity"));
 							}
 						}
 					}
 					if(keywordArgs.onItem){
-						scope = keywordArgs.scope || dojo.global;
+						scope = keywordArgs.scope || winUtil.global;
 						keywordArgs.onItem.call(scope, item);
 					}
 				};
@@ -1452,19 +1445,19 @@ dojo.declare("dojox.data.XmlStore", null, {
 					handleAs: "xml",
 					preventCache: self.urlPreventCache
 				};
-				getHandler = dojo.xhrGet(getArgs);
+				getHandler = xhr.get(getArgs);
 
 				//Add in the callbacks for completion of data load.
 				getHandler.addCallback(handleDocument);
 				if(keywordArgs.onError){
 					getHandler.addErrback(function(error){
-						var s = keywordArgs.scope || dojo.global;
+						var s = keywordArgs.scope || winUtil.global;
 						keywordArgs.onError.call(s, error);
 					});
 				}
 			}else{
 				if(keywordArgs.onError){
-					var s = keywordArgs.scope || dojo.global;
+					var s = keywordArgs.scope || winUtil.global;
 					keywordArgs.onError.call(s, new Error("XmlStore is not told that the server to provides identity support.  No keyAttribute specified."));
 				}
 			}
@@ -1472,46 +1465,7 @@ dojo.declare("dojox.data.XmlStore", null, {
 	}
 });
 
-dojo.declare("dojox.data.XmlItem", null, {
-	constructor: function(element, store, query){
-		//	summary:
-		//		Initialize with an XML element
-		//	element:
-		//		An XML element
-		//	store:
-		//		The containing store, if any.
-		//	query:
-		//		The query to use to look up a specific element.
-		//		Usually an XPath or dojo.query statement.
-		this.element = element;
-		this.store = store;
-		this.q = query;
-	},
-	//	summary:
-	//		A data item of 'XmlStore'
-	//	description:
-	//		This class represents an item of 'XmlStore' holding an XML element.
-	//		'element'
-	//	element:
-	//		An XML element
-	toString: function(){
-		//	summary:
-		//		Return a value of the first text child of the element
-		// 	returns:
-		//		a value of the first text child of the element
-		var str = "";
-		if(this.element){
-			for(var i = 0; i < this.element.childNodes.length; i++){
-				var node = this.element.childNodes[i];
-				if(node.nodeType === 3 || node.nodeType === 4){
-					str += node.nodeValue;
-				}
-			}
-		}
-		return str;	//String
-	}
-});
-dojo.extend(dojox.data.XmlStore,dojo.data.util.simpleFetch);
+lang.extend(XmlStore,simpleFetch);
 
-return dojox.data.XmlStore;
+return XmlStore;
 });

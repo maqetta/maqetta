@@ -1,8 +1,44 @@
-define("dijit/layout/ScrollingTabController", ["dojo", "dijit", "text!dijit/layout/templates/ScrollingTabController.html", "text!dijit/layout/templates/_ScrollingTabControllerButton.html", "dijit/layout/TabController", "dijit/Menu", "dijit/form/Button", "dijit/_HasDropDown"], function(dojo, dijit) {
+define([
+	"dojo/_base/array", // array.forEach
+	"dojo/_base/declare", // declare
+	"dojo/dom-class", // domClass.add domClass.contains
+	"dojo/dom-geometry", // domGeometry.contentBox
+	"dojo/dom-style", // domStyle.style
+	"dojo/_base/fx", // Animation
+	"dojo/_base/lang", // lang.hitch
+	"dojo/query", // query
+	"dojo/_base/sniff", // has("ie"), has("webkit"), has("quirks")
+	"../registry",	// registry.byId()
+	"dojo/text!./templates/ScrollingTabController.html",
+	"dojo/text!./templates/_ScrollingTabControllerButton.html",
+	"./TabController",
+	"./utils",	// marginBox2contextBox, layoutChildren
+	"../_WidgetsInTemplateMixin",
+	"../Menu",
+	"../MenuItem",
+	"../form/Button",
+	"../_HasDropDown",
+	"dojo/NodeList-dom" // NodeList.style
+], function(array, declare, domClass, domGeometry, domStyle, fx, lang, query, has,
+	registry, tabControllerTemplate, buttonTemplate, TabController, layoutUtils, _WidgetsInTemplateMixin,
+	Menu, MenuItem, Button, _HasDropDown){
 
-dojo.declare("dijit.layout.ScrollingTabController",
-	dijit.layout.TabController,
-	{
+/*=====
+var _WidgetsInTemplateMixin = dijit._WidgetsInTemplateMixin;
+var Menu = dijit.Menu;
+var _HasDropDown = dijit._HasDropDown;
+var TabController = dijit.layout.TabController;
+=====*/
+
+
+// module:
+//		dijit/layout/ScrollingTabController
+// summary:
+//		Set of tabs with left/right arrow keys and a menu to switch between tabs not
+//		all fitting on a single row.
+
+
+var ScrollingTabController = declare("dijit.layout.ScrollingTabController", [TabController, _WidgetsInTemplateMixin], {
 	// summary:
 	//		Set of tabs with left/right arrow keys and a menu to switch between tabs not
 	//		all fitting on a single row.
@@ -11,7 +47,9 @@ dojo.declare("dijit.layout.ScrollingTabController",
 	// tags:
 	//		private
 
-	templateString: dojo.cache("dijit.layout", "templates/ScrollingTabController.html"),
+	baseClass: "dijitTabController dijitScrollingTabController",
+
+	templateString: tabControllerTemplate,
 
 	// useMenu: [const] Boolean
 	//		True if a menu should be used to select tabs when they are too
@@ -35,9 +73,8 @@ dojo.declare("dijit.layout.ScrollingTabController",
 	//		go all the way to the left/right.
 	_minScroll: 5,
 
-	attributeMap: dojo.delegate(dijit._Widget.prototype.attributeMap, {
-		"class": "containerNode"
-	}),
+	// Override default behavior mapping class to DOMNode
+	_setClassAttr: { node: "containerNode", type: "class" },
 
 	buildRendering: function(){
 		this.inherited(arguments);
@@ -51,19 +88,19 @@ dojo.declare("dijit.layout.ScrollingTabController",
 				this.tabPosition.charAt(0).toUpperCase() +
 				this.tabPosition.substr(1).replace(/-.*/, "") +
 				"None";
-			dojo.addClass(n, "tabStrip-disabled")
+			domClass.add(n, "tabStrip-disabled")
 		}
 
-		dojo.addClass(this.tablistWrapper, this.tabStripClass);
+		domClass.add(this.tablistWrapper, this.tabStripClass);
 	},
 
 	onStartup: function(){
 		this.inherited(arguments);
 
-		// Do not show the TabController until the related
-		// StackController has added it's children.  This gives
-		// a less visually jumpy instantiation.
-		dojo.style(this.domNode, "visibility", "visible");
+		// TabController is hidden until it finishes drawing, to give
+		// a less visually jumpy instantiation.   When it's finished, set visibility to ""
+		// to that the tabs are hidden/shown depending on the container's visibility setting.
+		domStyle.set(this.domNode, "visibility", "");
 		this._postStartup = true;
 	},
 
@@ -72,9 +109,9 @@ dojo.declare("dijit.layout.ScrollingTabController",
 
 		// changes to the tab button label or iconClass will have changed the width of the
 		// buttons, so do a resize
-		dojo.forEach(["label", "iconClass"], function(attr){
+		array.forEach(["label", "iconClass"], function(attr){
 			this.pane2watches[page.id].push(
-				this.pane2button[page.id].watch(attr, dojo.hitch(this, function(name, oldValue, newValue){
+				this.pane2button[page.id].watch(attr, lang.hitch(this, function(){
 					if(this._postStartup && this._dim){
 						this.resize(this._dim);
 					}
@@ -86,8 +123,8 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		// This makes sure that the buttons never wrap.
 		// The value 200 is chosen as it should be bigger than most
 		// Tab button widths.
-		dojo.style(this.containerNode, "width",
-			(dojo.style(this.containerNode, "width") + 200) + "px");
+		domStyle.set(this.containerNode, "width",
+			(domStyle.get(this.containerNode, "width") + 200) + "px");
 	},
 
 	onRemoveChild: function(page, insertIndex){
@@ -109,13 +146,13 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		// wider than the TabContainer, and hide the other buttons.
 		// Also gets the total width of the displayed buttons.
 		this._btnWidth = 0;
-		this._buttons = dojo.query("> .tabStripButton", this.domNode).filter(function(btn){
+		this._buttons = query("> .tabStripButton", this.domNode).filter(function(btn){
 			if((this.useMenu && btn == this._menuBtn.domNode) ||
 				(this.useSlider && (btn == this._rightBtn.domNode || btn == this._leftBtn.domNode))){
-				this._btnWidth += dojo._getMarginSize(btn).w;
+				this._btnWidth += domGeometry.getMarginSize(btn).w;
 				return true;
 			}else{
-				dojo.style(btn, "display", "none");
+				domStyle.set(btn, "display", "none");
 				return false;
 			}
 		}, this);
@@ -126,7 +163,7 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		if(children.length){
 			var leftTab = children[this.isLeftToRight() ? 0 : children.length - 1].domNode,
 				rightTab = children[this.isLeftToRight() ? children.length - 1 : 0].domNode;
-			return rightTab.offsetLeft + dojo.style(rightTab, "width") - leftTab.offsetLeft;
+			return rightTab.offsetLeft + domStyle.get(rightTab, "width") - leftTab.offsetLeft;
 		}else{
 			return 0;
 		}
@@ -137,7 +174,7 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		//		Determines if the tabs are wider than the width of the TabContainer, and
 		//		thus that we need to display left/right/menu navigation buttons.
 		var tabsWidth = this._getTabsWidth();
-		width = width || dojo.style(this.scrollNode, "width");
+		width = width || domStyle.get(this.scrollNode, "width");
 		return tabsWidth > 0 && width < tabsWidth;
 	},
 
@@ -145,10 +182,6 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		// summary:
 		//		Hides or displays the buttons used to scroll the tab list and launch the menu
 		//		that selects tabs.
-
-		if(this.domNode.offsetWidth == 0){
-			return;
-		}
 
 		// Save the dimensions to be used when a child is renamed.
 		this._dim = dim;
@@ -158,9 +191,9 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		// But first reset scrollNode.height in case it was set by layoutChildren() call
 		// in a previous run of this method.
 		this.scrollNode.style.height = "auto";
-		this._contentBox = dijit.layout.marginBox2contentBox(this.domNode, {h: 0, w: dim.w});
-		this._contentBox.h = this.scrollNode.offsetHeight;
-		dojo.contentBox(this.domNode, this._contentBox);
+		var cb = this._contentBox = layoutUtils.marginBox2contentBox(this.domNode, {h: 0, w: dim.w});
+		cb.h = this.scrollNode.offsetHeight;
+		domGeometry.setContentSize(this.domNode, cb);
 
 		// Show/hide the left/right/menu navigation buttons depending on whether or not they
 		// are needed.
@@ -171,7 +204,7 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		this._leftBtn.layoutAlign = "left";
 		this._rightBtn.layoutAlign = "right";
 		this._menuBtn.layoutAlign = this.isLeftToRight() ? "right" : "left";
-		dijit.layout.layoutChildren(this.domNode, this._contentBox,
+		layoutUtils.layoutChildren(this.domNode, this._contentBox,
 			[this._menuBtn, this._leftBtn, this._rightBtn, {domNode: this.scrollNode, layoutAlign: "client"}]);
 
 		// set proper scroll so that selected tab is visible
@@ -179,14 +212,12 @@ dojo.declare("dijit.layout.ScrollingTabController",
 			if(this._anim && this._anim.status() == "playing"){
 				this._anim.stop();
 			}
-			var w = this.scrollNode,
-				sl = this._convertToScrollLeft(this._getScrollForSelectedTab());
-			w.scrollLeft = sl;
+			this.scrollNode.scrollLeft = this._convertToScrollLeft(this._getScrollForSelectedTab());
 		}
 
 		// Enable/disabled left right buttons depending on whether or not user can scroll to left or right
 		this._setButtonClass(this._getScroll());
-		
+
 		this._postResize = true;
 
 		// Return my size so layoutChildren() can use it.
@@ -199,10 +230,9 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		//		Returns the current scroll of the tabs where 0 means
 		//		"scrolled all the way to the left" and some positive number, based on #
 		//		of pixels of possible scroll (ex: 1000) means "scrolled all the way to the right"
-		var sl = (this.isLeftToRight() || dojo.isIE < 8 || (dojo.isIE && dojo.isQuirks) || dojo.isWebKit) ? this.scrollNode.scrollLeft :
-				dojo.style(this.containerNode, "width") - dojo.style(this.scrollNode, "width")
-					 + (dojo.isIE == 8 ? -1 : 1) * this.scrollNode.scrollLeft;
-		return sl;
+		return (this.isLeftToRight() || has("ie") < 8 || (has("ie") && has("quirks")) || has("webkit")) ? this.scrollNode.scrollLeft :
+				domStyle.get(this.containerNode, "width") - domStyle.get(this.scrollNode, "width")
+					 + (has("ie") == 8 ? -1 : 1) * this.scrollNode.scrollLeft;
 	},
 
 	_convertToScrollLeft: function(val){
@@ -213,11 +243,11 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		//		to achieve that scroll.
 		//
 		//		This method is to adjust for RTL funniness in various browsers and versions.
-		if(this.isLeftToRight() || dojo.isIE < 8 || (dojo.isIE && dojo.isQuirks) || dojo.isWebKit){
+		if(this.isLeftToRight() || has("ie") < 8 || (has("ie") && has("quirks")) || has("webkit")){
 			return val;
 		}else{
-			var maxScroll = dojo.style(this.containerNode, "width") - dojo.style(this.scrollNode, "width");
-			return (dojo.isIE == 8 ? -1 : 1) * (val - maxScroll);
+			var maxScroll = domStyle.get(this.containerNode, "width") - domStyle.get(this.scrollNode, "width");
+			return (has("ie") == 8 ? -1 : 1) * (val - maxScroll);
 		}
 	},
 
@@ -228,17 +258,21 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		var tab = this.pane2button[page.id];
 		if(!tab || !page){return;}
 
-		// Scroll to the selected tab, except on startup, when scrolling is handled in resize()
 		var node = tab.domNode;
-		if(this._postResize && node != this._selectedTab){
+
+		// Save the selection
+		if(node != this._selectedTab){
 			this._selectedTab = node;
 
-			var sl = this._getScroll();
+			// Scroll to the selected tab, except on startup, when scrolling is handled in resize()
+			if(this._postResize){
+				var sl = this._getScroll();
 
-			if(sl > node.offsetLeft ||
-					sl + dojo.style(this.scrollNode, "width") <
-					node.offsetLeft + dojo.style(node, "width")){
-				this.createSmoothScroll().play();
+				if(sl > node.offsetLeft ||
+						sl + domStyle.get(this.scrollNode, "width") <
+						node.offsetLeft + domStyle.get(node, "width")){
+					this.createSmoothScroll().play();
+				}
 			}
 		}
 
@@ -250,8 +284,8 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		//		Returns the minimum and maximum scroll setting to show the leftmost and rightmost
 		//		tabs (respectively)
 		var children = this.getChildren(),
-			scrollNodeWidth = dojo.style(this.scrollNode, "width"),		// about 500px
-			containerWidth = dojo.style(this.containerNode, "width"),	// 50,000px
+			scrollNodeWidth = domStyle.get(this.scrollNode, "width"),		// about 500px
+			containerWidth = domStyle.get(this.containerNode, "width"),	// 50,000px
 			maxPossibleScroll = containerWidth - scrollNodeWidth,	// scrolling until right edge of containerNode visible
 			tabsWidth = this._getTabsWidth();
 
@@ -260,7 +294,7 @@ dojo.declare("dijit.layout.ScrollingTabController",
 			return {
 				min: this.isLeftToRight() ? 0 : children[children.length-1].domNode.offsetLeft,
 				max: this.isLeftToRight() ?
-					(children[children.length-1].domNode.offsetLeft + dojo.style(children[children.length-1].domNode, "width")) - scrollNodeWidth :
+					(children[children.length-1].domNode.offsetLeft + domStyle.get(children[children.length-1].domNode, "width")) - scrollNodeWidth :
 					maxPossibleScroll
 			};
 		}else{
@@ -279,12 +313,12 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		//		will appear in the center
 		var w = this.scrollNode,
 			n = this._selectedTab,
-			scrollNodeWidth = dojo.style(this.scrollNode, "width"),
+			scrollNodeWidth = domStyle.get(this.scrollNode, "width"),
 			scrollBounds = this._getScrollBounds();
 
 		// TODO: scroll minimal amount (to either right or left) so that
 		// selected tab is fully visible, and just return if it's already visible?
-		var pos = (n.offsetLeft + dojo.style(n, "width")/2) - scrollNodeWidth/2;
+		var pos = (n.offsetLeft + domStyle.get(n, "width")/2) - scrollNodeWidth/2;
 		pos = Math.min(Math.max(pos, scrollBounds.min), scrollBounds.max);
 
 		// TODO:
@@ -321,12 +355,12 @@ dojo.declare("dijit.layout.ScrollingTabController",
 
 		var self = this,
 			w = this.scrollNode,
-			anim = new dojo._Animation({
+			anim = new fx.Animation({
 				beforeBegin: function(){
 					if(this.curve){ delete this.curve; }
 					var oldS = w.scrollLeft,
 						newS = self._convertToScrollLeft(x);
-					anim.curve = new dojo._Line(oldS, newS);
+					anim.curve = new fx._Line(oldS, newS);
 				},
 				onAnimate: function(val){
 					w.scrollLeft = val;
@@ -346,7 +380,7 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		// e:
 		//		The mouse click event.
 		var n = e.target;
-		while(n && !dojo.hasClass(n, "tabStripButton")){
+		while(n && !domClass.contains(n, "tabStripButton")){
 			n = n.parentNode;
 		}
 		return n;
@@ -375,9 +409,9 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		//		If the direction is 1, the widget scrolls to the right, if it is
 		//		-1, it scrolls to the left.
 
-		if(node && dojo.hasClass(node, "dijitTabDisabled")){return;}
+		if(node && domClass.contains(node, "dijitTabDisabled")){return;}
 
-		var sWidth = dojo.style(this.scrollNode, "width");
+		var sWidth = domStyle.get(this.scrollNode, "width");
 		var d = (sWidth * 0.75) * direction;
 
 		var to = this._getScroll() + d;
@@ -401,10 +435,10 @@ dojo.declare("dijit.layout.ScrollingTabController",
 });
 
 
-dojo.declare("dijit.layout._ScrollingTabControllerButtonMixin", null, {
+var ScrollingTabControllerButtonMixin = declare("dijit.layout._ScrollingTabControllerButtonMixin", null, {
 	baseClass: "dijitTab tabStripButton",
 
-	templateString: dojo.cache("dijit.layout","templates/_ScrollingTabControllerButton.html"),
+	templateString: buttonTemplate,
 
 		// Override inherited tabIndex: 0 from dijit.form.Button, because user shouldn't be
 		// able to tab to the left/right/menu buttons
@@ -414,13 +448,18 @@ dojo.declare("dijit.layout._ScrollingTabControllerButtonMixin", null, {
 	// either (this override avoids focus() call in FormWidget.js)
 	isFocusable: function(){ return false; }
 });
+/*=====
+ScrollingTabControllerButtonMixin = dijit.layout._ScrollingTabControllerButtonMixin;
+=====*/
 
-dojo.declare("dijit.layout._ScrollingTabControllerButton",
-	[dijit.form.Button, dijit.layout._ScrollingTabControllerButtonMixin]);
+// Class used in template
+declare("dijit.layout._ScrollingTabControllerButton",
+	[Button, ScrollingTabControllerButtonMixin]);
 
-dojo.declare(
+// Class used in template
+declare(
 	"dijit.layout._ScrollingTabControllerMenuButton",
-	[dijit.form.Button, dijit._HasDropDown, dijit.layout._ScrollingTabControllerButtonMixin],
+	[Button, _HasDropDown, ScrollingTabControllerButtonMixin],
 {
 	// id of the TabContainer itself
 	containerId: "",
@@ -435,19 +474,21 @@ dojo.declare(
 	},
 
 	loadDropDown: function(callback){
-		this.dropDown = new dijit.Menu({
+		this.dropDown = new Menu({
 			id: this.containerId + "_menu",
 			dir: this.dir,
-			lang: this.lang
+			lang: this.lang,
+			textDir: this.textDir
 		});
-		var container = dijit.byId(this.containerId);
-		dojo.forEach(container.getChildren(), function(page){
-			var menuItem = new dijit.MenuItem({
+		var container = registry.byId(this.containerId);
+		array.forEach(container.getChildren(), function(page){
+			var menuItem = new MenuItem({
 				id: page.id + "_stcMi",
 				label: page.title,
 				iconClass: page.iconClass,
 				dir: page.dir,
 				lang: page.lang,
+				textDir: page.textDir,
 				onClick: function(){
 					container.selectChild(page);
 				}
@@ -466,5 +507,5 @@ dojo.declare(
 	}
 });
 
-return dijit.layout.ScrollingTabController;
+return ScrollingTabController;
 });

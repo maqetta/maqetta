@@ -1,8 +1,8 @@
-dojo.provide("dojox.date.hebrew.numerals");
+define(["dojo/_base/kernel", "dojo/_base/array"], function(dojo){
+	dojo.getObject("date.hebrew.numerals", true, dojox);
+	dojo.experimental("dojox.date.hebrew.numerals");
 
 //Conversion from "Hindi" numerals to Hebrew numerals and vice versa
-
-(function(){
 
 	var DIG="אבגדהוזחט";
 	var	TEN="יכלמנסעפצ";
@@ -136,4 +136,5 @@ dojo.provide("dojox.date.hebrew.numerals");
 		}
 		return monnum;
 	};
-})();
+	return dojox.date.hebrew.numerals;
+});

@@ -25,12 +25,8 @@
 	<script type="text/javascript" src="../../../dijit/tests/_testCommon.js"></script>
 	
 	<script type="text/javascript">
-	    dojo.require("dojox.widget.DialogSimple");
-		dojo.require("dojox.widget.Dialog");
-		dojo.require("dojo.fx.easing");
-		dojo.require("dijit.form.Button");
-		dojo.addOnLoad(function(){
-			
+	    require(["dojo/parser","dojox/widget/DialogSimple", "dojox/widget/Dialog", "dojo/fx/easing", "dijit/form/Button", "dojo/domReady!"], function(){
+	                    
 			// a programatic test:
 			var thinger = new dojox.widget.Dialog({
 				title:"foobar",
@@ -79,8 +75,11 @@
 				},
 				label:"double show."
 			}).placeAt("testholder");
-			
-		});
+	       
+	        dojo.parser.parse();
+	        
+	    });
+
 	</script>
 </head>
 <body class="claro">

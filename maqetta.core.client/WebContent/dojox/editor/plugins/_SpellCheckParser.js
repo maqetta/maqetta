@@ -1,4 +1,9 @@
-define("dojox/editor/plugins/_SpellCheckParser", ["dojo", "dojox"], function(dojo, dojox) {
+define([
+	"dojo",
+	"dojox",
+	"dojo/_base/connect",
+	"dojo/_base/declare"
+], function(dojo, dojox) {
 
 dojo.declare("dojox.editor.plugins._SpellCheckParser", null, {
 	lang: "english",

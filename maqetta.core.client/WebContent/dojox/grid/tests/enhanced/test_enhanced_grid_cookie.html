@@ -79,6 +79,7 @@
 		<input type="checkbox" onclick="enableCookie('columnWidth',!this.checked)" /> Do not persist column width<br />
 		<input type="checkbox" onclick="enableCookie('sortOrder',!this.checked)" /> Do not persist sorting order<br />
 		<input type="checkbox" onclick="enableCookie('columnOrder',!this.checked)" /> Do not persist column arrangement<br />
+		<input type="checkbox" onclick="(dijit.byId('grid')).layout.setColumnVisibility(1, !this.checked)" /> Hide column with idx = 1<br /> 
 	</div>
 	<div id="gridContainer">
 		<div id="grid" dojoType="dojox.grid.EnhancedGrid" store="test_store[0]" structure="layout" plugins="plugins"></div>

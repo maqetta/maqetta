@@ -1,9 +1,6 @@
-dojo.provide("dojox.av.widget.VolumeButton");
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-dojo.require("dijit.form.Button");
+define(['dojo', 'dijit', 'dijit/_Widget', 'dijit/_TemplatedMixin', 'dijit/form/Button'],function(dojo, dijit){
 
-dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._Templated], {
+dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._TemplatedMixin], {
 	// summary:
 	//		A volume widget to use with dojox.av.widget.Player
 	//
@@ -47,7 +44,7 @@ dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._Templated], 
 			dojo.attr(this.domNode, "class", "Volume high");
 		}
 	},
-	
+
 	onShowVolume: function(/*DOMEvent*/evt){
 		// summary:
 		//		Shows the volume slider.
@@ -57,28 +54,28 @@ dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._Templated], 
 			this.showing = false;
 		}
 		if(!this.showing){
-			
+
 			var TOPMARG = 2;
 			var LEFTMARG = 7;
 			var vol = this.media.volume();
 			var dim = this._getVolumeDim();
 			var hand = this._getHandleDim();
 			this.x = dim.x - this.width;
-			
-			
-			
+
+
+
 			dojo.style(this.volumeSlider, "display", "");
 			dojo.style(this.volumeSlider, "top", dim.y+"px");
 			dojo.style(this.volumeSlider, "left", (this.x)+"px");
-			
+
 			var x = (this.slotWidth * vol);
-			
+
 			dojo.style(this.handle, "top", (TOPMARG+(hand.w/2))+"px");
 			dojo.style(this.handle, "left", (x+LEFTMARG+(hand.h/2))+"px");
-			
+
 			this.showing = true;
 			//this.startDrag();
-			
+
 			this.clickOff = dojo.connect(dojo.doc, "onmousedown", this, "onDocClick");
 		}else{
 			this.onHideVolume();
@@ -93,7 +90,7 @@ dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._Templated], 
 			this.onHideVolume();
 		}
 	},
-	
+
 	onHideVolume: function(){
 		//	summary:
 		//		Hides volume slider.
@@ -102,7 +99,7 @@ dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._Templated], 
 		dojo.style(this.volumeSlider, "display", "none");
 		this.showing = false;
 	},
-	
+
 	onDrag: function(/*DOMEvent*/evt){
 		// summary:
 		//		Fired on mousemove. Updates volume and position of
@@ -113,7 +110,7 @@ dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._Templated], 
 		if(x<beg) x = beg;
 		if(x>end) x=end;
 		dojo.style(this.handle, "left", (x)+"px");
-		
+
 		var p = (x-beg)/(end-beg);
 		this.media.volume(p);
 		this.updateIcon(p);
@@ -135,7 +132,7 @@ dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._Templated], 
 		if(this.cup) dojo.disconnect(this.cup);
 		this.handleOut();
 	},
-	
+
 	handleOver: function(){
 		// summary:
 		//		Highlights the slider handle on mouseover, and
@@ -151,7 +148,7 @@ dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._Templated], 
 			dojo.removeClass(this.handle, "over");
 		}
 	},
-	
+
 	_getVolumeDim: function(){
 		// summary:
 		//		Gets dimensions of slider background node.
@@ -174,7 +171,7 @@ dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._Templated], 
 		this._handleCoords = dojo.marginBox(this.handle);
 		return this._handleCoords;
 	},
-	
+
 	onResize: function(/*Object*/playerDimensions){
 		// summary:
 		//		Fired on player resize. Zeros dimensions
@@ -183,4 +180,7 @@ dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._Templated], 
 		this.onHideVolume();
 		this._domCoords = null;
 	}
+});
+
+return dojox.av.widget.VolumeButton;
 });

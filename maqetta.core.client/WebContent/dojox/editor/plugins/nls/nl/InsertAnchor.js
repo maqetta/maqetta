@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertAnchor: "Anker invoegen",
 	title: "Ankereigenschappen",
@@ -7,3 +9,5 @@
 	cancel: "Annuleren"
 })
 
+//end v1.x content
+);

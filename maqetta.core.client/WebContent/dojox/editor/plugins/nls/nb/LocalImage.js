@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertImageTitle: "Sett inn bilde",
 	url: "Bilde",
@@ -8,3 +10,5 @@
 	prePopuTextUrl: "Angi en bilde-URL",
 	prePopuTextBrowse: " eller bla gjennom til en lokal fil."
 })
+//end v1.x content
+);

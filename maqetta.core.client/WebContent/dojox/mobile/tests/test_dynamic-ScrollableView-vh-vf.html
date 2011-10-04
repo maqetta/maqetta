@@ -4,17 +4,16 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>Dynamic ScrollableView (view header / view footer)</title>
-		<link href="../themes/iphone/iphone.css" rel="stylesheet"></link>
+		<link href="../themes/iphone/base.css" rel="stylesheet">
 		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
 
 		<script language="JavaScript" type="text/javascript">
-			//dojo.require("dojo.parser"); // Use the lightweight parser.
-			dojo.require("dojox.mobile.parser");
-			dojo.require("dojox.mobile");
+			dojo.require("dojox.mobile");			// This is a mobile app.
+			dojo.require("dojox.mobile.parser");	// This mobile app supports running on desktop browsers
+			dojo.require("dojox.mobile.compat");	// This mobile app uses declarative programming with fast mobile parser
 			dojo.require("dojox.mobile.ScrollableView");
-			dojo.requireIf(!dojo.isWebKit, "dojox.mobile.compat");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				// ==== view1 ====
 				var view1 = new dojox.mobile.ScrollableView({
 					id: "foo",
@@ -71,6 +70,6 @@
 			});
 		</script>
 	</head>
-	<body>
+	<body style="visibility:hidden;">
 	</body>
 </html>

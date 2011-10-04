@@ -232,7 +232,7 @@ tortor pharetra congue. Suspendisse pulvinar.
 		before block<div style="display:block;" id="programmatic">Click here to edit a block programmatically created inline edit region</div>after
 		<script type="text/javascript">
 			// See if we can make a widget in script
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				var inlineWidget = new dijit.InlineEditBox({ renderAsHtml: true, onChange:myHandler }, 'programmatic');
  			});
 		</script>

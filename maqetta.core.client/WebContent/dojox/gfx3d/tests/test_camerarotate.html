@@ -8,8 +8,6 @@
 	@import "../../../dijit/themes/tundra/tundra.css";
 </style>
 <script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: false"></script>
-<script type="text/javascript" src="../object.js"></script>
-<script type="text/javascript" src="../scheduler.js"></script>
 <script type="text/javascript">
 
 dojo.require("dojox.gfx3d");
@@ -36,7 +34,6 @@ rotate = function() {
 		m.cameraRotateYg(angles.y), 
 		m.cameraRotateZg(angles.z)
 		]);
-	console.debug(t);
 	view.setCameraTransform(t);
 	view.render();
 }

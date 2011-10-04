@@ -6,27 +6,27 @@ dojo.require("dojo.data.api.Identity");
 
 
 dojox.data.tests.stores.XmlStore.getBooks3Store = function(){
-	return new dojox.data.XmlStore({url: dojo.moduleUrl("dojox.data.tests", "stores/books2.xml").toString(), label: "title", keyAttribute: "isbn"});
+	return new dojox.data.XmlStore({url: require.toUrl("dojox/data/tests/stores/books2.xml").toString(), label: "title", keyAttribute: "isbn"});
 };
 
 dojox.data.tests.stores.XmlStore.getBooks2Store = function(){
-	return new dojox.data.XmlStore({url: dojo.moduleUrl("dojox.data.tests", "stores/books2.xml").toString(), label: "title"});
+	return new dojox.data.XmlStore({url: require.toUrl("dojox/data/tests/stores/books2.xml").toString(), label: "title"});
 };
 
 dojox.data.tests.stores.XmlStore.getBooks2StorePC = function(){
-	return new dojox.data.XmlStore({url: dojo.moduleUrl("dojox.data.tests", "stores/books2.xml").toString(), label: "title", urlPreventCache: false});
+	return new dojox.data.XmlStore({url: require.toUrl("dojox/data/tests/stores/books2.xml").toString(), label: "title", urlPreventCache: false});
 };
 
 dojox.data.tests.stores.XmlStore.getBooksStore = function(){
-	return new dojox.data.XmlStore({url: dojo.moduleUrl("dojox.data.tests", "stores/books.xml").toString(), label: "title"});
+	return new dojox.data.XmlStore({url: require.toUrl("dojox/data/tests/stores/books.xml").toString(), label: "title"});
 };
 
 dojox.data.tests.stores.XmlStore.getCDataTestStore = function(){
-	return new dojox.data.XmlStore({url: dojo.moduleUrl("dojox.data.tests", "stores/cdata_test.xml").toString(), label: "title"});
+	return new dojox.data.XmlStore({url: require.toUrl("dojox/data/tests/stores/cdata_test.xml").toString(), label: "title"});
 };
 
 dojox.data.tests.stores.XmlStore.getGeographyStore = function(){
-	return new dojox.data.XmlStore({url: dojo.moduleUrl("dojox.data.tests", "stores/geography2.xml").toString(), label: "text", keyAttribute: "text", attributeMap: {text: '@text'}, rootItem: "geography"});
+	return new dojox.data.XmlStore({url: require.toUrl("dojox/data/tests/stores/geography2.xml").toString(), label: "text", keyAttribute: "text", attributeMap: {text: '@text'}, rootItem: "geography"});
 };
 
 doh.register("dojox.data.tests.stores.XmlStore",
@@ -157,6 +157,7 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			store.fetch({query:{isbn:"?9B574"}, onComplete: onComplete, onError: onError});
 			return d; //Object
 		},
+		
 		function testReadAPI_fetch_pattern1(t){
 			//	summary:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
@@ -278,12 +279,29 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			store.fetch({query:{isbn:"?9B574"}, queryOptions: {ignoreCase: false}, onComplete: onComplete, onError: onError});
 			return d; //Object
 		},
+		function testReadAPI_fetch_regexp(t){
+			//	summary:
+			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
+			//	description:
+			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
+			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
+			var d = new doh.Deferred();
+			function onComplete(items, request) {
+				t.assertEqual(1, items.length);
+				d.callback(true);
+			}
+			function onError(error, request) {
+				d.errback(error);
+			}
+			store.fetch({query:{isbn: new RegExp("^.9B574$")}, onComplete: onComplete, onError: onError});
+			return d; //Object
+		},
 		function testReadAPI_fetch_all_rootItem(t){
 			//	summary:
 			//		Simple test of fetching all xml items through an XML element called isbn
 			//	description:
 			//		Simple test of fetching all xml items through an XML element called isbn
-			var store = new dojox.data.XmlStore({url: dojo.moduleUrl("dojox.data.tests", "stores/books3.xml").toString(),
+			var store = new dojox.data.XmlStore({url: require.toUrl("dojox/data/tests/stores/books3.xml").toString(),
 				rootItem:"book"});
 
 			var d = new doh.Deferred();
@@ -298,7 +316,7 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_withAttrMap_all(t){
-			var store = new dojox.data.XmlStore({url: dojo.moduleUrl("dojox.data.tests", "stores/books_isbnAttr.xml").toString(),
+			var store = new dojox.data.XmlStore({url: require.toUrl("dojox/data/tests/stores/books_isbnAttr.xml").toString(),
 				attributeMap: {"book.isbn": "@isbn"}});
 
 			var d = new doh.Deferred();
@@ -314,7 +332,7 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_withAttrMap_one(t){
-			var store = new dojox.data.XmlStore({url: dojo.moduleUrl("dojox.data.tests", "stores/books_isbnAttr.xml").toString(),
+			var store = new dojox.data.XmlStore({url: require.toUrl("dojox/data/tests/stores/books_isbnAttr.xml").toString(),
 				attributeMap: {"book.isbn": "@isbn"}});
 
 			var d = new doh.Deferred();
@@ -334,7 +352,7 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
 			//	description:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
-			var store = new dojox.data.XmlStore({url: dojo.moduleUrl("dojox.data.tests", "stores/books_isbnAttr2.xml").toString(),
+			var store = new dojox.data.XmlStore({url: require.toUrl("dojox/data/tests/stores/books_isbnAttr2.xml").toString(),
 				attributeMap: {"book.isbn": "@isbn"}});
 			var d = new doh.Deferred();
 			function onComplete(items, request) {
@@ -352,7 +370,7 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
 			//	description:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
-			var store = new dojox.data.XmlStore({url: dojo.moduleUrl("dojox.data.tests", "stores/books_isbnAttr2.xml").toString(),
+			var store = new dojox.data.XmlStore({url: require.toUrl("dojox/data/tests/stores/books_isbnAttr2.xml").toString(),
 				attributeMap: {"book.isbn": "@isbn"}});
 			var d = new doh.Deferred();
 			function onComplete(items, request) {
@@ -370,7 +388,7 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
 			//	description:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
-			var store = new dojox.data.XmlStore({url: dojo.moduleUrl("dojox.data.tests", "stores/books_isbnAttr2.xml").toString(),
+			var store = new dojox.data.XmlStore({url: require.toUrl("dojox/data/tests/stores/books_isbnAttr2.xml").toString(),
 				attributeMap: {"book.isbn": "@isbn"}});
 			var d = new doh.Deferred();
 			function onComplete(items, request) {

@@ -9,8 +9,7 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
 		<!-- functions to help test -->
 		<script type="text/javascript" src="../../helpers.js"></script>
@@ -20,7 +19,7 @@
 			dojo.require("dojo.window");
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_Tree_DnD.html');
 
 				setup();
@@ -82,7 +81,7 @@
 
 								doh.t(fruitsTreeNode.isExpanded, "drop caused the node to expand");
 								var treeNodeChildren = fruitsTreeNode.getChildren();
-								doh.is(2, treeNodeChildren.length, "2 TreeNode children")
+								doh.is(2, treeNodeChildren.length, "2 TreeNode children");
 								doh.is("Apple", innerText(treeNodeChildren[0].labelNode));
 								doh.is("Citrus", innerText(treeNodeChildren[1].labelNode));
 							}), 1000);	// 1000ms to wait for 'Fruits' node to expand and show 'Apple' node
@@ -103,7 +102,7 @@
 								fruitsTreeNode = findTreeNode("itemTree", "Fruits"),
 								appleTreeNode = findTreeNode("itemTree", "Apple"),
 								citrusTreeNode = findTreeNode("itemTree", "Citrus");
-							dijit.scrollIntoView("itemTree");
+							dojo.window.scrollIntoView("itemTree");
 							// Drag "Apple" into "Citrus".
 							doh.robot.mouseMoveAt(appleTreeNode.labelNode, 500, 1);
 							doh.robot.mousePress({left: true}, 500);
@@ -122,7 +121,7 @@
 								var fruitsTreeNode = findTreeNode("itemTree", "Fruits");
 
 								var fruitsTreeNodeChildren = fruitsTreeNode.getChildren();
-								doh.is(1, fruitsTreeNodeChildren.length, "1 TreeNode children")
+								doh.is(1, fruitsTreeNodeChildren.length, "1 TreeNode children");
 								doh.is("Citrus", innerText(fruitsTreeNodeChildren[0].labelNode));
 
 								// ... and parented to Citrus item
@@ -135,7 +134,7 @@
 								var citrusTreeNode = findTreeNode("itemTree", "Citrus");
 
 								var citrusTreeNodeChildren = citrusTreeNode.getChildren();
-								doh.is(2, citrusTreeNodeChildren.length, "2 TreeNode children for Citrus")
+								doh.is(2, citrusTreeNodeChildren.length, "2 TreeNode children for Citrus");
 								doh.is("Orange", innerText(citrusTreeNodeChildren[0].labelNode), "child of Citrus TreeNode");
 								doh.is("Apple", innerText(citrusTreeNodeChildren[1].labelNode), "child of Citrus TreeNode");
 							}), 2000);
@@ -179,7 +178,7 @@
 								var
 									foodsTreeNode = findTreeNode("collectionsTree", "Foods (1)"),
 									foodsTreeNodeChildren = foodsTreeNode.getChildren();
-								doh.is(3, foodsTreeNodeChildren.length, "3 TreeNode children")
+								doh.is(3, foodsTreeNodeChildren.length, "3 TreeNode children");
 								doh.is("Fruits (2)", innerText(foodsTreeNodeChildren[0].labelNode));
 								doh.is("Cereals (0)", innerText(foodsTreeNodeChildren[1].labelNode));
 								doh.is("Vegetables (0)", innerText(foodsTreeNodeChildren[2].labelNode));
@@ -248,13 +247,13 @@
 								var
 									foodsTreeNode = findTreeNode("collectionsTree", "Foods (1)"),
 									foodsTreeNodeChildren = foodsTreeNode.getChildren();
-								doh.is(2, foodsTreeNodeChildren.length, "2 TreeNode children for foods")
+								doh.is(2, foodsTreeNodeChildren.length, "2 TreeNode children for foods");
 								doh.is("Fruits (2)", innerText(foodsTreeNodeChildren[0].labelNode));
 								doh.is("Cereals (0)", innerText(foodsTreeNodeChildren[1].labelNode));
 
 								var fruitsTreeNode = findTreeNode("collectionsTree", "Fruits (2)"),
 								fruitsTreeNodeChildren = fruitsTreeNode.getChildren();
-								doh.is(2, fruitsTreeNodeChildren.length, "2 TreeNode children for fruits")
+								doh.is(2, fruitsTreeNodeChildren.length, "2 TreeNode children for fruits");
 								doh.is("Citrus (1)", innerText(fruitsTreeNodeChildren[0].labelNode));
 								doh.is("Vegetables (0)", innerText(fruitsTreeNodeChildren[1].labelNode));
 							}), 500);
@@ -367,7 +366,7 @@
 								// Check that data store update was reflected in the tree
 								var citrusTreeNode = findTreeNode("itemTree", "Citrus");
 								var treeNodeChildren = citrusTreeNode.getChildren();
-								doh.is(3, treeNodeChildren.length, "3 TreeNode children")
+								doh.is(3, treeNodeChildren.length, "3 TreeNode children");
 								doh.is("Banana", innerText(treeNodeChildren[0].labelNode));
 								doh.is("Orange", innerText(treeNodeChildren[1].labelNode));
 								doh.is("Apple",  innerText(treeNodeChildren[2].labelNode));
@@ -396,7 +395,7 @@
 								// Check that data store update was reflected in the tree
 								var citrusTreeNode = findTreeNode("itemTree", "Citrus");
 								var treeNodeChildren = citrusTreeNode.getChildren();
-								doh.is(4, treeNodeChildren.length, "4 TreeNode children")
+								doh.is(4, treeNodeChildren.length, "4 TreeNode children");
 								doh.is("Banana", innerText(treeNodeChildren[0].labelNode));
 								doh.is("Tomato", innerText(treeNodeChildren[1].labelNode));
 								doh.is("Orange", innerText(treeNodeChildren[2].labelNode));
@@ -427,7 +426,7 @@
 								// Check that data store update was reflected in the tree
 								var citrusTreeNode = findTreeNode("itemTree", "Citrus");
 								var treeNodeChildren = citrusTreeNode.getChildren();
-								doh.is(5, treeNodeChildren.length, "5 TreeNode children")
+								doh.is(5, treeNodeChildren.length, "5 TreeNode children");
 								doh.is("Banana", innerText(treeNodeChildren[0].labelNode));
 								doh.is("Tomato", innerText(treeNodeChildren[1].labelNode));
 								doh.is("Pepper", innerText(treeNodeChildren[2].labelNode));
@@ -460,7 +459,7 @@
 								// Check that data store update was reflected in the tree
 								var citrusTreeNode = findTreeNode("itemTree", "Citrus");
 								var treeNodeChildren = citrusTreeNode.getChildren();
-								doh.is(6, treeNodeChildren.length, "6 TreeNode children")
+								doh.is(6, treeNodeChildren.length, "6 TreeNode children");
 								doh.is("Banana", innerText(treeNodeChildren[0].labelNode));
 								doh.is("Tomato", innerText(treeNodeChildren[1].labelNode));
 								doh.is("Pepper", innerText(treeNodeChildren[2].labelNode));
@@ -495,7 +494,7 @@
 								// Check that data store update was reflected in the tree
 								var citrusTreeNode = findTreeNode("itemTree", "Citrus");
 								var treeNodeChildren = citrusTreeNode.getChildren();
-								doh.is(7, treeNodeChildren.length, "7 TreeNode children")
+								doh.is(7, treeNodeChildren.length, "7 TreeNode children");
 								doh.is("Banana", innerText(treeNodeChildren[0].labelNode));
 								doh.is("Tomato", innerText(treeNodeChildren[1].labelNode));
 								doh.is("Pepper", innerText(treeNodeChildren[2].labelNode));
@@ -532,7 +531,7 @@
 								// Check that data store update was reflected in the tree
 								var citrusTreeNode = findTreeNode("itemTree", "Citrus");
 								var treeNodeChildren = citrusTreeNode.getChildren();
-								doh.is(8, treeNodeChildren.length, "8 TreeNode children")
+								doh.is(8, treeNodeChildren.length, "8 TreeNode children");
 								doh.is("Banana", innerText(treeNodeChildren[0].labelNode));
 								doh.is("Tomato", innerText(treeNodeChildren[1].labelNode));
 								doh.is("Pepper", innerText(treeNodeChildren[2].labelNode));
@@ -695,7 +694,6 @@
 						}
 					}
 				]);
-				// TODO: test icon and highlighting when valid drop target and invalid target (another item)
 
 				doh.run();
 			});

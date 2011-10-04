@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	singleSort: "Pojedyncze sortowanie",
 	nestedSort: "Zagnieżdżone sortowanie",
@@ -9,4 +11,6 @@
 	indirectSelectionCheckBox: "Wiersz ${0}, wybór wielokrotny, pole wyboru",
 	selectAll: "Wybierz wszystko"
 })
+//end v1.x content
+);
 

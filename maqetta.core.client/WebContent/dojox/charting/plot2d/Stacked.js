@@ -1,17 +1,12 @@
-dojo.provide("dojox.charting.plot2d.Stacked");
+define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/array", "./Default", "./common", 
+	"dojox/lang/functional", "dojox/lang/functional/reversed", "dojox/lang/functional/sequence"], 
+	function(lang, declare, arr, Default, dc, df, dfr, dfs){
+/*=====
+var Default = dojox.charting.plot2d.Default;
+=====*/
+	var purgeGroup = dfr.lambda("item.purgeGroup()");
 
-dojo.require("dojox.charting.plot2d.common");
-dojo.require("dojox.charting.plot2d.Default");
-
-dojo.require("dojox.lang.functional");
-dojo.require("dojox.lang.functional.sequence");
-dojo.require("dojox.lang.functional.reversed");
-
-(function(){
-	var df = dojox.lang.functional, dc = dojox.charting.plot2d.common,
-		purgeGroup = df.lambda("item.purgeGroup()");
-
-	dojo.declare("dojox.charting.plot2d.Stacked", dojox.charting.plot2d.Default, {
+	return declare("dojox.charting.plot2d.Stacked", Default, {
 		//	summary:
 		//		Like the default plot, Stacked sets up lines, areas and markers
 		//		in a stacked fashion (values on the y axis added to each other)
@@ -57,7 +52,7 @@ dojo.require("dojox.lang.functional.reversed");
 			this.resetEvents();
 			this.dirty = this.isDirty();
 			if(this.dirty){
-				dojo.forEach(this.series, purgeGroup);
+				arr.forEach(this.series, purgeGroup);
 				this._eventSeries = {};
 				this.cleanGroup();
 				var s = this.group;
@@ -78,7 +73,7 @@ dojo.require("dojox.lang.functional.reversed");
 				run.cleanGroup();
 				var theme = t.next(this.opt.areas ? "area" : "line", [this.opt, run], true),
 					s = run.group, outline,
-					lpoly = dojo.map(acc, function(v, i){
+					lpoly = arr.map(acc, function(v, i){
 						return {
 							x: ht(i + 1) + offsets.l,
 							y: dim.height - offsets.b - vt(v)
@@ -88,7 +83,7 @@ dojo.require("dojox.lang.functional.reversed");
 				var lpath = this.opt.tension ? dc.curve(lpoly, this.opt.tension) : "";
 
 				if(this.opt.areas){
-					var apoly = dojo.clone(lpoly);
+					var apoly = lang.clone(lpoly);
 					if(this.opt.tension){
 						var p=dc.curve(apoly, this.opt.tension);
 						p += " L" + lpoly[lpoly.length - 1].x + "," + (dim.height - offsets.b) +
@@ -114,7 +109,7 @@ dojo.require("dojox.lang.functional.reversed");
 				var frontMarkers, outlineMarkers, shadowMarkers;
 				if(theme.series.shadow && theme.series.stroke){
 					var shadow = theme.series.shadow,
-						spoly = dojo.map(lpoly, function(c){
+						spoly = arr.map(lpoly, function(c){
 							return {x: c.x + shadow.dx, y: c.y + shadow.dy};
 						});
 					if(this.opt.lines){
@@ -126,7 +121,7 @@ dojo.require("dojox.lang.functional.reversed");
 					}
 					if(this.opt.markers){
 						shadow = theme.marker.shadow;
-						shadowMarkers = dojo.map(spoly, function(c){
+						shadowMarkers = arr.map(spoly, function(c){
 							return s.createPath("M" + c.x + " " + c.y + " " + theme.symbol).
 								setStroke(shadow).setFill(shadow.color);
 						}, this);
@@ -154,7 +149,7 @@ dojo.require("dojox.lang.functional.reversed");
 						outline = dc.makeStroke(theme.marker.outline);
 						outline.width = 2 * outline.width + (theme.marker.stroke ? theme.marker.stroke.width : 0);
 					}
-					dojo.forEach(lpoly, function(c, i){
+					arr.forEach(lpoly, function(c, i){
 						var path = "M" + c.x + " " + c.y + " " + theme.symbol;
 						if(outline){
 							outlineMarkers[i] = s.createPath(path).setStroke(outline);
@@ -163,7 +158,7 @@ dojo.require("dojox.lang.functional.reversed");
 					}, this);
 					if(events){
 						var eventSeries = new Array(frontMarkers.length);
-						dojo.forEach(frontMarkers, function(s, i){
+						arr.forEach(frontMarkers, function(s, i){
 							var o = {
 								element: "marker",
 								index:   i,
@@ -198,4 +193,4 @@ dojo.require("dojox.lang.functional.reversed");
 			return this;	//	dojox.charting.plot2d.Stacked
 		}
 	});
-})();
+});

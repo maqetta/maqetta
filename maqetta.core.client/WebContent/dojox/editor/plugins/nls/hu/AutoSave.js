@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"saveLabel": "Mentés",
 	"saveSettingLabelOn": "Automatikus mentés időközének beállítása...",
@@ -12,3 +14,5 @@
 	"saveMessageFail": "Sikertelen mentés: ${0}"
 })
 
+//end v1.x content
+);

@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertTableTitle: "Inserisci tabella",
 	modifyTableTitle: "Modifica tabella",
@@ -30,3 +32,5 @@
 })
 	
 
+//end v1.x content
+);

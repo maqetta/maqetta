@@ -5,7 +5,7 @@
 	<title>Editor Custom Plugin Test/Tutorial</title>
 
 	<style type="text/css">
-		@import "../themes/claro/document.css";
+		@import "../../themes/claro/document.css";
 		@import "../css/dijitTests.css";
 	</style>
 
@@ -37,7 +37,7 @@
 		dojo.require("dijit._editor._Plugin");
 		dojo.require("dojo.string");
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			dojo.declare("MyPlugin",
 				dijit._editor._Plugin,
 				{
@@ -66,6 +66,7 @@
 							dojo.place(this.sourceArea, this.editor.domNode, "last");
 						}
 						if(this.source){
+							this.sourceArea.style.display = "";
 							this.sourceArea.value = this.editor.getValue();
 							dojo.style(this.sourceArea, "borderWidth", dojo.style(this.editor.editingArea, "borderStyle") == "none" ? "0" : dojo.style(this.editor.editingArea, "borderWidth"));
 							dojo.marginBox(this.sourceArea, dojo.marginBox(this.editor.editingArea));
@@ -77,6 +78,7 @@
 						}else{
 							this.editor.setValue(this.sourceArea.value);
 							this.sourceArea.style.top = "-999px";
+							this.sourceArea.style.display = "none";
 						}
 	
 						this.button.set('label', this.source ? "View WYSIWYG" : this.editor.commands["htmlToggle"]); // note: should be localized
@@ -97,7 +99,7 @@
 	</script>
 </head>
 <body class="claro">
-	<div id="editor1" data-dojo-type="dijit.Editor" data-dojo-props='extraPlugins:["MyPlugin"]'><p>
+	<div id="editor1" data-dojo-type="dijit.Editor" data-dojo-props='extraPlugins:["MyPlugin"], height: 150'><p>
 	This editor should have my custom plugin
 	</p></div>
 </body>

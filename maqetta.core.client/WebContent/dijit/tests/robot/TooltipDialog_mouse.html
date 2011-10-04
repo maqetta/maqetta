@@ -18,7 +18,7 @@
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_TooltipDialog.html');
 
 				doh.register("Select", [
@@ -32,7 +32,7 @@
 							doh.robot.mouseClick({left: true}, 1000);
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.t(isVisible("tooltipDlg"), "TooltipDialog visible");
-								doh.is("inline", dojo.global.dijit._curFocus.id, "focus on InlineEditBox (first field in TooltipDialog)")
+								doh.is("inline", dojo.global.dijit.focus.curNode.id, "focus on InlineEditBox (first field in TooltipDialog)")
 							}), 1000);
 						}
 					},
@@ -114,13 +114,13 @@
 							}), 1000);
 							
 							// click TextBox to get select to close
-							doh.robot.mouseMoveAt("text", 0)
+							doh.robot.mouseMoveAt("text", 0);
 							doh.robot.mouseClick({left: true}, 1000);
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.t(isHidden("select_menu"), "Select Menu closed");
 								doh.t(isVisible("tooltipDlg"), "TooltipDialog should still still be showing");
-								doh.is("text", dijit._curFocus && dijit._curFocus.id, "focused on textbox")
+								doh.is("text", dijit.focus.curNode && dijit.focus.curNode.id, "focused on textbox")
 							}), 1000);
 						}
 					},
@@ -179,6 +179,80 @@
 							}), 1000);
 
 							// close TooltipDialog
+							doh.robot.mouseMove(10, 10, 0);
+							doh.robot.mouseClick({left: true}, 1000);
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(isHidden("tooltipDlg"), "Tooltip dialog closed");
+							}), 500);
+
+							return d;
+						}
+					}
+				]);
+
+				doh.register("DateTextBox", [
+					{
+						name: "open TooltipDialog",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							doh.robot.mouseMoveAt("tooltipDlgButton", 1000);
+							doh.robot.mouseClick({left: true}, 1000);
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(isVisible("tooltipDlg"), "TooltipDialog visible");
+								doh.is("inline", dojo.global.dijit.focus.curNode.id, "focus on InlineEditBox (first field in TooltipDialog)")
+							}), 1000);
+						}
+					},
+
+					{
+						name: "open DateTextBox by clicking arrow",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred(),
+								date = dijit.byId("date2");
+
+							// click arrow to open
+							doh.robot.mouseMoveAt(function(){
+								return dojo.query(".dijitArrowButton", date.domNode)[0];
+							}, 0);
+							doh.robot.mouseClick({left: true}, 1000);
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(isVisible("tooltipDlg"), "TooltipDialog should still be showing");
+								doh.t(isVisible("date2_popup"), "Calendar showing too");
+							}), 1000);
+
+							return d;
+						}
+					},
+
+					{
+						name: "close DateTextBox by clicking arrow",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred(),
+								date = dijit.byId("date2");
+
+							// click arrow to open
+							doh.robot.mouseMoveAt(function(){
+								return dojo.query(".dijitArrowButton", date.domNode)[0];
+							}, 0);
+							doh.robot.mouseClick({left: true}, 1000);
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(isVisible("tooltipDlg"), "TooltipDialog should still be showing");
+								doh.f(isVisible("date_popup"), "calendar closed");
+							}), 1000);
+						}
+					},
+
+					{
+						name: "close TooltipDialog",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
 							doh.robot.mouseMove(10, 10, 0);
 							doh.robot.mouseClick({left: true}, 1000);
 
@@ -277,13 +351,13 @@
 							var d = new doh.Deferred();
 							
 							// click TextBox to get submenu to close
-							doh.robot.mouseMoveAt("name", 0)
+							doh.robot.mouseMoveAt("name", 0);
 							doh.robot.mouseClick({left: true}, 1000);
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.t(isHidden("submenuu"), "submenu closed");
 								doh.t(isVisible("innerTtDialog"), "TooltipDialog should still still be showing");
-								doh.is("name", dijit._curFocus && dijit._curFocus.id, "focused on textbox")
+								doh.is("name", dijit.focus.curNode && dijit.focus.curNode.id, "focused on textbox")
 							}), 1000);
 						}
 					},

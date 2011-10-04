@@ -1,6 +1,9 @@
-define("dojox/data/AndOrWriteStore", ["dojo", "dojox", "dojox/data/AndOrReadStore"], function(dojo, dojox) {
+define(["dojo/_base/declare","dojo/_base/lang","dojo/_base/array", "dojo/_base/json", "dojo/date/stamp",
+		"dojo/_base/window", "./AndOrReadStore"], 
+  function(declare, lang, arrayUtil, json, dateStamp, winUtil, AndOrReadStore) {
+/*===== var AndOrReadStore = dojox.data.AndOrReadStore; =====*/
 
-dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
+return declare("dojox.data.AndOrWriteStore", AndOrReadStore, {
 	constructor: function(/* object */ keywordParameters){
 		//	keywordParameters: {typeMap: object)
 		//		The structure of the typeMap object is as follows:
@@ -34,7 +37,7 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 
 		if(!this._datatypeMap['Date'].serialize){
 			this._datatypeMap['Date'].serialize = function(obj){
-				return dojo.date.stamp.toISOString(obj, {zulu:true});
+				return dateStamp.toISOString(obj, {zulu:true});
 			};
 		}
 		//Disable only if explicitly set to false.
@@ -86,7 +89,7 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 			if(typeof newIdentity === "undefined"){
 				throw new Error("newItem() was not passed an identity for the new item");
 			}
-			if(dojo.isArray(newIdentity)){
+			if(lang.isArray(newIdentity)){
 				throw new Error("newItem() was not passed an single-valued identity");
 			}
 		}
@@ -166,7 +169,7 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 				throw new Error("encountered bug in ItemFileWriteStore.newItem");
 			}
 			var value = keywordArgs[key];
-			if(!dojo.isArray(value)){
+			if(!lang.isArray(value)){
 				value = [value];
 			}
 			newItem[key] = value;
@@ -184,7 +187,7 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 	},
 	
 	_removeArrayElement: function(/* Array */ array, /* anything */ element){
-		var index = dojo.indexOf(array, element);
+		var index = arrayUtil.indexOf(array, element);
 		if(index != -1){
 			array.splice(index, 1);
 			return true;
@@ -214,15 +217,15 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 
 			//Backup the map, we'll have to restore it potentially, in a revert.
 			if(item[this._reverseRefMap]){
-				item["backup_" + this._reverseRefMap] = dojo.clone(item[this._reverseRefMap]);
+				item["backup_" + this._reverseRefMap] = lang.clone(item[this._reverseRefMap]);
 			}
 			
 			//TODO:  This causes a reversion problem.  This list won't be restored on revert since it is
 			//attached to the 'value'. item, not ours.  Need to back tese up somehow too.
 			//Maybe build a map of the backup of the entries and attach it to the deleted item to be restored
 			//later.  Or just record them and call _addReferenceToMap on them in revert.
-			dojo.forEach(attributes, function(attribute){
-				dojo.forEach(this.getValues(item, attribute), function(value){
+			arrayUtil.forEach(attributes, function(attribute){
+				arrayUtil.forEach(this.getValues(item, attribute), function(value){
 					if(this.isItem(value)){
 						//We have to back up all the references we had to others so they can be restored on a revert.
 						if(!item["backupRefs_" + this._reverseRefMap]){
@@ -250,7 +253,7 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 					if(containingItem){
 						for(var attribute in references[itemId]){
 							var oldValues = this.getValues(containingItem, attribute) || [];
-							var newValues = dojo.filter(oldValues, function(possibleItem){
+							var newValues = arrayUtil.filter(oldValues, function(possibleItem){
 								return !(this.isItem(possibleItem) && this.getIdentity(possibleItem) == identity);
 							}, this);
 							//Remove the note of the reference to the item and set the values on the modified attribute.
@@ -300,7 +303,7 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 		
 		// Check for valid arguments
 		this._assertIsItem(item);
-		this._assert(dojo.isString(attribute));
+		this._assert(lang.isString(attribute));
 		this._assert(typeof newValueOrValues !== "undefined");
 
 		// Make sure the user isn't trying to change the item's identity
@@ -326,7 +329,7 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 				if((key === this._storeRefPropName) || (key === this._itemNumPropName) || (key === this._rootItemPropName)){
 					copyOfItemState[key] = item[key];
 				}else if(key === this._reverseRefMap){
-					copyOfItemState[key] = dojo.clone(item[key]);
+					copyOfItemState[key] = lang.clone(item[key]);
 				}else{
 					copyOfItemState[key] = item[key].slice(0, item[key].length);
 				}
@@ -338,7 +341,7 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 		// Okay, now we can actually change this attribute on the item
 		var success = false;
 		
-		if(dojo.isArray(newValueOrValues) && newValueOrValues.length === 0){
+		if(lang.isArray(newValueOrValues) && newValueOrValues.length === 0){
 			
 			// If we were passed an empty array as the value, that counts
 			// as "unsetting" the attribute, so we need to remove this
@@ -348,7 +351,7 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 
 			if(this.referenceIntegrity && oldValueOrValues){
 				var oldValues = oldValueOrValues;
-				if(!dojo.isArray(oldValues)){
+				if(!lang.isArray(oldValues)){
 					oldValues = [oldValues];
 				}
 				for(var i = 0; i < oldValues.length; i++){
@@ -360,7 +363,7 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 			}
 		}else{
 			var newValueArray;
-			if(dojo.isArray(newValueOrValues)){
+			if(lang.isArray(newValueOrValues)){
 				var newValues = newValueOrValues;
 				// Unfortunately, it's not safe to just do this:
 				//    newValueArray = newValues;
@@ -379,7 +382,7 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 			if(this.referenceIntegrity){
 				if(oldValueOrValues){
 					var oldValues = oldValueOrValues;
-					if(!dojo.isArray(oldValues)){
+					if(!lang.isArray(oldValues)){
 						oldValues = [oldValues];
 					}
 					//Use an associative map to determine what was added/removed from the list.
@@ -388,13 +391,13 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 					//Then we pass over the map and any references left it it need to be removed (IE, no match in
 					//the new values list).
 					var map = {};
-					dojo.forEach(oldValues, function(possibleItem){
+					arrayUtil.forEach(oldValues, function(possibleItem){
 						if(this.isItem(possibleItem)){
 							var id = this.getIdentity(possibleItem);
 							map[id.toString()] = true;
 						}
 					}, this);
-					dojo.forEach(newValueArray, function(possibleItem){
+					arrayUtil.forEach(newValueArray, function(possibleItem){
 						if(this.isItem(possibleItem)){
 							var id = this.getIdentity(possibleItem);
 							if(map[id.toString()]){
@@ -501,7 +504,7 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 		for(i = 0; i < this._arrayOfAllItems.length; i++){
 			var item = this._arrayOfAllItems[i];
 			if(item && item[this._reverseRefMap]){
-				console.log("Item: [" + this.getIdentity(item) + "] is referenced by: " + dojo.toJson(item[this._reverseRefMap]));
+				console.log("Item: [" + this.getIdentity(item) + "] is referenced by: " + json.toJson(item[this._reverseRefMap]));
 			}
 		}
 	},
@@ -535,7 +538,7 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 			if(typeof value === "object"){
 				for(var type in this._datatypeMap){
 					var typeMap = this._datatypeMap[type];
-					if(dojo.isObject(typeMap) && !dojo.isFunction(typeMap)){
+					if(lang.isObject(typeMap) && !lang.isFunction(typeMap)){
 						if(value instanceof typeMap.type){
 							if(!typeMap.serialize){
 								throw new Error("ItemFileWriteStore:  No serializer defined for type mapping: [" + type + "]");
@@ -590,7 +593,7 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 			}
 		}
 		var prettyPrint = true;
-		return dojo.toJson(serializableStructure, prettyPrint);
+		return json.toJson(serializableStructure, prettyPrint);
 	},
 
 	_isEmpty: function(something){
@@ -599,13 +602,13 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 		//	something:
 		//		The array or object to examine.
 		var empty = true;
-		if(dojo.isObject(something)){
+		if(lang.isObject(something)){
 			var i;
 			for(i in something){
 				empty = false;
 				break;
 			}
-		}else if(dojo.isArray(something)){
+		}else if(lang.isArray(something)){
 			if(something.length > 0){
 				empty = false;
 			}
@@ -630,14 +633,14 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 
 			self._saveInProgress = false; // must come after this._pending is cleared, but before any callbacks
 			if(keywordArgs && keywordArgs.onComplete){
-				var scope = keywordArgs.scope || dojo.global;
+				var scope = keywordArgs.scope || winUtil.global;
 				keywordArgs.onComplete.call(scope);
 			}
 		};
 		var saveFailedCallback = function(){
 			self._saveInProgress = false;
 			if(keywordArgs && keywordArgs.onError){
-				var scope = keywordArgs.scope || dojo.global;
+				var scope = keywordArgs.scope || winUtil.global;
 				keywordArgs.onError.call(scope);
 			}
 		};
@@ -678,7 +681,7 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 			for(key in modifiedItem){
 				delete modifiedItem[key];
 			}
-			dojo.mixin(modifiedItem, copyOfItemState);
+			lang.mixin(modifiedItem, copyOfItemState);
 		}
 		var deletedItem;
 		for(identity in this._pending._deletedItems){
@@ -704,7 +707,7 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 		for(identity in this._pending._deletedItems){
 			deletedItem = this._pending._deletedItems[identity];
 			if(deletedItem["backupRefs_" + this._reverseRefMap]){
-				dojo.forEach(deletedItem["backupRefs_" + this._reverseRefMap], function(reference){
+				arrayUtil.forEach(deletedItem["backupRefs_" + this._reverseRefMap], function(reference){
 					var refItem;
 					if(this._itemsByIdentity){
 						refItem = this._itemsByIdentity[reference.id];
@@ -805,5 +808,4 @@ dojo.declare("dojox.data.AndOrWriteStore", dojox.data.AndOrReadStore, {
 	}
 });
 
-return dojox.data.AndOrWriteStore;
 });

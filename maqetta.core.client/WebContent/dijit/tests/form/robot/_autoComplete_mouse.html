@@ -9,12 +9,13 @@
 	</style>
 
 	<!-- required: dojo.js -->
-	<script type="text/javascript" src="../../../../dojo/dojo.js"
-		djConfig="isDebug: true, parseOnLoad: true"></script>
+	<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
+
 	<script type="text/javascript" src="../../helpers.js"></script>
 
 	<script type="text/javascript">
 		dojo.require("dijit.robotx");
+		dojo.require("dojo.window");
 
 		// TODO: provide URL toggle for FilteringSelect
 		var testWidget = "dijit.form.ComboBox";
@@ -29,16 +30,16 @@
 		        }
 		}
 		isComboBox = testWidget=="dijit.form.ComboBox";
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			var pageSize, combo;
 
 			var findMenuItem = function(combo, text){
 				var node = combo.dropDown.domNode.firstChild;
-				while(((node.innerText || node.textContent).indexOf(text)<0) && node.nextSibling){
+				while(((node.innerText || node.textContent).indexOf(text) < 0) && node.nextSibling){
 					node = node.nextSibling;
 				}
 				return node;
-			}
+			};
 
 			doh.robot.initRobot('../_autoComplete.html?testWidget='+testWidget);
 
@@ -79,7 +80,7 @@
 
 						doh.robot.sequence(d.getTestCallback(function(){
 							var list = combo.dropDown.domNode,
-								entries = dojo.query("li", list).filter(isVisible);
+								entries = dojo.query(".dijitMenuItem", list).filter(isVisible);
 							doh.t(isVisible(list), "list is visible");
 							doh.is(31, entries.length, "30 elements plus next button");
 							doh.is("California", combo.focusNode.value, "displayed value hasn't changed");
@@ -105,7 +106,7 @@
 						doh.robot.mouseClick({left:true}, 1000);
 
 						doh.robot.sequence(d.getTestCallback(function(){
-							var entries = dojo.query("li", list).filter(isVisible);
+							var entries = dojo.query(".dijitMenuItem", list).filter(isVisible);
 							doh.is("Minnesota (MN)", innerText(entries[1]), "first entry on second page of drop down");
 							doh.is("California", combo.focusNode.value, "displayed value hasn't changed");
 						}), 1500, 1000);
@@ -127,7 +128,7 @@
 
 						doh.robot.sequence(d.getTestCallback(function(){
 							var list = combo.dropDown.domNode,
-								entries = dojo.query("li", list).filter(isVisible);
+								entries = dojo.query(".dijitMenuItem", list).filter(isVisible);
 							doh.is(2, entries.length, "previous choices + wyoming");
 							doh.is("Wyoming (WY)", innerText(entries[1]));
 						}), 1500, 1000);
@@ -149,7 +150,7 @@
 
 						doh.robot.sequence(d.getTestCallback(function(){
 							var list = combo.dropDown.domNode,
-								entries = dojo.query("li", list);
+								entries = dojo.query(".dijitMenuItem", list);
 							doh.is(32, entries.length, "30 states, plus next and previous button");
 							doh.is("Minnesota (MN)", innerText(entries[1]));
 							doh.is("Wisconsin (WI)", innerText(entries[30]));
@@ -222,12 +223,12 @@
 						var d = new doh.Deferred();
 
 						combo = dijit.byId("setvaluetest");
-						handle = dojo.connect(combo, "onClick", d.getTestCallback(function(){
+						handle = dojo.global.dojo.connect(combo, "onClick", d.getTestCallback(function(){
 							// If we hit here it's OK, if no click event then fail with timeout
 							console.log("hit onClick callback");
 						}));
 
-						dijit.scrollIntoView(combo.domNode);
+						dojo.window.scrollIntoView(combo.domNode);
 
 						doh.robot.mouseMoveAt(combo._buttonNode, 1000, 0);
 						doh.robot.mouseClick({left:true}, 500);
@@ -246,12 +247,12 @@
 						var d = new doh.Deferred();
 
 						combo = dijit.byId("setvaluetest");
-						handle = dojo.connect(combo, "onClick", d.getTestCallback(function(){
+						handle = dojo.global.dojo.connect(combo, "onClick", d.getTestCallback(function(){
 							// If we hit here it's OK, if no click event then fail with timeout
 							console.log("hit onClick callback");
 						}));
 
-						dijit.scrollIntoView(combo.domNode);
+						dojo.window.scrollIntoView(combo.domNode);
 
 						doh.robot.mouseMoveAt(combo.focusNode, 1000, 0);
 						doh.robot.mouseClick({left:true}, 500);
@@ -313,7 +314,7 @@
 								doh.t(list && isVisible(list), "drop down is visible");
 								doh.is(findMenuItem(combo, "Alaska"), combo.dropDown.getHighlightedOption(), "Alaska is highlighted");
 	
-								doh.t(combo._focused, "widget is focused");
+								doh.t(combo.focused, "widget is focused");
 							}), 0);
 						});
 
@@ -344,7 +345,7 @@
 
 						doh.robot.sequence(d.getTestCallback(function(){
 							if(!dojo.isWebKit){		// webkit bug, see #11064 - TODO: verify this is fixed now
-								doh.isNot(combo, dijit.getEnclosingWidget(dojo.global.dijit._curFocus), "click doesn't focus disabled combo");
+								doh.isNot(combo, dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode), "click doesn't focus disabled combo");
 							}
 						}), 1000, 500);
 
@@ -367,7 +368,7 @@
 							doh.f(combo.dropDown, "User was able to open the menu on a disabled ComboBox!");
 
 							// Testcase for #8923, uncomment when that bug is fixed
-							//doh.isNot(combo, dijit.getEnclosingWidget(dojo.global.dijit._curFocus), "button-click doesn't focus disabled combo");
+							//doh.isNot(combo, dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode), "button-click doesn't focus disabled combo");
 						}), 1000, 500);
 						return d;
 					}
@@ -407,7 +408,7 @@
 							}
 						);
 						doh.robot.mouseMoveAt(combo._buttonNode, 1000, 0);
-						doh.robot.mousePress({left:true}, 500) // mousedown on the arrow image
+						doh.robot.mousePress({left:true}, 500); // mousedown on the arrow image
 
 						return d;
 					},

@@ -74,7 +74,7 @@
 			}
 			var th = dojo.query("> th", this.headRow)[index];
 			th.style.paddingRight = "16px"; // space for the sort arrow
-			th.style.background = "url(\""+dojo.moduleUrl("dijit", "themes/tundra/images/arrow"+(this.query.sort[0].descending ? "Up" : "Down")+((dojo.isIE == 6) ? ".gif" : ".png")) + "\") no-repeat 98% 4px";
+			th.style.background = "url(\""+require.toUrl("dijit/themes/tundra/images/arrow"+(this.query.sort[0].descending ? "Up" : "Down")+((dojo.isIE == 6) ? ".gif" : ".png")) + "\") no-repeat 98% 4px";
 			this.runQuery();
 		</script>
 		<script type="dojo/method" event="runQuery">

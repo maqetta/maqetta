@@ -31,10 +31,10 @@
 
     //-sie
     //the dojo.required code might not be here yet!
-    dojo.addOnLoad(function() {
+    dojo.ready(function(){
 
 		// make dojo.toJson() print dates correctly (this feels a bit dirty)
-		createAndShow= function() {
+		createAndShow= function(){
 			var node = document.createElement("div");
 			dojo.body().appendChild(node);
 			var dlg = new dijit.Dialog({ title: "test input focus" }, node);

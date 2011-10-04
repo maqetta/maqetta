@@ -9,6 +9,8 @@ try{
 	dojo.require("dijit.tests.editor.module");
 	dojo.require("dijit.tests.form.module");
 	dojo.require("dijit.tests.layout.module");
+
+	dojo.require("dijit.tests._BidiSupport.module");
 }catch(e){
 	doh.debug(e);
 }

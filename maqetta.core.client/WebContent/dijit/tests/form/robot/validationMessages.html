@@ -13,18 +13,21 @@
 
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			data-dojo-config="isDebug: true, parseOnLoad: true"></script>
+			data-dojo-config="isDebug: true"></script>
 
 		<script type="text/javascript">
+			dojo.require("dojo.parser");
+
 			dojo.require("dijit.form.NumberTextBox");
+			dojo.require("dijit.Tooltip");
 			dojo.require("dijit.robot");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 
 			// track tooltip currently being displayed (if any)
 			var tooltip;
-			dojo.connect(dijit, "showTooltip", function(msg){ tooltip = msg; });
-			dojo.connect(dijit, "hideTooltip", function(msg){ tooltip = ""; });
+			dojo.connect(dijit.Tooltip, "show", function(msg){ tooltip = msg; });
+			dojo.connect(dijit.Tooltip, "hide", function(msg){ tooltip = ""; });
 
 			function testOn(evt, widget, deferred, callback, delay){
 				var handler = widget.connect(widget.focusNode, "on"+evt,
@@ -34,19 +37,24 @@
 					});
 			}
 
+			doh.register("parse", function parse(){
+				dojo.parser.parse();
+			});
+
 			dojo.forEach([false, true], function(rangeBound){
 				dojo.forEach([false, true], function(required){
 					dojo.forEach(["", "p"], function(promptMessage){
 						dojo.forEach(["", "i"], function(invalidMessage){
 							dojo.forEach(["", "m"], function(missingMessage){
 								var name = "t" + (rangeBound?1:0) + (required?1:0) + (promptMessage?1:0) + (invalidMessage?1:0) + (missingMessage?1:0);
-								var textbox = dijit.byId(name);
+								var textbox;
 
 								doh.register(name, [
 								{
 									name: name + " first focus, empty value",
 									timeout: 5000,
 									setUp:function(){
+										textbox = dijit.byId(name);
 										textbox.focusNode.scrollIntoView();
 									},
 									runTest: function(){
@@ -347,131 +355,131 @@
 	<body>
 		<label for="t00000">not required, no min/max, no prompt message, no invalid message, no missing message</label><br>
 		<input id="t00000" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='required:false, promptMessage:"", invalidMessage:"", missingMessage:"", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t00000"/><br>
+		<input style="border:0;" size="6" value="t00000"/><br>
 
 		<label for="t00001">not required, no min/max, no prompt message, no invalid message, missing message</label><br>
 		<input id="t00001" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='required:false, promptMessage:"", invalidMessage:"", missingMessage:"m", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t00001"/><br>
+		<input style="border:0;" size="6" value="t00001"/><br>
 
 		<label for="t00010">not required, no min/max, no prompt message, invalid message, no missing message</label><br>
 		<input id="t00010" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='required:false, promptMessage:"", invalidMessage:"i", missingMessage:"", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t00010"/><br>
+		<input style="border:0;" size="6" value="t00010"/><br>
 
 		<label for="t00011">not required, no min/max, no prompt message, invalid message, missing message</label><br>
 		<input id="t00011" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='required:false, promptMessage:"", invalidMessage:"i", missingMessage:"m", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t00011"/><br>
+		<input style="border:0;" size="6" value="t00011"/><br>
 
 		<label for="t00100">not required, no min/max, prompt message, no invalid message, no missing message</label><br>
 		<input id="t00100" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='required:false, promptMessage:"p", invalidMessage:"", missingMessage:"", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t00100"/><br>
+		<input style="border:0;" size="6" value="t00100"/><br>
 
 		<label for="t00101">not required, no min/max, prompt message, no invalid message, missing message</label><br>
 		<input id="t00101" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='required:false, promptMessage:"p", invalidMessage:"", missingMessage:"m", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t00101"/><br>
+		<input style="border:0;" size="6" value="t00101"/><br>
 
 		<label for="t00110">not required, no min/max, prompt message, invalid message, no missing message</label><br>
 		<input id="t00110" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='required:false, promptMessage:"p", invalidMessage:"i", missingMessage:"", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t00110"/><br>
+		<input style="border:0;" size="6" value="t00110"/><br>
 
 		<label for="t00111">not required, no min/max, prompt message, invalid message, missing message</label><br>
 		<input id="t00111" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='required:false, promptMessage:"p", invalidMessage:"i", missingMessage:"m", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t00111"/><br>
+		<input style="border:0;" size="6" value="t00111"/><br>
 
 		<label for="t01000">required, no min/max, no prompt message, no invalid message, no missing message</label><br>
 		<input id="t01000" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='required:true, promptMessage:"", invalidMessage:"", missingMessage:"", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t01000"/><br>
+		<input style="border:0;" size="6" value="t01000"/><br>
 
 		<label for="t01001">required, no min/max, no prompt message, no invalid message, missing message</label><br>
 		<input id="t01001" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='required:true, promptMessage:"", invalidMessage:"", missingMessage:"m", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t01001"/><br>
+		<input style="border:0;" size="6" value="t01001"/><br>
 
 		<label for="t01010">required, no min/max, no prompt message, invalid message, no missing message</label><br>
 		<input id="t01010" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='required:true, promptMessage:"", invalidMessage:"i", missingMessage:"", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t01010"/><br>
+		<input style="border:0;" size="6" value="t01010"/><br>
 
 		<label for="t01011">required, no min/max, no prompt message, invalid message, missing message</label><br>
 		<input id="t01011" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='required:true, promptMessage:"", invalidMessage:"i", missingMessage:"m", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t01011"/><br>
+		<input style="border:0;" size="6" value="t01011"/><br>
 
 		<label for="t01100">required, no min/max, prompt message, no invalid message, no missing message</label><br>
 		<input id="t01100" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='required:true, promptMessage:"p", invalidMessage:"", missingMessage:"", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t01100"/><br>
+		<input style="border:0;" size="6" value="t01100"/><br>
 
 		<label for="t01101">required, no min/max, prompt message, no invalid message, missing message</label><br>
 		<input id="t01101" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='required:true, promptMessage:"p", invalidMessage:"", missingMessage:"m", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t01101"/><br>
+		<input style="border:0;" size="6" value="t01101"/><br>
 
 		<label for="t01110">required, no min/max, prompt message, invalid message, no missing message</label><br>
 		<input id="t01110" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='required:true, promptMessage:"p", invalidMessage:"i", missingMessage:"", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t01110"/><br>
+		<input style="border:0;" size="6" value="t01110"/><br>
 
 		<label for="t01111">required, no min/max, prompt message, invalid message, missing message</label><br>
 		<input id="t01111" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='required:true, promptMessage:"p", invalidMessage:"i", missingMessage:"m", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t01111"/><br>
+		<input style="border:0;" size="6" value="t01111"/><br>
 
 		<label for="t10000">not required, min=10, max=100, no prompt message, no invalid message, no missing message</label><br>
 		<input id="t10000" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='constraints:{min:10, max:100}, required:false, promptMessage:"", invalidMessage:"", missingMessage:"", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t10000"/><br>
+		<input style="border:0;" size="6" value="t10000"/><br>
 
 		<label for="t10001">not required, min=10, max=100, no prompt message, no invalid message, missing message</label><br>
 		<input id="t10001" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='constraints:{min:10, max:100}, required:false, promptMessage:"", invalidMessage:"", missingMessage:"m", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t10001"/><br>
+		<input style="border:0;" size="6" value="t10001"/><br>
 
 		<label for="t10010">not required, min=10, max=100, no prompt message, invalid message, no missing message</label><br>
 		<input id="t10010" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='constraints:{min:10, max:100}, required:false, promptMessage:"", invalidMessage:"i", missingMessage:"", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t10010"/><br>
+		<input style="border:0;" size="6" value="t10010"/><br>
 
 		<label for="t10011">not required, min=10, max=100, no prompt message, invalid message, missing message</label><br>
 		<input id="t10011" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='constraints:{min:10, max:100}, required:false, promptMessage:"", invalidMessage:"i", missingMessage:"m", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t10011"/><br>
+		<input style="border:0;" size="6" value="t10011"/><br>
 
 		<label for="t10100">not required, min=10, max=100, prompt message, no invalid message, no missing message</label><br>
 		<input id="t10100" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='constraints:{min:10, max:100}, required:false, promptMessage:"p", invalidMessage:"", missingMessage:"", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t10100"/><br>
+		<input style="border:0;" size="6" value="t10100"/><br>
 
 		<label for="t10101">not required, min=10, max=100, prompt message, no invalid message, missing message</label><br>
 		<input id="t10101" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='constraints:{min:10, max:100}, required:false, promptMessage:"p", invalidMessage:"", missingMessage:"m", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t10101"/><br>
+		<input style="border:0;" size="6" value="t10101"/><br>
 
 		<label for="t10110">not required, min=10, max=100, prompt message, invalid message, no missing message</label><br>
 		<input id="t10110" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='constraints:{min:10, max:100}, required:false, promptMessage:"p", invalidMessage:"i", missingMessage:"", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t10110"/><br>
+		<input style="border:0;" size="6" value="t10110"/><br>
 
 		<label for="t10111">not required, min=10, max=100, prompt message, invalid message, missing message</label><br>
 		<input id="t10111" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='constraints:{min:10, max:100}, required:false, promptMessage:"p", invalidMessage:"i", missingMessage:"m", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t10111"/><br>
+		<input style="border:0;" size="6" value="t10111"/><br>
 
 		<label for="t11000">required, min=10, max=100, no prompt message, no invalid message, no missing message</label><br>
 		<input id="t11000" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='constraints:{min:10, max:100}, required:true, promptMessage:"", invalidMessage:"", missingMessage:"", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t11000"/><br>
+		<input style="border:0;" size="6" value="t11000"/><br>
 
 		<label for="t11001">required, min=10, max=100, no prompt message, no invalid message, missing message</label><br>
 		<input id="t11001" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='constraints:{min:10, max:100}, required:true, promptMessage:"", invalidMessage:"", missingMessage:"m", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t11001"/><br>
+		<input style="border:0;" size="6" value="t11001"/><br>
 
 		<label for="t11010">required, min=10, max=100, no prompt message, invalid message, no missing message</label><br>
 		<input id="t11010" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='constraints:{min:10, max:100}, required:true, promptMessage:"", invalidMessage:"i", missingMessage:"", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t11010"/><br>
+		<input style="border:0;" size="6" value="t11010"/><br>
 
 		<label for="t11011">required, min=10, max=100, no prompt message, invalid message, missing message</label><br>
 		<input id="t11011" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='constraints:{min:10, max:100}, required:true, promptMessage:"", invalidMessage:"i", missingMessage:"m", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t11011"/><br>
+		<input style="border:0;" size="6" value="t11011"/><br>
 
 		<label for="t11100">required, min=10, max=100, prompt message, no invalid message, no missing message</label><br>
 		<input id="t11100" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='constraints:{min:10, max:100}, required:true, promptMessage:"p", invalidMessage:"", missingMessage:"", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t11100"/><br>
+		<input style="border:0;" size="6" value="t11100"/><br>
 
 		<label for="t11101">required, min=10, max=100, prompt message, no invalid message, missing message</label><br>
 		<input id="t11101" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='constraints:{min:10, max:100}, required:true, promptMessage:"p", invalidMessage:"", missingMessage:"m", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t11101"/><br>
+		<input style="border:0;" size="6" value="t11101"/><br>
 
 		<label for="t11110">required, min=10, max=100, prompt message, invalid message, no missing message</label><br>
 		<input id="t11110" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='constraints:{min:10, max:100}, required:true, promptMessage:"p", invalidMessage:"i", missingMessage:"", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t11110"/><br>
+		<input style="border:0;" size="6" value="t11110"/><br>
 
 		<label for="t11111">required, min=10, max=100, prompt message, invalid message, missing message</label><br>
 		<input id="t11111" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='constraints:{min:10, max:100}, required:true, promptMessage:"p", invalidMessage:"i", missingMessage:"m", rangeMessage:"r"'/>
-		<input style="border:0px;" size="6" value="t11111"/><br>
+		<input style="border:0;" size="6" value="t11111"/><br>
 
 	</body>
 </html>

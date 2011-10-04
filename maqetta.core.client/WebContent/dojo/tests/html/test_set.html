@@ -5,12 +5,8 @@
 	<title>dojo.html.set test</title>
 
 	<script src='../../dojo.js' djConfig='isDebug:true, parseOnLoad:false'></script>
-	<script src='../../html.js'></script>
-	<script src='../../../util/doh/runner.js'></script>
 	<script>
-		dojo.require('doh.runner');
-		dojo.require('dojo.html');
-		dojo.require('dojo.NodeList-html');
+		require(["dojo", "doh", "dojo/html", "dojo/NodeList-html"], function(dojo, doh){
 
 		/* test goals
 		 * injecting content as string, node, nodelist. 
@@ -231,7 +227,7 @@
 							{
 								"testname": "basicChecks setNodeList"
 							});
-						var res = dojo.query("li", dojo.byId("pane1")).length
+						var res = dojo.query("li", dojo.byId("pane1")).length;
 						doh.is(2, res);
 					},
 					tearDown: function(){
@@ -461,12 +457,14 @@
 							{
 								dir: "rtl",
 								lang: "it_it",
+								textDir: "ltr",
 								parseContent: true
 							}
 						);
 						doh.t(parserCalled, "parser was called");
 						doh.is("rtl", inherited.dir, "dir");
 						doh.is("it_it", inherited.lang, "lang");
+						doh.is("ltr", inherited.textDir, "textdir");
 					},
 					tearDown: function(){
 						dojo.disconnect(handle);
@@ -476,7 +474,8 @@
 			]);
 
 			doh.run();
-		}); 
+		});
+		});
 	</script>
 	<style>
 		@import "../../../dojo/resources/dojo.css";

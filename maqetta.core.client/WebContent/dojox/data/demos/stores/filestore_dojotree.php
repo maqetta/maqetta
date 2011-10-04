@@ -113,7 +113,7 @@
 			$files = array_slice($files, 0, $count);
 		}
 
-		$result;
+		$result = new stdClass();
 		$result->total = $total;
 		$result->items = $files;
 		header("Content-Type", "text/json");
@@ -138,7 +138,7 @@
 				}
 
 				if (file_exists($fullPath)) {
-					$arr = split("/", $path);
+					$arr = explode("/", $path);
 					$size = count($arr);
 
 					if ($size > 0) {

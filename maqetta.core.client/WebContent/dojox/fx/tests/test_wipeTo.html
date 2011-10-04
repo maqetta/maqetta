@@ -1,11 +1,10 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-        "http://www.w3.org/TR/html4/strict.dtd">
+		"http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
 	<title>dojox.fx.wipeTo | experimental fx add-ons for the Dojo Toolkit</title>
 		
 	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug:true, parseOnLoad: true" ></script>
-	<script type="text/javascript" src="../_base.js"></script>
 	<style type="text/css">
 		@import "../../../dojo/resources/dojo.css";
 		@import "../../../dijit/themes/dijit.css";
@@ -18,13 +17,14 @@
 			background:#ededed;
 			border:1px solid #b7b7b7;
 			-moz-border-radius:6pt;
-			-webkit-border-radius:5pt;      
+			-webkit-border-radius:5pt;		
 		}
 	</style>
-        <script type="text/javascript">
-			dojo.require("dojox.fx.ext-dojo.NodeList");
-			dojo.require("dojox.fx");
+		<script type="text/javascript">
+			dojo.require("dojo.parser");
 			dojo.require("dojo.fx");
+			dojo.require("dojox.fx");
+			dojo.require("dojox.fx.ext-dojo.NodeList");
 			dojo.require("dijit.form.Button");
 			var delayAnims = function(obj){
 				console.log('yo');
@@ -36,24 +36,23 @@
 					);
 				});
 				console.log(_anims);
-				dojo.fx.combine(_anims).play();
-				
+				dojo.fx.combine(_anims).play();				
 			}
-        </script>
+		</script>
 </head>
 <body class="tundra">
 	<h1 class="testTitle">dojox.fx.wipeTo test</h1>
-        
-        <p>quick sizeTo API overview:</p>
+		
+		<p>quick sizeTo API overview:</p>
 
-        <pre>
-        dojox.fx.wipeTo({
-                // basic requirements:
-                node: "aDomNodeId", // or a domNode reference        
-                width: 200 // measured in px
-                // height: 200 // measured in px (only one at a time, see sizeTo)         
-        });
-        </pre>
+		<pre>
+		dojox.fx.wipeTo({
+				// basic requirements:
+				node: "aDomNodeId", // or a domNode reference		 
+				width: 200 // measured in px
+				// height: 200 // measured in px (only one at a time, see sizeTo)		  
+		});
+		</pre>
 
 		<p>Some test boxes: (id="box1,box2,box3" etc ...)</p>
 
@@ -101,8 +100,8 @@
 		</div>
 
 
-        <br style="clear:both;">
-        
+		<br style="clear:both;">
+		
 	<br>
 
 </body>

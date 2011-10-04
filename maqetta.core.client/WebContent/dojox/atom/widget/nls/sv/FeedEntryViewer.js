@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	displayOptions: "[Visningsalternativ]",
 	title: "Rubrik",
@@ -9,3 +11,5 @@
 	summary: "Sammanfattning",
 	content: "Innehåll"
 })
+//end v1.x content
+);

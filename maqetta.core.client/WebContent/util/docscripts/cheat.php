@@ -2,10 +2,9 @@
 	
 	// for this to work, the file api.html needs to be writable locally. pass a "?build" to
 	// this url to trigger the generation. otherwise, work live from here. No JS ends up 
-	// in the output. api.css gets inlined in the output, making api.html standalone. 
+	// in the output. api.css gets inlined in the output, making cheat.html standalone. 
 	
-	$head = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http://www.w3.org/TR/html4/strict.dtd">
+	$head = '<!DOCTYPE html>
 	<html>
 		<head>
 			<title>API Overview - Dojo Toolkit</title>

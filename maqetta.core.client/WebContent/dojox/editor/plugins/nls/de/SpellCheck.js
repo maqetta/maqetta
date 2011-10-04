@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	widgetLabel: "Batchrechtschreibprüfung",
 	unfound: "Nicht gefunden",
@@ -15,3 +17,5 @@
 	iMsg: "Keine Rechtschreibvorschläge"
 })
 
+//end v1.x content
+);

@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	singleSort: "Enkelvoudig sorteren",
 	nestedSort: "Genest sorteren",
@@ -9,4 +11,6 @@
 	indirectSelectionCheckBox: "Rij ${0}, meerdere selecties, selectievakje",
 	selectAll: "Alles selecteren"
 })
+//end v1.x content
+);
 

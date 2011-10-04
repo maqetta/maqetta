@@ -1,8 +1,5 @@
-dojo.provide("dojox.highlight.languages.delphi");
+define(["dojox/main", "../_base"], function(dojox){
 
-dojo.require("dojox.highlight._base");
-
-(function(){
 	var DELPHI_KEYWORDS = {
 		'and': 1, 'safecall': 1, 'cdecl': 1, 'then': 1, 'string': 1,
 		'exports': 1, 'library': 1, 'not': 1, 'pascal': 1, 'set': 1,
@@ -42,6 +39,7 @@ dojo.require("dojox.highlight._base");
 
 	var dh = dojox.highlight, dhc = dh.constants;
 	dh.languages.delphi = {
+		// summary: Delphi highlight definitions
 		defaultMode: {
 			lexems: [dhc.IDENT_RE],
 			illegal: '("|\\$[G-Zg-z]|\\/\\*|</)',
@@ -115,4 +113,6 @@ dojo.require("dojox.highlight._base");
 			}
 		]
 	};
-})();
+
+	return dh.languages.delphi
+});

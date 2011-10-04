@@ -1,14 +1,12 @@
-dojo.provide("dojox.fx.ext-dojo.NodeList");
-dojo.experimental("dojox.fx.ext-dojo.NodeList");
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojox/fx","dojo/NodeList-fx"],
+	function(kernel, lang, CoreFx, NodeList){
+kernel.experimental("dojox.fx.ext-dojo.NodeList");
 // summary: Core extensions to dojo.NodeList providing addtional fx to dojo.NodeList-fx
 // description:
 //	A Package to extend dojo base NodeList with fx provided by the dojox.fx project.
 //	These are experimental animations, in an experimental
 
-dojo.require("dojo.NodeList-fx");
-dojo.require("dojox.fx");
-
-dojo.extend(dojo.NodeList, {
+lang.extend(NodeList, {
 
 	sizeTo: function(args){
 		//	summary:
@@ -19,7 +17,7 @@ dojo.extend(dojo.NodeList, {
 		//	|		width:50,
 		//	|		height:50
 		//	|	}).play();
-		return this._anim(dojox.fx, "sizeTo", args); // dojo.Animation
+		return this._anim(CoreFx, "sizeTo", args); // dojo.Animation
 	},
 
 	slideBy: function(args){
@@ -29,7 +27,7 @@ dojo.extend(dojo.NodeList, {
 		//	example:
 		//	|	// slide all tables with class "blah" 10 px
 		//	|	dojo.query("table.blah").slideBy({ top:10, left:10 }).play();
-		return this._anim(dojox.fx, "slideBy", args); // dojo.Animation
+		return this._anim(CoreFx, "slideBy", args); // dojo.Animation
 	},
 
 	highlight: function(args){
@@ -39,7 +37,7 @@ dojo.extend(dojo.NodeList, {
 		//	example:
 		//	|	// highlight all links with class "foo"
 		//	|	dojo.query("a.foo").hightlight().play();
-		return this._anim(dojox.fx, "highlight", args); // dojo.Animation
+		return this._anim(CoreFx, "highlight", args); // dojo.Animation
 	},
 
 	fadeTo: function(args){
@@ -48,7 +46,7 @@ dojo.extend(dojo.NodeList, {
 		//	example:
 		//	|	// fade all elements with class "bar" to to 50% opacity
 		//	|	dojo.query(".bar").fadeTo({ end: 0.5 }).play();
-		return this._anim(dojo,"_fade",args);
+		return this._anim(CoreFx,"_fade",args);
 	},
 	
 	wipeTo: function(args){
@@ -56,7 +54,9 @@ dojo.extend(dojo.NodeList, {
 		//		Wipe all elements of the NodeList to a specified width: or height:
 		// example:
 		//	| dojo.query(".box").wipeTo({ width: 300px }).play();
-		return this._anim(dojox.fx, "wipeTo", args);
+		return this._anim(CoreFx, "wipeTo", args);
 	}
 
+});
+return NodeList;
 });

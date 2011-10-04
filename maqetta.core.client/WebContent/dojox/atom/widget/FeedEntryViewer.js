@@ -1,16 +1,26 @@
-dojo.provide("dojox.atom.widget.FeedEntryViewer");
-
-dojo.require("dojo.fx");
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-dojo.require("dijit._Container");
-dojo.require("dijit.layout.ContentPane");
-dojo.require("dojox.atom.io.Connection");
-dojo.requireLocalization("dojox.atom.widget", "FeedEntryViewer");
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/connect",
+	"dojo/_base/declare",
+	"dojo/_base/fx",
+	"dojo/_base/array",
+	"dojo/dom-style",
+	"dojo/dom-construct",
+	"dijit/_Widget",
+	"dijit/_Templated",
+	"dijit/_Container",
+	"dijit/layout/ContentPane",
+	"../io/Connection",
+	"dojo/text!./templates/FeedEntryViewer.html",
+	"dojo/text!./templates/EntryHeader.html",
+	"dojo/i18n!./nls/FeedEntryViewer"
+], function (dojo, connect, declare, fx, arrayUtil, domStyle, domConstruct, _Widget, _Templated, _Container, ContentPane, Connection, template, headerTemplate, i18nViewer) {
 
 dojo.experimental("dojox.atom.widget.FeedEntryViewer");
 
-dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Templated, dijit._Container],{
+var widget = dojo.getObject("dojox.atom.widget", true);
+
+widget.FeedEntryViewer = dojo.declare(/*===== "dojox.atom.widget.FeedEntryViewer", =====*/ [_Widget, _Templated, _Container],{
 	//	summary:
 	//		An ATOM feed entry editor for publishing updated ATOM entries, or viewing non-editable entries.
 	//	description:
@@ -28,7 +38,7 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 	_optionButtonDisplayed: true,
 
 	//Templates for the HTML rendering.  Need to figure these out better, admittedly.
-	templateString: dojo.cache("dojox.atom", "widget/templates/FeedEntryViewer.html"),
+	templateString: template,
 	
 	_entry: null, //The entry that is being viewed/edited.
 	_feed: null, //The feed the entry came from.
@@ -39,7 +49,7 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 		if(this.entrySelectionTopic !== ""){
 			this._subscriptions = [dojo.subscribe(this.entrySelectionTopic, this, "_handleEvent")];
 		}
-		var _nlsResources = dojo.i18n.getLocalization("dojox.atom.widget", "FeedEntryViewer");
+		var _nlsResources = i18nViewer;
 		this.displayOptions.innerHTML = _nlsResources.displayOptions;
 		this.feedEntryCheckBoxLabelTitle.innerHTML = _nlsResources.title;
 		this.feedEntryCheckBoxLabelAuthors.innerHTML = _nlsResources.authors;
@@ -60,11 +70,11 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 		this._setDisplaySectionsCheckboxes();
 
 		if(this.enableMenu){
-			dojo.style(this.feedEntryViewerMenu, 'display', '');
+			domStyle.set(this.feedEntryViewerMenu, 'display', '');
 			if(this.entryCheckBoxRow && this.entryCheckBoxRow2){
 				if(this.enableMenuFade){
-					dojo.fadeOut({node: this.entryCheckBoxRow,duration: 250}).play();
-					dojo.fadeOut({node: this.entryCheckBoxRow2,duration: 250}).play();
+					fx.fadeOut({node: this.entryCheckBoxRow,duration: 250}).play();
+					fx.fadeOut({node: this.entryCheckBoxRow2,duration: 250}).play();
 				}
 			}
 		}
@@ -87,20 +97,20 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 		//	description:
 		//		Function to clear all the display nodes for the ATOM entry from the viewer.
 
-		dojo.forEach([
+		arrayUtil.forEach([
 			"entryTitleRow", "entryAuthorRow", "entryContributorRow", "entrySummaryRow", "entryContentRow",
 			"entryIdRow", "entryUpdatedRow"
 			], function(node){
-				dojo.style(this[node], "display", "none");
+				domStyle.set(this[node], "display", "none");
 			}, this);
 
-		dojo.forEach([
+		arrayUtil.forEach([
 			"entryTitleNode", "entryTitleHeader", "entryAuthorHeader", "entryContributorHeader",
 			"entryContributorNode", "entrySummaryHeader", "entrySummaryNode", "entryContentHeader",
 			"entryContentNode", "entryIdNode", "entryIdHeader", "entryUpdatedHeader", "entryUpdatedNode"
 			], function(part){
 				while(this[part].firstChild){
-					dojo.destroy(this[part].firstChild);
+					domConstruct.destroy(this[part].firstChild);
 				}
 			}
 		,this);
@@ -196,8 +206,8 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 		//		The Feed Entry to work with.
 		//
 		if(entry.title && entry.title.value && entry.title.value !== null){
-			var _nlsResources = dojo.i18n.getLocalization("dojox.atom.widget", "FeedEntryViewer");
-			var titleHeader = new dojox.atom.widget.EntryHeader({title: _nlsResources.title});
+			var _nlsResources = i18nViewer;
+			var titleHeader = new widget.EntryHeader({title: _nlsResources.title});
 			titleHeaderNode.appendChild(titleHeader.domNode);
 		}
 	},
@@ -221,7 +231,7 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 				titleAnchorNode.appendChild(titleNode);
 			}else{
 				var titleViewNode = document.createElement("span");
-				var titleView = new dijit.layout.ContentPane({refreshOnShow: true, executeScripts: false}, titleViewNode);
+				var titleView = new ContentPane({refreshOnShow: true, executeScripts: false}, titleViewNode);
 				titleView.attr('content', entry.title.value);
 				titleAnchorNode.appendChild(titleView.domNode);
 			}
@@ -241,8 +251,8 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 		//	entry:
 		//		The Feed Entry to work with.
 		if(entry.authors && entry.authors.length > 0){
-			var _nlsResources = dojo.i18n.getLocalization("dojox.atom.widget", "FeedEntryViewer");
-			var authorHeader = new dojox.atom.widget.EntryHeader({title: _nlsResources.authors});
+			var _nlsResources = i18nViewer;
+			var authorHeader = new widget.EntryHeader({title: _nlsResources.authors});
 			authorHeaderNode.appendChild(authorHeader.domNode);
 		}
 	},
@@ -297,8 +307,8 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 		//	entry:
 		//		The Feed Entry to work with.
 		if(entry.contributors && entry.contributors.length > 0){
-			var _nlsResources = dojo.i18n.getLocalization("dojox.atom.widget", "FeedEntryViewer");
-			var contributorHeader = new dojox.atom.widget.EntryHeader({title: _nlsResources.contributors});
+			var _nlsResources = i18nViewer;
+			var contributorHeader = new widget.EntryHeader({title: _nlsResources.contributors});
 			contributorsHeaderNode.appendChild(contributorHeader.domNode);
 		}
 	},
@@ -341,8 +351,8 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 		//	entry:
 		//		The Feed Entry to work with.
 		if(entry.id && entry.id !== null){
-			var _nlsResources = dojo.i18n.getLocalization("dojox.atom.widget", "FeedEntryViewer");
-			var idHeader = new dojox.atom.widget.EntryHeader({title: _nlsResources.id});
+			var _nlsResources = i18nViewer;
+			var idHeader = new widget.EntryHeader({title: _nlsResources.id});
 			idHeaderNode.appendChild(idHeader.domNode);
 		}
 	},
@@ -380,8 +390,8 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 		//	entry:
 		//		The Feed Entry to work with.
 		if(entry.updated && entry.updated !== null){
-			var _nlsResources = dojo.i18n.getLocalization("dojox.atom.widget", "FeedEntryViewer");
-			var updatedHeader = new dojox.atom.widget.EntryHeader({title: _nlsResources.updated});
+			var _nlsResources = i18nViewer;
+			var updatedHeader = new widget.EntryHeader({title: _nlsResources.updated});
 			updatedHeaderNode.appendChild(updatedHeader.domNode);
 		}
 	},
@@ -418,8 +428,8 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 		//	entry:
 		//		The Feed Entry to work with.
 		if(entry.summary && entry.summary.value && entry.summary.value !== null){
-			var _nlsResources = dojo.i18n.getLocalization("dojox.atom.widget", "FeedEntryViewer");
-			var summaryHeader = new dojox.atom.widget.EntryHeader({title: _nlsResources.summary});
+			var _nlsResources = i18nViewer;
+			var summaryHeader = new widget.EntryHeader({title: _nlsResources.summary});
 			summaryHeaderNode.appendChild(summaryHeader.domNode);
 		}
 	},
@@ -440,7 +450,7 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 		//		The Feed Entry to work with.
 		if(entry.summary && entry.summary.value && entry.summary.value !== null){
 			var summaryViewNode = document.createElement("span");
-			var summaryView = new dijit.layout.ContentPane({refreshOnShow: true, executeScripts: false}, summaryViewNode);
+			var summaryView = new ContentPane({refreshOnShow: true, executeScripts: false}, summaryViewNode);
 			summaryView.attr('content', entry.summary.value);
 			summaryAnchorNode.appendChild(summaryView.domNode);
 			this.setFieldValidity("summary", true);
@@ -459,8 +469,8 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 		//	entry:
 		//		The Feed Entry to work with.
 		if(entry.content && entry.content.value && entry.content.value !== null){
-			var _nlsResources = dojo.i18n.getLocalization("dojox.atom.widget", "FeedEntryViewer");
-			var contentHeader = new dojox.atom.widget.EntryHeader({title: _nlsResources.content});
+			var _nlsResources = i18nViewer;
+			var contentHeader = new widget.EntryHeader({title: _nlsResources.content});
 			contentHeaderNode.appendChild(contentHeader.domNode);
 		}
 	},
@@ -480,7 +490,7 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 		//		The Feed Entry to work with.
 		if(entry.content && entry.content.value && entry.content.value !== null){
 			var contentViewNode = document.createElement("span");
-			var contentView = new dijit.layout.ContentPane({refreshOnShow: true, executeScripts: false},contentViewNode);
+			var contentView = new ContentPane({refreshOnShow: true, executeScripts: false},contentViewNode);
 			contentView.attr('content', entry.content.value);
 			contentAnchorNode.appendChild(contentView.domNode);
 			this.setFieldValidity("content", true);
@@ -496,36 +506,36 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 		//
 		//	returns:
 		//		Nothing.
-		dojo.style(this.entryTitleRow, 'display', 'none');
-		dojo.style(this.entryAuthorRow, 'display', 'none');
-		dojo.style(this.entryContributorRow, 'display', 'none');
-		dojo.style(this.entrySummaryRow, 'display', 'none');
-		dojo.style(this.entryContentRow, 'display', 'none');
-		dojo.style(this.entryIdRow, 'display', 'none');
-		dojo.style(this.entryUpdatedRow, 'display', 'none');
+		domStyle.set(this.entryTitleRow, 'display', 'none');
+		domStyle.set(this.entryAuthorRow, 'display', 'none');
+		domStyle.set(this.entryContributorRow, 'display', 'none');
+		domStyle.set(this.entrySummaryRow, 'display', 'none');
+		domStyle.set(this.entryContentRow, 'display', 'none');
+		domStyle.set(this.entryIdRow, 'display', 'none');
+		domStyle.set(this.entryUpdatedRow, 'display', 'none');
 
 		for(var i in this._displayEntrySections){
 			var section = this._displayEntrySections[i].toLowerCase();
 			if(section === "title" && this.isFieldValid("title")){
-				dojo.style(this.entryTitleRow, 'display', '');
+				domStyle.set(this.entryTitleRow, 'display', '');
 			}
 			if(section === "authors" && this.isFieldValid("authors")){
-				dojo.style(this.entryAuthorRow, 'display', '');
+				domStyle.set(this.entryAuthorRow, 'display', '');
 			}
 			if(section === "contributors" && this.isFieldValid("contributors")){
-				dojo.style(this.entryContributorRow, 'display', '');
+				domStyle.set(this.entryContributorRow, 'display', '');
 			}
 			if(section === "summary" && this.isFieldValid("summary")){
-				dojo.style(this.entrySummaryRow, 'display', '');
+				domStyle.set(this.entrySummaryRow, 'display', '');
 			}
 			if(section === "content" && this.isFieldValid("content")){
-				dojo.style(this.entryContentRow, 'display', '');
+				domStyle.set(this.entryContentRow, 'display', '');
 			}
 			if(section === "id" && this.isFieldValid("id")){
-				dojo.style(this.entryIdRow, 'display', '');
+				domStyle.set(this.entryIdRow, 'display', '');
 			}
 			if(section === "updated" && this.isFieldValid("updated")){
-				dojo.style(this.entryUpdatedRow, 'display', '');
+				domStyle.set(this.entryUpdatedRow, 'display', '');
 			}
 
 		}
@@ -560,8 +570,8 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 		//		Nothing.
 		var items = ["title","authors","contributors","summary","content","id","updated"];
 		for(var i in items){
-			if(dojo.indexOf(this._displayEntrySections, items[i]) == -1){
-				dojo.style(this["feedEntryCell"+items[i]], 'display', 'none');
+			if(arrayUtil.indexOf(this._displayEntrySections, items[i]) == -1){
+				domStyle.set(this["feedEntryCell"+items[i]], 'display', 'none');
 			}else{
 				this["feedEntryCheckBox"+items[i].substring(0,1).toUpperCase()+items[i].substring(1)].checked=true;
 			}
@@ -641,37 +651,37 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 			var anim2;
 			if(this._optionButtonDisplayed){
 				if(this.enableMenuFade){
-					anim = dojo.fadeOut({node: this.entryCheckBoxDisplayOptions,duration: 250});
-					dojo.connect(anim, "onEnd", this, function(){
-						dojo.style(this.entryCheckBoxDisplayOptions, 'display', 'none');
-						dojo.style(this.entryCheckBoxRow, 'display', '');
-						dojo.style(this.entryCheckBoxRow2, 'display', '');
-						dojo.fadeIn({node: this.entryCheckBoxRow, duration: 250}).play();
-						dojo.fadeIn({node: this.entryCheckBoxRow2, duration: 250}).play();
+					anim = fx.fadeOut({node: this.entryCheckBoxDisplayOptions,duration: 250});
+					connect.connect(anim, "onEnd", this, function(){
+						domStyle.set(this.entryCheckBoxDisplayOptions, 'display', 'none');
+						domStyle.set(this.entryCheckBoxRow, 'display', '');
+						domStyle.set(this.entryCheckBoxRow2, 'display', '');
+						fx.fadeIn({node: this.entryCheckBoxRow, duration: 250}).play();
+						fx.fadeIn({node: this.entryCheckBoxRow2, duration: 250}).play();
 					});
 					anim.play();
 				}else{
-					dojo.style(this.entryCheckBoxDisplayOptions, 'display', 'none');
-					dojo.style(this.entryCheckBoxRow, 'display', '');
-					dojo.style(this.entryCheckBoxRow2, 'display', '');
+					domStyle.set(this.entryCheckBoxDisplayOptions, 'display', 'none');
+					domStyle.set(this.entryCheckBoxRow, 'display', '');
+					domStyle.set(this.entryCheckBoxRow2, 'display', '');
 				}
 				this._optionButtonDisplayed=false;
 			}else{
 				if(this.enableMenuFade){
-					anim = dojo.fadeOut({node: this.entryCheckBoxRow,duration: 250});
-					anim2 = dojo.fadeOut({node: this.entryCheckBoxRow2,duration: 250});
-					dojo.connect(anim, "onEnd", this, function(){
-						dojo.style(this.entryCheckBoxRow, 'display', 'none');
-						dojo.style(this.entryCheckBoxRow2, 'display', 'none');
-						dojo.style(this.entryCheckBoxDisplayOptions, 'display', '');
-						dojo.fadeIn({node: this.entryCheckBoxDisplayOptions, duration: 250}).play();
+					anim = fx.fadeOut({node: this.entryCheckBoxRow,duration: 250});
+					anim2 = fx.fadeOut({node: this.entryCheckBoxRow2,duration: 250});
+					connect.connect(anim, "onEnd", this, function(){
+						domStyle.set(this.entryCheckBoxRow, 'display', 'none');
+						domStyle.set(this.entryCheckBoxRow2, 'display', 'none');
+						domStyle.set(this.entryCheckBoxDisplayOptions, 'display', '');
+						fx.fadeIn({node: this.entryCheckBoxDisplayOptions, duration: 250}).play();
 					});
 					anim.play();
 					anim2.play();
 				}else{
-					dojo.style(this.entryCheckBoxRow, 'display', 'none');
-					dojo.style(this.entryCheckBoxRow2, 'display', 'none');
-					dojo.style(this.entryCheckBoxDisplayOptions, 'display', '');
+					domStyle.set(this.entryCheckBoxRow, 'display', 'none');
+					domStyle.set(this.entryCheckBoxRow2, 'display', 'none');
+					domStyle.set(this.entryCheckBoxDisplayOptions, 'display', '');
 				}
 				this._optionButtonDisplayed=true;
 			}
@@ -743,17 +753,17 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 
 	destroy: function(){
 		this.clear();
-		dojo.forEach(this._subscriptions, dojo.unsubscribe);
+		arrayUtil.forEach(this._subscriptions, dojo.unsubscribe);
 	}
 });
 
-dojo.declare("dojox.atom.widget.EntryHeader",[dijit._Widget, dijit._Templated, dijit._Container],{
+widget.EntryHeader = dojo.declare(/*===== "dojox.atom.widget.EntryHeader", =====*/ [_Widget, _Templated, _Container],{
 	//	summary:
 	//		Widget representing a header in a FeedEntryViewer/Editor
 	//	description:
 	//		Widget representing a header in a FeedEntryViewer/Editor
 	title: "",
-	templateString: dojo.cache("dojox.atom", "widget/templates/EntryHeader.html"),
+	templateString: headerTemplate,
 
 	postCreate: function(){
 		this.setListHeader();
@@ -780,4 +790,7 @@ dojo.declare("dojox.atom.widget.EntryHeader",[dijit._Widget, dijit._Templated, d
 	destroy: function(){
 		this.clear();
 	}
+});
+
+return widget.FeedEntryViewer;
 });

@@ -104,21 +104,21 @@
 					title:'Panel 1', 
 					dndType:'TitlePane'
 				});
-				tp1.attr('content', 'lorem ipsum');
+				tp1.set('content', 'lorem ipsum');
 				gc1.addChild(tp1);
 
 				tp2 = new dijit.TitlePane({
 					title:'Panel 2', 
 					dndType:'TitlePane'
 				});
-				tp2.attr('content', 'lorem ipsum');
+				tp2.set('content', 'lorem ipsum');
 				gc1.addChild(tp2);
 
 				tp3 = new dijit.TitlePane({
 					title:'Panel 3', 
 					dndType:'TitlePane'
 				});
-				tp3.attr('content', 'lorem ipsum');
+				tp3.set('content', 'lorem ipsum');
 				gc1.addChild(tp3,0,2);
 				
 				// Create the central GridContainer
@@ -136,14 +136,14 @@
 					label:'Content Pane', 
 					dndType:'ContentPane'
 				});
-				cp1.attr('content', 'ContentPane n*1 !');
+				cp1.set('content', 'ContentPane n*1 !');
 				gc2.addChild(cp1);
 
 				tp4 = new dijit.TitlePane({
 					title:'Ergo', 
 					dndType:'TitlePane'
 				});
-				tp4.attr('content', 'Non ergo erunt homines deliciis diffluentes audiendi, si quando de amicitia, quam nec usu nec ratione habent cognitam, disputabunt. Nam quis est, pro deorum fidem atque hominum! qui velit, ut neque diligat quemquam nec ipse ab ullo diligatur, circumfluere omnibus copiis atque in omnium rerum abundantia vivere? Haec enim est tyrannorum vita nimirum, in qua nulla fides, nulla caritas, nulla stabilis benevolentiae potest esse fiducia, omnia semper suspecta atque sollicita, nullus locus amicitiae.');
+				tp4.set('content', 'Non ergo erunt homines deliciis diffluentes audiendi, si quando de amicitia, quam nec usu nec ratione habent cognitam, disputabunt. Nam quis est, pro deorum fidem atque hominum! qui velit, ut neque diligat quemquam nec ipse ab ullo diligatur, circumfluere omnibus copiis atque in omnium rerum abundantia vivere? Haec enim est tyrannorum vita nimirum, in qua nulla fides, nulla caritas, nulla stabilis benevolentiae potest esse fiducia, omnia semper suspecta atque sollicita, nullus locus amicitiae.');
 				gc2.addChild(tp4,0,1);
 
 				cp2 = new dijit.layout.ContentPane({
@@ -151,14 +151,14 @@
 					label:"Content Pane", 
 					dndType:'ContentPane'
 				});
-				cp2.attr('content', 'Content Pane n*2 !');
+				cp2.set('content', 'Content Pane n*2 !');
 				gc2.addChild(cp2,1,0);
 
 				cp3 = new dijit.layout.ContentPane({
 					title:"Itellectum", 
 					dndType:'ContentPane'
 				});
-				cp3.attr('content', 'Intellectum est enim mihi quidem in multis, et maxime in me ipso, sed paulo ante in omnibus, cum M. Marcellum senatui reique publicae concessisti, commemoratis praesertim offensionibus, te auctoritatem huius ordinis dignitatemque rei publicae tuis vel doloribus vel suspicionibus anteferre. Ille quidem fructum omnis ante actae vitae hodierno die maximum cepit, cum summo consensu senatus, tum iudicio tuo gravissimo et maximo. Ex quo profecto intellegis quanta in dato beneficio sit laus, cum in accepto sit tanta gloria.');
+				cp3.set('content', 'Intellectum est enim mihi quidem in multis, et maxime in me ipso, sed paulo ante in omnibus, cum M. Marcellum senatui reique publicae concessisti, commemoratis praesertim offensionibus, te auctoritatem huius ordinis dignitatemque rei publicae tuis vel doloribus vel suspicionibus anteferre. Ille quidem fructum omnis ante actae vitae hodierno die maximum cepit, cum summo consensu senatus, tum iudicio tuo gravissimo et maximo. Ex quo profecto intellegis quanta in dato beneficio sit laus, cum in accepto sit tanta gloria.');
 				gc2.addChild(cp3,1,1);
 
 				cp4 = new dijit.layout.ContentPane({
@@ -166,7 +166,7 @@
 					label:'Content Pane', 
 					dndType:'ContentPane'
 				});
-				cp4.attr('content', 'Content Pane n*3 !');
+				cp4.set('content', 'Content Pane n*3 !');
 				gc2.addChild(cp4,1,2);
 
 				cp5 = new dijit.layout.ContentPane({
@@ -174,7 +174,7 @@
 					label:'Content Pane', 
 					dndType:'ContentPane'
 				});
-				cp5.attr('content', 'Content Pane n*4 !');
+				cp5.set('content', 'Content Pane n*4 !');
 				gc2.addChild(cp5,2,0);
 
 				dp = new dijit.Calendar({dndType:'Calendar'});
@@ -195,21 +195,21 @@
 					title:'Panel 1', 
 					dndType:'TitlePane'
 				});
-				tp4.attr('content', 'lorem ipsum');
+				tp4.set('content', 'lorem ipsum');
 				gc3.addChild(tp4,0,0);
 
 				tp5 = new dijit.TitlePane({
 					title:'Panel 2', 
 					dndType:'TitlePane'
 				});
-				tp5.attr('content', 'lorem ipsum');
+				tp5.set('content', 'lorem ipsum');
 				gc3.addChild(tp5,0,1);
 
 				tp6 = new dijit.TitlePane({
 					title:'Panel 3', 
 					dndType:'TitlePane'
 				});
-				tp6.attr('content', 'lorem ipsum');
+				tp6.set('content', 'lorem ipsum');
 				gc3.addChild(tp6,0,2);
 
 				gc1.startup();

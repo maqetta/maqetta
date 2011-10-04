@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"descTemplate": "${1} ${0} элементтің ${2} - ${3} элементі",
 	"firstTip": "Бірінші бет",
@@ -13,6 +15,9 @@
 	"dialogIndication": "Бет нөмірін көрсету",
 	"pageCountIndication": " (${0} бет)",
 	"dialogConfirm": "Өту",
-	"dialogCancel": "Болдырмау"
+	"dialogCancel": "Болдырмау",
+	"all": "барлығы"
 })
+//end v1.x content
+);
 

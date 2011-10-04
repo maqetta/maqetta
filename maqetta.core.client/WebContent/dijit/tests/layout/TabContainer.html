@@ -29,7 +29,7 @@
 		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
 
 		// create a do nothing, only for test widget
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 
 			doh.register("parse", function(){
 				dojo.parser.parse();
@@ -38,23 +38,68 @@
 			doh.register("creationAndDestruction", [
 
 				// Test that destroyRecursive removes all supporting widgets, including the list-of-tabs menu
-				// and the close menu
+				// and the close menu.  Also test that the second tab doesn't get selected
+				// for a split second as the TabContainer is being destroyed.
 				{
 					name: 'destroyRecursive',
 					runTest: function(t){
 						var num = dijit.registry.length;
 	
-						var tc = new dijit.layout.TabContainer({ id:"creationAndDestruction", useMenu:true }).placeAt(dojo.body());
-						tc.addChild(new dijit.layout.ContentPane({title: "test pane 1", closable: true}));
-						tc.addChild(new dijit.layout.ContentPane({title: "test pane 2"}));
+						var cp1 = new dijit.layout.ContentPane({title: "test pane 1", closable: true})
+							cp2 = new dijit.layout.ContentPane({title: "test pane 2", href: "doc0.html"})
+							tc = new dijit.layout.TabContainer({
+								id:"creationAndDestruction",
+								useMenu:true
+							}).placeAt(dojo.body());
+
+						var cp2selected = false;
+						cp2.watch("selected", function(){
+							cp2selected = true;
+						});
+
+						tc.addChild(cp1);
+						tc.addChild(cp2);
 						tc.startup();
-	
+
 						tc.destroyRecursive();
 	
-						t.is(dijit.registry.length, num);
+						t.is(dijit.registry.length, num, "registry length");
+						t.f(cp2selected, "second pane wasn't temporarily selected");
 					}
 				},
 				
+				// Test that on destroyDescendants(), the second tab doesn't get selected
+				// for a split second as the TabContainer is being destroyed.
+				{
+					name: 'destroyRecursive',
+					runTest: function(t){
+						var cp1 = new dijit.layout.ContentPane({title: "test pane 1", closable: true})
+							cp2 = new dijit.layout.ContentPane({title: "test pane 2", href: "doc0.html"})
+							tc = new dijit.layout.TabContainer({
+								id:"destroyDescendants",
+								useMenu:true
+							}).placeAt(dojo.body());
+
+						var cp2selected = false;
+						cp2.watch("selected", function(){
+							cp2selected = true;
+						});
+						var downloadStarted = false;
+						dojo.connect(cp2, "onDownloadStart", function(){
+							downloadStarted = true;
+						});
+
+						tc.addChild(cp1);
+						tc.addChild(cp2);
+						tc.startup();
+
+						tc.destroyDescendants();
+
+						t.f(cp2selected, "second pane wasn't temporarily selected");
+						t.f(downloadStarted, "second pane never started downloading");
+					}
+				},
+
 				// Check that tab labels for initial tabs are created
 				{
 					name: 'checkTabLabels',
@@ -203,8 +248,15 @@
 						var tc1 = dijit.byId("tc1");
 						var cp = dijit.byId("cpTitle");
 						
-						tc1.removeChild(cp);
+
+						// track resizes to cp, removing it from tc1 shouldn't cause a resize call
+						var cpResizes = 0;
+						dojo.connect(cp, "resize", function(){
+							cpResizes++;
+						});
 						
+						tc1.removeChild(cp);
+
 						var childPanes = tc1.getChildren();
 						
 						t.is(5, childPanes.length, "verify there are now only 4 tabs instead of 5");
@@ -212,6 +264,8 @@
 
 						var label = dojo.byId("#tc1_tablist_cpTitle");
 						t.f(label, "verify that deleted tab's label does not exist");
+
+						t.is(0, cpResizes, "no resize");
 					}
 				},
 				
@@ -463,6 +517,34 @@
 				}
 			]);			
 
+			doh.register("tab label scrolling", [
+				function initialScroll(){
+					// Make sure that tab labels are scrolled so that selected tab visible
+					var tc = dijit.byId("scroll"),
+						tcPos = dojo.position("scroll");
+						labelPos = dojo.position("scroll_tablist_nine");
+					doh.t(tcPos.x < labelPos.x, "tcPos.x (" + tcPos.x + ") < labelPos.x (" + labelPos.x + ")");
+					doh.t(tcPos.x + tcPos.w > labelPos.x + labelPos.w,
+							"tcPos.x (" + tcPos.x + ") + tcPos.w (" + tcPos.w +
+							") < labelPos.x " + labelPos.x + " + labelPos.w + (" + labelPos.w + ")");
+				},
+				function selectATab(){
+					// Make sure that tab labels are scrolled so that selected tab visible
+					var d = new doh.Deferred();
+					var tc = dijit.byId("scroll");
+					tc.selectChild(dijit.byId("one"));
+					setTimeout(d.getTestCallback(function(){
+						var tcPos = dojo.position("scroll");
+							labelPos = dojo.position("scroll_tablist_one");
+						doh.t(tcPos.x < labelPos.x, "tcPos.x (" + tcPos.x + ") < labelPos.x (" + labelPos.x + ")");
+						doh.t(tcPos.x + tcPos.w > labelPos.x + labelPos.w,
+								"tcPos.x (" + tcPos.x + ") + tcPos.w (" + tcPos.w +
+								") < labelPos.x " + labelPos.x + " + labelPos.w + (" + labelPos.w + ")");
+					}), 500);
+
+					return d;
+				}
+			]);
 			doh.run();
 
 		});
@@ -596,6 +678,18 @@
 		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"My last tab"'>
 			Lorem ipsum and all around - last...
 		</div>
+	</div>
+
+	<div id="scroll" dojoType="dijit.layout.TabContainer" jsid="scroll" style="width: 300px; height:200px;">
+		<div dojoType="dijit.layout.ContentPane" title="One" jsid="one" id="one">One</div>
+		<div dojoType="dijit.layout.ContentPane" title="Two" jsid="two" id="two">Two</div>
+		<div dojoType="dijit.layout.ContentPane" title="Three" jsid="three" id="three">Three</div>
+		<div dojoType="dijit.layout.ContentPane" title="Four" jsid="four" id="four">Four</div>
+		<div dojoType="dijit.layout.ContentPane" title="Five" jsid="five" id="five">Five</div>
+		<div dojoType="dijit.layout.ContentPane" title="Six" jsid="six" id="six">Six</div>
+		<div dojoType="dijit.layout.ContentPane" title="Seven" jsid="seven" id="seven">Seven</div>
+		<div dojoType="dijit.layout.ContentPane" title="Eight" jsid="eight" id="eight">Eight</div>
+		<div dojoType="dijit.layout.ContentPane" selected="true" title="Nine" jsid="nine" id="nine">Nine</div>
 	</div>
 
 </body>

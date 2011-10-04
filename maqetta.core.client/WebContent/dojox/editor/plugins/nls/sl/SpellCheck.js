@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	widgetLabel: "Paketno preverjanje črkovanja ",
 	unfound: "Ni najdeno ",
@@ -15,3 +17,5 @@
 	iMsg: "Ni predlogov za črkovanje "
 })
 
+//end v1.x content
+);

@@ -1,8 +1,8 @@
-dojo.provide("dojox.json.ref");
-dojo.require("dojo.date.stamp");
+define(["dojo/_base/kernel", "dojox", "dojo/date/stamp", "dojo/_base/array", "dojo/_base/json"], function(dojo, dojox){
 
+dojo.getObject("json", true, dojox);
 
-dojox.json.ref = {
+return dojox.json.ref = {
 	// summary:
 	// 		Adds advanced JSON {de}serialization capabilities to the base json library.
 	// 		This enhances the capabilities of dojo.toJson and dojo.fromJson,
@@ -355,4 +355,5 @@ dojox.json.ref = {
 	refAttribute: "$ref",
 	_useRefs: false,
 	serializeFunctions: false
-}
+};
+});

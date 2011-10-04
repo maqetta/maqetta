@@ -1,3 +1,3 @@
-dojo.provide("dojox.analytics");
-dojo.require("dojox.analytics._base");
-
+define(["./analytics/_base"], function(analytics) {
+	return analytics;
+});

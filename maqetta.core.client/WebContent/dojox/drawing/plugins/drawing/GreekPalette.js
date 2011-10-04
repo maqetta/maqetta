@@ -1,19 +1,25 @@
 dojo.provide("dojox.drawing.plugins.drawing.GreekPalette");
 
 dojo.require("dojox.drawing.library.greek");
+dojo.require("dijit.focus");
 dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
+dojo.require("dijit._TemplatedMixin");
 dojo.require("dijit._PaletteMixin");
 dojo.require("dojo.i18n");
 
 dojo.requireLocalization("dojox.editor.plugins", "latinEntities");
 
 dojo.declare("dojox.drawing.plugins.drawing.GreekPalette",
-	[dijit._Widget, dijit._Templated, dijit._PaletteMixin],
+	[dijit._Widget, dijit._TemplatedMixin, dijit._PaletteMixin],
 	{
 	// summary:
-	//		This plugin uses the palette dijit in order to give
-	//		tips for non-english (mostly greek for now) letters.
+	//		This plugin uses the palette dijit in order to give tips for
+	//		non-english (mostly greek for now) letters.
+	//
+	//		IMPORTANT!  Because it is a full blown dijit it is NOT loaded
+	//		like the other plugins.  INSTEAD currently it is instantiated
+	//		in markup.  TextBlock LOOKS FOR IT by ID - "greekPalette"
+	//		and if it finds it does the necessary initialization/connections.
 	// description:
 	//		Grid showing all available entity options which the
 	//		user can pick from.  The library loaded for use by the picker
@@ -22,13 +28,14 @@ dojo.declare("dojox.drawing.plugins.drawing.GreekPalette",
 	//
 	//		This works as a popup and as such its onChange and onCancel
 	//		close it.  TextBlock manages it, since it's what uses the assist
-	//		so opening it happens there.  In order to activate the plugin
-	//		add it to the dojox.drawing.Drawing node as shown below:
+	//		so it calls show (all actual popup management happens here).
+	//		In order to activate the plugin require it and then include the
+	//		markup in the example:
 	//
 	// example:
-	// |	<div dojoType="dojox.drawing.Drawing" id="drawing" jsId="myDrawing" class="drawing"
-	//			     plugins="[{'name':'dojox.drawing.plugins.drawing.GreekPalette'}]" >
-
+	// |	<!--Because this is a widget it is included in markup and NOT like the other plugins-->
+	// |	<div dojoType="dojox.drawing.plugins.drawing.GreekPalette" id="greekPalette"></div>
+	
 	postMixInProperties: function(){
 		// Convert hash of entities into two-dimensional rows/columns table (array of arrays)
 		var choices = dojox.drawing.library.greek;
@@ -54,9 +61,14 @@ dojo.declare("dojox.drawing.plugins.drawing.GreekPalette",
 		this._palette = rows;
 	},
 	
+	show: function(obj){
+		dojo.mixin(obj, {popup: this});
+		dijit.popup.open(obj);
+	},
+	
 	onChange: function(val){
 		var textBlock = this._textBlock;
-		dijit.popup.close(this);
+		dijit.popup.hide(this);
 		textBlock.insertText(this._pushChangeTo,val);
 		textBlock._dropMode = false;
 	},
@@ -64,11 +76,9 @@ dojo.declare("dojox.drawing.plugins.drawing.GreekPalette",
 	onCancel: function(/*Boolean*/ closeAll){
 		// summary:
 		//		attach point for notification about when the user cancels the current menu
-		dijit.popup.close(this);
+		dijit.popup.hide(this);
 		this._textBlock._dropMode = false;
 	},
-	
-	id: "dropdown",
 
 	// templateString: String
 	//		The template of this widget.  Using dojoxEntityPalette classes
@@ -127,7 +137,7 @@ dojo.declare("dojox.drawing.plugins.drawing.GreekPalette",
 			this.connect(cellNode, "onmouseenter", "_onCellMouseEnter");
 		}, this);
 	},
-        
+	
         _onCellMouseEnter: function(e){
 		// summary:
 		//		Simple function to handle updating the display at the bottom of
@@ -175,6 +185,7 @@ dojo.declare("dojox.drawing.plugins.drawing.GreekPalette",
 		if(!this.showPreview){
 			dojo.style(this.previewNode,"display","none");
 		}
+		dijit.popup.moveOffScreen(this);
 	},
 
 	_setCurrent: function(/*DOMNode*/ node){
@@ -296,30 +307,30 @@ dojo.declare("dojox.drawing.plugins.drawing.GreekPalette",
 
 dojo.declare("dojox.drawing.plugins.Greeks",
         null,
-	{
+{
+	// summary:
+	//		Represents a character.
+	//		Initialized using an alias for the character (like cent) rather
+	//		than with the character itself.
+
+	constructor: function(/*String*/ alias){
 		// summary:
-		//		Represents a character.
-		//		Initialized using an alias for the character (like cent) rather
-		//		than with the character itself.
+		//	 Construct JS object representing an entity (associated w/a cell
+		//		in the palette)
+		// value: String
+		//		alias name: 'cent', 'pound' ..
+		this._alias = alias;
+	},
 
- 		constructor: function(/*String*/ alias){
-			// summary:
-			//	 Construct JS object representing an entity (associated w/a cell
-			//		in the palette)
-			// value: String
-			//		alias name: 'cent', 'pound' ..
-			this._alias = alias;
-		},
+	getValue: function(){
+		// summary:
+		//   Returns HTML representing the character, like &amp;
+		//
+		return this._alias;
+	},
 
-		getValue: function(){
-			// summary:
-			//   Returns HTML representing the character, like &amp;
-			//
-			return this._alias;
-		},
-
-		fillCell: function(/*DOMNode*/ cell){
-			// Deal with entities that have keys which are reserved words.
-			cell.innerHTML = "&"+this._alias+";";
-                }
+	fillCell: function(/*DOMNode*/ cell){
+		// Deal with entities that have keys which are reserved words.
+		cell.innerHTML = "&"+this._alias+";";
+	}
 });

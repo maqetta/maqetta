@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	displayOptions: "[אפשרויות הצגה]",
 	title: "כותרת",
@@ -9,4 +11,5 @@
 	summary: "סיכום",
 	content: "תוכן"
 })
-
+//end v1.x content
+);

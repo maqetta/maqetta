@@ -1,14 +1,10 @@
-dojo.provide("dojox.charting.themes.Claro");
-dojo.require("dojox.gfx.gradutils");
-dojo.require("dojox.charting.Theme");
+define(["../Theme", "dojox/gfx/gradutils", "./common"], function(Theme, gradutils, themes){
+	// created by Tom Trenka
 
-// created by Tom Trenka
-
-(function(){
-	var dc = dojox.charting, themes = dc.themes, Theme = dc.Theme, g = Theme.generateGradient,
+	var g = Theme.generateGradient,
 		defaultFill = {type: "linear", space: "shape", x1: 0, y1: 0, x2: 0, y2: 100};
 	
-	themes.Claro = new dc.Theme({
+	themes.Claro = new Theme({
 		chart: {
 			fill:	   {
 				type: "linear",
@@ -101,8 +97,10 @@ dojo.require("dojox.charting.Theme");
 	themes.Claro.post = function(theme, elementType){
 		theme = Theme.prototype.post.apply(this, arguments);
 		if((elementType == "slice" || elementType == "circle") && theme.series.fill && theme.series.fill.type == "radial"){
-			theme.series.fill = dojox.gfx.gradutils.reverse(theme.series.fill);
+			theme.series.fill = gradutils.reverse(theme.series.fill);
 		}
 		return theme;
 	};
-})();
+	
+	return themes.Claro;
+});

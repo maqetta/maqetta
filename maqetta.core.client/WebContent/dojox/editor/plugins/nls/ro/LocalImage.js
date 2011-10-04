@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertImageTitle: "Inserare imagine",
 	url: "Imagine",
@@ -9,3 +11,5 @@
 	prePopuTextBrowse: "sau răsfoiţi la un fişier local."
 })
 
+//end v1.x content
+);

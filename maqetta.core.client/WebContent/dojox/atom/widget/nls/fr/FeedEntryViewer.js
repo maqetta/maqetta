@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	displayOptions: "[options d'affichage]",
 	title: "Titre",
@@ -9,3 +11,5 @@
 	summary: "Récapitulatif",
 	content: "Contenu"
 })
+//end v1.x content
+);

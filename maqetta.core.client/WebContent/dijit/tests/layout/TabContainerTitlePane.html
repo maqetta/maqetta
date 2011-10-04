@@ -27,7 +27,7 @@
 
 		var resized = {};
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			dojo.connect(dijit.layout.TabContainer.prototype, "resize", function(){
 				resized[this.id] = true;
 			});

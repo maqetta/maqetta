@@ -1,9 +1,6 @@
-dojo.provide("dojox.av.FLVideo");
-dojo.experimental("dojox.av.FLVideo");
-dojo.require("dijit._Widget");
-dojo.require("dojox.embed.Flash");
-dojo.require("dojox.av._Media");
+define(['dojo', 'dijit', 'dijit/_Widget', 'dojox/embed/Flash', 'dojox/av/_Media'],function(dojo, dijit){
 
+dojo.experimental("dojox.av.FLVideo");
 dojo.declare("dojox.av.FLVideo", [dijit._Widget, dojox.av._Media], {
 
 	// summary:
@@ -50,7 +47,7 @@ dojo.declare("dojox.av.FLVideo", [dijit._Widget, dojox.av._Media], {
 		this.initialVolume = this._normalizeVolume(this.initialVolume);
 
 		var args = {
-			path:this._swfPath.uri,
+			path:this._swfPath,
 			width:"100%",
 			height:"100%",
 			minimumVersion:9,
@@ -301,6 +298,7 @@ dojo.declare("dojox.av.FLVideo", [dijit._Widget, dojox.av._Media], {
 		//		Helper function to fire onPosition, check download progress,
 		//		and check buffer.
 		var time = Math.min(this.getTime() || 0, this.duration);
+
 		var dObj = this.flashMedia.getLoaded();
 		this.percentDownloaded = Math.ceil(dObj.bytesLoaded/dObj.bytesTotal*100);
 		this.onDownloaded(this.percentDownloaded);
@@ -318,4 +316,7 @@ dojo.declare("dojox.av.FLVideo", [dijit._Widget, dojox.av._Media], {
 		this.inherited(arguments);
 	}
 
+});
+
+return dojox.av.FLVideo;
 });

@@ -24,21 +24,13 @@
 		dojo.require("dojo.date");
 		dojo.require("dijit.dijit"); // optimize: load dijit layer
 		dojo.require("dijit.form.Form");
-		dojo.require("dijit.layout.LayoutContainer");
-		dojo.require("dijit.layout.ContentPane");
 		dojo.require("dijit.form.ComboBox");
-		dojo.require("dijit.form.CheckBox");
-		dojo.require("dijit.form.DateTextBox");
 		dojo.require("dijit.form.Button");
-		dojo.require("dijit.form.MultiSelect");
-		dojo.require("dijit.form.Textarea");
-		dojo.require("dijit.form.SimpleTextarea");
-		dojo.require("dijit.Editor");
 		dojo.require("dijit.form.TextBox");
 		
 		function submittedValues(values){
 			console.log('actual submitted values: ' + dojo.toJson(values));
-			dijit.byId("textbox").set('value',dojo.fromJson(dojo.toJson(values)).plopcombo);
+			dijit.byId("textbox").set('value', dojo.fromJson(dojo.toJson(values)).plopcombo, true);
 		}
 	</script>
 
@@ -100,7 +92,7 @@
 	</form>
 	
 	<h3>Submitted value:</h3>
-	<input id="textbox" data-dojo-type="dijit.form.TextBox" data-dojo-props='type:"text" '/>
+	<input id="textbox" data-dojo-type="dijit.form.TextBox" data-dojo-props='type:"text"'/>
 	
 	<iframe name="formSubmitIframe" src="about:blank" onload="if(this.values)submittedValues(this.values)" style="display:none;"></iframe>
 </body>

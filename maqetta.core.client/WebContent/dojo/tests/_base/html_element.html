@@ -10,13 +10,10 @@
 		<style type="text/css">
 			@import "../../resources/dojo.css";
 		</style>
-		<script type="text/javascript" 
-			src="../../dojo.js" 
-			djConfig="isDebug: true"></script>
+		<script type="text/javascript" src="../../dojo.js" data-dojo-config="isDebug:true"></script>
 		<script type="text/javascript">
-			dojo.require("doh.runner");
+			require(["dojo", "doh", "dojo/domReady!"], function(dojo, doh){
 			
-			dojo.addOnLoad(function(){
 				doh.register("t", 
 					[
 					
@@ -125,7 +122,7 @@
 								return dojo.query("body >").filter(function(n){
 									return !dojo.hasClass(n, "firebug");
 								})
-							}
+							};
 							c().forEach(dojo.destroy);
 
 							// check for deepest embeeded id
@@ -281,7 +278,7 @@
 						}
 					]
 				);
-				doh.run();
+				doh.runOnLoad();
 			});
 		</script>
 	</head>

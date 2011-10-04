@@ -11,6 +11,7 @@
 .dojoxGrid .dojoxGridSortNode {
 	position: relative;
 	border: 1px solid transparent;
+	cursor: pointer;
 }
 .dj_ie6 .dojoxGrid .dojoxGridSortNode,
 .dj_ie7 .dojoxGrid .dojoxGridSortNode {
@@ -19,7 +20,7 @@
 }
 .dojoxGrid .dojoxGridSortNoWrap {
 	white-space:nowrap;
-	cursor: pointer;
+	word-wrap: normal;
 }
 .dojoxGridSortBtn {
 	width: 10px;

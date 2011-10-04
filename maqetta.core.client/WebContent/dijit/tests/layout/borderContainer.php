@@ -3,7 +3,7 @@
 
 	// If you call this file like borderContainer.php?id=foo then the id's of the created widgets
 	// will be based on the string "foo"
-	$id = $_GET['id'];
+	$id = htmlspecialchars($_GET['id']);
 
 	// sized=true means that it will add a width/height to the BorderContainer
 ?>

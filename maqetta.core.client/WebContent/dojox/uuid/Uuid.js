@@ -1,5 +1,4 @@
-dojo.provide("dojox.uuid.Uuid");
-dojo.require("dojox.uuid");
+define(['dojo/_base/lang', './_base'], function(dojo, uuid){
 
 dojox.uuid.Uuid = function(/*String?*/ input){
 	// summary:
@@ -194,3 +193,7 @@ dojox.uuid.Uuid.prototype.getTimestamp = function(/*String?*/ returnType){
 			break;
 	}
 };
+
+return dojox.uuid.Uuid;
+
+});

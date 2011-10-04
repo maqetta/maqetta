@@ -1,4 +1,4 @@
-define("dojox/data/AppStore", ["dojo", "dojox", "dojo/data/util/simpleFetch", "dojo/data/util/filter", "dojox/atom/io/Connection"], function(dojo, dojox) {
+define(["dojo", "dojox", "dojo/data/util/simpleFetch", "dojo/data/util/filter", "dojox/atom/io/Connection"], function(dojo, dojox) {
 
 dojo.experimental("dojox.data.AppStore");
 
@@ -185,7 +185,7 @@ dojo.declare("dojox.data.AppStore",
 			}
 			if(item[attribute]){
 				item = item[attribute];
-				if(item.declaredClass == "dojox.atom.io.model.Content"){
+				if(item.nodeType == "Content"){
 					return [item.value];
 				}
 				return [item] ;

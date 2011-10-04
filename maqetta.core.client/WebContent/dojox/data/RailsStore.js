@@ -1,4 +1,4 @@
-define("dojox/data/RailsStore", ["dojo", "dojox", "dojox/data/JsonRestStore"], function(dojo, dojox) {
+define(["dojo", "dojox", "dojox/data/JsonRestStore"], function(dojo, dojox) {
 
 // Contains code donated by Travis Tilley under CLA
 dojo.declare("dojox.data.RailsStore", dojox.data.JsonRestStore, {

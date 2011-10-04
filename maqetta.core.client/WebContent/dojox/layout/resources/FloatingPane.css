@@ -129,7 +129,7 @@
 }
 
 .dojoxDockRestoreButton {
-	background:url('../../../dijit/themes/tundra/images/arrowUp.png') no-repeat center center;
+	background:url('../../../dijit/themes/tundra/images/folderClosed.gif') no-repeat center center;
 	width:16px; height:16px;
 	overflow:hidden; 
 	float:left;

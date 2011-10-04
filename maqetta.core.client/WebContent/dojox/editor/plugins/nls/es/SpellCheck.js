@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	widgetLabel: "Corrector ortográfico por lotes",
 	unfound: "No encontrado",
@@ -15,3 +17,5 @@
 	iMsg: "No hay sugerencias de ortografía"
 })
 
+//end v1.x content
+);

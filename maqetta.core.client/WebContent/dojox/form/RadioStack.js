@@ -1,9 +1,13 @@
-dojo.provide("dojox.form.RadioStack");
-
-dojo.require("dojox.form.CheckedMultiSelect");
-dojo.require("dojox.form._SelectStackMixin");
-
-dojo.declare("dojox.form.RadioStack",
-	[ dojox.form.CheckedMultiSelect, dojox.form._SelectStackMixin ], {
+define([
+	"./CheckedMultiSelect",
+	"./_SelectStackMixin",
+	"dojo/_base/declare"
+], function(CheckedMultiSelect, _SelectStackMixin, declare){
+	/*=====
+		CheckedMultiSelect = dojox.form.CheckedMultiSelect;
+		_SelectStackMixin = dojox.form._SelectStackMixin;
+	=====*/
+	return declare("dojox.form.RadioStack", [ CheckedMultiSelect, _SelectStackMixin ], {
 	// summary: A radio-based select stack.
+	});
 });

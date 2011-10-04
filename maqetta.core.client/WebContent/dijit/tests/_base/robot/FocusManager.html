@@ -9,13 +9,12 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_FocusManager.html');
 
 				doh.register("Dijit focus manager low level tests", [
@@ -104,8 +103,8 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								// Check that focus was returned to the textarea
-								doh.t(dojo.global.dijit._curFocus, "curFocus defined");
-								doh.is("textarea", dojo.global.dijit._curFocus.id, "focused on textarea");
+								doh.t(dojo.global.dijit.focus.curNode, "curFocus defined");
+								doh.is("textarea", dojo.global.dijit.focus.curNode.id, "focused on textarea");
 
 								// And that " there" was selected then deleted
 								doh.is("hello!", dojo.byId("textarea").value);

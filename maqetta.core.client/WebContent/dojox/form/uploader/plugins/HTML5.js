@@ -1,6 +1,11 @@
-dojo.provide("dojox.form.uploader.plugins.HTML5");
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dojo"
+],function(declare, lang, array, dojo){
 
-dojo.declare("dojox.form.uploader.plugins.HTML5", [], {
+var pluginsHTML5 = declare("dojox.form.uploader.plugins.HTML5", [], {
 	//
 	// Version: 1.6
 	//
@@ -22,10 +27,18 @@ dojo.declare("dojox.form.uploader.plugins.HTML5", [], {
 		this.connectForm();
 		this.inherited(arguments);
 		if(this.uploadOnSelect){
-			this.connect(this, "onChange", "upload");
+			this.connect(this, "onChange", function(data){
+				this.upload(data[0]);
+			});
 		}
 	},
 
+	_drop: function(e){
+		dojo.stopEvent(e);
+		var dt = e.dataTransfer;
+		this._files = dt.files;
+		this.onChange(this.getFileList());
+	},
 	/*************************
 	 *	   Public Methods	 *
 	 *************************/
@@ -42,16 +55,24 @@ dojo.declare("dojox.form.uploader.plugins.HTML5", [], {
 		}
 	},
 
-	submit: function(/* form Node ? */form){
+	addDropTarget: function(node, /*Boolean?*/onlyConnectDrop){
 		// summary:
-		//		See: dojox.form.Uploader.submit
-		//
-		form = !!form ? form.tagName ? form : this.getForm() : this.getForm();
-		var data = dojo.formToObject(form);
-		console.log("form data:", data);
-		this.upload(data);
+		//		Add a dom node which will act as the drop target area so user
+		//		can drop files to this node.
+		// description:
+		//		If onlyConnectDrop is true, dragenter/dragover/dragleave events
+		//		won't be connected to dojo.stopEvent, and they need to be
+		//		canceled by user code to allow DnD files to happen.
+		//		This API is only available in HTML5 plugin (only HTML5 allows
+		//		DnD files).
+		if(!onlyConnectDrop){
+			this.connect(node, 'dragenter', dojo.stopEvent);
+			this.connect(node, 'dragover', dojo.stopEvent);
+			this.connect(node, 'dragleave', dojo.stopEvent);
+		}
+		this.connect(node, 'drop', '_drop');
 	},
-
+	
 	sendAsBinary: function(/* Object */data){
 		// summary:
 		// 		Used primarily in FF < 4.0. Sends files and form object as binary data, written to
@@ -76,6 +97,9 @@ dojo.declare("dojox.form.uploader.plugins.HTML5", [], {
 		if(!msg){
 			this.onError(this.errMsg);
 		}else{
+			console.log("msg:", msg)
+			console.log("xhr:", xhr)
+
 			xhr.sendAsBinary(msg);
 		}
 	},
@@ -89,9 +113,8 @@ dojo.declare("dojox.form.uploader.plugins.HTML5", [], {
 		if(!this.getUrl()){
 			console.error("No upload url found.", this); return;
 		}
-
 		var fd = new FormData();
-		dojo.forEach(this.inputNode.files, function(f, i){
+		array.forEach(this._files, function(f, i){
 			fd.append(this.name+"s[]", f);
 		}, this);
 
@@ -128,26 +151,26 @@ dojo.declare("dojox.form.uploader.plugins.HTML5", [], {
 	createXhr: function(){
 		var xhr = new XMLHttpRequest();
 		var timer;
-        xhr.upload.addEventListener("progress", dojo.hitch(this, "_xhrProgress"), false);
-        xhr.addEventListener("load", dojo.hitch(this, "_xhrProgress"), false);
-        xhr.addEventListener("error", dojo.hitch(this, function(evt){
+		xhr.upload.addEventListener("progress", lang.hitch(this, "_xhrProgress"), false);
+		xhr.addEventListener("load", lang.hitch(this, "_xhrProgress"), false);
+		xhr.addEventListener("error", lang.hitch(this, function(evt){
 			this.onError(evt);
 			clearInterval(timer);
 		}), false);
-        xhr.addEventListener("abort", dojo.hitch(this, function(evt){
+		xhr.addEventListener("abort", lang.hitch(this, function(evt){
 			this.onAbort(evt);
 			clearInterval(timer);
 		}), false);
-        xhr.onreadystatechange = dojo.hitch(this, function() {
-			if (xhr.readyState === 4) {
-				console.info("COMPLETE")
+		xhr.onreadystatechange = lang.hitch(this, function(){
+			if(xhr.readyState === 4){
+//				console.info("COMPLETE")
 				clearInterval(timer);
-				this.onComplete(dojo.eval(xhr.responseText));
+				this.onComplete(JSON.parse(xhr.responseText.replace(/^\{\}&&/,'')));
 			}
 		});
-        xhr.open("POST", this.getUrl());
+		xhr.open("POST", this.getUrl());
 
-		timer = setInterval(dojo.hitch(this, function(){
+		timer = setInterval(lang.hitch(this, function(){
 			try{
 				if(typeof(xhr.statusText)){} // accessing this error throws an error. Awesomeness.
 			}catch(e){
@@ -159,19 +182,19 @@ dojo.declare("dojox.form.uploader.plugins.HTML5", [], {
 		return xhr;
 	},
 
-	_buildRequestBody : function(data, boundary) {
+	_buildRequestBody : function(data, boundary){
 		var EOL  = "\r\n";
 		var part = "";
 		boundary = "--" + boundary;
 
-		var filesInError = [];
-		dojo.forEach(this.inputNode.files, function(f, i){
+		var filesInError = [], files = this._files;
+		array.forEach(files, function(f, i){
 			var fieldName = this.name+"s[]";//+i;
-			var fileName  = this.inputNode.files[i].fileName;
+			var fileName  = f.fileName;
 			var binary;
 
 			try{
-				binary = this.inputNode.files[i].getAsBinary() + EOL;
+				binary = f.getAsBinary() + EOL;
 				part += boundary + EOL;
 				part += 'Content-Disposition: form-data; ';
 				part += 'name="' + fieldName + '"; ';
@@ -184,7 +207,7 @@ dojo.declare("dojox.form.uploader.plugins.HTML5", [], {
 		}, this);
 
 		if(filesInError.length){
-			if(filesInError.length >= this.inputNode.files.length){
+			if(filesInError.length >= files.length){
 				// all files were bad. Nothing to upload.
 				this.onError({
 					message:this.errMsg,
@@ -211,4 +234,7 @@ dojo.declare("dojox.form.uploader.plugins.HTML5", [], {
 	}
 
 });
-dojox.form.addUploaderPlugin(dojox.form.uploader.plugins.HTML5);
+dojox.form.addUploaderPlugin(pluginsHTML5);
+
+return pluginsHTML5;
+});

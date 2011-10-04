@@ -1,2 +1,3 @@
-dojo.provide("dojox.color");
-dojo.require("dojox.color._base");
+define(["./color/_base"], function(dxcolor){
+	return dxcolor;
+});

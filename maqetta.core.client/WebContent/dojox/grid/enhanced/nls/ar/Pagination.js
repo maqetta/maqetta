@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} من ${1} ${0}",
 	"firstTip": "الصفحة الأولى",
@@ -13,6 +15,9 @@
 	"dialogIndication": "حدد رقم الصفحة",
 	"pageCountIndication": " (${0} صفحات)",
 	"dialogConfirm": "بدء",
-	"dialogCancel": "الغاء"
+	"dialogCancel": "الغاء",
+	"all": "كل"
 })
+//end v1.x content
+);
 

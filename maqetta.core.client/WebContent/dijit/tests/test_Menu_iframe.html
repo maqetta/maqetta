@@ -9,7 +9,10 @@
 	<script type="text/javascript" src="../../dojo/dojo.js"
 		data-dojo-config="parseOnLoad:true, isDebug:true"></script>
 	<script type="text/javascript">
+		dojo.require("dojo.parser");
+
 		dojo.require("dijit.Menu");
+		dojo.require("dijit.MenuItem");
 
 		function setContents(str){
 			dojo.byId('iframe').src = "javascript:'" + str.replace("'", "\\'") + "'";

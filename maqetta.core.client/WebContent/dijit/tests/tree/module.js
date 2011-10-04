@@ -6,8 +6,6 @@ try{
 
 	doh.registerUrl("dijit.tests.tree.CustomLabel", dojo.moduleUrl("dijit", "tests/tree/CustomLabel.html"), 999999);
 	doh.registerUrl("dijit.tests.tree.Tree", dojo.moduleUrl("dijit", "tests/tree/Tree.html"), 999999);
-	
-	// comment out until #11621 is fixed
 	doh.registerUrl("dijit.tests.tree.Tree_with_JRS", dojo.moduleUrl("dijit", "tests/tree/Tree_with_JRS.html"), 999999);
 
 	if(test_robot){

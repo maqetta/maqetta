@@ -1,32 +1,30 @@
-dojo.provide("dojox.charting.action2d.Magnify");
+define(["dojo/_base/connect", "dojo/_base/declare", 
+	"./PlotAction", "dojox/gfx/matrix", 
+	"dojox/gfx/fx", "dojo/fx", "dojo/fx/easing"], 
+	function(Hub, declare, PlotAction, m, gf, df, dfe){
 
-dojo.require("dojox.charting.action2d.Base");
-dojo.require("dojox.gfx.matrix");
-dojo.require("dojo.fx");
+	/*=====
+	dojo.declare("dojox.charting.action2d.__MagnifyCtorArgs", dojox.charting.action2d.__PlotActionCtorArgs, {
+		//	summary:
+		//		Additional arguments for highlighting actions.
+	
+		//	scale: Number?
+		//		The amount to magnify the given object to.  Default is 2.
+		scale: 2
+	});
+	var PlotAction = dojox.charting.action2d.PlotAction;
+	=====*/
+	
+	var DEFAULT_SCALE = 2;
 
-/*=====
-dojo.declare("dojox.charting.action2d.__MagnifyCtorArgs", dojox.charting.action2d.__BaseCtorArgs, {
-	//	summary:
-	//		Additional arguments for highlighting actions.
-
-	//	scale: Number?
-	//		The amount to magnify the given object to.  Default is 2.
-	scale: 2
-});
-=====*/
-(function(){
-	var DEFAULT_SCALE = 2,
-		m = dojox.gfx.matrix,
-		gf = dojox.gfx.fx;
-
-	dojo.declare("dojox.charting.action2d.Magnify", dojox.charting.action2d.Base, {
+	return declare("dojox.charting.action2d.Magnify", PlotAction, {
 		//	summary:
 		//		Create an action that magnifies the object the action is applied to.
 
 		// the data description block for the widget parser
 		defaultParams: {
 			duration: 400,	// duration of the action in ms
-			easing:   dojo.fx.easing.backOut,	// easing for the action
+			easing:   dfe.backOut,	// easing for the action
 			scale:    DEFAULT_SCALE	// scale of magnification
 		},
 		optionalParams: {},	// no optional parameters
@@ -34,7 +32,7 @@ dojo.declare("dojox.charting.action2d.__MagnifyCtorArgs", dojox.charting.action2
 		constructor: function(chart, plot, kwArgs){
 			//	summary:
 			//		Create the magnifying action.
-			//	chart: dojox.charting.Chart2D
+			//	chart: dojox.charting.Chart
 			//		The chart this action belongs to.
 			//	plot: String?
 			//		The plot to apply the action to. If not passed, "default" is assumed.
@@ -103,9 +101,9 @@ dojo.declare("dojox.charting.action2d.__MagnifyCtorArgs", dojox.charting.action2
 				return;
 			}
 
-			anim.action = dojo.fx.combine(vector);
+			anim.action = df.combine(vector);
 			if(o.type == "onmouseout"){
-				dojo.connect(anim.action, "onEnd", this, function(){
+				Hub.connect(anim.action, "onEnd", this, function(){
 					if(this.anim[runName]){
 						delete this.anim[runName][index];
 					}
@@ -114,4 +112,5 @@ dojo.declare("dojox.charting.action2d.__MagnifyCtorArgs", dojox.charting.action2
 			anim.action.play();
 		}
 	});
-})();
+	
+});

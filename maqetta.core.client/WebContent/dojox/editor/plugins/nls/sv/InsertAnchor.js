@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertAnchor: "Infoga ankare",
 	title: "Egenskaper för ankare",
@@ -7,3 +9,5 @@
 	cancel: "Avbryt"
 })
 
+//end v1.x content
+);

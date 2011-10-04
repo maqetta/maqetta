@@ -11,7 +11,7 @@ dojox.data.tests.stores.OpmlStore.getDatasource = function(filepath){
 	
 	var dataSource = {};
 	if(dojo.isBrowser){
-		dataSource.url = dojo.moduleUrl("dojox.data.tests", filepath).toString();
+		dataSource.url = require.toUrl("dojox/data/tests/" + filepath).toString();
 	}else{
 		// When running tests in Rhino, xhrGet is not available,
 		// so we have the file data in the code below.

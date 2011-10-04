@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"clearFilterDialogTitle": "清除過濾器",
 	"filterDefDialogTitle": "過濾器",
@@ -82,6 +84,8 @@
 	"trueLabel": "True",
 	"falseLabel": "False"
 })
+//end v1.x content
+);
 
 
 

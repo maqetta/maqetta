@@ -1,21 +1,12 @@
-dojo.provide("dojox.charting.plot2d.Scatter");
+define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", "./Base", "./common", 
+	"dojox/lang/functional", "dojox/lang/functional/reversed", "dojox/lang/utils", "dojox/gfx/fx", "dojox/gfx/gradutils"],
+	function(lang, arr, declare, Base, dc, df, dfr, du, fx, gradutils){
+/*=====
+var Base = dojox.charting.plot2d.Base;
+=====*/
+	var purgeGroup = dfr.lambda("item.purgeGroup()");
 
-dojo.require("dojox.charting.plot2d.common");
-dojo.require("dojox.charting.plot2d.Base");
-
-dojo.require("dojox.lang.utils");
-dojo.require("dojox.lang.functional");
-dojo.require("dojox.lang.functional.reversed");
-
-dojo.require("dojox.gfx.gradutils");
-
-
-(function(){
-	var df = dojox.lang.functional, du = dojox.lang.utils,
-		dc = dojox.charting.plot2d.common,
-		purgeGroup = df.lambda("item.purgeGroup()");
-
-	dojo.declare("dojox.charting.plot2d.Scatter", dojox.charting.plot2d.Base, {
+	return declare("dojox.charting.plot2d.Scatter", Base, {
 		//	summary:
 		//		A plot object representing a typical scatter chart.
 		defaultParams: {
@@ -37,11 +28,11 @@ dojo.require("dojox.gfx.gradutils");
 		constructor: function(chart, kwArgs){
 			//	summary:
 			//		Create the scatter plot.
-			//	chart: dojox.charting.Chart2D
+			//	chart: dojox.charting.Chart
 			//		The chart this plot belongs to.
 			//	kwArgs: dojox.charting.plot2d.__DefaultCtorArgs?
 			//		An optional keyword arguments object to help define this plot's parameters.
-			this.opt = dojo.clone(this.defaultParams);
+			this.opt = lang.clone(this.defaultParams);
             du.updateWithObject(this.opt, kwArgs);
             du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
 			this.series = [];
@@ -65,7 +56,7 @@ dojo.require("dojox.gfx.gradutils");
 			this.resetEvents();
 			this.dirty = this.isDirty();
 			if(this.dirty){
-				dojo.forEach(this.series, purgeGroup);
+				arr.forEach(this.series, purgeGroup);
 				this._eventSeries = {};
 				this.cleanGroup();
 				var s = this.group;
@@ -90,14 +81,14 @@ dojo.require("dojox.gfx.gradutils");
 					ht = this._hScaler.scaler.getTransformerFromModel(this._hScaler),
 					vt = this._vScaler.scaler.getTransformerFromModel(this._vScaler);
 				if(typeof run.data[0] == "number"){
-					lpoly = dojo.map(run.data, function(v, i){
+					lpoly = arr.map(run.data, function(v, i){
 						return {
 							x: ht(i + 1) + offsets.l,
 							y: dim.height - offsets.b - vt(v)
 						};
 					}, this);
 				}else{
-					lpoly = dojo.map(run.data, function(v, i){
+					lpoly = arr.map(run.data, function(v, i){
 						return {
 							x: ht(v.x) + offsets.l,
 							y: dim.height - offsets.b - vt(v.y)
@@ -109,7 +100,7 @@ dojo.require("dojox.gfx.gradutils");
 					frontMarkers   = new Array(lpoly.length),
 					outlineMarkers = new Array(lpoly.length);
 
-				dojo.forEach(lpoly, function(c, i){
+				arr.forEach(lpoly, function(c, i){
 					var finalTheme = typeof run.data[i] == "number" ?
 							t.post(theme, "marker") :
 							t.addMixin(theme, "marker", run.data[i], true),
@@ -133,7 +124,7 @@ dojo.require("dojox.gfx.gradutils");
 					var stroke = dc.makeStroke(finalTheme.marker.stroke),
 						fill = this._plotFill(finalTheme.marker.fill, dim, offsets);
 					if(fill && (fill.type === "linear" || fill.type == "radial")){
-						var color = dojox.gfx.gradutils.getColor(fill, {x: c.x, y: c.y});
+						var color = gradutils.getColor(fill, {x: c.x, y: c.y});
 						if(stroke){
 							stroke.color = color;
 						}
@@ -152,7 +143,7 @@ dojo.require("dojox.gfx.gradutils");
 
 				if(events){
 					var eventSeries = new Array(frontMarkers.length);
-					dojo.forEach(frontMarkers, function(s, i){
+					arr.forEach(frontMarkers, function(s, i){
 						var o = {
 							element: "marker",
 							index:   i,
@@ -183,7 +174,7 @@ dojo.require("dojox.gfx.gradutils");
 			return this;	//	dojox.charting.plot2d.Scatter
 		},
 		_animateScatter: function(shape, offset){
-			dojox.gfx.fx.animateTransform(dojo.delegate({
+			fx.animateTransform(lang.delegate({
 				shape: shape,
 				duration: 1200,
 				transform: [
@@ -194,4 +185,4 @@ dojo.require("dojox.gfx.gradutils");
 			}, this.animate)).play();
 		}
 	});
-})();
+});

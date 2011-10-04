@@ -8,39 +8,41 @@
 	</style>
 
 	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug:true"></script>
-	<script type="text/javascript" src="../windowName.js"></script>
 	<script type="text/javascript">
+		var test, testPost;
+		require(['dojox/io/windowName'], function(windowName){
 	//dojox.io.xhrWindowNamePlugin("http://localhost");
-function test(auth) {
-	var authTarget = auth && document.getElementById("authTarget");
-	var dfd = dojox.io.windowName.send("GET",{
-				url: prompt("Enter an address to retrieve data from",
-						auth ? "http://sitepen.com:80/labs/code/secure/dojox/io/tests/testResource.html" : "http://persevere.sitepen.com/Customer/550"),
-				handleAs:"text",
-				authElement: authTarget,
-				onAuthLoad: auth && function(){
-					authTarget.style.display='block';
-				}});
-	dfd.addBoth(function(result){
-		auth && (authTarget.style.display='none');
-		alert(result)
-	});
-}
-function testPost(auth) {
-	var authTarget = auth && document.getElementById("authTarget");
-	var dfd = dojox.io.windowName.send("POST",{
-				url: prompt("Enter an address to post data to",
-						"http://persevere.sitepen.com/Customer/"),
-				content:{foo:"bar"},
-				authElement: authTarget,
-				onAuthLoad: auth && function(){
-					authTarget.style.display='block';
-				}});
-	dfd.addBoth(function(result){
-		auth && (authTarget.style.display='none');
-		alert(result)
-	});
-}
+			test = function(auth) {
+				var authTarget = auth && document.getElementById("authTarget");
+				var dfd = windowName.send("GET",{
+							url: prompt("Enter an address to retrieve data from",
+									auth ? "http://sitepen.com:80/labs/code/secure/dojox/io/tests/testResource.html" : "http://persevere.sitepen.com/Customer/550"),
+							handleAs:"text",
+							authElement: authTarget,
+							onAuthLoad: auth && function(){
+								authTarget.style.display='block';
+							}});
+				dfd.addBoth(function(result){
+					auth && (authTarget.style.display='none');
+					alert(result)
+				});
+			};
+			testPost = function(auth) {
+				var authTarget = auth && document.getElementById("authTarget");
+				var dfd = windowName.send("POST",{
+							url: prompt("Enter an address to post data to",
+									"http://persevere.sitepen.com/Customer/"),
+							content:{foo:"bar"},
+							authElement: authTarget,
+							onAuthLoad: auth && function(){
+								authTarget.style.display='block';
+							}});
+				dfd.addBoth(function(result){
+					auth && (authTarget.style.display='none');
+					alert(result)
+				});
+			}
+		});
 	</script>
 </head>
 <body class="tundra">

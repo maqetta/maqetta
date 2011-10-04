@@ -1,10 +1,5 @@
-dojo.provide("dojox.highlight.languages.django");
+define(["dojox/main", "../_base", "./xml", "./html"], function(dojox){
 
-dojo.require("dojox.highlight._base");
-dojo.require("dojox.highlight.languages.xml");
-dojo.require("dojox.highlight.languages.html");
-
-(function(){
 	var dh = dojox.highlight, dhc = dh.constants, dhl = dh.languages, x = dhl.xml, h = dhl.html;
 	dhl.django = {
 		defaultMode: {
@@ -90,4 +85,7 @@ dojo.require("dojox.highlight.languages.html");
 			}
 		]
 	};
-})();
+
+	return dhl.django;
+	
+});

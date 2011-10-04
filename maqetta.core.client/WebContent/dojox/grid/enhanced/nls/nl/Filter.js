@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"clearFilterDialogTitle": "Filter wissen",
 	"filterDefDialogTitle": "Filteren",
@@ -82,6 +84,8 @@
 	"trueLabel": "Waar",
 	"falseLabel": "Onwaar"
 })
+//end v1.x content
+);
 
 
 

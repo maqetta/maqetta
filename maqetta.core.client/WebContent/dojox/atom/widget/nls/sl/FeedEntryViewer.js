@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	displayOptions: "[možnosti prikaza]",
 	title: "Naslov",
@@ -9,4 +11,5 @@
 	summary: "Povzetek",
 	content: "Vsebina"
 })
-
+//end v1.x content
+);

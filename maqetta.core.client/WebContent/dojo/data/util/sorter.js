@@ -1,7 +1,12 @@
-define("dojo/data/util/sorter", ["dojo"], function(dojo) {
-dojo.getObject("data.util.sorter", true, dojo);
+define(["dojo/_base/lang"], function(lang) {
+	// module:
+	//		dojo/data/util/sorter
+	// summary:
+	//		TODOC
 
-dojo.data.util.sorter.basicComparator = function(	/*anything*/ a,
+var sorter = lang.getObject("dojo.data.util.sorter", true);
+
+sorter.basicComparator = function(	/*anything*/ a,
 													/*anything*/ b){
 	//	summary:
 	//		Basic comparision function that compares if an item is greater or less than another item
@@ -9,7 +14,7 @@ dojo.data.util.sorter.basicComparator = function(	/*anything*/ a,
 	//		returns 1 if a > b, -1 if a < b, 0 if equal.
 	//		'null' values (null, undefined) are treated as larger values so that they're pushed to the end of the list.
 	//		And compared to each other, null is equivalent to undefined.
-	
+
 	//null is a problematic compare, so if null, we set to undefined.
 	//Makes the check logic simple, compact, and consistent
 	//And (null == undefined) === true, so the check later against null
@@ -29,8 +34,7 @@ dojo.data.util.sorter.basicComparator = function(	/*anything*/ a,
 	return r; //int {-1,0,1}
 };
 
-dojo.data.util.sorter.createSortFunction = function(	/* attributes array */sortSpec,
-														/*dojo.data.core.Read*/ store){
+sorter.createSortFunction = function(	/* attributes array */sortSpec, /*dojo.data.core.Read*/ store){
 	//	summary:
 	//		Helper function to generate the sorting function based off the list of sort attributes.
 	//	description:
@@ -62,7 +66,7 @@ dojo.data.util.sorter.createSortFunction = function(	/* attributes array */sortS
 	}
 	var sortAttribute;
 	var map = store.comparatorMap;
-	var bc = dojo.data.util.sorter.basicComparator;
+	var bc = sorter.basicComparator;
 	for(var i = 0; i < sortSpec.length; i++){
 		sortAttribute = sortSpec[i];
 		var attr = sortAttribute.attribute;
@@ -91,5 +95,5 @@ dojo.data.util.sorter.createSortFunction = function(	/* attributes array */sortS
 	}; // Function
 };
 
-return dojo.data.util.sorter;
+return sorter;
 });

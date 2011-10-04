@@ -51,6 +51,7 @@
 		djConfig="isDebug:false, parseOnLoad: true"></script>
 	<script type="text/javascript" src="../../../../dijit/tests/_testCommon.js"></script>
 	<script type="text/javascript">
+		dojo.require("dijit._WidgetsInTemplateMixin");
 		dojo.require("dijit.form.CheckBox");
 		dojo.require("dojox.grid.enhanced.plugins.Filter");
 		dojo.require("dojox.grid.enhanced.plugins.exporter.CSVWriter");
@@ -180,7 +181,7 @@
 			sb.push("</tbody></table>");
 			return sb.join('');
 		}
-		dojo.declare("PluginTable", [dijit._Widget, dijit._Templated], {
+		dojo.declare("PluginTable", [dijit._Widget, dijit._TemplatedMixin, dijit._WidgetsInTemplateMixin], {
 			templateString: getTableString(),
 			widgetsInTemplate: true,
 			_onChangePlugin:  function(pluginName, cb, e){
@@ -370,7 +371,7 @@
 			grid.connect(grid, "onEndSelect", func);
 			grid.connect(grid, "onEndDeselect", func);
 		}
-		dojo.declare("TestWidget", [dijit._Widget,dijit._Templated], {
+		dojo.declare("TestWidget", [dijit._Widget,dijit._TemplatedMixin], {
 			templateString: dojo.cache("dojox.grid", "enhanced/templates/ClearFilterConfirmPane.html"),
 			widgetsInTemplate: true,
 			_clearBtnLabel: "clearButton",

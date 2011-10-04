@@ -10,15 +10,14 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 		<script type="text/javascript" src="../../helpers.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 			dojo.require("dojo.date");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_Select.html');
 
 				// refs to parts of s1 Select
@@ -41,6 +40,12 @@
 						s8b_menu = dijit.byId('s8b_menu');
 						s3 = dijit.byId('s3');
 						s3_menu = dijit.byId('s3_menu');
+						s13 = dijit.byId('s13');
+						s13_menu = dijit.byId('s13_menu');
+						s14 = dijit.byId('s14');
+						s14_menu = dijit.byId('s14_menu');
+
+						form = dijit.byId('form');
 
 						// preload menus since first load can take a while
 						var doNothing = function(){};
@@ -64,7 +69,7 @@
 							doh.robot.mouseClick({left:true}, 500);
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(isVisible(s1_menu), "drop down menu displayed after click");
-								doh.is(5, dojo.query("tr", s1_menu.domNode).length, "5 options in menu")
+								doh.is(5, dojo.query("tr", s1_menu.domNode).length, "5 options in menu");
 								
 								var selectedOptions = dojo.query(".dijitSelectSelectedOption .dijitMenuItemLabel", s1_menu.domNode);
 								doh.is(1, selectedOptions.length, "one selected option");
@@ -99,7 +104,7 @@
 							}), 1000);
 
 							// clicking away should close the drop down
-							doh.robot.mouseMove(10, 10, 500)
+							doh.robot.mouseMove(10, 10, 500);
 							doh.robot.mouseClick({left:true}, 500);
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.t(isHidden(s1_menu), "clicking away hides menu");
@@ -123,7 +128,7 @@
 							doh.robot.mousePress({left:true}, 500);
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(isVisible(s1_menu), "drop down menu displayed after mouse down");
-								doh.is(5, dojo.query("tr", s1_menu.domNode).length, "5 options in menu")
+								doh.is(5, dojo.query("tr", s1_menu.domNode).length, "5 options in menu");
 								
 								var selectedOptions = dojo.query(".dijitSelectSelectedOption .dijitMenuItemLabel", s1_menu.domNode);
 								doh.is(1, selectedOptions.length, "one selected option");
@@ -158,7 +163,7 @@
 							}), 1000);
 
 							// mouse up away from node should leave drop down open
-							doh.robot.mouseMove(10, 10, 500)
+							doh.robot.mouseMove(10, 10, 500);
 							doh.robot.mouseRelease({left:true}, 500);
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(isVisible(s1_menu), "mouse up away from menu leaves menu open");
@@ -191,7 +196,7 @@
 							}), 1000);
 
 							// close drop down
-							doh.robot.mouseMove(10, 10, 500, 1)
+							doh.robot.mouseMove(10, 10, 500, 1);
 							doh.robot.mouseClick({left:true}, 500);
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.t(isHidden(s8a_menu), "clicking on blank screen hides menu");
@@ -253,19 +258,19 @@
 							// tab to s1
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.is("s1", dojo.global.dijit._curFocus.id)
+								doh.is("s1", dojo.global.dijit.focus.curNode.id)
 							}), 1000);
 
 							// tab to button after s1
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.is("s1button", dojo.global.dijit._curFocus.id)
+								doh.is("s1button", dojo.global.dijit.focus.curNode.id)
 							}), 1000);
 
 							// tab again should skip disabled s2, and go to s3
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("s3", dojo.global.dijit._curFocus.id)
+								doh.is("s3", dojo.global.dijit.focus.curNode.id)
 							}), 1000);
 
 							return d;
@@ -286,7 +291,7 @@
 							// tab to s1
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.is("s1", dojo.global.dijit._curFocus.id)
+								doh.is("s1", dojo.global.dijit.focus.curNode.id)
 							}), 1000);
 
 							// down arrow to open drop down and focus first item
@@ -294,7 +299,7 @@
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(isVisible(s1_menu), "drop down menu displayed after down arrow");
 								Tenessee = dojo.query("tr", s1_menu.domNode)[0];
-								doh.is(Tenessee, dojo.global.dijit._curFocus, "focused on first menu item")
+								doh.is(Tenessee, dojo.global.dijit.focus.curNode, "focused on first menu item")
 							}), 1000);
 
 							// down arrow to next menu choice
@@ -302,7 +307,7 @@
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(isVisible(s1_menu), "drop down menu still displayed");
 								Virginia = dojo.query("tr", s1_menu.domNode)[1];
-								doh.is(Virginia, dojo.global.dijit._curFocus, "focused on second menu item")
+								doh.is(Virginia, dojo.global.dijit.focus.curNode, "focused on second menu item")
 							}), 1000);
 
 							// ENTER to select option
@@ -330,7 +335,7 @@
 							// tab to s1
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.is("s1", dojo.global.dijit._curFocus.id)
+								doh.is("s1", dojo.global.dijit.focus.curNode.id)
 							}), 1000);
 
 							// down arrow to open drop down and focus first item
@@ -338,7 +343,7 @@
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(isVisible(s1_menu), "drop down menu displayed after down arrow");
 								Tenessee = dojo.query("tr", s1_menu.domNode)[0];
-								doh.is(Tenessee, dojo.global.dijit._curFocus, "focused on first menu item")
+								doh.is(Tenessee, dojo.global.dijit.focus.curNode, "focused on first menu item")
 							}), 1000);
 
 							// ESC to close menu
@@ -493,6 +498,88 @@
 								doh.t(s3.isValid(), "should be valid");
 							}), 1000);
 				
+							return d;
+						}
+					}
+				]);
+
+				doh.register("form submit", [
+					{
+						name: "first validate",
+						timeout: 5000,
+						runTest: function(){
+							// First validate() should focus s13 and display a tooltip.
+							// (s13 is also required, but has a value from previous tests)
+							var d = new doh.Deferred();
+
+							 var handle = dijit.focus.watch("curNode", d.getTestErrback(function(name, oval, nval){
+								if(!nval){ return; }	// ignore spurious event on IE
+								console.log("focused on", nval && (nval.id || nval.innerHTML));
+								doh.is("s13", nval.id, "focused on first required select");
+								handle.unwatch();
+								setTimeout(d.getTestCallback(function(){
+									// Tooltip should appear with error message
+									masterTT = dojo.global.dijit._masterTT;
+									doh.t(masterTT && isVisible(masterTT.domNode), "visible");
+									doh.is("s13", masterTT.aroundNode.id, "tooltip for s13");
+									doh.is("This value is required.", dojo.trim(innerText(masterTT.domNode)));
+								}), 750);
+							}));
+
+							// Validate the form programatically
+							dijit.byId("form").validate();
+
+							return d;
+						}
+					},
+					{
+						name: "select non-blank option for s13",
+						timeout: 6000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							// Open drop down menu
+							doh.robot.mouseMoveAt(s13.domNode, 0, 1);
+							doh.robot.mouseClick({left:true}, 500);
+							// Select 4th option
+							doh.robot.mouseMoveAt(function(){
+								return dojo.query("tr", s13_menu.domNode)[4];
+							}, 1000, 1);
+							doh.robot.mouseClick({left:true}, 500);
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(isHidden(s13_menu), "drop down menu closes after selection");
+								doh.is("AZ", s13.get('value'), "Arizona");
+								doh.t(s13.isValid(), "should be valid");
+							}), 1000);
+
+							return d;
+						}
+					},
+					{
+						name: "revalidate",
+						timeout: 5000,
+						runTest: function(){
+							// Second validate() should focus s14 and display a tooltip
+							var d = new doh.Deferred();
+
+							var handle = dijit.focus.watch("curNode", d.getTestErrback(function(name, oval, nval){
+								if(!nval){ return; }	// ignore spurious event on IE
+								if(nval.id == "submit"){ return; }	// ignore focus onto submit button
+								doh.is("s14", nval.id, "focused on second required select");
+								handle.unwatch();
+								setTimeout(d.getTestCallback(function(){
+									// Tooltip should appear with error message
+									masterTT = dojo.global.dijit._masterTT;
+									doh.t(masterTT && isVisible(masterTT.domNode), "visible");
+									doh.is("s14", masterTT.aroundNode.id, "tooltip for s14");
+									doh.is("This value is required.", dojo.trim(innerText(masterTT.domNode)));
+								}), 750);
+							}));
+
+							// Press button to submit the form
+							doh.robot.mouseMoveAt("submit", 0, 1);
+							doh.robot.mouseClick({left:true}, 500);
+
 							return d;
 						}
 					}

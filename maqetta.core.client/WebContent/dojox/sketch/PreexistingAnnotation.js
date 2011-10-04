@@ -1,9 +1,6 @@
-dojo.provide("dojox.sketch.PreexistingAnnotation");
+define(["dojo/_base/kernel", "dojo/_base/lang", "./Annotation", "./Anchor"], function(dojo){
+	dojo.getObject("sketch", true, dojox);
 
-dojo.require("dojox.sketch.Annotation");
-dojo.require("dojox.sketch.Anchor");
-
-(function(){
 	var ta=dojox.sketch;
 	ta.PreexistingAnnotation=function(figure, id){
 		ta.Annotation.call(this, figure, id);
@@ -162,4 +159,5 @@ dojo.require("dojox.sketch.Anchor");
 	};
 
 	ta.Annotation.register("Preexisting");
-})();
+	return dojox.sketch.PreexistingAnnotation;
+});

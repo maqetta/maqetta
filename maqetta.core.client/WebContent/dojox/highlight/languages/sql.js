@@ -1,8 +1,5 @@
-dojo.provide("dojox.highlight.languages.sql");
+define(["dojox/main", "../_base"], function(dojox){
 
-dojo.require("dojox.highlight._base");
-
-(function(){
 	var SQL_KEYWORDS = {
 		'all': 1, 'partial': 1, 'global': 1, 'month': 1,
 		'current_timestamp': 1, 'using': 1, 'go': 1, 'revoke': 1,
@@ -94,4 +91,6 @@ dojo.require("dojox.highlight._base");
 			dhc.BACKSLASH_ESCAPE
 		]
 	};
-})();
+
+	return dh.languages.sql;
+});

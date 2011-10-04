@@ -1,7 +1,10 @@
-define("dojo/store/util/SimpleQueryEngine", ["dojo"], function(dojo) {
-dojo.getObject("store.util", true, dojo);
+define(["../../_base/array"], function(arrayUtil) {
+  //  module:
+  //    dojo/store/util/SimpleQueryEngine
+  //  summary:
+  //    The module defines a simple filtering query engine for object stores. 
 
-dojo.store.util.SimpleQueryEngine = function(query, options){
+return function(query, options){
 	// summary:
 	//		Simple query engine that matches using filter functions, named filter
 	//		functions or objects by name-value on a query object hash
@@ -77,7 +80,7 @@ dojo.store.util.SimpleQueryEngine = function(query, options){
 	}
 	function execute(array){
 		// execute the whole query, first we filter
-		var results = dojo.filter(array, query);
+		var results = arrayUtil.filter(array, query);
 		// next we sort
 		if(options && options.sort){
 			results.sort(function(a, b){
@@ -102,6 +105,4 @@ dojo.store.util.SimpleQueryEngine = function(query, options){
 	execute.matches = query;
 	return execute;
 };
-
-return dojo.store.util.SimpleQueryEngine;
 });

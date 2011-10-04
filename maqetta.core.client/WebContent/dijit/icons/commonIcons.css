@@ -123,7 +123,7 @@ The 16 x 16px icons in these sprites are action and object type images which can
 }
 
 /*Action icons*/
-.dijitIconSave { background-position: 0px; }
+.dijitIconSave { background-position: 0; }
 .dijitIconPrint { background-position: -16px; }
 .dijitIconCut { background-position: -32px; }
 .dijitIconCopy { background-position: -48px; }
@@ -139,7 +139,6 @@ The 16 x 16px icons in these sprites are action and object type images which can
 .dijitIconConfigure { background-position: -208px; }
 .dijitIconSearch { background-position: -224px; }
 .dijitIconError { background-position: -496px; } 
-/* .dijitIconError is also called .dijitContentPaneError icon in the claro/common.css and is applied to HREF url errors that render in a dialog box with the error messsage */
 
 /*Object icons*/
 .dijitIconApplication { background-position: -240px; }
@@ -161,4 +160,12 @@ The 16 x 16px icons in these sprites are action and object type images which can
 /*Tree folder icons*/
 .dijitIconFolderClosed, .dijitFolderClosed { background-position: -464px; }
 .dijitIconFolderOpen, .dijitFolderOpened { background-position: -480px; }
+
+/*Loading animation*/
+.dijitIconLoading {
+	background:url('images/loadingAnimation_rtl.gif') no-repeat;
+	height: 20px;
+	width: 20px;
+}
+
 

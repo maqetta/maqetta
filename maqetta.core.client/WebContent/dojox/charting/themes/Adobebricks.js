@@ -1,9 +1,6 @@
-dojo.provide("dojox.charting.themes.Adobebricks");
-dojo.require("dojox.charting.Theme");
+define(["../Theme", "./common"], function(Theme, themes){
 
-(function(){
-	var dxc=dojox.charting;
-	dxc.themes.Adobebricks=new dxc.Theme({
+	themes.Adobebricks=new Theme({
 		colors: [
 			"#7f2518",
 			"#3e170c",
@@ -12,4 +9,6 @@ dojo.require("dojox.charting.Theme");
 			"#8c271c"
 		]
 	});
-})();
+	
+	return themes.Adobebricks;
+});

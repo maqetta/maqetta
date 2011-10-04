@@ -85,7 +85,7 @@
   -webkit-transition-duration: 0.35s;
   -moz-transition-duration: 0.35s;
   transition-duration: 0.35s;
-  color: #4a4a4a;
+  color: #494949;
 }
 .claro .dijitTabHover .dijitTabInnerDiv {
   background-color: #abd6ff;
@@ -95,7 +95,7 @@
   color: #000000;
 }
 .claro .dijitTabActive .dijitTabInnerDiv {
-  background-color: #7dbefa;
+  background-color: #7dbdfa;
   color: #000000;
   -webkit-transition-duration: 0.1s;
   -moz-transition-duration: 0.1s;
@@ -109,10 +109,10 @@
   border: 1px solid #b5bcc7;
 }
 .claro .dijitTabHover .dijitTabContent {
-  border-color: #769dc0;
+  border-color: #759dc0;
 }
 .claro .dijitTabActive .dijitTabContent {
-  border-color: #769dc0;
+  border-color: #759dc0;
 }
 .claro .dijitTabChecked .dijitTabContent {
   color: #000000;
@@ -304,7 +304,7 @@
 }
 /************ left/right scroll buttons + menu button ************/
 .claro .tabStripButton {
-  background-color: #e9f4fe;
+  background-color: #e5f2fe;
   border: 1px solid #b5bcc7;
 }
 .claro .dijitTabListContainer-top .tabStripButton {
@@ -324,7 +324,7 @@
   background-color: #abd6ff;
 }
 .claro .tabStripButtonActive {
-  background-color: #7dbefa;
+  background-color: #7dbdfa;
 }
 .claro .dijitTabStripIcon {
   height: 15px;
@@ -393,7 +393,7 @@
   box-shadow: none;
 }
 .claro .dijitTabContainerTabListNested .dijitTabHover .dijitTabContent {
-  background-color: #e9f4fe;
+  background-color: #e5f2fe;
   border: solid 1px #cfe5fa;
   padding: 3px;
   -webkit-transition-duration: 0.2s;
@@ -404,7 +404,7 @@
   text-decoration: none;
 }
 .claro .dijitTabContainerTabListNested .dijitTabActive .dijitTabContent {
-  border: solid 1px #769dc0;
+  border: solid 1px #759dc0;
   padding: 3px;
   background: #abd6ff url("images/tabNested.png") repeat-x;
   -webkit-transition-duration: 0.1s;
@@ -413,7 +413,7 @@
 }
 .claro .dijitTabContainerTabListNested .dijitTabChecked .dijitTabContent {
   padding: 3px;
-  border: solid 1px #769dc0;
+  border: solid 1px #759dc0;
   background-position: 0 105px;
   background-color: #cfe5fa;
 }

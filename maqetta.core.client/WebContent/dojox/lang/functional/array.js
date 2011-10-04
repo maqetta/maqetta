@@ -1,6 +1,5 @@
-dojo.provide("dojox.lang.functional.array");
-
-dojo.require("dojox.lang.functional.lambda");
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/window", "./lambda"], 
+	function(dojo, lang, arr, win, df){
 
 // This module adds high-level functions and related constructs:
 //	- array-processing functions similar to standard JS functions
@@ -15,19 +14,21 @@ dojo.require("dojox.lang.functional.lambda");
 //	- take a string as the array argument
 //	- take an iterator objects as the array argument
 
-(function(){
-	var d = dojo, df = dojox.lang.functional, empty = {};
+	var empty = {};
 
-	d.mixin(df, {
+/*=====
+	var df = dojox.lang.functional;
+ =====*/
+	lang.mixin(df, {
 		// JS 1.6 standard array functions, which can take a lambda as a parameter.
 		// Consider using dojo._base.array functions, if you don't need the lambda support.
 		filter: function(/*Array|String|Object*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
 			// summary: creates a new array with all elements that pass the test
 			//	implemented by the provided function.
 			if(typeof a == "string"){ a = a.split(""); }
-			o = o || d.global; f = df.lambda(f);
+			o = o || win.global; f = df.lambda(f);
 			var t = [], v, i, n;
-			if(d.isArray(a)){
+			if(lang.isArray(a)){
 				// array
 				for(i = 0, n = a.length; i < n; ++i){
 					v = a[i];
@@ -53,9 +54,9 @@ dojo.require("dojox.lang.functional.lambda");
 		forEach: function(/*Array|String|Object*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
 			// summary: executes a provided function once per array element.
 			if(typeof a == "string"){ a = a.split(""); }
-			o = o || d.global; f = df.lambda(f);
+			o = o || win.global; f = df.lambda(f);
 			var i, n;
-			if(d.isArray(a)){
+			if(lang.isArray(a)){
 				// array
 				for(i = 0, n = a.length; i < n; f.call(o, a[i], i, a), ++i);
 			}else if(typeof a.hasNext == "function" && typeof a.next == "function"){
@@ -75,9 +76,9 @@ dojo.require("dojox.lang.functional.lambda");
 			// summary: creates a new array with the results of calling
 			//	a provided function on every element in this array.
 			if(typeof a == "string"){ a = a.split(""); }
-			o = o || d.global; f = df.lambda(f);
+			o = o || win.global; f = df.lambda(f);
 			var t, n, i;
-			if(d.isArray(a)){
+			if(lang.isArray(a)){
 				// array
 				t = new Array(n = a.length);
 				for(i = 0; i < n; t[i] = f.call(o, a[i], i, a), ++i);
@@ -100,9 +101,9 @@ dojo.require("dojox.lang.functional.lambda");
 			// summary: tests whether all elements in the array pass the test
 			//	implemented by the provided function.
 			if(typeof a == "string"){ a = a.split(""); }
-			o = o || d.global; f = df.lambda(f);
+			o = o || win.global; f = df.lambda(f);
 			var i, n;
-			if(d.isArray(a)){
+			if(lang.isArray(a)){
 				// array
 				for(i = 0, n = a.length; i < n; ++i){
 					if(!f.call(o, a[i], i, a)){
@@ -132,9 +133,9 @@ dojo.require("dojox.lang.functional.lambda");
 			// summary: tests whether some element in the array passes the test
 			//	implemented by the provided function.
 			if(typeof a == "string"){ a = a.split(""); }
-			o = o || d.global; f = df.lambda(f);
+			o = o || win.global; f = df.lambda(f);
 			var i, n;
-			if(d.isArray(a)){
+			if(lang.isArray(a)){
 				// array
 				for(i = 0, n = a.length; i < n; ++i){
 					if(f.call(o, a[i], i, a)){
@@ -161,4 +162,6 @@ dojo.require("dojox.lang.functional.lambda");
 			return false;	// Boolean
 		}
 	});
-})();
+	
+	return df;
+});

@@ -1,4 +1,13 @@
-define("dojox/editor/plugins/UploadImage", ["dojo", "dijit", "dojox", "dojox/form/FileUploader", "dijit/_editor/_Plugin"], function(dojo, dijit, dojox) {
+define([
+	"dojo",
+	"dijit",
+	"dojox",
+	"dijit/_editor/_Plugin",
+	"dojo/_base/connect",
+	"dojo/_base/declare",
+	"dojox/form/FileUploader",
+	"dijit/_editor/_Plugin"
+], function(dojo, dijit, dojox) {
 
 dojo.experimental("dojox.editor.plugins.UploadImage");
 

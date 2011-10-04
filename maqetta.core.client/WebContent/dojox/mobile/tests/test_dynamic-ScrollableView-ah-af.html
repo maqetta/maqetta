@@ -4,17 +4,24 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>Dynamic ScrollableView (app header / app footer)</title>
-		<link href="../themes/iphone/iphone.css" rel="stylesheet"></link>
+		<link href="../themes/iphone/base.css" rel="stylesheet">
 		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
 
 		<script language="JavaScript" type="text/javascript">
-			//dojo.require("dojo.parser"); // Use the lightweight parser.
-			dojo.require("dojox.mobile.parser");
-			dojo.require("dojox.mobile");
+			dojo.require("dojox.mobile");			// This is a mobile app.
+			dojo.require("dojox.mobile.parser");	// This mobile app supports running on desktop browsers
+			dojo.require("dojox.mobile.compat");	// This mobile app uses declarative programming with fast mobile parser
 			dojo.require("dojox.mobile.ScrollableView");
-			dojo.requireIf(!dojo.isWebKit, "dojox.mobile.compat");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
+				// ==== App Header has to be at the top position ====
+				var heading1 = new dojox.mobile.Heading({
+					label: "Fixed App Header",
+					fixed: "top"
+				});
+				dojo.body().appendChild(heading1.domNode);
+
+
 				// ==== view1 ====
 				var view1 = new dojox.mobile.ScrollableView({
 					id: "foo",
@@ -42,13 +49,6 @@
 					counter++;
 				}
 
-				var heading1 = new dojox.mobile.Heading({
-					label: "Fixed App Header",
-					fixed: "top"
-				});
-				dojo.body().appendChild(heading1.domNode);
-
-
 				// ==== view2 ====
 				var view2 = new dojox.mobile.ScrollableView({
 					id: "bar"
@@ -74,12 +74,12 @@
 
 				// ==== Initialize each view when the dom is ready ====
 				view1.findAppBars();
-				view1.resizeView();
+				view1.resize();
 				view2.findAppBars();
-				view2.resizeView();
+				view2.resize();
 			});
 		</script>
 	</head>
-	<body>
+	<body style="visibility:hidden;">
 	</body>
 </html>

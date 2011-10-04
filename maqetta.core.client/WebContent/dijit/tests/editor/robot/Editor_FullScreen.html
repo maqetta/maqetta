@@ -9,8 +9,7 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
 		<!-- functions to help test -->
 		<script type="text/javascript" src="../../helpers.js"></script>
@@ -20,7 +19,7 @@
 			dojo.require("dojo.window");
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_FullScreen.html');
 
 				function getPlugin(/*Editor*/ editor){
@@ -61,8 +60,10 @@
 							var d = new doh.Deferred();
 
 							//Focus on the editor window
-							dojo.window.scrollIntoView(editor.domNode);
-							editor.focus();
+							doh.robot.sequence(d.getTestErrback(function(){
+								dojo.window.scrollIntoView(editor.domNode);
+								editor.focus();
+							}), 500);
 
 							doh.robot.keyPress(dojo.keys.F11, 500, {ctrl:true,shift:true});
 
@@ -94,8 +95,10 @@
 							var d = new doh.Deferred();
 
 							//Focus on the editor window
-							dojo.window.scrollIntoView(editor.domNode);
-							editor.focus();
+							doh.robot.sequence(d.getTestErrback(function(){
+								dojo.window.scrollIntoView(editor.domNode);
+								editor.focus();
+							}), 500);
 
 							doh.robot.keyPress(dojo.keys.F11, 500, {ctrl:true,shift:true});
 							doh.robot.keyPress(dojo.keys.F11, 1000, {ctrl:true,shift:true});
@@ -125,8 +128,10 @@
 							var d = new doh.Deferred();
 
 							//Focus on the editor window
-							dojo.window.scrollIntoView(editor.domNode);
-							editor.focus();
+							doh.robot.sequence(d.getTestErrback(function(){
+								dojo.window.scrollIntoView(editor.domNode);
+								editor.focus();
+							}), 500);
 
 							doh.robot.mouseMoveAt(fsPlugin.button.domNode, 500);
 							doh.robot.mouseClick({left: true}, 750);
@@ -159,9 +164,11 @@
 							var d = new doh.Deferred();
 
 							//Focus on the editor window
-							dojo.window.scrollIntoView(editor.domNode);
-							editor.focus();
-							doh.t(fsPlugin != null);
+							doh.robot.sequence(d.getTestErrback(function(){
+								dojo.window.scrollIntoView(editor.domNode);
+								editor.focus();
+							}), 500);
+
 							//Click it, then click it again!
 							doh.robot.mouseMoveAt(fsPlugin.button.domNode, 500);
 							doh.robot.mouseClick({left: true}, 750);
@@ -202,12 +209,14 @@
 							var d = new doh.Deferred();
 
 							//Focus on the editor window
-							dojo.window.scrollIntoView(editor.domNode);
-							editor.focus();
+							doh.robot.sequence(d.getTestErrback(function(){
+								dojo.window.scrollIntoView(editor.domNode);
+								editor.focus();
+							}), 500);
 
 							var origEditorSize = dojo.marginBox(editor.domNode);
 							var origContainerSize = dojo.marginBox(container.domNode);
-							os = {w: origContainerSize.w, h: origContainerSize.h}
+							os = {w: origContainerSize.w, h: origContainerSize.h};
 
 							doh.robot.sequence(d.getTestErrback(function(){
 								// Engage FullScreen Mode
@@ -230,7 +239,7 @@
 								var containerHdiff = origContainerSize.h - curContainerSize.h;
 								var eWdiff = origEditorSize.w - curEditorSize.w;
 								var eHdiff = origEditorSize.h - curEditorSize.h;
-								
+
 								doh.t(origEditorSize.w > curEditorSize.w, "Validating new width is less that the original size");
 								doh.t(origEditorSize.h > curEditorSize.h, "Validating new height is less that the original size");
 								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rouch check that the editor width resized roughly to the Container difference");
@@ -251,12 +260,14 @@
 							var d = new doh.Deferred();
 
 							//Focus on the editor window
-							dojo.window.scrollIntoView(editor.domNode);
-							editor.focus();
+							doh.robot.sequence(d.getTestErrback(function(){
+								dojo.window.scrollIntoView(editor.domNode);
+								editor.focus();
+							}), 500);
 
 							var origEditorSize = dojo.marginBox(editor.domNode);
 							var origContainerSize = dojo.marginBox(container.domNode);
-							os = {w: origContainerSize.w, h: origContainerSize.h}
+							os = {w: origContainerSize.w, h: origContainerSize.h};
 
 							doh.robot.sequence(d.getTestErrback(function(){
 								// Engage FullScreen Mode
@@ -279,7 +290,7 @@
 								var containerHdiff = -(origContainerSize.h - curContainerSize.h);
 								var eWdiff = -(origEditorSize.w - curEditorSize.w);
 								var eHdiff = -(origEditorSize.h - curEditorSize.h);
-								
+
 								doh.t(origEditorSize.w < curEditorSize.w, "Validating new width is less that the original size");
 								doh.t(origEditorSize.h < curEditorSize.h, "Validating new height is less that the original size");
 								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rouch check that the editor width resized roughly to the Container difference");
@@ -309,12 +320,14 @@
 							var d = new doh.Deferred();
 
 							//Focus on the editor window
-							dojo.window.scrollIntoView(editor.domNode);
-							editor.focus();
+							doh.robot.sequence(d.getTestErrback(function(){
+								dojo.window.scrollIntoView(editor.domNode);
+								editor.focus();
+							}), 500);
 
 							var origEditorSize = dojo.marginBox(editor.domNode);
 							var origContainerSize = dojo.marginBox(container.domNode);
-							os = {w: origContainerSize.w, h: origContainerSize.h}
+							os = {w: origContainerSize.w, h: origContainerSize.h};
 
 							doh.robot.sequence(d.getTestErrback(function(){
 								// Engage FullScreen Mode
@@ -337,7 +350,7 @@
 								var containerHdiff = origContainerSize.h - curContainerSize.h;
 								var eWdiff = origEditorSize.w - curEditorSize.w;
 								var eHdiff = origEditorSize.h - curEditorSize.h;
-								
+
 								doh.t(origEditorSize.w > curEditorSize.w, "Validating new width is less that the original size");
 								doh.t(origEditorSize.h > curEditorSize.h, "Validating new height is less that the original size");
 								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rouch check that the editor width resized roughly to the Container difference");
@@ -358,12 +371,14 @@
 							var d = new doh.Deferred();
 
 							//Focus on the editor window
-							dojo.window.scrollIntoView(editor.domNode);
-							editor.focus();
+							doh.robot.sequence(d.getTestErrback(function(){
+								dojo.window.scrollIntoView(editor.domNode);
+								editor.focus();
+							}), 500);
 
 							var origEditorSize = dojo.marginBox(editor.domNode);
 							var origContainerSize = dojo.marginBox(container.domNode);
-							os = {w: origContainerSize.w, h: origContainerSize.h}
+							os = {w: origContainerSize.w, h: origContainerSize.h};
 
 							doh.robot.sequence(d.getTestErrback(function(){
 								// Engage FullScreen Mode
@@ -386,7 +401,7 @@
 								var containerHdiff = -(origContainerSize.h - curContainerSize.h);
 								var eWdiff = -(origEditorSize.w - curEditorSize.w);
 								var eHdiff = -(origEditorSize.h - curEditorSize.h);
-								
+
 								doh.t(origEditorSize.w < curEditorSize.w, "Validating new width is less that the original size");
 								doh.t(origEditorSize.h < curEditorSize.h, "Validating new height is less that the original size");
 								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rouch check that the editor width resized roughly to the Container difference");
@@ -416,12 +431,14 @@
 							var d = new doh.Deferred();
 
 							//Focus on the editor window
-							dojo.window.scrollIntoView(editor.domNode);
-							editor.focus();
+							doh.robot.sequence(d.getTestErrback(function(){
+								dojo.window.scrollIntoView(editor.domNode);
+								editor.focus();
+							}), 500);
 
 							var origEditorSize = dojo.marginBox(editor.domNode);
 							var origContainerSize = dojo.marginBox(container.domNode);
-							os = {w: origContainerSize.w, h: origContainerSize.h}
+							os = {w: origContainerSize.w, h: origContainerSize.h};
 
 							doh.robot.sequence(d.getTestErrback(function(){
 								// Engage FullScreen Mode
@@ -444,7 +461,7 @@
 								var containerHdiff = origContainerSize.h - curContainerSize.h;
 								var eWdiff = origEditorSize.w - curEditorSize.w;
 								var eHdiff = origEditorSize.h - curEditorSize.h;
-								
+
 								doh.t(origEditorSize.w > curEditorSize.w, "Validating new width is less that the original size");
 								doh.t(origEditorSize.h > curEditorSize.h, "Validating new height is less that the original size");
 								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rouch check that the editor width resized roughly to the Container difference");
@@ -465,12 +482,14 @@
 							var d = new doh.Deferred();
 
 							//Focus on the editor window
-							dojo.window.scrollIntoView(editor.domNode);
-							editor.focus();
+							doh.robot.sequence(d.getTestErrback(function(){
+								dojo.window.scrollIntoView(editor.domNode);
+								editor.focus();
+							}), 500);
 
 							var origEditorSize = dojo.marginBox(editor.domNode);
 							var origContainerSize = dojo.marginBox(container.domNode);
-							os = {w: origContainerSize.w, h: origContainerSize.h}
+							os = {w: origContainerSize.w, h: origContainerSize.h};
 
 							doh.robot.sequence(d.getTestErrback(function(){
 								// Engage FullScreen Mode
@@ -493,7 +512,7 @@
 								var containerHdiff = -(origContainerSize.h - curContainerSize.h);
 								var eWdiff = -(origEditorSize.w - curEditorSize.w);
 								var eHdiff = -(origEditorSize.h - curEditorSize.h);
-								
+
 								doh.t(origEditorSize.w < curEditorSize.w, "Validating new width is less that the original size");
 								doh.t(origEditorSize.h < curEditorSize.h, "Validating new height is less that the original size");
 								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rouch check that the editor width resized roughly to the Container difference");
@@ -523,12 +542,14 @@
 							var d = new doh.Deferred();
 
 							//Focus on the editor window
-							dojo.window.scrollIntoView(editor.domNode);
-							editor.focus();
+							doh.robot.sequence(d.getTestErrback(function(){
+								dojo.window.scrollIntoView(editor.domNode);
+								editor.focus();
+							}), 500);
 
 							var origEditorSize = dojo.marginBox(editor.domNode);
 							var origContainerSize = dojo.marginBox(container.domNode);
-							os = {w: origContainerSize.w, h: origContainerSize.h}
+							os = {w: origContainerSize.w, h: origContainerSize.h};
 
 							doh.robot.sequence(d.getTestErrback(function(){
 								// Engage FullScreen Mode
@@ -551,7 +572,7 @@
 								var containerHdiff = origContainerSize.h - curContainerSize.h;
 								var eWdiff = origEditorSize.w - curEditorSize.w;
 								var eHdiff = origEditorSize.h - curEditorSize.h;
-								
+
 								doh.t(origEditorSize.w > curEditorSize.w, "Validating new width is less that the original size");
 								doh.t(origEditorSize.h > curEditorSize.h, "Validating new height is less that the original size");
 								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rouch check that the editor width resized roughly to the Container difference");
@@ -572,12 +593,14 @@
 							var d = new doh.Deferred();
 
 							//Focus on the editor window
-							dojo.window.scrollIntoView(editor.domNode);
-							editor.focus();
+							doh.robot.sequence(d.getTestErrback(function(){
+								dojo.window.scrollIntoView(editor.domNode);
+								editor.focus();
+							}), 500);
 
 							var origEditorSize = dojo.marginBox(editor.domNode);
 							var origContainerSize = dojo.marginBox(container.domNode);
-							os = {w: origContainerSize.w, h: origContainerSize.h}
+							os = {w: origContainerSize.w, h: origContainerSize.h};
 
 							doh.robot.sequence(d.getTestErrback(function(){
 								// Engage FullScreen Mode
@@ -600,7 +623,7 @@
 								var containerHdiff = -(origContainerSize.h - curContainerSize.h);
 								var eWdiff = -(origEditorSize.w - curEditorSize.w);
 								var eHdiff = -(origEditorSize.h - curEditorSize.h);
-								
+
 								doh.t(origEditorSize.w < curEditorSize.w, "Validating new width is less that the original size");
 								doh.t(origEditorSize.h < curEditorSize.h, "Validating new height is less that the original size");
 								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rouch check that the editor width resized roughly to the Container difference");

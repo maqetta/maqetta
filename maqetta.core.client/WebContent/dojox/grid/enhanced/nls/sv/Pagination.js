@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} av ${1} ${0}",
 	"firstTip": "Första sidan",
@@ -13,6 +15,9 @@
 	"dialogIndication": "Ange sidnummer",
 	"pageCountIndication": " (${0} sidor)",
 	"dialogConfirm": "Gå",
-	"dialogCancel": "Avbryt"
+	"dialogCancel": "Avbryt",
+	"all": "alla"
 })
+//end v1.x content
+);
 

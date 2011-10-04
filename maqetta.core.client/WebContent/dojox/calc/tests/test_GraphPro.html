@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 	<title>GraphPro Calculator Test</title>
@@ -15,28 +15,27 @@
 
 	<script type="text/javascript">
 		//TODO make the graphing window textboxes respond to the input buttons on the layout
-
-		dojo.require("dojox.calc.GraphPro");
-
-		dojo.require("dojo.data.ItemFileReadStore");
-		dojo.require("dojo.data.ItemFileWriteStore");
-		dojo.require("dojox.calc.toFrac");
-		dojo.require("dojox.calc.FuncGen");
-		// dojo.require("dojox.calc.Grapher"); // already required in GraphPro
-		dojo.require("dojo.number");
-
-		dojo.addOnLoad(function(){
-			new dojox.calc.GraphPro(
-			{
-				readStore: new dojo.data.ItemFileReadStore({data: {identifier: 'name', items:[{name:"test2", args:"a, b", body:"return a/b;"}]}}),
-				writeStore: new dojo.data.ItemFileWriteStore({data: {identifier: 'name', items:[{name:"test", args:"a, b", body:"return a/b;"}, {name:"newFunc", args:"", body:"var a,b; return test(b=8,a=4);"}, {name:"exampleFunction", args:"x", body:"return 2*x;"}]}})
-			}, "calculator");
-
-		});
-
+		require([
+			"dojox/calc/GraphPro",
+			"dojo/ready",
+			"dojo/store/Memory",
+			"dojox/calc/toFrac", // optional add-ons
+			"dojox/calc/FuncGen", // optional add-ons
+			"dojo/parser"
+		]);
 	</script>
 </head>
 <body class=claro>
-	<div id="calculator"></div>
+	<div id="calculator" data-dojo-type="dojox.calc.GraphPro" data-dojo-props='
+		readStore: new dojo.store.Memory({ idProperty: "name", data: [
+			{ name: "test2", args: "a, b", body: "return a/b;"}
+		]}),
+		writeStore: new dojo.store.Memory({ idProperty: "name", data: [
+			{ name: "test", args: "a, b", body: "return a/b;" },
+			{ name: "newFunc", args: "", body: "var a,b; return test(b=8,a=4);" },
+			{ name: "exampleFunction", args:"x", body:"return 2*x;" }
+		]})'
+	>
+	</div>
 </body>
 </html>

@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"findLabel": "Găsire:",
 	"findTooltip": "Introduceţi textul de găsit",
@@ -20,3 +22,5 @@
 	"eofDialogTextReplace": "înlocuită"
 })
 
+//end v1.x content
+);

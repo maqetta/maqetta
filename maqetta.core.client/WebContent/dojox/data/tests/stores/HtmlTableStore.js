@@ -5,11 +5,11 @@ dojo.require("dojo.data.api.Identity");
 
 
 dojox.data.tests.stores.HtmlTableStore.getBooks2Store = function(){
-	return new dojox.data.HtmlTableStore({url: dojo.moduleUrl("dojox.data.tests", "stores/books2.html").toString(), tableId: "books2"});
+	return new dojox.data.HtmlTableStore({url: require.toUrl("dojox/data/tests/stores/books2.html").toString(), tableId: "books2"});
 };
 
 dojox.data.tests.stores.HtmlTableStore.getBooksStore = function(){
-	return new dojox.data.HtmlTableStore({url: dojo.moduleUrl("dojox.data.tests", "stores/books.html").toString(), tableId: "books"});
+	return new dojox.data.HtmlTableStore({url: require.toUrl("dojox/data/tests/stores/books.html").toString(), tableId: "books"});
 };
 
 doh.register("dojox.data.tests.stores.HtmlTableStore",

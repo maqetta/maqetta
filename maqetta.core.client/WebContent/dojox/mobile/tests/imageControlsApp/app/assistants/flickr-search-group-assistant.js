@@ -1,4 +1,3 @@
-dojo.provide("FlickrSearchGroupAssistant");
 dojo.require("dojox.mobile.app.SceneAssistant");
 
 dojo.declare("FlickrSearchGroupAssistant", dojox.mobile.app.SceneAssistant, {

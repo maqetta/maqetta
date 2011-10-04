@@ -103,7 +103,7 @@
 									try{
 										// this better have opened the expected editor or something very bad happened
 										doh.isNot(undefined,dijit.byId(editorids[i]),"Editing the "+i+" field of the 1st row did not open the expected editor.");
-										doh.t(dijit.byId(editorids[i])._focused);
+										doh.t(dijit.byId(editorids[i]).focused);
 										grid.edit.cancel();
 										doh.robot.keyPress(dojo.keys.RIGHT_ARROW,500);
 										doh.robot.sequence(function(){

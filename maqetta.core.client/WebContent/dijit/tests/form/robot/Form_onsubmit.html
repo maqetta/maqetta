@@ -9,85 +9,114 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
 		<script type="text/javascript" src="../../helpers.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_Form_onsubmit.html');
 
+				var textbox;
+				var handler;
 				doh.register("onsubmit", [
 					{
 						name: "submit1",
-						timeout: 9000,
+						timeout: 4000,
 						runTest: function(){
 							var d = new doh.Deferred();
+
+							textbox = dijit.byId("textbox");
+							//reset the submit textbox
+							textbox.set('value', "", false);
+							handler = textbox.connect(textbox, 'onChange', function(){
+								d.errback('onChange should not have fired');
+							});
 							
-							doh.robot.mouseMoveAt("submit1", 500, 0);
+							doh.robot.mouseMoveAt("submit1", 1000, 1);
 							doh.robot.mouseClick({left:true}, 500);
 							
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("", dijit.byId("textbox").get('value'));
+								doh.is("", textbox.get('value'));
 							}), 1000);
+
 							return d;
+						},
+						tearDown: function(){
+							textbox.disconnect(handler);
 						}
 					},
 					{
 						name: "submit2",
-						timeout: 9000,
+						timeout: 4000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
 							//reset the submit textbox
-							dijit.byId("textbox").set('value',"");
+							textbox.set('value', "", false);
+							handler = textbox.connect(textbox, 'onChange', function(){
+								d.errback('onChange should not have fired');
+							});
 														
-							doh.robot.mouseMoveAt("submit2", 500, 0);
+							doh.robot.mouseMoveAt("submit2", 0, 1);
 							doh.robot.mouseClick({left:true}, 500);
 							
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("", dijit.byId("textbox").get('value'));
+								doh.is("", textbox.get('value'));
 							}), 1000);
+
 							return d;
+						},
+						tearDown: function(){
+							textbox.disconnect(handler);
 						}
 					},
 					{
 						name: "submit3",
-						timeout: 9000,
+						timeout: 5000,
 						runTest: function(){
 							var d = new doh.Deferred();
-							
-							//reset the submit textbox
-							dijit.byId("textbox").set('value',"");
 
-							doh.robot.mouseMoveAt("submit3", 500, 0);
+							//reset the submit textbox
+							textbox.set('value', "", false);
+
+							handler = textbox.connect(textbox, 'onChange',
+								d.getTestCallback(function(){
+									doh.is("one", textbox.get('value'));
+								})
+							);
+							doh.robot.mouseMoveAt("submit3", 0, 1);
 							doh.robot.mouseClick({left:true}, 500);
-							
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("one", dijit.byId("textbox").get('value'));
-							}), 1000);
+
 							return d;
+						},
+						tearDown: function(){
+							textbox.disconnect(handler);
 						}
 					},
 					{
 						name: "submit4",
-						timeout: 9000,
+						timeout: 5000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
 							//reset the submit textbox
-							dijit.byId("textbox").set('value',"");
+							textbox.set('value', "", false);
 							
-							doh.robot.mouseMoveAt("submit4", 500, 0);
+							handler = textbox.connect(textbox, 'onChange',
+								d.getTestCallback(function(){
+									doh.is("one", textbox.get('value'));
+								})
+							);
+							doh.robot.mouseMoveAt("submit4", 0, 1);
 							doh.robot.mouseClick({left:true}, 500);
 							
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("one", dijit.byId("textbox").get('value'));
-							}), 1000);
 							return d;
+						},
+						tearDown: function(){
+							textbox.disconnect(handler);
 						}
 					},
 					{
@@ -96,7 +125,7 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 							
-							doh.robot.mouseMoveAt("combo1", 500, 0);
+							doh.robot.mouseMoveAt("combo1", 0, 1);
 							doh.robot.mouseClick({left:true}, 500);
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 1000, {});
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500, {});
@@ -117,7 +146,7 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.mouseMoveAt("combo2", 500, 0);
+							doh.robot.mouseMoveAt("combo2", 0, 1);
 							doh.robot.mouseClick({left:true}, 500);
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 1000, {});
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 1000, {});
@@ -140,9 +169,9 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 							
-							doh.robot.mouseMoveAt("combo3", 500, 0);
+							doh.robot.mouseMoveAt("combo3", 0, 1);
 							doh.robot.mouseClick({left:true}, 500);
-							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500, {});
+							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 1000, {});
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500, {});
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500, {});
 							doh.robot.keyPress(dojo.keys.ENTER, 500, {});
@@ -161,7 +190,7 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.mouseMoveAt("combo4", 500, 0);
+							doh.robot.mouseMoveAt("combo4", 0, 1);
 							doh.robot.mouseClick({left:true}, 500);
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 1000, {});
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500, {});

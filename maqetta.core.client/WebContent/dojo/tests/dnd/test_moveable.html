@@ -48,9 +48,11 @@
 		}
 	</style>
 	<script type="text/javascript" src="../../dojo.js" djConfig="isDebug: true"></script>
+	<!--
 	<script type="text/javascript" src="../../dnd/Mover.js"></script>
 	<script type="text/javascript" src="../../dnd/Moveable.js"></script>
 	<script type="text/javascript" src="../../dnd/move.js"></script>
+	-->
 	<script type="text/javascript">
 		dojo.require("dojo.dnd.move");
 		var m1, m2;
@@ -59,18 +61,18 @@
 			m2 = new dojo.dnd.Moveable("moveable2");
 			m3 = new dojo.dnd.Moveable("moveable3");
 
-			dojo.subscribe("/dnd/move/start", function(mover){ 
-				console.debug("Start move", mover); 	
+			dojo.subscribe("/dnd/move/start", function(mover){
+				console.debug("Start move", mover, mover.node);
 			});
-			dojo.subscribe("/dnd/move/stop", function(mover){ 
-				console.debug("Stop move", mover); 	
+			dojo.subscribe("/dnd/move/stop", function(mover){
+				console.debug("Stop move", mover, mover.node);
 			});
 			
 			dojo.connect(m1, "onMoveStart", function(mover){
-				console.debug("Start moving m1", mover); 	
+				console.debug("Start moving m1", mover, mover.node);
 			});
 			dojo.connect(m1, "onMoveStop", function(mover){
-				console.debug("Stop moving m1", mover); 	
+				console.debug("Stop moving m1", mover, mover.node);
 			});
 		};
 		dojo.addOnLoad(init);

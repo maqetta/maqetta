@@ -1,4 +1,5 @@
-<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" >
+<!DOCTYPE html>
+<html>
 <head>
     <title>Testing image</title>
     <style type="text/css">
@@ -12,14 +13,9 @@
 		#testImage { border:2px solid #000; }
 		
     </style>
-    <script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad:true"></script>
-	<!-- for debugging -->
-	<script type="text/javascript" src="../MagnifierLite.js"></script>
-	<script type="text/javascript" src="../Magnifier.js"></script>
-
+    <script type="text/javascript" src="../../../dojo/dojo.js" djConfig="async: true, isDebug: true, parseOnLoad:true"></script>
     <script type="text/javascript">
-		dojo.require("dojox.image.Magnifier");
-		dojo.require("dijit.form.Button");		
+        require(["dojox/image/Magnifier", "dijit/form/Button", "dojo/parser"]);
 	</script>
 
 </head>

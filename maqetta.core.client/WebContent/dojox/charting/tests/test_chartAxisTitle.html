@@ -1,8 +1,20 @@
+<!--[if IE 7]>
+<!DOCTYPE>
+<html lang="en">
+	<head>
+<![endif]-->
+<!--[if IE 8]>
+<!DOCTYPE>
+<html lang="en">
+    <head>
+           <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
+<![endif]-->
+<![if gte IE 9]>
 <!DOCTYPE HTML>
-<html>
-<head>
+<html lang="en">
+	<head>
+<![endif]>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
 <title>Chart2D Title</title>
 <style type="text/css">
 	@import "../../../dojo/resources/dojo.css";
@@ -44,7 +56,7 @@ dojo.require("dojox.charting.themes.PlotKit.purple");
 dojo.require("dojox.charting.themes.PlotKit.red");
 dojo.require("dijit.form.Button");
 dojo.require("dijit.form.NumberSpinner");
-
+dojo.require("dojo.parser");
 var chart1;
 
 updateAxis = function(){

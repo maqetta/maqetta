@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	displayOptions: "[көрсету параметрлері]",
 	title: "Тақырып",
@@ -9,4 +11,5 @@
 	summary: "Жиынтық",
 	content: "Мазмұн"
 })
-
+//end v1.x content
+);

@@ -52,7 +52,6 @@
 		is told that debug mode is off, and to parse all dojoType widgets when it has fully loaded.
 	-->
 	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: false, parseOnLoad: true, useCommentedJson: true"></script>
-	<script type="text/javascript" src="../../../dijit/dijit.js"></script>
 	<script>
 		dojo.require("dijit.Tree");
 		dojo.require("dijit.tree.ForestStoreModel");
@@ -78,7 +77,8 @@
 		Demo:  Lazy Loading File Browsing Store connected to multiple widgets
 	</h1>
 	<p>All the widgets used in this demo connect to the same filestore instance.  It is talking to a filestore rooted in the dojox/data/ sub-directory to make it fast handling when querying across all files.</p>
-	<p><i><b>This demo must be run from a web-server with PHP support enabled.  Without PHP support, this demo cannot function.</b></i></p>
+	<p><i><b>This demo must be run from a web-server with PHP support enabled.  Without PHP support, this demo cannot function.  The Demo also requires PHP 
+	support for json_encode and json_decode.  Please be sure to have those packages installed in your PHP environment.</b></i></p>
 	<hr>
 
 	<div dojoType="dojox.data.FileStore" url="stores/filestore_dojoxdata.php" jsId="fileStore" pathAsQueryParam="true"></div>

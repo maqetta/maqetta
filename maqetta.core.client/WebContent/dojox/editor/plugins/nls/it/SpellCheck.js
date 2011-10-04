@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	widgetLabel: "Controllo ortografico batch",
 	unfound: "Non trovato",
@@ -15,3 +17,5 @@
 	iMsg: "Nessun suggerimento ortografico"
 })
 
+//end v1.x content
+);

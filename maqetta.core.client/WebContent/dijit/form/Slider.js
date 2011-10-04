@@ -1,9 +1,18 @@
-define("dijit/form/Slider", ["dojo", "dijit", "dijit/form/HorizontalSlider", "dijit/form/VerticalSlider", "dijit/form/HorizontalRule", "dijit/form/VerticalRule", "dijit/form/HorizontalRuleLabels", "dijit/form/VerticalRuleLabels"], function(dojo, dijit) {
+define([
+	"dojo/_base/kernel", // kernel.deprecated
+	"./HorizontalSlider",
+	"./VerticalSlider",
+	"./HorizontalRule",
+	"./VerticalRule",
+	"./HorizontalRuleLabels",
+	"./VerticalRuleLabels"
+], function(kernel){
 
-dojo.deprecated("Call require() for HorizontalSlider / VerticalRule, explicitly rather than 'dijit.form.Slider' itself", "", "2.0");
+	// module:
+	//		dijit/form/Slider
+	// summary:
+	//		Rollup of all the the Slider related widgets
+	//		For back-compat, remove for 2.0
 
-// For back-compat, remove for 2.0
-
-
-return dijit.form.Slider;
+	kernel.deprecated("Call require() for HorizontalSlider / VerticalRule, explicitly rather than 'dijit.form.Slider' itself", "", "2.0");
 });

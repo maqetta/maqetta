@@ -1,7 +1,6 @@
-dojo.provide("dojox.gfx3d");
+// AMD-ID "dojox/gfx3d"
+define(["dojo/_base/kernel","dojox","./gfx3d/matrix","./gfx3d/_base","./gfx3d/object"], function(dojo,dojox) {
+dojo.getObject("gfx3d", true, dojox);
 
-dojo.require("dojox.gfx3d.matrix");
-dojo.require("dojox.gfx3d._base");
-dojo.require("dojox.gfx3d.object");
-
-
+return dojox.gfx3d;
+});

@@ -1,4 +1,6 @@
-dojo.provide("dojox.json.schema");
+define(["dojo/_base/kernel", "dojox", "dojo/_base/array"], function(dojo, dojox){
+
+dojo.getObject("json.schema", true, dojox);
 
 
 dojox.json.schema.validate = function(/*Any*/instance,/*Object*/schema){
@@ -216,3 +218,5 @@ dojox.json.schema._validate = function(/*Any*/instance,/*Object*/schema,/*Boolea
 	return {valid:!errors.length,errors:errors};
 };
 
+return dojox.json.schema;
+});

@@ -1,10 +1,11 @@
-dojo.provide("dojox.gfx.canvas_attach");
+define(["dojo/_base/lang", "dojo/_base/kernel","dojox/gfx/canvas"], function(lang,kernel,canvas){
+	lang.getObject("dojox.gfx.canvas_attach", true);
+	kernel.experimental("dojox.gfx.canvas_attach");
 
-dojo.require("dojox.gfx.canvas");
+	// not implemented
+	canvas.attachSurface = canvas.attachNode = function(){
+		return null;	// for now
+	};
 
-dojo.experimental("dojox.gfx.canvas_attach");
-
-// not implemented
-dojox.gfx.canvas.attachSurface = dojox.gfx.canvas.attachNode = function(){
-	return null;	// for now
-};
+	return canvas;
+});

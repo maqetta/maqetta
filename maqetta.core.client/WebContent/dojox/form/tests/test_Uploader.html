@@ -5,10 +5,7 @@
 	<link href="../../../dijit/themes/dijit.css" rel="stylesheet" />
 	<link href="../../../dijit/themes/claro/Common.css" rel="stylesheet" />
 	<link href="../../../dijit/themes/claro/form/Common.css" rel="stylesheet" />
-	<link href="../../../dijit/themes/claro/Dialog.css" rel="stylesheet" />
 	<link href="../../../dijit/themes/claro/form/Button.css" rel="stylesheet" />
-	<link href="../../../dijit/themes/claro/layout/TabContainer.css" rel="stylesheet" />
-	<link href="../../../dijit/themes/claro/Dialog.css" rel="stylesheet" />
 
 	<link href="../resources/UploaderFileList.css" rel="stylesheet" />
 	<style>
@@ -18,22 +15,19 @@
 		}
 		.browseButton{
 			width:300px;
-			height:20px;
+			/*height:20px;*/
 			font-weight:bold;
 			margin:10px 0 2px 0;
 		}
 		.dijitTabPane{
 			padding:20px;
 		}
-		form{
-			width:315px;
-			margin-right:10px;
-		}
 		fieldset{
 			text-align:right;
+			padding: 5px;
 		}
 		input[type=text]{
-			width:140px;
+			width:135px;
 		}
 		.dijitButton{
 			margin-top:15px;
@@ -79,27 +73,18 @@
 		#dialog p{
 			width:310px;
 		}
-		.claro .attachButton{
-			width:350px;
-			height:60px;
-			border:0;
-		}
-		.claro .attachButton .dijitButton .dijitButtonNode{
-			background-color:#ffffff;
-			background-image:url(images/attach.png);
-			background-position:left top;
-			background-repeat:no-repeat;
-			height:56px;
-			border:0;
-			-moz-box-shadow:0 0 0;
-			-webkit-box-shadow:0 0 0;
-		}
-		.claro .attachButton .dijitButtonHover .dijitButtonNode{
-			background-position:0px -60px;
+		form{
+			margin-bottom:15px;
 		}
 		code{
 			font-family:monospace;
 			white-space:nowrap;
+		}
+		.browseButton, .browseButton .dijitButton, .browseButton .dijitButtonNode {
+			display:block;
+		}
+		.dijitUploadDisplayInput {
+			width:100px;
 		}
 	</style>
 	<script>
@@ -110,15 +95,15 @@
 	</script>
 	<script src="../../../dojo/dojo.js"></script>
 	<script>
+		dojo.require("dojo.parser");
 		dojo.require("dojox.form.Uploader");
 		dojo.require("dojox.form.uploader.FileList");
 		dojo.require("dijit.form.Button");
 		dojo.require("dojox.form.uploader.plugins.Flash");
 
 		var handleUpload = function(upl, node){
-
 			dojo.connect(upl, "onComplete", function(dataArray){
-				dojo.forEach(dataArray, function(file){
+				dojo.forEach(dojo.isArray(dataArray)?dataArray:[dataArray], function(file){
 					console.log("display:", file)
 
 					var div = dojo.create('div', {className:'thumb'});
@@ -127,10 +112,24 @@
 					node.appendChild(div);
 				});
 			});
+		},
+		handleDnD = function(domnode, uploader){
+			if(uploader.addDropTarget && uploader.uploadType=='html5'){
+				dojo.create('div',{innerHTML:'Drag and Drop files to this fieldset'}, domnode,'last');
+				uploader.addDropTarget(domnode);
+			}
 		}
+
 		dojo.addOnLoad(function(){
-			dojo.connect(dijit.byId("remBtn"), "onClick", dijit.byId("uploader"), "reset");
-			handleUpload(dijit.byId("uploader"), dojo.byId('colImages'));
+			var uploader=dijit.byId("uploader"), uploader2=dijit.byId("uploader2");
+			dojo.connect(dijit.byId("remBtn"), "onClick", uploader, "reset");
+			dojo.connect(dijit.byId("remBtn2"), "onClick", uploader2, "reset");
+			handleUpload(uploader, dojo.byId('colImages'));
+			handleUpload(uploader2, dojo.byId('colImages'));
+			if(require.has('file-multiple')){
+				handleDnD(uploader.domNode.parentNode, uploader);
+				handleDnD(uploader2.domNode.parentNode, uploader2);
+			}
 		});
 	</script>
 </head>
@@ -148,14 +147,15 @@
 		is provided because Flash has some features that HTML5 does not yet have. But it is still not
 		recommended because of the many problems that Firefox and Webkit have with the Flash plugin.
 	</p>
+	<p class="HTML5">When HTML5 plugin is in use, drag &amp; drop of files to the fieldset is supported.</p>
 
 	<table class="pageTable">
 		<tr>
 			<td id="colForm">
 				<form method="post" action="UploadFile.php" id="myForm" enctype="multipart/form-data" >
 					<fieldset>
-						<legend>Form Post Test</legend>
-						<input class="browseButton" name="uploadedfile" multiple="true" type="file" dojoType="dojox.form.Uploader" label="Select Some Files" id="uploader">
+						<legend>Block Browse Button Form Post Test</legend>
+						<input class="browseButton" name="uploadedfile" multiple="true" type="file" dojoType="dojox.form.Uploader" label="Select Some Files" isDebug="true" id="uploader" />
 						<input type="text" name="album" value="Summer Vacation" />
 						<input type="text" name="year" value="2011" />
 						<input type="button" id="remBtn" label="Clear" dojoType="dijit.form.Button" />
@@ -163,11 +163,21 @@
 						<div id="files" dojoType="dojox.form.uploader.FileList" uploaderId="uploader"></div>
 					</fieldset>
 				</form>
+				<form method="post" action="UploadFile.php" id="myForm2" enctype="multipart/form-data" >
+					<fieldset>
+						<legend>Inline Browse Button Form Post Test</legend>
+						inline control <div data-dojo-type="dojox.form.Uploader" id="uploader2" data-dojo-props="name:'uploadedfile',showInput:'before',isDebug:true">Browse</div>
+						<input type="text" name="album" value="Summer Vacation" />
+						<input type="text" name="year" value="2011" />
+						<input type="button" id="remBtn2" label="Clear" dojoType="dijit.form.Button" />
+						<input type="submit" label="Submit" dojoType="dijit.form.Button" />
+						<div id="files2" dojoType="dojox.form.uploader.FileList" uploaderId="uploader2"></div>
+					</fieldset>
+				</form>
 			</td>
 			<td id="colImages">
 			</td>
 		</tr>
 	</table>
-
 </body>
 </html>

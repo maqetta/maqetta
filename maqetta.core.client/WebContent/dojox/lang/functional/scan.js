@@ -1,6 +1,4 @@
-dojo.provide("dojox.lang.functional.scan");
-
-dojo.require("dojox.lang.functional.lambda");
+define(["dojo/_base/kernel", "dojo/_base/lang", "./lambda"], function(d, darray, df){
 
 // This module adds high-level functions and related constructs:
 //	- "scan" family of functions
@@ -15,8 +13,7 @@ dojo.require("dojox.lang.functional.lambda");
 //	- take a string as the array argument
 //	- take an iterator objects as the array argument (only scanl, and scanl1)
 
-(function(){
-	var d = dojo, df = dojox.lang.functional, empty = {};
+	var empty = {};
 
 	d.mixin(df, {
 		// classic reduce-class functions
@@ -63,11 +60,11 @@ dojo.require("dojox.lang.functional.lambda");
 				// iterator
 				if(a.hasNext()){
 					t = [z = a.next()];
-					for(var i = 1; a.hasNext(); t.push(z = f.call(o, z, a.next(), i++, a)));
+					for(i = 1; a.hasNext(); t.push(z = f.call(o, z, a.next(), i++, a)));
 				}
 			}else{
 				// object/dictionary
-				for(var i in a){
+				for(i in a){
 					if(!(i in empty)){
 						if(first){
 							t = [z = a[i]];
@@ -103,4 +100,4 @@ dojo.require("dojox.lang.functional.lambda");
 			return t;	// Array
 		}
 	});
-})();
+});

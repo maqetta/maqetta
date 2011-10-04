@@ -34,7 +34,7 @@
 			resizeCnt[widget.id] = (resizeCnt[widget.id] || 0) + 1;
 		}
 	
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			dojo.declare("dijit.TestLayoutContained",
 				dijit.layout._LayoutWidget, {
 					startup: function(){

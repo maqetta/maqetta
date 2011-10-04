@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"nodeActions": "${nodeName}-åtgärder",
 	"selectContents": "Välj innehåll",
@@ -8,3 +10,5 @@
 	"moveEnd": "Flytta markören till slutet"
 })
 
+//end v1.x content
+);

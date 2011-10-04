@@ -1,13 +1,15 @@
-dojo.provide("dojox.form.manager._ClassMixin");
-
-dojo.require("dojox.form.manager._Mixin");
-
-(function(){
-	var fm = dojox.form.manager,
+define([
+	"dojo/_base/lang",
+	"dojo/_base/kernel",
+	"dojo/dom-class",
+	"./_Mixin",
+	"dojo/_base/declare"
+], function(lang, dojo, domClass, _Mixin, declare){
+	var fm = lang.getObject("dojox.form.manager", true),
 		aa = fm.actionAdapter,
 		ia = fm.inspectorAdapter;
 
-	dojo.declare("dojox.form.manager._ClassMixin", null, {
+	return declare("dojox.form.manager._ClassMixin", null, {
 		// summary:
 		//		Form manager's mixin for testing/assigning/removing
 		//		classes of controlled elements.
@@ -27,7 +29,7 @@ dojo.require("dojox.form.manager._Mixin");
 			//		If it is omitted, all known form elements are to be processed.
 
 			var result = this.inspect(ia(function(name, node){
-				return dojo.hasClass(node, className);
+				return domClass.contains(node, className);
 			}), names);
 
 			return result;	// Object
@@ -44,7 +46,7 @@ dojo.require("dojox.form.manager._Mixin");
 			//		If it is omitted, all known form elements are to be processed.
 
 			this.inspect(aa(function(name, node){
-				dojo.addClass(node, className);
+				domClass.add(node, className);
 			}), names);
 
 			return this;	// self
@@ -61,10 +63,10 @@ dojo.require("dojox.form.manager._Mixin");
 			//		If it is omitted, all known form elements are to be processed.
 
 			this.inspect(aa(function(name, node){
-				dojo.removeClass(node, className);
+				domClass.remove(node, className);
 			}), names);
 
 			return this;	// self
 		}
 	});
-})();
+});

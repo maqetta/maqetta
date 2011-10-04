@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	singleSort: "מיון יחיד",
 	nestedSort: "מיון מקונן",
@@ -9,4 +11,6 @@
 	indirectSelectionCheckBox: "שורה ${0}, בחירה מרובה, תיבת סימון",
 	selectAll: "בחירת הכל"
 })
+//end v1.x content
+);
 

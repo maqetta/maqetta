@@ -41,6 +41,7 @@
 		dojo.require("dijit.layout.BorderContainer");
 		dojo.require("dijit.form.FilteringSelect");
 		dojo.require("dijit.form.Button");
+		dojo.require("dijit.form.ToggleButton");
 		dojo.require("dijit.layout.TabContainer");
 		dojo.require("dijit.layout.ContentPane");
 		dojo.require("dojox.grid.DataGrid");
@@ -396,7 +397,7 @@
 								+ saveErrorMsg);
 						} else {
 							successes++;
-							if (successes = inputs.length) {
+							if (successes == inputs.length) {
 								alert("All files saved successfully");
 								dijit.byId("changedFilesDlg").hide();
 							}

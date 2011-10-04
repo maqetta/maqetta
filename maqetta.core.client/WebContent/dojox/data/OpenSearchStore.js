@@ -1,12 +1,16 @@
-dojo.provide("dojox.data.OpenSearchStore");
+define([
+	"dojo/_base/kernel", // dojo.experimental
+	"dojo/_base/lang", // dojo.extend
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/xhr", // dojo.xhrGet
+	"dojo/_base/array", // dojo.forEach
+	"dojo/_base/window", // dojo.doc
+	"dojo/query",
+	"dojo/data/util/simpleFetch",
+	"dojox/xml/parser"], function (kernel, lang, declare, dxhr, array, window, query, simpleFetch, parser) {
+kernel.experimental("dojox.data.OpenSearchStore");
 
-dojo.require("dojo.data.util.simpleFetch");
-dojo.require("dojox.xml.DomParser");
-dojo.require("dojox.xml.parser");
-
-dojo.experimental("dojox.data.OpenSearchStore");
-
-dojo.declare("dojox.data.OpenSearchStore", null, {
+var OpenSearchStore = declare("dojox.data.OpenSearchStore", null, {
 	constructor: function(/*Object*/args){
 		//	summary:
 		//		Initializer for the OpenSearchStore store.
@@ -21,7 +25,7 @@ dojo.declare("dojox.data.OpenSearchStore", null, {
 				this.urlPreventCache = args.urlPreventCache?true:false;
 			}
 		}
-		var def = dojo.xhrGet({
+		var def = dxhr.get({
 			url: this.url,
 			handleAs: "xml",
 			sync: true,
@@ -185,7 +189,7 @@ dojo.declare("dojox.data.OpenSearchStore", null, {
 		var index = template.indexOf("{searchTerms}");
 		template = template.substring(0, index) + request.query.searchTerms + template.substring(index+13);
 		
-		dojo.forEach([	{'name': 'count', 'test': request.count, 'def': '10'},
+		array.forEach([	{'name': 'count', 'test': request.count, 'def': '10'},
 						{'name': 'startIndex', 'test': request.start, 'def': this.urlElement.attributes.getNamedItem("indexOffset")?this.urlElement.attributes.getNamedItem("indexOffset").nodeValue:0},
 						{'name': 'startPage', 'test': request.startPage, 'def': this.urlElement.attributes.getNamedItem("pageOffset")?this.urlElement.attributes.getNamedItem("pageOffset").nodeValue:0},
 						{'name': 'language', 'test': request.language, 'def': "*"},
@@ -221,7 +225,7 @@ dojo.declare("dojox.data.OpenSearchStore", null, {
 		};
 
 		// Change to fetch the query results.
-		var xhr = dojo.xhrGet(getArgs);
+		var xhr = dxhr.get(getArgs);
 
 		xhr.addErrback(function(error){
 			errorHandler(error, request);
@@ -242,9 +246,9 @@ dojo.declare("dojox.data.OpenSearchStore", null, {
 	},
 	
 	_processOSDxml: function(data){
-		var div = dojo.doc.createElement("div");
+		var div = window.doc.createElement("div");
 		div.innerHTML = data;
-		return dojo.query(this.itemPath, div);
+		return query(this.itemPath, div);
 	},
 	
 	_processItemxml: function(item, attribute){
@@ -364,4 +368,5 @@ dojo.declare("dojox.data.OpenSearchStore", null, {
 		}
 	}
 });
-dojo.extend(dojox.data.OpenSearchStore,dojo.data.util.simpleFetch);
+return lang.extend(OpenSearchStore,simpleFetch);
+});

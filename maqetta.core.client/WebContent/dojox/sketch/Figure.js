@@ -1,10 +1,14 @@
-dojo.provide("dojox.sketch.Figure");
-dojo.experimental("dojox.sketch");
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"dojo/_base/connect",
+	"dojo/_base/html",
+	"../gfx",
+	"../xml/DomParser",
+	"./UndoStack"
+], function(dojo){
+	dojo.experimental("dojox.sketch");
 
-dojo.require("dojox.gfx");
-dojo.require("dojox.sketch.UndoStack");
-
-(function(){
 	var ta=dojox.sketch;
 	ta.tools={};
 	ta.registerTool=function(type, fn){ ta.tools[type]=fn; };
@@ -523,4 +527,6 @@ dojo.require("dojox.sketch.UndoStack");
 		return s;
 	};
 	p.getValue=p.serialize;
-})();
+
+	return dojox.sketch.Figure;
+});

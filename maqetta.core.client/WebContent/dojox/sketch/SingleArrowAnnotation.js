@@ -1,8 +1,6 @@
-dojo.provide("dojox.sketch.SingleArrowAnnotation");
-dojo.require("dojox.sketch.Annotation");
-dojo.require("dojox.sketch.Anchor");
+define(["dojo/_base/kernel", "dojo/_base/lang", "./Annotation", "./Anchor"], function(dojo){
+	dojo.getObject("sketch", true, dojox);
 
-(function(){
 	var ta=dojox.sketch;
 	ta.SingleArrowAnnotation=function(figure, id){
 		ta.Annotation.call(this, figure, id);
@@ -224,4 +222,5 @@ dojo.require("dojox.sketch.Anchor");
 	};
 
 	ta.Annotation.register("SingleArrow");
-})();
+	return dojox.sketch.SingleArrowAnnotation;
+});

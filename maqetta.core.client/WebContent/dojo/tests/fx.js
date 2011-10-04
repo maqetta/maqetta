@@ -1,5 +1,7 @@
-dojo.provide("tests.fx");
-if(dojo.isBrowser){
-	doh.registerUrl("tests.fx", dojo.moduleUrl("tests", "fx.html"), 30000);
-	doh.registerUrl("tests.NodeList-fx", dojo.moduleUrl("tests", "NodeList-fx.html"));
-}
+define(["doh", "require"], function(doh, require){
+	if(doh.isBrowser){
+		doh.register("tests.fx", require.toUrl("./fx.html"), 30000);
+		doh.register("tests.NodeList-fx", require.toUrl("./NodeList-fx.html"), 30000);
+	}
+});
+

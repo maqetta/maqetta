@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 redLabel: "א",
 greenLabel: "י",
@@ -10,4 +12,4 @@ hexLabel: "הקס",
 huePickerTitle: "בורר גוון",
 saturationPickerTitle: "בורר רוויה"
 })
-
+);

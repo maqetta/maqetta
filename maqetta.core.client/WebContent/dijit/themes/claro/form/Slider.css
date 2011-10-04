@@ -54,14 +54,17 @@
   outline: 1px;
 }
 .claro .dijitSliderFocused .dijitSliderBar {
-  border-color: #769dc0;
+  border-color: #759dc0;
 }
 .claro .dijitSliderHover .dijitSliderBar {
-  border-color: #769dc0;
+  border-color: #759dc0;
 }
 .claro .dijitSliderDisabled .dijitSliderBar {
   background-image: none;
   border-color: #d3d3d3;
+}
+.claro .dijitRuleLabel {
+  color: #000000;
 }
 /* Horizontal Slider */
 .claro .dijitRuleLabelsContainerH {
@@ -90,22 +93,22 @@
 .claro .dijitSliderHover .dijitSliderProgressBarH, .claro .dijitSliderHover .dijitSliderLeftBumper {
   background-position: 0 -20px;
   background-color: #abd6ff;
-  border-color: #769dc0;
+  border-color: #759dc0;
 }
 .claro .dijitSliderHover .dijitSliderRemainingBarH, .claro .dijitSliderHover .dijitSliderRightBumper {
   background-position: 0 0;
   background-color: #ffffff;
-  border-color: #769dc0;
+  border-color: #759dc0;
 }
 .claro .dijitSliderFocused .dijitSliderProgressBarH, .claro .dijitSliderFocused .dijitSliderLeftBumper {
   background-position: 0 -30px;
   background-color: #abd6ff;
-  border-color: #769dc0;
+  border-color: #759dc0;
 }
 .claro .dijitSliderFocused .dijitSliderRemainingBarH, .claro .dijitSliderFocused .dijitSliderRightBumper {
   background-position: 0 -9px;
   background-color: #ffffff;
-  border-color: #769dc0;
+  border-color: #759dc0;
 }
 .claro .dijitSliderDisabled .dijitSliderProgressBarH, .claro .dijitSliderDisabled .dijitSliderLeftBumper {
   background-color: #d3d3d3;
@@ -248,7 +251,7 @@
 .claro .dijitSliderHover .dijitSliderIncrementIconV {
   /* dijitSliderActive should be treated as dijitSliderHover since "clicking the slider" has no meaning */
 
-  border: solid 1px #769dc0;
+  border: solid 1px #759dc0;
   background-color: #ffffff;
 }
 .claro .dijitSliderDecrementIconH {
@@ -286,7 +289,7 @@
 .claro .dijitSliderButtonContainerV .dijitSliderIncrementButtonActive,
 .claro .dijitSliderButtonContainerH .dijitSliderIncrementButtonActive {
   background-color: #abd6ff;
-  border-color: #769dc0;
+  border-color: #759dc0;
 }
 .claro .dijitSliderButtonInner {
   visibility: hidden;

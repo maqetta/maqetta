@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"findLabel": "Localizar:",
 	"findTooltip": "Introduzir texto a localizar",
@@ -21,3 +23,5 @@
 	"eofDialogTextReplace": "substituído"
 })
 
+//end v1.x content
+);

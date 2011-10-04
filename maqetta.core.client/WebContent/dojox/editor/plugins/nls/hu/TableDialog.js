@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertTableTitle: "Táblázat beszúrása",
 	modifyTableTitle: "Táblázat módosítása",
@@ -28,3 +30,5 @@
 	deleteTableRowLabel: "Sor törlése",
 	deleteTableColumnLabel: "Oszlop törlése"
 })
+//end v1.x content
+);

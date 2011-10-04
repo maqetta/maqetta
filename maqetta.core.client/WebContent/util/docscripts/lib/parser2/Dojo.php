@@ -201,6 +201,7 @@ class Dojo {
   }
 
   private static function format_summary($summary) {
-    return preg_replace('%`([^`]+)`%', '<code>$1</code>', htmlentities($summary));
+      return htmlentities($summary);
+    //return preg_replace('%`([^`]+)`%', '<code>$1</code>', htmlentities($summary));
   }
 }

@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertTableTitle: "Sett inn tabell",
 	modifyTableTitle: "Endre tabell",
@@ -28,3 +30,5 @@
 	deleteTableRowLabel: "Slett rad",
 	deleteTableColumnLabel: "Slett kolonne"
 })
+//end v1.x content
+);

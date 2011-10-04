@@ -1,4 +1,3 @@
-dojo.provide("MainAssistant");
 dojo.require("dojox.mobile.app.SceneAssistant");
 
 dojo.declare("MainAssistant", dojox.mobile.app.SceneAssistant, {

@@ -1,7 +1,10 @@
-dojo.provide('dojox.atom.io.Connection');
-dojo.require('dojox.atom.io.model');
-
-dojo.declare("dojox.atom.io.Connection",null,{
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/xhr",
+	"dojo/_base/window",
+	"./model",
+	"dojo/_base/declare"], function (dojo, xhrUtil, windowUtil, model) {
+return dojo.declare("dojox.atom.io.Connection",null,{
 	// summary: This object implements a transport layer for working with ATOM feeds and ATOM publishing protocols.
 	// description: This object implements a transport layer for working with ATOM feeds and ATOM publishing protocols.
 	//   Specifically, it provides a mechanism by which feeds can be fetched and entries can be fetched, created
@@ -37,7 +40,7 @@ dojo.declare("dojox.atom.io.Connection",null,{
 		//
 		//	returns:
 		//		Nothing. The return is handled through the callback handler.
-		this._getXmlDoc(url, "feed", new dojox.atom.io.model.Feed(), dojox.atom.io.model._Constants.ATOM_NS, callback, /*handleDocumentRetrieved,*/ errorCallback, scope);
+		this._getXmlDoc(url, "feed", new model.Feed(), model._Constants.ATOM_NS, callback, /*handleDocumentRetrieved,*/ errorCallback, scope);
 	},
 	
 	getService: function(url, callback, errorCallback, scope){
@@ -57,7 +60,7 @@ dojo.declare("dojox.atom.io.Connection",null,{
 		//
 		//	returns:
 		//		Nothing. The return is handled through the callback handler.
-		this._getXmlDoc(url, "service", new dojox.atom.io.model.Service(url), dojox.atom.io.model._Constants.APP_NS, callback, errorCallback, scope);
+		this._getXmlDoc(url, "service", new model.Service(url), model._Constants.APP_NS, callback, errorCallback, scope);
 	},
 	
 	getEntry: function(url, callback, errorCallback, scope){
@@ -77,7 +80,7 @@ dojo.declare("dojox.atom.io.Connection",null,{
 		//
 		//	returns:
 		//		Nothing. The return is handled through the callback handler.
-		this._getXmlDoc(url, "entry", new dojox.atom.io.model.Entry(), dojox.atom.io.model._Constants.ATOM_NS, callback, errorCallback, scope);
+		this._getXmlDoc(url, "entry", new model.Entry(), model._Constants.ATOM_NS, callback, errorCallback, scope);
 	},
 
 	_getXmlDoc: function(url, nodeName, newNode, namespace, callback, errorCallback, scope){
@@ -98,7 +101,7 @@ dojo.declare("dojox.atom.io.Connection",null,{
 		//	returns:
 		//		Nothing. The return is handled through the callback handler.
 		if(!scope){
-			scope = dojo.global;
+			scope = windowUtil.global;
 		}
 		var ae = this.alertsEnabled;
 		var xhrArgs = {
@@ -167,7 +170,7 @@ dojo.declare("dojox.atom.io.Connection",null,{
 				throw new Error("The URL requested cannot be accessed");
 			};
 		}
-		dojo.xhrGet(xhrArgs);
+		xhrUtil.get(xhrArgs);
 	},
 
 	updateEntry: function(entry, callback, errorCallback, retrieveUpdated, xmethod, scope){
@@ -200,7 +203,7 @@ dojo.declare("dojox.atom.io.Connection",null,{
 		//	returns:
 		//		Nothing. The return is handled through the callback handler.
 		if(!scope){
-			scope = dojo.global;
+			scope = windowUtil.global;
 		}
 		entry.updated = new Date();
 		var url = entry.getEditHref();
@@ -261,10 +264,10 @@ dojo.declare("dojox.atom.io.Connection",null,{
 		if(xmethod){
 			xhrArgs.postData = entry.toString(true); //Set the content to send.
 			xhrArgs.headers = {"X-Method-Override": "PUT"};
-			dojo.rawXhrPost(xhrArgs);
+			xhrUtil.post(xhrArgs);
 		}else{
 			xhrArgs.putData = entry.toString(true); //Set the content to send.
-			var xhr = dojo.rawXhrPut(xhrArgs);
+			var xhr = xhrUtil.put(xhrArgs);
 		}
 	},
 
@@ -294,7 +297,7 @@ dojo.declare("dojox.atom.io.Connection",null,{
 		//	returns:
 		//		Nothing. The return is handled through the callback handler.
 		if(!scope){
-			scope = dojo.global;
+			scope = windowUtil.global;
 		}
 
 		entry.published = new Date();
@@ -361,7 +364,7 @@ dojo.declare("dojox.atom.io.Connection",null,{
 				throw new Error("The URL requested cannot be accessed");
 			};
 		}
-		dojo.rawXhrPost(xhrArgs);
+		xhrUtil.post(xhrArgs);
 	},
 
 	deleteEntry: function(entry,callback,errorCallback,xmethod,scope){
@@ -383,7 +386,7 @@ dojo.declare("dojox.atom.io.Connection",null,{
 		//	returns:
 		//		Nothing. The return is handled through the callback handler.
 		if(!scope){
-			scope = dojo.global;
+			scope = windowUtil.global;
 		}
 
 		var url = null;
@@ -424,9 +427,10 @@ dojo.declare("dojox.atom.io.Connection",null,{
 		}
 		if(xmethod){
 			xhrArgs.headers = {"X-Method-Override": "DELETE"};
-			dojo.xhrPost(xhrArgs);
+			dhxr.post(xhrArgs);
 		}else{
-			dojo.xhrDelete(xhrArgs);
+			xhrUtil.del(xhrArgs);
 		}
 	}
+});
 });

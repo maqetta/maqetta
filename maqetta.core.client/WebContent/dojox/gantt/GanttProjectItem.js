@@ -2,6 +2,7 @@ dojo.provide("dojox.gantt.GanttProjectItem");
 
 dojo.require("dojox.gantt.GanttTaskItem");
 dojo.require("dojo.date.locale");
+dojo.require("dijit.focus");		// dijit.focus()
 
 dojo.declare("dojox.gantt.GanttProjectControl", null, {
 	constructor: function(ganttChart, projectItem){

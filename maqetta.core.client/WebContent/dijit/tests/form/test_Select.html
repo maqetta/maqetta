@@ -9,6 +9,10 @@
 			@import url(../../themes/claro/claro.css);
 			@import url(../css/dijitTests.css);
 			.ark { text-decoration: underline; }
+			form {
+				margin:  10px 0px;
+				border:  solid gray 2px;
+			}
 		</style>
 
 		<!-- required: the default dijit theme: -->
@@ -30,6 +34,7 @@
 			dojo.require("dijit.form.Button");
 			dojo.require("dijit.form.Form");
 			dojo.require("dojo.data.ItemFileWriteStore");
+			dojo.require("dijit.Dialog");
 
 			var numOptions = 0;
 			var numChanges = 0;
@@ -76,7 +81,7 @@
 				return ("<span class=\"dijitReset dijitInline dijitSelectLabel\">" + expected + "</span>").toLowerCase().replace(/ */g, "");
 			}
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				dojo.connect(s1, "onChange", function(val){
 					console.log("First Select Changed to " + val);
 					numChanges++;
@@ -245,6 +250,111 @@
 							t.is(7, s12.getOptions().length);
 						}
 					]);
+
+					doh.register("validation", [
+						function required(){
+							var s3 = dijit.byId("s3");
+							doh.is("Incomplete", s3.get("state"), "incomplete because required but no value");
+
+							var stateWatch = "no notification";
+							s3.watch("state", function(name, oval, nval){
+								stateWatch = nval;
+							});
+
+							s3.set("required", false);
+							doh.is("", stateWatch, "watch fired after set requried=true");
+
+							s3.set("required", true);
+							doh.is("Incomplete", stateWatch, "watch fired after set required=false''");
+
+							s3.set("value", "AK");
+							doh.is("", stateWatch, "watch fired after set value=AK''");
+						}
+					]);
+					doh.register("validation in dialog1", [
+						function showDialog(){
+							// Show dialog, returning Deferred that fires when show dialog is finished.
+							// Before showing, focus the open button, so that Dialog knows where to return focus to.
+							dijit.byId("dlg1OpenBtn").focus();
+							return dijit.byId("dlg1").show();
+						},
+						function validateDialog(){
+							// Clicking validate button should show "required but empty" tooltip on the Select
+							var d = new doh.Deferred();
+							dijit.byId("dlg1ValidateBtn").focus();
+							dijit.byId("dlg1").validate();
+							setTimeout(d.getTestCallback(function(){
+								doh.is("dlg1Select", dijit._curFocus && dijit._curFocus.id, "focused on select");
+								masterTT = dojo.global.dijit._masterTT;
+								doh.t(masterTT && isVisible(masterTT.domNode), "tooltip shown");
+							}), 300);
+							return d;
+						},
+						function hideDialog(){
+							// Hiding the dialog should make the validation tooltip disappear
+							var d = new doh.Deferred();
+							dijit.byId("dlg1").hide().then(function(){
+								setTimeout(d.getTestCallback(function(){
+									doh.t(isHidden(masterTT.domNode), "tooltip hidden");
+								}), 300);
+							});
+							return d;
+						},
+						function showDialogAgain(){
+							// Show dialog, returning Deferred that fires when show dialog is finished.
+							// Before showing, focus the open button, so that Dialog knows where to return focus to.
+							dijit.byId("dlg1OpenBtn").focus();
+							return dijit.byId("dlg1").show();
+						},
+						function tooltipAppears(){
+							// Opening the dialog focuses the select, which is invalid since it's got no value.
+							// Since this is the second time it's being focused, it should popup the tooltip
+							// immediately.
+							var d = new doh.Deferred();
+							dijit.byId("dlg1ValidateBtn").focus();
+							dijit.byId("dlg1").validate();
+							setTimeout(d.getTestCallback(function(){
+								doh.is("dlg1Select", dijit._curFocus && dijit._curFocus.id, "focused on select");
+								masterTT = dojo.global.dijit._masterTT;
+								doh.t(masterTT && isVisible(masterTT.domNode), "tooltip shown");
+							}), 300);
+							return d;
+						},
+						function tearDown(){
+							return dijit.byId("dlg1").hide();
+						}
+					]);
+
+					doh.register("validation in dialog2", [
+						function showDialog(){
+							// Show dialog, returning Deferred that fires when show dialog is finished.
+							// Before showing, focus the open button, so that Dialog knows where to return focus to.
+							dijit.byId("dlg2OpenBtn").focus();
+							return dijit.byId("dlg2").show();
+						},
+						function validateDialog(){
+							// Clicking validate button should show "required but empty" tooltip on the Select
+							var d = new doh.Deferred();
+							dijit.byId("dlg2ValidateBtn").focus();
+							dijit.byId("dlg2").validate();
+							setTimeout(d.getTestCallback(function(){
+								doh.is("dlg2Select1", dijit._curFocus && dijit._curFocus.id, "focused on select");
+								masterTT = dojo.global.dijit._masterTT;
+								doh.t(masterTT && isVisible(masterTT.domNode), "tooltip shown");
+							}), 300);
+							return d;
+						},
+						function hideDialog(){
+							// Hiding the dialog should make the validation tooltip disappear
+							var d = new doh.Deferred();
+							dijit.byId("dlg2").hide().then(function(){
+								setTimeout(d.getTestCallback(function(){
+									doh.t(isHidden(masterTT.domNode), "tooltip hidden");
+								}), 300);
+							});
+							return d;
+						}
+					]);
 				}
 
 				if(testPerformance){			
@@ -322,8 +432,8 @@
 			<a href="test_Select.html?mode=benchmark">test_Select.html?mode=benchmark</a> to run performance tests.
 		</p>
 
-		<h2>HTML select for comparison</h2>
 		<form method="get" id="htmlForm" action="get">
+			<h2>HTML select for comparison</h2>
 			<label for="htmlSelect">Four options:</label>
 			<select id="htmlSelect">
 				<option value="one">one</option>
@@ -335,8 +445,9 @@
 			<select id="htmlSelect2">
 			</select>
 		</form>
-		<h2>dijit.form.Select</h2>
-		<form data-dojo-id="form" data-dojo-type="dijit.form.Form" data-dojo-props='method:"get"'>
+		<form id="form" data-dojo-id="form" data-dojo-type="dijit.form.Form" method="get"
+				onSubmit="return this.validate();">
+			<h2>dijit.form.Select form</h2>
 			<h4 class="testSubtitle">Setting Defaults</h4>
 			<label for="s1">Test One: </label>
 			<select id="s1" data-dojo-id="s1" data-dojo-type="dijit.form.Select" data-dojo-props='name:"s1" '>
@@ -357,7 +468,7 @@
 				<option value="AR">Arkansas</option>
 				<option value="CA">California</option>
 			</select>
-			<label for="s3">Test Three: </label>
+			<label for="s3">Test Three (required): </label>
 			<select id="s3" data-dojo-id="s3" data-dojo-type="dijit.form.Select" data-dojo-props='name:"s3", style:{width:"150px"},
 					required:true,
 					onChange: function(){
@@ -546,13 +657,41 @@
 				<option value="SEL" selected="selected">Select</option>
 				<option value="OTHER">Other</option>
 			</select>
+
+			<hr>
+			<h4 class="testSubtitle">More required but blank selects</h4>
+			<label for="s13">required s13:</label>
+			<select id="s13" data-dojo-id="s13" data-dojo-type="dijit.form.Select"
+					name="s13" style="width: 150px;" required="true">
+				<option>&nbsp;</option>
+				<option value="AL">Alabama</option>
+				<option value="AK">Alaska</option>
+				<option></option>
+				<option value="AZ">Arizona</option>
+				<option value="AR">Arkansas</option>
+				<option></option>
+				<option value="CA">California</option>
+			</select>
+			<label for="s14">required s14:</label>
+			<select id="s14" data-dojo-id="s14" data-dojo-type="dijit.form.Select"
+					name="s14" style="width: 150px;" required="true">
+				<option>&nbsp;</option>
+				<option value="AL">Alabama</option>
+				<option value="AK">Alaska</option>
+				<option></option>
+				<option value="AZ">Arizona</option>
+				<option value="AR">Arkansas</option>
+				<option></option>
+				<option value="CA">California</option>
+			</select>
+
 			<hr>
 			<button data-dojo-type="dijit.form.Button" data-dojo-props='type:"button", onClick:function(){ console.dir(form.getValues()); }'>
 				Get Values
 			</button>
-			<button data-dojo-type="dijit.form.Button" data-dojo-props='type:"submit"'>Submit</button>
+			<button data-dojo-type="dijit.form.Button" data-dojo-props='id:"submit", type:"submit"'>Submit</button>
 		</form>
-		<hr>
+
 		<h4 class="testSubtitle">Disabled</h4>
 		<label for="testDisabled">Disabled:</label>
 		<select id='testDisabled' data-dojo-id='testDisabled' data-dojo-type="dijit.form.Select" data-dojo-props='disabled:true, name:"testDisabled" '>
@@ -562,5 +701,37 @@
 		<hr>
 		<h4 class="testSubtitle">Programmatic and other tests</h4>
 		<div id="testProgramatic"></div>
+
+		<!-- testing that tooltip disappears when dialog is closed -->
+		<div dojoType="dijit.Dialog" id="dlg1">
+			<div dojoType="dijit.form.Select" id="dlg1Select"required="true"></div>
+			<div dojoType="dijit.form.Button" id="dlg1ValidateBtn">
+				<script type=dojo/method event="onClick">
+					var dlg1 = dijit.byId("dlg1");
+					if(dlg1.validate()){
+						dlg1.hide();
+					}
+				</script>
+				validate and close
+			</div>
+		</div>
+		<button dojoType="dijit.form.Button" id="dlg1OpenBtn"
+				onclick="dijit.byId('dlg1').show();">show one select dialog</button>
+
+		<div dojoType="dijit.Dialog" id="dlg2">
+			<div dojoType="dijit.form.Select" id="dlg2Select1"required="true"></div>
+			<div dojoType="dijit.form.Select" id="dlg2Select2"required="true"></div>
+			<div dojoType="dijit.form.Button" id="dlg2ValidateBtn">
+				<script type=dojo/method event="onClick">
+					var dlg2 = dijit.byId("dlg2");
+					if(dlg2.validate()){
+						dlg2.hide();
+					}
+				</script>
+				validate and close
+			</div>
+		</div>
+		<button dojoType="dijit.form.Button" id="dlg2OpenBtn"
+				onclick="dijit.byId('dlg2').show();">show two select dialog</button>
 	</body>
 </html>

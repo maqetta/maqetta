@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} από ${1} ${0}",
 	"firstTip": "Πρώτη σελίδα",
@@ -13,6 +15,9 @@
 	"dialogIndication": "Καθορίστε τον αριθμό της σελίδας",
 	"pageCountIndication": " (${0} σελίδες)",
 	"dialogConfirm": "Μετάβαση",
-	"dialogCancel": "Ακύρωση"
+	"dialogCancel": "Ακύρωση",
+	"all": "όλα"
 })
+//end v1.x content
+);
 

@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertImageTitle: "แทรกรูปภาพ",
 	url: "รูปภาพ",
@@ -9,3 +11,5 @@
 	prePopuTextBrowse: " หรือเรียกดูโลคัลไฟล์"
 })
 
+//end v1.x content
+);

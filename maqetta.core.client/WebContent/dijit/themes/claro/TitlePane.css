@@ -30,11 +30,11 @@
 }
 .claro .dijitTitlePaneTitleHover {
   background-color: #abd6ff;
-  border-color: #769dc0;
+  border-color: #759dc0;
 }
 .claro .dijitTitlePaneTitleActive {
-  background-color: #7dbefa;
-  border-color: #769dc0;
+  background-color: #7dbdfa;
+  border-color: #759dc0;
   background-position: 0 -136px;
 }
 .claro .dijitTitlePaneTitleFocus {
@@ -53,10 +53,8 @@
 .claro .dijitTitlePane .dijitClosed .dijitArrowNode {
   background-position: -14px 0;
 }
-.claro .dijitTitlePaneFocused .dijitTitlePaneTextNode {
+.claro .dijitTitlePane .dijitTitlePaneTextNode {
   color: #000000;
-  /* TODO: do we need this?   we usually don't change text color on focus */
-
 }
 .claro .dijitTitlePaneContentOuter {
   background: #ffffff;

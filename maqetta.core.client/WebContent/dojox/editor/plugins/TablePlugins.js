@@ -1,4 +1,31 @@
-define("dojox/editor/plugins/TablePlugins", ["dojo", "dijit", "dojox", "dijit/form/Button", "dijit/Dialog", "dijit/form/TextBox", "dijit/form/FilteringSelect", "dijit/_editor/_Plugin", "dijit/_editor/selection", "dijit/Menu", "dijit/ColorPalette", "dojox/widget/ColorPicker", "dojo/i18n", "i18n!dojox/editor/plugins/nls/TableDialog"], function(dojo, dijit, dojox) {
+define([
+	"dojo",
+	"dijit",
+	"dojox",
+	"dijit/_base/popup",
+	"dijit/_Widget",
+	"dijit/_TemplatedMixin",
+	"dijit/_WidgetsInTemplateMixin",
+	"dijit/Menu",
+	"dijit/MenuItem",
+	"dijit/MenuSeparator",
+	"dijit/TooltipDialog",
+	"dijit/form/Button",
+	"dijit/form/DropDownButton",
+	"dijit/Dialog",
+	"dijit/form/TextBox",
+	"dijit/form/FilteringSelect",
+	"dijit/popup",
+	"dijit/_editor/_Plugin",
+	"dijit/_editor/range",
+	"dijit/_editor/selection",
+	"dijit/ColorPalette",
+	"dojox/widget/ColorPicker",
+	"dojo/_base/connect",
+	"dojo/_base/declare",
+	"dojo/i18n",
+	"dojo/i18n!dojox/editor/plugins/nls/TableDialog"
+], function(dojo, dijit, dojox) {
 
 dojo.experimental("dojox.editor.plugins.TablePlugins");
 
@@ -247,8 +274,8 @@ dojo.declare("dojox.editor.plugins._TableHandler", dijit._editor._Plugin,{
 			return true;
 		}
 		
-		// Only return avalable if the editor is focused.
-		this.currentlyAvailable = this.editor._focused ? this.editor.hasAncestorElement("table") : false;
+		// Only return available if the editor is focused.
+		this.currentlyAvailable = this.editor.focused ? this.editor.hasAncestorElement("table") : false;
 		
 		if(this.currentlyAvailable){
 			this.connectTableKeys();
@@ -794,7 +821,7 @@ dojo.declare("dojox.editor.plugins.ModifyTable",
 		}
 });
 
-dojo.declare("dojox.editor.plugins._CellColorDropDown", [dijit._Widget, dijit._Templated], {
+dojo.declare("dojox.editor.plugins._CellColorDropDown", [dijit._Widget, dijit._TemplatedMixin, dijit._WidgetsInTemplateMixin], {
 	// summary:
 	//		A smple widget that uses/creates a dropdown with a dojox.widget.ColorPicker.  Also provides
 	//		passthroughs to the value of the color picker and convenient hook points.
@@ -949,13 +976,12 @@ dojo.declare("dojox.editor.plugins.ColorTableCell", dojox.editor.plugins.TablePl
 		}
 });
 
-dojo.declare("dojox.editor.plugins.EditorTableDialog", [dijit.Dialog], {
+dojo.declare("dojox.editor.plugins.EditorTableDialog", [dijit.Dialog, dijit._TemplatedMixin, dijit._WidgetsInTemplateMixin], {
 	// summary:
 	//		Dialog box with options for table creation
-	//
+
 	baseClass:"EditorTableDialog",
 				
-	widgetsInTemplate:true,
 	templateString: dojo.cache("dojox.editor.plugins", "resources/insertTable.html"),
 
 	postMixInProperties: function(){
@@ -989,7 +1015,7 @@ dojo.declare("dojox.editor.plugins.EditorTableDialog", [dijit.Dialog], {
 			}
 			t += '\t</tr>\n';
 		}
-		t += '</table>';
+		t += '</table><br />';
 		
 		//console.log(t);
 		this.onBuildTable({htmlText:t, id:_id});
@@ -1021,7 +1047,7 @@ dojo.declare("dojox.editor.plugins.EditorTableDialog", [dijit.Dialog], {
 	}
 });
 
-dojo.declare("dojox.editor.plugins.EditorModifyTableDialog", [dijit.Dialog], {
+dojo.declare("dojox.editor.plugins.EditorModifyTableDialog", [dijit.Dialog, dijit._TemplatedMixin, dijit._WidgetsInTemplateMixin], {
 	
 	// summary:
 	//		Dialog box with options for editing a table
@@ -1029,7 +1055,6 @@ dojo.declare("dojox.editor.plugins.EditorModifyTableDialog", [dijit.Dialog], {
 	
 	baseClass:"EditorTableDialog",
 
-	widgetsInTemplate:true,
 	table:null, //html table to be modified
 	tableAtts:{},
 	templateString: dojo.cache("dojox.editor.plugins", "resources/modifyTable.html"),

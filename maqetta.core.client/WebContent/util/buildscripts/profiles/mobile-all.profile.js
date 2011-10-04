@@ -6,25 +6,18 @@ dependencies = {
 			name: "dojo.js",
 			customBase: true,
 			dependencies: [
-				"dojo._base.declare",
-				"dojo._base.lang",
-				"dojo._base.array",
-				"dojo._base.window",
-				"dojo._base.event",
-				"dojo._base.connect",
-				"dojo._base.html",
-				"dijit._WidgetBase",
-				"dijit._base.manager",
 				"dojox.mobile.parser",
-				"dojox.mobile"
+				"dojox.mobile",
+				"dojox.mobile.compat"
 			]
 		},
 		{
-			name: "../dojox/mobile/compat.js",
+			name: "../dojox/mobile/_compat.js",
+			layerDependencies: [
+				"dojo.js"
+			],
 			dependencies: [
-				"dijit._base.sniff",
-				"dojo._base.fx",
-				"dojox.mobile.compat"
+				"dojox.mobile._compat"
 			]
 		}
 	],

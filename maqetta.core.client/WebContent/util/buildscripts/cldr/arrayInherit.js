@@ -40,10 +40,33 @@ djConfig={baseUrl: "../../../dojo/"};
 load("../../../dojo/dojo.js");
 load("../jslib/logger.js");
 load("../jslib/fileUtil.js");
-load("../jslib/buildUtil.js");
 load("cldrUtil.js");
 
 dojo.require("dojo.i18n");
+
+var _searchLocalePath = function(/*String*/locale, /*Boolean*/down, /*Function*/searchFunc){
+    //      summary:                                                                                                                   
+    //              A helper method to assist in searching for locale-based resources.                                                 
+    //              Will iterate through the variants of a particular locale, either up                                                
+    //              or down, executing a callback function.  For example, "en-us" and                                                  
+    //              true will try "en-us" followed by "en" and finally "ROOT".                                                         
+
+    locale = dojo.i18n.normalizeLocale(locale);
+
+    var elements = locale.split('-');
+    var searchlist = [];
+    for(var i = elements.length; i > 0; i--){
+	searchlist.push(elements.slice(0, i).join('-'));
+    }
+    searchlist.push(false);
+    if(down){searchlist.reverse();}
+
+    for(var j = searchlist.length - 1; j >= 0; j--){
+	var loc = searchlist[j] || "ROOT";
+	var stop = searchFunc(loc);
+	if(stop){ break; }
+    }
+};
 
 var dir = arguments[0];
 var logDir = arguments[1];
@@ -65,11 +88,11 @@ for(var i= 0; i < fileList.length; i++){
 	var hasChanged = false;
 	
 	try{
-		dojo.i18n._requireLocalization('dojo.cldr', 'gregorian', locale);
+//		dojo.i18n._requireLocalization('dojo.cldr', 'gregorian', locale);
 		var bundle = dojo.i18n.getLocalization('dojo.cldr', 'gregorian', locale); //flattened bundle
-	}catch(e){print(e);/* simply ignore if no bundle found*/}
+	}catch(e){/* logStr += "arrayInherit: an exception occurred: "+e;/* simply ignore if no bundle found*/}
 	
-	dojo.i18n._searchLocalePath(locale, true, function(variant){
+	_searchLocalePath(locale, true, function(variant){
 		var isComplete = false;
 		var path = jsPath;
 		if(variant=="ROOT"){

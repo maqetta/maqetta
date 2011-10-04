@@ -1,4 +1,8 @@
-dojo.provide("dojox.mobile");
-dojo.require("dojox.mobile._base");
-dojo.experimental("dojox.mobile");
-
+define([
+	".",
+	"dojo/_base/lang",
+	"dojox/mobile/_base"
+], function(dojox, lang, base){
+	lang.getObject("mobile", true, dojox);
+	return dojox.mobile;
+});

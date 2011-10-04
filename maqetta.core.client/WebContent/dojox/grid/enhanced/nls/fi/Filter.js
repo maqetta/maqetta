@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"clearFilterDialogTitle": "Tyhjennä suodatin",
 	"filterDefDialogTitle": "Suodatin",
@@ -82,6 +84,8 @@
 	"trueLabel": "Tosi",
 	"falseLabel": "Epätosi"
 })
+//end v1.x content
+);
 
 
 

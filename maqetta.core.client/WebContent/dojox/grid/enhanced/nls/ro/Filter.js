@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"clearFilterDialogTitle": "Ştergere filtru",
 	"filterDefDialogTitle": "Filtru",
@@ -15,7 +17,7 @@
 	"conditionEndWith": "se termină cu",
 	"conditionNotContain": "nu conţine",
 	"conditionIsNot": "nu este",
-	"conditionNotStartWith": "nu începe cu ",
+	"conditionNotStartWith": "nu începe cu",
 	"conditionNotEndWith": "nu se termină cu",
 	"conditionBefore": "înaintea",
 	"conditionAfter": "după",
@@ -82,6 +84,8 @@
 	"trueLabel": "Adevărat",
 	"falseLabel": "Fals"
 })
+//end v1.x content
+);
 
 
 

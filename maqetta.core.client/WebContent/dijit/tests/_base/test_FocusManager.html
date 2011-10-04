@@ -12,10 +12,11 @@
 	<script type="text/javascript" src="../../../dojo/dojo.js"
 		djConfig="isDebug: true"></script>
 	<script type="text/javascript">
-		dojo.require("dijit._base.focus");
+		dojo.require("dijit.focus");		// dijit.focus()
+		dojo.require("dijit._base.focus");	// dijit.getFocus()
 		dojo.require("dijit._editor.selection");	// accessed by robot test
 		var savedFocus, fakeWidget;
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			fakeWidget = { domNode: dojo.byId("save") };
 			dojo.subscribe("focusNode", function(node){ console.log("focused on " + (node?(node.id||node.tagName):"nothing"));});
 		});

@@ -2,7 +2,7 @@
                 "http://www.w3.org/TR/html4/strict.dtd">
 <html style="overflow-y:scroll;border:0px none;padding:0;margin:0;">
 <head>
-        <title>dojo.window.scrollIntoView Test</title>
+	<title>dojo.window.scrollIntoView Test</title>
 
 	<style type="text/css">
 		@import "../../resources/dojo.css";
@@ -13,19 +13,21 @@
 		djConfig="isDebug: true"></script>
 
 	<script type="text/javascript">
-		dojo.require("doh.runner");
-		dojo.require("dojo.window");
+		var loading; //global
+		require(["doh"], function(doh){
+			loading = new doh.Deferred();
+		});
 
-		var usingNative = !(dojo.isMoz || dojo.isIE || dojo.isWebKit || dojo.isOpera);
-		var loading = new doh.Deferred();
-		var count = 0;
-		dojo.addOnLoad(function(){
+		require(["dojo", "doh", "dojo/window", "dojo/domReady!"], function(dojo, doh) {
+
+			var usingNative = !(dojo.isMoz || dojo.isIE || dojo.isWebKit || dojo.isOpera);
+			var count = 0;
+
 			innerScrollBarSize = dojo.byId("nonscroll").clientWidth - dojo.byId("withscroll").clientWidth;
 			console.debug('inner scrollbar size = ' + innerScrollBarSize);
 			outerScrollBarSize = (dojo.isIE >= 9) ? ((dojo.position(document.documentElement).w - document.documentElement.clientWidth) || innerScrollBarSize) : innerScrollBarSize;
 			console.debug('outer scrollbar size = ' + outerScrollBarSize);
-		        doh.register("dojo.window.scroll",
-	                [
+			doh.register("dojo.window.scroll",[
 				{
 					name: "wait for iframes to load",
 					timeout: 20000,
@@ -124,7 +126,7 @@
 					}else if(dojo.isIE == 7){
 						scroll = 46;
 					}else if(dojo.isIE >= 8 || dojo.isOpera){
-						scroll = "+0";
+						scroll = "0";
 					}else if(dojo.isWebKit){
 						scroll = "-0";
 					}else{
@@ -226,35 +228,35 @@
 					generateTest('htmlPadding_quirks_rtl', "(0,-"+(maxScroll-fudge)+")", "(0,+"+(minScroll-fudge)+")");
 				}
 			]);
-		        doh.run();
-		});
-		function generateTest(id, maxVal, minVal){
-			var compare = usingNative? "isNot" : "is";
-			with(dojo.byId(id)){
-				scrollMin();
-				scrollMax();
-				scrollIntoView();
-				var maxActualScroll = getScroll();
-				var maxExpectedScroll = usingNative? "(-1,-1)" : maxVal;
-				scrollIntoView(); // make sure the value sticks
-				var repMaxActualScroll = getScroll();
-				scrollMin();
-				scrollIntoView();
-				var minActualScroll = getScroll();
-				var minExpectedScroll = usingNative? "(+1,+1)" : minVal;
-				dojo.byId(id).style.visibility = 'visible';
-				doh[compare](maxExpectedScroll, maxActualScroll, id+" max failed");
-				doh[compare](maxExpectedScroll, repMaxActualScroll, id+" repeat max failed");
-				doh[compare](minExpectedScroll, minActualScroll, id+" min failed");
+			function generateTest(id, maxVal, minVal){
+				var compare = usingNative? "isNot" : "is";
+				with(dojo.byId(id)){
+					scrollMin();
+					scrollMax();
+					scrollIntoView();
+					var maxActualScroll = getScroll();
+					var maxExpectedScroll = usingNative? "(-1,-1)" : maxVal;
+					scrollIntoView(); // make sure the value sticks
+					var repMaxActualScroll = getScroll();
+					scrollMin();
+					scrollIntoView();
+					var minActualScroll = getScroll();
+					var minExpectedScroll = usingNative? "(+1,+1)" : minVal;
+					dojo.byId(id).style.visibility = 'visible';
+					doh[compare](maxExpectedScroll, maxActualScroll, id+" max failed");
+					doh[compare](maxExpectedScroll, repMaxActualScroll, id+" repeat max failed");
+					doh[compare](minExpectedScroll, minActualScroll, id+" min failed");
+				}
 			}
-		}
-		function generateTestXY(id, maxScrollX, maxScrollY, minScrollX, minScrollY){
-			if(typeof maxScrollX == "number" && maxScrollX > 0){ maxScrollX = "+" + maxScrollX; }
-			if(typeof maxScrollY == "number" && maxScrollY > 0){ maxScrollY = "+" + maxScrollY; }
-			if(typeof minScrollX == "number" && minScrollX > 0){ minScrollX = "+" + minScrollX; }
-			if(typeof minScrollY == "number" && minScrollY > 0){ minScrollY = "+" + minScrollY; }
-			generateTest(id, "("+maxScrollX+","+maxScrollY+")", "("+minScrollX+","+minScrollY+")");
-		}
+			function generateTestXY(id, maxScrollX, maxScrollY, minScrollX, minScrollY){
+				if(typeof maxScrollX == "number" && maxScrollX > 0){ maxScrollX = "+" + maxScrollX; }
+				if(typeof maxScrollY == "number" && maxScrollY > 0){ maxScrollY = "+" + maxScrollY; }
+				if(typeof minScrollX == "number" && minScrollX > 0){ minScrollX = "+" + minScrollX; }
+				if(typeof minScrollY == "number" && minScrollY > 0){ minScrollY = "+" + minScrollY; }
+				generateTest(id, "("+maxScrollX+","+maxScrollY+")", "("+minScrollX+","+minScrollY+")");
+			}
+			doh.run();
+		});
 	</script>
 </head>
 <body>
@@ -468,7 +470,20 @@
 			right = n._scrollMaxX - n.scrollLeft,
 			bottom = n._scrollMaxY - n.scrollTop;
 			if(left || top || n._scrollMinX || n._scrollMaxX || n._scrollMinY || n._scrollMaxY){
-				scroll += '('+(left<=right?((left==right?'':'+')+left):(right<0 ? '0' : ('-'+right)))+','+(top<=bottom?((top==bottom?'':'+')+top):(bottom<0 ? '0' : ('-'+bottom)))+')';
+				//scroll += '('+(left<=right?((left==right?'':'+')+left):(right<0 ? '0' : ('-'+right)))+','+(top<=bottom?((top==bottom?'':'+')+top):(bottom<0 ? '0' : ('-'+bottom)))+')';
+				scroll += "(";
+				if(left <= right){
+					scroll += (left != right && left > 0 ? "+" : "") + left;
+				}else{
+					scroll += right < 0 ? '0' : ('-' + right);
+				}
+				scroll += ",";
+				if(top <= bottom){
+					scroll += (top != bottom && top > 0 ? "+" : "") + top;
+				}else{
+					scroll += bottom < 0 ? '0' : ('-' + bottom);
+				}
+				scroll += ")";
 			}
 			n = n.parentNode;
 		}

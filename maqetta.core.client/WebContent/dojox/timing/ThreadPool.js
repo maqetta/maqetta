@@ -1,7 +1,5 @@
-dojo.provide("dojox.timing.ThreadPool");
-dojo.require("dojox.timing");
-
-dojo.experimental("dojox.timing.ThreadPool");
+define(["./_base"], function(){
+	dojo.experimental("dojox.timing.ThreadPool");
 
 //	dojox.timing.Timer is included as part of _base
 /********************************************************************
@@ -10,7 +8,6 @@ dojo.experimental("dojox.timing.ThreadPool");
 	
 	Donated to the Dojo toolkit by the author :)
 *********************************************************************/
-(function(){
 	var t=dojox.timing;
 	t.threadStates={
 		UNSTARTED:"unstarted",
@@ -150,4 +147,5 @@ dojo.experimental("dojox.timing.ThreadPool");
 		//	dedicate the timer to us.
 		timer.onTick=self.invoke;
 	})(16, 5000);
-})();
+	return dojox.timing.ThreadPool;
+});

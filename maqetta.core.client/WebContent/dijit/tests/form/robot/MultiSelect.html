@@ -9,31 +9,31 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
 		<script type="text/javascript" src="../../helpers.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			function testInverted(allOptions, selected, newSelected) {
+			function testInverted(allOptions, selected, newSelected){
 				doh.is(allOptions.length, selected.length+newSelected.length); //newSelected + the no longer selected list size should be the same as the length of the whole list
 				dojo.forEach(allOptions, function(option){ //verify the selections were inverted
-					if(option.selected) {
+					var found;
+					if(option.selected){
 						//it must be in the newSelectedList
-						var found=false;
+						found=false;
 						dojo.forEach(newSelected, function(ns){
-							if(option.value===ns) {
+							if(option.value===ns){
 								found=true;
 							}
 						});
 						doh.t(found);
-					} else {
+					}else{
 						//it better be in the origional selected list
-						var found=false;
+						found=false;
 						dojo.forEach(selected, function(s){
-							if(option.value===s) {
+							if(option.value===s){
 								found=true;
 							}
 						});
@@ -42,7 +42,7 @@
 				});
 			}
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_MultiSelect.html');
 
 				doh.register("dijit.form.MultiSelect", [
@@ -86,6 +86,7 @@
 							doh.robot.sequence(function(){ selectedValue2 = dijit.byId('select2').get('value');}, 1000); 
 
 							doh.robot.sequence(d.getTestCallback(function(){
+								doh.is("16", dijit.byId('select2').value.toString());
 								doh.is("16", selectedValue2[0]);
 							}), 1000);
 							return d;
@@ -112,6 +113,7 @@
 								doh.is("7", selectedValue[1]);
 								doh.is("19", selectedValue[2]);
 								doh.is("47", selectedValue[3]);
+								doh.is("3 7 19 47", dijit.byId('select').value.join(' '));
 							}), 1000);
 							return d;
 						}
@@ -235,6 +237,7 @@
 								doh.is(2, selected.length);
 								doh.is(selected[0], 'VA');
 								doh.is(selected[1], 'WA');
+								doh.is("VA WA", dijit.byId('select3').value.join(' '));
 							}), 1000);
 							return d;
 						}

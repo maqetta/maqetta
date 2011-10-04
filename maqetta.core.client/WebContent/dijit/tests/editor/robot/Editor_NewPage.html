@@ -9,8 +9,7 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
 		<!-- functions to help test -->
 		<script type="text/javascript" src="../../helpers.js"></script>
@@ -20,7 +19,7 @@
 			dojo.require("dojo.window");
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_NewPage.html');
 
 				function getPlugin(/*Editor*/ editor){

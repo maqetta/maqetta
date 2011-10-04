@@ -28,7 +28,7 @@ dojox.data.tests.stores.AndOrWriteStore.getTestData = function(name){
 	var data = null;
 	if(name === "countries"){
 		if(dojo.isBrowser){
-			data = {url: dojo.moduleUrl("dojox", "data/tests/stores/countries.json").toString() };
+			data = {url: require.toUrl("dojo/tests/data/countries.json").toString() };
 		}else{
 			data = {data: {
 				identifier:'abbr',
@@ -301,7 +301,7 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 				//		paper.
 	
 				if(dojo.isBrowser){
-	                var store = new dojox.data.AndOrWriteStore({url: dojo.moduleUrl("tests", "data/countries_commentFiltered.json").toString()});
+	                var store = new dojox.data.AndOrWriteStore({url: require.toUrl("dojo/tests/data/countries_commentFiltered.json").toString()});
 	
 					var d = new doh.Deferred();
 					var onItem = function(item){
@@ -985,7 +985,7 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 				//		data with this store can bypass the JavaSceipt hijack noted in Fortify's
 				//		paper.
 				if(dojo.isBrowser){
-	                var store = new dojox.data.AndOrWriteStore({url: dojo.moduleUrl("tests", "data/countries_commentFiltered.json").toString()});
+	                var store = new dojox.data.AndOrWriteStore({url: require.toUrl("dojo/tests/data/countries_commentFiltered.json").toString()});
 	
 					var d = new doh.Deferred();
 					var onComplete = function(items, request){
@@ -1015,7 +1015,7 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 				//		data with this store can bypass the JavaSceipt hijack noted in Fortify's
 				//		paper.
 				if(dojo.isBrowser){
-	                var store = new dojox.data.AndOrWriteStore({url: dojo.moduleUrl("tests", "data/countries_commentFiltered.json").toString()});
+	                var store = new dojox.data.AndOrWriteStore({url: require.toUrl("dojo/tests/data/countries_commentFiltered.json").toString()});
 	
 					var d = new doh.Deferred();
 					var onComplete = function(items, request){
@@ -2718,7 +2718,7 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 				//		Added because of tracker: #2546
 	
 				if(dojo.isBrowser){
-					var store = new dojox.data.AndOrWriteStore({url: dojo.moduleUrl("tests", "data/countries_idcollision.json").toString() });
+					var store = new dojox.data.AndOrWriteStore({url: require.toUrl("dojo/tests/data/countries_idcollision.json").toString() });
 					var d = new doh.Deferred();
 					var onComplete = function(items, request){
 						//This is bad if this fires, this case should fail and not call onComplete.
@@ -3176,7 +3176,7 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 							t.assertTrue(store._arrayOfAllItems.length === 0);
 							t.assertTrue(store._loadFinished === false);
 							
-							store.url = dojo.moduleUrl("dojox", "data/tests/stores/countries_withNull.json").toString()
+							store.url = require.toUrl("dojo/tests/data/countries_withNull.json").toString()
 							function onItem2 (item){
 								var err;
 								try{
@@ -3232,7 +3232,7 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 							t.assertTrue(store._arrayOfAllItems.length === 0);
 							t.assertTrue(store._loadFinished === false);
 							
-							store.url = dojo.moduleUrl("dojox", "data/tests/stores/countries_withNull.json").toString()
+							store.url = require.toUrl("dojo/tests/data/countries_withNull.json").toString()
 							function onComplete (items){
 								var err;
 								try{
@@ -3290,7 +3290,7 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 							t.assertTrue(store._arrayOfAllItems.length === 0);
 							t.assertTrue(store._loadFinished === false);
 							
-							store._jsonFileUrl = dojo.moduleUrl("dojox", "data/tests/stores/countries_withNull.json").toString()
+							store._jsonFileUrl = require.toUrl("dojo/tests/data/countries_withNull.json").toString()
 							function onItem2 (item){
 								var err;
 								try{

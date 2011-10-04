@@ -1,44 +1,45 @@
-dojo.provide("dojox.charting.plot2d.Grid");
+define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", "dojo/_base/array",
+		"../Element", "./common", "dojox/lang/utils", "dojox/gfx/fx"], 
+	function(lang, declare, hub, arr, Element, dc, du, fx){
 
-dojo.require("dojox.charting.Element");
-dojo.require("dojox.charting.plot2d.common");
-dojo.require("dojox.lang.functional");
-dojo.require("dojox.lang.utils");
+	/*=====
+	dojo.declare("dojox.charting.plot2d.__GridCtorArgs", dojox.charting.plot2d.__DefaultCtorArgs, {
+		//	summary:
+		//		A special keyword arguments object that is specific to a grid "plot".
+	
+		//	hMajorLines: Boolean?
+		//		Whether to show lines at the major ticks along the horizontal axis. Default is true.
+		hMajorLines: true,
+	
+		//	hMinorLines: Boolean?
+		//		Whether to show lines at the minor ticks along the horizontal axis. Default is false.
+		hMinorLines: false,
+	
+		//	vMajorLines: Boolean?
+		//		Whether to show lines at the major ticks along the vertical axis. Default is true.
+		vMajorLines: true,
+	
+		//	vMinorLines: Boolean?
+		//		Whether to show lines at the major ticks along the vertical axis. Default is false.
+		vMinorLines: false,
+	
+		//	hStripes: String?
+		//		Whether or not to show stripes (alternating fills) along the horizontal axis. Default is "none".
+		hStripes: "none",
+	
+		//	vStripes: String?
+		//		Whether or not to show stripes (alternating fills) along the vertical axis. Default is "none".
+		vStripes: "none",
+		
+		//	enableCache: Boolean?
+		//		Whether the grid lines are cached from one rendering to another. This improves the rendering performance of
+		//		successive rendering but penalize the first rendering.  Default false.
+		enableCache: false
+	});
+	var Element = dojox.charting.plot2d.Element;
+	=====*/
 
-/*=====
-dojo.declare("dojox.charting.plot2d.__GridCtorArgs", dojox.charting.plot2d.__DefaultCtorArgs, {
-	//	summary:
-	//		A special keyword arguments object that is specific to a grid "plot".
-
-	//	hMajorLines: Boolean?
-	//		Whether to show lines at the major ticks along the horizontal axis. Default is true.
-	hMajorLines: true,
-
-	//	hMinorLines: Boolean?
-	//		Whether to show lines at the minor ticks along the horizontal axis. Default is false.
-	hMinorLines: false,
-
-	//	vMajorLines: Boolean?
-	//		Whether to show lines at the major ticks along the vertical axis. Default is true.
-	vMajorLines: true,
-
-	//	vMinorLines: Boolean?
-	//		Whether to show lines at the major ticks along the vertical axis. Default is false.
-	vMinorLines: false,
-
-	//	hStripes: String?
-	//		Whether or not to show stripes (alternating fills) along the horizontal axis. Default is "none".
-	hStripes: "none",
-
-	//	vStripes: String?
-	//		Whether or not to show stripes (alternating fills) along the vertical axis. Default is "none".
-	vStripes: "none"
-});
-=====*/
-(function(){
-	var du = dojox.lang.utils, dc = dojox.charting.plot2d.common;
-
-	dojo.declare("dojox.charting.plot2d.Grid", dojox.charting.Element, {
+	return declare("dojox.charting.plot2d.Grid", Element, {
 		//	summary:
 		//		A "faux" plot that can be placed behind other plots to represent
 		//		a grid against which other plots can be easily measured.
@@ -51,18 +52,19 @@ dojo.declare("dojox.charting.plot2d.__GridCtorArgs", dojox.charting.plot2d.__Def
 			vMinorLines: false,	// draw vertical minor lines
 			hStripes: "none",	// TBD
 			vStripes: "none",	// TBD
-			animate: null   // animate bars into place
+			animate: null,   // animate bars into place
+			enableCache: false
 		},
 		optionalParams: {},	// no optional parameters
 
 		constructor: function(chart, kwArgs){
 			//	summary:
 			//		Create the faux Grid plot.
-			//	chart: dojox.charting.Chart2D
+			//	chart: dojox.charting.Chart
 			//		The chart this plot belongs to.
 			//	kwArgs: dojox.charting.plot2d.__GridCtorArgs?
 			//		An optional keyword arguments object to help define the parameters of the underlying grid.
-			this.opt = dojo.clone(this.defaultParams);
+			this.opt = lang.clone(this.defaultParams);
 			du.updateWithObject(this.opt, kwArgs);
 			this.hAxis = this.opt.hAxis;
 			this.vAxis = this.opt.vAxis;
@@ -71,6 +73,10 @@ dojo.declare("dojox.charting.plot2d.__GridCtorArgs", dojox.charting.plot2d.__Def
 			this.zoom = null,
 			this.zoomQueue = [];	// zooming action task queue
 			this.lastWindow = {vscale: 1, hscale: 1, xoffset: 0, yoffset: 0};
+			if(this.opt.enableCache){
+				this._lineFreePool = [];
+				this._lineUsePool = [];
+			}
 		},
 		clear: function(){
 			//	summary:
@@ -104,7 +110,7 @@ dojo.declare("dojox.charting.plot2d.__GridCtorArgs", dojox.charting.plot2d.__Def
 			//		Returns default stats (irrelevant for this type of plot).
 			//	returns: Object
 			//		{hmin, hmax, vmin, vmax} min/max in both directions.
-			return dojo.delegate(dc.defaultStats);
+			return lang.delegate(dc.defaultStats);
 		},
 		initializeScalers: function(){
 			//	summary:
@@ -135,7 +141,7 @@ dojo.declare("dojox.charting.plot2d.__GridCtorArgs", dojox.charting.plot2d.__Def
 				hBounds = this._hAxis.getScaler().bounds,
 				xOffset = (hBounds.from - hBounds.lower) * hBounds.scale,
 				vBounds = this._vAxis.getScaler().bounds,
-				yOffset = (vBounds.from - vBounds.lower) * vBounds.scale;
+				yOffset = (vBounds.from - vBounds.lower) * vBounds.scale,
 				// get incremental zooming various
 				rVScale = vs / this.lastWindow.vscale,
 				rHScale = hs / this.lastWindow.hscale,
@@ -145,7 +151,7 @@ dojo.declare("dojox.charting.plot2d.__GridCtorArgs", dojox.charting.plot2d.__Def
 					((this.lastWindow.vscale == 1)? vs : this.lastWindow.vscale),
 
 				shape = this.group,
-				anim = dojox.gfx.fx.animateTransform(dojo.delegate({
+				anim = fx.animateTransform(lang.delegate({
 					shape: shape,
 					duration: 1200,
 					transform:[
@@ -155,12 +161,12 @@ dojo.declare("dojox.charting.plot2d.__GridCtorArgs", dojox.charting.plot2d.__Def
 						{name:"translate", start: [0, 0], end: [rXOffset, rYOffset]}
 					]}, this.zoom));
 
-			dojo.mixin(this.lastWindow, {vscale: vs, hscale: hs, xoffset: xOffset, yoffset: yOffset});
+			lang.mixin(this.lastWindow, {vscale: vs, hscale: hs, xoffset: xOffset, yoffset: yOffset});
 			//add anim to zooming action queue,
 			//in order to avoid several zooming action happened at the same time
 			this.zoomQueue.push(anim);
 			//perform each anim one by one in zoomQueue
-			dojo.connect(anim, "onEnd", this, function(){
+			hub.connect(anim, "onEnd", this, function(){
 				this.zoom = null;
 				this.zoomQueue.shift();
 				if(this.zoomQueue.length > 0){
@@ -178,6 +184,28 @@ dojo.declare("dojox.charting.plot2d.__GridCtorArgs", dojox.charting.plot2d.__Def
 			//	returns: Number
 			//		Returns 0, since there are no series associated with this plot type.
 			return 0;	//	Number
+		},
+		cleanGroup: function(){
+			this.inherited(arguments);
+			if(this.opt.enableCache){
+				this._lineFreePool = this._lineFreePool.concat(this._lineUsePool);
+				this._lineUsePool = [];
+			}
+		},
+		createLine: function(creator, params){
+			var line;
+			if(this.opt.enableCache && this._lineFreePool.length > 0){
+				line = this._lineFreePool.pop();
+				line.setShape(params);
+				// was cleared, add it back
+				creator.add(line);
+			}else{
+				line = creator.createLine(params);
+			}
+			if(this.opt.enableCache){
+				this._lineUsePool.push(line);
+			}
+			return line;
 		},
 		render: function(dim, offsets){
 			//	summary:
@@ -200,33 +228,35 @@ dojo.declare("dojox.charting.plot2d.__GridCtorArgs", dojox.charting.plot2d.__Def
 				var vScaler = this._vAxis.getScaler(),
 					vt = vScaler.scaler.getTransformerFromModel(vScaler),
 					ticks = this._vAxis.getTicks();
-				if(this.opt.hMinorLines){
-					dojo.forEach(ticks.minor, function(tick){
-						var y = dim.height - offsets.b - vt(tick.value);
-						var hMinorLine = s.createLine({
-							x1: offsets.l,
-							y1: y,
-							x2: dim.width - offsets.r,
-							y2: y
-						}).setStroke(ta.minorTick);
-						if(this.animate){
-							this._animateGrid(hMinorLine, "h", offsets.l, offsets.r + offsets.l - dim.width);
-						}
-					}, this);
-				}
-				if(this.opt.hMajorLines){
-					dojo.forEach(ticks.major, function(tick){
-						var y = dim.height - offsets.b - vt(tick.value);
-						var hMajorLine = s.createLine({
-							x1: offsets.l,
-							y1: y,
-							x2: dim.width - offsets.r,
-							y2: y
-						}).setStroke(ta.majorTick);
-						if(this.animate){
-							this._animateGrid(hMajorLine, "h", offsets.l, offsets.r + offsets.l - dim.width);
-						}
-					}, this);
+				if(ticks != null){
+					if(this.opt.hMinorLines){
+						arr.forEach(ticks.minor, function(tick){
+							var y = dim.height - offsets.b - vt(tick.value);
+							var hMinorLine = this.createLine(s, {
+								x1: offsets.l,
+								y1: y,
+								x2: dim.width - offsets.r,
+								y2: y
+							}).setStroke(ta.minorTick);
+							if(this.animate){
+								this._animateGrid(hMinorLine, "h", offsets.l, offsets.r + offsets.l - dim.width);
+							}
+						}, this);
+					}
+					if(this.opt.hMajorLines){
+						arr.forEach(ticks.major, function(tick){
+							var y = dim.height - offsets.b - vt(tick.value);
+							var hMajorLine = this.createLine(s, {
+								x1: offsets.l,
+								y1: y,
+								x2: dim.width - offsets.r,
+								y2: y
+							}).setStroke(ta.majorTick);
+							if(this.animate){
+								this._animateGrid(hMajorLine, "h", offsets.l, offsets.r + offsets.l - dim.width);
+							}
+						}, this);
+					}
 				}
 			}catch(e){
 				// squelch
@@ -236,33 +266,35 @@ dojo.declare("dojox.charting.plot2d.__GridCtorArgs", dojox.charting.plot2d.__Def
 				var hScaler = this._hAxis.getScaler(),
 					ht = hScaler.scaler.getTransformerFromModel(hScaler),
 					ticks = this._hAxis.getTicks();
-				if(ticks && this.opt.vMinorLines){
-					dojo.forEach(ticks.minor, function(tick){
-						var x = offsets.l + ht(tick.value);
-						var vMinorLine = s.createLine({
-							x1: x,
-							y1: offsets.t,
-							x2: x,
-							y2: dim.height - offsets.b
-						}).setStroke(ta.minorTick);
-						if(this.animate){
-							this._animateGrid(vMinorLine, "v", dim.height - offsets.b, dim.height - offsets.b - offsets.t);
-						}
-					}, this);
-				}
-				if(ticks && this.opt.vMajorLines){
-					dojo.forEach(ticks.major, function(tick){
-						var x = offsets.l + ht(tick.value);
-						var vMajorLine = s.createLine({
-							x1: x,
-							y1: offsets.t,
-							x2: x,
-							y2: dim.height - offsets.b
-						}).setStroke(ta.majorTick);
-						if(this.animate){
-							this._animateGrid(vMajorLine, "v", dim.height - offsets.b, dim.height - offsets.b - offsets.t);
-						}
-					}, this);
+				if(this != null){
+					if(ticks && this.opt.vMinorLines){
+						arr.forEach(ticks.minor, function(tick){
+							var x = offsets.l + ht(tick.value);
+							var vMinorLine = this.createLine(s, {
+								x1: x,
+								y1: offsets.t,
+								x2: x,
+								y2: dim.height - offsets.b
+							}).setStroke(ta.minorTick);
+							if(this.animate){
+								this._animateGrid(vMinorLine, "v", dim.height - offsets.b, dim.height - offsets.b - offsets.t);
+							}
+						}, this);
+					}
+					if(ticks && this.opt.vMajorLines){
+						arr.forEach(ticks.major, function(tick){
+							var x = offsets.l + ht(tick.value);
+							var vMajorLine = this.createLine(s, {
+								x1: x,
+								y1: offsets.t,
+								x2: x,
+								y2: dim.height - offsets.b
+							}).setStroke(ta.majorTick);
+							if(this.animate){
+								this._animateGrid(vMajorLine, "v", dim.height - offsets.b, dim.height - offsets.b - offsets.t);
+							}
+						}, this);
+					}
 				}
 			}catch(e){
 				// squelch
@@ -273,7 +305,7 @@ dojo.declare("dojox.charting.plot2d.__GridCtorArgs", dojox.charting.plot2d.__Def
 		_animateGrid: function(shape, type, offset, size){
 			var transStart = type == "h" ? [offset, 0] : [0, offset];
 			var scaleStart = type == "h" ? [1/size, 1] : [1, 1/size];
-			dojox.gfx.fx.animateTransform(dojo.delegate({
+			fx.animateTransform(lang.delegate({
 				shape: shape,
 				duration: 1200,
 				transform: [
@@ -284,4 +316,4 @@ dojo.declare("dojox.charting.plot2d.__GridCtorArgs", dojox.charting.plot2d.__Def
 			}, this.animate)).play();
 		}
 	});
-})();
+});

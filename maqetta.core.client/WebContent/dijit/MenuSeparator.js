@@ -1,16 +1,32 @@
-define("dijit/MenuSeparator", ["dojo", "dijit", "text!dijit/templates/MenuSeparator.html", "dijit/_Widget", "dijit/_Templated", "dijit/_Contained"], function(dojo, dijit) {
+define([
+	"dojo/_base/declare", // declare
+	"dojo/dom", // dom.setSelectable
+	"./_WidgetBase",
+	"./_TemplatedMixin",
+	"./_Contained",
+	"dojo/text!./templates/MenuSeparator.html"
+], function(declare, dom, _WidgetBase, _TemplatedMixin, _Contained, template){
 
-dojo.declare("dijit.MenuSeparator",
-		[dijit._Widget, dijit._Templated, dijit._Contained],
-		{
+/*=====
+	var _WidgetBase = dijit._WidgetBase;
+	var _TemplatedMixin = dijit._TemplatedMixin;
+	var _Contained = dijit._Contained;
+=====*/
+
+	// module:
+	//		dijit/MenuSeparator
+	// summary:
+	//		A line between two menu items
+
+	return declare("dijit.MenuSeparator", [_WidgetBase, _TemplatedMixin, _Contained], {
 		// summary:
 		//		A line between two menu items
 
-		templateString: dojo.cache("dijit", "templates/MenuSeparator.html"),
+		templateString: template,
 
 		buildRendering: function(){
 			this.inherited(arguments);
-			dojo.setSelectable(this.domNode, false);
+			dom.setSelectable(this.domNode, false);
 		},
 
 		isFocusable: function(){
@@ -22,7 +38,4 @@ dojo.declare("dijit.MenuSeparator",
 			return false; // Boolean
 		}
 	});
-
-
-return dijit.MenuSeparator;
 });

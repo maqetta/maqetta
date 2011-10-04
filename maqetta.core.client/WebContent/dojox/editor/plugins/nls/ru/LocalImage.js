@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertImageTitle: "Вставить изображение",
 	url: "Изображение",
@@ -9,3 +11,5 @@
 	prePopuTextBrowse: " или выберите локальный файл."
 })
 
+//end v1.x content
+);

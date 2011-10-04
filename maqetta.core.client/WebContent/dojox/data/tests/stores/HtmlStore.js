@@ -5,27 +5,27 @@ dojo.require("dojo.data.api.Identity");
 
 
 dojox.data.tests.stores.HtmlStore.getBooks3Store = function(){
-	return new dojox.data.HtmlStore({url: dojo.moduleUrl("dojox.data.tests", "stores/books3.html").toString(), dataId: "books3"});
+	return new dojox.data.HtmlStore({url: require.toUrl("dojox/data/tests/stores/books3.html").toString(), dataId: "books3"});
 };
 
 dojox.data.tests.stores.HtmlStore.getBooks3StoreOnCreate = function(){
-	return new dojox.data.HtmlStore({url: dojo.moduleUrl("dojox.data.tests", "stores/books3.html").toString(), dataId: "books3", fetchOnCreate: true});
+	return new dojox.data.HtmlStore({url: require.toUrl("dojox/data/tests/stores/books3.html").toString(), dataId: "books3", fetchOnCreate: true});
 };
 
 dojox.data.tests.stores.HtmlStore.getBooks2Store = function(){
-	return new dojox.data.HtmlStore({url: dojo.moduleUrl("dojox.data.tests", "stores/books2.html").toString(), dataId: "books2"});
+	return new dojox.data.HtmlStore({url: require.toUrl("dojox/data/tests/stores/books2.html").toString(), dataId: "books2"});
 };
 
 dojox.data.tests.stores.HtmlStore.getBooksStore = function(){
-	return new dojox.data.HtmlStore({url: dojo.moduleUrl("dojox.data.tests", "stores/books.html").toString(), dataId: "books"});
+	return new dojox.data.HtmlStore({url: require.toUrl("dojox/data/tests/stores/books.html").toString(), dataId: "books"});
 };
 
 dojox.data.tests.stores.HtmlStore.getBooksStoreWhitespace = function(){
-	return new dojox.data.HtmlStore({url: dojo.moduleUrl("dojox.data.tests", "stores/booksWhitespace.html").toString(), dataId: "books", trimWhitespace: true});
+	return new dojox.data.HtmlStore({url: require.toUrl("dojox/data/tests/stores/booksWhitespace.html").toString(), dataId: "books", trimWhitespace: true});
 };
 
 dojox.data.tests.stores.HtmlStore.getBooks3StoreWhitespace = function(){
-	return new dojox.data.HtmlStore({url: dojo.moduleUrl("dojox.data.tests", "stores/books3Whitespace.html").toString(), dataId: "books3", trimWhitespace: true});
+	return new dojox.data.HtmlStore({url: require.toUrl("dojox/data/tests/stores/books3Whitespace.html").toString(), dataId: "books3", trimWhitespace: true});
 };
 
 doh.register("dojox.data.tests.stores.HtmlStore",

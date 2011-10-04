@@ -1,13 +1,8 @@
-dojo.provide("dojox.encoding.tests.compression.lzw");
-dojo.require("dojox.encoding.compression.lzw");
-dojo.require("dojox.encoding.bits");
-
-(function(){
+define(['doh', '../../compression/lzw', '../../bits'], function(doh, dcl, dcb){
 	var msg1 = "The rain in Spain falls mainly on the plain.";
 	var msg2 = "The rain in Spain falls mainly on the plain.1";
 	var msg3 = "The rain in Spain falls mainly on the plain.ab";
 	var msg4 = "The rain in Spain falls mainly on the plain.!@#";
-	var dc = dojox.encoding.compression, dcb = dojox.encoding.bits, dcl = dc.lzw;
 	
 	var s2b = function(s){
 		var b = [];
@@ -41,10 +36,10 @@ dojo.require("dojox.encoding.bits");
 		return t.join("");
 	};
 
-	tests.register("dojox.encoding.tests.compression.lzw", [
+	doh.register("dojox.encoding.tests.compression.lzw", [
 		function testLzwMsg1(t){ t.assertEqual(msg1, decode(msg1.length, encode(msg1))); },
 		function testLzwMsg2(t){ t.assertEqual(msg2, decode(msg2.length, encode(msg2))); },
 		function testLzwMsg3(t){ t.assertEqual(msg3, decode(msg3.length, encode(msg3))); },
 		function testLzwMsg4(t){ t.assertEqual(msg4, decode(msg4.length, encode(msg4))); }
 	]);
-})();
+});

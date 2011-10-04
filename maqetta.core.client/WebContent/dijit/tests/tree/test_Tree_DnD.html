@@ -48,7 +48,7 @@
 		globalId=1000;
 		lastSelected=null;
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 
 			//record the selection from tree 1
 			dojo.subscribe("myTree", null, function(message){
@@ -80,7 +80,7 @@
 			//since we don't have a server, we're going to connect to the store and do a few things the server/store combination would normal be taking care of for us
 			dojo.connect(myStore, "onNew", function(item, pInfo){
 				var p = pInfo && pInfo.item;
-				if (p) {
+				if(p){
 					var currentTotal = myStore.getValues(p, "numberOfItems")[0];
 					myStore.setValue(p, "numberOfItems", ++currentTotal);
 				}
@@ -97,37 +97,29 @@
 		}
 
 		//on item tree , we want to drop on containers, the root node itself, or between items in the containers
-		function itemTreeCheckItemAcceptance(node,source,position) {
+		function itemTreeCheckItemAcceptance(node,source,position){
 			source.forInSelectedItems(function(item){
 				console.log("testing to drop item of type " + item.type[0] + " and data " + item.data + ", position " + position);
 			});
 			var item = dijit.getEnclosingWidget(node).item;
-			if (item && (item.root || myStore.hasAttribute(item,"numberOfItems"))){
+			if(item && (item.root || myStore.hasAttribute(item,"numberOfItems"))){
 				return true;
 			}
-			if (position != "over") {
-				return true;
-			}
-			return false;
+			return position != "over";
+
 		}
 
 		//on collection tree, only accept itself as the source tree
-		function collectionTreeCheckItemAcceptance(node,source,position) {
-			if(source.tree && source.tree.id == "collectionsTree"){
-				return true;
-			}
-			return false;
+		function collectionTreeCheckItemAcceptance(node,source,position){
+			return source.tree && source.tree.id == "collectionsTree";
 		}
 
 		function dndAccept(source,nodes){
-			if (this.tree.id=="myTree"){
-				return false;
-			}
-			return true;
+			return this.tree.id != "myTree";
 		}
 
-		function getIcon(item) {
-			if (!item || myStore.hasAttribute(item, "numberOfItems")) {
+		function getIcon(item){
+			if(!item || myStore.hasAttribute(item, "numberOfItems")){
 				return "myFolder";
 			}
 			return "myItem"
@@ -155,7 +147,7 @@
 
 	<div data-dojo-id="myStore" data-dojo-type="dojo.data.ItemFileWriteStore" data-dojo-props='url:"../_data/categories.json"'></div>
 
-	<table style="margin:5px solid gray;width:100%;" >
+	<table style="margin:5px; width:100%;" >
 
 	<tr style="width:100%">
 		<td style="width: 50%">

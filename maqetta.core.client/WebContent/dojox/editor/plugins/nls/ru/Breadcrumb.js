@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"nodeActions": "${nodeName}: действия",
 	"selectContents": "Выбрать содержимое",
@@ -8,3 +10,5 @@
 	"moveEnd": "Поместить курсор в конец"
 })
 
+//end v1.x content
+);

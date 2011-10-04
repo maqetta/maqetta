@@ -142,6 +142,7 @@ dojo.declare("dojox.image.SlideShow",
 		
 		this._loadImage(0, dojo.hitch(this, "showImage", 0));
 		this._calcNavDimensions();
+		dojo.style(this.navNode, "opacity", 0);
 	},
 
 	setDataStore: function(dataStore, request, /*optional*/paramNames){
@@ -513,6 +514,7 @@ dojo.declare("dojox.image.SlideShow",
 	_prev: function(){
 		// summary:
 		//		Show the previous image.
+
 		// FIXME: either pull code from showNext/prev, or call it here
 		if(this.imageIndex < 1){ return; }
 		this.showImage(this.imageIndex - 1);
@@ -541,14 +543,11 @@ dojo.declare("dojox.image.SlideShow",
 		//Place the navigation controls far off screen
 		dojo.style(this.navNode, "top", "-10000px");
 		
-		//Make the navigation controls visible
-		dojo._setOpacity(this.navNode, 1);
+		dojo.style(this.navPlay, 'marginLeft', 0);
 		
 		this.navPlay._size = dojo.marginBox(this.navPlay);
 		this.navPrev._size = dojo.marginBox(this.navPrev);
 		this.navNext._size = dojo.marginBox(this.navNext);
-		
-		dojo._setOpacity(this.navNode, 0);
 		
 		dojo.style(this.navNode, {"position": "", top: ""});
 	},
@@ -605,9 +604,13 @@ dojo.declare("dojox.image.SlideShow",
 		//		If true, the navigation controls are repositioned even if they are
 		//		currently visible.
 		if(this._navShowing && !force){return;}
+		this._calcNavDimensions();
 		dojo.style(this.navNode, "marginTop", "0px");
 		
+		
 		var navPlayPos = dojo.style(this.navNode, "width")/2 - this.navPlay._size.w/2 - this.navPrev._size.w;
+		console.log('navPlayPos = ' + dojo.style(this.navNode, "width")/2 + ' - ' + this.navPlay._size.w + '/2 - '
+				+ this.navPrev._size.w);
 		
 		dojo.style(this.navPlay, "marginLeft", navPlayPos + "px");
 		var wrapperSize = dojo.marginBox(this.outerNode);
@@ -662,13 +665,11 @@ dojo.declare("dojox.image.SlideShow",
 		if(typeof(dojo) == "undefined"){ return false; }
 		element = dojo.byId(element);
 		var m = { x: e.pageX, y: e.pageY };
-		var bb = dojo._getBorderBox(element);
-		var absl = dojo.coords(element, true);
-		var left = absl.x;
+		var bb = dojo.position(element, true);
 
-		return (m.x >= left
-			&& m.x <= (left + bb.w)
-			&& m.y >= absl.y
+		return (m.x >= bb.x
+			&& m.x <= (bb.x + bb.w)
+			&& m.y >= bb.y
 			&& m.y <= (top + bb.h)
 		);	//	boolean
 	}

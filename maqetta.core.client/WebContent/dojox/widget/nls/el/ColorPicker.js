@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 redLabel: "κ",
 greenLabel: "π",
@@ -9,4 +11,4 @@ hexLabel: "16-αδικό",
 huePickerTitle: "Επιλογή απόχρωσης",
 saturationPickerTitle: "Επιλογή κορεσμού"
 })
-
+);

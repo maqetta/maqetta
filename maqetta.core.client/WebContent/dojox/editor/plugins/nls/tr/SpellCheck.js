@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	widgetLabel: "Toplu Yazım Denetimi",
 	unfound: "Bulunamadı",
@@ -15,3 +17,5 @@
 	iMsg: "Yazım önerisi yok"
 })
 
+//end v1.x content
+);

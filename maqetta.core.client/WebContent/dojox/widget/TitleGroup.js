@@ -1,11 +1,6 @@
-dojo.provide("dojox.widget.TitleGroup");
-
-dojo.require("dijit._Widget");
-dojo.require("dijit.TitlePane");
-
-(function(d){
+define(["dojo", "dijit/registry", "dijit/_Widget", "dijit/TitlePane"], function(dojo, registry, widget, titlepane){
 	
-	var tp = dijit.TitlePane.prototype,
+	var tp = titlepane.prototype,
 		lookup = function(){
 			// generic handler function for click and keypress
 			var parent = this._dxfindParent && this._dxfindParent();
@@ -16,26 +11,26 @@ dojo.require("dijit.TitlePane");
 	// this might hide this uberprivate function from the docparser.
 	tp._dxfindParent = function(){
 		// summary: TitlePane's MUST be first-children of a TitleGroup. only used by
-		//		`dojox.widget.TitleGroup`. Find a possible parent TitleGroup of a TitlePane
+		//		`dojox.widget.TitleGroup`. Finds a possible parent TitleGroup of a TitlePane
 		var n = this.domNode.parentNode;
 		if(n){
-			n = dijit.getEnclosingWidget(n);
+			n = registry.getEnclosingWidget(n);
 			return n && n instanceof dojox.widget.TitleGroup && n;
 		}
 		return n;
 	};
 
 	// if we click our own title, hide everyone
-	d.connect(tp, "_onTitleClick", lookup);
-	d.connect(tp, "_onTitleKey", function(e){
+	dojo.connect(tp, "_onTitleClick", lookup);
+	dojo.connect(tp, "_onTitleKey", function(e){
 		// if we're tabbing through the items in a group, don't do toggles.
 		// if we hit enter, let it happen.
-		if(!(e && e.type && e.type == "keypress" && e.charOrCode == d.keys.TAB)){
+		if(!(e && e.type && e.type == "keypress" && e.charOrCode == dojo.keys.TAB)){
 			lookup.apply(this, arguments);
 		}
 	});
 		
-	d.declare("dojox.widget.TitleGroup", dijit._Widget, {
+	return dojo.declare("dojox.widget.TitleGroup", dijit._Widget, {
 		// summary: A container which controls a series of `dijit.TitlePane`s,
 		//		allowing one to be visible and hiding siblings
 		//
@@ -76,12 +71,12 @@ dojo.require("dijit.TitlePane");
 			// summary: close all found titlePanes within this group, excluding
 			// the one the we pass to select
 			widget && dojo.query("> .dijitTitlePane", this.domNode).forEach(function(n){
-				var tp = dijit.getEnclosingWidget(n);
-				tp && tp !== widget && tp.open && tp.set("open", false);
+				var tp = registry.byNode(n);
+				tp && tp !== widget && tp.open && tp.toggle(); // could race if open is set onEnd of slide
 			});
 			return widget; // dijit.TitlePane
 		}
 	
 	});
 
-})(dojo);
+});

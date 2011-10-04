@@ -25,9 +25,10 @@
 		dojo.require("dijit.Declaration");
 		dojo.require("dijit.ProgressBar");
 		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
+		dojo.require("dojo.on");
 		dojo.require("doh.runner");
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			doh.register("dijit.Declaration", [
 				function parse(){
 					// run parser inside of DOH so we can tell if there are any exceptions
@@ -55,6 +56,18 @@
 					// test <script type="dojo/connect">
 					doh.t(foo1, "foo1 exists");
 					doh.t(/modified by dojo\/connect event=startup/.test(foo1.domNode.innerHTML), "dojo/connect fired");
+				},
+
+				function events(){
+					doh.t(button1, "button created");
+					doh.t(button1.onButtonClick, "onButtonClick exists");
+
+					var clicked = false;
+					button1.on("ButtonClick", function(){
+						clicked = true;
+					});
+					dojo.on.emit(button1.domNode, "click", {});
+					doh.t(clicked, "clicked");
 				}
 			]);
 
@@ -128,5 +141,16 @@
 	<div data-dojo-id="foo1" data-dojo-type="foo" data-dojo-props='foo:"blah", progress:50'></div>
 	<div data-dojo-id="foo2" data-dojo-type="foo" data-dojo-props='foo:"thinger", progress:73'></div>
 
+	<h3>data-dojo-attach-event on root node</h3>
+	<div data-dojo-type="dijit.Declaration"
+		 	data-dojo-props='widgetClass:"button"'
+			data-dojo-attach-event="onclick: onButtonClick">
+		<script type='dojo/method' data-dojo-event='onButtonClick'>
+			console.log("in onButtonClicked");
+		</script>
+		click me
+	</div>
+
+	<button data-dojo-id="button1" data-dojo-type="button">click me</button>
 </body>
 </html>

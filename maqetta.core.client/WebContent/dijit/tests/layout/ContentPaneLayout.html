@@ -22,7 +22,7 @@
 		dojo.require("dojo.parser");
 
 		dojo.require("dijit._Widget");
-		dojo.require("dijit._Templated");
+		dojo.require("dijit._TemplatedMixin");
 		dojo.require("dijit.layout.ContentPane");
 		dojo.require("dijit.layout.TabContainer");
 		dojo.require("dijit.layout.BorderContainer");
@@ -43,11 +43,11 @@
 			loadEvents[this.id] = (loadEvents[this.id] || 0) + 1;
 		}
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 
 			// create a do nothing, only for test widget
 			dojo.declare("ResizableWidget",
-				[dijit._Widget, dijit._Templated], {
+				[dijit._Widget, dijit._TemplatedMixin], {
 				templateString: "<span class='dijitInline resizableWidget'>resizable widget</span>",
 				_resized: 0,
 				_resizeArgs: null,
@@ -243,10 +243,10 @@
 							var child = dijit.byId("singleChildResizable");
 							doh.is(0, child._resized, "hasn't been shown yet so no resize events");
 
-							dijit.byId("resizeTC").selectChild(dijit.byId("singleChildPane"))
+							dijit.byId("resizeTC").selectChild(dijit.byId("singleChildPane"));
 
 							doh.t(child._resized, "got resize event");	// note: should only be 1 but currently gets 2
-							doh.t(child._resizeArgs && child._resizeArgs.length, "got size specified")
+							doh.t(child._resizeArgs && child._resizeArgs.length, "got size specified");
 
 							var size = child._resizeArgs[0];
 							doh.t(size && size.h, "non-0 height specified");
@@ -265,10 +265,10 @@
 							doh.is(0, child1._resized, "child1 hasn't been shown yet so no resize events");
 							doh.is(0, child2._resized, "child2 hasn't been shown yet so no resize events");
 
-							dijit.byId("resizeTC").selectChild(dijit.byId("multipleChildPanes"))
+							dijit.byId("resizeTC").selectChild(dijit.byId("multipleChildPanes"));
 
 							doh.t(child1._resized, "got resize event for child1");
-							doh.is(0, child1._resizeArgs && child1._resizeArgs.length, "no size specified for child1")
+							doh.is(0, child1._resizeArgs && child1._resizeArgs.length, "no size specified for child1");
 							doh.t(child2._resized, "got resize event for child2");
 							doh.is(0, child2._resizeArgs && child2._resizeArgs.length, "no size specified for child2")
 						}
@@ -281,15 +281,15 @@
 						runTest: function(t){
 							var d = new doh.Deferred();
 
-							dijit.byId("resizeTC").selectChild(dijit.byId("singleChildHref"))
+							dijit.byId("resizeTC").selectChild(dijit.byId("singleChildHref"));
 
 							// Wait for load events to occur (after fetching URL's)
 							setTimeout(d.getTestCallback(function(){
 								// Check top level border container got sized to fit ContentPane
 								var child = dijit.byId("singleChildHrefBorderContainer");
-								doh.t(child, "href was loaded and top level BorderContainer was created")
+								doh.t(child, "href was loaded and top level BorderContainer was created");
 								doh.t(layoutResizes["singleChildHrefBorderContainer"], "got resize event");
-								doh.t(layoutResizes["singleChildHrefBorderContainer"][0].length, "got size specified")
+								doh.t(layoutResizes["singleChildHrefBorderContainer"][0].length, "got size specified");
 
 								var size = layoutResizes["singleChildHrefBorderContainer"][0][0];
 								doh.t(size && size.h, "non-0 height specified");
@@ -297,7 +297,7 @@
 
 								// Check that resize() events also trickled down to inner TabContainer
 								var child2 = dijit.byId("singleChildHrefInnerTabContainer");
-								doh.t(child2, "inner TabContainer was created")
+								doh.t(child2, "inner TabContainer was created");
 								doh.t(layoutResizes["singleChildHrefInnerTabContainer"], "got resize event");
 								doh.is(0, layoutResizes["singleChildHrefInnerTabContainer"][0].length, "no size specified")
 							}), 4000);
@@ -312,13 +312,13 @@
 						runTest: function(t){
 							var d = new doh.Deferred();
 
-							dijit.byId("resizeTC").selectChild(dijit.byId("multipleChildHref"))
+							dijit.byId("resizeTC").selectChild(dijit.byId("multipleChildHref"));
 
 							// Wait for load events to occur (after fetching URL's)
 							setTimeout(d.getTestCallback(function(){
 								// Check that resize() done on TabContainer
 								var child = dijit.byId("multipleChildHrefTabContainer");
-								doh.t(child, "TabContainer was created")
+								doh.t(child, "TabContainer was created");
 								doh.t(layoutResizes["multipleChildHrefTabContainer"], "got resize event");
 								doh.is(0, layoutResizes["multipleChildHrefTabContainer"][0].length, "no size specified")
 							}), 4000);
@@ -342,10 +342,10 @@
 							doh.is(1, child1.history.length, "child2 # of history events (before show)");
 							doh.is("started", child2.history[0], "child2 history");
 
-							dijit.byId("resizeTC").selectChild(dijit.byId("multipleResizableInForm"))
+							dijit.byId("resizeTC").selectChild(dijit.byId("multipleResizableInForm"));
 
 							doh.t(child1._resized, "got resize event for child1");
-							doh.is(0, child1._resizeArgs && child1._resizeArgs.length, "no size specified for child1")
+							doh.is(0, child1._resizeArgs && child1._resizeArgs.length, "no size specified for child1");
 							doh.t(child2._resized, "got resize event for child2");
 							doh.is(0, child2._resizeArgs && child2._resizeArgs.length, "no size specified for child2")
 						}
@@ -360,7 +360,7 @@
 							doh.is(1, child.history.length, "child # of history events (before show)");
 							doh.is("started", child.history[0], "child history");
 
-							dijit.byId("resizeTC").selectChild(dijit.byId("singleResizableInForm"))
+							dijit.byId("resizeTC").selectChild(dijit.byId("singleResizableInForm"));
 
 							doh.t(child._resized, "got resize event for child");
 							doh.is(1, child._resizeArgs && child._resizeArgs.length, "size specified")
@@ -385,7 +385,7 @@
 								child2 = dijit.byId("fsmc2");
 
 							doh.t(child1._resized, "got resize event for child1");
-							doh.is(0, child1._resizeArgs && child1._resizeArgs.length, "no size specified for child1")
+							doh.is(0, child1._resizeArgs && child1._resizeArgs.length, "no size specified for child1");
 							doh.t(child2._resized, "got resize event for child2");
 							doh.is(0, child2._resizeArgs && child2._resizeArgs.length, "no size specified for child2")
 						}
@@ -408,7 +408,7 @@
 								child2 = dijit.byId("fnmc2");
 
 							doh.t(child1._resized, "got resize event for child1");
-							doh.is(0, child1._resizeArgs && child1._resizeArgs.length, "no size specified for child1")
+							doh.is(0, child1._resizeArgs && child1._resizeArgs.length, "no size specified for child1");
 							doh.t(child2._resized, "got resize event for child2");
 							doh.is(0, child2._resizeArgs && child2._resizeArgs.length, "no size specified for child2")
 						}

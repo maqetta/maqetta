@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertAnchor: "Wstaw zakotwiczenie",
 	title: "Właściwości zakotwiczenia",
@@ -7,3 +9,5 @@
 	cancel: "Anuluj"
 })
 
+//end v1.x content
+);

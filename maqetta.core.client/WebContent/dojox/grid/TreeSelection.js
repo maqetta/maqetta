@@ -1,14 +1,20 @@
-dojo.provide("dojox.grid.TreeSelection");
+define([
+	"../main",
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/dom-attr",
+	"dojo/query",
+	"./DataSelection"
+], function(dojox, declare, array, lang, domAttr, query, DataSelection){
 
-dojo.require("dojox.grid.DataSelection");
-
-dojo.declare("dojox.grid.TreeSelection", dojox.grid.DataSelection, {
+return declare("dojox.grid.TreeSelection", DataSelection, {
 	setMode: function(mode){
 		this.selected = {};
 		this.sorted_sel = [];
 		this.sorted_ltos = {};
 		this.sorted_stol = {};
-		dojox.grid.DataSelection.prototype.setMode.call(this, mode);
+		DataSelection.prototype.setMode.call(this, mode);
 	},
 	addToSelection: function(inItemOrIndex){
 		if(this.mode == 'none'){ return; }
@@ -23,9 +29,9 @@ dojo.declare("dojox.grid.TreeSelection", dojox.grid.DataSelection, {
 		}else{
 			if(this.onCanSelect(idx) !== false){
 				this.selectedIndex = idx;
-				var rowNodes = dojo.query("tr[dojoxTreeGridPath='" + idx + "']", this.grid.domNode);
+				var rowNodes = query("tr[dojoxTreeGridPath='" + idx + "']", this.grid.domNode);
 				if(rowNodes.length){
-					dojo.attr(rowNodes[0],"aria-selected","true");
+					domAttr.set(rowNodes[0], "aria-selected", "true");
 				}
 				this._beginUpdate();
 				this.selected[idx] = true;
@@ -52,9 +58,9 @@ dojo.declare("dojox.grid.TreeSelection", dojox.grid.DataSelection, {
 			if(this.onCanDeselect(idx) === false){
 				return;
 			}
-			var rowNodes = dojo.query("tr[dojoxTreeGridPath='" + idx + "']", this.grid.domNode);
+			var rowNodes = query("tr[dojoxTreeGridPath='" + idx + "']", this.grid.domNode);
 			if(rowNodes.length){
-				dojo.attr(rowNodes[0],"aria-selected","false");
+				domAttr.set(rowNodes[0], "aria-selected", "false");
 			}
 			this._beginUpdate();
 			delete this.selected[idx];
@@ -110,7 +116,7 @@ dojo.declare("dojox.grid.TreeSelection", dojox.grid.DataSelection, {
 		var ss = this.sorted_stol;
 
 		var lpath = index.split('/');
-		lpath = dojo.map(lpath, function(item){ return parseInt(item, 10); });
+		lpath = array.map(lpath, function(item){ return parseInt(item, 10); });
 		sl[lpath] = index;
 		ss[index] = lpath;
 
@@ -174,7 +180,7 @@ dojo.declare("dojox.grid.TreeSelection", dojox.grid.DataSelection, {
 		return this.sorted_ltos[lpath];
 	},
 	_range: function(inFrom, inTo, func){
-		if(!dojo.isString(inFrom) && inFrom < 0){
+		if(!lang.isString(inFrom) && inFrom < 0){
 			inFrom = inTo;
 		}
 		var cells = this.grid.layout.cells,
@@ -205,4 +211,5 @@ dojo.declare("dojox.grid.TreeSelection", dojox.grid.DataSelection, {
 		// select/deselect the last
 		func(inToStr);
 	}
+});
 });

@@ -44,7 +44,7 @@ There are three areas of styling for the Menu:
 .claro .dijitMenu {
   background-repeat: repeat-y;
   background-color: #ffffff;
-  border: 1px solid #769dc0;
+  border: 1px solid #759dc0;
   /* so adjoining borders of MenuBar/ComboBox and Menu overlap, avoiding double border */
 
   margin: -1px 0;
@@ -57,13 +57,13 @@ There are three areas of styling for the Menu:
 .claro .dijitMenuBar .dijitMenuItem {
   padding: 6px 10px 7px;
   background-position: 0 100px;
-  color: #4a4a4a;
   margin: -1px;
 }
 .claro .dijitMenuItem {
   background-image: url("images/menuHighlight.png");
   background-position: 0 -40px;
   background-repeat: repeat-x;
+  color: #000000;
 }
 /* this prevents jiggling upon hover of a menu item */
 .claro .dijitMenuTable {
@@ -77,7 +77,7 @@ There are three areas of styling for the Menu:
 /* hover over a MenuBarItem */
 .claro .dijitMenuPassive .dijitMenuItemHover, .claro .dijitMenuPassive .dijitMenuItemSelected {
   background-color: #abd6ff;
-  border: solid 1px #769dc0;
+  border: solid 1px #759dc0;
   background-position: 0 0;
   color: #000000;
   padding: 5px 9px 6px;
@@ -90,7 +90,7 @@ There are three areas of styling for the Menu:
 }
 /* MenuBarItem that has been selected and menu drops down from it */
 .claro .dijitMenuActive .dijitMenuItemHover, .claro .dijitMenuActive .dijitMenuItemSelected {
-  border: solid 1px #769dc0;
+  border: solid 1px #759dc0;
   padding: 5px 9px 6px;
   background-color: #abd6ff;
   background-position: 0 0;
@@ -105,7 +105,7 @@ There are three areas of styling for the Menu:
   margin-top: -3px;
 }
 .claro .dijitMenuActive .dijitMenuItemActive {
-  background-color: #7dbefa;
+  background-color: #7dbdfa;
   background-position: 0 -177px;
 }
 .claro .dijitMenuItemActive {
@@ -170,12 +170,18 @@ There are three areas of styling for the Menu:
 }
 .claro .dijitComboBoxMenu .dijitMenuItemSelected {
   color: #000000;
+  border-color: #759dc0;
+  background-color: #abd6ff;
+}
+.claro .dijitComboBoxMenu .dijitMenuItemHover {
+  color: #000000;
   border-color: #769dc0;
   background-color: #abd6ff;
+  background-position: 0 0;
 }
 .claro .dijitComboBoxMenuActive .dijitMenuItemSelected {
   background-position: 0 -177px;
-  background-color: #7dbefa;
+  background-color: #7dbdfa;
   /* TODO: why is this a different color than normal .dijitMenuItemSelected? */
 
 }

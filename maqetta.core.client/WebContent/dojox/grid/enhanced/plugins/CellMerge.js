@@ -1,8 +1,13 @@
-dojo.provide("dojox.grid.enhanced.plugins.CellMerge");
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/_base/html",
+	"../_Plugin",
+	"../../EnhancedGrid"
+], function(declare, array, lang, html, _Plugin, EnhancedGrid){
 
-dojo.require("dojox.grid.enhanced._Plugin");
-
-dojo.declare("dojox.grid.enhanced.plugins.CellMerge", dojox.grid.enhanced._Plugin, {
+var CellMerge = declare("dojox.grid.enhanced.plugins.CellMerge", _Plugin, {
 	// summary:
 	//		This plugin provides functions to merge(un-merge) adjacent cells within one row.
 	//		Acceptable plugin paramters:
@@ -30,7 +35,7 @@ dojo.declare("dojox.grid.enhanced.plugins.CellMerge", dojox.grid.enhanced._Plugi
 		this.grid = grid;
 		this._records = [];
 		this._merged = {};
-		if(args && dojo.isObject(args)){
+		if(args && lang.isObject(args)){
 			this._setupConfig(args.mergedCells);
 		}
 		this._initEvents();
@@ -77,7 +82,7 @@ dojo.declare("dojox.grid.enhanced.plugins.CellMerge", dojox.grid.enhanced._Plugi
 		// mergeHandler: object
 		//		A handler for the merged cells created by a call of function mergeCells.
 		var idx;
-		if(mergeHandler && (idx = dojo.indexOf(this._records, mergeHandler)) >= 0){
+		if(mergeHandler && (idx = array.indexOf(this._records, mergeHandler)) >= 0){
 			this._records.splice(idx, 1);
 			this._updateRows(mergeHandler);
 		}
@@ -115,23 +120,23 @@ dojo.declare("dojox.grid.enhanced.plugins.CellMerge", dojox.grid.enhanced._Plugi
 	
 	//----------------Private--------------------------
 	_setupConfig: function(config){
-		dojo.forEach(config, this._createRecord, this);
+		array.forEach(config, this._createRecord, this);
 	},
 	_initEvents: function(){
-		dojo.forEach(this.grid.views.views, function(view){
-			this.connect(view, "onAfterRow", dojo.hitch(this, "_onAfterRow", view.index));
+		array.forEach(this.grid.views.views, function(view){
+			this.connect(view, "onAfterRow", lang.hitch(this, "_onAfterRow", view.index));
 		}, this);
 	},
 	_mixinGrid: function(){
 		var g = this.grid;
-		g.mergeCells = dojo.hitch(this, "mergeCells");
-		g.unmergeCells = dojo.hitch(this, "unmergeCells");
-		g.getMergedCells = dojo.hitch(this, "getMergedCells");
-		g.getMergedCellsByRow = dojo.hitch(this, "getMergedCellsByRow");
+		g.mergeCells = lang.hitch(this, "mergeCells");
+		g.unmergeCells = lang.hitch(this, "unmergeCells");
+		g.getMergedCells = lang.hitch(this, "getMergedCells");
+		g.getMergedCellsByRow = lang.hitch(this, "getMergedCellsByRow");
 	},
 	_getWidth: function(colIndex){
 		var node = this.grid.layout.cells[colIndex].getHeaderNode();
-		return dojo.position(node).w;
+		return html.position(node).w;
 	},
 	_onAfterRow: function(viewIdx, rowIndex, subrows){
 		try{
@@ -175,21 +180,21 @@ dojo.declare("dojox.grid.enhanced.plugins.CellMerge", dojox.grid.enhanced._Plugi
 				}
 			}
 			this._merged[rowIndex] = [];
-			dojo.forEach(result, function(res){
-				dojo.forEach(res.hiddenCells, function(node){
-					dojo.style(node, "display", "none");
+			array.forEach(result, function(res){
+				array.forEach(res.hiddenCells, function(node){
+					html.style(node, "display", "none");
 				});
-				var pbm = dojo.marginBox(res.majorHeaderNode).w - dojo.contentBox(res.majorHeaderNode).w;
+				var pbm = html.marginBox(res.majorHeaderNode).w - html.contentBox(res.majorHeaderNode).w;
 				var tw = res.totalWidth;
 				
 				//Tricky for WebKit.
-				if(!dojo.isWebKit){
+				if(!html.isWebKit){
 					tw -= pbm;
 				}
 				
-				dojo.style(res.majorNode, "width", tw + "px");
+				html.style(res.majorNode, "width", tw + "px");
 				//In case we're dealing with multiple subrows.
-				dojo.attr(res.majorNode, "colspan", res.hiddenCells.length + 1);
+				res.majorNode.setAttribute("colspan", res.hiddenCells.length + 1);
 	
 				this._merged[rowIndex].push({
 					"row": rowIndex,
@@ -232,7 +237,7 @@ dojo.declare("dojox.grid.enhanced.plugins.CellMerge", dojox.grid.enhanced._Plugi
 					return false;
 				};
 			}
-			if(dojo.isFunction(item.row)){
+			if(lang.isFunction(item.row)){
 				this._records.push(item);
 				return item;
 			}
@@ -242,7 +247,7 @@ dojo.declare("dojox.grid.enhanced.plugins.CellMerge", dojox.grid.enhanced._Plugi
 	_isValid: function(item){
 		var cells = this.grid.layout.cells,
 			colCount = cells.length;
-		return (dojo.isObject(item) && ("row" in item) && ("start" in item) && ("end" in item) &&
+		return (lang.isObject(item) && ("row" in item) && ("start" in item) && ("end" in item) &&
 			item.start >= 0 && item.start < colCount &&
 			item.end > item.start && item.end < colCount &&
 			cells[item.start].view.index == cells[item.end].view.index &&
@@ -263,4 +268,8 @@ dojo.declare("dojox.grid.enhanced.plugins.CellMerge", dojox.grid.enhanced._Plugi
 		}
 	}
 });
-dojox.grid.EnhancedGrid.registerPlugin(dojox.grid.enhanced.plugins.CellMerge/*name:'cellMerge'*/);
+
+EnhancedGrid.registerPlugin(CellMerge);
+
+return CellMerge;
+});

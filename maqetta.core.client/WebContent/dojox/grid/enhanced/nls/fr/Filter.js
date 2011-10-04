@@ -1,4 +1,6 @@
-﻿({
+﻿define(
+//begin v1.x content
+({
 	"clearFilterDialogTitle": "Effacer le filtre",
 	"filterDefDialogTitle": "Filtrer",
 	"ruleTitleTemplate": "Règle ${0}",
@@ -82,6 +84,8 @@
 	"trueLabel": "Vrai",
 	"falseLabel": "Faux"
 })
+//end v1.x content
+);
 
 
 

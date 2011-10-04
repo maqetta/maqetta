@@ -25,8 +25,9 @@
 		dojo.require("doh.runner");
 		dojo.require("dijit.dijit"); // optimize: load dijit layer
 		dojo.require("dijit.Dialog");
+		dojo.require("dijit.focus");
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			// Non robot tests to see if nested dialogs work correctly
 			// when obscured dialogs are destroyed/hidden, on race conditions of
 			// multiple dialogs fading in/out at once, etc.
@@ -65,7 +66,7 @@
 							doh.t(dialog1Z > underlayZ, "dialog1 (zIndex=" + dialog1Z +
 								") above underlay (zIndex=" + underlayZ + ")");
 
-							doh.is("dlg1_inputA", dojo.global.dijit._curFocus.id, "focus is on the first field");
+							doh.is("dlg1_inputA", dojo.global.dijit.focus.curNode.id, "focus is on the first field");
 
 							// For back-compat, startup() should be called on children even if Dialog.startup()
 							// isn't called explicitly.							
@@ -107,7 +108,7 @@
 							doh.t(dialog2Z > underlayZ, "dialog2 (zIndex=" + dialog2Z +
 								") above underlay (zIndex=" + underlayZ + ")");
 
-							doh.is("dlg2_inputA", dojo.global.dijit._curFocus.id, "focus is on the first field");
+							doh.is("dlg2_inputA", dojo.global.dijit.focus.curNode.id, "focus is on the first field");
 						}));
 
 						return d;
@@ -127,7 +128,7 @@
 							doh.t(isVisible(dlg2), "dialog 2 is still visible");
 							doh.t(isVisible(dojo.global.dijit._underlay), "underlay is still visible");
 
-							doh.is("dlg2_inputA", dojo.global.dijit._curFocus.id, "dialog 2 still has focus");
+							doh.is("dlg2_inputA", dojo.global.dijit.focus.curNode.id, "dialog 2 still has focus");
 
 							var dialog2Z = dojo.style(dlg2.domNode, "zIndex"),
 								underlayZ = dojo.style(dojo.global.dijit._underlay.domNode, "zIndex");
@@ -173,7 +174,7 @@
 							doh.t(dialog3Z > underlayZ, "dialog3 (zIndex=" + dialog3Z +
 								") above underlay (zIndex=" + underlayZ + ")");
 
-							doh.is("dlg3_inputA", dojo.global.dijit._curFocus.id, "focus is on the first field");
+							doh.is("dlg3_inputA", dojo.global.dijit.focus.curNode.id, "focus is on the first field");
 						}));
 
 						return d;
@@ -206,7 +207,7 @@
 							doh.t(dialog4Z > underlayZ, "dialog4 (zIndex=" + dialog4Z +
 								") above underlay (zIndex=" + underlayZ + ")");
 
-							doh.is("dlg4_inputA", dojo.global.dijit._curFocus.id, "focus is on the first field");
+							doh.is("dlg4_inputA", dojo.global.dijit.focus.curNode.id, "focus is on the first field");
 						}));
 
 						return d;
@@ -224,7 +225,7 @@
 							doh.t(isVisible(dlg4), "dialog 4 is still visible");
 							doh.t(isVisible(dojo.global.dijit._underlay), "underlay is still visible");
 
-							doh.is("dlg4_inputA", dojo.global.dijit._curFocus.id, "dialog 4 still has focus");
+							doh.is("dlg4_inputA", dojo.global.dijit.focus.curNode.id, "dialog 4 still has focus");
 
 							var dialog4Z = dojo.style(dlg4.domNode, "zIndex"),
 								underlayZ = dojo.style(dojo.global.dijit._underlay.domNode, "zIndex");
@@ -258,7 +259,7 @@
 							doh.t(dialog2Z > underlayZ, "dialog2 (zIndex=" + dialog2Z +
 								") above underlay (zIndex=" + underlayZ + ")");
 
-							doh.is("dlg2_inputA", dojo.global.dijit._curFocus.id, "focus is on the first field");
+							doh.is("dlg2_inputA", dojo.global.dijit.focus.curNode.id, "focus is on the first field");
 						}));
 
 						return d;
@@ -277,7 +278,7 @@
 							doh.t(isHidden(dlg2), "dialog 4 is hidden");
 							doh.t(isHidden(dojo.global.dijit._underlay), "underlay hidden");
 
-							doh.is("button", dojo.global.dijit._curFocus.id, "focus is on the main page");
+							doh.is("button", dojo.global.dijit.focus.curNode.id, "focus is on the main page");
 						}));
 
 						return d;
@@ -380,13 +381,13 @@
 						
 						setTimeout(d.getTestErrback(function(){
 							fast.show();
-						}), slow.duration / 2)
+						}), slow.duration / 2);
 						
 						setTimeout(d.getTestCallback(function(){
 							doh.t(isVisible(slow), "dialog C visible");
 							doh.t(isVisible(fast), "dialog D visible");
 							doh.f(dojo.global.slowFocused, "dialog C never got focus")
-						}), slow.duration * 2)
+						}), slow.duration * 2);
 						return d;
 					}
 				},
@@ -400,9 +401,9 @@
 						fast.hide();
 						
 						setTimeout(d.getTestCallback(function(){
-							doh.is("slowOK", dojo.global.dijit._curFocus.id, "focused to dialog C");
+							doh.is("slowOK", dojo.global.dijit.focus.curNode.id, "focused to dialog C");
 							doh.t(dojo.global.slowFocused, "onfocus handler working");
-						}), fast.duration * 2)
+						}), fast.duration * 2);
 
 						return d;
 					}

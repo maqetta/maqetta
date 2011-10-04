@@ -1,9 +1,36 @@
-define("dijit/TitlePane", ["dojo", "dijit", "text!dijit/templates/TitlePane.html", "dojo/fx", "dijit/_Templated", "dijit/layout/ContentPane", "dijit/_CssStateMixin"], function(dojo, dijit) {
+define([
+	"dojo/_base/array", // array.forEach
+	"dojo/_base/declare", // declare
+	"dojo/dom", // dom.setSelectable
+	"dojo/dom-attr", // domAttr.set or get domAttr.remove
+	"dojo/dom-class", // domClass.replace
+	"dojo/dom-geometry", // domGeometry.setMarginBox domGeometry.getMarginBox
+	"dojo/_base/event", // event.stop
+	"dojo/fx", // fxUtils.wipeIn fxUtils.wipeOut
+	"dojo/_base/kernel", // kernel.deprecated
+	"dojo/keys", // keys.DOWN_ARROW keys.ENTER
+	"./_CssStateMixin",
+	"./_TemplatedMixin",
+	"./layout/ContentPane",
+	"dojo/text!./templates/TitlePane.html",
+	"./_base/manager"	// defaultDuration
+], function(array, declare, dom, domAttr, domClass, domGeometry, event, fxUtils, kernel, keys,
+			_CssStateMixin, _TemplatedMixin, ContentPane, template, manager){
 
-dojo.declare(
-	"dijit.TitlePane",
-	[dijit.layout.ContentPane, dijit._Templated, dijit._CssStateMixin],
-{
+/*=====
+	var _Widget = dijit._Widget;
+	var _TemplatedMixin = dijit._TemplatedMixin;
+	var _CssStateMixin = dijit._CssStateMixin;
+	var ContentPane = dijit.layout.ContentPane;
+=====*/
+
+// module:
+//		dijit/TitlePane
+// summary:
+//		A pane with a title on top, that can be expanded or collapsed.
+
+
+return declare("dijit.TitlePane", [ContentPane, _TemplatedMixin, _CssStateMixin], {
 	// summary:
 	//		A pane with a title on top, that can be expanded or collapsed.
 	//
@@ -19,17 +46,18 @@ dojo.declare(
 	//
 	// example:
 	// |	<!-- markup href example: -->
-	// |	<div dojoType="dijit.TitlePane" href="foobar.html" title="Title"></div>
+	// |	<div data-dojo-type="dijit.TitlePane" data-dojo-props="href: 'foobar.html', title: 'Title'"></div>
 	//
 	// example:
 	// |	<!-- markup with inline data -->
-	// | 	<div dojoType="dijit.TitlePane" title="Title">
+	// | 	<div data-dojo-type="dijit.TitlePane" title="Title">
 	// |		<p>I am content</p>
 	// |	</div>
 
 	// title: String
 	//		Title of the pane
 	title: "",
+	_setTitleAttr: { node: "titleNode", type: "innerHTML" },	// override default where title becomes a hover tooltip
 
 	// open: Boolean
 	//		Whether pane is opened or closed.
@@ -46,28 +74,32 @@ dojo.declare(
 
 	// duration: Integer
 	//		Time in milliseconds to fade in/fade out
-	duration: dijit.defaultDuration,
+	duration: manager.defaultDuration,
 
 	// baseClass: [protected] String
 	//		The root className to be placed on this widget's domNode.
 	baseClass: "dijitTitlePane",
 
-	templateString: dojo.cache("dijit", "templates/TitlePane.html"),
+	templateString: template,
 
-	attributeMap: dojo.delegate(dijit.layout.ContentPane.prototype.attributeMap, {
-		title: { node: "titleNode", type: "innerHTML" },
-		tooltip: {node: "focusNode", type: "attribute", attribute: "title"},	// focusNode spans the entire width, titleNode doesn't
-		id:""
-	}),
+	// doLayout: [protected] Boolean
+	//		Don't change this parameter from the default value.
+	//		This ContentPane parameter doesn't make sense for TitlePane, since TitlePane
+	//		is never a child of a layout container, nor should TitlePane try to control
+	//		the size of an inner widget.
+	doLayout: false,
+
+	// Tooltip is defined in _WidgetBase but we need to handle the mapping to DOM here
+	_setTooltipAttr: {node: "focusNode", type: "attribute", attribute: "title"},	// focusNode spans the entire width, titleNode doesn't
 
 	buildRendering: function(){
 		this.inherited(arguments);
-		dojo.setSelectable(this.titleNode, false);
+		dom.setSelectable(this.titleNode, false);
 	},
 
 	postCreate: function(){
 		this.inherited(arguments);
-		
+
 		// Hover and focus effect on title bar, except for non-toggleable TitlePanes
 		// This should really be controlled from _setToggleableAttr() but _CssStateMixin
 		// doesn't provide a way to disconnect a previous _trackMouseState() call
@@ -77,15 +109,15 @@ dojo.declare(
 
 		// setup open/close animations
 		var hideNode = this.hideNode, wipeNode = this.wipeNode;
-		this._wipeIn = dojo.fx.wipeIn({
-			node: this.wipeNode,
+		this._wipeIn = fxUtils.wipeIn({
+			node: wipeNode,
 			duration: this.duration,
 			beforeBegin: function(){
 				hideNode.style.display="";
 			}
 		});
-		this._wipeOut = dojo.fx.wipeOut({
-			node: this.wipeNode,
+		this._wipeOut = fxUtils.wipeOut({
+			node: wipeNode,
 			duration: this.duration,
 			onEnd: function(){
 				hideNode.style.display="none";
@@ -99,7 +131,7 @@ dojo.declare(
 		// open: Boolean
 		//		True if you want to open the pane, false if you want to close it.
 
-		dojo.forEach([this._wipeIn, this._wipeOut], function(animation){
+		array.forEach([this._wipeIn, this._wipeOut], function(animation){
 			if(animation && animation.status() == "playing"){
 				animation.stop();
 			}
@@ -124,8 +156,8 @@ dojo.declare(
 
 		this.arrowNodeInner.innerHTML = open ? "-" : "+";
 
-		dijit.setWaiState(this.containerNode,"hidden", open ? "false" : "true");
-		dijit.setWaiState(this.focusNode, "pressed", open ? "true" : "false");
+		this.containerNode.setAttribute("aria-hidden", open ? "false" : "true");
+		this.focusNode.setAttribute("aria-pressed", open ? "true" : "false");
 
 		this._set("open", open);
 
@@ -138,13 +170,13 @@ dojo.declare(
 		// canToggle: Boolean
 		//		True to allow user to open/close pane by clicking title bar.
 
-		dijit.setWaiRole(this.focusNode, canToggle ? "button" : "heading");
+		this.focusNode.setAttribute("role", canToggle ? "button" : "heading");
 		if(canToggle){
 			// TODO: if canToggle is switched from true to false shouldn't we remove this setting?
-			dijit.setWaiState(this.focusNode, "controls", this.id+"_pane");
-			dojo.attr(this.focusNode, "tabIndex", this.tabIndex);
+			this.focusNode.setAttribute("aria-controls", this.id+"_pane");
+			domAttr.set(this.focusNode, "tabIndex", this.tabIndex);
 		}else{
-			dojo.removeAttr(this.focusNode, "tabIndex");
+			domAttr.remove(this.focusNode, "tabIndex");
 		}
 
 		this._set("toggleable", canToggle);
@@ -166,7 +198,7 @@ dojo.declare(
 			}
 
 			// freeze container at current height so that adding new content doesn't make it jump
-			dojo.marginBox(this.wipeNode, { h: dojo.marginBox(this.wipeNode).h });
+			domGeometry.setMarginBox(this.wipeNode, { h: domGeometry.getMarginBox(this.wipeNode).h });
 
 			// add the new content (erasing the old content, if any)
 			this.inherited(arguments);
@@ -198,7 +230,7 @@ dojo.declare(
 		var node = this.titleBarNode || this.focusNode;
 		var oldCls = this._titleBarClass;
 		this._titleBarClass = "dijit" + (this.toggleable ? "" : "Fixed") + (this.open ? "Open" : "Closed");
-		dojo.replaceClass(node, this._titleBarClass, oldCls || "");
+		domClass.replace(node, this._titleBarClass, oldCls || "");
 
 		this.arrowNodeInner.innerHTML = this.open ? "-" : "+";
 	},
@@ -209,12 +241,12 @@ dojo.declare(
 		// tags:
 		//		private
 
-		if(e.charOrCode == dojo.keys.ENTER || e.charOrCode == ' '){
+		if(e.charOrCode == keys.ENTER || e.charOrCode == ' '){
 			if(this.toggleable){
 				this.toggle();
 			}
-			dojo.stopEvent(e);
-		}else if(e.charOrCode == dojo.keys.DOWN_ARROW && this.open){
+			event.stop(e);
+		}else if(e.charOrCode == keys.DOWN_ARROW && this.open){
 			this.containerNode.focus();
 			e.preventDefault();
 	 	}
@@ -235,11 +267,9 @@ dojo.declare(
 		//		Deprecated.  Use set('title', ...) instead.
 		// tags:
 		//		deprecated
-		dojo.deprecated("dijit.TitlePane.setTitle() is deprecated.  Use set('title', ...) instead.", "", "2.0");
+		kernel.deprecated("dijit.TitlePane.setTitle() is deprecated.  Use set('title', ...) instead.", "", "2.0");
 		this.set("title", title);
 	}
 });
 
-
-return dijit.TitlePane;
 });

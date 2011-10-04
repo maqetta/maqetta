@@ -1,20 +1,17 @@
-dojo.provide("tests.hash");
-dojo.require("dojo.hash");
+define(["../main", "doh", "../hash"], function(dojo, doh){
 
-(function(){
-
-// utilities for the tests:
+	// utilities for the tests:
 	function setHash(h){
 		h = h || "";
 		location.replace('#'+h);
 	}
-	
+
 	function getHash(){
 		var h = location.href, i = h.indexOf("#");
 		return (i >= 0) ? h.substring(i + 1) : "";
 	}
 
-	tests.register("tests.hash", [
+	doh.register("tests.hash", [
 		// hash as an empty string.
 		{
 			name: "Getting an empty hash",
@@ -159,7 +156,7 @@ dojo.require("dojo.hash");
 				setHash();
 			}
 		},
-		
+
 		// hash with trailing space:
 		{
 			name: "Getting the hash of 'trailingSpace%20'",
@@ -296,7 +293,7 @@ dojo.require("dojo.hash");
 		},
 		{
 			_s: null, // used for the subscriber.
-		
+
 			name: "Hash change publishes to '/dojo/hashchange'",
 			setUp: function(t){
 				setHash();
@@ -311,7 +308,7 @@ dojo.require("dojo.hash");
 						d.errback(e);
 					}
 				});
-				
+
 				dojo.hash('test');
 				return d;
 			},
@@ -321,4 +318,4 @@ dojo.require("dojo.hash");
 			}
 		}
 	]);
-})();
+});

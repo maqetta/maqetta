@@ -1,10 +1,7 @@
-dojo.provide("dojox.fx.text");
-
-// dojo.require("dojox.fx._split");
-dojo.require("dojo.fx");
-dojo.require("dojo.fx.easing");
-
-dojox.fx.text._split = function(/*Object*/ args){
+define(["dojo/_base/lang", "./_base", "dojo/_base/fx", "dojo/fx","dojo/fx/easing", "dojo/dom", "dojo/dom-style", "dojo/_base/html", "dojo/_base/connect"],
+function(lang, dojoxFx, baseFx, coreFx, easingLib, dom, domStyle, htmlLib, connectUtil ){
+var textFx = lang.getObject("dojox.fx.text", true);
+textFx._split = function(/*Object*/ args){
 	// summary: Split a block of text into words or letters
 	//
 	// description:
@@ -25,10 +22,10 @@ dojox.fx.text._split = function(/*Object*/ args){
 	//			nodeCoords is the result of dojo.coords(args.node, true);
 	//			number is the piece's position in the array of pieces, and numPieces is the array.length
 
-	var node = args.node = dojo.byId(args.node),
+	var node = args.node = dom.byId(args.node),
 		s = node.style,
-		cs = dojo.getComputedStyle(node),
-		nodeCoords = dojo.coords(node, true);
+		cs = domStyle.getComputedStyle(node),
+		nodeCoords = htmlLib.coords(node, true);
 		
 	args.duration = args.duration || 1000;
 	args.words = args.words || false;
@@ -38,7 +35,7 @@ dojox.fx.text._split = function(/*Object*/ args){
 		originalWidth = s.width,
 		animations = [];
 
-	dojo.style(node, {
+	domStyle.set(node, {
 		height: cs.height,
 		width: cs.width
 	});
@@ -73,9 +70,9 @@ dojox.fx.text._split = function(/*Object*/ args){
 	function animatePieces(piece){
 		var next = piece.nextSibling;
 		if(piece.tagName == "SPAN" && piece.childNodes.length == 1 && piece.firstChild.nodeType == 3){
-			var pieceCoords = dojo.coords(piece, true);
+			var pieceCoords = htmlLib.coords(piece, true);
 			number++;
-			dojo.style(piece, {
+			domStyle.set(piece, {
 				padding: 0,
 				margin: 0,
 				top: (args.crop ? "0px" : pieceCoords.t + "px"),
@@ -83,7 +80,7 @@ dojox.fx.text._split = function(/*Object*/ args){
 				display: "inline"
 			});
 			var pieceAnimation = args.pieceAnimation(piece, pieceCoords, nodeCoords, number, numPieces);
-			if(dojo.isArray(pieceAnimation)){
+			if(lang.isArray(pieceAnimation)){
 				// if pieceAnimation is an array, append its elements
 				animations = animations.concat(pieceAnimation);
 			}else{
@@ -100,24 +97,24 @@ dojox.fx.text._split = function(/*Object*/ args){
 	}
 
 	animatePieces(node.firstChild);
-	var anim = dojo.fx.combine(animations);
-	dojo.connect(anim, "onEnd", anim, function(){
+	var anim = coreFx.combine(animations);
+	connectUtil.connect(anim, "onEnd", anim, function(){
 		node.innerHTML = originalHTML;
-		dojo.style(node, {
+		domStyle.set(node, {
 			height: originalHeight,
 			width: originalWidth
 		});
 	});
 	if(args.onPlay){
-		dojo.connect(anim, "onPlay", anim, args.onPlay);
+		connectUtil.connect(anim, "onPlay", anim, args.onPlay);
 	}
 	if(args.onEnd){
-		dojo.connect(anim, "onEnd", anim, args.onEnd);
+		connectUtil.connect(anim, "onEnd", anim, args.onEnd);
 	}
 	return anim; // dojo.Animation
 };
 
-dojox.fx.text.explode = function(/*Object*/ args){
+textFx.explode = function(/*Object*/ args){
 	// summary: Explode a block of text into words or letters
 	//
 	// description:
@@ -137,7 +134,7 @@ dojox.fx.text.explode = function(/*Object*/ args){
 	//		args.sync: Boolean - If args.unhide is true, all the pieces converge at the same time
 	//							 (default is true)
 
-	var node = args.node = dojo.byId(args.node);
+	var node = args.node = dom.byId(args.node);
 	var s = node.style;
 
 	args.distance = args.distance || 1;
@@ -181,15 +178,15 @@ dojox.fx.text.explode = function(/*Object*/ args){
 
 		// Create the animation objects for the piece
 		// These are separate anim objects so they can have different curves
-		var pieceSlide = dojo.animateProperty({
+		var pieceSlide = baseFx.animateProperty({
 			node: piece,
 			duration: duration,
 			delay: delay,
-			easing: (args.easing || (args.unhide ? dojo.fx.easing.sinOut : dojo.fx.easing.circOut)),
+			easing: (args.easing || (args.unhide ? easingLib.sinOut : easingLib.circOut)),
 			beforeBegin: (args.unhide ? function(){
 					if(args.fade){
 						//piece.style.opacity = 0;
-						dojo.style(piece,"opacity", 0);
+						domStyle.set(piece,"opacity", 0);
 					}
 					piece.style.position = args.crop ? "relative" : "absolute";
 					piece.style.top = endTop + "px";
@@ -202,11 +199,11 @@ dojox.fx.text.explode = function(/*Object*/ args){
 		});
 
 		if(args.fade){
-			var pieceFade = dojo.animateProperty({
+			var pieceFade = baseFx.animateProperty({
 				node: piece,
 				duration: duration,
 				delay: delay,
-				easing: (args.fadeEasing || dojo.fx.easing.quadOut),
+				easing: (args.fadeEasing || easingLib.quadOut),
 				properties: {
 					opacity: (args.unhide ? {start: 0, end: 1} : {end: 0})
 				}
@@ -220,16 +217,16 @@ dojox.fx.text.explode = function(/*Object*/ args){
 		}
 	};
 
-	var anim = dojox.fx.text._split(args);
+	var anim = textFx._split(args);
 	return anim; // dojo.Animation
 };
 
-dojox.fx.text.converge = function(/*Object*/ args){
+textFx.converge = function(/*Object*/ args){
 	args.unhide = true;
-	return dojox.fx.text.explode(args);
+	return textFx.explode(args);
 };
 
-dojox.fx.text.disintegrate = function(/*Object*/ args){
+textFx.disintegrate = function(/*Object*/ args){
 	// summary: Split a block of text into words or letters and let them fall
 	//
 	// description:
@@ -247,7 +244,7 @@ dojox.fx.text.disintegrate = function(/*Object*/ args){
 	//		args.reverseOrder: Boolean - If true, pieces animate in reversed order
 	//		args.unhide: Boolean - If true, the peices fall from above and land in place
 
-	var node = args.node = dojo.byId(args.node);
+	var node = args.node = dom.byId(args.node);
 	var s = node.style;
 
 	args.duration = args.duration || 1500;
@@ -288,16 +285,16 @@ dojox.fx.text.disintegrate = function(/*Object*/ args){
 				properties.opacity = {end: 0};
 			}
 		}
-		var pieceAnimation = dojo.animateProperty({
+		var pieceAnimation = baseFx.animateProperty({
 			node: piece,
 			duration: duration,
 			delay: delay,
-			easing: (args.easing || (args.unhide ? dojo.fx.easing.sinIn : dojo.fx.easing.circIn)),
+			easing: (args.easing || (args.unhide ? easingLib.sinIn : easingLib.circIn)),
 			properties: properties,
 			beforeBegin: (args.unhide ? function(){
 				if(args.fade){
 					// piece.style.opacity = 0;
-					dojo.style(piece, "opacity", 0);
+					domStyle.set(piece, "opacity", 0);
 				}
 				piece.style.position = args.crop ? "relative" : "absolute";
 				piece.style.top = properties.top.start + "px";
@@ -307,16 +304,16 @@ dojox.fx.text.disintegrate = function(/*Object*/ args){
 		return pieceAnimation;
 	};
 
-	var anim = dojox.fx.text._split(args);
+	var anim = textFx._split(args);
 	return anim; // dojo.Animation
 };
 
-dojox.fx.text.build = function(/*Object*/ args){
+textFx.build = function(/*Object*/ args){
 	args.unhide = true;
-	return dojox.fx.text.disintegrate(args);
+	return textFx.disintegrate(args);
 };
 
-dojox.fx.text.blockFadeOut = function(/*Object*/ args){
+textFx.blockFadeOut = function(/*Object*/ args){
 	// summary: Split a block of text into words or letters and fade them
 	//
 	// description:
@@ -331,7 +328,7 @@ dojox.fx.text.blockFadeOut = function(/*Object*/ args){
 	//		args.reverseOrder: Boolean - If true, pieces animate in reversed order
 	//		args.unhide: Boolean - If true, the animation is reversed
 
-	var node = args.node = dojo.byId(args.node);;
+	var node = args.node = dom.byId(args.node);;
 	var s = node.style;
 
 	args.duration = args.duration || 1000;
@@ -350,30 +347,30 @@ dojox.fx.text.blockFadeOut = function(/*Object*/ args){
 		var delay = randomDelay * random + Math.max(1 - random, 0) * uniformDelay;
 
 		// Create the animation object for the piece
-		var pieceAnimation = dojo.animateProperty({
+		var pieceAnimation = baseFx.animateProperty({
 			node: piece,
 			duration: duration,
 			delay: delay,
-			easing: (args.easing || dojo.fx.easing.sinInOut),
+			easing: (args.easing || easingLib.sinInOut),
 			properties: {
 				opacity: (args.unhide ? {start: 0, end: 1} : {end:0})
 			},
-			beforeBegin: (args.unhide ? function(){ dojo.style(piece,"opacity",0); } : undefined)
+			beforeBegin: (args.unhide ? function(){ domStyle.set(piece,"opacity",0); } : undefined)
 		});
 
 		return pieceAnimation;
 	};
 
-	var anim = dojox.fx.text._split(args);
+	var anim = textFx._split(args);
 	return anim; // dojo.Animation
 };
 
-dojox.fx.text.blockFadeIn = function(/*Object*/ args){
+textFx.blockFadeIn = function(/*Object*/ args){
 	args.unhide = true;
-	return dojox.fx.text.blockFadeOut(args);
+	return textFx.blockFadeOut(args);
 };
 
-dojox.fx.text.backspace = function(/*Object*/ args){
+textFx.backspace = function(/*Object*/ args){
 	// summary: Split a block of text into words or letters and backspace them in sequence
 	//
 	// description:
@@ -391,7 +388,7 @@ dojox.fx.text.backspace = function(/*Object*/ args){
 	//							   randomness is introduced (only effective when args.unhide = true)
 	//		args.unhide: Boolean - If true, the animation is reversed
 
-	var node = args.node = dojo.byId(args.node);
+	var node = args.node = dom.byId(args.node);
 	var s = node.style;
 
 	args.words = false;
@@ -418,7 +415,7 @@ dojox.fx.text.backspace = function(/*Object*/ args){
 
 		if(args.fixed){
 			if(args.unhide){
-				var beforeBegin = function(){ dojo.style(piece,"opacity",0); };
+				var beforeBegin = function(){ domStyle.set(piece,"opacity",0); };
 			}
 		}else{
 			if(args.unhide){
@@ -430,11 +427,11 @@ dojox.fx.text.backspace = function(/*Object*/ args){
 		}
 
 		// Create the animation object for the piece
-		var pieceAnimation = dojo.animateProperty({
+		var pieceAnimation = baseFx.animateProperty({
 			node: piece,
 			duration: 1,
 			delay: delay,
-			easing: (args.easing || dojo.fx.easing.sinInOut),
+			easing: (args.easing || easingLib.sinInOut),
 			properties: {
 				opacity: (args.unhide ? {start: 0, end: 1} : {end:0})
 			},
@@ -453,11 +450,13 @@ dojox.fx.text.backspace = function(/*Object*/ args){
 		return pieceAnimation;
 	};
 
-	var anim = dojox.fx.text._split(args);
+	var anim = textFx._split(args);
 	return anim; // dojo.Animation
 };
 
-dojox.fx.text.type = function(/*Object*/ args){
+textFx.type = function(/*Object*/ args){
 	args.unhide = true;
-	return dojox.fx.text.backspace(args);
+	return textFx.backspace(args);
 };
+return textFx;
+});

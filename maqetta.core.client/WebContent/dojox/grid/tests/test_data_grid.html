@@ -37,7 +37,7 @@
 	<span dojoType="dojo.data.ItemFileWriteStore" 
 		jsId="jsonStore" url="../../../dijit/tests/_data/countries.json">
 	</span>
-	<table dojoType="dojox.grid.DataGrid"
+	<table dojoType="dojox.grid.DataGrid" keepSelection=true
 		jsid="grid" id="grid" 
 		store="jsonStore" query="{ name: '*' }" rowsPerPage="20" rowSelector="20px">
 		<thead>

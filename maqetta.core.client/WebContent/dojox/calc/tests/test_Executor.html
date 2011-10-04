@@ -7,27 +7,25 @@
 	<script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="isDebug:true, parseOnLoad: true"></script>
 
 	<script type="text/javascript">
-		dojo.require("doh.runner");
-		dojo.require("dojox.calc._Executor");
-		dojo.require("dojo.number");
+	var executor;
+	var waitForLoad;
+	function executorLoaded(){
+		executor = dijit.byId('executor');
+		waitForLoad.callback(true);
+	}
+	require(["dojox/calc/_Executor", "doh/runner", "dojo/number", "dojo/ready", "dojo/parser", "dojox/math/_base"],
+	function(calc, runner, number, ready, parser, math){
 
-		var executor;
-		var waitForLoad = new doh.Deferred();
-		function executorLoaded(){
-			executor = dijit.byId('executor');
-			waitForLoad.callback(true);
-		}
+		waitForLoad = new doh.Deferred();
+
 		function test(text, ans){
 			if (ans!=true&&ans!=false)
-				ans = dojox.calc.approx(ans);
+				ans = calc.approx(ans);
 			console.log("text is "+text);
-			doh.is(ans, dojox.calc.approx(executor.eval(text)), text);
+			doh.is(ans, calc.approx(executor.eval(text)), text);
 		}
-		/*function approx(r){
-			return Math.round(r * (1 << 30)) / (1 << 30);
-		}*/
 		var status = "Error(s) on page";
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			function allTests(){
 				dojo.byId("status").innerHTML = "Testing...";
 				func = executor.Function("fcn1", "i,j","k=i+j+1;return k;");
@@ -99,9 +97,9 @@
 				test("y=(x!!=6)", false);// factorial(x) != 6
 				test("5", 5);
 				test("3!", 6);
-				test("\u221A(3!)", Math.sqrt(dojox.math.factorial(3))); // 2.4494897427831780981972840747059);
+				test("\u221A(3!)", Math.sqrt(math.factorial(3))); // 2.4494897427831780981972840747059);
 				// factorial goes first, 2^3! = 2^6
-				test("\u221A3!", Math.sqrt(dojox.math.factorial(3))); // 2.4494897427831780981972840747059);
+				test("\u221A3!", Math.sqrt(math.factorial(3))); // 2.4494897427831780981972840747059);
 				test("\u221A(3!^2)", 6);
 				test("3\u221A(3!^3)", 6);
 				test("4\u221A(4^4)", 4);
@@ -124,16 +122,16 @@
 
 
 				test("2^Math.sin((\u03C0))", 1);
-				test("2^Math.sin(3!!)", dojox.calc.pow(2, Math.sin(dojox.math.factorial(dojox.math.factorial(3)))));
-				test("2^Math.sin((3!)!)", dojox.calc.pow(2, Math.sin(dojox.math.factorial(dojox.math.factorial(3)))));
-				test("2^Math.sin((3!+3!)-1)", dojox.calc.pow(2, Math.sin((dojox.math.factorial(3)+dojox.math.factorial(3))-1)));
-				test("2^\u221A-Math.sin(3!+3!-1)", dojox.calc.pow(2, Math.sqrt(-Math.sin(dojox.math.factorial(3)+dojox.math.factorial(3)-1))));
+				test("2^Math.sin(3!!)", calc.pow(2, Math.sin(math.factorial(math.factorial(3)))));
+				test("2^Math.sin((3!)!)", calc.pow(2, Math.sin(math.factorial(math.factorial(3)))));
+				test("2^Math.sin((3!+3!)-1)", calc.pow(2, Math.sin((math.factorial(3)+math.factorial(3))-1)));
+				test("2^\u221A-Math.sin(3!+3!-1)", calc.pow(2, Math.sqrt(-Math.sin(math.factorial(3)+math.factorial(3)-1))));
 				test("2^-\u221A+4", 1/4);
 				test("2^-2\u221A+4", 1/4);
 				test("2^(-2)\u221A+4", 256);
 				test("2^2\u221A+4", Math.sqrt(2));
 				test("2^\u221A+4", 4);
-				test("2^-(-2)\u221A+4", dojox.calc.pow(2, (-1/2)));
+				test("2^-(-2)\u221A+4", calc.pow(2, (-1/2)));
 				test("2^--2\u221A+4", 4);
 				test("-\u221A4", -2);
 				test("2^-2", 1/4);
@@ -148,7 +146,7 @@
 				// floating poMath.floor tests
 				test("--4.56443*2", 4.56443*2);
 				test("\u221A--\u221A4.56443*2", Math.sqrt(Math.sqrt(4.56443))*2);//2.923321855);
-				test("\u221A--\u221A4.56443!*2", Math.sqrt(Math.sqrt(dojox.math.factorial(4.56443)))*2);
+				test("\u221A--\u221A4.56443!*2", Math.sqrt(Math.sqrt(math.factorial(4.56443)))*2);
 				test("--4.56443*2-4.56443", 4.56443);
 				// more arithmetic
 				test("4*2-(5+2*3-2)*6/-2", 35);
@@ -163,12 +161,12 @@
 				// with \u221A (radicals)
 				test("\u221A10e10*2", Math.sqrt(10e10)*2);
 				test("\u221A10e-10*2", Math.sqrt(10e-10)*2);
-				test("5\u221A10e-10*2", dojox.calc.pow(10e-10, 1/5)*2);
-				test("5\u221A10e-10*2+5\u221A10e-10*2", dojox.calc.pow(10e-10, 1/5)*2*2);
+				test("5\u221A10e-10*2", calc.pow(10e-10, 1/5)*2);
+				test("5\u221A10e-10*2+5\u221A10e-10*2", calc.pow(10e-10, 1/5)*2*2);
 
-				test("2^3!\u221A3", dojox.calc.pow(3, 1/dojox.calc.pow(2, 6)));
-				test("2^-3!\u221A3", dojox.calc.pow(2, -dojox.calc.pow(3, 1/dojox.math.factorial(3))));
-				test("2^(-3!)\u221A3", dojox.calc.pow(3, 1/dojox.calc.pow(2, -dojox.math.factorial(3))));
+				test("2^3!\u221A3", calc.pow(3, 1/calc.pow(2, 6)));
+				test("2^-3!\u221A3", calc.pow(2, -calc.pow(3, 1/math.factorial(3))));
+				test("2^(-3!)\u221A3", calc.pow(3, 1/calc.pow(2, -math.factorial(3))));
 
 				// full space tests
 				test(" x = 5 ", 5);
@@ -180,9 +178,9 @@
 				test(" x == 5 ", true);
 				test(" 5 ", 5);
 				test(" 3 !", 6);
-				test(" \u221A ( 3 ! )", Math.sqrt(dojox.math.factorial(3))); //2.4494897427831780981972840747059);
+				test(" \u221A ( 3 ! )", Math.sqrt(math.factorial(3))); //2.4494897427831780981972840747059);
 				// factorial goes first, 2^3! = 2^6
-				test(" \u221A 3 !", Math.sqrt(dojox.math.factorial(3))); //2.4494897427831780981972840747059);
+				test(" \u221A 3 !", Math.sqrt(math.factorial(3))); //2.4494897427831780981972840747059);
 				test(" \u221A ( 3 ! ^ 2 ) ", 6);
 				test(" 3 \u221A ( 3 ! ^ 3 ) ", 6);
 				test(" 4 \u221A ( 4 ^ 4 ) ", 4);
@@ -197,16 +195,16 @@
 				test(" \u221A Math.sqrt ( 16 , 2 ) ", 2);
 
 				test(" 2 ^ Math.sin ( ( \u03C0 ) ) ", 1);
-				test(" 2 ^ Math.sin ( 3 ! ! ) ", dojox.calc.pow(2, Math.sin(dojox.math.factorial(dojox.math.factorial(3)))));
-				test(" 2 ^ Math.sin( ( 3 ! ) ! ) ", dojox.calc.pow(2, Math.sin(dojox.math.factorial(dojox.math.factorial(3)))));
-				test(" 2 ^ Math.sin ( ( 3 ! + 3 ! ) - 1 ) ", dojox.calc.pow(2, Math.sin((dojox.math.factorial(3)+dojox.math.factorial(3))-1)));
-				test(" 2 ^ \u221A - Math.sin ( 3 ! + 3 ! - 1 ) ", dojox.calc.pow(2, Math.sqrt(-Math.sin(dojox.math.factorial(3)+dojox.math.factorial(3)-1))));
+				test(" 2 ^ Math.sin ( 3 ! ! ) ", calc.pow(2, Math.sin(math.factorial(math.factorial(3)))));
+				test(" 2 ^ Math.sin( ( 3 ! ) ! ) ", calc.pow(2, Math.sin(math.factorial(math.factorial(3)))));
+				test(" 2 ^ Math.sin ( ( 3 ! + 3 ! ) - 1 ) ", calc.pow(2, Math.sin((math.factorial(3)+math.factorial(3))-1)));
+				test(" 2 ^ \u221A - Math.sin ( 3 ! + 3 ! - 1 ) ", calc.pow(2, Math.sqrt(-Math.sin(math.factorial(3)+math.factorial(3)-1))));
 				test(" 2 ^ - \u221A + 4 ", 1/4);
 				test(" 2 ^ - 2 \u221A + 4 ", 1/4);
 				test(" 2 ^ ( - 2 ) \u221A + 4 ", 256);
 				test(" 2 ^ 2 \u221A + 4 ", Math.sqrt(2));
 				test(" 2 ^ \u221A + 4 ", 4);
-				test(" 2 ^ - ( - 2 ) \u221A + 4 ", dojox.calc.pow(2, (-1/2)));
+				test(" 2 ^ - ( - 2 ) \u221A + 4 ", calc.pow(2, (-1/2)));
 				test(" 2 ^ - - 2 \u221A + 4 ", 4);
 				test(" - \u221A 4 " , -2);
 				test(" 2 ^ - 2 ", 1/4);
@@ -222,7 +220,7 @@
 				// floating point tests
 				test(" - - 4.56443 * 2 ", 4.56443*2);
 				test(" \u221A - - \u221A 4.56443 * 2 ", Math.sqrt(Math.sqrt(4.56443))*2);
-				test(" \u221A - - \u221A 4.56443 ! * 2 ", Math.sqrt(Math.sqrt(dojox.math.factorial(4.56443)))*2);
+				test(" \u221A - - \u221A 4.56443 ! * 2 ", Math.sqrt(Math.sqrt(math.factorial(4.56443)))*2);
 				test(" - - 4.56443 * 2 - 4.56443 ", 4.56443);
 				// more arithmetic
 				test(" 4 * 2 - ( 5 + 2 * 3 - 2 ) * 6 / - 2 ", 35);
@@ -233,12 +231,12 @@
 				// with \u221A (radicals)
 				test(" \u221A 10e10 * 2 ", Math.sqrt(10e10)*2);
 				test(" \u221A 10e-10 * 2 ", Math.sqrt(10e-10)*2);
-				test(" 5 \u221A 10e-10 * 2 ", dojox.calc.pow(10e-10, 1/5)*2);
-				test(" 5 \u221A 10e-10 * 2 + 5 \u221A 10e-10 * 2 ", dojox.calc.pow(10e-10, 1/5)*2*2);
+				test(" 5 \u221A 10e-10 * 2 ", calc.pow(10e-10, 1/5)*2);
+				test(" 5 \u221A 10e-10 * 2 + 5 \u221A 10e-10 * 2 ", calc.pow(10e-10, 1/5)*2*2);
 
-				test(" 2 ^ 3 ! \u221A 3 ", dojox.calc.pow(3, 1/dojox.calc.pow(2, 6)));
-				test(" 2 ^ - 3 ! \u221A 3 ", dojox.calc.pow(2, -dojox.calc.pow(3, 1/dojox.math.factorial(3))));
-				test(" 2 ^ ( - 3 ! ) \u221A 3 ", dojox.calc.pow(3, 1/dojox.calc.pow(2, -dojox.math.factorial(3))));
+				test(" 2 ^ 3 ! \u221A 3 ", calc.pow(3, 1/calc.pow(2, 6)));
+				test(" 2 ^ - 3 ! \u221A 3 ", calc.pow(2, -calc.pow(3, 1/math.factorial(3))));
+				test(" 2 ^ ( - 3 ! ) \u221A 3 ", calc.pow(3, 1/calc.pow(2, -math.factorial(3))));
 
 				test("3!=6", true);
 				test("3!==6", true);
@@ -261,7 +259,7 @@
 
 				status = "Completed without errors";
 			}
-			doh.register("dojox.calc._Executor", [
+			doh.register("calc._Executor", [
 				{
 					name: "wait for Executor to load",
 					timeout: 5000,
@@ -279,6 +277,7 @@
 			]);
 			doh.run();
 		});
+	});
 	</script>
 </head>
 <body>

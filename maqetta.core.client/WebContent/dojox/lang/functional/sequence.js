@@ -1,6 +1,4 @@
-dojo.provide("dojox.lang.functional.sequence");
-
-dojo.require("dojox.lang.functional.lambda");
+define(["./lambda"], function(df){
 
 // This module adds high-level functions and related constructs:
 //	- sequence generators
@@ -11,15 +9,16 @@ dojo.require("dojox.lang.functional.lambda");
 // Defined methods:
 //	- take any valid lambda argument as the functional argument
 
-(function(){
-	var d = dojo, df = dojox.lang.functional;
+/*=====
+	var df = dojox.lang.functional;
+ =====*/
 
-	d.mixin(df, {
+	dojo.mixin(df, {
 		// sequence generators
 		repeat: function(/*Number*/ n, /*Function|String|Array*/ f, /*Object*/ z, /*Object?*/ o){
 			// summary: builds an array by repeatedly applying a unary function N times
 			//	with a seed value Z. N should be greater than 0.
-			o = o || d.global; f = df.lambda(f);
+			o = o || dojo.global; f = df.lambda(f);
 			var t = new Array(n), i = 1;
 			t[0] = z;
 			for(; i < n; t[i] = z = f.call(o, z), ++i);
@@ -28,10 +27,10 @@ dojo.require("dojox.lang.functional.lambda");
 		until: function(/*Function|String|Array*/ pr, /*Function|String|Array*/ f, /*Object*/ z, /*Object?*/ o){
 			// summary: builds an array by repeatedly applying a unary function with
 			//	a seed value Z until the predicate is satisfied.
-			o = o || d.global; f = df.lambda(f); pr = df.lambda(pr);
+			o = o || dojo.global; f = df.lambda(f); pr = df.lambda(pr);
 			var t = [];
 			for(; !pr.call(o, z); t.push(z), z = f.call(o, z));
 			return t;	// Array
 		}
 	});
-})();
+});

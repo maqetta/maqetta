@@ -1,4 +1,9 @@
-dojo.provide("dojox.grid.enhanced.plugins._StoreLayer");
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/_base/xhr"
+], function(declare, array, lang, xhr){
 // summary:
 //		The dojo.data.api.Read API is powerful, but it's difficult to give the store some special commands before
 //		fetch, so that the store content can be temporarily modified or transformed, and acts as another store. The
@@ -32,14 +37,14 @@ dojo.provide("dojox.grid.enhanced.plugins._StoreLayer");
 //		//now use the store as usual...
 //
 //		store.unwrap(); //remove all the layers, get the original store back.
-(function(){
-	var ns = dojox.grid.enhanced.plugins,
+
+	var ns = lang.getObject("grid.enhanced.plugins", true, dojox);
 	
-	getPrevTags = function(tags){
+	var getPrevTags = function(tags){
 		var tagList = ["reorder", "sizeChange", "normal", "presentation"];
 		var idx = tagList.length;
 		for(var i = tags.length - 1; i >= 0; --i){
-			var p = dojo.indexOf(tagList, tags[i]);
+			var p = array.indexOf(tagList, tags[i]);
 			if(p >= 0 && p <= idx){
 				idx = p;
 			}
@@ -144,14 +149,14 @@ dojo.provide("dojox.grid.enhanced.plugins._StoreLayer");
 		//		The wrapped store, for nested use only.
 		if(!store._layers){
 			store._layers = [];
-			store.layer = dojo.hitch(store, getLayer);
-			store.unwrap = dojo.hitch(store, unwrap);
-			store.forEachLayer = dojo.hitch(store, forEachLayer);
+			store.layer = lang.hitch(store, getLayer);
+			store.unwrap = lang.hitch(store, unwrap);
+			store.forEachLayer = lang.hitch(store, forEachLayer);
 		}
 		var prevTags = getPrevTags(layer.tags);
-		if(!dojo.some(store._layers, function(lyr, i){
-			if(dojo.some(lyr.tags, function(tag){
-				return dojo.indexOf(prevTags, tag) >= 0;
+		if(!array.some(store._layers, function(lyr, i){
+			if(array.some(lyr.tags, function(tag){
+				return array.indexOf(prevTags, tag) >= 0;
 			})){
 				return false;
 			}else{
@@ -167,7 +172,7 @@ dojo.provide("dojox.grid.enhanced.plugins._StoreLayer");
 		return store;	//Read-store
 	};
 
-	dojo.declare("dojox.grid.enhanced.plugins._StoreLayer", null, {
+	var _StoreLayer = declare("dojox.grid.enhanced.plugins._StoreLayer", null, {
 		// summary:
 		//		The most abstract class of store layers, provides basic utilities and some interfaces.
 		// tags:
@@ -214,7 +219,7 @@ dojo.provide("dojox.grid.enhanced.plugins._StoreLayer");
 			//		The store to be wrapped.
 			this._store = store;
 			this._funcName = funcName;
-			var fetchFunc = dojo.hitch(this, function(){
+			var fetchFunc = lang.hitch(this, function(){
 				return (this.enabled() ? this[layerFuncName || this.layerFuncName] : this.originFetch).apply(this, arguments);
 			});
 			if(nextLayer){
@@ -271,10 +276,10 @@ dojo.provide("dojox.grid.enhanced.plugins._StoreLayer");
 			return this.__name;
 		},
 		originFetch: function(){
-			return (dojo.hitch(this._store, this._originFetch)).apply(this, arguments);
+			return (lang.hitch(this._store, this._originFetch)).apply(this, arguments);
 		}
 	});
-	dojo.declare("dojox.grid.enhanced.plugins._ServerSideLayer", ns._StoreLayer, {
+	var _ServerSideLayer = declare("dojox.grid.enhanced.plugins._ServerSideLayer", _StoreLayer, {
 		// summary:
 		//		The most abstract class for all server side store layers.
 		// tags:
@@ -323,14 +328,14 @@ dojo.provide("dojox.grid.enhanced.plugins._StoreLayer");
 			//		Implementation of _StoreLayer._fetch
 			if(this.__cmds.cmdlayer){
 				//We're gonna send command to server before fetch.
-				dojo.xhrPost({
+				xhr.post({
 					url: this._url || this._store.url,
 					content: this.__cmds,
-					load: dojo.hitch(this, function(responce){
+					load: lang.hitch(this, function(responce){
 						this.onCommandLoad(responce, userRequest);
 						this.originFetch(userRequest);
 					}),
-					error: dojo.hitch(this, this.onCommandError)
+					error: lang.hitch(this, this.onCommandError)
 				});
 			}else{
 				//The user only wants to modify the request object.
@@ -380,4 +385,10 @@ dojo.provide("dojox.grid.enhanced.plugins._StoreLayer");
 			throw error;
 		}
 	});
-})();
+
+	return {
+		_StoreLayer: _StoreLayer,
+		_ServerSideLayer: _ServerSideLayer,
+		wrap: ns.wrap
+	};
+});

@@ -1,7 +1,7 @@
 <?php
 	// If you call this file like multipleLayoutWidgets.php?id=foo then the id's of the created widgets
 	// will be based on the string "foo"
-	$id = $_GET['id'];
+	$id = htmlspecialchars($_GET['id']);
 ?>
 This file has some nested layout widgets, and when this file is loaded the TabContainer and
 BorderContainer below should get resize() called on them

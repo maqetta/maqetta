@@ -1,9 +1,5 @@
-dojo.provide("dojox.highlight.languages.pygments.html");
+define(["dojox/main", "../../_base", "./_html"], function(dojox){
 
-dojo.require("dojox.highlight._base");
-dojo.require("dojox.highlight.languages.pygments._html");
-
-(function(){
 	var dh = dojox.highlight, dhl = dh.languages, tags = [],
 		ht = dhl.pygments._html.tags;
 	
@@ -94,4 +90,7 @@ dojo.require("dojox.highlight.languages.pygments._html");
 			}
 		]
 	};
-})();
+
+	return dhl.html;
+	
+});

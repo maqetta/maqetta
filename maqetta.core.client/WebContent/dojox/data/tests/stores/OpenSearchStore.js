@@ -4,23 +4,23 @@ dojo.require("dojo.data.api.Read");
 
 
 dojox.data.tests.stores.OpenSearchStore.getAtomStore = function(){
-	var store = new dojox.data.OpenSearchStore({url: dojo.moduleUrl('dojox.data.tests.stores', 'opensearch_atom.xml').toString()});
+	var store = new dojox.data.OpenSearchStore({url: require.toUrl('dojox/data/tests/stores/opensearch_atom.xml').toString()});
 	store._createSearchUrl = function(request){
-		return dojo.moduleUrl('dojox.data.tests.stores', 'atom1.xml').toString();
+		return require.toUrl('dojox/data/tests/stores/atom1.xml').toString();
 	};
 	return store;
 };
 dojox.data.tests.stores.OpenSearchStore.getRSSStore = function(){
-	var store = new dojox.data.OpenSearchStore({url: dojo.moduleUrl('dojox.data.tests.stores', 'opensearch_rss.xml').toString()});
+	var store = new dojox.data.OpenSearchStore({url: require.toUrl('dojox/data/tests/stores/opensearch_rss.xml').toString()});
 	store._createSearchUrl = function(request){
-		return dojo.moduleUrl('dojox.data.tests.stores', 'rss1.xml').toString();
+		return require.toUrl('dojox/data/tests/stores/rss1.xml').toString();
 	};
 	return store;
 };
 dojox.data.tests.stores.OpenSearchStore.getHTMLStore = function(){
-	var store = new dojox.data.OpenSearchStore({url: dojo.moduleUrl('dojox.data.tests.stores', 'opensearch_html.xml').toString(), itemPath: "table tbody tr"});
+	var store = new dojox.data.OpenSearchStore({url: require.toUrl('dojox/data/tests/stores/opensearch_html.xml').toString(), itemPath: "table tbody tr"});
 	store._createSearchUrl = function(request){
-		return dojo.moduleUrl('dojox.data.tests.stores', 'books.html').toString();
+		return require.toUrl('dojox/data/tests/stores/books.html').toString();
 	};
 	return store;
 };

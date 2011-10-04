@@ -53,13 +53,30 @@
 
 		<script type="text/javascript">
 			dojo.require("dijit.dijit"); // optimize: load dijit layer
+
 			dojo.require("dijit.ColorPalette");
-			dojo.require("dijit.Menu");
 			dojo.require("dijit.Tooltip");
+
+			dojo.require("dijit.Menu");
+			dojo.require("dijit.MenuItem");
+			dojo.require("dijit.PopupMenuItem");
+			dojo.require("dijit.MenuSeparator");
+
 			dojo.require("dijit.form.Button");
+			dojo.require("dijit.form.DropDownButton");
+			dojo.require("dijit.form.ComboButton");
+			dojo.require("dijit.form.ToggleButton");
+
 			dojo.require("dijit.form.Form");
 			dojo.require("dijit.form.TextBox");
+
 			dojo.require("dojo.parser");
+
+			dojo.ready(99, function(){
+				dijit.form.ViewButton = dojo.declare([dijit.form.Button], {
+					label: "View"
+				});
+			});
 		</script>
 	</head>
 <body class="claro">
@@ -71,24 +88,23 @@
 	<p class="box">
 		<button id="button" onclick="console.log('clicked native button');">&lt;button&gt;</button>
 		<input id="input" type="button" value="&lt;input type='button'&gt;" onclick="console.log('clicked native input button');"/>
-		<button data-dojo-type="dijit.form.Button" data-dojo-props='id:"1465", onClick:function(){ console.log("clicked simple"); }, iconClass:"plusIcon", value:"Create"'>
+		<button data-dojo-type="dijit.form.Button" id="T1465" data-dojo-props='onClick:function(){ console.log("clicked simple"); }, iconClass:"plusIcon", value:"Create"'>
 			Create
 		</button>
 		<span data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["1465"]'>tooltip on button</span>
-		<button data-dojo-type="dijit.form.Button" data-dojo-props='id:"1466", title:"view title", onClick:function(){ console.log("clicked simple"); }'>
-			View
+		<button data-dojo-type="dijit.form.ViewButton" id="T1466" title="view title" data-dojo-props='onClick:function(){ console.log("clicked simple"); }'>
 		</button>
-		<button id="comboCreate" data-dojo-type="dijit.form.ComboButton" data-dojo-props='optionsTitle:"save options", onClick:function(){ console.log("clicked combo save") },
-				iconClass:"plusIcon", title:"creative title"'>
+		<button id="comboCreate" title="creative title" data-dojo-type="dijit.form.ComboButton" data-dojo-props='optionsTitle:"save options", onClick:function(){ console.log("clicked combo save") },
+				iconClass:"plusIcon"'>
 			<span>Create</span>
-			<span id="createMenu" data-dojo-type="dijit.Menu"'>
+			<span id="createMenu" data-dojo-type="dijit.Menu">
 				<span data-dojo-type="dijit.MenuItem"  data-dojo-props='iconClass:"dijitEditorIcon dijitEditorIconSave",
 					onClick:function(){ console.log("not actually saving anything, just a test!"); }'>Create blank</span>
 				<span data-dojo-type="dijit.MenuItem"
 					data-dojo-props='onClick:function(){ console.log("not actually saving anything, just a test!"); }'>Create from template</span>
 			</span>
 		</button>
-		<button id="edit" data-dojo-type="dijit.form.DropDownButton" data-dojo-props='iconClass:"noteIcon", title:"edit title", value:"Edit"'>
+		<button id="edit" title="edit title" value="Edit" data-dojo-type="dijit.form.DropDownButton" data-dojo-props='iconClass:"noteIcon"'>
 			<span>Edit<b>!</b></span>
 			<span id="editMenu" data-dojo-type="dijit.Menu" >
 				<span id="cut" data-dojo-type="dijit.MenuItem" data-dojo-props='iconClass:"dijitEditorIcon dijitEditorIconCut",
@@ -128,28 +144,28 @@
 				<span id="saveAs" data-dojo-type="dijit.MenuItem" data-dojo-props='onClick:function(){ console.log("not actually saving anything, just a test!"); }'>Save As</span>
 			</span>
 		</button>
-		<button id="disabled" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ console.log("clicked simple"); }, disabled:true, iconClass:"plusIcon"'>
+		<button id="disabled" disabled data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ console.log("clicked simple"); }, iconClass:"plusIcon"'>
 			Disabled
 		</button>
 	</p>
 	<br style="clear:both;"/>
 	<h2>DropDownButtons with different drop down positions</h2>
-	<button id="dropdown_default" data-dojo-type="dijit.form.DropDownButton" data-dojo-props='iconClass:"noteIcon", value:"color"'>
+	<button id="dropdown_default" value="color" data-dojo-type="dijit.form.DropDownButton" data-dojo-props='iconClass:"noteIcon"'>
 		<span>Default (below)</span>
 		<span data-dojo-type="dijit.ColorPalette"
 			data-dojo-props='palette:"3x4", onChange:function(val){ console.log(val); }'></span>
 	</button>
-	<button id="dropdown_up" data-dojo-type="dijit.form.DropDownButton" data-dojo-props='dropDownPosition:["above"], iconClass:"noteIcon", value:"color"'>
+	<button id="dropdown_up" value="color" data-dojo-type="dijit.form.DropDownButton" data-dojo-props='dropDownPosition:["above"], iconClass:"noteIcon"'>
 		<span>Above</span>
 		<span data-dojo-type="dijit.ColorPalette"
 			data-dojo-props='palette:"3x4", onChange:function(val){ console.log(val); }'></span>
 	</button>
-	<button id="dropdown_before" data-dojo-type="dijit.form.DropDownButton" data-dojo-props='dropDownPosition:["before"], iconClass:"noteIcon", value:"color"'>
+	<button id="dropdown_before" value="color" data-dojo-type="dijit.form.DropDownButton" data-dojo-props='dropDownPosition:["before"], iconClass:"noteIcon"'>
 		<span>Before</span>
 		<span data-dojo-type="dijit.ColorPalette"
 			data-dojo-props='palette:"3x4", onChange:function(val){ console.log(val); }'></span>
 	</button>
-	<button id="dropdown_after" data-dojo-type="dijit.form.DropDownButton" data-dojo-props='dropDownPosition:["after"], iconClass:"noteIcon", value:"color"'>
+	<button id="dropdown_after" value="color" data-dojo-type="dijit.form.DropDownButton" data-dojo-props='dropDownPosition:["after"], iconClass:"noteIcon"'>
 		<span>After</span>
 		<span data-dojo-type="dijit.ColorPalette"
 			data-dojo-props='palette:"3x4", onChange:function(val){ console.log(val); }'></span>
@@ -198,17 +214,17 @@
 	<h2>Buttons with no text label</h2>
 	<p>Buttons have showLabel=false so text is not displayed.  If no title attribute supplied, Should have label as title attribute displayed on mouse over</p>
 	<div class="box">
-		<button data-dojo-type="dijit.form.Button" data-dojo-props='id:"1467", title:"title attrib rather than label", onClick:function(){ console.log("clicked simple button with no text label"); },
+		<button id="buttonNoLabel" title="title attrib rather than label" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ console.log("clicked simple button with no text label"); },
 		iconClass:"plusIcon", showLabel:false'>
-		<span><b>Rich</b><i> Text</i> Test!</span>
+			<span><b>Rich</b><i> Text</i> Test!</span>
 		</button>
-				<div data-dojo-type="dijit.form.DropDownButton" data-dojo-props='iconClass:"noteIcon", showLabel:false, title:"color title"'>
+		<div id="dropDownNoLabel" title="color title" data-dojo-type="dijit.form.DropDownButton" data-dojo-props='iconClass:"noteIcon", showLabel:false'>
 			<span>Color</span>
 			<div id="colorPalette2" data-dojo-type="dijit.ColorPalette"
 				data-dojo-props='palette:"3x4", onChange:function(val){ console.log(val); }'>
 			</div>
-	</div>
-	<div data-dojo-type="dijit.form.ComboButton" data-dojo-props='optionsTitle:"save options", title:"save title", onClick:function(){ console.log("clicked combo save"); },
+		</div>
+		<div id="comboNoLabel" title="save title" data-dojo-type="dijit.form.ComboButton" data-dojo-props='optionsTitle:"save options", onClick:function(){ console.log("clicked combo save"); },
 				iconClass:"plusBlockIcon", showLabel:false'>
 			<span>Save</span>
 			<div id="saveMenu2" data-dojo-type="dijit.Menu">
@@ -223,7 +239,7 @@
 	<h2>Toggle buttons</h2>
 	<p>The button CSS as well as the icon CSS can change on toggle </p>
 	<div class="box">
-		<button id="toggle1" data-dojo-type="dijit.form.ToggleButton" data-dojo-props='checked:true,
+		<button id="toggle1" checked data-dojo-type="dijit.form.ToggleButton" data-dojo-props='
 			onChange:function(val){
 				console.log("toggled button checked="+val);
 				this.set("label", val ? "toggle me off" : "toggle me on");
@@ -304,7 +320,7 @@
 			dojo.byId("toggle").innerHTML= disabled ? "Enable all" : "Disable all";
 		}
 		var labels=["<img src='../images/note.gif' width='20' height='20'/>All", "<i>work</i>", "and no", "<span style='font-size: 40pt;'>play</span>",
-					 "<span style='color: red'>makes</span>", "Jack", "<span style='font-size: 20pt;'>a</a>", "dull",
+					 "<span style='color: red'>makes</span>", "Jack", "<span style='font-size: 20pt;'>a</span>", "dull",
 					 "<img src='../images/plus.gif' width='16' height='16'/>boy"];
 		var idx = 0;
 		function changeLabels(){
@@ -328,7 +344,7 @@
 	<p id="buttonContainer" style="display: none;"></p>
 	<script type="text/javascript">
 		// See if we can make a button in script and attach it to the DOM ourselves.
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			var widget = new dijit.form.Button({
 				label: "hello!",
 				name: "programmatic"
@@ -389,8 +405,7 @@
 	<div>Testing that submit and reset buttons work properly.  OnSubmit and OnReset handlers
 		for the form just output to the console.
 	</div>
-	<form id="testForm" data-dojo-type="dijit.form.Form" data-dojo-props='name:"testForm",
-		encType:"multipart/form-data", action:"../formAction.html", method:"" '>
+	<form id="testForm" encType="multipart/form-data" name="testForm" action="../formAction.html" method="" data-dojo-type="dijit.form.Form">
 		<script type="dojo/method" data-dojo-event="onReset">
 			console.log("testForm onReset invoked");
 		</script>
@@ -408,15 +423,15 @@
 	</div>
 	<form>
 		<label for="onClickName">Value: </label><input id="onClickName" name="onClickName" value="RESET"/><br>
-		<button id="reset1" data-dojo-type="dijit.form.Button" data-dojo-props='type:"reset" '>Reset with no onClick handler should reset</button>
+		<button id="reset1" type="reset" data-dojo-type="dijit.form.Button">Reset with no onClick handler should reset</button>
 		<button type="reset" id="reset1N">Native Reset with no onClick handler should reset</button><br>
-		<button id="reset2" data-dojo-type="dijit.form.Button" data-dojo-props='type:"reset", onClick:function(){ return false }'>Reset with "return false" onClick handler should not reset</button>
+		<button id="reset2" type="reset" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ return false }'>Reset with "return false" onClick handler should not reset</button>
 		<button type="reset" id="reset2N" onClick="return false;">Native Reset with "return false" onClick handler should not reset</button><br>
-		<button id="reset3" data-dojo-type="dijit.form.Button" data-dojo-props='type:"reset", onClick:function(){ return true }'>Reset with "return true" onClick handler should reset</button>
+		<button id="reset3" type="reset" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ return true }'>Reset with "return true" onClick handler should reset</button>
 		<button type="reset" id="reset3N" onClick="return true;">Native Reset with "return true" onClick handler should reset</button><br>
-		<button id="reset4" data-dojo-type="dijit.form.Button" data-dojo-props='type:"reset", onClick:function(){ return }'>Reset with "return" onClick handler should reset</button>
+		<button id="reset4" type="reset" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ return }'>Reset with "return" onClick handler should reset</button>
 		<button type="reset" id="reset4N" onClick="return;">Native Reset with "return" onClick handler should reset</button><br>
-		<button id="reset5" data-dojo-type="dijit.form.Button" data-dojo-props='type:"reset", onClick:function(){  }'>Reset with "" onClick handler should reset</button>
+		<button id="reset5" type="reset" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){  }'>Reset with "" onClick handler should reset</button>
 		<button type="reset" id="reset5N" onClick="">Native Reset with "" onClick handler should reset</button><br>
 	</form>
 
@@ -429,19 +444,23 @@
 			}
 		};
 	</script>
-	<form id="myForm" data-dojo-type="dijit.form.Form" data-dojo-props='encType:"multipart/form-data", action:"../formAction.html", method:"", target:"formSubmitIframe"'>
-		<button id="Plain" data-dojo-type="dijit.form.Button" data-dojo-props='name:"Plain", type:"submit", value:"Plain Submit", label:"Plain Submit"'></button>
-		<button id="Combo" data-dojo-type="dijit.form.ComboButton" data-dojo-props='name:"Combo", type:"submit", value:"Combo Submit", label:"Combo Submit"'>
+	<form id="myForm" data-dojo-type="dijit.form.Form" encType="multipart/form-data" action="../formAction.html" method="" target="formSubmitIframe">
+		<button id="SubmitPlain" data-dojo-type="dijit.form.Button" name="Plain" type="submit" value="Plain Submit">Plain Submit</button>
+		<button id="SubmitCombo" data-dojo-type="dijit.form.ComboButton" name="Combo" type="submit" value="Combo Submit"
+				data-dojo-props="label: 'Combo Submit'">
+			Combo Submit
 			<span data-dojo-type="dijit.Menu">
-				<span id="ComboMenuItem" data-dojo-type="dijit.MenuItem" data-dojo-props='onClick:function(){ dijit.byId("myForm").submit(); }'>Combo MenuItem Submit</span>
+				<span id="SubmitComboMenuItem" data-dojo-type="dijit.MenuItem" data-dojo-props='onClick:function(){ dijit.byId("myForm").submit(); }'>Combo MenuItem Submit</span>
 			</span>
 		</button>
-		<button id="DropDown" data-dojo-type="dijit.form.DropDownButton" data-dojo-props='name:"DropDown", type:"submit", value:"DropDown Submit", label:"DropDown Submit"'>
+		<button id="SubmitDropDown" data-dojo-type="dijit.form.DropDownButton" name="DropDown" type="submit" value="DropDown Submit"
+				data-dojo-props="label: 'DropDown Submit'">
+			DropDown Submit
 			<span data-dojo-type="dijit.Menu">
-				<span id="DropDownMenuItem" data-dojo-type="dijit.MenuItem" data-dojo-props='onClick:function(){ dijit.byId("myForm").submit(); }'>DropDown MenuItem Submit</span>
+				<span id="SubmitDropDownMenuItem" data-dojo-type="dijit.MenuItem" data-dojo-props='onClick:function(){ dijit.byId("myForm").submit(); }'>DropDown MenuItem Submit</span>
 			</span>
 		</button>
-		<button id="Disabled" data-dojo-type="dijit.form.Button" data-dojo-props='name:"Disabled", type:"submit", disabled:true, value:"Disabled Submit", label:"Disabled Submit"'></button>
+		<button id="SubmitDisabled" data-dojo-type="dijit.form.Button" name="Disabled" type="submit" disabled value="Disabled Submit">Disabled Submit</button>
 	</form>
 	<br>
 	<label for="buttonName">Submitted name:</label><input id="buttonName"/><br>

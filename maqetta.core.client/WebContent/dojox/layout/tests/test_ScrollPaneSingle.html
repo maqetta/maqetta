@@ -15,10 +15,9 @@
 	<!-- do not use! only for testing dynamic themes -->
 	<script type="text/javascript" src="../../../dijit/tests/_testCommon.js"></script>
 
-	<!-- for debugging: -->
-	<script type="text/javascript" src="../ScrollPane.js"></script>
 	<script language="JavaScript" type="text/javascript">
 		dojo.require("dojo.parser");
+		dojo.require("dojox.layout.ScrollPane");
 		dojo.addOnLoad(function(){
 			var i;
 			var n = dojo.byId("hold");
@@ -28,7 +27,7 @@
 				n.appendChild(b); // dojo.clone(dojo.byId("clone")));
 			}
 			dojo.parser.parse();
-			dijit.byId("horiz").layout(); 
+//			dijit.byId("horiz").layout(); 
 		});
 	</script>
 	<style type="text/css">

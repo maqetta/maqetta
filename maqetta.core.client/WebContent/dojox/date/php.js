@@ -1,6 +1,5 @@
-dojo.provide("dojox.date.php");
-dojo.require("dojo.date");
-dojo.require("dojox.string.tokenize");
+define(["dojo/_base/kernel", "dojo/_base/lang","dojo/date","dojox/string/tokenize"], function(dojo,dlang,ddate,dxst){
+dojo.getObject("date.php", true, dojox);
 
 dojox.date.php.format = function(/*Date*/ date, /*String*/ format){
 	// summary: Get a formatted string for a given date object
@@ -22,7 +21,7 @@ dojox.date.php.DateFormat = function(/*String*/ format){
 
 	var replacements = [];
 
-	this.tokens = dojox.string.tokenize(format, this.regex, function(escape, token, i){
+	this.tokens = dxst(format, this.regex, function(escape, token, i){
 		if(token){
 			replacements.push([i, token]);
 			return token;
@@ -111,7 +110,7 @@ dojo.extend(dojox.date.php.DateFormat, {
 
 		if(z <= (8 - jan1_w) && jan1_w > 4){
 			var last_year = new Date(this.date.getFullYear() - 1, this.date.getMonth(), this.date.getDate());
-			if(jan1_w == 5 || (jan1_w == 6 && dojo.date.isLeapYear(last_year))){
+			if(jan1_w == 5 || (jan1_w == 6 && ddate.isLeapYear(last_year))){
 				week = 53;
 			}else{
 				week = 52;
@@ -169,7 +168,7 @@ dojo.extend(dojox.date.php.DateFormat, {
 
 	L: function(){
 		// summary: Whether it's a leap year
-		return (dojo.date.isLeapYear(this.date)) ? "1" : "0";
+		return (ddate.isLeapYear(this.date)) ? "1" : "0";
 	},
 
 	o: function(){
@@ -250,7 +249,7 @@ dojo.extend(dojox.date.php.DateFormat, {
 
 	e: function(){
 		// summary: Timezone identifier (added in PHP 5.1.0)
-		return dojo.date.getTimezoneName(this.date);
+		return ddate.getTimezoneName(this.date);
 	},
 
 	I: function(){
@@ -305,4 +304,6 @@ dojo.extend(dojox.date.php.DateFormat, {
 		return Math.floor(this.date.getTime() / 1000);
 	}
 
+});
+return dojox.date.php;
 });

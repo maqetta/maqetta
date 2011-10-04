@@ -1,7 +1,6 @@
-dojo.provide("dojox.io.scriptFrame");
-
-dojo.require("dojo.io.script");
-dojo.require("dojo.io.iframe");
+define(["dojo/main", "dojo/io/script", "dojo/io/iframe"], function(dojo, ioScript, iframe){
+	dojo.deprecated("dojox.io.scriptFrame", "dojo.io.script now supports parallel requests without dojox.io.scriptFrame", "2.0");
+	dojo.getObject("io.scriptFrame", true, dojox);
 
 //This module extends dojo.io.script to use an iframe for the dojo.io.script.attach calls
 //if the frameDoc argument is passed to dojo.io.script.get(), and if frameDoc is a string (representing
@@ -16,8 +15,6 @@ dojo.require("dojo.io.iframe");
 //NOT the parent page location. This iframe document's URL will be (dojo.moduleUrl("dojo", "resources/blank.html")
 //or djConfig.dojoBlankHtmlUrl (for xdomain loading).
 
-(function(){
-	var ioScript = dojo.io.script;
 	dojox.io.scriptFrame = {
 		_waiters: {},
 		_loadedIds: {},
@@ -39,7 +36,7 @@ dojo.require("dojo.io.iframe");
 
 			for(var i = 0; i < waiters.length; i++){
 				var ioArgs = waiters[i];
-				ioArgs.frameDoc = dojo.io.iframe.doc(dojo.byId(frameId));
+				ioArgs.frameDoc = iframe.doc(dojo.byId(frameId));
 				ioScript.attach(ioArgs.id, ioArgs.url, ioArgs.frameDoc);
 			}
 		}
@@ -66,11 +63,11 @@ dojo.require("dojo.io.iframe");
 				//if using xdomain loading). Loading of the frame document is asynchronous,
 				//so we need to do callback stuff.
 				waiters.push(ioArgs);
-				dojo.io.iframe.create(fId, dojox._scopeName + ".io.scriptFrame._loaded('" + fId + "');");
+				iframe.create(fId, dojox._scopeName + ".io.scriptFrame._loaded('" + fId + "');");
 			}else{
 				//Frame loading could still be happening. Only call attach if the frame has loaded.
 				if(scriptFrame._loadedIds[fId]){
-					ioArgs.frameDoc = dojo.io.iframe.doc(frame);
+					ioArgs.frameDoc = iframe.doc(frame);
 					this.attach(ioArgs.id, ioArgs.url, ioArgs.frameDoc);
 				}else{
 					waiters.push(ioArgs);
@@ -80,6 +77,8 @@ dojo.require("dojo.io.iframe");
 		}else{
 			return oldCanAttach.apply(this, arguments);
 		}
-	}
-})();
+	};
+
+	return dojox.io.scriptFrame;
+});
 

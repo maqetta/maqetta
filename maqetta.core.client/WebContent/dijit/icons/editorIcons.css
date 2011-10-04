@@ -19,7 +19,7 @@ editorIcons.css contains references to the dijit editor widget icons. There are 
 }
 
 
-.dijitEditorIconSep { background-position: 0px; }
+.dijitEditorIconSep { background-position: 0; }
 .dijitEditorIconSave { background-position: -18px; }
 .dijitEditorIconPrint { background-position: -36px; }
 .dijitEditorIconCut { background-position: -54px; }

@@ -1,4 +1,15 @@
-define("dojox/editor/plugins/AutoUrlLink", ["dojo", "dijit", "dojox", "dojo/string", "dijit/_editor/_Plugin", "dijit/form/Button"], function(dojo, dijit, dojox) {
+define([
+	"dojo",
+	"dijit",
+	"dojox",
+	"dijit/_editor/range",
+	"dijit/_editor/selection",
+	"dijit/_editor/_Plugin",
+	"dijit/form/Button",
+	"dojo/_base/connect",
+	"dojo/_base/declare",
+	"dojo/string"
+], function(dojo, dijit, dojox) {
 
 dojo.declare("dojox.editor.plugins.AutoUrlLink", [dijit._editor._Plugin], {
 	//summary:

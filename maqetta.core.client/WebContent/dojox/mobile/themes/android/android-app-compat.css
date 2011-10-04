@@ -1,5 +1,5 @@
 /* mbl.widget.Heading */
-@import url("iphone-compat.css");
+@import url("android-compat.css");
 
 .alertTitle {
 	background-image: url(compat/heading-bg.png);

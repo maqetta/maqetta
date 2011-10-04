@@ -1,11 +1,110 @@
-define("dijit/_WidgetBase", ["dojo", "dijit", "dijit/_base/manager", "dojo/Stateful"], function(dojo, dijit) {
+define([
+	"require",			// require.toUrl
+	"dojo/_base/array", // array.forEach array.map
+	"dojo/aspect",
+	"dojo/_base/config", // config.blankGif
+	"dojo/_base/connect", // connect.connect
+	"dojo/_base/declare", // declare
+	"dojo/dom", // dom.byId
+	"dojo/dom-attr", // domAttr.set domAttr.remove
+	"dojo/dom-class", // domClass.add domClass.replace
+	"dojo/dom-construct", // domConstruct.create domConstruct.destroy domConstruct.place
+	"dojo/dom-geometry",	// isBodyLtr
+	"dojo/dom-style", // domStyle.set, domStyle.get
+	"dojo/_base/kernel",
+	"dojo/_base/lang", // mixin(), isArray(), etc.
+	"dojo/on",
+	"dojo/ready",
+	"dojo/Stateful", // Stateful
+	"dojo/topic",
+	"dojo/_base/window", // win.doc.createTextNode
+	"./registry"	// registry.getUniqueId(), registry.findWidgets()
+], function(require, array, aspect, config, connect, declare,
+			dom, domAttr, domClass, domConstruct, domGeometry, domStyle, kernel,
+			lang, on, ready, Stateful, topic, win, registry){
 
-(function(){
+/*=====
+var Stateful = dojo.Stateful;
+=====*/
 
-dojo.declare("dijit._WidgetBase", dojo.Stateful, {
+// module:
+//		dijit/_WidgetBase
+// summary:
+//		Future base class for all Dijit widgets.
+
+// For back-compat, remove in 2.0.
+if(!kernel.isAsync){
+	ready(0, function(){
+		var requires = ["dijit/_base/manager"];
+		require(requires);	// use indirection so modules not rolled into a build
+	});
+}
+
+// Nested hash listing attributes for each tag, all strings in lowercase.
+// ex: {"div": {"style": true, "tabindex" true}, "form": { ...
+var tagAttrs = {};
+function getAttrs(obj){
+	var ret = {};
+	for(var attr in obj){
+		ret[attr.toLowerCase()] = true;
+	}
+	return ret;
+}
+
+function nonEmptyAttrToDom(attr){
+	// summary:
+	//		Returns a setter function that copies the attribute to this.domNode,
+	//		or removes the attribute from this.domNode, depending on whether the
+	//		value is defined or not.
+	return function(val){
+		domAttr[val ? "set" : "remove"](this.domNode, attr, val);
+		this._set(attr, val);
+	};
+}
+
+return declare("dijit._WidgetBase", Stateful, {
 	// summary:
 	//		Future base class for all Dijit widgets.
+	// description:
+	//		Future base class for all Dijit widgets.
 	//		_Widget extends this class adding support for various features needed by desktop.
+	//
+	//		Provides stubs for widget lifecycle methods for subclasses to extend, like postMixInProperties(), buildRendering(),
+	//		postCreate(), startup(), and destroy(), and also public API methods like set(), get(), and watch().
+	//
+	//		Widgets can provide custom setters/getters for widget attributes, which are called automatically by set(name, value).
+	//		For an attribute XXX, define methods _setXXXAttr() and/or _getXXXAttr().
+	//
+	//		_setXXXAttr can also be a string/hash/array mapping from a widget attribute XXX to the widget's DOMNodes:
+	//
+	//		- DOM node attribute
+	// |		_setFocusAttr: {node: "focusNode", type: "attribute"}
+	// |		_setFocusAttr: "focusNode"	(shorthand)
+	// |		_setFocusAttr: ""		(shorthand, maps to this.domNode)
+	// 		Maps this.focus to this.focusNode.focus, or (last example) this.domNode.focus
+	//
+	//		- DOM node innerHTML
+	//	|		_setTitleAttr: { node: "titleNode", type: "innerHTML" }
+	//		Maps this.title to this.titleNode.innerHTML
+	//
+	//		- DOM node innerText
+	//	|		_setTitleAttr: { node: "titleNode", type: "innerText" }
+	//		Maps this.title to this.titleNode.innerText
+	//
+	//		- DOM node CSS class
+	// |		_setMyClassAttr: { node: "domNode", type: "class" }
+	//		Maps this.myClass to this.domNode.className
+	//
+	//		If the value of _setXXXAttr is an array, then each element in the array matches one of the
+	//		formats of the above list.
+	//
+	//		If the custom setter is null, no action is performed other than saving the new value
+	//		in the widget (in this).
+	//
+	//		If no custom setter is defined for an attribute, then it will be copied
+	//		to this.focusNode (if the widget defines a focusNode), or this.domNode otherwise.
+	//		That's only done though for attributes that match DOMNode attributes (title,
+	//		alt, aria-labelledby, etc.)
 
 	// id: [const] String
 	//		A unique, opaque ID string that can be assigned by users or by the
@@ -13,6 +112,7 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 	//		unique, the specified ID is ignored and the system-generated ID is
 	//		used instead.
 	id: "",
+	_setIdAttr: "domNode",	// to copy to this.domNode even for auto-generated id's
 
 	// lang: [const] String
 	//		Rarely used.  Overrides the default Dojo locale used to render this widget,
@@ -20,16 +120,32 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 	//		Value must be among the list of locales specified during by the Dojo bootstrap,
 	//		formatted according to [RFC 3066](http://www.ietf.org/rfc/rfc3066.txt) (like en-us).
 	lang: "",
+	// set on domNode even when there's a focus node.   but don't set lang="", since that's invalid.
+	_setLangAttr: nonEmptyAttrToDom("lang"),
 
 	// dir: [const] String
 	//		Bi-directional support, as defined by the [HTML DIR](http://www.w3.org/TR/html401/struct/dirlang.html#adef-dir)
 	//		attribute. Either left-to-right "ltr" or right-to-left "rtl".  If undefined, widgets renders in page's
 	//		default direction.
 	dir: "",
+	// set on domNode even when there's a focus node.   but don't set dir="", since that's invalid.
+	_setDirAttr: nonEmptyAttrToDom("dir"),	// to set on domNode even when there's a focus node
+
+	// textDir: String
+	//		Bi-directional support,	the main variable which is responsible for the direction of the text.
+	//		The text direction can be different than the GUI direction by using this parameter in creation
+	//		of a widget.
+	// 		Allowed values:
+	//			1. "ltr"
+	//			2. "rtl"
+	//			3. "auto" - contextual the direction of a text defined by first strong letter.
+	//		By default is as the page direction.
+	textDir: "",
 
 	// class: String
 	//		HTML class attribute
 	"class": "",
+	_setClassAttr: { node: "domNode", type: "class" },
 
 	// style: String||Object
 	//		HTML style attributes as cssText string or name/value hash
@@ -62,7 +178,7 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 	// domNode: [readonly] DomNode
 	//		This is our visible representation of the widget! Other DOM
 	//		Nodes may by assigned to other properties, usually through the
-	//		template system's dojoAttachPoint syntax, but the domNode
+	//		template system's data-dojo-attach-point syntax, but the domNode
 	//		property is the canonical "top level" node in widget UI.
 	domNode: null,
 
@@ -71,20 +187,20 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 	//		"Children" in this case refers to both DOM nodes and widgets.
 	//		For example, for myWidget:
 	//
-	//		|	<div dojoType=myWidget>
+	//		|	<div data-dojo-type=myWidget>
 	//		|		<b> here's a plain DOM node
-	//		|		<span dojoType=subWidget>and a widget</span>
+	//		|		<span data-dojo-type=subWidget>and a widget</span>
 	//		|		<i> and another plain DOM node </i>
 	//		|	</div>
 	//
 	//		containerNode would point to:
 	//
 	//		|		<b> here's a plain DOM node
-	//		|		<span dojoType=subWidget>and a widget</span>
+	//		|		<span data-dojo-type=subWidget>and a widget</span>
 	//		|		<i> and another plain DOM node </i>
 	//
 	//		In templated widgets, "containerNode" is set via a
-	//		dojoAttachPoint assignment.
+	//		data-dojo-attach-point assignment.
 	//
 	//		containerNode must be defined for any widget that accepts innerHTML
 	//		(like ContentPane or BorderContainer or even Button), and conversely
@@ -98,6 +214,9 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 =====*/
 
 	// attributeMap: [protected] Object
+	//		Deprecated.   Instead of attributeMap, widget should have a _setXXXAttr attribute
+	//		for each XXX attribute to be mapped to the DOM.
+	//
 	//		attributeMap sets up a "binding" between attributes (aka properties)
 	//		of the widget and the widget's DOM.
 	//		Changes to widget attributes listed in attributeMap will be
@@ -133,12 +252,12 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 	//		- string --> { node: string, type: "attribute" }, for example:
 	//	|	"focusNode" ---> { node: "focusNode", type: "attribute" }
 	//		- "" --> { node: "domNode", type: "attribute" }
-	attributeMap: {id:"", dir:"", lang:"", "class":"", style:"", title:""},
+	attributeMap: {},
 
 	// _blankGif: [protected] String
 	//		Path to a blank 1x1 image.
 	//		Used by <img> nodes in templates that really get their image via CSS background-image.
-	_blankGif: (dojo.config.blankGif || dojo.moduleUrl("dojo", "resources/blank.gif")).toString(),
+	_blankGif: config.blankGif || require.toUrl("dojo/resources/blank.gif"),
 
 	//////////// INITIALIZATION METHODS ///////////////////////////////////////
 
@@ -175,21 +294,21 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 		//		private
 
 		// store pointer to original DOM tree
-		this.srcNodeRef = dojo.byId(srcNodeRef);
+		this.srcNodeRef = dom.byId(srcNodeRef);
 
-		// For garbage collection.  An array of handles returned by Widget.connect()
-		// Each handle returned from Widget.connect() is an array of handles from dojo.connect()
+		// For garbage collection.  An array of listener handles returned by this.connect() / this.subscribe()
 		this._connects = [];
 
-		// For garbage collection.  An array of handles returned by Widget.subscribe()
-		// The handle returned from Widget.subscribe() is the handle returned from dojo.subscribe()
-		this._subscribes = [];
+		// For widgets internal to this widget, invisible to calling code
+		this._supportingWidgets = [];
+
+		// this is here for back-compat, remove in 2.0 (but check NodeList-instantiate.html test)
+		if(this.srcNodeRef && (typeof this.srcNodeRef.id == "string")){ this.id = this.srcNodeRef.id; }
 
 		// mix in our passed parameters
-		if(this.srcNodeRef && (typeof this.srcNodeRef.id == "string")){ this.id = this.srcNodeRef.id; }
 		if(params){
 			this.params = params;
-			dojo._mixin(this, params);
+			lang.mixin(this, params);
 		}
 		this.postMixInProperties();
 
@@ -197,9 +316,9 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 		// (be sure to do this before buildRendering() because that function might
 		// expect the id to be there.)
 		if(!this.id){
-			this.id = dijit.getUniqueId(this.declaredClass.replace(/\./g,"_"));
+			this.id = registry.getUniqueId(this.declaredClass.replace(/\./g,"_"));
 		}
-		dijit.registry.add(this);
+		registry.add(this);
 
 		this.buildRendering();
 
@@ -235,52 +354,56 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 
 	_applyAttributes: function(){
 		// summary:
-		//		Step during widget creation to copy all widget attributes to the
-		//		DOM as per attributeMap and _setXXXAttr functions.
-		// description:
+		//		Step during widget creation to copy  widget attributes to the
+		//		DOM according to attributeMap and _setXXXAttr objects, and also to call
+		//		custom _setXXXAttr() methods.
+		//
 		//		Skips over blank/false attribute values, unless they were explicitly specified
 		//		as parameters to the widget, since those are the default anyway,
 		//		and setting tabIndex="" is different than not setting tabIndex at all.
 		//
-		//		It processes the attributes in the attribute map first, and then
-		//		it goes through and processes the attributes for the _setXXXAttr
-		//		functions that have been specified
+		//		For backwards-compatibility reasons attributeMap overrides _setXXXAttr when
+		//		_setXXXAttr is a hash/string/array, but _setXXXAttr as a functions override attributeMap.
 		// tags:
 		//		private
-		var condAttrApply = function(attr, scope){
-			if((scope.params && attr in scope.params) || scope[attr]){
-				scope.set(attr, scope[attr]);
+
+		// Get list of attributes where this.set(name, value) will do something beyond
+		// setting this[name] = value.  Specifically, attributes that have:
+		//		- associated _setXXXAttr() method/hash/string/array
+		//		- entries in attributeMap.
+		var ctor = this.constructor,
+			list = ctor._setterAttrs;
+		if(!list){
+			list = (ctor._setterAttrs = []);
+			for(var attr in this.attributeMap){
+				list.push(attr);
 			}
-		};
 
-		// Do the attributes in attributeMap
-		for(var attr in this.attributeMap){
-			condAttrApply(attr, this);
-		}
-
-		// And also any attributes with custom setters
-		dojo.forEach(this._getSetterAttributes(), function(a){
-			if(!(a in this.attributeMap)){
-				condAttrApply(a, this);
-			}
-		}, this);
-	},
-
-	_getSetterAttributes: function(){
-		// summary:
-		//		Returns list of attributes with custom setters for this widget
-		var ctor = this.constructor;
-		if(!ctor._setterAttrs){
-			var r = (ctor._setterAttrs = []),
-				attrs,
-				proto = ctor.prototype;
+			var proto = ctor.prototype;
 			for(var fxName in proto){
-				if(dojo.isFunction(proto[fxName]) && (attrs = fxName.match(/^_set([a-zA-Z]*)Attr$/)) && attrs[1]){
-					r.push(attrs[1].charAt(0).toLowerCase() + attrs[1].substr(1));
+				if(fxName in this.attributeMap){ continue; }
+				var setterName = "_set" + fxName.replace(/^[a-z]|-[a-zA-Z]/g, function(c){ return c.charAt(c.length-1).toUpperCase(); }) + "Attr";
+				if(setterName in proto){
+					list.push(fxName);
 				}
 			}
 		}
-		return ctor._setterAttrs;	// String[]
+
+		// Call this.set() for each attribute that was either specified as parameter to constructor,
+		// or was found above and has a default non-null value.   For correlated attributes like value and displayedValue, the one
+		// specified as a parameter should take precedence, so apply attributes in this.params last.
+		// Particularly important for new DateTextBox({displayedValue: ...}) since DateTextBox's default value is
+		// NaN and thus is not ignored like a default value of "".
+		array.forEach(list, function(attr){
+			if(this.params && attr in this.params){
+				// skip this one, do it below
+			}else if(this[attr]){
+				this.set(attr, this[attr]);
+			}
+		}, this);
+		for(var param in this.params){
+			this.set(param, this[param]);
+		}
 	},
 
 	postMixInProperties: function(){
@@ -295,16 +418,14 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 
 	buildRendering: function(){
 		// summary:
-		//		Construct the UI for this widget, setting this.domNode
-		// description:
-		//		Most widgets will mixin `dijit._Templated`, which implements this
-		//		method.
+		//		Construct the UI for this widget, setting this.domNode.
+		//		Most widgets will mixin `dijit._TemplatedMixin`, which implements this method.
 		// tags:
 		//		protected
 
 		if(!this.domNode){
 			// Create root node if it wasn't created by _Templated
-			this.domNode = this.srcNodeRef || dojo.create('div');
+			this.domNode = this.srcNodeRef || domConstruct.create('div');
 		}
 
 		// baseClass is a single class name or occasionally a space-separated list of names.
@@ -313,9 +434,9 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 		if(this.baseClass){
 			var classes = this.baseClass.split(" ");
 			if(!this.isLeftToRight()){
-				classes = classes.concat( dojo.map(classes, function(name){ return name+"Rtl"; }));
+				classes = classes.concat( array.map(classes, function(name){ return name+"Rtl"; }));
 			}
-			dojo.addClass(this.domNode, classes);
+			domClass.add(this.domNode, classes);
 		}
 	},
 
@@ -338,7 +459,14 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 		//		and all related widgets have finished their create() cycle, up through postCreate().
 		//		This is useful for composite widgets that need to control or layout sub-widgets.
 		//		Many layout widgets can use this as a wiring phase.
+		if(this._started){ return; }
 		this._started = true;
+		array.forEach(this.getChildren(), function(obj){
+			if(!obj._started && !obj._destroyed && lang.isFunction(obj.startup)){
+				obj.startup();
+				obj._started = true;
+			}
+		});
 	},
 
 	//////////// DESTROY FUNCTIONS ////////////////////////////////
@@ -370,27 +498,25 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 
 		this._beingDestroyed = true;
 		this.uninitialize();
-		var d = dojo,
-			dfe = d.forEach,
-			dun = d.unsubscribe;
-		dfe(this._connects, function(array){
-			dfe(array, d.disconnect);
-		});
-		dfe(this._subscribes, function(handle){
-			dun(handle);
-		});
+
+		// remove this.connect() and this.subscribe() listeners
+		var c;
+		while(c = this._connects.pop()){
+			c.remove();
+		}
 
 		// destroy widgets created as part of template, etc.
-		dfe(this._supportingWidgets || [], function(w){
+		var w;
+		while(w = this._supportingWidgets.pop()){
 			if(w.destroyRecursive){
 				w.destroyRecursive();
 			}else if(w.destroy){
 				w.destroy();
 			}
-		});
+		}
 
 		this.destroyRendering(preserveDom);
-		dijit.registry.remove(this.id);
+		registry.remove(this.id);
 		this._destroyed = true;
 	},
 
@@ -411,16 +537,16 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 
 		if(this.domNode){
 			if(preserveDom){
-				dojo.removeAttr(this.domNode, "widgetId");
+				domAttr.remove(this.domNode, "widgetId");
 			}else{
-				dojo.destroy(this.domNode);
+				domConstruct.destroy(this.domNode);
 			}
 			delete this.domNode;
 		}
 
 		if(this.srcNodeRef){
 			if(!preserveDom){
-				dojo.destroy(this.srcNodeRef);
+				domConstruct.destroy(this.srcNodeRef);
 			}
 			delete this.srcNodeRef;
 		}
@@ -436,7 +562,7 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 		//		widgets.
 
 		// get all direct descendants and destroy them recursively
-		dojo.forEach(this.getChildren(), function(widget){
+		array.forEach(this.getChildren(), function(widget){
 			if(widget.destroyRecursive){
 				widget.destroyRecursive(preserveDom);
 			}
@@ -454,16 +580,6 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 
 	////////////////// GET/SET, CUSTOM SETTERS, ETC. ///////////////////
 
-	_setClassAttr: function(/*String*/ value){
-		// summary:
-		//		Custom setter for the CSS "class" attribute
-		// tags:
-		//		protected
-		var mapNode = this[this.attributeMap["class"] || 'domNode'];
-		dojo.replaceClass(mapNode, value, this["class"]);
-		this._set("class", value);
-	},
-
 	_setStyleAttr: function(/*String||Object*/ value){
 		// summary:
 		//		Sets the style attribute of the widget according to value,
@@ -475,13 +591,13 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 		// tags:
 		//		protected
 
-		var mapNode = this[this.attributeMap.style || 'domNode'];
+		var mapNode = this.domNode;
 
 		// Note: technically we should revert any style setting made in a previous call
 		// to his method, but that's difficult to keep track of.
 
-		if(dojo.isObject(value)){
-			dojo.style(mapNode, value);
+		if(lang.isObject(value)){
+			domStyle.set(mapNode, value);
 		}else{
 			if(mapNode.style.cssText){
 				mapNode.style.cssText += "; " + value;
@@ -493,18 +609,20 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 		this._set("style", value);
 	},
 
-	_attrToDom: function(/*String*/ attr, /*String*/ value){
+	_attrToDom: function(/*String*/ attr, /*String*/ value, /*Object?*/ commands){
 		// summary:
 		//		Reflect a widget attribute (title, tabIndex, duration etc.) to
-		//		the widget DOM, as specified in attributeMap.
+		//		the widget DOM, as specified by commands parameter.
+		//		If commands isn't specified then it's looked up from attributeMap.
 		//		Note some attributes like "type"
 		//		cannot be processed this way as they are not mutable.
 		//
 		// tags:
 		//		private
 
-		var commands = this.attributeMap[attr];
-		dojo.forEach(dojo.isArray(commands) ? commands : [commands], function(command){
+		commands = arguments.length >= 3 ? commands : this.attributeMap[attr];
+
+		array.forEach(lang.isArray(commands) ? commands : [commands], function(command){
 
 			// Get target node and what we are doing to that node
 			var mapNode = this[command.node || command || "domNode"];	// DOM node
@@ -512,8 +630,8 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 
 			switch(type){
 				case "attribute":
-					if(dojo.isFunction(value)){ // functions execute in the context of the widget
-						value = dojo.hitch(this, value);
+					if(lang.isFunction(value)){ // functions execute in the context of the widget
+						value = lang.hitch(this, value);
 					}
 
 					// Get the name of the DOM node attribute; usually it's the same
@@ -522,17 +640,17 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 					var attrName = command.attribute ? command.attribute :
 						(/^on[A-Z][a-zA-Z]*$/.test(attr) ? attr.toLowerCase() : attr);
 
-					dojo.attr(mapNode, attrName, value);
+					domAttr.set(mapNode, attrName, value);
 					break;
 				case "innerText":
 					mapNode.innerHTML = "";
-					mapNode.appendChild(dojo.doc.createTextNode(value));
+					mapNode.appendChild(win.doc.createTextNode(value));
 					break;
 				case "innerHTML":
 					mapNode.innerHTML = value;
 					break;
 				case "class":
-					dojo.replaceClass(mapNode, value, this[attr]);
+					domClass.replace(mapNode, value, this[attr]);
 					break;
 			}
 		}, this);
@@ -547,19 +665,17 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 		//		Get a named property from a widget. The property may
 		//		potentially be retrieved via a getter method. If no getter is defined, this
 		// 		just retrieves the object's property.
-		// 		For example, if the widget has a properties "foo"
-		//		and "bar" and a method named "_getFooAttr", calling:
-		//	|	myWidget.get("foo");
-		//		would be equivalent to writing:
-		//	|	widget._getFooAttr();
-		//		and:
-		//	|	myWidget.get("bar");
-		//		would be equivalent to writing:
-		//	|	widget.bar;
+		//
+		// 		For example, if the widget has properties `foo` and `bar`
+		//		and a method named `_getFooAttr()`, calling:
+		//		`myWidget.get("foo")` would be equivalent to calling
+		//		`widget._getFooAttr()` and `myWidget.get("bar")`
+		//		would be equivalent to the expression
+		//		`widget.bar2`
 		var names = this._getAttrNames(name);
 		return this[names.g] ? this[names.g]() : this[name];
 	},
-	
+
 	set: function(name, value){
 		// summary:
 		//		Set a property on a widget
@@ -570,22 +686,21 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 		// description:
 		//		Sets named properties on a widget which may potentially be handled by a
 		// 		setter in the widget.
-		// 		For example, if the widget has a properties "foo"
-		//		and "bar" and a method named "_setFooAttr", calling:
-		//	|	myWidget.set("foo", "Howdy!");
-		//		would be equivalent to writing:
-		//	|	widget._setFooAttr("Howdy!");
-		//		and:
-		//	|	myWidget.set("bar", 3);
-		//		would be equivalent to writing:
-		//	|	widget.bar = 3;
 		//
-		//	set() may also be called with a hash of name/value pairs, ex:
+		// 		For example, if the widget has properties `foo` and `bar`
+		//		and a method named `_setFooAttr()`, calling
+		//		`myWidget.set("foo", "Howdy!")` would be equivalent to calling
+		//		`widget._setFooAttr("Howdy!")` and `myWidget.set("bar", 3)`
+		//		would be equivalent to the statement `widget.bar = 3;`
+		//
+		//		set() may also be called with a hash of name/value pairs, ex:
+		//
 		//	|	myWidget.set({
 		//	|		foo: "Howdy",
 		//	|		bar: 3
-		//	|	})
-		//	This is equivalent to calling set(foo, "Howdy") and set(bar, 3)
+		//	|	});
+		//
+		//	This is equivalent to calling `set(foo, "Howdy")` and `set(bar, 3)`
 
 		if(typeof name === "object"){
 			for(var x in name){
@@ -593,20 +708,35 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 			}
 			return this;
 		}
-		var names = this._getAttrNames(name);
-		if(this[names.s]){
+		var names = this._getAttrNames(name),
+			setter = this[names.s];
+		if(lang.isFunction(setter)){
 			// use the explicit setter
-			var result = this[names.s].apply(this, Array.prototype.slice.call(arguments, 1));
+			var result = setter.apply(this, Array.prototype.slice.call(arguments, 1));
 		}else{
-			// if param is specified as DOM node attribute, copy it
-			if(name in this.attributeMap){
-				this._attrToDom(name, value);
+			// Mapping from widget attribute to DOMNode attribute/value/etc.
+			// Map according to:
+			//		1. attributeMap setting, if one exists (TODO: attributeMap deprecated, remove in 2.0)
+			//		2. _setFooAttr: {...} type attribute in the widget (if one exists)
+			//		3. apply to focusNode or domNode if standard attribute name, excluding funcs like onClick.
+			// Checks if an attribute is a "standard attribute" by whether the DOMNode JS object has a similar
+			// attribute name (ex: accept-charset attribute matches jsObject.acceptCharset).
+			// Note also that Tree.focusNode() is a function not a DOMNode, so test for that.
+			var defaultNode = this.focusNode && !lang.isFunction(this.focusNode) ? "focusNode" : "domNode",
+				tag = this[defaultNode].tagName,
+				attrsForTag = tagAttrs[tag] || (tagAttrs[tag] = getAttrs(this[defaultNode])),
+				map =	name in this.attributeMap ? this.attributeMap[name] :
+						names.s in this ? this[names.s] :
+						((names.l in attrsForTag && typeof value != "function") ||
+							/^aria-|^data-|^role$/.test(name)) ? defaultNode : null;
+			if(map != null){
+				this._attrToDom(name, value, map);
 			}
 			this._set(name, value);
 		}
 		return result || this;
 	},
-	
+
 	_attrPairNames: {},		// shared between all widgets
 	_getAttrNames: function(name){
 		// summary:
@@ -617,11 +747,12 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 
 		var apn = this._attrPairNames;
 		if(apn[name]){ return apn[name]; }
-		var uc = name.charAt(0).toUpperCase() + name.substr(1);
+		var uc = name.replace(/^[a-z]|-[a-zA-Z]/g, function(c){ return c.charAt(c.length-1).toUpperCase(); });
 		return (apn[name] = {
 			n: name+"Node",
-			s: "_set"+uc+"Attr",
-			g: "_get"+uc+"Attr"
+			s: "_set"+uc+"Attr",	// converts dashes to camel case, ex: accept-charset --> _setAcceptCharsetAttr
+			g: "_get"+uc+"Attr",
+			l: uc.toLowerCase()		// lowercase name w/out dashes, ex: acceptcharset
 		});
 	},
 
@@ -636,6 +767,32 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 		}
 	},
 
+	on: function(/*String*/ type, /*Function*/ func){
+		// summary:
+		//		Call specified function when event occurs, ex: myWidget.on("click", function(){ ... }).
+		// description:
+		//		Call specified function when event `type` occurs, ex: `myWidget.on("click", function(){ ... })`.
+		//		Note that the function is not run in any particular scope, so if (for example) you want it to run in the
+		//		widget's scope you must do `myWidget.on("click", lang.hitch(myWidget, func))`.
+
+		return aspect.after(this, this._onMap(type), func, true);
+	},
+
+	_onMap: function(/*String*/ type){
+		// summary:
+		//		Maps on() type parameter (ex: "mousemove") to method name (ex: "onMouseMove")
+		var ctor = this.constructor, map = ctor._onMap;
+		if(!map){
+			map = (ctor._onMap = {});
+			for(var attr in ctor.prototype){
+				if(/^on/.test(attr)){
+					map[attr.replace(/^on/, "").toLowerCase()] = attr;
+				}
+			}
+		}
+		return map[type.toLowerCase()];	// String
+	},
+
 	toString: function(){
 		// summary:
 		//		Returns a string that represents the widget
@@ -646,20 +803,17 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 		return '[Widget ' + this.declaredClass + ', ' + (this.id || 'NO ID') + ']'; // String
 	},
 
-	getDescendants: function(){
-		// summary:
-		//		Returns all the widgets contained by this, i.e., all widgets underneath this.containerNode.
-		//		This method should generally be avoided as it returns widgets declared in templates, which are
-		//		supposed to be internal/hidden, but it's left here for back-compat reasons.
-
-		return this.containerNode ? dojo.query('[widgetId]', this.containerNode).map(dijit.byNode) : []; // dijit._Widget[]
-	},
-
 	getChildren: function(){
 		// summary:
 		//		Returns all the widgets contained by this, i.e., all widgets underneath this.containerNode.
 		//		Does not return nested widgets, nor widgets that are part of this widget's template.
-		return this.containerNode ? dijit.findWidgets(this.containerNode) : []; // dijit._Widget[]
+		return this.containerNode ? registry.findWidgets(this.containerNode) : []; // dijit._Widget[]
+	},
+
+	getParent: function(){
+		// summary:
+		//		Returns the parent widget of this widget
+		return registry.getEnclosingWidget(this.domNode.parentNode);
 	},
 
 	connect: function(
@@ -687,35 +841,35 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 		// tags:
 		//		protected
 
-		var handles = [dojo._connect(obj, event, this, method)];
-		this._connects.push(handles);
-		return handles;		// _Widget.Handle
+		var handle = connect.connect(obj, event, this, method);
+		this._connects.push(handle);
+		return handle;		// _Widget.Handle
 	},
 
-	disconnect: function(/* _Widget.Handle */ handles){
+	disconnect: function(handle){
 		// summary:
 		//		Disconnects handle created by `connect`.
 		//		Also removes handle from this widget's list of connects.
 		// tags:
 		//		protected
-		for(var i=0; i<this._connects.length; i++){
-			if(this._connects[i] == handles){
-				dojo.forEach(handles, dojo.disconnect);
-				this._connects.splice(i, 1);
-				return;
-			}
+		var i = array.indexOf(this._connects, handle);
+		if(i != -1){
+			handle.remove();
+			this._connects.splice(i, 1);
 		}
 	},
 
-	subscribe: function(
-			/*String*/ topic,
-			/*String|Function*/ method){
+	subscribe: function(t, method){
 		// summary:
 		//		Subscribes to the specified topic and calls the specified method
 		//		of this object and registers for unsubscribe() on widget destroy.
 		// description:
 		//		Provide widget-specific analog to dojo.subscribe, except with the
 		//		implicit use of this widget as the target object.
+		// t: String
+		//		The topic
+		// method: Function
+		//		The callback
 		// example:
 		//	|	var btn = new dijit.form.Button();
 		//	|	// when /my/topic is published, this button changes its label to
@@ -723,24 +877,20 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 		//	|	btn.subscribe("/my/topic", function(v){
 		//	|		this.set("label", v);
 		//	|	});
-		var handle = dojo.subscribe(topic, this, method);
-
-		// return handles for Any widget that may need them
-		this._subscribes.push(handle);
-		return handle;
+		// tags:
+		//		protected
+		var handle = topic.subscribe(t, lang.hitch(this, method));
+		this._connects.push(handle);
+		return handle;		// _Widget.Handle
 	},
 
 	unsubscribe: function(/*Object*/ handle){
 		// summary:
 		//		Unsubscribes handle created by this.subscribe.
 		//		Also removes handle from this widget's list of subscriptions
-		for(var i=0; i<this._subscribes.length; i++){
-			if(this._subscribes[i] == handle){
-				dojo.unsubscribe(handle);
-				this._subscribes.splice(i, 1);
-				return;
-			}
-		}
+		// tags:
+		//		protected
+		this.disconnect(handle);
 	},
 
 	isLeftToRight: function(){
@@ -748,13 +898,20 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 		//		Return this widget's explicit or implicit orientation (true for LTR, false for RTL)
 		// tags:
 		//		protected
-		return this.dir ? (this.dir == "ltr") : dojo._isBodyLtr(); //Boolean
+		return this.dir ? (this.dir == "ltr") : domGeometry.isBodyLtr(); //Boolean
+	},
+
+	isFocusable: function(){
+		// summary:
+		//		Return true if this widget can currently be focused
+		//		and false if not
+		return this.focus && (domStyle.get(this.domNode, "display") != "none");
 	},
 
 	placeAt: function(/* String|DomNode|_Widget */reference, /* String?|Int? */position){
 		// summary:
 		//		Place this widget's domNode reference somewhere in the DOM based
-		//		on standard dojo.place conventions, or passing a Widget reference that
+		//		on standard domConstruct.place conventions, or passing a Widget reference that
 		//		contains and addChild member.
 		//
 		// description:
@@ -763,12 +920,12 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 		//		somewhere in the dom, and allow chaining.
 		//
 		// reference:
-		//		The String id of a domNode, a domNode reference, or a reference to a Widget posessing
+		//		The String id of a domNode, a domNode reference, or a reference to a Widget possessing
 		//		an addChild method.
 		//
 		// position:
 		//		If passed a string or domNode reference, the position argument
-		//		accepts a string just as dojo.place does, one of: "first", "last",
+		//		accepts a string just as domConstruct.place does, one of: "first", "last",
 		//		"before", or "after".
 		//
 		//		If passed a _Widget reference, and that widget reference has an ".addChild" method,
@@ -783,9 +940,9 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 		//
 		// example:
 		// | 	// create a Button with no srcNodeRef, and place it in the body:
-		// | 	var button = new dijit.form.Button({ label:"click" }).placeAt(dojo.body());
+		// | 	var button = new dijit.form.Button({ label:"click" }).placeAt(win.body());
 		// | 	// now, 'button' is still the widget reference to the newly created button
-		// | 	dojo.connect(button, "onClick", function(e){ console.log('click'); });
+		// | 	button.on("click", function(e){ console.log('click'); }));
 		//
 		// example:
 		// |	// create a button out of a node with id="src" and append it to id="wrapper":
@@ -803,14 +960,32 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 		if(reference.declaredClass && reference.addChild){
 			reference.addChild(this, position);
 		}else{
-			dojo.place(this.domNode, reference, position);
+			domConstruct.place(this.domNode, reference, position);
 		}
 		return this;
+	},
+
+	getTextDir: function(/*String*/ text,/*String*/ originalDir){
+		// summary:
+		//		Return direction of the text.
+		//		The function overridden in the _BidiSupport module,
+		//		its main purpose is to calculate the direction of the
+		//		text, if was defined by the programmer through textDir.
+		//	tags:
+		//		protected.
+		return originalDir;
+	},
+
+	applyTextDir: function(/*===== element, text =====*/){
+		// summary:
+		//		The function overridden in the _BidiSupport module,
+		//		originally used for setting element.dir according to this.textDir.
+		//		In this case does nothing.
+		// element: DOMNode
+		// text: String
+		// tags:
+		//		protected.
 	}
 });
 
-})();
-
-
-return dijit._WidgetBase;
 });

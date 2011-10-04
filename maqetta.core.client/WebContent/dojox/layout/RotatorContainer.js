@@ -1,14 +1,17 @@
-dojo.provide("dojox.layout.RotatorContainer");
+define(["dojo/_base/declare","dojo/_base/html","dojo/_base/connect","dojo/_base/lang","dojo/_base/array",
+	"dojo/_base/fx","dojo/fx","dijit/_base/manager","dijit/layout/StackContainer","dijit/layout/StackController","dijit/_Widget",
+	"dijit/_Templated","dijit/_Contained"
+],function(declare,html,connect,lang,array,baseFx,coreFx,manager,
+	StackContainer,StackController,Widget,Templated,Contained){
 
-dojo.require("dojo.fx");
-dojo.require("dijit.layout.StackContainer");
-dojo.require("dijit.layout.StackController");
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-dojo.require("dijit._Contained");
-
-dojo.declare("dojox.layout.RotatorContainer",
-	[dijit.layout.StackContainer, dijit._Templated], {
+/*===== 
+	var Widget = dijit._Widget, 
+		Templated = dijit._Templated,
+		Contained = dijit._Contained,
+		StackContainer = dijit.layout.StackContainer,
+		StackController = dijit.layout.StackController;
+=====*/
+var RotatorContainer = declare("dojox.layout.RotatorContainer",[StackContainer, Templated], {
 	// summary:
 	//		Extends a StackContainer to automatically transition between children
 	//		and display navigation in the form of tabs or a pager.
@@ -90,7 +93,7 @@ dojo.declare("dojox.layout.RotatorContainer",
 		this.inherited(arguments);
 
 		// force this DOM node to a relative position and make sure the children are absolute positioned
-		dojo.style(this.domNode, "position", "relative");
+		html.style(this.domNode, "position", "relative");
 
 		// validate the cycles counter
 		if(this.cycles-0 == this.cycles && this.cycles != -1){
@@ -108,18 +111,18 @@ dojo.declare("dojox.layout.RotatorContainer",
 
 		// create the stack controller if we are using tabs
 		var id = this.id || "rotator"+(new Date()).getTime(),
-			sc = new dijit.layout.StackController({ containerId:id }, this.tabNode);
+			sc = new StackController({ containerId:id }, this.tabNode);
 		this.tabNode = sc.domNode;
 		this._stackController = sc;
-		dojo.style(this.tabNode, "display", this.showTabs ? "" : "none");
+		html.style(this.tabNode, "display", this.showTabs ? "" : "none");
 
 		// if the controller's tabs are clicked, check if we should pause and reset the cycle counter
 		this.connect(sc, "onButtonClick","_manualChange");
 
 		// set up our topic listeners
 		this._subscriptions = [
-			dojo.subscribe(this.id+"-cycle", this, "_cycle"),
-			dojo.subscribe(this.id+"-state", this, "_state")
+			connect.subscribe(this.id+"-cycle", this, "_cycle"),
+			connect.subscribe(this.id+"-state", this, "_state")
 		];
 
 		// make sure the transition duration isn't less than the transition delay
@@ -154,7 +157,7 @@ dojo.declare("dojox.layout.RotatorContainer",
 		// check if we should start automatically
 		if(this.autoStart){
 			// start playing
-			setTimeout(dojo.hitch(this, "_play"), 10);
+			setTimeout(lang.hitch(this, "_play"), 10);
 		}else{
 			// update the pagers with the initial state
 			this._updatePager();
@@ -163,19 +166,19 @@ dojo.declare("dojox.layout.RotatorContainer",
 
 	destroy: function(){
 		// summary: Unsubscribe to all of our topics
-		dojo.forEach(this._subscriptions, dojo.unsubscribe);
+		array.forEach(this._subscriptions, connect.unsubscribe);
 		this.inherited(arguments);
 	},
 
 	_setShowTabsAttr: function(/*anything*/value){
 		this.showTabs = value;
-		dojo.style(this.tabNode, "display", value ? "" : "none");
+		html.style(this.tabNode, "display", value ? "" : "none");
 	},
 
 	_updatePager: function(){
 		// summary: Notify the pager's current and total numbers.
 		var c = this.getChildren();
-		dojo.publish(this.id+"-update", [this._playing, dojo.indexOf(c, this.selectedChildWidget)+1, c.length]);
+		connect.publish(this.id+"-update", [this._playing, array.indexOf(c, this.selectedChildWidget)+1, c.length]);
 	},
 
 	_onMouseOver: function(){
@@ -194,7 +197,7 @@ dojo.declare("dojox.layout.RotatorContainer",
 		// we need to wait because we may be moused over again right away
 		if(this._playing){
 			clearTimeout(this._timer);
-			this._timer = setTimeout(dojo.hitch(this, "_play", true), 200);
+			this._timer = setTimeout(lang.hitch(this, "_play", true), 200);
 		}
 	},
 
@@ -215,7 +218,7 @@ dojo.declare("dojox.layout.RotatorContainer",
 
 		var c = this.getChildren(),
 			len = c.length,
-			i = dojo.indexOf(c, this.selectedChildWidget) + (next === false || (next !== true && this.reverse) ? -1 : 1);
+			i = array.indexOf(c, this.selectedChildWidget) + (next === false || (next !== true && this.reverse) ? -1 : 1);
 		this.selectChild(c[(i < len ? (i < 0 ? len-1 : i) : 0)]);
 		this._updatePager();
 	},
@@ -240,7 +243,7 @@ dojo.declare("dojox.layout.RotatorContainer",
 			this._pause();
 		}else if((!this.suspendOnHover || !this._over) && this.transitionDelay){
 			// check if current pane has a delay
-			this._timer = setTimeout(dojo.hitch(this, "_cycle"), this.selectedChildWidget.domNode.getAttribute("transitionDelay") || this.transitionDelay);
+			this._timer = setTimeout(lang.hitch(this, "_cycle"), this.selectedChildWidget.domNode.getAttribute("transitionDelay") || this.transitionDelay);
 		}
 		this._updatePager();
 	},
@@ -298,12 +301,12 @@ dojo.declare("dojox.layout.RotatorContainer",
 
 		// create the crossfade animation
 		var args = { duration:this.transitionDuration },
-			anim = dojo.fx.combine([
-				dojo["fadeOut"](dojo.mixin({node:prev.domNode}, args)),
-				dojo["fadeIn"](dojo.mixin({node:next.domNode}, args))
+			anim = coreFx.combine([
+				baseFx["fadeOut"](lang.mixin({node:prev.domNode}, args)),
+				baseFx["fadeIn"](lang.mixin({node:next.domNode}, args))
 			]);
 
-		this.connect(anim, "onEnd", dojo.hitch(this,function(){
+		this.connect(anim, "onEnd", lang.hitch(this,function(){
 			this._hideChild(prev);
 			this._transitionEnd();
 		}));
@@ -313,13 +316,13 @@ dojo.declare("dojox.layout.RotatorContainer",
 
 	_styleNode: function(/*DOMnode*/node, /*number*/opacity, /*int*/zIndex){
 		// summary: Helper function to style the children.
-		dojo.style(node, "opacity", opacity);
-		dojo.style(node, "zIndex", zIndex);
-		dojo.style(node, "position", "absolute");
+		html.style(node, "opacity", opacity);
+		html.style(node, "zIndex", zIndex);
+		html.style(node, "position", "absolute");
 	}
 });
 
-dojo.declare("dojox.layout.RotatorPager", [dijit._Widget, dijit._Templated, dijit._Contained], {
+declare("dojox.layout.RotatorPager", [Widget, Templated, Contained], {
 	// summary:
 	//		Defines controls used to manipulate a RotatorContainer
 	//
@@ -398,34 +401,34 @@ dojo.declare("dojox.layout.RotatorPager", [dijit._Widget, dijit._Templated, diji
 	},
 
 	postCreate: function(){
-		var p = dijit.byId(this.rotatorId) || this.getParent();
+		var p = manager.byId(this.rotatorId) || this.getParent();
 		if(p && p.declaredClass == "dojox.layout.RotatorContainer"){
 			if(this.previous){
-				dojo.connect(this.previous, "onClick", function(){
-					dojo.publish(p.id+"-cycle", [false]);
+				connect.connect(this.previous, "onClick", function(){
+					connect.publish(p.id+"-cycle", [false]);
 				});
 			}
 			if(this.next){
-				dojo.connect(this.next, "onClick", function(){
-					dojo.publish(p.id+"-cycle", [true]);
+				connect.connect(this.next, "onClick", function(){
+					connect.publish(p.id+"-cycle", [true]);
 				});
 			}
 			if(this.playPause){
-				dojo.connect(this.playPause, "onClick", function(){
+				connect.connect(this.playPause, "onClick", function(){
 					this.set('label', this.checked ? "Pause" : "Play");
-					dojo.publish(p.id+"-state", [this.checked]);
+					connect.publish(p.id+"-state", [this.checked]);
 				});
 			}
 			this._subscriptions = [
-				dojo.subscribe(p.id+"-state", this, "_state"),
-				dojo.subscribe(p.id+"-update", this, "_update")
+				connect.subscribe(p.id+"-state", this, "_state"),
+				connect.subscribe(p.id+"-update", this, "_update")
 			];
 		}
 	},
 
 	destroy: function(){
 		// summary: Unsubscribe to all of our topics
-		dojo.forEach(this._subscriptions, dojo.unsubscribe);
+		array.forEach(this._subscriptions, connect.unsubscribe);
 		this.inherited(arguments);
 	},
 
@@ -447,4 +450,6 @@ dojo.declare("dojox.layout.RotatorPager", [dijit._Widget, dijit._Templated, diji
 			this.total.innerHTML = total;
 		}
 	}
+});
+return RotatorContainer;
 });

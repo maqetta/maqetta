@@ -1,6 +1,7 @@
-dojo.provide("dojox.json.query");
+define(["dojo/_base/kernel", "dojox", "dojo/_base/array"], function(dojo, dojox){
 
-(function(){
+	dojo.getObject("json", true, dojox);
+
 	dojox.json._slice = function(obj,start,end,step){
 		// handles slice operations: [3:6:2]
 		var len=obj.length,results = [];
@@ -32,7 +33,7 @@ dojo.provide("dojox.json.query");
 					// if we don't have a name we are just getting all the properties values (.* or [*])
 					results.push(val);
 				}else if(val && typeof val == 'object'){
-					
+
 					walk(val);
 				}
 			}
@@ -54,7 +55,7 @@ dojo.provide("dojox.json.query");
 		}
 		return results;
 	}
-	
+
 	dojox.json._distinctFilter = function(array, callback){
 		// does the filter with removal of duplicates in O(n)
 		var outArr = [];
@@ -83,7 +84,7 @@ dojo.provide("dojox.json.query");
 		}
 		return outArr;
 	}
-	dojox.json.query = function(/*String*/query,/*Object?*/obj){
+	return dojox.json.query = function(/*String*/query,/*Object?*/obj){
 		// summary:
 		// 		Performs a JSONQuery on the provided object and returns the results.
 		// 		If no object is provided (just a query), it returns a "compiled" function that evaluates objects
@@ -197,8 +198,8 @@ dojo.provide("dojox.json.query");
 		query.replace(/(\]|\)|push|pop|shift|splice|sort|reverse)\s*\(/,function(){
 			throw new Error("Unsafe function call");
 		});
-		
-		query = query.replace(/([^=]=)([^=])/g,"$1=$2"). // change the equals to comparisons
+
+		query = query.replace(/([^<>=]=)([^=])/g,"$1=$2"). // change the equals to comparisons except operators ==, <=, >=
 			replace(/@|(\.\s*)?[a-zA-Z\$_]+(\s*:)?/g,function(t){
 				return t.charAt(0) == '.' ? t : // leave .prop alone
 					t == '@' ? "$obj" :// the reference to the current object
@@ -249,12 +250,12 @@ dojo.provide("dojox.json.query");
 			return a == ']' ? ']' : str[a];
 		});
 		// create a function within this scope (so it can use expand and slice)
-		
+
 		var executor = eval("1&&function($,$1,$2,$3,$4,$5,$6,$7,$8,$9){var $obj=$;return " + query + "}");
 		for(var i = 0;i<arguments.length-1;i++){
 			arguments[i] = arguments[i+1];
 		}
 		return obj ? executor.apply(this,arguments) : executor;
 	};
-	
-})();
+
+});

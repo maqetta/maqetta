@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertImageTitle: "Insereix imatge",
 	url: "Imatge",
@@ -9,3 +11,5 @@
 	prePopuTextBrowse: " o navegueu fins un fitxer local."
 })
 
+//end v1.x content
+);

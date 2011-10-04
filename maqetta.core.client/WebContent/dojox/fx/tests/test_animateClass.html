@@ -14,16 +14,12 @@
 		
 	<script type="text/javascript" src="../../../dojo/dojo.js" 
 		djConfig="isDebug:true, parseOnLoad: true" ></script>
-		
-	<!-- debugging -->
-	<script type="text/javascript" src="../style.js"></script>
-	<script type="text/javascript" src="../ext-dojo/NodeList-style.js"></script>
-	
+			
 	<script type="text/javascript">
+		dojo.require("dojo.parser");
+		dojo.require("dijit.form.Button"); 
 		dojo.require("dojox.fx.style");
 		dojo.require("dojox.fx.ext-dojo.NodeList-style");
-		
-		dojo.require("dijit.form.Button"); 
 	</script>
 </head>
 <body class="tundra">
@@ -74,8 +70,8 @@
 					}));
 					delay += 200;
 				});
-				this.attr('disabled',true);
-				dijit.byId('removeTall').attr('disabled',false);
+				this.set('disabled',true);
+				dijit.byId('removeTall').set('disabled',false);
 				dojo.fx.combine(_anims).play();
 		</script>
 	</button>
@@ -90,8 +86,8 @@
 						}));
 						delay += 200;
 				});
-				this.attr('disabled', true);
-				dijit.byId('addTall').attr('disabled',false);
+				this.set('disabled', true);
+				dijit.byId('addTall').set('disabled',false);
 				dojo.fx.combine(_anims).play();
 		</script>
 	</button>		 
@@ -106,8 +102,8 @@
 						}));
 						delay += 200;
 				});
-				this.attr('disabled',true);
-				dijit.byId('removeWide').attr('disabled',false);
+				this.set('disabled',true);
+				dijit.byId('removeWide').set('disabled',false);
 				dojo.fx.combine(_anims).play();
 		</script>
 	</button>
@@ -122,8 +118,8 @@
 					}));
 					delay += 200;
 				});
-				this.attr('disabled',true);
-				dijit.byId('addWide').attr('disabled',false);
+				this.set('disabled',true);
+				dijit.byId('addWide').set('disabled',false);
 				dojo.fx.combine(_anims).play();
 		</script>
 	</button>

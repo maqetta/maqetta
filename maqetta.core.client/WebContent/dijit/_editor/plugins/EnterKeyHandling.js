@@ -1,6 +1,32 @@
-define("dijit/_editor/plugins/EnterKeyHandling", ["dojo", "dijit", "dojo/window", "dijit/_editor/_Plugin", "dijit/_editor/range"], function(dojo, dijit) {
+define([
+	"dojo/_base/declare", // declare
+	"dojo/dom-construct", // domConstruct.destroy domConstruct.place
+	"dojo/_base/event", // event.stop
+	"dojo/keys", // keys.ENTER
+	"dojo/_base/lang",
+	"dojo/_base/sniff", // has("ie") has("mozilla") has("webkit")
+	"dojo/_base/window", // win.global win.withGlobal
+	"dojo/window", // winUtils.scrollIntoView
+	"../_Plugin",
+	"../RichText",
+	"../range",
+	"../selection"
+], function(declare, domConstruct, event, keys, lang, has, win, winUtils, _Plugin, RichText, rangeapi, selectionapi){
 
-dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
+/*=====
+	var _Plugin = dijit._editor._Plugin;
+=====*/
+
+// module:
+//		dijit/_editor/plugins/EnterKeyHandling
+// summary:
+//		This plugin tries to make all browsers behave consistently with regard to
+//		how ENTER behaves in the editor window.  It traps the ENTER key and alters
+//		the way DOM is constructed in certain cases to try to commonize the generated
+//		DOM and behaviors across browsers.
+
+
+return declare("dijit._editor.plugins.EnterKeyHandling", _Plugin, {
 	// summary:
 	//		This plugin tries to make all browsers behave consistently with regard to
 	//		how ENTER behaves in the editor window.  It traps the ENTER key and alters
@@ -10,11 +36,11 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 	// description:
 	//		This plugin has three modes:
 	//
-	//			* blockModeForEnter=BR
-	//			* blockModeForEnter=DIV
-	//			* blockModeForEnter=P
+	//			* blockNodeForEnter=BR
+	//			* blockNodeForEnter=DIV
+	//			* blockNodeForEnter=P
 	//
-	//		In blockModeForEnter=P, the ENTER key starts a new
+	//		In blockNodeForEnter=P, the ENTER key starts a new
 	//		paragraph, and shift-ENTER starts a new line in the current paragraph.
 	//		For example, the input:
 	//
@@ -78,28 +104,28 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 			if("blockNodeForEnter" in args){
 				args.blockNodeForEnter = args.blockNodeForEnter.toUpperCase();
 			}
-			dojo.mixin(this,args);
+			lang.mixin(this,args);
 		}
 	},
 
 	setEditor: function(editor){
 		// Overrides _Plugin.setEditor().
-		if(this.editor === editor) { return; }
+		if(this.editor === editor){ return; }
 		this.editor = editor;
 		if(this.blockNodeForEnter == 'BR'){
 			// While Moz has a mode tht mostly works, it's still a little different,
 			// So, try to just have a common mode and be consistent.  Which means
 			// we need to enable customUndo, if not already enabled.
 			this.editor.customUndo = true;
-				editor.onLoadDeferred.addCallback(dojo.hitch(this,function(d){
+				editor.onLoadDeferred.addCallback(lang.hitch(this,function(d){
 				this.connect(editor.document, "onkeypress", function(e){
-					if(e.charOrCode == dojo.keys.ENTER){
+					if(e.charOrCode == keys.ENTER){
 						// Just do it manually.  The handleEnterKey has a shift mode that
 						// Always acts like <br>, so just use it.
-						var ne = dojo.mixin({},e);
+						var ne = lang.mixin({},e);
 						ne.shiftKey = true;
 						if(!this.handleEnterKey(ne)){
-							dojo.stopEvent(e);
+							event.stop(e);
 						}
 					}
 				});
@@ -108,28 +134,28 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 		}else if(this.blockNodeForEnter){
 			// add enter key handler
 			// FIXME: need to port to the new event code!!
-			var h = dojo.hitch(this,this.handleEnterKey);
+			var h = lang.hitch(this,this.handleEnterKey);
 			editor.addKeyHandler(13, 0, 0, h); //enter
 			editor.addKeyHandler(13, 0, 1, h); //shift+enter
 			this.connect(this.editor,'onKeyPressed','onKeyPressed');
 		}
 	},
-	onKeyPressed: function(e){
+	onKeyPressed: function(){
 		// summary:
 		//		Handler for keypress events.
 		// tags:
 		//		private
 		if(this._checkListLater){
-			if(dojo.withGlobal(this.editor.window, 'isCollapsed', dijit)){
-				var liparent=dojo.withGlobal(this.editor.window, 'getAncestorElement', dijit._editor.selection, ['LI']);
+			if(win.withGlobal(this.editor.window, 'isCollapsed', dijit)){
+				var liparent=win.withGlobal(this.editor.window, 'getAncestorElement', selection, ['LI']);
 				if(!liparent){
 					// circulate the undo detection code by calling RichText::execCommand directly
-					dijit._editor.RichText.prototype.execCommand.call(this.editor, 'formatblock',this.blockNodeForEnter);
+					RichText.prototype.execCommand.call(this.editor, 'formatblock',this.blockNodeForEnter);
 					// set the innerHTML of the new block node
-					var block = dojo.withGlobal(this.editor.window, 'getAncestorElement', dijit._editor.selection, [this.blockNodeForEnter]);
+					var block = win.withGlobal(this.editor.window, 'getAncestorElement', selection, [this.blockNodeForEnter]);
 					if(block){
 						block.innerHTML=this.bogusHtmlContent;
-						if(dojo.isIE){
+						if(has("ie")){
 							// move to the start by moving backwards one char
 							var r = this.editor.document.selection.createRange();
 							r.move('character',-1);
@@ -139,7 +165,7 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 						console.error('onKeyPressed: Cannot find the new block node'); // FIXME
 					}
 				}else{
-					if(dojo.isMoz){
+					if(has("mozilla")){
 						if(liparent.parentNode.parentNode.nodeName == 'LI'){
 							liparent=liparent.parentNode.parentNode;
 						}
@@ -147,9 +173,9 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 					var fc=liparent.firstChild;
 					if(fc && fc.nodeType == 1 && (fc.nodeName == 'UL' || fc.nodeName == 'OL')){
 						liparent.insertBefore(fc.ownerDocument.createTextNode('\xA0'),fc);
-						var newrange = dijit.range.create(this.editor.window);
+						var newrange = rangeapi.create(this.editor.window);
 						newrange.setStart(liparent.firstChild,0);
-						var selection = dijit.range.getSelection(this.editor.window, true);
+						var selection = rangeapi.getSelection(this.editor.window, true);
 						selection.removeAllRanges();
 						selection.addRange(newrange);
 					}
@@ -168,7 +194,7 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 
 	// bogusHtmlContent: [private] String
 	//		HTML to stick into a new empty block
-	bogusHtmlContent: '&nbsp;',
+	bogusHtmlContent: '&#160;',		// &nbsp;
 
 	// blockNodes: [private] Regex
 	//		Regex for testing if a given tag is a block level (display:block) tag
@@ -176,7 +202,7 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 
 	handleEnterKey: function(e){
 		// summary:
-		//		Handler for enter key events when blockModeForEnter is DIV or P.
+		//		Handler for enter key events when blockNodeForEnter is DIV or P.
 		// description:
 		//		Manually handle enter key event to make the behavior consistent across
 		//		all supported browsers. See class description for details.
@@ -185,28 +211,28 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 
 		var selection, range, newrange, startNode, endNode, brNode, doc=this.editor.document,br,rs,txt;
 		if(e.shiftKey){		// shift+enter always generates <br>
-			var parent = dojo.withGlobal(this.editor.window, "getParentElement", dijit._editor.selection);
-			var header = dijit.range.getAncestor(parent,this.blockNodes);
+			var parent = win.withGlobal(this.editor.window, "getParentElement", selectionapi);
+			var header = rangeapi.getAncestor(parent,this.blockNodes);
 			if(header){
 				if(header.tagName == 'LI'){
 					return true; // let browser handle
 				}
-				selection = dijit.range.getSelection(this.editor.window);
+				selection = rangeapi.getSelection(this.editor.window);
 				range = selection.getRangeAt(0);
 				if(!range.collapsed){
 					range.deleteContents();
-					selection = dijit.range.getSelection(this.editor.window);
+					selection = rangeapi.getSelection(this.editor.window);
 					range = selection.getRangeAt(0);
 				}
-				if(dijit.range.atBeginningOfContainer(header, range.startContainer, range.startOffset)){
+				if(rangeapi.atBeginningOfContainer(header, range.startContainer, range.startOffset)){
 						br=doc.createElement('br');
-						newrange = dijit.range.create(this.editor.window);
+						newrange = rangeapi.create(this.editor.window);
 						header.insertBefore(br,header.firstChild);
-						newrange.setStartBefore(br.nextSibling);
+						newrange.setStartAfter(br);
 						selection.removeAllRanges();
 						selection.addRange(newrange);
-				}else if(dijit.range.atEndOfContainer(header, range.startContainer, range.startOffset)){
-					newrange = dijit.range.create(this.editor.window);
+				}else if(rangeapi.atEndOfContainer(header, range.startContainer, range.startOffset)){
+					newrange = rangeapi.create(this.editor.window);
 					br=doc.createElement('br');
 						header.appendChild(br);
 						header.appendChild(doc.createTextNode('\xA0'));
@@ -218,19 +244,19 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 					if(rs && rs.nodeType == 3){
 						// Text node, we have to split it.
 						txt = rs.nodeValue;
-						dojo.withGlobal(this.editor.window, function(){
+						win.withGlobal(this.editor.window, function(){
 							startNode = doc.createTextNode(txt.substring(0, range.startOffset));
 							endNode = doc.createTextNode(txt.substring(range.startOffset));
 							brNode = doc.createElement("br");
-							
-							if(endNode.nodeValue == "" && dojo.isWebKit){
+
+							if(endNode.nodeValue == "" && has("webkit")){
 								endNode = doc.createTextNode('\xA0')
 							}
-							dojo.place(startNode, rs, "after");
-							dojo.place(brNode, startNode, "after");
-							dojo.place(endNode, brNode, "after");
-							dojo.destroy(rs);
-							newrange = dijit.range.create(dojo.gobal);
+							domConstruct.place(startNode, rs, "after");
+							domConstruct.place(brNode, startNode, "after");
+							domConstruct.place(endNode, brNode, "after");
+							domConstruct.destroy(rs);
+							newrange = rangeapi.create(dojo.gobal);	// TODO: this is a typo for "global" but still works??
 							newrange.setStart(endNode,0);
 							selection.removeAllRanges();
 							selection.addRange(newrange);
@@ -240,21 +266,21 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 					return true; // let browser handle
 				}
 			}else{
-				selection = dijit.range.getSelection(this.editor.window);
+				selection = rangeapi.getSelection(this.editor.window);
 				if(selection.rangeCount){
 					range = selection.getRangeAt(0);
 					if(range && range.startContainer){
 						if(!range.collapsed){
 							range.deleteContents();
-							selection = dijit.range.getSelection(this.editor.window);
+							selection = rangeapi.getSelection(this.editor.window);
 							range = selection.getRangeAt(0);
 						}
 						rs = range.startContainer;
 						if(rs && rs.nodeType == 3){
 							// Text node, we have to split it.
-							dojo.withGlobal(this.editor.window, dojo.hitch(this, function(){
+							win.withGlobal(this.editor.window, lang.hitch(this, function(){
 								var endEmpty = false;
-							
+
 								var offset = range.startOffset;
 								if(rs.length < offset){
 									//We are not splitting the right node, try to locate the correct one
@@ -263,53 +289,62 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 									offset = ret.offset;
 								}
 								txt = rs.nodeValue;
-				
+
 								startNode = doc.createTextNode(txt.substring(0, offset));
 								endNode = doc.createTextNode(txt.substring(offset));
 								brNode = doc.createElement("br");
-								
+
 								if(!endNode.length){
 									endNode = doc.createTextNode('\xA0');
 									endEmpty = true;
 								}
-								
+
 								if(startNode.length){
-									dojo.place(startNode, rs, "after");
+									domConstruct.place(startNode, rs, "after");
 								}else{
 									startNode = rs;
 								}
-								dojo.place(brNode, startNode, "after");
-								dojo.place(endNode, brNode, "after");
-								dojo.destroy(rs);
-								newrange = dijit.range.create(dojo.gobal);
+								domConstruct.place(brNode, startNode, "after");
+								domConstruct.place(endNode, brNode, "after");
+								domConstruct.destroy(rs);
+								newrange = rangeapi.create(dojo.gobal);	// TODO: typo for dojo.global but still works??
 								newrange.setStart(endNode,0);
 								newrange.setEnd(endNode, endNode.length);
 								selection.removeAllRanges();
 								selection.addRange(newrange);
-								if(endEmpty && !dojo.isWebKit){
-									dijit._editor.selection.remove();
+								if(endEmpty && !has("webkit")){
+									selectionapi.remove();
 								}else{
-									dijit._editor.selection.collapse(true);
+									selectionapi.collapse(true);
 								}
 							}));
 						}else{
-							dojo.withGlobal(this.editor.window, dojo.hitch(this, function(){
+							var targetNode;
+							if(range.startOffset >= 0){
+								targetNode = rs.childNodes[range.startOffset];
+							}
+							win.withGlobal(this.editor.window, lang.hitch(this, function(){
 								var brNode = doc.createElement("br");
-								rs.appendChild(brNode);
 								var endNode = doc.createTextNode('\xA0');
-								rs.appendChild(endNode);
-								newrange = dijit.range.create(dojo.global);
+								if(!targetNode){
+									rs.appendChild(brNode);
+									rs.appendChild(endNode);
+								}else{
+									domConstruct.place(brNode, targetNode, "before");
+									domConstruct.place(endNode, brNode, "after");
+								}
+								newrange = rangeapi.create(win.global);
 								newrange.setStart(endNode,0);
 								newrange.setEnd(endNode, endNode.length);
 								selection.removeAllRanges();
 								selection.addRange(newrange);
-								dijit._editor.selection.collapse(true);
+								selectionapi.collapse(true);
 							}));
 						}
 					}
 				}else{
 					// don't change this: do not call this.execCommand, as that may have other logic in subclass
-					dijit._editor.RichText.prototype.execCommand.call(this.editor, 'inserthtml', '<br>');
+					RichText.prototype.execCommand.call(this.editor, 'inserthtml', '<br>');
 				}
 			}
 			return false;
@@ -317,29 +352,29 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 		var _letBrowserHandle = true;
 
 		// first remove selection
-		selection = dijit.range.getSelection(this.editor.window);
+		selection = rangeapi.getSelection(this.editor.window);
 		range = selection.getRangeAt(0);
 		if(!range.collapsed){
 			range.deleteContents();
-			selection = dijit.range.getSelection(this.editor.window);
+			selection = rangeapi.getSelection(this.editor.window);
 			range = selection.getRangeAt(0);
 		}
 
-		var block = dijit.range.getBlockAncestor(range.endContainer, null, this.editor.editNode);
+		var block = rangeapi.getBlockAncestor(range.endContainer, null, this.editor.editNode);
 		var blockNode = block.blockNode;
 
 		// if this is under a LI or the parent of the blockNode is LI, just let browser to handle it
 		if((this._checkListLater = (blockNode && (blockNode.nodeName == 'LI' || blockNode.parentNode.nodeName == 'LI')))){
-			if(dojo.isMoz){
+			if(has("mozilla")){
 				// press enter in middle of P may leave a trailing <br/>, let's remove it later
 				this._pressedEnterInBlock = blockNode;
 			}
 			// if this li only contains spaces, set the content to empty so the browser will outdent this item
-			if(/^(\s|&nbsp;|\xA0|<span\b[^>]*\bclass=['"]Apple-style-span['"][^>]*>(\s|&nbsp;|\xA0)<\/span>)?(<br>)?$/.test(blockNode.innerHTML)){
+			if(/^(\s|&nbsp;|&#160;|\xA0|<span\b[^>]*\bclass=['"]Apple-style-span['"][^>]*>(\s|&nbsp;|&#160;|\xA0)<\/span>)?(<br>)?$/.test(blockNode.innerHTML)){
 				// empty LI node
 				blockNode.innerHTML = '';
-				if(dojo.isWebKit){ // WebKit tosses the range when innerHTML is reset
-					newrange = dijit.range.create(this.editor.window);
+				if(has("webkit")){ // WebKit tosses the range when innerHTML is reset
+					newrange = rangeapi.create(this.editor.window);
 					newrange.setStart(blockNode, 0);
 					selection.removeAllRanges();
 					selection.addRange(newrange);
@@ -352,11 +387,11 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 		// text node directly under body, let's wrap them in a node
 		if(!block.blockNode || block.blockNode===this.editor.editNode){
 			try{
-				dijit._editor.RichText.prototype.execCommand.call(this.editor, 'formatblock',this.blockNodeForEnter);
+				RichText.prototype.execCommand.call(this.editor, 'formatblock',this.blockNodeForEnter);
 			}catch(e2){ /*squelch FF3 exception bug when editor content is a single BR*/ }
 			// get the newly created block node
 			// FIXME
-			block = {blockNode:dojo.withGlobal(this.editor.window, "getAncestorElement", dijit._editor.selection, [this.blockNodeForEnter]),
+			block = {blockNode:win.withGlobal(this.editor.window, "getAncestorElement", selectionapi, [this.blockNodeForEnter]),
 					blockContainer: this.editor.editNode};
 			if(block.blockNode){
 				if(block.blockNode != this.editor.editNode &&
@@ -367,7 +402,7 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 			}else{	// we shouldn't be here if formatblock worked
 				block.blockNode = this.editor.editNode;
 			}
-			selection = dijit.range.getSelection(this.editor.window);
+			selection = rangeapi.getSelection(this.editor.window);
 			range = selection.getRangeAt(0);
 		}
 
@@ -382,39 +417,39 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 			node = ret.node;
 			endOffset = ret.offset;
 		}
-		if(dijit.range.atEndOfContainer(block.blockNode, node, endOffset)){
+		if(rangeapi.atEndOfContainer(block.blockNode, node, endOffset)){
 			if(block.blockNode === block.blockContainer){
 				block.blockNode.appendChild(newblock);
 			}else{
-				dojo.place(newblock, block.blockNode, "after");
+				domConstruct.place(newblock, block.blockNode, "after");
 			}
 			_letBrowserHandle = false;
 			// lets move caret to the newly created block
-			newrange = dijit.range.create(this.editor.window);
+			newrange = rangeapi.create(this.editor.window);
 			newrange.setStart(newblock, 0);
 			selection.removeAllRanges();
 			selection.addRange(newrange);
 			if(this.editor.height){
-				dojo.window.scrollIntoView(newblock);
+				winUtils.scrollIntoView(newblock);
 			}
-		}else if(dijit.range.atBeginningOfContainer(block.blockNode,
+		}else if(rangeapi.atBeginningOfContainer(block.blockNode,
 				range.startContainer, range.startOffset)){
-			dojo.place(newblock, block.blockNode, block.blockNode === block.blockContainer ? "first" : "before");
+			domConstruct.place(newblock, block.blockNode, block.blockNode === block.blockContainer ? "first" : "before");
 			if(newblock.nextSibling && this.editor.height){
 				// position input caret - mostly WebKit needs this
-				newrange = dijit.range.create(this.editor.window);
+				newrange = rangeapi.create(this.editor.window);
 				newrange.setStart(newblock.nextSibling, 0);
 				selection.removeAllRanges();
 				selection.addRange(newrange);
 				// browser does not scroll the caret position into view, do it manually
-				dojo.window.scrollIntoView(newblock.nextSibling);
+				winUtils.scrollIntoView(newblock.nextSibling);
 			}
 			_letBrowserHandle = false;
 		}else{ //press enter in the middle of P/DIV/Whatever/
 			if(block.blockNode === block.blockContainer){
 				block.blockNode.appendChild(newblock);
 			}else{
-				dojo.place(newblock, block.blockNode, "after");
+				domConstruct.place(newblock, block.blockNode, "after");
 			}
 			_letBrowserHandle = false;
 
@@ -426,11 +461,11 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 					}
 				}
 			}
-			
+
 			// Okay, we probably have to split.
 			rs = range.startContainer;
 			var firstNodeMoved;
-			if(rs && rs.nodeType == 3){ 
+			if(rs && rs.nodeType == 3){
 				// Text node, we have to split it.
 				var nodeToMove, tNode;
 				endOffset = range.endOffset;
@@ -440,15 +475,15 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 					rs = ret.node;
 					endOffset = ret.offset;
 				}
-				
+
 				txt = rs.nodeValue;
 				startNode = doc.createTextNode(txt.substring(0, endOffset));
 				endNode = doc.createTextNode(txt.substring(endOffset, txt.length));
 
 				// Place the split, then remove original nodes.
-				dojo.place(startNode, rs, "before");
-				dojo.place(endNode, rs, "after");
-				dojo.destroy(rs);
+				domConstruct.place(startNode, rs, "before");
+				domConstruct.place(endNode, rs, "after");
+				domConstruct.destroy(rs);
 
 				// Okay, we split the text.  Now we need to see if we're
 				// parented to the block element we're splitting and if
@@ -465,7 +500,7 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 							}
 						}
 					}
-					// If font also need to clone over any font data. 
+					// If font also need to clone over any font data.
 					if(parentC.tagName === "FONT"){
 						if(parentC.color){
 							newTg.color = parentC.color;
@@ -477,14 +512,14 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 							newTg.size = parentC.size;
 						}
 					}
-					
+
 					nodeToMove = endNode;
 					while(nodeToMove){
 						tNode = nodeToMove.nextSibling;
 						newTg.appendChild(nodeToMove);
 						nodeToMove = tNode;
 					}
-					dojo.place(newTg, parentC, "after");
+					domConstruct.place(newTg, parentC, "after");
 					startNode = parentC;
 					endNode = newTg;
 					parentC = parentC.parentNode;
@@ -505,9 +540,9 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 					nodeToMove = tNode;
 				}
 			}
-			
+
 			//lets move caret to the newly created block
-			newrange = dijit.range.create(this.editor.window);
+			newrange = rangeapi.create(this.editor.window);
 			var nodeForCursor;
 			var innerMostFirstNodeMoved = firstNodeMoved;
 			if(this.blockNodeForEnter !== 'BR'){
@@ -522,12 +557,12 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 					selection.removeAllRanges();
 					selection.addRange(newrange);
 					if(this.editor.height){
-						dijit.scrollIntoView(newblock);
+						winUtils.scrollIntoView(newblock);
 					}
-					if(dojo.isMoz){
+					if(has("mozilla")){
 						// press enter in middle of P may leave a trailing <br/>, let's remove it later
 						this._pressedEnterInBlock = block.blockNode;
-					}					
+					}
 				}else{
 					_letBrowserHandle = true;
 				}
@@ -536,9 +571,9 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 				selection.removeAllRanges();
 				selection.addRange(newrange);
 				if(this.editor.height){
-					dijit.scrollIntoView(newblock);
+					winUtils.scrollIntoView(newblock);
 				}
-				if(dojo.isMoz){
+				if(has("mozilla")){
 					// press enter in middle of P may leave a trailing <br/>, let's remove it later
 					this._pressedEnterInBlock = block.blockNode;
 				}
@@ -562,8 +597,7 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 			offset = offset - node.length;
 			node = node.nextSibling;
 		}
-		var ret = {"node": node, "offset": offset};
-		return ret;
+		return {"node": node, "offset": offset};
 	},
 
 	removeTrailingBr: function(container){
@@ -572,14 +606,14 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 		// tags:
 		//		private
 		var para = /P|DIV|LI/i.test(container.tagName) ?
-			container : dijit._editor.selection.getParentOfType(container,['P','DIV','LI']);
+			container : selectionapi.getParentOfType(container,['P','DIV','LI']);
 
 		if(!para){ return; }
 		if(para.lastChild){
 			if((para.childNodes.length > 1 && para.lastChild.nodeType == 3 && /^[\s\xAD]*$/.test(para.lastChild.nodeValue)) ||
 				para.lastChild.tagName=='BR'){
 
-				dojo.destroy(para.lastChild);
+				domConstruct.destroy(para.lastChild);
 			}
 		}
 		if(!para.childNodes.length){
@@ -588,5 +622,4 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 	}
 });
 
-return dijit._editor.plugins.EnterKeyHandling;
 });

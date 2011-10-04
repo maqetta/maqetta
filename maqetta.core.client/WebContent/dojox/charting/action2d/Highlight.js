@@ -1,25 +1,22 @@
-dojo.provide("dojox.charting.action2d.Highlight");
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/Color", "dojo/_base/connect", "dojox/color/_base", 
+		"./PlotAction", "dojo/fx/easing", "dojox/gfx/fx"], 
+	function(dojo, lang, declare, Color, hub, c, PlotAction, dfe, dgf){
 
-dojo.require("dojox.charting.action2d.Base");
-dojo.require("dojox.color");
-
-/*=====
-dojo.declare("dojox.charting.action2d.__HighlightCtorArgs", dojox.charting.action2d.__BaseCtorArgs, {
-	//	summary:
-	//		Additional arguments for highlighting actions.
-
-	//	highlight: String|dojo.Color|Function?
-	//		Either a color or a function that creates a color when highlighting happens.
-	highlight: null
-});
-=====*/
-(function(){
+	/*=====
+	dojo.declare("dojox.charting.action2d.__HighlightCtorArgs", dojox.charting.action2d.__PlotActionCtorArgs, {
+		//	summary:
+		//		Additional arguments for highlighting actions.
+	
+		//	highlight: String|dojo.Color|Function?
+		//		Either a color or a function that creates a color when highlighting happens.
+		highlight: null
+	});
+	var PlotAction = dojox.charting.action2d.PlotAction;
+	=====*/
+	
 	var DEFAULT_SATURATION  = 100,	// %
 		DEFAULT_LUMINOSITY1 = 75,	// %
 		DEFAULT_LUMINOSITY2 = 50,	// %
-
-		c = dojox.color,
-
 		cc = function(color){
 			return function(){ return color; };
 		},
@@ -43,7 +40,7 @@ dojo.declare("dojox.charting.action2d.__HighlightCtorArgs", dojox.charting.actio
 			return c.fromHsl(x);
 		};
 
-	dojo.declare("dojox.charting.action2d.Highlight", dojox.charting.action2d.Base, {
+	return declare("dojox.charting.action2d.Highlight", PlotAction, {
 		//	summary:
 		//		Creates a highlighting action on a plot, where an element on that plot
 		//		has a highlight on it.
@@ -51,7 +48,7 @@ dojo.declare("dojox.charting.action2d.__HighlightCtorArgs", dojox.charting.actio
 		// the data description block for the widget parser
 		defaultParams: {
 			duration: 400,	// duration of the action in ms
-			easing:   dojo.fx.easing.backOut	// easing for the action
+			easing:   dfe.backOut	// easing for the action
 		},
 		optionalParams: {
 			highlight: "red"	// name for the highlight color
@@ -61,14 +58,14 @@ dojo.declare("dojox.charting.action2d.__HighlightCtorArgs", dojox.charting.actio
 		constructor: function(chart, plot, kwArgs){
 			//	summary:
 			//		Create the highlighting action and connect it to the plot.
-			//	chart: dojox.charting.Chart2D
+			//	chart: dojox.charting.Chart
 			//		The chart this action belongs to.
 			//	plot: String?
 			//		The plot this action is attached to.  If not passed, "default" is assumed.
-			//	kwArgs: dojox.charting.action2d.__HighlightCtorArgs?
+			//	kwArgs: charting.action2d.__HighlightCtorArgs?
 			//		Optional keyword arguments object for setting parameters.
 			var a = kwArgs && kwArgs.highlight;
-			this.colorFun = a ? (dojo.isFunction(a) ? a : cc(a)) : hl;
+			this.colorFun = a ? (lang.isFunction(a) ? a : cc(a)) : hl;
 
 			this.connect();
 		},
@@ -92,7 +89,7 @@ dojo.declare("dojox.charting.action2d.__HighlightCtorArgs", dojox.charting.actio
 				anim.action.stop(true);
 			}else{
 				var color = o.shape.getFill();
-				if(!color || !(color instanceof dojo.Color)){
+				if(!color || !(color instanceof Color)){
 					return;
 				}
 				this.anim[runName][index] = anim = {
@@ -109,14 +106,14 @@ dojo.declare("dojox.charting.action2d.__HighlightCtorArgs", dojox.charting.actio
 				end = t;
 			}
 
-			anim.action = dojox.gfx.fx.animateFill({
+			anim.action = dgf.animateFill({
 				shape:    o.shape,
 				duration: this.duration,
 				easing:   this.easing,
 				color:    {start: start, end: end}
 			});
 			if(o.type == "onmouseout"){
-				dojo.connect(anim.action, "onEnd", this, function(){
+				hub.connect(anim.action, "onEnd", this, function(){
 					if(this.anim[runName]){
 						delete this.anim[runName][index];
 					}
@@ -125,4 +122,5 @@ dojo.declare("dojox.charting.action2d.__HighlightCtorArgs", dojox.charting.actio
 			anim.action.play();
 		}
 	});
-})();
+	
+});

@@ -45,6 +45,7 @@
 	background-position: center top;
 	background-repeat: repeat-x;
 	background-color: @button-background-color;
+	color: @text-color;
 	.border-radius(@button-border-radius);
 	.box-shadow(0 1px 1px rgba(0,0,0,0.15));
 }
@@ -109,7 +110,8 @@
 .claro .dijitButtonActive .dijitButtonNode, 
 .claro .dijitDropDownButtonActive .dijitButtonNode,
 .claro .dijitComboButtonActive .dijitButtonNode,
-.claro .dijitToggleButtonActive .dijitButtonNode {
+.claro .dijitToggleButtonActive .dijitButtonNode,
+.claro .dijitStackController .dijitToggleButtonChecked .dijitButtonNode {
 	background-color: @button-pressed-background-color;
 	.box-shadow(0 0 0 rgba(0,0,0,0));
  	.transition-duration(.1s);

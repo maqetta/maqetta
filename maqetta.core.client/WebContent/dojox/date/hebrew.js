@@ -1,11 +1,11 @@
-dojo.provide("dojox.date.hebrew");
+define(["dojo/_base/kernel", "dojo/date", "./hebrew/Date"], function(dojo, dd, hebrewDate){
 
-dojo.require("dojox.date.hebrew.Date");
-dojo.require("dojo.date"); // for compare
+dojo.getObject("date.hebrew", true, dojox);
+dojo.experimental("dojox.date.hebrew");
 	
 // Utility methods to do arithmetic calculations with hebrew.Dates
 
-	// added for compat to date
+// added for compat to date
 dojox.date.hebrew.getDaysInMonth = function(/*hebrew.Date*/month){
 	return month.getDaysInHebrewMonth(month.getMonth(), month.getFullYear());
 };
@@ -26,14 +26,14 @@ dojox.date.hebrew.compare = function(/*hebrew.Date*/dateheb1, /*hebrew.Date*/dat
 	//		Compares both "date" and "time" by default.  One of the following:
 	//		"date", "time", "datetime"
 
-	if(dateheb1 instanceof dojox.date.hebrew.Date){
+	if(dateheb1 instanceof hebrewDate){
 		dateheb1 = dateheb1.toGregorian();
 	}
-	if(dateheb2 instanceof dojox.date.hebrew.Date){
+	if(dateheb2 instanceof hebrewDate){
 		dateheb2 = dateheb2.toGregorian();
 	}
 	
-	return dojo.date.compare.apply(null, arguments);
+	return dd.compare.apply(null, arguments);
 };
 
 
@@ -50,7 +50,7 @@ dojox.date.hebrew.add = function(/*dojox.date.hebrew.Date*/date, /*String*/inter
 	//	amount:
 	//		How much to add to the date.
 
-	var newHebrDate = new dojox.date.hebrew.Date(date);
+	var newHebrDate = new hebrewDate(date);
 
 	switch(interval){
 		case "day":
@@ -81,25 +81,25 @@ dojox.date.hebrew.add = function(/*dojox.date.hebrew.Date*/date, /*String*/inter
 			newHebrDate.setDate(date.getDate() + amount);
 			break;
 		case "month":
-			var month = date.getMonth();
-			var add = month + amount;
+			var month = date.getMonth(),
+				newMonth = month + amount;
 			if(!date.isLeapYear(date.getFullYear())){
-				if(month < 5 && add >= 5){ add++;}
-				else if (month > 5 && add <= 5){ add--;}
+				if(month < 5 && newMonth >= 5){ newMonth++;}
+				else if (month > 5 && newMonth <= 5){ newMonth--;}
 			}
-			newHebrDate.setMonth(add);
+			newHebrDate.setMonth(newMonth);
 			break;
 		case "hour":
 			newHebrDate.setHours(date.getHours() + amount);
 			break;
 		case "minute":
-			newHebrDate.setMinutes(date.getMinutes() + amount);
+			newHebrDate._addMinutes(amount);
 			break;
 		case "second":
-			newHebrDate.setSeconds(date.getSeconds() + amount);
+			newHebrDate._addSeconds(amount);
 			break;
 		case "millisecond":
-			newHebrDate.setMilliseconds(date.getMilliseconds() + amount);
+			newHebrDate._addMilliseconds(amount);
 			break;
 	}
 
@@ -109,7 +109,7 @@ dojox.date.hebrew.add = function(/*dojox.date.hebrew.Date*/date, /*String*/inter
 dojox.date.hebrew.difference = function(/*dojox.date.hebrew.Date*/date1, /*dojox.date.hebrew.Date?*/date2, /*String?*/interval){
 	//	based on and similar to dojo.date.difference
 	//	summary:
-	//        date1 - date2
+	//        date2 - date1
 	//	 date2 is hebrew.Date object.  If not specified, the current hebrew.Date is used.
 	//	interval:
 	//		A string representing the interval.  One of the following:
@@ -117,9 +117,9 @@ dojox.date.hebrew.difference = function(/*dojox.date.hebrew.Date*/date1, /*dojox
 	//			"millisecond",  "week", "weekday"
 	//		Defaults to "day".
 
-	date2 = date2 || new dojox.date.hebrew.Date();
+	date2 = date2 || new hebrewDate();
 	interval = interval || "day";
-	var yearDiff = date1.getFullYear() - date2.getFullYear();
+	var yearDiff = date2.getFullYear() - date1.getFullYear();
 	var delta = 1; // Integer return value
 	switch(interval){
 		case "weekday":
@@ -133,14 +133,14 @@ dojox.date.hebrew.difference = function(/*dojox.date.hebrew.Date*/date1, /*dojox
 			}else{
 				// Weeks plus spare change (< 7 days)
 				var adj = 0;
-				var aDay = date2.getDay();
-				var bDay = date1.getDay();
+				var aDay = date1.getDay();
+				var bDay = date2.getDay();
 	
 				weeks = parseInt(days/7);
 				mod = days % 7;
 				// Mark the date advanced by the number of
 				// round weeks (may be zero)
-				var dtMark = new dojox.date.hebrew.Date(date2);
+				var dtMark = new hebrewDate(date1);
 				dtMark.setDate(dtMark.getDate()+(weeks*7));
 				var dayMark = dtMark.getDay();
 	
@@ -199,14 +199,14 @@ dojox.date.hebrew.difference = function(/*dojox.date.hebrew.Date*/date1, /*dojox
 			delta = yearDiff;
 			break;
 		case "month":
-			var startdate =  (date1.toGregorian() > date2.toGregorian()) ? date1 : date2; // more
-			var enddate = (date1.toGregorian() > date2.toGregorian()) ? date2 : date1;
+			var startdate =  (date2.toGregorian() > date1.toGregorian()) ? date2 : date1; // more
+			var enddate = (date2.toGregorian() > date1.toGregorian()) ? date1 : date2;
 			
 			var month1 = startdate.getMonth();
 			var month2 = enddate.getMonth();
 			
 			if(yearDiff == 0){
-				delta = ( !date1.isLeapYear(date1.getFullYear())  && startdate.getMonth() > 5 && enddate.getMonth() <=5) ? (startdate.getMonth() - enddate.getMonth() - 1) :
+				delta = ( !date2.isLeapYear(date2.getFullYear())  && startdate.getMonth() > 5 && enddate.getMonth() <=5) ? (startdate.getMonth() - enddate.getMonth() - 1) :
 						(startdate.getMonth() - enddate.getMonth() );
 			}else{
 				delta = (!enddate.isLeapYear(enddate.getFullYear()) &&  month2 < 6) ? (13-month2-1) : (13-month2);
@@ -217,7 +217,7 @@ dojox.date.hebrew.difference = function(/*dojox.date.hebrew.Date*/date1, /*dojox
 					delta += enddate.isLeapYear(i) ? 13 : 12;
 				}
 			}
-			if(date1.toGregorian() < date2.toGregorian()){
+			if(date2.toGregorian() < date1.toGregorian()){
 				delta = -delta;
 			}
 			break;
@@ -239,9 +239,11 @@ dojox.date.hebrew.difference = function(/*dojox.date.hebrew.Date*/date1, /*dojox
 			delta /= 1000;
 			// fallthrough
 		case "millisecond":
-			delta *= date1.toGregorian().getTime()- date2.toGregorian().getTime();
+			delta *= date2.toGregorian().getTime()- date1.toGregorian().getTime();
 	}
 
 	// Round for fractional values and DST leaps
 	return Math.round(delta); // Number (integer)
 };
+return dojox.date.hebrew;
+});

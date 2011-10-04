@@ -11,18 +11,18 @@
 		dojo.require("dijit._Widget");
 		dojo.require("dojo.parser");
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			dojo.declare("dijit.WidgetWithOndijitclick",
 				dijit._Widget,
 				{
 					clickCount: 0,
 					onClick: function(){
 					},
-					_onClick: function() {
-						console.log(this.id + ": ondijitclick");
+					_onClick: function(){
+						this.clickCount++;
 						this.onClick();
 					},
-					postCreate: function() {
+					postCreate: function(){
 						this.connect(this.domNode, "ondijitclick", "_onClick");
 					}
 				}
@@ -64,7 +64,7 @@
 	<textarea id="textarea">hello world</textarea>
 
 	<br>
-	<button id="button2" style="margin-top: 2em;" type="button"
+	<button id="plainbutton2" style="margin-top: 2em;" type="button"
 			onClick="dojo.byId('third').focus();">
 		click me using space or enter, to focus ondijitclick widget below
 	</button>
@@ -78,5 +78,10 @@
 			onClick:function(){ alert("make sure can close this alert via keyboard"); }'>
 		Manual Test: Click me using space or enter to launch a JavaScript alert() from element using ondijitclick
 	</div>
+	<br>
+	Clicking this button should produce exactly one click event to console:
+	<button id="widgetbutton" tabIndex="0" data-dojo-type="dijit.WidgetWithOndijitclick">
+		button w/ondijitclick
+	</button>
 </body>
 </html>

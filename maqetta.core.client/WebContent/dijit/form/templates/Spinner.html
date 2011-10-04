@@ -1,16 +1,16 @@
-<div class="dijit dijitReset dijitInlineTable dijitLeft"
+<div class="dijit dijitReset dijitInline dijitLeft"
 	id="widget_${id}" role="presentation"
 	><div class="dijitReset dijitButtonNode dijitSpinnerButtonContainer"
 		><input class="dijitReset dijitInputField dijitSpinnerButtonInner" type="text" tabIndex="-1" readonly="readonly" role="presentation"
 		/><div class="dijitReset dijitLeft dijitButtonNode dijitArrowButton dijitUpArrowButton"
-			dojoAttachPoint="upArrowNode"
+			data-dojo-attach-point="upArrowNode"
 			><div class="dijitArrowButtonInner"
 				><input class="dijitReset dijitInputField" value="&#9650;" type="text" tabIndex="-1" readonly="readonly" role="presentation"
 					${_buttonInputDisabled}
 			/></div
 		></div
 		><div class="dijitReset dijitLeft dijitButtonNode dijitArrowButton dijitDownArrowButton"
-			dojoAttachPoint="downArrowNode"
+			data-dojo-attach-point="downArrowNode"
 			><div class="dijitArrowButtonInner"
 				><input class="dijitReset dijitInputField" value="&#9660;" type="text" tabIndex="-1" readonly="readonly" role="presentation"
 					${_buttonInputDisabled}
@@ -21,7 +21,7 @@
 		><input class="dijitReset dijitInputField dijitValidationIcon dijitValidationInner" value="&#935;" type="text" tabIndex="-1" readonly="readonly" role="presentation"
 	/></div
 	><div class="dijitReset dijitInputField dijitInputContainer"
-		><input class='dijitReset dijitInputInner' dojoAttachPoint="textbox,focusNode" type="${type}" dojoAttachEvent="onkeypress:_onKeyPress"
+		><input class='dijitReset dijitInputInner' data-dojo-attach-point="textbox,focusNode" type="${type}" data-dojo-attach-event="onkeypress:_onKeyPress"
 			role="spinbutton" autocomplete="off" ${!nameAttrSetting}
 	/></div
 ></div>

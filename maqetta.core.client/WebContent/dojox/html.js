@@ -1,4 +1,3 @@
-dojo.provide("dojox.html");
-
-dojo.require("dojox.html._base");
-
+define(["./html/_base"], function (html) {
+	return html;
+});

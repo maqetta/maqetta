@@ -19,7 +19,7 @@ tests.register("dojox.date.tests.posix",
 			tearDown: function(){
 				//Clean up bundles that should not exist if
 				//the test is re-run.
-				delete dojo.cldr.nls.gregorian;
+//				delete dojo.cldr.nls.gregorian;
 			}
 		},
 		{

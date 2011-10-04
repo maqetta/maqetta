@@ -12,6 +12,8 @@
 
 			dojo.require("dojo.parser");
 
+			dojo.require("dijit._Widget");
+			dojo.require("dijit._Templated");
 			dojo.require("dijit.form.Button");
 			dojo.require("dijit.form.CheckBox");
 			dojo.require("dijit.ProgressBar");
@@ -20,8 +22,9 @@
 			dojo.require("dijit._Container");
 			dojo.require("dijit._Contained");
 			dojo.require("dijit.layout._LayoutWidget");
+			dojo.require("dijit.focus");	// dijit.focus()
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				var testW;
 
 				dojo.declare('Test1Widget',
@@ -59,7 +62,7 @@
 					templateString: dojo.byId('Test4Template').textContent || dojo.byId('Test4Template').innerText
 				});
 		
-				function validateTest4Widget(t, testW) {
+				function validateTest4Widget(t, testW){
 					var selectedTab = dojo.query(".dijitTabChecked", testW.domNode)[0];
 					var selectedPane = dojo.query(".dijitTabPane.dijitVisible", testW.domNode)[0];
 					var tabBox = selectedTab ? dojo.contentBox(selectedTab) : null;
@@ -193,7 +196,7 @@
 					];
 				}
 		
-				function validateTest5Widget(t, testW) {
+				function validateTest5Widget(t, testW){
 					// Check that everything got started, but not double-started
 					dojo.forEach(getTestWidgets(testW), function(w){
 						t.t(w._started, "w._started: " + w);
@@ -201,7 +204,7 @@
 					});
 				}
 		
-				function validateTest5WidgetDestroy(t, testW) {
+				function validateTest5WidgetDestroy(t, testW){
 					var savedWidgets = getTestWidgets(testW);
 					testW.destroy();
 					dojo.forEach(savedWidgets, function(w, idx){
@@ -276,13 +279,13 @@
 									testW.getDescendants();
 								console.log("*** time for getDescendants(false): " + (new Date()-start));
 ***/
-								var desc = testW.getChildren();
-								t.is(5, desc.length, "number of direct descendants");
-								t.is(desc[0].id, "3.1");
-								t.is(desc[1].id, "3.2");
-								t.is(desc[2].id, "3.3");
-								t.is(desc[3].id, "3.4");
-								t.is(desc[4].id, "3.5");
+								var chil = testW.getChildren();
+								t.is(5, chil.length, "number of direct descendants");
+								t.is(chil[0].id, "3.1");
+								t.is(chil[1].id, "3.2");
+								t.is(chil[2].id, "3.3");
+								t.is(chil[3].id, "3.4");
+								t.is(chil[4].id, "3.5");
 
 								var desc = testW.getDescendants();
 								t.is(7, desc.length, "number of descendants (including nested ones)");
@@ -370,7 +373,7 @@
 								var testW = dijit.byId("missing");
 								doh.t(testW, "widget was created");
 								doh.t(testW.missingButton, "dojoAttachPoint created");
-								doh.is("dijit.form.Button", testW.missingButton.declaredClass, "and it's to a widget")
+								doh.is("dijit.form.Button", testW.missingButton.declaredClass, "and it's to a widget");
 								doh.t(dijit.byId("missingButtonId"), "nested widget also registered by id");
 							}
 						}

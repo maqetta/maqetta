@@ -9,8 +9,7 @@
 	</style>
 
 	<!-- required: dojo.js -->
-	<script type="text/javascript" src="../../../../dojo/dojo.js"
-		djConfig="isDebug: true, parseOnLoad: true"></script>
+	<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
 	<script type="text/javascript">
 		dojo.require("dojo.window");
@@ -19,12 +18,9 @@
 		var arrowSliders = ['slider1','slider2','programaticSlider'];
 		var arrowSliderInit_min = [0.2,10,1200];
 		var arrowSliderInit_max = [99.8,90,2800];
-		var accessibleSliders = ['slider1','slider2','slider3','programaticSlider']
-		var accessibleSliderInit_min = [0.2,10,2,1200];
-		var accessibleSliderInit_max = [99.8,90,2,2800];
 		var sliderIds = ["slider1", "slider2", "slider3", "sliderH2", "programaticSlider"];
 
-		onChange = {slider1: 'slider1input', slider2: 'slider2input', programaticSlider: 'sliderProgInput'};
+		var onChange = {slider1: 'slider1input', slider2: 'slider2input', programaticSlider: 'sliderProgInput'};
 
 		var boundaryTest = function(slider, initValue, finalValue){
 			// summary:
@@ -44,16 +40,16 @@
 			doh.robot.mouseMoveAt(button, 500);
 			doh.robot.mouseClick({left: true}, 500);
 			doh.robot.sequence(d.getTestErrback(function(){
-				doh.is(finalValue, new Number(slider.get('value')).toFixed(1));
+				doh.is(Number(finalValue).toFixed(2), Number(slider.get('value')).toFixed(2));
 				if(onChange[slider.id]){
-					doh.is(finalValue, parseFloat(dojo.byId(onChange[slider.id]).value));
+					doh.is(Number(finalValue).toFixed(1), Number(parseFloat(dojo.byId(onChange[slider.id]).value)).toFixed(1));
 				}
 				doh.robot.mouseMoveAt(button, 500);
 				doh.robot.mouseClick({left: true}, 500);
 				doh.robot.sequence(d.getTestCallback(function(){
-					doh.is(finalValue, new Number(slider.get('value')).toFixed(1));
+					doh.is(Number(finalValue).toFixed(2), Number(slider.get('value')).toFixed(2));
 					if(onChange[slider.id]){
-						doh.is(finalValue, parseFloat(dojo.byId(onChange[slider.id]).value));
+						doh.is(Number(finalValue).toFixed(1), Number(parseFloat(dojo.byId(onChange[slider.id]).value)).toFixed(1));
 					}
 				}), 500);
 			}), 500);
@@ -101,11 +97,16 @@
 			}
 		};
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			doh.robot.initRobot('../test_Slider.html');
 
 			// Test initial values
 			doh.register("initial values", function initialValues(){
+				var slider = dijit.byId(arrowSliders[0]),
+					bar = slider.valueNode.parentNode,
+					barWidth = bar.offsetWidth;
+				arrowSliderInit_min[0] = 100 / (barWidth-1); // discover slider smallest non min value
+				arrowSliderInit_max[0] = 100 - arrowSliderInit_min[0]; // discover slider largest non max value
 				doh.is(10, dijit.byId("slider1").get("value"), "horizontal1");
 				doh.is(10, dijit.byId("slider2").get("value"), "vertical1");
 				doh.is(2, dijit.byId("slider3").get("value"), "horizontal2");
@@ -159,11 +160,11 @@
 				{
 					name: arrowSliders[0]+'_min',
 					slider: arrowSliders[0],
-					value: arrowSliderInit_min[0],
 					timeout: 30000,
 					runTest: function(){
 						this.slider = dijit.byId(this.slider);
-						return boundaryTest(this.slider, this.value, this.value);
+						var value = arrowSliderInit_min[0];
+						return boundaryTest(this.slider, value, value);
 					}
 				},
 				{
@@ -184,21 +185,19 @@
 				{
 					name: arrowSliders[0]+'_min',
 					slider: arrowSliders[0],
-					value: arrowSliderInit_min[0],
 					timeout: 30000,
 					runTest: function(){
 						this.slider = dijit.byId(this.slider);
-						return boundaryTest(this.slider, this.value, this.slider.minimum);
+						return boundaryTest(this.slider, arrowSliderInit_min[0], this.slider.minimum);
 					}
 				},
 				{
 					name: arrowSliders[0]+'_max',
 					slider: arrowSliders[0],
-					value: arrowSliderInit_max[0],
 					timeout: 30000,
 					runTest: function(){
 						this.slider = dijit.byId(this.slider);
-						return boundaryTest(this.slider, this.value, this.slider.maximum);
+						return boundaryTest(this.slider, arrowSliderInit_max[0], this.slider.maximum);
 					}
 				}
 			]);
@@ -226,8 +225,8 @@
 
 			doh.register("mouseWheelTest", [
 				{
-					name: accessibleSliders[1]+'_minToMax',
-					slider: accessibleSliders[1],
+					name: arrowSliders[1]+'_minToMax',
+					slider: arrowSliders[1],
 					timeout: 30000,
 					runTest: function(){
 						this.slider = dijit.byId(this.slider);
@@ -235,8 +234,8 @@
 					}
 				},
 				{
-					name: accessibleSliders[1]+'_maxToMin',
-					slider: accessibleSliders[1],
+					name: arrowSliders[1]+'_maxToMin',
+					slider: arrowSliders[1],
 					timeout: 30000,
 					runTest: function(){
 						this.slider = dijit.byId(this.slider);
@@ -307,6 +306,29 @@
 						doh.robot.sequence(d.getTestCallback(function(){
 							var value = slider.get('value');
 							doh.is(3000, value);
+						}), 1000);
+						return d;
+					}
+				}
+			]);
+
+			doh.register("drag tests", [
+				{
+					name: "horizontal",
+					timeout: 5000,
+					runTest: function(){
+						var d = new doh.Deferred();
+						var slider = dijit.byId("slider1");
+						slider.set('value', 50);
+						dojo.window.scrollIntoView(slider.domNode);
+						doh.robot.mouseMoveAt(slider.focusNode, 1, 0);
+						doh.robot.mousePress({left: true}, 500);
+						doh.robot.mouseMoveAt(slider.incrementButton, 1000, 0);
+						doh.robot.mouseRelease({left: true}, 500);
+						doh.robot.mouseMoveAt(slider.decrementButton, 1000, 0);
+						doh.robot.sequence(d.getTestCallback(function(){
+							var value = slider.get('value');
+							doh.is(value, 100, "Expected max value of 100, got "+value);
 						}), 1000);
 						return d;
 					}

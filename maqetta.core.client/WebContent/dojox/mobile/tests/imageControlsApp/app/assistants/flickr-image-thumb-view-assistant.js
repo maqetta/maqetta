@@ -1,4 +1,3 @@
-dojo.provide("FlickrImageThumbViewAssistant");
 dojo.require("dojox.mobile.app.SceneAssistant");
 
 dojo.declare("FlickrImageThumbViewAssistant", dojox.mobile.app.SceneAssistant, {
@@ -44,13 +43,13 @@ dojo.declare("FlickrImageThumbViewAssistant", dojox.mobile.app.SceneAssistant, {
 			}
 		});
 
-		this.connect(dijit.byId("btnSmall"), "onClick", function(event){
+		this.connect(dijit.byId("btnSmall"), "onClick", function(){
 			_this.setThumbSize("small");
 		});
-		this.connect(dijit.byId("btnMedium"), "onClick", function(event){
+		this.connect(dijit.byId("btnMedium"), "onClick", function(){
 			_this.setThumbSize("medium");
 		});
-		this.connect(dijit.byId("btnLarge"), "onClick", function(event){
+		this.connect(dijit.byId("btnLarge"), "onClick", function(){
 			_this.setThumbSize("large");
 		});
 
@@ -59,7 +58,7 @@ dojo.declare("FlickrImageThumbViewAssistant", dojox.mobile.app.SceneAssistant, {
 		// the thumbnails fill the horizontal space
 		// This is fairly pointless for mobile, but makes it work
 		// better in desktop browsers
-		this.connect(window, "resize", function(event){
+		this.connect(window, "resize", function(){
 			if(resizeTimer){
 				clearTimeout(resizeTimer);
 			}
@@ -137,7 +136,6 @@ dojo.declare("FlickrImageThumbViewAssistant", dojox.mobile.app.SceneAssistant, {
 
 	loadInteresting: function(){
 		console.log("loading interesting");
-		var _this = this;
 
 		var url = "http://api.flickr.com/services/rest/?method=" +
 					"flickr.interestingness.getList";
@@ -156,7 +154,6 @@ dojo.declare("FlickrImageThumbViewAssistant", dojox.mobile.app.SceneAssistant, {
 
 	loadText: function(text){
 		console.log("loading text ", text);
-		var _this = this;
 
 		var url = "http://api.flickr.com/services/rest/?method=" +
 					"flickr.photos.search";
@@ -177,7 +174,6 @@ dojo.declare("FlickrImageThumbViewAssistant", dojox.mobile.app.SceneAssistant, {
 
 	loadTags: function(text){
 		console.log("loading tags ", text);
-		var _this = this;
 
 		var url = "http://api.flickr.com/services/rest/?method=" +
 					"flickr.photos.search";

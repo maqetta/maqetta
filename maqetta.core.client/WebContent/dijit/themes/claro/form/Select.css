@@ -49,13 +49,13 @@
 }
 /* hover status */
 .claro .dijitSelectHover {
-  border: 1px solid #769dc0;
-  background-color: #e9f4fe;
+  border: 1px solid #759dc0;
+  background-color: #e5f2fe;
   background-image: url('images/textBox_back.png');
   background-repeat: repeat-x;
 }
 .claro .dijitSelectHover .dijitButtonContents {
-  border-color: #769dc0;
+  border-color: #759dc0;
 }
 .claro .dijitSelectHover .dijitArrowButton {
   background-color: #abd6ff;
@@ -65,10 +65,10 @@
 }
 /* focused status */
 .claro .dijitSelectFocused {
-  border: 1px solid #769dc0;
+  border: 1px solid #759dc0;
 }
 .claro .dijitSelectFocused .dijitButtonContents {
-  border-color: #769dc0;
+  border-color: #759dc0;
 }
 .claro .dijitSelectFocused .dijitArrowButton {
   background-color: #7dbefa;
@@ -105,5 +105,5 @@
   padding: 2px;
 }
 .claro .dijitSelectMenu .dijitMenuSeparatorTop {
-  border-bottom: 1px solid #769dc0;
+  border-bottom: 1px solid #759dc0;
 }

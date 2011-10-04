@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"clearFilterDialogTitle": "Ryd filter",
 	"filterDefDialogTitle": "Filter",
@@ -82,6 +84,8 @@
 	"trueLabel": "Sand",
 	"falseLabel": "Falsk"
 })
+//end v1.x content
+);
 
 
 

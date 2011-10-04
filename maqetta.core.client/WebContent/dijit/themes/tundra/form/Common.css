@@ -10,7 +10,7 @@
 		dijit.form.ComboBox (partial)
  ****/
 
-.tundra .dijitInputContainer INPUT,
+.tundra .dijitInputContainer input,
 .tundra .dijitTextBox {
 	margin: 0 0.1em;
 }

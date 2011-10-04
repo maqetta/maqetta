@@ -1,8 +1,6 @@
-dojo.provide("dojox.av.widget.Status");
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
+define(['dojo', 'dijit', 'dijit/_Widget', 'dijit/_TemplatedMixin'],function(dojo, dijit){
 
-dojo.declare("dojox.av.widget.Status", [dijit._Widget, dijit._Templated], {
+dojo.declare("dojox.av.widget.Status", [dijit._Widget, dijit._TemplatedMixin], {
 	// summary:
 	//		A Status widget to use with dojox.av.widget.Player
 	//
@@ -12,7 +10,7 @@ dojo.declare("dojox.av.widget.Status", [dijit._Widget, dijit._Templated], {
 	//		the playhead time on the left and the duration on the right.
 	//
 	templateString: dojo.cache("dojox.av.widget","resources/Status.html"),
-	
+
 	setMedia: function(/* Object */med){
 		// summary:
 		//		A common method to set the media in all Player widgets.
@@ -26,12 +24,12 @@ dojo.declare("dojox.av.widget.Status", [dijit._Widget, dijit._Templated], {
 		dojo.connect(this.media, "onPosition", this, function(time){
 			this.timeNode.innerHTML = this.toSeconds(time);
 		});
-		
+
 		var cons = ["onMetaData", "onPosition", "onStart", "onBuffer", "onPlay", "onPaused", "onStop", "onEnd", "onError", "onLoad"];
 		dojo.forEach(cons, function(c){
 			dojo.connect(this.media, c, this, c);
 		}, this);
-		
+
 	},
 	onMetaData: function(data){
 		this.duration = data.duration;
@@ -83,7 +81,7 @@ dojo.declare("dojox.av.widget.Status", [dijit._Widget, dijit._Templated], {
 	onLoad: function(){
 		this.setStatus("Loading...");
 	},
-	
+
 	setStatus: function(str, isError){
 		if(isError){
 			dojo.addClass(this.titleNode, "statusError");
@@ -96,7 +94,7 @@ dojo.declare("dojox.av.widget.Status", [dijit._Widget, dijit._Templated], {
 		//console.log(this.titleNode, "title:",this.title, "str:",str)
 		this.titleNode.innerHTML = '<span class="statusTitle">'+this.title+'</span> <span class="statusInfo">'+str+'</span>';
 	},
-	
+
 	toSeconds: function(time){
 		var ts = time.toString()
 
@@ -109,5 +107,8 @@ dojo.declare("dojox.av.widget.Status", [dijit._Widget, dijit._Templated], {
 		}
 		return ts;
 	}
-	
+
+});
+
+return dojox.av.widget.Status;
 });

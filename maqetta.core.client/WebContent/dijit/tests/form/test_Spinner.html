@@ -107,12 +107,12 @@
 			<p>
 			<script type="text/javascript">
 				// so robot can get to it easily
-				document.displayData=function() {
+				document.displayData=function(){
 					var f = document.getElementById("form1");
 					var s = "";
-					for (var i = 0; i < f.elements.length; i++) {
+					for(var i = 0; i < f.elements.length; i++){
 						var elem = f.elements[i];
-						if (elem.nodeName.toLowerCase() == "button" || elem.type=="submit" || elem.type=="button")  { continue; }
+						if(elem.nodeName.toLowerCase() == "button" || elem.type=="submit" || elem.type=="button")  { continue; }
 						s += elem.name + ": " + elem.value + "\n";
 					}
 					return s;

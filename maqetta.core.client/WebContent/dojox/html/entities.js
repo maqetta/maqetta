@@ -1,9 +1,9 @@
-define("dojox/html/entities", ["dojo", "dojox"], function(dojo, dojox) {
-(function(){
+define(["dojo/_base/lang"], function(lang) {
 	// dojox.html.entities.html [public] Array
 	//		Entity characters for HTML, represented as an array of
 	//		character code, entity name (minus & and ; wrapping.
 	//		The function wrapper is to fix global leking with the build tools.
+	var dhe = lang.getObject("dojox.html.entities",true);	
 	
 	var _applyEncodingMap = function(str, map){
 		// summary:
@@ -77,8 +77,8 @@ define("dojox/html/entities", ["dojo", "dojox"], function(dojo, dojox) {
 		});
 		return str;
 	};
-	
-	dojox.html.entities.html = [
+
+	dhe.html = [
 		["\u0026","amp"], ["\u0022","quot"],["\u003C","lt"], ["\u003E","gt"],
 		["\u00A0","nbsp"]
 	];
@@ -86,7 +86,7 @@ define("dojox/html/entities", ["dojo", "dojox"], function(dojo, dojox) {
 	// dojox.html.entities.latin [public] Array
 	//		Entity characters for Latin characters and similar, represented as an array of
 	//		character code, entity name (minus & and ; wrapping.
-	dojox.html.entities.latin = [
+	dhe.latin = [
 		["\u00A1","iexcl"],["\u00A2","cent"],["\u00A3","pound"],["\u20AC","euro"],
 		["\u00A4","curren"],["\u00A5","yen"],["\u00A6","brvbar"],["\u00A7","sect"],
 		["\u00A8","uml"],["\u00A9","copy"],["\u00AA","ordf"],["\u00AB","laquo"],
@@ -151,7 +151,7 @@ define("dojox/html/entities", ["dojo", "dojox"], function(dojo, dojox) {
 		["\u2030","permil"],["\u2039","lsaquo"],["\u203A","rsaquo"]
 	];
 	
-	dojox.html.entities.encode = function(str/*string*/, m /*array?*/){
+	dhe.encode = function(str/*string*/, m /*array?*/){
 		// summary:
 		//		Function to obtain an entity encoding for a specified character
 		// str:
@@ -166,8 +166,8 @@ define("dojox/html/entities", ["dojo", "dojox"], function(dojo, dojox) {
 			if(!m){
 				// Apply the basic mappings.  HTML should always come first when decoding
 				// as well.
-				str = _applyEncodingMap(str, dojox.html.entities.html);
-				str = _applyEncodingMap(str, dojox.html.entities.latin);
+				str = _applyEncodingMap(str, dhe.html);
+				str = _applyEncodingMap(str, dhe.latin);
 	
 			}else{
 				str = _applyEncodingMap(str, m);
@@ -176,7 +176,7 @@ define("dojox/html/entities", ["dojo", "dojox"], function(dojo, dojox) {
 		return str;
 	};
 	
-	dojox.html.entities.decode = function(str/*string*/, m /*array?*/){
+	dhe.decode = function(str/*string*/, m /*array?*/){
 		// summary:
 		//		Function to obtain an entity encoding for a specified character
 		// str:
@@ -191,8 +191,8 @@ define("dojox/html/entities", ["dojo", "dojox"], function(dojo, dojox) {
 			if(!m){
 				// Apply the basic mappings.  HTML should always come first when decoding
 				// as well.
-				str = _applyDecodingMap(str, dojox.html.entities.html);
-				str = _applyDecodingMap(str, dojox.html.entities.latin);
+				str = _applyDecodingMap(str, dhe.html);
+				str = _applyDecodingMap(str, dhe.latin);
 	
 			}else{
 				str = _applyDecodingMap(str, m);
@@ -200,6 +200,6 @@ define("dojox/html/entities", ["dojo", "dojox"], function(dojo, dojox) {
 		}
 		return str;
 	};
-})();
+	return dhe;
 });
 

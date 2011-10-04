@@ -1,13 +1,14 @@
-dojo.provide("dojox.charting.plot2d.StackedLines");
-
-dojo.require("dojox.charting.plot2d.Stacked");
-
-dojo.declare("dojox.charting.plot2d.StackedLines", dojox.charting.plot2d.Stacked, {
-	//	summary:
-	//		A convenience object to create a stacked line chart.
-	constructor: function(){
+define(["dojo/_base/declare", "./Stacked"], function(declare, Stacked){
+/*=====
+var Stacked = dojox.charting.plot2d.Stacked;
+=====*/
+	return declare("dojox.charting.plot2d.StackedLines", Stacked, {
 		//	summary:
-		//		Force our Stacked base to be lines only.
-		this.opt.lines = true;
-	}
+		//		A convenience object to create a stacked line chart.
+		constructor: function(){
+			//	summary:
+			//		Force our Stacked base to be lines only.
+			this.opt.lines = true;
+		}
+	});
 });

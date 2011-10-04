@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertAnchor: "ادراج نقطة التثبيت",
 	title: "خصائص نقطة التثبيت",
@@ -7,3 +9,5 @@
 	cancel: "الغاء"
 })
 
+//end v1.x content
+);

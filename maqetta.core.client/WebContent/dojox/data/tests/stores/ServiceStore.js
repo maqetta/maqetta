@@ -9,7 +9,7 @@ dojox.data.tests.stores.ServiceStore.error = function(t, d, errData){
 	//		The error callback function to be used for all of the tests.
 	d.errback(errData);
 }
-var testServices = new dojox.rpc.Service(dojo.moduleUrl("dojox.rpc.tests.resources", "test.smd"));
+var testServices = new dojox.rpc.Service(require.toUrl("dojox/rpc/tests/resources/test.smd"));
 var jsonStore = new dojox.data.ServiceStore({service:testServices.jsonRestStore});
 
 doh.register("dojox.data.tests.stores.ServiceStore",

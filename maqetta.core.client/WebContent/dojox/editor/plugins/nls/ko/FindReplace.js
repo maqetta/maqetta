@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"findLabel": "찾기:",
 	"findTooltip": "찾을 텍스트 입력",
@@ -20,3 +22,5 @@
 	"eofDialogTextFind": "찾음",
 	"eofDialogTextReplace": "대체됨"
 })
+//end v1.x content
+);

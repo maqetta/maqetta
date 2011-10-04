@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"findLabel": "查找：",
 	"findTooltip": "输入要查找的文本",
@@ -20,3 +22,5 @@
 	"eofDialogTextFind": "已找到",
 	"eofDialogTextReplace": "已替换"
 })
+//end v1.x content
+);

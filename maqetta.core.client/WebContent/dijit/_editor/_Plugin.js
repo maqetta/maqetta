@@ -1,13 +1,25 @@
-define("dijit/_editor/_Plugin", ["dojo", "dijit", "dijit/_Widget", "dijit/form/Button"], function(dojo, dijit) {
+define([
+	"dojo/_base/connect", // connect.connect
+	"dojo/_base/declare", // declare
+	"dojo/_base/lang", // lang.mixin, lang.hitch
+	"../form/Button"
+], function(connect, declare, lang, Button){
 
-dojo.declare("dijit._editor._Plugin", null, {
-	// summary
+// module:
+//		dijit/_editor/_Plugin
+// summary:
+//		Base class for a "plugin" to the editor, which is usually
+//		a single button on the Toolbar and some associated code
+
+
+var _Plugin = declare("dijit._editor._Plugin", null, {
+	// summary:
 	//		Base class for a "plugin" to the editor, which is usually
 	//		a single button on the Toolbar and some associated code
 
-	constructor: function(/*Object?*/args, /*DomNode?*/node){
+	constructor: function(/*Object?*/args){
 		this.params = args || {};
-		dojo.mixin(this, this.params);
+		lang.mixin(this, this.params);
 		this._connects=[];
 		this._attrPairNames = {};
 	},
@@ -39,7 +51,7 @@ dojo.declare("dijit._editor._Plugin", null, {
 	//		Class of widget (ex: dijit.form.Button or dijit.form.FilteringSelect)
 	//		that is added to the toolbar to control this plugin.
 	//		This is used to instantiate the button, unless `button` itself is specified directly.
-	buttonClass: dijit.form.Button,
+	buttonClass: Button,
 
 	// disabled: Boolean
 	//		Flag to indicate if this plugin has been disabled and should do nothing
@@ -65,7 +77,7 @@ dojo.declare("dijit._editor._Plugin", null, {
 				editor = this.editor,
 				className = this.iconClassPrefix+" "+this.iconClassPrefix + this.command.charAt(0).toUpperCase() + this.command.substr(1);
 			if(!this.button){
-				var props = dojo.mixin({
+				var props = lang.mixin({
 					label: label,
 					dir: editor.dir,
 					lang: editor.lang,
@@ -86,7 +98,8 @@ dojo.declare("dijit._editor._Plugin", null, {
 		// summary:
 		//		Destroy this plugin
 
-		dojo.forEach(this._connects, dojo.disconnect);
+		var h;
+		while(h = this._connects.pop()){ h.remove(); }
 		if(this.dropDown){
 			this.dropDown.destroyRecursive();
 		}
@@ -94,11 +107,11 @@ dojo.declare("dijit._editor._Plugin", null, {
 
 	connect: function(o, f, tf){
 		// summary:
-		//		Make a dojo.connect() that is automatically disconnected when this plugin is destroyed.
+		//		Make a connect.connect() that is automatically disconnected when this plugin is destroyed.
 		//		Similar to `dijit._Widget.connect`.
 		// tags:
 		//		protected
-		this._connects.push(dojo.connect(o, f, this, tf));
+		this._connects.push(connect.connect(o, f, this, tf));
 	},
 
 	updateState: function(){
@@ -154,7 +167,7 @@ dojo.declare("dijit._editor._Plugin", null, {
 		if(this.button && this.useDefaultCommand){
 			if(this.editor.queryCommandAvailable(this.command)){
 				this.connect(this.button, "onClick",
-					dojo.hitch(this.editor, "execCommand", this.command, this.commandArg)
+					lang.hitch(this.editor, "execCommand", this.command, this.commandArg)
 				);
 			}else{
 				// hide button because editor doesn't support command (due to browser limitations)
@@ -177,7 +190,7 @@ dojo.declare("dijit._editor._Plugin", null, {
 		}
 		// console.debug("adding", this.button, "to:", toolbar);
 	},
-	
+
 	set: function(/* attribute */ name, /* anything */ value){
 		// summary:
 		//		Set a property on a plugin
@@ -249,7 +262,7 @@ dojo.declare("dijit._editor._Plugin", null, {
 		this.disabled = disabled;
 		this.updateState();
 	},
-	
+
 	_getAttrNames: function(name){
 		// summary:
 		//		Helper function for get() and set().
@@ -265,14 +278,17 @@ dojo.declare("dijit._editor._Plugin", null, {
 			g: "_get"+uc+"Attr"
 		});
 	},
-	
+
 	_set: function(/*String*/ name, /*anything*/ value){
 		// summary:
 		//		Helper function to set new value for specified attribute
-		var oldValue = this[name];
 		this[name] = value;
 	}
 });
 
-return dijit._editor._Plugin;
+// Hash mapping plugin name to factory, used for registering plugins
+_Plugin.registry = {};
+
+return _Plugin;
+
 });

@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	widgetLabel: "Vérification orthographique par lots",
 	unfound: "Introuvable",
@@ -15,3 +17,5 @@
 	iMsg: "Aucune suggestion orthographique"
 })
 
+//end v1.x content
+);

@@ -1,6 +1,8 @@
-define("dojox/data/AndOrReadStore", ["dojo", "dojox", "dojo/data/util/filter", "dojo/data/util/simpleFetch", "dojo/date/stamp"], function(dojo, dojox) {
+define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/lang", "dojo/data/util/filter", "dojo/data/util/simpleFetch",
+		"dojo/_base/array", "dojo/date/stamp", "dojo/_base/json", "dojo/_base/window", "dojo/_base/xhr"], 
+  function(kernel, declare, lang, filterUtil, simpleFetch, array, dateStamp, json, winUtil, xhr) {
 
-dojo.declare("dojox.data.AndOrReadStore", null,{
+var AndOrReadStore = declare("dojox.data.AndOrReadStore", null, {
 	//	summary:
 	//		AndOrReadStore uses ItemFileReadStore as a base, modifying only the query (_fetchItems) section.
 	//		Supports queries of the form: query:"id:1* OR dept:'Sales Department' || (id:2* && NOT dept:S*)"
@@ -52,7 +54,7 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 			this._datatypeMap['Date'] = {
 											type: Date,
 											deserialize: function(value){
-												return dojo.date.stamp.fromISOString(value);
+												return dateStamp.fromISOString(value);
 											}
 										};
 		}
@@ -175,7 +177,7 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 		//		See dojo.data.api.Read.containsValue()
 		var regexp = undefined;
 		if(typeof value === "string"){
-			regexp = dojo.data.util.filter.patternToRegExp(value, false);
+			regexp = filterUtil.patternToRegExp(value, false);
 		}
 		return this._containsValue(item, attribute, value, regexp); //boolean.
 	},
@@ -200,13 +202,15 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 		//	regexp:
 		//		Optional regular expression generated off value if value was of string type to handle wildcarding.
 		//		If present and attribute values are string, then it can be used for comparison instead of 'value'
-		return dojo.some(this.getValues(item, attribute), function(possibleValue){
-			if(possibleValue !== null && !dojo.isObject(possibleValue) && regexp){
+		return array.some(this.getValues(item, attribute), function(possibleValue){
+			if(possibleValue !== null && !lang.isObject(possibleValue) && regexp){
 				if(possibleValue.toString().match(regexp)){
 					return true; // Boolean
 				}
-			}else if(value === possibleValue){
+			} else if(value === possibleValue){
 				return true; // Boolean
+			} else {
+				return false;
 			}
 		});
 	},
@@ -273,7 +277,7 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 			if(requestArgs.query){
 				//Complete copy, we may have to mess with it.
 				//Safer than clone, which does a shallow copy, I believe.
-				var query = dojo.fromJson(dojo.toJson(requestArgs.query));
+				var query = json.fromJson(json.toJson(requestArgs.query));
 				//Okay, object form query, we have to check to see if someone mixed query methods (such as using FilteringSelect
 				//with a complexQuery).  In that case, the params need to be anded to the complex query statement.
 				//See defect #7980
@@ -296,7 +300,7 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 								}
 								//Make sure strings are quoted when going into complexQuery merge.
 								var v = requestArgs.query[p];
-								if(dojo.isString(v)){
+								if(lang.isString(v)){
 									v = "'" + v + "'";
 								}
 								cq += " AND " + p + ":" + v;
@@ -312,14 +316,14 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 				//for complex queries only:  pattern = query[:|=]"NOT id:23* AND (type:'test*' OR dept:'bob') && !filed:true"
 				//logical operators are case insensitive:  , NOT AND OR ( ) ! && ||  // "," included for quoted/string legacy queries.
 				if(typeof query != "string"){
-					query = dojo.toJson(query);
+					query = json.toJson(query);
 					query = query.replace(/\\\\/g,"\\"); //counter toJson expansion of backslashes, e.g., foo\\*bar test.
 				}
 				query = query.replace(/\\"/g,"\"");   //ditto, for embedded \" in lieu of " availability.
-				var complexQuery = dojo.trim(query.replace(/{|}/g,"")); //we can handle these, too.
+				var complexQuery = lang.trim(query.replace(/{|}/g,"")); //we can handle these, too.
 				var pos2, i;
 				if(complexQuery.match(/"? *complexQuery *"?:/)){ //case where widget required a json object, so use complexQuery:'the real query'
-					complexQuery = dojo.trim(complexQuery.replace(/"?\s*complexQuery\s*"?:/,""));
+					complexQuery = lang.trim(complexQuery.replace(/"?\s*complexQuery\s*"?:/,""));
 					var quotes = ["'",'"'];
 					var pos1,colon;
 					var flag = false;
@@ -364,8 +368,8 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 							
 							//get/process/append one or two leading logical operators.
 							while(op && !err){ //look for leading logical operators.
-								complexQuery = dojo.trim(complexQuery.replace(op[0],""));
-								op = dojo.trim(op[0]).toUpperCase();
+								complexQuery = lang.trim(complexQuery.replace(op[0],""));
+								op = lang.trim(op[0]).toUpperCase();
 								//convert some logical operators to their javascript equivalents for later eval.
 								op = op == "NOT" ? "!" : op == "AND" || op == "," ? "&&" : op == "OR" ? "||" : op;
 								op = " " + op + " ";
@@ -380,8 +384,8 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 									err = true;
 									break;
 								}else{
-									key = dojo.trim(complexQuery.substring(0,pos).replace(/\"|\'/g,""));
-									complexQuery = dojo.trim(complexQuery.substring(pos + 1));
+									key = lang.trim(complexQuery.substring(0,pos).replace(/\"|\'/g,""));
+									complexQuery = lang.trim(complexQuery.substring(pos + 1));
 									tok = complexQuery.match(/^\'|^\"/);	//quoted?
 									if(tok){
 										tok = tok[0];
@@ -395,9 +399,9 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 										if(pos2 == complexQuery.length - 1){ //quote is last character
 											complexQuery = "";
 										}else{
-											complexQuery = dojo.trim(complexQuery.substring(pos2 + 1));
+											complexQuery = lang.trim(complexQuery.substring(pos2 + 1));
 										}
-										sQuery += self._containsValue(candidateItem, key, value, dojo.data.util.filter.patternToRegExp(value, ignoreCase));
+										sQuery += self._containsValue(candidateItem, key, value, filterUtil.patternToRegExp(value, ignoreCase));
 									}
 									else{ //not quoted, so a space, comma, or closing parens (or the end) will be the break.
 										tok = complexQuery.match(/\s|\)|,/);
@@ -412,13 +416,13 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 													pos = Math.min(pos,pos3[j]);
 												}
 											}
-											value = dojo.trim(complexQuery.substring(0,pos));
-											complexQuery = dojo.trim(complexQuery.substring(pos));
+											value = lang.trim(complexQuery.substring(0,pos));
+											complexQuery = lang.trim(complexQuery.substring(pos));
 										}else{ //not a space, so must be at the end of the complexQuery.
-											value = dojo.trim(complexQuery);
+											value = lang.trim(complexQuery);
 											complexQuery = "";
 										} //end  inner if(tok) else
-										sQuery += self._containsValue(candidateItem, key, value, dojo.data.util.filter.patternToRegExp(value, ignoreCase));
+										sQuery += self._containsValue(candidateItem, key, value, filterUtil.patternToRegExp(value, ignoreCase));
 									} //end outer if(tok) else
 								} //end found ":"
 							} //end if(complexQuery.length > 0)
@@ -456,7 +460,7 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 			filter(keywordArgs, this._getItemsArray(keywordArgs.queryOptions));
 		}else{
 			if(this._jsonFileUrl !== this._ccUrl){
-				dojo.deprecated("dojox.data.AndOrReadStore: ",
+				kernel.deprecated("dojox.data.AndOrReadStore: ",
 								"To change the url, set the url property of the store," +
 								" not _jsonFileUrl.  _jsonFileUrl support will be removed in 2.0");
 				this._ccUrl = this._jsonFileUrl;
@@ -483,7 +487,7 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 							handleAs: "json-comment-optional",
 							preventCache: this.urlPreventCache
 						};
-					var getHandler = dojo.xhrGet(getArgs);
+					var getHandler = xhr.get(getArgs);
 					getHandler.addCallback(function(data){
 						try{
 							self._getItemsFromLoadedData(data);
@@ -626,8 +630,8 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 			var isItem = (
 				(aValue !== null) &&
 				(typeof aValue === "object") &&
-				(!dojo.isArray(aValue)) &&
-				(!dojo.isFunction(aValue)) &&
+				(!lang.isArray(aValue)) &&
+				(!lang.isFunction(aValue)) &&
 				(aValue.constructor == Object) &&
 				(typeof aValue._reference === "undefined") &&
 				(typeof aValue._type === "undefined") &&
@@ -642,7 +646,7 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 			for(var attribute in anItem){
 				var valueForAttribute = anItem[attribute];
 				if(valueForAttribute){
-					if(dojo.isArray(valueForAttribute)){
+					if(lang.isArray(valueForAttribute)){
 						var valueArray = valueForAttribute;
 						for(var k = 0; k < valueArray.length; ++k){
 							var singleValue = valueArray[k];
@@ -694,7 +698,7 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 				if(key !== this._rootItemPropName){
 					var value = item[key];
 					if(value !== null){
-						if(!dojo.isArray(value)){
+						if(!lang.isArray(value)){
 							item[key] = [value];
 						}
 					}else{
@@ -780,9 +784,9 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 							var mappingObj = this._datatypeMap[type]; // examples: Date, dojo.Color, foo.math.ComplexNumber, {type: dojo.Color, deserialize(value){ return new dojo.Color(value)}}
 							if(!mappingObj){
 								throw new Error("dojox.data.AndOrReadStore: in the typeMap constructor arg, no object class was specified for the datatype '" + type + "'");
-							}else if(dojo.isFunction(mappingObj)){
+							}else if(lang.isFunction(mappingObj)){
 								arrayOfValues[j] = new mappingObj(value._value);
-							}else if(dojo.isFunction(mappingObj.deserialize)){
+							}else if(lang.isFunction(mappingObj.deserialize)){
 								arrayOfValues[j] = mappingObj.deserialize(value._value);
 							}else{
 								throw new Error("dojox.data.AndOrReadStore: Value provided in typeMap was neither a constructor, nor a an object with a deserialize function");
@@ -790,7 +794,7 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 						}
 						if(value._reference){
 							var referenceDescription = value._reference; // example: {name:'Miss Piggy'}
-							if(!dojo.isObject(referenceDescription)){
+							if(!lang.isObject(referenceDescription)){
 								// example: 'Miss Piggy'
 								// from an item like: { name:['Kermit'], friends:[{_reference:'Miss Piggy'}]}
 								arrayOfValues[j] = this._getItemByIdentity(referenceDescription);
@@ -868,7 +872,7 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 		if(!this._loadFinished){
 			var self = this;
 			if(this._jsonFileUrl !== this._ccUrl){
-				dojo.deprecated("dojox.data.AndOrReadStore: ",
+				kernel.deprecated("dojox.data.AndOrReadStore: ",
 								"To change the url, set the url property of the store," +
 								" not _jsonFileUrl.  _jsonFileUrl support will be removed in 2.0");
 				this._ccUrl = this._jsonFileUrl;
@@ -893,9 +897,9 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 							handleAs: "json-comment-optional",
 							preventCache: this.urlPreventCache
 					};
-					var getHandler = dojo.xhrGet(getArgs);
+					var getHandler = xhr.get(getArgs);
 					getHandler.addCallback(function(data){
-						var scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
+						var scope = keywordArgs.scope?keywordArgs.scope:winUtil.global;
 						try{
 							self._getItemsFromLoadedData(data);
 							self._loadFinished = true;
@@ -915,7 +919,7 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 					getHandler.addErrback(function(error){
 						self._loadInProgress = false;
 						if(keywordArgs.onError){
-							var scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
+							var scope = keywordArgs.scope?keywordArgs.scope:winUtil.global;
 							keywordArgs.onError.call(scope, error);
 						}
 					});
@@ -928,7 +932,7 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 				self._loadFinished = true;
 				var item = self._getItemByIdentity(keywordArgs.identity);
 				if(keywordArgs.onItem){
-					var scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
+					var scope = keywordArgs.scope?keywordArgs.scope:winUtil.global;
 					keywordArgs.onItem.call(scope, item);
 				}
 			}
@@ -936,7 +940,7 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 			// Already loaded.  We can just look it up and call back.
 			var item = this._getItemByIdentity(keywordArgs.identity);
 			if(keywordArgs.onItem){
-				var scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
+				var scope = keywordArgs.scope?keywordArgs.scope:winUtil.global;
 				keywordArgs.onItem.call(scope, item);
 			}
 		}
@@ -979,7 +983,7 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 		//		for specific functions to work properly.
 		var self = this;
 		if(this._jsonFileUrl !== this._ccUrl){
-			dojo.deprecated("dojox.data.AndOrReadStore: ",
+			kernel.deprecated("dojox.data.AndOrReadStore: ",
 							"To change the url, set the url property of the store," +
 							" not _jsonFileUrl.  _jsonFileUrl support will be removed in 2.0");
 			this._ccUrl = this._jsonFileUrl;
@@ -1000,7 +1004,7 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 					preventCache: this.urlPreventCache,
 					sync: true
 				};
-			var getHandler = dojo.xhrGet(getArgs);
+			var getHandler = xhr.get(getArgs);
 			getHandler.addCallback(function(data){
 				try{
 					//Check to be sure there wasn't another load going on concurrently
@@ -1034,9 +1038,9 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 	}
 });
 //Mix in the simple fetch implementation to this class.
-dojo.extend(dojox.data.AndOrReadStore,dojo.data.util.simpleFetch);
+lang.extend(AndOrReadStore, simpleFetch);
 
-return dojox.data.AndOrReadStore;
+return AndOrReadStore;
 });
 
 

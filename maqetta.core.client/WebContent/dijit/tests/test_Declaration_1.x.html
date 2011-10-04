@@ -26,7 +26,7 @@
 		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
 		dojo.require("doh.runner");
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			doh.register("dijit.Declaration_1.x", [
 				function parse(){
 					// run parser inside of DOH so we can tell if there are any exceptions

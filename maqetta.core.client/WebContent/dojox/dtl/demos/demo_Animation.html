@@ -3,10 +3,10 @@
 		<title>Testing dojox.dtl using animation to change attributes</title>
 		<script src="../../../dojo/dojo.js" djConfig="parseOnLoad: true, usePlainJson: true"></script>
 		<script>
-			dojo.require("dijit._Widget");
+			dojo.require("dijit._WidgetBase");
 			dojo.require("dojox.dtl._DomTemplated");
 
-			dojo.declare("demo.Animation", [dijit._Widget, dojox.dtl._DomTemplated],
+			dojo.declare("demo.Animation", [dijit._WidgetBase, dojox.dtl._DomTemplated],
 			{
 				buffer: 0, // Note: Sensitivity is 0 by default, but this is to emphasize we're not doing any buffering
 				templateString: dojo.cache("dojox.dtl.demos.templates", "animation.html"),

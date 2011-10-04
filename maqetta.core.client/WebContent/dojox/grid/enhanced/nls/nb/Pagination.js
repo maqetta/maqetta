@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} av ${1} ${0}",
 	"firstTip": "Første side",
@@ -13,6 +15,9 @@
 	"dialogIndication": "Oppgi sidetallet",
 	"pageCountIndication": " (${0} sider)",
 	"dialogConfirm": "Utfør",
-	"dialogCancel": "Avbryt"
+	"dialogCancel": "Avbryt",
+	"all": "alle"
 })
+//end v1.x content
+);
 

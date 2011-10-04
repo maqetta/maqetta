@@ -1,25 +1,35 @@
-dojo.provide("dojox.grid._Grid");
+define([
+	"dojo/_base/kernel",
+	"../main",
+	"dojo/_base/declare",
+	"./_Events",
+	"./_Scroller",
+	"./_Layout",
+	"./_View",
+	"./_ViewManager",
+	"./_RowManager",
+	"./_FocusManager",
+	"./_EditManager",
+	"./Selection",
+	"./_RowSelector",
+	"./util",
+	"dijit/_Widget",
+	"dijit/_TemplatedMixin",
+	"dijit/CheckedMenuItem",
+	"dojo/text!./resources/_Grid.html",
+	"dojo/string",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/_base/sniff",
+	"dojox/html/metrics",
+	"dojo/_base/html",
+	"dojo/query",
+	"dojo/dnd/common",
+	"dojo/i18n!dijit/nls/loading"
+], function(dojo, dojox, declare, _Events, _Scroller, _Layout, _View, _ViewManager,
+	_RowManager, _FocusManager, _EditManager, Selection, _RowSelector, util, _Widget,
+	 _TemplatedMixin, CheckedMenuItem, template, string, array, lang, has, metrics, html, query){
 
-dojo.require("dijit.dijit");
-dojo.require("dijit.Menu");
-
-dojo.require("dojox.html.metrics");
-dojo.require("dojox.grid.util");
-dojo.require("dojox.grid._Scroller");
-dojo.require("dojox.grid._Layout");
-dojo.require("dojox.grid._View");
-dojo.require("dojox.grid._ViewManager");
-dojo.require("dojox.grid._RowManager");
-dojo.require("dojox.grid._FocusManager");
-dojo.require("dojox.grid._EditManager");
-dojo.require("dojox.grid.Selection");
-dojo.require("dojox.grid._RowSelector");
-dojo.require("dojox.grid._Events");
-
-
-dojo.requireLocalization("dijit", "loading");
-
-(function(){
 	// NOTE: this is for backwards compatibility with Dojo 1.3
 	if(!dojo.isCopyKey){
 		dojo.isCopyKey = dojo.dnd.getCopyKeyState;
@@ -141,8 +151,8 @@ dojo.requireLocalization("dijit", "loading");
 	}
 	=====*/
 
-	dojo.declare('dojox.grid._Grid',
-		[ dijit._Widget, dijit._Templated, dojox.grid._Events ],
+	var _Grid = declare('dojox.grid._Grid',
+		[ _Widget, _TemplatedMixin, _Events ],
 		{
 		// summary:
 		// 		A grid widget with virtual scrolling, cell editing, complex rows,
@@ -181,7 +191,7 @@ dojo.requireLocalization("dijit", "loading");
 		//	|		structure="structure"
 		//	|		dojoType="dojox.grid._Grid"></div>
 
-		templatePath: dojo.moduleUrl("dojox.grid","resources/_Grid.html"),
+		templateString: template,
 
 		// classTag: String
 		// 		CSS class applied to the grid's domNode
@@ -324,7 +334,7 @@ dojo.requireLocalization("dijit", "loading");
 
 		// _layoutClass: Object
 		//	The class to use for our layout - can be overridden by grid subclasses
-		_layoutClass: dojox.grid._Layout,
+		_layoutClass: _Layout,
 
 		// initialization
 		buildRendering: function(){
@@ -343,24 +353,24 @@ dojo.requireLocalization("dijit", "loading");
 			this.connect(this.selection, "onDeselected", "onDeselected");
 			this.connect(this.selection, "onChanged", "onSelectionChanged");
 
-			dojox.html.metrics.initOnFontResize();
-			this.connect(dojox.html.metrics, "onFontResize", "textSizeChanged");
-			dojox.grid.util.funnelEvents(this.domNode, this, 'doKeyEvent', dojox.grid.util.keyEvents);
+			metrics.initOnFontResize();
+			this.connect(metrics, "onFontResize", "textSizeChanged");
+			util.funnelEvents(this.domNode, this, 'doKeyEvent', util.keyEvents);
 			if (this.selectionMode != "none") {
-				dojo.attr(this.domNode, "aria-multiselectable", this.selectionMode == "single" ? "false" : "true");
+				this.domNode.setAttribute("aria-multiselectable", this.selectionMode == "single" ? "false" : "true");
 			}
 
-			dojo.addClass(this.domNode, this.classTag);
+			html.addClass(this.domNode, this.classTag);
 			if(!this.isLeftToRight()){
-				dojo.addClass(this.domNode, this.classTag+"Rtl");
+				html.addClass(this.domNode, this.classTag+"Rtl");
 			}
 		},
 		
 		postMixInProperties: function(){
 			this.inherited(arguments);
 			var messages = dojo.i18n.getLocalization("dijit", "loading", this.lang);
-			this.loadingMessage = dojo.string.substitute(this.loadingMessage, messages);
-			this.errorMessage = dojo.string.substitute(this.errorMessage, messages);
+			this.loadingMessage = string.substitute(this.loadingMessage, messages);
+			this.errorMessage = string.substitute(this.errorMessage, messages);
 			if(this.srcNodeRef && this.srcNodeRef.style.height){
 				this.height = this.srcNodeRef.style.height;
 			}
@@ -380,7 +390,7 @@ dojo.requireLocalization("dijit", "loading");
 			}
 			if (this.domNode && !this.editable){
 				// default value for aria-readonly is false, set to true if grid is not editable
-				dojo.attr(this.domNode,"aria-readonly", "true");
+				html.attr(this.domNode,"aria-readonly", "true");
 			}
 		},
 
@@ -391,20 +401,19 @@ dojo.requireLocalization("dijit", "loading");
 			// Fixes IE domNode leak
 			delete this._click;
 
-			this.edit.destroy();
-			delete this.edit;
-
-			this.views.destroyViews();
 			if(this.scroller){
 				this.scroller.destroy();
 				delete this.scroller;
 			}
+			this.edit.destroy();
+			delete this.edit;
+			this.views.destroyViews();
 			if(this.focus){
 				this.focus.destroy();
 				delete this.focus;
 			}
 			if(this.headerMenu&&this._placeholders.length){
-				dojo.forEach(this._placeholders, function(p){ p.unReplace(true); });
+				array.forEach(this._placeholders, function(p){ p.unReplace(true); });
 				this.headerMenu.unBindDomNode(this.viewsHeaderNode);
 			}
 			this.inherited(arguments);
@@ -466,26 +475,26 @@ dojo.requireLocalization("dijit", "loading");
 			//		create grid managers for various tasks including rows, focus, selection, editing
 
 			// row manager
-			this.rows = new dojox.grid._RowManager(this);
+			this.rows = new _RowManager(this);
 			// focus manager
-			this.focus = new dojox.grid._FocusManager(this);
+			this.focus = new _FocusManager(this);
 			// edit manager
-			this.edit = new dojox.grid._EditManager(this);
+			this.edit = new _EditManager(this);
 		},
 
 		createSelection: function(){
 			// summary:	Creates a new Grid selection manager.
 
 			// selection manager
-			this.selection = new dojox.grid.Selection(this);
+			this.selection = new Selection(this);
 		},
 
 		createScroller: function(){
 			// summary: Creates a new virtual scroller
-			this.scroller = new dojox.grid._Scroller();
+			this.scroller = new _Scroller();
 			this.scroller.grid = this;
-			this.scroller.renderRow = dojo.hitch(this, "renderRow");
-			this.scroller.removeRow = dojo.hitch(this, "rowRemoved");
+			this.scroller.renderRow = lang.hitch(this, "renderRow");
+			this.scroller.removeRow = lang.hitch(this, "rowRemoved");
 		},
 
 		createLayout: function(){
@@ -504,17 +513,17 @@ dojo.requireLocalization("dijit", "loading");
 
 		// views
 		createViews: function(){
-			this.views = new dojox.grid._ViewManager(this);
-			this.views.createView = dojo.hitch(this, "createView");
+			this.views = new _ViewManager(this);
+			this.views.createView = lang.hitch(this, "createView");
 		},
 
 		createView: function(inClass, idx){
-			var c = dojo.getObject(inClass);
+			var c = lang.getObject(inClass);
 			var view = new c({ grid: this, index: idx });
 			this.viewsNode.appendChild(view.domNode);
 			this.viewsHeaderNode.appendChild(view.headerNode);
 			this.views.addView(view);
-			dojo.attr(this.domNode, "align", dojo._isBodyLtr() ? 'left' : 'right');
+			html.attr(this.domNode, "align", this.isLeftToRight() ? 'left' : 'right');
 			return view;
 		},
 
@@ -527,9 +536,9 @@ dojo.requireLocalization("dijit", "loading");
 
 		_setStructureAttr: function(structure){
 			var s = structure;
-			if(s && dojo.isString(s)){
+			if(s && lang.isString(s)){
 				dojo.deprecated("dojox.grid._Grid.set('structure', 'objVar')", "use dojox.grid._Grid.set('structure', objVar) instead", "2.0");
-				s=dojo.getObject(s);
+				s=lang.getObject(s);
 			}
 			this.structure = s;
 			if(!s){
@@ -557,11 +566,12 @@ dojo.requireLocalization("dijit", "loading");
 		getColumnTogglingItems: function(){
 			// Summary: returns an array of dijit.CheckedMenuItem widgets that can be
 			//		added to a menu for toggling columns on and off.
-			return dojo.map(this.layout.cells, function(cell){
+			var items, checkedItems = [];
+			items = array.map(this.layout.cells, function(cell){
 				if(!cell.menuItems){ cell.menuItems = []; }
 
 				var self = this;
-				var item = new dijit.CheckedMenuItem({
+				var item = new CheckedMenuItem({
 					label: cell.name,
 					checked: !cell.hidden,
 					_gridCell: cell,
@@ -569,40 +579,47 @@ dojo.requireLocalization("dijit", "loading");
 						if(self.layout.setColumnVisibility(this._gridCell.index, checked)){
 							var items = this._gridCell.menuItems;
 							if(items.length > 1){
-								dojo.forEach(items, function(item){
+								array.forEach(items, function(item){
 									if(item !== this){
 										item.setAttribute("checked", checked);
 									}
 								}, this);
 							}
-							checked = dojo.filter(self.layout.cells, function(c){
+							checked = array.filter(self.layout.cells, function(c){
 								if(c.menuItems.length > 1){
-									dojo.forEach(c.menuItems, "item.set('disabled', false);");
+									array.forEach(c.menuItems, "item.set('disabled', false);");
 								}else{
 									c.menuItems[0].set('disabled', false);
 								}
 								return !c.hidden;
 							});
 							if(checked.length == 1){
-								dojo.forEach(checked[0].menuItems, "item.set('disabled', true);");
+								array.forEach(checked[0].menuItems, "item.set('disabled', true);");
 							}
 						}
 					},
 					destroy: function(){
-						var index = dojo.indexOf(this._gridCell.menuItems, this);
+						var index = array.indexOf(this._gridCell.menuItems, this);
 						this._gridCell.menuItems.splice(index, 1);
 						delete this._gridCell;
-						dijit.CheckedMenuItem.prototype.destroy.apply(this, arguments);
+						CheckedMenuItem.prototype.destroy.apply(this, arguments);
 					}
 				});
 				cell.menuItems.push(item);
+				if(!cell.hidden) {
+					checkedItems.push(item);
+				}
 				return item;
 			}, this); // dijit.CheckedMenuItem[]
+			if(checkedItems.length == 1) {
+				checkedItems[0].set('disabled', true);
+			}
+			return items;
 		},
 
 		_setHeaderMenuAttr: function(menu){
 			if(this._placeholders && this._placeholders.length){
-				dojo.forEach(this._placeholders, function(p){
+				array.forEach(this._placeholders, function(p){
 					p.unReplace(true);
 				});
 				this._placeholders = [];
@@ -626,7 +643,7 @@ dojo.requireLocalization("dijit", "loading");
 		
 		setupHeaderMenu: function(){
 			if(this._placeholders && this._placeholders.length){
-				dojo.forEach(this._placeholders, function(p){
+				array.forEach(this._placeholders, function(p){
 					if(p._replaced){
 						p.unReplace(true);
 					}
@@ -679,7 +696,7 @@ dojo.requireLocalization("dijit", "loading");
 		},
 
 		_getPadBorder: function() {
-			this._padBorder = this._padBorder || dojo._getPadBorderExtents(this.domNode);
+			this._padBorder = this._padBorder || html._getPadBorderExtents(this.domNode);
 			return this._padBorder;
 		},
 
@@ -727,18 +744,18 @@ dojo.requireLocalization("dijit", "loading");
 			if(resultSize){
 				changeSize = resultSize;
 			}
-			if(changeSize){
-				dojo.marginBox(this.domNode, changeSize);
+			if(!this._autoHeight && changeSize){
+				html.marginBox(this.domNode, changeSize);
 				this.height = this.domNode.style.height;
 				delete this.fitTo;
 			}else if(this.fitTo == "parent"){
-				h = this._parentContentBoxHeight = this._parentContentBoxHeight || dojo._getContentBox(pn).h;
+				h = this._parentContentBoxHeight = this._parentContentBoxHeight || html._getContentBox(pn).h;
 				this.domNode.style.height = Math.max(0, h) + "px";
 			}
 			
-			var hasFlex = dojo.some(this.views.views, function(v){ return v.flexCells; });
+			var hasFlex = array.some(this.views.views, function(v){ return v.flexCells; });
 
-			if(!this._autoHeight && (h || dojo._getContentBox(this.domNode).h) === 0){
+			if(!this._autoHeight && (h || html._getContentBox(this.domNode).h) === 0){
 				// We need to hide the header, since the Grid is essentially hidden.
 				this.viewsHeaderNode.style.display = "none";
 			}else{
@@ -783,13 +800,13 @@ dojo.requireLocalization("dijit", "loading");
 			this.views.onEach('adaptHeight');
 			if(!this._autoHeight){
 				var numScroll = 0, numNoScroll = 0;
-				var noScrolls = dojo.filter(this.views.views, function(v){
+				var noScrolls = array.filter(this.views.views, function(v){
 					var has = v.hasHScrollbar();
 					if(has){ numScroll++; }else{ numNoScroll++; }
 					return (!has);
 				});
 				if(numScroll > 0 && numNoScroll > 0){
-					dojo.forEach(noScrolls, function(v){
+					array.forEach(noScrolls, function(v){
 						v.adaptHeight(true);
 					});
 				}
@@ -847,7 +864,7 @@ dojo.requireLocalization("dijit", "loading");
 			this.postresize();
 			this.focus.initFocusView();
 			// make rows unselectable
-			dojo.setSelectable(this.domNode, this.selectable);
+			html.setSelectable(this.domNode, this.selectable);
 		},
 
 		postresize: function(){
@@ -985,11 +1002,11 @@ dojo.requireLocalization("dijit", "loading");
 		getRowNode: function(inRowIndex){
 			// summary:
 			//		find the rowNode that is not a rowSelector
-			if (this.focus.focusView && !(this.focus.focusView instanceof dojox.grid._RowSelector)){
+			if (this.focus.focusView && !(this.focus.focusView instanceof _RowSelector)){
 					return this.focus.focusView.rowNodes[inRowIndex];
 			}else{ // search through views
 				for (var i = 0, cView; (cView = this.views.views[i]); i++) {
-					if (!(cView instanceof dojox.grid._RowSelector)) {
+					if (!(cView instanceof _RowSelector)) {
 						return cView.rowNodes[inRowIndex];
 					}
 				}
@@ -1016,7 +1033,7 @@ dojo.requireLocalization("dijit", "loading");
 
 		// scrollRedrawThreshold: int
 		//	pixel distance a user must scroll vertically to trigger grid scrolling.
-		scrollRedrawThreshold: (dojo.isIE ? 100 : 50),
+		scrollRedrawThreshold: (has('ie') ? 100 : 50),
 
 		// scroll methods
 		scrollTo: function(inTop){
@@ -1264,10 +1281,9 @@ dojo.requireLocalization("dijit", "loading");
 
 	});
 
-	dojox.grid._Grid.markupFactory = function(props, node, ctor, cellFunc){
-		var d = dojo;
+	_Grid.markupFactory = function(props, node, ctor, cellFunc){
 		var widthFromAttr = function(n){
-			var w = d.attr(n, "width")||"auto";
+			var w = html.attr(n, "width")||"auto";
 			if((w != "auto")&&(w.slice(-2) != "em")&&(w.slice(-1) != "%")){
 				w = parseInt(w, 10)+"px";
 			}
@@ -1280,14 +1296,14 @@ dojo.requireLocalization("dijit", "loading");
 			node.nodeName.toLowerCase() == "table"){
 
 			// try to discover a structure
-			props.structure = d.query("> colgroup", node).map(function(cg){
-				var sv = d.attr(cg, "span");
+			props.structure = query("> colgroup", node).map(function(cg){
+				var sv = html.attr(cg, "span");
 				var v = {
-					noscroll: (d.attr(cg, "noscroll") == "true") ? true : false,
+					noscroll: (html.attr(cg, "noscroll") == "true") ? true : false,
 					__span: (!!sv ? parseInt(sv, 10) : 1),
 					cells: []
 				};
-				if(d.hasAttr(cg, "width")){
+				if(html.hasAttr(cg, "width")){
 					v.width = widthFromAttr(cg);
 				}
 				return v; // for vendetta
@@ -1301,12 +1317,12 @@ dojo.requireLocalization("dijit", "loading");
 			// check to see if we're gonna have more than one view
 
 			// for each tr in our th, create a row of cells
-			d.query("thead > tr", node).forEach(function(tr, tr_idx){
+			query("thead > tr", node).forEach(function(tr, tr_idx){
 				var cellCount = 0;
 				var viewIdx = 0;
 				var lastViewIdx;
 				var cView = null;
-				d.query("> th", tr).map(function(th){
+				query("> th", tr).map(function(th){
 					// what view will this cell go into?
 
 					// NOTE:
@@ -1329,31 +1345,31 @@ dojo.requireLocalization("dijit", "loading");
 
 					// actually define the cell from what markup hands us
 					var cell = {
-						name: d.trim(d.attr(th, "name")||th.innerHTML),
-						colSpan: parseInt(d.attr(th, "colspan")||1, 10),
-						type: d.trim(d.attr(th, "cellType")||""),
-						id: d.trim(d.attr(th,"id")||"")
+						name: lang.trim(html.attr(th, "name")||th.innerHTML),
+						colSpan: parseInt(html.attr(th, "colspan")||1, 10),
+						type: lang.trim(html.attr(th, "cellType")||""),
+						id: lang.trim(html.attr(th,"id")||"")
 					};
 					cellCount += cell.colSpan;
-					var rowSpan = d.attr(th, "rowspan");
+					var rowSpan = html.attr(th, "rowspan");
 					if(rowSpan){
 						cell.rowSpan = rowSpan;
 					}
-					if(d.hasAttr(th, "width")){
+					if(html.hasAttr(th, "width")){
 						cell.width = widthFromAttr(th);
 					}
-					if(d.hasAttr(th, "relWidth")){
-						cell.relWidth = window.parseInt(dojo.attr(th, "relWidth"), 10);
+					if(html.hasAttr(th, "relWidth")){
+						cell.relWidth = window.parseInt(html.attr(th, "relWidth"), 10);
 					}
-					if(d.hasAttr(th, "hidden")){
-						cell.hidden = (d.attr(th, "hidden") == "true" || d.attr(th, "hidden") === true/*always boolean true in Chrome*/);
+					if(html.hasAttr(th, "hidden")){
+						cell.hidden = (html.attr(th, "hidden") == "true" || html.attr(th, "hidden") === true/*always boolean true in Chrome*/);
 					}
 
 					if(cellFunc){
 						cellFunc(th, cell);
 					}
 
-					cell.type = cell.type ? dojo.getObject(cell.type) : dojox.grid.cells.Cell;
+					cell.type = cell.type ? lang.getObject(cell.type) : dojox.grid.cells.Cell;
 
 					if(cell.type && cell.type.markupFactory){
 						cell.type.markupFactory(th, cell);
@@ -1369,4 +1385,7 @@ dojo.requireLocalization("dijit", "loading");
 
 		return new ctor(props, node);
 	};
-})();
+
+	return _Grid;
+
+});

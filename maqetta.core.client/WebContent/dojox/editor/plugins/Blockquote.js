@@ -1,4 +1,16 @@
-define("dojox/editor/plugins/Blockquote", ["dojo", "dijit", "dojox", "dijit/_editor/_Plugin", "dijit/form/Button", "dojo/i18n", "i18n!dojox/editor/plugins/nls/Blockquote"], function(dojo, dijit, dojox) {
+define([
+	"dojo",
+	"dijit",
+	"dojox",
+	"dijit/_editor/range",
+	"dijit/_editor/selection",
+	"dijit/_editor/_Plugin",
+	"dijit/form/ToggleButton",
+	"dojo/_base/connect",
+	"dojo/_base/declare",
+	"dojo/i18n",
+	"dojo/i18n!dojox/editor/plugins/nls/Blockquote"
+], function(dojo, dijit, dojox) {
 
 dojo.declare("dojox.editor.plugins.Blockquote",dijit._editor._Plugin,{
 	//	summary:

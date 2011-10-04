@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"clearFilterDialogTitle": "Szűrő törlése",
 	"filterDefDialogTitle": "Szűrő",
@@ -82,6 +84,8 @@
 	"trueLabel": "Igaz",
 	"falseLabel": "Hamis"
 })
+//end v1.x content
+);
 
 
 

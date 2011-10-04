@@ -1,4 +1,4 @@
-define("dojox/data/AtomReadStore", ["dojo", "dojox", "dojo/data/util/filter", "dojo/data/util/simpleFetch", "dojo/date/stamp"], function(dojo, dojox) {
+define(["dojo", "dojox", "dojo/data/util/filter", "dojo/data/util/simpleFetch", "dojo/date/stamp"], function(dojo, dojox) {
 dojo.experimental("dojox.data.AtomReadStore");
 
 dojo.declare("dojox.data.AtomReadStore", null, {

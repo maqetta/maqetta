@@ -1,127 +1,121 @@
-dojo.provide("dojox.charting.axis2d.Default");
+define(["dojo/_base/lang", "dojo/_base/array","dojo/_base/sniff", "dojo/_base/declare", 
+	"dojo/_base/connect", "dojo/_base/html", "dojo/dom-geometry", "./Invisible", 
+	"../scaler/common", "../scaler/linear", "./common", "dojox/gfx", "dojox/lang/utils"], 
+	function(lang, arr, has, declare, connect, html, domGeom, Invisible, scommon, 
+			lin, acommon, g, du){
 
-dojo.require("dojox.charting.axis2d.Invisible");
+	/*=====
+		dojox.charting.axis2d.__AxisCtorArgs = function(
+			vertical, fixUpper, fixLower, natural, leftBottom,
+			includeZero, fixed, majorLabels, minorTicks, minorLabels, microTicks, htmlLabels,
+			min, max, from, to, majorTickStep, minorTickStep, microTickStep,
+			labels, labelFunc, maxLabelSize,
+			stroke, majorTick, minorTick, microTick, tick,
+			font, fontColor
+		){
+		//	summary:
+		//		Optional arguments used in the definition of an axis.
+		//
+		//	vertical: Boolean?
+		//		A flag that says whether an axis is vertical (i.e. y axis) or horizontal. Default is false (horizontal).
+		//	fixUpper: String?
+		//		Align the greatest value on the axis with the specified tick level. Options are "major", "minor", "micro", or "none".  Defaults to "none".
+		//	fixLower: String?
+		//		Align the smallest value on the axis with the specified tick level. Options are "major", "minor", "micro", or "none".  Defaults to "none".
+		//	natural: Boolean?
+		//		Ensure tick marks are made on "natural" numbers. Defaults to false.
+		//	leftBottom: Boolean?
+		//		The position of a vertical axis; if true, will be placed against the left-bottom corner of the chart.  Defaults to true.
+		//	includeZero: Boolean?
+		//		Include 0 on the axis rendering.  Default is false.
+		//	fixed: Boolean?
+		//		Force all axis labels to be fixed numbers.  Default is true.
+		//	majorLabels: Boolean?
+		//		Flag to draw all labels at major ticks. Default is true.
+		//	minorTicks: Boolean?
+		//		Flag to draw minor ticks on an axis.  Default is true.
+		//	minorLabels: Boolean?
+		//		Flag to draw labels on minor ticks. Default is true.
+		//	microTicks: Boolean?
+		//		Flag to draw micro ticks on an axis. Default is false.
+		//	htmlLabels: Boolean?
+		//		Flag to use HTML (as opposed to the native vector graphics engine) to draw labels. Default is true.
+		//	min: Number?
+		//		The smallest value on an axis. Default is 0.
+		//	max: Number?
+		//		The largest value on an axis. Default is 1.
+		//	from: Number?
+		//		Force the chart to render data visible from this value. Default is 0.
+		//	to: Number?
+		//		Force the chart to render data visible to this value. Default is 1.
+		//	majorTickStep: Number?
+		//		The amount to skip before a major tick is drawn.  Default is 4.
+		//	minorTickStep: Number?
+		//		The amount to skip before a minor tick is drawn. Default is 2.
+		//	microTickStep: Number?
+		//		The amount to skip before a micro tick is drawn. Default is 1.
+		//	labels: Object[]?
+		//		An array of labels for major ticks, with corresponding numeric values, ordered by value.
+		//	labelFunc: Function?
+		//		An optional function used to compute label values.
+		//	maxLabelSize: Number?
+		//		The maximum size, in pixels, for a label.  To be used with the optional label function.
+		//	stroke: dojox.gfx.Stroke?
+		//		An optional stroke to be used for drawing an axis.
+		//	majorTick: Object?
+		//		An object containing a dojox.gfx.Stroke, and a length (number) for a major tick.
+		//	minorTick: Object?
+		//		An object containing a dojox.gfx.Stroke, and a length (number) for a minor tick.
+		//	microTick: Object?
+		//		An object containing a dojox.gfx.Stroke, and a length (number) for a micro tick.
+		//	tick: Object?
+		//		An object containing a dojox.gfx.Stroke, and a length (number) for a tick.
+		//	font: String?
+		//		An optional font definition (as used in the CSS font property) for labels.
+		//	fontColor: String|dojo.Color?
+		//		An optional color to be used in drawing labels.
+		//	enableCache: Boolean?
+		//		Whether the ticks and labels are cached from one rendering to another. This improves the rendering performance of
+		//		successive rendering but penalize the first rendering.  Default false.
+	
+		this.vertical = vertical;
+		this.fixUpper = fixUpper;
+		this.fixLower = fixLower;
+		this.natural = natural;
+		this.leftBottom = leftBottom;
+		this.includeZero = includeZero;
+		this.fixed = fixed;
+		this.majorLabels = majorLabels;
+		this.minorTicks = minorTicks;
+		this.minorLabels = minorLabels;
+		this.microTicks = microTicks;
+		this.htmlLabels = htmlLabels;
+		this.min = min;
+		this.max = max;
+		this.from = from;
+		this.to = to;
+		this.majorTickStep = majorTickStep;
+		this.minorTickStep = minorTickStep;
+		this.microTickStep = microTickStep;
+		this.labels = labels;
+		this.labelFunc = labelFunc;
+		this.maxLabelSize = maxLabelSize;
+		this.stroke = stroke;
+		this.majorTick = majorTick;
+		this.minorTick = minorTick;
+		this.microTick = microTick;
+		this.tick = tick;
+		this.font = font;
+		this.fontColor = fontColor;
+		this.enableCache = enableCache;
+	}
+	var Invisible = dojox.charting.axis2d.Invisible
+	=====*/
 
-dojo.require("dojox.charting.scaler.linear");
-dojo.require("dojox.charting.axis2d.common");
-
-dojo.require("dojo.colors");
-dojo.require("dojo.string");
-dojo.require("dojox.gfx");
-dojo.require("dojox.lang.functional");
-dojo.require("dojox.lang.utils");
-
-/*=====
-	dojox.charting.axis2d.__AxisCtorArgs = function(
-		vertical, fixUpper, fixLower, natural, leftBottom,
-		includeZero, fixed, majorLabels, minorTicks, minorLabels, microTicks, htmlLabels,
-		min, max, from, to, majorTickStep, minorTickStep, microTickStep,
-		labels, labelFunc, maxLabelSize,
-		stroke, majorTick, minorTick, microTick, tick,
-		font, fontColor
-	){
-	//	summary:
-	//		Optional arguments used in the definition of an axis.
-	//
-	//	vertical: Boolean?
-	//		A flag that says whether an axis is vertical (i.e. y axis) or horizontal. Default is false (horizontal).
-	//	fixUpper: String?
-	//		Align the greatest value on the axis with the specified tick level. Options are "major", "minor", "micro", or "none".  Defaults to "none".
-	//	fixLower: String?
-	//		Align the smallest value on the axis with the specified tick level. Options are "major", "minor", "micro", or "none".  Defaults to "none".
-	//	natural: Boolean?
-	//		Ensure tick marks are made on "natural" numbers. Defaults to false.
-	//	leftBottom: Boolean?
-	//		The position of a vertical axis; if true, will be placed against the left-bottom corner of the chart.  Defaults to true.
-	//	includeZero: Boolean?
-	//		Include 0 on the axis rendering.  Default is false.
-	//	fixed: Boolean?
-	//		Force all axis labels to be fixed numbers.  Default is true.
-	//	majorLabels: Boolean?
-	//		Flag to draw all labels at major ticks. Default is true.
-	//	minorTicks: Boolean?
-	//		Flag to draw minor ticks on an axis.  Default is true.
-	//	minorLabels: Boolean?
-	//		Flag to draw labels on minor ticks. Default is true.
-	//	microTicks: Boolean?
-	//		Flag to draw micro ticks on an axis. Default is false.
-	//	htmlLabels: Boolean?
-	//		Flag to use HTML (as opposed to the native vector graphics engine) to draw labels. Default is true.
-	//	min: Number?
-	//		The smallest value on an axis. Default is 0.
-	//	max: Number?
-	//		The largest value on an axis. Default is 1.
-	//	from: Number?
-	//		Force the chart to render data visible from this value. Default is 0.
-	//	to: Number?
-	//		Force the chart to render data visible to this value. Default is 1.
-	//	majorTickStep: Number?
-	//		The amount to skip before a major tick is drawn.  Default is 4.
-	//	minorTickStep: Number?
-	//		The amount to skip before a minor tick is drawn. Default is 2.
-	//	microTickStep: Number?
-	//		The amount to skip before a micro tick is drawn. Default is 1.
-	//	labels: Object[]?
-	//		An array of labels for major ticks, with corresponding numeric values, ordered by value.
-	//	labelFunc: Function?
-	//		An optional function used to compute label values.
-	//	maxLabelSize: Number?
-	//		The maximum size, in pixels, for a label.  To be used with the optional label function.
-	//	stroke: dojox.gfx.Stroke?
-	//		An optional stroke to be used for drawing an axis.
-	//	majorTick: Object?
-	//		An object containing a dojox.gfx.Stroke, and a length (number) for a major tick.
-	//	minorTick: Object?
-	//		An object containing a dojox.gfx.Stroke, and a length (number) for a minor tick.
-	//	microTick: Object?
-	//		An object containing a dojox.gfx.Stroke, and a length (number) for a micro tick.
-	//	tick: Object?
-	//		An object containing a dojox.gfx.Stroke, and a length (number) for a tick.
-	//	font: String?
-	//		An optional font definition (as used in the CSS font property) for labels.
-	//	fontColor: String|dojo.Color?
-	//		An optional color to be used in drawing labels.
-
-	this.vertical = vertical;
-	this.fixUpper = fixUpper;
-	this.fixLower = fixLower;
-	this.natural = natural;
-	this.leftBottom = leftBottom;
-	this.includeZero = includeZero;
-	this.fixed = fixed;
-	this.majorLabels = majorLabels;
-	this.minorTicks = minorTicks;
-	this.minorLabels = minorLabels;
-	this.microTicks = microTicks;
-	this.htmlLabels = htmlLabels;
-	this.min = min;
-	this.max = max;
-	this.from = from;
-	this.to = to;
-	this.majorTickStep = majorTickStep;
-	this.minorTickStep = minorTickStep;
-	this.microTickStep = microTickStep;
-	this.labels = labels;
-	this.labelFunc = labelFunc;
-	this.maxLabelSize = maxLabelSize;
-	this.stroke = stroke;
-	this.majorTick = majorTick;
-	this.minorTick = minorTick;
-	this.microTick = microTick;
-	this.tick = tick;
-	this.font = font;
-	this.fontColor = fontColor;
-}
-=====*/
-(function(){
-	var dc = dojox.charting,
-		du = dojox.lang.utils,
-		g = dojox.gfx,
-		lin = dc.scaler.linear,
-		labelGap = 4,			// in pixels
+	var labelGap = 4,			// in pixels
 		centerAnchorLimit = 45;	// in degrees
 
-	dojo.declare("dojox.charting.axis2d.Default", dojox.charting.axis2d.Invisible, {
+	return declare("dojox.charting.axis2d.Default", Invisible, {
 		//	summary:
 		//		The default axis object used in dojox.charting.  See dojox.charting.Chart.addAxis for details.
 		//
@@ -168,7 +162,8 @@ dojo.require("dojox.lang.utils");
 			minorLabels: true,		// draw minor labels
 			microTicks:  false,		// draw micro ticks
 			rotation:    0,			// label rotation angle in degrees
-			htmlLabels:  true		// use HTML to draw labels
+			htmlLabels:  true,		// use HTML to draw labels
+			enableCache: false		// whether we cache or not
 		},
 		optionalParams: {
 			min:			0,	// minimal value on this axis
@@ -207,13 +202,19 @@ dojo.require("dojox.lang.utils");
 		constructor: function(chart, kwArgs){
 			//	summary:
 			//		The constructor for an axis.
-			//	chart: dojox.charting.Chart2D
+			//	chart: dojox.charting.Chart
 			//		The chart the axis belongs to.
 			//	kwArgs: dojox.charting.axis2d.__AxisCtorArgs?
 			//		Any optional keyword arguments to be used to define this axis.
-			this.opt = dojo.clone(this.defaultParams);
+			this.opt = lang.clone(this.defaultParams);
             du.updateWithObject(this.opt, kwArgs);
 			du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
+			if(this.opt.enableCache){
+				this._textFreePool = [];
+				this._lineFreePool = [];
+				this._textUsePool = [];
+				this._lineUsePool = [];
+			}
 		},
 		getOffsets: function(){
 			//	summary:
@@ -225,7 +226,7 @@ dojo.require("dojox.lang.utils");
 				return offsets;
 			}
 			var o = this.opt, labelWidth = 0, a, b, c, d,
-				gl = dc.scaler.common.getNumericLabel,
+				gl = scommon.getNumericLabel,
 				offset = 0, ma = s.major, mi = s.minor,
 				ta = this.chart.theme.axis,
 				// TODO: we use one font --- of major tick, we need to use major and minor fonts
@@ -327,6 +328,67 @@ dojo.require("dojox.lang.utils");
 				this._cachedLabelWidth = labelWidth;
 			}
 			return offsets;	//	Object
+		},
+		cleanGroup: function(creator){
+			if(this.opt.enableCache && this.group){
+				this._lineFreePool = this._lineFreePool.concat(this._lineUsePool);
+				this._lineUsePool = [];
+				this._textFreePool = this._textFreePool.concat(this._textUsePool);
+				this._textUsePool = [];
+			}
+			this.inherited(arguments);
+		},
+		createText: function(labelType, creator, x, y, align, textContent, font, fontColor, labelWidth){
+			if(!this.opt.enableCache || labelType=="html"){
+				return acommon.createText[labelType](
+						this.chart,
+						creator,
+						x,
+						y,
+						align,
+						textContent,
+						font,
+						fontColor,
+						labelWidth
+					);
+			}
+			var text;
+			if (this._textFreePool.length > 0){
+				text = this._textFreePool.pop();
+				text.setShape({x: x, y: y, text: textContent, align: align});
+				// For now all items share the same font, no need to re-set it
+				//.setFont(font).setFill(fontColor);
+				// was cleared, add it back
+				creator.add(text);
+			}else{
+				text = acommon.createText[labelType](
+						this.chart,
+						creator,
+						x,
+						y,
+						align,
+						textContent,
+						font,
+						fontColor,
+						labelWidth
+					);			}
+			this._textUsePool.push(text);
+			return text;
+		},
+		createLine: function(creator, params){
+			var line;
+			if(this.opt.enableCache && this._lineFreePool.length > 0){
+				line = this._lineFreePool.pop();
+				line.setShape(params);
+				// was cleared, add it back
+				creator.add(line);
+			}else{
+				line = creator.createLine(params);
+			}
+			if(this.opt.enableCache){
+				this._lineUsePool.push(line);
+			}
+			return line;
 		},
 		render: function(dim, offsets){
 			//	summary:
@@ -517,7 +579,7 @@ dojo.require("dojox.lang.utils");
 					f = lin.getTransformerFromModel(this.scaler),
 					// GFX Canvas now supports labels, so let's _not_ fallback to HTML anymore on canvas, just use
 					// HTML labels if explicitly asked + no rotation + no IE + no Opera
-					labelType = !titleRotation && !rotation && this.opt.htmlLabels && !dojo.isIE && !dojo.isOpera ? "html" : "gfx",
+					labelType = !titleRotation && !rotation && this.opt.htmlLabels && !has("ie") && !has("opera") ? "html" : "gfx",
 					dx = tickVector.x * taMajorTick.length,
 					dy = tickVector.y * taMajorTick.length;
 
@@ -530,7 +592,7 @@ dojo.require("dojox.lang.utils");
 				
 				//create axis title
 				if(o.title){
-					var axisTitle = dc.axis2d.common.createText[labelType](
+					var axisTitle = acommon.createText[labelType](
 						this.chart,
 						s,
 						titlePos.x,
@@ -548,12 +610,18 @@ dojo.require("dojox.lang.utils");
 						axisTitle.setTransform(g.matrix.rotategAt(titleRotation, titlePos.x, titlePos.y));
 					}
 				}
+				
+				// go out nicely instead of try/catch
+				if(t==null){
+					this.dirty = false;
+					return this;
+				}
 
-				dojo.forEach(t.major, function(tick){
+				arr.forEach(t.major, function(tick){
 					var offset = f(tick.value), elem,
 						x = start.x + axisVector.x * offset,
 						y = start.y + axisVector.y * offset;
-						s.createLine({
+						this.createLine(s, {
 							x1: x, y1: y,
 							x2: x + dx,
 							y2: y + dy
@@ -564,8 +632,7 @@ dojo.require("dojox.lang.utils");
 								truncated: false
 							};
 							label = o.maxLabelSize ? this.getTextWithLimitLength(label.text, taFont, o.maxLabelSize, label.truncated) : label;
-							elem = dc.axis2d.common.createText[labelType](
-								this.chart,
+							elem = this.createText(labelType,
 								s,
 								x + dx + anchorOffset.x + (rotation ? 0 : labelOffset.x),
 								y + dy + anchorOffset.y + (rotation ? 0 : labelOffset.y),
@@ -575,6 +642,15 @@ dojo.require("dojox.lang.utils");
 								taFontColor
 								//this._cachedLabelWidth
 							);
+							
+							// if bidi support was required, the textDir is "auto" and truncation
+							// took place, we need to update the dir of the element for cases as: 
+							// Fool label: 111111W (W for bidi character)
+							// truncated label: 11... 
+							// in this case for auto textDir the dir will be "ltr" which is wrong.
+							if(this.chart.truncateBidi  && label.truncated){
+								this.chart.truncateBidi(elem, tick.label, labelType);
+							}
 							label.truncated && this.labelTooltip(elem, this.chart, tick.label, label.text, taFont, labelType);
 							if(labelType == "html"){
 								this.htmlElements.push(elem);
@@ -594,11 +670,11 @@ dojo.require("dojox.lang.utils");
 				dx = tickVector.x * taMinorTick.length;
 				dy = tickVector.y * taMinorTick.length;
 				canLabel = c.minMinorStep <= c.minor.tick * c.bounds.scale;
-				dojo.forEach(t.minor, function(tick){
+				arr.forEach(t.minor, function(tick){
 					var offset = f(tick.value), elem,
 						x = start.x + axisVector.x * offset,
 						y = start.y + axisVector.y * offset;
-						s.createLine({
+						this.createLine(s, {
 							x1: x, y1: y,
 							x2: x + dx,
 							y2: y + dy
@@ -609,8 +685,7 @@ dojo.require("dojox.lang.utils");
 								truncated: false
 							};
 							label = o.maxLabelSize ? this.getTextWithLimitLength(label.text, taFont, o.maxLabelSize, label.truncated) : label;
-							elem = dc.axis2d.common.createText[labelType](
-								this.chart,
+							elem = this.createText(labelType,
 								s,
 								x + dx + anchorOffset.x + (rotation ? 0 : labelOffset.x),
 								y + dy + anchorOffset.y + (rotation ? 0 : labelOffset.y),
@@ -620,6 +695,14 @@ dojo.require("dojox.lang.utils");
 								taFontColor
 								//this._cachedLabelWidth
 							);
+							// if bidi support was required, the textDir is "auto" and truncation
+							// took place, we need to update the dir of the element for cases as: 
+							// Fool label: 111111W (W for bidi character)
+							// truncated label: 11... 
+							// in this case for auto textDir the dir will be "ltr" which is wrong.
+							if(this.chart.getTextDir && label.truncated){
+								this.chart.truncateBidi(elem, tick.label, labelType);
+							}
 							label.truncated && this.labelTooltip(elem, this.chart, tick.label, label.text, taFont, labelType);
 							if(labelType == "html"){
 								this.htmlElements.push(elem);
@@ -638,11 +721,11 @@ dojo.require("dojox.lang.utils");
 
 				dx = tickVector.x * taMicroTick.length;
 				dy = tickVector.y * taMicroTick.length;
-				dojo.forEach(t.micro, function(tick){
+				arr.forEach(t.micro, function(tick){
 					var offset = f(tick.value), elem,
 						x = start.x + axisVector.x * offset,
 						y = start.y + axisVector.y * offset;
-						s.createLine({
+						this.createLine(s, {
 							x1: x, y1: y,
 							x2: x + dx,
 							y2: y + dy
@@ -656,34 +739,34 @@ dojo.require("dojox.lang.utils");
 			return this;	//	dojox.charting.axis2d.Default
 		},
 		labelTooltip: function(elem, chart, label, truncatedLabel, font, elemType){
-			// to avoid requiring dijit module for that feature, let's test that
-			// dynamically and return if we can't do it
-			if(!dijit || !dijit.Tooltip){
-				return;
-			}
+			var modules = ["dijit/Tooltip"];
 			var aroundRect = {type: "rect"}, position = ["above", "below"],
-				fontWidth = dojox.gfx._base._getTextBox(truncatedLabel, {font: font}).w || 0;
+				fontWidth = g._base._getTextBox(truncatedLabel, {font: font}).w || 0,
 				fontHeight = font ? g.normalizedLength(g.splitFontString(font).size) : 0;
 			if(elemType == "html"){
-				dojo.mixin(aroundRect, dojo.coords(elem.firstChild, true));
+				lang.mixin(aroundRect, html.coords(elem.firstChild, true));
 				aroundRect.width = Math.ceil(fontWidth);
 				aroundRect.height = Math.ceil(fontHeight);
 				this._events.push({
 					shape:  dojo,
-					handle: dojo.connect(elem.firstChild, "onmouseover", this, function(e){
-						dijit.showTooltip(label, aroundRect, position);
+					handle: connect.connect(elem.firstChild, "onmouseover", this, function(e){
+						require(modules, function(Tooltip){
+							Tooltip.show(label, aroundRect, position);
+						});
 					})
 				});
 				this._events.push({
 					shape:  dojo,
-					handle: dojo.connect(elem.firstChild, "onmouseout", this, function(e){
-						dijit.hideTooltip(aroundRect);
+					handle: connect.connect(elem.firstChild, "onmouseout", this, function(e){
+						require(modules, function(Tooltip){
+							Tooltip.hide(aroundRect);
+						});
 					})
 				});
 			}else{
 				var shp = elem.getShape(),
-					lt = dojo.coords(chart.node, true);
-				aroundRect = dojo.mixin(aroundRect, {
+					lt = html.coords(chart.node, true);
+				aroundRect = lang.mixin(aroundRect, {
 					x: shp.x - fontWidth / 2,
 					y: shp.y
 				});
@@ -696,16 +779,20 @@ dojo.require("dojox.lang.utils");
 				this._events.push({
 					shape:  elem,
 					handle: elem.connect("onmouseenter", this, function(e){
-						dijit.showTooltip(label, aroundRect, position);
+						require(modules, function(Tooltip){
+							Tooltip.show(label, aroundRect, position);
+						});
 					})
 				});
 				this._events.push({
 					shape:  elem,
 					handle: elem.connect("onmouseleave", this, function(e){
-						dijit.hideTooltip(aroundRect);
+						require(modules, function(Tooltip){
+							Tooltip.hide(aroundRect);
+						});
 					})
 				});
 			}
 		}
 	});
-})();
+});

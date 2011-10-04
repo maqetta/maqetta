@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	singleSort: "Tekli Sıralama",
 	nestedSort: "İç İçe Sıralama",
@@ -9,4 +11,6 @@
 	indirectSelectionCheckBox: "Satır ${0}, çok seçimli, radyo düğmesi",
 	selectAll: "Tümünü seç"
 })
+//end v1.x content
+);
 

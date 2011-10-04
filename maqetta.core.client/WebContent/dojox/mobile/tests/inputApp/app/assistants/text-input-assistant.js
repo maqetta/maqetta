@@ -1,4 +1,3 @@
-dojo.provide("TextInputAssistant");
 dojo.require("dojox.mobile.app.SceneAssistant");
 
 dojo.declare("TextInputAssistant", dojox.mobile.app.SceneAssistant, {

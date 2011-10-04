@@ -1,8 +1,15 @@
-dojo.provide("dojox.NodeList.delegate");
+define(["dojo/_base/lang", "dojo/query", "dojo/_base/NodeList", "dojo/NodeList-traverse"], function(lang, query, NodeList) {
+	// module:
+	//		dojox/NodeList/delegate
+	// summary:
+	//		TODOC
 
-dojo.require("dojo.NodeList-traverse");
+/*=====
+// doc alias helpers:
+NodeList = dojo.NodeList;
+=====*/
 
-dojo.extend(dojo.NodeList, {
+lang.extend(NodeList, {
 	delegate: function(/*String*/ selector, /*String*/ eventName, /*Function*/ fn){
 		// summary:
 		//		Monitor nodes in this NodeList for [bubbled] events on nodes that match selector.
@@ -46,7 +53,7 @@ dojo.extend(dojo.NodeList, {
 		//	- single node version
 
 		return this.connect(eventName, function(evt){
-			var closest = dojo.query(evt.target).closest(selector, this);
+			var closest = query(evt.target).closest(selector, this);
 			if(closest.length){
 				fn.call(closest[0], evt);
 			}
@@ -54,3 +61,5 @@ dojo.extend(dojo.NodeList, {
 	}
 });
 
+return NodeList;
+});

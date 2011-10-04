@@ -55,10 +55,7 @@
   background-repeat: repeat-x;
   padding: 5px 7px 2px 7px;
   min-height: 17px;
-  color: #4a4a4a;
-}
-.claro .dijitAccordionTitleHover {
-  color: #000000;
+  color: #494949;
 }
 .dj_ie6 .claro .dijitAccordionTitle {
   background-image: none;
@@ -69,7 +66,7 @@
 	 */
 
   background-color: #ffffff;
-  border: 1px solid #769dc0;
+  border: 1px solid #759dc0;
   margin: 0 2px 2px;
 }
 .claro .dijitAccordionContainer .dijitAccordionContainer-child {
@@ -79,8 +76,8 @@
 }
 /* Active state for closed pane */
 .claro .dijitAccordionInnerContainerActive {
-  border: 1px solid #769dc0;
-  background-color: #7dbefa;
+  border: 1px solid #759dc0;
+  background-color: #7dbdfa;
   -webkit-transition-duration: 0.1s;
   -moz-transition-duration: 0.1s;
   transition-duration: 0.1s;
@@ -91,7 +88,7 @@
 }
 /* Open (a.k.a. selected) pane */
 .claro .dijitAccordionInnerContainerSelected {
-  border-color: #769dc0;
+  border-color: #759dc0;
   background-color: #cfe5fa;
 }
 .claro .dijitAccordionInnerContainerSelected .dijitAccordionTitle {
@@ -101,7 +98,7 @@
 
 }
 /* Hovering open or closed pane */
-.claro .dijitAccordionInnerContainerHover dijitAccordionTitle {
+.claro .dijitAccordionInnerContainerHover .dijitAccordionTitle {
   /* both open and closed */
 
   color: #000000;
@@ -109,7 +106,7 @@
 .claro .dijitAccordionInnerContainerHover, .claro .dijitAccordionInnerContainerSelectedActive {
   /* note: clicking the currently selected Accordion pane should have no effect, so treating same as hover. */
 
-  border: 1px solid #769dc0;
+  border: 1px solid #759dc0;
   background-color: #abd6ff;
   -webkit-transition-duration: 0.2s;
   -moz-transition-duration: 0.2s;
@@ -117,7 +114,7 @@
 }
 .claro .dijitAccordionInnerContainerSelectedHover .dijitAccordionChildWrapper, .claro .dijitAccordionInnerContainerSelectedActive .dijitAccordionChildWrapper {
   background-color: #ffffff;
-  border: 1px solid #769dc0 !important;
+  border: 1px solid #759dc0 !important;
   -webkit-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.25);
   -moz-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.25);
   box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.25);

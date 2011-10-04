@@ -19,7 +19,7 @@
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_BorderContainer.html');
 
 				doh.register("mouse", [
@@ -110,26 +110,26 @@
 							// Tab into second BorderContainer, landing on link
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.is("a link", innerText(dojo.global.dijit._curFocus), "tabbed to link");
+								doh.is("a link", innerText(dojo.global.dijit.focus.curNode), "tabbed to link");
 							}), 500);
 
 							// Tab past ComboBox to get to splitter for bottom panel
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.is("border2-bottom_splitter", dojo.global.dijit._curFocus.id, "focus on bottom splitter");
+								doh.is("border2-bottom_splitter", dojo.global.dijit.focus.curNode.id, "focus on bottom splitter");
 							}), 500);
 
 							// Tab to get to splitter for right panel
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.is("border2-trailing_splitter", dojo.global.dijit._curFocus.id, "focus on bottom splitter");
+								doh.is("border2-trailing_splitter", dojo.global.dijit.focus.curNode.id, "focus on bottom splitter");
 							}), 500);
 
 							// tab out of BorderContainer, into the next one
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("a link", innerText(dojo.global.dijit._curFocus), "tabbed to link in next BC");
+								doh.is("a link", innerText(dojo.global.dijit.focus.curNode), "tabbed to link in next BC");
 							}), 500);
 
 							return d;

@@ -1,37 +1,35 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html lang="en">
 <head>
-    <title>FileUploader CSS Test</title>
-    <link href="../../../dijit/themes/dijit.css" rel="stylesheet" />
-    <link href="../../../dijit/themes/tundra/form/Button.css" rel="stylesheet" />
-    <link href="../resources/FileUploader.css" rel="stylesheet" />
+	<title>FileUploader CSS Test</title>
+	<link href="../../../dijit/themes/dijit.css" rel="stylesheet" />
+	<link href="../../../dijit/themes/tundra/form/Button.css" rel="stylesheet" />
+	<link href="../resources/FileUploader.css" rel="stylesheet" />
 	<script>
-        djConfig = {
-            isDebug: true,
+	        djConfig = {
+	        	isDebug: true,
 			popup:true,
-            parseOnLoad: true
-        }
-    </script>
-    <script src="../../../dojo/dojo.js"></script>
-    <script>
-        dojo.require("dojox.form.FileUploader");
-        dojo.require("dijit.form.Button");
-		
-        dojo.addOnLoad(function(){
-			
+	        	parseOnLoad: true
+	        }
+	</script>
+	<script src="../../../dojo/dojo.js"></script>
+	<script>
+		dojo.require("dojo.parser");
+	        dojo.require("dojox.form.FileUploader");
+	        dojo.require("dijit.form.Button");
+
+	        dojo.ready(function(){
 			var props = {
 				isDebug:false,
 				hoverClass:"btnDftHover",
 				activeClass:"btnDftActive"
 			}
-			if(dijit.byId("btnD"))
+			if(dijit.byId("btnD")){
 				new dojox.form.FileUploader(dojo.mixin({button:dijit.byId("btnD")}, props));
-			
+			}
 		});
-        
-        
-    </script>
-    <style>
+	</script>
+	<style>
 		body{
 			font-family:sans-serif;
 		}
@@ -60,28 +58,25 @@
 			font-weight:normal;
 			font-size:14px;
 		}
-    </style>
-	
-	<style>
 		.flashBtn{
-            border:2px solid #333333;
-            background:url(images/grad.jpg) #d0d0d0 repeat-x scroll 0px bottom;
-            font-size:12px;
-            font-family:Arial;
-            padding:5px;
-            width:100px;
-            height:100px;
+			border:2px solid #333333;
+			background:url(images/grad.jpg) #d0d0d0 repeat-x scroll 0px bottom;
+			font-size:12px;
+			font-family:Arial;
+			padding:5px;
+			width:100px;
+			height:100px;
 			vertical-align:middle; /* emulates a <button> */
 			text-align:center;
-        }
-        .flashBtnHover{
-            background-image:url(images/grad_over.jpg);
+		}
+		.flashBtnHover{
+			background-image:url(images/grad_over.jpg);
 			color:#fff;
-            cursor:pointer;
-        }
-        .flashBtnPress{
-            background-image:url(images/grad_down.jpg);
-        }
+			cursor:pointer;
+		}
+		.flashBtnPress{
+			background-image:url(images/grad_down.jpg);
+		}
 		.top{
 			vertical-align:top;
 		}
@@ -96,8 +91,6 @@
 		.left{
 			text-align:left;
 		}
-		
-		
 		.gfx{
 			width:197px;
 			height:29px;
@@ -105,7 +98,6 @@
 			border:0;
 			text-align:left;
 			padding-left:55px;
-			
 			font-size:14px;
 			color:#fff;
 			font-weight:bold;
@@ -120,7 +112,6 @@
 			background:url(images/rndBtn_down.png) no-repeat;
 			color:#c6dfe3;
 		}
-		
 		.sprite{
 			width:197px;
 			height:29px;
@@ -128,12 +119,10 @@
 			border:0;
 			text-align:left;
 			padding-left:55px;
-			
 			font-size:14px;
 			color:#fff;
 			font-weight:bold;
 			font-style:italic;
-			
 		}
 		.spriteOver{
 			background:url(images/rndBtnSprite.png) no-repeat 0px -30px;
@@ -154,7 +143,6 @@
 		.wrapping{
 			width:100px;
 			height:60px;
-			
 			white-space:normal;
 			line-height:12px !important;
 			vertical-align:top;
@@ -164,7 +152,6 @@
 </head>
 <body class="tundra">
 	<h1>FileUploader CSS Test</h1>
-	
 	<h3>
 		All the buttons on this page are either Flash or HTML uploaders. They all should open a
 		file-browse dialog, but otherwise the uploading is non-functional. This page is for testing
@@ -177,7 +164,7 @@
 	</div>
 	<button isDebug="true" devMode="true" dojoType="dojox.form.FileUploader">Default Markup Flash</button>
 	<button force="html" dojoType="dojox.form.FileUploader">Default Markup HTML</button>
-	
+
 	<div class="note">
 		Testing float right and left, and using style="" to override class. The buttons should cascade properly when resizing
 		the window.
@@ -185,17 +172,16 @@
 	<div style="padding:10px; border:1px solid #ccc;float:left; width:60%; margin-bottom:20px;">
 		<button class="floatLeft" dojoType="dojox.form.FileUploader">Flash Float Left</button>
 		<button force="html" class="floatLeft" dojoType="dojox.form.FileUploader">Flash Float Left</button>
-		
 		<button dojoType="dojox.form.FileUploader" style="display:block; width:150px;float:right;">Flash Float Right</button>
-		<button force="html" dojoType="dojox.form.FileUploader" style="display:block; width:150px;float:right;margin-right:5px;">HTML Float Right</button>	
+		<button force="html" dojoType="dojox.form.FileUploader" style="display:block; width:150px;float:right;margin-right:5px;">HTML Float Right</button>
 	</div>
-	
+
 	<div class="note">
 		Text wrapping - FileUploader does not support text wrapping natively, it needs some CSS massaging to make it happen. 
 	</div>
 	<button class="wrapping" dojoType="dojox.form.FileUploader">Using a Flash button with long wrapping text</button>
 	<button force="html" class="wrapping" dojoType="dojox.form.FileUploader">Using an HTML button with long wrapping text</button>
-	
+
 	<div class="note">
 		Testing Dijit Button for backward compatibility. Use of a dijit button is
 		deprecated and will be removed in 1.5. On the right is the Flash Upload button and on the left a
@@ -203,20 +189,19 @@
 	</div>
 	<button id="btnX" class="dBtn" dojoType="dijit.form.Button">Using Dijit Button</button>
 	<button id="btnD" class="dBtn" dojoType="dijit.form.Button">Using Dijit Button</button>
-	
-	
+
 	<div class="note">Testing top-center</div>
 	<div baseClass="flashBtn top" hoverClass="flashBtnHover" activeClass="flashBtnPress" dojoType="dojox.form.FileUploader">Flash Top</div>
-	
+
 	<div class="note">Testing bottom-center with 20px bottom padding</div>
 	<div baseClass="flashBtn bot" hoverClass="flashBtnHover" activeClass="flashBtnPress" dojoType="dojox.form.FileUploader">Flash Bottom</div>
-	
+
 	<div class="note">Testing centered text, wide border and a left margin</div>
 	<div id="btn1" class="flashBtn ctr" hoverClass="flashBtnHover" activeClass="flashBtnPress" dojoType="dojox.form.FileUploader">Flash Center</div>
-	
+
 	<div class="note">Testing left align</div>
 	<button id="btn3" class="flashBtn left" hoverClass="flashBtnHover" activeClass="flashBtnPress" dojoType="dojox.form.FileUploader">Flash Left</button>
-	
+
 	<div class="note">
 		Testing background images for HTML and Flash buttons. "GFX" uses three
 		different images, "SPRITE" uses one sprited image with the background-position changed. The
@@ -228,8 +213,7 @@
 	<button class="sprite" hoverClass="spriteOver" activeClass="spriteDown" dojoType="dojox.form.FileUploader">FLASH BK SPRITE</button>
 	<button class="gfx" hoverClass="gfxOver" activeClass="gfxDown" dojoType="dojox.form.FileUploader">HTML BK GFX</button>
 	<button class="gfx" hoverClass="gfxOver" activeClass="gfxDown" dojoType="dojox.form.FileUploader">Flash BK GFX</button>
-	
-	
+
 	<table style="margin-bottom:30px;">
 		<tr>
 		<td>
@@ -247,7 +231,7 @@
 		<td>
 			<div class="scrolls">
 				Testing a
-			<div>	
+			<div>
 				<button class="block" dojoType="dojox.form.FileUploader">HTML Block Display Button</button>
 			</div>
 			in a scrolling pane. This is really just to see if IE blows up on this as well as the
@@ -255,10 +239,8 @@
 			still work however - the button is built outside of the pane and inserted (as well as
 			the previous inline test). This will cause a slower render time.
 			</div>
-			
 		</td>
 		</tr>
 	</table>
-	
 </body>
 </html>

@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	widgetLabel: "Groepsgewijze spellingcontrole",
 	unfound: "Niet gevonden",
@@ -15,3 +17,5 @@
 	iMsg: "Geen spellingsuggesties"
 })
 
+//end v1.x content
+);

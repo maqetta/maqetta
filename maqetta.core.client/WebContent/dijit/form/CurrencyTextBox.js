@@ -1,27 +1,39 @@
-define("dijit/form/CurrencyTextBox", ["dojo", "dijit", "dojo/currency", "dijit/form/NumberTextBox"], function(dojo, dijit) {
+define([
+	"dojo/currency", // currency._mixInDefaults currency.format currency.parse currency.regexp
+	"dojo/_base/declare", // declare
+	"dojo/_base/lang", // lang.hitch
+	"./NumberTextBox"
+], function(currency, declare, lang, NumberTextBox){
 
 /*=====
-dojo.declare(
-	"dijit.form.CurrencyTextBox.__Constraints",
-	[dijit.form.NumberTextBox.__Constraints, dojo.currency.__FormatOptions, dojo.currency.__ParseOptions], {
-	// summary:
-	//		Specifies both the rules on valid/invalid values (minimum, maximum,
-	//		number of required decimal places), and also formatting options for
-	//		displaying the value when the field is not focused (currency symbol,
-	//		etc.)
-	// description:
-	//		Follows the pattern of `dijit.form.NumberTextBox.constraints`.
-	//		In general developers won't need to set this parameter
-	// example:
-	//		To ensure that the user types in the cents (for example, 1.00 instead of just 1):
-	//	|		{fractional:true}
-});
+	var NumberTextBox = dijit.form.NumberTextBox;
 =====*/
 
-dojo.declare(
-	"dijit.form.CurrencyTextBox",
-	dijit.form.NumberTextBox,
-	{
+	// module:
+	//		dijit/form/CurrencyTextBox
+	// summary:
+	//		A validating currency textbox
+
+
+	/*=====
+	declare(
+		"dijit.form.CurrencyTextBox.__Constraints",
+		[dijit.form.NumberTextBox.__Constraints, currency.__FormatOptions, currency.__ParseOptions], {
+		// summary:
+		//		Specifies both the rules on valid/invalid values (minimum, maximum,
+		//		number of required decimal places), and also formatting options for
+		//		displaying the value when the field is not focused (currency symbol,
+		//		etc.)
+		// description:
+		//		Follows the pattern of `dijit.form.NumberTextBox.constraints`.
+		//		In general developers won't need to set this parameter
+		// example:
+		//		To ensure that the user types in the cents (for example, 1.00 instead of just 1):
+		//	|		{fractional:true}
+	});
+	=====*/
+
+	return declare("dijit.form.CurrencyTextBox", NumberTextBox, {
 		// summary:
 		//		A validating currency textbox
 		// description:
@@ -44,21 +56,21 @@ dojo.declare(
 		//		formatting options.  See `dijit.form.CurrencyTextBox.__Constraints` for details.
 		constraints: {},
 		======*/
-		
+
 		baseClass: "dijitTextBox dijitCurrencyTextBox",
 
 		// Override regExpGen ValidationTextBox.regExpGen().... we use a reg-ex generating function rather
 		// than a straight regexp to deal with locale  (plus formatting options too?)
 		regExpGen: function(constraints){
 			// if focused, accept either currency data or NumberTextBox format
-			return '(' + (this._focused? this.inherited(arguments, [ dojo.mixin({}, constraints, this.editOptions) ]) + '|' : '')
-				+ dojo.currency.regexp(constraints) + ')';
+			return '(' + (this.focused ? this.inherited(arguments, [ lang.mixin({}, constraints, this.editOptions) ]) + '|' : '')
+				+ currency.regexp(constraints) + ')';
 		},
 
 		// Override NumberTextBox._formatter to deal with currencies, ex: converts "123.45" to "$123.45"
-		_formatter: dojo.currency.format,
+		_formatter: currency.format,
 
-		_parser: dojo.currency.parse,
+		_parser: currency.parse,
 
 		parse: function(/*String*/ value, /*Object*/ constraints){
 			// summary:
@@ -67,7 +79,7 @@ dojo.declare(
 			// 		protected extension
 			var v = this.inherited(arguments);
 			if(isNaN(v) && /\d+/.test(value)){ // currency parse failed, but it could be because they are using NumberTextBox format so try its parse
-				v = dojo.hitch(dojo.mixin({}, this, { _parser: dijit.form.NumberTextBox.prototype._parser }), "inherited")(arguments);
+				v = lang.hitch(lang.mixin({}, this, { _parser: NumberTextBox.prototype._parser }), "inherited")(arguments);
 			}
 			return v;
 		},
@@ -76,11 +88,7 @@ dojo.declare(
 			if(!constraints.currency && this.currency){
 				constraints.currency = this.currency;
 			}
-			this.inherited(arguments, [ dojo.currency._mixInDefaults(dojo.mixin(constraints, { exponent: false })) ]); // get places
+			this.inherited(arguments, [ currency._mixInDefaults(lang.mixin(constraints, { exponent: false })) ]); // get places
 		}
-	}
-);
-
-
-return dijit.form.CurrencyTextBox;
+	});
 });

@@ -1,13 +1,29 @@
+define([
+	"dojo/_base/kernel",
+	"../main",
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/_base/event",
+	"dojo/dom-attr",
+	"dojo/dom-class",
+	"dojo/query",
+	"dojo/keys",
+	"dijit/tree/ForestStoreModel",
+	"./DataGrid",
+	"./_Layout",
+	"./_FocusManager",
+	"./_RowManager",
+	"./_EditManager",
+	"./TreeSelection",
+	"./cells/tree",
+	"./_TreeView"
+], function(dojo, dojox, declare, array, lang, event, domAttr, domClass, query, keys, ForestStoreModel, 
+	DataGrid, _Layout, _FocusManager, _RowManager, _EditManager, TreeSelection, TreeCell){
+		
 dojo.experimental("dojox.grid.TreeGrid");
 
-dojo.provide("dojox.grid.TreeGrid");
-
-dojo.require("dojox.grid.DataGrid");
-dojo.require("dojox.grid._TreeView");
-dojo.require("dojox.grid.cells.tree");
-dojo.require("dojox.grid.TreeSelection");
-
-dojo.declare("dojox.grid._TreeAggregator", null, {
+var _TreeAggregator = declare("dojox.grid._TreeAggregator", null, {
 	cells: [],
 	grid: null,
 	childFields: [],
@@ -43,7 +59,7 @@ dojo.declare("dojox.grid._TreeAggregator", null, {
 			if (cell.index <= level + 1){
 				total = children.length;
 			}else{
-				dojo.forEach(children, function(c){
+				array.forEach(children, function(c){
 					total += this.getForCell(cell, level + 1, c, "cnt");
 				}, this);
 			}
@@ -59,7 +75,7 @@ dojo.declare("dojox.grid._TreeAggregator", null, {
 		var store = this.store;
 		var childFields = this.childFields;
 		if(childFields[level]){
-			dojo.forEach(store.getValues(item, childFields[level]), function(c){
+			array.forEach(store.getValues(item, childFields[level]), function(c){
 				total += this.getForCell(cell, level + 1, c, "sum");
 			}, this);
 		}else{
@@ -116,7 +132,7 @@ dojo.declare("dojox.grid._TreeAggregator", null, {
 	}
 });
 
-dojo.declare("dojox.grid._TreeLayout", dojox.grid._Layout, {
+var _TreeLayout = declare("dojox.grid._TreeLayout", _Layout, {
 	// Whether or not we are collapsable - this is calculated when we
 	// set our structure.
 	_isCollapsable: false,
@@ -141,7 +157,7 @@ dojo.declare("dojox.grid._TreeLayout", dojox.grid._Layout, {
 				for(k in originalCell){
 					n[k] = originalCell[k];
 				}
-				n = dojo.mixin(n, {
+				n = lang.mixin(n, {
 					level: level,
 					idxInParent: level > 0 ? idx : -1,
 					parentCell: level > 0 ? parentCell : null
@@ -149,7 +165,7 @@ dojo.declare("dojox.grid._TreeLayout", dojox.grid._Layout, {
 				return n;
 			};
 			var ret = [];
-			dojo.forEach(children, function(c, idx){
+			array.forEach(children, function(c, idx){
 				if("children" in c){
 					cFields.push(c.field);
 					var last = ret[ret.length - 1];
@@ -165,7 +181,7 @@ dojo.declare("dojox.grid._TreeLayout", dojox.grid._Layout, {
 		};
 		var tCell = {children: cells, itemAggregates: []};
 		tree.cells[0] = getTreeCells(tCell, 0);
-		g.aggregator = new dojox.grid._TreeAggregator({cells: tree.cells[0],
+		g.aggregator = new _TreeAggregator({cells: tree.cells[0],
 														grid: g,
 														childFields: cFields});
 		if(g.scroller && g.defaultOpen){
@@ -180,7 +196,7 @@ dojo.declare("dojox.grid._TreeLayout", dojox.grid._Layout, {
 		var g = this.grid;
 		// Only supporting single-view, single row or else we
 		// are not collapsable
-		if(g && g.treeModel && !dojo.every(s, function(i){
+		if(g && g.treeModel && !array.every(s, function(i){
 			return ("cells" in i);
 		})){
 			s = arguments[0] = [{cells:[s]}];
@@ -191,7 +207,7 @@ dojo.declare("dojox.grid._TreeLayout", dojox.grid._Layout, {
 				this._isCollapsable = true;
 				s[0].cells[0][(this.grid.treeModel?this.grid.expandoCell:0)].isCollapsable = true;
 			}else{
-				var childCells = dojo.filter(s[0].cells[0], function(c){
+				var childCells = array.filter(s[0].cells[0], function(c){
 					return ("children" in c);
 				});
 				if(childCells.length === 1){
@@ -207,11 +223,11 @@ dojo.declare("dojox.grid._TreeLayout", dojox.grid._Layout, {
 
 	addCellDef: function(inRowIndex, inCellIndex, inDef){
 		var obj = this.inherited(arguments);
-		return dojo.mixin(obj, dojox.grid.cells.TreeCell);
+		return lang.mixin(obj, TreeCell);
 	}
 });
 
-dojo.declare("dojox.grid.TreePath", null, {
+var TreePath = declare("dojox.grid.TreePath", null, {
 	level: 0,
 	_str: "",
 	_arr: null,
@@ -221,10 +237,10 @@ dojo.declare("dojox.grid.TreePath", null, {
 	item: null,
 
 	constructor: function(/*String|Integer[]|Integer|dojox.grid.TreePath*/ path, /*dojox.grid.TreeGrid*/ grid){
-		if(dojo.isString(path)){
+		if(lang.isString(path)){
 			this._str = path;
-			this._arr = dojo.map(path.split('/'), function(item){ return parseInt(item, 10); });
-		}else if(dojo.isArray(path)){
+			this._arr = array.map(path.split('/'), function(item){ return parseInt(item, 10); });
+		}else if(lang.isArray(path)){
 			this._str = path.join('/');
 			this._arr = path.slice(0);
 		}else if(typeof path == "number"){
@@ -254,11 +270,11 @@ dojo.declare("dojox.grid.TreePath", null, {
 	compare: function(path /*dojox.grid.TreePath|String|Array*/){
 		// summary:
 		//	compares two paths
-		if(dojo.isString(path) || dojo.isArray(path)){
+		if(lang.isString(path) || lang.isArray(path)){
 			if(this._str == path){ return 0; }
 			if(path.join && this._str == path.join('/')){ return 0; }
-			path = new dojox.grid.TreePath(path, this.grid);
-		}else if(path instanceof dojox.grid.TreePath){
+			path = new TreePath(path, this.grid);
+		}else if(path instanceof TreePath){
 			if(this._str == path._str){ return 0; }
 		}
 		for(var i=0, l=(this._arr.length < path._arr.length ? this._arr.length : path._arr.length); i<l; i++){
@@ -288,11 +304,11 @@ dojo.declare("dojox.grid.TreePath", null, {
 
 		if(new_path[last] === 0){
 			new_path.pop();
-			return new dojox.grid.TreePath(new_path, this.grid);
+			return new TreePath(new_path, this.grid);
 		}
 
 		new_path[last]--;
-		var path = new dojox.grid.TreePath(new_path, this.grid);
+		var path = new TreePath(new_path, this.grid);
 		return path.lastChild(true);
 	},
 	next: function(){
@@ -320,7 +336,7 @@ dojo.declare("dojox.grid.TreePath", null, {
 			}
 		}
 
-		return new dojox.grid.TreePath(new_path, this.grid);
+		return new TreePath(new_path, this.grid);
 	},
 	children: function(alwaysReturn){
 		// summary:
@@ -337,7 +353,7 @@ dojo.declare("dojox.grid.TreePath", null, {
 			if(!model.mayHaveChildren(item)){
 				return null;
 			}
-			dojo.forEach(model.childrenAttrs, function(attr){
+			array.forEach(model.childrenAttrs, function(attr){
 				items = items.concat(store.getValues(item, attr));
 			});
 		}else{
@@ -364,8 +380,8 @@ dojo.declare("dojox.grid.TreePath", null, {
 		if(!childItems){
 			return [];
 		}
-		return dojo.map(childItems, function(item, index){
-			return new dojox.grid.TreePath(this._str + '/' + index, this.grid);
+		return array.map(childItems, function(item, index){
+			return new TreePath(this._str + '/' + index, this.grid);
 		}, this);
 	},
 	parent: function(){
@@ -375,7 +391,7 @@ dojo.declare("dojox.grid.TreePath", null, {
 		if(this.level === 0){
 			return null;
 		}
-		return new dojox.grid.TreePath(this._arr.slice(0, this.level), this.grid);
+		return new TreePath(this._arr.slice(0, this.level), this.grid);
 	},
 	lastChild: function(/*Boolean?*/ traverse){
 		// summary:
@@ -386,7 +402,7 @@ dojo.declare("dojox.grid.TreePath", null, {
 		if(!children || !children.length){
 			return this;
 		}
-		var path = new dojox.grid.TreePath(this._str + "/" + String(children.length-1), this.grid);
+		var path = new TreePath(this._str + "/" + String(children.length-1), this.grid);
 		if(!traverse){
 			return path;
 		}
@@ -397,7 +413,7 @@ dojo.declare("dojox.grid.TreePath", null, {
 	}
 });
 
-dojo.declare("dojox.grid._TreeFocusManager", dojox.grid._FocusManager, {
+var _TreeFocusManager = declare("dojox.grid._TreeFocusManager", _FocusManager, {
 	setFocusCell: function(inCell, inRowIndex){
 		if(inCell && inCell.getNode(inRowIndex)){
 			this.inherited(arguments);
@@ -405,7 +421,7 @@ dojo.declare("dojox.grid._TreeFocusManager", dojox.grid._FocusManager, {
 	},
 	isLastFocusCell: function(){
 		if(this.cell && this.cell.index == this.grid.layout.cellCount-1){
-			var path = new dojox.grid.TreePath(this.grid.rowCount-1, this.grid);
+			var path = new TreePath(this.grid.rowCount-1, this.grid);
 			path = path.lastChild(true);
 			return this.rowIndex == path._str;
 		}
@@ -416,7 +432,7 @@ dojo.declare("dojox.grid._TreeFocusManager", dojox.grid._FocusManager, {
 		//	focus next grid cell
 		if(this.cell){
 			var row=this.rowIndex, col=this.cell.index+1, cc=this.grid.layout.cellCount-1;
-			var path = new dojox.grid.TreePath(this.rowIndex, this.grid);
+			var path = new TreePath(this.rowIndex, this.grid);
 			if(col > cc){
 				var new_path = path.next();
 				if(!new_path){
@@ -444,7 +460,7 @@ dojo.declare("dojox.grid._TreeFocusManager", dojox.grid._FocusManager, {
 		//	focus previous grid cell
 		if(this.cell){
 			var row=(this.rowIndex || 0), col=(this.cell.index || 0) - 1;
-			var path = new dojox.grid.TreePath(row, this.grid);
+			var path = new TreePath(row, this.grid);
 			if(col < 0){
 				var new_path = path.previous();
 				if(!new_path){
@@ -477,7 +493,7 @@ dojo.declare("dojox.grid._TreeFocusManager", dojox.grid._FocusManager, {
 		var sc = this.grid.scroller,
 			r = this.rowIndex,
 			rc = this.grid.rowCount-1,
-			path = new dojox.grid.TreePath(this.rowIndex, this.grid);
+			path = new TreePath(this.rowIndex, this.grid);
 		if(inRowDelta){
 			var row;
 			if(inRowDelta>0){
@@ -517,7 +533,7 @@ dojo.declare("dojox.grid._TreeFocusManager", dojox.grid._FocusManager, {
 	}
 });
 
-dojo.declare("dojox.grid.TreeGrid", dojox.grid.DataGrid, {
+var TreeGrid = declare("dojox.grid.TreeGrid", DataGrid, {
 	// summary:
 	//		A grid that supports nesting rows - it provides an expando function
 	//		similar to dijit.Tree.  It also provides mechanisms for aggregating
@@ -567,10 +583,10 @@ dojo.declare("dojox.grid.TreeGrid", dojox.grid.DataGrid, {
 
 
 	// Override this to get our "magic" layout
-	_layoutClass: dojox.grid._TreeLayout,
+	_layoutClass: _TreeLayout,
 
 	createSelection: function(){
-		this.selection = new dojox.grid.TreeSelection(this);
+		this.selection = new TreeSelection(this);
 	},
 
 	_childItemSorter: function(a, b, attribute, descending){
@@ -618,7 +634,7 @@ dojo.declare("dojox.grid.TreeGrid", dojox.grid.DataGrid, {
 	_addItem: function(item, index, noUpdate, dontUpdateRoot){
 		// add our root items to the root of the model's children
 		// list since we don't query the model
-		if(!dontUpdateRoot && this.model && dojo.indexOf(this.model.root.children, item) == -1){
+		if(!dontUpdateRoot && this.model && array.indexOf(this.model.root.children, item) == -1){
 			this.model.root.children[index] = item;
 		}
 		this.inherited(arguments);
@@ -629,8 +645,8 @@ dojo.declare("dojox.grid.TreeGrid", dojox.grid.DataGrid, {
 		//		overridden so that you can pass in a '/' delimited string of indexes to get the
 		//		item based off its path...that is, passing in "1/3/2" will get the
 		//		3rd (0-based) child from the 4th child of the 2nd top-level item.
-		var isArray = dojo.isArray(idx);
-		if(dojo.isString(idx) && idx.indexOf('/')){
+		var isArray = lang.isArray(idx);
+		if(lang.isString(idx) && idx.indexOf('/')){
 			idx = idx.split('/');
 			isArray = true;
 		}
@@ -639,10 +655,10 @@ dojo.declare("dojox.grid.TreeGrid", dojox.grid.DataGrid, {
 			isArray = false;
 		}
 		if(!isArray){
-			return dojox.grid.DataGrid.prototype.getItem.call(this, idx);
+			return DataGrid.prototype.getItem.call(this, idx);
 		}
 		var s = this.store;
-		var itm = dojox.grid.DataGrid.prototype.getItem.call(this, idx[0]);
+		var itm = DataGrid.prototype.getItem.call(this, idx[0]);
 		var cf, i, j;
 		if(this.aggregator){
 			cf = this.aggregator.childFields||[];
@@ -692,7 +708,7 @@ dojo.declare("dojox.grid.TreeGrid", dojox.grid.DataGrid, {
 			this.defaultOpen = false;
 		}
 		var def = this.defaultOpen;
-		this.openAtLevels = dojo.map(this.openAtLevels, function(l){
+		this.openAtLevels = array.map(this.openAtLevels, function(l){
 			if(typeof l == "string"){
 				switch(l.toLowerCase()){
 					case "true":
@@ -729,11 +745,11 @@ dojo.declare("dojox.grid.TreeGrid", dojox.grid.DataGrid, {
 	},
 	
 	_setModel: function(treeModel){
-		if(treeModel && (!dijit.tree.ForestStoreModel || !(treeModel instanceof dijit.tree.ForestStoreModel))){
+		if(treeModel && (!ForestStoreModel || !(treeModel instanceof ForestStoreModel))){
 			throw new Error("dojox.grid.TreeGrid: treeModel must be an instance of dijit.tree.ForestStoreModel");
 		}
 		this.treeModel = treeModel;
-		dojo.toggleClass(this.domNode, "dojoxGridTreeModel", this.treeModel ? true : false);
+		domClass.toggle(this.domNode, "dojoxGridTreeModel", this.treeModel ? true : false);
 		this._setQuery(treeModel ? treeModel.query : null);
 		this._setStore(treeModel ? treeModel.store : null);
 	},
@@ -748,11 +764,11 @@ dojo.declare("dojox.grid.TreeGrid", dojox.grid.DataGrid, {
 		//		create grid managers for various tasks including rows, focus, selection, editing
 
 		// row manager
-		this.rows = new dojox.grid._RowManager(this);
+		this.rows = new _RowManager(this);
 		// focus manager
-		this.focus = new dojox.grid._TreeFocusManager(this);
+		this.focus = new _TreeFocusManager(this);
 		// edit manager
-		this.edit = new dojox.grid._EditManager(this);
+		this.edit = new _EditManager(this);
 	},
 
 	_setStore: function(store){
@@ -793,7 +809,7 @@ dojo.declare("dojox.grid.TreeGrid", dojox.grid.DataGrid, {
 			this.inherited(arguments);
 			return;
 		}
-		var base = dojo.attr(row.node, 'dojoxTreeGridBaseClasses');
+		var base = domAttr.get(row.node, 'dojoxTreeGridBaseClasses');
 		if(base){
 			row.customClasses = base;
 		}
@@ -808,17 +824,17 @@ dojo.declare("dojox.grid.TreeGrid", dojox.grid.DataGrid, {
 	styleRowNode: function(inRowIndex, inRowNode){
 		if(inRowNode){
 			if(inRowNode.tagName.toLowerCase() == 'div' && this.aggregator){
-				dojo.query("tr[dojoxTreeGridPath]", inRowNode).forEach(function(rowNode){
-					this.rows.styleRowNode(dojo.attr(rowNode, 'dojoxTreeGridPath'), rowNode);
+				query("tr[dojoxTreeGridPath]", inRowNode).forEach(function(rowNode){
+					this.rows.styleRowNode(domAttr.get(rowNode, 'dojoxTreeGridPath'), rowNode);
 				},this);
 			}
 			this.rows.styleRowNode(inRowIndex, inRowNode);
 		}
 	},
 	onCanSelect: function(inRowIndex){
-		var nodes = dojo.query("tr[dojoxTreeGridPath='" + inRowIndex + "']", this.domNode);
+		var nodes = query("tr[dojoxTreeGridPath='" + inRowIndex + "']", this.domNode);
 		if(nodes.length){
-			if(dojo.hasClass(nodes[0], 'dojoxGridSummaryRow')){
+			if(domClass.contains(nodes[0], 'dojoxGridSummaryRow')){
 				return false;
 			}
 		}
@@ -828,20 +844,19 @@ dojo.declare("dojox.grid.TreeGrid", dojox.grid.DataGrid, {
 		if(e.altKey || e.metaKey){
 			return;
 		}
-		var dk = dojo.keys;
 		switch(e.keyCode){
-			case dk.UP_ARROW:
+			case keys.UP_ARROW:
 				if(!this.edit.isEditing() && this.focus.rowIndex != "0"){
-					dojo.stopEvent(e);
+					event.stop(e);
 					this.focus.move(-1, 0);
 				}
 				break;
-			case dk.DOWN_ARROW:
-				var currPath = new dojox.grid.TreePath(this.focus.rowIndex, this);
-				var lastPath = new dojox.grid.TreePath(this.rowCount-1, this);
+			case keys.DOWN_ARROW:
+				var currPath = new TreePath(this.focus.rowIndex, this);
+				var lastPath = new TreePath(this.rowCount-1, this);
 				lastPath = lastPath.lastChild(true);
 				if(!this.edit.isEditing() && currPath.toString() != lastPath.toString()){
-					dojo.stopEvent(e);
+					event.stop(e);
 					this.focus.move(1, 0);
 				}
 				break;
@@ -869,10 +884,9 @@ dojo.declare("dojox.grid.TreeGrid", dojox.grid.DataGrid, {
 		this.onApplyCellEdit(inValue, inRowIndex, inAttrName);
 	}
 });
-dojox.grid.TreeGrid.markupFactory = function(props, node, ctor, cellFunc){
-	var d = dojo;
+TreeGrid.markupFactory = function(props, node, ctor, cellFunc){
 	var widthFromAttr = function(n){
-		var w = d.attr(n, "width")||"auto";
+		var w = domAttr.get(n, "width")||"auto";
 		if((w != "auto")&&(w.slice(-2) != "em")&&(w.slice(-1) != "%")){
 			w = parseInt(w, 10)+"px";
 		}
@@ -883,50 +897,50 @@ dojox.grid.TreeGrid.markupFactory = function(props, node, ctor, cellFunc){
 		var rows;
 		// Don't support colgroup on our grid - single view, single row only
 		if(table.nodeName.toLowerCase() == "table" &&
-					d.query("> colgroup", table).length === 0 &&
-					(rows = d.query("> thead > tr", table)).length == 1){
+					query("> colgroup", table).length === 0 &&
+					(rows = query("> thead > tr", table)).length == 1){
 			var tr = rows[0];
-			return d.query("> th", rows[0]).map(function(th){
+			return query("> th", rows[0]).map(function(th){
 				// Grab type and field (the only ones that are shared
 				var cell = {
-					type: d.trim(d.attr(th, "cellType")||""),
-					field: d.trim(d.attr(th, "field")||"")
+					type: lang.trim(domAttr.get(th, "cellType")||""),
+					field: lang.trim(domAttr.get(th, "field")||"")
 				};
 				if(cell.type){
-					cell.type = d.getObject(cell.type);
+					cell.type = lang.getObject(cell.type);
 				}
 				
-				var subTable = d.query("> table", th)[0];
+				var subTable = query("> table", th)[0];
 				if(subTable){
 					// If we have a subtable, we are an aggregate and a summary cell
 					cell.name = "";
 					cell.children = cellsFromMarkup(subTable);
-					if(d.hasAttr(th, "itemAggregates")){
-						cell.itemAggregates = d.map(d.attr(th, "itemAggregates").split(","), function(v){
-							return d.trim(v);
+					if(domAttr.has(th, "itemAggregates")){
+						cell.itemAggregates = array.map(domAttr.get(th, "itemAggregates").split(","), function(v){
+							return lang.trim(v);
 						});
 					}else{
 						cell.itemAggregates = [];
 					}
-					if(d.hasAttr(th, "aggregate")){
-						cell.aggregate = d.attr(th, "aggregate");
+					if(domAttr.has(th, "aggregate")){
+						cell.aggregate = domAttr.get(th, "aggregate");
 					}
 					cell.type = cell.type || dojox.grid.cells.SubtableCell;
 				}else{
 					// Grab our other stuff we need (mostly what's in the normal
 					// Grid)
-					cell.name = d.trim(d.attr(th, "name")||th.innerHTML);
-					if(d.hasAttr(th, "width")){
+					cell.name = lang.trim(domAttr.get(th, "name")||th.innerHTML);
+					if(domAttr.has(th, "width")){
 						cell.width = widthFromAttr(th);
 					}
-					if(d.hasAttr(th, "relWidth")){
-						cell.relWidth = window.parseInt(d.attr(th, "relWidth"), 10);
+					if(domAttr.has(th, "relWidth")){
+						cell.relWidth = window.parseInt(domAttr.get(th, "relWidth"), 10);
 					}
-					if(d.hasAttr(th, "hidden")){
-						cell.hidden = d.attr(th, "hidden") == "true";
+					if(domAttr.has(th, "hidden")){
+						cell.hidden = domAttr.get(th, "hidden") == "true";
 					}
 					cell.field = cell.field||cell.name;
-					dojox.grid.DataGrid.cell_markupFactory(cellFunc, th, cell);
+					DataGrid.cell_markupFactory(cellFunc, th, cell);
 					cell.type = cell.type || dojox.grid.cells.Cell;
 				}
 				if(cell.type && cell.type.markupFactory){
@@ -947,5 +961,9 @@ dojox.grid.TreeGrid.markupFactory = function(props, node, ctor, cellFunc){
 			props.structure = [{__span: Infinity, cells:[row]}];
 		}
 	}
-	return dojox.grid.DataGrid.markupFactory(props, node, ctor, cellFunc);
+	return DataGrid.markupFactory(props, node, ctor, cellFunc);
 };
+
+return TreeGrid;
+
+});

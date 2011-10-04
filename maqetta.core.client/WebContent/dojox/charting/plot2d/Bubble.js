@@ -1,14 +1,14 @@
-dojo.provide("dojox.charting.plot2d.Bubble");
+define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/array", 
+		"./Base", "./common", "dojox/lang/functional", "dojox/lang/functional/reversed", 
+		"dojox/lang/utils", "dojox/gfx/fx"], 
+	function(lang, declare, arr, Base, dc, df, dfr, du, fx){
+/*=====
+var Base = dojox.charting.plot2d.Base;
+=====*/
 
-dojo.require("dojox.charting.plot2d.Base");
-dojo.require("dojox.lang.functional");
+	var purgeGroup = dfr.lambda("item.purgeGroup()");
 
-(function(){
-	var df = dojox.lang.functional, du = dojox.lang.utils,
-		dc = dojox.charting.plot2d.common,
-		purgeGroup = df.lambda("item.purgeGroup()");
-
-	dojo.declare("dojox.charting.plot2d.Bubble", dojox.charting.plot2d.Base, {
+	return declare("dojox.charting.plot2d.Bubble", Base, {
 		//	summary:
 		//		A plot representing bubbles.  Note that data for Bubbles requires 3 parameters,
 		//		in the form of:  { x, y, size }, where size determines the size of the bubble.
@@ -30,11 +30,11 @@ dojo.require("dojox.lang.functional");
 		constructor: function(chart, kwArgs){
 			//	summary:
 			//		Create a plot of bubbles.
-			//	chart: dojox.charting.Chart2D
+			//	chart: dojox.charting.Chart
 			//		The chart this plot belongs to.
 			//	kwArgs: dojox.charting.plot2d.__DefaultCtorArgs?
 			//		Optional keyword arguments object to help define plot parameters.
-			this.opt = dojo.clone(this.defaultParams);
+			this.opt = lang.clone(this.defaultParams);
             du.updateWithObject(this.opt, kwArgs);
             du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
             this.series = [];
@@ -59,7 +59,7 @@ dojo.require("dojox.lang.functional");
 			this.resetEvents();
 			this.dirty = this.isDirty();
 			if(this.dirty){
-				dojo.forEach(this.series, purgeGroup);
+				arr.forEach(this.series, purgeGroup);
 				this._eventSeries = {};
 				this.cleanGroup();
 				var s = this.group;
@@ -91,7 +91,7 @@ dojo.require("dojox.lang.functional");
 				}
 
 				var theme = t.next("circle", [this.opt, run]), s = run.group,
-					points = dojo.map(run.data, function(v, i){
+					points = arr.map(run.data, function(v, i){
 						return v ? {
 							x: ht(v.x) + offsets.l,
 							y: dim.height - offsets.b - vt(v.y),
@@ -103,7 +103,7 @@ dojo.require("dojox.lang.functional");
 
 				// make shadows if needed
 				if(theme.series.shadow){
-					shadowCircles = dojo.map(points, function(item){
+					shadowCircles = arr.map(points, function(item){
 						if(item !== null){
 							var finalTheme = t.addMixin(theme, "circle", item, true),
 								shadow = finalTheme.series.shadow;
@@ -124,7 +124,7 @@ dojo.require("dojox.lang.functional");
 
 				// make outlines if needed
 				if(theme.series.outline){
-					outlineCircles = dojo.map(points, function(item){
+					outlineCircles = arr.map(points, function(item){
 						if(item !== null){
 							var finalTheme = t.addMixin(theme, "circle", item, true),
 								outline = dc.makeStroke(finalTheme.series.outline);
@@ -145,7 +145,7 @@ dojo.require("dojox.lang.functional");
 				}
 
 				//	run through the data and add the circles.
-				frontCircles = dojo.map(points, function(item){
+				frontCircles = arr.map(points, function(item){
 					if(item !== null){
 						var finalTheme = t.addMixin(theme, "circle", item, true),
 							rect = {
@@ -173,7 +173,7 @@ dojo.require("dojox.lang.functional");
 
 				if(events){
 					var eventSeries = new Array(frontCircles.length);
-					dojo.forEach(frontCircles, function(s, i){
+					arr.forEach(frontCircles, function(s, i){
 						if(s !== null){
 							var o = {
 								element: "circle",
@@ -204,7 +204,7 @@ dojo.require("dojox.lang.functional");
 			return this;	//	dojox.charting.plot2d.Bubble
 		},
 		_animateBubble: function(shape, offset, size){
-			dojox.gfx.fx.animateTransform(dojo.delegate({
+			fx.animateTransform(lang.delegate({
 				shape: shape,
 				duration: 1200,
 				transform: [
@@ -215,4 +215,4 @@ dojo.require("dojox.lang.functional");
 			}, this.animate)).play();
 		}
 	});
-})();
+});

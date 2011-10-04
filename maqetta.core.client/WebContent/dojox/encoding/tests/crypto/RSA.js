@@ -1,15 +1,6 @@
-dojo.provide("dojox.encoding.tests.crypto.RSA");
+define(['doh', '../../crypto/RSAKey', '../../../math/random/Secure', '../../../math/random/prng4', '../../crypto/RSAKey-ext'], function(doh, RSAKey, Secure, prng4){
+	var message = "The rain in Spain falls mainly on the plain.",
 
-dojo.require("dojox.encoding.crypto.RSAKey");
-dojo.require("dojox.encoding.crypto.RSAKey-ext");
-dojo.require("dojox.math.random.Secure");
-dojo.require("dojox.math.random.prng4");
-
-(function(){
-	var dxc = dojox.encoding.crypto,
-		message = "The rain in Spain falls mainly on the plain.",
-
-		Secure = dojox.math.random.Secure, prng4 = dojox.math.random.prng4,
 		sec = function(){ return new Secure(prng4); },
 
 		keys = {
@@ -85,7 +76,7 @@ dojo.require("dojox.math.random.prng4");
 		};
 
 	function roundTrip(text, key, rngf){
-		var rsa = rngf ? new dxc.RSAKey(rngf) : new dxc.RSAKey();
+		var rsa = rngf ? new RSAKey(rngf) : new RSAKey();
 		rsa.setPublic(key.N, key.E);
 		var encoded = rsa.encrypt(text);
 		rsa.setPrivateEx(key.N, key.E, key.D, key.P, key.Q, key.DMP1, key.DMQ1, key.COEFF);
@@ -94,7 +85,7 @@ dojo.require("dojox.math.random.prng4");
 	}
 
 	function generateKey(len, e, rngf){
-		var rsa = rngf ? new dxc.RSAKey(rngf) : new dxc.RSAKey();
+		var rsa = rngf ? new RSAKey(rngf) : new RSAKey();
 		rsa.generate(len, e);
 		return {
 			N: rsa.n.toString(),
@@ -172,4 +163,4 @@ dojo.require("dojox.math.random.prng4");
 		}
 */
 	]);
-})();
+});

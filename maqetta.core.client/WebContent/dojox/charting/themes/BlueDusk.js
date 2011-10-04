@@ -1,9 +1,6 @@
-dojo.provide("dojox.charting.themes.BlueDusk");
-dojo.require("dojox.charting.Theme");
+define(["../Theme", "./common"], function(Theme, themes){
 
-(function(){
-	var dxc=dojox.charting;
-	dxc.themes.BlueDusk=new dxc.Theme({
+	themes.BlueDusk=new Theme({
 		colors: [
 			"#292e76",
 			"#3e56a6",
@@ -12,4 +9,6 @@ dojo.require("dojox.charting.Theme");
 			"#798dcd"
 		]
 	});
-})();
+	
+	return themes.BlueDusk;
+});

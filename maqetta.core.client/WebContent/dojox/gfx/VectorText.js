@@ -1,38 +1,47 @@
-dojo.provide("dojox.gfx.VectorText");
-dojo.require("dojox.gfx");
-dojo.require("dojox.xml.DomParser");
-dojo.require("dojox.html.metrics");
-
-(function(){
-	/*
-		dojox.gfx.VectorText
-		An implementation of the SVG Font 1.1 spec, using dojox.gfx.
-
-		Basic interface:
-		var f = new dojox.gfx.Font(url|string);
-		surface||group.createVectorText(text)
-			.setFill(fill)
-			.setStroke(stroke)
-			.setFont(fontStyleObject);
-
-		The arguments passed to createVectorText are the same as you would
-		pass to surface||group.createText; the difference is that this
-		is entirely renderer-agnostic, and the return value is a subclass
-		of dojox.gfx.Group.
-
-		Note also that the "defaultText" object is slightly different:
-		{ type:"vectortext", x:0, y:0, width:null, height: null,
-			text: "", align: "start", decoration: "none" }
-
-		...as well as the "defaultVectorFont" object:
-		{ type:"vectorfont", size:"10pt" }
-
-		The reason for this should be obvious: most of the style for the font is defined
-		by the font object itself.
-
-		Note that this will only render IF and WHEN you set the font.
-	 */
-	dojo.mixin(dojox.gfx, {
+define(["dojo/_base/lang","dojo/_base/declare","dojo/_base/array", "dojo/_base/loader" /* dojo._getText */,
+	    "dojo/_base/xhr","./_base", "dojox/xml/DomParser", "dojox/html/metrics","./matrix"],
+  function (lang,declare,arr,loader,xhr,gfx,xmlDomParser,HtmlMetrics,Matrix){
+/*===== 
+ 	gfx = dojox.gfx;
+ 	dojox.gfx.VectorText = {
+		// summary:
+		//		An implementation of the SVG Font 1.1 spec, using dojox.gfx.
+		//
+		// Basic interface:
+		// var f = new dojox.gfx.Font(url|string);
+		// surface||group.createVectorText(text)
+		//	.setFill(fill)
+		//	.setStroke(stroke)
+		//	.setFont(fontStyleObject);
+		//
+		// The arguments passed to createVectorText are the same as you would
+		// pass to surface||group.createText; the difference is that this
+		// is entirely renderer-agnostic, and the return value is a subclass
+		// of dojox.gfx.Group.
+		//
+		// Note also that the "defaultText" object is slightly different:
+		// { type:"vectortext", x:0, y:0, width:null, height: null,
+		//	text: "", align: "start", decoration: "none" }
+		//
+		// ...as well as the "defaultVectorFont" object:
+		// { type:"vectorfont", size:"10pt" }
+		//
+		// The reason for this should be obvious: most of the style for the font is defined
+		// by the font object itself.
+		//
+		// Note that this will only render IF and WHEN you set the font.
+	};
+ =====*/ 
+	var _getText = function(url){
+		var result;
+		xhr.get({url:url, sync:true, load:function(text){ // Note synchronous!
+			result = text;
+		}});
+		return result;
+	};
+	 
+	lang.getObject("dojox.gfx.VectorText", true);
+	lang.mixin(gfx, {
 		vectorFontFitting: {
 			NONE: 0,	//	render text according to passed size.
 			FLOW: 1,		//	render text based on the passed width and size
@@ -49,14 +58,14 @@ dojo.require("dojox.html.metrics");
 		_vectorFontCache: {},
 		_svgFontCache: {},
 		getVectorFont: function(/* String */url){
-			if(dojox.gfx._vectorFontCache[url]){
-				return dojox.gfx._vectorFontCache[url];
+			if(gfx._vectorFontCache[url]){
+				return gfx._vectorFontCache[url];
 			}
-			return new dojox.gfx.VectorFont(url);
+			return new gfx.VectorFont(url);
 		}
 	});
 
-	dojo.declare("dojox.gfx.VectorFont", null, {
+	return declare("dojox.gfx.VectorFont", null, {  // EARLY RETURN
 		_entityRe: /&(quot|apos|lt|gt|amp|#x[^;]+|#\d+);/g,
 		_decodeEntitySequence: function(str){
 			//	unescape the unicode sequences
@@ -87,7 +96,7 @@ dojo.require("dojox.html.metrics");
 			//		Take the loaded SVG Font definition file and convert the info
 			//		into things we can use. The SVG Font definition must follow
 			//		the SVG 1.1 Font specification.
-			var doc = dojox.gfx._svgFontCache[url]||dojox.xml.DomParser.parse(svg);
+			var doc = gfx._svgFontCache[url]||xmlDomParser.parse(svg);
 
 			//	font information
 			var f = doc.documentElement.byName("font")[0], face = doc.documentElement.byName("font-face")[0];
@@ -133,10 +142,10 @@ dojo.require("dojox.html.metrics");
 			}
 
 			//	see if this is cached already, and if so, forget the rest of the parsing.
-			if(dojox.gfx._vectorFontCache[name]){ return; }
+			if(gfx._vectorFontCache[name]){ return; }
 
 			//	get any provided baseline alignment offsets.
-			dojo.forEach(["alphabetic", "ideographic", "mathematical", "hanging" ], function(attr){
+			arr.forEach(["alphabetic", "ideographic", "mathematical", "hanging" ], function(attr){
 				var a = face.getAttribute(attr);
 				if(a !== null /* be explicit, might be 0 */){
 					baseline[attr] = parseFloat(a, 10);
@@ -146,7 +155,7 @@ dojo.require("dojox.html.metrics");
 		/*
 			//	TODO: decoration hinting.
 			var decoration = { };
-			dojo.forEach(["underline", "strikethrough", "overline"], function(type){
+			arr.forEach(["underline", "strikethrough", "overline"], function(type){
 				if(face.getAttribute(type+"-position")!=null){
 					decoration[type]={ };
 				}
@@ -158,7 +167,7 @@ dojo.require("dojox.html.metrics");
 
 			//	glyph information
 			var glyphs = {}, glyphsByName={}, g=doc.documentElement.byName("glyph");
-			dojo.forEach(g, function(node){
+			arr.forEach(g, function(node){
 				//	we are going to assume the following:
 				//		1) we have the unicode attribute
 				//		2) we have the name attribute
@@ -181,7 +190,7 @@ dojo.require("dojox.html.metrics");
 
 			//	now the fun part: look for kerning pairs.
 			var hkern=doc.documentElement.byName("hkern");
-			dojo.forEach(hkern, function(node, i){
+			arr.forEach(hkern, function(node, i){
 				var k = -parseInt(node.getAttribute("k"),10);
 				//	look for either a code or a name
 				var u1=node.getAttribute("u1"),
@@ -220,7 +229,7 @@ dojo.require("dojox.html.metrics");
 			}, this);
 
 			//	pop the final definition in the font cache.
-			dojo.mixin(this, {
+			lang.mixin(this, {
 				family: family,
 				name: name,
 				style: style,
@@ -230,7 +239,7 @@ dojo.require("dojox.html.metrics");
 				range: range,
 				viewbox: { width: unitsPerEm, height: unitsPerEm },
 				origin: origin,
-				advance: dojo.mixin(advance, {
+				advance: lang.mixin(advance, {
 					missing:{ x: missing, y: missing }
 				}),
 				ascent: ascent,
@@ -240,22 +249,22 @@ dojo.require("dojox.html.metrics");
 			});
 
 			//	cache the parsed font
-			dojox.gfx._vectorFontCache[name] = this;
-			dojox.gfx._vectorFontCache[url] = this;
-			if(name!=family && !dojox.gfx._vectorFontCache[family]){
-				dojox.gfx._vectorFontCache[family] = this;
+			gfx._vectorFontCache[name] = this;
+			gfx._vectorFontCache[url] = this;
+			if(name!=family && !gfx._vectorFontCache[family]){
+				gfx._vectorFontCache[family] = this;
 			}
 
 			//	cache the doc
-			if(!dojox.gfx._svgFontCache[url]){
-				dojox.gfx._svgFontCache[url]=doc;
+			if(!gfx._svgFontCache[url]){
+				gfx._svgFontCache[url]=doc;
 			}
 		},
 		_clean: function(){
 			//	summary:
 			//		Clean off all of the given mixin parameters.
 			var name = this.name, family = this.family;
-			dojo.forEach(["family","name","style","variant",
+			arr.forEach(["family","name","style","variant",
 				"weight","stretch","range","viewbox",
 				"origin","advance","ascent","descent",
 				"baseline","glyphs"], function(prop){
@@ -263,11 +272,11 @@ dojo.require("dojox.html.metrics");
 			}, this);
 
 			//	try to pull out of the font cache.
-			if(dojox.gfx._vectorFontCache[name]){
-				delete dojox.gfx._vectorFontCache[name];
+			if(gfx._vectorFontCache[name]){
+				delete gfx._vectorFontCache[name];
 			}
-			if(dojox.gfx._vectorFontCache[family]){
-				delete dojox.gfx._vectorFontCache[family];
+			if(gfx._vectorFontCache[family]){
+				delete gfx._vectorFontCache[family];
 			}
 			return this;
 		},
@@ -285,7 +294,7 @@ dojo.require("dojox.html.metrics");
 			//		Load the passed SVG and send it to the parser for parsing.
 			this.onLoadBegin(url.toString());
 			this._parse(
-				dojox.gfx._svgFontCache[url.toString()]||dojo._getText(url.toString()),
+				gfx._svgFontCache[url.toString()]||_getText(url.toString()),
 				url.toString()
 			);
 			this.onLoad(this);
@@ -306,7 +315,7 @@ dojo.require("dojox.html.metrics");
 
 		_getWidth: function(glyphs){
 			var w=0, last=0, lastGlyph=null;
-			dojo.forEach(glyphs, function(glyph, i){
+			arr.forEach(glyphs, function(glyph, i){
 				last=glyph.xAdvance;
 				if(glyphs[i] && glyph.kern && glyph.kern[glyphs[i].code]){
 					last += glyph.kern[glyphs[i].code].x;
@@ -325,7 +334,7 @@ dojo.require("dojox.html.metrics");
 
 		_getLongestLine: function(lines){
 			var maxw=0, idx=0;
-			dojo.forEach(lines, function(line, i){
+			arr.forEach(lines, function(line, i){
 				var max = Math.max(maxw, this._getWidth(line));
 				if(max > maxw){
 					maxw = max;
@@ -344,9 +353,9 @@ dojo.require("dojox.html.metrics");
 				if(arr[0].code == " "){ arr.splice(0, 1); }
 			};
 
-			if(dojo.isArray(lines[0])){
+			if(lang.isArray(lines[0])){
 				//	more than one line.
-				dojo.forEach(lines, fn);
+				arr.forEach(lines, fn);
 			} else {
 				fn(lines);
 			}
@@ -391,7 +400,7 @@ dojo.require("dojox.html.metrics");
 			//	given the size, return a scaling factor based on the height of the
 			//	font as defined in the font definition file.
 			size += "";	//	force the string cast.
-			var metrics = dojox.html.metrics.getCachedFontMeasurements(),
+			var metrics = HtmlMetrics.getCachedFontMeasurements(),
 				height=this.viewbox.height,
 				f=metrics["1em"],
 				unit=parseFloat(size, 10);	//	the default.
@@ -480,7 +489,7 @@ dojo.require("dojox.html.metrics");
 		getWidth: function(/* String */text, /* Float? */scale){
 			//	summary:
 			//		Get the width of the rendered text without actually rendering it.
-			return this._getWidth(dojo.map(this._normalize(text).split(""), function(chr){
+			return this._getWidth(arr.map(this._normalize(text).split(""), function(chr){
 				return this.glyphs[chr] || { xAdvance: this.advance.missing.x };
 			}, this)) * (scale || 1);	//	Float
 		},
@@ -604,7 +613,7 @@ dojo.require("dojox.html.metrics");
 			}
 
 			//	go get the glyph array.
-			var text = dojo.map(this._normalize(textArgs.text).split(""), function(chr){
+			var text = arr.map(this._normalize(textArgs.text).split(""), function(chr){
 				return this.glyphs[chr] || { path:null, xAdvance: this.advance.missing.x };
 			}, this);
 
@@ -619,22 +628,22 @@ dojo.require("dojox.html.metrics");
 			//	figure out if we have to do fitting at all.
 			if(fitting){
 				//	more than zero.
-				if((fitting==dojox.gfx.vectorFontFitting.FLOW && !width) || (fitting==dojox.gfx.vectorFontFitting.FIT && (!width || !height))){
+				if((fitting==gfx.vectorFontFitting.FLOW && !width) || (fitting==gfx.vectorFontFitting.FIT && (!width || !height))){
 					//	reset the fitting if we don't have everything we need.
-					fitting = dojox.gfx.vectorFontFitting.NONE;
+					fitting = gfx.vectorFontFitting.NONE;
 				}
 			}
 
 			//	set up the lines array and the scaling factor.
 			var lines, scale;
 			switch(fitting){
-				case dojox.gfx.vectorFontFitting.FIT:
+				case gfx.vectorFontFitting.FIT:
 					var o=this._getBestFit(text, width, height, leading);
 					scale = o.scale;
 					lines = o.lines;
 					break;
 
-				case dojox.gfx.vectorFontFitting.FLOW:
+				case gfx.vectorFontFitting.FLOW:
 					scale = this._getSizeFactor(size);
 					lines = this._getBestFlow(text, width, scale);
 					break;
@@ -646,7 +655,7 @@ dojo.require("dojox.html.metrics");
 			}
 
 			//	make sure lines doesn't have any empty lines.
-			lines = dojo.filter(lines, function(item){
+			lines = arr.filter(lines, function(item){
 				return item.length>0;
 			});
 
@@ -667,8 +676,8 @@ dojo.require("dojox.html.metrics");
 						var p = lg.createPath(glyph.path).setFill(fillArgs);
 						if(strokeArgs){ p.setStroke(strokeArgs); }
 						p.setTransform([
-							dojox.gfx.matrix.flipY,
-							dojox.gfx.matrix.translate(cx, -this.viewbox.height-this.descent)
+							Matrix.flipY,
+							Matrix.translate(cx, -this.viewbox.height-this.descent)
 						]);
 					}
 					cx += glyph.xAdvance;
@@ -686,7 +695,7 @@ dojo.require("dojox.html.metrics");
 			}
 
 			//	scale the group
-			g.setTransform(dojox.gfx.matrix.scale(scale));
+			g.setTransform(Matrix.scale(scale));
 
 			//	return the overall group
 			return g;	//	dojox.gfx.Group
@@ -774,4 +783,4 @@ dojo.require("dojox.html.metrics");
 		return this.createObject(dojox.gfx.VectorText, text);
 	}
 */
-})();
+});

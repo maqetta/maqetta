@@ -1,6 +1,31 @@
-define("dijit/_editor/plugins/LinkDialog", ["dojo", "dijit", "dijit/_Widget", "dijit/_editor/_Plugin", "dijit/TooltipDialog", "dijit/form/DropDownButton", "dijit/form/ValidationTextBox", "dijit/form/Select", "dijit/_editor/range", "dojo/i18n", "dojo/string", "i18n!dijit/nls/common", "i18n!dijit/_editor/nls/LinkDialog"], function(dojo, dijit) {
+define([
+	"require",
+	"dojo/_base/declare", // declare
+	"dojo/dom-attr", // domAttr.get
+	"dojo/keys", // keys.ENTER
+	"dojo/_base/lang", // lang.delegate lang.hitch lang.trim
+	"dojo/_base/sniff", // has("ie")
+	"dojo/string", // string.substitute
+	"dojo/_base/window", // win.withGlobal
+	"../../_Widget",
+	"../_Plugin",
+	"../../form/DropDownButton",
+	"../range",
+	"../selection"
+], function(require, declare, domAttr, keys, lang, has, string, win,
+	_Widget, _Plugin, DropDownButton, rangeapi, selectionapi){
 
-dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
+/*=====
+	var _Plugin = dijit._editor._Plugin;
+=====*/
+
+// module:
+//		dijit/_editor/plugins/LinkDialog
+// summary:
+//		Editor plugins: LinkDialog (for inserting links) and ImgLinkDialog (for inserting images)
+
+
+var LinkDialog = declare("dijit._editor.plugins.LinkDialog", _Plugin, {
 	// summary:
 	//		This plugin provides the basis for an 'anchor' (link) dialog and an extension of it
 	//		provides the image link dialog.
@@ -11,7 +36,7 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 
 	// Override _Plugin.buttonClass.   This plugin is controlled by a DropDownButton
 	// (which triggers a TooltipDialog).
-	buttonClass: dijit.form.DropDownButton,
+	buttonClass: DropDownButton,
 
 	// Override _Plugin.useDefaultCommand... processing is handled by this plugin, not by dijit.Editor.
 	useDefaultCommand: false,
@@ -50,76 +75,105 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 		"<table><tr><td>",
 		"<label for='${id}_urlInput'>${url}</label>",
 		"</td><td>",
-		"<input dojoType='dijit.form.ValidationTextBox' required='true' " +
-		"id='${id}_urlInput' name='urlInput' intermediateChanges='true'/>",
+		"<input data-dojo-type='dijit.form.ValidationTextBox' required='true' " +
+		"id='${id}_urlInput' name='urlInput' data-dojo-props='intermediateChanges:true'/>",
 		"</td></tr><tr><td>",
 		"<label for='${id}_textInput'>${text}</label>",
 		"</td><td>",
-		"<input dojoType='dijit.form.ValidationTextBox' required='true' id='${id}_textInput' " +
-		"name='textInput' intermediateChanges='true'/>",
+		"<input data-dojo-type='dijit.form.ValidationTextBox' required='true' id='${id}_textInput' " +
+		"name='textInput' data-dojo-props='intermediateChanges:true'/>",
 		"</td></tr><tr><td>",
 		"<label for='${id}_targetSelect'>${target}</label>",
 		"</td><td>",
-		"<select id='${id}_targetSelect' name='targetSelect' dojoType='dijit.form.Select'>",
+		"<select id='${id}_targetSelect' name='targetSelect' data-dojo-type='dijit.form.Select'>",
 		"<option selected='selected' value='_self'>${currentWindow}</option>",
 		"<option value='_blank'>${newWindow}</option>",
 		"<option value='_top'>${topWindow}</option>",
 		"<option value='_parent'>${parentWindow}</option>",
 		"</select>",
 		"</td></tr><tr><td colspan='2'>",
-		"<button dojoType='dijit.form.Button' type='submit' id='${id}_setButton'>${set}</button>",
-		"<button dojoType='dijit.form.Button' type='button' id='${id}_cancelButton'>${buttonCancel}</button>",
+		"<button data-dojo-type='dijit.form.Button' type='submit' id='${id}_setButton'>${set}</button>",
+		"<button data-dojo-type='dijit.form.Button' type='button' id='${id}_cancelButton'>${buttonCancel}</button>",
 		"</td></tr></table>"
 	].join(""),
 
 	_initButton: function(){
-		// Override _Plugin._initButton() to initialize DropDownButton and TooltipDialog.
-		var _this = this;
-		this.tag = this.command == 'insertImage' ? 'img' : 'a';
-		var messages = dojo.mixin(dojo.i18n.getLocalization("dijit", "common", this.lang),
-			dojo.i18n.getLocalization("dijit._editor", "LinkDialog", this.lang));
-		var dropDown = (this.dropDown = new dijit.TooltipDialog({
-			title: messages[this.command + "Title"],
-			execute: dojo.hitch(this, "setValue"),
-			onOpen: function(){
-				_this._onOpenDialog();
-				dijit.TooltipDialog.prototype.onOpen.apply(this, arguments);
-			},
-			onCancel: function(){
-				setTimeout(dojo.hitch(_this, "_onCloseDialog"),0);
-			}
-		}));
-		messages.urlRegExp = this.urlRegExp;
-		messages.id = dijit.getUniqueId(this.editor.id);
-		this._uniqueId = messages.id;
-		this._setContent(dropDown.title +
-			"<div style='border-bottom: 1px black solid;padding-bottom:2pt;margin-bottom:4pt'></div>" +
-			dojo.string.substitute(this.linkDialogTemplate, messages));
-		dropDown.startup();
-		this._urlInput = dijit.byId(this._uniqueId + "_urlInput");
-		this._textInput = dijit.byId(this._uniqueId + "_textInput");
-		this._setButton = dijit.byId(this._uniqueId + "_setButton");
-		this.connect(dijit.byId(this._uniqueId + "_cancelButton"), "onClick", function(){
-			this.dropDown.onCancel();
-		});
-		if(this._urlInput){
-			this.connect(this._urlInput, "onChange", "_checkAndFixInput");
-		}
-		if(this._textInput){
-			this.connect(this._textInput, "onChange", "_checkAndFixInput");
-		}
+		this.inherited(arguments);
 
-		// Build up the dual check for http/https/file:, and mailto formats.
-		this._urlRegExp = new RegExp("^" + this.urlRegExp + "$", "i");
-		this._emailRegExp = new RegExp("^" + this.emailRegExp + "$", "i");
-		this._urlInput.isValid = dojo.hitch(this, function(){
-			// Function over-ride of isValid to test if the input matches a url or a mailto style link.
-			var value = this._urlInput.get("value");
-			return this._urlRegExp.test(value) || this._emailRegExp.test(value);
-		});
+		// Setup to lazy create TooltipDialog first time the button is clicked
+		this.button.loadDropDown = lang.hitch(this, "_loadDropDown");
 
 		this._connectTagEvents();
-		this.inherited(arguments);
+	},
+	_loadDropDown: function(callback){
+		// Called the first time the button is pressed.  Initialize TooltipDialog.
+		require([
+			"dojo/i18n", // i18n.getLocalization
+			"../../TooltipDialog",
+			"../../registry", // registry.byId, registry.getUniqueId
+			"../../form/Button",	// used by template
+			"../../form/Select",	// used by template
+			"../../form/ValidationTextBox",	// used by template
+			"dojo/i18n!../../nls/common",
+			"dojo/i18n!../nls/LinkDialog"
+		], lang.hitch(this, function(i18n, TooltipDialog, registry){
+			var _this = this;
+			this.tag = this.command == 'insertImage' ? 'img' : 'a';
+			var messages = lang.delegate(i18n.getLocalization("dijit", "common", this.lang),
+				i18n.getLocalization("dijit._editor", "LinkDialog", this.lang));
+			var dropDown = (this.dropDown = this.button.dropDown = new TooltipDialog({
+				title: messages[this.command + "Title"],
+				execute: lang.hitch(this, "setValue"),
+				onOpen: function(){
+					_this._onOpenDialog();
+					TooltipDialog.prototype.onOpen.apply(this, arguments);
+				},
+				onCancel: function(){
+					setTimeout(lang.hitch(_this, "_onCloseDialog"),0);
+				}
+			}));
+			messages.urlRegExp = this.urlRegExp;
+			messages.id = registry.getUniqueId(this.editor.id);
+			this._uniqueId = messages.id;
+			this._setContent(dropDown.title +
+				"<div style='border-bottom: 1px black solid;padding-bottom:2pt;margin-bottom:4pt'></div>" +
+				string.substitute(this.linkDialogTemplate, messages));
+			dropDown.startup();
+			this._urlInput = registry.byId(this._uniqueId + "_urlInput");
+			this._textInput = registry.byId(this._uniqueId + "_textInput");
+			this._setButton = registry.byId(this._uniqueId + "_setButton");
+			this.connect(registry.byId(this._uniqueId + "_cancelButton"), "onClick", function(){
+				this.dropDown.onCancel();
+			});
+			if(this._urlInput){
+				this.connect(this._urlInput, "onChange", "_checkAndFixInput");
+			}
+			if(this._textInput){
+				this.connect(this._textInput, "onChange", "_checkAndFixInput");
+			}
+
+			// Build up the dual check for http/https/file:, and mailto formats.
+			this._urlRegExp = new RegExp("^" + this.urlRegExp + "$", "i");
+			this._emailRegExp = new RegExp("^" + this.emailRegExp + "$", "i");
+			this._urlInput.isValid = lang.hitch(this, function(){
+				// Function over-ride of isValid to test if the input matches a url or a mailto style link.
+				var value = this._urlInput.get("value");
+				return this._urlRegExp.test(value) || this._emailRegExp.test(value);
+			});
+
+			// Listen for enter and execute if valid.
+			this.connect(dropDown.domNode, "onkeypress", function(e){
+				if(e && e.charOrCode == keys.ENTER &&
+					!e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey){
+					if(!this._setButton.get("disabled")){
+						dropDown.onExecute();
+						dropDown.execute(dropDown.get('value'));
+					}
+				}
+			});
+
+			callback();
+		}));
 	},
 
 	_checkAndFixInput: function(){
@@ -135,7 +189,7 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 			var appendHttp = false;
 			var appendMailto = false;
 			if(url && url.length > 1){
-				url = dojo.trim(url);
+				url = lang.trim(url);
 				if(url.indexOf("mailto:") !== 0){
 					if(url.indexOf("/") > 0){
 						if(url.indexOf("://") === -1){
@@ -173,7 +227,7 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 	_connectTagEvents: function(){
 		// summary:
 		//		Over-ridable function that connects tag specific events.
-		this.editor.onLoadDeferred.addCallback(dojo.hitch(this, function(){
+		this.editor.onLoadDeferred.addCallback(lang.hitch(this, function(){
 			this.connect(this.editor.editNode, "ondblclick", this._onDblClick);
 		}));
 	},
@@ -216,8 +270,8 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 		//		private
 		//TODO: prevent closing popup if the text is empty
 		this._onCloseDialog();
-		if(dojo.isIE < 9){ //see #4151
-			var sel = dijit.range.getSelection(this.editor.window);
+		if(has("ie") < 9){ //see #4151
+			var sel = rangeapi.getSelection(this.editor.window);
 			var range = sel.getRangeAt(0);
 			var a = range.endContainer;
 			if(a.nodeType === 3){
@@ -227,21 +281,21 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 				a = a.parentNode;
 			}
 			if(a && (a.nodeName && a.nodeName.toLowerCase() !== this.tag)){
-				// Stll nothing, one last thing to try on IE, as it might be 'img'
+				// Still nothing, one last thing to try on IE, as it might be 'img'
 				// and thus considered a control.
-				a = dojo.withGlobal(this.editor.window,
-					"getSelectedElement", dijit._editor.selection, [this.tag]);
+				a = win.withGlobal(this.editor.window,
+					"getSelectedElement", selectionapi, [this.tag]);
 			}
 			if(a && (a.nodeName && a.nodeName.toLowerCase() === this.tag)){
 				// Okay, we do have a match.  IE, for some reason, sometimes pastes before
-				// instead of removing the targetted paste-over element, so we unlink the
+				// instead of removing the targeted paste-over element, so we unlink the
 				// old one first.  If we do not the <a> tag remains, but it has no content,
 				// so isn't readily visible (but is wrong for the action).
 				if(this.editor.queryCommandEnabled("unlink")){
-					// Select all the link childent, then unlink.  The following insert will
+					// Select all the link children, then unlink.  The following insert will
 					// then replace the selected text.
-					dojo.withGlobal(this.editor.window,
-						"selectElementChildren", dijit._editor.selection, [a]);
+					win.withGlobal(this.editor.window,
+						"selectElementChildren", selectionapi, [a]);
 					this.editor.execCommand("unlink");
 				}
 			}
@@ -249,7 +303,7 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 		// make sure values are properly escaped, etc.
 		args = this._checkValues(args);
 		this.editor.execCommand('inserthtml',
-			dojo.string.substitute(this.htmlTemplate, args));
+			string.substitute(this.htmlTemplate, args));
 	},
 
 	_onCloseDialog: function(){
@@ -270,9 +324,9 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 			url = a.getAttribute('_djrealurl') || a.getAttribute('href');
 			target = a.getAttribute('target') || "_self";
 			text = a.textContent || a.innerText;
-			dojo.withGlobal(this.editor.window, "selectElement", dijit._editor.selection, [a, true]);
+			win.withGlobal(this.editor.window, "selectElement", selectionapi, [a, true]);
 		}else{
-			text = dojo.withGlobal(this.editor.window, dijit._editor.selection.getSelectedText);
+			text = win.withGlobal(this.editor.window, selectionapi.getSelectedText);
 		}
 		return {urlInput: url || '', textInput: text || '', targetSelect: target || ''}; //Object;
 	},
@@ -282,10 +336,10 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 		//		Handler for when the dialog is opened.
 		//		If the caret is currently in a URL then populate the URL's info into the dialog.
 		var a;
-		if(dojo.isIE < 9){
+		if(has("ie") < 9){
 			// IE is difficult to select the element in, using the range unified
 			// API seems to work reasonably well.
-			var sel = dijit.range.getSelection(this.editor.window);
+			var sel = rangeapi.getSelection(this.editor.window);
 			var range = sel.getRangeAt(0);
 			a = range.endContainer;
 			if(a.nodeType === 3){
@@ -295,14 +349,14 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 				a = a.parentNode;
 			}
 			if(a && (a.nodeName && a.nodeName.toLowerCase() !== this.tag)){
-				// Stll nothing, one last thing to try on IE, as it might be 'img'
+				// Still nothing, one last thing to try on IE, as it might be 'img'
 				// and thus considered a control.
-				a = dojo.withGlobal(this.editor.window,
-					"getSelectedElement", dijit._editor.selection, [this.tag]);
+				a = win.withGlobal(this.editor.window,
+					"getSelectedElement", selectionapi, [this.tag]);
 			}
 		}else{
-			a = dojo.withGlobal(this.editor.window,
-				"getAncestorElement", dijit._editor.selection, [this.tag]);
+			a = win.withGlobal(this.editor.window,
+				"getAncestorElement", selectionapi, [this.tag]);
 		}
 		this.dropDown.reset();
 		this._setButton.set("disabled", true);
@@ -321,24 +375,27 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 		if(e && e.target){
 			var t = e.target;
 			var tg = t.tagName? t.tagName.toLowerCase() : "";
-			if(tg === this.tag && dojo.attr(t,"href")){
-				dojo.withGlobal(this.editor.window,
+			if(tg === this.tag && domAttr.get(t,"href")){
+				win.withGlobal(this.editor.window,
 					 "selectElement",
-					 dijit._editor.selection, [t]);
+					 selectionapi, [t]);
 				this.editor.onDisplayChanged();
-				
-				setTimeout(dojo.hitch(this, function(){
+
+				setTimeout(lang.hitch(this, function(){
 					// Focus shift outside the event handler.
 					// IE doesn't like focus changes in event handles.
 					this.button.set("disabled", false);
 					this.button.openDropDown();
+					if(this.button.dropDown.focus){
+						this.button.dropDown.focus();
+					}
 				}), 10);
 			}
 		}
 	}
 });
 
-dojo.declare("dijit._editor.plugins.ImgLinkDialog", [dijit._editor.plugins.LinkDialog], {
+var ImgLinkDialog = declare("dijit._editor.plugins.ImgLinkDialog", [LinkDialog], {
 	// summary:
 	//		This plugin extends LinkDialog and adds in a plugin for handling image links.
 	//		provides the image link dialog.
@@ -354,17 +411,17 @@ dojo.declare("dijit._editor.plugins.ImgLinkDialog", [dijit._editor.plugins.LinkD
 		"<label for='${id}_urlInput'>${url}</label>",
 		"</td><td>",
 		"<input dojoType='dijit.form.ValidationTextBox' regExp='${urlRegExp}' " +
-		"required='true' id='${id}_urlInput' name='urlInput' intermediateChanges='true'/>",
+		"required='true' id='${id}_urlInput' name='urlInput' data-dojo-props='intermediateChanges:true'/>",
 		"</td></tr><tr><td>",
 		"<label for='${id}_textInput'>${text}</label>",
 		"</td><td>",
-		"<input dojoType='dijit.form.ValidationTextBox' required='false' id='${id}_textInput' " +
-		"name='textInput' intermediateChanges='true'/>",
+		"<input data-dojo-type='dijit.form.ValidationTextBox' required='false' id='${id}_textInput' " +
+		"name='textInput' data-dojo-props='intermediateChanges:true'/>",
 		"</td></tr><tr><td>",
 		"</td><td>",
 		"</td></tr><tr><td colspan='2'>",
-		"<button dojoType='dijit.form.Button' type='submit' id='${id}_setButton'>${set}</button>",
-		"<button dojoType='dijit.form.Button' type='button' id='${id}_cancelButton'>${buttonCancel}</button>",
+		"<button data-dojo-type='dijit.form.Button' type='submit' id='${id}_setButton'>${set}</button>",
+		"<button data-dojo-type='dijit.form.Button' type='button' id='${id}_cancelButton'>${buttonCancel}</button>",
 		"</td></tr></table>"
 	].join(""),
 
@@ -387,10 +444,10 @@ dojo.declare("dijit._editor.plugins.ImgLinkDialog", [dijit._editor.plugins.LinkD
 		if(img && img.tagName.toLowerCase() === this.tag){
 			url = img.getAttribute('_djrealurl') || img.getAttribute('src');
 			text = img.getAttribute('alt');
-			dojo.withGlobal(this.editor.window,
-				"selectElement", dijit._editor.selection, [img, true]);
+			win.withGlobal(this.editor.window,
+				"selectElement", selectionapi, [img, true]);
 		}else{
-			text = dojo.withGlobal(this.editor.window, dijit._editor.selection.getSelectedText);
+			text = win.withGlobal(this.editor.window, selectionapi.getSelectedText);
 		}
 		return {urlInput: url || '', textInput: text || ''}; //Object;
 	},
@@ -407,7 +464,7 @@ dojo.declare("dijit._editor.plugins.ImgLinkDialog", [dijit._editor.plugins.LinkD
 		// summary:
 		//		Over-ridable function that connects tag specific events.
 		this.inherited(arguments);
-		this.editor.onLoadDeferred.addCallback(dojo.hitch(this, function(){
+		this.editor.onLoadDeferred.addCallback(lang.hitch(this, function(){
 			// Use onmousedown instead of onclick.  Seems that IE eats the first onclick
 			// to wrap it in a selector box, then the second one acts as onclick.  See #10420
 			this.connect(this.editor.editNode, "onmousedown", this._selectTag);
@@ -427,9 +484,9 @@ dojo.declare("dijit._editor.plugins.ImgLinkDialog", [dijit._editor.plugins.LinkD
 			var t = e.target;
 			var tg = t.tagName? t.tagName.toLowerCase() : "";
 			if(tg === this.tag){
-				dojo.withGlobal(this.editor.window,
+				win.withGlobal(this.editor.window,
 					"selectElement",
-					dijit._editor.selection, [t]);
+					selectionapi, [t]);
 			}
 		}
 	},
@@ -463,35 +520,35 @@ dojo.declare("dijit._editor.plugins.ImgLinkDialog", [dijit._editor.plugins.LinkD
 		if(e && e.target){
 			var t = e.target;
 			var tg = t.tagName? t.tagName.toLowerCase() : "";
-			if(tg === this.tag && dojo.attr(t,"src")){
-				dojo.withGlobal(this.editor.window,
+			if(tg === this.tag && domAttr.get(t,"src")){
+				win.withGlobal(this.editor.window,
 					 "selectElement",
-					 dijit._editor.selection, [t]);
+					 selectionapi, [t]);
 				this.editor.onDisplayChanged();
-				setTimeout(dojo.hitch(this, function(){
+				setTimeout(lang.hitch(this, function(){
 					// Focus shift outside the event handler.
 					// IE doesn't like focus changes in event handles.
 					this.button.set("disabled", false);
 					this.button.openDropDown();
+					if(this.button.dropDown.focus){
+						this.button.dropDown.focus();
+					}
 				}), 10);
 			}
 		}
 	}
 });
 
-// Register this plugin.
-dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
-	if(o.plugin){ return; }
-	switch(o.args.name){
-		case "createLink":
-			o.plugin = new dijit._editor.plugins.LinkDialog({command: o.args.name});
-			break;
-		case "insertImage":
-			o.plugin = new dijit._editor.plugins.ImgLinkDialog({command: o.args.name});
-			break;
-	}
-});
+// Register these plugins
+_Plugin.registry["createLink"] = function(){
+	return new LinkDialog({command: "createLink"});
+};
+_Plugin.registry["insertImage"] = function(){
+	return new ImgLinkDialog({command: "insertImage"});
+};
 
 
-return dijit._editor.plugins.LinkDialog;
+// Export both LinkDialog and ImgLinkDialog
+LinkDialog.ImgLinkDialog = ImgLinkDialog;
+return LinkDialog;
 });

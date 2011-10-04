@@ -47,7 +47,7 @@ tests.register("dojox.date.tests.timezoneFormatting",
 				// Tokyo (in ja-jp)
 				doh.is("2006\u5e748\u670811\u65e5\u91d1\u66dc\u65e59\u664255\u520612\u79d2 JST", dojo.date.locale.format(date, {formatLength:'full',locale:'ja-jp',timezone:'Asia/Tokyo'}));
 				// Shanghai (in zh-cn)
-				doh.is("2006\u5e748\u670811\u65e5\u661f\u671f\u4e94\u4e0a\u534808\u65f655\u520612\u79d2 CST", dojo.date.locale.format(date, {formatLength:'full',locale:'zh-cn',timezone:'Asia/Shanghai'}));
+				doh.is("2006\u5e748\u670811\u65e5\u661f\u671f\u4e94CST\u4e0a\u53488\u65f655\u520612\u79d2", dojo.date.locale.format(date, {formatLength:'full',locale:'zh-cn',timezone:'Asia/Shanghai'}));
 				// Paris (in fr-fr)
 				doh.is("vendredi 11 août 2006 02:55:12 CEST", dojo.date.locale.format(date, {formatLength:'full',locale:'fr-fr',timezone:'Europe/Paris'}));
 				// Vienna (in de-at)

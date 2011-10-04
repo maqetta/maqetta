@@ -1,8 +1,15 @@
-dojo.provide("dojox.grid.enhanced.plugins.Menu");
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/_base/html",
+	"dojo/_base/event",
+	"dojo/keys",
+	"../_Plugin",
+	"../../EnhancedGrid"
+], function(declare, array, lang, html, evt, keys, _Plugin, EnhancedGrid){
 
-dojo.require("dojox.grid.enhanced._Plugin");
-
-dojo.declare("dojox.grid.enhanced.plugins.Menu", dojox.grid.enhanced._Plugin, {
+var Menu = declare("dojox.grid.enhanced.plugins.Menu", _Plugin, {
 	// summary:
 	//		 Provides context menu support, including header menu, row menu, cell menu and selected region menu
 	// example:
@@ -21,15 +28,15 @@ dojo.declare("dojox.grid.enhanced.plugins.Menu", dojox.grid.enhanced._Plugin, {
 	
 	constructor: function(){
 		var g = this.grid;
-		g.showMenu = dojo.hitch(g, this.showMenu);
-		g._setRowMenuAttr = dojo.hitch(this, '_setRowMenuAttr');
-		g._setCellMenuAttr = dojo.hitch(this, '_setCellMenuAttr');
-		g._setSelectedRegionMenuAttr = dojo.hitch(this, '_setSelectedRegionMenuAttr');
+		g.showMenu = lang.hitch(g, this.showMenu);
+		g._setRowMenuAttr = lang.hitch(this, '_setRowMenuAttr');
+		g._setCellMenuAttr = lang.hitch(this, '_setCellMenuAttr');
+		g._setSelectedRegionMenuAttr = lang.hitch(this, '_setSelectedRegionMenuAttr');
 	},
 	onStartUp: function(){
 		var type, option = this.option;
 		for(type in option){
-			if(dojo.indexOf(this.types, type) >= 0 && option[type]){
+			if(array.indexOf(this.types, type) >= 0 && option[type]){
 				this._initMenu(type, option[type]);
 			}
 		}
@@ -42,6 +49,8 @@ dojo.declare("dojox.grid.enhanced.plugins.Menu", dojox.grid.enhanced._Plugin, {
 			g.set(menuType, m);
 			if(menuType != "headerMenu"){
 				m._scheduleOpen = function(){return;};
+			}else{
+				g.setupHeaderMenu();
 			}
 		}
 	},
@@ -84,25 +93,25 @@ dojo.declare("dojox.grid.enhanced.plugins.Menu", dojox.grid.enhanced._Plugin, {
 		//		Show appropriate context menu
 		//		Fired from dojox.grid.enhanced._Events.onRowContextMenu, 'this' scope - Grid
 		//		TODO: test Shift-F10
-		var inSelectedRegion = (e.cellNode && dojo.hasClass(e.cellNode, 'dojoxGridRowSelected') ||
-			e.rowNode && (dojo.hasClass(e.rowNode, 'dojoxGridRowSelected') || dojo.hasClass(e.rowNode, 'dojoxGridRowbarSelected')));
+		var inSelectedRegion = (e.cellNode && html.hasClass(e.cellNode, 'dojoxGridRowSelected') ||
+			e.rowNode && (html.hasClass(e.rowNode, 'dojoxGridRowSelected') || html.hasClass(e.rowNode, 'dojoxGridRowbarSelected')));
 		
 		if(inSelectedRegion && this.selectedRegionMenu){
 			this.onSelectedRegionContextMenu(e);
 			return;
 		}
 		
-		var info = {target: e.target, coords: e.keyCode !== dojo.keys.F10 && "pageX" in e ? {x: e.pageX, y: e.pageY } : null};
-		if(this.rowMenu && (!this.cellMenu || this.selection.isSelected(e.rowIndex) || e.rowNode && dojo.hasClass(e.rowNode, 'dojoxGridRowbar'))){
+		var info = {target: e.target, coords: e.keyCode !== keys.F10 && "pageX" in e ? {x: e.pageX, y: e.pageY } : null};
+		if(this.rowMenu && (!this.cellMenu || this.selection.isSelected(e.rowIndex) || e.rowNode && html.hasClass(e.rowNode, 'dojoxGridRowbar'))){
 			this.rowMenu._openMyself(info);
-			dojo.stopEvent(e);
+			evt.stop(e);
 			return;
 		}
 
 		if(this.cellMenu){
 			this.cellMenu._openMyself(info);
 		}
-		dojo.stopEvent(e);
+		evt.stop(e);
 	},
 	destroy: function(){
 		// summary:
@@ -117,4 +126,8 @@ dojo.declare("dojox.grid.enhanced.plugins.Menu", dojox.grid.enhanced._Plugin, {
 	}
 });
 
-dojox.grid.EnhancedGrid.registerPlugin(dojox.grid.enhanced.plugins.Menu/*name:'menus'*/);
+EnhancedGrid.registerPlugin(Menu/*name:'menus'*/);
+
+return Menu;
+
+});

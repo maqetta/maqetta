@@ -5,7 +5,7 @@ dojo.require("dojo.data.api.Identity");
 
 
 dojox.data.tests.stores.FileStore.getGeoStore = function(){
-	return new dojox.data.FileStore({url: dojo.moduleUrl("dojox.data.tests.stores", "filestore_dojoxdatageo.php").toString(), pathAsQueryParam: true});
+	return new dojox.data.FileStore({url: require.toUrl("dojox/data/tests/stores/filestore_dojoxdatageo.php").toString(), pathAsQueryParam: true});
 };
 
 

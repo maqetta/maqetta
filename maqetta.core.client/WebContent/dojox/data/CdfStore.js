@@ -1,4 +1,4 @@
-define("dojox/data/CdfStore", ["dojo", "dojox", "dojo/data/util/sorter"], function(dojo, dojox) {
+define(["dojo", "dojox", "dojo/data/util/sorter"], function(dojo, dojox) {
 
 dojox.data.ASYNC_MODE = 0;
 dojox.data.SYNC_MODE = 1;

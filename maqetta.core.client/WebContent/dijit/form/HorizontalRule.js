@@ -1,7 +1,21 @@
-define("dijit/form/HorizontalRule", ["dojo", "dijit", "dijit/_Widget", "dijit/_Templated"], function(dojo, dijit) {
+define([
+	"dojo/_base/declare",	// declare
+	"../_Widget",
+	"../_TemplatedMixin"
+], function(declare, _Widget, _TemplatedMixin){
 
-dojo.declare("dijit.form.HorizontalRule", [dijit._Widget, dijit._Templated],
-{
+/*=====
+	var _Widget = dijit._Widget;
+	var _TemplatedMixin = dijit._TemplatedMixin;
+=====*/
+
+// module:
+//		dijit/form/HorizontalRule
+// summary:
+//		Hash marks for `dijit.form.HorizontalSlider`
+
+
+return declare("dijit.form.HorizontalRule", [_Widget, _TemplatedMixin], {
 	// summary:
 	//		Hash marks for `dijit.form.HorizontalSlider`
 
@@ -24,7 +38,7 @@ dojo.declare("dijit.form.HorizontalRule", [dijit._Widget, dijit._Templated],
 	_positionSuffix: '%;',
 	_suffix: '"></div>',
 
-	_genHTML: function(pos, ndx){
+	_genHTML: function(pos){
 		return this._positionPrefix + pos + this._positionSuffix + this.ruleStyle + this._suffix;
 	},
 
@@ -59,6 +73,4 @@ dojo.declare("dijit.form.HorizontalRule", [dijit._Widget, dijit._Templated],
 	}
 });
 
-
-return dijit.form.HorizontalRule;
 });

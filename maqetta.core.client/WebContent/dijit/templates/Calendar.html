@@ -1,37 +1,34 @@
-<table cellspacing="0" cellpadding="0" class="dijitCalendarContainer" role="grid" dojoAttachEvent="onkeypress: _onKeyPress" aria-labelledby="${id}_year">
+<table cellspacing="0" cellpadding="0" class="dijitCalendarContainer" role="grid" aria-labelledby="${id}_mddb ${id}_year">
 	<thead>
 		<tr class="dijitReset dijitCalendarMonthContainer" valign="top">
-			<th class='dijitReset dijitCalendarArrow' dojoAttachPoint="decrementMonth">
+			<th class='dijitReset dijitCalendarArrow' data-dojo-attach-point="decrementMonth">
 				<img src="${_blankGif}" alt="" class="dijitCalendarIncrementControl dijitCalendarDecrease" role="presentation"/>
-				<span dojoAttachPoint="decreaseArrowNode" class="dijitA11ySideArrow">-</span>
+				<span data-dojo-attach-point="decreaseArrowNode" class="dijitA11ySideArrow">-</span>
 			</th>
 			<th class='dijitReset' colspan="5">
-				<div dojoType="dijit.form.DropDownButton" dojoAttachPoint="monthDropDownButton"
-					id="${id}_mddb" tabIndex="-1">
+				<div data-dojo-attach-point="monthNode">
 				</div>
 			</th>
-			<th class='dijitReset dijitCalendarArrow' dojoAttachPoint="incrementMonth">
+			<th class='dijitReset dijitCalendarArrow' data-dojo-attach-point="incrementMonth">
 				<img src="${_blankGif}" alt="" class="dijitCalendarIncrementControl dijitCalendarIncrease" role="presentation"/>
-				<span dojoAttachPoint="increaseArrowNode" class="dijitA11ySideArrow">+</span>
+				<span data-dojo-attach-point="increaseArrowNode" class="dijitA11ySideArrow">+</span>
 			</th>
 		</tr>
 		<tr>
-			<th class="dijitReset dijitCalendarDayLabelTemplate" role="columnheader"><span class="dijitCalendarDayLabel"></span></th>
+			${!dayCellsHtml}
 		</tr>
 	</thead>
-	<tbody dojoAttachEvent="onclick: _onDayClick, onmouseover: _onDayMouseOver, onmouseout: _onDayMouseOut, onmousedown: _onDayMouseDown, onmouseup: _onDayMouseUp" class="dijitReset dijitCalendarBodyContainer">
-		<tr class="dijitReset dijitCalendarWeekTemplate" role="row">
-			<td class="dijitReset dijitCalendarDateTemplate" role="gridcell"><span class="dijitCalendarDateLabel"></span></td>
-		</tr>
+	<tbody data-dojo-attach-point="dateRowsNode" data-dojo-attach-event="onclick: _onDayClick" class="dijitReset dijitCalendarBodyContainer">
+			${!dateRowsHtml}
 	</tbody>
 	<tfoot class="dijitReset dijitCalendarYearContainer">
 		<tr>
-			<td class='dijitReset' valign="top" colspan="7">
-				<h3 class="dijitCalendarYearLabel">
-					<span dojoAttachPoint="previousYearLabelNode" class="dijitInline dijitCalendarPreviousYear"></span>
-					<span dojoAttachPoint="currentYearLabelNode" class="dijitInline dijitCalendarSelectedYear" id="${id}_year"></span>
-					<span dojoAttachPoint="nextYearLabelNode" class="dijitInline dijitCalendarNextYear"></span>
-				</h3>
+			<td class='dijitReset' valign="top" colspan="7" role="presentation">
+				<div class="dijitCalendarYearLabel">
+					<span data-dojo-attach-point="previousYearLabelNode" class="dijitInline dijitCalendarPreviousYear" role="button"></span>
+					<span data-dojo-attach-point="currentYearLabelNode" class="dijitInline dijitCalendarSelectedYear" role="button" id="${id}_year"></span>
+					<span data-dojo-attach-point="nextYearLabelNode" class="dijitInline dijitCalendarNextYear" role="button"></span>
+				</div>
 			</td>
 		</tr>
 	</tfoot>

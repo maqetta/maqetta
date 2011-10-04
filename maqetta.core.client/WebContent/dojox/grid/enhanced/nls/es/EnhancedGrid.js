@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	singleSort: "Orden único",
 	nestedSort: "Orden anidado",
@@ -9,4 +11,6 @@
 	indirectSelectionCheckBox: "Fila ${0}, selección múltiple, recuadro de selección",
 	selectAll: "Seleccionar todo"
 })
+//end v1.x content
+);
 

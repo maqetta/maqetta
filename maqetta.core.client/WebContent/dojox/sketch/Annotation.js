@@ -1,10 +1,12 @@
-dojo.provide("dojox.sketch.Annotation");
-dojo.require("dojox.sketch.Anchor");
-dojo.require("dojox.sketch._Plugin");
-
-(function(){
-	var ta=dojox.sketch;
-	dojo.declare("dojox.sketch.AnnotationTool", ta._Plugin, {
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"dojo/_base/declare",
+	"dojo/_base/json",
+	"./Anchor",
+	"./_Plugin"
+], function(dojo){
+	dojo.declare("dojox.sketch.AnnotationTool", dojox.sketch._Plugin, {
 		onMouseDown: function(e){
 			this._omd=true;
 		},
@@ -68,19 +70,19 @@ dojo.require("dojox.sketch._Plugin");
 			a.initialize();
 			f.select(a);
 			f.onCreateShape(a);
-			f.history.add(ta.CommandTypes.Create,a);
+			f.history.add(dojox.sketch.CommandTypes.Create,a);
 		}
 	});
 
-	ta.Annotation=function(figure, id){
+	dojox.sketch.Annotation=function(figure, id){
 		//	for editing stuff.
 		this.id=this._key=id;
 		this.figure=figure;
-		this.mode=ta.Annotation.Modes.View;
+		this.mode=dojox.sketch.Annotation.Modes.View;
 		this.shape=null;	// dojox.gfx.Group
 		this.boundingBox=null;	// rect for boundaries
 		this.hasAnchors=true;
-		this.anchors={};	//	ta.Anchor
+		this.anchors={};	//	dojox.sketch.Anchor
 		this._properties={
 			'stroke':{ color:"blue", width:2 },
 			'font': {family:"Arial", size:16, weight:"bold"},
@@ -93,13 +95,13 @@ dojo.require("dojox.sketch._Plugin");
 		}
 	};
 
-	var p=ta.Annotation.prototype;
-	p.constructor=ta.Annotation;
+	var p=dojox.sketch.Annotation.prototype;
+	p.constructor=dojox.sketch.Annotation;
 	p.type=function(){ return ''; };
-	p.getType=function(){ return ta.Annotation; };
+	p.getType=function(){ return dojox.sketch.Annotation; };
 	p.onRemove=function(noundo){
 		//this.figure._delete([this],noundo);
-		this.figure.history.add(ta.CommandTypes.Delete, this, this.serialize());
+		this.figure.history.add(dojox.sketch.CommandTypes.Delete, this, this.serialize());
 	};
 	p.property=function(name,/*?*/value){
 		var r;
@@ -117,12 +119,12 @@ dojo.require("dojox.sketch._Plugin");
 	};
 	p.onPropertyChange=function(name,oldvalue){};
 	p.onCreate=function(){
-		this.figure.history.add(ta.CommandTypes.Create,this);
+		this.figure.history.add(dojox.sketch.CommandTypes.Create,this);
 	}
 	p.onDblClick=function(e){
 		var l=prompt('Set new text:',this.property('label'));
 		if(l!==false){
-			this.beginEdit(ta.CommandTypes.Modify);
+			this.beginEdit(dojox.sketch.CommandTypes.Modify);
 			this.property('label',l);
 			this.draw();
 			this.endEdit();
@@ -136,7 +138,7 @@ dojo.require("dojox.sketch._Plugin");
 	p.getBBox=function(){ };
 	p.beginEdit=function(type){
 		if(!this._type){
-			this._type=type||ta.CommandTypes.Move;
+			this._type=type||dojox.sketch.CommandTypes.Move;
 			this._prevState=this.serialize();
 		}
 	};
@@ -193,7 +195,7 @@ dojo.require("dojox.sketch._Plugin");
 		if(this.mode==m){ return; }
 		this.mode=m;
 		var method="disable";
-		if(m==ta.Annotation.Modes.Edit){ method="enable"; }
+		if(m==dojox.sketch.Annotation.Modes.Edit){ method="enable"; }
 		if(method=="enable"){
 			//	draw the bounding box
 			this.drawBBox();
@@ -257,15 +259,17 @@ dojo.require("dojox.sketch._Plugin");
 			this.transform.dy=parseFloat(pt[1],10);
 		}
 	};
-	ta.Annotation.Modes={ View:0, Edit:1 };
-	ta.Annotation.register=function(name,toolclass){
-		var cls=ta[name+'Annotation'];
-		ta.registerTool(name, function(p){
+	dojox.sketch.Annotation.Modes={ View:0, Edit:1 };
+	dojox.sketch.Annotation.register=function(name,toolclass){
+		var cls=dojox.sketch[name+'Annotation'];
+		dojox.sketch.registerTool(name, function(p){
 			dojo.mixin(p, {
 				shape: name,
 				annotation:cls
 			});
-			return new (toolclass || ta.AnnotationTool)(p);
+			return new (toolclass || dojox.sketch.AnnotationTool)(p);
 		});
 	};
-})();
+
+	return dojox.sketch.Annotation;
+});

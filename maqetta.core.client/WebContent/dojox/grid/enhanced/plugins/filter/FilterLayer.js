@@ -1,25 +1,26 @@
-dojo.provide("dojox.grid.enhanced.plugins.filter.FilterLayer");
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/window",
+	"dojo/_base/json",
+	"../_StoreLayer"
+], function(declare, lang, win, json, layers){
 
-dojo.require("dojox.grid.enhanced.plugins.filter._FilterExpr");
-dojo.require("dojox.grid.enhanced.plugins._StoreLayer");
-
-(function(){
-var ns = dojox.grid.enhanced.plugins,
-	cmdSetFilter = "filter",
-	cmdClearFilter = "clear",
-	hitchIfCan = function(scope, func){
-		return func ? dojo.hitch(scope || dojo.global, func) : function(){};
-	},
-	shallowClone = function(obj){
-		var res = {};
-		if(obj && dojo.isObject(obj)){
-			for(var name in obj){
-				res[name] = obj[name];
+	var cmdSetFilter = "filter",
+		cmdClearFilter = "clear",
+		hitchIfCan = function(scope, func){
+			return func ? lang.hitch(scope || win.global, func) : function(){};
+		},
+		shallowClone = function(obj){
+			var res = {};
+			if(obj && lang.isObject(obj)){
+				for(var name in obj){
+					res[name] = obj[name];
+				}
 			}
-		}
-		return res;
-	};
-	dojo.declare("dojox.grid.enhanced.plugins.filter._FilterLayerMixin", null, {
+			return res;
+		};
+	var _FilterLayerMixin = declare("dojox.grid.enhanced.plugins.filter._FilterLayerMixin", null, {
 /*=====
 		// _filter: _ConditionExpr
 		//		The filter definition
@@ -56,7 +57,7 @@ var ns = dojox.grid.enhanced.plugins,
 			//		The number of original fetched items.
 		}
 	});
-	dojo.declare("dojox.grid.enhanced.plugins.filter.ServerSideFilterLayer", [ns._ServerSideLayer, ns.filter._FilterLayerMixin], {
+	var ServerSideFilterLayer = declare("dojox.grid.enhanced.plugins.filter.ServerSideFilterLayer", [layers._ServerSideLayer, _FilterLayerMixin], {
 		constructor: function(args){
 			this._onUserCommandLoad = args.setupFilterQuery || this._onUserCommandLoad;
 			this.filterDef(null);
@@ -68,7 +69,7 @@ var ns = dojox.grid.enhanced.plugins,
 				this._filter = filter;
 				var obj = filter.toObject();
 				//Stateless implementation will need to parse the filter object.
-				this.command(cmdSetFilter, this._isStateful ? dojo.toJson(obj) : obj);
+				this.command(cmdSetFilter, this._isStateful ? json.toJson(obj) : obj);
 				this.command(cmdClearFilter, null);
 				this.useCommands(true);
 				this.onFilterDefined(filter);
@@ -121,7 +122,7 @@ var ns = dojox.grid.enhanced.plugins,
 			}
 		}
 	});
-	dojo.declare("dojox.grid.enhanced.plugins.filter.ClientSideFilterLayer", [ns._StoreLayer, ns.filter._FilterLayerMixin], {
+	var ClientSideFilterLayer = declare("dojox.grid.enhanced.plugins.filter.ClientSideFilterLayer", [layers._StoreLayer, _FilterLayerMixin], {
 		// summary:
 		//		Add a client side filter layer on top of the data store,
 		//		so any filter expression can be applied to the store.
@@ -161,9 +162,9 @@ var ns = dojox.grid.enhanced.plugins,
 		
 		constructor: function(args){
 			this.filterDef(null);
-			args = dojo.isObject(args) ? args : {};
+			args = lang.isObject(args) ? args : {};
 			this.fetchAllOnFirstFilter(args.fetchAll);
-			this._getter = dojo.isFunction(args.getter) ? args.getter : this._defaultGetter;
+			this._getter = lang.isFunction(args.getter) ? args.getter : this._defaultGetter;
 		},
 		_defaultGetter: function(datarow, colName, rowIndex, store){
 			return store.getValue(datarow, colName);
@@ -184,7 +185,7 @@ var ns = dojox.grid.enhanced.plugins,
 			// tags:
 			//		public
 			// getter: function(datarow, colArg, rowIndex, store);
-			if(dojo.isFunction(getter)){
+			if(lang.isFunction(getter)){
 				this._getter = getter;
 			}
 		},
@@ -244,9 +245,9 @@ var ns = dojox.grid.enhanced.plugins,
 					this._result = [];
 					this._resultStartIdx = start;
 					var sortStr;
-					if(dojo.isArray(userRequest.sort) && userRequest.sort.length > 0 &&
+					if(lang.isArray(userRequest.sort) && userRequest.sort.length > 0 &&
 						//Sort info will stay here in every re-fetch, so remember it!
-						(sortStr = dojo.toJson(userRequest.sort)) != this._lastSortInfo){
+						(sortStr = json.toJson(userRequest.sort)) != this._lastSortInfo){
 						//If we should sort data, all the old caches are no longer valid.
 						this.invalidate();
 						this._lastSortInfo = sortStr;
@@ -272,8 +273,8 @@ var ns = dojox.grid.enhanced.plugins,
 						//Initially, we've got to create a new request object.
 						filterRequest = shallowClone(userRequest);
 						//Use our own onBegin function to remember the total size of the original store.
-						filterRequest.onBegin = dojo.hitch(this, this._onFetchBegin);
-						filterRequest.onComplete = dojo.hitch(this, function(items, req){
+						filterRequest.onBegin = lang.hitch(this, this._onFetchBegin);
+						filterRequest.onComplete = lang.hitch(this, function(items, req){
 							//We've fetched some more, so march ahead!
 							this._nextUnfetchedIdx += items.length;
 							//Actual filtering work goes here. Survived items are added to our cache.
@@ -374,7 +375,7 @@ var ns = dojox.grid.enhanced.plugins,
 			//		Data items to add.
 			// filterStartIdx: Integer
 			//		The start point to insert in the cache.
-			if(!dojo.isArray(items)){
+			if(!lang.isArray(items)){
 				items = [items];
 			}
 			for(var k = 0; k < items.length; ++k){
@@ -385,7 +386,7 @@ var ns = dojox.grid.enhanced.plugins,
 		onRowMappingChange: function(mapping){
 			//This function runs in FilterLayer scope!
 			if(this._filter){
-				var m = dojo.clone(mapping),
+				var m = lang.clone(mapping),
 					alreadyUpdated = {};
 				for(var r in m){
 					r = parseInt(r, 10);
@@ -401,4 +402,9 @@ var ns = dojox.grid.enhanced.plugins,
 			}
 		}
 	});
-})();
+
+	return lang.mixin({
+		ServerSideFilterLayer: ServerSideFilterLayer,
+		ClientSideFilterLayer: ClientSideFilterLayer
+	}, layers);
+});

@@ -1,4 +1,12 @@
-define("dojox/editor/plugins/PrettyPrint", ["dojo", "dijit", "dojox", "dijit/_editor/_Plugin", "dojox/html/format"], function(dojo, dijit, dojox) {
+define([
+	"dojo",
+	"dijit",
+	"dojox",
+	"dijit/_editor/_Plugin",
+	"dojo/_base/connect",
+	"dojo/_base/declare",
+	"dojox/html/format"
+], function(dojo, dijit, dojox) {
 
 dojo.declare("dojox.editor.plugins.PrettyPrint",dijit._editor._Plugin,{
 	// summary:

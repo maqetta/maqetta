@@ -46,7 +46,7 @@
 			dojo.require("dojo.parser");	// scan page for widgets and instantiate them
 			dojo.require("doh.runner");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				dojo.declare(
 					"dijit.form.TimeTextBox",
 					dijit.form.ValidationTextBox,
@@ -59,7 +59,7 @@
 				);
 	
 				var tz_s = dojo.date.getTimezoneName(new Date());
-				if (!tz_s) {
+				if(!tz_s){
 					var offset = new Date().getTimezoneOffset();
 					var tz = [
 						(offset <= 0 ? "+" : "-"),
@@ -71,7 +71,7 @@
 					tz_s = tz.join("");
 				}
 	
-				function gen4DateFormat(testCases, language, locale, date, shortFmt, shortCmt, mediumFmt, mediumCmt, longFmt, longCmt, full, fullCmt) {
+				function gen4DateFormat(testCases, language, locale, date, shortFmt, shortCmt, mediumFmt, mediumCmt, longFmt, longCmt, full, fullCmt){
 					var tz_l = language.indexOf("hi") == 0 && dojo.number.normalizeDigitChars ?
 						dojo.number.normalizeDigitChars(tz_s, language) : tz_s;
 	
@@ -115,10 +115,10 @@
 					  comment: fullCmt
 					});
 	
-					date.processValue = function (value) {
+					date.processValue = function(value){
 						return value ? new Date(1970, 0, 1, value.getHours(), value.getMinutes(), value.getSeconds()) : value;
 					};
-					if (shortDate) {
+					if(shortDate){
 						shortDate.processValue = date.processValue;
 					}
 				}

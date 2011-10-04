@@ -1,4 +1,4 @@
-dojo.provide("dojox.uuid.generateTimeBasedUuid");
+define([ 'dojo/_base/lang', './_base'], function(lang){
 
 dojox.uuid.generateTimeBasedUuid = function(/*String?*/ node){
 	// summary:
@@ -28,7 +28,7 @@ dojox.uuid.generateTimeBasedUuid = function(/*String?*/ node){
 dojox.uuid.generateTimeBasedUuid.isValidNode = function(/*String?*/ node){
 	var HEX_RADIX = 16;
 	var integer = parseInt(node, HEX_RADIX);
-	var valid = dojo.isString(node) && node.length == 12 && isFinite(integer);
+	var valid = lang.isString(node) && node.length == 12 && isFinite(integer);
 	return valid; // Boolean
 };
 
@@ -107,8 +107,8 @@ dojox.uuid.generateTimeBasedUuid._generator = new function(){
 		//		that is the sum of the two original numbers.
 		// arrayA: An array with 4 elements, each of which is a 16-bit number.
 		// arrayB: An array with 4 elements, each of which is a 16-bit number.
-		dojox.uuid.assert(dojo.isArray(arrayA));
-		dojox.uuid.assert(dojo.isArray(arrayB));
+		dojox.uuid.assert(lang.isArray(arrayA));
+		dojox.uuid.assert(lang.isArray(arrayB));
 		dojox.uuid.assert(arrayA.length == 4);
 		dojox.uuid.assert(arrayB.length == 4);
 	
@@ -128,8 +128,8 @@ dojox.uuid.generateTimeBasedUuid._generator = new function(){
 		//		that is the product of the two original numbers.
 		// arrayA: An array with 4 elements, each of which is a 16-bit number.
 		// arrayB: An array with 4 elements, each of which is a 16-bit number.
-		dojox.uuid.assert(dojo.isArray(arrayA));
-		dojox.uuid.assert(dojo.isArray(arrayB));
+		dojox.uuid.assert(lang.isArray(arrayA));
+		dojox.uuid.assert(lang.isArray(arrayB));
 		dojox.uuid.assert(arrayA.length == 4);
 		dojox.uuid.assert(arrayB.length == 4);
 	
@@ -284,3 +284,7 @@ dojox.uuid.generateTimeBasedUuid._generator = new function(){
 	}
 
 }();
+
+return dojox.uuid.generateTimeBasedUuid;
+
+});

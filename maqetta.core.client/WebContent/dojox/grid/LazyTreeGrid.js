@@ -1,111 +1,116 @@
-dojo.provide("dojox.grid.LazyTreeGrid");
-
-dojo.require("dojox.grid._View");
-dojo.require("dojox.grid.TreeGrid");
-dojo.require("dojox.grid.cells.tree");
-dojo.require("dojox.grid.LazyTreeGridStoreModel");
-
-dojo.declare("dojox.grid._LazyExpando", [dijit._Widget, dijit._Templated], {
-	itemId: "",
-	cellIdx: -1,
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/event",
+	"dojo/_base/array",
+	"dojo/query",
+	"dojo/parser",
+	"dojo/dom-construct",
+	"dojo/dom-class",
+	"dojo/dom-style",
+	"dojo/dom-geometry",
+	"dojo/dom",
+	"dojo/keys",	
+	"dojo/text!./resources/Expando.html",
+	"dijit/_Widget",
+	"dijit/_TemplatedMixin",
+	"./TreeGrid",
+	"./_Builder",
+	"./_View",
+	"./_Layout",
+	"./cells/tree",
+	"./_RowManager",
+	"./_FocusManager",
+	"./_EditManager",
+	"./DataSelection",
+	"./util"
+], function(dojo, declare, lang, event, array, query, parser, domConstruct,
+	domClass, domStyle, domGeometry, dom, keys, template, _widget, _templatedMixin,
+	TreeGrid, _Builder, _View, _Layout, TreeCell, _RowManager, _FocusManager, _EditManager, DataSelection, util){
+		
+var _LazyExpando = declare("dojox.grid._LazyExpando", [_widget, _templatedMixin], {
+	grid: null,
 	view: null,
 	rowIdx: -1,
-	expandoCell: null,
+	cellIdx: -1,
 	level: 0,
-	open: false,
-	templatePath: dojo.moduleUrl("dojox.grid", "resources/Expando.html"),
-	
-	onToggle: function(event){
-		// Summary
-		//		Function for expand/collapse row
-		this.setOpen(!this.view.grid.cache.getExpandoStatusByRowIndex(this.rowIdx));
-		try{
-			dojo.stopEvent(event);
-		}catch(e){}
+	itemId: "",
+	templateString: template,
+	onToggle: function(evt){
+		// summary:
+		//		The onclick handler of expando, expand/collapse a tree node if has children.
+		if(this.grid._treeCache.items[this.rowIdx]){
+			this.grid.focus.setFocusIndex(this.rowIdx, this.cellIdx);
+			this.setOpen(!this.grid._treeCache.items[this.rowIdx].opened);
+			try{
+				event.stop(evt);
+			}catch(e){}
+		}
 	},
-	
 	setOpen: function(open){
-		var g = this.view.grid,
-			item = g.cache.getItemByRowIndex(this.rowIdx);
-		if(!g.treeModel.mayHaveChildren(item)){
-			g.stateChangeNode = null;
-			return;
-		}
-		if(item && !g._loading){
-			g.stateChangeNode = this.domNode;
-			g.cache.updateCache(this.rowIdx, {"expandoStatus": open});
+		// summary:
+		//		expand/collapse the row where the expando is in.
+		var g = this.grid,
+			item = g._by_idx[this.rowIdx].item;
+		if(item && g.treeModel.mayHaveChildren(item) && !g._loading && g._treeCache.items[this.rowIdx].opened !== open){
+			g._treeCache.items[this.rowIdx].opened = open;
 			g.expandoFetch(this.rowIdx, open);
-			this.open = open;
+			this._updateOpenState(item);
 		}
-		this._updateOpenState(item);
 	},
-	
 	_updateOpenState: function(item){
-		// Summary
-		//		Update the expando icon
-		var grid = this.view.grid;
-		if(item && grid.treeModel.mayHaveChildren(item)){
-			var state = grid.cache.getExpandoStatusByRowIndex(this.rowIdx);
+		var g = this.grid, state;
+		if(item && g.treeModel.mayHaveChildren(item)){
+			state = g._treeCache.items[this.rowIdx].opened;
 			this.expandoInner.innerHTML = state ? "-" : "+";
-			dojo.toggleClass(this.domNode, "dojoxGridExpandoOpened", state);
-			dijit.setWaiState(this.domNode.parentNode, "expanded", state);
+			domClass.toggle(this.domNode, "dojoxGridExpandoOpened", state);
+			this.domNode.parentNode.setAttribute("aria-expanded", state);
+		}else{
+			domClass.remove(this.domNode, "dojoxGridExpandoOpened");
 		}
 	},
-	
 	setRowNode: function(rowIdx, rowNode, view){
-		if(this.cellIdx < 0 || !this.itemId){ return false; }
-		this._initialized = false;
-		this.view = view;
-		this.rowIdx = rowIdx;
-		this.expandoCell = view.structure.cells[0][this.cellIdx];
-		var d = this.domNode;
-		if(d && d.parentNode && d.parentNode.parentNode){
-			this._tableRow = d.parentNode.parentNode;
+		if(this.cellIdx < 0 || !this.itemId){
+			return false;
 		}
-		dojo.style(this.domNode , "marginLeft" , (this.level * 1.125) + "em");
-		this._updateOpenState(view.grid.cache.getItemByRowIndex(this.rowIdx));
+		this.view = view;
+		this.grid = view.grid;
+		this.rowIdx = rowIdx;
+		var marginPos = this.grid.isLeftToRight() ? "marginLeft" : "marginRight";
+		domStyle.set(this.domNode.parentNode, marginPos, (this.level * 1.125) + "em");
+		this._updateOpenState(this.grid._by_idx[this.rowIdx].item);
 		return true;
 	}
 });
 
-dojo.declare("dojox.grid._TreeGridContentBuilder", dojox.grid._ContentBuilder, {
-	// summary:
-	//		Could create row content innerHTML by different appoarch for different data structure
-	generateHtml: function(inDataIndex, inRowIndex){
-		// summary:
-		//		create row innterHTML for flat data structure
+var _TreeGridContentBuilder = declare("dojox.grid._TreeGridContentBuilder", _Builder._ContentBuilder, {
+	generateHtml: function(inDataIndex, rowIndex){
 		var html = this.getTableArray(),
 			grid = this.grid,
 			v = this.view,
 			cells = v.structure.cells,
-			item = grid.getItem(inRowIndex),
+			item = grid.getItem(rowIndex),
 			level = 0,
-			treePath = grid.cache.getTreePathByRowIndex(inRowIndex),
-			rowStack = [],
-			toggleClasses = [];
-			
-		dojox.grid.util.fire(this.view, "onBeforeRow", [inRowIndex, cells]);
-			
-		if(item !== null && treePath !== null){
-			rowStack = treePath.split("/");
-			level = rowStack.length - 1;
-			toggleClasses[0] = "dojoxGridRowToggle-" + rowStack.join("-");
-			if(!grid.treeModel.mayHaveChildren(item)){
-				toggleClasses.push("dojoxGridNoChildren");
-			}
+			toggleClass = "",
+			treePath = grid._treeCache.items[rowIndex] ? grid._treeCache.items[rowIndex].treePath : null;
+		util.fire(this.view, "onBeforeRow", [rowIndex, cells]);
+		if(item && lang.isArray(treePath)){
+			level = treePath.length;
+			toggleClass = grid.treeModel.mayHaveChildren(item) ? "" : "dojoxGridNoChildren";
 		}
-		
-		for(var j = 0, row; (row = cells[j]); j++){
+		var i = 0, j = 0, row, cell,
+			mergedCells, totalWidth = 0, totalWidthes = [];
+		for(; row = cells[j]; j++){
 			if(row.hidden || row.header){
 				continue;
 			}
-			var tr = '<tr style="" class="' + toggleClasses.join(' ') + '" dojoxTreeGridPath="' + rowStack.join('/') + '" dojoxTreeGridBaseClasses="' + toggleClasses.join(' ') + '">';
-			html.push(tr);
-			var k = 0, mergedCells = this._getColSpans(level);
-			var totalWidth = 0, totalWidthes = [];
+			html.push('<tr class="' + toggleClass + '">');
+			// cell merge
+			mergedCells = this._getColSpans(level);
 			if(mergedCells){
-				dojo.forEach(mergedCells, function(c){
-					for(var i = 0, cell;(cell = row[i]); i++){
+				array.forEach(mergedCells, function(c){
+					for(i = 0; cell = row[i]; i++){
 						if(i >= c.start && i <= c.end){
 							totalWidth += this._getCellWidth(row, i);
 						}
@@ -114,18 +119,17 @@ dojo.declare("dojox.grid._TreeGridContentBuilder", dojox.grid._ContentBuilder, {
 					totalWidth = 0;
 				}, this);
 			}
-			for(var i = 0, cell, m, cc, cs; (cell = row[i]); i++){
+			var m, cc, cs, pbm, k = 0;
+			for(i = 0; cell = row[i]; i++){
 				m = cell.markup;
 				cc = cell.customClasses = [];
 				cs = cell.customStyles = [];
 				if(mergedCells && mergedCells[k] && (i >= mergedCells[k].start && i <= mergedCells[k].end)){
-					var primaryIdx = mergedCells[k].primary ? mergedCells[k].primary : mergedCells[k].start;
+					var primaryIdx = mergedCells[k].primary || mergedCells[k].start;
 					if(i == primaryIdx){
-						m[5] = cell.formatAtLevel(rowStack, item, level, false, toggleClasses[0], cc, inRowIndex);
-						// classes
+						m[5] = cell.formatAtLevel(item, level, rowIndex);
 						m[1] = cc.join(' ');
-						// styles
-						var pbm = dojo.marginBox(cell.getHeaderNode()).w - dojo.contentBox(cell.getHeaderNode()).w;
+						pbm = domGeometry.getMarginBox(cell.getHeaderNode()).w - domGeometry.getContentBox(cell.getHeaderNode()).w;
 						cs = cell.customStyles = ['width:' + (totalWidthes[k] - pbm) + "px"];
 						m[3] = cs.join(';');
 						html.push.apply(html, m);
@@ -136,300 +140,217 @@ dojo.declare("dojox.grid._TreeGridContentBuilder", dojox.grid._ContentBuilder, {
 						continue;
 					}
 				}else{
-					// content (format can fill in cc and cs as side-effects)
-					// m[5] = cell.format(inRowIndex, item);
-					m[5] = cell.formatAtLevel(rowStack, item, level, false, toggleClasses[0], cc, inRowIndex);
-					// classes
+					m[5] = cell.formatAtLevel(item, level, rowIndex);
 					m[1] = cc.join(' ');
-					// styles
 					m[3] = cs.join(';');
-					// in-place concat
 					html.push.apply(html, m);
 				}
-				
 			}
 			html.push('</tr>');
 		}
 		html.push('</table>');
 		return html.join(''); // String
 	},
-
 	_getColSpans: function(level){
-		// summary:
-		//		handle the column span object
 		var colSpans = this.grid.colSpans;
-		if(colSpans && (colSpans[level])){
-			return colSpans[level];
-		}else{
-			return null;
-		}
+		return colSpans && colSpans[level] ? colSpans[level] : null;
 	},
-	
 	_getCellWidth: function(cells, colIndex){
-		// summary:
-		//		calculate column width by header cell's size
-		var node = cells[colIndex].getHeaderNode();
-		if(colIndex == cells.length - 1 || dojo.every(cells.slice(colIndex + 1), function(cell){
+		var curCell = cells[colIndex], node = curCell.getHeaderNode();
+		if(curCell.hidden){
+			return 0;
+		}
+		if(colIndex == cells.length - 1 || array.every(cells.slice(colIndex + 1), function(cell){
 			return cell.hidden;
 		})){
-			var headerNodePos = dojo.position(cells[colIndex].view.headerContentNode.firstChild);
-			return headerNodePos.x + headerNodePos.w - dojo.position(node).x;
+			var headerNodePos = domGeometry.position(cells[colIndex].view.headerContentNode.firstChild);
+			return headerNodePos.x + headerNodePos.w - domGeometry.position(node).x;
 		}else{
-			var nextNode = cells[colIndex + 1].getHeaderNode();
-			return dojo.position(nextNode).x - dojo.position(node).x;
+			var nextCell;
+			do{
+				nextCell = cells[++colIndex];
+			}while(nextCell.hidden);
+			return domGeometry.position(nextCell.getHeaderNode()).x - domGeometry.position(node).x;
 		}
 	}
 });
 
-dojo.declare("dojox.grid._TreeGridView", [dojox.grid._View], {
-	
-	_contentBuilderClass: dojox.grid._TreeGridContentBuilder,
-	
+declare("dojox.grid._TreeGridView", _View, {
+	_contentBuilderClass: _TreeGridContentBuilder,
 	postCreate: function(){
 		this.inherited(arguments);
 		this._expandos = {};
-		this.connect(this.grid, '_cleanupExpandoCache', '_cleanupExpandoCache');
+		this.connect(this.grid, '_onCleanupExpandoCache', '_cleanupExpandoCache');
 	},
-	
-	_cleanupExpandoCache: function(index, identity, item){
-		if(index == -1){
-			return;
-		}
-		dojo.forEach(this.grid.layout.cells, function(cell){
-			if(cell.openStates && identity in cell.openStates){
-				delete cell.openStates[identity];
-			}
-		});
-		for(var i in this._expandos){
-			if(this._expandos[i]){
+	destroy: function(){
+		this._cleanupExpandoCache();
+		this.inherited(arguments);
+	},
+	_cleanupExpandoCache: function(identity){
+		if(identity && this._expandos[identity]){
+			this._expandos[identity].destroy();
+			delete this._expandos[identity];
+		}else{
+			var i;
+			for(i in this._expandos){
 				this._expandos[i].destroy();
 			}
+			this._expandos = {};
 		}
-		this._expandos = {};
 	},
-
-	onAfterRow: function(inRowIndex, cells, inRowNode){
-		// summary:
-		//		parse the expando of each row to a widget
-		dojo.query("span.dojoxGridExpando", inRowNode).forEach(function(n){
+	onAfterRow: function(rowIndex, cells, rowNode){
+		query("span.dojoxGridExpando", rowNode).forEach(function(n){
 			if(n && n.parentNode){
-				// Either create our expando or put the existing expando back
-				// into place
 				var idty, expando, _byIdx = this.grid._by_idx;
-				if(_byIdx && _byIdx[inRowIndex] && _byIdx[inRowIndex].idty){
-					idty = _byIdx[inRowIndex].idty;
+				if(_byIdx && _byIdx[rowIndex] && _byIdx[rowIndex].idty){
+					idty = _byIdx[rowIndex].idty;
 					expando = this._expandos[idty];
 				}
 				if(expando){
-					dojo.place(expando.domNode, n, "replace");
+					domConstruct.place(expando.domNode, n, "replace");
 					expando.itemId = n.getAttribute("itemId");
 					expando.cellIdx = parseInt(n.getAttribute("cellIdx"), 10);
 					if(isNaN(expando.cellIdx)){
 						expando.cellIdx = -1;
 					}
 				}else{
-					expando = dojo.parser.parse(n.parentNode)[0];
+					expando = parser.parse(n.parentNode)[0];
 					if(idty){
 						this._expandos[idty] = expando;
 					}
 				}
-				if(!expando.setRowNode(inRowIndex, inRowNode, this)){
+				if(!expando.setRowNode(rowIndex, rowNode, this)){
 					expando.domNode.parentNode.removeChild(expando.domNode);
 				}
+				domConstruct.destroy(n);
 			}
 		}, this);
 		this.inherited(arguments);
+	},
+	updateRow: function(rowIndex){
+		var grid = this.grid, item;
+		if(grid.keepSelection){
+			item = grid.getItem(rowIndex);
+			if(item){
+				grid.selection.preserver._reSelectById(item, rowIndex);
+			}
+		}
+		this.inherited(arguments);
 	}
-	
 });
 
-dojox.grid.cells.LazyTreeCell = dojo.mixin(dojo.clone(dojox.grid.cells.TreeCell), {
-	formatAtLevel: function(inRowIndexes, inItem, level, summaryRow, toggleClass, cellClasses, inRowIndex){
-		if(!inItem){
-			return this.formatIndexes(inRowIndex, inRowIndexes, inItem, level);
+var LazyTreeCell = lang.mixin(lang.clone(TreeCell), {
+	formatAtLevel: function(item, level, rowIndex){
+		if(!item){
+			return this.formatIndexes(rowIndex, item, level);
 		}
-		if(!dojo.isArray(inRowIndexes)){
-			inRowIndexes = [inRowIndexes];
-		}
-		var result = "";
-		var ret = "";
-		if(this.isCollapsable){
-			var store = this.grid.store, id = "";
-			if(inItem && store.isItem(inItem)){
-				id = store.getIdentity(inItem);
-			}
-			cellClasses.push("dojoxGridExpandoCell");
+		var result = "", ret = "", content;
+		if(this.isCollapsable && this.grid.store.isItem(item)){
 			ret = '<span ' + dojo._scopeName + 'Type="dojox.grid._LazyExpando" level="' + level + '" class="dojoxGridExpando"' +
-					'" toggleClass="' + toggleClass + '" itemId="' + id + '" cellIdx="' + this.index + '"></span>';
+					' itemId="' + this.grid.store.getIdentity(item) + '" cellIdx="' + this.index + '"></span>';
 		}
-		result = ret + this.formatIndexes(inRowIndex, inRowIndexes, inItem, level);
-		if(this.grid.focus.cell && this.index == this.grid.focus.cell.index && inRowIndexes.join('/') == this.grid.focus.rowIndex){
-			cellClasses.push(this.grid.focus.focusClass);
-		}
+		content = this.formatIndexes(rowIndex, item, level);
+		result = ret !== "" ? '<div>' + ret + content + '</div>' : content;
 		return result;
 	},
-	
-	formatIndexes: function(inRowIndex, inRowIndexes, inItem, level){
+	formatIndexes: function(rowIndex, item, level){
 		var info = this.grid.edit.info,
-			d = this.get ? this.get(inRowIndexes[0], inItem, inRowIndexes) : (this.value || this.defaultValue);
-		if(this.editable && (this.alwaysEditing || (info.rowIndex == inRowIndexes[0] && info.cell == this))){
-			return this.formatEditing(d, inRowIndex, inRowIndexes);
+			d = this.get ? this.get(rowIndex, item) : (this.value || this.defaultValue);
+		if(this.editable && (this.alwaysEditing || (info.rowIndex === rowIndex && info.cell === this))){
+			return this.formatEditing(d, rowIndex);
 		}else{
-			return this._defaultFormat(d, [d, inRowIndex, level, this]);
+			return this._defaultFormat(d, [d, rowIndex, level, this]);
 		}
 	}
 });
 
-dojo.declare("dojox.grid._LazyTreeLayout", dojox.grid._Layout, {
+var _LazyTreeLayout = declare("dojox.grid._LazyTreeLayout", _Layout, {
 	// summary:
 	//		Override the dojox.grid._TreeLayout to modify the _TreeGridView and cell formatter
-	setStructure: function(inStructure){
-		var s = inStructure;
-		var g = this.grid;
-		if(g && !dojo.every(s, function(i){
-			return ("cells" in i);
+	setStructure: function(structure){
+		var g = this.grid, s = structure;
+		if(g && !array.every(s, function(i){
+			return !!i.cells;
 		})){
 			s = arguments[0] = [{cells:[s]}];//intentionally change arguments[0]
 		}
-		if(s.length == 1 && s[0].cells.length == 1){
+		if(s.length === 1 && s[0].cells.length === 1){
 			s[0].type = "dojox.grid._TreeGridView";
 			this._isCollapsable = true;
 			s[0].cells[0][this.grid.expandoCell].isCollapsable = true;
 		}
 		this.inherited(arguments);
 	},
-	
-	addCellDef: function(inRowIndex, inCellIndex, inDef){
+	addCellDef: function(rowIndex, cellIndex, def){
 		var obj = this.inherited(arguments);
-		return dojo.mixin(obj, dojox.grid.cells.LazyTreeCell);
+		return lang.mixin(obj, LazyTreeCell);
 	}
 });
 
-dojo.declare("dojox.grid.TreeGridItemCache", null, {
-	
-	unInit: true,
-	
-	items: null,
-	
-	constructor: function(grid){
-		this.rowsPerPage = grid.rowsPerPage;
-		this._buildCache(grid.rowsPerPage);
-	},
-	
-	_buildCache: function(size){
-		// Summary
-		//		Build the cache only with the treepath using given size
-		this.items = [];
-		for(var i = 0; i < size; i++){
-			this.cacheItem(i, {item: null, treePath: i + "", expandoStatus: false});
-		}
-	},
-	
-	cacheItem: function(/*integer*/rowIdx, cacheObj){
-		// Summary
-		//		Add an item and its tree structure information to the cache.
-		this.items[rowIdx] = dojo.mixin({
-			item: null,
-			treePath: "",
-			expandoStatus: false
-		}, cacheObj);
-	},
-	
-	insertItem: function(/*integer*/rowIdx, cacheObj){
-		this.items.splice(rowIdx, 0, dojo.mixin({
-			item: null,
-			treePath: "",
-			expandoStatus: false
-		}, cacheObj));
-	},
-	
-	initCache: function(size){
-		if(!this.unInit){ return; }
-		this._buildCache(size);
-		this.unInit = false;
-	},
-	
-	getItemByRowIndex: function(/*integer*/rowIdx){
-		return this.items[rowIdx] ? this.items[rowIdx].item : null;
-	},
-	
-	getItemByTreePath: function(treePath){
-		for(var i = 0, len = this.items.length; i < len; i++){
-			if(this.items[i].treePath === treePath){
-				return this.items[i].item;
-			}
-		}
-		return null;
-	},
-	
-	getTreePathByRowIndex: function(/*integer*/rowIdx){
-		return this.items[rowIdx] ? this.items[rowIdx].treePath : null;
-	},
-	
-	getExpandoStatusByRowIndex: function(/*integer*/rowIdx){
-		return this.items[rowIdx] ? this.items[rowIdx].expandoStatus : null;
-	},
-	
-	getInfoByItem: function(item){
-		for(var i = 0, len = this.items.length; i < len; i++){
-			if(this.items[i].item == item){
-				return dojo.mixin({rowIdx: i}, this.items[i]);
-			}
-		}
-		return null;
-	},
-	
-	updateCache: function(/*integer*/rowIdx, cacheObj){
-		if(this.items[rowIdx]){
-			dojo.mixin(this.items[rowIdx], cacheObj);
-		}
-	},
-	
-	deleteItem: function(rowIdx){
-		if(this.items[rowIdx]){
-			this.items.splice(rowIdx, 1);
-		}
-	},
-	
-	cleanChildren: function(rowIdx){
-		var treePath = this.getTreePathByRowIndex(rowIdx);
-		for(var i = this.items.length - 1; i >= 0; i--){
-			if(this.items[i].treePath.indexOf(treePath) === 0 && this.items[i].treePath !== treePath){
-				this.items.splice(i, 1);
-			}
-		}
-	},
-	
-	emptyCache: function(){
-		this.unInit = true;
-		this._buildCache(this.rowsPerPage);
-	},
-	
-	cleanupCache: function(){
-		this.items = null;
-	}
-	
-});
-
-dojo.declare("dojox.grid.LazyTreeGrid", dojox.grid.TreeGrid, {
+var _LazyTreeGridCache = declare("dojox.grid._LazyTreeGridCache", null, {
 	// summary:
-	//		An enhanced TreeGrid widget which supports lazy-loading nested-level items
+	//		An internal object used to cache the tree path and open state of each item.
+	//		The form of the cache items would be an object array: 
+	//		[{opened: true/false, treePath: [level0 parent id, level1 parent id, ...]}]
+	// example:
+	//		| [{opened: true, treePath: []},
+	//		|  {opened: false, treePath: ["root0"]},
+	//		|  {opened: false, treePath: ["root0"]},
+	//		|  {opened: false, treePath: []},
+	//		|  ...]
+	constructor: function(){
+		this.items = [];
+	},
+	getSiblingIndex: function(rowIndex, treePath){
+		var i = rowIndex - 1, indexCount = 0, tp;
+		for(; i >=0; i--){
+			tp = this.items[i] ? this.items[i].treePath : [];
+			if(tp.join('/') === treePath.join('/')){
+				indexCount++;
+			}else if(tp.length < treePath.length){
+				break;
+			}
+		}
+		return indexCount;
+	},
+	removeChildren: function(rowIndex){
+		// find next sibling index
+		var i = rowIndex + 1, count, tp,
+			treePath = this.items[rowIndex] ? this.items[rowIndex].treePath : [];
+		for(; i < this.items.length; i++){
+			tp = this.items[i] ? this.items[i].treePath : [];
+			if(tp.join('/') === treePath.join('/') || tp.length <= treePath.length){
+				break;
+			}
+		}
+		count = i - (rowIndex + 1);
+		this.items.splice(rowIndex + 1, count);
+		return count;
+	}
+});
+
+var LazyTreeGrid = declare("dojox.grid.LazyTreeGrid", TreeGrid, {
+	// summary:
+	//		An enhanced TreeGrid widget which supports lazy-loading for nested children items
 	//
 	// description:
-	//		LazyTreeGrid inherits from dojo.grid.TreeGrid, and applies virtual scrolling mechanism
-	//		to nested children rows so that it's possible to deal with large data set specifically
-	//		in tree structure with large number of children rows. It's also compatible with dijit.tree.ForestStoreModel
+	//		LazyTreeGrid inherits from dojo.grid.TreeGrid and applies virtual scrolling mechanism
+	//		to nested children rows so that it's possible to deal with complex tree structure data set
+	//		with nested and huge children rows. It's also compatible with dijit.tree.ForestStoreModel
 	//
-	//		Most methods and properties pertaining to the dojox.grid.DataGrid
+	//		Most methods and properties pertaining to dojox.grid.DataGrid
 	//		and dojox.grid.TreeGrid also apply here
 	//
-	//		LazyTreeGrid does not support summary row/items aggregate for the
-	//		lazy-loading reason.
-	
+	//		LazyTreeGrid does not support summary row/items aggregate due to the lazy-loading rationale.
+	_layoutClass: _LazyTreeLayout,
+	_size: 0,
+	// treeModel: dijit.tree.ForestStoreModel | dojox.grid.LazyTreeGridStoreModel
+	//		A tree store model object.
 	treeModel: null,
-	
-	_layoutClass: dojox.grid._LazyTreeLayout,
-	
+	// defaultState: Object
+	//		Used to restore the state of LazyTreeGrid.
+	//		This object should ONLY be obtained from `LazyTreeGrid.getState()`.
+	defaultState: null,
 	// colSpans: Object
 	//		a json object that defines column span of each level rows
 	//		attributes:
@@ -450,35 +371,33 @@ dojo.declare("dojox.grid.LazyTreeGrid", dojox.grid.TreeGrid, {
 	colSpans: null,
 	
 	postCreate: function(){
+		this._setState();
 		this.inherited(arguments);
-		this.cache = new dojox.grid.TreeGridItemCache(this);
-		if(!this.treeModel || !(this.treeModel instanceof dijit.tree.ForestStoreModel)){
-			throw new Error("dojox.grid.LazyTreeGrid: must use a treeModel and treeModel must be an instance of dijit.tree.ForestStoreModel");
+		if(!this._treeCache){
+			this._treeCache = new _LazyTreeGridCache();
 		}
-		dojo.addClass(this.domNode, "dojoxGridTreeModel");
-		dojo.setSelectable(this.domNode, this.selectable);
+		if(!this.treeModel || !(this.treeModel instanceof dijit.tree.ForestStoreModel)){
+			throw new Error("dojox.grid.LazyTreeGrid: must be used with a treeModel which is an instance of dijit.tree.ForestStoreModel");
+		}
+		domClass.add(this.domNode, "dojoxGridTreeModel");
+		dom.setSelectable(this.domNode, this.selectable);
 	},
-	
 	createManagers: function(){
-		// summary:
-		//		create grid managers for various tasks including rows, focus, selection, editing
-		this.rows = new dojox.grid._RowManager(this);
-		this.focus = new dojox.grid._FocusManager(this);
-		this.edit = new dojox.grid._EditManager(this);
+		this.rows = new _RowManager(this);
+		this.focus = new _FocusManager(this);
+		this.edit = new _EditManager(this);
 	},
-
 	createSelection: function(){
-		this.selection = new dojox.grid.DataSelection(this);
+		this.selection = new DataSelection(this);
 	},
-	
 	setModel: function(treeModel){
 		if(!treeModel){
 			return;
 		}
 		this._setModel(treeModel);
+		this._cleanup();
 		this._refresh(true);
 	},
-	
 	setStore: function(store, query, queryOptions){
 		if(!store){
 			return;
@@ -489,22 +408,74 @@ dojo.declare("dojox.grid.LazyTreeGrid", dojox.grid.TreeGrid, {
 		this.treeModel.root.children = [];
 		this.setModel(this.treeModel);
 	},
-	
+	onSetState: function(){
+		// summary:
+		//		Event fired when a default state being set.
+	},
+	_setState: function(){
+		if(this.defaultState){
+			this._treeCache = this.defaultState.cache;
+			this.sortInfo = this.defaultState.sortInfo || 0;
+			this.query = this.defaultState.query || this.query;
+			this._lastScrollTop = this.defaultState.scrollTop;
+			if(this.keepSelection){
+				this.selection.preserver._selectedById = this.defaultState.selection;
+			}else{
+				this.selection.selected = this.defaultState.selection || [];
+			}
+			this.onSetState();
+		}
+	},
+	getState: function(){
+		// summary:
+		//		Get the current state of LazyTreeGrid including expanding, sorting, selection and scroll top state.
+		var _this = this, 
+			selection = this.keepSelection ? this.selection.preserver._selectedById : this.selection.selected;
+		return {
+			cache: lang.clone(_this._treeCache),
+			query: lang.clone(_this.query),
+			sortInfo: lang.clone(_this.sortInfo),
+			scrollTop: lang.clone(_this.scrollTop),
+			selection: lang.clone(selection)
+		};
+	},
 	_setQuery: function(query, queryOptions){
 		this.inherited(arguments);
 		this.treeModel.query = query;
 	},
-	
+	filter: function(query, reRender){
+		this._cleanup();
+		this.inherited(arguments);
+    },
 	destroy: function(){
 		this._cleanup();
 		this.inherited(arguments);
 	},
-	
-	_cleanup: function(){
-		this.cache.emptyCache();
-		this._cleanupExpandoCache();
+	expand: function(itemId){
+		//	summary:
+		//		Expand the row with the given itemId.
+		//	id: string?
+		this._fold(itemId, true);
 	},
-	
+	collapse: function(itemId){
+		//	summary:
+		//		Collapse the row with the given itemId.
+		//	id: string?
+		this._fold(itemId, false);
+	},
+	refresh: function(keepState){
+		//	summary:
+		//		Refresh, and persist the expand/collapse state when keepState equals true
+		//	keepState: boolean
+		if(!keepState){
+			this._cleanup();
+		}
+		this._refresh(true);
+	},
+	_cleanup: function(){
+		this._treeCache.items = [];
+		this._onCleanupExpandoCache();
+	},
 	setSortIndex: function(inIndex, inAsc){
 		// Need to clean up the cache before sorting
 		if(this.canSort(inIndex + 1)){
@@ -512,322 +483,352 @@ dojo.declare("dojox.grid.LazyTreeGrid", dojox.grid.TreeGrid, {
 		}
 		this.inherited(arguments);
 	},
-	
 	_refresh: function(isRender){
-		this._cleanup();
-		this.inherited(arguments);
+		this._clearData();
+		this.updateRowCount(this._size);
+		this._fetch(0, true);
 	},
-	
 	render: function(){
 		this.inherited(arguments);
 		this.setScrollTop(this.scrollTop);
 	},
-	
 	_onNew: function(item, parentInfo){
-		var isAddingChild = false;
-		var info;
-		if(parentInfo && this.store.isItem(parentInfo.item) && dojo.some(this.treeModel.childrenAttrs, function(c){
+		var addingChild = parentInfo && this.store.isItem(parentInfo.item) && array.some(this.treeModel.childrenAttrs, function(c){
 			return c === parentInfo.attribute;
-		})){
-			isAddingChild = true;
-			info = this.cache.getInfoByItem(parentInfo.item);
-		}
-		if(!isAddingChild){
+		});
+		var items = this._treeCache.items, byIdx = this._by_idx;
+		if(!addingChild){
+			items.push({opened: false, treePath: []});
+			this._size += 1;
 			this.inherited(arguments);
-			var items = this.cache.items;
-			var treePath = (parseInt(items[items.length - 1].treePath.split("/")[0], 10) + 1) + "";
-			this.cache.insertItem(this.get('rowCount'), {item: item, treePath: treePath, expandoStatus: false});
-		}else if(info && info.expandoStatus && info.rowIdx >= 0){
-			this.expandoFetch(info.rowIdx, false);
-			this.expandoFetch(info.rowIdx, true);
-		}else if(info && info.rowIdx){
-			this.updateRow(info.rowIdx);
+		}else{
+			var parentItem = parentInfo.item, 
+				parentIdty = this.store.getIdentity(parentItem),
+				rowIndex = -1, i = 0;
+			for(; i < byIdx.length; i++){
+				if(parentIdty === byIdx[i].idty){
+					rowIndex = i;
+					break;
+				}
+			}
+			if(rowIndex >= 0){
+				if(items[rowIndex] && items[rowIndex].opened){
+					var parentTreePath = items[rowIndex].treePath, pos = rowIndex + 1;
+					for(; pos < items.length; pos++){
+						if(items[pos].treePath.length <= parentTreePath.length){
+							break;
+						}
+					}
+					var treePath = parentTreePath.slice();
+					treePath.push(parentIdty);
+					this._treeCache.items.splice(pos, 0, {opened: false, treePath: treePath});
+					// update grid._by_idx
+					var idty = this.store.getIdentity(item);
+					this._by_idty[idty] = { idty: idty, item: item };
+					byIdx.splice(pos, 0, this._by_idty[idty]);
+					// update grid
+					this._size += 1;
+					this.updateRowCount(this._size);
+					this._updateRenderedRows(pos);
+				}else{
+					this.updateRow(rowIndex);
+				}
+			}
 		}
 	},
-	
 	_onDelete: function(item){
-		this._pages = [];
-		this._bop = -1;
-		this._eop = -1;
-		this._refresh();
+		var i = 0, rowIndex = -1, idty = this.store.getIdentity(item);
+		for(; i < this._by_idx.length; i++){
+			if(idty === this._by_idx[i].idty){
+				rowIndex = i;
+				break;
+			}
+		}
+		if(rowIndex >= 0){
+			var items = this._treeCache.items, treePath = items[rowIndex] ? items[rowIndex].treePath : [], tp, count = 1;
+			i = rowIndex + 1;
+			for(; i < this._size; i++, count++){
+				tp = items[i] ? items[i].treePath : [];
+				if(items[i].treePath.length <= treePath.length){
+					break;
+				}
+			}
+			items.splice(rowIndex, count);
+			this._onCleanupExpandoCache(idty);
+			this._by_idx.splice(rowIndex, count);
+			this._size -= count;
+			this.updateRowCount(this._size);
+			this._updateRenderedRows(rowIndex);
+		}
 	},
-	
-	_cleanupExpandoCache: function(index, identity, item){},
-	
+	_onCleanupExpandoCache: function(identity){},
 	_fetch: function(start, isRender){
-		// summary:
-		//		Function for fetch data when initializing TreeGrid and
-		//		scroll the TreeGrid
+		if(!this._loading){
+			this._loading = true;
+		}
 		start = start || 0;
-		this.reqQueue = [];
-		// Check cache, do not need to fetch data if there are required data in cache
-		var i = 0, fetchedItems = [];
-		var count = Math.min(this.rowsPerPage, this.cache.items.length - start);
-		for(i = start; i < count; i++){
-			if(this.cache.getItemByRowIndex(i)){
-				fetchedItems.push(this.cache.getItemByRowIndex(i));
+		var count = this._size - start > 0 ? Math.min(this.rowsPerPage, this._size - start) : this.rowsPerPage;
+		var i = 0;
+		var fetchedItems = [];
+		this._reqQueueLen = 0;
+		for(; i < count; i++){
+			if(this._by_idx[start + i]){
+				fetchedItems.push(this._by_idx[start + i].item);
 			}else{
 				break;
 			}
 		}
-		if(fetchedItems.length === count){// || !this.cache.getTreePathByRowIndex(start + fetchedItems.length)){
+		if(fetchedItems.length === count){
+			this._reqQueueLen = 1;
+			this._onFetchBegin(this._size, {startRowIdx: start, count: count});
 			this._onFetchComplete(fetchedItems, {startRowIdx: start, count: count});
 		}else{
-			// In case there need different level data, we need to do multiple fetch.
-			// Do next fetch only when the last request complete.
-			this.reqQueueIndex = 0;
-			var level = "",
-				nextRowLevel = "",
-				startRowIdx = start,
-				startTreePath = this.cache.getTreePathByRowIndex(start);
-			count = 0;
-			// Create request queue
-			for(i = start + 1; i < start + this.rowsPerPage; i++){
-				if(!this.cache.getTreePathByRowIndex(i)){
-					break;
-				}
-				level = this.cache.getTreePathByRowIndex(i - 1).split("/").length - 1;
-				nextRowLevel = this.cache.getTreePathByRowIndex(i).split("/").length - 1;
-				if(level !== nextRowLevel){
-					this.reqQueue.push({
-						startTreePath: startTreePath,
-						startRowIdx: startRowIdx,
-						count: count + 1
-					});
-					count = 0;
-					startRowIdx = i;
-					startTreePath = this.cache.getTreePathByRowIndex(i);
+			var level, nextLevel, len = 1, items = this._treeCache.items, 
+				treePath = items[start] ? items[start].treePath : [];
+			for(i = 1; i < count; i++){
+				level = items[start + len - 1] ? items[start + len - 1].treePath.length : 0;
+				nextLevel = items[start + len] ? items[start + len].treePath.length : 0;
+				if(level !== nextLevel){
+					this._reqQueueLen++;
+					this._fetchItems({startRowIdx: start, count: len, treePath: treePath});
+					start = start + len;
+					len = 1;
+					treePath = items[start] ? items[start].treePath : 0;
 				}else{
-					count++;
+					len++;
 				}
 			}
-			this.reqQueue.push({
-				startTreePath: startTreePath,
-				startRowIdx: startRowIdx,
-				count: count + 1
-			});
-			var len = this.reqQueue.length;
-			for(i = 0; i < len; i++){
-				this._fetchItems(i, dojo.hitch(this, "_onFetchBegin"), dojo.hitch(this, "_onFetchComplete"), dojo.hitch(this, "_onFetchError"));
-			}
+			this._reqQueueLen++;
+			this._fetchItems({startRowIdx: start, count: len, treePath: treePath});
 		}
 	},
-	
-	_fetchItems: function(idx, onBegin, onComplete, onError){
-		if(!this._loading){
-			this._loading = true;
-			this.showMessage(this.loadingMessage);
+	_fetchItems: function(req){
+		if(this._pending_requests[req.startRowIdx]){
+			return;
 		}
-		var level = this.reqQueue[idx].startTreePath.split("/").length - 1;
-		this._pending_requests[this.reqQueue[idx].startRowIdx] = true;
-		if(level === 0){
+		this.showMessage(this.loadingMessage);
+		this._pending_requests[req.startRowIdx] = true;
+		var	onError = lang.hitch(this, '_onFetchError'),
+			start = this._treeCache.getSiblingIndex(req.startRowIdx, req.treePath);
+		if(req.treePath.length === 0){
 			this.store.fetch({
-				start: parseInt(this.reqQueue[idx].startTreePath, 10),
-				startRowIdx: this.reqQueue[idx].startRowIdx,
-				count: this.reqQueue[idx].count,
+				start: start,
+				startRowIdx: req.startRowIdx,
+				treePath: req.treePath,
+				count: req.count,
 				query: this.query,
 				sort: this.getSortProps(),
 				queryOptions: this.queryOptions,
-				onBegin: onBegin,
-				onComplete: onComplete,
-				onError: onError
+				onBegin: lang.hitch(this, '_onFetchBegin'),
+				onComplete: lang.hitch(this, '_onFetchComplete'),
+				onError: lang.hitch(this, '_onFetchError')
 			});
 		}else{
-			var startTreePath = this.reqQueue[idx].startTreePath;
-			var parentTreePath = startTreePath.substring(0, startTreePath.lastIndexOf("/"));
-			var startIdx = startTreePath.substring(startTreePath.lastIndexOf("/") + 1);
-			var parentItem = this.cache.getItemByTreePath(parentTreePath);
-			if(!parentItem){
-				throw new Error("Lazy loading TreeGrid on fetch error:");
-			}
-			var parentId = this.store.getIdentity(parentItem);
-			this.queryObj = {
-				start: parseInt(startIdx, 10),
-				startRowIdx: this.reqQueue[idx].startRowIdx,
-				count: this.reqQueue[idx].count,
+			var parentId = req.treePath[req.treePath.length - 1], parentItem;
+			var queryObj = {
+				start: start,
+				startRowIdx: req.startRowIdx,
+				treePath: req.treePath,
+				count: req.count,
 				parentId: parentId,
 				sort: this.getSortProps()
 			};
-			this.treeModel.getChildren(parentItem, onComplete, onError, this.queryObj);
+			var _this = this;
+			var onComplete = function(){
+				var f = lang.hitch(_this, '_onFetchComplete');
+				if(arguments.length == 1){
+					f.apply(_this, [arguments[0], queryObj]);
+				}else{
+					f.apply(_this, arguments);
+				}
+			};
+			if(this._by_idty[parentId]){
+				parentItem = this._by_idty[parentId].item;
+				this.treeModel.getChildren(parentItem, onComplete, onError, queryObj);
+			}else{
+				this.store.fetchItemByIdentity({
+					identity: parentId,
+					onItem: function(item){
+						_this.treeModel.getChildren(item, onComplete, onError, queryObj);
+					},
+					onError: onError
+				});
+			}
 		}
 	},
-	
 	_onFetchBegin: function(size, request){
-		this.cache.initCache(size);
-		size = this.cache.items.length;
+		if(this._treeCache.items.length === 0){
+			this._size = parseInt(size, 10);
+		}
+		size = this._size;
+		// this._size = size = this._treeCache.items.length;
 		this.inherited(arguments);
 	},
-
-    filter: function(query, reRender){
-    	this.cache.emptyCache();
-        this.inherited(arguments);
-    },
-
-	_onFetchComplete: function(items, request, size){
-		var treePath = "",
-			startRowIdx, count, start;
-			
-		if(request){
-			startRowIdx = request.startRowIdx;
-			count = request.count;
-			start = 0;
-		}else{
-			startRowIdx = this.queryObj.startRowIdx;
-			count = this.queryObj.count;
-			start = this.queryObj.start;
-		}
-		
-		for(var i = 0; i < count; i++){
-			treePath = this.cache.getTreePathByRowIndex(startRowIdx + i);
-			if(treePath){
-				if(!this.cache.getItemByRowIndex(startRowIdx + i)){
-					this.cache.cacheItem(startRowIdx + i, {
-						item: items[start + i],
-						treePath: treePath,
-						expandoStatus: false
-					});
+	_onFetchComplete: function(items, request){
+		var startRowIdx = request.startRowIdx,
+			count = request.count,
+			start = items.length <= count ? 0: request.start,
+			treePath = request.treePath || [];
+		if(lang.isArray(items) && items.length > 0){
+			var i = 0, len = Math.min(count, items.length);
+			for(; i < len; i++){
+				if(!this._treeCache.items[startRowIdx + i]){
+					this._treeCache.items[startRowIdx + i] = {opened: false, treePath: treePath};
 				}
+				if(!this._by_idx[startRowIdx + i]){
+					this._addItem(items[start + i], startRowIdx + i, true);
+				}
+				// this._treeCache.items.splice(startRowIdx + i, 0, {opened: false, treePath: treePath});
 			}
+			this.updateRows(startRowIdx, len);
+		}
+		if(this._size == 0){
+			this.showMessage(this.noDataMessage);
+		}else{
+			this.showMessage();
 		}
 		this._pending_requests[startRowIdx] = false;
-		// Add items when all request complete
-		if(!this.scroller){
-			return;
-		}
-		var len = Math.min(count, items.length);
-		for(i = 0; i < len; i++){
-			this._addItem(items[start + i], startRowIdx + i, true);
-		}
-		this.updateRows(startRowIdx, len);
-		if(this._lastScrollTop){
-			this.setScrollTop(this._lastScrollTop);
-		}
-		if(this._loading){
+		this._reqQueueLen--;
+		if(this._loading && this._reqQueueLen === 0){
 			this._loading = false;
-			if(!this.cache.items.length){
-				this.showMessage(this.noDataMessage);
-			}else{
-				this.showMessage();
+			if(this._lastScrollTop){
+				this.setScrollTop(this._lastScrollTop);
 			}
 		}
-		
 	},
-	
 	expandoFetch: function(rowIndex, open){
 		// summary:
 		//		Function for fetch children of a given row
-		if(this._loading){return;}
+		if(this._loading || !this._by_idx[rowIndex]){return;}
 		this._loading = true;
-		this.toggleLoadingClass(true);
-		var item = this.cache.getItemByRowIndex(rowIndex);
+		this._toggleLoadingClass(rowIndex, true);
 		this.expandoRowIndex = rowIndex;
-		this._pages = [];
+		var item = this._by_idx[rowIndex].item;
+		// this._pages = [];
 		if(open){
-			var parentId = this.store.getIdentity(item);
 			var queryObj = {
 				start: 0,
-				count: this.keepRows,
-				parentId: parentId,
+				count: this.rowsPerPage,
+				parentId: this.store.getIdentity(this._by_idx[rowIndex].item),
 				sort: this.getSortProps()
 			};
-			this.treeModel.getChildren(item, dojo.hitch(this, "_onExpandoComplete"), dojo.hitch(this, "_onFetchError"), queryObj);
+			this.treeModel.getChildren(item, lang.hitch(this, "_onExpandoComplete"), lang.hitch(this, "_onFetchError"), queryObj);
 		}else{
-			this.cache.cleanChildren(rowIndex);
-			for(var i = rowIndex + 1, len = this._by_idx.length; i < len; i++){
-				delete this._by_idx[i];
+			// get the whole children number when clear the children from cache
+			var num = this._treeCache.removeChildren(rowIndex);
+			// remove the items from grid._by_idx
+			this._by_idx.splice(rowIndex + 1, num);
+			this._bop = this._eop = -1;
+			//update grid
+			this._size -= num;
+			this.updateRowCount(this._size);
+			this._updateRenderedRows(rowIndex + 1);
+			this._toggleLoadingClass(rowIndex, false);
+			if(this._loading){
+				this._loading = false;
 			}
-			this.updateRowCount(this.cache.items.length);
-			if(this.cache.getTreePathByRowIndex(rowIndex + 1)){
-				this._fetch(rowIndex + 1);
-			}else{
-				this._fetch(rowIndex);
-			}
-			this.toggleLoadingClass(false);
+			this.focus._delayedCellFocus();
 		}
 	},
-	
 	_onExpandoComplete: function(childItems, request, size){
-		var parentTreePath = this.cache.getTreePathByRowIndex(this.expandoRowIndex);
-		if(size && !isNaN(parseInt(size, 10))){
-			size = parseInt(size, 10);
-		}else{
-			size = childItems.length;
+		size = isNaN(size) ? childItems.length : parseInt(size, 10);
+		var treePath = this._treeCache.items[this.expandoRowIndex].treePath.slice(0);
+		treePath.push(this.store.getIdentity(this._by_idx[this.expandoRowIndex].item));
+		var i = 1, idty;
+		for(; i <= size; i++){
+			this._treeCache.items.splice(this.expandoRowIndex + i, 0, {treePath: treePath, opened: false});
 		}
-		var i, j = 0, len = this._by_idx.length;
-		for(i = this.expandoRowIndex + 1; j < size; i++, j++){
-			this.cache.insertItem(i, {
-				item: null,
-				treePath: parentTreePath + "/" + j,
-				expandoStatus: false
-			});
-		}
-		this.updateRowCount(this.cache.items.length);
-		
-		for(i = this.expandoRowIndex + 1; i < len; i++){
-			delete this._by_idx[i];
-		}
-		this.cache.updateCache(this.expandoRowIndex, {childrenNum: size});
+		this._size += size;
+		this.updateRowCount(this._size);
 		for(i = 0; i < size; i++){
-			this.cache.updateCache(this.expandoRowIndex + 1 + i, {item: childItems[i]});
+			if(childItems[i]){
+				idty = this.store.getIdentity(childItems[i]);
+				this._by_idty[idty] = { idty: idty, item: childItems[i] };
+				this._by_idx.splice(this.expandoRowIndex + 1 + i, 0, this._by_idty[idty]);
+			}else{
+				this._by_idx.splice(this.expandoRowIndex + 1 + i, 0, null);
+			}
 		}
-		for(i = 0; i < Math.min(size, this.keepRows); i++){
-			this._addItem(childItems[i], this.expandoRowIndex + 1 + i, false);
-			this.updateRow(this.expandoRowIndex + 1 + i);
-		}
-		
-		this.toggleLoadingClass(false);
+		this._updateRenderedRows(this.expandoRowIndex + 1);
+		this._toggleLoadingClass(this.expandoRowIndex, false);
 		this.stateChangeNode = null;
 		if(this._loading){
 			this._loading = false;
 		}
-		if(size < this.keepRows && this.cache.getTreePathByRowIndex(this.expandoRowIndex + 1 + size)){
-			this._fetch(this.expandoRowIndex + 1 + size);
+		if(this.autoHeight === true){
+			this._resize();
+		}
+		this.focus._delayedCellFocus();
+	},
+	styleRowNode: function(rowIndex, rowNode){
+		if(rowNode){
+			this.rows.styleRowNode(rowIndex, rowNode);
 		}
 	},
-	
-	toggleLoadingClass: function(flag){
-		// summary:
-		//		set loading class when expanding/collapsing
-		if(this.stateChangeNode){
-			dojo.toggleClass(this.stateChangeNode, "dojoxGridExpandoLoading", flag);
-		}
-	},
-	
-	styleRowNode: function(inRowIndex, inRowNode){
-		if(inRowNode){
-			this.rows.styleRowNode(inRowIndex, inRowNode);
-		}
-	},
-	
 	onStyleRow: function(row){
 		if(!this.layout._isCollapsable){
 			this.inherited(arguments);
 			return;
 		}
-		var base = dojo.attr(row.node, 'dojoxTreeGridBaseClasses');
-		if(base){
-			row.customClasses = base;
-		}
-		var i = row;
-		i.customClasses += (i.odd ? " dojoxGridRowOdd" : "") + (i.selected ? " dojoxGridRowSelected" : "") + (i.over ? " dojoxGridRowOver" : "");
-		this.focus.styleRow(i);
-		this.edit.styleRow(i);
+		row.customClasses = (row.odd ? " dojoxGridRowOdd" : "") + (row.selected ? " dojoxGridRowSelected" : "") + (row.over ? " dojoxGridRowOver" : "");
+		this.focus.styleRow(row);
+		this.edit.styleRow(row);
 	},
-	
-	dokeydown: function(e){
+	onKeyDown: function(e){
 		if(e.altKey || e.metaKey){
 			return;
 		}
-		var dk = dojo.keys,
-			target = e.target,
-			expando = target && target.firstChild ? dijit.byId(target.firstChild.id) : null;
-		if(e.keyCode === dk.ENTER && expando instanceof dojox.grid._LazyExpando){
+		var expando = dijit.findWidgets(e.target)[0];
+		if(e.keyCode === keys.ENTER && expando instanceof _LazyExpando){
 			expando.onToggle();
 		}
-		this.onKeyDown(e);
+		this.inherited(arguments);
+	},
+	_toggleLoadingClass: function(rowIndex, flag){
+		var views = this.views.views, node,
+			rowNode = views[views.length - 1].getRowNode(rowIndex);
+		if(rowNode){
+			node = query('.dojoxGridExpando', rowNode)[0];
+			if(node){
+				domClass.toggle(node, "dojoxGridExpandoLoading", flag);
+			}
+		}
+	},
+	_updateRenderedRows: function(start){
+		array.forEach(this.scroller.stack, function(p){
+			if(p * this.rowsPerPage >= start){
+				this.updateRows(p * this.rowsPerPage, this.rowsPerPage);
+			}else if((p + 1) * this.rowsPerPage >=  start){
+				this.updateRows(start, (p + 1) * this.rowsPerPage - start + 1);
+			}
+		}, this);
+	},
+	_fold: function(itemId, open){
+		var rowIndex = -1, i = 0, byIdx = this._by_idx, idty = this._by_idty[itemId];
+		if(idty && idty.item && this.treeModel.mayHaveChildren(idty.item)){
+			for(; i < byIdx.length; i++){
+				if(byIdx[i] && byIdx[i].idty === itemId){
+					rowIndex = i;
+					break;
+				}
+			}
+			if(rowIndex >= 0){
+				var rowNode = this.views.views[this.views.views.length - 1].getRowNode(rowIndex);
+				if(rowNode){
+					var expando = dijit.findWidgets(rowNode)[0];
+					if(expando){
+						expando.setOpen(open);
+					}
+				}
+			}
+		}
 	}
 });
 
-dojox.grid.LazyTreeGrid.markupFactory = function(props, node, ctor, cellFunc){
-	return dojox.grid.TreeGrid.markupFactory(props, node, ctor, cellFunc);
+LazyTreeGrid.markupFactory = function(props, node, ctor, cellFunc){
+	return TreeGrid.markupFactory(props, node, ctor, cellFunc);
 };
+
+return LazyTreeGrid;
+
+});

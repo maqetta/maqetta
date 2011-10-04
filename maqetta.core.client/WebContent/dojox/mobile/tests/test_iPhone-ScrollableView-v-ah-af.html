@@ -4,7 +4,7 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>ScrollableView-v-ah-af</title>
-		<link href="../themes/iphone/iphone.css" rel="stylesheet">
+		<link href="../themes/iphone/base.css" rel="stylesheet">
 		<style>
 		.lnk {
 			font-size: 14px;
@@ -19,16 +19,13 @@
 		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true, mblAlwaysHideAddressBar: true"></script>
 
 		<script language="JavaScript" type="text/javascript">
-			//dojo.require("dojo.parser"); // Use the lightweight parser.
-			dojo.require("dojox.mobile.parser");
-			dojo.require("dojox.mobile");
+			dojo.require("dojox.mobile");			// This is a mobile app.
+			dojo.require("dojox.mobile.parser");	// This mobile app supports running on desktop browsers
+			dojo.require("dojox.mobile.compat");	// This mobile app uses declarative programming with fast mobile parser
 			dojo.require("dojox.mobile.ScrollableView");
-			dojo.requireIf(!dojo.isWebKit, "dojox.mobile.compat");
-			dojo.requireIf(!dojo.isWebKit, "dojo.fx");
-			dojo.requireIf(!dojo.isWebKit, "dojo.fx.easing");
 		</script>
 	</head>
-	<body>
+	<body style="visibility:hidden;">
 		<h1 dojoType="dojox.mobile.Heading" fixed="top">Application Header Bar</h1>
 		<div id="foo" dojoType="dojox.mobile.ScrollableView" selected="true">
 			<h2 dojoType="dojox.mobile.RoundRectCategory">Transition Effects</h2>
@@ -93,6 +90,33 @@
 				</li>
 				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-9.png" moveTo="bar" transition="fade">
 					Fade 18
+				</li>
+				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-7.png" moveTo="bar" transition="slide">
+					Slide 19
+				</li>
+				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-8.png" moveTo="bar" transition="flip">
+					Flip 20
+				</li>
+				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-9.png" moveTo="bar" transition="fade">
+					Fade 21
+				</li>
+				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-7.png" moveTo="bar" transition="slide">
+					Slide 22
+				</li>
+				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-8.png" moveTo="bar" transition="flip">
+					Flip 23
+				</li>
+				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-9.png" moveTo="bar" transition="fade">
+					Fade 24
+				</li>
+				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-7.png" moveTo="bar" transition="slide">
+					Slide 25
+				</li>
+				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-8.png" moveTo="bar" transition="flip">
+					Flip 26
+				</li>
+				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-9.png" moveTo="bar" transition="fade">
+					Fade 27
 				</li>
 			</ul>
 		</div>

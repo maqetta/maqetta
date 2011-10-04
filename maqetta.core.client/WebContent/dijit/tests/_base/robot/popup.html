@@ -18,8 +18,20 @@
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_popup.html');
+
+				doh.register("API", [
+						function repeatMoveOffScreen(){
+							// Previously, calling moveOffScreen twice would cause an exception
+							dijit.popup.moveOffScreen(dijit.byId("spw"));
+							dijit.popup.moveOffScreen(dijit.byId("spw"));
+
+							// Deprecated API where moveOffScreen() takes a DOMNode
+							dijit.popup.moveOffScreen(dojo.byId("sdn"));
+							dijit.popup.moveOffScreen(dojo.byId("sdn"));
+						}
+				]);
 
 				doh.register("simple open and close", [
 					function initialConditions(t){
@@ -142,9 +154,6 @@
 
 					function closeAround(){
 						// Close the layer of popups
-						var around = dojo.global.choiceDropDownButton,
-							popup = dojo.global.choiceDropDown;
-
 						var around = dojo.global.nestedDropDownButton,
 							popup = dojo.global.nestedOpener,
 							nestedPopup = dojo.global.nestedChoice1;
@@ -160,61 +169,11 @@
 
 				// Make sure there are no hidden tab stops when popups are closed.
 				// This test doesn't work on safari (due to safari bugs) although there aren't any hidden tab stops.
-				if(!dojo.isSafari){
-					doh.register("no hidden tab stops", [
-						{
-							name: "tab off end of viewport",
-							timeout: 10000,
-							runTest: function (){
-								var d = new doh.Deferred();
-								var focusId;
-		
-								dojo.byId("inputAtEnd").focus();
-								doh.robot.sequence(function(){
-									// Just to make sure that focus is on the input
-									focusId = dojo.global.dijit._curFocus ? dojo.global.dijit._curFocus.id : null;
-								}, 1000);
-	
-								doh.robot.keyPress(dojo.keys.TAB, 500, {});
-		
-								// Focus should end up on URL bar etc., not on a hidden <input> or <button> in a popup
-								doh.robot.sequence(d.getTestCallback(function(){
-									doh.is("inputAtEnd", focusId);
-									doh.f(dojo.global.dijit._curFocus && dojo.isDescendant(dojo.global.dijit._curFocus, dojo.global.dojo.body()), "no focus inside viewport");
-								}), 1000);
-		
-								return d;
-							}
-						},
-						{
-							name: "tab off beginning of viewport",
-							timeout: 10000,
-							runTest: function (){
-								var d = new doh.Deferred();
-								var focusId;
-
-								doh.robot.keyPress(dojo.keys.TAB, 500, {shift: true});
-								doh.robot.sequence(function(){
-									dojo.byId("inputAtStart").focus();
-								}, 1000);
-								doh.robot.sequence(function(){
-									// Just to make sure that focus is on the input
-									focusId = dojo.global.dijit._curFocus ? dojo.global.dijit._curFocus.id : null;
-								}, 1000);
-	
-								doh.robot.keyPress(dojo.keys.TAB, 500, {shift: true});
-		
-								// Focus should end up on URL bar etc., not on a hidden <input> or <button> in a popup
-								doh.robot.sequence(d.getTestCallback(function(){
-									doh.is("inputAtStart", focusId);
-									doh.f(dojo.global.dijit._curFocus && dojo.isDescendant(dojo.global.dijit._curFocus, dojo.global.dojo.body()), "no focus inside viewport");
-								}), 1000);
-		
-								return d;
-							}
-						}
-					]);
-				}	// if(!dojo.isSafari)
+				doh.register("no hidden tab stops", function hiddenTabStops(){
+					var tabbable = tabOrder();
+					doh.is("inputAtStart", tabbable[0].id, "first tabbable node");
+					doh.is("inputAtEnd", tabbable[tabbable.length - 1].id, "last tabbable node");
+				});
 
 				// TODO: test x/y placement
 

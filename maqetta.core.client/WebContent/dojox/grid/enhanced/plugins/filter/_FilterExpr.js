@@ -1,13 +1,13 @@
-dojo.provide("dojox.grid.enhanced.plugins.filter._FilterExpr");
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/date",
+	"./_DataExprs"
+], function(declare, lang, date, exprs){
 //This is the main file that should be 'required' if filter expression facility is necessary.
 
-dojo.require("dojox.grid.enhanced.plugins.filter._DataExprs");
-dojo.require("dojo.date");
-
-(function(){
-	var fns = dojox.grid.enhanced.plugins.filter;
 	/* Logic Operations */
-	dojo.declare("dojox.grid.enhanced.plugins.filter.LogicAND", fns._BiOpExpr, {
+	var LogicAND = declare("dojox.grid.enhanced.plugins.filter.LogicAND", exprs._BiOpExpr, {
 		// summary:
 		//		A logic AND condition expression.
 		_name: "and",
@@ -17,10 +17,10 @@ dojo.require("dojo.date");
 			//		Override from _BiOpExpr
 			var res = left_operand.applyRow(datarow, getter).getValue() &&
 				right_operand.applyRow(datarow, getter).getValue();
-			return new fns.BooleanExpr(res);	//_ConditionExpr
+			return new exprs.BooleanExpr(res);	//_ConditionExpr
 		}
 	});
-	dojo.declare("dojox.grid.enhanced.plugins.filter.LogicOR", fns._BiOpExpr, {
+	var LogicOR = declare("dojox.grid.enhanced.plugins.filter.LogicOR", exprs._BiOpExpr, {
 		// summary:
 		//		A logic OR condition expression.
 		_name: "or",
@@ -30,10 +30,10 @@ dojo.require("dojo.date");
 			//		Override from _BiOpExpr
 			var res = left_operand.applyRow(datarow, getter).getValue() ||
 				right_operand.applyRow(datarow, getter).getValue();
-			return new fns.BooleanExpr(res);	//_ConditionExpr
+			return new exprs.BooleanExpr(res);	//_ConditionExpr
 		}
 	});
-	dojo.declare("dojox.grid.enhanced.plugins.filter.LogicXOR", fns._BiOpExpr, {
+	var LogicXOR = declare("dojox.grid.enhanced.plugins.filter.LogicXOR", exprs._BiOpExpr, {
 		// summary:
 		//		A logic XOR condition expression.
 		_name: "xor",
@@ -43,41 +43,41 @@ dojo.require("dojo.date");
 			//		Override from _BiOpExpr
 			var left_res = left_operand.applyRow(datarow, getter).getValue();
 			var right_res = right_operand.applyRow(datarow, getter).getValue();
-			return new fns.BooleanExpr((!!left_res) != (!!right_res));	//_ConditionExpr
+			return new exprs.BooleanExpr((!!left_res) != (!!right_res));	//_ConditionExpr
 		}
 	});
-	dojo.declare("dojox.grid.enhanced.plugins.filter.LogicNOT", fns._UniOpExpr, {
+	var LogicNOT = declare("dojox.grid.enhanced.plugins.filter.LogicNOT", exprs._UniOpExpr, {
 		// summary:
 		//		A logic NOT condition expression.
 		_name: "not",
 		_calculate: function(/* _ConditionExpr */operand,/* data item*/datarow,/* function(row,colIdx) */getter){
 			// summary:
 			//		Override from _UniOpExpr
-			return new fns.BooleanExpr(!operand.applyRow(datarow, getter).getValue());	//_ConditionExpr
+			return new exprs.BooleanExpr(!operand.applyRow(datarow, getter).getValue());	//_ConditionExpr
 		}
 	});
-	dojo.declare("dojox.grid.enhanced.plugins.filter.LogicALL", fns._OperatorExpr, {
+	var LogicALL = declare("dojox.grid.enhanced.plugins.filter.LogicALL", exprs._OperatorExpr, {
 		// summary:
 		//		A logic ALL condition expression, equals a sequence of logic ANDs
 		_name: "all",
 		applyRow: function(/* data item */datarow,/* function(row,colIdx) */ getter){
 			// summary:
 			//		Override from _ConditionExpr
-			for(var i = 0, res = true; res && (this._operands[i] instanceof fns._ConditionExpr); ++i){
+			for(var i = 0, res = true; res && (this._operands[i] instanceof exprs._ConditionExpr); ++i){
 				res = this._operands[i].applyRow(datarow,getter).getValue();
 			}
-			return new fns.BooleanExpr(res);	//_ConditionExpr
+			return new exprs.BooleanExpr(res);	//_ConditionExpr
 		}
 	});
-	dojo.declare("dojox.grid.enhanced.plugins.filter.LogicANY", fns._OperatorExpr, {
+	var LogicANY = declare("dojox.grid.enhanced.plugins.filter.LogicANY", exprs._OperatorExpr, {
 		// summary:
 		//		A logic ANY condition expression, equals a sequence of logic ORs
 		_name: "any",
 		applyRow: function(/* data item */datarow,/* function(row,colIdx) */ getter){
-			for(var i = 0,res = false; !res && (this._operands[i] instanceof fns._ConditionExpr); ++i){
+			for(var i = 0,res = false; !res && (this._operands[i] instanceof exprs._ConditionExpr); ++i){
 				res = this._operands[i].applyRow(datarow,getter).getValue();
 			}
-			return new fns.BooleanExpr(res);	//_ConditionExpr
+			return new exprs.BooleanExpr(res);	//_ConditionExpr
 		}
 	});
 	
@@ -87,19 +87,19 @@ dojo.require("dojo.date");
 		right = right.applyRow(row, getter);
 		var left_res = left.getValue();
 		var right_res = right.getValue();
-		if(left instanceof fns.TimeExpr){
-			return dojo.date.compare(left_res,right_res,"time");
-		}else if(left instanceof fns.DateExpr){
-			return dojo.date.compare(left_res,right_res,"date");
+		if(left instanceof exprs.TimeExpr){
+			return date.compare(left_res,right_res,"time");
+		}else if(left instanceof exprs.DateExpr){
+			return date.compare(left_res,right_res,"date");
 		}else{
-			if(left instanceof fns.StringExpr){
+			if(left instanceof exprs.StringExpr){
 				left_res = left_res.toLowerCase();
 				right_res = String(right_res).toLowerCase();
 			}
 			return left_res == right_res ? 0 : (left_res < right_res ? -1 : 1);
 		}
 	}
-	dojo.declare("dojox.grid.enhanced.plugins.filter.EqualTo", fns._BiOpExpr, {
+	var EqualTo = declare("dojox.grid.enhanced.plugins.filter.EqualTo", exprs._BiOpExpr, {
 		// summary:
 		//		An "equal to" condition expression.
 		_name: "equal",
@@ -108,10 +108,10 @@ dojo.require("dojo.date");
 			// summary:
 			//		Override from _BiOpExpr
 			var res = compareFunc(left_operand,right_operand,datarow,getter);
-			return new fns.BooleanExpr(res === 0);	//_ConditionExpr
+			return new exprs.BooleanExpr(res === 0);	//_ConditionExpr
 		}
 	});
-	dojo.declare("dojox.grid.enhanced.plugins.filter.LessThan", fns._BiOpExpr, {
+	var LessThan = declare("dojox.grid.enhanced.plugins.filter.LessThan", exprs._BiOpExpr, {
 		// summary:
 		//		A "less than" condition expression.
 		_name: "less",
@@ -120,10 +120,10 @@ dojo.require("dojo.date");
 			// summary:
 			//		Override from _BiOpExpr
 			var res = compareFunc(left_operand,right_operand,datarow,getter);
-			return new fns.BooleanExpr(res < 0);	//_ConditionExpr
+			return new exprs.BooleanExpr(res < 0);	//_ConditionExpr
 		}
 	});
-	dojo.declare("dojox.grid.enhanced.plugins.filter.LessThanOrEqualTo", fns._BiOpExpr, {
+	var LessThanOrEqualTo = declare("dojox.grid.enhanced.plugins.filter.LessThanOrEqualTo", exprs._BiOpExpr, {
 		// summary:
 		//		A "less than or equal to" condition expression.
 		_name: "lessEqual",
@@ -132,10 +132,10 @@ dojo.require("dojo.date");
 			// summary:
 			//		Override from _BiOpExpr
 			var res = compareFunc(left_operand,right_operand,datarow,getter);
-			return new fns.BooleanExpr(res <= 0);	//_ConditionExpr
+			return new exprs.BooleanExpr(res <= 0);	//_ConditionExpr
 		}
 	});
-	dojo.declare("dojox.grid.enhanced.plugins.filter.LargerThan", fns._BiOpExpr, {
+	var LargerThan = declare("dojox.grid.enhanced.plugins.filter.LargerThan", exprs._BiOpExpr, {
 		// summary:
 		//		A "larger than" condition expression.
 		_name: "larger",
@@ -144,10 +144,10 @@ dojo.require("dojo.date");
 			// summary:
 			//		Override from _BiOpExpr
 			var res = compareFunc(left_operand,right_operand,datarow,getter);
-			return new fns.BooleanExpr(res > 0);	//_ConditionExpr
+			return new exprs.BooleanExpr(res > 0);	//_ConditionExpr
 		}
 	});
-	dojo.declare("dojox.grid.enhanced.plugins.filter.LargerThanOrEqualTo", fns._BiOpExpr, {
+	var LargerThanOrEqualTo = declare("dojox.grid.enhanced.plugins.filter.LargerThanOrEqualTo", exprs._BiOpExpr, {
 		// summary:
 		//		A "larger than or equal to" condition expression.
 		_name: "largerEqual",
@@ -156,12 +156,12 @@ dojo.require("dojo.date");
 			// summary:
 			//		Override from _BiOpExpr
 			var res = compareFunc(left_operand,right_operand,datarow,getter);
-			return new fns.BooleanExpr(res >= 0);	//_ConditionExpr
+			return new exprs.BooleanExpr(res >= 0);	//_ConditionExpr
 		}
 	});
 	
 	/* String Operations */
-	dojo.declare("dojox.grid.enhanced.plugins.filter.Contains", fns._BiOpExpr, {
+	var Contains = declare("dojox.grid.enhanced.plugins.filter.Contains", exprs._BiOpExpr, {
 		// summary:
 		//		A "contains" condition expression.
 		_name: "contains",
@@ -171,10 +171,10 @@ dojo.require("dojo.date");
 			//		Override from _BiOpExpr
 			var left_res = String(left_operand.applyRow(datarow, getter).getValue()).toLowerCase();
 			var right_res = String(right_operand.applyRow(datarow, getter).getValue()).toLowerCase();
-			return new fns.BooleanExpr(left_res.indexOf(right_res) >= 0);	//_ConditionExpr
+			return new exprs.BooleanExpr(left_res.indexOf(right_res) >= 0);	//_ConditionExpr
 		}
 	});
-	dojo.declare("dojox.grid.enhanced.plugins.filter.StartsWith", fns._BiOpExpr, {
+	var StartsWith = declare("dojox.grid.enhanced.plugins.filter.StartsWith", exprs._BiOpExpr, {
 		// summary:
 		//		A "starts with" condition expression.
 		_name: "startsWith",
@@ -184,10 +184,10 @@ dojo.require("dojo.date");
 			//		Override from _BiOpExpr
 			var left_res = String(left_operand.applyRow(datarow, getter).getValue()).toLowerCase();
 			var right_res = String(right_operand.applyRow(datarow, getter).getValue()).toLowerCase();
-			return new fns.BooleanExpr(left_res.substring(0, right_res.length) == right_res);	//_ConditionExpr
+			return new exprs.BooleanExpr(left_res.substring(0, right_res.length) == right_res);	//_ConditionExpr
 		}
 	});
-	dojo.declare("dojox.grid.enhanced.plugins.filter.EndsWith", fns._BiOpExpr, {
+	var EndsWith = declare("dojox.grid.enhanced.plugins.filter.EndsWith", exprs._BiOpExpr, {
 		// summary:
 		//		An "ends with" condition expression.
 		_name: "endsWith",
@@ -197,10 +197,10 @@ dojo.require("dojo.date");
 			//		Override from _BiOpExpr
 			var left_res = String(left_operand.applyRow(datarow, getter).getValue()).toLowerCase();
 			var right_res = String(right_operand.applyRow(datarow, getter).getValue()).toLowerCase();
-			return new fns.BooleanExpr(left_res.substring(left_res.length - right_res.length) == right_res);	//_ConditionExpr
+			return new exprs.BooleanExpr(left_res.substring(left_res.length - right_res.length) == right_res);	//_ConditionExpr
 		}
 	});
-	dojo.declare("dojox.grid.enhanced.plugins.filter.Matches", fns._BiOpExpr, {
+	var Matches = declare("dojox.grid.enhanced.plugins.filter.Matches", exprs._BiOpExpr, {
 		// summary:
 		//		A "regular expression match" condition expression.
 		//		The second operand's value will be regarded as an regular expression string.
@@ -211,10 +211,10 @@ dojo.require("dojo.date");
 			//		Override from _BiOpExpr
 			var left_res = String(left_operand.applyRow(datarow, getter).getValue());
 			var right_res = new RegExp(right_operand.applyRow(datarow, getter).getValue());
-			return new fns.BooleanExpr(left_res.search(right_res) >= 0);	//_ConditionExpr
+			return new exprs.BooleanExpr(left_res.search(right_res) >= 0);	//_ConditionExpr
 		}
 	});
-	dojo.declare("dojox.grid.enhanced.plugins.filter.IsEmpty", fns._UniOpExpr, {
+	var IsEmpty = declare("dojox.grid.enhanced.plugins.filter.IsEmpty", exprs._UniOpExpr, {
 		// summary:
 		//		Check empty
 		_name: "isEmpty",
@@ -222,7 +222,26 @@ dojo.require("dojo.date");
 			// summary:
 			//		Override from _BiOpExpr
 			var res = operand.applyRow(datarow, getter).getValue();
-			return new fns.BooleanExpr(res === "" || res == null);
+			return new exprs.BooleanExpr(res === "" || res == null);
 		}
 	});
-})();
+
+	return lang.mixin({
+		LogicAND: LogicAND,
+		LogicOR: LogicOR,
+		LogicXOR: LogicXOR,
+		LogicNOT: LogicNOT,
+		LogicALL: LogicALL,
+		LogicANY: LogicANY,
+		EqualTo: EqualTo,
+		LessThan: LessThan,
+		LessThanOrEqualTo: LessThanOrEqualTo,
+		LargerThan: LargerThan,
+		LargerThanOrEqualTo: LargerThanOrEqualTo,
+		Contains: Contains,
+		StartsWith: StartsWith,
+		EndsWith: EndsWith,
+		Matches: Matches,
+		IsEmpty: IsEmpty
+	}, exprs);
+});

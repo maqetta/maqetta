@@ -10,13 +10,12 @@
 		</style>
 		<script type="text/javascript"
 			src="../../../dojo/dojo.js"
-			debugAtAllCosts="false"
 			djConfig="isDebug:true, popup:false, parseOnLoad:false">
 		</script>
 		<script type="text/javascript">
 
 			dojo.require("dijit._Widget");
-			dojo.require("dijit._Templated");
+			dojo.require("dijit._TemplatedMixin");
 			dojo.require("dojo.parser");
 
 			var w;
@@ -29,19 +28,23 @@
 			onPopClose = function(){
 				console.log("setting context back to main window...");
 				dojo.setContext(dojo.global, globalDocument);
-				if(dijit.byId('simple3')){ dijit.byId('simple3').destroy(); }
+				if(dijit.byId('simple3')){
+					dijit.byId('simple3').destroy();
+				}
 				console.log("Now building the widget in the main window...");
 				var div = dojo.doc.createElement("div");
 				dojo.byId("main").appendChild(div);
 				new widgetClass({id:"simple3"}, div);
 				console.log("There should now be two widgets at the top of the page.");
-			}
+			};
 
 			onPopLoad = function(){
 				globalDocument = dojo.doc;
 				dojo.setContext(dojo.global, popwin.document);
 
-				if(dijit.byId('simple2')){ dijit.byId('simple2').destroy(); }
+				if(dijit.byId('simple2')){
+					dijit.byId('simple2').destroy();
+				}
 				console.log("rendering one widget in popup...");
 
 				var div = dojo.doc.createElement("div");
@@ -51,19 +54,19 @@
 				console.log("The widget should have appeared in the popup window.");
 
 				onPopClose();
-			}
+			};
 
 			openPopup = function(){
-				popup = window.open ('',"mywin","width=240,height=180");
-				var doc=popup.document;
+				popup = window.open('', "mywin", "width=240,height=180");
+				var doc = popup.document;
 
 				var newbcolor = '#FFFFFF';
 				var newfcolor = '$FF0000';
 				var word = "";
-				var HTMLstring=	'<HTML><HEAD><TITLE>IE Cross Window</TITLE></HEAD>\n' +
-								'<BODY id="popup" bgColor="'+newbcolor+'">\n'+
-								'<div><div id="main"></div></div>\n'+
-								'</BODY></HTML>';
+				var HTMLstring = '<HTML><HEAD><TITLE>IE Cross Window</TITLE></HEAD>\n' +
+						'<BODY id="popup" bgColor="' + newbcolor + '">\n' +
+						'<div><div id="main"></div></div>\n' +
+						'</BODY></HTML>';
 
 				doc.write(HTMLstring);
 				doc.close();
@@ -81,7 +84,7 @@
 				}
 
 				return popup;
-			}
+			};
 
 			speedTest = function(){
 				console.log("Speed Test");
@@ -93,15 +96,15 @@
 				dojo.byId("main").appendChild(div);
 
 				for(var i = 0; i < amt; i++){
-					new widgetClass({id:"simple_"+i}, div);
+					new widgetClass({id:"simple_" + i}, div);
 				}
-				console.log("Time to render ", amt, " widgets:",  (new Date() - start) );
-			}
+				console.log("Time to render ", amt, " widgets:", (new Date() - start));
+			};
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				widgetClass = dojo.declare(
 					"Simple",
-					[dijit._Widget, dijit._Templated], {
+					[dijit._Widget, dijit._TemplatedMixin], {
 						templateString: '<div> Widget created: ${id} </div>'
 					}
 				);

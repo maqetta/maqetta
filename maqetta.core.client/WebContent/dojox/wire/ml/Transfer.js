@@ -1,8 +1,4 @@
 dojo.provide("dojox.wire.ml.Transfer");
-dojo.provide("dojox.wire.ml.ChildWire");
-dojo.provide("dojox.wire.ml.ColumnWire");
-dojo.provide("dojox.wire.ml.NodeWire");
-dojo.provide("dojox.wire.ml.SegmentWire");
 
 dojo.require("dijit._Widget");
 dojo.require("dijit._Container");

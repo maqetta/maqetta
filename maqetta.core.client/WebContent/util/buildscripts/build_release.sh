@@ -20,11 +20,11 @@ read -p "If you mean to create a tag for Dojo $version from r$svnRevision ... pr
 
 #Make the SVN tag.
 svn mkdir -m "Using r$svnRevision to create a tag for the $version release." https://svn.dojotoolkit.org/src/tags/$tagName
-svn copy -r $svnRevision https://svn.dojotoolkit.org/src/branches/1.6/dojo  https://svn.dojotoolkit.org/src/tags/$tagName/dojo -m "Using r$svnRevision to create a tag for the $version release."
-svn copy -r $svnRevision https://svn.dojotoolkit.org/src/branches/1.6/dijit https://svn.dojotoolkit.org/src/tags/$tagName/dijit -m "Using r$svnRevision to create a tag for the $version release."
-svn copy -r $svnRevision https://svn.dojotoolkit.org/src/branches/1.6/dojox https://svn.dojotoolkit.org/src/tags/$tagName/dojox -m "Using r$svnRevision to create a tag for the $version release."
-svn copy -r $svnRevision https://svn.dojotoolkit.org/src/branches/1.6/util  https://svn.dojotoolkit.org/src/tags/$tagName/util -m "Using r$svnRevision to create a tag for the $version release."
-svn copy -r $svnRevision https://svn.dojotoolkit.org/src/branches/1.6/demos https://svn.dojotoolkit.org/src/tags/$tagName/demos -m "Using r$svnRevision to create a tag for the $version release."
+svn copy -r $svnRevision https://svn.dojotoolkit.org/src/dojo/trunk  https://svn.dojotoolkit.org/src/tags/$tagName/dojo -m "Using r$svnRevision to create a tag for the $version release."
+svn copy -r $svnRevision https://svn.dojotoolkit.org/src/dijit/trunk https://svn.dojotoolkit.org/src/tags/$tagName/dijit -m "Using r$svnRevision to create a tag for the $version release."
+svn copy -r $svnRevision https://svn.dojotoolkit.org/src/dojox/trunk https://svn.dojotoolkit.org/src/tags/$tagName/dojox -m "Using r$svnRevision to create a tag for the $version release."
+svn copy -r $svnRevision https://svn.dojotoolkit.org/src/util/trunk  https://svn.dojotoolkit.org/src/tags/$tagName/util -m "Using r$svnRevision to create a tag for the $version release."
+svn copy -r $svnRevision https://svn.dojotoolkit.org/src/demos/trunk https://svn.dojotoolkit.org/src/tags/$tagName/demos -m "Using r$svnRevision to create a tag for the $version release."
 
 #Check out the tag
 mkdir ../../build
@@ -33,9 +33,13 @@ svn co https://svn.dojotoolkit.org/src/tags/$tagName $buildName
 cd $buildName/util/buildscripts
 
 #Update the dojo version in the tag
-java -jar ../shrinksafe/js.jar changeVersion.js $version ../../dojo/_base/_loader/bootstrap.js
+java -jar ../shrinksafe/js.jar changeVersion.js $version ../../dojo/_base/kernel.js
+java -jar ../shrinksafe/js.jar changeVersion.js $version ../../dojo/package.json
+java -jar ../shrinksafe/js.jar changeVersion.js $version ../../dijit/package.json
 cd ../../dojo
-svn commit -m "Updating dojo version for the tag. \!strict" _base/_loader/bootstrap.js
+svn commit -m "Updating dojo version for the tag. \!strict" package.json _base/kernel.js
+cd ../dijit
+svn commit -m "Updating dijit version for the tag. \!strict" package.json
 
 #Erase the SVN dir and replace with an exported SVN contents.
 cd ../..
@@ -76,7 +80,7 @@ mv $srcName $buildName
 #Run the build.
 cd $buildName/util/buildscripts/
 chmod +x ./build.sh
-./build.sh profile=standard version=$1 releaseName=$buildName cssOptimize=comments.keepLines optimize=shrinksafe.keepLines action=release 
+./build.sh profile=standard version=$1 releaseName=$buildName cssOptimize=comments.keepLines optimize=shrinksafe.keepLines action=release insertAbsMids=1
 # remove tests and demos, but only for the actual release:
 chmod +x ./clean_release.sh
 ./clean_release.sh ../../release $buildName
@@ -103,7 +107,7 @@ tar -xzvf $srcName.tar.gz
 cd $srcName/util/buildscripts/
 
 # build the version that will be extracted and live on downloads.dojotoolkit.org (with tests)
-./build.sh action=release version=$1 profile=standard cssOptimize=comments.keepLines releaseName=$buildName copyTests=true mini=false
+./build.sh action=release version=$1 profile=standard cssOptimize=comments.keepLines releaseName=$buildName copyTests=true mini=false insertAbsMids=1
 
 # cleanup the -src extraction, moving the newly built tree into place. 
 cd ../../release
@@ -114,7 +118,7 @@ rm -rf release/
 # generate api.xml and api.json
 cd util/docscripts/
 php -q generate.php
-mv api.* ../../../../build/
+mv cache/api.* ../../../../build/
 cd ../../../../
 
 # make a folder structure appropriate for directly extracting on downloads.dojotoolkit.org
@@ -123,15 +127,20 @@ rm -rf release-$1/$srcName/
 cd release-$1
 
 # md5sum the release files -- OSX doesn't have md5sum, foundation servers don't have md5
-if [ -e `which md5` ]; then
-	md5=`which md5`
-elif [ -e `which md5sum` ]; then
+md5=`which md5`
+if [[ -n $md5 && -x $md5 ]]; then
+	echo "Found $md5";
+else
 	md5=`which md5sum`
 fi
 
-for i in *.zip; do $md5 $i > $i.md5; done
-for i in *.gz; do $md5 $i > $i.md5; done
-for i in *.js; do $md5 $i > $i.md5; done
+if [[ -n $md5 && -x $md5 ]]; then
+	for i in *.zip; do $md5 $i > $i.md5; done
+	for i in *.gz; do $md5 $i > $i.md5; done
+	for i in *.js; do $md5 $i > $i.md5; done
+else
+	echo "ERROR: Failed to generate md5 checksums" 
+fi
 
 # pack up the whole thing for easy copying
 cd ..
@@ -140,7 +149,7 @@ tar -czvf dj-$1-dtk.tar.gz release-$1
 #Finished.
 outDirName=`pwd`
 echo "Build complete. Files are in: $outDirName"
-echo "A copy/paste command to push files to downloads.dojotoolkit.org with permission:"
-echo "scp dj-$1-dtk.tar.gz download.dojotoolkit.org:/srv/www/vhosts/download.dojotoolkit.org"
+echo "A copy/paste command to push files to download.dojotoolkit.org with permission:"
+echo "scp dj-$1-dtk.tar.gz download.dojotoolkit.org:/srv/www/vhosts.d/download.dojotoolkit.org"
 echo "... then extract in place and rm dj-$1-dtk.tar.gz"
 cd ../util/buildscripts

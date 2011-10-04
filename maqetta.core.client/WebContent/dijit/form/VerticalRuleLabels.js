@@ -1,24 +1,32 @@
-define("dijit/form/VerticalRuleLabels", ["dojo", "dijit", "dijit/form/HorizontalRuleLabels"], function(dojo, dijit) {
+define([
+	"dojo/_base/declare", // declare
+	"./HorizontalRuleLabels"
+], function(declare, HorizontalRuleLabels){
 
-dojo.declare("dijit.form.VerticalRuleLabels", dijit.form.HorizontalRuleLabels,
-{
+/*=====
+	var HorizontalRuleLabels = dijit.form.HorizontalRuleLabels;
+=====*/
+
+	// module:
+	//		dijit/form/VerticalRuleLabels
 	// summary:
 	//		Labels for the `dijit.form.VerticalSlider`
 
-	templateString: '<div class="dijitRuleContainer dijitRuleContainerV dijitRuleLabelsContainer dijitRuleLabelsContainerV"></div>',
+	return declare("dijit.form.VerticalRuleLabels", HorizontalRuleLabels, {
+		// summary:
+		//		Labels for the `dijit.form.VerticalSlider`
 
-	_positionPrefix: '<div class="dijitRuleLabelContainer dijitRuleLabelContainerV" style="top:',
-	_labelPrefix: '"><span class="dijitRuleLabel dijitRuleLabelV">',
+		templateString: '<div class="dijitRuleContainer dijitRuleContainerV dijitRuleLabelsContainer dijitRuleLabelsContainerV"></div>',
 
-	_calcPosition: function(pos){
-		// Overrides HorizontalRuleLabel._calcPosition()
-		return 100-pos;
-	},
+		_positionPrefix: '<div class="dijitRuleLabelContainer dijitRuleLabelContainerV" style="top:',
+		_labelPrefix: '"><span class="dijitRuleLabel dijitRuleLabelV">',
 
-	// needed to prevent labels from being reversed in RTL mode
-	_isHorizontal: false
-});
+		_calcPosition: function(pos){
+			// Overrides HorizontalRuleLabel._calcPosition()
+			return 100-pos;
+		},
 
-
-return dijit.form.VerticalRuleLabels;
+		// needed to prevent labels from being reversed in RTL mode
+		_isHorizontal: false
+	});
 });

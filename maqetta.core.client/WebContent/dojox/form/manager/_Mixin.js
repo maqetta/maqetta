@@ -1,9 +1,21 @@
-dojo.provide("dojox.form.manager._Mixin");
+define([
+	"dojo/_base/window",
+	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dojo/_base/connect",
+	"dojo/dom-attr",
+	"dojo/dom-class",
+	"dijit/_base/manager",
+	"dijit/_Widget",
+	"dijit/form/_FormWidget",
+	"dijit/form/Button",
+	"dijit/form/CheckBox",
+	"dojo/_base/declare"
+], function(win, lang, array, connect, domAttr, domClass, manager, Widget, FormWidget, Button, CheckBox, declare){
+	// XXX: This class is loading a bunch of extra widgets just to perform isInstanceOf operations,
+	// which is wasteful
 
-dojo.require("dijit._Widget");
-
-(function(){
-	var fm = dojox.form.manager,
+	var fm = lang.getObject("dojox.form.manager", true),
 
 		aa = fm.actionAdapter = function(action){
 			// summary:
@@ -13,8 +25,8 @@ dojo.require("dijit._Widget");
 			//		(usually node or widget), and a value. This action will
 			//		be applied to all elements of array.
 			return function(name, elems, value){
-				if(dojo.isArray(elems)){
-					dojo.forEach(elems, function(elem){
+				if(lang.isArray(elems)){
+					array.forEach(elems, function(elem){
 						action.call(this, name, elem, value);
 					}, this);
 				}else{
@@ -30,7 +42,7 @@ dojo.require("dijit._Widget");
 			//		Function that takes three parameters: a name, an object
 			//		(usually node or widget), and a value.
 			return function(name, elem, value){
-				return inspector.call(this, name, dojo.isArray(elem) ? elem[0] : elem, value);
+				return inspector.call(this, name, lang.isArray(elem) ? elem[0] : elem, value);
 			};
 		},
 
@@ -49,10 +61,10 @@ dojo.require("dijit._Widget");
 
 		registerWidget = function(widget){
 			var name = widget.get("name");
-			if(name && widget instanceof dijit.form._FormWidget){
+			if(name && widget instanceof FormWidget){
 				if(name in this.formWidgets){
 					var a = this.formWidgets[name].widget;
-					if(dojo.isArray(a)){
+					if(lang.isArray(a)){
 						a.push(widget);
 					}else{
 						this.formWidgets[name].widget = [a, widget];
@@ -71,9 +83,9 @@ dojo.require("dijit._Widget");
 			aa(function(_, w){
 				var o = w.get("observer");
 				if(o && typeof o == "string"){
-					dojo.forEach(o.split(","), function(o){
-						o = dojo.trim(o);
-						if(o && dojo.isFunction(this[o])){
+					array.forEach(o.split(","), function(o){
+						o = lang.trim(o);
+						if(o && lang.isFunction(this[o])){
 							observers[o] = 1;
 						}
 					}, this);
@@ -85,18 +97,18 @@ dojo.require("dijit._Widget");
 		connectWidget = function(name, observers){
 			var t = this.formWidgets[name], w = t.widget, c = t.connections;
 			if(c.length){
-				dojo.forEach(c, dojo.disconnect);
+				array.forEach(c, connect.disconnect);
 				c = t.connections = [];
 			}
-			if(dojo.isArray(w)){
+			if(lang.isArray(w)){
 				// radio buttons
-				dojo.forEach(w, function(w){
-					dojo.forEach(observers, function(o){
-						c.push(dojo.connect(w, "onChange", this, function(evt){
+				array.forEach(w, function(w){
+					array.forEach(observers, function(o){
+						c.push(connect.connect(w, "onChange", this, function(evt){
 							// TODO: for some reason for radio button widgets
 							// w.checked != w.focusNode.checked when value changes.
 							// We test the underlying value to be 100% sure.
-							if(this.watching && dojo.attr(w.focusNode, "checked")){
+							if(this.watching && domAttr.get(w.focusNode, "checked")){
 								this[o](w.get("value"), name, w, evt);
 							}
 						}));
@@ -104,11 +116,11 @@ dojo.require("dijit._Widget");
 				}, this);
 			}else{
 				// the rest
-				// the next line is a crude workaround for dijit.form.Button that fires onClick instead of onChange
-				var eventName = w.declaredClass == "dijit.form.Button" ?
+				// the next line is a crude workaround for Button that fires onClick instead of onChange
+				var eventName = w.isInstanceOf(Button) ?
 						"onClick" : "onChange";
-				dojo.forEach(observers, function(o){
-					c.push(dojo.connect(w, eventName, this, function(evt){
+				array.forEach(observers, function(o){
+					c.push(connect.connect(w, eventName, this, function(evt){
 						if(this.watching){
 							this[o](w.get("value"), name, w, evt);
 						}
@@ -117,7 +129,7 @@ dojo.require("dijit._Widget");
 			}
 		};
 
-	dojo.declare("dojox.form.manager._Mixin", null, {
+	var _Mixin = declare("dojox.form.manager._Mixin", null, {
 		// summary:
 		//		Mixin to orchestrate dynamic forms.
 		// description:
@@ -133,7 +145,7 @@ dojo.require("dijit._Widget");
 		startup: function(){
 			// summary:
 			//		Called after all the widgets have been instantiated and their
-			//		dom nodes have been inserted somewhere under dojo.doc.body.
+			//		dom nodes have been inserted somewhere under win.doc.body.
 
 			if(this._started){ return; }
 
@@ -149,7 +161,7 @@ dojo.require("dijit._Widget");
 			//		Called when the widget is being destroyed
 
 			for(var name in this.formWidgets){
-				dojo.forEach(this.formWidgets[name].connections, dojo.disconnect);
+				array.forEach(this.formWidgets[name].connections, connect.disconnect);
 			}
 			this.formWidgets = {};
 
@@ -166,9 +178,9 @@ dojo.require("dijit._Widget");
 			// returns: Object:
 			//		Returns self
 			if(typeof widget == "string"){
-				widget = dijit.byId(widget);
+				widget = manager.byId(widget);
 			}else if(widget.tagName && widget.cloneNode){
-				widget = dijit.byNode(widget);
+				widget = manager.byNode(widget);
 			}
 			var name = registerWidget.call(this, widget);
 			if(name){
@@ -186,7 +198,7 @@ dojo.require("dijit._Widget");
 			// returns: Object:
 			//		Returns self
 			if(name in this.formWidgets){
-				dojo.forEach(this.formWidgets[name].connections, this.disconnect, this);
+				array.forEach(this.formWidgets[name].connections, this.disconnect, this);
 				delete this.formWidgets[name];
 			}
 			return this;
@@ -202,16 +214,16 @@ dojo.require("dijit._Widget");
 
 			// convert to widget, if required
 			if(typeof widget == "string"){
-				widget = dijit.byId(widget);
+				widget = manager.byId(widget);
 			}else if(widget.tagName && widget.cloneNode){
-				widget = dijit.byNode(widget);
+				widget = manager.byNode(widget);
 			}
 
 			// build the map of widgets
-			var widgets = dojo.map(widget.getDescendants(), registerWidget, this);
+			var widgets = array.map(widget.getDescendants(), registerWidget, this);
 
 			// process observers for widgets
-			dojo.forEach(widgets, function(name){
+			array.forEach(widgets, function(name){
 				if(name){
 					connectWidget.call(this, name, getObserversFromWidget.call(this, name));
 				}
@@ -232,17 +244,17 @@ dojo.require("dijit._Widget");
 
 			// convert to widget, if required
 			if(typeof widget == "string"){
-				widget = dijit.byId(widget);
+				widget = manager.byId(widget);
 			}else if(widget.tagName && widget.cloneNode){
-				widget = dijit.byNode(widget);
+				widget = manager.byNode(widget);
 			}
 
 			// unregister widgets by names
-			dojo.forEach(
-				dojo.map(
+			array.forEach(
+				array.map(
 					widget.getDescendants(),
 					function(w){
-						return w instanceof dijit.form._FormWidget && w.get("name") || null;
+						return w instanceof FormWidget && w.get("name") || null;
 					}
 				),
 				function(name){
@@ -284,23 +296,23 @@ dojo.require("dijit._Widget");
 				return null;	// Object
 			}
 
-			if(dojo.isArray(elem)){
+			if(lang.isArray(elem)){
 				// input/radio array of widgets
 				if(isSetter){
-					dojo.forEach(elem, function(widget){
+					array.forEach(elem, function(widget){
 						widget.set("checked", false, !this.watching);
 					});
-					dojo.forEach(elem, function(widget){
+					array.forEach(elem, function(widget){
 						widget.set("checked", widget.value === value, !this.watching);
 					});
 					return this;	// self
 				}
 				// getter
-				dojo.some(elem, function(widget){
+				array.some(elem, function(widget){
 					// TODO: for some reason for radio button widgets
 					// w.checked != w.focusNode.checked when value changes.
 					// We test the underlying value to be 100% sure.
-					if(dojo.attr(widget.focusNode, "checked")){
+					if(domAttr.get(widget.focusNode, "checked")){
 					//if(widget.get("checked")){
 						result = widget;
 						return true;
@@ -311,7 +323,7 @@ dojo.require("dijit._Widget");
 			}
 
 			// checkbox widget is a special case :-(
-			if(elem.declaredClass == "dijit.form.CheckBox"){
+			if(elem.isInstanceOf && elem.isInstanceOf(CheckBox)){
 				if(isSetter){
 					elem.set("value", Boolean(value), !this.watching);
 					return this;	// self
@@ -346,7 +358,7 @@ dojo.require("dijit._Widget");
 				return null;	// Object
 			}
 
-			if(!dojo.hasClass(elem, "dojoFormValue")){
+			if(!domClass.contains(elem, "dojoFormValue")){
 				// accessing the value of the attached point not marked with CSS class 'dojoFormValue'
 				return null;
 			}
@@ -379,8 +391,8 @@ dojo.require("dijit._Widget");
 			var name, result = {};
 
 			if(state){
-				if(dojo.isArray(state)){
-					dojo.forEach(state, function(name){
+				if(lang.isArray(state)){
+					array.forEach(state, function(name){
 						if(name in this.formWidgets){
 							result[name] = inspector.call(this, name, this.formWidgets[name].widget, defaultValue);
 						}
@@ -418,8 +430,8 @@ dojo.require("dijit._Widget");
 			var name, result = {};
 
 			if(state){
-				if(dojo.isArray(state)){
-					dojo.forEach(state, function(name){
+				if(lang.isArray(state)){
+					array.forEach(state, function(name){
 						var elem = this[name];
 						if(elem && elem.tagName && elem.cloneNode){
 							result[name] = inspector.call(this, name, elem, defaultValue);
@@ -463,22 +475,23 @@ dojo.require("dijit._Widget");
 			//		Optional. The default state (true, if omitted).
 
 			var result = this.inspectFormWidgets(function(name, widget, value){
-				if(dojo.isArray(widget)){
-					return inspector.call(this, name, dojo.map(widget, function(w){ return w.domNode; }), value);
+				if(lang.isArray(widget)){
+					return inspector.call(this, name, array.map(widget, function(w){ return w.domNode; }), value);
 				}
 				return inspector.call(this, name, widget.domNode, value);
 			}, state, defaultValue);
 			if(this.inspectFormNodes){
-				dojo.mixin(result, this.inspectFormNodes(inspector, state, defaultValue));
+				lang.mixin(result, this.inspectFormNodes(inspector, state, defaultValue));
 			}
-			return dojo.mixin(result, this.inspectAttachedPoints(inspector, state, defaultValue));	// Object
+			return lang.mixin(result, this.inspectAttachedPoints(inspector, state, defaultValue));	// Object
 		}
 	});
-})();
 
 // These arguments can be specified for widgets which are used in forms.
 // Since any widget can be specified as sub widgets, mix it into the base
 // widget class.  (This is a hack, but it's effective.)
-dojo.extend(dijit._Widget, {
+lang.extend(Widget, {
 	observer: ""
+});
+return _Mixin;
 });

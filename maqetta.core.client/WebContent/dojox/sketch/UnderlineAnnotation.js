@@ -1,8 +1,4 @@
-dojo.provide("dojox.sketch.UnderlineAnnotation");
-dojo.require("dojox.sketch.Annotation");
-dojo.require("dojox.sketch.Anchor");
-
-(function(){
+define(["./Annotation", "./Anchor"], function(){
 	var ta=dojox.sketch;
 	ta.UnderlineAnnotation=function(figure, id){
 		ta.Annotation.call(this, figure, id);
@@ -144,4 +140,5 @@ dojo.require("dojox.sketch.Anchor");
 		onMouseMove: function(){}
 	});
 	ta.Annotation.register("Underline", ta.UnderlineAnnotationTool);
-})();
+	return dojox.sketch.UnderlineAnnotation;
+});

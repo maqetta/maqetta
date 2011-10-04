@@ -1,7 +1,12 @@
-dojo.provide("dojox.validate.web");
-dojo.require("dojox.validate._base");
+define(["dojo/_base/kernel", "./_base", "./regexp"], function(dojo, validate, xregexp){
 
-dojox.validate.isIpAddress = function(/*String*/value, /*Object?*/flags) {
+/*=====
+
+	validate = dojox.validate;
+
+=====*/
+
+validate.isIpAddress = function(/*String*/value, /*Object?*/flags) {
 	// summary: Validates an IP address
 	//
 	// description:
@@ -20,12 +25,12 @@ dojox.validate.isIpAddress = function(/*String*/value, /*Object?*/flags) {
 	//    flags.allowHybrid   IPv6 address written as six groups of four hexadecimal digits
 	//      followed by the usual 4 dotted decimal digit notation of IPv4. x:x:x:x:x:x:d.d.d.d
 
-	var re = new RegExp("^" + dojox.validate.regexp.ipAddress(flags) + "$", "i");
+	var re = new RegExp("^" + xregexp.ipAddress(flags) + "$", "i");
 	return re.test(value); // Boolean
-}
+};
 
 
-dojox.validate.isUrl = function(/*String*/value, /*Object?*/flags) {
+validate.isUrl = function(/*String*/value, /*Object?*/flags) {
 	// summary: Checks if a string could be a valid URL
 	// value: A string
 	// flags: An object
@@ -35,11 +40,11 @@ dojox.validate.isUrl = function(/*String*/value, /*Object?*/flags) {
 	//    flags in regexp.ipAddress can be applied.
 	//    flags in regexp.tld can be applied.
 
-	var re = new RegExp("^" + dojox.validate.regexp.url(flags) + "$", "i");
+	var re = new RegExp("^" + xregexp.url(flags) + "$", "i");
 	return re.test(value); // Boolean
-}
+};
 
-dojox.validate.isEmailAddress = function(/*String*/value, /*Object?*/flags) {
+validate.isEmailAddress = function(/*String*/value, /*Object?*/flags) {
 	// summary: Checks if a string could be a valid email address
 	//
 	// value: A string
@@ -49,11 +54,11 @@ dojox.validate.isEmailAddress = function(/*String*/value, /*Object?*/flags) {
 	//    flags in regexp.ipAddress can be applied.
 	//    flags in regexp.tld can be applied.
 
-	var re = new RegExp("^" + dojox.validate.regexp.emailAddress(flags) + "$", "i");
+	var re = new RegExp("^" + xregexp.emailAddress(flags) + "$", "i");
 	return re.test(value); // Boolean
-}
+};
 
-dojox.validate.isEmailAddressList = function(/*String*/value, /*Object?*/flags) {
+validate.isEmailAddressList = function(/*String*/value, /*Object?*/flags) {
 	// summary: Checks if a string could be a valid email address list.
 	//
 	// value  A string.
@@ -64,11 +69,11 @@ dojox.validate.isEmailAddressList = function(/*String*/value, /*Object?*/flags) 
 	//    flags in regexp.ipAddress can be applied.
 	//    flags in regexp.tld can be applied.
 
-	var re = new RegExp("^" + dojox.validate.regexp.emailAddressList(flags) + "$", "i");
+	var re = new RegExp("^" + xregexp.emailAddressList(flags) + "$", "i");
 	return re.test(value); // Boolean
-}
+};
 
-dojox.validate.getEmailAddressList = function(/*String*/value, /*Object?*/flags) {
+validate.getEmailAddressList = function(/*String*/value, /*Object?*/flags) {
 	// summary: Check if value is an email address list. If an empty list
 	//  is returned, the value didn't pass the test or it was empty.
 	//
@@ -78,8 +83,11 @@ dojox.validate.getEmailAddressList = function(/*String*/value, /*Object?*/flags)
 	if(!flags) { flags = {}; }
 	if(!flags.listSeparator) { flags.listSeparator = "\\s;,"; }
 
-	if ( dojox.validate.isEmailAddressList(value, flags) ) {
+	if ( validate.isEmailAddressList(value, flags) ) {
 		return value.split(new RegExp("\\s*[" + flags.listSeparator + "]\\s*")); // Array
 	}
 	return []; // Array
-}
+};
+
+return validate;
+});

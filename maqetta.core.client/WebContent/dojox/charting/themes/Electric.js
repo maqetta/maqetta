@@ -1,15 +1,9 @@
-dojo.provide("dojox.charting.themes.Electric");
+define(["../Theme", "dojox/gfx/gradutils", "./common"], function(Theme, gradutils, themes){
 
-dojo.require("dojox.gfx.gradutils");
-dojo.require("dojox.charting.Theme");
-
-// created by Tom Trenka
-
-(function(){
-	var dc = dojox.charting, themes = dc.themes, Theme = dc.Theme, g = Theme.generateGradient,
+	var g = Theme.generateGradient,
 		defaultFill = {type: "linear", space: "shape", x1: 0, y1: 0, x2: 0, y2: 75};
 	
-	themes.Electric = new dc.Theme({
+	themes.Electric = new Theme({
 		chart: {
 			fill:      "#252525",
 			stroke:    {color: "#252525"},
@@ -85,8 +79,10 @@ dojo.require("dojox.charting.Theme");
 	themes.Electric.post = function(theme, elementType){
 		theme = Theme.prototype.post.apply(this, arguments);
 		if((elementType == "slice" || elementType == "circle") && theme.series.fill && theme.series.fill.type == "radial"){
-			theme.series.fill = dojox.gfx.gradutils.reverse(theme.series.fill);
+			theme.series.fill = gradutils.reverse(theme.series.fill);
 		}
 		return theme;
 	};
-})();
+	
+	return themes.Electric;
+});

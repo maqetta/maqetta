@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"saveLabel": "Shrani",
 	"saveSettingLabelOn": "Nastavi interval za samodejno shranjevanje ... ",
@@ -12,3 +14,5 @@
 	"saveMessageFail": "Shranjevanje ob ${0} ni uspelo "
 })
 
+//end v1.x content
+);

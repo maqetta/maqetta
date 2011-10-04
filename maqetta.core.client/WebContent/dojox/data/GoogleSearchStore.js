@@ -1,16 +1,10 @@
-define("dojox/data/GoogleSearchStore", ["dojo", "dojox", "dojo/io/script"], function(dojo, dojox) {
-
-dojo.provide("dojox.data.GoogleWebSearchStore");
-dojo.provide("dojox.data.GoogleBlogSearchStore");
-dojo.provide("dojox.data.GoogleLocalSearchStore");
-dojo.provide("dojox.data.GoogleVideoSearchStore");
-dojo.provide("dojox.data.GoogleNewsSearchStore");
-dojo.provide("dojox.data.GoogleBookSearchStore");
-dojo.provide("dojox.data.GoogleImageSearchStore");
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window", "dojo/_base/query", 
+		"dojo/dom-construct","dojo/io/script"], 
+  function(dojo, lang, declare, winUtil, domQuery, domConstruct, scriptIO) {
 
 dojo.experimental("dojox.data.GoogleSearchStore");
 
-dojo.declare("dojox.data.GoogleSearchStore",null,{
+var SearchStore = declare("dojox.data.GoogleSearchStore",null,{
 	//	summary:
 	//		A data store for retrieving search results from Google.
 	//		This data store acts as a base class for Google searches,
@@ -199,7 +193,7 @@ dojo.declare("dojox.data.GoogleSearchStore",null,{
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
 		var val = item[attribute];
-		if(dojo.isArray(val)) {
+		if(lang.isArray(val)) {
 			return val;
 		}else if(val !== undefined){
 			return [val];
@@ -237,7 +231,7 @@ dojo.declare("dojox.data.GoogleSearchStore",null,{
 		//		A function to call on error
 		request = request || {};
 
-		var scope = request.scope || dojo.global;
+		var scope = request.scope || winUtil.global;
 
 		if(!request.query){
 			if(request.onError){
@@ -305,7 +299,7 @@ dojo.declare("dojox.data.GoogleSearchStore",null,{
 			numRequests ++;
 			getArgs.content.context = getArgs.content.start = req.start;
 
-			var deferred = dojo.io.script.get(getArgs);
+			var deferred = scriptIO.get(getArgs);
 			scriptIds.push(deferred.ioArgs.id);
 
 			//We only set up the errback, because the callback isn't ever really used because we have
@@ -321,7 +315,7 @@ dojo.declare("dojox.data.GoogleSearchStore",null,{
 		var myHandler = function(start, data){
 			if (scriptIds.length > 0) {
 				// Delete the script node that was created.
-				dojo.query("#" + scriptIds.splice(0,1)).forEach(dojo.destroy);
+				domQuery("#" + scriptIds.splice(0,1)).forEach(domConstruct.destroy);
 			}
 			if(finished){return;}
 
@@ -375,7 +369,7 @@ dojo.declare("dojox.data.GoogleSearchStore",null,{
 					//Process the items...
 					finished = true;
 					//Clean up the function, it should never be called again
-					dojo.global[callbackFn] = null;
+					winUtil.global[callbackFn] = null;
 					if(request.onItem){
 						request.onComplete.call(scope, null, request);
 					}else{
@@ -391,13 +385,13 @@ dojo.declare("dojox.data.GoogleSearchStore",null,{
 		var lastCallback = firstRequest.start - 1;
 
 		// Attach a callback function to the global namespace, where Google can call it.
-		dojo.global[callbackFn] = function(start, data, responseCode, errorMsg){
+		winUtil.global[callbackFn] = function(start, data, responseCode, errorMsg){
 			try {
 				if(responseCode != 200){
 					if(request.onError){
 						request.onError.call(scope, new Error("Response from Google was: " + responseCode), request);
 					}
-					dojo.global[callbackFn] = function(){};//an error occurred, do not return anything else.
+					winUtil.global[callbackFn] = function(){};//an error occurred, do not return anything else.
 					return;
 				}
 	
@@ -441,7 +435,7 @@ dojo.declare("dojox.data.GoogleSearchStore",null,{
 		item[this._storeRef] = this;
 		// Copy aggregated attributes from query results to the item.
 		for(var attribute in this._aggregatedAttributes) {
-			item[attribute] = dojo.getObject(this._aggregatedAttributes[attribute], false, data);
+			item[attribute] = lang.getObject(this._aggregatedAttributes[attribute], false, data);
 		}
 	},
 
@@ -464,7 +458,7 @@ dojo.declare("dojox.data.GoogleSearchStore",null,{
 	}
 });
 
-dojo.declare("dojox.data.GoogleWebSearchStore", dojox.data.GoogleSearchStore,{
+var WebSearchStore = declare("dojox.data.GoogleWebSearchStore", SearchStore,{
 	//	Summary:
 	//		A data store for retrieving search results from Google.
 	//		The following attributes are supported on each item:
@@ -481,7 +475,7 @@ dojo.declare("dojox.data.GoogleWebSearchStore", dojox.data.GoogleSearchStore,{
 	//		The query accepts one parameter: text - The string to search for
 });
 
-dojo.declare("dojox.data.GoogleBlogSearchStore", dojox.data.GoogleSearchStore,{
+var BlogSearchStore = declare("dojox.data.GoogleBlogSearchStore", SearchStore,{
 	//	Summary:
 	//		A data store for retrieving search results from Google.
 	//		The following attributes are supported on each item:
@@ -504,7 +498,7 @@ dojo.declare("dojox.data.GoogleBlogSearchStore", dojox.data.GoogleSearchStore,{
 });
 
 
-dojo.declare("dojox.data.GoogleLocalSearchStore", dojox.data.GoogleSearchStore,{
+var LocalSearchStore = declare("dojox.data.GoogleLocalSearchStore", SearchStore,{
 	//	summary:
 	//		A data store for retrieving search results from Google.
 	//		The following attributes are supported on each item:
@@ -551,7 +545,7 @@ dojo.declare("dojox.data.GoogleLocalSearchStore", dojox.data.GoogleSearchStore,{
 	}
 });
 
-dojo.declare("dojox.data.GoogleVideoSearchStore", dojox.data.GoogleSearchStore,{
+var VideoSearchStore = declare("dojox.data.GoogleVideoSearchStore", SearchStore,{
 	//	summary:
 	//		A data store for retrieving search results from Google.
 	//		The following attributes are supported on each item:
@@ -575,7 +569,7 @@ dojo.declare("dojox.data.GoogleVideoSearchStore", dojox.data.GoogleSearchStore,{
 	_aggregatedAttributes: { }
 });
 
-dojo.declare("dojox.data.GoogleNewsSearchStore", dojox.data.GoogleSearchStore,{
+var NewsSearchStore = declare("dojox.data.GoogleNewsSearchStore", SearchStore,{
 	//	summary:
 	//		A data store for retrieving search results from Google.
 	//		The following attributes are supported on each item:
@@ -601,7 +595,7 @@ dojo.declare("dojox.data.GoogleNewsSearchStore", dojox.data.GoogleSearchStore,{
 	_aggregatedAttributes: { }
 });
 
-dojo.declare("dojox.data.GoogleBookSearchStore", dojox.data.GoogleSearchStore,{
+var BookSearchStore = declare("dojox.data.GoogleBookSearchStore", SearchStore,{
 	// 	summary:
 	//		A data store for retrieving search results from Google.
 	//		The following attributes are supported on each item:
@@ -622,7 +616,7 @@ dojo.declare("dojox.data.GoogleBookSearchStore", dojox.data.GoogleSearchStore,{
 	_aggregatedAttributes: { }
 });
 
-dojo.declare("dojox.data.GoogleImageSearchStore", dojox.data.GoogleSearchStore,{
+var ImageSearchStore = declare("dojox.data.GoogleImageSearchStore", SearchStore,{
 	//	summary:
 	//		A data store for retrieving search results from Google.
 	//		The following attributes are supported on each item:
@@ -649,5 +643,14 @@ dojo.declare("dojox.data.GoogleImageSearchStore", dojox.data.GoogleSearchStore,{
 	_aggregatedAttributes: { }
 });
 
-return dojox.data.GoogleSearchStore;
+return {
+	Search: SearchStore,
+	ImageSearch: ImageSearchStore,
+	BookSearch: BookSearchStore,
+	NewsSearch: NewsSearchStore,
+	VideoSearch: VideoSearchStore,
+	LocalSearch: LocalSearchStore,
+	BlogSearch: BlogSearchStore,
+	WebSearch: WebSearchStore
+	}
 });

@@ -18,7 +18,7 @@
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_Menu_iframe.html');
 					
 				var handler, menu;
@@ -40,7 +40,7 @@
 							doh.robot.mouseClick({right:true}, 500);
 							
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
-								doh.f(isVisible(menu.domNode));
+								doh.f(isVisible(menu.domNode), "menu hidden");
 							})), 1000);
 
 							return d;
@@ -65,7 +65,7 @@
 							
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
 								var menu = dijit.byId("menu");
-								doh.t(isVisible(menu.domNode));
+								doh.t(isVisible(menu.domNode), "menu visible");
 							})), 1000);
 
 							return d;
@@ -85,11 +85,11 @@
 							
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
 								var menu = dijit.byId("menu");
-								doh.t(isVisible(menu.domNode));
+								doh.t(isVisible(menu.domNode), "menu visible");
 
 								var iframe = dojo.byId("iframe");
 								var heading = dojo.withGlobal(iframe.contentWindow,'query', dojo, ["h1"])[0];
-								doh.is("Document 0", heading.innerHTML);
+								doh.is("Document 0", heading.innerHTML, "heading.innerHTML");
 							})), 1000);
 
 							return d;
@@ -112,7 +112,7 @@
 							doh.robot.mouseClick({right:true}, 500);
 							
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
-								doh.f(isVisible(menu.domNode));
+								doh.f(isVisible(menu.domNode), "menu hidden");
 							})), 1000);
 
 							return d;
@@ -137,7 +137,7 @@
 							
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
 								var menu = dijit.byId("menu");
-								doh.t(isVisible(menu.domNode));
+								doh.t(isVisible(menu.domNode), "menu visible");
 							})), 1000);
 
 							return d;
@@ -157,11 +157,11 @@
 							
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
 								var menu = dijit.byId("menu");
-								doh.t(isVisible(menu.domNode));
+								doh.t(isVisible(menu.domNode), "menu visible");
 
 								var iframe = dojo.byId("iframe");
 								var div = dojo.withGlobal(iframe.contentWindow,'query', dojo, ["div"])[0];
-								doh.is("bill was here", div.innerHTML);
+								doh.is("bill was here", div.innerHTML, "div.innerHTML");
 							})), 1000);
 
 							return d;
@@ -184,7 +184,7 @@
 							doh.robot.mouseClick({right:true}, 500);
 							
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
-								doh.f(isVisible(menu.domNode));
+								doh.f(isVisible(menu.domNode), "menu hidden");
 							})), 1000);
 
 							return d;
@@ -209,7 +209,7 @@
 							
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
 								var menu = dijit.byId("menu");
-								doh.t(isVisible(menu.domNode));
+								doh.t(isVisible(menu.domNode), "menu visible");
 							})), 1000);
 
 							return d;

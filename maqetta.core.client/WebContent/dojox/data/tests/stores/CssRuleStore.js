@@ -13,7 +13,7 @@ dojox.data.tests.stores.CssRuleStore.createStore = function(context){
 		if(!dojox.data.tests.stores.CssRuleStore._loaded){
 			var head = dojo.doc.getElementsByTagName('head')[0];
 			var link = document.createElement('link');
-			link.href = dojo.moduleUrl('dojox.data.tests.stores', 'test1.css').toString();
+			link.href = require.toUrl('dojox/data/tests/stores/test1.css').toString();
 			link.rel = "stylesheet";
 			link.type = "text/css";
 			head.appendChild(link);
@@ -21,10 +21,10 @@ dojox.data.tests.stores.CssRuleStore.createStore = function(context){
 			var text;
 			if(dojo.isIE){
 				style = document.createStyleSheet();
-				style.cssText = '@import "'+dojo.moduleUrl('dojox.data.tests.stores', 'test2.css').toString()+'";';
+				style.cssText = '@import "'+require.toUrl('dojox/data/tests/stores/test2.css').toString()+'";';
 			}else{
 				style = document.createElement('style');
-				text = document.createTextNode('@import "'+dojo.moduleUrl('dojox.data.tests.stores', 'test2.css').toString()+'";');
+				text = document.createTextNode('@import "'+require.toUrl('dojox/data/tests/stores/test2.css').toString()+'";');
 				style.appendChild(text);
 				head.appendChild(style);
 			}
@@ -55,7 +55,7 @@ dojox.data.tests.stores.CssRuleStore.verifyItems = function(cssRuleStore, items,
 	//		the same as the compareArray
 	if(items.length != compareArray.length){ return false; }
 	for(var i = 0; i < items.length; i++){
-		if(!(cssRuleStore.getValue(items[i], attribute) === (dojo.isWebKit?compareArray[i].toLowerCase():compareArray[i]))){
+		if(!(cssRuleStore.getValue(items[i], attribute) === compareArray[i])){
 			return false; //Boolean
 		}
 	}
@@ -291,12 +291,7 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			function onComplete(items, request){
 				done[0] = true;
 				t.is(1, items.length);
-				if(dojo.isWebKit){
-					// Safari is dumb, see comment in CssRuleStore about bug in selectorText
-					t.is('.embeddedtestclass', cssRuleStore.getValue(items[0], 'selector'));
-				}else{
-					t.is('.embeddedTestClass', cssRuleStore.getValue(items[0], 'selector'));
-				}
+				t.is('.embeddedTestClass', cssRuleStore.getValue(items[0], 'selector'));
 				if(done[0] && done[1]){
 					d.callback(true);
 				}
@@ -305,12 +300,7 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			function onItem(item){
 				done[1] = true;
 				t.assertTrue(item !== null);
-				if(dojo.isWebKit){
-					// Safari is dumb, see comment in CssRuleStore about bug in selectorText
-					t.is('.linktestclass .test', cssRuleStore.getValue(item, 'selector'));
-				}else{
-					t.is('.linkTestClass .test', cssRuleStore.getValue(item, 'selector'));
-				}
+				t.is('.linkTestClass .test', cssRuleStore.getValue(item, 'selector'));
 				if(done[0] && done[1]){
 					d.callback(true);
 				}
@@ -378,12 +368,7 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			
 			function dumpSecondFetch(items, request){
 				t.is(1, items.length);
-				if(dojo.isWebKit){
-					// Safari is dumb, see comment in CssRuleStore about bug in selectorText
-					t.is('.embeddedtestclass', cssRuleStore.getValue(items[0], 'selector'));
-				}else{
-					t.is('.embeddedTestClass', cssRuleStore.getValue(items[0], 'selector'));
-				}
+				t.is('.embeddedTestClass', cssRuleStore.getValue(items[0], 'selector'));
 				request.start = 0;
 				request.count = 2;
 				request.onComplete = dumpThirdFetch;
@@ -420,12 +405,7 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 				t.assertEqual(items.length, 1);
 				var label = cssRuleStore.getLabel(items[0]);
 				t.assertTrue(label !== null);
-				if(dojo.isWebKit){
-					// Safari is dumb, see comment in CssRuleStore about bug in selectorText
-					t.assertEqual(".linktestclass", label);
-				}else{
-					t.assertEqual(".linkTestClass", label);
-				}
+				t.assertEqual(".linkTestClass", label);
 				d.callback(true);
 			}
 			cssRuleStore.fetch({
@@ -467,12 +447,7 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			var d = new doh.Deferred();
 			function onItem(item){
 				t.assertTrue(item !== null);
-				if(dojo.isWebKit){
-					// Safari is dumb, see comment in CssRuleStore about bug in selectorText
-					t.is('.linktestclass', cssRuleStore.getValue(item,'selector'));
-				}else{
-					t.is('.linkTestClass', cssRuleStore.getValue(item,'selector'));
-				}
+				t.is('.linkTestClass', cssRuleStore.getValue(item,'selector'));
 				t.assertTrue(cssRuleStore.getValue(item, 'parentStyleSheetHref').match('dojox/data/tests/stores/test1.css'));
 				d.callback(true);
 			}
@@ -493,12 +468,7 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			var d = new doh.Deferred();
 			function onItem(item){
 				t.assertTrue(item !== null);
-				if(dojo.isWebKit){
-					// Safari is dumb, see comment in CssRuleStore about bug in selectorText
-					t.is('.importtestclass', cssRuleStore.getValue(item,'selector'));
-				}else{
-					t.is('.importTestClass', cssRuleStore.getValue(item,'selector'));
-				}
+				t.is('.importTestClass', cssRuleStore.getValue(item,'selector'));
 				t.assertTrue(cssRuleStore.getValue(item, 'parentStyleSheetHref').match('dojox/data/tests/stores/test2.css'));
 				d.callback(true);
 			}
@@ -522,12 +492,7 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 				var values = cssRuleStore.getValues(item,'selector');
 				t.assertTrue(dojo.isArray(values));
 				t.is(1, values.length);
-				if(dojo.isWebKit){
-					// Safari is dumb, see comment in CssRuleStore about bug in selectorText
-					t.is('.embeddedtestclass', values[0]);
-				}else{
-					t.is('.embeddedTestClass', values[0]);
-				}
+				t.is('.embeddedTestClass', values[0]);
 				d.callback(true);
 			}
 			cssRuleStore.fetch({
@@ -603,14 +568,8 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			var d = new doh.Deferred();
 			function onItem(item){
 				t.assertTrue(item !== null);
-				if(dojo.isWebKit){
-					// Safari is dumb, see comment in CssRuleStore about bug in selectorText
-					t.assertTrue(cssRuleStore.containsValue(item, 'selector', '.embeddedtestclass'));
-					t.assertTrue(cssRuleStore.containsValue(item, 'classes', '.embeddedtestclass'));
-				}else{
-					t.assertTrue(cssRuleStore.containsValue(item, 'selector', '.embeddedTestClass'));
-					t.assertTrue(cssRuleStore.containsValue(item, 'classes', '.embeddedTestClass'));
-				}
+				t.assertTrue(cssRuleStore.containsValue(item, 'selector', '.embeddedTestClass'));
+				t.assertTrue(cssRuleStore.containsValue(item, 'classes', '.embeddedTestClass'));
 				t.assertTrue(!cssRuleStore.containsValue(item, 'selector', '.embeddedTestClass2'));
 				t.assertTrue(!cssRuleStore.containsValue(item, 'classes', 'embeddedTestClass	'));
 				t.assertTrue(!cssRuleStore.containsValue(item, 'selector', null));
@@ -707,12 +666,7 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			var d = new doh.Deferred();
 			function completed(items, request){
 				t.is(1, items.length);
-				if(dojo.isWebKit){
-					// Safari is dumb, see comment in CssRuleStore about bug in selectorText
-					t.assertTrue(cssRuleStore.getValue(items[0], 'selector') === '.linktestclass');
-				}else{
-					t.assertTrue(cssRuleStore.getValue(items[0], 'selector') === '.linkTestClass');
-				}
+				t.assertTrue(cssRuleStore.getValue(items[0], 'selector') === '.linkTestClass');
 				d.callback(true);
 			}
 
@@ -732,12 +686,7 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 			var d = new doh.Deferred();
 			function completed(items, request){
-				if(dojo.isWebKit){
-					// Safari is dumb, see comment in CssRuleStore about bug in selectorText
-					t.is(1, items.length);
-				}else{
-					t.is(0, items.length);
-				}
+				t.is(0, items.length);
 				d.callback(true);
 			}
 

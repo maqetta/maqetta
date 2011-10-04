@@ -4,7 +4,8 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<title>ScrollableView demo</title>
-	<link href="../themes/iphone/iphone.css" rel="stylesheet">
+	<link href="../themes/iphone/base.css" rel="stylesheet">
+	<link href="../themes/iphone/TabBar.css" rel="stylesheet">
 	<style>
 	html,body{
 		height: 100%;
@@ -83,7 +84,7 @@
 		dojo.requireIf(!dojo.isWebKit, "dojo.fx.easing");
 	</script>
 </head>
-<body>
+<body style="visibility:hidden;">
 	<div id="group1" dojoType="dojox.mobile.View" selected="true">
 		<ul dojoType="dojox.mobile.TabBar" barType="segmentedControl" fixed="top">
 			<li dojoType="dojox.mobile.TabBarButton" icon1="images/tab-icon-16.png" icon2="images/tab-icon-16h.png" moveTo="view1" selected="true">New</li>

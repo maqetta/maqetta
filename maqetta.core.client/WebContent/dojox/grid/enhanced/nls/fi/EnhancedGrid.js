@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	singleSort: "Yksinkertainen lajittelu",
 	nestedSort: "Sisäkkäinen lajittelu",
@@ -9,4 +11,6 @@
 	indirectSelectionCheckBox: "Rivi ${0}, monivalinta, valintaruutu",
 	selectAll: "Valitse kaikki"
 })
+//end v1.x content
+);
 

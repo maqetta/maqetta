@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"clearFilterDialogTitle": "Süzgeci Kaldır",
 	"filterDefDialogTitle": "Süzgeç",
@@ -82,6 +84,8 @@
 	"trueLabel": "Doğru",
 	"falseLabel": "Yanlış"
 })
+//end v1.x content
+);
 
 
 

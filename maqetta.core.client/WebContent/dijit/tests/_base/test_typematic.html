@@ -10,14 +10,14 @@
 	</style>
 
 	<script type="text/javascript" src="../../../dojo/dojo.js"
-		djConfig="isDebug: true, debugAtAllCosts: true"></script>
+		djConfig="isDebug: true"></script>
 	<script type="text/javascript">
-		dojo.require("dijit._base.typematic");
+		dojo.require("dijit.typematic");
 
 		var lastCount = 0;
 		function typematicCallBack(count, node, evt){
 			var inputNode = dojo.byId('typematicInput');
-			if (node == inputNode){
+			if(node == inputNode){
 				key = "a";
 			}else{
 				key = "b";
@@ -30,7 +30,7 @@
 			}
 				inputNode.focus();
 		}
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			var keyNode = dojo.byId('typematicInput');
 			var mouseNode = dojo.byId('typematicButton');
 			dijit.typematic.addKeyListener(keyNode,

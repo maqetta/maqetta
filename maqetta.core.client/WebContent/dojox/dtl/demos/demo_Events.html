@@ -3,15 +3,15 @@
 			<title>Demo using dojox.dtl._Templated</title>
 	    <script type="text/javascript" src="../../../dojo/dojo.js"
 				djConfig="isDebug: true, parseOnLoad: true"></script>
-	    <script type="text/javascript" src="../../../dijit/dijit.js"></script>
 			<style type="text/css">
 				@import "../../../dijit/themes/tundra/tundra.css";
 			</style>
 	    <script type="text/javascript">
+					dojo.require("dijit._WidgetBase");
 					dojo.require("dojox.dtl._DomTemplated");
 					dojo.require("dijit.form.Button");
 
-					dojo.declare("Fruit", [dijit._Widget, dojox.dtl._DomTemplated], {
+					dojo.declare("Fruit", [dijit._WidgetBase, dojox.dtl._DomTemplated], {
 						widgetsInTemplate: true,
 						items: ["apple", "banana", "orange"],
 						keyUp: function(e){
@@ -34,7 +34,7 @@
 							console.debug("You " + verb + " a:", fruit);
 						},
 						// Note, the load tag here is superfluous, since _DomTemplate has a dojo.require for it.
-						templateString: '<!--{% load dojox.dtl.contrib.dijit %}--><div><input dojoAttachEvent="onkeyup: keyUp" dojoAttachPoint="input"> <button dojoType="dijit.form.Button" dojoAttachPoint="button">Add/Remove Item</button><ul><!--{% for item in items %}--><li onclick="debug \'ate\' item"><!--{{ item }}--></li><!--{% endfor %}--></ul></div>'
+						templateString: '{% load dojox.dtl.contrib.dijit %}<div><input dojoAttachEvent="onkeyup: keyUp" dojoAttachPoint="input"> <button dojoType="dijit.form.Button" dojoAttachPoint="button">Add/Remove Item</button><ul><!--{% for item in items %}--><li onclick="debug \'ate\' item"><!--{{ item }}--></li><!--{% endfor %}--></ul></div>'
 					});
 
 	        dojo.require("dojo.parser");

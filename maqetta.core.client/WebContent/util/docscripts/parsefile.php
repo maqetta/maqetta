@@ -52,6 +52,8 @@ function doc_test($ns, $file, $debug){
 		if(count($data) == 0){
 			if($debug){ print "Error: No data found. [" . $ns . "/" . $file . "]"; }
 			$ret = false;
+		}else{
+		    
 		}
 		
 		return $ret;

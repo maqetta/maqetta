@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	smiley: "이모티콘 삽입",
 	emoticonSmile: "미소",
@@ -19,3 +21,5 @@
 	emoticonAngel: "천사",
 	emoticonCrying: "울음"
 })
+//end v1.x content
+);

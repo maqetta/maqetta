@@ -1,8 +1,5 @@
-dojo.provide("dojox.highlight.languages.java");
+define(["dojox/main", "../_base"], function(dojox){
 
-dojo.require("dojox.highlight._base");
-
-(function(){
 	var dh = dojox.highlight, dhc = dh.constants;
 	var javakeywords = {
 				'false': 1, 'int': 1, 'float': 1, 'while': 1, 'private': 1,
@@ -55,4 +52,6 @@ dojo.require("dojox.highlight._base");
 			}
 		]
 	};
-})();
+
+	return dh.languages.java;
+});

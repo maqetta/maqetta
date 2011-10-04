@@ -1,14 +1,34 @@
-define("dijit/form/Form", ["dojo", "dijit", "dijit/_Widget", "dijit/_Templated", "dijit/form/_FormMixin", "dijit/layout/_ContentPaneResizeMixin"], function(dojo, dijit) {
+define([
+	"dojo/_base/declare", // declare
+	"dojo/dom-attr", // domAttr.set
+	"dojo/_base/event", // event.stop
+	"dojo/_base/kernel", // kernel.deprecated
+	"dojo/_base/sniff", // has("ie")
+	"../_Widget",
+	"../_TemplatedMixin",
+	"./_FormMixin",
+	"../layout/_ContentPaneResizeMixin"
+], function(declare, domAttr, event, kernel, has, _Widget, _TemplatedMixin, _FormMixin, _ContentPaneResizeMixin){
 
-dojo.declare(
-	"dijit.form.Form",
-	[dijit._Widget, dijit._Templated, dijit.form._FormMixin, dijit.layout._ContentPaneResizeMixin],
-	{
+/*=====
+	var _Widget = dijit._Widget;
+	var _TemplatedMixin = dijit._TemplatedMixin;
+	var _FormMixin = dijit.form._FormMixin;
+	var _ContentPaneResizeMixin = dijit.layout._ContentPaneResizeMixin;
+=====*/
+
+	// module:
+	//		dijit/form/Form
+	// summary:
+	//		Widget corresponding to HTML form tag, for validation and serialization
+
+
+	return declare("dijit.form.Form", [_Widget, _TemplatedMixin, _FormMixin, _ContentPaneResizeMixin], {
 		// summary:
 		//		Widget corresponding to HTML form tag, for validation and serialization
 		//
 		// example:
-		//	|	<form dojoType="dijit.form.Form" id="myForm">
+		//	|	<form data-dojo-type="dijit.form.Form" id="myForm">
 		//	|		Name: <input type="text" name="name" />
 		//	|	</form>
 		//	|	myObj = {name: "John Doe"};
@@ -46,25 +66,16 @@ dojo.declare(
 		//		Target frame for the document to be opened in.
 		target: "",
 
-		templateString: "<form dojoAttachPoint='containerNode' dojoAttachEvent='onreset:_onReset,onsubmit:_onSubmit' ${!nameAttrSetting}></form>",
-
-		attributeMap: dojo.delegate(dijit._Widget.prototype.attributeMap, {
-			action: "",
-			method: "",
-			encType: "",
-			"accept-charset": "",
-			accept: "",
-			target: ""
-		}),
+		templateString: "<form data-dojo-attach-point='containerNode' data-dojo-attach-event='onreset:_onReset,onsubmit:_onSubmit' ${!nameAttrSetting}></form>",
 
 		postMixInProperties: function(){
 			// Setup name=foo string to be referenced from the template (but only if a name has been specified)
-			// Unfortunately we can't use attributeMap to set the name due to IE limitations, see #8660
+			// Unfortunately we can't use _setNameAttr to set the name due to IE limitations, see #8660
 			this.nameAttrSetting = this.name ? ("name='" + this.name + "'") : "";
 			this.inherited(arguments);
 		},
 
-		execute: function(/*Object*/ formContents){
+		execute: function(/*Object*/ /*===== formContents =====*/){
 			// summary:
 			//		Deprecated: use submit()
 			// tags:
@@ -80,20 +91,8 @@ dojo.declare(
 
 		_setEncTypeAttr: function(/*String*/ value){
 			this.encType = value;
-			dojo.attr(this.domNode, "encType", value);
-			if(dojo.isIE){ this.domNode.encoding = value; }
-		},
-
-		postCreate: function(){
-			// IE tries to hide encType
-			// TODO: remove in 2.0, no longer necessary with data-dojo-params
-			if(dojo.isIE && this.srcNodeRef && this.srcNodeRef.attributes){
-				var item = this.srcNodeRef.attributes.getNamedItem('encType');
-				if(item && !item.specified && (typeof item.value == "string")){
-					this.set('encType', item.value);
-				}
-			}
-			this.inherited(arguments);
+			domAttr.set(this.domNode, "encType", value);
+			if(has("ie")){ this.domNode.encoding = value; }
 		},
 
 		reset: function(/*Event?*/ e){
@@ -117,7 +116,7 @@ dojo.declare(
 			}
 		},
 
-		onReset: function(/*Event?*/ e){
+		onReset: function(/*Event?*/ /*===== e =====*/){
 			// summary:
 			//		Callback when user resets the form. This method is intended
 			//		to be over-ridden. When the `reset` method is called
@@ -130,24 +129,24 @@ dojo.declare(
 
 		_onReset: function(e){
 			this.reset(e);
-			dojo.stopEvent(e);
+			event.stop(e);
 			return false;
 		},
 
 		_onSubmit: function(e){
-			var fp = dijit.form.Form.prototype;
+			var fp = this.constructor.prototype;
 			// TODO: remove this if statement beginning with 2.0
 			if(this.execute != fp.execute || this.onExecute != fp.onExecute){
-				dojo.deprecated("dijit.form.Form:execute()/onExecute() are deprecated. Use onSubmit() instead.", "", "2.0");
+				kernel.deprecated("dijit.form.Form:execute()/onExecute() are deprecated. Use onSubmit() instead.", "", "2.0");
 				this.onExecute();
 				this.execute(this.getValues());
 			}
 			if(this.onSubmit(e) === false){ // only exactly false stops submit
-				dojo.stopEvent(e);
+				event.stop(e);
 			}
 		},
 
-		onSubmit: function(/*Event?*/ e){
+		onSubmit: function(/*Event?*/ /*===== e =====*/){
 			// summary:
 			//		Callback when user submits the form.
 			// description:
@@ -169,9 +168,5 @@ dojo.declare(
 				this.containerNode.submit();
 			}
 		}
-	}
-);
-
-
-return dijit.form.Form;
+	});
 });

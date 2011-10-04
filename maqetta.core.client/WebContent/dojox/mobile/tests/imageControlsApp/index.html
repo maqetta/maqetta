@@ -15,13 +15,9 @@
 		<script type="text/javascript" src="../../../../dojo/dojo.js" 
 				djConfig="parseOnLoad: false, mobileAnim:'slide'"></script>
     
-    <!-- 
-      Include the files directly, as some mobile operating systems do not
-      allow synchronous XHR, and therefore break dojo.require
-    -->
-		<script type="text/javascript" src="../../../mobile/app.js"></script>
-		<script type="text/javascript" src="../../../../dojo/io/script.js"></script>
 		<script language="JavaScript" type="text/javascript">
+			dojo.require("dojo.io.script");
+			dojo.require("dojox.mobile.app");
 			dojo.requireIf(!dojo.isWebKit, "dojox.mobile.app.compat");
       
 			var appInfo = {

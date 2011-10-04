@@ -35,21 +35,21 @@
 			return Math.floor(Math.random() * 3) + 3;
 		}
 
-	    dojo.addOnLoad(function() {
+	    dojo.ready(function(){
 	
 			dojo.declare("dijit.TestTitlePane", dijit.TitlePane, {
 				templateString: '<div class="dijitTitlePane">' +
-								'    <div class="dijitTitlePaneTitle" dojoAttachPoint="titleBarNode" style="cursor: default;">' +
-								        '<span dojoAttachEvent="onclick:toggle,onkeypress: _onTitleKey" tabindex="0"' +
-								                'role="button" dojoAttachPoint="focusNode,arrowNode" style="cursor: pointer;">' +
+								'    <div class="dijitTitlePaneTitle" data-dojo-attach-point="titleBarNode" style="cursor: default;">' +
+								        '<span data-dojo-attach-event="onclick:toggle,onkeypress: _onTitleKey" tabindex="0"' +
+								                'role="button" data-dojo-attach-point="focusNode,arrowNode" style="cursor: pointer;">' +
 											'<img src="${_blankGif}" alt="" class="dijitArrowNode" role="presentation"/>' +
-											'<span dojoAttachPoint="arrowNodeInner" class="dijitArrowNodeInner"></span>' +
+											'<span data-dojo-attach-point="arrowNodeInner" class="dijitArrowNodeInner"></span>' +
 										 '</span>' +
-								        '<span dojoAttachPoint="titleNode" class="dijitTitlePaneTextNode"></span>' +
+								        '<span data-dojo-attach-point="titleNode" class="dijitTitlePaneTextNode"></span>' +
 								    '</div>' +
-								    '<div class="dijitTitlePaneContentOuter" dojoAttachPoint="hideNode">' +
-								        '<div class="dijitReset" dojoAttachPoint="wipeNode">' +
-								            '<div class="dijitTitlePaneContentInner" dojoAttachPoint="containerNode" role="region" tabindex="-1">' +
+								    '<div class="dijitTitlePaneContentOuter" data-dojo-attach-point="hideNode">' +
+								        '<div class="dijitReset" data-dojo-attach-point="wipeNode">' +
+								            '<div class="dijitTitlePaneContentInner" data-dojo-attach-point="containerNode" role="region" tabindex="-1">' +
 								            '</div>' +
 								        '</div>' +
 								    '</div>' +

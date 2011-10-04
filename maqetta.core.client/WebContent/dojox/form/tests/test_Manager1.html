@@ -18,19 +18,21 @@
 		.makeYellow		{ background-color: #ffa; }
 	</style>
 	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: true"></script>
-	<script type="text/javascript" src="../manager/Mixin.js"></script>
-	<script type="text/javascript" src="../manager/FormMixin.js"></script>
-	<script type="text/javascript" src="../manager/ValueMixin.js"></script>
-	<script type="text/javascript" src="../manager/EnableMixin.js"></script>
-	<script type="text/javascript" src="../manager/DisplayMixin.js"></script>
-	<script type="text/javascript" src="../manager/ClassMixin.js"></script>
+	<!--
+	<script type="text/javascript" src="../manager/_Mixin.js"></script>
+	<script type="text/javascript" src="../manager/_FormMixin.js"></script>
+	<script type="text/javascript" src="../manager/_ValueMixin.js"></script>
+	<script type="text/javascript" src="../manager/_EnableMixin.js"></script>
+	<script type="text/javascript" src="../manager/_DisplayMixin.js"></script>
+	<script type="text/javascript" src="../manager/_ClassMixin.js"></script>
 	<script type="text/javascript" src="../Manager.js"></script>
+	-->
 	<script type="text/javascript">
 		dojo.require("dojox.form.Manager");
 
 		dojo.require("dijit.dijit");			// optimize: load dijit layer
 		dojo.require("dijit.form.Button");
-		dojo.require("dijit.form.CheckBox");	// includes dijit.form.RadioButton
+		dojo.require("dijit.form.RadioButton");
 		dojo.require("dijit.form.TextBox");
 		dojo.require("dijit.form.ComboBox");
 		dojo.require("dijit.form.SimpleTextarea");

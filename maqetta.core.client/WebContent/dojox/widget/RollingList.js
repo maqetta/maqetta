@@ -9,6 +9,8 @@ dojo.require("dijit._Contained");
 dojo.require("dijit.layout._LayoutWidget");
 dojo.require("dijit.Menu");
 dojo.require("dijit.form.Button");
+dojo.require("dijit.focus");		// dijit.focus()
+dojo.require("dijit._base.focus");	// dijit.getFocus()
 
 dojo.require("dojox.html.metrics");
 

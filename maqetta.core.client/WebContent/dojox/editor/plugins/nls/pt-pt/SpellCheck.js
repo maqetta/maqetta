@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	widgetLabel: "Verificação ortográfica por grupo",
 	unfound: "Não localizado",
@@ -15,3 +17,5 @@
 	iMsg: "Sem sugestões de ortografia"
 })
 
+//end v1.x content
+);

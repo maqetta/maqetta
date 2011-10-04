@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	widgetLabel: "Бума емлесін тексеру",
 	unfound: "Табылмады",
@@ -15,3 +17,5 @@
 	iMsg: "Емле ұсыныстары жоқ"
 })
 
+//end v1.x content
+);

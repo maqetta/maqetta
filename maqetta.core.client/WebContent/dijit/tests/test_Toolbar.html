@@ -34,11 +34,13 @@
 		dojo.require("dijit.ColorPalette");
 		dojo.require("dijit.TooltipDialog");
 		dojo.require("dijit.form.TextBox");
+
 		dojo.require("dijit.Menu");
+		dojo.require("dijit.MenuItem");
 
 		dojo.require("dojo.parser");
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			// programatic creation
 			dojo.forEach(["toolbar2", "toolbar3", "toolbar4"], function(toolbarId){
 				var toolbar = new dijit.Toolbar({}, dojo.byId(toolbarId));
@@ -48,7 +50,7 @@
                         // note: should always specify a label, for accessibility reasons.
                         // Just set showLabel=false if you don't want it to be displayed normally
                         label: label,
-                        showLabel: (toolbarId == "toolbar2" ? false : true),
+                        showLabel: (toolbarId != "toolbar2"),
                         iconClass: toolbarId == "toolbar4" ? "" : "dijitEditorIcon dijitEditorIcon"+label
                     });
                     toolbar.addChild(button);

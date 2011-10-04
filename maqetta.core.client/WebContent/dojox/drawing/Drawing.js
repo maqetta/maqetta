@@ -131,9 +131,8 @@ dojo.provide("dojox.drawing.Drawing");
 			this.stencilTypeMap = {};
 			this.srcRefNode = node; // need this?
 			this.domNode = node;
-			var str = dojo.attr(node, "plugins"); // FIXME: get this from props if available
-			if(str){
-				this.plugins = eval(str);
+			if(props.plugins){
+				this.plugins = eval(props.plugins);
 			}else{
 				this.plugins = [];
 			}
@@ -248,7 +247,6 @@ dojo.provide("dojox.drawing.Drawing");
 				});
 				return;
 			}
-			
 			dojo.forEach(this.plugins, function(p, i){
 				var props = dojo.mixin({
 					util:this.util,
@@ -542,6 +540,13 @@ dojo.provide("dojox.drawing.Drawing");
 				console.error(this.currentType + " is not a constructor: ", this.tools[this.currentType]);
 				//console.trace();
 			}
+		},
+		
+		set: function(name, value){
+			// summary:
+			//		Drawing registers as a widget and needs to support
+			//		widget's api.
+			console.info("Attempting to set ",name," to: ",value,". Set currently not fully supported in Drawing");
 		},
 		
 		unSetTool: function(){

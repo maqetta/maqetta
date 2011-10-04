@@ -1,8 +1,20 @@
+<!--[if IE 7]>
+<!DOCTYPE>
+<html lang="en">
+	<head>
+<![endif]-->
+<!--[if IE 8]>
+<!DOCTYPE>
+<html lang="en">
+    <head>
+           <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
+<![endif]-->
+<![if gte IE 9]>
 <!DOCTYPE HTML>
-<html>
-<head>
+<html lang="en">
+	<head>
+<![endif]>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
 <title>Chart 2D: fireEvent test</title>
 <style type="text/css">
 	@import "../../../dojo/resources/dojo.css";
@@ -46,6 +58,8 @@ dojo.require("dojox.charting.action2d.Tooltip");
 
 dojo.require("dojox.lang.functional.sequence");
 
+dojo.require("dojo.parser");
+
 var chart, legend, size = 10, magnitude = 30, none = "<em>none</em>";
 
 
@@ -88,7 +102,7 @@ function getZeroes(){
 var actions = [];
 
 function addActions(chart){
-	dojox.lang.functional.forEach(actions, ".destroy()");
+	dojox.lang.functional.forEach(actions, ".disconnect()");
 	actions = [
 		new dojox.charting.action2d.Highlight(chart),
 		new dojox.charting.action2d.Magnify(chart),

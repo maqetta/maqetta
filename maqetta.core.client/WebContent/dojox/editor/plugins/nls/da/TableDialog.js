@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertTableTitle: "Indsæt tabel",
 	modifyTableTitle: "Revidér tabel",
@@ -28,3 +30,5 @@
 	deleteTableRowLabel: "Slet række",
 	deleteTableColumnLabel: "Slet kolonne"
 })
+//end v1.x content
+);

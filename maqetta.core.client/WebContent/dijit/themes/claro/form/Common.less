@@ -6,6 +6,13 @@
 
 /* 'dijitTextBox' refers to 'dijit(TextBox|DateTextBox|CurrencyTextBox|...)' */
 
+.claro .dijitTextBox,
+.claro .dijitInputInner {
+    // .dijitInputInner selector needed for ValidationTextBox on IE6 because <input> doesn't inherit
+    // the color setting from the ancestor div.dijitTextBox
+	color: @text-color;
+}
+
 .claro .dijitTextBoxError .dijitValidationContainer {
 	background-color: @erroricon-background-color;
 	background-image: url('images/error.png');
@@ -103,7 +110,18 @@
 .claro .dijitTextBoxDisabled .dijitInputContainer {
 	background-color: @textbox-disabled-background-color;
 	background-image: none;
+}
+.claro .dijitTextBoxDisabled,
+.claro .dijitTextBoxDisabled .dijitInputInner {
 	color: @disabled-text-color;
+}
+.dj_webkit .claro .dijitTextBoxDisabled input {
+    /* because WebKit lightens disabled input/textarea no matter what color you specify */
+	color: darken(@disabled-text-color, 5%)
+}
+.dj_webkit .claro textarea.dijitTextAreaDisabled {
+    /* because WebKit lightens disabled input/textarea no matter what color you specify */
+	color: darken(@disabled-text-color, 40%)
 }
 
 /*========================= for special widgets =========================*/

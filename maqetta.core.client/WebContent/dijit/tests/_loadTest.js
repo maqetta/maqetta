@@ -19,16 +19,30 @@ if(!file && window.location.href.search(/[?&]file[=]/i) > 0){
 }
 var readFile = function(file){
 	var xhr = null;
-	try{ xhr = new XMLHttpRequest() }catch(e0){
-	try{ xhr = new ActiveXObject('Msxml2.XMLHTTP') }catch(e1){
-	try{ xhr = new ActiveXObject('Microsoft.XMLHTTP') }catch(e2){
-	try{ xhr = new ActiveXObject('Msxml2.XMLHTTP.4.0') }catch(e3){}}}}
+	try{
+		xhr = new XMLHttpRequest();
+	}catch(e0){
+		try{
+			xhr = new ActiveXObject('Msxml2.XMLHTTP');
+		}catch(e1){
+			try{
+				xhr = new ActiveXObject('Microsoft.XMLHTTP');
+			}catch(e2){
+				try{
+					xhr = new ActiveXObject('Msxml2.XMLHTTP.4.0');
+				}catch(e3){
+				}
+			}
+		}
+	}
 	try{
 		xhr.open("GET", file, false);
 		xhr.send(null);
-	}catch(e){ return null } // file not found
+	}catch(e){
+		return null
+	} // file not found
 	return xhr.responseText;
-}
+};
 var text = readFile(file) || (file + " not found");
 var baseHref = file.replace(/^(.*\/)?[^\/]+$/, "$1");
 if(baseHref){

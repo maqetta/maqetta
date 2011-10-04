@@ -1,8 +1,20 @@
+<!--[if IE 7]>
+<!DOCTYPE>
+<html lang="en">
+	<head>
+<![endif]-->
+<!--[if IE 8]>
+<!DOCTYPE>
+<html lang="en">
+    <head>
+           <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
+<![endif]-->
+<![if gte IE 9]>
 <!DOCTYPE HTML>
-<html>
-<head>
+<html lang="en">
+	<head>
+<![endif]>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
 <title>Scaling, scrolling, and panning.</title>
 <style type="text/css">
 	@import "../../../dojo/resources/dojo.css";
@@ -41,10 +53,10 @@ var reflect = function(){
 		}
 	});
 	setTimeout(function(){
-		dijit.byId("scaleXSlider").setValue(scaleX);
-		dijit.byId("offsetXSlider").setValue(offsetX);
-		dijit.byId("scaleYSlider").setValue(scaleY);
-		dijit.byId("offsetYSlider").setValue(offsetY);
+		dijit.byId("scaleXSlider").set("value",scaleX);
+		dijit.byId("offsetXSlider").set("value",offsetX);
+		dijit.byId("scaleYSlider").set("value",scaleY);
+		dijit.byId("offsetYSlider").set("value",offsetY);
 	}, 25);
 };
 

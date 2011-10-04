@@ -1,7 +1,6 @@
-dojo.provide("dojox.secure.tests.secure");
-dojo.require("dojox.secure.secure");
+dojo.provide("dojox.secure.tests.sandbox");
 
-doh.register("dojox.secure.tests.secure.good",
+doh.register("dojox.secure.tests.sandbox.good",
 	[
 		function setup(){
 			var div = document.createElement("div");
@@ -40,7 +39,7 @@ function violater(func) {
 		t.f(insecure);
 	}};
 }
-doh.register("dojox.secure.tests.secure.bad",
+doh.register("dojox.secure.tests.sandbox.bad",
 	[
 		function parentNode(t){
 			t.f(dojox.secure.evaluate("document.body",container));

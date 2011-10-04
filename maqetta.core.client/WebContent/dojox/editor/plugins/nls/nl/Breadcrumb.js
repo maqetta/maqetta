@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"nodeActions": "${nodeName} Acties",
 	"selectContents": "Inhoud selecteren",
@@ -8,3 +10,5 @@
 	"moveEnd": "Cursor verplaatsen naar eind"
 })
 
+//end v1.x content
+);

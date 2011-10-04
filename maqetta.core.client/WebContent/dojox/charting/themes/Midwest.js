@@ -1,9 +1,6 @@
-dojo.provide("dojox.charting.themes.Midwest");
-dojo.require("dojox.charting.Theme");
-
-(function(){
-	var dxc=dojox.charting;
-	dxc.themes.Midwest=new dxc.Theme({
+define(["../Theme", "./common"], function(Theme, themes){
+	
+	themes.Midwest=new Theme({
 		colors: [
 			"#927b51",
 			"#a89166",
@@ -12,4 +9,6 @@ dojo.require("dojox.charting.Theme");
 			"#aebc21"
 		]
 	});
-})();
+	
+	return themes.Midwest;
+});

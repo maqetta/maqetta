@@ -110,8 +110,5 @@ dojo.declare("davinci.de.DijitTemplatedGenerator", null, {
 			}
 			return true;
 		}, this);
-	},
-	
-	
-
+	}
 });

@@ -1,10 +1,10 @@
 define(["dojo/_base/declare",        
-		"davinci.ve.tools._Tool",
-		"davinci.ve.widget",
-		"davinci.ve.metadata",
-		"davinci.commands.CompoundCommand",
-		"davinci.ve.commands.MoveCommand",
-		"davinci.ve.commands.ResizeCommand"], function(
+		"davinci/ve/tools/_Tool",
+		"davinci/ve/widget",
+		"davinci/ve/metadata",
+		"davinci/commands/CompoundCommand",
+		"davinci/ve/commands/MoveCommand",
+		"davinci/ve/commands/ResizeCommand"], function(
 				declare,
 				tool
 		){

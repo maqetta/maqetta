@@ -68,6 +68,7 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 			var defaultIconFile = "fldr_obj.gif";
 			var	iconFile = defaultIconFile;
 			var iconUri = iconFolder + iconFile;
+			
 			componentIcon = this._getIconUri(component.icon, iconUri);
 			
 			var opt = {
@@ -260,6 +261,7 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 		if(!iconFile){
 			iconFile = defaultIconFile;
 		}
+		
 		var iconUri = iconFolder + iconFile;
 		componentIcon = this._getIconUri(component.icon, iconUri);
 		
@@ -299,6 +301,7 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 	},
 	
 	_getIconUri: function(uri, fallbackUri) {
+		
 	    if (uri) {
 	    	/* maybe already resolved */
 	    	if(uri.indexOf("http")==0)

@@ -98,7 +98,9 @@ davinci.ve.metadata = function() {
         		 descriptor.$providedTypes[item.type] = item;
         	 }
             // XXX refactor into function, so we don't change original data?
-            if (item.icon) {
+            
+        	 
+        	 if (item.icon && !item.iconLocal) {
                 item.icon = path.append(item.icon).toString();
             }
             // XXX refactor into function

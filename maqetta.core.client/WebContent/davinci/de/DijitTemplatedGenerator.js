@@ -46,7 +46,7 @@ dojo.declare("davinci.de.DijitTemplatedGenerator", null, {
     	var html =  this._srcDocument.find({'elementType' : "HTMLElement", 'tag':'body'}, true);
     	var bodyChildren = html.children;
     	
-    	var htmlString = "\t\t<div>"
+    	var htmlString = "\t\t<div>";
     	for(var i=0;i<bodyChildren.length;i++){
     		htmlString += bodyChildren[i].getText();
     	}
@@ -56,7 +56,7 @@ dojo.declare("davinci.de.DijitTemplatedGenerator", null, {
     	this.value.js+='\twidgetsInTemplate:true\n' ;
     	this.value.js+="\n});";
     	
-    	this.metadata.content = "<div></div>"
+    	this.metadata.content = "<div></div>";
     	this.metadata.require.push({type:"javascript", $text:"dojo.require(\'" + dijitName + "');"});
     	
     	

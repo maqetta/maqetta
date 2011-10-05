@@ -1,4 +1,5 @@
-({
+define({ root:
+{
 		/*Currently this file is also used for davinci.review/WebContent/review.html*/
 		//pagedesigner.html
 		"designer":"Designer,",
@@ -31,5 +32,5 @@
 		"perspectiveNotFound":"perspective not found: ${0}",
 		"scopeNotDefined":"scope not defined for action: ${0}",
 		"funcNotDefined":"function not defined for action: ${0}"
-
-})
+}
+});

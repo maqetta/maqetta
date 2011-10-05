@@ -1,4 +1,5 @@
-({
+define({ root:
+{
 		//EditorContainer.js
 		"fileHasUnsavedChanges":"This file has unsaved changes. Are you sure you want to close WITHOUT saving?",
 		
@@ -9,5 +10,5 @@
 		"preferences":"Preferences",
 		"noUserPref":"no user preferences...",
 		"restoreDefaults":"Restore Defaults"
-
-})
+}
+});

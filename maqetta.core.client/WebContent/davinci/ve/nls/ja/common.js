@@ -1,4 +1,5 @@
-({
+define(
+{
 /* General resources */
 search: "検索",
 filter: "フィルター",
@@ -107,4 +108,4 @@ warnOnCSSOverride: "Warn on CSS Override",
 liveEdit: "ライブ編集",
 
 __dummy__: ""
-})
+});

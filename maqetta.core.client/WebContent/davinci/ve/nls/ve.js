@@ -1,4 +1,5 @@
-({
+define({ root:
+{
 		//SwitchingStyleView.js
 		"common":"Common",
 		"widgetSpecific":"Widget-specific",
@@ -56,5 +57,5 @@
 		"toolBarFor":"for: ",
 		"noSelection":"(no selection)",
 		"toolBarClass":"class: "
-
-})
+}
+});

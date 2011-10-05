@@ -1,4 +1,5 @@
-({
+define({ root:
+{
 		//DocileDialog.js
 		"dontShowAgain":"Don't show again",
 	
@@ -93,4 +94,5 @@
 		"selectTheme":"Select a Theme",
 
 		"newProject":"New Project"
-})
+}
+});

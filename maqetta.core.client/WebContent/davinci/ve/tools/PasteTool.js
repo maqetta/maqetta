@@ -1,13 +1,16 @@
-dojo.provide("davinci.ve.tools.PasteTool");
+define(["dojo/_base/declare",
+    	"davinci/ve/tools/CreateTool",
+    	"davinci/ve/widget",
+    	"davinci/commands/CompoundCommand",
+    	"davinci/ve/commands/AddCommand",
+    	"davinci/ve/commands/MoveCommand",
+    	"davinci/ve/commands/ResizeCommand"], function(
+    		declare,
+			createTool,
+			widget
+			){
 
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.commands.CompoundCommand");
-dojo.require("davinci.ve.commands.AddCommand");
-dojo.require("davinci.ve.commands.MoveCommand");
-dojo.require("davinci.ve.commands.ResizeCommand");
-dojo.require("davinci.ve.tools.CreateTool");
-
-dojo.declare("davinci.ve.tools.PasteTool", davinci.ve.tools.CreateTool, {
+return declare("davinci.ve.tools.PasteTool", createTool, {
 
 	_create: function(args){
 		var command = new davinci.commands.CompoundCommand(),
@@ -28,7 +31,7 @@ dojo.declare("davinci.ve.tools.PasteTool", davinci.ve.tools.CreateTool, {
 			
 			loadRequiresForTree(d);
 
-			var position, style = davinci.ve.widget.parseStyleValues((d.properties && d.properties.style));
+			var position, style = widget.parseStyleValues((d.properties && d.properties.style));
 			if(style && style.position == "absolute"){
 				if(args.position){
 					var p = {x: (parseInt(style.left) || 0), y: (parseInt(style.top) || 0)};
@@ -48,7 +51,7 @@ dojo.declare("davinci.ve.tools.PasteTool", davinci.ve.tools.CreateTool, {
 				}
 			}
 
-			var widget;
+			var w;
 			dojo.withDoc(this._context.getDocument(), function(){
 				d.context=this._context;
 				var tool = davinci.ve.metadata.queryDescriptor(d.type, "tool");
@@ -72,32 +75,32 @@ dojo.declare("davinci.ve.tools.PasteTool", davinci.ve.tools.CreateTool, {
 		        	myArgs.parent = args.parent || this._context.getContainerNode();
 		        	myArgs.position = position;
 		        	myArgs.index = index;
-		        	widget =  myTool.addPasteCreateCommand(command,myArgs);
-		        	if(!widget){
+		        	w = myTool.addPasteCreateCommand(command,myArgs);
+		        	if(!w){
 						return;
 					}
 		        } else {
-		        	widget = davinci.ve.widget.createWidget(d);
-		        	if(!widget){
+		        	w = widget.createWidget(d);
+		        	if(!w){
 						return;
 					}
-		        	command.add(new davinci.ve.commands.AddCommand(widget, args.parent || this._context.getContainerNode(), index));
+		        	command.add(new davinci.ve.commands.AddCommand(w, args.parent || this._context.getContainerNode(), index));
 		        }
 		    					
 				if(index !== undefined && index >= 0){
 					index++;
 				}
 				if(position){
-					command.add(new davinci.ve.commands.MoveCommand(widget, position.x, position.y));
+					command.add(new davinci.ve.commands.MoveCommand(w, position.x, position.y));
 				}
 
 				
 			}, this);
-			if(!widget){
+			if(!w){
 				return;
 			}
 
-			selection.push(widget);
+			selection.push(w);
 		}, this);
 
 		if(!command.isEmpty()){
@@ -108,4 +111,5 @@ dojo.declare("davinci.ve.tools.PasteTool", davinci.ve.tools.CreateTool, {
 		}
 	}
 
+});
 });

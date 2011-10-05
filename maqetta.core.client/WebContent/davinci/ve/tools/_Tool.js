@@ -1,10 +1,8 @@
-dojo.provide("davinci.ve.tools._Tool");
+define(["dojo/_base/declare",
+        "davinci/ve/widget",
+        "davinci/ve/metadata"], function(declare, widget, metadata){
 
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.ve.metadata");
-
-
-dojo.declare("davinci.ve.tools._Tool", null, {
+return declare("davinci.ve.tools._Tool", null, {
 
 	_getTarget: function(){
 		return this._target;
@@ -27,42 +25,42 @@ dojo.declare("davinci.ve.tools._Tool", null, {
 		}
 
 		var containerNode = this._context.getContainerNode();
-		var widget;
+		var w;
 		
 		while(target && target != containerNode){
-			widget = davinci.ve.widget.getEnclosingWidget(target);
-			// Not sure when widget.getContext() won't be true. Maybe that check deals with
+			w = widget.getEnclosingWidget(target);
+			// Not sure when w.getContext() won't be true. Maybe that check deals with
 			// widgets that are either not completely ready or in process of being deleted?
 			// If anyone knows answer, please update this comment.
-			if(widget && !widget.getContext()){
-				target = widget.domNode.parentNode;
-				widget = null;
+			if(w && !w.getContext()){
+				target = w.domNode.parentNode;
+				w = null;
 			}else{
 				// Flow typically comes to here. The following check determines if
 				// current widget is a container, which means it can contain other widgets.
 				// If a container, then don't put editFeedback overlay over this DOM node
 				// because we want user to be able to click-select on child widgets,
 				// (unless the "isControl" metadata override is set for this widget type).
-				if (widget && widget.getContainerNode()) {
+				if (w && w.getContainerNode()) {
 					// Some Dijit widgets inherit from dijit._Container even those
 					// they aren't really meant to contain child widgets.
 					// "isControl" metadata flag overrides and says this is really 
 					// a primitive widget not a container widget.
-					if (!davinci.ve.metadata.queryDescriptor(widget.type, "isControl")) {
-						widget = null;
+					if (!davinci.ve.metadata.queryDescriptor(w.type, "isControl")) {
+						w = null;
 					}
 				}
 				break;
 			}
 		}
 
-		if(widget){
-			var node = widget.getStyleNode();
+		if(w){
+			var node = w.getStyleNode();
 			var box = this._context.getDojo().position(node, true);
 			box.l = box.x;
 			box.t = box.y;
 
-			var domNode = widget.domNode;
+			var domNode = w.domNode;
 			var parentNode = domNode.parentNode;
 			
 			//FIXME: no side effects? index is never used?
@@ -79,7 +77,7 @@ dojo.declare("davinci.ve.tools._Tool", null, {
 			this._feedback.style.zIndex = domNode.style.zIndex;
 			parentNode.insertBefore(this._feedback,domNode.nextSibling);
 			
-			this._target = widget;
+			this._target = w;
 		}else{
 			if(this._feedback.parentNode){
 				this._feedback.parentNode.removeChild(this._feedback);
@@ -114,7 +112,7 @@ dojo.declare("davinci.ve.tools._Tool", null, {
 	_getAllowedTargetWidget: function(target, data, climb) {
 		// returns an array consisting of 'type' and any 'class' properties
 		function getClassList(type) {
-			var classList = Metadata.queryDescriptor(type, 'class');
+			var classList = davinci.ve.metadata.queryDescriptor(type, 'class');
 			if (classList) {
 				classList = classList.split(/\s+/);
 				classList.push(type);
@@ -136,7 +134,7 @@ dojo.declare("davinci.ve.tools._Tool", null, {
 			var parentType = parent instanceof davinci.ve._Widget ?
 					parent.type : parent._dvWidget.type;
 			var parentClassList,
-				allowedChild = Metadata.getAllowedChild(parentType);
+				allowedChild = davinci.ve.metadata.getAllowedChild(parentType);
 			
 			// special case for HTML <body>
 			if (parentType === "html.body") {
@@ -157,8 +155,7 @@ dojo.declare("davinci.ve.tools._Tool", null, {
 		}
 		
 		// get data for widget we are adding to page
-		var Metadata = davinci.ve.metadata,
-			getEnclosingWidget = davinci.ve.widget.getEnclosingWidget,
+		var getEnclosingWidget = widget.getEnclosingWidget,
 			newTarget = target,
 			allowedParentList = [],
 			data = data.length ? data : [data],
@@ -168,7 +165,7 @@ dojo.declare("davinci.ve.tools._Tool", null, {
 		// Get data for all widgets, for use later in isAllowed().
 		data.forEach(function(elem) {
 			children.push({
-				allowedParent: Metadata.getAllowedParent(elem.type),
+				allowedParent: davinci.ve.metadata.getAllowedParent(elem.type),
 				classList: getClassList(elem.type)
 			});
 		});
@@ -182,4 +179,5 @@ dojo.declare("davinci.ve.tools._Tool", null, {
 		
 		return allowedParentList;
 	}
+});
 });

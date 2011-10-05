@@ -1,22 +1,17 @@
-define(["dojo/_base/declare",
-    	"davinci/ve/tools/_Tool",
-    	"davinci/Workbench",
-    	"davinci/ve/metadata",
-    	"davinci/ve/widget",
-    	"davinci/ui/ErrorDialog",
-    	"davinci/commands/CompoundCommand",
-    	"davinci/ve/commands/AddCommand",
-    	"davinci/ve/commands/MoveCommand",
-    	"davinci/ve/commands/ResizeCommand",
-    	"davinci/ve/Snap"], function(
-    		declare,
-			tool,
-			workbench,
-			metadata,
-			widget
-			){
+dojo.provide("davinci.ve.tools.CreateTool");
 
-return declare("davinci.ve.tools.CreateTool", tool, {
+dojo.require("davinci.Workbench");
+dojo.require("davinci.ui.ErrorDialog");
+dojo.require("davinci.ve.tools._Tool");
+dojo.require("davinci.ve.metadata");
+dojo.require("davinci.ve.widget");
+dojo.require("davinci.commands.CompoundCommand");
+dojo.require("davinci.ve.commands.AddCommand");
+dojo.require("davinci.ve.commands.MoveCommand");
+dojo.require("davinci.ve.commands.ResizeCommand");
+dojo.require("davinci.ve.Snap");
+
+dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 
 	constructor: function(data) {
 		this._data = data;
@@ -45,7 +40,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 	},
 
 	onMouseDown: function(event){
-		this._target = widget.getEnclosingWidget(event.target);
+		this._target = davinci.ve.widget.getEnclosingWidget(event.target);
 		this._position = this._adjustPosition(this._context.getContentPosition(event));
 	},
 
@@ -87,7 +82,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		}
 
 		var size,
-			target = this._getTarget() || widget.getEnclosingWidget(event.target);
+			target = this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
 
 		/**
 		 * Custom error, thrown when a valid parent widget is not found.
@@ -202,7 +197,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 				console.error(e);
 			}
             var errorDialog = new davinci.ui.ErrorDialog({errorText: content});
-            workbench.showModal(errorDialog, title);
+            davinci.Workbench.showModal(errorDialog, title);
 		} finally {
 			// Make sure that if calls above fail due to invalid target or some
 			// unknown creation error that we properly unset the active tool,
@@ -290,13 +285,13 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 //		if(data && data.type && data.type.indexOf("html.") == 0){
 //			var metadata = davinci.ve.metadata.getMetadata(data.type);
 //			data.properties = data.properties || {};
-//			data.properties.id = widget.getUniqueId(metadata.tagName, this._context.rootNode);
+//			data.properties.id = davinci.ve.widget.getUniqueId(metadata.tagName, this._context.rootNode);
 //		}else if(data && data.length){
 //			for(var i = 0;i<data.length;i++){
 //				var d = data[i];
 //				var metadata = davinci.ve.metadata.getMetadata(d.type);
 //				d.properties = d.properties || {};
-//				d.properties.id = widget.getUniqueId(metadata.tagName, this._context.rootNode);
+//				d.properties.id = davinci.ve.widget.getUniqueId(metadata.tagName, this._context.rootNode);
 //			}
 //		}
 		this._data.context=this._context;
@@ -308,43 +303,43 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			return;
 		}
 
-		var w;
+		var widget;
 		dojo.withDoc(this._context.getDocument(), function(){
-			w = widget.createWidget(this._data);
+			widget = davinci.ve.widget.createWidget(this._data);
 		}, this);
-		if(!w){
+		if(!widget){
 			return;
 		}
 
 		var command = new davinci.commands.CompoundCommand();
 
-		command.add(new davinci.ve.commands.AddCommand(w,
+		command.add(new davinci.ve.commands.AddCommand(widget,
 			args.parent || this._context.getContainerNode(),
 			args.index));
 
 		if(args.position){
-			command.add(new davinci.ve.commands.MoveCommand(w, args.position.x, args.position.y));
+			command.add(new davinci.ve.commands.MoveCommand(widget, args.position.x, args.position.y));
 		}
-		if(args.size || w.isLayoutContainer){
+		if(args.size || widget.isLayoutContainer){
 			// For containers, issue a resize regardless of whether an explicit size was set.
 			// In the case where a widget is nested in a layout container,
 			// resize()+layout() will not get called during create. 
-			var width = args.size && args.size.w,
-				height = args.size && args.size.h;
-			command.add(new davinci.ve.commands.ResizeCommand(w, width, height));
+			var w = args.size && args.size.w,
+				h = args.size && args.size.h;
+			command.add(new davinci.ve.commands.ResizeCommand(widget, w, h));
 		}
 		this._context.getCommandStack().execute(command);
-		this._select(w);
-		return w;
+		this._select(widget);
+		return widget;
 	},
 	
-	_select: function(w) {
-		var inLineEdit = davinci.ve.metadata.queryDescriptor(w.type, "inlineEdit");
+	_select: function(widget) {
+		var inLineEdit = davinci.ve.metadata.queryDescriptor(widget.type, "inlineEdit");
 		if (!this._data.fileDragCreate && inLineEdit && inLineEdit.displayOnCreate) {
-			w.inLineEdit_displayOnCreate = inLineEdit.displayOnCreate;
-			this._context.select(w, null, true); // display inline
+			widget.inLineEdit_displayOnCreate = inLineEdit.displayOnCreate;
+			this._context.select(widget,null,true); // display inline
 		} else {
-			this._context.select(w); // no inline on create
+			this._context.select(widget); // no inline on create
 		}
 	},
 
@@ -367,4 +362,3 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 	}
 });
 
-});

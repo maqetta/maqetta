@@ -54,13 +54,13 @@ dojo.declare("davinci.de.DijitTemplatedGenerator", null, {
     	htmlString +="</div>";
     	
     	if(inlineHtml){
-    		this.value.js+='\ttempl" + "ateString:"' + this.escapeHtml(htmlString) + '",\n' ;
+    		this.value.js+='\ttempl' + 'ateString:"' + this.escapeHtml(htmlString) + '",\n' ;
     	}else{
     		var htmlFullPath = dijitName.replace(/\./g, "/");
         	htmlFullPath = htmlFullPath + ".html";
         	var htmlPath = new davinci.model.Path(htmlFullPath);
         	htmlPath = htmlPath.removeFirstSegments(1);
-        	this.value.js+='\ttempla" + "teString:dojo." + "cache("widgets", "' + htmlPath.toString() + '"),\n' ;
+        	this.value.js+='\ttempla' + 'teString:dojo." + "cache("widgets", "' + htmlPath.toString() + '"),\n' ;
     		this.value.html = htmlString;
     	}
     	

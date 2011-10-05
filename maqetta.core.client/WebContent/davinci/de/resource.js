@@ -1,11 +1,6 @@
 dojo.provide("davinci.de.resource");
 
-
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ui", "ui");
-
 dojo.require("davinci.de.widgets.NewDijit");
-
 dojo.require("davinci.de.DijitTemplatedGenerator");
 dojo.mixin(davinci.de.resource, {
 	
@@ -13,9 +8,7 @@ dojo.mixin(davinci.de.resource, {
 	
 	
 	createDijiFromNewDialog : function(){
-		var projectDialog = new davinci.de.widgets.NewDijit({}),
-		langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
-		
+		var projectDialog = new davinci.de.widgets.NewDijit({});
 		var oldEditor = davinci.Workbench.getOpenEditor();
 		var oldFileName = oldEditor.fileName;
 		var oldResource = davinci.resource.findResource(oldFileName);

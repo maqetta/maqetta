@@ -664,7 +664,8 @@ davinci_top_bar .dijitButtonNode {
 	background-color:#aaa;
 }
 
-.toolbaredContainer_toolbarDiv .dijitIcon {
+.toolbaredContainer_toolbarDiv .dijitIcon,
+.dijitMenuPopup .dijitIcon {
 	background-image: url(img/sprite.png);
 }
 

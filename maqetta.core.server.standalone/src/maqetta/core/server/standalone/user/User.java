@@ -88,6 +88,9 @@ public class User implements IUser {
 			for (int i = 0; i < libs.size(); i++) {
 				IVResource root = firstFolder;
 				String defaultRoot = libs.get(i).getVirtualRoot();
+				
+				if(defaultRoot==null) continue;
+				
 				Library b = this.getLibrary(libs.get(i));
 				/* library not found on server so avoid adding it to the workspace */
 				if (b == null) {

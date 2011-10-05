@@ -30,10 +30,10 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 		this._themeData = davinci.library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly);
 		this._themeCount = this._themeData.length;
 		for (var i = 0; i < this._themeData.length; i++){
-			if(this._hasValue(this._themeData[i].className)) continue;
+			if(this._hasValue(this._themeData[i].name)) continue;
 			var op = dojo.doc.createElement("option");
-			op.value =this._themeData[i].className;
-			op.text = this._themeData[i].className;
+			op.value =this._themeData[i].name;
+			op.text = this._themeData[i].name;
 			this._select.appendChild(op);
 			
 		}
@@ -93,10 +93,10 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 		}
 	},
 	_getValueAttr : function(){
-		var className = dojo.attr(this._select, "value");
+		var name = dojo.attr(this._select, "value");
 		
 		for(var i=0;i<this._themeData.length;i++){
-			if(this._themeData[i]['className'] == className )
+			if(this._themeData[i]['name'] == name )
 				return this._themeData[i];
 			
 		}

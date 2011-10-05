@@ -591,11 +591,13 @@ dojo.declare("davinci.ve.Context", null, {
 			
 			if(allThemes[i].name==defaultThemeName)
 				defaultTheme = allThemes[i];
-
-			//FIXME: this can't be right...
-			for(var k=0;k<allThemes[i].files.length;k++){
-				themeHash[allThemes[i].files] = allThemes[i];
-			}
+			
+			if (allThemes[i].files){ // #1024 some theme's may not contain files, themeMaps
+			  //FIXME: this can't be right...
+    			for(var k=0;k<allThemes[i].files.length;k++){
+    			        themeHash[allThemes[i].files] = allThemes[i];
+    			}
+            }
 		}
 		/* check the header file for a themes CSS.  
 		 * 
@@ -743,8 +745,11 @@ dojo.declare("davinci.ve.Context", null, {
 				head += "<script>djConfig={addOnLoad:top.loading" + this._id + ", baseUrl:'"+dojoUrl.substr(0,inx+1)+"', modulePaths:{'widgets':'" + baseUserWorkspace +"'} }</script>";
 				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\"></script>";
 			}
-
-			if(source.themeCssfiles){ // css files need to be added to doc before body content
+			var helper = davinci.theme.getHelper(this._visualEditor.theme);
+			if (helper && helper.getHeadImports){
+			    head += helper.getHeadImports(this._visualEditor.theme);
+			    
+			} else if(source.themeCssfiles) { // css files need to be added to doc before body content
 				head += '<style type="text/css">';
 				for(var i = 0;i < source.themeCssfiles.length;i++){
 					head += '@import "'+ source.themeCssfiles[i] + '";\n';
@@ -769,7 +774,7 @@ dojo.declare("davinci.ve.Context", null, {
 			window["loading" + context._id] = function() {
 				delete window["loading" + context._id];
 				var callbackData = context;
-				try {
+			//	try {
 					var win = dijit.getDocumentWindow(doc),
 					 	body = (context.rootNode = doc.body);
 					body.id = "myapp";
@@ -803,12 +808,12 @@ dojo.declare("davinci.ve.Context", null, {
 					win.require("dojo/_base/lang").isArray = win.dojo.isArray=function(it){
 						return it && Object.prototype.toString.call(it)=="[object Array]";
 					};
-				} catch(e) {
+				/*} catch(e) {
 					console.error(e);
 					// recreate the Error since we crossed frames
 					callbackData = new Error(e.message, e.fileName, e.lineNumber);
 					dojo.mixin(callbackData, e);
-				}
+				}*/
 
 				context._continueLoading(data, callback, callbackData, scope);
 			};
@@ -849,7 +854,7 @@ dojo.declare("davinci.ve.Context", null, {
 
 	_continueLoading: function(data, callback, callbackData, scope) {
 		var loading;
-		try {
+		//try {
 			loading = dojo.create("div",
 					{innerHTML: dojo.replace('<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;{0}</td></tr></table>', ["Loading..."])}, // FIXME: i18n
 					this.frameNode.parentNode,
@@ -863,13 +868,13 @@ dojo.declare("davinci.ve.Context", null, {
 			this._setSourceData(data);
 
 			loading.parentNode.removeChild(loading); // need to remove loading for silhouette to display
-		} catch(e) {
+	/*	} catch(e) {
 			// recreate the Error since we crossed frames
 			callbackData = new Error(e.message, e.fileName, e.lineNumber);
 			dojo.mixin(callbackData, e);
 			loading.innerHTML = "Uh oh! An error has occurred:<br>" + e.message + "<br>file:" + e.fileName + "<br>line: "+e.lineNumber; // FIXME: i18n
 			dojo.addClass(loading, 'error');
-		}
+		}*/
 		
 		if(callback){
 			callback.call((scope || this), callbackData);

@@ -78,7 +78,7 @@
 
    <element name="libraryPath">
       <complexType>
-         <attribute name="name" type="string" use="required">
+         <attribute name="name" type="string">
             <annotation>
                <documentation>
                   

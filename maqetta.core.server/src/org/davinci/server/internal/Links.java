@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
 import org.davinci.server.util.XMLFile;
 import org.maqetta.server.IDavinciServerConstants;
 import org.w3c.dom.Element;
@@ -131,7 +132,7 @@ public class Links extends XMLFile {
     }
 
     @Override
-    protected Object createObject(Element element, String[] attributes) {
+    protected Object createObject(Element element,String[] attributeNames, String[] attributes) {
         int type = 0;
         if (Links.STR_SYSTEM_PATH.equals(attributes[2])) {
             type = Links.SYSTEM_PATH;
@@ -145,15 +146,7 @@ public class Links extends XMLFile {
         return new String[] { "path", "location", "type" };
     }
 
-    @Override
-    protected String[] getAttributeValues(Object object) {
-        Link link = (Link) object;
-        String linkAttr = null;
-        if (link.type == Links.SYSTEM_PATH) {
-            linkAttr = Links.STR_SYSTEM_PATH;
-        }
-        return new String[] { link.path, link.location, linkAttr };
-    }
+  
 
     @Override
     protected String getElementTag() {
@@ -164,5 +157,27 @@ public class Links extends XMLFile {
     protected String getRootTag() {
         return "links";
     }
+
+	protected String getAttributeValue(String attribute, Object object) {
+		// TODO Auto-generated method stub
+		Link link = (Link)object;
+		if(attribute.equalsIgnoreCase("path")){
+			return link.path;
+		}
+		
+		if(attribute.equalsIgnoreCase("location")){
+			return link.location;
+		}
+		
+		if(attribute.equalsIgnoreCase("type")){
+			 String linkAttr = null;
+		        if (link.type == Links.SYSTEM_PATH) {
+		            linkAttr = Links.STR_SYSTEM_PATH;
+		        }
+		        return linkAttr;
+		}
+		return null;
+	}
+
 
 }

@@ -99,33 +99,54 @@ davinci.library.getMetaData=function(theme){
 	return davinci.library._themesMetaCache[theme.name];
 }
 
+
 davinci.library.addCustomWidgets=function(base, customWidgetJson){
-	dojo.mixin(davinci.library._customWidgets[base], customWidgetJson);
+	
 	var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 	if(!prefs['widgetFolder']){
 		prefs.widgetFolder = "./widgets";
 		davinci.workbench.Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
 	}
+	if(!davinci.library._customWidgets[base].hasOwnProperty("name")){
+		davinci.library._customWidgets[base]= customWidgetJson;	
+
+		davinci.library._customWidgets[base].metaPath=prefs['widgetFolder'];
+	    davinci.library._customWidgets[base].localPath = true;
+
+	}
+	/*
+	else{
+		for(var name in customWidgetJson.categories){
+			if(!(davinci.library._customWidgets[base].categories.hasOwnProperty(name))){
+				davinci.library._customWidgets[base].categories[name] = customWidgetJson.categories[name];
+			}
+		}	
+		for(var i=0;i<customWidgetJson.widgets.length;i++){
+			davinci.library._customWidgets[base].widgets.push(customWidgetJson.widgets[i]);
+		}
+		
+	}
+	*/
 	
 	davinci.ve.metadata.parseMetaData({descriptor:customWidgetJson, metaPath:prefs['widgetFolder'], localPath:true});
 	dojo.publish("/davinci/ui/addedCustomWidget", [customWidgetJson]);
 }
 
 davinci.library.getCustomWidgets=function(base){
-   
-    
-	if(!davinci.library._customWidgets)
-		davinci.library._customWidgets = {};
+
+	if(davinci.library._customWidgets==null || davinci.library._customWidgets[base]==null){
+		/* load the custom widgets from the users workspace */
 		
-	if(!davinci.library._customWidgets[base]){
-		
-		davinci.library._customWidgets[base] = {};
+		if(!davinci.library._customWidgets)
+			davinci.library._customWidgets = {};
+		if(!davinci.library._customWidgets[base])
+			davinci.library._customWidgets[base]= [];	
+			
 		var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 		if(!prefs['widgetFolder']){
 			prefs.widgetFolder = "./widgets";
 			davinci.workbench.Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
 		}
-		davinci.library._customWidgets[base] = {};
 		
 		var widgetFolderSetting = (new davinci.model.Path(base).append(prefs['widgetFolder']));
 		var fullPath = widgetFolderSetting.getSegments();
@@ -142,22 +163,9 @@ davinci.library.getCustomWidgets=function(base){
 		var customWidgets = davinci.resource.findResource("*_widgets.json", parent);
 		
 		for(var i=0;i<customWidgets.length;i++){
-			dojo.mixin(davinci.library._customWidgets[base], dojo.fromJson(customWidgets[i].getText()));
-		    dojo.mixin(davinci.library._customWidgets[base], {
-	            /**
-	             * Get a translated string for this library
-	             * @param key
-	             * @returns {String}
-	             */
-	            _maqGetString:  function getDescriptorString(key) {
-	                				return key;
-	            				}
-	        });
-			
-			
+			davinci.library.addCustomWidgets(base, dojo.fromJson(customWidgets[i].getText()));
 		}
-		davinci.library._customWidgets[base].metaPath=prefs['widgetFolder'];
-		davinci.library._customWidgets[base].localPath = true;
+		
 	}
 	
 	return {custom:davinci.library._customWidgets[base]};

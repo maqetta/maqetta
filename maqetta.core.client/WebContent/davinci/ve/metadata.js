@@ -59,8 +59,23 @@ davinci.ve.metadata = function() {
     		descriptor = data.descriptor;
      
         descriptor.$path = path.toString();
-        libraries[descriptor.name] = descriptor;
         
+        
+        if(libraries.hasOwnProperty(descriptor.name)){
+        	  dojo.forEach(descriptor.widgets, function(item) {
+                  libraries[descriptor.name].widgets.push(item);
+              });
+        	  for(var name in descriptor.categories) {
+                  if(!libraries[descriptor.name].categories.hasOwnProperty(name)){
+                	  libraries[descriptor.name].categories[name] = descriptor.categories[name];
+                  }
+              };
+        	  
+        }else{
+        
+        	libraries[descriptor.name] = descriptor;
+    	}
+    
         if (descriptor.callbacks) {
             dojo.xhrGet({
                 url: path.append(descriptor.callbacks).toString(),
@@ -72,22 +87,41 @@ davinci.ve.metadata = function() {
             });
         }
         
-        descriptor.$providedTypes = {};
+        if(descriptor.$providedTypes==null)
+        	descriptor.$providedTypes= {};
+        
         dojo.forEach(descriptor.widgets, function(item) {
-            descriptor.$providedTypes[item.type] = item;
-
+        	
+        	 if(libraries.hasOwnProperty(descriptor.name)){
+        		 libraries[descriptor.name].$providedTypes[item.type] = item;
+        	 }else{
+        		 descriptor.$providedTypes[item.type] = item;
+        	 }
             // XXX refactor into function, so we don't change original data?
-            if (item.icon) {
+            
+        	 
+        	 if (item.icon && !item.iconLocal) {
                 item.icon = path.append(item.icon).toString();
             }
             // XXX refactor into function
             item.widgetClass = descriptor.categories[item.category].widgetClass;
             
-            dojo.forEach(item.data, function(data) {
-                if (!descriptor.$providedTypes[data.type]) {
-                    descriptor.$providedTypes[data.type] = true;
-                }
-            });
+           
+            if(libraries.hasOwnProperty(descriptor.name)){
+            
+            	dojo.forEach(item.data, function(data) {
+	                if (!libraries[descriptor.name].$providedTypes[data.type]) {
+	                	libraries[descriptor.name].$providedTypes[data.type] = true;
+	                }
+	            });
+            	
+            }else{
+	            dojo.forEach(item.data, function(data) {
+	                if (!descriptor.$providedTypes[data.type]) {
+	                    descriptor.$providedTypes[data.type] = true;
+	                }
+	            });
+            }
         });
         
         // mix in descriptor instance functions
@@ -285,7 +319,7 @@ davinci.ve.metadata = function() {
 			/* add the users custom widgets to the library metadata */
 			var base = davinci.Runtime.getProject();
 			var descriptor = davinci.library.getCustomWidgets(base);
-			if(descriptor.custom) parseLibraryDescriptor({descriptor:descriptor.custom, metaPath:descriptor.custom.metaPath});
+			//if(descriptor.custom) parseLibraryDescriptor({descriptor:descriptor.custom, metaPath:descriptor.custom.metaPath});
 			
 		},
         

@@ -380,7 +380,8 @@ davinci_top_bar .dijitButtonNode {
 	padding: 0;
 	height: 32px;
 }
-.toolbaredContainer_toolbarDiv {
+
+.EditorContainer .toolbaredContainer_toolbarDiv {
 	height: 28px;
 }
 

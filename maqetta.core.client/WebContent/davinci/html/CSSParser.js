@@ -3,6 +3,8 @@ dojo.provide("davinci.html.CSSParser");
 dojo.require("davinci.html.CSSModel");
 dojo.require("davinci.model.parser.Tokenizer");
 
+var pushComment=null;
+
 davinci.html.CSSParser  = (function() {
   var tokenizeCSS = (function() {
     function normal(source, setState) {
@@ -184,7 +186,7 @@ davinci.html.CSSParser  = (function() {
 	  var combiner = ' ';
 	  var errors=[];
 	  var model,wsAfterSel;
-	  function error(text){console.log("ERROR: "+text); errors.push(text)}
+	  function error(text){console.log("ERROR: "+text); errors.push(text);}
 	  
 	  function nextToken()
 	  {
@@ -222,7 +224,7 @@ davinci.html.CSSParser  = (function() {
                   while (!stream.endOfLine())
                 	  stream.next();
                   var s=stream.get();
-                  pushComment.addComment('line',start,start+s.length,s)
+                  pushComment.addComment('line',start,start+s.length,s);
         	  }
         	  else
         	  {
@@ -483,5 +485,5 @@ davinci.html.CSSParser  = (function() {
 		  } while (true);
 	  } catch (e) {}
 	  
-	  return {errors:errors}
-}
+	  return {errors:errors};
+};

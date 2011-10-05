@@ -77,7 +77,7 @@ dojo.declare("davinci.ui.widgets._ToggleTreeNode", dijit._TreeNode, {
 
 				// If node was previously opened then open it again now (this may trigger
 				// more data store accesses, recursively)
-				if(node.isExpandable && (this.tree.autoExpand || this.tree._state(item))){
+				if(node.isExpandable && (this.tree.autoExpand || this.tree._state(node))){
 					defs.push(tree._expandNode(node));
 				}
 			}, this);

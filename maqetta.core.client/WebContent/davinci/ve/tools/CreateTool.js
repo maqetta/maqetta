@@ -224,7 +224,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 	},
 
 	create: function(args){
-	
+		
 		if(!args || !this._data){
 			return;
 		}

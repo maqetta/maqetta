@@ -6,6 +6,11 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
 
 	acceptsHTMLChildren: false,
 
+	/**
+	 * @static
+	 */
+	_skipAttrs: ['id', 'style', 'class', 'dir', 'lang', '_children'],
+
 	constructor: function (params, node, type, metadata) {
 	  this.domNode=node;
 	  this.id=node.id;
@@ -277,7 +282,7 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
 	},
 
 	getChildrenData: function(options) {
-		options = options ? options : {identify: true};
+		options = options || {identify: true};
 
 		var helper = this.getHelper();
 		if(helper && helper.getChildrenData) {
@@ -340,8 +345,6 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
 			if (idProp && idProp.noPersist)
 				data.properties.isTempID=true;
 			data.properties.id = this.id;
-		}else if(options.identify !== false) {
-			data.properties.id = this.getId();
 		}
 		if ((options.preserveTagName !== false) && (this.id)) {
 			data.tagName = this._srcElement.tag;
@@ -349,7 +352,7 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
 
 		// get all properties
 	    var properties = davinci.ve.metadata.query(this, "property");
-	    if (this.domNode && this.domNode.parentNode) { // "widget" could be a string for dojoType
+	    if (this.domNode && this.domNode.parentNode) {
 	        var parent = davinci.ve.widget.getEnclosingWidget(this.domNode.parentNode);
 	        var childProperties = davinci.ve.metadata.query(parent, "childProperties");
 	        if (childProperties) {
@@ -363,7 +366,7 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
 
 		if(properties) {
 			for(var name in properties) {
-				if(name=="_children" || name == "id" || name == "style" || name == "class" || name == "dir" || name == "lang") {
+				if (this._skipAttrs.indexOf(name.toLowerCase()) !== -1) {
 					continue;
 				}
 				var property = properties[name];
@@ -427,6 +430,9 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
 			}
 		}
 		
+		// Save source for widget
+		data.content = this._getElementSource();
+		
 		// Find "on*" event attributes that are in the model and
 		// place on the data object. Note that Maqetta strips
 		// on* event attributes from the DOM that appears on visual canvas.
@@ -443,7 +449,32 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
 		}
 
 		return data;
+	},
 
+    // Save source for widget, everything except for any widget children.
+	_getElementSource: function() {
+        var srcElement = this._srcElement,
+            content = ['<'];
+        content.push(srcElement.tag);
+        srcElement.attributes.forEach(function(attr) {
+            if (this._skipAttrs.indexOf(attr.name.toLowerCase()) === -1) {
+                content.push(' $n="$v"'.replace('$n', attr.name).replace('$v', attr.value));
+            }
+        }, this);
+        content.push('>');
+        
+        // look for any model children that aren't managed widgets
+        var childWidgets = this.getChildren();
+        srcElement.children.filter(function(child) {
+            return ! childWidgets.some(function(w) {
+                return w._srcElement === child;
+            });
+        }).forEach(function(child) {
+            content.push(child.getText());
+        });
+
+        content.push('</$t>'.replace('$t', srcElement.tag));
+        return content.join('');
 	},
 
 	getPropertyValue: function(name) {

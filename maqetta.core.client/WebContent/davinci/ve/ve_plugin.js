@@ -444,14 +444,14 @@
                 },
                 {
                     id: "saveasdijit",
-                    iconClass: 'saveAsIcon',
+                    iconClass: 'saveAsWidgetIcon',
                     run: "davinci.de.resource.createDijiFromNewDialog()",
                     isEnabled: function(context) {
                         var isEnabled = davinci.Workbench.getOpenEditor();
                         return isEnabled;
 
                     },
-                    label: "Save As Dijit",
+                    label: "Save As Widget",
                     toolbarPath: "save"
                 },
                 // {

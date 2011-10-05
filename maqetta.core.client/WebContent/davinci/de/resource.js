@@ -9,7 +9,7 @@ dojo.require("davinci.de.widgets.NewDijit");
 dojo.require("davinci.de.DijitTemplatedGenerator");
 dojo.mixin(davinci.de.resource, {
 	
-	WIDGETS_JSON : {"name":"custom", longName:"Custom Widgets", version:"1.0", localPath:true, "categories":{"custom":{name:"User Widgets", description:"User Widgets", widgetClass:"object"}}, widgets:[]},
+	WIDGETS_JSON : {"name":"custom", longName:"Custom Widgets", version:"1.0", localPath:true, "categories":{"custom":{name:"User Widgets", description:"User Widgets", widgetClass:"dijit"}}, widgets:[]},
 	
 	
 	createDijiFromNewDialog : function(){
@@ -65,14 +65,12 @@ dojo.mixin(davinci.de.resource, {
 		var widgetSingleName = name;
 		var parent = davinci.resource.findResource(base);
 		
-		parent = this._createNameSpace(name, parent);
+		var widgetNamespace = this._createNameSpace(name, parent);
 		if(namesplit.length>1){
 			widgetSingleName = namesplit[namesplit.length-1];
 		}
 		
-		var widgetResource = parent.getChild(widgetSingleName);
-		if(widgetResource==null)
-			widgetResource = parent.createResource(widgetSingleName + ".js");
+		
 		
 		var widgetFolderSetting = (new davinci.model.Path(base).append(prefs['widgetFolder']));
 		var fullPath = widgetFolderSetting.getSegments();
@@ -86,16 +84,18 @@ dojo.mixin(davinci.de.resource, {
 			}
 		}
 		
-		var customWidgets = parent.getChild(name + "_widgets.json");
+		var cleanName = name.substring("widgets.".length);
+		
+		var customWidgets = parent.getChild(cleanName + "_widgets.json");
 		if(customWidgets==null){
-			customWidgets = parent.createResource(name +"_widgets.json");
+			customWidgets = parent.createResource(cleanName +"_widgets.json");
 			
 		}
 		
 		var customWidgetsJson = dojo.clone(davinci.de.resource.WIDGETS_JSON);
 		
 		
-		customWidgetsJson.widgets.push({name:widgetSingleName, description: "Custom user widget " + widgetSingleName, type:name, category:"custom", iron:"app/img/jcu_obj.gif" })
+		customWidgetsJson.widgets.push({name:cleanName, description: "Custom user widget " + cleanName, type:name, category:"custom", iconLocal:true, icon:"app/davinci/img/maqetta.png" })
 		customWidgets.setContents(dojo.toJson(customWidgetsJson));
 
 		
@@ -107,7 +107,13 @@ dojo.mixin(davinci.de.resource, {
 		for(var type in content){
 			
 			switch(type){
+			
+				case 'html':
+					var html = widgetNamespace.createResource(widgetSingleName + ".html");
+					html.setContents(content.html);
+					break;
 				case 'js':
+					var widgetResource = widgetNamespace.createResource(widgetSingleName + ".js");
 					widgetResource.setContents(content.js);
 					break;
 				case 'metadata':

@@ -14,7 +14,7 @@ dojo.declare("davinci.de.DijitTemplatedGenerator", null, {
 		dojo.mixin(this, args);
 	},
 	
-	buildSource: function(model, dijitName){
+	buildSource: function(model, dijitName, inlineHtml){
 		
 		
 		this.value.js = "";
@@ -26,8 +26,8 @@ dojo.declare("davinci.de.DijitTemplatedGenerator", null, {
 		//var themeMetaobject = davinci.ve.metadata.loadThemeMeta(this._srcDocument);
 
 		var elements = this._srcDocument.find({'elementType' : "HTMLElement"});
-		this.value.js+="dojo.provide('" + dijitName + "');\n\n";
-		this.value.js+="dojo.require('dijit._Templated');\n\n";
+		this.value.js+="dojo." + "provide('" + dijitName + "');\n\n";
+		this.value.js+="dojo." + "require('dijit._Templated');\n\n";
 		
 		
 		/* build the dojo.requires(...) top bits */
@@ -42,22 +42,33 @@ dojo.declare("davinci.de.DijitTemplatedGenerator", null, {
             }
         }
         /* build the templated class */
-    	this.value.js+="dojo.declare('" + this.dijitName + "', [dijit._Widget, dijit._Templated],{\n" ;
+    	this.value.js+="dojo." + "declare('" + this.dijitName + "', [dijit._Widget, dijit._Templated],{\n" ;
     	var html =  this._srcDocument.find({'elementType' : "HTMLElement", 'tag':'body'}, true);
     	var bodyChildren = html.children;
     	
-    	var htmlString = "\t\t<div>"
+    	var htmlString = "\t\t<div>";
     	for(var i=0;i<bodyChildren.length;i++){
     		htmlString += bodyChildren[i].getText();
     	}
     	
     	htmlString +="</div>";
-    	this.value.js+='\ttemplateString:"' + this.escapeHtml(htmlString) + '",\n' ;
+    	
+    	if(inlineHtml){
+    		this.value.js+='\ttemplateString:"' + this.escapeHtml(htmlString) + '",\n' ;
+    	}else{
+    		var htmlFullPath = dijitName.replace(/\./g, "/");
+        	htmlFullPath = htmlFullPath + ".html";
+        	var htmlPath = new davinci.model.Path(htmlFullPath);
+        	htmlPath = htmlPath.removeFirstSegments(1);
+        	this.value.js+='\ttemplateString:dojo.cache("widgets", "' + htmlPath.toString() + '"),\n' ;
+    		this.value.html = htmlString;
+    	}
+    	
     	this.value.js+='\twidgetsInTemplate:true\n' ;
     	this.value.js+="\n});";
     	
-    	this.metadata.content = "<div></div>"
-    	this.metadata.require.push({type:"javascript", $text:"dojo.require(\'" + dijitName + "');"});
+    	this.metadata.content = "<div></div>";
+    	this.metadata.require.push({type:"javascript", $text:"dojo." + "require(\'" + dijitName + "');"});
     	
     	
     	this.value.metadata = dojo.toJson(this.metadata);
@@ -110,8 +121,5 @@ dojo.declare("davinci.de.DijitTemplatedGenerator", null, {
 			}
 			return true;
 		}, this);
-	},
-	
-	
-
+	}
 });

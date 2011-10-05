@@ -14,7 +14,7 @@ dojo.declare("davinci.de.DijitTemplatedGenerator", null, {
 		dojo.mixin(this, args);
 	},
 	
-	buildSource: function(model, dijitName){
+	buildSource: function(model, dijitName, inlineHtml){
 		
 		
 		this.value.js = "";
@@ -52,7 +52,18 @@ dojo.declare("davinci.de.DijitTemplatedGenerator", null, {
     	}
     	
     	htmlString +="</div>";
-    	this.value.js+='\ttemplateString:"' + this.escapeHtml(htmlString) + '",\n' ;
+    	
+    	if(inlineHtml){
+    		this.value.js+='\ttemplateString:"' + this.escapeHtml(htmlString) + '",\n' ;
+    	}else{
+    		var htmlFullPath = dijitName.replace(/\./g, "/");
+        	htmlFullPath = htmlFullPath + ".html";
+        	var htmlPath = new davinci.model.Path(htmlFullPath);
+        	htmlPath = htmlPath.removeFirstSegments(1);
+        	this.value.js+='\ttemplateString:dojo.cache("widgets", "' + htmlPath.toString() + '"),\n' ;
+    		this.value.html = htmlString;
+    	}
+    	
     	this.value.js+='\twidgetsInTemplate:true\n' ;
     	this.value.js+="\n});";
     	

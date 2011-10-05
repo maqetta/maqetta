@@ -104,6 +104,7 @@
 	width: 16px;
 	height: 16px;
 }
+
 .saveAsIcon {
 	background-image: url(./img/sprite.png); /* FIXME: add logic for saveas-disabled.gif? */
 	background-position: -82px -1059px;
@@ -111,14 +112,12 @@
 	width: 16px;
 	height: 16px;
 }
-/* For when we activate the save-as-widget feature
 .saveAsWidgetIcon {
 	background-image: url(./img/sprite.png)
 	background-position: -82px -927px;
 	width: 16px;
 	height: 16px;
 }
-*/
 
 .selectThemeIcon {
 	background-image: url(./img/sprite.png); /* FIXME: add logic for undo-disabled.gif? */

@@ -357,9 +357,11 @@ davinci.ve.metadata = function() {
     		var allThemes = davinci.library.getThemes(themePath.removeLastSegments(1).toString());
     		var themeHash = {};
     		for(var i=0;i<allThemes.length;i++){
-    			for(var k=0;k<allThemes[i]['files'].length;k++){
-    				themeHash[allThemes[i]['files']] = allThemes[i];
-    			}
+    		    if (allThemes[i]['files']){ // #1024 theme maps do not have files
+        			for(var k=0;k<allThemes[i]['files'].length;k++){
+        				themeHash[allThemes[i]['files']] = allThemes[i];
+        			}
+    		    }
     		}
     		
     		

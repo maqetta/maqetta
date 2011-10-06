@@ -17,25 +17,28 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ThemeHelper", null, {
         // Pull in _compat.js immediately, since it redefines methods like loadCssFile which we wish to add advice to now
         context.getDojo()["require"]("dojox.mobile.compat");
         var resourcePath = context.getFullResourcePath();
-        var ssPath = new davinci.model.Path(context._theme.file.parent.getPath()).append(context._theme.files[0]);
-        newFilename = ssPath.relativeTo(resourcePath, true);
+        //var ssPath = new davinci.model.Path(context._theme.file.parent.getPath()).append(context._theme.files[0]);
+        //newFilename = ssPath.relativeTo(resourcePath, true);
         var base = "iphone";
-        if (context._theme.base){
-            base = context._theme.base;
+        if (context._visualEditor.theme.base){
+            base = context._visualEditor.theme.base;
         }
-        dm.themeMap=[[".*",base,[newFilename]]];
+        dm.themeMap=[[".*",base,[context._visualEditor.theme.files[0]]]];
+       // dm.themeMap=[[".*","",["x.css"]]];
 
+	},
+	
+	getHeadImports: function(theme){
+	    return '';
 	},
 	
 	addTheme: function(context, theme){
 	    // add the theme to the dojox.mobile.themeMap
-	    context.loadRequires("dojox.mobile.View", true); //  use this widget to get the correct requires added to the file.
+        context.loadRequires("dojox.mobile.View", true); //  use this widget to get the correct requires added to the file.
 	    var htmlElement = context._srcDocument.getDocumentElement();
         var head = htmlElement.getChildElement("head");
         var scriptTags=head.getChildElements("script");
-        var resourcePath = context.getFullResourcePath();
-        var ssPath = new davinci.model.Path(theme.file.parent.getPath()).append(theme.files[0]);
-        newFilename = ssPath.relativeTo(resourcePath, true);
+
         dojo.forEach(scriptTags, function (scriptTag){
             var text=scriptTag.getElementText();
             if (text.length) {
@@ -44,20 +47,35 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ThemeHelper", null, {
                 if (start > 0){
                     var stop = text.indexOf(';', start);
                     if (stop > start){
-                        var base = "iphone";
-                        if (theme.base){
-                            base = theme.base;
+                        var themeMap;
+                        if (theme.themeMap){
+                            themeMap = theme.themeMap;
+                            if (themeMap.toLowerCase() === 'default'){
+                                themeMap = null;
+                            } else {
+                                themeMap = text.substring(0,stop+1) + '\ndojox.mobile.themeMap='+themeMap+';' + text.substring(stop+1);
+                            }
+                        } else {
+                            var ssPath = new davinci.model.Path(theme.file.parent.getPath()).append(theme.files[0]);
+                            var resourcePath = context.getFullResourcePath();
+                            var newFilename = ssPath.relativeTo(resourcePath, true);
+                            var base = "iphone";
+                            if (theme.base){
+                                base = theme.base;
+                            }
+                            themeMap = text.substring(0,stop+1) + '\ndojox.mobile.themeMap=[[".*","'+base+'",["'+newFilename+'"]]];' + text.substring(stop+1);
                         }
-                        var themeMap = text.substring(0,stop+1) + '\ndojox.mobile.themeMap=[[".*","'+base+'",["'+newFilename+'"]]];' + text.substring(stop+1);
-                        // create a new script element
-                        var script = new davinci.html.HTMLElement('script');
-                        script.addAttribute('type', 'text/javascript');
-                        script.script = "";
-                        head.insertBefore(script, scriptTag);
-                        var newScriptText = new davinci.html.HTMLText();
-                        newScriptText.setText(themeMap); 
-                        script.addChild(newScriptText); 
-                        scriptTag.parent.removeChild(scriptTag);
+                        if(themeMap){
+                            // create a new script element
+                            var script = new davinci.html.HTMLElement('script');
+                            script.addAttribute('type', 'text/javascript');
+                            script.script = "";
+                            head.insertBefore(script, scriptTag);
+                            var newScriptText = new davinci.html.HTMLText();
+                            newScriptText.setText(themeMap); 
+                            script.addChild(newScriptText); 
+                            scriptTag.parent.removeChild(scriptTag);
+                        }
                         
                     }
                 }

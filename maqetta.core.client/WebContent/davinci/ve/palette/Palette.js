@@ -22,7 +22,7 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 	_resource: null,
 	_context: null,
 	_folders: {},
-	_folderNodes : {},
+	_folderNodes: {},
 	
 	postMixInProperties: function() {
 		this._resource = dojo.i18n.getLocalization("davinci.ve", "common");
@@ -37,7 +37,7 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 		dojo.subscribe("/davinci/ui/addedCustomWidget", this, "addCustomWidget" );
 	},
 	
-	addCustomWidget : function(lib){
+	addCustomWidget: function(lib){
 		
 		var libraries = {};
 		
@@ -114,7 +114,7 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 		this.startupKeyNavChildren();
 	},
 
-	refresh : function(){
+	refresh: function(){
 		delete this._loaded;
 		this._createFolderTemplate();
 		this._createItemTemplate();
@@ -125,10 +125,7 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 			this.startupkeyNavChildren();
 		}
 	},
-	
-	
 
-	
 	_loadPalette: function(){
 		
 		
@@ -310,7 +307,7 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 	    	return davinci.Workbench.location() + uri;
 	      
 	    }
-	    return dojo.moduleUrl("davinci", fallbackUri).uri;
+	    return require.toUrl("davinci/" + fallbackUri);
 	},
 
 	_createFolder: function(opt){

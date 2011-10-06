@@ -7,19 +7,20 @@ import java.util.Iterator;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public abstract class XMLElement {
 
     protected abstract String getElementTag();
-
-    protected abstract Object createObject(Element element, String[] attributes);
-
+    
     protected abstract String[] getAttributeNames();
+    
+    protected abstract Object createObject(Element element, String[] attributeNames, String[] attributeValues);
 
-    protected abstract String[] getAttributeValues(Object object);
-
+    protected abstract String getAttributeValue(String attribute, Object object);
+    
     protected void saveElementAddition(Element element, Object value) {
     }
 
@@ -38,12 +39,16 @@ public abstract class XMLElement {
     }
 
     public Object loadElement(Element userElement) {
-        String[] attributeNames = this.getAttributeNames();
+    	NamedNodeMap map = userElement.getAttributes();
+        String[] attributeNames = new String[map.getLength()];
         String[] values = new String[attributeNames.length];
-        for (int j = 0; j < values.length; j++) {
-            values[j] = userElement.getAttribute(attributeNames[j]);
+        for(int i=0;i< map.getLength();i++){
+        	Node item = map.item(i);
+        	attributeNames[i] = item.getNodeName();
+        	values[i] = item.getNodeValue();
         }
-        return this.createObject(userElement, values);
+        
+        return this.createObject(userElement, attributeNames, values);
     }
 
     public ArrayList loadAny(Element parentElement) {
@@ -65,12 +70,20 @@ public abstract class XMLElement {
 
     public void saveElement(Element parentElement, Object value) {
         String elementTag = this.getElementTag();
+        
         String[] attributeNames = this.getAttributeNames();
+        String[] attrValues = new String[attributeNames.length];
+        
+        for(int i=0;i<attributeNames.length;i++){
+        	attrValues[i] = this.getAttributeValue(attributeNames[i], value);
+        }
+        
         Document document = parentElement.getOwnerDocument();
-        String[] attrValues = this.getAttributeValues(value);
+        
         Element element = document.createElement(elementTag);
         for (int i = 0; i < attrValues.length; i++) {
-            element.setAttribute(attributeNames[i], attrValues[i]);
+        	if(attrValues[i]!=null)
+        		element.setAttribute(attributeNames[i], attrValues[i]);
         }
         parentElement.appendChild(element);
         this.saveElementAddition(element, value);

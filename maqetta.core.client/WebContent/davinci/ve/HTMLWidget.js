@@ -30,38 +30,52 @@ define("davinci/ve/HTMLWidget", ["davinci/ve/_Widget"], function() {
 		}
 	},
 
-	_getChildrenData: function( options) {
-		var childrenData = [],
-			childNodes = this.domNode.childNodes;
-		for(var i = 0; i < childNodes.length; i++) {
-			var n = childNodes[i];
-			var d;
-			switch(n.nodeType) {
-			case 1: // Element
-				var w = davinci.ve.widget.byNode(n);
-				if(w) {
-					d = w.getData( options);
-				}
-				break;
-			case 3: // Text
-				d = n.nodeValue.trim();
-				if(d && options.serialize) {
-					d = davinci.html.escapeXml(d);
-				}
-				break;
-			case 8: // Comment
-				d = "<!--" + n.nodeValue + "-->";
-				break;
-			}
-			if(d) {
-				childrenData.push(d);
-			}
-		}
-		if(!childrenData.length) {
-			return undefined;
-		}
-		return childrenData;
-	},
+    _getChildrenData: function(options) {
+        function getTextContent(node) {
+            var d = node.nodeValue.trim();
+            if (d && options.serialize) {
+                d = davinci.html.escapeXml(d);
+            }
+            return d;
+        }
+        
+        var domNode = this.domNode;
+        
+        if (! domNode.hasChildNodes()) {
+            return null;
+        }
+        
+        // Check if text node is the only child. If so, return text content as
+        // the child data. We do this to match up with the code in
+        // davinci.ve.widget.createWidget(), which can take child data either
+        // as an array or as a string (representing the innerHTML of a node).
+        if (domNode.childNodes.length === 1 && domNode.firstChild.nodeType === 3) {
+            return getTextContent(domNode.firstChild);
+        }
+
+        var data = [];
+        dojo.forEach(domNode.childNodes, function(node) {
+            var d;
+            switch (node.nodeType) {
+            case 1: // Element
+                var w = davinci.ve.widget.byNode(node);
+                if (w) {
+                    d = w.getData(options);
+                }
+                break;
+            case 3: // Text
+                d = getTextContent(node);
+                break;
+            case 8: // Comment
+                d = "<!--" + node.nodeValue + "-->";
+                break;
+            }
+            if (d) {
+                data.push(d);
+            }
+        });
+        return data;
+    },
 
 	setProperties: function(properties, modelOnly) {
 

@@ -30,10 +30,10 @@
     </style>
 
     <script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="parseOnLoad: true, cacheBust: '@revision@'"></script>
-    <script type="text/javascript" src="app/dijit/dijit.js?@revision@"></script>
-    <script type="text/javascript" src="app/davinci/davinci-common.js?@revision@"></script>
-    <script type="text/javascript" >
-	davinci.useAppCache = true; // needed to provide FF "allow" warning
+    <script type="text/javascript">
+    	require(["dijit/dijit", "davinci/davinci-common"]);
+    </script>
+    <script type="text/javascript">
 
 	function login()
 	{

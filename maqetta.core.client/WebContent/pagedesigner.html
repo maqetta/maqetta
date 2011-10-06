@@ -17,12 +17,9 @@
     <!-- FIXME: This LINK element should be added by the properties palette plugin -->
     <link href="app/davinci/propvieweffects.css?@revision@" rel="stylesheet" type="text/css"></link>
     <script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="parseOnLoad: true, modulePaths:{'preview':'../preview'}, cacheBust: '@revision@'"></script>
-    <script type="text/javascript" src="app/dijit/dijit.js?@revision@"></script>
-    <script type="text/javascript" src="app/davinci/davinci-common.js?@revision@"></script>
-    <script type="text/javascript" src="app/davinci/davinci.js?@revision@"></script>
-    
-    
-    
+	<script type="text/javascript">
+		require(["dijit/dijit", "davinci/davinci-common", "davinci/davinci"]);
+	</script>
 
     <script type="text/javascript">
     <!-- Globalization -->

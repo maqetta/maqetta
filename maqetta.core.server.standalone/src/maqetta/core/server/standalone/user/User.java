@@ -179,11 +179,13 @@ public class User implements IUser {
         
         for(int i=0;i<allLibs.length;i++){
         	Library lib = allLibs[i];
-        	String id= lib.getID();
-        	String version = lib.getVersion();
         	String root = lib.getDefaultRoot();
-        	String libPath = "./WebContent" + root;
-        	this.modifyLibrary(id, version,  libPath, project.getPath());
+        	if(root!=null){
+        		String id= lib.getID();
+            	String version = lib.getVersion();
+            	String libPath = "./WebContent" + root;
+        		this.modifyLibrary(id, version,  libPath, project.getPath());
+        	}
         }
         
         rebuildWorkspace();

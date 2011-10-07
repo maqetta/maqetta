@@ -1,6 +1,6 @@
 dojo.provide("davinci.ve.actions.PropertyActions");
 
-dojo.require("davinci.ve.properties.edit.dialogs");
+//dojo.require("davinci.ve.properties.edit.dialogs"); // FIXME: missing
 dojo.require("davinci.actions.Action");
 dojo.require("davinci.ve.metadata");
 

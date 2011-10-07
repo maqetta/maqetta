@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Set;
 
 
+import maqetta.core.server.standalone.internal.Links;
+
 import org.davinci.server.user.IPersonManager;
 import org.davinci.server.user.IPerson;
 import org.davinci.server.user.UserException;
@@ -59,7 +61,7 @@ public class PersonManagerImpl implements IPersonManager {
             return new String[] { PersonManagerImpl.NAME_TAG, PersonManagerImpl.PASSWORD_TAG, PersonManagerImpl.EMAIL_TAG };
         }
 
-        protected Object createObject(Element element, String[] attributes) {
+        protected Object createObject(Element element, String[] attributeNames, String[] attributes) {
             String userName = attributes[0];
             PersonImpl user = new PersonImpl(userName, attributes[1], attributes[2]);
             PersonManagerImpl.this.persons.put(user.getUserName(), user);
@@ -70,6 +72,22 @@ public class PersonManagerImpl implements IPersonManager {
             PersonImpl user = (PersonImpl) object;
             return new String[] { user.getUserName(), user.password, user.getEmail() };
         }
+
+		@Override
+		protected String getAttributeValue(String attribute, Object object) {
+			  PersonImpl user = (PersonImpl) object;
+			  if(attribute.equalsIgnoreCase(PersonManagerImpl.NAME_TAG)){
+					return user.getUserName();
+			  }
+			  if(attribute.equalsIgnoreCase(PersonManagerImpl.PASSWORD_TAG)){
+					return user.password;
+			  }
+			  if(attribute.equalsIgnoreCase(PersonManagerImpl.EMAIL_TAG)){
+					return user.getEmail();
+			  }
+			return null;
+		
+		}
 
     }
 

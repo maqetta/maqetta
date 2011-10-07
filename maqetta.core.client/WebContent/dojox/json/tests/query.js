@@ -92,6 +92,14 @@ doh.register("dojox.json.tests.query",
 			}
 		},
 		{
+			name: "$..book[0]?price>=20",
+			runTest: function(t) {
+				var result = dojo.toJson(dojox.json.query(this.name,dojox.json.tests.testData));
+				var success =  '[{"category":"fiction","author":"J. R. R. Tolkien","title":"The Lord of the\\nRings","isbn":"0-395-19395-8","price":22.99}]';
+				doh.assertEqual(success,result);
+			}
+		},
+		{
 			name: "$..book[0][-1:]",
 			runTest: function(t) {
 				var result = dojo.toJson(dojox.json.query(this.name,dojox.json.tests.testData));

@@ -34,6 +34,7 @@
 	background: url("images/sprite_icons.png") no-repeat -77px 4px;
 }
 .dojoxGridPaginatorGotoDivDisabled {
+	cursor: not-allowed;
 	background: url("images/sprite_icons.png") no-repeat -77px -16px;
 }
 .dojoxGridWardButton {
@@ -57,6 +58,7 @@
 }
 .dojoxGridfirstPageBtnDisable {
 	margin-left: 1px;
+	cursor: not-allowed;
 	background-position: -57px -17px;
 }
 .dojoxGridprevPageBtn {
@@ -65,6 +67,7 @@
 	background-position: 3px 3px;
 }
 .dojoxGridprevPageBtnDisable {
+	cursor: not-allowed;
 	margin: 2px 2px 0 9px;
 	background-position: 3px -17px;
 }
@@ -74,6 +77,7 @@
 	background-position: -37px 3px;
 }
 .dojoxGridlastPageBtnDisable {
+	cursor: not-allowed;
 	margin: 2px 9px 0 9px;
 	background-position: -37px -17px;
 }
@@ -85,6 +89,7 @@
 }
 .dojoxGridnextPageBtnDisable {
 	margin-left: 3px;
+	cursor: not-allowed;
 	background-position: -17px -17px;
 }
 .dojoxGridInactived {
@@ -135,4 +140,8 @@
 .dojoxGridDialogButton {
 	width: 220px!important;
 	text-align: right;
+}
+.dojoxGridButtonFocus {
+	outline: none;
+	border: 0.5px dotted darkblue !important;
 }

@@ -54,7 +54,7 @@
 		hr.spacer { border:0; background-color:#ededed; width:80%; height:1px; }
 
 		/* rules used to test custom setting of TextBox padding */
-		.inputPadding0 .dijitInputField { padding: 0px !important; }
+		.inputPadding0 .dijitInputField { padding: 0 !important; }
 		.inputPadding1 .dijitInputField { padding: 1px !important; }
 		.inputPadding2 .dijitInputField { padding: 2px !important; }
 		.inputPadding3 .dijitInputField { padding: 3px !important; }
@@ -72,228 +72,172 @@
 
 	<!-- required: dojo.js -->
 	<script type="text/javascript" src="../../dojo/dojo.js"
-		data-dojo-config="parseOnLoad: false, isDebug: true"></script>
+		data-dojo-config="parseOnLoad: false, async:true"></script>
 
-	<!-- do not use: only for debugging / testing themes -->
+	<!-- only needed for alternate theme testing: -->
 	<script type="text/javascript" src="../tests/_testCommon.js"></script>
 
-	<!-- in nightly (or standard-profile builds), these files are layers -->
-	<script type="text/javascript" src="../dijit.js"></script>
-	<script type="text/javascript" src="../dijit-all.js" charset="utf-8"></script>
-
-	<script type="text/javascript"> // dojo.requires(), explicitly. 
-
-		dojo.require("dijit.Menu");
-		dojo.require("dijit.MenuItem");
-		dojo.require("dijit.PopupMenuItem");
-
-		dojo.require("dijit.Calendar");
-		dojo.require("dijit.ColorPalette");
-		dojo.require("dijit.ProgressBar");
-		dojo.require("dijit.TitlePane");
-		dojo.require("dijit.Tooltip");
-
-		dojo.require("dijit.Tree");
-		dojo.require("dijit.tree.ForestStoreModel");
-
-		dojo.require("dijit.MenuBar");
-		dojo.require("dijit.MenuBarItem");
-		dojo.require("dijit.PopupMenuBarItem");
-
-		// editor:
-		dojo.require("dijit.Editor");
-		dojo.require("dijit._editor.plugins.FontChoice");
-		dojo.require("dijit._editor.plugins.LinkDialog");
-
-		// dnd:
-		dojo.require("dojo.dnd.Source");
-
-		// various Form elements
-		dojo.require("dijit.form.CheckBox");
-		dojo.require("dijit.form.Textarea");
-		dojo.require("dijit.form.SimpleTextarea");
-		dojo.require("dijit.form.FilteringSelect");
-		dojo.require("dijit.form.TextBox");
-		dojo.require("dijit.form.DateTextBox");
-		dojo.require("dijit.form.TimeTextBox");
-		dojo.require("dijit.form.CurrencyTextBox");
-		dojo.require("dijit.form.Button");
-		dojo.require("dijit.InlineEditBox");
-		dojo.require("dijit.form.NumberSpinner");
-
-		dojo.require("dijit.form.VerticalSlider");
-		dojo.require("dijit.form.VerticalRuleLabels");
-		dojo.require("dijit.form.VerticalRule");
-		dojo.require("dijit.form.HorizontalSlider");
-		dojo.require("dijit.form.HorizontalRuleLabels");
-		dojo.require("dijit.form.HorizontalRule");
-
-		// layouts used in page
-		dojo.require("dijit.layout.AccordionContainer");
-		dojo.require("dijit.layout.ContentPane");
-		dojo.require("dijit.layout.TabContainer");
-		dojo.require("dijit.layout.BorderContainer");
-		dojo.require("dijit.layout.LinkPane");
-		dojo.require("dijit.Dialog");
-
-		dojo.require("dojo.parser");
-
-		dojo.require("dojo.date.locale");
-
-		dojo.require("dojo.data.ItemFileReadStore");
-
-		// various function ripped out of inline script type=dojo/* blocks
-		function showDialog(){
-			var dlg = dijit.byId('dialog1');
-			dlg.show();
-			// avoid (trying to) restore focus to a closed menu, go to MenuBar instead
-			dlg._savedFocus = dojo.byId("header");
-		}
-		
-		function showDialogAb(){
-			var dlg = dijit.byId('dialogAB');
-			dlg.show();
-			// avoid (trying to) restore focus to a closed menu, go to MenuBar instead
-			dlg._savedFocus = dojo.byId("header");
-		}
-
-		var setTextBoxPadding;
-		(function(){
-			// current setting (if there is one) to override theme default padding on TextBox based widgets
-			var currentInputPadding = "";
-			
-			setTextBoxPadding = function(){
-				// summary:
-				//		Handler for when a MenuItem is clicked to set non-default padding for
-				//		TextBox widgets
-	
-				// Effectively ignore clicks on the	 currently checked MenuItem
-				if(!this.get("checked")){
-					this.set("checked", true);
-				}
-	
-				// val will be "theme default", "0px", "1px", ..., "5px"
-				var val = this.get("label");
+	<script type="text/javascript">
+		require([
+			"dojo",
+			"dijit/dijit",
+			"dijit/dijit-all",
+			"dojo/parser",
+			"dojo/date/locale",
+			"dojo/data/ItemFileReadStore",
+			"dojo/dnd/Source"], function(dojo, dijit){
+				// various function ripped out of inline script type=dojo/* blocks
+				showDialog = function(){
+					var dlg = dijit.byId('dialog1');
+					dlg.show();
+					// avoid (trying to) restore focus to a closed menu, go to MenuBar instead
+					dlg._savedFocus = dojo.byId("header");
+				};
 				
-				// Set class on body to get requested padding, and remove any previously set class
-				if(currentInputPadding){
-					dojo.removeClass(dojo.body(), currentInputPadding);
-					currentInputPadding = "";
-				}
-				if(val != "theme default"){
-					currentInputPadding = "inputPadding" + val.replace("px", "");
-					dojo.addClass(dojo.body(), currentInputPadding);
-				}
-	
-				// Clear previously checked MenuItem (radio-button effect).
-				dojo.forEach(this.getParent().getChildren(), function(mi){
-					if(mi != this){
-						mi.set("checked", false);
+				showDialogAb = function(){
+					var dlg = dijit.byId('dialogAB');
+					dlg.show();
+					// avoid (trying to) restore focus to a closed menu, go to MenuBar instead
+					dlg._savedFocus = dojo.byId("header");
+				};
+
+				//var setTextBoxPadding;
+				// current setting (if there is one) to override theme default padding on TextBox based widgets
+				var currentInputPadding = "";
+				
+				setTextBoxPadding = function(){
+					// summary:
+					//		Handler for when a MenuItem is clicked to set non-default padding for
+					//		TextBox widgets
+
+					// Effectively ignore clicks on the	 currently checked MenuItem
+					if(!this.get("checked")){
+						this.set("checked", true);
 					}
-				}, this);
-			}
-		})();
 
-		dojo.addOnLoad(function() {
+					// val will be "theme default", "0px", "1px", ..., "5px"
+					var val = this.get("label");
 
-			var loadCompleteTime = +new Date();
-			console.log("Total load time: " + (loadCompleteTime - startTime) + "ms");
-
-			dojo.parser.parse(dojo.byId('container'));
-			console.info("Total parse time: " + (+new Date() - loadCompleteTime) + "ms");
-
-			dojo.byId('loaderInner').innerHTML += " done.";
-			setTimeout(function hideLoader(){
-				dojo.fadeOut({ 
-					node: 'loader', 
-					duration:500,
-					onEnd: function(n){
-						n.style.display = "none";
+					// Set class on body to get requested padding, and remove any previously set class
+					if(currentInputPadding){
+						dojo.removeClass(dojo.body(), currentInputPadding);
+						currentInputPadding = "";
 					}
-				}).play();
-			}, 250);
+					if(val != "theme default"){
+						currentInputPadding = "inputPadding" + val.replace("px", "");
+						dojo.addClass(dojo.body(), currentInputPadding);
+					}
 
-			logStrayGlobals();
+					// Clear previously checked MenuItem (radio-button effect).
+					dojo.forEach(this.getParent().getChildren(), function(mi){
+						if(mi != this){
+							mi.set("checked", false);
+						}
+					}, this);
+				};
 
-			// Fill in menu/links to get to other themes.		
-			// availableThemes[] is just a list of 'official' dijit themes, you can use ?theme=String
-			// for 'un-supported' themes, too. (eg: yours)
-			var availableThemes = [
-				{ theme:"claro", author:"Dojo", baseUri:"../themes/" },
-				{ theme:"tundra", author:"Dojo", baseUri:"../themes/" },
-				{ theme:"soria", author:"nikolai", baseUri:"../themes/" },
-				{ theme:"nihilo", author:"nikolai", baseUri:"../themes/" }
-			];
-
-			var tmpString='';
-			dojo.forEach(availableThemes,function(theme){
-				tmpString += 
-					'<a href="?theme='+theme.theme+'">'+theme.theme+'</'+'a> (' +
-					'<a href="?theme='+theme.theme+'&dir=rtl">RTL</'+'a> ' +
-					'<a href="?theme='+theme.theme+'&a11y=true">high-contrast</'+'a> ' +
-					'<a href="?theme='+theme.theme+'&dir=rtl&a11y=true">RTL+high-contrast</'+'a> )' +
-					' - by: '+theme.author+' <br>';
-				dijit.byId('themeMenu').addChild(new dijit.MenuItem({
-					label: theme.theme,
-					onClick: function(){ location.search = "?theme=" + theme.theme; }
-				}))
+				logStrayGlobals = function(){
+					// summary:
+					//		Print all the global variables that we've created [by mistake] inside of dojo
+					var strayGlobals = [];
+					for(var i in window){
+						if(!window.__globalList[i]){
+							strayGlobals.push(i);
+						}
+					}
+					if(strayGlobals.length){
+						console.warn("Stray globals: " + strayGlobals.join(", "));
+					}
+				};
+		
+				logWidgets = function(){
+					// summary:
+					//		Print all the widgets to console
+					console.log("Widgets in registry:");
+					dijit.registry.forEach(function(w){
+						console.log(w);
+					});
+				};
+		
+				tearDown = function(){
+					// summary:
+					//		Destroy all widgets, top down, and then check for any orphaned widgets
+					dijit._destroyAll();
+					logWidgets();
+				};
+		
+				dojo.ready(function(){
+					var loadCompleteTime = +new Date();
+					console.log("Total load time: " + (loadCompleteTime - startTime) + "ms");
+		
+					dojo.parser.parse(dojo.byId('container'));
+					console.info("Total parse time: " + (+new Date() - loadCompleteTime) + "ms");
+		
+					dojo.byId('loaderInner').innerHTML += " done.";
+					setTimeout(function hideLoader(){
+						dojo.fadeOut({ 
+							node: 'loader', 
+							duration:500,
+							onEnd: function(n){
+								n.style.display = "none";
+							}
+						}).play();
+					}, 250);
+		
+					logStrayGlobals();
+		
+					// Fill in menu/links to get to other themes.		
+					// availableThemes[] is just a list of 'official' dijit themes, you can use ?theme=String
+					// for 'un-supported' themes, too. (eg: yours)
+					var availableThemes = [
+						{ theme:"claro", author:"Dojo", baseUri:"../themes/" },
+						{ theme:"tundra", author:"Dojo", baseUri:"../themes/" },
+						{ theme:"soria", author:"nikolai", baseUri:"../themes/" },
+						{ theme:"nihilo", author:"nikolai", baseUri:"../themes/" }
+					];
+		
+					var tmpString='';
+					dojo.forEach(availableThemes,function(theme){
+						tmpString += 
+							'<a href="?theme='+theme.theme+'">'+theme.theme+'</'+'a> (' +
+							'<a href="?theme='+theme.theme+'&dir=rtl">RTL</'+'a> ' +
+							'<a href="?theme='+theme.theme+'&a11y=true">high-contrast</'+'a> ' +
+							'<a href="?theme='+theme.theme+'&dir=rtl&a11y=true">RTL+high-contrast</'+'a> )' +
+							' - by: '+theme.author+' <br>';
+						dijit.byId('themeMenu').addChild(new dijit.MenuItem({
+							label: theme.theme,
+							onClick: function(){ location.search = "?theme=" + theme.theme; }
+						}))
+					});
+					dojo.byId('themeData').innerHTML = tmpString;
+				});
+		
+				dojo.ready(function(){
+					// It's the server's responsibility to localize the date displayed in the (non-edit) version of an InlineEditBox,
+					// but since we don't have a server we'll hack it in the client
+					dijit.byId("backgroundArea").set('value', dojo.date.locale.format(new Date(2005, 11, 30), { selector: 'date' }));
+		
+					var nineAm = new Date(0);
+					nineAm.setHours(9);
+					dijit.byId("timePicker").set('value', dojo.date.locale.format(nineAm, { selector: 'time' }));
+				});
+		
+				/***
+				dojo.ready(function(){
+					// use "before advice" to print log message each time resize is called on a layout widget
+					var origResize = dijit.layout._LayoutWidget.prototype.resize;
+					dijit.layout._LayoutWidget.prototype.resize = function(mb){
+						console.log(this + ": resize({w:"+ mb.w + ", h:" + mb.h + "})");
+						origResize.apply(this, arguments);
+					};
+		
+					// content pane has no children so just use dojo's builtin after advice
+					dojo.connect(dijit.layout.ContentPane.prototype, "resize", function(mb){
+						console.log(this + ": resize({w:"+ mb.w + ", h:" + mb.h + "})");
+					});
+				});
+				***/
 			});
-			dojo.byId('themeData').innerHTML = tmpString;
-		});
-
-		function logStrayGlobals(){
-			// summary:
-			//		Print all the global variables that we've created [by mistake] inside of dojo
-			var strayGlobals = [];
-			for(var i in window){
-				if(!window.__globalList[i]){ strayGlobals.push(i); }
-			}
-			if(strayGlobals.length){
-				console.warn("Stray globals: "+strayGlobals.join(", "));
-			}
-		}
-
-		function logWidgets(){
-			// summary:
-			//		Print all the widgets to console
-			console.log("Widgets in registry:");
-			dijit.registry.forEach(function(w){
-				console.log(w);
-			});
-		}
-
-		function tearDown(){
-			// summary:
-			//		Destroy all widgets, top down, and then check for any orphaned widgets
-			dijit._destroyAll();
-			logWidgets();
-		}
-
-		dojo.addOnLoad(function(){
-			// It's the server's responsibility to localize the date displayed in the (non-edit) version of an InlineEditBox,
-			// but since we don't have a server we'll hack it in the client
-			dijit.byId("backgroundArea").set('value', dojo.date.locale.format(new Date(2005, 11, 30), { selector: 'date' }));
-
-			var nineAm = new Date(0);
-			nineAm.setHours(9);
-			dijit.byId("timePicker").set('value', dojo.date.locale.format(nineAm, { selector: 'time' }));
-		});
-
-		/***
-		dojo.addOnLoad(function(){
-			// use "before advice" to print log message each time resize is called on a layout widget
-			var origResize = dijit.layout._LayoutWidget.prototype.resize;
-			dijit.layout._LayoutWidget.prototype.resize = function(mb){
-				console.log(this + ": resize({w:"+ mb.w + ", h:" + mb.h + "})");
-				origResize.apply(this, arguments);
-			};
-
-			// content pane has no children so just use dojo's builtin after advice
-			dojo.connect(dijit.layout.ContentPane.prototype, "resize", function(mb){
-				console.log(this + ": resize({w:"+ mb.w + ", h:" + mb.h + "})");
-			});
-		});
-		***/
 	</script>
 </head>
 <body class="claro">

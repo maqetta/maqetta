@@ -9,8 +9,7 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
 		<!-- functions to help test -->
 		<script type="text/javascript" src="../../helpers.js"></script>
@@ -20,7 +19,7 @@
 			dojo.require("dojo.window");
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_ViewSource.html');
 
 				var editor0, editor1, editor2, editor3;
@@ -53,7 +52,7 @@
 								}
 							}
 							doh.t(vsPlugin != null, "Checking for VS plugin.");
-							if(vsPlugin) { vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							if(vsPlugin){ vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 						},
 						runTest: function(){
 							var d = new doh.Deferred();
@@ -77,7 +76,7 @@
 							return d;
 						},
 						tearDown: function(){
-							 if(vsPlugin) {vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							 if(vsPlugin){vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 							 fsPlugin = null;
 							 vsPlugin = null;
 						}
@@ -98,7 +97,7 @@
 								}
 							}
 							doh.t(vsPlugin != null, "Checking that the view source plugin was found.");
-							if(vsPlugin) {vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							if(vsPlugin){vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 						},
 						runTest: function(){
 							var d = new doh.Deferred();
@@ -122,7 +121,7 @@
 							return d;
 						},
 						tearDown: function(){
-							 if(vsPlugin) {vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							 if(vsPlugin){vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 						}
 					},
 					{
@@ -139,7 +138,7 @@
 								}
 							}
 							doh.t(vsPlugin != null, "Checking that the view source plugin was found.");
-							if(vsPlugin) {vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							if(vsPlugin){vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 						},
 						runTest: function(){
 							var d = new doh.Deferred();
@@ -162,7 +161,7 @@
 							return d;
 						},
 						tearDown: function(){
-							 if(vsPlugin) {vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							 if(vsPlugin){vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 							 fsPlugin = null;
 							 vsPlugin = null;
 						}
@@ -181,7 +180,7 @@
 								}
 							}
 							doh.t(vsPlugin != null);
-							if(vsPlugin) {vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							if(vsPlugin){vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 						},
 						runTest: function(){
 							var d = new doh.Deferred();
@@ -206,7 +205,7 @@
 							return d;
 						},
 						tearDown: function(){
-							 if(vsPlugin) {vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							 if(vsPlugin){vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 							 fsPlugin = null;
 							 vsPlugin = null;
 						}
@@ -231,8 +230,8 @@
 							}
 							doh.t(vsPlugin != null, "Checking for viewSource plugin.");
 							doh.t(fsPlugin != null, "Checking for fullScreen plugin.");
-							if(fsPlugin) {fsPlugin.button.set("checked", false);}
-							if(vsPlugin) {vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							if(fsPlugin){fsPlugin.button.set("checked", false);}
+							if(vsPlugin){vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 						},
 						runTest: function(){
 							var d = new doh.Deferred();
@@ -258,8 +257,8 @@
 							return d;
 						},
 						tearDown: function(){
-							 if(fsPlugin) {fsPlugin.button.set("checked", false);}
-							 if(vsPlugin) {vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							 if(fsPlugin){fsPlugin.button.set("checked", false);}
+							 if(vsPlugin){vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 							 fsPlugin = null;
 							 vsPlugin = null;
 						}
@@ -284,8 +283,8 @@
 							}
 							doh.t(vsPlugin != null, "Checking for viewSource plugin.");
 							doh.t(fsPlugin != null, "Checking for fullScreen plugin.");
-							if(vsPlugin) {vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
-							if(fsPlugin) {fsPlugin.button.set("checked", false);}
+							if(vsPlugin){vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							if(fsPlugin){fsPlugin.button.set("checked", false);}
 						},
 						runTest: function(){
 							var d = new doh.Deferred();
@@ -317,8 +316,8 @@
 							return d;
 						},
 						tearDown: function(){
-							 if(vsPlugin) {vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
-							 if(fsPlugin) {fsPlugin.button.set("checked", false);}
+							 if(vsPlugin){vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							 if(fsPlugin){fsPlugin.button.set("checked", false);}
 							 fsPlugin = null;
 							 vsPlugin = null;
 						}
@@ -339,7 +338,7 @@
 								}
 							}
 							doh.t(vsPlugin != null, "Checking for VS plugin.");
-							if(vsPlugin) { vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							if(vsPlugin){ vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 						},
 						runTest: function(){
 							var d = new doh.Deferred();
@@ -380,7 +379,7 @@
 							return d;
 						},
 						tearDown: function(){
-							 if(vsPlugin) {vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							 if(vsPlugin){vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 							 fsPlugin = null;
 							 vsPlugin = null;
 						}
@@ -401,7 +400,7 @@
 								}
 							}
 							doh.t(vsPlugin != null, "Checking for VS plugin.");
-							if(vsPlugin) { vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							if(vsPlugin){ vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 						},
 						runTest: function(){
 							var d = new doh.Deferred();
@@ -435,7 +434,7 @@
 							return d;
 						},
 						tearDown: function(){
-							 if(vsPlugin) {vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							 if(vsPlugin){vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 							 fsPlugin = null;
 							 vsPlugin = null;
 						}
@@ -456,7 +455,7 @@
 								}
 							}
 							doh.t(vsPlugin != null, "Checking for VS plugin.");
-							if(vsPlugin) { vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							if(vsPlugin){ vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 						},
 						runTest: function(){
 							var d = new doh.Deferred();
@@ -492,7 +491,7 @@
 							return d;
 						},
 						tearDown: function(){
-							 if(vsPlugin) {vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							 if(vsPlugin){vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 							 fsPlugin = null;
 							 vsPlugin = null;
 						}
@@ -513,7 +512,7 @@
 								}
 							}
 							doh.t(vsPlugin != null, "Checking for VS plugin.");
-							if(vsPlugin) { vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							if(vsPlugin){ vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 						},
 						runTest: function(){
 							var d = new doh.Deferred();
@@ -550,7 +549,7 @@
 							return d;
 						},
 						tearDown: function(){
-							 if(vsPlugin) {vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							 if(vsPlugin){vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 							 fsPlugin = null;
 							 vsPlugin = null;
 						}
@@ -573,7 +572,7 @@
 								}
 							}
 							doh.t(vsPlugin != null, "Checking for VS plugin.");
-							if(vsPlugin) { vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							if(vsPlugin){ vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 						},
 						runTest: function(){
 							 var d = new doh.Deferred();
@@ -611,7 +610,7 @@
 							return d;
 						},
 						tearDown: function(){
-							 if(vsPlugin) {vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							 if(vsPlugin){vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 							 fsPlugin = null;
 							 vsPlugin = null;
 						}
@@ -632,7 +631,7 @@
 								}
 							}
 							doh.t(vsPlugin != null, "Checking for VS plugin.");
-							if(vsPlugin) { vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							if(vsPlugin){ vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 						},
 						runTest: function(){
 							var d = new doh.Deferred();
@@ -685,7 +684,7 @@
 							return d;
 						},
 						tearDown: function(){
-							 if(vsPlugin) {vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							 if(vsPlugin){vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 							 fsPlugin = null;
 							 vsPlugin = null;
 						}
@@ -705,7 +704,7 @@
 									break;
 								}
 							}
-							if(vsPlugin) { vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							if(vsPlugin){ vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 						},
 						runTest: function(){
 							 var d = new doh.Deferred();
@@ -729,7 +728,7 @@
 							return d;
 						},
 						tearDown: function(){
-							 if(vsPlugin) {vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							 if(vsPlugin){vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 							 fsPlugin = null;
 							 vsPlugin = null;
 						}
@@ -751,7 +750,7 @@
 								}
 							}
 							doh.t(vsPlugin != null, "Checking for VS plugin.");
-							if(vsPlugin) { vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							if(vsPlugin){ vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 						},
 						runTest: function(){
 							var d = new doh.Deferred();
@@ -779,7 +778,7 @@
 							return d;
 						},
 						tearDown: function(){
-							if(vsPlugin) {vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							if(vsPlugin){vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
 							editor0.set("value", value); 
 							fsPlugin = null;
 							vsPlugin = null;

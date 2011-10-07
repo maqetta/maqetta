@@ -1,27 +1,16 @@
-dojo.provide("dojox.charting.axis2d.Invisible");
-
-dojo.require("dojox.charting.scaler.linear");
-dojo.require("dojox.charting.axis2d.common");
-dojo.require("dojox.charting.axis2d.Base");
-
-dojo.require("dojo.string");
-dojo.require("dojox.gfx");
-dojo.require("dojox.lang.functional");
-dojo.require("dojox.lang.utils");
-
-(function(){
-	var dc = dojox.charting,
-		df = dojox.lang.functional,
-		du = dojox.lang.utils,
-		g = dojox.gfx,
-		lin = dc.scaler.linear,
-		merge = du.merge,
+define(["dojo/_base/lang", "dojo/_base/declare", "./Base", "../scaler/linear", 
+	"dojox/gfx", "dojox/lang/utils", "dojox/lang/functional", "dojo/string"],
+	function(lang, declare, Base, lin, g, du, df, dstring){
+/*=====
+var Base = dojox.charting.axis2d.Base;
+=====*/ 
+	var merge = du.merge,
 		labelGap = 4,			// in pixels
 		centerAnchorLimit = 45;	// in degrees
 
-	dojo.declare("dojox.charting.axis2d.Invisible", dojox.charting.axis2d.Base, {
+	return declare("dojox.charting.axis2d.Invisible", Base, {
 		//	summary:
-		//		The default axis object used in dojox.charting.  See dojox.charting.Chart2D.addAxis for details.
+		//		The default axis object used in dojox.charting.  See dojox.charting.Chart.addAxis for details.
 		//
 		//	defaultParams: Object
 		//		The default parameters used to define any axis.
@@ -90,11 +79,11 @@ dojo.require("dojox.lang.utils");
 		constructor: function(chart, kwArgs){
 			//	summary:
 			//		The constructor for an axis.
-			//	chart: dojox.charting.Chart2D
+			//	chart: dojox.charting.Chart
 			//		The chart the axis belongs to.
 			//	kwArgs: dojox.charting.axis2d.__AxisCtorArgs?
 			//		Any optional keyword arguments to be used to define this axis.
-			this.opt = dojo.clone(this.defaultParams);
+			this.opt = lang.clone(this.defaultParams);
             du.updateWithObject(this.opt, kwArgs);
 			du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
 		},
@@ -147,16 +136,16 @@ dojo.require("dojox.lang.utils");
 			if(!labels.length){
 				return 0;
 			}
-			if(dojo.isObject(labels[0])){
+			if(lang.isObject(labels[0])){
 				labels = df.map(labels, function(label){ return label.text; });
 			}
 			if (wcLimit) {
 				labels = df.map(labels, function(label){
-					return dojo.trim(label).length == 0 ? "" : label.substring(0, wcLimit) + this.trailingSymbol;
+					return lang.trim(label).length == 0 ? "" : label.substring(0, wcLimit) + this.trailingSymbol;
 				}, this);
 			}
 			var s = labels.join("<br>");
-			return dojox.gfx._base._getTextBox(s, {font: font}).w || 0;
+			return g._base._getTextBox(s, {font: font}).w || 0;
 		},
 		calculate: function(min, max, span, labels){
 			//	summary:
@@ -245,15 +234,15 @@ dojo.require("dojox.lang.utils");
 						if(tsb.from < 0 || tsb.to < 0){
 							t.push("-");
 						}
-						t.push(dojo.string.rep("9", labelLength));
+						t.push(dstring.rep("9", labelLength));
 						var precision = Math.floor(
 							Math.log( tsb.to - tsb.from ) / Math.LN10
 						);
 						if(precision > 0){
 							t.push(".");
-							t.push(dojo.string.rep("9", precision));
+							t.push(dstring.rep("9", precision));
 						}
-						labelWidth = dojox.gfx._base._getTextBox(
+						labelWidth = g._base._getTextBox(
 							t.join(""),
 							{ font: taFont }
 						).w;
@@ -293,4 +282,4 @@ dojo.require("dojox.lang.utils");
 			return this.ticks;	//	Object
 		}
 	});
-})();
+});

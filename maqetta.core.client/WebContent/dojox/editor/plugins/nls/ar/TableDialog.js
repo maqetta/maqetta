@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertTableTitle: "‏ادراج جدول‏",
 	modifyTableTitle: "تعديل جدول",
@@ -28,3 +30,5 @@
 	deleteTableRowLabel: "حذف صف",
 	deleteTableColumnLabel: "حذف عمود"
 })
+//end v1.x content
+);

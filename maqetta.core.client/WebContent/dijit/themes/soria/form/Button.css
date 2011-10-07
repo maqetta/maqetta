@@ -44,8 +44,8 @@
 	background:#c3d3e5 url("../images/buttonDisabled.png") top repeat-x;
 	opacity: 0.60;
 }
-.dj_ie6 .soria .dijitReadOnly INPUT,
-.dj_ie7 .soria .dijitReadOnly INPUT,
+.dj_ie6 .soria .dijitReadOnly input,
+.dj_ie7 .soria .dijitReadOnly input,
 .dj_ie6 .soria .dijitComboButtonDisabled .dijitButtonText,
 .dj_ie7 .soria .dijitComboButtonDisabled .dijitButtonText {
 	/* opacity doesn't work on table node in IE, work around here */

@@ -27,9 +27,7 @@ dojo.declare("dijit.tests._data.SlowStore", dojo.data.ItemFileReadStore, {
 				first = query[attr];
 				break;
 			}
-			if(dojo.isString(first)){
-					count = first.length;
-			}
+			count = first.toString().length;
 		}
 
 		var delay = 100;

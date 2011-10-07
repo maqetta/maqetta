@@ -1,8 +1,5 @@
-dojo.provide("dojox.widget.PlaceholderMenuItem");
-
+define(["dojo", "dijit", "dojox", "dijit/Menu","dijit/MenuItem"], function(dojo, dijit, dojox){
 dojo.experimental("dojox.widget.PlaceholderMenuItem");
-
-dojo.require("dijit.Menu");
 
 dojo.declare("dojox.widget.PlaceholderMenuItem", dijit.MenuItem, {
 	// summary:
@@ -104,4 +101,7 @@ dojo.extend(dijit.Menu, {
 		}, this);
 		return r; // dojox.widget.PlaceholderMenuItem[]
 	}
-}); 
+});
+
+return dojox.widget.PlaceholderMenuItem;
+});

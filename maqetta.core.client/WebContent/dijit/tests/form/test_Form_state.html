@@ -36,6 +36,14 @@
 			according to child widget state.
 		</p>
 		<form id="form1" data-dojo-type="dijit.form.Form" data-dojo-props='action:"", name:"example", method:""'>
+			<script type="dojo/connect" data-dojo-event="startup">
+				var submitButton = dijit.byId("submitButton");
+				//  set initial state
+				submitButton.set("disabled", !this.isValid());
+				this.connect(this, "onValidStateChange", function(state){
+						submitButton.set("disabled", !state);
+				});
+			</script>
 			<table>
 				<tr>
 					<td><label for="name">Name:</label></td>
@@ -72,14 +80,6 @@
 			<button id="submitButton" data-dojo-type="dijit.form.Button" >
 				<script type="dojo/method" data-dojo-event="onClick">
 					console.dir(dijit.byId("form1").get('value'));
-				</script>
-				<script type="dojo/method" data-dojo-event="startup">
-					var form = dijit.byId("form1");
-					//  set initial state
-					this.set("disabled", !form.isValid());
-					this.connect(form, "onValidStateChange", function(state){
-							this.set("disabled", !state);
-					});
 				</script>
 				Submit
 			</button>

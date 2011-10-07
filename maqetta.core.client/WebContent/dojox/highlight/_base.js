@@ -1,23 +1,23 @@
-dojo.provide("dojox.highlight._base");
-/*=====
-	dojox.highlight = {
-		//	summary:
-		//		Syntax highlighting with language auto-detection package
-		//
-		//	description:
-		//
-		//		Syntax highlighting with language auto-detection package.
-		//		Released under CLA by the Dojo Toolkit, original BSD release
-		//		available from: http://softwaremaniacs.org/soft/highlight/
-		//
-		//
-	};
-=====*/
+define(["dojo", "dojox/main"], function(dojo, dojox){
 
-;(function(){
-	var dh = dojox.highlight,
-		C_NUMBER_RE = '\\b(0x[A-Za-z0-9]+|\\d+(\\.\\d+)?)';
-	
+	/*=====
+		dojox.highlight = {
+			//	summary:
+			//		Syntax highlighting with language auto-detection package
+			//
+			//	description:
+			//
+			//		Syntax highlighting with language auto-detection package.
+			//		Released under CLA by the Dojo Toolkit, original BSD release
+			//		available from: http://softwaremaniacs.org/soft/highlight/
+			//
+			//
+		};
+	=====*/
+	var dh = dojo.getObject("dojox.highlight", true),
+		C_NUMBER_RE = '\\b(0x[A-Za-z0-9]+|\\d+(\\.\\d+)?)'
+	;
+	dh.languages = dh.languages || {};
 	// constants
 
 	dh.constants = {
@@ -457,6 +457,8 @@ dojo.provide("dojox.highlight._base");
 	};
 =====*/
 
-	dh.Code = function(p, n){ dh.init(n); };
+	dh.Code = function(props, node){ dh.init(node); };
 
-})();
+	return dh;
+
+});

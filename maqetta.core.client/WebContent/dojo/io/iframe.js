@@ -1,4 +1,9 @@
-define("dojo/io/iframe", ["dojo"], function(dojo) {
+define(["../main", "require"], function(dojo, require) {
+	// module:
+	//		dojo/io/iframe
+	// summary:
+	//		TODOC
+
 dojo.getObject("io", true, dojo);
 
 /*=====
@@ -43,7 +48,7 @@ dojo.declare("dojo.io.iframe.__ioArgs", dojo.__IoArgs, {
 dojo.io.iframe = {
 	// summary:
 	//		Sends an Ajax I/O call using and Iframe (for instance, to upload files)
-	
+
 	create: function(/*String*/fname, /*String*/onloadstr, /*String?*/uri){
 		//	summary:
 		//		Creates a hidden iframe in the page. Used mostly for IO
@@ -61,7 +66,6 @@ dojo.io.iframe = {
 		//		used.
 		if(window[fname]){ return window[fname]; }
 		if(window.frames[fname]){ return window.frames[fname]; }
-		var cframe = null;
 		var turi = uri;
 		if(!turi){
 			if(dojo.config["useXDomain"] && !dojo.config["dojoBlankHtmlUrl"]){
@@ -69,7 +73,7 @@ dojo.io.iframe = {
 					+ " please save dojo/resources/blank.html to your domain and set djConfig.dojoBlankHtmlUrl"
 					+ " to the path on your domain to blank.html");
 			}
-			turi = (dojo.config["dojoBlankHtmlUrl"]||dojo.moduleUrl("dojo", "resources/blank.html"));
+			turi = (dojo.config["dojoBlankHtmlUrl"]||require.toUrl("../resources/blank.html"));
 		}
 		var cframe = dojo.place(
 			'<iframe id="'+fname+'" name="'+fname+'" src="'+turi+'" onload="'+onloadstr+
@@ -101,14 +105,13 @@ dojo.io.iframe = {
 				}else{ //  if(d.isMozilla){
 					idoc = iframe.contentWindow;
 				}
-	
+
 				//For Safari (at least 2.0.3) and Opera, if the iframe
 				//has just been created but it doesn't have content
 				//yet, then iframe.document may be null. In that case,
 				//use iframe.location and return.
 				if(!idoc){
 					iframe.location = src;
-					return;
 				}else{
 					idoc.location.replace(src);
 				}
@@ -120,7 +123,7 @@ dojo.io.iframe = {
 
 	doc: function(/*DOMNode*/iframeNode){
 		//summary: Returns the document object associated with the iframe DOM Node argument.
-		var doc = iframeNode.contentDocument || // W3
+		return iframeNode.contentDocument || // W3
 			(
 				(
 					(iframeNode.name) && (iframeNode.document) &&
@@ -132,7 +135,6 @@ dojo.io.iframe = {
 				(iframeNode.name)&&(dojo.doc.frames[iframeNode.name])&&
 				(dojo.doc.frames[iframeNode.name].document)
 			) || null;
-		return doc;
 	},
 
 	send: function(/*dojo.io.iframe.__ioArgs*/args){
@@ -213,7 +215,7 @@ dojo.io.iframe = {
 
 		this._dfdQueue.push(dfd);
 		this._fireNextRequest();
-		
+
 		//Add it the IO watch queue, to get things like timeout support.
 		dojo._ioWatch(
 			dfd,
@@ -338,7 +340,7 @@ dojo.io.iframe = {
 		var ioArgs = dfd.ioArgs;
 		var args = ioArgs.args;
 		var fNode = dojo.byId(args.form);
-	
+
 		if(fNode){
 			// remove all the hidden content inputs
 			var toClean = ioArgs._contentToClean;

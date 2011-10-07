@@ -1,4 +1,9 @@
-define("dojo/dnd/common", ["dojo"], function(dojo) {
+define(["../main"], function(dojo) {
+	// module:
+	//		dojo/dnd/common
+	// summary:
+	//		TODOC
+
 dojo.getObject("dnd", true, dojo);
 
 dojo.dnd.getCopyKeyState = dojo.isCopyKey;

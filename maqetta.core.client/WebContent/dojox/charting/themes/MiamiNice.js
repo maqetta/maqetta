@@ -1,9 +1,6 @@
-dojo.provide("dojox.charting.themes.MiamiNice");
-dojo.require("dojox.charting.Theme");
-
-(function(){
-	var dxc=dojox.charting;
-	dxc.themes.MiamiNice=new dxc.Theme({
+define(["../Theme", "./common"], function(Theme, themes){
+	
+	themes.MiamiNice=new Theme({
 		colors: [
 			"#7f9599",
 			"#45b8cc",
@@ -12,4 +9,6 @@ dojo.require("dojox.charting.Theme");
 			"#cc4482"
 		]
 	});
-})();
+	
+	return themes.MiamiNice;
+});

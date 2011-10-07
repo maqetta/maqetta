@@ -50,12 +50,12 @@
 
 			formValue = null;
 	
-			function displayData() {
+			function displayData(){
 				var f = document.getElementById("form1");
 				var s = "";
-				for (var i = 0; i < f.elements.length; i++) {
+				for(var i = 0; i < f.elements.length; i++){
 						var elem = f.elements[i];
-						if (elem.name == "button")  { continue; }
+						if(elem.name == "button")  { continue; }
 						s += elem.name + ": " + elem.value + "\n";
 				}
 				console.log(s);
@@ -172,7 +172,10 @@
 					required:true,
 					invalidMessage:"" '/>
 			</div>
-
 		</form>
+		<input id="ro" type="button" onclick="dijit.byId('q20').set('readOnly',true);" value="Set readOnly" tabIndex="-1"/>
+		<input id="rw" type="button" onclick="dijit.byId('q20').set('readOnly',false);" value="Clear readOnly" tabIndex="-1"/>
+		<input id="disable" type="button" onclick="dijit.byId('q20').set('disabled',true);" value="Disable" tabIndex="-1"/>
+		<input id="enable" type="button" onclick="dijit.byId('q20').set('disabled',false);" value="Enable" tabIndex="-1"/>
 	</body>
 </html>

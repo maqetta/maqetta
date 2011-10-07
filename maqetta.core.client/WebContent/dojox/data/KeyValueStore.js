@@ -1,6 +1,8 @@
-define("dojox/data/KeyValueStore", ["dojo", "dojox", "dojo/data/util/simpleFetch", "dojo/data/util/filter"], function(dojo, dojox) {
+define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/xhr", "dojo/_base/window", 
+		"dojo/data/util/simpleFetch", "dojo/data/util/filter"], 
+  function(declare, lang, xhr, winUtil, simpleFetch, filterUtil) {
 
-dojo.declare("dojox.data.KeyValueStore", null, {
+var KeyValueStore = declare("dojox.data.KeyValueStore", null, {
 	//	summary:
 	//		This is a dojo.data store implementation.  It can take in either a Javascript
 	//		array, JSON string, or URL as the data source.  Data is expected to be in the
@@ -58,7 +60,7 @@ dojo.declare("dojox.data.KeyValueStore", null, {
 		//      This function tests whether the item passed in is indeed a valid 'attribute' like type for the store.
 		//	attribute:
 		//		The attribute to test for being contained by the store.
-		if(!dojo.isString(attribute)){
+		if(!lang.isString(attribute)){
 			throw new Error("dojox.data.KeyValueStore: a function was passed an attribute argument that was not an attribute object nor an attribute name string");
 		}
 	},
@@ -117,7 +119,7 @@ dojo.declare("dojox.data.KeyValueStore", null, {
 		//		See dojo.data.api.Read.containsValue()
 		var regexp = undefined;
 		if(typeof value === "string"){
-			regexp = dojo.data.util.filter.patternToRegExp(value, false);
+			regexp = filterUtil.patternToRegExp(value, false);
 		}
 		return this._containsValue(item, attribute, value, regexp); //boolean.
 	},
@@ -230,7 +232,7 @@ dojo.declare("dojox.data.KeyValueStore", null, {
 				for(var key in requestArgs.query){
 					var value = requestArgs.query[key];
 					if(typeof value === "string"){
-						regexpList[key] = dojo.data.util.filter.patternToRegExp(value, ignoreCase);
+						regexpList[key] = filterUtil.patternToRegExp(value, ignoreCase);
 					}
 				}
 
@@ -283,7 +285,7 @@ dojo.declare("dojox.data.KeyValueStore", null, {
 							handleAs: "json-comment-filtered",
 							preventCache: this.urlPreventCache
 						};
-					var getHandler = dojo.xhrGet(getArgs);
+					var getHandler = xhr.get(getArgs);
 					getHandler.addCallback(function(data){
 						self._processData(data);
 						filter(keywordArgs, self._arrayOfAllItems);
@@ -376,7 +378,7 @@ dojo.declare("dojox.data.KeyValueStore", null, {
 	},
 	
 	_finishFetchItemByIdentity: function(/* Array */ items, /* object */ request){
-		var scope = request.scope || dojo.global;
+		var scope = request.scope || winUtil.global;
 		if(items.length){
 			request.oldOnItem.call(scope, items[0]);
 		}else{
@@ -385,6 +387,6 @@ dojo.declare("dojox.data.KeyValueStore", null, {
 	}
 });
 //Mix in the simple fetch implementation to this class.
-dojo.extend(dojox.data.KeyValueStore,dojo.data.util.simpleFetch);
-return dojox.data.KeyValueStore;
+lang.extend(KeyValueStore,simpleFetch);
+return KeyValueStore;
 });

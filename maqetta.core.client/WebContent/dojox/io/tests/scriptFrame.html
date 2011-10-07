@@ -9,15 +9,12 @@
 		<script type="text/javascript" 
 			src="../../../dojo/dojo.js" djConfig="isDebug: true"></script>
 		<script type="text/javascript">
-			dojo.require("doh.runner");
-			dojo.require("dojox.io.scriptFrame");
-
-			dojo.addOnLoad(function(){
+			require(['doh/runner', 'dojo/io/script', 'dojox/io/scriptFrame'], function(doh, script, scriptFrame){
 				doh.register("t", 
 					[
 						function ioScriptJsonp(t){
 							var d = new doh.Deferred();
-							var td = dojo.io.script.get({
+							var td = script.get({
 								//Note that this URL path is relative to the URL of the iframe document
 								//(dojo.moduleUrl("dojo.resources", "blank.html")
 								url: "../tests/io/scriptJsonp.js",
@@ -37,7 +34,7 @@
 						},
 						function ioScriptJsonpTimeout(t){
 							var d = new doh.Deferred();
-							var td = dojo.io.script.get({
+							var td = script.get({
 								//Note that this URL path is relative to the URL of the iframe document
 								//(dojo.moduleUrl("dojo.resources", "blank.html")
 								url: "../tests/_base/timeout.php",

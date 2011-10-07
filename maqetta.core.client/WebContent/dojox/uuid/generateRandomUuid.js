@@ -1,4 +1,4 @@
-dojo.provide("dojox.uuid.generateRandomUuid");
+define(['./_base'], function(){
 
 dojox.uuid.generateRandomUuid = function(){
 	// summary:
@@ -50,3 +50,7 @@ dojox.uuid.generateRandomUuid = function(){
 	returnValue = returnValue.toLowerCase();
 	return returnValue; // String
 };
+
+return dojox.uuid.generateRandomUuid;
+
+});

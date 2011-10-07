@@ -13,7 +13,7 @@
 
 		html, body { height: 100%; width: 100%; padding: 0; border: 0; }
 		#main { height: 100%; width: 100%; border: 0; }
-		#header { margin: 0px; }
+		#header { margin: 0; }
 		#leftAccordion { width: 25%; }
 		#bottomTabs { height: 40%; }
 
@@ -41,7 +41,7 @@
 		hr.spacer { border:0; background-color:#ededed; width:80%; height:1px; }
 
 		/* rules used to test custom setting of TextBox padding */
-		.inputPadding0 .dijitInputField { padding: 0px !important; }
+		.inputPadding0 .dijitInputField { padding: 0 !important; }
 		.inputPadding1 .dijitInputField { padding: 1px !important; }
 		.inputPadding2 .dijitInputField { padding: 2px !important; }
 		.inputPadding3 .dijitInputField { padding: 3px !important; }
@@ -66,15 +66,14 @@
 	<!--
 	<script type="text/javascript" src="http://prototypejs.org/assets/2007/10/16/prototype.js"></script>
 	-->
-	<script type="text/javascript" src="../dijit.js"></script>
-	<script type="text/javascript" src="../dijit-all.js" charset="utf-8"></script>
-
 
 	<script type="text/javascript"> // dojo.requires()
 
 		dojo.require("dijit.Menu");
 		dojo.require("dijit.MenuItem");
 		dojo.require("dijit.PopupMenuItem");
+		dojo.require("dijit.CheckedMenuItem");
+		dojo.require("dijit.MenuSeparator");
 
 		dojo.require("dijit.Calendar");
 		dojo.require("dijit.ColorPalette");
@@ -87,6 +86,8 @@
 		dojo.require("dijit.MenuBarItem");
 		dojo.require("dijit.PopupMenuBarItem");
 
+		dojo.require("dijit.InlineEditBox");
+
 		// editor:
 		dojo.require("dijit.Editor");
 		dojo.require("dijit._editor.plugins.FontChoice");
@@ -97,6 +98,8 @@
 
 		// various Form elements
 		dojo.require("dijit.form.CheckBox");
+		dojo.require("dijit.form.RadioButton");
+
 		dojo.require("dijit.form.Textarea");
 		dojo.require("dijit.form.SimpleTextarea");
 		dojo.require("dijit.form.FilteringSelect");
@@ -104,9 +107,12 @@
 		dojo.require("dijit.form.DateTextBox");
 		dojo.require("dijit.form.TimeTextBox");
 		dojo.require("dijit.form.CurrencyTextBox");
-		dojo.require("dijit.form.Button");
-		dojo.require("dijit.InlineEditBox");
 		dojo.require("dijit.form.NumberSpinner");
+
+		dojo.require("dijit.form.Button");
+		dojo.require("dijit.form.DropDownButton");
+		dojo.require("dijit.form.ComboButton");
+		dojo.require("dijit.form.ToggleButton");
 
 		dojo.require("dijit.form.VerticalSlider");
 		dojo.require("dijit.form.VerticalRuleLabels");
@@ -178,7 +184,7 @@
 			}, this);
 		}
 
-		dojo.addOnLoad(function() {
+		dojo.addOnLoad(function(){
 
 			var start = new Date().getTime();
 			dojo.parser.parse(dojo.byId('container'));

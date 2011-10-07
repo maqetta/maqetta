@@ -32,7 +32,7 @@
 }
 .claro .dijitProgressBarEmpty {
 	/* outer container and background of the bar that's not finished yet*/
-	background: @progressbar-empty-background-color url("images/progressBarEmpty.png") repeat-none left;
+	background: @progressbar-empty-background-color url("images/progressBarEmpty.png") no-repeat left;
 	border-color: @progressbar-border-color;
 }
 .claro .dijitProgressBarTile {
@@ -44,6 +44,8 @@
 } 
 .claro .dijitProgressBarFull {
 	border-right:1px solid @progressbar-border-color;
+	.transition-property(width);
+	.transition-duration(.25s);
 }
 .claro .dijitProgressBarLabel {
 	/* Set to a color that contrasts with both the "Empty" and "Full" parts. */

@@ -119,10 +119,12 @@
 	margin:0;
 	padding:0.4em 0 0.25em 0;
 	text-align:center;
+	font-size: 1.17em;
 }
 
 .nihilo .dijitCalendarSelectedYear {
 	/* label for selected year */
+	font-weight:bolder;
 	color:black;
 	padding:0.2em;
 	padding-bottom:0.1em;

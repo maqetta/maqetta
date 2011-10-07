@@ -1,8 +1,10 @@
-// AMD-ID "dojox/encoding/ascii85"
-define(["dojo", "dojox"], function(dojo, dojox) {
-dojo.getObject("encoding.ascii85", true, dojox);
+define(["dojo/_base/kernel"], function(dojo) {
 
-(function(){
+	var ascii85 = dojo.getObject("dojox.encoding.ascii85", true);
+	/*=====
+		ascii85 = dojox.encoding.ascii85;
+	=====*/
+
 	var c = function(input, length, result){
 		var i, j, n, b = [0, 0, 0, 0, 0];
 		for(i = 0; i < length; i += 4){
@@ -16,7 +18,7 @@ dojo.getObject("encoding.ascii85", true, dojox);
 		}
 	};
 
-	dojox.encoding.ascii85.encode = function(input){
+	ascii85.encode = function(input){
 		// summary: encodes input data in ascii85 string
 		// input: Array: an array of numbers (0-255) to encode
 		var result = [], reminder = input.length % 4, length = input.length - reminder;
@@ -32,7 +34,7 @@ dojo.getObject("encoding.ascii85", true, dojox);
 		return result.join("");	// String
 	};
 
-	dojox.encoding.ascii85.decode = function(input){
+	ascii85.decode = function(input){
 		// summary: decodes the input string back to array of numbers
 		// input: String: the input string to decode
 		var n = input.length, r = [], b = [0, 0, 0, 0, 0], i, j, t, x, y, d;
@@ -58,8 +60,6 @@ dojo.getObject("encoding.ascii85", true, dojox);
 		}
 		return r;
 	};
-})();
 
-
-return dojox.encoding.ascii85;
+	return ascii85;
 });

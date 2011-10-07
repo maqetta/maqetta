@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	displayOptions: "[megjelenítési beállítások]",
 	title: "Cím",
@@ -9,3 +11,5 @@
 	summary: "Összegzés",
 	content: "Tartalom"
 })
+//end v1.x content
+);

@@ -1,15 +1,11 @@
-dojo.provide("dojox.charting.themes.Julie");
+define(["../Theme", "dojox/gfx/gradutils", "./common"], function(Theme, gradutils){
 
-dojo.require("dojox.gfx.gradutils");
-dojo.require("dojox.charting.Theme");
-
-// created by Julie Santilli
-
-(function(){
-	var dc = dojox.charting, themes = dc.themes, Theme = dc.Theme, g = Theme.generateGradient,
+	// created by Julie Santilli (Claro-based theme)
+	
+	var themes = dojox.charting.themes, g = Theme.generateGradient,
 		defaultFill = {type: "linear", space: "shape", x1: 0, y1: 0, x2: 0, y2: 100};
 	
-	themes.Julie = new dc.Theme({
+	themes.Julie = new Theme({
 		seriesThemes: [
 			{fill: g(defaultFill, "#59a0bd", "#497c91"), stroke: {color: "#22627d"}},	// blue
 			{fill: g(defaultFill, "#8d88c7", "#6c6d8e"), stroke: {color: "#8a84c5"}},	// purple
@@ -63,8 +59,10 @@ dojo.require("dojox.charting.Theme");
 	themes.Julie.post = function(theme, elementType){
 		theme = Theme.prototype.post.apply(this, arguments);
 		if(elementType == "slice" && theme.series.fill && theme.series.fill.type == "radial"){
-			theme.series.fill = dojox.gfx.gradutils.reverse(theme.series.fill);
+			theme.series.fill = gradutils.reverse(theme.series.fill);
 		}
 		return theme;
 	};
-})();
+	
+	return themes.Julie;
+});

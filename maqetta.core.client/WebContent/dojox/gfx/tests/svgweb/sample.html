@@ -7,19 +7,10 @@
 		<!-- include svgweb, must before dojo, notice the extra 'data-path' attribute -->
 		<script src="svgweb/src/svg.js" data-path="svgweb/src"></script>
 		<!-- include dojo, notice the config: forceGfxRenderer:'svg' -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js" djConfig="isDebug: true, forceGfxRenderer: 'svg'"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js" djConfig="async: true, isDebug: true, forceGfxRenderer: 'svg'"></script>
 
 		<script type="text/javascript">
-			dojo.require("dojox.gfx");
-			dojo.require("dojox.gfx.move");
-
-			dojo.addOnLoad(function() {
-				try {
-					testSurface();
-				} catch (ex) {
-					alert(ex);
-				}
-			});
+			require(["dojox/gfx", "dojox/gfx/move"], function(){
 			
 			function testSurface() {
 				var node = dojo.byId("surface");
@@ -161,6 +152,8 @@
 				}).setFill([0,0,255,0.5]);
 
 			}
+					testSurface();
+				});
 		</script>
 	</head>
 

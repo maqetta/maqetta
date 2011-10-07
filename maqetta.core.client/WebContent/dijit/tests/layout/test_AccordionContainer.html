@@ -30,13 +30,14 @@
 	<script type="text/javascript">
 		dojo.require("dijit.dijit"); // optimize: load dijit layer
 		dojo.require("dijit.layout.AccordionContainer");
+		dojo.require("dijit.layout.AccordionPane");
 		dojo.require("dijit.layout.ContentPane");
 		dojo.require("dijit.layout.BorderContainer");
 		dojo.require("dijit.layout.TabContainer");
 		dojo.require("dijit.form.ComboBox");
 	 	dojo.require("dijit.form.Button");
 		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			dojo.subscribe("focusNode", function(node){ console.log("focused on " + (node?(node.id||node.tagName):"nothing"));});
 		});
 		
@@ -280,8 +281,8 @@
 				ut eros sit amet ante pharetra interdum.
 			</p>
 		</div>
-		<div data-dojo-type="dijit.layout.AccordionPane" data-dojo-props='"class":"extremePadding", title:"Extreme Padding"'>
-			<p>(Leaving one to test deprecation)</p>
+		<div data-dojo-type="dijit.layout.AccordionPane" data-dojo-props='"class":"extremePadding", title:"AccordionPane w/ Extreme Padding"'>
+			<p>(Leaving one AccordionPane to test deprecation)</p>
 			<p>
 				Nunc consequat nisi vitae quam. Suspendisse sed nunc. Proin
 				suscipit porta magna. Duis accumsan nunc in velit. Nam et nibh.

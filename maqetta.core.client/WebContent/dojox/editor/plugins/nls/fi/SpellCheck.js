@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	widgetLabel: "Eräoikoluku",
 	unfound: "Ei löydy",
@@ -15,3 +17,5 @@
 	iMsg: "Ei oikeinkirjoitusehdotuksia"
 })
 
+//end v1.x content
+);

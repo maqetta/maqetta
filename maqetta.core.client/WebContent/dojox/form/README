@@ -9,9 +9,9 @@ experimental
 -------------------------------------------------------------------------------
 Credits
 	Nathan Toone (toonetown)
-	Peter Higgins	(dante)
-    Wolfram Kriesing (http://wolfram.kriesing.de/blog/): Rating
-    Mike Wilcox
+	Peter Higgins (dante)
+	Wolfram Kriesing (wolfram)
+	Mike Wilcox (mwilcox)
 -------------------------------------------------------------------------------
 Project description
 
@@ -39,8 +39,8 @@ Additional Notes (Brief widget list):
 	* CheckedMultiSelect - an extension to dijit.form.MultiSelect which
 						uses check boxes instead of ctrl-click
 
- 	* DropDownSelect - an extension to dijit.form.DropDownButton which is
- 						meant to mirror the html <select> drop down
+	* DropDownSelect - an extension to dijit.form.DropDownButton which is
+						meant to mirror the html <select> drop down
 
 	* DropDownStack/RadioStack - a widget that can toggle parts of a form as
 						"on" or "off" - to allow for different options based on 

@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertAnchor: "Inserare ancoră",
 	title: "Proprietăţi ancoră",
@@ -7,3 +9,5 @@
 	cancel: "Anulare"
 })
 
+//end v1.x content
+);

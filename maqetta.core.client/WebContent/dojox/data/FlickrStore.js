@@ -1,6 +1,8 @@
-define("dojox/data/FlickrStore", ["dojo", "dojox", "dojo/data/util/simpleFetch", "dojo/io/script", "dojo/date/stamp", "dojo/AdapterRegistry"], function(dojo, dojox) {
+define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/array", "dojo/data/util/simpleFetch", "dojo/io/script", 
+		"dojo/_base/connect", "dojo/date/stamp", "dojo/AdapterRegistry"], 
+  function(lang, declare, array, simpleFetch, scriptIO, connect, dateStamp, AdapterRegistry) {
 
-dojo.declare("dojox.data.FlickrStore", null, {
+var FlickrStore = declare("dojox.data.FlickrStore", null, {
 	constructor: function(/*Object*/args){
 		//	summary:
 		//		Initializer for the FlickrStore store.
@@ -123,8 +125,8 @@ dojo.declare("dojox.data.FlickrStore", null, {
 
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
-		var u = dojo.hitch(this, "_unescapeHtml");
-		var s = dojo.hitch(dojo.date.stamp, "fromISOString");
+		var u = lang.hitch(this, "_unescapeHtml");
+		var s = lang.hitch(dateStamp, "fromISOString");
 		switch(attribute){
 			case "title":
 				return [ u(item.title) ];
@@ -183,7 +185,7 @@ dojo.declare("dojox.data.FlickrStore", null, {
 			tagmode:"any"
 		};
 
-		dojo.forEach(
+		array.forEach(
 			[ "tags", "tagmode", "lang", "id", "ids" ],
 			function(i){
 				if(rq[i]){ content[i] = rq[i]; }
@@ -203,21 +205,21 @@ dojo.declare("dojox.data.FlickrStore", null, {
 			preventCache: this.urlPreventCache,
 			content: content
 		};
-		var myHandler = dojo.hitch(this, function(data){
+		var myHandler = lang.hitch(this, function(data){
 			if(!!handle){
-				dojo.disconnect(handle);
+				connect.disconnect(handle);
 			}
 
 			//Process the items...
 			fetchHandler(this._processFlickrData(data), request);
 		});
-		handle = dojo.connect("jsonFlickrFeed", myHandler);
-		var deferred = dojo.io.script.get(getArgs);
+		handle = connect.connect("jsonFlickrFeed", myHandler);
+		var deferred = scriptIO.get(getArgs);
 		
 		//We only set up the errback, because the callback isn't ever really used because we have
 		//to link to the jsonFlickrFeed function....
 		deferred.addErrback(function(error){
-			dojo.disconnect(handle);
+			connect.disconnect(handle);
 			errorHandler(error, request);
 		});
 	},
@@ -256,11 +258,11 @@ dojo.declare("dojox.data.FlickrStore", null, {
 	}
 });
 
-dojo.extend(dojox.data.FlickrStore, dojo.data.util.simpleFetch);
+lang.extend(FlickrStore, simpleFetch);
 
 var feedsUrl = "http://api.flickr.com/services/feeds/";
 
-var reg = dojox.data.FlickrStore.urlRegistry = new dojo.AdapterRegistry(true);
+var reg = FlickrStore.urlRegistry = new AdapterRegistry(true);
 
 reg.register("group pool",
 	function(request){ return !!request.query["groupid"]; },
@@ -278,6 +280,5 @@ if(!jsonFlickrFeed){
 	var jsonFlickrFeed = function(data){};
 }
 
-return dojox.data.FlickrStore;
-
+return FlickrStore;
 });

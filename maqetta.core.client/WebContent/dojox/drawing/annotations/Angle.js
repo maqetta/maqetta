@@ -101,4 +101,4 @@ dojox.drawing.annotations.Angle = dojox.drawing.util.oo.declare(
 		}
 	}
 
-)
+);

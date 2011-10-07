@@ -1,5 +1,6 @@
-<html style="margin:0px; padding:0px;">
-<body style="margin:0px; padding:0px; border:0px none;background-color:transparent;" onload="init()">
+<!DOCTYPE html>
+<html style="margin:0px; padding:0px; border:0px none; overflow:hidden;">
+<head>
 <script>
 	// support document.domain
 	// Yes, we need this try/catch to handle document.domain.
@@ -11,7 +12,7 @@
 	try{
 		// Was the passed domain just a stupid browser default?
 		// If so, this statement will work.
-		window.frameElement.ownerDocument;
+		var test=window.frameElement.ownerDocument;
 	}catch(e){
 		// Permission Denied.
 		// Means user explicitly set document.domain elsewhere.
@@ -117,28 +118,32 @@
 		return false;
 	}
 
+	var rf=null;
 	doh.robot._onKeyboard = function(){
 	 	// called from Robot
 		// Robot calls _onKeyboard after it finishes discovering the keyboard
 		// need to untie from Java thread with setTimeout
 		setTimeout(function(){
-			var rf = document.getElementsByTagName('input')[0];
 			rf.style.visibility = "hidden";
 			doh.robot._run(window.frameElement);
  		}, 0);
 	};
 </script>
-<input type="text" tabIndex="-1" style="border:0px none;margin:0px;padding:0px;position:absolute;left:0px;top:0px;width:200px;height:42px;background-color:white;z-index:9999;opacity:0;filter:alpha(opacity=0);cursor:default;"
+</head>
+<body style="margin:0px; padding:0px; border:0px none;background-color:transparent;" onload="init()">
+<input type="text" tabIndex="-1" style="border:0px none;margin:0px;padding:0px;width:200px;height:42px;background-color:white;z-index:9998;opacity:0;filter:alpha(opacity=0);cursor:default;"
 	onmousewheel="_onmousewheel(arguments[0])"
 	onmousedown="_onmousedown(arguments[0])"
 	onkeypress="_onkeypress(arguments[0])"
 	onfocus="_onfocus(this)"
-	onblur="_onblur(arguments[0])">
+	onblur="_onblur(arguments[0])"></input>
 <script>
-	if(document.getElementsByTagName('input')[0].addEventListener){
-		document.getElementsByTagName('input')[0].addEventListener('DOMMouseScroll', _onmousewheel, false);
+	rf = document.getElementsByTagName('input')[0];
+	if(rf.addEventListener){
+		rf.addEventListener('DOMMouseScroll', _onmousewheel, false);
 	}
 </script>
+<img src="robot/signature.png" style="width:3px; height:3px; position:absolute; left:0px; top:0px; z-index:9999"></img>
 <script>
 	// taken from hostenv_browser.js
 	// Dojo is not always available to DOH

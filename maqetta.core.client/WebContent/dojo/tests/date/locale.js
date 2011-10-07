@@ -1,4 +1,4 @@
-dojo.provide("tests.date.locale");
+dojo.provide("dojo.tests.date.locale");
 
 dojo.require("dojo.date.locale");
 
@@ -12,22 +12,20 @@ tests.register("tests.date.locale",
 			name: "date.locale",
 			runTest: function(t){
 				var partLocaleList = ["en-us", "fr-fr", "es", "de-at", "ja-jp", "zh-cn"];
-        if(dojo.global.define && define.vendor!="dojotoolkit.org"){ //tests for the AMD loader
-            var
-              def = new doh.Deferred(),
-              deps = [];
-            dojo.forEach(partLocaleList, function(locale){
-              deps.push(dojo.getL10nName("dojo/cldr", "gregorian", locale));
-            });
-            define(deps, function(){
-							def.callback(true);
-            });
-            return def;
-        }else{ // tests for the v1.x loader/i18n machinery
-  				dojo.forEach(partLocaleList, function(locale){
-	  				dojo.requireLocalization("dojo.cldr", "gregorian", locale);
-		  		});
-        }
+				if(dojo.isAsync){
+					var def = new doh.Deferred(),
+						deps = dojo.map(partLocaleList, function(locale){
+							return dojo.getL10nName("dojo/cldr", "gregorian", locale)
+						});
+					require(deps, function(){
+						def.callback(true);
+					});
+					return def;
+				}else{ // tests for the v1.x loader/i18n machinery
+					dojo.forEach(partLocaleList, function(locale){
+						dojo.requireLocalization("dojo.cldr", "gregorian", locale);
+					});
+				}
 			},
 			tearDown: function(){
 				//Clean up bundles that should not exist if
@@ -187,7 +185,7 @@ tests.register("tests.date.locale",
 	//nichi (day): \u65e5
 	//kinyoubi (Friday): \u91d1\u66dc\u65e5
 	//zenkaku space: \u3000
-	
+
 	//ja: 'short' fmt: yy/MM/dd (note: the "short" fmt isn't actually defined in the CLDR data...)
 	t.is( aug_11_2006, dojo.date.locale.parse("06/08/11", {formatLength:'short', selector:'date', locale:'ja'}));
 	t.is( aug_11_2006, dojo.date.locale.parse("06/8/11", {formatLength:'short', selector:'date', locale:'ja'}));
@@ -248,7 +246,11 @@ tests.register("tests.date.locale",
 
 	t.is( new Date(2006, 7, 11), dojo.date.locale.parse("11082006", {datePattern:"ddMMyyyy", selector:"date"}));
 
-	t.is( new Date(2006, 7, 31), dojo.date.locale.parse("31Aug2006", {datePattern:"ddMMMyyyy", selector:"date"}));
+	t.is( new Date(2006, 7, 31), dojo.date.locale.parse("31Aug2006", {datePattern:"ddMMMyyyy", selector:"date", locale:'en'}));
+
+	t.is(new Date(1970,0,7), dojo.date.locale.parse("007", {datePattern:'DDD',selector:'date'}));
+	t.is(new Date(1970,0,31), dojo.date.locale.parse("031", {datePattern:'DDD',selector:'date'}));
+	t.is(new Date(1970,3,10), dojo.date.locale.parse("100", {datePattern:'DDD',selector:'date'}));
 
 			}
 		},
@@ -257,7 +259,7 @@ tests.register("tests.date.locale",
 			runTest: function(t){
 				var time = new Date(2006, 7, 11, 12, 30);
 				var tformat = {selector:'time', strict:true, timePattern:"h:mm a", locale:'en'};
-			
+
 				t.is(time.getHours(), dojo.date.locale.parse("12:30 PM", tformat).getHours());
 				t.is(time.getMinutes(), dojo.date.locale.parse("12:30 PM", tformat).getMinutes());
 			}
@@ -397,7 +399,7 @@ function test_validate_datetime_is24HourTime(){
 }
 
 function test_validate_datetime_isValidDate(){
-	
+
 	// Month date year
 	jum.assertTrue("test1", dojo_validate_isValidDate("08/06/2005", "MM/dd/yyyy"));
 	jum.assertTrue("test2", dojo_validate_isValidDate("08.06.2005", "MM.dd.yyyy"));

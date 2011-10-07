@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	singleSort: "Enkel sortering",
 	nestedSort: "Nästlad sortering",
@@ -9,4 +11,6 @@
 	indirectSelectionCheckBox: "Rad ${0}, flera val, kryssruta",
 	selectAll: "Markera alla "
 })
+//end v1.x content
+);
 

@@ -19,8 +19,9 @@
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../../dojo/dojo.js"
 			djConfig="parseOnLoad: true, isDebug: true"></script>
-		<script type="text/javascript" src="../BusyButton.js"></script>
 		<script type="text/javascript">
+			dojo.require("dojox.form.BusyButton");
+			dojo.require("dojo.parser");
 			dojo.require("dijit.Menu");
 			dojo.addOnLoad(function(){
 				dojo.connect(dijit.byId("buttonCancel"), "onClick", function(){
@@ -46,7 +47,12 @@
 		<h1 class="testTitle">Test: dojox.form.BusyButton</h1>
 		<p>
 		Normal busy button, 5000 miliseconds timeout<br />
-		<button dojoType="dojox.form.BusyButton" timeout="5000" >Click</button>
+		<button dojoType="dojox.form.BusyButton" timeout="5000" >
+			<script type="dojo/connect" data-dojo-event="onClick" data-dojo-args="evt">
+				console.log("dojox.form.BusyButton clicked");
+			</script>
+			Click
+		</button>
 		</p>
 	
 		<p>
@@ -101,4 +107,4 @@
 			</button>
 		</p>
 	</body>
-</hmtl>
+</html>

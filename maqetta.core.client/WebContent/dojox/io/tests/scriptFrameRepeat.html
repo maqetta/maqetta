@@ -9,32 +9,29 @@
 		<script type="text/javascript" 
 			src="../../../dojo/dojo.js" djConfig="isDebug: true"></script>
 		<script type="text/javascript">
-			dojo.require("dojox.io.scriptFrame");
+			require(['dojo/io/script', 'dojox/io/scriptFrame'], function(script, scriptFrame){
+				function repeatCall(){
+					var td = script.get({
+						//Note that this URL path is relative to the URL of the iframe document
+						//(dojo.moduleUrl("dojo.resources", "blank.html")
+						url: "../tests/io/scriptJsonp.js",
+						content: { foo: "bar" },
+						callbackParamName: "callback",
+						frameDoc: "testFrame",
+						timeout: 3000
+					});
+					td.addBoth(function(res){
+						if(!(res instanceof Error) && "mammal" == res.animalType){
+							console.log("success");
+						}else{
+							console.error(res);
+						}
+						return res;
+					});
+				};
 
-			function repeatCall(){
-				var td = dojo.io.script.get({
-					//Note that this URL path is relative to the URL of the iframe document
-					//(dojo.moduleUrl("dojo.resources", "blank.html")
-					url: "../tests/io/scriptJsonp.js",
-					content: { foo: "bar" },
-					callbackParamName: "callback",
-					frameDoc: "testFrame",
-					timeout: 3000
-				});
-				td.addBoth(function(res){
-					if(!(res instanceof Error) && "mammal" == res.animalType){
-						console.log("success");
-					}else{
-						console.error(res);
-					}
-					return res;
-				});
-			};
-
-			dojo.addOnLoad(function(){
 				setInterval(repeatCall, 2000);
 			});
-
 		</script>
 	</head>
 	<body>

@@ -70,13 +70,13 @@
 			</div>
 			<script type="text/javascript">
 				// See if we can make a widget in script
-				dojo.addOnLoad(function(){
+				dojo.ready(function(){
 					programmaticTextarea = new dijit.form.Textarea({
 						id: "programmatic",
 						name: "programmaticTextArea",
 						cols: "60",
 						value: "created programatically with custom border, padding, margin",
-						style: {border:"5px solid gray", padding:"11px", margin:"7px"}
+						style: {border:"5px solid gray", padding:"11px", margin:"7px", minHeight:"2em"}
 					}, "programmatic");
 				});
 			</script>
@@ -126,7 +126,7 @@ Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh 
 				<input type="submit" name="submit" />
 			</div>
 			<script type="text/javascript">
-				function displayData() {
+				function displayData(){
 					var f = dojo.byId("form1");
 					var s = "";
 					for(var i = 0; i < f.elements.length; i++){

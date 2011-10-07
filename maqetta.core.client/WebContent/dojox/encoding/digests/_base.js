@@ -1,11 +1,11 @@
-// AMD-ID "dojox/encoding/digests/_base"
-define(["dojo", "dojox"], function(dojo, dojox) {
-dojo.getObject("encoding.digests", true, dojox);
+define(["dojo/_base/kernel"], function(dojo){
+	var d = dojo.getObject("dojox.encoding.digests", true);
+	/*=====
+		d = dojox.encoding.digests;
+	=====*/
 
-(function(){
 	//TODO: see if it makes sense to meld this into one with the
 	//	crypto base enums
-	var d=dojox.encoding.digests;
 	d.outputTypes={
 		//	summary:
 		//		Enumeration for input and output encodings.
@@ -73,8 +73,6 @@ dojo.getObject("encoding.digests", true, dojox);
 		}
 		return s.join("");	//	string
 	};
-})();
 
-
-return dojox.encoding.digests;
+	return d;
 });

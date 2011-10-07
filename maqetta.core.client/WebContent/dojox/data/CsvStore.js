@@ -1,6 +1,7 @@
-define("dojox/data/CsvStore", ["dojo", "dojox", "dojo/data/util/filter", "dojo/data/util/simpleFetch"], function(dojo, dojox) {
+define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/xhr", "dojo/_base/window","dojo/data/util/filter", "dojo/data/util/simpleFetch"], 
+  function(lang, declare, xhr, winUtil, filterUtil, simpleFetch) {
 
-dojo.declare("dojox.data.CsvStore", null, {
+var CsvStore = declare("dojox.data.CsvStore", null, {
 	// summary:
 	//		The CsvStore implements the dojo.data.api.Read API and reads
 	//		data from files in CSV (Comma Separated Values) format.
@@ -183,7 +184,7 @@ dojo.declare("dojox.data.CsvStore", null, {
 		//		See dojo.data.api.Read.containsValue()
 		var regexp = undefined;
 		if(typeof value === "string"){
-			regexp = dojo.data.util.filter.patternToRegExp(value, false);
+			regexp = filterUtil.patternToRegExp(value, false);
 		}
 		return this._containsValue(item, attribute, value, regexp); //boolean.
 	},
@@ -313,7 +314,7 @@ dojo.declare("dojox.data.CsvStore", null, {
 				for(key in requestArgs.query){
 					value = requestArgs.query[key];
 					if(typeof value === "string"){
-						regexpList[key] = dojo.data.util.filter.patternToRegExp(value, ignoreCase);
+						regexpList[key] = filterUtil.patternToRegExp(value, ignoreCase);
 					}
 				}
 
@@ -355,7 +356,7 @@ dojo.declare("dojox.data.CsvStore", null, {
 							handleAs: "text",
 							preventCache: self.urlPreventCache
 						};
-					var getHandler = dojo.xhrGet(getArgs);
+					var getHandler = xhr.get(getArgs);
 					getHandler.addCallback(function(data){
 						try{
 							self._processData(data);
@@ -442,7 +443,7 @@ dojo.declare("dojox.data.CsvStore", null, {
 		//			{ "Title":0, "Year":1, "Producer":2 }
 		// tags:
 		//		private
-		if(dojo.isString(csvFileContents)){
+		if(lang.isString(csvFileContents)){
 			var leadingWhiteSpaceCharacters = new RegExp("^\\s+",'g');
 			var trailingWhiteSpaceCharacters = new RegExp("\\s+$",'g');
 			var doubleQuotes = new RegExp('""','g');
@@ -611,7 +612,7 @@ dojo.declare("dojox.data.CsvStore", null, {
 		// tags:
 		//		public
 		var item;
-		var scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
+		var scope = keywordArgs.scope?keywordArgs.scope:winUtil.global;
 		//Hasn't loaded yet, we have to trigger the load.
 		if(!this._loadFinished){
 			var self = this;
@@ -627,7 +628,7 @@ dojo.declare("dojox.data.CsvStore", null, {
 							url: self.url,
 							handleAs: "text"
 						};
-					var getHandler = dojo.xhrGet(getArgs);
+					var getHandler = xhr.get(getArgs);
 					getHandler.addCallback(function(data){
 						try{
 							self._processData(data);
@@ -719,7 +720,7 @@ dojo.declare("dojox.data.CsvStore", null, {
 	}
 });
 //Mix in the simple fetch implementation to this class.
-dojo.extend(dojox.data.CsvStore,dojo.data.util.simpleFetch);
+lang.extend(CsvStore, simpleFetch);
 
-return dojox.data.CsvStore;
+return CsvStore;
 });

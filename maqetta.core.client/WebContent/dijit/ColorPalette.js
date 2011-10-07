@@ -1,8 +1,33 @@
-define("dijit/ColorPalette", ["dojo", "dijit", "text!dijit/templates/ColorPalette.html", "dijit/_Widget", "dijit/_Templated", "dojo/colors", "dojo/i18n", "dojo/string", "dijit/_PaletteMixin", "i18n!dojo/nls/colors"], function(dojo, dijit) {
+define([
+	"require",		// require.toUrl
+	"dojo/text!./templates/ColorPalette.html",
+	"./_Widget",
+	"./_TemplatedMixin",
+	"./_PaletteMixin",
+	"dojo/i18n", // i18n.getLocalization
+	"dojo/_base/Color", // dojo.Color dojo.Color.named
+	"dojo/_base/declare", // declare
+	"dojo/dom-class", // domClass.contains
+	"dojo/dom-construct", // domConstruct.place
+	"dojo/_base/window", // win.body
+	"dojo/string", // string.substitute
+	"dojo/i18n!dojo/nls/colors",	// translations
+	"dojo/colors"	// extend dojo.Color w/names of other colors
+], function(require, template, _Widget, _TemplatedMixin, _PaletteMixin, i18n, Color,
+	declare, domClass, domConstruct, win, string){
 
-dojo.declare("dijit.ColorPalette",
-	[dijit._Widget, dijit._Templated, dijit._PaletteMixin],
-	{
+/*=====
+	var _Widget = dijit._Widget;
+	var _TemplatedMixin = dijit._TemplatedMixin;
+	var _PaletteMixin = dijit._PaletteMixin;
+=====*/
+
+// module:
+//		dijit/ColorPalette
+// summary:
+//		A keyboard accessible color-picking widget
+
+var ColorPalette = declare("dijit.ColorPalette", [_Widget, _TemplatedMixin, _PaletteMixin], {
 	// summary:
 	//		A keyboard accessible color-picking widget
 	// description:
@@ -10,7 +35,7 @@ dojo.declare("dijit.ColorPalette",
 	//		Can be used standalone, or as a popup.
 	//
 	// example:
-	// |	<div dojoType="dijit.ColorPalette"></div>
+	// |	<div data-dojo-type="dijit.ColorPalette"></div>
 	//
 	// example:
 	// |	var picker = new dijit.ColorPalette({ },srcNode);
@@ -41,29 +66,35 @@ dojo.declare("dijit.ColorPalette",
 
 	// templateString: String
 	//		The template of this widget.
-	templateString: dojo.cache("dijit", "templates/ColorPalette.html"),
+	templateString: template,
 
 	baseClass: "dijitColorPalette",
+
+	_dyeFactory: function(value, row, col){
+		// Overrides _PaletteMixin._dyeFactory().
+		return new this._dyeClass(value, row, col);
+	},
 
 	buildRendering: function(){
 		// Instantiate the template, which makes a skeleton into which we'll insert a bunch of
 		// <img> nodes
 		this.inherited(arguments);
 
+		//	Creates customized constructor for dye class (color of a single cell) for
+		//	specified palette and high-contrast vs. normal mode.   Used in _getDye().
+		this._dyeClass = declare(ColorPalette._Color, {
+			hc: domClass.contains(win.body(), "dijit_a11y"),
+			palette: this.palette
+		});
+
 		// Creates <img> nodes in each cell of the template.
-		// Pass in "customized" dijit._Color constructor for specified palette and high-contrast vs. normal mode
 		this._preparePalette(
 			this._palettes[this.palette],
-			dojo.i18n.getLocalization("dojo", "colors", this.lang),
-			dojo.declare(dijit._Color, {
-				hc: dojo.hasClass(dojo.body(), "dijit_a11y"),
-				palette: this.palette
-			})
-		);
+			i18n.getLocalization("dojo", "colors", this.lang));
 	}
 });
 
-dojo.declare("dijit._Color", dojo.Color, {
+ColorPalette._Color = declare("dijit._Color", Color, {
 	// summary:
 	//		Object associated with each cell in a ColorPalette palette.
 	//		Implements dijit.Dye.
@@ -86,15 +117,15 @@ dojo.declare("dijit._Color", dojo.Color, {
 	// _imagePaths: [protected] Map
 	//		This is stores the path to the palette images used for high-contrast mode display
 	_imagePaths: {
-		"7x10": dojo.moduleUrl("dijit.themes", "a11y/colors7x10.png"),
-		"3x4": dojo.moduleUrl("dijit.themes", "a11y/colors3x4.png")
+		"7x10": require.toUrl("./themes/a11y/colors7x10.png"),
+		"3x4": require.toUrl("./themes/a11y/colors3x4.png")
 	},
 
 	constructor: function(/*String*/alias, /*Number*/ row, /*Number*/ col){
 		this._alias = alias;
 		this._row = row;
 		this._col = col;
-		this.setColor(dojo.Color.named[alias]);
+		this.setColor(Color.named[alias]);
 	},
 
 	getValue: function(){
@@ -105,12 +136,12 @@ dojo.declare("dijit._Color", dojo.Color, {
 	},
 
 	fillCell: function(/*DOMNode*/ cell, /*String*/ blankGif){
-		var html = dojo.string.substitute(this.hc ? this.hcTemplate : this.template, {
+		var html = string.substitute(this.hc ? this.hcTemplate : this.template, {
 			// substitution variables for normal mode
 			color: this.toHex(),
 			blankGif: blankGif,
 			alt: this._alias,
-			
+
 			// variables used for high contrast mode
 			image: this._imagePaths[this.palette].toString(),
 			left: this._col * -20 - 5,
@@ -118,10 +149,10 @@ dojo.declare("dijit._Color", dojo.Color, {
 			size: this.palette == "7x10" ? "height: 145px; width: 206px" : "height: 64px; width: 86px"
 		});
 
-		dojo.place(html, cell);
+		domConstruct.place(html, cell);
 	}
 });
 
 
-return dijit.ColorPalette;
+return ColorPalette;
 });

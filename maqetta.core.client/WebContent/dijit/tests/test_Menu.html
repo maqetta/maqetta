@@ -14,8 +14,8 @@
 
 		/* styling for left-hand-side navigation menu to become a column equal to length of page */
 		#formattingTable {
-			border: 0px;
-			border-spacing: 0px;
+			border: 0;
+			border-spacing: 0;
 		}
 		#contentContainer { padding: 2em; }
 
@@ -37,22 +37,27 @@
 
 	<script type="text/javascript">
 		dojo.require("dijit.dijit"); // optimize: load dijit layer
+
 		dojo.require("dijit.Menu");
 		dojo.require("dijit.MenuItem");
 		dojo.require("dijit.PopupMenuItem");
+		dojo.require("dijit.CheckedMenuItem");
+		dojo.require("dijit.MenuSeparator");
+
 		dojo.require("dijit.MenuBar");
 		dojo.require("dijit.MenuBarItem");
 		dojo.require("dijit.PopupMenuBarItem");
-		dojo.require("dijit.MenuSeparator");
+
 		dojo.require("dijit.ColorPalette");
 		dojo.require("dijit.form.TextBox");
+
 		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
 	</script>
 
     <script type="text/javascript">
-        function createMenu() {
+        function createMenu(){
             // create a menu programmatically
-            function fClick() {console.log("clicked!")};
+            function fClick(){console.log("clicked!")}
 
             pMenu = new dijit.Menu({targetNodeIds:["prog_menu"], id:"progMenu"});
             pMenu.addChild(new dijit.MenuItem({label:"Programmatic Context Menu", disabled:true}));
@@ -97,7 +102,7 @@
             dojo.byId("createButton").disabled = created;
             dojo.byId("destroyButton").disabled = !created;
 	}
-	dojo.addOnLoad(function(){
+	dojo.ready(function(){
 		// need to explicitly update our buttons states, otherwise the
 		// browser will remember the last states of them before reloading
 		// (so a programmatic menu is created, reload, and "the create
@@ -207,7 +212,7 @@
 
 	<table id="formattingTable">
 		<tr>
-			<td style="width:0%;">
+			<td style="width:0;">
 				<!-- This is here for tabIndex testing.
 				     Use textarea since Chrome 1.0 likes it better for TABing and
 				     because it has innerText property and because it doesn't mess
@@ -279,7 +284,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td id="navMenuContainer" class="dijitMenu" style="vertical-align:top; width:0%;">
+			<td id="navMenuContainer" class="dijitMenu" style="vertical-align:top; width:0;">
 
 				<h3 style="margin-bottom: 2em;">Navigation menu:</h3>
 				<div id="navMenu" data-dojo-type="dijit.Menu" >

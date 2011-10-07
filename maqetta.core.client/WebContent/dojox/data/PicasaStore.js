@@ -1,6 +1,7 @@
-define("dojox/data/PicasaStore", ["dojo", "dojox", "dojo/io/script", "dojo/data/util/simpleFetch", "dojo/date/stamp"], function(dojo, dojox) {
+define(["dojo/_base/lang","dojo/_base/declare", "dojo/_base/connect", "dojo/io/script", "dojo/data/util/simpleFetch", "dojo/date/stamp"], 
+  function(lang, declare, connect, scriptIO, simpleFetch, dateStamp) {
 
-dojo.declare("dojox.data.PicasaStore", null, {
+var PicasaStore = declare("dojox.data.PicasaStore", null, {
 	constructor: function(/*Object*/args){
 		//	summary:
 		//		Initializer for the PicasaStore store.
@@ -33,7 +34,7 @@ dojo.declare("dojox.data.PicasaStore", null, {
 	label: "title",
 
 	//urlPreventCache: boolean
-	//Flag denoting if preventCache should be passed to dojo.io.script.
+	//Flag denoting if preventCache should be passed to io.script.
 	urlPreventCache: false,
 
 	//maxResults:  Define out how many results to return for a fetch.
@@ -141,11 +142,11 @@ dojo.declare("dojox.data.PicasaStore", null, {
 		}else if(attribute === "author"){
 			return [this._unescapeHtml(item.author[0].name)];
 		}else if(attribute === "datePublished"){
-			return [dojo.date.stamp.fromISOString(item.published)];
+			return [dateAtamp.fromISOString(item.published)];
 		}else if(attribute === "dateTaken"){
-			return [dojo.date.stamp.fromISOString(item.published)];
+			return [dateStamp.fromISOString(item.published)];
 		}else if(attribute === "updated"){
-			return [dojo.date.stamp.fromISOString(item.updated)];
+			return [dateStamp.fromISOString(item.updated)];
 		}else if(attribute === "imageUrlSmall"){
 			return [item.media.thumbnail[1].url];
 		}else if(attribute === "imageUrl"){
@@ -216,7 +217,7 @@ dojo.declare("dojox.data.PicasaStore", null, {
 		var handle = null;
 		var myHandler = function(data){
 			if(handle !== null){
-				dojo.disconnect(handle);
+				connect.disconnect(handle);
 			}
 
 			//Process the items...
@@ -229,10 +230,10 @@ dojo.declare("dojox.data.PicasaStore", null, {
 			callbackParamName: 'callback',
 			handle: myHandler
 		};
-		var deferred = dojo.io.script.get(getArgs);
+		var deferred = scriptIO.get(getArgs);
 		
 		deferred.addErrback(function(error){
-			dojo.disconnect(handle);
+			connect.disconnect(handle);
 			errorHandler(error, request);
 		});
 	},
@@ -265,8 +266,8 @@ dojo.declare("dojox.data.PicasaStore", null, {
 		return str;
 	}
 });
-dojo.extend(dojox.data.PicasaStore,dojo.data.util.simpleFetch);
+lang.extend(PicasaStore, simpleFetch);
 
-return dojox.data.PicasaStore;
+return PicasaStore;
 
 });

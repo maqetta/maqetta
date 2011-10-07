@@ -1,2 +1,3 @@
-dojo.provide("dojox.grid.cells");
-dojo.require("dojox.grid.cells._base");
+define(["../main", "./cells/_base"], function(dojox){
+	return dojox.grid.cells;
+});

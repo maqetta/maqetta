@@ -1,8 +1,5 @@
-dojo.provide("dojox.highlight.languages.xml");
+define(["dojox/main", "../_base"], function(dojox){
 
-dojo.require("dojox.highlight._base");
-
-(function(){
 	var XML_COMMENT = {
 		className: 'comment',
 		begin: '<!--', end: '-->'
@@ -62,4 +59,7 @@ dojo.require("dojox.highlight._base");
 		XML_ATTR: XML_ATTR,
 		XML_VALUE: XML_VALUE
 	};
-})();
+
+	return dh.languages.xml;
+
+});

@@ -7,7 +7,7 @@
 		dojo.require("doh.runner");
 		dojo.require("dijit.dijit");
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			doh.register("dijit.tests._base.wai",
 				[
 					function getWaiRoleOnElementWithNoRole(){
@@ -40,14 +40,14 @@
 						doh.assertEqual("menuitem", div.getAttribute("role"));
 					},
 
-					function setWaiRoleToExistingXHTML() {
+					function setWaiRoleToExistingXHTML(){
 						/* replacing XHTML role w/wai role */
 						var elem=dojo.byId("navigation-role");
 						dijit.setWaiRole(elem, "treeitem");
 						doh.assertEqual("treeitem", elem.getAttribute("role"));
 					},
 
-					function setWaiRoleToExistingWaiRole() {
+					function setWaiRoleToExistingWaiRole(){
 						/* replacing wai role w/another wai role */
 						var div= document.createElement("div");
 						dijit.setWaiRole(div, "menuitem");

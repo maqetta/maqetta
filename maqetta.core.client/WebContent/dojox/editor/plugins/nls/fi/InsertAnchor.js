@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertAnchor: "Lisää ankkuri",
 	title: "Ankkurin ominaisuudet",
@@ -7,3 +9,5 @@
 	cancel: "Peruuta"
 })
 
+//end v1.x content
+);

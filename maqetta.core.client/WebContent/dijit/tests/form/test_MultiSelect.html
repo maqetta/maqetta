@@ -42,14 +42,14 @@
 		dojo.require("dijit.form.Button");
 		dojo.require("dijit.layout.SplitContainer");
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 
 			// ref a clonable node, then split it between two selects
 			var c = dojo.query(".clone")[0];
 			var l = -1;
 			opt = function(){
-				return dojo.byId((++l%2 == 0 ? "select":"select2" ));
-			}
+				return dojo.byId((++l % 2 == 0 ? "select" : "select2" ));
+			};
 			// based on the the 'dijit' object
 			var count=0;
 			for(var i in dijit){
@@ -86,9 +86,9 @@
 
 			// there is only one debug button
 			dojo.query(".debug").connect("onclick",function(e){
-				console.log('select value:',dijit.byId("select").get('value'));
-				console.log('select2 value:',dijit.byId("select2").get('value'));
-				console.log('select3 value:',dijit.byId("select3").get('value'));
+				console.log('select value:',dijit.byId("select").get('value') + '/' + dijit.byId("select").value);
+				console.log('select2 value:',dijit.byId("select2").get('value') + '/' + dijit.byId("select2").value);
+				console.log('select3 value:',dijit.byId("select3").get('value') + '/' + dijit.byId("select3").value);
 			});
 
 			dojo.connect(dojo.byId("formSubmit"), "onclick", function(e){

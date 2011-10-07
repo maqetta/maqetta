@@ -11,7 +11,7 @@
 
 /* Button */
 
-.dj_iequirks .dijitComboButtonRtl BUTTON {
+.dj_iequirks .dijitComboButtonRtl button {
 	/* workaround bug where label invisible (themeTesterQuirk.html?dir=rtl) */
 	float:left;
 }
@@ -29,6 +29,11 @@
 .dijitSpinnerRtl .dijitSpinnerButtonContainer .dijitArrowButton {
 	right: 0;
 	left: auto;
+}
+
+.dj_ie7 .dijitInputContainer {
+	/* to fix wrong text alignment in rtl text box in IE */
+	display: inline-block;
 }
 
 .dijitTextBoxRtl .dijitSpinnerButtonContainer,
@@ -87,13 +92,18 @@
 }
 
 /* ContentPane*/
-.dijitRtl .dijitContentPaneLoading, .dijitRtl .dijitContentPaneError {
-	background-position:right;
-	padding-right:25px;
+
+.dijitRtl .dijitContentPaneLoading .dijitIconLoading,
+.dijitRtl .dijitContentPaneError .dijitIconError {
+	margin-right: 0;
+	margin-left: 9px;
 }
 
 /* TabContainer */
 
+.dijitTabControllerRtl .nowrapTabStrip {
+    text-align: right;  /* just in case ancestor has non-standard setting */
+}
 .dijitTabRtl .dijitTabCloseButton {
 	margin-left: 0;
 	margin-right: 1em;

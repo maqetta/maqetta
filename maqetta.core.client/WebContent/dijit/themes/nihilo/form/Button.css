@@ -52,8 +52,8 @@
 	background:#fafafa url("../images/buttonDisabled.png") top repeat-x;
 	opacity: 0.60;
 }
-.dj_ie6 .nihilo .dijitReadOnly INPUT,
-.dj_ie7 .nihilo .dijitReadOnly INPUT,
+.dj_ie6 .nihilo .dijitReadOnly input,
+.dj_ie7 .nihilo .dijitReadOnly input,
 .dj_ie6 .nihilo .dijitComboButtonDisabled .dijitButtonText,
 .dj_ie7 .nihilo .dijitComboButtonDisabled .dijitButtonText {
 	/* opacity doesn't work on table node in IE, work around here */

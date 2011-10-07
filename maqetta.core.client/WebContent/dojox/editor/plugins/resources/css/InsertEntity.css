@@ -22,16 +22,16 @@
 .dojoxEntityPaletteCell {
 	/* individual cell of the drop down */
 	border: 1px dotted gray;
-	width: 20px;	/* todo: don't hardcode width/height; it's neither nececessary nor a11y safe */
+	width: 20px;	/* todo: don't hardcode width/height; it's neither necessary nor a11y safe */
 	line-height: 18px;
 	overflow: hidden;
 	z-index: 10;
 	text-align: center;
 }
 
-.dojoxEntityPaletteCellHover, .dojoxEntityPaletteCellActive, .dojoxEntityPaletteCellFocused {
+.dojoxEntityPaletteCell:hover, .dojoxEntityPaletteCell:active, .dojoxEntityPaletteCell:focus {
 	width: 18px;
-        line-height: 16px;
+    line-height: 16px;
 	overflow: hidden;
 	cursor: default;
 	border:1px dashed #000;

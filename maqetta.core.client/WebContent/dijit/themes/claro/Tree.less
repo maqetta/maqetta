@@ -46,24 +46,23 @@
 	background-color: none;	// IE6 doesn't understand rgba() or transparent below
 	background-color: transparent;	// IE8 doesn't understand rgba() below
 	background-color: rgba(171,214,255,0);	// rgba() instead of transparent to prevent flash on hover fade-in
-	background-image: url("images/commonHighlight.png");
 	background-position:0 0;
 	background-repeat:repeat-x;
 
 	border-color: rgba(118,157,192,0);	// rgba() instead of none to prevent flash on hover fade-in
 	border-width: 0;
 
+	color: @text-color;
+
 	.transition-property(background-color, border-color);
 	.transition-duration(.25s);
 	.transition-timing-function(ease-out);
-}
-.dj_ie6 .claro .dijitTreeRow {
-	background-image: none;
 }
 
 .claro .dijitTreeRowSelected {
 	background-repeat:repeat-x;
 	background-color:@selected-background-color;
+	background-image: url("images/commonHighlight.png");
 	padding: 3px 0 1px;
 	margin: 0;
 	border:solid 1px @selected-border-color;
@@ -71,6 +70,7 @@
 }
 .claro .dijitTreeRowHover {
 	background-color:@hovered-background-color;
+	background-image: url("images/commonHighlight.png");
 	padding: 3px 0 1px;
 	margin: 0;
 	border:solid 1px @hovered-border-color;
@@ -79,13 +79,14 @@
 }
 .claro .dijitTreeRowActive {
 	background-color:@pressed-background-color;
+	background-image: url("images/commonHighlight.png");
 	background-position:0 -177px;
 	padding: 3px 0 1px;
 	margin-left: 0;
 	border:solid 1px @pressed-border-color;
 	color:@selected-text-color;
 }
-.dj_ie6 .claro .dijitTreeRowActive {
+.dj_ie6 .claro .dijitTreeRow {
 	background-image: none;
 }
 .claro .dijitTreeRowFocused {

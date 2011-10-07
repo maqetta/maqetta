@@ -38,7 +38,7 @@ The 16 x 16px icons in these sprites are action and object type images which can
 .dijitRtl .dijitIconFolderClosed,
 .dijitRtl .dijitFolderOpened,
 .dijitRtl .dijitIconFolderOpen,
-.dijitRtl .dijitIconError, .dijitRtl .dijitContentPaneError { 
+.dijitRtl .dijitIconError { 
 	background-image: url('images/commonIconsObjActEnabled_rtl.png'); /* Contains both object and action icons in a sprite image for the enabled state.  */
 	width: 16px;
 	height: 16px;
@@ -78,7 +78,7 @@ The 16 x 16px icons in these sprites are action and object type images which can
 .dj_ie6 .dijitRtl .dijitIconFolderClosed,
 .dj_ie6 .dijitRtl .dijitFolderOpened,
 .dj_ie6 .dijitRtl .dijitIconFolderOpen,
-.dj_ie6 .dijitRtl .dijitIconError, .dj_ie6 .dijitRtl .dijitContentPaneError {
+.dj_ie6 .dijitRtl .dijitIconError {
 	background-image: url('images/commonIconsObjActEnabled8bit_rtl.png');
 }
 
@@ -116,12 +116,6 @@ The 16 x 16px icons in these sprites are action and object type images which can
 .dijitRtl .dijitDisabled .dijitIconFolderClosed,
 .dijitRtl .dijitDisabled .dijitFolderOpened,
 .dijitRtl .dijitDisabled .dijitIconFolderOpen,
-.dijitRtl .dijitDisabled .dijitIconError, .dijitRtl .dijitDisabled .dijitContentPaneError {
+.dijitRtl .dijitDisabled .dijitIconError {
 	background-image: url('images/commonIconsObjActDisabled_rtl.png'); /* Contains both object and action icons as a sprite image for the disabled state. These would be used by buttons and menus.   */
-}
-
-
-/*For Claro and future themes.*/
-.dijitRtl .dijitContentPaneLoading {
-	background:url('images/loadingAnimation_rtl.gif') no-repeat;
 }

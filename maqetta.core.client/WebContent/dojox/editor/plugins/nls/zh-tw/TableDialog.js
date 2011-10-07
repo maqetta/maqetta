@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertTableTitle: "插入表格",
 	modifyTableTitle: "修改表格",
@@ -29,3 +31,5 @@
 	deleteTableColumnLabel: "刪除欄"
 })
 
+//end v1.x content
+);

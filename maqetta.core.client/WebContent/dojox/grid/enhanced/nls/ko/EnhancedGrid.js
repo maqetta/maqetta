@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	singleSort: "단일 정렬",
 	nestedSort: "중첩된 정렬",
@@ -9,4 +11,6 @@
 	indirectSelectionCheckBox: "행 ${0}, 다중 선택, 선택란",
 	selectAll: "모두 선택"
 })
+//end v1.x content
+);
 

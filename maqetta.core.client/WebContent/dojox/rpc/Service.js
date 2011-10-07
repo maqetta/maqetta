@@ -1,4 +1,4 @@
-define("dojox/rpc/Service", ["dojo", "dojox", "dojo.AdapterRegistry"], function(dojo, dojox) {
+define("dojox/rpc/Service", ["dojo", "dojox", "dojo/AdapterRegistry", "dojo/_base/url"], function(dojo, dojox) {
 
 dojo.declare("dojox.rpc.Service", null, {
 	constructor: function(smd, options){
@@ -111,7 +111,7 @@ dojo.declare("dojox.rpc.Service", null, {
 						delete args[i];
 					}
 				}
-				
+
 			}
 			// setting default values
 			for(i=0; i< parameters.length; i++){
@@ -134,11 +134,11 @@ dojo.declare("dojox.rpc.Service", null, {
 				args = args[0];
 			}
 		}
-		
+
 		if(dojo.isObject(this._options)){
 			args = dojo.mixin(args, this._options);
 		}
-		
+
 		var schema = method._schema || method.returns; // serialize with the right schema for the context;
 		var request = envDef.serialize.apply(this, [smd, method, args]);
 		request._envDef = envDef;// save this for executeMethod
@@ -169,7 +169,7 @@ dojo.declare("dojox.rpc.Service", null, {
 		}
 		var request = this._getRequest(method,args);
 		var deferred = dojox.rpc.transportRegistry.match(request.transport).fire(request);
-		
+
 		deferred.addBoth(function(results){
 			return request._envDef.deserialize.call(this,results);
 		});

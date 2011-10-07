@@ -12,17 +12,11 @@
 	</style>
 
 	<!-- required: dojo.js -->
-	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true"></script>
+	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="async: true, isDebug: true"></script>
 
-	<!-- for debuggin: -->
-	<!--<script type="text/javascript" src="../_base.js"></script>-->
-	<!--<script type="text/javascript" src="../path.js"></script>-->
-	<!--<script type="text/javascript" src="../vml.js"></script>-->
-	<!--<script type="text/javascript" src="../svg.js"></script>-->
-	<!--<script type="text/javascript" src="../silverlight.js"></script>-->
 	<script type="text/javascript">
 
-		dojo.require("dojox.gfx");
+		require(['dojox/gfx','dojo/domReady!'], function(gfx){
 
 		var gTestContainer = null;
 		var gTests = {};
@@ -108,7 +102,6 @@
 
 		var runTest = dojo.config.isDebug ? runTest_debug : runTest_nodebug;
 
-		dojo.addOnLoad(function(){
 			gTestContainer = dojo.byId('testcontainer');
 			var rect = { x: 0, y: 0, width: 100, height: 100 };
 

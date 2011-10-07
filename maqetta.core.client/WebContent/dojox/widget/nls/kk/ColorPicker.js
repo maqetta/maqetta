@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 redLabel: "r",
 greenLabel: "д",
@@ -9,4 +11,4 @@ hexLabel: "алтылық",
 huePickerTitle: "Реңкті іріктеу",
 saturationPickerTitle: "Қанықтықты іріктеу"
 })
-
+);

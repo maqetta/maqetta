@@ -263,12 +263,11 @@ dojo.declare("dojox.widget.FisheyeList", [dijit._Widget, dijit._Templated, dijit
 		// Node: Must must be display:block (ie, not a <span>)
 		node = dojo.byId(node);
 		var mouse = {x: e.pageX, y: e.pageY};
-		var bb = dojo._getBorderBox(node);
-		var absolute = dojo.coords(node, true);
+		var absolute = dojo.position(node, true);
 		var top = absolute.y;
-		var bottom = top + bb.h;
+		var bottom = top + absolute.h;
 		var left = absolute.x;
-		var right = left + bb.w;
+		var right = left + absolute.w;
 
 		return (mouse.x >= left
 			&& mouse.x <= right

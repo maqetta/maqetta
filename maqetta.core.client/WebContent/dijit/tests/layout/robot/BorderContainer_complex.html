@@ -19,7 +19,7 @@
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_BorderContainer_complex.html');
 
 				doh.register("API", [
@@ -51,7 +51,7 @@
 							doh.robot.mouseClick({left:true}, 500);
 							
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("mainTabContainer_tablist_tab1", dojo.global.dijit._curFocus.id, "current focus was not tab1");
+								doh.is("mainTabContainer_tablist_tab1", dojo.global.dijit.focus.curNode.id, "current focus was not tab1");
 								doh.is("tab1", dijit.byId("mainTabContainer").selectedChildWidget.id, "Tab1 pane is not the selected pane");
 								doh.t(isVisible(dijit.byId("tab1")), "Tab1 is hidden");
 								doh.t(isHidden(dijit.byId("tab2")), "Tab2 is visible");
@@ -68,7 +68,7 @@
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 1000, {});
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("mainTabContainer_tablist_tab2", dojo.global.dijit._curFocus.id, "current focus was not tab2");
+								doh.is("mainTabContainer_tablist_tab2", dojo.global.dijit.focus.curNode.id, "current focus was not tab2");
 								doh.is("tab2", dijit.byId("mainTabContainer").selectedChildWidget.id, "Tab2 pane is not the selected pane");
 								doh.t(isVisible(dijit.byId("tab2")), "Tab2 is hidden");
 								doh.t(isHidden(dijit.byId("tab1")), "Tab1 is visible");
@@ -85,7 +85,7 @@
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 1000, {});
 							
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("mainTabContainer_tablist_tab3", dojo.global.dijit._curFocus.id, "current focus was not tab3");
+								doh.is("mainTabContainer_tablist_tab3", dojo.global.dijit.focus.curNode.id, "current focus was not tab3");
 								doh.is("tab3", dijit.byId("mainTabContainer").selectedChildWidget.id, "Tab3 pane is not the selected pane");
 								doh.t(isVisible(dijit.byId("tab3")), "Tab3 is hidden");
 								doh.t(isHidden(dijit.byId("tab2")), "Tab2 is visible");
@@ -102,7 +102,7 @@
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 1000, {});
 							
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("mainTabContainer_tablist_tab4", dojo.global.dijit._curFocus.id, "current focus was not tab4");
+								doh.is("mainTabContainer_tablist_tab4", dojo.global.dijit.focus.curNode.id, "current focus was not tab4");
 								doh.is("tab4", dijit.byId("mainTabContainer").selectedChildWidget.id, "Tab4 pane is not the selected pane");
 								doh.t(isVisible(dijit.byId("tab4")), "Tab4 is hidden");
 								doh.t(isHidden(dijit.byId("tab3")), "Tab3 is visible");
@@ -119,7 +119,7 @@
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 1000, {});
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("mainTabContainer_tablist_tab5", dojo.global.dijit._curFocus.id, "current focus was not tab5");
+								doh.is("mainTabContainer_tablist_tab5", dojo.global.dijit.focus.curNode.id, "current focus was not tab5");
 								doh.is("tab5", dijit.byId("mainTabContainer").selectedChildWidget.id, "Tab5 pane is not the selected pane");
 								doh.t(isVisible(dijit.byId("tab5")), "Tab5 is hidden");
 								doh.t(isHidden(dijit.byId("tab4")), "Tab4 is visible");
@@ -136,7 +136,7 @@
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 1000, {});
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("mainTabContainer_tablist_tab6", dojo.global.dijit._curFocus.id, "current focus was not tab6");
+								doh.is("mainTabContainer_tablist_tab6", dojo.global.dijit.focus.curNode.id, "current focus was not tab6");
 								doh.is("tab6", dijit.byId("mainTabContainer").selectedChildWidget.id, "Tab6 pane is not the selected pane");
 								doh.t(isVisible(dijit.byId("tab6")), "Tab6 is hidden");
 								doh.t(isHidden(dijit.byId("tab5")), "Tab5 is visible");
@@ -174,7 +174,7 @@
 							// Connect to _hideChild() as a trick to tell when animation is finished
 							handle = dojo.connect(dijit.byId("ac1"), "_hideChild", function(){
 								setTimeout(d.getTestCallback(function(){
-									doh.is("ap2_button", dojo.global.dijit._curFocus.parentNode.id, "current focus was not ap2");
+									doh.is("ap2_button", dojo.global.dijit.focus.curNode.parentNode.id, "current focus was not ap2");
 									doh.is("ap2", dijit.byId("ac1").selectedChildWidget.id, "ap2 is not the selected pane");
 									doh.t(isVisible(dijit.byId("ap2")), "ap2 is visible");
 									doh.t(isHidden(dijit.byId("ap1")), "ap1 is hidden");
@@ -198,7 +198,7 @@
 							// Connect to _hideChild() as a trick to tell when animation is finished
 							handle = dojo.connect(dijit.byId("ac1"), "_hideChild", function(){
 								setTimeout(d.getTestCallback(function(){
-									doh.is("ap3_button", dojo.global.dijit._curFocus.parentNode.id, "current focus was not ap3");
+									doh.is("ap3_button", dojo.global.dijit.focus.curNode.parentNode.id, "current focus was not ap3");
 									doh.is("ap3", dijit.byId("ac1").selectedChildWidget.id, "ap3 is not the selected pane");
 									doh.t(isVisible(dijit.byId("ap3")), "ap3 is visible");
 									doh.t(isHidden(dijit.byId("ap2")), "ap2 is hidden");
@@ -221,29 +221,42 @@
 
 							var accordion = dojo.position(dojo.byId("ac1"));
 							var centerPane = dojo.position(dojo.byId("mainCP"));
+							var centerPaneRight = centerPane.x + centerPane.w;
+							var filteringSelectWidth = dojo.position(dijit.byId("filteringSelect").domNode).w;
+							var move = filteringSelectWidth - centerPane.w + 30;
 
 							// Drag slider to shrink pane 
 							var size = dojo.position("ac1_splitter");
-							doh.robot.mouseMoveAt("ac1_splitter", 500, 1);
+							doh.robot.mouseMoveAt("ac1_splitter", 0, 1);
 							doh.robot.mousePress({left: true}, 500);
-							doh.robot.mouseMoveAt("ac1_splitter", 500, 500, size.w/2+30, size.h/2);
-							doh.robot.mouseRelease({left: true}, 1000);
-							
-							doh.robot.sequence(d.getTestCallback(function(){
-								// test that the margin box for the accordion pane grows the same size as the splitter moved
-								var newAccordion = dojo.position(dojo.byId("ac1"));
-								doh.is(newAccordion.w, accordion.w+30);
-								
-								// test that the center content got smaller by the same size that the splitter moved
+							doh.robot.mouseMoveAt("ac1_splitter", 500, 1, size.w/2-move, size.h/2);
+							doh.robot.sequence(function(){
 								var newCenterPane = dojo.position(dojo.byId("mainCP"));
-								doh.is(newCenterPane.w, centerPane.w-30);
-							}), 1000);
+								var newCenterPaneRight = newCenterPane.x + newCenterPane.w;
+								// center could overlap right pane
+								var move2 = centerPaneRight - newCenterPaneRight;
+								doh.robot.mouseMoveAt("ac1_splitter", 500, 1, size.w/2-move2, size.h/2);
+								move += move2;
+							
+								doh.robot.mouseRelease({left: true}, 500);
+								doh.robot.sequence(d.getTestCallback(function(){
+									// test that the margin box for the accordion pane grows the same size as the splitter moved
+									var newAccordion = dojo.position(dojo.byId("ac1"));
+									doh.is(newAccordion.w, accordion.w-move, 'old accordion w = ' + accordion.w + ', new w = ' + newAccordion.w);
+									
+									// test that the center content got smaller by the same size that the splitter moved
+									var newCenterPane = dojo.position(dojo.byId("mainCP"));
+									var newCenterPaneRight = newCenterPane.x + newCenterPane.w;
+									doh.is(newCenterPane.w, centerPane.w+move-centerPaneRight+newCenterPaneRight, 'old center pane w = ' + centerPane.w + ', new w = ' + newCenterPane.w);
+								}), 500);
+							}, 500);
 
 							return d;
 						}
 					}
 				]);
 				
+				var filteringSelect, handler;
 				doh.register("filteringSelect", [
 					{
 						name: "changeValue",
@@ -251,16 +264,21 @@
 						runTest: function(t){
 							var d = new doh.Deferred();
 							
-							dijit.byId("filteringSelect").connect(dijit.byId("filteringSelect"), "onChange", function(e){d.callback(true); });
+							filteringSelect = dijit.byId("filteringSelect");
+							handler = filteringSelect.connect(filteringSelect, "onChange", function(e){
+								d.callback(true);
+							});
 							
-							doh.robot.mouseMoveAt("filteringSelect", 500, 1);
-							doh.robot.mouseClick({left:true}, 500);
-							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500, {});
-							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500, {});
+							filteringSelect.focus();
+							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 1000, {});
+							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 1000, {});
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500, {});
 							doh.robot.keyPress(dojo.keys.ENTER, 500, {});
 							
 							return d;
+						},
+						tearDown: function(t){
+							filteringSelect.disconnect(handler);
 						}
 					}
 				]); 

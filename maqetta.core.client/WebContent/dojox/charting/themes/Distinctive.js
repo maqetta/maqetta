@@ -1,8 +1,6 @@
-dojo.provide("dojox.charting.themes.Distinctive");
-dojo.require("dojox.charting.Theme");
-(function(){
-	var dxc=dojox.charting;
-	dxc.themes.Distinctive=new dxc.Theme({
+define(["../Theme", "./common"], function(Theme, themes){
+	
+	themes.Distinctive=new Theme({
 		colors: [
 			"#497c91",
 			"#ada9d6",
@@ -39,4 +37,6 @@ dojo.require("dojox.charting.Theme");
 		
 		]
 	});
-})();
+	
+	return themes.Distinctive;
+});

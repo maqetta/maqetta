@@ -1,7 +1,8 @@
-dojo.provide("dojox.lang.utils");
-
-(function(){
-	var empty = {}, du = dojox.lang.utils, opts = Object.prototype.toString;
+define(["..", "dojo/_base/lang"], 
+  function(dojox, lang){
+	var du = lang.getObject("lang.utils", true, dojox);
+	
+	var empty = {}, opts = Object.prototype.toString;
 
 	var clone = function(o){
 		if(o){
@@ -9,13 +10,13 @@ dojo.provide("dojox.lang.utils");
 				case "[object Array]":
 					return o.slice(0);
 				case "[object Object]":
-					return dojo.delegate(o);
+					return lang.delegate(o);
 			}
 		}
 		return o;
 	}
 	
-	dojo.mixin(du, {
+	lang.mixin(du, {
 		coerceType: function(target, source){
 			// summary: Coerces one object to the type of another.
 			// target: Object: object, which typeof result is used to coerce "source" object.
@@ -80,7 +81,7 @@ dojo.provide("dojox.lang.utils");
 						return mixin.slice(0);
 					case "[object Object]":
 						if(mtype == otype && object){
-							t = dojo.delegate(object);
+							t = lang.delegate(object);
 							for(i in mixin){
 								if(i in object){
 									l = object[i];
@@ -89,15 +90,17 @@ dojo.provide("dojox.lang.utils");
 										t[i] = du.merge(l, m);
 									}
 								}else{
-									t[i] = dojo.clone(mixin[i]);
+									t[i] = lang.clone(mixin[i]);
 								}
 							}
 							return t;
 						}
-						return dojo.clone(mixin);
+						return lang.clone(mixin);
 				}
 			}
 			return mixin;
 		}
 	});
-})();
+	
+	return du;
+});

@@ -1,6 +1,7 @@
-	<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+	"http://www.w3.org/TR/html4/loose.dtd">
 <html>
-    <head>
+	<head>
         <title>dojox.grid.TreeGrid Lazy-loading for children items test</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
         <style type="text/css">
@@ -18,20 +19,26 @@
 				text-align:center;
 				margin:1em;
 			}
-			.grid {
-                width: 70em;
-                height: 30em;
+			#grid1 {
+                width: 65em;
+                height: 25em;
+				border: 1px solid #333333;
+            }
+			#grid2 {
+                width: 65em;
+                height: 25em;
 				border: 1px solid #333333;
             }
         </style>
         <script type="text/javascript" src="../../../dojo/dojo.js"  djConfig="isDebug:true, parseOnLoad: true"></script>
         <script type="text/javascript">
             dojo.require("dojox.grid.LazyTreeGrid");
+			dojo.require("dojo.data.ItemFileWriteStore");
             dojo.require("dijit.tree.ForestStoreModel");
-            dojo.require("dojo.data.ItemFileWriteStore");
-            dojo.require("dojo.parser");
+			dojo.require("dojox.grid.LazyTreeGridStoreModel");
 			dojo.require("dijit.form.Button");
-
+			
+			// large dataset
 			var rows = 5;
 			var continentItems = [
 				{name:'South America', type:'continent', population:'', area:''},
@@ -96,59 +103,67 @@
 				]
 			};
 			
-			function deleteItem() {
-				var item = grid.getItem(3);
-				grid.store.deleteItem(item);
-			}
+			var readStore = new dojo.data.ItemFileReadStore({data: dataItems});
+			var writeStore = new dojo.data.ItemFileWriteStore({url: "support/countryStore.json?"});
+			var model1 = new dijit.tree.ForestStoreModel({store: readStore, childrenAttrs: ['children']})
+			var model2 = new dojox.grid.LazyTreeGridStoreModel({store: writeStore, childrenAttrs: ['children']});
 			
-			var idx = 1000;
+			var layout = [
+				{name: 'Name', field: 'name', width: 'auto'},
+				{name: 'Type', field: 'type', width: 'auto'},
+				{name: 'Population', field: 'population', width: 'auto'},
+				{name: 'Area', field: 'area', width: 'auto'}
+			]
+			
+			function refresh(flg){
+				grid2.refresh(flg);
+			}
+			var idx = 0;
 			function addItem(){
-				var item = {id:'test_' + idx, name:'test_' + idx, type:'', population: '', area: ''};
-				grid.store.newItem(item);
-				idx++;
+				var item = {id:'test_' + idx, name:'test_' + (idx++), type:'', population: '', area: ''};
+				grid2.store.newItem(item);
 			}
-			
 			function addChildItem(){
-				var addedItem = {id:'test_child_' + idx, name:'test_child_' + idx, type:'', population: '', area: ''};
-				var s = grid.store;
-				s.fetchItemByIdentity({identity: "Continent", onItem: function(item){
-					s.newItem(addedItem, {parent: item, attribute: "children"});
-					idx++;
-				}});
+				var parentItem = grid2.selection.getSelected()[0];
+				if(parentItem){
+					var item = {id:'test_child_' + idx, name:'test_child_' + (idx++), type:'', population: '', area: ''};
+					grid2.store.newItem(item, {parent: parentItem, attribute: "children"});
+				}
 			}
-			
 			function removeSelected(){
-				grid.removeSelectedRows();
+				grid2.removeSelectedRows();
 			}
-
+			function expandSelected(){
+				var item = grid2.selection.getSelected()[0];
+				if(item){
+					grid2.expand(grid2.store.getIdentity(item));
+				}
+			}
+			function collapseSelected(){
+				var item = grid2.selection.getSelected()[0];
+				if(item){
+					grid2.collapse(grid2.store.getIdentity(item));
+				}
+			}
         </script>
     </head>
     <body class="claro">
         <h1 class="title">Test: dojox.grid.TreeGrid - Lazy-loading for children items</h1>
-        <span dojoType="dojo.data.ItemFileWriteStore"
-              jsId="jsonStore" data="dataItems">
-        </span>
-
-        <div dojoType="dijit.tree.ForestStoreModel" jsId="continentModel"
-        	store="jsonStore" query="{type:'*'}" childrenAttrs="children"></div>
-		<div dojoType="dojox.grid.LazyTreeGridStoreModel" jsId="continentModel"
-        	store="jsonStore" query="{type:'*'}" childrenAttrs="children"></div>
-
-        <table jsid="grid" dojoType="dojox.grid.LazyTreeGrid" class="grid" defaultOpen=true rowsPerPage=5
-			   store="jsonStore" treeModel="continentModel" rowSelector="20px"  columnReordering=true>
-            <thead>
-                <tr>
-                    <th field="name" width="auto">Name</th>
-                    <th field="type" width="auto">Type</th> 
-					<th field="population" width="auto">Population</th>
-					<th field="area" width="auto">Area</th>
-                </tr>
-            </thead>
-        </table>
+		<h2>grid 1</h2>
+		<div id='grid1' jsid='grid1' dojoType='dojox.grid.LazyTreeGrid' 
+				structure='layout' treeModel='model1' rowSelector='true'></div>
+				
+		<h2>grid 2</h2>
+		<div id='grid2' jsid='grid2' dojoType='dojox.grid.LazyTreeGrid'
+				structure='layout' treeModel='model2' 
+				keepSelection='true' rowSelector='true'></div>
+		
+		<button dojoType="dijit.form.Button" onClick="refresh(true)">Refresh with state</button>
+		<button dojoType="dijit.form.Button" onClick="refresh(false)">Refresh without state</button>
+		<button dojoType="dijit.form.Button" onClick="addItem()">Add Item</button>
+		<button dojoType="dijit.form.Button" onClick="addChildItem()">Add Child Item</button>
+		<button dojoType="dijit.form.Button" onClick="removeSelected()">Delete Selected</button>
+		<button dojoType="dijit.form.Button" onClick="expandSelected()">Expand Selected</button>
+		<button dojoType="dijit.form.Button" onClick="collapseSelected()">Collapse Selected</button>
     </body>
-	
-	<button dojoType="dijit.form.Button" onClick="addItem()">Add Item</button>
-	<button dojoType="dijit.form.Button" onClick="addChildItem()">Add Child Item</button>
-	<button dojoType="dijit.form.Button" onClick="removeSelected()">Delete Selected</button>
 </html>
-

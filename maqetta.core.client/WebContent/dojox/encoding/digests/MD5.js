@@ -1,5 +1,8 @@
-// AMD-ID "dojox/encoding/digests/MD5"
-define(["dojo", "dojox", "dojox/encoding/digests/_base"], function(dojo, dojox) {
+define(["dojo/_base/kernel", "./_base"], function(dojo, dxd) {
+
+	/*=====
+		dxd = dojox.encoding.digests;
+	=====*/
 
 /*	A port of Paul Johnstone's MD5 implementation
  *	http://pajhome.org.uk/crypt/md5/index.html
@@ -10,8 +13,7 @@ define(["dojo", "dojox", "dojox/encoding/digests/_base"], function(dojo, dojox) 
  *
  *	Dojo port by Tom Trenka
  */
-(function(){
-	var dxd=dojox.encoding.digests;
+
 	var chrsz=8;
 
 	//	MD5 rounds functions
@@ -169,8 +171,6 @@ define(["dojo", "dojox", "dojox/encoding/digests/_base"], function(dojo, dojox) 
 			}
 		}
 	};
-})();
 
-
-return dojox.encoding.digests.MD5;
+	return dxd.MD5;
 });

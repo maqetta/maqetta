@@ -66,14 +66,14 @@ dojo.require("util.docscripts.cheat.floatup");
 
 				"Event-System":[
 					"connect", "publish", "subscribe", "pub", "sub", "unsubscribe", "disconnect",
-					"fixEvent", "stopEvent", "connectPublisher", "isCopyKey", "mouseButtons"
+					"fixEvent", "stopEvent", "connectPublisher", "isCopyKey", "mouseButtons", "on"
 				],
 
 				"NodeList-Events":[
 					"onmousedown", "onmouseenter", "onmouseleave", "onmousemove", "onmouseover",
 					 "onmouseout", "onblur",
 					"onfocus", "onclick", "onchange", "onload", "onmousedown", "onmouseup", "onsubmit",
-					"onerror", "onkeydown", "onkeypress", "onkeyup", "hover"
+					"onerror", "onkeydown", "onkeypress", "onkeyup", "hover", "on"
 				],
 
 				"NodeList-Misc":[
@@ -87,14 +87,13 @@ dojo.require("util.docscripts.cheat.floatup");
 
 				"Package-System":[
 					"require", "provide", "load", "requireLocalization", "requireIf", "dfdLoad",
-					"moduleUrl", "requireAfterIf", "registerModulePath", "platformRequire"
+					"moduleUrl", "requireAfterIf", "registerModulePath", "platformRequire", "isAsync"
 				],
 
 				"Document-Lifecycle":[
 					"addOnLoad", "addOnUnload", "addOnWindowUnload","loaded",
 					"unloaded", "loadInit",  "windowUnloaded", "ready"
 				],
-
 
 				"DOM-Manipulation":[
 					"create", "wrap", "place", "byId", "query", "empty", "destroy", "generateId", "clone",
@@ -130,7 +129,7 @@ dojo.require("util.docscripts.cheat.floatup");
 
 				"Sniffing":[
 					"isBrowser", "isFF", "isKhtml", "isMoz", "isMozilla", "isIE", "isOpera", "isBrowser",
-					"isQuirks", "isWebKit", "isChrome", /* new 1.4 */ "isMac"
+					"isQuirks", "isWebKit", "isChrome", "isSafari", "isAIR", /* new 1.4 */ "isMac"
 				]
 			},
 			

@@ -13,7 +13,7 @@ Credits
 		Preview, Save, ToolbarLineBreak, InsertEntity, 
 		NormalizeIndentOutdent, Breadcrumb, FindReplace, 
 		CollapsibleToolbar, Blockquote, PasteFromWord, InsertAnchor,
-		TextColor, NormalizeStyle, StatusBar)
+		TextColor, NormalizeStyle, StatusBar, SafePaste)
 	Dustin Machi 	 - Technical Assistance
 	David Schwartz and Gu Yi He (IBM) - Contributed enhancements to the
 		look and feel of FindReplace, as well as behavioral
@@ -159,6 +159,13 @@ dojox.editor.plugins.SpellCheck
 	Status: Experimental (Unsupported)
 	A plugin that provides server-side spell-check support.
 
+	
+dojox.editor.plugins.SafePaste
+	Status: Beta (Supported)
+	A plugin that provides a safer paste function to the editor.  It strips out script tags, 
+	tries to fix up odd input from Word, Wordpad, etc.  Very similar to PasteFromWord except that
+	it takes complete control of paste in dijit.Editor instead of being an alternate paste icon.
+	
 -------------------------------------------------------------------------------
 Dependencies:
 
@@ -197,6 +204,7 @@ See also:
 	http://docs.dojocampus.org/dojox/editor/plugins/ResizeTableColumn
 	http://docs.dojocampus.org/dojox/editor/plugins/AutoSave
 	http://docs.dojocampus.org/dojox/editor/plugins/SpellCheck
+	http://docs.dojocampus.org/dojox/editor/plugins/SafePaste
 
 	
 -------------------------------------------------------------------------------
@@ -326,7 +334,12 @@ For the SpellCheck plugin:
 	dojo.require("dojox.editor.plugins.SpellCheck");
 	and CSS:
 	<link href="[path]dojox/editor/plugins/resources/css/SpellCheck.css" type="text/css" rel="stylesheet" />
-                
+
+For the SafePaste plugin:
+	dojo.require("dojox.editor.plugins.SafePaste");
+	and CSS:
+	<link href="[path]dojox/editor/plugins/resources/css/SafePaste.css" type="text/css" rel="stylesheet" />
+	
 See tests for examples:
 	dojox/editor/tests/editorTablePlugs.html
 	dojox/editor/tests/editorUploadPlug.html
@@ -352,4 +365,5 @@ See tests for examples:
 	dojox/editor/tests/editorResizeTableColumn.html
 	dojox/editor/tests/editorAutoSave.html
 	dojox/editor/tests/editorSpellCheck.html
+	dojox/editor/tests/editorSafePaste.html
 	dojox/editor/tests/testPluginsAll.html

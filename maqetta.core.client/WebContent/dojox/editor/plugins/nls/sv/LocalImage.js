@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertImageTitle: "Infoga bild",
 	url: "Bild",
@@ -9,3 +11,5 @@
 	prePopuTextBrowse: " eller bläddra efter en lokal fil."
 })
 
+//end v1.x content
+);

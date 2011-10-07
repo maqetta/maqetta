@@ -10,18 +10,17 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_Textarea.html');
 
 				// execute some test as soon as the widget gets focus
 				var focusThenRun = function(widget, fcn){
-					if(!widget._focused){
+					if(!widget.focused){
 						var handler = widget.connect(widget, '_onFocus', function(){
 							widget.disconnect(handler);
 							setTimeout(fcn, 1);
@@ -144,17 +143,19 @@
 								d = new doh.Deferred(),
 								modifier = dojo.isMac ? {meta: true} : {ctrl: true},
 								w = dijit.byId("blank"),
-								height1 = dojo.marginBox(w.domNode).h,
-								height2,
-								height3;
+								height1, height2, height3;
 
 							focusThenRun(w, function(){
+								doh.robot.keyPress(dojo.keys.ENTER, 500, {});
+								doh.robot.sequence(function(){
+									height1 = dojo.marginBox(w.domNode).h;
+								}, 500);
 								// Cut text, height should decrease
 								doh.robot.keyPress("a", 1, modifier);
 								doh.robot.keyPress("x", 500, modifier);
 								doh.robot.sequence(function(){
 									height2 = dojo.marginBox(w.domNode).h;
-								}, 1000);
+								}, 500);
 
 								// Paste text, height should increase
 								doh.robot.keyPress("v", 500, modifier);
@@ -163,7 +164,7 @@
 									height3 = dojo.marginBox(w.domNode).h;
 									doh.t(height2 < height1, "height went from " + height1 + " to " + height2);
 									doh.t(height3 > height2, "height went from " + height2 + " to " + height3);
-								}), 1000);
+								}), 500);
 							});
 
 							return d;
@@ -205,6 +206,25 @@
 									doh.is(50, value1.length, "should have stopped at 50, value is " + value1);
 									doh.is(49, value2.length, "erased a char, value is " + value2);
 									doh.is(50, value3.length, "tried to type 2 chars but only 1 should fit, value is " + value3);
+								}), 500);
+							});
+
+							return d;
+						}
+					},
+					{
+						name: "#13166",
+						timeout: 5000,
+						runTest: function(){
+							var
+								d = new doh.Deferred(),
+								w = dijit.byId("programmatic");
+
+							focusThenRun(w, function(){
+								var h = parseInt(w.domNode.style.height);
+								doh.robot.keyPress(" ", 500, {});
+								doh.robot.sequence(d.getTestCallback(function(){
+									doh.t(parseInt(w.domNode.style.height) >= h, "height should not shrink");
 								}), 500);
 							});
 

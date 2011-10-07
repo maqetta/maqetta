@@ -94,7 +94,7 @@
 				fetchProperties: {sort:[{attribute: 'name', descending: true}]}
 			}, dojo.byId("progCombo3"));
 		}
-		dojo.addOnLoad(init);
+		dojo.ready(init);
 
 		function toggleDisabled(button, widget){
 			widget = dijit.byId(widget);
@@ -103,12 +103,12 @@
 			button.innerHTML= widget.disabled ? "Enable" : "Disable";
 		}
 
-		function getValue() {
+		function getValue(){
 			var f = document.getElementById("form1");
 			var s = "";
-			for (var i = 0; i < f.elements.length; i++) {
+			for(var i = 0; i < f.elements.length; i++){
 				var elem = f.elements[i];
-				if (elem.nodeName.toLowerCase() == "button" || elem.type=="submit" || elem.type=="button")  { continue; }
+				if(elem.nodeName.toLowerCase() == "button" || elem.type=="submit" || elem.type=="button")  { continue; }
 				s += elem.name + ": " + elem.value + "\n";
 			}
 			return s;
@@ -146,7 +146,6 @@
 		<script type="text/javascript">
 			function setValueTestOnChange(newValue){
 				if(this.lastlabelFuncMsg){
-					console.info(this.lastlabelFuncMsg);
 					this.lastlabelFuncMsg = '';
 				}
 				dojo.byId('oc1').value = newValue;
@@ -162,13 +161,13 @@
 					console.error(this.id + ' has an undefined item, onChange value = ' + newValue + ', widget value = ' + this.value + ', displayed Value = ' + this.textbox.value);
 					this.itemError = true;
 				}else{
-					itemLabel = this.store.getValue(this.item, this.searchAttr).toString();
+					itemLabel = this.item[this.searchAttr].toString();
 				}
 				dojo.byId('i1').value = itemLabel;
 			}
 			function setValueTestLabelFunc(item, store){
-				var label = store.getValue(item, this.searchAttr);
-				var value = store.getValue(item, 'value');
+				var label = item[this.searchAttr];
+				var value = item.value;
 				if(!this.labelFuncCount){ this.labelFuncCount = 0; }
 				if(!this.labelFuncCounts){ this.labelFuncCounts = []; }
 				if(!this.labelFuncCounts[value]){ this.labelFuncCounts[value] = 0; }
@@ -501,7 +500,7 @@
 				selectOnClick:true,
 				value:"h1",
 				labelType:"html",
-				labelFunc:function(node){ var txt = node.innerHTML; return "<"+txt+">"+txt+"</"+txt+">"; }
+				labelFunc:function(item){ var txt = item.value; return "<"+txt+">"+txt+"</"+txt+">"; }
 		'>
 			<option value="h1">h1</option>
 			<option value="h2">h2</option>

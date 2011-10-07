@@ -1,12 +1,17 @@
-dojo.provide("dojox.dtl.tag.loader");
+define([
+	"dojo/_base/lang",
+	"../_base",
+	"dojo/_base/array",
+	"dojo/_base/connect"
+], function(lang,dd,array,connect){
+	/*=====
+		dd = dojox.dtl;
+	=====*/
+	lang.getObject("dojox.dtl.tag.loader", true);
 
-dojo.require("dojox.dtl._base");
-
-(function(){
-	var dd = dojox.dtl;
 	var ddtl = dd.tag.loader;
 
-	ddtl.BlockNode = dojo.extend(function(name, nodelist){
+	ddtl.BlockNode = lang.extend(function(name, nodelist){
 		this.name = name;
 		this.nodelist = nodelist; // Can be overridden
 	},
@@ -47,14 +52,14 @@ dojo.require("dojox.dtl._base");
 
 			if(buffer.getParent){
 				var bufferParent = buffer.getParent();
-				var setParent = dojo.connect(buffer, "onSetParent", function(node, up, root){
+				var setParent = connect.connect(buffer, "onSetParent", function(node, up, root){
 					if(up && root){
 						buffer.setParent(bufferParent);
 					}
 				});
 			}
 			buffer = nodelist.render(context, buffer, this);
-			setParent && dojo.disconnect(setParent);
+			setParent && connect.disconnect(setParent);
 			context = context.pop();
 			return buffer;
 		},
@@ -67,7 +72,7 @@ dojo.require("dojox.dtl._base");
 		toString: function(){ return "dojox.dtl.tag.loader.BlockNode"; }
 	});
 
-	ddtl.ExtendsNode = dojo.extend(function(getTemplate, nodelist, shared, parent, key){
+	ddtl.ExtendsNode = lang.extend(function(getTemplate, nodelist, shared, parent, key){
 		this.getTemplate = getTemplate;
 		this.nodelist = nodelist;
 		this.shared = shared;
@@ -149,7 +154,7 @@ dojo.require("dojox.dtl._base");
 		toString: function(){ return "dojox.dtl.block.ExtendsNode"; }
 	});
 
-	ddtl.IncludeNode = dojo.extend(function(path, constant, getTemplate, text, parsed){
+	ddtl.IncludeNode = lang.extend(function(path, constant, getTemplate, text, parsed){
 		this._path = path;
 		this.constant = constant;
 		this.path = (constant) ? path : new dd._Filter(path);
@@ -231,7 +236,7 @@ dojo.require("dojox.dtl._base");
 		}
 	});
 
-	dojo.mixin(ddtl, {
+	lang.mixin(ddtl, {
 		block: function(parser, token){
 			var parts = token.contents.split();
 			var name = parts[1];
@@ -294,4 +299,5 @@ dojo.require("dojox.dtl._base");
 			return node;
 		}
 	});
-})();
+	return dojox.dtl.tag.loader;
+});

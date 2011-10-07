@@ -1,16 +1,19 @@
-dojo.provide("dojox.grid.enhanced.plugins.exporter.CSVWriter");
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"./_ExportWriter",
+	"../Exporter"
+], function(declare, array, _ExportWriter, Exporter){
 
-dojo.require("dojox.grid.enhanced.plugins.exporter._ExportWriter");
+Exporter.registerWriter("csv", "dojox.grid.enhanced.plugins.exporter.CSVWriter");
 
-dojox.grid.enhanced.plugins.Exporter.registerWriter("csv",
-	"dojox.grid.enhanced.plugins.exporter.CSVWriter");
-
-dojo.declare("dojox.grid.enhanced.plugins.exporter.CSVWriter",
-	dojox.grid.enhanced.plugins.exporter._ExportWriter, {
+return declare("dojox.grid.enhanced.plugins.exporter.CSVWriter", _ExportWriter, {
 	// summary:
 	//		Export grid to CSV format.
 	_separator: ',',
+
 	_newline: "\r\n",
+
 	constructor: function(/* object? */writerArgs){
 		// summary:
 		//		CSV default separator is ','.
@@ -24,6 +27,7 @@ dojo.declare("dojox.grid.enhanced.plugins.exporter.CSVWriter",
 		this._headers = [];
 		this._dataRows = [];
 	},
+
 	_formatCSVCell: function(/* string */cellValue){
 		// summary:
 		//		Format cell value to follow CSV standard.
@@ -43,14 +47,15 @@ dojo.declare("dojox.grid.enhanced.plugins.exporter.CSVWriter",
 		}
 		return result;	//String
 	},
+
 	beforeContentRow: function(/* object */arg_obj){
 		// summary:
 		//		Overrided from _ExportWriter
 		var row = [],
 			func = this._formatCSVCell;
-		dojo.forEach(arg_obj.grid.layout.cells, function(cell){
+		array.forEach(arg_obj.grid.layout.cells, function(cell){
 			//We are not interested in indirect selectors and row indexes.
-			if(!cell.hidden && dojo.indexOf(arg_obj.spCols,cell.index) < 0){
+			if(!cell.hidden && array.indexOf(arg_obj.spCols,cell.index) < 0){
 				//We only need data here, not html
 				row.push(func(this._getExportDataForCell(arg_obj.rowIndex, arg_obj.row, cell, arg_obj.grid)));
 			}
@@ -59,14 +64,16 @@ dojo.declare("dojox.grid.enhanced.plugins.exporter.CSVWriter",
 		//We do not need to go into the row.
 		return false;	//Boolean
 	},
+
 	handleCell: function(/* object */arg_obj){
 		// summary:
 		//		Overrided from _ExportWriter
 		var cell = arg_obj.cell;
-		if(arg_obj.isHeader && !cell.hidden && dojo.indexOf(arg_obj.spCols,cell.index) < 0){
+		if(arg_obj.isHeader && !cell.hidden && array.indexOf(arg_obj.spCols,cell.index) < 0){
 			this._headers.push(cell.name || cell.field);
 		}
 	},
+
 	toString: function(){
 		// summary:
 		//		Overrided from _ExportWriter
@@ -76,4 +83,5 @@ dojo.declare("dojox.grid.enhanced.plugins.exporter.CSVWriter",
 		}
 		return result + this._newline + this._dataRows.join(this._newline);	//String
 	}
+});
 });

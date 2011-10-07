@@ -1,7 +1,7 @@
-dojo.provide("dojox.gfx.matrix");
-
-(function(){
-	var m = dojox.gfx.matrix;
+define(["./_base","dojo/_base/lang"], 
+  function(g, lang){
+	var m = g.matrix = {};
+	/*===== g = dojox.gfx; m = dojox.gfx.matrix =====*/
 
 	// candidates for dojox.math:
 	var _degToRadCache = {};
@@ -11,7 +11,8 @@ dojo.provide("dojox.gfx.matrix");
 	m._radToDeg = function(radian){ return radian / Math.PI * 180; };
 
 	m.Matrix2D = function(arg){
-		// summary: a 2D matrix object
+		// summary: 
+		//		a 2D matrix object
 		// description: Normalizes a 2D matrix-like object. If arrays is passed,
 		//		all objects of the array are normalized and multiplied sequentially.
 		// arg: Object
@@ -24,7 +25,7 @@ dojo.provide("dojox.gfx.matrix");
 					var matrix = m.normalize(arg[0]);
 					// combine matrices
 					for(var i = 1; i < arg.length; ++i){
-						var l = matrix, r = dojox.gfx.matrix.normalize(arg[i]);
+						var l = matrix, r = m.normalize(arg[i]);
 						matrix = new m.Matrix2D();
 						matrix.xx = l.xx * r.xx + l.xy * r.yx;
 						matrix.xy = l.xx * r.xy + l.xy * r.yy;
@@ -33,18 +34,18 @@ dojo.provide("dojox.gfx.matrix");
 						matrix.dx = l.xx * r.dx + l.xy * r.dy + l.dx;
 						matrix.dy = l.yx * r.dx + l.yy * r.dy + l.dy;
 					}
-					dojo.mixin(this, matrix);
+					lang.mixin(this, matrix);
 				}
 			}else{
-				dojo.mixin(this, arg);
+				lang.mixin(this, arg);
 			}
 		}
 	};
 
 	// the default (identity) matrix, which is used to fill in missing values
-	dojo.extend(m.Matrix2D, {xx: 1, xy: 0, yx: 0, yy: 1, dx: 0, dy: 0});
+	lang.extend(m.Matrix2D, {xx: 1, xy: 0, yx: 0, yy: 1, dx: 0, dy: 0});
 
-	dojo.mixin(m, {
+	lang.mixin(m, {
 		// summary: class constants, and methods of dojox.gfx.matrix
 
 		// matrix constants
@@ -207,7 +208,7 @@ dojo.provide("dojox.gfx.matrix");
 			// summary: inverts a 2D matrix
 			// matrix: dojox.gfx.matrix.Matrix2D: a 2D matrix-like object to be inverted
 			var M = m.normalize(matrix),
-				D = M.xx * M.yy - M.xy * M.yx,
+				D = M.xx * M.yy - M.xy * M.yx;
 				M = new m.Matrix2D({
 					xx: M.yy/D, xy: -M.xy/D,
 					yx: -M.yx/D, yy: M.xx/D,
@@ -223,11 +224,11 @@ dojo.provide("dojox.gfx.matrix");
 			// y: Number: a y coordinate of a point
 			return {x: matrix.xx * x + matrix.xy * y + matrix.dx, y: matrix.yx * x + matrix.yy * y + matrix.dy}; // dojox.gfx.Point
 		},
-		multiplyPoint: function(matrix, /* Number||Point */ a, /* Number, optional */ b){
+		multiplyPoint: function(matrix, /* Number||Point */ a, /* Number? */ b){
 			// summary: applies a matrix to a point
 			// matrix: dojox.gfx.matrix.Matrix2D: a 2D matrix object to be applied
 			// a: Number: an x coordinate of a point
-			// b: Number: a y coordinate of a point
+			// b: Number?: a y coordinate of a point
 			var M = m.normalize(matrix);
 			if(typeof a == "number" && typeof b == "number"){
 				return m._multiplyPoint(M, a, b); // dojox.gfx.Point
@@ -412,12 +413,12 @@ dojo.provide("dojox.gfx.matrix");
 			// b: null
 			return m._sandwich(m.skewY(angle), a.x, a.y); // dojox.gfx.matrix.Matrix2D
 		},
-		skewYgAt: function(/* Number */ degree, /* Number||Point */ a, /* Number, optional */ b){
+		skewYgAt: function(/* Number */ degree, /* Number||Point */ a, /* Number? */ b){
 			// summary: skews a picture along the y axis using a specified point as a center of skewing
 			// description: Compare with dojox.gfx.matrix.skewYg().
 			// degree: Number: an skewing angle in degrees
 			// a: Number: an x component of a central point
-			// b: Number: a y component of a central point
+			// b: Number?: a y component of a central point
 
 			// accepts several signatures:
 			//	1) skew angle in degrees, Point
@@ -437,7 +438,10 @@ dojo.provide("dojox.gfx.matrix");
 		//TODO: rect-to-rect mapping, scale-to-fit (isotropic and anisotropic versions)
 
 	});
-})();
+	// propagate Matrix2D up
+	g.Matrix2D = m.Matrix2D;
 
-// propagate Matrix2D up
-dojox.gfx.Matrix2D = dojox.gfx.matrix.Matrix2D;
+	return m;
+});
+
+

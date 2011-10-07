@@ -1,31 +1,47 @@
-dojo.provide("dojox.grid.enhanced.plugins.filter.FilterBar");
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/connect",
+	"dojo/_base/lang",
+	"dojo/_base/sniff",
+	"dojo/_base/event",
+	"dojo/_base/html",
+	"dojo/_base/window",
+	"dojo/cache",
+	"dojo/query",
+	"dijit/_Widget",
+	"dijit/_TemplatedMixin",
+	"dijit/_WidgetsInTemplateMixin",
+	"dojo/fx",
+	"dojo/string",
+	"dijit/focus"
+], function(declare, array, connect, lang, has, event, html, win, cache, query, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, fx, string, dijitFocus){
 
-dojo.require("dijit.form.Button");
-dojo.require("dojo.string");
-dojo.require("dojo.fx");
-
-(function(){
 var _focusClass = "dojoxGridFBarHover",
 	_filteredClass = "dojoxGridFBarFiltered",
 	_stopEvent = function(evt){
 		try{
 			if(evt && evt.preventDefault){
-				dojo.stopEvent(evt);
+				event.stop(evt);
 			}
 		}catch(e){}
 	};
 	
-dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBar",[dijit._Widget, dijit._Templated],{
+return declare("dojox.grid.enhanced.plugins.filter.FilterBar", [_Widget, _TemplatedMixin, _WidgetsInTemplateMixin],{
 	// summary:
 	//		The filter bar UI.
-	templateString: dojo.cache("dojox.grid","enhanced/templates/FilterBar.html"),
+	templateString: cache("dojox.grid","enhanced/templates/FilterBar.html"),
+
 	widgetsInTemplate: true,
 	
 	_timeout_statusTooltip: 300,
+
 	_handle_statusTooltip: null,
+
 	_curColIdx: -1,
 	
 	plugin: null,
+
 	postMixInProperties: function(){
 		var plugin = this.plugin;
 		var nls = plugin.nls;
@@ -33,7 +49,7 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBar",[dijit._Widget, diji
 		this._filterBarClearBtnLabel = nls["filterBarClearButton"];
 		this._closeFilterBarBtnLabel = nls["closeFilterBarBtn"];
 		var itemsName = plugin.args.itemsName || nls["defaultItemsName"];
-		this._noFilterMsg = dojo.string.substitute(nls["filterBarMsgNoFilterTemplate"], ["", itemsName]);
+		this._noFilterMsg = string.substitute(nls["filterBarMsgNoFilterTemplate"], ["", itemsName]);
 		
 		var t = this.plugin.args.statusTipTimeout;
 		if(typeof t == 'number'){
@@ -41,18 +57,18 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBar",[dijit._Widget, diji
 		}
 		
 		var g = plugin.grid;
-		g.showFilterBar = dojo.hitch(this, "showFilterBar");
-		g.toggleFilterBar = dojo.hitch(this, "toggleFilterBar");
-		g.isFilterBarShown = dojo.hitch(this, "isFilterBarShown");
+		g.showFilterBar = lang.hitch(this, "showFilterBar");
+		g.toggleFilterBar = lang.hitch(this, "toggleFilterBar");
+		g.isFilterBarShown = lang.hitch(this, "isFilterBarShown");
 	},
 	postCreate: function(){
 		this.inherited(arguments);
 		if(!this.plugin.args.closeFilterbarButton){
-			dojo.style(this.closeFilterBarButton.domNode, "display", "none");
+			html.style(this.closeFilterBarButton.domNode, "display", "none");
 		}
 		var _this = this,
 			g = this.plugin.grid,
-			old_func = this.oldGetHeaderHeight = dojo.hitch(g,g._getHeaderHeight);
+			old_func = this.oldGetHeaderHeight = lang.hitch(g,g._getHeaderHeight);
 		
 		this.placeAt(g.viewsHeaderNode, "after");
 		this.connect(this.plugin.filterDefDialog, "showDialog", "_onShowFilterDefDialog");
@@ -60,7 +76,7 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBar",[dijit._Widget, diji
 		this.connect(g.layer("filter"), "onFiltered", this._onFiltered);
 		
 		this.defineFilterButton.domNode.title = this.plugin.nls["filterBarDefButton"];
-		if(dojo.hasClass(dojo.body(), "dijit_a11y")){
+		if(html.hasClass(win.body(), "dijit_a11y")){
 			this.defineFilterButton.set("label", this.plugin.nls["a11yFilterBarDefButton"]);
 		}
 		this.connect(this.defineFilterButton.domNode, "click", _stopEvent);
@@ -72,13 +88,13 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBar",[dijit._Widget, diji
 		
 		//Hack the header height to include filter bar height;
 		g._getHeaderHeight = function(){
-			return old_func() + dojo.marginBox(_this.domNode).h;
+			return old_func() + html.marginBox(_this.domNode).h;
 		};
 		//Define an area to make focusManager handle all the navigation stuff
 		g.focus.addArea({
 			name: "filterbar",
-			onFocus: dojo.hitch(this, this._onFocusFilterBar, false),
-			onBlur: dojo.hitch(this, this._onBlurFilterBar)
+			onFocus: lang.hitch(this, this._onFocusFilterBar, false),
+			onBlur: lang.hitch(this, this._onBlurFilterBar)
 		});
 		g.focus.placeArea("filterbar","after","header");
 	},
@@ -89,7 +105,7 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBar",[dijit._Widget, diji
 		this.plugin = null;
 	},
 	isFilterBarShown: function(){
-		return dojo.style(this.domNode, "display") != "none";
+		return html.style(this.domNode, "display") != "none";
 	},
 	showFilterBar: function(toShow, useAnim, animArgs){
 		var g = this.plugin.grid;
@@ -97,7 +113,7 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBar",[dijit._Widget, diji
 			if(Boolean(toShow) == this.isFilterBarShown()){ return; }
 			animArgs = animArgs || {};
 			var anims = [], defaultDuration = 500;
-			anims.push(dojo.fx[toShow ? "wipeIn" : "wipeOut"](dojo.mixin({
+			anims.push(fx[toShow ? "wipeIn" : "wipeOut"](lang.mixin({
 				"node": this.domNode,
 				"duration": defaultDuration
 			}, animArgs)));
@@ -106,9 +122,9 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBar",[dijit._Widget, diji
 				"duration": defaultDuration,
 				"properties": {
 					"height": {
-						"end": dojo.hitch(this, function(){
+						"end": lang.hitch(this, function(){
 							var barHeight = this.domNode.scrollHeight;
-							if(dojo.isFF){
+							if(has('ff')){
 								barHeight -= 2;
 							}
 							return toShow ? (curHeight - barHeight) : (curHeight + barHeight);
@@ -116,19 +132,19 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBar",[dijit._Widget, diji
 					}
 				}
 			};
-			dojo.forEach(g.views.views, function(view){
-				anims.push(dojo.animateProperty(dojo.mixin({
+			array.forEach(g.views.views, function(view){
+				anims.push(fx.animateProperty(lang.mixin({
 					"node": view.domNode
-				}, prop, animArgs)), dojo.animateProperty(dojo.mixin({
+				}, prop, animArgs)), fx.animateProperty(lang.mixin({
 					"node": view.scrollboxNode
 				}, prop, animArgs)));
 			});
-			anims.push(dojo.animateProperty(dojo.mixin({
+			anims.push(fx.animateProperty(lang.mixin({
 				"node": g.viewsNode
 			}, prop, animArgs)));
-			dojo.fx.combine(anims).play();
+			fx.combine(anims).play();
 		}else{
-			dojo.style(this.domNode, "display", toShow ? "" : "none");
+			html.style(this.domNode, "display", toShow ? "" : "none");
 			g.update();
 		}
 	},
@@ -136,10 +152,10 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBar",[dijit._Widget, diji
 		this.showFilterBar(!this.isFilterBarShown(), useAnim, animArgs);
 	},
 	getColumnIdx: function(/* int */coordX){
-		var headers = dojo.query("[role='columnheader']", this.plugin.grid.viewsHeaderNode);
+		var headers = query("[role='columnheader']", this.plugin.grid.viewsHeaderNode);
 		var idx = -1;
 		for(var i = headers.length - 1; i >= 0; --i){
-			var coord = dojo.coords(headers[i]);
+			var coord = html.position(headers[i]);
 			if(coordX >= coord.x && coordX < coord.x + coord.w){
 				idx = i;
 				break;
@@ -152,15 +168,15 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBar",[dijit._Widget, diji
 		}
 	},
 	toggleClearFilterBtn: function(toHide){
-		dojo.style(this.clearFilterButton.domNode, "display", toHide ? "none" : "");
+		html.style(this.clearFilterButton.domNode, "display", toHide ? "none" : "");
 	},
 	_closeFilterBar: function(e){
 		_stopEvent(e);
 		var rulesCnt = this.plugin.filterDefDialog.getCriteria();
 		if(rulesCnt){
-			var handle = dojo.connect(this.plugin.filterDefDialog, "clearFilter", this, function(){
+			var handle = connect.connect(this.plugin.filterDefDialog, "clearFilter", this, function(){
 				this.showFilterBar(false, true);
-				dojo.disconnect(handle);
+				connect.disconnect(handle);
 			});
 			this._clearFilterDefDialog(e);
 		}else{
@@ -200,7 +216,7 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBar",[dijit._Widget, diji
 		this._defPaneIsShown = false;
 		//Do not remember what column are we on, so clicking the btn will show 'any column'
 		this._curColIdx = -1;
-		dijit.focus(this.defineFilterButton.domNode);
+		dijitFocus.focus(this.defineFilterButton.domNode);
 	},
 	_onClickFilterBar: function(/* event */e){
 		_stopEvent(e);
@@ -240,10 +256,10 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBar",[dijit._Widget, diji
 			return false;
 		}
 		this._isFocused = true;
-		dojo.addClass(this.domNode,_focusClass);
+		html.addClass(this.domNode,_focusClass);
 		if(!highlightOnly){
-			var hasFilter = dojo.style(this.clearFilterButton.domNode, "display") !== "none";
-			var hasCloseButton = dojo.style(this.closeFilterBarButton.domNode, "display") !== "none";
+			var hasFilter = html.style(this.clearFilterButton.domNode, "display") !== "none";
+			var hasCloseButton = html.style(this.closeFilterBarButton.domNode, "display") !== "none";
 			if(typeof this._focusPos == "undefined"){
 				if(step > 0){
 					this._focusPos = 0;
@@ -259,11 +275,11 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBar",[dijit._Widget, diji
 				}
 			}
 			if(this._focusPos === 0){
-				dijit.focus(this.defineFilterButton.focusNode);
+				dijitFocus.focus(this.defineFilterButton.focusNode);
 			}else if(this._focusPos === 1 && hasFilter){
-				dijit.focus(this.clearFilterButton.focusNode);
+				dijitFocus.focus(this.clearFilterButton.focusNode);
 			}else{
-				dijit.focus(this.closeFilterBarButton.focusNode);
+				dijitFocus.focus(this.closeFilterBarButton.focusNode);
 			}
 		}
 		_stopEvent(evt);
@@ -272,17 +288,17 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBar",[dijit._Widget, diji
 	_onBlurFilterBar: function(evt, step){
 		if(this._isFocused){
 			this._isFocused = false;
-			dojo.removeClass(this.domNode,_focusClass);
+			html.removeClass(this.domNode,_focusClass);
 			this._clearStatusTipTimeout();
 			this._clearHeaderHighlight();
 		}
 		var toBlur = true;
 		if(step){
 			var buttonCount = 3;
-			if(dojo.style(this.closeFilterBarButton.domNode, "display") === "none"){
+			if(html.style(this.closeFilterBarButton.domNode, "display") === "none"){
 				--buttonCount;
 			}
-			if(dojo.style(this.clearFilterButton.domNode, "display") === "none"){
+			if(html.style(this.clearFilterButton.domNode, "display") === "none"){
 				--buttonCount;
 			}
 			if(buttonCount == 1){
@@ -307,27 +323,27 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBar",[dijit._Widget, diji
 			msg = "", g = p.grid,
 			filterLayer = g.layer("filter");
 		if(filterLayer.filterDef()){
-			msg = dojo.string.substitute(p.nls["filterBarMsgHasFilterTemplate"], [filteredSize, originSize, itemsName]);
-			dojo.addClass(this.domNode, _filteredClass);
+			msg = string.substitute(p.nls["filterBarMsgHasFilterTemplate"], [filteredSize, originSize, itemsName]);
+			html.addClass(this.domNode, _filteredClass);
 		}else{
-			msg = dojo.string.substitute(p.nls["filterBarMsgNoFilterTemplate"], [originSize, itemsName]);
-			dojo.removeClass(this.domNode, _filteredClass);
+			msg = string.substitute(p.nls["filterBarMsgNoFilterTemplate"], [originSize, itemsName]);
+			html.removeClass(this.domNode, _filteredClass);
 		}
 		this.statusBarNode.innerHTML = msg;
 		this._focusPos = 0;
 	},
 	_initAriaInfo: function(){
-		dijit.setWaiState(this.defineFilterButton.domNode, "label", this.plugin.nls["waiFilterBarDefButton"]);
-		dijit.setWaiState(this.clearFilterButton.domNode,"label", this.plugin.nls["waiFilterBarClearButton"]);
+		this.defineFilterButton.domNode.setAttribute("aria-label", this.plugin.nls["waiFilterBarDefButton"]);
+		this.clearFilterButton.domNode.setAttribute("aria-label", this.plugin.nls["waiFilterBarClearButton"]);
 	},
 	_isInColumn: function(/* int */mousePos_x, /* domNode */headerNode, /* int */colIndex){
-		var coord = dojo.coords(headerNode);
+		var coord = html.position(headerNode);
 		return mousePos_x >= coord.x && mousePos_x < coord.x + coord.w;
 	},
 	_setStatusTipTimeout: function(){
 		this._clearStatusTipTimeout();
 		if(!this._defPaneIsShown){
-			this._handle_statusTooltip = setTimeout(dojo.hitch(this,this._showStatusTooltip),this._timeout_statusTooltip);
+			this._handle_statusTooltip = setTimeout(lang.hitch(this,this._showStatusTooltip),this._timeout_statusTooltip);
 		}
 	},
 	_clearStatusTipTimeout: function(){
@@ -343,11 +359,11 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBar",[dijit._Widget, diji
 			var g = this.plugin.grid,
 			cell = g.getCell(this._previousHeaderIdx);
 			if(cell){
-				dojo.removeClass(cell.getHeaderNode(), "dojoxGridCellOver");
+				html.removeClass(cell.getHeaderNode(), "dojoxGridCellOver");
 			}
 			cell = g.getCell(colIdx);
 			if(cell){
-				dojo.addClass(cell.getHeaderNode(), "dojoxGridCellOver");
+				html.addClass(cell.getHeaderNode(), "dojoxGridCellOver");
 			}
 			this._previousHeaderIdx = colIdx;
 		}
@@ -365,5 +381,4 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBar",[dijit._Widget, diji
 		}
 	}
 });
-})();
-
+});

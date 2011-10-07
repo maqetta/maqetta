@@ -12,9 +12,10 @@
 	<!-- required: a default theme file -->
 	<link rel="stylesheet" id="themeStyles" href="../../../dijit/themes/tundra/tundra.css">
 	
-	<!-- required: dojo.js -->
+	<!-- required: dojo.js Update analyticsUrl: to point to your test server-->
 	<script type="text/javascript" src="../../../dojo/dojo.js"
-		djConfig="parseOnLoad: true, isDebug: true, usePlainJson: true, sendMethod: 'script', sendInterval: 5000, analyticsUrl: 'http://dojotoolkit.org/~dmachi/dojo-1.0/dojox/analytics/logger/dojoxAnalytics.php'"></script>
+		djConfig="parseOnLoad: true, isDebug: true, usePlainJson: true, sendMethod: 'script', sendInterval: 5000, 
+				analyticsUrl: 'http://dojotoolkit.org/~dmachi/dojo-1.0/dojox/analytics/logger/dojoxAnalytics.php'"></script>
 
 	<!-- do not use: only for testing alternate themes -->
 	<script type="text/javascript" src="../../../dijit/tests/_testCommon.js"></script>
@@ -55,7 +56,9 @@
 		dojo.require("dijit.form.Button");
 		dojo.require("dijit.form.ComboBox");
 
-		dojo.addOnLoad(function(){console.info("Page Loaded Sample Message");});
+		dojo.addOnLoad(function(){
+			console.info("Page Loaded Sample Message");
+		});
 	</script>
 
 </head>

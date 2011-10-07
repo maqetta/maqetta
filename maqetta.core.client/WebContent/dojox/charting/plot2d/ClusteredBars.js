@@ -1,16 +1,13 @@
-dojo.provide("dojox.charting.plot2d.ClusteredBars");
+define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", "./Bars", "./common", 
+		"dojox/lang/functional", "dojox/lang/functional/reversed", "dojox/lang/utils"], 
+	function(lang, arr, declare, Bars, dc, df, dfr, du){
+/*=====
+var Bars = dojox.charting.plot2d.Bars;
+=====*/
 
-dojo.require("dojox.charting.plot2d.common");
-dojo.require("dojox.charting.plot2d.Bars");
+	var purgeGroup = dfr.lambda("item.purgeGroup()");
 
-dojo.require("dojox.lang.functional");
-dojo.require("dojox.lang.functional.reversed");
-
-(function(){
-	var df = dojox.lang.functional, dc = dojox.charting.plot2d.common,
-		purgeGroup = df.lambda("item.purgeGroup()");
-
-	dojo.declare("dojox.charting.plot2d.ClusteredBars", dojox.charting.plot2d.Bars, {
+	return declare("dojox.charting.plot2d.ClusteredBars", Bars, {
 		//	summary:
 		//		A plot representing grouped or clustered bars (horizontal bars)
 		render: function(dim, offsets){
@@ -28,7 +25,7 @@ dojo.require("dojox.lang.functional.reversed");
 			this.resetEvents();
 			this.dirty = this.isDirty();
 			if(this.dirty){
-				dojo.forEach(this.series, purgeGroup);
+				arr.forEach(this.series, purgeGroup);
 				this._eventSeries = {};
 				this.cleanGroup();
 				var s = this.group;
@@ -63,7 +60,7 @@ dojo.require("dojox.lang.functional.reversed");
 							finalTheme = typeof value != "number" ?
 								t.addMixin(theme, "bar", value, true) :
 								t.post(theme, "bar");
-						if(w >= 1 && height >= 1){
+						if(w >= 0 && height >= 1){
 							var rect = {
 								x: offsets.l + (v < baseline ? hv : baselineWidth),
 								y: dim.height - offsets.b - vt(j + 1.5) + gap + shift,
@@ -99,4 +96,4 @@ dojo.require("dojox.lang.functional.reversed");
 			return this;	//	dojox.charting.plot2d.ClusteredBars
 		}
 	});
-})();
+});

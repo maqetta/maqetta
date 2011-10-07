@@ -1,15 +1,13 @@
-dojo.provide("dojox.io.tests.xhrPlugins");
-dojo.require("dojox.io.xhrPlugins");
+define(['doh', 'dojo/_base/kernel', 'dojo/_base/xhr', 'dojox/io/xhrPlugins', 'dojo/_base/url'], function(doh, dojo, xhr, xhrPlugins){
 
-dojox.io.xhrPlugins.addXdr("http://xdrsupportingsite.com/"); // make sure the registry is setup
-var url = dojo.moduleUrl("dojox.io.tests.crossSite");
+xhrPlugins.addXdr("http://xdrsupportingsite.com/"); // make sure the registry is setup
+var url = dojo.moduleUrl("dojox.io", "tests/crossSite.php");
 url = url.toString();
-url = url.substring(0,url.length-1) + ".php";
 
 doh.register("dojox.io.tests.xhrPlugins", [
 	function getLocal(t){
 		var d = new doh.Deferred();
-		var dfd = dojo.xhr("GET",{url:url});
+		var dfd = xhr("GET",{url:url});
 		dfd.addCallback(function(result){
 			d.callback(result.match(/response/));
 		});
@@ -24,7 +22,7 @@ doh.register("dojox.io.tests.xhrPlugins", [
 		dojox.io.xhrPlugins.addXdr("http://persevere.sitepen.com/");
 		dojox.io.xhrPlugins.addCrossSiteXhr("http://persevere.sitepen.com/");
 		try {
-			var dfd = dojo.xhr("GET",{url:"http://persevere.sitepen.com/SMD"});
+			var dfd = xhr("GET",{url:"http://persevere.sitepen.com/SMD"});
 		}
 		catch (e){
 			if(e.message.match(/No match/)){
@@ -40,7 +38,7 @@ doh.register("dojox.io.tests.xhrPlugins", [
 /*		dojox.io.xhrPlugins.addXdr("http://dojotoolkit.org/...");
 		dojox.io.xhrPlugins.addCrossSiteXhr("http://dojotoolkit.org/...");
 				
-		var dfd = dojo.xhr("GET",{url:"http://dojotoolkit.org/.../dojox/io/tests/crossSite.php"});
+		var dfd = xhr("GET",{url:"http://dojotoolkit.org/.../dojox/io/tests/crossSite.php"});
 		dfd.addCallback(function(result){
 			d.callback(result.match(/response/));
 		}); */
@@ -50,10 +48,12 @@ doh.register("dojox.io.tests.xhrPlugins", [
 		var d = new doh.Deferred();
 		dojox.io.xhrPlugins.addProxy(url+"?url=");
 
-		var dfd = dojo.xhr("GET",{url:"http://someforeignsite.com/SMD"});
+		var dfd = xhr("GET",{url:"http://someforeignsite.com/SMD"});
 		dfd.addCallback(function(result){
 			d.callback(result.match(/proxied/));
 		});
 		return d;
 	}
 ]);
+
+});

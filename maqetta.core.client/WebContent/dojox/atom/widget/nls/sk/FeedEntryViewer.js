@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	displayOptions: "[zobraziť voľby]",
 	title: "Nadpis",
@@ -9,4 +11,5 @@
 	summary: "Súhrn",
 	content: "Obsah"
 })
-
+//end v1.x content
+);

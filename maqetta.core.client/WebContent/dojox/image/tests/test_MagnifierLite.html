@@ -1,7 +1,8 @@
-<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" >
+<!DOCTYPE html>
+<html>
 <head>
-    <title>Testing image</title>
-    <style type="text/css">
+	<title>Testing image</title>
+	<style type="text/css">
 		@import "../../../dojo/resources/dojo.css";
 		@import "../../../dijit/tests/css/dijitTests.css";
 		@import "../../../dijit/themes/tundra/tundra.css";
@@ -10,19 +11,17 @@
 		p { padding:20px; border:1px solid #ededed; }
 		#testImage { border:2px solid #000; }
 		
-    </style>
+	</style>
 
-    <script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad:true"></script>
-	<script type="text/javascript" src="../MagnifierLite.js"></script>
-    <script type="text/javascript">
-		dojo.require("dojox.image.MagnifierLite");
-		dojo.require("dijit.form.Button");		
+	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="async: true, isDebug: true, parseOnLoad:true"></script>
+	<script type="text/javascript">
+		require(["dojox/image/MagnifierLite", "dijit/form/Button", "dojo/parser"]);
 	</script>
 
 </head>
 <body class="tundra">
 
-    <h1 class="testTitle">dojox.image.MagnifierLite test page</h1>
+	<h1 class="testTitle">dojox.image.MagnifierLite test page</h1>
 
 		<p>They are just images. It's entirely unobtrusive to add magnification to an image, and style it accordingly.</p>
 

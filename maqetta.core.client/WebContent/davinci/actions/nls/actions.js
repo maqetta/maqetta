@@ -1,4 +1,5 @@
-({
+define({ root:
+{
 		//AddLinkAction.js
 		"selectDirectory":"Select Directory to link to",
 		"parentFolder":"Parent Folder:",
@@ -23,5 +24,5 @@
 		
 		//SelectThemeAction.js
 		"selectTheme":"Select a theme"
-
-})
+}
+});

@@ -12,13 +12,14 @@
 	</style>
 	<script>
         djConfig = {
-            isDebug: false,
+            isDebug: true,
 			popup:true,
             parseOnLoad: true
         }
     </script>
     <script src="../../../dojo/dojo.js"></script>
     <script>
+		dojo.require("dojo.parser");
         dojo.require("dojox.form.FileUploader");
         dojo.require("dijit.form.Button");
 		dojo.require("dijit.ProgressBar");

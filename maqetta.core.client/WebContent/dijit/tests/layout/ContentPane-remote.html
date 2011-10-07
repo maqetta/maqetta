@@ -24,16 +24,22 @@
 
 	<script type="text/javascript">
 		dojo.require("doh.runner");
-		dojo.require("dijit.dijit"); // optimize: load dijit layer
+
+		dojo.require("dojo.parser");
+
+		dojo.require("dijit._Widget");
+		dojo.require("dijit._TemplatedMixin");
+
+		dojo.require("dijit.Tooltip");
+		dojo.require("dijit.TooltipDialog");
+
+		dojo.require("dijit.form.Button");
+		dojo.require("dijit.form.DropDownButton");
+
 		dojo.require("dijit.layout.ContentPane");
 		dojo.require("dijit.layout.TabContainer");
 		dojo.require("dijit.layout.AccordionContainer");
-		dojo.require("dijit.Tooltip");
-		dojo.require("dijit.TooltipDialog");
 		dojo.require("dijit.layout.LinkPane");
-		dojo.require("dijit.form.Button");
-		dojo.require("dijit.form.DropDownButton");
-		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
 
 		var tabCounter;
 		function testClose(pane, tab){
@@ -66,10 +72,10 @@
 			return domNode.firstChild.innerHTML == "Loading...";
 		}
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			// create a do nothing, only for test widget
 			dojo.declare("dijit.TestWidget",
-				[dijit._Widget, dijit._Templated], {
+				[dijit._Widget, dijit._TemplatedMixin], {
 				templateString: "<span class='dijitTestWidget'></span>"
 			});
 
@@ -184,7 +190,7 @@
 						var d = new doh.Deferred();
 
 						setTimeout(d.getTestErrback(function(){
-							var msg = 'refreshed load'
+							var msg = 'refreshed load';
 							cp.href = "getResponse.php?message="+encodeURI(msg);
 							cp.refresh().then(d.getTestCallback(function(){
 								doh.is(msg, cp.domNode.innerHTML);
@@ -272,7 +278,7 @@
 
 						cp.onDownloadError = function(){
 							return msg;
-						}
+						};
 
 						var d = new doh.Deferred();
 

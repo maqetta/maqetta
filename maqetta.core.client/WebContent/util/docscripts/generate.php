@@ -8,7 +8,7 @@
 # -- Runs only the module starting with custom, custom2, etc.
 # php generate.php --store=file
 # php generate.php --store=mysql --db_host=localhost --db_user=api --db_password=password --db_name=api
-# -- Specifies storage type. "file" and "resource" currently supported
+# -- Specifies storage type. "hash", "file" and "resource" currently supported
 # php generate.php --serialize=xml,json
 # -- Comma-separated list of serializations. "xml" and "json" supported
 # php generate.php --outfile=custom-api custom
@@ -24,7 +24,6 @@ error_reporting(E_ALL ^ E_NOTICE);
 $debug = true;
 
 require_once('lib/parser2/dojo2.inc');
-// Use file serializers by default
 
 $keys = array();
 $namespaces = array();
@@ -82,8 +81,9 @@ if (!isset($kwargs['serialize'])) {
     'xml' => true
   );
 }
+// Use hash storage by default
 if (!isset($kwargs['store'])) {
-  $kwargs['store'] = 'file';
+  $kwargs['store'] = 'hash';
 }
 
 require_once('lib/generator/' . $kwargs['store'] . '/Freezer.php');
@@ -141,6 +141,11 @@ foreach ($files as $set){
   unset($contents['#resource']);
   $requires = $contents['#requires'];
   unset($contents['#requires']);
+
+  // set by debugging in parsing
+  unset($contents['#debug']);
+  unset($contents['#unwrapped_source']);
+  unset($contents['#raw_source']);
 
   foreach ($contents as $var => $content) {
     foreach ($content as $key_key => $key_value) {
@@ -292,8 +297,9 @@ foreach ($files as $set){
           $short_parameters = (count($node_parameters) >  count($content_parameters)) ? $content_parameters : $node_parameters;
 
           $match = true;
+	  $total_short = count($short_parameters);
           foreach ($long_parameters as $i => $parameter) {
-            if ($i < count($short_parameters) && $parameter != $short_parameters[$i]) {
+            if ($i < $total_short && $parameter != $short_parameters[$i]) {
               $match = false;
             }
           }
@@ -334,10 +340,12 @@ $ids = $nodes->ids();
 
 $percent = 0;
 
+$total = count($ids);
+$count_args = count($args);
 foreach ($ids as $pos => $id) {
-  $new_percent = floor($pos / count($ids) * 50);
+  $new_percent = floor($pos / $total * 50);
   if ($new_percent % 5 == 0 && $percent % 5 != 0) {
-    print floor($new_percent) . "%\n";
+    print $new_percent . "%\n";
   }
   $percent = $new_percent;
 
@@ -347,7 +355,7 @@ foreach ($ids as $pos => $id) {
     $parent = implode('.', $parts);
 
     $node = $nodes->open($id, array());
-    if (!is_array($node['#namespaces']) || (count($args) && !count(array_intersect($args, $node['#namespaces'])))) {
+    if (!is_array($node['#namespaces']) || ($count_args && !count(array_intersect($args, $node['#namespaces'])))) {
       continue;
     }
     if (!array_key_exists($parent, $roots)) {
@@ -365,27 +373,35 @@ foreach ($ids as $pos => $id) {
 // Figure out whether a root item has children or not
 $pos = 0;
 $root_count = count($roots);
-foreach ($roots as $id => $root) {
+$has_children_map = array();
+$rootids = array_keys($roots);
+//descending sort rootids, so children are processed before parents
+rsort($rootids);
+foreach ($rootids as $id) {
+  $root = $roots[$id];
   $new_percent = floor(50 + ($pos++ / $root_count * 50));
   if ($new_percent % 5 == 0 && $percent % 5 != 0) {
     print floor($new_percent) . "%\n";
   }
   $percent = $new_percent;
 
-  if ($root['function'] && !$root['classlike']) {
-    $has_children = false;
-    $parts = explode('.', $id);
-    if (count($parts) > 1) {
-      foreach ($roots as $possible_child_id => $possible_child) {
-        $child_parts = explode('.', $possible_child_id);
-        if (count($child_parts) == count($parts)+1 && strpos($possible_child_id, "$id.") === 0) {
-          $has_children = true;
-          break;
-        }
+  $parts = explode('.', $id);
+  $parts_count = count($parts);
+  if ($parts_count > 1) {
+    if ($root['function'] && !$root['classlike']) {
+      if(!array_key_exists($id, $has_children_map)){
+          unset($roots[$id]);
       }
-      if (!$has_children) {
-        unset($roots[$id]);
-      }
+    }
+
+    $name = array_pop($parts);
+    $parent_id = implode('.', $parts);
+    $obj = array("name"=>$name, "id"=>$id);
+    if(array_key_exists($parent_id, $has_children_map)) {
+      array_push($has_children_map[$parent_id], $obj);
+    }
+    else{
+      $has_children_map[$parent_id] = array($obj);
     }
   }
 }
@@ -419,11 +435,9 @@ foreach ($roots as $id => $root) {
 
   $node = $nodes->open($id, null);
 
-  $parts = explode('.', $id);
-  foreach ($ids as $child_id) {
-    $child_parts = explode('.', $child_id);
-    if (count($child_parts) == count($parts)+1 && strpos($child_id, "$id.") === 0 && !array_key_exists($child_id, $roots)) {
-      $node['#children'][array_pop($child_parts)] = $nodes->open($child_id, null);
+  if(array_key_exists($id, $has_children_map)){
+    foreach ($has_children_map[$id] as $child) {
+      $node['#children'][$child['name']] = $nodes->open($child['id'], null);
     }
   }
 

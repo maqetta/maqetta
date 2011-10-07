@@ -1,12 +1,11 @@
-dojo.provide("dojox.collections.Set");
-dojo.require("dojox.collections.ArrayList");
-
-(function(){
-	var dxc=dojox.collections;
+define(["./_base", "./ArrayList"], function(dxc, ArrayList){
+/*=====
+var dxc = dojox.collections;
+=====*/
 	dxc.Set=new (function(){
 		function conv(arr){
 			if(arr.constructor==Array){
-				return new dojox.collections.ArrayList(arr);	//	dojox.collections.ArrayList
+				return new ArrayList(arr);	//	dojox.collections.ArrayList
 			}
 			return arr;		//	dojox.collections.ArrayList
 		}
@@ -15,7 +14,7 @@ dojo.require("dojox.collections.ArrayList");
 			//	Return the union of the two passed sets.
 			setA=conv(setA);
 			setB=conv(setB);
-			var result = new dojox.collections.ArrayList(setA.toArray());
+			var result = new ArrayList(setA.toArray());
 			var e = setB.getIterator();
 			while(!e.atEnd()){
 				var item=e.get();
@@ -30,7 +29,7 @@ dojo.require("dojox.collections.ArrayList");
 			//	Return the intersection of the two passed sets.
 			setA=conv(setA);
 			setB=conv(setB);
-			var result = new dojox.collections.ArrayList();
+			var result = new ArrayList();
 			var e = setB.getIterator();
 			while(!e.atEnd()){
 				var item=e.get();
@@ -45,7 +44,7 @@ dojo.require("dojox.collections.ArrayList");
 			//	Returns everything in setA that is not in setB.
 			setA=conv(setA);
 			setB=conv(setB);
-			var result = new dojox.collections.ArrayList();
+			var result = new ArrayList();
 			var e=setA.getIterator();
 			while(!e.atEnd()){
 				var item=e.get();
@@ -82,4 +81,5 @@ dojo.require("dojox.collections.ArrayList");
 			return true;	//	boolean
 		};
 	})();
-})();
+	return dxc.Set;
+});

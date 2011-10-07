@@ -14,6 +14,8 @@ dojo.require("dojo.fx");
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
 
+// FIXME: use CSS for size, thumbHeight, and thumbWidth
+
 dojo.declare("dojox.image.ThumbnailPicker",
 	[dijit._Widget, dijit._Templated],
 	{
@@ -29,15 +31,15 @@ dojo.declare("dojox.image.ThumbnailPicker",
 
 	// size: Number
 	// Width or height in pixels, depending if horizontal or vertical.
-	size: 500, //FIXME: use CSS?
+	size: 500, 
 
 	// thumbHeight: Number
 	// Default height of a thumbnail image
-	thumbHeight: 75, // FIXME: use CSS?
+	thumbHeight: 75, 
 
 	// thumbWidth: Number
 	// Default width of an image
-	thumbWidth: 100, // FIXME: use CSS?
+	thumbWidth: 100, 
 
 	// useLoadNotifier: Boolean
 	// Setting useLoadNotifier to true makes a colored DIV appear under each

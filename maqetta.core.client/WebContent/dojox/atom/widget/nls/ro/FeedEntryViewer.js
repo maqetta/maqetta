@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	displayOptions: "[opţiuni afişare]",
 	title: "Titlu",
@@ -9,4 +11,5 @@
 	summary: "Sumar",
 	content: "Conţinut"
 })
-
+//end v1.x content
+);

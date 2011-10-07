@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	singleSort: "単一ソート",
 	nestedSort: "ネスト・ソート",
@@ -9,3 +11,5 @@
 	indirectSelectionCheckBox: "行 ${0}、複数選択、チェック・ボックス",
 	selectAll: "すべてを選択"
 })
+//end v1.x content
+);

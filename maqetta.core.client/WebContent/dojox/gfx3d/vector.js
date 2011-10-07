@@ -1,10 +1,11 @@
-dojo.provide("dojox.gfx3d.vector");
+define(["dojo/_base/lang", "dojo/_base/array", "./_base"],function(lang, arrayUtil, gfx3d) {
 
-dojo.mixin(dojox.gfx3d.vector, {
+gfx3d.vector =  {
+	
 	sum: function(){
 		// summary: sum of the vectors
 		var v = {x: 0, y: 0, z:0};
-		dojo.forEach(arguments, function(item){ v.x += item.x; v.y += item.y; v.z += item.z; });
+		arrayUtil.forEach(arguments, function(item){ v.x += item.x; v.y += item.y; v.z += item.z; });
 		return v;
 	},
 
@@ -14,7 +15,7 @@ dojo.mixin(dojox.gfx3d.vector, {
 		if(l == 0){
 			return {x: 0, y: 0, z: 0};
 		}
-		var v = dojox.gfx3d.vector.sum(arguments);
+		var v = gfx3d.vector.sum(arguments);
 		return {x: v.x/l, y: v.y/l, z: v.z/l};
 	},
 
@@ -42,8 +43,8 @@ dojo.mixin(dojox.gfx3d.vector, {
 		// d: Number: an x coordinate of a point
 		// e: Number: a y coordinate of a point
 		// f: Number: a z coordinate of a point
-		if(arguments.length == 6 && dojo.every(arguments, function(item){ return typeof item == "number"; })){
-			return dojox.gfx3d.vector._crossProduct(a, b, c, d, e, f); // Object
+		if(arguments.length == 6 && arrayUtil.every(arguments, function(item){ return typeof item == "number"; })){
+			return gfx3d.vector._crossProduct(a, b, c, d, e, f); // Object
 		}
 		// branch
 		// a: Object: a point
@@ -52,7 +53,7 @@ dojo.mixin(dojox.gfx3d.vector, {
 		// d: null
 		// e: null
 		// f: null
-		return dojox.gfx3d.vector._crossProduct(a.x, a.y, a.z, b.x, b.y, b.z); // Object
+		return gfx3d.vector._crossProduct(a.x, a.y, a.z, b.x, b.y, b.z); // Object
 	},
 
 	_dotProduct: function(x, y, z, u, v, w){
@@ -74,8 +75,8 @@ dojo.mixin(dojox.gfx3d.vector, {
 		// d: Number: an x coordinate of a point
 		// e: Number: a y coordinate of a point
 		// f: Number: a z coordinate of a point
-		if(arguments.length == 6 && dojo.every(arguments, function(item){ return typeof item == "number"; })){
-			return dojox.gfx3d.vector._dotProduct(a, b, c, d, e, f); // Object
+		if(arguments.length == 6 && arrayUtil.every(arguments, function(item){ return typeof item == "number"; })){
+			return gfx3d.vector._dotProduct(a, b, c, d, e, f); // Object
 		}
 		// branch
 		// a: Object: a point
@@ -84,7 +85,7 @@ dojo.mixin(dojox.gfx3d.vector, {
 		// d: null
 		// e: null
 		// f: null
-		return dojox.gfx3d.vector._dotProduct(a.x, a.y, a.z, b.x, b.y, b.z); // Object
+		return gfx3d.vector._dotProduct(a.x, a.y, a.z, b.x, b.y, b.z); // Object
 	},
 
 	normalize: function(/* Point||Array*/ a, /* Point */ b, /* Point */ c){
@@ -99,8 +100,10 @@ dojo.mixin(dojox.gfx3d.vector, {
 			l = a; m = b; n = c;
 		}
 
-		var u = dojox.gfx3d.vector.substract(m, l);
-		var v = dojox.gfx3d.vector.substract(n, l);
-		return dojox.gfx3d.vector.crossProduct(u, v);
+		var u = gfx3d.vector.substract(m, l);
+		var v = gfx3d.vector.substract(n, l);
+		return gfx3d.vector.crossProduct(u, v);
 	}
+};
+	return gfx3d.vector;
 });

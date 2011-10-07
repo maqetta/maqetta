@@ -18,7 +18,7 @@
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_Dialog.html');
 
 				doh.register("keyboard tests (cancel)",[
@@ -37,7 +37,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.t(isVisible("dialog1"), "dialog 1 has been made visible");
-								doh.is("name", dojo.global.dijit._curFocus.id, "focus is on the first field");
+								doh.is("name", dojo.global.dijit.focus.curNode.id, "focus is on the first field");
 							}), 500);
 
 							return d;
@@ -55,7 +55,7 @@
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("date", dojo.global.dijit._curFocus.id, "focus is on the date field");
+								doh.is("date", dojo.global.dijit.focus.curNode.id, "focus is on the date field");
 							}), 1000);
 
 							return d;
@@ -72,7 +72,7 @@
 							doh.robot.keyPress(dojo.keys.ESCAPE, 500, {});
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("date", dojo.global.dijit._curFocus.id, "focus is still on the date field");
+								doh.is("date", dojo.global.dijit.focus.curNode.id, "focus is still on the date field");
 								doh.t(isVisible("dialog1"), "dialog 1 wasn't closed");
 							}), 1000);
 
@@ -92,7 +92,7 @@
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("name", dojo.global.dijit._curFocus.id, "focus looped back to name field");
+								doh.is("name", dojo.global.dijit.focus.curNode.id, "focus looped back to name field");
 							}), 1000);
 
 							return d;
@@ -108,7 +108,7 @@
 							doh.robot.keyPress(dojo.keys.TAB, 500, {shift: true});
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("ok", dojo.global.dijit._curFocus.id, "focus looped back to submit button");
+								doh.is("ok", dojo.global.dijit.focus.curNode.id, "focus looped back to submit button");
 							}), 1000);
 
 							return d;
@@ -125,7 +125,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.t(isHidden("dialog1"), "dialog 1 was closed");
-								doh.is("dialog1button", dojo.global.dijit._curFocus.id, "focus returned to button");
+								doh.is("dialog1button", dojo.global.dijit.focus.curNode.id, "focus returned to button");
 							}), 1000);
 
 							return d;
@@ -241,40 +241,40 @@
 							doh.robot.keyPress(dojo.keys.SPACE, 500, {});
 
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.t(dojo.global.dijit._curFocus, "focus is somewhere #1");
-								doh.t(dojo.hasClass(dojo.global.dijit._curFocus, "dijitDialogCloseIcon"), "focus is on the close button #1");
+								doh.t(dojo.global.dijit.focus.curNode, "focus is somewhere #1");
+								doh.t(dojo.hasClass(dojo.global.dijit.focus.curNode, "dijitDialogCloseIcon"), "focus is on the close button #1");
 							}), 1000);
 
 							// Tab key shouldn't change the focus
 							doh.robot.keyPress(dojo.keys.TAB, 500);
 
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.t(dojo.global.dijit._curFocus, "focus is somewhere #2");
-								doh.t(dojo.hasClass(dojo.global.dijit._curFocus, "dijitDialogCloseIcon"), "focus is on the close button #2");
+								doh.t(dojo.global.dijit.focus.curNode, "focus is somewhere #2");
+								doh.t(dojo.hasClass(dojo.global.dijit.focus.curNode, "dijitDialogCloseIcon"), "focus is on the close button #2");
 							}), 500);
 
 							// Space key should close the dialog
 							doh.robot.keyPress(dojo.keys.SPACE, 500);
 
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.t(dojo.global.dijit._curFocus, "focus is somewhere #3");
-								doh.is("unmovablebutton", dojo.global.dijit._curFocus.id, "focus is back on the button that opened the dialog #1");
+								doh.t(dojo.global.dijit.focus.curNode, "focus is somewhere #3");
+								doh.is("unmovablebutton", dojo.global.dijit.focus.curNode.id, "focus is back on the button that opened the dialog #1");
 							}), 500);
 
 							// Open the dialog again
 							doh.robot.keyPress(dojo.keys.SPACE, 500, {});
 
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.t(dojo.global.dijit._curFocus, "focus is somewhere #4");
-								doh.t(dojo.hasClass(dojo.global.dijit._curFocus, "dijitDialogCloseIcon"), "focus is on the close button #4");
+								doh.t(dojo.global.dijit.focus.curNode, "focus is somewhere #4");
+								doh.t(dojo.hasClass(dojo.global.dijit.focus.curNode, "dijitDialogCloseIcon"), "focus is on the close button #4");
 							}), 500);
 
 							// Esc key should also close the dialog
 							doh.robot.keyPress(dojo.keys.ESCAPE, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(dojo.global.dijit._curFocus, "focus is somewhere #5");
-								doh.is("unmovablebutton", dojo.global.dijit._curFocus.id, "focus is back on the button that opened the dialog #2");
+								doh.t(dojo.global.dijit.focus.curNode, "focus is somewhere #5");
+								doh.is("unmovablebutton", dojo.global.dijit.focus.curNode.id, "focus is back on the button that opened the dialog #2");
 							}), 500);
 
 							return d;
@@ -294,16 +294,16 @@
 							doh.robot.keyPress(dojo.keys.SPACE, 500, {});
 
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.t(dojo.global.dijit._curFocus, "focus is somewhere #1");
-								doh.is("afile", dojo.global.dijit._curFocus.id, "focus is on the input type=file");
+								doh.t(dojo.global.dijit.focus.curNode, "focus is somewhere #1");
+								doh.is("afile", dojo.global.dijit.focus.curNode.id, "focus is on the input type=file");
 							}), 1000);
 
 							// Esc key should close the dialog
 							doh.robot.keyPress(dojo.keys.ESCAPE, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(dojo.global.dijit._curFocus, "focus is somewhere #2");
-								doh.is("filebutton", dojo.global.dijit._curFocus.id, "focus is back on the button that opened the dialog");
+								doh.t(dojo.global.dijit.focus.curNode, "focus is somewhere #2");
+								doh.is("filebutton", dojo.global.dijit.focus.curNode.id, "focus is back on the button that opened the dialog");
 							}), 500);
 
 							return d;
@@ -323,24 +323,24 @@
 							doh.robot.keyPress(dojo.keys.SPACE, 500, {});
 
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.t(dojo.global.dijit._curFocus, "focus is somewhere #1");
-								doh.is("textarea-radio-test", dojo.global.dijit._curFocus.id, "focus is on the textarea");
+								doh.t(dojo.global.dijit.focus.curNode, "focus is somewhere #1");
+								doh.is("textarea-radio-test", dojo.global.dijit.focus.curNode.id, "focus is on the textarea");
 							}), 1000);
 
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.t(dojo.global.dijit._curFocus, "focus is somewhere #2");
-								doh.is("textarea-radio-test", dojo.global.dijit._curFocus.id, "focus wraps around back to the textarea");
+								doh.t(dojo.global.dijit.focus.curNode, "focus is somewhere #2");
+								doh.is("textarea-radio-test", dojo.global.dijit.focus.curNode.id, "focus wraps around back to the textarea");
 							}), 500);
 
 							// Esc key should close the dialog
 							doh.robot.keyPress(dojo.keys.ESCAPE, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(dojo.global.dijit._curFocus, "focus is somewhere #3");
-								doh.is("RadioButtonDlgBtn", dojo.global.dijit._curFocus.id, "focus is back on the button that opened the dialog");
+								doh.t(dojo.global.dijit.focus.curNode, "focus is somewhere #3");
+								doh.is("RadioButtonDlgBtn", dojo.global.dijit.focus.curNode.id, "focus is back on the button that opened the dialog");
 							}), 500);
 
 							return d;
@@ -377,7 +377,7 @@
 								doh.t(dialog1Z > underlayZ, "dialog1 (zIndex=" + dialog1Z +
 									") above underlay (zIndex=" + underlayZ + ")");
 
-								doh.is("loc", dojo.global.dijit._curFocus.id, "focus is on the second field");
+								doh.is("loc", dojo.global.dijit.focus.curNode.id, "focus is on the second field");
 							}), 1000);
 
 							return d;
@@ -428,7 +428,7 @@
 								doh.t(dialog1Z > underlayZ, "dialog1 (zIndex=" + dialog1Z +
 									") above underlay (zIndex=" + underlayZ + ")");
 
-								doh.is("loc", dojo.global.dijit._curFocus.id, "focus is on the second field");
+								doh.is("loc", dojo.global.dijit.focus.curNode.id, "focus is on the second field");
 							}), 2000);
 
 							return d;
@@ -445,7 +445,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.t(isHidden("dialog1"), "dialog 1 was closed");
-								doh.is("dialog1button", dojo.global.dijit._curFocus.id, "focus returned to button");
+								doh.is("dialog1button", dojo.global.dijit.focus.curNode.id, "focus returned to button");
 							}), 2000);
 
 							return d;

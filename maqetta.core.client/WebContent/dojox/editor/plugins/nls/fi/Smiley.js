@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	smiley: "Lisää hymiö",
 	emoticonSmile: "hymyillä",
@@ -20,3 +22,5 @@
 	emoticonCrying: "itkeä"
 })
 
+//end v1.x content
+);

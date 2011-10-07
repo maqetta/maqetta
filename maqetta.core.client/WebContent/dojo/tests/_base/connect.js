@@ -1,15 +1,15 @@
-dojo.provide("tests._base.connect");
+dojo.provide("dojo.tests._base.connect");
 
 hub = function(){
-}
+};
 
 failures = 0;
 bad = function(){
 	failures++;
-}
+};
 
 good = function(){
-}
+};
 
 // make 'iterations' connections to hub
 // roughly half of which will be to 'good' and
@@ -45,7 +45,7 @@ markAndSweepTest = function(iterations){
 	hub();
 	// return number of disconnected functions that fired (should be 0)
 	return failures;
-}
+};
 
 markAndSweepSubscribersTest = function(iterations){
 	var topic = "hubbins";
@@ -76,7 +76,7 @@ markAndSweepSubscribersTest = function(iterations){
 	dojo.publish(topic);
 	// return number of unsubscribed functions that fired (should be 0)
 	return failures;
-}
+};
 
 tests.register("tests._base.connect",
 	[
@@ -196,6 +196,16 @@ tests.register("tests._base.connect",
 			t.is(true, foo.ok);
 			t.is(false, bar.ok);
 		},
+		function pubsub(t){
+			var count = 0;
+			dojo.subscribe("/test/blah", function(first, second){
+				t.is("first", first);
+				t.is("second", second);
+				count++;
+			});
+			dojo.publish("/test/blah", ["first", "second"]);
+			t.is(1, count);
+		},
 		function connectPublisher(t){
 			var foo = { inc: 0, foo: function(){ this.inc++; } };
 			var bar = { inc: 0, bar: function(){ this.inc++; } };
@@ -216,6 +226,21 @@ tests.register("tests._base.connect",
 		},
 		function publishSubscribe1000(t){
 			t.is(markAndSweepSubscribersTest(1000), 0);
+		},
+		function performanceAdd(){
+			function listener(){}
+			for(var i = 0;i < 1000; i++){
+				var foo = {};
+				dojo.connect(foo, "bar", listener);
+			}
+		},
+		function performanceFire(){
+			var foo = {};
+			function listener(){}
+			dojo.connect(foo, "bar", listener);
+			for(var i = 0;i < 100000; i++){
+				foo.bar();
+			}
 		}
 	]
 );

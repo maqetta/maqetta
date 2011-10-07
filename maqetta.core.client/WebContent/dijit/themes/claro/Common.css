@@ -18,21 +18,11 @@
 .claro .dijitFocusedLabel {
   /* for checkboxes or radio buttons, hatch border around the corresponding label, to indicate focus */
 
-  outline: 1px dotted #4a4a4a;
-}
-.claro .dijitContentPaneLoading {
-  background: url('images/loadingAnimation.gif') no-repeat left center;
-  padding-left: 25px;
-}
-/* .dijitContentPaneError icon renders in a dialog box with the error messsage when  there is an error in a HREF url */
-.claro .dijitContentPaneError {
-  background: url('../../icons/images/commonIconsObjActEnabled.png') no-repeat left center;
-  background-position: -496px;
-  padding-left: 25px;
+  outline: 1px dotted #494949;
 }
 /* Drag and Drop */
 .claro .dojoDndItemBefore, .claro .dojoDndItemAfter {
-  border-top: 1px solid #769dc0;
+  border-top: 1px solid #759dc0;
 }
 .claro .dojoDndItemOver {
   cursor: pointer;

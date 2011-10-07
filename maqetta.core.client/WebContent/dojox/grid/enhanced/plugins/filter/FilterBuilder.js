@@ -1,26 +1,28 @@
-dojo.provide("dojox.grid.enhanced.plugins.filter.FilterBuilder");
-dojo.require("dojox.grid.enhanced.plugins.filter._FilterExpr");
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"./_FilterExpr"
+], function(declare, array, lang, exprs){
 
-(function(){
-var fns = dojox.grid.enhanced.plugins.filter,
-	bdr = function(opCls){
-		return dojo.partial(function(cls,operands){
-			return new fns[cls](operands);
+var bdr = function(opCls){
+		return lang.partial(function(cls,operands){
+			return new exprs[cls](operands);
 		},opCls);
 	},
 	bdr_not = function(opCls){
-		return dojo.partial(function(cls,operands){
-			return new fns.LogicNOT(new fns[cls](operands));
+		return lang.partial(function(cls,operands){
+			return new exprs.LogicNOT(new exprs[cls](operands));
 		},opCls);
 	};
-dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBuilder", null, {
+return declare("dojox.grid.enhanced.plugins.filter.FilterBuilder", null, {
 	// summary:
 	//		Create filter expression from a JSON object.
 	buildExpression: function(def){
 		if("op" in def){
-			return this.supportedOps[def.op.toLowerCase()](dojo.map(def.data, this.buildExpression, this));
+			return this.supportedOps[def.op.toLowerCase()](array.map(def.data, this.buildExpression, this));
 		}else{
-			var args = dojo.mixin(this.defaultArgs[def.datatype], def.args || {});
+			var args = lang.mixin(this.defaultArgs[def.datatype], def.args || {});
 			return new this.supportedTypes[def.datatype](def.data, def.isColumn, args);
 		}
 	},
@@ -41,20 +43,20 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBuilder", null, {
 		"notendswith": bdr_not("EndsWith"),
 		"isempty": bdr("IsEmpty"),
 		"range": function(operands){
-			return new fns.LogicALL(
-				new fns.LargerThanOrEqualTo(operands.slice(0,2)),
-				new fns.LessThanOrEqualTo(operands[0], operands[2])
+			return new exprs.LogicALL(
+				new exprs.LargerThanOrEqualTo(operands.slice(0,2)),
+				new exprs.LessThanOrEqualTo(operands[0], operands[2])
 			);
 		},
 		"logicany": bdr("LogicANY"),
 		"logicall": bdr("LogicALL")
 	},
 	supportedTypes: {
-		"number": fns.NumberExpr,
-		"string": fns.StringExpr,
-		"boolean": fns.BooleanExpr,
-		"date": fns.DateExpr,
-		"time": fns.TimeExpr
+		"number": exprs.NumberExpr,
+		"string": exprs.StringExpr,
+		"boolean": exprs.BooleanExpr,
+		"date": exprs.DateExpr,
+		"time": exprs.TimeExpr
 	},
 	defaultArgs: {
 		"boolean": {
@@ -62,7 +64,7 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBuilder", null, {
 			"convert": function(dataValue, args){
 				var falseValue = args.falseValue;
 				var trueValue = args.trueValue;
-				if(dojo.isString(dataValue)){
+				if(lang.isString(dataValue)){
 					if(trueValue && dataValue.toLowerCase() == trueValue){
 						return true;
 					}
@@ -75,4 +77,4 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBuilder", null, {
 		}
 	}
 });
-})();
+});

@@ -1,2 +1,3 @@
-dojo.provide("dojox.uuid");
-dojo.require("dojox.uuid._base");
+define(['dojox/uuid/_base'], function(uuid){
+	return uuid;
+});

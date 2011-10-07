@@ -1,7 +1,7 @@
-dojo.provide("dojox.image._base");
-
-// summary: Core Image-related functionality
-;(function(d){
+define(["dojo", "dojox"], function(dojo, dojox){
+	
+	dojo.getObject("image", true, dojox);
+	var d = dojo;
 	
 	var cacheNode;
 	dojox.image.preload = function(/* Array */urls){
@@ -37,13 +37,14 @@ dojo.provide("dojox.image._base");
 	};
 	
 	/*=====
-		dojo.mixin(djConfig, {
-			// preloadImages: Array?
-			//		An optional array of urls to preload immediately upon
-			//		page load. Uses `dojox.image`, and is unused if not present.
-			preloadImages: []
-		})
+	dojo.mixin(djConfig, {
+		// preloadImages: Array?
+		//		An optional array of urls to preload immediately upon
+		//		page load. Uses `dojox.image`, and is unused if not present.
+		preloadImages: []
+	});
 	=====*/
+	
 	if(d.config.preloadImages){
 		d.addOnLoad(function(){
 			dojox.image.preload(d.config.preloadImages);
@@ -111,4 +112,4 @@ dojo.provide("dojox.image._base");
 //
 //	});
 		
-})(dojo);
+});

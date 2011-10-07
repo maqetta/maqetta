@@ -1,9 +1,6 @@
-dojo.provide("dojox.charting.themes.WatersEdge");
-dojo.require("dojox.charting.Theme");
-
-(function(){
-	var dxc=dojox.charting;
-	dxc.themes.WatersEdge=new dxc.Theme({
+define(["../Theme", "./common"], function(Theme, themes){
+	
+	themes.WatersEdge = new Theme({
 		colors: [
 			"#437cc0",
 			"#6256a5",
@@ -12,4 +9,6 @@ dojo.require("dojox.charting.Theme");
 			"#4b66b0"
 		]
 	});
-})();
+	
+	return  themes.WatersEdge;
+});

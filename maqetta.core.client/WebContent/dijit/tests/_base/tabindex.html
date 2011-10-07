@@ -18,7 +18,7 @@
 		dojo.require("dijit.dijit");
 		dojo.require("dijit.Editor");
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			doh.register("parse", function(){
 				dojo.parser.parse();
 			});

@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} z ${1} ${0}",
 	"firstTip": "Prvá strana",
@@ -13,6 +15,9 @@
 	"dialogIndication": "Zadajte číslo strany",
 	"pageCountIndication": " (${0} strán)",
 	"dialogConfirm": "Prejsť",
-	"dialogCancel": "Zrušiť"
+	"dialogCancel": "Zrušiť",
+	"all": "všetko"
 })
+//end v1.x content
+);
 

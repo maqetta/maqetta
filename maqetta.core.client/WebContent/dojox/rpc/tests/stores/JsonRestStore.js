@@ -1,9 +1,10 @@
-dojo.provide("dojox.data.tests.stores.JsonRestStore");
+dojo.provide("dojox.rpc.tests.stores.JsonRestStore");
+
 dojo.require("dojox.data.JsonRestStore");
 dojo.require("dojo.data.api.Read");
 dojo.require("dojox.rpc.Service");
 
-dojox.data.tests.stores.JsonRestStore.error = function(t, d, errData){
+dojox.rpc.tests.stores.JsonRestStore.error = function(t, d, errData){
 	//  summary:
 	//		The error callback function to be used for all of the tests.
 	d.errback(errData);
@@ -11,7 +12,7 @@ dojox.data.tests.stores.JsonRestStore.error = function(t, d, errData){
 var testServices = new dojox.rpc.Service(dojo.moduleUrl("dojox.rpc.tests.resources", "test.smd"));
 var jsonStore = new dojox.data.JsonRestStore({service:testServices.jsonRestStore});
 
-doh.register("dojox.data.tests.stores.JsonRestStore",
+doh.register("dojox.rpc.tests.stores.JsonRestStore",
 	[
 		{
 			name: "Fetch some items",
@@ -25,7 +26,7 @@ doh.register("dojox.data.tests.stores.JsonRestStore",
 						t.is(4, items.length);
 						d.callback(true);
 					},
-					onError: dojo.partial(dojox.data.tests.stores.JsonRestStore.error, doh, d)});
+					onError: dojo.partial(dojox.rpc.tests.stores.JsonRestStore.error, doh, d)});
 				return d; //Object
 			}
 		},
@@ -44,7 +45,7 @@ doh.register("dojox.data.tests.stores.JsonRestStore",
 						t.t(jsonStore.isItem(item));
 						d.callback(true);
 					},
-					onError: dojo.partial(dojox.data.tests.stores.JsonRestStore.error, doh, d)});
+					onError: dojo.partial(dojox.rpc.tests.stores.JsonRestStore.error, doh, d)});
 				return d; //Object
 			}
 		},
@@ -71,9 +72,9 @@ doh.register("dojox.data.tests.stores.JsonRestStore",
 								t.is(item.obj, item['obj dup']);
 								d.callback(true);
 							},
-							onError: dojo.partial(dojox.data.tests.stores.JsonRestStore.error, doh, d)});
+							onError: dojo.partial(dojox.rpc.tests.stores.JsonRestStore.error, doh, d)});
 					},
-					onError: dojo.partial(dojox.data.tests.stores.JsonRestStore.error, doh, d)});
+					onError: dojo.partial(dojox.rpc.tests.stores.JsonRestStore.error, doh, d)});
 				return d; //Object
 			}
 		},
@@ -99,7 +100,7 @@ doh.register("dojox.data.tests.stores.JsonRestStore",
 						jsonStore.save();
 						d.callback(true);
 					},
-					onError: dojo.partial(dojox.data.tests.stores.JsonRestStore.error, doh, d)});
+					onError: dojo.partial(dojox.rpc.tests.stores.JsonRestStore.error, doh, d)});
 				return d; //Object
 			}
 		},
@@ -124,7 +125,7 @@ doh.register("dojox.data.tests.stores.JsonRestStore",
 						t.t(typeof jsonStore.getValue(item,"updated") == 'number');
 						d.callback(true);
 					},
-					onError: dojo.partial(dojox.data.tests.stores.JsonRestStore.error, doh, d)});
+					onError: dojo.partial(dojox.rpc.tests.stores.JsonRestStore.error, doh, d)});
 				return d; //Object
 			}
 		},
@@ -144,7 +145,7 @@ doh.register("dojox.data.tests.stores.JsonRestStore",
 							d.callback(true);
 						});
 					},
-					onError: dojo.partial(dojox.data.tests.stores.JsonRestStore.error, doh, d)});
+					onError: dojo.partial(dojox.rpc.tests.stores.JsonRestStore.error, doh, d)});
 				return d; //Object
 			}
 		},
@@ -167,7 +168,7 @@ doh.register("dojox.data.tests.stores.JsonRestStore",
 						};
 						jsonStore.save();
 					},
-					onError: dojo.partial(dojox.data.tests.stores.JsonRestStore.error, doh, d)});
+					onError: dojo.partial(dojox.rpc.tests.stores.JsonRestStore.error, doh, d)});
 				return d; //Object
 			}
 		},
@@ -199,7 +200,7 @@ doh.register("dojox.data.tests.stores.JsonRestStore",
 					count: 5,
 					onItem: onItem,
 					onComplete: onComplete,
-					onError: dojo.partial(dojox.data.tests.stores.JsonRestStore.error, t, d)
+					onError: dojo.partial(dojox.rpc.tests.stores.JsonRestStore.error, t, d)
 				});
 				return d; //Object
 			}

@@ -33,16 +33,16 @@
 		dojo.require("dijit.tree.TreeStoreModel");
 		dojo.require("dijit.tree.dndSource");
 		
-		function getRowClass(item, isExpanded) {
-			if (!item
+		function getRowClass(item, isExpanded){
+			if(!item
 					|| !treeStore.isItem(item)
-					|| treeStore.getValue(item, "type") != "header") {
+					|| treeStore.getValue(item, "type") != "header"){
 				return null;
 			}
 			return "headerRow";
 		}
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			doh.register("parse", function(){
 				dojo.parser.parse();
 			});
@@ -277,7 +277,7 @@
 							// but this is enough for testing
 							myStore.setValue(item, 'type', 'country');
 						}
-					})
+					});
 
 					var children = myTree.rootNode.getChildren();
 					doh.is(5, children.length, "five children again");
@@ -294,7 +294,7 @@
 							// but this is enough for testing
 							myStore.setValue(item, 'type', 'continent');
 						}
-					})
+					});
 
 					var children = myTree.rootNode.getChildren();
 					doh.is(6, children.length, "six children again");
@@ -336,6 +336,49 @@
 				function selectNewItem(){
 					myTree.set("path", ["earth", "EU", "FR"]);
 					doh.is("FR", myTree.get("selectedItem").id);
+				}
+			]);
+
+			doh.register("nobidi", [
+				// Make sure that Tree doesn't have spurious lang="" dir="" on nodes
+				function noLangDir(){
+					var d = new doh.Deferred();
+					myStore = new dojo.data.ItemFileWriteStore({url:'../_data/countries.json'});
+					doh.t(myStore, "store created");
+
+					myModel = new dijit.tree.ForestStoreModel({
+						store: myStore,
+						query: {type:'continent'},
+						rootId: "earth",
+						rootLabel: "Earth",
+						childrenAttrs: ["children"]
+					});
+					doh.t(myModel, "model created");
+
+					myTree = new dijit.Tree({
+						id: "noDirTree",
+						model: myModel,
+						persist: false,		// persist==true is too hard to test
+						dndController: "dijit.tree.dndSource"
+					});
+					doh.t(myTree, "tree created");
+
+					dojo.byId("container").appendChild(myTree.domNode);
+					myTree.startup();
+
+					setTimeout(d.getTestCallback(function(){
+						// Give the tree time to load, and the do checks that it
+						// loaded correctly
+						doh.t(myTree.rootNode, "root node exists");
+						doh.t(myTree.rootNode.isExpanded, "root node is expanded");
+						doh.f(dojo.hasAttr(myTree.rootNode, "lang"), "no (empty) lang attribute on root TreeNode");
+						doh.f(dojo.hasAttr(myTree.rootNode, "dir"), "no (empty) dir attribute on root TreeNode");
+
+						var children = myTree.rootNode.getChildren();
+						doh.f(dojo.hasAttr(children[2], "lang"), "no (empty) lang attribute on child TreeNode");
+						doh.f(dojo.hasAttr(children[2], "dir"), "no (empty) dir attribute on child TreeNode");
+					}), 750);
+					return d;
 				}
 			]);
 

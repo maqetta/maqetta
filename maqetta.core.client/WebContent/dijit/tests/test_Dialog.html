@@ -44,7 +44,7 @@
 		Date.prototype.json = function(){ return dojo.date.stamp.toISOString(this, {selector: 'date'});};
 
 		var thirdDlg;
-		function createDialog() {
+		function createDialog(){
 			if(!thirdDlg){
 				var pane = dojo.byId('thirdDialog');
 				// should specify a width on dialogs with <p> tags, otherwise they get too wide
@@ -60,6 +60,19 @@
 		function open2Dialogs(){
 			dijit.byId('dialog1').show();
 			setTimeout(dojo.hitch(dijit.byId('fifthDlg'), 'show'), 1000);
+		}
+		
+		function showSelfDestructDlg(){
+			//for testing #12436
+			var dlg = new dijit.Dialog({
+				id: 'SelfDestructDlg',
+				title: 'Self-Destruct Dialog',
+				content: 'This dialog will destroy itself onHide.<br/><input type="text" id="SelfDestructDlgInput" />',
+				onHide: function(){
+					this.destroyRecursive();
+				}
+			});
+			dlg.show();
 		}
 	</script>
 </head>
@@ -213,7 +226,7 @@
 	<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("embedded").show() }'>Dialog w/embedded layout widgets</button> |
 
 	<div id="embedded" data-dojo-type="dijit.Dialog" data-dojo-props='title:"Embedded layout widgets",
-		onShow:function(){ dojo.attr(this.domNode, "aria-describedby", "describe"); } '>
+		onShow:function(){ this.domNode.setAttribute("aria-describedby", "describe"); } '>
 		<p id="describe">
 			The pane has some text, plus two embedded layout widgets, which should
 			appear correctly even though the pane is initially hidden.
@@ -363,14 +376,19 @@
 	    <textarea id="textarea-radio-test" width="400" height="200"></textarea>
 	    <fieldset>
 	      <legend>Best Pet</legend>
-	      <input id="dograd" type="radio" name="pet" checked="checked"></input>
+	      <input id="dograd" type="radio" name="pet" checked="checked"/>
 	      <label for="dograd">Dog</label> -
-	      <input id="catrad" type="radio" name="pet"></input>
+	      <input id="catrad" type="radio" name="pet"/>
 	      <label for="catrad">Cat</label>
 	    </fieldset>
 	  </div>
 	</div>
 	
+	<button id="SelfDestructDlgBtn" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:showSelfDestructDlg'>Show Self-Destruct Dialog</button>
+	<div id="SelfDestructDlgBtn2" style="border: 1px solid black;" class="dijitInline" onclick="showSelfDestructDlg();">Show Self-Destruct Dialog (unfocusable div)</div>
+
+	<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ createDialog() }, title:"shows after 3 second delay, with blue background"'>Programatic Dialog (3 second delay)</button> |
+
 	<p><b><i>(scroll down to see more links to click, for testing positioning / scroll handling)</i></b></p>
 
 	<p>

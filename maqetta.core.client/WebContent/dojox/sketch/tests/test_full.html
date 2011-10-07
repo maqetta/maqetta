@@ -23,9 +23,8 @@
 		</style>
 		<script>var djConfig={ isDebug: false };</script>
 		<script src="../../../dojo/dojo.js"></script>
-		<script src="../Toolbar.js"></script>
 		<script>
-            dojo.require("dijit.robot");
+			dojo.require("dijit.robot");
 			dojo.require("dojox.sketch");
 			dojo.require("dojox.sketch.Slider");
 			dojo.require("dojox.sketch.LeadAnnotation");
@@ -51,13 +50,13 @@
 						dojo.byId("output").value=f.serialize();
 					}
 				});
-                
+
                 setTimeout(function(){
                     doh.robot.startRobot();
                     setTimeout(function(){
                         rundoh();
                     },1000);
-                },1000);
+				},1000);
 			}
 			dojo.addOnLoad(init);
             
@@ -117,7 +116,7 @@
 		</script>
 	</head>
 	<body class="tundra">
-    <button onclick="rundoh()">FT</button>
+		<button onclick="rundoh()">FT</button>
 		<h1>Annotator/Figure Testing Platform</h1>
 		<p>This is a generic test to create a figure from an existing SVG file, to edit that figure, and to test the undo stack. Double click a shape to set new text for it.</p>
 		<div id="container">

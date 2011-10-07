@@ -1,6 +1,9 @@
-dojo.provide("dojox.embed.flashVars");
+define(['dojo'],function(dojo){
 
-dojo.mixin(dojox.embed.flashVars, {
+dojo.getObject("dojox.embed", true);
+dojo.deprecated("dojox.embed.flashVars", "Will be removed in 2.0", "2.0");
+
+dojox.embed.flashVars = {
 	//	summary
 	//		Handles flashvar serialization
 	//		Converting complex objects into a simple, clear string that can be appended
@@ -52,4 +55,6 @@ dojo.mixin(dojox.embed.flashVars, {
 		// Dev note: important that there is no double semi-colons
 		return n+":"+o; // String
 	}
+};
+return dojox.embed.flashVars;
 });

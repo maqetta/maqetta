@@ -1,12 +1,24 @@
-dojo.provide("dojox.grid.EnhancedGrid");
-
-dojo.require("dojox.grid.DataGrid");
-dojo.require("dojox.grid.enhanced._PluginManager");
-dojo.requireLocalization("dojox.grid.enhanced", "EnhancedGrid");
+define([
+	"dojo/_base/kernel",
+	"../main",
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dojo/_base/sniff",
+	"dojo/dom",
+	"dojo/dom-geometry",
+	"dojo/i18n",
+	"./DataGrid",
+	"./DataSelection",
+	"./enhanced/_PluginManager",
+	"./enhanced/plugins/_SelectionPreserver",//default loaded plugin
+	"dojo/i18n!./enhanced/nls/EnhancedGrid"
+], function(dojo, dojox, declare, lang, array, has, dom, domGeometry, i18n,
+	DataGrid, DataSelection, _PluginManager, _SelectionPreserver){
 
 dojo.experimental("dojox.grid.EnhancedGrid");
 
-dojo.declare("dojox.grid.EnhancedGrid", dojox.grid.DataGrid, {
+var EnhancedGrid = declare("dojox.grid.EnhancedGrid", DataGrid, {
 	// summary:
 	//		Provides enhanced features based on DataGrid
 	//
@@ -60,17 +72,13 @@ dojo.declare("dojox.grid.EnhancedGrid", dojox.grid.DataGrid, {
 	//		Singleton plugin manager
 	pluginMgr: null,
 
-	//keepSelection: Boolean
-	//		Whether keep selection after sort, filter, pagination etc.
-	keepSelection: false,
-	
 	//_pluginMgrClass: Object
 	//		Default plugin manager class
-	_pluginMgrClass: dojox.grid.enhanced._PluginManager,
+	_pluginMgrClass: _PluginManager,
 
 	postMixInProperties: function(){
 		//load nls bundle
-		this._nls = dojo.i18n.getLocalization("dojox.grid.enhanced", "EnhancedGrid", this.lang);
+		this._nls = i18n.getLocalization("dojox.grid.enhanced", "EnhancedGrid", this.lang);
 		this.inherited(arguments);
 	},
 	postCreate: function(){
@@ -125,7 +133,7 @@ dojo.declare("dojox.grid.EnhancedGrid", dojox.grid.DataGrid, {
 			}
 			props[p] = source[p];
 		}
-		dojo.mixin(target, props);
+		lang.mixin(target, props);
 	},
 	_copyAttr: function(idx, attr){
 		// summary:
@@ -139,7 +147,7 @@ dojo.declare("dojox.grid.EnhancedGrid", dojox.grid.DataGrid, {
 		//		Overwritten, see _Grid._getHeaderHeight()
 		//		Should include borders/margins of this.viewsHeaderNode
 		this.inherited(arguments);
-		return dojo.marginBox(this.viewsHeaderNode).h;
+		return domGeometry.getMarginBox(this.viewsHeaderNode).h;
 	},
 	_fetch: function(start, isRender){
 		// summary:
@@ -162,9 +170,9 @@ dojo.declare("dojox.grid.EnhancedGrid", dojox.grid.DataGrid, {
 					sort: this.getSortProps(),
 					queryOptions: this.queryOptions,
 					isRender: isRender,
-					onBegin: dojo.hitch(this, "_onFetchBegin"),
-					onComplete: dojo.hitch(this, "_onFetchComplete"),
-					onError: dojo.hitch(this, "_onFetchError")
+					onBegin: lang.hitch(this, "_onFetchBegin"),
+					onComplete: lang.hitch(this, "_onFetchComplete"),
+					onError: lang.hitch(this, "_onFetchError")
 				};
 				this._storeLayerFetch(req);
 			}catch(e){
@@ -179,7 +187,7 @@ dojo.declare("dojox.grid.EnhancedGrid", dojox.grid.DataGrid, {
 		this.store.fetch(req);
 	},
 	getCellByField: function(field){
-		return dojo.filter(this.layout.cells, function(cell){
+		return array.filter(this.layout.cells, function(cell){
 			return cell.field == field;
 		})[0];
 	},
@@ -188,7 +196,7 @@ dojo.declare("dojox.grid.EnhancedGrid", dojox.grid.DataGrid, {
 		// summary
 		//		Overwrite: rewrite getCellX of view.header
 		var view = this.inherited(arguments);
-		if(dojo.isMoz){
+		if(has('mozilla')){
 			var ascendDom = function(inNode, inWhile){
 				for(var n = inNode; n && inWhile(n); n = n.parentNode){}
 				return n;
@@ -202,7 +210,7 @@ dojo.declare("dojox.grid.EnhancedGrid", dojox.grid.DataGrid, {
 			view.header.getCellX = function(e){
 				var x = func.call(view.header, e);
 				var n = ascendDom(e.target, makeNotTagName("th"));
-				if(n && n !== e.target && dojo.isDescendant(e.target, n)){ x += n.firstChild.offsetLeft; }
+				if(n && n !== e.target && dom.isDescendant(e.target, n)){ x += n.firstChild.offsetLeft; }
 				return x;
 			};
 		}
@@ -212,19 +220,18 @@ dojo.declare("dojox.grid.EnhancedGrid", dojox.grid.DataGrid, {
 		// summary:
 		//		Destroy all resources
 		delete this._nls;
-		this.selection.destroy();
 		this.pluginMgr.destroy();
 		this.inherited(arguments);
 	}
 });
 
-dojo.provide("dojox.grid.enhanced.DataSelection");
-dojo.require("dojox.grid.enhanced.plugins._SelectionPreserver");//default loaded plugin
-
-dojo.declare("dojox.grid.enhanced.DataSelection", dojox.grid.DataSelection, {
+declare("dojox.grid.enhanced.DataSelection", DataSelection, {
 	constructor: function(grid){
 		if(grid.keepSelection){
-			this.preserver = new dojox.grid.enhanced.plugins._SelectionPreserver(this);
+			if(this.preserver){
+				this.preserver.destroy();
+			}
+			this.preserver = new _SelectionPreserver(this);
 		}
 	},
 	_range: function(inFrom, inTo){
@@ -238,19 +245,18 @@ dojo.declare("dojox.grid.enhanced.DataSelection", dojox.grid.DataSelection, {
 		this.inherited(arguments);
 		this.grid._selectingRange = false;
 		this.onChanged();
-	},
-	destroy: function(){
-		if(this.preserver){
-			this.preserver.destroy();
-		}
 	}
 });
 
-dojox.grid.EnhancedGrid.markupFactory = function(props, node, ctor, cellFunc){
+EnhancedGrid.markupFactory = function(props, node, ctor, cellFunc){
 	return dojox.grid._Grid.markupFactory(props, node, ctor,
-					dojo.partial(dojox.grid.DataGrid.cell_markupFactory, cellFunc));
+					lang.partial(DataGrid.cell_markupFactory, cellFunc));
 };
 
-dojox.grid.EnhancedGrid.registerPlugin = function(clazz, props){
-	dojox.grid.enhanced._PluginManager.registerPlugin(clazz, props);
+EnhancedGrid.registerPlugin = function(clazz, props){
+	_PluginManager.registerPlugin(clazz, props);
 };
+
+return EnhancedGrid;
+
+});

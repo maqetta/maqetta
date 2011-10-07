@@ -1,6 +1,21 @@
-define("dijit/_base", ["dojo", "dijit", "dijit/_base/focus", "dijit/_base/manager", "dijit/_base/place", "dijit/_base/popup", "dijit/_base/scroll", "dijit/_base/sniff", "dijit/_base/typematic", "dijit/_base/wai", "dijit/_base/window"], function(dojo, dijit) {
+define([
+	".",
+	"./a11y",	// used to be in dijit/_base/manager
+	"./_base/focus",
+	"./_base/manager",
+	"./_base/place",
+	"./_base/popup",
+	"./_base/scroll",
+	"./_base/sniff",
+	"./_base/typematic",
+	"./_base/wai",
+	"./_base/window"
+], function(dijit){
 
+	// module:
+	//		dijit/_base
+	// summary:
+	//		Includes all the modules in dijit/_base
 
-
-return dijit._base;
+	return dijit._base;
 });

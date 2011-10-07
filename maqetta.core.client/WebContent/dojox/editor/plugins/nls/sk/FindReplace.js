@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"findLabel": "Hľadať:",
 	"findTooltip": "Zadajte text na nájdenie",
@@ -20,3 +22,5 @@
 	"eofDialogTextReplace": "nahradený"
 })
 
+//end v1.x content
+);

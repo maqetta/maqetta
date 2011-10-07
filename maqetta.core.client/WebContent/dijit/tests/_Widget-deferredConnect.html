@@ -12,6 +12,7 @@
 	<script type="text/javascript" src="../../dojo/dojo.js"
 		data-dojo-config="isDebug: true, parseOnLoad: true"></script>
 	<script>
+		dojo.require("dojo.parser");
 		dojo.require("dijit.form.Button");
 
 		overrodeMouseMoved = false;
@@ -26,7 +27,7 @@
 			bothOverrodeMouseMoved = true;
 		}
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			dojo.connect(dijit.byId("connect"), "onMouseMove", function(){
 				if(!connectedMouseMoved){
 					console.log("'connect' button: mouse moved");
@@ -48,7 +49,7 @@
 	<h1>Test deferred connections</h1>
 	<p>
 		OnMouseMove is a deferred connection, _Widget only call dojo.connect()
-		(dojoAttachEvent) to connect the onmousemove event on the focusNode to
+		(data-dojo-attach-event) to connect the onmousemove event on the focusNode to
 		the widget method if needed.
 	</p>
 	<p>

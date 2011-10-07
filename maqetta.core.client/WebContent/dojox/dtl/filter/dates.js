@@ -1,11 +1,15 @@
-dojo.provide("dojox.dtl.filter.dates");
+define([
+	"dojo/_base/lang",
+	"../_base",	
+	"../utils/date"
+], function(lang,dd,ddud){
+	/*=====
+		dd = dojox.dtl;
+	=====*/
+	lang.getObject("dojox.dtl.filter.dates", true);
 
-dojo.require("dojox.dtl.utils.date");
-
-(function(){
-	var ddfd = dojox.dtl.filter.dates;
-
-	dojo.mixin(ddfd, {
+	var ddfd = dd.filter.dates;
+	lang.mixin(ddfd, {
 		_toDate: function(value){
 			if(value instanceof Date){
 				return value;
@@ -23,7 +27,7 @@ dojo.require("dojox.dtl.utils.date");
 				return "";
 			}
 			arg = arg || "N j, Y";
-			return dojox.dtl.utils.date.format(value, arg);
+			return ddud.format(value, arg);
 		},
 		time: function(value, arg){
 			// summary: Formats a time according to the given format
@@ -32,7 +36,7 @@ dojo.require("dojox.dtl.utils.date");
 				return "";
 			}
 			arg = arg || "P";
-			return dojox.dtl.utils.date.format(value, arg);
+			return ddud.format(value, arg);
 		},
 		timesince: function(value, arg){
 			// summary: Formats a date as the time since that date (i.e. "4 days, 6 hours")
@@ -40,7 +44,7 @@ dojo.require("dojox.dtl.utils.date");
 			if(!value){
 				return "";
 			}
-			var timesince = dojox.dtl.utils.date.timesince;
+			var timesince = ddud.timesince;
 			if(arg){
 				return timesince(arg, value);
 			}
@@ -52,11 +56,12 @@ dojo.require("dojox.dtl.utils.date");
 			if(!value){
 				return "";
 			}
-			var timesince = dojox.dtl.utils.date.timesince;
+			var timesince = ddud.timesince;
 			if(arg){
 				return timesince(arg, value);
 			}
 			return timesince(new Date(), value);
 		}
 	});
-})();
+	return dojox.dtl.filter.dates;
+});

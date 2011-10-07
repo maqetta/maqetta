@@ -1,8 +1,35 @@
-define("dijit/layout/ContentPane", ["dojo", "dijit", "dijit/_Widget", "dijit/layout/_ContentPaneResizeMixin", "dojo/string", "dojo/html", "i18n!dijit/nls/loading"], function(dojo, dijit) {
+define([
+	"dojo/_base/kernel", // kernel.deprecated
+	"dojo/_base/lang", // lang.mixin lang.delegate lang.hitch lang.isFunction lang.isObject
+	"../_Widget",
+	"./_ContentPaneResizeMixin",
+	"dojo/string", // string.substitute
+	"dojo/html", // html._ContentSetter html._emptyNode
+	"dojo/i18n!../nls/loading",
+	"dojo/_base/array", // array.forEach
+	"dojo/_base/declare", // declare
+	"dojo/_base/Deferred", // Deferred
+	"dojo/dom", // dom.byId
+	"dojo/dom-attr", // domAttr.attr
+	"dojo/_base/window", // win.body win.doc.createDocumentFragment
+	"dojo/_base/xhr", // xhr.get
+	"dojo/i18n" // i18n.getLocalization
+], function(kernel, lang, _Widget, _ContentPaneResizeMixin, string, html, nlsLoading,
+	array, declare, Deferred, dom, domAttr, win, xhr, i18n){
 
-dojo.declare(
-	"dijit.layout.ContentPane", [dijit._Widget, dijit.layout._ContentPaneResizeMixin],
-{
+/*=====
+	var _Widget = dijit._Widget;
+	var _ContentPaneResizeMixin = dijit.layout._ContentPaneResizeMixin;
+=====*/
+
+// module:
+//		dijit/layout/ContentPane
+// summary:
+//		A widget containing an HTML fragment, specified inline
+//		or by uri.  Fragment may include widgets.
+
+
+return declare("dijit.layout.ContentPane", [_Widget, _ContentPaneResizeMixin], {
 	// summary:
 	//		A widget containing an HTML fragment, specified inline
 	//		or by uri.  Fragment may include widgets.
@@ -37,13 +64,11 @@ dojo.declare(
 	//		Changing href after creation doesn't have any effect; Use set('href', ...);
 	href: "",
 
-/*=====
 	// content: String || DomNode || NodeList || dijit._Widget
 	//		The innerHTML of the ContentPane.
 	//		Note that the initialization parameter / argument to set("content", ...)
 	//		can be a String, DomNode, Nodelist, or _Widget.
 	content: "",
-=====*/
 
 	// extractContent: Boolean
 	//		Extract visible content from inside of <body> .... </body>.
@@ -59,7 +84,7 @@ dojo.declare(
 	//		will search for data-dojo-type (or dojoType).  For backwards compatibility
 	//		reasons defaults to dojo._scopeName (which is "dojo" except when
 	//		multi-version support is used, when it will be something like dojo16, dojo20, etc.)
-	parserScope: dojo._scopeName,
+	parserScope: kernel._scopeName,
 
 	// preventCache: Boolean
 	//		Prevent caching of data from href's by appending a timestamp to the href.
@@ -75,11 +100,11 @@ dojo.declare(
 
 	// loadingMessage: String
 	//		Message that shows while downloading
-	loadingMessage: "<span class='dijitContentPaneLoading'>${loadingState}</span>",
+	loadingMessage: "<span class='dijitContentPaneLoading'><span class='dijitInline dijitIconLoading'></span>${loadingState}</span>",
 
 	// errorMessage: String
 	//		Message that shows if an error occurs
-	errorMessage: "<span class='dijitContentPaneError'>${errorState}</span>",
+	errorMessage: "<span class='dijitContentPaneError'><span class='dijitInline dijitIconError'></span>${errorState}</span>",
 
 	// isLoaded: [readonly] Boolean
 	//		True if the ContentPane has data in it, either specified
@@ -92,9 +117,15 @@ dojo.declare(
 
 	baseClass: "dijitContentPane",
 
+	/*======
+	// ioMethod: dojo.xhrGet|dojo.xhrPost
+	//		Function that should grab the content specified via href.
+	ioMethod: dojo.xhrGet,
+	======*/
+
 	// ioArgs: Object
 	//		Parameters to pass to xhrGet() request, for example:
-	// |	<div dojoType="dijit.layout.ContentPane" href="./bar" ioArgs="{timeout: 500}">
+	// |	<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="href: './bar', ioArgs: {timeout: 500}">
 	ioArgs: {},
 
 	// onLoadDeferred: [readonly] dojo.Deferred
@@ -107,12 +138,10 @@ dojo.declare(
 	//		or content is loaded.
 	onLoadDeferred: null,
 
-	// Override _Widget's attributeMap because we don't want the title attribute (used to specify
+	// Cancel _WidgetBase's _setTitleAttr because we don't want the title attribute (used to specify
 	// tab labels) to be copied to ContentPane.domNode... otherwise a tooltip shows up over the
 	// entire pane.
-	attributeMap: dojo.delegate(dijit._Widget.prototype.attributeMap, {
-		title: []
-	}),
+	_setTitleAttr: null,
 
 	// Flag to parser that I'll parse my contents, so it shouldn't.
 	stopParser: true,
@@ -128,21 +157,21 @@ dojo.declare(
 		// processed in the same way as contents set via set("content", ...), calling the parser etc.
 		// Avoid modifying original params object since that breaks NodeList instantiation, see #11906.
 		if((!params || !params.template) && srcNodeRef && !("href" in params) && !("content" in params)){
-			var df = dojo.doc.createDocumentFragment();
-			srcNodeRef = dojo.byId(srcNodeRef)
+			var df = win.doc.createDocumentFragment();
+			srcNodeRef = dom.byId(srcNodeRef);
 			while(srcNodeRef.firstChild){
 				df.appendChild(srcNodeRef.firstChild);
 			}
-			params = dojo.delegate(params, {content: df});
+			params = lang.delegate(params, {content: df});
 		}
 		this.inherited(arguments, [params, srcNodeRef]);
 	},
 
 	postMixInProperties: function(){
 		this.inherited(arguments);
-		var messages = dojo.i18n.getLocalization("dijit", "loading", this.lang);
-		this.loadingMessage = dojo.string.substitute(this.loadingMessage, messages);
-		this.errorMessage = dojo.string.substitute(this.errorMessage, messages);
+		var messages = i18n.getLocalization("dijit", "loading", this.lang);
+		this.loadingMessage = string.substitute(this.loadingMessage, messages);
+		this.errorMessage = string.substitute(this.errorMessage, messages);
 	},
 
 	buildRendering: function(){
@@ -158,12 +187,12 @@ dojo.declare(
 		// over a node  (TODO: remove in 2.0, no longer needed after #11490)
 		this.domNode.title = "";
 
-		if(!dojo.attr(this.domNode,"role")){
-			dijit.setWaiRole(this.domNode, "group");
+		if(!domAttr.get(this.domNode,"role")){
+			this.domNode.setAttribute("role", "group");
 		}
 	},
 
-	_startChildren: function(){
+	startup: function(){
 		// summary:
 		//		Call startup() on all children including non _Widget ones like dojo.dnd.Source objects
 
@@ -172,8 +201,8 @@ dojo.declare(
 
 		// And this catches stuff like dojo.dnd.Source
 		if(this._contentSetter){
-			dojo.forEach(this._contentSetter.parseResults, function(obj){
-				if(!obj._started && !obj._destroyed && dojo.isFunction(obj.startup)){
+			array.forEach(this._contentSetter.parseResults, function(obj){
+				if(!obj._started && !obj._destroyed && lang.isFunction(obj.startup)){
 					obj.startup();
 					obj._started = true;
 				}
@@ -184,7 +213,7 @@ dojo.declare(
 	setHref: function(/*String|Uri*/ href){
 		// summary:
 		//		Deprecated.   Use set('href', ...) instead.
-		dojo.deprecated("dijit.layout.ContentPane.setHref() is deprecated. Use set('href', ...) instead.", "", "2.0");
+		kernel.deprecated("dijit.layout.ContentPane.setHref() is deprecated. Use set('href', ...) instead.", "", "2.0");
 		return this.set("href", href);
 	},
 	_setHrefAttr: function(/*String|Uri*/ href){
@@ -199,8 +228,8 @@ dojo.declare(
 		// Cancel any in-flight requests (a set('href', ...) will cancel any in-flight set('href', ...))
 		this.cancel();
 
-		this.onLoadDeferred = new dojo.Deferred(dojo.hitch(this, "cancel"));
-		this.onLoadDeferred.addCallback(dojo.hitch(this, "onLoad"));
+		this.onLoadDeferred = new Deferred(lang.hitch(this, "cancel"));
+		this.onLoadDeferred.addCallback(lang.hitch(this, "onLoad"));
 
 		this._set("href", href);
 
@@ -215,13 +244,13 @@ dojo.declare(
 			this._hrefChanged = true;
 		}
 
-		return this.onLoadDeferred;		// dojo.Deferred
+		return this.onLoadDeferred;		// Deferred
 	},
 
 	setContent: function(/*String|DomNode|Nodelist*/data){
 		// summary:
 		//		Deprecated.   Use set('content', ...) instead.
-		dojo.deprecated("dijit.layout.ContentPane.setContent() is deprecated.  Use set('content', ...) instead.", "", "2.0");
+		kernel.deprecated("dijit.layout.ContentPane.setContent() is deprecated.  Use set('content', ...) instead.", "", "2.0");
 		this.set("content", data);
 	},
 	_setContentAttr: function(/*String|DomNode|Nodelist*/data){
@@ -243,19 +272,19 @@ dojo.declare(
 
 		// Even though user is just setting content directly, still need to define an onLoadDeferred
 		// because the _onLoadHandler() handler is still getting called from setContent()
-		this.onLoadDeferred = new dojo.Deferred(dojo.hitch(this, "cancel"));
+		this.onLoadDeferred = new Deferred(lang.hitch(this, "cancel"));
 		if(this._created){
 			// For back-compat reasons, call onLoad() for set('content', ...)
-			// calls but not for content specified in srcNodeRef (ie: <div dojoType=ContentPane>...</div>)
+			// calls but not for content specified in srcNodeRef (ie: <div data-dojo-type=ContentPane>...</div>)
 			// or as initialization parameter (ie: new ContentPane({content: ...})
-			this.onLoadDeferred.addCallback(dojo.hitch(this, "onLoad"));
+			this.onLoadDeferred.addCallback(lang.hitch(this, "onLoad"));
 		}
 
 		this._setContent(data || "");
 
 		this._isDownloaded = false; // mark that content is from a set('content') not a set('href')
 
-		return this.onLoadDeferred; 	// dojo.Deferred
+		return this.onLoadDeferred; 	// Deferred
 	},
 	_getContentAttr: function(){
 		// summary:
@@ -325,8 +354,8 @@ dojo.declare(
 		// Cancel possible prior in-flight request
 		this.cancel();
 
-		this.onLoadDeferred = new dojo.Deferred(dojo.hitch(this, "cancel"));
-		this.onLoadDeferred.addCallback(dojo.hitch(this, "onLoad"));
+		this.onLoadDeferred = new Deferred(lang.hitch(this, "cancel"));
+		this.onLoadDeferred.addCallback(lang.hitch(this, "onLoad"));
 		this._load();
 		return this.onLoadDeferred;		// If child has an href, promise that fires when refresh is complete
 	},
@@ -344,11 +373,11 @@ dojo.declare(
 			url: this.href,
 			handleAs: "text"
 		};
-		if(dojo.isObject(this.ioArgs)){
-			dojo.mixin(getArgs, this.ioArgs);
+		if(lang.isObject(this.ioArgs)){
+			lang.mixin(getArgs, this.ioArgs);
 		}
 
-		var hand = (this._xhrDfd = (this.ioMethod || dojo.xhrGet)(getArgs));
+		var hand = (this._xhrDfd = (this.ioMethod || xhr.get)(getArgs));
 
 		hand.addCallback(function(html){
 			try{
@@ -397,7 +426,7 @@ dojo.declare(
 		}
 	},
 
-	destroyDescendants: function(){
+	destroyDescendants: function(/*Boolean*/ preserveDom){
 		// summary:
 		//		Destroy all the widgets inside the ContentPane and empty containerNode
 
@@ -412,24 +441,26 @@ dojo.declare(
 		// For historical reasons we need to delete all widgets under this.containerNode,
 		// even ones that the user has created manually.
 		var setter = this._contentSetter;
-		dojo.forEach(this.getChildren(), function(widget){
+		array.forEach(this.getChildren(), function(widget){
 			if(widget.destroyRecursive){
-				widget.destroyRecursive();
+				widget.destroyRecursive(preserveDom);
 			}
 		});
 		if(setter){
 			// Most of the widgets in setter.parseResults have already been destroyed, but
 			// things like Menu that have been moved to <body> haven't yet
-			dojo.forEach(setter.parseResults, function(widget){
-				if(widget.destroyRecursive && widget.domNode && widget.domNode.parentNode == dojo.body()){
-					widget.destroyRecursive();
+			array.forEach(setter.parseResults, function(widget){
+				if(widget.destroyRecursive && widget.domNode && widget.domNode.parentNode == win.body()){
+					widget.destroyRecursive(preserveDom);
 				}
 			});
 			delete setter.parseResults;
 		}
 
 		// And then clear away all the DOM nodes
-		dojo.html._emptyNode(this.containerNode);
+		if(!preserveDom){
+			html._emptyNode(this.containerNode);
+		}
 
 		// Delete any state information we have about current contents
 		delete this._singleChild;
@@ -442,17 +473,17 @@ dojo.declare(
 		// first get rid of child widgets
 		this.destroyDescendants();
 
-		// dojo.html.set will take care of the rest of the details
+		// html.set will take care of the rest of the details
 		// we provide an override for the error handling to ensure the widget gets the errors
 		// configure the setter instance with only the relevant widget instance properties
 		// NOTE: unless we hook into attr, or provide property setters for each property,
 		// we need to re-configure the ContentSetter with each use
 		var setter = this._contentSetter;
-		if(! (setter && setter instanceof dojo.html._ContentSetter)){
-			setter = this._contentSetter = new dojo.html._ContentSetter({
+		if(! (setter && setter instanceof html._ContentSetter)){
+			setter = this._contentSetter = new html._ContentSetter({
 				node: this.containerNode,
-				_onError: dojo.hitch(this, this._onError),
-				onContentError: dojo.hitch(this, function(e){
+				_onError: lang.hitch(this, this._onError),
+				onContentError: lang.hitch(this, function(e){
 					// fires if a domfault occurs when we are appending this.errorMessage
 					// like for instance if domNode is a UL and we try append a DIV
 					var errMess = this.onContentError(e);
@@ -464,19 +495,20 @@ dojo.declare(
 				})/*,
 				_onError */
 			});
-		};
+		}
 
-		var setterParams = dojo.mixin({
+		var setterParams = lang.mixin({
 			cleanContent: this.cleanContent,
 			extractContent: this.extractContent,
-			parseContent: this.parseOnLoad,
+			parseContent: !cont.domNode && this.parseOnLoad,
 			parserScope: this.parserScope,
 			startup: false,
 			dir: this.dir,
-			lang: this.lang
+			lang: this.lang,
+			textDir: this.textDir
 		}, this._contentSetterParams || {});
 
-		setter.set( (dojo.isObject(cont) && cont.domNode) ? cont.domNode : cont, setterParams );
+		setter.set( (lang.isObject(cont) && cont.domNode) ? cont.domNode : cont, setterParams );
 
 		// setter params must be pulled afresh from the ContentPane each time
 		delete this._contentSetterParams;
@@ -488,8 +520,9 @@ dojo.declare(
 		if(!isFakeContent){
 			if(this._started){
 				// Startup each top level child widget (and they will start their children, recursively)
-				this._startChildren();
-	
+				delete this._started;
+				this.startup();
+
 				// Call resize() on each of my child layout widgets,
 				// or resize() on my single child layout widget...
 				// either now (if I'm currently visible) or when I become visible
@@ -514,7 +547,7 @@ dojo.declare(
 	},
 
 	// EVENT's, should be overide-able
-	onLoad: function(data){
+	onLoad: function(/*===== data =====*/){
 		// summary:
 		//		Event hook, is called after everything is loaded and widgetified
 		// tags:
@@ -540,7 +573,7 @@ dojo.declare(
 		return this.loadingMessage;
 	},
 
-	onContentError: function(/*Error*/ error){
+	onContentError: function(/*Error*/ /*===== error =====*/){
 		// summary:
 		//		Called on DOM faults, require faults etc. in content.
 		//
@@ -553,7 +586,7 @@ dojo.declare(
 		//		extension
 	},
 
-	onDownloadError: function(/*Error*/ error){
+	onDownloadError: function(/*Error*/ /*===== error =====*/){
 		// summary:
 		//		Called when download error occurs.
 		//
@@ -575,6 +608,4 @@ dojo.declare(
 	}
 });
 
-
-return dijit.layout.ContentPane;
 });

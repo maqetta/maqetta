@@ -1,8 +1,7 @@
-dojo.provide("dojox.layout.DragPane");
-
-dojo.require("dijit._Widget");
-
-dojo.declare("dojox.layout.DragPane", dijit._Widget, {
+define(["dojo/_base/declare", "dijit/_Widget", "dojo/_base/html", "dojo/dom-style"],
+  function(declare, Widget, htmlUtil, domStyle){
+/*===== var Widget = dijit._Widget; =====*/
+return declare("dojox.layout.DragPane", Widget, {
 	// summary: Makes a pane's content dragable by/within it's surface
 	//
 	// description:
@@ -26,20 +25,20 @@ dojo.declare("dojox.layout.DragPane", dijit._Widget, {
 		// summary: mousedown handler, start the dragging
 		var t = this.domNode;
 		e.preventDefault();
-		dojo.style(t, "cursor", "move");
+		domStyle.set(t, "cursor", "move");
 		this._x = e.pageX;
 		this._y = e.pageY;
 		if ((this._x < t.offsetLeft + t.clientWidth) &&
 			(this._y < t.offsetTop + t.clientHeight)) {
-			dojo.setSelectable(t,false);
+			htmlUtil.setSelectable(t,false);
 			this._mover = this.connect(t, "onmousemove", "_move");
 		}
 	},
 	
 	_up: function(e){
 		// summary: mouseup handler, stop the dragging
-		dojo.setSelectable(this.domNode,true);
-		dojo.style(this.domNode, "cursor", "pointer");
+		htmlUtil.setSelectable(this.domNode,true);
+		domStyle.set(this.domNode, "cursor", "pointer");
 		this._mover && this.disconnect(this._mover);
 		delete this._mover;
 	},
@@ -56,4 +55,5 @@ dojo.declare("dojox.layout.DragPane", dijit._Widget, {
 		
 	}
 	
+});
 });

@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 redLabel: "c",
 greenLabel: "z",
@@ -9,4 +11,4 @@ hexLabel: "szesnastkowe",
 huePickerTitle: "Selektor barwy",
 saturationPickerTitle: "Selektor nasycenia"
 })
-
+);

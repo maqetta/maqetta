@@ -1,10 +1,7 @@
-dojo.provide("dojox.av.widget.Player");
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
+define(['dojo', 'dijit', 'dijit/_Widget', 'dijit/_TemplatedMixin'],function(dojo, dijit){
 
-
-
-dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._Templated], {
+dojo.experimental("dojox.av.widget.Player");
+dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._TemplatedMixin], {
 	// summary:
 	//		A Media Player UI widget for all types of dojox.av and AIR media.
 	//
@@ -38,10 +35,10 @@ dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._Templated], {
 	//playerHeight
 	//videoWidth: 320,
 	//videoHeight: 240,
-	
+
 	widgetsInTemplate:true,
 	templateString: dojo.cache("dojox.av.widget","resources/Player.html"),
-	
+
 	_fillContent: function(){
 		// summary
 		//		Finding and collecting child nodes
@@ -53,13 +50,13 @@ dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._Templated], {
 			}, this);
 		}
 	},
-	
+
 	postCreate: function(){
 		// summary:
 		//		Do player styling, and place child widgets in the proper location.
 		//
 		dojo.style(this.domNode, "width", this.playerWidth+(dojo.isString(this.playerWidth)?"":"px"));
-		
+
 		if(dojo.isString(this.playerWidth) && this.playerWidth.indexOf("%")){
 			dojo.connect(window, "resize", this, "onResize");
 		}
@@ -81,11 +78,11 @@ dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._Templated], {
 					this.mediaNode = n;
 					this.playerScreen.appendChild(n);	break;
 				default:
-					
+
 			}
 			this.items[i] = n.id;
 		}, this);
-		
+
 	},
 	startup: function(){
 		// summary:
@@ -107,7 +104,7 @@ dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._Templated], {
 			}
 		}, this);
 	},
-	
+
 	onResize: function(evt){
 		// summary:
 		//		If a player size is a percentage, this will fire an onResize
@@ -124,4 +121,7 @@ dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._Templated], {
 		});
 	}
 
+});
+
+return dojox.av.widget.Player;
 });

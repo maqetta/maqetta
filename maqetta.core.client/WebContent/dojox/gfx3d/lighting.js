@@ -1,10 +1,12 @@
-dojo.provide("dojox.gfx3d.lighting");
-dojo.require("dojox.gfx._base");
+define([
+	"dojo/_base/lang",
+	"dojo/_base/Color",	// dojo.Color
+	"dojo/_base/declare",	// dojo.declare
+	"dojox/gfx/_base",
+	"./_base"
+],function(lang,Color,declare,gfx,gfx3d) {
 
-(function(){
-	var lite = dojox.gfx3d.lighting;
-
-	dojo.mixin(dojox.gfx3d.lighting, {
+	var lite = gfx3d.lighting = {
 		// color utilities
 		black: function(){
 			return {r: 0, g: 0, b: 0, a: 1};
@@ -13,11 +15,11 @@ dojo.require("dojox.gfx._base");
 			return {r: 1, g: 1, b: 1, a: 1};
 		},
 		toStdColor: function(c){
-			c = dojox.gfx.normalizeColor(c);
+			c = gfx.normalizeColor(c);
 			return {r: c.r / 255, g: c.g / 255, b: c.b / 255, a: c.a};
 		},
 		fromStdColor: function(c){
-			return new dojo.Color([Math.round(255 * c.r), Math.round(255 * c.g), Math.round(255 * c.b), c.a]);
+			return new Color([Math.round(255 * c.r), Math.round(255 * c.g), Math.round(255 * c.b), c.a]);
 		},
 		scaleColor: function(s, c){
 			return {r: s * c.r, g: s * c.g, b: s * c.b, a: s * c.a};
@@ -65,18 +67,18 @@ dojo.require("dojox.gfx._base");
 			return Math.min(Math.max(v, 0), 1);
 		},
 		length: function(v){
-			return Math.sqrt(dojox.gfx3d.lighting.dot(v, v));
+			return Math.sqrt(gfx3d.lighting.dot(v, v));
 		},
 		normalize: function(v){
 			return lite.scale(1 / lite.length(v), v);
 		},
 		faceforward: function(n, i){
-			var p = dojox.gfx3d.lighting;
+			var p = gfx3d.lighting;
 			var s = p.dot(i, n) < 0 ? 1 : -1;
 			return p.scale(s, n);
 		},
 		reflect: function(i, n){
-			var p = dojox.gfx3d.lighting;
+			var p = gfx3d.lighting;
 			return p.add(i, p.scale(-2 * p.dot(i, n), n));
 		},
 		
@@ -111,11 +113,11 @@ dojo.require("dojox.gfx._base");
 			}
 			return lite.saturateColor(c);
 		}
-	});
+	};
 
 	// this lighting model is derived from RenderMan Interface Specification Version 3.2
 
-	dojo.declare("dojox.gfx3d.lighting.Model", null, {
+	declare("dojox.gfx3d.lighting.Model", null, {
 		constructor: function(incident, lights, ambient, specular){
 			this.incident = lite.normalize(incident);
 			this.lights = [];
@@ -202,36 +204,39 @@ dojo.require("dojox.gfx._base");
 			return lite.fromStdColor(lite.saturateColor(color));
 		}
 	});
-})();
 
-// POV-Ray basic finishes
 
-dojox.gfx3d.lighting.finish = {
-
-	// Default
+	// POV-Ray basic finishes
 	
-	defaults: {Ka: 0.1, Kd: 0.6, Ks: 0.0, roughness: 0.05},
+	gfx3d.lighting.finish = {
 	
-	dull:     {Ka: 0.1, Kd: 0.6, Ks: 0.5, roughness: 0.15},
-	shiny:    {Ka: 0.1, Kd: 0.6, Ks: 1.0, roughness: 0.001},
-	glossy:   {Ka: 0.1, Kd: 0.6, Ks: 1.0, roughness: 0.0001},
+		// Default
+		
+		defaults: {Ka: 0.1, Kd: 0.6, Ks: 0.0, roughness: 0.05},
+		
+		dull:     {Ka: 0.1, Kd: 0.6, Ks: 0.5, roughness: 0.15},
+		shiny:    {Ka: 0.1, Kd: 0.6, Ks: 1.0, roughness: 0.001},
+		glossy:   {Ka: 0.1, Kd: 0.6, Ks: 1.0, roughness: 0.0001},
+		
+		phong_dull:   {Ka: 0.1, Kd: 0.6, Ks: 0.5, phong: 0.5, phong_size: 1},
+		phong_shiny:  {Ka: 0.1, Kd: 0.6, Ks: 1.0, phong: 1.0, phong_size: 200},
+		phong_glossy: {Ka: 0.1, Kd: 0.6, Ks: 1.0, phong: 1.0, phong_size: 300},
 	
-	phong_dull:   {Ka: 0.1, Kd: 0.6, Ks: 0.5, phong: 0.5, phong_size: 1},
-	phong_shiny:  {Ka: 0.1, Kd: 0.6, Ks: 1.0, phong: 1.0, phong_size: 200},
-	phong_glossy: {Ka: 0.1, Kd: 0.6, Ks: 1.0, phong: 1.0, phong_size: 300},
+		luminous: {Ka: 1.0, Kd: 0.0, Ks: 0.0, roughness: 0.05},
+	
+		// Metals
+	
+		// very soft and dull
+		metalA: {Ka: 0.35, Kd: 0.3, Ks: 0.8, roughness: 1/20},
+		// fairly soft and dull
+		metalB: {Ka: 0.30, Kd: 0.4, Ks: 0.7, roughness: 1/60},
+		// medium reflectivity, holds color well
+		metalC: {Ka: 0.25, Kd: 0.5, Ks: 0.8, roughness: 1/80},
+		// highly hard and polished, high reflectivity
+		metalD: {Ka: 0.15, Kd: 0.6, Ks: 0.8, roughness: 1/100},
+		// very highly polished and reflective
+		metalE: {Ka: 0.10, Kd: 0.7, Ks: 0.8, roughness: 1/120}
+	};
 
-	luminous: {Ka: 1.0, Kd: 0.0, Ks: 0.0, roughness: 0.05},
-
-	// Metals
-
-	// very soft and dull
-	metalA: {Ka: 0.35, Kd: 0.3, Ks: 0.8, roughness: 1/20},
-	// fairly soft and dull
-	metalB: {Ka: 0.30, Kd: 0.4, Ks: 0.7, roughness: 1/60},
-	// medium reflectivity, holds color well
-	metalC: {Ka: 0.25, Kd: 0.5, Ks: 0.8, roughness: 1/80},
-	// highly hard and polished, high reflectivity
-	metalD: {Ka: 0.15, Kd: 0.6, Ks: 0.8, roughness: 1/100},
-	// very highly polished and reflective
-	metalE: {Ka: 0.10, Kd: 0.7, Ks: 0.8, roughness: 1/120}
-};
+	return lite;
+});

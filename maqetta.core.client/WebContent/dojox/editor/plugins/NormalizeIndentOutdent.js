@@ -1,4 +1,13 @@
-define("dojox/editor/plugins/NormalizeIndentOutdent", ["dojo", "dijit", "dojox", "dijit/_editor/selection", "dijit/_editor/_Plugin"], function(dojo, dijit, dojox) {
+define([
+	"dojo",
+	"dijit",
+	"dojox",
+	"dijit/_editor/range",
+	"dijit/_editor/selection",
+	"dijit/_editor/_Plugin",
+	"dojo/_base/connect",
+	"dojo/_base/declare"
+], function(dojo, dijit, dojox) {
 
 dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin,{
 	// summary:

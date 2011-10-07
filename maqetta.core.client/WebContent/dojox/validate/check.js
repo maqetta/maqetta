@@ -1,7 +1,11 @@
-dojo.provide("dojox.validate.check");
-dojo.experimental
-dojo.require("dojox.validate._base");
+define(["dojo/_base/kernel", "dojo/_base/lang", "./_base"], function(dojo, lang, validate){
+dojo.experimental("dojox.validate.check");
 
+/*=====
+
+	validate = dojox.validate;
+
+=====*/
 /**
 	FIXME: How much does this overlap with dojox.form.Manager and friends?
 
@@ -69,7 +73,7 @@ dojo.require("dojox.validate._base");
 
 */
 
-dojox.validate.check = function(/*HTMLFormElement*/form, /*Object*/profile){
+validate.check = function(/*HTMLFormElement*/form, /*Object*/profile){
 	// summary: validates user input of an HTML form based on input profile
 	//
 	// description:
@@ -154,7 +158,7 @@ dojox.validate.check = function(/*HTMLFormElement*/form, /*Object*/profile){
 	// See if required input fields have values missing.
 	if(profile.required instanceof Array){
 		for(var i = 0; i < profile.required.length; i++){
-			if(!dojo.isString(profile.required[i])){ continue; }
+			if(!lang.isString(profile.required[i])){ continue; }
 			var elem = form[profile.required[i]];
 			// Are textbox, textarea, or password fields blank.
 			if(!_undef("type", elem)
@@ -184,7 +188,7 @@ dojox.validate.check = function(/*HTMLFormElement*/form, /*Object*/profile){
 	// See if checkbox groups and select boxes have x number of required values.
 	if(profile.required instanceof Array){
 		for (var i = 0; i < profile.required.length; i++){
-			if(!dojo.isObject(profile.required[i])){ continue; }
+			if(!lang.isObject(profile.required[i])){ continue; }
 			var elem, numRequired;
 			for(var name in profile.required[i]){
 				elem = form[name];
@@ -217,7 +221,7 @@ dojox.validate.check = function(/*HTMLFormElement*/form, /*Object*/profile){
 	// Todo: Support dependent and target fields that are radio button groups, or select drop-down lists.
 	// Todo: Make the dependency based on a specific value of the target field.
 	// Todo: allow dependent fields to have several required values, like {checkboxgroup: 3}.
-	if(dojo.isObject(profile.dependencies)){
+	if(lang.isObject(profile.dependencies)){
 		// properties of dependencies object are the names of dependent fields to be checked
 		for(name in profile.dependencies){
 			var elem = form[name];	// the dependent element
@@ -233,7 +237,7 @@ dojox.validate.check = function(/*HTMLFormElement*/form, /*Object*/profile){
 	}
 
 	// Find invalid input fields.
-	if(dojo.isObject(profile.constraints)){
+	if(lang.isObject(profile.constraints)){
 		// constraint properties are the names of fields to bevalidated
 		for(name in profile.constraints){
 			var elem = form[name];
@@ -250,20 +254,20 @@ dojox.validate.check = function(/*HTMLFormElement*/form, /*Object*/profile){
 			
 			var isValid = true;
 			// case 1: constraint value is validation function
-			if(dojo.isFunction(profile.constraints[name])){
+			if(lang.isFunction(profile.constraints[name])){
 				isValid = profile.constraints[name](elem.value);
-			}else if(dojo.isArray(profile.constraints[name])){
+			}else if(lang.isArray(profile.constraints[name])){
 				
 				// handle nested arrays for multiple constraints
-				if(dojo.isArray(profile.constraints[name][0])){
+				if(lang.isArray(profile.constraints[name][0])){
 					for (var i=0; i<profile.constraints[name].length; i++){
-						isValid = dojox.validate.evaluateConstraint(profile, profile.constraints[name][i], name, elem);
+						isValid = validate.evaluateConstraint(profile, profile.constraints[name][i], name, elem);
 						if(!isValid){ break; }
 					}
 				}else{
 					// case 2: constraint value is array, first elem is function,
 					// tail is parameters
-					isValid = dojox.validate.evaluateConstraint(profile, profile.constraints[name], name, elem);
+					isValid = validate.evaluateConstraint(profile, profile.constraints[name], name, elem);
 				}
 			}
 			
@@ -274,7 +278,7 @@ dojox.validate.check = function(/*HTMLFormElement*/form, /*Object*/profile){
 	}
 
 	// Find unequal confirm fields and report them as Invalid.
-	if(dojo.isObject(profile.confirm)){
+	if(lang.isObject(profile.confirm)){
 		for(name in profile.confirm){
 			var elem = form[name];	// the confirm element
 			var target = form[profile.confirm[name]];
@@ -293,7 +297,7 @@ dojox.validate.check = function(/*HTMLFormElement*/form, /*Object*/profile){
 };
 
 //TODO: evaluateConstraint doesn't use profile or fieldName args?
-dojox.validate.evaluateConstraint=function(profile, /*Array*/constraint, fieldName, elem){
+validate.evaluateConstraint=function(profile, /*Array*/constraint, fieldName, elem){
 	// summary:
 	//	Evaluates dojo.validate.check() constraints that are specified as array
 	//	arguments
@@ -321,4 +325,7 @@ dojox.validate.evaluateConstraint=function(profile, /*Array*/constraint, fieldNa
 		return isValidSomething.apply(null, params);
 	}
 	return false; // Boolean
-}
+};
+
+return validate.check;
+});

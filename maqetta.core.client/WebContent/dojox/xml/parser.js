@@ -1,4 +1,6 @@
-dojo.provide("dojox.xml.parser");
+define(['dojo/_base/kernel', 'dojo/_base/lang', 'dojo/_base/array', 'dojo/_base/window', 'dojo/_base/sniff'], function(dojo){
+
+dojo.getObject("xml.parser", true, dojox);
 
 //DOM type to int value for reference.
 //Ints make for more compact code than full constant names.
@@ -84,7 +86,7 @@ dojox.xml.parser.parse = function(/*String?*/ str, /*String?*/ mimetype){
 		}
 	}
 	return null;	//	null
-}
+};
 
 dojox.xml.parser.textContent = function(/*Node*/node, /*String?*/text){
 	//	summary:
@@ -122,7 +124,7 @@ dojox.xml.parser.textContent = function(/*Node*/node, /*String?*/text){
 		}
 		return _result;	//	String
 	}
-}
+};
 
 dojox.xml.parser.replaceChildren = function(/*Element*/node, /*Node || Array*/ newChildren){
 	//	summary:
@@ -154,7 +156,7 @@ dojox.xml.parser.replaceChildren = function(/*Element*/node, /*Node || Array*/ n
 			node.appendChild(child);
 		});
 	}
-}
+};
 
 dojox.xml.parser.removeChildren = function(/*Element*/node){
 	//	summary:
@@ -168,7 +170,7 @@ dojox.xml.parser.removeChildren = function(/*Element*/node){
 		node.removeChild(node.firstChild);
 	}
 	return count; // int
-}
+};
 
 
 dojox.xml.parser.innerXML = function(/*Node*/node){
@@ -184,4 +186,8 @@ dojox.xml.parser.innerXML = function(/*Node*/node){
 		return (new XMLSerializer()).serializeToString(node);	//	String
 	}
 	return null;
-}
+};
+
+return dojox.xml.parser;
+
+});

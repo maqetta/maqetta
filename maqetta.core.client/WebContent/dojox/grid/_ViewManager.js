@@ -1,6 +1,10 @@
-dojo.provide("dojox.grid._ViewManager");
+define([
+	"dojo/_base/declare",
+	"dojo/_base/sniff",
+	"dojo/dom-class"
+], function(declare, has, domClass){
 
-dojo.declare('dojox.grid._ViewManager', null, {
+return declare('dojox.grid._ViewManager', null, {
 	// summary:
 	//		A collection of grid views. Owned by grid and used internally for managing grid views.
 	// description:
@@ -85,7 +89,7 @@ dojo.declare('dojox.grid._ViewManager', null, {
 				// depends on the container not having any margin (which it shouldn't)
 				// Also - we only look up the height if the cell doesn't have the
 				// dojoxGridNonNormalizedCell class (like for row selectors)
-				if(!dojo.hasClass(n, "dojoxGridNonNormalizedCell")){
+				if(!domClass.contains(n, "dojoxGridNonNormalizedCell")){
 					currHeights[i] = n.firstChild.offsetHeight;
 					h =  Math.max(h, currHeights[i]);
 				}
@@ -94,7 +98,7 @@ dojo.declare('dojox.grid._ViewManager', null, {
 	
 			//Work around odd FF3 rendering bug: #8864.
 			//A one px increase fixes FireFox 3's rounding bug for fractional font sizes.
-			if(dojo.isMoz && h){h++;}
+			if(has('mozilla') && h){h++;}
 		}
 		for(i=0; (n=inRowNodes[i]); i++){
 			if(currHeights[i] != h){
@@ -174,7 +178,7 @@ dojo.declare('dojox.grid._ViewManager', null, {
 	},
 
 	arrange: function(l, w){
-		var i, v, vw, len = this.views.length;
+		var i, v, vw, len = this.views.length, self = this;
 		// find the client
 		var c = (w <= 0 ? len : this.findClient());
 		// layout views
@@ -182,10 +186,10 @@ dojo.declare('dojox.grid._ViewManager', null, {
 			var ds = v.domNode.style;
 			var hs = v.headerNode.style;
 
-			if(!dojo._isBodyLtr()){
+			if(!self.grid.isLeftToRight()){
 				ds.right = l + 'px';
-				// fixed rtl, the scrollbar is on the right side in FF
-				if (dojo.isMoz) {
+				// fixed rtl, the scrollbar is on the right side in FF or WebKit
+				if (has('ff') < 4 || has('webkit')){
 					hs.right = l + v.getScrollbarWidth() + 'px';
 					hs.width = parseInt(hs.width, 10) - v.getScrollbarWidth() + 'px';
 				}else{
@@ -281,7 +285,7 @@ dojo.declare('dojox.grid._ViewManager', null, {
 			top = v.setScrollTop(inTop);
 			// Work around IE not firing scroll events that cause header offset
 			// issues to occur.
-			if(dojo.isIE && v.headerNode && v.scrollboxNode){
+			if(has('ie') && v.headerNode && v.scrollboxNode){
 				v.headerNode.scrollLeft = v.scrollboxNode.scrollLeft;
 			}
 		}
@@ -298,5 +302,5 @@ dojo.declare('dojox.grid._ViewManager', null, {
 		}
 		return null;
 	}
-	
+});
 });

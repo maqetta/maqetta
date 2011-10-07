@@ -63,7 +63,7 @@
 			);
 		}
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			doh.register("parse", function(){
 				dojo.parser.parse();
 			});
@@ -78,7 +78,6 @@
 					var left = dijit.byId("leftcp_layout1"),
 						top = dijit.byId("topcp_layout1"),
 						right = dijit.byId("rightcp_layout1"),
-						top = dijit.byId("topcp_layout1"),
 						center = dijit.byId("centercp_layout1"),
 						bottom = dijit.byId("bottomcp_layout1");
 
@@ -108,7 +107,6 @@
 					var left = dijit.byId("leftcp_layout2"),
 						top = dijit.byId("topcp_layout2"),
 						right = dijit.byId("rightcp_layout2"),
-						top = dijit.byId("topcp_layout2"),
 						centerLeft = dijit.byId("centerLeftcp_layout2"),
 						center = dijit.byId("centercp_layout2"),
 						centerRight = dijit.byId("centerRightcp_layout2"),

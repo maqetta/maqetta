@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} מתוך ${1} ${0}",
 	"firstTip": "עמוד ראשון",
@@ -13,6 +15,9 @@
 	"dialogIndication": "ציון מספר העמוד",
 	"pageCountIndication": " (${0} עמודים)",
 	"dialogConfirm": "ביצוע",
-	"dialogCancel": "ביטול"
+	"dialogCancel": "ביטול",
+	"all": "הכל"
 })
+//end v1.x content
+);
 

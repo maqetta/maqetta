@@ -1,9 +1,16 @@
-dojo.provide("dojox.grid.enhanced.plugins.Exporter");
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"../_Plugin",
+	"../../_RowSelector",
+	"../../EnhancedGrid",
+	"../../cells/_base"
+], function(declare, array, lang, _Plugin, _RowSelector, EnhancedGrid){
 
-dojo.require("dojox.grid.enhanced._Plugin");
-dojo.require("dojox.grid._RowSelector");
+var gridCells = lang.getObject("dojox.grid.cells");
 
-dojo.declare("dojox.grid.enhanced.plugins.Exporter", dojox.grid.enhanced._Plugin, {
+var Exporter = declare("dojox.grid.enhanced.plugins.Exporter", _Plugin, {
 	// summary:
 	//		Provide functions to export the grid data into a given format.
 	//
@@ -38,15 +45,15 @@ dojo.declare("dojox.grid.enhanced.plugins.Exporter", dojox.grid.enhanced._Plugin
 		// grid: EnhancedGrid
 		//		The grid to plug in to.
 		this.grid = grid;
-		this.formatter = (args && dojo.isObject(args)) && args.exportFormatter;
+		this.formatter = (args && lang.isObject(args)) && args.exportFormatter;
 		this._mixinGrid();
 	},
 	_mixinGrid: function(){
 		var g = this.grid;
-		g.exportTo = dojo.hitch(this, this.exportTo);
-		g.exportGrid = dojo.hitch(this, this.exportGrid);
-		g.exportSelected = dojo.hitch(this, this.exportSelected);
-		g.setExportFormatter = dojo.hitch(this, this.setExportFormatter);
+		g.exportTo = lang.hitch(this, this.exportTo);
+		g.exportGrid = lang.hitch(this, this.exportGrid);
+		g.exportSelected = lang.hitch(this, this.exportSelected);
+		g.setExportFormatter = lang.hitch(this, this.setExportFormatter);
 	},
 	setExportFormatter: function(formatter){
 		this.formatter = formatter;
@@ -70,17 +77,17 @@ dojo.declare("dojox.grid.enhanced.plugins.Exporter", dojox.grid.enhanced._Plugin
 		//		}
 		// onExported: function(string)
 		//		Call back function when export result is ready
-		if(dojo.isFunction(args)){
+		if(lang.isFunction(args)){
 			onExported = args;
 			args = {};
 		}
-		if(!dojo.isString(type) || !dojo.isFunction(onExported)){
+		if(!lang.isString(type) || !lang.isFunction(onExported)){
 			return;
 		}
 		args = args || {};
 		var g = this.grid, _this = this,
 			writer = this._getExportWriter(type, args.writerArgs),
-			fetchArgs = (args.fetchArgs && dojo.isObject(args.fetchArgs)) ? args.fetchArgs : {},
+			fetchArgs = (args.fetchArgs && lang.isObject(args.fetchArgs)) ? args.fetchArgs : {},
 			oldFunc = fetchArgs.onComplete;
 		if(g.store){
 			fetchArgs.onComplete = function(items, request){
@@ -113,7 +120,7 @@ dojo.declare("dojox.grid.enhanced.plugins.Exporter", dojox.grid.enhanced._Plugin
 		//		Arguments for the given format writer
 		// returns: string
 		//		The exported string
-		if(!dojo.isString(type)){
+		if(!lang.isString(type)){
 			return "";
 		}
 		var writer = this._getExportWriter(type, writerArgs);
@@ -128,15 +135,15 @@ dojo.declare("dojox.grid.enhanced.plugins.Exporter", dojox.grid.enhanced._Plugin
 		// returns:
 		//		undefined
 		var _this = this;
-		dojo.forEach(arg_obj._views, function(view, vIdx){
+		array.forEach(arg_obj._views, function(view, vIdx){
 			arg_obj.view = view;
 			arg_obj.viewIdx = vIdx;
 			if(writer.beforeView(arg_obj)){
-				dojo.forEach(view.structure.cells, function(subrow, srIdx){
+				array.forEach(view.structure.cells, function(subrow, srIdx){
 					arg_obj.subrow = subrow;
 					arg_obj.subrowIdx = srIdx;
 					if(writer.beforeSubrow(arg_obj)){
-						dojo.forEach(subrow, function(cell, cIdx){
+						array.forEach(subrow, function(cell, cIdx){
 							if(arg_obj.isHeader && _this._isSpecialCol(cell)){
 								arg_obj.spCols.push(cell.index);
 							}
@@ -158,8 +165,8 @@ dojo.declare("dojox.grid.enhanced.plugins.Exporter", dojox.grid.enhanced._Plugin
 		// tags:
 		//		private
 		var grid = this.grid,
-			views = dojo.filter(grid.views.views, function(view){
-				return !(view instanceof dojox.grid._RowSelector);
+			views = array.filter(grid.views.views, function(view){
+				return !(view instanceof _RowSelector);
 			}),
 			arg_obj = {
 				'grid': grid,
@@ -176,7 +183,7 @@ dojo.declare("dojox.grid.enhanced.plugins.Exporter", dojox.grid.enhanced._Plugin
 		//go through content
 		arg_obj.isHeader = false;
 		if(writer.beforeContent(items)){
-			dojo.forEach(items, function(item, rIdx){
+			array.forEach(items, function(item, rIdx){
 				arg_obj.row = item;
 				arg_obj.rowIdx = rIdx;
 				if(writer.beforeContentRow(arg_obj)){
@@ -193,7 +200,7 @@ dojo.declare("dojox.grid.enhanced.plugins.Exporter", dojox.grid.enhanced._Plugin
 		//		Row selectors and row indexes should be recognized and handled separately.
 		// tags:
 		//		private
-		return header_cell.isRowSelector || header_cell instanceof dojox.grid.cells.RowIndex;	//Boolean
+		return header_cell.isRowSelector || header_cell instanceof gridCells.RowIndex;	//Boolean
 	},
 	_getExportWriter: function(/* string */ fileType, /* object? */ writerArgs){
 		// summary:
@@ -203,10 +210,10 @@ dojo.declare("dojox.grid.enhanced.plugins.Exporter", dojox.grid.enhanced._Plugin
 		// tags:
 		//		private
 		var writerName, cls,
-			expCls = dojox.grid.enhanced.plugins.Exporter;
+			expCls = Exporter;
 		if(expCls.writerNames){
 			writerName = expCls.writerNames[fileType.toLowerCase()];
-			cls = dojo.getObject(writerName);
+			cls = lang.getObject(writerName);
 			if(cls){
 				var writer = new cls(writerArgs);
 				writer.formatter = this.formatter;
@@ -218,14 +225,18 @@ dojo.declare("dojox.grid.enhanced.plugins.Exporter", dojox.grid.enhanced._Plugin
 		throw new Error('The writer for "' + fileType + '" has not been registered.');
 	}
 });
-dojox.grid.enhanced.plugins.Exporter.registerWriter = function(/* string */fileType,/* string */writerClsName){
+
+Exporter.registerWriter = function(/* string */fileType,/* string */writerClsName){
 	// summary:
 	//		Register a writer(writerClsName) to a export format type(fileType).
 	//		This function separates the Exporter from all kinds of writers.
 	// tags:
 	//		public
-	var expCls = dojox.grid.enhanced.plugins.Exporter;
-	expCls.writerNames = expCls.writerNames || {};
-	expCls.writerNames[fileType] = writerClsName;
+	Exporter.writerNames = Exporter.writerNames || {};
+	Exporter.writerNames[fileType] = writerClsName;
 };
-dojox.grid.EnhancedGrid.registerPlugin(dojox.grid.enhanced.plugins.Exporter/*name:'exporter'*/);
+
+EnhancedGrid.registerPlugin(Exporter/*name:'exporter'*/);
+
+return Exporter;
+});

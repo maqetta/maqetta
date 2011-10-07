@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"saveLabel": "Guardar",
 	"saveSettingLabelOn": "Definir intervalo de guardado automático...",
@@ -12,3 +14,5 @@
 	"saveMessageFail": "No se ha podido guardar a las ${0}"
 })
 
+//end v1.x content
+);

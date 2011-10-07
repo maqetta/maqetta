@@ -89,14 +89,14 @@ Splitters and gutters:
   background: url("images/splitterHorizontalHover.png") no-repeat center top;
 }
 .claro .dijitSplitterHHover .dijitSplitterThumb {
-  background: #769dc0 none;
+  background: #759dc0 none;
 }
 .claro .dijitSplitterVHover {
   font-size: 1px;
   background: url("images/splitterVerticalHover.png") no-repeat center left;
 }
 .claro .dijitSplitterVHover .dijitSplitterThumb {
-  background: #769dc0 none;
+  background: #759dc0 none;
 }
 .dj_ie6 .dijitSplitterHHover, .dj_ie6 .claro .dijitSplitterVHover {
   background-color: #cfe5fa;

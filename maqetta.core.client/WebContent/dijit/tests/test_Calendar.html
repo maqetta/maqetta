@@ -35,7 +35,7 @@
 			dojo.require("dojo.date.locale");
 			dojo.require("dojo.parser"); // scan page for widgets
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				//Need to declare BigCalendar here in an addOnLoad block so that it works
 				//with xdomain loading, where the dojo.require for dijit.Calendar
 				//may load asynchronously. This also means we cannot have HTML
@@ -69,15 +69,17 @@
 		<p>
 			<a href="#"
 			   onClick="dijit.registry.forEach(function(c){
-					c.isDisabledDate = dojo.date.locale.isWeekend;
-					c._populateGrid();
+			   		if(c.isDisabledDate){
+						c.isDisabledDate = dojo.date.locale.isWeekend;
+						c._populateGrid();
+					}
 				});">disable weekends</a>
 		</p>
 
 		<p>Customized template with "today" button</p>
 		<div>
 			<!-- Parent div used so we have a handle to use for dojo.parser.parse after BigCalendar gets defined. -->
-			<!-- The input below will be replaced by BigCalendar which is defined in a dojo.addOnLoad block. -->
+			<!-- The input below will be replaced by BigCalendar which is defined in a dojo.ready block. -->
 			<input id="calendar5" data-dojo-props='dayWidth:"abbr", value:"2008-03-14"'/>
 		</div>
 	</body>

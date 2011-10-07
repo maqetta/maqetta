@@ -40,7 +40,29 @@ public class LibrarySettings extends XMLFile {
         }
         return results;
     }
-
+    protected String[] getAttributeNames() {
+        return new String[] { "id", "name", "version", "virtualRoot", "base" };
+    }
+	protected String getAttributeValue(String attribute, Object object) {
+		  ILibInfo libInfo = (ILibInfo) object;
+		  if(attribute.equalsIgnoreCase("id")){
+				return libInfo.getId();
+		  }
+		  if(attribute.equalsIgnoreCase("name")){
+			  return libInfo.getName();
+		  }
+		  if(attribute.equalsIgnoreCase("version")){
+			  return libInfo.getVersion();
+		  }
+		  if(attribute.equalsIgnoreCase("virtualRoot")){
+			  return libInfo.getVirtualRoot();
+		  }
+		  if(attribute.equalsIgnoreCase("base")){
+			  return null;
+		  }
+		return null;
+	
+	}
     protected String getRootTag() {
         return "libraries";
     }
@@ -85,20 +107,29 @@ public class LibrarySettings extends XMLFile {
         this.addLibrary(id, version, id, virtualRoot);
     }
 
-    protected Object createObject(Element element, String[] attributes) {
+    protected Object createObject(Element element, String[] attributeNames, String[] attributeValues) {
 
-        ILibInfo link = new LibInfo(attributes[0], attributes[1], attributes[2], attributes[3]);
+    	String id = null;
+    	String name = null;
+    	String version = null;
+    	String virtualRoot = null;
+    	String base = null;
+    	
+    	for(int i=0;i<attributeNames.length;i++){
+    		if(attributeNames[i].equalsIgnoreCase("id"))
+    			id = attributeValues[i];
+    		if(attributeNames[i].equalsIgnoreCase("name"))
+    			name = attributeValues[i];
+    		if(attributeNames[i].equalsIgnoreCase("version"))
+    			version = attributeValues[i];
+    		if(attributeNames[i].equalsIgnoreCase("virtualRoot"))
+    			virtualRoot = attributeValues[i];
+    		if(attributeNames[i].equalsIgnoreCase("base"))
+    			base = attributeValues[i];
+    	}
+    	
+    	ILibInfo link = new LibInfo(id,name,version,virtualRoot);
         return link;
-    }
-
-    protected String[] getAttributeNames() {
-        return new String[] { "id", "name", "version", "virtualRoot", "base" };
-    }
-
-    protected String[] getAttributeValues(Object object) {
-        ILibInfo link = (ILibInfo) object;
-
-        return new String[] { link.getId(), link.getName(), link.getVersion(), link.getVirtualRoot() };
     }
 
     public void save() {

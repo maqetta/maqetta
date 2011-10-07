@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"saveLabel": "저장",
 	"saveSettingLabelOn": "자동 저장 간격 설정...",
@@ -12,3 +14,5 @@
 	"saveMessageFail": "${0}에 저장 실패"
 })
 
+//end v1.x content
+);

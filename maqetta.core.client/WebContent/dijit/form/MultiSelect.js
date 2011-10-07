@@ -1,6 +1,22 @@
-define("dijit/form/MultiSelect", ["dojo", "dijit", "dijit/form/_FormWidget"], function(dojo, dijit) {
+define([
+	"dojo/_base/array", // array.indexOf, array.map
+	"dojo/_base/declare", // declare
+	"dojo/dom-geometry", // domGeometry.setMarginBox
+	"dojo/query", // query
+	"./_FormValueWidget"
+], function(array, declare, domGeometry, query, _FormValueWidget){
 
-dojo.declare("dijit.form.MultiSelect", dijit.form._FormValueWidget, {
+/*=====
+	var _FormValueWidget = dijit.form._FormValueWidget;
+=====*/
+
+// module:
+//		dijit/form/MultiSelect
+// summary:
+//		Widget version of a <select multiple=true> element,
+//		for selecting multiple options.
+
+return declare("dijit.form.MultiSelect", _FormValueWidget, {
 	// summary:
 	//		Widget version of a <select multiple=true> element,
 	//		for selecting multiple options.
@@ -11,20 +27,7 @@ dojo.declare("dijit.form.MultiSelect", dijit.form._FormValueWidget, {
 	//		set the size via style="..." or CSS class names instead.
 	size: 7,
 
-	templateString: "<select multiple='true' ${!nameAttrSetting} dojoAttachPoint='containerNode,focusNode' dojoAttachEvent='onchange: _onChange'></select>",
-
-	attributeMap: dojo.delegate(dijit.form._FormWidget.prototype.attributeMap, {
-		size: "focusNode"
-	}),
-
-	reset: function(){
-		// summary:
-		//		Reset the widget's value to what it was at initialization time
-
-		// TODO: once we inherit from FormValueWidget this won't be needed
-		this._hasBeenBlurred = false;
-		this._setValueAttr(this._resetValue, true);
-	},
+	templateString: "<select multiple='true' ${!nameAttrSetting} data-dojo-attach-point='containerNode,focusNode' data-dojo-attach-event='onchange: _onChange'></select>",
 
 	addSelected: function(/*dijit.form.MultiSelect*/ select){
 		// summary:
@@ -46,12 +49,13 @@ dojo.declare("dijit.form.MultiSelect", dijit.form._FormValueWidget, {
 			select.domNode.scrollTop = 0;
 			select.domNode.scrollTop = oldscroll;
 		},this);
+		this._set('value', this.get('value'));
 	},
 
 	getSelected: function(){
 		// summary:
 		//		Access the NodeList of the selected options directly
-		return dojo.query("option",this.containerNode).filter(function(n){
+		return query("option",this.containerNode).filter(function(n){
 			return n.selected; // Boolean
 		}); // dojo.NodeList
 	},
@@ -61,50 +65,54 @@ dojo.declare("dijit.form.MultiSelect", dijit.form._FormValueWidget, {
 		//		Hook so get('value') works.
 		// description:
 		//		Returns an array of the selected options' values.
-		return this.getSelected().map(function(n){
+
+		// Don't call getSelect.map() because it doesn't return a real array,
+		// and that messes up dojo.toJson() calls like in the Form.html test
+		return array.map(this.getSelected(), function(n){
 			return n.value;
 		});
 	},
 
 	multiple: true, // for Form
 
-	_setValueAttr: function(/*Array*/ values){
+	_setValueAttr: function(/*Array*/ values, /*Boolean?*/ priorityChange){
 		// summary:
 		//		Hook so set('value', values) works.
 		// description:
 		//		Set the value(s) of this Select based on passed values
-		dojo.query("option",this.containerNode).forEach(function(n){
-			n.selected = (dojo.indexOf(values,n.value) != -1);
+		query("option",this.containerNode).forEach(function(n){
+			n.selected = (array.indexOf(values,n.value) != -1);
 		});
+		this.inherited(arguments);
 	},
 
-	invertSelection: function(onChange){
+	invertSelection: function(/*Boolean?*/ onChange){
 		// summary:
 		//		Invert the selection
 		// onChange: Boolean
-		//		If null, onChange is not fired.
-		dojo.query("option",this.containerNode).forEach(function(n){
-			n.selected = !n.selected;
+		//		If false, onChange is not fired.
+		var val = [];
+		query("option",this.containerNode).forEach(function(n){
+			if(!n.selected){ val.push(n.value); }
 		});
-		this._handleOnChange(this.get('value'), onChange == true);
+		this._setValueAttr(val, !(onChange === false || onChange == null));
 	},
 
-	_onChange: function(/*Event*/ e){
+	_onChange: function(/*Event*/){
 		this._handleOnChange(this.get('value'), true);
 	},
 
 	// for layout widgets:
 	resize: function(/*Object*/ size){
 		if(size){
-			dojo.marginBox(this.domNode, size);
+			domGeometry.setMarginBox(this.domNode, size);
 		}
 	},
 
 	postCreate: function(){
-		this._onChange();
+		this._set('value', this.get('value'));
+		this.inherited(arguments);
 	}
 });
 
-
-return dijit.form.MultiSelect;
 });

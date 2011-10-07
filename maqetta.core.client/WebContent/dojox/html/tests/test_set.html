@@ -25,12 +25,13 @@
 		}
 	</style>
 	<script src='../../../dojo/dojo.js' djConfig='isDebug:true, parseOnLoad:true'></script>
-	<script src='../../../dojo/html.js'></script>
-	<script src='../../../dojox/html/_base.js'></script>
 	<script>
 		dojo.require('doh.runner');
+		dojo.require('dojo.html');
+		dojo.require('dojox.html/_base');
 		dojo.require('dojox.html');
 		dojo.require('dojo.parser');
+		dojo.require('dojo._base.url');
 
 		// used to test if we fire scrips to document scope
 		function documentCallback(){

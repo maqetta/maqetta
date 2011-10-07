@@ -1,13 +1,16 @@
-dojo.provide("dojox.dtl.tag.logic");
+define([
+	"dojo/_base/lang",
+	"../_base"
+], function(lang, dd){
+	/*=====
+		dd = dojox.dtl;
+	=====*/
+	lang.getObject("dojox.dtl.tag.logic", true);
 
-dojo.require("dojox.dtl._base");
-
-(function(){
-	var dd = dojox.dtl;
 	var ddt = dd.text;
 	var ddtl = dd.tag.logic;
 
-	ddtl.IfNode = dojo.extend(function(bools, trues, falses, type){
+	ddtl.IfNode = lang.extend(function(bools, trues, falses, type){
 		this.bools = bools;
 		this.trues = trues;
 		this.falses = falses;
@@ -64,7 +67,7 @@ dojo.require("dojox.dtl._base");
 		}
 	});
 
-	ddtl.IfEqualNode = dojo.extend(function(var1, var2, trues, falses, negate){
+	ddtl.IfEqualNode = lang.extend(function(var1, var2, trues, falses, negate){
 		this.var1 = new dd._Filter(var1);
 		this.var2 = new dd._Filter(var2);
 		this.trues = trues;
@@ -98,7 +101,7 @@ dojo.require("dojox.dtl._base");
 		}
 	});
 
-	ddtl.ForNode = dojo.extend(function(assign, loop, reversed, nodelist){
+	ddtl.ForNode = lang.extend(function(assign, loop, reversed, nodelist){
 		this.assign = assign;
 		this.loop = new dd._Filter(loop);
 		this.reversed = reversed;
@@ -131,7 +134,7 @@ dojo.require("dojox.dtl._base");
 				items = items.slice(0).reverse();
 			}
 
-			var isObject = dojo.isObject(items) && !dojo.isArrayLike(items);
+			var isObject = lang.isObject(items) && !lang.isArrayLike(items);
 			var arred = [];
 			if(isObject){
 				for(var key in items){
@@ -155,7 +158,7 @@ dojo.require("dojox.dtl._base");
 				forloop.first = !j;
 				forloop.last = (j == arred.length - 1);
 
-				if(assign.length > 1 && dojo.isArrayLike(item)){
+				if(assign.length > 1 && lang.isArrayLike(item)){
 					if(!dirty){
 						dirty = true;
 						context = context.push();
@@ -164,7 +167,7 @@ dojo.require("dojox.dtl._base");
 					for(k = 0; k < item.length && k < assign.length; k++){
 						zipped[assign[k]] = item[k];
 					}
-					dojo.mixin(context, zipped);
+					lang.mixin(context, zipped);
 				}else{
 					context[assign[0]] = item;
 				}
@@ -196,7 +199,7 @@ dojo.require("dojox.dtl._base");
 		}
 	});
 
-	dojo.mixin(ddtl, {
+	lang.mixin(ddtl, {
 		if_: function(parser, token){
 			var i, part, type, bools = [], parts = token.contents.split();
 			parts.shift();
@@ -273,4 +276,5 @@ dojo.require("dojox.dtl._base");
 			return new ddtl.ForNode(loopvars, parts[parts.length + index + 1], reversed, nodelist);
 		}
 	});
-})();
+	return dojox.dtl.tag.logic;
+});

@@ -1,9 +1,14 @@
-dojo.provide("dojox.form.uploader.plugins.IFrame");
+define([
+	"dojo/dom-construct",
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dojo/io/iframe",
+	"dojox/form/uploader/plugins/HTML5"
+],function(domConstruct, declare, lang, array, ioIframe, formUploaderPluginsHTML5){
+	
 
-dojo.require("dojox.form.uploader.plugins.HTML5");
-dojo.require("dojo.io.iframe");
-
-dojo.declare("dojox.form.uploader.plugins.IFrame", [], {
+var pluginsIFrame = declare("dojox.form.uploader.plugins.IFrame", [], {
 	//
 	// Version: 1.6
 	//
@@ -12,49 +17,62 @@ dojo.declare("dojox.form.uploader.plugins.IFrame", [], {
 	//
 	//	description:
 	//		Only supported by IE, due to the specifc iFrame hack used. The
-	//		dojox.form.uploader.plugins.HTML5 plugin should be used along with this to add HTML5
+	//		formUploaderPluginsHTML5 plugin should be used along with this to add HTML5
 	//		capabilities to browsers that support them. Progress events are not supported.
-	//		Inherits all properties from dojox.form.Uploader and dojox.form.uploader.plugins.HTML5.
+	//		Inherits all properties from dojox.form.Uploader and formUploaderPluginsHTML5.
 	//
 
 	force:"",
 
 	postMixInProperties: function(){
 		this.inherited(arguments);
-		if(!this.supports("multiple")){
-			this.uploadType = "iframe";
-		}
-	},
-
-	upload: function(/*Object ? */data){
-		// summary:
-		//		See: dojox.form.Uploader.upload
-		//
 		if(!this.supports("multiple") || this.force =="iframe"){
-			this.uploadIFrame(data);
-			dojo.stopEvent(data);
-			return;
+			this.uploadType = "iframe";
+			this.upload = this.uploadIFrame;
 		}
 	},
 
-	uploadIFrame: function(){
+	uploadIFrame: function(data){
 		// summary:
 		//		Internal. You could use this, but you should use upload() or submit();
 		//		which can also handle the post data.
 		//
+		var form, destroyAfter = false;
+		if(!this.getForm()){
+			//enctype can't be changed once a form element is created
+			form = domConstruct.place('<form enctype="multipart/form-data" method="post"></form>', this.domNode);
+			array.forEach(this._inputs, function(n, i){
+				if(n.value) form.appendChild(n);
+			}, this);
+			destroyAfter = true;
+		}else{
+			form = this.form;
+		}
+
 		var url = this.getUrl();
-		var dfd = dojo.io.iframe.send({
-			url: this.getUrl(),
-			form: this.form,
+
+		var dfd = ioIframe.send({
+			url: url,
+			form: form,
 			handleAs: "json",
-			error: dojo.hitch(this, function(err){
-				console.error("HTML Upload Error:" + err.message);
+			content: data,
+			error: lang.hitch(this, function(err){
+				if(destroyAfter){ domConstruct.destroy(form); }
+				this.onError(err);
 			}),
-			load: dojo.hitch(this, function(data, ioArgs, widgetRef){
-				this.onComplete(data);
+			load: lang.hitch(this, function(data, ioArgs, widgetRef){
+				if(destroyAfter){ domConstruct.destroy(form); }
+				if(data["ERROR"] || data["error"]){
+					this.onError(data);
+				}else{
+					this.onComplete(data);
+				}
 			})
 		});
 	}
 });
 
-dojox.form.addUploaderPlugin(dojox.form.uploader.plugins.IFrame);
+dojox.form.addUploaderPlugin(pluginsIFrame);
+
+return pluginsIFrame;
+});

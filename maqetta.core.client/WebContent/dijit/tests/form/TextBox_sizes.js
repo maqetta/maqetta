@@ -1,7 +1,9 @@
 dojo.provide("dijit.tests.form.TextBox_sizes");
 
+var userArgs = window.location.search.replace(/[\?&](dojoUrl|testUrl|testModule)=[^&]*/g,"").replace(/^&/,"?");
+
+
 try{
-	var userArgs = window.location.search.replace(/[\?&](dojoUrl|testUrl|testModule)=[^&]*/g,"").replace(/^&/,"?");
 
 doh.registerUrl('t.monospace.small.padded.ltr.claro',dojo.moduleUrl('dijit', 'tests/form/TextBox_sizes.html?theme=claro&dir=ltr&padding=padded&fontSize=small&fontFamily=monospace'), 999999);
 doh.registerUrl('t.monospace.small.padded.ltr.tundra',dojo.moduleUrl('dijit', 'tests/form/TextBox_sizes.html?theme=tundra&dir=ltr&padding=padded&fontSize=small&fontFamily=monospace'), 999999);
@@ -150,10 +152,8 @@ doh.registerUrl('t.system.2em.unPadded.rtl.a11y',dojo.moduleUrl('dijit', 'tests/
 }catch(e){
 	doh.debug(e);
 }
-dojo.provide("dijit.tests.form.TextBox_sizes");
 
 try{
-	var userArgs = window.location.search.replace(/[\?&](dojoUrl|testUrl|testModule)=[^&]*/g,"").replace(/^&/,"?");
 
 doh.registerUrl('t.monospace.small.padded.ltr.claro',dojo.moduleUrl('dijit', 'tests/form/TextBox_sizes.html?theme=claro&dir=ltr&padding=padded&fontSize=small&fontFamily=monospace'), 999999);
 doh.registerUrl('t.monospace.small.padded.ltr.tundra',dojo.moduleUrl('dijit', 'tests/form/TextBox_sizes.html?theme=tundra&dir=ltr&padding=padded&fontSize=small&fontFamily=monospace'), 999999);
@@ -302,10 +302,8 @@ doh.registerUrl('t.system.2em.unPadded.rtl.a11y',dojo.moduleUrl('dijit', 'tests/
 }catch(e){
 	doh.debug(e);
 }
-dojo.provide("dijit.tests.form.TextBox_sizes");
 
 try{
-	var userArgs = window.location.search.replace(/[\?&](dojoUrl|testUrl|testModule)=[^&]*/g,"").replace(/^&/,"?");
 
 doh.registerUrl('t.monospace.small.padded.ltr.claro',dojo.moduleUrl('dijit', 'tests/form/TextBox_sizes.html?theme=claro&dir=ltr&padding=padded&fontSize=small&fontFamily=monospace'), 999999);
 doh.registerUrl('t.monospace.small.padded.ltr.tundra',dojo.moduleUrl('dijit', 'tests/form/TextBox_sizes.html?theme=tundra&dir=ltr&padding=padded&fontSize=small&fontFamily=monospace'), 999999);

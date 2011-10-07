@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertImageTitle: "Сурет кірістіру",
 	url: "Кескін",
@@ -9,3 +11,5 @@
 	prePopuTextBrowse: " немесе жергілікті файлға өтіңіз."
 })
 
+//end v1.x content
+);

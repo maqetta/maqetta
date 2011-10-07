@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 redLabel: "อาร์",
 greenLabel: "จี",
@@ -8,4 +10,4 @@ valueLabel: "วี", /* aka intensity or brightness */
 huePickerTitle: "ตัวเลือกสี",
 saturationPickerTitle: "ตัวเลือกความอิ่มของสี"
 })
-
+);

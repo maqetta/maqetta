@@ -18,7 +18,7 @@
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_AccordionContainer.html');
 				doh.register("Accordion A11Y tests", [
 					{
@@ -33,14 +33,14 @@
 							// Tab into accordion, landing on title of first pane
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.t(/A Simple Pane/.test(innerText(dojo.global.dijit._curFocus)), "tabbed to first pane's title");
+								doh.t(/A Simple Pane/.test(innerText(dojo.global.dijit.focus.curNode)), "tabbed to first pane's title");
 							}), 500);
 
 							// Use down arrow to get to second pane's title
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500, {});
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.f(/A Simple Pane/.test(innerText(dojo.global.dijit._curFocus)), "moved away from first pane's title");
-								doh.t(/Lazy Load Pane/.test(innerText(dojo.global.dijit._curFocus)), "moved to second pane's title");
+								doh.f(/A Simple Pane/.test(innerText(dojo.global.dijit.focus.curNode)), "moved away from first pane's title");
+								doh.t(/Lazy Load Pane/.test(innerText(dojo.global.dijit.focus.curNode)), "moved to second pane's title");
 								doh.is("lazyLoadPane", dojo.global.dijit.byId("markupAccordion").get("selectedChildWidget").id, "second pane is now selected");
 							}), 500);
 
@@ -54,13 +54,13 @@
 							// Tab into second pane's content area, landing on link inside pane
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.is("WebA11y", innerText(dojo.global.dijit._curFocus), "tabbed into second pane");
+								doh.is("WebA11y", innerText(dojo.global.dijit.focus.curNode), "tabbed into second pane");
 							}), 500);
 
 							// tab out of AccordionContainer
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("afterMarkupAccordion", dojo.global.dijit._curFocus.id, "tabbed out of accordion");
+								doh.is("afterMarkupAccordion", dojo.global.dijit.focus.curNode.id, "tabbed out of accordion");
 							}), 500);
 
 							return d;

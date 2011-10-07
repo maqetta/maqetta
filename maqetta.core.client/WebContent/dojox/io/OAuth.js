@@ -1,5 +1,12 @@
-dojo.provide("dojox.io.OAuth");
-dojo.require("dojox.encoding.digests.SHA1");
+define([
+	"dojo/_base/kernel", // dojo
+	"dojo/_base/lang", // mixin
+	"dojo/_base/array", // isArray, map
+	"dojo/_base/xhr", // formToObject, queryToObject, xhr
+	"dojo/dom", // byId
+	"dojox/encoding/digests/SHA1", // SHA1
+], function(dojo, lang, array, xhr, dom, SHA1){
+dojo.getObject("io.OAuth", true, dojox);
 
 dojox.io.OAuth = new (function(){
 	//	summary:
@@ -20,7 +27,7 @@ dojox.io.OAuth = new (function(){
 	//		This object was developed against the Netflix API (OAuth-based service); see
 	//		http://developer.netflix.com for more details.
 	var encode = this.encode = function(s){
-		if(!s){ return ""; }
+		if(!("" + s).length){ return ""; }
 		return encodeURIComponent(s)
 			.replace(/\!/g, "%21")
 			.replace(/\*/g, "%2A")
@@ -101,7 +108,7 @@ dojox.io.OAuth = new (function(){
 			return key;
 		} else {
 			//	assume SHA1 HMAC
-			return dojox.encoding.digests.SHA1._hmac(data, key);
+			return SHA1._hmac(data, key);
 		}
 	}
 
@@ -196,7 +203,7 @@ dojox.io.OAuth = new (function(){
 
 		//	encode.
 		var s = dojo.map(a, function(item){
-			return encode(item[0]) + "=" + encode(item[1]||"");
+			return encode(item[0]) + "=" + encode((""+item[1]).length ? item[1] : "");
 		}).join("&");
 
 		var baseString = method.toUpperCase()
@@ -277,7 +284,7 @@ dojox.io.OAuth = new (function(){
 		 *	|	});
 		 */
 		sign(method, args, oaa);
-		return dojo.xhr(method, args, hasBody);
+		return xhr(method, args, hasBody);
 	};
 
 	this.xhrGet = function(/* dojo.__XhrArgs */args, /* dojox.io.OAuth.__OAuthArgs*/ oaa){
@@ -293,3 +300,7 @@ dojox.io.OAuth = new (function(){
 		return this.xhr("DELETE", args, oaa);
 	};
 })();
+
+return dojox.io.OAuth;
+
+});

@@ -1,7 +1,19 @@
-<!DOCTYPE HTML>
-<html>
+<!--[if IE 7]>
+<!DOCTYPE>
+<html lang="en">
 	<head>
-	    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
+<![endif]-->
+<!--[if IE 8]>
+<!DOCTYPE>
+<html lang="en">
+    <head>
+           <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
+<![endif]-->
+<![if gte IE 9]>
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+<![endif]>
 		<title>Chart 2D -- Sparklines Edition</title>
 		<style type="text/css">
 			@import "../../../dojo/resources/dojo.css";
@@ -16,7 +28,6 @@
 		<script type="text/javascript" src="../../../dojo/dojo.js" 
 			djConfig="isDebug: false, parseOnLoad: true"></script>
 		<script type="text/javascript">
-            dojo.require("dojox.charting.widget.Chart2D");
             dojo.require("dojox.charting.plot2d.Lines");
             dojo.require("dojox.charting.plot2d.Areas");
 			dojo.require("dojox.charting.widget.Sparkline");
@@ -55,7 +66,7 @@
 					Simple Sparkline:
 				</td>
 				<td>
-					<div dojoType="dojox.charting.widget.Chart2D" 
+					<div dojoType="dojox.charting.widget.Chart" 
 						theme="dojox.charting.themes.Tufte" 
 						margins="{ l: 0, r: 0, t: 0, b: 0 }"
 						style="width: 100px; height: 15px;">
@@ -75,7 +86,7 @@
 
 					<div dojoType="dojox.data.CsvStore" jsId="googStore" 
 						url="data/goog_prices.csv"></div>
-					<div dojoType="dojox.charting.widget.Chart2D" 
+					<div dojoType="dojox.charting.widget.Chart" 
 						theme="dojox.charting.themes.Tufte" 
 						margins="{ l: 0, r: 0, t: 0, b: 0 }"
 						style="width: 100px; height: 15px;">
@@ -114,7 +125,7 @@
 
 					<div dojoType="dojox.data.CsvStore" jsId="yahooStore" 
 						url="data/yahoo_prices.csv"></div>
-					<div dojoType="dojox.charting.widget.Chart2D" 
+					<div dojoType="dojox.charting.widget.Chart" 
 						theme="dojox.charting.themes.Tufte" 
 						margins="{ l: 0, r: 0, t: 0, b: 0 }"
 						style="width: 100px; height: 15px;">
@@ -151,7 +162,7 @@
 				<td>
 					<div dojoType="dojox.data.CsvStore" jsId="msftStore" 
 						url="data/msft_prices.csv"></div>
-					<div dojoType="dojox.charting.widget.Chart2D" 
+					<div dojoType="dojox.charting.widget.Chart" 
 						theme="dojox.charting.themes.Tufte" 
 						margins="{ l: 0, r: 0, t: 0, b: 0 }"
 						style="width: 100px; height: 15px;">

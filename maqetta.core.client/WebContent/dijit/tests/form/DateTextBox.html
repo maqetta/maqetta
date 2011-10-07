@@ -27,7 +27,7 @@
 		dojo.require("dijit.form.DateTextBox");
 		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 
 			doh.register("parse", function(){
 				dojo.parser.parse();

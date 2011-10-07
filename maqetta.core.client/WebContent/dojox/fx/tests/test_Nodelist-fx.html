@@ -49,7 +49,7 @@
 
 	dojo.require("dojox.fx.ext-dojo.NodeList"); 
 	dojo.require("dijit.form.Button");
-	dojo.require("dijit.form.CheckBox");
+	dojo.require("dijit.form.RadioButton");
 
 	// its funny...
 	var dQuery = dojo.query;
@@ -204,7 +204,7 @@
 			return false; 
 		</script>
 
-		<button dojoType="dijit.form.Button" type="submit" id="runnerButton" />
+		<button dojoType="dijit.form.Button" type="submit" id="runnerButton" >
 			Run
 			<script type="dojo/method" event="onClick">
 				// our runner / submit button				

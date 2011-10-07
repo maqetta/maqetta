@@ -1,43 +1,54 @@
-dojo.provide("dojox.form.Manager");
+define([
+	"dijit/_Widget",
+	"dijit/_TemplatedMixin",
+	"./manager/_Mixin",
+	"./manager/_NodeMixin",
+	"./manager/_FormMixin",
+	"./manager/_ValueMixin",
+	"./manager/_EnableMixin",
+	"./manager/_DisplayMixin",
+	"./manager/_ClassMixin",
+	"dojo/_base/declare"
+], function(_Widget, _TemplatedMixin, _Mixin, _NodeMixin, _FormMixin, _ValueMixin, _EnableMixin, _DisplayMixin, _ClassMixin, declare){
 
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-
-dojo.require("dojox.form.manager._Mixin");
-dojo.require("dojox.form.manager._NodeMixin");
-dojo.require("dojox.form.manager._FormMixin");
-dojo.require("dojox.form.manager._ValueMixin");
-dojo.require("dojox.form.manager._EnableMixin");
-dojo.require("dojox.form.manager._DisplayMixin");
-dojo.require("dojox.form.manager._ClassMixin");
-
-dojo.declare("dojox.form.Manager", [
-		dijit._Widget,
-		dojox.form.manager._Mixin,
-		dojox.form.manager._NodeMixin,
-		dojox.form.manager._FormMixin,
-		dojox.form.manager._ValueMixin,
-		dojox.form.manager._EnableMixin,
-		dojox.form.manager._DisplayMixin,
-		dojox.form.manager._ClassMixin
-], {
+	/*=====
+		_Widget = dijit._Widget;
+		_Mixin = dojox.form.manager._Mixin;
+		_NodeMixin = dojox.form.manager._NodeMixin;
+		_FormMixin = dojox.form.manager._FormMixin;
+		_ValueMixin = dojox.form.manager._ValueMixin;
+		_EnableMixin = dojox.form.manager._EnableMixin;
+		_DisplayMixin = dojox.form.manager._DisplayMixin;
+		_ClassMixin = dojox.form.manager._ClassMixin;
+	=====*/
+return declare("dojox.form.Manager", [ _Widget, _Mixin, _NodeMixin, _FormMixin, _ValueMixin, _EnableMixin, _DisplayMixin, _ClassMixin ], {
 	// summary:
 	//		The widget to orchestrate dynamic forms.
 	// description:
 	//		This widget hosts dojox.form.manager mixins.
-	//		See dojox.form.manager._Mixin for more info.
+	//		See _Mixin for more info.
 
 	buildRendering: function(){
-		var node = this.domNode = this.srcNodeRef;
+		var node = (this.domNode = this.srcNodeRef);
 		if(!this.containerNode){
 			// all widgets with descendants must set containerNode
 				this.containerNode = node;
 		}
+		this.inherited(arguments);
 		this._attachPoints = [];
-		dijit._Templated.prototype._attachTemplateNodes.call(this, node);
+		this._attachEvents = [];
+		_TemplatedMixin.prototype._attachTemplateNodes.call(this, node, function(n, p){ return n.getAttribute(p); });
 	},
-	
-	destroyRendering: function(){
-		dijit._Templated.prototype.destroyRendering.call(this);
+
+	destroyRendering: function(preserveDom){
+		// ctm: calling _TemplatedMixin
+		if(!this.__ctm){
+			// avoid recursive call from _TemplatedMixin
+			this.__ctm = true;
+			_TemplatedMixin.prototype.destroyRendering.apply(this, arguments);
+			delete this.__ctm;
+			this.inherited(arguments);
+		}
 	}
+});
 });

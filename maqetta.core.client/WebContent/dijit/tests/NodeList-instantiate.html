@@ -26,7 +26,7 @@
 			dojo.require("dijit.layout.TabContainer");
 			dojo.require("dijit.layout.ContentPane");
 
-	    	dojo.addOnLoad(function() {	
+	    	dojo.ready(function(){
 
 				// declare a simple widget to use as a base test:
 				dojo.declare("test._Widget",dijit._Widget,{
@@ -87,11 +87,13 @@
 						
 						var tabs = tc.tablist.getChildren();
 						doh.is(3, tabs.length);
-						dojo.forEach(tabs, function(tab, i) { doh.is("tab"+(i+1), tab.label); })
+						dojo.forEach(tabs, function(tab, i){
+							doh.is("tab" + (i + 1), tab.label);
+						});
 	
 						var childrenContent = tc.containerNode.childNodes;
 						doh.is(3, childrenContent.length);
-						dojo.forEach(childrenContent, function(childrenContent, i) { doh.is("pane"+(i+1), childrenContent.innerHTML); })
+						dojo.forEach(childrenContent, function(childrenContent, i){ doh.is("pane"+(i+1), childrenContent.innerHTML); })
 					},
 	
 					function Buttons(){

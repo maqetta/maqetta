@@ -1,6 +1,5 @@
 dojo.provide("davinci.ve.actions.TableActions");
 
-dojo.require("davinci.ve.properties.edit.dialogs");
 dojo.require("davinci.actions.Action");
 dojo.require("davinci.commands.CompoundCommand");
 dojo.require("davinci.ve.widget");

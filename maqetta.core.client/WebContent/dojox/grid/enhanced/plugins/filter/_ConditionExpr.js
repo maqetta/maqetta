@@ -1,9 +1,10 @@
-dojo.provide("dojox.grid.enhanced.plugins.filter._ConditionExpr");
-
-(function(){
-	var fns = dojox.grid.enhanced.plugins.filter;
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/array"
+], function(declare, lang, array){
 	
-dojo.declare("dojox.grid.enhanced.plugins.filter._ConditionExpr",null,{
+var _ConditionExpr = declare("dojox.grid.enhanced.plugins.filter._ConditionExpr", null, {
 	// summary:
 	//		The most abstract class for all condition expressions.
 	//		A condition expression can be applied on a data row (e.g. an item in a store)
@@ -12,6 +13,7 @@ dojo.declare("dojox.grid.enhanced.plugins.filter._ConditionExpr",null,{
 	//		abstract
 	
 	_name: "expr",
+
 	applyRow: function(/* data item */datarow,/* function(row,colArg) */getter){
 		// summary:
 		//		*Unimplemented Interface*
@@ -28,6 +30,7 @@ dojo.declare("dojox.grid.enhanced.plugins.filter._ConditionExpr",null,{
 		//		MUST return a _ConditionExpr object
 		throw new Error("_ConditionExpr.applyRow: unimplemented interface");
 	},
+
 	toObject: function(){
 		// summary:
 		//		Convert this data expression to a simple object. Mainly used for serialization.
@@ -37,6 +40,7 @@ dojo.declare("dojox.grid.enhanced.plugins.filter._ConditionExpr",null,{
 		//		An object for serialization.
 		return {};	//Object
 	},
+
 	getName: function(){
 		// summary:
 		//		Get the name of this kind of expression.
@@ -47,7 +51,8 @@ dojo.declare("dojox.grid.enhanced.plugins.filter._ConditionExpr",null,{
 		return this._name;	//String
 	}
 });
-dojo.declare("dojox.grid.enhanced.plugins.filter._DataExpr", fns._ConditionExpr, {
+
+var _DataExpr = declare("dojox.grid.enhanced.plugins.filter._DataExpr", _ConditionExpr, {
 	// summary:
 	//		The most abstract class for all data expressions.
 	//		A _DataExpr is a condition expression for a single data value.
@@ -59,6 +64,7 @@ dojo.declare("dojox.grid.enhanced.plugins.filter._DataExpr", fns._ConditionExpr,
 	//		_value: anything
 	//		_colArg: anything
 	_name: "data",
+
 	constructor: function(/* anything */dataValue,/* bool */isColumn, /* object */convertArgs){
 		// summary:
 		//		If a _DataExpr is constructed with only one argument, this argument is regarded as a pure value.
@@ -72,8 +78,8 @@ dojo.declare("dojox.grid.enhanced.plugins.filter._DataExpr", fns._ConditionExpr,
 		// isColumn: boolean?
 		//		Optional. To specify whether this _DataExpr represents a column or a pure value.
 		this._convertArgs = convertArgs || {};
-		if(dojo.isFunction(this._convertArgs.convert)){
-			this._convertData = dojo.hitch(this._convertArgs.scope, this._convertArgs.convert);
+		if(lang.isFunction(this._convertArgs.convert)){
+			this._convertData = lang.hitch(this._convertArgs.scope, this._convertArgs.convert);
 		}
 		if(isColumn){
 			this._colArg = dataValue;
@@ -81,6 +87,7 @@ dojo.declare("dojox.grid.enhanced.plugins.filter._DataExpr", fns._ConditionExpr,
 			this._value = this._convertData(dataValue, this._convertArgs);
 		}
 	},
+
 	getValue: function(){
 		// summary:
 		//		If this is a pure value wrapper, simply return the value.
@@ -91,6 +98,7 @@ dojo.declare("dojox.grid.enhanced.plugins.filter._DataExpr", fns._ConditionExpr,
 		//		the value of this data expression.
 		return this._value;	//String
 	},
+
 	applyRow: function(/* data item */datarow,/* function(row,colIdx) */getter){
 		// summary:
 		//		Implement _ConditionExpr.applyRow.
@@ -98,10 +106,11 @@ dojo.declare("dojox.grid.enhanced.plugins.filter._DataExpr", fns._ConditionExpr,
 		//		Otherwise, extract the cell data from datarow using the given getter function,
 		//		and then convert this cell data to a _DataExpr and return the expression.
 		return typeof this._colArg == "undefined" ? this :			//_ConditionExpr
-			new (dojo.getObject(this.declaredClass))(
+			new (lang.getObject(this.declaredClass))(
 				this._convertData(getter(datarow, this._colArg), this._convertArgs)
 			);
 	},
+
 	_convertData: function(/* anything */dataValue){
 		// summary:
 		//
@@ -112,6 +121,7 @@ dojo.declare("dojox.grid.enhanced.plugins.filter._DataExpr", fns._ConditionExpr,
 		// returns:
 		return dataValue;
 	},
+
 	toObject: function(){
 		// summary:
 		//		Overrided from _ConditionExpr.toObject
@@ -122,17 +132,19 @@ dojo.declare("dojox.grid.enhanced.plugins.filter._DataExpr", fns._ConditionExpr,
 		};
 	}
 });
-dojo.declare("dojox.grid.enhanced.plugins.filter._OperatorExpr", fns._ConditionExpr, {
+
+var _OperatorExpr = declare("dojox.grid.enhanced.plugins.filter._OperatorExpr", _ConditionExpr, {
 	// summary:
 	//		The most abstract class for all operator expressions.
 	//		An operator expression is a _ConditionExpr that represents an operation.
 	_name: "operator",
+
 	constructor: function(/* Array | operand1,operand2,... */){
 		// summary:
 		//		The arguments are operands (or an array of operands, if the first argument
 		//		is an Array) of this operator, ordering from left to right.
 		//		Every operand should be a _ConditionExpr.
-		if(dojo.isArray(arguments[0])){
+		if(lang.isArray(arguments[0])){
 			this._operands = arguments[0];
 		}else{
 			this._operands = [];
@@ -146,27 +158,30 @@ dojo.declare("dojox.grid.enhanced.plugins.filter._OperatorExpr", fns._ConditionE
 		//		Overrided from _ConditionExpr.toObject
 		return {											//Object
 			op: this.getName(),
-			data: dojo.map(this._operands,function(operand){
+			data: array.map(this._operands,function(operand){
 				return operand.toObject();
 			})
 		};
 	}
 });
-dojo.declare("dojox.grid.enhanced.plugins.filter._UniOpExpr", fns._OperatorExpr, {
+
+var _UniOpExpr = declare("dojox.grid.enhanced.plugins.filter._UniOpExpr", _OperatorExpr, {
 	// summary:
 	//		The most abstract class for all uni-operator expressions.
 	//		A uni-operator expression is an _OperatorExpr that only allow one operand.
 	_name: "uniOperator",
+
 	applyRow: function(/* data item */datarow,/* function(row,colArg) */getter){
 		// summary:
 		//		Implement _ConditionExpr.applyRow.
 		//		Apply the restriction of "only one operand" and confirm the operand is a valid _ConditionExpr.
 		//		Then do the calculation of this operator.
-		if(!(this._operands[0] instanceof fns._ConditionExpr)){
+		if(!(this._operands[0] instanceof _ConditionExpr)){
 			throw new Error("_UniOpExpr: operand is not expression.");
 		}
 		return this._calculate(this._operands[0],datarow,getter);	//_ConditionExpr
 	},
+
 	_calculate: function(/* _ConditionExpr */operand,/* data item*/datarow,/* function(row,colArg) */getter){
 		// summary:
 		//		*Unimplemented Interface*
@@ -181,22 +196,25 @@ dojo.declare("dojox.grid.enhanced.plugins.filter._UniOpExpr", fns._OperatorExpr,
 		throw new Error("_UniOpExpr._calculate: unimplemented interface");
 	}
 });
-dojo.declare("dojox.grid.enhanced.plugins.filter._BiOpExpr", fns._OperatorExpr, {
+
+var _BiOpExpr = declare("dojox.grid.enhanced.plugins.filter._BiOpExpr", _OperatorExpr, {
 	// summary:
 	//		The most abstract class for all bi-operator expressions.
 	//		A bi-operator expression is an _OperatorExpr that allow and only allow two operands.
 	_name: "biOperator",
+
 	applyRow: function(/* data item */datarow,/* function(row,colArg) */getter){
 		// summary:
 		//		Implement _ConditionExpr.applyRow.
 		//		Apply the restriction of "two operands" and confirm operands are valid _ConditionExpr's.
-		if(!(this._operands[0] instanceof fns._ConditionExpr)){
+		if(!(this._operands[0] instanceof _ConditionExpr)){
 			throw new Error("_BiOpExpr: left operand is not expression.");
-		}else if(!(this._operands[1] instanceof fns._ConditionExpr)){
+		}else if(!(this._operands[1] instanceof _ConditionExpr)){
 			throw new Error("_BiOpExpr: right operand is not expression.");
 		}
 		return this._calculate(this._operands[0],this._operands[1],datarow,getter);
 	},
+
 	_calculate: function(/* _ConditionExpr */left_operand,/* _ConditionExpr */right_operand,/* data item*/datarow,/* function(row,colArg) */getter){
 		// summary:
 		//		*Unimplemented Interface*
@@ -212,4 +230,13 @@ dojo.declare("dojox.grid.enhanced.plugins.filter._BiOpExpr", fns._OperatorExpr, 
 		throw new Error("_BiOpExpr._calculate: unimplemented interface");
 	}
 });
-})();
+
+return {
+	_ConditionExpr: _ConditionExpr,
+	_DataExpr: _DataExpr,
+	_OperatorExpr: _OperatorExpr,
+	_UniOpExpr: _UniOpExpr,
+	_BiOpExpr: _BiOpExpr
+};
+
+});

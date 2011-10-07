@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} de ${1} ${0}",
 	"firstTip": "Primera pàgina",
@@ -13,6 +15,9 @@
 	"dialogIndication": "Especifiqueu el número de pàgina",
 	"pageCountIndication": " (${0} pàgines)",
 	"dialogConfirm": "Vés-hi",
-	"dialogCancel": "Cancel·la"
+	"dialogCancel": "Cancel·la",
+	"all": "tot"
 })
+//end v1.x content
+);
 

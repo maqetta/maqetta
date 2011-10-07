@@ -1,8 +1,23 @@
-dojo.provide("dojox.form.Uploader");
-dojo.experimental("dojox.form.Uploader");
-dojo.require("dojox.form.uploader.Base");
-dojo.require("dijit.form.Button");
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dojo/_base/connect",
+	"dojo/_base/window",
+	"dojo/dom-style",
+	"dojo/dom-geometry",
+	"dojo/dom-attr",
+	"dojo/dom-construct",
+	"dojo/dom-form",
+	"dijit",
+	"dijit/form/Button",
+	"dojox/form/uploader/Base",
+	"dojo/i18n!./nls/Uploader",
+	"dojo/text!./resources/Uploader.html"
+],function(kernel, declare, lang, array, connect, win, domStyle, domGeometry, domAttr, domConstruct, domForm, dijit, Button, uploader, res, template){
 
+	kernel.experimental("dojox.form.Uploader");
 	//
 	// TODO:
 	//		i18n
@@ -12,9 +27,14 @@ dojo.require("dijit.form.Button");
 	//		Use new FileReader() for thumbnails
 	//		flashFieldName should default to Flash
 	//		get('value'); and set warning
+	//		Make it so URL can change (current set to Flash on build)
 	//
 
-dojo.declare("dojox.form.Uploader", [dojox.form.uploader.Base], {
+	/*=====
+		uploader = dojox.form.uploader.Base;
+		WidgetsInTemplateMixin = dijit._WidgetsInTemplateMixin;
+	=====*/
+declare("dojox.form.Uploader", [uploader, Button], {
 	//
 	// Version: 1.6
 	//
@@ -49,7 +69,7 @@ dojo.declare("dojox.form.Uploader", [dojox.form.uploader.Base], {
 	//
 	//	label: String
 	//		The text used in the button that when clicked, opens a system Browse Dialog.
-	label:"Upload...",
+	label:res.label,
 	//
 	// url: String
 	//		The url targeted for upload. An absolute URL is preferred. Relative URLs are
@@ -73,28 +93,68 @@ dojo.declare("dojox.form.Uploader", [dojox.form.uploader.Base], {
 	//		determine what type of parsing should be used.
 	uploadType:"form",
 	//
+	//	showInput: String [const]
+	//		Position to show an input which shows selected filename(s). Possible
+	//		values are "before", "after", which specifies where the input should
+	//		be placed with reference to the containerNode which contains the
+	//		label). By default, this is empty string (no such input will be
+	//		shown). Specify showInput="before" to mimic the look&feel of a
+	//		native file input element.
+	showInput: "",
+
 	_nameIndex:0,
-	widgetsInTemplate:true,
-	templateString:'<div class="dojoxFileInput"><div dojoType="dijit.form.Button" dojoAttachPoint="button">${label}</div></div>',
+
+	templateString: template,
+
+	baseClass: 'dijitUploader '+Button.prototype.baseClass,
 
 	postMixInProperties: function(){
 		this._inputs = [];
-		this._getButtonStyle(this.srcNodeRef);
+		this._cons = [];
 		this.inherited(arguments);
 	},
-	postCreate: function(){
-		var restore = false;
-		var parent = this.domNode.parentNode;
-		var position = this._getNodePosition(this.domNode);
-		if(!this.btnSize.w || !this.btnSize.h) {
-			dojo.body().appendChild(this.domNode);
-			this._getButtonStyle(this.domNode);
-			restore = true;
+	buildRendering: function(){
+		console.warn("buildRendering", this.id)
+		this.inherited(arguments);
+		domStyle.set(this.domNode, {
+			overflow:"hidden",
+			position:"relative"
+		});
+		this._buildDisplay();
+		//change the button node not occupy tabIndex: the real file input
+		//will have tabIndex set
+		domAttr.set(this.titleNode, 'tabIndex', -1);
+	},
+	_buildDisplay: function(){
+		if(this.showInput){
+			this.displayInput = dojo.create('input', {
+				  'class':'dijitUploadDisplayInput',
+				  'tabIndex':-1, 'autocomplete':'off'},
+				this.containerNode, this.showInput);
+			//schedule the attachpoint to be cleaned up on destroy
+			this._attachPoints.push('displayInput');
+			this.connect(this,'onChange', function(files){
+				var i=0,l=files.length, f, r=[];
+				while((f=files[i++])){
+					if(f && f.name){
+						r.push(f.name);
+					}
+				}
+				this.displayInput.value = r.join(', ');
+			});
+			this.connect(this,'reset', function(){
+				this.displayInput.value = '';
+			});
 		}
+	},
+
+	startup: function(){
+		if(this._buildInitialized){
+			return;
+		}
+		this._buildInitialized = true;
+		this._getButtonStyle(this.domNode);
 		this._setButtonStyle();
-		if(restore){
-			dojo.place(this.domNode, position.node, position.pos)
-		}
 		this.inherited(arguments);
 	},
 
@@ -170,7 +230,10 @@ dojo.declare("dojox.form.Uploader", [dojox.form.uploader.Base], {
 	submit: function(/* form Node ? */form){
 		// summary:
 		//		If Uploader is in a form, and other data should be sent along with the files, use
-		//		this instead of form submit. Only supported with plugins.
+		//		this instead of form submit.
+		form = !!form ? form.tagName ? form : this.getForm() : this.getForm();
+		var data = domForm.toObject(form);
+		this.upload(data);
 	},
 
 	reset: function(){
@@ -182,8 +245,9 @@ dojo.declare("dojox.form.Uploader", [dojox.form.uploader.Base], {
 		// 		TODO:
 		// 		Add this ability by effectively, not uploading them
 		//
+		delete this._files;
 		this._disconnectButton();
-		dojo.forEach(this._inputs, dojo.destroy, dojo);
+		array.forEach(this._inputs, domConstruct.destroy, dojo);
 		this._inputs = [];
 		this._nameIndex = 0;
 		this._createInput();
@@ -195,7 +259,7 @@ dojo.declare("dojox.form.Uploader", [dojox.form.uploader.Base], {
 		//
 		var fileArray = [];
 		if(this.supports("multiple")){
-			dojo.forEach(this.inputNode.files, function(f, i){
+			array.forEach(this._files, function(f, i){
 				fileArray.push({
 					index:i,
 					name:f.name,
@@ -204,14 +268,16 @@ dojo.declare("dojox.form.Uploader", [dojox.form.uploader.Base], {
 				});
 			}, this);
 		}else{
-			dojo.forEach(this._inputs, function(n, i){
-				fileArray.push({
-					index:i,
-					name:n.value.substring(n.value.lastIndexOf("\\")+1),
-					size:0,
-					type:n.value.substring(n.value.lastIndexOf(".")+1)
-				});
-			}, this)
+			array.forEach(this._inputs, function(n, i){
+				if(n.value){
+					fileArray.push({
+						index:i,
+						name:n.value.substring(n.value.lastIndexOf("\\")+1),
+						size:0,
+						type:n.value.substring(n.value.lastIndexOf(".")+1)
+					});
+				}
+			}, this);
 
 		}
 		return fileArray; // Array
@@ -231,84 +297,26 @@ dojo.declare("dojox.form.Uploader", [dojox.form.uploader.Base], {
 		console.error("Uploader value is read only");
 	},
 
-	_getDisabledAttr: function(){
-		// summary:
-		//		Internal. To get disabled use: uploader.get("disabled");
-		return this._disabled;
-	},
-
 	_setDisabledAttr: function(disabled){
 		// summary:
 		//		Internal. To set disabled use: uploader.set("disabled", true);
 		if(this._disabled == disabled){ return; }
-		this.button.set('disabled', disabled);
-		dojo.style(this.inputNode, "display", disabled ? "none" : "block");
-	},
-
-	_getNodePosition: function(node){
-		if(node.previousSibling){
-			return {
-				node:node.previousSibling,
-				pos:"after"
-			}
-		}
-		return {
-			node:node.nextSibling,
-			pos:"before"
-		}
+		this.inherited(arguments);
+		domStyle.set(this.inputNode, "display", disabled ? "none" : "");
 	},
 
 	_getButtonStyle: function(node){
-		if(!node){
-			// we don't want this to happen. But if it does, try and display *something*.
-			this.btnSize = {
-				w:200,
-				h:25
-			};
-		}else{
-			this.btnSize = dojo.marginBox(node);
-		}
+		this.btnSize = {w:domStyle.get(node,'width'), h:domStyle.get(node,'height')};
 	},
 
 	_setButtonStyle: function(){
-		var hasParent = true;
-		if(!this.domNode.parentNode || !this.domNode.parentNode.tagName){
-			document.body.appendChild(this.domNode);
-			hasParent = false;
-		}
-
-		dojo.style(this.domNode, {
-			width:this.btnSize.w+"px",
-			height:(this.btnSize.h+4)+"px",
-			overflow:"hidden",
-			position:"relative"
-		});
-
 		this.inputNodeFontSize = Math.max(2, Math.max(Math.ceil(this.btnSize.w / 60), Math.ceil(this.btnSize.h / 15)));
 		this._createInput();
-
-		dojo.style(this.button.domNode, {
-			margin:"0px",
-			display:"block",
-			verticalAlign:"top" // IE fix
-
-		});
-
-		dojo.style(this.button.domNode.firstChild, {
-			margin:"0px",
-			display:"block"
-			//height:this.btnSize.h+"px"
-		});
-
-		if(!hasParent){
-			document.body.removeChild(this.domNode);
-		}
 	},
 
 	_createInput: function(){
-
 		if(this._inputs.length){
-			dojo.style(this.inputNode, {
+			domStyle.set(this.inputNode, {
 				top:"500px"
 			});
 			this._disconnectButton();
@@ -323,61 +331,49 @@ dojo.declare("dojox.form.Uploader", [dojox.form.uploader.Base], {
 			// <=IE8
 			name = this.name + (this.multiple ? this._nameIndex : "");
 		}
-		this.inputNode = dojo.create("input", {type:"file", name:name, className:"dojoxInputNode"}, this.domNode, "first");
+		// reset focusNode to the inputNode, so when the button is clicked,
+		// the focus is properly moved to the input element
+		this.focusNode = this.inputNode = domConstruct.create("input", {type:"file", name:name}, this.domNode, "first");
 		if(this.supports("multiple") && this.multiple){
-			dojo.attr(this.inputNode, "multiple", true);
+			domAttr.set(this.inputNode, "multiple", true);
 		}
 		this._inputs.push(this.inputNode);
 
-
-		dojo.style(this.inputNode, {
-			fontSize:this.inputNodeFontSize+"em"
-		});
-		var size = dojo.marginBox(this.inputNode);
-
-		dojo.style(this.inputNode, {
+		domStyle.set(this.inputNode, {
 			position:"absolute",
-			top:"-2px",
-			left:"-"+(size.w-this.btnSize.w-2)+"px",
+			fontSize:this.inputNodeFontSize+"em",
+			top:"-3px",
+			right:"-3px",
 			opacity:0
 		});
 		this._connectButton();
 	},
 
 	_connectButton: function(){
-		this._cons = [];
-		var cs = dojo.hitch(this, function(nm){
-			this._cons.push(dojo.connect(this.inputNode, nm, this, function(evt){
-				this.button._cssMouseEvent({type:nm})
-			}));
-		});
-		cs("mouseover");
-		cs("mouseout");
-		cs("mousedown");
-		this._cons.push(dojo.connect(this.inputNode, "change", this, function(evt){
+		this._cons.push(connect.connect(this.inputNode, "change", this, function(evt){
+			this._files = this.inputNode.files;
 			this.onChange(this.getFileList(evt));
 			if(!this.supports("multiple") && this.multiple) this._createInput();
 		}));
 
-		this.button.set('tabIndex', -1);
 		if(this.tabIndex > -1){
 			this.inputNode.tabIndex = this.tabIndex;
-			var restoreBorderStyle = dojo.style(this.button.domNode.firstChild, "border");
-			this._cons.push(dojo.connect(this.inputNode, "focus", this, function(){
-				dojo.style(this.button.domNode.firstChild, "border", "1px dashed #ccc");
+
+			this._cons.push(connect.connect(this.inputNode, "focus", this, function(){
+				this.titleNode.style.outline= "1px dashed #ccc";
 			}));
-			this._cons.push(dojo.connect(this.inputNode, "blur", this, function(){
-				dojo.style(this.button.domNode.firstChild, "border", restoreBorderStyle);
+			this._cons.push(connect.connect(this.inputNode, "blur", this, function(){
+				this.titleNode.style.outline = "";
 			}));
 		}
 	},
 
 	_disconnectButton: function(){
-		dojo.forEach(this._cons, dojo.disconnect, dojo);
+		array.forEach(this._cons, connect.disconnect);
+		this._cons.splice(0,this._cons.length);
 	}
 });
 
-(function(){
 	dojox.form.UploaderOrg = dojox.form.Uploader;
 	var extensions = [dojox.form.UploaderOrg];
 	dojox.form.addUploaderPlugin = function(plug){
@@ -386,6 +382,8 @@ dojo.declare("dojox.form.Uploader", [dojox.form.uploader.Base], {
 		// 		the dojox.form.Uploader is recreated using the new plugin (mixin).
 		//
 		extensions.push(plug);
-		dojo.declare("dojox.form.Uploader", extensions, {});
+		declare("dojox.form.Uploader", extensions, {});
 	}
-})();
+
+	return dojox.form.Uploader;
+});

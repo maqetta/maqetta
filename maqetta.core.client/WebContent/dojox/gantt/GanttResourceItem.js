@@ -25,7 +25,9 @@ dojo.declare("dojox.gantt.GanttResourceItem", null, {
 		this.ownerTimeConsume = {};
 	},
 	clearItems: function(){
-		dojo.destroy(this.content.firstChild);
+		if(this.content.firstChild){
+		    dojo.destroy(this.content.firstChild);
+		}
 	},
 	buildResource: function(){
 		var resourceInfo = {};
@@ -164,8 +166,8 @@ dojo.declare("dojox.gantt.GanttResourceItem", null, {
 			this.ownerNameItem.push(oNameItem);
 			this.ownerTaskNodeMapping[owner][owner].push(oNameItem);
 		}
-		var currentOwnerNode = this.ownerItem[this.ownerNameItem.length - 1];
-		var currentOwnerNameNode = this.ownerNameItem[this.ownerNameItem.length - 1];
+		var currentOwnerNode = this.ownerItem[this.ownerNameItem.length - 1],
+			currentOwnerNameNode = this.ownerNameItem[this.ownerNameItem.length - 1];
 		//adjust nodes
 		if(this.panelNames){
 			this.checkWidthTaskNameItem(currentOwnerNameNode);
@@ -192,9 +194,9 @@ dojo.declare("dojox.gantt.GanttResourceItem", null, {
 		return ownerName;
 	},
 	refreshOwnerItem: function(owner){
-		var item = this.ownerTaskNodeMapping[owner][owner][0];
-		var start = this.ownerTimeConsume[owner].min, end = this.ownerTimeConsume[owner].max, dur = this.ownerTimeConsume[owner].dur;
-		var posX = this.ganttChart.getPosOnDate(start); // should be task start date
+		var item = this.ownerTaskNodeMapping[owner][owner][0],
+			start = this.ownerTimeConsume[owner].min, end = this.ownerTimeConsume[owner].max, dur = this.ownerTimeConsume[owner].dur,
+			posX = this.ganttChart.getPosOnDate(start); // should be task start date
 		item.style.left = posX + "px";
 		item.style.width = dur * this.ganttChart.pixelsPerWorkHour + "px";
 		dojo.forEach(this.resourceInfo[owner], function(task, i){
@@ -309,7 +311,7 @@ dojo.declare("dojox.gantt.GanttResourceItem", null, {
 		lineVerticalLeft.pNode = parentNode;
 		var LineHorizontalLeft = dojo.create("div", {
 			noShade: true,
-			color: "#000000",
+			color: "#000",
 			className: "ganttResourceLineHorizontalLeft"
 		}, this.panelNames.firstChild);
 		LineHorizontalLeft.cNode = currentNode;
@@ -329,27 +331,28 @@ dojo.declare("dojox.gantt.GanttResourceItem", null, {
 		dojo.forEach(["onclick", "onkeydown"], function(e){
 			this.ganttChart._events.push(
 				dojo.connect(treeImg, e, this, function(evt){
+					var reachTarget = false, owner, ownerItem;
 					if(e == "onkeydown" && evt.keyCode != dojo.keys.ENTER){ return; }
+					//TODO: perhaps the following conditional can be collapsed?  Duplicate code.
 					if(currentItem.isOpen){
 						dojo.removeClass(treeImg, "ganttImageTreeCollapse");
 						dojo.addClass(treeImg, "ganttImageTreeExpand");
 						currentItem.isOpen = false;
 						//collapse
-						var reachTarget = false;
-						for(var owner in this.ownerTaskNodeMapping){
-							var ownerItem = this.ownerTaskNodeMapping[owner];
+						for(owner in this.ownerTaskNodeMapping){
+							ownerItem = this.ownerTaskNodeMapping[owner];
 							if(reachTarget){
 								dojo.forEach(ownerItem[owner], function(tItem){
 									dojo.style(tItem, "top", dojo.style(tItem, "top") - currentItem.taskCount * 23 + "px");
-								}, this);
+								});
 								dojo.forEach(ownerItem.tasks, function(tItems){
 									dojo.forEach(tItems, function(tItem){
 										var item = !tItem.v && !tItem.h ? [tItem] : [tItem.v, tItem.h];
 										dojo.forEach(item, function(t){
 											dojo.style(t, "top", dojo.style(t, "top") - currentItem.taskCount * 23 + "px");
-										}, this);
-									}, this);
-								}, this);
+										});
+									});
+								});
 							}else{
 								if(owner == ownerNameItem.id){
 									reachTarget = true;
@@ -366,21 +369,20 @@ dojo.declare("dojox.gantt.GanttResourceItem", null, {
 						dojo.addClass(treeImg, "ganttImageTreeCollapse");
 						currentItem.isOpen = true;
 						//expand
-						var reachTarget = false;
-						for(var owner in this.ownerTaskNodeMapping){
-							var ownerItem = this.ownerTaskNodeMapping[owner];
+						for(owner in this.ownerTaskNodeMapping){
+							ownerItem = this.ownerTaskNodeMapping[owner];
 							if(reachTarget){
 								dojo.forEach(ownerItem[owner], function(tItem){
 									dojo.style(tItem, "top", dojo.style(tItem, "top") + currentItem.taskCount * 23 + "px");
-								}, this);
+								});
 								dojo.forEach(ownerItem.tasks, function(tItems){
 									dojo.forEach(tItems, function(tItem){
 										var item = !tItem.v && !tItem.h ? [tItem] : [tItem.v, tItem.h];
 										dojo.forEach(item, function(t){
 											dojo.style(t, "top", dojo.style(t, "top") + currentItem.taskCount * 23 + "px");
-										}, this);
-									}, this);
-								}, this);
+										});
+									});
+								});
 							}else{
 								if(owner == ownerNameItem.id){
 									reachTarget = true;
@@ -426,11 +428,10 @@ dojo.declare("dojox.gantt.GanttResourceItem", null, {
 	},
 	checkWidthTaskNameItem: function(taskNameItem){
 		if(taskNameItem && taskNameItem.offsetWidth + taskNameItem.offsetLeft > this.ganttChart.maxWidthPanelNames){
-			var width = taskNameItem.offsetWidth + taskNameItem.offsetLeft - this.ganttChart.maxWidthPanelNames;
-			var countChar = Math.round(width / (taskNameItem.offsetWidth / taskNameItem.firstChild.length));
-			var tName = taskNameItem.id.substring(0, taskNameItem.firstChild.length - countChar - 3);
-			tName += "...";
-			taskNameItem.innerHTML = tName;
+			var width = taskNameItem.offsetWidth + taskNameItem.offsetLeft - this.ganttChart.maxWidthPanelNames,
+				countChar = Math.round(width / (taskNameItem.offsetWidth / taskNameItem.firstChild.length)),
+				tName = taskNameItem.id.substring(0, taskNameItem.firstChild.length - countChar - 3);
+			taskNameItem.innerHTML = tName + "...";
 		}
 	},
 	createPanelOwners: function(){

@@ -88,6 +88,9 @@ public class User implements IUser {
 			for (int i = 0; i < libs.size(); i++) {
 				IVResource root = firstFolder;
 				String defaultRoot = libs.get(i).getVirtualRoot();
+				
+				if(defaultRoot==null) continue;
+				
 				Library b = this.getLibrary(libs.get(i));
 				/* library not found on server so avoid adding it to the workspace */
 				if (b == null) {
@@ -176,11 +179,13 @@ public class User implements IUser {
         
         for(int i=0;i<allLibs.length;i++){
         	Library lib = allLibs[i];
-        	String id= lib.getID();
-        	String version = lib.getVersion();
         	String root = lib.getDefaultRoot();
-        	String libPath = "./WebContent" + root;
-        	this.modifyLibrary(id, version,  libPath, project.getPath());
+        	if(root!=null){
+        		String id= lib.getID();
+            	String version = lib.getVersion();
+            	String libPath = "./WebContent" + root;
+        		this.modifyLibrary(id, version,  libPath, project.getPath());
+        	}
         }
         
         rebuildWorkspace();

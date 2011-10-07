@@ -1,4 +1,9 @@
-define("dojo/dnd/Moveable", ["dojo", "dojo/dnd/Mover"], function(dojo) {
+define(["../main", "../Evented", "../touch", "./Mover"], function(dojo, Evented, touch) {
+	// module:
+	//		dojo/dnd/Moveable
+	// summary:
+	//		TODOC
+
 
 /*=====
 dojo.declare("dojo.dnd.__MoveableArgs", [], {
@@ -21,12 +26,12 @@ dojo.declare("dojo.dnd.__MoveableArgs", [], {
 });
 =====*/
 
-dojo.declare("dojo.dnd.Moveable", null, {
+dojo.declare("dojo.dnd.Moveable", [Evented], {
 	// object attributes (for markup)
 	handle: "",
 	delay: 0,
 	skip: false,
-	
+
 	constructor: function(node, params){
 		// summary:
 		//		an object, which makes a node moveable
@@ -42,8 +47,7 @@ dojo.declare("dojo.dnd.Moveable", null, {
 		this.skip  = params.skip;
 		this.mover = params.mover ? params.mover : dojo.dnd.Mover;
 		this.events = [
-			dojo.connect(this.handle, "onmousedown", this, "onMouseDown"),
-			dojo.connect(this.handle, "ontouchstart", this, "onMouseDown"),
+			dojo.connect(this.handle, touch.press, this, "onMouseDown"),
 			// cancel text selection and text dragging
 			dojo.connect(this.handle, "ondragstart",   this, "onSelectStart"),
 			dojo.connect(this.handle, "onselectstart", this, "onSelectStart")
@@ -51,8 +55,8 @@ dojo.declare("dojo.dnd.Moveable", null, {
 	},
 
 	// markup methods
-	markupFactory: function(params, node){
-		return new dojo.dnd.Moveable(node, params);
+	markupFactory: function(params, node, ctor){
+		return new ctor(node, params);
 	},
 
 	// methods
@@ -62,7 +66,7 @@ dojo.declare("dojo.dnd.Moveable", null, {
 		dojo.forEach(this.events, dojo.disconnect);
 		this.events = this.node = this.handle = null;
 	},
-	
+
 	// mouse event processors
 	onMouseDown: function(e){
 		// summary:
@@ -72,14 +76,11 @@ dojo.declare("dojo.dnd.Moveable", null, {
 		if(this.skip && dojo.dnd.isFormElement(e)){ return; }
 		if(this.delay){
 			this.events.push(
-				dojo.connect(this.handle, "onmousemove", this, "onMouseMove"),
-				dojo.connect(this.handle, "ontouchmove", this, "onMouseMove"),
-				dojo.connect(this.handle, "onmouseup", this, "onMouseUp"),
-				dojo.connect(this.handle, "ontouchend", this, "onMouseUp")
+				dojo.connect(this.handle, touch.move, this, "onMouseMove"),
+				dojo.connect(this.handle, touch.release, this, "onMouseUp")
 			);
-			var pos = e.touches ? e.touches[0] : e;
-			this._lastX = pos.pageX;
-			this._lastY = pos.pageY;
+			this._lastX = e.pageX;
+			this._lastY = e.pageY;
 		}else{
 			this.onDragDetected(e);
 		}
@@ -90,8 +91,7 @@ dojo.declare("dojo.dnd.Moveable", null, {
 		//		event processor for onmousemove/ontouchmove, used only for delayed drags
 		// e: Event
 		//		mouse/touch event
-		var pos = e.touches ? e.touches[0] : e;
-		if(Math.abs(pos.pageX - this._lastX) > this.delay || Math.abs(pos.pageY - this._lastY) > this.delay){
+		if(Math.abs(e.pageX - this._lastX) > this.delay || Math.abs(e.pageY - this._lastY) > this.delay){
 			this.onMouseUp(e);
 			this.onDragDetected(e);
 		}
@@ -116,7 +116,7 @@ dojo.declare("dojo.dnd.Moveable", null, {
 			dojo.stopEvent(e);
 		}
 	},
-	
+
 	// local events
 	onDragDetected: function(/* Event */ e){
 		// summary:
@@ -142,7 +142,7 @@ dojo.declare("dojo.dnd.Moveable", null, {
 		// summary:
 		//		called during the very first move notification;
 		//		can be used to initialize coordinates, can be overwritten.
-		
+
 		// default implementation does nothing
 	},
 	onMove: function(/* dojo.dnd.Mover */ mover, /* Object */ leftTop, /* Event */ e){
@@ -158,13 +158,13 @@ dojo.declare("dojo.dnd.Moveable", null, {
 	onMoving: function(/* dojo.dnd.Mover */ mover, /* Object */ leftTop){
 		// summary:
 		//		called before every incremental move; can be overwritten.
-		
+
 		// default implementation does nothing
 	},
 	onMoved: function(/* dojo.dnd.Mover */ mover, /* Object */ leftTop){
 		// summary:
 		//		called after every incremental move; can be overwritten.
-		
+
 		// default implementation does nothing
 	}
 });

@@ -1,4 +1,12 @@
-.tundra .dijitTooltipAbove .dijitTooltipConnector, .dj_ie .tundra .dijitTooltipAbove .dijitTooltipConnector {
+.tundra .dijitTooltipAbove .dijitTooltipConnector,
+.tundra .dijitTooltipLeft .dijitTooltipConnector,
+.tundra .dijitTooltipBottom .dijitTooltipConnector,
+.tundra .dijitTooltipRight.dijitTooltipConnector,
+.dj_ie .tundra .dijitTooltipAbove .dijitTooltipConnector 
+.dj_ie .tundra .dijitTooltipLeft .dijitTooltipConnector,
+.dj_ie .tundra .dijitTooltipBottom .dijitTooltipConnector,
+.dj_ie .tundra .dijitTooltipRight .dijitTooltipConnector
+{
 	display: none;
 }
 

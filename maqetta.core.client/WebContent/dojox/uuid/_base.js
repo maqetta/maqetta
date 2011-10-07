@@ -1,4 +1,6 @@
-dojo.provide("dojox.uuid._base");
+define(['dojo/_base/kernel', 'dojo/_base/lang'], function(dojo){
+
+dojo.getObject("uuid", true, dojox);
 
 // Public constants:
 dojox.uuid.NIL_UUID = "00000000-0000-0000-0000-000000000000";
@@ -239,3 +241,7 @@ dojox.uuid.getTimestamp = function(/*String*/ uuidString, /*String?*/ returnType
 			break;
 	}
 };
+
+return dojox.uuid;
+
+});

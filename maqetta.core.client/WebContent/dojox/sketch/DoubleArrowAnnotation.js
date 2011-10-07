@@ -1,10 +1,7 @@
-dojo.provide("dojox.sketch.DoubleArrowAnnotation");
-
-dojo.require("dojox.sketch.Annotation");
-dojo.require("dojox.sketch.Anchor");
-
-(function(){
+define(["dojo/_base/kernel", "dojo/_base/lang", "./Annotation", "./Anchor"], function(dojo){
+	dojo.getObject("sketch", true, dojox);
 	var ta=dojox.sketch;
+	console.log(ta);
 	ta.DoubleArrowAnnotation=function(figure, id){
 		ta.Annotation.call(this, figure, id);
 		this.transform={ dx:0, dy:0 };
@@ -231,4 +228,5 @@ dojo.require("dojox.sketch.Anchor");
 	};
 
 	ta.Annotation.register("DoubleArrow");
-})();
+	return dojox.sketch.DoubleArrowAnnotation;
+});

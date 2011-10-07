@@ -1,7 +1,10 @@
-define("dojox/data/FlickrRestStore", ["dojo", "dojox", "dojox/data/FlickrStore"], function(dojo, dojox) {
+define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/array", "dojo/io/script", "dojox/data/FlickrStore", "dojo/_base/connect"], 
+  function(lang, declare, array, scriptIO, FlickrStore, connect) {
 
-dojo.declare("dojox.data.FlickrRestStore",
-	dojox.data.FlickrStore, {
+/*===== var FlickrStore = dojox.data.FlickrStore; =====*/
+
+var FlickrRestStore = declare("dojox.data.FlickrRestStore",
+	FlickrStore, {
 	constructor: function(/*Object*/args){
 		// summary:
 		//	Initializer for the FlickrRestStore store.
@@ -24,7 +27,7 @@ dojo.declare("dojox.data.FlickrRestStore",
 		this._handlers = {};
 		this._prevRequestRanges = [];
 		this._maxPhotosPerUser = {};
-		this._id = dojox.data.FlickrRestStore.prototype._id++;
+		this._id = FlickrRestStore.prototype._id++;
 	},
 
 	// _id: Integer
@@ -86,7 +89,7 @@ dojo.declare("dojox.data.FlickrRestStore",
 		if(!request.query){
 			request.query = query = {};
 		} else {
-			dojo.mixin(query, request.query);
+			lang.mixin(query, request.query);
 		}
 
 		var primaryKey = [];
@@ -268,7 +271,7 @@ dojo.declare("dojox.data.FlickrRestStore",
 			callbackParamName: "jsoncallback"
 		};
 
-		var doHandle = dojo.hitch(this, function(processedData, data, handler){
+		var doHandle = lang.hitch(this, function(processedData, data, handler){
 			var onBegin = handler.request.onBegin;
 			handler.request.onBegin = null;
 			var maxPhotos;
@@ -313,9 +316,9 @@ dojo.declare("dojox.data.FlickrRestStore",
 		});
 
 		//Define a callback for the script that iterates through a list of
-		//handlers for this piece of data.  Multiple requests can come into
+		//handlers for this piece of data.	Multiple requests can come into
 		//the store for the same data.
-		var myHandler = dojo.hitch(this, function(data){
+		var myHandler = lang.hitch(this, function(data){
 			//The handler should not be called more than once, so disconnect it.
 			//if(handle !== null){ dojo.disconnect(handle); }
 			if(data.stat != "ok"){
@@ -341,7 +344,7 @@ dojo.declare("dojox.data.FlickrRestStore",
 				});
 
 				//Iterate through the array of handlers, calling each one.
-				dojo.forEach(handlers, function(i){
+				array.forEach(handlers, function(i){
 					doHandle(processedData, data, i);
 				});
 			}
@@ -361,20 +364,20 @@ dojo.declare("dojox.data.FlickrRestStore",
 			return;
 		}
 
-		var deferred = dojo.io.script.get(getArgs);
+		var deferred = scriptIO.get(getArgs);
 		deferred.addCallback(myHandler);
 
 		//We only set up the errback, because the callback isn't ever really used because we have
 		//to link to the jsonFlickrFeed function....
 		deferred.addErrback(function(error){
-			dojo.disconnect(handle);
+			connect.disconnect(handle);
 			errorHandler(error, request);
 		});
 	},
 
 	getAttributes: function(item){
 		//	summary:
-		//      See dojo.data.api.Read.getAttributes()
+		//		See dojo.data.api.Read.getAttributes()
 		return [
 			"title", "author", "imageUrl", "imageUrlSmall", "imageUrlMedium",
 			"imageUrlThumb", "imageUrlLarge", "imageUrlOriginal", "link", "dateTaken", "datePublished"
@@ -383,7 +386,7 @@ dojo.declare("dojox.data.FlickrRestStore",
 
 	getValues: function(item, attribute){
 		//	summary:
-		//      See dojo.data.api.Read.getValue()
+		//		See dojo.data.api.Read.getValue()
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
 
@@ -426,9 +429,9 @@ dojo.declare("dojox.data.FlickrRestStore",
 		// If the data contains an 'item' object, it has not come from the REST
 		// services, so process it using the FlickrStore.
 		if(data.items){
-			return dojox.data.FlickrStore.prototype._processFlickrData.apply(this,arguments);
+			return FlickrStore.prototype._processFlickrData.apply(this,arguments);
 		}
-        var template = ["http://farm", null, ".static.flickr.com/", null, "/", null, "_", null];
+		var template = ["http://farm", null, ".static.flickr.com/", null, "/", null, "_", null];
 
 		var items = [];
 		var photos = (data.photoset ? data.photoset : data.photos);
@@ -439,18 +442,18 @@ dojo.declare("dojox.data.FlickrRestStore",
 			for(var i = 0; i < items.length; i++){
 				var item = items[i];
 				item[this._storeRef] = this;
-                template[1] = item.farm;
-                template[3] = item.server;
-                template[5] = item.id;
-                template[7] = item.secret;
-                
-                var base = template.join("");
+				template[1] = item.farm;
+				template[3] = item.server;
+				template[5] = item.id;
+				template[7] = item.secret;
+				
+				var base = template.join("");
 				item.media = {
-                    s: base + "_s.jpg",
-                    m: base + "_m.jpg",
-                    l: base + ".jpg",
-                    t: base + "_t.jpg",
-                    o: base + "_o.jpg"
+					s: base + "_s.jpg",
+					m: base + "_m.jpg",
+					l: base + ".jpg",
+					t: base + "_t.jpg",
+					o: base + "_o.jpg"
 				};
 				if(!item.owner && data.photoset){
 					item.owner = data.photoset.owner;
@@ -462,7 +465,7 @@ dojo.declare("dojox.data.FlickrRestStore",
 		if(!arr){
 			this._cache[cacheKey] = arr = [];
 		}
-		dojo.forEach(items, function(i, idx){
+		array.forEach(items, function(i, idx){
 			arr[idx+ start] = i;
 		});
 
@@ -472,12 +475,11 @@ dojo.declare("dojox.data.FlickrRestStore",
 	_checkPrevRanges: function(primaryKey, start, count){
 		var end = start + count;
 		var arr = this._prevRequestRanges[primaryKey];
-		return (!!arr) && dojo.some(arr, function(item){
+		return (!!arr) && array.some(arr, function(item){
 			return ((start >= item.start)&&(end <= item.end));
 		});
 	}
 });
-
-return dojox.data.FlickrRestStore;
+return FlickrRestStore;
 });
 

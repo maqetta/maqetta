@@ -9,13 +9,12 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				var spin1;
 				var spin2;
 				var spin3;
@@ -307,7 +306,7 @@
 							doh.robot.mouseWheel(-10, 1000, 1000);
 							doh.robot.sequence(d.getTestCallback(function(){
 								var v = spin3.get('value');
-								doh.is(v, (1.0+1.0*delta), "spinner 3: wrong value, expected "+(1.0+1.0*delta)+", got "+v);
+								doh.is(v, (1.0+delta), "spinner 3: wrong value, expected "+(1.0+delta)+", got "+v);
 							}), 1000);
 							return d;
 						}

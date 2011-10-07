@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"nodeActions": "פעולות ${nodeName} ",
 	"selectContents": "בחירת תוכן ",
@@ -8,3 +10,5 @@
 	"moveEnd": "העברת הסמן לסוף "
 })
 
+//end v1.x content
+);

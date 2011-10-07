@@ -9,13 +9,12 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				var spin1;
 				var spin2;
 				var spin3;
@@ -27,10 +26,10 @@
 				var blurCountZ = 0;
 				var countFocus = function(){
 					focusCountZ++;
-				}
+				};
 				var countBlur = function(){
 					blurCountZ++;
-				}
+				};
 				var focusConnect;
 				var blurConnect;
 				var tabFocusSetup = function(inSpinnerId){
@@ -40,7 +39,7 @@
 					blurCountZ = 0;
 					focusConnect = spinner.connect(spinner.focusNode, "onfocus", countFocus);
 					blurConnect = spinner.connect(spinner.focusNode, "onblur", countBlur);
-				}
+				};
 
 				// Setup to test manipulation of spinner via keystrokes.
 				var results;	// array holding both expected value and actual value after each keypress
@@ -66,6 +65,7 @@
 					var initVal = inSpinner.get('value');
 					var eVals = [];
 					var newVal;
+					var i;
 
 					// The values expected by pressing HOME, right arrow five times,
 					// PgUp twice, PgDn, up arrow twice, down arrow once,
@@ -76,14 +76,14 @@
 					newVal = inSpinner.get('value');
 					eVals.push({stroke: "HOME", expected: newVal});
 					// UP 5 times
-					for(var i = 0; i < 5; i++){
+					for(i = 0; i < 5; i++){
 						newVal = inSpinner.adjust(newVal, inSpinner.smallDelta);
 						inSpinner.set('value', newVal);
 						newVal = inSpinner.get('value');
 						eVals.push({stroke: "UP", expected: newVal});
 					}
 					// PgUp twice
-					for(var i = 0; i < 2; i++){
+					for(i = 0; i < 2; i++){
 						newVal = inSpinner.adjust(newVal, inSpinner.largeDelta);
 						inSpinner.set('value', newVal);
 						newVal = inSpinner.get('value');
@@ -109,11 +109,11 @@
 					// reset <inSpinner> back to its initial value, and return
 					inSpinner.set('value', initVal);
 					return eVals;
-				}
+				};
 
 				// execute some test as soon as the widget gets focus
 				var focusThenRun = function(widget, fcn){
-					if(!widget._focused){
+					if(!widget.focused){
 						var handler = widget.connect(widget, '_onFocus', function(){
 							widget.disconnect(handler);
 							setTimeout(fcn, 1);
@@ -159,7 +159,7 @@
 						doh.robot.keyPress(dojo.keys.TAB, 1, {shift:true}); // blur
 					});
 					return d;
-				}
+				};
 
 				// common robot keystroke test function.
 				var a11yKeystrokeTest = function(inSpinnerId){
@@ -184,7 +184,7 @@
 							spinner.set('value', initVal);
 							for(var i = 0; i < results.length; i++){
 								var aResult = results[i];
-								if(!(isNaN(aResult.expected) && isNaN(aResult.actual))) {
+								if(!(isNaN(aResult.expected) && isNaN(aResult.actual))){
 									doh.is(aResult.expected, aResult.actual, aResult.stroke);
 								}
 							}
@@ -192,7 +192,7 @@
 						doh.robot.sequence(d.getTestCallback(testPresses), 1000, 1000);
 					});
 					return d;
-				}
+				};
 
 				doh.register("setUp",{
 					name: "setUp",
@@ -331,7 +331,7 @@
 					function spinnerRole(){
 						var spinner = dijit.byId("integerspinner1");
 						doh.isNot(spinner, null, "can't find 'integerspinner1'");
-						doh.is(dijit.getWaiRole(spinner.focusNode), "spinbutton", spinner.id + ": aria role (spinbutton)");
+						doh.is(dojo.attr(spinner.focusNode, "role"), "spinbutton", spinner.id + ": aria role (spinbutton)");
 					}
 				);
 
@@ -345,41 +345,41 @@
 						function minAndMax(){
 							var spinner = dijit.byId("integerspinner2");
 							doh.isNot(spinner, null, "can't find 'integerspinner2'");
-							doh.is(dijit.getWaiState(spinner.focusNode, "valuemin"), spinner.constraints.min, spinner.id + ": aria-valuemin");
-							doh.is(dijit.getWaiState(spinner.focusNode, "valuemax"), spinner.constraints.max, spinner.id + ": aria-valuemax");
+							doh.is(spinner.focusNode.getAttribute("aria-valuemin"), spinner.constraints.min, spinner.id + ": aria-valuemin");
+							doh.is(spinner.focusNode.getAttribute("aria-valuemax"), spinner.constraints.max, spinner.id + ": aria-valuemax");
 						},
 						function minOnly(){
 							var spinner = dijit.byId("spinnerMinOnly");
 							doh.isNot(spinner, null, "can't find 'spinnerMinOnly'");
-							doh.is(dijit.getWaiState(spinner.focusNode, "valuemin"), spinner.constraints.min, spinner.id + ": aria-valuemin");
+							doh.is(spinner.focusNode.getAttribute("aria-valuemin"), spinner.constraints.min, spinner.id + ": aria-valuemin");
 							if(spinner.constraints.max){
-								doh.is(dijit.getWaiState(spinner.focusNode, "valuemax"), spinner.constraints.max, spinner.id + ": aria-valuemax");
-							} else {
-								doh.f(dijit.hasWaiState(spinner.focusNode, "valuemax"), spinner.id + ": aria-valuemax");
+								doh.is(spinner.focusNode.getAttribute("aria-valuemax"), spinner.constraints.max, spinner.id + ": aria-valuemax");
+							}else{
+								doh.f(spinner.focusNode.hasAttribute("aria-valuemax"), spinner.id + ": aria-valuemax");
 							}
 						},
 						function maxOnly(){
 							var spinner = dijit.byId("integertextbox3");
 							doh.isNot(spinner, null, "can't find 'integertextbox3'");
-							doh.is(dijit.getWaiState(spinner.focusNode, "valuemax"), spinner.constraints.max, spinner.id + ": aria-valuemax");
+							doh.is(spinner.focusNode.getAttribute("aria-valuemax"), spinner.constraints.max, spinner.id + ": aria-valuemax");
 							if(spinner.constraints.min){
-								doh.is(dijit.getWaiState(spinner.focusNode, "valuemin"), spinner.constraints.min, spinner.id + ": aria-valuemin");
-							} else {
-								doh.f(dijit.hasWaiState(spinner.focusNode, "valuemin"), spinner.id + ": aria-valuemin");
+								doh.is(spinner.focusNode.getAttribute("aria-valuemin"), spinner.constraints.min, spinner.id + ": aria-valuemin");
+							}else{
+								doh.f(spinner.focusNode.hasAttribute("aria-valuemin"), spinner.id + ": aria-valuemin");
 							}
 						},
 						function neitherMinNorMax(){
 							var spinner = dijit.byId("integertextbox3");
 							doh.isNot(spinner, null, "can't find 'integertextbox3'");
 							if(spinner.constraints.min){
-								doh.is(dijit.getWaiState(spinner.focusNode, "valuemin"), spinner.constraints.min, spinner.id + ": aria-valuemin");
-							} else {
-								doh.f(dijit.hasWaiState(spinner.focusNode, "valuemin"), spinner.id + ": aria-valuemin");
+								doh.is(spinner.focusNode.getAttribute("aria-valuemin"), spinner.constraints.min, spinner.id + ": aria-valuemin");
+							}else{
+								doh.f(spinner.focusNode.hasAttribute("aria-valuemin"), spinner.id + ": aria-valuemin");
 							}
 							if(spinner.constraints.max){
-								doh.is(dijit.getWaiState(spinner.focusNode, "valuemax"), spinner.constraints.max, spinner.id + ": aria-valuemax");
-							} else {
-								doh.f(dijit.hasWaiState(spinner.focusNode, "valuemax"), spinner.id + ": aria-valuemax");
+								doh.is(spinner.focusNode.getAttribute("aria-valuemax"), spinner.constraints.max, spinner.id + ": aria-valuemax");
+							}else{
+								doh.f(spinner.focusNode.hasAttribute("aria-valuemax"), spinner.id + ": aria-valuemax");
 							}
 						}
 					]
@@ -398,7 +398,7 @@
 							runTest:function(){
 								var spinner = dijit.byId(this.spinnerId);
 								spinner.set('value', 100);
-								var ariaVal = dijit.getWaiState(spinner.focusNode, "valuenow");
+								var ariaVal = spinner.focusNode.getAttribute("aria-valuenow");
 								doh.is(100, ariaVal, spinner.id + ": aria-valuenow");
 							}
 						};
@@ -416,8 +416,8 @@
 							var initVal = spinner.get('value');
 							spinner.set('value', null);
 							var spinnerVal = spinner.get('value');
-							var nowVal = dijit.getWaiState(spinner.focusNode, "valuenow");
-							var invalid = dijit.getWaiState(spinner.focusNode, "invalid");
+							var nowVal = spinner.focusNode.getAttribute("aria-valuenow");
+							var invalid = spinner.focusNode.getAttribute("aria-invalid");
 							spinner.set('value', initVal);
 							doh.t(invalid, spinner.id + ": aria-invalid");
 							if(!(isNaN(spinnerVal) && isNaN(nowVal))){

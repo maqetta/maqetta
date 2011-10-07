@@ -1,3 +1,5 @@
+define({ root:
+//begin v1.x content
 ({
 	"clearFilterDialogTitle": "Clear Filter",
 	"filterDefDialogTitle": "Filter",
@@ -28,7 +30,7 @@
 	"waiRelAll": "Match all of the following rules:",
 	"relationAny": "any rules",
 	"waiRelAny": "Match any of the following rules:",
-	"relationMsgFront": "Match",
+	"relationMsgFront": "Match:",
 	"relationMsgTail": "",
 	"and": "and",
 	"or": "or",
@@ -62,8 +64,8 @@
 	"anycolumn": "any column",
 	"statusTipTitleNoFilter": "Filter Bar",
 	"statusTipTitleHasFilter": "Filter",
-	"statusTipRelPre": "Match",
-	"statusTipRelPost": "rules.",
+	"statusTipRelAny": "Match any rules.",
+	"statusTipRelAll": "Match all rules.",
 	
 	"defaultItemsName": "items",
 	"filterBarMsgHasFilterTemplate": "${0} of ${1} ${2} shown.",
@@ -82,4 +84,36 @@
 	"trueLabel": "True",
 	"falseLabel": "False"
 })
-
+//end v1.x content
+,
+"ar": true,
+"ca": true,
+"cs": true,
+"da": true,
+"de": true,
+"el": true,
+"es": true,
+"fi": true,
+"fr": true,
+"he": true,
+"hr": true,
+"hu": true,
+"it": true,
+"ja": true,
+"kk": true,
+"ko": true,
+"nb": true,
+"nl": true,
+"pl": true,
+"pt": true,
+"pt-pt": true,
+"ro": true,
+"ru": true,
+"sk": true,
+"sl": true,
+"sv": true,
+"th": true,
+"tr": true,
+"zh": true,
+"zh-tw": true
+});

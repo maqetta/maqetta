@@ -1,4 +1,9 @@
-define("dojo/dnd/Avatar", ["dojo", "dojo/dnd/common"], function(dojo) {
+define(["../main", "./common"], function(dojo) {
+	// module:
+	//		dojo/dnd/Avatar
+	// summary:
+	//		TODOC
+
 
 dojo.declare("dojo.dnd.Avatar", null, {
 	// summary:

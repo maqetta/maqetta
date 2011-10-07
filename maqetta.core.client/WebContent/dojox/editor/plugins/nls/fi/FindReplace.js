@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"findLabel": "Etsi:",
 	"findTooltip": "Anna etsittävä teksti",
@@ -21,3 +23,5 @@
 	"eofDialogTextReplace": "korvattu"
 })
 
+//end v1.x content
+);

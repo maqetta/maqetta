@@ -1,8 +1,33 @@
-define("dojox/editor/plugins/FindReplace", ["dojo", "dijit", "dojox", "dojo/string", "dijit/TooltipDialog", "dijit/Toolbar", "dijit/form/CheckBox", "dijit/form/TextBox", "dijit/_editor/_Plugin", "dijit/form/Button", "dojox/editor/plugins/ToolbarLineBreak",  "dojo/i18n", "i18n!dojox/editor/plugins/nls/FindReplace"], function(dojo, dijit, dojox) {
+define([
+	"dojo",
+	"dijit",
+	"dojox",
+	"dijit/_base/manager",	// getUniqueId
+	"dijit/_base/popup",
+	"dijit/_Widget",
+	"dijit/_TemplatedMixin",
+	"dijit/_KeyNavContainer",
+	"dijit/_WidgetsInTemplateMixin",
+	"dijit/TooltipDialog",
+	"dijit/Toolbar",
+	"dijit/form/CheckBox",
+	"dijit/form/_TextBoxMixin",	// selectInputText
+	"dijit/form/TextBox",
+	"dijit/_editor/_Plugin",
+	"dijit/form/Button",
+	"dijit/form/DropDownButton",
+	"dijit/form/ToggleButton",
+	"dojox/editor/plugins/ToolbarLineBreak",
+	"dojo/_base/connect",
+	"dojo/_base/declare",
+	"dojo/i18n",
+	"dojo/string",
+	"dojo/i18n!dojox/editor/plugins/nls/FindReplace"
+], function(dojo, dijit, dojox) {
 
 dojo.experimental("dojox.editor.plugins.FindReplace");
 
-dojo.declare("dojox.editor.plugins._FindReplaceCloseBox", [dijit._Widget, dijit._Templated], {
+dojo.declare("dojox.editor.plugins._FindReplaceCloseBox", [dijit._Widget, dijit._TemplatedMixin, dijit._WidgetsInTemplateMixin], {
 	// summary:
 	//		Base class for widgets that contains a button labeled X
 	//		to close the tool bar.
@@ -32,7 +57,7 @@ dojo.declare("dojox.editor.plugins._FindReplaceCloseBox", [dijit._Widget, dijit.
 
 
 dojo.declare("dojox.editor.plugins._FindReplaceTextBox",
-	[dijit._Widget, dijit._Templated],{
+	[dijit._Widget, dijit._TemplatedMixin, dijit._WidgetsInTemplateMixin],{
 	// summary:
 	//		Base class for widgets that contains a label (like "Font:")
 	//		and a TextBox to pick a value.
@@ -56,7 +81,7 @@ dojo.declare("dojox.editor.plugins._FindReplaceTextBox",
 		"<span style='white-space: nowrap' class='dijit dijitReset dijitInline dijitEditorFindReplaceTextBox' " +
 			"title='${tooltip}' tabindex='-1'>" +
 			"<label class='dijitLeft dijitInline' for='${textId}' tabindex='-1'>${label}</label>" +
-			"<input dojoType='dijit.form.TextBox' required='false' intermediateChanges='true' class='focusTextBox'" +
+			"<input dojoType='dijit.form.TextBox' intermediateChanges='true' class='focusTextBox' " +
 					"tabIndex='0' id='${textId}' dojoAttachPoint='textBox, focusNode' value='' dojoAttachEvent='onKeyPress: _onKeyPress'/>" +
 		"</span>",
 
@@ -72,6 +97,7 @@ dojo.declare("dojox.editor.plugins._FindReplaceTextBox",
 		this.textBox.set("value", "");
 		this.disabled =  this.textBox.get("disabled");
 		this.connect(this.textBox, "onChange", "onChange");
+		dojo.attr(this.textBox.textbox, "formnovalidate", "true");
 	},
 
 	_setValueAttr: function(/*String*/ value){
@@ -137,7 +163,7 @@ dojo.declare("dojox.editor.plugins._FindReplaceTextBox",
 
 
 dojo.declare("dojox.editor.plugins._FindReplaceCheckBox",
-	[dijit._Widget, dijit._Templated],{
+	[dijit._Widget, dijit._TemplatedMixin, dijit._WidgetsInTemplateMixin],{
 	// summary:
 	//		Base class for widgets that contains a label (like "Match case: ")
 	//		and a checkbox to indicate if it is checked or not.
@@ -161,7 +187,7 @@ dojo.declare("dojox.editor.plugins._FindReplaceCheckBox",
 	templateString:
 		"<span style='white-space: nowrap' tabindex='-1' " +
 			"class='dijit dijitReset dijitInline dijitEditorFindReplaceCheckBox' title='${tooltip}' >" +
-			"<input dojoType='dijit.form.CheckBox' required=false " +
+			"<input dojoType='dijit.form.CheckBox' " +
 					"tabIndex='0' id='${checkId}' dojoAttachPoint='checkBox, focusNode' value=''/>" +
 			"<label tabindex='-1' class='dijitLeft dijitInline' for='${checkId}'>${label}</label>" +
 		"</span>",
@@ -422,7 +448,7 @@ dojo.declare("dojox.editor.plugins.FindReplace",[dijit._editor._Plugin],{
 		//		public
 		this.inherited(arguments);
 		if(!dojo.isOpera){
-			var _tb = this._frToolbar = new dojox.editor.plugins._FindReplaceToolbar();
+			var _tb = (this._frToolbar = new dojox.editor.plugins._FindReplaceToolbar());
 			dojo.style(_tb.domNode, "display", "none");
 			dojo.place(_tb.domNode, toolbar.domNode, "after");
 			_tb.startup();

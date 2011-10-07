@@ -1,36 +1,30 @@
-dojo.provide("dojox.date.relative");
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/date/locale", "dojo/i18n"], function(dojo, dlang, ddl, i18n){
 
-dojo.require("dojo.date");
-dojo.require("dojo.date.locale");
+dojo.getObject("date.relative", true, dojox);
 
-(function(d){
 /*=====
-	dojox.date.relative.__FormatOptions = function(){
-	//	locale: String
-	//		override the locale used to determine formatting rules
-	//	relativeDate: Date
-	//		Date to calculate relation to (defaults to new Date())
-	//	weekCheck: boolean
-	//		Whether or not to display the day of week (defaults true)
-		this.locale = locale;
-		this.relativeDate = relativeDate;
-		this.weekCheck = weekCheck;
-	}
+dojox.date.relative.__FormatOptions = function(){
+//	locale: String
+//		override the locale used to determine formatting rules
+//	relativeDate: Date
+//		Date to calculate relation to (defaults to new Date())
+//	weekCheck: boolean
+//		Whether or not to display the day of week (defaults true)
+	this.locale = locale;
+	this.relativeDate = relativeDate;
+	this.weekCheck = weekCheck;
+}
 =====*/
 
-var DAY = 1000*60*60*24;
-var SIX_DAYS = 6 * DAY;
-var del = d.delegate;
-var ddl = d.date.locale;
-var ggb = ddl._getGregorianBundle;
-var fmt = ddl.format;
+var DAY = 1000*60*60*24,
+	SIX_DAYS = 6 * DAY,
+	del = dojo.delegate,
+	ggb = ddl._getGregorianBundle,
+	fmt = ddl.format;
 
 function _clearTime(date){
-	date = dojo.clone(date);
-	date.setHours(0);
-	date.setMinutes(0);
-	date.setSeconds(0);
-	date.setMilliseconds(0);
+	date = new Date(date);
+	date.setHours(0, 0, 0, 0);
 	return date;
 }
 
@@ -66,9 +60,9 @@ dojox.date.relative.format = function(/*Date*/dateObject, /*dojox.date.relative.
 	
 	options = options || {};
 	
-	var today = _clearTime(options.relativeDate || new Date());
-	var diff = today.getTime() - _clearTime(dateObject).getTime();
-	var fmtOpts = {locale: options.locale};
+	var today = _clearTime(options.relativeDate || new Date()),
+		diff = today.getTime() - _clearTime(dateObject).getTime(),
+		fmtOpts = {locale: options.locale};
 	
 	if(diff === 0){
 		// today: 9:32 AM
@@ -80,7 +74,7 @@ dojox.date.relative.format = function(/*Date*/dateObject, /*dojox.date.relative.
 				fmt(dateObject, del(fmtOpts, {selector: "time", formatLength: "short"}));
 	}else if(dateObject.getFullYear() == today.getFullYear()){
 		// this year: Nov 1
-		var bundle = ggb(dojo.i18n.normalizeLocale(options.locale));
+		var bundle = ggb(i18n.normalizeLocale(options.locale));
 		return fmt(dateObject, del(fmtOpts, {
 			selector: "date",
 			datePattern: bundle["dateFormatItem-MMMd"]
@@ -94,4 +88,4 @@ dojox.date.relative.format = function(/*Date*/dateObject, /*dojox.date.relative.
 		}));
 	}
 };
-})(dojo);
+});

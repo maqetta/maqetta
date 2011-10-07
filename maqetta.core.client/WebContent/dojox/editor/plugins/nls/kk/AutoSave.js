@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"saveLabel": "Сақтау",
 	"saveSettingLabelOn": "Автосақтау аралығын орнату...",
@@ -12,3 +14,5 @@
 	"saveMessageFail": "${0} сақталмады"
 })
 
+//end v1.x content
+);

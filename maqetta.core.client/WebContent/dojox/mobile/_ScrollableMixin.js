@@ -1,51 +1,123 @@
-dojo.provide("dojox.mobile._ScrollableMixin");
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/window",
+	"dojo/dom",
+	"dojo/dom-class",
+	"dijit/registry",	// registry.byNode
+	"./scrollable"
+], function(dojo, declare, lang, win, dom, domClass, registry, Scrollable){
+	// module:
+	//		dojox/mobile/_ScrollableMixin
+	// summary:
+	//		Mixin for widgets to have a touch scrolling capability.
 
-dojo.require("dijit._WidgetBase");
-dojo.require("dojox.mobile.scrollable");
+	var cls = declare("dojox.mobile._ScrollableMixin", null, {
+		// summary:
+		//		Mixin for widgets to have a touch scrolling capability.
+		// description:
+		//		Actual implementation is in scrollable.js.
+		//		scrollable.js is not a dojo class, but just a collection
+		//		of functions. This module makes scrollable.js a dojo class.
 
-// summary:
-//		Mixin for widgets to have a touch scrolling capability.
-// description:
-//		Actual implementation is in scrollable.js.
-//		scrollable.js is not a dojo class, but just a collection
-//		of functions. This module makes scrollable.js a dojo class.
+		// fixedHeader: String
+		//		Id of the fixed header.
+		fixedHeader: "",
 
-dojo.declare(
-	"dojox.mobile._ScrollableMixin",
-	null,
-{
-	fixedHeader: "",
-	fixedFooter: "",
+		// fixedFooter: String
+		//		Id of the fixed footer.
+		fixedFooter: "",
 
-	destroy: function(){
-		this.cleanup();
-		this.inherited(arguments);
-	},
+		// scrollableParams: Object
+		//		Parameters for dojox.mobile.scrollable.init().
+		scrollableParams: null,
 
-	startup: function(){
-		var params = {};
-		if(this.fixedHeader){
-			params.fixedHeaderHeight = dojo.byId(this.fixedHeader).offsetHeight;
-		}
-		if(this.fixedFooter){
-			var node = dojo.byId(this.fixedFooter);
-			if(node.parentNode == this.domNode){ // local footer
-				this.isLocalFooter = true;
-				node.style.bottom = "0px";
+		// allowNestedScrolls: Boolean
+		//		e.g. Allow ScrollableView in a SwapView.
+		allowNestedScrolls: true,
+
+		constructor: function(){
+			this.scrollableParams = {};
+		},
+
+		destroy: function(){
+			this.cleanup();
+			this.inherited(arguments);
+		},
+
+		startup: function(){
+			if(this._started){ return; }
+			var node;
+			var params = this.scrollableParams;
+			if(this.fixedHeader){
+				node = dom.byId(this.fixedHeader);
+				if(node.parentNode == this.domNode){ // local footer
+					this.isLocalHeader = true;
+				}
+				params.fixedHeaderHeight = node.offsetHeight;
 			}
-			params.fixedFooterHeight = node.offsetHeight;
+			if(this.fixedFooter){
+				node = dom.byId(this.fixedFooter);
+				if(node.parentNode == this.domNode){ // local footer
+					this.isLocalFooter = true;
+					node.style.bottom = "0px";
+				}
+				params.fixedFooterHeight = node.offsetHeight;
+			}
+			this.init(params);
+			if(this.allowNestedScrolls){
+				for(var p = this.getParent(); p; p = p.getParent()){
+					if(p && p.scrollableParams){
+						this.isNested = true;
+						this.dirLock = true;
+						p.dirLock = true;
+						break;
+					}
+				}
+			}
+			this.inherited(arguments);
+		},
+
+		findAppBars: function(){
+			// summary:
+			//		Search for application-specific header or footer.
+			var i, len, c;
+			for(i = 0, len = win.body().childNodes.length; i < len; i++){
+				c = win.body().childNodes[i];
+				this.checkFixedBar(c, false);
+			}
+			if(this.domNode.parentNode){
+				for(i = 0, len = this.domNode.parentNode.childNodes.length; i < len; i++){
+					c = this.domNode.parentNode.childNodes[i];
+					this.checkFixedBar(c, false);
+				}
+			}
+			this.fixedFooterHeight = this.fixedFooter ? this.fixedFooter.offsetHeight : 0;
+		},
+
+		checkFixedBar: function(/*DomNode*/node, /*Boolean*/local){
+			// summary:
+			//		Checks if the given node is a fixed bar or not.
+			if(node.nodeType === 1){
+				var fixed = node.getAttribute("fixed")
+					|| (registry.byNode(node) && registry.byNode(node).fixed);
+				if(fixed === "top"){
+					domClass.add(node, "mblFixedHeaderBar");
+					if(local){
+						node.style.top = "0px";
+						this.fixedHeader = node;
+					}
+					return fixed;
+				}else if(fixed === "bottom"){
+					domClass.add(node, "mblFixedBottomBar");
+					this.fixedFooter = node;
+					return fixed;
+				}
+			}
+			return null;
 		}
-		this.init(params);
-		this.inherited(arguments);
-	}
+	});
+	lang.extend(cls, new Scrollable(dojo, dojox));
+	return cls;
 });
-(function(){
-	var obj = new dojox.mobile.scrollable();
-	dojo.extend(dojox.mobile._ScrollableMixin, obj);
-	if(dojo.version.major == 1 && dojo.version.minor == 4){
-		// dojo-1.4 had a problem in inheritance behavior. (#10709 and #10788)
-		// This is a workaround to avoid the problem.
-		// There is no such a problem in dojo-1.3 and dojo-1.5.
-		dojo.mixin(dojox.mobile._ScrollableMixin._meta.hidden, obj);
-	}
-})();

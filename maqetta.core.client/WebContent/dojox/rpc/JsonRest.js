@@ -436,10 +436,15 @@ define("dojox/rpc/JsonRest", ["dojo", "dojox", "dojox/json/ref", "dojox/rpc/Rest
 				callback(result);
 			});
 		},
-		isDirty: function(item){
+		isDirty: function(item, store){
 			// summary
 			//		returns true if the item is marked as dirty or true if there are any dirty items
 			if(!item){
+				if(store){
+					return dojo.some(dirtyObjects, function(dirty){
+						return dojox.data._getStoreForItem(dirty.object || dirty.old) == store;
+					});
+				}
 				return !!dirtyObjects.length;
 			}
 			return item.__isDirty;

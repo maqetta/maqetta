@@ -1,4 +1,5 @@
-({
+define({ root:
+{
 /* General resources */
 search: "Search",
 filter: "Filter",
@@ -120,4 +121,5 @@ selectorPrefix: "Selector Prefix",
 component: "Component",
 
 __dummy__: ""
-})
+}
+});

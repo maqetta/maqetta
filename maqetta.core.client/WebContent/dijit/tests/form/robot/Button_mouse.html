@@ -9,28 +9,27 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
 		<script type="text/javascript" src="../../helpers.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_Button.html');
 
 				doh.register("dijit.form.Button", [
 					{
 						name: "enabled",
-						timeout: 15000,
+						timeout: 4000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
 							var clicked = false;
-							dijit.byId("1466").set("onClick", function(){ clicked = true; });
+							dijit.byId("T1466").set("onClick", function(){ clicked = true; });
 
-							doh.robot.mouseMoveAt("1466", 500);
+							doh.robot.mouseMoveAt("T1466", 500);
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
@@ -41,7 +40,7 @@
 					},
 					{
 						name: "disabled",
-						timeout: 15000,
+						timeout: 4000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
@@ -53,7 +52,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								if(!dojo.isWebKit){		// webkit bug, see #11064
-									doh.f(dojo.isDescendant(dojo.global.dijit._curFocus, dijit.byId("disabled").domNode), "not focused on button")
+									doh.f(dojo.isDescendant(dojo.global.dijit.focus.curNode, dijit.byId("disabled").domNode), "not focused on button")
 								}
 								doh.f(clicked, "click event wasn't fired");
 							}), 1000);
@@ -65,7 +64,7 @@
 				doh.register("dijit.form.DropDownButton", [
 					{
 						name: "click button",
-						timeout: 15000,
+						timeout: 4000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
@@ -81,7 +80,7 @@
 
 					{
 						name: "click menu",
-						timeout: 15000,
+						timeout: 4000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
@@ -100,7 +99,7 @@
 				doh.register("dijit.form.ComboButton", [
 					{
 						name: "click button",
-						timeout: 15000,
+						timeout: 4000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
@@ -122,7 +121,7 @@
 
 					{
 						name: "click drop down button",
-						timeout: 15000,
+						timeout: 4000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
@@ -141,7 +140,7 @@
 
 					{
 						name: "click menu",
-						timeout: 15000,
+						timeout: 4000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
@@ -157,7 +156,7 @@
 
 					{
 						name: "disabled click button",
-						timeout: 15000,
+						timeout: 4000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
@@ -174,7 +173,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								if(!dojo.isWebKit){ // webkit bug, see #11064
-									doh.f(dojo.isDescendant(dojo.global.dijit._curFocus, dijit.byId("save").domNode), "not focused on button")
+									doh.f(dojo.isDescendant(dojo.global.dijit.focus.curNode, dijit.byId("save").domNode), "not focused on button")
 								}
 								doh.f(clicked, "click event wasn't fired");
 							}), 1000);
@@ -184,7 +183,7 @@
 
 					{
 						name: "disabled click drop down button",
-						timeout: 15000,
+						timeout: 4000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
@@ -196,11 +195,30 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								if(!dojo.isWebKit){		// webkit bug, see #11064
-									doh.f(dojo.isDescendant(dojo.global.dijit._curFocus, dijit.byId("save").domNode), "not focused on button")
+									doh.f(dojo.isDescendant(dojo.global.dijit.focus.curNode, dijit.byId("save").domNode), "not focused on button")
 								}
 								doh.t(isHidden("saveMenu"), "save menu is still hidden: " + dijit.byId("saveMenu").domNode.style.cssText);
 							}), 1000);
 							return d;
+						}
+					},
+					{
+						name: "tabIndex",
+						timeout: 1000,
+						runTest: function(){
+							var btn = dijit.byId("save"),
+								focusNode = btn.focusNode,
+								titleNode = btn.titleNode;
+
+							btn.set("disabled", true);
+							doh.t(btn.get("disabled"), "save button is disabled");
+							doh.f(dojo.hasAttr(focusNode, "tabIndex") && dojo.attr(focusNode, "tabIndex") >= 0, "disabled focusNode tabIndex");
+							doh.f(dojo.hasAttr(titleNode, "tabIndex") && dojo.attr(titleNode, "tabIndex") >= 0, "disabled titleNode tabIndex");
+
+							btn.set("disabled", false);
+							doh.f(btn.get("disabled"), "save button is enabled");
+							doh.is(0, dojo.attr(focusNode, "tabIndex"), "enabled focusNode tabIndex");
+							doh.is(0, dojo.attr(titleNode, "tabIndex"), "enabled titleNode tabIndex");
 						}
 					}
 				]);
@@ -208,7 +226,7 @@
 				doh.register("dijit.form.ToggleButton", [
 					{
 						name: "initially checked",
-						timeout: 15000,
+						timeout: 4000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
@@ -227,7 +245,7 @@
 					},
 					{
 						name: "initially unchecked",
-						timeout: 15000,
+						timeout: 4000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
@@ -246,7 +264,7 @@
 					},
 					{
 						name: "disabled",
-						timeout: 15000,
+						timeout: 4000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
@@ -260,7 +278,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								if(!dojo.isWebKit){		// webkit bug, see #11064
-									doh.f(dojo.isDescendant(dojo.global.dijit._curFocus, dijit.byId("toggle1").domNode), "not focused on button")
+									doh.f(dojo.isDescendant(dojo.global.dijit.focus.curNode, dijit.byId("toggle1").domNode), "not focused on button")
 								}
 								doh.f(changed, "value didn't change");
 							}), 1000);
@@ -281,25 +299,37 @@
 					{
 						name: "icon",
 						runTest: function(){
-							doh.f(dojo.hasClass(dijit.byId("1466").iconNode, "plusIcon"), "doesn't plus icon class");
-							dijit.byId("1466").set("iconClass", "plusIcon");
-							doh.t(dojo.hasClass(dijit.byId("1466").iconNode, "plusIcon"), "has plus icon class");
+							// initial condition: no icon
+							doh.f(dojo.hasClass(dijit.byId("T1466").iconNode, "plusIcon"), "doesn't have plusIcon class");
+							doh.is("none", dojo.style(dijit.byId("T1466").iconNode, "display"), "initially hidden");
 
-							// switching icon erases old one
-							dijit.byId("1466").set("iconClass", "noteIcon");
-							doh.f(dojo.hasClass(dijit.byId("1466").iconNode, "plusIcon"), "doesn't plus icon class");
+							// no icon --> icon
+							dijit.byId("T1466").set("iconClass", "plusIcon");
+							doh.t(dojo.hasClass(dijit.byId("T1466").iconNode, "plusIcon"), "plusIcon class added");
+							doh.isNot("none", dojo.style(dijit.byId("T1466").iconNode, "display"), "became visible");
+
+							// switching icon
+							dijit.byId("T1466").set("iconClass", "noteIcon");
+							doh.f(dojo.hasClass(dijit.byId("T1466").iconNode, "plusIcon"), "plusIcon cleared");
+							doh.t(dojo.hasClass(dijit.byId("T1466").iconNode, "noteIcon"), "noteIcon added");
+
+							// initial conditions for buttons with icon
+							doh.t(dojo.hasClass(dijit.byId("dropDownNoLabel").iconNode, "noteIcon"),
+									"dropDownNoLabel: noteIcon set");
+							doh.t(dojo.hasClass(dijit.byId("comboNoLabel").iconNode, "plusBlockIcon"),
+									"comboNoLabel: plusBlockIcon set");
+							doh.t(isVisible(dijit.byId("comboNoLabel").iconNode),
+									"comboNoLabel: initially visible");
 						}
 					},
 
 					{
 						name: "disable",
-						timeout: 15000,
+						timeout: 6000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
 							dijit.byId("save").set("disabled", true);
-
-							var d = new doh.Deferred();
 
 							// click left side of button
 							var leftPart = dojo.query(".dijitButtonContents", dojo.byId("save"))[0];
@@ -341,13 +371,13 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.mouseMoveAt('Plain', 500, 1);
+							doh.robot.mouseMoveAt('SubmitPlain', 500, 1);
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(nameBox.value, "Plain", "Plain name");
-								doh.is(valueBox.value, "Plain Submit", "Plain value");
-							}), 1000);
+								doh.is("Plain", nameBox.value, "Plain name");
+								doh.is("Plain Submit", valueBox.value, "Plain value");
+							}), 1500);
 
 							return d;
 						}
@@ -359,13 +389,13 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.mouseMoveAt('Combo', 500, 1);
+							doh.robot.mouseMoveAt('SubmitCombo', 500, 1);
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(nameBox.value, "Combo", "Combo name");
-								doh.is(valueBox.value, "Combo Submit", "Combo value");
-							}), 1000);
+								doh.is("Combo", nameBox.value, "Combo name");
+								doh.is("Combo Submit", valueBox.value, "Combo value");
+							}), 1500);
 
 							return d;
 						}
@@ -377,15 +407,15 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							var downArrowNode = dojo.query(".dijitDownArrowButton", dojo.byId("Combo"))[0];
+							var downArrowNode = dojo.query(".dijitDownArrowButton", dojo.byId("SubmitCombo"))[0];
 
 							doh.robot.mouseMoveAt(downArrowNode, 500, 1);
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(nameBox.value, "INIT", "Combo Down Arrow name");
-								doh.is(valueBox.value, "INIT", "Combo Down Arrow value");
-							}), 1000);
+								doh.is("INIT", nameBox.value, "Combo Down Arrow name");
+								doh.is("INIT", valueBox.value, "Combo Down Arrow value");
+							}), 1500);
 
 							return d;
 						}
@@ -397,13 +427,13 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.mouseMoveAt("ComboMenuItem", 500, 1);
+							doh.robot.mouseMoveAt("SubmitComboMenuItem", 500, 1);
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(nameBox.value, "", "Combo Arrow name");
-								doh.is(valueBox.value, "", "Combo Arrow value");
-							}), 1000);
+								doh.is("", nameBox.value, "Combo Arrow name");
+								doh.is("", valueBox.value, "Combo Arrow value");
+							}), 1500);
 
 							return d;
 						}
@@ -415,13 +445,13 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.mouseMoveAt('DropDown', 500, 1);
+							doh.robot.mouseMoveAt('SubmitDropDown', 500, 1);
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(nameBox.value, "DropDown", "DropDown name");
-								doh.is(valueBox.value, "DropDown Submit", "DropDown value");
-							}), 1000);
+								doh.is("DropDown", nameBox.value, "DropDown name");
+								doh.is("DropDown Submit", valueBox.value, "DropDown value");
+							}), 1500);
 
 							return d;
 						}
@@ -433,13 +463,13 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.mouseMoveAt("DropDownMenuItem", 500, 1);
+							doh.robot.mouseMoveAt("SubmitDropDownMenuItem", 500, 1);
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(nameBox.value, "", "DropDown Arrow name");
-								doh.is(valueBox.value, "", "DropDown Arrow value");
-							}), 1000);
+								doh.is("", nameBox.value, "DropDown Arrow name");
+								doh.is("", valueBox.value, "DropDown Arrow value");
+							}), 1500);
 
 							return d;
 						}
@@ -451,12 +481,12 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.mouseMoveAt('Disabled', 500, 1);
+							doh.robot.mouseMoveAt('SubmitDisabled', 500, 1);
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(nameBox.value, "INIT", "Disabled name");
-								doh.is(valueBox.value, "INIT", "Disabled value");
+								doh.is("INIT", nameBox.value, "Disabled name");
+								doh.is("INIT", valueBox.value, "Disabled value");
 							}), 1000);
 
 							return d;
@@ -477,8 +507,8 @@
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(dojo.byId('onClickName').value, "RESET");
-							}), 500);
+								doh.is("RESET", dojo.byId('onClickName').value);
+							}), 1000);
 
 							return d;
 						}
@@ -495,8 +525,8 @@
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(dojo.byId('onClickName').value, "RESET");
-							}), 500);
+								doh.is("RESET", dojo.byId('onClickName').value);
+							}), 1000);
 
 							return d;
 						}
@@ -513,8 +543,8 @@
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(dojo.byId('onClickName').value, "2");
-							}), 500);
+								doh.is("2", dojo.byId('onClickName').value);
+							}), 1000);
 
 							return d;
 						}
@@ -531,8 +561,8 @@
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(dojo.byId('onClickName').value, "2");
-							}), 500);
+								doh.is("2", dojo.byId('onClickName').value);
+							}), 1000);
 
 							return d;
 						}
@@ -549,8 +579,8 @@
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(dojo.byId('onClickName').value, "RESET");
-							}), 500);
+								doh.is("RESET", dojo.byId('onClickName').value);
+							}), 1000);
 
 							return d;
 						}
@@ -567,8 +597,8 @@
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(dojo.byId('onClickName').value, "RESET");
-							}), 500);
+								doh.is("RESET", dojo.byId('onClickName').value);
+							}), 1000);
 
 							return d;
 						}
@@ -585,8 +615,8 @@
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(dojo.byId('onClickName').value, "RESET");
-							}), 500);
+								doh.is("RESET", dojo.byId('onClickName').value);
+							}), 1000);
 
 							return d;
 						}
@@ -603,8 +633,8 @@
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(dojo.byId('onClickName').value, "RESET");
-							}), 500);
+								doh.is("RESET", dojo.byId('onClickName').value);
+							}), 1000);
 
 							return d;
 						}
@@ -621,8 +651,8 @@
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(dojo.byId('onClickName').value, "RESET");
-							}), 500);
+								doh.is("RESET", dojo.byId('onClickName').value);
+							}), 1000);
 
 							return d;
 						}
@@ -639,8 +669,8 @@
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(dojo.byId('onClickName').value, "RESET");
-							}), 500);
+								doh.is("RESET", dojo.byId('onClickName').value);
+							}), 1000);
 
 							return d;
 						}

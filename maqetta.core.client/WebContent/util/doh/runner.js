@@ -1,93 +1,12 @@
-//guarantee in global scope and scope protection
-(function(/* Array? */scriptArgs) {
+define("doh/runner", ["dojo"], function(dojo) {
+var doh= dojo.mixin({}, dojo);
 
-//here's the definition of doh.runner...which really defines global doh
-var d= function(doh) {
-
-//
-// Utility Functions and Classes
-//
-
-doh.selfTest = false;
-
-doh.global = this;
-
-doh.hitch = function(/*Object*/thisObject, /*Function|String*/method /*, ...*/){
-	var args = [];
-	for(var x=2; x<arguments.length; x++){
-		args.push(arguments[x]);
-	}
-	var fcn = ((typeof method == "string") ? thisObject[method] : method) || function(){};
-	return function(){
-		var ta = args.concat([]); // make a copy
-		for(var x=0; x<arguments.length; x++){
-			ta.push(arguments[x]);
-		}
-		return fcn.apply(thisObject, ta); // Function
-	};
-}
-
-doh._mixin = function(/*Object*/ obj, /*Object*/ props){
-	// summary:
-	//		Adds all properties and methods of props to obj. This addition is
-	//		"prototype extension safe", so that instances of objects will not
-	//		pass along prototype defaults.
-	var tobj = {};
-	for(var x in props){
-		// the "tobj" condition avoid copying properties in "props"
-		// inherited from Object.prototype.  For example, if obj has a custom
-		// toString() method, don't overwrite it with the toString() method
-		// that props inherited from Object.protoype
-		if(tobj[x] === undefined || tobj[x] != props[x]){
-			obj[x] = props[x];
-		}
-	}
-	// IE doesn't recognize custom toStrings in for..in
-	if(	this["document"]
-		&& document.all
-		&& (typeof props["toString"] == "function")
-		&& (props["toString"] != obj["toString"])
-		&& (props["toString"] != tobj["toString"])
-	){
-		obj.toString = props.toString;
-	}
-	return obj; // Object
-}
-
-doh.mixin = function(/*Object*/obj, /*Object...*/props){
-	// summary:	Adds all properties and methods of props to obj.
-	for(var i=1, l=arguments.length; i<l; i++){
-		doh._mixin(obj, arguments[i]);
-	}
-	return obj; // Object
-}
-
-doh.extend = function(/*Object*/ constructor, /*Object...*/ props){
-	// summary:
-	//		Adds all properties and methods of props to constructor's
-	//		prototype, making them available to all instances created with
-	//		constructor.
-	for(var i=1, l=arguments.length; i<l; i++){
-		doh._mixin(constructor.prototype, arguments[i]);
-	}
-	return constructor; // Object
-}
-
+// intentionally define global tests and global doh symbols
+// TODO: scrub these globals from tests and remove this pollution
+tests = doh;
+this.doh= doh;
 
 doh._line = "------------------------------------------------------------";
-
-/*
-doh._delegate = function(obj, props){
-	// boodman-crockford delegation
-	function TMP(){};
-	TMP.prototype = obj;
-	var tmp = new TMP();
-	if(props){
-		dojo.lang.mixin(tmp, props);
-	}
-	return tmp;
-}
-*/
 
 doh.debug = function(){
 	// summary:
@@ -95,7 +14,7 @@ doh.debug = function(){
 	//		or logging facility is available in this environment
 
 	// YOUR TEST RUNNER NEEDS TO IMPLEMENT THIS
-}
+};
 
 doh.error = function(){
 	// summary:
@@ -104,12 +23,12 @@ doh.error = function(){
 	//		as an Error object and show additional information - such as stack trace
 
 	// YOUR TEST RUNNER NEEDS TO IMPLEMENT THIS
-}
+};
 
 doh._AssertFailure = function(msg, hint){
-	// idea for this as way of dis-ambiguating error types is from JUM.
-	// The JUM is dead! Long live the JUM!
-
+	if (doh.breakOnError) {
+		debugger;
+	}
 	if(!(this instanceof doh._AssertFailure)){
 		return new doh._AssertFailure(msg, hint);
 	}
@@ -118,7 +37,7 @@ doh._AssertFailure = function(msg, hint){
 	}
 	this.message = new String(msg||"");
 	return this;
-}
+};
 doh._AssertFailure.prototype = new Error();
 doh._AssertFailure.prototype.constructor = doh._AssertFailure;
 doh._AssertFailure.prototype.name = "doh._AssertFailure";
@@ -160,6 +79,7 @@ doh.extend(doh.Deferred, {
 	},
 
 	getFunctionFromArgs: function(){
+		//TODO: this looks like dojo.hitch? remove and replace?
 		var a = arguments;
 		if((a[0])&&(!a[1])){
 			if(typeof a[0] == "function"){
@@ -194,11 +114,11 @@ doh.extend(doh.Deferred, {
 			if(this.fired == -1){
 				this.errback(new Error("Deferred(unfired)"));
 			}
-		}else if(this.fired == 0 && this.results[0] && this.results[0].cancel){
+		}else if(this.fired == 0 &&
+					(this.results[0] instanceof doh.Deferred)){
 			this.results[0].cancel();
 		}
 	},
-			
 
 	_pause: function(){
 		this.paused++;
@@ -246,6 +166,7 @@ doh.extend(doh.Deferred, {
 	},
 
 	addBoth: function(cb, cbfn){
+		//TODO: this looks like dojo.hitch? remove and replace?
 		var enclosed = this.getFunctionFromArgs(cb, cbfn);
 		if(arguments.length > 2){
 			enclosed = doh.hitch(null, enclosed, arguments, 2);
@@ -254,6 +175,7 @@ doh.extend(doh.Deferred, {
 	},
 
 	addCallback: function(cb, cbfn){
+		//TODO: this looks like dojo.hitch? remove and replace?
 		var enclosed = this.getFunctionFromArgs(cb, cbfn);
 		if(arguments.length > 2){
 			enclosed = doh.hitch(null, enclosed, arguments, 2);
@@ -262,6 +184,7 @@ doh.extend(doh.Deferred, {
 	},
 
 	addErrback: function(cb, cbfn){
+		//TODO: this looks like dojo.hitch? remove and replace?
 		var enclosed = this.getFunctionFromArgs(cb, cbfn);
 		if(arguments.length > 2){
 			enclosed = doh.hitch(null, enclosed, arguments, 2);
@@ -293,7 +216,7 @@ doh.extend(doh.Deferred, {
 			try {
 				res = f(res);
 				fired = ((res instanceof Error) ? 1 : 0);
-				if(res && res.addCallback){
+				if(res instanceof doh.Deferred){
 					cb = function(res){
 						self._continue(res);
 					};
@@ -330,116 +253,26 @@ doh._init = function(){
 	this._errorCount = 0;
 	this._failureCount = 0;
 	this.debug(this._testCount, "tests to run in", this._groupCount, "groups");
-}
+};
 
-// doh._urls = [];
 doh._groups = {};
 
 //
-// Test Registration
+// Test Types
 //
+doh._testTypes= {};
 
-doh.registerTestNs = function(/*String*/ group, /*Object*/ ns){
+doh.registerTestType= function(name, initProc){
 	// summary:
-	//		adds the passed namespace object to the list of objects to be
-	//		searched for test groups. Only "public" functions (not prefixed
-	//		with "_") will be added as tests to be run. If you'd like to use
-	//		fixtures (setUp(), tearDown(), and runTest()), please use
-	//		registerTest() or registerTests().
-	for(var x in ns){
-		if(	(x.charAt(0) != "_") &&
-			(typeof ns[x] == "function") ){
-			this.registerTest(group, ns[x]);
-		}
-	}
-}
+	//	 Adds a test type and associates a function used to initialize each test of the given type
+	// name: String
+	//	 The name of the type.
+	// initProc: Function
+	//	 Type specific test initializer; called after the test object is created.
+	doh._testTypes[name]= initProc;
+};
 
-doh._testRegistered = function(group, fixture){
-	// slot to be filled in
-}
-
-doh._groupStarted = function(group){
-	// slot to be filled in
-}
-
-doh._groupFinished = function(group, success){
-	// slot to be filled in
-}
-
-doh._testStarted = function(group, fixture){
-	// slot to be filled in
-}
-
-doh._testFinished = function(group, fixture, success){
-	// slot to be filled in
-}
-
-doh.registerGroup = function(	/*String*/ group,
-								/*Array||Function||Object*/ tests,
-								/*Function*/ setUp,
-								/*Function*/ tearDown,
-								/*String*/ type){
-	// summary:
-	//		registers an entire group of tests at once and provides a setUp and
-	//		tearDown facility for groups. If you call this method with only
-	//		setUp and tearDown parameters, they will replace previously
-	//		installed setUp or tearDown functions for the group with the new
-	//		methods.
-	// group:
-	//		string name of the group
-	// tests:
-	//		either a function or an object or an array of functions/objects. If
-	//		an object, it must contain at *least* a "runTest" method, and may
-	//		also contain "setUp" and "tearDown" methods. These will be invoked
-	//		on either side of the "runTest" method (respectively) when the test
-	//		is run. If an array, it must contain objects matching the above
-	//		description or test functions.
-	// setUp: a function for initializing the test group
-	// tearDown: a function for initializing the test group
-	// type: The type of tests these are, such as a group of performance tests
-	//		null/undefied are standard DOH tests, the valye 'perf' enables
-	//		registering them as performance tests.
-	if(tests){
-		this.register(group, tests, type);
-	}
-	if(setUp){
-		this._groups[group].setUp = setUp;
-	}
-	if(tearDown){
-		this._groups[group].tearDown = tearDown;
-	}
-}
-
-doh._getTestObj = function(group, test, type){
-	var tObj = test;
-	if(typeof test == "string"){
-		if(test.substr(0, 4)=="url:"){
-			return this.registerUrl(group, test);
-		}else{
-			tObj = {
-				name: test.replace("/\s/g", "_") // FIXME: bad escapement
-			};
-			tObj.runTest = new Function("t", test);
-		}
-	}else if(typeof test == "function"){
-		// if we didn't get a fixture, wrap the function
-		tObj = { "runTest": test };
-		if(test["name"]){
-			tObj.name = test.name;
-		}else{
-			try{
-				var fStr = "function ";
-				var ts = tObj.runTest+"";
-				if(0 <= ts.indexOf(fStr)){
-					tObj.name = ts.split(fStr)[1].split("(", 1)[0];
-				}
-				// doh.debug(tObj.runTest.toSource());
-			}catch(e){
-			}
-		}
-		// FIXME: try harder to get the test name here
-	}
-
+doh.registerTestType("perf", function(group, tObj, type){
 	//Augment the test with some specific options to make it identifiable as a
 	//particular type of test so it can be executed properly.
 	if(type === "perf" || tObj.testType === "perf"){
@@ -458,13 +291,12 @@ doh._getTestObj = function(group, test, type){
 			doh.perfTestResults[group][tObj.name] = {};
 		}
 		tObj.results = doh.perfTestResults[group][tObj.name];
-		
-		//If it's not set, then set the trial duration
-		//default to 100ms.
+
+		//If it's not set, then set the trial duration; default to 100ms.
 		if(!("trialDuration" in tObj)){
 			tObj.trialDuration = 100;
 		}
-		
+
 		//If it's not set, then set the delay between trial runs to 100ms
 		//default to 100ms to allow for GC and to make IE happy.
 		if(!("trialDelay" in tObj)){
@@ -476,158 +308,567 @@ doh._getTestObj = function(group, test, type){
 			tObj.trialIterations = 10;
 		}
 	}
-	return tObj;
-}
+});
 
-doh.registerTest = function(/*String*/ group, /*Function||Object*/ test, /*String*/ type){
+
+//
+// Test Registration
+//
+var
+	createFixture= function(group, test, type){
+		// test is a function, string, or fixture object
+		var tObj = test;
+		if(dojo.isString(test)){
+			tObj = {
+				name: test.replace("/\s/g", "_"), // FIXME: bad escapement
+				runTest: new Function("t", test)
+			};
+		}else if(dojo.isFunction(test)){
+			// if we didn't get a fixture, wrap the function
+			tObj = { "runTest": test };
+			if(test["name"]){
+				tObj.name = test.name;
+			}else{
+				try{
+					var fStr = "function ";
+					var ts = tObj.runTest+"";
+					if(0 <= ts.indexOf(fStr)){
+						tObj.name = ts.split(fStr)[1].split("(", 1)[0];
+					}
+					// doh.debug(tObj.runTest.toSource());
+				}catch(e){
+				}
+			}
+			// FIXME: try harder to get the test name here
+		}else if(dojo.isString(tObj.runTest)){
+			tObj.runTest= new Function("t", tObj.runTest);
+		}
+		if(!tObj.runTest){
+			return 0;
+		}
+
+		// if the test is designated as a particular type, do type-specific initialization
+		var testType= doh._testTypes[type] || doh._testTypes[tObj.testType];
+		if(testType){
+			testType(group, tObj);
+		}
+
+		// add the test to this group
+		doh._groups[group].push(tObj);
+		doh._testCount++;
+		doh._testRegistered(group, tObj);
+
+		return tObj;
+	},
+
+	dumpArg= function(arg){
+		if(dojo.isString(arg)){
+			return "string(" + arg + ")";
+		} else {
+			return typeof arg;
+		}
+	},
+
+	illegalRegister= function(args, testArgPosition){
+		var hint= "\targuments: ";
+		for(var i= 0; i<5; i++){
+			hint+= dumpArg(args[i]);
+		};
+		this.debug("ERROR:");
+		if(testArgPosition){
+			this.debug("\tillegal arguments provided to dojo.register; the test at argument " + testArgPosition + " wasn't a test.");
+		}else{
+			this.debug("\tillegal arguments provided to dojo.register");
+		}
+		this.debug(hint);
+	},
+
+	isUrl= function(arg){
+		return dojo.isString(arg) && (/^url\:/.test(arg) || !/\(/.test(arg));
+	};
+
+
+doh._testRegistered = function(group, fixture){
+	// slot to be filled in
+};
+
+doh._groupStarted = function(group){
+	// slot to be filled in
+};
+
+doh._groupFinished = function(group, success){
+	// slot to be filled in
+};
+
+doh._testStarted = function(group, fixture){
+	// slot to be filled in
+};
+
+doh._testFinished = function(group, fixture, success){
+	// slot to be filled in
+};
+
+doh._registerTest = function(group, test, type){
 	// summary:
 	//		add the provided test function or fixture object to the specified
 	//		test group.
-	// group:
+	// group: String
 	//		string name of the group to add the test to
-	// test:
-	//		either a function or an object. If an object, it must contain at
-	//		*least* a "runTest" method, and may also contain "setUp" and
-	//		"tearDown" methods. These will be invoked on either side of the
-	//		"runTest" method (respectively) when the test is run.
-	// type:
+	// test: Function||String||Object
+	//		TODOC
+	// type: String?
 	//		An identifier denoting the type of testing that the test performs, such
-	//		as a performance test.  If null, defaults to regular DOH test.
-	if(!this._groups[group]){
+	//		as a performance test. If falsy, defaults to test.type.
+
+	// get, possibly create, the group object
+
+	var groupObj= this._groups[group];
+	if(!groupObj){
 		this._groupCount++;
-		this._groups[group] = [];
-		this._groups[group].inFlight = 0;
+		groupObj= this._groups[group] = [];
+		groupObj.inFlight = 0;
 	}
-	var tObj = this._getTestObj(group, test, type);
-	if(!tObj){ return null; }
-	this._groups[group].push(tObj);
-	this._testCount++;
-	this._testRegistered(group, tObj);
-	return tObj;
-}
-
-doh.registerTests = function(/*String*/ group, /*Array*/ testArr, /*String*/ type){
-	// summary:
-	//		registers a group of tests, treating each element of testArr as
-	//		though it were being (along with group) passed to the registerTest
-	//		method.  It also uses the type to decide how the tests should
-	//		behave, by defining the type of tests these are, such as performance tests
-	for(var x=0; x<testArr.length; x++){
-		this.registerTest(group, testArr[x], type);
+	if(!test){
+		return groupObj;
 	}
-}
 
-// FIXME: move implementation to _browserRunner?
-doh.registerUrl = function(	/*String*/ group,
-								/*String*/ url,
-								/*Integer*/ timeout,
-								/*String*/ type){
+	// create the test fixture
+	var tObj;
+	if(dojo.isFunction(test) || dojo.isString(test) || "runTest" in test){
+		return createFixture(group, test, type) ? groupObj : 0;
+	}else if(dojo.isArray(test)){
+		// a vector of tests...
+		for(var i= 0; i<test.length; i++){
+			tObj = createFixture(group, test[i], type);
+			if(!tObj){
+				this.debug("ERROR:");
+				this.debug("\tillegal test is test array; more information follows...");
+				return null;
+			}
+		}
+		return groupObj;
+	}else{
+		// a hash of tests...
+		for(var testName in test){
+			var theTest= test[testName];
+			if(dojo.isFunction(theTest) || dojo.isString(theTest)){
+				tObj = createFixture(group, {name:testName, runTest:theTest}, type);
+			}else{
+				// should be an object
+				theTest.name= theTest.name || testName;
+				tObj = createFixture(group, theTest, type);
+			}
+			if(!tObj){
+				this.debug("ERROR:");
+				this.debug("\tillegal test is test hash; more information follows...");
+				return null;
+			}
+		}
+		return groupObj;
+	}
+};
+
+doh._registerTestAndCheck= function(groupId, test, type, testArgPosition, args, setUp, tearDown){
+	var amdMid= 0;
+	if(groupId){
+		if(type){
+			// explicitly provided type; therefore don't try to get type from groupId
+			var match= groupId.match(/([^\!]+)\!(.+)/);
+			if(match){
+				amdMid= match[1];
+				groupId= match[2];
+			}
+		}else{
+			var parts= groupId && groupId.split("!");
+			if(parts.length==3){
+				amdMid= parts[0];
+				groupId= parts[1];
+				type= parts[2];
+			}else if(parts.length==2){
+				// either (amdMid, group) or (group, type)
+				if(parts[1] in doh._testTypes){
+					groupId= parts[0];
+					type= parts[1];
+				}else{
+					amdMid= parts[0];
+					groupId= parts[1];
+				}
+			} // else, no ! and just a groupId
+		}
+	}
+
+	var group= doh._registerTest(groupId, test, type);
+	if(group){
+		if(amdMid){
+			group.amdMid= amdMid;
+		}
+		if(setUp){
+			group.setUp= setUp;
+		}
+		if(tearDown){
+			group.tearDown= tearDown;
+		}
+	}else{
+		illegalRegister(arguments, testArgPosition);
+	}
+};
+
+doh._registerUrl = function(/*String*/ group, /*String*/ url, /*Integer*/ timeout, /*String*/ type, /*object*/ dohArgs){
+	// slot to be filled in
 	this.debug("ERROR:");
 	this.debug("\tNO registerUrl() METHOD AVAILABLE.");
-	// this._urls.push(url);
-}
+};
 
-doh.registerString = function(group, str, type){
-}
+var typeSigs= (function(){
+	// Generate machinery to decode the many register signatures; these are the possible signatures.
 
-// FIXME: remove the doh.add alias SRTL.
-doh.register = doh.add = function(groupOrNs, testOrNull, type){
+	var sigs= [
+		// note: to===timeout, up===setUp, down===tearDown
+
+		// 1 arg
+		"test", function(args, a1){doh._registerTestAndCheck("ungrouped", a1, 0, 0, args, 0, 0);},
+		"url", function(args, a1){doh._registerUrl("ungrouped", a1);},
+
+		// 2 args
+		"group-test", function(args, a1, a2){doh._registerTestAndCheck(a1, a2, 0, 0, args, 0, 0);},
+		"test-type", function(args, a1, a2){doh._registerTestAndCheck("ungrouped", a1, a2, 1, args, 0, 0);},
+		"test-up", function(args, a1, a2){doh._registerTestAndCheck("ungrouped", a1, 0, 0, args, a2, 0);},
+		"group-url", function(args, a1, a2){doh._registerUrl(a1, a2);},
+		"url-to", function(args, a1, a2){doh._registerUrl("ungrouped", a1, a2);},
+		"url-type", function(args, a1, a2){doh._registerUrl("ungrouped", a1, undefined, a2);},
+		"url-args", function(args, a1, a2){doh._registerUrl("ungrouped", a1, undefined, 0, a2);},
+
+		// 3 args
+		"group-test-type", function(args, a1, a2, a3){doh._registerTestAndCheck(a1, a2, a3, 2, args, 0, 0);},
+		"group-test-up", function(args, a1, a2, a3){doh._registerTestAndCheck(a1, a2, 0, 2, args, a3, 0);},
+		"test-type-up", function(args, a1, a2, a3){doh._registerTestAndCheck("ungrouped", a1, a2, 0, args, a3, 0);},
+		"test-up-down", function(args, a1, a2, a3){doh._registerTestAndCheck("ungrouped", a1, 0, 0, args, a2, a3);},
+		"group-url-to", function(args, a1, a2, a3){doh._registerUrl(a1, a2, a3);},
+		"group-url-type", function(args, a1, a2, a3){doh._registerUrl(a1, a2, undefined, a3);},
+		"group-url-args", function(args, a1, a2, a3){doh._registerUrl(a1, a2, undefined, 0, a3);},
+		"url-to-type", function(args, a1, a2, a3){doh._registerUrl("ungrouped", a1, a2, a3);},
+		"url-to-args", function(args, a1, a2, a3){doh._registerUrl("ungrouped", a1, a2, 0, a3);},
+		"url-type-args", function(args, a1, a2, a3){doh._registerUrl("ungrouped", a1, undefined, a2, a3);},
+
+		// 4 args
+		"group-test-type-up", function(args, a1, a2, a3, a4){doh._registerTestAndCheck(a1, a2, a3, 2, args, a3, 0);},
+		"group-test-up-down", function(args, a1, a2, a3, a4){doh._registerTestAndCheck(a1, a2, 0, 2, args, a3, a4);},
+		"test-type-up-down", function(args, a1, a2, a3, a4){doh._registerTestAndCheck("ungrouped", a1, 2, 0, args, a3, a4);},
+		"group-url-to-type", function(args, a1, a2, a3, a4){doh._registerUrl(a1, a2, a3, a4);},
+		"group-url-to-args", function(args, a1, a2, a3, a4){doh._registerUrl(a1, a2, a3, 0, a4);},
+		"group-url-type-args", function(args, a1, a2, a3, a4){doh._registerUrl(a1, a2, undefined, a3, a4);},
+		"url-to-type-args", function(args, a1, a2, a3, a4){doh._registerUrl("ungrouped", a1, a2, a3, a4);},
+
+		// 5 args
+		"group-test-type-up-down", function(args, a1, a2, a3, a4, a5){doh._registerTestAndCheck(a1, a2, a3, 2, args, a4, a5);},
+		"group-url-to-type-args", function(args, a1, a2, a3, a4){doh._registerUrl(a1, a2, a3, a4, a5);}
+	];
+
+	// type-ids
+	// a - array
+	// st - string, possible type
+	// sf - string, possible function
+	// s - string not a type or function
+	// o - object
+	// f - function
+	// n - number
+    // see getTypeId inside doh.register
+	var argTypes= {
+		group:"st.sf.s",
+		test:"a.sf.o.f",
+		type:"st",
+		up:"f",
+		down:"f",
+		url:"s",
+		to:"n",
+		args:"o"
+	};
+	for(var p in argTypes){
+		argTypes[p]= argTypes[p].split(".");
+	};
+
+	function generateTypeSignature(sig, pattern, dest, func){
+		for(var nextPattern, reducedSig= sig.slice(1), typeList= argTypes[sig[0]], i= 0; i<typeList.length; i++){
+			nextPattern=  pattern + (pattern ? "-" : "") + typeList[i];
+			if(reducedSig.length){
+				generateTypeSignature(reducedSig, nextPattern, dest, func);
+			}else{
+				dest.push(nextPattern, func);
+			}
+		}
+	}
+
+	var typeSigs= [];
+	for(var sig, func, dest, i= 0; i<sigs.length; i++){
+		sig= sigs[i++].split("-");
+		func= sigs[i];
+		dest= typeSigs[sig.length-1] || (typeSigs[sig.length-1]= []);
+		generateTypeSignature(sig, "", dest, func);
+	}
+	return typeSigs;
+})();
+
+
+doh.register = function(a1, a2, a3, a4, a5){
+	/*=====
+	doh.register = function(groupId, testOrTests, timeoutOrSetUp, tearDown){
 	// summary:
-	// 		"magical" variant of registerTests, registerTest, and
-	// 		registerTestNs. Will accept the calling arguments of any of these
-	// 		methods and will correctly guess the right one to register with.
-	if(	(arguments.length == 1)&&
-		(typeof groupOrNs == "string") ){
-		if(groupOrNs.substr(0, 4)=="url:"){
-			this.registerUrl(groupOrNs, null, null, type);
+	//	 Add a test or group of tests.
+	// groupId: String?
+	//		The name of the group, optionally with an AMD module identifier prefix and/or
+	//		test type suffix. The value character set for group names and AMD module indentifiers
+	//		is given by [A-Za-z0-9_/.-]. If provided, prefix and suffix are denoted by "!". If
+	//		provided, type must be a valid test type.
+	// testOrUrl: Array||Function||Object||String||falsy
+	//		When a function, implied a function that defines a single test. DOH passes the
+	//		DOH object to the function as the sole argument when the test is executed. When
+	//		a string, implies the definition of a single test given by `new Function("t", testOrUrl)`.
+	//		When an object that contains the method `runTest` (which *must* be a function),
+	//		implies a single test given by the value of the property `runTest`. In this case,
+	//		the object may also contain the methods `setup` and `tearDown`, and, if provided, these
+	//		will be invoked on either side of the test function. Otherwise when an object (that is,
+	//		an object that does not contain the method `runTest`), then a hash from test name to
+	//		test function (either a function or string as described above); any names that begin
+	//		with "_" are ignored. When an array, the array must exclusively contain functions,
+	//		strings, and/or objects as described above and each item is added to the group as
+	//		per the items semantics.
+	// timeoutOrSetUp: integer||Function?
+	//		If tests is a URL, then must be an integer giving the number milliseconds to wait for the test
+	//		page to load before signaling an error; otherwise, a function for initializing the test group.
+	// tearDown: Function?
+	//		A function for deinitializing the test group.
+	// decription:
+	//	 Adds the test or tests given by testsOrUrl to the group given by group (if any). For URL tests, unless
+	//	 a group is explicitly provided the group given by the URL until the document arrives at which
+	//	 point the group is renamed to the title of the document. For non-URL tests, if groupId is
+	//	 not provided, then tests are added to the group "ungrouped"; otherwise if the given groupId does not
+	//	 exist, it is created; otherwise, tests are added to the already-existing group.
+	//
+	//	 groupIds may contain embedded AMD module identifiers as prefixes and/or test types as suffixes. Prefixes
+	//	 and suffixes are denoted by a "!". For example
+	// example:
+	// | `"myTest/MyGroup"`							 // just a group, group ids need not include a slash
+	// | `"myTest/MyGroup!perf"`					 // group with test type
+	// | `"path/to/amd/module!myTest/MyGroup"`		 // group with AMD module identifier
+	// | `"path/to/amd/module!myTest/MyGroup!perf"`	 // group with both AMD module identifier and test type
+	//
+	//	 Groups associated with AMD module identifiers may be unloaded/reloaded if using an AMD loader with
+	//	 reload support (dojo's AMD loader includes such support). If no AMD module identifier is given,
+	//	 the loader supports reloading, and the user demands a reload, then the groupId will be used
+	//	 as the AMD module identifier.
+	//
+	//	 For URL tests, the groupId is changed to the document title (if any) upon document arrival. The
+	//	 title may include a test type suffix denoted with a "!" as described above.
+	//
+	//	 For URL tests, if timeout is a number, then sets the timeout for loading
+	//	 the particular URL; otherwise, timeout is set to DOH.iframeTimeout.
+	//
+	//	 For non-URL tests, if setUp and/or tearDown are provided, then any previous setUp and/or
+	//	 tearDown functions for the group are replaced as given. You may affect just setUp and/or tearDown
+	//	 for a group and not provide/add any tests by providing falsy for the test argument.
+	// example:
+	// | var
+	// |	 t1= function(t) {
+	// |		 // this is a test
+	// |		 // t will be set to DOH when the test is executed by DOH
+	// |		 // etc.
+	// |	 },
+	// |
+	// |	 t2= {
+	// |		 // this is a test fixture and may be passed as a test
+	// |
+	// |		 // runTest is always required...
+	// |		 runTest:function(t){
+	// |			 //the test...
+	// |		 },
+	// |
+	// |		 // name is optional, but recommended...
+	// |		 name:"myTest",
+	// |
+	// |		 // preamble is optional...
+	// |		 setUp:function(){
+	// |			 // will be executed by DOH prior to executing the test
+	// |		 },
+	// |
+	// |		 // postscript is optional...
+	// |		 tearDown:function(){ //op
+	// |			 // will be executed by DOH after executing the test
+	// |		 }
+	// |	 }
+	// |
+	// |	 t3= [
+	// |		 // this is a vector of tests...
+	// |		 t1, t2
+	// |	 ],
+	// |
+	// |	 t4= {
+	// |		 // this is a map from test name to test or test fixture
+	// |		 t5:function(t){
+	// |			 //etc.
+	// |		 },
+	// |
+	// |		 t6:{
+	// |			 runTest:function(t){
+	// |				//etc.
+	// |			 }
+	// |			 // name will be automatically added as "t6"
+	// |		 }
+	// |	 },
+	// |
+	// |	 aSetup:function(){
+	// |		 // etc.
+	// |	 },
+	// |
+	// |	 aTearDown:function(){
+	// |		 // etc.
+	// |	 };
+	// | // (test); note, can't provide setup/tearDown without a group
+	// | doh.register(t1);
+	// |
+	// | // (group, test, setUp, tearDown) test and/or setUp and/or tearDown can be missing
+	// | doh.register("myGroup", 0, aSetUp, aTearDown);
+	// | doh.register("myGroup", t1, aSetUp, aTearDown);
+	// | doh.register("myGroup", t1, aSetUp);
+	// | doh.register("myGroup", t1, 0, aTearDown);
+	// | doh.register("myGroup", t1);
+	// |
+	// | // various kinds of test arguments are allowed
+	// | doh.register("myGroup", t2);
+	// | doh.register("myGroup", t3);
+	// | doh.register("myGroup", t4);
+	// |
+	// | // add a perf test
+	// | doh.register("myGroup!perf", t1);
+	// |
+	// | // add a perf test with an AMD module identifier
+	// | doh.register("path/to/my/module!myGroup!perf", t1);
+	//
+	//	 doh.register also supports Dojo, v1.6- signature (group, test, type), although this signature is deprecated.
+	}
+	=====*/
+
+	function getTypeId(a){
+		if(a instanceof Array){
+			return "a";
+		}else if(typeof a == "function"){
+			return "f";
+		}else if(typeof a == "number"){
+			return "n";
+		}else if(typeof a == "string"){
+			if(a in doh._testTypes){
+				return "st";
+			}else if(/\(/.test(a)){
+				return "sf";
+			}else{
+				return "s";
+			}
 		}else{
-			this.registerTest("ungrouped", groupOrNs, type);
+			return "o";
 		}
 	}
-	if(arguments.length == 1){
-		this.debug("invalid args passed to doh.register():", groupOrNs, ",", testOrNull);
-		return;
+
+	var
+		arity= arguments.length,
+		search= typeSigs[arity-1],
+		sig= [],
+		i;
+	for(i= 0; i<arity; i++){
+		sig.push(getTypeId(arguments[i]));
 	}
-	if(typeof testOrNull == "string"){
-		if(testOrNull.substr(0, 4)=="url:"){
-			this.registerUrl(testOrNull, null, null, type);
-		}else{
-			this.registerTest(groupOrNs, testOrNull, type);
+	sig= sig.join("-");
+	for(i= 0; i<search.length; i+= 2){
+		if(search[i]==sig){
+			search[i+1](arguments, a1, a2, a3, a4, a5);
+			return;
 		}
-		// this.registerTestNs(groupOrNs, testOrNull);
-		return;
 	}
-	if(doh._isArray(testOrNull)){
-		this.registerTests(groupOrNs, testOrNull, type);
-		return;
-	}
-	this.registerTest(groupOrNs, testOrNull, type);
+	illegalRegister(arguments);
 };
 
 doh.registerDocTests = function(module){
-	// no-op for when Dojo isn't loaded into the page
-	this.debug("registerDocTests() requires dojo to be loaded into the environment. Skipping doctest set for module:", module);
-};
-(function(){
-	if(typeof dojo != "undefined"){
-		try{
-			dojo.require("dojox.testing.DocTest");
-		}catch(e){
-			// if the DocTest module isn't available (e.g., the build we're
-			// running from doesn't include it), stub it out and log the error
-			console.debug(e);
-
-			doh.registerDocTests = function(){}
-			return;
+	//	summary:
+	//		Get all the doctests from the given module and register each of them
+	//		as a single test case here.
+	//
+	var docTest = new dojox.testing.DocTest();
+	var docTests = docTest.getTests(module);
+	var len = docTests.length;
+	var tests = [];
+	for (var i=0; i<len; i++){
+		var test = docTests[i];
+		// Extract comment on first line and add to test name.
+		var comment = "";
+		if (test.commands.length && test.commands[0].indexOf("//")!=-1) {
+			var parts = test.commands[0].split("//");
+			comment = ", "+parts[parts.length-1]; // Get all after the last //, so we dont get trapped by http:// or alikes :-).
 		}
-		doh.registerDocTests = function(module){
-			//	summary:
-			//		Get all the doctests from the given module and register each of them
-			//		as a single test case here.
-			//
-			
-			var docTest = new dojox.testing.DocTest();
-			var docTests = docTest.getTests(module);
-			var len = docTests.length;
-			var tests = [];
-			for (var i=0; i<len; i++){
-				var test = docTests[i];
-				// Extract comment on first line and add to test name.
-				var comment = "";
-				if (test.commands.length && test.commands[0].indexOf("//")!=-1) {
-					var parts = test.commands[0].split("//");
-					comment = ", "+parts[parts.length-1]; // Get all after the last //, so we dont get trapped by http:// or alikes :-).
-				}
-				tests.push({
-					runTest: (function(test){
-						return function(t){
-							var r = docTest.runTest(test.commands, test.expectedResult);
-							t.assertTrue(r.success);
-						}
-					})(test),
-					name:"Line "+test.line+comment
-				}
-				);
-			}
-			this.register("DocTests: "+module, tests);
+		tests.push({
+			runTest: (function(test){
+				return function(t){
+					var r = docTest.runTest(test.commands, test.expectedResult);
+					t.assertTrue(r.success);
+				};
+			})(test),
+			name:"Line "+test.line+comment
 		}
+		);
 	}
-})();
+	this.register("DocTests: "+module, tests);
+};
+
+//
+// depricated v1.6- register API follows
+//
+
+doh.registerTest = function(/*String*/ group, /*Array||Function||Object*/ test, /*String*/ type){
+	// summary:
+	//		Deprecated.	 Use doh.register(group/type, test) instead
+	doh.register(group + (type ? "!" + type : ""), test);
+};
+
+doh.registerGroup = function(/*String*/ group, /*Array||Function||Object*/ tests, /*Function*/ setUp, /*Function*/ tearDown, /*String*/ type){
+	// summary:
+	//		Deprecated.	 Use doh.register(group/type, tests, setUp, tearDown) instead
+	var args= [(group ? group : "") + (type ? "!" + type : ""), tests];
+	setUp && args.push(setUp);
+	tearDown && args.push(tearDown);
+	doh.register.apply(doh, args);
+}
+
+doh.registerTestNs = function(/*String*/ group, /*Object*/ ns){
+	// summary:
+	//		Deprecated.	 Use doh.register(group, ns) instead
+	doh.register(group, ns);
+};
+
+doh.registerTests = function(/*String*/ group, /*Array*/ testArr, /*String*/ type){
+	// summary:
+	//		Deprecated.	 Use doh.register(group/type, testArr) instead
+	doh.register(group + (type ? "!" + type : ""), testArr);
+}
+
+doh.registerUrl = function(/*String*/ group, /*String*/ url, /*Integer*/ timeout, /*String*/ type, /*Object*/ args){
+	// summary:
+	//		Deprecated.	 Use doh.register(group/type, url, timeout) instead
+	doh.register(group + (type ? "!" + type : ""), url+"", timeout || 10000, args || {});
+};
 
 //
 // Assertions and In-Test Utilities
 //
-
 doh.t = doh.assertTrue = function(/*Object*/ condition, /*String?*/ hint){
 	// summary:
 	//		is the passed item "truthy"?
 	if(arguments.length < 1){
 		throw new doh._AssertFailure("assertTrue failed because it was not passed at least 1 argument");
 	}
+	//if(dojo.isString(condition) && condition.length){
+	//	return true;
+	//}
 	if(!eval(condition)){
 		throw new doh._AssertFailure("assertTrue('" + condition + "') failed", hint);
 	}
-}
+};
 
 doh.f = doh.assertFalse = function(/*Object*/ condition, /*String?*/ hint){
 	// summary:
@@ -638,7 +879,7 @@ doh.f = doh.assertFalse = function(/*Object*/ condition, /*String?*/ hint){
 	if(eval(condition)){
 		throw new doh._AssertFailure("assertFalse('" + condition + "') failed", hint);
 	}
-}
+};
 
 doh.e = doh.assertError = function(/*Error object*/expectedError, /*Object*/scope, /*String*/functionName, /*Array*/args, /*String?*/ hint){
 	//	summary:
@@ -650,16 +891,16 @@ doh.e = doh.assertError = function(/*Error object*/expectedError, /*Object*/scop
 		scope[functionName].apply(scope, args);
 	}catch (e){
 		if(e instanceof expectedError){
+
 			return true;
 		}else{
 			throw new doh._AssertFailure("assertError() failed:\n\texpected error\n\t\t"+expectedError+"\n\tbut got\n\t\t"+e+"\n\n", hint);
 		}
 	}
 	throw new doh._AssertFailure("assertError() failed:\n\texpected error\n\t\t"+expectedError+"\n\tbut no error caught\n\n", hint);
-}
+};
 
-
-doh.is = doh.assertEqual = function(/*Object*/ expected, /*Object*/ actual, /*String?*/ hint){
+doh.is = doh.assertEqual = function(/*Object*/ expected, /*Object*/ actual, /*String?*/ hint, doNotThrow){
 	// summary:
 	//		are the passed expected and actual objects/values deeply
 	//		equivalent?
@@ -674,9 +915,10 @@ doh.is = doh.assertEqual = function(/*Object*/ expected, /*Object*/ actual, /*St
 	}
 	if((expected === actual)||(expected == actual)||
 				( typeof expected == "number" && typeof actual == "number" && isNaN(expected) && isNaN(actual) )){
+
 		return true;
 	}
-	if(	(this._isArray(expected) && this._isArray(actual))&&
+	if( (this.isArray(expected) && this.isArray(actual))&&
 		(this._arrayEq(expected, actual)) ){
 		return true;
 	}
@@ -684,8 +926,11 @@ doh.is = doh.assertEqual = function(/*Object*/ expected, /*Object*/ actual, /*St
 		(this._objPropEq(expected, actual)) ){
 		return true;
 	}
+	if (doNotThrow) {
+		return false;
+	}
 	throw new doh._AssertFailure("assertEqual() failed:\n\texpected\n\t\t"+expected+"\n\tbut got\n\t\t"+actual+"\n\n", hint);
-}
+};
 
 doh.isNot = doh.assertNotEqual = function(/*Object*/ notExpected, /*Object*/ actual, /*String?*/ hint){
 	// summary:
@@ -695,15 +940,15 @@ doh.isNot = doh.assertNotEqual = function(/*Object*/ notExpected, /*Object*/ act
 	// Compare undefined always with three equal signs, because undefined==null
 	// is true, but undefined===null is false.
 	if((notExpected === undefined)&&(actual === undefined)){
-        throw new doh._AssertFailure("assertNotEqual() failed: not expected |"+notExpected+"| but got |"+actual+"|", hint);
+				throw new doh._AssertFailure("assertNotEqual() failed: not expected |"+notExpected+"| but got |"+actual+"|", hint);
 	}
 	if(arguments.length < 2){
 		throw doh._AssertFailure("assertEqual failed because it was not passed 2 arguments");
 	}
 	if((notExpected === actual)||(notExpected == actual)){
-        throw new doh._AssertFailure("assertNotEqual() failed: not expected |"+notExpected+"| but got |"+actual+"|", hint);
+				throw new doh._AssertFailure("assertNotEqual() failed: not expected |"+notExpected+"| but got |"+actual+"|", hint);
 	}
-	if(	(this._isArray(notExpected) && this._isArray(actual))&&
+	if( (this.isArray(notExpected) && this.isArray(actual))&&
 		(this._arrayEq(notExpected, actual)) ){
 		throw new doh._AssertFailure("assertNotEqual() failed: not expected |"+notExpected+"| but got |"+actual+"|", hint);
 	}
@@ -717,20 +962,20 @@ doh.isNot = doh.assertNotEqual = function(/*Object*/ notExpected, /*Object*/ act
 			}
 		}
 		if(isequal){
-        throw new doh._AssertFailure("assertNotEqual() failed: not expected |"+notExpected+"| but got |"+actual+"|", hint);
+				throw new doh._AssertFailure("assertNotEqual() failed: not expected |"+notExpected+"| but got |"+actual+"|", hint);
+		}
 	}
-	}
-    return true;
-}
+	return true;
+};
 
 doh._arrayEq = function(expected, actual){
 	if(expected.length != actual.length){ return false; }
 	// FIXME: we're not handling circular refs. Do we care?
 	for(var x=0; x<expected.length; x++){
-		if(!doh.assertEqual(expected[x], actual[x])){ return false; }
+		if(!doh.assertEqual(expected[x], actual[x], 0, true)){ return false; }
 	}
 	return true;
-}
+};
 
 doh._objPropEq = function(expected, actual){
 	// Degenerate case: if they are both null, then their "properties" are equal.
@@ -753,32 +998,23 @@ doh._objPropEq = function(expected, actual){
 	};
 
 	for(x in expected){
-		if(!doh.assertEqual(expected[x], actual[x])){
+		if(!doh.assertEqual(expected[x], actual[x], 0, true)){
 			return false;
 		}
 	}
 	return true;
-}
-
-doh._isArray = function(it){
-	return (it && it instanceof Array || typeof it == "array" ||
-		(
-			!!doh.global["dojo"] &&
-			doh.global["dojo"]["NodeList"] !== undefined &&
-			it instanceof doh.global["dojo"]["NodeList"]
-		)
-	);
-}
+};
 
 //
 // Runner-Wrapper
 //
 
-doh._setupGroupForRun = function(/*String*/ groupName, /*Integer*/ idx){
+doh._setupGroupForRun = function(/*String*/ groupName){
 	var tg = this._groups[groupName];
 	this.debug(this._line);
 	this.debug("GROUP", "\""+groupName+"\"", "has", tg.length, "test"+((tg.length > 1) ? "s" : "")+" to run");
-}
+	doh._groupStarted(groupName);
+};
 
 doh._handleFailure = function(groupName, fixture, e){
 	// this.debug("FAILED test:", fixture.name);
@@ -801,29 +1037,20 @@ doh._handleFailure = function(groupName, fixture, e){
 	}else{
 		this.debug("\tERROR IN:\n\t\t", fixture.runTest);
 	}
-
 	if(e.rhinoException){
 		e.rhinoException.printStackTrace();
 	}else if(e.javaException){
 		e.javaException.printStackTrace();
 	}
-}
-
-try{
-	setTimeout(function(){}, 0);
-}catch(e){
-	setTimeout = function(func){
-		return func();
-	}
-}
+};
 
 doh._runPerfFixture = function(/*String*/groupName, /*Object*/fixture){
 	//	summary:
 	//		This function handles how to execute a 'performance' test
-	//		which is different from a straight UT style test.  These
+	//		which is different from a straight UT style test.	 These
 	//		will often do numerous iterations of the same operation and
 	//		gather execution statistics about it, like max, min, average,
-	//		etc.  It makes use of the already in place DOH deferred test
+	//		etc.	It makes use of the already in place DOH deferred test
 	//		handling since it is a good idea to put a pause inbetween each
 	//		iteration to allow for GC cleanup and the like.
 	//
@@ -869,7 +1096,7 @@ doh._runPerfFixture = function(/*String*/groupName, /*Object*/fixture){
 			def.errback(new Error("test timeout in "+fixture.name.toString()));
 		}, to);
 	}
-	
+
 	//Set up the end calls to the test into the deferred we'll return.
 	def.addBoth(function(arg){
 		if(timer){
@@ -893,14 +1120,14 @@ doh._runPerfFixture = function(/*String*/groupName, /*Object*/fixture){
 	});
 
 	//Blah, since tests can be deferred, the actual run has to be deferred until after
-	//we know how many iterations to run.  This is just plain ugly.
+	//we know how many iterations to run.	 This is just plain ugly.
 	itrDef.addCallback(function(iterations){
 		if(iterations){
 			var countdown = fixture.trialIterations;
 			doh.debug("TIMING TEST: [" + fixture.name +
-					  "]\n\t\tITERATIONS PER TRIAL: " +
-					  iterations + "\n\tTRIALS: " +
-					  countdown);
+						"]\n\t\tITERATIONS PER TRIAL: " +
+						iterations + "\n\tTRIALS: " +
+						countdown);
 
 			//Figure out how many times we want to run our 'trial'.
 			//Where each trial consists of 'iterations' of the test.
@@ -920,9 +1147,9 @@ doh._runPerfFixture = function(/*String*/groupName, /*Object*/fixture){
 							state.countdown--;
 							if(state.countdown){
 								var ret = fixture.runTest(doh);
-								if(ret && ret.addCallback){
-									// Deferreds have to be handled async,
-									// otherwise we just keep looping.
+								if(ret instanceof doh.Deferred){
+									//Deferreds have to be handled async,
+									//otherwise we just keep looping.
 									var atState = {
 										countdown: state.countdown
 									};
@@ -956,9 +1183,9 @@ doh._runPerfFixture = function(/*String*/groupName, /*Object*/fixture){
 					};
 					res.trials.push(tResults);
 					doh.debug("\n\t\tTRIAL #: " +
-							  tResults.trial + "\n\tTIME: " +
-							  tResults.executionTime + "ms.\n\tAVG TEST TIME: " +
-							  (tResults.executionTime/tResults.testIterations) + "ms.");
+								tResults.trial + "\n\tTIME: " +
+								tResults.executionTime + "ms.\n\tAVG TEST TIME: " +
+								(tResults.executionTime/tResults.testIterations) + "ms.");
 
 					//Okay, have we run all the trials yet?
 					countdown--;
@@ -992,11 +1219,11 @@ doh._runPerfFixture = function(/*String*/groupName, /*Object*/fixture){
 	return def;
 };
 
-doh._calcTrialIterations =  function(/*String*/ groupName, /*Object*/ fixture){
+doh._calcTrialIterations =	function(/*String*/ groupName, /*Object*/ fixture){
 	//	summary:
 	//		This function determines the rough number of iterations to
-	//		use to reach a particular MS threshold.  This returns a deferred
-	//		since tests can theoretically by async.  Async tests aren't going to
+	//		use to reach a particular MS threshold.	 This returns a deferred
+	//		since tests can theoretically by async.	 Async tests aren't going to
 	//		give great perf #s, though.
 	//		The callback is passed the # of iterations to hit the requested
 	//		threshold.
@@ -1007,8 +1234,8 @@ doh._calcTrialIterations =  function(/*String*/ groupName, /*Object*/ fixture){
 	var calibrate = function () {
 		var testFunc = doh.hitch(fixture, fixture.runTest);
 
-		//Set the initial state.  We have to do this as a loop instead
-		//of a recursive function.  Otherwise, it blows the call stack
+		//Set the initial state.	We have to do this as a loop instead
+		//of a recursive function.	Otherwise, it blows the call stack
 		//on some browsers.
 		var iState = {
 			start: new Date(),
@@ -1020,7 +1247,7 @@ doh._calcTrialIterations =  function(/*String*/ groupName, /*Object*/ fixture){
 				if(state.curIter < state.iterations){
 					try{
 						var ret = testFunc(doh);
-						if(ret && ret.addCallback){
+						if(ret instanceof doh.Deferred){
 							var aState = {
 								start: state.start,
 								curIter: state.curIter + 1,
@@ -1049,7 +1276,7 @@ doh._calcTrialIterations =  function(/*String*/ groupName, /*Object*/ fixture){
 						var nState = {
 							iterations: state.iterations * 2,
 							curIter: 0
-						}
+						};
 						state = null;
 						setTimeout(function(){
 							nState.start = new Date();
@@ -1071,7 +1298,7 @@ doh._calcTrialIterations =  function(/*String*/ groupName, /*Object*/ fixture){
 
 doh._runRegFixture = function(/*String*/groupName, /*Object*/fixture){
 	//	summary:
-	//		Function to run a generic doh test.  These are not
+	//		Function to run a generic doh test.	 These are not
 	//		specialized tests, like performance groups and such.
 	//
 	//	groupName:
@@ -1085,7 +1312,7 @@ doh._runRegFixture = function(/*String*/groupName, /*Object*/fixture){
 	// if we get a deferred back from the test runner, we know we're
 	// gonna wait for an async result. It's up to the test code to trap
 	// errors and give us an errback or callback.
-	if(ret && ret.addCallback){
+	if(ret instanceof doh.Deferred) {
 		tg.inFlight++;
 		ret.groupName = groupName;
 		ret.fixture = fixture;
@@ -1095,16 +1322,17 @@ doh._runRegFixture = function(/*String*/groupName, /*Object*/fixture){
 		});
 
 		var retEnd = function(){
+
 			if(fixture["tearDown"]){ fixture.tearDown(doh); }
 			tg.inFlight--;
+			doh._testFinished(groupName, fixture, ret.results[0]);
 			if((!tg.inFlight)&&(tg.iterated)){
 				doh._groupFinished(groupName, !tg.failures);
 			}
-			doh._testFinished(groupName, fixture, ret.results[0]);
 			if(doh._paused){
 				doh.run();
 			}
-		}
+		};
 
 		var timeoutFunction = function(){
 			fixture.endTime = new Date();
@@ -1139,7 +1367,7 @@ doh._runFixture = function(groupName, fixture){
 		// only execute the parts of the fixture we've got
 
 		if(fixture["setUp"]){ fixture.setUp(this); }
-		if(fixture["runTest"]){  // should we error out of a fixture doesn't have a runTest?
+		if(fixture["runTest"]){	 // should we error out of a fixture doesn't have a runTest?
 			if(fixture.testType === "perf"){
 				//Always async deferred, so return it.
 				return doh._runPerfFixture(groupName, fixture);
@@ -1170,7 +1398,7 @@ doh._runFixture = function(groupName, fixture){
 			doh._groupFinished(groupName, !tg.failures);
 		}else if(tg.inFlight > 0){
 			setTimeout(this.hitch(this, function(){
-				doh.runGroup(groupName); // , idx);
+				doh.runGroup(groupName);
 			}), 100);
 			this._paused = true;
 		}
@@ -1180,9 +1408,8 @@ doh._runFixture = function(groupName, fixture){
 	}), 30);
 	doh.pause();
 	return d;
-}
+};
 
-doh._testId = 0;
 doh.runGroup = function(/*String*/ groupName, /*Integer*/ idx){
 	// summary:
 	//		runs the specified test group
@@ -1196,27 +1423,18 @@ doh.runGroup = function(/*String*/ groupName, /*Integer*/ idx){
 
 	// FIXME: need to make fixture execution async!!
 
+	idx= idx || 0;
 	var tg = this._groups[groupName];
 	if(tg.skip === true){ return; }
-	if(this._isArray(tg)){
-		if(idx<=tg.length){
-			if((!tg.inFlight)&&(tg.iterated == true)){
-				if(tg["tearDown"]){ tg.tearDown(this); }
-				doh._groupFinished(groupName, !tg.failures);
-				return;
-			}
-		}
-		if(!idx){
-			tg.inFlight = 0;
+	if(this.isArray(tg)){
+		if(tg.iterated===undefined){
 			tg.iterated = false;
+			tg.inFlight = 0;
 			tg.failures = 0;
-		}
-		doh._groupStarted(groupName);
-		if(!idx){
-			this._setupGroupForRun(groupName, idx);
+			this._setupGroupForRun(groupName);
 			if(tg["setUp"]){ tg.setUp(this); }
 		}
-		for(var y=(idx||0); y<tg.length; y++){
+		for(var y=idx; y<tg.length; y++){
 			if(this._paused){
 				this._currentTest = y;
 				// this.debug("PAUSED at:", tg[y].name, this._currentGroup, this._currentTest);
@@ -1225,7 +1443,7 @@ doh.runGroup = function(/*String*/ groupName, /*Integer*/ idx){
 			doh._runFixture(groupName, tg[y]);
 			if(this._paused){
 				this._currentTest = y+1;
-				if(this._currentTest == tg.length){
+				if(this._currentTest == tg.length){ //RCG--don't think we need this; the next time through it will be taken care of
 					tg.iterated = true;
 				}
 				// this.debug("PAUSED at:", tg[y].name, this._currentGroup, this._currentTest);
@@ -1238,9 +1456,9 @@ doh.runGroup = function(/*String*/ groupName, /*Integer*/ idx){
 			doh._groupFinished(groupName, !tg.failures);
 		}
 	}
-}
+};
 
-doh._onEnd = function(){}
+doh._onEnd = function(){};
 
 doh._report = function(){
 	// summary:
@@ -1257,17 +1475,17 @@ doh._report = function(){
 	this.debug("\t", this._testCount, "tests in", this._groupCount, "groups");
 	this.debug("\t", this._errorCount, "errors");
 	this.debug("\t", this._failureCount, "failures");
-}
+};
 
 doh.togglePaused = function(){
 	this[(this._paused) ? "run" : "pause"]();
-}
+};
 
 doh.pause = function(){
 	// summary:
 	//		halt test run. Can be resumed.
 	this._paused = true;
-}
+};
 
 doh.run = function(){
 	// summary:
@@ -1283,7 +1501,6 @@ doh.run = function(){
 	}
 	this._currentGroup = null;
 	this._currentTest = null;
-
 	for(var x in this._groups){
 		if(
 			( (!found)&&(x == cg) )||( found )
@@ -1304,210 +1521,19 @@ doh.run = function(){
 	this._paused = false;
 	this._onEnd();
 	this._report();
-}
-
-//Statistics functions to handle computing performance metrics.
-//Taken from dojox.math
-//	basic statistics
-doh.standardDeviation = function(/* Number[] */a){
-	//	summary:
-	//		Returns the standard deviation of the passed arguments.
-	return Math.sqrt(this.variance(a));	//	Number
 };
 
-doh.variance = function(/* Number[] */a){
-	//	summary:
-	//		Find the variance in the passed array of numbers.
-	var mean=0, squares=0;
-	dojo.forEach(a, function(item){
-		mean+=item;
-		squares+=Math.pow(item,2);
-	});
-	return (squares/a.length)-Math.pow(mean/a.length, 2);	//	Number
+doh.runOnLoad = function(){
+	dojo.ready(doh, "run");
 };
-
-doh.mean = function(/* Number[] */a){
-	//	summary:
-	//		Returns the mean value in the passed array.
-	var t=0;
-	dojo.forEach(a, function(v){
-		t += v;
-	});
-	return t / Math.max(a.length, 1);	//	Number
-};
-
-doh.min = function(/* Number[] */a){
-	//	summary:
-	//		Returns the min value in the passed array.
-	return Math.min.apply(null, a);		//	Number
-};
-
-doh.max = function(/* Number[] */a){
-	//	summary:
-	//		Returns the max value in the passed array.
-	return Math.max.apply(null, a);		//	Number
-},
-
-doh.median= function(/* Number[] */a){
-	//	summary:
-	//		Returns the value closest to the middle from a sorted version of the passed array.
-	return a.slice(0).sort()[Math.ceil(a.length/2)-1];	//	Number
-},
-
-doh.mode = function(/* Number[] */a){
-	//	summary:
-	//		Returns the mode from the passed array (number that appears the most often).
-	//		This is not the most efficient method, since it requires a double scan, but
-	//		is ensures accuracy.
-	var o = {}, r = 0, m = Number.MIN_VALUE;
-	dojo.forEach(a, function(v){
-		(o[v]!==undefined)?o[v]++:o[v]=1;
-	});
-
-	//	we did the lookup map because we need the number that appears the most.
-	for(var p in o){
-		if(m < o[p]){
-			m = o[p], r = p;
-		}
-	}
-	return r;	//	Number
-};
-
-doh.average = function(/* Number [] */ a){
-	var i;
-	var s = 0;
-	for(i = 0; i < a.length; i++){
-		s += a[i];
-	}
-	return s/a.length;
-}
-
-tests = doh;
-
-(function(){
-	// scope protection
-	var x;
-	try{
-		if(typeof dojo != "undefined"){
-			dojo.require(dojo.isBrowser ? "doh._browserRunner" : "doh._rhinoRunner");
-			try{
-				var _shouldRequire = dojo.isBrowser ? (dojo.global == dojo.global["parent"] || !Boolean(dojo.global.parent.doh) ) : true;
-			}catch(e){
-				//can't access dojo.global.parent.doh, then we need to do require
-				_shouldRequire = true;
-			}
-			if(_shouldRequire && dojo.isBrowser){
-				dojo.addOnLoad(function(){
-					if (dojo.global.registerModulePath){
-						dojo.forEach(dojo.global.registerModulePath, function(m){
-							dojo.registerModulePath(m[0], m[1]);
-						});
-					}
-				});
-			}
-		}else if(typeof load == "function"){
-			throw new Error();
-		}else if(typeof define == "function" && define.vendor!="dojotoolkit.org"){
-			// using a real AMD loader; it will load runnerFile
-		}else if(this["document"]){
-			// if we survived all of that, we're probably in a browser but
-			// don't have Dojo handy and/or are using an AMD loader.
-			// Load _browserRunner.js using a document.write() call.
-
-			// find runner.js, load _browserRunner relative to it
-			var scripts = document.getElementsByTagName("script"), runnerFile;
-			for(x=0; x<scripts.length; x++){
-				var s = scripts[x].src;
-				if(s){
-					if(!runnerFile && s.substr(s.length - 9) == "runner.js"){
-						runnerFile = s;
-					}else if(s.substr(s.length - 17) == "_browserRunner.js"){
-						runnerFile = null;
-						break;
-					}
-				}
-			}
-			if(runnerFile){
-				document.write("<scri"+"pt src='" + runnerFile.substr(0, runnerFile.length - 9)
-					+ "_browserRunner.js' type='text/javascript'></scr"+"ipt>");
-			}
-		}
-	}catch(e){
-		print("\n"+doh._line);
-		print("The Dojo Unit Test Harness, $Rev: 24146 $");
-		print("Copyright (c) 2011, The Dojo Foundation, All Rights Reserved");
-		print(doh._line, "\n");
-
-		try{
-			var dojoUrl = "../../dojo/dojo.js";
-			var testUrl = "";
-			var testModule = "dojo.tests.module";
-			var dohBase = "";
-
-			for(x=0; x<scriptArgs.length; x++){
-				if(scriptArgs[x].indexOf("=") > 0){
-					var tp = scriptArgs[x].split("=");
-					if(tp[0] == "dohBase"){
-						dohBase = tp[1];
-						//Convert slashes to unix style and make sure properly ended.
-						dohBase = dohBase.replace(/\\/g, "/");
-						if(dohBase.charAt(dohBase.length - 1) != "/"){
-							dohBase += "/";
-						}
-					}
-					if(tp[0] == "dojoUrl"){
-						dojoUrl = tp[1];
-					}
-					if(tp[0] == "testUrl"){
-						testUrl = tp[1];
-					}
-					if(tp[0] == "testModule"){
-						testModule = tp[1];
-					}
-				}
-			}
-
-			load(dohBase + "_rhinoRunner.js");
-
-			if(dojoUrl.length){
-				if(!this["djConfig"]){
-					djConfig = {};
-				}
-				djConfig.baseUrl = dojoUrl.split("dojo.js")[0];
-				load(dojoUrl);
-			}
-			if(testUrl.length){
-				load(testUrl);
-			}
-			if(testModule.length){
-				dojo.forEach(testModule.split(","), dojo.require, dojo);
-			}
-		}catch(e){
-			print("An exception occurred: " + e);
-		}
-
-		doh.run();
-	}
-}).apply(this, []);
 
 return doh;
 
-};//end of definition of doh/runner, which really defines global doh
+});
 
-// this is guaranteed in the global scope, not matter what kind of eval is thrown at us
-// define global doh
-if(typeof doh == "undefined"){
-	doh = {};
+// backcompat hack: if in the browser, then loading doh/runner implies loading doh/_browserRunner. This is the
+// behavior of 1.6- and is leveraged on many test documents that dojo.require("doh.runner"). Note that this
+// hack will only work in synchronous mode; but if you're not in synchronous mode, you don't care about this.
+if (typeof window!="undefined" && typeof location!="undefined" && typeof document!="undefined" && window.location==location && window.document==document) {
+	require(["doh/_browserRunner"]);
 }
-if(typeof define == "undefined" || define.vendor=="dojotoolkit.org"){
-	// using dojo 1.x loader or no dojo on the page
-	if(typeof dojo !== "undefined"){
-		dojo.provide("doh.runner");
-	}
-	d(doh);
-}else{
-	// using an AMD loader
-	doh.runnerFactory= d;
-}
-
-}).call(null, typeof arguments=="undefined" ? [] : Array.prototype.slice.call(arguments));

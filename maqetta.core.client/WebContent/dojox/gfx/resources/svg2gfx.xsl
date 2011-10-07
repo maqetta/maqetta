@@ -41,7 +41,7 @@ GMail, etc.) or Eric (Saugus.net, ShellTown, etc.)
 	
 	<!-- The following templates process little bits of things that can often occur in multiple contexts -->
 	
-	<xsl:template name="kill-extra-spaces" mode="kill-extra-spaces">
+	<xsl:template name="kill-extra-spaces">
 		<xsl:param name="string"/>
 		<!-- Some don't feel that SVG is verbose enough and thus add extra spaces, which when -->
 		<!-- untreated can look exactly like delimiters in point sets. -->
@@ -63,7 +63,7 @@ GMail, etc.) or Eric (Saugus.net, ShellTown, etc.)
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template name="arg-processor" mode="arg-processor">
+	<xsl:template name="arg-processor">
 		<xsl:param name="values"/>
 		<xsl:param name="labels"/>
 		<!-- Recursively chew through the arguments in a traditional CAR / CDR pattern -->
@@ -92,7 +92,7 @@ GMail, etc.) or Eric (Saugus.net, ShellTown, etc.)
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template name="background-processor" mode="background-processor">
+	<xsl:template name="background-processor">
 		<xsl:param name="background"/>
 		<xsl:choose>
 			<xsl:when test="starts-with($background,'url')">
@@ -136,7 +136,7 @@ GMail, etc.) or Eric (Saugus.net, ShellTown, etc.)
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template name="point-processor" mode="point-processor">
+	<xsl:template name="point-processor">
 		<xsl:param name="points"/>
 		<!-- Recursively process points in a traditional CAR / CDR pattern -->
 		<xsl:variable name="pointsCdr" select="normalize-space(substring-after($points,' '))"/>
@@ -165,7 +165,7 @@ GMail, etc.) or Eric (Saugus.net, ShellTown, etc.)
 		</xsl:choose>
 	</xsl:template>
 	
-	<xsl:template name="rgb-triple-processor" mode="rgb-triple-processor">
+	<xsl:template name="rgb-triple-processor">
 		<xsl:param name="triple"/>
 		<!-- Note that as SVG triples cannot contain alpha values, we hardcode it to be fully opaque -->
 		<!-- This could theoretically be better handled by watching for fill-opacity -->
@@ -181,7 +181,7 @@ GMail, etc.) or Eric (Saugus.net, ShellTown, etc.)
 		<xsl:text>,"a":1},</xsl:text>
 	</xsl:template>
 	
-	<xsl:template name="styles-processor" mode="styles-processor">
+	<xsl:template name="styles-processor">
 		<xsl:param name="styles"/>
 		<!-- Recursively chew through the styles in a traditional CAR / CDR pattern -->
 		<xsl:variable name="stylesCdr" select="substring-after($styles,';')"/>
@@ -206,7 +206,7 @@ GMail, etc.) or Eric (Saugus.net, ShellTown, etc.)
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template name="transform-processor" mode="transform-processor">
+	<xsl:template name="transform-processor">
 		<xsl:param name="transforms"/>
 		<!-- Recursively chew through the transforms in a traditional CAR / CDR pattern -->
 		<xsl:variable name="transformsCdr" select="normalize-space(substring-after($transforms,')'))"/>
@@ -323,7 +323,7 @@ GMail, etc.) or Eric (Saugus.net, ShellTown, etc.)
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template name="url-processor" mode="url-processor">
+	<xsl:template name="url-processor">
 		<xsl:param name="url"/>
 		<xsl:param name="groupAttrs" select="''"/>
 		<!-- We can only handle local references; that's probably all we should get anyway -->
@@ -340,7 +340,7 @@ GMail, etc.) or Eric (Saugus.net, ShellTown, etc.)
 	<!-- The biggest of these is gradient transforms; when GFX natively supports it all the -->
 	<!-- kluges made to support it here (including all the following code) should be removed. -->
 	
-	<xsl:template name="gradient-transform-helper" mode="gradient-transform-helper">
+	<xsl:template name="gradient-transform-helper">
 		<!-- This nasty little routine helps gradient adjuster and can be -->
 		<!-- removed when GFX gets gradientTransform support. -->
 		<xsl:param name="cxa"/>
@@ -390,7 +390,7 @@ GMail, etc.) or Eric (Saugus.net, ShellTown, etc.)
 		</xsl:choose>
 	</xsl:template>
 	
-	<xsl:template name="gradient-adjuster" mode="gradient-adjuster">
+	<xsl:template name="gradient-adjuster">
 		<xsl:param name="node"/>
 		<!-- This code is awful and only meant to serve until GFX gets gradientTransform support. -->
 		<!-- Once GFX does gradientTransforms, the following should be destroyed and forgotten. -->

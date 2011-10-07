@@ -1,12 +1,10 @@
-define("dojo/robotx", ["dojo", "dojo/robot"], function(dojo) {
+define(["dojo", "dojo/robot"], function(dojo) {
 
 dojo.experimental("dojo.robotx");
 
 // loads an external app into an iframe and points dojo.doc to the iframe document, allowing the robot to control it
 // to use: set robotURL in djConfig to the URL you want to load
 // dojo.require this file
-
-(function(){
 
 var iframe = null;
 
@@ -38,14 +36,16 @@ var attachIframe = function(){
 var robotReady=false;
 var robotFrame=null;
 var _run=doh.robot._run;
-doh.robot._run=function(frame){
+doh.robot._run = function(frame){
 	// Called from robot when the robot completed its initialization.
 	robotReady = true;
 	robotFrame = frame;
-	doh.robot._run=_run;
+	doh.robot._run = _run;
 	// If initRobot was already called, then attach the iframe.
-	if(iframe.src){ attachIframe(); }
-}
+	if(iframe.src){
+		attachIframe();
+	}
+};
 
 var onIframeLoad=function(){
 	// initial load handler: update the document and start the tests
@@ -95,18 +95,17 @@ if(iframe['attachEvent'] !== undefined){
 	dojo.connect(iframe, 'onload', iframeLoad);
 }
 
-
-
-
 dojo.mixin(doh.robot,{
 	_updateDocument: function(){
 		dojo.setContext(iframe.contentWindow, iframe.contentWindow.document);
 		var win = dojo.global;
-		if(win["dojo"]){
+		if(win.dojo){
 			// allow the tests to subscribe to topics published by the iframe
-			dojo._topics = win.dojo._topics;
+			dojo.publish = win.dojo.publish;
+			dojo.subscribe = win.dojo.subscribe;
+			dojo.connectPublisher = win.dojo.connectPublisher;  
 		}
-		 
+
 	},
 
 	initRobot: function(/*String*/ url){
@@ -121,7 +120,7 @@ dojo.mixin(doh.robot,{
 		// see above note about race conditions
 		if(robotReady){
 			attachIframe();
-			
+
 		}
 	},
 
@@ -157,7 +156,6 @@ dojo.mixin(doh.robot,{
 	}
 
 });
-})();
 
 return doh.robot;
 });

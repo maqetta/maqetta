@@ -1,5 +1,4 @@
 dojo.provide("dojox.wire.ml.Action");
-dojo.provide("dojox.wire.ml.ActionFilter");
 
 dojo.require("dijit._Widget");
 dojo.require("dijit._Container");

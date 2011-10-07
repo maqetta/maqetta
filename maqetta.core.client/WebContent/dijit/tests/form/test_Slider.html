@@ -13,7 +13,7 @@
 				height:12px;
 				border: none;
 				font-size:11px;
-				padding:0px;
+				padding:0;
 			}
 		</style>
 
@@ -59,9 +59,6 @@
 					// and setup the slider
 					var theSlider = new dijit.form.VerticalSlider({
 						value:1400,
-						onChange: function(){
-                                                    console.log(arguments);
-						},
 						name:"programaticSlider",
 						slideDuration:0,
 						onChange:function(val){ dojo.byId('sliderProgInput').value=val; },
@@ -78,7 +75,7 @@
         				sliderRules.startup();
 
 				};
-				dojo.addOnLoad(programaticExample);
+				dojo.ready(programaticExample);
 		</script>
 	</head>
 
@@ -100,7 +97,7 @@
 			showButtons:true,
 			intermediateChanges:true,
 			slideDuration:500,
-			style:{width:"500px", height:"20px"}
+			style:{width:"50%", height:"20px"}
 			'>
 				<ol data-dojo-type="dijit.form.HorizontalRuleLabels" data-dojo-props='container:"topDecoration", style:{height:"1.2em",fontSize:"75%"}, count:6, numericMargin:1'></ol>
 				<div data-dojo-type="dijit.form.HorizontalRule" data-dojo-props='container:"topDecoration", count:6, style:{height:"5px"}'></div>
@@ -201,12 +198,12 @@
 
 		        <script>
 				// so robot can get to it easily
-				document.displayData=function() {
+				document.displayData=function(){
 					var f = document.getElementById("form1");
 					var s = "";
-					for (var i = 0; i < f.elements.length; i++) {
+					for(var i = 0; i < f.elements.length; i++){
 						var elem = f.elements[i];
-						if (elem.nodeName.toLowerCase() == "button" || elem.type=="submit" || elem.type=="button")  { continue; }
+						if(elem.nodeName.toLowerCase() == "button" || elem.type=="submit" || elem.type=="button")  { continue; }
 						s += elem.name + ": " + elem.value + "\n";
 					}
 					return s;

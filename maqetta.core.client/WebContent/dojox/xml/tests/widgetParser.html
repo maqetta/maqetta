@@ -12,13 +12,15 @@
 	<script type="text/javascript" src="../../../dojo/dojo.js"
 		djConfig="isDebug: true, parseOnLoad: true"></script>
 		
-	<script type="text/javascript" src="../widgetParser.js"></script>
-		
 	<script type="text/javascript">
-		dojo.require("dijit.form.Button");
-		dojo.require("dijit.layout.AccordionContainer");
-		dojo.require("dijit.form.TextBox");
-		dojo.require("dojox.xml.Script");
+		require([
+			'dijit/form/Button',
+			'dijit/layout/AccordionContainer',
+			'dijit/layout/AccordionPane',
+			'dijit/form/TextBox',
+			'dojox/xml/widgetParser',
+			'dojox/xml/Script'
+		]);
 	</script>
 
 		
@@ -27,7 +29,6 @@
 <body style="padding: 50px;" class="tundra">
 
 <h1 class="testTitle">AccordionContainer Tests</h1>
-
 
 <script type="text/xml" dojoType="dojox.xml.Script">
 <ui xmlns:dijit="dijit" xmlns:html="html">

@@ -1,11 +1,9 @@
-dojo.provide("dojox.highlight.languages.xquery");
+define(["dojox/main", "../_base"], function(dojox){
 
-dojo.require("dojox.highlight._base");
+	// Very simple XQuery language file.  Would be nice
+	// to eventually handle more of the enclosed expressions
+	// and direct XML element construction
 
-// Very simple XQuery language file.  Would be nice
-// to eventually handle more of the enclosed expressions
-// and direct XML element construction
-(function(){
 	var XQUERY_COMMENT = {
 		className: 'comment',
 		begin: '\\(\\:', end: '\\:\\)'
@@ -53,4 +51,6 @@ dojo.require("dojox.highlight._base");
 		],
 		XQUERY_COMMENT: XQUERY_COMMENT
 	};
-})();
+
+	return dh.languages.xquery;
+});

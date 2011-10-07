@@ -1,8 +1,7 @@
-dojo.provide("dojox.validate.regexp");
+define(["dojo/_base/kernel", "dojo/regexp", "dojox/main"], function(dojo, regexp, dojox){
 
-dojo.require("dojo.regexp");
-
-dojo.mixin(dojox.validate.regexp, {
+var dxregexp = dojo.getObject("validate.regexp", true, dojox);
+dxregexp = dojox.validate.regexp = {
 	
 	ipAddress: function(/*Object?*/flags){
 		// summary: Builds a RE that matches an IP Address
@@ -109,7 +108,7 @@ dojo.mixin(dojox.validate.regexp, {
 
 		// build host RE
 		var hostNameRE = "((?:" + domainLabelRE + "\\.)+" + domainNameRE + "\\.?)";
-		if(flags.allowIP){ hostNameRE += "|" +  dojox.validate.regexp.ipAddress(flags); }
+		if(flags.allowIP){ hostNameRE += "|" +  dxregexp.ipAddress(flags); }
 		if(flags.allowLocal){ hostNameRE += "|localhost"; }
 		if(flags.allowNamed){ hostNameRE += "|^[^-][a-zA-Z0-9_-]*"; }
 		return "(" + hostNameRE + ")" + portRE; // String
@@ -130,14 +129,14 @@ dojo.mixin(dojox.validate.regexp, {
 		if(!("scheme" in flags)){ flags.scheme = [true, false]; }
 
 		// Scheme RE
-		var protocolRE = dojo.regexp.buildGroupRE(flags.scheme,
+		var protocolRE = regexp.buildGroupRE(flags.scheme,
 			function(q){ if(q){ return "(https?|ftps?)\\://"; } return ""; }
 		);
 
 		// Path and query and anchor RE
 		var pathRE = "(/(?:[^?#\\s/]+/)*(?:[^?#\\s/]+(?:\\?[^?#\\s/]*)?(?:#[A-Za-z][\\w.:-]*)?)?)?";
 
-		return protocolRE + dojox.validate.regexp.host(flags) + pathRE;
+		return protocolRE + dxregexp.host(flags) + pathRE;
 	},
 
 	emailAddress: function(/*Object?*/flags){
@@ -158,7 +157,7 @@ dojo.mixin(dojox.validate.regexp, {
 		var usernameRE = "([!#-'*+\\-\\/-9=?A-Z^-~]+[.])*[!#-'*+\\-\\/-9=?A-Z^-~]+";
 
 		// build emailAddress RE
-		var emailAddressRE = usernameRE + "@" + dojox.validate.regexp.host(flags);
+		var emailAddressRE = usernameRE + "@" + dxregexp.host(flags);
 
 		// Allow email addresses with cruft
 		if ( flags.allowCruft ) {
@@ -182,7 +181,7 @@ dojo.mixin(dojox.validate.regexp, {
 		if(typeof flags.listSeparator != "string"){ flags.listSeparator = "\\s;,"; }
 
 		// build a RE for an Email Address List
-		var emailAddressRE = dojox.validate.regexp.emailAddress(flags);
+		var emailAddressRE = dxregexp.emailAddress(flags);
 		var emailAddressListRE = "(" + emailAddressRE + "\\s*[" + flags.listSeparator + "]\\s*)*" +
 			emailAddressRE + "\\s*[" + flags.listSeparator + "]?\\s*";
 
@@ -216,7 +215,7 @@ dojo.mixin(dojox.validate.regexp, {
 		// Converts a number format to RE.
 		var digitRE = function(format){
 			// escape all special characters, except '?'
-			return dojo.regexp.escapeString(format, "?")
+			return regexp.escapeString(format, "?")
 				// Now replace '?' with Regular Expression
 				.replace(/\?/g, "\\d?")
 				// replace # with Regular Expression
@@ -225,56 +224,59 @@ dojo.mixin(dojox.validate.regexp, {
 		};
 
 		// build RE for multiple number formats
-		return dojo.regexp.buildGroupRE(flags.format, digitRE); //String
-	}
-	
-});
-
-dojox.validate.regexp.ca = {
-	
-	postalCode: function(){
-		// summary: String regular Express to match Canadain Postal Codes
-		return "([A-Z][0-9][A-Z] [0-9][A-Z][0-9])";
+		return regexp.buildGroupRE(flags.format, digitRE); //String
 	},
+	
+	ca: {
 
-	province: function(){
-		// summary: a regular expression to match Canadian Province Abbreviations
-		return "(AB|BC|MB|NB|NL|NS|NT|NU|ON|PE|QC|SK|YT)";
+		postalCode: function(){
+			// summary: String regular Express to match Canadain Postal Codes
+			return "([A-Z][0-9][A-Z] [0-9][A-Z][0-9])";
+		},
+
+		province: function(){
+			// summary: a regular expression to match Canadian Province Abbreviations
+			return "(AB|BC|MB|NB|NL|NS|NT|NU|ON|PE|QC|SK|YT)";
+		}
+
+	},
+	
+	us:{
+
+		state: function(/*Object?*/flags){
+			// summary: A regular expression to match US state and territory abbreviations
+			//
+			// flags  An object.
+			//    flags.allowTerritories  Allow Guam, Puerto Rico, etc.  Default is true.
+			//    flags.allowMilitary  Allow military 'states', e.g. Armed Forces Europe (AE).  Default is true.
+
+			// assign default values to missing paramters
+			flags = (typeof flags == "object") ? flags : {};
+			if(typeof flags.allowTerritories != "boolean"){ flags.allowTerritories = true; }
+			if(typeof flags.allowMilitary != "boolean"){ flags.allowMilitary = true; }
+
+			// state RE
+			var statesRE =
+				"AL|AK|AZ|AR|CA|CO|CT|DE|DC|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|" +
+				"NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY";
+
+			// territories RE
+			var territoriesRE = "AS|FM|GU|MH|MP|PW|PR|VI";
+
+			// military states RE
+			var militaryRE = "AA|AE|AP";
+
+			// Build states and territories RE
+			if(flags.allowTerritories){ statesRE += "|" + territoriesRE; }
+			if(flags.allowMilitary){ statesRE += "|" + militaryRE; }
+
+			return "(" + statesRE + ")"; // String
+		}
+
 	}
 	
 };
 
-dojox.validate.regexp.us = {
-	
-	state: function(/*Object?*/flags){
-		// summary: A regular expression to match US state and territory abbreviations
-		//
-		// flags  An object.
-		//    flags.allowTerritories  Allow Guam, Puerto Rico, etc.  Default is true.
-		//    flags.allowMilitary  Allow military 'states', e.g. Armed Forces Europe (AE).  Default is true.
+return dxregexp;
 
-		// assign default values to missing paramters
-		flags = (typeof flags == "object") ? flags : {};
-		if(typeof flags.allowTerritories != "boolean"){ flags.allowTerritories = true; }
-		if(typeof flags.allowMilitary != "boolean"){ flags.allowMilitary = true; }
-
-		// state RE
-		var statesRE =
-			"AL|AK|AZ|AR|CA|CO|CT|DE|DC|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|" +
-			"NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY";
-
-		// territories RE
-		var territoriesRE = "AS|FM|GU|MH|MP|PW|PR|VI";
-
-		// military states RE
-		var militaryRE = "AA|AE|AP";
-
-		// Build states and territories RE
-		if(flags.allowTerritories){ statesRE += "|" + territoriesRE; }
-		if(flags.allowMilitary){ statesRE += "|" + militaryRE; }
-
-		return "(" + statesRE + ")"; // String
-	}
-	
-};
-
+});

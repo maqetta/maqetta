@@ -2,12 +2,12 @@
 	<head>
 			<title>Demo using dojox.dtl._Templated</title>
 	    <script type="text/javascript" src="../../../dojo/dojo.js"
-				djConfig="isDebug: false, parseOnLoad: true"></script>
-	    <script type="text/javascript" src="../../../dijit/dijit.js"></script> 
+				djConfig="isDebug: true, parseOnLoad: true"></script>
 	    <script type="text/javascript">
+					dojo.require("dijit._WidgetBase");
 					dojo.require("dojox.dtl._Templated");
 
-					dojo.declare("Fruit", [dijit._Widget, dojox.dtl._Templated], {
+					dojo.declare("Fruit", [dijit._WidgetBase, dojox.dtl._Templated], {
 						oldRepl: "Fruit: ",
 						_dijitTemplateCompat: true,
 						items: ["apple", "banana", "orange"],

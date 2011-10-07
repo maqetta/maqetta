@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html style="height:100%;">
-	<!--
-		// TODO: provide a UI for prompted tests
-	-->
 	<head>
-		<title>The Dojo Unit Test Harness, $Rev: 24358 $</title>
+		<title>The Dojo Unit Test Harness, $Rev: 25896 $</title>
 
 		<script type="text/javascript">
-			// workaround for bug in Safari 3.  See #7189
+			// workaround for bug in Safari 3.	See #7189
 			if (/3[\.0-9]+ Safari/.test(navigator.appVersion))
 			{
 				window.console = {
@@ -28,108 +25,8 @@
 			}
 		</script>
 
-		<script type="text/javascript">
-			window.dojoUrl = "../../dojo/dojo.js";
-			window.testUrl = "";
-			window.testModule = "";
-
-			// parse out our test URL and our Dojo URL from the query string
-			var qstr = window.location.search.substr(1);
-			if(qstr.length){
-				var qparts = qstr.split("&");
-				for(var x=0; x<qparts.length; x++){
-					var tp = qparts[x].split("="), name=tp[0], value=tp[1].replace(/[<>"':\(\)]/g, "");	// replace() to avoid XSS attack
-					//Avoid URLs that use the same protocol but on other domains, for security reasons.
-					if (value.indexOf("//") === 0 || value.indexOf("\\\\") === 0) {
-						throw "Insupported URL";
-					}
-					switch(name){
-						case "dojoUrl":
-						case "testUrl":
-						case "testModule":
-							window[name] = value;
-							break;
-						case "registerModulePath":
-							var modules = value.split(";");
-							window.registerModulePath=[];
-							for (var i=0; i<modules.length;i++){
-								window.registerModulePath.push(modules[i].split(","));
-							}
-						break;
-					}
-				}
-			}
-			document.write("<scr"+"ipt type='text/javascript' djConfig='isDebug: true' src='"+dojoUrl+"'></scr"+"ipt>");
-		</script>
-		<script type="text/javascript">
-			function fixHeight(){
-				// IE9 doesn't give test iframe height because no nodes have an explicit pixel height!
-				// Give outer table a pixel height.
-				if(dojo.isIE){
-					var headerHeight=0;
-					var rows=dojo.query('#testLayout > tbody > tr');
-					for(var i=0; i<rows.length-1; i++){
-						headerHeight+=dojo.position(rows[i]).h;
-					}
-					dojo.byId('testLayout').style.height=(dojo.window.getBox().h-headerHeight)+"px";
-				}
-			}
-			if(this.dojo){
-				// we're in the browser and are going to have to require _browserRunner, DocTest and some kind of testModule
-				dojo.require("doh.runner");
-				dojo.require("doh._browserRunner");
-				dojo.require("dojox.testing.DocTest");
-				dojo.require("dojo.window"); // to size iframe
-				dojo.addOnLoad(function(){
-					for(var moduleList= (window.testModule || "dojo.tests.module").split(","), i= 0; i<moduleList.length; i++){
-						dojo.require(moduleList[i]);
-					}
-					window.testModule= "";
-
-					fixHeight();
-
-					//we want to ensure that doh.run is the *last* thing run
-					dojo.addOnLoad(function(){
-						setTimeout(function(){
-							dojo.global.doh.run();
-						}, 200);
-					});
-				});
-			}else if(typeof define == "function"){
-				// AMD loader
-				(function() {
-					require({baseUrl:"./"});
-					require(["runner.js", "_browserRunner.js","../../dojox/testing/DocTest.js","../../dojo/window.js"], function(){
-						// runner.js and _browserRunner.js create the global object doh and stuff the factories into it
-						// run the factories to bring doh to life. this is a bit awkward compared to how pure AMD modules
-						// would look, but doh is being asked to operate in many non-AMD environments today and this works.
-						var factories= doh;
-						doh= {};
-						factories.runnerFactory(doh);
-						factories.browserRunnerFactory(doh);
-
-						//tell the loader about our new doh module
-						define("doh", [], doh);
-
-						// now load all the testUrls/testModules; test modules don't make much sense since there
-						// is no specific paths/package config at this point to map module ids to URLs; therefore,
-						// we just treat both as if they are URLs.
-						var deps= (window.testUrl || window.testModule || "dojo.tests.module").split(",");
-						for (var i= 0; i<deps.length; i++) {
-							deps[i]+= (/\.js$/.test(deps[i]) ? "" : ".js");
-						}
-						require(deps);
-
-						fixHeight();
-					});
-				})();
-			}else{
-				document.write("<scr"+"ipt type='text/javascript' src='runner.js'></scr"+"ipt>");
-				if(testUrl.length){
-					document.write("<scr"+"ipt type='text/javascript' src='"+testUrl+".js'></scr"+"ipt>");
-				}
-			}
-		</script>
+		<script type="text/javascript" src="_parseURLargs.js"></script>
+	
 		<style type="text/css">
 			@import "../../dojo/resources/dojo.css";
 			/*
@@ -234,7 +131,7 @@
 				border: 1px solid black;
 				*/
 				position: relative;
-				height: 100%;
+				height: 99%;
 				width: 100%;
 				overflow: auto;
 			}
@@ -315,7 +212,7 @@
 				<td width="*" class="header" valign="bottom">
 					<button class="tab" onclick="doh.showTestPage();">Test Page</button>
 					<button class="tab" onclick="doh.showLogPage();">Log</button>
-                    <button class="tab" onclick="doh.showPerfTestsPage();">Performance Tests Results</button>
+										<button class="tab" onclick="doh.showPerfTestsPage();">Performance Tests Results</button>
 				</td>
 			</tr>
 			<tr valign="top" style="border: 0; padding: 0; margin: 0;">

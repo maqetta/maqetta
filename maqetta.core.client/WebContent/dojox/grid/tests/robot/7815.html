@@ -42,7 +42,7 @@
 						doh.robot.keyPress(dojo.keys.ENTER,500);
 						doh.robot.sequence(d.getTestCallback(function(){
 							doh.isNot(undefined,dijit.byId('dijit_Editor_0'),"Editing the 6th field of the 1st row did not open the expected dijit.Editor.");
-							doh.t(dijit.byId('dijit_Editor_0')._focused);
+							doh.t(dijit.byId('dijit_Editor_0').focused);
 							doh.isNot(undefined,dijit.byId('dijit_Toolbar_0'),"Editor toolbar should have been created.");
 							doh.isNot(undefined,dijit.byId('dijit_Toolbar_0').domNode.parentNode,"Editor toolbar should have been attached to the DOM");
 						}),500);

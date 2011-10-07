@@ -6,7 +6,7 @@ dojo.require("dojo.data.api.Read");
 
 dojox.data.tests.stores.QueryReadStore.getStore = function(){
 	return new dojox.data.QueryReadStore({
-			url: dojo.moduleUrl("dojox.data.tests", "stores/QueryReadStore.php").toString()
+			url: require.toUrl("dojox/data/tests/stores/QueryReadStore.php").toString()
 		});
 };
 

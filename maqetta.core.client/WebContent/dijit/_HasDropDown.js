@@ -1,33 +1,59 @@
-define("dijit/_HasDropDown", ["dojo", "dijit", "dijit/_Widget"], function(dojo, dijit) {
+define([
+	"dojo/_base/declare", // declare
+	"dojo/_base/event", // event.stop
+	"dojo/dom", // dom.isDescendant
+	"dojo/dom-attr", // domAttr.set
+	"dojo/dom-class", // domClass.add domClass.contains domClass.remove
+	"dojo/dom-geometry", // domGeometry.marginBox domGeometry.position
+	"dojo/dom-style", // domStyle.set
+	"dojo/has",
+	"dojo/keys", // keys.DOWN_ARROW keys.ENTER keys.ESCAPE
+	"dojo/_base/lang", // lang.hitch lang.isFunction
+	"dojo/touch",
+	"dojo/_base/window", // win.doc
+	"dojo/window", // winUtils.getBox
+	"./registry",	// registry.byNode()
+	"./focus",
+	"./popup",
+	"./_FocusMixin"
+], function(declare, event,dom, domAttr, domClass, domGeometry, domStyle, has, keys, lang, touch,
+			win, winUtils, registry, focus, popup, _FocusMixin){
 
-dojo.declare("dijit._HasDropDown",
-	null,
-	{
+/*=====
+	var _FocusMixin = dijit._FocusMixin;
+=====*/
+
+	// module:
+	//		dijit/_HasDropDown
+	// summary:
+	//		Mixin for widgets that need drop down ability.
+
+	return declare("dijit._HasDropDown", _FocusMixin, {
 		// summary:
 		//		Mixin for widgets that need drop down ability.
 
 		// _buttonNode: [protected] DomNode
 		//		The button/icon/node to click to display the drop down.
-		//		Can be set via a dojoAttachPoint assignment.
+		//		Can be set via a data-dojo-attach-point assignment.
 		//		If missing, then either focusNode or domNode (if focusNode is also missing) will be used.
 		_buttonNode: null,
 
 		// _arrowWrapperNode: [protected] DomNode
 		//		Will set CSS class dijitUpArrow, dijitDownArrow, dijitRightArrow etc. on this node depending
 		//		on where the drop down is set to be positioned.
-		//		Can be set via a dojoAttachPoint assignment.
+		//		Can be set via a data-dojo-attach-point assignment.
 		//		If missing, then _buttonNode will be used.
 		_arrowWrapperNode: null,
 
 		// _popupStateNode: [protected] DomNode
 		//		The node to set the popupActive class on.
-		//		Can be set via a dojoAttachPoint assignment.
+		//		Can be set via a data-dojo-attach-point assignment.
 		//		If missing, then focusNode or _buttonNode (if focusNode is missing) will be used.
 		_popupStateNode: null,
 
 		// _aroundNode: [protected] DomNode
 		//		The node to display the popup around.
-		//		Can be set via a dojoAttachPoint assignment.
+		//		Can be set via a data-dojo-attach-point assignment.
 		//		If missing, then domNode will be used.
 		_aroundNode: null,
 
@@ -77,12 +103,11 @@ dojo.declare("dijit._HasDropDown",
 		_onDropDownMouseDown: function(/*Event*/ e){
 			// summary:
 			//		Callback when the user mousedown's on the arrow icon
-
 			if(this.disabled || this.readOnly){ return; }
 
-			dojo.stopEvent(e);
+			event.stop(e);
 
-			this._docHandler = this.connect(dojo.doc, "onmouseup", "_onDropDownMouseUp");
+			this._docHandler = this.connect(win.doc, touch.release, "_onDropDownMouseUp");
 
 			this.toggleDropDown();
 		},
@@ -90,8 +115,8 @@ dojo.declare("dijit._HasDropDown",
 		_onDropDownMouseUp: function(/*Event?*/ e){
 			// summary:
 			//		Callback when the user lifts their mouse after mouse down on the arrow icon.
-			//		If the drop is a simple menu and the mouse is over the menu, we execute it, otherwise, we focus our
-			//		dropDown node.  If the event is missing, then we are not
+			//		If the drop down is a simple menu and the mouse is over the menu, we execute it, otherwise, we focus our
+			//		drop down widget.  If the event is missing, then we are not
 			//		a mouseup event.
 			//
 			//		This is useful for the common mouse movement pattern
@@ -109,12 +134,12 @@ dojo.declare("dijit._HasDropDown",
 				// because it's so large.  In that case mouse-up shouldn't select a value from the menu.
 				// Find out if our target is somewhere in our dropdown widget,
 				// but not over our _buttonNode (the clickable node)
-				var c = dojo.position(this._buttonNode, true);
+				var c = domGeometry.position(this._buttonNode, true);
 				if(!(e.pageX >= c.x && e.pageX <= c.x + c.w) ||
 					!(e.pageY >= c.y && e.pageY <= c.y + c.h)){
 					var t = e.target;
 					while(t && !overMenu){
-						if(dojo.hasClass(t, "dijitPopup")){
+						if(domClass.contains(t, "dijitPopup")){
 							overMenu = true;
 						}else{
 							t = t.parentNode;
@@ -124,7 +149,7 @@ dojo.declare("dijit._HasDropDown",
 						t = e.target;
 						if(dropDown.onItemClick){
 							var menuItem;
-							while(t && !(menuItem = dijit.byNode(t))){
+							while(t && !(menuItem = registry.byNode(t))){
 								t = t.parentNode;
 							}
 							if(menuItem && menuItem.onClick && menuItem.getParent){
@@ -135,17 +160,40 @@ dojo.declare("dijit._HasDropDown",
 					}
 				}
 			}
-			if(this._opened && dropDown.focus && dropDown.autoFocus !== false){
-				// Focus the dropdown widget - do it on a delay so that we
-				// don't steal our own focus.
-				window.setTimeout(dojo.hitch(dropDown, "focus"), 1);
+			if(this._opened){
+				if(dropDown.focus && dropDown.autoFocus !== false){
+					// Focus the dropdown widget - do it on a delay so that we
+					// don't steal our own focus.
+					window.setTimeout(lang.hitch(dropDown, "focus"), 1);
+				}
+			}else{
+				// The drop down arrow icon probably can't receive focus, but widget itself should get focus.
+				// setTimeout() needed to make it work on IE (test DateTextBox)
+				setTimeout(lang.hitch(this, "focus"), 0);
+			}
+
+			if(has("ios")){
+				this._justGotMouseUp = true;
+				setTimeout(lang.hitch(this, function(){
+					this._justGotMouseUp = false;
+				}), 0);
 			}
 		},
 
 		_onDropDownClick: function(/*Event*/ e){
-			// the drop down was already opened on mousedown/keydown; just need to call stopEvent()
+			if(has("ios") && !this._justGotMouseUp){
+				// This branch fires on iPhone for ComboBox, because the button node is an <input> and doesn't
+				// generate touchstart/touchend events.   Pretend we just got a mouse down / mouse up.
+				// The if(has("ios") is necessary since IE and desktop safari get spurious onclick events
+				// when there are nested tables (specifically, clicking on a table that holds a dijit.form.Select,
+				// but not on the Select itself, causes an onclick event on the Select)
+				this._onDropDownMouseDown(e);
+				this._onDropDownMouseUp(e);
+			}
+
+			// The drop down was already opened on mousedown/keydown; just need to call stopEvent().
 			if(this._stopClickEvents){
-				dojo.stopEvent(e);
+				event.stop(e);
 			}
 		},
 
@@ -165,7 +213,7 @@ dojo.declare("dijit._HasDropDown",
 					"left" : "Left",
 					"right" : "Right"
 			}[this.dropDownPosition[0]] || this.dropDownPosition[0] || "Down";
-			dojo.addClass(this._arrowWrapperNode || this._buttonNode, "dijit" + defaultPos + "ArrowButton");
+			domClass.add(this._arrowWrapperNode || this._buttonNode, "dijit" + defaultPos + "ArrowButton");
 		},
 
 		postCreate: function(){
@@ -174,7 +222,7 @@ dojo.declare("dijit._HasDropDown",
 
 			this.inherited(arguments);
 
-			this.connect(this._buttonNode, "onmousedown", "_onDropDownMouseDown");
+			this.connect(this._buttonNode, touch.press, "_onDropDownMouseDown");
 			this.connect(this._buttonNode, "onclick", "_onDropDownClick");
 			this.connect(this.focusNode, "onkeypress", "_onKey");
 			this.connect(this.focusNode, "onkeyup", "_onKeyUp");
@@ -202,16 +250,16 @@ dojo.declare("dijit._HasDropDown",
 			if(d && this._opened && d.handleKey){
 				if(d.handleKey(e) === false){
 					/* false return code means that the drop down handled the key */
-					dojo.stopEvent(e);
+					event.stop(e);
 					return;
 				}
 			}
-			if(d && this._opened && e.charOrCode == dojo.keys.ESCAPE){
+			if(d && this._opened && e.charOrCode == keys.ESCAPE){
 				this.closeDropDown();
-				dojo.stopEvent(e);
+				event.stop(e);
 			}else if(!this._opened &&
-					(e.charOrCode == dojo.keys.DOWN_ARROW ||
-						( (e.charOrCode == dojo.keys.ENTER || e.charOrCode == " ") &&
+					(e.charOrCode == keys.DOWN_ARROW ||
+						( (e.charOrCode == keys.ENTER || e.charOrCode == " ") &&
 						  //ignore enter and space if the event is for a text input
 						  ((target.tagName || "").toLowerCase() !== 'input' ||
 						     (target.type && target.type.toLowerCase() !== 'text'))))){
@@ -219,7 +267,7 @@ dojo.declare("dijit._HasDropDown",
 				// get a stray keyup event, or in the case of key-repeat (because user held
 				// down key for too long), stray keydown events
 				this._toggleOnKeyUp = true;
-				dojo.stopEvent(e);
+				event.stop(e);
 			}
 		},
 
@@ -229,7 +277,7 @@ dojo.declare("dijit._HasDropDown",
 				this.toggleDropDown();
 				var d = this.dropDown;	// drop down may not exist until toggleDropDown() call
 				if(d && d.focus){
-					setTimeout(dojo.hitch(d, "focus"), 1);
+					setTimeout(lang.hitch(d, "focus"), 1);
 				}
 			}
 		},
@@ -242,7 +290,7 @@ dojo.declare("dijit._HasDropDown",
 			// when user clicks another control causing the current popup to close)..
 			// But if focus is inside of the drop down then reset focus to me, because IE doesn't like
 			// it when you display:none a node with focus.
-			var focusMe = dijit._curFocus && this.dropDown && dojo.isDescendant(dijit._curFocus, this.dropDown.domNode);
+			var focusMe = focus.curNode && this.dropDown && dom.isDescendant(focus.curNode, this.dropDown.domNode);
 
 			this.closeDropDown(focusMe);
 
@@ -282,8 +330,7 @@ dojo.declare("dijit._HasDropDown",
 			if(!this._opened){
 				// If we aren't loaded, load it first so there isn't a flicker
 				if(!this.isLoaded()){
-					this.loadDropDown(dojo.hitch(this, "openDropDown"));
-					return;
+					this.loadDropDown(lang.hitch(this, "openDropDown"));
 				}else{
 					this.openDropDown();
 				}
@@ -334,29 +381,29 @@ dojo.declare("dijit._HasDropDown",
 				if(!this._explicitDDHeight){
 					myStyle.height = "";
 				}
-				dojo.style(ddNode, myStyle);
-				
+				domStyle.set(ddNode, myStyle);
+
 				// Figure out maximum height allowed (if there is a height restriction)
 				var maxHeight = this.maxHeight;
 				if(maxHeight == -1){
 					// limit height to space available in viewport either above or below my domNode
 					// (whichever side has more room)
-					var viewport = dojo.window.getBox(),
-						position = dojo.position(aroundNode, false);
+					var viewport = winUtils.getBox(),
+						position = domGeometry.position(aroundNode, false);
 					maxHeight = Math.floor(Math.max(position.y, viewport.h - (position.y + position.h)));
 				}
 
 				// Attach dropDown to DOM and make make visibility:hidden rather than display:none
 				// so we call startup() and also get the size
-				if(dropDown.startup && !dropDown._started){
-					dropDown.startup();
-				}
+				popup.moveOffScreen(dropDown);
 
-				dijit.popup.moveOffScreen(dropDown);
+				if(dropDown.startup && !dropDown._started){
+					dropDown.startup(); // this has to be done after being added to the DOM
+				}
 				// Get size of drop down, and determine if vertical scroll bar needed
-				var mb = dojo._getMarginSize(ddNode);
+				var mb = domGeometry.getMarginSize(ddNode);
 				var overHeight = (maxHeight && mb.h > maxHeight);
-				dojo.style(ddNode, {
+				domStyle.set(ddNode, {
 					overflowX: "hidden",
 					overflowY: overHeight ? "auto" : "hidden"
 				});
@@ -377,20 +424,20 @@ dojo.declare("dijit._HasDropDown",
 				}else{
 					delete mb.w;
 				}
-				
+
 				// And finally, resize the dropdown to calculated height and width
-				if(dojo.isFunction(dropDown.resize)){
+				if(lang.isFunction(dropDown.resize)){
 					dropDown.resize(mb);
 				}else{
-					dojo.marginBox(ddNode, mb);
+					domGeometry.setMarginBox(ddNode, mb);
 				}
 			}
 
-			var retVal = dijit.popup.open({
+			var retVal = popup.open({
 				parent: this,
 				popup: dropDown,
 				around: aroundNode,
-				orient: dijit.getPopupAroundAlignment((this.dropDownPosition && this.dropDownPosition.length) ? this.dropDownPosition : ["below"],this.isLeftToRight()),
+				orient: this.dropDownPosition,
 				onExecute: function(){
 					self.closeDropDown(true);
 				},
@@ -398,13 +445,13 @@ dojo.declare("dijit._HasDropDown",
 					self.closeDropDown(true);
 				},
 				onClose: function(){
-					dojo.attr(self._popupStateNode, "popupActive", false);
-					dojo.removeClass(self._popupStateNode, "dijitHasDropDownOpen");
+					domAttr.set(self._popupStateNode, "popupActive", false);
+					domClass.remove(self._popupStateNode, "dijitHasDropDownOpen");
 					self._opened = false;
 				}
 			});
-			dojo.attr(this._popupStateNode, "popupActive", "true");
-			dojo.addClass(self._popupStateNode, "dijitHasDropDownOpen");
+			domAttr.set(this._popupStateNode, "popupActive", "true");
+			domClass.add(self._popupStateNode, "dijitHasDropDownOpen");
 			this._opened=true;
 
 			// TODO: set this.checked and call setStateClass(), to affect button look while drop down is shown
@@ -421,14 +468,10 @@ dojo.declare("dijit._HasDropDown",
 
 			if(this._opened){
 				if(focus){ this.focus(); }
-				dijit.popup.close(this.dropDown);
+				popup.close(this.dropDown);
 				this._opened = false;
 			}
 		}
 
-	}
-);
-
-
-return dijit._HasDropDown;
+	});
 });

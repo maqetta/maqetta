@@ -22,7 +22,7 @@
 		</script>
 		<script src="test_i18n.js"></script>
 		<script type="text/javascript">
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.register("t", getAllTestCases());
 				doh.run();
 			});
@@ -67,7 +67,7 @@
 		</p>
 
 		<script>
-		(function() {
+		(function(){
 			genFormatTestCases("Currency Format", "dijit.form.CurrencyTextBox", [
 
 				{ attrs: {Currency: "CNY", lang: "zh-cn"},

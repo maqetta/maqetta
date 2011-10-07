@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"findLabel": "検索内容:",
 	"findTooltip": "検索するテキストを入力",
@@ -20,3 +22,5 @@
 	"eofDialogTextFind": "見つかりました",
 	"eofDialogTextReplace": "置換されました"
 })
+//end v1.x content
+);

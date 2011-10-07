@@ -1,41 +1,34 @@
-dojo.provide("dojox.charting.action2d.MoveSlice");
+define(["dojo/_base/connect", "dojo/_base/declare", "./PlotAction", "dojo/fx/easing", "dojox/gfx/matrix", 
+	"dojox/gfx/fx", "dojox/lang/functional", "dojox/lang/functional/scan", "dojox/lang/functional/fold"], 
+	function(hub, declare, PlotAction, dfe, m, gf, df, dfs, dff){
 
-dojo.require("dojox.charting.action2d.Base");
-dojo.require("dojox.gfx.matrix");
-
-dojo.require("dojox.lang.functional");
-dojo.require("dojox.lang.functional.scan");
-dojo.require("dojox.lang.functional.fold");
-
-/*=====
-dojo.declare("dojox.charting.action2d.__MoveSliceCtorArgs", dojox.charting.action2d.__BaseCtorArgs, {
-	//	summary:
-	//		Additional arguments for highlighting actions.
-
-	//	scale: Number?
-	//		The amount to scale the pie slice.  Default is 1.05.
-	scale: 1.05,
-
-	//	shift: Number?
-	//		The amount in pixels to shift the pie slice.  Default is 7.
-	shift: 7
-});
-=====*/
-(function(){
+	/*=====
+	dojo.declare("dojox.charting.action2d.__MoveSliceCtorArgs", dojox.charting.action2d.__PlotActionCtorArgs, {
+		//	summary:
+		//		Additional arguments for highlighting actions.
+	
+		//	scale: Number?
+		//		The amount to scale the pie slice.  Default is 1.05.
+		scale: 1.05,
+	
+		//	shift: Number?
+		//		The amount in pixels to shift the pie slice.  Default is 7.
+		shift: 7
+	});
+	var PlotAction = dojox.charting.action2d.PlotAction;
+	=====*/
+	
 	var DEFAULT_SCALE = 1.05,
-		DEFAULT_SHIFT = 7,	// px
-		m = dojox.gfx.matrix,
-		gf = dojox.gfx.fx,
-		df = dojox.lang.functional;
+		DEFAULT_SHIFT = 7;	// px
 
-	dojo.declare("dojox.charting.action2d.MoveSlice", dojox.charting.action2d.Base, {
+	return declare("dojox.charting.action2d.MoveSlice", PlotAction, {
 		//	summary:
 		//		Create an action for a pie chart that moves and scales a pie slice.
 
 		// the data description block for the widget parser
 		defaultParams: {
 			duration: 400,	// duration of the action in ms
-			easing:   dojo.fx.easing.backOut,	// easing for the action
+			easing:   dfe.backOut,	// easing for the action
 			scale:    DEFAULT_SCALE,	// scale of magnification
 			shift:    DEFAULT_SHIFT		// shift of the slice
 		},
@@ -44,7 +37,7 @@ dojo.declare("dojox.charting.action2d.__MoveSliceCtorArgs", dojox.charting.actio
 		constructor: function(chart, plot, kwArgs){
 			//	summary:
 			//		Create the slice moving action and connect it to the plot.
-			//	chart: dojox.charting.Chart2D
+			//	chart: dojox.charting.Chart
 			//		The chart this action belongs to.
 			//	plot: String?
 			//		The plot this action is attached to.  If not passed, "default" is assumed.
@@ -101,7 +94,7 @@ dojo.declare("dojox.charting.action2d.__MoveSliceCtorArgs", dojox.charting.actio
 				endScale    = 1;
 			}
 
-			anim.action = dojox.gfx.fx.animateTransform({
+			anim.action = gf.animateTransform({
 				shape:    o.shape,
 				duration: this.duration,
 				easing:   this.easing,
@@ -114,7 +107,7 @@ dojo.declare("dojox.charting.action2d.__MoveSliceCtorArgs", dojox.charting.actio
 			});
 
 			if(o.type == "onmouseout"){
-				dojo.connect(anim.action, "onEnd", this, function(){
+				hub.connect(anim.action, "onEnd", this, function(){
 					delete this.anim[index];
 				});
 			}
@@ -125,4 +118,4 @@ dojo.declare("dojox.charting.action2d.__MoveSliceCtorArgs", dojox.charting.actio
 			delete this.angles;
 		}
 	});
-})();
+});

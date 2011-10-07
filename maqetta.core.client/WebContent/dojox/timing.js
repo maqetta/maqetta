@@ -1,2 +1,3 @@
-dojo.provide("dojox.timing");
-dojo.require("dojox.timing._base");
+define(["./timing/_base"], function(timing){
+	return timing;
+});

@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	widgetLabel: "فحص هجاء دفعي",
 	unfound: "غير موجودة",
@@ -15,3 +17,5 @@
 	iMsg: "لا توجد اقتراحات للهجاء"
 })
 
+//end v1.x content
+);

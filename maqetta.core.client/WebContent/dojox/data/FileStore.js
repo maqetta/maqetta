@@ -1,6 +1,7 @@
-define("dojox/data/FileStore", ["dojo", "dojox"], function(dojo, dojox) {
+define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/window", "dojo/_base/json", "dojo/_base/xhr"], 
+  function(declare, lang, winUtil, jsonUtil, xhr) {
 
-dojo.declare("dojox.data.FileStore", null, {
+return declare("dojox.data.FileStore", null, {
 	constructor: function(/*Object*/args){
 		//	summary:
 		//		A simple store that provides a datastore interface to a filesystem.
@@ -32,10 +33,10 @@ dojo.declare("dojox.data.FileStore", null, {
 			this.url = args.url;
 		}
 		if(args && args.options){
-			if(dojo.isArray(args.options)){
+			if(lang.isArray(args.options)){
 				this.options = args.options;
 			}else{
-				if(dojo.isString(args.options)){
+				if(lang.isString(args.options)){
 					this.options = args.options.split(",");
 				}
 			}
@@ -170,12 +171,12 @@ dojo.declare("dojox.data.FileStore", null, {
 		//      See dojo.data.api.Read.loadItem()
 		var item = keywordArgs.item;
 		var self = this;
-		var scope = keywordArgs.scope || dojo.global;
+		var scope = keywordArgs.scope || winUtil.global;
 
 		var content = {};
 
 		if(this.options.length > 0){
-			content.options = dojo.toJson(this.options);
+			content.options = jsonUtil.toJson(this.options);
 		}
 
 		if(this.pathAsQueryParam){
@@ -189,7 +190,7 @@ dojo.declare("dojox.data.FileStore", null, {
 			failOk: this.failOk
 		};
 
-		var deferred = dojo.xhrGet(xhrData);
+		var deferred = xhr.get(xhrData);
 		deferred.addErrback(function(error){
 				if(keywordArgs.onError){
 					keywordArgs.onError.call(scope, error);
@@ -199,7 +200,7 @@ dojo.declare("dojox.data.FileStore", null, {
 		deferred.addCallback(function(data){
 			delete item.parentPath;
 			delete item._loaded;
-			dojo.mixin(item, data);
+			lang.mixin(item, data);
 			self._processItem(item);
 			if(keywordArgs.onItem){
 				keywordArgs.onItem.call(scope, item);
@@ -238,7 +239,7 @@ dojo.declare("dojox.data.FileStore", null, {
 		this._assertIsAttribute(attribute);
 		
 		var value = item[attribute];
-		if(typeof value !== "undefined" && !dojo.isArray(value)){
+		if(typeof value !== "undefined" && !lang.isArray(value)){
 			value = [value];
 		}else if(typeof value === "undefined"){
 			value = [];
@@ -271,20 +272,20 @@ dojo.declare("dojox.data.FileStore", null, {
 			request.store = this;
 		}
 		var self = this;
-		var scope = request.scope || dojo.global;
+		var scope = request.scope || winUtil.global;
 
 		//Generate what will be sent over.
 		var reqParams = {};
 		if(request.query){
-			reqParams.query = dojo.toJson(request.query);
+			reqParams.query = jsonUtil.toJson(request.query);
 		}
 
 		if(request.sort){
-			reqParams.sort = dojo.toJson(request.sort);
+			reqParams.sort = jsonUtil.toJson(request.sort);
 		}
 
 		if(request.queryOptions){
-			reqParams.queryOptions = dojo.toJson(request.queryOptions);
+			reqParams.queryOptions = jsonUtil.toJson(request.queryOptions);
 		}
 
 		if(typeof request.start == "number"){
@@ -295,7 +296,7 @@ dojo.declare("dojox.data.FileStore", null, {
 		}
 
 		if(this.options.length > 0){
-			reqParams.options = dojo.toJson(this.options);
+			reqParams.options = jsonUtil.toJson(this.options);
 		}
 
 		var getArgs = {
@@ -307,7 +308,7 @@ dojo.declare("dojox.data.FileStore", null, {
 		};
 
 
-		var deferred = dojo.xhrGet(getArgs);
+		var deferred = xhr.get(getArgs);
 
 		deferred.addCallback(function(data){self._processResult(data, request);});
 		deferred.addErrback(function(error){
@@ -322,12 +323,12 @@ dojo.declare("dojox.data.FileStore", null, {
 		//      See dojo.data.api.Read.loadItem()
 		var path = keywordArgs.identity;
 		var self = this;
-		var scope = keywordArgs.scope || dojo.global;
+		var scope = keywordArgs.scope || winUtil.global;
 
 		var content = {};
 
 		if(this.options.length > 0){
-			content.options = dojo.toJson(this.options);
+			content.options = jsonUtil.toJson(this.options);
 		}
 
 		if(this.pathAsQueryParam){
@@ -341,7 +342,7 @@ dojo.declare("dojox.data.FileStore", null, {
 			failOk: this.failOk
 		};
 
-		var deferred = dojo.xhrGet(xhrData);
+		var deferred = xhr.get(xhrData);
 		deferred.addErrback(function(error){
 				if(keywordArgs.onError){
 					keywordArgs.onError.call(scope, error);
@@ -357,7 +358,7 @@ dojo.declare("dojox.data.FileStore", null, {
 	},
 
 	_processResult: function(data, request){
-		 var scope = request.scope || dojo.global;
+		 var scope = request.scope || winUtil.global;
 		 try{
 			 //If the data contains a path separator, set ours
 			 if(data.pathSeparator){
@@ -407,12 +408,12 @@ dojo.declare("dojox.data.FileStore", null, {
 		if(!item){return null;}
 		item[this._storeRef] = this;
 		if(item.children && item.directory){
-			if(dojo.isArray(item.children)){
+			if(lang.isArray(item.children)){
 				var children = item.children;
 				var i;
 				for(i = 0; i < children.length; i++ ){
 					var name = children[i];
-					if(dojo.isObject(name)){
+					if(lang.isObject(name)){
 						children[i] = this._processItem(name);
 					}else{
 						children[i] = {name: name, _loaded: false, parentPath: item.path};
@@ -426,6 +427,4 @@ dojo.declare("dojox.data.FileStore", null, {
 		return item;
 	}
 });
-
-return dojox.data.FileStore;
 });

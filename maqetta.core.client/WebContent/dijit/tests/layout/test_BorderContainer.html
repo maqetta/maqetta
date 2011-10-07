@@ -19,7 +19,7 @@
 		#mondrian .dijitSplitterActive { background-color: blue }
 		.dj_webkit #mondrian .dijitSplitter:focus {
 			/* override orange focus border w/something easier to see (response to a11y bug report) */
-			outline: auto 5px blue;
+			outline: 5px blue;
 		}
 		#mondrian SPAN { display: none }
 		#mondrian:hover SPAN { display: inline }
@@ -60,16 +60,16 @@
 			}
 		}
 
-		function watchSplitters(bc) {
+		function watchSplitters(bc){
 			var out = dojo.byId("watchedOutput");
 			var moveConnects = {};
-			dojo.forEach(["top", "left"], function(region) {
+			dojo.forEach(["top", "left"], function(region){
 				var spl = bc.getSplitter(region);
 
-				dojo.connect(spl, "_startDrag", function() {
+				dojo.connect(spl, "_startDrag", function(){
 
 					dojo.style(spl.child.domNode, "opacity", "0.4");
-					moveConnects[spl.widgetId] = dojo.connect(spl.domNode, "onmousemove", function(evt) {
+					moveConnects[spl.widgetId] = dojo.connect(spl.domNode, "onmousemove", function(evt){
 
 						out.innerHTML = spl.region + ": " + dojo.toJson({
 							x: !spl.horizontal ? spl.domNode.style[spl.region] : 0,
@@ -78,7 +78,7 @@
 					})
 
 				});
-				dojo.connect(spl, "_stopDrag", function(evt) {
+				dojo.connect(spl, "_stopDrag", function(evt){
 					dojo.style(spl.child.domNode, "opacity", 1);
 					dojo.disconnect(moveConnects[spl.widgetId]);
 					delete moveConnects[spl.widgetId];
@@ -87,7 +87,7 @@
 		}
 
 		var bc, cp1, cp2, cp3;
-        dojo.addOnLoad(function(){
+        dojo.ready(function(){
 			watchSplitters( dijit.byId("watchedBC") );
 				
 			bc = new dijit.layout.BorderContainer({style:'height:400px;width:500px;border:1px solid black'}, dojo.byId('main'));

@@ -25,8 +25,9 @@
 		dojo.require("dojo.parser");
 		dojo.require("dijit.dijit"); // optimize: load dijit layer
 		dojo.require("dijit.form.ValidationTextBox");
+		dojo.require("dijit.layout.ContentPane");
 		
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			doh.register("parse", function(){
 				dojo.parser.parse();
 			});
@@ -46,15 +47,15 @@
 					dijit.byId("test19").promptMessage="really really really really really really really really really really really really really really really really really really really really";
 				}else if(width > 1200){
 					//Make a shorter tooltip longer in order to span the whole width
-					dijit.byId("test1").promptMessage="really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really<br><br><br><br><br><br><br><br><br><br><br><br><br><br>a"
-					dijit.byId("test4").promptMessage="really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really<br><br><br><br><br><br><br><br><br>a"
-					dijit.byId("test10").promptMessage="really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really<br><br><br><br><br><br><br><br><br>a"
+					dijit.byId("test1").promptMessage = "really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really<br><br><br><br><br><br><br><br><br><br><br><br><br><br>a";
+					dijit.byId("test4").promptMessage = "really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really<br><br><br><br><br><br><br><br><br>a";
+					dijit.byId("test10").promptMessage = "really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really<br><br><br><br><br><br><br><br><br>a";
 					dijit.byId("test20").promptMessage="really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really<br><br><br><br><br><br><br><br><br>a"
 				}
 				
 				if(height < 600){
 					//Make the taller tooltips shorter
-					for(var i=1;i<22;i++) {
+					for(var i=1;i<22;i++){
 						if(i==7){
 							//skip
 						}else{
@@ -113,7 +114,7 @@
 			//	4. If the tooltip is not completely visible, verify that it uses all available height
 			function testRightOrLeft(textbox, verifyFullWidthIsUtilized){
 				verifyTooltipArrowPosition(textbox);
-			
+
 				var textboxPos = dojo.position(textbox.domNode);
 				var tooltipContainerPos = dojo.position(dojo.query(".dijitTooltip")[0]);
 				
@@ -125,13 +126,13 @@
 
 				doh.t(toTheLeft || toTheRight, "The tooltip was not to the left or right");
 
-				var tooltip = dojo.query("div[dojoattachpoint='containerNode']");
-				var tooltipPos = dojo.position(tooltip[0]);
+				var tooltip = dijit.Tooltip._masterTT.containerNode;
+				var tooltipPos = dojo.position(tooltip);
 
 				var view = dojo.window.getBox();
 				var isIE6 = dojo.isIE < 7;
 				//verify the entire width is utilized.  Small tooltips will not utilize the entire width.
-				if(verifyFullWidthIsUtilized && !isIE6 && !dojo.isOpera) {
+				if(verifyFullWidthIsUtilized && !isIE6 && !dojo.isOpera){
 					if(toTheLeft){
 						doh.t(tooltipContainerPos.w + 3/*space in between arrow and textbox*/ >= textboxPos.x, "The entire width was not utilized to the left");					
 					}else{
@@ -140,8 +141,8 @@
 				}
 			
 				//If we cannot view the entire tooltip, verify they side with the most space was choosen and the entire height was utilized.
-				var canViewEntireTooltip = (tooltipContainerPos.x + tooltipContainerPos.w <= view.w) && 
-										   (tooltipPos.y + tooltipPos.h <= view.h);
+				var canViewEntireTooltip = (tooltipContainerPos.x + tooltipContainerPos.w <= view.w+1) && 
+										   (tooltipPos.y + tooltipPos.h <= view.h+1);			
 				if(!canViewEntireTooltip && !isIE6 && !dojo.isOpera){
 					if(toTheLeft){
 						//verify there is more space on the left than the right
@@ -150,8 +151,21 @@
 						doh.t(textboxPos.x <= (view.w - textboxPos.x - textboxPos.w), "There is not more space on the right than the left");
 					}
 					//verify the entire height is utilized
-					doh.t(tooltipPos.h >= view.h, "The entire height was not utilized");
+					doh.t(tooltipPos.h >= view.h, "The entire height was not utilized. Tooltip height="+tooltipPos.h+". View height="+view.h);
 				}
+			}
+			
+			function toTheLeftOrRight(textbox){
+				var textboxPos = dojo.position(textbox.domNode);
+				var tooltipContainerPos = dojo.position(dojo.query(".dijitTooltip")[0]);
+				
+				var xDiff = textboxPos.x - tooltipContainerPos.x - tooltipContainerPos.w;
+				var toTheLeft = xDiff >= -1 && xDiff < 2;
+
+				xDiff = tooltipContainerPos.x - textboxPos.x - textboxPos.w;
+				var toTheRight = xDiff >= -1 && xDiff < 2;
+
+				doh.t(toTheLeft || toTheRight, "The tooltip was not to the left or right");
 			}
 			
 			//Verify the tooltip arrow is next to the textbox
@@ -162,9 +176,8 @@
 				var middleOfTextbox = textboxPos.y + (textboxPos.h / 2);
 				var middleOfTooltipConnector = tooltipConnectorPos.y + (tooltipConnectorPos.h /2);
 
-				var yDiff = 0;
 				var yDiff = middleOfTextbox - middleOfTooltipConnector;
-				var yAxisValid = yDiff <= 1.5 && yDiff >= -1.5; //tooltip arrow is at a similar y coord as the box
+				var yAxisValid = yDiff <= 2 && yDiff >= -1.5; //tooltip arrow is at a similar y coord as the box
 				doh.t(yAxisValid, "Y axis is invalid. yDiff was: "+yDiff);
 			}
 			
@@ -329,6 +342,50 @@
 					dojo.disconnect(handler);
 				}
 			}];
+			var tooltip_left_right_overflow = [{
+				name: "test22",
+				timeout: 4000,
+				runTest: function(){
+					var d = new doh.Deferred();
+					widget = dijit.byId("test22");
+					var cp = dijit.byId("test22_cp");
+
+					dojo.byId("afterBeforeButton").focus();
+					dojo.byId("afterBeforeButton").click();
+					widget.set('value', null);
+
+					handler = dojo.connect(dijit._MasterTooltip.prototype, "_onShow", d.getTestCallback(function(){
+						toTheLeftOrRight(cp, true);
+					}));
+					widget.focusNode.focus();
+				
+					return d;
+				},
+				tearDown: function(){
+					dojo.disconnect(handler);
+				}
+			}];
+			var tooltip_left_right_overflow_rtl = [{
+				name: "test23",
+				timeout: 4000,
+				runTest: function(){
+					var d = new doh.Deferred();
+					widget = dijit.byId("test23");
+					var cp = dijit.byId("test23_cp");
+
+					widget.set('value', null);
+
+					handler = dojo.connect(dijit._MasterTooltip.prototype, "_onShow", d.getTestCallback(function(){
+						toTheLeftOrRight(cp, true);
+					}));
+					widget.focusNode.focus();
+				
+					return d;
+				},
+				tearDown: function(){
+					dojo.disconnect(handler);
+				}
+			}];
 
 			// rest of tests
 			for(var i=2; i<=21; i++){
@@ -479,6 +536,8 @@
 			doh.register("tooltip_above_below_small", tooltip_above_below_small);
 			doh.register("tooltip_above_below", tooltip_above_below);
 			doh.register("tooltip_above_below_tall_skinny", tooltip_above_below_tall_skinny);
+			doh.register("tooltip_left_right_overflow", tooltip_left_right_overflow);
+			doh.register("tooltip_left_right_overflow_rtl", tooltip_left_right_overflow_rtl);
 			doh.run();
 		});
 	</script>
@@ -564,7 +623,7 @@
 	<tr>
 	<td>
 		<button id="aboveBelowButton" onclick="dijit.Tooltip.defaultPosition=['above', 'below']; dojo.byId('current').innerHTML='Current: ' + dijit.Tooltip.defaultPosition;">above, below</button>
-		<button onclick="dijit.Tooltip.defaultPosition=['after', 'before']; dojo.byId('current').innerHTML='Current: ' + dijit.Tooltip.defaultPosition;">after, before (default)</button>
+		<button id="afterBeforeButton" onclick="dijit.Tooltip.defaultPosition=['after', 'before']; dojo.byId('current').innerHTML='Current: ' + dijit.Tooltip.defaultPosition;">after, before (default)</button>
 		<div id=current>
 			Current: default (unchanged)
 		</div>
@@ -711,5 +770,17 @@
 	</td>
 	</tr>
 </table>
+
+<div id="test22_cp" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="style:{height:'90px', width:'100px', padding:'0px'}">
+   <input type="text" id="test22" name="test22" data-dojo-type="dijit.form.ValidationTextBox" data-dojo-props="style:{fontSize:'100pt'}, promptMessage:'test overflow', required:true"/>
+<br><br><br><br><br>
+</div>
+
+<table width='100%' align='left'><tr><td width='95%'></td><td style="width:'5%'">
+<div id="test23_cp" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="dir:'rtl', style:{height:'100px', width:'100px', border:'1px', overflow:'scroll'}">
+   <input type="text" id="test23" name="test23" data-dojo-type="dijit.form.ValidationTextBox" data-dojo-props="dir:'rtl', style:{fontSize:'20pt'}, promptMessage:'test overflow', required:true"/>
+</div>
+</td></tr></table>
+
 </body>
 </html>

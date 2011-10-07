@@ -15,7 +15,7 @@
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_ColorPalette.html');
 
 				var big, small, prog;
@@ -60,9 +60,9 @@
 								doh.is(0, changes.length, "no onchange events yet");
 								
 								// test that focus is on top left cell
-								var focus = dojo.global.dijit._curFocus;
+								var focus = dojo.global.dijit.focus.curNode;
 								doh.t(focus, "something is focused");
-								var imgNode = focus.getElementsByTagName("img")[0]
+								var imgNode = focus.getElementsByTagName("img")[0];
 								doh.t(imgNode, "found image node");
                                 //
                                 var dye = big._getDye(focus);                                
@@ -88,10 +88,10 @@
 							
 							// Focus should follow the current position for the benefit of screen readers.
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								var focus = dojo.global.dijit._curFocus;
+								var focus = dojo.global.dijit.focus.curNode;
 								doh.t(focus, "something is focused");
 								
-								var imgNode = focus.getElementsByTagName("img")[0]
+								var imgNode = focus.getElementsByTagName("img")[0];
 								doh.t(imgNode, "found image node");
                                 //
                                 var dye = big._getDye(focus);
@@ -139,22 +139,22 @@
 							dojo.byId("beforeBig").focus();
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.is("pink", dojo.global.dijit._curFocus.title, "tab into colorpalette, focus goes to pink (last focused cell)")
+								doh.is("pink", dojo.global.dijit.focus.curNode.title, "tab into colorpalette, focus goes to pink (last focused cell)")
 							}), 1000);
 
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.is("afterBig", dojo.global.dijit._curFocus.id, "another tab, went to input after ColorPalette")
+								doh.is("afterBig", dojo.global.dijit.focus.curNode.id, "another tab, went to input after ColorPalette")
 							}), 1000);
 
 							doh.robot.keyPress(dojo.keys.TAB, 500, {shift: true});
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.is("pink", dojo.global.dijit._curFocus.title, "shift-tab back into colorpalette")
+								doh.is("pink", dojo.global.dijit.focus.curNode.title, "shift-tab back into colorpalette")
 							}), 1000);
 
 							doh.robot.keyPress(dojo.keys.TAB, 500, {shift: true});
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("beforeBig", dojo.global.dijit._curFocus.id, "another shift-tab, to input before ColorPalette")
+								doh.is("beforeBig", dojo.global.dijit.focus.curNode.id, "another shift-tab, to input before ColorPalette")
 							}), 1000);
 
 							return d;
@@ -217,9 +217,9 @@
 								doh.is("#008000", value, "value");
 								
 								// test that focus also got set
-								var focus = dojo.global.dijit._curFocus;
+								var focus = dojo.global.dijit.focus.curNode;
 								doh.t(focus, "something is focused");
-								var imgNode = focus.getElementsByTagName("img")[0]
+								var imgNode = focus.getElementsByTagName("img")[0];
 								doh.t(imgNode, "found image node");
 								var dye = small._getDye(focus);
 								doh.is("#008000", dye.getValue(), "focused");
@@ -234,6 +234,11 @@
 							
 							return d;
 						}
+					},
+					function valuePreselected(){
+						var cp = dijit.byId("valuePreselected");
+						doh.is("#0000ff", cp.get("value"), "get('value')");
+						doh.is("blue", dojo.query(".dijitPaletteCellSelected img", cp.domNode)[0].alt, "marked");
 					}
 				]);
 

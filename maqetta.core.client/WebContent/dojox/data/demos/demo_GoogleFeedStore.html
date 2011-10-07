@@ -39,13 +39,13 @@
 	<title>Google Feed Store</title>
 
 	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: true"></script>
-	<script type="text/javascript" src="../GoogleSearchStore.js"></script>
-	<script type="text/javascript" src="../GoogleFeedStore.js"></script>
 	<script type="text/javascript">
 		dojo.require("dijit.form.ComboBox");
 		dojo.require("dijit.form.FilteringSelect");
 		dojo.require("dojox.dtl");
 		dojo.require("dojox.dtl.ext-dojo.NodeList");
+		dojo.require("dojox.data.GoogleSearchStore");
+		dojo.require("dojox.data.GoogleFeedStore");
 		
 		dojo.addOnLoad(function(){
 			dojo.connect(dojo.byId("output"), "onclick", function(evt) {

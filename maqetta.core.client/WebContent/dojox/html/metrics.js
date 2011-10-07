@@ -1,7 +1,8 @@
-dojo.provide("dojox.html.metrics");
-
-(function(){
-	var dhm = dojox.html.metrics;
+define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/sniff", "dojo/_base/unload", 
+		"dojo/_base/window", "dojo/dom-geometry"],
+  function(kernel,lang,has,UnloadUtil,Window,DOMGeom){
+	var dhm = lang.getObject("dojox.html.metrics",true);
+	var dojox = lang.getObject("dojox");
 
 	//	derived from Morris John's emResized measurer
 	dhm.getFontMeasurements = function(){
@@ -12,14 +13,14 @@ dojo.provide("dojox.html.metrics");
 			'small':0, 'medium':0, 'large':0, 'x-large':0, 'xx-large':0
 		};
 	
-		if(dojo.isIE){
+		if(has("ie")){
 			//	we do a font-size fix if and only if one isn't applied already.
 			//	NOTE: If someone set the fontSize on the HTML Element, this will kill it.
-			dojo.doc.documentElement.style.fontSize="100%";
+			Window.doc.documentElement.style.fontSize="100%";
 		}
 	
 		//	set up the measuring node.
-		var div=dojo.doc.createElement("div");
+		var div=Window.doc.createElement("div");
 		var ds = div.style;
 		ds.position="absolute";
 		ds.left="-100px";
@@ -32,7 +33,7 @@ dojo.provide("dojox.html.metrics");
 		ds.outline="0";
 		ds.lineHeight="1";
 		ds.overflow="hidden";
-		dojo.body().appendChild(div);
+		Window.body().appendChild(div);
 	
 		//	do the measurements.
 		for(var p in heights){
@@ -40,7 +41,7 @@ dojo.provide("dojox.html.metrics");
 			heights[p] = Math.round(div.offsetHeight * 12/16) * 16/12 / 1000;
 		}
 		
-		dojo.body().removeChild(div);
+		Window.body().removeChild(div);
 		div = null;
 		return heights; 	//	object
 	};
@@ -58,10 +59,10 @@ dojo.provide("dojox.html.metrics");
 	dhm.getTextBox = function(/* String */ text, /* Object */ style, /* String? */ className){
 		var m, s;
 		if(!measuringNode){
-			m = measuringNode = dojo.doc.createElement("div");
+			m = measuringNode = Window.doc.createElement("div");
 			// Container that we can set contraints on so that it doesn't
 			// trigger a scrollbar.
-			var c = dojo.doc.createElement("div");
+			var c = Window.doc.createElement("div");
 			c.appendChild(m);
 			s = c.style;
 			s.overflow='scroll';
@@ -75,7 +76,7 @@ dojo.provide("dojox.html.metrics");
 			s.margin = "0";
 			s.padding = "0";
 			s.outline = "0";
-			dojo.body().appendChild(c);
+			Window.body().appendChild(c);
 		}else{
 			m = measuringNode;
 		}
@@ -99,7 +100,7 @@ dojo.provide("dojox.html.metrics");
 		}
 		// take a measure
 		m.innerHTML = text;
-		var box = dojo.position(m);
+		var box = DOMGeom.position(m);
 		// position doesn't report right (reports 1, since parent is 1)
 		// So we have to look at the scrollWidth to get the real width
 		// Height is right.
@@ -114,13 +115,13 @@ dojo.provide("dojox.html.metrics");
 	dhm._fontResizeNode = null;
 
 	dhm.initOnFontResize = function(interval){
-		var f = dhm._fontResizeNode = dojo.doc.createElement("iframe");
+		var f = dhm._fontResizeNode = Window.doc.createElement("iframe");
 		var fs = f.style;
 		fs.position = "absolute";
 		fs.width = "5em";
 		fs.height = "10em";
 		fs.top = "-10000px";
-		if(dojo.isIE){
+		if(has("ie")){
 			f.onreadystatechange = function(){
 				if(f.contentWindow.document.readyState == "complete"){
 					f.onresize = f.contentWindow.parent[dojox._scopeName].html.metrics._fontresize;
@@ -133,7 +134,7 @@ dojo.provide("dojox.html.metrics");
 		}
 		//The script tag is to work around a known firebug race condition.  See comments in bug #9046
 		f.setAttribute("src", "javascript:'<html><head><script>if(\"loadFirebugConsole\" in window){window.loadFirebugConsole();}</script></head><body></body></html>'");
-		dojo.body().appendChild(f);
+		Window.body().appendChild(f);
 		dhm.initOnFontResize = function(){};
 	};
 
@@ -142,11 +143,11 @@ dojo.provide("dojox.html.metrics");
 		dhm.onFontResize();
 	}
 
-	dojo.addOnUnload(function(){
+	UnloadUtil.addOnUnload(function(){
 		// destroy our font resize iframe if we have one
 		var f = dhm._fontResizeNode;
 		if(f){
-			if(dojo.isIE && f.onresize){
+			if(has("ie") && f.onresize){
 				f.onresize = null;
 			}else if(f.contentWindow && f.contentWindow.onresize){
 				f.contentWindow.onresize = null;
@@ -155,22 +156,23 @@ dojo.provide("dojox.html.metrics");
 		}
 	});
 
-	dojo.addOnLoad(function(){
+	UnloadUtil.addOnUnload(function(){
 		// getScrollbar metrics node
 		try{
-			var n=dojo.doc.createElement("div");
+			var n=Window.doc.createElement("div");
 			n.style.cssText = "top:0;left:0;width:100px;height:100px;overflow:scroll;position:absolute;visibility:hidden;";
-			dojo.body().appendChild(n);
+			Window.body().appendChild(n);
 			scroll.w = n.offsetWidth - n.clientWidth;
 			scroll.h = n.offsetHeight - n.clientHeight;
-			dojo.body().removeChild(n);
+			Window.body().removeChild(n);
 			//console.log("Scroll bar dimensions: ", scroll);
 			delete n;
 		}catch(e){}
 
 		// text size poll setup
-		if("fontSizeWatch" in dojo.config && !!dojo.config.fontSizeWatch){
+		if("fontSizeWatch" in kernel.config && !!kernel.config.fontSizeWatch){
 			dhm.initOnFontResize();
 		}
 	});
-})();
+	return dhm;
+});

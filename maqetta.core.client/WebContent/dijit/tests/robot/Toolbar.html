@@ -15,7 +15,7 @@
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_Toolbar.html');
 
 				var toolbar1Before, toolbar1After, toolbar1, toolbar2, toolbar3, toolbar4;
@@ -38,7 +38,7 @@
 							doh.t(toolbar3, "toolbar 3");
 							doh.t(toolbar4, "toolbar 4");
 							
-							// and that labels are shown except when showLabel=true
+							// and that labels are shown except when showLabel==false
 							var cutText = dojo.query(".dijitButtonText", dojo.byId("toolbar1.cut"))[0];
 							doh.is(0, cutText.offsetWidth, "cut button - text hidden");						
 
@@ -61,22 +61,22 @@
 
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is("toolbar1.cut", dojo.global.dijit._curFocus.id, "cut, first visit");
+								doh.is("toolbar1.cut", dojo.global.dijit.focus.curNode.id, "cut, first visit");
 							})), 1000);
 
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is("toolbar1After", dojo.global.dijit._curFocus.id);
+								doh.is("toolbar1After", dojo.global.dijit.focus.curNode.id);
 							})), 1000);
 
 							doh.robot.keyPress(dojo.keys.TAB, 500, {shift: true});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is("toolbar1.cut", dojo.global.dijit._curFocus.id, "cut, second visit");
+								doh.is("toolbar1.cut", dojo.global.dijit.focus.curNode.id, "cut, second visit");
 							})), 1000);
 
 							doh.robot.keyPress(dojo.keys.TAB, 500, {shift: true});
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
-								doh.is("toolbar1Before", dojo.global.dijit._curFocus.id, "back before toolbar1");
+								doh.is("toolbar1Before", dojo.global.dijit.focus.curNode.id, "back before toolbar1");
 							})), 1000);
 
 							return d;
@@ -101,17 +101,17 @@
 							toolbar1Before.focus();
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is("toolbar1.italic", dojo.global.dijit._curFocus.id, "cut, first visit");
+								doh.is("toolbar1.italic", dojo.global.dijit.focus.curNode.id, "italic, first visit");
 							})), 1000);
 
-							// Remaining enabled positons that left/right arrow should navigate to (not including the initial leftmost button),
+							// Remaining enabled positions that left/right arrow should navigate to (not including the initial leftmost button),
 							var focusPoints = ["toolbar1.dialog", "toolbar1.combo_button", "toolbar1.combo_arrow", "toolbar1.insertorderedlist"];
 
 							// Use right arrow key to visit every enabled button (and for combobutton to hit left and right sides)
 							dojo.forEach(focusPoints, function(str){
 								doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500, {});
 								doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-									doh.is(str, dojo.global.dijit._curFocus.id, str + ", first visit");
+									doh.is(str, dojo.global.dijit.focus.curNode.id, str + ", first visit");
 								})), 1000);
 							});
 
@@ -121,7 +121,7 @@
 							dojo.forEach(focusPoints, function(str){
 								doh.robot.keyPress(dojo.keys.LEFT_ARROW, 500, {});
 								doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-									doh.is(str, dojo.global.dijit._curFocus.id, str + ", second visit");
+									doh.is(str, dojo.global.dijit.focus.curNode.id, str + ", second visit");
 								})), 1000);
 							});
 
@@ -132,18 +132,18 @@
 							// or on the other buttons. 
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is("toolbar1After", dojo.global.dijit._curFocus.id, "first time past toolbar1");
+								doh.is("toolbar1After", dojo.global.dijit.focus.curNode.id, "first time past toolbar1");
 							})), 1000);
 
 							// Make sure that we can still shift-tab back to before the toolbar too
 							doh.robot.keyPress(dojo.keys.TAB, 500, {shift: true});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is("toolbar1.italic", dojo.global.dijit._curFocus.id, "cut, after shift-tab back into toolbar");
+								doh.is("toolbar1.italic", dojo.global.dijit.focus.curNode.id, "italic, after shift-tab back into toolbar");
 							})), 1000);
 
 							doh.robot.keyPress(dojo.keys.TAB, 500, {shift: true});
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
-								doh.is("toolbar1Before", dojo.global.dijit._curFocus.id, "back before toolbar1");
+								doh.is("toolbar1Before", dojo.global.dijit.focus.curNode.id, "back before toolbar1");
 							})), 1000);
 
 							return d;
@@ -161,20 +161,20 @@
 							toolbar1Before.focus();
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is("toolbar1.italic", dojo.global.dijit._curFocus.id, "first button");
+								doh.is("toolbar1.italic", dojo.global.dijit.focus.curNode.id, "first button");
 							})), 1000);
 
 							// End key should go to last button
 							doh.robot.keyPress(dojo.keys.END, 500, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is("toolbar1.insertorderedlist", dojo.global.dijit._curFocus.id, "last button");
+								doh.is("toolbar1.insertorderedlist", dojo.global.dijit.focus.curNode.id, "last button");
 							})), 1000);
 
 							// Home key should go to first enabled button again
 							// which is "italic", since "cut" and "copy" are disabled
 							doh.robot.keyPress(dojo.keys.HOME, 500, {});
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
-								doh.is("toolbar1.italic", dojo.global.dijit._curFocus.id, "first button again");
+								doh.is("toolbar1.italic", dojo.global.dijit.focus.curNode.id, "first button again");
 							})), 1000);
 
 							return d;
@@ -202,25 +202,25 @@
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500, {});
 
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is("toolbar1.dialog", dojo.global.dijit._curFocus.id, "dialog button, first visit");
+								doh.is("toolbar1.dialog", dojo.global.dijit.focus.curNode.id, "dialog button, first visit");
 							})), 1000);
 
 							// Open the dialog, focus should go to first input
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is("user", dojo.global.dijit._curFocus.id);
+								doh.is("user", dojo.global.dijit.focus.curNode.id);
 							})), 1000);
 
 							// ESC should restore focus to toolbar dialog button
 							doh.robot.keyPress(dojo.keys.ESCAPE, 500, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is("toolbar1.dialog", dojo.global.dijit._curFocus.id, "dialog button, second visit");
+								doh.is("toolbar1.dialog", dojo.global.dijit.focus.curNode.id, "dialog button, second visit");
 							})), 1000);
 
 							// Open the dialog again
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is("user", dojo.global.dijit._curFocus.id, "user, again");
+								doh.is("user", dojo.global.dijit.focus.curNode.id, "user, again");
 							})), 1000);
 
 							// Submit should also restore focus to toolbar dialog button, assuming that it
@@ -229,29 +229,29 @@
 							doh.robot.keyPress(dojo.keys.TAB, 500);
 							doh.robot.keyPress(dojo.keys.ENTER, 500);
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is("toolbar1.dialog", dojo.global.dijit._curFocus.id, "dialog button, third visit");
+								doh.is("toolbar1.dialog", dojo.global.dijit.focus.curNode.id, "dialog button, third visit");
 							})), 1000);
 
 							// Try the ColorPalette
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500);
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500);
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.t(dojo.isDescendant(dojo.global.dijit._curFocus, dijit.byId("toolbar1.colorPalette").domNode),
-									"focus inside colorpalette, actual focus is: " + (dojo.global.dijit._curFocus ? 
-										(dojo.global.dijit._curFocus.id||"no id") : "no focus"));
+								doh.t(dojo.isDescendant(dojo.global.dijit.focus.curNode, dijit.byId("toolbar1.colorPalette").domNode),
+									"focus inside colorpalette, actual focus is: " + (dojo.global.dijit.focus.curNode ?
+										(dojo.global.dijit.focus.curNode.id||"no id") : "no focus"));
 							})), 1000);
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500);	// navigation in the ColorPalette
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500);	// navigation in the ColorPalette
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.t(dojo.isDescendant(dojo.global.dijit._curFocus, dijit.byId("toolbar1.colorPalette").domNode),
-									"focus still inside colorpalette, actual focus is: " + (dojo.global.dijit._curFocus ? 
-										(dojo.global.dijit._curFocus.id||"no id") : "no focus"));
+								doh.t(dojo.isDescendant(dojo.global.dijit.focus.curNode, dijit.byId("toolbar1.colorPalette").domNode),
+									"focus still inside colorpalette, actual focus is: " + (dojo.global.dijit.focus.curNode ?
+										(dojo.global.dijit.focus.curNode.id||"no id") : "no focus"));
 							})), 1000);
 							
 							// pressing tab in the colorpalette should move focus back to the toolbar
 							doh.robot.keyPress(dojo.keys.TAB, 500);
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is("toolbar1.backcolor", dojo.global.dijit._curFocus.id, "back on colorpalette button");
+								doh.is("toolbar1.backcolor", dojo.global.dijit.focus.curNode.id, "back on colorpalette button");
 							})), 1000);
 
 							// try the ComboButton

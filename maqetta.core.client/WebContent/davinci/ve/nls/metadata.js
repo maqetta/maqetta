@@ -1,4 +1,5 @@
-({
+define({ root:
+{
 /*
  * For Palette dijit.form
  */
@@ -139,4 +140,6 @@ onSelect: "Select",
 onSubmit: "Submit",
 
 __dummy__: ""
-})
+},
+'ja': true
+});

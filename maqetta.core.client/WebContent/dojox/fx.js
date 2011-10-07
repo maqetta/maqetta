@@ -1,3 +1,3 @@
-dojo.provide("dojox.fx");
-
-dojo.require("dojox.fx._base");
+define(["./fx/_base"], function(DojoxFx){
+	return DojoxFx;
+});

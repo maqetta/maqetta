@@ -3,7 +3,6 @@ dojo.experimental("dojox.widget.CalendarViews");
 
 dojo.require("dojox.widget.Calendar");
 
-
 dojo.declare("dojox.widget._CalendarMonth", null, {
 	// summary: Mixin class for adding a view listing all 12 months of the year to the
 	//	 dojox.widget._CalendarBase

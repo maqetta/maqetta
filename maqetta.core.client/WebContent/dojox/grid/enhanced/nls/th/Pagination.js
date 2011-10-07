@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} จาก ${1} ${0}",
 	"firstTip": "หน้าแรก",
@@ -13,6 +15,9 @@
 	"dialogIndication": "ระบุหมายเลขหน้า",
 	"pageCountIndication": " (${0} หน้า)",
 	"dialogConfirm": "ไปที่",
-	"dialogCancel": "ยกเลิก"
+	"dialogCancel": "ยกเลิก",
+	"all": "ทั้งหมด"
 })
+//end v1.x content
+);
 

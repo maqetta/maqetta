@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertImageTitle: "Resim Ekle",
 	url: "Resim",
@@ -9,3 +11,5 @@
 	prePopuTextBrowse: " ya da yerel bir dosyaya göz atın."
 })
 
+//end v1.x content
+);

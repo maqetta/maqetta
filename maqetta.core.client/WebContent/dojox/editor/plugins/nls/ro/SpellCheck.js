@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	widgetLabel: "Verificare ortografică lot",
 	unfound: "Nu a fost găsit",
@@ -15,3 +17,5 @@
 	iMsg: "Nicio sugestie de verificare ortografică"
 })
 
+//end v1.x content
+);

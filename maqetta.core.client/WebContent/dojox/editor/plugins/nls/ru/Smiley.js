@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	smiley: "Вставить значок настроения",
 	emoticonSmile: "улыбка",
@@ -20,3 +22,5 @@
 	emoticonCrying: "плачь"
 })
 
+//end v1.x content
+);

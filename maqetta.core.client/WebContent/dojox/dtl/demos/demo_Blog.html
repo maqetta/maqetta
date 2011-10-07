@@ -3,11 +3,11 @@
 		<title>Testing dojox.dtl using a blog example</title>
 		<script src="../../../dojo/dojo.js" djConfig="usePlainJson: true, parseOnLoad: true"></script>
 		<script>
-			dojo.require("dijit._Widget");
+			dojo.require("dijit._WidgetBase");
 			dojo.require("dojox.dtl._DomTemplated");
 			dojo.require("dojo.parser");
 
-			dojo.declare("demo.Blog", [dijit._Widget, dojox.dtl._DomTemplated],
+			dojo.declare("demo.Blog", [dijit._WidgetBase, dojox.dtl._DomTemplated],
 			{
 				templatePath: dojo.moduleUrl("dojox.dtl.demos.templates", "blog_list.html"),
 				base: {

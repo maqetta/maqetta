@@ -48,7 +48,6 @@
 		is told that debug mode is off, and to parse all dojoType widgets when it has fully loaded.
 	-->
 	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: false, parseOnLoad: true, useCommentedJson: true"></script>
-	<script type="text/javascript" src="../../../dijit/dijit.js"></script>
 	<script>
 		dojo.require("dijit.Tree");
 		dojo.require("dijit.tree.ForestStoreModel");
@@ -62,7 +61,8 @@
 		Demo:  Lazy Loading File Browsing Store
 	</h1>
 	<p>The tree below uses the dojox.data.FileStore and a PHP implementation for the serverside to browse the dojo tree hierarchy in a lazy-load fashion.</p>
-	<p><i><b>This demo must be run from a web-server with PHP support enabled.  Without PHP support, this demo cannot function.</b></i></p>
+	<p><i><b>This demo must be run from a web-server with PHP support enabled.  Without PHP support, this demo cannot function.  The Demo also requires PHP 
+	support for json_encode and json_decode.  Please be sure to have those packages installed in your PHP environment.</b></i></p>
 	<hr>
 	<i>Clicking on a file in the tree will display the details about that file.</i>
 	<div dojoType="dojox.data.FileStore" url="stores/filestore_dojotree.php" jsId="fileStore" pathAsQueryParam="true"></div>

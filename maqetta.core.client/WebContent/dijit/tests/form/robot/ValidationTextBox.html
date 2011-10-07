@@ -11,7 +11,9 @@
 
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true"></script>
+			djConfig="isDebug: true"></script>
+
+		<script type="text/javascript" src="../../helpers.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
@@ -20,7 +22,7 @@
 				return typeof val == "string" ? val.replace(/\xA0/g, " ") : val;
 			}
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_validate.html');
 
 				// Test initial conditions
@@ -127,14 +129,14 @@
 								// check that watch() callbacks were called
 								for(attr in watchExpected){
 									doh.t(attr in watchActual, "watch(" + attr + ") fired");
-									doh.is(watchExpected[attr], watchActual[attr], "watch(" + attr + ")")
+									doh.is(watchExpected[attr], watchActual[attr], "watch(" + attr + ")");
 									doh.is(typeof watchExpected[attr], typeof watchActual[attr], "typeof watch(" + attr + ")")
 								}
 		
 								// check that direct get(...) calls are also working, for both the attributes
 								// that were supposed to change and the attributes that weren't supposed to change
 								for(attr in expectedState){
-									doh.is(expectedState[attr], fixNbsp(textbox.get(attr)), "get(" + attr + ")")
+									doh.is(expectedState[attr], fixNbsp(textbox.get(attr)), "get(" + attr + ")");
 									doh.is(typeof expectedState[attr], typeof textbox.get(attr), "typeof get(" + attr + ")")
 								}
 
@@ -615,7 +617,7 @@
 								doh.is('123.000', this.textbox.focusNode.value, "focusNode.value");
 								doh.is(undefined, this.textbox.get('value'), "get('value')");
 								doh.f(this.textbox.isValid(), "!isValid()");
-							})), 1000);
+							})), 1500);
 							return d;
 						}
 					},
@@ -636,7 +638,7 @@
 								doh.is('-123.00', this.textbox.focusNode.value, "focusNode.value");
 								doh.is(-123, this.textbox.get('value'), "get('value')");
 								doh.t(this.textbox.isValid(), "isValid()");
-							})), 1000);
+							})), 1500);
 							return d;
 						}
 					},
@@ -657,7 +659,7 @@
 								doh.is('($123.00)', this.textbox.focusNode.value, "focusNode.value");
 								doh.is(-123, this.textbox.get('value'), "get('value')");
 								doh.t(this.textbox.isValid(), "isValid()");
-							})), 1000);
+							})), 1500);
 							return d;
 						}
 					},
@@ -845,7 +847,7 @@
 							doh.robot.typeKeys('abc', 1000, 600);
 
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
-								doh.is("q24", (dojo.global.dijit._curFocus||{}).id, "did focus");
+								doh.is("q24", (dojo.global.dijit.focus.curNode||{}).id, "did focus");
 								doh.is('cannot type here', this.textbox.focusNode.value, "focusNode.value");
 								doh.is('cannot type here', this.textbox.get('value'), "get('value')");
 							})), 1000);
@@ -897,7 +899,7 @@
 							doh.robot.mouseClick({left: true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
-								doh.isNot("q24", (dojo.global.dijit._curFocus||{}).id, "didn't focus");
+								doh.isNot("q24", (dojo.global.dijit.focus.curNode||{}).id, "didn't focus");
 							})), 500);
 							return d;
 						}
@@ -918,7 +920,7 @@
 							doh.robot.keyPress(dojo.keys.TAB, 500);
 
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
-								doh.is("q26", dojo.global.dijit._curFocus.id,
+								doh.is("q26", dojo.global.dijit.focus.curNode.id,
 										"tabbed past input, to the button after it");
 							})), 500);
 							return d;
@@ -1231,6 +1233,126 @@
 							dojo.byId("q01").focus();
 							return d;
 						}
+					}
+				]);
+
+				function testOn(evt, widget, deferred, callback, delay){
+					var handler = widget.connect(widget.focusNode, "on"+evt,
+						function(){
+							widget.disconnect(handler);
+							setTimeout(deferred.getTestCallback(callback), delay||250);
+						});
+				}
+
+				// Supplementary test from validationMessages.html, to make sure tooltip doesn't flash
+				// on typing multiple invalid characters
+				doh.register("validation", [
+					{
+						name: "first focus, empty value",
+						timeout: 5000,
+						runTest: function(){
+							var d = new doh.Deferred();
+							textbox = dijit.byId("q03");
+							textbox.focusNode.scrollIntoView();
+							textbox.set("value", "");
+							textbox.focus();
+							setTimeout(d.getTestCallback(function(){
+								// Tooltip should appear with information message
+								masterTT = dojo.global.dijit._masterTT;
+								doh.t(masterTT && isVisible(masterTT.domNode), "visible");
+								doh.is("(optional) Enter an age between 0 and 120", dojo.trim(innerText(masterTT.domNode)));
+							}), 750);
+						}
+					},
+					{
+						name: "first invalid character",
+						timeout: 2000,
+						runTest: function(){
+							var d = new doh.Deferred();
+							testOn('keyup', textbox, d, function(){
+								masterTT = dojo.global.dijit._masterTT;
+								doh.t(masterTT && isVisible(masterTT.domNode), "visible");
+								doh.is("The value entered is not valid.", dojo.trim(innerText(masterTT.domNode)),
+									"message changed from info message to error message");
+							});
+							doh.robot.typeKeys("a", 0, 0);
+							return d;
+						}
+					},
+					{
+						name: "second invalid character",
+						timeout: 2000,
+						runTest: function(){
+							var d = new doh.Deferred();
+							var tooltipHidden = false;
+							testOn('keyup', textbox, d, function(){
+								masterTT = dojo.global.dijit._masterTT;
+								doh.f(tooltipHidden, "tooltip didn't blink or disappear");
+								doh.is("The value entered is not valid.", dojo.trim(innerText(masterTT.domNode)),
+									"same message");
+							});
+							dojo.connect(dijit, "hideTooltip", function(){ tooltipHidden = true; });
+							doh.robot.typeKeys("a", 0, 0);
+							return d;
+						}
+					},
+					{
+						name: "tab away",
+						timeout: 2000,
+						runTest: function(){
+							var d = new doh.Deferred();
+							testOn('blur', textbox, d, function(){
+								masterTT = dojo.global.dijit._masterTT;
+								doh.t(masterTT && isHidden(masterTT.domNode), "hidden");
+							});
+							doh.robot.keyPress(dojo.keys.TAB, 0);
+							return d;
+						}
+					},
+					{
+						name: "tab back",
+						timeout: 2000,
+						runTest: function(){
+							var d = new doh.Deferred();
+							testOn('focus', textbox, d, function(){
+								masterTT = dojo.global.dijit._masterTT;
+								doh.t(masterTT && isVisible(masterTT.domNode), "visible again");
+								doh.is("The value entered is not valid.", dojo.trim(innerText(masterTT.domNode)),
+									"same message");
+							});
+							doh.robot.keyPress(dojo.keys.TAB, 0, { shift:true });
+							return d;
+						}
+					}
+				]);
+
+				doh.register("validation in dialog", [
+					function showDialog(){
+						// Show dialog, returning Deferred that fires when show dialog is finished.
+						// Before showing, focus the open button, so that Dialog knows where to return focus to.
+						dijit.byId("dlgOpenBtn").focus();
+						return dijit.byId("dlg").show();
+					},
+					function enterInvalidValue(){
+						// Entering invalid value should make validation tooltip appear
+						var d = new doh.Deferred();
+						dijit.byId("dlgNTB").set("value", "invalid");
+						dijit.byId("dlgNTB").focus();
+						setTimeout(d.getTestCallback(function(){
+							masterTT = dojo.global.dijit._masterTT;
+							doh.t(masterTT && isVisible(masterTT.domNode), "tooltip shown");
+						}), 300);
+						return d;
+					},
+					function hideDialog(){
+						// Hiding the dialog should make the validation tooltip disappear
+						var d = new doh.Deferred();
+						dijit.byId("dlg").hide().then(function(){
+							setTimeout(d.getTestCallback(function(){
+								doh.t(isHidden(masterTT.domNode), "tooltip hidden");
+							}), 300);
+						});
+						return d;
 					}
 				]);
 

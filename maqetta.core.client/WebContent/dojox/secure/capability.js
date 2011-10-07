@@ -41,7 +41,7 @@ dojox.secure.capability = {
 			// now clear line comments, block comments, regular expressions, and strings.
 			// By doing it all at once, the regular expression uses left to right parsing, and the most
 			// left token is read first. It is also more compact.
-			replace(/\/\/.*|\/\*[\w\W]*?\*\/|\/(\\[\/\\]|[^*\/])(\\.|[^\/\n\\])*\/[gim]*|("[^"]*")|('[^']*')/g,function(t) {
+			replace(/\/\/.*|\/\*[\w\W]*?\*\/|("[^"]*")|('[^']*')/g,function(t) {
 				return t.match(/^\/\/|^\/\*/) ? ' ' : '0'; // comments are replaced with a space, strings and regex are replaced with a single safe token (0)
 			}).
 			replace(/\.\s*([a-z\$_A-Z][\w\$_]*)|([;,{])\s*([a-z\$_A-Z][\w\$_]*\s*):/g,function(t,prop,prefix,key) {

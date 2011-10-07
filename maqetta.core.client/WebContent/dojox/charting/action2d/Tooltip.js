@@ -1,26 +1,20 @@
-dojo.provide("dojox.charting.action2d.Tooltip");
+define(["dojo/_base/kernel", "dijit/Tooltip","dojo/_base/lang", "dojo/_base/html", "dojo/_base/declare", "./PlotAction", 
+	"dojox/gfx/matrix", "dojox/lang/functional", "dojox/lang/functional/scan", "dojox/lang/functional/fold"], 
+	function(dojo, Tooltip, lang, html, declare, PlotAction, m, df, dfs, dff){
+	
+	/*=====
+	dojo.declare("dojox.charting.action2d.__TooltipCtorArgs", dojox.charting.action2d.__PlotActionCtorArgs, {
+		//	summary:
+		//		Additional arguments for tooltip actions.
+	
+		//	text: Function?
+		//		The function that produces the text to be shown within a tooltip.  By default this will be
+		//		set by the plot in question, by returning the value of the element.
+		text: null
+	});
+	var PlotAction = dojox.charting.action2d.PlotAction;
+	=====*/
 
-dojo.require("dijit.Tooltip");
-
-dojo.require("dojox.charting.action2d.Base");
-dojo.require("dojox.gfx.matrix");
-
-dojo.require("dojox.lang.functional");
-dojo.require("dojox.lang.functional.scan");
-dojo.require("dojox.lang.functional.fold");
-
-/*=====
-dojo.declare("dojox.charting.action2d.__TooltipCtorArgs", dojox.charting.action2d.__BaseCtorArgs, {
-	//	summary:
-	//		Additional arguments for tooltip actions.
-
-	//	text: Function?
-	//		The function that produces the text to be shown within a tooltip.  By default this will be
-	//		set by the plot in question, by returning the value of the element.
-	text: null
-});
-=====*/
-(function(){
 	var DEFAULT_TEXT = function(o){
 		var t = o.run && o.run.data && o.run.data[o.index];
 		if(t && typeof t != "number" && (t.tooltip || t.text)){
@@ -38,9 +32,9 @@ dojo.declare("dojox.charting.action2d.__TooltipCtorArgs", dojox.charting.action2
 		return o.element == "bar" ? o.x : o.y;
 	};
 
-	var df = dojox.lang.functional, m = dojox.gfx.matrix, pi4 = Math.PI / 4, pi2 = Math.PI / 2;
+	var pi4 = Math.PI / 4, pi2 = Math.PI / 2;
 	
-	dojo.declare("dojox.charting.action2d.Tooltip", dojox.charting.action2d.Base, {
+	return declare("dojox.charting.action2d.Tooltip", PlotAction, {
 		//	summary:
 		//		Create an action on a plot where a tooltip is shown when hovering over an element.
 
@@ -53,7 +47,7 @@ dojo.declare("dojox.charting.action2d.__TooltipCtorArgs", dojox.charting.action2
 		constructor: function(chart, plot, kwArgs){
 			//	summary:
 			//		Create the tooltip action and connect it to the plot.
-			//	chart: dojox.charting.Chart2D
+			//	chart: dojox.charting.Chart
 			//		The chart this action belongs to.
 			//	plot: String?
 			//		The plot this action is attached to.  If not passed, "default" is assumed.
@@ -70,7 +64,7 @@ dojo.declare("dojox.charting.action2d.__TooltipCtorArgs", dojox.charting.action2
 			//	o: dojox.gfx.Shape
 			//		The object on which to process the highlighting action.
 			if(o.type === "onplotreset" || o.type === "onmouseout"){
-                dijit.hideTooltip(this.aroundRect);
+                Tooltip.hide(this.aroundRect);
 				this.aroundRect = null;
 				if(o.type === "onplotreset"){
 					delete this.angles;
@@ -86,24 +80,24 @@ dojo.declare("dojox.charting.action2d.__TooltipCtorArgs", dojox.charting.action2
 				case "marker":
 					aroundRect.x = o.cx;
 					aroundRect.y = o.cy;
-					aroundRect.width = aroundRect.height = 1;
+					aroundRect.w = aroundRect.h = 1;
 					break;
 				case "circle":
 					aroundRect.x = o.cx - o.cr;
 					aroundRect.y = o.cy - o.cr;
-					aroundRect.width = aroundRect.height = 2 * o.cr;
+					aroundRect.w = aroundRect.h = 2 * o.cr;
 					break;
 				case "column":
 					position = ["above", "below"];
 					// intentional fall down
 				case "bar":
-					aroundRect = dojo.clone(o.shape.getShape());
+					aroundRect = lang.clone(o.shape.getShape());
 					break;
 				case "candlestick":
 					aroundRect.x = o.x;
 					aroundRect.y = o.y;
-					aroundRect.width = o.width;
-					aroundRect.height = o.height;
+					aroundRect.w = o.width;
+					aroundRect.h = o.height;
 					break;
 				default:
 				//case "slice":
@@ -121,7 +115,7 @@ dojo.declare("dojox.charting.action2d.__TooltipCtorArgs", dojox.charting.action2
 						angle = (this.angles[o.index] + this.angles[o.index + 1]) / 2 + startAngle;
 					aroundRect.x = o.cx + o.cr * Math.cos(angle);
 					aroundRect.y = o.cy + o.cr * Math.sin(angle);
-					aroundRect.width = aroundRect.height = 1;
+					aroundRect.w = aroundRect.h = 1;
 					// calculate the position
 					if(angle < pi4){
 						// do nothing: the position is right
@@ -141,19 +135,30 @@ dojo.declare("dojox.charting.action2d.__TooltipCtorArgs", dojox.charting.action2
 			}
 			
 			// adjust relative coordinates to absolute, and remove fractions
-			var lt = dojo.coords(this.chart.node, true);
+			var lt = this.chart.getCoords();
 			aroundRect.x += lt.x;
 			aroundRect.y += lt.y;
 			aroundRect.x = Math.round(aroundRect.x);
 			aroundRect.y = Math.round(aroundRect.y);
-			aroundRect.width = Math.ceil(aroundRect.width);
-			aroundRect.height = Math.ceil(aroundRect.height);
+			aroundRect.w = Math.ceil(aroundRect.w);
+			aroundRect.h = Math.ceil(aroundRect.h);
 			this.aroundRect = aroundRect;
 
 			var tooltip = this.text(o);
+			if(this.chart.getTextDir){
+				var isChartDirectionRtl = (html.style(this.chart.node,"direction") == "rtl");
+				var isBaseTextDirRtl = (this.chart.getTextDir(tooltip) == "rtl");
+			}
 			if(tooltip){
-                dijit.showTooltip(tooltip, this.aroundRect, position);
+				if(isBaseTextDirRtl && !isChartDirectionRtl){
+					Tooltip.show("<span dir = 'rtl'>" + tooltip +"</span>", this.aroundRect, position);
+				}
+				else if(!isBaseTextDirRtl && isChartDirectionRtl){
+					Tooltip.show("<span dir = 'ltr'>" + tooltip +"</span>", this.aroundRect, position);
+				}else{
+					Tooltip.show(tooltip, this.aroundRect, position);
+				}
 			}
 		}
 	});
-})();
+});

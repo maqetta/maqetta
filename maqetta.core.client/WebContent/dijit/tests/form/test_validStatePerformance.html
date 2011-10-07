@@ -32,7 +32,7 @@
 
   <body class="claro">
     <script>
-      function performancetest() {
+      function performancetest(){
         console.log("Dojo version " + dojo.version);
         var startTime1 = (new Date()).getTime();
         dijit.byId("form1").reset();
@@ -43,26 +43,27 @@
         console.log("Time 2: Reset form with ValidationTextBox-fields: " + ((new Date()).getTime() - startTime2) + " millis");
 
         var startTime3 = (new Date()).getTime();
-        for (var i = 1; i <= 20; i++) {
-			    var w = dijit.byId("input1_" + i);
-			    if(dojo.version.major == 1 && dojo.version.minor == 2) {
-			      w.set("value", i);
-			    } else {
-			      w.set("value", i);
-			    }
-			  }
-        console.log("Time 3: Inserting value into NumberTextBox-fields: " + ((new Date()).getTime() - startTime3) + " millis");
+		var i, w;
+        for(i = 1; i <= 20; i++){
+			w = dijit.byId("input1_" + i);
+			if(dojo.version.major == 1 && dojo.version.minor == 2){
+			  w.set("value", i);
+			}else{
+			  w.set("value", i);
+			}
+		}
+		console.log("Time 3: Inserting value into NumberTextBox-fields: " + ((new Date()).getTime() - startTime3) + " millis");
 
         var startTime4 = (new Date()).getTime();
-        for (var i = 1; i <= 20; i++) {
-			    var w = dijit.byId("input2_" + i);
-			    if(dojo.version.major == 1 && dojo.version.minor == 2) {
-			      w.set("value", i);
-			    } else {
-			      w.set("value", i);
-			    }
-			  }
-        console.log("Time 4: Inserting value into ValidationTextBox-fields: " + ((new Date()).getTime() - startTime4) + " millis");
+        for(i = 1; i <= 20; i++){
+			w = dijit.byId("input2_" + i);
+			if(dojo.version.major == 1 && dojo.version.minor == 2){
+			  w.set("value", i);
+			}else{
+			  w.set("value", i);
+			}
+		}
+		console.log("Time 4: Inserting value into ValidationTextBox-fields: " + ((new Date()).getTime() - startTime4) + " millis");
       }
     </script>
       <form id="form1" data-dojo-type="dijit.form.Form" data-dojo-props='action:"", method:""'>

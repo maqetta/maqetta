@@ -1,17 +1,12 @@
-dojo.provide("dojox.charting.plot2d.StackedBars");
+define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", "./Bars", "./common", 
+	"dojox/lang/functional", "dojox/lang/functional/reversed", "dojox/lang/functional/sequence"], 
+	function(lang, arr, declare, Bars, dc, df, dfr, dfs){
 
-dojo.require("dojox.charting.plot2d.common");
-dojo.require("dojox.charting.plot2d.Bars");
-
-dojo.require("dojox.lang.functional");
-dojo.require("dojox.lang.functional.reversed");
-dojo.require("dojox.lang.functional.sequence");
-
-(function(){
-	var df = dojox.lang.functional, dc = dojox.charting.plot2d.common,
-		purgeGroup = df.lambda("item.purgeGroup()");
-
-	dojo.declare("dojox.charting.plot2d.StackedBars", dojox.charting.plot2d.Bars, {
+	var	purgeGroup = dfr.lambda("item.purgeGroup()");
+/*=====
+var bars = dojox.charting.plot2d.Bars;
+=====*/
+	return declare("dojox.charting.plot2d.StackedBars", Bars, {
 		//	summary:
 		//		The plot object representing a stacked bar chart (horizontal bars).
 		getSeriesStats: function(){
@@ -60,7 +55,7 @@ dojo.require("dojox.lang.functional.sequence");
 			this.resetEvents();
 			this.dirty = this.isDirty();
 			if(this.dirty){
-				dojo.forEach(this.series, purgeGroup);
+				arr.forEach(this.series, purgeGroup);
 				this._eventSeries = {};
 				this.cleanGroup();
 				var s = this.group;
@@ -91,7 +86,7 @@ dojo.require("dojox.lang.functional.sequence");
 							finalTheme = typeof value != "number" ?
 								t.addMixin(theme, "bar", value, true) :
 								t.post(theme, "bar");
-						if(width >= 1 && height >= 1){
+						if(width >= 0 && height >= 1){
 							var rect = {
 								x: offsets.l,
 								y: dim.height - offsets.b - vt(j + 1.5) + gap,
@@ -136,4 +131,4 @@ dojo.require("dojox.lang.functional.sequence");
 			return this;	//	dojox.charting.plot2d.StackedBars
 		}
 	});
-})();
+});

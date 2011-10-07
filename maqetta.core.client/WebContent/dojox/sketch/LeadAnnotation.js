@@ -1,8 +1,6 @@
-dojo.provide("dojox.sketch.LeadAnnotation");
-dojo.require("dojox.sketch.Annotation");
-dojo.require("dojox.sketch.Anchor");
+define(["dojo/_base/kernel", "dojo/_base/lang", "./Annotation", "./Anchor"], function(dojo){
+	dojo.getObject("sketch", true, dojox);
 
-(function(){
 	var ta=dojox.sketch;
 	ta.LeadAnnotation=function(figure, id){
 		ta.Annotation.call(this, figure, id);
@@ -159,4 +157,5 @@ dojo.require("dojox.sketch.Anchor");
 	};
 
 	ta.Annotation.register("Lead");
-})();
+	return dojox.sketch.LeadAnnotation;
+});

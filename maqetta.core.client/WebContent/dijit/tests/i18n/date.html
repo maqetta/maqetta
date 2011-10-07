@@ -22,7 +22,7 @@
 		</script>
 		<script src="test_i18n.js"></script>
 		<script type="text/javascript">
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.register("t", getAllTestCases());
 				doh.run();
 			});
@@ -55,7 +55,7 @@
 			td {white-space:nowrap}
 		</style>
 		<script>
-			function gen4DateFormat(testCases, language, locale, date, short, shortCmt, medium, mediumCmt, long, longCmt, full, fullCmt) {
+			function gen4DateFormat(testCases, language, locale, date, short, shortCmt, medium, mediumCmt, long, longCmt, full, fullCmt){
 				testCases.push({
 				  attrs: {constraints: "{formatLength:'short'}", lang: language},
 				  desc: "Locale: <b>" + locale + "</b> Format: <b>Short</b>",
@@ -98,7 +98,7 @@
 		</p>
 
 		<script>
-		(function() {
+		(function(){
 			var testCases = [];
 			gen4DateFormat(testCases, "ru-ru", "ru_RU", "2005-07-31",
 				"31.07.05", "", "31.07.2005", "", "31 июля 2005 г.", "Failed in Firefox. <a href='currency.html#cmt_1'>See #1 (currency.html).</a>", "31 июля 2005 г.", "Failed in Firefox. <a href='currency.html#cmt_1'>See #1 (currency.html).</a>");

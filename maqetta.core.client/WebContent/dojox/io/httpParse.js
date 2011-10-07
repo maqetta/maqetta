@@ -1,4 +1,6 @@
-dojo.provide("dojox.io.httpParse");
+define(["dojo/_base/kernel"], function(dojo){
+dojo.getObject("io.httpParse", true, dojox);
+
 dojox.io.httpParse = function(/*String*/httpStream, /*String?*/topHeaders,/*Boolean?*/ partial){
 	// summary:
 	//		Parses an HTTP stream for a message.
@@ -72,4 +74,8 @@ dojox.io.httpParse = function(/*String*/httpStream, /*String?*/topHeaders,/*Bool
 		xhr._lastIndex = streamLength - httpStream.length; // need to pick up from where we left on streaming connections
 	}while(httpStream);
 	return xhrs;
-}
+};
+
+return dojox.io.httpParse;
+
+});

@@ -50,31 +50,31 @@
 	margin-top: 5px;
 }
 
-.alertDialog.out {
+.alertDialog.mblOut {
 	position: absolute;
 }
 
-.alertDialog.in {
+.alertDialog.mblIn {
 	position: absolute;
 }
 
-.slidev.out {
+.mblSlidev.mblOut {
 	-webkit-animation-duration: .4s;
-	-webkit-animation-name: slideOut;
+	-webkit-animation-name: mblSlideOut;
 	-webkit-animation-timing-function: linear;
 	-webkit-transform: translateY(-100%);
 }
-.slidev.in {
+.mblSlidev.mblIn {
 	-webkit-animation-duration: .4s;
-	-webkit-animation-name: slideIn;
+	-webkit-animation-name: mblSlideIn;
 	-webkit-animation-timing-function: linear;
 	-webkit-transform: translateY(0px);
 }
-.slidev.out.reverse {
-	-webkit-animation-name: slideOutReverse;
+.mblSlidev.mblOut.mblReverse {
+	-webkit-animation-name: mblSlideOutReverse;
 }
-.slidev.in.reverse {
-	-webkit-animation-name: slideInReverse;
+.mblSlidev.mblIn.mblReverse {
+	-webkit-animation-name: mblSlideInReverse;
 }
 
 .dialogUnderlayWrapper {

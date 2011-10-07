@@ -1,6 +1,9 @@
-dojo.provide("dojox.form.manager._ValueMixin");
-
-dojo.declare("dojox.form.manager._ValueMixin", null, {
+define([
+	"dojo/_base/lang",
+	"dojo/_base/kernel",
+	"dojo/_base/declare"
+], function(lang, dojo, declare){
+return declare("dojox.form.manager._ValueMixin", null, {
 	// summary:
 	//		Form manager's mixin for getting/setting form values in the unified manner.
 	// description:
@@ -40,12 +43,12 @@ dojo.declare("dojox.form.manager._ValueMixin", null, {
 		}, names);
 
 		if(this.inspectFormNodes){
-			dojo.mixin(result, this.inspectFormNodes(function(name){
+			lang.mixin(result, this.inspectFormNodes(function(name){
 				return this.formNodeValue(name);
 			}, names));
 		}
 
-		dojo.mixin(result, this.inspectAttachedPoints(function(name){
+		lang.mixin(result, this.inspectAttachedPoints(function(name){
 			return this.formPointValue(name);
 		}, names));
 
@@ -74,4 +77,5 @@ dojo.declare("dojox.form.manager._ValueMixin", null, {
 		}
 		return this;
 	}
+});
 });

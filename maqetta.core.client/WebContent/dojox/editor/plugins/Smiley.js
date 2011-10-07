@@ -1,4 +1,16 @@
-define("dojox/editor/plugins/Smiley", ["dojo", "dijit", "dojox", "dijit/_editor/_Plugin", "dijit/form/ToggleButton", "dijit/form/DropDownButton", "dojox/editor/plugins/_SmileyPalette", "dojo/i18n", "dojox/html/format", "i18n!dojox/editor/plugins/nls/Smiley"], function(dojo, dijit, dojox) {
+define([
+	"dojo",
+	"dijit",
+	"dojox",
+	"dijit/_editor/_Plugin",
+	"dijit/form/DropDownButton",
+	"dojo/_base/connect",
+	"dojo/_base/declare",
+	"dojo/i18n",
+	"dojox/editor/plugins/_SmileyPalette",
+	"dojox/html/format",
+	"dojo/i18n!dojox/editor/plugins/nls/Smiley"
+], function(dojo, dijit, dojox) {
 
 dojo.experimental("dojox.editor.plugins.Smiley");
 
@@ -60,6 +72,30 @@ dojo.declare("dojox.editor.plugins.Smiley", dijit._editor._Plugin, {
 		this._initButton();
 		this.editor.contentPreFilters.push(dojo.hitch(this, this._preFilterEntities));
 		this.editor.contentPostFilters.push(dojo.hitch(this, this._postFilterEntities));
+		
+		if(dojo.isFF){
+			// This is a workaround for a really odd Firefox bug with
+			// leaving behind phantom cursors when deleting smiley images.
+			// See: #13299
+			var deleteHandler = dojo.hitch(this, function(){
+				var editor = this.editor;
+				// have to use timers here because the event has to happen
+				// (bubble), then we can poke the dom.
+				setTimeout(function(){
+					if(editor.editNode){
+						dojo.style(editor.editNode, "opacity", "0.99");
+						// Allow it to apply, then undo it to trigger cleanup of those
+						// phantoms.
+						setTimeout(function(){if(editor.editNode) { dojo.style(editor.editNode, "opacity", "");} }, 0);
+					}
+				}, 0);
+				return true;
+			})
+			this.editor.onLoadDeferred.addCallback(dojo.hitch(this, function(){
+				this.editor.addKeyHandler(dojo.keys.DELETE, false, false, deleteHandler);
+				this.editor.addKeyHandler(dojo.keys.BACKSPACE, false, false, deleteHandler);
+			}));
+		}
 	},
 
 	_preFilterEntities: function(/*String content passed in*/ value){

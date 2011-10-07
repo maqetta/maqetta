@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"findLabel": "חיפוש: ",
 	"findTooltip": "ציינו תמליל לחיפוש",
@@ -21,3 +23,5 @@
 	"eofDialogTextReplace": "הוחלפו "
 })
 
+//end v1.x content
+);

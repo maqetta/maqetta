@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	/* These are already handled in the default RTE
 		amp:"ampersand",lt:"less-than sign",
@@ -254,3 +256,5 @@
 	rsaquo:"右尖括号",
 	euro:"欧元符号"
 })
+//end v1.x content
+);

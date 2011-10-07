@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertImageTitle: "Grafik einfügen",
 	url: "Grafik",
@@ -9,3 +11,5 @@
 	prePopuTextBrowse: "oder blättern Sie zu einer lokalen Datei."
 })
 
+//end v1.x content
+);

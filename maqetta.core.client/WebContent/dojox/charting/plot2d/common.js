@@ -1,37 +1,35 @@
-dojo.provide("dojox.charting.plot2d.common");
-
-dojo.require("dojo.colors");
-dojo.require("dojox.gfx");
-dojo.require("dojox.lang.functional");
-
-(function(){
-	var df = dojox.lang.functional, dc = dojox.charting.plot2d.common;
-
-	dojo.mixin(dojox.charting.plot2d.common, {
+define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/Color", 
+		"dojox/gfx", "dojox/lang/functional", "../scaler/common"], 
+	function(lang, arr, Color, g, df, sc){
+	
+	var common = lang.getObject("dojox.charting.plot2d.common", true);
+	
+	return lang.mixin(common, {	
+		doIfLoaded: sc.doIfLoaded,
 		makeStroke: function(stroke){
 			if(!stroke){ return stroke; }
-			if(typeof stroke == "string" || stroke instanceof dojo.Color){
+			if(typeof stroke == "string" || stroke instanceof Color){
 				stroke = {color: stroke};
 			}
-			return dojox.gfx.makeParameters(dojox.gfx.defaultStroke, stroke);
+			return g.makeParameters(g.defaultStroke, stroke);
 		},
 		augmentColor: function(target, color){
-			var t = new dojo.Color(target),
-				c = new dojo.Color(color);
+			var t = new Color(target),
+				c = new Color(color);
 			c.a = t.a;
 			return c;
 		},
 		augmentStroke: function(stroke, color){
-			var s = dc.makeStroke(stroke);
+			var s = common.makeStroke(stroke);
 			if(s){
-				s.color = dc.augmentColor(s.color, color);
+				s.color = common.augmentColor(s.color, color);
 			}
 			return s;
 		},
 		augmentFill: function(fill, color){
-			var fc, c = new dojo.Color(color);
-			if(typeof fill == "string" || fill instanceof dojo.Color){
-				return dc.augmentColor(fill, color);
+			var fc, c = new Color(color);
+			if(typeof fill == "string" || fill instanceof Color){
+				return common.augmentColor(fill, color);
 			}
 			return fill;
 		},
@@ -42,7 +40,7 @@ dojo.require("dojox.lang.functional");
 		},
 
 		collectSimpleStats: function(series){
-			var stats = dojo.delegate(dc.defaultStats);
+			var stats = lang.delegate(common.defaultStats);
 			for(var i = 0; i < series.length; ++i){
 				var run = series[i];
 				for(var j = 0; j < run.data.length; j++){
@@ -51,7 +49,7 @@ dojo.require("dojox.lang.functional");
 							// 1D case
 							var old_vmin = stats.vmin, old_vmax = stats.vmax;
 							if(!("ymin" in run) || !("ymax" in run)){
-								dojo.forEach(run.data, function(val, i){
+								arr.forEach(run.data, function(val, i){
 									if(val !== null){
 										var x = i + 1, y = val;
 										if(isNaN(y)){ y = 0; }
@@ -69,7 +67,7 @@ dojo.require("dojox.lang.functional");
 							var old_hmin = stats.hmin, old_hmax = stats.hmax,
 								old_vmin = stats.vmin, old_vmax = stats.vmax;
 							if(!("xmin" in run) || !("xmax" in run) || !("ymin" in run) || !("ymax" in run)){
-								dojo.forEach(run.data, function(val, i){
+								arr.forEach(run.data, function(val, i){
 									if(val !== null){
 										var x = "x" in val ? val.x : i + 1, y = val.y;
 										if(isNaN(x)){ x = 0; }
@@ -112,7 +110,7 @@ dojo.require("dojox.lang.functional");
 
 		collectStackedStats: function(series){
 			// collect statistics
-			var stats = dojo.clone(dc.defaultStats);
+			var stats = lang.clone(common.defaultStats);
 			if(series.length){
 				// 1st pass: find the maximal length of runs
 				stats.hmin = Math.min(stats.hmin, 1);
@@ -139,39 +137,39 @@ dojo.require("dojox.lang.functional");
 			//	FIX for #7235, submitted by Enzo Michelangeli.
 			//	Emulates the smoothing algorithms used in a famous, unnamed spreadsheet
 			//		program ;)
-			var arr = a.slice(0);
+			var array = a.slice(0);
 			if(tension == "x") {
-				arr[arr.length] = arr[0];   // add a last element equal to the first, closing the loop
+				array[array.length] = arr[0];   // add a last element equal to the first, closing the loop
 			}
-			var p=dojo.map(arr, function(item, i){
+			var p=arr.map(array, function(item, i){
 				if(i==0){ return "M" + item.x + "," + item.y; }
 				if(!isNaN(tension)) { // use standard Dojo smoothing in tension is numeric
-					var dx=item.x-arr[i-1].x, dy=arr[i-1].y;
+					var dx=item.x-array[i-1].x, dy=array[i-1].y;
 					return "C"+(item.x-(tension-1)*(dx/tension))+","+dy+" "+(item.x-(dx/tension))+","+item.y+" "+item.x+","+item.y;
 				} else if(tension == "X" || tension == "x" || tension == "S") {
 					// use Excel "line smoothing" algorithm (http://xlrotor.com/resources/files.shtml)
-					var p0, p1 = arr[i-1], p2 = arr[i], p3;
+					var p0, p1 = array[i-1], p2 = array[i], p3;
 					var bz1x, bz1y, bz2x, bz2y;
 					var f = 1/6;
 					if(i==1) {
 						if(tension == "x") {
-							p0 = arr[arr.length-2];
+							p0 = array[array.length-2];
 						} else { // "tension == X || tension == "S"
 							p0 = p1;
 						}
 						f = 1/3;
 					} else {
-						p0 = arr[i-2];
+						p0 = array[i-2];
 					}
-					if(i==(arr.length-1)) {
+					if(i==(array.length-1)) {
 						if(tension == "x") {
-							p3 = arr[1];
+							p3 = array[1];
 						} else { // "tension == X || tension == "S"
 							p3 = p2;
 						}
 						f = 1/3;
 					} else {
-						p3 = arr[i+1];
+						p3 = array[i+1];
 					}
 					var p1p2 = Math.sqrt((p2.x-p1.x)*(p2.x-p1.x)+(p2.y-p1.y)*(p2.y-p1.y));
 					var p0p2 = Math.sqrt((p2.x-p0.x)*(p2.x-p0.x)+(p2.y-p0.y)*(p2.y-p0.y));
@@ -207,11 +205,12 @@ dojo.require("dojox.lang.functional");
 		},
 		
 		getLabel: function(/*Number*/number, /*Boolean*/fixed, /*Number*/precision){
-			if(dojo.number){
-				return (fixed ? dojo.number.format(number, {places : precision}) :
-					dojo.number.format(number)) || "";
-			}
-			return fixed ? number.toFixed(precision) : number.toString();
+			return sc.doIfLoaded("dojo/number", function(numberLib){
+				return (fixed ? numberLib.format(number, {places : precision}) :
+					numberLib.format(number)) || "";
+			}, function(){
+				return fixed ? number.toFixed(precision) : number.toString();
+			});
 		}
 	});
-})();
+});

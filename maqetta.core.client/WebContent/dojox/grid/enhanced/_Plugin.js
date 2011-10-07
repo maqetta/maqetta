@@ -1,7 +1,13 @@
-dojo.provide("dojox.grid.enhanced._Plugin");
-
-dojo.require("dojox.grid.EnhancedGrid");
-dojo.declare("dojox.grid.enhanced._Plugin", null, {
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/connect",
+    "../EnhancedGrid"
+], function(dojo, lang, declare, array, connect){
+	
+return declare("dojox.grid.enhanced._Plugin", null, {
 	// summary:
 	//		Base class for all plugins.
 	//
@@ -76,7 +82,7 @@ dojo.declare("dojox.grid.enhanced._Plugin", null, {
 		this.option = option;
 		this._connects = [];
 		this._subscribes = [];
-		this.privates = dojo.mixin({},dojox.grid.enhanced._Plugin.prototype);
+		this.privates = lang.mixin({},dojox.grid.enhanced._Plugin.prototype);
 		this.init();
 	},
 	
@@ -97,16 +103,16 @@ dojo.declare("dojox.grid.enhanced._Plugin", null, {
 		//	|	plugin.connect(foo, "bar", function(){
 		//	|		console.debug(this.xxx());//"this" - plugin scope
 		//	|	});
-		var conn = dojo.connect(obj, event, this, method);
+		var conn = connect.connect(obj, event, this, method);
 		this._connects.push(conn);
 		return conn;
 	},
 	disconnect: function(handle){
 		// summary:
 		//		Disconnects handle and removes it from connection list.
-		dojo.some(this._connects, function(conn, i, conns){
+		array.some(this._connects, function(conn, i, conns){
 			if(conn == handle){
-				dojo.disconnect(handle);
+				connect.disconnect(handle);
 				conns.splice(i, 1);
 				return true;
 			}
@@ -124,16 +130,16 @@ dojo.declare("dojox.grid.enhanced._Plugin", null, {
 		//	|	plugin.subscribe("/my/topic", function(v){
 		//	|		console.debug(this.xxx(v));//"this" - plugin scope
 		//	|	});
-		var subscribe = dojo.subscribe(topic, this, method);
+		var subscribe = connect.subscribe(topic, this, method);
 		this._subscribes.push(subscribe);
 		return subscribe;
 	},
 	unsubscribe: function(handle){
 		// summary:
 		//		Un-subscribes handle and removes it from subscriptions list.
-		dojo.some(this._subscribes, function(subscribe, i, subscribes){
+		array.some(this._subscribes, function(subscribe, i, subscribes){
 			if(subscribe == handle){
-				dojo.unsubscribe(handle);
+				connect.unsubscribe(handle);
 				subscribes.splice(i, 1);
 				return true;
 			}
@@ -147,8 +153,8 @@ dojo.declare("dojox.grid.enhanced._Plugin", null, {
 	destroy: function(){
 		// summary:
 		//		Destroy all resources.
-		dojo.forEach(this._connects, dojo.disconnect);
-		dojo.forEach(this._subscribes, dojo.unsubscribe);
+		array.forEach(this._connects, connect.disconnect);
+		array.forEach(this._subscribes, connect.unsubscribe);
 		delete this._connects;
 		delete this._subscribes;
 		delete this.option;
@@ -161,3 +167,5 @@ dojo.declare("dojox.grid.enhanced._Plugin", null, {
 // e.g. for DnD plugin(name:'dnd'):
 // |	dojox.grid.EnhancedGrid.registerPlugin(dojox.grid.enhanced.plugins.DnD/*class*/,
 // |		{"dependency": ["nestedSorting"]}/*Optional - properties*/);
+
+});

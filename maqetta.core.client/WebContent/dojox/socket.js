@@ -1,4 +1,4 @@
-define("dojox/socket", ["dojo", "dojo/cookie"], function(dojo) {
+define("dojox/socket", ["dojo", "dojo/Evented", "dojo/cookie", "dojo/_base/url"], function(dojo, Evented) {
 
 var WebSocket = window.WebSocket;
 
@@ -110,7 +110,7 @@ var cancelled = false,
 		first = true,
 		timeoutId,
 		connections = [];
-	
+
 	// create the socket object
 	var socket = {
 		send: function(data){
@@ -171,9 +171,7 @@ var cancelled = false,
 		dispatchEvent: function(event){
 			fire(event.type, event);
 		},
-		on: function(type, callback){
-			return dojo.connect(this, "on" + type, callback);
-		},
+		on: Evented.prototype.on,
 		firstRequest: function(args){
 			// summary:
 			// 		This allows for special handling for the first request. This is useful for

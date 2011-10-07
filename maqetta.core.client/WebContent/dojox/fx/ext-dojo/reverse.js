@@ -1,9 +1,11 @@
-dojo.provide("dojox.fx.ext-dojo.reverse");
-dojo.require("dojo.fx.easing");
-dojo.require("dojo.fx");
-
-			
-dojo.extend(dojo.Animation, {
+define(["dojo/_base/fx",
+		"dojo/fx",
+		"dojo/_base/lang", 
+		"dojo/fx/easing",
+		"dojox/fx"],
+	function(baseFx, coreFx, lang, easingUtil, dojoxFx){ //
+/*===== var dojox.fx.ext-dojo.=====*/
+var reverseApi = {
 	// summary:
 	//		A dojo.Animation extension that enables an easy reversal.
 	//	description:
@@ -57,7 +59,7 @@ dojo.extend(dojo.Animation, {
 					this.rEase = reverseEase;
 				}else{
 					// loop through dojo.fx.easing to find the matching ease
-					var de = dojo.fx.easing, found, eName;
+					var de = easingUtil, found, eName;
 					for(nm in de){
 						if(this.easing == de[nm]){
 							// get ease's name
@@ -75,7 +77,7 @@ dojo.extend(dojo.Animation, {
 							eName = nm.replace("Out", "In");
 						}
 						if(eName){
-							this.rEase = dojo.fx.easing[eName];
+							this.rEase = easingUtil[eName];
 						}
 					}else{
 						// default ease, and other's like linear do not have an opposite
@@ -95,4 +97,7 @@ dojo.extend(dojo.Animation, {
 		
 		return this;
 	}
+};
+lang.extend( baseFx.Animation, reverseApi);
+return baseFx.Animation;
 });

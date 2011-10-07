@@ -19,7 +19,7 @@
 			dojo.require("dojo.window");
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_Tooltip.html');
 
 				// Pointer to master tooltip.  This gets set in the first test when the
@@ -57,7 +57,8 @@
 								// left of the right depending on page BIDI setting)
 								var aroundCoords = dojo.position(around),
 									tooltipCoords = dojo.position(masterTT.domNode);
-								doh.is(aroundCoords.y + aroundCoords.h, tooltipCoords.y + Math.round(tooltipCoords.h), "aligned");
+								doh.t((aroundCoords.y + aroundCoords.h) <= (tooltipCoords.y + tooltipCoords.h), "lower aligned");
+								doh.t(aroundCoords.y  >= tooltipCoords.y, "upper aligned");
 
 								// Make sure it has right content
 								doh.is("tooltip on a button", dojo.trim(innerText(masterTT.domNode)), "tooltip text");

@@ -1,6 +1,9 @@
-define("dojox/data/CssClassStore", ["dojo", "dojox", "dojox/data/CssRuleStore"], function(dojo, dojox) {
+define(["dojo/_base/declare","dojox/data/CssRuleStore"], 
+  function(declare, CssRuleStore) {
 
-dojo.declare("dojox.data.CssClassStore", dojox.data.CssRuleStore, {
+/*===== var CssRuleStore = dojox.data.CssRuleStore =====*/
+
+return declare("dojox.data.CssClassStore", CssRuleStore, {
 	//	summary:
 	//		Basic store to display CSS information.
 	//	description:
@@ -113,7 +116,7 @@ dojo.declare("dojox.data.CssClassStore", dojox.data.CssRuleStore, {
 		var items = request._items;
 		// Per https://bugs.webkit.org/show_bug.cgi?id=17935 , Safari 3.x always returns the selectorText
 		// of a rule in full lowercase.
-		var item = items[(dojo.isWebKit?request.identity.toLowerCase():request.identity)];
+		var item = items[request.identity];
 		if(!this.isItem(item)){
 			item = null;
 		}
@@ -155,5 +158,4 @@ dojo.declare("dojox.data.CssClassStore", dojox.data.CssRuleStore, {
 	}
 });
 
-return dojox.data.CssClassStore;
 });

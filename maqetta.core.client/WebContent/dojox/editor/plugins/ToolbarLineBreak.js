@@ -1,11 +1,16 @@
-define("dojox/editor/plugins/ToolbarLineBreak", ["dojo", "dijit", "dojox", "dijit/_Widget", "dijit/_Templated", "dijit/_editor/_Plugin"], function(dojo, dijit, dojox) {
-
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-dojo.require("dijit._editor._Plugin");
+define([
+	"dojo",
+	"dijit",
+	"dojox",
+	"dijit/_Widget",
+	"dijit/_TemplatedMixin",
+	"dijit/_editor/_Plugin",
+	"dojo/_base/connect",
+	"dojo/_base/declare"
+], function(dojo, dijit, dojox) {
 
 dojo.declare("dojox.editor.plugins.ToolbarLineBreak",
-	[ dijit._Widget, dijit._Templated ],
+	[ dijit._Widget, dijit._TemplatedMixin ],
 	{
 	// summary:
 	//		A 'line break' between two `dijit.Toolbar` items so that very

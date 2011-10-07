@@ -1,8 +1,6 @@
-dojo.provide("dojox.av.FLAudio");
-dojo.experimental("dojox.av.FLAudio");
-dojo.require("dojox.embed.Flash");
-dojo.require("dojox.timing.doLater");
+define(['dojo', 'dojox/embed/Flash', 'dojox/timing/doLater'],function(dojo, dijit){
 
+dojo.experimental("dojox.av.FLVideo");
 
 dojo.declare("dojox.av.FLAudio", null, {
 
@@ -375,4 +373,6 @@ dojo.declare("dojox.av.FLAudio", null, {
 		return _url;
 	}
 
+});
+return dojox.av.FLAudio;
 });

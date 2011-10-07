@@ -27,10 +27,12 @@
 		dojo.require("dojo.date");
 		dojo.require("dojo.parser");
 		dojo.require("dijit.dijit"); // optimize: load dijit layer
+		dojo.require("dijit.focus");
 		dojo.require("dijit.form.Form");
 		dojo.require("dijit.layout.ContentPane");
 		dojo.require("dijit.form.ComboBox");
 		dojo.require("dijit.form.CheckBox");
+		dojo.require("dijit.form.RadioButton");
 		dojo.require("dijit.form.DateTextBox");
 		dojo.require("dijit.form.Button");
 		dojo.require("dijit.form.MultiSelect");
@@ -107,7 +109,7 @@
 							cb: ["2"]
 		};
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 
 			doh.register("parse", function(){
 				dojo.parser.parse();
@@ -228,7 +230,7 @@
 					},
 					function nameAttributeSurvived(){  // ticket:4753
 						var radios = dojo.query("INPUT[type=radio]", "radio-cells").forEach(
-							function(r) {
+							function(r){
 								doh.is( r.name, "r" );
 							});
 					},
@@ -259,11 +261,17 @@
 				]
 			);
 
-			false && doh.register("watch('value')", [
+			doh.register("watch('value')", [
+				// Set() calls fire onChange() on a timer, so set calls from above may have unfired onChange events.
+				// Avoid spurious watch() notifications by waiting for lingering onChange() events to fire.
+				function coolDown(){
+					var d = new doh.Deferred();
+					setTimeout(function(){ d.callback(true); }, 100);
+					return d;
+				},
+
 				// Setup watch("value", ...)
 				function setUp(){
-					var d = new doh.Deferred();
-
 					// Setup globals to reflect return from watch("value"), ...
 					calls = 0;
 					oldVal = null;
@@ -280,7 +288,7 @@
 				// and see if Form.watch("value", ...) does the right thing					
 				function formSet(){
 					var d = new doh.Deferred();
-
+					calls = 0;
 					formWidget.set("value", {
 						foo: {bar: {baz: {quux: "1967-10-20"} } },
 						available: {from: "1967-11-09"}
@@ -291,7 +299,7 @@
 						doh.is('2007-12-30', dojo.date.stamp.toISOString(oldVal.foo.bar.baz.quux, {selector: 'date'}), "old value");
 						doh.is('1967-10-20', dojo.date.stamp.toISOString(newVal.foo.bar.baz.quux, {selector: 'date'}), "new value");
 						doh.is('1967-11-09', dojo.date.stamp.toISOString(newVal.available.from, {selector: 'date'}), "new value2");
-					}), 50);
+					}), 500);
 					
 					return d;
 				},
@@ -308,7 +316,7 @@
 						doh.is(1, calls, "exactly one watch(value) call");
 						doh.is('1967-10-20', dojo.date.stamp.toISOString(oldVal.foo.bar.baz.quux, {selector: 'date'}), "old value");
 						doh.is('1981-10-12', dojo.date.stamp.toISOString(newVal.foo.bar.baz.quux, {selector: 'date'}), "new value");
-					}), 50);
+					}), 500);
 					
 					return d;
 				},
@@ -331,7 +339,7 @@
 						doh.is(2, newVal.cb.length, "number of checkboxes currently checked");
 						doh.is(1, newVal.cb[0], "new checkboxes, first checked");
 						doh.is(4, newVal.cb[1], "new checkboxes, second checked");
-					}), 50);
+					}), 500);
 					
 					return d;
 				},
@@ -353,7 +361,7 @@
 
 						doh.is(1, newVal.cb.length, "number of checkboxes currently checked");
 						doh.is(4, newVal.cb[0], "new checkboxes, first checked");
-					}), 50);
+					}), 500);
 					
 					return d;
 				},
@@ -377,7 +385,7 @@
 						doh.is(2, newVal.cb.length, "number of checkboxes currently checked");
 						doh.is(2, newVal.cb[0], "new checkboxes, first checked");
 						doh.is(4, newVal.cb[1], "new checkboxes, second checked");
-					}), 50);
+					}), 500);
 					
 					return d;
 				},
@@ -394,7 +402,7 @@
 						doh.is(1, calls, "exactly one watch(value) call");
 						doh.is(2, oldVal.r, "old selected radio button");
 						doh.is(3, newVal.r, "new selected radio button");
-					}), 50);
+					}), 500);
 
 					return d;
 				},
@@ -411,7 +419,7 @@
 						doh.is(1, calls, "exactly one watch(value) call");
 						doh.is(3, oldVal.r, "old selected radio button");
 						doh.is(1, newVal.r, "new selected radio button");
-					}), 50);
+					}), 500);
 					
 					return d;
 				},
@@ -427,7 +435,7 @@
 						doh.is(1, calls, "one watch(value) call");
 						doh.t(dojo.getObject("foo.bar.baz.quux", false, oldVal) !== undefined, "attribute used to exist");
 						doh.t(dojo.getObject("foo.bar.baz.quux", false, newVal) === undefined, "attribute no longer exists");
-					}), 50);
+					}), 500);
 					
 					return d;
 				},
@@ -443,7 +451,7 @@
 						doh.is(1, calls, "one watch(value) call");
 						doh.t(dojo.getObject("foo.bar.baz.quux", false, oldVal) === undefined, "attribute didn't used to exist");
 						doh.t(dojo.getObject("foo.bar.baz.quux", false, newVal) !== undefined, "attribute now exists");
-					}), 50);
+					}), 500);
 					
 					return d;
 				},
@@ -596,8 +604,15 @@
 				formWidget.validate();
 				
 				doh.t(dojo.hasClass(dojo.byId("widget_rw"), "dijitValidationTextBoxError"), "required but empty marked as error");
-				doh.is("dtb2", dijit._curFocus.id, "focused on first invalid DateTextBox");
+				doh.is("dtb2", dijit.focus.curNode.id, "focused on first invalid DateTextBox");
 			});
+
+			if(dojo.isFF >= 4 || dojo.isIE >= 10 || dojo.isWebKit){
+				doh.register("novalidate", function noValidate(){
+					// Making sure the parser picks up the flag and _WidgetBase copies it to this.domNode
+					doh.t(dijit.byId("noValidateForm").domNode.hasAttribute("novalidate"), "novalidate");
+				});
+			}
 
 			doh.run();
 		});
@@ -874,5 +889,7 @@ simple line 2</textarea>
 onClick:function(){ dijit.byId("myForm").submit() }'>Submit programmatically</button>
 
 <iframe name="formSubmitIframe" src="about:blank" onload="if(this.values)submittedValues(this.values)" style="display:none;"></iframe>
+
+	<form id="noValidateForm" data-dojo-type="dijit.form.Form" novalidate></form>
 </body>
 </html>

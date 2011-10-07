@@ -19,10 +19,10 @@
 			dojo.require("dojo.date.locale");
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_InlineEditBox.html');
 
-				function moveAndClick(node) {
+				function moveAndClick(node){
 					doh.robot.mouseMoveAt(node, 500, 1);
 					doh.robot.mouseClick({left: true}, 500);
 				}
@@ -226,12 +226,13 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 							var inlineBox = dijit.byId(test.id);
-							var handler = inlineBox.connect(inlineBox, 'edit',
-								function(){
-									inlineBox.disconnect(handler);
+							var handler = inlineBox.connect(inlineBox, 'edit', function(){
+								inlineBox.disconnect(handler);
+								var editWidget = inlineBox.wrapperWidget.editWidget;
+								handler = editWidget.connect(editWidget, '_onFocus', function(){
+									editWidget.disconnect(handler);
 									setTimeout(d.getTestErrback(function(){
 										doh.is(test.textValue, inlineBox.get("value"), "inline text value");
-										var editWidget = inlineBox.wrapperWidget.editWidget;
 										doh.t(isVisible(editWidget), "editor widget should visible");
 										var expected = test.widgetValue,
 											actual = editWidget.get("value");
@@ -246,8 +247,9 @@
 											});
 										var buttons = dojo.query(".cancelButton", inlineBox.domNode.parentNode);
 										moveAndClick(buttons[buttons.length-1]);
-									}), 1000);
+									}), 1500);
 								});
+							});
 							moveAndClick(inlineBox.domNode);
 							return d;
 						}

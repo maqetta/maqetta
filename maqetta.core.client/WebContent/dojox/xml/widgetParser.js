@@ -1,13 +1,19 @@
+define([
+	"dojo/_base/lang",	// dojo.getObject
+	"dojo/_base/window",	// dojo.doc
+	"dojo/_base/sniff",	// dojo.isIE
+	"dojo/query",
+	"dojo/parser",
+	"dojox/xml/parser"
+], function(dojo, window, has, query, parser, dxparser){
+
+var dXml = lang.getObject("dojox.xml", true);
+
 /**
 Take some sort of xml block
 * like <dojo.button caption="blah"/> and turn
 * it into a widget..
 */
-
-dojo.provide("dojox.xml.widgetParser");
-dojo.require("dojox.xml.parser");
-dojo.require("dojo.parser");
-
 
 	/**
 	 * We want to support something like:
@@ -42,7 +48,7 @@ dojo.require("dojo.parser");
 	 *
 	 */
 
-dojox.xml.widgetParser = new function(){
+xXml.widgetParser = new function(){
 	
 	var d = dojo;
 	
@@ -68,7 +74,7 @@ dojox.xml.widgetParser = new function(){
 		//small as possible
 		var ret = d.query('[dojoType]', htmlNode);
 		//remove the script tag and replace with new HTML block
-		dojo.query(">", htmlNode).place(script, "before")
+		query(">", htmlNode).place(script, "before")
 		script.parentNode.removeChild(script);
 		return ret;
 	};
@@ -81,7 +87,7 @@ dojox.xml.widgetParser = new function(){
 	this.toHTML = function (/*XmlNode*/ node){
 		var newNode;
 		var nodeName = node.nodeName;
-		var dd = dojo.doc;
+		var dd = window.doc;
 		var type = node.nodeType;
 		
 		
@@ -143,7 +149,7 @@ dojox.xml.widgetParser = new function(){
 				// is uses the browser HTML parsing exactly at is and won't
 				// cause any sort of issues. We could just special case style
 				// as well?
-				if(dojo.isIE && name == "style"){
+				if(has("ie") && name == "style"){
 					newNode.style.setAttribute("cssText", value);
 				}else{
 					newNode.setAttribute(name, value);
@@ -167,3 +173,6 @@ dojox.xml.widgetParser = new function(){
 	
 }();
 
+return dXml.widgetParser;
+
+});

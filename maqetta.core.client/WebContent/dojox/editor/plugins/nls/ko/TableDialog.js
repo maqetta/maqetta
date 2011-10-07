@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertTableTitle: "테이블 삽입",
 	modifyTableTitle: "테이블 수정",
@@ -28,3 +30,5 @@
 	deleteTableRowLabel: "행 삭제",
 	deleteTableColumnLabel: "열 삭제"
 })
+//end v1.x content
+);

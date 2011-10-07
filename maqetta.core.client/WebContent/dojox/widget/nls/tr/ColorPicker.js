@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 redLabel: "k",
 greenLabel: "y",
@@ -9,4 +11,4 @@ hexLabel: "onaltılı",
 huePickerTitle: "Ton Seçici",
 saturationPickerTitle: "Doygunluk Seçici"
 })
-
+);

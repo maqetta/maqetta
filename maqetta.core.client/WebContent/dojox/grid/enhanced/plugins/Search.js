@@ -1,9 +1,14 @@
-dojo.provide("dojox.grid.enhanced.plugins.Search");
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/data/util/filter",
+	"../../EnhancedGrid",
+	"../_Plugin"
+], function(dojo, lang, declare, array, dFilter, EnhancedGrid, _Plugin){
 
-dojo.require("dojox.grid.enhanced._Plugin");
-dojo.require("dojo.data.util.filter");
-
-dojo.declare("dojox.grid.enhanced.plugins.Search", dojox.grid.enhanced._Plugin, {
+var Search = declare("dojox.grid.enhanced.plugins.Search", _Plugin, {
 	// summary:
 	//		Search the grid using wildcard string or Regular Expression.
 	
@@ -13,23 +18,23 @@ dojo.declare("dojox.grid.enhanced.plugins.Search", dojox.grid.enhanced._Plugin, 
 	
 	constructor: function(grid, args){
 		this.grid = grid;
-		args = (args && dojo.isObject(args)) ? args : {};
+		args = (args && lang.isObject(args)) ? args : {};
 		this._cacheSize = args.cacheSize || -1;
-		grid.searchRow = dojo.hitch(this, "searchRow");
+		grid.searchRow = lang.hitch(this, "searchRow");
 	},
 	searchRow: function(/* Object|RegExp|String */searchArgs, /* function(Integer, item) */onSearched){
-		if(!dojo.isFunction(onSearched)){ return; }
-		if(dojo.isString(searchArgs)){
-			searchArgs = dojo.data.util.filter.patternToRegExp(searchArgs);
+		if(!lang.isFunction(onSearched)){ return; }
+		if(lang.isString(searchArgs)){
+			searchArgs = dFilter.patternToRegExp(searchArgs);
 		}
 		var isGlobal = false;
 		if(searchArgs instanceof RegExp){
 			isGlobal = true;
-		}else if(dojo.isObject(searchArgs)){
+		}else if(lang.isObject(searchArgs)){
 			var isEmpty = true;
 			for(var field in searchArgs){
-				if(dojo.isString(searchArgs[field])){
-					searchArgs[field] = dojo.data.util.filter.patternToRegExp(searchArgs[field]);
+				if(lang.isString(searchArgs[field])){
+					searchArgs[field] = dFilter.patternToRegExp(searchArgs[field]);
 				}
 				isEmpty = false;
 			}
@@ -43,12 +48,15 @@ dojo.declare("dojox.grid.enhanced.plugins.Search", dojox.grid.enhanced._Plugin, 
 		var _this = this,
 			cnt = this._cacheSize,
 			args = {
-				"start": start,
-				"onBegin": function(size){
+				start: start,
+				query: this.grid.query,
+				sort: this.grid.getSortProps(),
+				queryOptions: this.grid.queryOptions,
+				onBegin: function(size){
 					_this._storeSize = size;
 				},
-				"onComplete": function(items){
-					if(!dojo.some(items, function(item, i){
+				onComplete: function(items){
+					if(!array.some(items, function(item, i){
 						if(_this._checkRow(item, searchArgs, isGlobal)){
 							onSearched(start + i, item);
 							return true;
@@ -70,11 +78,11 @@ dojo.declare("dojox.grid.enhanced.plugins.Search", dojox.grid.enhanced._Plugin, 
 	},
 	_checkRow: function(/* store item */item, /* Object|RegExp */searchArgs, /* Boolean */isGlobal){
 		var g = this.grid, s = g.store, i, field,
-			cells = dojo.filter(g.layout.cells, function(cell){
+			cells = array.filter(g.layout.cells, function(cell){
 				return !cell.hidden;
 			});
 		if(isGlobal){
-			return dojo.some(cells, function(cell){
+			return array.some(cells, function(cell){
 				try{
 					if(cell.field){
 						return String(s.getValue(item, cell.field)).search(searchArgs) >= 0;
@@ -106,4 +114,9 @@ dojo.declare("dojox.grid.enhanced.plugins.Search", dojox.grid.enhanced._Plugin, 
 		}
 	}
 });
-dojox.grid.EnhancedGrid.registerPlugin(dojox.grid.enhanced.plugins.Search/*name:'search'*/);
+
+EnhancedGrid.registerPlugin(Search/*name:'search'*/);
+
+return Search;
+
+});

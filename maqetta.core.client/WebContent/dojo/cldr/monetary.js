@@ -1,4 +1,9 @@
-define("dojo/cldr/monetary", ["dojo"], function(dojo) {
+define(["../main"], function(dojo) {
+	// module:
+	//		dojo/cldr/monetary
+	// summary:
+	//		TODOC
+
 dojo.getObject("cldr.monetary", true, dojo);
 
 dojo.cldr.monetary.getData = function(/*String*/code){

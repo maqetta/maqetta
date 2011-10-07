@@ -1,5 +1,10 @@
-dojo.provide("dojox.layout.RadioGroup");
-dojo.experimental("dojox.layout.RadioGroup");
+define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/lang","dojo/_base/query",
+		"dijit/_Widget","dijit/_Templated","dijit/_Contained","dijit/layout/StackContainer",
+		"dojo/fx/easing","dojo/_base/fx","dojo/dom-construct","dojo/dom-class"],function(
+	kernel,declare,html,lang,query,Widget,Templated,Contained,StackContainer,easing,baseFx,domConstruct,domClass){
+
+kernel.experimental("dojox.layout.RadioGroup");
+
 //
 //	dojox.layout.RadioGroup - an experimental (probably poorly named) Layout widget extending StackContainer
 //	that accepts ContentPanes as children, and applies aesthetically pleasing responsive transition animations
@@ -8,15 +13,14 @@ dojo.experimental("dojox.layout.RadioGroup");
 //	FIXME: take the Buttons out of the root template, and allow layoutAlign or similar attrib to use a different
 //	template, or build the template dynamically?
 //
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-dojo.require("dijit._Contained");
-dojo.require("dijit.layout.StackContainer");
-dojo.require("dojo.fx.easing");
+/*=====
+	var StackContainer = dijit.layout.StackContainer,
+		Templated = dijit._Templated,
+		Contained = dijit._Contained,
+		Widget = dijit._Widget;
+=====*/
 
-dojo.declare("dojox.layout.RadioGroup",
-	[dijit.layout.StackContainer,dijit._Templated],
-	{
+var RadioGroup = declare("dojox.layout.RadioGroup",[StackContainer,Templated],{
 	// summary: A Container that turns its Layout Children into a single Pane and transitions between states
 	//	onHover of the button
 	//
@@ -48,27 +52,27 @@ dojo.declare("dojox.layout.RadioGroup",
 		this.inherited(arguments);
 		this._children = this.getChildren();
 		this._buttons = this._children.length;
-		this._size = dojo.coords(this.containerNode);
+		this._size = html.coords(this.containerNode);
 		if(this.hasButtons){
-			dojo.style(this.buttonHolder, "display", "block");
+			html.style(this.buttonHolder, "display", "block");
 		}
 	},
 
 	_setupChild: function(/* dijit._Widget */child){
 		// summary: Creates a hover button for a child node of the RadioGroup
-		dojo.style(child.domNode, "position", "absolute");
+		html.style(child.domNode, "position", "absolute");
 		if(this.hasButtons){
 			
-			var tmp = this.buttonNode.appendChild(dojo.create('td'));
-			var n = dojo.create("div", null, tmp),
-				_Button = dojo.getObject(this.buttonClass),
+			var tmp = this.buttonNode.appendChild(domConstruct.create('td'));
+			var n = domConstruct.create("div", null, tmp),
+				_Button = lang.getObject(this.buttonClass),
 				tmpw = new _Button({
 					label: child.title,
 					page: child
 				}, n)
 			;
 			
-			dojo.mixin(child, { _radioButton: tmpw });
+			lang.mixin(child, { _radioButton: tmpw });
 			tmpw.startup();
 		}
 		child.domNode.style.display = "none";
@@ -125,34 +129,30 @@ dojo.declare("dojox.layout.RadioGroup",
 
 });
 
-dojo.declare("dojox.layout.RadioGroupFade",
-	dojox.layout.RadioGroup,
-	{
+declare("dojox.layout.RadioGroupFade", RadioGroup, {
 	// summary: An extension on a stock RadioGroup, that fades the panes.
 
 	_hideChild: function(page){
 		// summary: hide the specified child widget
-		dojo.fadeOut({
+		baseFx.fadeOut({
 			node:page.domNode,
 			duration:this.duration,
-			onEnd: dojo.hitch(this,"inherited", arguments, arguments)
+			onEnd: lang.hitch(this,"inherited", arguments, arguments)
 		}).play();
 	},
 
 	_showChild: function(page){
 		// summary: show the specified child widget
 		this.inherited(arguments);
-		dojo.style(page.domNode, "opacity", 0);
-		dojo.fadeIn({
+		html.style(page.domNode, "opacity", 0);
+		baseFx.fadeIn({
 			node:page.domNode,
 			duration:this.duration
 		}).play();
 	}
 });
 
-dojo.declare("dojox.layout.RadioGroupSlide",
-	dojox.layout.RadioGroup,
-	{
+declare("dojox.layout.RadioGroupSlide", RadioGroup, {
 	// summary: A Sliding Radio Group
 	// description:
 	//		An extension on a stock RadioGroup widget, sliding the pane
@@ -169,15 +169,16 @@ dojo.declare("dojox.layout.RadioGroupSlide",
 	zTop: 99,
 	
 	constructor: function(){
-		if(dojo.isString(this.easing)){
-			this.easing = dojo.getObject(this.easing);
+		if(lang.isString(this.easing)){
+			this.easing = lang.getObject(this.easing);
 		}
 	},
 	
 	_positionChild: function(page){
 		// summary: set the child out of view immediately after being hidden
-		
-		if(!this._size){ return; } // FIXME: is there a real "size" floating around always?
+
+		// FIXME: is there a real "size" floating around always?
+		if(!this._size){ return; } 
 		
 		// there should be a contest: obfuscate this function as best you can.
 		var rA = true, rB = true;
@@ -194,7 +195,7 @@ dojo.declare("dojox.layout.RadioGroupSlide",
 		var prop = rA ? "top" : "left",
 			val = (rB ? "-" : "") + (this._size[rA ? "h" : "w" ] + 20) + "px";
 			
-		dojo.style(page.domNode, prop, val);
+		html.style(page.domNode, prop, val);
 
 	},
 
@@ -206,7 +207,7 @@ dojo.declare("dojox.layout.RadioGroupSlide",
 		page.isLastChild = (page == children[children.length-1]);
 		page.selected = true;
 
-		dojo.style(page.domNode,{
+		html.style(page.domNode,{
 			zIndex: this.zTop, display:""
 		})
 
@@ -214,7 +215,7 @@ dojo.declare("dojox.layout.RadioGroupSlide",
 			this._anim.gotoPercent(100,true);
 		}
 		
-		this._anim = dojo.animateProperty({
+		this._anim = baseFx.animateProperty({
 			node:page.domNode,
 			properties: {
 				left: 0,
@@ -222,11 +223,11 @@ dojo.declare("dojox.layout.RadioGroupSlide",
 			},
 			duration: this.duration,
 			easing: this.easing,
-			onEnd: dojo.hitch(page, function(){
+			onEnd: lang.hitch(page, function(){
 				if(this.onShow){ this.onShow(); }
 				if(this._onShow){ this._onShow(); }
 			}),
-			beforeBegin: dojo.hitch(this, "_positionChild", page)
+			beforeBegin: lang.hitch(this, "_positionChild", page)
 		});
 		this._anim.play();
 	},
@@ -244,9 +245,7 @@ dojo.declare("dojox.layout.RadioGroupSlide",
 	
 });
 
-dojo.declare("dojox.layout._RadioButton",
-	[dijit._Widget,dijit._Templated,dijit._Contained],
-	{
+declare("dojox.layout._RadioButton",[Widget,Templated,Contained],{
 	// summary: The Buttons for a RadioGroup
 	//
 	// description: A private widget used to manipulate the StackContainer (RadioGroup*). Don't create directly.
@@ -270,7 +269,7 @@ dojo.declare("dojox.layout._RadioButton",
 		// summary: set the selected child on hover, and set our hover state class
 		this.getParent().selectChild(this.page);
 		this._clearSelected();
-		dojo.addClass(this.domNode,"dojoxRadioButtonSelected");
+		domClass.add(this.domNode,"dojoxRadioButtonSelected");
 
 	},
 
@@ -279,14 +278,14 @@ dojo.declare("dojox.layout._RadioButton",
 		//	than setting up an additional connection to onMouseOut
 		
 		// FIXME: this relies on the template being [div][span]node[/span][/div]
-		dojo.query(".dojoxRadioButtonSelected", this.domNode.parentNode.parentNode)
+		query(".dojoxRadioButtonSelected", this.domNode.parentNode.parentNode)
 			.removeClass("dojoxRadioButtonSelected")
 		;
 	}
 	
 });
 
-dojo.extend(dijit._Widget,{
+lang.extend(Widget,{
 	// slideFrom: String
 	//		A parameter needed by RadioGroupSlide only. An optional paramter to force
 	//		the ContentPane to slide in from a set direction. Defaults
@@ -294,3 +293,4 @@ dojo.extend(dijit._Widget,{
 	//		to slideFrom top, left, right, or bottom.
 	slideFrom: "random"
 })
+});

@@ -1,13 +1,32 @@
-dojo.provide("dojox.gfx.silverlight");
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/Color", 
+		"dojo/_base/array", "dojo/dom-geometry", "dojo/dom", "dojo/_base/sniff", 
+		"./_base", "./shape", "./path"], 
+  function(kernel,lang,declare,color,arr,domGeom,dom,has,g,gs,pathLib){
+/*===== 
+	dojox.gfx.silverlight = {
+	// module:
+	//		dojox/gfx/silverlight
+	// summary:
+	//		This the graphics rendering bridge for the Microsoft Silverlight plugin.
+	//		Silverlight is a faster implementation on IE6-8 than the default 2d graphics, VML
+	};
+	g = dojox.gfx;
+	pathLib.Path = dojox.gfx.path.Path;
+	pathLib.TextPath = dojox.gfx.path.TextPath;
+	sl.Shape = dojox.gfx.canvas.Shape;
+	gs.Shape = dojox.gfx.shape.Shape;
+	gs.Rect = dojox.gfx.shape.Rect;
+	gs.Ellipse = dojox.gfx.shape.Ellipse;
+	gs.Circle = dojox.gfx.shape.Circle;
+	gs.Line = dojox.gfx.shape.Line;
+	gs.PolyLine = dojox.gfx.shape.PolyLine;
+	gs.Image = dojox.gfx.shape.Image;
+	gs.Text = dojox.gfx.shape.Text;
+	gs.Surface = dojox.gfx.shape.Surface;
+  =====*/
 
-dojo.require("dojox.gfx._base");
-dojo.require("dojox.gfx.shape");
-dojo.require("dojox.gfx.path");
-
-dojo.experimental("dojox.gfx.silverlight");
-
-(function(){
-	var d = dojo, g = dojox.gfx, gs = g.shape, sl = g.silverlight;
+	var sl = g.silverlight = {};
+	kernel.experimental("dojox.gfx.silverlight");
 
 	var dasharray = {
 			solid:				"none",
@@ -45,7 +64,7 @@ dojo.experimental("dojox.gfx.silverlight");
 		return "#" + (a.length < 2 ? "0" + a : a) + t.slice(1);	// String
 	}
 
-	d.declare("dojox.gfx.silverlight.Shape", gs.Shape, {
+	declare("dojox.gfx.silverlight.Shape", gs.Shape, {
 		// summary: Silverlight-specific implementation of dojox.gfx.Shape methods
 
 		setFill: function(fill){
@@ -72,7 +91,7 @@ dojo.experimental("dojox.gfx.silverlight");
 						lgb.mappingMode = "Absolute";
 						lgb.startPoint = f.x1 + "," + f.y1;
 						lgb.endPoint = f.x2 + "," + f.y2;
-						d.forEach(f.colors, function(c){
+						arr.forEach(f.colors, function(c){
 							var t = p.createFromXaml("<GradientStop/>");
 							t.offset = c.offset;
 							t.color = hexColor(c.color);
@@ -89,7 +108,7 @@ dojo.experimental("dojox.gfx.silverlight");
 						rgb.gradientOrigin = pt;
 						rgb.center = pt;
 						rgb.radiusX = rgb.radiusY = f.r;
-						d.forEach(f.colors, function(c){
+						arr.forEach(f.colors, function(c){
 							var t = p.createFromXaml("<GradientStop/>");
 							t.offset = c.offset;
 							t.color = hexColor(c.color);
@@ -130,7 +149,7 @@ dojo.experimental("dojox.gfx.silverlight");
 				return this;
 			}
 			// normalize the stroke
-			if(typeof stroke == "string" || d.isArray(stroke) || stroke instanceof d.Color){
+			if(typeof stroke == "string" || lang.isArray(stroke) || stroke instanceof color){
 				stroke = {color: stroke};
 			}
 			var s = this.strokeStyle = g.makeParameters(g.defaultStroke, stroke);
@@ -153,7 +172,7 @@ dojo.experimental("dojox.gfx.silverlight");
 				var da = s.style.toLowerCase();
 				if(da in dasharray){ da = dasharray[da]; }
 				if(da instanceof Array){
-					da = d.clone(da);
+					da = lang.clone(da);
 					var i;
 					/*
 					for(var i = 0; i < da.length; ++i){
@@ -213,6 +232,7 @@ dojo.experimental("dojox.gfx.silverlight");
 			rawNode.fill = null;
 			rawNode.stroke = null;
 			this.rawNode = rawNode;
+			this.rawNode.tag = this.getUID();						
 		},
 
 		// move family
@@ -238,7 +258,7 @@ dojo.experimental("dojox.gfx.silverlight");
 		}
 	});
 
-	d.declare("dojox.gfx.silverlight.Group", sl.Shape, {
+	declare("dojox.gfx.silverlight.Group", sl.Shape, {
 		// summary: a group shape (Silverlight), which can be used
 		//	to logically group shapes (e.g, to propagate matricies)
 		constructor: function(){
@@ -248,11 +268,13 @@ dojo.experimental("dojox.gfx.silverlight");
 			// summary: sets a raw Silverlight node to be used by this shape
 			// rawNode: Node: an Silverlight node
 			this.rawNode = rawNode;
+			this.rawNode.tag = this.getUID();						
+			
 		}
 	});
 	sl.Group.nodeType = "Canvas";
 
-	d.declare("dojox.gfx.silverlight.Rect", [sl.Shape, gs.Rect], {
+	declare("dojox.gfx.silverlight.Rect", [sl.Shape, gs.Rect], {
 		// summary: a rectangle shape (Silverlight)
 		setShape: function(newShape){
 			// summary: sets a rectangle shape object (Silverlight)
@@ -273,7 +295,7 @@ dojo.experimental("dojox.gfx.silverlight");
 	});
 	sl.Rect.nodeType = "Rectangle";
 
-	d.declare("dojox.gfx.silverlight.Ellipse", [sl.Shape, gs.Ellipse], {
+	declare("dojox.gfx.silverlight.Ellipse", [sl.Shape, gs.Ellipse], {
 		// summary: an ellipse shape (Silverlight)
 		setShape: function(newShape){
 			// summary: sets an ellipse shape object (Silverlight)
@@ -293,7 +315,7 @@ dojo.experimental("dojox.gfx.silverlight");
 	});
 	sl.Ellipse.nodeType = "Ellipse";
 
-	d.declare("dojox.gfx.silverlight.Circle", [sl.Shape, gs.Circle], {
+	declare("dojox.gfx.silverlight.Circle", [sl.Shape, gs.Circle], {
 		// summary: a circle shape (Silverlight)
 		setShape: function(newShape){
 			// summary: sets a circle shape object (Silverlight)
@@ -312,7 +334,7 @@ dojo.experimental("dojox.gfx.silverlight");
 	});
 	sl.Circle.nodeType = "Ellipse";
 
-	d.declare("dojox.gfx.silverlight.Line", [sl.Shape, gs.Line], {
+	declare("dojox.gfx.silverlight.Line", [sl.Shape, gs.Line], {
 		// summary: a line shape (Silverlight)
 		setShape: function(newShape){
 			// summary: sets a line shape object (Silverlight)
@@ -326,7 +348,7 @@ dojo.experimental("dojox.gfx.silverlight");
 	});
 	sl.Line.nodeType = "Line";
 
-	d.declare("dojox.gfx.silverlight.Polyline", [sl.Shape, gs.Polyline], {
+	declare("dojox.gfx.silverlight.Polyline", [sl.Shape, gs.Polyline], {
 		// summary: a polyline/polygon shape (Silverlight)
 		setShape: function(points, closed){
 			// summary: sets a polyline/polygon shape object (Silverlight)
@@ -353,7 +375,7 @@ dojo.experimental("dojox.gfx.silverlight");
 	});
 	sl.Polyline.nodeType = "Polyline";
 
-	d.declare("dojox.gfx.silverlight.Image", [sl.Shape, gs.Image], {
+	declare("dojox.gfx.silverlight.Image", [sl.Shape, gs.Image], {
 		// summary: an image (Silverlight)
 		setShape: function(newShape){
 			// summary: sets an image shape object (Silverlight)
@@ -377,11 +399,12 @@ dojo.experimental("dojox.gfx.silverlight");
 			//	shape. Once set, transforms, gradients, etc, can be applied.
 			//	(no fill & stroke by default)
 			this.rawNode = rawNode;
+			this.rawNode.tag = this.getUID();						
 		}
 	});
 	sl.Image.nodeType = "Image";
 
-	d.declare("dojox.gfx.silverlight.Text", [sl.Shape, gs.Text], {
+	declare("dojox.gfx.silverlight.Text", [sl.Shape, gs.Text], {
 		// summary: an anchored text (Silverlight)
 		setShape: function(newShape){
 			// summary: sets a text shape object (Silverlight)
@@ -394,7 +417,7 @@ dojo.experimental("dojox.gfx.silverlight");
 			r["Canvas.Left"] = -10000;
 			r["Canvas.Top"]  = -10000;
 			if(!this._delay){
-				this._delay = window.setTimeout(d.hitch(this, "_delayAlignment"), 10);
+				this._delay = window.setTimeout(lang.hitch(this, "_delayAlignment"), 10);
 			}
 			return this;	// self
 		},
@@ -446,6 +469,7 @@ dojo.experimental("dojox.gfx.silverlight");
 			//	shape. Once set, transforms, gradients, etc, can be applied.
 			//	(no fill & stroke by default)
 			this.rawNode = rawNode;
+			this.rawNode.tag = this.getUID();						
 		},
 		getTextWidth: function(){
 			// summary: get the text width in pixels
@@ -454,7 +478,7 @@ dojo.experimental("dojox.gfx.silverlight");
 	});
 	sl.Text.nodeType = "TextBlock";
 
-	d.declare("dojox.gfx.silverlight.Path", [sl.Shape, g.path.Path], {
+	declare("dojox.gfx.silverlight.Path", [sl.Shape, pathLib.Path], {
 		// summary: a path shape (Silverlight)
 		_updateWithSegment: function(segment){
 			// summary: updates the bounding box of path with new segment
@@ -476,7 +500,7 @@ dojo.experimental("dojox.gfx.silverlight");
 	});
 	sl.Path.nodeType = "Path";
 
-	d.declare("dojox.gfx.silverlight.TextPath", [sl.Shape, g.path.TextPath], {
+	declare("dojox.gfx.silverlight.TextPath", [sl.Shape, pathLib.TextPath], {
 		// summary: a textpath shape (Silverlight)
 		_updateWithSegment: function(segment){
 			// summary: updates the bounding box of path with new segment
@@ -493,7 +517,7 @@ dojo.experimental("dojox.gfx.silverlight");
 
 	var surfaces = {}, nullFunc = new Function;
 
-	d.declare("dojox.gfx.silverlight.Surface", gs.Surface, {
+	declare("dojox.gfx.silverlight.Surface", gs.Surface, {
 		// summary: a surface object to be used for drawings (Silverlight)
 		constructor: function(){
 			gs.Container._init.call(this);
@@ -533,7 +557,7 @@ dojo.experimental("dojox.gfx.silverlight");
 		// height: String: height of surface, e.g., "100px"
 
 		if(!width && !height){
-			var pos = d.position(parentNode);
+			var pos = domGeom.position(parentNode);
 			width  = width  || pos.w;
 			height = height || pos.h;
 		}
@@ -545,7 +569,7 @@ dojo.experimental("dojox.gfx.silverlight");
 		}
 
 		var s = new sl.Surface();
-		parentNode = d.byId(parentNode);
+		parentNode = dom.byId(parentNode);
 		s._parent = parentNode;
 		s._nodeName = g._base._getUniqueId();
 
@@ -564,13 +588,13 @@ dojo.experimental("dojox.gfx.silverlight");
 		s._onLoadName = onLoadName;
 		window[onLoadName] = function(sender){
 			if(!s.rawNode){
-				s.rawNode = d.byId(pluginName).content.root;
+				s.rawNode = dom.byId(pluginName).content.root;
 				// register the plugin with its parent node
 				surfaces[s._nodeName] = parentNode;
 				s.onLoad(s);
 			}
 		};
-		if(d.isSafari){
+		if(has("safari")){
 			obj = "<embed type='application/x-silverlight' id='" +
 			pluginName + "' width='" + width + "' height='" + height +
 			" background='transparent'" +
@@ -593,7 +617,7 @@ dojo.experimental("dojox.gfx.silverlight");
 		}
 		parentNode.innerHTML = obj;
 
-		var pluginNode = d.byId(pluginName);
+		var pluginNode = dom.byId(pluginName);
 		if(pluginNode.content && pluginNode.content.root){
 			// the plugin was created synchronously
 			s.rawNode = pluginNode.content.root;
@@ -649,7 +673,7 @@ dojo.experimental("dojox.gfx.silverlight");
 
 			// update the transform
 			if(!this._delay){
-				this._delay = window.setTimeout(d.hitch(this, "_delayAlignment"), 10);
+				this._delay = window.setTimeout(lang.hitch(this, "_delayAlignment"), 10);
 			}
 		}
 	};
@@ -701,16 +725,16 @@ dojo.experimental("dojox.gfx.silverlight");
 		}
 	};
 
-	d.extend(sl.Text, Font);
-	//d.extend(sl.TextPath, Font);
+	lang.extend(sl.Text, Font);
+	//dojo.extend(sl.TextPath, Font);
 
-	d.extend(sl.Group, Container);
-	d.extend(sl.Group, gs.Creator);
-	d.extend(sl.Group, Creator);
+	lang.extend(sl.Group, Container);
+	lang.extend(sl.Group, gs.Creator);
+	lang.extend(sl.Group, Creator);
 
-	d.extend(sl.Surface, Container);
-	d.extend(sl.Surface, gs.Creator);
-	d.extend(sl.Surface, Creator);
+	lang.extend(sl.Surface, Container);
+	lang.extend(sl.Surface, gs.Creator);
+	lang.extend(sl.Surface, Creator);
 
 	function mouseFix(s, a){
 		var ev = {target: s, currentTarget: s, preventDefault: function(){}, stopPropagation: function(){}};
@@ -718,6 +742,8 @@ dojo.experimental("dojox.gfx.silverlight");
 			if(a.source){
 				// support silverlight 2.0
 				ev.target = a.source;
+				var gfxId = ev.target.tag;				
+				ev.gfxTarget = gs.byId(gfxId);
 			}
 		}catch(e){
 			// a.source does not exist in 1.0
@@ -732,7 +758,7 @@ dojo.experimental("dojox.gfx.silverlight");
 				ev.y = ev.offsetY = ev.layerY = p.y;
 				// calculate clientX and clientY
 				var parent = surfaces[s.getHost().content.root.name];
-				var t = d.position(parent);
+				var t = domGeom.position(parent);
 				ev.clientX = t.x + p.x;
 				ev.clientY = t.y + p.y;
 			}catch(e){
@@ -752,6 +778,7 @@ dojo.experimental("dojox.gfx.silverlight");
 			if(a.source){
 				// source is defined from Silverlight 2+
 				ev.target = a.source;
+				ev.gfxTarget = gs.byId(ev.target.tag);
 			}
 		}catch(e){
 			// a.source does not exist in 1.0
@@ -778,7 +805,7 @@ dojo.experimental("dojox.gfx.silverlight");
 				{name: name, fix: function(){ return {}; }};
 			if(arguments.length > 2){
 				token = this.getEventSource().addEventListener(n.name,
-					function(s, a){ d.hitch(object, method)(n.fix(s, a)); });
+					function(s, a){ lang.hitch(object, method)(n.fix(s, a)); });
 			}else{
 				token = this.getEventSource().addEventListener(n.name,
 					function(s, a){ object(n.fix(s, a)); });
@@ -794,8 +821,8 @@ dojo.experimental("dojox.gfx.silverlight");
 		}
 	};
 	
-	d.extend(sl.Shape, eventsProcessing);
-	d.extend(sl.Surface, eventsProcessing);
+	lang.extend(sl.Shape, eventsProcessing);
+	lang.extend(sl.Surface, eventsProcessing);
 	
 	// patch dojox.gfx
 	g.equalSources = function(a, b){
@@ -803,10 +830,6 @@ dojo.experimental("dojox.gfx.silverlight");
 		return a && b && a.equals(b);
 	};
 	
-	// see if we are required to initilize
-	if(g.loadAndSwitch === "silverlight"){
-		g.switchTo("silverlight");
-		delete g.loadAndSwitch;
-	}
-})();
+	return sl;
+});
 

@@ -1,6 +1,11 @@
-define("dojo/dnd/Manager", ["dojo", "dojo/dnd/common", "dojo/dnd/autoscroll", "dojo/dnd/Avatar"], function(dojo) {
+define(["../main", "../Evented", "./common", "./autoscroll", "./Avatar"], function(dojo, Evented) {
+	// module:
+	//		dojo/dnd/Manager
+	// summary:
+	//		TODOC
 
-dojo.declare("dojo.dnd.Manager", null, {
+
+var Manager = dojo.declare("dojo.dnd.Manager", [Evented], {
 	// summary:
 	//		the manager of DnD operations (usually a singleton)
 	constructor: function(){
@@ -16,7 +21,7 @@ dojo.declare("dojo.dnd.Manager", null, {
 	// avatar's offset from the mouse
 	OFFSET_X: 16,
 	OFFSET_Y: 16,
-	
+
 	// methods
 	overSource: function(source){
 		// summary:
@@ -103,7 +108,7 @@ dojo.declare("dojo.dnd.Manager", null, {
 		//		updates the avatar; it is separate to be overwritten dynamically, if needed
 		this.avatar.update();
 	},
-	
+
 	// mouse event processors
 	onMouseMove: function(e){
 		// summary:
@@ -140,7 +145,7 @@ dojo.declare("dojo.dnd.Manager", null, {
 			this.stopDrag();
 		}
 	},
-	
+
 	// keyboard event processors
 	onKeyDown: function(e){
 		// summary:
@@ -175,7 +180,7 @@ dojo.declare("dojo.dnd.Manager", null, {
 			}
 		}
 	},
-	
+
 	// utilities
 	_setCopyStatus: function(copy){
 		// summary:
@@ -195,7 +200,7 @@ dojo.declare("dojo.dnd.Manager", null, {
 //		The manager singleton variable. Can be overwritten if needed.
 dojo.dnd._manager = null;
 
-dojo.dnd.manager = function(){
+Manager.manager = dojo.dnd.manager = function(){
 	// summary:
 	//		Returns the current DnD manager.  Creates one if it is not created yet.
 	if(!dojo.dnd._manager){
@@ -204,5 +209,5 @@ dojo.dnd.manager = function(){
 	return dojo.dnd._manager;	// Object
 };
 
-return dojo.dnd.Manager;
+return Manager;
 });

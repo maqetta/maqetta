@@ -19,7 +19,7 @@ $rows = array(array("7369", '"SMITH,CLERK"', "7902", '"1993-06-13"', "800.00", "
 
 $prefix = htmlentities($_GET["sn_stream_header"]);
 
-if($_GET["sn_count"]) {
+if(@$_GET["sn_count"]) {
     if($_GET["sn_count"] == "records"){
         echo $prefix . "([[" . count($rows) . "]])";
     } else {
@@ -28,13 +28,13 @@ if($_GET["sn_count"]) {
         exit(0);
     }
 } else {
-    if($_GET["sn_start"]) {
+    if(@$_GET["sn_start"]) {
         $start = $_GET["sn_start"];
     } else {
         $start = 1;
     }
 
-    if($_GET["sn_limit"]) {
+    if(@$_GET["sn_limit"]) {
         $limit = $_GET["sn_limit"];
     } else {
         $limit = count($rows);

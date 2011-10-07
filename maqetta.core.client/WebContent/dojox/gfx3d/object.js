@@ -1,12 +1,20 @@
-dojo.provide("dojox.gfx3d.object");
+define([
+	"dojo/_base/array",
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojox/gfx",
+	"dojox/gfx/matrix",
+	"./_base",
+	"./scheduler",
+	"./gradient",
+	"./vector",
+	"./matrix",
+	"./lighting"
+], function(arrayUtil,declare,lang,gfx,matrixUtil2d,gfx3d,schedulerExtensions,Gradient,VectorUtil,matrixUtil,lightUtil){
 
-dojo.require("dojox.gfx");
-dojo.require("dojox.gfx3d.lighting");
-dojo.require("dojox.gfx3d.scheduler");
-dojo.require("dojox.gfx3d.vector");
-dojo.require("dojox.gfx3d.gradient");
-
-// FIXME: why the global "out" var here?
+var scheduler = schedulerExtensions.scheduler;
+	
+// FIXME: why the "out" var here?
 var out = function(o, x){
 	if(arguments.length > 1){
 		// console.debug("debug:", o);
@@ -19,7 +27,7 @@ var out = function(o, x){
 	}
 };
 
-dojo.declare("dojox.gfx3d.Object", null, {
+declare("dojox.gfx3d.Object", null, {
 	constructor: function(){
 		// summary: a Object object, which knows how to map
 		// 3D objects to 2D shapes.
@@ -59,7 +67,7 @@ dojo.declare("dojox.gfx3d.Object", null, {
 		// dojox.gfx3d.defaultOrbit
 		// dojox.gfx3d.defaultCube
 		// or dojox.gfx3d.defaultCylinder)
-		this.object = dojox.gfx.makeParameters(this.object, newObject);
+		this.object = gfx.makeParameters(this.object, newObject);
 		return this;
 	},
 
@@ -68,7 +76,7 @@ dojo.declare("dojox.gfx3d.Object", null, {
 		// matrix: dojox.gfx3d.matrix.Matrix: a matrix or a matrix-like object
 		//	(see an argument of dojox.gfx3d.matrix.Matrix
 		//	constructor for a list of acceptable arguments)
-		this.matrix = dojox.gfx3d.matrix.clone(matrix ? dojox.gfx3d.matrix.normalize(matrix) : dojox.gfx3d.identity, true);
+		this.matrix = matrixUtil.clone(matrix ? matrixUtil.normalize(matrix) : gfx3d.identity, true);
 		return this;	// self
 	},
 
@@ -123,7 +131,9 @@ dojo.declare("dojox.gfx3d.Object", null, {
 	},
 
 	toStdFill: function(lighting, normal){
-		return (this.fillStyle && typeof this.fillStyle['type'] != "undefined") ? lighting[this.fillStyle.type](normal, this.fillStyle.finish, this.fillStyle.color) : this.fillStyle;
+		return (this.fillStyle && typeof this.fillStyle['type'] != "undefined") ? 
+			lighting[this.fillStyle.type](normal, this.fillStyle.finish, this.fillStyle.color)
+			: this.fillStyle;
 	},
 
 	invalidate: function(){
@@ -161,7 +171,7 @@ dojo.declare("dojox.gfx3d.Object", null, {
 
 });
 
-dojo.declare("dojox.gfx3d.Scene", dojox.gfx3d.Object, {
+declare("dojox.gfx3d.Scene", gfx3d.Object, {
 	// summary: the Scene is just a containter.
 	// note: we have the following assumption:
 	// all objects in the Scene are not overlapped with other objects
@@ -170,13 +180,13 @@ dojo.declare("dojox.gfx3d.Scene", dojox.gfx3d.Object, {
 		// summary: a containter of other 3D objects
 		this.objects= [];
 		this.todos = [];
-		this.schedule = dojox.gfx3d.scheduler.zOrder;
-		this._draw = dojox.gfx3d.drawer.conservative;
+		this.schedule = scheduler.zOrder;
+		this._draw = gfx3d.drawer.conservative;
 	},
 
 	setFill: function(fill){
 		this.fillStyle = fill;
-		dojo.forEach(this.objects, function(item){
+		arrayUtil.forEach(this.objects, function(item){
 			item.setFill(fill);
 		});
 		return this;
@@ -184,18 +194,18 @@ dojo.declare("dojox.gfx3d.Scene", dojox.gfx3d.Object, {
 
 	setStroke: function(stroke){
 		this.strokeStyle = stroke;
-		dojo.forEach(this.objects, function(item){
+		arrayUtil.forEach(this.objects, function(item){
 			item.setStroke(stroke);
 		});
 		return this;
 	},
 
 	render: function(camera, deep){
-		var m = dojox.gfx3d.matrix.multiply(camera, this.matrix);
+		var m = matrixUtil.multiply(camera, this.matrix);
 		if(deep){
 			this.todos = this.objects;
 		}
-		dojo.forEach(this.todos, function(item){ item.render(m, deep); });
+		arrayUtil.forEach(this.todos, function(item){ item.render(m, deep); });
 	},
 
 	draw: function(lighting){
@@ -205,7 +215,7 @@ dojo.declare("dojox.gfx3d.Scene", dojox.gfx3d.Object, {
 
 	addTodo: function(newObject){
 		// FIXME: use indexOf?
-		if(dojo.every(this.todos, function(item){ return item != newObject; })){
+		if(arrayUtil.every(this.todos, function(item){ return item != newObject; })){
 			this.todos.push(newObject);
 			this.invalidate();
 		}
@@ -217,36 +227,36 @@ dojo.declare("dojox.gfx3d.Scene", dojox.gfx3d.Object, {
 
 	getZOrder: function(){
 		var zOrder = 0;
-		dojo.forEach(this.objects, function(item){ zOrder += item.getZOrder(); });
+		arrayUtil.forEach(this.objects, function(item){ zOrder += item.getZOrder(); });
 		return (this.objects.length > 1) ?  zOrder / this.objects.length : 0;
 	}
 });
 
 
-dojo.declare("dojox.gfx3d.Edges", dojox.gfx3d.Object, {
+declare("dojox.gfx3d.Edges", gfx3d.Object, {
 	constructor: function(){
 		// summary: a generic edge in 3D viewport
-		this.object = dojo.clone(dojox.gfx3d.defaultEdges);
+		this.object = lang.clone(gfx3d.defaultEdges);
 	},
 
 	setObject: function(newObject, /* String, optional */ style){
 		// summary: setup the object
 		// newObject: Array of points || Object
 		// style: String, optional
-		this.object = dojox.gfx.makeParameters(this.object, (newObject instanceof Array) ? { points: newObject, style: style } : newObject);
+		this.object = gfx.makeParameters(this.object, (newObject instanceof Array) ? { points: newObject, style: style } : newObject);
 		return this;
 	},
 
 	getZOrder: function(){
 		var zOrder = 0;
-		dojo.forEach(this.cache, function(item){ zOrder += item.z;} );
+		arrayUtil.forEach(this.cache, function(item){ zOrder += item.z;} );
 		return (this.cache.length > 1) ?  zOrder / this.cache.length : 0;
 	},
 
 	render: function(camera){
-		var m = dojox.gfx3d.matrix.multiply(camera, this.matrix);
-		this.cache = dojo.map(this.object.points, function(item){
-			return dojox.gfx3d.matrix.multiplyPoint(m, item);
+		var m = matrixUtil.multiply(camera, this.matrix);
+		this.cache = arrayUtil.map(this.object.points, function(item){
+			return matrixUtil.multiplyPoint(m, item);
 		});
 	},
 
@@ -261,7 +271,7 @@ dojo.declare("dojox.gfx3d.Edges", dojox.gfx3d.Object, {
 
 		if(this.object.style == "strip" || this.object.style == "loop"){
 			p.moveTo(c[0].x, c[0].y);
-			dojo.forEach(c.slice(1), function(item){
+			arrayUtil.forEach(c.slice(1), function(item){
 				p.lineTo(item.x, item.y);
 			});
 			if(this.object.style == "loop"){
@@ -280,29 +290,29 @@ dojo.declare("dojox.gfx3d.Edges", dojox.gfx3d.Object, {
 	}
 });
 
-dojo.declare("dojox.gfx3d.Orbit", dojox.gfx3d.Object, {
+declare("dojox.gfx3d.Orbit", gfx3d.Object, {
 	constructor: function(){
 		// summary: a generic edge in 3D viewport
-		this.object = dojo.clone(dojox.gfx3d.defaultOrbit);
+		this.object = lang.clone(gfx3d.defaultOrbit);
 	},
 
 	render: function(camera){
-		var m = dojox.gfx3d.matrix.multiply(camera, this.matrix);
+		var m = matrixUtil.multiply(camera, this.matrix);
 		var angles = [0, Math.PI/4, Math.PI/3];
-		var center = dojox.gfx3d.matrix.multiplyPoint(m, this.object.center);
-		var marks = dojo.map(angles, function(item){
+		var center = matrixUtil.multiplyPoint(m, this.object.center);
+		var marks = arrayUtil.map(angles, function(item){
 			return {x: this.center.x + this.radius * Math.cos(item),
 				y: this.center.y + this.radius * Math.sin(item), z: this.center.z};
 			}, this.object);
 
-		marks = dojo.map(marks, function(item){
-			return dojox.gfx3d.matrix.multiplyPoint(m, item);
+		marks = arrayUtil.map(marks, function(item){
+			return matrixUtil.multiplyPoint(m, item);
 		});
 
-		var normal = dojox.gfx3d.vector.normalize(marks);
+		var normal = VectorUtil.normalize(marks);
 
-		marks = dojo.map(marks, function(item){
-			return dojox.gfx3d.vector.substract(item, center);
+		marks = arrayUtil.map(marks, function(item){
+			return VectorUtil.substract(item, center);
 		});
 
 		// Use the algorithm here:
@@ -318,17 +328,17 @@ dojo.declare("dojox.gfx3d.Orbit", dojox.gfx3d.Object, {
 			zx: marks[2].x * marks[2].y, zy: marks[2].y * marks[2].y, zz: 1,
 			dx: 0, dy: 0, dz: 0
 		};
-		var B = dojo.map(marks, function(item){
+		var B = arrayUtil.map(marks, function(item){
 			return -Math.pow(item.x, 2);
 		});
 
 		// X is 2b, c, f
-		var X = dojox.gfx3d.matrix.multiplyPoint(dojox.gfx3d.matrix.invert(A),B[0], B[1], B[2]);
+		var X = matrixUtil.multiplyPoint(matrixUtil.invert(A),B[0], B[1], B[2]);
 		var theta = Math.atan2(X.x, 1 - X.y) / 2;
 
 		// rotate the marks back to the canonical form
-		var probes = dojo.map(marks, function(item){
-			return dojox.gfx.matrix.multiplyPoint(dojox.gfx.matrix.rotate(-theta), item.x, item.y);
+		var probes = arrayUtil.map(marks, function(item){
+			return matrixUtil2d.multiplyPoint(matrixUtil2d.rotate(-theta), item.x, item.y);
 		});
 
 		// we are solving the equation: Ax = b
@@ -344,7 +354,7 @@ dojo.declare("dojox.gfx3d.Orbit", dojox.gfx3d.Object, {
 		// the invert matrix is
 		// 1/(ad -bc) [ d, -b; -c, a];
 		var rx = Math.sqrt( (a*d - b*c)/ (d-b) );
-		var ry  = Math.sqrt( (a*d - b*c)/ (a-c) );
+		var ry = Math.sqrt( (a*d - b*c)/ (a-c) );
 
 		this.cache = {cx: center.x, cy: center.y, rx: rx, ry: ry, theta: theta, normal: normal};
 	},
@@ -355,18 +365,18 @@ dojo.declare("dojox.gfx3d.Orbit", dojox.gfx3d.Object, {
 		} else {
 			this.shape = this.renderer.createEllipse(this.cache);
 		}
-		this.shape.applyTransform(dojox.gfx.matrix.rotateAt(this.cache.theta, this.cache.cx, this.cache.cy))
+		this.shape.applyTransform(matrixUtil2d.rotateAt(this.cache.theta, this.cache.cx, this.cache.cy))
 			.setStroke(this.strokeStyle)
 			.setFill(this.toStdFill(lighting, this.cache.normal));
 	}
 });
 
-dojo.declare("dojox.gfx3d.Path3d", dojox.gfx3d.Object, {
+declare("dojox.gfx3d.Path3d", gfx3d.Object, {
 	// This object is still very immature !
 	constructor: function(){
 		// summary: a generic line
 		//	(this is a helper object, which is defined for convenience)
-		this.object = dojo.clone(dojox.gfx3d.defaultPath3d);
+		this.object = lang.clone(gfx3d.defaultPath3d);
 		this.segments = [];
 		this.absolute = true;
 		this.last = {};
@@ -436,15 +446,15 @@ dojo.declare("dojox.gfx3d.Path3d", dojox.gfx3d.Object, {
 
 	render: function(camera){
 		// TODO: we need to get the ancestors' matrix
-		var m = dojox.gfx3d.matrix.multiply(camera, this.matrix);
+		var m = matrixUtil.multiply(camera, this.matrix);
 		// iterate all the segments and convert them to 2D canvas
 		// TODO consider the relative mode
 		var path = ""
 		var _validSegments = this._validSegments;
-		dojo.forEach(this.segments, function(item){
+		arrayUtil.forEach(this.segments, function(item){
 			path += item.action;
 			for(var i = 0; i < item.args.length; i+= _validSegments[item.action.toLowerCase()] ){
-				var pt = dojox.gfx3d.matrix.multiplyPoint(m, item.args[i], item.args[i+1], item.args[i+2])
+				var pt = matrixUtil.multiplyPoint(m, item.args[i], item.args[i+1], item.args[i+2])
 				path += " " + pt.x + " " + pt.y;
 			}
 		});
@@ -457,11 +467,11 @@ dojo.declare("dojox.gfx3d.Path3d", dojox.gfx3d.Object, {
 	}
 });
 
-dojo.declare("dojox.gfx3d.Triangles", dojox.gfx3d.Object, {
+declare("dojox.gfx3d.Triangles", gfx3d.Object, {
 	constructor: function(){
 		// summary: a generic triangle
 		//	(this is a helper object, which is defined for convenience)
-		this.object = dojo.clone(dojox.gfx3d.defaultTriangles);
+		this.object = lang.clone(gfx3d.defaultTriangles);
 	},
 
 	setObject: function(newObject, /* String, optional */ style){
@@ -469,29 +479,29 @@ dojo.declare("dojox.gfx3d.Triangles", dojox.gfx3d.Object, {
 		// newObject: Array of points || Object
 		// style: String, optional
 		if(newObject instanceof Array){
-			this.object = dojox.gfx.makeParameters(this.object, { points: newObject, style: style } );
+			this.object = gfx.makeParameters(this.object, { points: newObject, style: style } );
 		} else {
-			this.object = dojox.gfx.makeParameters(this.object, newObject);
+			this.object = gfx.makeParameters(this.object, newObject);
 		}
 		return this;
 	},
 	render: function(camera){
-		var m = dojox.gfx3d.matrix.multiply(camera, this.matrix);
-		var c = dojo.map(this.object.points, function(item){
-			return dojox.gfx3d.matrix.multiplyPoint(m, item);
+		var m = matrixUtil.multiply(camera, this.matrix);
+		var c = arrayUtil.map(this.object.points, function(item){
+			return matrixUtil.multiplyPoint(m, item);
 		});
 		this.cache = [];
 		var pool = c.slice(0, 2);
 		var center = c[0];
 		if(this.object.style == "strip"){
-			dojo.forEach(c.slice(2), function(item){
+			arrayUtil.forEach(c.slice(2), function(item){
 				pool.push(item);
 				pool.push(pool[0]);
 				this.cache.push(pool);
 				pool = pool.slice(1, 3);
 			}, this);
 		} else if(this.object.style == "fan"){
-			dojo.forEach(c.slice(2), function(item){
+			arrayUtil.forEach(c.slice(2), function(item){
 				pool.push(item);
 				pool.push(center);
 				this.cache.push(pool);
@@ -507,45 +517,47 @@ dojo.declare("dojox.gfx3d.Triangles", dojox.gfx3d.Object, {
 
 	draw: function(lighting){
 		// use the BSP to schedule
-		this.cache = dojox.gfx3d.scheduler.bsp(this.cache, function(it){  return it; });
+		this.cache = scheduler.bsp(this.cache, function(it){  return it; });
 		if(this.shape){
 			this.shape.clear();
 		} else {
 			this.shape = this.renderer.createGroup();
 		}
-		dojo.forEach(this.cache, function(item){
+		arrayUtil.forEach(this.cache, function(item){
 			this.shape.createPolyline(item)
 				.setStroke(this.strokeStyle)
-				.setFill(this.toStdFill(lighting, dojox.gfx3d.vector.normalize(item)));
+				.setFill(this.toStdFill(lighting, VectorUtil.normalize(item)));
 		}, this);
 	},
 
 	getZOrder: function(){
 		var zOrder = 0;
-		dojo.forEach(this.cache, function(item){
+		arrayUtil.forEach(this.cache, function(item){
 				zOrder += (item[0].z + item[1].z + item[2].z) / 3; });
 		return (this.cache.length > 1) ?  zOrder / this.cache.length : 0;
 	}
 });
 
-dojo.declare("dojox.gfx3d.Quads", dojox.gfx3d.Object, {
+declare("dojox.gfx3d.Quads", gfx3d.Object, {
 	constructor: function(){
 		// summary: a generic triangle
 		//	(this is a helper object, which is defined for convenience)
-		this.object = dojo.clone(dojox.gfx3d.defaultQuads);
+		this.object = lang.clone(gfx3d.defaultQuads);
 	},
 
 	setObject: function(newObject, /* String, optional */ style){
 		// summary: setup the object
 		// newObject: Array of points || Object
 		// style: String, optional
-		this.object = dojox.gfx.makeParameters(this.object, (newObject instanceof Array) ? { points: newObject, style: style } : newObject );
+		this.object = gfx.makeParameters(this.object, (newObject instanceof Array) ? 
+			{ points: newObject, style: style } 
+				: newObject );
 		return this;
 	},
 	render: function(camera){
-		var m = dojox.gfx3d.matrix.multiply(camera, this.matrix), i;
-		var c = dojo.map(this.object.points, function(item){
-			return dojox.gfx3d.matrix.multiplyPoint(m, item);
+		var m = matrixUtil.multiply(camera, this.matrix), i;
+		var c = arrayUtil.map(this.object.points, function(item){
+			return matrixUtil.multiplyPoint(m, item);
 		});
 		this.cache = [];
 		if(this.object.style == "strip"){
@@ -566,7 +578,7 @@ dojo.declare("dojox.gfx3d.Quads", dojox.gfx3d.Object, {
 
 	draw: function(lighting){
 		// use the BSP to schedule
-		this.cache = dojox.gfx3d.scheduler.bsp(this.cache, function(it){  return it; });
+		this.cache = gfx3d.scheduler.bsp(this.cache, function(it){  return it; });
 		if(this.shape){
 			this.shape.clear();
 		}else{
@@ -576,7 +588,7 @@ dojo.declare("dojox.gfx3d.Quads", dojox.gfx3d.Object, {
 		for(var x=0; x<this.cache.length; x++){
 			this.shape.createPolyline(this.cache[x])
 				.setStroke(this.strokeStyle)
-				.setFill(this.toStdFill(lighting, dojox.gfx3d.vector.normalize(this.cache[x])));
+				.setFill(this.toStdFill(lighting, VectorUtil.normalize(this.cache[x])));
 		}
 		/*
 		dojo.forEach(this.cache, function(item){
@@ -602,24 +614,24 @@ dojo.declare("dojox.gfx3d.Quads", dojox.gfx3d.Object, {
 	}
 });
 
-dojo.declare("dojox.gfx3d.Polygon", dojox.gfx3d.Object, {
+declare("dojox.gfx3d.Polygon", gfx3d.Object, {
 	constructor: function(){
 		// summary: a generic triangle
 		//	(this is a helper object, which is defined for convenience)
-		this.object = dojo.clone(dojox.gfx3d.defaultPolygon);
+		this.object = lang.clone(gfx3d.defaultPolygon);
 	},
 
 	setObject: function(newObject){
 		// summary: setup the object
 		// newObject: Array of points || Object
-		this.object = dojox.gfx.makeParameters(this.object, (newObject instanceof Array) ? {path: newObject} : newObject)
+		this.object = gfx.makeParameters(this.object, (newObject instanceof Array) ? {path: newObject} : newObject)
 		return this;
 	},
 
 	render: function(camera){
-		var m = dojox.gfx3d.matrix.multiply(camera, this.matrix);
-		this.cache = dojo.map(this.object.path, function(item){
-			return dojox.gfx3d.matrix.multiplyPoint(m, item);
+		var m = matrixUtil.multiply(camera, this.matrix);
+		this.cache = arrayUtil.map(this.object.path, function(item){
+			return matrixUtil.multiplyPoint(m, item);
 		});
 		// add the first point to close the polyline
 		this.cache.push(this.cache[0]);
@@ -633,7 +645,7 @@ dojo.declare("dojox.gfx3d.Polygon", dojox.gfx3d.Object, {
 		}
 
 		this.shape.setStroke(this.strokeStyle)
-			.setFill(this.toStdFill(lighting, dojox.gfx3d.matrix.normalize(this.cache)));
+			.setFill(this.toStdFill(lighting, matrixUtil.normalize(this.cache)));
 	},
 
 	getZOrder: function(){
@@ -650,18 +662,18 @@ dojo.declare("dojox.gfx3d.Polygon", dojox.gfx3d.Object, {
 	}
 });
 
-dojo.declare("dojox.gfx3d.Cube", dojox.gfx3d.Object, {
+declare("dojox.gfx3d.Cube", gfx3d.Object, {
 	constructor: function(){
 		// summary: a generic triangle
 		//	(this is a helper object, which is defined for convenience)
-		this.object = dojo.clone(dojox.gfx3d.defaultCube);
+		this.object = lang.clone(gfx3d.defaultCube);
 		this.polygons = [];
 	},
 
 	setObject: function(newObject){
 		// summary: setup the object
 		// newObject: Array of points || Object
-		this.object = dojox.gfx.makeParameters(this.object, newObject);
+		this.object = gfx.makeParameters(this.object, newObject);
 	},
 
 	render: function(camera){
@@ -675,9 +687,9 @@ dojo.declare("dojox.gfx3d.Cube", dojox.gfx3d.Object, {
 		var f = {x: g.x, y: a.y, z: g.z};
 		var h = {x: a.x, y: g.y, z: g.z};
 		var polygons = [a, b, c, d, e, f, g, h];
-		var m = dojox.gfx3d.matrix.multiply(camera, this.matrix);
-		var p = dojo.map(polygons, function(item){
-			return dojox.gfx3d.matrix.multiplyPoint(m, item);
+		var m = matrixUtil.multiply(camera, this.matrix);
+		var p = arrayUtil.map(polygons, function(item){
+			return matrixUtil.multiplyPoint(m, item);
 		});
 		a = p[0]; b = p[1]; c = p[2]; d = p[3]; e = p[4]; f = p[5]; g = p[6]; h = p[7];
 		this.cache = [[a, b, c, d, a], [e, f, g, h, e], [a, d, h, e, a], [d, c, g, h, d], [c, b, f, g, c], [b, a, e, f, b]];
@@ -685,7 +697,7 @@ dojo.declare("dojox.gfx3d.Cube", dojox.gfx3d.Object, {
 
 	draw: function(lighting){
 		// use bsp to sort.
-		this.cache = dojox.gfx3d.scheduler.bsp(this.cache, function(it){ return it; });
+		this.cache = gfx3d.scheduler.bsp(this.cache, function(it){ return it; });
 		// only the last 3 polys are visible.
 		var cache = this.cache.slice(3);
 
@@ -697,7 +709,7 @@ dojo.declare("dojox.gfx3d.Cube", dojox.gfx3d.Object, {
 		for(var x=0; x<cache.length; x++){
 			this.shape.createPolyline(cache[x])
 				.setStroke(this.strokeStyle)
-				.setFill(this.toStdFill(lighting, dojox.gfx3d.vector.normalize(cache[x])));
+				.setFill(this.toStdFill(lighting, VectorUtil.normalize(cache[x])));
 		}
 		/*
 		dojo.forEach(cache, function(item){
@@ -716,23 +728,23 @@ dojo.declare("dojox.gfx3d.Cube", dojox.gfx3d.Object, {
 });
 
 
-dojo.declare("dojox.gfx3d.Cylinder", dojox.gfx3d.Object, {
+declare("dojox.gfx3d.Cylinder", gfx3d.Object, {
 	constructor: function(){
-		this.object = dojo.clone(dojox.gfx3d.defaultCylinder);
+		this.object = lang.clone(gfx3d.defaultCylinder);
 	},
 
 	render: function(camera){
 		// get the bottom surface first
-		var m = dojox.gfx3d.matrix.multiply(camera, this.matrix);
+		var m = matrixUtil.multiply(camera, this.matrix);
 		var angles = [0, Math.PI/4, Math.PI/3];
-		var center = dojox.gfx3d.matrix.multiplyPoint(m, this.object.center);
-		var marks = dojo.map(angles, function(item){
+		var center = matrixUtil.multiplyPoint(m, this.object.center);
+		var marks = arrayUtil.map(angles, function(item){
 			return {x: this.center.x + this.radius * Math.cos(item),
 				y: this.center.y + this.radius * Math.sin(item), z: this.center.z};
 			}, this.object);
 
-		marks = dojo.map(marks, function(item){
-			return dojox.gfx3d.vector.substract(dojox.gfx3d.matrix.multiplyPoint(m, item), center);
+		marks = arrayUtil.map(marks, function(item){
+			return VectorUtil.substract(matrixUtil.multiplyPoint(m, item), center);
 		});
 
 		// Use the algorithm here:
@@ -748,17 +760,17 @@ dojo.declare("dojox.gfx3d.Cylinder", dojox.gfx3d.Object, {
 			zx: marks[2].x * marks[2].y, zy: marks[2].y * marks[2].y, zz: 1,
 			dx: 0, dy: 0, dz: 0
 		};
-		var B = dojo.map(marks, function(item){
+		var B = arrayUtil.map(marks, function(item){
 			return -Math.pow(item.x, 2);
 		});
 
 		// X is 2b, c, f
-		var X = dojox.gfx3d.matrix.multiplyPoint(dojox.gfx3d.matrix.invert(A), B[0], B[1], B[2]);
+		var X = matrixUtil.multiplyPoint(matrixUtil.invert(A), B[0], B[1], B[2]);
 		var theta = Math.atan2(X.x, 1 - X.y) / 2;
 
 		// rotate the marks back to the canonical form
-		var probes = dojo.map(marks, function(item){
-			return dojox.gfx.matrix.multiplyPoint(dojox.gfx.matrix.rotate(-theta), item.x, item.y);
+		var probes = arrayUtil.map(marks, function(item){
+			return matrixUtil2d.multiplyPoint(matrixUtil2d.rotate(-theta), item.x, item.y);
 		});
 
 		// we are solving the equation: Ax = b
@@ -782,11 +794,11 @@ dojo.declare("dojox.gfx3d.Cylinder", dojox.gfx3d.Object, {
 			theta -= Math.PI/2;
 		}
 
-		var top = dojox.gfx3d.matrix.multiplyPoint(m,
-			dojox.gfx3d.vector.sum(this.object.center, {x: 0, y:0, z: this.object.height}));
+		var top = matrixUtil.multiplyPoint(m,
+			VectorUtil.sum(this.object.center, {x: 0, y:0, z: this.object.height}));
 
 		var gradient = this.fillStyle.type == "constant" ? this.fillStyle.color
-			: dojox.gfx3d.gradient(this.renderer.lighting, this.fillStyle, this.object.center, this.object.radius, Math.PI, 2 * Math.PI, m);
+			: Gradient(this.renderer.lighting, this.fillStyle, this.object.center, this.object.radius, Math.PI, 2 * Math.PI, m);
 		if(isNaN(rx) || isNaN(ry) || isNaN(theta)){
 			// in case the cap is invisible (parallel to the incident vector)
 			rx = this.object.radius, ry = 0, theta = 0;
@@ -795,7 +807,7 @@ dojo.declare("dojox.gfx3d.Cylinder", dojox.gfx3d.Object, {
 	},
 
 	draw: function(){
-		var c = this.cache, v = dojox.gfx3d.vector, m = dojox.gfx.matrix,
+		var c = this.cache, v = VectorUtil, m = matrixUtil2d,
 			centers = [c.center, c.top], normal = v.substract(c.top, c.center);
 		if(v.dotProduct(normal, this.renderer.lighting.incident) > 0){
 			centers = [c.top, c.center];
@@ -831,7 +843,7 @@ dojo.declare("dojox.gfx3d.Cylinder", dojox.gfx3d.Object, {
 
 
 // the ultimate container of 3D world
-dojo.declare("dojox.gfx3d.Viewport", dojox.gfx.Group, {
+declare("dojox.gfx3d.Viewport", gfx.Group, {
 	constructor: function(){
 		// summary: a viewport/container for 3D objects, which knows
 		// the camera and lightings
@@ -848,8 +860,8 @@ dojo.declare("dojox.gfx3d.Viewport", dojox.gfx.Group, {
 		// FIXME: memory leak?
 		this.renderer = this;
 		// Using zOrder as the default scheduler
-		this.schedule = dojox.gfx3d.scheduler.zOrder;
-		this.draw = dojox.gfx3d.drawer.conservative;
+		this.schedule = gfx3d.scheduler.zOrder;
+		this.draw = gfx3d.drawer.conservative;
 		// deep: boolean, true means the whole viewport needs to re-render, redraw
 		this.deep = false;
 
@@ -863,7 +875,7 @@ dojo.declare("dojox.gfx3d.Viewport", dojox.gfx.Group, {
 		// matrix: dojox.gfx3d.matrix.Matrix: a matrix or a matrix-like object
 		//	(see an argument of dojox.gfx.matrix.Matrix
 		//	constructor for a list of acceptable arguments)
-		this.camera = dojox.gfx3d.matrix.clone(matrix ? dojox.gfx3d.matrix.normalize(matrix) : dojox.gfx3d.identity, true);
+		this.camera = matrixUtil.clone(matrix ? matrixUtil.normalize(matrix) : gfx3d.identity, true);
 		this.invalidate();
 		return this;	// self
 	},
@@ -901,10 +913,12 @@ dojo.declare("dojox.gfx3d.Viewport", dojox.gfx.Group, {
 		// or lights object
 		// ambient: Color: an ambient object
 		// specular: Color: an specular object
-		this.lights = (lights instanceof Array) ? {sources: lights, ambient: ambient, specular: specular} : lights;
+		this.lights = (lights instanceof Array) ? 
+			{sources: lights, ambient: ambient, specular: specular}
+				: lights;
 		var view = {x: 0, y: 0, z: 1};
 
-		this.lighting = new dojox.gfx3d.lighting.Model(view, this.lights.sources,
+		this.lighting = new lightUtil.Model(view, this.lights.sources,
 				this.lights.ambient, this.lights.specular);
 		this.invalidate();
 		return this;
@@ -921,7 +935,7 @@ dojo.declare("dojox.gfx3d.Viewport", dojox.gfx.Group, {
 		// except calling invalidate, since invalidate is used as
 		// any modification needs to redraw the object itself, call invalidate.
 		// then call render.
-		if(dojo.every(this.todos,
+		if(arrayUtil.every(this.todos,
 			function(item){
 				return item != newObject;
 			}
@@ -937,8 +951,8 @@ dojo.declare("dojox.gfx3d.Viewport", dojox.gfx.Group, {
 
 	setDimensions: function(dim){
 		if(dim){
-			var w = dojo.isString(dim.width) ? parseInt(dim.width)  : dim.width;
-			var h = dojo.isString(dim.height) ? parseInt(dim.height) : dim.height;
+			var w = lang.isString(dim.width) ? parseInt(dim.width)  : dim.width;
+			var h = lang.isString(dim.height) ? parseInt(dim.height) : dim.height;
 			// there is no rawNode in canvas GFX implementation
 			if(this.rawNode){
 				var trs = this.rawNode.style;
@@ -958,11 +972,11 @@ dojo.declare("dojox.gfx3d.Viewport", dojox.gfx.Group, {
 		// summary: iterate all children and call their render callback function.
 		if(!this.todos.length){ return; }
 		// console.debug("Viewport::render");
-		var m = dojox.gfx3d.matrix;
+		var m = matrixUtil;
 		
 		// Iterate the todos and call render to prepare the rendering:
 		for(var x=0; x<this.todos.length; x++){
-			this.todos[x].render(dojox.gfx3d.matrix.normalize([
+			this.todos[x].render(matrixUtil.normalize([
 				m.cameraRotateXg(180),
 				m.cameraTranslate(0, this.dimension.height, 0),
 				this.camera
@@ -978,58 +992,58 @@ dojo.declare("dojox.gfx3d.Viewport", dojox.gfx.Group, {
 });
 
 //FIXME: Viewport cannot masquerade as a Group
-dojox.gfx3d.Viewport.nodeType = dojox.gfx.Group.nodeType;
+gfx3d.Viewport.nodeType = gfx.Group.nodeType;
 
-dojox.gfx3d._creators = {
+gfx3d._creators = {
 	// summary: object creators
 	createEdges: function(edges, style){
 		// summary: creates an edge object
 		// line: Object: a edge object (see dojox.gfx3d.defaultPath)
-		return this.create3DObject(dojox.gfx3d.Edges, edges, style);	// dojox.gfx3d.Edge
+		return this.create3DObject(gfx3d.Edges, edges, style);	// dojox.gfx3d.Edge
 	},
 	createTriangles: function(tris, style){
 		// summary: creates an edge object
 		// line: Object: a edge object (see dojox.gfx3d.defaultPath)
-		return this.create3DObject(dojox.gfx3d.Triangles, tris, style);	// dojox.gfx3d.Edge
+		return this.create3DObject(gfx3d.Triangles, tris, style);	// dojox.gfx3d.Edge
 	},
 	createQuads: function(quads, style){
 		// summary: creates an edge object
 		// line: Object: a edge object (see dojox.gfx3d.defaultPath)
-		return this.create3DObject(dojox.gfx3d.Quads, quads, style);	// dojox.gfx3d.Edge
+		return this.create3DObject(gfx3d.Quads, quads, style);	// dojox.gfx3d.Edge
 	},
 	createPolygon: function(points){
 		// summary: creates an triangle object
 		// points: Array of points || Object
-		return this.create3DObject(dojox.gfx3d.Polygon, points);	// dojox.gfx3d.Polygon
+		return this.create3DObject(gfx3d.Polygon, points);	// dojox.gfx3d.Polygon
 	},
 
 	createOrbit: function(orbit){
 		// summary: creates an triangle object
 		// points: Array of points || Object
-		return this.create3DObject(dojox.gfx3d.Orbit, orbit);	// dojox.gfx3d.Cube
+		return this.create3DObject(gfx3d.Orbit, orbit);	// dojox.gfx3d.Cube
 	},
 
 	createCube: function(cube){
 		// summary: creates an triangle object
 		// points: Array of points || Object
-		return this.create3DObject(dojox.gfx3d.Cube, cube);	// dojox.gfx3d.Cube
+		return this.create3DObject(gfx3d.Cube, cube);	// dojox.gfx3d.Cube
 	},
 
 	createCylinder: function(cylinder){
 		// summary: creates an triangle object
 		// points: Array of points || Object
-		return this.create3DObject(dojox.gfx3d.Cylinder, cylinder);	// dojox.gfx3d.Cube
+		return this.create3DObject(gfx3d.Cylinder, cylinder);	// dojox.gfx3d.Cube
 	},
 
 	createPath3d: function(path){
 		// summary: creates an edge object
 		// line: Object: a edge object (see dojox.gfx3d.defaultPath)
-		return this.create3DObject(dojox.gfx3d.Path3d, path);	// dojox.gfx3d.Edge
+		return this.create3DObject(gfx3d.Path3d, path);	// dojox.gfx3d.Edge
 	},
 	createScene: function(){
 		// summary: creates an triangle object
 		// line: Object: a triangle object (see dojox.gfx3d.defaultPath)
-		return this.create3DObject(dojox.gfx3d.Scene);	// dojox.gfx3d.Scene
+		return this.create3DObject(gfx3d.Scene);	// dojox.gfx3d.Scene
 	},
 
 	create3DObject: function(objectType, rawObject, style){
@@ -1077,20 +1091,23 @@ dojox.gfx3d._creators = {
 	}
 };
 
-dojo.extend(dojox.gfx3d.Viewport, dojox.gfx3d._creators);
-dojo.extend(dojox.gfx3d.Scene, dojox.gfx3d._creators);
-delete dojox.gfx3d._creators;
+lang.extend(gfx3d.Viewport, gfx3d._creators);
+lang.extend(gfx3d.Scene, gfx3d._creators);
+delete gfx3d._creators;
 
 
 //FIXME: extending dojox.gfx.Surface and masquerading Viewport as Group is hacky!
 
 // Add createViewport to dojox.gfx.Surface
-dojo.extend(dojox.gfx.Surface, {
+lang.extend(gfx.Surface, {
 	createViewport: function(){
 		//FIXME: createObject is non-public method!
-		var viewport = this.createObject(dojox.gfx3d.Viewport, null, true);
+		var viewport = this.createObject(gfx3d.Viewport, null, true);
 		//FIXME: this may not work with dojox.gfx.Group !!
 		viewport.setDimensions(this.getDimensions());
 		return viewport;
 	}
+});
+
+	return gfx3d.Object;
 });

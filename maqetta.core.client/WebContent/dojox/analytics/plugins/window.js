@@ -1,31 +1,37 @@
-dojo.require("dojox.analytics._base");
-dojo.provide("dojox.analytics.plugins.window");
+define(["dojo/_base/lang","../_base", "dojo/ready", "dojo/_base/config", "dojo/aspect"
+], function(lang, dxa, ready, config, aspect){
+	/*=====
+		dxa = dojox.analytics;
+		ready = dojo.ready;
+		aspect = dojo.aspect;
+	=====*/	
 
-// window startup data
-dojox.analytics.plugins.window = new (function(){
-	this.addData = dojo.hitch(dojox.analytics, "addData", "window");
-	this.windowConnects = dojo.config["windowConnects"] || ["open", "onerror"];
+	// window startup data
+	return (dxa.plugins.window = new (function(){
+		this.addData = lang.hitch(dxa, "addData", "window");
+		this.windowConnects = config["windowConnects"] || ["open", "onerror"];
 
-	for(var i=0; i<this.windowConnects.length;i++){
-		dojo.connect(window, this.windowConnects[i], dojo.hitch(this, "addData", this.windowConnects[i]));
-	}
-
-	dojo.addOnLoad(dojo.hitch(this, function(){
-		var data = {};
-		for(var i in window){
-			if (dojo.isObject(window[i])){
-				switch(i){
-					case "location":
-					case "console":
-						data[i]=window[i];
-						break;
-					default:
-						break;
-				}
-			}else{
-				data[i]=window[i];
-			}
+		for(var i=0; i<this.windowConnects.length;i++){
+			aspect.after(window, this.windowConnects[i], lang.hitch(this, "addData", this.windowConnects[i]),true);
 		}
-		this.addData(data);
-	}));
-})();
+
+		ready(lang.hitch(this, function(){
+			var data = {};
+			for(var i in window){
+				if (typeof window[i] == "object" || typeof window[i] == "function"){
+					switch(i){
+						case "location":
+						case "console":
+							data[i]=window[i];
+							break;
+						default:
+							break;
+					}
+				}else{
+					data[i]=window[i];
+				}
+			}
+			this.addData(data);
+		}));
+	})());
+});

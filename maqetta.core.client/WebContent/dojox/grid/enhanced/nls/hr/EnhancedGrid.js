@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	singleSort: "Jedan sort",
 	nestedSort: "Ugniježđeni sort",
@@ -9,4 +11,6 @@
 	indirectSelectionCheckBox: "Red ${0}, više izbora, kontrolna kućica",
 	selectAll: "Izaberi sve"
 })
+//end v1.x content
+);
 

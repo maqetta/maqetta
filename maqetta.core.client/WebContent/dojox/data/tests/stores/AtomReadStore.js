@@ -3,7 +3,7 @@ dojo.require("dojox.data.AtomReadStore");
 dojo.require("dojo.data.api.Read");
 
 dojox.data.tests.stores.AtomReadStore.getBlog1Store = function(){
-	return new dojox.data.AtomReadStore({url: dojo.moduleUrl("dojox.data.tests", "stores/atom1.xml").toString()});
+	return new dojox.data.AtomReadStore({url: require.toUrl("dojox/data/tests/stores/atom1.xml").toString()});
 	//return new dojox.data.AtomReadStore({url: "/sos/feeds/blog.php"});
 };
 /*
@@ -263,7 +263,7 @@ doh.register("dojox.data.tests.stores.AtomReadStore",
 				var atomStore = dojox.data.tests.stores.AtomReadStore.getBlog1Store();
 				var passed = false;
 				try{
-					var value = store.getValue("NotAnItem", "foo");
+					var value = atomStore.getValue("NotAnItem", "foo");
 				}catch(e){
 					passed = true;
 				}
@@ -320,7 +320,7 @@ doh.register("dojox.data.tests.stores.AtomReadStore",
 				var atomStore = dojox.data.tests.stores.AtomReadStore.getBlog1Store();
 				var passed = false;
 				try{
-					var value = store.getValues("NotAnItem", "foo");
+					var value = atomStore.getValues("NotAnItem", "foo");
 				}catch(e){
 					passed = true;
 				}

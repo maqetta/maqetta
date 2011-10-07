@@ -1,6 +1,11 @@
-dojo.provide("dojox.grid._Scroller");
+define([
+	"dijit/registry",
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"./util",
+	"dojo/_base/html"
+], function(dijitRegistry, declare, lang, util, html){
 
-(function(){
 	var indexInParent = function(inNode){
 		var i=0, n, p=inNode.parentNode;
 		while((n = p.childNodes[i++])){
@@ -15,18 +20,15 @@ dojo.provide("dojox.grid._Scroller");
 		if(!inNode){
 			return;
 		}
-		var filter = function(inW){
-			return inW.domNode && dojo.isDescendant(inW.domNode, inNode, true);
-		};
-		var ws = dijit.registry.filter(filter);
-		for(var i=0, w; (w=ws[i]); i++){
-			w.destroy();
-		}
-		delete ws;
+		dojo.forEach(dijitRegistry.toArray(), function(w){
+			if(w.domNode && html.isDescendant(w.domNode, inNode, true)){
+				w.destroy();
+			}
+		});
 	};
 
 	var getTagName = function(inNodeOrId){
-		var node = dojo.byId(inNodeOrId);
+		var node = html.byId(inNodeOrId);
 		return (node && node.tagName ? node.tagName.toLowerCase() : '');
 	};
 	
@@ -46,7 +48,7 @@ dojo.provide("dojox.grid._Scroller");
 		return nodeKids(inNode, 'div');
 	};
 
-	dojo.declare("dojox.grid._Scroller", null, {
+	return declare("dojox.grid._Scroller", null, {
 		constructor: function(inContentNodes){
 			this.setContentNodes(inContentNodes);
 			this.pageHeights = [];
@@ -85,7 +87,7 @@ dojo.provide("dojox.grid._Scroller");
 			if(this.scrollboxNode){
 				this.scrollboxNode.scrollTop = 0;
 				this.scroll(0);
-				this.scrollboxNode.onscroll = dojo.hitch(this, 'onscroll');
+				this.scrollboxNode.onscroll = lang.hitch(this, 'onscroll');
 			}
 		},
 		_getPageCount: function(rowCount, rowsPerPage){
@@ -218,7 +220,7 @@ dojo.provide("dojox.grid._Scroller");
 			for(var i=0; i<this.colCount; i++){
 				var n = this.invalidatePageNode(inPageIndex, this.pageNodes[i]);
 				if(n){
-					dojo.destroy(n);
+					html.destroy(n);
 				}
 			}
 		},
@@ -253,7 +255,7 @@ dojo.provide("dojox.grid._Scroller");
 			for(var i=0; i<this.colCount; i++){
 				//We want to have 1px in height min to keep scroller.  Otherwise can't scroll
 				//and see header in empty grid.
-				dojox.grid.util.setStyleHeightPx(this.contentNodes[i], Math.max(1,this.height));
+				util.setStyleHeightPx(this.contentNodes[i], Math.max(1,this.height));
 			}
 			
 			// Calculate the average row height and update the defaults (row and page).
@@ -322,10 +324,10 @@ dojo.provide("dojox.grid._Scroller");
 		},
 		createPageNode: function(){
 			var p = document.createElement('div');
-			dojo.attr(p,"role","presentation");
+			html.attr(p,"role","presentation");
 			p.style.position = 'absolute';
 			//p.style.width = '100%';
-			p.style[dojo._isBodyLtr() ? "left" : "right"] = '0';
+			p.style[this.grid.isLeftToRight() ? "left" : "right"] = '0';
 			return p;
 		},
 		getPageHeight: function(inPageIndex){
@@ -501,4 +503,4 @@ dojo.provide("dojox.grid._Scroller");
 		},
 		dummy: 0
 	});
-})();
+});

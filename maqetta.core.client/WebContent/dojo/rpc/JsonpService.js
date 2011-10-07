@@ -1,4 +1,9 @@
-define("dojo/rpc/JsonpService", ["dojo", "dojo/rpc/RpcService", "dojo/io/script"], function(dojo) {
+define(["../main", "./RpcService", "../io/script"], function(dojo) {
+	// module:
+	//		dojo/rpc/JsonpService
+	// summary:
+	//		TODOC
+
 
 dojo.declare("dojo.rpc.JsonpService", dojo.rpc.RpcService, {
 	// summary:

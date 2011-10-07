@@ -37,7 +37,7 @@
 		dojo.require("dojo.string");
 		dojo.require("doh.runner");
 
-		dojo.addOnLoad(function go(){
+		dojo.ready(function go(){
 			doh.register("parse", function(){
 				dojo.parser.parse();
 			});
@@ -150,7 +150,7 @@
 						progressBar = dijit.byId("implied2");
 						doh.is("50", progressBar.progress);
 						doh.is("50%", dojo.byId("implied2_label").innerHTML);
-						var visualProgress = dojo.query("div.dijitProgressBarFull", progressBar.domNode)[0];
+						visualProgress = dojo.query("div.dijitProgressBarFull", progressBar.domNode)[0];
 						doh.is("50%", visualProgress.style.width);
 					}
 				},
@@ -212,8 +212,22 @@
 							
 						doh.t(dojo.hasClass(progressBar.domNode, "dijitProgressBarIndeterminate"), "has class dijitProgressBarIndeterminate");
 						
-						var progressBar = dijit.byId("timerBar");
+						progressBar = dijit.byId("timerBar");
 						doh.t(80 < progressBar.progress <= 100, "Timer progress was " + progressBar.progress);
+					}
+				},
+				{
+					name: "set zero maximum",
+					runTest: function(){
+						var d = new doh.Deferred();
+
+						var progressBar = dijit.byId("setTestBar");
+						progressBar.set({maximum: 0, value: 0});
+
+						doh.is("0", progressBar.progress);
+						doh.is("0%", dojo.byId("setTestBar_label").innerHTML);
+						var visualProgress = dojo.query("div.dijitProgressBarFull", progressBar.domNode)[0];
+						doh.is("0%", visualProgress.style.width);
 					}
 				}
 			]);
@@ -250,7 +264,6 @@
 					if(response == "100%"){
 						clearInterval(_timer);
 						_timer = null;
-						return;
 					}
 				});
 			}, 3000); // on 3 second intervals
@@ -282,7 +295,7 @@
 		maximum:200, value:"20" '></div>
 
 	<h3>Test 2</h3>
-	Write here: <input type="text" value="" name="test" maxLength="256" id="test" style="width:300"/>
+	Write here: <input type="text" value="" name="test" maxLength="256" id="test" style="width:300px"/>
 	<br />
 	<br />
 	<div id="testBar" style='width:300px'></div>

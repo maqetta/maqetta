@@ -1,4 +1,9 @@
-define("dojo/dnd/move", ["dojo", "dojo/dnd/Mover", "dojo/dnd/Moveable"], function(dojo) {
+define(["../main", "./Mover", "./Moveable"], function(dojo) {
+	// module:
+	//		dojo/dnd/move
+	// summary:
+	//		TODOC
+
 
 /*=====
 dojo.declare("dojo.dnd.move.__constrainedMoveableArgs", [dojo.dnd.__MoveableArgs], {
@@ -17,11 +22,6 @@ dojo.declare("dojo.dnd.move.constrainedMoveable", dojo.dnd.Moveable, {
 	// object attributes (for markup)
 	constraints: function(){},
 	within: false,
-	
-	// markup methods
-	markupFactory: function(params, node){
-		return new dojo.dnd.move.constrainedMoveable(node, params);
-	},
 
 	constructor: function(node, params){
 		// summary:
@@ -74,11 +74,6 @@ dojo.declare("dojo.dnd.move.boxConstrainedMoveable", dojo.dnd.move.constrainedMo
 	// box:
 	//		object attributes (for markup)
 	box: {},
-	
-	// markup methods
-	markupFactory: function(params, node){
-		return new dojo.dnd.move.boxConstrainedMoveable(node, params);
-	},
 
 	constructor: function(node, params){
 		// summary:
@@ -105,11 +100,6 @@ dojo.declare("dojo.dnd.move.parentConstrainedMoveable", dojo.dnd.move.constraine
 	// area:
 	//		object attributes (for markup)
 	area: "content",
-
-	// markup methods
-	markupFactory: function(params, node){
-		return new dojo.dnd.move.parentConstrainedMoveable(node, params);
-	},
 
 	constructor: function(node, params){
 		// summary:

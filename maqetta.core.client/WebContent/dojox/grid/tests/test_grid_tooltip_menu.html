@@ -62,9 +62,6 @@
 				},
 				hideTooltip = function(e) {
 					dijit.hideTooltip(e.cellNode);
-					// FIXME: make sure that pesky tooltip doesn't reappear!
-					// would be nice if there were a way to hide tooltip without regard to aroundNode.
-					dijit._masterTT._onDeck=null;
 				}
 			
 			// cell tooltip

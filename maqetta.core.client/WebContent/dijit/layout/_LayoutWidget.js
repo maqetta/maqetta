@@ -1,8 +1,31 @@
-define("dijit/layout/_LayoutWidget", ["dojo", "dijit", "dijit/_Widget", "dijit/_Container", "dijit/_Contained"], function(dojo, dijit) {
+define([
+	"dojo/_base/lang", // lang.mixin
+	"../_Widget",
+	"../_Container",
+	"../_Contained",
+	"dojo/_base/declare", // declare
+	"dojo/dom-class", // domClass.add domClass.remove
+	"dojo/dom-geometry", // domGeometry.marginBox
+	"dojo/dom-style", // domStyle.getComputedStyle
+	"dojo/_base/sniff", // has("ie")
+	"dojo/_base/window" // win.global
+], function(lang, _Widget, _Container, _Contained,
+	declare, domClass, domGeometry, domStyle, has, win){
 
-dojo.declare("dijit.layout._LayoutWidget",
-	[dijit._Widget, dijit._Container, dijit._Contained],
-	{
+/*=====
+	var _Widget = dijit._Widget;
+	var _Container = dijit._Container;
+	var _Contained = dijit._Contained;
+=====*/
+
+	// module:
+	//		dijit/layout/_LayoutWidget
+	// summary:
+	//		_LayoutWidget Base class for a _Container widget which is responsible for laying out its children.
+	//		Widgets which mixin this code must define layout() to manage placement and sizing of the children.
+
+
+	return declare("dijit.layout._LayoutWidget", [_Widget, _Container, _Contained], {
 		// summary:
 		//		Base class for a _Container widget which is responsible for laying out its children.
 		//		Widgets which mixin this code must define layout() to manage placement and sizing of the children.
@@ -20,13 +43,13 @@ dojo.declare("dijit.layout._LayoutWidget",
 
 		buildRendering: function(){
 			this.inherited(arguments);
-			dojo.addClass(this.domNode, "dijitContainer");
+			domClass.add(this.domNode, "dijitContainer");
 		},
 
 		startup: function(){
 			// summary:
 			//		Called after all the widgets have been instantiated and their
-			//		dom nodes have been inserted somewhere under dojo.doc.body.
+			//		dom nodes have been inserted somewhere under win.doc.body.
 			//
 			//		Widgets should override this method to do any initialization
 			//		dependent on other widgets existing, and then call
@@ -42,7 +65,7 @@ dojo.declare("dijit.layout._LayoutWidget",
 			this.inherited(arguments);
 
 			// If I am a not being controlled by a parent layout widget...
-			var parent = this.getParent && this.getParent()
+			var parent = this.getParent && this.getParent();
 			if(!(parent && parent.isLayoutContainer)){
 				// Do recursive sizing and layout of all my descendants
 				// (passing in no argument to resize means that it has to glean the size itself)
@@ -53,7 +76,7 @@ dojo.declare("dijit.layout._LayoutWidget",
 				// monitor when my size changes so that I can re-layout.
 				// For browsers where I can't directly monitor when my size changes,
 				// monitor when the viewport changes size, which *may* indicate a size change for me.
-				this.connect(dojo.isIE ? this.domNode : dojo.global, 'onresize', function(){
+				this.connect(has("ie") ? this.domNode : win.global, 'onresize', function(){
 					// Using function(){} closure to ensure no arguments to resize.
 					this.resize();
 				});
@@ -100,35 +123,31 @@ dojo.declare("dijit.layout._LayoutWidget",
 
 			// set margin box size, unless it wasn't specified, in which case use current size
 			if(changeSize){
-				dojo.marginBox(node, changeSize);
-
-				// set offset of the node
-				if(changeSize.t){ node.style.top = changeSize.t + "px"; }
-				if(changeSize.l){ node.style.left = changeSize.l + "px"; }
+				domGeometry.setMarginBox(node, changeSize);
 			}
 
 			// If either height or width wasn't specified by the user, then query node for it.
 			// But note that setting the margin box and then immediately querying dimensions may return
 			// inaccurate results, so try not to depend on it.
 			var mb = resultSize || {};
-			dojo.mixin(mb, changeSize || {});	// changeSize overrides resultSize
+			lang.mixin(mb, changeSize || {});	// changeSize overrides resultSize
 			if( !("h" in mb) || !("w" in mb) ){
-				mb = dojo.mixin(dojo.marginBox(node), mb);	// just use dojo.marginBox() to fill in missing values
+				mb = lang.mixin(domGeometry.getMarginBox(node), mb);	// just use domGeometry.marginBox() to fill in missing values
 			}
 
 			// Compute and save the size of my border box and content box
-			// (w/out calling dojo.contentBox() since that may fail if size was recently set)
-			var cs = dojo.getComputedStyle(node);
-			var me = dojo._getMarginExtents(node, cs);
-			var be = dojo._getBorderExtents(node, cs);
+			// (w/out calling domGeometry.getContentBox() since that may fail if size was recently set)
+			var cs = domStyle.getComputedStyle(node);
+			var me = domGeometry.getMarginExtents(node, cs);
+			var be = domGeometry.getBorderExtents(node, cs);
 			var bb = (this._borderBox = {
 				w: mb.w - (me.w + be.w),
 				h: mb.h - (me.h + be.h)
 			});
-			var pe = dojo._getPadExtents(node, cs);
+			var pe = domGeometry.getPadExtents(node, cs);
 			this._contentBox = {
-				l: dojo._toPixelValue(node, cs.paddingLeft),
-				t: dojo._toPixelValue(node, cs.paddingTop),
+				l: domStyle.toPixelValue(node, cs.paddingLeft),
+				t: domStyle.toPixelValue(node, cs.paddingTop),
 				w: bb.w - pe.w,
 				h: bb.h - pe.h
 			};
@@ -156,7 +175,7 @@ dojo.declare("dijit.layout._LayoutWidget",
 
 			var cls = this.baseClass + "-child "
 				+ (child.baseClass ? this.baseClass + "-" + child.baseClass : "");
-			dojo.addClass(child.domNode, cls);
+			domClass.add(child.domNode, cls);
 		},
 
 		addChild: function(/*dijit._Widget*/ child, /*Integer?*/ insertIndex){
@@ -172,131 +191,9 @@ dojo.declare("dijit.layout._LayoutWidget",
 			var cls = this.baseClass + "-child"
 					+ (child.baseClass ?
 						" " + this.baseClass + "-" + child.baseClass : "");
-			dojo.removeClass(child.domNode, cls);
-			
+			domClass.remove(child.domNode, cls);
+
 			this.inherited(arguments);
 		}
-	}
-);
-
-dijit.layout.marginBox2contentBox = function(/*DomNode*/ node, /*Object*/ mb){
-	// summary:
-	//		Given the margin-box size of a node, return its content box size.
-	//		Functions like dojo.contentBox() but is more reliable since it doesn't have
-	//		to wait for the browser to compute sizes.
-	var cs = dojo.getComputedStyle(node);
-	var me = dojo._getMarginExtents(node, cs);
-	var pb = dojo._getPadBorderExtents(node, cs);
-	return {
-		l: dojo._toPixelValue(node, cs.paddingLeft),
-		t: dojo._toPixelValue(node, cs.paddingTop),
-		w: mb.w - (me.w + pb.w),
-		h: mb.h - (me.h + pb.h)
-	};
-};
-
-(function(){
-	var capitalize = function(word){
-		return word.substring(0,1).toUpperCase() + word.substring(1);
-	};
-
-	var size = function(widget, dim){
-		// size the child
-		var newSize = widget.resize ? widget.resize(dim) : dojo.marginBox(widget.domNode, dim);
-
-		// record child's size
-		if(newSize){
-			// if the child returned it's new size then use that
-			dojo.mixin(widget, newSize);
-		}else{
-			// otherwise, call marginBox(), but favor our own numbers when we have them.
-			// the browser lies sometimes
-			dojo.mixin(widget, dojo.marginBox(widget.domNode));
-			dojo.mixin(widget, dim);
-		}
-	};
-
-	dijit.layout.layoutChildren = function(/*DomNode*/ container, /*Object*/ dim, /*Widget[]*/ children,
-			/*String?*/ changedRegionId, /*Number?*/ changedRegionSize){
-		// summary
-		//		Layout a bunch of child dom nodes within a parent dom node
-		// container:
-		//		parent node
-		// dim:
-		//		{l, t, w, h} object specifying dimensions of container into which to place children
-		// children:
-		//		an array of Widgets or at least objects containing:
-		//			* domNode: pointer to DOM node to position
-		//			* region or layoutAlign: position to place DOM node
-		//			* resize(): (optional) method to set size of node
-		//			* id: (optional) Id of widgets, referenced from resize object, below.
-		// changedRegionId:
-		//		If specified, the slider for the region with the specified id has been dragged, and thus
-		//		the region's height or width should be adjusted according to changedRegionSize
-		// changedRegionSize:
-		//		See changedRegionId.
-
-		// copy dim because we are going to modify it
-		dim = dojo.mixin({}, dim);
-
-		dojo.addClass(container, "dijitLayoutContainer");
-
-		// Move "client" elements to the end of the array for layout.  a11y dictates that the author
-		// needs to be able to put them in the document in tab-order, but this algorithm requires that
-		// client be last.    TODO: move these lines to LayoutContainer?   Unneeded other places I think.
-		children = dojo.filter(children, function(item){ return item.region != "center" && item.layoutAlign != "client"; })
-			.concat(dojo.filter(children, function(item){ return item.region == "center" || item.layoutAlign == "client"; }));
-
-		// set positions/sizes
-		dojo.forEach(children, function(child){
-			var elm = child.domNode,
-				pos = (child.region || child.layoutAlign);
-
-			// set elem to upper left corner of unused space; may move it later
-			var elmStyle = elm.style;
-			elmStyle.left = dim.l+"px";
-			elmStyle.top = dim.t+"px";
-			elmStyle.position = "absolute";
-
-			dojo.addClass(elm, "dijitAlign" + capitalize(pos));
-
-			// Size adjustments to make to this child widget
-			var sizeSetting = {};
-
-			// Check for optional size adjustment due to splitter drag (height adjustment for top/bottom align
-			// panes and width adjustment for left/right align panes.
-			if(changedRegionId && changedRegionId == child.id){
-				sizeSetting[child.region == "top" || child.region == "bottom" ? "h" : "w"] = changedRegionSize;
-			}
-
-			// set size && adjust record of remaining space.
-			// note that setting the width of a <div> may affect its height.
-			if(pos == "top" || pos == "bottom"){
-				sizeSetting.w = dim.w;
-				size(child, sizeSetting);
-				dim.h -= child.h;
-				if(pos == "top"){
-					dim.t += child.h;
-				}else{
-					elmStyle.top = dim.t + dim.h + "px";
-				}
-			}else if(pos == "left" || pos == "right"){
-				sizeSetting.h = dim.h;
-				size(child, sizeSetting);
-				dim.w -= child.w;
-				if(pos == "left"){
-					dim.l += child.w;
-				}else{
-					elmStyle.left = dim.l + dim.w + "px";
-				}
-			}else if(pos == "client" || pos == "center"){
-				size(child, dim);
-			}
-		});
-	};
-
-})();
-
-
-return dijit.layout._LayoutWidget;
+	});
 });

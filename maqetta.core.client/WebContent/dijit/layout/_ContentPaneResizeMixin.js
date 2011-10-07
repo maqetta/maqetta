@@ -1,6 +1,32 @@
-define("dijit/layout/_ContentPaneResizeMixin", ["dojo", "dijit", "dijit/_Contained", "dijit/layout/_LayoutWidget"], function(dojo, dijit) {
+define([
+	"dojo/_base/array", // array.filter array.forEach
+	"dojo/_base/declare", // declare
+	"dojo/dom-attr",	// domAttr.has
+	"dojo/dom-class",	// domClass.contains domClass.toggle
+	"dojo/dom-geometry",// domGeometry.contentBox domGeometry.marginBox
+	"dojo/_base/lang", // lang.mixin
+	"dojo/query", // query
+	"dojo/_base/sniff", // has("ie")
+	"dojo/_base/window", // win.global
+	"../registry",	// registry.byId
+	"./utils",	// marginBox2contextBox
+	"../_Contained"
+], function(array, declare, domAttr, domClass, domGeometry, lang, query, has, win,
+			registry, layoutUtils, _Contained){
 
-dojo.declare("dijit.layout._ContentPaneResizeMixin", null, {
+/*=====
+var _Contained = dijit._Contained;
+=====*/
+
+// module:
+//		dijit/layout/_ContentPaneResizeMixin
+// summary:
+//		Resize() functionality of ContentPane.   If there's a single layout widget
+//		child then it will call resize() with the same dimensions as the ContentPane.
+//		Otherwise just calls resize on each child.
+
+
+return declare("dijit.layout._ContentPaneResizeMixin", null, {
 	// summary:
 	//		Resize() functionality of ContentPane.   If there's a single layout widget
 	//		child then it will call resize() with the same dimensions as the ContentPane.
@@ -15,27 +41,10 @@ dojo.declare("dijit.layout._ContentPaneResizeMixin", null, {
 	//				however big the ContentPane is
 	doLayout: true,
 
-	// isContainer: [protected] Boolean
-	//		Indicates that this widget acts as a "parent" to the descendant widgets.
-	//		When the parent is started it will call startup() on the child widgets.
-	//		See also `isLayoutContainer`.
-	isContainer: true,
-
 	// isLayoutContainer: [protected] Boolean
 	//		Indicates that this widget will call resize() on it's child widgets
 	//		when they become visible.
 	isLayoutContainer: true,
-
-	_startChildren: function(){
-		// summary:
-		//		Call startup() on all children including non _Widget ones like dojo.dnd.Source objects
-
-		// This starts all the widgets
-		dojo.forEach(this.getChildren(), function(child){
-			child.startup();
-			child._started = true;
-		});
-	},
 
 	startup: function(){
 		// summary:
@@ -45,7 +54,7 @@ dojo.declare("dijit.layout._ContentPaneResizeMixin", null, {
 
 		if(this._started){ return; }
 
-		var parent = dijit._Contained.prototype.getParent.call(this);
+		var parent = this.getParent();
 		this._childOfLayoutWidget = parent && parent.isLayoutContainer;
 
 		// I need to call resize() on my child/children (when I become visible), unless
@@ -53,8 +62,6 @@ dojo.declare("dijit.layout._ContentPaneResizeMixin", null, {
 		this._needLayout = !this._childOfLayoutWidget;
 
 		this.inherited(arguments);
-
-		this._startChildren();
 
 		if(this._isShown()){
 			this._onShow();
@@ -66,7 +73,7 @@ dojo.declare("dijit.layout._ContentPaneResizeMixin", null, {
 			// monitor when my size changes so that I can re-layout.
 			// For browsers where I can't directly monitor when my size changes,
 			// monitor when the viewport changes size, which *may* indicate a size change for me.
-			this.connect(dojo.isIE ? this.domNode : dojo.global, 'onresize', function(){
+			this.connect(has("ie") ? this.domNode : win.global, 'onresize', function(){
 				// Using function(){} closure to ensure no arguments to resize.
 				this._needLayout = !this._childOfLayoutWidget;
 				this.resize();
@@ -81,13 +88,13 @@ dojo.declare("dijit.layout._ContentPaneResizeMixin", null, {
 		//		and should propagate startup() and resize() calls to it.
 		//		Skips over things like data stores since they aren't visible.
 
-		var childNodes = dojo.query("> *", this.containerNode).filter(function(node){
+		var childNodes = query("> *", this.containerNode).filter(function(node){
 				return node.tagName !== "SCRIPT"; // or a regexp for hidden elements like script|area|map|etc..
 			}),
 			childWidgetNodes = childNodes.filter(function(node){
-				return dojo.hasAttr(node, "data-dojo-type") || dojo.hasAttr(node, "dojoType") || dojo.hasAttr(node, "widgetId");
+				return domAttr.has(node, "data-dojo-type") || domAttr.has(node, "dojoType") || domAttr.has(node, "widgetId");
 			}),
-			candidateWidgets = dojo.filter(childWidgetNodes.map(dijit.byNode), function(widget){
+			candidateWidgets = array.filter(childWidgetNodes.map(registry.byNode), function(widget){
 				return widget && widget.domNode && widget.resize;
 			});
 
@@ -104,7 +111,7 @@ dojo.declare("dijit.layout._ContentPaneResizeMixin", null, {
 		}
 
 		// So we can set overflow: hidden to avoid a safari bug w/scrollbars showing up (#9449)
-		dojo.toggleClass(this.containerNode, this.baseClass + "SingleChild", !!this._singleChild);
+		domClass.toggle(this.containerNode, this.baseClass + "SingleChild", !!this._singleChild);
 	},
 
 	resize: function(changeSize, resultSize){
@@ -150,7 +157,7 @@ dojo.declare("dijit.layout._ContentPaneResizeMixin", null, {
 
 		// Set margin box size, unless it wasn't specified, in which case use current size.
 		if(changeSize){
-			dojo.marginBox(this.domNode, changeSize);
+			domGeometry.setMarginBox(this.domNode, changeSize);
 		}
 
 		// Compute content box size of containerNode in case we [later] need to size our single child.
@@ -160,20 +167,20 @@ dojo.declare("dijit.layout._ContentPaneResizeMixin", null, {
 			// this.domNode then we can compute the content-box size without querying the node,
 			// which is more reliable (similar to LayoutWidget.resize) (see for example #9449).
 			var mb = resultSize || {};
-			dojo.mixin(mb, changeSize || {}); // changeSize overrides resultSize
+			lang.mixin(mb, changeSize || {}); // changeSize overrides resultSize
 			if(!("h" in mb) || !("w" in mb)){
-				mb = dojo.mixin(dojo.marginBox(cn), mb); // just use dojo.marginBox() to fill in missing values
+				mb = lang.mixin(domGeometry.getMarginBox(cn), mb); // just use domGeometry.setMarginBox() to fill in missing values
 			}
-			this._contentBox = dijit.layout.marginBox2contentBox(cn, mb);
+			this._contentBox = layoutUtils.marginBox2contentBox(cn, mb);
 		}else{
-			this._contentBox = dojo.contentBox(cn);
+			this._contentBox = domGeometry.getContentBox(cn);
 		}
 
 		this._layoutChildren();
 
 		delete this._needLayout;
 	},
-	
+
 	_layoutChildren: function(){
 		// Call _checkIfSingleChild() again in case app has manually mucked w/the content
 		// of the ContentPane (rather than changing it through the set("content", ...) API.
@@ -182,7 +189,7 @@ dojo.declare("dijit.layout._ContentPaneResizeMixin", null, {
 		}
 
 		if(this._singleChild && this._singleChild.resize){
-			var cb = this._contentBox || dojo.contentBox(this.containerNode);
+			var cb = this._contentBox || domGeometry.getContentBox(this.containerNode);
 
 			// note: if widget has padding this._contentBox will have l and t set,
 			// but don't pass them to resize() or it will doubly-offset the child
@@ -190,7 +197,7 @@ dojo.declare("dijit.layout._ContentPaneResizeMixin", null, {
 		}else{
 			// All my child widgets are independently sized (rather than matching my size),
 			// but I still need to call resize() on each child to make it layout.
-			dojo.forEach(this.getChildren(), function(widget){
+			array.forEach(this.getChildren(), function(widget){
 				if(widget.resize){
 					widget.resize();
 				}
@@ -217,7 +224,7 @@ dojo.declare("dijit.layout._ContentPaneResizeMixin", null, {
 			return this.open;		// for TitlePane, etc.
 		}else{
 			var node = this.domNode, parent = this.domNode.parentNode;
-			return (node.style.display != 'none') && (node.style.visibility != 'hidden') && !dojo.hasClass(node, "dijitHidden") &&
+			return (node.style.display != 'none') && (node.style.visibility != 'hidden') && !domClass.contains(node, "dijitHidden") &&
 					parent && parent.style && (parent.style.display != 'none');
 		}
 	},
@@ -245,6 +252,4 @@ dojo.declare("dijit.layout._ContentPaneResizeMixin", null, {
 	}
 });
 
-
-return dijit.layout._ContentPaneResizeMixin;
 });

@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	smiley: "Insereix emoticona",
 	emoticonSmile: "somriure",
@@ -20,3 +22,5 @@
 	emoticonCrying: "plorant"
 })
 
+//end v1.x content
+);

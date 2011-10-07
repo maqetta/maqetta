@@ -2,7 +2,7 @@ dojo.provide("dojox.data.tests.stores.SnapLogicStore");
 dojo.require("dojox.data.SnapLogicStore");
 dojo.require("dojo.data.api.Read");
 
-dojox.data.tests.stores.SnapLogicStore.pipelineUrl = dojo.moduleUrl("dojox.data.tests", "stores/snap_pipeline.php").toString();
+dojox.data.tests.stores.SnapLogicStore.pipelineUrl = require.toUrl("dojox/data/tests/stores/snap_pipeline.php").toString();
 dojox.data.tests.stores.SnapLogicStore.pipelineSize = 14;
 dojox.data.tests.stores.SnapLogicStore.attributes = ["empno", "ename", "job", "hiredate", "sal", "comm", "deptno"];
 

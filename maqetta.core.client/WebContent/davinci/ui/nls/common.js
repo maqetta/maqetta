@@ -1,4 +1,5 @@
-({
+define({ root:
+{
     // common
     "save": "Save",
     "cancel": "Cancel",
@@ -15,4 +16,5 @@
     "sawfMetadataTitle": "Edit full metadata for custom widget (advanced)",
     "sawfNamePrompt": "A unique \"common\" name.",
     "sawfIdPrompt": "A unique identifier for this widget in the form of a URI."
-})
+}
+});

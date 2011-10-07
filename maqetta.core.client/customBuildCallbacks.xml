@@ -191,7 +191,9 @@
 				classname="org.mozilla.javascript.tools.shell.Main"
 				description="Run Dojo build script"
 				>
-				<arg value="build.js"/>
+				<arg value="${basedir}/WebContent/dojo/dojo.js"/>
+				<arg value="baseUrl=${basedir}/WebContent/dojo"/>
+				<arg value="load=build"/>
 				<arg value="profileFile=${basedir}/davinci.profile.js"/>
 				<arg value="action=release"/>
 				<arg value="cssOptimize=comments.keepLines"/>

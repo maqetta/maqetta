@@ -1,12 +1,10 @@
-dojo.provide("dojox.io.xhrPlugins");
-dojo.require("dojo.AdapterRegistry");
-dojo.require("dojo._base.xhr");
+define(["dojo/_base/kernel", "dojo/_base/xhr", "dojo/AdapterRegistry"], function(dojo, xhr, AdapterRegistry){
+	dojo.getObject("io.xhrPlugins", true, dojox);
 
-(function() {
 	var registry;
 	var plainXhr;
 	function getPlainXhr(){
-		return plainXhr = dojox.io.xhrPlugins.plainXhr = plainXhr || dojo._defaultXhr || dojo.xhr;
+		return plainXhr = dojox.io.xhrPlugins.plainXhr = plainXhr || dojo._defaultXhr || xhr;
 	}
 	dojox.io.xhrPlugins.register = function(){
 		//	summary:
@@ -14,7 +12,7 @@ dojo.require("dojo._base.xhr");
 		// 		xhr handlers
 		var plainXhr = getPlainXhr();
 		if(!registry){
-			registry = new dojo.AdapterRegistry();
+			registry = new AdapterRegistry();
 			// replaces the default xhr() method. Can we just use connect() instead?
 			dojo[dojo._defaultXhr ? "_defaultXhr" : "xhr"] = function(/*String*/ method, /*dojo.__XhrArgs*/ args, /*Boolean?*/ hasBody){
 				return registry.match.apply(registry,arguments);
@@ -167,7 +165,6 @@ dojo.require("dojo._base.xhr");
 			return plainXhr.call(dojo,method,args,hasBody);
 		};
 	};
-})();
 
-
-
+	return dojox.io.xhrPlugins;
+});

@@ -15,7 +15,7 @@
 
 		dojo.require("dojo.parser");
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			dojo.declare("dijit.TestContainer",
 				[dijit._Widget, dijit._Container], { }
 			);
@@ -92,6 +92,39 @@
 							t.is("one", children[0].id);
 							t.is("three", children[1].id);
 						}
+					},
+					{
+						name: "addChild",
+						runTest: function(t){
+							var c = dijit.byId("container");
+
+							// Add child at beginning
+							c.addChild(dijit.byId("zero"), 0);
+							children = c.getChildren();
+							t.is(3, children.length);
+							t.is("zero", children[0].id, "after addChild(zero), zero");
+							t.is("one", children[1].id, "after addChild(zero), one");
+							t.is("three", children[2].id, "after addChild(zero), three");
+
+							// Add child in middle
+							c.addChild(dijit.byId("two"), 2);
+							children = c.getChildren();
+							t.is(4, children.length);
+							t.is("zero", children[0].id, "after addChild(two), zero");
+							t.is("one", children[1].id, "after addChild(two), one");
+							t.is("two", children[2].id, "after addChild(two), two");
+							t.is("three", children[3].id, "after addChild(two), three");
+
+							// Add child at end
+							c.addChild(new dijit.TestContained({id: "four"}));
+							children = c.getChildren();
+							t.is(5, children.length);
+							t.is("zero", children[0].id, "after addChild(four), zero");
+							t.is("one", children[1].id, "after addChild(four), one");
+							t.is("two", children[2].id, "after addChild(four), two");
+							t.is("three", children[3].id, "after addChild(four), three");
+							t.is("four", children[4].id, "after addChild(four), three");
+						}
 					}
 				]
 			);
@@ -104,6 +137,7 @@
 <body class="claro">
 
 	<div id="container" data-dojo-type="dijit.TestContainer">
+		<!-- comment just to make sure that numbering isn't thrown off -->
 		<div id="zero" data-dojo-type="dijit.TestContained"></div>
 		<div id="one" data-dojo-type="dijit.TestContained"></div>
 		<div id="two" data-dojo-type="dijit.TestContained"></div>

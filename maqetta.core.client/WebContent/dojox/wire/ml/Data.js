@@ -1,5 +1,4 @@
 dojo.provide("dojox.wire.ml.Data");
-dojo.provide("dojox.wire.ml.DataProperty");
 
 dojo.require("dijit._Widget");
 dojo.require("dijit._Container");

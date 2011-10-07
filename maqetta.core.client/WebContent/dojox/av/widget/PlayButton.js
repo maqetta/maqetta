@@ -1,9 +1,6 @@
-dojo.provide("dojox.av.widget.PlayButton");
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-dojo.require("dijit.form.Button");
+define(['dojo', 'dijit', 'dijit/_Widget', 'dijit/_TemplatedMixin'],function(dojo, dijit){
 
-dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._Templated], {
+dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._TemplatedMixin], {
 	// summary:
 	//		A Play/Pause button widget to use with dojox.av.widget.Player
 	//
@@ -14,7 +11,7 @@ dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._Templated], {
 		//		Intialize button.
 		this.showPlay();
 	},
-	
+
 	setMedia: function(/* Object */med){
 		// summary:
 		//		A common method to set the media in all Player widgets.
@@ -24,7 +21,7 @@ dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._Templated], {
 		dojo.connect(this.media, "onEnd", this, "showPlay");
 		dojo.connect(this.media, "onStart", this, "showPause");
 	},
-	
+
 	onClick: function(){
 		// summary:
 		//		Fired on play or pause click.
@@ -35,7 +32,7 @@ dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._Templated], {
 			this.onPause();
 		}
 	},
-	
+
 	onPlay: function(){
 		// summary:
 		//		Fired on play click.
@@ -72,4 +69,6 @@ dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._Templated], {
 		dojo.addClass(this.domNode, "Pause");
 		dojo.removeClass(this.domNode, "Play");
 	}
+});
+return dojox.av.widget.PlayButton;
 });

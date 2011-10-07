@@ -1,23 +1,18 @@
-dojo.provide("dojox.charting.plot2d.Candlesticks");
+define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/array", "./Base", "./common", 
+		"dojox/lang/functional", "dojox/lang/functional/reversed", "dojox/lang/utils", "dojox/gfx/fx"], 
+	function(lang, declare, arr, Base, dc, df, dfr, du, fx){
+/*=====
+var Base = dojox.charting.plot2d.Base;
+=====*/
 
-dojo.require("dojox.charting.plot2d.common");
-dojo.require("dojox.charting.plot2d.Base");
-
-dojo.require("dojox.lang.utils");
-dojo.require("dojox.lang.functional");
-dojo.require("dojox.lang.functional.reversed");
-
-(function(){
-	var df = dojox.lang.functional, du = dojox.lang.utils,
-		dc = dojox.charting.plot2d.common,
-		purgeGroup = df.lambda("item.purgeGroup()");
+	var purgeGroup = dfr.lambda("item.purgeGroup()");
 
 	//	Candlesticks are based on the Bars plot type; we expect the following passed
 	//	as values in a series:
 	//	{ x?, open, close, high, low, mid? }
 	//	if x is not provided, the array index is used.
 	//	failing to provide the OHLC values will throw an error.
-	dojo.declare("dojox.charting.plot2d.Candlesticks", dojox.charting.plot2d.Base, {
+	return declare("dojox.charting.plot2d.Candlesticks", Base, {
 		//	summary:
 		//		A plot that represents typical candlesticks (financial reporting, primarily).
 		//		Unlike most charts, the Candlestick expects data points to be represented by
@@ -45,11 +40,11 @@ dojo.require("dojox.lang.functional.reversed");
 		constructor: function(chart, kwArgs){
 			//	summary:
 			//		The constructor for a candlestick chart.
-			//	chart: dojox.charting.Chart2D
+			//	chart: dojox.charting.Chart
 			//		The chart this plot belongs to.
 			//	kwArgs: dojox.charting.plot2d.__BarCtorArgs?
 			//		An optional keyword arguments object to help define the plot.
-			this.opt = dojo.clone(this.defaultParams);
+			this.opt = lang.clone(this.defaultParams);
 			du.updateWithObject(this.opt, kwArgs);
 			du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
 			this.series = [];
@@ -70,13 +65,13 @@ dojo.require("dojox.lang.functional.reversed");
 
 			//	we have to roll our own, since we need to use all four passed
 			//	values to figure out our stats, and common only assumes x and y.
-			var stats = dojo.delegate(dc.defaultStats);
+			var stats = lang.delegate(dc.defaultStats);
 			for(var i=0; i<series.length; i++){
 				var run = series[i];
 				if(!run.data.length){ continue; }
 				var old_vmin = stats.vmin, old_vmax = stats.vmax;
 				if(!("ymin" in run) || !("ymax" in run)){
-					dojo.forEach(run.data, function(val, idx){
+					arr.forEach(run.data, function(val, idx){
 						if(val !== null){
 							var x = val.x || idx + 1;
 							stats.hmin = Math.min(stats.hmin, x);
@@ -118,7 +113,7 @@ dojo.require("dojox.lang.functional.reversed");
 			this.resetEvents();
 			this.dirty = this.isDirty();
 			if(this.dirty){
-				dojo.forEach(this.series, purgeGroup);
+				arr.forEach(this.series, purgeGroup);
 				this._eventSeries = {};
 				this.cleanGroup();
 				var s = this.group;
@@ -172,7 +167,7 @@ dojo.require("dojox.lang.functional.reversed");
 									x: 0, y: y-Math.max(open, close),
 									width: width, height: Math.max(doFill ? open-close : close-open, 1)
 								};
-							shape = s.createGroup();
+							var shape = s.createGroup();
 							shape.setTransform({dx: x, dy: 0 });
 							var inner = shape.createGroup();
 							inner.createLine(line).setStroke(finalTheme.series.stroke);
@@ -219,7 +214,7 @@ dojo.require("dojox.lang.functional.reversed");
 			return this;	//	dojox.charting.plot2d.Candlesticks
 		},
 		_animateCandlesticks: function(shape, voffset, vsize){
-			dojox.gfx.fx.animateTransform(dojo.delegate({
+			fx.animateTransform(lang.delegate({
 				shape: shape,
 				duration: 1200,
 				transform: [
@@ -230,4 +225,4 @@ dojo.require("dojox.lang.functional.reversed");
 			}, this.animate)).play();
 		}
 	});
-})();
+});

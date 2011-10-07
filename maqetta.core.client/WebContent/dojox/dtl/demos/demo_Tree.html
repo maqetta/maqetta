@@ -3,8 +3,8 @@
 			<title>Demo to show recursion in DTL</title>
 			<script type="text/javascript" src="../../../dojo/dojo.js"
 				djConfig="isDebug: true, parseOnLoad: true"></script>
-			<script type="text/javascript" src="../../../dijit/dijit.js"></script>
 			<script type="text/javascript">
+					dojo.require("dijit._WidgetBase");
 					dojo.require("dojox.dtl._DomTemplated");
 					dojo.require("dojo.data.ItemFileReadStore");
 					dojo.require("dojo.parser");
@@ -25,7 +25,7 @@
 							}
 						});
 
-						dojo.declare("demo.Tree", [dijit._Widget, dojox.dtl._DomTemplated], {
+						dojo.declare("demo.Tree", [dijit._WidgetBase, dojox.dtl._DomTemplated], {
 							constructor: function(){
 								this.disabled = {};
 							},

@@ -88,7 +88,7 @@
 }
 .claro .dijitToolbar .dijitComboButtonHover .dijitButtonNode, .claro .dijitToolbar .dijitComboButtonHover .dijitDownArrowButton {
   background-position: 0 0;
-  background-color: #f4ffff;
+  background-color: #f3ffff;
 }
 .claro .dijitToolbar .dijitComboButtonHover .dijitButtonNodeHover, .claro .dijitToolbar .dijitComboButtonHover .dijitDownArrowButtonHover {
   background-color: #abd6ff;
@@ -96,7 +96,7 @@
 /* active status */
 .claro .dijitToolbar .dijitButtonActive .dijitButtonNode, .claro .dijitToolbar .dijitDropDownButtonActive .dijitButtonNode, .claro .dijitToolbar .dijitToggleButtonActive .dijitButtonNode {
   border-width: 1px;
-  background-color: #7dbefa;
+  background-color: #7dbdfa;
   background-position: 0 -177px;
   padding: 1px;
 }
@@ -108,15 +108,15 @@
   padding: 0;
 }
 .claro .dijitToolbar .dijitComboButtonActive .dijitButtonNode, .claro .dijitToolbar .dijitComboButtonActive .dijitDownArrowButton {
-  background-color: #f4ffff;
+  background-color: #f3ffff;
   background-position: 0 -177px;
   padding: 2px;
 }
 .claro .dijitToolbar .dijitComboButtonActive .dijitButtonNodeActive {
-  background-color: #7dbefa;
+  background-color: #7dbdfa;
 }
 .claro .dijitToolbar .dijitComboButtonActive .dijitDownArrowButtonActive {
-  background-color: #7dbefa;
+  background-color: #7dbdfa;
 }
 /* Avoid double border between button and arrow */
 .claro .dijitToolbar .dijitComboButtonHover .dijitDownArrowButton, .claro .dijitToolbar .dijitComboButtonActive .dijitDownArrowButton {
@@ -135,7 +135,7 @@
   border-width: 1px;
   border-style: solid;
   background-image: none;
-  border-color: #769dc0;
+  border-color: #759dc0;
   background-color: #ffffff;
   padding: 1px;
 }

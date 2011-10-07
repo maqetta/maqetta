@@ -1,6 +1,19 @@
-dojo.provide("dojox.grid.enhanced._FocusManager");
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/connect",
+	"dojo/_base/event",
+	"dojo/_base/sniff",
+	"dojo/_base/html",
+	"dojo/keys",
+	"dijit/a11y",
+	"dijit/focus",
+	"../_FocusManager"
+], function(dojo, lang, declare, array, connect, event, has, html, keys, dijitA11y, dijitFocus, _FocusManager){
 
-dojo.declare("dojox.grid.enhanced._FocusArea",null,{
+var _FocusArea = declare("dojox.grid.enhanced._FocusArea", null, {
 	// summary:
 	//		This is a friend class of _FocusManager
 /*=====
@@ -69,7 +82,7 @@ dojo.declare("dojox.grid.enhanced._FocusArea",null,{
 		area.onMove = area.onMove || dummy;
 		area.onKeyUp = area.onKeyUp || dummy;
 		area.onKeyDown = area.onKeyDown || dummy;
-		dojo.mixin(this, area);
+		lang.mixin(this, area);
 	},
 	move: function(rowStep, colStep, evt){
 		if(this.name){
@@ -111,11 +124,12 @@ dojo.declare("dojox.grid.enhanced._FocusArea",null,{
 		return 0;
 	}
 });
-dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
+
+return declare("dojox.grid.enhanced._FocusManager", _FocusManager, {
 	_stopEvent: function(evt){
 		try{
 			if(evt && evt.preventDefault){
-				dojo.stopEvent(evt);
+				event.stop(evt);
 			}
 		}catch(e){}
 	},
@@ -128,32 +142,32 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 		this._headerMouseEventHandlers = [];
 		this._currentAreaIdx = -1;
 		this._gridBlured = true;
-		this._connects.push(dojo.connect(grid, "onBlur", this, "_doBlur"));
-		this._connects.push(dojo.connect(grid.scroller, "renderPage", this, "_delayedCellFocus"));
+		this._connects.push(connect.connect(grid, "onBlur", this, "_doBlur"));
+		this._connects.push(connect.connect(grid.scroller, "renderPage", this, "_delayedCellFocus"));
 		
 		this.addArea({
 			name: "header",
-			onFocus: dojo.hitch(this, this.focusHeader),
-			onBlur: dojo.hitch(this, this._blurHeader),
-			onMove: dojo.hitch(this, this._navHeader),
-			getRegions: dojo.hitch(this, this._findHeaderCells),
-			onRegionFocus: dojo.hitch(this, this.doColHeaderFocus),
-			onRegionBlur: dojo.hitch(this, this.doColHeaderBlur),
-			onKeyDown: dojo.hitch(this, this._onHeaderKeyDown)
+			onFocus: lang.hitch(this, this.focusHeader),
+			onBlur: lang.hitch(this, this._blurHeader),
+			onMove: lang.hitch(this, this._navHeader),
+			getRegions: lang.hitch(this, this._findHeaderCells),
+			onRegionFocus: lang.hitch(this, this.doColHeaderFocus),
+			onRegionBlur: lang.hitch(this, this.doColHeaderBlur),
+			onKeyDown: lang.hitch(this, this._onHeaderKeyDown)
 		});
 		this.addArea({
 			name: "content",
-			onFocus: dojo.hitch(this, this._focusContent),
-			onBlur: dojo.hitch(this, this._blurContent),
-			onMove: dojo.hitch(this, this._navContent),
-			onKeyDown: dojo.hitch(this, this._onContentKeyDown)
+			onFocus: lang.hitch(this, this._focusContent),
+			onBlur: lang.hitch(this, this._blurContent),
+			onMove: lang.hitch(this, this._navContent),
+			onKeyDown: lang.hitch(this, this._onContentKeyDown)
 		});
 		this.addArea({
 			name: "editableCell",
-			onFocus: dojo.hitch(this, this._focusEditableCell),
-			onBlur: dojo.hitch(this, this._blurEditableCell),
-			onKeyDown: dojo.hitch(this, this._onEditableCellKeyDown),
-			onContentMouseEvent: dojo.hitch(this, this._onEditableCellMouseEvent),
+			onFocus: lang.hitch(this, this._focusEditableCell),
+			onBlur: lang.hitch(this, this._blurEditableCell),
+			onKeyDown: lang.hitch(this, this._onEditableCellKeyDown),
+			onContentMouseEvent: lang.hitch(this, this._onEditableCellMouseEvent),
 			contentMouseEventPlanner: function(evt, areas){ return -1; }
 		});
 		this.placeArea("header");
@@ -164,7 +178,7 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 	destroy: function(){
 		for(var name in this._areas){
 			var area = this._areas[name];
-			dojo.forEach(area._connects, dojo.disconnect);
+			array.forEach(area._connects, connect.disconnect);
 			area._connects = null;
 			if(area.uninitialize){
 				area.uninitialize();
@@ -173,12 +187,12 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 		this.inherited(arguments);
 	},
 	addArea: function(area){
-		if(area.name && dojo.isString(area.name)){
+		if(area.name && lang.isString(area.name)){
 			if(this._areas[area.name]){
 				//Just replace the original area, instead of remove it, so the position does not change.
-				dojo.forEach(area._connects, dojo.disconnect);
+				array.forEach(area._connects, connect.disconnect);
 			}
-			this._areas[area.name] = new dojox.grid.enhanced._FocusArea(area, this);
+			this._areas[area.name] = new _FocusArea(area, this);
 			if(area.onHeaderMouseEvent){
 				this._headerMouseEventHandlers.push(area.name);
 			}
@@ -192,23 +206,23 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 	},
 	_bindAreaEvents: function(){
 		var area, hdl, areas = this._areas;
-		dojo.forEach(this._areaQueue, function(name){
+		array.forEach(this._areaQueue, function(name){
 			area = areas[name];
-			if(!area._initialized && dojo.isFunction(area.initialize)){
+			if(!area._initialized && lang.isFunction(area.initialize)){
 				area.initialize();
 				area._initialized = true;
 			}
 			if(area.getRegions){
 				area._regions = area.getRegions() || [];
-				dojo.forEach(area._connects || [], dojo.disconnect);
+				array.forEach(area._connects || [], connect.disconnect);
 				area._connects = [];
-				dojo.forEach(area._regions, function(r){
+				array.forEach(area._regions, function(r){
 					if(area.onRegionFocus){
-						hdl = dojo.connect(r, "onfocus", area.onRegionFocus);
+						hdl = connect.connect(r, "onfocus", area.onRegionFocus);
 						area._connects.push(hdl);
 					}
 					if(area.onRegionBlur){
-						hdl = dojo.connect(r, "onblur", area.onRegionBlur);
+						hdl = connect.connect(r, "onblur", area.onRegionBlur);
 						area._connects.push(hdl);
 					}
 				});
@@ -219,15 +233,15 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 		var area = this._areas[areaName];
 		if(area){
 			this.ignoreArea(areaName);
-			var i = dojo.indexOf(this._contentMouseEventHandlers, areaName);
+			var i = array.indexOf(this._contentMouseEventHandlers, areaName);
 			if(i >= 0){
 				this._contentMouseEventHandlers.splice(i, 1);
 			}
-			i = dojo.indexOf(this._headerMouseEventHandlers, areaName);
+			i = array.indexOf(this._headerMouseEventHandlers, areaName);
 			if(i >= 0){
 				this._headerMouseEventHandlers.splice(i, 1);
 			}
-			dojo.forEach(area._connects, dojo.disconnect);
+			array.forEach(area._connects, connect.disconnect);
 			if(area.uninitialize){
 				area.uninitialize();
 			}
@@ -239,7 +253,7 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 		//		Set current area to the one areaName refers.
 		// areaName: String
 		var idx, cai = this._currentAreaIdx;
-		if(dojo.isString(areaName) && (idx = dojo.indexOf(this._areaQueue, areaName)) >= 0){
+		if(lang.isString(areaName) && (idx = array.indexOf(this._areaQueue, areaName)) >= 0){
 			if(cai != idx){
 				this.tabbingOut = false;
 				if(toBlurOld && cai >= 0 && cai < this._areaQueue.length){
@@ -249,7 +263,7 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 			}
 		}else{
 			return (cai < 0 || cai >= this._areaQueue.length) ?
-				new dojox.grid.enhanced._FocusArea({}, this) :
+				new _FocusArea({}, this) :
 				this._areas[this._areaQueue[this._currentAreaIdx]];
 		}
 		return null;
@@ -261,7 +275,7 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 		//		placeArea("myarea","before"|"after",...)
 		//		placeArea("myarea","below"|"above",...)
 		if(!this._areas[name]){ return; }
-		var idx = dojo.indexOf(this._areaQueue,otherAreaName);
+		var idx = array.indexOf(this._areaQueue,otherAreaName);
 		switch(pos){
 			case "after":
 				if(idx >= 0){ ++idx; }
@@ -290,7 +304,7 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 		}
 	},
 	ignoreArea: function(name){
-		this._areaQueue = dojo.filter(this._areaQueue,function(areaName){
+		this._areaQueue = array.filter(this._areaQueue,function(areaName){
 			return areaName != name;
 		});
 	},
@@ -299,8 +313,8 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 		if(typeof areaId == "number"){
 			idx = areaId < 0 ? this._areaQueue.length + areaId : areaId;
 		}else{
-			idx = dojo.indexOf(this._areaQueue,
-				dojo.isString(areaId) ? areaId : (areaId && areaId.name));
+			idx = array.indexOf(this._areaQueue,
+				lang.isString(areaId) ? areaId : (areaId && areaId.name));
 		}
 		if(idx < 0){ idx = 0; }
 		var step = idx - this._currentAreaIdx;
@@ -326,8 +340,8 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 			var nextArea = this._areas[this._areaQueue[cai]].onBlur(evt,step);
 			if(nextArea === true){
 				cai = (this._currentAreaIdx += step);
-			}else if(dojo.isString(nextArea) && this._areas[nextArea]){
-				cai = this._currentAreaIdx = dojo.indexOf(this._areaQueue,nextArea);
+			}else if(lang.isString(nextArea) && this._areas[nextArea]){
+				cai = this._currentAreaIdx = array.indexOf(this._areaQueue,nextArea);
 			}
 		}
 		//console.log("target area:",cai);
@@ -342,16 +356,16 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 		this.tabbingOut = true;
 		if(step < 0){
 			this._currentAreaIdx = -1;
-			dijit.focus(this.grid.domNode);
+			dijitFocus.focus(this.grid.domNode);
 		}else{
 			this._currentAreaIdx = this._areaQueue.length;
-			dijit.focus(this.grid.lastFocusNode);
+			dijitFocus.focus(this.grid.lastFocusNode);
 		}
 	},
 	_onMouseEvent: function(type, evt){
 		var lowercase = type.toLowerCase(),
 			handlers = this["_" + lowercase + "MouseEventHandlers"],
-			res = dojo.map(handlers, function(areaName){
+			res = array.map(handlers, function(areaName){
 				return {
 					"area": areaName,
 					"idx": this._areas[areaName][lowercase + "MouseEventPlanner"](evt, handlers)
@@ -359,7 +373,7 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 			}, this).sort(function(a, b){
 				return b.idx - a.idx;
 			}),
-			resHandlers = dojo.map(res, function(handler){
+			resHandlers = array.map(res, function(handler){
 				return res.area;
 			}),
 			i = res.length;
@@ -430,7 +444,7 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 		}else{
 			this.tabbingOut = false;
 		}
-		dojo.stopEvent(e);
+		event.stop(e);
 	},
 	_doBlur: function(){
 		this._gridBlured = true;
@@ -471,8 +485,8 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 		//		Overwritten
 		var didFocus = false;
 		this.inherited(arguments);
-		if(this._colHeadNode && dojo.style(this._colHeadNode, 'display') != "none"){
-			dijit.focus(this._colHeadNode);
+		if(this._colHeadNode && html.style(this._colHeadNode, 'display') != "none"){
+			dijitFocus.focus(this._colHeadNode);
 			this._stopEvent(evt);
 			didFocus = true;
 		}
@@ -482,9 +496,9 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 		// summary:
 		//		Overwritten
 		if(this._colHeadNode){
-			dojo.removeClass(this._colHeadNode, this.focusClass);
+			html.removeClass(this._colHeadNode, this.focusClass);
 		}
-		dojo.removeAttr(this.grid.domNode,"aria-activedescendant");
+		html.removeAttr(this.grid.domNode,"aria-activedescendant");
 		// reset contextMenu onto viewsHeaderNode so right mouse on header will invoke (see focusHeader)
 		this._changeMenuBindNode(this.grid.domNode,this.grid.viewsHeaderNode);
 		//moved here from nextKey
@@ -493,7 +507,7 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 	},
 	_navHeader: function(rowStep, colStep, evt){
 		var colDir = colStep < 0 ? -1 : 1,
-			savedIdx = dojo.indexOf(this._findHeaderCells(), this._colHeadNode);
+			savedIdx = array.indexOf(this._findHeaderCells(), this._colHeadNode);
 		if(savedIdx >= 0 && (evt.shiftKey && evt.ctrlKey)){
 			this.colSizeAdjust(evt, savedIdx, colDir * 5);
 			return;
@@ -502,14 +516,14 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 	},
 	_onHeaderKeyDown: function(e, isBubble){
 		if(isBubble){
-			var dk = dojo.keys;
+			var dk = keys;
 			switch(e.keyCode){
 				case dk.ENTER:
 				case dk.SPACE:
 					var colIdx = this.getHeaderIndex();
 					if(colIdx >= 0 && !this.grid.pluginMgr.isFixedCell(e.cell)/*TODO*/){
 						this.grid.setSortIndex(colIdx, null, e);
-						dojo.stopEvent(e);
+						event.stop(e);
 					}
 					break;
 			}
@@ -521,7 +535,7 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 		//		Overwritten
 		this.inherited(arguments);
 		//EDG now will decorate event on header key events, if no focus, the cell will be wrong
-		dijit.focus(this._colHeadNode);
+		dijitFocus.focus(this._colHeadNode);
 	},
 	//---------------Content Area------------------------------------------
 	findAndFocusGridCell: function(){
@@ -562,20 +576,20 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 		this._colHeadNode = null;
 		this.move(rowStep, colStep, evt);
 		if(evt){
-			dojo.stopEvent(evt);
+			event.stop(evt);
 		}
 	},
 	_onContentKeyDown: function(e, isBubble){
 		if(isBubble){
-			var dk = dojo.keys, s = this.grid.scroller;
+			var dk = keys, s = this.grid.scroller;
 			switch(e.keyCode){
 				case dk.ENTER:
 				case dk.SPACE:
 					var g = this.grid;
 					if(g.indirectSelection){ break; }
-					g.selection.clickSelect(this.rowIndex, dojo.isCopyKey(e), e.shiftKey);
+					g.selection.clickSelect(this.rowIndex, keys.isCopyKey(e), e.shiftKey);
 					g.onRowClick(e);
-					dojo.stopEvent(e);
+					event.stop(e);
 					break;
 				case dk.PAGE_UP:
 					if(this.rowIndex !== 0){
@@ -585,19 +599,19 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 							this.grid.setScrollTop(s.findScrollTop(this.rowIndex - 1));
 							this._navContent(s.firstVisibleRow - s.lastVisibleRow + 1, 0);
 						}
-						dojo.stopEvent(e);
+						event.stop(e);
 					}
 					break;
 				case dk.PAGE_DOWN:
 					if(this.rowIndex + 1 != this.grid.rowCount){
-						dojo.stopEvent(e);
+						event.stop(e);
 						if(this.rowIndex != s.lastVisibleRow - 1){
 							this._navContent(s.lastVisibleRow - this.rowIndex - 1, 0);
 						}else{
 							this.grid.setScrollTop(s.findScrollTop(this.rowIndex + 1));
 							this._navContent(s.lastVisibleRow - s.firstVisibleRow - 1, 0);
 						}
-						dojo.stopEvent(e);
+						event.stop(e);
 					}
 					break;
 			}
@@ -636,11 +650,12 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 				var elems = this._navElems;
 				var firstElem = elems.lowest || elems.first;
 				var lastElem = elems.last || elems.highest || firstElem;
-				var target = dojo.isIE ? evt.srcElement : evt.target;
+				var target = has('ie') ? evt.srcElement : evt.target;
 				toBlur = target == (step > 0 ? lastElem : firstElem);
 			}
 			if(toBlur){
 				this._isNavigating = false;
+				html.setSelectable(this.cell.getNode(this.rowIndex), false);
 				return "content";
 			}
 			return false;
@@ -673,10 +688,10 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 		return true;
 	},
 	_initNavigatableElems: function(){
-		this._navElems = dijit._getTabNavigable(this.cell.getNode(this.rowIndex));
+		this._navElems = dijitA11y._getTabNavigable(this.cell.getNode(this.rowIndex));
 	},
 	_onEditableCellKeyDown: function(e, isBubble){
-		var dk = dojo.keys,
+		var dk = keys,
 			g = this.grid,
 			edit = g.edit,
 			editApplied = false,
@@ -686,7 +701,7 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 				if(isBubble && edit.isEditing()){
 					this._applyEditableCell();
 					editApplied = true;
-					dojo.stopEvent(e);
+					event.stop(e);
 				}
 				//intentional drop through
 			case dk.SPACE:
@@ -700,8 +715,9 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 						var toFocus = this._navElems.lowest || this._navElems.first;
 						if(toFocus){
 							this._isNavigating = true;
-							dijit.focus(toFocus);
-							dojo.stopEvent(e);
+							html.setSelectable(this.cell.getNode(this.rowIndex), true);
+							dijitFocus.focus(toFocus);
+							event.stop(e);
 							this.currentArea("editableCell", true);
 							break;
 						}
@@ -737,11 +753,12 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 			if(cell && !cell.editable && cell.navigatable){
 				this._initNavigatableElems();
 				if(this._navElems.lowest || this._navElems.first){
-					var target = dojo.isIE ? evt.srcElement : evt.target;
+					var target = has('ie') ? evt.srcElement : evt.target;
 					if(target != cell.getNode(evt.rowIndex)){
 						this._isNavigating = true;
 						this.focusArea("editableCell", evt);
-						dijit.focus(target);
+						html.setSelectable(cell.getNode(evt.rowIndex), true);
+						dijitFocus.focus(target);
 						return false;
 					}
 				}
@@ -752,4 +769,5 @@ dojo.declare("dojox.grid.enhanced._FocusManager", dojox.grid._FocusManager, {
 		}
 		return true;
 	}
+});
 });

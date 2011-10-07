@@ -5,9 +5,7 @@ dojo.require("dijit._Templated");
 dojo.require("dijit.form.Button");
 dojo.require("dijit.form.TextBox");
 dojo.require("dijit.form.RadioButton");
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ui", "ui");
-dojo.requireLocalization("dijit", "common");
+
 dojo.require("dojox.widget.Standby");
 
 dojo.declare("davinci.de.widgets.NewDijit",   [dijit._Widget,dijit._Templated], {
@@ -17,10 +15,6 @@ dojo.declare("davinci.de.widgets.NewDijit",   [dijit._Widget,dijit._Templated], 
 	_dijitName : null,
 	
 	postMixInProperties : function() {
-		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
-		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
-		dojo.mixin(this, langObj);
-		dojo.mixin(this, dijitLangObj);
 		this.inherited(arguments);
 	},
 	

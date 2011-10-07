@@ -1,8 +1,6 @@
-dojo.provide("dojo.tests.store.JsonRest");
-dojo.require("dojo.store.JsonRest");
-(function(){
-	var store = new dojo.store.JsonRest({target: dojo.moduleUrl("dojo.tests.store", "")});
-	tests.register("tests.store.JsonRest",
+define(["dojo", "doh", "require", "dojo/store/JsonRest"], function(dojo, doh, require){
+	var store = new dojo.store.JsonRest({target: require.toUrl("dojo/tests/store/x.y").match(/(.+)x\.y$/)[1]});
+	doh.register("tests.store.JsonRest",
 		[
 			function testGet(t){
 				var d = new doh.Deferred();
@@ -37,4 +35,4 @@ dojo.require("dojo.store.JsonRest");
 			}
 		]
 	);
-})();
+});

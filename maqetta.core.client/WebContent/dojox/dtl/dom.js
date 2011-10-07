@@ -1,11 +1,19 @@
-dojo.provide("dojox.dtl.dom");
-
-dojo.require("dojox.dtl._base");
-dojo.require("dojox.dtl.Context");
-
-(function(){
-	var dd = dojox.dtl;
-
+define([
+	"dojo/_base/lang",
+	"./_base",
+	"dojox/string/tokenize",
+	"./Context",
+	"dojo/dom",
+	"dojo/dom-construct",
+	"dojo/_base/html",
+	"dojo/_base/array",
+	"dojo/_base/connect",
+	"dojo/_base/sniff"
+], function(lang,dd,Tokenize,context,dom,domconstruct,html,array,connect,has){
+	/*=====
+		Tokenize = dojox.string.tokenize;
+		dd = dojox.dtl;
+	=====*/
 	dd.BOOLS = {checked: 1, disabled: 1, readonly: 1};
 	dd.TOKEN_CHANGE = -11;
 	dd.TOKEN_ATTR = -12;
@@ -23,9 +31,9 @@ dojo.require("dojox.dtl.Context");
 			if(typeof this._commentable == "undefined"){
 				// Check to see if the browser can handle comments
 				this._commentable = false;
-				var div = document.createElement("div");
-				div.innerHTML = "<!--Test comment handling, and long comments, using comments whenever possible.-->";
-				if(div.childNodes.length && div.childNodes[0].nodeType == 8 && div.childNodes[0].data == "comment"){
+				var div = document.createElement("div"), comment = "Test comment handling, and long comments, using comments whenever possible.";
+				div.innerHTML = "<!--" + comment + "-->";
+				if(div.childNodes.length && div.firstChild.nodeType == 8 && div.firstChild.data == comment){
 					this._commentable = true;
 				}
 			}
@@ -35,13 +43,13 @@ dojo.require("dojox.dtl.Context");
 				text = text.replace(/<!--({({|%).*?(%|})})-->/g, "$1");
 			}
 
-			if(dojo.isIE){
+			if(has("ie")){
 				text = text.replace(/\b(checked|disabled|readonly|style)="/g, 't$1="');
 			}
 			text = text.replace(/\bstyle="/g, 'tstyle="');
 
 			var match;
-			var table = dojo.isWebKit;
+			var table = has("webkit");
 			var pairs = [ // Format: [enable, parent, allowed children (first for nesting), nestings]
 				[true, "select", "option"],
 				[table, "tr", "td|th"],
@@ -65,7 +73,7 @@ dojo.require("dojox.dtl.Context");
 							innerRe.push("<" + inner + "(?:.|\n)*?>(?:.|\n)*?</" + inner + ">");
 						}
 						var tags = [];
-						var tokens = dojox.string.tokenize(match[1], new RegExp("(" + innerRe.join("|") + ")", "ig"), function(data){
+						var tokens = Tokenize(match[1], new RegExp("(" + innerRe.join("|") + ")", "ig"), function(data){
 							var tag = /<(\w+)/.exec(data)[1];
 							if(!tags[tag]){
 								tags[tag] = true;
@@ -79,7 +87,7 @@ dojo.require("dojox.dtl.Context");
 							var replace = [];
 							for(var j = 0, jl = tokens.length; j < jl; j++) {
 								var token = tokens[j];
-								if(dojo.isObject(token)){
+								if(lang.isObject(token)){
 									replace.push(token.data);
 								}else{
 									var stripped = token.replace(this._reTrim, "");
@@ -117,7 +125,7 @@ dojo.require("dojox.dtl.Context");
 				}
 			}
 
-			for(var i=replacements.length; i--;){
+			for(var i = replacements.length; i--;){
 				text = text.replace("\xFF" + i, replacements[i]);
 			}
 
@@ -189,7 +197,7 @@ dojo.require("dojox.dtl.Context");
 			}
 
 			var children = [];
-			if(dojo.isIE && node.tagName == "SCRIPT"){
+			if(has("ie") && node.tagName == "SCRIPT"){
 				children.push({
 					nodeType: 3,
 					data: node.text
@@ -224,7 +232,7 @@ dojo.require("dojox.dtl.Context");
 				}else if(node.getAttribute){
 					value = node.getAttribute(key, 2) || value;
 					if(key == "href" || key == "src"){
-						if(dojo.isIE){
+						if(has("ie")){
 							var hash = location.href.lastIndexOf(location.hash);
 							var href = location.href.substring(0, hash).split("/");
 							href.pop();
@@ -237,9 +245,9 @@ dojo.require("dojox.dtl.Context");
 					}else if(key == "tstyle"){
 						clear = key; // Placeholder because we can't use style
 						key = "style";
-					}else if(dd.BOOLS[key.slice(1)] && dojo.trim(value)){
+					}else if(dd.BOOLS[key.slice(1)] && lang.trim(value)){
 						key = key.slice(1);
-					}else if(this._uppers[key] && dojo.trim(value)){
+					}else if(this._uppers[key] && lang.trim(value)){
 						clear = this._uppers[key]; // Replaced by lowercase
 					}
 				}
@@ -315,17 +323,20 @@ dojo.require("dojox.dtl.Context");
 					return;
 				case 8:
 					if(data.indexOf("{%") == 0){
-						var text = dojo.trim(data.slice(2, -2));
+						var text = lang.trim(data.slice(2, -2));
 						if(text.substr(0, 5) == "load "){
-							var parts = dojo.trim(text).split(/\s+/g);
+							var parts = lang.trim(text).split(/\s+/g);
 							for(var i = 1, part; part = parts[i]; i++){
-								dojo["require"](part);
+								if (/\./.test(part)){
+									part = part.replace(/\./g,"/");
+								}
+								require([part]);
 							}
 						}
 						tokens.push([dd.TOKEN_BLOCK, text]);
 					}
 					if(data.indexOf("{{") == 0){
-						tokens.push([dd.TOKEN_VAR, dojo.trim(data.slice(2, -2))]);
+						tokens.push([dd.TOKEN_VAR, lang.trim(data.slice(2, -2))]);
 					}
 					if(child.parentNode) child.parentNode.removeChild(child);
 					return;
@@ -333,12 +344,12 @@ dojo.require("dojox.dtl.Context");
 		}
 	};
 
-	dd.DomTemplate = dojo.extend(function(/*String|DOMNode|dojo._Url*/ obj){
-		// summary: Use this object for DOM templating
+	dd.DomTemplate = lang.extend(function(/*String|DOMNode|dojo._Url*/ obj){
+		// summary: The template class for DOM templating.
 		if(!obj.nodes){
-			var node = dojo.byId(obj);
+			var node = dom.byId(obj);
 			if(node && node.nodeType == 1){
-				dojo.forEach(["class", "src", "href", "name", "value"], function(item){
+				array.forEach(["class", "src", "href", "name", "value"], function(item){
 					ddh._attributes[item] = true;
 				});
 				obj = {
@@ -363,16 +374,20 @@ dojo.require("dojox.dtl.Context");
 	{
 		_count: 0,
 		_re: /\bdojo:([a-zA-Z0-9_]+)\b/g,
-		setClass: function(str){
+		setClass: function(/*String*/str){
+			// summary: Sets the specified class name on the root node.
 			this.getRootNode().className = str;
 		},
 		getRootNode: function(){
+			// summary: Returns the template root node.
 			return this.buffer.rootNode;
 		},
 		getBuffer: function(){
+			// summary: Returns a new buffer.
 			return new dd.DomBuffer();
 		},
-		render: function(context, buffer){
+		render: function(/*dojox.dtl.Context?*/context, /*concatenable?*/buffer){
+			// summary: Renders this template.
 			buffer = this.buffer = buffer || this.getBuffer();
 			this.rootNode = null;
 			var output = this.nodelist.render(context || new dd.Context({}), buffer);
@@ -388,7 +403,7 @@ dojo.require("dojox.dtl.Context");
 		}
 	});
 
-	dd.DomBuffer = dojo.extend(function(/*Node*/ parent){
+	dd.DomBuffer = lang.extend(function(/*Node*/ parent){
 		// summary: Allows the manipulation of DOM
 		// description:
 		//		Use this to append a child, change the parent, or
@@ -409,13 +424,13 @@ dojo.require("dojox.dtl.Context");
 			}
 
 			if(!parent){
-				if(node.nodeType == 3 && dojo.trim(node.data)){
+				if(node.nodeType == 3 && lang.trim(node.data)){
 					throw new Error("Text should not exist outside of the root node in template");
 				}
 				return this;
 			}
 			if(this._closed){
-				if(node.nodeType == 3 && !dojo.trim(node.data)){
+				if(node.nodeType == 3 && !lang.trim(node.data)){
 					return this;
 				}else{
 					throw new Error("Content should not exist outside of the root node in template");
@@ -443,7 +458,7 @@ dojo.require("dojox.dtl.Context");
 			parent._cache.push(node);
 			return this;
 		},
-		remove: function(obj){
+		remove: function(/*String|DomNode*/obj){
 			if(typeof obj == "string"){
 				if(this._parent){
 					this._parent.removeAttribute(obj);
@@ -463,7 +478,7 @@ dojo.require("dojox.dtl.Context");
 			return this;
 		},
 		setAttribute: function(key, value){
-			var old = dojo.attr(this._parent, key);
+			var old = html.attr(this._parent, key);
 			if(this.onChangeAttribute && old != value){
 				this.onChangeAttribute(this._parent, key, old, value);
 			}
@@ -471,8 +486,11 @@ dojo.require("dojox.dtl.Context");
 				//console.log(value);
 				this._parent.style.cssText = value;
 			}else{
-				dojo.attr(this._parent, key, value);
+				html.attr(this._parent, key, value);
 				//console.log(this._parent, key, value);
+				if(key == "value"){
+					this._parent.setAttribute(key, value);
+				}
 			}
 			return this;
 		},
@@ -480,12 +498,12 @@ dojo.require("dojox.dtl.Context");
 			if(!context.getThis()){ throw new Error("You must use Context.setObject(instance)"); }
 			this.onAddEvent && this.onAddEvent(this.getParent(), type, fn);
 			var resolved = fn;
-			if(dojo.isArray(args)){
+			if(lang.isArray(args)){
 				resolved = function(e){
 					this[fn].apply(this, [e].concat(args));
 				}
 			}
-			return dojo.connect(this.getParent(), type, context.getThis(), resolved);
+			return connect.connect(this.getParent(), type, context.getThis(), resolved);
 		},
 		setParent: function(node, /*Boolean?*/ up, /*Boolean?*/ root){
 			if(!this._parent) this._parent = this._first = node;
@@ -497,7 +515,7 @@ dojo.require("dojox.dtl.Context");
 			if(up){
 				var parent = this._parent;
 				var script = "";
-				var ie = dojo.isIE && parent.tagName == "SCRIPT";
+				var ie = has("ie") && parent.tagName == "SCRIPT";
 				if(ie){
 					parent.text = "";
 				}
@@ -573,7 +591,7 @@ dojo.require("dojox.dtl.Context");
 		=====*/
 	});
 
-	dd._DomNode = dojo.extend(function(node){
+	dd._DomNode = lang.extend(function(node){
 		// summary: Places a node into DOM
 		this.contents = node;
 	},
@@ -594,7 +612,7 @@ dojo.require("dojox.dtl.Context");
 		}
 	});
 
-	dd._DomNodeList = dojo.extend(function(/*Node[]*/ nodes){
+	dd._DomNodeList = lang.extend(function(/*Node[]*/ nodes){
 		// summary: A list of any DOM-specific node objects
 		// description:
 		//		Any object that's used in the constructor or added
@@ -653,7 +671,7 @@ dojo.require("dojox.dtl.Context");
 			}
 
 			var html = div.innerHTML;
-			return (dojo.isIE) ? html.replace(/\s*_(dirty|clone)="[^"]*"/g, "") : html;
+			return (has("ie")) ? domconstruct.replace(/\s*_(dirty|clone)="[^"]*"/g, "") : html;
 		},
 		unrender: function(context, buffer, instance){
 			if(instance){
@@ -712,7 +730,7 @@ dojo.require("dojox.dtl.Context");
 		}
 	});
 
-	dd._DomVarNode = dojo.extend(function(str){
+	dd._DomVarNode = lang.extend(function(str){
 		// summary: A node to be processed as a variable
 		// description:
 		//		Will render an object that supports the render function
@@ -821,7 +839,7 @@ dojo.require("dojox.dtl.Context");
 				}
 				return buffer;
 			case "html":
-				for(var i=0, l=this._html.length; i<l; i++){
+				for(var i = 0, l = this._html.length; i < l; i++){
 					buffer = buffer.remove(this._html[i]);
 				}
 				return buffer;
@@ -834,7 +852,7 @@ dojo.require("dojox.dtl.Context");
 		}
 	});
 
-	dd.ChangeNode = dojo.extend(function(node, /*Boolean?*/ up, /*Bookean*/ root){
+	dd.ChangeNode = lang.extend(function(node, /*Boolean?*/ up, /*Bookean*/ root){
 		// summary: Changes the parent during render/unrender
 		this.contents = node;
 		this.up = up;
@@ -855,7 +873,7 @@ dojo.require("dojox.dtl.Context");
 		}
 	});
 
-	dd.AttributeNode = dojo.extend(function(key, value){
+	dd.AttributeNode = lang.extend(function(key, value){
 		// summary: Works on attributes
 		this.key = key;
 		this.value = value;
@@ -894,7 +912,7 @@ dojo.require("dojox.dtl.Context");
 		}
 	});
 
-	dd._DomTextNode = dojo.extend(function(str){
+	dd._DomTextNode = lang.extend(function(str){
 		// summary: Adds a straight text node without any processing
 		this.contents = document.createTextNode(str);
 		this.upcoming = str;
@@ -916,14 +934,14 @@ dojo.require("dojox.dtl.Context");
 			return buffer.remove(this.contents);
 		},
 		isEmpty: function(){
-			return !dojo.trim(this.contents.data);
+			return !lang.trim(this.contents.data);
 		},
 		clone: function(){
 			return new this.constructor(this.contents.data);
 		}
 	});
 
-	dd._DomParser = dojo.extend(function(tokens){
+	dd._DomParser = lang.extend(function(tokens){
 		// summary: Turn a simple array into a set of objects
 		// description:
 		//	This is also used by all tags to move through
@@ -959,12 +977,12 @@ dojo.require("dojox.dtl.Context");
 							value.setAttribute(token[2], "");
 						}
 						nodelist.push(fn(null, new dd.Token(type, token[2] + " " + token[3])));
-					}else if(dojo.isString(token[3])){
+					}else if(lang.isString(token[3])){
 						if(token[2] == "style" || token[3].indexOf("{%") != -1 || token[3].indexOf("{{") != -1){
 							nodelist.push(new dd.AttributeNode(token[2], token[3]));
-						}else if(dojo.trim(token[3])){
+						}else if(lang.trim(token[3])){
 							try{
-								dojo.attr(value, token[2], token[3]);
+								html.attr(value, token[2], token[3]);
 							}catch(e){}
 						}
 					}
@@ -1027,5 +1045,5 @@ dojo.require("dojox.dtl.Context");
 			return new dd.DomTemplate(ddh.getTemplate(loc));
 		}
 	});
-
-})();
+	return dojox.dtl.dom;
+});

@@ -1,5 +1,10 @@
-define("dojo/cldr/supplemental", ["dojo", "dojo/i18n"], function(dojo) {
-dojo.getObject("cldr.supplemental", true, dojo);
+define(["../_base/kernel", "../_base/lang", "../i18n"], function(dojo, lang) {
+	// module:
+	//		dojo/cldr/supplemental
+	// summary:
+	//		TODOC
+
+lang.getObject("cldr.supplemental", true, dojo);
 
 dojo.cldr.supplemental.getFirstDayOfWeek = function(/*String?*/locale){
 // summary: Returns a zero-based index for first day of the week

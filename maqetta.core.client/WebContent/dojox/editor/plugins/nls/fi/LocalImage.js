@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertImageTitle: "Lisää kuva",
 	url: "Kuva",
@@ -9,3 +11,5 @@
 	prePopuTextBrowse: " tai selaa paikalliseen tiedostoon."
 })
 
+//end v1.x content
+);

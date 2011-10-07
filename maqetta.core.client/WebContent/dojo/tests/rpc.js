@@ -1,12 +1,6 @@
-dojo.provide("tests.rpc");
+define(["../main", "doh", "require", "../rpc/RpcService", "../rpc/JsonService", "../rpc/JsonpService"], function(dojo, doh, require){
 
-dojo.require("dojo.rpc.RpcService");
-dojo.require("dojo.rpc.JsonService");
-dojo.require("dojo.rpc.JsonpService");
-
-doh.register("tests.rpc",
-	[
-
+	doh.register("tests.rpc", [
 		{
 			name: "JsonRPC-EchoTest",
 			timeout: 2000,
@@ -25,8 +19,8 @@ doh.register("tests.rpc",
 							]
 						}
 					]
-				}
-			
+				};
+
 				this.svc = new dojo.rpc.JsonService(testSmd);
 			},
 			runTest: function(){
@@ -63,8 +57,8 @@ doh.register("tests.rpc",
 				var testSmd={
 					serviceURL:"../../dojo/tests/resources/test_JsonRPCMediator.php",
 					methods:[ { name:"contentB" } ]
-				}
-			
+				};
+
 				this.svc = new dojo.rpc.JsonService(testSmd);
 			},
 			runTest: function(){
@@ -112,7 +106,7 @@ doh.register("tests.rpc",
 			name: "JsonP_test",
 			timeout: 10000,
 			setUp: function(){
-				this.svc = new dojo.rpc.JsonpService(dojo.moduleUrl("dojo.tests.resources","yahoo_smd_v1.smd"), {appid: "foo"});
+				this.svc = new dojo.rpc.JsonpService(require.toUrl("dojo/tests/resources/yahoo_smd_v1.smd"), {appid: "foo"});
 			},
 			runTest: function(){
 				var d = new doh.Deferred();
@@ -141,7 +135,6 @@ doh.register("tests.rpc",
 				return d;
 			}
 		}
-	]
-);
+	]);
 
-
+});

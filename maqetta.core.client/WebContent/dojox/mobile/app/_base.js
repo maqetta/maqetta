@@ -5,6 +5,7 @@ dojo.require("dijit._base");
 dojo.require("dijit._WidgetBase");
 dojo.require("dojox.mobile");
 dojo.require("dojox.mobile.parser");
+dojo.require("dojox.mobile.Button");
 
 dojo.require("dojox.mobile.app._event");
 dojo.require("dojox.mobile.app._Widget");
@@ -52,9 +53,9 @@ dojo.require("dojox.mobile.app.ImageThumbView");
 			if (resource.source) {
 				url = resource.source;
 			}else if (resource.module) {
-				url = dojo.baseUrl + dojo._getModuleSymbols(resource.module).join("/") + '.js';
+				url= dojo.moduleUrl(resource.module)+".js";
 			}else {
-				alert("Error: invalid JavaScript resource " + dojo.toJson(resource));
+				console.log("Error: invalid JavaScript resource " + dojo.toJson(resource));
 				return;
 			}
 		}while (resources.length > 0 && loadedResources[url]);
@@ -78,7 +79,7 @@ dojo.require("dojox.mobile.app.ImageThumbView");
 			}
 		},
 		function(){
-			alert("Failed to load resource " + url);
+			console.log("Failed to load resource " + url);
 		});
 	}
 

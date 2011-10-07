@@ -1,13 +1,15 @@
-dojo.provide("dojox.form.manager._EnableMixin");
-
-dojo.require("dojox.form.manager._Mixin");
-
-(function(){
-	var fm = dojox.form.manager,
+define([
+	"dojo/_base/lang",
+	"dojo/_base/kernel",
+	"dojo/dom-attr",
+	"./_Mixin",
+	"dojo/_base/declare"
+], function(lang, dojo, domAttr, _Mixin, declare){
+	var fm = lang.getObject("dojox.form.manager", true),
 		aa = fm.actionAdapter,
 		ia = fm.inspectorAdapter;
 
-	dojo.declare("dojox.form.manager._EnableMixin", null, {
+	return declare("dojox.form.manager._EnableMixin", null, {
 		// summary:
 		//		Form manager's mixin for controlling enable/disable state of
 		//		form elements.
@@ -29,8 +31,8 @@ dojo.require("dojox.form.manager._Mixin");
 			}), names);
 
 			if(this.inspectFormNodes){
-				dojo.mixin(result, this.inspectFormNodes(ia(function(name, node){
-					return !dojo.attr(node, "disabled");
+				lang.mixin(result, this.inspectFormNodes(ia(function(name, node){
+					return !domAttr.get(node, "disabled");
 				}), names));
 			}
 
@@ -58,7 +60,7 @@ dojo.require("dojox.form.manager._Mixin");
 
 			if(this.inspectFormNodes){
 				this.inspectFormNodes(aa(function(name, node, value){
-					dojo.attr(node, "disabled", !value);
+					domAttr.set(node, "disabled", !value);
 				}), state, defaultState);
 			}
 
@@ -78,4 +80,4 @@ dojo.require("dojox.form.manager._Mixin");
 			return oldState;	// Object
 		}
 	});
-})();
+});

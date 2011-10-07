@@ -41,26 +41,35 @@
 	<script type="text/javascript" src="_testCommon.js"></script>
 
 	<script type="text/javascript">
-		dojo.require("dijit.dijit"); // optimize: load dijit layer
+		dojo.require("dijit._Widget");
+		dojo.require("dijit._TemplatedMixin");
+
 		dojo.require("dijit.TooltipDialog");
 		dojo.require("dijit.form.DropDownButton");
+
 		dojo.require("dijit.form.TextBox");
 		dojo.require("dijit.form.DateTextBox");
 		dojo.require("dijit.form.TimeTextBox");
 		dojo.require("dijit.form.FilteringSelect");
 		dojo.require("dijit.form.Select");
+
 		dojo.require("dijit.layout.TabContainer");
 		dojo.require("dijit.InlineEditBox");
+
 		dojo.require("dijit.Menu");
+		dojo.require("dijit.MenuItem");
+		dojo.require("dijit.PopupMenuItem");
+		dojo.require("dijit.MenuSeparator");
+
 		dojo.require("dojo.parser");
 
 		// make dojo.toJson() print dates correctly (this feels a bit dirty)
 		Date.prototype.json = function(){ return dojo.date.stamp.toISOString(this, {selector: 'date'});};
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			// create a do nothing, only for test widget
 			dojo.declare("dijit.TestWidget",
-				[dijit._Widget, dijit._Templated], {
+				[dijit._Widget, dijit._TemplatedMixin], {
 				templateString: "<div style='margin: 10px; border: inset #700 4px; padding: 5px;' dojoAttachPoint='containerNode'></div>"
 			});
 

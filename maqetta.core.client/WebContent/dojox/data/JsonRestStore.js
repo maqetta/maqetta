@@ -1,7 +1,12 @@
-define("dojox/data/JsonRestStore", ["dojo", "dojox", "dojox/rpc/JsonRest", "dojox/data/ServiceStore"], function(dojo, dojox) {
+define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", "dojox/rpc/Rest", 
+		"dojox/rpc/JsonRest", "dojox/json/schema", "dojox/data/ServiceStore"], 
+  function(lang, declare, connect, rpcRest, rpcJsonRest, jsonSchema, ServiceStore) {
 
-dojo.declare("dojox.data.JsonRestStore",
-	dojox.data.ServiceStore,
+/*=====
+var ServiceStore = dojox.data.ServiceStore;
+=====*/
+
+var JsonRestStore = declare("dojox.data.JsonRestStore", ServiceStore,
 	{
 		constructor: function(options){
 			//summary:
@@ -96,7 +101,7 @@ dojo.declare("dojox.data.JsonRestStore",
 			//		The object would automatically be requested from the server (with an object id of "obj2").
 			//
 
-			dojo.connect(dojox.rpc.Rest._index,"onUpdate",this,function(obj,attrName,oldValue,newValue){
+			connect.connect(rpcRest._index,"onUpdate",this,function(obj,attrName,oldValue,newValue){
 				var prefix = this.service.servicePath;
 				if(!obj.__id){
 					console.log("no id on updated object ", obj);
@@ -109,26 +114,26 @@ dojo.declare("dojox.data.JsonRestStore",
 			if(typeof options.target == 'string'){
 				options.target = options.target.match(/\/$/) || this.allowNoTrailingSlash ? options.target : (options.target + '/');
 				if(!this.service){
-					this.service = dojox.rpc.JsonRest.services[options.target] ||
-							dojox.rpc.Rest(options.target, true);
+					this.service = rpcJsonRest.services[options.target] ||
+							rpcRest(options.target, true);
 					// create a default Rest service
 				}
 			}
 
-			dojox.rpc.JsonRest.registerService(this.service, options.target, this.schema);
+			rpcJsonRest.registerService(this.service, options.target, this.schema);
 			this.schema = this.service._schema = this.schema || this.service._schema || {};
 			// wrap the service with so it goes through JsonRest manager
 			this.service._store = this;
 			this.service.idAsRef = this.idAsRef;
 			this.schema._idAttr = this.idAttribute;
-			var constructor = dojox.rpc.JsonRest.getConstructor(this.service);
+			var constructor = rpcJsonRest.getConstructor(this.service);
 			var self = this;
 			this._constructor = function(data){
 				constructor.call(this, data);
 				self.onNew(this);
 			}
 			this._constructor.prototype = constructor.prototype;
-			this._index = dojox.rpc.Rest._index;
+			this._index = rpcRest._index;
 		},
 		
 		// summary:
@@ -174,11 +179,11 @@ dojo.declare("dojox.data.JsonRestStore",
 			//	If the desire is to delete only one reference, unsetAttribute or
 			//	setValue is the way to go.
 			var checked = [];
-			var store = dojox.data._getStoreForItem(item) || this;
+			var store = dataExtCfg._getStoreForItem(item) || this;
 			if(this.referenceIntegrity){
 				// cleanup all references
-				dojox.rpc.JsonRest._saveNotNeeded = true;
-				var index = dojox.rpc.Rest._index;
+				rpcJsonRest._saveNotNeeded = true;
+				var index = rpcRest._index;
 				var fixReferences = function(parent){
 					var toSplice;
 					// keep track of the checked ones
@@ -195,7 +200,7 @@ dojo.declare("dojox.data.JsonRestStore",
 										(toSplice = toSplice || []).push(i);
 									}else{
 										// property, just delete it.
-										(dojox.data._getStoreForItem(parent) || store).unsetAttribute(parent, i);
+										(dataExtCfg._getStoreForItem(parent) || store).unsetAttribute(parent, i);
 									}
 								}
 							}else{
@@ -206,7 +211,7 @@ dojo.declare("dojox.data.JsonRestStore",
 									}
 									if(typeof value.__checked == 'object' && parent != index){
 										// if it is a modified array, we will replace it
-										(dojox.data._getStoreForItem(parent) || store).setValue(parent, i, value.__checked);
+										(dataExtCfg._getStoreForItem(parent) || store).setValue(parent, i, value.__checked);
 									}
 								}
 							}
@@ -225,14 +230,14 @@ dojo.declare("dojox.data.JsonRestStore",
 				};
 				// start with the index
 				fixReferences(index);
-				dojox.rpc.JsonRest._saveNotNeeded = false;
+				rpcJsonRest._saveNotNeeded = false;
 				var i = 0;
 				while(checked[i]){
 					// remove the checked marker
 					delete checked[i++].__checked;
 				}
 			}
-			dojox.rpc.JsonRest.deleteObject(item);
+			rpcJsonRest.deleteObject(item);
 
 			store.onDelete(item);
 		},
@@ -242,7 +247,26 @@ dojo.declare("dojox.data.JsonRestStore",
 			//		contains a reference to the item itself as well as a
 			//		cloned and trimmed version of old item for use with
 			//		revert.
-			dojox.rpc.JsonRest.changing(item,_deleting);
+			rpcJsonRest.changing(item,_deleting);
+		},
+		cancelChanging : function(object){
+			//	summary:
+			// 		Removes an object from the list of dirty objects
+			//		This will prevent that object from being saved to the server on the next save
+			//	object:
+			//		The item to cancel changes on
+			if(!object.__id){
+				return;
+			}
+			dirtyObjects = dirty=rpcJsonRest.getDirtyObjects();
+			for(var i=0; i<dirtyObjects.length; i++){
+				var dirty = dirtyObjects[i];
+				if(object==dirty.object){
+					dirtyObjects.splice(i, 1);
+					return;
+				}
+			}
+	
 		},
 
 		setValue: function(item, attribute, value){
@@ -250,10 +274,10 @@ dojo.declare("dojox.data.JsonRestStore",
 			//		sets 'attribute' on 'item' to 'value'
 
 			var old = item[attribute];
-			var store = item.__id ? dojox.data._getStoreForItem(item) : this;
-			if(dojox.json.schema && store.schema && store.schema.properties){
+			var store = item.__id ? dataExtCfg._getStoreForItem(item) : this;
+			if(jsonSchema && store.schema && store.schema.properties){
 				// if we have a schema and schema validator available we will validate the property change
-				dojox.json.schema.mustBeValid(dojox.json.schema.checkPropertyChange(value,store.schema.properties[attribute]));
+				jsonSchema.mustBeValid(jsonSchema.checkPropertyChange(value,store.schema.properties[attribute]));
 			}
 			if(attribute == store.idAttribute){
 				throw new Error("Can not change the identity attribute for an item");
@@ -271,7 +295,7 @@ dojo.declare("dojox.data.JsonRestStore",
 			//	must be an array.
 
 
-			if(!dojo.isArray(values)){
+			if(!lang.isArray(values)){
 				throw new Error("setValues expects to be passed an Array object as its value");
 			}
 			this.setValue(item,attribute,values);
@@ -320,10 +344,10 @@ dojo.declare("dojox.data.JsonRestStore",
 				(kwArgs = kwArgs || {}).service = this.service;
 			}
 			if("syncMode" in kwArgs ? kwArgs.syncMode : this.syncMode){
-				dojox.rpc._sync = true;
+				rpcConfig._sync = true;
 			}
 
-			var actions = dojox.rpc.JsonRest.commit(kwArgs);
+			var actions = rpcJsonRest.commit(kwArgs);
 			this.serverVersion = this._updates && this._updates.length;
 			return actions;
 		},
@@ -335,13 +359,13 @@ dojo.declare("dojox.data.JsonRestStore",
 			//	kwArgs.global:
 			//		This will cause the revert to undo all the changes for all
 			// 		JsonRestStores in a single operation.
-			dojox.rpc.JsonRest.revert(kwArgs && kwArgs.global && this.service);
+			rpcJsonRest.revert(kwArgs && kwArgs.global && this.service);
 		},
 
 		isDirty: function(item){
 			// summary
 			//		returns true if the item is marked as dirty.
-			return dojox.rpc.JsonRest.isDirty(item);
+			return rpcJsonRest.isDirty(item, this);
 		},
 		isItem: function(item, anyStore){
 			//	summary:
@@ -353,11 +377,11 @@ dojo.declare("dojox.data.JsonRestStore",
 			//	anyStore: /* boolean*/
 			//		If true, this will return true if the value is an item for any JsonRestStore,
 			//		not just this instance
-			return item && item.__id && (anyStore || this.service == dojox.rpc.JsonRest.getServiceAndId(item.__id).service);
+			return item && item.__id && (anyStore || this.service == rpcJsonRest.getServiceAndId(item.__id).service);
 		},
 		_doQuery: function(args){
 			var query= typeof args.queryStr == 'string' ? args.queryStr : args.query;
-			var deferred = dojox.rpc.JsonRest.query(this.service,query, args);
+			var deferred = rpcJsonRest.query(this.service,query, args);
 			var self = this;
 			if(this.loadReferencedSchema){
 				deferred.addCallback(function(result){
@@ -369,10 +393,10 @@ dojo.declare("dojox.data.JsonRestStore",
 					}
 					schemaRef = schemaRef && schemaRef[1];
 					if(schemaRef){
-						var serviceAndId = dojox.rpc.JsonRest.getServiceAndId((self.target + schemaRef).replace(/^(.*\/)?(\w+:\/\/)|[^\/\.]+\/\.\.\/|^.*\/(\/)/,"$2$3"));
-						var schemaDeferred = dojox.rpc.JsonRest.byId(serviceAndId.service, serviceAndId.id);
+						var serviceAndId = rpcJsonRest.getServiceAndId((self.target + schemaRef).replace(/^(.*\/)?(\w+:\/\/)|[^\/\.]+\/\.\.\/|^.*\/(\/)/,"$2$3"));
+						var schemaDeferred = rpcJsonRest.byId(serviceAndId.service, serviceAndId.id);
 						schemaDeferred.addCallbacks(function(newSchema){
-							dojo.mixin(self.schema, newSchema);
+							lang.mixin(self.schema, newSchema);
 							return result;
 						}, function(error){
 							console.error(error); // log it, but don't let it cause the main request to fail
@@ -411,7 +435,7 @@ dojo.declare("dojox.data.JsonRestStore",
 			var store = this;
 			// if it is an absolute id, we want to find the right store to query
 			if(id.toString().match(/^(\w*:)?\//)){
-				var serviceAndId = dojox.rpc.JsonRest.getServiceAndId(id);
+				var serviceAndId = rpcJsonRest.getServiceAndId(id);
 				store = serviceAndId.service._store;
 				args.identity = serviceAndId.id;
 			}
@@ -445,7 +469,7 @@ dojo.declare("dojox.data.JsonRestStore",
 
 	}
 );
-dojox.data.JsonRestStore.getStore = function(options, Class){
+JsonRestStore.getStore = function(options, Class){
 	//	summary:
 	//		Will retrieve or create a store using the given options (the same options
 	//		that are passed to JsonRestStore constructor. Returns a JsonRestStore instance
@@ -457,26 +481,29 @@ dojox.data.JsonRestStore.getStore = function(options, Class){
 	if(typeof options.target == 'string'){
 		options.target = options.target.match(/\/$/) || options.allowNoTrailingSlash ?
 				options.target : (options.target + '/');
-		var store = (dojox.rpc.JsonRest.services[options.target] || {})._store;
+		var store = (rpcJsonRest.services[options.target] || {})._store;
 		if(store){
 			return store;
 		}
 	}
-	return new (Class || dojox.data.JsonRestStore)(options);
+	return new (Class || JsonRestStore)(options);
 };
-dojox.data._getStoreForItem = function(item){
+
+var dataExtCfg = lang.getObject("dojox.data",true); 
+dataExtCfg._getStoreForItem = function(item){
 	if(item.__id){
-		var serviceAndId = dojox.rpc.JsonRest.getServiceAndId(item.__id);
+		var serviceAndId = rpcJsonRest.getServiceAndId(item.__id);
 		if(serviceAndId && serviceAndId.service._store){
 			return serviceAndId.service._store;
 		}else{
 			var servicePath = item.__id.toString().match(/.*\//)[0];
-			return new dojox.data.JsonRestStore({target:servicePath});
+			return new JsonRestStore({target:servicePath});
 		}
 	}
 	return null;
 };
-dojox.json.ref._useRefs = true; // Use referencing when identifiable objects are referenced
+var jsonRefConfig = lang.getObject("dojox.json.ref", true);
+jsonRefConfig._useRefs = true; // Use referencing when identifiable objects are referenced
 
-return dojox.data.JsonRestStore;
+return JsonRestStore;
 });

@@ -1440,7 +1440,17 @@ dojo.mixin(davinci.Workbench, {
 	},
 
 	_initializeWorkbenchState: function(){
-		var state= (this._state=davinci.Runtime.serverJSONRequest({url:"./cmd/getWorkbenchState", handleAs:"json", sync:true  }));
+		
+		if(this._state==null || !this._state.hasOwnProperty("editors")) 
+			(this._state=davinci.Runtime.serverJSONRequest({url:"./cmd/getWorkbenchState", handleAs:"json", sync:true  }));
+		
+		var state = this._state;
+		
+		
+		if(state && state.project){
+			davinci.Workbench.setActiveProject(state.project);
+		}
+		
 		if (state&&state.editors){
 			state.version = davinci.version;
 			
@@ -1474,11 +1484,27 @@ dojo.mixin(davinci.Workbench, {
 				}
 			}
 		}
-		else {
-			this._state={ editors:[], version:davinci.version};
-		}
+		if(!this._state.hasOwnProperty("editors"))
+			this._state={ editors:[], version:davinci.version, project:davinci.Runtime._DEFAULT_PROJECT};
+		
 	},
 
+	getActiveProject : function(){
+		
+		if(this._state==null )
+			this._state=davinci.Runtime.serverJSONRequest({url:"./cmd/getWorkbenchState", handleAs:"json", sync:true  });
+		
+		if(this._state.hasOwnProperty("project"))
+			return this._state.project;
+		
+		return davinci.Runtime._DEFAULT_PROJECT;
+	},
+	
+	setActiveProject : function(project){
+		this._state.project = project;
+		davinci.Workbench._updateWorkbenchState();
+	},
+	
 	_updateWorkbenchState: function()
 	{
 		davinci.Runtime.serverPut(

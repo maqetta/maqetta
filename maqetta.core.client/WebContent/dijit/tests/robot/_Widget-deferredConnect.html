@@ -5,7 +5,7 @@
 	<title>doh.robot deferred connect tests</title>
 
 	<style>
-		@import "../../../../util/doh/robot/robot.css";
+		@import "../../../util/doh/robot/robot.css";
 	</style>
 
 	<!-- required: dojo.js -->
@@ -18,7 +18,7 @@
 	<script type="text/javascript">
 		dojo.require("dijit.robotx");
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 
 			doh.robot.initRobot('../_Widget-deferredConnect.html');
 

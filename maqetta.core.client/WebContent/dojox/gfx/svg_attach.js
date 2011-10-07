@@ -1,11 +1,7 @@
-dojo.provide("dojox.gfx.svg_attach");
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array","dojo/_base/Color", "./_base","./svg","./matrix"], 
+  function(kernel, lang, arr, Color, g, svg, Matrix){
 
-dojo.require("dojox.gfx.svg");
-
-dojo.experimental("dojox.gfx.svg_attach");
-
-(function(){
-	var g = dojox.gfx, svg = g.svg;
+	kernel.experimental("dojox.gfx.svg_attach");
 	
 	svg.attachNode = function(node){
 		// summary: creates a shape from a Node
@@ -93,13 +89,13 @@ dojo.experimental("dojox.gfx.svg_attach");
 			switch(gradient.tagName.toLowerCase()){
 				case "lineargradient":
 					fillStyle = _getGradient(g.defaultLinearGradient, gradient);
-					dojo.forEach(["x1", "y1", "x2", "y2"], function(x){
+					arr.forEach(["x1", "y1", "x2", "y2"], function(x){
 						fillStyle[x] = gradient.getAttribute(x);
 					});
 					break;
 				case "radialgradient":
 					fillStyle = _getGradient(g.defaultRadialGradient, gradient);
-					dojo.forEach(["cx", "cy", "r"], function(x){
+					arr.forEach(["cx", "cy", "r"], function(x){
 						fillStyle[x] = gradient.getAttribute(x);
 					});
 					fillStyle.cx = gradient.getAttribute("cx");
@@ -107,15 +103,15 @@ dojo.experimental("dojox.gfx.svg_attach");
 					fillStyle.r  = gradient.getAttribute("r");
 					break;
 				case "pattern":
-					fillStyle = dojo.clone(g.defaultPattern);
-					dojo.forEach(["x", "y", "width", "height"], function(x){
+					fillStyle = lang.clone(g.defaultPattern);
+					arr.forEach(["x", "y", "width", "height"], function(x){
 						fillStyle[x] = gradient.getAttribute(x);
 					});
 					fillStyle.src = gradient.firstChild.getAttributeNS(svg.xmlns.xlink, "href");
 					break;
 			}
 		}else{
-			fillStyle = new dojo.Color(fill);
+			fillStyle = new Color(fill);
 			var opacity = object.rawNode.getAttribute("fill-opacity");
 			if(opacity != null){ fillStyle.a = opacity; }
 		}
@@ -123,12 +119,12 @@ dojo.experimental("dojox.gfx.svg_attach");
 	}
 
 	function _getGradient(defaultGradient, gradient){
-		var fillStyle = dojo.clone(defaultGradient);
+		var fillStyle = lang.clone(defaultGradient);
 		fillStyle.colors = [];
 		for(var i = 0; i < gradient.childNodes.length; ++i){
 			fillStyle.colors.push({
 				offset: gradient.childNodes[i].getAttribute("offset"),
-				color:  new dojo.Color(gradient.childNodes[i].getAttribute("stop-color"))
+				color:  new Color(gradient.childNodes[i].getAttribute("stop-color"))
 			});
 		}
 		return fillStyle;
@@ -142,8 +138,8 @@ dojo.experimental("dojox.gfx.svg_attach");
 			object.strokeStyle = null;
 			return;
 		}
-		var strokeStyle = object.strokeStyle = dojo.clone(g.defaultStroke);
-		var color = new dojo.Color(stroke);
+		var strokeStyle = object.strokeStyle = lang.clone(g.defaultStroke);
+		var color = new Color(stroke);
 		if(color){
 			strokeStyle.color = color;
 			strokeStyle.color.a = rawNode.getAttribute("stroke-opacity");
@@ -163,7 +159,7 @@ dojo.experimental("dojox.gfx.svg_attach");
 		var matrix = object.rawNode.getAttribute("transform");
 		if(matrix.match(/^matrix\(.+\)$/)){
 			var t = matrix.slice(7, -1).split(",");
-			object.matrix = g.matrix.normalize({
+			object.matrix = Matrix.normalize({
 				xx: parseFloat(t[0]), xy: parseFloat(t[2]),
 				yx: parseFloat(t[1]), yy: parseFloat(t[3]),
 				dx: parseFloat(t[4]), dy: parseFloat(t[5])
@@ -176,7 +172,7 @@ dojo.experimental("dojox.gfx.svg_attach");
 	function attachFont(object){
 		// summary: deduces a font style from a Node.
 		// object: dojox.gfx.Shape: an SVG shape
-		var fontStyle = object.fontStyle = dojo.clone(g.defaultFont),
+		var fontStyle = object.fontStyle = lang.clone(g.defaultFont),
 			r = object.rawNode;
 		fontStyle.style = r.getAttribute("font-style");
 		fontStyle.variant = r.getAttribute("font-variant");
@@ -189,7 +185,7 @@ dojo.experimental("dojox.gfx.svg_attach");
 		// summary: builds a shape from a node.
 		// object: dojox.gfx.Shape: an SVG shape
 		// def: Object: a default shape template
-		var shape = object.shape = dojo.clone(def), r = object.rawNode;
+		var shape = object.shape = lang.clone(def), r = object.rawNode;
 		for(var i in shape) {
 			shape[i] = r.getAttribute(i);
 		}
@@ -205,7 +201,7 @@ dojo.experimental("dojox.gfx.svg_attach");
 	function attachText(object){
 		// summary: builds a text shape from a node.
 		// object: dojox.gfx.Shape: an SVG shape
-		var shape = object.shape = dojo.clone(g.defaultText),
+		var shape = object.shape = lang.clone(g.defaultText),
 			r = object.rawNode;
 		shape.x = r.getAttribute("x");
 		shape.y = r.getAttribute("y");
@@ -219,7 +215,7 @@ dojo.experimental("dojox.gfx.svg_attach");
 	function attachTextPath(object){
 		// summary: builds a textpath shape from a node.
 		// object: dojox.gfx.Shape: an SVG shape
-		var shape = object.shape = dojo.clone(g.defaultTextPath),
+		var shape = object.shape = lang.clone(g.defaultTextPath),
 			r = object.rawNode;
 		shape.align = r.getAttribute("text-anchor");
 		shape.decoration = r.getAttribute("text-decoration");
@@ -227,4 +223,6 @@ dojo.experimental("dojox.gfx.svg_attach");
 		shape.kerning = r.getAttribute("kerning") == "auto";
 		shape.text = r.firstChild.nodeValue;
 	}
-})();
+
+	return svg; // return augmented svg api
+});

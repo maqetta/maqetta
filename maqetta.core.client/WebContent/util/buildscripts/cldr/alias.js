@@ -45,10 +45,10 @@ for(var i = 0; i < BUNDLES.length; i++){
 		var locale = jsFilePath[jsFilePath.length-2];
 		if(locale=="nls"){continue;} // no need for root bundle
 		try{
-			dojo.i18n._requireLocalization('dojo.cldr', BUNDLES[i], locale); //declare bundle
+//			dojo.i18n._requireLocalization('dojo.cldr', BUNDLES[i], locale); //declare bundle
 			var bundle = dojo.i18n.getLocalization('dojo.cldr', BUNDLES[i], locale); //get bundle
 			var nativeSrcBundle = getNativeBundle(jsFileName);//bundle not flattened
-		}catch(e){print(e);/* simply ignore if no bundle found*/}
+		}catch(e){/*logStr += "alias: an exception occurred: "+e;/* simply ignore if no bundle found*/}
 		
 		if(!bundle) continue;
 		

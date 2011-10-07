@@ -380,7 +380,8 @@ davinci_top_bar .dijitButtonNode {
 	padding: 0;
 	height: 32px;
 }
-.toolbaredContainer_toolbarDiv {
+
+.EditorContainer .toolbaredContainer_toolbarDiv {
 	height: 28px;
 }
 
@@ -663,7 +664,8 @@ davinci_top_bar .dijitButtonNode {
 	background-color:#aaa;
 }
 
-.toolbaredContainer_toolbarDiv .dijitIcon {
+.toolbaredContainer_toolbarDiv .dijitIcon,
+.dijitMenuPopup .dijitIcon {
 	background-image: url(img/sprite.png);
 }
 

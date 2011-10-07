@@ -1,4 +1,9 @@
-define("dojo/jaxer", ["dojo"], function(dojo) {
+define(["./main"], function(dojo) {
+	// module:
+	//		dojo/jaxer
+	// summary:
+	//		TODOC
+
 
 if(typeof print == "function"){
 	console.debug = Jaxer.Log.debug;

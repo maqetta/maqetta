@@ -1,8 +1,26 @@
-define("dijit/PopupMenuItem", ["dojo", "dijit", "dijit/MenuItem"], function(dojo, dijit) {
+define([
+	"dojo/_base/declare", // declare
+	"dojo/dom-style", // domStyle.set
+	"dojo/query", // query
+	"dojo/_base/window", // win.body
+	"./registry",	// registry.byNode
+	"./MenuItem",
+	"./hccss"
+], function(declare, domStyle, query, win, registry, MenuItem){
 
-dojo.declare("dijit.PopupMenuItem",
-		dijit.MenuItem,
-		{
+/*=====
+	var MenuItem = dijit.MenuItem;
+=====*/
+
+	// module:
+	//		dijit/PopupMenuItem
+	// summary:
+	//		An item in a Menu that spawn a drop down (usually a drop down menu)
+
+	return declare("dijit.PopupMenuItem", MenuItem, {
+		// summary:
+		//		An item in a Menu that spawn a drop down (usually a drop down menu)
+
 		_fillContent: function(){
 			// summary:
 			//		When Menu is declared in markup, this code gets the menu label and
@@ -11,7 +29,7 @@ dojo.declare("dijit.PopupMenuItem",
 			//		srcNodeRefinnerHTML contains both the menu item text and a popup widget
 			//		The first part holds the menu item text and the second part is the popup
 			// example:
-			// |	<div dojoType="dijit.PopupMenuItem">
+			// |	<div data-dojo-type="dijit.PopupMenuItem">
 			// |		<span>pick me</span>
 			// |		<popup> ... </popup>
 			// |	</div>
@@ -19,8 +37,8 @@ dojo.declare("dijit.PopupMenuItem",
 			//		protected
 
 			if(this.srcNodeRef){
-				var nodes = dojo.query("*", this.srcNodeRef);
-				dijit.PopupMenuItem.superclass._fillContent.call(this, nodes[0]);
+				var nodes = query("*", this.srcNodeRef);
+				this.inherited(arguments, [nodes[0]]);
 
 				// save pointer to srcNode so we can grab the drop down widget after it's instantiated
 				this.dropDownContainer = this.srcNodeRef;
@@ -32,34 +50,31 @@ dojo.declare("dijit.PopupMenuItem",
 			this.inherited(arguments);
 
 			// we didn't copy the dropdown widget from the this.srcNodeRef, so it's in no-man's
-			// land now.  move it to dojo.doc.body.
+			// land now.  move it to win.doc.body.
 			if(!this.popup){
-				var node = dojo.query("[widgetId]", this.dropDownContainer)[0];
-				this.popup = dijit.byNode(node);
+				var node = query("[widgetId]", this.dropDownContainer)[0];
+				this.popup = registry.byNode(node);
 			}
-			dojo.body().appendChild(this.popup.domNode);
+			win.body().appendChild(this.popup.domNode);
 			this.popup.startup();
 
 			this.popup.domNode.style.display="none";
 			if(this.arrowWrapper){
-				dojo.style(this.arrowWrapper, "visibility", "");
+				domStyle.set(this.arrowWrapper, "visibility", "");
 			}
-			dijit.setWaiState(this.focusNode, "haspopup", "true");
+			this.focusNode.setAttribute("aria-haspopup", "true");
 		},
 
-		destroyDescendants: function(){
+		destroyDescendants: function(/*Boolean*/ preserveDom){
 			if(this.popup){
 				// Destroy the popup, unless it's already been destroyed.  This can happen because
 				// the popup is a direct child of <body> even though it's logically my child.
 				if(!this.popup._destroyed){
-					this.popup.destroyRecursive();
+					this.popup.destroyRecursive(preserveDom);
 				}
 				delete this.popup;
 			}
 			this.inherited(arguments);
 		}
 	});
-
-
-return dijit.PopupMenuItem;
 });

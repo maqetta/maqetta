@@ -10,8 +10,8 @@
 
 		body {
 			height: 100%;
-			padding: 0px;
-			margin: 0px;
+			padding: 0;
+			margin: 0;
 		}
 
 		div {
@@ -33,15 +33,17 @@
 	<script type="text/javascript" src="../_testCommon.js"></script>
 
 	<script type="text/javascript">
-		dojo.require("dijit.dijit");
+		dojo.require("dijit._base.popup");
+		dojo.require("dijit._Widget");
+		dojo.require("dijit._TemplatedMixin");
 
 		function log(str){
 			console.log(str);
 		}
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 
-			dojo.declare("SimpleDropDownButton", [dijit._Widget, dijit._Templated], {
+			dojo.declare("SimpleDropDownButton", [dijit._Widget, dijit._TemplatedMixin], {
 				// summary:
 				//		A button that shows a popup.
 				//		Supply popup as parameter when instantiating this widget.
@@ -49,7 +51,7 @@
 				label: "show popup",
 				orient: {'BL': 'TL', 'BR': 'TR'},
 
-				templateString: "<button dojoAttachEvent='onclick: openPopup'>${label}</button>",
+				templateString: "<button data-dojo-attach-event='onclick: openPopup'>${label}</button>",
 
 				openPopup: function(){
 					var self = this;
@@ -88,7 +90,14 @@
 				}
 			});
 
-			dojo.declare("SimpleChoiceWidget",  [dijit._Widget, dijit._Templated], {
+			dojo.declare("SimplePopup",  [dijit._Widget, dijit._TemplatedMixin], {
+				// summary:
+				//		A trivial popup widget
+
+				templateString: "<span>i'm a popup</span>"
+			});
+
+			dojo.declare("SimpleChoiceWidget",  [dijit._Widget, dijit._TemplatedMixin], {
 				// summary:
 				//		A list of values; select a value by pressing an entry in the list.
 
@@ -98,9 +107,9 @@
 
 				templateString:
 					"<div class='choice'>" +
-						"<div dojoAttachEvent='onclick: onClick'>${choice1}</div>" +
-						"<div dojoAttachEvent='onclick: onClick'>${choice2}</div>" +
-						"<div dojoAttachEvent='onclick: onClick'>${choice3}</div>" +
+						"<div data-dojo-attach-event='onclick: onClick'>${choice1}</div>" +
+						"<div data-dojo-attach-event='onclick: onClick'>${choice2}</div>" +
+						"<div data-dojo-attach-event='onclick: onClick'>${choice3}</div>" +
 					"</div>",
 
 				onClick: function(e){
@@ -123,7 +132,7 @@
 				popup: choiceDropDown
 			})).placeAt(dojo.byId("widgets"));
 
-			dojo.declare("DialogWithPopupWidget",  [dijit._Widget, dijit._Templated], {
+			dojo.declare("DialogWithPopupWidget",  [dijit._Widget, dijit._TemplatedMixin], {
 				// summary:
 				//		This is a dialog that contains a button that spawns a drop down.
 				//		Supply popup as an argument to this widget.
@@ -135,8 +144,8 @@
 					"<div style='width: 300px'>" +
 						"<div>${title}</div>" +
 						"<input><br>" +
-						"<button dojoAttachPoint='button'>${label}</button><br>" +
-						"<button dojoAttachEvent='onclick: onExecute'>OK</button>" +
+						"<button data-dojo-attach-point='button'>${label}</button><br>" +
+						"<button data-dojo-attach-event='onclick: onExecute'>OK</button>" +
 					"</div>",
 
 				postCreate: function(){
@@ -175,15 +184,15 @@
 				})
 			}).placeAt(dojo.byId("widgets"));
 
-			dojo.declare("NestedPopupOpener",  [dijit._Widget, dijit._Templated], {
+			dojo.declare("NestedPopupOpener",  [dijit._Widget, dijit._TemplatedMixin], {
 				// summary:
 				//		Clicking a value in this list will open a nested popup.
 				//		Specify popup1 and popup2 as parameters to this widget.
 
 				templateString:
 					"<div class='choice'>" +
-						"<div dojoAttachEvent='onclick: onClick'>popup1</div>" +
-						"<div dojoAttachEvent='onclick: onClick'>popup2</div>" +
+						"<div data-dojo-attach-event='onclick: onClick'>popup1</div>" +
+						"<div data-dojo-attach-event='onclick: onClick'>popup2</div>" +
 					"</div>",
 
 				onClick: function(e){
@@ -259,6 +268,9 @@
 				popup: dialogWithNestedPopup
 			}).placeAt(dojo.byId("widgets"));
 
+			// To help the robot code, create an unattached widget and unattached DOMNode
+			new SimplePopup({id: "spw"}).placeAt(dojo.body());
+			dojo.place("<span id='sdn'>simple dom node</span>", dojo.body());
 		});
 	</script>
 </head>

@@ -1,6 +1,13 @@
-dojo.provide("dojox.grid.enhanced._Events");
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/declare",
+	"dojo/keys",
+	"dojo/_base/html",
+	"dojo/_base/event",
+	"dojox/grid/_Events"
+], function(dojo, declare, keys, html, event, _Events){
 
-dojo.declare("dojox.grid.enhanced._Events", null, {
+return declare("dojox.grid.enhanced._Events", null, {
 	// summary:
 	//		Overwrite some default events of DataGrid
 	//
@@ -25,14 +32,8 @@ dojo.declare("dojox.grid.enhanced._Events", null, {
 	rowActiveClass: 'dojoxGridRowActive',
 
 	constructor: function(inGrid){
-		//get the default Grid events
-		this._events = new dojox.grid._Events();
-		//for methods that won't be overwritten, copy them to "this" scope
-		for(var p in this._events){
-			if(!this[p]){
-				this.p = this._events.p;
-			}
-		}
+		//TODO - extend dojox.grid._Events rather than mixin for 1.8
+		this._events = new _Events();
 		//mixin "this" to Grid
 		inGrid.mixin(inGrid, this);
 	},
@@ -47,24 +48,26 @@ dojo.declare("dojox.grid.enhanced._Events", null, {
 		// summary:
 		//		Overwritten, see dojox.grid._Events.onKeyDown();
 		if(e.altKey || e.metaKey){ return; }
-		var dk = dojo.keys;
 		var focus = this.focus;
+		var editing = this.edit.isEditing();
 		switch(e.keyCode){
-			case dk.TAB:
+			case keys.TAB:
 				if(e.ctrlKey){ return; }
 				focus.tab(e.shiftKey ? -1:1,e);
 				break;
-			case dk.UP_ARROW:
-			case dk.DOWN_ARROW:
-				focus.currentArea().move(e.keyCode == dk.UP_ARROW ? -1 : 1, 0, e);
+			case keys.UP_ARROW:
+			case keys.DOWN_ARROW:
+				if(editing){ return; }
+				focus.currentArea().move(e.keyCode == keys.UP_ARROW ? -1 : 1, 0, e);
 				break;
-			case dk.LEFT_ARROW:
-			case dk.RIGHT_ARROW:
-				var offset = (e.keyCode == dk.LEFT_ARROW) ? 1 : -1;
-				if(dojo._isBodyLtr()){ offset *= -1; }
+			case keys.LEFT_ARROW:
+			case keys.RIGHT_ARROW:
+				if(editing){ return; }
+				var offset = (e.keyCode == keys.LEFT_ARROW) ? 1 : -1;
+				if(html._isBodyLtr()){ offset *= -1; }
 				focus.currentArea().move(0, offset, e);
 				break;
-			case dk.F10:
+			case keys.F10:
 				if(this.menus && e.shiftKey){
 					this.onRowContextMenu(e);
 				}
@@ -98,16 +101,16 @@ dojo.declare("dojox.grid.enhanced._Events", null, {
 	onCellMouseDown: function(e){
 		// summary:
 		//		Overwritten, see dojox.grid._Events.onCellMouseDown()
-		dojo.addClass(e.cellNode, this.cellActiveClass);
-		dojo.addClass(e.rowNode, this.rowActiveClass);
+		html.addClass(e.cellNode, this.cellActiveClass);
+		html.addClass(e.rowNode, this.rowActiveClass);
 	},
 	onCellMouseUp: function(e){
 		// summary:
 		//		New - Event fired when mouse is up inside content cell.
 		// e: Event
 		//		Decorated event object that contains reference to grid, cell, and rowIndex
-		dojo.removeClass(e.cellNode, this.cellActiveClass);
-		dojo.removeClass(e.rowNode, this.rowActiveClass);
+		html.removeClass(e.cellNode, this.cellActiveClass);
+		html.removeClass(e.rowNode, this.rowActiveClass);
 	},
 	onCellClick: function(e){
 		// summary:
@@ -127,14 +130,12 @@ dojo.declare("dojox.grid.enhanced._Events", null, {
 		}
 		//invoke dojox.grid._Events.onCellDblClick()
 		this._events.onCellDblClick.call(this, e);
-		//now focus.setFocusCell need isEditing info, so call it after that is set.
-		//this.focus.setFocusCell(e.cell, e.rowIndex);
 	},
 	onRowClick: function(e){
 		// summary:
 		//		Overwritten, see dojox.grid._Events.onRowClick()
 		this.edit.rowClick(e);
-		if(!e.cell || (!e.cell.isRowSelector && (!this.rowSelectCell || !this.rowSelectCell.disabled(e.rowIndex)))){
+		if(!e.cell || !this.plugin('indirectSelection')){
 			this.selection.clickSelectEvent(e);
 		}
 	},
@@ -154,34 +155,34 @@ dojo.declare("dojox.grid.enhanced._Events", null, {
 		if(this.selectedRegionMenu){
 			this.selectedRegionMenu._openMyself({
 				target: e.target,
-				coords: e.keyCode !== dojo.keys.F10 && "pageX" in e ? {
+				coords: e.keyCode !== keys.F10 && "pageX" in e ? {
 					x: e.pageX,
 					y: e.pageY
 				} : null
 			});
-			dojo.stopEvent(e);
+			event.stop(e);
 		}
 	},
 	onHeaderCellMouseOut: function(e){
 		// summary:
 		//		Overwritten, see dojox.grid._Events.onHeaderCellMouseOut()
 		if(e.cellNode){
-			dojo.removeClass(e.cellNode, this.cellOverClass);
-			dojo.removeClass(e.cellNode, this.headerCellActiveClass);
+			html.removeClass(e.cellNode, this.cellOverClass);
+			html.removeClass(e.cellNode, this.headerCellActiveClass);
 		}
 	},
 	onHeaderCellMouseDown: function(e){
 		// summary:
 		//		Overwritten, see dojox.grid._Events.onHeaderCellMouseDown()
 		if(e.cellNode){//TBD - apply to selection region for nested sorting?
-			dojo.addClass(e.cellNode, this.headerCellActiveClass);
+			html.addClass(e.cellNode, this.headerCellActiveClass);
 		}
 	},
 	onHeaderCellMouseUp: function(e){
 		// summary:
 		//		New event
 		if(e.cellNode){
-			dojo.removeClass(e.cellNode, this.headerCellActiveClass);
+			html.removeClass(e.cellNode, this.headerCellActiveClass);
 		}
 	},
 	onHeaderCellClick: function(e){
@@ -209,4 +210,5 @@ dojo.declare("dojox.grid.enhanced._Events", null, {
 		}
 	},
 	onRowMouseUp: function(e){}
+});
 });

@@ -10,49 +10,52 @@
 	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug:true"></script>
 	<script type="text/javascript" src="../xhrMultiPart.js"></script>
 	<script type="text/javascript">
-		dojo.require("dojox.io.xhrMultiPart");
-		var content = [
-			{ name: "foo", content: "FOObarbaz", filename: "foo.txt" },
-			{ name: "bar", content: "fooBARbaz", filename: "bar.txt" },
-			{ name: "baz", content: "foobarBAZ", filename: "baz.txt" }
-		];
+		var testXhrMulti, testXhrMultiForm, testXhrMultiFormWithFile;
 
-		function testXhrMulti(){
-			dojox.io.xhrMultiPart({
-				url: "result.txt",
-				file: content,
-				load: function(data){ console.log("Test with file: ", data); }
-			});
+		require(['dojox/io/xhrMultiPart'], function(xhrMultiPart){
+			var content = [
+				{ name: "foo", content: "FOObarbaz", filename: "foo.txt" },
+				{ name: "bar", content: "fooBARbaz", filename: "bar.txt" },
+				{ name: "baz", content: "foobarBAZ", filename: "baz.txt" }
+			];
 
-			//	should be the same.
-			dojox.io.xhrMultiPart({
-				url: "result.txt",
-				content: content,
-				load: function(data){ console.log("Test with content: ", data); }
-			});
-		}
-
-		function testXhrMultiForm(){
-			dojox.io.xhrMultiPart({
-				url: "result.txt",
-				form: dojo.byId("formTest"),
-				load: function(data){ console.log("Test with form: ", data); }
-			});
-			return false;	//	stop the submission
-		}
-
-		function testXhrMultiFormWithFile(){
-			try {
-				dojox.io.xhrMultiPart({
+			testXhrMulti = function(){
+				xhrMultiPart({
 					url: "result.txt",
-					form: dojo.byId("formTestWithFile"),
+					file: content,
+					load: function(data){ console.log("Test with file: ", data); }
+				});
+
+				//	should be the same.
+				xhrMultiPart({
+					url: "result.txt",
+					content: content,
+					load: function(data){ console.log("Test with content: ", data); }
+				});
+			}
+
+			testXhrMultiForm = function(){
+				xhrMultiPart({
+					url: "result.txt",
+					form: dojo.byId("formTest"),
 					load: function(data){ console.log("Test with form: ", data); }
 				});
-			} catch(e){
-				console.warn("xhrMultiPart failed because the form contains a FILE element!");
+				return false;	//	stop the submission
 			}
-			return false;	//	stop the submission
-		}
+
+			testXhrMultiFormWithFile = function(){
+				try {
+					xhrMultiPart({
+						url: "result.txt",
+						form: dojo.byId("formTestWithFile"),
+						load: function(data){ console.log("Test with form: ", data); }
+					});
+				} catch(e){
+					console.warn("xhrMultiPart failed because the form contains a FILE element!");
+				}
+				return false;	//	stop the submission
+			}
+		});
 	</script>
 </head>
 <body class="tundra">

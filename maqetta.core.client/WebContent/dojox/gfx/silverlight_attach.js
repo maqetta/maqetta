@@ -1,11 +1,7 @@
-dojo.provide("dojox.gfx.silverlight_attach");
-
-dojo.require("dojox.gfx.silverlight");
-
-dojo.experimental("dojox.gfx.silverlight_attach");
-
-(function(){
-	var g = dojox.gfx, sl = g.silverlight;
+define(["dojo/_base/kernel", "dojo/_base/lang", "./_base", "./silverlight"], 
+  function(kernel, lang, g, sl){
+	lang.getObject("dojox.gfx.silverlight_attach", true);
+	kernel.experimental("dojox.gfx.silverlight_attach");
 	
 	sl.attachNode = function(node){
 		// summary: creates a shape from a Node
@@ -18,4 +14,6 @@ dojo.experimental("dojox.gfx.silverlight_attach");
 		// node: Node: an Silverlight node
 		return null;	// dojox.gfx.Surface
 	};
-})();
+	
+	return sl; // return augmented silverlight api
+});

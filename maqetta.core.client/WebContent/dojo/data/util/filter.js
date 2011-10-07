@@ -1,7 +1,12 @@
-define("dojo/data/util/filter", ["dojo"], function(dojo) {
-dojo.getObject("data.util.filter", true, dojo);
+define(["dojo/_base/lang"], function(lang) {
+	// module:
+	//		dojo/data/util/filter
+	// summary:
+	//		TODOC
 
-dojo.data.util.filter.patternToRegExp = function(/*String*/pattern, /*boolean?*/ ignoreCase){
+var filter = lang.getObject("dojo.data.util.filter", true);
+
+filter.patternToRegExp = function(/*String*/pattern, /*boolean?*/ ignoreCase){
 	//	summary:
 	//		Helper function to convert a simple pattern to a regular expression for matching.
 	//	description:
@@ -62,8 +67,8 @@ dojo.data.util.filter.patternToRegExp = function(/*String*/pattern, /*boolean?*/
 	}else{
 		return new RegExp(rxp,"m"); //RegExp
 	}
-	
+
 };
 
-return dojo.data.util.filter;
+return filter;
 });

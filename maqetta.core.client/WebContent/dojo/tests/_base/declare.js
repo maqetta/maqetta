@@ -1,12 +1,13 @@
-dojo.provide("tests._base.declare");
+// FIXME: this test assumes the existence of the global object "tests"
+tests= typeof tests=="undefined" ? {} : tests;
 
-tests.register("tests._base.declare",
-	[
+define(["../..", "doh"], function(dojo, doh){
+	doh.register("tests._base.declare", [
 		function smokeTest(t){
 			dojo.declare("tests._base.declare.tmp", null);
 			var tmp = new tests._base.declare.tmp();
 			dojo.declare("testsFoo", null);
-			var tmp = new testsFoo();
+			tmp = new testsFoo();
 		},
 		function smokeTest2(t){
 			dojo.declare("tests._base.declare.foo", null, {
@@ -194,11 +195,11 @@ tests.register("tests._base.declare",
 
 			var Thing = function(args){
 				dojo.mixin(this, args);
-			}
+			};
 			Thing.prototype.method = function(){
 				t.t(true);
 				d.callback(true);
-			}
+			};
 
 			dojo.declare("Thinger", Thing, {
 				method: function(){
@@ -247,7 +248,7 @@ tests.register("tests._base.declare",
 				a = 1;
 				++this.flag;
 				old.call(this);
-			}
+			};
 			x.bar();
 			t.is(3, x.flag);
 			t.is(1, a);
@@ -258,7 +259,7 @@ tests.register("tests._base.declare",
 				a = 1;
 				++this.flag;
 				this.inherited("baz", arguments);
-			}
+			};
 			x.baz();
 			t.is(2, x.flag);
 			t.is(1, a);
@@ -400,13 +401,13 @@ tests.register("tests._base.declare",
 			}
 			t.t(flag);
 		},
-		
+
 		function noNew(t){
 			// all of the classes I create will use this as their
 			// pseudo-constructor function
 			function noNewConstructor(){
 				this.noNew_Value = 'instance value';
-			};
+			}
 
 			var g = dojo.global;
 			// this value will remain unchanged if the code for
@@ -419,7 +420,7 @@ tests.register("tests._base.declare",
 				var obj = cls('instance value');
 				t.is(obj.noNew_Value, 'instance value');
 				t.is(g.noNew_Value, 'global value');
-			};
+			}
 
 			// There are three different functions that might be
 			// created by dojo.declare(), so I need to test all
@@ -466,5 +467,5 @@ tests.register("tests._base.declare",
 		// FIXME: there are still some permutations to test like:
 		//	- ctor arguments
 		//	- multi-level inheritance + L/R conflict checks
-	]
-);
+	]);
+});

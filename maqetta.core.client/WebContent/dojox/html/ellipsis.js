@@ -1,18 +1,16 @@
-dojo.provide("dojox.html.ellipsis");
-
-/*=====
-dojox.html.ellipsis = {
-	// summary: offers cross-browser support for text-overflow: ellipsis
-	//
-	// description: Add "dojoxEllipsis" on any node that you want to ellipsis-ize. In order to function properly,
-	//	the node with the dojoxEllipsis class set on it should be a child of a node with a defined width.
-	//	It should also be a block-level element (i.e. <div>) - it will not work on td elements.
-	//	NOTE: When using the dojoxEllipsis class within tables, the table needs to have the table-layout: fixed style
-}
-=====*/
-
-(function(d){
-	if(d.isMoz){ //TODO: feature detect text-overflow in computed style?
+define("dojox/html/ellipsis",["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/Color", "dojo/colors"], function(d){
+	/*=====
+	dojox.html.ellipsis = {
+		// summary: offers cross-browser support for text-overflow: ellipsis
+		//
+		// description: Add "dojoxEllipsis" on any node that you want to ellipsis-ize. In order to function properly,
+		//	the node with the dojoxEllipsis class set on it should be a child of a node with a defined width.
+		//	It should also be a block-level element (i.e. <div>) - it will not work on td elements.
+		//	NOTE: When using the dojoxEllipsis class within tables, the table needs to have the table-layout: fixed style
+	}
+	=====*/
+	
+	if(d.isFF < 7){ //TODO: feature detect text-overflow in computed style?
 		// The delay (in ms) to wait so that we don't keep querying when many
 		// changes happen at once - set config "dojoxFFEllipsisDelay" if you
 		// want a different value
@@ -192,4 +190,4 @@ dojox.html.ellipsis = {
 			connFx();
 		});
 	}
-})(dojo);
+});

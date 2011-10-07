@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"clearFilterDialogTitle": "Vymazat filtr",
 	"filterDefDialogTitle": "Filtr",
@@ -82,6 +84,8 @@
 	"trueLabel": "Pravda",
 	"falseLabel": "Nepravda"
 })
+//end v1.x content
+);
 
 
 

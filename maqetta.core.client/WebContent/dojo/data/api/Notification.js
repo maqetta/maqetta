@@ -1,4 +1,9 @@
-define("dojo/data/api/Notification", ["dojo", "dojo/data/api/Read"], function(dojo) {
+define(["../..", "./Read"], function(dojo) {
+	// module:
+	//		dojo/data/api/Notification
+	// summary:
+	//		TODOC
+
 
 dojo.declare("dojo.data.api.Notification", dojo.data.api.Read, {
 	//	summary:
@@ -36,8 +41,8 @@ dojo.declare("dojo.data.api.Notification", dojo.data.api.Read, {
 
 	onSet: function(/* item */ item,
 					/* attribute-name-string */ attribute,
-					/* object | array */ oldValue,
-					/* object | array */ newValue){
+					/* object|array */ oldValue,
+					/* object|array */ newValue){
 		//	summary:
 		//		This function is called any time an item is modified via setValue, setValues, unsetAttribute, etc.
 		//	description:

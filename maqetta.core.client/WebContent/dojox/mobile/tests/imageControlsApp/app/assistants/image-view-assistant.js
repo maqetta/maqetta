@@ -1,4 +1,3 @@
-dojo.provide("ImageViewAssistant");
 dojo.require("dojox.mobile.app.SceneAssistant");
 
 dojo.declare("ImageViewAssistant", dojox.mobile.app.SceneAssistant, {

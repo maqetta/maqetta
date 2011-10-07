@@ -1,24 +1,22 @@
-dojo.provide("dojox.date.buddhist");
-dojo.experimental("dojox.date.buddhist");
+define(["dojo/_base/kernel", "dojo/date", "./buddhist/Date"], function(dojo, dd, buddhistDate){
+	dojo.getObject("date.buddhist", true, dojox);
+	dojo.experimental("dojox.date.buddhist");
 
-dojo.require("dojox.date.buddhist.Date");
-dojo.require("dojo.date"); // for compare
-	
 // Utility methods to do arithmetic calculations with buddhist.Dates
 
 dojox.date.buddhist.getDaysInMonth = function(/*buddhist.Date*/dateObject){
-	return dojo.date.getDaysInMonth(dateObject.toGregorian());
+	return dd.getDaysInMonth(dateObject.toGregorian());
 };
 
 dojox.date.buddhist.isLeapYear = function(/*buddhist.Date*/dateObject){
-	return dojo.date.isLeapYear(dateObject.toGregorian());
+	return dd.isLeapYear(dateObject.toGregorian());
 };
 
 //FIXME: reduce compare, add, diff also
 dojox.date.buddhist.compare = function(/*buddhist.Date*/date1, /*buddhist.Date*/date2, /*String?*/portion){
-//	summary:
+	//	summary:
 	//		Compare two buddhist date objects by date, time, or both.
-	return dojo.date.compare(date1,date2, portion); //FIXME
+	return dd.compare(date1,date2, portion); // int
 };
 
 
@@ -35,7 +33,7 @@ dojox.date.buddhist.add = function(/*dojox.date.buddhist.Date*/date, /*String*/i
 	//	amount:
 	//		How much to add to the date.
 
-	var newBuddDate = new dojox.date.buddhist.Date(date);
+	var newBuddDate = new buddhistDate(date);
 
 	switch(interval){
 		case "day":
@@ -88,13 +86,13 @@ dojox.date.buddhist.add = function(/*dojox.date.buddhist.Date*/date, /*String*/i
 			newBuddDate.setHours(date.getHours() + amount );
 			break;
 		case "minute":
-			newBuddDate.setMinutes(date.getMinutes() + amount );
+			newBuddDate._addMinutes(amount);
 			break;
 		case "second":
-			newBuddDate.setSeconds(date.getSeconds() + amount );
+			newBuddDate._addSeconds(amount);
 			break;
 		case "millisecond":
-			newBuddDate.setMilliseconds(date.getMilliseconds() + amount );
+			newBuddDate._addMilliseconds(amount);
 			break;
 	}
 	return newBuddDate; // dojox.date.buddhist.Date
@@ -103,7 +101,7 @@ dojox.date.buddhist.add = function(/*dojox.date.buddhist.Date*/date, /*String*/i
 dojox.date.buddhist.difference = function(/*dojox.date.buddhist.Date*/date1, /*dojox.date.buddhist.Date?*/date2, /*String?*/interval){
 	//	based on and similar to dojo.date.difference
 	//	summary:
-	//        date1 - date2
+	//        date2 - date1
 	//	 date2 is hebrew.Date object.  If not specified, the current hebrew.Date is used.
 	//	interval:
 	//		A string representing the interval.  One of the following:
@@ -111,9 +109,9 @@ dojox.date.buddhist.difference = function(/*dojox.date.buddhist.Date*/date1, /*d
 	//			"millisecond",  "week", "weekday"
 	//		Defaults to "day".
 	
-	date2 = date2 || new dojox.date.buddhist.Date();
+	date2 = date2 || new buddhistDate();
 	interval = interval || "day";
-	var yearDiff = date1.getFullYear() - date2.getFullYear();
+	var yearDiff = date2.getFullYear() - date1.getFullYear();
 	var delta = 1; // Integer return value
 	switch(interval){
 		case "weekday":
@@ -127,14 +125,14 @@ dojox.date.buddhist.difference = function(/*dojox.date.buddhist.Date*/date1, /*d
 			}else{
 				// Weeks plus spare change (< 7 days)
 				var adj = 0;
-				var aDay = date2.getDay();
-				var bDay = date1.getDay();
+				var aDay = date1.getDay();
+				var bDay = date2.getDay();
 	
 				weeks = parseInt(days/7);
 				mod = days % 7;
 				// Mark the date advanced by the number of
 				// round weeks (may be zero)
-				var dtMark = new dojox.date.buddhist.Date(date1);
+				var dtMark = new buddhistDate(date2);
 				dtMark.setDate(dtMark.getDate(true)+(weeks*7));
 				var dayMark = dtMark.getDay();
 	
@@ -193,8 +191,8 @@ dojox.date.buddhist.difference = function(/*dojox.date.buddhist.Date*/date1, /*d
 			delta = yearDiff;
 			break;
 		case "month":
-			var startdate =  (date1.toGregorian() > date2.toGregorian()) ? date1 : date2; // more
-			var enddate = (date1.toGregorian() > date2.toGregorian()) ? date2 : date1;
+			var startdate =  (date2.toGregorian() > date1.toGregorian()) ? date2 : date1; // more
+			var enddate = (date2.toGregorian() > date1.toGregorian()) ? date1 : date2;
 			
 			var month1 = startdate.getMonth();
 			var month2 = enddate.getMonth();
@@ -210,7 +208,7 @@ dojox.date.buddhist.difference = function(/*dojox.date.buddhist.Date*/date1, /*d
 					delta += 12;
 				}
 			}
-			if (date1.toGregorian() < date2.toGregorian()){
+			if (date2.toGregorian() < date1.toGregorian()){
 				delta = -delta;
 			}
 			break;
@@ -232,9 +230,11 @@ dojox.date.buddhist.difference = function(/*dojox.date.buddhist.Date*/date1, /*d
 			delta /= 1000;
 			// fallthrough
 		case "millisecond":
-			delta *= date1.toGregorian().getTime()- date2.toGregorian().getTime();
+			delta *= date2.toGregorian().getTime()- date1.toGregorian().getTime();
 	}
 	
 	// Round for fractional values and DST leaps
 	return Math.round(delta); // Number (integer)
 };
+return dojox.date.buddhist;
+});

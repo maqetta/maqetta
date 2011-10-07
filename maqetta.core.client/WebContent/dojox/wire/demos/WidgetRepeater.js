@@ -19,7 +19,7 @@ dojo.declare("dojox.wire.demos.WidgetRepeater", [ dijit._Widget, dijit._Template
 		//		The parameters to pass to the widget.
 		try{
 			if(dojo.isString(this.widget)){
-				dojo.require(this.widget);
+				// dojo.require(this.widget);	confuses new AMD builder, include resource manually first
 				this.widget = dojo.getObject(this.widget);
 			}
 			this.addChild(new this.widget(obj));

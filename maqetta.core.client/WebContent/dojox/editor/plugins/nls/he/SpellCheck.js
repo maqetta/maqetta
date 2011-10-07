@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	widgetLabel: "בדיקת איות באצווה ",
 	unfound: "לא נמצא ",
@@ -15,3 +17,5 @@
 	iMsg: "אין הצעות איות "
 })
 
+//end v1.x content
+);

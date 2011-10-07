@@ -9,8 +9,8 @@
 	</style>
 
 	<!-- required: dojo.js -->
-	<script type="text/javascript" src="../../../../dojo/dojo.js"
-		djConfig="isDebug: true, parseOnLoad: true"></script>
+	<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
+
 	<script type="text/javascript" src="../../helpers.js"></script>
 
 	<script type="text/javascript">
@@ -29,7 +29,7 @@
 		        }
 		}
 		isComboBox = testWidget=="dijit.form.ComboBox";
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 
 			doh.robot.initRobot('../_autoComplete.html?testWidget='+testWidget);
 
@@ -74,7 +74,7 @@
 					node = node.nextSibling;
 				}
 				return node;
-			}
+			};
 
 			// Select a value from the drop down using the keyboard, using "more choices" button to page as necessary
 			var robot_a11ySelectValue = function(combo, text, value, expectedText){
@@ -116,7 +116,7 @@
 							// watch() tests
 							doh.is(expectedText, dv, "watch of displayedValue");
 							doh.is(value, v, "watch of value");
-							doh.is(value, isComboBox ? combo.store.getValue(i, combo.searchAttr) : combo.store.getIdentity(i), "watch of item");
+							doh.is(value, isComboBox ? i[combo.searchAttr] : combo.store.getIdentity(i), "watch of item");
 							h1.unwatch();
 							h2.unwatch();
 							h3.unwatch();
@@ -222,7 +222,7 @@
 							if(!isComboBox){
 								doh.t(combo.isValid(), "isValid()");
 							}
-							doh.is(isComboBox ? "Kentucky" : "KY", v, "watch of value")
+							doh.is(isComboBox ? "Kentucky" : "KY", v, "watch of value");
 							doh.is("Kentucky", dv, "watch of displayedValue")
 						}), 900);
 						return d;
@@ -274,6 +274,35 @@
 				}
 
 				// TODO: test some other set("value") calls
+			]);
+
+			doh.register("back compat", [
+				function fetch_optionTags(){
+					// Make sure that myComboBox.store.fetch() still works even though
+					// ComboBox is using the new dojo.store API
+					var d = new doh.Deferred();
+					doh.t(dijit.byId("setvaluetest").store, "store exists");
+					doh.t(dojo.isFunction(dijit.byId("setvaluetest").store.fetch), "fetch exists");
+					dijit.byId("setvaluetest").store.fetch({
+						onBegin: d.getTestCallback(function(total){
+							doh.is(61, total, "# records");
+						})
+					});
+					return d;
+				},
+				function fetch_externalStore(){
+					// Make sure that myComboBox.store.fetch() still works even though
+					// ComboBox is using the new dojo.store API
+					var d = new doh.Deferred();
+					doh.t(dijit.byId("datatest").store, "store exists");
+					doh.t(dojo.isFunction(dijit.byId("datatest").store.fetch), "fetch exists");
+					dijit.byId("datatest").store.fetch({
+						onBegin: d.getTestCallback(function(total){
+							doh.is(61, total, "# records");
+						})
+					});
+					return d;
+				}
 			]);
 
 			doh.register("direct input", [
@@ -397,7 +426,7 @@
 							doh.t(list, "drop down exists");
 							doh.t(isVisible(list), "drop down is visible");
 
-							var entries = dojo.query("li", list).filter(isVisible);
+							var entries = dojo.query(".dijitMenuItem", list).filter(isVisible);
 							doh.is(3, entries.length, "three entries in drop down: " + list.innerHTML);
 							doh.is("California (CA)", innerText(entries[0]), "list #1");
 							doh.is("Colorado (CO)", innerText(entries[1]), "list #2");
@@ -429,7 +458,7 @@
 							doh.t(list, "drop down exists");
 							doh.t(isVisible(list), "drop down is visible");
 
-							var entries = dojo.query("li", list).filter(isVisible);
+							var entries = dojo.query(".dijitMenuItem", list).filter(isVisible);
 							doh.is(2, entries.length, "three entries in drop down: " + list.innerHTML);
 							doh.is("Colorado (CO)", innerText(entries[0]), "list #1");
 							doh.is("Connecticut (CT)", innerText(entries[1]), "list #2");
@@ -455,7 +484,7 @@
 							doh.t(list, "drop down exists");
 							doh.t(isVisible(list), "drop down is visible");
 
-							var entries = dojo.query("li", list).filter(isVisible);
+							var entries = dojo.query(".dijitMenuItem", list).filter(isVisible);
 							doh.is(3, entries.length, "three entries in drop down: " + list.innerHTML);
 							doh.is("California (CA)", innerText(entries[0]), "list #1");
 							doh.is("Colorado (CO)", innerText(entries[1]), "list #2");
@@ -614,7 +643,7 @@
 							doh.t(list, "drop down exists");
 							doh.t(isVisible(list), "drop down is visible");
 
-							var entries = dojo.query("li", list).filter(isVisible);
+							var entries = dojo.query(".dijitMenuItem", list).filter(isVisible);
 							doh.is(2, entries.length, "two entries in drop down: " + list.innerHTML);
 							doh.is("Colorado", innerText(entries[0]), "list #1");
 							doh.is("Connecticut", innerText(entries[1]), "list #2");
@@ -699,13 +728,13 @@
 						var d = new doh.Deferred();
 
 						dojo.byId("datatestDijit").focus();
-						doh.is("datatestDijit", dojo.global.dijit._curFocus.id, "focused on elem before disabled combo");
+						doh.is("datatestDijit", dojo.global.dijit.focus.curNode.id, "focused on elem before disabled combo");
 
 						// Tab over the disabled ComboBox
 						doh.robot.keyPress(dojo.keys.TAB, 1000);
 
 						doh.robot.sequence(d.getTestCallback(function(){
-							doh.is("combobox4", dojo.global.dijit._curFocus.id, "focused on 'enable' button after disabled combo");
+							doh.is("combobox4", dojo.global.dijit.focus.curNode.id, "focused on 'enable' button after disabled combo");
 						}), 1000);
 
 						return d;
@@ -813,8 +842,7 @@
 					name:"labelFunc_type",
 					combo:"labelFunc",
 					runTest:function(){
-						var d = robot_typeValue((this.combo = dijit.byId(this.combo)), "Alabama", isComboBox? "Alabama" : "AL", "Alabama");
-						return d;
+						return robot_typeValue((this.combo = dijit.byId(this.combo)), "Alabama", isComboBox ? "Alabama" : "AL", "Alabama");
 					}
 				},
 
@@ -839,7 +867,7 @@
 							doh.t(list, "drop down exists");
 							doh.t(isVisible(list), "drop down is visible");
 
-							var entries = dojo.query("li", list).filter(isVisible);
+							var entries = dojo.query(".dijitMenuItem", list).filter(isVisible);
 							doh.is("<h1>h1</h1>", dojo.trim(entries[0].innerHTML).toLowerCase(), "list #1 is rich text");
 						}), 500);
 
@@ -868,7 +896,7 @@
 							doh.t(list, "drop down exists");
 							doh.t(isVisible(list), "drop down is visible");
 
-							var entries = dojo.query("li", list).filter(isVisible);
+							var entries = dojo.query(".dijitMenuItem", list).filter(isVisible);
 							doh.is("United States of America", innerText(entries[0]), "list #1");
 						}), 900);
 
@@ -892,7 +920,7 @@
 							doh.t(list, "drop down exists");
 							doh.t(isVisible(list), "drop down is visible");
 
-							var entries = dojo.query("li", list).filter(isVisible);
+							var entries = dojo.query(".dijitMenuItem", list).filter(isVisible);
 							doh.is(2, entries.length, "two countries (but no continents) in drop down: " + list.innerHTML);
 							doh.is("Australia", innerText(entries[0]), "list #1");
 							doh.is("Argentina", innerText(entries[1]), "list #2");
@@ -1057,7 +1085,7 @@
 							doh.t(list && isVisible(list), "drop down is visible");
 							doh.is(combo.dropDown.getHighlightedOption(), findMenuItem(combo, "Alaska"), "Alaska is selected");
 
-							doh.t(combo._focused, "widget is focused");
+							doh.t(combo.focused, "widget is focused");
 
 							// Since the user down arrowed thru the choices, the value should be the current selection
 							doh.is('Alaska', combo.focusNode.value);
@@ -1098,7 +1126,7 @@
 							doh.t(list && isVisible(list), "drop down is visible");
 							doh.is(combo.dropDown.getHighlightedOption(), findMenuItem(combo, "Alaska"), "Alaska is selected");
 
-							doh.t(combo._focused, "widget is focused");
+							doh.t(combo.focused, "widget is focused");
 
 							// Since the user down arrowed thru the choices, the value should be the current selection
 							doh.is('Alaska', combo.focusNode.value);
@@ -1366,7 +1394,7 @@
 										var item = findMenuItem(combo, idx);
 										if(idx in test.results){
 											var expected = test.results[idx];
-											var actual = item.innerHTML.replace(/\/?span\s*[^>]*/ig, "");
+											var actual = item.innerHTML.replace(/\/?span\s*[^>]*@?/ig, "");
 											doh.is(expected, actual, idx);
 										}else{
 											doh.t(item == combo.dropDown.nextButton, "too many menu items: " + idx);

@@ -44,6 +44,9 @@ public class LibInfo implements ILibInfo {
     public String getVirtualRoot() {
         String vr = this.virtualRoot;
 
+        if(vr==null)
+        	return null;
+        
         if (vr.length()>0 && vr.charAt(0) == '.') {
             vr = vr.substring(1);
         }

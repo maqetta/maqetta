@@ -1,43 +1,45 @@
-dojo.provide("dojox.color._base");
-dojo.require("dojo.colors");
+define(["dojo/_base/kernel", "../main", "dojo/_base/lang", "dojo/_base/Color", "dojo/colors"], 
+	function(dojo, dojox, lang, Color, colors){
 
+var cx = lang.getObject("dojox.color", true);
+/*===== cx = dojox.color =====*/
+		
 //	alias all the dojo.Color mechanisms
-dojox.color.Color=dojo.Color;
-dojox.color.blend=dojo.blendColors;
-dojox.color.fromRgb=dojo.colorFromRgb;
-dojox.color.fromHex=dojo.colorFromHex;
-dojox.color.fromArray=dojo.colorFromArray;
-dojox.color.fromString=dojo.colorFromString;
+cx.Color=Color;
+cx.blend=Color.blendColors;
+cx.fromRgb=Color.fromRgb;
+cx.fromHex=Color.fromHex;
+cx.fromArray=Color.fromArray;
+cx.fromString=Color.fromString;
 
 //	alias the dojo.colors mechanisms
-dojox.color.greyscale=dojo.colors.makeGrey;
+cx.greyscale=colors.makeGrey;
 
-//	static methods
-dojo.mixin(dojox.color, {
+lang.mixin(cx,{
 	fromCmy: function(/* Object|Array|int */cyan, /*int*/magenta, /*int*/yellow){
 		//	summary
 		//	Create a dojox.color.Color from a CMY defined color.
 		//	All colors should be expressed as 0-100 (percentage)
-
-		if(dojo.isArray(cyan)){
+	
+		if(lang.isArray(cyan)){
 			magenta=cyan[1], yellow=cyan[2], cyan=cyan[0];
-		} else if(dojo.isObject(cyan)){
+		} else if(lang.isObject(cyan)){
 			magenta=cyan.m, yellow=cyan.y, cyan=cyan.c;
 		}
 		cyan/=100, magenta/=100, yellow/=100;
-
+	
 		var r=1-cyan, g=1-magenta, b=1-yellow;
-		return new dojox.color.Color({ r:Math.round(r*255), g:Math.round(g*255), b:Math.round(b*255) });	//	dojox.color.Color
+		return new Color({ r:Math.round(r*255), g:Math.round(g*255), b:Math.round(b*255) });	//	dojox.color.Color
 	},
-
+	
 	fromCmyk: function(/* Object|Array|int */cyan, /*int*/magenta, /*int*/yellow, /*int*/black){
 		//	summary
 		//	Create a dojox.color.Color from a CMYK defined color.
 		//	All colors should be expressed as 0-100 (percentage)
-
-		if(dojo.isArray(cyan)){
+	
+		if(lang.isArray(cyan)){
 			magenta=cyan[1], yellow=cyan[2], black=cyan[3], cyan=cyan[0];
-		} else if(dojo.isObject(cyan)){
+		} else if(lang.isObject(cyan)){
 			magenta=cyan.m, yellow=cyan.y, black=cyan.b, cyan=cyan.c;
 		}
 		cyan/=100, magenta/=100, yellow/=100, black/=100;
@@ -45,22 +47,22 @@ dojo.mixin(dojox.color, {
 		r = 1-Math.min(1, cyan*(1-black)+black);
 		g = 1-Math.min(1, magenta*(1-black)+black);
 		b = 1-Math.min(1, yellow*(1-black)+black);
-		return new dojox.color.Color({ r:Math.round(r*255), g:Math.round(g*255), b:Math.round(b*255) });	//	dojox.color.Color
+		return new Color({ r:Math.round(r*255), g:Math.round(g*255), b:Math.round(b*255) });	//	dojox.color.Color
 	},
-	
+		
 	fromHsl: function(/* Object|Array|int */hue, /* int */saturation, /* int */luminosity){
 		//	summary
 		//	Create a dojox.color.Color from an HSL defined color.
 		//	hue from 0-359 (degrees), saturation and luminosity 0-100.
-
-		if(dojo.isArray(hue)){
+	
+		if(lang.isArray(hue)){
 			saturation=hue[1], luminosity=hue[2], hue=hue[0];
-		} else if(dojo.isObject(hue)){
+		} else if(lang.isObject(hue)){
 			saturation=hue.s, luminosity=hue.l, hue=hue.h;
 		}
 		saturation/=100;
 		luminosity/=100;
-
+	
 		while(hue<0){ hue+=360; }
 		while(hue>=360){ hue-=360; }
 		
@@ -83,54 +85,52 @@ dojo.mixin(dojox.color, {
 			g=(1-luminosity)*g+2*luminosity-1;
 			b=(1-luminosity)*b+2*luminosity-1;
 		}
-		return new dojox.color.Color({ r:Math.round(r*255), g:Math.round(g*255), b:Math.round(b*255) });	//	dojox.color.Color
-	},
-	
-	fromHsv: function(/* Object|Array|int */hue, /* int */saturation, /* int */value){
-		//	summary
-		//	Create a dojox.color.Color from an HSV defined color.
-		//	hue from 0-359 (degrees), saturation and value 0-100.
-
-		if(dojo.isArray(hue)){
-			saturation=hue[1], value=hue[2], hue=hue[0];
-		} else if (dojo.isObject(hue)){
-			saturation=hue.s, value=hue.v, hue=hue.h;
-		}
-		
-		if(hue==360){ hue=0; }
-		saturation/=100;
-		value/=100;
-		
-		var r, g, b;
-		if(saturation==0){
-			r=value, b=value, g=value;
-		}else{
-			var hTemp=hue/60, i=Math.floor(hTemp), f=hTemp-i;
-			var p=value*(1-saturation);
-			var q=value*(1-(saturation*f));
-			var t=value*(1-(saturation*(1-f)));
-			switch(i){
-				case 0:{ r=value, g=t, b=p; break; }
-				case 1:{ r=q, g=value, b=p; break; }
-				case 2:{ r=p, g=value, b=t; break; }
-				case 3:{ r=p, g=q, b=value; break; }
-				case 4:{ r=t, g=p, b=value; break; }
-				case 5:{ r=value, g=p, b=q; break; }
-			}
-		}
-		return new dojox.color.Color({ r:Math.round(r*255), g:Math.round(g*255), b:Math.round(b*255) });	//	dojox.color.Color
+		return new Color({ r:Math.round(r*255), g:Math.round(g*255), b:Math.round(b*255) });	//	dojox.color.Color
 	}
 });
+	
+cx.fromHsv = function(/* Object|Array|int */hue, /* int */saturation, /* int */value){
+	//	summary
+	//	Create a dojox.color.Color from an HSV defined color.
+	//	hue from 0-359 (degrees), saturation and value 0-100.
 
-//	Conversions directly on dojox.color.Color
-dojo.extend(dojox.color.Color, {
+	if(lang.isArray(hue)){
+		saturation=hue[1], value=hue[2], hue=hue[0];
+	} else if (lang.isObject(hue)){
+		saturation=hue.s, value=hue.v, hue=hue.h;
+	}
+	
+	if(hue==360){ hue=0; }
+	saturation/=100;
+	value/=100;
+	
+	var r, g, b;
+	if(saturation==0){
+		r=value, b=value, g=value;
+	}else{
+		var hTemp=hue/60, i=Math.floor(hTemp), f=hTemp-i;
+		var p=value*(1-saturation);
+		var q=value*(1-(saturation*f));
+		var t=value*(1-(saturation*(1-f)));
+		switch(i){
+			case 0:{ r=value, g=t, b=p; break; }
+			case 1:{ r=q, g=value, b=p; break; }
+			case 2:{ r=p, g=value, b=t; break; }
+			case 3:{ r=p, g=q, b=value; break; }
+			case 4:{ r=t, g=p, b=value; break; }
+			case 5:{ r=value, g=p, b=q; break; }
+		}
+	}
+	return new Color({ r:Math.round(r*255), g:Math.round(g*255), b:Math.round(b*255) });	//	dojox.color.Color
+};
+lang.extend(Color,{
 	toCmy: function(){
 		//	summary
 		//	Convert this Color to a CMY definition.
 		var cyan=1-(this.r/255), magenta=1-(this.g/255), yellow=1-(this.b/255);
 		return { c:Math.round(cyan*100), m:Math.round(magenta*100), y:Math.round(yellow*100) };		//	Object
 	},
-	
+		
 	toCmyk: function(){
 		//	summary
 		//	Convert this Color to a CMYK definition.
@@ -142,7 +142,7 @@ dojo.extend(dojox.color.Color, {
 		yellow = (1-b-black)/(1-black);
 		return { c:Math.round(cyan*100), m:Math.round(magenta*100), y:Math.round(yellow*100), b:Math.round(black*100) };	//	Object
 	},
-	
+		
 	toHsl: function(){
 		//	summary
 		//	Convert this Color to an HSL definition.
@@ -167,7 +167,7 @@ dojo.extend(dojox.color.Color, {
 		}
 		return { h:h, s:Math.round(s*100), l:Math.round(l*100) };	//	Object
 	},
-
+	
 	toHsv: function(){
 		//	summary
 		//	Convert this Color to an HSV definition.
@@ -185,9 +185,12 @@ dojo.extend(dojox.color.Color, {
 			}else{
 				h = 240 + 60*(r-g)/delta;
 			}
-
+	
 			if(h<0){ h+=360; }
 		}
 		return { h:h, s:Math.round(s*100), v:Math.round(max*100) };	//	Object
 	}
+});
+
+return cx;
 });

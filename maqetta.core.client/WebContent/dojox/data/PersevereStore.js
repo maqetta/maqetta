@@ -1,4 +1,4 @@
-define("dojox/data/PersevereStore", ["dojo", "dojox", "dojox/data/JsonQueryRestStore", "dojox/rpc/Client"], function(dojo, dojox) {
+define(["dojo", "dojox", "require", "dojox/data/JsonQueryRestStore", "dojox/rpc/Client", "dojo/_base/url"], function(dojo, dojox, require) {
 
 // PersevereStore is an extension of JsonRestStore to handle Persevere's special features
 
@@ -8,7 +8,7 @@ dojo.declare("dojox.data.PersevereStore",dojox.data.JsonQueryRestStore,{
 	useFullIdInQueries: true, // in JSONQuerys use the full id
 	jsonQueryPagination: false // use the Range headers instead
 });
-	
+
 dojox.data.PersevereStore.getStores = function(/*String?*/path,/*Boolean?*/sync){
 	// summary:
 	//		Creates Dojo data stores for all the table/classes on a Persevere server
@@ -25,7 +25,7 @@ dojox.data.PersevereStore.getStores = function(/*String?*/path,/*Boolean?*/sync)
 	path = (path && (path.match(/\/$/) ? path : (path + '/'))) || '/';
 	if(path.match(/^\w*:\/\//)){
 		// if it is cross-domain, we will use window.name for communication
-		dojo.require("dojox.io.xhrScriptPlugin");
+		require("dojox/io/xhrScriptPlugin");
 		dojox.io.xhrScriptPlugin(path, "callback", dojox.io.xhrPlugins.fullHttpAdapter);
 	}
 	var plainXhr = dojo.xhr;
@@ -103,7 +103,7 @@ dojox.data.PersevereStore.getStores = function(/*String?*/path,/*Boolean?*/sync)
 dojox.data.PersevereStore.addProxy = function(){
 	// summary:
 	//		Invokes the XHR proxy plugin. Call this if you will be using x-site data.
-	dojo.require("dojox.io.xhrPlugins"); // also not necessary, but we can register that Persevere supports proxying
+	require("dojox/io/xhrPlugins"); // also not necessary, but we can register that Persevere supports proxying
 	dojox.io.xhrPlugins.addProxy("/proxy/");
 };
 

@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertImageTitle: "Indsæt billede",
 	url: "Billede",
@@ -9,3 +11,5 @@
 	prePopuTextBrowse: " eller søg efter en lokal fil."
 })
 
+//end v1.x content
+);

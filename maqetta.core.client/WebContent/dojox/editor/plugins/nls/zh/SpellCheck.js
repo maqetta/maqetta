@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	widgetLabel: "批处理拼写检查",
 	unfound: "未找到",
@@ -14,3 +16,5 @@
 	iSkipAll: "跳过所有与此处相同的地方",
 	iMsg: "没有拼写建议"
 })
+//end v1.x content
+);

@@ -1,8 +1,20 @@
+<!--[if IE 7]>
+<!DOCTYPE>
+<html lang="en">
+	<head>
+<![endif]-->
+<!--[if IE 8]>
+<!DOCTYPE>
+<html lang="en">
+    <head>
+           <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
+<![endif]-->
+<![if gte IE 9]>
 <!DOCTYPE HTML>
-<html>
-<head>
+<html lang="en">
+	<head>
+<![endif]>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
 <title>Chart 2D: dynamics</title>
 <style type="text/css">
 	@import "../../../dojo/resources/dojo.css";
@@ -34,6 +46,8 @@ dojo.require("dojox.charting.themes.CubanShirts");
 dojo.require("dojox.charting.widget.Legend");
 
 dojo.require("dojox.lang.functional.sequence");
+
+dojo.require("dojo.parser");
 
 var chart, legend, size = 10, magnitude = 30;
 
@@ -148,6 +162,8 @@ addSeries = function(n){
 </head>
 <body class="tundra">
 <h1>Chart 2D: dynamics</h1>
+		<button id="reset1" type="reset" dojoType="dijit.form.Button">Reset with no onClick handler should reset</button>
+
 <table>
 	<tr>
 		<td>Plot:</td>

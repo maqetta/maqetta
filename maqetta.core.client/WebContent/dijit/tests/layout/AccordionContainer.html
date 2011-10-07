@@ -25,13 +25,15 @@
 
 	<script type="text/javascript">
 		dojo.require("doh.runner");
-		dojo.require("dijit.dijit"); // optimize: load dijit layer
+		dojo.require("dojo.parser");
+		dojo.require("dijit.registry");
+		dojo.require("dijit.form.Button");
 		dojo.require("dijit.layout.AccordionContainer");
 		dojo.require("dijit.layout.ContentPane");
 
 		var accordion;
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			doh.register("basic",
 				[
 					{
@@ -414,6 +416,39 @@
 				}
 			]);
 
+			doh.register("markup", [
+				{
+					name: "create",
+					runTest: function(t){
+						dojo.parser.parse();
+
+						accordion = dijit.byId("markupAccordion");
+
+						var titles = dojo.query(".dijitAccordionText", accordion.domNode);
+						t.is(3, titles.length, "number of titles");
+						t.is("Other Lazy Load Pane", titles[2].innerHTML);
+
+						var children = accordion.getChildren();
+						t.is(3, children.length, "number of children (ie, contentpanes)");
+					}
+				},
+				{
+					name: "addChild after pane 1",
+					runTest: function(t){
+						pane1half = new dijit.layout.ContentPane({id: "otherPane1half", title: "pane 1.5", content: "this is pane 1.5"});
+						accordion.addChild(pane1half, 1);
+
+						var titles = dojo.query(".dijitAccordionText", accordion.domNode);
+						t.is(4, titles.length, "number of titles");
+						t.is("pane 1.5", titles[1].innerHTML);
+
+						var children = accordion.getChildren();
+						t.is(4, children.length, "number of children (ie, contentpanes)");
+						t.is(pane1half, children[1], "second child is the newly inserted one");
+					}
+				}
+			]);
+
 			doh.run();
 		});
 	</script>
@@ -421,6 +456,55 @@
 <body class="claro" style="padding: 50px;">
 
 	<h1 class="testTitle">AccordionContainer Automated Tests</h1>
+
+	<h2 class="testTitle">Markup Accordion</h2>
+	<div id="markupAccordion" data-dojo-type="dijit.layout.AccordionContainer"
+		 data-dojo-props='style:"width: 400px; height: 300px; overflow: hidden"'>
+		<div id="pane1" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='selected:true,
+			title:"A Simple Pane", iconClass:"dijitEditorIcon dijitEditorIconSave", tooltip:"tooltip for simple pane" '>
+				<select>
+					<option>red</option>
+					<option>blue</option>
+					<option>green</option>
+				</select>
+				<p>
+				Nunc consequat nisi vitae quam. Suspendisse sed nunc. Proin
+				suscipit porta magna. Duis accumsan nunc in velit. Nam et nibh.
+				Nulla facilisi. Cras venenatis urna et magna. Aenean magna mauris,
+				bibendum sit amet, semper quis, aliquet nec, sapien.  Aliquam
+				aliquam odio quis erat. Etiam est nisi, condimentum non, lacinia
+				ac, vehicula laoreet, elit. Sed interdum augue sit amet quam
+				dapibus semper. Nulla facilisi. Pellentesque lobortis erat nec
+				quam.
+				</p>
+				<p>
+				Sed arcu magna, molestie at, <input value="fringilla in, sodales"/> fringilla in, sodales eu, elit.
+				Curabitur mattis lorem et est. Quisque et tortor. Integer bibendum
+				vulputate odio. Nam nec ipsum. Vestibulum mollis eros feugiat
+				augue. Integer fermentum odio lobortis odio. Nullam mollis nisl non
+				metus. Maecenas nec nunc eget pede ultrices blandit. Ut non purus
+				ut elit convallis eleifend. Fusce tincidunt, justo quis tempus
+				euismod, magna nulla viverra libero, sit amet lacinia odio diam id
+				risus. Ut varius viverra turpis. Morbi urna elit, imperdiet eu,
+				porta ac, pharetra sed, nisi. Etiam ante libero, ultrices ac,
+				faucibus ac, cursus sodales, nisl. Praesent nisl sem, fermentum eu,
+				consequat quis, varius interdum, nulla. Donec neque tortor,
+				sollicitudin sed, consequat nec, facilisis sit amet, orci. Aenean
+				ut eros sit amet ante pharetra interdum.
+				</p>
+		</div>
+
+		<!-- test lazy loading.   margin style for testing size calculations. -->
+		<div id="lazyLoadPane1" data-dojo-type="dijit.layout.ContentPane"
+			 data-dojo-props='title:"Lazy Load Pane", href:"doc1.html"'></div>
+
+		<!-- test lazy loading.   margin style for testing size calculations. -->
+		<div id="lazyLoadPane2" data-dojo-type="dijit.layout.ContentPane"
+			 data-dojo-props='title:"Other Lazy Load Pane", href:"doc1.html"'></div>
+
+	</div>
+
+	<h2 class="testTitle">Programmatic Accordions</h2>
 
 </body>
 </html>

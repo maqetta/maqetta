@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	widgetLabel: "Wsadowe sprawdzanie pisowni",
 	unfound: "Nie znaleziono",
@@ -15,3 +17,5 @@
 	iMsg: "Brak propozycji pisowni"
 })
 
+//end v1.x content
+);

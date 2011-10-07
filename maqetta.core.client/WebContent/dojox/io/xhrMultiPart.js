@@ -1,7 +1,12 @@
-dojo.provide("dojox.io.xhrMultiPart");
-dojo.require("dojox.uuid.generateRandomUuid");
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/array",
+	"dojo/_base/xhr",
+	 "dojo/query",
+	"dojox/uuid/generateRandomUuid"
+], function(dojo, array, xhr, query, generateRandomUuid){
+	dojo.getObject("io.xhrMultiPart", true, dojox);
 
-(function(){
 	/*=====
 	dojox.io.__xhrContentArgs = function(){
 		//	name: String
@@ -124,7 +129,7 @@ dojo.require("dojox.uuid.generateRandomUuid");
 		}
 
 		// unique guid as a boundary value for multipart posts
-		var boundary=dojox.uuid.generateRandomUuid(), tmp=[], out="";
+		var boundary=generateRandomUuid(), tmp=[], out="";
 		if(args["file"] || args["content"]){
 			var v = args["file"] || args["content"];
 			dojo.forEach((dojo.isArray(v) ? v : [v]), function(item){
@@ -132,7 +137,7 @@ dojo.require("dojox.uuid.generateRandomUuid");
 			});
 		}
 		else if(args["form"]){
-			if(dojo.query("input[type=file]", args["form"]).length){
+			if(query("input[type=file]", args["form"]).length){
 				throw new Error("dojox.io.xhrMultiPart cannot post files that are values of an INPUT TYPE=FILE.  Use dojo.io.iframe.send() instead.");
 			}
 			tmp = _partsFromNode(args["form"], boundary);
@@ -149,5 +154,7 @@ dojo.require("dojox.uuid.generateRandomUuid");
 			contentType: "multipart/form-data; boundary=" + boundary,
 			postData: out
 		}));	//	dojo.Deferred
-	}
-})();
+	};
+
+	return dojox.io.xhrMultiPart;
+});

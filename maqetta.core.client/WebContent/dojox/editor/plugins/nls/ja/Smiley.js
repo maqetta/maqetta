@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	smiley: "顔文字の挿入",
 	emoticonSmile: "微笑",
@@ -20,3 +22,5 @@
 	emoticonCrying: "泣く"
 })
 
+//end v1.x content
+);

@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	smiley: "Εισαγωγή εικονιδίου συναισθήματος",
 	emoticonSmile: "Χαμόγελο",
@@ -20,3 +22,5 @@
 	emoticonCrying: "Κλάμα"
 })
 
+//end v1.x content
+);

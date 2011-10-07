@@ -9,8 +9,7 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
 		<!-- functions to help test -->
 		<script type="text/javascript" src="../../helpers.js"></script>
@@ -55,7 +54,7 @@
 				return out.join("");
 			}
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../EnterKeyHandling.html');
 
 				var metaKey = dojo.isMac? {meta: true} : {ctrl: true};
@@ -207,11 +206,11 @@
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(function(){
-                                editor._sCall("selectElementChildren", [node]);
+								editor._sCall("selectElementChildren", [node]);
 							}, 500);
 							
 							//Keyboard kill the selection and shift position between i and s.
-							if(!dojo.isMoz || dojo.isMac) {doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 100, {}); }
+							if(!dojo.isMoz || dojo.isMac){doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 100, {}); }
 							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 100, {});
 							doh.robot.keyPress(dojo.keys.ENTER, 500);
 
@@ -244,11 +243,11 @@
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(function(){
-                                editor._sCall("selectElementChildren", [node]);
+								editor._sCall("selectElementChildren", [node]);
 							}, 500);
 							
 							//Keyboard kill the selection and shift position between i and s.
-							if(!dojo.isMoz || dojo.isMac) {doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 100, {}); }
+							if(!dojo.isMoz || dojo.isMac){doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 100, {}); }
 							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 100, {});
 							doh.robot.keyPress(dojo.keys.ENTER, 500);
 
@@ -281,11 +280,11 @@
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(function(){
-                                editor._sCall("selectElementChildren", [node]);
+								editor._sCall("selectElementChildren", [node]);
 							}, 500);
 							
 							//Keyboard kill the selection and shift position between i and s.
-							if(!dojo.isMoz || dojo.isMac) {doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 100, {}); }
+							if(!dojo.isMoz || dojo.isMac){doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 100, {}); }
 							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 100, {});
 							doh.robot.keyPress(dojo.keys.ENTER, 500);
 
@@ -326,8 +325,7 @@
 							doh.robot.sequence(d.getTestCallback(function(){
 								var value = editor.get('value');
 								value = value.replace(/\xA0/g, "");
-								var expVal = dojo.isWebKit? 'testingCopyAndPastetestingCopyAndPastetestingCopyAndPaste<div></div>' : '<div>testingCopyAndPastetestingCopyAndPastetestingCopyAndPaste</div><div></div>';
-								doh.is(expVal,
+								doh.is('<div>testingCopyAndPastetestingCopyAndPastetestingCopyAndPaste</div><div></div>',
 										value,
 										"get('value')");
 							}), 1000);
@@ -365,8 +363,8 @@
 								// paragraphs.
 								var value = editor.get('value');
 								value = value.replace(/\xA0/g, "");
-								var expVal = dojo.isWebKit? 'testingCopyAndPastetestingCopyAndPastetestingCopyAndP<div>aste</div>' : '<div>testingCopyAndPastetestingCopyAndPastetestingCopyAndP</div><div>aste</div>';
-								doh.is(expVal,
+
+								doh.is('<div>testingCopyAndPastetestingCopyAndPastetestingCopyAndP</div><div>aste</div>',
 									value,
 									"get('value')");
 							}), 1000);
@@ -390,11 +388,11 @@
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(function(){
-                                editor._sCall("selectElementChildren", [node]);
+								editor._sCall("selectElementChildren", [node]);
 							}, 500);
 							
 							//Keyboard kill the selection and shift position between i and s.
-							if(!dojo.isMoz || dojo.isMac) {doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 100, {}); }
+							if(!dojo.isMoz || dojo.isMac){doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 100, {}); }
 							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 100, {});
 							doh.robot.keyPress(dojo.keys.ENTER, 500);
 
@@ -406,6 +404,29 @@
 								doh.t(val.indexOf("<p><b>s</b>") > 0, "end");
 							}), 500);
 
+							return d;
+						}
+					},
+					{
+						name: "shift enter to replace all content in p",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
+							var editor = dijit.byId("p2");
+							editor.set('value','<p>ab</p>');
+							dojo.withGlobal(editor.window, function(){
+								var selection=dijit.range.getSelection(dojo.global);
+								selection.removeAllRanges();
+								var range=dijit.range.create(dojo.global);
+								range.setStart(editor.editNode.firstChild, 0);
+								range.setEnd(editor.editNode.firstChild, 1);
+								selection.addRange(range);
+							});
+							doh.robot.keyPress(dojo.keys.ENTER, 500, {shift: true});
+							doh.robot.sequence(d.getTestCallback(function(){
+								var val = editor.get("value");
+								doh.is(val, '<p><br /></p>');
+							}), 1000);
 							return d;
 						}
 					},

@@ -5,7 +5,7 @@ dojo.require("dijit.Menu");
 dojo.require("dijit.form.ValidationTextBox");
 dojo.require("dijit.form.Textarea");
 dojo.require("dijit.form.Button");
-dojo.require("dijit.form.CheckBox");
+dojo.require("dijit.form.RadioButton");
 dojo.require("dijit.form.FilteringSelect");
 
 (function(){
@@ -24,7 +24,7 @@ dojo.declare("dojox.data.ItemExplorer", dijit.Tree, {
 		dojo.mixin(this, options);
 		var self = this;
 		var initialRootValue = {};
-		var root = this.rootModelNode = {value:initialRootValue,id:"root"};
+		var root = (this.rootModelNode = {value:initialRootValue,id:"root"});
 
 		this._modelNodeIdMap = {};
 		this._modelNodePropMap = {};

@@ -30,7 +30,7 @@
 		dojo.require("dijit._editor.plugins.LinkDialog");
 		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
 
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			// Dummy simple plugin for testing that filters registered this way work
 			// properly with content setting on load.
 			dojo.declare("dijit.tests.editor.TestFilter", [dijit._editor._Plugin], {
@@ -51,8 +51,8 @@
 				value: "Custom Initial Content."
 			}, "programmatic3");
 
-			var progEditor = new dijit.Editor({
-				contentPreFilters: [function(txt) { return txt; }]		
+			var progEditor2 = new dijit.Editor({
+				contentPreFilters: [function(txt){ return txt; }]
 			}, "programmatic4");
 		});
 
@@ -78,7 +78,7 @@
 				setTimeout(function(){ try {
 					dijit.byId('automated').document.execCommand('bold', false, false);
 					document.getElementById('disabledOK').checked = (dijit.byId('automated').document.queryCommandState('bold') == false);
-				} catch(e) { document.getElementById('disabledOK').checked = true; }}, 0);
+				}catch(e){ document.getElementById('disabledOK').checked = true; }}, 0);
 			}
 		</script
 		><script type='dojo/method' data-dojo-event='onChange'>

@@ -60,8 +60,12 @@ dojo.declare("davinci.ui.UserLibraries",   [dijit._Widget, dijit._Templated], {
 			uiArray.push("<td class='columna'><input type='checkbox' libItemCheck='"+ i +"'"+ checkedString +"></input></td>");
 			uiArray.push("<td class='columnb'>" + name + "</td>");
 			uiArray.push("<td class='columnc'>" + this._allLibs[i]['version'] + "</td>");
-			uiArray.push("<td class='columnd'><input type='text' value='" + this._allLibs[i].initRoot + "' libItemPath='"+i+ "'></input></td>");
 			
+			if(this._allLibs[i].initRoot!=null){
+				uiArray.push("<td class='columnd'><input type='text' value='" + this._allLibs[i].initRoot + "' libItemPath='"+i+ "'></input></td>");
+			}else{
+				uiArray.push("<td class='columnd'></td>");
+			}
 			uiArray.push("</tr>");
 			
 		}
@@ -82,11 +86,7 @@ dojo.declare("davinci.ui.UserLibraries",   [dijit._Widget, dijit._Templated], {
 		if(davinci.Runtime.singleProjectMode())
 			return davinci.resource.getRoot().getName();
 	},
-	
-	_getLibRoot: function( id, version){
-		return this._getUserLib(id,version) || this._getGlobalLib(id,version);
-	},
-	
+
 	_getGlobalLib: function( id, version){
 		
 		for(var i=0;i<this._allLibs.length;i++){
@@ -109,15 +109,23 @@ dojo.declare("davinci.ui.UserLibraries",   [dijit._Widget, dijit._Templated], {
 		this._handles = [];
 	},
 	
-	_getUserLib:function(id,version){
+	_getLibRoot:function(id,version){
 		for(var i=0;i<this._userLibs.length;i++){
 			if(this._userLibs[i].id==id && this._userLibs[i].version==version)
 				return this._userLibs[i]['root'];
 		}
+		return this._getGlobalLib(id,version);
+	},
+	
+	_getUserLib:function(id,version){
+		for(var i=0;i<this._userLibs.length;i++){
+			if(this._userLibs[i].id==id && this._userLibs[i].version==version)
+				return true;
+		}
 		
 	},
 	_makeChange : function(values){
-		
+	
 		if(values.length){
 			var isOk = davinci.library.modifyLib(values);
 			
@@ -198,6 +206,7 @@ dojo.declare("davinci.ui.UserLibraries",   [dijit._Widget, dijit._Templated], {
 		}
 		nodeList = dojo.query("[libItemPath]", this.domNode );
 		for(var i =0;i<nodeList.length;i++){
+			
 			var element = parseInt(dojo.attr(nodeList[i], "libItemPath"));
 			var value = dojo.attr(nodeList[i], "value");
 			if(this._allLibs[element]['initRoot']!= value){

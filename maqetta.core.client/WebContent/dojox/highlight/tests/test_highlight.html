@@ -12,7 +12,7 @@
 		@import "../resources/highlight.css";
 
 		/* additional styling for this test case */
-		pre code[class]:after {
+		pre.item code[class]:after {
 		  content: 'highlight: ' attr(class);
 		  display: block; text-align: right;
 		  font-size: smaller;
@@ -35,8 +35,7 @@
 		}
 	</style>
 
-	<script type="text/javascript" djConfig="parseOnLoad: true, isDebug: true" src="../../../dojo/dojo.js"></script>
-	<script type="text/javascript" src="../_base.js"></script>
+	<script type="text/javascript" djConfig="parseOnLoad: false, isDebug: true" src="../../../dojo/dojo.js"></script>
 
 	<script type="text/javascript">
 		// initHighlightOnLoad is deprecated.
@@ -47,35 +46,27 @@
 		// will "do it's best" based on the language maps available
 		// at the time of construction.
 		//
-		dojo.require("dojox.highlight");
-
-		// several layer-like files have been provided grouping
-		// similar langauges, and a catch all language module
-		// dojox.highlight.languages._all is available for "best results"
-
-		// we need some language definitions:		
-		dojo.require("dojox.highlight.languages._all");
-		//dojo.require("dojox.highlight.languages._static");
-		//dojo.require("dojox.highlight.languages._dynamic");
-		//dojo.require("dojox.highlight.languages._www");
-
-		var lazyCode = function(){
-			
+		
+		require(["dojo/parser", "dojox/highlight", "dojox/highlight/languages/_all", "dojox/highlight/widget/Code"], function(){
+		    
 			dojo.query("code").forEach(dojox.highlight.init);
-			
 			dojo.xhrGet({
-				url: "../../../dojo/_base.js",
+				url: "../../../dojo/aspect.js",
 				load: function(data){
 					var n = dojo.byId("foobar"),
 						c = document.createElement('div'),
 						e = n.parentNode.parentNode;
-					c.innerHTML = '<pre><code class="javascript">' + data.replace(/\</gi,"&lt;") + '</code></pre>';
+					c.innerHTML = '<pre class="item"><code class="javascript">' + data.replace(/\</gi,"&lt;") + '</code></pre>';
 					e.replaceChild(c.firstChild, n.parentNode);
 					dojo.query("pre > code", e).forEach(dojox.highlight.init);
 				}
 			});
-		};	
-		dojo.addOnLoad(lazyCode); 
+			
+			dojo.ready(function(){
+				dojo.parser.parse();
+			})
+
+		});
 
 	</script>
 </head>
@@ -94,7 +85,7 @@
 
 	<p>Some Python code:</p>
 
-<pre><code>@requires_authorization
+<pre class="item"><code>@requires_authorization
 def somefunc(param1, param2):
   '''A docstring'''
   if param1 &gt; param2: # interesting
@@ -107,11 +98,11 @@ class SomeClass:<br>    pass
 
 	<p>A chunk of PHP: </p>
 
-<pre><code class="php">
+<pre class="item"><code class="php">
 $opAr = array (    "-a|--append", // a or append toggle, nothing extra
         "-i|--input:", // i or input with next input being needed
         "-l|--list:",           // l with input needed
-		//"--foo",     // broken
+        //"--foo",     // broken
         "-f:",           // f with no input
         "--wot:"      // wot with input, no short
         );
@@ -178,7 +169,7 @@ return $return;
 
 	<p>A custom XML document:</p>
 
-<pre><code>&lt;?xml version="1.0"?&gt;
+<pre class="item"><code>&lt;?xml version="1.0"?&gt;
 &lt;response value="ok"&gt;
   &lt;text&gt;Ok&lt;/text&gt;
   &lt;comment/&gt;
@@ -190,7 +181,7 @@ return $return;
 
 	<p>Some HTML code:</p>
 
-<pre><code>&lt;head&gt;
+<pre class="item"><code>&lt;head&gt;
   &lt;title&gt;Title&lt;/title&gt;
 &lt;body&gt;
   &lt;p class="something"&gt;Something&lt;/p&gt;
@@ -203,7 +194,7 @@ return $return;
 
 	<p>HTML with Django templates:</p>
 
-<pre><code>{% if articles|length %}
+<pre class="item"><code>{% if articles|length %}
 {% for article in articles %}
 
 {# Striped table #}
@@ -223,7 +214,7 @@ multiline.
 
 	<p>Some CSS code:</p>
 
-<pre><code>body, 
+<pre class="item"><code>body, 
 html {
   font: Tahoma, Arial, san-serif;
 }
@@ -240,20 +231,20 @@ p[lang=ru] {
 
 	<p>Explicit Python highlight:</p>
 
-<pre><code class="python">for x in [1, 2, 3]:
+<pre class="item"><code class="python">for x in [1, 2, 3]:
   count(x)
 </code></pre>
 
 	<p>Disabled highlighting:</p>
 
-<pre><code class="no-highlight">&lt;div id="contents"&gt;
+<pre class="item"><code class="no-highlight">&lt;div id="contents"&gt;
   &lt;p&gt;Hello, World!
 &lt;/div&gt;
 </code></pre>
 
 	<p>Normal dojo-looking code</p>
 
-<pre><code>
+<pre class="item"><code>
 dojo.provide("some.object");
 dojo.declare("some.object",null,{
 	param: "value",
@@ -282,7 +273,7 @@ dojo.addOnLoad(function(){
 
 	<p>Lazy, xhr'd code:</p>
 
-<pre><code id="foobar"></code></pre>
+<pre class="item"><code id="foobar"></code></pre>
 
 <hr>
 
@@ -292,7 +283,7 @@ dojo.addOnLoad(function(){
 
 	<p>Markuped code (python), no language was specified:</p>
 
-<pre><code dojoType="dojo.highlight.Code">@requires_authorization
+<div data-dojo-type="dojox.highlight.widget.Code">@requires_authorization
 def somefunc(param1, param2):
   '''A docstring'''
   if param1 &gt; param2: # interesting
@@ -301,11 +292,11 @@ def somefunc(param1, param2):
   return param2 - param1 + 1
   
 class SomeClass:<br>    pass
-</code></pre>
+</div>
 
 	<p>Markuped code, "python" was specified:</p>
 
-<pre><code dojoType="dojo.highlight.Code" class="python">
+<div data-dojo-type="dojox.highlight.widget.Code" class="python">
 @requires_authorization
 def somefunc(param1, param2):
   '''A docstring'''
@@ -315,11 +306,11 @@ def somefunc(param1, param2):
   return param2 - param1 + 1
   
 class SomeClass:<br>    pass
-</code></pre>
+</div>
 
 	<p>Some XQuery code:</p>
 
-<pre><code class="xquery">
+<pre class="item"><code class="xquery">
 declare variable $my:entityName as xs:string external;
 
 declare variable $databaseURI := concat('jdbc://getCreditDefaultSwapsByEntityName?cd&#37;&amp;', $my:entityName); 
@@ -355,7 +346,7 @@ declare function local:equityRows($root) {
 
 	<p>Some Java code:</p>
 
-<pre><code class="java">
+<pre class="item"><code class="java">
 import java.io.*;
 public final class DOHRobot extends Applet{
 	// The last reported mouse x,y.
@@ -419,7 +410,7 @@ public final class DOHRobot extends Applet{
 
 	<p>A Groovy fragment:</p>
 
-<pre><code class="groovy">
+<pre class="item"><code class="groovy">
 /*
 * A comment test block
 * 

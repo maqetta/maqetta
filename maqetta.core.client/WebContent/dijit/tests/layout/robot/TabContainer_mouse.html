@@ -18,7 +18,7 @@
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_TabContainer.html');
 				doh.register("mouse tests",[
 					
@@ -55,7 +55,7 @@
 							
 							doh.robot.sequence(d.getTestCallback(function(){
 								// verify tab button is selected
-								doh.is('mainTabContainer_tablist_tab3', dojo.global.dijit._curFocus.id, "verify chosen tab is in its chosen state and focused");
+								doh.is('mainTabContainer_tablist_tab3', dojo.global.dijit.focus.curNode.id, "verify chosen tab is in its chosen state and focused");
 
 								// verify pane is shown
 								doh.is("tab3", tc.selectedChildWidget.id, "verify that the appropiate contentpane is displayed");
@@ -166,7 +166,7 @@
 	
 								var isTabVisible = (tablistLeft < tabLeft && tablistRight > tabRight);
 
-								doh.t(isTabVisible, "verify tab is in display area")
+								doh.t(isTabVisible, "verify tab is in display area");
 								
 								// And verify that pane is shown
 								doh.is("tab4href", tc.selectedChildWidget.id, "verify that the appropiate contentpane is displayed");

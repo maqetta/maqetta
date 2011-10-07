@@ -4,17 +4,17 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>Settings</title>
-		<link href="../themes/android/android.css" rel="stylesheet"></link>
-		<link href="../themes/buttons.css" rel="stylesheet"></link>
+		<link href="../themes/android/base.css" rel="stylesheet">
+		<link href="../themes/common/domButtons/DomButtonCheckOn.css" rel="stylesheet">
+		<link href="../themes/common/domButtons/DomButtonCheckOff.css" rel="stylesheet">
 
 		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
 
 		<script language="JavaScript" type="text/javascript">
-			//dojo.require("dojo.parser"); // Use the lightweight parser.
-			dojo.require("dojox.mobile.parser");
-			dojo.require("dojox.mobile");
-			dojo.requireIf(!dojo.isWebKit, "dojox.mobile.compat");
-			dojo.addOnLoad(function(){
+			dojo.require("dojox.mobile");			// This is a mobile app.
+			dojo.require("dojox.mobile.parser");	// This mobile app supports running on desktop browsers
+			dojo.require("dojox.mobile.compat");	// This mobile app uses declarative programming with fast mobile parser
+			dojo.ready(function(){
 				var ul = dojo.byId("list");
 				for(var i = 0, len = ul.childNodes.length; i < len; i++){
 					var li = ul.childNodes[i];
@@ -38,7 +38,7 @@
 			}
 		</script>
 	</head>
-	<body>
+	<body style="visibility:hidden;">
 		<div id="settings" dojoType="dojox.mobile.View" selected="true">
 			<h1 dojoType="dojox.mobile.Heading">Settings</h1>
 			<ul dojoType="dojox.mobile.EdgeToEdgeList" iconBase="images/a-icon-1-41x41.png">
@@ -78,18 +78,19 @@
 				<li dojoType="dojox.mobile.ListItem" icon="images/a-icon-12.png" moveTo="location">
 					Text-to-speech
 				</li>
+			</ul>
 		</div>
 		<div id="location" dojoType="dojox.mobile.View">
 			<h1 dojoType="dojox.mobile.Heading" back="Settings" moveTo="settings">Location &amp; security settings</h1>
 			<h2 class="mblHeading">My Location</h2>
 			<ul id="list" dojoType="dojox.mobile.EdgeToEdgeList">
-				<li class="mblVariableHeight" dojoType="dojox.mobile.ListItem" btnClass="mblCheckOffButton">
+				<li class="mblVariableHeight" dojoType="dojox.mobile.ListItem" btnClass="mblDomButtonCheckOff">
 					Use wireless networks
 					<div class="mblListItemSubText">
 						See location in applications (such as Maps) using wireless networks
 					</div>
 				</li>
-				<li class="mblVariableHeight" dojoType="dojox.mobile.ListItem" btnClass="mblCheckOnButton">
+				<li class="mblVariableHeight" dojoType="dojox.mobile.ListItem" btnClass="mblDomButtonCheckOn">
 					Use GPS satellites
 					<div class="mblListItemSubText">
 						When locating, accurate to street level (uncheck to conserve battery)

@@ -15,24 +15,26 @@
 	}
 </style>
 
-<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true, fontSizeWatch: true"></script>
+<script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="isDebug: true, fontSizeWatch: true" ></script>
 <script type="text/javascript">
-	
+
 	dojo.require("dojox.html.styles");
-	
+
 	getSelectedStyleSheet = function(){
 		if(dojo.byId("ssDefault").checked) return false;
 		if(dojo.byId("ssExtra").checked) return "ssExtra";
 	}
-	
+
 	enableStyleSheet = function(){
 		dojox.html.enableStyleSheet(getSelectedStyleSheet());
 	}
-	
+
 	disableStyleSheet = function(){
 		dojox.html.disableStyleSheet(getSelectedStyleSheet());
 	}
-	dojo.addOnLoad(function(){
+
+	dojo.ready(function(){
+
 		console.log(dojo.version.toString());
 		var styles = [
 			"p { font-size:24; margin:20px;}",
@@ -42,21 +44,21 @@
 			"p span {font-weight:bold;}",
 			"span {font-style:italic;}"
 		]
-		
+
 		var col = dojo.byId("btnCol");
 		dojo.forEach(styles, function(s){
-		
+
 			var sel = s.substring(0,s.indexOf("{")-1);
 			var des = s.substring(s.indexOf("{")+1, s.indexOf("}") );
-			
+
 			var div = dojo.doc.createElement("div");
 			col.appendChild(div);
-			
+
 			var d = dojo.doc.createElement("span");
 			dojo.style(d, "display", "block");
 			d.innerHTML = s;
 			div.appendChild(d);
-			
+
 			var b = dojo.doc.createElement("button");
 			div.appendChild(b);
 			b.innerHTML = "Insert";
@@ -71,14 +73,12 @@
 				console.log("Rem:", s);
 				dojox.html.removeCssRule(sel, des);
 			});
-			
+
 		});
-		
-		
-		
-		
+
 		console.log("Style Sheets tests:");
 		console.log("dojox.html.getStyleSheet [is false]:", dojox.html.getStyleSheet());
+
 		// insert a style, which creates our dynamic style sheet:
 		var sel = styles[0].substring(0,styles[0].indexOf("{")-1);
 		var des = styles[0].substring(styles[0].indexOf("{")+1, styles[0].indexOf("}") );
@@ -88,6 +88,7 @@
 		dojo.forEach(dojox.html.getToggledStyleSheets(), function(s){
 			console.log("    toggled style sheet:", s.title, "enabled:", !s.disabled);
 		});
+
 		var ss = dojox.html.getStyleSheets(); //return object
 		for(var nm in ss){
 			//display either title or href
@@ -95,11 +96,11 @@
 			if(!name){ name = "*Persistant*"}
 			console.log("    style sheet:", name);
 		}
+
 		console.log("dojox.html.getStyleSheet [href:dijitTests.css, object]:", dojox.html.getStyleSheet("dijitTests.css"));
 		console.log("dojox.html.getStyleSheet [title:BadStyleName]:", dojox.html.getStyleSheet("BadStyleName"));
-	
-	});
 
+	});
 </script>
 <style>
 	#btnCol{
@@ -110,7 +111,7 @@
 	}
 	body table td{
 		vertical-align:top;
-		
+
 	}
 	button{
 		width:70px;
@@ -144,24 +145,24 @@ to create a second style sheet. Toggle them on and off. See the log for more sty
     </td>
     <td>
     	<p>paragraph text</p>
-    
+
     <p class="foo">paragraph class=foo text
     	<span class="woot">span class=woot</span>
         with a span inside it
     </p>
-    
+
     <p class="bar">paragraph class=bar text
     	<span class="zoot">span class=zoot</span>
     	with a span inside it
     </p>
-     
+
      <span class="xoot">external span class=xoot</span>
     </td>
   </tr>
 </table>
-	
-     
-     
-    	
+
+
+
+
 </body>
 </html>

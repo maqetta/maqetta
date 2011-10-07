@@ -1,9 +1,11 @@
-dojo.provide("dojox.grid.enhanced.plugins.GridSource");
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/dnd/Source",
+	"./DnD"
+], function(declare, array, lang, Source, DnD){
 
-dojo.require("dojo.dnd.Source");
-dojo.require("dojox.grid.enhanced.plugins.DnD");
-
-(function(){
 var _joinToArray = function(arrays){
 	var a = arrays[0];
 	for(var i = 1; i < arrays.length; ++i){
@@ -11,7 +13,10 @@ var _joinToArray = function(arrays){
 	}
 	return a;
 };
-dojo.declare("dojox.grid.enhanced.plugins.GridSource", dojo.dnd.Source, {
+
+var GridDnDSource = lang.getObject("dojox.grid.enhanced.plugins.GridDnDSource");
+
+return declare("dojox.grid.enhanced.plugins.GridSource", Source, {
 	// summary:
 	//		A special source that can accept grid contents.
 	//		Only for non-grid widgets or domNodes.
@@ -24,13 +29,14 @@ dojo.declare("dojox.grid.enhanced.plugins.GridSource", dojo.dnd.Source, {
 	insertNodesForGrid: false,
 	
 	markupFactory: function(params, node){
-		return new dojox.grid.enhanced.plugins.GridSource(node, params);
+		cls = lang.getObject("dojox.grid.enhanced.plugins.GridSource");
+		return new cls(node, params);
 	},
 	checkAcceptance: function(source, nodes){
-		if(source instanceof dojox.grid.enhanced.plugins.GridDnDSource){
+		if(source instanceof GridDnDSource){
 			if(nodes[0]){
 				var item = source.getItem(nodes[0].id);
-				if(item && (dojo.indexOf(item.type, "grid/rows") >= 0 || dojo.indexOf(item.type, "grid/cells") >= 0) &&
+				if(item && (array.indexOf(item.type, "grid/rows") >= 0 || array.indexOf(item.type, "grid/cells") >= 0) &&
 					!source.dndPlugin._allDnDItemsLoaded()){
 					return false;
 				}
@@ -50,8 +56,8 @@ dojo.declare("dojox.grid.enhanced.plugins.GridSource", dojo.dnd.Source, {
 		}
 	},
 	onDropExternal: function(source, nodes, copy){
-		if(source instanceof dojox.grid.enhanced.plugins.GridDnDSource){
-			var ranges = dojo.map(nodes, function(node){
+		if(source instanceof GridDnDSource){
+			var ranges = array.map(nodes, function(node){
 				return source.getItem(node.id).data;
 			});
 			var item = source.getItem(nodes[0].id);
@@ -145,4 +151,4 @@ dojo.declare("dojox.grid.enhanced.plugins.GridSource", dojo.dnd.Source, {
 		
 	}
 });
-})();
+});

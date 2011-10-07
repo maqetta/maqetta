@@ -1,6 +1,13 @@
-define("dojo/data/ItemFileReadStore", ["dojo", "dojo/data/util/filter", "dojo/data/util/simpleFetch", "dojo/date/stamp"], function(dojo) {
+define(["../_base/kernel", "../_base/lang", "../_base/declare", "../_base/array", "../_base/xhr", 
+	"../Evented", "../_base/window", "./util/filter", "./util/simpleFetch", "../date/stamp"
+], function(kernel, lang, declare, array, xhr, Evented, window, filterUtil, simpleFetch, dateStamp) {
+	// module:
+	//		dojo/data/ItemFileReadStore
+	// summary:
+	//		TODOC
 
-dojo.declare("dojo.data.ItemFileReadStore", null,{
+
+var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 	//	summary:
 	//		The ItemFileReadStore implements the dojo.data.api.Read API and reads
 	//		data from JSON files that have contents in this format --
@@ -31,7 +38,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		//			type: function, //constructor.
 		//			deserialize:	function(value) //The function that parses the value and constructs the object defined by type appropriately.
 		//		}
-	
+
 		this._arrayOfAllItems = [];
 		this._arrayOfTopLevelItems = [];
 		this._loadFinished = false;
@@ -48,7 +55,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 			this._datatypeMap['Date'] = {
 											type: Date,
 											deserialize: function(value){
-												return dojo.date.stamp.fromISOString(value);
+												return dateStamp.fromISOString(value);
 											}
 										};
 		}
@@ -73,7 +80,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 			this.failOk = keywordParameters.failOk?true:false;
 		}
 	},
-	
+
 	url: "",	// use "" rather than undefined for the benefit of the parser (#3539)
 
 	//Internal var, crossCheckUrl.  Used so that setting either url or _jsonFileUrl, can still trigger a reload
@@ -83,7 +90,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 	data: null,	// define this so that the parser can populate it
 
 	typeMap: null, //Define so parser can populate.
-	
+
 	//Parameter to allow users to specify if a close call should force a reload or not.
 	//By default, it retains the old behavior of not clearing if close is called.  But
 	//if set true, the store will be reset to default state.  Note that by doing this,
@@ -94,7 +101,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 	//Note this does not mean the store calls the server on each fetch, only that the data load has preventCache set as an option.
 	//Added for tracker: #6072
 	urlPreventCache: false,
-	
+
 	//Parameter for specifying that it is OK for the xhrGet call to fail silently.
 	failOk: false,
 
@@ -175,7 +182,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		//		See dojo.data.api.Read.containsValue()
 		var regexp = undefined;
 		if(typeof value === "string"){
-			regexp = dojo.data.util.filter.patternToRegExp(value, false);
+			regexp = filterUtil.patternToRegExp(value, false);
 		}
 		return this._containsValue(item, attribute, value, regexp); //boolean.
 	},
@@ -200,8 +207,8 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		//	regexp:
 		//		Optional regular expression generated off value if value was of string type to handle wildcarding.
 		//		If present and attribute values are string, then it can be used for comparison instead of 'value'
-		return dojo.some(this.getValues(item, attribute), function(possibleValue){
-			if(possibleValue !== null && !dojo.isObject(possibleValue) && regexp){
+		return array.some(this.getValues(item, attribute), function(possibleValue){
+			if(possibleValue !== null && !lang.isObject(possibleValue) && regexp){
 				if(possibleValue.toString().match(regexp)){
 					return true; // Boolean
 				}
@@ -277,7 +284,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 				for(key in requestArgs.query){
 					value = requestArgs.query[key];
 					if(typeof value === "string"){
-						regexpList[key] = dojo.data.util.filter.patternToRegExp(value, ignoreCase);
+						regexpList[key] = filterUtil.patternToRegExp(value, ignoreCase);
 					}else if(value instanceof RegExp){
 						regexpList[key] = value;
 					}
@@ -326,7 +333,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 			//compatibility.  People use _jsonFileUrl (even though officially
 			//private.
 			if(this._jsonFileUrl !== this._ccUrl){
-				dojo.deprecated("dojo.data.ItemFileReadStore: ",
+				kernel.deprecated("dojo.data.ItemFileReadStore: ",
 					"To change the url, set the url property of the store," +
 					" not _jsonFileUrl.  _jsonFileUrl support will be removed in 2.0");
 				this._ccUrl = this._jsonFileUrl;
@@ -356,13 +363,13 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 							preventCache: this.urlPreventCache,
 							failOk: this.failOk
 						};
-					var getHandler = dojo.xhrGet(getArgs);
+					var getHandler = xhr.get(getArgs);
 					getHandler.addCallback(function(data){
 						try{
 							self._getItemsFromLoadedData(data);
 							self._loadFinished = true;
 							self._loadInProgress = false;
-							
+
 							filter(keywordArgs, self._getItemsArray(keywordArgs.queryOptions));
 							self._handleQueuedFetches();
 						}catch(e){
@@ -478,11 +485,11 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		//
 		// 	returns: array
 		//		Array of items in store item format.
-		
+
 		// First, we define a couple little utility functions...
 		var addingArrays = false,
 		    self = this;
-		
+
 		function valueIsAnItem(/* anything */ aValue){
 			// summary:
 			//		Given any sort of value that could be in the raw json data,
@@ -497,26 +504,23 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 			// 	|	true == valueIsAnItem({name:'Kermit', color:'green'});
 			// 	|	true == valueIsAnItem({iggy:'pop'});
 			// 	|	true == valueIsAnItem({foo:42});
-			var isItem = (
-				(aValue !== null) &&
+			return (aValue !== null) &&
 				(typeof aValue === "object") &&
-				(!dojo.isArray(aValue) || addingArrays) &&
-				(!dojo.isFunction(aValue)) &&
-				(aValue.constructor == Object || dojo.isArray(aValue)) &&
+				(!lang.isArray(aValue) || addingArrays) &&
+				(!lang.isFunction(aValue)) &&
+				(aValue.constructor == Object || lang.isArray(aValue)) &&
 				(typeof aValue._reference === "undefined") &&
 				(typeof aValue._type === "undefined") &&
 				(typeof aValue._value === "undefined") &&
-				self.hierarchical
-			);
-			return isItem;
+				self.hierarchical;
 		}
-		
+
 		function addItemAndSubItemsToArrayOfAllItems(/* Item */ anItem){
 			self._arrayOfAllItems.push(anItem);
 			for(var attribute in anItem){
 				var valueForAttribute = anItem[attribute];
 				if(valueForAttribute){
-					if(dojo.isArray(valueForAttribute)){
+					if(lang.isArray(valueForAttribute)){
 						var valueArray = valueForAttribute;
 						for(var k = 0; k < valueArray.length; ++k){
 							var singleValue = valueArray[k];
@@ -547,7 +551,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 
 		for(i = 0; i < this._arrayOfTopLevelItems.length; ++i){
 			item = this._arrayOfTopLevelItems[i];
-			if(dojo.isArray(item)){
+			if(lang.isArray(item)){
 				addingArrays = true;
 			}
 			addItemAndSubItemsToArrayOfAllItems(item);
@@ -571,7 +575,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 				if(key !== this._rootItemPropName){
 					var value = item[key];
 					if(value !== null){
-						if(!dojo.isArray(value)){
+						if(!lang.isArray(value)){
 							item[key] = [value];
 						}
 					}else{
@@ -657,9 +661,9 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 							var mappingObj = this._datatypeMap[type]; // examples: Date, dojo.Color, foo.math.ComplexNumber, {type: dojo.Color, deserialize(value){ return new dojo.Color(value)}}
 							if(!mappingObj){
 								throw new Error("dojo.data.ItemFileReadStore: in the typeMap constructor arg, no object class was specified for the datatype '" + type + "'");
-							}else if(dojo.isFunction(mappingObj)){
+							}else if(lang.isFunction(mappingObj)){
 								arrayOfValues[j] = new mappingObj(value._value);
-							}else if(dojo.isFunction(mappingObj.deserialize)){
+							}else if(lang.isFunction(mappingObj.deserialize)){
 								arrayOfValues[j] = mappingObj.deserialize(value._value);
 							}else{
 								throw new Error("dojo.data.ItemFileReadStore: Value provided in typeMap was neither a constructor, nor a an object with a deserialize function");
@@ -667,7 +671,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 						}
 						if(value._reference){
 							var referenceDescription = value._reference; // example: {name:'Miss Piggy'}
-							if(!dojo.isObject(referenceDescription)){
+							if(!lang.isObject(referenceDescription)){
 								// example: 'Miss Piggy'
 								// from an item like: { name:['Kermit'], friends:[{_reference:'Miss Piggy'}]}
 								arrayOfValues[j] = this._getItemByIdentity(referenceDescription);
@@ -718,7 +722,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		 //		The item that holds the new reference to refItem.
 		 //	attribute:
 		 //		The attribute on parentItem that contains the new reference.
-		 
+
 		 //Stub function, does nothing.  Real processing is in ItemFileWriteStore.
 	},
 
@@ -753,7 +757,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 			//compatibility.  People use _jsonFileUrl (even though officially
 			//private.
 			if(this._jsonFileUrl !== this._ccUrl){
-				dojo.deprecated("dojo.data.ItemFileReadStore: ",
+				kernel.deprecated("dojo.data.ItemFileReadStore: ",
 					"To change the url, set the url property of the store," +
 					" not _jsonFileUrl.  _jsonFileUrl support will be removed in 2.0");
 				this._ccUrl = this._jsonFileUrl;
@@ -762,7 +766,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 				this._jsonFileUrl = this.url;
 				this._ccUrl = this.url;
 			}
-			
+
 			//See if there was any forced reset of data.
 			if(this.data != null && this._jsonData == null){
 				this._jsonData = this.data;
@@ -781,9 +785,9 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 							preventCache: this.urlPreventCache,
 							failOk: this.failOk
 					};
-					var getHandler = dojo.xhrGet(getArgs);
+					var getHandler = xhr.get(getArgs);
 					getHandler.addCallback(function(data){
-						var scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
+						var scope = keywordArgs.scope?keywordArgs.scope:window.global;
 						try{
 							self._getItemsFromLoadedData(data);
 							self._loadFinished = true;
@@ -803,7 +807,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 					getHandler.addErrback(function(error){
 						self._loadInProgress = false;
 						if(keywordArgs.onError){
-							var scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
+							var scope = keywordArgs.scope?keywordArgs.scope:window.global;
 							keywordArgs.onError.call(scope, error);
 						}
 					});
@@ -816,7 +820,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 				self._loadFinished = true;
 				item = self._getItemByIdentity(keywordArgs.identity);
 				if(keywordArgs.onItem){
-					scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
+					scope = keywordArgs.scope?keywordArgs.scope:window.global;
 					keywordArgs.onItem.call(scope, item);
 				}
 			}
@@ -824,7 +828,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 			// Already loaded.  We can just look it up and call back.
 			item = this._getItemByIdentity(keywordArgs.identity);
 			if(keywordArgs.onItem){
-				scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
+				scope = keywordArgs.scope?keywordArgs.scope:window.global;
 				keywordArgs.onItem.call(scope, item);
 			}
 		}
@@ -834,9 +838,12 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		//	summary:
 		//		Internal function to look an item up by its identity map.
 		var item = null;
-		if(this._itemsByIdentity &&
-		   Object.hasOwnProperty.call(this._itemsByIdentity, identity)){
-			item = this._itemsByIdentity[identity];
+		if(this._itemsByIdentity){
+			// If this map is defined, we need to just try to get it.  If it fails
+			// the item does not exist.
+			if(Object.hasOwnProperty.call(this._itemsByIdentity, identity)){
+				item = this._itemsByIdentity[identity];
+			}
 		}else if (Object.hasOwnProperty.call(this._arrayOfAllItems, identity)){
 			item = this._arrayOfAllItems[identity];
 		}
@@ -849,7 +856,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 	getIdentityAttributes: function(/* item */ item){
 		//	summary:
 		//		See dojo.data.api.Identity.getIdentityAttributes()
-		 
+
 		var identifier = this._features['dojo.data.api.Identity'];
 		if(identifier === Number){
 			// If (identifier === Number) it means getIdentity() just returns
@@ -861,7 +868,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 			return [identifier]; // Array
 		}
 	},
-	
+
 	_forceLoad: function(){
 		//	summary:
 		//		Internal function to force a load of the store if it hasn't occurred yet.  This is required
@@ -874,7 +881,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		//compatibility.  People use _jsonFileUrl (even though officially
 		//private.
 		if(this._jsonFileUrl !== this._ccUrl){
-			dojo.deprecated("dojo.data.ItemFileReadStore: ",
+			kernel.deprecated("dojo.data.ItemFileReadStore: ",
 				"To change the url, set the url property of the store," +
 				" not _jsonFileUrl.  _jsonFileUrl support will be removed in 2.0");
 			this._ccUrl = this._jsonFileUrl;
@@ -898,7 +905,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 					failOk: this.failOk,
 					sync: true
 				};
-			var getHandler = dojo.xhrGet(getArgs);
+			var getHandler = xhr.get(getArgs);
 			getHandler.addCallback(function(data){
 				try{
 					//Check to be sure there wasn't another load going on concurrently
@@ -932,7 +939,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 	}
 });
 //Mix in the simple fetch implementation to this class.
-dojo.extend(dojo.data.ItemFileReadStore,dojo.data.util.simpleFetch);
+lang.extend(ItemFileReadStore,simpleFetch);
 
-return dojo.data.ItemFileReadStore;
+return ItemFileReadStore;
 });

@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	insertImageTitle: "Vložit obrázek",
 	url: "Obrázek",
@@ -9,3 +11,5 @@
 	prePopuTextBrowse: " nebo vyhledejte lokální soubor."
 })
 
+//end v1.x content
+);

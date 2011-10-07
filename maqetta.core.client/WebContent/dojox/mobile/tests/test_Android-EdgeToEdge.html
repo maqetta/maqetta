@@ -5,19 +5,18 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>Edge to Edge</title>
-		<link href="../themes/android/android.css" rel="stylesheet"></link>
+		<link href="../themes/android/base.css" rel="stylesheet">
 
 		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
 
 		<script language="JavaScript" type="text/javascript">
-			//dojo.require("dojo.parser"); // Use the lightweight parser.
-			dojo.require("dojox.mobile.parser");
-			dojo.require("dojox.mobile");
-			dojo.requireIf(!dojo.isWebKit, "dojox.mobile.compat");
+			dojo.require("dojox.mobile");			// This is a mobile app.
+			dojo.require("dojox.mobile.parser");	// This mobile app supports running on desktop browsers
+			dojo.require("dojox.mobile.compat");	// This mobile app uses declarative programming with fast mobile parser
 		</script>
 
 	</head>
-	<body>
+	<body style="visibility:hidden;">
 		<div id="settings" dojoType="dojox.mobile.View" selected="true">
 			<h1 dojoType="dojox.mobile.Heading">Settings</h1>
 			<ul dojoType="dojox.mobile.EdgeToEdgeList">
@@ -36,7 +35,6 @@
 
 		<div id="hello" dojoType="dojox.mobile.View">
 			<h1 dojoType="dojox.mobile.Heading">Hello</h1>
-			<ul dojoType="dojox.mobile.EdgeToEdgeList">
 			<ul dojoType="dojox.mobile.EdgeToEdgeList">
 				<li dojoType="dojox.mobile.ListItem" moveTo="settings">
 					Hello

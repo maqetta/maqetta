@@ -48,7 +48,7 @@
 				// mouseleave/enter map to mouseout/over in all browsers except IE
 				console.log(this.domNode.getAttribute('widgetId') + ' ' + e.type);
 			}
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				dijit.byId("localLong").parse = function(value,constraints){
 					return this.dateLocaleModule.parse(value, (constraints.formatLength="long") && constraints) ||
 						 this.dateLocaleModule.parse(value, (constraints.formatLength="short") && constraints) ||
@@ -161,7 +161,7 @@
 
 			<script>
 			// See if we can make a widget in script and attach it to the DOM ourselves.
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				dojo.connect(dijit.byId('pattern'), "onMouseEnter", eventHandler);
 				dojo.connect(dijit.byId('pattern'), "onMouseLeave", eventHandler);
 				dojo.connect(dijit.byId('pattern'), "onKeyDown", eventHandler);
@@ -184,12 +184,12 @@
 			</script>
 
 			<script>
-				function displayData() {
+				function displayData(){
 					var f = document.getElementById("form1");
 					var s = "";
-					for (var i = 0; i < f.elements.length; i++) {
+					for(var i = 0; i < f.elements.length; i++){
 						var elem = f.elements[i];
-						if (elem.name == "button")  { continue; }
+						if(elem.name == "button")  { continue; }
 						s += elem.name + ": " + elem.value + "\n";
 					}
 					alert(s);

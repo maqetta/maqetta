@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"clearFilterDialogTitle": "Rensa filter",
 	"filterDefDialogTitle": "Filter",
@@ -82,6 +84,8 @@
 	"trueLabel": "Sant",
 	"falseLabel": "Falskt"
 })
+//end v1.x content
+);
 
 
 

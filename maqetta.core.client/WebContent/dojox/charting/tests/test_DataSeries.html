@@ -1,48 +1,26 @@
+<!--[if IE 7]>
+<!DOCTYPE>
+<html lang="en">
+	<head>
+<![endif]-->
+<!--[if IE 8]>
+<!DOCTYPE>
+<html lang="en">
+    <head>
+           <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
+<![endif]-->
+<![if gte IE 9]>
 <!DOCTYPE HTML>
-<html>
-<head>
-
+<html lang="en">
+	<head>
+<![endif]>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
 <title>DataSeries Test</title>
+<link rel="stylesheet" href="../../../dijit/themes/claro/document.css"/>
+<link rel="stylesheet" href="../../../dijit/themes/claro/claro.css"/>
+<link rel="stylesheet" href="../../../dijit/tests/css/dijitTests.css"/>
 
 <style>
-	@import "../../../dojo/resources/dojo.css";
-	@import "../../../dijit/tests/css/dijitTests.css";
-	@import "../../../dijit/themes/dijit.css";
-    @import "../../../dijit/themes/tundra/tundra.css";
-	
-	#spinners{
-		clear:both;
-	}
-	#spinners label{
-		width:60px;
-		line-height:30px;
-		margin-top:10px;
-	}
-	.tundra #spinners .dijitSpinner	{
-		width:70px !important;
-		margin:5px !important;
-	}
-	.tundra #spinners .dijitSpinner{
-		width:80px !important;
-	}
-	.dijitSpinner{
-		padding:0px !important;
-	}
-	#spinners .dijitSpinnerButtonContainer{
-		line-height:23px;
-	}
-	.dj_ie #spinners .dijitSpinnerButtonContainer{
-		height:25px;
-	}
-	.dijitInputLayoutContainer .dijitInputField input{
-		padding:5px 0px 0px 5px;
-	}
-	.dj_webkit .dijitInputLayoutContainer .dijitInputField input{
-		padding:10px 0px 0px 5px;
-	}
-
     .dojoxLegendNode {border: 1px solid #ccc; margin: 5px 10px 5px 10px; padding: 3px;}
     .dojoxLegendText {vertical-align: text-top; padding-right: 10px}
     
@@ -194,7 +172,7 @@
 
 </head>
 
-<body class="tundra">
+<body class="claro">
 	<h1>DataSeries Test</h1>
 	<p>
 		Use the spinner fields at the bottom to change the data. The charts listen to store changes an update automatically.

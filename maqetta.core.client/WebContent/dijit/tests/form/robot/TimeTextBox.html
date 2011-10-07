@@ -10,15 +10,15 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
+
 		<script type="text/javascript" src="../../helpers.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 			dojo.require("dojo.date.stamp");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_TimeTextBox.html');
 
 				doh.register("keyboard", [
@@ -182,8 +182,7 @@
 
 								// drop down list should be filtered to times starting with 12:,
 								// and they should appear in chronological order
-								var popup = dijit.byId("q2_popup"),
-									children = dojo.query(".dijitTimePickerItem", popup.domNode);
+								var children = dojo.query(".dijitTimePickerItem", popup.domNode);
 								doh.is(8, children.length, "# of items in drop down");
 								doh.is("12:00 AM", innerText(children[0]));
 								doh.is("12:15 AM", innerText(children[1]));
@@ -201,7 +200,7 @@
 								var popup = dijit.byId('q2_popup');
 								doh.t(!popup || isHidden(popup), "popup hidden");
 								
-								doh.is("q3", dojo.global.dijit._curFocus.id, "tab moved to next input widget");
+								doh.is("q3", dojo.global.dijit.focus.curNode.id, "tab moved to next input widget");
 							}), 1000);
 
 							return d;
@@ -263,6 +262,62 @@
 						tearDown: function(){
 							q5.disconnect(handler);
 							q5.closeDropDown();
+						}
+					}
+				]);
+
+				var q20;
+				doh.register("disabled", [
+					{
+						name: "disable",
+						timeout: 6000,
+						runTest: function(){
+							var d = new doh.Deferred();
+							q20 = dijit.byId('q20');
+	
+							q20.set('disabled',true);
+							// click field, thus opening drop down
+							doh.robot.mouseMoveAt(q20.domNode, 500, 1);
+							doh.robot.mouseClick({left:true}, 500);
+							doh.robot.typeKeys('1', 500, 200);
+	
+							doh.robot.sequence(d.getTestCallback(function(){
+								var popup = dijit.byId('q20_popup');
+								doh.t(!popup || isHidden(popup), "popup hidden");
+								var val = dojo.date.stamp.toISOString(q20.get('value'), {selector: "time"});	
+								doh.is(val, "T17:45:00", "should be 5:45PM");
+							}), 1000);
+							return d;
+						},
+						tearDown: function(){
+							q20.set('disabled',false);
+							q20.closeDropDown();
+						}
+					},
+					{
+						name: "readOnly",
+						timeout: 6000,
+						runTest: function(){
+							var d = new doh.Deferred();
+							q20 = dijit.byId('q20');
+	
+							q20.set('readOnly',true);
+							// click field, thus opening drop down
+							doh.robot.mouseMoveAt(q20.domNode, 500, 1);
+							doh.robot.mouseClick({left:true}, 500);
+							doh.robot.typeKeys('1', 500, 200);
+	
+							doh.robot.sequence(d.getTestCallback(function(){
+								var popup = dijit.byId('q20_popup');
+								doh.t(!popup || isHidden(popup), "popup hidden");
+								var val = dojo.date.stamp.toISOString(q20.get('value'), {selector: "time"});	
+								doh.is(val, "T17:45:00", "should be 5:45PM");
+							}), 1000);
+							return d;
+						},
+						tearDown: function(){
+							q20.set('readOnly',false);
+							q20.closeDropDown();
 						}
 					}
 				]);

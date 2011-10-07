@@ -1,14 +1,24 @@
-dojo.provide("dojox.atom.widget.FeedViewer");
-
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-dojo.require("dijit._Container");
-dojo.require("dojox.atom.io.Connection");
-dojo.requireLocalization("dojox.atom.widget", "FeedViewerEntry");
-
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dojo/_base/connect",
+	"dojo/dom-class",
+	"dijit/_Widget",
+	"dijit/_Templated",
+	"dijit/_Container",
+	"../io/Connection",
+	"dojo/text!./templates/FeedViewer.html",
+	"dojo/text!./templates/FeedViewerEntry.html",
+	"dojo/text!./templates/FeedViewerGrouping.html",
+	"dojo/i18n!./nls/FeedViewerEntry",
+	"dojo/_base/declare"
+], function (dojo, lang, arrayUtil, connect, domClass, _Widget, _Templated, _Container, Connection, template, entryTemplate, groupingTemplate, i18nViewer) {
 dojo.experimental("dojox.atom.widget.FeedViewer");
 
-dojo.declare("dojox.atom.widget.FeedViewer",[dijit._Widget, dijit._Templated, dijit._Container],{
+var widget = dojo.getObject("dojox.atom.widget", true);
+
+widget.FeedViewer = dojo.declare(/*===== "dojox.atom.widget.FeedViewer", =====*/ [_Widget, _Templated, _Container],{
 	//	summary:
 	//		An ATOM feed viewer that allows for viewing a feed, deleting entries, and editing entries.
 	//	description:
@@ -21,7 +31,7 @@ dojo.declare("dojox.atom.widget.FeedViewer",[dijit._Widget, dijit._Templated, di
 	localSaveOnly: false,
 
 	//Templates for the HTML rendering.  Need to figure these out better, admittedly.
-	templateString: dojo.cache("dojox.atom", "widget/templates/FeedViewer.html"),
+	templateString: template,
 
 	_feed: null,
 	_currentSelection: null, // Currently selected entry
@@ -41,7 +51,7 @@ dojo.declare("dojox.atom.widget.FeedViewer",[dijit._Widget, dijit._Templated, di
 		if(this.entrySelectionTopic !== ""){
 			this._subscriptions = [dojo.subscribe(this.entrySelectionTopic, this, "_handleEvent")];
 		}
-		this.atomIO = new dojox.atom.io.Connection();
+		this.atomIO = new Connection();
 		this.childWidgets = [];
 	},
 	
@@ -55,7 +65,7 @@ dojo.declare("dojox.atom.widget.FeedViewer",[dijit._Widget, dijit._Templated, di
 		for(var i in children){
 			var child = children[i];
 			if(child && child.isFilter){
-				this._includeFilters.push(new dojox.atom.widget.FeedViewer.CategoryIncludeFilter(child.scheme, child.term, child.label));
+				this._includeFilters.push(new widget.FeedViewer.CategoryIncludeFilter(child.scheme, child.term, child.label));
 				child.destroy();
 			}
 		}
@@ -98,7 +108,7 @@ dojo.declare("dojox.atom.widget.FeedViewer",[dijit._Widget, dijit._Templated, di
 				this.url = baseUrl + url;
 			}
 
-			this.atomIO.getFeed(url,dojo.hitch(this,this.setFeed));
+			this.atomIO.getFeed(url,lang.hitch(this,this.setFeed));
 		}
 	},
 
@@ -131,7 +141,7 @@ dojo.declare("dojox.atom.widget.FeedViewer",[dijit._Widget, dijit._Templated, di
 			dpts.pop(); // remove year and time
 			return dpts.join(",");
 		};
-		var sortedEntries = feed.entries.sort(dojo.hitch(this,entrySorter));
+		var sortedEntries = feed.entries.sort(lang.hitch(this,entrySorter));
 		if(feed){
 			var lastSectionTitle = null;
 			for(var i=0;i<sortedEntries.length;i++){
@@ -187,7 +197,7 @@ dojo.declare("dojox.atom.widget.FeedViewer",[dijit._Widget, dijit._Templated, di
 		//
 		//	returns:
 		//		Nothing.
-		var entryWidget = new dojox.atom.widget.FeedViewerGrouping({});
+		var entryWidget = new widget.FeedViewerGrouping({});
 		entryWidget.setText(titleText);
 		this.addChild(entryWidget);
 		this.childWidgets.push(entryWidget);
@@ -204,7 +214,7 @@ dojo.declare("dojox.atom.widget.FeedViewer",[dijit._Widget, dijit._Templated, di
 		//
 		//	returns:
 		//		Nothing.
-		var entryWidget = new dojox.atom.widget.FeedViewerEntry({"xmethod": this.xmethod});
+		var entryWidget = new widget.FeedViewerEntry({"xmethod": this.xmethod});
 		entryWidget.setTitle(entry.title.value);
 		entryWidget.setTime(this._displayDateForEntry(entry).toLocaleTimeString());
 		entryWidget.entrySelectionTopic = this.entrySelectionTopic;
@@ -225,7 +235,7 @@ dojo.declare("dojox.atom.widget.FeedViewer",[dijit._Widget, dijit._Templated, di
 		//	description:
 		//		Function for deleting a row from the view
 		if(!this.localSaveOnly){
-			this.atomIO.deleteEntry(entryRow.entry, dojo.hitch(this, this._removeEntry, entryRow), null, this.xmethod);
+			this.atomIO.deleteEntry(entryRow.entry, lang.hitch(this, this._removeEntry, entryRow), null, this.xmethod);
 		}else{
 			this._removeEntry(entryRow, true);
 		}
@@ -239,11 +249,11 @@ dojo.declare("dojox.atom.widget.FeedViewer",[dijit._Widget, dijit._Templated, di
 		//		callback for when an entry is deleted from a feed.
 		if(success){
 			/* Check if this is the last Entry beneath the given date */
-			var idx = dojo.indexOf(this.childWidgets, entry);
+			var idx = arrayUtil.indexOf(this.childWidgets, entry);
 			var before = this.childWidgets[idx-1];
 			var after = this.childWidgets[idx+1];
-			if( before.declaredClass === 'dojox.atom.widget.FeedViewerGrouping' &&
-				(after === undefined || after.declaredClass === 'dojox.atom.widget.FeedViewerGrouping')){
+			if( before.isInstanceOf(widget.FeedViewerGrouping) &&
+				(after === undefined || after.isInstanceOf(widget.FeedViewerGrouping))){
 				before.destroy();
 			}
 			
@@ -265,11 +275,8 @@ dojo.declare("dojox.atom.widget.FeedViewer",[dijit._Widget, dijit._Templated, di
 		//		Nothing.
 		var selectedNode = evt.target;
 		while(selectedNode){
-			if(selectedNode.attributes){
-				var widgetid = selectedNode.attributes.getNamedItem("widgetid");
-				if(widgetid && widgetid.value.indexOf("FeedViewerEntry") != -1){
-					break;
-				}
+			if(domClass.contains(selectedNode, 'feedViewerEntry')) {
+				break;
 			}
 			selectedNode = selectedNode.parentNode;
 		}
@@ -278,9 +285,9 @@ dojo.declare("dojox.atom.widget.FeedViewer",[dijit._Widget, dijit._Templated, di
 			var entry = this._feed.entries[i];
 			if( (selectedNode === entry.domNode) && (this._currentSelection !== entry) ){
 				//Found it and it isn't already selected.
-				dojo.addClass(entry.domNode, "feedViewerEntrySelected");
-				dojo.removeClass(entry._entryWidget.timeNode, "feedViewerEntryUpdated");
-				dojo.addClass(entry._entryWidget.timeNode, "feedViewerEntryUpdatedSelected");
+				domClass.add(entry.domNode, "feedViewerEntrySelected");
+				domClass.remove(entry._entryWidget.timeNode, "feedViewerEntryUpdated");
+				domClass.add(entry._entryWidget.timeNode, "feedViewerEntryUpdatedSelected");
 
 				this.onEntrySelected(entry);
 				if(this.entrySelectionTopic !== ""){
@@ -311,9 +318,9 @@ dojo.declare("dojox.atom.widget.FeedViewer",[dijit._Widget, dijit._Templated, di
 		//	returns:
 		//		Nothing.
 		if(this._currentSelection){
-			dojo.addClass(this._currentSelection._entryWidget.timeNode, "feedViewerEntryUpdated");
-			dojo.removeClass(this._currentSelection.domNode, "feedViewerEntrySelected");
-			dojo.removeClass(this._currentSelection._entryWidget.timeNode, "feedViewerEntryUpdatedSelected");
+			domClass.add(this._currentSelection._entryWidget.timeNode, "feedViewerEntryUpdated");
+			domClass.remove(this._currentSelection.domNode, "feedViewerEntrySelected");
+			domClass.remove(this._currentSelection._entryWidget.timeNode, "feedViewerEntryUpdatedSelected");
 			this._currentSelection._entryWidget.disableDelete();
 			this._currentSelection = null;
 		}
@@ -511,7 +518,7 @@ dojo.declare("dojox.atom.widget.FeedViewer",[dijit._Widget, dijit._Templated, di
 			}
 
 			if (addIt) {
-				this._includeFilters.push(dojox.atom.widget.FeedViewer.CategoryIncludeFilter(scheme, term, label));
+				this._includeFilters.push(widget.FeedViewer.CategoryIncludeFilter(scheme, term, label));
 			}
 		}
 	},
@@ -572,13 +579,13 @@ dojo.declare("dojox.atom.widget.FeedViewer",[dijit._Widget, dijit._Templated, di
 			if(entrySelectionEvent.action == "update" && entrySelectionEvent.entry) {
                 var evt = entrySelectionEvent;
 				if(!this.localSaveOnly){
-					this.atomIO.updateEntry(evt.entry, dojo.hitch(evt.source,evt.callback), null, true);
+					this.atomIO.updateEntry(evt.entry, lang.hitch(evt.source,evt.callback), null, true);
 				}
 				this._currentSelection._entryWidget.setTime(this._displayDateForEntry(evt.entry).toLocaleTimeString());
 				this._currentSelection._entryWidget.setTitle(evt.entry.title.value);
 			} else if(entrySelectionEvent.action == "post" && entrySelectionEvent.entry) {
 				if(!this.localSaveOnly){
-					this.atomIO.addEntry(entrySelectionEvent.entry, this.url, dojo.hitch(this,this._addEntry));
+					this.atomIO.addEntry(entrySelectionEvent.entry, this.url, lang.hitch(this,this._addEntry));
 				}else{
 					this._addEntry(entrySelectionEvent.entry);
 				}
@@ -603,16 +610,16 @@ dojo.declare("dojox.atom.widget.FeedViewer",[dijit._Widget, dijit._Templated, di
 		//	description:
 		//		Destroys this widget, including all descendants and subscriptions.
 		this.clear();
-		dojo.forEach(this._subscriptions, dojo.unsubscribe);
+		arrayUtil.forEach(this._subscriptions, dojo.unsubscribe);
 	}
 });
 
-dojo.declare("dojox.atom.widget.FeedViewerEntry",[dijit._Widget, dijit._Templated],{
+widget.FeedViewerEntry = dojo.declare(/*===== "dojox.atom.widget.FeedViewerEntry", =====*/ [_Widget, _Templated],{
 	//	summary:
 	//		Widget for handling the display of an entry and specific events associated with it.
 	//		description: Widget for handling the display of an entry and specific events associated with it.
 
-	templateString: dojo.cache("dojox.atom", "widget/templates/FeedViewerEntry.html"),
+	templateString: entryTemplate,
 
 	entryNode: null,
 	timeNode: null,
@@ -621,7 +628,7 @@ dojo.declare("dojox.atom.widget.FeedViewerEntry",[dijit._Widget, dijit._Template
 	feed: null,
 
 	postCreate: function(){
-		var _nlsResources = dojo.i18n.getLocalization("dojox.atom.widget", "FeedViewerEntry");
+		var _nlsResources = i18nViewer;
 		this.deleteButton.innerHTML = _nlsResources.deleteButton;
 	},
 
@@ -710,12 +717,12 @@ dojo.declare("dojox.atom.widget.FeedViewerEntry",[dijit._Widget, dijit._Template
 	}
 });
 
-dojo.declare("dojox.atom.widget.FeedViewerGrouping",[dijit._Widget, dijit._Templated],{
+widget.FeedViewerGrouping = dojo.declare(/*===== "dojox.atom.widget.FeedViewerGrouping", =====*/ [_Widget, _Templated],{
 	//	summary:
 	//		Grouping of feed entries.
 	//	description:
 	//		Grouping of feed entries.
-	templateString: dojo.cache("dojox.atom", "widget/templates/FeedViewerGrouping.html"),
+	templateString: groupingTemplate,
 	
 	groupingNode: null,
 	titleNode: null,
@@ -734,7 +741,7 @@ dojo.declare("dojox.atom.widget.FeedViewerGrouping",[dijit._Widget, dijit._Templ
 	}
 });
 
-dojo.declare("dojox.atom.widget.AtomEntryCategoryFilter",[dijit._Widget, dijit._Templated],{
+widget.AtomEntryCategoryFilter = dojo.declare(/*===== "dojox.atom.widget.AtomEntryCategoryFilter", =====*/ [_Widget, _Templated],{
 	//	summary:
 	//		A filter to be applied to the list of entries.
 	//	description:
@@ -745,7 +752,7 @@ dojo.declare("dojox.atom.widget.AtomEntryCategoryFilter",[dijit._Widget, dijit._
 	isFilter: true
 });
 
-dojo.declare("dojox.atom.widget.FeedViewer.CategoryIncludeFilter",null,{
+widget.FeedViewer.CategoryIncludeFilter = dojo.declare(/*===== "dojox.atom.widget.FeedViewer.CategoryIncludeFilter", =====*/ null,{
 	constructor: function(scheme, term, label){
 		//	summary:
 		//		The initializer function.
@@ -795,4 +802,6 @@ dojo.declare("dojox.atom.widget.FeedViewer.CategoryIncludeFilter",null,{
 		}
 		return matched;
 	}
+});
+return widget.FeedViewer;
 });

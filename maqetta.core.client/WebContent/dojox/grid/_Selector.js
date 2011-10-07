@@ -1,13 +1,18 @@
-dojo.provide("dojox.grid._Selector");
-
-dojo.require("dojox.grid.Selection");
-dojo.require("dojox.grid._View");
-dojo.require("dojox.grid._Builder");
-
-(function(){
-	dojox.grid._InputSelectorHeaderBuilder = dojo.extend(function(view){
-		dojox.grid._HeaderBuilder.call(this, view);
-	},dojox.grid._HeaderBuilder.prototype,{
+define([
+	"../main",
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/query",
+	"dojo/dom-class",
+	"./Selection",
+	"./_View",
+	"./_Builder",
+	"./util"
+], function(dojox, declare, lang, query, domClass, Selection, _View, _Builder, util){
+	
+	var _InputSelectorHeaderBuilder = dojox.grid._InputSelectorHeaderBuilder = lang.extend(function(view){
+		_Builder._HeaderBuilder.call(this, view);
+	},_Builder._HeaderBuilder.prototype,{
 		generateHtml: function(){
 			var w = this.view.contentWidth || 0;
 			var selectedCount = this.view.grid.selection.getSelectedCount();
@@ -32,9 +37,9 @@ dojo.require("dojox.grid._Builder");
 		}
 	});
 
-	dojox.grid._SelectorContentBuilder = dojo.extend(function(view){
-		dojox.grid._ContentBuilder.call(this, view);
-	},dojox.grid._ContentBuilder.prototype,{
+	var _SelectorContentBuilder = dojox.grid._SelectorContentBuilder = lang.extend(function(view){
+		_Builder._ContentBuilder.call(this, view);
+	},_Builder._ContentBuilder.prototype,{
 		generateHtml: function(inDataIndex, inRowIndex){
 			var w = this.view.contentWidth || 0;
 			return '<table class="dojoxGridRowbarTable" style="width:' + w + 'px;" border="0" ' +
@@ -45,7 +50,7 @@ dojo.require("dojox.grid._Builder");
 			return '&nbsp;';
 		},
 		findTarget: function(){
-			var t = dojox.grid._ContentBuilder.prototype.findTarget.apply(this, arguments);
+			var t = _Builder._ContentBuilder.prototype.findTarget.apply(this, arguments);
 			return t;
 		},
 		domouseover: function(e){
@@ -75,9 +80,9 @@ dojo.require("dojox.grid._Builder");
 		}
 	});
 
-	dojox.grid._InputSelectorContentBuilder = dojo.extend(function(view){
-		dojox.grid._SelectorContentBuilder.call(this, view);
-	},dojox.grid._SelectorContentBuilder.prototype,{
+	var _InputSelectorContentBuilder = dojox.grid._InputSelectorContentBuilder = lang.extend(function(view){
+		_SelectorContentBuilder.call(this, view);
+	},_SelectorContentBuilder.prototype,{
 		getCellContent: function(rowIndex){
 			var v = this.view;
 			var type = v.inputType == "checkbox" ? "CheckBox" : "Radio";
@@ -86,7 +91,7 @@ dojo.require("dojox.grid._Builder");
 		}
 	});
 
-	dojo.declare("dojox.grid._Selector", dojox.grid._View, {
+	var _Selector = declare("dojox.grid._Selector", _View, {
 		inputType: '',
 		selectionMode: '',
 
@@ -96,7 +101,7 @@ dojo.require("dojox.grid._Builder");
 		noscroll: true,
 		padBorderWidth: 2,
 
-		_contentBuilderClass: dojox.grid._SelectorContentBuilder,
+		_contentBuilderClass: _SelectorContentBuilder,
 
 		postCreate: function(){
 			this.inherited(arguments);
@@ -148,24 +153,24 @@ dojo.require("dojox.grid._Builder");
 			this.grid.updateRow(inIndex);
 		}
 	});
-	if(!dojox.grid._View.prototype._headerBuilderClass &&
-		!dojox.grid._View.prototype._contentBuilderClass){
-		dojox.grid._Selector.prototype.postCreate = function(){
+	if(!_View.prototype._headerBuilderClass &&
+		!_View.prototype._contentBuilderClass){
+		_Selector.prototype.postCreate = function(){
 			this.connect(this.scrollboxNode,"onscroll","doscroll");
-			dojox.grid.util.funnelEvents(this.contentNode, this, "doContentEvent", [ 'mouseover', 'mouseout', 'click', 'dblclick', 'contextmenu', 'mousedown' ]);
-			dojox.grid.util.funnelEvents(this.headerNode, this, "doHeaderEvent", [ 'dblclick', 'mouseover', 'mouseout', 'mousemove', 'mousedown', 'click', 'contextmenu' ]);
+			util.funnelEvents(this.contentNode, this, "doContentEvent", [ 'mouseover', 'mouseout', 'click', 'dblclick', 'contextmenu', 'mousedown' ]);
+			util.funnelEvents(this.headerNode, this, "doHeaderEvent", [ 'dblclick', 'mouseover', 'mouseout', 'mousemove', 'mousedown', 'click', 'contextmenu' ]);
 			if(this._contentBuilderClass){
 				this.content = new this._contentBuilderClass(this);
 			}else{
-				this.content = new dojox.grid._ContentBuilder(this);
+				this.content = new _Builder._ContentBuilder(this);
 			}
 			if(this._headerBuilderClass){
 				this.header = new this._headerBuilderClass(this);
 			}else{
-				this.header = new dojox.grid._HeaderBuilder(this);
+				this.header = new _Builder._HeaderBuilder(this);
 			}
 			//BiDi: in RTL case, style width='9000em' causes scrolling problem in head node
-			if(!dojo._isBodyLtr()){
+			if(!this.grid.isLeftToRight()){
 				this.headerNodeContainer.style.width = "";
 			}
 			this.connect(this.grid.selection, 'onSelected', 'onSelected');
@@ -173,11 +178,11 @@ dojo.require("dojox.grid._Builder");
 		};
 	}
 
-	dojo.declare("dojox.grid._RadioSelector", dojox.grid._Selector, {
+	declare("dojox.grid._RadioSelector", _Selector, {
 		inputType: 'radio',
 		selectionMode: 'single',
 
-		_contentBuilderClass: dojox.grid._InputSelectorContentBuilder,
+		_contentBuilderClass: _InputSelectorContentBuilder,
 
 		buildRendering: function(){
 			this.inherited(arguments);
@@ -187,10 +192,10 @@ dojo.require("dojox.grid._Builder");
 		renderHeader: function(){}
 	});
 
-	dojo.declare("dojox.grid._CheckBoxSelector", dojox.grid._Selector, {
+	declare("dojox.grid._CheckBoxSelector", _Selector, {
 		inputType: 'checkbox',
-		_headerBuilderClass: dojox.grid._InputSelectorHeaderBuilder,
-		_contentBuilderClass: dojox.grid._InputSelectorContentBuilder,
+		_headerBuilderClass: _InputSelectorHeaderBuilder,
+		_contentBuilderClass: _InputSelectorContentBuilder,
 		postCreate: function(){
 			this.inherited(arguments);
 			this.connect(this.grid, 'onSelectionChanged', 'onSelectionChanged');
@@ -205,12 +210,15 @@ dojo.require("dojox.grid._Builder");
 		},
 		onSelectionChanged: function(){
 			if(this._selectionChanging){ return; }
-			var inputDiv = dojo.query('.dojoxGridCheckSelector', this.headerNode)[0];
+			var inputDiv = query('.dojoxGridCheckSelector', this.headerNode)[0];
 			var g = this.grid;
 			var s = (g.rowCount && g.rowCount == g.selection.getSelectedCount());
 			g.allItemsSelected = s||false;
-			dojo.toggleClass(inputDiv, "dijitChecked", g.allItemsSelected);
-			dojo.toggleClass(inputDiv, "dijitCheckBoxChecked", g.allItemsSelected);
+			domClass.toggle(inputDiv, "dijitChecked", g.allItemsSelected);
+			domClass.toggle(inputDiv, "dijitCheckBoxChecked", g.allItemsSelected);
 		}
 	});
-})();
+	
+	return _Selector;
+
+});

@@ -1,9 +1,15 @@
-dojo.provide("dojox.grid.enhanced.plugins.Rearrange");
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/connect",
+	"../../EnhancedGrid",
+	"../_Plugin",
+	"./_RowMapLayer"
+], function(dojo, lang, declare, array, connect, EnhancedGrid, _Plugin, _RowMapLayer){
 
-dojo.require("dojox.grid.enhanced._Plugin");
-dojo.require("dojox.grid.enhanced.plugins._RowMapLayer");
-
-dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugin, {
+var Rearrange = declare("dojox.grid.enhanced.plugins.Rearrange", _Plugin, {
 	// summary:
 	//		Provides a set of method to re-arrange the structure of grid.
 	
@@ -14,11 +20,11 @@ dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugi
 	constructor: function(grid, args){
 		this.grid = grid;
 		this.setArgs(args);
-		var rowMapLayer = new dojox.grid.enhanced.plugins._RowMapLayer(grid);
+		var rowMapLayer = new _RowMapLayer(grid);
 		dojox.grid.enhanced.plugins.wrap(grid, "_storeLayerFetch", rowMapLayer);
 	},
 	setArgs: function(args){
-		this.args = dojo.mixin(this.args || {}, args || {});
+		this.args = lang.mixin(this.args || {}, args || {});
 		this.args.setIdentifierForNewItem = this.args.setIdentifierForNewItem || function(v){return v;};
 	},
 	destroy: function(){
@@ -31,7 +37,7 @@ dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugi
 	_hasIdentity: function(points){
 		var g = this.grid, s = g.store, cells = g.layout.cells;
 		if(s.getFeatures()["dojo.data.api.Identity"]){
-			if(dojo.some(points, function(point){
+			if(array.some(points, function(point){
 				return s.getIdentityAttributes(g._by_idx[point.r].item) == cells[point.c].field;
 			})){
 				return true;
@@ -62,24 +68,22 @@ dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugi
 				++delta;
 			}
 		}
-		var leftCount = 0;
-		var rightCount = 0;
+		var leftCount = 0, rightCount = 0;
 		var maxCol = Math.max(colsToMove[colsToMove.length - 1], targetPos);
 		if(maxCol == cells.length){
 			--maxCol;
 		}
-		for(i = colsToMove[0]; i <= maxCol; ++i){
+		var minCol = Math.min(colsToMove[0], targetPos);
+		for(i = minCol; i <= maxCol; ++i){
 			var j = tmp[i];
 			if(j >= 0){
-				if(i != targetPos - delta + j){
-					mapping[i] = targetPos - delta + j;
-				}
-				leftCount = j + 1;
-				rightCount = colsToMove.length - j - 1;
-			}else if(i < targetPos && leftCount > 0){
-				mapping[i] = i - leftCount;
-			}else if(i >= targetPos && rightCount > 0){
-				mapping[i] = i + rightCount;
+				mapping[i] = targetPos - delta + j;
+			}else if(i < targetPos){
+				mapping[i] = minCol + leftCount;
+				++leftCount;
+			}else if(i >= targetPos){
+				mapping[i] = targetPos + colsToMove.length - delta + rightCount;
+				++rightCount;
 			}
 		}
 		//console.log("mapping:", mapping, ", colsToMove:", colsToMove,", target:", targetPos);
@@ -96,7 +100,7 @@ dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugi
 			}
 			++delta;
 			if(colIndex != targetPos){
-				layout.moveColumn(cells[colIndex].view.idx, cells[targetPos].view.idx, colIndex, targetPos, before);
+				layout.moveColumn(cells[colIndex].view.idx, cells[targetPos].view.idx, colIndex, targetPos, before && colIndex > targetPos);
 				cells = layout.cells;
 			}
 			if(targetPos <= colIndex){
@@ -104,7 +108,7 @@ dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugi
 			}
 		}
 		delete g._notRefreshSelection;
-		dojo.publish("dojox/grid/rearrange/move/" + g.id, ["col", mapping, colsToMove]);
+		connect.publish("dojox/grid/rearrange/move/" + g.id, ["col", mapping, colsToMove]);
 	},
 	moveRows: function(rowsToMove, targetPos){
 		// summary:
@@ -135,7 +139,7 @@ dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugi
 		len = arr.length;
 		if(len){
 			rowMap = {};
-			dojo.forEach(arr, function(r){
+			array.forEach(arr, function(r){
 				rowMap[r] = true;
 			});
 			mapping[arr[0]] = targetPos - len;
@@ -153,7 +157,7 @@ dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugi
 		len = arr.length;
 		if(len){
 			rowMap = {};
-			dojo.forEach(arr, function(r){
+			array.forEach(arr, function(r){
 				rowMap[r] = true;
 			});
 			mapping[arr[len - 1]] = targetPos + len - 1;
@@ -167,7 +171,7 @@ dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugi
 				}
 			}
 		}
-		var tmpMapping = dojo.clone(mapping);
+		var tmpMapping = lang.clone(mapping);
 		g.layer("rowmap").setMapping(mapping);
 		g.forEachLayer(function(layer){
 			if(layer.name() != "rowmap"){
@@ -181,7 +185,7 @@ dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugi
 		g._noInternalMapping = true;
 		g._refresh();
 		setTimeout(function(){
-			dojo.publish("dojox/grid/rearrange/move/" + g.id, ["row", tmpMapping, rowsToMove]);
+			connect.publish("dojox/grid/rearrange/move/" + g.id, ["row", tmpMapping, rowsToMove]);
 			g._noInternalMapping = false;
 		}, 0);
 	},
@@ -220,15 +224,15 @@ dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugi
 				console.warn("Can not write to identity!");
 				return;
 			}
-			dojo.forEach(sources, function(point){
+			array.forEach(sources, function(point){
 				s.setValue(g._by_idx[point.r].item, cells[point.c].field, "");
 			});
-			dojo.forEach(targets, function(point){
+			array.forEach(targets, function(point){
 				s.setValue(g._by_idx[point.r].item, cells[point.c].field, point.v);
 			});
 			s.save({
 				onComplete: function(){
-					dojo.publish("dojox/grid/rearrange/move/" + g.id, ["cell", {
+					connect.publish("dojox/grid/rearrange/move/" + g.id, ["cell", {
 						"from": cellsToMove,
 						"to": target
 					}]);
@@ -266,13 +270,13 @@ dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugi
 				console.warn("Can not write to identity!");
 				return;
 			}
-			dojo.forEach(targets, function(point){
+			array.forEach(targets, function(point){
 				s.setValue(g._by_idx[point.r].item, cells[point.c].field, point.v);
 			});
 			s.save({
 				onComplete: function(){
 					setTimeout(function(){
-						dojo.publish("dojox/grid/rearrange/copy/" + g.id, ["cell", {
+						connect.publish("dojox/grid/rearrange/copy/" + g.id, ["cell", {
 							"from": cellsToMove,
 							"to": target
 						}]);
@@ -309,12 +313,12 @@ dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugi
 				console.warn("Can not write to identity!");
 				return;
 			}
-			dojo.forEach(targets, function(point){
+			array.forEach(targets, function(point){
 				s.setValue(g._by_idx[point.r].item, cells[point.c].field, point.v);
 			});
 			s.save({
 				onComplete: function(){
-					dojo.publish("dojox/grid/rearrange/change/" + g.id, ["cell", target]);
+					connect.publish("dojox/grid/rearrange/change/" + g.id, ["cell", target]);
 				}
 			});
 		}
@@ -341,12 +345,12 @@ dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugi
 				console.warn("Can not write to identity!");
 				return;
 			}
-			dojo.forEach(targets, function(point){
+			array.forEach(targets, function(point){
 				s.setValue(g._by_idx[point.r].item, cells[point.c].field, "");
 			});
 			s.save({
 				onComplete: function(){
-					dojo.publish("dojox/grid/rearrange/change/" + g.id, ["cell", cellsToClear]);
+					connect.publish("dojox/grid/rearrange/change/" + g.id, ["cell", cellsToClear]);
 				}
 			});
 		}
@@ -359,26 +363,41 @@ dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugi
 				mapping = {},
 				obj = {idx: 0},
 				newRows = [], i,
+				emptyTarget = targetPos < 0;
 				_this = this;
 			var len = rowsToMove.length;
-			for(i = targetPos; i < g.rowCount; ++i){
-				mapping[i] = i + len;
+			if(emptyTarget){
+				targetPos = 0;
+			}else{
+				for(i = targetPos; i < g.rowCount; ++i){
+					mapping[i] = i + len;
+				}
 			}
 			if(s.getFeatures()['dojo.data.api.Write']){
 				if(sourceGrid){
 					var srcg = sourceGrid,
 						srcs = srcg.store,
-						thisItem;
-					for(i = 0; !thisItem; ++i){
-						thisItem = g._by_idx[i];
+						thisItem, attrs;
+					if(!emptyTarget){
+						for(i = 0; !thisItem; ++i){
+							thisItem = g._by_idx[i];
+						}
+						attrs = s.getAttributes(thisItem.item);
+					}else{
+						//If the target grid is empty, there is no way to retrieve attributes.
+						//So try to get attrs from grid.layout.cells[], but this might not be right
+						//since some fields may be missed(e.g ID fields), please use "setIdentifierForNewItem()" 
+						//to add those missed fields
+						attrs = array.map(g.layout.cells, function(cell){
+							return cell.field;
+						});
 					}
-					var attrs = s.getAttributes(thisItem.item);
 					var rowsToFetch = [];
-					dojo.forEach(rowsToMove, function(rowIndex, i){
+					array.forEach(rowsToMove, function(rowIndex, i){
 						var item = {};
 						var srcItem = srcg._by_idx[rowIndex];
 						if(srcItem){
-							dojo.forEach(attrs, function(attr){
+							array.forEach(attrs, function(attr){
 								item[attr] = srcs.getValue(srcItem.item, attr);
 							});
 							item = _this.args.setIdentifierForNewItem(item, s, rowCnt + obj.idx) || item;
@@ -394,8 +413,8 @@ dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugi
 							rowsToFetch.push(rowIndex);
 						}
 					});
-				}else if(rowsToMove.length && dojo.isObject(rowsToMove[0])){
-					dojo.forEach(rowsToMove, function(rowData, i){
+				}else if(rowsToMove.length && lang.isObject(rowsToMove[0])){
+					array.forEach(rowsToMove, function(rowData, i){
 						var item = _this.args.setIdentifierForNewItem(rowData, s, rowCnt + obj.idx) || rowData;
 						try{
 							s.newItem(item);
@@ -414,7 +433,7 @@ dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugi
 					onComplete: function(){
 						g._refresh();
 						setTimeout(function(){
-							dojo.publish("dojox/grid/rearrange/insert/" + g.id, ["row", newRows]);
+							connect.publish("dojox/grid/rearrange/insert/" + g.id, ["row", newRows]);
 						}, 0);
 					}
 				});
@@ -427,7 +446,7 @@ dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugi
 		var g = this.grid;
 		var s = g.store;
 		try{
-			dojo.forEach(dojo.map(rowsToRemove, function(rowIndex){
+			array.forEach(array.map(rowsToRemove, function(rowIndex){
 				return g._by_idx[rowIndex];
 			}), function(row){
 				if(row){
@@ -436,7 +455,7 @@ dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugi
 			});
 			s.save({
 				onComplete: function(){
-					dojo.publish("dojox/grid/rearrange/remove/" + g.id, ["row", rowsToRemove]);
+					connect.publish("dojox/grid/rearrange/remove/" + g.id, ["row", rowsToRemove]);
 				}
 			});
 		}catch(e){
@@ -458,7 +477,7 @@ dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugi
 			topRow, bottomRow, matched,
 			invalidPages = [];
 		
-		dojo.forEach(renderedPages, function(page, pageIndex){
+		array.forEach(renderedPages, function(page, pageIndex){
 			if(!page){ return; }
 			matched = false;
 			topRow = pageIndex * rowsPerPage;
@@ -478,4 +497,9 @@ dojo.declare("dojox.grid.enhanced.plugins.Rearrange", dojox.grid.enhanced._Plugi
 		return {topPage: topPage, bottomPage: bottomPage, invalidPages: invalidPages};
 	}
 });
-dojox.grid.EnhancedGrid.registerPlugin(dojox.grid.enhanced.plugins.Rearrange/*name:'rearrange'*/);
+
+EnhancedGrid.registerPlugin(Rearrange/*name:'rearrange'*/);
+
+return Rearrange;
+
+});

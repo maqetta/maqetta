@@ -1,11 +1,10 @@
-dojo.provide("dojox.charting.plot2d.Base");
-
-dojo.require("dojox.charting.scaler.primitive");
-dojo.require("dojox.charting.Element");
-dojo.require("dojox.charting.plot2d.common");
-dojo.require("dojox.charting.plot2d._PlotEvents");
-
+define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", 
+		"../Element", "./_PlotEvents", "dojo/_base/array",
+		"../scaler/primitive", "./common", "dojox/gfx/fx"],
+	function(lang, declare, hub, Element, PlotEvents, arr, primitive, common, fx){
 /*=====
+var Element = dojox.charting.Element;
+var PlotEvents = dojox.charting.plot2d._PlotEvents;
 dojox.charting.plot2d.__PlotCtorArgs = function(){
 	//	summary:
 	//		The base keyword arguments object for plot constructors.
@@ -14,11 +13,11 @@ dojox.charting.plot2d.__PlotCtorArgs = function(){
 	//		details).
 }
 =====*/
-dojo.declare("dojox.charting.plot2d.Base", [dojox.charting.Element, dojox.charting.plot2d._PlotEvents], {
+return declare("dojox.charting.plot2d.Base", [Element, PlotEvents], {
 	constructor: function(chart, kwArgs){
 		//	summary:
 		//		Create a base plot for charting.
-		//	chart: dojox.chart.Chart2D
+		//	chart: dojox.chart.Chart
 		//		The chart this plot belongs to.
 		//	kwArgs: dojox.charting.plot2d.__PlotCtorArgs?
 		//		An optional arguments object to help define the plot.
@@ -49,6 +48,58 @@ dojo.declare("dojox.charting.plot2d.Base", [dojox.charting.Element, dojox.charti
 		}
 		return this;	//	dojox.charting.plot2d.Base
 	},
+	toPage: function(coord){
+		//	summary:
+		//		Compute page coordinates from plot axis data coordinates.
+		//	coord: Object?
+		//		The coordinates in plot axis data coordinate space. For cartesian charts that is of the following form:
+		//			`{ hAxisName: 50, vAxisName: 200 }`
+		//		If not provided return the tranform method instead of the result of the transformation.
+		//	returns: Object
+		//		The resulting page pixel coordinates. That is of the following form:
+		//			`{ x: 50, y: 200 }`
+		var ah = this._hAxis, av = this._vAxis, 
+			sh = ah.getScaler(), sv = av.getScaler(),  
+			th = sh.scaler.getTransformerFromModel(sh),
+			tv = sv.scaler.getTransformerFromModel(sv),
+			c = this.chart.getCoords(),
+			o = this.chart.offsets, dim = this.chart.dim;
+		var t = function(coord){
+			var r = {};
+			r.x = th(coord[ah.name]) + c.x + o.l;
+			r.y = c.y + dim.height - o.b - tv(coord[av.name]);
+			return r;
+		};
+		// if no coord return the function so that we can capture the current transforms
+		// and reuse them later on
+		return coord?t(coord):t;
+	},
+	toData: function(coord){
+		//	summary:
+		//		Compute plot axis data coordinates from page coordinates.
+		//	coord: Object
+		//		The pixel coordinate in page coordinate space. That is of the following form:
+		//			`{ x: 50, y: 200 }`
+		//		If not provided return the tranform method instead of the result of the transformation.
+		//	returns: Object
+		//		The resulting plot axis data coordinates. For cartesian charts that is of the following form:
+		//			`{ hAxisName: 50, vAxisName: 200 }`
+		var ah = this._hAxis, av = this._vAxis, 
+			sh = ah.getScaler(), sv = av.getScaler(),  
+			th = sh.scaler.getTransformerFromPlot(sh),
+			tv = sv.scaler.getTransformerFromPlot(sv),
+			c = this.chart.getCoords(),
+			o = this.chart.offsets, dim = this.chart.dim;
+		var t = function(coord){
+			var r = {};
+			r[ah.name] = th(coord.x - c.x - o.l);
+			r[av.name] = tv(c.y + dim.height - coord.y  - o.b);
+			return r;
+		};
+		// if no coord return the function so that we can capture the current transforms
+		// and reuse them later on
+		return coord?t(coord):t;
+	},
 	addSeries: function(run){
 		//	summary:
 		//		Add a data series to this plot.
@@ -64,7 +115,7 @@ dojo.declare("dojox.charting.plot2d.Base", [dojox.charting.Element, dojox.charti
 		//		Calculate the min/max on all attached series in both directions.
 		//	returns: Object
 		//		{hmin, hmax, vmin, vmax} min/max in both directions.
-		return dojox.charting.plot2d.common.collectSimpleStats(this.series);
+		return common.collectSimpleStats(this.series);
 	},
 	calculateAxes: function(dim){
 		//	summary:
@@ -88,7 +139,7 @@ dojo.declare("dojox.charting.plot2d.Base", [dojox.charting.Element, dojox.charti
 		//		Returns whether or not any of this plot's data series need to be rendered.
 		//	returns: Boolean
 		//		Flag indicating if any of this plot's series are invalid and need rendering.
-		return dojo.some(this.series, function(item){ return item.dirty; });	//	Boolean
+		return arr.some(this.series, function(item){ return item.dirty; });	//	Boolean
 	},
 	performZoom: function(dim, offsets){
 		//	summary:
@@ -107,7 +158,7 @@ dojo.declare("dojox.charting.plot2d.Base", [dojox.charting.Element, dojox.charti
 			hBounds = this._hScaler.bounds,
 			xOffset = (hBounds.from - hBounds.lower) * hBounds.scale,
 			vBounds = this._vScaler.bounds,
-			yOffset = (vBounds.from - vBounds.lower) * vBounds.scale;
+			yOffset = (vBounds.from - vBounds.lower) * vBounds.scale,
 			// get incremental zooming various
 			rVScale = vs / this.lastWindow.vscale,
 			rHScale = hs / this.lastWindow.hscale,
@@ -117,7 +168,7 @@ dojo.declare("dojox.charting.plot2d.Base", [dojox.charting.Element, dojox.charti
 				((this.lastWindow.vscale == 1)? vs : this.lastWindow.vscale),
 
 			shape = this.group,
-			anim = dojox.gfx.fx.animateTransform(dojo.delegate({
+			anim = fx.animateTransform(lang.delegate({
 				shape: shape,
 				duration: 1200,
 				transform:[
@@ -127,12 +178,12 @@ dojo.declare("dojox.charting.plot2d.Base", [dojox.charting.Element, dojox.charti
 					{name:"translate", start: [0, 0], end: [rXOffset, rYOffset]}
 				]}, this.zoom));
 
-		dojo.mixin(this.lastWindow, {vscale: vs, hscale: hs, xoffset: xOffset, yoffset: yOffset});
+		lang.mixin(this.lastWindow, {vscale: vs, hscale: hs, xoffset: xOffset, yoffset: yOffset});
 		//add anim to zooming action queue,
 		//in order to avoid several zooming action happened at the same time
 		this.zoomQueue.push(anim);
 		//perform each anim one by one in zoomQueue
-		dojo.connect(anim, "onEnd", this, function(){
+		hub.connect(anim, "onEnd", this, function(){
 			this.zoom = null;
 			this.zoomQueue.shift();
 			if(this.zoomQueue.length > 0){
@@ -177,7 +228,7 @@ dojo.declare("dojox.charting.plot2d.Base", [dojox.charting.Element, dojox.charti
 			}
 			this._hScaler = this._hAxis.getScaler();
 		}else{
-			this._hScaler = dojox.charting.scaler.primitive.buildScaler(stats.hmin, stats.hmax, dim.width);
+			this._hScaler = primitive.buildScaler(stats.hmin, stats.hmax, dim.width);
 		}
 		if(this._vAxis){
 			if(!this._vAxis.initialized()){
@@ -185,8 +236,9 @@ dojo.declare("dojox.charting.plot2d.Base", [dojox.charting.Element, dojox.charti
 			}
 			this._vScaler = this._vAxis.getScaler();
 		}else{
-			this._vScaler = dojox.charting.scaler.primitive.buildScaler(stats.vmin, stats.vmax, dim.height);
+			this._vScaler = primitive.buildScaler(stats.vmin, stats.vmax, dim.height);
 		}
 		return this;	//	dojox.charting.plot2d.Base
 	}
+});
 });

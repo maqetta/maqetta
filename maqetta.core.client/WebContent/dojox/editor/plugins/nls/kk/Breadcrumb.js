@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	"nodeActions": "${nodeName} Әрекеттер",
 	"selectContents": "Мазмұнын таңдау",
@@ -8,3 +10,5 @@
 	"moveEnd": "Жүгіргіні аяғына жылжыту"
 })
 
+//end v1.x content
+);

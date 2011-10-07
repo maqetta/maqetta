@@ -1,9 +1,8 @@
-dojo.provide("dojox.charting.DataChart");
-dojo.require("dojox.charting.Chart2D");
-dojo.require("dojox.charting.themes.PlotKit.blue");
-dojo.experimental("dojox.charting.DataChart");
-
-(function(){
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/html", "dojo/_base/connect",
+	 "dojo/_base/array", "./Chart2D", "./themes/PlotKit/blue", "dojo/dom"], 
+	 function(kernel, lang, declare, html, hub, arr, Chart, blue, dom){
+	// FIXME: This module drags in all Charting modules because of the Chart2D dependency...it is VERY heavy
+	kernel.experimental("dojox.charting.DataChart");
 
 	// Defaults for axes
 	//	to be mixed in with xaxis/yaxis custom properties
@@ -39,8 +38,10 @@ dojo.experimental("dojox.charting.DataChart");
 		tension:2,
 		gap:2
 	};
-
-	dojo.declare("dojox.charting.DataChart", [dojox.charting.Chart2D], {
+	/*=====
+	var Chart = dojox.charting.Chart;
+	=====*/
+	return declare("dojox.charting.DataChart", Chart, {
 		//	summary:
 		//		DataChart
 		//		Extension to the 2D chart that connects to a data store in
@@ -113,7 +114,7 @@ dojo.experimental("dojox.charting.DataChart");
 		//
 		//		chartTheme: dojox.charting.themes.*
 		//			The theme to style the chart. Defaults to PlotKit.blue.
-		chartTheme: dojox.charting.themes.PlotKit.blue,
+		chartTheme: blue,
 		//
 		//		displayRange: Number
 		//			The number of major ticks to show on the xaxis
@@ -164,18 +165,18 @@ dojo.experimental("dojox.charting.DataChart");
 			//			chartPlot: Object
 			//				Options for chart elements (lines, bars, etc)
 
-			this.domNode = dojo.byId(node);
+			this.domNode = dom.byId(node);
 
-			dojo.mixin(this, kwArgs);
+			lang.mixin(this, kwArgs);
 
-			this.xaxis = dojo.mixin(dojo.mixin({}, _xaxis), kwArgs.xaxis);
+			this.xaxis = lang.mixin(lang.mixin({}, _xaxis), kwArgs.xaxis);
 			if(this.xaxis.labelFunc == "seriesLabels"){
-				this.xaxis.labelFunc = dojo.hitch(this, "seriesLabels");
+				this.xaxis.labelFunc = lang.hitch(this, "seriesLabels");
 			}
 
-			this.yaxis = dojo.mixin(dojo.mixin({}, _yaxis), kwArgs.yaxis);
+			this.yaxis = lang.mixin(lang.mixin({}, _yaxis), kwArgs.yaxis);
 			if(this.yaxis.labelFunc == "seriesLabels"){
-				this.yaxis.labelFunc = dojo.hitch(this, "seriesLabels");
+				this.yaxis.labelFunc = lang.hitch(this, "seriesLabels");
 			}
 
 			// potential event's collector
@@ -208,9 +209,9 @@ dojo.experimental("dojox.charting.DataChart");
 			this.addAxis("x", this.xaxis);
 			this.addAxis("y", this.yaxis);
 			chartPlot.type = kwArgs.type || "Markers"
-			this.addPlot("default", dojo.mixin(chartPlot, kwArgs.chartPlot));
+			this.addPlot("default", lang.mixin(chartPlot, kwArgs.chartPlot));
 
-			this.addPlot("grid", dojo.mixin(kwArgs.grid || {}, {type: "Grid", hMinorLines: true}));
+			this.addPlot("grid", lang.mixin(kwArgs.grid || {}, {type: "Grid", hMinorLines: true}));
 
 			if(this.showing){
 				this.render();
@@ -222,7 +223,7 @@ dojo.experimental("dojox.charting.DataChart");
 		},
 
 		destroy: function(){
-			dojo.forEach(this._events, dojo.disconnect);
+			arr.forEach(this._events, hub.disconnect);
 			this.inherited(arguments);
 		},
 
@@ -241,10 +242,10 @@ dojo.experimental("dojox.charting.DataChart");
 			this.label = this.store.getLabelAttributes();
 			this.queryOptions = queryOptions || queryOptions;
 
-			dojo.forEach(this._events, dojo.disconnect);
+			arr.forEach(this._events, hub.disconnect);
 			this._events = [
-				dojo.connect(this.store, "onSet", this, "onSet"),
-				dojo.connect(this.store, "onError", this, "onError")
+				hub.connect(this.store, "onSet", this, "onSet"),
+				hub.connect(this.store, "onError", this, "onError")
 			];
 			this.fetch();
 		},
@@ -253,7 +254,7 @@ dojo.experimental("dojox.charting.DataChart");
 			// summary:
 			//		If chart is hidden, show it
 			if(!this.showing){
-				dojo.style(this.domNode, "display", "");
+				html.style(this.domNode, "display", "");
 				this.showing = true;
 				this.render();
 			}
@@ -263,7 +264,7 @@ dojo.experimental("dojox.charting.DataChart");
 			//		If chart is showing, hide it
 			//		Prevents rendering while hidden
 			if(this.showing){
-				dojo.style(this.domNode, "display", "none");
+				html.style(this.domNode, "display", "none");
 				this.showing = false;
 			}
 		},
@@ -289,7 +290,7 @@ dojo.experimental("dojox.charting.DataChart");
 				if(!this.onSetItems[nm]){
 					this.onSetItems[nm] = item;
 				}
-				this.onSetInterval = setTimeout(dojo.hitch(this, function(){
+				this.onSetInterval = setTimeout(lang.hitch(this, function(){
 					clearTimeout(this.onSetInterval);
 					var items = [];
 					for(var nm in this.onSetItems){
@@ -342,9 +343,9 @@ dojo.experimental("dojox.charting.DataChart");
 			if(!items || !items.length){ return; }
 
 			if(this.items && this.items.length != items.length){
-				dojo.forEach(items, function(m){
+				arr.forEach(items, function(m){
 					var id = this.getProperty(m, "id");
-					dojo.forEach(this.items, function(m2, i){
+					arr.forEach(this.items, function(m2, i){
 						if(this.getProperty(m2, "id") == id){
 							this.items[i] = m2;
 						}
@@ -366,7 +367,7 @@ dojo.experimental("dojox.charting.DataChart");
 
 				this.seriesData[nm] = [];
 				this.seriesDataBk[nm] = [];
-				dojo.forEach(items, function(m, i){
+				arr.forEach(items, function(m, i){
 					var field = this.getProperty(m, this.fieldName);
 					this.seriesData[nm].push(field);
 				}, this);
@@ -374,7 +375,7 @@ dojo.experimental("dojox.charting.DataChart");
 			}else{
 
 				// each item is a seperate series.
-				dojo.forEach(items, function(m, i){
+				arr.forEach(items, function(m, i){
 					var nm = this.store.getLabel(m);
 					if(!this.seriesData[nm]){
 						this.seriesData[nm] = [];
@@ -383,7 +384,7 @@ dojo.experimental("dojox.charting.DataChart");
 
 					// the property in the item we are using
 					var field = this.getProperty(m, this.fieldName);
-					if(dojo.isArray(field)){
+					if(lang.isArray(field)){
 						// Data is an array, so it's a snapshot, and not
 						//	live, updating data
 						//
@@ -396,7 +397,7 @@ dojo.experimental("dojox.charting.DataChart");
 							//
 							// create empty chart elements by starting an array
 							//	with zeros until we reach our relevant data
-							var ar = dojo.map(new Array(i+1), function(){ return 0; });
+							var ar = arr.map(new Array(i+1), function(){ return 0; });
 							ar.push(Number(field));
 							this.seriesData[nm] = ar;
 
@@ -456,12 +457,12 @@ dojo.experimental("dojox.charting.DataChart");
 			//
 			if(!this.store){ return; }
 			this.store.fetch({query:this.query, queryOptions:this.queryOptions, start:this.start, count:this.count, sort:this.sort,
-				onComplete:dojo.hitch(this, function(data){
-					setTimeout(dojo.hitch(this, function(){
+				onComplete:lang.hitch(this, function(data){
+					setTimeout(lang.hitch(this, function(){
 						this.onData(data)
 					}),0);
 				}),
-				onError:dojo.hitch(this, "onError")
+				onError:lang.hitch(this, "onError")
 			});
 		},
 
@@ -470,9 +471,9 @@ dojo.experimental("dojox.charting.DataChart");
 			//		Convenience method to convert a label array of strings
 			//		into an array of objects
 			//
-			if(!axis.labels || dojo.isObject(axis.labels[0])){ return null; }
+			if(!axis.labels || lang.isObject(axis.labels[0])){ return null; }
 
-			axis.labels = dojo.map(axis.labels, function(ele, i){
+			axis.labels = arr.map(axis.labels, function(ele, i){
 				return {value:i, text:ele};
 			});
 			return null; // null
@@ -514,4 +515,4 @@ dojo.experimental("dojox.charting.DataChart");
 			this.resize(w, h);
 		}
 	});
-})();
+});

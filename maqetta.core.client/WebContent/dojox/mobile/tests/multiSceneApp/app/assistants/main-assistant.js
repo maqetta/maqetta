@@ -1,4 +1,3 @@
-dojo.provide("MainAssistant");
 dojo.require("dojox.mobile.app.SceneAssistant");
 
 dojo.declare("MainAssistant", dojox.mobile.app.SceneAssistant, {
@@ -19,7 +18,7 @@ dojo.declare("MainAssistant", dojox.mobile.app.SceneAssistant, {
     var launcher = dijit.byId("secondSceneLauncher");
     
     console.log("launcher = " , launcher, " node = ", this.domNode);
-    this.connect(launcher, "onClick", function(){
+    this.connect(launcher.domNode, "onclick", function(){
       console.log("launching the second scene");
       
       _this.controller.stageController.pushScene("second", "Came from Main Scene");

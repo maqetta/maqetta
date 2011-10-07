@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	singleSort: "Ordine singolo",
 	nestedSort: "Ordine nidificato",
@@ -9,4 +11,6 @@
 	indirectSelectionCheckBox: "Riga ${0}, selezione multipla, casella di spunta",
 	selectAll: "Seleziona tutto"
 })
+//end v1.x content
+);
 

@@ -4,39 +4,50 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>Transition on Orientation Change</title>
-		<link href="../themes/iphone/iphone.css" rel="stylesheet"></link>
+		<link href="../themes/iphone/base.css" rel="stylesheet">
 		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true, mblAlwaysHideAddressBar: true"></script>
 
 		<script language="JavaScript" type="text/javascript">
-			//dojo.require("dojo.parser"); // Use the lightweight parser.
-			dojo.require("dojox.mobile.parser");
-			dojo.require("dojox.mobile");
-			dojo.requireIf(!dojo.isWebKit, "dojox.mobile.compat");
-
-			dojo.addOnLoad(function(){
+			dojo.require("dojox.mobile");			// This is a mobile app.
+			dojo.require("dojox.mobile.parser");	// This mobile app supports running on desktop browsers
+			dojo.require("dojox.mobile.compat");	// This mobile app uses declarative programming with fast mobile parser
+			dojo.ready(function(){
 				var portrait = dijit.byId("portrait");
 				var landscape = dijit.byId("landscape");
+				var timer;
 				var onChange = function(){
-					if(window.orientation == 0 && dojox.mobile.currentView != portrait){
-						landscape.performTransition("portrait", 1, "fade");
-					}else if (window.orientation != 0 && dojox.mobile.currentView != landscape){
-						portrait.performTransition("landscape", 1, "fade");
+					var dim = dojox.mobile.getScreenSize();
+					var n, t;
+					if(timer){
+						clearTimeout(timer);
+					}
+					if(dim.h > dim.w && dojox.mobile.currentView != portrait){
+						n = landscape.domNode;
+						t = (dojo.hasClass(n, "mblIn") || dojo.hasClass(n, "mblOut")) ? 2000 : 0;
+						timer = setTimeout(function(){
+							landscape.performTransition("portrait", 1, "fade");
+							timer = null;
+						}, t);
+					}else if (dim.h <= dim.w && dojox.mobile.currentView != landscape){
+						n = portrait.domNode;
+						t = (dojo.hasClass(n, "mblIn") || dojo.hasClass(n, "mblOut")) ? 2000 : 0;
+						timer = setTimeout(function(){
+							portrait.performTransition("landscape", 1, "fade");
+							timer = null;
+						}, t);
 					}
 				};
-				if(window.orientation != 0){
+				if(dojo.hasClass(dojo.doc.documentElement, "dj_landscape")){
 					setTimeout(function(){
 						landscape.show();
 					}, 0);
 				}
-				if(window.onorientationchange !== undefined){
-					dojo.connect(dojo.global, "onorientationchange", onChange);
-				}else{
-					dojo.connect(dojo.global, "onresize", onChange);
-				}
+				dojo.connect(null, (dojo.global.onorientationchange !== undefined && !dojo.isAndroid)
+					? "onorientationchange" : "onresize", null, onChange);
 			});
 		</script>
 	</head>
-	<body>
+	<body style="visibility:hidden;">
 		<div id="portrait" dojoType="dojox.mobile.View" selected="true">
 			<h1 dojoType="dojox.mobile.Heading">Portrait</h1>
 			<div style="text-align:center;padding-top:20px;">

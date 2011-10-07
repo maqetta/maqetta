@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	smiley: "İfade Ekle",
 	emoticonSmile: "gülümseme",
@@ -20,3 +22,5 @@
 	emoticonCrying: "ağlayan ifade"
 })
 
+//end v1.x content
+);

@@ -1,12 +1,8 @@
-dojo.provide("dojox.encoding.tests.bits");
-dojo.require("dojox.encoding.bits");
-
-(function(){
+define(['doh', '../bits'], function(doh, dcb){
 	var msg1 = "The rain in Spain falls mainly on the plain.";
 	var msg2 = "The rain in Spain falls mainly on the plain.1";
 	var msg3 = "The rain in Spain falls mainly on the plain.ab";
 	var msg4 = "The rain in Spain falls mainly on the plain.!@#";
-	var dcb = dojox.encoding.bits;
 	
 	var s2b = function(s){
 		var b = [];
@@ -23,7 +19,7 @@ dojo.require("dojox.encoding.bits");
 	};
 	
 	var testOut = function(msg){
-		var a = new dojox.encoding.bits.OutputStream();
+		var a = new dcb.OutputStream();
 		for(var i = 0; i < msg.length; ++i){
 			var v = msg.charCodeAt(i);
 			var j = Math.floor(Math.random() * 7) + 1;
@@ -34,7 +30,7 @@ dojo.require("dojox.encoding.bits");
 	};
 
 	var testIn = function(msg){
-		var a = new dojox.encoding.bits.InputStream(s2b(msg), msg.length * 8);
+		var a = new dcb.InputStream(s2b(msg), msg.length * 8);
 		var r = [];
 		for(var i = 0; i < msg.length; ++i){
 			var j = Math.floor(Math.random() * 7) + 1;
@@ -44,8 +40,8 @@ dojo.require("dojox.encoding.bits");
 	};
 	
 	var test = function(msg){
-		var a = new dojox.encoding.bits.InputStream(s2b(msg), msg.length * 8);
-		var o = new dojox.encoding.bits.OutputStream();
+		var a = new dcb.InputStream(s2b(msg), msg.length * 8);
+		var o = new dcb.OutputStream();
 		while(a.getWidth() > 0){
 			var w = Math.min(a.getWidth(), 3);
 			o.putBits(a.getBits(w), w);
@@ -53,7 +49,7 @@ dojo.require("dojox.encoding.bits");
 		return b2s(o.getBuffer());
 	};
 
-	tests.register("dojox.encoding.tests.bits", [
+	doh.register("dojox.encoding.tests.bits", [
 		function testBitsOut1(t){ t.assertEqual(msg1, testOut(msg1)); },
 		function testBitsOut2(t){ t.assertEqual(msg2, testOut(msg2)); },
 		function testBitsOut3(t){ t.assertEqual(msg3, testOut(msg3)); },
@@ -67,4 +63,4 @@ dojo.require("dojox.encoding.bits");
 		function testBits3(t){ t.assertEqual(msg3, test(msg3)); },
 		function testBits4(t){ t.assertEqual(msg4, test(msg4)); }
 	]);
-})();
+});

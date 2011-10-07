@@ -67,9 +67,9 @@
 		
 		dojo.addOnLoad(function(){
 			dojo.parser.parse(dojo.query(".testTitle")[0]);
-			dijit._Templated.getCachedTemplate(dojo.moduleUrl("dojox.grid","resources/_Grid.html"));
-			dijit._Templated.getCachedTemplate(dojo.moduleUrl("dojox.grid", "resources/Expando.html"));
-			dijit._Templated.getCachedTemplate(dojo.moduleUrl("dojox.grid","resources/View.html"));
+			dijit._TemplatedMixin.getCachedTemplate(dojo.moduleUrl("dojox.grid","resources/_Grid.html"));
+			dijit._TemplatedMixin.getCachedTemplate(dojo.moduleUrl("dojox.grid", "resources/Expando.html"));
+			dijit._TemplatedMixin.getCachedTemplate(dojo.moduleUrl("dojox.grid","resources/View.html"));
 			jsonStore.fetch({onComplete: function(){
 				doProfiling = dojo.isMoz && doProfiling;
 				dojo.connect(window, "onresize", function(){

@@ -100,20 +100,25 @@ dojo.mixin(davinci.Runtime,	{
 	 */
 	
 	getProject: function(){
+		/*
 		var params = davinci.Workbench.queryParams();
 		if(params.project) {
 			return decodeURI(params.project);
 		}
-		
-		return davinci.Runtime._DEFAULT_PROJECT;
+		*/
+		return davinci.Workbench.getActiveProject() || davinci.Runtime._DEFAULT_PROJECT;
 	},
 	
 	loadProject: function(projectName){
-
+		/*
 		var params = davinci.Workbench.queryParams();
 		params.project = encodeURI(projectName);
 		
+		
 		window.location.href=davinci.Workbench.location() + "?" + dojo.objectToQuery(params);
+		*/
+		davinci.Workbench.setActiveProject(projectName);
+		location.reload(true);
 	},
 	
 	run: function() {

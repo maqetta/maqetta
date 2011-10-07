@@ -1,19 +1,16 @@
-dojo.provide("dojox.charting.widget.Chart");
-
-dojo.require("dijit._Widget");
-dojo.require("dojox.charting.Chart");
-dojo.require("dojox.lang.functional");
-
-(function(){
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array","dojo/_base/html","dojo/_base/declare", "dojo/query",
+	"dijit/_Widget", "../Chart", "dojox/lang/utils", "dojox/lang/functional","dojox/lang/functional/lambda",
+	"dijit/_base/manager"], 
+	function(kernel, lang, arr, html, declare, query, Widget, Chart, du, df, dfl){
+/*=====
+var Widget = dijit._Widget;
+=====*/
 	var collectParams, collectAxisParams, collectPlotParams,
 		collectActionParams, collectDataParams,
 		notNull = function(o){ return o; },
-		df = dojox.lang.functional,
-		du = dojox.lang.utils,
-		dc = dojox.charting,
-		d = dojo;
+		dc = lang.getObject("dojox.charting");
 	
-	dojo.declare("dojox.charting.widget.Chart", dijit._Widget, {
+	var ChartWidget = declare("dojox.charting.widget.Chart", Widget, {
 		// parameters for the markup
 		
 		// theme for the chart
@@ -22,27 +19,32 @@ dojo.require("dojox.lang.functional");
 		// margins for the chart: {l: 10, r: 10, t: 10, b: 10}
 		margins: null,
 		
-		// chart area
-		stroke: null,
-		fill:   null,
+		// chart area, define them as undefined to:
+		// allow the parser to take them into account
+		// but make sure they have no defined value to not override theme
+		stroke: undefined,
+		fill:   undefined,
 		
 		// methods
 		
 		buildRendering: function(){
-			var n = this.domNode = this.srcNodeRef;
+			this.inherited(arguments);
+			
+			n = this.domNode;
 			
 			// collect chart parameters
-			var axes    = d.query("> .axis", n).map(collectAxisParams).filter(notNull),
-				plots   = d.query("> .plot", n).map(collectPlotParams).filter(notNull),
-				actions = d.query("> .action", n).map(collectActionParams).filter(notNull),
-				series  = d.query("> .series", n).map(collectDataParams).filter(notNull);
+			var axes    = query("> .axis", n).map(collectAxisParams).filter(notNull),
+				plots   = query("> .plot", n).map(collectPlotParams).filter(notNull),
+				actions = query("> .action", n).map(collectActionParams).filter(notNull),
+				series  = query("> .series", n).map(collectDataParams).filter(notNull);
 			
 			// build the chart
 			n.innerHTML = "";
-			var c = this.chart = new dc.Chart(n, {
+			var c = this.chart = new Chart(n, {
 				margins: this.margins,
 				stroke:  this.stroke,
-				fill:    this.fill
+				fill:    this.fill,
+				textDir: this.textDir
 			});
 			
 			// add collected parameters
@@ -57,7 +59,7 @@ dojo.require("dojox.lang.functional");
 			});
 			
 			this.actions = actions.map(function(action){
-				return new action.action(c, action.plot, action.kwArgs)
+				return new action.action(c, action.plot, action.kwArgs);
 			});
 			
 			var render = df.foldl(series, function(render, series){
@@ -81,18 +83,18 @@ dojo.require("dojox.lang.functional");
 					);
 					if(series.kwArgs.sort){
 						// sort is a complex object type and doesn't survive coercian
-						kw.sort = dojo.clone(series.kwArgs.sort);
+						kw.sort = lang.clone(series.kwArgs.sort);
 					}
-					d.mixin(kw, {
+					lang.mixin(kw, {
 						onComplete: function(data){
 							var values;
 							if("valueFn" in series.kwArgs){
 								var fn = series.kwArgs.valueFn;
-								values = d.map(data, function(x){
+								values = arr.map(data, function(x){
 									return fn(series.data.getValue(x, series.field, 0));
 								});
 							}else{
-								values = d.map(data, function(x){
+								values = arr.map(data, function(x){
 									return series.data.getValue(x, series.field, 0);
 								});
 							}
@@ -147,12 +149,12 @@ dojo.require("dojox.lang.functional");
 		var o = {name: name, kwArgs: {}}, kw = o.kwArgs;
 		if(type){
 			if(dc.axis2d[type]){
-				type = dojox._scopeName + ".charting.axis2d." + type;
+				type = dojo._scopeName + "x.charting.axis2d." + type;
 			}
 			var axis = eval("(" + type + ")");
 			if(axis){ kw.type = axis; }
 		}else{
-			type = dojox._scopeName + ".charting.axis2d.Default";
+			type = dojo._scopeName + "x.charting.axis2d.Default";
 		}
 		collectParams(node, type, kw);
 		// compatibility conversions
@@ -177,12 +179,12 @@ dojo.require("dojox.lang.functional");
 		var o = {name: name, kwArgs: {}}, kw = o.kwArgs;
 		if(type){
 			if(dc.plot2d && dc.plot2d[type]){
-				type = dojox._scopeName + ".charting.plot2d." + type;
+				type = dojo._scopeName + "x.charting.plot2d." + type;
 			}
 			var plot = eval("(" + type + ")");
 			if(plot){ kw.type = plot; }
 		}else{
-			type = dojox._scopeName + ".charting.plot2d.Default";
+			type = dojo._scopeName + "x.charting.plot2d.Default";
 		}
 		collectParams(node, type, kw);
 		return o;
@@ -195,7 +197,7 @@ dojo.require("dojox.lang.functional");
 		var o = {plot: plot, kwArgs: {}}, kw = o.kwArgs;
 		if(type){
 			if(dc.action2d[type]){
-				type = dojox._scopeName + ".charting.action2d." + type;
+				type = dojo._scopeName + "x.charting.action2d." + type;
 			}
 			var action = eval("(" + type + ")");
 			if(!action){ return null; }
@@ -208,7 +210,7 @@ dojo.require("dojox.lang.functional");
 	};
 
 	collectDataParams = function(node){
-		var ga = d.partial(d.attr, node);
+		var ga = lang.partial(html.attr, node);
 		var name = ga("name");
 		if(!name){ return null; }
 		var o = { name: name, kwArgs: {} }, kw = o.kwArgs, t;
@@ -233,7 +235,7 @@ dojo.require("dojox.lang.functional");
 		t = ga("data");
 		if(t != null){
 			o.type = "data";
-			o.data = t ? dojo.map(String(t).split(','), Number) : [];
+			o.data = t ? arr.map(String(t).split(','), Number) : [];
 			return o;
 		}
 		t = ga("array");
@@ -259,9 +261,11 @@ dojo.require("dojox.lang.functional");
 			t = ga("sort");
 			if(!!t){ kw.sort = eval("("+t+")"); }
 			t = ga("valueFn");
-			if(!!t){ kw.valueFn = df.lambda(t); }
+			if(!!t){ kw.valueFn = dfl.lambda(t); }
 			return o;
 		}
 		return null;
 	};
-})();
+	
+	return ChartWidget;
+});

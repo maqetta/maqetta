@@ -5,7 +5,8 @@
 	margin:0px;
 	padding:0px;
 	border-collapse:collapse;	
-	background-color:#fff;	
+	background-color: #fff;
+	border: 1px solid #DBDBDB;
 }
 /*  messages */
 .claro .dojoxGridMasterMessages {
@@ -29,28 +30,32 @@
 
 /* header */
 .claro .dojoxGridHeader {
-	background-color:#FFF;
+	background: transparent;
+	margin-left: -2px;
 }
-.claro .dojoxGridHeader .dojoxGridCell { 
-	background:url("images/header.png") #e5edf4 repeat-x top;
+.claro .dojoxGridHeader .dojoxGridCell {
+	padding: 2px 5px;
+	vertical-align: top;
+	background: transparent;
 	border-style:solid;
 	border-width:1px;
-	border-color:#BCBCBC #BCBCBC #BCBCBC transparent;
+	border-color: #FFFFFF #BCBCBC #BCBCBC #FFFFFF;
 }
 .dj_ie6 .claro .dojoxGridHeader .dojoxGridCell { 
 	border-color:#BCBCBC #BCBCBC #BCBCBC #e5edf4;
 }
+.claro .dojoxGridHeader .dojoxGridCellOver {
+	background: #9dcfff;
+}
 
 /* header sorting arrow */
 .claro .dojoxGridSortNode {
-	background:url("images/header_shadow.png") #e5edf4 repeat-x bottom;
 	text-decoration:none;
 	display:block;
-	padding:4px 6px 5px 6px;
-	border:1px solid #e0eefb;
-}
-.dj_ie6 .claro .dojoxGridSortNode {
-	background-image:none;
+	white-space: normal;
+	background: none;
+	border: none;
+	padding: 0;
 }
 .claro .dojoxGridCellOver .dojoxGridSortNode {
 	background-color:#9dcfff;
@@ -73,10 +78,34 @@
 }
 
 /* header rows */
+.claro .dojoxGridMasterHeader {
+	background: url("../../../resources/images/header.png") #EDF2F7 repeat-x bottom;
+	background: -moz-linear-gradient(top, #EDF2F7, #D0DFEA);
+	background: -webkit-gradient(linear, left top, left bottom, from(#EDF2F7), to(#D0DFEA));
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#FFEDF2F7, endColorstr=#FFD0DFEA);
+	border: 1px solid #FFFFFF;
+	border-right: none;
+}
+.claro .dojoxGridMasterHeader .dojoxGridRowTable {
+	border-left: 1px solid #BCBCBC;
+	border-right: 1px solid #FFFFFF;
+	background-color: transparent;
+}
 .dj_ie .claro .dojoxGridHeader .dojoxGridRowTable {
 	border-collapse:separate;
 }
-
+.claro .dojoxGridHeader .dojoxGridRowTable tr {
+	background: none;
+}
+.claro .dojoxGridHeader tr:first-child .dojoxGridCell {
+	border-top: 1px solid transparent;
+}
+.claro .dojoxGridHeader:first-child .dojoxGridRowTable {
+	border-left-width: 0;
+}
+.claro .dojoxGridHeader:first-child {
+	margin-left: -1px;
+}
 /* Grid view content */
 .claro .dojoxGridScrollbox {
 	background-color: #fefefe;
@@ -101,9 +130,6 @@
 }
 .claro .dojoxGridRowbarOver .dojoxGridRowbarTable {
 	background-color:#abd5fd;
-}
-.claro .dojoxGridRowBarActive .dojoxGridRowbarTable {
-	background-color:#91c9fe;
 }
 .claro .dojoxGridRowbarSelected {
 	background-color:#abd5fd;
@@ -130,11 +156,14 @@
 
 /* cells */
 .claro .dojoxGridCell {
-	padding:0px;
+	outline: none;
+	padding: 3px 5px;
+	word-wrap: break-word;
 	border:1px solid transparent;
+	border-color: transparent #E5DAC8 #E5DAC8 transparent;
 }
 .dj_ie6 .claro .dojoxGridCell {
-	border-color:#fff
+	border-color: #F5F5F5;
 }
 .dj_ie6 .claro .dojoxGridRowOdd .dojoxGridCell {
 	border-left-color:#f4f9fd;
@@ -149,10 +178,8 @@
 	border-bottom:1px solid #BFD6EB;
 }
 .claro .dojoxGridCellFocus {
+	outline: none;
 	border:1px dashed darkblue !important;
-}
-.claro .dojoxGridCellContent {
-	padding:4px 6px 4px 6px;
 }
 
 /*  Single Affordance Hover Effect */
@@ -232,8 +259,9 @@
 }
 .claro .dojoxGridExpandoNode {
 	background-image: url('../../../dijit/themes/claro/images/treeExpandImages.png');
-    width: 16px;
-    height: 16px;
+	width: 16px;
+	height: 16px;
+	cursor: pointer;
 	background-position: 1px 0px; /* for closed state */
 }
 .dj_ie6 .claro .dojoxGridExpandoNode {

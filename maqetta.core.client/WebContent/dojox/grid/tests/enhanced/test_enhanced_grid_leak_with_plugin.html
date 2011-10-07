@@ -52,6 +52,7 @@
 	<script type="text/javascript" src="../../../../dijit/tests/_testCommon.js"></script>
 	<script type="text/javascript">
 		dojo.require("dijit.form.CheckBox");
+		dojo.require("dijit._WidgetsInTemplateMixin");
 		dojo.require("dojox.grid.enhanced.plugins.Filter");
 		dojo.require("dojox.grid.enhanced.plugins.exporter.CSVWriter");
 		dojo.require("dojox.grid.enhanced.plugins.Printer");
@@ -180,7 +181,7 @@
 			sb.push("</tbody></table>");
 			return sb.join('');
 		}
-		dojo.declare("PluginTable", [dijit._Widget, dijit._Templated], {
+		dojo.declare("PluginTable", [dijit._Widget, dijit._TemplatedMixin, dijit._WidgetsInTemplateMixin], {
 			templateString: getTableString(),
 			widgetsInTemplate: true,
 			_onChangePlugin:  function(pluginName, cb, e){

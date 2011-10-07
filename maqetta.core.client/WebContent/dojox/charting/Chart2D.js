@@ -1,35 +1,16 @@
-dojo.provide("dojox.charting.Chart2D");
-
-dojo.deprecated("dojox.charting.Chart2D", "Use dojo.charting.Chart instead and require all other components explicitly", "2.0");
-
-// require all axes to support references by name
-dojo.require("dojox.charting.axis2d.Default");
-dojo.require("dojox.charting.axis2d.Invisible");
-
-// require all plots to support references by name
-dojo.require("dojox.charting.plot2d.Default");
-dojo.require("dojox.charting.plot2d.Lines");
-dojo.require("dojox.charting.plot2d.Areas");
-dojo.require("dojox.charting.plot2d.Markers");
-dojo.require("dojox.charting.plot2d.MarkersOnly");
-dojo.require("dojox.charting.plot2d.Scatter");
-dojo.require("dojox.charting.plot2d.Stacked");
-dojo.require("dojox.charting.plot2d.StackedLines");
-dojo.require("dojox.charting.plot2d.StackedAreas");
-dojo.require("dojox.charting.plot2d.Columns");
-dojo.require("dojox.charting.plot2d.StackedColumns");
-dojo.require("dojox.charting.plot2d.ClusteredColumns");
-dojo.require("dojox.charting.plot2d.Bars");
-dojo.require("dojox.charting.plot2d.StackedBars");
-dojo.require("dojox.charting.plot2d.ClusteredBars");
-dojo.require("dojox.charting.plot2d.Grid");
-dojo.require("dojox.charting.plot2d.Pie");
-dojo.require("dojox.charting.plot2d.Bubble");
-dojo.require("dojox.charting.plot2d.Candlesticks");
-dojo.require("dojox.charting.plot2d.OHLC");
-dojo.require("dojox.charting.plot2d.Spider");
-
-// require the main file
-dojo.require("dojox.charting.Chart");
-
-dojox.charting.Chart2D = dojox.charting.Chart;
+define(["dojo/_base/kernel", "dojox", "./Chart", 
+	"./axis2d/Default", "./axis2d/Invisible", "./plot2d/Default", "./plot2d/Lines", "./plot2d/Areas",
+	"./plot2d/Markers", "./plot2d/MarkersOnly", "./plot2d/Scatter", "./plot2d/Stacked", "./plot2d/StackedLines",
+	"./plot2d/StackedAreas", "./plot2d/Columns", "./plot2d/StackedColumns", "./plot2d/ClusteredColumns",
+	"./plot2d/Bars", "./plot2d/StackedBars", "./plot2d/ClusteredBars", "./plot2d/Grid", "./plot2d/Pie",
+	"./plot2d/Bubble", "./plot2d/Candlesticks", "./plot2d/OHLC", "./plot2d/Spider"], 
+	  function(dojo, dojox, Chart){
+	dojo.deprecated("dojox.charting.Chart2D", "Use dojo.charting.Chart instead and require all other components explicitly", "2.0");
+	// module:
+	//		dojox/charting/Chart2D
+	// summary:
+	//		This is a compatibility module which loads all charting modules that used to be automatically
+	//		loaded in versions prior to 1.6.  It is highly recommended for performance reasons that
+	//		this module no longer be referenced by applications.  Instead, use dojox/charting/Chart.
+	return dojox.charting.Chart2D = Chart;
+});

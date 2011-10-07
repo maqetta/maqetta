@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	displayOptions: "[옵션 표시]",
 	title: "제목",
@@ -9,3 +11,5 @@
 	summary: "요약",
 	content: "컨텐츠"
 })
+//end v1.x content
+);

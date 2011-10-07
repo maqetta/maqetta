@@ -1,8 +1,8 @@
-define("dojox/data/ClientFilter", ["dojo", "dojox", "dojo/data/util/filter"], function(dojo, dojox) {
+define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/Deferred", "dojo/data/util/filter"], 
+  function(declare, lang, array, Deferred, filter) {
 
 // This is an abstract data store module for adding updateable result set functionality to an existing data store class
-(function(){
-	var cf;
+
 	var addUpdate = function(store,create,remove){
 		// create a handler that adds to the list of notifications
 		return function(item){
@@ -10,39 +10,37 @@ define("dojox/data/ClientFilter", ["dojo", "dojox", "dojo/data/util/filter"], fu
 					create:create && item,
 					remove:remove && item
 				});
-			cf.onUpdate();
+			ClientFilter.onUpdate();
 		}
 	};
-	cf = dojo.declare("dojox.data.ClientFilter",
-		null,
-		{
+	var ClientFilter = declare("dojox.data.ClientFilter", null, {
 			cacheByDefault: false,
 			constructor: function(){
 				// summary:
 				//		This is an abstract class that data stores can extend to add updateable result set functionality
-				// 		as well as client side querying capabilities. This enables
+				//		as well as client side querying capabilities. This enables
 				//		widgets to be aware of how active results change in response to the modifications/notifications.
 				//
 				//	description:
 				//		To a update a result set after a notification (onNew, onSet, and onDelete),
-				// 		widgets can call the updateResultSet method. Widgets can use the updated
+				//		widgets can call the updateResultSet method. Widgets can use the updated
 				//		result sets to determine how to react to notifications, and how to update their displayed results
 				//		based on changes.
 				//
-				// 		This module will use the best available information to update result sets, using query attribute
-				// 		objects to determine if items are in a result set, and using the sort arrays to maintain sort
-				// 		information. However, queries can be opaque strings, and this module can not update
-				// 		results by itself in this case. In this situations, data stores can provide a isUpdateable(request) function
-				// 		and matchesQuery(item,request) function. If a data store can handle a query, it can return true from
-				// 		isUpdateable and if an item matches a query, it can return true from matchesQuery. Here is
+				//		This module will use the best available information to update result sets, using query attribute
+				//		objects to determine if items are in a result set, and using the sort arrays to maintain sort
+				//		information. However, queries can be opaque strings, and this module can not update
+				//		results by itself in this case. In this situations, data stores can provide a isUpdateable(request) function
+				//		and matchesQuery(item,request) function. If a data store can handle a query, it can return true from
+				//		isUpdateable and if an item matches a query, it can return true from matchesQuery. Here is
 				//		definition of isUpdateable and matchesQuery
-				// 		isUpdateable(request)  - request is the keywords arguments as is passed to the fetch function.
-				// 		matchesQuery(item,request) - item is the item to test, and request is the value arguments object
+				//		isUpdateable(request)  - request is the keywords arguments as is passed to the fetch function.
+				//		matchesQuery(item,request) - item is the item to test, and request is the value arguments object
 				//				for the fetch function.
 				//
 				//		You can define a property on this object instance "cacheByDefault" to a value of true that will
-				// 		cause all queries to be cached by default unless the cache queryOption is explicitly set to false.
-				// 		This can be defined in the constructor options for ServiceStore/JsonRestStore and subtypes.
+				//		cause all queries to be cached by default unless the cache queryOption is explicitly set to false.
+				//		This can be defined in the constructor options for ServiceStore/JsonRestStore and subtypes.
 				//
 				// example:
 				//		to make a updated-result-set data store from an existing data store:
@@ -90,7 +88,7 @@ define("dojox/data/ClientFilter", ["dojo", "dojox", "dojo/data/util/filter"], fu
 							}
 						}
 						if(create && this.matchesQuery(create,request) && // if there is a new/replacement item and it matches the query
-								dojo.indexOf(resultSet,create) == -1){ // and it doesn't already exist in query
+								array.indexOf(resultSet,create) == -1){ // and it doesn't already exist in query
 							resultSet.push(create); // should this go at the beginning by default instead?
 							updated = true;
 						}
@@ -114,9 +112,9 @@ define("dojox/data/ClientFilter", ["dojo", "dojox", "dojo/data/util/filter"], fu
 				//	summary:
 				//		Determines whether the provided arguments are super/sub sets of each other
 				// argsSuper:
-				// 		Dojo Data Fetch arguments
+				//		Dojo Data Fetch arguments
 				// argsSub:
-				// 		Dojo Data Fetch arguments
+				//		Dojo Data Fetch arguments
 				if(argsSuper.query == argsSub.query){
 					return {};
 				}
@@ -125,14 +123,14 @@ define("dojox/data/ClientFilter", ["dojo", "dojox", "dojo/data/util/filter"], fu
 						(!argsSuper.query || typeof argsSuper.query == 'object'))){
 					return false;
 				}
-				var clientQuery = dojo.mixin({},argsSub.query);
+				var clientQuery = lang.mixin({},argsSub.query);
 				for(var i in argsSuper.query){
 					if(clientQuery[i] == argsSuper.query[i]){
 						delete clientQuery[i];
 					}else if(!(typeof argsSuper.query[i] == 'string' &&
 							// if it is a pattern, we can test to see if it is a sub-pattern
 							// FIXME: This is not technically correct, but it will work for the majority of cases
-							dojo.data.util.filter.patternToRegExp(argsSuper.query[i]).test(clientQuery[i]))){
+							filter.patternToRegExp(argsSuper.query[i]).test(clientQuery[i]))){
 						return false;
 					}
 				}
@@ -150,11 +148,11 @@ define("dojox/data/ClientFilter", ["dojo", "dojox", "dojo/data/util/filter"], fu
 					if(clientQuery !== false){
 						var defResult = cachedArgs._loading;
 						if(!defResult){
-							defResult = new dojo.Deferred();
+							defResult = new Deferred();
 							defResult.callback(cachedArgs.cacheResults);
 						}
 						defResult.addCallback(function(results){
-							results = self.clientSideFetch(dojo.mixin(dojo.mixin({}, args),{query:clientQuery}), results);
+							results = self.clientSideFetch(lang.mixin(lang.mixin({}, args),{query:clientQuery}), results);
 							defResult.fullLength = results._fullLength;
 							return results;
 						});
@@ -163,7 +161,7 @@ define("dojox/data/ClientFilter", ["dojo", "dojox", "dojo/data/util/filter"], fu
 					}
 				}
 				if(!defResult){
-					var serverArgs = dojo.mixin({}, args);
+					var serverArgs = lang.mixin({}, args);
 					var putInCache = (args.queryOptions || 0).cache;
 					var fetchCache = this._fetchCache;
 					if(putInCache === undefined ? this.cacheByDefault : putInCache){
@@ -171,7 +169,7 @@ define("dojox/data/ClientFilter", ["dojo", "dojox", "dojo/data/util/filter"], fu
 						if(args.start || args.count){
 							delete serverArgs.start;
 							delete serverArgs.count;
-							args.clientQuery = dojo.mixin(args.clientQuery || {}, {
+							args.clientQuery = lang.mixin(args.clientQuery || {}, {
 								start: args.start,
 								count: args.count
 							});
@@ -182,7 +180,7 @@ define("dojox/data/ClientFilter", ["dojo", "dojox", "dojo/data/util/filter"], fu
 					defResult= args._loading = this._doQuery(args);
 					 
 					defResult.addErrback(function(){
-						fetchCache.splice(dojo.indexOf(fetchCache, args), 1);
+						fetchCache.splice(array.indexOf(fetchCache, args), 1);
 					});
 				}
 				var version = this.serverVersion;
@@ -254,7 +252,7 @@ define("dojox/data/ClientFilter", ["dojo", "dojox", "dojo/data/util/filter"], fu
 					var match = query[i];
 					var value = this.getValue(item,i);
 					if((typeof match == 'string' && (match.match(/[\*\.]/) || ignoreCase)) ?
-						!dojo.data.util.filter.patternToRegExp(match, ignoreCase).test(value) :
+						!filter.patternToRegExp(match, ignoreCase).test(value) :
 						value != match){
 						return false;
 					}
@@ -263,7 +261,7 @@ define("dojox/data/ClientFilter", ["dojo", "dojox", "dojo/data/util/filter"], fu
 			},
 			makeComparator: function(sort){
 				//	summary:
-				// 		returns a comparator function for the given sort order array
+				//		returns a comparator function for the given sort order array
 				//	sort:
 				//		See dojox.data.api.Read.fetch
 				var current = sort.shift();
@@ -288,8 +286,7 @@ define("dojox/data/ClientFilter", ["dojo", "dojox", "dojo/data/util/filter"], fu
 			}
 		}
 	);
-	cf.onUpdate = function(){};
-})();
+	ClientFilter.onUpdate = function(){};
 
-return dojox.data.ClientFilter;
+	return ClientFilter;
 });

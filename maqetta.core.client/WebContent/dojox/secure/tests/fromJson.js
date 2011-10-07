@@ -1,6 +1,6 @@
 dojo.provide("dojox.secure.tests.fromJson");
+
 dojo.require("dojox.secure.fromJson");
-dojo.require("dojox.secure.tests.otherParsers");
 
 var smallDataSet = {
 	prop1: null,

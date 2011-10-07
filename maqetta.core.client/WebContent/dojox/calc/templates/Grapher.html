@@ -1,22 +1,22 @@
 <div>
-<div dojoAttachPoint="chartsParent" class="dojoxCalcChartHolder"></div>
-<span dojoAttachPoint="outerDiv">
-<div dojoType="dijit.form.DropDownButton" dojoAttachPoint="windowOptions" class="dojoxCalcDropDownForWindowOptions" title="Window Options">
+<div data-dojo-attach-point="chartsParent" class="dojoxCalcChartHolder"></div>
+<div data-dojo-attach-point="outerDiv">
+<div data-dojo-type="dijit.form.DropDownButton" data-dojo-attach-point="windowOptions" class="dojoxCalcDropDownForWindowOptions" title="Window Options">
 	<div>Window Options</div>
-	<div dojoType="dijit.TooltipDialog" dojoAttachPoint="windowOptionsInside" class="dojoxCalcTooltipDialogForWindowOptions" title="">
+	<div data-dojo-type="dijit.TooltipDialog" data-dojo-attach-point="windowOptionsInside" class="dojoxCalcTooltipDialogForWindowOptions" title="">
 		<table class="dojoxCalcGraphOptionTable">
 			<tr>
 				<td>
 					Width:
 				</td>
 				<td>
-					<input dojoType="dijit.form.TextBox" dojoAttachPoint="graphWidth" class="dojoxCalcGraphWidth" value="500" />
+					<input data-dojo-type="dijit.form.TextBox" data-dojo-attach-point="graphWidth" class="dojoxCalcGraphWidth" value="500" />
 				</td>
 				<td>
 					Height:
 				</td>
 				<td>
-					<input dojoType="dijit.form.TextBox" dojoAttachPoint="graphHeight" class="dojoxCalcGraphHeight" value="500" />
+					<input data-dojo-type="dijit.form.TextBox" data-dojo-attach-point="graphHeight" class="dojoxCalcGraphHeight" value="500" />
 				</td>
 			</tr>
 			<tr>
@@ -24,14 +24,14 @@
 					X >=
 				</td>
 				<td>
-					<input dojoType="dijit.form.TextBox" dojoAttachPoint="graphMinX" class="dojoxCalcGraphMinX" value="-10" />
+					<input data-dojo-type="dijit.form.TextBox" data-dojo-attach-point="graphMinX" class="dojoxCalcGraphMinX" value="-10" />
 				</td>
 
 				<td>
 					X <=
 				</td>
 				<td>
-					<input dojoType="dijit.form.TextBox" dojoAttachPoint="graphMaxX" class="dojoxCalcGraphMaxX" value="10" />
+					<input data-dojo-type="dijit.form.TextBox" data-dojo-attach-point="graphMaxX" class="dojoxCalcGraphMaxX" value="10" />
 				</td>
 			</tr>
 			<tr>
@@ -39,14 +39,14 @@
 					Y >=
 				</td>
 				<td>
-					<input dojoType="dijit.form.TextBox" dojoAttachPoint="graphMinY" class="dojoxCalcGraphMinY" value="-10" />
+					<input data-dojo-type="dijit.form.TextBox" data-dojo-attach-point="graphMinY" class="dojoxCalcGraphMinY" value="-10" />
 				</td>
 
 				<td>
 					Y <=
 				</td>
 				<td>
-					<input dojoType="dijit.form.TextBox" dojoAttachPoint="graphMaxY" class="dojoxCalcGraphMaxY" value="10" />
+					<input data-dojo-type="dijit.form.TextBox" data-dojo-attach-point="graphMaxY" class="dojoxCalcGraphMaxY" value="10" />
 				</td>
 			</tr>
 		</table>
@@ -56,20 +56,20 @@
 <BR>
 
 <div class="dojoxCalcGrapherFuncOuterDiv">
-	<table class="dojoxCalcGrapherFuncTable" dojoAttachPoint="graphTable">
+	<table class="dojoxCalcGrapherFuncTable" data-dojo-attach-point="graphTable">
 	</table>
 </div>
 
-<div dojoType="dijit.form.DropDownButton" dojoAttachPoint='addFuncButton' class="dojoxCalcDropDownAddingFunction">
+<div data-dojo-type="dijit.form.DropDownButton" data-dojo-attach-point='addFuncButton' class="dojoxCalcDropDownAddingFunction">
 	<div>Add Function</div>
-	<div dojoType="dijit.TooltipDialog" dojoAttachPoint="addFuncInside" class="dojoxCalcTooltipDialogAddingFunction" title="">
+	<div data-dojo-type="dijit.TooltipDialog" data-dojo-attach-point="addFuncInside" class="dojoxCalcTooltipDialogAddingFunction" title="">
 		<table class="dojoxCalcGrapherModeTable">
 			<tr>
 				<td>
 					Mode:
 				</td>
 				<td>
-					<select dojoType="dijit.form.Select" dojoAttachPoint="funcMode" class="dojoxCalcFunctionModeSelector">
+					<select data-dojo-type="dijit.form.Select" data-dojo-attach-point="funcMode" class="dojoxCalcFunctionModeSelector">
 						<option value="y=" selected="selected">y=</option>
 						<option value="x=">x=</option>
 					</select>
@@ -79,7 +79,7 @@
 	
 			<tr>
 				<td>
-					<input dojoType="dijit.form.Button" dojoAttachPoint="createFunc" class="dojoxCalcAddFunctionButton" label="Create" />
+					<input data-dojo-type="dijit.form.Button" data-dojo-attach-point="createFunc" class="dojoxCalcAddFunctionButton" label="Create" />
 				</td>
 			</tr>
 		</table>
@@ -90,28 +90,28 @@
 <table class="dijitInline dojoxCalcGrapherLayout">
 	<tr>
 		<td class="dojoxCalcGrapherButtonContainer">
-			<input dojoType="dijit.form.Button" class="dojoxCalcGrapherButton" dojoAttachPoint='selectAllButton' label="Select All" />
+			<input data-dojo-type="dijit.form.Button" class="dojoxCalcGrapherButton" data-dojo-attach-point='selectAllButton' label="Select All" />
 		</td>
 		<td class="dojoxCalcGrapherButtonContainer">
-			<input dojoType="dijit.form.Button" class="dojoxCalcGrapherButton" dojoAttachPoint='deselectAllButton' label="Deselect All" />
-		</td>
-	</tr>
-	<tr>
-		<td class="dojoxCalcGrapherButtonContainer">
-			<input dojoType="dijit.form.Button" class="dojoxCalcGrapherButton" dojoAttachPoint='drawButton'label="Draw Selected" />
-		</td>
-		<td class="dojoxCalcGrapherButtonContainer">
-			<input dojoType="dijit.form.Button" class="dojoxCalcGrapherButton" dojoAttachPoint='eraseButton' label="Erase Selected" />
+			<input data-dojo-type="dijit.form.Button" class="dojoxCalcGrapherButton" data-dojo-attach-point='deselectAllButton' label="Deselect All" />
 		</td>
 	</tr>
 	<tr>
 		<td class="dojoxCalcGrapherButtonContainer">
-			<input dojoType="dijit.form.Button" class="dojoxCalcGrapherButton" dojoAttachPoint='deleteButton' label="Delete Selected" />
+			<input data-dojo-type="dijit.form.Button" class="dojoxCalcGrapherButton" data-dojo-attach-point='drawButton'label="Draw Selected" />
 		</td>
 		<td class="dojoxCalcGrapherButtonContainer">
-			<input dojoType="dijit.form.Button" class="dojoxCalcGrapherButton" dojoAttachPoint='closeButton' label="Close" />
+			<input data-dojo-type="dijit.form.Button" class="dojoxCalcGrapherButton" data-dojo-attach-point='eraseButton' label="Erase Selected" />
+		</td>
+	</tr>
+	<tr>
+		<td class="dojoxCalcGrapherButtonContainer">
+			<input data-dojo-type="dijit.form.Button" class="dojoxCalcGrapherButton" data-dojo-attach-point='deleteButton' label="Delete Selected" />
+		</td>
+		<td class="dojoxCalcGrapherButtonContainer">
+			<input data-dojo-type="dijit.form.Button" class="dojoxCalcGrapherButton" data-dojo-attach-point='closeButton' label="Close" />
 		</td>
 	</tr>
 </table>
-</span>
+</div>
 </div>

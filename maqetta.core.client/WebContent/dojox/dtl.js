@@ -1,2 +1,3 @@
-dojo.provide("dojox.dtl");
-dojo.require("dojox.dtl._base");
+define(["./dtl/_base"], function(dxdtl){
+	return dxdtl;
+});

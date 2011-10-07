@@ -1,4 +1,4 @@
-dojo.provide("dojox.validate.ca");
+define(["dojo/_base/kernel", "./_base", "./regexp", "./us"], function(dojo, validate, xregexp, us){
 /*=====
 
 	dojox.validate.ca = {
@@ -6,18 +6,18 @@ dojo.provide("dojox.validate.ca");
 	}
 
 =====*/
-dojo.require("dojox.validate._base");
 
-dojo.mixin(dojox.validate.ca,{
+var ca = dojo.getObject("ca", true, validate);
+dojo.mixin(ca, {
 	
 	isPhoneNumber: function(/* String */value){
 		// summary: Validates Canadian 10-digit phone number for several common formats
-		return dojox.validate.us.isPhoneNumber(value);  // Boolean
+		return us.isPhoneNumber(value);  // Boolean
 	},
 
 	isProvince: function(/* String[2] */value) {
 		// summary: Validates Canadian province abbreviations (2 characters)
-		var re = new RegExp("^" + dojox.validate.regexp.ca.province() + "$", "i");
+		var re = new RegExp("^" + xregexp.ca.province() + "$", "i");
 		return re.test(value); // Boolean
 	},
  
@@ -31,7 +31,7 @@ dojo.mixin(dojox.validate.ca,{
 		//		use the Luhn Algorithm to validate number.
 		//
 		var flags = { format: [ "###-###-###", "### ### ###", "#########" ]};
-		return dojox.validate.isNumberFormat(value, flags); // Boolean
+		return validate.isNumberFormat(value, flags); // Boolean
 	},
 
 	isPostalCode: function(value) {
@@ -43,8 +43,11 @@ dojo.mixin(dojox.validate.ca,{
 		//		where A is a letter and N is a digit, with a space
 		//		separating the third and fourth characters.
 		//
-		var re = new RegExp("^" + dojox.validate.regexp.ca.postalCode() + "$", "i");
+		var re = new RegExp("^" + xregexp.ca.postalCode() + "$", "i");
 		return re.test(value); // Boolean
 	}
 
+});
+
+return ca;
 });

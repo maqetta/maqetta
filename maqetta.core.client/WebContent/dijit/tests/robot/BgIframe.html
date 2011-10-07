@@ -9,15 +9,14 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../dojo/dojo.js"
-			data-dojo-config="parseOnLoad: true, isDebug: true"></script>
+		<script type="text/javascript" src="../../../dojo/dojo.js"></script>
 			
 		<script type="text/javascript" src="../helpers.js"></script>
 			
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 
-			dojo.addOnLoad(function(){
+			dojo.ready(function(){
 				doh.robot.initRobot('../test_bgIframe.html');
 	
 				dojo.forEach(["applet", "xapp"], function(xId){

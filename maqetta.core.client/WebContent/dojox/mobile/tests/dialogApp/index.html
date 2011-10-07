@@ -14,12 +14,8 @@
 		</style>
 		<script type="text/javascript" src="../../../../dojo/dojo.js" djConfig="parseOnLoad: false"></script>
     
-    <!-- 
-      Include the files directly, as some mobile operating systems do not
-      allow synchronous XHR, and therefore break dojo.require
-    -->
-		<script type="text/javascript" src="../../../mobile/app.js"></script>
 		<script language="JavaScript" type="text/javascript">
+			dojo.require("dojox.mobile.app");
 			dojo.requireIf(!dojo.isWebKit, "dojox.mobile.app.compat");
       
             var appInfo = {

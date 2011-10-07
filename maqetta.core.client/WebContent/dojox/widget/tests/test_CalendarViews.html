@@ -22,13 +22,11 @@
 		<!-- not needed, for testing alternate themes -->
 		<script type="text/javascript" src="../../../dijit/tests/_testCommon.js"></script>
 
-		<script type="text/javascript" src="../../../dijit/dijit.js"></script>
-		<script type="text/javascript" src="../../../dijit/_Calendar.js"></script>
-		<script type="text/javascript" src="../Calendar.js"></script>
-		<script type="text/javascript" src="../CalendarViews.js"></script>
 		<script type="text/javascript">
 			dojo.require("dojo.parser");	// scan page for widgets and instantiate them
+			dojo.require("dijit.dijit");
 			dojo.require("dojox.fx");
+			dojo.require("dojox.widget.Calendar");
 			dojo.require("dojox.widget.CalendarViews");
 
 			function log(str){

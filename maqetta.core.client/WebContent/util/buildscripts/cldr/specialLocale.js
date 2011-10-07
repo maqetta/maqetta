@@ -129,13 +129,13 @@ for(var i= 0; i < srcLocaleList.length; i++){
 	for(var len = 0; len < BUNDLE_MAP.length; len++){
 		try{
 			//declare bundles
-			dojo.i18n._requireLocalization('dojo.cldr', BUNDLE_MAP[len], srcLocale);
-			dojo.i18n._requireLocalization('dojo.cldr', BUNDLE_MAP[len], aliasLocale);
+//			dojo.i18n._requireLocalization('dojo.cldr', BUNDLE_MAP[len], srcLocale);
+//			dojo.i18n._requireLocalization('dojo.cldr', BUNDLE_MAP[len], aliasLocale);
 						
 			//get bundles
 			var srcBundle = dojo.i18n.getLocalization('dojo.cldr', BUNDLE_MAP[len], srcLocale);
 			var aliasBundle = dojo.i18n.getLocalization('dojo.cldr', BUNDLE_MAP[len], aliasLocale);
-		}catch(e){print(e);/*it's ok if no bundle found*/}
+		}catch(e){/* logStr+="specialLocale: an exception occurred: "+e; /* it's ok if no bundle found*/}
 		
 		if(!aliasBundle && !srcBundle){
 			break;

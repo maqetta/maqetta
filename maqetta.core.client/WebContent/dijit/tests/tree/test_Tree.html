@@ -22,10 +22,16 @@
 	<script type="text/javascript">
 		dojo.require("dojo.data.ItemFileReadStore");
 		dojo.require("dijit.dijit"); // optimize: load dijit layer
+
 		dojo.require("dijit.Tree");
 		dojo.require("dijit.tree.ForestStoreModel");
+
 		dojo.require("dijit.ColorPalette");
+
 		dojo.require("dijit.Menu");
+		dojo.require("dijit.MenuItem");
+		dojo.require("dijit.PopupMenuItem");
+
 		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
 	</script>
 
@@ -151,7 +157,7 @@
 			}
 		</script>
 		<script type="dojo/method" data-dojo-event="getIconClass" data-dojo-args="item, opened">
-	       if (!item || continentStore.getValue(item, "type") != "continent")
+	       if(!item || continentStore.getValue(item, "type") != "continent")
 				return (!item || this.model.mayHaveChildren(item)) ? (opened ? "dijitFolderOpened" : "dijitFolderClosed") : "dijitLeaf"
 	       	else
 	       		return "";

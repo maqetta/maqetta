@@ -112,7 +112,7 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 };
 
 davinci.theme.getHelper = function(theme){
-
+	if (!theme) { return; } //FIXME: should theme ever be falsey?
     if (theme._helper){
         return theme._helper;
     }

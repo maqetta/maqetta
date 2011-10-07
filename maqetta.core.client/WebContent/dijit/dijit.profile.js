@@ -11,7 +11,7 @@ var testResourceRe = /^dijit\/tests\//,
 var profile = {
 	resourceTags:{
 		test: function(filename, mid){
-			return testResourceRe.test(mid);
+			return testResourceRe.test(mid) || mid=="dijit/robot" || mid=="dijit/robotx";
 		},
 
 		copyOnly: function(filename, mid){

@@ -185,8 +185,6 @@
 					<include name="WebContent/util/"/>
 				</fileset>
 		</copy>
-		<echo message="BaseDir: ${baseDir}" />
-		<echo message="Target Folder: ${target.folder}" />
 		<java fork="true" failonerror="true" output="${logFile}" append="true" dir="${target.folder}/WebContent/util/buildscripts"
 			    maxmemory="1024m"
 				classpath="${target.folder}/WebContent/util/shrinksafe/js.jar;${target.folder}/WebContent/util/shrinksafe/shrinksafe.jar"
@@ -219,8 +217,6 @@
 		</copy>
 		-->
 		<echo message="caching dojo build.."/>
-		<echo message="BaseDir: ${baseDir}" />
-		<echo message="Target Folder: ${target.folder}" />
 		
 		<copy todir="${dojo.cache.directory}" failonerror="true" overwrite="true" description="move Dojo build">
 					<fileset dir="${target.folder}/WebContent/release/dojo">

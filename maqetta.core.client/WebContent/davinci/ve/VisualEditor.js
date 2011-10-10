@@ -57,18 +57,19 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 			}
 		}
 		var visualEditor = this;
-		this.contentPane.connect(this.contentPane,"resize",function(newPos){
+		this.contentPane.connect(this.contentPane, 'resize', function(newPos){
 			// "this" is the ContentPane dijit
-			var iframe=dojo.query('iframe',this.domNode)[0];
+			var iframe = dojo.query('iframe', this.domNode)[0];
 			if(iframe && iframe.contentDocument && iframe.contentDocument.body){
 				var bodyElem = iframe.contentDocument.body;
 				resizeBody(bodyElem, newPos);
+				visualEditor.getContext().select(visualEditor.getSelectedWidget()); //FIXME: should call updateFocus
 				if(!visualEditor._scrollHandler){
-					visualEditor._scrollHandler = dojo.connect(iframe.contentDocument, "onscroll", this, function(e){
-						var size={};
-						size.w = dojo.style(this.domNode,'width');
-						size.h = dojo.style(this.domNode,'height');
-						resizeBody(bodyElem, size);
+					visualEditor._scrollHandler = dojo.connect(iframe.contentDocument, 'onscroll', this, function(e){
+						resizeBody(bodyElem, {
+							w: dojo.style(this.domNode, 'width'),
+							h: dojo.style(this.domNode, 'height')
+						});
 					});
 				}
 			}
@@ -77,13 +78,8 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	
 	setDevice: function(deviceName) {
 	    this.deviceName = deviceName;
-	    var svgfilename;
-	    if(deviceName=='none'){
-	    	svgfilename = null;
-	    }else{
-			//FIXME: Path shouldn't be hard-coded
-	    	svgfilename = "app/preview/images/"+deviceName+".svg";
-	    }
+		//FIXME: Path shouldn't be hard-coded
+	    var svgfilename = deviceName == 'none' ? null : "app/preview/images/" + deviceName + ".svg";
 		this.silhouetteiframe.setSVGFilename(svgfilename);
 		this.getContext().setMobileTheme(deviceName);
 
@@ -169,10 +165,10 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 					var oldUrl = new davinci.model.Path(davinci.ve.utils.URLRewrite.getUrl(value.values[name]));
 					if(!oldUrl.isAbsolute){
 						var newUrl = oldUrl.relativeTo(filePath).toString();
-						var newValue = davinci.ve.utils.URLRewrite.replaceUrl(value.values[name], newUrl)
+						var newValue = davinci.ve.utils.URLRewrite.replaceUrl(value.values[name], newUrl);
 						allValues[name]=newValue;
 					}else{
-						allValues[name]=value.values[name];
+						allValues[name]=value.values[name]; //FIXME: combine with below
 					}
 				}else{
 					allValues[name]=value.values[name];

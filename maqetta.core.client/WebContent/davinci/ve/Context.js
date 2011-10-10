@@ -774,7 +774,7 @@ dojo.declare("davinci.ve.Context", null, {
 			window["loading" + context._id] = function() {
 				delete window["loading" + context._id];
 				var callbackData = context;
-			//	try {
+			try {
 					var win = dijit.getDocumentWindow(doc),
 					 	body = (context.rootNode = doc.body);
 					body.id = "myapp";
@@ -808,12 +808,12 @@ dojo.declare("davinci.ve.Context", null, {
 					win.require("dojo/_base/lang").isArray = win.dojo.isArray=function(it){
 						return it && Object.prototype.toString.call(it)=="[object Array]";
 					};
-				/*} catch(e) {
+				} catch(e) {
 					console.error(e);
 					// recreate the Error since we crossed frames
 					callbackData = new Error(e.message, e.fileName, e.lineNumber);
 					dojo.mixin(callbackData, e);
-				}*/
+				}
 
 				context._continueLoading(data, callback, callbackData, scope);
 			};

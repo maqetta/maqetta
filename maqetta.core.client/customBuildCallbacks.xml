@@ -191,10 +191,10 @@
 				classname="org.mozilla.javascript.tools.shell.Main"
 				description="Run Dojo build script"
 				>
-				<arg value="${basedir}/WebContent/dojo/dojo.js"/>
-				<arg value="baseUrl=${basedir}/WebContent/dojo"/>
+				<arg value="${target.folder}/WebContent/dojo/dojo.js"/>
+				<arg value="baseUrl=${target.folder}/WebContent/dojo"/>
 				<arg value="load=build"/>
-				<arg value="profileFile=${basedir}/davinci.profile.js"/>
+				<arg value="profileFile=${target.folder}/davinci.profile.js"/>
 				<arg value="action=release"/>
 				<arg value="cssOptimize=comments.keepLines"/>
 				<arg value="layerOptimize=shrinksafe.keepLines"/>
@@ -217,6 +217,7 @@
 		</copy>
 		-->
 		<echo message="caching dojo build.."/>
+		
 		<copy todir="${dojo.cache.directory}" failonerror="true" overwrite="true" description="move Dojo build">
 					<fileset dir="${target.folder}/WebContent/release/dojo">
 						<include name="davinci/"/>

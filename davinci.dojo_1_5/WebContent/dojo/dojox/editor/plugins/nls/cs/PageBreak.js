@@ -1,4 +1,0 @@
-({
-	"pageBreak": "Zalomení stránky"
-})
-

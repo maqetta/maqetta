@@ -1,3 +1,0 @@
-({
-	deleteButton: "[삭제]"
-})

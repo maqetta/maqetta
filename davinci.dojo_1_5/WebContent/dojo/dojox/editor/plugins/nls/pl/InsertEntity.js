@@ -1,4 +1,0 @@
-({
-	insertEntity: "Wstaw symbol"
-})
-

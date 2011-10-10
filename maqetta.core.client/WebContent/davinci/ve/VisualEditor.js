@@ -398,13 +398,11 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		// Either we should prompt user "You must save before you can preview in browser. OK to save?"
 		// or we should preview the working copy instead of the permanent file.
 		editor.save();
-		if(deviceName && deviceName.length>0 && deviceName!='none'){
+		if(deviceName && deviceName.length && deviceName!='none'){
 			var orientation_param = (this._orientation == 'landscape') ? '&orientation='+this._orientation : "";
-			var url = davinci.Workbench.location()+'?preview=1&device='+encodeURI(deviceName)+'&file='+encodeURI(fileURL)+orientation_param;
-			window.open(url);
-		}else{
-			window.open(fileURL);
+			fileURL = davinci.Workbench.location()+'?preview=1&device='+encodeURI(deviceName)+'&file='+encodeURI(fileURL)+orientation_param;
 		}
+		window.open(fileURL);
 	}
 });
 

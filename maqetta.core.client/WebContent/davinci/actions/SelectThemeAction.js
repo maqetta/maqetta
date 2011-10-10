@@ -18,8 +18,9 @@ dojo.declare("davinci.actions.SelectThemeAction", davinci.actions.Action, {
 		
 		var langObj = dojo.i18n.getLocalization("davinci.actions", "actions");
 		this._themeChooser = new davinci.ui.widgets.ThemeSelection({'value':theme, workspaceOnly:false, dojoVersion: ldojoVersion });
-		davinci.Workbench.showModal(this._themeChooser, langObj.selectTheme, "width:200px");//width needs to be adjusted to fit language
-		dojo.connect(this._themeChooser, "onChange", this, "_changeTheme");
+		this._themeChooser.buildRendering();
+		//davinci.Workbench.showModal(this._themeChooser, langObj.selectTheme, "width:200px");//width needs to be adjusted to fit language
+		//dojo.connect(this._themeChooser, "onChange", this, "_changeTheme");
 		
 	},
 

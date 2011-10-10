@@ -21,7 +21,7 @@
 	
 }
 
-.projectToolbar .buttons .renameIcon {
+.projectToolbarRenameIcon {
 	/* same as redo icon for now */
 	background-image: url(./img/sprite.png); /* FIXME: add logic for redo-disabled.gif? */
 	background-position: -82px -728px;
@@ -31,7 +31,7 @@
 }
 
 
-.projectToolbar .buttons .deleteIcon {
+.projectToolbarDeleteIcon {
 	background-image: url(./img/sprite.png); /* FIXME: add logic for remove-disabled.gif? */
 	background-position: 0 -648px;
 	background-repeat: no-repeat;

@@ -1,4 +1,0 @@
-({
-	"pageBreak": "Salto de página"
-})
-

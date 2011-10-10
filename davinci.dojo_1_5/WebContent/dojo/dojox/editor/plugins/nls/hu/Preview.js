@@ -1,4 +1,0 @@
-({
-	"preview": "Előzetes"
-})
-

@@ -1,6 +1,6 @@
 dojo.provide("davinci.ui.widgets.ProjectToolbar");
 dojo.require("davinci.ui.widgets.ProjectSelection");
-
+dojo.require("davinci.ui.Rename");
 
 
 dojo.declare("davinci.ui.widgets.ProjectToolbar",   [dijit._Widget, dijit._Templated], {
@@ -8,7 +8,8 @@ dojo.declare("davinci.ui.widgets.ProjectToolbar",   [dijit._Widget, dijit._Templ
 	templateString: dojo.cache("davinci.ui", "templates/projectToolbar.html"),
 	widgetsInTemplate: true,
 	_projectSelection : null,
-
+	invalid : [],
+	
 	postCreate : function(){
 		this.connect(this._projectSelection, "onChange", this._projectSelectionChanged);
 		this._currentProject = this._projectSelection.attr("value");
@@ -45,8 +46,8 @@ dojo.declare("davinci.ui.widgets.ProjectToolbar",   [dijit._Widget, dijit._Templ
 	},
 	
 	_rename : function(){
-		var newProject = this._projectSelection.attr("value");
-		
+		var project = this._projectSelection.attr("value");
+		davinci.Workbench.showModal(new davinci.ui.Rename(), 'Rename Project To....', 'height:110px;width: 200px');
 	}
 	
 });

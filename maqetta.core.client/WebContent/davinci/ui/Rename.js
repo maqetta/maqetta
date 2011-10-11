@@ -22,6 +22,9 @@ dojo.declare("davinci.ui.Rename",   [dijit._Widget,dijit._Templated], {
 		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 		dojo.mixin(this, langObj);
 		dojo.mixin(this, dijitLangObj);
+		if(!this._invalid)
+			this._invalid = {};
+		
 		this.inherited(arguments);
 	},
 	postCreate : function(){

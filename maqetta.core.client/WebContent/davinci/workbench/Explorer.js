@@ -13,6 +13,7 @@ dojo.require("davinci.ui.widgets.ProjectSelection");
 dojo.require("davinci.ui.Download");
 dojo.require("davinci.ui.DownloadSelected");
 dojo.require("davinci.ui.UserLibraries");
+dojo.require("davinci.ui.widgets.ProjectToolbar");
 
 dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 	
@@ -88,8 +89,10 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 		var topDiv = dojo.doc.createElement('div');
 
 		if(davinci.Runtime.singleProjectMode()){
-			var projectSelection = new davinci.ui.widgets.ProjectSelection({});
+			var projectSelection = new davinci.ui.widgets.ProjectToolbar({});
 			topDiv.appendChild(projectSelection.domNode);
+			
+			
 			dojo.connect(projectSelection, "onChange", function(){
 				var project = this.value;
 				davinci.Runtime.loadProject(project);

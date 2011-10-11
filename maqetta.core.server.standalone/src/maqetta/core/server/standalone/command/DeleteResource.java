@@ -24,6 +24,7 @@ public class DeleteResource extends Command {
                 errorString = "Problem deleting file: " + file.getPath();
             }
         }
+        user.rebuildWorkspace();
     }
 
     private void deleteDir(IVResource file) {

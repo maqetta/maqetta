@@ -6,6 +6,40 @@
 	padding-right:2px;
 	
 }
+
+.projectSelection{
+	display: inline-block;
+	float: left;
+	width:95%
+	
+}
+
+.projectToolbar .buttons{
+	display: inline-block;
+	float: right;
+	width:40px;
+	
+}
+
+.projectToolbarRenameIcon {
+	/* same as redo icon for now */
+	background-image: url(./img/sprite.png); /* FIXME: add logic for redo-disabled.gif? */
+	background-position: -82px -728px;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+
+
+.projectToolbarDeleteIcon {
+	background-image: url(./img/sprite.png); /* FIXME: add logic for remove-disabled.gif? */
+	background-position: 0 -648px;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+
+
 .userLibDialog .columnb{
 	
 	text-align:center;	
@@ -171,6 +205,17 @@
 	width: 16px;
 	height: 16px;
 }
+
+.renameIcon {
+	/* same as redo icon for now */
+	background-image: url(./img/sprite.png); /* FIXME: add logic for redo-disabled.gif? */
+	background-position: -82px -728px;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+
+
 .deleteIcon {
 	background-image: url(./img/sprite.png); /* FIXME: add logic for remove-disabled.gif? */
 	background-position: 0 -648px;

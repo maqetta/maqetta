@@ -62,14 +62,14 @@ dojo.declare("davinci.ui.widgets.ProjectDataStore",  dojo.data.ItemFileReadStore
 
 dojo.declare("davinci.ui.widgets.ProjectSelection",   dijit._Widget, {
 
-
+	
 	postCreate : function(){
 		
 		this._store = new davinci.ui.widgets.ProjectDataStore({});
 		this.combo = new dijit.form.ComboBox({store:this._store, required: false, style:"width:100%"});
 		dojo.connect(this.combo,"onChange",this,"_onChange");
 		
-		this.domNode = this.combo.domNode;
+		this.domNode.appendChild(this.combo.domNode);
 		this._populateProjects();
 	},
 	
@@ -87,19 +87,33 @@ dojo.declare("davinci.ui.widgets.ProjectSelection",   dijit._Widget, {
 	},
 	
 	_getValueAttr : function(){
-		this.value;
+		return this.value;
 	},
+	
+	_getSizeAttr : function(){
+		return this._numberOfProjects;
+	},
+	
+	_getProjectsAttr : function(){
+		return this._allProjects;
+	},
+	
 	_populateProjects : function(){
 		var workspace = davinci.resource.getWorkspace();
 		var store = this._store;
 		var combo = this.combo;
 		var me = this;
+		
 		davinci.resource.listProjects(dojo.hitch(this,function(projects){
 			
 			store.setValues(projects);
 			var activeProject = davinci.Runtime.getProject();
 			this.value = activeProject;
-			
+			this._numberOfProjects = projects.length;
+			this._allProjects = [];
+			for(var i=0;i<projects.length;i++){
+				this._allProjects.push(projects[i].name);
+			}
 			combo.attr('value', activeProject);
 		}));
 		/*

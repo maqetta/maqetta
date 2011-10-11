@@ -52,7 +52,7 @@ davinci.model.Resource.Resource.prototype.getURL = function(){
 	 
 }
 
-davinci.model.Resource.Resource.prototype.rename = function(newName, recurse){
+davinci.model.Resource.Resource.prototype.rename = function(newName){
 		
 		var path = new davinci.model.Path(this.getPath()).removeLastSegments();
 		var newPath = path.append(newName);

@@ -1,4 +1,0 @@
-({
-	deleteButton: "[Izbriši]"
-})
-

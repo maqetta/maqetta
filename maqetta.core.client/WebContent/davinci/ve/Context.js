@@ -195,8 +195,6 @@ dojo.declare("davinci.ve.Context", null, {
 			if(widget.isHtmlWidget){
 				var tagName = widget.getTagName();
 				widget.type = "html." + tagName;
-//			}else if(widget.isOpenAjaxWidget){
-//				widget.type = widget.domNode.getAttribute('oawidget');
 			}else if(widget.isGenericWidget){
 				widget.type = widget.domNode.getAttribute('dvwidget');
 			}else if(widget.isObjectWidget){
@@ -226,16 +224,8 @@ dojo.declare("davinci.ve.Context", null, {
 			davinci.ve._add(this._objectIds, objectId);
 		}
 
-        var isContainer = davinci.ve.metadata.getAllowedChild(widget.type)[0] !== 'NONE';
-		if (widget.isHtmlWidget || widget.acceptsHTMLChildren ||
-		   (isContainer && (widget.isGenericWidget || widget.isOpenAjaxWidget))) { //TODO: need a better test for ContentPane
-			// Plain HTML content here.  Recurse on all tags
-			dojo.query("> *", widget.containerNode ||widget.domNode)
-			        .map(davinci.ve.widget.getWidget).forEach(this.attach, this);
-		} else {
-			// Recurse down widget hierarchy
-			dojo.forEach(widget.getChildren(true), this.attach, this);
-		}
+		// Recurse down widget hierarchy
+		dojo.forEach(widget.getChildren(true), this.attach, this);
 	},
 	
 	getBodyId: function(){

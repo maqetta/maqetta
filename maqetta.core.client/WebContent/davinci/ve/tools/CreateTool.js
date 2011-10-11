@@ -42,6 +42,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		}
 		this._setTarget(null);
 		delete this._mdPosition;
+		this._highlightNewWidgetParent(null);
 	},
 
 	onMouseDown: function(event){
@@ -56,8 +57,10 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		if(this._mdPosition){
 			// If here, then user did a 2-click widget addition (see onMouseDown())
 			// and then dragged mouse while mouse is still down
+			
+			// Only perform drag operation if widget is resizable
 			if(this._resizable){
-				// Ignore drag operation if widget isn't resizable
+				
 				var p = this._context.getContentPosition(event);
 				var w = p.x - this._mdPosition.x;
 				var h = p.y - this._mdPosition.y;
@@ -70,8 +73,25 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 				}
 			}
 		}else{
+			// For certain widgets, put an overlay DIV on top of the widget
+			// to intercept mouse events (to prevent normal widget mouse processing)
 			this._setTarget(event.target);
+
+			// Determine target parent at current location
+			var target = this._getTarget() || widget.getEnclosingWidget(event.target);
+		    var allowedParentList = this._getAllowedTargetWidget(target, this._data, true);
+		    var helper = this._getHelper();
+			if(allowedParentList.length>1 && helper && helper.chooseParent){
+				target = helper.chooseParent(allowedParentList);
+			}else{
+				target = allowedParentList[0];				
+			}
+
+			// Add an extra DIV that highlights the default parent widget
+			this._highlightNewWidgetParent(target);
+			
 			if(!this._context.getFlowLayout()){
+				// If absolute layout, show dynamic snap lines
 				var box = {l:event.pageX,t:event.pageY,w:0,h:0};
 				davinci.ve.Snap.updateSnapLines(this._context, box);
 			}
@@ -88,6 +108,8 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 	},
 
 	onMouseUp: function(event){
+		this._highlightNewWidgetParent(null);
+		
 		// If _mdPosition has a value, then user did a 2-click widget addition (see onMouseDown())
 		// If so, then use mousedown position, else get current position
 		this._position = this._mdPosition ? this._mdPosition : this._context.getContentPosition(event);
@@ -370,6 +392,23 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			}
 		}
 		return true;
+	},
+	
+	/**
+	 * During widget drag/drop creation, highlight the widget that would
+	 * be the parent of the new widget
+	 * @param {davinci.ve._Widget} newWidgetParent  Parent widget to highlight
+	 */
+	_highlightNewWidgetParent: function(newWidgetParent){
+		if(newWidgetParent != this._newWidgetParent){
+			if(this._newWidgetParent){
+				this._newWidgetParent.domNode.style.outline = '';
+			}
+			this._newWidgetParent = newWidgetParent;
+			if(newWidgetParent){
+				newWidgetParent.domNode.style.outline = '1px solid brown';
+			}
+		}
 	}
 });
 

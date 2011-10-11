@@ -52,7 +52,12 @@ dojo.declare("davinci.ve.ObjectWidget",davinci.ve._Widget, {
 
 	getObjectId: function() {
 		return this.domNode.getAttribute("jsId");
+	},
+
+	getChildren: function() {
+		return [];
 	}
+
 });
 
 });

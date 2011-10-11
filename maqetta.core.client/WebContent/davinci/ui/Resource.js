@@ -142,11 +142,12 @@ dojo.mixin(davinci.ui.Resource, {
 		var formHtml = 
 		'<label for=\"fileDialogParentFolder\">'+ langObj.parentFolder +' </label><div id="fileDialogParentFolder" ></div>'+
         '<div id="btn0"></div><br/>'+
-        '<div id="filelist">'+
+        '<div id="filelist"></div>'+
         '<div id="uploadBtn" class="uploadBtn" dojoType="dijit.form.Button">'+ langObj.upload +'</div><br/>';
 
 		var	dialog = new dijit.Dialog({id: "addFiles", title:langObj.addFiles,
-			onCancel:function(){this.destroyRecursive(false);}});	
+			onCancel:function() { /*dialog.reset();*/ this.destroyRecursive(false); }
+		});	
 		
 		dialog.connect(dialog, 'onLoad', function(){
 			var folder=davinci.resource.getRoot();
@@ -170,13 +171,13 @@ dojo.mixin(davinci.ui.Resource, {
 
 			var uploadHandler, uploadBtn = dijit.byId("uploadBtn");
 			uploadBtn.set("disabled", true);
-			dojo.connect(f0, 'onClick', function(){
+			dojo.connect(f0, 'onChange', function (files) {
 				if (uploadHandler) { dojo.disconnect(uploadHandler); }
 				uploadHandler = dojo.connect(uploadBtn, "onClick", null, function(){ f0.set("disabled", true); f0.upload(); });
 				if (uploadBtn.oldText) {
 					uploadBtn.containerNode.innerText = uploadBtn.oldText;
 				}
-				uploadBtn.set("disabled", false);
+				uploadBtn.set("disabled", !files.length);
 			});
 
 			var setDone = function(){

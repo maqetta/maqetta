@@ -26,10 +26,10 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
         } else {
             this.removeThemeSet(oldTheme);
         }
-        if (!oldTheme.desktopTheme){ // not a themeSet
+        if (!newThemeInfo.desktopTheme){ // not a themeSet
             this.addTheme(newThemeInfo);
         } else {
-            this.addThemeSet(oldTheme);
+            this.addThemeSet(newThemeInfo);
         }
         var text = this._context.getModel().getText();
         var e = davinci.Workbench.getOpenEditor();
@@ -67,12 +67,15 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
                         // found the sheet to change
                             
                         var modelAttribute = modelBody.getAttribute('class');
-                        modelAttribute = modelAttribute.replace(oldTheme.className,'');
-                        header.bodyClass = modelAttribute;
-                        modelBody.removeAttribute('class');
-                        if (modelAttribute.length > 0){
-                            modelBody.addAttribute('class',modelAttribute, false);
+                        if (modelAttribute){
+                            modelAttribute = modelAttribute.replace(oldTheme.className,'');
+                            header.bodyClass = modelAttribute;
+                            modelBody.removeAttribute('class');
+                            if (modelAttribute.length > 0){
+                                modelBody.addAttribute('class',modelAttribute, false);
+                            }
                         }
+                       
                         this._context.setHeader(header);
                         var importElements = modelHead.find({elementType:'CSSImport'});
                         
@@ -140,18 +143,14 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
         // remove the desktop theme
         if (themeSet.desktopTheme){
             for (var i = 0; i < themeData.length; i++){
-                if(this._hasValue(this._themeData[i].name)) continue;
-                var opt = {value: this._themeData[i].name, label: this._themeData[i].name};
                 if (themeData[i].name === themeSet.desktopTheme){
-                    this.removeTheme(this._themeData[i]);
+                    this.removeTheme(themeData[i]);
                 }
             }
         }
         // remove the mobile theme
         if (themeSet.mobileTheme){
             for (var i = 0; i < themeData.length; i++){
-                if(this._hasValue(this._themeData[i].name)) continue;
-                var opt = {value: this._themeData[i].name, label: this._themeData[i].name};
                 if (themeData[i].name === themeSet.desktopTheme){
                     this.removeTheme(this._themeData[i]);
                 }
@@ -160,13 +159,76 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
         
     },
     
+    addThemeSet: function(themeSet){
+        var themeData = davinci.library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly, true);
+        // add the desktop theme
+        if (themeSet.desktopTheme){
+            for (var i = 0; i < themeData.length; i++){
+                if (themeData[i].name === themeSet.desktopTheme){
+                    this.addTheme(themeData[i]);
+                }
+            }
+        }
+        // add the mobile theme
+        if (themeSet.mobileTheme){
+            this._dojoxMobileAddTheme(this._context, themeSet.mobileTheme);
+        }
+    },
+    
     _dojoxMobileRemoveTheme: function(){
         
     },
     
-    addThemeSet: function(themeSet){
-        
-    }
+    _dojoxMobileAddTheme: function(context, theme){
+        // add the theme to the dojox.mobile.themeMap
+        context.loadRequires("dojox.mobile.View", true); //  use this widget to get the correct requires added to the file.
+        var htmlElement = context._srcDocument.getDocumentElement();
+        var head = htmlElement.getChildElement("head");
+        var scriptTags=head.getChildElements("script");
+
+        dojo.forEach(scriptTags, function (scriptTag){
+            var text=scriptTag.getElementText();
+            if (text.length) {
+                // Look for a require('dojox.mobile'); in the document, if found set the themeMap 
+                var start = text.indexOf('dojox.mobile');
+                if (start > 0){
+                    var stop = text.indexOf(';', start);
+                    if (stop > start){
+                        var themeMap;
+                        if (theme){
+                            themeMap = theme;
+                            if ((typeof themeMap =="string") && (themeMap.toLowerCase() === 'default')){
+                                themeMap = null;
+                            } else {
+                               themeMap = dojo.toJson(themeMap);
+                               themeMap = text.substring(0,stop+1) + '\ndojox.mobile.themeMap='+themeMap+';' + text.substring(stop+1);
+                            }
+                        }
+                        if(themeMap){
+                            // create a new script element
+                            var script = new davinci.html.HTMLElement('script');
+                            script.addAttribute('type', 'text/javascript');
+                            script.script = "";
+                            head.insertBefore(script, scriptTag);
+                            var newScriptText = new davinci.html.HTMLText();
+                            newScriptText.setText(themeMap); 
+                            script.addChild(newScriptText); 
+                            scriptTag.parent.removeChild(scriptTag);
+                        }
+                        
+                    }
+                }
+             }
+        }, this);
+        var device = context.getMobileDevice() || 'none';
+        var dm = context.getDojo().getObject("dojox.mobile", true);
+        dm.loadDeviceTheme(device);
+                 
+            
+
+    },
+    
+  
 
 });
 

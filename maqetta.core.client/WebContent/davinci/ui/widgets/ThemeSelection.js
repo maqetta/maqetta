@@ -20,7 +20,7 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
             style: "width: 300px"
         });
         dojo.connect(this._dialog, "onCancel", this, "onClose");
-        
+        var currentThemeSet = davinci.theme.getThemeSet(davinci.Workbench.getOpenEditor().getContext());
         this._dialog.attr("content", this._getTemplate());
         this._connections.push(dojo.connect(dijit.byId('theme_select_themeset_theme_select'), "onChange", this, "onChange"));
         this._connections.push(dojo.connect(dijit.byId('theme_select_desktop_theme_select'), "onChange", this, "onDesktopChange"));
@@ -34,7 +34,10 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
         this._connections.push(dojo.connect(dijit.byId('theme_select_other_checkbox'), "onClick", this, "onCheckboxChange"));
         this.addThemeSets();
         //this.addThemes(this._dojoThemeSets.themeSets[0]);
+        var select = dijit.byId('theme_select_themeset_theme_select');
+        select.attr( 'value', currentThemeSet.name);
         this._dialog.show();
+        
 
         
         return;
@@ -424,6 +427,7 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
             dojo.disconnect(connection);
         }
         this._dialog.destroyDescendants();
+        this._dialog.destroy();
         delete this._dialog;
     },
     

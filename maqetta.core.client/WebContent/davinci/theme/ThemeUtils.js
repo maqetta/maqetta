@@ -131,4 +131,96 @@ davinci.theme.getHelper = function(theme){
     }
 };
 
+davinci.theme.getThemeSet = function(context){
+    
+    var returnThemeSet;
+    var dojoThemeSets = davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
+    if (!dojoThemeSets){ //  FIXME this default setting should be someplace else
+        dojoThemeSets =  { 
+            "version": "1.7",
+            "specVersion": "0.8",
+            "helper": "davinci.libraries.dojo.dojox.mobile.ThemeHelper",
+            "themeSets": [
+                {
+                    "name": "default",
+                    "desktopTheme": "claro",
+                    "mobileTheme": "default"
+                }               
+               
+            ]
+        };
+    }
+    // find the themeMap
+    var htmlElement = context._srcDocument.getDocumentElement();
+    var head = htmlElement.getChildElement("head");
+    var scriptTags=head.getChildElements("script");
+    var mobileTheme;
+    dojo.forEach(scriptTags, function (scriptTag){
+        var text=scriptTag.getElementText();
+        var stop = 0;
+        var start;
+        if (text.length) {
+            // Look for a dojox.mobile.themeMap in the document, if found set the themeMap
+            while ((start = text.indexOf('dojox.mobile.themeMap', stop)) > -1 ){ // might be more than one.
+                var stop = text.indexOf(';', start);
+                if (stop > start){
+                    mobileTheme = text.substring(start + 'dojox.mobile.themeMap'.length + 1, stop);
+                }
+            }
+       }
+    });
+    debugger;
+    for (var s = 0; s < dojoThemeSets.themeSets.length; s++){
+        var themeSet = dojoThemeSets.themeSets[s];
+        var mobileMap = themeSet.mobileTheme;
+        if (typeof mobileMap != "string"){
+            mobileMap = dojo.toJson(mobileMap);
+        }
+        if (mobileMap == mobileTheme){
+            // found themeMap
+            var themeData = davinci.library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly);
+            for (var i = 0; i < themeData.length; i++){
+                if(themeData[i].name === themeSet.desktopTheme){
+                 // check desktop 
+                    var modelDoc = context.getModel().getDocumentElement(); 
+                    var d = context.getDocument();
+                    var modelHead = modelDoc.getChildElement('head');
+                    var b = d.getElementsByTagName("body");
+                    var modelBody = modelDoc.getChildElement('body');
+                    
+                    //var header = dojo.clone( this._context.getHeader());
+                    var header = context.getHeader();
+                    //var resourcePath = context.getFullResourcePath();
+                    // find the old theme file name
+                    function sameSheet(headerSheet, file){
+                        return (headerSheet.indexOf(file) > -1)
+                    }
+                    var files = themeData[i].files;
+                
+                    for (var x=0; x<files.length; x++){
+                        var filename = files[x];
+                        for (var y=0; y<header.styleSheets.length; y++){
+                            if(sameSheet(header.styleSheets[y], filename)){
+                                // found the sheet to change
+                                debugger;    
+                                var modelAttribute = modelBody.getAttribute('class');
+                                if (modelAttribute && (modelAttribute.indexOf(themeData[i].className) > -1)){
+                                   debugger;
+                                   return themeSet;
+                                }
+             
+                            }
+                        }
+                    }
+                }
+            }
+           
+            debugger;
+        }
+    }
+    return;
+   
+};
+
+
 

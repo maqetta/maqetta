@@ -27,7 +27,7 @@ public class Rename extends Command {
             VResourceUtils.copyFile(source, newResource);
         }
         source.delete();
-
+        user.rebuildWorkspace();
         this.responseString = "OK";
     }
 

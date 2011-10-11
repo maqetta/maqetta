@@ -46,8 +46,15 @@ dojo.declare("davinci.ui.widgets.ProjectToolbar",   [dijit._Widget, dijit._Templ
 	},
 	
 	_rename : function(){
-		var project = this._projectSelection.attr("value");
-		davinci.Workbench.showModal(new davinci.ui.Rename(), 'Rename Project To....', 'height:110px;width: 200px');
+		var renameDialog = new davinci.ui.Rename({});
+		davinci.Workbench.showModal(renameDialog, 'Rename Project To....', 'height:110px;width: 200px',function(){
+			var newName = renameDialog.attr("value");
+			var resource = davinci.resource.findResource(davinci.Runtime.getProject());
+			resource.rename(newName);
+			davinci.Runtime.loadProject(newName);
+		});
+		
+		
 	}
 	
 });

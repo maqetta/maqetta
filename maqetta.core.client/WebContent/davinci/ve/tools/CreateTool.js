@@ -41,22 +41,22 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			this._context.rootNode.style.cursor = this._oldCursor;
 		}
 		this._setTarget(null);
-		delete this._position;
+		delete this._mdPosition;
 	},
 
 	onMouseDown: function(event){
 		this._target = widget.getEnclosingWidget(event.target);
-		this._position = this._context.getContentPosition(event);
+		this._mdPosition = this._context.getContentPosition(event); // mouse down position
 	},
 
 	onMouseMove: function(event){
-		if(this._position){
+		if(this._mdPosition){
 			if(this._resizable){
 				var p = this._context.getContentPosition(event);
-				var w = p.x - this._position.x;
-				var h = p.y - this._position.y;
+				var w = p.x - this._mdPosition.x;
+				var h = p.y - this._mdPosition.y;
 				if(w > 4 || h > 4){
-					var box = {l: this._position.x, t: this._position.y,
+					var box = {l: this._mdPosition.x, t: this._mdPosition.y,
 						w: (w > 0 ? w : 1), h: (h > 0 ? h : 1)};
 					this._context.focus({box: box, op: {}});
 				}else{
@@ -82,9 +82,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 	},
 
 	onMouseUp: function(event){
-		if(!this._position){
-			this._position = this._context.getContentPosition(event);
-		}
+		this._position = this._mdPosition ? this._mdPosition : this._context.getContentPosition(event);
 
 		var size,
 			target = this._getTarget() || widget.getEnclosingWidget(event.target);

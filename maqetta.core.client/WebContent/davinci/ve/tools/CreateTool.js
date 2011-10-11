@@ -46,7 +46,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 
 	onMouseDown: function(event){
 		this._target = widget.getEnclosingWidget(event.target);
-		this._position = this._adjustPosition(this._context.getContentPosition(event));
+		this._position = this._context.getContentPosition(event);
 	},
 
 	onMouseMove: function(event){
@@ -83,7 +83,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 
 	onMouseUp: function(event){
 		if(!this._position){
-			this._position = this._adjustPosition(this._context.getContentPosition(event));
+			this._position = this._context.getContentPosition(event);
 		}
 
 		var size,

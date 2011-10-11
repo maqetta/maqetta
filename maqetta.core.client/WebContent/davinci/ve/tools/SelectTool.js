@@ -232,7 +232,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						left -= (p.x - parentNode.scrollLeft);
 						top -= (p.y - parentNode.scrollTop);
 					}
-					var position = this._adjustPosition({x: left, y: top});
+					var position = {x: left, y: top};
 					left = position.x;
 					top = position.y;
 					var first_c = new davinci.ve.commands.MoveCommand(widget, left, top);
@@ -313,7 +313,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				return;
 			}
 			var box = dojo.marginBox(node);
-			var position = this._adjustPosition({x: box.l + dx, y: box.t + dy});
+			var position = {x: box.l + dx, y: box.t + dy};
 			command.add(new davinci.ve.commands.MoveCommand(w, position.x, position.y));
 		}, this);
 		if(!command.isEmpty()){

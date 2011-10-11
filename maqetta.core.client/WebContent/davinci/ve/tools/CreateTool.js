@@ -45,13 +45,19 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 	},
 
 	onMouseDown: function(event){
+		// This function gets called if user does a 2-click widget addition:
+		// 1) Click on widget in widget palette to select
+		// 2) Click on canvas to indicate drop location
 		this._target = widget.getEnclosingWidget(event.target);
 		this._mdPosition = this._context.getContentPosition(event); // mouse down position
 	},
 
 	onMouseMove: function(event){
 		if(this._mdPosition){
+			// If here, then user did a 2-click widget addition (see onMouseDown())
+			// and then dragged mouse while mouse is still down
 			if(this._resizable){
+				// Ignore drag operation if widget isn't resizable
 				var p = this._context.getContentPosition(event);
 				var w = p.x - this._mdPosition.x;
 				var h = p.y - this._mdPosition.y;
@@ -82,6 +88,8 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 	},
 
 	onMouseUp: function(event){
+		// If _mdPosition has a value, then user did a 2-click widget addition (see onMouseDown())
+		// If so, then use mousedown position, else get current position
 		this._position = this._mdPosition ? this._mdPosition : this._context.getContentPosition(event);
 
 		var size,

@@ -440,6 +440,13 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
             '<table>'+
                 '<tr><td>Desktop theme:</td><td><select dojoType="dijit.form.Select" id="theme_select_desktop_theme_select"type="text" autoWidth="true" ></select></td></tr>'+
                 '<tr><td>Mobile theme:</td><td><select dojoType="dijit.form.Select" id="theme_select_mobile_theme_select"type="text" autoWidth="true" ></select></td></tr>'+
+            '</table>' +
+            '<table>' +
+            '<tr><td>Moble theme applies to:</td><td></td></tr>' +
+            '<tr><td><input showlabel="true" type="radio" dojoType="dijit.form.RadioButton"></input><label>All mobile devices</label></td><td></td></tr>' +
+            '<tr><td> <input showlabel="true" type="radio" dojoType="dijit.form.RadioButton"></input><label>Selected devices</label></td><td></td></tr>' +
+            '</table>' +
+            '<table>' +
                 '<tr><td></td><td><input id="theme_select_android_checkbox" name="theme_select_android_checkbox" dojoType="dijit.form.CheckBox" value="Android"><label for="theme_select_android_checkbox">Android</label></td></tr>' +
                 '<tr><td></td><td><input id="theme_select_blackberry_checkbox" name="theme_select_blackberry_checkbox" dojoType="dijit.form.CheckBox" value="BlackBerry"><label for="theme_select_blackberry_checkbox">BlackBerry</label></td></tr>' +
                 '<tr><td></td><td><input id="theme_select_ipad_checkbox" name="theme_select_ipad_checkbox" dojoType="dijit.form.CheckBox" value="iPad"><label for="theme_select_ipad_checkbox">iPad</label></td></tr>' +

@@ -1,6 +1,6 @@
-dojo.provide("davinci.libraries.dojo.dojox.helloworld.HelloCreateTool");
+dojo.provide("davinci.libraries.helloworld.helloworld.HelloCreateTool");
 dojo.require("davinci.ve.tools.CreateTool");
-dojo.declare("davinci.libraries.dojo.dojox.helloworld.HelloCreateTool", davinci.ve.tools.CreateTool, {
+dojo.declare("davinci.libraries.helloworld.helloworld.HelloCreateTool", davinci.ve.tools.CreateTool, {
 	constructor: function(data){
 	},
 	

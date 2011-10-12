@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+    <extension id="helloworldMetaData" point="org.eclipse.equinox.http.registry.resources">
+            <resource alias="/app/metadata/helloworld/1.0" base-name="/WebContent/metadata" />
+             <resource alias="/app/static/lib/helloworld/1.0" base-name="/WebContent/helloworld"/>
+    </extension>
+    
+      <extension point="maqetta.core.server.ajaxLibrary">
+         <ajaxLibrary name="helloworld" id="helloworld" version="1.0">
+            <libraryPath location="WebContent/helloworld" name="/lib/helloworld"></libraryPath>
+            <metadata location="app/metadata/helloworld/1.0" />
+    
+         </ajaxLibrary>
+      </extension>
+      
+</plugin>

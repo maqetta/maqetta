@@ -11,20 +11,23 @@
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dojox.helloworld.hello');"
+            "$text": "dojo.require('helloworld.hello');"
         },
         {
             "type": "image",
-            "src": "dojox/helloworld/images/helloworld.png",
-            "$library": "dojo"
+            "src": "images/helloworld.png",
+            "$library": "helloworld"
         }
     ],
     "library": {
+        "helloworld": {
+            "version": "1.0",
+            "src": "../../helloworld"
+        },
         "dojo": {
-            "src": "../../../"
+            "version": "1.6.1",
+            "src": "http://ajax.googleapis.com/ajax/libs/dojo/1.6.1/"
         }
-    },
-    "property": {
     },
     "content": "<span></span>"
 }

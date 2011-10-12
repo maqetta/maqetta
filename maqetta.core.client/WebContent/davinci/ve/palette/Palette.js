@@ -397,17 +397,28 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 		var ds = new davinci.ui.dnd.DragSource(node.domNode, "component", node);
 		ds.targetShouldShowCaret = true;
 		ds.returnCloneOnFailure = false;
-		this.connect(ds, "onDragStart", "onDragStart"); // move start
-		this.connect(ds, "onDragEnd", "onDragEnd"); // move end
+		this.connect(ds, "onDragStart", dojo.hitch(this,"onDragStart")); // move start
+		this.connect(ds, "onDragEnd", dojo.hitch(this,"onDragEnd")); // move end
 		node.tooltip = new dijit.Tooltip({
 			label:opt.description, 
 			connectId:[node.id]
 		});
 		return node;
 	},
+	
+	_onKeyDownListener: function(){
+		if(tool.onKeyDown){
+			tool.onKeyDown(event);
+		}
+	},
+	
+	_onKeyUpListener: function(){
+		if(tool.onKeyUp){
+			tool.onKeyUp(event);
+		}
+	},
 
 	onDragStart: function(e){
-		
 		var data = e.dragSource.data,
 		// Clone the data in case something modifies it downstream
 			dataClone = dojo.clone(data.data),
@@ -419,11 +430,33 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 		var tool = new toolClass(dataClone);
 		tool._type = data.type;
 		this._context.setActiveTool(tool);
+
+		// Place an extra DIV onto end of dragCloneDiv to allow 
+		// posting a list of possible parent widgets for the new widget
+		// and register the dragClongDiv with Context
+		if(e._dragClone){
+			dojo.create('div',{className:'maqCandidateParents'},e._dragClone);
+		}
+		//FIXME: Attach dragClone and event listeners to tool instead of context?
+		this._context.setActiveDragDiv(e._dragClone);
+		this._dragKeyDownListener = dojo.connect(document, 'onkeydown', dojo.hitch(this,function(){
+			if(tool.onKeyDown){
+				tool.onKeyDown(event);
+			}
+		}));
+		this._dragKeyUpListener = dojo.connect(document, 'onkeyup', dojo.hitch(this,function(){
+			if(tool.onKeyUp){
+				tool.onKeyUp(event);
+			}
+		}));
 	},
 
     onDragEnd: function(e){
 		this.pushedItem = null;
 		this._context.setActiveTool(null);
+		this._context.setActiveDragDiv(null);
+		dojo.disconnect(this._dragKeyDownListener);
+		dojo.disconnect(this._dragKeyUpListener);
 	},
 	
 	onDragMove: function(e){

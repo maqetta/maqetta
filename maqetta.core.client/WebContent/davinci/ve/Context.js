@@ -1694,6 +1694,14 @@ dojo.declare("davinci.ve.Context", null, {
 		this._activeTool.activate(this);
 	},
 	
+	// getter/setter for currently active drag/drop object
+	getActiveDragDiv: function(){
+		return(this._activeDragDiv);
+	},
+	setActiveDragDiv: function(activeDragDiv){
+		this._activeDragDiv = activeDragDiv;
+	},
+	
 	blockChange: function(shouldBlock){
 			this._blockChange = shouldBlock;
 	},
@@ -1825,6 +1833,9 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	onKeyDown: function(event){
+		//FIXME: Research task. This routine doesn't get fired when using CreateTool and drag/drop from widget palette.
+		// Perhaps the drag operation created a DIV in application's DOM causes the application DOM
+		// to be the keyboard focus?
 		if(this._activeTool && this._activeTool.onKeyDown){
 			this._activeTool.onKeyDown(event);
 		}

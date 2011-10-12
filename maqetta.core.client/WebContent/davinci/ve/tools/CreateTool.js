@@ -17,7 +17,7 @@ define(["dojo/_base/declare",
 			){
 
 return declare("davinci.ve.tools.CreateTool", tool, {
-
+	
 	constructor: function(data) {
 		this._data = data;
 		if (data && data.type) {
@@ -49,11 +49,14 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		// This function gets called if user does a 2-click widget addition:
 		// 1) Click on widget in widget palette to select
 		// 2) Click on canvas to indicate drop location
-		this._target = widget.getEnclosingWidget(event.target);
+		this._target = davinci.ve.widget.getEnclosingWidget(event.target);
 		this._mdPosition = this._context.getContentPosition(event); // mouse down position
 	},
 
 	onMouseMove: function(event){
+		// Needed by onKeyDown and onKeyUp handlers
+		this._lastEventTarget = event.target;
+		
 		if(this._mdPosition){
 			// If here, then user did a 2-click widget addition (see onMouseDown())
 			// and then dragged mouse while mouse is still down
@@ -76,19 +79,24 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			// For certain widgets, put an overlay DIV on top of the widget
 			// to intercept mouse events (to prevent normal widget mouse processing)
 			this._setTarget(event.target);
-
-			// Determine target parent at current location
-			var target = this._getTarget() || widget.getEnclosingWidget(event.target);
+		
+			// Determine target parent(s) at current location
+			var target = this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
+			var proposedParentWidget;
 		    var allowedParentList = this._getAllowedTargetWidget(target, this._data, true);
 		    var helper = this._getHelper();
 			if(allowedParentList.length>1 && helper && helper.chooseParent){
-				target = helper.chooseParent(allowedParentList);
+				proposedParentWidget = helper.chooseParent(allowedParentList);
 			}else{
-				target = allowedParentList[0];				
+				proposedParentWidget = allowedParentList[0];				
 			}
 
 			// Add an extra DIV that highlights the default parent widget
-			this._highlightNewWidgetParent(target);
+			//FIXME: Not yet creating the extra DIV
+			this._highlightNewWidgetParent(proposedParentWidget);
+			
+			// Under certain conditions, show list of possible parent widgets
+			this._dragUpdateCandidateParents(event.target, event.ctrlKey);
 			
 			if(!this._context.getFlowLayout()){
 				// If absolute layout, show dynamic snap lines
@@ -97,25 +105,25 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			}
 		}
 	},
-	
-	onKeyDown: function(event){
-		switch(event.keyCode){
-		case dojo.keys.ENTER:
-			// a11y: assuming (50,50) instead of current mouse position (mouse may be outside of containerNode)
-			this.create({parent: this._context.getSelection()[0], position: {x:50, y:50}});
-			this._context.setActiveTool(null);
-		}
-	},
 
 	onMouseUp: function(event){
+		var activeDragDiv = this._context.getActiveDragDiv();
+		if(activeDragDiv){
+			var elems = dojo.query('.maqCandidateParents',activeDragDiv);
+			if(elems.length==1){
+				elems[0].innerHTML = '';
+			}
+		}
 		this._highlightNewWidgetParent(null);
+		this._lastAllowedParentList = null;
+		this._lastEventTarget = null;
 		
 		// If _mdPosition has a value, then user did a 2-click widget addition (see onMouseDown())
 		// If so, then use mousedown position, else get current position
 		this._position = this._mdPosition ? this._mdPosition : this._context.getContentPosition(event);
 
 		var size,
-			target = this._getTarget() || widget.getEnclosingWidget(event.target);
+			target = this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
 
 		/**
 		 * Custom error, thrown when a valid parent widget is not found.
@@ -238,6 +246,16 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			this._context.setActiveTool(null);
 			davinci.ve.Snap.clearSnapLines(this._context);
 		}
+	},
+
+	onKeyDown: function(event){
+		// Under certain conditions, show list of possible parent widgets
+		this._dragUpdateCandidateParents(this._lastEventTarget,event.keyCode==17);	// 17=ctrl key
+	},
+
+	onKeyUp: function(event){
+		// Under certain conditions, show list of possible parent widgets
+		this._dragUpdateCandidateParents(this._lastEventTarget,false);
 	},
 
 	_getHelper: function(){
@@ -392,6 +410,75 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			}
 		}
 		return true;
+	},
+	
+	_dragUpdateCandidateParents: function(targetNode, showCandidateParents){
+
+		var activeDragDiv = this._context.getActiveDragDiv();
+		var parentListDiv;
+		if(activeDragDiv){
+			var elems = dojo.query('.maqCandidateParents',activeDragDiv);
+			if(elems.length==1){
+				parentListDiv = elems[0];
+			}
+		}
+		if(parentListDiv){
+			if(showCandidateParents){
+
+				// Determine target parent(s) at current location
+				var target = this._getTarget() || davinci.ve.widget.getEnclosingWidget(targetNode);
+				var proposedParentWidget;
+			    var allowedParentList = this._getAllowedTargetWidget(target, this._data, true);
+			    var helper = this._getHelper();
+				if(allowedParentList.length>1 && helper && helper.chooseParent){
+					proposedParentWidget = helper.chooseParent(allowedParentList);
+				}else{
+					proposedParentWidget = allowedParentList[0];				
+				}
+				
+				// Don't recreate DIV with every mousemove if parent list is the same
+				var same = true;
+				if(typeof this._lastAllowedParentList == 'undefined' || this._lastAllowedParentList===null){
+					same = false;
+				}else if(this._lastAllowedParentList.length != allowedParentList.length){
+					same = false;
+				}else{
+					for(var i=0; i<allowedParentList.length; i++){
+						if(this._lastAllowedParentList[i] != allowedParentList[i]){
+							same = false;
+							break;
+						}
+					}
+				}
+
+				if(!same){
+					this._lastAllowedParentList = allowedParentList;
+					var parentListDiv = elems[0];
+					var len = allowedParentList.length;
+					parentListDiv.innerHTML = '';
+					var headerDiv = dojo.create('div',{className:'maqCandidateParentsHeader'},parentListDiv);
+					var listDiv = dojo.create('div',{className:'maqCandidateParentsList'},parentListDiv);
+					var helpDiv = dojo.create('div',{className:'maqCandidateParentsHelp'},parentListDiv);
+					if(len == 0){
+						// FIXME: need to globalize
+						headerDiv.innerHTML = 'No valid parents at this position';
+					}else if(len == 1){
+						headerDiv.innerHTML = 'Will become a child of:';
+						dojo.create('div',{className:'maqCandidateListItem',innerHTML:davinci.ve.widget.getLabel(allowedParentList[0])},listDiv);
+					}else{
+						headerDiv.innerHTML = 'Candidate parents:';
+						for(var i=0; i<allowedParentList.length; i++){
+							dojo.create('div',{className:'maqCandidateListItem',innerHTML:davinci.ve.widget.getLabel(allowedParentList[i])},listDiv);
+						}
+						helpDiv.innerHTML = 'Maybe some day you can choose';
+					}
+				}
+			}else{
+				parentListDiv.innerHTML = '';
+				this._lastAllowedParentList = null;
+			}
+		}
+	
 	},
 	
 	/**

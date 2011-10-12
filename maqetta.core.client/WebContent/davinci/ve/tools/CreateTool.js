@@ -96,7 +96,9 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			this._highlightNewWidgetParent(proposedParentWidget);
 			
 			// Under certain conditions, show list of possible parent widgets
-			this._dragUpdateCandidateParents(event.target, event.ctrlKey);
+			var showParentsPref = this._context.getPreference('showPossibleParents');
+			var showCandidateParents = (!showParentsPref && event.ctrlKey) || (showParentsPref && !event.ctrlKey);
+			this._dragUpdateCandidateParents(event.target, showCandidateParents);
 			
 			if(!this._context.getFlowLayout()){
 				// If absolute layout, show dynamic snap lines
@@ -250,12 +252,15 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 
 	onKeyDown: function(event){
 		// Under certain conditions, show list of possible parent widgets
-		this._dragUpdateCandidateParents(this._lastEventTarget,event.keyCode==17);	// 17=ctrl key
+		var showParentsPref = this._context.getPreference('showPossibleParents');
+		var showCandidateParents = (!showParentsPref && event.keyCode==17) || (showParentsPref && event.keyCode!=17);	// 17=ctrl key
+		this._dragUpdateCandidateParents(this._lastEventTarget,showCandidateParents);
 	},
 
 	onKeyUp: function(event){
 		// Under certain conditions, show list of possible parent widgets
-		this._dragUpdateCandidateParents(this._lastEventTarget,false);
+		var showParentsPref = this._context.getPreference('showPossibleParents');
+		this._dragUpdateCandidateParents(this._lastEventTarget,showParentsPref);
 	},
 
 	_getHelper: function(){

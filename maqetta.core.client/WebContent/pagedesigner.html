@@ -18,92 +18,86 @@
     <link href="app/davinci/propvieweffects.css?@revision@" rel="stylesheet" type="text/css"></link>
     <script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="parseOnLoad: true, modulePaths:{'preview':'../preview'}, cacheBust: '@revision@'"></script>
 	<script type="text/javascript">
-		require(["dijit/dijit", "davinci/davinci-common", "davinci/davinci"]);
-	</script>
+		require(["dijit/dijit", "davinci/davinci-common", "davinci/davinci"], function () {
+		    <!-- Globalization -->
+		    //dojo.requireLocalization("", "webContent");//to test "Loading..."
+		    dojo.addOnLoad(function () {
+		      var langObj = dojo.i18n.getLocalization("davinci","webContent");
+		      dojo.byId("davinci_user_welcome").innerHTML = langObj.welcome;
+		      dojo.byId("load_screen").innerHTML = langObj.loadingMaqetta;
+		      dojo.byId("davinci_logoff").innerHTML = langObj.logOff;
+		      dojo.byId("maqetta_designer").innerHTML = langObj.designer;
+		      dojo.byId("maqetta_version").innerHTML = davinci.version;
+		      dojo.byId("title_id").text = langObj.pageDesignerTitle;
+		      //var langObj2 = dojo.i18n.getLocalization("","webContent");//to test "Loading..."
+		    });
+		    
+	    	davinci.useAppCache = true; // needed to provide FF "allow" warning
 
-    <script type="text/javascript">
-    <!-- Globalization -->
-	    //dojo.requireLocalization("", "webContent");//to test "Loading..."
-	    function globalize()
-	    {
-	      var langObj = dojo.i18n.getLocalization("davinci","webContent");
-	      dojo.byId("davinci_user_welcome").innerHTML = langObj.welcome;
-	      dojo.byId("load_screen").innerHTML = langObj.loadingMaqetta;
-	      dojo.byId("davinci_logoff").innerHTML = langObj.logOff;
-	      dojo.byId("maqetta_designer").innerHTML = langObj.designer;
-	      dojo.byId("maqetta_version").innerHTML = davinci.version;
-	      dojo.byId("title_id").text = langObj.pageDesignerTitle;
-	      //var langObj2 = dojo.i18n.getLocalization("","webContent");//to test "Loading..."
-	    }
-	    dojo.addOnLoad(globalize);
-	    
-    	davinci.useAppCache = true; // needed to provide FF "allow" warning
+//			davinci.Runtime.addPlugin( "app/davinci/ui" );
+//		 	davinci.Runtime.addPlugin( "app/davinci/js/js" );
+//		//	davinci.Runtime.addPlugin( "app/davinci/cssEdit/cssEdit" );
+//		 	davinci.Runtime.addPlugin( "app/davinci/html/html" );
+//			davinci.Runtime.addPlugin( "app/davinci/ve/ve" );
+//			davinci.Runtime.addPlugin( "app/davinci/ve/themeEditor/themeEditor" );
 
-//		davinci.Runtime.addPlugin( "app/davinci/ui" );
-//	 	davinci.Runtime.addPlugin( "app/davinci/js/js" );
-//	//	davinci.Runtime.addPlugin( "app/davinci/cssEdit/cssEdit" );
-//	 	davinci.Runtime.addPlugin( "app/davinci/html/html" );
-//		davinci.Runtime.addPlugin( "app/davinci/ve/ve" );
-//		davinci.Runtime.addPlugin( "app/davinci/ve/themeEditor/themeEditor" );
+			davinci.Runtime.loadPlugins();
 
-		davinci.Runtime.loadPlugins();
+	 		davinci.Runtime.initialPerspective="davinci.ve.pageDesign";
+			dojo.addOnLoad(function()
+			{
+			    // Display a warning dialog for unsupported browsers
+				if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5.1)) {
+					var langObj = dojo.i18n.getLocalization("davinci","webContent");
+	                var unsupportedDialog = new dijit.Dialog({
+	                    id: "unsupportedBrowserDialog",
+	                    title: langObj.unsupportedBrowser,
+	                    content: ["<p>"+ langObj.unsupportedNote +"</p>",
+	                              "<div class='maqButtonArea'>",
+	                              "   <button dojoType='dijit.form.Button' type='submit'>",
+	                              langObj.buttonContinue,
+	                              "   </button>",
+	                              "</div>"
+	                             ].join(" "),
+	                    execute: function() { run(); }
+	                });
+				    unsupportedDialog.show();
+				} else {
+				    run();
+				}
 
- 		davinci.Runtime.initialPerspective="davinci.ve.pageDesign";
-		dojo.addOnLoad(function()
-		{
-		    // Display a warning dialog for unsupported browsers
-			if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5.1)) {
-				var langObj = dojo.i18n.getLocalization("davinci","webContent");
-                var unsupportedDialog = new dijit.Dialog({
-                    id: "unsupportedBrowserDialog",
-                    title: langObj.unsupportedBrowser,
-                    content: ["<p>"+ langObj.unsupportedNote +"</p>",
-                              "<div class='maqButtonArea'>",
-                              "   <button dojoType='dijit.form.Button' type='submit'>",
-                              langObj.buttonContinue,
-                              "   </button>",
-                              "</div>"
-                             ].join(" "),
-                    execute: function() { run(); }
-                });
-			    unsupportedDialog.show();
-			} else {
-			    run();
-			}
+				function run() {
+	    			var userInfo;
+	    			var result=davinci.Runtime.getUser();
 
-			function run() {
-    			var userInfo;
-    			var result=davinci.Runtime.getUser();
+	    			if (result )
+	    			{
+	    		 	   dojo.byId('davinci_user').innerHTML=result;
+	    		 	   davinci.Runtime.userName=result;
+	    			}
+	    			else
+	    			{
+	    				//FIXME: temporary fix for running via file: URLs
+	    			   var langObj = dojo.i18n.getLocalization("davinci","webContent");
+	    		 	   dojo.byId('davinci_user').innerHTML=langObj.maqettaUser;
+	    		 	}
+	    		 	if (!result)
+	    		 	{
+	    		 		var langObj = dojo.i18n.getLocalization("davinci","webContent");
+	    			 	dojo.byId('davinci_user').innerHTML=langObj.localhostUser;
+	    		 		dojo.byId('davinci_logoff').href="";
+	    		 		davinci.Runtime.isLocalInstall=true;
+	    		 	}
+	    		 	if ( davinci.Runtime.plugins.joomlaplugin) {
+	                    dojo.byId('davinci_logoff').href="http://" + window.location.hostname + "/index.php?option=com_user&task=logout&return=Lw";
+	    		 	}
+	    			davinci.Runtime.run(userInfo);
+				}
+			});
 
-    			if (result )
-    			{
-    		 	   dojo.byId('davinci_user').innerHTML=result;
-    		 	   davinci.Runtime.userName=result;
-    			}
-    			else
-    			{
-    				//FIXME: temporary fix for running via file: URLs
-    			   var langObj = dojo.i18n.getLocalization("davinci","webContent");
-    		 	   dojo.byId('davinci_user').innerHTML=langObj.maqettaUser;
-    		 	}
-    		 	if (!result)
-    		 	{
-    		 		var langObj = dojo.i18n.getLocalization("davinci","webContent");
-    			 	dojo.byId('davinci_user').innerHTML=langObj.localhostUser;
-    		 		dojo.byId('davinci_logoff').href="";
-    		 		davinci.Runtime.isLocalInstall=true;
-    		 	}
-    		 	if ( davinci.Runtime.plugins['joomlaplugin'] ) {
-                    dojo.byId('davinci_logoff').href="http://" + window.location.hostname + "/index.php?option=com_user&task=logout&return=Lw";
-    		 	}
-    			davinci.Runtime.run(userInfo);
-			}
+			dojo.addOnUnload(davinci.Runtime.unload);
 		});
-
-		dojo.addOnUnload(davinci.Runtime.unload );
-    </script>
-
-
+	</script>
   </head>
 
 	<body class="claro">

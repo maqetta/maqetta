@@ -22,24 +22,36 @@ dojo.declare("davinci.ui.Rename",   [dijit._Widget,dijit._Templated], {
 		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 		dojo.mixin(this, langObj);
 		dojo.mixin(this, dijitLangObj);
+		if(!this.invalid)
+			this.invalid = {};
+		
 		this.inherited(arguments);
 	},
 	postCreate : function(){
 		this.inherited(arguments);
 		dojo.connect(this._newName, "onkeyup", this, '_checkValid');
+		if(this.value){
+			this._setValueAttr(this.value);
+		}
+		
+		if(this.invalid){
+			this._setInvalidAttr(this.invalid);
+		}
+		
 	},
 	
-	_setInvalidNames : function(values){
-		this._invalid = values;
+	_setInvalidAttr : function(values){
+		this.invalid = values;
 	},
 	
 	_checkValid : function(){
 		
 		// make sure the project name is OK.
 		var name = dojo.attr(this._newName, "value");
-		var valid = true;
-		for(var i=0;i<this._invalid.length && valid;i++){
-			if(this._invalid[i]==name) 
+		var valid = (name!=null && name.length>0);
+		
+		for(var i=0;i<this.invalid.length && valid;i++){
+			if(this.invalid[i]==name) 
 				valid = false;
 		}
 		this._okButton.set( 'disabled', !valid);
@@ -55,10 +67,25 @@ dojo.declare("davinci.ui.Rename",   [dijit._Widget,dijit._Templated], {
 		return this.value;
 	},
 	
+	_setValueAttr : function(value){
+		
+		this.value = value;
+		if(this._newName){
+			dojo.attr(this._newName, "value", this.value);
+		}
+		this._checkValid();
+	},
+	
+	
 	cancelButton: function(){
+		this.cancel = true;
 		this.onClose();
 	},
 
+	_getCancelAttr : function(value){
+		return this.cancel;
+	},
+	
 	onClose : function(){}
 
 

@@ -492,23 +492,25 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 						// FIXME: need to globalize
 						headerDiv.innerHTML = 'No valid parents at this position';
 					}else if(len == 1){
+						// FIXME: need to globalize
 						headerDiv.innerHTML = 'Will become a child of:';
 						div = dojo.create('div',{className:'maqCandidateListItem maqCandidateCurrent',innerHTML:davinci.ve.widget.getLabel(allowedParentList[0])},listDiv);
-						//FIXME: Temporary
-						div.style.fontWeight = 'bold';
-						div.style.fontSize = '130%';
 					}else{
+						// FIXME: need to globalize
 						headerDiv.innerHTML = 'Candidate parents:';
-						for(var i=0; i<allowedParentList.length; i++){
-							div = dojo.create('div',{className:'maqCandidateListItem',innerHTML:davinci.ve.widget.getLabel(allowedParentList[i])},listDiv);
+						var s = '<table>';
+						var j;
+						for(var i=allowedParentList.length-1, j=1; i >= 0; i--, j++){
+							var className = 'maqCandidateListItem';
 							if(allowedParentList[i] == proposedParentWidget){
-								dojo.addClass(div,'maqCandidateCurrent');
-								//FIXME: Temporary
-								div.style.fontWeight = 'bold';
-								div.style.fontSize = '130%';
+								className += ' maqCandidateCurrent';
 							}
+							s += '<tr class="'+className+'"><td class="maqCandidateCheckedColumn">&rarr;</td><td class="maqCandidateNumberColumn">'+j+'</td><td class="maqCandidateParentColumn">'+davinci.ve.widget.getLabel(allowedParentList[i])+'</td></tr>';
 						}
-						helpDiv.innerHTML = 'Maybe some day you can choose';
+						s += '</table>';
+						listDiv.innerHTML = s;
+						// FIXME: need to globalize
+						helpDiv.innerHTML = 'To change, press space, arrows or numbers';
 					}
 				}
 			}else{

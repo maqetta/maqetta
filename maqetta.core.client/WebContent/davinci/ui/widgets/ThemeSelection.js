@@ -17,10 +17,13 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
     buildRendering: function(){
         this._dialog = new dijit.Dialog({
             title: "Select theme",
-            style: "width: 300px"
+            style: "width: 250px"
         });
         dojo.connect(this._dialog, "onCancel", this, "onClose");
         var currentThemeSet = davinci.theme.getThemeSet(davinci.Workbench.getOpenEditor().getContext());
+        if (!currentThemeSet){
+            currentThemeSet = davinci.theme.dojoThemeSets.themeSets[0]; // default;
+        }
         this._dialog.attr("content", this._getTemplate());
         this._connections.push(dojo.connect(dijit.byId('theme_select_themeset_theme_select'), "onChange", this, "onChange"));
         this._connections.push(dojo.connect(dijit.byId('theme_select_desktop_theme_select'), "onChange", this, "onDesktopChange"));
@@ -32,6 +35,8 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
         this._connections.push(dojo.connect(dijit.byId('theme_select_ipad_checkbox'), "onClick", this, "onCheckboxChange"));
         this._connections.push(dojo.connect(dijit.byId('theme_select_iphone_checkbox'), "onClick", this, "onCheckboxChange"));
         this._connections.push(dojo.connect(dijit.byId('theme_select_other_checkbox'), "onClick", this, "onCheckboxChange"));
+        this._connections.push(dojo.connect(dijit.byId('theme_select_all_devices_radio'), "onClick", this, "onRadioChange"));
+        this._connections.push(dojo.connect(dijit.byId('theme_select_devices_radio'), "onClick", this, "onRadioChange"));
         this.addThemeSets();
         //this.addThemes(this._dojoThemeSets.themeSets[0]);
         var select = dijit.byId('theme_select_themeset_theme_select');
@@ -110,6 +115,7 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
         var mblSelect = dijit.byId('theme_select_mobile_theme_select');
         mblSelect.options = [];
         mblSelect.addOption({value: 'default', label: 'default'});
+        mblSelect.addOption({value: 'none', label: 'none'});
         this._themeCount = this._themeData.length;
         for (var i = 0; i < this._themeData.length; i++){
             if(this._hasValue(this._themeData[i].name)) continue;
@@ -231,7 +237,28 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
     
     onMobileChange : function(e){
         debugger;
+        var checkboxs = [];
+        checkboxs['android'] = dijit.byId('theme_select_android_checkbox');
+        checkboxs['blackberry'] = dijit.byId('theme_select_blackberry_checkbox');
+        checkboxs['ipad'] = dijit.byId('theme_select_ipad_checkbox');
+        checkboxs['iphone'] = dijit.byId('theme_select_iphone_checkbox');
+        checkboxs['other'] = dijit.byId('theme_select_other_checkbox');
+        var allDevice = dijit.byId('theme_select_all_devices_radio');
+        var selectDevice = dijit.byId('theme_select_devices_radio');
+        var selectDevicesTable = dojo.byId('theme_select_devices_table');
+        var selectRadioTable = dojo.byId('theme_select_radio_table');
+        
+        dojo.style(selectDevicesTable, 'display', '');
+        dojo.style(selectRadioTable, 'display', '');
+        // reset checkboxes
+       for (c in checkboxs){
+            checkboxs[c].setChecked(false);
+       }
+       checkboxs['other'].setDisabled(false);
+        
         if (e == 'none' || e == 'default'){
+            dojo.style(selectDevicesTable, 'display', 'none');
+            dojo.style(selectRadioTable, 'display', 'none');
            // this.selectMobileTheme(e);
            delete this._selectedMobileTheme;
         } else {
@@ -247,26 +274,28 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
             var ssPath = new davinci.model.Path(theme.file.parent.getPath()).append(theme.files[0]);
             var resourcePath = davinci.Workbench.getOpenEditor().getContext().getFullResourcePath();
             var filename = ssPath.relativeTo(resourcePath, true).toString();
-            // reset checkboxes
-            var checkboxs = [];
-            checkboxs['android'] = dijit.byId('theme_select_android_checkbox');
-            checkboxs['blackberry'] = dijit.byId('theme_select_blackberry_checkbox');
-            checkboxs['ipad'] = dijit.byId('theme_select_ipad_checkbox');
-            checkboxs['iphone'] = dijit.byId('theme_select_iphone_checkbox');
-            checkboxs['other'] = dijit.byId('theme_select_other_checkbox');
-            for (c in checkboxs){
-                checkboxs[c].setChecked(false);
-            }
-            if (this._selectedThemeSet.mobileTheme.length < 1) {
+            
+            if (this._selectedThemeSet.mobileTheme.length < 2) {
+                var device = this._selectedThemeSet.mobileTheme[0][0];
+                if (device === '.*'){
+                    allDevice.setChecked(true);
+                    selectDevice.setChecked(false);
+                    checkboxs['other'].setChecked(true);
+                    checkboxs['other'].setDisabled(true);
+                    dojo.style(selectDevicesTable, 'display', 'none');
+                }
                 // all devices
             } else {
                 // list of devices
+                allDevice.setChecked(false);
+                selectDevice.setChecked(true);
                 for (var i =0; i < this._selectedThemeSet.mobileTheme.length; i++){
                     if (this._selectedThemeSet.mobileTheme[i][2][0] == filename){
                         console.log(this._selectedThemeSet.mobileTheme[i][0]); // should be the device
                         var device = this._selectedThemeSet.mobileTheme[i][0];
                         if (device === '.*'){
                             device = 'other';
+                            checkboxs[device].setDisabled(true);
                         }
                         device = device.toLowerCase();
                         checkboxs[device].setChecked(true);
@@ -279,16 +308,50 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
         
     },
     
+    onRadioChange: function(e){
+        debugger;
+        var selectDevicesTable = dojo.byId('theme_select_devices_table');
+        var allDevice = dijit.byId('theme_select_all_devices_radio');
+        var selectDevice = dijit.byId('theme_select_devices_radio');
+        if (e.target.id === 'theme_select_all_devices_radio'){
+            if (e.target.checked){
+                allDevice.setChecked(true);
+                selectDevice.setChecked(false);
+                dojo.style(selectDevicesTable, 'display', 'none');
+            } else {
+                allDevice.setChecked(false);
+                selectDevice.setChecked(true); 
+                dojo.style(selectDevicesTable, 'display', '');
+            }
+            
+        } else if(e.target.id === 'theme_select_devices_radio'){
+            if (e.target.checked){
+                allDevice.setChecked(false);
+                selectDevice.setChecked(true);
+                dojo.style(selectDevicesTable, 'display', '');
+            } else {
+                allDevice.setChecked(true);
+                selectDevice.setChecked(false);
+                dojo.style(selectDevicesTable, 'display', 'none');
+            }
+        }
+        
+        
+    },
+    
     onCheckboxChange: function(e){
         debugger;
         var checkbox = dijit.byId(e.target.id);
         var device = e.target.value;
         if (device.toLowerCase() == 'other') {
             device = '.*';
+            if (checkbox.checked){
+                checkbox.setDisabled(true);
+            }
         }
         var mobileIndex = -1;
         for (var i =0; i < this._selectedThemeSet.mobileTheme.length; i++){
-            if (device == this._selectedThemeSet.mobileTheme[i][0].toLowerCase()){
+            if (device.toLowerCase() == this._selectedThemeSet.mobileTheme[i][0].toLowerCase()){
                 mobileIndex = i;
                 break;
             }
@@ -316,7 +379,12 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
              // FIXME can not remove other, only replace add, should disable other check box when checked.
                 alert('can not remove other, replace only');
             } else {
-               delete this._selectedThemeSet.mobileTheme[mobileIndex];
+                var temp = [];
+                if (mobileIndex > 0){
+                    temp = this._selectedThemeSet.mobileTheme.slice(0,mobileIndex);
+                } 
+                temp = temp.concat(this._selectedThemeSet.mobileTheme.slice(mobileIndex+1));
+               this._selectedThemeSet.mobileTheme =  temp;
             }
         }
         debugger;
@@ -435,26 +503,26 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
         
         var template = ''+
             '<table>'+
-                '<tr><td>Theme set:</td><td><select dojoType="dijit.form.Select" id="theme_select_themeset_theme_select" type="text" autoWidth="true"></select></td></tr>'+
+                '<tr><td>Theme set:</td><td><select dojoType="dijit.form.Select" id="theme_select_themeset_theme_select" type="text" style="width: 135px;" ></select></td></tr>'+
             '</table>' +
             '<table>'+
-                '<tr><td>Desktop theme:</td><td><select dojoType="dijit.form.Select" id="theme_select_desktop_theme_select"type="text" autoWidth="true" ></select></td></tr>'+
-                '<tr><td>Mobile theme:</td><td><select dojoType="dijit.form.Select" id="theme_select_mobile_theme_select"type="text" autoWidth="true" ></select></td></tr>'+
+                '<tr><td>Desktop theme:</td><td><select dojoType="dijit.form.Select" id="theme_select_desktop_theme_select"type="text"  style="width: 135px;"  ></select></td></tr>'+
+                '<tr><td>Mobile theme:</td><td><select dojoType="dijit.form.Select" id="theme_select_mobile_theme_select"type="text"  style="width: 135px;" ></select></td></tr>'+
             '</table>' +
-            '<table>' +
-            '<tr><td>Moble theme applies to:</td><td></td></tr>' +
-            '<tr><td><input showlabel="true" type="radio" dojoType="dijit.form.RadioButton"></input><label>All mobile devices</label></td><td></td></tr>' +
-            '<tr><td> <input showlabel="true" type="radio" dojoType="dijit.form.RadioButton"></input><label>Selected devices</label></td><td></td></tr>' +
+            '<table id="theme_select_radio_table" style="margin-top:5px; margin-left:30px;">' +
+            '<tr><td>Mobile theme applies to:</td><td></td></tr>' +
+            '<tr><td style="padding-left:15px;"><input showlabel="true" type="radio" id="theme_select_all_devices_radio" dojoType="dijit.form.RadioButton"></input><label>All mobile devices</label></td><td></td></tr>' +
+            '<tr><td style="padding-left:15px;"> <input showlabel="true" type="radio" id="theme_select_devices_radio" dojoType="dijit.form.RadioButton"></input><label>Selected devices</label></td><td></td></tr>' +
             '</table>' +
-            '<table>' +
+            '<table id="theme_select_devices_table" style="margin-left:60px;">' +
                 '<tr><td></td><td><input id="theme_select_android_checkbox" name="theme_select_android_checkbox" dojoType="dijit.form.CheckBox" value="Android"><label for="theme_select_android_checkbox">Android</label></td></tr>' +
                 '<tr><td></td><td><input id="theme_select_blackberry_checkbox" name="theme_select_blackberry_checkbox" dojoType="dijit.form.CheckBox" value="BlackBerry"><label for="theme_select_blackberry_checkbox">BlackBerry</label></td></tr>' +
                 '<tr><td></td><td><input id="theme_select_ipad_checkbox" name="theme_select_ipad_checkbox" dojoType="dijit.form.CheckBox" value="iPad"><label for="theme_select_ipad_checkbox">iPad</label></td></tr>' +
                 '<tr><td></td><td><input id="theme_select_iphone_checkbox" name="theme_select_iphone_checkbox" dojoType="dijit.form.CheckBox" value="iPhone"><label for="theme_select_iphone_checkbox">iPhone</label></td></tr>' +
                 '<tr><td></td><td><input id="theme_select_other_checkbox" name="theme_select_other_checkbox" dojoType="dijit.form.CheckBox" value="other"><label for="theme_select_other_checkbox">Other</label></td></tr>' +
             '</table>'+
-            '<table>'+
-                '<tr><td><input type="button" dojoType="dijit.form.Button" id="theme_select_ok_button" label="Ok"></input></td><td><input type="button" dojoType="dijit.form.Button" id="theme_select_cancel_button" label="Cancel"></input></td></tr>'+
+            '<table style="width:100%;">'+
+                '<tr><td style="text-align:right; width:80%;"><input type="button" dojoType="dijit.form.Button" id="theme_select_ok_button" label="Ok"></input></td><td><input type="button" dojoType="dijit.form.Button" id="theme_select_cancel_button" label="Cancel"></input></td></tr>'+
              '</table>'+
              '';
 

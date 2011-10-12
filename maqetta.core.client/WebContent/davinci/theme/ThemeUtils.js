@@ -131,24 +131,27 @@ davinci.theme.getHelper = function(theme){
     }
 };
 
+davinci.theme.dojoThemeSets =  { 
+        "version": "1.7",
+        "specVersion": "0.8",
+        "helper": "davinci.libraries.dojo.dojox.mobile.ThemeHelper",
+        "themeSets": [
+            {
+                "name": "default",
+                "desktopTheme": "claro",
+                "mobileTheme": "default"
+            }               
+           
+        ]
+};
+
+
 davinci.theme.getThemeSet = function(context){
     
     var returnThemeSet;
     var dojoThemeSets = davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
     if (!dojoThemeSets){ //  FIXME this default setting should be someplace else
-        dojoThemeSets =  { 
-            "version": "1.7",
-            "specVersion": "0.8",
-            "helper": "davinci.libraries.dojo.dojox.mobile.ThemeHelper",
-            "themeSets": [
-                {
-                    "name": "default",
-                    "desktopTheme": "claro",
-                    "mobileTheme": "default"
-                }               
-               
-            ]
-        };
+        dojoThemeSets =  davinci.theme.dojoThemeSets;
     }
     // find the themeMap
     var htmlElement = context._srcDocument.getDocumentElement();

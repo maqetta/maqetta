@@ -8,7 +8,11 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
     constructor: function(newTheme, context){
         this._newTheme = newTheme;
         this._context = context;
-        this._oldTheme = this._context.getTheme();
+        //this._oldTheme = this._context.getTheme();
+        this._oldTheme  = davinci.theme.getThemeSet(this._context);
+        if (!this._oldTheme){ // FIXME this should be a deafult to some desktop
+            this._oldTheme = davinci.theme.dojoThemeSets.themeSets[0]; // default;
+        }
     },
 
     execute: function(){
@@ -150,11 +154,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
         }
         // remove the mobile theme
         if (themeSet.mobileTheme){
-            for (var i = 0; i < themeData.length; i++){
-                if (themeData[i].name === themeSet.desktopTheme){
-                    this.removeTheme(this._themeData[i]);
-                }
-            }
+            this._dojoxMobileRemoveTheme(this._context);
         }
         
     },
@@ -175,7 +175,42 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
         }
     },
     
-    _dojoxMobileRemoveTheme: function(){
+    _dojoxMobileRemoveTheme: function(context){
+        // remove the dojox.mobile.themeMap
+        var htmlElement = context._srcDocument.getDocumentElement();
+        var head = htmlElement.getChildElement("head");
+        var scriptTags=head.getChildElements("script");
+        //var resourcePath = context.getFullResourcePath();
+        //var ssPath = new davinci.model.Path(theme.file.parent.getPath()).append(theme.files[0]);
+        //newFilename = ssPath.relativeTo(resourcePath, true);
+        dojo.forEach(scriptTags, function (scriptTag){
+            var text=scriptTag.getElementText();
+            var stop = 0;
+            var start;
+            if (text.length) {
+                // Look for a dojox.mobile.themeMap in the document, if found set the themeMap
+                while ((start = text.indexOf('dojox.mobile.themeMap', stop)) > -1 ){ // might be more than one.
+                    var stop = text.indexOf(';', start);
+                    if (stop > start){
+                        text = text.substring(0,start) + text.substring(stop+1);
+                      }
+                }
+                var script = new davinci.html.HTMLElement('script');
+                script.addAttribute('type', 'text/javascript');
+                script.script = "";
+                head.insertBefore(script, scriptTag);
+                var newScriptText = new davinci.html.HTMLText();
+                newScriptText.setText(text); 
+                script.addChild(newScriptText); 
+                scriptTag.parent.removeChild(scriptTag);
+             }
+        }, this);
+        var device = context.getMobileDevice() || 'none';
+        var dm = context.getDojo().getObject("dojox.mobile", true);
+        var dj = context.getDojo();
+        var url = dj.moduleUrl('dojox.mobile', 'themes/iphone/ipad.css');
+        dm.themeMap=[["Android","android",[]],["BlackBerry","blackberry",[]],["iPad","iphone",[url]],["Custom","custom",[]],[".*","iphone",[]]]; // reset themeMap to default
+        dm.loadDeviceTheme(device);
         
     },
     

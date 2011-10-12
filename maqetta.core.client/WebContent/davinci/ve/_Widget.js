@@ -57,6 +57,15 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
 	},
 
 	getChildren: function(attach) {
+		var helper = this.getHelper();
+		if (helper && helper.getChildren) {
+			return helper.getChildren(this, attach);
+		}
+
+		return this._getChildren(attach);
+	},
+
+	_getChildren: function(attach) {
 		var containerNode = this.getContainerNode(),
 			children = [];
 

@@ -100,7 +100,7 @@ define("davinci/ve/DijitWidget", ["davinci/ve/_Widget", "davinci/ve/metadata"], 
 		return widget;
 	},
 
-	getChildren: function(attach) {
+	_getChildren: function(attach) {
         if (this.acceptsHTMLChildren) {
             return this.inherited(arguments);
         }

@@ -567,8 +567,9 @@ dojo.declare("davinci.ve.Context", null, {
 	 * @returns {davinci.model.Path} full path of resource
 	 */
     getPathRelativeToProject: function(resource) {
-		var fullLibPath = new davinci.model.Path(resource.getPath());
-		return fullLibPath.relativeTo(this.getPath(),true).toString();	
+        var absProjectPath = (new davinci.model.Path(this.baseURL)).removeLastSegments(1)
+                .append(this.relativePrefix);
+        return absProjectPath.append(resource);
     },
 
     /* ensures the file has a valid theme.  Adds the users default if its not there alread */

@@ -326,6 +326,30 @@ dojo.mixin(davinci.ui.Resource, {
 	    davinci.Workbench.showModal(projectDialog, langObj.newProject, 'height:160px;width: 250px');
 	},
 	
+	renameAction : function(){
+		var selection = this.getSelectedResources();
+	    if( selection.length!=1) return;
+	    var resource = selection[0];
+	    resource.parent.getChildren(function(parentChildren){
+		    var invalid = [];
+
+	    	for(var i=0;i<parentChildren.length;i++){
+	  	    	invalid.push(parentChildren[i].name);
+	  	    }
+	    	var renameDialog = new davinci.ui.Rename({value:resource.name, invalid:invalid});
+	  		davinci.Workbench.showModal(renameDialog, 'Rename To....', 'height:110px;width: 200px',function(){
+	  			
+	  			var cancel = renameDialog.attr("cancel");
+	  			var newName = renameDialog.attr("value");
+	  			if(!cancel){
+		  			resource.rename(newName);
+
+				}
+	  		});	
+	    },true);
+		
+	},
+	
 	
 	deleteAction: function()
 	{

@@ -301,6 +301,14 @@
 
                 },
                 {
+                    id: "davinci.ui.rename",
+                    label: "Rename...",
+                    iconClass:"renameIcon",
+                    run: "davinci.ui.Resource.renameAction()",
+                    menubarPath: "addFiles"
+
+                },
+                {
                     id: "davinci.ui.delete",
                     label: "Delete",
                     iconClass: "editActionIcon editDeleteIcon",

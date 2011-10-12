@@ -84,11 +84,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			var target = this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
 		    var allowedParentList = this._getAllowedTargetWidget(target, this._data, true);
 		    this._proposedParentWidget = this._chooseParent(allowedParentList);
-			
-			// Add an extra DIV that highlights the default parent widget
-			//FIXME: Not yet creating the extra DIV
-			this._highlightNewWidgetParent(this._proposedParentWidget);
-			
+
 			// Under certain conditions, show list of possible parent widgets
 			var showParentsPref = this._context.getPreference('showPossibleParents');
 			var showCandidateParents = (!showParentsPref && event.ctrlKey) || (showParentsPref && !event.ctrlKey);
@@ -465,6 +461,8 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 				}else{
 				    proposedParentWidget = this._chooseParent(allowedParentList);
 				}
+
+				this._highlightNewWidgetParent(proposedParentWidget);
 				
 				// Don't recreate DIV with every mousemove if parent list is the same
 				var same = true;
@@ -533,6 +531,9 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			}
 			this._newWidgetParent = newWidgetParent;
 			if(newWidgetParent){
+				//FIXME: This quick hack using 'outline' property is problematic:
+				//(1) User won't see the brown outline on BODY
+				//(2) If widget actually uses 'outline' property, it will get clobbered
 				newWidgetParent.domNode.style.outline = '1px solid brown';
 			}
 		}

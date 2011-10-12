@@ -430,6 +430,8 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 		var tool = new toolClass(dataClone);
 		tool._type = data.type;
 		this._context.setActiveTool(tool);
+		// Sometimes blockChange doesn't get cleared, force a clear upon starting a widget drag operation
+		this._context.blockChange(false);
 
 		// Place an extra DIV onto end of dragCloneDiv to allow 
 		// posting a list of possible parent widgets for the new widget

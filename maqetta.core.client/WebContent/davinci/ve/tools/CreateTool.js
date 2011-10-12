@@ -82,18 +82,12 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		
 			// Determine target parent(s) at current location
 			var target = this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
-			var proposedParentWidget;
 		    var allowedParentList = this._getAllowedTargetWidget(target, this._data, true);
-		    var helper = this._getHelper();
-			if(allowedParentList.length>1 && helper && helper.chooseParent){
-				proposedParentWidget = helper.chooseParent(allowedParentList);
-			}else{
-				proposedParentWidget = allowedParentList[0];				
-			}
-
+		    this._proposedParentWidget = this._chooseParent(allowedParentList);
+			
 			// Add an extra DIV that highlights the default parent widget
 			//FIXME: Not yet creating the extra DIV
-			this._highlightNewWidgetParent(proposedParentWidget);
+			this._highlightNewWidgetParent(this._proposedParentWidget);
 			
 			// Under certain conditions, show list of possible parent widgets
 			var showParentsPref = this._context.getPreference('showPossibleParents');
@@ -124,8 +118,18 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		// If so, then use mousedown position, else get current position
 		this._position = this._mdPosition ? this._mdPosition : this._context.getContentPosition(event);
 
-		var size,
+		var size, target;
+		if(this._proposedParentWidget){
+			// Use last computed parent from onMouseMove handler
+			target = this._proposedParentWidget;
+		}else{
+			// Otherwise, find the appropriate parent that is located under the pointer
 			target = this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
+		    var allowedParentList = this._getAllowedTargetWidget(target, this._data, true);
+		    target = this._chooseParent(allowedParentList);
+		}
+
+		this._proposedParentWidget = null;
 
 		/**
 		 * Custom error, thrown when a valid parent widget is not found.
@@ -143,16 +147,10 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			// create tool _data can be an object or an array of objects
 			// The array could hold a mix of widget data from different libs for example if this is a paste 
 			// where a dojo button and a html label were selected.
-			var data = this._data instanceof Array ? this._data : [this._data],
-
-			// XXX Have to do this call here, rather than in the more favorable
-			//  create() or _create() since different "subclasses" of CreateTool
-			//  either override create() or _create().  It is very inconsistent.
-			    allowedParentList = this._getAllowedTargetWidget(target, this._data, true),
-			    helper = this._getHelper();
-
+			var data = this._data instanceof Array ? this._data : [this._data];
+					
 			// If no valid target found, throw error
-			if (allowedParentList.length == 0) {
+			if (!target) {
 				// returns an array consisting of 'type' and any 'class' properties
 				function getClassList(type) {
 					var classList = davinci.ve.metadata.queryDescriptor(type, 'class');
@@ -190,12 +188,6 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 					             '</span>.'].join(''); // FIXME: i18n
 				}
 				throw new InvalidTargetWidgetError(errorMsg);
-			}
-
-			if(allowedParentList.length>1 && helper && helper.chooseParent){
-				target = helper.chooseParent(allowedParentList);
-			}else{
-				target = allowedParentList[0];				
 			}
 
 			if(this._resizable && this._position){
@@ -288,10 +280,6 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		var parent = args.target,
 			parentNode, child;
 
-		// For absolute layout, always drop widgets at the top-level of the document to avoid container clipping issues #6879
-		if(!this._context.getFlowLayout()){
-			parent = this._context.rootWidget;
-		}
 		while (parent) {
 			parentNode = parent.getContainerNode();
 			if (parentNode) { // container widget
@@ -417,11 +405,49 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		return true;
 	},
 	
-	_dragUpdateCandidateParents: function(targetNode, showCandidateParents){
+	/**
+	 * Choose a parent widget. For flow layout, default to nearest valid parent.
+	 * For absolute layout, the current outer container widget (e.g., the BODY)
+	 * 
+	 * @param {object} allowedParentList  List of ancestor widgets of event.target that can be parents of the new widget
+	 */
+	_chooseParent: function(allowedParentList){
+		var proposedParentWidget;
+	    var helper = this._getHelper();
+		if(allowedParentList.length>1 && helper && helper.chooseParent){
+			proposedParentWidget = helper.chooseParent(allowedParentList);
+		}else if (allowedParentList.length == 0){
+			proposedParentWidget = null;
+		}else{
+			// For absolute layout, always drop widgets at the top-level of the document to avoid container clipping issues #6879
+			if(!this._context.getFlowLayout()){
+				var rootWidget = this._context.rootWidget;
+				if(allowedParentList.indexOf(rootWidget)>=0){
+					proposedParentWidget = rootWidget;
+				}else{
+					proposedParentWidget = null;
+				}	
+			}else{
+				proposedParentWidget = allowedParentList[0];
+			}				
+		}
+		return proposedParentWidget;
+	},
+	
+	/**
+	 * If showCandidateParents is true, then update the DIV that is being dragged around
+	 * on the screen to show the list of possible parent widgets.
+	 * If false, clear any existing list of possible parent widgets.
+	 * 
+	 * @param {object} targetNode  For mouse events, this is the event.target
+	 * @param {boolean} showCandidateParents  Whether the DIV being dragged around should show possible parents
+	 */
+	_dragUpdateCandidateParents: function(targetNode, showCandidateParents, currentProposedParent){
 
 		var activeDragDiv = this._context.getActiveDragDiv();
 		var parentListDiv;
 		if(activeDragDiv){
+			// Palette.js stuffs in an extra DIV with class maqCandidateParents into DIV that is being dragged around by user
 			var elems = dojo.query('.maqCandidateParents',activeDragDiv);
 			if(elems.length==1){
 				parentListDiv = elems[0];
@@ -430,15 +456,14 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		if(parentListDiv){
 			if(showCandidateParents){
 
-				// Determine target parent(s) at current location
 				var target = this._getTarget() || davinci.ve.widget.getEnclosingWidget(targetNode);
+				var allowedParentList = this._getAllowedTargetWidget(target, this._data, true);
+
 				var proposedParentWidget;
-			    var allowedParentList = this._getAllowedTargetWidget(target, this._data, true);
-			    var helper = this._getHelper();
-				if(allowedParentList.length>1 && helper && helper.chooseParent){
-					proposedParentWidget = helper.chooseParent(allowedParentList);
+				if(this._proposedParentWidget){
+					proposedParentWidget = this._proposedParentWidget;
 				}else{
-					proposedParentWidget = allowedParentList[0];				
+				    proposedParentWidget = this._chooseParent(allowedParentList);
 				}
 				
 				// Don't recreate DIV with every mousemove if parent list is the same
@@ -464,16 +489,26 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 					var headerDiv = dojo.create('div',{className:'maqCandidateParentsHeader'},parentListDiv);
 					var listDiv = dojo.create('div',{className:'maqCandidateParentsList'},parentListDiv);
 					var helpDiv = dojo.create('div',{className:'maqCandidateParentsHelp'},parentListDiv);
+					var div;
 					if(len == 0){
 						// FIXME: need to globalize
 						headerDiv.innerHTML = 'No valid parents at this position';
 					}else if(len == 1){
 						headerDiv.innerHTML = 'Will become a child of:';
-						dojo.create('div',{className:'maqCandidateListItem',innerHTML:davinci.ve.widget.getLabel(allowedParentList[0])},listDiv);
+						div = dojo.create('div',{className:'maqCandidateListItem maqCandidateCurrent',innerHTML:davinci.ve.widget.getLabel(allowedParentList[0])},listDiv);
+						//FIXME: Temporary
+						div.style.fontWeight = 'bold';
+						div.style.fontSize = '130%';
 					}else{
 						headerDiv.innerHTML = 'Candidate parents:';
 						for(var i=0; i<allowedParentList.length; i++){
-							dojo.create('div',{className:'maqCandidateListItem',innerHTML:davinci.ve.widget.getLabel(allowedParentList[i])},listDiv);
+							div = dojo.create('div',{className:'maqCandidateListItem',innerHTML:davinci.ve.widget.getLabel(allowedParentList[i])},listDiv);
+							if(allowedParentList[i] == proposedParentWidget){
+								dojo.addClass(div,'maqCandidateCurrent');
+								//FIXME: Temporary
+								div.style.fontWeight = 'bold';
+								div.style.fontSize = '130%';
+							}
 						}
 						helpDiv.innerHTML = 'Maybe some day you can choose';
 					}

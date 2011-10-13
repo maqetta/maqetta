@@ -157,12 +157,15 @@ davinci.theme.getThemeSet = function(context){
     var htmlElement = context._srcDocument.getDocumentElement();
     var head = htmlElement.getChildElement("head");
     var scriptTags=head.getChildElements("script");
-    var mobileTheme;
+    var mobileTheme = 'none';
     dojo.forEach(scriptTags, function (scriptTag){
         var text=scriptTag.getElementText();
         var stop = 0;
         var start;
         if (text.length) {
+            if (text.indexOf("dojo.require('dojox.mobile.deviceTheme');") && mobileTheme === 'none') {
+                mobileTheme = 'default';
+            }
             // Look for a dojox.mobile.themeMap in the document, if found set the themeMap
             while ((start = text.indexOf('dojox.mobile.themeMap', stop)) > -1 ){ // might be more than one.
                 var stop = text.indexOf(';', start);
@@ -173,6 +176,7 @@ davinci.theme.getThemeSet = function(context){
        }
     });
     debugger;
+    var desktopTheme = context.getTheme();
     for (var s = 0; s < dojoThemeSets.themeSets.length; s++){
         var themeSet = dojoThemeSets.themeSets[s];
         var mobileMap = themeSet.mobileTheme;
@@ -181,7 +185,11 @@ davinci.theme.getThemeSet = function(context){
         }
         if (mobileMap == mobileTheme){
             // found themeMap
-            var themeData = davinci.library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly);
+            if (themeSet.desktopTheme == desktopTheme.name){
+                debugger;
+                return themeSet;
+            }
+            /*var themeData = davinci.library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly);
             for (var i = 0; i < themeData.length; i++){
                 if(themeData[i].name === themeSet.desktopTheme){
                  // check desktop 
@@ -216,12 +224,32 @@ davinci.theme.getThemeSet = function(context){
                         }
                     }
                 }
-            }
+            } */
            
             debugger;
         }
     }
-    return;
+    // themeSet not found Create one with gleaned information
+    debugger;
+    var newThemeSetName = desktopTheme.name + '_' + mobileTheme;
+    // make sure the name is unique
+    var nameIndex = 0;
+    for (var n = 0; n < dojoThemeSets.themeSets.length; n++){
+        if (dojoThemeSets.themeSets[n].name == newThemeSetName){
+            nameIndex++;
+        }
+    }
+    if (nameIndex > 0){
+        newThemeSetName = newThemeSetName + '_' + nameIndex;
+    }
+    themeSet =  {
+            "name": newThemeSetName,
+            "desktopTheme": desktopTheme.name,
+            "mobileTheme": mobileTheme
+        };  
+    dojoThemeSets.themeSets.push(themeSet);
+    davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(), dojoThemeSets);
+    return themeSet;
    
 };
 

@@ -604,7 +604,7 @@ davinci.ve.widget._parseNodeData = function(node, options){
 	//	data.children = davinci.ve.widget._getChildrenData(widget, options);
 	//}
 	return data;
-},
+};
 
 davinci.ve.widget.getWidgetHelper = function(type){
 
@@ -620,7 +620,7 @@ davinci.ve.widget.getWidgetHelper = function(type){
         }
         return /*this._edit_helper = */new helperConstructor();
     }
-},
+};
 
 davinci.ve.widget.getWidget = function(node){
 

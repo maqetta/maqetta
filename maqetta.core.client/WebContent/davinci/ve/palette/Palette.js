@@ -48,15 +48,15 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 		//    category groups.
         var descriptorObject = {};
 		for (var name in libraries) if (libraries.hasOwnProperty(name)) {
-		    var lib = libraries[name];
-		    dojo.forEach(lib.widgets, function(item) {
-                var category = lib.categories[item.category];
+		    var library = libraries[name];
+		    dojo.forEach(library.widgets, function(item) {
+                var category = library.categories[item.category];
                 if (!descriptorObject[category.name]) {
                     descriptorObject[category.name] = dojo.clone(category);
                     descriptorObject[category.name].items = [];
                 }
                 var newItem = dojo.clone(item);
-                newItem.$library = lib;
+                newItem.$library = library;
                 descriptorObject[category.name].items.push(newItem);
 		    });
 		}
@@ -69,7 +69,7 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 			var	iconFile = defaultIconFile;
 			var iconUri = iconFolder + iconFile;
 			
-			componentIcon = this._getIconUri(component.icon, iconUri);
+			var componentIcon = this._getIconUri(component.icon, iconUri);
 			
 			var opt = {
 				paletteId: this.id,
@@ -260,7 +260,7 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 		}
 		
 		var iconUri = iconFolder + iconFile;
-		componentIcon = this._getIconUri(component.icon, iconUri);
+		var componentIcon = this._getIconUri(component.icon, iconUri);
 		
 		var opt = {
 			paletteId: this.id,
@@ -380,7 +380,6 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
             }
 	    }
 
-	    var action;
 	    if (value === '') {
 	        action = resetWidgets;
 	        dojo.removeClass(this.domNode, 'maqWidgetsFiltered');

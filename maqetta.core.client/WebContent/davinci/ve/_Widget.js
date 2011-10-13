@@ -56,8 +56,33 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
 		return this._edit_context;
 	},
 
-	getChildren: function() {
-		return [];
+	getChildren: function(attach) {
+		var helper = this.getHelper();
+		if (helper && helper.getChildren) {
+			return helper.getChildren(this, attach);
+		}
+
+		return this._getChildren(attach);
+	},
+
+	_getChildren: function(attach) {
+		var containerNode = this.getContainerNode(),
+			children = [];
+
+		if (containerNode) {
+			dojo.forEach(containerNode.children, function(node) {
+				if (attach) {
+					children.push(davinci.ve.widget.getWidget(node));
+				} else {
+					var widget = node._dvWidget;
+					if (widget) {
+						children.push(widget);
+					}
+				}
+			});
+		}
+
+		return children;
 	},
 
 	getContainerNode: function() {
@@ -66,11 +91,14 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
 			return helper.getContainerNode(this);
 		}
 
-		if ((this.dijitWidget && this.dijitWidget.isContainer)
-                || davinci.ve.metadata.getAllowedChild(this.type)[0] !== 'NONE') {
-            return (this.containerNode || this.domNode);
-        }
-		return undefined;
+		if (davinci.ve.metadata.getAllowedChild(this.type)[0] !== 'NONE') {
+			return this._getContainerNode();
+		}
+		return null;
+	},
+
+	_getContainerNode: function() {
+		return this.domNode;
 	},
 
 	getMetadata: function() {

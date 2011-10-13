@@ -493,7 +493,7 @@ preview.silhouetteiframe.prototype = {
 	
 };
 
-preview.silhouetteiframe.themeMap = []; // map silhouette files to dojo mobile theme names
+preview.silhouetteiframe.themeMap = {}; // map silhouette files to dojo mobile theme names
 preview.silhouetteiframe.themeMap['android_340x480.svg'] = 'Android';
 preview.silhouetteiframe.themeMap['android_480x800.svg'] = 'Android';
 preview.silhouetteiframe.themeMap['androidtablet.svg'] = 'Android';
@@ -502,7 +502,7 @@ preview.silhouetteiframe.themeMap['blackberry.svg'] = 'BlackBerry';
 preview.silhouetteiframe.themeMap['ipad.svg'] = 'iPad';
 preview.silhouetteiframe.themeMap['iphone.svg'] = 'iPhone';
 
-preview.silhouetteiframe.themeCssMap = []; // map silhouette files to dojo mobile theme names, for pagedesigner
+preview.silhouetteiframe.themeCssMap = {}; // map silhouette files to dojo mobile theme names, for pagedesigner
 preview.silhouetteiframe.themeCssMap['Android'] = ['android/android.css'];
 preview.silhouetteiframe.themeCssMap['BlackBerry'] = ['blackberry/blackberry.css'];
 preview.silhouetteiframe.themeCssMap['iPad'] = ['iphone/iphone.css', 'iphone/ipad.css'];
@@ -511,15 +511,12 @@ preview.silhouetteiframe.themeCssMap['iPhone'] = ['iphone/iphone.css'];
 preview.silhouetteiframe.getMobileTheme = function(svgFile){
 	
 	var path = svgFile.split('/');// just get the first part of the file name android_340... or ipad
-	var file = path[path.length-1];
+	var file = path[path.length-1]; // pop
 	return preview.silhouetteiframe.themeMap[file];
 	
 };
 
 preview.silhouetteiframe.getMobileCss = function(theme){
-	if (!theme){
-		return preview.silhouetteiframe.themeCssMap['iPhone'];
-	}
-	return preview.silhouetteiframe.themeCssMap[theme];
+	return preview.silhouetteiframe.themeCssMap[theme || 'iPhone'];
 
 };

@@ -197,7 +197,8 @@
 				<arg value="profileFile=${target.folder}/davinci.profile.js"/>
 				<arg value="action=release"/>
 				<arg value="cssOptimize=comments.keepLines"/>
-				<arg value="layerOptimize=shrinksafe.keepLines"/>
+			<arg value="optimize=0"/>
+			<arg value="layerOptimize=0"/>
 		</java>
 		
 		<!-- Copy over original app.css with comments.  There is no build option to preserve CSS comments AND inline. -->

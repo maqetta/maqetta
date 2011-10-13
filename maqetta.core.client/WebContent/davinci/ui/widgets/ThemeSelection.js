@@ -128,7 +128,7 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
             
         }
         dtSelect.attr( 'value', themeSet.desktopTheme);
-        if (themeSet.mobileTheme === 'default'){
+        if (themeSet.mobileTheme === 'default' || themeSet.mobileTheme === 'none' ){
             mblSelect.attr( 'value', themeSet.mobileTheme);
         } else {
            var context = davinci.Workbench.getOpenEditor().getContext();
@@ -260,6 +260,7 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
             dojo.style(selectDevicesTable, 'display', 'none');
             dojo.style(selectRadioTable, 'display', 'none');
            // this.selectMobileTheme(e);
+           this._selectedThemeSet.mobileTheme = e;
            delete this._selectedMobileTheme;
         } else {
             var theme;

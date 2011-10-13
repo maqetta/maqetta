@@ -54,7 +54,10 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 	},
 
 	onMouseMove: function(event){
-		// Needed by onKeyDown and onKeyUp handlers
+		
+		if(event.target != this._lastEventTarget){
+			this._proposedParentWidget = null;
+		}
 		this._lastEventTarget = event.target;
 		
 		if(this._mdPosition){
@@ -81,9 +84,11 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			this._setTarget(event.target);
 		
 			// Determine target parent(s) at current location
-			var target = this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
-		    var allowedParentList = this._getAllowedTargetWidget(target, this._data, true);
-		    this._proposedParentWidget = this._chooseParent(allowedParentList);
+			this._target = this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
+		    var allowedParentList = this._getAllowedTargetWidget(this._target, this._data, true);
+			if(!this._proposedParentWidget){
+				this._proposedParentWidget = this._chooseParent(allowedParentList);
+			}
 
 			// Under certain conditions, show list of possible parent widgets
 			var showParentsPref = this._context.getPreference('showPossibleParents');
@@ -241,14 +246,23 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 	onKeyDown: function(event){
 		// Under certain conditions, show list of possible parent widgets
 		var showParentsPref = this._context.getPreference('showPossibleParents');
-		var showCandidateParents = (!showParentsPref && event.keyCode==17) || (showParentsPref && event.keyCode!=17);	// 17=ctrl key
-		this._dragUpdateCandidateParents(this._lastEventTarget,showCandidateParents);
+		if(event.keyCode==17){	// 17=ctrl key
+			this._ctrlKeyDown = true;
+		}else{
+			this._processKeyDown(event.keyCode);
+		}
+		var showCandidateParents = (!showParentsPref && this._ctrlKeyDown) || (showParentsPref && !this._ctrlKeyDown);
+		this._dragUpdateCandidateParents(this._lastEventTarget, showCandidateParents);
 	},
 
 	onKeyUp: function(event){
 		// Under certain conditions, show list of possible parent widgets
+		if(event.keyCode==17){	// 17=ctrl key
+			this._ctrlKeyDown = false;
+		}
 		var showParentsPref = this._context.getPreference('showPossibleParents');
-		this._dragUpdateCandidateParents(this._lastEventTarget,showParentsPref);
+		var showCandidateParents = (!showParentsPref && this._ctrlKeyDown) || (showParentsPref && !this._ctrlKeyDown);
+		this._dragUpdateCandidateParents(this._lastEventTarget, showCandidateParents);
 	},
 
 	_getHelper: function(){
@@ -402,6 +416,40 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 	},
 	
 	/**
+	 * Update currently proposed parent widget based on latest keydown event
+	 * 
+	 * @param {number} keyCode  The keyCode for the key that the user pressed
+	 */
+	_processKeyDown: function(keyCode){
+		if(keyCode==32 || (keyCode>=49 && keyCode<=57)){		// space or 1-9
+			var target = this._getTarget() || davinci.ve.widget.getEnclosingWidget(this._lastEventTarget);
+			var allowedParentList = this._getAllowedTargetWidget(this._target, this._data, true);
+			var index;
+			if(allowedParentList.length > 1){
+				if(keyCode==32){
+					// Space character: cycle to next candidate parent
+					index = allowedParentList.indexOf(this._proposedParentWidget);
+					if(index>=0){
+						if(index == allowedParentList.length-1){
+							index = 0;
+						}else{
+							index++;
+						}
+						this._proposedParentWidget = allowedParentList[index];
+					}
+				}else{
+					// Number character: select parent that has the given number
+					// Note that the presentation is 1-based (versus 0-based) and backwards
+					index = allowedParentList.length - (keyCode - 48);
+					if(index >= 0){
+						this._proposedParentWidget = allowedParentList[index];
+					}
+				}
+			}
+		}
+	},
+
+	/**
 	 * Choose a parent widget. For flow layout, default to nearest valid parent.
 	 * For absolute layout, the current outer container widget (e.g., the BODY)
 	 * 
@@ -438,8 +486,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 	 * @param {object} targetNode  For mouse events, this is the event.target
 	 * @param {boolean} showCandidateParents  Whether the DIV being dragged around should show possible parents
 	 */
-	_dragUpdateCandidateParents: function(targetNode, showCandidateParents, currentProposedParent){
-
+	_dragUpdateCandidateParents: function(targetNode, showCandidateParents){
 		var activeDragDiv = this._context.getActiveDragDiv();
 		var parentListDiv;
 		if(activeDragDiv){
@@ -455,18 +502,17 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 				var target = this._getTarget() || davinci.ve.widget.getEnclosingWidget(targetNode);
 				var allowedParentList = this._getAllowedTargetWidget(target, this._data, true);
 
-				var proposedParentWidget;
-				if(this._proposedParentWidget){
-					proposedParentWidget = this._proposedParentWidget;
-				}else{
-				    proposedParentWidget = this._chooseParent(allowedParentList);
+				if(!this._proposedParentWidget){
+					this._proposedParentWidget = this._chooseParent(allowedParentList);
 				}
 
-				this._highlightNewWidgetParent(proposedParentWidget);
+				this._highlightNewWidgetParent(this._proposedParentWidget);
 				
 				// Don't recreate DIV with every mousemove if parent list is the same
 				var same = true;
-				if(typeof this._lastAllowedParentList == 'undefined' || this._lastAllowedParentList===null){
+				if(this._lastProposedParentWidget != this._proposedParentWidget){
+					same = false;
+				}else if(typeof this._lastAllowedParentList == 'undefined' || this._lastAllowedParentList===null){
 					same = false;
 				}else if(this._lastAllowedParentList.length != allowedParentList.length){
 					same = false;
@@ -478,8 +524,10 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 						}
 					}
 				}
+				this._lastProposedParentWidget = this._proposedParentWidget;
 
 				if(!same){
+					var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 					this._lastAllowedParentList = allowedParentList;
 					var parentListDiv = elems[0];
 					var len = allowedParentList.length;
@@ -489,28 +537,24 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 					var helpDiv = dojo.create('div',{className:'maqCandidateParentsHelp'},parentListDiv);
 					var div;
 					if(len == 0){
-						// FIXME: need to globalize
-						headerDiv.innerHTML = 'No valid parents at this position';
+						headerDiv.innerHTML = langObj.noValidParents;
 					}else if(len == 1){
-						// FIXME: need to globalize
-						headerDiv.innerHTML = 'Will become a child of:';
+						headerDiv.innerHTML = langObj.willBeChildOf;
 						div = dojo.create('div',{className:'maqCandidateListItem maqCandidateCurrent',innerHTML:davinci.ve.widget.getLabel(allowedParentList[0])},listDiv);
 					}else{
-						// FIXME: need to globalize
-						headerDiv.innerHTML = 'Candidate parents:';
+						headerDiv.innerHTML = langObj.candidateParents;
 						var s = '<table>';
 						var j;
 						for(var i=allowedParentList.length-1, j=1; i >= 0; i--, j++){
 							var className = 'maqCandidateListItem';
-							if(allowedParentList[i] == proposedParentWidget){
+							if(allowedParentList[i] == this._proposedParentWidget){
 								className += ' maqCandidateCurrent';
 							}
 							s += '<tr class="'+className+'"><td class="maqCandidateCheckedColumn">&rarr;</td><td class="maqCandidateNumberColumn">'+j+'</td><td class="maqCandidateParentColumn">'+davinci.ve.widget.getLabel(allowedParentList[i])+'</td></tr>';
 						}
 						s += '</table>';
 						listDiv.innerHTML = s;
-						// FIXME: need to globalize
-						helpDiv.innerHTML = 'To change, press space, arrows or numbers';
+						helpDiv.innerHTML = langObj.toChangePress;
 					}
 				}
 			}else{

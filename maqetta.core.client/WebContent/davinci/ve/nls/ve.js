@@ -56,6 +56,12 @@ define({ root:
 		//widgets/WidgetToolBar.js
 		"toolBarFor":"for: ",
 		"noSelection":"(no selection)",
-		"toolBarClass":"class: "
+		"toolBarClass":"class: ",
+		
+		//tools/CreateTool.js
+		"noValidParents":"No valid parents at this position",
+		"willBeChildOf":"Will become a child of:",
+		"candidateParents":"Candidate parents:",
+		"toChangePress":"To change, press space or numbers"
 }
 });

@@ -1190,7 +1190,6 @@ davinci_top_bar .dijitButtonNode {
 .maqCandidateListItem {
 }
 .maqCandidateCurrent {
-	font-weight:bold;
 	color:brown;
 }
 .maqCandidateCheckedColumn {

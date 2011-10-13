@@ -1106,9 +1106,8 @@ dojo.mixin(davinci.Workbench, {
 		return tab.editor;
 	},
 
-	_filename2id: function(fileName)
-	{
-		return "editor." + fileName.replace(/[\/| |\t]/g, "_")
+	_filename2id: function(fileName) {
+		return "editor-" + encodeURIComponent(fileName.replace(/[\/| |\t]/g, "_")).replace(/%/g, ":");
 	},
 
 	_populateShowViewsMenu: function()
@@ -1489,7 +1488,7 @@ dojo.mixin(davinci.Workbench, {
 		
 	},
 
-	getActiveProject : function(){
+	getActiveProject: function(){
 		
 		if(this._state==null )
 			this._state=davinci.Runtime.serverJSONRequest({url:"./cmd/getWorkbenchState", handleAs:"json", sync:true  });
@@ -1500,7 +1499,7 @@ dojo.mixin(davinci.Workbench, {
 		return davinci.Runtime._DEFAULT_PROJECT;
 	},
 	
-	setActiveProject : function(project){
+	setActiveProject: function(project){
 		this._state.project = project;
 		davinci.Workbench._updateWorkbenchState();
 	},

@@ -42,25 +42,12 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
         var select = dijit.byId('theme_select_themeset_theme_select');
         select.attr( 'value', currentThemeSet.name);
         this._dialog.show();
-        
 
-        
-        return;
-        var div = dojo.doc.createElement("div");
-        div.innerHTML = this._getTemplate();
-        
-//      this._select = dojo.doc.createElement("select");
-    //  div.appendChild(this._select);
-        this._warnDiv = dojo.doc.createElement("div");
-        div.appendChild(this._warnDiv);
-        this.domNode = div;
-        //dojo.style(this._select, "width","180px");
-        dojo.style(this.domNode, "width","100%");
-    //  dojo.connect(this._select, "onchange", this, "_onChange");
     },
 
     /* populate the theme selection, depends on the "workspaceOnly" attribute being set post create */
     postCreate : function(){
+        debugger;
         this.addThemeSets();
     return;
         this._themeData = davinci.library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly);
@@ -78,7 +65,7 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
     },
     
     addThemeSets: function(){
-        
+
         this._dojoThemeSets = davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
         if (!this._dojoThemeSets){ //  FIXME this default setting should be someplace else
             this._dojoThemeSets =  { 
@@ -101,14 +88,11 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
             var opt = {value: this._dojoThemeSets.themeSets[i].name, label: this._dojoThemeSets.themeSets[i].name};
             select.addOption(opt);
         }
-
-       /* if(this._selection)
-            this._selectValue(this._selection);*/
         
     },
     
     addThemes: function(themeSet){
-        debugger;
+
         this._themeData = davinci.library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly, true);
         var dtSelect = dijit.byId('theme_select_desktop_theme_select');
         dtSelect.options = [];
@@ -118,7 +102,6 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
         mblSelect.addOption({value: 'none', label: 'none'});
         this._themeCount = this._themeData.length;
         for (var i = 0; i < this._themeData.length; i++){
-            if(this._hasValue(this._themeData[i].name)) continue;
             var opt = {value: this._themeData[i].name, label: this._themeData[i].name};
             if (this._themeData[i].type === 'dojox.mobile'){
                 mblSelect.addOption(opt);
@@ -148,18 +131,22 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
     },
     
     _setBaseAttr : function(base){
+        debugger;
         this._base = base;
     },
     
     _getBaseAttr : function(){
+        debugger;
         return this._base;
     },
     
     _getNumberOfThemesAttr : function(){
+        debugger;
         return this._themeCount;
     },
     
     _setValueAttr : function(value){
+        debugger;
     return;
         this._selection = value;
         if(value && value.className){
@@ -169,6 +156,7 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
     },
     
     _hasValue : function(themeName){
+        debugger;
     return;
         for(var i=0;i<this._select.children.length;i++){
             if(this._select.children[i].value==themeName){
@@ -179,7 +167,7 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
     },
     
     _selectValue : function(value){
-        
+        debugger;
         var found = false;
         for(var i=0;i<this._select.children.length;i++){
             if(this._select.children[i].selected)
@@ -200,6 +188,7 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
         }
     },
     _getValueAttr : function(){
+        debugger;
         var name = dojo.attr(this._select, "value");
         
         for(var i=0;i<this._themeData.length;i++){
@@ -212,11 +201,11 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
     },
     
     _setWorkspaceOnlyAttr : function(value){
+        debugger;
         this.workspaceOnly = value;
     },
     
     onChange : function(e){
-        debugger;
 
         for (var i = 0; i < this._dojoThemeSets.themeSets.length; i++){
             if (this._dojoThemeSets.themeSets[i].name == e) {
@@ -230,13 +219,13 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
     },
     
     onDesktopChange : function(e){
-        debugger;
+  
         this._selectedThemeSet.desktopTheme = e;
                
     },
     
     onMobileChange : function(e){
-        debugger;
+   
         var checkboxs = [];
         checkboxs['android'] = dijit.byId('theme_select_android_checkbox');
         checkboxs['blackberry'] = dijit.byId('theme_select_blackberry_checkbox');
@@ -276,7 +265,15 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
             var resourcePath = davinci.Workbench.getOpenEditor().getContext().getFullResourcePath();
             var filename = ssPath.relativeTo(resourcePath, true).toString();
             
-            if (this._selectedThemeSet.mobileTheme.length < 2) {
+            if (this._selectedThemeSet.mobileTheme === 'default' || this._selectedThemeSet.mobileTheme === 'none'){
+                // changing from default or none for mobile
+                allDevice.setChecked(true);
+                selectDevice.setChecked(false);
+                checkboxs['other'].setChecked(true);
+                checkboxs['other'].setDisabled(true);
+                dojo.style(selectDevicesTable, 'display', 'none');
+                
+            } else if (this._selectedThemeSet.mobileTheme.length < 2) {
                 var device = this._selectedThemeSet.mobileTheme[0][0];
                 if (device === '.*'){
                     allDevice.setChecked(true);
@@ -310,7 +307,7 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
     },
     
     onRadioChange: function(e){
-        debugger;
+      
         var selectDevicesTable = dojo.byId('theme_select_devices_table');
         var allDevice = dijit.byId('theme_select_all_devices_radio');
         var selectDevice = dijit.byId('theme_select_devices_radio');
@@ -341,7 +338,7 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
     },
     
     onCheckboxChange: function(e){
-        debugger;
+
         var checkbox = dijit.byId(e.target.id);
         var device = e.target.value;
         if (device.toLowerCase() == 'other') {
@@ -392,7 +389,7 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
     },
     
     selectMobileTheme: function(e){
-        debugger;
+ 
         var mblSelect = dijit.byId('theme_select_mobile_theme_select');
         var themeMap = this._selectedThemeSet.mobileTheme;
         if (e === 'default'){
@@ -422,14 +419,14 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
     },
     
     _changeTheme : function(){
-        
+        debugger;
         var e = davinci.Workbench.getOpenEditor();
         if (e && e.getContext)
             e.getContext().getCommandStack().execute(new davinci.ve.commands.ChangeThemeCommand(newTheme, e.getContext()));
     },
     
     _onChange :function(){ // FIXME need to make this a warn for both desktop and mobile
-        
+        debugger;
         var currentValue = this._getValueAttr();
         if( currentValue==null  ||  this._blockChange)
             return;
@@ -457,10 +454,12 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
     
     
     _getThemeDataAttr : function(){
+        debugger;
         return this._themeData;
     },
     
     _warnOk: function(){
+        debugger;
         dojo.cookie(this._cookieName, "true");
         this._destroy();
         this.onChange();
@@ -468,12 +467,14 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
     },
     
     _warnCancel: function(){
+        debugger;
         this._destroy();
         this.onClose();
         
     },
     
     _destroy: function(){
+        debugger;
         var ok = dijit.byId('davinci.ui.widgets.ThemeSelection.ok');
         dojo.disconnect(ok);
         ok.destroy();
@@ -483,7 +484,7 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
     },
     
     onOk: function(e){
-        debugger;
+
         davinci.workbench.Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(),this._dojoThemeSets);
         this.onClose(e);
         var e = davinci.Workbench.getOpenEditor();
@@ -492,6 +493,7 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
     },
     
     onClose: function(e){
+
         while (connection = this._connections.pop()){
             dojo.disconnect(connection);
         }
@@ -501,7 +503,7 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
     },
     
     _getTemplate: function(){
-        
+
         var template = ''+
             '<table>'+
                 '<tr><td>Theme set:</td><td><select dojoType="dijit.form.Select" id="theme_select_themeset_theme_select" type="text" style="width: 135px;" ></select></td></tr>'+

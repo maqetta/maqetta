@@ -137,10 +137,15 @@ davinci.theme.dojoThemeSets =  {
         "helper": "davinci.libraries.dojo.dojox.mobile.ThemeHelper",
         "themeSets": [
             {
-                "name": "default",
+                "name": "desktop_default",
+                "desktopTheme": "claro",
+                "mobileTheme": "none"
+            },
+            {
+                "name": "mobile_default",
                 "desktopTheme": "claro",
                 "mobileTheme": "default"
-            }               
+            }
            
         ]
 };
@@ -150,8 +155,10 @@ davinci.theme.getThemeSet = function(context){
     
     var returnThemeSet;
     var dojoThemeSets = davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
-    if (!dojoThemeSets){ //  FIXME this default setting should be someplace else
+    if (!dojoThemeSets){ 
         dojoThemeSets =  davinci.theme.dojoThemeSets;
+        // set the defaults
+        davinci.workbench.Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(), dojoThemeSets);
     }
     // find the themeMap
     var htmlElement = context._srcDocument.getDocumentElement();
@@ -248,7 +255,7 @@ davinci.theme.getThemeSet = function(context){
             "mobileTheme": mobileTheme
         };  
     dojoThemeSets.themeSets.push(themeSet);
-    davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(), dojoThemeSets);
+    davinci.workbench.Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(), dojoThemeSets);
     return themeSet;
    
 };

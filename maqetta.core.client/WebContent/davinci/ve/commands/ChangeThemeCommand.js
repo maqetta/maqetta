@@ -170,7 +170,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             }
         }
         // add the mobile theme
-        if (themeSet.mobileTheme){
+        if (themeSet.mobileTheme && themeSet.mobileTheme != 'none'){
             this._dojoxMobileAddTheme(this._context, themeSet.mobileTheme);
         }
     },

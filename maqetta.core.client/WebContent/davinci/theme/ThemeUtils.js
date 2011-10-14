@@ -182,7 +182,7 @@ davinci.theme.getThemeSet = function(context){
             }
        }
     });
-    debugger;
+
     var desktopTheme = context.getTheme();
     for (var s = 0; s < dojoThemeSets.themeSets.length; s++){
         var themeSet = dojoThemeSets.themeSets[s];
@@ -193,7 +193,6 @@ davinci.theme.getThemeSet = function(context){
         if (mobileMap == mobileTheme){
             // found themeMap
             if (themeSet.desktopTheme == desktopTheme.name){
-                debugger;
                 return themeSet;
             }
             /*var themeData = davinci.library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly);
@@ -233,22 +232,21 @@ davinci.theme.getThemeSet = function(context){
                 }
             } */
            
-            debugger;
         }
     }
     // themeSet not found Create one with gleaned information
-    debugger;
-    var newThemeSetName = desktopTheme.name + '_' + mobileTheme;
+
+    var newThemeSetName = 'myThemeSet';
     // make sure the name is unique
     var nameIndex = 0;
     for (var n = 0; n < dojoThemeSets.themeSets.length; n++){
         if (dojoThemeSets.themeSets[n].name == newThemeSetName){
             nameIndex++;
+            newThemeSetName = newThemeSetName + '_' + nameIndex;
+            n = -1; // start search a first theme set with new name
         }
     }
-    if (nameIndex > 0){
-        newThemeSetName = newThemeSetName + '_' + nameIndex;
-    }
+    
     themeSet =  {
             "name": newThemeSetName,
             "desktopTheme": desktopTheme.name,
@@ -259,6 +257,17 @@ davinci.theme.getThemeSet = function(context){
     return themeSet;
    
 };
+
+davinci.theme.getTheme = function(name){
+    var themeData = davinci.library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly);
+    for (var i = 0; i < themeData.length; i++){
+        if(themeData[i].name === name){
+            return themeData[i];
+        }
+    }
+};
+
+
 
 
 

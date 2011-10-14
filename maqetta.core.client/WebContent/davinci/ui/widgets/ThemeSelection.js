@@ -272,6 +272,11 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", null, {
                 checkboxs['other'].setChecked(true);
                 checkboxs['other'].setDisabled(true);
                 dojo.style(selectDevicesTable, 'display', 'none');
+                this._selectedMobileTheme = davinci.theme.getTheme(e);
+                var ssPath = new davinci.model.Path(this._selectedMobileTheme.file.parent.getPath()).append(this._selectedMobileTheme.files[0]);
+                var resourcePath = davinci.Workbench.getOpenEditor().getContext().getFullResourcePath();
+                var filename = ssPath.relativeTo(resourcePath, true).toString();
+                this._selectedThemeSet.mobileTheme = [['.*',this._selectedMobileTheme.base,[filename]]];
                 
             } else if (this._selectedThemeSet.mobileTheme.length < 2) {
                 var device = this._selectedThemeSet.mobileTheme[0][0];

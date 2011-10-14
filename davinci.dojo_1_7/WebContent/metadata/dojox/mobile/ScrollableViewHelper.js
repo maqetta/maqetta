@@ -49,7 +49,9 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ScrollableViewHelper", [davinc
 		// add them to array.
 		// NOTE: The following code follows the impl of ScrollableView.getChildren().
 		if (header && header.parentNode === dijitWidget.domNode) {
-			children.push(getWidget(header));
+			// Use unshift() to add 'fixedHeader' to front of array, so that
+			// array order matches order of elements in Visual Editor.
+			children.unshift(getWidget(header));
 		}
 		if(footer && footer.parentNode === dijitWidget.domNode){
 			children.push(getWidget(footer));

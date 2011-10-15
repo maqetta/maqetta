@@ -11,7 +11,7 @@ dojo.mixin(davinci.de.resource, {
 		var projectDialog = new davinci.de.widgets.NewDijit({});
 		var oldEditor = davinci.Workbench.getOpenEditor();
 		var oldFileName = oldEditor.fileName;
-		var oldResource = davinci.resource.findResource(oldFileName);
+		var oldResource = system.resource.findResource(oldFileName);
         var model = oldEditor.model;
        
 		davinci.Workbench.showModal(projectDialog, "Dijit Widget...", 'height:160px;width: 250px', function(){
@@ -25,7 +25,7 @@ dojo.mixin(davinci.de.resource, {
 	_createNameSpace : function(name, parent){
 		var namesplit = name.split(".");
 		var base = davinci.Runtime.getProject();
-		parent = parent || davinci.resource.findResource(base);
+		parent = parent || system.resource.findResource(base);
 		
 		if(namesplit.length>1){
 			widgetSingleName = namesplit[namesplit.length-1];
@@ -56,7 +56,7 @@ dojo.mixin(davinci.de.resource, {
 		
 		var namesplit = name.split(".");
 		var widgetSingleName = name;
-		var parent = davinci.resource.findResource(base);
+		var parent = system.resource.findResource(base);
 		
 		var widgetNamespace = this._createNameSpace(name, parent);
 		if(namesplit.length>1){
@@ -67,7 +67,7 @@ dojo.mixin(davinci.de.resource, {
 		
 		var widgetFolderSetting = (new davinci.model.Path(base).append(prefs['widgetFolder']));
 		var fullPath = widgetFolderSetting.getSegments();
-		parent = davinci.resource.findResource(fullPath[0]);
+		parent = system.resource.findResource(fullPath[0]);
 		for(var i=1;i<fullPath.length;i++){
 			var folder = parent.getChild(fullPath[i]);
 			if(folder!=null){

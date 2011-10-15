@@ -1,7 +1,7 @@
 dojo.provide("davinci.ui.widgets.OpenFileDialog");
 	
 dojo.require("davinci.ui.Panel");
-dojo.require("davinci.resource");
+dojo.require("system.resource");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.ui", "ui");
@@ -17,7 +17,7 @@ dojo.declare("davinci.ui.widgets.OpenFileDialog",null,{
 	
 	constructor : function (parms)
 	{
-	      this.filter=new davinci.resource.FileTypeFilter(parms.fileTypes || "*");
+	      this.filter=new system.resource.FileTypeFilter(parms.fileTypes || "*");
 	      dojo.mixin(this, parms);
 	      davinci.ui.widgets.OpenFileDialog.filter=this.filter;
 	},
@@ -35,7 +35,7 @@ dojo.declare("davinci.ui.widgets.OpenFileDialog",null,{
 					                  type: "tree",
 //					                  label: "Select File",
 					                  data: "file",
-					                  model: davinci.resource,
+					                  model: system.resource,
 					                  filters: "davinci.ui.widgets.OpenFileDialog.filter"
 					                }						],
 					data:data,

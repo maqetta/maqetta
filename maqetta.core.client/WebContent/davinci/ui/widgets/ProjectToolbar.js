@@ -40,7 +40,7 @@ dojo.declare("davinci.ui.widgets.ProjectToolbar",   [dijit._Widget, dijit._Templ
 			if(allProjects[i]!=project)
 				changeToProject = allProjects[i];
 		}
-		var resource = davinci.resource.findResource(project);
+		var resource = system.resource.findResource(project);
 		resource.deleteResource();
 		davinci.Runtime.loadProject(changeToProject);
 	},
@@ -56,7 +56,7 @@ dojo.declare("davinci.ui.widgets.ProjectToolbar",   [dijit._Widget, dijit._Templ
 				var newName = renameDialog.attr("value");
 				if(newName==oldProject) return;
 				
-				var resource = davinci.resource.findResource(oldProject);
+				var resource = system.resource.findResource(oldProject);
 				resource.rename(newName);
 				davinci.Runtime.loadProject(newName);
 			}

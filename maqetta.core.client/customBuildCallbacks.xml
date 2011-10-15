@@ -221,6 +221,7 @@
 		<copy todir="${dojo.cache.directory}" failonerror="true" overwrite="true" description="move Dojo build">
 					<fileset dir="${target.folder}/WebContent/release/dojo">
 						<include name="davinci/"/>
+						<include name="system/"/>
 						<include name="dojo/"/>
 						<include name="dijit/"/>
 						<include name="dojox/"/>
@@ -234,6 +235,7 @@
 		<delete dir="${target.folder}/WebContent/util"/>
 		<delete dir="${target.folder}/WebContent/dojo"/>
 		<delete dir="${target.folder}/WebContent/dijit"/>
+		<delete dir="${target.folder}/WebContent/system"/>
 		<delete dir="${target.folder}/WebContent/dojox"/>
 		<delete dir="${target.folder}/WebContent/davinci"/>
 		<delete dir="${target.folder}/WebContent/eclipse"/>
@@ -241,6 +243,7 @@
 		<copy todir="${target.folder}/WebContent" failonerror="true" overwrite="true" description="Copy cached Dojo build">
 					<fileset dir="${dojo.cache.directory}">
 						<include name="davinci/"/>
+						<include name="system/"/>
 						<include name="dojo/"/>
 						<include name="dijit/"/>
 						<include name="dojox/"/>

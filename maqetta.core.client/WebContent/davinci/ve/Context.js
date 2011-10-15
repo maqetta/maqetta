@@ -274,7 +274,7 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	getBaseResource: function(options){
-		return davinci.resource.findResource(this.getDocumentLocation());
+		return system.resource.findResource(this.getDocumentLocation());
 	},
 
 	getLibraryBase: function(id, version){
@@ -708,7 +708,7 @@ dojo.declare("davinci.ve.Context", null, {
 				//  depend on dojo any more.  Once issue, though, is that the callback function
 				//  makes use of dojo and thusly must be invoked only after dojo has loaded.  Need
 				//  to remove Dojo dependencies from callback function first.
-				var baseUserWorkspace = davinci.resource.getRoot().getURL() + "/" + this._getWidgetFolder();
+				var baseUserWorkspace = system.resource.getRoot().getURL() + "/" + this._getWidgetFolder();
 				head += "<script>djConfig={addOnLoad:top.loading" + this._id + ", baseUrl:'"+dojoUrl.substr(0,inx+1)+"', modulePaths:{'widgets':'" + baseUserWorkspace +"'} }</script>";
 				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\"></script>";
 			}
@@ -2123,7 +2123,7 @@ dojo.declare("davinci.ve.Context", null, {
 				if (isDojoJS) {
 					// XXX Nasty nasty nasty special case for dojo attribute thats
 					// required. Need to generalize in the metadata somehow.
-					var fullPath = new davinci.model.Path(davinci.resource.getRoot().getPath());
+					var fullPath = new davinci.model.Path(system.resource.getRoot().getPath());
 					var urlPath = new davinci.model.Path(url);
 					var relativeUrl = urlPath.relativeTo(fullPath);
 				

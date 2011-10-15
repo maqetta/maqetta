@@ -15,7 +15,7 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 			this.cssFiles.push(davinci.model.Factory.getInstance().getModel({url:cssURL,
 			    includeImports : true,
 			    loader:function(url){
-					var resource=  davinci.resource.findResource(url);
+					var resource=  system.resource.findResource(url);
 					return resource.getText();
 				}
 			}));
@@ -29,7 +29,7 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 	_getThemeResource : function (fileName)
 	{
 		var absoluteLocation = this._themePath.getParentPath().append(fileName).toString();
-		var resource=  davinci.resource.findResource(absoluteLocation);
+		var resource=  system.resource.findResource(absoluteLocation);
 		return resource;
 	},
 	

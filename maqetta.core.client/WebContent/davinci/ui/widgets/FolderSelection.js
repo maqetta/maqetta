@@ -19,7 +19,7 @@ dojo.declare("davinci.ui.widgets.FolderSelection", [dijit._Widget], {
 		
 		/*
 		if(this.defaultFolder!=null)
-			this.defaultFolder = davinci.resource.findResource(this.defaultFolder);//this._folder.attr('value');
+			this.defaultFolder = system.resource.findResource(this.defaultFolder);//this._folder.attr('value');
 		*/
 		var filter= {filterList : function(list){
 									var newList=[];
@@ -36,7 +36,7 @@ dojo.declare("davinci.ui.widgets.FolderSelection", [dijit._Widget], {
 					              {
 					                  type: "tree",
 					                  data: "file",
-					                  model: davinci.resource,
+					                  model: system.resource,
 					                  filters: filter
 					                  
 					                  

@@ -19,7 +19,7 @@ dojo.declare("davinci.libraries.html.html.HtmlSrcAttributeInput", davinci.ve.inp
 	    { 
           type: "tree",
 	      data: "file",
-	      model: davinci.resource,
+	      model: system.resource,
 	      filters: "davinci.ui.widgets.OpenFileDialog.filter",
 	      link : { target: "textValue",
         	targetFunction : function (input){

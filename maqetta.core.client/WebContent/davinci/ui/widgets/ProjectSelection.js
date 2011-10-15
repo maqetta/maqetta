@@ -99,12 +99,12 @@ dojo.declare("davinci.ui.widgets.ProjectSelection",   dijit._Widget, {
 	},
 	
 	_populateProjects : function(){
-		var workspace = davinci.resource.getWorkspace();
+		var workspace = system.resource.getWorkspace();
 		var store = this._store;
 		var combo = this.combo;
 		var me = this;
 		
-		davinci.resource.listProjects(dojo.hitch(this,function(projects){
+		system.resource.listProjects(dojo.hitch(this,function(projects){
 			
 			store.setValues(projects);
 			var activeProject = davinci.Runtime.getProject();

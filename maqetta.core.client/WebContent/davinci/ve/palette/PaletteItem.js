@@ -138,7 +138,7 @@ dojo.declare("davinci.ve.palette.PaletteItem", dijit._Widget,{
 			// prime the metadata cache to make sure the loader is set up properly
 			davinci.ve.metadata.query(this.type);
 			dojo["require"](this.tool);
-//            dojo._loadUri(davinci.resource.findResource(
+//            dojo._loadUri(system.resource.findResource(
 //                    './' + this.tool.replace(/\./g, "/") + ".js").getURL());
 			var ctor = dojo.getObject(this.tool);
 			tool = new ctor(this.data);
@@ -164,7 +164,7 @@ dojo.declare("davinci.ve.palette.PaletteItem", dijit._Widget,{
 			// prime the metadata cache to make sure the loader is set up properly
 			davinci.ve.metadata.query(this.type);
 //			dojo["require"](this.tool);
-            dojo._loadUri(davinci.resource.findResource(
+            dojo._loadUri(system.resource.findResource(
                     './' + this.tool.replace(/\./g, "/") + ".js").getURL());
 			var ctor = dojo.getObject(this.tool);
 			tool = new ctor(this.data);

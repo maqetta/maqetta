@@ -107,7 +107,7 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 		var base = selector;
 	
 		var newBase = this._getThemeLocation();
-		var r1=  davinci.resource.findResource(newBase+'/'+base+'.theme');
+		var r1=  system.resource.findResource(newBase+'/'+base+'.theme');
 		if(r1){
 			alert(langObj.themeAlreadyExists);
 		}else{
@@ -147,7 +147,7 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 		
 		var selector = dojo.attr(this._selector, 'value');
 		
-		//var resource = davinci.resource.findResource("./themes");
+		//var resource = system.resource.findResource("./themes");
 
 		/* the directory is virtual, so create an actual instance */
 		//if(resource.libraryId)

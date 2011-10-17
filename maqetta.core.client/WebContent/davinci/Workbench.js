@@ -11,14 +11,14 @@ dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.StackContainer");
 dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit.layout.TabContainer");
-dojo.require("davinci.resource");
+dojo.require("system.resource");
 dojo.require("davinci.Runtime");
 dojo.require("davinci.model.Path");
 //dojo.require("davinci.workbench._ToolbaredContainer");
 dojo.require("davinci.workbench.ViewPart");
 dojo.require("davinci.workbench.EditorContainer");
 dojo.require("davinci.de.resource");
-
+dojo.require("davinci.ui.Resource");
 //dojo.require("davinci.ui.Panel");
 
 /*
@@ -1469,7 +1469,7 @@ dojo.mixin(davinci.Workbench, {
 					if(!path.startsWith(project)) continue;
 				}
 				
-				var resource=davinci.resource.findResource(state.editors[i]);
+				var resource=system.resource.findResource(state.editors[i]);
 				var noSelect=state.editors[i]!=state.activeEditor;
 				if (resource){
 					

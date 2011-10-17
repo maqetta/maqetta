@@ -215,7 +215,7 @@ davinci.ve.metadata = function() {
 	        });
         }else{
         	var base = davinci.Runtime.getProject();
-        	var resource = davinci.resource.findResource("./"+ base + "/" + metadataUrl);
+        	var resource = system.resource.findResource("./"+ base + "/" + metadataUrl);
         	metadata = dojo.fromJson(resource.getText());
         }
         

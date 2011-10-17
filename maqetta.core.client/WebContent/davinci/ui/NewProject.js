@@ -22,7 +22,7 @@ dojo.declare("davinci.ui.NewProject",   [dijit._Widget,dijit._Templated], {
 		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 		dojo.mixin(this, langObj);
 		dojo.mixin(this, dijitLangObj);
-		davinci.resource.listProjects(dojo.hitch(this,this.setProjects));
+		system.resource.listProjects(dojo.hitch(this,this.setProjects));
 		this.inherited(arguments);
 	},
 	setProjects : function(projects){
@@ -52,7 +52,7 @@ dojo.declare("davinci.ui.NewProject",   [dijit._Widget,dijit._Templated], {
 		var newProjectName = dojo.attr(this._projectName, "value");
 		var isEclipse = dojo.attr(this._eclipseSupport,'checked');
 
-		davinci.resource.createProject(newProjectName, true, isEclipse);
+		system.resource.createProject(newProjectName, true, isEclipse);
 		
 		if(isEclipse){
 			var prefValue = {webContentFolder:"./WebContent", themeFolder: "./WebContent/themes", widgetFolder: "./WebContent/widgets"};

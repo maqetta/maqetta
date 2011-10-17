@@ -72,7 +72,7 @@ dojo.declare("davinci.ui.ProjectSelection",   dijit._Widget, {
 	},
 	
 	_populateProjects : function(){
-		var workspace = davinci.resource.getWorkspace();
+		var workspace = system.resource.getWorkspace();
 		var store = this._store;
 		var combo = this.combo;
 		workspace.getChildren(function(projects){

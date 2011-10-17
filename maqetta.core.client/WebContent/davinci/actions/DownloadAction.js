@@ -1,6 +1,6 @@
 dojo.provide("davinci.actions.DownloadAction");
 dojo.require("davinci.actions.Action");
-dojo.require("davinci.resource");
+dojo.require("system.resource");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.actions", "actions");
@@ -43,7 +43,7 @@ dojo.declare("davinci.actions.DownloadAction", davinci.actions.Action, {
 		var path=value.zipFileName;
 		
 		
-		davinci.resource.download(resources, path + ".zip", davinci.Runtime.getProject());	
+		system.resource.download(resources, path + ".zip", davinci.Runtime.getProject());	
 
 	
 	

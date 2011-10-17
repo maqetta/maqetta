@@ -87,6 +87,13 @@
             "datatype": "string",
             "title": "Max Length"
         },
+        "selectOnClick": {
+            "datatype": "boolean",
+            "defaultValue": "false"
+        },
+        "placeHolder": {
+            "datatype": "string"
+        },
         "scrollOnFocus": {
             "datatype": "boolean",
             "description": "On focus, should this widget scroll into view?",

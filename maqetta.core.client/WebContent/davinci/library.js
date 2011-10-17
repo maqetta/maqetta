@@ -54,7 +54,7 @@ davinci.library.getThemes=function(base, workspaceOnly, flushCache){
 	
 	var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 	var projectThemeBase = (new davinci.model.Path(base).append(prefs['themeFolder']));
-	var allThemes = davinci.resource.findResource("*.theme", true, projectThemeBase.toString());
+	var allThemes = system.resource.findResource("*.theme", true, projectThemeBase.toString());
 	var results = [];
 	for (var i = 0; i < allThemes.length; i++){
 		var contents = allThemes[i].getText();
@@ -88,7 +88,7 @@ davinci.library.getMetaData=function(theme){
 	var metaResources = [];
 	for(var i = 0;i<theme.meta.length;i++){
 		var absoluteLocation = parent.append(theme.meta[i]);
-		var resource=  davinci.resource.findResource(absoluteLocation.toString());
+		var resource=  system.resource.findResource(absoluteLocation.toString());
 		metaResources.push(resource);
 	}
 			
@@ -150,7 +150,7 @@ davinci.library.getCustomWidgets=function(base){
 		
 		var widgetFolderSetting = (new davinci.model.Path(base).append(prefs['widgetFolder']));
 		var fullPath = widgetFolderSetting.getSegments();
-		parent = davinci.resource.findResource(fullPath[0]);
+		parent = system.resource.findResource(fullPath[0]);
 		for(var i=1;i<fullPath.length;i++){
 			var folder = parent.getChild(fullPath[i]);
 			if(folder!=null){
@@ -160,7 +160,7 @@ davinci.library.getCustomWidgets=function(base){
 			}
 		}
 		
-		var customWidgets = davinci.resource.findResource("*_widgets.json", parent);
+		var customWidgets = system.resource.findResource("*_widgets.json", parent);
 		
 		for(var i=0;i<customWidgets.length;i++){
 			davinci.library.addCustomWidgets(base, dojo.fromJson(customWidgets[i].getText()));

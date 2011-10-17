@@ -84,7 +84,7 @@ dojo.declare("davinci.ui.UserLibraries",   [dijit._Widget, dijit._Templated], {
 		// returns the base folder for this change.
 		
 		if(davinci.Runtime.singleProjectMode())
-			return davinci.resource.getRoot().getName();
+			return system.resource.getRoot().getName();
 	},
 
 	_getGlobalLib: function( id, version){
@@ -156,16 +156,16 @@ dojo.declare("davinci.ui.UserLibraries",   [dijit._Widget, dijit._Templated], {
 			
 			for(var i=0;i<resourceChanges.length;i++){
 				
-				davinci.resource.resourceChanged("reload", resourceChanges[i].toString());
+				system.resource.resourceChanged("reload", resourceChanges[i].toString());
 				davinci.library.themesChanged(resourceChanges[i].toString());
 			}
 			
-		//	davinci.resource.resourceChanged("reload", this.getResourceBase());
+		//	system.resource.resourceChanged("reload", this.getResourceBase());
 			dojo.publish("/davinci/ui/libraryChanged");
 			
 		}
 		
-		var pages = davinci.resource.findResource("*.html", true, this.getResourceBase(), true);
+		var pages = system.resource.findResource("*.html", true, this.getResourceBase(), true);
 		
 		var pageBuilder = new davinci.ve.RebuildPage();
 		

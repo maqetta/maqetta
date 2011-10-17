@@ -42,6 +42,10 @@
         "iconPos": {
             "datatype": "string"
         },
+        "barType": {
+            "datatype": "string",
+            "defaultValue": "tabBar"
+        }
         "fixed": {
             "datatype": "string",
             "defaultValue": "",

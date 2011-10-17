@@ -247,7 +247,7 @@
                 },
                 {
                     id: "editThemeSets",
-                    run: "davinci.ui.ThemeSets()",
+                    run: "davinci.ui.ThemeSetsDialog()",
                     label: "Theme sets...",
                     menubarPath: "davinci.settings/settings"
                 },

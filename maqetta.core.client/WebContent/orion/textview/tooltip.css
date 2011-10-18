@@ -1,0 +1,32 @@
+.view {
+	color: InfoText;
+	background-color: InfoBackground;
+	padding: 0px;
+}
+
+.viewContainer {
+	font-family: monospace;
+	font-size: 10pt;
+}
+
+.viewContent {
+}
+
+/* Styles for the view tooltips */
+.viewTooltip {
+	font-family: monospace;
+	font-size: 10pt;
+	background-color: InfoBackground;
+	color: InfoText;
+	padding: 2px;
+	border-radius: 4px;
+	border: 1px solid black;
+	z-index: 100;
+	position: fixed;
+	overflow: hidden;
+	white-space: pre;
+}
+.viewTooltip em {
+	font-style: normal;
+	font-weight: bold;
+}

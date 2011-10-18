@@ -6,8 +6,6 @@ dojo.require("davinci.ve.widgets.CommonProperties");
 dojo.require("davinci.ve.widgets.EventSelection");
 dojo.require("davinci.ve.widgets.WidgetProperties");
 dojo.require("davinci.ve.widgets.WidgetToolBar");
-dojo.require("davinci.ve.widgets.Background");
-dojo.require('davinci.ve.widgets.Border');
 dojo.require("davinci.ve.widgets.Cascade");
 
 dojo.require("dojo.i18n");  

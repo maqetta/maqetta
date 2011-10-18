@@ -1,5 +1,3 @@
-dojo.provide("eclipse.TextModel");
-
 /*******************************************************************************
  * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
@@ -12,12 +10,16 @@ dojo.provide("eclipse.TextModel");
  *		Silenio Quarti (IBM Corporation) - initial API and implementation
  ******************************************************************************/
  
-/*global navigator */
+/*global window define */
 
 /**
- * @namespace The global container for eclipse APIs.
+ * @namespace The global container for Orion APIs.
  */ 
-//var eclipse = eclipse || {};
+var orion = orion || {};
+/**
+ * @namespace The container for textview APIs.
+ */ 
+orion.textview = orion.textview || {};
 
 /**
  * Constructs a new TextModel with the given text and default line delimiter.
@@ -25,31 +27,31 @@ dojo.provide("eclipse.TextModel");
  * @param {String} [text=""] the text that the model will store
  * @param {String} [lineDelimiter=platform delimiter] the line delimiter used when inserting new lines to the model.
  *
- * @name eclipse.TextModel
- * @class The TextModel is an interface that provides text for the editor. Applications may
- * implement the TextModel interface to provide a custom store for the editor content. The
- * editor interacts with its text model in order to access and update the text that is being
- * displayed and edited in the editor. This is the default implementation.
+ * @name orion.textview.TextModel
+ * @class The TextModel is an interface that provides text for the view. Applications may
+ * implement the TextModel interface to provide a custom store for the view content. The
+ * view interacts with its text model in order to access and update the text that is being
+ * displayed and edited in the view. This is the default implementation.
  * <p>
  * <b>See:</b><br/>
- * {@link eclipse.Editor}<br/>
- * {@link eclipse.Editor#setModel}
+ * {@link orion.textview.TextView}<br/>
+ * {@link orion.textview.TextView#setModel}
  * </p>
  */
-eclipse.TextModel = (function() {
-	var isWindows = navigator.platform.indexOf("Win") !== -1;
+orion.textview.TextModel = (function() {
+	var isWindows = window.navigator.platform.indexOf("Win") !== -1;
 
 	/** @private */
 	function TextModel(text, lineDelimiter) {
 		this._listeners = [];
-		this._lineDelimiter = lineDelimiter ? lineDelimiter : (isWindows ? "\r\n" : "\n"); 
 		this._lastLineIndex = -1;
 		this._text = [""];
 		this._lineOffsets = [0];
 		this.setText(text);
+		this.setLineDelimiter(lineDelimiter);
 	}
 
-	TextModel.prototype = /** @lends eclipse.TextModel.prototype */ {
+	TextModel.prototype = /** @lends orion.textview.TextModel.prototype */ {
 		/**
 		 * Adds a listener to the model.
 		 * 
@@ -134,11 +136,11 @@ eclipse.TextModel = (function() {
 		 * @returns {Number} the zero based line index or <code>-1</code> if out of range.
 		 */
 		getLineAtOffset: function(offset) {
-			if (!(0 <= offset && offset <= this.getCharCount())) {
+			var charCount = this.getCharCount();
+			if (!(0 <= offset && offset <= charCount)) {
 				return -1;
 			}
 			var lineCount = this.getLineCount();
-			var charCount = this.getCharCount();
 			if (offset === charCount) {
 				return lineCount - 1; 
 			}
@@ -181,11 +183,11 @@ eclipse.TextModel = (function() {
 			return this._lineOffsets.length;
 		},
 		/**
-		 * Returns the line delimiter that is used by the editor
+		 * Returns the line delimiter that is used by the view
 		 * when inserting new lines. New lines entered using key strokes 
 		 * and paste operations use this line delimiter.
 		 *
-		 * @return {String} the line delimiter that is used by the editor when inserting new lines.
+		 * @return {String} the line delimiter that is used by the view when inserting new lines.
 		 */
 		getLineDelimiter: function() {
 			return this._lineDelimiter;
@@ -261,6 +263,7 @@ eclipse.TextModel = (function() {
 		getText: function(start, end) {
 			if (start === undefined) { start = 0; }
 			if (end === undefined) { end = this.getCharCount(); }
+			if (start === end) { return ""; }
 			var offset = 0, chunk = 0, length;
 			while (chunk<this._text.length) {
 				length = this._text[chunk].length; 
@@ -288,8 +291,8 @@ eclipse.TextModel = (function() {
 		/**
 		 * Notifies all listeners that the text is about to change.
 		 * <p>
-		 * This notification is intended to be used only by the editor. Application clients should
-		 * use {@link eclipse.Editor#event:onModelChanging}.
+		 * This notification is intended to be used only by the view. Application clients should
+		 * use {@link orion.textview.TextView#event:onModelChanging}.
 		 * </p>
 		 * <p>
 		 * NOTE: This method is not meant to called directly by application code. It is called internally by the TextModel
@@ -297,26 +300,21 @@ eclipse.TextModel = (function() {
 		 * purposes and to allow integration with other toolkit frameworks.
 		 * </p>
 		 *
-		 * @param {String} text the text that is about to be inserted in the model.
-		 * @param {Number} start the character offset in the model where the change will occur.
-		 * @param {Number} removedCharCount the number of characters being removed from the model.
-		 * @param {Number} addedCharCount the number of characters being added to the model.
-		 * @param {Number} removedLineCount the number of lines being removed from the model.
-		 * @param {Number} addedLineCount the number of lines being added to the model.
+		 * @param {orion.textview.ModelChangingEvent} modelChangingEvent the changing event
 		 */
-		onChanging: function(text, start, removedCharCount, addedCharCount, removedLineCount, addedLineCount) {
+		onChanging: function(modelChangingEvent) {
 			for (var i = 0; i < this._listeners.length; i++) {
 				var l = this._listeners[i]; 
 				if (l && l.onChanging) { 
-					l.onChanging(text, start, removedCharCount, addedCharCount, removedLineCount, addedLineCount);
+					l.onChanging(modelChangingEvent);
 				}
 			}
 		},
 		/**
 		 * Notifies all listeners that the text has changed.
 		 * <p>
-		 * This notification is intended to be used only by the editor. Application clients should
-		 * use {@link eclipse.Editor#event:onModelChanged}.
+		 * This notification is intended to be used only by the view. Application clients should
+		 * use {@link orion.textview.TextView#event:onModelChanged}.
 		 * </p>
 		 * <p>
 		 * NOTE: This method is not meant to called directly by application code. It is called internally by the TextModel
@@ -324,19 +322,37 @@ eclipse.TextModel = (function() {
 		 * purposes and to allow integration with other toolkit frameworks.
 		 * </p>
 		 *
-		 * @param {Number} start the character offset in the model where the change occurred.
-		 * @param {Number} removedCharCount the number of characters removed from the model.
-		 * @param {Number} addedCharCount the number of characters added to the model.
-		 * @param {Number} removedLineCount the number of lines removed from the model.
-		 * @param {Number} addedLineCount the number of lines added to the model.
+		 * @param {orion.textview.ModelChangedEvent} modelChangedEvent the changed event
 		 */
-		onChanged: function(start, removedCharCount, addedCharCount, removedLineCount, addedLineCount) {
+		onChanged: function(modelChangedEvent) {
 			for (var i = 0; i < this._listeners.length; i++) {
 				var l = this._listeners[i]; 
 				if (l && l.onChanged) { 
-					l.onChanged(start, removedCharCount, addedCharCount, removedLineCount, addedLineCount);
+					l.onChanged(modelChangedEvent);
 				}
 			}
+		},
+		/**
+		 * Sets the line delimiter that is used by the view
+		 * when new lines are inserted in the model due to key
+		 * strokes  and paste operations.
+		 * <p>
+		 * If lineDelimiter is "auto", the delimiter is computed to be
+		 * the first delimiter found the in the current text. If lineDelimiter
+		 * is undefined or if there are no delimiters in the current text, the
+		 * platform delimiter is used.
+		 * </p>
+		 *
+		 * @param {String} lineDelimiter the line delimiter that is used by the view when inserting new lines.
+		 */
+		setLineDelimiter: function(lineDelimiter) {
+			if (lineDelimiter === "auto") {
+				lineDelimiter = undefined;
+				if (this.getLineCount() > 1) {
+					lineDelimiter = this.getText(this.getLineEnd(0), this.getLineEnd(0, true));
+				}
+			}
+			this._lineDelimiter = lineDelimiter ? lineDelimiter : (isWindows ? "\r\n" : "\n"); 
 		},
 		/**
 		 * Replaces the text in the given range with the given text.
@@ -390,7 +406,15 @@ eclipse.TextModel = (function() {
 				addedLineCount++;
 			}
 		
-			this.onChanging(text, eventStart, removedCharCount, addedCharCount, removedLineCount, addedLineCount);
+			var modelChangingEvent = {
+				text: text,
+				start: eventStart,
+				removedCharCount: removedCharCount,
+				addedCharCount: addedCharCount,
+				removedLineCount: removedLineCount,
+				addedLineCount: addedLineCount
+			};
+			this.onChanging(modelChangingEvent);
 			
 			//TODO this should be done the loops below to avoid getText()
 			if (newLineOffsets.length === 0) {
@@ -445,9 +469,22 @@ eclipse.TextModel = (function() {
 			Array.prototype.splice.apply(this._text, params);
 			if (this._text.length === 0) { this._text = [""]; }
 			
-			this.onChanged(eventStart, removedCharCount, addedCharCount, removedLineCount, addedLineCount);
+			var modelChangedEvent = {
+				start: eventStart,
+				removedCharCount: removedCharCount,
+				addedCharCount: addedCharCount,
+				removedLineCount: removedLineCount,
+				addedLineCount: addedLineCount
+			};
+			this.onChanged(modelChangedEvent);
 		}
 	};
 	
 	return TextModel;
-}()); 
+}());
+
+if (typeof window !== "undefined" && typeof window.define !== "undefined") {
+	define([], function() {
+		return orion.textview;
+	});
+}

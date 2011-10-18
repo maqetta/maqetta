@@ -11,7 +11,7 @@
  /*global define window orion:true eclipse:true */
  /*jslint maxerr:150 browser:true devel:true laxbreak:true regexp:false*/
 
-var orion = orion || {};
+//var orion = orion || {};
 orion.editor = orion.editor || {};	
 
 /**

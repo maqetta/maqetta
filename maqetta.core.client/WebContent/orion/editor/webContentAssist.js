@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*global orion:true*/
 
-var orion = orion || {};
+//var orion = orion || {};
 orion.editor = orion.editor || {};
 
 /**

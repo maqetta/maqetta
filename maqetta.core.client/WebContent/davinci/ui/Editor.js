@@ -103,7 +103,9 @@ dojo.declare("davinci.ui.Editor", null, {
 			}
 		}
 	},
+
 	_onTextChanged: function(textChangeEvent) {
+		// 'this' === Editor._textModel
 		if (this._dontNotifyChange) {
 			return;
 		}

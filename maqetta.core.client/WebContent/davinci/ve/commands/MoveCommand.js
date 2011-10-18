@@ -38,6 +38,13 @@ dojo.declare("davinci.ve.commands.MoveCommand", null, {
 			this._oldBox = {l: box.l, t: box.t, w:box.w, h:box.h};
 			this._oldPosition = node.style.position;
 		}
+		if(!widget.domNode.offsetParent){
+			return;
+		}
+		var offsetParentPageBox = dojo.position(widget.domNode.offsetParent, true);
+		if(!offsetParentPageBox){
+			return;
+		}
 		
 		this._state = davinci.ve.states.getState();
 		var isNormalState = davinci.ve.states.isNormalState(this._state);
@@ -48,22 +55,24 @@ dojo.declare("davinci.ve.commands.MoveCommand", null, {
 		}else{
 			if(context && context._snapX){
 				var w = this._oldBox.w;
+				var snapX_relative = context._snapX.x - offsetParentPageBox.x;
 				if(context._snapX.type=="left"){
-					this._newBox.l = context._snapX.x;
+					this._newBox.l = snapX_relative;
 				}else if(w && context._snapX.type=="right"){
-					this._newBox.l = context._snapX.x - w;
+					this._newBox.l = snapX_relative - w;
 				}else if(w && context._snapX.type=="center"){
-					this._newBox.l = context._snapX.x - w/2;
+					this._newBox.l = snapX_relative - w/2;
 				}
 			}
 			if(context && context._snapY){
 				var h = this._oldBox.h;
+				var snapY_relative = context._snapY.y - offsetParentPageBox.y;
 				if(context._snapY.type=="top"){
-					this._newBox.t = context._snapY.y;
+					this._newBox.t = snapY_relative;
 				}else if(h && context._snapY.type=="bottom"){
-					this._newBox.t = context._snapY.y - h;
+					this._newBox.t = snapY_relative - h;
 				}else if(h && context._snapY.type=="middle"){
-					this._newBox.t = context._snapY.y - h/2;
+					this._newBox.t = snapY_relative - h/2;
 				}
 			}
 		}

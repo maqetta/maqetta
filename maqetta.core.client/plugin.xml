@@ -25,10 +25,6 @@
               base-name="/WebContent/dijit"
               />
         <resource
-              alias="/app/eclipse"
-              base-name="/WebContent/eclipse"
-              />
-        <resource
               alias="/app/orion"
               base-name="/WebContent/orion"
               />          

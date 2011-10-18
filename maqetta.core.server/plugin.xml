@@ -21,6 +21,11 @@
             class="org.maqetta.server.DavinciCommandServlet"
             load-on-startup="true">
       </servlet>
+       <servlet
+            alias="/review"
+            class="org.davinci.server.review.DavinciReviewServlet"
+            load-on-startup="true">
+      </servlet>
    </extension>
 
 </plugin>

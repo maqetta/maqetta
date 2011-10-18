@@ -124,7 +124,29 @@
            <command path="tryIt" noLogin="true"
                class="maqetta.core.server.standalone.command.TryIt" />         
            <command path="removeUser" noLogin="true"
-               class="maqetta.core.server.standalone.command.RemoveUser" />         
+               class="maqetta.core.server.standalone.command.RemoveUser" />
+                
+          <!-- Review and Commenting Commands -->        
+          <command path="listVersions"
+               class="maqetta.core.server.standalone.command.ListVersions" />
+         <command path="addComment"
+               class="maqetta.core.server.standalone.command.AddComment" />
+         <command path="updateComment"
+               class="maqetta.core.server.standalone.command.UpdateComment" />
+         <command path="getComments"
+               class="maqetta.core.server.standalone.command.GetComments" />
+         <command path="publish"
+         	   class="maqetta.core.server.standalone.command.Publish" />
+	     <command path="getBluePageInfo"
+         	   class="maqetta.core.server.standalone.command.GetBluePageInfo" />         	   
+         <command path="listReviewFiles"
+         	   class="maqetta.core.server.standalone.command.ListReviewFiles" />
+         <command path="getLatestVersionId"
+         	   class="maqetta.core.server.standalone.command.GetLatestVersionId" />
+         <command path="managerVersion"
+         	   class="maqetta.core.server.standalone.command.ManagerVersion" />
+         <command path="getReviewUserInfo"
+         	   class="maqetta.core.server.standalone.command.GetReviewUserInfo" />   
                
       </extension>
 

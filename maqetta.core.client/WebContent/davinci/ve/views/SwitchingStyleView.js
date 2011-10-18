@@ -110,7 +110,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
    		                			return;
    		                		}
 		       					var showRange=function(sectionData,first,last,begin,end){
-		       						for(var k=first;k<last;k++){
+		       						for(var k=first;k<=last;k++){
 		       							var thisProp = sectionData[k];
 		       							var thisRow = dojo.byId(thisProp.rowId);
 		       							if(k>=begin && k<=end){

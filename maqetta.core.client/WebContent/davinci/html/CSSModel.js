@@ -2,7 +2,7 @@ dojo.provide("davinci.html.CSSModel");
 dojo.require("davinci.model.Model");
 dojo.require("davinci.html.CSSParser");
 dojo.require("davinci.model.Path");
-dojo.require("davinci.resource");
+dojo.require("system.resource");
 dojo.require("davinci.model.Factory");
 
 
@@ -148,7 +148,7 @@ davinci.html.CSSFile.prototype.close = function() {
  
 davinci.html.CSSFile.prototype.getResource = function (isWorkingCopy) {
 	
-	return davinci.resource.findResource(this.url);
+	return system.resource.findResource(this.url);
 };
 
 davinci.html.CSSFile.prototype.addRule = function (ruleText) {

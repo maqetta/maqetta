@@ -45,7 +45,7 @@ public class GetPlugins extends Command {
             String bundleName = configElement.getDeclaringExtension().getContributor().getName();
             Bundle bundle = Activator.getActivator().getOtherBundle(bundleName);
             if (bundle != null) {
-                URL resourceURL = bundle.getEntry(resourcePath + "_plugin.js");
+                URL resourceURL = bundle.getEntry(resourcePath + ".plugin");
                 if (resourceURL != null) {
                     try {
                         InputStream inputStream = resourceURL.openConnection().getInputStream();

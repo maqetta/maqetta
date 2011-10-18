@@ -121,7 +121,7 @@ dojo.declare("davinci.libraries.dojo.dojo.data.ItemFileReadStoreInput", davinci.
         if (url) {
             if (url[0]===".")
                 url = url.substring(1);
-            urlInput.setValue(davinci.resource.root.getURL()+url);
+            urlInput.setValue(system.resource.root.getURL()+url);
         }
         var scriptInput = dijit.byId("scriptInput");
         var script = this._widget._srcElement.getAttribute("data");

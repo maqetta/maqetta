@@ -56,7 +56,7 @@ dojo.declare("davinci.ve.palette.ImageDragSource", null, {
 			    tool;
 			if (toolName) {
 //					dojo["require"](data.tool);
-				dojo._loadUri(davinci.resource.findResource(
+				dojo._loadUri(system.resource.findResource(
 						'./' + toolName.replace(/\./g, "/") + ".js").getURL());
 				var ctor = dojo.getObject(toolName);
 				tool = new ctor(createData);

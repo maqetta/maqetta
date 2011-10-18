@@ -6,7 +6,7 @@ dojo.require("davinci.workbench.ViewPart");
 dojo.require("dijit.Tree");
 dojo.require("davinci.ui.widgets.TransformTreeMixin");
 dojo.require("davinci.ui.dnd.DragSource");
-dojo.require("davinci.resource");
+dojo.require("system.resource");
 dojo.require("davinci.ui.widgets.ProjectSelection");
 
 //ui_plugin.js
@@ -32,7 +32,7 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 			 return dojo.some(extension.parts,function(item){ return item=="davinci.ui.navigator"; }) && extension.dragSource;
 		});
 		
-		var model= davinci.resource;
+		var model= system.resource;
 
 		// Patch Tree to allow for image drag-and-drop.  code moved from davinci.ui.widget.Tree.
 		// TODO: Would be better and more efficient to make use of the dijit.Tree drag-and-drop with dojo.dnd,
@@ -64,7 +64,7 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 			labelAttr: "name", childrenAttrs:"children",
 			getIconClass: this._getIconClass,
 			getRowClass: this._getRowClass,
-			transforms: [davinci.resource.alphabeticalSort],
+			transforms: [system.resource.alphabeticalSort],
 			isMultiSelect: true});
 
 		// Because there are two child elements in this layout container, and it only sizes the top (topDiv), we have to manage the size of the children

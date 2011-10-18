@@ -107,7 +107,7 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 	_getResources : function(){
 	
 		var project=davinci.Runtime.getProject();
-		var folder = davinci.resource.findResource(project);
+		var folder = system.resource.findResource(project);
 		
 		/* get all sub files */
 		var list = [];
@@ -122,15 +122,15 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 		var resources = this._getResources();
 
 		
-		//this._pages = davinci.resource.findResource("*.html", true, null, true);
+		//this._pages = system.resource.findResource("*.html", true, null, true);
 		
 		var pageBuilder = new davinci.ve.RebaseDownload(resources['userLibs']);
 		var allResources = [];
 		for(var i=0;i<resources['userFiles'].length;i++){
 			
-			var resource = davinci.resource.findResource(resources['userFiles'][i]);
+			var resource = system.resource.findResource(resources['userFiles'][i]);
 			if(resource.elementType=="Folder"){
-				allResources = davinci.resource.findResource("*.html", true, resource, true);
+				allResources = system.resource.findResource("*.html", true, resource, true);
 			}else if(resource.extension=="html"){
 				allResources = [resource];
 			}
@@ -155,7 +155,7 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 				var fn = fileName
 			
 				
-				davinci.resource.download(files, fn, root, libs);		
+				system.resource.download(files, fn, root, libs);		
 				/*
 				for(var i=0;i<pgs.length;i++){
 					pgs[i].removeWorkingCopy();

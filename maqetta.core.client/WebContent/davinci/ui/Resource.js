@@ -26,7 +26,7 @@ dojo.mixin(davinci.ui.Resource, {
 			doItAction = "davinci.ui.Resource.createFile({checkForExtension:true})",
 			proposedFileName,
 			hideFileNameInput,
-			folder=davinci.resource.getRoot(),
+			folder=system.resource.getRoot(),
 			resource=davinci.ui.Resource.getSelectedResource();
 		this.action=action;
 		if (resource){
@@ -77,7 +77,7 @@ dojo.mixin(davinci.ui.Resource, {
 			doItLabel = langObj.save;
 			doItAction = "davinci.ui.Resource.saveAs({checkForExtension:true})";
 			var editor = davinci.Workbench.getOpenEditor();
-			var file= editor.resourceFile || davinci.resource.findResource( editor.fileName);
+			var file= editor.resourceFile || system.resource.findResource( editor.fileName);
 			folder=file.getParentFolder();
 			var oldFileName = proposedFileName = file.getName();
 			if(!oldFileName || !oldFileName===""){
@@ -101,7 +101,7 @@ dojo.mixin(davinci.ui.Resource, {
 '	<div class="folderContainer">'+
 
 '		<div dojoType="dijit.layout.ContentPane">'+
-'			<div class="fileDialogTreeWidget" dojoType="dijit.Tree" id="fileDialogFolderTree" model="davinci.resource" labelAttr="name" childrenAttrs="children"></div>'+
+'			<div class="fileDialogTreeWidget" dojoType="dijit.Tree" id="fileDialogFolderTree" model="system.resource" labelAttr="name" childrenAttrs="children"></div>'+
 '		</div>'+
 '	</div>'+
 '	<div class="buttonRow">'+
@@ -150,7 +150,7 @@ dojo.mixin(davinci.ui.Resource, {
 		});	
 		
 		dialog.connect(dialog, 'onLoad', function(){
-			var folder=davinci.resource.getRoot();
+			var folder=system.resource.getRoot();
 			var resource=davinci.ui.Resource.getSelectedResource();
 			if (resource)
 			{
@@ -198,7 +198,7 @@ dojo.mixin(davinci.ui.Resource, {
 					 *  */
 					folder._appendFiles([{isDir:false, isLib:false, isNew:false,name:data.file}])
 					var changed = new davinci.model.Path(folder.getPath()).append(data.file);
-					davinci.resource.resourceChanged('updated', changed.toString());
+					system.resource.resourceChanged('updated', changed.toString());
 				});
 				setDone();
 			});
@@ -226,7 +226,7 @@ dojo.mixin(davinci.ui.Resource, {
 				proposedName='file'+count+extension;
 			}
 			var fullname=fileDialogParentFolder.getPath()+'/'+proposedName;
-			existing=davinci.resource.findResource(fullname);
+			existing=system.resource.findResource(fullname);
 		}while(existing);
 		return proposedName;
 	},
@@ -237,7 +237,7 @@ dojo.mixin(davinci.ui.Resource, {
 		
 		var resourcePath = dijit.byId('fileDialogParentFolder').get('value');
 		
-		var resource = davinci.resource.findResource(resourcePath);
+		var resource = system.resource.findResource(resourcePath);
 		var data = dialog.getValues();
 		var fileName = data.fileDialogFileName;
 		
@@ -246,7 +246,7 @@ dojo.mixin(davinci.ui.Resource, {
 			alert(langObj.mustEnterFileName);
 			return false;
 		}
-		var existing=davinci.resource.findResource(fullName);
+		var existing=system.resource.findResource(fullName);
 		if(existing){
 			// Check if existing file is a folder
 			if(existing.elementType=='Folder' && !args.selectFolderOK){
@@ -293,12 +293,12 @@ dojo.mixin(davinci.ui.Resource, {
 		var fullName=folder.getPath()+'/'+fileName;
 		var oldEditor = davinci.Workbench.getOpenEditor();
 		var oldFileName = oldEditor.fileName;
-		var oldResource = davinci.resource.findResource(oldFileName);
+		var oldResource = system.resource.findResource(oldFileName);
         var oldContent = oldEditor.editorID == "davinci.html.CSSEditor" ? oldEditor.getText() : oldEditor.model.getText();
 		//dialog.close();
 		dialog.destroyRecursive();
 		// If resource exists, delete it because we will soon make a new version of that resource
-		var existing=davinci.resource.findResource(fullName);
+		var existing=system.resource.findResource(fullName);
 		oldEditor.editorContainer.forceClose(oldEditor);
 		if(existing){
 			existing.removeWorkingCopy();
@@ -407,7 +407,7 @@ dojo.mixin(davinci.ui.Resource, {
 		//var resource = resources[0];
 		
 		var resourcePath = dijit.byId('fileDialogParentFolder').get('value');
-	 	var resource = davinci.resource.findResource(resourcePath);
+	 	var resource = system.resource.findResource(resourcePath);
 		
 	 	var folder=(resource.elementType=='Folder'?resource:resource.parent);
 		var data = dialog.getValues();

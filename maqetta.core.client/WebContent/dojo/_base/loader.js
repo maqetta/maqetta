@@ -43,7 +43,7 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 		buildDetectRe = /\/\/>>built/,
 
 		dojoRequireSet = {},
-
+/*
 		dojoRequirePlugin = function(mid, require, loaded){
 			var count = 1,
 				arrived = function(){
@@ -123,6 +123,30 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 			}
 
 			return foundAtLeastOne ? (checkDojoRequirePlugin() || 1) : 0;
+		},
+*/
+
+		dojoRequireCallbacks = [],
+		dojoRequireModuleStack = [],
+
+		dojoRequirePlugin = function(mid, require, loaded){
+			dojoRequireCallbacks.push(loaded);
+			array.forEach(mid.split(","), function(mid){
+				var module = getModule(mid, require.module);
+				dojoRequireModuleStack.push(module);
+				injectModule(module);
+			});
+			checkDojoRequirePlugin();
+		},
+
+		checkDojoRequirePlugin = function(){
+			dojoRequireModuleStack = array.filter(dojoRequireModuleStack, function(module){
+				return module.injected!==arrived && !module.executed;
+			});
+			if(!dojoRequireModuleStack.length){
+				array.forEach(dojoRequireCallbacks, function(cb){cb(1);});
+				dojoRequireCallbacks = [];
+			}
 		},
 
 		dojoLoadInitPlugin = function(mid, require, loaded){

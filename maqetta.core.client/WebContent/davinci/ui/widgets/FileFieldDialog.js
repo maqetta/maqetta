@@ -31,7 +31,7 @@ dojo.declare("davinci.ui.widgets.FileFieldDialog", [davinci.workbench.WidgetLite
 					              {
 					                  type: "tree",
 					                  data: "file",
-					                  model: davinci.resource,
+					                  model: system.resource,
 					                  filters: "davinci.ui.widgets.OpenFileDialog.filter",
 					                  style: "height: 210px;overflow:auto;"
 

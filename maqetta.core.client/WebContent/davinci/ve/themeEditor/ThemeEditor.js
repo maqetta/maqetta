@@ -492,7 +492,7 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 //			this._URLResolver = new davinci.ve.utils.URLResolver(filename);
 			
 			this.theme = dojo.isString(content)? dojo.fromJson(content) : content;
-			this.theme.file = davinci.resource.findResource(filename);
+			this.theme.file = system.resource.findResource(filename);
 			//dojo.connect(this.visualEditor, "onSelectionChange", this,"onSelectionChange");
 			this.themeCssfiles = [];
 			for(var i = 0;i<this.theme.files.length;i++){
@@ -578,7 +578,7 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 					if(node.elementType=="CSSFile"){
 						for(var aa in this.lookFor){
 							if(aa==node.url){
-								var resource=  davinci.resource.findResource(aa);
+								var resource=  system.resource.findResource(aa);
 							
 								this.result.push(this._getObject(resource, node.getText({noComments:false}), this.lookFor[aa]  ));
 								//delete this.lookFor[aa]; we dont want to delete on autosave
@@ -619,7 +619,7 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 					if(node.elementType=="CSSFile"){
 						for(var aa in this.lookFor){
 							if(aa==node.url){
-								var resource=  davinci.resource.findResource(aa);
+								var resource=  system.resource.findResource(aa);
 								resource.setContents(node.getText({noComments:false}),this.isWorkingCopy);
 								if (!this.isWorkingCopy) // only delete the dirty resource if we are save real copy not working
 									delete this.lookFor[aa];

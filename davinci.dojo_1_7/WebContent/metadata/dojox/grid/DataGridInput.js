@@ -284,7 +284,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
     		url = this._url;
     	} else {
     		var parentFolder = new davinci.model.Path(this._widget._edit_context._srcDocument.fileName).getParentPath().toString();
-    		var file = davinci.resource.findResource(this._url, null, parentFolder); // relative so we have to get the absolute for the update of the store
+    		var file = system.resource.findResource(this._url, null, parentFolder); // relative so we have to get the absolute for the update of the store
     		if (!file){
     			alert('File: ' + this._url + ' does not exsist.');
     			return;
@@ -451,7 +451,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
               type: "tree",
       	      data: "file",
       	      style: "height:10em;overflow:auto",
-      	      model: davinci.resource,
+      	      model: system.resource,
       	      filters: "davinci.ui.widgets.OpenFileDialog.filter"
 
       	    }

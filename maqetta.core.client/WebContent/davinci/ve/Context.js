@@ -45,7 +45,6 @@ dojo.declare("davinci.ve.Context", null, {
 		this._objectIds = [];
 		this._widgets = [];
 		this._links = [];
-		this._dojoxMobileCss = [];
 	},
 
 	    _configDojoxMobile: function() {
@@ -56,10 +55,6 @@ dojo.declare("davinci.ve.Context", null, {
         dm.configDeviceTheme = dojo.hitch(this, function() {
             var loadDeviceTheme = dm.loadDeviceTheme;
 
-            // Pull in _compat.js immediately, since it redefines methods like loadCssFile which we wish to add advice to now
-            this.getDojo()["require"]("dojox.mobile.compat");
-
-            // add before advice to clear out css file list before loading a new theme
             dm.loadDeviceTheme = dojo.hitch(this, function(device) {
                 var htmlElement = this._srcDocument.getDocumentElement();
                 var head = htmlElement.getChildElement("head");
@@ -69,7 +64,7 @@ dojo.declare("davinci.ve.Context", null, {
                     if (text.length) {
                         // Look for a dojox.mobile.themeMap in the document, if found set the themeMap 
                         var start = text.indexOf('dojox.mobile.themeMap');
-                        if (start > 0){
+                        if (start != -1) {
                             start = text.indexOf('=', start);
                             var stop = text.indexOf(';', start);
                             if (stop > start){
@@ -79,13 +74,7 @@ dojo.declare("davinci.ve.Context", null, {
                         }
                      }
                 }, this);
-                this._dojoxMobileCss = [];
                 loadDeviceTheme(device);
-            });
-
-            // keep an updated list as dojox.mobile loads css files
-            dojo.connect(dm, "loadCssFile", this, function(file) {
-                this._dojoxMobileCss.push(file);
             });
 
             // This is a call-once function
@@ -285,7 +274,7 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	getBaseResource: function(options){
-		return davinci.resource.findResource(this.getDocumentLocation());
+		return system.resource.findResource(this.getDocumentLocation());
 	},
 
 	getLibraryBase: function(id, version){
@@ -413,7 +402,7 @@ dojo.declare("davinci.ve.Context", null, {
      */
     setMobileDevice: function(device) {
     	this.getDojo().config.mblUserAgent = /* remove this line for Dojo 1.7 final */
-    	this.getDojo()["require"]("dojo/_base/config")["mblUserAgent"] = preview.silhouetteiframe.getMobileTheme(device + '.svg');
+    	this.getDojo()["require"]("dojo/_base/config").mblUserAgent = preview.silhouetteiframe.getMobileTheme(device + '.svg');
     	var bodyElement = this.getDocumentElement().getChildElement("body");
         if (! device || device === 'none') {
             bodyElement.removeAttribute(davinci.ve.Context.MOBILE_DEV_ATTR, device);
@@ -438,11 +427,6 @@ dojo.declare("davinci.ve.Context", null, {
         this.setMobileDevice(device);
 
 		// dojox.mobile specific CSS file handling
-
-        // remove old theme css files
-        this._dojoxMobileCss.forEach(function (file) {
-        	this.getDojo().query('link[href="' + file + '"]').orphan();
-        }, this);
 
         var dm = this.getDojo().getObject("dojox.mobile");
         if(dm && dm.loadDeviceTheme) {
@@ -481,7 +465,7 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 	},
 	
- getTheme: function(){
+	getTheme: function(){
         if(this._theme==null){
             var theme = this.loadThemeMeta(this._srcDocument);
             if (theme) { // wdr #1024
@@ -489,7 +473,6 @@ dojo.declare("davinci.ve.Context", null, {
                 this._themeMetaCache = theme.themeMetaCache;
                 this._theme = theme.theme;
             }
-            
         }
         return this._theme;
     }, 
@@ -579,8 +562,9 @@ dojo.declare("davinci.ve.Context", null, {
 		
 		for(var i=0;i<allThemes.length;i++){
 			
-			if(allThemes[i].name==defaultThemeName)
+			if(allThemes[i].name==defaultThemeName) {
 				defaultTheme = allThemes[i];
+			}
 			
 			if (allThemes[i].files){ // #1024 some theme's may not contain files, themeMaps
 			  //FIXME: this can't be right...
@@ -624,19 +608,12 @@ dojo.declare("davinci.ve.Context", null, {
         var htmlElement = context._srcDocument.getDocumentElement();
         var head = htmlElement.getChildElement("head");
         var scriptTags=head.getChildElements("script");
-        for(var s=0; s<scriptTags.length; s++){
-            var text=scriptTags[s].getElementText();
-            if (text.length) {
+        return dojo.some(scriptTags, function(tag) {
+            var text=tag.getElementText();
                 // Look for a dojox.mobile.themeMap in the document, if found set the themeMap 
                // var start = text.indexOf('dojox.mobile.themeMap');
-                var start = text.indexOf('dojox.mobile.deviceTheme');
-                if (start > 0){
-                    return true; // it's a mobile theme
-                }
-             }
-        }
-        return false;
-     
+            return text.length && text.indexOf('dojox.mobile.deviceTheme') != -1;
+        });
     },
 //////////////////////////////////////////////////////////////////////////////////////////////     
     
@@ -731,7 +708,7 @@ dojo.declare("davinci.ve.Context", null, {
 				//  depend on dojo any more.  Once issue, though, is that the callback function
 				//  makes use of dojo and thusly must be invoked only after dojo has loaded.  Need
 				//  to remove Dojo dependencies from callback function first.
-				var baseUserWorkspace = davinci.resource.getRoot().getURL() + "/" + this._getWidgetFolder();
+				var baseUserWorkspace = system.resource.getRoot().getURL() + "/" + this._getWidgetFolder();
 				head += "<script>djConfig={addOnLoad:top.loading" + this._id + ", baseUrl:'"+dojoUrl.substr(0,inx+1)+"', modulePaths:{'widgets':'" + baseUserWorkspace +"'} }</script>";
 				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\"></script>";
 			}
@@ -2146,7 +2123,7 @@ dojo.declare("davinci.ve.Context", null, {
 				if (isDojoJS) {
 					// XXX Nasty nasty nasty special case for dojo attribute thats
 					// required. Need to generalize in the metadata somehow.
-					var fullPath = new davinci.model.Path(davinci.resource.getRoot().getPath());
+					var fullPath = new davinci.model.Path(system.resource.getRoot().getPath());
 					var urlPath = new davinci.model.Path(url);
 					var relativeUrl = urlPath.relativeTo(fullPath);
 				

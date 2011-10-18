@@ -28,7 +28,10 @@
               alias="/app/eclipse"
               base-name="/WebContent/eclipse"
               />
-          
+        <resource
+              alias="/app/system"
+              base-name="/WebContent/system"
+              />   
         <resource
               alias="/app/preview"
               base-name="/WebContent/preview"

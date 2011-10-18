@@ -18,7 +18,7 @@ dojo.require("dijit.Dialog");
 dojo.require("dijit.Tree");
 dojo.require("davinci.review.widgets.Tree");
 dojo.require("davinci.ui.widgets.TransformTreeMixin");
-dojo.require("davinci.resource");
+dojo.require("system.resource");
 dojo.require("davinci.model.Resource");
 
 dojo.require("dijit.tree.TreeStoreModel");
@@ -144,7 +144,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 			getIconClass: dojo.hitch(this,this._getIconClass),
 			isMultiSelect: true,
 			onDblClick: dojo.hitch(this,doubleClick),
-			transforms: [davinci.resource.alphabeticalSort]
+			transforms: [system.resource.alphabeticalSort]
 		});
 		sourceTreeCP.domNode.appendChild(sourceTree.domNode);
 		sourceTree.startup();

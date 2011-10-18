@@ -139,12 +139,12 @@ davinci.theme.dojoThemeSets =  {
             {
                 "name": "desktop_default",
                 "desktopTheme": "claro",
-                "mobileTheme": "none"
+                "mobileTheme": [{"theme":"none","device":"Android"},{"theme":"none","device":"BlackBerry"},{"theme":"none","device":"iPad"},{"theme":"none","device":"iPhone"},{"theme":"none","device":"other"}]
             },
             {
                 "name": "mobile_default",
                 "desktopTheme": "claro",
-                "mobileTheme": "default"
+                "mobileTheme": [{"theme":"default","device":"Android"},{"theme":"default","device":"BlackBerry"},{"theme":"default","device":"iPad"},{"theme":"default","device":"iPhone"},{"theme":"default","device":"other"}]
             }
            
         ]

@@ -11,6 +11,6 @@
           </ajaxLibrary>
       </extension>
      <extension id="yui.metadata" point="org.eclipse.equinox.http.registry.resources">
-      <resource alias="/app/metadata/yui/2.8.2r1" base-name="/WebContent/metadata"/>
+      <resource alias="/maqetta/app/metadata/yui/2.8.2r1" base-name="/WebContent/metadata"/>
      </extension>
 </plugin>

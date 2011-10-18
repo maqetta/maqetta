@@ -1,0 +1,33 @@
+<div class='downloadDialog'>	 
+		<table style='width:100%' cellSpacing=0 cellPadding=0 >
+		<tr>
+		<td width='20px'>&nbsp;</td>
+		<td>File Name:</td><td> <input type='text' dojoAttachPoint="__fileName" value='workspace1.zip'></input></td>
+		<td width='20px'>&nbsp;</td>
+		</tr>
+		<tr><td colspan=3><hr></hr></td></tr>
+		<tr><td width='20px'>&nbsp;</td>
+		<td  style='text-align:center;'><input type='checkbox' checked ></input></td><td>Include Library Files</td>
+		<td width='20px'>&nbsp;</td>
+		</tr>
+		
+		<tr><td width='20px'>&nbsp;</td>
+		<td style='text-align:center;'><input type='checkbox' dojoAttachPoint="__rewriteDojo" dojoAttachEvent='onclick:_rewriteDojo'></input></td><td>Rewrite Dojo Path To:<input type='text' disabled="true" dojoAttachPoint="__rewriteDojoURL" value='./dojo'></input></td>
+		<td width='20px'>&nbsp;</td>
+		</tr>
+		
+		<tr><td colspan=3><hr></hr></td></tr>
+		</table>
+		
+		<table style='width:100%;'> 
+			<tr> 
+			<td width='20px'>&nbsp;</td>
+				<td style='width:auto;'>&nbsp;</td> 
+				<td style='width:1px;'><span dojoType='dijit.form.Button' dojoAttachEvent='onClick:okButton' label='OK'/></td> 
+				<td style='width:auto;'>&nbsp;</td> 
+				<td style='width:1px;'><span dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='Cancel'/></td> 
+				<td style='width:auto;'>&nbsp;</td> 
+				<td width='20px'>&nbsp;</td>
+			</tr> 
+		</table> 
+</div>

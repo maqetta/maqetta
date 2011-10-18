@@ -11,7 +11,7 @@
 /*jslint */
 /*global define orion:true window */
 
-var orion = orion || {};
+//var orion = orion || {};
 
 orion.editor = orion.editor || {};
 

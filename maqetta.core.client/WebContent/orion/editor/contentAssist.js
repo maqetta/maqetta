@@ -14,7 +14,7 @@
 /**
  * @namespace The container for Orion APIs.
  */ 
-var orion = orion || {};
+//var orion = orion || {};
 orion.editor = orion.editor || {};
 
 /**

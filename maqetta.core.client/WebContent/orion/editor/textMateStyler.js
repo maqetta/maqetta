@@ -11,7 +11,7 @@
 /*jslint regexp:false laxbreak:true*/
 /*global define window*/
 
-var orion = orion || {};
+//var orion = orion || {};
 orion.editor = orion.editor || {};
 
 /**

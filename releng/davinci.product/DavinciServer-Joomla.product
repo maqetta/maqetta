@@ -30,7 +30,6 @@
       <plugin id="davinci.html"/>
       <plugin id="davinci.joomla"/>
       <plugin id="davinci.jqueryui_1_8"/>
-      <plugin id="davinci.review"/>
       <plugin id="davinci.yui_2_6_0"/>
       <plugin id="javax.servlet"/>
       <plugin id="maqetta.core.client"/>

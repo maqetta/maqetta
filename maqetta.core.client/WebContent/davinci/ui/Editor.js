@@ -1,32 +1,30 @@
 dojo.provide("davinci.ui.Editor");
 
-dojo.require("eclipse.Editor");
-dojo.require("eclipse.TextModel");
+if (typeof orion == "undefined") { orion = {}; } // workaround because orion code did not declare orion global in a way that works with the Dojo loader
+
+dojo.require("orion.editor.editor");
+dojo.require("orion.editor.editorFeatures");
+dojo.require("orion.textview.textView");
 dojo.require("davinci.ui.editor.Styler");
 dojo.require("davinci.commands.CommandStack");
-dojo.require("davinci.Workbench");
 dojo.require("dojox.timing.doLater");
 
 dojo.declare("davinci.ui.Editor", null, {
 	
-	constructor : function (element, existWhenVisible) {
+	constructor: function (element, existWhenVisible) {
 		this.contentDiv = element;
 		this._existWhenVisible=existWhenVisible;
 		this.commandStack=new davinci.commands.CommandStack();
 		this._isVisible=!existWhenVisible;
 	},
 
-	setContent : function (filename, content) {
-		if (!this._textModel)
-		{
-			this._textModel=new eclipse.TextModel();
-			dojo.connect(this._textModel,"onChanged",this,this._onTextChanged);
+	setContent: function (filename, content) {
+		if (!this.editor && (!this._existWhenVisible || this._isVisible)) {
+			this._createEditor();
 		}
-		if (!this.editor)
-		{
-			if (!this._existWhenVisible || this._isVisible) {
-				this._createEditor();
-		}
+		if (!this._textModel) {
+			this._textModel = this.editor ? this.editor.getModel() : new orion.textview.TextModel();
+			dojo.connect(this._textModel,"onChanged",this,this._onTextChanged); // editor.onInputChange?
 		}
 		this.fileName=filename;
 
@@ -47,16 +45,16 @@ dojo.declare("davinci.ui.Editor", null, {
 			}
 			else
 			{
-	            this.editor.removeEventListener("Selection", this, this._onSelectionChanged);
-	            try {
-					this.editor.destroy();
-	            } catch (e){}
+	            this.editor.getTextView().removeEventListener("Selection", this, this._onSelectionChanged);
+//	            try {
+//					this.editor.destroy();
+//	            } catch (e){ console.error(e); }
 				delete this.editor;
 			}
 		}
 		this._isVisible=visible;
 	},
-	setValue : function (content,dontNotify) {
+	setValue: function (content,dontNotify) {
 		this._dontNotifyChange=dontNotify;
 		if (this.editor) {
 			this.editor.setText(content);
@@ -67,19 +65,41 @@ dojo.declare("davinci.ui.Editor", null, {
 	},
 
 	_createEditor: function () {
-		var options = {
-				parent:this.contentDiv,
-				model:  this._textModel,
-				undoStack : this.commandStack
-			};
-
-		this.editor = new eclipse.Editor(options);
-		this.editor.focus();
+		var parent = this.contentDiv,
+			model = this._textModel,
+			options = {
+				statusReporter: function(message, isError) {
+					var method = isError ? "error" : "log";
+					console[method]("orion.editor: " + message);
+				},
+				textViewFactory: function() {
+					return new orion.textview.TextView({
+						parent: parent,
+						model: model,
+						/*
+						stylesheet: [ "../../orion/textview/textview.css",
+										"../../orion/textview/rulers.css",
+										"../../orion/textview/annotations.css",
+										"../textview/textstyler.css"],
+						*/
+						tabSize: 4
+					})
+				},
+				undoStackFactory: new orion.editor.UndoFactory(),
+				annotationFactory: new orion.editor.AnnotationFactory(),
+				lineNumberRulerFactory: new orion.editor.LineNumberRulerFactory(),
+				contentAssistFactory: null,
+//TODO				keyBindingFactory: keyBindingFactory, 
+				domNode: parent // redundant with textView parent?
+		};
+		this.editor = new orion.editor.Editor(options);
+		this.editor.installTextView();
+		this.editor.getTextView().focus();
 
 		dojo.style(this.contentDiv, "overflow", "hidden");
 
 		if (this.selectionChange) {
-            this.editor.addEventListener("Selection", this, this._onSelectionChanged);
+            this.editor.getTextView().addEventListener("Selection", this, this._onSelectionChanged);
 		}
 		this.cutAction=new davinci.ui._EditorCutAction(this.editor);
 		this.copyAction=new davinci.ui._EditorCopyAction(this.editor);
@@ -99,7 +119,7 @@ dojo.declare("davinci.ui.Editor", null, {
 			this._styler=new davinci.ui.editor.Styler(style);
 			if (this.editor){
 //				new eclipse.TextStyler(this.editor, style);
-				this._styler.setView(this.editor);
+				this._styler.setView(this.editor.getTextView());
 			}
 		}
 	},
@@ -158,7 +178,7 @@ dojo.declare("davinci.ui.Editor", null, {
 });
 
 dojo.declare("davinci.ui._EditorCutAction", davinci.actions.Action, {
-	constructor : function (editor) {
+	constructor: function (editor) {
 		this._editor=editor;
 	},
 	run: function(context){
@@ -169,7 +189,7 @@ dojo.declare("davinci.ui._EditorCutAction", davinci.actions.Action, {
 	}
 });
 dojo.declare("davinci.ui._EditorCopyAction", davinci.actions.Action, {
-	constructor : function (editor) {
+	constructor: function (editor) {
 		this._editor=editor;
 	},
 	run: function(context){
@@ -180,7 +200,7 @@ dojo.declare("davinci.ui._EditorCopyAction", davinci.actions.Action, {
 	}
 });
 dojo.declare("davinci.ui._EditorPasteAction", davinci.actions.Action, {
-	constructor : function (editor) {
+	constructor: function (editor) {
 		this._editor=editor;
 	},
 	run: function(context){

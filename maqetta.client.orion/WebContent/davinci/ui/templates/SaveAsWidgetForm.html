@@ -1,0 +1,29 @@
+<div class='dvSaveAsWidgetForm'>
+  <p class="dvSawfDesc">${descriptionString}</p>
+  <p>
+    <span class="dvSawfLabel">${nameString}:</span>
+    <input dojoType='dijit.form.ValidationTextBox' dojoAttachPoint="nameInputNode" trim="true"
+        promptMessage="${namePromptString}"></input>
+  </p>
+  <p>
+    <span class="dvSawfLabel"><span class="dvRequired">*</span>${idString}:</span>
+    <input dojoType='dijit.form.ValidationTextBox' dojoAttachPoint="idInputNode" trim="true"
+        required="true" intermediateChanges="true" promptMessage="${idPromptString}"></input>
+  </p>
+  <p>
+    <span class="dvSawfLabel">${versionString}:</span>
+    <input dojoType='dijit.form.ValidationTextBox' dojoAttachPoint="versionInputNode"
+        trim="true"></input>
+  </p>
+  <h4 class="dvRequired">*${requiredString}</h4>
+
+  <div dojoType="dijit.TitlePane" title="${metadataTitle}" open="false">
+    <textarea dojoType="dijit.form.SimpleTextarea" dojoAttachPoint="textareaNode" name="metadata"
+        rows="15" cols="50" intermediateChanges="true">${initialTextareaContent}</textarea>
+  </div>
+
+  <p class="dvDialogOKCancel">
+    <button dojoType="dijit.form.Button" dojoAttachPoint="buttonSave" type="submit" disabled="true">${saveString}</button>
+    <button dojoType="dijit.form.Button" dojoAttachPoint="buttonCancel" type="button">${cancelString}</button>
+  </p>
+</div>

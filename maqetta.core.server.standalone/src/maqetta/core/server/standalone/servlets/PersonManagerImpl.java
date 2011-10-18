@@ -62,8 +62,10 @@ public class PersonManagerImpl implements IPersonManager {
         }
 
         protected Object createObject(Element element, String[] attributeNames, String[] attributes) {
-            String userName = attributes[0];
-            PersonImpl user = new PersonImpl(userName, attributes[1], attributes[2]);
+            String name = element.getAttribute(PersonManagerImpl.NAME_TAG);
+            String email = element.getAttribute(PersonManagerImpl.EMAIL_TAG );
+            String password = element.getAttribute(PersonManagerImpl.PASSWORD_TAG);
+            PersonImpl user = new PersonImpl(name,  password, email);
             PersonManagerImpl.this.persons.put(user.getUserName(), user);
             return user;
         }

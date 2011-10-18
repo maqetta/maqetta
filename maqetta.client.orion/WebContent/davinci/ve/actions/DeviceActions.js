@@ -1,0 +1,67 @@
+dojo.provide("davinci.ve.actions.DeviceActions");
+dojo.require("davinci.actions.Action");
+
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "ve");  
+
+dojo.declare("davinci.ve.actions.ChooseDeviceAction", davinci.actions.Action, {
+	
+	run: function(selection){
+		if (!this.isEnabled(null)){ return; }
+		this.showDevices(); 
+	},
+
+	isEnabled: function(selection){
+		var e = davinci.Workbench.getOpenEditor();
+		return e.declaredClass == 'davinci.ve.PageEditor'; // this is a hack to only support undo for theme editor for 0.5
+	},
+
+	showDevices: function(){
+
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+		var e = davinci.Workbench.getOpenEditor(),
+			c = e.getContext(),
+			device = c.visualEditor.deviceName,
+			deviceList = ["none", "iphone", "ipad", "android_340x480", "android_480x800", "androidtablet", "blackberry"],
+			formHtml = '<select dojoType="dijit.form.ComboBox" id="devices" name="devices">';
+		e._visualChanged();
+		formHtml += deviceList.map(function(name){
+			return '<option' + (name == device ? ' selected' : '') + '>' + name+ '</option>';			
+		}).join("")
+			+ '</select><br/>';
+		var	dialog = new dijit.Dialog({id: "selectDevices", title:langObj.chooseDeviceSilhouette,
+			onCancel:function(){this.destroyRecursive(false);}});	
+		dojo.connect(dialog, 'onLoad', function(){
+			var cb = dijit.byId('devices');
+			dojo.connect(cb, "onChange", function(newDevice){
+				dialog.destroyRecursive(false);
+				var e = davinci.Workbench.getOpenEditor();
+				var context = e.getContext();
+				context.visualEditor.setDevice(newDevice);
+				e._visualChanged();
+			});
+		}, this);
+
+		dialog.setContent(formHtml);
+		dialog.show();
+	}
+});
+
+dojo.declare("davinci.ve.actions.RotateDeviceAction", davinci.actions.Action, {
+	
+	run: function(selection){
+		var e = davinci.Workbench.getOpenEditor();
+		var context = e.getContext();
+		context.visualEditor.toggleOrientation();		
+	},
+	
+	isEnabled: function(selection){
+		var e = davinci.Workbench.getOpenEditor();
+		if (e && e.getContext)
+	//	if (e.declaredClass == 'davinci.themeEditor.ThemeEditor') // this is a hack to only support undo for theme editor for 0.5
+			return (e.getContext().getCommandStack().canRedo());
+		else return false;
+		//	return davinci.Runtime.commandStack.canRedo();
+	}
+}
+);

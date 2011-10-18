@@ -16,7 +16,7 @@
     <!-- propvieweffects.css needs to be separate and not built -->
     <!-- FIXME: This LINK element should be added by the properties palette plugin -->
     <link href="app/davinci/propvieweffects.css?@revision@" rel="stylesheet" type="text/css"></link>
-    <script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="parseOnLoad: true, modulePaths:{'preview':'../preview'}, cacheBust: '@revision@'"></script>
+    <script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="parseOnLoad: true, modulePaths:{'preview':'../preview', 'system':'../system'}, cacheBust: '@revision@'"></script>
 	<script type="text/javascript">
 		require(["dijit/dijit", "davinci/davinci-common", "davinci/davinci"], function () {
 		    <!-- Globalization -->
@@ -34,14 +34,14 @@
 		    
 	    	davinci.useAppCache = true; // needed to provide FF "allow" warning
 
-//			davinci.Runtime.addPlugin( "app/davinci/ui" );
-//		 	davinci.Runtime.addPlugin( "app/davinci/js/js" );
+			davinci.Runtime.addPlugin( "app/davinci/ui" );
+	    	davinci.Runtime.addPlugin( "app/davinci/de/de" );
 //		//	davinci.Runtime.addPlugin( "app/davinci/cssEdit/cssEdit" );
-//		 	davinci.Runtime.addPlugin( "app/davinci/html/html" );
-//			davinci.Runtime.addPlugin( "app/davinci/ve/ve" );
-//			davinci.Runtime.addPlugin( "app/davinci/ve/themeEditor/themeEditor" );
+		 	davinci.Runtime.addPlugin( "app/davinci/html/html" );
+			davinci.Runtime.addPlugin( "app/davinci/ve/ve" );
+			davinci.Runtime.addPlugin( "app/davinci/ve/themeEditor/themeEditor" );
 
-			davinci.Runtime.loadPlugins();
+			//davinci.Runtime.loadPlugins();
 
 	 		davinci.Runtime.initialPerspective="davinci.ve.pageDesign";
 			dojo.addOnLoad(function()

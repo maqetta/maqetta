@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+      
+     <extension id="maqetta.core.client" point="org.eclipse.equinox.http.registry.resources">
+        <resource alias="/maqetta/app/system" 
+        		  base-name="/WebContent/system" 
+        		   />      
+     </extension>
+    
+	<extension point="maqetta.core.server.welcomePage"><welcomePage path="WebContent/welcome.html" priority="2"/></extension>
+	
+	<extension point="maqetta.core.server.mainPage"><mainPage path="WebContent/pagedesigner.html" priority="2"/></extension>
+	<!--
+   	<extension point="maqetta.core.server.previewPage"><previewPage path="WebContent/preview.html" priority="1" /></extension>
+	-->
+	
+</plugin>

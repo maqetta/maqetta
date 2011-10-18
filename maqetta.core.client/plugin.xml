@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-       <extension id="maqetta.core.client" point="org.eclipse.equinox.http.registry.resources">
-        <resource alias="/maqetta/app" 
-        		  base-name="/WebContent" 
-        		   />      
-       </extension>
+      <extension
+           id="testResource"
+           point="org.eclipse.equinox.http.registry.resources">
+        <resource
+              alias="/app/davinci"
+              base-name="/WebContent/davinci"
+              />
+        <resource
+              alias="/app/docs"
+              base-name="/WebContent/docs"
+              />
+        <resource
+              alias="/app/dojo"
+              base-name="/WebContent/dojo"
+              />
+        <resource
+              alias="/app/dojox"
+              base-name="/WebContent/dojox"
+              />
+        <resource
+              alias="/app/dijit"
+              base-name="/WebContent/dijit"
+              />
+        <resource
+              alias="/app/eclipse"
+              base-name="/WebContent/eclipse"
+              />
+        <resource
+              alias="/app/orion"
+              base-name="/WebContent/orion"
+              />          
+        <resource
+              alias="/app/preview"
+              base-name="/WebContent/preview"
+              />
+        <!-- maqetta core libraries metadata (maqetta.js and states.js) -->
+        
+
+       
+        <!--   
+        <resource
+              alias="/app/workspace"
+              base-name="/WebContent/project/base"
+              />
+		-->
+      </extension>
        <extension
             point="maqetta.core.server.jsPlugin">
          <jsPlugin

@@ -43,7 +43,8 @@ public class ServerManager implements IServerManager {
     public static boolean IN_WAR;
 
     {
-        String localInstall = System.getProperty(IDavinciServerConstants.LOCAL_INSTALL);
+    	ServerManager.IN_WAR = false;
+        String localInstall = this.getDavinciProperty(IDavinciServerConstants.LOCAL_INSTALL);
         if (localInstall != null) {
             ServerManager.LOCAL_INSTALL = Boolean.parseBoolean(localInstall);
         } else {
@@ -51,12 +52,11 @@ public class ServerManager implements IServerManager {
         }
 
         String base = System.getProperty(IDavinciServerConstants.BASE_DIRECTORY_PROPERTY);
-        ServerManager.IN_WAR = base == null;
+        ServerManager.IN_WAR = Boolean.parseBoolean(this.getDavinciProperty(IDavinciServerConstants.INWAR_PROPERTY));
 
     }
 
-    ServerManager(ServletConfig servletConfig) {
-        this.servletConfig = servletConfig;
+    ServerManager() {
         String shouldDebug = this.getDavinciProperty(IDavinciServerConstants.SERVER_DEBUG);
         if (shouldDebug != null && "true".equals(shouldDebug)) {
             ServerManager.DEBUG_IO_TO_CONSOLE = Boolean.parseBoolean(shouldDebug);
@@ -72,14 +72,10 @@ public class ServerManager implements IServerManager {
     }
 
     public static ServerManager getServerManger() {
-        return ServerManager.theServerManager;
-    }
-
-    public static IServerManager createServerManger(ServletConfig servletConfig) {
-        if (ServerManager.theServerManager == null) {
-            ServerManager.theServerManager = new ServerManager(servletConfig);
-        }
-        return ServerManager.theServerManager;
+        if(ServerManager.theServerManager==null)
+        	ServerManager.theServerManager = new ServerManager();
+    	
+    	return ServerManager.theServerManager;
     }
 
     /* (non-Javadoc)

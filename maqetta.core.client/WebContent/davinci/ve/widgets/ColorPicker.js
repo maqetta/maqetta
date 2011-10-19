@@ -31,6 +31,7 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 			this.data.push({value:this._statics[2],run:this._chooseColorValue});
 			this.data.push({value:this._statics[3],run:function(){this.attr('value','')}});
 			this.data.push({value:this._statics[1]});   
+			this.data.push({value:'transparent'});
 			this.data.push({value:'black'});
 			this.data.push({value:'white'});
 			this.data.push({value:'red'});

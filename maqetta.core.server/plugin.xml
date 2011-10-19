@@ -13,14 +13,34 @@
    <!-- <extension-point id="libraryManager" name="Library Manager" schema="schema/libraryManager.exsd"/>-->
    <extension-point id="userManager" name="User Manager" schema="schema/userManager.exsd"/>
    <extension-point id="libraryManager" name="User Manager" schema="schema/userManager.exsd"/>
-    <extension-point id="libraryFinder" name="Library Finder" schema="schema/libraryFinder.exsd"/>
-      <extension point="org.eclipse.equinox.http.registry.servlets">
-
+   <extension-point id="libraryFinder" name="Library Finder" schema="schema/libraryFinder.exsd"/>
+   
+   <extension point="org.eclipse.equinox.http.registry.httpcontexts">
+      <httpcontext id="maqetta.core.server.httpcontext"/>
+   </extension>
+   
+   
+   <extension point="org.eclipse.equinox.http.registry.servlets">
       <servlet
-            alias="/cmd"
+      		
+            alias="/maqetta/cmd"
             class="org.maqetta.server.DavinciCommandServlet"
             load-on-startup="true">
       </servlet>
    </extension>
+	<extension  id="maqettaLib"  point="org.eclipse.equinox.http.registry.resources">
+	
+	        <!-- maqetta core libraries metadata (maqetta.js and states.js) -->
+	        
+	        <resource
+	              alias="/maqetta/app/metadata/maqetta/core/0.3"
+	              base-name="/WebContent/project"
+	              />
+	 </extension>
+	 <extension point="maqetta.core.server.initialUserFiles">
 
+             <initalUserFile path="WebContent/samples/"/>
+              
+      </extension>
+	 
 </plugin>

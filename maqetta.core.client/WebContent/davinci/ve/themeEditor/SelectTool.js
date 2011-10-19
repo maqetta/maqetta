@@ -64,13 +64,6 @@ dojo.declare("davinci.ve.themeEditor._Tool", null, {
 			}
 			this._target = undefined;
 		}
-	},
-
-	_adjustPosition: function(position){
-		if(!position){
-			return undefined;
-		}
-		return position;
 	}
 
 });
@@ -215,7 +208,7 @@ dojo.declare("davinci.ve.themeEditor.SelectTool", davinci.ve.themeEditor._Tool, 
 					left -= (p.x - parentNode.scrollLeft);
 					top -= (p.y - parentNode.scrollTop);
 				}
-				var position = this._adjustPosition({x: left, y: top});
+				var position = {x: left, y: top};
 				left = position.x;
 				top = position.y;
 				var c = new davinci.ve.commands.MoveCommand(widget, left, top);
@@ -294,7 +287,7 @@ dojo.declare("davinci.ve.themeEditor.SelectTool", davinci.ve.themeEditor._Tool, 
 				return;
 			}
 			var box = dojo.marginBox(node);
-			var position = this._adjustPosition({x: box.l + dx, y: box.t + dy});
+			var position = {x: box.l + dx, y: box.t + dy};
 			command.add(new davinci.ve.commands.MoveCommand(w, position.x, position.y));
 		}, this);
 		if(!command.isEmpty()){

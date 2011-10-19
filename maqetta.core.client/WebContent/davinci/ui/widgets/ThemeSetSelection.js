@@ -45,27 +45,8 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
 
     },
 
-    /* populate the theme selection, depends on the "workspaceOnly" attribute being set post create */
-    postCreate : function(){
-        debugger;
-        this.addThemeSets();
-    return;
-        this._themeData = davinci.library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly);
-        this._themeCount = this._themeData.length;
-        for (var i = 0; i < this._themeData.length; i++){
-            if(this._hasValue(this._themeData[i].name)) continue;
-            var op = dojo.doc.createElement("option");
-            op.value =this._themeData[i].name;
-            op.text = this._themeData[i].name;
-            this._select.appendChild(op);
-            
-        }
-        if(this._selection)
-            this._selectValue(this._selection);
-    },
-    
     addThemeSets: function(){
-
+debugger;
         this._dojoThemeSets = davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
         if (!this._dojoThemeSets){ //  FIXME this default setting should be someplace else
             this._dojoThemeSets =  { 
@@ -111,9 +92,14 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
             
         }
         dtSelect.attr( 'value', themeSet.desktopTheme);
-        if (themeSet.mobileTheme === 'default' || themeSet.mobileTheme === 'none' ){
+        if(dojo.toJson(themeSet.mobileTheme) === dojo.toJson(davinci.theme.dojoMobileNone)){
+            mblSelect.attr( 'value', 'none'); 
+        } else if(dojo.toJson(themeSet.mobileTheme) === dojo.toJson(davinci.theme.dojoMobileDefault)){
+            mblSelect.attr( 'value', 'default'); 
+        }
+       /* if (themeSet.mobileTheme === 'default' || themeSet.mobileTheme === 'none' ){
             mblSelect.attr( 'value', themeSet.mobileTheme);
-        } else {
+        }*/ else {
            var context = davinci.Workbench.getOpenEditor().getContext();
            var css = themeSet.mobileTheme[themeSet.mobileTheme.length-1][2][0]; // should be the catchall .*
             for (var t = 0; t < this._themeData.length; t++){
@@ -129,82 +115,7 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
         }
         
     },
-    
-    _setBaseAttr : function(base){
-        debugger;
-        this._base = base;
-    },
-    
-    _getBaseAttr : function(){
-        debugger;
-        return this._base;
-    },
-    
-    _getNumberOfThemesAttr : function(){
-        debugger;
-        return this._themeCount;
-    },
-    
-    _setValueAttr : function(value){
-        debugger;
-    return;
-        this._selection = value;
-        if(value && value.className){
-            this._selection = value.className; 
-        }
-        this._selectValue(this._selection);
-    },
-    
-    _hasValue : function(themeName){
-        debugger;
-    return;
-        for(var i=0;i<this._select.children.length;i++){
-            if(this._select.children[i].value==themeName){
-                return true;
-            }
-        }
-        return false;
-    },
-    
-    _selectValue : function(value){
-        debugger;
-        var found = false;
-        for(var i=0;i<this._select.children.length;i++){
-            if(this._select.children[i].selected)
-                this._select.children[i].selected = false;
-            
-            if(!found && this._select.children[i].value==value){
-                this._select.children[i].selected = true;
-                var found = true;
-            }
-        }
-        
-        if(!found && value!=null){
-            var op = dojo.doc.createElement("option");
-            op.value = value;
-            op.text = value;
-            op.selected = true;
-            this._select.appendChild(op);   
-        }
-    },
-    _getValueAttr : function(){
-        debugger;
-        var name = dojo.attr(this._select, "value");
-        
-        for(var i=0;i<this._themeData.length;i++){
-            if(this._themeData[i]['name'] == name )
-                return this._themeData[i];
-            
-        }
-            
-        return null;
-    },
-    
-    _setWorkspaceOnlyAttr : function(value){
-        debugger;
-        this.workspaceOnly = value;
-    },
-    
+      
     onChange : function(e){
 
         for (var i = 0; i < this._dojoThemeSets.themeSets.length; i++){

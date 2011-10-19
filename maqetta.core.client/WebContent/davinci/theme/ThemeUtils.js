@@ -131,6 +131,8 @@ davinci.theme.getHelper = function(theme){
     }
 };
 
+davinci.theme.dojoMobileDefault = [{"theme":"default","device":"Android"},{"theme":"default","device":"BlackBerry"},{"theme":"default","device":"iPad"},{"theme":"default","device":"iPhone"},{"theme":"default","device":"other"}];
+davinci.theme.dojoMobileNone =  [{"theme":"none","device":"Android"},{"theme":"none","device":"BlackBerry"},{"theme":"none","device":"iPad"},{"theme":"none","device":"iPhone"},{"theme":"none","device":"other"}];
 davinci.theme.dojoThemeSets =  { 
         "version": "1.7",
         "specVersion": "0.8",
@@ -139,16 +141,17 @@ davinci.theme.dojoThemeSets =  {
             {
                 "name": "desktop_default",
                 "desktopTheme": "claro",
-                "mobileTheme": [{"theme":"none","device":"Android"},{"theme":"none","device":"BlackBerry"},{"theme":"none","device":"iPad"},{"theme":"none","device":"iPhone"},{"theme":"none","device":"other"}]
+                "mobileTheme": davinci.theme.dojoMobileNone
             },
             {
                 "name": "mobile_default",
                 "desktopTheme": "claro",
-                "mobileTheme": [{"theme":"default","device":"Android"},{"theme":"default","device":"BlackBerry"},{"theme":"default","device":"iPad"},{"theme":"default","device":"iPhone"},{"theme":"default","device":"other"}]
+                "mobileTheme": davinci.theme.dojoMobileDefault
             }
            
         ]
 };
+
 
 
 davinci.theme.getThemeSet = function(context){
@@ -183,6 +186,11 @@ davinci.theme.getThemeSet = function(context){
        }
     });
 
+    if (mobileTheme == 'none'){
+        mobileTheme = dojo.toJson(davinci.theme.dojoMobileNone);
+    } else if (mobileTheme == 'default'){
+        mobileTheme = dojo.toJson(davinci.theme.dojoMobileDefault);
+    }
     var desktopTheme = context.getTheme();
     for (var s = 0; s < dojoThemeSets.themeSets.length; s++){
         var themeSet = dojoThemeSets.themeSets[s];

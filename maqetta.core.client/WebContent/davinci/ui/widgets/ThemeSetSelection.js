@@ -49,19 +49,7 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
 debugger;
         this._dojoThemeSets = davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
         if (!this._dojoThemeSets){ //  FIXME this default setting should be someplace else
-            this._dojoThemeSets =  { 
-                "version": "1.7",
-                "specVersion": "0.8",
-                "helper": "davinci.libraries.dojo.dojox.mobile.ThemeHelper",
-                "themeSets": [
-                    {
-                        "name": "default",
-                        "desktopTheme": "claro",
-                        "mobileTheme": "default"
-                    }               
-                   
-                ]
-            };
+            this._dojoThemeSets =  davinci.theme.dojoThemeSets;
             
         }
         var select = dijit.byId('theme_select_themeset_theme_select');
@@ -100,7 +88,7 @@ debugger;
        /* if (themeSet.mobileTheme === 'default' || themeSet.mobileTheme === 'none' ){
             mblSelect.attr( 'value', themeSet.mobileTheme);
         }*/ else {
-           var context = davinci.Workbench.getOpenEditor().getContext();
+          /* var context = davinci.Workbench.getOpenEditor().getContext();
            var css = themeSet.mobileTheme[themeSet.mobileTheme.length-1][2][0]; // should be the catchall .*
             for (var t = 0; t < this._themeData.length; t++){
                 var theme = this._themeData[t];
@@ -111,7 +99,8 @@ debugger;
                     mblSelect.attr( 'value', theme.name);
                     break;
                 } 
-            }
+            }*/
+            mblSelect.attr( 'value', themeSet.mobileTheme[themeSet.mobileTheme.length-1].theme);
         }
         
     },
@@ -160,10 +149,15 @@ debugger;
             dojo.style(selectDevicesTable, 'display', 'none');
             dojo.style(selectRadioTable, 'display', 'none');
            // this.selectMobileTheme(e);
-           this._selectedThemeSet.mobileTheme = e;
+           //this._selectedThemeSet.mobileTheme = e;
+            if(e == 'none'){
+                this._selectedThemeSet.mobileTheme = davinci.theme.dojoMobileNone;
+            }else{
+                this._selectedThemeSet.mobileTheme = davinci.theme.dojoMobileDefault;
+            }
            delete this._selectedMobileTheme;
         } else {
-            var theme;
+           /* var theme;
             for (var t = 0; t < this._themeData.length; t++){
                 theme = this._themeData[t];
                 if(theme.name === e){
@@ -175,21 +169,23 @@ debugger;
             var ssPath = new davinci.model.Path(theme.file.parent.getPath()).append(theme.files[0]);
             var resourcePath = davinci.Workbench.getOpenEditor().getContext().getFullResourcePath();
             var filename = ssPath.relativeTo(resourcePath, true).toString();
-            
-            if (this._selectedThemeSet.mobileTheme === 'default' || this._selectedThemeSet.mobileTheme === 'none'){
+            */
+           // if (this._selectedThemeSet.mobileTheme === 'default' || this._selectedThemeSet.mobileTheme === 'none'){
+            if ((dojo.toJson(this._selectedThemeSet.mobileTheme) == dojo.toJson(davinci.theme.dojoMobileDefault)) || (dojo.toJson(this._selectedThemeSet.mobileTheme) == dojo.toJson(davinci.theme.dojoMobileNone))){
                 // changing from default or none for mobile
                 allDevice.setChecked(true);
                 selectDevice.setChecked(false);
                 checkboxs['other'].setChecked(true);
                 checkboxs['other'].setDisabled(true);
                 dojo.style(selectDevicesTable, 'display', 'none');
-                this._selectedMobileTheme = davinci.theme.getTheme(e);
-                var ssPath = new davinci.model.Path(this._selectedMobileTheme.file.parent.getPath()).append(this._selectedMobileTheme.files[0]);
+                //this._selectedMobileTheme = davinci.theme.getTheme(e);
+                this._selectedMobileTheme = e;
+               /* var ssPath = new davinci.model.Path(this._selectedMobileTheme.file.parent.getPath()).append(this._selectedMobileTheme.files[0]);
                 var resourcePath = davinci.Workbench.getOpenEditor().getContext().getFullResourcePath();
-                var filename = ssPath.relativeTo(resourcePath, true).toString();
-                this._selectedThemeSet.mobileTheme = [['.*',this._selectedMobileTheme.base,[filename]]];
-                
-            } else if (this._selectedThemeSet.mobileTheme.length < 2) {
+                var filename = ssPath.relativeTo(resourcePath, true).toString();*/
+                //this._selectedThemeSet.mobileTheme = [['.*',this._selectedMobileTheme.base,[filename]]];
+                this._selectedThemeSet.mobileTheme =  [{"theme":"none","device":"Android"},{"theme":"none","device":"BlackBerry"},{"theme":"none","device":"iPad"},{"theme":"none","device":"iPhone"},{"theme": e ,"device":"other"}];
+            } /*else if (this._selectedThemeSet.mobileTheme.length < 2) {
                 var device = this._selectedThemeSet.mobileTheme[0][0];
                 if (device === '.*'){
                     allDevice.setChecked(true);
@@ -199,12 +195,16 @@ debugger;
                     dojo.style(selectDevicesTable, 'display', 'none');
                 }
                 // all devices
-            } else {
+            } */else {
                 // list of devices
-                allDevice.setChecked(false);
-                selectDevice.setChecked(true);
+                //allDevice.setChecked(false);
+                //selectDevice.setChecked(true);
+                this._selectedMobileTheme = e;
+                allDevice.setChecked(true);
+                selectDevice.setChecked(false);
+                dojo.style(selectDevicesTable, 'display', 'none');
                 for (var i =0; i < this._selectedThemeSet.mobileTheme.length; i++){
-                    if (this._selectedThemeSet.mobileTheme[i][2][0] == filename){
+                    /*if (this._selectedThemeSet.mobileTheme[i][2][0] == filename){
                         console.log(this._selectedThemeSet.mobileTheme[i][0]); // should be the device
                         var device = this._selectedThemeSet.mobileTheme[i][0];
                         if (device === '.*'){
@@ -214,7 +214,21 @@ debugger;
                         device = device.toLowerCase();
                         checkboxs[device].setChecked(true);
                         
+                    }*/
+                    if (this._selectedThemeSet.mobileTheme[i].device != 'other' && this._selectedThemeSet.mobileTheme[i].theme != 'none'){
+                        // all devices false
+                        allDevice.setChecked(false);
+                        selectDevice.setChecked(true);
+                        dojo.style(selectDevicesTable, 'display', '');
+                    } 
+                    if (this._selectedThemeSet.mobileTheme[i].theme == e){
+                        var device = this._selectedThemeSet.mobileTheme[i].device.toLowerCase();
+                        checkboxs[device].setChecked(true);
+                        if (device === 'other'){
+                            checkboxs[device].setDisabled(true);
+                        }
                     }
+                        
                 }
             }
            
@@ -263,14 +277,19 @@ debugger;
                 checkbox.setDisabled(true);
             }
         }
-        var mobileIndex = -1;
+        //var mobileIndex = -1;
         for (var i =0; i < this._selectedThemeSet.mobileTheme.length; i++){
-            if (device.toLowerCase() == this._selectedThemeSet.mobileTheme[i][0].toLowerCase()){
-                mobileIndex = i;
+            if (device.toLowerCase() == this._selectedThemeSet.mobileTheme[i].device.toLowerCase()){
+               // mobileIndex = i;
+                if(checkbox.checked){
+                    this._selectedThemeSet.mobileTheme[i].theme = this._selectedMobileTheme;
+                } else {
+                    this._selectedThemeSet.mobileTheme[i].theme = 'none';
+                }
                 break;
             }
         }
-        if (mobileIndex < 0 && checkbox.checked){
+        /*if (mobileIndex < 0 && checkbox.checked){
             // add
             var ssPath = new davinci.model.Path(this._selectedMobileTheme.file.parent.getPath()).append(this._selectedMobileTheme.files[0]);
             var resourcePath = davinci.Workbench.getOpenEditor().getContext().getFullResourcePath();
@@ -300,7 +319,7 @@ debugger;
                 temp = temp.concat(this._selectedThemeSet.mobileTheme.slice(mobileIndex+1));
                this._selectedThemeSet.mobileTheme =  temp;
             }
-        }
+        }*/
         debugger;
     },
     

@@ -186,18 +186,24 @@ davinci.theme.getThemeSet = function(context){
        }
     });
 
-    if (mobileTheme == 'none'){
+  /*  if (mobileTheme == 'none'){
         mobileTheme = dojo.toJson(davinci.theme.dojoMobileNone);
     } else if (mobileTheme == 'default'){
-        mobileTheme = dojo.toJson(davinci.theme.dojoMobileDefault);
-    }
+       // mobileTheme = dojo.toJson(davinci.theme.dojoMobileDefault);
+        mobileTheme = dojo.toJson(davinci.theme.getDojoxMobileThemeMap(context, davinci.theme.dojoMobileDefault));
+    }*/
     var desktopTheme = context.getTheme();
     for (var s = 0; s < dojoThemeSets.themeSets.length; s++){
         var themeSet = dojoThemeSets.themeSets[s];
-        var mobileMap = themeSet.mobileTheme;
-        if (typeof mobileMap != "string"){
-            mobileMap = dojo.toJson(mobileMap);
+        if ((mobileTheme == 'none') && (dojo.toJson(themeSet.mobileTheme) == dojo.toJson(davinci.theme.dojoMobileNone)) ){
+            return themeSet;
+        } else if ((mobileTheme == 'default') && (dojo.toJson(themeSet.mobileTheme) == dojo.toJson(davinci.theme.dojoMobileDefault))){
+            return themeSet;
         }
+        var mobileMap = dojo.toJson(davinci.theme.getDojoxMobileThemeMap(context, themeSet.mobileTheme)); //themeSet.mobileTheme;
+        /*if (typeof mobileMap != "string"){
+            mobileMap = dojo.toJson(mobileMap);
+        }*/
         if (mobileMap == mobileTheme){
             // found themeMap
             if (themeSet.desktopTheme == desktopTheme.name){
@@ -250,7 +256,7 @@ davinci.theme.getThemeSet = function(context){
     for (var n = 0; n < dojoThemeSets.themeSets.length; n++){
         if (dojoThemeSets.themeSets[n].name == newThemeSetName){
             nameIndex++;
-            newThemeSetName = newThemeSetName + '_' + nameIndex;
+            newThemeSetName = 'myThemeSet_' + nameIndex;
             n = -1; // start search a first theme set with new name
         }
     }
@@ -258,7 +264,7 @@ davinci.theme.getThemeSet = function(context){
     themeSet =  {
             "name": newThemeSetName,
             "desktopTheme": desktopTheme.name,
-            "mobileTheme": mobileTheme
+            "mobileTheme": dojo.fromJson(mobileTheme)
         };  
     dojoThemeSets.themeSets.push(themeSet);
     davinci.workbench.Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(), dojoThemeSets);
@@ -273,6 +279,27 @@ davinci.theme.getTheme = function(name){
             return themeData[i];
         }
     }
+};
+
+davinci.theme.getDojoxMobileThemeMap = function(context, mobileTheme){
+    
+    var themeMap = [];
+    var other = [".*","iphone",[]]; // set default to ensure we have one
+    for (var i =0; i < mobileTheme.length; i++){
+        if(mobileTheme[i].theme != 'none' && mobileTheme[i].theme != 'default'){
+            var theme = davinci.theme.getTheme(mobileTheme[i].theme);
+            var ssPath = new davinci.model.Path(theme.file.parent.getPath()).append(theme.files[0]);
+            var resourcePath = context.getFullResourcePath();
+            var filename = ssPath.relativeTo(resourcePath, true).toString();
+            if (mobileTheme[i].device === 'other'){
+              other = ['.*',theme.base,[filename]];  
+            } else {
+                themeMap.push([mobileTheme[i].device,theme.base,[filename]]);
+            }
+        }
+    }
+    themeMap.push(other); // ensure the catch all is at the end.
+    return themeMap;
 };
 
 

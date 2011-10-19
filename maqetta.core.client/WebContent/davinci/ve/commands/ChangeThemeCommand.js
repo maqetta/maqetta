@@ -153,7 +153,8 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             }
         }
         // remove the mobile theme
-        if (themeSet.mobileTheme && themeSet.mobileTheme != 'none' && themeSet.mobileTheme != 'default'){
+      //  if (themeSet.mobileTheme && themeSet.mobileTheme != 'none' && themeSet.mobileTheme != 'default'){
+        if (themeSet.mobileTheme && (dojo.toJson(themeSet.mobileTheme) != dojo.toJson(davinci.theme.dojoMobileNone)) && (dojo.toJson(themeSet.mobileTheme) != dojo.toJson(davinci.theme.dojoMobileDefault))){
             this._dojoxMobileRemoveTheme(this._context);
         }
         
@@ -170,7 +171,8 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             }
         }
         // add the mobile theme
-        if (themeSet.mobileTheme && themeSet.mobileTheme != 'none'){
+       // if (themeSet.mobileTheme && themeSet.mobileTheme != 'none'){
+        if (themeSet.mobileTheme && (dojo.toJson(themeSet.mobileTheme) != dojo.toJson(davinci.theme.dojoMobileNone))){
             this._dojoxMobileAddTheme(this._context, themeSet.mobileTheme);
         }
     },
@@ -234,10 +236,12 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
                         var themeMap;
                         if (theme){
                             themeMap = theme;
-                            if ((typeof themeMap =="string") && (themeMap.toLowerCase() === 'default')){
+                           // if ((typeof themeMap =="string") && (themeMap.toLowerCase() === 'default')){
+                            if (dojo.toJson(themeMap) === dojo.toJson(davinci.theme.dojoMobileDefault)){
                                 themeMap = null;
                             } else {
-                               themeMap = dojo.toJson(themeMap);
+                               //themeMap = dojo.toJson(themeMap);
+                               themeMap = dojo.toJson(davinci.theme.getDojoxMobileThemeMap(context, theme));
                                themeMap = text.substring(0,stop+1) + '\ndojox.mobile.themeMap='+themeMap+';' + text.substring(stop+1);
                             }
                         }

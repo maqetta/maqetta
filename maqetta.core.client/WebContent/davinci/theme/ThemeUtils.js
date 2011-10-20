@@ -195,9 +195,11 @@ davinci.theme.getThemeSet = function(context){
     var desktopTheme = context.getTheme();
     for (var s = 0; s < dojoThemeSets.themeSets.length; s++){
         var themeSet = dojoThemeSets.themeSets[s];
-        if ((mobileTheme == 'none') && (dojo.toJson(themeSet.mobileTheme) == dojo.toJson(davinci.theme.dojoMobileNone)) ){
+       // if ((mobileTheme == 'none') && (dojo.toJson(themeSet.mobileTheme) == dojo.toJson(davinci.theme.dojoMobileNone)) ){
+        if ((mobileTheme == 'none') && (davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileNone)) ){
             return themeSet;
-        } else if ((mobileTheme == 'default') && (dojo.toJson(themeSet.mobileTheme) == dojo.toJson(davinci.theme.dojoMobileDefault))){
+        //} else if ((mobileTheme == 'default') && (dojo.toJson(themeSet.mobileTheme) == dojo.toJson(davinci.theme.dojoMobileDefault))){
+        } else if ((mobileTheme == 'default') && (davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileDefault))){
             return themeSet;
         }
         var mobileMap = dojo.toJson(davinci.theme.getDojoxMobileThemeMap(context, themeSet.mobileTheme)); //themeSet.mobileTheme;
@@ -301,6 +303,47 @@ davinci.theme.getDojoxMobileThemeMap = function(context, mobileTheme){
     themeMap.push(other); // ensure the catch all is at the end.
     return themeMap;
 };
+
+
+
+davinci.theme.themeSetEquals = function (o1, o2) {
+    //compares to objects to see if they are the same
+    
+    function countProperties(obj) {
+        var count = 0;
+        for (k in obj) {
+            if (obj.hasOwnProperty(k)) {
+                count++;
+            }
+        }
+        return count;
+    };
+    
+    if (typeof(o1) !== typeof(o2)) {
+        return false;
+    }
+
+    if (typeof(o1) === "function") {
+        return o1.toString() === o2.toString();
+    }
+
+    if (o1 instanceof Object && o2 instanceof Object) {
+        if (countProperties(o1) !== countProperties(o2)) {
+            return false;
+        }
+        var r = true;
+        for (k in o1) {
+            r = davinci.theme.themeSetEquals(o1[k], o2[k]);
+            if (!r) {
+                return false;
+            }
+        }
+        return true;
+    } else {
+        return o1 === o2;
+    }
+};
+
 
 
 

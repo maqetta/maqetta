@@ -64,12 +64,12 @@ dojo.mixin(davinci.Workbench, {
 				}
 			}
 		);
-        davinci.Runtime.subscribe("/davinci/ui/widgetPropertiesChanges",
-        	function() {
-        		var currentEditor = davinci.Runtime.currentEditor;
-        		currentEditor.visualEditor._objectPropertiesChange.apply(currentEditor.visualEditor, arguments);
-        	}
-        );
+		davinci.Runtime.subscribe("/davinci/ui/widgetPropertiesChanges",
+			function() {
+				var ve = davinci.Runtime.currentEditor.visualEditor;
+				ve._objectPropertiesChange.apply(ve, arguments);
+			}
+		);
 
 		// bind overlay widgets to corresponding davinci states. singleton; no need to unsubscribe
 		davinci.states.subscribe("/davinci/states/state/changed", function(args){

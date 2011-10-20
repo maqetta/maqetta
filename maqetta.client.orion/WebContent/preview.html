@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>  
+	<head>
+		<meta charset="utf-8" />
+		<style type="text/css">
+			body, html { 
+				font-family:helvetica,arial,sans-serif; 
+				font-size:90%;
+				width:100%;
+				height:100%;
+				margin:0;
+				padding:0;
+			}
+			.silhouette_table_container {
+				width:100%;
+				height:100%;
+			}
+			.silhouette_td_container {
+				text-align:left;
+				vertical-align:top;
+			}
+			/* The original CSS rules in singlepreviewer.js assume images are
+				located at preview/images but Maqetta server injects an extra
+				app/ folder in URL so we need to override background-image URLs. */
+			#preview_app_body .control_angle_cw {
+				background-image: url(app/preview/images/rotate_cw.png);
+			}
+			#preview_app_body .control_angle_ccw {
+				background-image: url(app/preview/images/rotate_ccw.png);
+			}
+			#preview_app_error {
+				display:none;
+				margin:20px;
+				font-size:125%;
+				font-weight:bold;
+				font-style:italic;
+				color:darkred;
+			}
+		</style>
+
+		<script src="app/dojo/dojo.js" djConfig="modulePaths:{'preview':'../preview'}"></script>
+		<link rel="stylesheet" type="text/css" href="app/dijit/themes/claro/claro.css"/>
+		<script>
+		 	dojo.requireLocalization("davinci", "webContent");
+			dojo.require('preview.singlepreview');
+			//FIXME: Pull from server instead of hardcode
+			var devicelist=[
+					{value:"0", label:'android_340x480', file:'app/preview/images/android_340x480.svg'},
+					{value:"1", label:'android_480x800', file:'app/preview/images/android_480x800.svg'},
+					{value:"2", label:'androidtablet', file:'app/preview/images/androidtablet.svg'},
+					//bbplaybook.svg is currently broken: rotated 90 degrees
+					//{value:"3", label:'bbplaybook', file:'app/preview/images/bbplaybook.svg'},
+					{value:"3", label:'blackberry', file:'app/preview/images/blackberry.svg'},
+					{value:"4", label:'ipad', file:'app/preview/images/ipad.svg'},
+					{value:"5", label:'iphone', file:'app/preview/images/iphone.svg'}
+			];
+			var currentDevice = "0";
+			var iframefilename = '';
+			var orientation='portrait';
+			var scalefactor=1;
+			var showZoom=true;
+
+			function initSinglePreview(){
+				// fill object urlparams with URL parameters
+				var urlparams_string = window.location.search.substring(1);
+				var urlparams_array = urlparams_string.split("&");
+				var urlparams = {};
+				for (var i=0; i<urlparams_array.length; i++){
+					var param=urlparams_array[i].split('=');
+					if(param.length==2){
+						urlparams[param[0]] = param[1];
+					}	
+				}
+				
+				if(urlparams.file){
+					iframefilename = urlparams.file;
+				}else{
+					var langObj = dojo.i18n.getLocalization("davinci","webContent");
+					var error_div = document.getElementById('preview_app_error');
+					error_div.innerHTML=langObj.devicePreviewError;
+					error_div.style.display = "block";
+				}
+				if(urlparams.orientation){
+					orientation = urlparams.orientation;
+				}
+				if(urlparams.device){
+					// Verify the device is in our list
+					for(var i=0; i<devicelist.length; i++){
+						if(urlparams.device==devicelist[i].label){
+							currentDevice = i+"";	// String values required
+							devicelist[i].selected=true;
+							break;
+						}
+					}
+				}
+				if(urlparams.scalefactor){
+					scalefactor = urlparams.scalefactor;
+				}
+				if(urlparams.showZoom){
+					showZoom = urlparams.showZoom;
+				}
+				var singlepreview_container = document.querySelectorAll(".singlepreview_container")[0];
+				window.singlepreview = new preview.singlepreview({
+					devicelist:devicelist,
+					currentDevice:currentDevice,
+					iframefilename:iframefilename,
+					orientation:orientation,
+					scalefactor:scalefactor,
+					showZoom:showZoom,
+					margin:20,
+					pathToPreviewerFolder:'../'
+				},singlepreview_container);
+			}
+
+			// Used by test case in preview/test folder, not used by preview.html
+			function destroyRecreate(){
+				singlepreview.destroy(true);
+				initSinglePreview();
+			}
+
+			dojo.addOnLoad(function() {
+				initSinglePreview();
+			});
+		</script>
+	</head>
+    
+	<body class="claro" id="preview_app_body">
+		<div id="preview_app_error">
+		</div>
+		<table class="silhouette_table_container">
+			<tr>
+				<td class="silhouette_td_container">
+					<div class="singlepreview_container">
+					</div>
+				</td>
+			</tr>
+		</table>
+	</body>
+
+</html>

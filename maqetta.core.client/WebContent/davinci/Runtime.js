@@ -24,7 +24,7 @@ dojo.mixin(davinci.Runtime,	{
 	clipboard: null,
 	
 	addPlugin: function(pluginName) {
-		url = pluginName + "_plugin.js";
+		url = pluginName + ".plugin";
 		dojo.xhrGet( {
 			// The following URL must match that used to test
 			// the server.

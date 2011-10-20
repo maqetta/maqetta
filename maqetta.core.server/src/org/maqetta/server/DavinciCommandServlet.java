@@ -61,7 +61,7 @@ public class DavinciCommandServlet extends HttpServlet {
 
     private IUser checkLogin(HttpServletRequest req, HttpServletResponse resp, CommandDescriptor commandDescriptor) throws IOException {
 
-        IUser user = (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
+        IUser user = ServerManager.getServerManger().getUserManager().getUser(req);
         if (user == null) {
             if (ServerManager.LOCAL_INSTALL) {
                 user = ServerManager.getServerManger().getUserManager().getSingleUser();
@@ -168,9 +168,7 @@ public class DavinciCommandServlet extends HttpServlet {
         if (commands.isEmpty()) {
             this.loadCommands();
         }
-        if (ServerManager.getServerManger() == null) {
-            ServerManager.createServerManger(getServletConfig());
-        }
+
         this.initialized = true;
     }
 

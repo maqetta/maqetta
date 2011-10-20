@@ -86,14 +86,6 @@ return declare("davinci.ve.tools._Tool", null, {
 		}
 	},
 
-	//FIXME: pointless?
-	_adjustPosition: function(position){
-		if(!position){
-			return undefined;
-		}
-		return position;
-	},
-
 	/**
 	 * Create a candidate list of valid parents for the dropped widget, based on the widgets'
 	 * 'allowedChild' and 'allowedParent' properties. The logic ascends the DOM hierarchy

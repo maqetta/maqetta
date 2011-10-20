@@ -1,0 +1,13 @@
+.propRootDetailsContainer {
+	/* This style rule is updated by code to achieve animation effects */
+	-webkit-transition: margin-left .6s ease;
+	-moz-transition: margin-left .6s ease;
+	margin-left:0px;
+}
+
+.propPaletteDetailsRoot {
+	/* This style rule is updated by code to achieve animation effects */
+	-webkit-transition: margin-top .6s ease;
+	-moz-transition: margin-top .6s ease;
+	margin-top:0px;
+}

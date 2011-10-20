@@ -3,6 +3,8 @@ package maqetta.core.server.standalone.servlets;
 import java.io.File;
 import java.util.HashMap;
 
+import javax.servlet.http.HttpServletRequest;
+
 import maqetta.core.server.standalone.VResourceUtils;
 import maqetta.core.server.standalone.user.User;
 import org.davinci.server.user.UserException;
@@ -197,6 +199,11 @@ public class UserManagerImpl implements IUserManager {
        return user;
 
     }
+
+	public IUser getUser(HttpServletRequest req) {
+		// TODO Auto-generated method stub
+		return (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
+	}
 
 
 

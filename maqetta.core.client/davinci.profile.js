@@ -58,7 +58,7 @@ dependencies = {
 
 	prefixes: [
 		[ "preview", "../preview" ],
-		[ "eclipse", "../eclipse" ],
+		[ "orion", "../orion" ],
 		[ "davinci", "../davinci" ],
 		[ "dijit", "../dijit" ],
 		[ "dojox", "../dojox" ]

@@ -6,8 +6,6 @@ dojo.require("davinci.ve.widgets.CommonProperties");
 dojo.require("davinci.ve.widgets.EventSelection");
 dojo.require("davinci.ve.widgets.WidgetProperties");
 dojo.require("davinci.ve.widgets.WidgetToolBar");
-dojo.require("davinci.ve.widgets.Background");
-dojo.require('davinci.ve.widgets.Border');
 dojo.require("davinci.ve.widgets.Cascade");
 
 dojo.require("dojo.i18n");  
@@ -110,7 +108,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
    		                			return;
    		                		}
 		       					var showRange=function(sectionData,first,last,begin,end){
-		       						for(var k=first;k<last;k++){
+		       						for(var k=first;k<=last;k++){
 		       							var thisProp = sectionData[k];
 		       							var thisRow = dojo.byId(thisProp.rowId);
 		       							if(k>=begin && k<=end){

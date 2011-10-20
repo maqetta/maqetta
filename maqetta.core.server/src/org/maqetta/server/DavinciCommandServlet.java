@@ -1,6 +1,7 @@
 package org.maqetta.server;
 
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
@@ -8,6 +9,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.maqetta.server.Command;
 import org.davinci.server.internal.Activator;
@@ -61,6 +63,7 @@ public class DavinciCommandServlet extends HttpServlet {
 
     private IUser checkLogin(HttpServletRequest req, HttpServletResponse resp, CommandDescriptor commandDescriptor) throws IOException {
 
+<<<<<<< HEAD
         IUser user = ServerManager.getServerManger().getUserManager().getUser(req);
         if (user == null) {
             if (ServerManager.LOCAL_INSTALL) {
@@ -75,6 +78,17 @@ public class DavinciCommandServlet extends HttpServlet {
 
         }
         return user;
+=======
+    	
+    	
+    	IUser user =  ServerManager.getServerManger().getUserManager().authenticate(req,resp);
+    	
+    	if(user==null){
+    		resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+    	
+    	}
+       return user;
+>>>>>>> a2d6891c1fc71029889c285355b4d7ac0f921179
     }
 
     @Override
@@ -168,7 +182,11 @@ public class DavinciCommandServlet extends HttpServlet {
         if (commands.isEmpty()) {
             this.loadCommands();
         }
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> a2d6891c1fc71029889c285355b4d7ac0f921179
         this.initialized = true;
     }
 

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   
+      <extension point="maqetta.core.server.personManager">
+    	<personManager class="maqetta.core.server.orion.servlets.PersonManagerImpl"/>
+   	  </extension>
+
+      <extension point="maqetta.core.server.userManager">
+    	<userManager class="maqetta.core.server.orion.servlets.UserManagerImpl"/>
+   	  </extension>
+   
+	  <extension point="maqetta.core.server.maqettaConfig">
+    	<maqettaConfig class="maqetta.core.server.orion.MaqettaConfig"/>
+   	  </extension>
+   
+   <extension point="org.eclipse.equinox.http.registry.servlets"  httpcontextId="davincicontext">
+     <!--  
+      <servlet
+           
+         	alias="/"
+            class="maqetta.core.server.orion.DavinciPageServlet"
+            load-on-startup="true">
+      </servlet>
+		-->
+   </extension>
+      	<extension id="maqettaOrion" point="org.eclipse.equinox.http.registry.resources">
+            <resource
+              alias="/welcome"
+              base-name="/WebContent/welcome.html"
+              />
+      </extension>
+
+      <extension
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="davinci.product"
+            description="Davinci Server"
+            name="Davinci Server">
+      </product>
+   </extension>
+      <extension
+            point="maqetta.core.server.command">
+         <command path="login" noLogin="true" 
+               class="maqetta.core.server.orion.command.Login" />
+         <command path="register" noLogin="true" 
+               class="maqetta.core.server.orion.command.Register" />
+         <command path="listFiles" 
+               class="maqetta.core.server.orion.command.ListFiles" />
+         <command path="addFiles" 
+               class="maqetta.core.server.orion.command.AddFiles" />
+         <command path="deleteResource" 
+               class="maqetta.core.server.orion.command.DeleteResource" />
+         <command path="createResource" 
+               class="maqetta.core.server.orion.command.CreateResource" />
+         <command path="getPreferences" 
+               class="maqetta.core.server.orion.command.GetPreferences" />
+         <command path="setPreferences"  isPut="true"
+               class="maqetta.core.server.orion.command.SetPreferences" />
+         <command path="getWorkbenchState" 
+               class="maqetta.core.server.orion.command.GetWorkbenchState" />
+         <command path="setWorkbenchState"  isPut="true"
+               class="maqetta.core.server.orion.command.SetWorkbenchState" />
+         <command path="removeWorkingCopy" 
+               class="maqetta.core.server.orion.command.RemoveWorkingCopy" />
+         <command path="logoff" 
+               class="maqetta.core.server.orion.command.LogOff" />
+         <command path="download" 
+               class="maqetta.core.server.orion.command.Download" />
+         <command path="findResource" 
+               class="maqetta.core.server.orion.command.FindResource" />
+         <command path="getPlugins" 
+               class="maqetta.core.server.orion.command.GetPlugins" />
+          <command path="getLibRoots" 
+               class="maqetta.core.server.orion.command.GetLibRoots" /> 
+          <command path="listLibs" 
+               class="maqetta.core.server.orion.command.ListLibs" />   
+          <command path="getUserLibs" 
+               class="maqetta.core.server.orion.command.GetUserLibs" />   
+          <command path="getLibMetadata" 
+               class="maqetta.core.server.orion.command.GetLibMetadata" />  
+          <command path="modifyLib" 
+               class="maqetta.core.server.orion.command.ModifyLib" /> 
+          <command path="getMetaRoot" 
+               class="maqetta.core.server.orion.command.GetMetaRoot" />   
+           <command path="copy" 
+               class="maqetta.core.server.orion.command.Copy" /> 
+           <command path="createProject" 
+               class="maqetta.core.server.orion.command.CreateProject" />         
+           <command path="rename" 
+               class="maqetta.core.server.orion.command.Rename" />         
+           <command path="tryIt" noLogin="true"
+               class="maqetta.core.server.orion.command.TryIt" />         
+           <command path="removeUser" noLogin="true"
+               class="maqetta.core.server.orion.command.RemoveUser" />         
+               
+      </extension>
+
+</plugin>

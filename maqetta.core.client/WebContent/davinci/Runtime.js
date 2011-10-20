@@ -49,8 +49,7 @@ dojo.mixin(davinci.Runtime,	{
 	},
 
 	getUser : function(){
-		return dojo.cookie("DAVINCI.USER");
-		
+		return  dojo.cookie("user");;	
 	},
 	
 	loadPlugins: function() {

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+
+    <script type="text/javascript" src="../dojo/dojo.js?@revision@" data-dojo-config="parseOnLoad: true, modulePaths:{'davinci':'../maqetta/app/davinci','preview':'../maqetta/app/preview', 'eclipse':'../maqetta/app/eclipse','system':'../maqetta/app/system'  }, cacheBust: '@revision@'"></script>
+    <script type="text/javascript">
+    	require(["dijit/dijit", "davinci/davinci-common","system/orionInit", "system/resource"]);
+    </script>
+    <script type="text/javascript">
+	dojo.addOnLoad(function (){
+		system.resource.createProject("project1");
+		location.href="."
+
+	});
+
+    </script>
+
+</head>
+<body>
+
+<div>&nbsp;</div>
+</body>
+
+</html>

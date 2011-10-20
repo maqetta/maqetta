@@ -15,6 +15,7 @@ import maqetta.core.server.standalone.internal.Activator;
 import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.maqetta.server.Command;
+import org.maqetta.server.Extensions;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
 import org.osgi.framework.Bundle;
@@ -23,7 +24,7 @@ public class GetPlugins extends Command {
 
     @Override
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
-        List extensions = ServerManager.getServerManger().getExtensions(IDavinciServerConstants.EXTENSION_POINT_JSPLUGIN,
+        List extensions = Extensions.getExtensions(IDavinciServerConstants.EXTENSION_POINT_JSPLUGIN,
                 IDavinciServerConstants.EP_TAG_JSPLUGIN);
         StringBuffer sb = new StringBuffer();
         sb.append("[");

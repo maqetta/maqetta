@@ -36,6 +36,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.maqetta.project.util.EclipseProjectUtil;
+import org.maqetta.server.Extensions;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ILink;
 import org.maqetta.server.ILinks;
@@ -217,7 +218,7 @@ public class User implements IUser {
 			
 		
 		if(initFiles){
-			List extensions = ServerManager.getServerManger().getExtensions(IDavinciServerConstants.EXTENSION_POINT_INITIAL_USER_FILES,
+			List extensions = Extensions.getExtensions(IDavinciServerConstants.EXTENSION_POINT_INITIAL_USER_FILES,
 	                IDavinciServerConstants.EP_TAG_INITIAL_USER_FILE);
 	        for (Iterator iterator = extensions.iterator(); iterator.hasNext();) {
 	            IConfigurationElement libraryElement = (IConfigurationElement) iterator.next();

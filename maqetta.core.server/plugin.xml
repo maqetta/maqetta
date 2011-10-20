@@ -12,6 +12,7 @@
    <extension-point id="mailConfig" name="Mail Server Configuration" schema="schema/mailConfig.exsd"/>
    <!-- <extension-point id="libraryManager" name="Library Manager" schema="schema/libraryManager.exsd"/>-->
    <extension-point id="userManager" name="User Manager" schema="schema/userManager.exsd"/>
+<<<<<<< HEAD
    <extension-point id="libraryManager" name="User Manager" schema="schema/userManager.exsd"/>
    <extension-point id="libraryFinder" name="Library Finder" schema="schema/libraryFinder.exsd"/>
    
@@ -43,4 +44,18 @@
               
       </extension>
 	 
+=======
+   <extension-point id="maqettaConfig" name="maqettaConfig" schema="schema/maqettaConfig.exsd"/>
+      <extension point="org.eclipse.equinox.http.registry.servlets">
+
+		<servlet
+	      	
+	            alias="/cmd"
+	            class="org.maqetta.server.DavinciCommandServlet"
+	            httpcontextId="maqetta.core.client.maqetta"
+	            load-on-startup="true">
+	      </servlet>
+	   </extension>
+   
+>>>>>>> a2d6891c1fc71029889c285355b4d7ac0f921179
 </plugin>

@@ -605,15 +605,20 @@ davinci.html.HTMLElement.prototype.addAttribute = function(name, value, noPersis
 };
 
 davinci.html.HTMLElement.prototype.removeAttribute = function(name) {
-    for (var i=0;i<this.attributes.length;i++)
-        if (this.attributes[i].name==name) {
-            var attr=this.attributes[i];
-            var s=attr.getText({});
-            this.attributes.splice(i, 1);
-            if (!attr.noPersist)
-                this.getHTMLFile().updatePositions(attr.startOffset,0-(s.length+1));
-            return;
+    this.attributes.every(function(attr, idx, arr) {
+        if (attr.name === name) {
+            arr.splice(idx, 1);
+            // Make sure that getHTMLFile() returns a non-null value. This
+            // HTMLElement may be standalone (not part of a file); for example,
+            // see code in davinci.ve.widget.createWidget().
+            var file = this.getHTMLFile();
+            if (!attr.noPersist && file) {
+                var s = attr.getText();
+                file.updatePositions(attr.startOffest, 0 - (s.length + 1));
+            }
+            return false; // break
         }
+    }, this);
     this.onChange();
 };
 

@@ -8,9 +8,8 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
     constructor: function(newTheme, context){
         this._newTheme = newTheme;
         this._context = context;
-        //this._oldTheme = this._context.getTheme();
         this._oldTheme  = davinci.theme.getThemeSet(this._context);
-        if (!this._oldTheme){ // FIXME this should be a deafult to some desktop
+        if (!this._oldTheme){ 
             this._oldTheme = davinci.theme.dojoThemeSets.themeSets[0]; // default;
         }
     },
@@ -153,9 +152,6 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             }
         }
         // remove the mobile theme
-      //  if (themeSet.mobileTheme && themeSet.mobileTheme != 'none' && themeSet.mobileTheme != 'default'){
-     //   if (themeSet.mobileTheme && (dojo.toJson(themeSet.mobileTheme) != dojo.toJson(davinci.theme.dojoMobileNone)) && (dojo.toJson(themeSet.mobileTheme) != dojo.toJson(davinci.theme.dojoMobileDefault))){
-        davinci.theme.themeSetEquals
         if (themeSet.mobileTheme && (!davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileNone)) && (!davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileDefault))){
             this._dojoxMobileRemoveTheme(this._context);
         }
@@ -173,8 +169,6 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             }
         }
         // add the mobile theme
-       // if (themeSet.mobileTheme && themeSet.mobileTheme != 'none'){
-        //if (themeSet.mobileTheme && (dojo.toJson(themeSet.mobileTheme) != dojo.toJson(davinci.theme.dojoMobileNone))){
         if (themeSet.mobileTheme && (!davinci.theme.themeSetEquals(themeSet.mobileTheme, davinci.theme.dojoMobileNone))){
             this._dojoxMobileAddTheme(this._context, themeSet.mobileTheme);
         }
@@ -185,9 +179,6 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
         var htmlElement = context._srcDocument.getDocumentElement();
         var head = htmlElement.getChildElement("head");
         var scriptTags=head.getChildElements("script");
-        //var resourcePath = context.getFullResourcePath();
-        //var ssPath = new davinci.model.Path(theme.file.parent.getPath()).append(theme.files[0]);
-        //newFilename = ssPath.relativeTo(resourcePath, true);
         dojo.forEach(scriptTags, function (scriptTag){
             var text=scriptTag.getElementText();
             var stop = 0;
@@ -239,12 +230,9 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
                         var themeMap;
                         if (theme){
                             themeMap = theme;
-                           // if ((typeof themeMap =="string") && (themeMap.toLowerCase() === 'default')){
-                           // if (dojo.toJson(themeMap) === dojo.toJson(davinci.theme.dojoMobileDefault)){
                             if (davinci.theme.themeSetEquals(themeMap, davinci.theme.dojoMobileDefault)){
                                 themeMap = null;
                             } else {
-                               //themeMap = dojo.toJson(themeMap);
                                themeMap = dojo.toJson(davinci.theme.getDojoxMobileThemeMap(context, theme));
                                themeMap = text.substring(0,stop+1) + '\ndojox.mobile.themeMap='+themeMap+';' + text.substring(stop+1);
                             }

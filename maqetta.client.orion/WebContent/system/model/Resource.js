@@ -4,6 +4,14 @@ dojo.require("davinci.Runtime");
 dojo.require("davinci.model.Model");
 
 
+if(!system){
+	system = {};
+}
+
+if(!system.model){
+	system.model = {};
+}
+
 /**  
  * @class system.model.Resource.Resource
    * @constructor 

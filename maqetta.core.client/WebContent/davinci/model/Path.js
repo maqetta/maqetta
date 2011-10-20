@@ -1,5 +1,14 @@
 dojo.provide("davinci.model.Path");
 
+if(!davinci){
+	davinci = {};
+}
+
+if(!davinci.model){
+	davinci.model = {};
+}
+
+
 /**
  * @class davinci.model.Path
    * @constructor     

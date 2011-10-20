@@ -135,7 +135,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             }
             var css = new davinci.html.CSSImport();
             css.url = newFilename.toString();
-            style.addChild(css);
+            style.addChild(css,0);
         }
         
     },

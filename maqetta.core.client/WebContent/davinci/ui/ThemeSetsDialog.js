@@ -24,7 +24,7 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
             id: "manageThemeSets",
            // title:langObj.aboutMaqetta,
             title:'Manage theme sets',
-            style:"width:300px; height: 300px;",
+            style:"width:300px; ",
             
         });
         dojo.connect(this._dialog, "onCancel", this, "onClose");
@@ -85,9 +85,37 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
         //var div = dojo.byId('manage_theme_sets_div');
 
         div = dojo.create("div");
+        var table = dojo.create("table");
+        var tr = dojo.create("tr");
+        var td = dojo.create("td");
         div.innerHTML= 'Theme set name:' ;
+        var deleteDiv = dojo.create("div");
+        deleteDiv.innerHTML='<div id="theme_set_delete" class="projectToolbarDeleteIcon"></div>';
         
-        dojo.place(div, this._dialog.containerNode,'first');
+        //dojo.place(div, this._dialog.containerNode,'first');
+        dojo.place(table, this._dialog.containerNode,'first');
+        dojo.place(tr, table);
+        dojo.place(td, tr);
+        dojo.place(div, td);
+        td = dojo.create("td");
+        dojo.place(td, tr);
+        dojo.place(filteringSelect.domNode, td);
+        td = dojo.create("td");
+        dojo.place(td, tr);
+        dojo.place(deleteDiv, td);
+        tr = dojo.create("tr");
+        dojo.place(tr, table);
+        td = dojo.create("td");
+        dojo.place(td, tr);
+        div = dojo.create("div");
+        div.innerHTML= 'Desktop theme:' ;
+        dojo.place(div, td);
+        td = dojo.create("td");
+        dojo.place(td, tr);
+        dojo.place(dtSelect.domNode, td);
+        td = dojo.create("td");
+        dojo.place(td, tr);
+        
         var grid = new dojox.grid.DataGrid({
             id: 'grid',
             store: store,
@@ -96,24 +124,29 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
             rowSelector: '20px'
         });
         
-        dojo.place(filteringSelect.domNode, this._dialog.containerNode);
-        dojo.style( div, 'display', 'initial');
-        dojo.style( div, 'margin-right', '2px');
+        //dojo.place(filteringSelect.domNode, this._dialog.containerNode);
+        //dojo.place(filteringSelect.domNode, td);
+        //td = dojo.create("td");
+        //dojo.place(td, tr);
+        //dojo.place(deleteDiv, this._dialog.containerNode);
+        //dojo.place(deleteDiv, td);
+        //dojo.style( div, 'display', 'initial');
+        //dojo.style( div, 'margin-right', '2px');
         
         
-        div = dojo.create("div");
+      /*  div = dojo.create("div");
         div.innerHTML= 'Desktop theme:' ;
         dojo.place(div, this._dialog.containerNode);
         dojo.style( div, 'display', 'initial');
         dojo.style( div, 'margin-right', '2px');
-        dojo.place(dtSelect.domNode, this._dialog.containerNode);
+        dojo.place(dtSelect.domNode, this._dialog.containerNode);*/
         
         dojo.place(grid.domNode, this._dialog.containerNode);
        
         
         div = dojo.create("div");
         div.innerHTML=  '<table style="width:100%;">'+
-        '<tr><td style="text-align:right; width:80%;"><input type="button"  id="theme_select_ok_button" label="Ok"></input></td><td><input type="button"  id="theme_select_cancel_button" label="Cancel"></input></td></tr>'+
+        '<tr><td style="text-align:right; width:80%;"><input type="button"  id="theme_select_ok_button" label="Save"></input></td><td><input type="button"  id="theme_select_cancel_button" label="Cancel"></input></td></tr>'+
         '</table>';
         dojo.place(div, this._dialog.containerNode);
        var button = new dijit.form.Button({label:"ok", id:"theme_select_ok_button" }, theme_select_ok_button);
@@ -130,11 +163,20 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
        // this._connections.push(dojo.connect(filteringSelect, "onKeyUp", this, "onChange"));
         this._connections.push(dojo.connect(filteringSelect, "onBlur", this, "onBlur"));
         this._connections.push(dojo.connect(dtSelect, "onChange", this, "onDesktopChange"));
+        this._connections.push(dojo.connect(deleteDiv, "onclick", this, "onDeleteThemeSet"));
         this.changeThemeSetStore('desktop_default'); 
+        dojo.style('theme_set_delete', 'display', 'none');
     },
     
     onChange: function(e){
+        
        debugger; 
+       var deleteDiv = dojo.byId('theme_set_delete');
+       if (e === 'desktop_default' || e === 'mobile_default'){ // don't let the user delete the defaults
+          dojo.style(deleteDiv, 'display', 'none');
+       } else {
+           dojo.style(deleteDiv, 'display', ''); 
+       }
        this.changeThemeSetStore(e);
     },
     
@@ -197,6 +239,12 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
              newThemeSet.mobileTheme = [{"theme":"none","device":"Android"},{"theme":"none","device":"BlackBerry"},{"theme":"none","device":"iPad"},{"theme":"none","device":"iPhone"},{"theme":"none","device":"other"}];
              this._dojoThemeSets.themeSets.push(newThemeSet);
              this._currentThemeSet = newThemeSet;
+             var cb = dijit.byId('theme_select'); // add the new themeset to the combo
+             var item = {};
+             item.name = themeSet;
+             cb.store.newItem(item);
+             cb.store.save();
+             cb.attr( 'value', themeSet); 
          }
 
          var store = new dojo.data.ItemFileWriteStore({data: mydata });
@@ -266,6 +314,34 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
             '</thead>' +
         '</table>';
         return template;
+    },
+    
+    onDeleteThemeSet: function(e){
+        debugger;
+        for (var i = 0; i < this._dojoThemeSets.themeSets.length; i++){
+            if (this._dojoThemeSets.themeSets[i].name === this._currentThemeSet.name){
+                var themeName = this._dojoThemeSets.themeSets[i-1].name;
+                var cb = dijit.byId('theme_select');
+                //var store = this._getThemeSetsDataStore();
+                //var items = cb.store.query('name=*');
+                cb.store.fetchItemByIdentity({
+                    identity: this._dojoThemeSets.themeSets[i].name,
+                    onItem: function(item){
+                        debugger;
+                        cb.store.deleteItem(item);
+                        cb.store.save();
+                    }
+                });
+                this._dojoThemeSets.themeSets.splice(i,1); // removes the theme set from the array 
+                this._currentThemeSet = null;
+                //cb.setStore(store); // refresh the options
+                cb.attr( 'value', themeName); 
+                //this.onChange(themeName);
+                break;
+            }
+           
+        }
+        
     }
     
 

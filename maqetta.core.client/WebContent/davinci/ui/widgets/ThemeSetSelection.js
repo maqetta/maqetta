@@ -80,9 +80,11 @@ debugger;
             
         }
         dtSelect.attr( 'value', themeSet.desktopTheme);
-        if(dojo.toJson(themeSet.mobileTheme) === dojo.toJson(davinci.theme.dojoMobileNone)){
+        //if(dojo.toJson(themeSet.mobileTheme) === dojo.toJson(davinci.theme.dojoMobileNone)){
+        if(davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileNone)){
             mblSelect.attr( 'value', 'none'); 
-        } else if(dojo.toJson(themeSet.mobileTheme) === dojo.toJson(davinci.theme.dojoMobileDefault)){
+        //} else if(dojo.toJson(themeSet.mobileTheme) === dojo.toJson(davinci.theme.dojoMobileDefault)){
+        } else if(davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileDefault)){
             mblSelect.attr( 'value', 'default'); 
         }
        /* if (themeSet.mobileTheme === 'default' || themeSet.mobileTheme === 'none' ){
@@ -171,7 +173,8 @@ debugger;
             var filename = ssPath.relativeTo(resourcePath, true).toString();
             */
            // if (this._selectedThemeSet.mobileTheme === 'default' || this._selectedThemeSet.mobileTheme === 'none'){
-            if ((dojo.toJson(this._selectedThemeSet.mobileTheme) == dojo.toJson(davinci.theme.dojoMobileDefault)) || (dojo.toJson(this._selectedThemeSet.mobileTheme) == dojo.toJson(davinci.theme.dojoMobileNone))){
+           // if ((dojo.toJson(this._selectedThemeSet.mobileTheme) == dojo.toJson(davinci.theme.dojoMobileDefault)) || (dojo.toJson(this._selectedThemeSet.mobileTheme) == dojo.toJson(davinci.theme.dojoMobileNone))){
+            if ((davinci.theme.themeSetEquals(this._selectedThemeSet.mobileTheme, davinci.theme.dojoMobileDefault)) || (davinci.theme.themeSetEquals(this._selectedThemeSet.mobileTheme, davinci.theme.dojoMobileNone))){
                 // changing from default or none for mobile
                 allDevice.setChecked(true);
                 selectDevice.setChecked(false);

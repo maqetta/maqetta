@@ -43,9 +43,7 @@ davinci.html.HTMLItem= function() {
 davinci.Inherits(davinci.html.HTMLItem,davinci.model.Model);
 
 davinci.html.HTMLItem.prototype.getLabel = function() {
-    context= {};
-    context.indent=0;
-    return this.getText(context);
+    return this.getText({indent: 0});
 };
 
 davinci.html.HTMLItem.prototype.onChange = function(arg) {
@@ -308,20 +306,18 @@ davinci.html.HTMLFile.prototype.getID = function() {
 
 davinci.html.HTMLFile.prototype.updatePositions = function(startOffset,delta) {
     davinci.model.Model.updatePositions(this,startOffset,delta);
-    visitor = {
+    this.visit({
             visit: function(element) {
                 if (element.endOffset<startOffset) {return true;}
                 if (element.elementType=="HTMLElement" && element.startTagOffset>startOffset) {
                     element.startTagOffset+=delta;				    
                 }
             }
-    };
-
-    this.visit(visitor);
+    });
 };
 
 davinci.html.HTMLFile.prototype.reportPositions = function() {
-    visitor = {
+    this.visit({
             visit: function(element) {
                 if (element.elementType=="HTMLElement") {
                     console.log("<"+element.tag+"> "+element.startOffset+" -> "+element.startTagOffset+" -> "+element.endOffset);
@@ -329,9 +325,7 @@ davinci.html.HTMLFile.prototype.reportPositions = function() {
                     console.log("   "+element.name+"= "+element.value+":: -> "+element.startOffset+" -> "+element.endOffset);
                 }
             }
-    };
-
-    this.visit(visitor);
+    });
 };
 
 /**
@@ -504,7 +498,7 @@ davinci.html.HTMLElement.prototype._formatModel = function( newElement, index, c
         elem1=this;
         offset=this.startTagOffset+1;
     } else {
-        var elem2=this.children[index-1];
+        elem2=this.children[index-1];
         offset=elem2.endOffset+1;
     }
     var startOffset=offset;
@@ -586,9 +580,9 @@ davinci.html.HTMLElement.prototype.addAttribute = function(name, value, noPersis
         return;
     }
     var delta;
-    var startOffset=(this.attributes.length>0) 
-    ? this.attributes[this.attributes.length-1].endOffset +1
-            : this.startTagOffset -(this.noEndTag ? 2 : 1) ;
+    var startOffset = (this.attributes.length > 0) ?
+            this.attributes[this.attributes.length-1].endOffset +1 :
+            this.startTagOffset -(this.noEndTag ? 2 : 1) ;
     var attr=this._getAttribute(name);
     var add;
     if (!attr) {
@@ -791,13 +785,12 @@ davinci.html.HTMLElement.prototype.setText = function (text) {
     // first child is actually the parsed element, so replace this with child
     dojo.mixin(this, this.children[0]);
     this.parent=currentParent;
-    var visitor = {
+    this.visit({
             visit:function(node){
                 delete node.wasParsed;
             },
             rules :[]
-    }
-    this.visit(visitor);
+    });
     this.onChange();
 };
 
@@ -861,7 +854,7 @@ davinci.html.HTMLText.prototype.setText = function(value) {
 davinci.html.HTMLText.prototype.getLabel = function() {
     if (this.value.length<15)
         return this.value;
-    return this.value.substring(0, 15)+"..."
+    return this.value.substring(0, 15) + "...";
 };
 
 /**

@@ -34,6 +34,11 @@ define({ root:
 		//OpenThemeDialog.js
 		"noUserThemes":"No user themes found in workspace. Please create a new theme before editing.",
 		
+		//ThemeSetsDialog.js
+		"themeSetsDialog":"Manage theme sets",
+		"themeSetName":"Theme set name:",
+		"desktopTheme":"Desktop theme:",
+		
 		//SaveAsWidgetForm.js
 		//right now it has its own nls file called "common." 
 		//Globalize later once it is completed

@@ -1,15 +1,17 @@
 if (typeof orion == "undefined") { orion = {}; } // workaround because orion code did not declare orion global in a way that works with the Dojo loader
 
-define("davinci/ui/Editor", [
-	"davinci/ui/editor/Styler",
+define([
 	"davinci/commands/CommandStack",
 	"dojox/timing/doLater",
 	"dojo/_base/declare",
 	"davinci/actions/Action",
+	"./TextStyler",
 	"orion/editor/editor",
 	"orion/editor/editorFeatures",
+	"orion/editor/htmlGrammar",
+	"orion/editor/textMateStyler",
 	"orion/textview/textView"
-], function(Styler, CommandStack, doLater, declare, Action) {
+], function(CommandStack, doLater, declare, Action, TextStyler) {
 	declare("davinci.ui._EditorCutAction", Action, {
 		constructor: function (editor) {
 			this._editor=editor;
@@ -88,9 +90,8 @@ return declare("davinci.ui.Editor", null, {
 		}
 		this.fileName=filename;
 
-		this._updateStyler();
-
 		this.setValue(content, true);
+		this._updateStyler();
 	},
 
 	setVisible: function (visible) {
@@ -137,13 +138,10 @@ return declare("davinci.ui.Editor", null, {
 					return new orion.textview.TextView({
 						parent: parent,
 						model: model,
-						tabSize: 4
-						/*
-						stylesheet: [ "../../orion/textview/textview.css",
-										"../../orion/textview/rulers.css",
-										"../../orion/textview/annotations.css",
-										"../textview/textstyler.css"],
-						*/
+						tabSize: 4,
+						stylesheet: [
+						    "app/davinci/ui/editor/orionEditor.css"
+						]
 					});
 				},
 				undoStackFactory: new orion.editor.UndoFactory(),
@@ -169,29 +167,28 @@ return declare("davinci.ui.Editor", null, {
 	},
 
 	_updateStyler: function () {
-		var extension=this.fileName.substr(this.fileName.lastIndexOf('.')+1);
-		var map={js: 'js', json: 'js', html:'html', css:'css'};
-		var style=map[extension];
+		if (!this.editor) { return; }
+		var lang = this.fileName.substr(this.fileName.lastIndexOf('.')+1),
+			view = this.editor.getTextView();
 		
-		if (style)
-		{
-			if (this._styler) {
-				this._styler.destroy();
-			}
-			this._styler = new Styler(style);
-			if (this.editor){
-//				new eclipse.TextStyler(this.editor, style);
-				this._styler.setView(this.editor.getTextView());
-			}
+		if (this._styler) {
+			this._styler.destroy();
+			delete this._styler;
 		}
+		if (lang == "json") { lang = "js"; }
+
+		switch (lang) {
+		case "js":
+		case "java":
+		case "css":
+			this._styler = new TextStyler(view, lang, this.editor._annotationModel/*view.annotationModel*/);
+			break;
+		case "html":
+			this._styler = new orion.editor.TextMateStyler(view, orion.editor.HtmlGrammar.grammar);
+		}
+		view.setText(this.getText());
 	},
 
-/*	
-	update_size: function(){
-		
-	},
-*/
-		
 	selectionChange: function (selection) {
 	},
 

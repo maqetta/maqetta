@@ -650,13 +650,13 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 		this.inherited(arguments);
 		if(this.visualEditor) this.visualEditor.destroy();
 		this._subscriptions.forEach(function(item) {
-			var topic = item[0];
+			/*var topic = item[0];  FIXME do we still need this? wdr
 			var isStatesSubscription = topic.indexOf("/davinci/states") == 0;
 			if (isStatesSubscription) {
 				davinci.states.unsubscribe(item);
-			} else {
+			} else {*/
 				dojo.unsubscribe(item);
-			}
+			//}
 		});
 		delete this._tempRules;
 	},

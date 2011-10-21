@@ -6,13 +6,31 @@
                 "Normal": {
 					"selectors": {
 						".mblHeading": [
-							"color"
-							
-							
+							"color",
+							"position",
+							"margin",
+							"width",
+							"overflow",
+							"white-space",
+							"text-overflow",
+							"z-index",
+							"padding",
+							"height",
+							"background-color",
+							"background-image",
+							"border-top",
+							"border-bottom",
+							"color",
+							"font-family",
+							"font-size",
+							"font-weight",
+							"text-align",
+							"line-height",
+							"text-shadow"
 						]								
 					},
 					"query": "" 
-				} 
+				}
             }
 		},
 		"Button": {
@@ -27,7 +45,19 @@
 						]								
 					},
 					"query": "" 
-				} 
+				},
+				"Disabled": {
+                	"selectors": {
+						".mblButtonDisabled" : [
+	 						"cursor",
+    						"border-color",
+    						"background-image",
+    						"color"
+						] 
+                    },
+                    "query": ".mblButton",
+                    "simulate": "mblButtonDisabled"
+                }  
             }
 		},
 		"ToggleButton": {

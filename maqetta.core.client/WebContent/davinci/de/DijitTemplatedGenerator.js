@@ -15,8 +15,6 @@ dojo.declare("davinci.de.DijitTemplatedGenerator", null, {
 	},
 	
 	buildSource: function(model, dijitName, inlineHtml){
-		
-		
 		this.value.js = "";
 	
 		this.dijitName = dijitName;

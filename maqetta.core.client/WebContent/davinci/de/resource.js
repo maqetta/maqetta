@@ -28,9 +28,29 @@ dojo.mixin(davinci.de.resource, {
 		parent = parent || system.resource.findResource(base);
 		
 		if(namesplit.length>1){
-			widgetSingleName = namesplit[namesplit.length-1];
-			
 			for(var i=0;i<namesplit.length-1;i++){
+				var folder = parent.getChild(namesplit[i]);
+				if(folder!=null){
+					parent = folder;
+				}else{
+					parent = parent.createResource(namesplit[i],true);
+				}
+			}
+			
+		}
+		return parent;
+	},
+	
+	_createFolder : function(name, parent){
+		var namesplit = name.split("/");
+		var base = davinci.Runtime.getProject();
+		parent = parent || system.resource.findResource(base);
+		
+		if(namesplit.length){
+			for(var i=0;i<namesplit.length;i++){
+				
+				if(namesplit[i]==".") continue;
+				
 				var folder = parent.getChild(namesplit[i]);
 				if(folder!=null){
 					parent = folder;
@@ -45,7 +65,8 @@ dojo.mixin(davinci.de.resource, {
 	
 	createDijit : function(name, model, resource){
 		
-		name = "widgets." + name;
+		var qualifiedWidget = "widgets." + name;
+		
 		
 		var base = davinci.Runtime.getProject();
 		var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
@@ -56,46 +77,31 @@ dojo.mixin(davinci.de.resource, {
 		
 		var namesplit = name.split(".");
 		var widgetSingleName = name;
-		var parent = system.resource.findResource(base);
+		
+		var parent = this._createFolder(prefs['widgetFolder']);
 		
 		var widgetNamespace = this._createNameSpace(name, parent);
 		if(namesplit.length>1){
 			widgetSingleName = namesplit[namesplit.length-1];
 		}
 		
-		
-		
-		var widgetFolderSetting = (new davinci.model.Path(base).append(prefs['widgetFolder']));
-		var fullPath = widgetFolderSetting.getSegments();
-		parent = system.resource.findResource(fullPath[0]);
-		for(var i=1;i<fullPath.length;i++){
-			var folder = parent.getChild(fullPath[i]);
-			if(folder!=null){
-				parent = folder;
-			}else{
-				parent = parent.createResource(fullPath[i],true);
-			}
-		}
-		
-		var cleanName = name.substring("widgets.".length);
-		
-		var customWidgets = parent.getChild(cleanName + "_widgets.json");
+		var customWidgets = parent.getChild(name + "_widgets.json");
 		if(customWidgets==null){
-			customWidgets = parent.createResource(cleanName +"_widgets.json");
+			customWidgets = parent.createResource(name +"_widgets.json");
 			
 		}
 		
 		var customWidgetsJson = dojo.clone(davinci.de.resource.WIDGETS_JSON);
 		
 		
-		customWidgetsJson.widgets.push({name:cleanName, description: "Custom user widget " + cleanName, type:name, category:"custom", iconLocal:true, icon:"app/davinci/img/maqetta.png" })
+		customWidgetsJson.widgets.push({name:name, description: "Custom user widget " + name, type:qualifiedWidget, category:"custom", iconLocal:true, icon:"app/davinci/img/maqetta.png" })
 		customWidgets.setContents(dojo.toJson(customWidgetsJson));
 
 		
 		var widgetFolder = parent;
 		
 		var generator = new davinci.de.DijitTemplatedGenerator({});
-		var content = generator.buildSource(model, name);
+		var content = generator.buildSource(model, qualifiedWidget);
 		
 		for(var type in content){
 			
@@ -110,7 +116,7 @@ dojo.mixin(davinci.de.resource, {
 					widgetResource.setContents(content.js);
 					break;
 				case 'metadata':
-					var resource = this._createNameSpace(name, widgetFolder);
+					var resource = this._createNameSpace(qualifiedWidget, widgetFolder);
 					
 					var metaResource = resource.createResource(widgetSingleName + "_oam.json");
 					metaResource.setContents(content.metadata);

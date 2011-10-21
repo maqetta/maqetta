@@ -18,11 +18,10 @@ dojo.declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 			this._children = properties.richText; //wdr richtext
 			delete properties.richText; //wdr richtext
 		}
-		else 
+		else {
 			this._children = properties._children;
-		this._context = context || widget.getContext();;
-		
-		
+		}
+		this._context = context || widget.getContext();
 	},
 
 	setContext : function(context){
@@ -52,11 +51,7 @@ dojo.declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 		if(!widget){
 			return;
 		}
-		this._parentWidget = widget.getParent();
-		if (!this._parentWidget)
-			this._parentWidget = widget.getParent();
-		if (!this._parentWidget)
-			this._parentWidget = widget.parent; // maybe this
+		this._parentWidget = widget.getParent() || widget.parent; // maybe this
 		if (!this._oldText){
 			this._oldText = widget._srcElement.getElementText(this._context);
 			if (this._oldText && (typeof this._oldText == 'string')){
@@ -185,14 +180,18 @@ dojo.declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 		// refresh the page designer, sometimes the widgets are not redrawn for children
 		// we need the timer to let the model catch up to prevent corruption.
 		
+		var containerNode = widget.getContainerNode();
 		// this is from davinci.ve.Context. _processWidgets line 584
-		var dj = this._context.getDojo(),
-			containerNode = widget.getContainerNode();
-        dj["require"]("dojo.parser");
-        dj.parser.parse(containerNode);
+		if (containerNode) {
+			var dj = this._context.getDojo();
+	        dj["require"]("dojo.parser");
+	        dj.parser.parse(containerNode);
+	    }
         this._context.attach(widget);
         widget.startup();
         widget.renderWidget();
-		this._context._attachChildren(containerNode);
+        if (containerNode) {
+			this._context._attachChildren(containerNode);
+		}
 	}
 });

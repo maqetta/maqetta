@@ -67,7 +67,7 @@
             defaultValues: {
                 "webContentFolder": "",
                 "themeFolder": "./themes",
-                "widgetFolder": "./widgets"
+                "widgetFolder": "./lib/widgets"
             },
             
         }

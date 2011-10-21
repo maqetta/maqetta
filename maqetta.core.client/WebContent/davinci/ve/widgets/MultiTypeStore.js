@@ -1,7 +1,7 @@
 dojo.provide("davinci.ve.widgets.MultiTypeStore");
 
 dojo.require("dojo.data.ItemFileWriteStore");
-
+dojo.require("davinci.util");
 
 
 
@@ -16,7 +16,7 @@ dojo.declare("davinci.ve.widgets.MultiTypeStore", dojo.data.ItemFileReadStore, {
 
 	setValues: function(values, unit){
 		for(var i=0;i<values.length;i++){
-			davinci.Runtime.arrayAddOnce(this._allValues, values[i]);	
+			davinci.util.arrayAddOnce(this._allValues, values[i]);
 		}
 		
 		this._unit = unit;

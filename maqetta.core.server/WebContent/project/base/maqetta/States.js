@@ -1088,9 +1088,9 @@ if (typeof dojo != "undefined") {
 	if (! dojo.getObject("dojox.mobile.parser.parse")) {
 		dojo.require("dojo.parser");
 	}
-	dojo.declare("workspace.maqetta.States", null, davinci.states);
+	var zclass = dojo.declare("workspace.maqetta.States", null, davinci.states);
 	
-	davinci.states = new workspace.maqetta.States();
+	davinci.states = new zclass();
 }
 
 (function(){

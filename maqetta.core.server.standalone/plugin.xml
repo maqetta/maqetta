@@ -24,12 +24,7 @@
      </extension>
              
       
-      <extension point="maqetta.core.server.ajaxLibrary">
-		 <ajaxLibrary name="maqetta" id="maqetta" version="0.3">
-		      <libraryPath location="WebContent/project/base" name="/"></libraryPath>
-		      <metadata location="app/metadata/maqetta/core/0.3" />
-		 </ajaxLibrary>
-	 </extension>
+
 	 
    <extension
          point="org.eclipse.equinox.http.registry.servlets">

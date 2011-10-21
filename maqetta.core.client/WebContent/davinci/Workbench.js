@@ -20,6 +20,7 @@ dojo.require("davinci.workbench.EditorContainer");
 dojo.require("davinci.de.resource");
 dojo.require("davinci.ui.Resource");
 //dojo.require("davinci.ui.Panel");
+dojo.require("davinci.util");
 
 /*
  * Dialog deps from davinci.dialog
@@ -62,12 +63,12 @@ dojo.mixin(davinci.Workbench, {
 				}
 			}
 		);
-        davinci.Runtime.subscribe("/davinci/ui/widgetPropertiesChanges",
-        	function() {
-        		var currentEditor = davinci.Runtime.currentEditor;
-        		currentEditor.visualEditor._objectPropertiesChange.apply(currentEditor.visualEditor, arguments);
-        	}
-        );
+		davinci.Runtime.subscribe("/davinci/ui/widgetPropertiesChanges",
+			function() {
+				var ve = davinci.Runtime.currentEditor.visualEditor;
+				ve._objectPropertiesChange.apply(ve, arguments);
+			}
+		);
 
 		// bind overlay widgets to corresponding davinci states. singleton; no need to unsubscribe
 		davinci.states.subscribe("/davinci/states/state/changed", function(args){
@@ -1093,7 +1094,7 @@ dojo.mixin(davinci.Workbench, {
 		
 		if (!keywordArgs.noSelect)
 		{
-			davinci.Runtime.arrayAddOnce(davinci.Workbench._state.editors,fileName);
+			davinci.util.arrayAddOnce(davinci.Workbench._state.editors, fileName);
 			davinci.Workbench._switchEditor(tab.editor, keywordArgs.startup);
 		}
 
@@ -1422,7 +1423,7 @@ dojo.mixin(davinci.Workbench, {
 		{
 			if (page.editor.fileName)
 			{
-				davinci.Runtime.arrayRemove(this._state.editors,page.editor.fileName);
+				davinci.util.arrayRemove(this._state.editors, page.editor.fileName);
 				this._updateWorkbenchState();
 			}
 		}

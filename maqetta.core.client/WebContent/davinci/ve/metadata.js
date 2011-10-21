@@ -2,6 +2,7 @@ dojo.provide("davinci.ve.metadata");
 
 dojo.require("dojo.i18n");
 dojo.require("davinci.ve.input.SmartInput");
+dojo.require("davinci.util");
 
 
 /**
@@ -182,7 +183,6 @@ davinci.ve.metadata = function() {
 //    };
     
     function getMetadata(type) {
-    
         if (!type) {
             return undefined;
         }
@@ -203,8 +203,8 @@ davinci.ve.metadata = function() {
         
         var metadata = null;
         var metadataUrl = [ descriptorPath, "/", type.replace(/\./g, "/"), "_oam.json" ].join('');
+
         if(!lib.localPath){
-	        
 	        dojo.xhrGet({
 	            url : metadataUrl,
 	            handleAs : "json",
@@ -229,6 +229,9 @@ davinci.ve.metadata = function() {
         metadata.$src = metadataUrl;
         // XXX localize(metadata);
         cache[type] = metadata;
+
+        // OAM may be overridden by metadata in widgets.json
+        davinci.util.mixin(metadata, lib.$providedTypes[type].metadata);
         
         return metadata;
     }

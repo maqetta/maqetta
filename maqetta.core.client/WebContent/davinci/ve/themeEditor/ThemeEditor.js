@@ -536,8 +536,8 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
                 dojo.connect(cssFiles[i], 'onChange', context,
                         '_themeChange');
             }
-			var context = this.getContext();
-			context.setTheme(this.theme);
+			//var context = this.getContext();
+			context.setTheme(this.theme); 
 			this._themeFileContent = this.resourceFile.getText(); // get the content for use later when setting dirty. Timing issue
 
 			var subs = this._subscriptions;

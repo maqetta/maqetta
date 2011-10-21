@@ -48,6 +48,9 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 	if(originalTheme.base){
         themeJson.base = originalTheme.base; 
     }
+	if(originalTheme.type){
+        themeJson.type = originalTheme.type; 
+    }
 	
 	
 	

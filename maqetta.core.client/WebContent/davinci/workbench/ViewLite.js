@@ -4,6 +4,15 @@ dojo.require("davinci.workbench._ToolbaredContainer"); //FIXME: should not be re
 dojo.require("davinci.ve.States");
 dojo.require("davinci.workbench.WidgetLite");
 
+/**
+ * This class is a base class for various pieces of the Properties palette
+ * (i.e., pieces of SwitchingStylingViews.js).
+ * At the time of writing this note, it is used by:
+ *   davinci/ve/widgets/CommonProperties.js
+ *   davinci/ve/widgets/EventSelection.js
+ *   davinci/ve/widgets/WidgetProperties.js
+ *   davinci/ve/widgets/WidgetToolBar.js
+ */
 dojo.declare("davinci.workbench.ViewLite", [davinci.workbench.WidgetLite], {
 	/* selected editor */
 	_editor : null,
@@ -13,25 +22,13 @@ dojo.declare("davinci.workbench.ViewLite", [davinci.workbench.WidgetLite], {
 	_subWidget : null,
 
 	constructor: function(params, srcNodeRef){
-    	this.viewExt=params.view;
     	this.subscriptions=[];
     	this.publishing={};
     	
     	dojo.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, this._editorSelected));
 		dojo.subscribe("/davinci/ui/widgetSelected", dojo.hitch(this, this._widgetSelectionChanged));
-		//dojo.subscribe("/davinci/ui/selectionPropertiesChange", dojo.hitch(this, this._selectionChanged));
 	},
 	
-
-	
-	_selectionChanged : function (changeEvent){
-		if(	!this._editor )
-			return;
-		this._setWidgetAttr(changeEvent)
-		//if(this._setWidgetAttr(changeEvent)) need this for undo redo
-			if(this.onWidgetSelectionChange)
-				this.onWidgetSelectionChange(changeEvent);
-	},
 	_widgetSelectionChanged : function (changeEvent){
 		if(	!this._editor )
 			return;
@@ -44,21 +41,11 @@ dojo.declare("davinci.workbench.ViewLite", [davinci.workbench.WidgetLite], {
 				this.onWidgetSelectionChange();
 	},
 	_editorSelected : function(editorChange){
-		
 		this._editor = editorChange.editor;
-		
 		if(this.onEditorSelected)
 			this.onEditorSelected(this._editor);
 	 },	
-	
-	_setWidgetAttr : function(widget){
-		if(this._widget == widget.widget && this._subwidget==widget.subwidget)
-			return false;
-		this._widget = widget.widget;
-		this._subwidget = widget.subwidget;
-		return true;
-		
-	},
+
 	subscribe: function(topic,func){
 		var isStatesSubscription = topic.indexOf("/davinci/states") == 0;
 		var subscription = isStatesSubscription ? davinci.states.subscribe(topic,this,func) : dojo.subscribe(topic,this,func);
@@ -88,21 +75,5 @@ dojo.declare("davinci.workbench.ViewLite", [davinci.workbench.WidgetLite], {
 			}
 		});
 		delete this.subscriptions;
-	},
-	
-	_getViewActions : function(){
-		var viewID=this.toolbarID || this.viewExt.id;
-		
-		var viewActions=[];
-		var extensions = davinci.Runtime.getExtensions('davinci.viewActions', function(ext){
-			if (viewID==ext.viewContribution.targetID)
-			{
-				viewActions.push(ext.viewContribution);
-				return true;
-			}
-				
-		});
-		return viewActions;
-        
 	}
 });

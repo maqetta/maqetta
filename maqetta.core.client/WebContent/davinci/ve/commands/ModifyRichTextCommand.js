@@ -18,11 +18,10 @@ dojo.declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 			this._children = properties.richText; //wdr richtext
 			delete properties.richText; //wdr richtext
 		}
-		else 
+		else {
 			this._children = properties._children;
-		this._context = context || widget.getContext();;
-		
-		
+		}
+		this._context = context || widget.getContext();
 	},
 
 	setContext : function(context){
@@ -52,11 +51,7 @@ dojo.declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 		if(!widget){
 			return;
 		}
-		this._parentWidget = widget.getParent();
-		if (!this._parentWidget)
-			this._parentWidget = widget.getParent();
-		if (!this._parentWidget)
-			this._parentWidget = widget.parent; // maybe this
+		this._parentWidget = widget.getParent() || widget.parent; // maybe this
 		if (!this._oldText){
 			this._oldText = widget._srcElement.getElementText(this._context);
 			if (this._oldText && (typeof this._oldText == 'string')){

@@ -380,7 +380,7 @@ dojo.declare("davinci.ve.Context", null, {
 	
 	_require: function(module){
 		try{
-			this.getDojo()["require"](module);
+			return this.getGlobal()["require"]([module.replace(/\./g, "/")]);
 		}catch(e){
 			console.error("FAILED: Context.js _require failure for module="+module);
 			throw e;
@@ -402,7 +402,7 @@ dojo.declare("davinci.ve.Context", null, {
      */
     setMobileDevice: function(device) {
     	this.getDojo().config.mblUserAgent = /* remove this line for Dojo 1.7 final */
-    	this.getDojo()["require"]("dojo/_base/config").mblUserAgent = preview.silhouetteiframe.getMobileTheme(device + '.svg');
+    	this.getGlobal()["require"](["dojo/_base/config"]).mblUserAgent = preview.silhouetteiframe.getMobileTheme(device + '.svg');
     	var bodyElement = this.getDocumentElement().getChildElement("body");
         if (! device || device === 'none') {
             bodyElement.removeAttribute(davinci.ve.Context.MOBILE_DEV_ATTR, device);
@@ -1011,9 +1011,8 @@ dojo.declare("davinci.ve.Context", null, {
 
 		}, this);
 		try {
-			var dj = this.getDojo();
-			dj["require"]("dojo.parser");
-			dj.parser.parse(containerNode);
+			this.getGlobal()["require"](["dojo/parser"]); // FIXME: why can't I use the return value to parse?
+			this.getDojo().parser.parse(containerNode);
 		} catch(e) {
 			// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
 			// the dojo parser will throw an exception trying to compute style on hidden containers

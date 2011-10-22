@@ -358,24 +358,24 @@ dojo.declare("davinci.ve.Context", null, {
 		}, this);
 	},
 
-	_getWidgetFolder : function(){
+	_getWidgetFolder: function(){
 		
 		var base = this.getBase();
 		var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
-		if(!prefs['widgetFolder']){
-			prefs.widgetFolder = "./WebContent/widgets";
+		if(!prefs.widgetFolder){
+			prefs.widgetFolder = "WebContent/widgets";
 			davinci.workbench.Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
 		}
 	
-		var folder = prefs['widgetFolder'];
-		while(folder.length>1 && (folder.charAt(0)=="." || folder.charAt(0)=="/"))
+		var folder = prefs.widgetFolder;
+		while(folder.length>1 && (folder.charAt(0)=="." || folder.charAt(0)=="/")) {
 			folder = folder.substring(1);
+		}
 		return folder;
 	},
-	_getDojoModulePath : function(){
-		
-		
-		return this._dojoModulePath  ;
+
+	_getDojoModulePath: function(){
+		return this._dojoModulePath;
 	},
 	
 	_require: function(module){

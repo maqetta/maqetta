@@ -1,26 +1,25 @@
 dojo.provide("davinci.ve.themeEditor.ThemeEditor");
- 
-dojo.require("dijit.layout.TabContainer");
+
+//dojo.require("dijit.layout.TabContainer");
 dojo.require("davinci.ve.themeEditor.VisualThemeEditor");
-dojo.require("davinci.html.CSSModel");
 //dojo.require("davinci.ve.utils.URLResolver");
 dojo.require("davinci.ve.themeEditor.metadata.query");
-dojo.require("davinci.ve.VisualEditorOutline");
-dojo.require("davinci.html.CSSModel");
-dojo.require("davinci.html.HTMLModel");
-dojo.require("dojox.html.styles");
-dojo.require("davinci.ve.themeEditor.metadata.metadata");
-dojo.require("davinci.ve.States");
+//dojo.require("davinci.ve.VisualEditorOutline");
+//dojo.require("davinci.html.CSSModel");
+//dojo.require("davinci.html.HTMLModel");
+//dojo.require("dojox.html.styles");
+//dojo.require("davinci.ve.themeEditor.metadata.metadata");
+//dojo.require("davinci.ve.States");
 dojo.require("davinci.ui.ModelEditor");
-dojo.require("davinci.ve.themeEditor.ThemeColor");
+//dojo.require("davinci.ve.themeEditor.ThemeColor");
 // undo
-dojo.require("davinci.commands.Command");
+//dojo.require("davinci.commands.Command");
 dojo.require("davinci.ve.themeEditor.commands.ThemeEditorCommand");
 dojo.require("davinci.ve.themeEditor.commands.SubwidgetChangeCommand");
 dojo.require("davinci.ve.themeEditor.commands.StyleChangeCommand");
 dojo.require("davinci.ve.themeEditor.commands.StateChangeCommand");
 //dojo.require("davinci.ve.themeEditor.commands.ModifyTheme");
-dojo.require("davinci.commands.CommandStack");
+//dojo.require("davinci.commands.CommandStack");
 dojo.require("davinci.ve.ThemeModifier");
 
 

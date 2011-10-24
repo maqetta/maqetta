@@ -1,29 +1,28 @@
-dojo.provide("davinci.ve.themeEditor.ThemeEditor");
+define([
+    "dojo._base.declare",
+	"davinci.ui.ModelEditor",
+	"davinci.ve.ThemeModifier",
+	"davinci.ve.themeEditor.VisualThemeEditor",
+	"davinci.ve.themeEditor.metadata.query",
+	"davinci.ve.themeEditor.commands.ThemeEditorCommand",
+	"davinci.ve.themeEditor.commands.SubwidgetChangeCommand",
+	"davinci.ve.themeEditor.commands.StyleChangeCommand",
+	"davinci.ve.themeEditor.commands.StateChangeCommand",
+	"dijit.layout.ContentPane"
+	], function(
+			declare,
+			ModelEditor,
+			ThemeModifier,
+			VisualThemeEditor,
+			query,
+			ThemeEditorCommand,
+			SubwidgetChangeCommand,
+			StyleChangeCommand,
+			StateChangeCommand,
+			ContentPane
+	){
 
-//dojo.require("dijit.layout.TabContainer");
-dojo.require("davinci.ve.themeEditor.VisualThemeEditor");
-//dojo.require("davinci.ve.utils.URLResolver");
-dojo.require("davinci.ve.themeEditor.metadata.query");
-//dojo.require("davinci.ve.VisualEditorOutline");
-//dojo.require("davinci.html.CSSModel");
-//dojo.require("davinci.html.HTMLModel");
-//dojo.require("dojox.html.styles");
-//dojo.require("davinci.ve.themeEditor.metadata.metadata");
-//dojo.require("davinci.ve.States");
-dojo.require("davinci.ui.ModelEditor");
-//dojo.require("davinci.ve.themeEditor.ThemeColor");
-// undo
-//dojo.require("davinci.commands.Command");
-dojo.require("davinci.ve.themeEditor.commands.ThemeEditorCommand");
-dojo.require("davinci.ve.themeEditor.commands.SubwidgetChangeCommand");
-dojo.require("davinci.ve.themeEditor.commands.StyleChangeCommand");
-dojo.require("davinci.ve.themeEditor.commands.StateChangeCommand");
-//dojo.require("davinci.ve.themeEditor.commands.ModifyTheme");
-//dojo.require("davinci.commands.CommandStack");
-dojo.require("davinci.ve.ThemeModifier");
-
-
-dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davinci.ve.ThemeModifier], {
+declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier], {
 	
 	children : [], //FIXME: shared array
 	visualEditor : null, 
@@ -40,7 +39,7 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 	constructor: function (element) {
 		
 		this.inherited(arguments);
-		this._cp = new dijit.layout.ContentPane({}, element);
+		this._cp = new ContentPane({}, element);
 		this.domNode = this._cp.domNode;
 		this.domNode.className = "ThemeEditor fullPane";
 	},
@@ -85,7 +84,7 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 			return;
 		}
 
-		this.getContext().getCommandStack().execute(new davinci.ve.themeEditor.commands.StateChangeCommand({_themeEditor: this,
+		this.getContext().getCommandStack().execute(new StateChangeCommand({_themeEditor: this,
 			_widget: e.widget, _newState: e.newState, _oldState: e.oldState, _firstRun: true
 		}));
 		
@@ -152,7 +151,7 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 	
 		if(!this.isActiveEditor() ||  !(this._selectedWidget || this._selectedSubWidget) ) { return; }
 		
-		this.getContext().getCommandStack().execute(new davinci.ve.themeEditor.commands.SubwidgetChangeCommand({_themeEditor: this,
+		this.getContext().getCommandStack().execute(new SubwidgetChangeCommand({_themeEditor: this,
 			_subwidget: e.subwidget
 		}));
 		
@@ -300,7 +299,7 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 		if (this._currentSelectionRules) {
 			delete this._currentSelectionRules;
 		}
-		this.getContext().getCommandStack().execute(new davinci.ve.themeEditor.commands.ThemeEditorCommand({_themeEditor: this,
+		this.getContext().getCommandStack().execute(new ThemeEditorCommand({_themeEditor: this,
 			_widget: a, _firstRun: true
 
 		}));
@@ -373,7 +372,7 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 		
 		var values = value.values;
 		if (this._selectedWidget){
-			this.getContext().getCommandStack().execute(new davinci.ve.themeEditor.commands.StyleChangeCommand({_themeEditor: this,
+			this.getContext().getCommandStack().execute(new StyleChangeCommand({_themeEditor: this,
 			/*_rules: rules,*/ _values: values, _firstRun: true
 			}));
 		}
@@ -520,7 +519,7 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 				
 			}
 
-			this.visualEditor = new davinci.ve.themeEditor.VisualThemeEditor(this, this._cp.domNode,filename, this.themeCssfiles, themeHtmlResources,this.theme);
+			this.visualEditor = new VisualThemeEditor(this, this._cp.domNode,filename, this.themeCssfiles, themeHtmlResources,this.theme);
 			
 			this.fileName = filename;
 			
@@ -535,7 +534,7 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 				
 			}
 			
-			this.metaDataLoader = new davinci.ve.themeEditor.metadata.query(metaResources);
+			this.metaDataLoader = new query(metaResources);
 			this._theme = new davinci.ve.themeEditor.metadata.CSSThemeProvider(metaResources, this.theme);
 			// connect to the css files, so we can update the canvas when the model changes
 			var cssFiles = this._getCssFiles();	
@@ -733,7 +732,7 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 			if (this._currentSelectionRules) {
 				delete this._currentSelectionRules;
 			}
-			this.getContext().getCommandStack().execute(new davinci.ve.themeEditor.commands.ThemeEditorCommand({_themeEditor: this,
+			this.getContext().getCommandStack().execute(new ThemeEditorCommand({_themeEditor: this,
 				_widget: a, _firstRun: true
 
 			}));
@@ -764,4 +763,5 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 		this._createFrame(widget, 'enableWidgetFocusFrame_', 'enableWidgetFocusFrame');
 	}
 
+});
 });

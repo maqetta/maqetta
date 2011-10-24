@@ -1,14 +1,14 @@
 define([
-    "dojo._base.declare",
-	"davinci.ui.ModelEditor",
-	"davinci.ve.ThemeModifier",
-	"davinci.ve.themeEditor.VisualThemeEditor",
-	"davinci.ve.themeEditor.metadata.query",
-	"davinci.ve.themeEditor.commands.ThemeEditorCommand",
-	"davinci.ve.themeEditor.commands.SubwidgetChangeCommand",
-	"davinci.ve.themeEditor.commands.StyleChangeCommand",
-	"davinci.ve.themeEditor.commands.StateChangeCommand",
-	"dijit.layout.ContentPane"
+    "dojo/_base/declare",
+	"davinci/ui/ModelEditor",
+	"davinci/ve/ThemeModifier",
+	"davinci/ve/themeEditor/VisualThemeEditor",
+	"davinci/ve/themeEditor/metadata/query",
+	"davinci/ve/themeEditor/commands/ThemeEditorCommand",
+	"davinci/ve/themeEditor/commands/SubwidgetChangeCommand",
+	"davinci/ve/themeEditor/commands/StyleChangeCommand",
+	"davinci/ve/themeEditor/commands/StateChangeCommand",
+	"dijit/layout/ContentPane"
 	], function(
 			declare,
 			ModelEditor,

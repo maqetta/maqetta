@@ -2146,9 +2146,14 @@ dojo.declare("davinci.ve.Context", null, {
 					var fullPath = new davinci.model.Path(system.resource.getRoot().getPath());
 					var urlPath = new davinci.model.Path(url);
 					var relativeUrl = urlPath.relativeTo(fullPath);
-				
+
+					var config = {
+						parseOnLoad: true,
+						modulePaths: { widgets: this._dojoModulePath + "/" + this._getWidgetFolder() }
+					};
+					dojo.mixin(config, this._configProps);
 					this.addHeaderScript(url, {
-						djConfig: "parseOnLoad: true, modulePaths:{'widgets':'"+ this._dojoModulePath + "/" + this._getWidgetFolder()  + "'" + this._configProps + "}"
+						djConfig: JSON.stringify(config).slice(1, -1)
 					});
 				}else{
 					this.addHeaderScript(url);
@@ -2156,7 +2161,7 @@ dojo.declare("davinci.ve.Context", null, {
 			}
 		} else if (text) {
 			/* run the requires if there is an iframe */
-			if(!skipDomUpdate) this.getGlobal()['eval'](text);
+			if(!skipDomUpdate) { this.getGlobal()['eval'](text); }
 		//	dojo.eval(text);
 			if (doUpdateModel || doUpdateModelDojoRequires) {
 				this._scriptAdditions = this.addHeaderScriptSrc(text, this._scriptAdditions,this.getDocumentElement().getChildElement('head'),this._statesJsScriptTag);

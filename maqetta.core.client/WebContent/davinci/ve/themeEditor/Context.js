@@ -110,11 +110,9 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 				this.loadRequires(n.getAttribute("dojoType"));
 //				this.resolveUrl(n);
 			}, this);
-			var dj = this.getDojo();
 			try {
-				var dj = this.getDojo();
-				dj["require"]("dojo.parser");
-				dj.parser.parse(containerNode);
+				this.getGlobal()["require"](["dojo/parser"]);
+				this.getDojo().parser.parse(containerNode);
 			} catch(e) {
 				// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
 				// the dojo parser will throw an exception trying to compute style on hidden containers
@@ -136,7 +134,7 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 		}
 
 		// remove the styles from all widgets and subwidgets that supported the state
-		dojo.query('.dvThemeWidget').forEach(this._theme.removeWidgetStyleValues);
+		dojo.query('.dvThemeWidget').forEach(this.theme.removeWidgetStyleValues);
 			// set the style on all widgets and subwidgets that support the state
 			//this._themeEditor._theme.setWidgetStyleValues(widgets[i],this._currentState);
 	},
@@ -162,7 +160,7 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 	},
 	getThemeMeta: function(){
 		if(!this._themeMetaCache) {
-			this._themeMetaCache = davinci.library.getMetaData(this._theme);
+			this._themeMetaCache = davinci.library.getMetaData(this.theme);
 		}
 
 		return this._themeMetaCache;
@@ -216,9 +214,6 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 			this._selection = selection;
 			this.onSelectionChange(this.getSelection());
 		}
-	},
-	setTheme: function(themeMeta){
-		this._theme = themeMeta;
 	},
 	onSelectionChange: function(selection){
 		//dojo.publish("/davinci/ui/widgetSelected",[selection]);

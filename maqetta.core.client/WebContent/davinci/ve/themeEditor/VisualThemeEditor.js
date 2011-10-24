@@ -35,6 +35,7 @@ dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 			containerNode: this.domNode,
 			baseURL : resource.getURL(),
 		});
+		this.context.setTheme(this.theme);
 	
 		dojo.connect(this.context, "onSelectionChange",this, "onSelectionChange");
 

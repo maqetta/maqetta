@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-<<<<<<< HEAD
+
        <extension id="maqetta.core.client" point="org.eclipse.equinox.http.registry.resources">
         <resource alias="/maqetta/app/davinci" 
         		  base-name="/WebContent/davinci" 
@@ -24,7 +24,7 @@
         		   />
  		            
        </extension>
-=======
+
    <extension
         point="org.eclipse.equinox.http.registry.httpcontexts">
       <httpcontext id="maqetta">
@@ -35,20 +35,32 @@
       <extension
            id="maqettaResources"
            point="org.eclipse.equinox.http.registry.resources">
+       
+ 		<resource
+        	  httpcontextId="maqetta"
+              alias="/app/davinci"
+              bundle="maqetta.core.client"
+              base-name="/WebContent/davinci"
+              />             
+ 		
+              
         <resource
         	  httpcontextId="maqetta"
-              alias="/app"
+              alias="/app/docs"
               bundle="maqetta.core.client"
-              base-name="/WebContent"
-              />
+              base-name="/WebContent/docs"
+              />                           
+              
+        <!--
         <resource
               httpcontextId="maqetta"
               alias="/maqetta"
               bundle="maqetta.core.client"
               base-name="/WebContent/pagedesigner.html"
               />
-        
-
+        -->
+        </extension>
+		
         <!-- maqetta core libraries metadata (maqetta.js and states.js) -->
         
         <resource
@@ -58,7 +70,7 @@
               base-name="/WebContent/project"
               />
        
->>>>>>> a2d6891c1fc71029889c285355b4d7ac0f921179
+
        
        <extension
             point="maqetta.core.server.jsPlugin">

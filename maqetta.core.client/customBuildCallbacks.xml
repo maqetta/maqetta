@@ -178,7 +178,7 @@
 	<target name="dojo.build" if="run.dojo.build" unless="dojo.build.exists">
 		<echo message="Doing dojo build" />
 		<property name="logExtension" value=".log"/>
-		<property name="logFile" value="${build.result.folder}/@dot${logExtension}"/>
+		<property name="logFile" value="${build.result.folder}/dojo_build_results${logExtension}"/>
 
 		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying Dojo tools">
 				<fileset dir="${basedir}">
@@ -187,6 +187,7 @@
 		</copy>
 		<java fork="true" failonerror="true" output="${logFile}" append="true" dir="${target.folder}/WebContent/util/buildscripts"
 			    maxmemory="1024m"
+			    
 				classpath="${target.folder}/WebContent/util/shrinksafe/js.jar;${target.folder}/WebContent/util/shrinksafe/shrinksafe.jar"
 				classname="org.mozilla.javascript.tools.shell.Main"
 				description="Run Dojo build script"
@@ -196,6 +197,7 @@
 				<arg value="load=build"/>
 				<arg value="profileFile=${target.folder}/davinci.profile.js"/>
 				<arg value="action=release"/>
+				
 				<arg value="cssOptimize=comments.keepLines"/>
 				<arg value="layerOptimize=shrinksafe.keepLines"/>
 		</java>
@@ -221,7 +223,7 @@
 		<copy todir="${dojo.cache.directory}" failonerror="true" overwrite="true" description="move Dojo build">
 					<fileset dir="${target.folder}/WebContent/release/dojo">
 						<include name="davinci/"/>
-						<include name="system/"/>
+					
 						<include name="dojo/"/>
 						<include name="dijit/"/>
 						<include name="dojox/"/>
@@ -235,7 +237,7 @@
 		<delete dir="${target.folder}/WebContent/util"/>
 		<delete dir="${target.folder}/WebContent/dojo"/>
 		<delete dir="${target.folder}/WebContent/dijit"/>
-		<delete dir="${target.folder}/WebContent/system"/>
+	
 		<delete dir="${target.folder}/WebContent/dojox"/>
 		<delete dir="${target.folder}/WebContent/davinci"/>
 		<delete dir="${target.folder}/WebContent/eclipse"/>
@@ -243,7 +245,7 @@
 		<copy todir="${target.folder}/WebContent" failonerror="true" overwrite="true" description="Copy cached Dojo build">
 					<fileset dir="${dojo.cache.directory}">
 						<include name="davinci/"/>
-						<include name="system/"/>
+					
 						<include name="dojo/"/>
 						<include name="dijit/"/>
 						<include name="dojox/"/>

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-<<<<<<< HEAD
-=======
+
    <extension
         point="org.eclipse.equinox.http.registry.httpcontexts">
       <httpcontext id="davincicontext">
@@ -20,14 +19,14 @@
               />
       </extension>
    
->>>>>>> a2d6891c1fc71029889c285355b4d7ac0f921179
+
       <extension point="maqetta.core.server.personManager">
     	<personManager class="maqetta.core.server.standalone.servlets.PersonManagerImpl"/>
    	  </extension>
 
      <extension point="maqetta.core.server.userManager">
     	<userManager class="maqetta.core.server.standalone.servlets.UserManagerImpl"/>
-<<<<<<< HEAD
+
    	 </extension>
 	
 	
@@ -52,15 +51,10 @@
 		 </ajaxLibrary>
 	 </extension>
 	 
-=======
-   	  </extension>
-   	  
-     <extension point="maqetta.core.server.maqettaConfig">
-    	<maqettaConfig class="maqetta.core.server.standalone.MaqettaConfig"/>
-   	  </extension>
+
+
 
    
->>>>>>> a2d6891c1fc71029889c285355b4d7ac0f921179
    <extension
          point="org.eclipse.equinox.http.registry.servlets">
       <servlet

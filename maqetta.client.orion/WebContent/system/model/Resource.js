@@ -1,6 +1,5 @@
 dojo.provide("system.model.Resource");
 
-dojo.require("davinci.Runtime");
 dojo.require("davinci.model.Model");
 
 

@@ -4,10 +4,9 @@ import java.io.File;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
-<<<<<<< HEAD
-=======
+
 import javax.servlet.http.HttpServletResponse;
->>>>>>> a2d6891c1fc71029889c285355b4d7ac0f921179
+
 
 import maqetta.core.server.standalone.VResourceUtils;
 import maqetta.core.server.standalone.user.User;
@@ -205,11 +204,12 @@ public class UserManagerImpl implements IUserManager {
 
     }
 
-<<<<<<< HEAD
+
 	public IUser getUser(HttpServletRequest req) {
 		// TODO Auto-generated method stub
 		return (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
-=======
+	}
+	
 	public IUser authenticate(HttpServletRequest req, HttpServletResponse resp) {
 		 IUser user =  (IUser)req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
 	        if (user == null) {
@@ -220,7 +220,7 @@ public class UserManagerImpl implements IUserManager {
 
 	        }
 	        return null;
->>>>>>> a2d6891c1fc71029889c285355b4d7ac0f921179
+
 	}
 
 

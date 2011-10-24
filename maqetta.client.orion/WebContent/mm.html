@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title id="title_id"></title>
+	<meta charset="utf-8" />
+	<meta http-equiv="Cache-Control" CONTENT="no-store, no-cache, must-revalidate">
+	<meta http-equiv="Cache-Control" CONTENT="post-check=0, pre-check=0", FALSE">
+	<meta http-equiv="Pragma" CONTENT="no-cache">
+    <style type="text/css">
+		@import url("app/davinci/workbench.css?@revision@");
+		html, body {
+			width: 100%;
+			height: 100%;
+		}
+    </style>
+    <!-- propvieweffects.css needs to be separate and not built -->
+    <!-- FIXME: This LINK element should be added by the properties palette plugin -->
+    <link href="app/davinci/propvieweffects.css?@revision@" rel="stylesheet" type="text/css"></link>
+	<script type="text/javascript">
+		debugger;
+		for(var name in window.opener){
+			if(name==window.opener) continue;
+			window[name] = window[opener][name];
+		}
+		
+		dojo.registerModulePath("davinci",'/maqetta/app/davinci');
+		dojo.registerModulePath("system",'/maqetta/app/system');
+		
+		require(["dijit/dijit", "davinci/davinci-common", "davinci/davinci"], function () {
+		    
+			dojo.addOnLoad(function () {
+		      var langObj = dojo.i18n.getLocalization("davinci","webContent");
+		      dojo.byId("davinci_user_welcome").innerHTML = langObj.welcome;
+		      dojo.byId("load_screen").innerHTML = langObj.loadingMaqetta;
+		      dojo.byId("davinci_logoff").innerHTML = langObj.logOff;
+		      dojo.byId("maqetta_designer").innerHTML = langObj.designer;
+		      dojo.byId("maqetta_version").innerHTML = davinci.version;
+		      dojo.byId("title_id").text = langObj.pageDesignerTitle;
+		      //var langObj2 = dojo.i18n.getLocalization("","webContent");//to test "Loading..."
+		    });
+		    
+	    	davinci.useAppCache = true; // needed to provide FF "allow" warning
+			davinci.Runtime.addPlugin( "app/davinci/ui" );
+	    	davinci.Runtime.addPlugin( "app/davinci/de/de" );
+		 	davinci.Runtime.addPlugin( "app/davinci/html/html" );
+			davinci.Runtime.addPlugin( "app/davinci/ve/ve" );
+			davinci.Runtime.addPlugin( "app/davinci/ve/themeEditor/themeEditor" );
+	 		davinci.Runtime.initialPerspective="davinci.ve.pageDesign";
+			dojo.addOnLoad(function()
+			{
+			    // Display a warning dialog for unsupported browsers
+				if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5.1)) {
+					var langObj = dojo.i18n.getLocalization("davinci","webContent");
+	                var unsupportedDialog = new dijit.Dialog({
+	                    id: "unsupportedBrowserDialog",
+	                    title: langObj.unsupportedBrowser,
+	                    content: ["<p>"+ langObj.unsupportedNote +"</p>",
+	                              "<div class='maqButtonArea'>",
+	                              "   <button dojoType='dijit.form.Button' type='submit'>",
+	                              langObj.buttonContinue,
+	                              "   </button>",
+	                              "</div>"
+	                             ].join(" "),
+	                    execute: function() { run(); }
+	                });
+				    unsupportedDialog.show();
+				} else {
+				    run();
+				}
+				debugger;
+				function run() {
+	    			var userInfo;
+	    			var result=davinci.Runtime.getUser();
+
+	    			if (result )
+	    			{
+	    		 	   dojo.byId('davinci_user').innerHTML=result;
+	    		 	   davinci.Runtime.userName=result;
+	    			}
+	    			else
+	    			{
+	    				//FIXME: temporary fix for running via file: URLs
+	    			   var langObj = dojo.i18n.getLocalization("davinci","webContent");
+	    		 	   dojo.byId('davinci_user').innerHTML=langObj.maqettaUser;
+	    		 	}
+	    		 	if (!result)
+	    		 	{
+	    		 		var langObj = dojo.i18n.getLocalization("davinci","webContent");
+	    			 	dojo.byId('davinci_user').innerHTML=langObj.localhostUser;
+	    		 		dojo.byId('davinci_logoff').href="";
+	    		 		davinci.Runtime.isLocalInstall=true;
+	    		 	}
+	    		 	if ( davinci.Runtime.plugins.joomlaplugin) {
+	                    dojo.byId('davinci_logoff').href="http://" + window.location.hostname + "/index.php?option=com_user&task=logout&return=Lw";
+	    		 	}
+	    			davinci.Runtime.run(userInfo);
+				}
+			});
+
+			dojo.addOnUnload(davinci.Runtime.unload);
+		});
+		
+	</script>
+  </head>
+
+	<body class="claro">
+		<div class="loading"><table><tr><td id="load_screen"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;</td></tr></table></div>
+		<div id="davinci_app">
+			<div id="davinci_top_bar">
+					<div id="davinci_user_container">
+						<span id="davinci_user_welcome"></span>
+						<span id="davinci_user"></span>
+						<span id="davinci_main_menu"> </span>
+						<a id="davinci_logoff" href='javascript:davinci.Runtime.logoff()'> </a>
+					</div>
+					<span class="maq_banner_name_box">
+						<span class="maq_banner_name">Maqetta</span>
+						<span id="maqetta_designer" class="maq_banner_component"></span>
+						<span id="maqetta_version" class="maq_banner_version"></span>
+					</span>
+			</div>
+			<div id="mainBody"></div>
+		</div>
+	</body>
+</html>

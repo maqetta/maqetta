@@ -3,16 +3,10 @@ package org.davinci.server.user;
 import java.io.File;
 
 import javax.servlet.http.HttpServletRequest;
-<<<<<<< HEAD
-=======
-import javax.servlet.http.HttpServletResponse;
->>>>>>> a2d6891c1fc71029889c285355b4d7ac0f921179
 
 public interface IUserManager {
 
     public abstract boolean hasPermisions(IUser owner, IUser requester, String resource);
-    
-    public IUser authenticate(HttpServletRequest req, HttpServletResponse resp);
 
     public abstract IUser getUser(String userName);
 

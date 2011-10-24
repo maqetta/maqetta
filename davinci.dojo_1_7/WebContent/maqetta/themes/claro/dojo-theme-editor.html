@@ -4,23 +4,24 @@
 <head>
 <title>Theme Editor</title>
 
-
-<script type="text/javascript" src="/maqetta/app/static/lib/dojo/1.7/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+<script type="text/javascript" src="/maqetta/app/static/lib/dojo/1.7/dojo/dojo.js" data-dojo-config="parseOnLoad: true, async: true"></script>
 <script type="text/javascript">
-    dojo.require("dojo.parser");
-    dojo.require("dijit.dijit"); // optimized layer for loading
-    dojo.require("dijit.form.Button");
-    dojo.require("dijit.Toolbar");
-    dojo.require("dijit.form.CheckBox");
-    dojo.require("dijit.form.ComboBox")
-    dojo.require("dijit.form.TextBox");
-    dojo.require("dijit.Calendar");
-    dojo.require("dijit.layout.TabContainer");
-    dojo.require("dijit.layout.ContentPane");
-    dojo.require("dijit.layout.AccordionContainer");
-    dojo.require("dijit.TitlePane");
-    dojo.require("dijit.layout.BorderContainer");
-	dojo.require("dijit.Menu");
+    require([
+        "dojo/parser",
+		"dijit/dijit", // optimized layer for loading
+        "dijit/form/Button",
+        "dijit/Toolbar",
+        "dijit/form/CheckBox",
+        "dijit/form/ComboBox",
+        "dijit/form/TextBox",
+        "dijit/Calendar",
+        "dijit/layout/TabContainer",
+        "dijit/layout/ContentPane",
+        "dijit/layout/AccordionContainer",
+        "dijit/TitlePane",
+    	"dijit/layout/BorderContainer",
+    	"dijit/Menu"
+    	]);
 </script>
 
 </head>

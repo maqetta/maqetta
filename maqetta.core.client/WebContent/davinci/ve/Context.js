@@ -14,6 +14,7 @@ dojo.declare("davinci.ve.Context", null, {
 
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit/dijit",
+	_configProps: {},
 
 /*=====
 	// keeps track of widgets-per-library loaded in context
@@ -358,29 +359,29 @@ dojo.declare("davinci.ve.Context", null, {
 		}, this);
 	},
 
-	_getWidgetFolder : function(){
+	_getWidgetFolder: function(){
 		
 		var base = this.getBase();
 		var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
-		if(!prefs['widgetFolder']){
-			prefs.widgetFolder = "./WebContent/widgets";
+		if(!prefs.widgetFolder){
+			prefs.widgetFolder = "WebContent/widgets";
 			davinci.workbench.Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
 		}
 	
-		var folder = prefs['widgetFolder'];
-		while(folder.length>1 && (folder.charAt(0)=="." || folder.charAt(0)=="/"))
+		var folder = prefs.widgetFolder;
+		while(folder.length>1 && (folder.charAt(0)=="." || folder.charAt(0)=="/")) {
 			folder = folder.substring(1);
+		}
 		return folder;
 	},
-	_getDojoModulePath : function(){
-		
-		
-		return this._dojoModulePath  ;
+
+	_getDojoModulePath: function(){
+		return this._dojoModulePath;
 	},
 	
 	_require: function(module){
 		try{
-			this.getDojo()["require"](module);
+			return this.getGlobal()["require"]([module.replace(/\./g, "/")]);
 		}catch(e){
 			console.error("FAILED: Context.js _require failure for module="+module);
 			throw e;
@@ -402,7 +403,7 @@ dojo.declare("davinci.ve.Context", null, {
      */
     setMobileDevice: function(device) {
     	this.getDojo().config.mblUserAgent = /* remove this line for Dojo 1.7 final */
-    	this.getDojo()["require"]("dojo/_base/config").mblUserAgent = preview.silhouetteiframe.getMobileTheme(device + '.svg');
+    	this.getGlobal()["require"](["dojo/_base/config"]).mblUserAgent = preview.silhouetteiframe.getMobileTheme(device + '.svg');
     	var bodyElement = this.getDocumentElement().getChildElement("body");
         if (! device || device === 'none') {
             bodyElement.removeAttribute(davinci.ve.Context.MOBILE_DEV_ATTR, device);
@@ -696,9 +697,9 @@ dojo.declare("davinci.ve.Context", null, {
 			}
 
 // TODO: This needs to be more flexible to allow things like HTML5 DOCTYPE's (should be based on a preference)
-			var doc = (frame.contentDocument || frame.contentWindow.document);
-			var win = dijit.getDocumentWindow(doc);
-			var head = "<!DOCTYPE html>";
+			var doc = frame.contentDocument || frame.contentWindow.document,
+				win = dijit.getDocumentWindow(doc),
+				head = "<!DOCTYPE html>";
 // TODO: margin:0 is a temporary hack. In previous releases, we always included dojo.css
 // which set margin:0, but we now only include dojo.css with the first Dojo widget
 // added to the page. That causes scrollbars when page was loaded initially,
@@ -721,19 +722,26 @@ dojo.declare("davinci.ve.Context", null, {
 				//  makes use of dojo and thusly must be invoked only after dojo has loaded.  Need
 				//  to remove Dojo dependencies from callback function first.
 				var baseUserWorkspace = system.resource.getRoot().getURL() + "/" + this._getWidgetFolder();
-				head += "<script>djConfig={addOnLoad:top.loading" + this._id + ", baseUrl:'"+dojoUrl.substr(0,inx+1)+"', modulePaths:{'widgets':'" + baseUserWorkspace +"'} }</script>";
-				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\"></script>";
+				var config = {
+					baseUrl: dojoUrl.substr(0,inx+1),
+					modulePaths: {widgets: baseUserWorkspace}
+				};
+				dojo.mixin(config, this._configProps);
+
+				var requires = this._bootstrapModules.split(","),
+					dependencies = ['dojo/parser', 'dojox/html/_base', 'dojo/domReady!'];
+				dependencies = dependencies.concat(requires);  // to bootstrap references to base dijit methods in container
+
+				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\" data-dojo-config=\"" + JSON.stringify(config).slice(1, -1) + "\"></script>"
+					+ "<script type=\"text/javascript\">require(" + JSON.stringify(dependencies) + ", top.loading" + this._id + ");</script>";
 			}
 			var helper = davinci.theme.getHelper(this._visualEditor.theme);
 			if (helper && helper.getHeadImports){
 			    head += helper.getHeadImports(this._visualEditor.theme);
-			    
 			} else if(source.themeCssfiles) { // css files need to be added to doc before body content
-				head += '<style type="text/css">';
-				for(var i = 0;i < source.themeCssfiles.length;i++){
-					head += '@import "'+ source.themeCssfiles[i] + '";\n';
-				}
-				head += '</style>';
+				head += '<style type="text/css">'
+					+ source.themeCssfiles.map(function(file) { return '@import "' + file + '";'; }).join();
+					+ '</style>';
 			}
 			/*
 			else{
@@ -742,15 +750,17 @@ dojo.declare("davinci.ve.Context", null, {
 			*/
 			//head += '<style type="text/css">@import "claro.css";</style>';
 			head += "</head><body>";
+/*
 			if (dojoUrl) {
 				// Since this document was created from script, DOMContentLoaded and window.onload never fire.
 				// Call dojo._loadInit manually to trigger the Dojo onLoad events for Dojo < 1.7
 				head += "<script>if(dojo._loadInit)dojo._loadInit();</script>";
 			}
+*/
 			head += "</body></html>";
 
 			var context = this;
-			window["loading" + context._id] = function() {
+			window["loading" + context._id] = function(parser, htmlUtil) { //FIXME: should be able to get doc reference from domReady! plugin?
 				delete window["loading" + context._id];
 				var callbackData = context;
 			try {
@@ -772,12 +782,11 @@ dojo.declare("davinci.ve.Context", null, {
 
 					body._edit_context = context; // TODO: find a better place to stash the root context
 					context._configDojoxMobile();
-					
+
 					var requires = context._bootstrapModules.split(",");
 					if (requires.indexOf('dijit/dijit-all') != -1){
 						win.dojo._postLoad = true; // this is needed for FF4 to keep dijit._editor.RichText from throwing at line 32 dojo 1.5						
 					}
-					win.require(requires);  // to bootstrap references to base dijit methods in container
 
 					context.frameNode = frame;
 					// see Dojo ticket #5334
@@ -920,7 +929,7 @@ dojo.declare("davinci.ve.Context", null, {
 		// has loaded any required resources (i.e. <head> scripts)
 		var scripts;
         var dj = this.getDojo();
-	    dj['require']('dojox.html._base');
+	    this.getGlobal()['require']('dojox/html/_base');
         // It is necessary to run the dojox.html.set utility from the context
 	    // of inner frame.  Might be a Dojo bug in _toDom().
 	    dj.getObject('dojox').html.set(containerNode, content, {
@@ -1011,9 +1020,8 @@ dojo.declare("davinci.ve.Context", null, {
 
 		}, this);
 		try {
-			var dj = this.getDojo();
-			dj["require"]("dojo.parser");
-			dj.parser.parse(containerNode);
+			this.getGlobal()["require"](["dojo/parser"]); // FIXME: use the return value to parse
+			this.getDojo().parser.parse(containerNode);
 		} catch(e) {
 			// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
 			// the dojo parser will throw an exception trying to compute style on hidden containers
@@ -2140,7 +2148,7 @@ dojo.declare("davinci.ve.Context", null, {
 					var relativeUrl = urlPath.relativeTo(fullPath);
 				
 					this.addHeaderScript(url, {
-						djConfig: "parseOnLoad: true, modulePaths:{'widgets':'"+ this._dojoModulePath + "/" + this._getWidgetFolder()  + "'}"
+						djConfig: "parseOnLoad: true, modulePaths:{'widgets':'"+ this._dojoModulePath + "/" + this._getWidgetFolder()  + "'" + this._configProps + "}"
 					});
 				}else{
 					this.addHeaderScript(url);

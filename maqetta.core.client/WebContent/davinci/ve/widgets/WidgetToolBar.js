@@ -29,26 +29,31 @@ dojo.declare("davinci.ve.widgets.WidgetToolBar", [davinci.workbench.ViewLite], {
 		dojo.subscribe("/davinci/ui/widget/replaced", dojo.hitch(this, this._widgetReplaced));
 		this.inherited(arguments);
 	},
+	
 	onEditorSelected : function(){
-		
-		this.domNode.innerHTML = this.widgetDescStart+this.widgetDescUnselectEnd;
-		
+		if(this._editor && this._editor.visualEditor && this._editor.visualEditor.context){
+			var selection = this._editor.visualEditor.context.getSelection();
+			if(selection.length==0){
+				this._widget = null;
+			}else{
+				this._widget = selection[0];
+			}
+		}else{
+			this._widget = null;
+		}
+		this.onWidgetSelectionChange();
 	},
 	
 	_widgetReplaced : function(newWidget){
 		this._widget = newWidget;
 		this.onWidgetSelectionChange();
-		
-		
 	},
 	
-	onWidgetSelectionChange : function(){
-		
+	onWidgetSelectionChange : function(){		
 		var displayName = "";
 		
-		if(this._widget || this._subwidget){
-			
-			displayName = davinci.ve.widget.getLabel(this._widget || this._subwidget); 
+		if(this._widget){
+			displayName = davinci.ve.widget.getLabel(this._widget); 
 		}else{
 			this.domNode.innerHTML = this.widgetDescStart+this.widgetDescUnselectEnd;
 			dojo.removeClass(this.domNode, "propertiesSelection");

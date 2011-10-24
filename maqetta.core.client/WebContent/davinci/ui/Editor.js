@@ -17,10 +17,10 @@ define([
 			this._editor=editor;
 		},
 		run: function(context){
-			this._editor._doCut();
+			this._editor.getTextView()._doCut();
 		},
 		isEnabled: function(context){
-			return !this._editor._getSelection().isEmpty();
+			return !this._editor.getTextView()._getSelection().isEmpty();
 		}
 	});
 	declare("davinci.ui._EditorCopyAction", Action, {
@@ -28,10 +28,10 @@ define([
 			this._editor=editor;
 		},
 		run: function(context){
-			this._editor._doCopy();
+			this._editor.getTextView()._doCopy();
 		},
 		isEnabled: function(context){
-			return !this._editor._getSelection().isEmpty();
+			return !this._editor.getTextView()._getSelection().isEmpty();
 		}
 	});
 	declare("davinci.ui._EditorPasteAction", Action, {
@@ -39,7 +39,7 @@ define([
 			this._editor=editor;
 		},
 		run: function(context){
-			this._editor._doPaste();
+			this._editor.getTextView()._doPaste();
 		}
 	});
 
@@ -64,8 +64,9 @@ define([
 	};
 
 	var onSelectionChanged = function(selectionEvent) {
-		if (this._selecting) 
+		if (this._selecting) {
 			return;
+		}
 //		var startPos=this._textModel.getPosition(selectionEvent.newValue.start);
 //		var endPos=this._textModel.getPosition(selectionEvent.newValue.end);
         this.selectionChange({startOffset:selectionEvent.newValue.start,endOffset:selectionEvent.newValue.end});
@@ -97,15 +98,11 @@ return declare("davinci.ui.Editor", null, {
 	setVisible: function (visible) {
 
 //console.log("setVisible="+visible + " "+s)
-		if (visible!=this._isVisible && this._existWhenVisible)
-		{
-			if (visible && this._existWhenVisible)
-			{
+		if (visible!=this._isVisible && this._existWhenVisible) {
+			if (visible && this._existWhenVisible) {
 				this._createEditor();
 				this._updateStyler();
-			}
-			else
-			{
+			} else {
 	            this.editor.getTextView().removeEventListener("Selection", this, onSelectionChanged);
 //	            try {
 //					this.editor.destroy();

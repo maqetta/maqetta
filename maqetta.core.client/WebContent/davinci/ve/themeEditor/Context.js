@@ -12,6 +12,7 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit/dijit,dijit/dijit-all", // dijit-all hangs FF4 and does not seem to be needed.
 	//_bootstrapModules: "dijit/dijit",
+	_configProps: {async:true},
 
 	constructor: function(args){
 		this._id = "_edit_context_" + davinci.ve._contextCount++;

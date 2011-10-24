@@ -6,27 +6,7 @@
                 "Normal": {
 					"selectors": {
 						".mblHeading": [
-							"color",
-							"position",
-							"margin",
-							"width",
-							"overflow",
-							"white-space",
-							"text-overflow",
-							"z-index",
-							"padding",
-							"height",
-							"background-color",
-							"background-image",
-							"border-top",
-							"border-bottom",
-							"color",
-							"font-family",
-							"font-size",
-							"font-weight",
-							"text-align",
-							"line-height",
-							"text-shadow"
+							"$std_10"
 						]								
 					},
 					"query": "" 
@@ -39,9 +19,19 @@
                 "Normal": {
 					"selectors": {
 						".mblButton": [
-							"color"
-							
-							
+							"$std_10" 
+/*							"cursor",
+							"background-color",
+							"outline",
+							"padding",
+							"height",
+							"border",
+							"background-image",
+							"color",
+							"font-family",
+							"font-size",
+							"line-height"
+							*/
 						]								
 					},
 					"query": "" 
@@ -49,15 +39,25 @@
 				"Disabled": {
                 	"selectors": {
 						".mblButtonDisabled" : [
-	 						"cursor",
+							"$std_10" 
+	 						/*"cursor",
     						"border-color",
     						"background-image",
-    						"color"
+    						"color"*/
 						] 
                     },
                     "query": ".mblButton",
                     "simulate": "mblButtonDisabled"
-                }  
+                },
+				"Selected": {
+                	"selectors": {
+						".mblButtonSelected" : [
+							"$std_10" 
+						] 
+                    },
+                    "query": ".mblButton",
+                    "simulate": "mblButtonSelected"
+                }				
             }
 		},
 		"ToggleButton": {
@@ -66,7 +66,7 @@
                 "Normal": {
 					"selectors": {
 						".mblButton": [
-							"color"
+							"$std_10"
 							
 							
 						]								

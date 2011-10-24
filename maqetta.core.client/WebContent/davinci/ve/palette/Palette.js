@@ -1,22 +1,19 @@
-dojo.provide("davinci.ve.palette.Palette");
-
-dojo.require("dijit._WidgetBase");
-dojo.require("dijit._Container");
-dojo.require("dijit.Tooltip");
-dojo.require("dojo.i18n");
-dojo.require("dojo.fx");
-dojo.require("davinci.ve.tools.CreateTool");
-dojo.require("davinci.ui.dnd.DragSource");
-//dojo.require("davinci.ui.dnd.DropTarget");
-dojo.require("davinci.ve.metadata");
-dojo.require("davinci.ve.palette.PaletteFolder");
-dojo.require("davinci.ve.palette.PaletteItem");
+define([
+    "dojo/_base/declare",
+	"dijit/_WidgetBase",
+	"dijit/_KeyNavContainer",
+	"dijit/Tooltip",
+	"davinci/ui/dnd/DragSource",
+	"davinci/ve/metadata",
+	"./PaletteFolder",
+	"./PaletteItem",
 //FIXME: Need to separate out the logic that builds the davinci.Runtime.widgetTable
-dojo.require("davinci.Runtime");
+	"davinci/Runtime",
+	"dojo/i18n!davinci/ve/nls/common",
+	"davinci/ve/tools/CreateTool"
+], function(declare, WidgetBase, _KeyNavContainer, Tooltip, DragSource, metadata, PaletteFolder, PaletteItem, Runtime, commonNls){
 
-dojo.requireLocalization("davinci.ve", "common");
-
-dojo.declare("davinci.ve.palette.Palette", [dijit._WidgetBase, dijit._KeyNavContainer], {
+declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 
 	descriptors: "", // "fooDescriptor,barDescriptor"
 //	_resource: null,
@@ -25,16 +22,15 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._WidgetBase, dijit._KeyNavCont
 	_folderNodes: {}, //FIXME: not instance safe
 	
 	postMixInProperties: function() {
-		this._resource = dojo.i18n.getLocalization("davinci.ve", "common");
+		this._resource = commonNls;
 	},
 	
 	postCreate: function(){
-
 		dojo.addClass(this.domNode, "dojoyPalette");
 		this.refresh();
 		this.connectKeyNavHandlers([dojo.keys.UP_ARROW], [dojo.keys.DOWN_ARROW]);
-		dojo.subscribe("/davinci/ui/libraryChanged", this, "refresh" );
-		dojo.subscribe("/davinci/ui/addedCustomWidget", this, "addCustomWidget" );
+		dojo.subscribe("/davinci/ui/libraryChanged", this, "refresh");
+		dojo.subscribe("/davinci/ui/addedCustomWidget", this, "addCustomWidget");
 	},
 	
 	addCustomWidget: function(lib){
@@ -105,7 +101,6 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._WidgetBase, dijit._KeyNavCont
 				this._createItem(opt);
 			}, this);
 		}
-	
 	},
 	
 	setContext: function(context){
@@ -127,14 +122,11 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._WidgetBase, dijit._KeyNavCont
 	},
 
 	_loadPalette: function(){
-		
-		
-		
-		if(this._loaded) return;
+		if (this._loaded) { return; }
 		//debugger;
 		this._loaded = true; // call this only once
-		var allLibraries = davinci.ve.metadata.getLibrary();
-		var userLibs = davinci.library.getUserLibs(davinci.Runtime.getProject());
+		var allLibraries = metadata.getLibrary();
+		var userLibs = davinci.library.getUserLibs(Runtime.getProject());
 		var libraries = {};
 		
 		function findInAll(name, version){
@@ -151,11 +143,11 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._WidgetBase, dijit._KeyNavCont
 		
 		for(var i=0;i<userLibs.length;i++){
 			var library = findInAll(userLibs[i].id, userLibs[i].version);
-			if(library!=null) dojo.mixin(libraries, library);
+			if (library!=null) { dojo.mixin(libraries, library); }
 		}
 		
-		var customWidgets = davinci.library.getCustomWidgets(davinci.Runtime.getProject());
-		if(customWidgets!=null) dojo.mixin(libraries, customWidgets);
+		var customWidgets = davinci.library.getCustomWidgets(Runtime.getProject());
+		if (customWidgets!=null) { dojo.mixin(libraries, customWidgets); }
 		
 		// Merge descriptors that have the same category
 		// XXX Need a better solution for enumerating through descriptor items and creating
@@ -316,7 +308,7 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._WidgetBase, dijit._KeyNavCont
 			return this._folderNodes[opt.displayName];
 		}
 
-		this._folderNodes[opt.displayName] = new davinci.ve.palette.PaletteFolder(opt);
+		this._folderNodes[opt.displayName] = new PaletteFolder(opt);
 		this.addChild(this._folderNodes[opt.displayName]);
 		return this._folderNodes[opt.displayName];
 	},
@@ -391,14 +383,14 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._WidgetBase, dijit._KeyNavCont
 	},
 	
 	_createItem: function(opt){
-		var node = new davinci.ve.palette.PaletteItem(opt);
+		var node = new PaletteItem(opt);
 		this.addChild(node);
-		var ds = new davinci.ui.dnd.DragSource(node.domNode, "component", node);
+		var ds = new DragSource(node.domNode, "component", node);
 		ds.targetShouldShowCaret = true;
 		ds.returnCloneOnFailure = false;
 		this.connect(ds, "onDragStart", "onDragStart"); // move start
 		this.connect(ds, "onDragEnd", "onDragEnd"); // move end
-		node.tooltip = new dijit.Tooltip({
+		node.tooltip = new Tooltip({
 			label:opt.description, 
 			connectId:[node.id]
 		});
@@ -429,4 +421,5 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._WidgetBase, dijit._KeyNavCont
 	},
 
 	__dummy__: null	
+});
 });

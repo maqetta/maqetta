@@ -1,6 +1,6 @@
 dojo.provide("davinci.ve.palette.Palette");
 
-dojo.require("dijit._Widget");
+dojo.require("dijit._WidgetBase");
 dojo.require("dijit._Container");
 dojo.require("dijit.Tooltip");
 dojo.require("dojo.i18n");
@@ -16,13 +16,13 @@ dojo.require("davinci.Runtime");
 
 dojo.requireLocalization("davinci.ve", "common");
 
-dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContainer], {
+dojo.declare("davinci.ve.palette.Palette", [dijit._WidgetBase, dijit._KeyNavContainer], {
 
 	descriptors: "", // "fooDescriptor,barDescriptor"
-	_resource: null,
-	_context: null,
-	_folders: {},
-	_folderNodes: {},
+//	_resource: null,
+//	_context: null,
+	_folders: {}, //FIXME: not instance safe
+	_folderNodes: {}, //FIXME: not instance safe
 	
 	postMixInProperties: function() {
 		this._resource = dojo.i18n.getLocalization("davinci.ve", "common");
@@ -301,21 +301,21 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 		
 	    if (uri) {
 	    	/* maybe already resolved */
-	    	if(uri.indexOf("http")==0)
+	    	if(uri.indexOf("http")==0) {
 	    		return uri;
+	    	}
 	    	
 	    	return davinci.Workbench.location() + uri;
-	      
 	    }
 	    return require.toUrl("davinci/" + fallbackUri);
 	},
 
 	_createFolder: function(opt){
 		
-		if(this._folderNodes[opt.displayName]!=null)
+		if(this._folderNodes[opt.displayName]!=null) {
 			return this._folderNodes[opt.displayName];
-		
-		
+		}
+
 		this._folderNodes[opt.displayName] = new davinci.ve.palette.PaletteFolder(opt);
 		this.addChild(this._folderNodes[opt.displayName]);
 		return this._folderNodes[opt.displayName];
@@ -405,19 +405,14 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 		return node;
 	},
 
-	onDragStart: function(e){
-		
-		var data = e.dragSource.data,
-		// Clone the data in case something modifies it downstream
-			dataClone = dojo.clone(data.data),
-			toolClass = davinci.ve.tools.CreateTool;
-		if (data.tool) {
-		    dojo["require"](data.tool);
-		    toolClass = dojo.getObject(data.tool);
-		}
-		var tool = new toolClass(dataClone);
-		tool._type = data.type;
-		this._context.setActiveTool(tool);
+	onDragStart: function(e){	
+		var data = e.dragSource.data;
+		require([data.tool || "davinci/ve/tools/CreateTool"], function(toolClass) {
+			// Copy the data in case something modifies it downstream
+			var tool = new toolClass(dojo.mixin({}, data.data));
+			tool._type = data.type;
+			this._context.setActiveTool(tool);
+		}.bind(this));
 	},
 
     onDragEnd: function(e){

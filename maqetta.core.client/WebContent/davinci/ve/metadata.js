@@ -344,14 +344,15 @@ davinci.ve.metadata = function() {
         
     	loadThemeMeta: function(model) {
     		// try to find the theme using path magic
-    		var style = model.find({'elementType':'HTMLElement', 'tag':'style'});
+    		var style = model.find({elementType:'HTMLElement', tag:'style'});
     		var imports = [];
     		var claroThemeName="claro";
     		var claroThemeUrl;
     		for(var z=0;z<style.length;z++){
     			for(var i=0;i<style[z].children.length;i++){
-    				if(style[z].children[i]['elementType']== 'CSSImport')
+    				if(style[z].children[i].elementType== 'CSSImport') {
     					imports.push(style[z].children[i]);
+    				}
     			}
     		}
     		
@@ -361,6 +362,7 @@ davinci.ve.metadata = function() {
     		var themeHash = {};
     		for(var i=0;i<allThemes.length;i++){
     		    if (allThemes[i]['files']){ // #1024 theme maps do not have files
+    		    	// This can't be right... making the same assignment k times.  See also Context.js loadThenme ~line 572
         			for(var k=0;k<allThemes[i]['files'].length;k++){
         				themeHash[allThemes[i]['files']] = allThemes[i];
         			}
@@ -382,11 +384,11 @@ davinci.ve.metadata = function() {
     					claroThemeUrl = themeUrl;
     				}
     				if(url.indexOf(themeUrl)  > -1){
-    					var returnObject = {};
-    					returnObject['themeUrl'] = url;
-    					returnObject['themeMetaCache'] = davinci.library.getMetaData(themeHash[themeUrl]);
-    					returnObject['theme'] =  themeHash[themeUrl];
-    					return returnObject;	
+    					return {
+    						themeUrl: url,
+    						themeMetaCache: davinci.library.getMetaData(themeHash[themeUrl]),
+    						theme: themeHash[themeUrl]
+    					};
     				}
     			}
     		}
@@ -462,7 +464,7 @@ davinci.ve.metadata = function() {
          */
     	_loadThemeMetaDojoxMobile: function(model, themeHash){
      
-             var scriptTags=model.find({'elementType':'HTMLElement', 'tag':'script'}); 
+             var scriptTags=model.find({elementType:'HTMLElement', tag:'script'}); 
              for(var s=0; s<scriptTags.length; s++){
                  var text=scriptTags[s].getElementText();
                  if (text.length) {
@@ -477,11 +479,11 @@ davinci.ve.metadata = function() {
                              /* trim off any relative prefix */
                              for(var themeUrl in themeHash){
                                  if(url.indexOf(themeUrl)  > -1){
-                                     var returnObject = {};
-                                     returnObject['themeUrl'] = url;
-                                     returnObject['themeMetaCache'] = davinci.library.getMetaData(themeHash[themeUrl]);
-                                     returnObject['theme'] =  themeHash[themeUrl];
-                                     return returnObject;    
+                                     return {
+                                    	 themeUrl: url,
+                                    	 themeMetaCache: davinci.library.getMetaData(themeHash[themeUrl],
+                                    	 theme: themeHash[themeUrl]
+                                     };
                                  }
                              }
                          }

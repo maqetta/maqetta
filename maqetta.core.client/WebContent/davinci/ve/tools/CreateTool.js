@@ -119,9 +119,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 				function getClassList(type) {
 					var classList = davinci.ve.metadata.queryDescriptor(type, 'class');
 					if (classList) {
-						classList = classList.split(/\s+/);
-						classList.push(type);
-				        return classList;
+						return classList.split(/\s+/).push(type);
 					}
 					return [type];
 				}
@@ -189,7 +187,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
     	        // Always invoke the 'onAdd' callback.
     	        davinci.ve.metadata.invokeCallback(type, 'onAdd', args);
 	        }
-			this.create({target: target, size: size});
+			this.create({target: target, directTarget: this._getTarget(), size: size});
 		} catch(e) {
 			var content,
 				title;

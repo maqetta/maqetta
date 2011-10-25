@@ -7,7 +7,8 @@ print_help() {
     echo "Usage: $0 [OPTION]..."
     echo ""
     echo "Options:"
-    echo " -t, --tag <tag> tag to build"
+    echo " -t, --tag <tag>          tag to build"
+    echo " --git-http               use HTTP protocol when cloning from git"
     echo " -h, --help               show this message"
     echo ""
 }
@@ -22,6 +23,10 @@ while [ "${1+isset}" ]; do
         -t|--tag)
             externalTag=$2
             shift 2
+            ;;
+        --git-http)
+            gitHttp=1
+            shift 1
             ;;
         -h|--help)
             print_help
@@ -38,8 +43,15 @@ if  [ ! -z ${externalTag} ]
 then
   echo "Using external tag: ${externalTag}"
 fi
-#
 
+if  [ ! -z ${gitHttp} ] 
+then
+    GIT_PROTOCOL="http"
+else
+    GIT_PROTOCOL="git"
+fi
+
+#
 # Path to eclipse directory inclusive. The application directory is
 # usually, but not always, named 'eclipse'. It has sub-directories
 # /configuration, /features, /plugins, etc. No trailing slash.
@@ -58,7 +70,7 @@ fi
 #
 # GitHub read-only URL for Maqetta repository. This should not change.
 #
-export gitRepository="git://github.com/maqetta/maqetta.git"
+export gitRepository="${GIT_PROTOCOL}://github.com/maqetta/maqetta.git"
 
 echo "Using ${baseLocation} Eclipse for build..."
 #
@@ -159,7 +171,7 @@ fi
 
 # Retrieve external equinox dependancies
 
-equinoxGitRepo="git://git.eclipse.org/gitroot/equinox/rt.equinox.bundles.git/"
+equinoxGitRepo="${GIT_PROTOCOL}://git.eclipse.org/gitroot/equinox/rt.equinox.bundles.git/"
 
 # Stable version of equinox to checkout 
 equinoxBranch="R3_6_maintenance"

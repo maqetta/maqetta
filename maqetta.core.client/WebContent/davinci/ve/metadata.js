@@ -1,49 +1,24 @@
-dojo.provide("davinci.ve.metadata");
-
-dojo.require("dojo.i18n");
-dojo.require("davinci.ve.input.SmartInput");
-dojo.require("davinci.util");
-
-
-/**
- * @static
- */
-davinci.ve.metadata = function() {
-    
-    var METADATA_CLASS_BASE = "davinci.libraries.";
+define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, util) {
+	var metadata,
+    	METADATA_CLASS_BASE = "davinci.libraries.",
     
     // Array of library descriptors.
-    var libraries = {};
+    	libraries = {},
     // Widget metadata cache
     // XXX Should there be a limit on metadata objects in memory?
-    var cache = {};
+    	cache = {},
     // Localization strings
-    var l10n = null;
-    
-    var defaultProperties = {
-        id: {datatype: "string", hidden: true},
-        lang: {datatype: "string", hidden: true},
-        dir: {datatype: "string", hidden: true},
-        "class": {datatype: "string", hidden: true},
-        style: {datatype: "string", hidden: true},
-        title: {datatype: "string", hidden: true}
-    };
-    
-    
-	
-    // XXX not used anywhere
-    // var defaultEvents = [
-    // "onkeydown",
-    // "onkeypress",
-    // "onkeyup",
-    // "onclick",
-    // "ondblclick",
-    // "onmousedown",
-    // "onmouseout",
-    // "onmouseover",
-    // "onmouseup"
-    // ];
-    
+    	l10n = null,
+
+    	defaultProperties = {
+	        id: {datatype: "string", hidden: true},
+	        lang: {datatype: "string", hidden: true},
+	        dir: {datatype: "string", hidden: true},
+	        "class": {datatype: "string", hidden: true},
+	        style: {datatype: "string", hidden: true},
+	        title: {datatype: "string", hidden: true}
+    	};
+
     dojo.subscribe("/davinci/ui/libraryChanged", function() {
         // XXX We should be smart about this and only reload data for libraries whose path has
         //  changed.  This code currently nukes everything, reloading all libs, even those that
@@ -51,7 +26,7 @@ davinci.ve.metadata = function() {
         libraries = {};
         cache = {};
         l10n = null;
-        davinci.ve.metadata.init();
+        metadata.init();
     });
     
     function parseLibraryDescriptor(data) {
@@ -206,10 +181,10 @@ davinci.ve.metadata = function() {
 
         if(!lib.localPath){
 	        dojo.xhrGet({
-	            url : metadataUrl,
-	            handleAs : "json",
-	            sync : true, // XXX should be async
-	            load : function(data) {
+	            url: metadataUrl,
+	            handleAs: "json",
+	            sync: true, // XXX should be async
+	            load: function(data) {
 	                metadata = data;
 	            }
 	        });
@@ -231,7 +206,7 @@ davinci.ve.metadata = function() {
         cache[type] = metadata;
 
         // OAM may be overridden by metadata in widgets.json
-        davinci.util.mixin(metadata, lib.$providedTypes[type].metadata);
+        util.mixin(metadata, lib.$providedTypes[type].metadata);
         
         return metadata;
     }
@@ -298,7 +273,7 @@ davinci.ve.metadata = function() {
     
     function getAllowedElement(name, type) {
     	var propName = 'allowed' + name,
-    		prop = davinci.ve.metadata.queryDescriptor(type, propName);
+    		prop = metadata.queryDescriptor(type, propName);
     	if (! prop) {
     		// set default -- 'ANY' for 'allowedParent' and 'NONE' for
     		// 'allowedChild'
@@ -308,11 +283,11 @@ davinci.ve.metadata = function() {
     }
 
     
-    return /** @scope davinci.ve.metadata */ {
+    return metadata = {
         /**
          * Read the library metadata for all the libraries linked in the user's workspace
          */
-		init : function() {
+		init: function() {
 			dojo.forEach(davinci.library.getInstalledLibs(), function(lib) {
 				var data = davinci.library.getLibMetadata(lib.id, lib.version);
 				if (data) {
@@ -327,7 +302,7 @@ davinci.ve.metadata = function() {
 		},
         
 		/* used to update a library descriptor after the fact */
-		parseMetaData : function(data){
+		parseMetaData: function(data){
 			parseLibraryDescriptor(data);
 		},
 		
@@ -394,7 +369,7 @@ davinci.ve.metadata = function() {
     		}
     		
     		// check for single mobile theme's
-    		if (ro = this._loadThemeMetaDojoxMobile(model, themeHash)){
+    		if (ro = metadata._loadThemeMetaDojoxMobile(model, themeHash)){
     		    return ro;
     		}
 
@@ -437,18 +412,18 @@ davinci.ve.metadata = function() {
     				});
     				// Update data in returnObject
     				var url = imports[i].url.replace(new RegExp("/"+oldThemeName,"g"),"/"+newThemeName);
-    				var returnObject = {};
-    				returnObject['themeUrl'] = url;
-    				// Pull claro theme data
-    				returnObject['themeMetaCache'] = davinci.library.getMetaData(themeHash[claroThemeUrl]);
-    				returnObject['theme'] =  themeHash[claroThemeUrl];
-    				returnObject['themeMetaCache']['usingSubstituteTheme'] = {
-    						oldThemeName:oldThemeName,
-    						newThemeName:newThemeName
+    				var returnObject = {
+    					themeUrl: url,
+    					// Pull claro theme data
+    					themeMetaCache: davinci.library.getMetaData(themeHash[claroThemeUrl]),
+    					theme: themeHash[claroThemeUrl]
+    				};
+    				returnObject.themeMetaCache.usingSubstituteTheme = {
+						oldThemeName:oldThemeName,
+						newThemeName:newThemeName
     				};
     				// Make sure source pane updates text from model
 
-    				
     				return returnObject;	
     			}
     		}
@@ -481,7 +456,7 @@ davinci.ve.metadata = function() {
                                  if(url.indexOf(themeUrl)  > -1){
                                      return {
                                     	 themeUrl: url,
-                                    	 themeMetaCache: davinci.library.getMetaData(themeHash[themeUrl],
+                                    	 themeMetaCache: davinci.library.getMetaData(themeHash[themeUrl]),
                                     	 theme: themeHash[themeUrl]
                                      };
                                  }
@@ -572,7 +547,7 @@ davinci.ve.metadata = function() {
          * @param queryString
          * @return 'undefined' if there is any error; otherwise, the requested data.
          */
-        queryDescriptor : function(type, queryString) {
+        queryDescriptor: function(type, queryString) {
             var lib = getLibraryForType(type),
                 item;
             if (lib) {
@@ -602,7 +577,7 @@ davinci.ve.metadata = function() {
                                 value = new aClass();
                             }
                         } else {
-                            var si = new davinci.ve.input.SmartInput();
+                            var si = new SmartInput();
                             dojo.mixin(si, value);
                             value = si;
                         }
@@ -638,4 +613,4 @@ davinci.ve.metadata = function() {
         	return getAllowedElement('Child', type);
         }
     };
-}();
+});

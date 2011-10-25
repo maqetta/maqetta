@@ -461,21 +461,21 @@ dojo.declare("davinci.ve.Context", null, {
 				changed = false;
 		}
 		if(changed){
-			this._theme = null;
+			this.theme = null;
 			this._themeMetaCache = null;
 		}
 	},
 	
 	getTheme: function(){
-        if(this._theme==null){
+        if(this.theme==null){
             var theme = this.loadThemeMeta(this._srcDocument);
             if (theme) { // wdr #1024
                 this._themeUrl = theme.themeUrl;
                 this._themeMetaCache = theme.themeMetaCache;
-                this._theme = theme.theme;
+                this.theme = theme.theme;
             }
         }
-        return this._theme;
+        return this.theme;
     }, 
 
 	getThemeMeta: function(){
@@ -728,7 +728,7 @@ dojo.declare("davinci.ve.Context", null, {
 			    head += helper.getHeadImports(this._visualEditor.theme);
 			} else if(source.themeCssfiles) { // css files need to be added to doc before body content
 				head += '<style type="text/css">'
-					+ source.themeCssfiles.map(function(file) { return '@import "' + file + '";'; }).join();
+					+ source.themeCssfiles.map(function(file) { return '@import "' + file + '";'; }).join('');
 					+ '</style>';
 			}
 			/*

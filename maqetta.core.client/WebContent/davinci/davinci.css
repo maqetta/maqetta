@@ -196,7 +196,7 @@ BODY{
 */
 
 #davinci_ve_widgets_ColorPicker_1 input, #dijit_form_TextBox_0, #dijit_form_TextBox_5 {
-	color: transparent;
+/*	color: transparent; */
 }
 
 #davinci_ve_widgets_MultiTypeDropDown_0 {

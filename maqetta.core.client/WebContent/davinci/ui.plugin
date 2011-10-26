@@ -180,7 +180,7 @@
                 {
                     id: "newHTML",
                     // icon: './davinci/img/add.gif',
-                    run: "davinci.ui.Resource.fileDialog('newhtml')",
+                    run: "davinci.ui.Resource.newHTML()",
                     label: "HTML File...",
                     // toolbarPath: "davinci.toolbar.main/edit",
                     menubarPath: "davinci.new/new"
@@ -188,14 +188,14 @@
 
                 {
                     id: "newCSS",
-                    run: "davinci.ui.Resource.fileDialog('newcss')",
+                    run: "davinci.ui.Resource.newCSS()",
                     label: "CSS File...",
                     menubarPath: "davinci.new/new"
                 },
 
                 {
                     id: "newJS",
-                    run: "davinci.ui.Resource.fileDialog('newjs')",
+                    run: "davinci.ui.Resource.newJS()",
                     label: "JavaScript File...",
                     menubarPath: "davinci.new/new"
                 },
@@ -219,14 +219,14 @@
 
                 {
                     id: "newFolder",
-                    run: "davinci.ui.Resource.fileDialog('newfolder')",
+                    run: "davinci.ui.Resource.newFolder()",
                     label: "Folder...",
                     menubarPath: "davinci.new/new2"
                 },
 
                 {
                     id: "openFile",
-                    run: "davinci.ui.Resource.fileDialog('openfile')",
+                    run: "davinci.ui.Resource.openFile()",
                     label: "File...",
                     toolbarPath: "davinci.toolbar.main/edit",
                     menubarPath: "davinci.open/open"

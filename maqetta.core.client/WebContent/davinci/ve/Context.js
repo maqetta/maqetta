@@ -25,7 +25,7 @@ dojo.declare("davinci.ve.Context", null, {
 		if(!args) {
 			args ={};
 		}
-		this._contentStyleSheet = davinci.Workbench.location() + dojo.moduleUrl("davinci.ve", "resources/content.css"),
+		this._contentStyleSheet = davinci.Workbench.location() + dojo.moduleUrl("davinci.ve", "resources/content.css");
 		this._id = "_edit_context_" + davinci.ve._contextCount++;
 		this._editor = args.editor;
 		this._visualEditor = args.visualEditor;
@@ -139,7 +139,7 @@ dojo.declare("davinci.ve.Context", null, {
 			dojo.connect(containerNode, "onmousedown", this, "onMouseDown"),
 			dojo.connect(containerNode, "onmousemove", this, "onMouseMove"),
 			dojo.connect(containerNode, "onmouseup", this, "onMouseUp"),
-			dojo.connect(containerNode, "onmouseout", this, "onMouseOut"),
+			dojo.connect(containerNode, "onmouseout", this, "onMouseOut")
 		];
 		this.setActiveTool();
 	},
@@ -457,8 +457,9 @@ dojo.declare("davinci.ve.Context", null, {
 		var model = this.getModel();
 		if(this._themeUrl){
 			var style = model.find({elementType:'CSSImport', url:this._themeUrl},true);
-			if(style!=null && style.length!=0)
+			if (style && style.length > 0) {
 				changed = false;
+			}
 		}
 		if(changed){
 			this.theme = null;
@@ -467,7 +468,7 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 	
 	getTheme: function(){
-        if(this.theme==null){
+        if (! this.theme) {
             var theme = this.loadThemeMeta(this._srcDocument);
             if (theme) { // wdr #1024
                 this._themeUrl = theme.themeUrl;
@@ -513,7 +514,7 @@ dojo.declare("davinci.ve.Context", null, {
 				if(m){
 					// find out where we came from
 					return loc + "/" + src;
-					break; // "first Dojo wins"
+					// "first Dojo wins"
 				}
 			}
 		}	
@@ -1405,11 +1406,11 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 	
 	updateFocus: function(widget, index, inline){
-		var box, op;
+		var box, op, parent;
 
 		if (!davinci.ve.metadata.queryDescriptor(widget.type, "isInvisible")) {
-			var node = widget.getStyleNode();
-			helper = widget.getHelper();			
+			var node = widget.getStyleNode(),
+				helper = widget.getHelper();
 			if(helper && helper.getSelectNode){
 				node = helper.getSelectNode(this) || node;
 			}
@@ -1417,7 +1418,7 @@ dojo.declare("davinci.ve.Context", null, {
 			box.l = box.x;
 			box.t = box.y;
 
-			var parent = widget.getParent();
+			parent = widget.getParent();
 			op = {move: !(parent && parent.isLayout())};
 
 			//FIXME: need to consult metadata to see if layoutcontainer children are resizable, and if so on which axis
@@ -1568,7 +1569,7 @@ dojo.declare("davinci.ve.Context", null, {
 			clear = true;
 			index = 0;
 		}
-		var focus = undefined;
+		var focus;
 		if(index < this._focuses.length){
 			focus = this._focuses[index];
 		}else{
@@ -1609,7 +1610,7 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 		if(clear){
 			for(var i = index; i < this._focuses.length; i++){
-				var focus = this._focuses[i];
+				focus = this._focuses[i];
 				if(focus.domNode.parentNode == containerNode){
 					focus.hide();
 					containerNode.removeChild(focus.domNode);
@@ -1649,10 +1650,10 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 	},
 	
-	getFlowLayout: function(){
-		var htmlElement=this.getDocumentElement();
-		var bodyElement=htmlElement.getChildElement("body");
-		flowLayout = bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE);
+	getFlowLayout: function() {
+		var htmlElement = this.getDocumentElement(),
+			bodyElement = htmlElement.getChildElement("body"),
+			flowLayout = bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE);
 		if (!flowLayout){ // if flowLayout has not been set in the context check the edit prefs
 			var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
 			flowLayout = editorPrefs.flowLayout;
@@ -1850,10 +1851,9 @@ dojo.declare("davinci.ve.Context", null, {
 			var selectorText = rule.getSelectorText();
 			selectorText = selectorText.replace(/^\s+|\s+$/g,""); // trim white space
 			var rules = sheet.cssRules;
-			var foundSheet;
-			foundSheet = findSheet(sheet, fileName);
+			var foundSheet = findSheet(sheet, fileName);
 			if (foundSheet){
-				var rules = foundSheet.cssRules;
+				rules = foundSheet.cssRules;
 				var r;
 				for (r = 0; r < rules.length; r++){
 					if (rules[r] instanceof CSSStyleRule){

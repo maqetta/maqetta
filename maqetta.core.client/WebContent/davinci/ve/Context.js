@@ -728,7 +728,7 @@ dojo.declare("davinci.ve.Context", null, {
 			    head += helper.getHeadImports(this._visualEditor.theme);
 			} else if(source.themeCssfiles) { // css files need to be added to doc before body content
 				head += '<style type="text/css">'
-					+ source.themeCssfiles.map(function(file) { return '@import "' + file + '";'; }).join('');
+					+ source.themeCssfiles.map(function(file) { return '@import "' + file + '";'; }).join();
 					+ '</style>';
 			}
 			/*

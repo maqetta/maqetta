@@ -1,4 +1,4 @@
-package maqetta.core.server.standalone;
+package org.maqetta.server;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,7 +16,6 @@ import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.eclipse.core.runtime.Path;
-import org.maqetta.server.IVResource;
 
 public class VDirectory implements IVResource {
 

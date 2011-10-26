@@ -9,6 +9,7 @@ import org.maqetta.project.util.EclipseProjectUtil;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.IVResourceFilter;
+import org.maqetta.server.VLibraryResource;
 
 public class Resource {
 

@@ -11,15 +11,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import maqetta.core.server.standalone.VDirectory;
-import maqetta.core.server.standalone.VFile;
-import maqetta.core.server.standalone.VLibraryResource;
-import maqetta.core.server.standalone.VResourceUtils;
-import maqetta.core.server.standalone.VWorkspaceRoot;
 import maqetta.core.server.standalone.internal.Activator;
 import maqetta.core.server.standalone.internal.Links;
-import maqetta.core.server.standalone.internal.Links.Link;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.IOFileFilter;
@@ -29,6 +22,8 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.ajaxLibrary.ILibraryFinder;
 import org.davinci.ajaxLibrary.Library;
+import org.davinci.server.review.Constants;
+import org.davinci.server.review.ReviewManager;
 import org.davinci.server.user.IPerson;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.LibrarySettings;
@@ -41,6 +36,11 @@ import org.maqetta.server.ILink;
 import org.maqetta.server.ILinks;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
+import org.maqetta.server.VDirectory;
+import org.maqetta.server.VFile;
+import org.maqetta.server.VLibraryResource;
+import org.maqetta.server.VResourceUtils;
+import org.maqetta.server.VWorkspaceRoot;
 import org.osgi.framework.Bundle;
 
 public class User implements IUser {
@@ -51,7 +51,19 @@ public class User implements IUser {
 	private Links links;
 	private IPerson person;
 	private IVResource workspace;
-	
+    static {
+        Constants.LOCAL_INSTALL_USER_OBJ = 
+             new User(new IPerson() {
+                public String getUserName() {
+                    return Constants.LOCAL_INSTALL_USER_NAME;
+                }
+                public String getEmail() {
+                    return "";
+                }
+             }
+            ,ReviewManager.getReviewManager().getBaseDirectory());
+        
+    }	
 
 
 	public User(IPerson person, File userDirectory) {

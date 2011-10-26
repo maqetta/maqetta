@@ -8,8 +8,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import maqetta.core.server.standalone.DavinciPageServlet;
-import maqetta.core.server.standalone.VURL;
+import org.davinci.server.internal.Activator;
+import org.davinci.server.review.DavinciPageServlet;
+import org.maqetta.server.VURL;
 
 import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.user.IUser;

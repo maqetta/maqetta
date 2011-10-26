@@ -1,4 +1,4 @@
-package maqetta.core.server.standalone;
+package org.davinci.server.review;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,8 +18,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import maqetta.core.server.standalone.Command;
-import maqetta.core.server.standalone.internal.Activator;
+import org.maqetta.server.Command;
+import org.maqetta.server.VURL;
+import org.davinci.server.internal.Activator;
 
 import org.davinci.ajaxLibrary.ILibraryManager;
 import org.davinci.server.user.IUser;

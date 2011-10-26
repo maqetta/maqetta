@@ -1,4 +1,4 @@
-package maqetta.core.server.standalone;
+package org.maqetta.server;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,7 +9,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
 
-import org.maqetta.server.IVResource;
 
 public class VEmptyFile implements IVResource {
 

@@ -1,4 +1,4 @@
-package maqetta.core.server.standalone;
+package org.maqetta.server;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -18,8 +18,6 @@ import java.util.Hashtable;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.maqetta.server.IDavinciServerConstants;
-import org.maqetta.server.IVResource;
 
 public class VFile implements IVResource {
     // abstracted file/resource class

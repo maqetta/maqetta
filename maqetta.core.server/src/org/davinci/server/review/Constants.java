@@ -1,9 +1,7 @@
 package org.davinci.server.review;
 
-import maqetta.core.server.standalone.user.User;
 
 import org.davinci.server.user.IUser;
-import org.davinci.server.user.IPerson;
 import org.maqetta.server.IDavinciServerConstants;
 
 public class Constants {
@@ -37,20 +35,7 @@ public class Constants {
 	public static final String TEMPLATE_COMMENT_NOTIFICATION_SUBJECT = "maqetta.review.commentNotificationSubject";
 	public static final String TEMPLATE_COMMENT = "maqetta.review.commentTemplate";
 	
-	public static final IUser LOCAL_INSTALL_USER;
+	public static IUser LOCAL_INSTALL_USER_OBJ = null;
 
 	public static final String LOCAL_INSTALL_USER_NAME = IDavinciServerConstants.LOCAL_INSTALL_USER;
-	static {
-		LOCAL_INSTALL_USER = 
-			 new User(new IPerson() {
-				public String getUserName() {
-					return LOCAL_INSTALL_USER_NAME;
-				}
-				public String getEmail() {
-					return "";
-				}
-			 }
-			,ReviewManager.getReviewManager().getBaseDirectory());
-		
-	}
 }

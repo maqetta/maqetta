@@ -9,8 +9,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.davinci.server.mail.SimpleMessage;
-import org.davinci.server.mail.SmtpPop3Mailer;
+import org.maqetta.server.mail.SimpleMessage;
+import org.maqetta.server.mail.SmtpPop3Mailer;
 import org.davinci.server.review.Comment;
 import org.davinci.server.review.Constants;
 import org.davinci.server.review.DavinciProject;

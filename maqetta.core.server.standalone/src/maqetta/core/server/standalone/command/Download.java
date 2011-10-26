@@ -12,7 +12,6 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import maqetta.core.server.standalone.VLibraryResource;
 
 import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.user.IUser;
@@ -22,6 +21,7 @@ import org.eclipse.core.runtime.Path;
 import org.maqetta.server.Command;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
+import org.maqetta.server.VLibraryResource;
 
 public class Download extends Command {
 

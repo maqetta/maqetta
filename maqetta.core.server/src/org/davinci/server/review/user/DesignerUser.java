@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import maqetta.core.server.standalone.VFile;
+import org.maqetta.server.VFile;
 
 import org.davinci.server.review.Constants;
 import org.davinci.server.review.ReviewManager;

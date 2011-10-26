@@ -1,115 +1,202 @@
 {
     "dojox": {
         "Heading": {
-            "displayName": "Heading" ,
+            "displayName": "Heading",
             "states": {
                 "Normal": {
-					"selectors": {
-						".mblHeading": [
-							"$std_10"
-						]								
-					},
-					"query": "" 
-				}
+                    "selectors": {
+                        ".mblHeading": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ""
+                }
             }
-		},
-		"Button": {
-            "displayName": "Button" ,
+        },
+        "Button": {
+            "displayName": "Button",
             "states": {
                 "Normal": {
-					"selectors": {
-						".mblButton": [
-							"$std_10" 
-/*							"cursor",
-							"background-color",
-							"outline",
-							"padding",
-							"height",
-							"border",
-							"background-image",
-							"color",
-							"font-family",
-							"font-size",
-							"line-height"
-							*/
-						]								
-					},
-					"query": "" 
-				},
-				"Disabled": {
-                	"selectors": {
-						".mblButtonDisabled" : [
-							"$std_10" 
-	 						/*"cursor",
-    						"border-color",
-    						"background-image",
-    						"color"*/
-						] 
+                    "selectors": {
+                        ".mblButton": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ""
+                },
+                "Disabled": {
+                    "selectors": {
+                        ".mblButtonDisabled": [
+                            "$std_10"
+                        ]
                     },
                     "query": ".mblButton",
                     "simulate": "mblButtonDisabled"
                 },
-				"Selected": {
-                	"selectors": {
-						".mblButtonSelected" : [
-							"$std_10" 
-						] 
+                "Selected": {
+                    "selectors": {
+                        ".mblButtonSelected": [
+                            "$std_10"
+                        ]
                     },
                     "query": ".mblButton",
                     "simulate": "mblButtonSelected"
-                }				
+                }
             }
-		},
-		"ToggleButton": {
-            "displayName": "ToggleButton" ,
+        },
+        "ToggleButton": {
+            "displayName": "ToggleButton",
             "states": {
                 "Normal": {
-					"selectors": {
-						".mblButton": [
-							"$std_10"
-							
-							
-						]								
-					},
-					"query": "" 
-				} 
+                    "selectors": {
+                        ".mblToggleButton": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ""
+                },
+                "Disabled": {
+                    "selectors": {
+                        ".mblToggleButton:disabled": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ".mblToggleButton",
+                    "simulate": ":disabled='true'"
+                },
+                "Selected": {
+                    "selectors": {
+                        ".mblToggleButton.mblToggleButtonChecked": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ".mblToggleButton",
+                    "simulate": "mblToggleButtonChecked"
+                }
             }
-		},
-		"Switch": {
-            "displayName": "Switch" ,
+        },
+        "Switch": {
+            "displayName": "Switch",
             "states": {
                 "Normal": {
-					"selectors": {
-						".mblButton": [
-							"color"
-							
-							
-						]								
-					},
-					"query": "" 
-				} 
-            }
-		},
-		"View": {
-			"displayName": "View" ,
-			"states": {
-				"Normal": {
-					"selectors": {
-						".mobile body": [
-							"color",
-							"overflow-x",
-							"-webkit-text-size-adjust",
-							"background-color",
-							"font-family",
-							"font-size",
-							"width",
-							"margin",
-							"padding"							
-						]								
-					},
-					"query": "" 
-				} 
+                    "selectors": {
+                        ".mblSwitch": [
+                            "margin",
+                            "position",
+                            "width",
+                            "height",
+                            "line-height",
+                            "overflow",
+                            "text-align",
+                            "-webkit-tap-highlight-color"
+                        ],
+                        ".mblSwitchOn .mblSwitchInner": [
+                            "left"
+                        ],
+                        ".mblSwitchBgLeft": [
+                            "background-image",
+                            "left",
+                            "width",
+                            "color",
+                            "background-color"
+                        ],
+                        ".mblSwitchBg": [
+                            "border-radius",
+                            "position",
+                            "top",
+                            "height",
+                            "border-width",
+                            "border-style",
+                            "border-color",
+                            "font-family",
+                            "font-size",
+                            "font-weight",
+                            "line-height",
+                            "-webkit-box-sizing",
+                            "box-sizing"
+                        ],
+                        ".mblSwitchTextLeft": [
+                            "left"
+                        ],
+                        ".mblSwitchText": [
+                            "position",
+                            "top",
+                            "width",
+                            "height",
+                            "padding",
+                            "line-height",
+                            "text-align"
+                        ]
+                    },
+                    "query": ""			
+                },
+                "Disabled": {
+                    "selectors": {
+                        ".mblSwitchBgRight": [
+                            "background-image",
+                            "left",
+                            "width",
+                            "color",
+                            "background-color"
+                        ],
+                        ".mblSwitchTextRight": [
+                            "left"
+                        ],
+                        ".mblSwitchText": [
+                            "position",
+                            "top",
+                            "width",
+                            "height",
+                            "padding",
+                            "line-height",
+                            "text-align"
+                        ]
+                    },
+                    "query": [".mblSwitchOn", ".mblSwitchBgRight"],
+					"simulate": ["mblSwitchOff",":style=''"]
+                }
+            },
+			"subwidgets": {
+             	"SwitchKnob": {
+					"displayName": "SwitchKnob" ,
+					"states": {
+						"Normal": {
+							"selectors": {
+								".mblSwitchKnob": [
+									"background-image",
+									"background-color",
+									"border-radius",
+									"position",
+									"top",
+									"left",
+									"width",
+									"height",
+									"font-size",
+									"border-width",
+									"border-style",
+									"border-color",
+									"-webkit-box-sizing",
+									"box-sizing"
+								]
+							},
+							"query": ".mblSwitchKnob"
+						}
+					}	
+				}
 			}
-		}
+        },
+        "View": {
+            "displayName": "View",
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".mobile body": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ""
+                }
+            }
+        }
     }
 }

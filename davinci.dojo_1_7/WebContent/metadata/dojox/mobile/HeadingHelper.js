@@ -1,8 +1,10 @@
 dojo.provide("davinci.libraries.dojo.dojox.mobile.HeadingHelper");
 
+dojo.require("davinci.libraries.dojo.dojox.mobile._FixedElemMixin");
 
-dojo.declare("davinci.libraries.dojo.dojox.mobile.HeadingHelper", null, {
 
+dojo.declare("davinci.libraries.dojo.dojox.mobile.HeadingHelper",
+			 davinci.libraries.dojo.dojox.mobile._FixedElemMixin, {
 	
 	create: function(widget, srcElement){
 		// Fix for #705.

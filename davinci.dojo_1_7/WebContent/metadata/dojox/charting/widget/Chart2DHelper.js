@@ -51,17 +51,20 @@ dojo.declare("davinci.libraries.dojo.dojox.charting.widget.Chart2DHelper", null,
 			return childrenData;
 		},
 		
-		getPropertyValue: function(/*Widget*/ widget, /*String*/ name){
-			if(!widget || !widget.dijitWidget.chart.stack[0]){
-				return undefined;
-			}
-			var properties = [];
-			if(widget.dijitWidget.chart.stack){
-				properties = widget.dijitWidget.chart.stack[0].opt;
-				dojo.mixin(properties, properties, widget.dijitWidget.chart);
-				return(properties[name]);
-			}
-		},
+		// FIXME: Original code from dojoy days. Commented out because currently untested.
+		// Need to review and decide whether to resurrect.	
+		// 
+		// getPropertyValue: function(/*Widget*/ widget, /*String*/ name){
+		// 	if(!widget || !widget.dijitWidget.chart.stack[0]){
+		// 		return undefined;
+		// 	}
+		// 	var properties = [];
+		// 	if(widget.dijitWidget.chart.stack){
+		// 		properties = widget.dijitWidget.chart.stack[0].opt;
+		// 		dojo.mixin(properties, properties, widget.dijitWidget.chart);
+		// 		return(properties[name]);
+		// 	}
+		// },
 		
 		getAxisProperty: function(axis, name){
 			if(!axis){

@@ -241,6 +241,12 @@ dojo.declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 					}
 			}
 			simulate = s; //.push(s);
+			var index;
+			var attribute;
+			if ((index = simulate.indexOf(':')) > -1){
+			    attribute = simulate.substring(index+1);
+			    simulate = simulate.substring(0, index);
+			}
 			var nodes = dojo.query(query,updateWidget.domNode);
 			var n = nodes[0];
 			if(!n){ // might already be at the top node.
@@ -248,9 +254,19 @@ dojo.declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 			}
 			if (state != 'Normal'){ // Normal is the base class do not remove it.
 				if(mode == 'add'){
-					dojo.addClass(n,simulate);
+				    if(attribute){
+				        n.setAttribute(attribute, attribute);
+				    }
+				    if(simulate){
+				        dojo.addClass(n,simulate);
+				    }
 				} else { 
-					dojo.removeClass(n,simulate);
+				    if(attribute){
+                        n.removeAttribute(attribute);
+                    }
+				    if (simulate){
+				        dojo.removeClass(n,simulate);
+				    }
 				}
 			}
 		}

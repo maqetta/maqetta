@@ -2210,6 +2210,7 @@
                     }
                 }
             },
+            "helper": "davinci.libraries.dojo.dojox.mobile.TabBarHelper",
             "inlineEdit": "davinci.libraries.dojo.dojox.mobile.TabBarInput",
             "allowedChild": "dojox.mobile.TabBarButton",
             "properties": {

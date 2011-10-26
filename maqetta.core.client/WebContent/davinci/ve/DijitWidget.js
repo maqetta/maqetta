@@ -187,20 +187,20 @@ define("davinci/ve/DijitWidget", ["davinci/ve/_Widget", "davinci/ve/metadata"], 
         }
     },
 
-	_getWidget: function() {
-		return this.dijitWidget;
-	},
-	startup: function()
-	{
-		this.dijitWidget.startup();
 
+    _getPropertyValue: function(name) {
+        return this.dijitWidget.get(name);
+    },
+
+	startup: function() {
+		this.dijitWidget.startup();
 	},
-	isLayout: function()
-	{
+
+	isLayout: function() {
 		return this.dijitWidget.isInstanceOf(dijit.layout._LayoutWidget);
 	},
-	resize: function()
-	{
+
+	resize: function() {
 		if (this.dijitWidget.resize) {
 			this.dijitWidget.resize();
 		}

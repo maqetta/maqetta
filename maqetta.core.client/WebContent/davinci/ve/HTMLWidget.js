@@ -117,10 +117,6 @@ define("davinci/ve/HTMLWidget", ["davinci/ve/_Widget"], function() {
 		}
 	},
 
-	_getWidget: function() {
-		return this.domNode;
-	},
-
 	getTagName: function() {
 		return this.domNode.nodeName.toLowerCase();
 	}

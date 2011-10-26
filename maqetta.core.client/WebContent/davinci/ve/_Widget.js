@@ -505,33 +505,26 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
         return content.join('');
 	},
 
-	getPropertyValue: function(name) {
-		if(!name) {
-			return undefined;
-		}
 
-//	TODO: implement helper
-//		var helper = this.getHelper();
-//		if(helper && helper.getPropertyValue) {
-//			return helper.getPropertyValue.apply(this, [name]);
-//		}
-		if (name=='id') {
+	getPropertyValue: function(name) {
+		if (name === 'id') {
 			return this.getId();
-		} else if (name == 'jsId') {
+		} else if (name === 'jsId') {
 			return this.getObjectId();
 		}
+
+		var helper = this.getHelper();
+		if (helper && helper.getPropertyValue) {
+			// FIXME: Helper has to know about _getPropertyValue function
+			// Would be cleaner if we used OO approach
+			return helper.getPropertyValue(this, name);
+		}
+
 		return this._getPropertyValue(name);
 	},
 
 	_getPropertyValue: function(name) {
-		var widget=this._getWidget();
-		if(widget && widget.get) {
-			return widget.get(name);
-		}
-		return widget && widget[name];
-	},
-
-	_getWidget: function() {
+		return this.domNode[name];
 	},
 
 	getTagName: function()

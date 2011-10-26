@@ -12,22 +12,24 @@ define(function() {
 			return undefined;
 		};
 		
-		this.getPropertyValue = function(/*Widget*/ widget, /*String*/ name){
-			// summary:
-			//		Mask label attribute if the button's tag is BUTTON.
-			//
-/*	
-			if(!widget || !name){
-				return undefined;
-			}
-*/
-			var context = widget.getContext();
+		// FIXME: Original code from dojoy days. Commented out because currently untested.
+		// Need to review and decide whether to resurrect.	
+		// 
+		// this.getPropertyValue = function(/*Widget*/ widget, /*String*/ name){
+		// 	// summary:
+		// 	//		Mask label attribute if the button's tag is BUTTON.
+		// 	//
+		// 	if(!widget || !name){
+		// 		return undefined;
+		// 	}
 
-			if (context && widget.getTagName() == "BUTTON" && name == "label") {
-				return undefined;
-			}
+		// 	var context = widget.getContext();
 
-			return widget._getPropertyValue(name);
-		};
+		// 	if (context && widget.getTagName() == "BUTTON" && name == "label") {
+		// 		return undefined;
+		// 	}
+
+		// 	return widget._getPropertyValue(name);
+		// };
 	};
 });

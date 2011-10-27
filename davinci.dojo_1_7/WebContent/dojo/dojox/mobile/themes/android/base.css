@@ -138,6 +138,11 @@ html.mobile, .mobile body {
 	-webkit-transition-property: -webkit-transform;
 	-webkit-transform: translate3d(0%,0px,0px) !important;
 }
+.dj_android.dj_tablet .mblSlide.mblOut.mblTransition,
+.dj_android.dj_tablet .mblSlide.mblIn.mblTransition {
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
+}
 .mblFlip.mblOut {
 	-webkit-transition-property: none;
 	-webkit-transition-duration: 0s;
@@ -165,6 +170,13 @@ html.mobile, .mobile body {
 	-webkit-transition-timing-function: linear;
 	opacity: 1;
 	-webkit-transform: scale(1,1) skew(0,0) !important;
+}
+.dj_android.dj_tablet .mblFlip.mblOut.mblTransition {
+	-webkit-transition-duration: .4s;
+}
+.dj_android.dj_tablet .mblFlip.mblIn.mblTransition {
+	-webkit-transition-delay: .4s;
+	-webkit-transition-duration: .4s;
 }
 .mblFade.mblOut {
 	-webkit-transition-property: none;

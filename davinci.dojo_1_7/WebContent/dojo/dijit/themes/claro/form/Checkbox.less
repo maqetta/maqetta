@@ -22,16 +22,16 @@
 @import "../variables";
 
 .claro .dijitToggleButton .dijitCheckBoxIcon {
-	background-image: url('../images/checkmarkNoBorder.png');
+	background-image: url("../@{image-checkmark}");
 }
 
 .dj_ie6 .claro .dijitToggleButton .dijitCheckBoxIcon {
-	background-image: url('../images/checkmarkNoBorder.gif');
+	background-image: url("../@{image-checkmark-ie6}");
 }
 
 .claro .dijitCheckBox,
 .claro .dijitCheckBoxIcon		/* inside a toggle button */	{
-	background-image: url('images/checkboxRadioButtonStates.png'); /* checkbox sprite image */
+	background-image: url("../@{image-form-checkbox-and-radios}"); /* checkbox sprite image */
 	background-repeat: no-repeat;
 	width: 15px;
 	height: 16px;
@@ -41,7 +41,7 @@
 
 .dj_ie6 .claro .dijitCheckBox,
 .dj_ie6 .claro .dijitCheckBoxIcon		/* inside a toggle button */	{
-	background-image: url('images/checkboxAndRadioButtons_IE6.png'); /* checkbox sprite image */
+	background-image: url("../@{image-form-checkbox-and-radios-ie6}"); /* checkbox sprite image */
 }
 
 .claro .dijitCheckBox,

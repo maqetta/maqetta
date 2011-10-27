@@ -229,7 +229,7 @@ if(i!="type"&&i!="r"){
 this.rawNode.setAttribute(i,this.shape[i]);
 }
 }
-if("r" in this.shape){
+if(this.shape.r!=null){
 this.rawNode.setAttribute("ry",this.shape.r);
 this.rawNode.setAttribute("rx",this.shape.r);
 }

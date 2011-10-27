@@ -16,7 +16,7 @@ this.connect(this.dateRowsNode,"onmouseup","_onDayMouseUp");
 this._setCurrentFocusAttr(this.dateFuncObj.add(this.currentFocus,"month",_13-this.currentFocus.getMonth()));
 },_onDayMouseOver:function(evt){
 var _14=_6.contains(evt.target,"dijitCalendarDateLabel")?evt.target.parentNode:evt.target;
-if(_14&&(_14.dijitDateValue||_14==this.previousYearLabelNode||_14==this.nextYearLabelNode)){
+if(_14&&((_14.dijitDateValue&&!_6.contains(_14,"dijitCalendarDisabledDate"))||_14==this.previousYearLabelNode||_14==this.nextYearLabelNode)){
 _6.add(_14,"dijitCalendarHoveredDate");
 this._currentNode=_14;
 }
@@ -35,7 +35,7 @@ _6.remove(this._currentNode,cls);
 this._currentNode=null;
 },_onDayMouseDown:function(evt){
 var _15=evt.target.parentNode;
-if(_15&&_15.dijitDateValue){
+if(_15&&_15.dijitDateValue&&!_6.contains(_15,"dijitCalendarDisabledDate")){
 _6.add(_15,"dijitCalendarActiveDate");
 this._currentNode=_15;
 }

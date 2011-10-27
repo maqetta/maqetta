@@ -245,10 +245,15 @@ this._lastInput=key;
 var _2b=_8.clone(this.query);
 var _2c={start:0,count:this.pageSize,queryOptions:{ignoreCase:this.ignoreCase,deep:true}};
 _8.mixin(_2c,this.fetchProperties);
-var qs=this._getQueryString(key),q=this.store._oldAPI?qs:_2.patternToRegExp(qs,this.ignoreCase);
+var qs=this._getQueryString(key),q;
+if(this.store._oldAPI){
+q=qs;
+}else{
+q=_2.patternToRegExp(qs,this.ignoreCase);
 q.toString=function(){
 return qs;
 };
+}
 this._lastQuery=_2b[this.searchAttr]=q;
 var _2d=this,_2e=function(){
 var _2f=_2d._fetchHandle=_2d.store.query(_2b,_2c);

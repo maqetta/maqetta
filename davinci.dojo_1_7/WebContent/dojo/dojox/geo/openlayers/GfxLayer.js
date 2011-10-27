@@ -1,6 +1,6 @@
 //>>built
 define("dojox/geo/openlayers/GfxLayer",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/connect","dojo/_base/html","dojox/gfx","dojox/gfx/_base","dojox/gfx/shape","dojox/gfx/path","dojox/gfx/matrix","dojox/geo/openlayers/Feature","dojox/geo/openlayers/Layer"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b){
-return _2("dojox.geo.openlayers.GfxLayer",dojox.geo.openlayers.Layer,{_viewport:null,constructor:function(_c,_d){
+return _2("dojox.geo.openlayers.GfxLayer",_b,{_viewport:null,constructor:function(_c,_d){
 var s=dojox.gfx.createSurface(this.olLayer.div,100,100);
 this._surface=s;
 var vp;

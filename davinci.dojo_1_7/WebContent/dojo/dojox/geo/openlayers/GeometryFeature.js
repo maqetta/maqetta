@@ -1,6 +1,6 @@
 //>>built
 define("dojox/geo/openlayers/GeometryFeature",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/lang","dojox/gfx/matrix","dojox/geo/openlayers/Point","dojox/geo/openlayers/LineString","dojox/geo/openlayers/Collection","dojox/geo/openlayers/Feature"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9){
-return _2("dojox.geo.openlayers.GeometryFeature",dojox.geo.openlayers.Feature,{constructor:function(_a){
+return _2("dojox.geo.openlayers.GeometryFeature",_9,{constructor:function(_a){
 this._geometry=_a;
 this._shapeProperties={};
 this._fill=null;

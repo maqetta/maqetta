@@ -1,5 +1,5 @@
 //>>built
-define("dojox/encoding/base64",["dojo/_base/kernel"],function(_1){
+define("dojox/encoding/base64",["dojo/_base/lang"],function(_1){
 var _2=_1.getObject("dojox.encoding.base64",true);
 var p="=";
 var _3="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";

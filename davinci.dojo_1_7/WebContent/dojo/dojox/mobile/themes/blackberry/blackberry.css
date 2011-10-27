@@ -142,6 +142,11 @@ html.mobile, .mobile body {
 	-webkit-transition-property: -webkit-transform;
 	-webkit-transform: translate3d(0%,0px,0px) !important;
 }
+.dj_android.dj_tablet .mblSlide.mblOut.mblTransition,
+.dj_android.dj_tablet .mblSlide.mblIn.mblTransition {
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
+}
 .mblFlip.mblOut {
 	-webkit-transition-property: none;
 	-webkit-transition-duration: 0s;
@@ -169,6 +174,13 @@ html.mobile, .mobile body {
 	-webkit-transition-timing-function: linear;
 	opacity: 1;
 	-webkit-transform: scale(1,1) skew(0,0) !important;
+}
+.dj_android.dj_tablet .mblFlip.mblOut.mblTransition {
+	-webkit-transition-duration: .4s;
+}
+.dj_android.dj_tablet .mblFlip.mblIn.mblTransition {
+	-webkit-transition-delay: .4s;
+	-webkit-transition-duration: .4s;
 }
 .mblFade.mblOut {
 	-webkit-transition-property: none;
@@ -1898,6 +1910,11 @@ html.mobile, .mobile body {
 	-webkit-transition-property: -webkit-transform;
 	-webkit-transform: translate3d(0%,0px,0px) !important;
 }
+.dj_android.dj_tablet .mblCover.mblOut.mblTransition,
+.dj_android.dj_tablet .mblCover.mblIn.mblTransition {
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
+}
 
 .mblReveal.mblOut {
 	z-index: 0;
@@ -1928,6 +1945,11 @@ html.mobile, .mobile body {
 .mblReveal.mblOut.mblReverse.mblTransition {
 	-webkit-transition-property: -webkit-transform;
 	-webkit-transform: translate3d(100%,0px,0px) !important;
+}
+.dj_android.dj_tablet .mblReveal.mblOut.mblTransition,
+.dj_android.dj_tablet .mblReveal.mblIn.mblTransition {
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
 }
 
 .mblSlidev.mblOut {
@@ -1966,6 +1988,11 @@ html.mobile, .mobile body {
 	-webkit-transition-property: -webkit-transform;
 	-webkit-transform: translate3d(0px,0%,0px) !important;
 }
+.dj_android.dj_tablet .mblSlidev.mblOut.mblTransition,
+.dj_android.dj_tablet .mblSlidev.mblIn.mblTransition {
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
+}
 
 .mblCoverv.mblOut {
 	z-index: -100;
@@ -1997,6 +2024,11 @@ html.mobile, .mobile body {
 	-webkit-transition-property: -webkit-transform;
 	-webkit-transform: translate3d(0px,0%,0px) !important;
 }
+.dj_android.dj_tablet .mblCoverv.mblOut.mblTransition,
+.dj_android.dj_tablet .mblCoverv.mblIn.mblTransition {
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
+}
 
 .mblRevealv.mblOut {
 	z-index: 0;
@@ -2023,6 +2055,11 @@ html.mobile, .mobile body {
 .mblRevealv.mblOut.mblReverse.mblTransition {
 	-webkit-transition-property: -webkit-transform;
 	-webkit-transform: translate3d(0px,100%,0px) !important;
+}
+.dj_android.dj_tablet .mblRevealv.mblOut.mblTransition,
+.dj_android.dj_tablet .mblRevealv.mblIn.mblTransition {
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
 }
 
 .mblSwirl.mblOut {
@@ -2493,7 +2530,6 @@ html.mobile, .mobile body {
 }
 .mblIconItemSub {
   list-style-type: none;
-  margin-left: -10px;
   background-color: white;
   color: black;
 }
@@ -2559,14 +2595,14 @@ table.mblClose {
   text-overflow: ellipsis;
   margin-top: 0px;
   padding-left: 40px;
-  height: 30px;
+  height: 25px;
   border-top: 1px solid #F1F3F4;
   border-bottom: 1px solid #717D85;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#e0e4e7), to(#b4bec6), color-stop(0.5, #c4ccd2), color-stop(0.5, #bfc8ce));
   font-family: Helvetica;
   font-size: 16px;
   color: white;
-  line-height: 32px;
+  line-height: 26px;
   text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0px;
 }
 .mblCoverv.mblOut {
@@ -2599,6 +2635,11 @@ table.mblClose {
 	-webkit-transition-property: -webkit-transform;
 	-webkit-transform: translate3d(0px,0%,0px) !important;
 }
+.dj_android.dj_tablet .mblCoverv.mblOut.mblTransition,
+.dj_android.dj_tablet .mblCoverv.mblIn.mblTransition {
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
+}
 .mblRevealv.mblOut {
 	z-index: 0;
 	-webkit-transition-property: none;
@@ -2624,6 +2665,11 @@ table.mblClose {
 .mblRevealv.mblOut.mblReverse.mblTransition {
 	-webkit-transition-property: -webkit-transform;
 	-webkit-transform: translate3d(0px,100%,0px) !important;
+}
+.dj_android.dj_tablet .mblRevealv.mblOut.mblTransition,
+.dj_android.dj_tablet .mblRevealv.mblIn.mblTransition {
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
 }
 .mblOverlay {
   position: fixed;
@@ -2910,8 +2956,8 @@ table.mblClose {
   padding: 0px;
   height: 48px;
   border-top: 1px solid #000000;
-  background-color: #424142;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#4a4d52), to(#292c31));
+  background-color: #212421;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#181818), to(#100c10));
   color: white;
   text-align: center;
 }
@@ -2932,7 +2978,7 @@ table.mblClose {
 }
 .mblTabBar .mblTabBarButton.mblTabButtonSelected {
   background-color: #404040;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#484848), to(#242424), color-stop(0.5, #353535), color-stop(0.5, #242424));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#484848), to(#242424), color-stop(0.5, #353535));
   -webkit-border-radius: 3px;
 }
 .mblTabBarButtonAnchor {
@@ -2975,17 +3021,16 @@ table.mblClose {
   list-style-type: none;
   cursor: pointer;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-  margin-right: 2px;
   width: 78px;
   height: 61px;
-  border-width: 0px 1px 0px 1px;
+  border-width: 1px 1px 0px 1px;
   border-style: solid;
-  border-color: black #182018 black #393C39;
+  border-color: #7B7D84 #182018 black #393C39;
   background-color: #212421;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#181818), to(#100c10), color-stop(0.1, #313031));
   font-family: Helvetica;
   font-size: 13px;
-  color: white;
+  color: #979797;
   text-align: center;
 }
 .mblTabButton img {
@@ -2995,14 +3040,6 @@ table.mblClose {
 }
 .mblTabButtonSelected .mblTabBarButtonTextBox {
   color: white;
-}
-.mblTabButtonSelected.mblTabButton {
-  background-color: #8C8E8C;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#a59ea5), to(#848284));
-}
-.mblTabButtonHighlighted.mblTabButton {
-  background-color: #FFB600;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffcb00), to(#ff9a00));
 }
 .mblTabButtonImgDiv {
   position: relative;
@@ -3032,7 +3069,8 @@ table.mblClose {
 }
 .mblTabPanelHeader .mblTabButton.mblTabButtonSelected {
   background-color: #404040;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#484848), to(#242424), color-stop(0.5, #353535), color-stop(0.5, #242424));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#484848), to(#242424), color-stop(0.5, #353535));
+  color: white;
 }
 .mblTabPanelHeader .mblTabButtonDomButton {
   width: 43px;

@@ -29,6 +29,9 @@ return _14.region=="center"||_14.layoutAlign=="client";
 }));
 _1.forEach(_10,function(_15){
 var elm=_15.domNode,pos=(_15.region||_15.layoutAlign);
+if(!pos){
+throw new Error("No region setting for "+_15.id);
+}
 var _16=elm.style;
 _16.left=dim.l+"px";
 _16.top=dim.t+"px";

@@ -31,15 +31,69 @@
                 }
             }
         },
-        "EdgeToEdgeList": {
-            "displayName": "EdgeToEdgeList",
+		"Heading": {
+			"displayName": "Heading",
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mblHeading": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				}
+			}
+		},
+        "RoundRectList": {
+            "displayName": "RoundRectList",
             "states": {
                 "Normal": {
                     "selectors": {
                         ".mblEdgeToEdgeList": [
-                            "$std_10"
-                        ]
-                    },
+							"position",
+							"padding",
+							"padding-top",
+							"padding-right",
+							"padding-bottom",
+							"padding-left"
+                        ],
+						".mblRoundRectList": [
+							"position",
+							"margin",
+							"margin-top",
+							"margin-right",
+							"margin-bottom",
+							"margin-left",
+							"padding",
+							"padding-top",
+							"padding-right",
+							"padding-bottom",
+							"padding-left",
+							"border",
+							"border-width",
+							"border-style",
+							"border-color",
+							"border-radius",
+							"border-top-width",
+							"border-right-width",
+							"border-bottom-width",
+							"border-left-width",
+							"border-top-style",
+							"border-right-style",
+							"border-bottom-style",
+							"border-left-style",
+							"border-top-color",
+							"border-right-color",
+							"border-bottom-color",
+							"border-left-color",
+							"-webkit-border-radius",
+							"border-top-left-radius",
+							"border-top-right-radius",
+							"border-bottom-right-radius",
+							"border-bottom-left-radius",
+							"-moz-border-radius"
+						]
+					},
                     "query": ""
                 }
             },
@@ -65,7 +119,7 @@
                                     "border-bottom-color",
                                     "background-color",
                                     "font-size",
-                                    "color:",
+                                    "color",
                                     "line-height"
                                 ],
                                 ".mblListItem .mblListItemAnchor": [
@@ -91,17 +145,14 @@
 					"states": {
 						"Normal": {
 							"selectors": {
-								".mblListItemRightIcon": [
-									"position",
-									"float",
-									"line-height",
-									"margin-top",
-									"margin-bottom"
-								],
-								".mblDomButtonGrayArrow": [
-									"position",
-									"width",
-									"height"
+								".mblDomButtonGrayArrow > div": [
+									"border-width",
+									"border-top-width",
+									"border-right-width",
+									"border-bottom-width",
+									"border-left-width",
+									"border-style",
+									"border-color"
 								]
 							},
 							"query": ".mblListItemRightIcon"
@@ -109,63 +160,6 @@
 					}
 				}
             }
-		},
-		"Heading": {
-			"displayName": "Heading",
-			"states": {
-				"Normal": {
-					"selectors": {
-						".mblHeading": [
-							"$std_10"
-						]
-					},
-					"query": ""
-				}
-			}
-		},
-		"ToggleButton": {
-			"displayName": "ToggleButton",
-			"states": {
-				"Normal": {
-					"selectors": {
-						".mblToggleButton": [
-							"$std_10"
-						]
-					},
-					"query": ""
-				},
-				"Disabled": {
-					"selectors": {
-						".mblToggleButton:disabled": [
-							"$std_10"
-						]
-					},
-					"query": ".mblToggleButton",
-					"simulate": ":disabled='true'"
-				},
-				"Selected": {
-					"selectors": {
-						".mblToggleButton.mblToggleButtonChecked": [
-							"$std_10"
-						]
-					},
-					"query": ".mblToggleButton",
-					"simulate": "mblToggleButtonChecked"
-				}
-			}
-		},
-		"View": {
-			"displayName": "View",
-			"states": {
-				"Normal": {
-					"selectors": {
-						".mobilebody": [
-							"$std_10"
-						]
-					},
-					"query": ""
-				}
-			}
 		},
 		"Switch": {
 			"displayName": "Switch",
@@ -282,6 +276,50 @@
 					}
 				}
 			}
-		}
+		},
+		"ToggleButton": {
+			"displayName": "ToggleButton",
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mblToggleButton": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				},
+				"Disabled": {
+					"selectors": {
+						".mblToggleButton:disabled": [
+							"$std_10"
+						]
+					},
+					"query": ".mblToggleButton",
+					"simulate": ":disabled='true'"
+				},
+				"Selected": {
+					"selectors": {
+						".mblToggleButton.mblToggleButtonChecked": [
+							"$std_10"
+						]
+					},
+					"query": ".mblToggleButton",
+					"simulate": "mblToggleButtonChecked"
+				}
+			}
+		},
+		"View": {
+			"displayName": "View",
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mobilebody": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				}
+			}
+		},
 	}
 }

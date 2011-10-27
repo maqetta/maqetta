@@ -37,7 +37,6 @@ define(["require", "dojo/has"], function(require, has) {
 
 	// host-dependent environment initialization
 	if (has("host-node")) {
-		console.log("running under node.js");
 		define("commandLineArgs", function() {
 			//arg[0] is node; argv[1] is dojo.js; therefore, start with argv[2]
 			return process.argv.slice(2);
@@ -52,7 +51,6 @@ define(["require", "dojo/has"], function(require, has) {
 		// TODO: make this real
 		has.add("is-windows", 0);
 	} else if (has("host-rhino")) {
-		console.log("running under rhino");
 		define("commandLineArgs", [], function() {
 			var result= [];
 			require.rawConfig.commandLineArgs.forEach(function(item) {
@@ -168,6 +166,11 @@ define(["require", "dojo/has"], function(require, has) {
 					return;
 				} //	else all processes have passed through bc.currentGate
 
+				if(bc.checkDiscovery){
+					//passing the first gate which is dicovery and just echoing discovery; therefore
+					process.exit(0);
+				}
+
 				if (bc.currentGate<bc.gates.length-1) {
 					advanceGate(bc.currentGate);
 					// hold the next gate until all resources have been advised
@@ -203,6 +206,11 @@ define(["require", "dojo/has"], function(require, has) {
 			// remember the resources in the global maps
 			bc.resources[resource.src]= resource;
 			bc.resourcesByDest[resource.dest]= resource;
+
+			if(bc.checkDiscovery){
+				bc.log("pacify", src + "-->" + dest);
+				return;
+			}
 
 			// find the transformJob and start it...
 			for (var i= 0; i<transformJobsLength; i++) {

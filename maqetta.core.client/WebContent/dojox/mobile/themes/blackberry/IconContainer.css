@@ -19,7 +19,6 @@
 }
 .mblIconItemSub {
   list-style-type: none;
-  margin-left: -10px;
   background-color: white;
   color: black;
 }
@@ -86,13 +85,13 @@ table.mblClose {
   text-overflow: ellipsis;
   margin-top: 0px;
   padding-left: 40px;
-  height: 30px;
+  height: 25px;
   border-top: 1px solid #F1F3F4;
   border-bottom: 1px solid #717D85;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#e0e4e7), to(#b4bec6), color-stop(0.5, #c4ccd2), color-stop(0.5, #bfc8ce));
   font-family: Helvetica;
   font-size: 16px;
   color: white;
-  line-height: 32px;
+  line-height: 26px;
   text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0px;
 }

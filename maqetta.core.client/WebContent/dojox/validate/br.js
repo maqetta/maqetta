@@ -1,6 +1,6 @@
-define(["dojo/_base/lang", "./_base"], function(dojo, validate){
+define(["dojo/_base/lang", "./_base"], function(lang, validate){
 
-var br = dojo.getObject("br", true, validate);
+var br = lang.getObject("br", true, validate);
 br.isValidCnpj = function(/*String*/value){
 	// summary:
 	//		Validates a CNPJ/CGC number
@@ -8,7 +8,7 @@ br.isValidCnpj = function(/*String*/value){
 	// value: String
 	//		The CNPJ/CGC number in ##.###.###/####-##, ########/####-##,
 	//		############-## or ############## format
-	if(!dojo.isString(value)){
+	if(!lang.isString(value)){
 		if(!value){
 			return false;
 		}
@@ -81,7 +81,7 @@ br.computeCnpjDv = function(/*String*/value){
 	// summary: Generate the DV code (checksum part) for a Cnpj number
 	//
 	// value: The CGC number in ##.###.###/#### or ############ format
-	if(!dojo.isString(value)){
+	if(!lang.isString(value)){
 		if(!value){
 			return "";
 		}
@@ -145,7 +145,7 @@ br.isValidCpf = function(/*String*/value){
 	// value: String
 	//		The CPF number in #########-## or ###########,
 	//		format
-	if(!dojo.isString(value)){
+	if(!lang.isString(value)){
 		if(!value){
 			return false;
 		}
@@ -219,7 +219,7 @@ br.computeCpfDv = function(/*String*/value){
 	//
 	// value: String
 	//		The CPF number in ######### format
-	if(!dojo.isString(value)){
+	if(!lang.isString(value)){
 		if(!value){
 			return "";
 		}

@@ -1,5 +1,5 @@
-define(["dojo/_base/kernel"], function(dojo){
-	var d = dojo.getObject("dojox.encoding.digests", true);
+define(["dojo/_base/lang"], function(lang){
+	var d = lang.getObject("dojox.encoding.digests", true);
 	/*=====
 		d = dojox.encoding.digests;
 	=====*/

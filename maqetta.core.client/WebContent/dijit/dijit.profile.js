@@ -5,7 +5,7 @@ var testResourceRe = /^dijit\/tests\//,
 			"dijit/package.json":1,
 			"dijit/themes/claro/compile":1
 		};
-		return (mid in list) || /^dijit\/resources\//.test(mid);
+		return (mid in list) || (/^dijit\/resources\//.test(mid) && !/\.css$/.test(mid));
 	};
 
 var profile = {

@@ -1,6 +1,6 @@
-define(["dojo/_base/kernel"], function(dojo) {
+define(["dojo/_base/lang"], function(lang) {
 	
-	var base64 = dojo.getObject("dojox.encoding.base64", true);
+	var base64 = lang.getObject("dojox.encoding.base64", true);
 	/*=====
 		base64 = dojox.encoding.base64;
 	=====*/

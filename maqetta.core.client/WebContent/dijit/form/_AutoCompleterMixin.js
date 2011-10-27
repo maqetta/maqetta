@@ -563,12 +563,18 @@ define([
 			};
 			lang.mixin(options, this.fetchProperties);
 
-			// Query on searchAttr is a regex (for benefit of dojo.store.MemoryStore),
-			// but with a toString() method to help JsonStore.
-			// Search string like "Co*" converted to regex like /^Co.*$/i.
-			var qs = this._getQueryString(key),
-				q = this.store._oldAPI ? qs : filter.patternToRegExp(qs, this.ignoreCase);
-			q.toString = function(){ return qs; };
+			// Generate query
+			var qs = this._getQueryString(key), q;
+			if(this.store._oldAPI){
+				// remove this branch for 2.0
+				q = qs;
+			}else{
+				// Query on searchAttr is a regex for benefit of dojo.store.Memory,
+				// but with a toString() method to help dojo.store.JsonRest.
+				// Search string like "Co*" converted to regex like /^Co.*$/i.
+				q = filter.patternToRegExp(qs, this.ignoreCase);
+				q.toString = function(){ return qs; };
+			}
 			this._lastQuery = query[this.searchAttr] = q;
 
 			// Function to run the query, wait for the results, and then call _openResultList()

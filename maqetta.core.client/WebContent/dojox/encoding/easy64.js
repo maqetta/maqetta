@@ -1,5 +1,5 @@
-define(["dojo/_base/kernel"], function(dojo) {
-	var easy64 = dojo.getObject("dojox.encoding.easy64", true);
+define(["dojo/_base/lang"], function(lang) {
+	var easy64 = lang.getObject("dojox.encoding.easy64", true);
 	/*=====
 		easy64 = dojox.encoding.easy64;
 	=====*/

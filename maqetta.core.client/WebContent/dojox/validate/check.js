@@ -1,5 +1,6 @@
-define(["dojo/_base/kernel", "dojo/_base/lang", "./_base"], function(dojo, lang, validate){
-dojo.experimental("dojox.validate.check");
+define(["dojo/_base/kernel", "dojo/_base/lang", "./_base"], 
+ function(kernel, lang, validate){
+kernel.experimental("dojox.validate.check");
 
 /*=====
 

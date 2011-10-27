@@ -1,13 +1,75 @@
 define(["./buildControlBase"], function(bc) {
 	var defaultBc= {
+		// v1.6- default values
+		internStrings:true,
+		internSkipList:[],
+		optimize:"",
+		layerOptimize:"shrinksafe",
+		cssOptimize:"",
+		cssImportIgnore:"",
+		stripConsole:"normal",
+		scopeMap:[],
+		insertAbsMids:1,
+		applyDojoPragmas:1,
+
+
+		// this is a dojo pragma
+		replaceLoaderConfig:1,
+
+		defaultConfig:{
+			hasCache:{
+				// these are the values given above, not-built client code may test for these so they need to be available
+				'dojo-built':1,
+				'dojo-loader':1,
+				'dom':1,
+				'host-browser':1,
+
+				// default
+				"config-selectorEngine":"acme"
+			},
+			async:0
+		},
+
 		files:[],
 		dirs:[],
 		trees:[],
 		replacements:{},
-		compactCssSet:{},
 
 		staticHasFeatures:{
-			// TODO
+			// consider turning these hard on for standard 1.x build
+			//'config-publishRequireResult':1,
+			//'config-tlmSiblingOfDojo':1,
+
+			'extend-dojo':1,
+			'dojo-amd-factory-scan':0,
+			'dojo-built':1,
+			'dojo-combo-api':0,
+			'dojo-log-api':1,
+			'dojo-test-sniff':0,// must be turned on for several tests to work
+			'dojo-config-addOnLoad':1,
+			'dojo-config-api':1,
+			'dojo-config-require':1,
+			'dojo-dom-ready-api':1,
+			'dojo-guarantee-console':1,
+			'dojo-has-api':1,
+			'dojo-inject-api':1,
+			'dojo-loader':1,
+			'dojo-modulePaths':1,
+			'dojo-moduleUrl':1,
+			'dojo-publish-privates':0,
+			'dojo-requirejs-api':0,
+			'dojo-scopeMap':1,
+			'dojo-sniff':1,
+			'dojo-sync-loader':1,
+			'dojo-timeout-api':1,
+			'dojo-trace-api':0,
+			'dojo-undef-api':0,
+			'dojo-v1x-i18n-Api':1,
+			'dojo-xhr-factory':1,
+			'dom':1,
+			'host-browser':1,
+			'host-node':0,
+			'host-rhino':0
 		},
 
 		buildFlags:{
@@ -55,7 +117,6 @@ define(["./buildControlBase"], function(bc) {
 			writeOptimized: ["build/transforms/writeOptimized", "write"],
 			copy:           ["build/transforms/copy", "write"],
 			writeDojo:      ["build/transforms/writeDojo", "write"],
-			compactCss:     ["build/transforms/compactCss", "optimize"],
 			optimizeCss:    ["build/transforms/optimizeCss", "optimize"],
 			writeCss:       ["build/transforms/writeCss", "write"],
 			hasFindAll:     ["build/transforms/hasFindAll", "read"],

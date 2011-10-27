@@ -37,11 +37,11 @@
   border: 1px solid #ffffff;
   border-top: none;
   background-color: #efefef;
-  background-image: url("images/formHighlight.png");
+  background-image: url("../form/images/formHighlight.png");
   background-repeat: repeat-x;
 }
 .claro .dijitSelect .dijitArrowButton .dijitArrowButtonInner {
-  background-image: url("images/commonFormArrows.png");
+  background-image: url("../form/images/commonFormArrows.png");
   background-position: -35px 70%;
   background-repeat: no-repeat;
   width: 16px;
@@ -51,7 +51,7 @@
 .claro .dijitSelectHover {
   border: 1px solid #759dc0;
   background-color: #e5f2fe;
-  background-image: url('images/textBox_back.png');
+  background-image: url("../form/images/textBox_back.png");
   background-repeat: repeat-x;
 }
 .claro .dijitSelectHover .dijitButtonContents {

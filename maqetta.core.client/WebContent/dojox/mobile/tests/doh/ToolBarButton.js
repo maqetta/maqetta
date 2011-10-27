@@ -74,9 +74,7 @@ dojo.addOnLoad(function(){
 
 			demoWidget = dijit.byId("dojox_mobile_ToolBarButton_16");
 			doh.assertEqual('mblToolBarButton mblArrowButtonText mblColorDefault', demoWidget.domNode.className);
-			if(dojo.isIE===6){
-				doh.assertTrue(demoWidget.domNode.childNodes[0].childNodes[0].href.search(/tab-icon-15h.png/) != -1, "tab-icon-15h.png");
-			}else{
+			if(dojo.isIE!=6){
 				doh.assertTrue(demoWidget.domNode.childNodes[0].childNodes[0].src.search(/tab-icon-15h.png/) != -1, "tab-icon-15h.png");
 			}
 

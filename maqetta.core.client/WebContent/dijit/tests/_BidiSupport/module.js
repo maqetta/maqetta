@@ -11,6 +11,8 @@ try{
 	dojo.require("dijit.tests._BidiSupport.dynamicallyChangeTextDir.module");
 
 	dojo.require("dijit.tests._BidiSupport.tree.module");
+	
+	dojo.require("dijit.tests._BidiSupport.widgets.module");
 
 }catch(e){
 

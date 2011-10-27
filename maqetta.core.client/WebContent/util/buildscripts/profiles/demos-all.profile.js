@@ -189,26 +189,6 @@ dependencies = {
 			dependencies:[
 				"demos.css3.src"
 			]
-		},
-		// Gridx demo
-		{
-			name: "../demos/gridx/MiniGrid.js",
-			dependencies: [
-				"demos.gridx.MiniGrid"
-			]
-		},
-		{
-			name: "../demos/gridx/MobileGrid.js",
-			resourceName: "demos.gridx.MobileGrid",
-			dependencies: [
-				"demos.gridx.MobileGrid"
-			]
-		},
-		{
-			name: "../demos/gridx/AdvancedGrid.js",
-			dependencies: [
-				"demos.gridx.AdvancedGrid"
-			]
 		}
 	],
 

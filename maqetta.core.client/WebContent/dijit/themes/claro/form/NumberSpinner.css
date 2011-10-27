@@ -35,7 +35,7 @@
 .claro .dijitSpinner .dijitArrowButton {
   width: auto;
   background-color: #efefef;
-  background-image: url("images/formHighlight.png");
+  background-image: url("../form/images/formHighlight.png");
   background-position: 0 0;
   background-repeat: repeat-x;
   overflow: hidden;
@@ -54,7 +54,7 @@
   border-bottom-width: 0;
   /* 2 top borders = 1 top+bottom border in ComboBox */
 
-  background-image: url("images/commonFormArrows.png");
+  background-image: url("../form/images/commonFormArrows.png");
   background-repeat: no-repeat;
   height: 100%;
   width: 15px;

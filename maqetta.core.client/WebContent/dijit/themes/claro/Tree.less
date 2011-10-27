@@ -62,7 +62,7 @@
 .claro .dijitTreeRowSelected {
 	background-repeat:repeat-x;
 	background-color:@selected-background-color;
-	background-image: url("images/commonHighlight.png");
+	background-image: url(@image-common-highlight);
 	padding: 3px 0 1px;
 	margin: 0;
 	border:solid 1px @selected-border-color;
@@ -70,7 +70,7 @@
 }
 .claro .dijitTreeRowHover {
 	background-color:@hovered-background-color;
-	background-image: url("images/commonHighlight.png");
+	background-image: url(@image-common-highlight);
 	padding: 3px 0 1px;
 	margin: 0;
 	border:solid 1px @hovered-border-color;
@@ -79,7 +79,7 @@
 }
 .claro .dijitTreeRowActive {
 	background-color:@pressed-background-color;
-	background-image: url("images/commonHighlight.png");
+	background-image: url(@image-common-highlight);
 	background-position:0 -177px;
 	padding: 3px 0 1px;
 	margin-left: 0;
@@ -96,13 +96,13 @@
 /* expando (open/closed) icon */
 
 .claro .dijitTreeExpando {
-	background-image: url('images/treeExpandImages.png');
+	background-image: url(@image-tree-expand);
     width: 16px;
     height: 16px;
 	background-position: -35px 0;		/* for dijitTreeExpandoOpened */
 }
 .dj_ie6 .claro .dijitTreeExpando {
-	background-image: url('images/treeExpandImages8bit.png');
+	background-image: url(@image-tree-expand-ie6);
 }
 .claro .dijitTreeRowHover .dijitTreeExpandoOpened {
 	background-position: -53px 0;
@@ -118,7 +118,7 @@
 	background-image:none;
 }
 .claro .dijitTreeExpandoLoading {
-	background-image: url('images/loadingAnimation.gif');
+	background-image: url(@image-loading-animation);
 }
 
 /* Drag and Drop on TreeNodes

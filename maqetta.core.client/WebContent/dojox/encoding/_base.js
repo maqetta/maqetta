@@ -1,3 +1,3 @@
-define(['dojo/_base/kernel'], function(dojo){
-	return dojo.getObject("dojox.encoding._base", true);
+define(['dojo/_base/lang'], function(lang){
+	return lang.getObject("dojox.encoding._base", true);
 });

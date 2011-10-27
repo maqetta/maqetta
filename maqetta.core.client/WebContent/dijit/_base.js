@@ -1,6 +1,7 @@
 define([
 	".",
 	"./a11y",	// used to be in dijit/_base/manager
+	"./WidgetSet",	// used to be in dijit/_base/manager
 	"./_base/focus",
 	"./_base/manager",
 	"./_base/place",

@@ -1,11 +1,11 @@
 define([
-	"dojo/_base/kernel",
+	"dojo/_base/lang",
 	"dojo/regexp", // dojo core expressions
 	"dojo/number", // dojo number expressions
 	"./regexp" // additional expressions
-], function(dojo, regexp, number, xregexp) {
+], function(lang, regexp, number, xregexp) {
 
-	var validate = dojo.getObject("dojox.validate", true);
+	var validate = lang.getObject("dojox.validate", true);
 	/*=====
 		validate = dojox.validate;
 	=====*/
@@ -58,7 +58,7 @@ validate.isInRange = function(/*String*/value, /*Object?*/flags){
 		min = (typeof flags.min == "number") ? flags.min : -Infinity,
 		dec = (typeof flags.decimal == "string") ? flags.decimal : ".",
 	
-		cache = dojox.validate._isInRangeCache,
+		cache = validate._isInRangeCache,
 		cacheIdx = value + "max" + max + "min" + min + "dec" + dec
 	;
 	if(typeof cache[cacheIdx] != "undefined"){
@@ -119,7 +119,7 @@ validate.isValidLuhn = function(/* String */value){
 	//		its integrity.
 	
 	var sum = 0, parity, curDigit;
-	if(!dojo.isString(value)){
+	if(!lang.isString(value)){
 		value = String(value);
 	}
 	value = value.replace(/[- ]/g,''); //ignore dashes and whitespaces

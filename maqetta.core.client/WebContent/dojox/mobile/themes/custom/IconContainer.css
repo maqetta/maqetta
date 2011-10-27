@@ -3,8 +3,8 @@
 @import url("../common/IconContainer_keyframes.css");
 /* dojox.mobile.IconContainer */
 .mblIconContainer {
-  margin: 8px;
-  padding: 8px;
+  margin: 8px 0 8px 8px;
+  padding: 8px 0 8px;
   background-color: #eff1f3;
 }
 /* dojox.mobile.IconItem */
@@ -20,7 +20,7 @@
 }
 .mblIconItemSub {
   list-style-type: none;
-  margin-left: - 8px;
+  margin-left: -8px;
   background-color: white;
   color: #131313;
 }
@@ -87,7 +87,8 @@ table.mblClose {
   text-overflow: ellipsis;
   margin-top: 0px;
   padding-left: 37px;
-  height: 29px;
+  height: 25px;
+  border-top: 1px solid #dfe8f0;
   border-bottom: 1px solid #769dc0;
   background-color: #5cb0ff;
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(2.5%, #ffffff), color-stop(2.5%, rgba(255, 255, 255, 0.14)), color-stop(5%, rgba(255, 255, 255, 0.14)), color-stop(5%, rgba(255, 255, 255, 0.52)), color-stop(7.5%, rgba(255, 255, 255, 0.52)), color-stop(7.5%, rgba(255, 255, 255, 0.68)), color-stop(10%, rgba(255, 255, 255, 0.68)), color-stop(1, rgba(255, 255, 255, 0)));
@@ -96,5 +97,5 @@ table.mblClose {
   font-family: Helvetica;
   font-weight: normal;
   text-shadow: rgba(0, 0, 0, 0.2) 0px 1px 2px;
-  line-height: 29px;
+  line-height: 26px;
 }

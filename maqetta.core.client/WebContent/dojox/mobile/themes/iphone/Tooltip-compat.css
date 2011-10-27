@@ -31,6 +31,9 @@
 	*overflow: visible;
 	*line-height: normal;
 }
+.dj_ie9 .mblTooltip .mblHeading {
+	width: auto;
+}
 .mblTooltip .mblHeading .mblToolBarButton {
 	background-color: #000924;
 	background-image: url(compat/tooltip-button-bg.png);

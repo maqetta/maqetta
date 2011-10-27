@@ -1,9 +1,16 @@
-dojo.provide("davinci.libraries.dojo.dojox.mobile.TabBarHelper");
+define([
+	"dojo/_base/lang",
+	"./_FixedElemMixin"
+	], function(
+			lang,
+			_FixedElemMixin
+	) {
 
-dojo.require("davinci.libraries.dojo.dojox.mobile._FixedElemMixin");
+	var TabBarHelper = function() {};
 
+	// brings in getPropertyValue()
+	lang.extend(TabBarHelper, _FixedElemMixin);
 
-dojo.declare("davinci.libraries.dojo.dojox.mobile.TabBarHelper",
-			 davinci.libraries.dojo.dojox.mobile._FixedElemMixin, {
-	
+	return TabBarHelper;
+
 });

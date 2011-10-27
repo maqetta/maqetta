@@ -45,6 +45,42 @@ dojo.mixin(system.resource, {
 		}
 	},
 
+	/*
+	 * generates text content of a given type with options
+	 * 
+	 * @param type html, js, css etc..
+	 * @param options Object {'theme':'claro'}
+	 * 
+	 */
+	createText : function(type, options){
+		switch(type){
+		default:
+			return "";
+			break;
+	
+		}
+	},
+	
+	createResource : function(fullPath,  isFolder, parent){
+		var namesplit = fullPath.split("/");
+		parent = parent || system.resource.getWorkspace();
+		var length = !isFolder? namesplit.length-1 : namesplit.length;
+			for(var i=0;i<length;i++){
+				if(namesplit[i]==".") continue;
+				
+				var folder = parent.getChild(namesplit[i]);
+				if(folder!=null){
+					parent = folder;
+				}else{
+					parent = parent.createResource(namesplit[i],true);
+				}
+			}
+			if(!isFolder){
+				parent = parent.createResource(namesplit[namesplit.length-1]);
+			}
+		return parent;
+	},
+	
 	listProjects : function(callBack){
 		
 		/*

@@ -302,6 +302,13 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	height: 6px;
 }
 
+/* Explorer */
+  	
+.readOnlyResource {
+	  	
+ opacity:0.5;
+	  	
+}
 .jsFileIcon {
 	background-image: url(./img/sprite.png);
 	background-position: 0 -1580px;
@@ -317,11 +324,12 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 
 /*FIXME: The style rules below might conflict with Claro Tree widget styling */
 .fileDialog .fileNameRow {
-	margin:.5em 2em 1.25em;
+	/* margin:.5em 2em 1.25em; */
 	text-align:center;
+	width:100%;
 }
 .fileDialog .fileNameRow input {
-	 width:12em;
+	  width:12em; 
 }
 .fileDialog .parentFolderInputRow {
 	margin-right:2px;

@@ -44,6 +44,32 @@
 				}
 			}
 		},
+		"RoundRect": {
+			"displayName": "RoundRect",
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mblRoundRect": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				}
+			}
+		},
+		"RoundRectCategory": {
+			"displayName": "RoundRectCategory",
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mblRoundRectCategory": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				}
+			}
+		},
         "RoundRectList": {
             "displayName": "RoundRectList",
             "states": {
@@ -313,13 +339,16 @@
 			"states": {
 				"Normal": {
 					"selectors": {
-						".mobilebody": [
+						".mobile body": [
+							"$std_10"
+						],
+						".mblView": [
 							"$std_10"
 						]
 					},
 					"query": ""
 				}
 			}
-		},
+		}
 	}
 }

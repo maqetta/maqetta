@@ -1,3 +1,5 @@
+@import url("temp_keyframes.css"");
+
 html.mobile, .mobile body {
   width: 100%;
   margin: 0px;
@@ -1835,14 +1837,7 @@ div.mblToolBarButtonDomButton {
 	-webkit-animation-name: mblDissolveIn;
 	-webkit-animation-timing-function: cubic-bezier(.25,1,.75,0);
 }
-@-webkit-keyframes mblDissolveOut {
-	from { opacity: 1; }
-	to { opacity: 0; }
-}
-@-webkit-keyframes mblDissolveIn {
-	from { opacity: 0; }
-	to { opacity: 1; }
-}
+
 .mblCover.mblOut {
 	z-index: -100;
 	-webkit-transition-property: none;
@@ -2014,18 +2009,7 @@ div.mblToolBarButtonDomButton {
 .mblSwirl.mblOut.mblReverse {
 	-webkit-animation-name: mblSwirlOutReverse;
 }
-@-webkit-keyframes mblSwirlOut {
-	from { -webkit-transform: rotate(0deg) scale(1.0); }
-	to { -webkit-transform: rotate(-360deg) scale(0.0); }
-}
-@-webkit-keyframes mblSwirlOutReverse {
-	from { -webkit-transform: rotate(0deg) scale(1.0); }
-	to { -webkit-transform: rotate(360deg) scale(0.0); }
-}
-@-webkit-keyframes mblSwirlIn {
-	from { -webkit-transform: scale(1.0); }
-	to { -webkit-transform: scale(1.0); }
-}
+
 
 .mblScaleOut.mblOut {
 	z-index: 0;
@@ -2042,24 +2026,7 @@ div.mblToolBarButtonDomButton {
 	-webkit-animation-name: mblScaleOutIn;
 	-webkit-animation-timing-function: ease-in;
 }
-@-webkit-keyframes mblScaleOutOut {
-	from {
-		-webkit-transform: scale(1.0);
-		opacity: 1;
-	}
-	to {
-		-webkit-transform: scale(0.0);
-		opacity: 0;
-	}
-}
-@-webkit-keyframes mblScaleOutOutAndroid {
-	from { -webkit-transform: scale(1.0); }
-	to { -webkit-transform: scale(0.0); }
-}
-@-webkit-keyframes mblScaleOutIn {
-	from { -webkit-transform: scale(1.0); }
-	to { -webkit-transform: scale(1.0); }
-}
+
 
 .mblScaleIn.mblOut {
 	z-index: -100;
@@ -2075,24 +2042,6 @@ div.mblToolBarButtonDomButton {
 }
 .dj_android .mblScaleIn.mblIn {
 	-webkit-animation-name: mblScaleInInAndroid;
-}
-@-webkit-keyframes mblScaleInOut {
-	from { -webkit-transform: scale(1.0); }
-	to { -webkit-transform: scale(1.0); }
-}
-@-webkit-keyframes mblScaleInIn {
-	from {
-		-webkit-transform: scale(0.0);
-		opacity: 0;
-	}
-	to {
-		-webkit-transform: scale(1.0);
-		opacity: 1;
-	}
-}
-@-webkit-keyframes mblScaleInInAndroid {
-	from { -webkit-transform: scale(0.0); }
-	to { -webkit-transform: scale(1.0); }
 }
 
 .mblZoomOut.mblOut {
@@ -2110,24 +2059,7 @@ div.mblToolBarButtonDomButton {
 	-webkit-animation-name: mblZoomOutIn;
 	-webkit-animation-timing-function: ease-in;
 }
-@-webkit-keyframes mblZoomOutOut {
-	from {
-		-webkit-transform: scale(1.0);
-		opacity: 1;
-	}
-	to {
-		-webkit-transform: scale(0.0);
-		opacity: 0;
-	}
-}
-@-webkit-keyframes mblZoomOutOutAndroid {
-	from { -webkit-transform: scale(1.0); }
-	to { -webkit-transform: scale(0.0); }
-}
-@-webkit-keyframes mblZoomOutIn {
-	from { -webkit-transform: scale(1.0); }
-	to { -webkit-transform: scale(1.0); }
-}
+
 
 .mblZoomIn.mblOut {
 	z-index: -100;
@@ -2144,24 +2076,7 @@ div.mblToolBarButtonDomButton {
 .dj_android .mblZoomIn.mblIn {
 	-webkit-animation-name: mblZoomInInAndroid;
 }
-@-webkit-keyframes mblZoomInOut {
-	from { -webkit-transform: scale(1.0); }
-	to { -webkit-transform: scale(1.0); }
-}
-@-webkit-keyframes mblZoomInIn {
-	from {
-		-webkit-transform: scale(0.0);
-		opacity: 0;
-	}
-	to {
-		-webkit-transform: scale(1.0);
-		opacity: 1;
-	}
-}
-@-webkit-keyframes mblZoomInInAndroid {
-	from { -webkit-transform: scale(0.0); }
-	to { -webkit-transform: scale(1.0); }
-}
+
 
 .mblButton {
   cursor: pointer;
@@ -2405,53 +2320,7 @@ div.mblToolBarButtonDomButton {
 	font-size: 1px;
 	background-color: white;
 }
-@-webkit-keyframes mblVibrate{
-	0%{
-		-webkit-transform: rotate(-2deg);
-		bottom: -1px;
-		left: -1px;
-	}
-	25% {
-		-webkit-transform: rotate(1deg);
-		bottom: 2px;
-		left: 1px;
-	}
-	50% {
-		-webkit-transform: rotate(-1deg);
-		bottom: -2px;
-		left: -1px;
-	}
-	75% {
-		-webkit-transform: rotate(2deg);
-		bottom: 2px;
-		left: 1px;
-	}
-	100% {
-		-webkit-transform: rotate(-2deg);
-		bottom: -1px;
-		left: -1px;
-	}
-}
-@-webkit-keyframes mblShrink{
-	from { -webkit-transform: scale(1); }
-	to { -webkit-transform: scale(0.01); }
-}
-@-webkit-keyframes mblShrink0{
-	from { -webkit-transform: scale(1); }
-	to { -webkit-transform: translate(-40%,-70%) scale(0.01); }
-}
-@-webkit-keyframes mblShrink1{
-	from { -webkit-transform: scale(1); }
-	to { -webkit-transform: translate(-14%,-70%) scale(0.01); }
-}
-@-webkit-keyframes mblShrink2{
-	from { -webkit-transform: scale(1); }
-	to { -webkit-transform: translate(14%,-70%) scale(0.01); }
-}
-@-webkit-keyframes mblShrink3{
-	from { -webkit-transform: scale(1); }
-	to { -webkit-transform: translate(40%,-70%) scale(0.01); }
-}
+
 .mblIconContainer {
   margin: 20px 0px 0px 10px;
   padding: 0px 0px 40px 0px;

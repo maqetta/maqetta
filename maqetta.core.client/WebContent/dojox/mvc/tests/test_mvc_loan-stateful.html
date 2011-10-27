@@ -8,15 +8,25 @@
 			@import "css/app-format.css";
 			@import "../../../dijit/themes/claro/claro.css";
 		</style>
-		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true, isDebug: true"></script>
+		<script type="text/javascript" djConfig="parseOnLoad:1,isDebug:1,async:1" src="../../../dojo/dojo.js"></script>
 		<script type="text/javascript">
-			dojo.require("dojox.charting.DataChart");
-			dojo.require("dijit.form.TextBox");
-			dojo.require("dijit.form.NumberTextBox");
-			dojo.require("dojo.parser");
-	
-			//dojo.registerModulePath("mvc", "../dojox/mvc/tests");
-			dojo.require("dojox.mvc.tests.models.LoanWizardModel");
+
+		var loanModel; 
+
+		require([
+			'dojo/_base/kernel',
+			'dojo/parser',
+			'dojo/ready',
+			'dojox/mvc',
+			'dojox/mvc/tests/models/LoanWizardModel',			
+			'dojox/charting/DataChart',
+			'dijit/form/TextBox',
+			'dijit/form/Button',
+			'dijit/form/ValidationTextBox',
+			'dijit/form/NumberTextBox',
+			'dojox/mvc/Group',
+			'dojox/mvc/Output'
+			], function(dojo, parser, ready, mvc, LoanWizardModel, DataChart){
 	
 			var loan_init = {
 				"Name"            : "John Doe",
@@ -35,10 +45,10 @@
 				"Taxes"           :  "500",
 				"OtherHousing"    :  "1200"
 			};
-			var loanModel = new dojox.mvc.tests.models.LoanWizardModel({ data: loan_init });
+			loanModel = new LoanWizardModel({ data: loan_init });
 	
 			function createChart() {
-				var chart = new dojox.charting.DataChart("expenseChart", {
+				var chart = new DataChart("expenseChart", {
 					store: loanModel.chartStore,
 					comparative: true,
 					type: dojox.charting.plot2d.Pie,
@@ -46,7 +56,9 @@
 					fieldName:"y"
 				});
 			};
-			dojo.addOnLoad(createChart);
+			ready(createChart);
+		});
+			
 		</script>    
 	</head>
 	<body class="claro" style="background-image: url(images/validating_form_pattern.png)">

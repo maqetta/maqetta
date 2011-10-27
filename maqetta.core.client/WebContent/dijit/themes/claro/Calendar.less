@@ -37,12 +37,13 @@
 .claro .dijitCalendar {
 	border:solid 1px @border-color;
 	background-color: @calendar-background-color;
-	background-image:url("images/calendarContainerImages.png");
+	background-image:url(@image-calendar-container);
 	background-position:0 -448px;
 	background-repeat:repeat-x;
 	text-align:center;
 	padding:6px 5px 3px 5px;
 	.border-radius(4px);
+	border-collapse: separate;	// in case user CSS has set border-collapse: collapse for tables
 }
 .dj_ie6 .claro .dijitCalendar {
 	background-image:none;
@@ -73,11 +74,11 @@
 .claro .dijitCalendarIncrementControl {
 	width:18px;
 	height:16px;
-	background-image: url("images/calendarArrows.png");
+	background-image: url(@image-calendar-arrows);
 	background-repeat: no-repeat;
 }
 .dj_ie6 .claro .dijitCalendarIncrementControl {
-	background-image: url("images/calendarArrows8bit.png");
+	background-image: url(@image-calendar-arrows-ie6);
 }
 .claro .dijitCalendarIncrease {
 	background-position:-18px 0;
@@ -119,7 +120,7 @@
 .claro .dijitCalendarDateTemplate {
 	text-align:center;
 	background-color:@calendar-currentmonth-background-color;
-	background-image:url("images/calendarContainerImages.png");
+	background-image:url(@image-calendar-container);
 	background-position:0 0;
 	background-repeat:repeat-x;
 	border-bottom: 1px solid @minor-border-color;
@@ -185,7 +186,7 @@
 /* End Normal Calendar Style */
 /* Hovered Calendar Style */
 .claro .dijitCalendarHoveredDate .dijitCalendarDateLabel,
-.claro .dijitCalendarDateTemplate:hover .dijitCalendarDateLabel {
+.claro .dijitCalendarEnabledDate:hover .dijitCalendarDateLabel {
 	background-color:@hovered-background-color;
 	border:solid 1px @hovered-border-color;
 	color:@hovered-text-color;
@@ -207,8 +208,8 @@
 	background-color:@calendar-button-pressed-background-color;
 }
 .claro .dijitCalendarActiveDate .dijitCalendarDateLabel,
-.claro .dijitCalendarDateTemplate:active .dijitCalendarDateLabel {
-	background-image:url("images/calendarContainerImages.png");
+.claro .dijitCalendarEnabledDate:active .dijitCalendarDateLabel {
+	background-image:url(@image-calendar-container);
 	background-position:0 -300px;
 	background-color: @calendar-date-pressed-background-color;
 	border:solid 1px @calendar-date-pressed-border-color;
@@ -227,17 +228,8 @@
 /* End Selected Calendar Style */
 /* Disabled Calendar Style*/
 .claro .dijitCalendarDisabledDate .dijitCalendarDateLabel {
-	text-decoration:line-through;
-}
-
-.claro .dijitCalendarDisabledDate .dijitCalendarDateLabel,
-.claro .dijitCalendarDisabledDate:hover .dijitCalendarDateLabel,
-.claro .dijitCalendarDisabledDate:active .dijitCalendarDateLabel {
-	/* override hover effects above, hover and click on disabled date should have no effect */
-	background-color: transparent;
-	border-width: 0;
-	padding: 4px 6px 4px 5px;
 	color: @disabled-text-color;
+	text-decoration:line-through;
 }
 
 /* End Disabled Calendar Style */
@@ -282,6 +274,6 @@
 	background-color: @hovered-background-color;
 	border-color: @hovered-border-color;
 	border-width:1px 0;
-	background-image: url("images/commonHighlight.png");
+	background-image: url(@image-common-highlight);
 	background-repeat:repeat-x;
 }

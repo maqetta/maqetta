@@ -17,7 +17,7 @@
 	background-image: url(compat/arrow-button-head.png);
 }
 .mblArrowButtonBody {
-	padding: 0px 10px 0px 10px;
+	padding: 0px 10px 0px 4px;
 	-moz-border-radius-topright: 5px;
 	-moz-border-radius-bottomright: 5px;
 	background-image: url(compat/arrow-button-bg.png);

@@ -3,9 +3,9 @@ define([
 	"dojo/_base/lang", // dojo.extend
 	"./RSAKey",
 	"../../math/BigInteger-ext"
-], function(dojo, lang, RSAKey, BigInteger) {
+], function(kernel, lang, RSAKey, BigInteger) {
 
-	dojo.experimental("dojox.encoding.crypto.RSAKey-ext");
+	kernel.experimental("dojox.encoding.crypto.RSAKey-ext");
 
 	// Undo PKCS#1 (type 2, random) padding and, if valid, return the plaintext
 	function pkcs1unpad2(d, n){
@@ -26,7 +26,7 @@ define([
 		return ret;
 	}
 
-	dojo.extend(RSAKey, {
+	lang.extend(RSAKey, {
 		setPrivate: function(N, E, D){
 			// summary:
 			//	Set the private key fields N, e, d and CRT params from hex strings

@@ -1,6 +1,6 @@
-define(["dojo/_base/kernel"], function(dojo) {
+define(["dojo/_base/lang"], function(lang) {
 	
-	var c = dojo.getObject("dojox.encoding.crypto", true);
+	var c = lang.getObject("dojox.encoding.crypto", true);
 	/*=====
 		c = dojox.encoding.crypto;
 	=====*/

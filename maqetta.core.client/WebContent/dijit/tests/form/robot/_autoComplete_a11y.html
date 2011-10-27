@@ -15,6 +15,7 @@
 
 	<script type="text/javascript">
 		dojo.require("dijit.robotx");
+		dojo.require("dojo.aspect");
 
 		// TODO: provide URL toggle for FilteringSelect
 		var testWidget = "dijit.form.ComboBox";
@@ -302,6 +303,58 @@
 						})
 					});
 					return d;
+				},
+				{
+					timeout:60000,
+					name:"fetch() called with string",
+					runTest:function(){
+						// Make sure typing into a ComboBox connected to an
+						// old dojo.data store calls store.fetch() with a String argument rather than a Regex
+
+						var d = new doh.Deferred();
+						combo = dijit.byId("datatest");
+
+						doh.t("fetch" in combo.store,
+								"combo.store has fetch() method (i.e. it's the old dojo.data API)");
+
+						combo.focusNode.focus();
+						doh.robot.sequence(function(){ combo.set("value", null); }, 500);
+
+						// Keypress (below) will trigger a call to store.fetch, which will then call this code.
+						doh.robot.sequence(function(){
+							var handle = dojo.aspect.after(combo.store, "fetch", d.getTestErrback(function(args){
+								handle.remove();
+								doh.isNot(null, args && args.query && args.query.name,
+										"args.query.name set");
+								doh.is("string", typeof args.query.name, "typeof searchAttr");
+							}), true);
+						}, 500);
+						doh.robot.keyPress("k", 500);
+
+						// Code below merely to let ComboBox finish any pending requests, so "datatest" ComboBox
+						// doesn't grab focus in the middle of with the "direct input" test below.
+						doh.robot.keyPress(dojo.keys.ENTER, 500);
+						doh.robot.sequence(function(){
+							d.callback(true);
+						}, 500);
+
+						return d;
+					}
+				}
+			]);
+
+			!isComboBox && doh.register("FilteringSelect back-compat", [
+				function setDisplayedValue(){
+					// Make sure that set("displayedValue", ...) on a FilteringSelect connected to an
+					// old dojo.data store calls store.fetch() with a String argument rather than a Regex
+					var combo = dijit.byId("datatest");
+					doh.t("fetch" in combo.store, "combo.store has fetch() method (i.e. it's the old dojo.data API)");
+					var handle = dojo.aspect.after(combo.store, "fetch", function(args){
+						handle.remove();
+						doh.isNot(null, args && args.query && args.query.name, "args.query.name set");
+						doh.is("string", typeof args.query.name, "typeof searchAttr");
+					}, true);
+					combo.set("displayedValue", "Kentucky");
 				}
 			]);
 
@@ -325,7 +378,7 @@
 						return robot_typeValue((this.combo = dijit.byId(this.combo)), "zxcxarax", isComboBox?"zxcxarax":"");
 					}
 				},
-				
+
 				// Check on the invalid value from the previous test
 				{
 					timeout:60000,
@@ -355,7 +408,7 @@
 				runTest:function(){
 					dojo.global.formSubmitted = false;
 					var d = new doh.Deferred();
-					var combo = dijit.byId("setvaluetest");	
+					var combo = dijit.byId("setvaluetest");
 					combo.focus();
 
 					// Initial conditions:
@@ -685,7 +738,7 @@
 								doh.is("cancel Co*", log[3].type + " " + log[3].query.name);
 								doh.is("start Co", log[4].type + " " + log[4].query.name);	// trying to lookup ID for item named "co"
 								doh.is("end Co", log[5].type + " " + log[5].query.name);
-								
+
 								// also, form should not have submitted because the FilteringSelect
 								// is still trying to fill in it's item value
 								doh.f(dojo.global.formSubmitted, "form not submitted");
@@ -859,7 +912,7 @@
 						doh.is("h2", w.focusNode.value, "set() focus value");
 
 						w.focus();
-						
+
 						doh.robot.keyPress(dojo.keys.DOWN_ARROW, 100);
 
 						doh.robot.sequence(d.getTestCallback(function(){

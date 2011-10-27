@@ -55,7 +55,7 @@ for(var i = 0; i < BUNDLES.length; i++){
 		updated = false;
 		//logStr += locale + ":" + BUNDLES[i] + "=========================================================================\n";
 		
-		_calculateAliasPath(bundle);
+		_calculateAliasPath(bundle, BUNDLES[i]);
 		//logStr += "all alias paths=" + dojo.toJson(localeAliasPaths) + "\n";
 				
 		_processLocaleAlias(localeAliasPaths, bundle, nativeSrcBundle,locale);
@@ -72,7 +72,7 @@ for(var i = 0; i < BUNDLES.length; i++){
 //print('CLDR finished, please refer to logs at ' + logDir + ' for more details.');
 
 
-function _calculateAliasPath(bundle){
+function _calculateAliasPath(bundle, name/*String*/){
 	for(p in bundle){
 		var index = p.indexOf(LOCALE_ALIAS_MARK);
 		if(index >= 0 /*p like 'xxx@localeAlias6'*/){
@@ -94,6 +94,8 @@ function _calculateAliasPath(bundle){
 				mapping[LOCALE_ALIAS_SOURCE_PROPERTY] = src;
 				mapping[LOCALE_ALIAS_TARGET_PROPERTY] = bundle[localeAliasSource + LOCALE_ALIAS_MARK + i][LOCALE_ALIAS_TARGET_PROPERTY];
 				mapping[LOCALE_ALIAS_TARGET_BUNDLE] = bundle[localeAliasSource + LOCALE_ALIAS_MARK + i][LOCALE_ALIAS_TARGET_BUNDLE];
+				//whether aliased to the bundle itself
+				mapping.inSelf = mapping[LOCALE_ALIAS_TARGET_BUNDLE] === name;
 				path.push(mapping);
 				records[src] = true;
 				src = bundle[localeAliasSource + LOCALE_ALIAS_MARK + i][LOCALE_ALIAS_TARGET_PROPERTY];
@@ -117,7 +119,7 @@ function _processLocaleAlias(localeAliasPaths/*Array*/, bundle/*JSON Obj*/, nati
 		var path = localeAliasPaths[i];
 		for(var j = 0; j < path.length; j++){
 			var mapping = path[j];
-			if(mapping[LOCALE_ALIAS_SOURCE_PROPERTY] != mapping[LOCALE_ALIAS_TARGET_PROPERTY]
+			if(mapping.inSelf && mapping[LOCALE_ALIAS_SOURCE_PROPERTY] != mapping[LOCALE_ALIAS_TARGET_PROPERTY]
 			   && bundle[mapping[LOCALE_ALIAS_TARGET_PROPERTY]]/*target existed*/){
 				//e.g. {'source':'months-format-abbr','target':"months-format-wide",'bundle':"gregorian"},
 				//currently source and target bundles are the same - gregorian
@@ -128,7 +130,7 @@ function _processLocaleAlias(localeAliasPaths/*Array*/, bundle/*JSON Obj*/, nati
 				_updateLocaleAlias(bundle, mapping[LOCALE_ALIAS_SOURCE_PROPERTY], bundle,
 								   mapping[LOCALE_ALIAS_TARGET_PROPERTY], nativeSrcBundle);
 				processed[mapping[LOCALE_ALIAS_SOURCE_PROPERTY]] =  true;
-			}else{
+			}else if(!mapping.inSelf){
 				//For other non-gregorian calendars. e.g. "hebrew" etc.
 				//Get the bundle according to the locale.
 				var targetBundle = dojo.i18n.getLocalization('dojo.cldr', mapping[LOCALE_ALIAS_TARGET_BUNDLE], locale);

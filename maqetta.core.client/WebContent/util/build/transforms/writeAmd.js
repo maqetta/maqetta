@@ -1,4 +1,4 @@
-define(["../buildControl", "../fileUtils", "../fs", "dojo/_base/lang", "dojo/json"], function(bc, fileUtils, fs, lang, json) {
+define(["../buildControl", "../fileUtils", "../fs", "dojo/_base/lang"], function(bc, fileUtils, fs, lang) {
 	var
 		computingLayers
 			// the set of layers being computed; use this to detect circular layer dependencies
@@ -172,7 +172,14 @@ define(["../buildControl", "../fileUtils", "../fs", "dojo/_base/lang", "dojo/jso
 				}
 				text= (bc.internStrings ? getStrings(resource) : "") + text;
 				resource.text= text;
-				copyright= resource.pack && resource.pack.copyright || "";
+				if(resource.pack){
+					copyright= resource.pack.copyrightNonlayers && (resource.pack.copyright || bc.copyright);
+				}else{
+					copyright = bc.copyrightNonlayers &&  bc.copyright;
+				}
+				if(!copyright){
+					copyright = "";
+				}
 			}
 			fs.writeFile(getDestFilename(resource), copyright + "//>>built\n" + text, resource.encoding, function(err) {
 				callback(resource, err);

@@ -41,6 +41,7 @@
   padding: 6px 5px 3px 5px;
   -moz-border-radius: 4px;
   border-radius: 4px;
+  border-collapse: separate;
 }
 .dj_ie6 .claro .dijitCalendar {
   background-image: none;
@@ -185,7 +186,7 @@
 }
 /* End Normal Calendar Style */
 /* Hovered Calendar Style */
-.claro .dijitCalendarHoveredDate .dijitCalendarDateLabel, .claro .dijitCalendarDateTemplate:hover .dijitCalendarDateLabel {
+.claro .dijitCalendarHoveredDate .dijitCalendarDateLabel, .claro .dijitCalendarEnabledDate:hover .dijitCalendarDateLabel {
   background-color: #abd6ff;
   border: solid 1px #759dc0;
   color: #000000;
@@ -213,7 +214,7 @@
 
   background-color: #7dbdfa;
 }
-.claro .dijitCalendarActiveDate .dijitCalendarDateLabel, .claro .dijitCalendarDateTemplate:active .dijitCalendarDateLabel {
+.claro .dijitCalendarActiveDate .dijitCalendarDateLabel, .claro .dijitCalendarEnabledDate:active .dijitCalendarDateLabel {
   background-image: url("images/calendarContainerImages.png");
   background-position: 0 -300px;
   background-color: #7dbdfa;
@@ -235,15 +236,8 @@
 /* End Selected Calendar Style */
 /* Disabled Calendar Style*/
 .claro .dijitCalendarDisabledDate .dijitCalendarDateLabel {
-  text-decoration: line-through;
-}
-.claro .dijitCalendarDisabledDate .dijitCalendarDateLabel, .claro .dijitCalendarDisabledDate:hover .dijitCalendarDateLabel, .claro .dijitCalendarDisabledDate:active .dijitCalendarDateLabel {
-  /* override hover effects above, hover and click on disabled date should have no effect */
-
-  background-color: transparent;
-  border-width: 0;
-  padding: 4px 6px 4px 5px;
   color: #818181;
+  text-decoration: line-through;
 }
 /* End Disabled Calendar Style */
 /* Styling for month DropDownButton */

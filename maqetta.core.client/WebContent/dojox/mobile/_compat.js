@@ -406,6 +406,26 @@ define([
 					img.style.height = h + "px";
 				}
 			};
+
+			if(!dm._disableBgFilter && dm.createDomButton){
+				dm._createDomButton_orig = dm.createDomButton;
+				dm.createDomButton = function(/*DomNode*/refNode, /*Object?*/style, /*DomNode?*/toNode){
+					var node = dm._createDomButton_orig.apply(this, arguments);
+					if(node && node.className && node.className.indexOf("mblDomButton") !== -1){
+						var f = function(){
+							if(node.currentStyle && node.currentStyle.backgroundImage.match(/url.*(mblDomButton.*\.png)/)){
+								var img = RegExp.$1;
+								var src = require.toUrl("dojox/mobile/themes/common/domButtons/compat/") + img;
+								node.runtimeStyle.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + src+"',sizingMethod='crop')";
+								node.style.background = "none";
+							}
+						};
+						setTimeout(f, 1000);
+						setTimeout(f, 5000);
+					}
+					return node;
+				};
+			}
 		} // if(has("ie") <= 6)
 
 		dm.loadCssFile = function(/*String*/file){

@@ -49,18 +49,15 @@ define(["./fs", "./buildControlBase", "dojo/has"], function(fs, bc, has) {
 			}
 		},
 
-
 		compactPath = function(path){
-			path= path.replace(/\\/g, "/");
-
-			var
-				result= [],
+			var result = [],
 				segment, lastSegment;
-		    path= path.split("/");
+			path = path.replace(/\\/g, '/').split('/');
 			while(path.length){
-				segment= path.shift();
+				segment = path.shift();
 				if(segment==".." && result.length && lastSegment!=".."){
 					result.pop();
+					lastSegment = result[result.length - 1];
 				}else if(segment!="."){
 					result.push(lastSegment= segment);
 				} // else ignore "."

@@ -200,6 +200,32 @@
 				}
 			]);
 
+			doh.register("exceptions", [
+				function createProgramatically(){
+					var exception;
+					try {
+						bc = new dijit.layout.BorderContainer({style:'height:400px;width:500px;border:1px solid black'}, dojo.byId('main'));
+
+						cp1 = new dijit.layout.ContentPane({region:'top',style:'height:100px;background-color:red',splitter:true, id:"cp1"});
+						cp1.domNode.innerHTML = "top pane";
+						bc.addChild(cp1);
+
+						cp2 = new dijit.layout.ContentPane({region:'center',style:'background-color:green', id:'cp2'});
+						cp2.domNode.innerHTML = "center pane";
+						bc.addChild(cp2);
+
+						cp3 = new dijit.layout.ContentPane({splitter: true, style:'width: 100px;', id:'cp3'});
+						cp3.domNode.innerHTML = "left pane";
+						bc.addChild(cp3);
+						bc.startup();
+					}catch(e){
+						doh.t(/No region setting for cp3/.test(e.toString()), "check exception: " + e);
+						exception = true;
+					}
+					doh.t(exception, "exception was fired");
+				}
+			]);
+
 			doh.run();
         });
 

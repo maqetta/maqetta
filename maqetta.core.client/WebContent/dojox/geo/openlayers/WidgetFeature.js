@@ -1,8 +1,10 @@
 define(
 	["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/html", "dojo/_base/lang", "dojox/geo/openlayers/Feature"],
 	function(dojo, declare, html, lang, Feature){
-
-		return declare("dojox.geo.openlayers.WidgetFeature", dojox.geo.openlayers.Feature, {
+		/*===== 
+		var Feature = dojox.geo.openlayers.Feature; 
+		=====*/
+		return declare("dojox.geo.openlayers.WidgetFeature", Feature, {
 			//	summary:
 			//		Wraps a Dojo widget, provide geolocalisation of the widget and interface
 			//		to Layer class.
@@ -95,6 +97,7 @@ define(
 				var w = this._getWidget();
 				if (w)
 					return html.style(w.domNode, "width");
+				return 10;
 			},
 
 			_getWidgetHeight : function(){
@@ -108,6 +111,7 @@ define(
 				var w = this._getWidget();
 				if (w)
 					return html.style(w.domNode, "height");
+				return 10;
 			},
 
 			render : function(){
@@ -136,11 +140,11 @@ define(
 				var y = a[1] - height / 2;
 				var dom = widget.domNode;
 
-				var p = layer.olLayer.div;
-				if (dom.parentNode != p) {
+				var pa = layer.olLayer.div;
+				if (dom.parentNode != pa) {
 					if (dom.parentNode)
 						dom.parentNode.removeChild(dom);
-					p.appendChild(dom);
+					pa.appendChild(dom);
 				}
 				this._updateWidgetPosition({
 					x : x,

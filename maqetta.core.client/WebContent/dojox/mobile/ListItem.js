@@ -305,7 +305,7 @@ define([
 	
 		_setCheckedAttr: function(/*Boolean*/checked){
 			var parent = this.getParent();
-			if(parent.select === "single" && checked){
+			if(parent && parent.select === "single" && checked){
 				array.forEach(parent.getChildren(), function(child){
 					child.set("checked", false);
 				});
@@ -321,8 +321,8 @@ define([
 			}
 
 			domClass.toggle(this.domNode, "mblListItemChecked", checked);
-			if(this.checked !== checked){
-				this.getParent().onCheckStateChanged(this, checked);
+			if(parent && this.checked !== checked){
+				parent.onCheckStateChanged(this, checked);
 			}
 			this.checked = checked;
 		},

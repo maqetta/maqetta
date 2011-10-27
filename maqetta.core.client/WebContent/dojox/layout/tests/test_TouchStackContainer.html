@@ -24,22 +24,23 @@
 		djConfig="isDebug: true, parseOnLoad: true"></script>
 
 	<!-- only needed for alternate theme testing: do NOT use in your code! -->
-	<script type="text/javascript" src="../_testCommon.js"></script>
+	<script type="text/javascript" src="../../../dijit/tests/_testCommon.js"></script>
 
 	<script type="text/javascript">
 		dojo.require("dijit.dijit"); // optimize: load dijit layer
 		dojo.require("dijit.layout.ContentPane");
 		dojo.require("dojox.layout.ext-dijit.layout.StackContainer-touch");
 		dojo.require("dijit.form.Button");
+		dojo.require("dijit.layout.StackController");
 		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
 
 		function selected(page){
 			console.debug("page selected " + page.id);
 			var widget=dijit.byId("myStackContainer");
-			dijit.byId("previous").attr("disabled", page.isFirstChild);
-			dijit.byId("next").attr("disabled", page.isLastChild);
-			dijit.byId("previous2").attr("disabled", page.isFirstChild);
-			dijit.byId("next2").attr("disabled", page.isLastChild);
+			dijit.byId("previous").set("disabled", page.isFirstChild);
+			dijit.byId("next").set("disabled", page.isLastChild);
+			dijit.byId("previous2").set("disabled", page.isFirstChild);
+			dijit.byId("next2").set("disabled", page.isLastChild);
 		}
 		dojo.subscribe("myStackContainer-selectChild", selected);
 	</script>

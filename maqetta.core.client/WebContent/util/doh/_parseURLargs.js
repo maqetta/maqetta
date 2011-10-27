@@ -147,13 +147,14 @@
 			},{
 				// now define the dohDojo package...
 				name:'dohDojo',
-				location:'../dojo'
+				location:'../dojo',
+				packageMap:{dojo:"dohDojo", dojox:"dohDojox"}
 			},{
 				// and the dohDojox package...
 				name:'dohDojox',
 				location:'../dojox',
 				// and dojox uses dojo...that is, dohDojox...which must be mapped to dohDojo in the context of dohDojox
-				packageMap:{dojo:"dohDojo"} 
+				packageMap:{dojo:"dohDojo", dojox:"dohDojox"} 
 			}],
 			
 			// next, we need to preposition a special configuration for dohDojo

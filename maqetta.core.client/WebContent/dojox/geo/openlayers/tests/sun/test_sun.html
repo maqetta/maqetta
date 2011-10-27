@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 
 <!-- hosted version -->
-<script type="text/javascript" src="http://openlayers.org/api/OpenLayers.js"></script>
+<script type="text/javascript" src="http://openlayers.org/api/2.10/OpenLayers.js"></script>
 
 <style type="text/css">
 .text {
@@ -86,20 +86,21 @@
 						<div id="crl" dojoType="dijit.CheckedMenuItem"
 							onClick="sunDemo.showCircles(dijit.byId('crl').checked)">Circles</div>
 					</div>
-				</div></td>
+				</div>
+			</td>
 		</tr>
 		<tr>
-			<td class="text" width="5%">Day</td>
+			<td class="text" width="5%">Day #</td>
 			<td>
 				<div id="date" dojoType="dijit.form.HorizontalSlider"
 					data-dojo-props='onChange:function(val){sunDemo.setDay(val);}' minimum="0" , maximum="365"
 					pageIncrement="1" showButtons="true" intermediateChanges="true" discreteValues="365">
 					<div dojoType="dijit.form.HorizontalRuleLabels" container="topDecoration" class="text"
-						labels="1,50,100,150,200,250,300,365" style="height: 25;"></div>
+						labels="1,50,100,150,200,250,300,365" style="height: 15;"></div>
 				</div>
 			</td>
 		</tr>
-		</td>
+
 		<tr>
 			<td class="text" width="5%">Time</td>
 			<td>
@@ -107,10 +108,11 @@
 					showButtons="true" intermediateChanges="true"
 					data-dojo-props='onChange:function(val){sunDemo.setTime(val);}'>
 					<div dojoType="dijit.form.HorizontalRuleLabels" container="topDecoration" class="text"
-						labels="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24" style="height: 25;"></div>
+						labels="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24" style="height: 15;"></div>
 				</div>
 			</td>
 		</tr>
+
 		<tr>
 			<td colspan="3">
 				<table style="width: 100%;">

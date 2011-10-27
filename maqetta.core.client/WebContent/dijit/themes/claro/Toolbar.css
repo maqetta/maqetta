@@ -145,7 +145,7 @@
 .claro .dijitToolbarSeparator {
   /* separator icon in the editor sprite */
 
-  background: url('../../icons/images/editorIconsEnabled.png');
+  background: url("../../icons/images/editorIconsEnabled.png");
 }
 /* Toolbar inside of disabled Editor */
 .claro .dijitDisabled .dijitToolbar {

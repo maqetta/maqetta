@@ -122,7 +122,7 @@ There are three areas of styling for the Menu:
 .claro .dijitMenuExpand {
   width: 7px;
   height: 7px;
-  background-image: url('images/spriteArrows.png');
+  background-image: url("images/spriteArrows.png");
   background-position: -14px 0;
   margin-right: 3px;
 }
@@ -145,14 +145,14 @@ There are three areas of styling for the Menu:
   display: none;
 }
 .claro .dijitCheckedMenuItemIcon {
-  background-image: url('form/images/checkboxRadioButtonStates.png');
+  background-image: url("form/images/checkboxRadioButtonStates.png");
   background-repeat: no-repeat;
   background-position: -15px 50%;
   width: 15px;
   height: 16px;
 }
 .dj_ie6 .claro .dijitCheckedMenuItemIcon {
-  background-image: url('form/images/checkboxAndRadioButtons_IE6.png');
+  background-image: url("form/images/checkboxAndRadioButtons_IE6.png");
 }
 .claro .dijitCheckedMenuItemChecked .dijitCheckedMenuItemIcon {
   background-position: 0 50%;

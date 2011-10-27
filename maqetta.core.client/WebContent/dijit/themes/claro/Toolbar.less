@@ -23,7 +23,7 @@
 .claro .dijitToolbar {
 	border-bottom: 1px solid @border-color;
 	background-color: @bar-background-color;
-	background-image: url("images/commonHighlight.png");
+	background-image: url(@image-common-highlight);
 	background-position:0 0;
 	background-repeat:repeat-x;
 	padding: 2px 0 2px 4px;
@@ -43,7 +43,7 @@
 	.transition-property(background-color);
 	.transition-duration(.3s, .35s);
 
-	background-image: url("images/commonHighlight.png");
+	background-image: url(@image-common-highlight);
 	background-position:0 -30px;
 	background-repeat:repeat-x;
 	background-color:rgba(171,214,255,0);
@@ -141,7 +141,7 @@
 
 .claro .dijitToolbarSeparator {
 	/* separator icon in the editor sprite */
-	background: url('../../icons/images/editorIconsEnabled.png');
+	background: url(@image-editor-icons-enabled);
 }
 
 /* Toolbar inside of disabled Editor */

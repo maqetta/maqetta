@@ -256,7 +256,7 @@ return declare("dijit._editor.plugins.EnterKeyHandling", _Plugin, {
 							domConstruct.place(brNode, startNode, "after");
 							domConstruct.place(endNode, brNode, "after");
 							domConstruct.destroy(rs);
-							newrange = rangeapi.create(dojo.gobal);	// TODO: this is a typo for "global" but still works??
+							newrange = rangeapi.create();
 							newrange.setStart(endNode,0);
 							selection.removeAllRanges();
 							selection.addRange(newrange);
@@ -307,7 +307,7 @@ return declare("dijit._editor.plugins.EnterKeyHandling", _Plugin, {
 								domConstruct.place(brNode, startNode, "after");
 								domConstruct.place(endNode, brNode, "after");
 								domConstruct.destroy(rs);
-								newrange = rangeapi.create(dojo.gobal);	// TODO: typo for dojo.global but still works??
+								newrange = rangeapi.create();
 								newrange.setStart(endNode,0);
 								newrange.setEnd(endNode, endNode.length);
 								selection.removeAllRanges();

@@ -3,113 +3,37 @@ define([
 	"./buildControlBase",
 	"./fs", "./fileUtils",
 	"./process",
-	"dojo",
-	"dojo/text!./copyright.txt",
-	"dojo/text!./buildNotice.txt"
-], function(require, bc, fs, fileUtils, process, dojo, defaultCopyright, defaultBuildNotice) {
+	"dojo"
+], function(require, bc, fs, fileUtils, process, dojo){
 	eval(require.scopeify("./fs, ./fileUtils"));
-	var mix= function(dest, src) {
-			dest= dest || {};
-			src= src || {};
-			for (var p in src) dest[p]= src[p];
+	var mix = function(dest, src){
+			dest = dest || {};
+			src = src || {};
+			for(var p in src) dest[p] = src[p];
 			return dest;
 		},
 
-		defaultBuildProps= {
-			// v1.6- default values
-			localeList:"ar,ca,cs,da,de-de,el,en-gb,en-us,es-es,fi-fi,fr-fr,he-il,hu,it-it,ja-jp,ko-kr,nl-nl,nb,pl,pt-br,pt-pt,ru,sk,sl,sv,th,tr,zh-tw,zh-cn",
-			internStrings:true,
-			internSkipList:[],
-			optimize:"",
-			layerOptimize:"shrinksafe",
-			cssOptimize:"",
-			cssImportIgnore:"",
-			stripConsole:"normal",
-			scopeMap:[],
-			insertAbsMids:1,
-			applyDojoPragmas:1,
-
-			// new for 1.7, if version is not provided, the version of the dojo package is used; see ./buildControl
-			//version:"0.0.0.dev",
-
-
+		// any profile properties default values that are different in a 1.6- profile are listed below
+		defaultBuildProps = {
 			// these are computed explicitly in processProfile() below
 			//releaseName:"dojo",
 			//releaseDir:"../../release",
 
-			// these will be set in buildControl; see buildControl.js for details
-			//copyTests:false,
-			//mini:true,
-
-			// the following configuration variables are ignored in 1.7 compared to 1.6 and have no effect
-			//query,
-			//buildLayers,
-			//scopeDjConfig,
-			//xdDojoPath,
-			//log,
-			//loader,
-			//xdScopeArgs,
-			//xdDojoScopeName,
-			//expandProvide,
-			//removeDefaultNameSpaces,
-			//addGuards,
-
-			staticHasFeatures: {
+			staticHasFeatures:{
 				// consider turning these hard on for standard 1.x build
 				//'config-publishRequireResult':1,
 				//'config-tlmSiblingOfDojo':1,
-
-				'extend-dojo':1,
-				'dojo-amd-factory-scan':0,
-				'dojo-built':1,
-				'dojo-combo-api':0,
-				'dojo-log-api':1,
-				'dojo-test-sniff':0,// must be turned on for several tests to work
-				'dojo-config-addOnLoad':1,
-				'dojo-config-api':1,
-				'dojo-config-require':1,
-				'dojo-dom-ready-api':1,
-				'dojo-guarantee-console':1,
-				'dojo-has-api':1,
-				'dojo-inject-api':1,
-				'dojo-loader':1,
-				'dojo-modulePaths':1,
-				'dojo-moduleUrl':1,
-				'dojo-publish-privates':0,
-				'dojo-requirejs-api':0,
-				'dojo-scopeMap':1,
-				'dojo-sniff':1,
-				'dojo-sync-loader':1,
-				'dojo-timeout-api':1,
-				'dojo-trace-api':0,
-				'dojo-undef-api':0,
-				'dojo-v1x-i18n-Api':1,
-				'dojo-xhr-factory':1,
-				'dom':1,
-				'host-browser':1,
-				'host-node':0,
-				'host-rhino':0
 			},
 
-			// this is a dojo pragma
-			replaceLoaderConfig:1,
-
 			defaultConfig:{
+				// no changes
 				hasCache:{
-					// these are the values given above, not-built client code may test for these so they need to be available
-					'dojo-built':1,
-					'dojo-loader':1,
-					'dom':1,
-					'host-browser':1,
-
-					// default
-					"config-selectorEngine":"acme"
-				},
-				async:0
+					// no changes
+				}
 			}
 		},
 
-		processProfile= function(profile, dojoPath, utilBuildscriptsPath) {
+		processProfile = function(profile, dojoPath, utilBuildscriptsPath, profilePath){
 			// process a v1.6- profile
 			//
 			// v1.6- has the following relative path behavior:
@@ -128,15 +52,15 @@ define([
 			//
 			var
 				p,
-				result= {},
-				layers= profile.layers || [],
-				prefixes= profile.prefixes || [];
+				result = {},
+				layers = profile.layers || [],
+				prefixes = profile.prefixes || [];
 
-			for (p in defaultBuildProps) {
-				result[p]= defaultBuildProps[p];
+			for(p in defaultBuildProps){
+				result[p] = defaultBuildProps[p];
 			}
-			for (p in profile) {
-				if (/^(loader|xdDojoPath|scopeDjConfig|xdScopeArgs|xdDojoScopeName|expandProvide|buildLayers|query|removeDefaultNameSpaces|addGuards)$/.test(p)) {
+			for(p in profile){
+				if(/^(loader|xdDojoPath|scopeDjConfig|xdScopeArgs|xdDojoScopeName|expandProvide|buildLayers|query|removeDefaultNameSpaces|addGuards|localeList)$/.test(p)){
 					bc.log("inputDeprecated", ["switch", p]);
 				}else if(p=="staticHasFeatures"){
 					mix(result.staticHasFeatures, profile.staticHasFeatures);
@@ -145,12 +69,12 @@ define([
 						if(p=="hasCache"){
 							mix(result.defaultConfig.hasCache, profile.defaultConfig.hasCache);
 						}else{
-							result.defaultConfig[p]= profile.defaultConfig[p];
+							result.defaultConfig[p] = profile.defaultConfig[p];
 						}
 					}
 				}else{
 					// this is gross, but it's in the v1.6 app...and it's used in some of our own profiles as of [26706]
-					result[p]= (profile[p]=="false" ? false : profile[p]);
+					result[p] = (profile[p]=="false" ? false : profile[p]);
 				}
 			}
 
@@ -169,8 +93,8 @@ define([
 				var mid = pair[0];
 				prefixMap[mid]= pair[1];
 				// copyright is relaxed in 1.7+: it can be a string or a filename
-				copyrightMap[mid]= (pair[2] && (maybeRead(pair[2]) || pair[2])) || "";
-				runtimeMap[mid]= pair[3];
+				copyrightMap[mid] = (pair[2] && (maybeRead(computePath(pair[2], utilBuildscriptsPath)) || maybeRead(computePath(pair[2], profilePath)) || pair[2])) || "";
+				runtimeMap[mid] = pair[3];
 			});
 
 			// make sure we have a dojo path; notice we default to the dojo being used to run the build program as per the v1.6- build system
@@ -178,7 +102,7 @@ define([
 			// in this case, basePath in v1.6- is always assumed to be /util/buildscripts
 			var basePath = result.basePath = utilBuildscriptsPath;
 
-			if(!prefixMap.dojo) {
+			if(!prefixMap.dojo){
 				prefixMap.dojo = dojoPath;
 			}
 			// make sure it is absolute
@@ -186,13 +110,13 @@ define([
 			if(prefixMap.dojo!=dojoPath){
 				bc.log("buildUsingDifferentDojo");
 			}
-			dojoPath= prefixMap.dojo;
+			dojoPath = prefixMap.dojo;
 
 			// now we can compute an absolute path for each prefix (top-level module)
 			// (recall , in v1.6-, relative prefix paths are relative to the dojo path because of "flattening"
 			for(var mid in prefixMap){
-				if (mid!="dojo") {
-					prefixMap[mid]= computePath(prefixMap[mid], dojoPath);
+				if(mid!="dojo"){
+					prefixMap[mid] = computePath(prefixMap[mid], dojoPath);
 				}
 			}
 
@@ -211,12 +135,12 @@ define([
 			result.releaseName = profile.releaseName.replace(/\\/g, "/");
 
 			// now make a package for each top-level module
-			var packages= result.packages= [];
+			var packages = result.packages = [];
 			for(mid in prefixMap){
 				packages.push({
 					name:mid,
 					location:prefixMap[mid],
-					copyright:copyrightMap[mid]!==undefined ? copyrightMap[mid] : defaultCopyright,
+					copyright:copyrightMap[mid]!==undefined ? copyrightMap[mid] : bc.defaultCopyright,
 					runtime:runtimeMap[mid]
 				});
 			}
@@ -227,7 +151,7 @@ define([
 			// a name like "../myTopLevelModule/someModule.js". Therefore, the intendeded module name can be deduced by chopping off the "../"
 			// prefix and ".js" suffix. Again, in theory, this won't work 100% of the time, but we don't have any examples of it not working. This
 			// technique also works for layerDependencies. Therefore, transform a v1.6 layer object into a v1.7 layer object
-			var getLayerCopyrightMessage= function(explicit, mid){
+			var getLayerCopyrightMessage = function(explicit, mid){
 					// this is a bit obnoxious as a default, but it's the v1.6- behavior
 					// TODO: consider changing
 					if(explicit!==undefined){
@@ -237,7 +161,7 @@ define([
 					if(copyright){
 						return copyright;
 					}else{
-						return defaultCopyright + defaultBuildNotice;
+						return bc.defaultCopyright + bc.defaultBuildNotice;
 					}
 				},
 
@@ -261,7 +185,7 @@ define([
 						}
 						if(mid=="dojo/dojo"){
 							return mid;
-						}else if (mid=="dojo.js"){
+						}else if(mid=="dojo.js"){
 							return "dojo/dojo";
 						}else if((match = mid.match(nameRe))){
 							// sibling of dojo
@@ -279,15 +203,13 @@ define([
 					}) : [];
 				},
 
-				nameRe = /^\.\.\/(.+)\.js$/,
+				nameRe = /^\.\.\/([^\.].*)\.js$/,
 
-				dojoModuleRe = /^(.+)\.js$/,
+				dojoModuleRe = /^([^\.].*)\.js$/,
 
 				modulesSeen = {},
 
-				gotDojoBase = false,
-
-				fixedLayers= {};
+				fixedLayers = {};
 			layers.forEach(function(layer){
 				var match,
 					name = layer.name;
@@ -296,7 +218,6 @@ define([
 				}
 				if(layer.name=="dojo.js"){
 					// custom base
-					gotDojoBase = true;
 					name = "dojo/dojo";
 					if(!layer.customBase){
 						layer.dependencies.push("dojo/main");
@@ -321,9 +242,6 @@ define([
 				layer.copyright = getLayerCopyrightMessage(layer.copyright, name);
 				fixedLayers[name] = layer;
 			});
-			if(!gotDojoBase){
-				fixedLayers["dojo/dojo"] = {name:"dojo/dojo", copyright:defaultCopyright + defaultBuildNotice, include:["dojo/main"], exclude:[]};
-			}
 
 			// lastly, check that all the top-level module seen were in the prefixes vector
 			for(p in modulesSeen){
@@ -332,12 +250,12 @@ define([
 					bc.log("missingPrefix", ["top-level module", tlm]);
 				}
 			}
-			result.layers= fixedLayers;
+			result.layers = fixedLayers;
 
 			return result;
 		},
 
-		processHtmlFiles= function(files, dojoPath, utilBuildscriptsPath){
+		processHtmlFiles = function(files, dojoPath, utilBuildscriptsPath){
 			bc.log("processHtmlFiles", ["files", files.join(", ")]);
 			var
 				basePath = "",

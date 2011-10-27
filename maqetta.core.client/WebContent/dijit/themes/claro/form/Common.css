@@ -6,7 +6,7 @@
 }
 .claro .dijitTextBoxError .dijitValidationContainer {
   background-color: #d46464;
-  background-image: url('images/error.png');
+  background-image: url("../form/images/error.png");
   background-position: top center;
   border: solid #d46464 0;
   border-left-width: 1px;
@@ -55,7 +55,7 @@
 }
 .claro .dijitTextBoxHover {
   background-color: #e5f2fe;
-  background-image: url('images/textBox_back.png');
+  background-image: url("../form/images/textBox_back.png");
   background-repeat: repeat-x;
 }
 /* error state */
@@ -74,7 +74,7 @@
 }
 .claro .dijitTextBoxFocused {
   background-color: #ffffff;
-  background-image: url('images/textBox_back.png');
+  background-image: url("../form/images/textBox_back.png");
   background-repeat: repeat-x;
 }
 .claro .dijitTextBoxFocused .dijitInputContainer {
@@ -107,7 +107,7 @@
 /*========================= for special widgets =========================*/
 /* Input boxes with an arrow (for a drop down) */
 .claro .dijitComboBox .dijitArrowButtonInner {
-  background-image: url("images/commonFormArrows.png");
+  background-image: url("../form/images/commonFormArrows.png");
   background-position: -35px 53%;
   background-repeat: no-repeat;
   margin: 0;
@@ -127,7 +127,7 @@
 }
 .claro .dijitComboBox .dijitButtonNode {
   background-color: #efefef;
-  background-image: url("images/formHighlight.png");
+  background-image: url("../form/images/formHighlight.png");
   background-repeat: repeat-x;
 }
 /* Arrow "hover" effect:

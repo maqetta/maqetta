@@ -1,10 +1,9 @@
 define([
-	"dojo/_base/kernel",	// dojo.getObject
 	"dojo/_base/lang",	// dojo.extend
 	"../bits"
-], function(dojo) {
+], function(lang, bits) {
 
-	var lzw = dojo.getObject("dojox.encoding.compression.lzw", true);
+	var lzw = lang.getObject("dojox.encoding.compression.lzw", true);
 	/*=====
 		lzw = dojox.encoding.compression.lzw;
 	=====*/
@@ -20,7 +19,7 @@ define([
 		this.init();
 	};
 
-	dojo.extend(lzw.Encoder, {
+	lang.extend(lzw.Encoder, {
 		init: function(){
 			this.dict = {};
 			for(var i = 0; i < this.size; ++i){
@@ -61,7 +60,7 @@ define([
 		this.init();
 	};
 
-	dojo.extend(lzw.Decoder, {
+	lang.extend(lzw.Decoder, {
 		init: function(){
 			this.codes = new Array(this.size);
 			for(var i = 0; i < this.size; ++i){

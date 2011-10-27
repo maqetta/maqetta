@@ -26,6 +26,9 @@ define([
 				if (!bc.userConfig) {
 					return "this.dojoConfig || this.djConfig || this.require || {}";
 				}
+				if(typeof bc.userConfig == "string"){
+					return bc.userConfig;
+				}
 				var result= stringify(bc.userConfig);
 				if (result.unsolved) {
 					bc.log("configUnresolvedValues");
@@ -58,7 +61,7 @@ define([
 					result= {};
 				result.name = destPack.name;
 				if(destPack.main!="main"){
-					result.name = destPack.main;
+					result.main = destPack.main;
 				}
 				// everything relative to the dojo dir
 				// TODO: making everything relative to dojo needs to be optional

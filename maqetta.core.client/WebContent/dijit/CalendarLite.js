@@ -222,6 +222,7 @@ define([
 					clazz = "dijitCalendarDisabledDate " + clazz;
 					template.setAttribute("aria-disabled", true);
 				}else{
+					clazz = "dijitCalendarEnabledDate " + clazz;
 					template.removeAttribute("aria-disabled");
 				}
 

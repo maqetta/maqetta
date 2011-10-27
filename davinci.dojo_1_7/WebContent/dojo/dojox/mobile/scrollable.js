@@ -74,6 +74,9 @@ this._ch=null;
 }
 };
 this.findDisp=function(_f){
+if(!_f.parentNode){
+return null;
+}
 var _10=_f.parentNode.childNodes;
 for(var i=0;i<_10.length;i++){
 var n=_10[i];
@@ -135,6 +138,7 @@ var _11=this.domNode.getElementsByTagName("*");
 for(var i=0;i<_11.length;i++){
 _11[i].blur&&_11[i].blur();
 }
+dm.resizeAll&&dm.resizeAll();
 }
 };
 this.onScreenSizeChanged=function(e){

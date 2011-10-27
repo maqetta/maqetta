@@ -256,22 +256,22 @@
 	margin: 0;
 }
 .dojoDndMove .dojoxGridDndAvatarItem .dojoxGridDndAvatarItemImage {
-	background-image: url(dojo/resources/images/dndNoMove.png);
+	background-image: url(../../../../dojo/resources/images/dndNoMove.png);
 	background-repeat: no-repeat;
 	background-position: center center;
 }
 .dojoDndCopy .dojoxGridDndAvatarItem .dojoxGridDndAvatarItemImage {
-	background-image: url(dojo/resources/images/dndNoCopy.png);
+	background-image: url(../../../../dojo/resources/images/dndNoCopy.png);
 	background-repeat: no-repeat;
 	background-position: center center;
 }
 .dojoDndMove .dojoDndAvatarCanDrop .dojoxGridDndAvatarItem .dojoxGridDndAvatarItemImage {
-	background-image: url(dojo/resources/images/dndMove.png);
+	background-image: url(../../../../dojo/resources/images/dndMove.png);
 	background-repeat: no-repeat;
 	background-position: center center;
 }
 .dojoDndCopy .dojoDndAvatarCanDrop .dojoxGridDndAvatarItem .dojoxGridDndAvatarItemImage {
-	background-image: url(dojo/resources/images/dndCopy.png);
+	background-image: url(../../../../dojo/resources/images/dndCopy.png);
 	background-repeat: no-repeat;
 	background-position: center center;
 }
@@ -365,10 +365,10 @@
 	padding-left:0px;
 }
 .tundra .dojoxGridLoading {
-	background-image: url(dijit/themes/tundra/images/loading.gif);
+	background-image: url(../../../../dijit/themes/tundra/images/loading.gif);
 }
 .tundra .dojoxGridError {
-	background-image: url(dijit/themes/tundra/images/warning.png);
+	background-image: url(../../../../dijit/themes/tundra/images/warning.png);
 }
 .tundra .dojoxGridHeader {
 	background-color:  #e9e9e9;
@@ -377,11 +377,11 @@
 	border-width: 1px;
 	padding-bottom: 0px;
 	border-color: transparent #ACA899 #919191 transparent;
-	background: url(dijit/themes/tundra/images/tabEnabled.png) #e9e9e9 repeat-x top;
+	background: url(../../../../dijit/themes/tundra/images/tabEnabled.png) #e9e9e9 repeat-x top;
 	color: #000 !important;
 }
 .tundra .dojoxGridHeader .dojoxGridCellOver {
-	background: url(dijit/themes/tundra/images/tabHover.png) #e9e9e9 repeat-x top;
+	background: url(../../../../dijit/themes/tundra/images/tabHover.png) #e9e9e9 repeat-x top;
 	color: #000 !important;
 }
 .tundra .dojoxGridHeader .dojoxGridCellFocus {
@@ -396,13 +396,13 @@
 	display: block !important;
 	padding-left: 0px;
 	float: right;
-	background:url(dijit/themes/tundra/images/spriteArrows.png) no-repeat left center;
+	background:url(../../../../dijit/themes/tundra/images/spriteArrows.png) no-repeat left center;
 	width: 7px;
 	height: 1em;
 	margin: 2px 4px 0px 5px;
 }
 .dj_ie6 .tundra .dojoxGridArrowButtonNode {
-	background-image:url(dijit/themes/tundra/images/spriteArrows.gif);
+	background-image:url(../../../../dijit/themes/tundra/images/spriteArrows.gif);
 	margin-left: 0px;
 }
 .tundra .dojoxGridSortUp .dojoxGridArrowButtonNode {
@@ -428,7 +428,7 @@
 	background: url(../../resources/images/tabHover_rotated.png) #e9e9e9 repeat-y right;
 }
 .tundra .dojoxGridRowbarSelected {
-	background: url(dijit/themes/tundra/images/tabDisabled.png) #D8E8F9 no-repeat center;
+	background: url(../../../../dijit/themes/tundra/images/tabDisabled.png) #D8E8F9 no-repeat center;
 	border-right: 1px solid #ccc;
 }
 .tundra .dojoxGridRow {
@@ -516,20 +516,20 @@
 }
 .tundra .dojoxGridExpandoNode {
 	height: 18px;
-	background-image: url(dijit/themes/tundra/images/treeExpand_plus.gif);
+	background-image: url(../../../../dijit/themes/tundra/images/treeExpand_plus.gif);
 }
 .tundra .dojoxGridExpandoOpened .dojoxGridExpandoNode {
-	background-image: url(dijit/themes/tundra/images/treeExpand_minus.gif);		
+	background-image: url(../../../../dijit/themes/tundra/images/treeExpand_minus.gif);		
 }
 .tundra .dojoxGridExpandoLoading .dojoxGridExpandoNode {
-	background-image: url(dijit/themes/tundra/images/treeExpand_loading.gif);		
+	background-image: url(../../../../dijit/themes/tundra/images/treeExpand_loading.gif);		
 }
 .tundra .dojoxGridTreeModel .dojoxGridNoChildren .dojoxGridExpando {
 	visibility: visible !important;
 	width: 18px !important;
 }
 .tundra .dojoxGridTreeModel .dojoxGridNoChildren .dojoxGridExpandoNode {
-	background-image: url(dijit/themes/tundra/images/treeExpand_leaf.gif);
+	background-image: url(../../../../dijit/themes/tundra/images/treeExpand_leaf.gif);
 	background-position: -3px;
 }
 .tundra .dojoxGridExpandoNodeInner {

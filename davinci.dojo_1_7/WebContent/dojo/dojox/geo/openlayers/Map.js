@@ -58,13 +58,13 @@ this.addLayer(_12);
 this.initialFit(_f);
 },initialFit:function(_13){
 var o=_13.initialLocation;
-if(o==null){
+if(!o){
 o=[-160,70,160,-70];
 }
 this.fitTo(o);
 },setBaseLayerType:function(_14){
 if(_14==this.baseLayerType){
-return;
+return null;
 }
 var o=null;
 if(typeof _14=="string"){
@@ -116,7 +116,7 @@ var om=this.olMap;
 if(_17){
 var _19=om.getUnits();
 if(!_19){
-return;
+return null;
 }
 var _1a=OpenLayers.INCHES_PER_UNIT;
 _18=(om.getGeodesicPixelSize().w||0.000001)*_1a["km"]*OpenLayers.DOTS_PER_INCH;

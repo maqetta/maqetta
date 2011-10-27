@@ -1,17 +1,11 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
 define(
 //begin v1.x content
 {
 	"dateFormatItem-yM": "M/y",
 	"field-dayperiod": "AM/PM",
-	"dayPeriods-format-wide-pm": "PM",
 	"dateFormatItem-yQ": "Q y",
+	"dayPeriods-format-wide-pm": "PM",
 	"field-minute": "Minute",
 	"eraNames": [
 		"Before Christ",
@@ -20,9 +14,18 @@ define(
 	"dateFormatItem-MMMEd": "E, MMM d",
 	"dateTimeFormat-full": "{1} {0}",
 	"field-day-relative+-1": "Yesterday",
+	"field-weekday": "Day of the Week",
 	"dateFormatItem-hms": "h:mm:ss a",
 	"dateFormatItem-yQQQ": "QQQ y",
-	"field-weekday": "Day of the Week",
+	"days-standAlone-wide": [
+		"Sunday",
+		"Monday",
+		"Tuesday",
+		"Wednesday",
+		"Thursday",
+		"Friday",
+		"Saturday"
+	],
 	"dateFormatItem-MMM": "LLL",
 	"months-standAlone-narrow": [
 		"J",
@@ -39,14 +42,29 @@ define(
 		"D"
 	],
 	"dateTimeFormat-short": "{1} {0}",
-	"dayPeriods-format-wide-am": "AM",
-	"dateTimeFormat-medium": "{1} {0}",
 	"field-era": "Era",
 	"field-hour": "Hour",
+	"dayPeriods-format-wide-am": "AM",
+	"dateTimeFormat-medium": "{1} {0}",
 	"dateFormatItem-y": "y",
 	"timeFormat-full": "h:mm:ss a zzzz",
+	"months-standAlone-abbr": [
+		"Jan",
+		"Feb",
+		"Mar",
+		"Apr",
+		"May",
+		"Jun",
+		"Jul",
+		"Aug",
+		"Sep",
+		"Oct",
+		"Nov",
+		"Dec"
+	],
 	"dateFormatItem-yMMM": "MMM y",
 	"field-day-relative+0": "Today",
+	"field-day-relative+1": "Tomorrow",
 	"days-standAlone-narrow": [
 		"S",
 		"M",
@@ -56,7 +74,6 @@ define(
 		"F",
 		"S"
 	],
-	"field-day-relative+1": "Tomorrow",
 	"eraAbbr": [
 		"BC",
 		"AD"
@@ -68,6 +85,12 @@ define(
 	"dateFormatItem-Hm": "HH:mm",
 	"dateFormat-medium": "MMM d, y",
 	"dateFormatItem-Hms": "HH:mm:ss",
+	"quarters-standAlone-wide": [
+		"1st quarter",
+		"2nd quarter",
+		"3rd quarter",
+		"4th quarter"
+	],
 	"dateFormatItem-ms": "mm:ss",
 	"field-year": "Year",
 	"quarters-standAlone-narrow": [
@@ -78,6 +101,20 @@ define(
 	],
 	"dateTimeFormat-long": "{1} {0}",
 	"field-week": "Week",
+	"months-standAlone-wide": [
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December"
+	],
 	"dateFormatItem-MMMd": "MMM d",
 	"timeFormat-long": "h:mm:ss a z",
 	"months-format-abbr": [
@@ -113,10 +150,42 @@ define(
 		"Sat"
 	],
 	"dateFormatItem-M": "L",
+	"days-format-narrow": [
+		"S",
+		"M",
+		"T",
+		"W",
+		"T",
+		"F",
+		"S"
+	],
 	"field-second": "Second",
 	"field-day": "Day",
 	"dateFormatItem-MEd": "E, M/d",
+	"months-format-narrow": [
+		"J",
+		"F",
+		"M",
+		"A",
+		"M",
+		"J",
+		"J",
+		"A",
+		"S",
+		"O",
+		"N",
+		"D"
+	],
 	"dateFormatItem-hm": "h:mm a",
+	"days-standAlone-abbr": [
+		"Sun",
+		"Mon",
+		"Tue",
+		"Wed",
+		"Thu",
+		"Fri",
+		"Sat"
+	],
 	"dateFormat-short": "M/d/yy",
 	"dateFormatItem-yMMMEd": "EEE, MMM d, y",
 	"dateFormat-full": "EEEE, MMMM d, y",

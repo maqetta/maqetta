@@ -68,10 +68,15 @@ _19=false;
 if(this.store){
 this.closeDropDown();
 var _1a=_4.clone(this.query);
-var qs=this._getDisplayQueryString(_18),q=_1.patternToRegExp(qs,this.ignoreCase);
+var qs=this._getDisplayQueryString(_18),q;
+if(this.store._oldAPI){
+q=qs;
+}else{
+q=_1.patternToRegExp(qs,this.ignoreCase);
 q.toString=function(){
 return qs;
 };
+}
 this._lastQuery=_1a[this.searchAttr]=q;
 this.textbox.value=_18;
 this._lastDisplayedValue=_18;

@@ -399,7 +399,7 @@ var g=this.grid;
 if(g.indirectSelection){
 break;
 }
-g.selection.clickSelect(this.rowIndex,_9.isCopyKey(e),e.shiftKey);
+g.selection.clickSelect(this.rowIndex,_5.isCopyKey(e),e.shiftKey);
 g.onRowClick(e);
 _6.stop(e);
 break;

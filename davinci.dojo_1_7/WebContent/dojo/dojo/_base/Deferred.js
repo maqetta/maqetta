@@ -34,7 +34,7 @@ if(_11){
 try{
 var _12=_11(_6);
 if(_12&&typeof _12.then==="function"){
-_12.then(_2.hitch(_10.deferred,"resolve"),_2.hitch(_10.deferred,"reject"));
+_12.then(_2.hitch(_10.deferred,"resolve"),_2.hitch(_10.deferred,"reject"),_2.hitch(_10.deferred,"progress"));
 continue;
 }
 var _13=_f&&_12===undefined;
@@ -123,7 +123,7 @@ _1.Deferred.when=_1.when=function(_26,_27,_28,_29){
 if(_26&&typeof _26.then==="function"){
 return _26.then(_27,_28,_29);
 }
-return _27(_26);
+return _27?_27(_26):_26;
 };
 return _1.Deferred;
 });

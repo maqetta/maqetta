@@ -45,6 +45,11 @@
 	-webkit-transition-property: -webkit-transform;
 	-webkit-transform: translate3d(0%,0px,0px) !important;
 }
+.dj_android.dj_tablet .mblCover.mblOut.mblTransition,
+.dj_android.dj_tablet .mblCover.mblIn.mblTransition {
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
+}
 
 .mblReveal.mblOut {
 	z-index: 0;
@@ -75,6 +80,11 @@
 .mblReveal.mblOut.mblReverse.mblTransition {
 	-webkit-transition-property: -webkit-transform;
 	-webkit-transform: translate3d(100%,0px,0px) !important;
+}
+.dj_android.dj_tablet .mblReveal.mblOut.mblTransition,
+.dj_android.dj_tablet .mblReveal.mblIn.mblTransition {
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
 }
 
 .mblSlidev.mblOut {
@@ -113,6 +123,11 @@
 	-webkit-transition-property: -webkit-transform;
 	-webkit-transform: translate3d(0px,0%,0px) !important;
 }
+.dj_android.dj_tablet .mblSlidev.mblOut.mblTransition,
+.dj_android.dj_tablet .mblSlidev.mblIn.mblTransition {
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
+}
 
 .mblCoverv.mblOut {
 	z-index: -100;
@@ -144,6 +159,11 @@
 	-webkit-transition-property: -webkit-transform;
 	-webkit-transform: translate3d(0px,0%,0px) !important;
 }
+.dj_android.dj_tablet .mblCoverv.mblOut.mblTransition,
+.dj_android.dj_tablet .mblCoverv.mblIn.mblTransition {
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
+}
 
 .mblRevealv.mblOut {
 	z-index: 0;
@@ -170,6 +190,11 @@
 .mblRevealv.mblOut.mblReverse.mblTransition {
 	-webkit-transition-property: -webkit-transform;
 	-webkit-transform: translate3d(0px,100%,0px) !important;
+}
+.dj_android.dj_tablet .mblRevealv.mblOut.mblTransition,
+.dj_android.dj_tablet .mblRevealv.mblIn.mblTransition {
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
 }
 
 .mblSwirl.mblOut {

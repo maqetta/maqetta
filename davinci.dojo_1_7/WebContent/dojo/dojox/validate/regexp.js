@@ -1,5 +1,5 @@
 //>>built
-define("dojox/validate/regexp",["dojo/_base/kernel","dojo/regexp","dojox/main"],function(_1,_2,_3){
+define("dojox/validate/regexp",["dojo/_base/lang","dojo/regexp","dojox/main"],function(_1,_2,_3){
 var _4=_1.getObject("validate.regexp",true,_3);
 _4=_3.validate.regexp={ipAddress:function(_5){
 _5=(typeof _5=="object")?_5:{};

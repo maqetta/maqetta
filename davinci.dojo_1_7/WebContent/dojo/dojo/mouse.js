@@ -5,13 +5,13 @@
 */
 
 //>>built
-define("dojo/mouse",["./_base/kernel","./on","./has","./dom"],function(_1,on,_2,_3){
-_2.add("dom-quirks",document.compatMode=="BackCompat");
-_2.add("events-mouseenter","onmouseenter" in document.createElement("div"));
-var _4;
+define("dojo/mouse",["./_base/kernel","./on","./has","./dom","./_base/window"],function(_1,on,_2,_3,_4){
+_2.add("dom-quirks",_4.doc&&_4.doc.compatMode=="BackCompat");
+_2.add("events-mouseenter",_4.doc&&"onmouseenter" in _4.doc.createElement("div"));
+var _5;
 if(_2("dom-quirks")||!_2("dom-addeventlistener")){
-_4={LEFT:1,MIDDLE:4,RIGHT:2,isButton:function(e,_5){
-return e.button&_5;
+_5={LEFT:1,MIDDLE:4,RIGHT:2,isButton:function(e,_6){
+return e.button&_6;
 },isLeft:function(e){
 return e.button&1;
 },isMiddle:function(e){
@@ -20,8 +20,8 @@ return e.button&4;
 return e.button&2;
 }};
 }else{
-_4={LEFT:0,MIDDLE:1,RIGHT:2,isButton:function(e,_6){
-return e.button==_6;
+_5={LEFT:0,MIDDLE:1,RIGHT:2,isButton:function(e,_7){
+return e.button==_7;
 },isLeft:function(e){
 return e.button==0;
 },isMiddle:function(e){
@@ -30,19 +30,19 @@ return e.button==1;
 return e.button==2;
 }};
 }
-_1.mouseButtons=_4;
-function _7(_8,_9){
-var _a=function(_b,_c){
-return on(_b,_8,function(_d){
-if(!_3.isDescendant(_d.relatedTarget,_9?_d.target:_b)){
-return _c.call(this,_d);
+_1.mouseButtons=_5;
+function _8(_9,_a){
+var _b=function(_c,_d){
+return on(_c,_9,function(_e){
+if(!_3.isDescendant(_e.relatedTarget,_a?_e.target:_c)){
+return _d.call(this,_e);
 }
 });
 };
-if(!_9){
-_a.bubble=_7(_8,true);
+if(!_a){
+_b.bubble=_8(_9,true);
 }
-return _a;
+return _b;
 };
-return {enter:_7("mouseover"),leave:_7("mouseout"),isLeft:_4.isLeft,isMiddle:_4.isMiddle,isRight:_4.isRight};
+return {enter:_8("mouseover"),leave:_8("mouseout"),isLeft:_5.isLeft,isMiddle:_5.isMiddle,isRight:_5.isRight};
 });

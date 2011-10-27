@@ -308,7 +308,7 @@ break;
 }
 this.cleanGroup();
 try{
-var s=this.group,c=this.scaler,t=this.ticks,_47,f=_a.getTransformerFromModel(this.scaler),_48=!_31&&!_2d&&this.opt.htmlLabels&&!_3("ie")&&!_3("opera")?"html":"gfx",dx=_34.x*_3e.length,dy=_34.y*_3e.length;
+var s=this.group,c=this.scaler,t=this.ticks,_47,f=_a.getTransformerFromModel(this.scaler),_48=(!o.title||!_31)&&!_2d&&this.opt.htmlLabels&&!_3("ie")&&!_3("opera")?"html":"gfx",dx=_34.x*_3e.length,dy=_34.y*_3e.length;
 s.createLine({x1:_2e.x,y1:_2e.y,x2:_2f.x,y2:_2f.y}).setStroke(_42);
 if(o.title){
 var _49=_b.createText[_48](this.chart,s,_30.x,_30.y,"middle",o.title,_39,_3b);

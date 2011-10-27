@@ -1,5 +1,5 @@
 //>>built
-define("dojox/encoding/digests/_base",["dojo/_base/kernel"],function(_1){
+define("dojox/encoding/digests/_base",["dojo/_base/lang"],function(_1){
 var d=_1.getObject("dojox.encoding.digests",true);
 d.outputTypes={Base64:0,Hex:1,String:2,Raw:3};
 d.addWords=function(a,b){

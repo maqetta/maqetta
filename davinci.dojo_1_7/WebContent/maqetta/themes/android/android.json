@@ -65,7 +65,7 @@
                                     "border-bottom-color",
                                     "background-color",
                                     "font-size",
-                                    "color: white",
+                                    "color:",
                                     "line-height"
                                 ],
                                 ".mblListItem .mblListItemAnchor": [
@@ -136,12 +136,12 @@
 				},
 				"Disabled": {
 					"selectors": {
-						".mblToggleButton: disabled": [
+						".mblToggleButton:disabled": [
 							"$std_10"
 						]
 					},
 					"query": ".mblToggleButton",
-					"simulate": ": disabled='true'"
+					"simulate": ":disabled='true'"
 				},
 				"Selected": {
 					"selectors": {
@@ -250,7 +250,7 @@
 					],
 					"simulate": [
 						"mblSwitchOff",
-						": style=''"
+						":style=''"
 					]
 				}
 			},

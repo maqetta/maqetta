@@ -736,15 +736,7 @@ dojo.declare("davinci.ve.Context", null, {
 			}
 			*/
 			//head += '<style type="text/css">@import "claro.css";</style>';
-			head += "</head><body>";
-/*
-			if (dojoUrl) {
-				// Since this document was created from script, DOMContentLoaded and window.onload never fire.
-				// Call dojo._loadInit manually to trigger the Dojo onLoad events for Dojo < 1.7
-				head += "<script>if(dojo._loadInit)dojo._loadInit();</script>";
-			}
-*/
-			head += "</body></html>";
+			head += "</head><body></body></html>";
 
 			var context = this;
 			window["loading" + context._id] = function(parser, htmlUtil) { //FIXME: should be able to get doc reference from domReady! plugin?

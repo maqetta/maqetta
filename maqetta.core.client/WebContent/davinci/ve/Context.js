@@ -14,7 +14,7 @@ dojo.declare("davinci.ve.Context", null, {
 
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit/dijit",
-	_configProps: {},
+	_configProps: {async: true},
 
 /*=====
 	// keeps track of widgets-per-library loaded in context
@@ -721,7 +721,7 @@ dojo.declare("davinci.ve.Context", null, {
 					dependencies = ['dojo/parser', 'dojox/html/_base', 'dojo/domReady!'];
 				dependencies = dependencies.concat(requires);  // to bootstrap references to base dijit methods in container
 
-				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\" data-dojo-config=\"" + JSON.stringify(config).slice(1, -1) + "\"></script>"
+				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\" data-dojo-config=\'" + JSON.stringify(config).slice(1, -1) + "\'></script>"
 					+ "<script type=\"text/javascript\">require(" + JSON.stringify(dependencies) + ", top.loading" + this._id + ");</script>";
 			}
 			var helper = davinci.theme.getHelper(this._visualEditor.theme);
@@ -2144,7 +2144,15 @@ dojo.declare("davinci.ve.Context", null, {
 			}
 		} else if (text) {
 			/* run the requires if there is an iframe */
+			// convert metadata to AMD.  Should convert metadata and perhaps provide a special field for requires list.
+			var dependency = text.match("dojo\.require\\([\"']([^\"']+)[\"']\\)");
+			if(dependency && dependency.length > 1){
+				// tweak the path to use AMD format
+				this.getGlobal()["require"](dependency[1].replace(/\./g, "/"));
+			} else {
+				console.log("eval: "+text);
 			if(!skipDomUpdate) { this.getGlobal()['eval'](text); }
+			}
 		//	dojo.eval(text);
 			if (doUpdateModel || doUpdateModelDojoRequires) {
 				this._scriptAdditions = this.addHeaderScriptSrc(text, this._scriptAdditions,this.getDocumentElement().getChildElement('head'),this._statesJsScriptTag);

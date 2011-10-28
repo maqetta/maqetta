@@ -4,13 +4,14 @@
 <head>
 <title>Theme Editor</title>
 
-
-<script type="text/javascript" src="/maqetta/app/static/lib/dojo/1.7/dojo/dojo.js" djConfig="parseOnLoad: true, "></script>
+<script type="text/javascript" src="/maqetta/app/static/lib/dojo/1.7/dojo/dojo.js" data-dojo-config="parseOnLoad: true, async: true"></script>
 <script type="text/javascript">
-dojo.require('dojox.mobile');
-dojo.require('dojox.mobile.parser');
-
+    require([
+        "dojox/mobile",
+		"dojox/mobile/parser"
+    	]);
 </script>
+
 <link href="/maqetta/app/static/lib/dojo/1.7/dojox/mobile/themes/custome/custom.css" type="text/css" rel="stylesheet"/>
 <link href="/maqetta/app/static/lib/dojo/1.7/dojox/mobile/themes/iphone/custom-compat.css" type="text/css" rel="stylesheet"/>
 </head>

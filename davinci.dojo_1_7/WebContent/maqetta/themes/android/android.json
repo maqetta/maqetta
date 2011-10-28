@@ -31,6 +31,28 @@
                 }
             }
         },
+		"CheckBox": {
+			"displayName": "CheckBox",
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mblCheckBox": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				},
+				"Selected": {
+					"selectors": {
+						".mblCheckBoxChecked": [
+							"$std_10"
+						]
+					},
+					"query": ".mblCheckBox",
+					"simulate": "mblCheckBoxChecked"
+				}
+			}
+		},
 		"EdgeToEdgeCategory": {
 			"displayName": "EdgeToEdgeCategory",
 			"states": {
@@ -54,6 +76,28 @@
 						]
 					},
 					"query": ""
+				}
+			}
+		},
+		"RadioButton": {
+			"displayName": "RadioButton",
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mblRadioButton": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				},
+				"Selected": {
+					"selectors": {
+						".mblRadioButtonChecked": [
+							"$std_10"
+						]
+					},
+					"query": ".mblRadioButton",
+					"simulate": "mblRadioButtonChecked"
 				}
 			}
 		},

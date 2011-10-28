@@ -389,6 +389,32 @@
 				}
 			}
 		},
+		"TextArea": {
+			"displayName": "TextArea",
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mblTextArea": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				}
+			}
+		},
+		"TextBox": {
+			"displayName": "TextBox",
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mblTextBox": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				}
+			}
+		},
 		"ToggleButton": {
 			"displayName": "ToggleButton",
 			"states": {

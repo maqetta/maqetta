@@ -225,7 +225,7 @@ public class ServerManager implements IServerManager {
 	             if (dir.exists()) {
 	                 userDir = dir;
 	             } else {
-	                 System.out.println("dir doesnt exist");
+	                 System.err.println("FATAL!!!!! User directory does not exist.");
 	             }
 	         }
 	         if (userDir == null) {

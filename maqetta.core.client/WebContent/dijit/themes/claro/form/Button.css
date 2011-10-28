@@ -43,7 +43,7 @@
 
   border: 1px solid #759dc0;
   padding: 2px 4px 4px 4px;
-  background-image: url("images/button.png");
+  background-image: url("../form/images/button.png");
   background-position: center top;
   background-repeat: repeat-x;
   background-color: #e5f2fe;
@@ -65,7 +65,7 @@
   width: 15px;
   height: 15px;
   margin: 0 auto;
-  background-image: url("images/buttonArrows.png");
+  background-image: url("../form/images/buttonArrows.png");
   background-repeat: no-repeat;
   background-position: -51px 53%;
 }

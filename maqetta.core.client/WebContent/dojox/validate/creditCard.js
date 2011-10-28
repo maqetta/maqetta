@@ -1,4 +1,4 @@
-define(["dojo/_base/lang", "./_base"], function(dojo, validate){
+define(["dojo/_base/lang", "./_base"], function(lang, validate){
 /*=====
 
 	dojox.validate.creditCard = {
@@ -105,7 +105,7 @@ validate.isValidCvv = function(/* String|Int */value, /* String */ccType) {
 	//
 	// value:
 	
-	if(!dojo.isString(value)){
+	if(!lang.isString(value)){
 		value = String(value);
 	}
 	var format;

@@ -42,7 +42,7 @@
   padding-bottom: 2px;
 }
 .claro .dijitTitlePane .dijitArrowNode {
-  background-image: url('images/spriteArrows.png');
+  background-image: url("images/spriteArrows.png");
   background-repeat: no-repeat;
   height: 8px;
   width: 7px;

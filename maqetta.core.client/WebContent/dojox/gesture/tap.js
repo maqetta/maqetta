@@ -11,10 +11,14 @@ define([
 /*=====
 	dojox.gesture.tap = {
 		// summary:
-		//		This module provides tap gesture event handlers
-		//		- dojox.gesture.tap: 'tap' event
-		//		- dojox.gesture.tap.hold: 'tap.hold' event
-		//		- dojox.gesture.tap.doubletap: 'tap.doubletap' event
+		//		This module provides tap gesture event handlers:
+		//
+		//		1. dojox.gesture.tap: 'tap' event
+		//
+		//		2. dojox.gesture.tap.hold: 'tap.hold' event
+		//
+		//		3. dojox.gesture.tap.doubletap: 'tap.doubletap' event
+		//
 		// example:
 		//		A. Used with dojo.connect()
 		//		|	dojo.connect(node, dojox.gesture.tap, function(e){});
@@ -34,7 +38,8 @@ define([
 		//
 		//		Though there is always a default gesture instance after being required, e.g
 		//		|	require(['dojox/gesture/tap'], function(){...});
-		//		it's possible to create a new one with different parameter setting:
+		//
+		//		It's possible to create a new one with different parameter setting:
 		//		|	var myTap = new dojox.gesture.tap.Tap({holdThreshold: 300});
 		//		|	dojo.connect(node, myTap, function(e){});
 		//		|	dojo.connect(node, myTap.hold, function(e){});

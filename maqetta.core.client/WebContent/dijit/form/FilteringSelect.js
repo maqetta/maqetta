@@ -193,12 +193,18 @@ define([
 				this.closeDropDown();
 				var query = lang.clone(this.query); // #6196: populate query with user-specifics
 
-				// Query on searchAttr is a regex (for benefit of dojo.store.Memory),
-				// but with a toString() method to help JsonStore
-				// Escape meta characters of dojo.data.util.filter.patternToRegExp().
-				var qs = this._getDisplayQueryString(label),
-					q = filter.patternToRegExp(qs, this.ignoreCase);	// "Co*" --> /^Co.*$/i
-				q.toString = function(){ return qs; };
+				// Generate query
+				var qs = this._getDisplayQueryString(label), q;
+				if(this.store._oldAPI){
+					// remove this branch for 2.0
+					q = qs;
+				}else{
+					// Query on searchAttr is a regex for benefit of dojo.store.Memory,
+					// but with a toString() method to help dojo.store.JsonRest.
+					// Search string like "Co*" converted to regex like /^Co.*$/i.
+					q = filter.patternToRegExp(qs, this.ignoreCase);
+					q.toString = function(){ return qs; };
+				}
 				this._lastQuery = query[this.searchAttr] = q;
 
 				// If the label is not valid, the callback will never set it,

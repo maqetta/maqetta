@@ -1,11 +1,11 @@
 //>>built
-define("dojox/encoding/digests/MD5",["dojo/_base/kernel","./_base"],function(_1,_2){
-var _3=8;
+define("dojox/encoding/digests/MD5",["./_base"],function(_1){
+var _2=8;
 function R(n,c){
 return (n<<c)|(n>>>(32-c));
 };
 function C(q,a,b,x,s,t){
-return _2.addWords(R(_2.addWords(_2.addWords(a,q),_2.addWords(x,t)),s),b);
+return _1.addWords(R(_1.addWords(_1.addWords(a,q),_1.addWords(x,t)),s),b);
 };
 function FF(a,b,c,d,x,s,t){
 return C((b&c)|((~b)&d),a,b,x,s,t);
@@ -19,18 +19,18 @@ return C(b^c^d,a,b,x,s,t);
 function II(a,b,c,d,x,s,t){
 return C(c^(b|(~d)),a,b,x,s,t);
 };
-function _4(x,_5){
-x[_5>>5]|=128<<((_5)%32);
-x[(((_5+64)>>>9)<<4)+14]=_5;
+function _3(x,_4){
+x[_4>>5]|=128<<((_4)%32);
+x[(((_4+64)>>>9)<<4)+14]=_4;
 var a=1732584193;
 var b=-271733879;
 var c=-1732584194;
 var d=271733878;
 for(var i=0;i<x.length;i+=16){
-var _6=a;
-var _7=b;
-var _8=c;
-var _9=d;
+var _5=a;
+var _6=b;
+var _7=c;
+var _8=d;
 a=FF(a,b,c,d,x[i+0],7,-680876936);
 d=FF(d,a,b,c,x[i+1],12,-389564586);
 c=FF(c,d,a,b,x[i+2],17,606105819);
@@ -95,53 +95,53 @@ a=II(a,b,c,d,x[i+4],6,-145523070);
 d=II(d,a,b,c,x[i+11],10,-1120210379);
 c=II(c,d,a,b,x[i+2],15,718787259);
 b=II(b,c,d,a,x[i+9],21,-343485551);
-a=_2.addWords(a,_6);
-b=_2.addWords(b,_7);
-c=_2.addWords(c,_8);
-d=_2.addWords(d,_9);
+a=_1.addWords(a,_5);
+b=_1.addWords(b,_6);
+c=_1.addWords(c,_7);
+d=_1.addWords(d,_8);
 }
 return [a,b,c,d];
 };
-function _a(_b,_c){
-var wa=_2.stringToWord(_c);
+function _9(_a,_b){
+var wa=_1.stringToWord(_b);
 if(wa.length>16){
-wa=_4(wa,_c.length*_3);
+wa=_3(wa,_b.length*_2);
 }
 var l=[],r=[];
 for(var i=0;i<16;i++){
 l[i]=wa[i]^909522486;
 r[i]=wa[i]^1549556828;
 }
-var h=_4(l.concat(_2.stringToWord(_b)),512+_b.length*_3);
-return _4(r.concat(h),640);
+var h=_3(l.concat(_1.stringToWord(_a)),512+_a.length*_2);
+return _3(r.concat(h),640);
 };
-_2.MD5=function(_d,_e){
-var _f=_e||_2.outputTypes.Base64;
-var wa=_4(_2.stringToWord(_d),_d.length*_3);
-switch(_f){
-case _2.outputTypes.Raw:
+_1.MD5=function(_c,_d){
+var _e=_d||_1.outputTypes.Base64;
+var wa=_3(_1.stringToWord(_c),_c.length*_2);
+switch(_e){
+case _1.outputTypes.Raw:
 return wa;
-case _2.outputTypes.Hex:
-return _2.wordToHex(wa);
-case _2.outputTypes.String:
-return _2.wordToString(wa);
+case _1.outputTypes.Hex:
+return _1.wordToHex(wa);
+case _1.outputTypes.String:
+return _1.wordToString(wa);
 default:
-return _2.wordToBase64(wa);
+return _1.wordToBase64(wa);
 }
 };
-_2.MD5._hmac=function(_10,key,_11){
-var out=_11||_2.outputTypes.Base64;
-var wa=_a(_10,key);
+_1.MD5._hmac=function(_f,key,_10){
+var out=_10||_1.outputTypes.Base64;
+var wa=_9(_f,key);
 switch(out){
-case _2.outputTypes.Raw:
+case _1.outputTypes.Raw:
 return wa;
-case _2.outputTypes.Hex:
-return _2.wordToHex(wa);
-case _2.outputTypes.String:
-return _2.wordToString(wa);
+case _1.outputTypes.Hex:
+return _1.wordToHex(wa);
+case _1.outputTypes.String:
+return _1.wordToString(wa);
 default:
-return _2.wordToBase64(wa);
+return _1.wordToBase64(wa);
 }
 };
-return _2.MD5;
+return _1.MD5;
 });

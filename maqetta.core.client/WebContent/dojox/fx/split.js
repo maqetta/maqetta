@@ -1,6 +1,6 @@
 define(["dojo/_base/lang", "dojo/dom", "dojo/_base/window", "dojo/_base/html", "dojo/dom-geometry", 
-		"dojo/dom-construct", "dojo/dom-attr", "./_base", "dojo/fx/easing", "dojo/_base/connect"],
-	function(lang, dom, winUtil, htmlUtil, domGeom, domConstruct, domAttr, fxExt, easingUtil, connectUtil){
+		"dojo/dom-construct", "dojo/dom-attr", "dojo/_base/fx", "dojo/fx", "./_base", "dojo/fx/easing", "dojo/_base/connect"],
+	function(lang, dom, winUtil, htmlUtil, domGeom, domConstruct, domAttr, baseFx, coreFx, fxExt, easingUtil, connectUtil){
 var dojoxFx = lang.getObject("dojox.fx");
 lang.mixin(dojoxFx,{
 	_split: function(/*Object*/ args){
@@ -110,7 +110,7 @@ lang.mixin(dojoxFx,{
 				}
 			}
 		}
-		var anim = fxExt.combine(animations);
+		var anim = coreFx.combine(animations);
 		connectUtil.connect(anim, "onEnd", anim, function(){
 			container.parentNode.removeChild(container);
 		});
@@ -190,7 +190,7 @@ lang.mixin(dojoxFx,{
 
 			// Create the animation objects for the piece
 			// These are separate anim objects so they can have different curves
-			var pieceSlide = fxExt.animateProperty({
+			var pieceSlide = baseFx.animateProperty({
 				node: piece,
 				duration: duration,
 				delay: delay,
@@ -208,7 +208,7 @@ lang.mixin(dojoxFx,{
 				}
 			});
 			if(args.fade){
-				var pieceFade = fxExt.animateProperty({
+				var pieceFade = baseFx.animateProperty({
 					node: piece,
 					duration: duration,
 					delay: delay,
@@ -304,7 +304,7 @@ lang.mixin(dojoxFx,{
 					properties.opacity = {end: "0"};
 				}
 			}
-			var pieceAnimation = fxExt.animateProperty({
+			var pieceAnimation = baseFx.animateProperty({
 				node: piece,
 				duration: duration,
 				delay: delay,
@@ -419,7 +419,7 @@ lang.mixin(dojoxFx,{
 			}
 
 			// Create the animation object for the piece
-			var pieceAnimation = fxExt.animateProperty({
+			var pieceAnimation = baseFx.animateProperty({
 				node: piece,
 				duration: duration,
 				delay: delay,
@@ -543,7 +543,7 @@ lang.mixin(dojoxFx,{
 			}
 
 			// Create the animation object for the piece
-			var pieceAnimation = fxExt.animateProperty({
+			var pieceAnimation = baseFx.animateProperty({
 				node: piece,
 				duration: duration,
 				delay: delay,
@@ -627,7 +627,7 @@ lang.mixin(dojoxFx,{
 					((x + y) * args.interval),
 				delay = randomDelay * random + Math.max(1 - random, 0) * uniformDelay,
 			// Create the animation object for the piece
-				pieceAnimation = fxExt.animateProperty({
+				pieceAnimation = baseFx.animateProperty({
 					node: piece,
 					duration: duration,
 					delay: delay,

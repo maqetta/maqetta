@@ -1,8 +1,7 @@
 define([
-	"dojo/_base/kernel",	// dojo.getObject
 	"dojo/_base/lang"	// dojo.extend
-], function(dojo) {
-	var bits = dojo.getObject("dojox.encoding.bits", true);
+], function(lang) {
+	var bits = lang.getObject("dojox.encoding.bits", true);
 	/*=====
 		bits = dojox.encoding.bits;
 	=====*/
@@ -11,7 +10,7 @@ define([
 		this.reset();
 	};
 
-	dojo.extend(bits.OutputStream, {
+	lang.extend(bits.OutputStream, {
 		reset: function(){
 			this.buffer = [];
 			this.accumulator = 0;
@@ -48,7 +47,7 @@ define([
 		this.bbyte = this.bit = 0;
 	};
 
-	dojo.extend(bits.InputStream, {
+	lang.extend(bits.InputStream, {
 		getBits: function(width){
 			var r = 0;
 			while(width){

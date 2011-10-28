@@ -587,7 +587,7 @@ return declare("dojox.grid.enhanced._FocusManager", _FocusManager, {
 				case dk.SPACE:
 					var g = this.grid;
 					if(g.indirectSelection){ break; }
-					g.selection.clickSelect(this.rowIndex, keys.isCopyKey(e), e.shiftKey);
+					g.selection.clickSelect(this.rowIndex, connect.isCopyKey(e), e.shiftKey);
 					g.onRowClick(e);
 					event.stop(e);
 					break;

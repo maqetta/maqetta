@@ -3,7 +3,6 @@
 	<head>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 		<title>Data-bound Form element Kitchen Sink test</title>
-		<script src="../../../dojo/dojo.js" type="text/javascript" djConfig="parseOnLoad: true, isDebug: true"></script>
 		<style type="text/css">
 			@import "css/app-format.css";
 			@import "../../../dijit/themes/claro/claro.css";
@@ -12,27 +11,42 @@
 				width: 100%;
 			}
 		</style>
-		<script type="text/javascript" >
-			dojo.require("dojox.mvc");
-			dojo.require("dojox.mvc.Output");
-			dojo.require("dijit.form.TextBox");
-			dojo.require("dijit.form.Button");
-			dojo.require("dijit.form.Select");
-			dojo.require("dijit.form.FilteringSelect");
-			dojo.require("dijit.form.ComboBox");
-			dojo.require("dijit.form.DateTextBox");
-			dojo.require("dijit.form.HorizontalSlider");
-			dojo.require("dijit.form.NumberSpinner");
-			dojo.require("dijit.form.SimpleTextarea");		
-			dojo.require("dijit.form.Textarea");
-			dojo.require("dojo.data.ItemFileReadStore");
-			dojo.require("dijit.Calendar");
-			dojo.require("dijit.ColorPalette");
-			dojo.require("dojo.date.locale");
-			dojo.require("dojo.parser");
-			// The dojox.mvc.StatefulModel class creates a data model instance
-			// where each leaf within the data model is decorated with dojo.Stateful
-			// properties that widgets can bind to and watch for their changes.
+		<script type="text/javascript" djConfig="parseOnLoad:1,isDebug:1,async:1" src="../../../dojo/dojo.js"></script>
+		<script type="text/javascript">
+
+		var store, selmodel, decselmodel, numspinmodel; 
+		var store2, filmodel, decfilmodel;
+		var combomodel, deccombomodel;
+		var datemodel, decdatemodel; 
+		var slidermodel, decslidermodel;
+		var numspinmodel, decnumspinmodel;
+		var simpTAmodel, decsimpTAmodel;
+		var textareamodel, dectextareamodel;
+		var deccalmodel, deccolormodel;
+
+		require([
+			'dojo/_base/kernel',
+			'dojo/parser',
+			'dojo/ready',
+			'dojox/mvc',
+			'dijit/form/TextBox',
+			'dijit/form/Button',
+			'dijit/form/Select',
+			'dijit/form/FilteringSelect',
+			'dijit/form/ComboBox',
+			'dijit/form/DateTextBox',
+			'dijit/form/HorizontalSlider',
+			'dijit/form/NumberSpinner',
+			'dijit/form/SimpleTextarea',
+			'dijit/form/Textarea',
+			'dojo/data/ItemFileReadStore',
+			'dijit/Calendar',
+			'dijit/ColorPalette',
+			'dojox/mvc/Group',
+			'dojox/mvc/Output',
+			'dojo/date/locale'
+			], function(dojo, parser, ready, mvc, TextBox, Button, Select, FilteringSelect, ComboBox, DateTextBox, HorizontalSlider, NumberSpinner,
+						SimpleTextarea, Textarea, ItemFileReadStore, Calendar, ColorPalette){
 
 			var alreadyset = false;	
 			var data = [
@@ -50,7 +64,7 @@
 				{id: '12',name:"twelve"},
 				{id: '13',name:"thirteen"}
 			  ];
-			var store = new dojo.data.ItemFileReadStore({
+			store = new ItemFileReadStore({
 				data: {
 					identifier: 'id',
 					label: 'name',
@@ -78,70 +92,68 @@
 					{value: "14", label: "fourteen"}
 				]
 			};
-			var store2 = new dojo.data.ItemFileReadStore({data:dojo.clone(data2)});
+			store2 = new ItemFileReadStore({data:dojo.clone(data2)});
 
 			// create models for selects
-			var selmodel = new dojox.mvc.newStatefulModel({data: {number: '1'}});
-			var decselmodel = new dojox.mvc.newStatefulModel({data: {number: '1'}});
+			selmodel = new mvc.newStatefulModel({data: {number: '1'}});
+			decselmodel = new mvc.newStatefulModel({data: {number: '1'}});
 
 			// create models for filtering selects
-			var filmodel = new dojox.mvc.newStatefulModel({data: {number: '2'}});
-			var decfilmodel = new dojox.mvc.newStatefulModel({data: {number: '2'}});
+			filmodel = new mvc.newStatefulModel({data: {number: '2'}});
+			decfilmodel = new mvc.newStatefulModel({data: {number: '2'}});
 
 			// create models for ComboBoxes
-			var combomodel = new dojox.mvc.newStatefulModel({data: {number: 'three'}});
-			var deccombomodel = new dojox.mvc.newStatefulModel({data: {number: 'three'}});
+			combomodel = new mvc.newStatefulModel({data: {number: 'three'}});
+			deccombomodel = new mvc.newStatefulModel({data: {number: 'three'}});
 
 			// create a model for DateTextBox
-			var datemodel = new dojox.mvc.newStatefulModel({data: {number: "2011-04-04"}});
-			var decdatemodel = new dojox.mvc.newStatefulModel({data: {number: "2011-04-04"}});
+			datemodel = new mvc.newStatefulModel({data: {number: "2011-04-04"}});
+			decdatemodel = new mvc.newStatefulModel({data: {number: "2011-04-04"}});
 
 			// create a model for Slider
-			var slidermodel = new dojox.mvc.newStatefulModel({data: {number: '5'}});
-			var decslidermodel = new dojox.mvc.newStatefulModel({data: {number: '5'}});
+			slidermodel = new mvc.newStatefulModel({data: {number: '5'}});
+			decslidermodel = new mvc.newStatefulModel({data: {number: '5'}});
 
 			// create a model for NumberSpinner
-			var numspinmodel = new dojox.mvc.newStatefulModel({data: {number: '6'}});
-			var decnumspinmodel = new dojox.mvc.newStatefulModel({data: {number: '6'}});
+			numspinmodel = new mvc.newStatefulModel({data: {number: '6'}});
+			decnumspinmodel = new mvc.newStatefulModel({data: {number: '6'}});
 
 			// create a model for SimpleTextArea
-			var simpTAmodel = new dojox.mvc.newStatefulModel({data: {number: '7'}});
-			var decsimpTAmodel = new dojox.mvc.newStatefulModel({data: {number: '7'}});
+			simpTAmodel = new mvc.newStatefulModel({data: {number: '7'}});
+			decsimpTAmodel = new mvc.newStatefulModel({data: {number: '7'}});
 
 			// create a model for TextArea
-			var textareamodel = new dojox.mvc.newStatefulModel({data: {number: '8'}});
-			var dectextareamodel = new dojox.mvc.newStatefulModel({data: {number: '8'}});
+			textareamodel = new mvc.newStatefulModel({data: {number: '8'}});
+			dectextareamodel = new mvc.newStatefulModel({data: {number: '8'}});
 
 			// create a model for dijit.Calendar
-			var deccalmodel = new dojox.mvc.newStatefulModel({data: {date: "Mon Apr 04 2011 01:00:00 GMT-0400 (Eastern Daylight Time)"}});
+			deccalmodel = new mvc.newStatefulModel({data: {date: "Mon Apr 04 2011 01:00:00 GMT-0400 (Eastern Daylight Time)"}});
 
 			// create a model for dijit.ColorPalette
-			var deccolormodel = new dojox.mvc.newStatefulModel({data: {code: "#000000"}});
+			deccolormodel = new mvc.newStatefulModel({data: {code: "#000000"}});
 
-			
-		dojo.addOnLoad(function(){
 			// Handle the programmatic creation of widgets here:
 			
 			// create the select, textbox, output and button			
-			var sel = new dijit.form.Select({
+			var sel = new Select({
 				store: store,
 				loadChildrenOnOpen: true,
 			//	value: 1,	
 				ref: selmodel.number // bind to model.number
 			}, document.getElementById('sel'));
 			
-			var text = new dijit.form.TextBox({
+			var text = new TextBox({
 				//id: "seltext",
 				ref: selmodel.number
 			}, document.getElementById('seltext'));			
 			text.startup();
 			
-			var selOutput = new dojox.mvc.Output({
+			var selOutput = new mvc.Output({
 				ref: selmodel.number
 			}, document.getElementById('selOutput'));
 			selOutput.startup();
 
-			var reset1 = new dijit.form.Button({
+			var reset1 = new Button({
 				onClick: function(){selmodel.reset();},
 				id: "selReset",
 				label: "Reset"
@@ -161,21 +173,21 @@
 			
 
 			// create the filtering select, textbox, output and button			
-			var filsel = new dijit.form.FilteringSelect({
+			var filsel = new FilteringSelect({
 				store: store,
 				ref: filmodel.number // bind to model.number
 			}, document.getElementById('filsel'));
 			
-			var filtext = new dijit.form.TextBox({
+			var filtext = new TextBox({
 				ref: filmodel.number
 			}, document.getElementById('filtext'));
 			
-			var filoutput = new dojox.mvc.Output({
+			var filoutput = new mvc.Output({
 				ref: filmodel.number
 			}, document.getElementById('filoutput'));			
 			filoutput.startup();
 
-			var filreset = new dijit.form.Button({
+			var filreset = new Button({
 				onClick: function(){filmodel.reset();},
 				id: "filReset",
 				label: "Reset"
@@ -186,21 +198,21 @@
 			filsel.startup();
 			
 			// create the comboBox, textbox, output and button			
-			var combo = new dijit.form.ComboBox({
+			var combo = new ComboBox({
 				store: store,
 				ref: combomodel.number // bind to model.number
 			}, document.getElementById('combosel'));
 			
-			var combotext = new dijit.form.TextBox({
+			var combotext = new TextBox({
 				ref: combomodel.number
 			}, document.getElementById('combotext'));
 			
-			var combooutput = new dojox.mvc.Output({
+			var combooutput = new mvc.Output({
 				ref: combomodel.number
 			}, document.getElementById('combooutput'));			
 			combooutput.startup();
 
-			var comboreset = new dijit.form.Button({
+			var comboreset = new Button({
 				onClick: function(){combomodel.reset();},
 				id: "comboReset",
 				label: "Reset"
@@ -211,20 +223,20 @@
 			combo.startup();
 			
 			// create the dijit.form.DateTextBox, textbox, output and button			
-			var dateWid = new dijit.form.DateTextBox({
+			var dateWid = new DateTextBox({
 				ref: datemodel.number // bind to model.number
 			}, document.getElementById('datesel'));
 			
-			var datetext = new dijit.form.TextBox({
+			var datetext = new TextBox({
 				ref: datemodel.number
 			}, document.getElementById('datetext'));
 			
-			var dateoutput = new dojox.mvc.Output({
+			var dateoutput = new mvc.Output({
 				ref: datemodel.number
 			}, document.getElementById('dateoutput'));			
 			dateoutput.startup();
 
-			var datereset = new dijit.form.Button({
+			var datereset = new Button({
 				onClick: function(){datemodel.reset();},
 				id: "dateReset",
 				label: "Reset"
@@ -235,7 +247,7 @@
 			dateWid.startup();
 			
 			// create the dijit.form.HorizontalSlider, textbox, output and button			
-			var sliderWid = new dijit.form.HorizontalSlider({
+			var sliderWid = new HorizontalSlider({
 						style:{width:"190px"},
 						minimum:0,
 						maximum:100,
@@ -243,16 +255,16 @@
 				ref: slidermodel.number // bind to model.number
 			}, document.getElementById('slidersel'));
 			
-			var slidertext = new dijit.form.TextBox({
+			var slidertext = new TextBox({
 				ref: slidermodel.number
 			}, document.getElementById('slidertext'));
 			
-			var slideroutput = new dojox.mvc.Output({
+			var slideroutput = new mvc.Output({
 				ref: slidermodel.number
 			}, document.getElementById('slideroutput'));			
 			slideroutput.startup();
 
-			var sliderreset = new dijit.form.Button({
+			var sliderreset = new Button({
 				onClick: function(){slidermodel.reset();},
 				id: "sliderReset",
 				label: "Reset"
@@ -263,21 +275,21 @@
 			sliderWid.startup();
 			
 			// create the dijit.form.NumberSpinner, textbox, output and button			
-			var numspinWid = new dijit.form.NumberSpinner({
+			var numspinWid = new NumberSpinner({
 			//	constraints:{max:100,places:0},
 				ref: numspinmodel.number // bind to model.number
 			}, document.getElementById('numspinsel'));
 			
-			var numspintext = new dijit.form.TextBox({
+			var numspintext = new TextBox({
 				ref: numspinmodel.number
 			}, document.getElementById('numspintext'));
 			
-			var numspinoutput = new dojox.mvc.Output({
+			var numspinoutput = new mvc.Output({
 				ref: numspinmodel.number
 			}, document.getElementById('numspinoutput'));			
 			numspinoutput.startup();
 
-			var numspinreset = new dijit.form.Button({
+			var numspinreset = new Button({
 				onClick: function(){numspinmodel.reset();},
 				id: "numspinReset",
 				label: "Reset"
@@ -288,21 +300,21 @@
 			numspinWid.startup();
 			
 			// create the dijit.form.SimpleTextarea, textbox, output and button 			
-			var simpTAWid = new dijit.form.SimpleTextarea({
+			var simpTAWid = new SimpleTextarea({
 				style:{height:"20px", width:"180px"},
 				ref: simpTAmodel.number // bind to model.number
 			}, document.getElementById('simpTAsel'));
 			
-			var simpTAtext = new dijit.form.TextBox({
+			var simpTAtext = new TextBox({
 				ref: simpTAmodel.number
 			}, document.getElementById('simpTAtext'));
 			
-			var simpTAoutput = new dojox.mvc.Output({
+			var simpTAoutput = new mvc.Output({
 				ref: simpTAmodel.number
 			}, document.getElementById('simpTAoutput'));			
 			simpTAoutput.startup();
 
-			var simpTAreset = new dijit.form.Button({
+			var simpTAreset = new Button({
 				onClick: function(){simpTAmodel.reset();},
 				id: "simpTAReset",
 				label: "Reset"
@@ -313,21 +325,21 @@
 			simpTAWid.startup();
 
 			// create the dijit.form.Textarea, textbox, output and button 
-			var textareaWid = new dijit.form.Textarea({
+			var textareaWid = new Textarea({
 			//	constraints:{max:100,places:0},
 				ref: textareamodel.number // bind to model.number
 			}, document.getElementById('textareasel'));
 			
-			var textareatext = new dijit.form.TextBox({
+			var textareatext = new TextBox({
 				ref: textareamodel.number
 			}, document.getElementById('textareatext'));
 			
-			var textareaoutput = new dojox.mvc.Output({
+			var textareaoutput = new mvc.Output({
 				ref: textareamodel.number
 			}, document.getElementById('textareaoutput'));			
 			textareaoutput.startup();
 
-			var textareareset = new dijit.form.Button({
+			var textareareset = new Button({
 				onClick: function(){textareamodel.reset();},
 				id: "textareaReset",
 				label: "Reset"
@@ -336,10 +348,9 @@
 			
 			textareatext.startup();
 			textareaWid.startup();
-			
-		});
-			
-			
+
+			});
+
 		</script>
 	</head>
 	<body class="claro">

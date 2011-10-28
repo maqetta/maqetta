@@ -15,7 +15,7 @@
 	background-image: url(compat/arrow-button-head.png);
 }
 .mblArrowButtonBody {
-	padding: 0px 10px 0px 10px;
+	padding: 0px 10px 0px 3px;
 	background-image: url(compat/arrow-button-bg.png);
 }
 .mblRoundCorner {
@@ -535,6 +535,9 @@
 	background-image: -moz-linear-gradient(top, #313137 0%, #73747D 5%, #92939B 7%, #ABABB5 9%, #C5C6CE 12%, #DFE0E4 16%, #F4F5F6 22%, #FBFCFC 35%, #FBFCFC 50%, #FBFCFC 61%, #B4C1C7 61%, #FBFCFC 65%, #F4F5F6 78%, #DFE0E4 84%, #C5C6CE 88%, #ABABB5 91%, #92939B 93%, #73747D 95%, #313137 100%);
 	-moz-border-radius: 3px;
 }
+.dj_ie .mblSpinWheel {
+	background-image: url(../common/compat/spinwheel-bg.png);
+}
 .mblSpinWheelBar {
 	background-color: #C4CADC;
 	background-image: -moz-linear-gradient(top, #EDEEF2 0%, #C8CADD 25%, #BBBFD4 49%, #9FA8C6 51%, #A2A9C7 81%, #A6ABC9 82%, #A7ADCA 1%);
@@ -543,7 +546,10 @@
 	opacity: 0.6;
 	filter: progid:DXImageTransform.Microsoft.alpha(opacity=60);
 }
-*html .mblSpinWheelBar {
+.dj_ie .mblSpinWheelBar {
+	background-image: url(../common/compat/spinwheel-bar.png);
+}
+.dj_ie6 .mblSpinWheelBar, .dj_ie7 .mblSpinWheelBar {
 	z-index: -1;
 }
 *:first-child+html .mblSpinWheelSlotTouch { 
@@ -687,6 +693,14 @@
 	_position: absolute;
 	text-align: center;
 }
+.dj_gecko .mblOverlay {
+	text-align: -moz-center;
+}
+.dj_ie9 .mblOverlay > *,
+.dj_ie8 .mblOverlay > *
+{
+	margin: 0 auto;
+}
 .mblTooltip {
 	-moz-border-radius: 8px;
 	-o-border-radius: 8px;
@@ -726,6 +740,9 @@
 	*height: auto;
 	*overflow: visible;
 	*line-height: normal;
+}
+.dj_ie9 .mblTooltip .mblHeading {
+	width: auto;
 }
 .mblTooltip .mblHeading .mblToolBarButton {
 	*margin: auto 6px;
@@ -806,18 +823,23 @@
 	-ms-transition-duration: 400ms;
 	transition-duration: 400ms;
 }
+.mblTabBar {
+	background-color: #1e1e1e;
+}
 .dj_ie6 .mblTabBarButtonDiv, .dj_ie7 .mblTabBarButtonDiv {
 	left: auto;
 }
 .dj_ie6 .mblTabBar .mblTabBarButton {
   display: inline; 
 }
-.mblTabPanelHeader {
+.mblTabBar .mblTabBarButton.mblTabButtonSelected {
+	-moz-border-radius: 3px;
+	background-image: none;
 }
-.mblTabButton {
+.mblTabPanelHeader .mblTabButton {
 	background-image: url(compat/tab-button-bg.png);
 }
-.mblTabButtonSelected {
+.mblTabPanelHeader .mblTabButton.mblTabButtonSelected {
 	background-image: url(compat/tab-sel-button-bg.png);
 }
 *html .mblTabButton { 
@@ -831,6 +853,9 @@
 }
 .dj_ie6 .mblTabPanelHeader .mblDomButton {
 	left: 0px;
+}
+.mblHeading .mblTabPanelHeader .mblTabButton {
+	background-image: none;
 }
 
 .mblTextArea {

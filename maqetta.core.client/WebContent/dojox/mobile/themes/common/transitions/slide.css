@@ -34,3 +34,8 @@
 	-webkit-transition-property: -webkit-transform;
 	-webkit-transform: translate3d(0%,0px,0px) !important;
 }
+.dj_android.dj_tablet .mblSlide.mblOut.mblTransition,
+.dj_android.dj_tablet .mblSlide.mblIn.mblTransition {
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
+}

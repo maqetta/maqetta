@@ -13,7 +13,7 @@ define([
 	"dojo/i18n!./nls/Wizard"
 ], function (lang, declare, connect, StackContainer, ContentPane, Button, _TemplatedMixin, _WidgetsInTemplateMixin, i18n, template) {
   
-declare("dojox.widget.Wizard", [StackContainer, _TemplatedMixin, _WidgetsInTemplateMixin], {
+var Wizard = declare("dojox.widget.Wizard", [StackContainer, _TemplatedMixin, _WidgetsInTemplateMixin], {
 	// summary:
 	//		A set of panels that display sequentially, typically notating a step-by-step
 	//		procedure like an install
@@ -202,6 +202,6 @@ declare("dojox.widget.WizardPane", ContentPane, {
 
 });
 
-return dojox.widget.Wizard;
+return Wizard;
 
 });

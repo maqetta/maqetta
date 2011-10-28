@@ -1,10 +1,9 @@
 define([
-	"dojo/_base/kernel",	// dojo.getObject
 	"dojo/_base/lang",	// dojo.isString
 	"dojo/_base/array",	// dojo.map
 	"../base64",
 	"./_base"
-], function(dojo, lang, array, base64, crypto){
+], function(lang, arrayUtil, base64, crypto){
 	/*=====
 		crypto = dojox.encoding.crypto;
 	=====*/
@@ -240,8 +239,8 @@ crypto.Blowfish = new function(){
 	//	but we should be more secure this way.
 	function init(key){
 		var k=key;
-		if(dojo.isString(k)){
-			k = dojo.map(k.split(""), function(item){
+		if(lang.isString(k)){
+			k = arrayUtil.map(k.split(""), function(item){
 				return item.charCodeAt(0) & 0xff;
 			});
 		}
@@ -249,7 +248,7 @@ crypto.Blowfish = new function(){
 		//	init the boxes
 		var pos=0, data=0, res={ left:0, right:0 }, i, j, l;
 		var box = {
-			p: dojo.map(boxes.p.slice(0), function(item){
+			p: arrayUtil.map(boxes.p.slice(0), function(item){
 				var l=k.length, j;
 				for(j=0; j<4; j++){ data=(data*POW8)|k[pos++ % l]; }
 				return (((item>>0x10)^(data>>0x10))<<0x10)|(((item&0xffff)^(data&0xffff))&0xffff);
@@ -283,7 +282,7 @@ crypto.Blowfish = new function(){
 		var out=outputType||crypto.outputTypes.Base64;
 		switch(out){
 			case crypto.outputTypes.Hex:{
-				return dojo.map(iv, function(item){
+				return arrayUtil.map(iv, function(item){
 					return (item<=0xf?'0':'')+item.toString(16);
 				}).join("");			//	string
 			}
@@ -306,7 +305,7 @@ crypto.Blowfish = new function(){
 		var ba=null;
 		switch(ip){
 			case crypto.outputTypes.String:{
-				ba = dojo.map(data.split(""), function(item){
+				ba = arrayUtil.map(data.split(""), function(item){
 					return item.charCodeAt(0);
 				});
 				break;
@@ -383,7 +382,7 @@ crypto.Blowfish = new function(){
 
 		switch(out){
 			case crypto.outputTypes.Hex:{
-				return dojo.map(cipher, function(item){
+				return arrayUtil.map(cipher, function(item){
 					return (item<=0xf?'0':'')+item.toString(16);
 				}).join("");	//	string
 			}
@@ -421,7 +420,7 @@ crypto.Blowfish = new function(){
 				break;
 			}
 			case crypto.outputTypes.String:{
-				c = dojo.map(ciphertext.split(""), function(item){
+				c = arrayUtil.map(ciphertext.split(""), function(item){
 					return item.charCodeAt(0);
 				});
 				break;
@@ -474,7 +473,7 @@ crypto.Blowfish = new function(){
 		}
 
 		//	convert to string
-		return dojo.map(pt, function(item){
+		return arrayUtil.map(pt, function(item){
 			return String.fromCharCode(item);
 		}).join("");	//	string
 	};

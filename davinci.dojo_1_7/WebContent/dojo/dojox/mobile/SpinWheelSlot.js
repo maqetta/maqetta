@@ -129,7 +129,7 @@ if(_18!==undefined&&_19!==undefined){
 break;
 }
 }
-var d=_19-_18;
+var d=_19-(_18||0);
 var m;
 if(d>0){
 m=(d<n-d)?-d:n-d;

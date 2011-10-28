@@ -1,6 +1,6 @@
 //>>built
 define("dojox/geo/openlayers/WidgetFeature",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/lang","dojox/geo/openlayers/Feature"],function(_1,_2,_3,_4,_5){
-return _2("dojox.geo.openlayers.WidgetFeature",dojox.geo.openlayers.Feature,{_widget:null,_bbox:null,constructor:function(_6){
+return _2("dojox.geo.openlayers.WidgetFeature",_5,{_widget:null,_bbox:null,constructor:function(_6){
 this._params=_6;
 },setParameters:function(_7){
 this._params=_7;
@@ -49,6 +49,7 @@ var w=this._getWidget();
 if(w){
 return _3.style(w.domNode,"width");
 }
+return 10;
 },_getWidgetHeight:function(){
 var p=this._params;
 if(p.height){
@@ -58,6 +59,7 @@ var w=this._getWidget();
 if(w){
 return _3.style(w.domNode,"height");
 }
+return 10;
 },render:function(){
 var _9=this.getLayer();
 var _a=this._getWidget();
@@ -76,12 +78,12 @@ var _11=this._getWidgetHeight();
 var x=a[0]-_10/2;
 var y=a[1]-_11/2;
 var dom=_a.domNode;
-var p=_9.olLayer.div;
-if(dom.parentNode!=p){
+var pa=_9.olLayer.div;
+if(dom.parentNode!=pa){
 if(dom.parentNode){
 dom.parentNode.removeChild(dom);
 }
-p.appendChild(dom);
+pa.appendChild(dom);
 }
 this._updateWidgetPosition({x:x,y:y,width:_10,height:_11});
 },_updateWidgetPosition:function(box){

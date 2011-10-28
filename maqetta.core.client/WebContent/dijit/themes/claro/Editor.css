@@ -25,7 +25,7 @@
 }
 .claro .dijitEditor .dijitEditorIFrameContainer {
   background-color: #ffffff;
-  background-image: url('form/images/textBox_back.png');
+  background-image: url("form/images/textBox_back.png");
   background-repeat: repeat-x;
 }
 .dj_ie6 .claro .dijitEditor .dijitEditorIFrameContainer {

@@ -3,21 +3,29 @@
 	<head>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 		<title>Static Master/Detail Pattern -- Multiple Address Detail example</title>
-		<script src="../../../dojo/dojo.js" type="text/javascript" djConfig="parseOnLoad: true, isDebug: true"></script>
 		<style type="text/css">
 			@import "css/app-format.css";
 			@import "../../../dijit/themes/claro/claro.css";
 		</style>
-		<script type="text/javascript" >
-			dojo.require("dojox.mvc");
-			dojo.require("dojox.mvc.Output");
-			dojo.require("dijit.form.TextBox");
-			dojo.require("dijit.form.Button");
-			dojo.require("dojo.parser");
-			// The dojox.mvc.StatefulModel class creates a data model instance
-			// where each leaf within the data model is decorated with dojo.Stateful
-			// properties that widgets can bind to and watch for their changes.
-			var model = dojox.mvc.newStatefulModel({ data : { "First" : "John", "Last" : "Doe", "Email" : "jdoe@example.com" }});
+		<script type="text/javascript" djConfig="parseOnLoad:1,isDebug:1,async:1" src="../../../dojo/dojo.js"></script>
+		<script type="text/javascript">
+			var model;
+ 
+			require([
+				'dojo/parser',
+				'dojox/mvc',
+				'dijit/form/TextBox',
+				'dijit/form/Button',
+				'dojox/mvc/Group',
+				'dojox/mvc/Output'
+			], function(parser, mvc){
+				// The dojox.mvc.StatefulModel class creates a data model instance
+				// where each leaf within the data model is decorated with dojo.Stateful
+				// properties that widgets can bind to and watch for their changes.
+				model = mvc.newStatefulModel({ data : { "First" : "John", "Last" : "Doe", "Email" : "jdoe@example.com" }});
+				// the StatefulModel created above is initialized with 
+				// model.First set to "John", model.Last set to "Doe" and model.Email set to "jdoe@example.com"				
+			});
 		</script>
 	</head>
 	<body class="claro">

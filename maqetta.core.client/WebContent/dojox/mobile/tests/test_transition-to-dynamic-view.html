@@ -13,37 +13,39 @@
 
 			dojo.declare("dojox.mobile.ListItemEx",dojox.mobile.ListItem,{
 				onClick: function(e){
-					var text = dojo.trim(dojo._getText(this.url));
-					var obj = dojo.fromJson(text);
-					if(!obj.items){ return; }
-					var items = obj.items;
-					var container = dojo.create("div", {}, dojo.body());
-					var view1 = new dojox.mobile.View({selected:true}, container);
-					view1.startup();
-					var heading1 = new dojox.mobile.Heading({
-						label: "New Dynamic View",
-						back: "Home",
-						moveTo: "home"
-					});
-					view1.addChild(heading1);
-					heading1.startup();
-					var categ1 = new dojox.mobile.RoundRectCategory({
-						label: "Documents"
-					});
-					view1.addChild(categ1);
-					var list1 = new dojox.mobile.RoundRectList();
-					view1.addChild(list1);
-					for(var i = 0; i < items.length; i++){
-						var item1 = new dojox.mobile.ListItem({
-							icon: "images/i-icon-"+(i+1)+".png",
-							label: items[i].title,
-							href: items[i].href
+					if(this.url){
+						var text = dojo.trim(dojo._getText(this.url));
+						var obj = dojo.fromJson(text);
+						if(!obj.items){ return; }
+						var items = obj.items;
+						var container = dojo.create("div", {}, dojo.body());
+						var view1 = new dojox.mobile.View({selected:true}, container);
+						view1.startup();
+						var heading1 = new dojox.mobile.Heading({
+							label: "New Dynamic View",
+							back: "Home",
+							moveTo: "home"
 						});
-						list1.addChild(item1);
+						view1.addChild(heading1);
+						heading1.startup();
+						var categ1 = new dojox.mobile.RoundRectCategory({
+							label: "Documents"
+						});
+						view1.addChild(categ1);
+						var list1 = new dojox.mobile.RoundRectList();
+						view1.addChild(list1);
+						for(var i = 0; i < items.length; i++){
+							var item1 = new dojox.mobile.ListItem({
+								icon: "images/i-icon-"+(i+1)+".png",
+								label: items[i].title,
+								href: items[i].href
+							});
+							list1.addChild(item1);
+						}
+						var id = view1.id;
+						this.url = "";
+						this.moveTo = dojo.hash ? "#" + id : id;						
 					}
-					var id = view1.id;
-					this.url = "";
-					this.moveTo = dojo.hash ? "#" + id : id;
 					this.inherited(arguments);
 				}
 			});

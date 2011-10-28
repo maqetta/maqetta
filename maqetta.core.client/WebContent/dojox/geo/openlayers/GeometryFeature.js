@@ -8,8 +8,10 @@ define(["dojo/_base/kernel",
 				"dojox/geo/openlayers/Collection",
 				"dojox/geo/openlayers/Feature"], function(dojo, declare, array, lang, matrix, Point, LineString,
 																									Collection, Feature){
-
-	return declare("dojox.geo.openlayers.GeometryFeature", dojox.geo.openlayers.Feature, {
+	/*===== 
+	var Feature = dojox.geo.openlayers.Feature; 
+	=====*/
+	return declare("dojox.geo.openlayers.GeometryFeature", Feature, {
 		//	summary:
 		//		A Feature encapsulating a geometry.
 		//	description:

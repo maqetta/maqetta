@@ -4,9 +4,6 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>test Overlay</title>
-		<link href="../themes/common/SpinWheel.css" rel="stylesheet">
-		<link href="../themes/common/dijit/dijit.css" rel="stylesheet">
-		<link href="../themes/custom/custom.css" rel="stylesheet">
 		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
 		<style>
 		#spin1 {
@@ -29,10 +26,13 @@
 		</style>
 
 		<script language="JavaScript" type="text/javascript">
+			dojo.require("dojox.mobile.deviceTheme");
+		</script>
+
+		<script language="JavaScript" type="text/javascript">
 			dojo.require("dojox.mobile");			// This is a mobile app.
 			dojo.require("dojox.mobile.parser");	// This mobile app supports running on desktop browsers
 			dojo.require("dojox.mobile.compat");	// This mobile app uses declarative programming with fast mobile parser
-			dojo.require("dojox.mobile.deviceTheme");
 			dojo.require("dojox.mobile.Overlay");
 			dojo.require("dojox.mobile.SpinWheel");
 			dojo.require("dojox.mobile.SpinWheelSlot");

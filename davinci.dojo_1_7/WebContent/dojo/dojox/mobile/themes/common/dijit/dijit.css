@@ -2526,6 +2526,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   padding: 6px 5px 3px 5px;
   -moz-border-radius: 4px;
   border-radius: 4px;
+  border-collapse: separate;
 }
 .dj_ie6 .claro .dijitCalendar {
   background-image: none;
@@ -2659,7 +2660,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   font-size: 1.091em;
   color: #000000;
 }
-.claro .dijitCalendarHoveredDate .dijitCalendarDateLabel, .claro .dijitCalendarDateTemplate:hover .dijitCalendarDateLabel {
+.claro .dijitCalendarHoveredDate .dijitCalendarDateLabel, .claro .dijitCalendarEnabledDate:hover .dijitCalendarDateLabel {
   background-color: #abd6ff;
   border: solid 1px #759dc0;
   color: #000000;
@@ -2683,7 +2684,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   
   background-color: #7dbdfa;
 }
-.claro .dijitCalendarActiveDate .dijitCalendarDateLabel, .claro .dijitCalendarDateTemplate:active .dijitCalendarDateLabel {
+.claro .dijitCalendarActiveDate .dijitCalendarDateLabel, .claro .dijitCalendarEnabledDate:active .dijitCalendarDateLabel {
   background-image: url(../../../../../dijit/themes/claro/images/calendarContainerImages.png);
   background-position: 0 -300px;
   background-color: #7dbdfa;
@@ -2701,14 +2702,8 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   border-color: #759dc0;
 }
 .claro .dijitCalendarDisabledDate .dijitCalendarDateLabel {
-  text-decoration: line-through;
-}
-.claro .dijitCalendarDisabledDate .dijitCalendarDateLabel, .claro .dijitCalendarDisabledDate:hover .dijitCalendarDateLabel, .claro .dijitCalendarDisabledDate:active .dijitCalendarDateLabel {
-  
-  background-color: transparent;
-  border-width: 0;
-  padding: 4px 6px 4px 5px;
   color: #818181;
+  text-decoration: line-through;
 }
 .claro .dijitCalendar .dijitDropDownButton {
   margin: 0;
@@ -3271,6 +3266,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   padding: 6px 5px 3px 5px;
   -moz-border-radius: 4px;
   border-radius: 4px;
+  border-collapse: separate;
 }
 .dj_ie6 .claro .dijitCalendar {
   background-image: none;
@@ -3404,7 +3400,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   font-size: 1.091em;
   color: #000000;
 }
-.claro .dijitCalendarHoveredDate .dijitCalendarDateLabel, .claro .dijitCalendarDateTemplate:hover .dijitCalendarDateLabel {
+.claro .dijitCalendarHoveredDate .dijitCalendarDateLabel, .claro .dijitCalendarEnabledDate:hover .dijitCalendarDateLabel {
   background-color: #abd6ff;
   border: solid 1px #759dc0;
   color: #000000;
@@ -3428,7 +3424,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   
   background-color: #7dbdfa;
 }
-.claro .dijitCalendarActiveDate .dijitCalendarDateLabel, .claro .dijitCalendarDateTemplate:active .dijitCalendarDateLabel {
+.claro .dijitCalendarActiveDate .dijitCalendarDateLabel, .claro .dijitCalendarEnabledDate:active .dijitCalendarDateLabel {
   background-image: url(../../../../../dijit/themes/claro/images/calendarContainerImages.png);
   background-position: 0 -300px;
   background-color: #7dbdfa;
@@ -3446,14 +3442,8 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   border-color: #759dc0;
 }
 .claro .dijitCalendarDisabledDate .dijitCalendarDateLabel {
-  text-decoration: line-through;
-}
-.claro .dijitCalendarDisabledDate .dijitCalendarDateLabel, .claro .dijitCalendarDisabledDate:hover .dijitCalendarDateLabel, .claro .dijitCalendarDisabledDate:active .dijitCalendarDateLabel {
-  
-  background-color: transparent;
-  border-width: 0;
-  padding: 4px 6px 4px 5px;
   color: #818181;
+  text-decoration: line-through;
 }
 .claro .dijitCalendar .dijitDropDownButton {
   margin: 0;

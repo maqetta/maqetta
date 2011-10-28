@@ -27,7 +27,7 @@ _7.baseUrl=_7.config.baseUrl=_3.baseUrl;
 _7.isAsync=!1||_3.async;
 _7.locale=_2.locale;
 var _b="$Rev: 23930 $".match(/\d+/);
-_7.version={major:1,minor:7,patch:0,flag:"b6",revision:_b?+_b[0]:NaN,toString:function(){
+_7.version={major:1,minor:7,patch:0,flag:"",revision:_b?+_b[0]:NaN,toString:function(){
 var v=_7.version;
 return v.major+"."+v.minor+"."+v.patch+v.flag+" ("+v.revision+")";
 }};

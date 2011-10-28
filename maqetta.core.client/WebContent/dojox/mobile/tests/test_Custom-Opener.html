@@ -11,6 +11,9 @@
 		.mblTooltip.mblOpener DIV[label='Cancel'] {
 			display: none;
 		}
+		HTML {
+			min-height: 100%; /* workaround for android 3.x position:fixed bug */
+		}
 	</style>
 	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
 
@@ -146,9 +149,7 @@
 			<div dojoType="dojox.mobile.ToolBarButton" label="Cancel" class="mblColorBlue" style="position:absolute;width:45px;left:0;"
 				onclick="dijit.byId('colorPicker2').hide(false)"></div>
 		</h1>
-		<div>
-			<div id="colorPicker" dojoType='dojox.widget.ColorPicker'></div>
-		</div>
+		<div id="colorPicker" dojoType='dojox.widget.ColorPicker'></div>
 	</div>
 
 </body>

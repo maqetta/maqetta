@@ -22,7 +22,7 @@
 
 .claro .dijitTitlePaneTitle {
 	background-color: @unselected-background-color;	// TODO: Mailed Jason, shouldn't this toggle to @selected-background-color when pane opened?
-	background-image: url("images/titlebar.png");
+	background-image: url(@image-titlebar);
 	background-repeat:repeat-x;
 	border:1px solid @border-color;
 	padding: 0 7px 3px 7px;
@@ -45,7 +45,7 @@
 	padding-bottom:2px;
 }
 .claro .dijitTitlePane .dijitArrowNode {
-	background-image: url('images/spriteArrows.png');
+	background-image: url(@image-arrow-sprite);
 	background-repeat: no-repeat;
 	height: 8px;
 	width: 7px;

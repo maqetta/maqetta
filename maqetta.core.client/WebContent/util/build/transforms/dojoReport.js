@@ -1,6 +1,6 @@
 define(["../buildControl", "../version", "../fileUtils"], function(bc, version, fileUtils) {
-	var dir = ".",
-		filename = "build-report.txt";
+	var dir = bc.buildReportDir || ".",
+		filename = bc.buildReportFilename || "build-report.txt";
 
 	return function(resource, callback) {
 		resource.reports.push({

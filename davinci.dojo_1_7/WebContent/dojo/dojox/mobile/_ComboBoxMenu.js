@@ -25,5 +25,6 @@ this.inherited(arguments);
 this.scrollable=new _8(_1,dojox);
 this.scrollable.resize=function(){
 };
+this.scrollable.androidWorkaroud=false;
 }});
 });

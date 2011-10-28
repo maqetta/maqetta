@@ -96,7 +96,7 @@
 }
 /* expando (open/closed) icon */
 .claro .dijitTreeExpando {
-  background-image: url('images/treeExpandImages.png');
+  background-image: url("images/treeExpandImages.png");
   width: 16px;
   height: 16px;
   background-position: -35px 0;
@@ -104,7 +104,7 @@
 
 }
 .dj_ie6 .claro .dijitTreeExpando {
-  background-image: url('images/treeExpandImages8bit.png');
+  background-image: url("images/treeExpandImages8bit.png");
 }
 .claro .dijitTreeRowHover .dijitTreeExpandoOpened {
   background-position: -53px 0;
@@ -119,7 +119,7 @@
   background-image: none;
 }
 .claro .dijitTreeExpandoLoading {
-  background-image: url('images/loadingAnimation.gif');
+  background-image: url("images/loadingAnimation.gif");
 }
 /* Drag and Drop on TreeNodes
  * Put insert line on dijitTreeContent node so it's aligned w/

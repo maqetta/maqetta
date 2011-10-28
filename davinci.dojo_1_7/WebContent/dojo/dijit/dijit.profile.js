@@ -5,13 +5,13 @@ var testResourceRe = /^dijit\/tests\//,
 			"dijit/package.json":1,
 			"dijit/themes/claro/compile":1
 		};
-		return (mid in list) || /^dijit\/resources\//.test(mid);
+		return (mid in list) || (/^dijit\/resources\//.test(mid) && !/\.css$/.test(mid));
 	};
 
 var profile = {
 	resourceTags:{
 		test: function(filename, mid){
-			return testResourceRe.test(mid);
+			return testResourceRe.test(mid) || mid=="dijit/robot" || mid=="dijit/robotx";
 		},
 
 		copyOnly: function(filename, mid){

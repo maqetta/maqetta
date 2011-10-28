@@ -79,7 +79,7 @@
 
 /* header rows */
 .claro .dojoxGridMasterHeader {
-	background: url("../../../resources/images/header.png") #EDF2F7 repeat-x bottom;
+	background: url("images/header.png") #EDF2F7 repeat-x bottom;
 	background: -moz-linear-gradient(top, #EDF2F7, #D0DFEA);
 	background: -webkit-gradient(linear, left top, left bottom, from(#EDF2F7), to(#D0DFEA));
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#FFEDF2F7, endColorstr=#FFD0DFEA);

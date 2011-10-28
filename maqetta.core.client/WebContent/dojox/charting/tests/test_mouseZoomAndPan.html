@@ -34,9 +34,9 @@
 				chart = new dojox.charting.Chart("chart");
 				chart.setTheme(dojox.charting.themes.PlotKit.orange);
 				chart.addAxis("x", {type : "Default", fixLower: "minor", natural: true, stroke: "grey", enableCache: true, 
-									majorTick: {color: "red", length: 4}, minorTick: {color: "blue", length: 2}});
+									htmlLabels: false, majorTick: {color: "red", length: 4}, minorTick: {color: "blue", length: 2}});
 				chart.addAxis("alternate", {type : "Default", fixLower: "minor", natural: true, stroke: "grey", enableCache: true,
-					majorTick: {color: "red", length: 4}, minorTick: {color: "blue", length: 2}, leftBottom: false});
+					htmlLabels: false, majorTick: {color: "red", length: 4}, minorTick: {color: "blue", length: 2}, leftBottom: false});
 				chart.addAxis("y", {vertical: true, min: 0, max: 100, majorTickStep: 10, minorTickStep: 5, stroke: "grey",
 					majorTick: {stroke: "black", length: 4}, minorTick: {stroke: "gray", length: 2}});
 				chart.addPlot("default", {type: "Default", markers: false});

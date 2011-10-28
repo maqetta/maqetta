@@ -1,4 +1,5 @@
-define(["dojo/_base/kernel", "./_base", "./regexp", "./us"], function(dojo, validate, xregexp, us){
+define(["dojo/_base/lang", "./_base", "./regexp", "./us"], 
+ function(lang, validate, xregexp, us){
 /*=====
 
 	dojox.validate.ca = {
@@ -7,8 +8,8 @@ define(["dojo/_base/kernel", "./_base", "./regexp", "./us"], function(dojo, vali
 
 =====*/
 
-var ca = dojo.getObject("ca", true, validate);
-dojo.mixin(ca, {
+var ca = lang.getObject("ca", true, validate);
+lang.mixin(ca, {
 	
 	isPhoneNumber: function(/* String */value){
 		// summary: Validates Canadian 10-digit phone number for several common formats

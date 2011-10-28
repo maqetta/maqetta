@@ -25,7 +25,7 @@ return " a button textarea input select option ".indexOf(" "+t.tagName.toLowerCa
 if(this._isDragging){
 return;
 }
-var _4=_1.isIE?(e.button==1):(e.which==1);
+var _4=(e.which||e.button)==1;
 if(!_4){
 return;
 }

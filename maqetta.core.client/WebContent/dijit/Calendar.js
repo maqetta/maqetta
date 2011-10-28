@@ -111,7 +111,10 @@ define([
 				evt.target.parentNode :
 				evt.target;
 
-			if(node && (node.dijitDateValue || node == this.previousYearLabelNode || node == this.nextYearLabelNode) ){
+			if(node && (
+				(node.dijitDateValue && !domClass.contains(node, "dijitCalendarDisabledDate"))
+					|| node == this.previousYearLabelNode || node == this.nextYearLabelNode
+				)){
 				domClass.add(node, "dijitCalendarHoveredDate");
 				this._currentNode = node;
 			}
@@ -137,7 +140,7 @@ define([
 
 		_onDayMouseDown: function(/*Event*/ evt){
 			var node = evt.target.parentNode;
-			if(node && node.dijitDateValue){
+			if(node && node.dijitDateValue && !domClass.contains(node, "dijitCalendarDisabledDate")){
 				domClass.add(node, "dijitCalendarActiveDate");
 				this._currentNode = node;
 			}

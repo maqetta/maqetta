@@ -705,14 +705,12 @@ dojo.declare("davinci.ve.Context", null, {
 			//   (even if user hasn't selected the Dojo lib) until those dependencies are removed.
 			//   See bug 7585.
 			if (dojoUrl) {
-				var inx=dojoUrl.lastIndexOf('/');
 				// XXX Invoking callback when dojo is loaded.  This should be refactored to not
 				//  depend on dojo any more.  Once issue, though, is that the callback function
 				//  makes use of dojo and thusly must be invoked only after dojo has loaded.  Need
 				//  to remove Dojo dependencies from callback function first.
 				var baseUserWorkspace = system.resource.getRoot().getURL() + "/" + this._getWidgetFolder();
 				var config = {
-					baseUrl: dojoUrl.substr(0,inx+1),
 					modulePaths: {widgets: baseUserWorkspace}
 				};
 				dojo.mixin(config, this._configProps);
@@ -721,7 +719,7 @@ dojo.declare("davinci.ve.Context", null, {
 					dependencies = ['dojo/parser', 'dojox/html/_base', 'dojo/domReady!'];
 				dependencies = dependencies.concat(requires);  // to bootstrap references to base dijit methods in container
 
-				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\" data-dojo-config=\"" + JSON.stringify(config).slice(1, -1) + "\"></script>"
+				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\" data-dojo-config=\'" + JSON.stringify(config).slice(1, -1) + "\'></script>"
 					+ "<script type=\"text/javascript\">require(" + JSON.stringify(dependencies) + ", top.loading" + this._id + ");</script>";
 			}
 			var helper = davinci.theme.getHelper(this._visualEditor.theme);
@@ -729,7 +727,7 @@ dojo.declare("davinci.ve.Context", null, {
 			    head += helper.getHeadImports(this._visualEditor.theme);
 			} else if(source.themeCssfiles) { // css files need to be added to doc before body content
 				head += '<style type="text/css">'
-					+ source.themeCssfiles.map(function(file) { return '@import "' + file + '";'; }).join('');
+					+ source.themeCssfiles.map(function(file) { return '@import "' + file + '";'; }).join();
 					+ '</style>';
 			}
 			/*
@@ -738,15 +736,7 @@ dojo.declare("davinci.ve.Context", null, {
 			}
 			*/
 			//head += '<style type="text/css">@import "claro.css";</style>';
-			head += "</head><body>";
-/*
-			if (dojoUrl) {
-				// Since this document was created from script, DOMContentLoaded and window.onload never fire.
-				// Call dojo._loadInit manually to trigger the Dojo onLoad events for Dojo < 1.7
-				head += "<script>if(dojo._loadInit)dojo._loadInit();</script>";
-			}
-*/
-			head += "</body></html>";
+			head += "</head><body></body></html>";
 
 			var context = this;
 			window["loading" + context._id] = function(parser, htmlUtil) { //FIXME: should be able to get doc reference from domReady! plugin?
@@ -831,7 +821,7 @@ dojo.declare("davinci.ve.Context", null, {
 
 	_continueLoading: function(data, callback, callbackData, scope) {
 		var loading;
-		//try {
+		try {
 			loading = dojo.create("div",
 					{innerHTML: dojo.replace('<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;{0}</td></tr></table>', ["Loading..."])}, // FIXME: i18n
 					this.frameNode.parentNode,
@@ -845,13 +835,13 @@ dojo.declare("davinci.ve.Context", null, {
 			this._setSourceData(data);
 
 			loading.parentNode.removeChild(loading); // need to remove loading for silhouette to display
-	/*	} catch(e) {
+		} catch(e) {
 			// recreate the Error since we crossed frames
 			callbackData = new Error(e.message, e.fileName, e.lineNumber);
 			dojo.mixin(callbackData, e);
 			loading.innerHTML = "Uh oh! An error has occurred:<br>" + e.message + "<br>file:" + e.fileName + "<br>line: "+e.lineNumber; // FIXME: i18n
 			dojo.addClass(loading, 'error');
-		}*/
+		}
 		
 		if(callback){
 			callback.call((scope || this), callbackData);
@@ -917,11 +907,9 @@ dojo.declare("davinci.ve.Context", null, {
 		// out those scripts and execute them later, after _processWidgets()
 		// has loaded any required resources (i.e. <head> scripts)
 		var scripts;
-        var dj = this.getDojo();
-	    this.getGlobal()['require']('dojox/html/_base');
         // It is necessary to run the dojox.html.set utility from the context
 	    // of inner frame.  Might be a Dojo bug in _toDom().
-	    dj.getObject('dojox').html.set(containerNode, content, {
+	    this.getGlobal()['require']('dojox/html/_base').set(containerNode, content, {
 	        executeScripts: true,
 	        onEnd: function() {
 	            // save any scripts for later execution
@@ -937,8 +925,7 @@ dojo.declare("davinci.ve.Context", null, {
 		var removeEventAttributes = function(node) {
 			if(node){
 				dojo.filter(node.attributes, function(attribute) {
-					var check = attribute.nodeName.substr(0,2).toLowerCase() == "on";
-					return check;
+					return attribute.nodeName.substr(0,2).toLowerCase() == "on";
 				}).forEach(function(attribute) {
 					node.removeAttribute(attribute.nodeName);
 				});
@@ -1009,8 +996,7 @@ dojo.declare("davinci.ve.Context", null, {
 
 		}, this);
 		try {
-			this.getGlobal()["require"](["dojo/parser"]); // FIXME: use the return value to parse
-			this.getDojo().parser.parse(containerNode);
+			this.getGlobal()["require"]("dojo/parser").parse(containerNode);
 		} catch(e) {
 			// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
 			// the dojo parser will throw an exception trying to compute style on hidden containers
@@ -1018,8 +1004,7 @@ dojo.declare("davinci.ve.Context", null, {
 			// then we will reprocess the content when we have focus -- wdr
 			
 			// remove all registered widgets, some may be partly constructed.
-			var localDijit = this.getDijit();
-			localDijit.registry.forEach(function(w){
+			this.getDijit().registry.forEach(function(w){
 				  w.destroy();			 
 			});
 

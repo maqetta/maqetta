@@ -358,7 +358,7 @@ var end=_5.range.ie.setEndPoint(_55,_58,_59);
 _55.setEndPoint("EndToEnd",end||_5b);
 return _55;
 }};
-dojo.declare("dijit.range.W3CRange",null,{constructor:function(){
+_2("dijit.range.W3CRange",null,{constructor:function(){
 if(arguments.length>0){
 this.setStart(arguments[0][0],arguments[0][1]);
 this.setEnd(arguments[0][2],arguments[0][3]);

@@ -48,7 +48,7 @@
 		function onCheck(item, checked){
 			setTimeout(function(){
 				if(checked){
-					checkedItem = item.labelNode.innerText || item.labelNode.textContent || '';
+					checkedItem = item.labelNode.innerText || dojo.trim(item.labelNode.textContent) || '';
 					if(dojo.hasClass(dijit.byId('listPicker').domNode, 'mblTooltip')){
 						dijit.byId('listPicker').hide(true); // Tooltip + selection = auto-hide
 					}

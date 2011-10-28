@@ -1,32 +1,32 @@
 //>>built
-define("dojox/validate/web",["dojo/_base/kernel","./_base","./regexp"],function(_1,_2,_3){
-_2.isIpAddress=function(_4,_5){
-var re=new RegExp("^"+_3.ipAddress(_5)+"$","i");
-return re.test(_4);
+define("dojox/validate/web",["./_base","./regexp"],function(_1,_2){
+_1.isIpAddress=function(_3,_4){
+var re=new RegExp("^"+_2.ipAddress(_4)+"$","i");
+return re.test(_3);
 };
-_2.isUrl=function(_6,_7){
-var re=new RegExp("^"+_3.url(_7)+"$","i");
-return re.test(_6);
+_1.isUrl=function(_5,_6){
+var re=new RegExp("^"+_2.url(_6)+"$","i");
+return re.test(_5);
 };
-_2.isEmailAddress=function(_8,_9){
-var re=new RegExp("^"+_3.emailAddress(_9)+"$","i");
-return re.test(_8);
+_1.isEmailAddress=function(_7,_8){
+var re=new RegExp("^"+_2.emailAddress(_8)+"$","i");
+return re.test(_7);
 };
-_2.isEmailAddressList=function(_a,_b){
-var re=new RegExp("^"+_3.emailAddressList(_b)+"$","i");
-return re.test(_a);
+_1.isEmailAddressList=function(_9,_a){
+var re=new RegExp("^"+_2.emailAddressList(_a)+"$","i");
+return re.test(_9);
 };
-_2.getEmailAddressList=function(_c,_d){
-if(!_d){
-_d={};
+_1.getEmailAddressList=function(_b,_c){
+if(!_c){
+_c={};
 }
-if(!_d.listSeparator){
-_d.listSeparator="\\s;,";
+if(!_c.listSeparator){
+_c.listSeparator="\\s;,";
 }
-if(_2.isEmailAddressList(_c,_d)){
-return _c.split(new RegExp("\\s*["+_d.listSeparator+"]\\s*"));
+if(_1.isEmailAddressList(_b,_c)){
+return _b.split(new RegExp("\\s*["+_c.listSeparator+"]\\s*"));
 }
 return [];
 };
-return _2;
+return _1;
 });

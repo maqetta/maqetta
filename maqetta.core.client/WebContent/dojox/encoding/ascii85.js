@@ -1,6 +1,6 @@
-define(["dojo/_base/kernel"], function(dojo) {
+define(["dojo/_base/lang"], function(lang) {
 
-	var ascii85 = dojo.getObject("dojox.encoding.ascii85", true);
+	var ascii85 = lang.getObject("dojox.encoding.ascii85", true);
 	/*=====
 		ascii85 = dojox.encoding.ascii85;
 	=====*/

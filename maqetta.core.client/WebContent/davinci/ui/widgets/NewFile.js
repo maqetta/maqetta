@@ -49,7 +49,20 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 	},
 	
 	_getForcedRootAttr : function(){
-		return this._forcedRoot || system.resource.findResource(davinci.Runtime.getProject());
+		
+		if(this._forcedRoot)
+			return this._forcedRoot;
+		
+		var base = davinci.Runtime.getProject();
+		var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+		
+		if(prefs.webContentFolder!=null && prefs.webContentFolder!=""){
+			var fullPath = new davinci.model.Path(davinci.Runtime.getProject()).append(prefs.webContentFolder);
+			
+			var folder = system.resource.findResource(fullPath.toString());
+			return folder;
+		}
+		return system.resource.findResource(davinci.Runtime.getProject());
 	},
 	
 	_setForcedRootAttr : function(value){

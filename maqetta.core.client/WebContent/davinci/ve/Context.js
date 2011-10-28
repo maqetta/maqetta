@@ -705,14 +705,12 @@ dojo.declare("davinci.ve.Context", null, {
 			//   (even if user hasn't selected the Dojo lib) until those dependencies are removed.
 			//   See bug 7585.
 			if (dojoUrl) {
-				var inx=dojoUrl.lastIndexOf('/');
 				// XXX Invoking callback when dojo is loaded.  This should be refactored to not
 				//  depend on dojo any more.  Once issue, though, is that the callback function
 				//  makes use of dojo and thusly must be invoked only after dojo has loaded.  Need
 				//  to remove Dojo dependencies from callback function first.
 				var baseUserWorkspace = system.resource.getRoot().getURL() + "/" + this._getWidgetFolder();
 				var config = {
-					baseUrl: dojoUrl.substr(0,inx+1),
 					modulePaths: {widgets: baseUserWorkspace}
 				};
 				dojo.mixin(config, this._configProps);
@@ -721,7 +719,7 @@ dojo.declare("davinci.ve.Context", null, {
 					dependencies = ['dojo/parser', 'dojox/html/_base', 'dojo/domReady!'];
 				dependencies = dependencies.concat(requires);  // to bootstrap references to base dijit methods in container
 
-				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\" data-dojo-config=\"" + JSON.stringify(config).slice(1, -1) + "\"></script>"
+				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\" data-dojo-config=\'" + JSON.stringify(config).slice(1, -1) + "\'></script>"
 					+ "<script type=\"text/javascript\">require(" + JSON.stringify(dependencies) + ", top.loading" + this._id + ");</script>";
 			}
 			var helper = davinci.theme.getHelper(this._visualEditor.theme);
@@ -738,15 +736,7 @@ dojo.declare("davinci.ve.Context", null, {
 			}
 			*/
 			//head += '<style type="text/css">@import "claro.css";</style>';
-			head += "</head><body>";
-/*
-			if (dojoUrl) {
-				// Since this document was created from script, DOMContentLoaded and window.onload never fire.
-				// Call dojo._loadInit manually to trigger the Dojo onLoad events for Dojo < 1.7
-				head += "<script>if(dojo._loadInit)dojo._loadInit();</script>";
-			}
-*/
-			head += "</body></html>";
+			head += "</head><body></body></html>";
 
 			var context = this;
 			window["loading" + context._id] = function(parser, htmlUtil) { //FIXME: should be able to get doc reference from domReady! plugin?

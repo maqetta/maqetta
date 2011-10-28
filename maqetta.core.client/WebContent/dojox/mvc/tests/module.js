@@ -6,6 +6,7 @@ try{
 	doh.registerUrl("dojox.mvc.tests.doh_mvc_shipto-billto-simple", dojo.moduleUrl("dojox.mvc","tests/doh_mvc_shipto-billto-simple.html"+userArgs), 999999);
 	doh.registerUrl("dojox.mvc.tests.doh_mvc_search-results-repeat", dojo.moduleUrl("dojox.mvc","tests/doh_mvc_search-results-repeat.html"+userArgs), 999999);
 	doh.registerUrl("dojox.mvc.tests.doh_mvc_search-results-repeat-store", dojo.moduleUrl("dojox.mvc","tests/doh_mvc_search-results-repeat-store.html"+userArgs), 999999);
+	doh.registerUrl("dojox.mvc.tests.doh_mvc_programmatic-repeat-store", dojo.moduleUrl("dojox.mvc","tests/doh_mvc_programmatic-repeat-store.html"+userArgs), 999999);
 	doh.registerUrl("dojox.mvc.tests.doh_mvc_binding-simple", dojo.moduleUrl("dojox.mvc","tests/doh_mvc_binding-simple.html"+userArgs), 999999);
 	doh.registerUrl("dojox.mvc.tests.doh_mvc_ref-set-repeat", dojo.moduleUrl("dojox.mvc","tests/doh_mvc_ref-set-repeat.html"+userArgs), 999999);
 	doh.registerUrl("dojox.mvc.tests.doh_mvc_billto-hierarchical", dojo.moduleUrl("dojox.mvc","tests/doh_mvc_shipto-billto-hierarchical.html"+userArgs), 999999);

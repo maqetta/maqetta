@@ -343,8 +343,7 @@ var _Widget = declare("dijit._Widget", [_WidgetBase, _OnDijitClickMixin, _FocusM
 // For back-compat, remove in 2.0.
 if(!kernel.isAsync){
 	ready(0, function(){
-		var requires = ["dijit/_base/focus", "dijit/_base/place", "dijit/_base/popup", "dijit/_base/scroll",
-			"dijit/_base/typematic", "dijit/_base/wai", "dijit/_base/window", "dijit/WidgetSet"];
+		var requires = ["dijit/_base"];
 		require(requires);	// use indirection so modules not rolled into a build
 	});
 }

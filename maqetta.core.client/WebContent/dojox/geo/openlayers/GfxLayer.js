@@ -10,8 +10,10 @@ define(["dojo/_base/kernel",
 				"dojox/geo/openlayers/Feature",
 				"dojox/geo/openlayers/Layer"], function(dojo, declare, connect, html, gfx, gbase, shape,
 																								path, matrix, Feature, Layer){
-
-	return declare("dojox.geo.openlayers.GfxLayer", dojox.geo.openlayers.Layer, {
+	/*===== 
+	var Layer = dojox.geo.openlayers.Layer; 
+	=====*/
+	return declare("dojox.geo.openlayers.GfxLayer", Layer, {
 		//	summary: 
 		//		A layer dedicated to render dojox.geo.openlayers.GeometryFeature
 		//	description:
@@ -79,7 +81,7 @@ define(["dojo/_base/kernel",
 			//		Get data extent
 			//	tags:
 			//		private
-			var ret = this._surface.getDimensions();;
+			var ret = this._surface.getDimensions();
 			return ret;
 		},
 

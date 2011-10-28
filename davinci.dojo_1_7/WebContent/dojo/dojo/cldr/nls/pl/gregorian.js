@@ -1,17 +1,29 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
 define(
 //begin v1.x content
 {
+	"months-format-narrow": [
+		"s",
+		"l",
+		"m",
+		"k",
+		"m",
+		"c",
+		"l",
+		"s",
+		"w",
+		"p",
+		"l",
+		"g"
+	],
 	"field-weekday": "Dzień tygodnia",
 	"dateFormatItem-yQQQ": "y QQQ",
 	"dateFormatItem-yMEd": "EEE, d.MM.yyyy",
 	"dateFormatItem-MMMEd": "E, d MMM",
+	"eraNarrow": [
+		"p.n.e.",
+		"n.e."
+	],
 	"dayPeriods-format-wide-earlyMorning": "nad ranem",
 	"dayPeriods-format-wide-morning": "rano",
 	"dateFormat-long": "d MMMM y",
@@ -83,13 +95,42 @@ define(
 	"field-day-relative+1": "Jutro",
 	"field-day-relative+2": "Pojutrze",
 	"field-day-relative+3": "Za trzy dni",
+	"months-standAlone-abbr": [
+		"sty",
+		"lut",
+		"mar",
+		"kwi",
+		"maj",
+		"cze",
+		"lip",
+		"sie",
+		"wrz",
+		"paź",
+		"lis",
+		"gru"
+	],
 	"quarters-format-abbr": [
 		"K1",
 		"K2",
 		"K3",
 		"K4"
 	],
+	"quarters-standAlone-wide": [
+		"I kwartał",
+		"II kwartał",
+		"III kwartał",
+		"IV kwartał"
+	],
 	"dateFormatItem-M": "L",
+	"days-standAlone-wide": [
+		"niedziela",
+		"poniedziałek",
+		"wtorek",
+		"środa",
+		"czwartek",
+		"piątek",
+		"sobota"
+	],
 	"dateFormatItem-MMMMd": "d MMMM",
 	"dateFormatItem-yyMMM": "MMM yy",
 	"timeFormat-medium": "HH:mm:ss",
@@ -106,6 +147,15 @@ define(
 	],
 	"field-minute": "Minuta",
 	"field-dayperiod": "Dayperiod",
+	"days-standAlone-abbr": [
+		"niedz.",
+		"pon.",
+		"wt.",
+		"śr.",
+		"czw.",
+		"pt.",
+		"sob."
+	],
 	"dayPeriods-format-wide-night": "w nocy",
 	"dateFormatItem-d": "d",
 	"dateFormatItem-ms": "mm:ss",
@@ -157,6 +207,15 @@ define(
 	"eraNames": [
 		"p.n.e.",
 		"n.e."
+	],
+	"days-format-narrow": [
+		"N",
+		"P",
+		"W",
+		"Ś",
+		"C",
+		"P",
+		"S"
 	],
 	"field-month": "Miesiąc",
 	"days-standAlone-narrow": [

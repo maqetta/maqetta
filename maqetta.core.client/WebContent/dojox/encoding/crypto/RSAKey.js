@@ -3,9 +3,9 @@ define([
 	"dojo/_base/declare",
 	"../../math/BigInteger",
 	"../../math/random/Simple"
-], function(dojo, declare, BigInteger, Simple) {
+], function(kernel, declare, BigInteger, Simple) {
 
-	dojo.experimental("dojox.encoding.crypto.RSAKey");
+	kernel.experimental("dojox.encoding.crypto.RSAKey");
 
 // Copyright (c) 2005  Tom Wu
 // All Rights Reserved.
@@ -35,7 +35,7 @@ define([
 		return new BigInteger(ba);
 	}
 
-	return dojo.declare("dojox.encoding.crypto.RSAKey", null, {
+	return declare("dojox.encoding.crypto.RSAKey", null, {
 		constructor: function(rngf){
 			// summary:
 			//	"empty" RSA key constructor

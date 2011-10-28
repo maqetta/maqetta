@@ -65,7 +65,7 @@ return true;
 }});
 if(!_5.isAsync){
 _8(0,function(){
-var _20=["dijit/_base/focus","dijit/_base/place","dijit/_base/popup","dijit/_base/scroll","dijit/_base/typematic","dijit/_base/wai","dijit/_base/window","dijit/WidgetSet"];
+var _20=["dijit/_base"];
 require(_20);
 });
 }

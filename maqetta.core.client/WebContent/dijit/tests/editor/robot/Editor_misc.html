@@ -263,6 +263,38 @@
 						tearDown: function(){
 							if(editor0){editor0.set("value", value);}
 						}
+					},
+					{
+						name: "Test page up/down.",
+						timeout: 4000,
+						setUp: function(){
+							editor0 = dijit.byId("editor0");
+							value = editor0.get("value");
+						},
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							//Focus on the editor window
+							dojo.window.scrollIntoView(editor0.domNode);
+							doh.robot.sequence(d.getTestErrback(function(){
+								editor0.focus();
+							}), 500);
+							
+							doh.robot.keyPress(dojo.keys.PAGE_UP, 500);
+							doh.robot.typeKeys("abc", 500);
+							doh.robot.keyPress(dojo.keys.PAGE_DOWN, 500);
+							doh.robot.typeKeys("def", 500);
+							
+							doh.robot.sequence(d.getTestCallback(function(){
+								var value = editor0.get("value");
+								doh.t(value.indexOf("abcdef") == 0, "abcdef was not typed into editor 0");
+							}), 500);
+
+							return d;
+						},
+						tearDown: function(){
+							if(editor0){editor0.set("value", value);}
+						}
 					}
 				]);
 				doh.run();

@@ -176,7 +176,7 @@ _5.add(a,"mblListItemAnchorNoIcon");
 }
 },_setCheckedAttr:function(_14){
 var _15=this.getParent();
-if(_15.select==="single"&&_14){
+if(_15&&_15.select==="single"&&_14){
 _1.forEach(_15.getChildren(),function(_16){
 _16.set("checked",false);
 });
@@ -190,8 +190,8 @@ _17[0].style.display=_14?"":"none";
 _17[1].style.display=!_14?"":"none";
 }
 _5.toggle(this.domNode,"mblListItemChecked",_14);
-if(this.checked!==_14){
-this.getParent().onCheckStateChanged(this,_14);
+if(_15&&this.checked!==_14){
+_15.onCheckStateChanged(this,_14);
 }
 this.checked=_14;
 },_setRightTextAttr:function(_18){

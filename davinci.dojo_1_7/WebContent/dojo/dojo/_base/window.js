@@ -6,7 +6,7 @@
 
 //>>built
 define("dojo/_base/window",["./kernel","../has","./sniff"],function(_1,_2){
-_1.doc=window["document"]||null;
+_1.doc=this["document"]||null;
 _1.body=function(){
 return _1.doc.body||_1.doc.getElementsByTagName("body")[0];
 };

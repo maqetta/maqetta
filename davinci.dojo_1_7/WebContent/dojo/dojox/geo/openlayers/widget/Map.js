@@ -1,6 +1,6 @@
 //>>built
 define("dojox/geo/openlayers/widget/Map",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/html","dojo/query","dijit/_Widget","dojox/geo/openlayers/Map","dojox/geo/openlayers/Layer","dojox/geo/openlayers/GfxLayer"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9){
-return _2("dojox.geo.openlayers.widget.Map",dijit._Widget,{baseLayerType:dojox.geo.openlayers.BaseLayerType.OSM,initialLocation:null,touchHandler:false,map:null,startup:function(){
+return _2("dojox.geo.openlayers.widget.Map",_6,{baseLayerType:dojox.geo.openlayers.BaseLayerType.OSM,initialLocation:null,touchHandler:false,map:null,startup:function(){
 this.inherited(arguments);
 this.map.initialFit({initialLocation:this.initialLocation});
 },buildRendering:function(){

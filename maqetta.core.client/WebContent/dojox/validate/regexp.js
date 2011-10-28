@@ -1,6 +1,7 @@
-define(["dojo/_base/kernel", "dojo/regexp", "dojox/main"], function(dojo, regexp, dojox){
+define(["dojo/_base/lang", "dojo/regexp", "dojox/main"], 
+  function(lang, regexp, dojox){
 
-var dxregexp = dojo.getObject("validate.regexp", true, dojox);
+var dxregexp = lang.getObject("validate.regexp", true, dojox);
 dxregexp = dojox.validate.regexp = {
 	
 	ipAddress: function(/*Object?*/flags){

@@ -41,7 +41,7 @@
 	background-image: url(compat/ui-widget-bg.png);
 }
 *html .mblArrowButtonBody { /* IE6 hack */
-	padding: 0px 10px 0px 10px;
+	padding: 0px 10px 0px 3px;
 	top: 0px;
 	left: 17px;
 }

@@ -32,12 +32,12 @@
 }
 .claro .dijitProgressBarEmpty {
 	/* outer container and background of the bar that's not finished yet*/
-	background: @progressbar-empty-background-color url("images/progressBarEmpty.png") no-repeat left;
+	background: @progressbar-empty-background-color url(@image-progressbar-empty) no-repeat left;
 	border-color: @progressbar-border-color;
 }
 .claro .dijitProgressBarTile {
 	/* inner container for finished portion when in 'tile' (image) mode */
-	background: @progressbar-full-background-color url("images/progressBarFull.png") repeat-x top;	
+	background: @progressbar-full-background-color url(@image-progressbar-full) repeat-x top;	
 }
 .dj_ie6 .claro .dijitProgressBarTile {
 	background-image: none;
@@ -54,5 +54,5 @@
 .claro .dijitProgressBarIndeterminate .dijitProgressBarTile {
 	/* use an animated gif for the progress bar in 'indeterminate' mode;
 		background-color won't appear unless user has turned off background images */
-	background: @bar-background-color url("images/progressBarAnim.gif") repeat-x top;
+	background: @bar-background-color url(@image-progressbar-anim) repeat-x top;
 } 

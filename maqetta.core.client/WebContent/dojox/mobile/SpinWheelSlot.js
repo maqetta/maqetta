@@ -234,7 +234,7 @@ define([
 					break;
 				}
 			}
-			var d = idx1 - idx0;
+			var d = idx1 - (idx0 || 0);
 			var m;
 			if(d > 0){
 				m = (d < n - d) ? -d : n - d;

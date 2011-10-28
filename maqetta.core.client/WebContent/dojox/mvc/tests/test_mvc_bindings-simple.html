@@ -4,27 +4,31 @@
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 		<title>Static Master/Detail Pattern -- Binding Test</title>
 
-		<script src="../../../dojo/dojo.js"
-				type="text/javascript"
-				djConfig="parseOnLoad: true, isDebug: true">
-		</script>
 		<style type="text/css">
 			@import "css/app-format.css";
 			@import "../../../dijit/themes/claro/claro.css";
 		</style>
-		<script type="text/javascript" >
-		  dojo.require("dojox.mvc");
-		  dojo.require("dojox.mvc.Output");
-		  dojo.require("dijit.form.TextBox");
-		  dojo.require("dijit.form.NumberTextBox");
-		  dojo.require("dijit.form.ValidationTextBox");
-		  dojo.require("dijit.form.Button");
-		  dojo.require("dojo.parser");
+		<script type="text/javascript" djConfig="parseOnLoad:1,isDebug:1,async:1" src="../../../dojo/dojo.js"></script>
+		<script type="text/javascript">
 
+		var model; 
+
+		require([
+			'dojo/_base/kernel',
+			'dojo/parser',
+			'dojo/ready',
+			'dojox/mvc',
+			'dijit/form/TextBox',
+			'dijit/form/Button',
+			'dijit/form/ValidationTextBox',
+			'dijit/form/NumberTextBox',
+			'dojox/mvc/Group',
+			'dojox/mvc/Output'
+			], function(dojo, parser, ready, mvc){
 		  // The dojox.mvc.StatefulModel class creates a data model instance
 		  // where each leaf within the data model is decorated with dojo.Stateful
 		  // properties that widgets can bind to and watch for their changes.
-		  var model = dojox.mvc.newStatefulModel({ data : 
+		  model = mvc.newStatefulModel({ data : 
 				{	"First" : "John", 
 					"Last" : "Doe", 
 					"Email" : "jdoe@example.com", 
@@ -34,53 +38,55 @@
 		  console.log("model is ");
 		  console.log(model);
 
-		function testFirstRelevance(newValue) {
+			function testFirstRelevance(newValue) {
 			  //newValue = model.First.value;
-			  if ( newValue !== "0" ) return true;
-			  else return false;
-		}
+				if ( newValue !== "0" ) return true;
+				else return false;
+			}
 
-		function testFirstReadOnly(newValue) {
-			  if ( newValue !== "2" && newValue !== "3"	 ) return false;
-			  else return true;
-		}
+			function testFirstReadOnly(newValue) {
+				if ( newValue !== "2" && newValue !== "3"	 ) return false;
+				else return true;
+			}
 
-		function testNumValid(newValue) {
-			  if ( newValue !== 1 && newValue !== "1"  && newValue !== "3") return true;
-			  else return false;
-		}
+			function testNumValid(newValue) {
+				if ( newValue !== 1 && newValue !== "1"  && newValue !== "3") return true;
+				else return false;
+			}
 
-		function testRequired(newValue) {
-			  if ( newValue !== 4 && newValue !== "4") return false;
-			  else return true;
-		}
+			function testRequired(newValue) {
+				if ( newValue !== 4 && newValue !== "4") return false;
+				else return true;
+			}
 
-		function testLastRelevance(newValue) {
-			  //newValue = model.First.value;
-			  if ( newValue !== "0" ) return true;
-			  else return false;
-		}
+			function testLastRelevance(newValue) {
+				//newValue = model.First.value;
+				if ( newValue !== "0" ) return true;
+				else return false;
+			}
 
-		function testLastValid(newValue) {
-			  if ( newValue !== "1" ) return true;
-			  else return false;
-		}
+			function testLastValid(newValue) {
+				if ( newValue !== "1" ) return true;
+				else return false;
+			}
 		
-		function init(){
-			// bind tests, "readOnly" etc.
-			dojox.mvc.bind(model.First, "value", model.First, "readOnly", testFirstReadOnly, true);
-			dojox.mvc.bind(model.First, "value", model.First, "relevant", testFirstRelevance, true);
-			dojox.mvc.bind(model.First, "value", model.First, "valid", testNumValid, true);
-			dojox.mvc.bind(model.Num, "value", model.Num, "valid", testNumValid, true);
+			function init(){
+				// bind tests, "read-only" etc.
+				mvc.bind(model.First, "value", model.First, "readOnly", testFirstReadOnly, true);
+				mvc.bind(model.First, "value", model.First, "relevant", testFirstRelevance, true);
+				mvc.bind(model.First, "value", model.First, "valid", testNumValid, true);
+				mvc.bind(model.Num, "value", model.Num, "valid", testNumValid, true);
 
-			// bind tests bind Last value to Email relevant and valid
-			dojox.mvc.bind(model.Last, "value", model.Email, "relevant", testFirstRelevance, true);
-			dojox.mvc.bind(model.Last, "value", model.Email, "valid", testNumValid, true);
-			dojox.mvc.bind(model.Last, "value", model.Email, "readOnly", testFirstReadOnly, true);
-			dojox.mvc.bind(model.Last, "value", model.Email, "required", testRequired, true);
-			dojox.mvc.bind(model.Last, "value", model.Email, "value");
-		}
-		dojo.addOnLoad(init);
+				// bind tests bind Last value to Email relevant and valid
+				mvc.bind(model.Last, "value", model.Email, "relevant", testFirstRelevance, true);
+				mvc.bind(model.Last, "value", model.Email, "valid", testNumValid, true);
+				mvc.bind(model.Last, "value", model.Email, "readOnly", testFirstReadOnly, true);
+				mvc.bind(model.Last, "value", model.Email, "required", testRequired, true);
+				mvc.bind(model.Last, "value", model.Email, "value");
+			}
+			ready(init);
+		});
+		
 		</script>
 	</head>
 	<body class="claro">
@@ -98,10 +104,10 @@
 		  <div id="mainContent">
 			<h2>Bind Self Tests</h2>
 			<div class="row">
-				<label style="display:inline-block; width:100%; text-align:left;">First: Enter 0 to test for Relevant false (use Reset to re-enable)</label>
+				<label style="display:inline-block; width:100%; text-align:left;">First: Enter 0 to test for Relevant false (disabled) (use Reset to re-enable)</label>
 				<label style="display:inline-block; width:100%; text-align:left;">First: Enter 1 to test for Valid false.</label>
-				<label style="display:inline-block; width:100%; text-align:left;">First: Enter 2 to test for ReadOnly false (use Reset to re-enable)</label>
-				<label style="display:inline-block; width:100%; text-align:left;">First: Enter 3 to test for ReadOnly false and Valid false (use Reset to re-enable)</label>
+				<label style="display:inline-block; width:100%; text-align:left;">First: Enter 2 to test for Read-only false (use Reset to re-enable)</label>
+				<label style="display:inline-block; width:100%; text-align:left;">First: Enter 3 to test for Read-only false and Valid false (use Reset to re-enable)</label>
 			</div>
 			<div class="row">
 				<label class="cell" for="firstnameInput">First:</label>
@@ -116,7 +122,7 @@
 		   <div class="row">
 				<label class="cell" for="firstnameInput"></label>
 				<span data-dojo-type="dojox.mvc.Output" data-dojo-props="ref: model.First">
-					Relevant is:  ${this.ref.relevant}, Valid is: ${this.ref.valid}, ReadOnly is: ${this.ref.readOnly})
+					Relevant is:  ${this.ref.relevant}, Valid is: ${this.ref.valid}, Read-only is: ${this.ref.readOnly})
 				</span>			   
 			</div>
 			<div class="row">
@@ -132,10 +138,10 @@
 			</div>
 			<h2>Bind Tests</h2>
 			<div class="row">
-				<label style="display:inline-block; width:100%; text-align:left;">Last: Enter 0 to test for Relevant false for Email.</label>
+				<label style="display:inline-block; width:100%; text-align:left;">Last: Enter 0 to test for Relevant false (disabled) for Email.</label>
 				<label style="display:inline-block; width:100%; text-align:left;">Last: Enter 1 to test for Valid false for Email.</label>
-				<label style="display:inline-block; width:100%; text-align:left;">Last: Enter 2 to test for ReadOnly true for Email.</label>
-				<label style="display:inline-block; width:100%; text-align:left;">Last: Enter 3 to test for ReadOnly true and Valid false for Email.</label>
+				<label style="display:inline-block; width:100%; text-align:left;">Last: Enter 2 to test for Read-only true for Email.</label>
+				<label style="display:inline-block; width:100%; text-align:left;">Last: Enter 3 to test for Read-only true and Valid false for Email.</label>
 				<label style="display:inline-block; width:100%; text-align:left;">Last: Enter 4 to test for Required true for Email.</label>
 			</div>			
 			
@@ -158,7 +164,7 @@
 		   <div class="row">
 				<label class="cell" for="emailInput"></label>
 				<span id="emailOut" data-dojo-type="dojox.mvc.Output" data-dojo-props="ref: model.Email">
-					Relevant is:  ${this.ref.relevant}, Valid is: ${this.ref.valid}, ReadOnly is: ${this.ref.readOnly}, Required is: ${this.ref.required})
+					Relevant is:  ${this.ref.relevant}, Valid is: ${this.ref.valid}, Read-only is: ${this.ref.readOnly}, Required is: ${this.ref.required})
 				</span>
 		   </div>
 			

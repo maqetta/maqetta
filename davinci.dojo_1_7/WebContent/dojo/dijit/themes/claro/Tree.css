@@ -65,14 +65,14 @@
   background-repeat: repeat;
 }
 .claro .dijitTreeExpando {
-  background-image: url('images/treeExpandImages.png');
+  background-image: url("images/treeExpandImages.png");
   width: 16px;
   height: 16px;
   background-position: -35px 0;
   
 }
 .dj_ie6 .claro .dijitTreeExpando {
-  background-image: url('images/treeExpandImages8bit.png');
+  background-image: url("images/treeExpandImages8bit.png");
 }
 .claro .dijitTreeRowHover .dijitTreeExpandoOpened {
   background-position: -53px 0;
@@ -87,7 +87,7 @@
   background-image: none;
 }
 .claro .dijitTreeExpandoLoading {
-  background-image: url('images/loadingAnimation.gif');
+  background-image: url("images/loadingAnimation.gif");
 }
 .claro .dijitTreeNode .dojoDndItemBefore .dijitTreeContent {
   border-top: 2px solid #759dc0;

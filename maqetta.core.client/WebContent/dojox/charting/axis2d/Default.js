@@ -76,7 +76,8 @@ define(["dojo/_base/lang", "dojo/_base/array","dojo/_base/sniff", "dojo/_base/de
 		//		An optional color to be used in drawing labels.
 		//	enableCache: Boolean?
 		//		Whether the ticks and labels are cached from one rendering to another. This improves the rendering performance of
-		//		successive rendering but penalize the first rendering.  Default false.
+		//		successive rendering but penalize the first rendering. For labels it is only working with gfx labels
+		//		not html ones.  Default false.
 	
 		this.vertical = vertical;
 		this.fixUpper = fixUpper;
@@ -579,7 +580,7 @@ define(["dojo/_base/lang", "dojo/_base/array","dojo/_base/sniff", "dojo/_base/de
 					f = lin.getTransformerFromModel(this.scaler),
 					// GFX Canvas now supports labels, so let's _not_ fallback to HTML anymore on canvas, just use
 					// HTML labels if explicitly asked + no rotation + no IE + no Opera
-					labelType = !titleRotation && !rotation && this.opt.htmlLabels && !has("ie") && !has("opera") ? "html" : "gfx",
+					labelType = (!o.title || !titleRotation) && !rotation && this.opt.htmlLabels && !has("ie") && !has("opera") ? "html" : "gfx",
 					dx = tickVector.x * taMajorTick.length,
 					dy = tickVector.y * taMajorTick.length;
 

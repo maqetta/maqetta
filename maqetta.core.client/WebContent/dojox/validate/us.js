@@ -1,6 +1,7 @@
-define(["dojo/_base/kernel", "./_base", "./regexp"], function(dojo, validate, xregexp){
+define(["dojo/_base/lang", "./_base", "./regexp"], 
+ function(lang, validate, xregexp){
 
-var us = dojo.getObject("us", true, validate);
+var us = lang.getObject("us", true, validate);
 us.isState = function(/*String*/value, /*Object?*/flags){
 	// summary: Validates US state and territory abbreviations.
 	//

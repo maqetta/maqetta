@@ -86,6 +86,9 @@ define([
 		array.forEach(children, function(child){
 			var elm = child.domNode,
 				pos = (child.region || child.layoutAlign);
+			if(!pos){
+				throw new Error("No region setting for " + child.id)
+			}
 
 			// set elem to upper left corner of unused space; may move it later
 			var elmStyle = elm.style;

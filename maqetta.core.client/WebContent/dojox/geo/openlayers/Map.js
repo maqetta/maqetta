@@ -151,7 +151,7 @@ define(["dojo/_base/kernel",
 				if (!opts.controls)
 					opts.controls = [];
 				opts.controls.push(kbd);
-			};
+			}
 			var baseLayerType = options.baseLayerType;
 			if (!baseLayerType)
 				baseLayerType = dojox.geo.openlayers.BaseLayerType.OSM;
@@ -181,7 +181,7 @@ define(["dojo/_base/kernel",
 
 		initialFit : function(params){
 			var o = params.initialLocation;
-			if (o == null)
+			if (!o)
 				o = [-160, 70, 160, -70];
 			this.fitTo(o);
 		},
@@ -195,7 +195,7 @@ define(["dojo/_base/kernel",
 			//	returns: OpenLayers.Layer
 			//		The newly created layer.
 			if (type == this.baseLayerType)
-				return;
+				return null;
 
 			var o = null;
 			if (typeof type == "string") {
@@ -262,7 +262,7 @@ define(["dojo/_base/kernel",
 			if (geodesic) {
 				var units = om.getUnits();
 				if (!units) {
-					return;
+					return null;
 				}
 				var inches = OpenLayers.INCHES_PER_UNIT;
 				scale = (om.getGeodesicPixelSize().w || 0.000001) * inches["km"] * OpenLayers.DOTS_PER_INCH;
@@ -316,13 +316,11 @@ define(["dojo/_base/kernel",
 					});
 				break;
 				case dojox.geo.openlayers.BaseLayerType.GOOGLE:
-					//				base = new OpenLayers.Layer.Google(name, options);
 					base = new Layer(name, {
 						olLayer : new OpenLayers.Layer.Google(name, options)
 					});
 				break;
 				case dojox.geo.openlayers.BaseLayerType.VIRTUAL_EARTH:
-					//				base = new OpenLayers.Layer.VirtualEarth(name);
 					base = new Layer(name, {
 						olLayer : new OpenLayers.Layer.VirtualEarth(name, options)
 					});
@@ -336,9 +334,6 @@ define(["dojo/_base/kernel",
 				case dojox.geo.openlayers.BaseLayerType.ARCGIS:
 					if (!url)
 						url = "http://server.arcgisonline.com/ArcGIS/rest/services/ESRI_StreetMap_World_2D/MapServer/export";
-					//				if (!options.layers)
-					//					options.layers = "0,1,2";
-					//				base = new OpenLayers.Layer.ArcGIS93Rest(name, url, options, {});
 					base = new Layer(name, {
 						olLayer : new OpenLayers.Layer.ArcGIS93Rest(name, url, options, {})
 					});
@@ -350,9 +345,7 @@ define(["dojo/_base/kernel",
 				if (type instanceof OpenLayers.Layer)
 					base = type;
 				else {
-					//base = new OpenLayers.Layer.OSM(name, url, options);
 					options.transitionEffect = "resize";
-					//				base = new OpenLayers.Layer.OSM(name, url, options);
 					base = new Layer(name, {
 						olLayer : new OpenLayers.Layer.OSM(name, url, options)
 					});

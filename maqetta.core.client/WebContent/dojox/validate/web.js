@@ -1,4 +1,4 @@
-define(["dojo/_base/kernel", "./_base", "./regexp"], function(dojo, validate, xregexp){
+define(["./_base", "./regexp"], function(validate, xregexp){
 
 /*=====
 

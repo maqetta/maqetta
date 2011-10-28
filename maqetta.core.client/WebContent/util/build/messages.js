@@ -45,6 +45,8 @@ define([], function(){
 		[1, 220, "outputToProfileFileDeprecated", "Writing htmlFiles- or htmlDirs-derived profile via the profileFile option is deprecated; use the writeProfile option instead"],
 		[1, 221, "assumeLayerIsDojoModule", "Assumed layer is referencing a dojo module."],
 		[1, 222, "assumeLayerDependencyIsDojoModule", "Assumed layer is referencing a dojo module."],
+		[1, 223, "possibleLegacyModuleId", "Name in internStringsSkipList looks like a legacy module identifier."],
+		[1, 224, "missingPluginResolver", "A plugin dependency was encountered but there was not build-time plugin resolver."],
 
 		// error 300-399
 		[1, 300, "dojoHasMissingPlugin", "Missing dojo/has module."],
@@ -100,6 +102,8 @@ define([], function(){
 		[1, 350, "cannotDeduceModuleIdFrom16LayerName", "Cannot deduce module identifier from layer name"],
 		[1, 351, "cannotDeduceModuleIdFrom16LayerDependency", "Cannot deduce module identifier from layer dependency"],
 		[1, 352, "optimizerReportedErrors", "Optimizer reported errors; consult build report for details."],
+		[1, 352, "failedToReadLayerCopyrightFile", "Failed to read copyright file given with layer."],
+
 
 
 		// reports 400-499

@@ -28,7 +28,7 @@ ba[--n]=0;
 _8.destroy();
 return new _3(ba);
 };
-return _1.declare("dojox.encoding.crypto.RSAKey",null,{constructor:function(_9){
+return _2("dojox.encoding.crypto.RSAKey",null,{constructor:function(_9){
 this.rngf=_9||_5;
 this.e=0;
 this.n=this.d=this.p=this.q=this.dmp1=this.dmq1=this.coeff=null;

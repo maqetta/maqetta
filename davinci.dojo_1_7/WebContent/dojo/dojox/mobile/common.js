@@ -126,7 +126,7 @@ ss[i]&&_1e(ss[i],dic);
 }
 return dic;
 }
-var _20=_1f.cssRules;
+var _20=_1f.cssRules||[];
 for(i=0;i<_20.length;i++){
 var _21=_20[i];
 if(_21.href&&_21.styleSheet){

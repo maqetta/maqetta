@@ -37,7 +37,7 @@ There are three areas of styling for the Menu:
 	margin: 0;
 	padding: 0;
 	background-color: @bar-background-color;
-	background-image: url("images/commonHighlight.png");
+	background-image: url(@image-common-highlight);
 	background-position:0 0;
 	background-repeat:repeat-x;
 }
@@ -61,7 +61,7 @@ There are three areas of styling for the Menu:
 	margin:-1px;
 }	
 .claro .dijitMenuItem {
-	background-image: url("images/menuHighlight.png");
+	background-image: url(@image-menu-highlight);
 	background-position:0 -40px;
 	background-repeat:repeat-x;
 	color: @text-color;
@@ -128,7 +128,7 @@ There are three areas of styling for the Menu:
 .claro .dijitMenuExpand {
 	width: 7px;
 	height: 7px;
-	background-image: url('images/spriteArrows.png');
+	background-image: url(@image-arrow-sprite);
 	background-position: -14px 0;
 	margin-right:3px;
 }
@@ -149,14 +149,14 @@ There are three areas of styling for the Menu:
 	display: none;
 }
 .claro .dijitCheckedMenuItemIcon {
-	background-image: url('form/images/checkboxRadioButtonStates.png');
+	background-image: url(@image-form-checkbox-and-radios);
 	background-repeat:no-repeat;
 	background-position: -15px 50%;
 	width:15px;
 	height:16px;
 }
 .dj_ie6 .claro .dijitCheckedMenuItemIcon {
-	background-image: url('form/images/checkboxAndRadioButtons_IE6.png');
+	background-image: url(@image-form-checkbox-and-radios-ie6);
 }
 .claro .dijitCheckedMenuItemChecked .dijitCheckedMenuItemIcon {
 	background-position: 0 50%;

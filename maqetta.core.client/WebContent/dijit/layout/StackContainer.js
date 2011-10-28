@@ -3,13 +3,15 @@ define([
 	"dojo/cookie", // cookie
 	"dojo/_base/declare", // declare
 	"dojo/dom-class", // domClass.add domClass.replace
+	"dojo/_base/kernel",	// kernel.isAsync
 	"dojo/_base/lang",	// lang.extend
+	"dojo/ready",
 	"dojo/topic", // publish
 	"../registry",	// registry.byId
 	"../_WidgetBase",
 	"./_LayoutWidget",
 	"dojo/i18n!../nls/common"
-], function(array, cookie, declare, domClass, lang, topic,
+], function(array, cookie, declare, domClass, kernel, lang, ready, topic,
 			registry, _WidgetBase, _LayoutWidget){
 
 /*=====
@@ -23,6 +25,13 @@ var StackController = dijit.layout.StackController;
 // summary:
 //		A container that has multiple children, but shows only one child at a time.
 
+// Back compat w/1.6, remove for 2.0
+if(!kernel.isAsync){
+	ready(0, function(){
+		var requires = ["dijit/layout/StackController"];
+		require(requires);	// use indirection so modules not rolled into a build
+	});
+}
 
 // These arguments can be specified for the children of a StackContainer.
 // Since any widget can be specified as a StackContainer child, mix them

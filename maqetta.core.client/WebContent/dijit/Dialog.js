@@ -511,6 +511,8 @@ define([
 		//		stuff initially visible on the page (at z-index 0), and then having an entry for
 		//		each Dialog shown.
 
+		_beginZIndex: 950,
+
 		show: function(/*dijit._Widget*/ dialog, /*Object*/ underlayAttrs){
 			// summary:
 			//		Call right before fade-in animation for new dialog.
@@ -534,7 +536,7 @@ define([
 			}
 
 			// Set z-index a bit above previous dialog
-			var zIndex = ds[ds.length-1].dialog ? ds[ds.length-1].zIndex + 2 : 950;
+			var zIndex = ds[ds.length-1].dialog ? ds[ds.length-1].zIndex + 2 : Dialog._DialogLevelManager._beginZIndex;
 			if(ds.length == 1){	// first dialog
 				underlay.show();
 			}

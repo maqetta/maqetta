@@ -1,5 +1,5 @@
-define(["dojo/_base/kernel","dojo/_base/lang","dojox/fx/_base","dojox/fx/_core","dojo/dom-geometry","dojo/_base/sniff"],
-	function (kernel,lang,fxExt,Line,domGeom,has){
+define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/fx", "dojox/fx/_base","dojox/fx/_core","dojo/dom-geometry","dojo/_base/sniff"],
+	function (kernel, lang, baseFx, fxExt, Line, domGeom, has){
 	kernel.experimental("dojox.fx.scroll");
 	var fx = lang.getObject("dojox.fx",true);
 	fxExt.smoothScroll = function(/* Object */args){
@@ -28,7 +28,7 @@ define(["dojo/_base/kernel","dojo/_base/lang","dojox/fx/_base","dojox/fx/_core",
 				args.win.scrollLeft = val[0];
 				args.win.scrollTop = val[1];
 			});
-		var anim = new fxExt.Animation(lang.mixin({
+		var anim = new baseFx.Animation(lang.mixin({
 			beforeBegin: function(){
 				if(this.curve){ delete this.curve; }
 				var current = isWindow ? dojo._docScroll() : {x: args.win.scrollLeft, y: args.win.scrollTop};

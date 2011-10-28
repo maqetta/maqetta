@@ -1,5 +1,5 @@
 //>>built
-define("dojox/encoding/easy64",["dojo/_base/kernel"],function(_1){
+define("dojox/encoding/easy64",["dojo/_base/lang"],function(_1){
 var _2=_1.getObject("dojox.encoding.easy64",true);
 var c=function(_3,_4,_5){
 for(var i=0;i<_4;i+=3){

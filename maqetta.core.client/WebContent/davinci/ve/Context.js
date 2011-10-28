@@ -705,14 +705,12 @@ dojo.declare("davinci.ve.Context", null, {
 			//   (even if user hasn't selected the Dojo lib) until those dependencies are removed.
 			//   See bug 7585.
 			if (dojoUrl) {
-				var inx=dojoUrl.lastIndexOf('/');
 				// XXX Invoking callback when dojo is loaded.  This should be refactored to not
 				//  depend on dojo any more.  Once issue, though, is that the callback function
 				//  makes use of dojo and thusly must be invoked only after dojo has loaded.  Need
 				//  to remove Dojo dependencies from callback function first.
 				var baseUserWorkspace = system.resource.getRoot().getURL() + "/" + this._getWidgetFolder();
 				var config = {
-					baseUrl: dojoUrl.substr(0,inx+1),
 					modulePaths: {widgets: baseUserWorkspace}
 				};
 				dojo.mixin(config, this._configProps);

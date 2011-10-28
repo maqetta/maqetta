@@ -74,11 +74,11 @@ dojo.require('dojox.mobile.parser');
 
    <div class="globalWidget">
 
- <table style="width: 911px; height: 173px;">
+ <table style="width: 911px; ">
   <tbody>
    <tr>
      <td>
-   <div style="width:100px; height:100px;">
+   <div style="width:100px; height:75px;">
 	<div id="View_0" dojoType="dojox.mobile.View" class="dvThemeWidget" style="height: 100%;" selected="true">
 		View
 	</div>
@@ -102,7 +102,7 @@ dojo.require('dojox.mobile.parser');
    <table role="presentation">
     <tbody>
      <tr valign="top">
-      <td style="width:150px">
+      <td style="width:175px">
        <div class="widget-sample">
         <button label="Button" dojoType="dojox.mobile.Button" class="dvThemeWidget"></button>
         <button label="ToggleButton" dojoType="dojox.mobile.ToggleButton" class="dvThemeWidget"></button>
@@ -112,7 +112,7 @@ dojo.require('dojox.mobile.parser');
 
 
       </td>
-      <td style="width:150px">
+      <td style="width:175px">
        <h1 label="Heading" dojoType="dojox.mobile.Heading" class="dvThemeWidget"></h1>
        </td>
       <td>
@@ -131,19 +131,23 @@ dojo.require('dojox.mobile.parser');
    <table role="presentation">
     <tbody>
      <tr valign="top">
-      <td style="width:150px">
+      <td style="width:175px">
 		<span style="font-style:italic; font-size:12px;">Note: Sytles are shared with EdgeToEdgeList</span>
 		<ul dojoType="dojox.mobile.RoundRectList" class="dvThemeWidget">
 			<li label="Item 1" dojoType="dojox.mobile.ListItem" sync="true" moveTo="test"></li>
 			<li label="Item 2" dojoType="dojox.mobile.ListItem"></li>
 		</ul>
       </td>
-      <td style="width:150px">
+      <td style="width:175px">
+		<div label="EdgeToEdgeCategory" dojoType="dojox.mobile.EdgeToEdgeCategory" class="dvThemeWidget"></div>
 		<div label="RoundRectCategory" dojoType="dojox.mobile.RoundRectCategory" class="dvThemeWidget"></div>
 		<div dojoType="dojox.mobile.RoundRect" class="dvThemeWidget">RoundRect</div>
       </td>
-      <td>
-
+      <td style="width:175px">
+		<ul dojoType="dojox.mobile.TabBar" barType="segmentedControl" class="dvThemeWidget">
+		   <li label="TabBarButton" dojoType="dojox.mobile.TabBarButton" sync="true"></li>
+		   <li label="TabBarButton" dojoType="dojox.mobile.TabBarButton" sync="true"></li>
+		 </ul>
       </td>
      </tr>
      <tr>

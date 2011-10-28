@@ -31,6 +31,19 @@
                 }
             }
         },
+		"EdgeToEdgeCategory": {
+			"displayName": "EdgeToEdgeCategory",
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mblEdgeToEdgeCategory": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				}
+			}
+		},
 		"Heading": {
 			"displayName": "Heading",
 			"states": {
@@ -299,6 +312,79 @@
 							},
 							"query": ".mblSwitchKnob"
 						}
+					}
+				}
+			}
+		},
+		"TabBar": {
+			"displayName": "TabBar",
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mblTabPanelHeader": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				}
+			},
+			"subwidgets": {
+				"TabBarButton": {
+					"displayName": "TabBarButton",
+					"states": {
+						"Normal": {
+							"selectors": {
+								".mblTabButton": [
+									"position",
+									"float",
+									"list-style-type",
+									"cursor",
+									"-webkit-tap-highlight-color",
+									"margin-right",
+									"width",
+									"height",
+									"border-width",
+									"border-top-width",
+									"border-right-width",
+									"border-bottom-width",
+									"border-left-width",
+									"border-style",
+									"border-top-style",
+									"border-right-style",
+									"border-bottom-style",
+									"border-left-style",
+									"border-color",
+									"border-top-color",
+									"border-right-color",
+									"border-bottom-color",
+									"border-left-color",
+									"background-color",
+									"background-image",
+									"font-family",
+									"font-size",
+									"color",
+									"text-align"
+								],
+								".mblTabPanelHeader .mblTabButton": [
+									"margin-top",
+								],
+								".mblTabBarButtonAnchor": [
+									"display",
+									"text-decoration"
+								]
+							},
+							"query": ".mblTabButton"
+						},
+						"Selected": {
+							"selectors": {
+								".mblTabButtonSelected.mblTabButton": [
+									"background-color",
+									"background-image"
+								]
+							},
+							"query": ".mblTabButton",
+							"simulate": "mblTabButtonSelected" 
+						},
 					}
 				}
 			}

@@ -9,6 +9,7 @@ dojo.require("davinci.actions.SelectLayoutAction");
 dojo.require("davinci.library");
 dojo.require("dojox.html._base");
 dojo.require('preview.silhouetteiframe');
+dojo.require('davinci.ve.ChooseParent');
 
 dojo.declare("davinci.ve.Context", null, {
 
@@ -46,6 +47,8 @@ dojo.declare("davinci.ve.Context", null, {
 		this._objectIds = [];
 		this._widgets = [];
 		this._links = [];
+		this._chooseParent = new davinci.ve.ChooseParent({context:this});
+
 	},
 
 	    _configDojoxMobile: function() {
@@ -1352,6 +1355,20 @@ dojo.declare("davinci.ve.Context", null, {
 		return this.rootNode;
 	},
 
+	getParentIframe: function(){
+		if(!this._parentIframeElem){
+	        var userdoc = this.getDocument();
+			var iframes = document.getElementsByTagName('iframe');
+			for(var i=0; i < iframes.length; i++){
+				if(iframes[i].contentDocument === userdoc){
+					this._parentIframeElem = iframes[i];
+					break;
+				}
+			}
+		}
+		return this._parentIframeElem;
+	},
+
 	getTopWidgets: function(){
 		var topWidgets=[];
 		for(var node = this.rootNode.firstChild; node; node = node.nextSibling){
@@ -1656,6 +1673,10 @@ dojo.declare("davinci.ve.Context", null, {
 		return flowLayout;
 	},
 
+	getActiveTool: function(){
+		return this._activeTool;
+	},
+
 	setActiveTool: function(tool){
 		if(this._activeTool){
 			this._activeTool.deactivate();
@@ -1665,6 +1686,14 @@ dojo.declare("davinci.ve.Context", null, {
 			this._activeTool = this._defaultTool;
 		}
 		this._activeTool.activate(this);
+	},
+	
+	// getter/setter for currently active drag/drop object
+	getActiveDragDiv: function(){
+		return(this._activeDragDiv);
+	},
+	setActiveDragDiv: function(activeDragDiv){
+		this._activeDragDiv = activeDragDiv;
 	},
 	
 	blockChange: function(shouldBlock){
@@ -1798,6 +1827,9 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	onKeyDown: function(event){
+		//FIXME: Research task. This routine doesn't get fired when using CreateTool and drag/drop from widget palette.
+		// Perhaps the drag operation created a DIV in application's DOM causes the application DOM
+		// to be the keyboard focus?
 		if(this._activeTool && this._activeTool.onKeyDown){
 			this._activeTool.onKeyDown(event);
 		}
@@ -2307,6 +2339,71 @@ dojo.declare("davinci.ve.Context", null, {
 			    dojo.destroy(n);
 			}
 		});
+	},
+	
+	/**
+	 * Perform any visual updates in response to mousemove event while performing a
+	 * drag operation on the visual canvas.
+	 * @param {object} params  object with following properties
+	 *      {object} position x,y properties hold current mouse location
+	 * 		{object} rect  l,t,w,h properties define rectangle being dragged around
+	 * 		{boolean} doSnapLines  whether to show dynamic snap lines
+	 * 		{boolean} doFindParentsXY  whether to show candidate parent widgets
+	 */
+	dragMoveUpdate: function(params) {
+		var context = this;
+		var cp = this._chooseParent;
+		var data = params.data;
+		var eventTarget = params.eventTarget;
+		var position = params.position;
+		var rect = params.rect;
+		var doSnapLines = params.doSnapLines;
+		var doFindParentsXY = params.doFindParentsXY;
+		
+		// "this" will be Context object
+		_updateThisWidget = function(widget){
+			var node = widget.domNode;
+			var dj = this.getDojo();
+			var computed_style = dj.style(node);
+			if(doSnapLines){
+				davinci.ve.Snap.findSnapOpportunities(this, widget, computed_style);
+			}
+			if(doFindParentsXY){
+				var widgetType = dojo.isArray(data) ? data[0].type : data.type;
+				cp.findParentsXY(data, widget, computed_style, position);
+				cp.dragUpdateCandidateParents(widgetType, doFindParentsXY);
+			}
+			dojo.forEach(widget.getChildren(), function(w){
+				_updateThisWidget.apply(context, [w]);
+			});
+		};
+		
+		if(doSnapLines || doFindParentsXY){
+			if(doSnapLines){
+				doSnapLines = davinci.ve.Snap.updateSnapLinesBeforeTraversal(this, rect);
+			}
+			if(doFindParentsXY){
+				doFindParentsXY = cp.findParentsXYBeforeTraversal(params);
+			}
+			dojo.forEach(this.getTopWidgets(), function(w){
+				_updateThisWidget.apply(context, [w]);
+			});
+			if(doSnapLines){
+				davinci.ve.Snap.updateSnapLinesAfterTraversal(this);
+			}
+			if(doFindParentsXY){
+				cp.findParentsXYAfterTraversal();
+			}
+		}
+
+	},
+	
+	/**
+	 * Cleanups after completing drag operations.
+	 */
+	dragMoveCleanup: function() {
+		davinci.ve.Snap.clearSnapLines(this);
+		this._chooseParent.cleanup(this);
 	}
 });
 

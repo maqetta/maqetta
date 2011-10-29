@@ -164,6 +164,9 @@ dojo.mixin(davinci.workbench.Preferences,	{
 			var base = davinci.Runtime.getProject();
 			
 			this.savePreferences(id, base, prefs);
+			if(this._currentPane.save){
+				this._currentPane.save(prefs);
+			}
 		}
 		for(var i = 0;i<listOfPages.length;i++){
 			try{

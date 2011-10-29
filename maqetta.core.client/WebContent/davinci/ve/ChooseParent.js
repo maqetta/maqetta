@@ -360,6 +360,8 @@ dojo.declare("davinci.ve.ChooseParent", null, {
     		return;
     	}
         var userdoc = context.getDocument();	// inner document = user's document
+        this._oldActiveElement = document.activeElement;
+        userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
         this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(widgetType, evt){
         	this.onKeyDown(evt, widgetType);
         }, widgetType));
@@ -392,6 +394,10 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 	   var context = this._context;
 	   var parentListDiv = this._parentListDiv;
 	   if(parentListDiv){
+		   if(this._oldActiveElement){
+			   this._oldActiveElement.focus();
+			   this._oldActiveElement = null;
+		   }
 		   dojo.disconnect(this._keyDownHandler);
 		   dojo.disconnect(this._keyUpHandler);
 		   this._keyDownHandler = this._keyUpHandler = null;
@@ -444,6 +450,10 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 				}
 			}
 		}
+	},
+	
+	isSpaceKeyDown: function(){
+		return this._spaceKeyDown;
 	}
 
 });

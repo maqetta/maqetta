@@ -183,8 +183,7 @@ dojo.declare("davinci.ve.Context", null, {
 		// The following two assignments needed for OpenAjax widget support
 		if(!widget.type){
 			if(widget.isHtmlWidget){
-				var tagName = widget.getTagName();
-				widget.type = "html." + tagName;
+				widget.type = "html." + widget.getTagName();
 			}else if(widget.isGenericWidget){
 				widget.type = widget.domNode.getAttribute('dvwidget');
 			}else if(widget.isObjectWidget){
@@ -375,6 +374,7 @@ dojo.declare("davinci.ve.Context", null, {
 		return folder;
 	},
 
+	//FIXME: remove accessor
 	_getDojoModulePath: function(){
 		return this._dojoModulePath;
 	},
@@ -821,7 +821,7 @@ dojo.declare("davinci.ve.Context", null, {
 
 	_continueLoading: function(data, callback, callbackData, scope) {
 		var loading;
-		//try {
+		try {
 			loading = dojo.create("div",
 					{innerHTML: dojo.replace('<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;{0}</td></tr></table>', ["Loading..."])}, // FIXME: i18n
 					this.frameNode.parentNode,
@@ -835,13 +835,13 @@ dojo.declare("davinci.ve.Context", null, {
 			this._setSourceData(data);
 
 			loading.parentNode.removeChild(loading); // need to remove loading for silhouette to display
-	/*	} catch(e) {
+		} catch(e) {
 			// recreate the Error since we crossed frames
 			callbackData = new Error(e.message, e.fileName, e.lineNumber);
 			dojo.mixin(callbackData, e);
 			loading.innerHTML = "Uh oh! An error has occurred:<br>" + e.message + "<br>file:" + e.fileName + "<br>line: "+e.lineNumber; // FIXME: i18n
 			dojo.addClass(loading, 'error');
-		}*/
+		}
 		
 		if(callback){
 			callback.call((scope || this), callbackData);

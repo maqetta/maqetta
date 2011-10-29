@@ -424,7 +424,8 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			}
 		}));
 		this._dragKeyUpListener = dojo.connect(document, 'onkeyup', dojo.hitch(this,function(){
-			if(tool.onKeyUp){
+			var tool = this._context.getActiveTool();
+			if(tool && tool.onKeyUp){
 				tool.onKeyUp(event);
 			}
 		}));

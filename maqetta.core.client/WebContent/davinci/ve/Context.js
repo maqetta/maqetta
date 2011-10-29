@@ -183,8 +183,7 @@ dojo.declare("davinci.ve.Context", null, {
 		// The following two assignments needed for OpenAjax widget support
 		if(!widget.type){
 			if(widget.isHtmlWidget){
-				var tagName = widget.getTagName();
-				widget.type = "html." + tagName;
+				widget.type = "html." + widget.getTagName();
 			}else if(widget.isGenericWidget){
 				widget.type = widget.domNode.getAttribute('dvwidget');
 			}else if(widget.isObjectWidget){
@@ -375,6 +374,7 @@ dojo.declare("davinci.ve.Context", null, {
 		return folder;
 	},
 
+	//FIXME: remove accessor
 	_getDojoModulePath: function(){
 		return this._dojoModulePath;
 	},

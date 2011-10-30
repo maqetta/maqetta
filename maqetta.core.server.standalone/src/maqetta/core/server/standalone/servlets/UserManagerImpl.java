@@ -31,11 +31,14 @@ public class UserManagerImpl implements IUserManager {
 
 
     public UserManagerImpl() {
-    
-        ServerManager serverManger = ServerManager.getServerManger();
-        this.baseDirectory= ServerManager.getServerManger().getBaseDirectory();
-   
-        this.usersCount = this.baseDirectory.list().length;
+    	ServerManager serverManger = ServerManager.getServerManger();
+    	try{
+        	this.baseDirectory= ServerManager.getServerManger().getBaseDirectory();
+        	this.usersCount = this.baseDirectory.list().length;
+    	}catch(Exception ex){
+    		System.out.println("FATAL ERROR Starting maqetta: " + ex);
+    		
+    	}
         if (ServerManager.DEBUG_IO_TO_CONSOLE) {
             System.out.println("\nSetting [user space] to: " + baseDirectory.getAbsolutePath());
         }

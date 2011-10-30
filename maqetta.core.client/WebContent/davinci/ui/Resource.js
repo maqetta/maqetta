@@ -29,7 +29,16 @@ dojo.mixin(davinci.ui.Resource, {
 			}
 				
 		}else{
-			folder = system.resource.findResource(davinci.Runtime.getProject());
+			var base = davinci.Runtime.getProject();
+			var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+			
+			if(prefs.webContentFolder!=null && prefs.webContentFolder!=""){
+				var fullPath = new davinci.model.Path(davinci.Runtime.getProject()).append(prefs.webContentFolder);
+				folder = system.resource.findResource(fullPath.toString());
+				
+			}else{
+				folder= system.resource.findResource(davinci.Runtime.getProject());
+			}
 		}
 		
 		var proposedFileName = this.getNewFileName('file',folder,"." + type);
@@ -268,6 +277,7 @@ dojo.mixin(davinci.ui.Resource, {
 		dialog.show();
 	},
 	getNewFileName : function (fileOrFolder, fileDialogParentFolder, extension){
+		
 		var existing, proposedName;
 		var count=0;
 		if(!extension){
@@ -293,6 +303,7 @@ dojo.mixin(davinci.ui.Resource, {
 			alert("File already exists!");
 			return false;
 		}
+		
 		
 		return true;
 		

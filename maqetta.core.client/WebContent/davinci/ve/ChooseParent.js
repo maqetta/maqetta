@@ -96,40 +96,6 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 		}
 		return [type];
 	},
-
-	/**
-	 * Choose a parent widget. For flow layout, default to nearest valid parent.
-	 * For absolute layout, the current outer container widget (e.g., the BODY)
-	 * 
-	 * @param {string} widgetType  For example, 'dijit.form.Button'
-	 * @param {object} allowedParentList  List of ancestor widgets of event.target that can be parents of the new widget
-	 */
-	chooseParent: function(widgetType, allowedParentList){
-		var context = this._context;
-		var proposedParentWidget;
-		var helper = davinci.ve.widget.getWidgetHelper(widgetType);
-		if(allowedParentList){
-			if(allowedParentList.length>1 && helper && helper.chooseParent){
-				proposedParentWidget = helper.chooseParent(allowedParentList);
-			}else if (allowedParentList.length == 0){
-				proposedParentWidget = null;
-			}else{
-				// For absolute layout, always drop widgets at the top-level of the document to avoid container clipping issues #6879
-				//FIXME: Pass absolute vs flow as parameter
-				if(!context.getFlowLayout()){
-					var rootWidget = context.rootWidget;
-					if(allowedParentList.indexOf(rootWidget)>=0){
-						proposedParentWidget = rootWidget;
-					}else{
-						proposedParentWidget = null;
-					}	
-				}else{
-					proposedParentWidget = allowedParentList[0];
-				}				
-			}
-		}
-		return proposedParentWidget;
-	},
 	
 	/**
 	 * If showCandidateParents is true, then update the DIV that is being dragged around
@@ -141,6 +107,8 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 	 */
 	dragUpdateCandidateParents: function(widgetType, showCandidateParents){
 		var context = this._context;
+		// NOTE: For CreateTool, the activeDragDiv is a DIV attached to dragClone
+		// For SelectTool, the activeDragDiv is created by calling parentListDivCreate() (in this JS file)
 		var activeDragDiv = context.getActiveDragDiv();
 		var parentListDiv;
 		if(activeDragDiv){
@@ -221,6 +189,40 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 		}
 	
 	},
+
+	/**
+	 * Choose a parent widget. For flow layout, default to nearest valid parent.
+	 * For absolute layout, default to the current outer container widget (e.g., the BODY)
+	 * 
+	 * @param {string} widgetType  For example, 'dijit.form.Button'
+	 * @param {object} allowedParentList  List of ancestor widgets of event.target that can be parents of the new widget
+	 */
+	chooseParent: function(widgetType, allowedParentList){
+		var context = this._context;
+		var proposedParentWidget;
+		if(allowedParentList){
+			var helper = davinci.ve.widget.getWidgetHelper(widgetType);
+			if(allowedParentList.length>1 && helper && helper.chooseParent){
+				proposedParentWidget = helper.chooseParent(allowedParentList);
+			}else if (allowedParentList.length == 0){
+				proposedParentWidget = null;
+			}else{
+				// For absolute layout, always drop widgets at the top-level of the document to avoid container clipping issues #6879
+				//FIXME: Pass absolute vs flow as parameter
+				if(!context.getFlowLayout()){
+					var rootWidget = context.rootWidget;
+					if(allowedParentList.indexOf(rootWidget)>=0){
+						proposedParentWidget = rootWidget;
+					}else{
+						proposedParentWidget = null;
+					}	
+				}else{
+					proposedParentWidget = allowedParentList[0];
+				}				
+			}
+		}
+		return proposedParentWidget;
+	},
 	
 	/**
 	 * Cleanup operations after drag operation is complete
@@ -283,13 +285,20 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 	/**
 	 * Preparatory work before searching widget tree for possible parent
 	 * widgets at a given (x,y) location
+	 * @param {object} params  object with following properties:
+	 *      {object|array{object}} data  For widget being dragged, either {type:<widgettype>} or array of similar objects
+	 *      {object} eventTarget  Node (usually, Element) that is current event.target (ie, node under mouse)
+	 *      {object} position x,y properties hold current mouse location
+	 * 		{object} rect  l,t,w,h properties define rectangle being dragged around
+	 * 		{boolean} doSnapLines  whether to show dynamic snap lines
+	 * 		{boolean} doFindParentsXY  whether to show candidate parent widgets
+	 * @return {boolean} true if current (x,y) is different than last (x,y), false if the same.
 	 */
 	findParentsXYBeforeTraversal: function(params) {
 		var data = params.data;
 		var eventTarget = params.eventTarget;
 		var position = params.position;
 		var rect = params.rect;
-		var doSnapLines = params.doSnapLines;
 		var doFindParentsXY = params.doFindParentsXY;
 		this._findParentsXYList = [];
 		var bodyWidget = eventTarget.ownerDocument.body._dvWidget;
@@ -314,12 +323,11 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 	/**
 	 * If this widget overlaps given x,y position, then add to
 	 * list of possible parents at current x,y position
+	 * @param {object|array{object}} data  For widget being dragged, either {type:<widgettype>} or array of similar objects
 	 * @param {object} widget  widget to check (dvWidget)
-	 * @param {object} computed_style  CSSStyleDeclaration holding computed style
-	 * 				                   for widget's DOM node
 	 * @param {object} position  object with properties x,y (in page-relative coords)
 	 */
-	findParentsXY: function(data, widget, computed_style, position) {
+	findParentsXY: function(data, widget, position) {
 		var domNode = widget.domNode;
 		var x = position.x;
 		var y = position.y;
@@ -348,10 +356,12 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 	 * widgets at a given (x,y) location
 	 */
 	findParentsXYAfterTraversal: function() {
+		this.findParentsXYLastPosition = {};
 	},
 	
     /**
      * Create a floating DIV that will hold the list of proposed parent widgets
+	 * {string} widgetType  Type of widget (e.g., 'dijit.form.Button')
      * @returns {object}  DIV's domNode
      */
     parentListDivCreate: function(widgetType){
@@ -374,6 +384,7 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 			style:'position:absolute;z-index:1000; opacity:.7;pointer-events:none;'}, 
 			body);
 		context.setActiveDragDiv(parentListDiv);
+		// Downstream logic stuffs the list of candidate parents into DIV with class 'maqCandidateParents'
 		dojo.create('div', {className:'maqCandidateParents'}, parentListDiv);
 		return parentListDiv;
     },
@@ -383,7 +394,6 @@ dojo.declare("davinci.ve.ChooseParent", null, {
      * @returns {object}  DIV's domNode
      */
     parentListDivGet: function(){
-		var context = this._context;
         return this._parentListDiv;
     },
     
@@ -408,28 +418,29 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 	   }
     },
     
+    _keyEventDoUpdate: function(widgetType){
+		// Under certain conditions, show list of possible parent widgets
+		var showParentsPref = this._context.getPreference('showPossibleParents');
+		var showCandidateParents = (!showParentsPref && this._spaceKeyDown) || (showParentsPref && !this._spaceKeyDown);
+		this.dragUpdateCandidateParents(widgetType, showCandidateParents);
+    },
+    
 	onKeyDown: function(event, widgetType){
+		dojo.stopEvent(event);
 		if(event.keyCode==32){	// 32=space key
 			this._spaceKeyDown = true;
 		}else{
 			this._processKeyDown(event.keyCode);
 		}
-		dojo.stopEvent(event);
-		// Under certain conditions, show list of possible parent widgets
-		var showParentsPref = this._context.getPreference('showPossibleParents');
-		var showCandidateParents = (!showParentsPref && this._spaceKeyDown) || (showParentsPref && !this._spaceKeyDown);
-		this.dragUpdateCandidateParents(widgetType, showCandidateParents);
+		this._keyEventDoUpdate(widgetType);
 	},
 
 	onKeyUp: function(event, widgetType){
+		dojo.stopEvent(event);
 		if(event.keyCode==32){	// 32=space key
 			this._spaceKeyDown = false;
 		}
-		dojo.stopEvent(event);
-		// Under certain conditions, show list of possible parent widgets
-		var showParentsPref = this._context.getPreference('showPossibleParents');
-		var showCandidateParents = (!showParentsPref && this._spaceKeyDown) || (showParentsPref && !this._spaceKeyDown);
-		this.dragUpdateCandidateParents(widgetType, showCandidateParents);
+		this._keyEventDoUpdate(widgetType);
 	},
 	
 	/**

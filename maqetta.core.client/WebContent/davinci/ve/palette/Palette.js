@@ -388,8 +388,8 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		var ds = new DragSource(node.domNode, "component", node);
 		ds.targetShouldShowCaret = true;
 		ds.returnCloneOnFailure = false;
-		this.connect(ds, "onDragStart", dojo.hitch(this,"onDragStart")); // move start
-		this.connect(ds, "onDragEnd", dojo.hitch(this,"onDragEnd")); // move end
+		this.connect(ds, "onDragStart", dojo.hitch(this,function(e){this.onDragStart(e);})); // move start
+		this.connect(ds, "onDragEnd", dojo.hitch(this,function(e){this.onDragEnd(e);})); // move end
 		node.tooltip = new Tooltip({
 			label:opt.description, 
 			connectId:[node.id]
@@ -417,13 +417,13 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		}
 		//FIXME: Attach dragClone and event listeners to tool instead of context?
 		this._context.setActiveDragDiv(e._dragClone);
-		this._dragKeyDownListener = dojo.connect(document, 'onkeydown', dojo.hitch(this,function(){
+		this._dragKeyDownListener = dojo.connect(document, 'onkeydown', dojo.hitch(this,function(event){
 			var tool = this._context.getActiveTool();
 			if(tool && tool.onKeyDown){
 				tool.onKeyDown(event);
 			}
 		}));
-		this._dragKeyUpListener = dojo.connect(document, 'onkeyup', dojo.hitch(this,function(){
+		this._dragKeyUpListener = dojo.connect(document, 'onkeyup', dojo.hitch(this,function(event){
 			var tool = this._context.getActiveTool();
 			if(tool && tool.onKeyUp){
 				tool.onKeyUp(event);

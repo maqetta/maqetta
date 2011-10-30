@@ -15,10 +15,11 @@ dojo.require("davinci.ui.NewProject");
 dojo.require("davinci.ui.widgets.NewFile");
 dojo.require("davinci.ui.widgets.NewFolder");
 dojo.require("davinci.ui.widgets.OpenFile");
+dojo.require("davinci.ui.widgets.NewHTMLFileOptions");
 
 dojo.mixin(davinci.ui.Resource, {
 	
-	_createNewDialog : function(fileNameLabel,createLabel, type){
+	_createNewDialog : function(fileNameLabel, createLabel, type, dialogSpecificClass){
 		var resource=davinci.ui.Resource.getSelectedResource();
 		var folder = null;
 		if(resource!=null){
@@ -45,7 +46,8 @@ dojo.mixin(davinci.ui.Resource, {
 		var dialogOptions = {newFileName:proposedFileName,
 							fileFieldLabel:fileNameLabel, 
 							folderFieldLabel:"Parent Folder:",
-							finishButtonLabel:createLabel };
+							finishButtonLabel:createLabel,
+							dialogSpecificClass:dialogSpecificClass};
 		return new davinci.ui.widgets.NewFile(dialogOptions);
 		
 	},
@@ -53,7 +55,8 @@ dojo.mixin(davinci.ui.Resource, {
 	
 	newHTML : function(){
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
-		var newDialog = davinci.ui.Resource._createNewDialog(langObj.fileName, langObj.create, "html");
+		var dialogSpecificClass = "davinci.ui.widgets.NewHTMLFileOptions";
+		var newDialog = davinci.ui.Resource._createNewDialog(langObj.fileName, langObj.create, "html", dialogSpecificClass);
 		var executor = function(){
 			if(!newDialog.cancel){
 				var resourcePath = newDialog.get('value');
@@ -66,7 +69,7 @@ dojo.mixin(davinci.ui.Resource, {
 				}
 			}
 		}
-		davinci.Workbench.showModal(newDialog, langObj.createNewHTMLFile, 'height:290px;width: 300px; oppacity:0', executor);
+		davinci.Workbench.showModal(newDialog, langObj.createNewHTMLFile, 'width: 300px; oppacity:0', executor);
 	},
 	
 	newCSS : function(){

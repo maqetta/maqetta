@@ -93,6 +93,9 @@ define({ root:
 		//OpenThemeDialog.html
 		"selectTheme":"Select a Theme",
 
-		"newProject":"New Project"
+		"newProject":"New Project",
+		
+		//NewHTMLFileOptions.html
+		"compositionType":"Composition type:"
 }
 });

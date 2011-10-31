@@ -27,6 +27,7 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		this.cancel =true;
 		this.inherited(arguments);
 	},
+	
 	postCreate : function(){
 		this.inherited(arguments);
 		dojo.connect(this.fileDialogFileName, "onkeyup", this, '_checkValid');
@@ -37,7 +38,7 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		}
 		//FIXME: Temporary
 		var c = dojo.getObject(this.dialogSpecificClass);
-		var dialogSpecificWidget = new c({}, this.dialogSpecificOptionsDiv);
+		this.dialogSpecificWidget = new c({}, this.dialogSpecificOptionsDiv);
 	},
 	
 	

@@ -16,6 +16,11 @@ dojo.require("dojox.widget.Standby");
 dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Templated], {
 	widgetsInTemplate: true,
 	templateString: dojo.cache("davinci.ui.widgets", "templates/NewHTMLFileOptions.html"),
+	compositionType: null,
+	device:null,
+	canvasSize: null,
+	layoutMode: null,
+	themeSet: null,
 	
 /*
 	fileDialogFileName : null,
@@ -37,6 +42,19 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 		this.inherited(arguments);
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		this.compositionTypeLabel.innerHTML = langObj.compositionType;
+		this.deviceLabel.innerHTML = langObj.device;
+		this.sizeLabel.innerHTML = langObj.size;
+		this.layoutLabel.innerHTML = langObj.layout;
+		this.themeLabel.innerHTML = langObj.theme;
+		
+		//FIXME: Add logic for 'for' attributes point to correct id
+		
+		// Contained widgets are:
+		// this.compositionTypeSelect
+		// this.deviceSelect
+		// need others
+
+
 /*
 		dojo.connect(this.fileDialogFileName, "onkeyup", this, '_checkValid');
 		this.fileTree.watch("selectedItem", dojo.hitch(this, this._updateFields));
@@ -143,9 +161,20 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 		return folder.createResource(this.fileDialogFileName.get( 'value'));
 */
 	},
-	onClose : function(){}
+	
+	onClose : function(){},
+	
+	getOptions: function(){
+		return{
+			compositionType: this.compositionTypeSelect.attr('value'),
+			device: this.deviceSelect.attr('value'),
+			size: this.sizeSelect.attr('value'),
+			layout: this.layoutSelect.attr('value'),
+			theme: this.themeSelect.attr('value')
+		};
+	}
 
-
+	
 	
 
 

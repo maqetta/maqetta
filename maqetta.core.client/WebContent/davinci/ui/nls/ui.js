@@ -96,6 +96,10 @@ define({ root:
 		"newProject":"New Project",
 		
 		//NewHTMLFileOptions.html
-		"compositionType":"Composition type:"
+		"compositionType":"Composition type:",
+		"device":"Device:",
+		"layout":"Layout:",
+		"size":"Size:",
+		"ThemeSetOrTheme":"Theme set or theme:"
 }
 });

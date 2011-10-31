@@ -59,6 +59,9 @@ dojo.mixin(davinci.ui.Resource, {
 		var newDialog = davinci.ui.Resource._createNewDialog(langObj.fileName, langObj.create, "html", dialogSpecificClass);
 		var executor = function(){
 			if(!newDialog.cancel){
+				var optionsWidget = newDialog.dialogSpecificWidget;
+				var options = optionsWidget.getOptions();
+				debugger;
 				var resourcePath = newDialog.get('value');
 				if(davinci.ui.Resource._checkFileName(resourcePath)){
 					var resource = system.resource.createResource(resourcePath);

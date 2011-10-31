@@ -1,12 +1,43 @@
 <div class="NHFO">	<!--  NHFO = NewHTMLFileOptions -->
 	<div class="NHFO_CT">	<!--  CT = Composition Type -->
-		<label for="" dojoAttachPoint="compositionTypeLabel"></label>
-		<select dojoType="dijit.form.Select">
+		<label dojoAttachPoint="compositionTypeLabel"></label>
+		<select dojoType="dijit.form.Select" dojoAttachPoint="compositionTypeSelect">
 			<option value='desktop'>Desktop UI</option>
 			<option value='mobile'>Mobile UI</option>
 			<option value='wysiwyg'>Sketch (WYSIWYG)</option>
 			<option value='wireframe'>Sketch (wireframe)</option>
 			<option value='custom'>Custom</option>
 		</select>
+	</div>
+	<div class="NHFO_DETAILS">
+		<div class="NHFO_DV">	<!--  DV = device -->
+			<label dojoAttachPoint="deviceLabel"></label>
+			<select dojoType="dijit.form.Select" dojoAttachPoint="deviceSelect">
+				<option value='iPhone'>iPhone</option>
+				<option value='iPad'>iPad</option>
+			</select>
+		</div>
+		<div class="NHFO_SZ">	<!--  SZ = canvas size -->
+			<label dojoAttachPoint="sizeLabel"></label>
+			<select dojoType="dijit.form.Select" dojoAttachPoint="sizeSelect">
+				<option value='640x480'>640x480</option>
+				<option value='800x600'>800x600</option>
+			</select>
+		</div>
+		<div class="NHFO_LA">	<!--  LA = layout -->
+			<label dojoAttachPoint="layoutLabel"></label>
+			<select dojoType="dijit.form.Select" dojoAttachPoint="layoutSelect">
+				<option value='flow'>flow</option>
+				<option value='absolute'>absolute</option>
+			</select>
+		</div>
+		<div class="NHFO_TH">	<!--  TH = theme set -->
+			<label dojoAttachPoint="themeLabel"></label>
+			<select dojoType="dijit.form.Select" dojoAttachPoint="themeSelect">
+				<option value='deviceSpecific'>(device specific)</option>
+				<option value='claro'>claro</option>
+				<option value='sketch'>sketch</option>
+			</select>
+		</div>
 	</div>
 </div>

@@ -401,8 +401,14 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		var data = e.dragSource.data;
 		require([data.tool && data.tool.replace(/\./g, "/") || "davinci/ve/tools/CreateTool"], function(toolClass) {
 			// Copy the data in case something modifies it downstream
-		    var dataClone = dojo.clone(data.data); // if data.data is an instance of array dojo.mixin({}, data.data)  
+		    var dataClone;// = dojo.clone(data.data); // if data.data is an instance of array dojo.mixin({}, data.data)  
 		                                           // creates instence of object that causes problems down stream. we need instance of array
+		    if (data.data instanceof Array) {
+		        dataClone = [];
+		        dataClone = dataClone.concat(data.data);
+		    } else {
+		        dataClone = dojo.mixin({},data.data);
+		    }
 			var tool = new toolClass(dataClone);
 			tool._type = data.type;
 			this._context.setActiveTool(tool);

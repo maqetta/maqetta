@@ -401,7 +401,7 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		var data = e.dragSource.data;
 		require([data.tool && data.tool.replace(/\./g, "/") || "davinci/ve/tools/CreateTool"], function(toolClass) {
 			// Copy the data in case something modifies it downstream
-			var tool = new toolClass(dojo.mixin({}, data.data));
+			var tool = new toolClass(dojo.clone(data.data));
 			tool._type = data.type;
 			this._context.setActiveTool(tool);
 		}.bind(this));

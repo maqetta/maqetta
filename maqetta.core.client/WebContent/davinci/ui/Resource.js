@@ -308,6 +308,10 @@ dojo.mixin(davinci.ui.Resource, {
 		return true;
 		
 	},
+	canModify : function(item){
+		return !item.readOnly();
+		
+	},
 	
 	newProject : function(){
 		var projectDialog = new davinci.ui.NewProject({}),
@@ -316,6 +320,7 @@ dojo.mixin(davinci.ui.Resource, {
 	},
 	
 	renameAction : function(){
+		
 		var selection = this.getSelectedResources();
 	    if( selection.length!=1) return;
 	    var resource = selection[0];

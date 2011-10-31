@@ -2158,7 +2158,7 @@ dojo.declare("davinci.ve.Context", null, {
 					};
 					dojo.mixin(config, this._configProps);
 					this.addHeaderScript(url, {
-						djConfig: JSON.stringify(config).slice(1, -1)
+						"data-dojo-config": JSON.stringify(config).slice(1, -1)
 					});
 				}else{
 					this.addHeaderScript(url);

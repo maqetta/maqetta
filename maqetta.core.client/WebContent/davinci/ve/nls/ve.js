@@ -12,6 +12,7 @@ define({ root:
 		"border":"Border",
 		"showDetails":"show details",
 		"fontsAndText":"Fonts and Text",
+		"shapesSVG":"Graphics/SVG",
 		
 		//DeviceActions.js
 		"chooseDeviceSilhouette":"Choose a device silhouette: ",
@@ -56,6 +57,12 @@ define({ root:
 		//widgets/WidgetToolBar.js
 		"toolBarFor":"for: ",
 		"noSelection":"(no selection)",
-		"toolBarClass":"class: "
+		"toolBarClass":"class: ",
+		
+		//tools/CreateTool.js
+		"noValidParents":"No valid parents at this position",
+		"willBeChildOf":"Will become a child of:",
+		"candidateParents":"Candidate parents:",
+		"toChangePress":"To change, press numbers"
 }
 });

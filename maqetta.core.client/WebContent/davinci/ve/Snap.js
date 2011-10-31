@@ -9,93 +9,23 @@ dojo.require("davinci.ve.Context");
 davinci.ve.Snap = function() {
 
 	return /** @scope davinci.ve.Snap */ {
-		_findSnapOpportunities:function(widget){
-			var context = this;
-			var snapBox = context._lastSnapBox;
-			
-			var node = widget.domNode;
-			var dj = context.getDojo();
-			var dj_coords = dj.coords(node, true);
-			
-			// Fix up because dojo.coords() value is shifted by left/top margins
-			var computed_style = dj.style(node);
-			dj_coords.x -= computed_style.marginLeft.match(/^\d+/);	// Extra number from something like "2px"
-			dj_coords.y -= computed_style.marginTop.match(/^\d+/);
-			
-			//FIXME: Maybe make this a preference.
-			var hitradius=5;
-			
-			var currentDeltaX = context._snapX ? context._snapX.delta : hitradius+1;
-			var currentDeltaY = context._snapY ? context._snapY.delta : hitradius+1;
-
-			var widgetLeft = dj_coords.x;
-			var widgetCenter = dj_coords.x + (dj_coords.w/2);
-			var widgetRight = dj_coords.x + dj_coords.w;
-			var deltaLeft = Math.abs(widgetLeft-snapBox.l);
-			var deltaCenter = Math.abs(widgetCenter-snapBox.c);
-			var deltaRight = Math.abs(widgetRight-snapBox.r);
-			
-			var widgetTop = dj_coords.y;
-			var widgetMiddle = dj_coords.y + (dj_coords.h/2);
-			var widgetBottom = dj_coords.y + dj_coords.h;
-			var deltaTop = Math.abs(widgetTop-snapBox.t);
-			var deltaMiddle = Math.abs(widgetMiddle-snapBox.m);
-			var deltaBottom = Math.abs(widgetBottom-snapBox.b);
-
-//console.log('widgetTop='+widgetTop+',deltaTop='+deltaTop+',currentDeltaY='+currentDeltaY);
-//console.log('widgetBottom='+widgetBottom+',deltaBottom='+deltaBottom+',currentDeltaY='+currentDeltaY);
-//console.log('widgetMiddle='+widgetMiddle+',deltaMiddle='+deltaMiddle+',currentDeltaY='+currentDeltaY);
-			function snapX(type,x,delta){
-				if(delta<currentDeltaX){
-//console.log('snapping. type='+type+',x='+x+',delta='+delta+',currentDeltaX='+currentDeltaX);
-					context._snapX = {type:type, x:x, widget:widget, delta:delta};
-					currentDeltaX = delta;
-				}
-			}
-			function snapY(type,y,delta){
-				if(delta<currentDeltaY){
-//console.log('snapping. node.className='+node.className+',type='+type+',y='+y+',delta='+delta+',currentDeltaY='+currentDeltaY);
-					context._snapY = {type:type, y:y, widget:widget, delta:delta};
-					currentDeltaY = delta;
-				}
-			}
-			snapX("left",widgetLeft,deltaLeft);
-			snapX("center",widgetCenter, deltaCenter);
-			snapX("right",widgetRight, deltaRight);
-			snapY("top",widgetTop,deltaTop);
-			snapY("middle",widgetMiddle, deltaMiddle);
-			snapY("bottom",widgetBottom, deltaBottom);
-			dojo.forEach(widget.getChildren(), davinci.ve.Snap._findSnapOpportunities, context);
-		},
 		
-		_findSnapOpportunitiesTop:function(context){
-			dojo.forEach(context.getTopWidgets(), davinci.ve.Snap._findSnapOpportunities, context);
-		},
-		
-		findSnapPoints:function(context){
+		/**
+		 * Preparation routine called during dynamic dragging if snapping is active
+		 * before looping through all of the widgets in the document.
+		 * @param {object} context  context object for current document
+		 * @param {object} rect  l,t,w,h for rectangular area being dragged around. w=h=0 if a point.
+		 * @returns {boolean}  false=> no need to traverse, same as last time. true=>yes, do the traversal
+		 */
+		updateSnapLinesBeforeTraversal:function(context, rect){
 			context._snapX = null;
 			context._snapY = null;
-			var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
-			if(editorPrefs.snap){
-				davinci.ve.Snap._findSnapOpportunitiesTop(context);
-			}
-		},
-		
-		updateSnapLines:function(context, rect){
-			//FIXME: Probably remove position and context._lastSnapPosition
-			var position = {x:rect.l, y:rect.t};
-			if(context._lastSnapPosition){
-				if(context._lastSnapPosition.x == position.x && context._lastSnapPosition.y == position.y){
-					return;
-				}
-			}
-			context._lastSnapPosition = position;
 			if(context._lastSnapBox){
 				if(context._lastSnapBox.l == rect.l &&
 					context._lastSnapBox.t == rect.t &&
 					context._lastSnapBox.w == rect.w &&
 					context._lastSnapBox.h == rect.h){
-					return;
+					return false;
 				}
 			}
 			snapBox={
@@ -104,9 +34,108 @@ davinci.ve.Snap = function() {
 				m:rect.t+rect.h/2, b:rect.t+rect.h
 			};
 			context._lastSnapBox = snapBox;
+			return true;
+		},
+		
+		/**
+		 * For a particular widget, see if there is a snapping opportunity that is better
+		 * than any other previously discovered snapping opportunity. If so, then update
+		 * various snapping-related properties on the "context" object.
+		 * @param {object} context  Current "context" object (i.e., current document)
+		 * @param {object} widget  Current dvWidget object
+		 * @param {object} computed_style  CSSStyleDeclaration holding computed style on widget's domNode
+		 * 		(passed in by higher-level routine so that computed style isn't called multiple times on same widget)
+		 */
+		findSnapOpportunities: function(context, widget, computed_style){
+			var snapBox = context._lastSnapBox;
+			
+			var node = widget.domNode;
+			var dj = context.getDojo();
+			var dj_coords = dj.coords(node, true);
+			
+			// Fix up because dojo.coords() value is shifted by left/top margins
+			dj_coords.x -= computed_style.marginLeft.match(/^\d+/);	// Extract number from something like "2px"
+			dj_coords.y -= computed_style.marginTop.match(/^\d+/);
+			
+			//FIXME: Maybe make this a preference.
+			var hitradius=5;
+			
+			var currentDeltaX = context._snapX ? context._snapX.delta : hitradius+1;
+			var currentDeltaY = context._snapY ? context._snapY.delta : hitradius+1;
+			
+			var widgetSnapInfo= {
+				snapRect:{
+					l:dj_coords.x,
+					c:dj_coords.x + (dj_coords.w/2),
+					r:dj_coords.x + dj_coords.w,
+					t:dj_coords.y,
+					m:dj_coords.y + (dj_coords.h/2),
+					b:dj_coords.y + dj_coords.h
+				}
+			};
+			var helper = widget.getHelper();
+			if(helper && helper.getSnapInfo){
+				// If widget has a getSnapInfo helper function, call it
+				// passing the default widgetSnapInfo in case it wants to accept
+				// the defaults or override the defaults
+				widgetSnapInfo = helper.getSnapInfo(widget, widgetSnapInfo);
+			}
+			
+			function snapX(type,x,delta){
+				if(delta<currentDeltaX){
+					context._snapX = {type:type, x:x, widget:widget, delta:delta};
+					currentDeltaX = delta;
+				}
+			}
+			function snapY(type,y,delta){
+				if(delta<currentDeltaY){
+					context._snapY = {type:type, y:y, widget:widget, delta:delta};
+					currentDeltaY = delta;
+				}
+			}
+			var rect = widgetSnapInfo.snapRect;
+			var deltaLeft, deltaCenter, deltaRight, deltaTop, deltaMiddle, deltaBottom;
+			if(rect){
+				deltaLeft = Math.abs(rect.l-snapBox.l);
+				deltaCenter = Math.abs(rect.c-snapBox.c);
+				deltaRight = Math.abs(rect.r-snapBox.r);
+				snapX("left",rect.l,deltaLeft);
+				snapX("center",rect.c, deltaCenter);
+				snapX("right",rect.r, deltaRight);
+				deltaTop = Math.abs(rect.t-snapBox.t);
+				deltaMiddle = Math.abs(rect.m-snapBox.m);
+				deltaBottom = Math.abs(rect.b-snapBox.b);
+				snapY("top",rect.t,deltaTop);
+				snapY("middle",rect.m, deltaMiddle);
+				snapY("bottom",rect.b, deltaBottom);
+			}
+			var points = widgetSnapInfo.snapPoints;
+			if(points){
+				for(var i=0; i<points.length; i++){
+					var p = points[i];
+					deltaLeft = Math.abs(p.x-snapBox.l);
+					deltaCenter = Math.abs(p.x-snapBox.c);
+					deltaRight = Math.abs(p.x-snapBox.r);
+					snapX("point",p.x,deltaLeft);
+					snapX("point",p.x, deltaCenter);
+					snapX("point",p.x, deltaRight);
+					deltaTop = Math.abs(p.y-snapBox.t);
+					deltaMiddle = Math.abs(p.y-snapBox.m);
+					deltaBottom = Math.abs(p.y-snapBox.b);
+					snapY("point",p.y,deltaTop);
+					snapY("point",p.y, deltaMiddle);
+					snapY("point",p.y, deltaBottom);
+				}
+			}
+		},
+		
+		/**
+		 * Updates screen to show dynamic snap lines
+		 */
+		updateSnapLinesAfterTraversal:function(context){
 
 			var containerNode = context.getContainerNode();
-			davinci.ve.Snap.findSnapPoints(context);
+
 			if(!context._snapLinesDiv){
 				context._snapLinesDiv = dojo.create('div',
 						{'class':'snaplines',style:'position:absolute;top:0px;left:0px;z-index:1001;pointer-events:none;'}, 
@@ -123,14 +152,9 @@ davinci.ve.Snap = function() {
 				context._snapLinesDivAlignY = dojo.create('div',
 						{'class':'snaplinesAlignY',style:'position:absolute;pointer-events:none;'}, 
 						context._snapLinesDiv);
-				context._snapLinesDivWidgetX.style.left='5px';
-				context._snapLinesDivWidgetX.style.top='5px';
-				context._snapLinesDivWidgetX.style.width='10px';
-				context._snapLinesDivWidgetX.style.height='5px';
-				context._snapLinesDivWidgetX.style.backgroundColor='pink';
 			}
 			context._snapLinesDiv.style.display="block";
-			var box;
+			var box; // Initial values are assigned by internal function snapSetup below leveraging closure
 			function snapSetup(context,widget,widgetDiv,alignDiv){
 				widgetDiv.style.display='block';
 				alignDiv.style.display='block';		
@@ -157,7 +181,9 @@ davinci.ve.Snap = function() {
 					t = snapBox.t;
 					h = box.y - snapBox.t;
 				}
-				if(context._snapX.type=="left"){
+				if(context._snapX.type=="point"){
+					context._snapLinesDivAlignX.style.left = context._snapX.x+'px';
+				}else if(context._snapX.type=="left"){
 					context._snapLinesDivAlignX.style.left = box.x+'px';
 				}else if(context._snapX.type=="center"){
 					context._snapLinesDivAlignX.style.left = box.c+'px';
@@ -183,7 +209,9 @@ davinci.ve.Snap = function() {
 					l = snapBox.l;
 					w = box.x - snapBox.l;
 				}
-				if(context._snapY.type=="top"){
+				if(context._snapY.type=="point"){
+					context._snapLinesDivAlignY.style.top = context._snapY.y+'px';
+				}else if(context._snapY.type=="top"){
 					context._snapLinesDivAlignY.style.top = box.y+'px';
 				}else if(context._snapY.type=="middle"){
 					context._snapLinesDivAlignY.style.top = box.m+'px';
@@ -201,6 +229,9 @@ davinci.ve.Snap = function() {
 			}
 		},
 		
+		/**
+		 * Clears all snap lines from visual canvas
+		 */
 		clearSnapLines:function(context){
 			if(context._snapLinesDiv){
 				context._snapLinesDiv.style.display="none";

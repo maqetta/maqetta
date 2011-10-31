@@ -75,11 +75,23 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
         this._resizable = {width: true, height: true};
     },
     
-
-    move: function(box){
+    move: function(box, event){
         if(!box){
             return;
         }
+        var context = this._context;
+        var cp = context._chooseParent;
+		if(event){
+			if(event.target != this._lastEventTarget){
+				// If mouse has moved over a different widget, then null out the current
+				// proposed parent widget, which will force recalculation of the list of possible parents
+				cp.setProposedParentWidget(null);
+			}
+			this._lastEventTarget = event.target;
+		}else{
+			// Sometimes this routine gets called without an event object
+			this._lastEventTarget = null;
+		}
 
         var b = this._box;
         b.l = box.l;
@@ -90,15 +102,62 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
         if(this._selectedWidget){
             var position_prop = dojo.style(this._selectedWidget.domNode,"position");
         }
-        if(this._mover && position_prop=="absolute"){
+        if(this._selectedWidget && event){
+    		var parentListDiv = cp.parentListDivGet();
+    		if(!parentListDiv){// Make sure there is a DIV into which list of parents should be displayed
+    			parentListDiv = cp.parentListDivCreate(this._selectedWidget.type);
+     		}
+    		var parentIframe = context.getParentIframe();
+    		if(parentIframe){
+    			// Ascend iframe's ancestors to calculate page-relative x,y for iframe
+    			var offsetLeft = 0;
+    			var offsetTop = 0;
+    			var offsetNode = parentIframe;
+    			while(offsetNode && offsetNode.tagName != 'BODY'){
+                    offsetLeft += offsetNode.offsetLeft;
+                    offsetTop += offsetNode.offsetTop;
+                    offsetNode = offsetNode.offsetParent;
+        		}
+    			parentListDiv.style.left = (offsetLeft + event.pageX) + 'px';
+    			parentListDiv.style.top = (offsetTop + event.pageY) + 'px';
+            }
+        }
+        var doSnapLines = (position_prop=="absolute");
+        var showParentsPref = this._context.getPreference('showPossibleParents');
+        var spaceKeyDown = cp.isSpaceKeyDown();
+        var showCandidateParents = (!showParentsPref && spaceKeyDown) || (showParentsPref && !spaceKeyDown);
+        if(this._mover && (doSnapLines || showCandidateParents) && event && this._selectedWidget){
+    		var data = {type:this._selectedWidget.type};
+        	if(showCandidateParents){
+    			if(!cp.getProposedParentWidget()){
+	    			// Determine target parent(s) at current location
+	    			var target = davinci.ve.widget.getEnclosingWidget(event.target);
+	    			if(target){
+		    			var allowedParentList = cp.getAllowedTargetWidget(target, data, true);
+	    				// Choose a new proposed parent at current (x,y)
+		    			cp.setProposedParentWidget(cp.chooseParent(this._selectedWidget.type, allowedParentList));	    				
+	    			}
+    			}
+        	}
+            var data = {type:this._selectedWidget.type};
+            var position = { x:event.pageX, y:event.pageY};
             var snapBox = {l:b.l, t:b.t, w:0, h:0};
             if(this._box && this._box.w && this._box.h){
                 snapBox.w = this._box.w;
                 snapBox.h = this._box.h;
             }
-            davinci.ve.Snap.updateSnapLines(this._context, snapBox);
+            // Call the dispatcher routine that updates snap lines and
+            // list of possible parents at current (x,y) location
+            this._context.dragMoveUpdate({
+            		data:data,
+            		eventTarget:event.target,
+            		position:position,
+             		rect:snapBox, 
+            		doSnapLines:doSnapLines, 
+            		doFindParentsXY:showCandidateParents});
         }else{
-            davinci.ve.Snap.clearSnapLines(this._context);
+        	// If not showing snap lines or parents, then make sure they aren't showing
+			context.dragMoveCleanup();
         }
         if(this._contexDiv){
             var x = b.w + 10;
@@ -227,7 +286,7 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
         this._nobs[RIGHT_TOP].style.display = corner;
         this._nobs[RIGHT_BOTTOM].style.display = corner;
     },
-
+	
     onMouseDown: function(event){
         // not to start Mover on the context menu
         if(event.button === 2 || event.ctrlKey){
@@ -263,6 +322,9 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
     },
 
     onMouseUp: function(event){
+        var context = this._context;
+		var cp = context._chooseParent;
+		this._lastEventTarget = null;
         if(this._updateTarget){
             clearTimeout(this._updateTarget);
             delete this._updateTarget;
@@ -284,7 +346,8 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
         }
         this._nobIndex = -1;
         this._nobBox = null;
-        davinci.ve.Snap.clearSnapLines(this._context);
+		context.dragMoveCleanup();
+     	cp.parentListDivDelete();
     },
     
     onDblClick: function(event) {
@@ -294,7 +357,7 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
 
     onMove: function(mover, box, event){
         if(this._nobIndex < 0){ // frame
-            this.move(box);
+            this.move(box, event);
             this._client = {x: event.clientX, y: event.clientY};
             if(!this._updateTarget){
                 this._updateTarget = setTimeout(dojo.hitch(this, function(){
@@ -471,10 +534,9 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
     },
 
     stopPropagation: function(e){
-        
-        //console.log('Focus:stopPropagation');
         e.stopPropagation();
     },
+    
     _subwidgetSelected: function(e){
         e.stopPropagation();
         var localDijit = this._context.getDijit();

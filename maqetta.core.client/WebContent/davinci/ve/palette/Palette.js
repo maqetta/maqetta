@@ -11,7 +11,7 @@ define([
 	"davinci/Runtime",
 	"dojo/i18n!davinci/ve/nls/common",
 	"davinci/ve/tools/CreateTool"
-], function(declare, WidgetBase, _KeyNavContainer, Tooltip, DragSource, metadata, PaletteFolder, PaletteItem, Runtime, commonNls){
+], function(declare, WidgetBase, _KeyNavContainer, Tooltip, DragSource, metadata, PaletteFolder, PaletteItem, Runtime, commonNls, CreateTool){
 
 declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 
@@ -388,15 +388,15 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		var ds = new DragSource(node.domNode, "component", node);
 		ds.targetShouldShowCaret = true;
 		ds.returnCloneOnFailure = false;
-		this.connect(ds, "onDragStart", "onDragStart"); // move start
-		this.connect(ds, "onDragEnd", "onDragEnd"); // move end
+		this.connect(ds, "onDragStart", dojo.hitch(this,function(e){this.onDragStart(e);})); // move start
+		this.connect(ds, "onDragEnd", dojo.hitch(this,function(e){this.onDragEnd(e);})); // move end
 		node.tooltip = new Tooltip({
 			label:opt.description, 
 			connectId:[node.id]
 		});
 		return node;
 	},
-
+	
 	onDragStart: function(e){	
 		var data = e.dragSource.data;
 		require([data.tool && data.tool.replace(/\./g, "/") || "davinci/ve/tools/CreateTool"], function(toolClass) {
@@ -405,11 +405,38 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			tool._type = data.type;
 			this._context.setActiveTool(tool);
 		}.bind(this));
+
+		// Sometimes blockChange doesn't get cleared, force a clear upon starting a widget drag operation
+		this._context.blockChange(false);
+
+		// Place an extra DIV onto end of dragCloneDiv to allow 
+		// posting a list of possible parent widgets for the new widget
+		// and register the dragClongDiv with Context
+		if(e._dragClone){
+			dojo.create('div',{className:'maqCandidateParents'},e._dragClone);
+		}
+		//FIXME: Attach dragClone and event listeners to tool instead of context?
+		this._context.setActiveDragDiv(e._dragClone);
+		this._dragKeyDownListener = dojo.connect(document, 'onkeydown', dojo.hitch(this,function(event){
+			var tool = this._context.getActiveTool();
+			if(tool && tool.onKeyDown){
+				tool.onKeyDown(event);
+			}
+		}));
+		this._dragKeyUpListener = dojo.connect(document, 'onkeyup', dojo.hitch(this,function(event){
+			var tool = this._context.getActiveTool();
+			if(tool && tool.onKeyUp){
+				tool.onKeyUp(event);
+			}
+		}));
 	},
 
     onDragEnd: function(e){
 		this.pushedItem = null;
 		this._context.setActiveTool(null);
+		this._context.setActiveDragDiv(null);
+		dojo.disconnect(this._dragKeyDownListener);
+		dojo.disconnect(this._dragKeyUpListener);
 	},
 	
 	onDragMove: function(e){

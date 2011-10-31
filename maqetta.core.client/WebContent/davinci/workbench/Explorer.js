@@ -161,7 +161,7 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 	},
 
 	_getRowClass: function(item) {
-		if (item.readOnly) {
+		if (item.readOnly()) {
 			return "readOnlyResource";
 		}
 	}

@@ -104,7 +104,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		
 		
 		var resource = cssFile.getResource();
-		return !resource.readOnly;
+		return !resource.readOnly();
 		
 	},
 	
@@ -619,7 +619,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			if(value && value.rule && value.rule.getCSSFile){
 				var file = value.rule.getCSSFile();
 				var resource = file.getResource();
-				return resource.readOnly;
+				return resource.readOnly();
 			}else{
 				return false;
 			}

@@ -239,9 +239,9 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	    }
 	},
 	
-	setContent: function (fileName, content){
+	setContent: function (fileName, content, newHtmlParams){
 		this._onloadMessages=[];	// List of messages to present to user after loading has completed
-		this._setContent(fileName, content);
+		this._setContent(fileName, content, newHtmlParams);
 	},
 	
 	saveAs: function (newFileName, oldFileName, content){
@@ -249,12 +249,12 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		this._setContent(newFileName, content);
 	},
 	
-	_setContent: function(filename,content){
+	_setContent: function(filename,content, newHtmlParams){
 		
-		this._setContentRaw(filename, content);
+		this._setContentRaw(filename, content, newHtmlParams);
 	},
 	
-	_setContentRaw: function(filename, content){
+	_setContentRaw: function(filename, content, newHtmlParams){
 		this.fileName=filename;
 		this.basePath=new davinci.model.Path(filename);
 	   
@@ -318,7 +318,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 				// resize kludge to make Dijit visualEditor contents resize
 				// seems necessary due to combination of 100%x100% layouts and extraneous width/height measurements serialized in markup
 				context.getTopWidgets().forEach(function (widget) { if (widget.resize) { widget.resize(); } });
-			}));
+			}), null, newHtmlParams);
 	   		// set flow layout on user prefs
 			var flow = this.context.getFlowLayout(); // gets the current layout, but also sets to default if missing..
 			this.initialSet=true;

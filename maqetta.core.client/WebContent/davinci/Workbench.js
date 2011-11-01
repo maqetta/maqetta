@@ -952,7 +952,7 @@ dojo.mixin(davinci.Workbench, {
 		}
 	},
 
-	openEditor: function (keywordArgs) {
+	openEditor: function (keywordArgs, newHtmlParams) {
 		
 		var fileName=keywordArgs.fileName,
 			content=keywordArgs.content,
@@ -1022,7 +1022,7 @@ dojo.mixin(davinci.Workbench, {
 			});
 			return;
 		}*/
-		var ee = this._createEditor(editorExtension,fileName,keywordArgs);
+		var ee = this._createEditor(editorExtension, fileName, keywordArgs, newHtmlParams);
 		if(editorCreateCallback){
 			editorCreateCallback.call(window, ee);
 		}
@@ -1032,7 +1032,7 @@ dojo.mixin(davinci.Workbench, {
 		}
 	},
 	
-	_createEditor: function(editorExtension, fileName, keywordArgs){
+	_createEditor: function(editorExtension, fileName, keywordArgs, newHtmlParams){
 		var nodeName = fileName.split('/').pop()
 
 		var loading = dojo.query('.loading');
@@ -1086,7 +1086,7 @@ dojo.mixin(davinci.Workbench, {
 		if (!keywordArgs.noSelect) {
 			tabContainer.selectChild(tab);
 		}
-		tab.setEditor(editorExtension,fileName,content,keywordArgs.fileName,tab.domNode);
+		tab.setEditor(editorExtension, fileName, content, keywordArgs.fileName, tab.domNode, newHtmlParams);
 		
 		if (keywordArgs.startLine) {
 			tab.editor.select(keywordArgs);

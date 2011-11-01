@@ -61,14 +61,19 @@ dojo.mixin(davinci.ui.Resource, {
 			if(!newDialog.cancel){
 				var optionsWidget = newDialog.dialogSpecificWidget;
 				var options = optionsWidget.getOptions();
-				debugger;
 				var resourcePath = newDialog.get('value');
 				if(davinci.ui.Resource._checkFileName(resourcePath)){
 					var resource = system.resource.createResource(resourcePath);
 					var text = system.resource.createText("CSS", {resource:resource});
-					if(text)
+					if(text){
 						resource.setText(text);
-					davinci.ui.Resource.openResource(resource);
+					}
+					//FIXME: Pull from dialog values instead
+					var newHtmlParams = {
+						device:'iphone',
+						flowlayout:'false'
+					};
+					davinci.ui.Resource.openResource(resource, newHtmlParams);
 				}
 			}
 		}
@@ -393,13 +398,13 @@ dojo.mixin(davinci.ui.Resource, {
 		davinci.Workbench.openEditor(options);
 	},
 	
-	openResource : function(resource){
+	openResource : function(resource, newHtmlParams){
 
 		if(resource.elementType=="File"){
 			davinci.Workbench.openEditor({
 				fileName: resource,
 				content: resource.getText()
-			});
+			}, newHtmlParams);
 		}
 	}
 	

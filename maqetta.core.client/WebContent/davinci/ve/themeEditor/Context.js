@@ -126,7 +126,7 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 				});
 				this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",  dojo.hitch(this, this._editorSelectionChange));
 
-				//				throw e;
+				throw e;
 			}
 		
 		if(active){

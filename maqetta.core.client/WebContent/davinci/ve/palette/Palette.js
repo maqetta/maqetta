@@ -400,22 +400,9 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	onDragStart: function(e){	
 		var data = e.dragSource.data;
 		require([data.tool && data.tool.replace(/\./g, "/") || "davinci/ve/tools/CreateTool"], function(toolClass) {
-<<<<<<< HEAD
-			// Copy the data in case something modifies it downstream
-		    var dataClone;// = dojo.clone(data.data); // if data.data is an instance of array dojo.mixin({}, data.data)  
-		                                           // creates instence of object that causes problems down stream. we need instance of array
-		    if (data.data instanceof Array) {
-		        dataClone = [];
-		        dataClone = dataClone.concat(data.data);
-		    } else {
-		        dataClone = dojo.mixin({},data.data);
-		    }
-			var tool = new toolClass(dataClone);
-=======
 			// Copy the data in case something modifies it downstream -- what types can data.data be?
 			var dataCopy = data.data instanceof Array ? [].concat(data.data) : dojo.mixin({}, data.data),
 					tool = new toolClass(dojo.clone(dataCopy));
->>>>>>> master
 			tool._type = data.type;
 			this._context.setActiveTool(tool);
 		}.bind(this));

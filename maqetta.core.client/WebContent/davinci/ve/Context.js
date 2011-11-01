@@ -817,8 +817,8 @@ dojo.declare("davinci.ve.Context", null, {
 				}
 			};*/
 
-		}else{
-			this._continueLoading(data, callback, this, scope);
+//		}else{
+//			this._continueLoading(data, callback, this, scope); //  we shouldn't be getting here?  this will just bomb out without Dojo (this.getGlobal() will fail)
 		}
 	},
 
@@ -835,19 +835,20 @@ dojo.declare("davinci.ve.Context", null, {
 				throw callbackData;
 			}
 
-			this._setSourceData(data);
+			var promise = this._setSourceData(data);
+			if (callback) {
+				promise.then(function(){
+					callback.call((scope || this), callbackData);
+				}.bind(this));
+			}
 
 			loading.parentNode.removeChild(loading); // need to remove loading for silhouette to display
 		} catch(e) {
 			// recreate the Error since we crossed frames
 			callbackData = new Error(e.message, e.fileName, e.lineNumber);
 			dojo.mixin(callbackData, e);
-			loading.innerHTML = "Uh oh! An error has occurred:<br>" + e.message + "<br>file:" + e.fileName + "<br>line: "+e.lineNumber; // FIXME: i18n
+			loading.innerHTML = "Uh oh! An error has occurred:<br><b>" + e.message + "</b><br>file: " + e.fileName + "<br>line: "+e.lineNumber; // FIXME: i18n
 			dojo.addClass(loading, 'error');
-		}
-		
-		if(callback){
-			callback.call((scope || this), callbackData);
 		}
 	},
 
@@ -961,17 +962,7 @@ dojo.declare("davinci.ve.Context", null, {
 		collapse(containerNode);
 
 		this._loadFileStatesCache = states;
-		this._processWidgets(containerNode, active, this._loadFileStatesCache);
-
-		// Now that _processWidgets() has loaded any of the widgets' required
-		// resources, we execute the inline scripts.
-        if (scripts) {
-            try {
-                dojox.html.evalInGlobal(scripts, containerNode);
-            } catch(e) {
-                console.error('Error eval script in Context._setSourceData, ' + e);
-            }
-        }
+		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts);
 	},
 
 	/**
@@ -985,7 +976,7 @@ dojo.declare("davinci.ve.Context", null, {
 	/**
 	 * Process dojoType, oawidget and dvwidget attributes on text content for containerNode
 	 */
-	_processWidgets: function(containerNode, attachWidgets, states) {
+	_processWidgets: function(containerNode, attachWidgets, states, scripts) {
 		dojo.forEach(dojo.query("*", containerNode), function(n){
 			var type = n.getAttribute("dojoType") || /*n.getAttribute("oawidget") ||*/ n.getAttribute("dvwidget");
 			//doUpdateModelDojoRequires=true forces the SCRIPT tag with dojo.require() elements
@@ -998,28 +989,43 @@ dojo.declare("davinci.ve.Context", null, {
 			this._preserveStates(n, states);
 
 		}, this);
-		try {
-			this.getGlobal()["require"]("dojo/parser").parse(containerNode);
-		} catch(e) {
-			// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
-			// the dojo parser will throw an exception trying to compute style on hidden containers
-			// so to fix this we catch the exception here and add a subscription to be notified when this editor is seleected by the user
-			// then we will reprocess the content when we have focus -- wdr
-			
-			// remove all registered widgets, some may be partly constructed.
-			this.getDijit().registry.forEach(function(w){
-				  w.destroy();			 
-			});
-
-			this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",
-					this, '_editorSelectionChange');
-
-//			throw e;
-		}
+		var promise = new dojo.Deferred();
+		this.getGlobal()["require"]("dojo/ready")(function(){
+			try {
+				this.getGlobal()["require"]("dojo/parser").parse(containerNode);
+				promise.callback();
+			} catch(e) {
+				// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
+				// the dojo parser will throw an exception trying to compute style on hidden containers
+				// so to fix this we catch the exception here and add a subscription to be notified when this editor is seleected by the user
+				// then we will reprocess the content when we have focus -- wdr
+				
+				// remove all registered widgets, some may be partly constructed.
+				this.getDijit().registry.forEach(function(w){
+					  w.destroy();			 
+				});
 	
-		if(attachWidgets){
-			this._attachAll();
-		}
+				this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",
+						this, '_editorSelectionChange');
+
+				promise.errback();
+				throw e;
+			}
+		
+			if(attachWidgets){
+				this._attachAll();
+			}
+
+	        if (scripts) {
+	            try {
+	                dojox.html.evalInGlobal(scripts, containerNode);
+	            } catch(e) {
+	                console.error('Error eval script in Context._setSourceData, ' + e);
+	            }
+	        }
+		}.bind(this));
+
+		return promise;
 	},
 	
    preProcess: function (node){

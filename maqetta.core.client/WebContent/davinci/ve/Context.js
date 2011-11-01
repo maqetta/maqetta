@@ -817,7 +817,8 @@ dojo.declare("davinci.ve.Context", null, {
 				}
 			};*/
 
-//		}else{
+		}else{
+			console.warn("Context._setContent called after frame initialized");
 //			this._continueLoading(data, callback, this, scope); //  we shouldn't be getting here?  this will just bomb out without Dojo (this.getGlobal() will fail)
 		}
 	},
@@ -836,11 +837,6 @@ dojo.declare("davinci.ve.Context", null, {
 			}
 
 			var promise = this._setSourceData(data);
-			if (callback) {
-				promise.then(function(){
-					callback.call((scope || this), callbackData);
-				}.bind(this));
-			}
 
 			loading.parentNode.removeChild(loading); // need to remove loading for silhouette to display
 		} catch(e) {
@@ -849,6 +845,11 @@ dojo.declare("davinci.ve.Context", null, {
 			dojo.mixin(callbackData, e);
 			loading.innerHTML = "Uh oh! An error has occurred:<br><b>" + e.message + "</b><br>file: " + e.fileName + "<br>line: "+e.lineNumber; // FIXME: i18n
 			dojo.addClass(loading, 'error');
+		}
+		if (callback) {
+			promise.then(function(){
+				callback.call((scope || this), callbackData); // FIXME: use hitch?  use errback for the error case?
+			}.bind(this));
 		}
 	},
 

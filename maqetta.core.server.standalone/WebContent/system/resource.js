@@ -143,7 +143,7 @@ dojo.mixin(system.resource, {
 			}else{
 				system.resource.root = workspace;
 			}
-				
+			system.resource.root._readOnly = false;
 			
 		}
 		

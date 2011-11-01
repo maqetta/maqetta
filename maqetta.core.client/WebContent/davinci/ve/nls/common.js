@@ -113,6 +113,7 @@ property: "Property",
 /* PreferencePane */
 flowLayout: "Flow Layout",
 snapToNearestWidget: "Snap to nearest widget",
+showPossibleParents: "When dragging, show possible parents",
 warnOnCSSOverride: "Warn on CSS Override",
 liveEdit: "Live Edit",
 

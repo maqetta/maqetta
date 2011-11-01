@@ -36,7 +36,11 @@ dojo.declare("davinci.ui.dnd.DragSource", null, {
 	},
 
 	onDragStart: function(e){
+		// Adds this.dragClone as side effect
 		this.createDragClone(e);
+		// Add dragClone pointer to event object so that it can be accessed by
+		// higher level routines, particularly Palette.js (widget palette)
+		e._dragClone = this.dragClone;
 		return this.dragClone;
 	},
 
@@ -102,7 +106,7 @@ dojo.declare("davinci.ui.dnd.DragSource", null, {
 		this.parentCoords = {
 			y: parentPosition.y - this.offsetParentCoords.y,
 			x: parentPosition.x - this.offsetParentCoords.x
-		}
+		};
 
 		// Users of the DragSource may want to fix the mouse down info
 		if(this.fixMouseDownInfo){
@@ -125,8 +129,13 @@ dojo.declare("davinci.ui.dnd.DragSource", null, {
 	createDragClone: function(e){
 		var dragClone;
 		if (e.dragSource.dragHandler && e.dragSource.dragHandler.createDragClone) {
+			// If dragHandler has a custom createDragClone, invoke it
+			//    (Note: tracing through code, drag/drop image from Files palette onto canvas uses this logic)
 			dragClone = e.dragSource.dragHandler.createDragClone();
 		} else {
+			// Default action: simply clone the original DIV whose dragStart handler
+			// (ie, mousedown) initiated the drag operation
+			//     (Note: tracing through code, drag/drop from Widgets palette onto canvas uses this logic)
 			dragClone = this.dragObject.cloneNode(true);
 		}
 		this.dragClone = dragClone;

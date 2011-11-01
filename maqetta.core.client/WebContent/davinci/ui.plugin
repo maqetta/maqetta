@@ -290,6 +290,8 @@
                     id: "davinci.ui.newfile",
                     label: "New folder...",
                     run: "davinci.ui.Resource.fileDialog('newfolder')",
+                  
+                    isEnabled: davinci.ui.Resource.canModify,
                     menubarPath: "newfolder"
 
                 },
@@ -297,6 +299,8 @@
                     id: "davinci.ui.addFiles",
                     label: "Upload file",
                     run: "davinci.ui.Resource.addFiles()",
+                    
+                    isEnabled: davinci.ui.Resource.canModify,
                     menubarPath: "addFiles"
 
                 },
@@ -305,6 +309,8 @@
                     label: "Rename...",
                     iconClass:"renameIcon",
                     run: "davinci.ui.Resource.renameAction()",
+                   
+                    isEnabled: davinci.ui.Resource.canModify,
                     menubarPath: "addFiles"
 
                 },
@@ -312,6 +318,8 @@
                     id: "davinci.ui.delete",
                     label: "Delete",
                     iconClass: "editActionIcon editDeleteIcon",
+                    
+                    isEnabled: davinci.ui.Resource.canModify,
                     run: "davinci.ui.Resource.deleteAction()",
                     menubarPath: "delete"
 
@@ -321,6 +329,8 @@
                     label: "Download",
                     iconClass: "downloadSomeIcon",
                     action: "davinci.actions.DownloadAction",
+                    
+                        isEnabled: davinci.ui.Resource.canModify,
                     menubarPath: "delete"
 
                 }

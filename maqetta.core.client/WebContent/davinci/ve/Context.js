@@ -9,6 +9,7 @@ dojo.require("davinci.actions.SelectLayoutAction");
 dojo.require("davinci.library");
 dojo.require("dojox.html._base");
 dojo.require('preview.silhouetteiframe');
+dojo.require('davinci.ve.ChooseParent');
 
 dojo.declare("davinci.ve.Context", null, {
 
@@ -46,6 +47,8 @@ dojo.declare("davinci.ve.Context", null, {
 		this._objectIds = [];
 		this._widgets = [];
 		this._links = [];
+		this._chooseParent = new davinci.ve.ChooseParent({context:this});
+
 	},
 
 	    _configDojoxMobile: function() {
@@ -183,8 +186,7 @@ dojo.declare("davinci.ve.Context", null, {
 		// The following two assignments needed for OpenAjax widget support
 		if(!widget.type){
 			if(widget.isHtmlWidget){
-				var tagName = widget.getTagName();
-				widget.type = "html." + tagName;
+				widget.type = "html." + widget.getTagName();
 			}else if(widget.isGenericWidget){
 				widget.type = widget.domNode.getAttribute('dvwidget');
 			}else if(widget.isObjectWidget){
@@ -375,6 +377,7 @@ dojo.declare("davinci.ve.Context", null, {
 		return folder;
 	},
 
+	//FIXME: remove accessor
 	_getDojoModulePath: function(){
 		return this._dojoModulePath;
 	},
@@ -705,14 +708,12 @@ dojo.declare("davinci.ve.Context", null, {
 			//   (even if user hasn't selected the Dojo lib) until those dependencies are removed.
 			//   See bug 7585.
 			if (dojoUrl) {
-				var inx=dojoUrl.lastIndexOf('/');
 				// XXX Invoking callback when dojo is loaded.  This should be refactored to not
 				//  depend on dojo any more.  Once issue, though, is that the callback function
 				//  makes use of dojo and thusly must be invoked only after dojo has loaded.  Need
 				//  to remove Dojo dependencies from callback function first.
 				var baseUserWorkspace = system.resource.getRoot().getURL() + "/" + this._getWidgetFolder();
 				var config = {
-					baseUrl: dojoUrl.substr(0,inx+1),
 					modulePaths: {widgets: baseUserWorkspace}
 				};
 				dojo.mixin(config, this._configProps);
@@ -738,15 +739,7 @@ dojo.declare("davinci.ve.Context", null, {
 			}
 			*/
 			//head += '<style type="text/css">@import "claro.css";</style>';
-			head += "</head><body>";
-/*
-			if (dojoUrl) {
-				// Since this document was created from script, DOMContentLoaded and window.onload never fire.
-				// Call dojo._loadInit manually to trigger the Dojo onLoad events for Dojo < 1.7
-				head += "<script>if(dojo._loadInit)dojo._loadInit();</script>";
-			}
-*/
-			head += "</body></html>";
+			head += "</head><body></body></html>";
 
 			var context = this;
 			window["loading" + context._id] = function(parser, htmlUtil) { //FIXME: should be able to get doc reference from domReady! plugin?
@@ -824,14 +817,14 @@ dojo.declare("davinci.ve.Context", null, {
 				}
 			};*/
 
-		}else{
-			this._continueLoading(data, callback, this, scope);
+//		}else{
+//			this._continueLoading(data, callback, this, scope); //  we shouldn't be getting here?  this will just bomb out without Dojo (this.getGlobal() will fail)
 		}
 	},
 
 	_continueLoading: function(data, callback, callbackData, scope) {
 		var loading;
-		//try {
+		try {
 			loading = dojo.create("div",
 					{innerHTML: dojo.replace('<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;{0}</td></tr></table>', ["Loading..."])}, // FIXME: i18n
 					this.frameNode.parentNode,
@@ -842,19 +835,20 @@ dojo.declare("davinci.ve.Context", null, {
 				throw callbackData;
 			}
 
-			this._setSourceData(data);
+			var promise = this._setSourceData(data);
+			if (callback) {
+				promise.then(function(){
+					callback.call((scope || this), callbackData);
+				}.bind(this));
+			}
 
 			loading.parentNode.removeChild(loading); // need to remove loading for silhouette to display
-	/*	} catch(e) {
+		} catch(e) {
 			// recreate the Error since we crossed frames
 			callbackData = new Error(e.message, e.fileName, e.lineNumber);
 			dojo.mixin(callbackData, e);
-			loading.innerHTML = "Uh oh! An error has occurred:<br>" + e.message + "<br>file:" + e.fileName + "<br>line: "+e.lineNumber; // FIXME: i18n
+			loading.innerHTML = "Uh oh! An error has occurred:<br><b>" + e.message + "</b><br>file: " + e.fileName + "<br>line: "+e.lineNumber; // FIXME: i18n
 			dojo.addClass(loading, 'error');
-		}*/
-		
-		if(callback){
-			callback.call((scope || this), callbackData);
 		}
 	},
 
@@ -968,17 +962,7 @@ dojo.declare("davinci.ve.Context", null, {
 		collapse(containerNode);
 
 		this._loadFileStatesCache = states;
-		this._processWidgets(containerNode, active, this._loadFileStatesCache);
-
-		// Now that _processWidgets() has loaded any of the widgets' required
-		// resources, we execute the inline scripts.
-        if (scripts) {
-            try {
-                dojox.html.evalInGlobal(scripts, containerNode);
-            } catch(e) {
-                console.error('Error eval script in Context._setSourceData, ' + e);
-            }
-        }
+		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts);
 	},
 
 	/**
@@ -992,7 +976,7 @@ dojo.declare("davinci.ve.Context", null, {
 	/**
 	 * Process dojoType, oawidget and dvwidget attributes on text content for containerNode
 	 */
-	_processWidgets: function(containerNode, attachWidgets, states) {
+	_processWidgets: function(containerNode, attachWidgets, states, scripts) {
 		dojo.forEach(dojo.query("*", containerNode), function(n){
 			var type = n.getAttribute("dojoType") || /*n.getAttribute("oawidget") ||*/ n.getAttribute("dvwidget");
 			//doUpdateModelDojoRequires=true forces the SCRIPT tag with dojo.require() elements
@@ -1005,28 +989,43 @@ dojo.declare("davinci.ve.Context", null, {
 			this._preserveStates(n, states);
 
 		}, this);
-		try {
-			this.getGlobal()["require"]("dojo/parser").parse(containerNode);
-		} catch(e) {
-			// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
-			// the dojo parser will throw an exception trying to compute style on hidden containers
-			// so to fix this we catch the exception here and add a subscription to be notified when this editor is seleected by the user
-			// then we will reprocess the content when we have focus -- wdr
-			
-			// remove all registered widgets, some may be partly constructed.
-			this.getDijit().registry.forEach(function(w){
-				  w.destroy();			 
-			});
-
-			this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",
-					this, '_editorSelectionChange');
-
-//			throw e;
-		}
+		var promise = new dojo.Deferred();
+		this.getGlobal()["require"]("dojo/ready")(function(){
+			try {
+				this.getGlobal()["require"]("dojo/parser").parse(containerNode);
+				promise.callback();
+			} catch(e) {
+				// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
+				// the dojo parser will throw an exception trying to compute style on hidden containers
+				// so to fix this we catch the exception here and add a subscription to be notified when this editor is seleected by the user
+				// then we will reprocess the content when we have focus -- wdr
+				
+				// remove all registered widgets, some may be partly constructed.
+				this.getDijit().registry.forEach(function(w){
+					  w.destroy();			 
+				});
 	
-		if(attachWidgets){
-			this._attachAll();
-		}
+				this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",
+						this, '_editorSelectionChange');
+
+				promise.errback();
+				throw e;
+			}
+		
+			if(attachWidgets){
+				this._attachAll();
+			}
+
+	        if (scripts) {
+	            try {
+	                dojox.html.evalInGlobal(scripts, containerNode);
+	            } catch(e) {
+	                console.error('Error eval script in Context._setSourceData, ' + e);
+	            }
+	        }
+		}.bind(this));
+
+		return promise;
 	},
 	
    preProcess: function (node){
@@ -1042,7 +1041,7 @@ dojo.declare("davinci.ve.Context", null, {
 	_editorSelectionChange: function(event){
 		// we should only be here do to a dojo.parse exception the first time we tried to process the page
 		// Now the editor tab container should have focus becouse the user selected it. So the dojo.processing should work this time
-		if (event.editor.fileName === this._editor.fileName){
+		if (event.oldEditor.fileName === this._editor.fileName){
 			dojo.unsubscribe(this._editorSelectConnection);
 			delete this._editorSelectConnection;
 			this._setSource(this._srcDocument, null, null);
@@ -1350,6 +1349,20 @@ dojo.declare("davinci.ve.Context", null, {
 		return this.rootNode;
 	},
 
+	getParentIframe: function(){
+		if(!this._parentIframeElem){
+	        var userdoc = this.getDocument();
+			var iframes = document.getElementsByTagName('iframe');
+			for(var i=0; i < iframes.length; i++){
+				if(iframes[i].contentDocument === userdoc){
+					this._parentIframeElem = iframes[i];
+					break;
+				}
+			}
+		}
+		return this._parentIframeElem;
+	},
+
 	getTopWidgets: function(){
 		var topWidgets=[];
 		for(var node = this.rootNode.firstChild; node; node = node.nextSibling){
@@ -1654,6 +1667,10 @@ dojo.declare("davinci.ve.Context", null, {
 		return flowLayout;
 	},
 
+	getActiveTool: function(){
+		return this._activeTool;
+	},
+
 	setActiveTool: function(tool){
 		if(this._activeTool){
 			this._activeTool.deactivate();
@@ -1663,6 +1680,14 @@ dojo.declare("davinci.ve.Context", null, {
 			this._activeTool = this._defaultTool;
 		}
 		this._activeTool.activate(this);
+	},
+	
+	// getter/setter for currently active drag/drop object
+	getActiveDragDiv: function(){
+		return(this._activeDragDiv);
+	},
+	setActiveDragDiv: function(activeDragDiv){
+		this._activeDragDiv = activeDragDiv;
 	},
 	
 	blockChange: function(shouldBlock){
@@ -1796,6 +1821,9 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	onKeyDown: function(event){
+		//FIXME: Research task. This routine doesn't get fired when using CreateTool and drag/drop from widget palette.
+		// Perhaps the drag operation created a DIV in application's DOM causes the application DOM
+		// to be the keyboard focus?
 		if(this._activeTool && this._activeTool.onKeyDown){
 			this._activeTool.onKeyDown(event);
 		}
@@ -2136,7 +2164,7 @@ dojo.declare("davinci.ve.Context", null, {
 					};
 					dojo.mixin(config, this._configProps);
 					this.addHeaderScript(url, {
-						djConfig: JSON.stringify(config).slice(1, -1)
+						"data-dojo-config": JSON.stringify(config).slice(1, -1)
 					});
 				}else{
 					this.addHeaderScript(url);
@@ -2313,6 +2341,81 @@ dojo.declare("davinci.ve.Context", null, {
 			    dojo.destroy(n);
 			}
 		});
+	},
+	
+	/**
+	 * Perform any visual updates in response to mousemove event while performing a
+	 * drag operation on the visual canvas.
+	 * @param {object} params  object with following properties:
+	 *      {object|array{object}} data  For widget being dragged, either {type:<widgettype>} or array of similar objects
+	 *      {object} eventTarget  Node (usually, Element) that is current event.target (ie, node under mouse)
+	 *      {object} position x,y properties hold current mouse location
+	 * 		{object} rect  l,t,w,h properties define rectangle being dragged around
+	 * 		{boolean} doSnapLines  whether to show dynamic snap lines
+	 * 		{boolean} doFindParentsXY  whether to show candidate parent widgets
+	 */
+	dragMoveUpdate: function(params) {
+		var context = this;
+		var cp = this._chooseParent;
+		var data = params.data;
+		var eventTarget = params.eventTarget;
+		var position = params.position;
+		var rect = params.rect;
+		var doSnapLines = params.doSnapLines;
+		var doFindParentsXY = params.doFindParentsXY;
+		var widgetType = dojo.isArray(data) ? data[0].type : data.type;
+
+		// inner function that gets called recurively for each widget in document
+		// The "this" object for this function is the Context object
+		_updateThisWidget = function(widget){
+			var node = widget.domNode;
+			var dj = this.getDojo();
+			var computed_style = dj.style(node);
+			if(doSnapLines){
+				davinci.ve.Snap.findSnapOpportunities(this, widget, computed_style);
+			}
+			if(doFindParentsXY){
+				// Two steps: (1) compute allowed parents at current (x,y)...
+				cp.findParentsXY(data, widget, position);
+				// (2) Update visual presentation of allowed parents at current (x,y)
+				cp.dragUpdateCandidateParents(widgetType, doFindParentsXY);
+			}
+			// Recurse through this widget's children
+			dojo.forEach(widget.getChildren(), function(w){
+				_updateThisWidget.apply(context, [w]);
+			});
+		};
+		
+		if(doSnapLines || doFindParentsXY){
+			if(doSnapLines){
+				doSnapLines = davinci.ve.Snap.updateSnapLinesBeforeTraversal(this, rect);
+			}
+			if(doFindParentsXY){
+				doFindParentsXY = cp.findParentsXYBeforeTraversal(params);
+				// Call dragUpdateCandidateParents so that (usually) "BODY" will show as initial list of parent widgets
+				cp.dragUpdateCandidateParents(widgetType, doFindParentsXY);
+			}
+			// Traverse all widgets, which will result in updates to snap lines and to 
+			// the visual popup showing possible parent widgets 
+			dojo.forEach(this.getTopWidgets(), function(w){
+				_updateThisWidget.apply(context, [w]);
+			});
+			if(doSnapLines){
+				davinci.ve.Snap.updateSnapLinesAfterTraversal(this);
+			}
+			if(doFindParentsXY){
+				cp.findParentsXYAfterTraversal();
+			}
+		}
+
+	},
+	
+	/**
+	 * Cleanups after completing drag operations.
+	 */
+	dragMoveCleanup: function() {
+		davinci.ve.Snap.clearSnapLines(this);
+		this._chooseParent.cleanup(this);
 	}
 });
 

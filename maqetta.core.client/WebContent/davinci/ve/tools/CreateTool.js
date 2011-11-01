@@ -8,7 +8,8 @@ define(["dojo/_base/declare",
     	"davinci/ve/commands/AddCommand",
     	"davinci/ve/commands/MoveCommand",
     	"davinci/ve/commands/ResizeCommand",
-    	"davinci/ve/Snap"], function(
+    	"davinci/ve/Snap",
+    	"davinci/ve/ChooseParent"], function(
     		declare,
 			tool,
 			workbench,
@@ -41,53 +42,110 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			this._context.rootNode.style.cursor = this._oldCursor;
 		}
 		this._setTarget(null);
-		delete this._position;
+		delete this._mdPosition;
+		this._context.dragMoveCleanup();
 	},
 
 	onMouseDown: function(event){
-		this._target = widget.getEnclosingWidget(event.target);
-		this._position = this._context.getContentPosition(event);
+		// This function gets called if user does a 2-click widget addition:
+		// 1) Click on widget in widget palette to select
+		// 2) Click on canvas to indicate drop location
+		this._target = davinci.ve.widget.getEnclosingWidget(event.target);
+		this._mdPosition = this._context.getContentPosition(event); // mouse down position
 	},
 
 	onMouseMove: function(event){
-		if(this._position){
+		var context = this._context;
+		var cp = context._chooseParent;
+		
+		if(event.target != this._lastEventTarget){
+			cp.setProposedParentWidget(null);
+		}
+		this._lastEventTarget = event.target;
+
+		if(this._mdPosition){
+			// If here, then user did a 2-click widget addition (see onMouseDown())
+			// and then dragged mouse while mouse is still down
+			
+			// Only perform drag operation if widget is resizable
 			if(this._resizable){
-				var p = this._context.getContentPosition(event);
-				var w = p.x - this._position.x;
-				var h = p.y - this._position.y;
+				
+				var p = context.getContentPosition(event);
+				var w = p.x - this._mdPosition.x;
+				var h = p.y - this._mdPosition.y;
 				if(w > 4 || h > 4){
-					var box = {l: this._position.x, t: this._position.y,
+					var box = {l: this._mdPosition.x, t: this._mdPosition.y,
 						w: (w > 0 ? w : 1), h: (h > 0 ? h : 1)};
-					this._context.focus({box: box, op: {}});
+					context.focus({box: box, op: {}});
 				}else{
-					this._context.focus(null);
+					context.focus(null);
 				}
 			}
 		}else{
+			// For certain widgets, put an overlay DIV on top of the widget
+			// to intercept mouse events (to prevent normal widget mouse processing)
 			this._setTarget(event.target);
-			if(!this._context.getFlowLayout()){
-				var box = {l:event.pageX,t:event.pageY,w:0,h:0};
-				davinci.ve.Snap.updateSnapLines(this._context, box);
+		
+			// Determine target parent(s) at current location
+			this._target = this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
+			var data = this._data;
+			if(!cp.getProposedParentWidget()){
+			    var allowedParentList = cp.getAllowedTargetWidget(this._target, this._data, true);
+				var widgetType = dojo.isArray(data) ? data[0].type : data.type;
+				cp.setProposedParentWidget(cp.chooseParent(widgetType, allowedParentList));
 			}
-		}
-	},
-	
-	onKeyDown: function(event){
-		switch(event.keyCode){
-		case dojo.keys.ENTER:
-			// a11y: assuming (50,50) instead of current mouse position (mouse may be outside of containerNode)
-			this.create({parent: this._context.getSelection()[0], position: {x:50, y:50}});
-			this._context.setActiveTool(null);
+
+			// Under certain conditions, show list of possible parent widgets
+			var showParentsPref = context.getPreference('showPossibleParents');
+			var showCandidateParents = (!showParentsPref && this._spaceKeyDown) || (showParentsPref && !this._spaceKeyDown);
+			
+			// Show dynamic snap lines
+			var position = {x:event.pageX, y:event.pageY};
+			var box = {l:event.pageX,t:event.pageY,w:0,h:0};
+			var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
+			var doSnapLines = editorPrefs.snap && !context.getFlowLayout();
+			context.dragMoveUpdate({
+				data:this._data,
+				position:position,
+				eventTarget:event.target, 
+				rect:box, 
+				doSnapLines:doSnapLines, 
+				doFindParentsXY:showCandidateParents});
 		}
 	},
 
 	onMouseUp: function(event){
-		if(!this._position){
-			this._position = this._context.getContentPosition(event);
+		var context = this._context;
+		var cp = context._chooseParent; 
+
+		var activeDragDiv = context.getActiveDragDiv();
+		if(activeDragDiv){
+			var elems = dojo.query('.maqCandidateParents',activeDragDiv);
+			if(elems.length==1){
+				elems[0].innerHTML = '';
+			}
+		}
+		this._lastEventTarget = null;
+		
+		// If _mdPosition has a value, then user did a 2-click widget addition (see onMouseDown())
+		// If so, then use mousedown position, else get current position
+		this._position = this._mdPosition ? this._mdPosition : context.getContentPosition(event);
+
+		var size, target;
+		var ppw = cp.getProposedParentWidget();
+		if(ppw){
+			// Use last computed parent from onMouseMove handler
+			target = ppw;
+		}else{
+			// Otherwise, find the appropriate parent that is located under the pointer
+			target = this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
+			var data = this._data;
+		    var allowedParentList = cp.getAllowedTargetWidget(target, data, true);
+			var widgetType = dojo.isArray(data) ? data[0].type : data.type;
+		    target = cp.chooseParent(widgetType, allowedParentList);
 		}
 
-		var size,
-			target = this._getTarget() || widget.getEnclosingWidget(event.target);
+		cp.setProposedParentWidget(null);
 
 		/**
 		 * Custom error, thrown when a valid parent widget is not found.
@@ -105,16 +163,10 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			// create tool _data can be an object or an array of objects
 			// The array could hold a mix of widget data from different libs for example if this is a paste 
 			// where a dojo button and a html label were selected.
-			var data = this._data instanceof Array ? this._data : [this._data],
-
-			// XXX Have to do this call here, rather than in the more favorable
-			//  create() or _create() since different "subclasses" of CreateTool
-			//  either override create() or _create().  It is very inconsistent.
-			    allowedParentList = this._getAllowedTargetWidget(target, this._data, true),
-			    helper = this._getHelper();
+			var data = this._data instanceof Array ? this._data : [this._data];
 
 			// If no valid target found, throw error
-			if (allowedParentList.length == 0) {
+			if (!target) {
 				// returns an array consisting of 'type' and any 'class' properties
 				function getClassList(type) {
 					var classList = davinci.ve.metadata.queryDescriptor(type, 'class');
@@ -152,14 +204,8 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 				throw new InvalidTargetWidgetError(errorMsg);
 			}
 
-			if(allowedParentList.length>1 && helper && helper.chooseParent){
-				target = helper.chooseParent(allowedParentList);
-			}else{
-				target = allowedParentList[0];				
-			}
-
 			if(this._resizable && this._position){
-				var p = this._context.getContentPosition(event);
+				var p = context.getContentPosition(event);
 				var w = (this._resizable != "height" ? p.x - this._position.x : 0);
 				var h = (this._resizable != "width" ? p.y - this._position.y : 0);
 				if(w > 4 || h > 4){
@@ -177,11 +223,11 @@ return declare("davinci.ve.tools.CreateTool", tool, {
     			// overridden by "subclasses", but put this call here.
     	        var library = davinci.ve.metadata.getLibraryForType(type),
     	            libId = library.name,
-    	            args = [type, this._context];
-    	        if (! this._context._widgets.hasOwnProperty(libId)) {
-    	            this._context._widgets[libId] = 0;
+    	            args = [type, context];
+    	        if (! context._widgets.hasOwnProperty(libId)) {
+    	            context._widgets[libId] = 0;
     	        }
-    	        if (++this._context._widgets[libId] == 1) {
+    	        if (++context._widgets[libId] == 1) {
     	            davinci.ve.metadata.invokeCallback(type, 'onFirstAdd', args);
     	        }
     	        // Always invoke the 'onAdd' callback.
@@ -205,25 +251,60 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			// Make sure that if calls above fail due to invalid target or some
 			// unknown creation error that we properly unset the active tool,
 			// in order to avoid drag/drop issues.
-			this._context.setActiveTool(null);
-			davinci.ve.Snap.clearSnapLines(this._context);
+			context.setActiveTool(null);
+			context.dragMoveCleanup();
 		}
 	},
 
-	_getHelper: function(){
-	    var helper = davinci.ve.metadata.queryDescriptor(this._type, "helper");
-	    if (helper) {
-			//FIXME: Duplicated from widget.js. Should be factored out into a utility
-	    	var helperConstructor;
-	        try {
-	        	helperConstructor = dojo["require"](helper) && dojo.getObject(helper) /* remove && dojo.getObject after transition to AMD */;
-	        } catch(e) {
-	            console.error("Failed to load helper: " + helper);
-	            console.error(e);
-	            throw e;
-	        }
-	        return new helperConstructor();
-	    }
+	onKeyDown: function(event){
+		// Under certain conditions, show list of possible parent widgets
+		var showParentsPref = this._context.getPreference('showPossibleParents');
+		if(event.keyCode==32){	// 32=space key
+			this._spaceKeyDown = true;
+		}else{
+			this._processKeyDown(event.keyCode);
+		}
+		dojo.stopEvent(event);
+		var showCandidateParents = (!showParentsPref && this._spaceKeyDown) || (showParentsPref && !this._spaceKeyDown);
+		var data = this._data;
+		var widgetType = dojo.isArray(data) ? data[0].type : data.type;
+		var cp = this._context._chooseParent;
+		cp.dragUpdateCandidateParents(widgetType, showCandidateParents);
+	},
+	
+	/**
+	 * Update currently proposed parent widget based on latest keydown event
+	 * 
+	 * @param {number} keyCode  The keyCode for the key that the user pressed
+	 */
+	_processKeyDown: function(keyCode){
+		if(keyCode>=49 && keyCode<=57){		// 1-9
+			var context = this._context;
+			var cp = context._chooseParent;
+			var proposedParentsList = cp.getProposedParentsList();
+			if(proposedParentsList && proposedParentsList.length > 1){
+				// Number character: select parent that has the given number
+				// Note that the presentation is 1-based (versus 0-based) and backwards
+				var index = proposedParentsList.length - (keyCode - 48);
+				if(index >= 0){
+					cp.setProposedParentWidget(proposedParentsList[index]);
+				}
+			}
+		}
+	},
+
+	onKeyUp: function(event){
+		// Under certain conditions, show list of possible parent widgets
+		if(event.keyCode==32){	// 32=space key
+			this._spaceKeyDown = false;
+		}
+		dojo.stopEvent(event);
+		var showParentsPref = this._context.getPreference('showPossibleParents');
+		var showCandidateParents = (!showParentsPref && this._spaceKeyDown) || (showParentsPref && !this._spaceKeyDown);
+		var data = this._data;
+		var widgetType = dojo.isArray(data) ? data[0].type : data.type;
+		var cp = this._context._chooseParent;
+		cp.dragUpdateCandidateParents(widgetType, showCandidateParents);
 	},
 
 	create: function(args){
@@ -235,10 +316,6 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		var parent = args.target,
 			parentNode, child;
 
-		// For absolute layout, always drop widgets at the top-level of the document to avoid container clipping issues #6879
-		if(!this._context.getFlowLayout()){
-			parent = this._context.rootWidget;
-		}
 		while (parent) {
 			parentNode = parent.getContainerNode();
 			if (parentNode) { // container widget
@@ -333,6 +410,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		}
 		this._context.getCommandStack().execute(command);
 		this._select(w);
+		this._widget = w;
 		return w;
 	},
 	

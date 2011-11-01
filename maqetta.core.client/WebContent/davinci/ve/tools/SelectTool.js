@@ -98,7 +98,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		// FIXME: sometime an exception occurs...
 		try{
 			this._setTarget(event.relatedTarget);
-			//this.updateSnapLines(event);
 		}catch(e){
 		}
 	},
@@ -167,7 +166,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				if (_node.style.position != "absolute") {
 					var close = davinci.ve.widget.findClosest(this._context.getContainerNode(), box, this._context, widget, true,
 							dojo.hitch(this, function(w){
-								return this._getAllowedTargetWidget(w, widget.getData()).length;
+								return this._context._chooseParent.getAllowedTargetWidget(w, widget.getData()).length;
 							}));
 					this._resetCursor();
 					if (close && close.widget && (close.widget != widget)) {

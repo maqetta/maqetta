@@ -62,8 +62,8 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 			showRoot:false,
 			model: model, id:'resourceTree',
 			labelAttr: "name", childrenAttrs:"children",
-			getIconClass: this._getIconClass,
-			getRowClass: this._getRowClass,
+			getIconClass: davinci.ui.Resource.getResourceIcon,
+			getRowClass: davinci.ui.Resource.getResourceClass,
 			transforms: [system.resource.alphabeticalSort],
 			isMultiSelect: true});
 
@@ -139,30 +139,6 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 				fileName: node,
 				content: node.getText()
 			});
-		}
-	},
-	
-	_getIconClass: function(item, opened){
-		if (item.elementType == "Folder"){
-			return opened ? "dijitFolderOpened" : "dijitFolderClosed";
-		}
-		if (item.elementType=="File"){
-			var icon;
-				fileType=item.getExtension();
-				extension=davinci.Runtime.getExtension("davinci.fileType", function (extension){
-					return extension.extension==fileType;
-				});
-			if (extension){
-				icon=extension.iconClass;
-			}
-			return icon || "dijitLeaf";
-		}
-		return this.prototype.getIconClass(item, opened);
-	},
-
-	_getRowClass: function(item) {
-		if (item.readOnly()) {
-			return "readOnlyResource";
 		}
 	}
 });

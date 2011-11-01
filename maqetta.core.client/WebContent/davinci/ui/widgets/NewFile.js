@@ -17,6 +17,7 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 	fileDialogFileName : null,
 	fileDialogParentFolder: null,
 	fileTree : null,
+	__okButton : null,
 	
 	postMixInProperties : function() {
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
@@ -29,11 +30,14 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 	postCreate : function(){
 		this.inherited(arguments);
 		dojo.connect(this.fileDialogFileName, "onkeyup", this, '_checkValid');
+		dojo.connect(this.fileDialogParentFolder, "onkeyup", this, '_checkValid');
 		this.fileTree.watch("selectedItem", dojo.hitch(this, this._updateFields));
+		
 		/* set a default value */
 		if(!this._value){
 			this._setValueAttr(this._getForcedRootAttr());
 		}
+		this.fileTree.watch("selectedItem", dojo.hitch(this, this._checkValid));
 	},
 	
 	
@@ -83,10 +87,22 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 	},
 	
 	_checkValid : function(){
+	
 		// make sure the project name is OK.
 		var name = dojo.attr(this.fileDialogFileName, "value");
 		var valid = name!=null && name.length > 0;
-		this._okButton.set( 'disabled', !valid);
+		var parent = system.resource.findResource(this.fileDialogParentFolder.get('value'))
+		if(parent!=null){
+			valid = valid && !parent.readOnly();
+		}
+		
+		var resource = system.resource.findResource(this.fileDialogParentFolder.get('value') + "/" + this.fileDialogFileName.get( 'value'));
+	
+		if(resource!=null){
+			valid = valid && !resource.readOnly();
+		}
+		
+		this.__okButton.set( 'disabled', !valid);
 	},
 	_okButton : function(){
 		this.value = this.fileDialogParentFolder.get('value') + "/" + this.fileDialogFileName.get( 'value');

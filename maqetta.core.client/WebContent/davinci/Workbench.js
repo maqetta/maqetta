@@ -739,6 +739,12 @@ dojo.mixin(davinci.Workbench, {
 						dojoMenu.addChild(popupParent);
 					} else {
 						var enabled=true;
+						if(item.isEnabled){
+							var resource=davinci.ui.Resource.getSelectedResource();
+							enabled = item.isEnabled(resource);
+						}
+						
+						
 						var label=item.label;
 						if (item.action)
 						{

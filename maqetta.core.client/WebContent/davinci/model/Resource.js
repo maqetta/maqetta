@@ -30,11 +30,13 @@ davinci.model.Resource.Resource= function(){
  
  davinci.model.Resource.Resource.prototype.readOnly= function(){
 	 
-	 if (this._readOnly)
-		 return this._readOnly;
+	 if (this.hasOwnProperty("_readOnly")){
+		 return this._readOnly || (this.parent!=null && this.parent.readOnly());
+	 }
 		 
 	if( this.parent)
 		 return this.parent.readOnly();
+	
 	 return false;
  }
  

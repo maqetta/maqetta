@@ -13,11 +13,12 @@
 	<div class="parentFolderInputRow"><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="fileDialogParentFolder"></input></div>
 	<div class="folderContainer">
 		<div dojoType="dijit.layout.ContentPane">
-		<div class="fileDialogTreeWidget" dojoAttachPoint="fileTree" dojoType="dijit.Tree" showRoot="false" model="system.resource" labelAttr="name" childrenAttrs="children"></div>
+		<div class="fileDialogTreeWidget" dojoAttachPoint="fileTree" dojoType="dijit.Tree" showRoot="false" model="system.resource" getIconClass="davinci.ui.Resource.getResourceIcon"
+			getRowClass="davinci.ui.Resource.getResourceClass" labelAttr="name" childrenAttrs="children"></div>
 		</div>
 	</div>
 	
 	<div class="buttonRow">
-		<button dojoType="dijit.form.Button" dojoAttachEvent="onClick:_okButton">${finishButtonLabel}</button>
+		<button dojoType="dijit.form.Button" dojoAttachPoint="__okButton" dojoAttachEvent="onClick:_okButton">${finishButtonLabel}</button>
 	</div>
 </div>

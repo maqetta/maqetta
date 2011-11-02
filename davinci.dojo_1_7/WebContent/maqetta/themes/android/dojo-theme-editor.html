@@ -15,15 +15,16 @@ require([
     "dojox/mobile/ToggleButton",
     "dojox/mobile/Switch",
     "dojox/mobile/Heading",
-    "dojox/mobile/RoundRect"
+    "dojox/mobile/RoundRect",
+	"dijit/form/DataList",
+	"dojox/mobile/ComboBox"
+	
 ]);
 
 </script>
 
-<link href="/maqetta/app/static/lib/dojo/1.7/dojox/mobile/themes/custome/custom.css" type="text/css" rel="stylesheet"/>
-<link href="/maqetta/app/static/lib/dojo/1.7/dojox/mobile/themes/iphone/custom-compat.css" type="text/css" rel="stylesheet"/>
 </head>
-<body class="a3">
+<body class="android">
 
  <style>
   body {
@@ -75,6 +76,14 @@ require([
     margin-bottom : .1em;
 }
 
+div.HtmlWidget {
+min-width: 0;
+min-height: 0;
+outline: none;
+outline-color: none;
+
+}
+
  </style>
  <div class="theming-group">
   <div class="theming-group-title">
@@ -88,7 +97,7 @@ require([
    <tr>
      <td>
    <div style="width:100px; height:75px;">
-	<div id="View_0" dojoType="dojox.mobile.View" class="dvThemeWidget" style="height: 100%;" selected="true">
+ <div id="View_0" dojoType="dojox.mobile.View" class="dvThemeWidget" style="height: 100%;" selected="true">
 		View
 	</div>
     </div>
@@ -115,17 +124,30 @@ require([
        <div class="widget-sample">
         <button label="Button" dojoType="dojox.mobile.Button" class="dvThemeWidget"></button>
         <button label="ToggleButton" dojoType="dojox.mobile.ToggleButton" class="dvThemeWidget"></button>
-        <div dojoType="dojox.mobile.Switch" class="dvThemeWidget"></div>
+        <div dojoType="dojox.mobile.Switch" id="mobile_theme_switch" class="dvThemeWidget"></div>
        </div>
       </td>
       <td style="width:175px">
        <h1 label="Heading" dojoType="dojox.mobile.Heading" class="dvThemeWidget"></h1>
-	   <input type="text" dojoType="dojox.mobile.TextBox" class="dvThemeWidget"></input>
-	   <textarea dojoType="dojox.mobile.TextArea" class="dvThemeWidget"></textarea>
+	   <input type="checkbox" dojoType="dojox.mobile.CheckBox" class="dvThemeWidget"></input>
+	   <input type="radio" dojoType="dojox.mobile.RadioButton" class="dvThemeWidget"></input>
+		<textarea dojoType="dojox.mobile.TextArea" class="dvThemeWidget">Text Area</textarea>
        </td>
-      <td style="width:175px">
-		<input type="checkbox" dojoType="dojox.mobile.CheckBox" class="dvThemeWidget"></input>
-		<input type="radio" dojoType="dojox.mobile.RadioButton" class="dvThemeWidget"></input>
+      <td style="width:175px; height:140px;">
+		<input type="text" dojoType="dojox.mobile.TextBox" class="dvThemeWidget" value="TextBox/ComboBox"></input>
+		<div class="dijitPopup mblComboBoxMenuPopup dvThemeWidget" >
+			<div class="mblReset mblComboBoxMenu" >
+				<div>
+					<div class="mblReset mblComboBoxMenuItem mblComboBoxMenuPreviousButton" role="option" >Previous choices</div>
+					<div class="mblReset mblComboBoxMenuItem themeEditorComboBoxItemLocator" role="option" >ComboBox Item 1</div>
+					<div class="mblReset mblComboBoxMenuItem" role="option" >ComboBox Item 2</div>
+					<div class="mblReset mblComboBoxMenuItem mblComboBoxMenuNextButton" role="option"  >More choices</div>
+				</div>
+				<div style="position: absolute; overflow-x: hidden; overflow-y: hidden; right: 2px; width: 5px; top: 4px; height: 34px; -webkit-mask-image: -webkit-canvas(scrollBarMaskV); " class="mblScrollBarWrapper">
+					<div style="position: absolute; background-color: rgb(96, 96, 96); font-size: 1px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; -webkit-transform-origin-x: 0px; -webkit-transform-origin-y: 0px; z-index: 2147483647; width: 5px; height: 29px; opacity: 0; " class=""></div>
+				</div>
+			</div>
+		</div>
       </td>
      </tr>
     </tbody>
@@ -141,22 +163,22 @@ require([
     <tbody>
      <tr valign="top">
       <td style="width:175px">
-		<span style="font-style:italic; font-size:12px;">Note: Sytles are shared with EdgeToEdgeList</span>
-		<ul dojoType="dojox.mobile.RoundRectList" class="dvThemeWidget">
-			<li label="Item 1" dojoType="dojox.mobile.ListItem" sync="true" moveTo="test"></li>
-			<li label="Item 2" dojoType="dojox.mobile.ListItem"></li>
-		</ul>
+  <span style="font-style:italic; font-size:12px;">Note: Sytles are shared with EdgeToEdgeList</span>
+  <ul dojoType="dojox.mobile.RoundRectList" class="dvThemeWidget">
+   <li label="Item 1" dojoType="dojox.mobile.ListItem" sync="true" moveTo="test"></li>
+   <li label="Item 2" dojoType="dojox.mobile.ListItem"></li>
+  </ul>
       </td>
       <td style="width:175px">
-		<div label="EdgeToEdgeCategory" dojoType="dojox.mobile.EdgeToEdgeCategory" class="dvThemeWidget"></div>
-		<div label="RoundRectCategory" dojoType="dojox.mobile.RoundRectCategory" class="dvThemeWidget"></div>
-		<div dojoType="dojox.mobile.RoundRect" class="dvThemeWidget">RoundRect</div>
+  <div label="EdgeToEdgeCategory" dojoType="dojox.mobile.EdgeToEdgeCategory" class="dvThemeWidget"></div>
+  <div label="RoundRectCategory" dojoType="dojox.mobile.RoundRectCategory" class="dvThemeWidget"></div>
+  <div dojoType="dojox.mobile.RoundRect" class="dvThemeWidget">RoundRect</div>
       </td>
       <td style="width:175px">
-		<ul dojoType="dojox.mobile.TabBar" barType="segmentedControl" class="dvThemeWidget">
-		   <li label="TabBarButton" dojoType="dojox.mobile.TabBarButton" sync="true"></li>
-		   <li label="TabBarButton" dojoType="dojox.mobile.TabBarButton" sync="true"></li>
-		 </ul>
+  <ul dojoType="dojox.mobile.TabBar" barType="segmentedControl" class="dvThemeWidget">
+     <li label="TabBarButton" dojoType="dojox.mobile.TabBarButton" sync="true"></li>
+     <li label="TabBarButton" dojoType="dojox.mobile.TabBarButton" sync="true"></li>
+   </ul>
       </td>
      </tr>
      <tr>

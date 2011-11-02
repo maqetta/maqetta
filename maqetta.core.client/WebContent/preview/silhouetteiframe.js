@@ -431,6 +431,8 @@ preview.silhouetteiframe.prototype = {
 			div_style.height = scaled_device_height+"px";
 			// Chrome workaround. Chrome posts scrollbars even when overflow:hidden.
 			// Needs to change something in order to trigger recalcs so scrollbars go away.
+			// Add at least 1 px to object width/height because once in awhile rounding calculations
+			// causes browser to show a scrollbar on the OBJECT.
 			setTimeout(function(){
 				obj_style.width = Math.ceil(scaled_device_width+1)+"px";
 				obj_style.height = Math.ceil(scaled_device_height+1)+"px";
@@ -469,6 +471,8 @@ preview.silhouetteiframe.prototype = {
 			div_style.height = scaled_device_width+"px";
 			// Chrome workaround. Chrome posts scrollbars even when overflow:hidden.
 			// Needs to change something in order to trigger recalcs so scrollbars go away.
+			// Add at least 1 px to object width/height because once in awhile rounding calculations
+			// causes browser to show a scrollbar on the OBJECT.
 			setTimeout(function(){
 				obj_style.width = Math.ceil(scaled_device_height+1)+"px";
 				obj_style.height = Math.ceil(scaled_device_width+1)+"px";

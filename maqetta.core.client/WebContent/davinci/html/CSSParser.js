@@ -306,10 +306,10 @@ davinci.html.CSSParser = (function() {
                             startNew();
 
                             break;
-                        }
+                        } // END inner switch
                         break;
 
-                    }
+                    } // END case css-select-op
                     case "css-selector":
                         if (token.type == "css-identifier") {
                             if (selector.element || selector.cls)
@@ -351,14 +351,14 @@ davinci.html.CSSParser = (function() {
                             }
 
                         }
-                    }
+                    } // END case css-punctuation
                         break;
 
-                    }
+                    } // END inner switch(token.style)
 
                     wasSelector = true;
                     nextToken();
-                }
+                } // END selectorLoop for(;;) loop
                 selector.endOffset = token.offset - 1;
                 while (nextToken().content != "}") {
                     var nameOffset = token.offset;
@@ -407,14 +407,14 @@ davinci.html.CSSParser = (function() {
                     property.endOffset = token.offset - 1;
                     if (token.content == "}")
                         break;
-                }
+                } // END while (nextToken().content != '}')
                 if (pushComment != null) {
                     property.postComment = pushComment;
                     pushComment = null;
                 }
                 model.endOffset = token.offset;
 
-            }
+            } // END case css-selector, css-select-op
                 break;
             case "css-at": {
                 var ruleName = token.content.substring(1);
@@ -438,6 +438,27 @@ davinci.html.CSSParser = (function() {
 
                     nextToken(); // ;
 
+                } else if ( rulename.indexOf("keyframes") >= 0 ) { 
+                    var className = "";
+                    nextToken(); // get class name
+                    className = token.content;
+                    nextToken(); // rule opening "{"
+                    atRule.value += token.content;
+                    nextToken(); // from
+                    atRule.value += token.content;
+                    nextToken(); // "{"
+                    atRule.value += token.content;
+                    while ((nextToken()).content != "}")
+                        atRule.value += token.content;
+                    nextToken(); // to
+                    atRule.value += token.content;
+                    nextToken(); // "{"
+                    atRule.value += token.content;
+                    while ((nextToken()).content != "}")
+                        atRule.value += token.content;
+                    nextToken(); // rule closing "}"
+                    atRule.value += token.content;
+                    atRule.name = rulename + " " + className;
                 } else {
                     atRule.name = ruleName;
                     atRule.value = "";
@@ -449,7 +470,7 @@ davinci.html.CSSParser = (function() {
             }
                 break;
 
-            }
+            } // END outer switch(token.style)
 		  } while (true);
         
       } catch (e) {}

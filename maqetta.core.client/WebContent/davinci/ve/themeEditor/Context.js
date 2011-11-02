@@ -4,7 +4,7 @@ dojo.require("davinci.commands.CommandStack");
 dojo.require("davinci.ve.widget");
 dojo.require("davinci.ve.themeEditor.SelectTool");
 dojo.require("davinci.ve.Context");
-dojo.require("davinci.util");
+dojo.require("davinci.util"); 
 
 
 dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {

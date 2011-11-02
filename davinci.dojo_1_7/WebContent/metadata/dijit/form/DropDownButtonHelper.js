@@ -22,7 +22,7 @@ define(function() {
 			var childData = [];
 	
 			if (data.properties.dropDown) {
-				childData = this.serializedropDown(data.properties.dropDown, widget._edit_context);
+				childData = serializeDropDown(data.properties.dropDown, widget._edit_context);
 				if (childData) {
 					// clear reference to dropDown to avoid duplication in the source
 					delete data.properties.dropDown;
@@ -31,10 +31,14 @@ define(function() {
 			}
 			return data;
 		};
-	
+
+		this.getChildren = function(widget) {
+			return [davinci.ve.widget.getWidget(widget.dijitWidget.dropDown.domNode)];
+		};
+
 		// HACKS: There's probably a better way to do this with the new model, just stopgap measures until Phil takes a look.
 		// Calling widget.declaredClass, passing in context instead of using a dvWidget because I couldn't find a handle to one.
-		this.serializedropDown = function(widget, context) {
+		var serializeDropDown = function(widget, context) {
 			// summary:
 			//		Returns a serialized form of the passed dropDown, collecting only a minimal set of information about the child widgets.
 			//

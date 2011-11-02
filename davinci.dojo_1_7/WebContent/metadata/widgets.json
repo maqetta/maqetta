@@ -505,7 +505,8 @@
             "resizable": "none",
             "isControl": true,
             "helper": "davinci.libraries.dojo.dijit.form.DropDownButtonHelper",
-            "inlineEdit": "davinci.libraries.dojo.dijit.form.DropDownButtonInput"
+            "inlineEdit": "davinci.libraries.dojo.dijit.form.DropDownButtonInput",
+            "allowedChild": "dijit.Menu, dijit.TooltipDialog"
         },
         {
             "name": "DropDownSelect",

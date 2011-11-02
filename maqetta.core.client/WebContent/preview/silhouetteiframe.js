@@ -317,13 +317,6 @@ preview.silhouetteiframe.prototype = {
 		var scaled_screen_height = screen_height * scale_adjust_y;
 		var scaled_screen_offset_x = screen_offset_x * scale_adjust_x;
 
-		// Increase sizes for HTML elements to deal with Webkit round-off errors
-		// that sometimes cause scrollbars to appear.
-		// Just adding 1 or 2 (or even 10) doesn't do the trick, so adjust by 20.
-		var margin_adjust = (this._isWebKit) ? 20 : this.margin;
-		var adj_scaled_device_width = scaled_device_width + margin_adjust;
-		var adj_scaled_device_height = scaled_device_height + margin_adjust;
-
 		var svg_ns="http://www.w3.org/2000/svg";
 		var xlink_ns="http://www.w3.org/1999/xlink";
 		var unique='_aqzpqtxv';	// use ids that are unlikely to appear in an SVG silhouette doc
@@ -387,8 +380,8 @@ preview.silhouetteiframe.prototype = {
 		var div_style = silhouetteiframe_div_container.style;
 		div_style.position="relative";
 		div_style.overflow="hidden";
-		div_style.marginLeft = margin_adjust+"px";
-		div_style.marginTop = margin_adjust+"px";
+		div_style.marginLeft = "0px";
+		div_style.marginTop = "0px";
 		
 		var ifr_style = iframe_elem.style;
 		var ifr_html = iframe_elem.contentDocument.documentElement;
@@ -432,18 +425,16 @@ preview.silhouetteiframe.prototype = {
 				a1_elem.setAttribute('to','0,0');
 				a2_elem.setAttribute('to','0');
 			}
-			if(this._isWebKit){	
-				// Overcome WebKit bug where scrollbars appear when they shouldn't	
-				obj_style.width = adj_scaled_device_width+"px";
-				obj_style.height = adj_scaled_device_height+"px";
-				div_style.width = adj_scaled_device_width+"px";
-				div_style.height = adj_scaled_device_height+"px";
-			}else{
-				obj_style.width = scaled_device_width+"px";
-				obj_style.height = scaled_device_height+"px";
-				div_style.width = scaled_device_width+"px";
-				div_style.height = scaled_device_height+"px";
-			}
+			obj_style.width = scaled_device_width+"px";
+			obj_style.height = scaled_device_height+"px";
+			div_style.width = scaled_device_width+"px";
+			div_style.height = scaled_device_height+"px";
+			// Chrome workaround. Chrome posts scrollbars even when overflow:hidden.
+			// Needs to change something in order to trigger recalcs so scrollbars go away.
+			setTimeout(function(){
+				obj_style.width = Math.ceil(scaled_device_width+1)+"px";
+				obj_style.height = Math.ceil(scaled_device_height+1)+"px";
+			},10);
 			
 		}else{		// "landscape"
 			// Note that these following 3 attributes SHOULDN'T BE NECESSARY
@@ -472,18 +463,16 @@ preview.silhouetteiframe.prototype = {
 				a1_elem.setAttribute('to',scaled_device_height+',0');
 				a2_elem.setAttribute('to','90');
 			}
-			if(this._isWebKit){		
-				// Overcome WebKit bug where scrollbars appear when they shouldn't	
-				obj_style.width = adj_scaled_device_height+"px";
-				obj_style.height = adj_scaled_device_width+"px";
-				div_style.width = adj_scaled_device_height+"px";
-				div_style.height = adj_scaled_device_width+"px";
-			}else{
-				obj_style.width = scaled_device_height+"px";
-				obj_style.height = scaled_device_width+"px";
-				div_style.width = scaled_device_height+"px";
-				div_style.height = scaled_device_width+"px";
-			}
+			obj_style.width = scaled_device_height+"px";
+			obj_style.height = scaled_device_width+"px";
+			div_style.width = scaled_device_height+"px";
+			div_style.height = scaled_device_width+"px";
+			// Chrome workaround. Chrome posts scrollbars even when overflow:hidden.
+			// Needs to change something in order to trigger recalcs so scrollbars go away.
+			setTimeout(function(){
+				obj_style.width = Math.ceil(scaled_device_height+1)+"px";
+				obj_style.height = Math.ceil(scaled_device_width+1)+"px";
+			},10);
 		}
 		if(a1_elem && a2_elem && a1_elem.beginElement){
 			a1_elem.beginElement();

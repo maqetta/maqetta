@@ -402,7 +402,7 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		require([data.tool && data.tool.replace(/\./g, "/") || "davinci/ve/tools/CreateTool"], function(toolClass) {
 			// Copy the data in case something modifies it downstream -- what types can data.data be?
 			var dataCopy = data.data instanceof Array ? [].concat(data.data) : dojo.mixin({}, data.data),
-					tool = new toolClass(dojo.clone(dataCopy));
+				tool = new toolClass(dataCopy);
 			tool._type = data.type;
 			this._context.setActiveTool(tool);
 		}.bind(this));

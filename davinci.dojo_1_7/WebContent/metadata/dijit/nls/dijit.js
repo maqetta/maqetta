@@ -1,4 +1,4 @@
-({
+define({ root: {
 
 		//layout/AccordionContainerInput.js
 		"accordionContainerInputHelp":"If you use any markup characters (&lt;,&gt;,&amp;), you need to specify whether the text represents literal (plain) text or HTML markup that should be parsed (using an innerHTML assignment).",
@@ -33,4 +33,4 @@
 		//TreeInput.js
 		"treeInputHelp":"Enter multiple lines of data, one for each row in the tree, indicate nesting levels by putting one or more \">\" characters at the start of a line."
 
-})
+}});

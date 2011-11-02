@@ -120,19 +120,19 @@ outline-color: none;
    <table role="presentation">
     <tbody>
      <tr valign="top">
-      <td style="width:175px">
-       <div class="widget-sample">
+       <td style="width:450px">
+       <h1 label="Heading" dojoType="dojox.mobile.Heading" class="dvThemeWidget" back="back">
+	     <div label="ToolBarButton" dojotype="dojox.mobile.ToolBarButton" sync="true"></div>
+	   </h1>
+	   <div class="widget-sample">
         <button label="Button" dojoType="dojox.mobile.Button" class="dvThemeWidget"></button>
         <button label="ToggleButton" dojoType="dojox.mobile.ToggleButton" class="dvThemeWidget"></button>
+		<input type="checkbox" dojoType="dojox.mobile.CheckBox" class="dvThemeWidget"></input>
+	    <input type="radio" dojoType="dojox.mobile.RadioButton" class="dvThemeWidget"></input>
+		<textarea dojoType="dojox.mobile.TextArea" class="dvThemeWidget">Text Area</textarea>
         <div dojoType="dojox.mobile.Switch" id="mobile_theme_switch" class="dvThemeWidget"></div>
        </div>
-      </td>
-      <td style="width:175px">
-       <h1 label="Heading" dojoType="dojox.mobile.Heading" class="dvThemeWidget"></h1>
-	   <input type="checkbox" dojoType="dojox.mobile.CheckBox" class="dvThemeWidget"></input>
-	   <input type="radio" dojoType="dojox.mobile.RadioButton" class="dvThemeWidget"></input>
-		<textarea dojoType="dojox.mobile.TextArea" class="dvThemeWidget">Text Area</textarea>
-       </td>
+	  </td>
       <td style="width:175px; height:140px;">
 		<input type="text" dojoType="dojox.mobile.TextBox" class="dvThemeWidget" value="TextBox/ComboBox"></input>
 		<div class="dijitPopup mblComboBoxMenuPopup dvThemeWidget" >
@@ -148,6 +148,9 @@ outline-color: none;
 				</div>
 			</div>
 		</div>
+      </td>
+	  <td style="width:175px">
+       
       </td>
      </tr>
     </tbody>

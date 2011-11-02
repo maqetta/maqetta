@@ -1,3 +1,4 @@
+{
 	"html": {
         "div": {
             "displayName": "Combobox" ,
@@ -173,6 +174,166 @@
 						]
 					},
 					"query": ""
+				}
+			},
+			"subwidgets": {
+				"ArrowButtonHead": {
+					"displayName": "ArrowButtonHead",
+					"states": {
+						"Normal": {
+							"selectors": {
+								".mblArrowButtonHead": [
+									"position", 
+									"top", 
+									"left", 
+									"width", 
+									"height", 
+									"border", 
+									"border-color",
+									"border-width",
+									"border-style",
+									"border-top-width", 
+									"border-right-width",
+									"border-bottom-width", 
+									"border-left-width", 
+									"border-top-style", 
+									"border-right-style", 
+									"border-bottom-style", 
+									"border-left-style", 
+									"border-top-color", 
+									"border-right-color", 
+									"border-bottom-color", 
+									"border-left-color",
+									"-webkit-transform", 
+									"background-image",
+									"background-color",
+									"border-image"
+								],
+								".dj_chrome .mblArrowButtonHead": [
+									"border", 
+									"border-color",
+									"border-width",
+									"border-style",
+									"border-top-width", 
+									"border-right-width",
+									"border-bottom-width", 
+									"border-left-width", 
+									"border-top-style", 
+									"border-right-style", 
+									"border-bottom-style", 
+									"border-left-style", 
+									"border-top-color", 
+									"border-right-color", 
+									"border-bottom-color", 
+									"border-left-color",
+									"background-image", 
+									"border-image"
+								]
+							},
+							"query": ".mblArrowButtonHead"
+						}
+					}
+				},
+				"ArrowButtonBody": {
+					"displayName": "ArrowButtonBody",
+					"states": {
+						"Normal": {
+							"selectors": {
+								".mblArrowButtonBody": [
+									"position", 
+									"cursor", 
+									"-webkit-tap-highlight-color", 
+									"top", 
+									"left", 
+									"padding", 
+									"padding-top", 
+									"padding-right",
+									"padding-bottom", 
+									"padding-left", 
+									"height", 
+									"border-width", 
+									"border-top-width", 
+									"border-right-width", 
+									"border-bottom-width", 
+									"border-left-width", 
+									"border-style", 
+									"border-top-style", 
+									"border-right-style", 
+									"border-bottom-style", 
+									"border-left-style", 
+									"border-color", 
+									"border-top-color", 
+									"border-right-color", 
+									"border-bottom-color", 
+									"border-left-color", 
+									"font-family", 
+									"font-size", 
+									"color", 
+									"line-height", 
+									"background-color", 
+									"background-image"								
+								]
+							},
+							"query": ".mblArrowButtonBody"
+						}
+					}
+				},
+				"ToolBarButton": {
+					"displayName": "ToolBarButton",
+					"states": {
+						"Normal": {
+							"selectors": {
+								".mblToolBarButtonText": [
+									"padding", 
+									"padding-top", 
+									"padding-right", 
+									"padding-bottom", 
+									"padding-left"
+
+								],
+								".mblToolBarButton": [
+									"float", 
+									"position", 
+									"overflow", 
+									"overflow-x", 
+									"overflow-y", 
+									"cursor", 
+									"-webkit-tap-highlight-color",
+									"margin",
+									"margin-top", 
+									"margin-right", 
+									"margin-bottom", 
+									"margin-left", 
+									"height", 
+									"border",
+									"border-top-width", 
+									"border-right-width", 
+									"border-bottom-width", 
+									"border-left-width", 
+									"border-top-style", 
+									"border-right-style", 
+									"border-bottom-style", 
+									"border-left-style", 
+									"border-top-color", 
+									"border-right-color", 
+									"border-bottom-color", 
+									"border-left-color", 
+									"font-family", 
+									"font-size", 
+									"font-weight", 
+									"color", 
+									"line-height", 
+									"text-align", 
+									"border-image"
+								],
+								".mblColorDefault": [
+									"background-color",
+									"background-image"
+								]
+							},
+							"query": ".mblToolBarButton"
+						}
+					}
 				}
 			}
 		},

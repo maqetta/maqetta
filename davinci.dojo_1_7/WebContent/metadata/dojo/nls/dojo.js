@@ -1,4 +1,4 @@
-({
+define({ root: {
 
 		//data/ItemFileReadStoreInput.js
 		"dataStoreDetails":"DataStore Details",
@@ -8,4 +8,4 @@
 		"url":"URL:",
 		"scriptLabel":"Script:"
 
-})
+}});

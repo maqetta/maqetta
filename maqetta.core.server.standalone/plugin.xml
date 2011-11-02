@@ -52,17 +52,6 @@
 		 </ajaxLibrary>
 	 </extension>
 	 
-   <extension
-         point="org.eclipse.equinox.http.registry.servlets">
-      <servlet
-            alias="/"
-            class="maqetta.core.server.standalone.DavinciPageServlet"
-            load-on-startup="true">
-      </servlet>
-
-   </extension>
-   
-
       <extension
          point="org.eclipse.core.runtime.products">
       <product

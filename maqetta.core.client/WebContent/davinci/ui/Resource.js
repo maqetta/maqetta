@@ -344,6 +344,29 @@ dojo.mixin(davinci.ui.Resource, {
 		
 	},
 	
+	getResourceIcon: function(item, opened){
+		if (item.elementType == "Folder"){
+			return opened ? "dijitFolderOpened" : "dijitFolderClosed";
+		}
+		if (item.elementType=="File"){
+			var icon;
+				fileType=item.getExtension();
+				extension=davinci.Runtime.getExtension("davinci.fileType", function (extension){
+					return extension.extension==fileType;
+				});
+			if (extension){
+				icon=extension.iconClass;
+			}
+			return icon || "dijitLeaf";
+		}
+		return this.prototype.getIconClass(item, opened);
+	},
+
+	getResourceClass: function(item) {
+		if (item.readOnly()) {
+			return "readOnlyResource";
+		}
+	},
 	
 	deleteAction: function(){
 		var selection = this.getSelectedResources(),

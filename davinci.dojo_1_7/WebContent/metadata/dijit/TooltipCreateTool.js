@@ -8,7 +8,8 @@ define([
 	return declare("davinci.libraries.dojo.dijit.TooltipCreateTool", CreateTool, {
 
 	create: function(args){
-		var bodyWidget = widget.getWidget(this._context.rootNode);
+		var bodyWidget = widget.getWidget(this._context.rootNode),
+			target = args.directTarget;
 
 		if(!this._data.properties){
 			this._data.properties = {};
@@ -17,11 +18,11 @@ define([
 		//this._data.properties.id = dijit.getUniqueId(this._data.type.replace(/\./g,"_"));
 		this._data.properties.id = dijit.getUniqueId(this._type.replace(/\./g,"_"));
 		this._data.properties.connectId = [];
-		if(args.target && args.target != this._context.container){
-			var connectId = args.target.getId();
+		if(target && target != this._context.container){
+			var connectId = target.getId();
 			if(!connectId){
-				connectId = "auto_" + dijit.getUniqueId(args.target.type);
-				this._context.getCommandStack().execute(new ModifyCommand(args.target, {id: connectId}));
+				connectId = "auto_" + dijit.getUniqueId(target.type);
+				this._context.getCommandStack().execute(new ModifyCommand(target, {id: connectId}));
 			}
 			if(connectId){
 				this._data.properties.connectId.push(connectId);

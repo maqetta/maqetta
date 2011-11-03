@@ -24,7 +24,7 @@ dojo.declare("davinci.ve.widgets.WidgetProperties", [davinci.workbench.ViewLite]
 			this._destroyProperties();
 			return;
 		}
-
+		
 		var metadata = davinci.ve.metadata.query(this._widget);
 		/* check to see if this widget is a child of a widget */
 		if (this._widget.parent && this._widget.parent.isWidget) {
@@ -83,8 +83,15 @@ dojo.declare("davinci.ve.widgets.WidgetProperties", [davinci.workbench.ViewLite]
 								   type: property.datatype,
 								   target:name,
 								   hideCascade:true});
+		
 			if(property.option){
 				this._pageLayout[this._pageLayout.length-1].values = dojo.map(property.option, function(option){ return option.value; });
+				
+				if(property.unconstrainted){
+					this._pageLayout[this._pageLayout.length-1].type = "comboEdit";
+				}else{
+					this._pageLayout[this._pageLayout.length-1].type = "combo";
+				}
 			}
 		}
 		return davinci.ve.widgets.HTMLStringUtil.generateTable(this._pageLayout);

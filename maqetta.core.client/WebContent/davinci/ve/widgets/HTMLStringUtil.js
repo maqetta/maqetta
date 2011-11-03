@@ -71,6 +71,15 @@ davinci.ve.widgets.HTMLStringUtil.getEditor = function(jsonString){
 		case "boolean":
 			var text = "<input type='checkbox' class='propertyPaneEditablevalue' style='display:inline-block;margin-left:5px' id='"+ id + "'></input>";
 	        return text;
+	        
+		case "comboEdit":
+			var values = jsonString['values'];
+			var text = "<select  dojoType='dijit.form.ComboBox' style='display:inline-block; width:100%;' id='"+ id + "' >";
+			for(var i = 0;i<values.length;i++)
+				text+="<option value='" + values[i] + "'>" + values[i] + "</option>"
+			text+="</select>";
+			return text;
+			
 		case "combo":
 			var values = jsonString['values'];
 			var text = "<select style='display:inline-block; width:100%;' id='"+ id + "' >";

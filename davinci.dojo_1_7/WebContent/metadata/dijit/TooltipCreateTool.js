@@ -1,14 +1,14 @@
-dojo.provide("davinci.libraries.dojo.dijit.TooltipCreateTool");
-
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.ve.tools.CreateTool");
-dojo.require("davinci.ve.commands.ModifyCommand");
-dojo.require("davinci.ve.States");
-
-dojo.declare("davinci.libraries.dojo.dijit.TooltipCreateTool", davinci.ve.tools.CreateTool, {
+define([
+    "dojo/_base/declare",
+    "davinci/ve/tools/CreateTool",
+	"davinci/ve/widget",
+	"davinci/ve/commands/ModifyCommand",
+	"davinci/ve/States"
+], function(declare, CreateTool, widget, ModifyCommand, States){
+	return declare("davinci.libraries.dojo.dijit.TooltipCreateTool", CreateTool, {
 
 	create: function(args){
-		var bodyWidget = davinci.ve.widget.getWidget(this._context.rootNode);
+		var bodyWidget = widget.getWidget(this._context.rootNode);
 
 		if(!this._data.properties){
 			this._data.properties = {};
@@ -21,7 +21,7 @@ dojo.declare("davinci.libraries.dojo.dijit.TooltipCreateTool", davinci.ve.tools.
 			var connectId = args.target.getId();
 			if(!connectId){
 				connectId = "auto_" + dijit.getUniqueId(args.target.type);
-				this._context.getCommandStack().execute(new davinci.ve.commands.ModifyCommand(args.target, {id: connectId}));
+				this._context.getCommandStack().execute(new ModifyCommand(args.target, {id: connectId}));
 			}
 			if(connectId){
 				this._data.properties.connectId.push(connectId);
@@ -29,8 +29,9 @@ dojo.declare("davinci.libraries.dojo.dijit.TooltipCreateTool", davinci.ve.tools.
 		}
 
 		this._data.context = this._context;
-		var widget = this._create({parent: bodyWidget});
+		var w = this._create({parent: bodyWidget});
 		var body = davinci.ve.states.getContainer();
-		davinci.ve.states.add(body, "_show:" + widget.getId());
+		davinci.ve.states.add(body, "_show:" + w.getId());
 	}
+});
 });

@@ -33,7 +33,8 @@ define(function() {
 		};
 
 		this.getChildren = function(widget) {
-			return [davinci.ve.widget.getWidget(widget.dijitWidget.dropDown.domNode)];
+			var dropDown = widget.dijitWidget.dropDown;
+			return dropDown ? [davinci.ve.widget.getWidget(dropDown.domNode)] : [];
 		};
 
 		// HACKS: There's probably a better way to do this with the new model, just stopgap measures until Phil takes a look.

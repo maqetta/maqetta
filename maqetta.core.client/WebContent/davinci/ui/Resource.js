@@ -59,7 +59,9 @@ dojo.mixin(davinci.ui.Resource, {
 				var resourcePath = newDialog.get('value');
 				if(davinci.ui.Resource._checkFileName(resourcePath)){
 					var resource = system.resource.createResource(resourcePath);
+					resource.isNew = true;
 					var text = system.resource.createText("CSS", {resource:resource});
+			
 					if(text)
 						resource.setText(text);
 					davinci.ui.Resource.openResource(resource);
@@ -77,6 +79,7 @@ dojo.mixin(davinci.ui.Resource, {
 				var resourcePath = newDialog.get('value');
 				if(davinci.ui.Resource._checkFileName(resourcePath)){
 					var resource = system.resource.createResource(resourcePath);
+					resource.isNew = true;
 					var text = system.resource.createText("CSS", {resource:resource});
 					if(text)
 						resource.setText(text);
@@ -163,6 +166,7 @@ dojo.mixin(davinci.ui.Resource, {
 				var resourcePath = newDialog.get('value');
 				if(davinci.ui.Resource._checkFileName(resourcePath)){
 					var resource = system.resource.createResource(resourcePath);
+					resource.isNew = true;
 					var text = system.resource.createText("CSS", {resource:resource});
 					if(text)
 						resource.setText(text);

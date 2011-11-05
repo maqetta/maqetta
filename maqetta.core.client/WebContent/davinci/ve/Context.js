@@ -497,8 +497,8 @@ dojo.declare("davinci.ve.Context", null, {
 		return ro;
 	},
 	
-	setSource: function(source, callback, scope){
-		dojo.withDoc(this.getDocument(), "_setSource", this, [source, callback, scope]);
+	setSource: function(source, callback, scope, initParams){
+		dojo.withDoc(this.getDocument(), "_setSource", this, [source, callback, scope, initParams]);
 	},
 
 	getDojoUrl: function(){
@@ -634,7 +634,7 @@ dojo.declare("davinci.ve.Context", null, {
     },
 //////////////////////////////////////////////////////////////////////////////////////////////     
     
-	_setSource: function(source, callback, scope){
+	_setSource: function(source, callback, scope, newHtmlParams){
 		
 		this._srcDocument=source;
 		
@@ -651,6 +651,14 @@ dojo.declare("davinci.ve.Context", null, {
 			this.rootWidget._srcElement=this._srcDocument.getDocumentElement().getChildElement("body");
 			this.rootWidget._srcElement.setAttribute("id", "myapp");
 		}
+
+		//FIXME: Need to add logic for initial themes and device size.
+		if(newHtmlParams){
+			var modelBodyElement = source.getDocumentElement().getChildElement("body");
+			modelBodyElement.setAttribute(davinci.ve.Context.MOBILE_DEV_ATTR, newHtmlParams.device);
+			modelBodyElement.setAttribute(davinci.preference_layout_ATTRIBUTE, newHtmlParams.flowlayout);
+		}
+
 		var data = this._parse(source);
 		this._scriptAdditions=data.scriptAdditions;
 		//debugger;
@@ -1058,7 +1066,7 @@ dojo.declare("davinci.ve.Context", null, {
 		if (event.editor.fileName === this._editor.fileName){
 			dojo.unsubscribe(this._editorSelectConnection);
 			delete this._editorSelectConnection;
-			this._setSource(this._srcDocument, null, null);
+			this._setSource(this._srcDocument, null, null, null);
 		}
 	},
 

@@ -48,7 +48,7 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
       	];
 	},
 	
-	setEditor: function(editorExtension,fileName,content,file,rootElement){
+	setEditor: function(editorExtension, fileName, content, file, rootElement, newHtmlParams){
 		
 		this.editorExtension=editorExtension;
 		var constr=dojo.getObject(editorExtension.editorClass);
@@ -79,7 +79,7 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
 		var tabContainer = "editors_tabcontainer";
 		if(dijit.byId(tabContainer).selectedChildWidget.domNode == this.domNode){
 			// Tab is visible.  Go ahead
-			editor.setContent(fileName,content);	
+			editor.setContent(fileName, content, newHtmlParams);	
 		}else{
 			// When tab is selected, set up the editor
 			var handle = dojo.subscribe(tabContainer + "-selectChild", null, function(args){

@@ -13,11 +13,13 @@ dojo.require("dojox.widget.Standby");
 dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 	widgetsInTemplate: true,
 	templateString: dojo.cache("davinci.ui.widgets", "templates/NewFile.html"),
-	
+	treeCollapsed:true,
+
 	fileDialogFileName : null,
 	fileDialogParentFolder: null,
 	fileTree : null,
 	__okButton : null,
+	dialogSpecificClass : null,
 	
 	postMixInProperties : function() {
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
@@ -27,6 +29,7 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		this.cancel =true;
 		this.inherited(arguments);
 	},
+	
 	postCreate : function(){
 		this.inherited(arguments);
 		dojo.connect(this.fileDialogFileName, "onkeyup", this, '_checkValid');
@@ -38,8 +41,43 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 			this._setValueAttr(this._getForcedRootAttr());
 		}
 		this.fileTree.watch("selectedItem", dojo.hitch(this, this._checkValid));
+		
+		this.arrowNode = dojo.query('.folder_details_arrow',this.domNode)[0];
+		this.connect(this.arrowNode, 'onclick', dojo.hitch(this,function(e){
+			this._tree_collapse_expand(!this.treeCollapsed);
+		}));
+		this._tree_collapse_expand();
+		
+		if(this.dialogSpecificClass){
+			var c = dojo.getObject(this.dialogSpecificClass);
+			this.dialogSpecificWidget = new c({}, this.dialogSpecificOptionsDiv);
+		}
 	},
-	
+
+	/**
+	 * Update this.collapsed to the given value and add/remove classes in DOM tree
+	 * @param {boolean} treeCollapsed  New value for treeCollapsed
+	 */
+	_tree_collapse_expand: function(treeCollapsed){
+		if(typeof treeCollapsed != 'undefined'){
+			this.treeCollapsed = treeCollapsed;
+		}
+		var table = dojo.query('.fileFolderTable',this.domNode)[0];
+		var folderContainer = dojo.query('.folderContainer',this.domNode)[0];
+		if(table){
+			if(this.treeCollapsed){
+				dojo.addClass(table, 'treeCollapsed');
+				dojo.removeClass(table, 'treeExpanded');
+				dojo.addClass(folderContainer, 'dijitHidden');
+			}else{
+				dojo.addClass(table, 'treeExpanded');
+				dojo.removeClass(table, 'treeCollapsed');
+				dojo.removeClass(folderContainer, 'dijitHidden');
+			}
+		}
+		//FIXME: add langObj
+		//this.arrowNode.title = this.treeCollapsed ? this.langObj.nhfoArrowTitleShowDetails : this.langObj.nhfoArrowTitleHideDetails;
+	},	
 	
 	_setValueAttr : function(value){
 		/* full resource expected */
@@ -104,11 +142,16 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		
 		this.__okButton.set( 'disabled', !valid);
 	},
+	
 	_okButton : function(){
 		this.value = this.fileDialogParentFolder.get('value') + "/" + this.fileDialogFileName.get( 'value');
 		this.cancel = false;
 		this.onClose();
 		
+	},
+		
+	_newFolder : function(){
+		debugger;		
 	},
 	
 	_getValueAttr : function(){

@@ -1,9 +1,20 @@
-define(function() {
+define(["dojo/_base/array", "dojo/_base/connect"], function(array, connect) {
 	return function() {
 		this.create = function(widget, srcElement) {
-			if (widget.dijitWidget.dropDown) {
-				widget.dijitWidget.dropDown._popupWrapper._dvWidget.hidden = true; // this will hide the dijitMenu in designer
-			}
+			var dw = widget.dijitWidget,
+				setup = function() {
+					if (dw.dropDown) {
+						dw.dropDown._popupWrapper._dvWidget.hidden = true; // this will hide the dijitMenu in designer
+						dw.dropDown.owner = dw; // leave a path to make it possible to get from the popup back to the dropdown instance
+					}
+				},
+				handle = connect.connect(dw, 'startup', function() {
+					if (handle) {
+						connect.disconnect(handle);
+					}
+					setup();
+				});
+			setup();
 		};
 
 		this.getData = function(/*Widget*/ widget, /*Object*/ options) {
@@ -51,9 +62,9 @@ define(function() {
 				dropDownData = [];
 
 			// search for child widgets
-			dojo.forEach(pChildNodes, function(n){
+			array.forEach(pChildNodes, function(n){
 				// only interested in menus or menu items
-				if((typeof n == "object" && n.nodeType != 1 /*ELEMENT*/) || dojo.isString(n) || n.length){
+				if((typeof n == "object" && n.nodeType != 1 /*ELEMENT*/) || typeof n == "string" || n.length){
 					
 				} else {
 					// get the widget from the node

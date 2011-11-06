@@ -35,7 +35,7 @@
             "icon": "resources/images/accordion.png",
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAPJJREFUeNpi/P//P8PCgzf/bzv3nIFU4GUkycACYoA01wYZkGxA87oLEAP+//vHsPvWa5IN+P/vP8QAbxNphi0nHzL8R5UGYkY4jxEqgizvay4HMWDj0QcMs4qcgUKMqKqg+hmBYv8ZkYyDmp3WvwdiwL+/f8HiohzMRDv/zY+/DP9+/2VgAhvw5y8DOQBkMdQF/xh+Ac14/u0P3AfIfmaEOvs/VJAR6lOQAYywdLBq5zWSXRDmroVIB53pjuSng98/fpKVDkD6wAb4WykAXfGUZANA+qiTlKnihVU7r4DjC2f0IaVIWFSGumlBopESABBgAGY0fipQlZCHAAAAAElFTkSuQmCC",
             "properties": {
-                "style": "width: 100%; height: 100%; min-width:1em; min-height:1em;"
+                "style": "width: 300px; height: 300px; min-width:1em; min-height:1em;"
             },
             "children": [
                 {
@@ -54,7 +54,8 @@
                 }
             ],
             "allowedChild": "dijit.layout.ContentPane",
-            "inlineEdit": "davinci.libraries.dojo.dijit.layout.AccordionContainerInput"
+            "inlineEdit": "davinci.libraries.dojo.dijit.layout.AccordionContainerInput",
+            "helper": "davinci.libraries.dojo.dijit.layout.AccordionContainerHelper"
         },
         {
             "name": "BorderContainer",
@@ -65,7 +66,7 @@
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAARJJREFUeNqkUzFuhEAMNFHqHAUEiU9Q0PKS3BNo6O9aJMQDqHkM4iG05CJdGgpgfXhvvVqyECHdSNaO7PWMsRYHEaGua+z7Hgi+7wPzLZh14kACZVniPM8yTM4xTZMOqpv8nZSEENqB+e/9DmIRJ6A6Xddd3aW8FFhcrFE/TifdaEHllymeAkQYQRBAURS7OwjDEFh2U6DrOrheLrDjDXmea64FxnHU4w7DIJt/bt+AAtVenqf36cs6/DcBc2piAUSxriszMn6DF2FNcAR45BM8z9tc5N+7lkAURZBl2a57HMe2gHxIajFt20JVVasHY06Spimcv87AfS8v0eG/sWkamUiSBJhvwawTd3bf+0E8BBgAL2nsdz3dOk4AAAAASUVORK5CYII=",
             "properties": {
                 "design": "sidebar",
-                "style": "width: 100%; height: 100%; min-width:1em; min-height:1em;"
+                "style": "width: 300px; height: 300px; min-width:1em; min-height:1em; z-index:0;"
             },
             "children": [
                 {
@@ -216,7 +217,7 @@
             "icon": "resources/images/tab-container.png",
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASlJREFUeNpi/P//PwMlgAVEBHbuxGnKgbf/GS1+f8SQP8HKzwg3gOEHA8P6enesBngWrvxflOyGId43d9d/kCEsEP0/GFYevInTmUDFWMUduBn/w13gbaaMVREucRAI7doK88IPMLXt8ksGRqjk//9AFuN/ND6YBeZ76YqD9UG8ADXg1x+ksAJqZkAOOiAfFGGMDAjhHx+gBoD9ACL//gPrg1n7H2oO3BnIYlB9YAO+/mQCc3/++QexjAHNcphGNHGQPrAB/37/hngB6IL/MGVAPzOCnI3BRwCQPrABP3/8RHEBNPwQzmaEBQkkIGFyIH0syNHy8+9/JCcjHAzjMzJAXYhkOtgAli+/wJxiJ0WS8gHTt68M8JRoGtRKVmZipDQ3MjFQCAACDAAZhYTuU0wrQQAAAABJRU5ErkJggg==",
             "properties": {
-                "style": "width: 100%; height: 100%; min-width:1em; min-height:1em;",
+                "style": "width: 300px; height: 300px; min-width:1em; min-height:1em;",
                 "controllerWidget": "dijit.layout.TabController"
             },
             "children": [
@@ -236,7 +237,8 @@
                 }
             ],
             "allowedChild": "dijit.layout.ContentPane",
-            "inlineEdit": "davinci.libraries.dojo.dijit.layout.StackContainerInput"
+            "inlineEdit": "davinci.libraries.dojo.dijit.layout.StackContainerInput",
+            "helper": "davinci.libraries.dojo.dijit.layout.TabContainerHelper"
         },
         {
             "name": "TitlePane",

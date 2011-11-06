@@ -385,7 +385,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 
 		var w;
 		dojo.withDoc(this._context.getDocument(), function(){
-			w = widget.createWidget(this._data);
+			w = widget.createWidget(this._data, args);
 		}, this);
 		if(!w){
 			return;

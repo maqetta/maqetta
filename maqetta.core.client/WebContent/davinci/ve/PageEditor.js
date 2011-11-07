@@ -190,7 +190,7 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 	},
 	
 	
-	setContent: function (filename, content) {
+	setContent: function (filename, content, newHtmlParams) {
 
 	    this.fileName=filename;
 	    this.htmlEditor.setContent(filename,content);
@@ -219,7 +219,7 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 	        this.htmlEditor.model.visit(visitor);
 	    }
 //		console.log(this.htmlEditor.model.getText());
-		this.visualEditor.setContent(filename,this.htmlEditor.model);
+		this.visualEditor.setContent(filename, this.htmlEditor.model, newHtmlParams);
 		dojo.connect(this.htmlEditor.model, "onChange", this, '_themeChange');
 //		this._visualChanged();
 		// update the source with changes which may have been made during initialization without setting dirty bit

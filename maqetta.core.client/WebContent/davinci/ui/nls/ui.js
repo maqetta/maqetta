@@ -49,10 +49,13 @@ define({ root:
 		"create":"Create",
 		"open":"Open",
 		"save":"Save",
+		
 		//fileDialog
-		"fileName":"File Name",//used in templates/download.html
+		"fileName":"File name",//used in templates/download.html
 		"folderName":"Folder name",
-		"parentFolder":"Parent Folder: ",//used in add files as well
+		"parentFolder":"Parent folder: ",//used in add files as well
+		"newFolderLabel":"New folder",
+		"cancelButtonLabel":"Cancel",
 		
 		//dialog titles
 		"createNewFile":"Create New File",
@@ -93,6 +96,34 @@ define({ root:
 		//OpenThemeDialog.html
 		"selectTheme":"Select a Theme",
 
-		"newProject":"New Project"
+		"newProject":"New Project",
+		
+		//NewHTMLFileOptions.html - Composition type strings
+		"nhfoCompositionType":"Composition type:",
+		"nhfoCTMenu_desktop":"Desktop",
+		"nhfoCTTitle_desktop":"desktop browser, flow layout, production theme",
+		"nhfoCTMenu_mobile":"Mobile",
+		"nhfoCTTitle_mobile":"mobile device, flow layout, production theme",
+		"nhfoCTMenu_sketch":"Sketch",
+		"nhfoCTTitle_sketch":"desktop browser, absolute layout, production theme",
+		"nhfoCTMenu_wireframe":"Wireframe",
+		"nhfoCTTitle_wireframe":"desktop browser, absolute layout, wireframe theme",
+		"nhfoCTMenu_custom":"Custom",
+		"nhfoCTTitle_custom":"custom settings",
+		"nhfoArrowTitleShowDetails":"Show detailed options",
+		"nhfoArrowTitleHideDetails":"Hide detailed options",
+		
+		//NewHTMLFileOptions.html - Device strings
+		"nhfoDevice":"Device:",
+		"nhfoDVMenu_desktop":"Desktop",
+		
+		//NewHTMLFileOptions.html - Layout strings
+		"nhfoLayout":"Layout:",
+		"nhfoLAMenu_flow":"flow",
+		"nhfoLAMenu_absolute":"absolute",
+		
+		//NewHTMLFileOptions.html - Theme strings
+		"nhfoTheme":"Theme or theme set:",
+		"nhfoTHMenu_devicespecific":"(device-specific)"
 }
 });

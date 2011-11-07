@@ -618,6 +618,7 @@ davinci.html.HTMLElement.prototype.removeAttribute = function(name) {
             }
             return false; // break
         }
+        return true;
     }, this);
     this.onChange();
 };

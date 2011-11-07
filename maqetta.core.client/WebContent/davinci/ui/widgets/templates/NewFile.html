@@ -1,24 +1,44 @@
 <div class="fileDialog" style="position:relative">
-	<div lass="fileNameRow">
-			<label>${fileFieldLabel}</label>
-		<input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="fileDialogFileName"></input>
-	</div>
-	<div>
-	<br>
-	</div>
-	<div>
-		<label>${folderFieldLabel}</label>
-	</div>
+	<table class="fileFolderTable">
+		<tr class='fileNameRow'>
+			<td class="fileDialogLabelCell">
+				<label>${fileFieldLabel}:</label>
+			</td>
+			<td>
+				<input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="fileDialogFileName"></input>
+			</td>
+			<td>
+			</td>
+		</tr>
+		<tr class='folderNameRow'>
+			<td class="fileDialogLabelCell">
+				<label>${folderFieldLabel}</label>
+			</td>
+			<td>
+				<input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="fileDialogParentFolder"></input>
+			</td>
+			<td>
+				<span class="folder_details_arrow "></span>
+			</td>
+		</tr>
+	</table>
 	
-	<div class="parentFolderInputRow"><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="fileDialogParentFolder"></input></div>
 	<div class="folderContainer">
 		<div dojoType="dijit.layout.ContentPane">
-		<div class="fileDialogTreeWidget" dojoAttachPoint="fileTree" dojoType="dijit.Tree" showRoot="false" model="system.resource" getIconClass="davinci.ui.Resource.getResourceIcon"
-			getRowClass="davinci.ui.Resource.getResourceClass" labelAttr="name" childrenAttrs="children"></div>
+			<div class="fileDialogTreeWidget" dojoAttachPoint="fileTree" dojoType="dijit.Tree" showRoot="false" model="system.resource" getIconClass="davinci.ui.Resource.getResourceIcon"
+				getRowClass="davinci.ui.Resource.getResourceClass" labelAttr="name" childrenAttrs="children"></div>
 		</div>
+		<div class='folderContainerButtonRow'><button dojoType="dijit.form.Button" dojoAttachPoint="__newFolderButton" dojoAttachEvent="onClick:_newFolder">${newFolderLabel}</button></div>
 	</div>
 	
+	<div dojoAttachPoint="dialogSpecificOptionsDiv"></div>
+	
 	<div class="buttonRow">
-		<button dojoType="dijit.form.Button" dojoAttachPoint="__okButton" dojoAttachEvent="onClick:_okButton">${finishButtonLabel}</button>
+		<span class="buttonWrapperSpan">
+			<button dojoType="dijit.form.Button" dojoAttachPoint="__cancelButton" dojoAttachEvent="onClick:cancelButton">${cancelButtonLabel}</button>
+		</span>
+		<span class="buttonWrapperSpan">
+			<button dojoType="dijit.form.Button" dojoAttachPoint="__okButton" dojoAttachEvent="onClick:_okButton">${finishButtonLabel}</button>
+		</span>
 	</div>
 </div>

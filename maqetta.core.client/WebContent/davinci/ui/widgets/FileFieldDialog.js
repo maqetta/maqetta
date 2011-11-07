@@ -92,12 +92,14 @@ dojo.declare("davinci.ui.widgets.FileFieldDialog", [davinci.workbench.WidgetLite
 	},
 	_onChange : function(){
 		var v1 = dojo.attr(this._textField, "value");
-	
+		
 		var path=new davinci.model.Path(v1);
 		var value=path.relativeTo(new davinci.model.Path(this._baseLocation), true).toString(); // ignore the filename to get the correct path to the image
 		
-		if(value && value!="")
+		if(v1 && v1!="")
 			value = "url('" + value + "')";
+		else 
+			value = "";
 		
 		if(this.value!=value){
 			

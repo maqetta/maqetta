@@ -72,7 +72,8 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
                         var modelAttribute = modelBody.getAttribute('class');
                         if (modelAttribute){
                             modelAttribute = modelAttribute.replace(oldTheme.className,'');
-                            header.bodyClass = modelAttribute;
+                            //header.bodyClass = modelAttribute;
+                            header.bodyClasses = modelAttribute; // seems to have changed to this
                             modelBody.removeAttribute('class');
                             if (modelAttribute.length > 0){
                                 modelBody.addAttribute('class',modelAttribute, false);
@@ -124,7 +125,8 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             } 
             modelAttribute = modelAttribute + ' '+newThemeInfo.className;
             modelAttribute = modelAttribute.trim();
-            header.bodyClass = modelAttribute;
+            //header.bodyClass = modelAttribute;
+            header.bodyClasses = modelAttribute;
             modelBody.removeAttribute('class');
             modelBody.addAttribute('class',modelAttribute, false);
             this._context.setHeader(header);
@@ -213,11 +215,30 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
     },
     
     _dojoxMobileAddTheme: function(context, theme){
-        // add the theme to the dojox.mobile.themeMap
-        context.loadRequires("dojox.mobile.View", true); //  use this widget to get the correct requires added to the file.
+        
         var htmlElement = context._srcDocument.getDocumentElement();
         var head = htmlElement.getChildElement("head");
         var scriptTags=head.getChildElements("script");
+        //var testMap = dojo.toJson(davinci.theme.getDojoxMobileThemeMap(context, theme));
+        if (davinci.theme.themeSetEquals(theme, davinci.theme.dojoMobileDefault)){
+            var nothingToDo = true;
+            dojo.forEach(scriptTags, function (scriptTag){
+                var text=scriptTag.getElementText();
+                if (text.length) {
+                    if (text.indexOf('dojox.mobile.themeMap=') >-1) {
+                        nothingToDo = false;
+                    }
+                }
+            }, this);
+            if (nothingToDo){
+                return;
+            }
+        }
+        // add the theme to the dojox.mobile.themeMap
+        context.loadRequires("dojox.mobile.View", true); //  use this widget to get the correct requires added to the file.
+        //htmlElement = context._srcDocument.getDocumentElement();
+        head = htmlElement.getChildElement("head");
+        scriptTags=head.getChildElements("script");
 
         dojo.forEach(scriptTags, function (scriptTag){
             var text=scriptTag.getElementText();

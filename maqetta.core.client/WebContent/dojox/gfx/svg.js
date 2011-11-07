@@ -1,7 +1,7 @@
-define(["dojo/_base/lang", "dojo/_base/window", "dojo/dom","dojo/_base/declare", "dojo/_base/array", 
-  "dojo/dom-geometry", "dojo/_base/Color", "./_base", "./shape", "./path"], 
+define(["dojo/_base/lang", "dojo/_base/window", "dojo/dom","dojo/_base/declare", "dojo/_base/array",
+  "dojo/dom-geometry", "dojo/_base/Color", "./_base", "./shape", "./path"],
   function(lang, win, dom, declare, arr, domGeom, Color, g, gs, pathLib){
-/*===== 
+/*=====
 	dojox.gfx.svg = {
 	// module:
 	//		dojox/gfx/svg
@@ -24,14 +24,14 @@ define(["dojo/_base/lang", "dojo/_base/window", "dojo/dom","dojo/_base/declare",
   =====*/
   var svg = g.svg = {};
 	svg.useSvgWeb = (typeof window.svgweb != "undefined");
-	
+
 	// Need to detect iOS in order to workaround bug when
 	// touching nodes with text
 	var uagent = navigator.userAgent.toLowerCase(),
 		safMobile = uagent.search('iphone') > -1 ||
 					uagent.search('ipad') > -1 ||
 					uagent.search('ipod') > -1;
-	
+
 	function _createElementNS(ns, nodeType){
 		// summary:
 		//		Internal helper to deal with creating elements that
@@ -43,7 +43,7 @@ define(["dojo/_base/lang", "dojo/_base/window", "dojo/dom","dojo/_base/declare",
 			return win.doc.createElement(nodeType);
 		}
 	}
-	
+
 	function _createTextNode(text){
 		if(svg.useSvgWeb){
 			return win.doc.createTextNode(text, true);
@@ -51,7 +51,7 @@ define(["dojo/_base/lang", "dojo/_base/window", "dojo/dom","dojo/_base/declare",
 			return win.doc.createTextNode(text);
 		}
 	}
-	
+
 	function _createFragment(){
 		if(svg.useSvgWeb){
 			return win.doc.createDocumentFragment(true);
@@ -362,7 +362,7 @@ define(["dojo/_base/lang", "dojo/_base/window", "dojo/dom","dojo/_base/declare",
 					this.rawNode.setAttribute(i, this.shape[i]);
 				}
 			}
-			if("r" in this.shape){
+			if(this.shape.r != null){
 				this.rawNode.setAttribute("ry", this.shape.r);
 				this.rawNode.setAttribute("rx", this.shape.r);
 			}
@@ -445,7 +445,7 @@ define(["dojo/_base/lang", "dojo/_base/window", "dojo/dom","dojo/_base/declare",
 			r.setAttribute("rotate", s.rotated ? 90 : 0);
 			r.setAttribute("kerning", s.kerning ? "auto" : 0);
 			r.setAttribute("text-rendering", "optimizeLegibility");
-			
+
 			// update the text content
 			if(r.firstChild){
 				r.firstChild.nodeValue = s.text;
@@ -743,10 +743,10 @@ else
 
 	// Mouse/Touch event
 	svg.fixTarget = function(event, gfxElement) {
-		// summary: 
-		//     Adds the gfxElement to event.gfxTarget if none exists. This new 
+		// summary:
+		//     Adds the gfxElement to event.gfxTarget if none exists. This new
 		//     property will carry the GFX element associated with this event.
-		// event: Object 
+		// event: Object
 		//     The current input event (MouseEvent or TouchEvent)
 		// gfxElement: Object
 		//     The GFX target element
@@ -754,7 +754,7 @@ else
 			if (safMobile && event.target.wholeText) {
 				// Workaround iOS bug when touching text nodes
 				event.gfxTarget = gs.byId(event.target.parentElement.__gfxObject__);
-			} else { 
+			} else {
 				event.gfxTarget = gs.byId(event.target.__gfxObject__);
 			}
 		}
@@ -777,7 +777,7 @@ else
 			// ensure id
 			parentNode = dom.byId(parentNode);
 			var id = parentNode.id ? parentNode.id+'_svgweb' : g._base._getUniqueId();
-			
+
 			// create dynamic svg root
 			var mockSvg = _createElementNS(svg.xmlns.svg, 'svg');
 			mockSvg.id = id;
@@ -790,12 +790,12 @@ else
 				// become loaded
 				s.rawNode = this;
 				s.isLoaded = true;
-				
+
 				// init defs
 				var defNode = _createElementNS(svg.xmlns.svg, "defs");
 				s.rawNode.appendChild(defNode);
 				s.defNode = defNode;
-				
+
 				// notify application
 				if (s.onLoad)
 					s.onLoad(s);
@@ -805,7 +805,7 @@ else
 			s.isLoaded = false;
 			return s;
 		};
-		
+
 		// override Surface.destroy()
 		svg.Surface.extend({
 			destroy: function(){
@@ -833,7 +833,7 @@ else
 				delete token[0];
 			}
 		};
-		
+
 		lang.extend(svg.Shape, _eventsProcessing);
 		lang.extend(svg.Surface, _eventsProcessing);
 	}

@@ -3,7 +3,9 @@ define("dojox/mvc/Repeat",["dojo/_base/declare","dojo/dom","./_Container"],funct
 return _1("dojox.mvc.Repeat",[_3],{index:0,postscript:function(_4,_5){
 this.srcNodeRef=_2.byId(_5);
 if(this.srcNodeRef){
+if(this.templateString==""){
 this.templateString=this.srcNodeRef.innerHTML;
+}
 this.srcNodeRef.innerHTML="";
 }
 this.inherited(arguments);
@@ -19,6 +21,7 @@ _9+=this._exprRepl(this.templateString);
 }
 var _a=this.srcNodeRef||this.domNode;
 _a.innerHTML=_9;
+this.srcNodeRef=_a;
 this._createBody();
 },_updateAddRemoveWatch:function(){
 if(this._addRemoveWatch){

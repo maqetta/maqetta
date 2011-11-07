@@ -68,7 +68,7 @@
 	border: 1px solid @dialog-titlebar-border-color;
 	border-top:none;
 	background-color: @dialog-titlebar-background-color;
-	background-image: url("images/titlebar.png");
+	background-image: url(@image-titlebar);
 	background-repeat:repeat-x;
 	padding: 5px 7px 4px 7px;
 }
@@ -82,7 +82,7 @@
 
 .claro .dijitDialogCloseIcon {
 	/* the default close icon for the dialog */
-	background: url("images/dialogCloseIcon.png");
+	background: url(@image-dialog-close);
 	background-repeat:no-repeat;
 	position: absolute;
 	right: 5px;
@@ -90,7 +90,7 @@
 	width: 21px;
 }
 .dj_ie6 .claro .dijitDialogCloseIcon {
-	background-image: url("images/dialogCloseIcon8bit.png");
+	background-image: url(@image-dialog-close-ie6);
 }
 .claro .dijitDialogCloseIconHover {
 	background-position:-21px;
@@ -123,7 +123,7 @@
 .claro .dijitTooltipContainer {
 	/* the part with the text */
 	background-color:@popup-background-color;
-	background-image:url("images/tooltipGradient.png");
+	background-image:url(@image-tooltip-gradient);
 	background-repeat:repeat-x;
 	background-position:bottom;
 	border:1px solid @popup-border-color;
@@ -141,13 +141,13 @@
 	/* the arrow piece */
 	border: 0;
 	z-index: 2;
-	background-image:url("images/tooltip.png");
+	background-image:url(@image-tooltip);
 	background-repeat:no-repeat;
 	width:16px;
 	height:14px;
 }
 .dj_ie6 .claro .dijitTooltipConnector {
-	background-image:url("images/tooltip8bit.png");
+	background-image:url(@image-tooltip-ie6);
 }
 .claro .dijitTooltipABRight .dijitTooltipConnector {
 	/* above or below tooltip, but the arrow appears on the right,

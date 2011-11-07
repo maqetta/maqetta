@@ -1,9 +1,8 @@
 define([
-	"dojo/_base/kernel",	// dojo.getObject
 	"dojo/_base/lang",	// dojo.extend
 	"../bits"
-], function(dojo) {
-	var compression = dojo.getObject("dojox.encoding.compression", true);
+], function(lang, bits) {
+	var compression = lang.getObject("dojox.encoding.compression", true);
 	/*=====
 		compression = dojox.encoding.compression;
 	=====*/
@@ -15,7 +14,7 @@ define([
 		this.reset();
 	};
 
-	dojo.extend(compression.Splay, {
+	lang.extend(compression.Splay, {
 		reset: function(){
 			for(var i = 1; i < this.up.length; this.up[i] = Math.floor((i - 1) / 2), ++i);
 			for(var i = 0; i < this.left.length; this.left[i] = 2 * i + 1, this.right[i] = 2 * i + 2, ++i);

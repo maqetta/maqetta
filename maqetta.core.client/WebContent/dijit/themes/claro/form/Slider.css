@@ -71,14 +71,14 @@
   padding: 2px 0;
 }
 .claro .dijitSlider .dijitSliderProgressBarH, .claro .dijitSlider .dijitSliderLeftBumper {
-  background-image: url("images/sliderHorizontal.png");
+  background-image: url("../form/images/sliderHorizontal.png");
   background-repeat: repeat-x;
   background-position: 0 -20px;
   border-color: #b5bcc7;
   background-color: #cfe5fa;
 }
 .claro .dijitSlider .dijitSliderRemainingBarH, .claro .dijitSlider .dijitSliderRightBumper {
-  background-image: url("images/sliderHorizontal.png");
+  background-image: url("../form/images/sliderHorizontal.png");
   background-repeat: repeat-x;
   background-position: 0 -11px;
   border-color: #b5bcc7;
@@ -124,14 +124,14 @@
   padding: 0 2px;
 }
 .claro .dijitSlider .dijitSliderProgressBarV, .claro .dijitSlider .dijitSliderBottomBumper {
-  background-image: url("images/sliderVertical.png");
+  background-image: url("../form/images/sliderVertical.png");
   background-repeat: repeat-y;
   background-position: -36px 0;
   border-color: #b5bcc7;
   background-color: #cfe5fa;
 }
 .claro .dijitSlider .dijitSliderRemainingBarV, .claro .dijitSlider .dijitSliderTopBumper {
-  background-image: url("images/sliderVertical.png");
+  background-image: url("../form/images/sliderVertical.png");
   background-repeat: repeat-y;
   background-position: -3px 0;
   border-color: #b5bcc7;
@@ -172,7 +172,7 @@
   border: 0;
   width: 18px;
   height: 16px;
-  background-image: url("images/sliderThumbs.png");
+  background-image: url("../form/images/sliderThumbs.png");
   background-repeat: no-repeat;
   background-position: 0 0;
 }
@@ -195,7 +195,7 @@
   border: 0;
   width: 18px;
   height: 16px;
-  background-image: url("images/sliderThumbs.png");
+  background-image: url("../form/images/sliderThumbs.png");
   background-repeat: no-repeat;
   background-position: -289px 0;
 }
@@ -225,7 +225,7 @@
 .claro .dijitSliderIncrementIconH,
 .claro .dijitSliderDecrementIconV,
 .claro .dijitSliderIncrementIconV {
-  background-image: url('images/commonFormArrows.png');
+  background-image: url("../form/images/commonFormArrows.png");
   background-repeat: no-repeat;
   background-color: #efefef;
   -moz-border-radius: 2px;

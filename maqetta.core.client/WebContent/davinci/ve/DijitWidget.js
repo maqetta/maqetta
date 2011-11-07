@@ -99,32 +99,33 @@ define("davinci/ve/DijitWidget", ["davinci/ve/_Widget", "davinci/ve/metadata"], 
 			//TODO: use widget.getParent() and have it support this behavior?
 		return widget;
 	},
-	getChildren: function(attach)
-	{
+
+	_getChildren: function(attach) {
+        if (this.acceptsHTMLChildren) {
+            return this.inherited(arguments);
+        }
+
 		var children=[];
 
-		if (this.acceptsHTMLChildren) {
-			var dvWidget = function(child) {
-				return child._dvWidget;
-			};
-
-			// this.containerNode is a Dojo attachpoint. FIXME: Perhaps this detail should be abstracted by a helper?
-			return dojo.map(dojo.filter((this.containerNode || this.domNode).children, dvWidget), dvWidget);
-		} else if (davinci.ve.metadata.getAllowedChild(this.type)[0] !== 'NONE') {
-			dojo.map(this.dijitWidget.getChildren(), function(widget) {
-				if (!widget) { return; }
-				if (attach && !widget.domNode._dvWidget)
-				{
-					davinci.ve.widget.getWidget(widget.domNode);
-				}
-				var child = widget.domNode && widget.domNode._dvWidget;
-				if (child) {
-					children.push(child);
-				}
+		if (davinci.ve.metadata.getAllowedChild(this.type)[0] !== 'NONE') {
+			this.dijitWidget.getChildren().forEach(function(child) {
+				if (attach) {
+					children.push(davinci.ve.widget.getWidget(child.domNode));
+				} else {
+                    var widget = child.domNode && child.domNode._dvWidget;
+                    if (widget) {
+                        children.push(widget);
+                    }
+                }
 			});
 		}
 		return children;
 	},
+
+	_getContainerNode: function() {
+		return this.containerNode || this.domNode;
+	},
+
 	selectChild: function(widget)
 	{
 		if (this.dijitWidget.selectChild) {
@@ -186,20 +187,20 @@ define("davinci/ve/DijitWidget", ["davinci/ve/_Widget", "davinci/ve/metadata"], 
         }
     },
 
-	_getWidget: function() {
-		return this.dijitWidget;
-	},
-	startup: function()
-	{
-		this.dijitWidget.startup();
 
+    _getPropertyValue: function(name) {
+        return this.dijitWidget.get(name);
+    },
+
+	startup: function() {
+		this.dijitWidget.startup();
 	},
-	isLayout: function()
-	{
+
+	isLayout: function() {
 		return this.dijitWidget.isInstanceOf(dijit.layout._LayoutWidget);
 	},
-	resize: function()
-	{
+
+	resize: function() {
 		if (this.dijitWidget.resize) {
 			this.dijitWidget.resize();
 		}

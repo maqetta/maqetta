@@ -48,7 +48,7 @@ public class DavinciPageServlet extends HttpServlet {
     protected ILibraryManager    libraryManager;
 
     public void initialize() {
-        serverManager = ServerManager.createServerManger(getServletConfig());
+        serverManager = ServerManager.getServerManger();
         userManager = serverManager.getUserManager();
         libraryManager = serverManager.getLibraryManager();
     }
@@ -101,7 +101,9 @@ public class DavinciPageServlet extends HttpServlet {
         Cookie k = new Cookie(IDavinciServerConstants.SESSION_USER, user!=null?user.getUserName():null);
         resp.addCookie(k);
         
-        if (pathInfo != null && (pathInfo.equals("") || pathInfo.equals("/")) && previewParam==null) {
+        if(pathInfo==null ){
+        	   resp.sendRedirect("./maqetta/");
+        }else if (pathInfo != null && (pathInfo.equals("") || pathInfo.equals("/")) && previewParam==null) {
             if (!ServerManager.LOCAL_INSTALL) {
                 if (user == null) {
                     resp.sendRedirect("./welcome");

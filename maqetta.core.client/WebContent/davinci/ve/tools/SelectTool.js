@@ -98,7 +98,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		// FIXME: sometime an exception occurs...
 		try{
 			this._setTarget(event.relatedTarget);
-			//this.updateSnapLines(event);
 		}catch(e){
 		}
 	},
@@ -167,7 +166,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				if (_node.style.position != "absolute") {
 					var close = davinci.ve.widget.findClosest(this._context.getContainerNode(), box, this._context, widget, true,
 							dojo.hitch(this, function(w){
-								return this._getAllowedTargetWidget(w, widget.getData()).length;
+								return this._context._chooseParent.getAllowedTargetWidget(w, widget.getData()).length;
 							}));
 					this._resetCursor();
 					if (close && close.widget && (close.widget != widget)) {
@@ -232,7 +231,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						left -= (p.x - parentNode.scrollLeft);
 						top -= (p.y - parentNode.scrollTop);
 					}
-					var position = this._adjustPosition({x: left, y: top});
+					var position = {x: left, y: top};
 					left = position.x;
 					top = position.y;
 					var first_c = new davinci.ve.commands.MoveCommand(widget, left, top);
@@ -313,7 +312,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				return;
 			}
 			var box = dojo.marginBox(node);
-			var position = this._adjustPosition({x: box.l + dx, y: box.t + dy});
+			var position = {x: box.l + dx, y: box.t + dy};
 			command.add(new davinci.ve.commands.MoveCommand(w, position.x, position.y));
 		}, this);
 		if(!command.isEmpty()){

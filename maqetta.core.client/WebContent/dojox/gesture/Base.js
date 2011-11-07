@@ -14,13 +14,8 @@ define([
 	// summary:
 	//		This module provides an abstract parental class for various gesture implementations.
 	
-	kernel.experimental("dojox.gesture.Base");
-	
-	lang.getObject("gesture", true, dojox);
-
-	// Declare an internal anonymous class which will only be exported by module return value
-	// should be changed to "declare(null, {...});" once http://bugs.dojotoolkit.org/ticket/13890 is fixed
-	return declare(" ", null, {
+/*=====
+	dojox.gesture.Base = {
 		// summary:
 		//		An abstract parental class for various gesture implementations.
 		//
@@ -32,18 +27,19 @@ define([
 		//
 		//		3. Firing and bubbling gesture events with on() API.
 		//
-		//		A gesture implementation only needs to extend this class and overwrite appropriate phase handlers
+		//		A gesture implementation only needs to extend this class and overwrite appropriate phase handlers:
+		//
 		//		- press()|move()|release()|cancel for recognizing and firing gestures
 		//
 		// example:
-		//		1. A typical gesture implementation:
+		//		1. A typical gesture implementation.
 		//
-		//		- Define dojox/gesture/a module which provides 3 gesture events:"a", "a.x", "a.y" to be used as:
-		//			
+		//		Suppose we have dojox/gesture/a which provides 3 gesture events:"a", "a.x", "a.y" to be used as:
 		//		|	dojo.connect(node, dojox.gesture.a, function(e){});
 		//		|	dojo.connect(node, dojox.gesture.a.x, function(e){});
 		//		|	dojo.connect(node, dojox.gesture.a.y, function(e){});
-		//		
+		//
+		//		The definition of the gesture "a" may look like:
 		//		|	define([..., "./Base"], function(..., Base){
 		//		|		var clz = declare(Base, {
 		//		|			defaultEvent: "a",
@@ -68,13 +64,14 @@ define([
 		//		|		dojox.gesture.a = new clz();
 		//		|
 		//		|		// so that we can create new instances like
-		//		|		// var mine = new dojox.gesture.a.A({/*parameters*/})
+		//		|		// var mine = new dojox.gesture.a.A({...})
 		//		|		dojox.gesture.a.A = clz;
 		//		|
 		//		|		return dojox.gesture.a;
 		//		|	});
-		//		|
+		//
 		//		2. A gesture can be used in the following ways(taking dojox.gestre.tap for example):
+		//
 		//		A. Used with dojo.connect()
 		//		|	dojo.connect(node, dojox.gesture.tap, function(e){});
 		//		|	dojo.connect(node, dojox.gesture.tap.hold, function(e){});
@@ -86,7 +83,7 @@ define([
 		//		|		on(node, tap.hold, function(e){});
 		//		|		on(node, tap.doubletap, function(e){});
 		//
-		//		C. Used with dojox.gesture.tap.* directly
+		//		C. Used with dojox.gesture.tap directly
 		//		|	dojox.gesture.tap(node, function(e){});
 		//		|	dojox.gesture.tap.hold(node, function(e){});
 		//		|	dojox.gesture.tap.doubletap(node, function(e){});
@@ -100,7 +97,16 @@ define([
 		//		|	dojo.connect(node, myTap.hold, function(e){});
 		//		|	dojo.connect(node, myTap.doubletap, function(e){});
 		//		
-		//		Please refer to dojox/gesture/* for more gesture usages	
+		//		Please refer to dojox/gesture/ for more gesture usages
+	};
+=====*/
+	kernel.experimental("dojox.gesture.Base");
+	
+	lang.getObject("gesture", true, dojox);
+
+	// Declare an internal anonymous class which will only be exported by module return value
+	// should be changed to "declare(null, {...});" once http://bugs.dojotoolkit.org/ticket/13890 is fixed
+	return declare(" ", null, {
 
 		// defaultEvent: [readonly] String
 		//		Default event e.g. 'tap' is a default event of dojox.gesture.tap
@@ -121,7 +127,7 @@ define([
 
 		/*=====
 		// _lock: Dom
-		//		The dom target(including all its descendant) that's being locked for processing
+		//		The dom node whose descendants are all locked for processing
 		_lock: null,
 		
 		// _events: [readonly] Array
@@ -331,7 +337,7 @@ define([
 		},
 		lock: function(/*Dom*/node){
 			// summary:
-			//		Lock the node including all its descendant for processing.
+			//		Lock all descendants of the node.
 			// tags:
 			//		protected
 			this._lock = node;

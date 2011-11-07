@@ -57,10 +57,10 @@
 @theme-tabbar-font-size: @theme-default-font-size - 3;
 @theme-tabbar-font-family: @theme-default-font-family;
 @theme-tabbar-font-weight: @theme-default-font-weight;
-@theme-category-font-size: @theme-default-font-size;
+@theme-category-font-size: @theme-highlight-font-size;
 @theme-category-font-family: @theme-highlight-font-family;
-@theme-category-font-weight: @theme-highlight-font-weight;
-@theme-category-text-shadow: none;
+@theme-category-font-weight: @theme-default-font-weight;
+@theme-category-text-shadow: @theme-highlight-text-shadow;
 @theme-list-item-font-size: @theme-highlight-font-size;
 @theme-list-item-font-family: @theme-default-font-family;
 @theme-list-item-font-weight: @theme-default-font-weight;
@@ -267,7 +267,7 @@
 	font-weight: @theme-category-font-weight;
 	text-shadow: @theme-category-text-shadow;
 	color: @theme-category-color;
-	line-height: @theme-category-height;
+	line-height: @theme-category-height + 2;
 }
 
 //----------------------------------------------------------------
@@ -531,8 +531,8 @@
 // IconContainer.less
 //----------------------------------------------------------------
 .mblIconContainer-styles () {
-	margin: @theme-default-margin;
-	padding: @theme-default-padding;
+	margin: @theme-default-margin 0 @theme-default-margin @theme-default-margin;
+	padding: @theme-default-padding 0 @theme-default-padding;
 	background-color: @theme-default-background-color;
 }
 
@@ -561,7 +561,8 @@
 .mblIconContentHeading-styles () {
 	margin-top: 0px;
 	padding-left: @mbl-dom-button-size + @theme-default-margin;
-	height: @mbl-dom-button-size;
+	height: @mbl-dom-button-size - 4;
+	border-top: 1px solid lighten(@theme-heading-border-color, 30%);
 	border-bottom: 1px solid @theme-heading-border-color;
 	background-color: @theme-heading-background-color;
 	._background-image-gradient-mask-heading();
@@ -570,7 +571,7 @@
 	font-family: @theme-heading-font-family;
 	font-weight: @theme-heading-font-weight;
 	text-shadow: @theme-heading-text-shadow;
-	line-height: @mbl-dom-button-size;
+	line-height: @mbl-dom-button-size - 3;
 }
 
 //----------------------------------------------------------------

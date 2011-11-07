@@ -119,7 +119,8 @@ public class User implements IUser {
 					String segment = path.segment(k);
 					IVResource v = root.get(segment);
 					if (v == null) {
-						v = new VDirectory(root, segment);
+						/* creating virtual directory structure, so READ ONLY */
+						v = new VDirectory(root, segment,true);
 						root.add(v);
 					}
 					root = v;

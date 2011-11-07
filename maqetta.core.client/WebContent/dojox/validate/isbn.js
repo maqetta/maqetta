@@ -1,4 +1,4 @@
-define(["dojo/_base/lang", "./_base"], function(dojo, validate){
+define(["dojo/_base/lang", "./_base"], function(lang, validate){
 // summary: Provides ISBN validation functions in `dojox.validate`
 //
 
@@ -14,7 +14,7 @@ validate.isValidIsbn = function(/* String */value) {
 	//		An ISBN to validate
 	// returns: Boolean
 	var len, sum = 0, weight;
-	if(!dojo.isString(value)){
+	if(!lang.isString(value)){
 		value = String(value);
 	}
 	value = value.replace(/[- ]/g,''); //ignore dashes and whitespaces

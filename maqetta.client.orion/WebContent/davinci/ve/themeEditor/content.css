@@ -1,0 +1,21 @@
+
+.editFocusFrame{
+	background-image: url('../ve/resources/images/slant.gif'); 
+
+}
+.editFocusNob {
+	background-color: #000000;
+
+}
+.editFeedback {
+	background-color: #9B9B9B;
+}
+
+.editContextContainer FORM,
+.editContextContainer .dijitContentPane,
+.editContextContainer .dojoxScrollWindow {
+	border: 1px dotted #9B9B9B;
+}
+.editContextContainer .dijitTabContainer .dijitContentPane {
+	border: 0px none #FFFFFF;
+}

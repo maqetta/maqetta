@@ -46,6 +46,9 @@ Install into the following directory structure:
 If you wish us use the old (compat / 1.2) grid, you can untar the
 compatGrid.tar.gz archive.  This version of the grid is no longer maintained
 or updated - but should work with any newer version of the dojo library.
+
+dojox.grid.* is a11y enabled, please see the following doc page for more details
+- http://docs.dojocampus.org/dojox/grid/DataGrid#accessibility-in-1-3-and-beyond
 -------------------------------------------------------------------------------
 
 

@@ -114,7 +114,7 @@
 }
 .claro .dijitToolbarSeparator {
   
-  background: url('../../icons/images/editorIconsEnabled.png');
+  background: url("../../icons/images/editorIconsEnabled.png");
 }
 .claro .dijitDisabled .dijitToolbar {
   background: none;

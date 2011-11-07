@@ -1,5 +1,5 @@
 //>>built
-define("dojox/encoding/bits",["dojo/_base/kernel","dojo/_base/lang"],function(_1){
+define("dojox/encoding/bits",["dojo/_base/lang"],function(_1){
 var _2=_1.getObject("dojox.encoding.bits",true);
 _2.OutputStream=function(){
 this.reset();

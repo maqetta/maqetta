@@ -24,7 +24,7 @@ dojo.mixin(davinci.Runtime,	{
 	clipboard: null,
 	
 	addPlugin: function(pluginName) {
-		url = pluginName + "_plugin.js";
+		url = pluginName + ".plugin";
 		dojo.xhrGet( {
 			// The following URL must match that used to test
 			// the server.
@@ -392,16 +392,6 @@ dojo.mixin(davinci.Runtime,	{
 		if (newLocation.charAt(lastChar)=='/')
 			newLocation=newLocation.substr(0,lastChar);
 		location.href = newLocation+"/welcome";
-	},	
-	arrayRemove: function (array,item)
-	{
-		array.splice(dojo.indexOf(array,item),1);
-	},
-	arrayAddOnce: function(array,item)
-	{
-		if (dojo.indexOf(array,item)==-1){
-			array.push(item);
-		}
 	}
 });
 

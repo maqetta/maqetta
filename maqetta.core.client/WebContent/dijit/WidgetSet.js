@@ -9,6 +9,7 @@ define([
 	//		dijit/WidgetSet
 	// summary:
 	//		Legacy registry code.   New modules should just use registry.
+	//		Will be removed in 2.0.
 
 	var WidgetSet = declare("dijit.WidgetSet", null, {
 		// summary:

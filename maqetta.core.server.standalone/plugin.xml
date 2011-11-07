@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension
-        point="org.eclipse.equinox.http.registry.httpcontexts">
-      <httpcontext id="davincicontext">
- 		  <resource-mapping path="/" />
-	      <mime-mapping extension="manifest" mime-type="text/cache-manifest" />
-      </httpcontext>
-   </extension>
-   
       <extension point="maqetta.core.server.personManager">
     	<personManager class="maqetta.core.server.standalone.servlets.PersonManagerImpl"/>
    	  </extension>
@@ -22,36 +14,33 @@
 	<extension point="maqetta.core.server.libraryFinder">
     	<libraryFinder class="maqetta.core.server.standalone.DojoLibraryFinder"/>
    	 </extension>
-	<extension  id="maqettaLib"  point="org.eclipse.equinox.http.registry.resources">
-	
-	        <!-- maqetta core libraries metadata (maqetta.js and states.js) -->
-	        
-	        <resource
-	              alias="/app/metadata/maqetta/core/0.3"
-	              base-name="/WebContent/project"
-	              />
-	 </extension>
+
    	  
       
-     <extension
-            point="maqetta.core.server.initialUserFiles">
-            <!--
-             <initalUserFile
-                  path="WebContent/project/base/"/>
-                  -->
-             <initalUserFile
-                  path="WebContent/samples/"/>
-              
-      </extension>
+     <extension id="maqetta.core.client" point="org.eclipse.equinox.http.registry.resources">
+        <resource alias="/maqetta/app/system" 
+        		  base-name="/WebContent/system" 
+        		   />      
+     </extension>
+             
       
-      
-      <extension point="maqetta.core.server.ajaxLibrary">
-		 <ajaxLibrary name="maqetta" id="maqetta" version="0.3">
-		      <libraryPath location="WebContent/project/base" name="/"></libraryPath>
-		      <metadata location="app/metadata/maqetta/core/0.3" />
-		 </ajaxLibrary>
-	 </extension>
+
 	 
+<<<<<<< HEAD
+=======
+   <extension
+         point="org.eclipse.equinox.http.registry.servlets">
+      <servlet
+            alias="/maqetta"
+         
+            class="maqetta.core.server.standalone.DavinciPageServlet"
+            load-on-startup="true">
+      </servlet>
+
+   </extension>
+   
+
+>>>>>>> master
       <extension
          point="org.eclipse.core.runtime.products">
       <product

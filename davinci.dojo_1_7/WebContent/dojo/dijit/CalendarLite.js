@@ -80,6 +80,7 @@ if(this.isDisabledDate(_1e,this.lang)){
 _20="dijitCalendarDisabledDate "+_20;
 _1d.setAttribute("aria-disabled",true);
 }else{
+_20="dijitCalendarEnabledDate "+_20;
 _1d.removeAttribute("aria-disabled");
 }
 var _21=this.getClassForDate(_1e,this.lang);

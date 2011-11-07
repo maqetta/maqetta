@@ -39,6 +39,9 @@
 	*overflow: visible;
 	*line-height: normal;
 }
+.dj_ie9 .mblTooltip .mblHeading {
+	width: auto;
+}
 .mblTooltip .mblHeading .mblToolBarButton {
 	*margin: auto 6px;
 }

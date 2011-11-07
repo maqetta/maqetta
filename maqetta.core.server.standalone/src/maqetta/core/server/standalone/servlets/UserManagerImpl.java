@@ -3,6 +3,12 @@ package maqetta.core.server.standalone.servlets;
 import java.io.File;
 import java.util.HashMap;
 
+<<<<<<< HEAD
+=======
+import javax.servlet.http.HttpServletRequest;
+
+import maqetta.core.server.standalone.VResourceUtils;
+>>>>>>> master
 import maqetta.core.server.standalone.user.User;
 import org.davinci.server.user.UserException;
 
@@ -29,11 +35,14 @@ public class UserManagerImpl implements IUserManager {
 
 
     public UserManagerImpl() {
-    
-        ServerManager serverManger = ServerManager.getServerManger();
-        this.baseDirectory= ServerManager.getServerManger().getBaseDirectory();
-   
-        this.usersCount = this.baseDirectory.list().length;
+    	ServerManager serverManger = ServerManager.getServerManger();
+    	try{
+        	this.baseDirectory= ServerManager.getServerManger().getBaseDirectory();
+        	this.usersCount = this.baseDirectory.list().length;
+    	}catch(Exception ex){
+    		System.out.println("FATAL ERROR Starting maqetta: " + ex);
+    		
+    	}
         if (ServerManager.DEBUG_IO_TO_CONSOLE) {
             System.out.println("\nSetting [user space] to: " + baseDirectory.getAbsolutePath());
         }
@@ -197,6 +206,11 @@ public class UserManagerImpl implements IUserManager {
        return user;
 
     }
+
+	public IUser getUser(HttpServletRequest req) {
+		// TODO Auto-generated method stub
+		return (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
+	}
 
 
 

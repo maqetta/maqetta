@@ -50,7 +50,7 @@ define([
 
 		buildRendering: function(){
 			this.domNode = win.doc.createElement("DIV");
-			var c = this.srcNodeRef ? this.srcNodeRef.className : this.className;
+			var c = (this.srcNodeRef && this.srcNodeRef.className) || this.className || this["class"];
 			this._swClass = (c || "").replace(/ .*/,"");
 			this.domNode.className = "mblSwitch";
 			var nameAttr = this.name ? " name=\"" + this.name + "\"" : "";

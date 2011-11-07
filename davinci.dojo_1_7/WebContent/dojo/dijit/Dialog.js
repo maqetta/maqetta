@@ -210,7 +210,7 @@ this.inherited(arguments);
 }});
 var _2c=_4("dijit.Dialog",[_1b,_1e],{});
 _2c._DialogBase=_1e;
-var _20=_2c._DialogLevelManager={show:function(_2d,_2e){
+var _20=_2c._DialogLevelManager={_beginZIndex:950,show:function(_2d,_2e){
 ds[ds.length-1].focus=_13.curNode;
 var _2f=_1d._underlay;
 if(!_2f||_2f._destroyed){
@@ -218,7 +218,7 @@ _2f=_1d._underlay=new _1a(_2e);
 }else{
 _2f.set(_2d.underlayAttrs);
 }
-var _30=ds[ds.length-1].dialog?ds[ds.length-1].zIndex+2:950;
+var _30=ds[ds.length-1].dialog?ds[ds.length-1].zIndex+2:_2c._DialogLevelManager._beginZIndex;
 if(ds.length==1){
 _2f.show();
 }

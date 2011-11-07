@@ -12,131 +12,195 @@ dojo.require("dojox.form.Uploader");
 dojo.require("dojox.form.uploader.FileList");
 dojo.require("dojox.form.uploader.plugins.HTML5");
 dojo.require("davinci.ui.NewProject");
+dojo.require("davinci.ui.widgets.NewFile");
+dojo.require("davinci.ui.widgets.NewFolder");
+dojo.require("davinci.ui.widgets.OpenFile");
 
 dojo.mixin(davinci.ui.Resource, {
-	/*
-	 * Present new file or new folder dialog.
-	 * @param action {string} newfile|newhtml|newcss|newjs|newfolder|openfile|saveas
-	 */
-	fileDialog: function(action){
-		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui"),
-			dialogTitle,
-			fileNameLabel = langObj.fileName,
-			doItLabel = langObj.create,
-			doItAction = "davinci.ui.Resource.createFile({checkForExtension:true})",
-			proposedFileName,
-			hideFileNameInput,
-			folder=davinci.resource.getRoot(),
-			resource=davinci.ui.Resource.getSelectedResource();
-		this.action=action;
-		if (resource){
-			//FIXME: Not sure this is the best way to code this.
-			//The code below filters out the Review* nodes from the Reviews palette
-			//because Runtime's currentSelection might include entries from either the
-			//Files palette or the Reviews palette. But we really shouldn't have one
-			//common selection between the two, so maybe this can be fixed at a higher
-			//level. Whatever, the following fix should be safe in the meantime.
-			if(resource.elementType=='Folder'){
+	
+	_createNewDialog : function(fileNameLabel,createLabel, type){
+		var resource=davinci.ui.Resource.getSelectedResource();
+		var folder = null;
+		if(resource!=null){
+			if(resource.elementType=="Folder"){
 				folder = resource;
-			}else if(resource.elementType=='File'){
+			}else{
 				folder = resource.parent;
 			}
-		}
-		switch(action){
-		case 'newfile':
-			dialogTitle=langObj.createNewFile;
-			proposedFileName = "";
-			break;
-		case 'newhtml':
-			dialogTitle=langObj.createNewHTMLFile;
-			proposedFileName = this.getNewFileName(action,folder,'.html');
-			break;
-		case 'newcss':
-			dialogTitle=langObj.createNewCSSFile;
-			proposedFileName = this.getNewFileName(action,folder,'.css');
-			break;
-		case 'newjs':
-			dialogTitle=langObj.createNewJSFile;
-			proposedFileName = this.getNewFileName(action,folder,'.js');
-			break;
-		case 'openfile':
-			dialogTitle=langObj.openFile;
-			proposedFileName = "";
-			doItLabel = langObj.open;
-			doItAction = "davinci.ui.Resource.openFile()";
-			hideFileNameInput = true;
-			break;
-		case 'newfolder':
-			dialogTitle=langObj.createNewFolder;
-			fileNameLabel = langObj.folderName;
-			proposedFileName = this.getNewFileName(action,folder);
-			doItAction = "davinci.ui.Resource.createFile({checkForExtension:false})";
-			break;
-		case 'saveas':
-			dialogTitle=langObj.saveFileAs;
-			doItLabel = langObj.save;
-			doItAction = "davinci.ui.Resource.saveAs({checkForExtension:true})";
-			var editor = davinci.Workbench.getOpenEditor();
-			var file= editor.resourceFile || davinci.resource.findResource( editor.fileName);
-			folder=file.getParentFolder();
-			var oldFileName = proposedFileName = file.getName();
-			if(!oldFileName || !oldFileName===""){
-				return;
-			}
-			break;
-		default:
-			return;
-		}
-		this.fileOrFolder = action === 'newfolder' ? 'folder' : 'file';
-		var formHtml = ''+
-'<div class="fileDialog" style="position:relative">'+
-'	<div id="fileDialogFileNameRow" class="fileNameRow">'+
-'		<label for="fileDialogFileName">'+fileNameLabel+': </label>'+
-'		<input dojoType="dijit.form.TextBox" type="text" name="fileDialogFileName" id="fileDialogFileName" value="'+proposedFileName+'"></input>'+
-'	</div>'+
-'	<div>'+
-'		<label for="fileDialogParentFolder">'+ langObj.parentFolder +' </label>'+
-'	</div>'+
-'	<div class="parentFolderInputRow"><input dojoType="dijit.form.TextBox" type="text" name="fileDialogParentFolder" id="fileDialogParentFolder"></input></div>'+
-'	<div class="folderContainer">'+
-
-'		<div dojoType="dijit.layout.ContentPane">'+
-'			<div class="fileDialogTreeWidget" dojoType="dijit.Tree" id="fileDialogFolderTree" model="davinci.resource" labelAttr="name" childrenAttrs="children"></div>'+
-'		</div>'+
-'	</div>'+
-'	<div class="buttonRow">'+
-'		<button dojoType="dijit.form.Button" type="submit" onclick="'+doItAction+'; return false;">'+doItLabel+'</button>'+
-'	</div>'+
-'</div>'+
-'';
-		var	dialog = new dijit.Dialog({id: "fileDialog", title:dialogTitle,
-			onCancel:function(){this.destroyRecursive(false);}});	
-		
-		dialog.setContent(formHtml);	
-		
-		var tree = dijit.byId('fileDialogFolderTree');
-		tree.set("selectedItems", [folder]);
-		dijit.byId('fileDialogParentFolder').set('value',folder.getPath());
-		tree.watch("selectedItem", function(prop, oldValue, newValue){
-			if(newValue.elementType==='Folder'){
-				dijit.byId('fileDialogParentFolder').set('value',newValue.getPath());
+				
+		}else{
+			var base = davinci.Runtime.getProject();
+			var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+			
+			if(prefs.webContentFolder!=null && prefs.webContentFolder!=""){
+				var fullPath = new davinci.model.Path(davinci.Runtime.getProject()).append(prefs.webContentFolder);
+				folder = system.resource.findResource(fullPath.toString());
+				
 			}else{
-				dijit.byId('fileDialogParentFolder').set('value',newValue.parent.getPath());
-				dijit.byId('fileDialogFileName').set('value',newValue.name);
+				folder= system.resource.findResource(davinci.Runtime.getProject());
 			}
-		});
-		var connectHandle = dojo.connect(dojo.byId("fileDialog"), "onkeypress", function(e){
-			if(e.charOrCode===dojo.keys.ENTER){
-				eval(doItAction);
-				dojo.stopEvent(e);
-			}
-			dojo.disconnect(connectHandle);
-		});
-		dialog.show();
-		if(hideFileNameInput){
-			dojo.byId("fileDialogFileNameRow").style.display="none";
 		}
+		
+		var proposedFileName = this.getNewFileName('file',folder,"." + type);
+		var dialogOptions = {newFileName:proposedFileName,
+							fileFieldLabel:fileNameLabel, 
+							folderFieldLabel:"Parent Folder:",
+							finishButtonLabel:createLabel };
+		return new davinci.ui.widgets.NewFile(dialogOptions);
+		
 	},
+	
+	
+	newHTML : function(){
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
+		var newDialog = davinci.ui.Resource._createNewDialog(langObj.fileName, langObj.create, "html");
+		var executor = function(){
+			if(!newDialog.cancel){
+				var resourcePath = newDialog.get('value');
+				if(davinci.ui.Resource._checkFileName(resourcePath)){
+					var resource = system.resource.createResource(resourcePath);
+					var text = system.resource.createText("CSS", {resource:resource});
+					if(text)
+						resource.setText(text);
+					davinci.ui.Resource.openResource(resource);
+				}
+			}
+		}
+		davinci.Workbench.showModal(newDialog, langObj.createNewHTMLFile, 'height:290px;width: 300px; oppacity:0', executor);
+	},
+	
+	newCSS : function(){
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
+		var newDialog = davinci.ui.Resource._createNewDialog(langObj.fileName, langObj.create, "css");
+		var executor = function(){
+			if(!newDialog.cancel){
+				var resourcePath = newDialog.get('value');
+				if(davinci.ui.Resource._checkFileName(resourcePath)){
+					var resource = system.resource.createResource(resourcePath);
+					var text = system.resource.createText("CSS", {resource:resource});
+					if(text)
+						resource.setText(text);
+					davinci.ui.Resource.openResource(resource);
+				}
+			}
+		}
+		davinci.Workbench.showModal(newDialog, langObj.createNewCSSFile, 'height:290px;width: 300px; oppacity:0', executor);
+	},
+	
+	newFolder : function(){
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
+		var resource=davinci.ui.Resource.getSelectedResource();
+		var folder = null;
+		if(resource!=null){
+			if(resource.elementType=="folder"){
+				folder = resource;
+			}else{
+				folder = resource.parent;
+			}
+				
+		}else{
+			folder = system.resource.findResource(davinci.Runtime.getProject());
+		}
+		
+		var proposedFileName = this.getNewFileName('folder',folder);
+		var dialogOptions = {newFileName:proposedFileName,
+							fileFieldLabel:langObj.folderName, 
+							folderFieldLabel:"Parent Folder:",
+							root:folder,
+							finishButtonLabel:"Create Folder" };
+		
+		var newFolderDialog =  new davinci.ui.widgets.NewFolder(dialogOptions);
+		var executor = function(){
+			if(!newFolderDialog.cancel){
+				var resourcePath = newFolderDialog.get('value');
+				if(davinci.ui.Resource._checkFileName(resourcePath)){
+					system.resource.createResource(resourcePath,true);
+				}
+			}
+		}
+		
+		davinci.Workbench.showModal(newFolderDialog, langObj.createNewFolder, 'height:115px;width: 300px; oppacity:0', executor);
+	},
+	
+	saveAs : function(){
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
+		var newDialog = davinci.ui.Resource._createNewDialog(langObj.fileName, langObj.save, "html");
+		var executor = function(){
+			if(!newDialog.cancel){
+				var resourcePath = newDialog.get('value');
+				if(davinci.ui.Resource._checkFileName(resourcePath)){
+					
+					var oldEditor = davinci.Workbench.getOpenEditor();
+					var oldFileName = oldEditor.fileName;
+					var oldResource = system.resource.findResource(oldFileName);
+			        var oldContent = oldEditor.editorID == "davinci.html.CSSEditor" ? oldEditor.getText() : oldEditor.model.getText();
+					var existing=system.resource.findResource(resourcePath);
+					oldEditor.editorContainer.forceClose(oldEditor);
+					if(existing){
+						existing.removeWorkingCopy();
+						existing.deleteResource();
+					}
+					// Do various cleanups around currently open file
+					oldResource.removeWorkingCopy();
+					oldEditor.isDirty = false;
+					// Create a new editor for the new filename
+					var file = system.resource.createResource(resourcePath);
+					var pageBuilder = davinci.ve.RebuildPage();
+					var newText = pageBuilder.rebuildSource(oldContent, file);
+					file.setContents(newText);
+					davinci.Workbench.openEditor({fileName: file, content: newText});
+				}
+			}
+		}
+		davinci.Workbench.showModal(newDialog, langObj.saveFileAs, 'height:290px;width: 300px; oppacity:0', executor);
+	},
+	
+	newJS : function(){
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
+		var newDialog = davinci.ui.Resource._createNewDialog(langObj.fileName, langObj.create, "js");
+		var executor = function(){
+			if(!newDialog.cancel){
+				var resourcePath = newDialog.get('value');
+				if(davinci.ui.Resource._checkFileName(resourcePath)){
+					var resource = system.resource.createResource(resourcePath);
+					var text = system.resource.createText("CSS", {resource:resource});
+					if(text)
+						resource.setText(text);
+					davinci.ui.Resource.openResource(resource);
+				}
+			}
+		}
+		davinci.Workbench.showModal(newDialog, langObj.createNewJSFile, 'height:290px;width: 300px; oppacity:0', executor);
+	},
+	
+	openFile: function(){
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
+		var resource=davinci.ui.Resource.getSelectedResource();
+		var folder = null;
+		if(resource!=null){
+			if(resource.elementType=="Folder"){
+				folder = resource;
+			}else{
+				folder = resource.parent;
+			}
+				
+		}else{
+			folder = system.resource.findResource(davinci.Runtime.getProject());
+		}
+		
+		var dialogOptions = {finishButtonLabel:langObj.open };
+		var openDialog = new davinci.ui.widgets.OpenFile(dialogOptions);
+		
+		var executor = function(){
+			if(!openDialog.cancel){
+				var resource = openDialog.get('value');
+				davinci.ui.Resource.openResource(resource);
+			}
+		}
+		davinci.Workbench.showModal(openDialog, langObj.openFile, 'height:260px;width: 300px; oppacity:0', executor);
+	},
+	
+	
 	addFiles: function(){
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		var formHtml = 
@@ -150,7 +214,7 @@ dojo.mixin(davinci.ui.Resource, {
 		});	
 		
 		dialog.connect(dialog, 'onLoad', function(){
-			var folder=davinci.resource.getRoot();
+			var folder=system.resource.getRoot();
 			var resource=davinci.ui.Resource.getSelectedResource();
 			if (resource)
 			{
@@ -198,7 +262,7 @@ dojo.mixin(davinci.ui.Resource, {
 					 *  */
 					folder._appendFiles([{isDir:false, isLib:false, isNew:false,name:data.file}])
 					var changed = new davinci.model.Path(folder.getPath()).append(data.file);
-					davinci.resource.resourceChanged('updated', changed.toString());
+					system.resource.resourceChanged('updated', changed.toString());
 				});
 				setDone();
 			});
@@ -213,6 +277,7 @@ dojo.mixin(davinci.ui.Resource, {
 		dialog.show();
 	},
 	getNewFileName : function (fileOrFolder, fileDialogParentFolder, extension){
+		
 		var existing, proposedName;
 		var count=0;
 		if(!extension){
@@ -220,105 +285,33 @@ dojo.mixin(davinci.ui.Resource, {
 		}
 		do{
 			count++;
-			if(fileOrFolder==='newfolder'){
+			if(fileOrFolder==='folder'){
 				proposedName='folder'+count;
 			}else{
 				proposedName='file'+count+extension;
 			}
 			var fullname=fileDialogParentFolder.getPath()+'/'+proposedName;
-			existing=davinci.resource.findResource(fullname);
+			existing=system.resource.findResource(fullname);
 		}while(existing);
 		return proposedName;
 	},
-	_checkFileName : function(args){
-		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
-		var dialog = dijit.byId("fileDialog");
-	//	var resources=dijit.byId('fileDialogFolderTree').get("selectedItems");
-		
-		var resourcePath = dijit.byId('fileDialogParentFolder').get('value');
-		
-		var resource = davinci.resource.findResource(resourcePath);
-		var data = dialog.getValues();
-		var fileName = data.fileDialogFileName;
-		
-		var fullName=resourcePath+'/'+fileName;
-		if(!fileName || fileName===""){
-			alert(langObj.mustEnterFileName);
-			return false;
-		}
-		var existing=davinci.resource.findResource(fullName);
-		if(existing){
-			// Check if existing file is a folder
-			if(existing.elementType=='Folder' && !args.selectFolderOK){
-				alert(dojo.string.substitute(langObj.cannotSelect, [fileName]));
-				return false;
-			}
-			if(args && args.existingFileOK){
-				if(args.existingFileOK=="prompt"){
-					if(!confirm(dojo.string.substitute(langObj.fileAlreadyExistsOverwrite, [fileName]))){
-						return false;
-					}
-				}
-			}else{
-				alert(dojo.string.substitute(langObj.cannotCreate, [fileName]));
-				return false;
-			}
-		}
-		if(fileName.indexOf('/')>=0){
-			alert(dojo.string.substitute(langObj.fileNameSlashCharacter, [fileName]));
-			return false;
-		}
-		var newSplitName = fileName.split('.');
-		if(args && args.checkForExtension && newSplitName.length<2){ // No extension, prompt user if OK
-			if(!confirm(dojo.string.substitute(langObj.doesNotHaveExtension,[fileName]))){
-				return false;
-			}
-		}
-		return true;
-	},
-	saveAs : function(args){
-		if(!args){
-			args={};
-		}
-		args.existingFileOK="prompt";
-		if(!this._checkFileName(args)){
-			return;
-		}
-		var dialog = dijit.byId("fileDialog");
-		var resources=dijit.byId('fileDialogFolderTree').get("selectedItems");
-		var resource = resources[0];
-		var data = dialog.getValues();
-		var fileName = data.fileDialogFileName;
-		var folder=(resource.elementType=='Folder'?resource:resource.parent);
-		var fullName=folder.getPath()+'/'+fileName;
-		var oldEditor = davinci.Workbench.getOpenEditor();
-		var oldFileName = oldEditor.fileName;
-		var oldResource = davinci.resource.findResource(oldFileName);
-        var oldContent = oldEditor.editorID == "davinci.html.CSSEditor" ? oldEditor.getText() : oldEditor.model.getText();
-		//dialog.close();
-		dialog.destroyRecursive();
-		// If resource exists, delete it because we will soon make a new version of that resource
-		var existing=davinci.resource.findResource(fullName);
-		oldEditor.editorContainer.forceClose(oldEditor);
-		if(existing){
-			existing.removeWorkingCopy();
-			existing.deleteResource();
-		}
-
-		// Do various cleanups around currently open file
-		oldResource.removeWorkingCopy();
-		oldEditor.isDirty = false;
-		
-		
-		// Create a new editor for the new filename
-		var file = folder.createResource(fileName);
-		var pageBuilder = davinci.ve.RebuildPage();
-		var newText = pageBuilder.rebuildSource(oldContent, file);
-		file.setContents(newText);
-		
-		davinci.Workbench.openEditor({fileName: file, content: newText});
-	},
 	
+	_checkFileName : function(fullPath){
+		
+		var resource = system.resource.findResource(fullPath);
+		if(resource!=null){
+			alert("File already exists!");
+			return false;
+		}
+		
+		
+		return true;
+		
+	},
+	canModify : function(item){
+		return !item.readOnly();
+		
+	},
 	
 	newProject : function(){
 		var projectDialog = new davinci.ui.NewProject({}),
@@ -327,6 +320,7 @@ dojo.mixin(davinci.ui.Resource, {
 	},
 	
 	renameAction : function(){
+		
 		var selection = this.getSelectedResources();
 	    if( selection.length!=1) return;
 	    var resource = selection[0];
@@ -350,9 +344,31 @@ dojo.mixin(davinci.ui.Resource, {
 		
 	},
 	
+	getResourceIcon: function(item, opened){
+		if (item.elementType == "Folder"){
+			return opened ? "dijitFolderOpened" : "dijitFolderClosed";
+		}
+		if (item.elementType=="File"){
+			var icon;
+				fileType=item.getExtension();
+				extension=davinci.Runtime.getExtension("davinci.fileType", function (extension){
+					return extension.extension==fileType;
+				});
+			if (extension){
+				icon=extension.iconClass;
+			}
+			return icon || "dijitLeaf";
+		}
+		return this.prototype.getIconClass(item, opened);
+	},
+
+	getResourceClass: function(item) {
+		if (item.readOnly()) {
+			return "readOnlyResource";
+		}
+	},
 	
-	deleteAction: function()
-	{
+	deleteAction: function(){
 		var selection = this.getSelectedResources(),
 		    paths = selection.map(function(resource){ return resource.getPath(); }).join("\n\t"),
 
@@ -366,14 +382,12 @@ dojo.mixin(davinci.ui.Resource, {
 		});
 	},
 
-	getSelectedResource: function()
-	{
+	getSelectedResource: function(){
 	  var selection=davinci.Runtime.getSelection();
 	  if (selection[0]&&selection[0].resource)
 		  return selection[0].resource;
 	},
-	getSelectedResources: function()
-	{
+	getSelectedResources: function(){
 	  var selection=davinci.Runtime.getSelection();
 	  if (selection[0]&&selection[0].resource)
 		  return dojo.map(selection,function(item){return item.resource});
@@ -393,56 +407,17 @@ dojo.mixin(davinci.ui.Resource, {
 		    	return true;
 	    }
 	},
-	createFile : function(args){
-		if(!this._checkFileName(args)){
-			return;
-		}
-		this._createFile(args);
+
+	openPath : function(path,text){
+		var options = {fileName:path};
+		if(text)
+			options.text = text;
+		davinci.Workbench.openEditor(options);
 	},
+	
+	openResource : function(resource){
 
-	_createFile : function(args){
-		var newEditorCallback=(args&&args.newEditorCallback)?args.newEditorCallback:null;
-		var dialog = dijit.byId("fileDialog");
-		//var resources=dijit.byId('fileDialogFolderTree').get("selectedItems");
-		//var resource = resources[0];
-		
-		var resourcePath = dijit.byId('fileDialogParentFolder').get('value');
-	 	var resource = davinci.resource.findResource(resourcePath);
-		
-	 	var folder=(resource.elementType=='Folder'?resource:resource.parent);
-		var data = dialog.getValues();
-		dialog.hide();
-		dialog.destroyRecursive(false);
-
-		var isFolder = (this.fileOrFolder == 'folder');
-		var fileDialogFileName = data.fileDialogFileName;
-
-		var file = folder.createResource(fileDialogFileName, isFolder);
-		if (file && file.elementType == "File") {
-			file.isNew = true;
-			davinci.Workbench.openEditor( {
-				fileName : file,
-				editorCreateCallback: newEditorCallback
-			});
-		}
-	},
-
-	openFile : function(args){
-		if(!args){
-			args={};
-		}
-		args.existingFileOK="noprompt";
-		if(!this._checkFileName(args)){
-			return;
-		}
-		var dialog = dijit.byId("fileDialog");
-		var resources=dijit.byId('fileDialogFolderTree').get("selectedItems");
-		var resource = resources[0];
-		dialog.hide();
-		dialog.destroyRecursive(false);
-		
-		if(resource.elementType=="File")
-		{
+		if(resource.elementType=="File"){
 			davinci.Workbench.openEditor({
 				fileName: resource,
 				content: resource.getText()

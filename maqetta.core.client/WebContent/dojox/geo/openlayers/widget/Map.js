@@ -6,9 +6,11 @@ define(["dojo/_base/kernel",
 				"dijit/_Widget",
 				"dojox/geo/openlayers/Map",
 				"dojox/geo/openlayers/Layer",
-				"dojox/geo/openlayers/GfxLayer"], function(dojo, declare, array, html, query, _Widget, Map, Layer, GfxLayer){
-
-	return declare("dojox.geo.openlayers.widget.Map", dijit._Widget, {
+				"dojox/geo/openlayers/GfxLayer"], function(dojo, declare, array, html, query, Widget, Map, Layer, GfxLayer){
+		/*===== 
+		var Widget = dijit.Widget; 
+		=====*/
+	return declare("dojox.geo.openlayers.widget.Map", Widget, {
 		//	summary: 
 		//		A widget version of the `dojox.geo.openlayers.Map` component.
 		//	description: 
@@ -126,8 +128,10 @@ define(["dojo/_base/kernel",
 			//	description:
 			//		Resize the domNode and the widget to the dimensions of a box of the following form:
 			//			`{ l: 50, t: 200, w: 300: h: 150 }`
-			//	box:
+			//	b:
 			//		If passed, denotes the new size of the widget.
+			// 		Can be either nothing (widget adapts to the div),
+			// 		a box, or a width and a height.
 
 			var olm = this.map.getOLMap();
 

@@ -13,7 +13,7 @@
 .claro .dijitSpinner .dijitArrowButton {
   width: auto;
   background-color: #efefef;
-  background-image: url("images/formHighlight.png");
+  background-image: url("../form/images/formHighlight.png");
   background-position: 0 0;
   background-repeat: repeat-x;
   overflow: hidden;
@@ -29,7 +29,7 @@
   border: solid 1px #ffffff;
   border-bottom-width: 0;
   
-  background-image: url("images/commonFormArrows.png");
+  background-image: url("../form/images/commonFormArrows.png");
   background-repeat: no-repeat;
   height: 100%;
   width: 15px;

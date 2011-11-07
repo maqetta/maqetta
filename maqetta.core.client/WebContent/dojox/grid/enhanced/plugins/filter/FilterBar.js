@@ -13,9 +13,10 @@ define([
 	"dijit/_TemplatedMixin",
 	"dijit/_WidgetsInTemplateMixin",
 	"dojo/fx",
+	"dojo/_base/fx",
 	"dojo/string",
 	"dijit/focus"
-], function(declare, array, connect, lang, has, event, html, win, cache, query, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, fx, string, dijitFocus){
+], function(declare, array, connect, lang, has, event, html, win, cache, query, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, fx, baseFx, string, dijitFocus){
 
 var _focusClass = "dojoxGridFBarHover",
 	_filteredClass = "dojoxGridFBarFiltered",
@@ -133,13 +134,13 @@ return declare("dojox.grid.enhanced.plugins.filter.FilterBar", [_Widget, _Templa
 				}
 			};
 			array.forEach(g.views.views, function(view){
-				anims.push(fx.animateProperty(lang.mixin({
+				anims.push(baseFx.animateProperty(lang.mixin({
 					"node": view.domNode
-				}, prop, animArgs)), fx.animateProperty(lang.mixin({
+				}, prop, animArgs)), baseFx.animateProperty(lang.mixin({
 					"node": view.scrollboxNode
 				}, prop, animArgs)));
 			});
-			anims.push(fx.animateProperty(lang.mixin({
+			anims.push(baseFx.animateProperty(lang.mixin({
 				"node": g.viewsNode
 			}, prop, animArgs)));
 			fx.combine(anims).play();

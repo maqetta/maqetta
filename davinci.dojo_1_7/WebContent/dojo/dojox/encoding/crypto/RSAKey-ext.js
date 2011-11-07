@@ -19,7 +19,7 @@ _7+=String.fromCharCode(b[i]);
 }
 return _7;
 };
-_1.extend(_3,{setPrivate:function(N,E,D){
+_2.extend(_3,{setPrivate:function(N,E,D){
 if(N&&E&&N.length&&E.length){
 this.n=new _4(N,16);
 this.e=parseInt(E,16);

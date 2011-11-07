@@ -435,7 +435,7 @@ if(!dijit.range._w3c){
 		}
 	};
 
-dojo.declare("dijit.range.W3CRange",null, {
+declare("dijit.range.W3CRange",null, {
 	constructor: function(){
 		if(arguments.length>0){
 			this.setStart(arguments[0][0],arguments[0][1]);

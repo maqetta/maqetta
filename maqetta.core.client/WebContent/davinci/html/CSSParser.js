@@ -5,103 +5,92 @@ dojo.require("davinci.model.parser.Tokenizer");
 
 var pushComment=null;
 
-davinci.html.CSSParser  = (function() {
-  var tokenizeCSS = (function() {
-    function normal(source, setState) {
-      var ch = source.next();
-      if (ch == "@") {
-        source.nextWhileMatches(/\w/);
-        return "css-at";
-      }
-      else if (ch == "/" && source.equals("*")) {
-        setState(inCComment);
-        return null;
-      }
-      else if (ch == "<" && source.equals("!")) {
-        setState(inSGMLComment);
-        return null;
-      }
-      else if (ch == "=") {
-        return "css-compare";
-      }
-      else if (source.equals("=") && (ch == "~" || ch == "|")) {
-        source.next();
-        return "css-compare";
-      }
-      else if (ch == "\"" || ch == "'") {
-        setState(inString(ch));
-        return null;
-      }
-      else if (ch == "#") {
-        source.nextWhileMatches(/\w/);
-        return "css-hash";
-      }
-      else if (ch == "!") {
-        source.nextWhileMatches(/[ \t]/);
-        source.nextWhileMatches(/\w/);
-        return "css-important";
-      }
-      else if (/\d/.test(ch)) {
-        source.nextWhileMatches(/[\w.%]/);
-        return "css-unit";
-      }
-      else if (/[,.+>*\/]/.test(ch)) {
-        return "css-select-op";
-      }
-      else if (/[;{}:\[\]]/.test(ch)) {
-        return "css-punctuation";
-      }
-      else {
-        source.nextWhileMatches(/[\w\\\-_]/);
-        return "css-identifier";
-      }
-    }
-
-    function inCComment(source, setState) {
-      var maybeEnd = false;
-      while (!source.endOfLine()) {
-        var ch = source.next();
-        if (maybeEnd && ch == "/") {
-          setState(normal);
-          break;
+davinci.html.CSSParser = (function() {
+    var tokenizeCSS = (function() {
+        function normal(source, setState) {
+            var ch = source.next();
+            if (ch == "@") {
+                source.nextWhileMatches(/\w/);
+                return "css-at";
+            } else if (ch == "/" && source.equals("*")) {
+                setState(inCComment);
+                return null;
+            } else if (ch == "<" && source.equals("!")) {
+                setState(inSGMLComment);
+                return null;
+            } else if (ch == "=") {
+                return "css-compare";
+            } else if (source.equals("=") && (ch == "~" || ch == "|")) {
+                source.next();
+                return "css-compare";
+            } else if (ch == "\"" || ch == "'") {
+                setState(inString(ch));
+                return null;
+            } else if (ch == "#") {
+                source.nextWhileMatches(/\w/);
+                return "css-hash";
+            } else if (ch == "!") {
+                source.nextWhileMatches(/[ \t]/);
+                source.nextWhileMatches(/\w/);
+                return "css-important";
+            } else if (/\d/.test(ch)) {
+                source.nextWhileMatches(/[\w.%]/);
+                return "css-unit";
+            } else if (/[,.+>*\/]/.test(ch)) {
+                return "css-select-op";
+            } else if (/[;{}:\[\]]/.test(ch)) {
+                return "css-punctuation";
+            } else {
+                source.nextWhileMatches(/[\w\\\-_]/);
+                return "css-identifier";
+            }
         }
-        maybeEnd = (ch == "*");
-      }
-      return "css-comment";
-    }
 
-    function inSGMLComment(source, setState) {
-      var dashes = 0;
-      while (!source.endOfLine()) {
-        var ch = source.next();
-        if (dashes >= 2 && ch == ">") {
-          setState(normal);
-          break;
+        function inCComment(source, setState) {
+            var maybeEnd = false;
+            while (!source.endOfLine()) {
+                var ch = source.next();
+                if (maybeEnd && ch == "/") {
+                    setState(normal);
+                    break;
+                }
+                maybeEnd = (ch == "*");
+            }
+            return "css-comment";
         }
-        dashes = (ch == "-") ? dashes + 1 : 0;
-      }
-      return "css-comment";
-    }
 
-    function inString(quote) {
-      return function(source, setState) {
-        var escaped = false;
-        while (!source.endOfLine()) {
-          var ch = source.next();
-          if (ch == quote && !escaped)
-            break;
-          escaped = !escaped && ch == "\\";
+        function inSGMLComment(source, setState) {
+            var dashes = 0;
+            while (!source.endOfLine()) {
+                var ch = source.next();
+                if (dashes >= 2 && ch == ">") {
+                    setState(normal);
+                    break;
+                }
+                dashes = (ch == "-") ? dashes + 1 : 0;
+            }
+            return "css-comment";
         }
-        if (!escaped)
-          setState(normal);
-        return "css-string";
-      };
-    }
 
-    return function(source, startState) {
-      return davinci.model.parser.tokenizer(source, startState || normal);
-    };
-  })();
+        function inString(quote) {
+            return function(source, setState) {
+                var escaped = false;
+                while (!source.endOfLine()) {
+                    var ch = source.next();
+                    if (ch == quote && !escaped)
+                        break;
+                    escaped = !escaped && ch == "\\";
+                }
+                if (!escaped)
+                    setState(normal);
+                return "css-string";
+            };
+        }
+
+        return function(source, startState) {
+            return davinci.model.parser.tokenizer(source, startState || normal);
+        };
+    })();
 
   function indentCSS(inBraces, inRule, base) {
     return function(nextChars) {
@@ -166,324 +155,325 @@ davinci.html.CSSParser  = (function() {
   return {make: parseCSS, electricChars: "}"};
 })();
 
- davinci.html.CSSParser.parse = function (text, parentElement)
- {
-	 var stream, inHtml;
-	 if (typeof text =="string" )
-	 {
-		  var txtStream = { next : function () {if (++this.count==1)  return text; else {throw StopIteration;}} , count:0, text:text};
-		 stream=davinci.model.parser.stringStream(txtStream);
-	 }
-	 else
-	 {
-		 stream=text;
-		 inHtml=true;
-	 }
-	  var parser = davinci.html.CSSParser.make(stream);
-	  var token;
-	  var selector;
-	  var combined;
-	  var combiner = ' ';
-	  var errors=[];
-	  var model,wsAfterSel;
-	  function error(text){console.log("ERROR: "+text); errors.push(text);}
-	  
-	  function nextToken()
-	  {
-          token=parser.next();
-          while (token.style=="css-comment" || token.style=="whitespace" || (token.content=='/' && stream.peek()=='/')) 
-	  	{
-        	  if (token.style=="css-comment")
-        	  {
-                  if(pushComment==null){
-                  	pushComment = new davinci.model.Comment();
-                  }
-                 var start,stop;
-                 var commentStart=false;
-                 var s=token.content;
-                 if (token.content.indexOf("/*")==0)
-                 {
-                	 s=s.substring(2);
-                	 commentStart=true;
+ davinci.html.CSSParser.parse = function (text, parentElement) {
+     var stream, inHtml;
+     if (typeof text == "string") {
+         var txtStream = {
+             next : function() {
+                 if ( ++this.count == 1)
+                     return text;
+                 else {
+                     throw StopIteration;
                  }
-                 if (s.lastIndexOf("*/")==s.length-2)
-                	 s=s.substring(0,s.length-2);
-                 if (commentStart)
-                	 pushComment.addComment('block',start,stop, s);
-                 else
-           		  pushComment.appendComment(s);
-        		  
-        	  }
-        	  else if (token.content=='/')
-        	  {
-        		  var start=token.offset;
-        		  parser.next();// second slash
-                  if(pushComment==null){
-                    	pushComment = new davinci.model.Comment();
-                   }
-                  while (!stream.endOfLine())
-                	  stream.next();
-                  var s=stream.get();
-                  pushComment.addComment('line',start,start+s.length,s);
-        	  }
-        	  else
-        	  {
-        		  if (pushComment)
-        			  pushComment.appendComment(token.value);
-        	  }
+             },
+             count : 0,
+             text : text
+         };
+         stream = davinci.model.parser.stringStream(txtStream);
+     } else {
+         stream = text;
+         inHtml = true;
+     }
+     var parser = davinci.html.CSSParser.make(stream);
+     var token;
+     var selector;
+     var combined;
+     var combiner = ' ';
+     var errors = [];
+     var model, wsAfterSel;
+     function error(text) {
+         console.log("ERROR: " + text);
+         errors.push(text);
+     }
+	  
+
+     function nextToken() {
+        token = parser.next();
+        while (token.style == "css-comment" || token.style == "whitespace"
+                || (token.content == '/' && stream.peek() == '/')) {
+            if (token.style == "css-comment") {
+                if (pushComment == null) {
+                    pushComment = new davinci.model.Comment();
+                }
+                var start, stop;
+                var commentStart = false;
+                var s = token.content;
+                if (token.content.indexOf("/*") == 0) {
+                    s = s.substring(2);
+                    commentStart = true;
+                }
+                if (s.lastIndexOf("*/") == s.length - 2)
+                    s = s.substring(0, s.length - 2);
+                if (commentStart)
+                    pushComment.addComment('block', start, stop, s);
+                else
+                    pushComment.appendComment(s);
+
+            } else if (token.content == '/') {
+                var start = token.offset;
+                parser.next();// second slash
+                if (pushComment == null) {
+                    pushComment = new davinci.model.Comment();
+                }
+                while (!stream.endOfLine())
+                    stream.next();
+                var s = stream.get();
+                pushComment.addComment('line', start, start + s.length, s);
+            } else {
+                if (pushComment)
+                    pushComment.appendComment(token.value);
+            }
             token = parser.next();
-	  	}
-          return token;
-	  }
-      function createSelector()
-      {
-     	 selector=new davinci.html.CSSSelector();
-     	 selector.startOffset=token.offset;
-     	 selector.parent=model;
-//     	 selector.setStart(nexttoken.line,nexttoken.from);
-     	 if (combined)
-     	{
-     		 combined.selectors.push(selector);
-     		 selector.parent=combined;		
-     	}
-     	 else
-          	model.selectors.push(selector);
-      }
-      function startNew()
-      {
-     	 var prev=selector;
-     	 prev.endOffset=token.offset-1;
-     	 if (!combined)
-          {
-     		 combined=new davinci.html.CSSCombinedSelector();
-     		 combined.parent=model;
-     		 combined.selectors.push(prev);
-         	 selector.startOffset=prev.startOffset;
-         	 model.selectors[model.selectors.length-1]=combined;
-          }
-     	 createSelector();
- 		 combined.combiners.push(combiner);
-     	 combiner= ' ';
-     	 
-      }
-      
-	  try {
-//		  debugger;
-		  do {
-			  nextToken();
-			  switch (token.style)
-			  {
-			  case "css-selector":
-			  case "css-select-op":
-			  {
-				  if (inHtml && token.content=="<")
-				  {
-					  stream.push("<");
-					  throw StopIteration;
-				  }
-	        	  model=new davinci.html.CSSRule();
-	        	  model.startOffset=token.offset;
-	        	  parentElement.addChild(model,undefined,true);
+        }
+        return token;
+    }
+    function createSelector() {
+        selector = new davinci.html.CSSSelector();
+        selector.startOffset = token.offset;
+        selector.parent = model;
+        // selector.setStart(nexttoken.line,nexttoken.from);
+        if (combined) {
+            combined.selectors.push(selector);
+            selector.parent = combined;
+        } else
+            model.selectors.push(selector);
+    }
+    function startNew() {
+        var prev = selector;
+        prev.endOffset = token.offset - 1;
+        if (!combined) {
+            combined = new davinci.html.CSSCombinedSelector();
+            combined.parent = model;
+            combined.selectors.push(prev);
+            selector.startOffset = prev.startOffset;
+            model.selectors[model.selectors.length - 1] = combined;
+        }
+        createSelector();
+        combined.combiners.push(combiner);
+        combiner = ' ';
+    }
 
-				  wsAfterSel=false;
-				  combined=undefined;
-				  combiner=' ';
-				  createSelector();
-		         selectorLoop: for (;;) {
-				  
-					  switch (token.style)
-					  {
-					  	case "css-select-op":
-					  	{
-					  		switch( token.content)
-						  	{
-					  			case ",": 
-					  				combined=undefined;
-					  				wasSelector=false;
-					  				createSelector();
-					  			break;
-					  			case ".": 
-				                     if (wsAfterSel)
-				                    	 startNew();
-				                     nextToken();
-				                     if (selector.cls)
-				                         selector.cls=selector.cls+"."+token.content;
-				                     else
-				                       selector.cls=token.content;
-								  		wsAfterSel=token.value.length>token.content.length;
+    try {
+        // debugger;
+        do {
+            nextToken();
+            switch (token.style) {
+            case "css-selector":
+            case "css-select-op": {
+                if (inHtml && token.content == "<") {
+                    stream.push("<");
+                    throw StopIteration;
+                }
+                model = new davinci.html.CSSRule();
+                model.startOffset = token.offset;
+                parentElement.addChild(model, undefined, true);
 
-					  			break;
-					  			case "*": 
-				                     if (selector.element || selector.cls)
-				                    	 startNew();
-				                     selector.element="*";
+                wsAfterSel = false;
+                combined = undefined;
+                combiner = ' ';
+                createSelector();
+                selectorLoop: for (;;) {
 
-					  			break;
-					  			case "+": 
-					  			case ">": 
-				                     combiner=token.content;
-				                     startNew();
+                    switch (token.style) {
+                    case "css-select-op": {
+                        switch (token.content) {
+                        case ",":
+                            combined = undefined;
+                            wasSelector = false;
+                            createSelector();
+                            break;
+                        case ".":
+                            if (wsAfterSel)
+                                startNew();
+                            nextToken();
+                            if (selector.cls)
+                                selector.cls = selector.cls + "."
+                                        + token.content;
+                            else
+                                selector.cls = token.content;
+                            wsAfterSel = token.value.length > token.content.length;
 
-					  			break;
-						  	}
-				  			break;
-					  		
-					  	}
-					  	case "css-selector":
-					  		if (token.type=="css-identifier")
-					  		{
-				                 if (selector.element || selector.cls)
-				                	 startNew();
-				                 selector.element=token.content;
-					  			
-					  		}
-					  		else if (token.type=="css-hash")
-					  		{
-			                     if (selector.id || wsAfterSel)
-			                    	 startNew();
-			                     selector.id=token.content.substring(1);
-					  		}
-					  		wsAfterSel=token.value.length>token.content.length;
-					  	break;
-					  	case "css-punctuation":
-					  	{
-					  		if (token.content=="{")
-					  			break selectorLoop;
-					  		else if (token.content==":")
-					  		{
-					  			nextToken();
-					  			if (token.content==":")
-					  			{
-					  				nextToken();
-			                		 selector.pseudoElement=token.content;
-					  			}
-					  			else
-					  			{
-			                		 selector.pseudoRule=token.content;
+                            break;
+                        case "*":
+                            if (selector.element || selector.cls)
+                                startNew();
+                            selector.element = "*";
 
-					  			}
-					  		}
-					  		else if (token.content=="[")
-					  		{
-					  			nextToken();
-			                     selector.attribute={name: token.content};
-					  			nextToken();
-			                     if (token.content === '=' || token.content === '~=' ||
-			                    		 token.content === '|=') {
-			                    	 selector.attribute.type=token.content;
-			                         nextToken();
-			                    	 selector.attribute.value=token.content.substring(1,token.content.length-1);
-							  			nextToken(); // ]
-			                     }
+                            break;
+                        case "+":
+                        case ">":
+                            combiner = token.content;
+                            startNew();
 
-					  		}
-					  	}
-					  	break;
+                            break;
+                        } // END inner switch
+                        break;
 
-					  }
+                    } // END case css-select-op
+                    case "css-selector":
+                        if (token.type == "css-identifier") {
+                            if (selector.element || selector.cls)
+                                startNew();
+                            selector.element = token.content;
 
-	                  wasSelector=true;
-		              nextToken();
-				  }
-				  selector.endOffset=token.offset-1;
-				  while (nextToken().content!="}")
-				  {
-					  var nameOffset=token.offset;
-					  var propertyName = token.content;
-					  var skipNext=false;
-					  if (token.type=="css-hash")
-					  {
-						  nextToken();
-						  if (token.type=="css-identifier")
-							  propertyName+=token.content;
-						  else 
-							  skipNext=true;
-					  }
-					  else if (token.type!="css-identifier")
-					  {
-						  if (token.content!="*")		// is probably bad syntax, but dojo.css has  " *font-size "
-						         error("expecting identifier");
-						  else
-						  {
-							  nextToken();
-							  propertyName+=token.content;
-							  
-						  }
-					  }
+                        } else if (token.type == "css-hash") {
+                            if (selector.id || wsAfterSel)
+                                startNew();
+                            selector.id = token.content.substring(1);
+                        }
+                        wsAfterSel = token.value.length > token.content.length;
+                        break;
+                    case "css-punctuation": {
+                        if (token.content == "{")
+                            break selectorLoop;
+                        else if (token.content == ":") {
+                            nextToken();
+                            if (token.content == ":") {
+                                nextToken();
+                                selector.pseudoElement = token.content;
+                            } else {
+                                selector.pseudoRule = token.content;
 
-					  
-			             var property = new davinci.html.CSSProperty();
-			             property.startOffset=nameOffset;
-			             property.parent=model;
-//			             property.setStart(nexttoken.line,nexttoken.from);
-			             model.properties.push(property);
-			             model.addChild(property,undefined,true);
+                            }
+                        } else if (token.content == "[") {
+                            nextToken();
+                            selector.attribute = {
+                                name : token.content
+                            };
+                            nextToken();
+                            if (token.content === '=' || token.content === '~='
+                                    || token.content === '|=') {
+                                selector.attribute.type = token.content;
+                                nextToken();
+                                selector.attribute.value = token.content
+                                        .substring(1, token.content.length - 1);
+                                nextToken(); // ]
+                            }
 
-			             property.name=propertyName;
-			             
-			             if (!skipNext)
-			            	 if (nextToken().content!=":")
-			            		 error ("expecting ':'");
-			             
-			             nextToken();
-			             property.value=token.value;
-			             while ((nextToken()).content!=";" && token.content!="}")
-			            	 property.value+=token.value;
-			           	if(pushComment!=null){	
-			        		property.postComment = pushComment;
-			        		pushComment = null;
-			        	}
+                        }
+                    } // END case css-punctuation
+                        break;
 
-						  property.endOffset=token.offset-1;
-			             if (token.content=="}")
-			            	 break;
-				  }
-		           	if(pushComment!=null){	
-		        		property.postComment = pushComment;
-		        		pushComment = null;
-		        	}
-		           	model.endOffset=token.offset;
-				  
-			  }
-			  break;
-			  case "css-at":
-				  {
-					  var ruleName=token.content.substring(1);
-					  var atRule = (ruleName=="import") ?new davinci.html.CSSImport() : new davinci.html.CSSAtRule();;
-					  atRule.startOffset=token.offset;
-	            	 parentElement.addChild(atRule,undefined,true);
-					  if (ruleName=="import")
-					  {
-			            	 var cssImport=atRule;
-				              nextToken();
-				              if (token.content=="url")
-				             {
-				            	  cssImport.isURL=true;
-					              nextToken();	// '
-					              nextToken();  // value
-				             }
-				              cssImport.url=token.content.substring(1,token.content.length-1);
-				              if (cssImport.isURL)
-				            	  nextToken();
-				              
-				              nextToken();  // ;
-						  
-					  }
-					  else
-					  {
-						  atRule.name=ruleName;
-						  atRule.value="";
-						  while ((nextToken()).content!=";")
-							  atRule.value+=token.content;
-					  }
-					  atRule.endOffset=token.offset;
+                    } // END inner switch(token.style)
 
-				  }
-				  break;
-	             
-			  }
+                    wasSelector = true;
+                    nextToken();
+                } // END selectorLoop for(;;) loop
+                selector.endOffset = token.offset - 1;
+                while (nextToken().content != "}") {
+                    var nameOffset = token.offset;
+                    var propertyName = token.content;
+                    var skipNext = false;
+                    if (token.type == "css-hash") {
+                        nextToken();
+                        if (token.type == "css-identifier")
+                            propertyName += token.content;
+                        else
+                            skipNext = true;
+                    } else if (token.type != "css-identifier") {
+                        if (token.content != "*") // is probably bad syntax,
+                                                    // but dojo.css has "
+                                                    // *font-size "
+                            error("expecting identifier");
+                        else {
+                            nextToken();
+                            propertyName += token.content;
+
+                        }
+                    }
+
+                    var property = new davinci.html.CSSProperty();
+                    property.startOffset = nameOffset;
+                    property.parent = model;
+                    // property.setStart(nexttoken.line,nexttoken.from);
+                    model.properties.push(property);
+                    model.addChild(property, undefined, true);
+
+                    property.name = propertyName;
+
+                    if (!skipNext)
+                        if (nextToken().content != ":")
+                            error("expecting ':'");
+
+                    nextToken();
+                    property.value = token.value;
+                    while ((nextToken()).content != ";" && token.content != "}")
+                        property.value += token.value;
+                    if (pushComment != null) {
+                        property.postComment = pushComment;
+                        pushComment = null;
+                    }
+
+                    property.endOffset = token.offset - 1;
+                    if (token.content == "}")
+                        break;
+                } // END while (nextToken().content != '}')
+                if (pushComment != null) {
+                    property.postComment = pushComment;
+                    pushComment = null;
+                }
+                model.endOffset = token.offset;
+
+            } // END case css-selector, css-select-op
+                break;
+            case "css-at": {
+                var ruleName = token.content.substring(1);
+                var atRule = (ruleName == "import") ? new davinci.html.CSSImport()
+                        : new davinci.html.CSSAtRule();
+                ;
+                atRule.startOffset = token.offset;
+                parentElement.addChild(atRule, undefined, true);
+                if (ruleName == "import") {
+                    var cssImport = atRule;
+                    nextToken();
+                    if (token.content == "url") {
+                        cssImport.isURL = true;
+                        nextToken(); // '
+                        nextToken(); // value
+                    }
+                    cssImport.url = token.content.substring(1,
+                            token.content.length - 1);
+                    if (cssImport.isURL)
+                        nextToken();
+
+                    nextToken(); // ;
+
+                } else if ( rulename.indexOf("keyframes") >= 0 ) { 
+                    var className = "";
+                    nextToken(); // get class name
+                    className = token.content;
+                    nextToken(); // rule opening "{"
+                    atRule.value += token.content;
+                    nextToken(); // from
+                    atRule.value += token.content;
+                    nextToken(); // "{"
+                    atRule.value += token.content;
+                    while ((nextToken()).content != "}")
+                        atRule.value += token.content;
+                    nextToken(); // to
+                    atRule.value += token.content;
+                    nextToken(); // "{"
+                    atRule.value += token.content;
+                    while ((nextToken()).content != "}")
+                        atRule.value += token.content;
+                    nextToken(); // rule closing "}"
+                    atRule.value += token.content;
+                    atRule.name = rulename + " " + className;
+                } else {
+                    atRule.name = ruleName;
+                    atRule.value = "";
+                    while ((nextToken()).content != ";")
+                        atRule.value += token.content;
+                }
+                atRule.endOffset = token.offset;
+
+            }
+                break;
+
+            } // END outer switch(token.style)
 		  } while (true);
-	  } catch (e) {}
+        
+      } catch (e) {}
 	  
 	  return {errors:errors};
 };

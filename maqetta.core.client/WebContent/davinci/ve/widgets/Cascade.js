@@ -104,7 +104,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		
 		
 		var resource = cssFile.getResource();
-		return !resource.readOnly;
+		return !resource.readOnly();
 		
 	},
 	
@@ -586,12 +586,14 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 	selectRuleBySelector : function(selector){
 		if(selector=="element.style"){
 			this._targetValueIndex = 0;
-			dojo.attr(this._radio[0], 'checked', true);
-			if(this._values[0].shorthand){
-				dojo.addClass(this._radio[0].parentNode.parentNode, "cssShorthandOverRidden");
-			}else{
-				var loc = this._getBaseLocation();
-				this._setFieldValue(this._values[0].value,loc);
+			if(this._values.length > 0){
+				dojo.attr(this._radio[0], 'checked', true);
+				if(this._values[0].shorthand){
+					dojo.addClass(this._radio[0].parentNode.parentNode, "cssShorthandOverRidden");
+				}else{
+					var loc = this._getBaseLocation();
+					this._setFieldValue(this._values[0].value,loc);
+				}
 			}
 			return;
 		}
@@ -619,7 +621,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			if(value && value.rule && value.rule.getCSSFile){
 				var file = value.rule.getCSSFile();
 				var resource = file.getResource();
-				return resource.readOnly;
+				return resource.readOnly();
 			}else{
 				return false;
 			}

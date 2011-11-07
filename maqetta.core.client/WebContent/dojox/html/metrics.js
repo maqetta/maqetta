@@ -1,6 +1,6 @@
-define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/sniff", "dojo/_base/unload", 
+define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/sniff", "dojo/ready", "dojo/_base/unload",
 		"dojo/_base/window", "dojo/dom-geometry"],
-  function(kernel,lang,has,UnloadUtil,Window,DOMGeom){
+  function(kernel,lang,has,ready,UnloadUtil,Window,DOMGeom){
 	var dhm = lang.getObject("dojox.html.metrics",true);
 	var dojox = lang.getObject("dojox");
 
@@ -156,7 +156,7 @@ define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/sniff", "dojo/_base/u
 		}
 	});
 
-	UnloadUtil.addOnUnload(function(){
+	ready(function(){
 		// getScrollbar metrics node
 		try{
 			var n=Window.doc.createElement("div");

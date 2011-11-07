@@ -9,11 +9,13 @@ dojo.require("davinci.actions.SelectLayoutAction");
 dojo.require("davinci.library");
 dojo.require("dojox.html._base");
 dojo.require('preview.silhouetteiframe');
+dojo.require('davinci.ve.ChooseParent');
 
 dojo.declare("davinci.ve.Context", null, {
 
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit/dijit",
+	_configProps: {},
 
 /*=====
 	// keeps track of widgets-per-library loaded in context
@@ -24,7 +26,7 @@ dojo.declare("davinci.ve.Context", null, {
 		if(!args) {
 			args ={};
 		}
-		this._contentStyleSheet = davinci.Workbench.location() + dojo.moduleUrl("davinci.ve", "resources/content.css"),
+		this._contentStyleSheet = davinci.Workbench.location() + dojo.moduleUrl("davinci.ve", "resources/content.css");
 		this._id = "_edit_context_" + davinci.ve._contextCount++;
 		this._editor = args.editor;
 		this._visualEditor = args.visualEditor;
@@ -45,7 +47,8 @@ dojo.declare("davinci.ve.Context", null, {
 		this._objectIds = [];
 		this._widgets = [];
 		this._links = [];
-		this._dojoxMobileCss = [];
+		this._chooseParent = new davinci.ve.ChooseParent({context:this});
+
 	},
 
 	    _configDojoxMobile: function() {
@@ -56,10 +59,6 @@ dojo.declare("davinci.ve.Context", null, {
         dm.configDeviceTheme = dojo.hitch(this, function() {
             var loadDeviceTheme = dm.loadDeviceTheme;
 
-            // Pull in _compat.js immediately, since it redefines methods like loadCssFile which we wish to add advice to now
-            this.getDojo()["require"]("dojox.mobile.compat");
-
-            // add before advice to clear out css file list before loading a new theme
             dm.loadDeviceTheme = dojo.hitch(this, function(device) {
                 var htmlElement = this._srcDocument.getDocumentElement();
                 var head = htmlElement.getChildElement("head");
@@ -69,7 +68,7 @@ dojo.declare("davinci.ve.Context", null, {
                     if (text.length) {
                         // Look for a dojox.mobile.themeMap in the document, if found set the themeMap 
                         var start = text.indexOf('dojox.mobile.themeMap');
-                        if (start > 0){
+                        if (start != -1) {
                             start = text.indexOf('=', start);
                             var stop = text.indexOf(';', start);
                             if (stop > start){
@@ -79,13 +78,7 @@ dojo.declare("davinci.ve.Context", null, {
                         }
                      }
                 }, this);
-                this._dojoxMobileCss = [];
                 loadDeviceTheme(device);
-            });
-
-            // keep an updated list as dojox.mobile loads css files
-            dojo.connect(dm, "loadCssFile", this, function(file) {
-                this._dojoxMobileCss.push(file);
             });
 
             // This is a call-once function
@@ -149,7 +142,7 @@ dojo.declare("davinci.ve.Context", null, {
 			dojo.connect(containerNode, "onmousedown", this, "onMouseDown"),
 			dojo.connect(containerNode, "onmousemove", this, "onMouseMove"),
 			dojo.connect(containerNode, "onmouseup", this, "onMouseUp"),
-			dojo.connect(containerNode, "onmouseout", this, "onMouseOut"),
+			dojo.connect(containerNode, "onmouseout", this, "onMouseOut")
 		];
 		this.setActiveTool();
 	},
@@ -193,10 +186,7 @@ dojo.declare("davinci.ve.Context", null, {
 		// The following two assignments needed for OpenAjax widget support
 		if(!widget.type){
 			if(widget.isHtmlWidget){
-				var tagName = widget.getTagName();
-				widget.type = "html." + tagName;
-//			}else if(widget.isOpenAjaxWidget){
-//				widget.type = widget.domNode.getAttribute('oawidget');
+				widget.type = "html." + widget.getTagName();
 			}else if(widget.isGenericWidget){
 				widget.type = widget.domNode.getAttribute('dvwidget');
 			}else if(widget.isObjectWidget){
@@ -226,16 +216,8 @@ dojo.declare("davinci.ve.Context", null, {
 			davinci.ve._add(this._objectIds, objectId);
 		}
 
-        var isContainer = davinci.ve.metadata.getAllowedChild(widget.type)[0] !== 'NONE';
-		if (widget.isHtmlWidget || widget.acceptsHTMLChildren ||
-		   (isContainer && (widget.isGenericWidget || widget.isOpenAjaxWidget))) { //TODO: need a better test for ContentPane
-			// Plain HTML content here.  Recurse on all tags
-			dojo.query("> *", widget.containerNode ||widget.domNode)
-			        .map(davinci.ve.widget.getWidget).forEach(this.attach, this);
-		} else {
-			// Recurse down widget hierarchy
-			dojo.forEach(widget.getChildren(true), this.attach, this);
-		}
+		// Recurse down widget hierarchy
+		dojo.forEach(widget.getChildren(true), this.attach, this);
 	},
 	
 	getBodyId: function(){
@@ -295,7 +277,7 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	getBaseResource: function(options){
-		return davinci.resource.findResource(this.getDocumentLocation());
+		return system.resource.findResource(this.getDocumentLocation());
 	},
 
 	getLibraryBase: function(id, version){
@@ -379,29 +361,30 @@ dojo.declare("davinci.ve.Context", null, {
 		}, this);
 	},
 
-	_getWidgetFolder : function(){
+	_getWidgetFolder: function(){
 		
 		var base = this.getBase();
 		var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
-		if(!prefs['widgetFolder']){
-			prefs.widgetFolder = "./WebContent/widgets";
+		if(!prefs.widgetFolder){
+			prefs.widgetFolder = "WebContent/widgets";
 			davinci.workbench.Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
 		}
 	
-		var folder = prefs['widgetFolder'];
-		while(folder.length>1 && (folder.charAt(0)=="." || folder.charAt(0)=="/"))
+		var folder = prefs.widgetFolder;
+		while(folder.length>1 && (folder.charAt(0)=="." || folder.charAt(0)=="/")) {
 			folder = folder.substring(1);
+		}
 		return folder;
 	},
-	_getDojoModulePath : function(){
-		
-		
-		return this._dojoModulePath  ;
+
+	//FIXME: remove accessor
+	_getDojoModulePath: function(){
+		return this._dojoModulePath;
 	},
 	
 	_require: function(module){
 		try{
-			this.getDojo()["require"](module);
+			return this.getGlobal()["require"]([module.replace(/\./g, "/")]);
 		}catch(e){
 			console.error("FAILED: Context.js _require failure for module="+module);
 			throw e;
@@ -423,7 +406,7 @@ dojo.declare("davinci.ve.Context", null, {
      */
     setMobileDevice: function(device) {
     	this.getDojo().config.mblUserAgent = /* remove this line for Dojo 1.7 final */
-    	this.getDojo()["require"]("dojo/_base/config")["mblUserAgent"] = preview.silhouetteiframe.getMobileTheme(device + '.svg');
+    	this.getGlobal()["require"](["dojo/_base/config"]).mblUserAgent = preview.silhouetteiframe.getMobileTheme(device + '.svg');
     	var bodyElement = this.getDocumentElement().getChildElement("body");
         if (! device || device === 'none') {
             bodyElement.removeAttribute(davinci.ve.Context.MOBILE_DEV_ATTR, device);
@@ -448,11 +431,6 @@ dojo.declare("davinci.ve.Context", null, {
         this.setMobileDevice(device);
 
 		// dojox.mobile specific CSS file handling
-
-        // remove old theme css files
-        this._dojoxMobileCss.forEach(function (file) {
-        	this.getDojo().query('link[href="' + file + '"]').orphan();
-        }, this);
 
         var dm = this.getDojo().getObject("dojox.mobile");
         if(dm && dm.loadDeviceTheme) {
@@ -482,26 +460,26 @@ dojo.declare("davinci.ve.Context", null, {
 		var model = this.getModel();
 		if(this._themeUrl){
 			var style = model.find({elementType:'CSSImport', url:this._themeUrl},true);
-			if(style!=null && style.length!=0)
+			if (style && style.length > 0) {
 				changed = false;
+			}
 		}
 		if(changed){
-			this._theme = null;
+			this.theme = null;
 			this._themeMetaCache = null;
 		}
 	},
 	
- getTheme: function(){
-        if(this._theme==null){
+	getTheme: function(){
+        if (! this.theme) {
             var theme = this.loadThemeMeta(this._srcDocument);
             if (theme) { // wdr #1024
                 this._themeUrl = theme.themeUrl;
                 this._themeMetaCache = theme.themeMetaCache;
-                this._theme = theme.theme;
+                this.theme = theme.theme;
             }
-            
         }
-        return this._theme;
+        return this.theme;
     }, 
 
 	getThemeMeta: function(){
@@ -539,7 +517,7 @@ dojo.declare("davinci.ve.Context", null, {
 				if(m){
 					// find out where we came from
 					return loc + "/" + src;
-					break; // "first Dojo wins"
+					// "first Dojo wins"
 				}
 			}
 		}	
@@ -589,8 +567,9 @@ dojo.declare("davinci.ve.Context", null, {
 		
 		for(var i=0;i<allThemes.length;i++){
 			
-			if(allThemes[i].name==defaultThemeName)
+			if(allThemes[i].name==defaultThemeName) {
 				defaultTheme = allThemes[i];
+			}
 			
 			if (allThemes[i].files){ // #1024 some theme's may not contain files, themeMaps
 			  //FIXME: this can't be right...
@@ -634,19 +613,12 @@ dojo.declare("davinci.ve.Context", null, {
         var htmlElement = context._srcDocument.getDocumentElement();
         var head = htmlElement.getChildElement("head");
         var scriptTags=head.getChildElements("script");
-        for(var s=0; s<scriptTags.length; s++){
-            var text=scriptTags[s].getElementText();
-            if (text.length) {
+        return dojo.some(scriptTags, function(tag) {
+            var text=tag.getElementText();
                 // Look for a dojox.mobile.themeMap in the document, if found set the themeMap 
                // var start = text.indexOf('dojox.mobile.themeMap');
-                var start = text.indexOf('dojox.mobile.deviceTheme');
-                if (start > 0){
-                    return true; // it's a mobile theme
-                }
-             }
-        }
-        return false;
-     
+            return text.length && text.indexOf('dojox.mobile.deviceTheme') != -1;
+        });
     },
 //////////////////////////////////////////////////////////////////////////////////////////////     
     
@@ -717,9 +689,9 @@ dojo.declare("davinci.ve.Context", null, {
 			}
 
 // TODO: This needs to be more flexible to allow things like HTML5 DOCTYPE's (should be based on a preference)
-			var doc = (frame.contentDocument || frame.contentWindow.document);
-			var win = dijit.getDocumentWindow(doc);
-			var head = "<!DOCTYPE html>";
+			var doc = frame.contentDocument || frame.contentWindow.document,
+				win = dijit.getDocumentWindow(doc),
+				head = "<!DOCTYPE html>";
 // TODO: margin:0 is a temporary hack. In previous releases, we always included dojo.css
 // which set margin:0, but we now only include dojo.css with the first Dojo widget
 // added to the page. That causes scrollbars when page was loaded initially,
@@ -736,25 +708,30 @@ dojo.declare("davinci.ve.Context", null, {
 			//   (even if user hasn't selected the Dojo lib) until those dependencies are removed.
 			//   See bug 7585.
 			if (dojoUrl) {
-				var inx=dojoUrl.lastIndexOf('/');
 				// XXX Invoking callback when dojo is loaded.  This should be refactored to not
 				//  depend on dojo any more.  Once issue, though, is that the callback function
 				//  makes use of dojo and thusly must be invoked only after dojo has loaded.  Need
 				//  to remove Dojo dependencies from callback function first.
-				var baseUserWorkspace = davinci.resource.getRoot().getURL() + "/" + this._getWidgetFolder();
-				head += "<script>djConfig={addOnLoad:top.loading" + this._id + ", baseUrl:'"+dojoUrl.substr(0,inx+1)+"', modulePaths:{'widgets':'" + baseUserWorkspace +"'} }</script>";
-				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\"></script>";
+				var baseUserWorkspace = system.resource.getRoot().getURL() + "/" + this._getWidgetFolder();
+				var config = {
+					modulePaths: {widgets: baseUserWorkspace}
+				};
+				dojo.mixin(config, this._configProps);
+
+				var requires = this._bootstrapModules.split(","),
+					dependencies = ['dojo/parser', 'dojox/html/_base', 'dojo/domReady!'];
+				dependencies = dependencies.concat(requires);  // to bootstrap references to base dijit methods in container
+
+				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\" data-dojo-config=\'" + JSON.stringify(config).slice(1, -1) + "\'></script>"
+					+ "<script type=\"text/javascript\">require(" + JSON.stringify(dependencies) + ", top.loading" + this._id + ");</script>";
 			}
 			var helper = davinci.theme.getHelper(this._visualEditor.theme);
 			if (helper && helper.getHeadImports){
 			    head += helper.getHeadImports(this._visualEditor.theme);
-			    
 			} else if(source.themeCssfiles) { // css files need to be added to doc before body content
-				head += '<style type="text/css">';
-				for(var i = 0;i < source.themeCssfiles.length;i++){
-					head += '@import "'+ source.themeCssfiles[i] + '";\n';
-				}
-				head += '</style>';
+				head += '<style type="text/css">'
+					+ source.themeCssfiles.map(function(file) { return '@import "' + file + '";'; }).join();
+					+ '</style>';
 			}
 			/*
 			else{
@@ -762,16 +739,10 @@ dojo.declare("davinci.ve.Context", null, {
 			}
 			*/
 			//head += '<style type="text/css">@import "claro.css";</style>';
-			head += "</head><body>";
-			if (dojoUrl) {
-				// Since this document was created from script, DOMContentLoaded and window.onload never fire.
-				// Call dojo._loadInit manually to trigger the Dojo onLoad events for Dojo < 1.7
-				head += "<script>if(dojo._loadInit)dojo._loadInit();</script>";
-			}
-			head += "</body></html>";
+			head += "</head><body></body></html>";
 
 			var context = this;
-			window["loading" + context._id] = function() {
+			window["loading" + context._id] = function(parser, htmlUtil) { //FIXME: should be able to get doc reference from domReady! plugin?
 				delete window["loading" + context._id];
 				var callbackData = context;
 			try {
@@ -793,12 +764,11 @@ dojo.declare("davinci.ve.Context", null, {
 
 					body._edit_context = context; // TODO: find a better place to stash the root context
 					context._configDojoxMobile();
-					
+
 					var requires = context._bootstrapModules.split(",");
 					if (requires.indexOf('dijit/dijit-all') != -1){
 						win.dojo._postLoad = true; // this is needed for FF4 to keep dijit._editor.RichText from throwing at line 32 dojo 1.5						
 					}
-					win.require(requires);  // to bootstrap references to base dijit methods in container
 
 					context.frameNode = frame;
 					// see Dojo ticket #5334
@@ -848,13 +818,14 @@ dojo.declare("davinci.ve.Context", null, {
 			};*/
 
 		}else{
-			this._continueLoading(data, callback, this, scope);
+			console.warn("Context._setContent called after frame initialized");
+//			this._continueLoading(data, callback, this, scope); //  we shouldn't be getting here?  this will just bomb out without Dojo (this.getGlobal() will fail)
 		}
 	},
 
 	_continueLoading: function(data, callback, callbackData, scope) {
 		var loading;
-		//try {
+		try {
 			loading = dojo.create("div",
 					{innerHTML: dojo.replace('<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;{0}</td></tr></table>', ["Loading..."])}, // FIXME: i18n
 					this.frameNode.parentNode,
@@ -865,19 +836,20 @@ dojo.declare("davinci.ve.Context", null, {
 				throw callbackData;
 			}
 
-			this._setSourceData(data);
+			var promise = this._setSourceData(data);
 
 			loading.parentNode.removeChild(loading); // need to remove loading for silhouette to display
-	/*	} catch(e) {
+		} catch(e) {
 			// recreate the Error since we crossed frames
 			callbackData = new Error(e.message, e.fileName, e.lineNumber);
 			dojo.mixin(callbackData, e);
-			loading.innerHTML = "Uh oh! An error has occurred:<br>" + e.message + "<br>file:" + e.fileName + "<br>line: "+e.lineNumber; // FIXME: i18n
+			loading.innerHTML = "Uh oh! An error has occurred:<br><b>" + e.message + "</b><br>file: " + e.fileName + "<br>line: "+e.lineNumber; // FIXME: i18n
 			dojo.addClass(loading, 'error');
-		}*/
-		
-		if(callback){
-			callback.call((scope || this), callbackData);
+		}
+		if (callback) {
+			promise.then(function(){
+				callback.call((scope || this), callbackData); // FIXME: use hitch?  use errback for the error case?
+			}.bind(this));
 		}
 	},
 
@@ -940,11 +912,9 @@ dojo.declare("davinci.ve.Context", null, {
 		// out those scripts and execute them later, after _processWidgets()
 		// has loaded any required resources (i.e. <head> scripts)
 		var scripts;
-        var dj = this.getDojo();
-	    dj['require']('dojox.html._base');
         // It is necessary to run the dojox.html.set utility from the context
 	    // of inner frame.  Might be a Dojo bug in _toDom().
-	    dj.getObject('dojox').html.set(containerNode, content, {
+	    this.getGlobal()['require']('dojox/html/_base').set(containerNode, content, {
 	        executeScripts: true,
 	        onEnd: function() {
 	            // save any scripts for later execution
@@ -960,8 +930,7 @@ dojo.declare("davinci.ve.Context", null, {
 		var removeEventAttributes = function(node) {
 			if(node){
 				dojo.filter(node.attributes, function(attribute) {
-					var check = attribute.nodeName.substr(0,2).toLowerCase() == "on";
-					return check;
+					return attribute.nodeName.substr(0,2).toLowerCase() == "on";
 				}).forEach(function(attribute) {
 					node.removeAttribute(attribute.nodeName);
 				});
@@ -994,17 +963,7 @@ dojo.declare("davinci.ve.Context", null, {
 		collapse(containerNode);
 
 		this._loadFileStatesCache = states;
-		this._processWidgets(containerNode, active, this._loadFileStatesCache);
-
-		// Now that _processWidgets() has loaded any of the widgets' required
-		// resources, we execute the inline scripts.
-        if (scripts) {
-            try {
-                dojox.html.evalInGlobal(scripts, containerNode);
-            } catch(e) {
-                console.error('Error eval script in Context._setSourceData, ' + e);
-            }
-        }
+		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts);
 	},
 
 	/**
@@ -1018,7 +977,7 @@ dojo.declare("davinci.ve.Context", null, {
 	/**
 	 * Process dojoType, oawidget and dvwidget attributes on text content for containerNode
 	 */
-	_processWidgets: function(containerNode, attachWidgets, states) {
+	_processWidgets: function(containerNode, attachWidgets, states, scripts) {
 		dojo.forEach(dojo.query("*", containerNode), function(n){
 			var type = n.getAttribute("dojoType") || /*n.getAttribute("oawidget") ||*/ n.getAttribute("dvwidget");
 			//doUpdateModelDojoRequires=true forces the SCRIPT tag with dojo.require() elements
@@ -1031,31 +990,43 @@ dojo.declare("davinci.ve.Context", null, {
 			this._preserveStates(n, states);
 
 		}, this);
-		try {
-			var dj = this.getDojo();
-			dj["require"]("dojo.parser");
-			dj.parser.parse(containerNode);
-		} catch(e) {
-			// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
-			// the dojo parser will throw an exception trying to compute style on hidden containers
-			// so to fix this we catch the exception here and add a subscription to be notified when this editor is seleected by the user
-			// then we will reprocess the content when we have focus -- wdr
-			
-			// remove all registered widgets, some may be partly constructed.
-			var localDijit = this.getDijit();
-			localDijit.registry.forEach(function(w){
-				  w.destroy();			 
-			});
-
-			this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",
-					this, '_editorSelectionChange');
-
-//			throw e;
-		}
+		var promise = new dojo.Deferred();
+		this.getGlobal()["require"]("dojo/ready")(function(){
+			try {
+				this.getGlobal()["require"]("dojo/parser").parse(containerNode);
+				promise.callback();
+			} catch(e) {
+				// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
+				// the dojo parser will throw an exception trying to compute style on hidden containers
+				// so to fix this we catch the exception here and add a subscription to be notified when this editor is seleected by the user
+				// then we will reprocess the content when we have focus -- wdr
+				
+				// remove all registered widgets, some may be partly constructed.
+				this.getDijit().registry.forEach(function(w){
+					  w.destroy();			 
+				});
 	
-		if(attachWidgets){
-			this._attachAll();
-		}
+				this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",
+						this, '_editorSelectionChange');
+
+				promise.errback();
+				throw e;
+			}
+		
+			if(attachWidgets){
+				this._attachAll();
+			}
+
+	        if (scripts) {
+	            try {
+	                dojox.html.evalInGlobal(scripts, containerNode);
+	            } catch(e) {
+	                console.error('Error eval script in Context._setSourceData, ' + e);
+	            }
+	        }
+		}.bind(this));
+
+		return promise;
 	},
 	
    preProcess: function (node){
@@ -1071,7 +1042,7 @@ dojo.declare("davinci.ve.Context", null, {
 	_editorSelectionChange: function(event){
 		// we should only be here do to a dojo.parse exception the first time we tried to process the page
 		// Now the editor tab container should have focus becouse the user selected it. So the dojo.processing should work this time
-		if (event.editor.fileName === this._editor.fileName){
+		if (event.oldEditor.fileName === this._editor.fileName){
 			dojo.unsubscribe(this._editorSelectConnection);
 			delete this._editorSelectConnection;
 			this._setSource(this._srcDocument, null, null);
@@ -1379,6 +1350,20 @@ dojo.declare("davinci.ve.Context", null, {
 		return this.rootNode;
 	},
 
+	getParentIframe: function(){
+		if(!this._parentIframeElem){
+	        var userdoc = this.getDocument();
+			var iframes = document.getElementsByTagName('iframe');
+			for(var i=0; i < iframes.length; i++){
+				if(iframes[i].contentDocument === userdoc){
+					this._parentIframeElem = iframes[i];
+					break;
+				}
+			}
+		}
+		return this._parentIframeElem;
+	},
+
 	getTopWidgets: function(){
 		var topWidgets=[];
 		for(var node = this.rootNode.firstChild; node; node = node.nextSibling){
@@ -1418,11 +1403,11 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 	
 	updateFocus: function(widget, index, inline){
-		var box, op;
+		var box, op, parent;
 
 		if (!davinci.ve.metadata.queryDescriptor(widget.type, "isInvisible")) {
-			var node = widget.getStyleNode();
-			helper = widget.getHelper();			
+			var node = widget.getStyleNode(),
+				helper = widget.getHelper();
 			if(helper && helper.getSelectNode){
 				node = helper.getSelectNode(this) || node;
 			}
@@ -1430,7 +1415,7 @@ dojo.declare("davinci.ve.Context", null, {
 			box.l = box.x;
 			box.t = box.y;
 
-			var parent = widget.getParent();
+			parent = widget.getParent();
 			op = {move: !(parent && parent.isLayout())};
 
 			//FIXME: need to consult metadata to see if layoutcontainer children are resizable, and if so on which axis
@@ -1581,7 +1566,7 @@ dojo.declare("davinci.ve.Context", null, {
 			clear = true;
 			index = 0;
 		}
-		var focus = undefined;
+		var focus;
 		if(index < this._focuses.length){
 			focus = this._focuses[index];
 		}else{
@@ -1622,7 +1607,7 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 		if(clear){
 			for(var i = index; i < this._focuses.length; i++){
-				var focus = this._focuses[i];
+				focus = this._focuses[i];
 				if(focus.domNode.parentNode == containerNode){
 					focus.hide();
 					containerNode.removeChild(focus.domNode);
@@ -1662,10 +1647,10 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 	},
 	
-	getFlowLayout: function(){
-		var htmlElement=this.getDocumentElement();
-		var bodyElement=htmlElement.getChildElement("body");
-		flowLayout = bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE);
+	getFlowLayout: function() {
+		var htmlElement = this.getDocumentElement(),
+			bodyElement = htmlElement.getChildElement("body"),
+			flowLayout = bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE);
 		if (!flowLayout){ // if flowLayout has not been set in the context check the edit prefs
 			var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
 			flowLayout = editorPrefs.flowLayout;
@@ -1683,6 +1668,10 @@ dojo.declare("davinci.ve.Context", null, {
 		return flowLayout;
 	},
 
+	getActiveTool: function(){
+		return this._activeTool;
+	},
+
 	setActiveTool: function(tool){
 		if(this._activeTool){
 			this._activeTool.deactivate();
@@ -1692,6 +1681,14 @@ dojo.declare("davinci.ve.Context", null, {
 			this._activeTool = this._defaultTool;
 		}
 		this._activeTool.activate(this);
+	},
+	
+	// getter/setter for currently active drag/drop object
+	getActiveDragDiv: function(){
+		return(this._activeDragDiv);
+	},
+	setActiveDragDiv: function(activeDragDiv){
+		this._activeDragDiv = activeDragDiv;
 	},
 	
 	blockChange: function(shouldBlock){
@@ -1825,6 +1822,9 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	onKeyDown: function(event){
+		//FIXME: Research task. This routine doesn't get fired when using CreateTool and drag/drop from widget palette.
+		// Perhaps the drag operation created a DIV in application's DOM causes the application DOM
+		// to be the keyboard focus?
 		if(this._activeTool && this._activeTool.onKeyDown){
 			this._activeTool.onKeyDown(event);
 		}
@@ -1863,10 +1863,9 @@ dojo.declare("davinci.ve.Context", null, {
 			var selectorText = rule.getSelectorText();
 			selectorText = selectorText.replace(/^\s+|\s+$/g,""); // trim white space
 			var rules = sheet.cssRules;
-			var foundSheet;
-			foundSheet = findSheet(sheet, fileName);
+			var foundSheet = findSheet(sheet, fileName);
 			if (foundSheet){
-				var rules = foundSheet.cssRules;
+				rules = foundSheet.cssRules;
 				var r;
 				for (r = 0; r < rules.length; r++){
 					if (rules[r] instanceof CSSStyleRule){
@@ -2156,12 +2155,17 @@ dojo.declare("davinci.ve.Context", null, {
 				if (isDojoJS) {
 					// XXX Nasty nasty nasty special case for dojo attribute thats
 					// required. Need to generalize in the metadata somehow.
-					var fullPath = new davinci.model.Path(davinci.resource.getRoot().getPath());
+					var fullPath = new davinci.model.Path(system.resource.getRoot().getPath());
 					var urlPath = new davinci.model.Path(url);
 					var relativeUrl = urlPath.relativeTo(fullPath);
-				
+
+					var config = {
+						parseOnLoad: true,
+						modulePaths: { widgets: this._dojoModulePath + "/" + this._getWidgetFolder() }
+					};
+					dojo.mixin(config, this._configProps);
 					this.addHeaderScript(url, {
-						djConfig: "parseOnLoad: true, modulePaths:{'widgets':'"+ this._dojoModulePath + "/" + this._getWidgetFolder()  + "'}"
+						"data-dojo-config": JSON.stringify(config).slice(1, -1)
 					});
 				}else{
 					this.addHeaderScript(url);
@@ -2169,7 +2173,7 @@ dojo.declare("davinci.ve.Context", null, {
 			}
 		} else if (text) {
 			/* run the requires if there is an iframe */
-			if(!skipDomUpdate) this.getGlobal()['eval'](text);
+			if(!skipDomUpdate) { this.getGlobal()['eval'](text); }
 		//	dojo.eval(text);
 			if (doUpdateModel || doUpdateModelDojoRequires) {
 				this._scriptAdditions = this.addHeaderScriptSrc(text, this._scriptAdditions,this.getDocumentElement().getChildElement('head'),this._statesJsScriptTag);
@@ -2330,6 +2334,81 @@ dojo.declare("davinci.ve.Context", null, {
 			    dojo.destroy(n);
 			}
 		});
+	},
+	
+	/**
+	 * Perform any visual updates in response to mousemove event while performing a
+	 * drag operation on the visual canvas.
+	 * @param {object} params  object with following properties:
+	 *      {object|array{object}} data  For widget being dragged, either {type:<widgettype>} or array of similar objects
+	 *      {object} eventTarget  Node (usually, Element) that is current event.target (ie, node under mouse)
+	 *      {object} position x,y properties hold current mouse location
+	 * 		{object} rect  l,t,w,h properties define rectangle being dragged around
+	 * 		{boolean} doSnapLines  whether to show dynamic snap lines
+	 * 		{boolean} doFindParentsXY  whether to show candidate parent widgets
+	 */
+	dragMoveUpdate: function(params) {
+		var context = this;
+		var cp = this._chooseParent;
+		var data = params.data;
+		var eventTarget = params.eventTarget;
+		var position = params.position;
+		var rect = params.rect;
+		var doSnapLines = params.doSnapLines;
+		var doFindParentsXY = params.doFindParentsXY;
+		var widgetType = dojo.isArray(data) ? data[0].type : data.type;
+
+		// inner function that gets called recurively for each widget in document
+		// The "this" object for this function is the Context object
+		_updateThisWidget = function(widget){
+			var node = widget.domNode;
+			var dj = this.getDojo();
+			var computed_style = dj.style(node);
+			if(doSnapLines){
+				davinci.ve.Snap.findSnapOpportunities(this, widget, computed_style);
+			}
+			if(doFindParentsXY){
+				// Two steps: (1) compute allowed parents at current (x,y)...
+				cp.findParentsXY(data, widget, position);
+				// (2) Update visual presentation of allowed parents at current (x,y)
+				cp.dragUpdateCandidateParents(widgetType, doFindParentsXY);
+			}
+			// Recurse through this widget's children
+			dojo.forEach(widget.getChildren(), function(w){
+				_updateThisWidget.apply(context, [w]);
+			});
+		};
+		
+		if(doSnapLines || doFindParentsXY){
+			if(doSnapLines){
+				doSnapLines = davinci.ve.Snap.updateSnapLinesBeforeTraversal(this, rect);
+			}
+			if(doFindParentsXY){
+				doFindParentsXY = cp.findParentsXYBeforeTraversal(params);
+				// Call dragUpdateCandidateParents so that (usually) "BODY" will show as initial list of parent widgets
+				cp.dragUpdateCandidateParents(widgetType, doFindParentsXY);
+			}
+			// Traverse all widgets, which will result in updates to snap lines and to 
+			// the visual popup showing possible parent widgets 
+			dojo.forEach(this.getTopWidgets(), function(w){
+				_updateThisWidget.apply(context, [w]);
+			});
+			if(doSnapLines){
+				davinci.ve.Snap.updateSnapLinesAfterTraversal(this);
+			}
+			if(doFindParentsXY){
+				cp.findParentsXYAfterTraversal();
+			}
+		}
+
+	},
+	
+	/**
+	 * Cleanups after completing drag operations.
+	 */
+	dragMoveCleanup: function() {
+		davinci.ve.Snap.clearSnapLines(this);
+		this._chooseParent.cleanup(this);
 	}
 });
 

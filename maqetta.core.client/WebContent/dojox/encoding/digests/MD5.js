@@ -1,4 +1,4 @@
-define(["dojo/_base/kernel", "./_base"], function(dojo, dxd) {
+define(["./_base"], function(dxd) {
 
 	/*=====
 		dxd = dojox.encoding.digests;

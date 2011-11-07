@@ -196,7 +196,7 @@ BODY{
 */
 
 #davinci_ve_widgets_ColorPicker_1 input, #dijit_form_TextBox_0, #dijit_form_TextBox_5 {
-	color: transparent;
+/*	color: transparent; */
 }
 
 #davinci_ve_widgets_MultiTypeDropDown_0 {
@@ -1174,4 +1174,35 @@ davinci_top_bar .dijitButtonNode {
 }
 .about_container DIV {
 	line-height: 1.5em;
+}
+
+.maqCandidateParents {
+	width:40em;
+}
+.maqCandidateParentsHeader {
+	margin-top:1em;
+}
+.maqCandidateParentsList {
+}
+.maqCandidateParentsHelp {
+	margin-top:.5em;
+}
+.maqCandidateListItem {
+}
+.maqCandidateCurrent {
+	color:brown;
+}
+.maqCandidateCheckedColumn {
+	width:.5em;
+	opacity:0;
+}
+.maqCandidateCurrent .maqCandidateCheckedColumn {
+	opacity:1;
+}
+.maqCandidateNumberColumn {
+	padding-left:2px;
+}
+.maqCandidateParentColumn {
+	white-space:nowrap;
+	overflow:hidden;
 }

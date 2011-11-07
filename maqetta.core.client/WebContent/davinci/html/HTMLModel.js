@@ -43,9 +43,7 @@ davinci.html.HTMLItem= function() {
 davinci.Inherits(davinci.html.HTMLItem,davinci.model.Model);
 
 davinci.html.HTMLItem.prototype.getLabel = function() {
-    context= {};
-    context.indent=0;
-    return this.getText(context);
+    return this.getText({indent: 0});
 };
 
 davinci.html.HTMLItem.prototype.onChange = function(arg) {
@@ -99,7 +97,7 @@ davinci.html.HTMLFile= function(fileName) {
 davinci.Inherits(davinci.html.HTMLFile,davinci.html.HTMLItem);
 
 davinci.html.HTMLFile.prototype.save = function (isWorkingCopy) {
-    var file = davinci.resource.findResource(this.fileName);
+    var file = system.resource.findResource(this.fileName);
     if(file){
         var text = this.getText();
         file.setContents(text,isWorkingCopy);
@@ -108,7 +106,7 @@ davinci.html.HTMLFile.prototype.save = function (isWorkingCopy) {
 
 //WHOEVER Added this should rename so it doesnt conflict with the real getText 
 //davinci.html.HTMLFile.prototype.getText = function(context){
-//var file = davinci.resource.findResource(this.url);
+//var file = system.resource.findResource(this.url);
 //if(file){
 //var text = this.getText();
 //file.setContents(text);
@@ -308,20 +306,18 @@ davinci.html.HTMLFile.prototype.getID = function() {
 
 davinci.html.HTMLFile.prototype.updatePositions = function(startOffset,delta) {
     davinci.model.Model.updatePositions(this,startOffset,delta);
-    visitor = {
+    this.visit({
             visit: function(element) {
                 if (element.endOffset<startOffset) {return true;}
                 if (element.elementType=="HTMLElement" && element.startTagOffset>startOffset) {
                     element.startTagOffset+=delta;				    
                 }
             }
-    };
-
-    this.visit(visitor);
+    });
 };
 
 davinci.html.HTMLFile.prototype.reportPositions = function() {
-    visitor = {
+    this.visit({
             visit: function(element) {
                 if (element.elementType=="HTMLElement") {
                     console.log("<"+element.tag+"> "+element.startOffset+" -> "+element.startTagOffset+" -> "+element.endOffset);
@@ -329,9 +325,7 @@ davinci.html.HTMLFile.prototype.reportPositions = function() {
                     console.log("   "+element.name+"= "+element.value+":: -> "+element.startOffset+" -> "+element.endOffset);
                 }
             }
-    };
-
-    this.visit(visitor);
+    });
 };
 
 /**
@@ -504,7 +498,7 @@ davinci.html.HTMLElement.prototype._formatModel = function( newElement, index, c
         elem1=this;
         offset=this.startTagOffset+1;
     } else {
-        var elem2=this.children[index-1];
+        elem2=this.children[index-1];
         offset=elem2.endOffset+1;
     }
     var startOffset=offset;
@@ -586,9 +580,9 @@ davinci.html.HTMLElement.prototype.addAttribute = function(name, value, noPersis
         return;
     }
     var delta;
-    var startOffset=(this.attributes.length>0) 
-    ? this.attributes[this.attributes.length-1].endOffset +1
-            : this.startTagOffset -(this.noEndTag ? 2 : 1) ;
+    var startOffset = (this.attributes.length > 0) ?
+            this.attributes[this.attributes.length-1].endOffset +1 :
+            this.startTagOffset -(this.noEndTag ? 2 : 1) ;
     var attr=this._getAttribute(name);
     var add;
     if (!attr) {
@@ -611,15 +605,20 @@ davinci.html.HTMLElement.prototype.addAttribute = function(name, value, noPersis
 };
 
 davinci.html.HTMLElement.prototype.removeAttribute = function(name) {
-    for (var i=0;i<this.attributes.length;i++)
-        if (this.attributes[i].name==name) {
-            var attr=this.attributes[i];
-            var s=attr.getText({});
-            this.attributes.splice(i, 1);
-            if (!attr.noPersist)
-                this.getHTMLFile().updatePositions(attr.startOffset,0-(s.length+1));
-            return;
+    this.attributes.every(function(attr, idx, arr) {
+        if (attr.name === name) {
+            arr.splice(idx, 1);
+            // Make sure that getHTMLFile() returns a non-null value. This
+            // HTMLElement may be standalone (not part of a file); for example,
+            // see code in davinci.ve.widget.createWidget().
+            var file = this.getHTMLFile();
+            if (!attr.noPersist && file) {
+                var s = attr.getText();
+                file.updatePositions(attr.startOffest, 0 - (s.length + 1));
+            }
+            return false; // break
         }
+    }, this);
     this.onChange();
 };
 
@@ -791,13 +790,12 @@ davinci.html.HTMLElement.prototype.setText = function (text) {
     // first child is actually the parsed element, so replace this with child
     dojo.mixin(this, this.children[0]);
     this.parent=currentParent;
-    var visitor = {
+    this.visit({
             visit:function(node){
                 delete node.wasParsed;
             },
             rules :[]
-    }
-    this.visit(visitor);
+    });
     this.onChange();
 };
 
@@ -861,7 +859,7 @@ davinci.html.HTMLText.prototype.setText = function(value) {
 davinci.html.HTMLText.prototype.getLabel = function() {
     if (this.value.length<15)
         return this.value;
-    return this.value.substring(0, 15)+"..."
+    return this.value.substring(0, 15) + "...";
 };
 
 /**

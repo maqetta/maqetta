@@ -2,7 +2,7 @@
 define("dojox/mobile/Switch",["dojo/_base/array","dojo/_base/connect","dojo/_base/declare","dojo/_base/event","dojo/_base/window","dojo/dom-class","dijit/_Contained","dijit/_WidgetBase","./sniff"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9){
 return _3("dojox.mobile.Switch",[_8,_7],{value:"on",name:"",leftLabel:"ON",rightLabel:"OFF",_width:53,buildRendering:function(){
 this.domNode=_5.doc.createElement("DIV");
-var c=this.srcNodeRef?this.srcNodeRef.className:this.className;
+var c=(this.srcNodeRef&&this.srcNodeRef.className)||this.className||this["class"];
 this._swClass=(c||"").replace(/ .*/,"");
 this.domNode.className="mblSwitch";
 var _a=this.name?" name=\""+this.name+"\"":"";

@@ -19,15 +19,15 @@
  * 		.dijitRadioDisabled|.dijitRadioCheckedDisabled - for background image
  */
 .claro .dijitToggleButton .dijitRadio, .claro .dijitToggleButton .dijitRadioIcon {
-  background-image: url('images/checkboxRadioButtonStates.png');
+  background-image: url("../form/images/checkboxRadioButtonStates.png");
 }
 .dj_ie6 .claro .dijitToggleButton .dijitRadio, .dj_ie6 .claro .dijitToggleButton .dijitRadioIcon {
-  background-image: url('images/checkboxAndRadioButtons_IE6.png');
+  background-image: url("../form/images/checkboxAndRadioButtons_IE6.png");
 }
 .claro .dijitRadio, .claro .dijitRadioIcon {
   /* inside a toggle button */
 
-  background-image: url('images/checkboxRadioButtonStates.png');
+  background-image: url("../form/images/checkboxRadioButtonStates.png");
   /* checkbox sprite image */
 
   background-repeat: no-repeat;
@@ -39,7 +39,7 @@
 .dj_ie6 .claro .dijitRadio, .dj_ie6 .claro .dijitRadioIcon {
   /* inside a toggle button */
 
-  background-image: url('images/checkboxAndRadioButtons_IE6.png');
+  background-image: url("../form/images/checkboxAndRadioButtons_IE6.png");
   /* checkbox sprite image */
 
 }

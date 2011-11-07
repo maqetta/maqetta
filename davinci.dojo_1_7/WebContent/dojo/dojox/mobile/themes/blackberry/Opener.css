@@ -29,6 +29,11 @@
 	-webkit-transition-property: -webkit-transform;
 	-webkit-transform: translate3d(0px,0%,0px) !important;
 }
+.dj_android.dj_tablet .mblCoverv.mblOut.mblTransition,
+.dj_android.dj_tablet .mblCoverv.mblIn.mblTransition {
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
+}
 .mblRevealv.mblOut {
 	z-index: 0;
 	-webkit-transition-property: none;
@@ -54,6 +59,11 @@
 .mblRevealv.mblOut.mblReverse.mblTransition {
 	-webkit-transition-property: -webkit-transform;
 	-webkit-transform: translate3d(0px,100%,0px) !important;
+}
+.dj_android.dj_tablet .mblRevealv.mblOut.mblTransition,
+.dj_android.dj_tablet .mblRevealv.mblIn.mblTransition {
+	-webkit-transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
 }
 .mblOverlay {
   position: fixed;

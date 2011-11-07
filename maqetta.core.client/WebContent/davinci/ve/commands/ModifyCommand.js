@@ -7,6 +7,9 @@ dojo.declare("davinci.ve.commands.ModifyCommand", null, {
 
 	name: "modify",
 
+	// XXX Most often only called with first 2 params. SmartInput.js passes in
+	//     'context'. DataStoresView.js passes in 'children' and 'context'.
+	//     No one passes in 'scripts'.
 	constructor: function(widget, properties, children, context, scripts){
 
 		this._oldId = (widget ? widget.id : undefined);
@@ -51,21 +54,36 @@ dojo.declare("davinci.ve.commands.ModifyCommand", null, {
 		if(!widget){
 			return;
 		}
-		//if(!this._oldData ){
+
 		// after creating the widget we need to refresh the data, the createWidget function removes the id's of the widgets and 
 		// children. We need the id's to be consistent for undo/redo to work -- wdr
-			this._oldData = widget.getData();
-			this._oldData.context = this._context;
-			
-			this._newData = {type: this._oldData.type,
-				properties: dojo.mixin({}, this._oldData.properties, this._properties),
-				children: (this._children==null?this._oldData.children:this._children),
-				scripts: dojo.mixin({}, this._oldData.scripts, this._scripts), //this._oldData.scripts,
-				states: this._oldData.states,
-				context:this._context
-				};
-		//}
+		this._oldData = widget.getData();
+		this._oldData.context = this._context;
 		
+		this._newData = {
+			type: this._oldData.type,
+			properties: dojo.mixin({}, this._oldData.properties, this._properties),
+			children: this._children || this._oldData.children,
+			scripts: dojo.mixin({}, this._oldData.scripts, this._scripts),
+			states: this._oldData.states,
+			context: this._context
+		};
+		
+		// Some properties (such as Dojox Mobile's 'fixed' property) require that
+		// we reload the Visual Editor iframe when they are changed, so that the
+		// widgets can properly take the new value in to account. Here, we short-
+		// circuit the ModifyCommand to update the model with the property changes
+		// and then reload the content of the VE.
+		if (this._doRefreshFromSource(widget)) {
+			// update model
+			widget.setProperties(this._newData.properties, true);
+
+			// set new content in Visual Editor
+			var ve = this._context.visualEditor;
+			ve.setContent(ve.fileName, this._context.model);
+			return;
+		}
+
 		if(this._context){
 			this._context.detach(widget);
 		}	
@@ -128,6 +146,32 @@ dojo.declare("davinci.ve.commands.ModifyCommand", null, {
 		
 		// Recompute styling properties in case we aren't in Normal state
 		davinci.ve.states.resetState(newWidget);
+	},
+
+	/**
+	 * Check if any of the modified properties has 'refreshFromSource' set.
+	 * 
+	 * @param  {davinci.ve._Widget} widget
+	 * 				The widget instance whose properties are being modified.
+	 * @return {boolean} 'true'
+	 * 				if one of the modified properties has the 'refreshFromSource'
+	 * 				attribute set.
+	 */
+	_doRefreshFromSource: function(widget) {
+		var props = this._properties,
+			name,
+			p,
+			refresh = false;
+		for (name in props) {
+			if (props.hasOwnProperty(name)) {
+				p = widget.metadata.property[name];
+				if (p && p.refreshFromSource) {
+					refresh = true;
+					break;
+				}
+			}
+		}
+		return refresh;
 	},
 
 	undo: function(){

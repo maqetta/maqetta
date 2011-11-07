@@ -1,3 +1,8 @@
+// monkey-patch dojo.xhrGet, as there is no Rhino support there
+dojo.xhrGet = function(args){
+    args.load(readFile(args.url, "utf-8"));
+};
+
 (function(){
 	// monkey patch fromJson to avoid Rhino bug in eval: https://bugzilla.mozilla.org/show_bug.cgi?id=471005
 	var fromJson = dojo.fromJson;

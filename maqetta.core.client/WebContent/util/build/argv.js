@@ -1,6 +1,7 @@
 define([
 	"require",
 	"dojo",
+	"dojo/has",
 	"./fs",
 	"./fileUtils",
 	"./process",
@@ -10,7 +11,7 @@ define([
 	"./messages",
 	"./v1xProfiles",
 	"dojo/text!./help.txt"
-], 	function(require, dojo, fs, fileUtils, process, argv, stringify, version, messages, v1xProfiles, help){
+], 	function(require, dojo, has, fs, fileUtils, process, argv, stringify, version, messages, v1xProfiles, help){
 	///
 	// AMD-ID build/argv
 	//
@@ -167,10 +168,11 @@ define([
 						profile = profile.profile;
 						fixupBasePath(profile);
 					}else{
-						profile = v1xProfiles.processProfile(profile.dependencies, dojoPath, utilBuildscriptsPath);
+						profile = v1xProfiles.processProfile(profile.dependencies, dojoPath, utilBuildscriptsPath, path);
 						// notice we do *not* fixup the basePath for legacy profiles since they have no concept of basePath
 					}
 				}
+				profile.selfFilename = filename;
 				messages.log("pacify", "processing " + scriptType + " resource " + filename);
 				return profile;
 			}catch(e){
@@ -270,9 +272,7 @@ define([
 			"--package":"package",
 			"package":"package",
 
-			"-r":"require",
 			"--require":"require",
-			"r":"require",
 			"require":"require",
 
 			"--dojoConfig":"dojoConfig",
@@ -305,7 +305,6 @@ define([
 				break;
 
 			case "--profileFile":
-			case "-r":
 			case "--require":
 			case "--dojoConfig":
 			case "--htmlDir":
@@ -331,7 +330,7 @@ define([
 
 			case "--writeProfile":
 				if(i<end){
-					result.wrieProfile = getAbsolutePath(argv[i++], cwd);
+					result.writeProfile = getAbsolutePath(argv[i++], cwd);
 				}else{
 					illegalArgumentValue(arg, i);
 				}
@@ -343,8 +342,14 @@ define([
 				break;
 
 			case "--check-args":
-				// read, process, and send the profile to the console and then exit
+				// read and process the command line args, send the profile to the console and then exit
 				checkArgs = true;
+				break;
+
+			case "--check-discovery":
+				// echo discovery and exit
+				result.checkDiscovery = true;
+				result.release = true;
 				break;
 
 			case "--debug-check":
@@ -357,6 +362,7 @@ define([
 				result.clean = true;
 				break;
 
+			case "-r":
 			case "--release":
 				// do a build
 				result.release = true;
@@ -365,13 +371,13 @@ define([
 			case "--help":
 				// print help message
 				printHelp = true;
-				messages.log("pacify", help);
 				break;
 
 			case "-v":
 				// print the version
-				printVersion = true;
-				messages.log("pacify", version+"");
+				printVersion = function(){
+					messages.log("pacify", version+"");
+				};
 				break;
 
 			case "--unit-test":
@@ -422,7 +428,6 @@ define([
 								break;
 
 							case "profileFile":
-							case "r":
 							case "require":
 							case "dojoConfig":
 							case "htmlDir":
@@ -501,19 +506,36 @@ define([
 		}
 	});
 
+
+
 	if(((printHelp || printVersion) && argv.length==2) || (printHelp && printVersion && argv.length==3)){
 		//just asked for either help or version or both; don't do more work or reporting
+		if(printHelp){
+			messages.log("pacify", help);
+			messages.log("pacify", version+"");
+			has("host-rhino") && messages.log("pacify", "running under rhino");
+			has("host-node") && messages.log("pacify", "running under node");
+		}
+		printVersion && printVersion();
 		process.exit(0);
 		return 0;
-	}else if (checkArgs){
+	}
+
+	printVersion && printVersion();
+
+	if (checkArgs){
 		messages.log("pacify", stringify(result));
 		process.exit(0);
 		return 0;
-	}else if(messages.getErrorCount()){
+	}
+
+	if(messages.getErrorCount()){
 		messages.log("pacify", "errors on command line; terminating application.");
 		process.exit(-1);
 		return 0;
-	}else if(!result.profiles.length){
+	}
+
+	if(!result.profiles.length){
 		messages.log("pacify", "no profile provided; use the option --help for help");
 		process.exit(-1);
 		return 0;

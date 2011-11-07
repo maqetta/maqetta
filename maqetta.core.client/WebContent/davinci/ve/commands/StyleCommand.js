@@ -55,8 +55,8 @@ dojo.declare("davinci.ve.commands.StyleCommand", null, {
 				if(!this._oldValues){
 					return;
 				}
-				this._mergeProperties(cleanValues, this._oldValues);
 			}			
+			this._mergeProperties(cleanValues, this._oldValues);
 			widget.setStyleValues( cleanValues);
 			this._refresh(widget);
 			

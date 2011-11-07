@@ -1,0 +1,11 @@
+<div class="fileDialog" style="position:relative">
+	<div class="folderContainer">
+		<div dojoType="dijit.layout.ContentPane">
+		<div class="fileDialogTreeWidget" dojoAttachPoint="fileTree" dojoType="dijit.Tree" model="system.resource" labelAttr="name" childrenAttrs="children"></div>
+		</div>
+	</div>
+	
+	<div class="buttonRow">
+		<button dojoType="dijit.form.Button" dojoAttachEvent="onClick:_okButton">${finishButtonLabel}</button>
+	</div>
+</div>

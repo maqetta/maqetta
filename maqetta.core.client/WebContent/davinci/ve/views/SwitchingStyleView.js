@@ -6,21 +6,28 @@ dojo.require("davinci.ve.widgets.CommonProperties");
 dojo.require("davinci.ve.widgets.EventSelection");
 dojo.require("davinci.ve.widgets.WidgetProperties");
 dojo.require("davinci.ve.widgets.WidgetToolBar");
-dojo.require("davinci.ve.widgets.Background");
-dojo.require('davinci.ve.widgets.Border');
 dojo.require("davinci.ve.widgets.Cascade");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.ve", "ve");  
 
 
-dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, {
+dojo.declare("davinci.ve.views.SwitchingStyleView", [davinci.workbench.WidgetLite], {
 
 	/* FIXME: These won't expand into pageTemplate. Not sure if that's a JS issue or dojo.declare issue.
 	 * Temporary copied into each property below but would be better if could get reusable values working somehow.
 	_paddingMenu:['', '0px', '1em'],
 	_radiusMenu:['', '0px', '6px'],
 	 */
+	
+	_editor : null,	// selected editor
+	_widget : null,	// selected widget
+	_subWidget : null,	// selected sub widget
+
+	constructor: function(params, srcNodeRef){
+    	dojo.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, this._editorSelected));
+		dojo.subscribe("/davinci/ui/widgetSelected", dojo.hitch(this, this._widgetSelectionChanged));
+	},
 
 	pageTemplate : [
 	         
@@ -110,7 +117,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
    		                			return;
    		                		}
 		       					var showRange=function(sectionData,first,last,begin,end){
-		       						for(var k=first;k<last;k++){
+		       						for(var k=first;k<=last;k++){
 		       							var thisProp = sectionData[k];
 		       							var thisRow = dojo.byId(thisProp.rowId);
 		       							if(k>=begin && k<=end){
@@ -472,7 +479,13 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 			}
 		}
 	},
-	
+
+	_editorSelected : function(editorChange){
+		
+		this._editor = editorChange.editor;
+		this.onEditorSelected(this._editor);
+	 },	
+
 	
 	onEditorSelected : function(){
 		

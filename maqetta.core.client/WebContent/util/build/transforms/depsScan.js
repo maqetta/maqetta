@@ -155,9 +155,20 @@ define(["require", "../buildControl", "../fileUtils", "../removeComments", "dojo
 			) {
 				var match= mid.match(/^([^\!]+)\!(.*)$/);
 				if (match) {
-					var pluginId= bc.getSrcModuleInfo(match[1], referenceModule).mid,
+					var pluginModuleInfo = bc.getSrcModuleInfo(match[1], referenceModule),
+						pluginModule = pluginModuleInfo &&  bc.amdResources[pluginModuleInfo.mid],
+						pluginId= pluginModule && pluginModule.mid,
 						pluginProc= bc.plugins[pluginId];
-					return pluginProc ? pluginProc.start(match[2], referenceModule, bc) : 0;
+					if(!pluginModule){
+						return 0;
+					}else if(!pluginProc){
+						if(!pluginModule.noBuildResolver){
+							bc.log("missingPluginResolver", ["module", resource.mid, "plugin", pluginId]);
+						}
+						return pluginModule;
+					}else{
+						return pluginProc.start(match[2], referenceModule, bc);
+					}
 				} else {
 					var moduleInfo= bc.getSrcModuleInfo(mid, referenceModule),
 						module= moduleInfo && bc.amdResources[moduleInfo.mid];
@@ -363,6 +374,7 @@ define(["require", "../buildControl", "../fileUtils", "../removeComments", "dojo
 					var text= getText.call(this);
 
 					// this is frome the old builder...
+					// TODO: consider removing this
 					// If this is an nls bundle, make sure it does not end in a ; Otherwise, bad things happen.
 					if(text.match(/\/nls\//)){
 						text = text.replace(/;\s*$/, "");
@@ -426,13 +438,13 @@ define(["require", "../buildControl", "../fileUtils", "../removeComments", "dojo
 
 					var textModuleInfo = bc.getSrcModuleInfo(fileUtils.catPath(parts[6].replace(/\./g, "/"), parts[9]), 0, true);
 					if(bc.internStringsSkipList[textModuleInfo.mid]){
-						skipping.push(textModuleInfo.src);
+						skipping.push(textModuleInfo.url);
 						return matchString;
 					}
 
 					var textModule = bc.resources[textModuleInfo.url];
 					if(!textModule){
-						notFound.push(textModuleInfo.src);
+						notFound.push(textModuleInfo.url);
 						return matchString;
 					}
 
@@ -505,7 +517,7 @@ define(["require", "../buildControl", "../fileUtils", "../removeComments", "dojo
 
 					extractResult =
 						// a vector of legacy loader API applications as pairs of [function-name, complete-function-application-text] + the following two properties
-						//   * text: the original text with all dojo.loadInit applications preceeded by 0 &&, thereby causing those applications to be discared by the minifier
+						//   * text: the original text with all dojo.loadInit applications preceeded by 0 &&, thereby causing those applications to be discarded by the minifier
 						//   * extractText: all legacy loader applications, with all dojo.loadInit applications moved to the beginning
 						// See dojo.js
 						syncLoader.extractLegacyApiApplications(text, removeComments(text));
@@ -549,14 +561,14 @@ define(["require", "../buildControl", "../fileUtils", "../removeComments", "dojo
 						"\tdef:function(" + names.join(",") + "){\n" + extractResult[1] + "\n}\n" +
 						"});\n\n";
 					mid = resource.mid + "-loadInit";
-					pluginResource = mix({}, resource, {
+					pluginResource = mix({}, mix(resource, {
 						src:resource.src.substring(0, resource.src.length-3) + "-loadInit.js",
 						dest:bc.getDestModuleInfo(mid).url,
 						mid:mid,
 						tag: {loadInitResource:1},
 						deps:[],
 						getText:function() { return pluginText; }
-					});
+					}));
 					bc.start(pluginResource);
 
 					pluginResourceId = "dojo/loadInit!" + mid;

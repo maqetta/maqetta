@@ -22,13 +22,19 @@ public class VDirectory implements IVResource {
     private Vector     children;
     private IVResource parent;
     private String     name;
-
+    private boolean readOnly;
+    
     public VDirectory(IVResource parent, String name) {
+    	this(parent,name, false);
+    }
+
+    public VDirectory(IVResource parent, String name, boolean readOnly) {
         this.parent = parent;
         this.name = name;
         this.children = new Vector();
+        this.readOnly = readOnly;
     }
-
+    
     protected VDirectory() {
         // TODO Auto-generated constructor stub
         this.children = new Vector();
@@ -197,9 +203,9 @@ public class VDirectory implements IVResource {
 
     public boolean readOnly() {
         if (this.parent != null) {
-            return this.parent.readOnly();
+            return this.readOnly || this.parent.readOnly();
         } else {
-            return false;
+            return this.readOnly;
         }
     }
 

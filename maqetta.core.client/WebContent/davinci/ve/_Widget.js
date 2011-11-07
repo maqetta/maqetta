@@ -56,8 +56,33 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
 		return this._edit_context;
 	},
 
-	getChildren: function() {
-		return [];
+	getChildren: function(attach) {
+		var helper = this.getHelper();
+		if (helper && helper.getChildren) {
+			return helper.getChildren(this, attach);
+		}
+
+		return this._getChildren(attach);
+	},
+
+	_getChildren: function(attach) {
+		var containerNode = this.getContainerNode(),
+			children = [];
+
+		if (containerNode) {
+			dojo.forEach(containerNode.children, function(node) {
+				if (attach) {
+					children.push(davinci.ve.widget.getWidget(node));
+				} else {
+					var widget = node._dvWidget;
+					if (widget) {
+						children.push(widget);
+					}
+				}
+			});
+		}
+
+		return children;
 	},
 
 	getContainerNode: function() {
@@ -66,11 +91,14 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
 			return helper.getContainerNode(this);
 		}
 
-		if ((this.dijitWidget && this.dijitWidget.isContainer)
-                || davinci.ve.metadata.getAllowedChild(this.type)[0] !== 'NONE') {
-            return (this.containerNode || this.domNode);
-        }
-		return undefined;
+		if (davinci.ve.metadata.getAllowedChild(this.type)[0] !== 'NONE') {
+			return this._getContainerNode();
+		}
+		return null;
+	},
+
+	_getContainerNode: function() {
+		return this.domNode;
 	},
 
 	getMetadata: function() {
@@ -477,33 +505,26 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
         return content.join('');
 	},
 
-	getPropertyValue: function(name) {
-		if(!name) {
-			return undefined;
-		}
 
-//	TODO: implement helper
-//		var helper = this.getHelper();
-//		if(helper && helper.getPropertyValue) {
-//			return helper.getPropertyValue.apply(this, [name]);
-//		}
-		if (name=='id') {
+	getPropertyValue: function(name) {
+		if (name === 'id') {
 			return this.getId();
-		} else if (name == 'jsId') {
+		} else if (name === 'jsId') {
 			return this.getObjectId();
 		}
+
+		var helper = this.getHelper();
+		if (helper && helper.getPropertyValue) {
+			// FIXME: Helper has to know about _getPropertyValue function
+			// Would be cleaner if we used OO approach
+			return helper.getPropertyValue(this, name);
+		}
+
 		return this._getPropertyValue(name);
 	},
 
 	_getPropertyValue: function(name) {
-		var widget=this._getWidget();
-		if(widget && widget.get) {
-			return widget.get(name);
-		}
-		return widget && widget[name];
-	},
-
-	_getWidget: function() {
+		return this.domNode[name];
 	},
 
 	getTagName: function()
@@ -645,13 +666,6 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
 			} else {
 			    delete this.properties[name];
 				this._srcElement.removeAttribute(name);
-				/*
-				 * WORKAROUND for issue 771
-				 * This workaround can be removed once we integrate a version of dojo
-				 * which includes the fix for http://bugs.dojotoolkit.org/ticket/13776
-				 */
-				var w = this._getWidget();
-				if (name == "back" && w.declaredClass != undefined && w.declaredClass == "dojox.mobile.Heading") dojo.destroy(w._btn);
 			}
 		}
 	},

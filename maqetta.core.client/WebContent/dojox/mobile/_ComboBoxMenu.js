@@ -75,6 +75,7 @@ define([
 			this.inherited(arguments);
 			this.scrollable = new Scrollable(dojo, dojox);
 			this.scrollable.resize = function(){}; // resize changes the height rudely
+			this.scrollable.androidWorkaroud = false; // disable Android workaround
 		}
 	});
 });

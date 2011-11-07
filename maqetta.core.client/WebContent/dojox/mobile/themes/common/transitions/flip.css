@@ -26,3 +26,10 @@
 	opacity: 1;
 	-webkit-transform: scale(1,1) skew(0,0) !important;
 }
+.dj_android.dj_tablet .mblFlip.mblOut.mblTransition {
+	-webkit-transition-duration: .4s;
+}
+.dj_android.dj_tablet .mblFlip.mblIn.mblTransition {
+	-webkit-transition-delay: .4s;
+	-webkit-transition-duration: .4s;
+}

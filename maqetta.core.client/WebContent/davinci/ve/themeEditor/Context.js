@@ -4,6 +4,7 @@ dojo.require("davinci.commands.CommandStack");
 dojo.require("davinci.ve.widget");
 dojo.require("davinci.ve.themeEditor.SelectTool");
 dojo.require("davinci.ve.Context");
+dojo.require("davinci.util"); 
 
 
 dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
@@ -11,6 +12,7 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit/dijit,dijit/dijit-all", // dijit-all hangs FF4 and does not seem to be needed.
 	//_bootstrapModules: "dijit/dijit",
+	_configProps: {async:true},
 
 	constructor: function(args){
 		this._id = "_edit_context_" + davinci.ve._contextCount++;
@@ -95,24 +97,24 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 			this.select(null);
 			dojo.forEach(this.getTopWidgets(), this.detach, this);
 		}
-		var escapees = [];
-		var scripts = {};
-		var dvAttributes = {};
-			dojo.forEach(this.getTopWidgets(), function(w){
-				if(w.getContext()){
-					w.destroyWidget();
-				}
-			});
-			containerNode.innerHTML = content;
-			dojo.forEach(dojo.query("*", containerNode), function(n){
-				this.loadRequires(n.getAttribute("dojoType"));
+		var escapees = [],
+			scripts = {},
+			dvAttributes = {},
+			promise = new dojo.Deferred();
+		dojo.forEach(this.getTopWidgets(), function(w){
+			if(w.getContext()){
+				w.destroyWidget();
+			}
+		});
+		containerNode.innerHTML = content;
+		dojo.forEach(dojo.query("*", containerNode), function(n){
+			this.loadRequires(n.getAttribute("dojoType"));
 //				this.resolveUrl(n);
-			}, this);
-			var dj = this.getDojo();
+		}, this);
+		this.getGlobal()["require"]("dojo/ready")(function(){
 			try {
-				var dj = this.getDojo();
-				dj["require"]("dojo.parser");
-				dj.parser.parse(containerNode);
+				this.getGlobal()["require"]("dojo/parser").parse(containerNode);
+				promise.callback();
 			} catch(e) {
 				// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
 				// the dojo parser will throw an exception trying to compute style on hidden containers
@@ -126,17 +128,19 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 				});
 				this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",  dojo.hitch(this, this._editorSelectionChange));
 
-				//				throw e;
+				promise.errback();
+				throw e;
 			}
-		
+		}.bind(this));
 		if(active){
 			dojo.query("> *", this.rootNode).map(davinci.ve.widget.getWidget).forEach(this.attach, this);
 		}
 
 		// remove the styles from all widgets and subwidgets that supported the state
-		dojo.query('.dvThemeWidget').forEach(this._theme.removeWidgetStyleValues);
+		dojo.query('.dvThemeWidget').forEach(this.theme.removeWidgetStyleValues);
 			// set the style on all widgets and subwidgets that support the state
 			//this._themeEditor._theme.setWidgetStyleValues(widgets[i],this._currentState);
+		return promise;
 	},
 	
 	attach: function(widget){
@@ -155,12 +159,12 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 				isThemeWidget: isThemeWidget
 		};
 		if (isThemeWidget) {
-			davinci.Runtime.arrayAddOnce(this._widgets,widget);
+			davinci.util.arrayAddOnce(this._widgets, widget);
 		}
 	},
 	getThemeMeta: function(){
 		if(!this._themeMetaCache) {
-			this._themeMetaCache = davinci.library.getMetaData(this._theme);
+			this._themeMetaCache = davinci.library.getMetaData(this.theme);
 		}
 
 		return this._themeMetaCache;
@@ -214,9 +218,6 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 			this._selection = selection;
 			this.onSelectionChange(this.getSelection());
 		}
-	},
-	setTheme: function(themeMeta){
-		this._theme = themeMeta;
 	},
 	onSelectionChange: function(selection){
 		//dojo.publish("/davinci/ui/widgetSelected",[selection]);

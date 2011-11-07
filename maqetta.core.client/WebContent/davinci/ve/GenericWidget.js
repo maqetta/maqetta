@@ -82,33 +82,6 @@ define("davinci/ve/GenericWidget", ["davinci/ve/_Widget"], function() {
 		this.inherited(arguments);
 	},
 
-	getContainerNode: function() {
-		// summary:
-		//		Returns the passed node itself if the node is allowed to have childNodes.
-		//		Otherwise returns undefined.
-		//
-
-		var tagName = this.getTagName();
-		switch(tagName) {
-		case "input":
-		case "img":
-		case "hr":
-		case "br":
-		case "script":
-			return undefined;
-		default:
-			return this.domNode;
-		}
-	},
-	//FIXME: Shouldn't return all children, just children that are widgets
-	//FIXME: DRY: code appears to be identical to HTMLWidget
-	getChildren: function() {
-		var dvWidget = function(child) {
-			return child._dvWidget;
-		};
-
-		return dojo.map(dojo.filter(this.domNode.children, dvWidget), dvWidget);
-	},
 	_attr: function(name,value) {
 		if (arguments.length>1) {
 			this.domNode[name]=value;
@@ -117,9 +90,6 @@ define("davinci/ve/GenericWidget", ["davinci/ve/_Widget"], function() {
 		}
 	},
 
-	_getWidget: function() {
-		return this.domNode;
-	},
 	getTagName: function() {
 		return this.domNode.nodeName.toLowerCase();
 	}

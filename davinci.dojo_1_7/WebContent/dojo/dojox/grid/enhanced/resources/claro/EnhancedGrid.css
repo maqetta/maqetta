@@ -256,22 +256,22 @@
 	margin: 0;
 }
 .dojoDndMove .dojoxGridDndAvatarItem .dojoxGridDndAvatarItemImage {
-	background-image: url(../dojo/resources/images/dndNoMove.png);
+	background-image: url(../../../../../dojo/resources/images/dndNoMove.png);
 	background-repeat: no-repeat;
 	background-position: center center;
 }
 .dojoDndCopy .dojoxGridDndAvatarItem .dojoxGridDndAvatarItemImage {
-	background-image: url(../dojo/resources/images/dndNoCopy.png);
+	background-image: url(../../../../../dojo/resources/images/dndNoCopy.png);
 	background-repeat: no-repeat;
 	background-position: center center;
 }
 .dojoDndMove .dojoDndAvatarCanDrop .dojoxGridDndAvatarItem .dojoxGridDndAvatarItemImage {
-	background-image: url(../dojo/resources/images/dndMove.png);
+	background-image: url(../../../../../dojo/resources/images/dndMove.png);
 	background-repeat: no-repeat;
 	background-position: center center;
 }
 .dojoDndCopy .dojoDndAvatarCanDrop .dojoxGridDndAvatarItem .dojoxGridDndAvatarItemImage {
-	background-image: url(../dojo/resources/images/dndCopy.png);
+	background-image: url(../../../../../dojo/resources/images/dndCopy.png);
 	background-repeat: no-repeat;
 	background-position: center center;
 }
@@ -361,10 +361,10 @@
 	padding-left:25px;
 }
 .claro .dojoxGridLoading {
-	background-image:url(../dijit/themes/claro/images/loadingAnimation.gif);
+	background-image:url(../../../../../dijit/themes/claro/images/loadingAnimation.gif);
 }
 .claro .dojoxGridError {
-	background-image: url(../dijit/icons/images/commonIconsObjActEnabled.png); 
+	background-image: url(../../../../../dijit/icons/images/commonIconsObjActEnabled.png); 
 	background-position: -496px;
 	width: 16px;
 	height: 16px;
@@ -403,7 +403,7 @@
 	float:right;
 }
 .claro .dojoxGridArrowButtonNode {
-	background:transparent url(../dijit/themes/claro/images/spriteArrows.png) no-repeat scroll left center;
+	background:transparent url(../../../../../dijit/themes/claro/images/spriteArrows.png) no-repeat scroll left center;
 	display:block;
 	float:right;
 	height:1em;
@@ -415,7 +415,7 @@
 	background-position:-21px 50%;
 }
 .claro .dojoxGridMasterHeader {
-	background: url(../resources/images/header.png) #EDF2F7 repeat-x bottom;
+	background: url(../../../resources/images/header.png) #EDF2F7 repeat-x bottom;
 	background: -moz-linear-gradient(top, #EDF2F7, #D0DFEA);
 	background: -webkit-gradient(linear, left top, left bottom, from(#EDF2F7), to(#D0DFEA));
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#FFEDF2F7, endColorstr=#FFD0DFEA);
@@ -577,14 +577,14 @@
 	background-position: left top !important;
 }
 .claro .dojoxGridExpandoNode {
-	background-image: url(../dijit/themes/claro/images/treeExpandImages.png);
+	background-image: url(../../../../../dijit/themes/claro/images/treeExpandImages.png);
 	width: 16px;
 	height: 16px;
 	cursor: pointer;
 	background-position: 1px 0px; 
 }
 .dj_ie6 .claro .dojoxGridExpandoNode {
-	background-image: url(../dijit/themes/claro/images/treeExpandImages8bit.png);
+	background-image: url(../../../../../dijit/themes/claro/images/treeExpandImages8bit.png);
 }
 .claro .dojoxGridRowOver .dojoxGridExpandoNode {
 	background-position: -17px 0px;
@@ -596,7 +596,7 @@
 	background-position: -53px 0px;
 }
 .claro .dojoxGridExpandoLoading .dojoxGridExpandoNode {
-	background-image: url(../dijit/themes/claro/images/loadingAnimation.gif);
+	background-image: url(../../../../../dijit/themes/claro/images/loadingAnimation.gif);
 }
 .claro .dojoxGridTreeModel .dojoxGridNoChildren .dojoxGridExpando {
 	visibility: visible !important;

@@ -27,6 +27,19 @@ davinci.model.Resource.Resource= function(){
 		 return this.parent.getPath()+"/"+this.name;
 	 return this.name;
  }
+ 
+ davinci.model.Resource.Resource.prototype.readOnly= function(){
+	 
+	 if (this.hasOwnProperty("_readOnly")){
+		 return this._readOnly || (this.parent!=null && this.parent.readOnly());
+	 }
+		 
+	if( this.parent)
+		 return this.parent.readOnly();
+	
+	 return false;
+ }
+ 
 // davinci.model.Resource.Resource.prototype.getURL = function(){
 //	
 //    var locationPath=new davinci.model.Path(location.href);
@@ -220,7 +233,7 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
           
             child.link=responseObject[i].link;
             child.isNew = responseObject[i].isNew;
-            child.readOnly = responseObject[i].readOnly;
+            child._readOnly = responseObject[i].readOnly;
             if(responseObject[i].libraryId){
             	child.libraryId = responseObject[i].libraryId;
             	child.libVersion = responseObject[i].libVersion;

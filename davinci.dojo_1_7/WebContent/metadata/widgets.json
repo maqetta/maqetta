@@ -918,6 +918,19 @@
             "inlineEdit": "davinci.ve.input.RichTextInput"
         },
         {
+            "name": "TooltipDialog",
+            "description": "Tooltip Dialog",
+            "type": "dijit.TooltipDialog",
+            "category": "untested",
+            "icon": "resources/images/tooltip.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAEJ1o2GMs2GMsmmRtmmRtW+WuXOZuz5zoUh6plCAqlCAqViGrmiStmmStmiStW+Xudr0/+P3/+T3//X8/9r1/9v1/+z6/+36//T8//X9//r+/////wAAAAAAAAAAAAAAACH5BAEAABsALAAAAAAQABAAAAVU4CaOZGme6GakpUGt7PZAUVWkgyNFfMQwg0FjQBAFIMikEikQLSTQKC8qWYgUVOg0mhAhLODw5RK2IEQAjHqdmawxANFBQ6/b6Qf5Yc/v82OAgYEhADs=",
+            "children": "Text",
+            "tool": "davinci.libraries.dojo.dijit.TooltipDialogCreateTool",
+            "resizable": "none",
+            "allowedChild": "ANY",
+            "helper": "davinci.libraries.dojo.dijit.TooltipDialogHelper"
+        },
+        {
             "name": "DateTextBox",
             "description": "Date Text Box",
             "type": "dijit.form.DateTextBox",

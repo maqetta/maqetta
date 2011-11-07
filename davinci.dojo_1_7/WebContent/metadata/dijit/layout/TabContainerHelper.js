@@ -1,4 +1,4 @@
-define(["dojo/_base/array", "dojo/_base/connect"], function (array, connect) {
+define(function() {
 return function(){
 	/**
 	 * Helper function called to establish widget size at initial creation time
@@ -13,6 +13,5 @@ return function(){
 			return {width:'100%',height:'100%'};
 		}
 	};
-
 };
 });

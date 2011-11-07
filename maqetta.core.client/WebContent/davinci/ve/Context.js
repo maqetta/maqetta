@@ -662,7 +662,8 @@ dojo.declare("davinci.ve.Context", null, {
 		var data = this._parse(source);
 		this._scriptAdditions=data.scriptAdditions;
 		//debugger;
-		if(!this.frameNode){ // initialize frame
+		if(!this.frameNode){
+			// initialize frame
 			var dojoUrl;
 			
 			dojo.some(data.scripts, function(url){
@@ -838,8 +839,11 @@ dojo.declare("davinci.ve.Context", null, {
 			};*/
 
 		}else{
-			console.warn("Context._setContent called after frame initialized");
-//			this._continueLoading(data, callback, this, scope); //  we shouldn't be getting here?  this will just bomb out without Dojo (this.getGlobal() will fail)
+			if(!this.getGlobal()){
+				console.warn("Context._setContent called during initialization");
+			}
+			// frame has already been initialized, changing content (such as changes from the source editor)
+			this._continueLoading(data, callback, this, scope);
 		}
 	},
 

@@ -1,4 +1,4 @@
-
+/* Switch - default */
 .mblSwitchBg {
 	-moz-border-radius: 2px;
 	-o-border-radius: 2px;
@@ -26,6 +26,8 @@
 	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 }
+
+/* Round Shape */
 .mblSwRoundShape1 .mblSwitchBg,
 .mblSwRoundShape2 .mblSwitchBg {
 	-moz-border-radius: 14px;
@@ -40,6 +42,7 @@
 	-ms-border-radius: 13px;
 	border-radius: 13px;
 }
+/* Arc Shape */
 .mblSwArcShape1 .mblSwitchBg,
 .mblSwArcShape2 .mblSwitchBg {
 	-moz-border-radius: 6px/14px;

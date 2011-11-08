@@ -1,4 +1,4 @@
-
+/* dojox.mobile.Tooltip */
 .mblTooltip {
 	-moz-border-radius: 8px;
 	-o-border-radius: 8px;
@@ -7,16 +7,16 @@
 	background-image: none;
 }
 .mblTooltipBefore .mblTooltipArrow {
-	*right: 0; 
+	*right: 0; /* IE 7 quirks */
 }
 .mblTooltipAbove .mblTooltipArrow {
-	*bottom: 0px; 
+	*bottom: 0px; /* IE 7 quirks */
 }
 .mblTooltipBefore .mblTooltipInnerArrow {
-	*right: -1px; 
+	*right: -1px; /* IE 7 quirks */
 }
 .mblTooltipAbove .mblTooltipInnerArrow {
-	*bottom: -1px;  
+	*bottom: -1px;  /* IE 7 quirks */
 }
 .mblTooltipBefore .mblTooltipInnerArrow {
 	border-right-color: #424142;

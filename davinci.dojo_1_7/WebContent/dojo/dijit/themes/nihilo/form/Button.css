@@ -1,28 +1,42 @@
 
+/*****
+		dijit.form.Button
+		dijit.form.DropDownButton
+		dijit.form.ComboButton
+		dijit.form.ComboBox (partial)
+		dijit.form.Spinner (partial) (TODO: create NumberSpinner.css file like claro has)
+ *****/
+
 .nihilo .dijitButtonNode {
-	
-	
+	/* enabled state - inner */
+	/* border:1px outset #a0a0a0; */
 	border:1px solid #dedede;
 	border-bottom:1px solid #dedede;
 	padding: 0.1em 0.2em 0.2em 0.2em;
 	background: #fff url("../images/buttonEnabled.png") repeat-x top left;
 }
+
 .nihilo .dijitSelect .dijitButtonContents {
 	border-right: none;
 }
+
 .nihilo .dijitButtonText {
 	text-align: center;
 	padding: 0 0.3em;
 }
+
 .nihilo .dijitComboBox .dijitButtonNode {
 	border-width: 0 0 0 1px;
 }
+
 .nihilo .dijitArrowButton {
 	color: #111;
 }
+
 .nihilo .dijitComboButton .dijitDownArrowButton {
 	padding-right:4px;
 }
+
 .nihilo .dijitComboBoxReadOnly,
 .nihilo .dijitSpinnerReadOnly,
 .nihilo .dijitSpinnerReadOnly .dijitButtonNode,
@@ -33,7 +47,7 @@
 .nihilo .dijitComboBoxDisabled,
 .nihilo .dijitSpinnerDisabled,
 .nihilo .dijitSpinnerDisabled .dijitButtonNode {
-	
+	/* disabled state - inner */
 	border-color: #dedede;
 	background:#fafafa url("../images/buttonDisabled.png") top repeat-x;
 	opacity: 0.60;
@@ -42,9 +56,11 @@
 .dj_ie7 .nihilo .dijitReadOnly input,
 .dj_ie6 .nihilo .dijitComboButtonDisabled .dijitButtonText,
 .dj_ie7 .nihilo .dijitComboButtonDisabled .dijitButtonText {
-	
+	/* opacity doesn't work on table node in IE, work around here */
 	color: #aaa;
 }
+
+
 .nihilo .dijitButtonHover .dijitButtonNode,
 .nihilo .dijitButtonNodeHover,
 .nihilo .dijitToggleButtonHover .dijitButtonNode,
@@ -52,11 +68,12 @@
 .nihilo .dijitButtonContentsHover,
 .nihilo .dijitDownArrowButtonHover,
 .nihilo .dijitUpArrowButtonHover {
-	
-	
+	/* hover state - inner */
+	/* TODO: change from Hover to Selected so that button is still highlighted while drop down is being used */
 	color:#243C5F;
 	background:#fcfcfc url("../images/buttonHover.png") repeat-x top left;
 }
+
 .nihilo .dijitUpArrowButtonActive,
 .nihilo .dijitDownArrowButtonActive,
 .nihilo .dijitButtonActive .dijitButtonNode,
@@ -64,10 +81,14 @@
 .nihilo .dijitDropDownButtonActive .dijitButtonNode,
 .nihilo .dijitComboButton .dijitButtonContentsActive,
 .nihilo .dijitStackController .dijitToggleButtonChecked .dijitButtonNode {
-	
+	/* active state - inner (for when you are pressing a normal button, or
+	 * when a radio-type button is in a depressed state
+	 */
 	border-color:#dedede;
 	background: #f5f5f5 url("../images/buttonActive.png") top left repeat-x;
 }
+
+
 .nihilo .dijitArrowButtonInner {
 	background-image: url("../images/spriteArrows.png");
 	background-repeat: no-repeat;
@@ -88,10 +109,10 @@
 	background-image: url("../images/spriteArrows.gif");
 }
 .dj_webkit .nihilo .dijitSpinner .dijitUpArrowButton .dijitArrowButtonInner {
-	margin-top: -1px; 
+	margin-top: -1px; /* image has too many blank pixels on top */
 }
 .dj_ie .nihilo .dijitSpinner .dijitUpArrowButton .dijitArrowButtonInner {
-	margin-top: 1px; 
+	margin-top: 1px; /* image has too many blank pixels on top */
 }
 .nihilo .dijitSpinnerButtonContainer {
 	width: auto;

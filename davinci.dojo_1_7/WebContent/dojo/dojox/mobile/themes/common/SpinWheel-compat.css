@@ -6,6 +6,7 @@
 .dj_ie .mblSpinWheel {
 	background-image: url(compat/spinwheel-bg.png);
 }
+
 .mblSpinWheelBar {
 	background-color: #C4CADC;
 	background-image: -moz-linear-gradient(top, #EDEEF2 0%, #C8CADD 25%, #BBBFD4 49%, #9FA8C6 51%, #A2A9C7 81%, #A6ABC9 82%, #A7ADCA 1%);
@@ -20,12 +21,12 @@
 .dj_ie6 .mblSpinWheelBar, .dj_ie7 .mblSpinWheelBar {
 	z-index: -1;
 }
-*:first-child+html .mblSpinWheelSlotTouch { 
+*:first-child+html .mblSpinWheelSlotTouch { /* IE7 hack */
 	background: white;
 	filter: alpha(opacity=0);
 	height: 200px;
 }
-*html .mblSpinWheelSlotTouch { 
+*html .mblSpinWheelSlotTouch { /* IE6 hack */
 	background: white;
 	filter: alpha(opacity=0);
 	height: 200px;

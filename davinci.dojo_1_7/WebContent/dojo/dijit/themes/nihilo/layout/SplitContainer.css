@@ -1,3 +1,7 @@
+/**
+ * dijit.layout.SplitContainer
+ *
+ */
 
 .nihilo .dijitSplitContainerSizerH {
 	background:url("../images/splitContainerSizerV.png") repeat-y #fff;
@@ -6,12 +10,14 @@
 	border-right:0 solid #d3d3d3;
 	width:5px;
 }
+
 .nihilo .dijitSplitContainerSizerH .thumb {
 	background:url("../images/splitContainerSizerV-thumb.png") no-repeat;
 	left:1px;
 	width:2px;
 	height:19px;
 }
+
 .nihilo .dijitSplitContainerSizerV {
 	background:url("../images/splitContainerSizerH.png") repeat-x #fff;
 	border:0;
@@ -19,6 +25,7 @@
 	border-bottom:0 solid #d3d3d3;
 	height:2px;
 }
+
 .nihilo .dijitSplitContainerSizerV .thumb {
 	background:url("../images/splitContainerSizerH-thumb.png") no-repeat;
 	top:1px;

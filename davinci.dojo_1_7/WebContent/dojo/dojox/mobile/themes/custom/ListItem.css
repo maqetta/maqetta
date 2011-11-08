@@ -1,43 +1,13 @@
+@import url("../common/domButtons/DomButtonGrayArrow.css");
 
-.mblDomButtonGrayArrow, .mblDomButtonArrow {
-	position: relative;
-	width: 20px;
-	height: 29px;
-}
-.mblDomButtonGrayArrow > div, .mblDomButtonArrow > div {
-	position: absolute;
-	top: 10px;
-	left: 6px;
-	width: 6px;
-	height: 6px;
-	font-size: 1px;
-	-webkit-transform: rotate(45deg);
-	border-width: 3px 3px 0px 0px;
-	border-style: solid;
-	border-color: #808080;
-}
-.mblDomButtonDarkBlueCheck, .mblDomButtonCheck {
-	position: relative;
-	width: 20px;
-	height: 29px;
-}
-.mblDomButtonDarkBlueCheck > div, .mblDomButtonCheck > div {
-	position: absolute;
-	left: 0px;
-	top: 8px;
-	width: 16px;
-	height: 6px;
-	font-size: 1px;
-	-webkit-transform: scaleX(0.7) rotate(135deg);
-	border-width: 3px 4px 0px 0px;
-	border-style: solid;
-	border-color: #314E84;
-}
+@import url("../common/domButtons/DomButtonDarkBlueCheck.css");
+/* dojox.mobile.ListItem */
 .mblListItem {
   position: relative;
   list-style-type: none;
   vertical-align: bottom;
-  
+  /* To avoid IE6 LI bug */
+
   padding: 0 0 0 8px;
   height: 50px;
   border-bottom: 1px solid #b5bcc7;

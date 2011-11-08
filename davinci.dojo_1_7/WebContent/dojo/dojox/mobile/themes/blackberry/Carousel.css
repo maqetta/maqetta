@@ -1,4 +1,4 @@
-
+/* dojox.mobile.Carousel */
 .mblCarousel {
   overflow: hidden;
 }
@@ -39,7 +39,8 @@
   padding-top: 0px;
   margin: 0px 2px;
   border-width: 1px;
-  
+  /* workaround for android problem */
+
 }
 .mblCarouselTitle {
   margin: 2px 0px 2px 4px;

@@ -10,10 +10,12 @@ html.mobile, .mobile body {
   font-family: Helvetica;
   font-size: 17px;
 }
+/* Button Colors */
 .mblColorBlue {
   background-color: #366EDF;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#7a9de9), to(#2362dd), color-stop(0.5, #366edf), color-stop(0.5, #215fdc));
 }
+/* Default Button Colors */
 .mblColorDefault {
   background-color: #5877A2;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999));

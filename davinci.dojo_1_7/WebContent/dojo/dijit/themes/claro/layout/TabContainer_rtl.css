@@ -28,7 +28,8 @@
 .dj_ie6 .claro .dijitTabContainerLeft-tabs .dijitTabRtl,
 .dj_ie7 .claro .dijitTabContainerRight-tabs .dijitTabRtl .dijitTabInnerDiv,
 .dj_ie7 .claro .dijitTabContainerLeft-tabs .dijitTabRtl .dijitTabInnerDiv {
-  
+  /*Make the .tablabel have width in ie6 with haslayout property, fix Close icon position bug*/
+
   zoom: 1;
 }
 .dj_ie6 .claro .dijitTabRtl .dijitTabCloseButton, .dj_ie7 .claro .dijitTabRtl .dijitTabCloseButton, .dj_iequirks .claro .dijitTabRtl .dijitTabCloseButton {
@@ -50,11 +51,17 @@
   position: relative;
 }
 .dj_ie6-rtl .claro .dijitTabContainerTop-tabs {
-  
+  /* this strange rule prevents IE6 bug in themeTester.html?dir=rtl upon closing
+	 * "Closable" tab, where the other tabs disappear
+	 */
+
   padding-left: 3px;
 }
 .dj_iequirks-rtl .claro .dijitTabListWrapper {
-  
+  /* this strange rule prevents IE6 bug in themeTesterQuirk.html?dir=rtl upon closing
+	 * "Closable" tab, where the other tabs disappear
+	 */
+
   border-left: 1px solid #ffffff;
   border-right: 1px solid #ffffff;
 }

@@ -18,146 +18,255 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
     constructor : function(){
 
         this._connections = [];
-        this._dojoThemeSets = davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
+       // this._dojoThemeSets = davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
         var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
         this._dialog = new dijit.Dialog({
             id: "manageThemeSets",
             title: langObj.themeSetsDialog,
-            style:"width:300px; ",
+            style:"width:510px; ",
             
         });
         dojo.connect(this._dialog, "onCancel", this, "onClose");
-        dojo.create("div");
-        var formHTML='<div id="manage_theme_sets_div" style="width:200px; height:300px;></div>';
-        this._dialog.attr("content",formHTML);
-        this._dialog.show();
-        
+        this._dojoThemeSets = davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
+        if (!this._dojoThemeSets){ 
+            this._dojoThemeSets =  davinci.theme.dojoThemeSets;
             
-        var mydata= {"identifier":"device","items":[{"theme":"iphone","device":"iPhone"},{"theme":"android","device":"Android"}]};
+        }
+        this._dojoThemeSets = dojo.clone(this._dojoThemeSets); // make a copy so we won't effect the real object
+        
+        this._dialog.attr("content", this._getTemplate());
+        this._connections.push(dojo.connect(dojo.byId('theme_select_themeset_theme_select'), "onchange", this, "onChange"));
+        this._connections.push(dojo.connect(dojo.byId('theme_select_themeset_theme_select'), "onClick", this, "onClick"));
+        this._connections.push(dojo.connect(dijit.byId('theme_select_desktop_theme_select'), "onChange", this, "onDesktopChange"));
+        this._connections.push(dojo.connect(dijit.byId('theme_select_mobile_theme_select'), "onChange", this, "onMobileChange"));
+        this._connections.push(dojo.connect(dijit.byId('theme_select_ok_button'), "onClick", this, "onOk"));
+        this._connections.push(dojo.connect(dijit.byId('theme_select_cancel_button'), "onClick", this, "onClose"));
+        this.addThemeSets();
+        this._selectedThemeSet = this._dojoThemeSets.themeSets[0];
+       // var select = dojo.byId('theme_select_themeset_theme_select');
+        dijit.byId('theme_select_themeset_theme_select_textbox').attr('value',this._selectedThemeSet.name);
+        //select.setAttribute( 'value', this._selectedThemeSet.name);
+        this.addThemes(this._selectedThemeSet);
+        this._dialog.show();
+  
+    },
+    
+    addThemeSets: function(){
+
+       
+        /*if (this._selectedThemeSet.name == davinci.theme.none_themeset_name){
+            this._dojoThemeSets.themeSets.unshift(this._selectedThemeSet); // temp add to prefs
+        } else {
+            this._dojoThemeSets.themeSets.unshift(davinci.theme.none_themeset); // temp add to prefs 
+        }*/
+        //var select = dijit.byId('theme_select_themeset_theme_select');
+        var select = dojo.byId('theme_select_themeset_theme_select');
+        //var opt = {value: '(none)', label: '(none)'}; // FIXME NLS
+        //select.addOption(opt);
+        for (var i = 0; i < this._dojoThemeSets.themeSets.length; i++){
+           // opt = {value: this._dojoThemeSets.themeSets[i].name, label: this._dojoThemeSets.themeSets[i].name};
+           // select.addOption(opt);
+            var c = dojo.doc.createElement('option');
+            c.innerHTML = this._dojoThemeSets.themeSets[i].name;
+            c.value = this._dojoThemeSets.themeSets[i].name;
+            if (i === 0 ) {
+                c.selected = '1';
+            }
+            select.appendChild(c);
+        }
+        
+    },
+    
+    addThemes: function(themeSet){
+
         this._themeData = davinci.library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly, true);
-        var options = ['none','default'];
-        var desktopThemes = {"identifier":"name","items":[]};
+        var dtSelect = dijit.byId('theme_select_desktop_theme_select');
+        dtSelect.options = [];
+        var androidSelect = dijit.byId('theme_select_android_select');
+        androidSelect.options = [];
+        var blackberrySelect = dijit.byId('theme_select_blackberry_select');
+        blackberrySelect.options = [];
+        var ipadSelect = dijit.byId('theme_select_ipad_select');
+        ipadSelect.options = [];
+        var iphoneSelect = dijit.byId('theme_select_iphone_select');
+        iphoneSelect.options = [];
+        var otherSelect = dijit.byId('theme_select_other_select');
+        otherSelect.options = [];
+        var mblSelect = dijit.byId('theme_select_mobile_theme_select');
+        dtSelect.options = [];
+        mblSelect.options = [];
+        mblSelect.addOption({value: davinci.theme.default_theme, label: davinci.theme.default_theme});
+        //mblSelect.addOption({value: davinci.theme.none_theme, label: davinci.theme.none_theme});
+        this._themeCount = this._themeData.length;
         for (var i = 0; i < this._themeData.length; i++){
+            var opt = {value: this._themeData[i].name, label: this._themeData[i].name};
             if (this._themeData[i].type === 'dojox.mobile'){
-                options.push(this._themeData[i].name);
+                mblSelect.addOption(opt);
+                androidSelect.addOption(opt);
+                blackberrySelect.addOption(opt);
+                ipadSelect.addOption(opt);
+                iphoneSelect.addOption(opt);
+                otherSelect.addOption(opt);
             } else {
-                var item = {};
-                item.name = this._themeData[i].name;
-                desktopThemes.items.push(item); 
+                dtSelect.addOption(opt);
             }
             
         }
-        var layout = [
-            [{
-            'name': 'Device',
-            'field': 'device',
-            'width': '125px;'
-        },
-        {
-            'name': 'Theme',
-            'field': 'theme',
-            'cellType': dojox.grid.cells.Select,
-            'options': options,
-            'editable': true ,
-            'width': '125px'
-        }]];
-        var themeStore = this._getThemeSetsDataStore();
-        var store = new dojo.data.ItemFileWriteStore({data: mydata });
-        var desktopThemeStore = new dojo.data.ItemFileWriteStore({data: desktopThemes });
-        var filteringSelect = new dijit.form.ComboBox({
-            id: "theme_select",
-            name: "theme",
-            value: davinci.theme.desktop_default,
-            store: themeStore,
-            searchAttr: "name"
-        });
+        dtSelect.attr( 'value', themeSet.desktopTheme);
+        for (var d = 0; d < themeSet.mobileTheme.length; d++){
+            var device = themeSet.mobileTheme[d].device.toLowerCase(); 
+            switch (device) {
+            case 'android':
+                androidSelect.attr( 'value', themeSet.mobileTheme[d].theme);
+                break;
+            case 'blackberry':
+                blackberrySelect.attr( 'value', themeSet.mobileTheme[d].theme);
+                break;
+            case 'ipad':
+                ipadSelect.attr( 'value', themeSet.mobileTheme[d].theme);
+                break;
+            case 'iphone':
+                iphoneSelect.attr( 'value', themeSet.mobileTheme[d].theme);
+                break;
+            case 'other':
+                otherSelect.attr( 'value', themeSet.mobileTheme[d].theme);
+                break;
+            }
+        }
+        if (davinci.theme.singleMobileTheme(themeSet)) {
+            mblSelect.attr( 'value', themeSet.mobileTheme[themeSet.mobileTheme.length-1].theme);
+        } else {
+            debugger;
+            mblSelect.attr( 'value', davinci.theme.default_theme); 
+            this.onMobileChange(davinci.theme.default_theme); //force refresh
+        }
         
-        var dtSelect = new dijit.form.FilteringSelect({
-            id: "desktop_theme_select",
-            name: "name",
-            value: "claro",
-            store: desktopThemeStore,
-            searchAttr: "name"
-        });
-
-        div = dojo.create("div");
-        var table = dojo.create("table");
-        var tr = dojo.create("tr");
-        var td = dojo.create("td");
-        div.innerHTML= langObj.themeSetName;
-        var deleteDiv = dojo.create("div");
-        deleteDiv.innerHTML='<div id="theme_set_delete" class="projectToolbarDeleteIcon"></div>';
-        dojo.place(table, this._dialog.containerNode,'first');
-        dojo.place(tr, table);
-        dojo.place(td, tr);
-        dojo.place(div, td);
-        td = dojo.create("td");
-        dojo.place(td, tr);
-        dojo.place(filteringSelect.domNode, td);
-        td = dojo.create("td");
-        dojo.place(td, tr);
-        dojo.place(deleteDiv, td);
-        tr = dojo.create("tr");
-        dojo.place(tr, table);
-        td = dojo.create("td");
-        dojo.place(td, tr);
-        div = dojo.create("div");
-        div.innerHTML= langObj.desktopTheme;
-        dojo.place(div, td);
-        td = dojo.create("td");
-        dojo.place(td, tr);
-        dojo.place(dtSelect.domNode, td);
-        td = dojo.create("td");
-        dojo.place(td, tr);
-        
-        var grid = new dojox.grid.DataGrid({
-            id: 'grid',
-            store: store,
-            structure: layout,
-            style: 'width:275px; height:140px; margin-top:5px;',
-            rowSelector: '20px'
-        });
-       dojo.place(grid.domNode, this._dialog.containerNode);
-       div = dojo.create("div");
-        div.innerHTML=  '<table style="width:100%;">'+
-        '<tr><td style="text-align:right; width:80%;"><input type="button"  id="theme_select_ok_button" label="Save"></input></td><td><input type="button"  id="theme_select_cancel_button" label="Cancel"></input></td></tr>'+
-        '</table>';
-        dojo.place(div, this._dialog.containerNode);
-       var button = new dijit.form.Button({label:"Save", id:"theme_select_ok_button" }, theme_select_ok_button);
-       this._connections.push(dojo.connect(button, "onClick", this, "onOk"));
-       button = new dijit.form.Button({label:"cancel", id:"theme_select_cancel_button" }, theme_select_cancel_button);
-       this._connections.push(dojo.connect(button, "onClick", this, "onClose"));
-        grid.startup();
-        this._connections.push(dojo.connect(filteringSelect, "onChange", this, "onChange"));
-        this._connections.push(dojo.connect(filteringSelect, "onBlur", this, "onBlur"));
-        this._connections.push(dojo.connect(dtSelect, "onChange", this, "onDesktopChange"));
-        this._connections.push(dojo.connect(deleteDiv, "onclick", this, "onDeleteThemeSet"));
-        this.changeThemeSetStore(davinci.theme.desktop_default); 
-        dojo.style('theme_set_delete', 'display', 'none');
     },
     
-    onChange: function(e){
-
-       var deleteDiv = dojo.byId('theme_set_delete');
-       if (e === davinci.theme.desktop_default || e === davinci.theme.mobile_default){ // don't let the user delete the defaults
-          dojo.style(deleteDiv, 'display', 'none');
-       } else {
-           dojo.style(deleteDiv, 'display', ''); 
-       }
-       this.changeThemeSetStore(e);
+    onClick: function(e) {
+        e.target.setAttribute('selected', false);
+        var select = dojo.byId('theme_select_themeset_theme_select');
+        select.setAttribute( 'value', this._selectedThemeSet.name);
     },
     
-    onBlur: function(e){
+    onChange : function(e){
+        var name = e.target[e.target.selectedIndex].value;
+        for (var i = 0; i < this._dojoThemeSets.themeSets.length; i++){
+            if (this._dojoThemeSets.themeSets[i].name == name) {
+                this.addThemes(this._dojoThemeSets.themeSets[i]);
+                this._selectedThemeSet = this._dojoThemeSets.themeSets[i];
+                dijit.byId('theme_select_themeset_theme_select_textbox').attr('value',this._selectedThemeSet.name);
+                break;
+            }
+         
+        }
+/*        var mblSelect = dijit.byId('theme_select_mobile_theme_select');
+        var dtSelect = dijit.byId('theme_select_desktop_theme_select');
+        if (e === davinci.theme.none_themeset_name) {
+            mblSelect.set('disabled', false);
+            dtSelect.set('disabled', false);
+        } else {
+            var androidSelect = dijit.byId('theme_select_android_select');
+            var blackberrySelect = dijit.byId('theme_select_blackberry_select');
+            var ipadSelect = dijit.byId('theme_select_ipad_select');
+            var iphoneSelect = dijit.byId('theme_select_iphone_select');
+            var otherSelect = dijit.byId('theme_select_other_select');
+            
+            mblSelect.set('disabled', true);
+            dtSelect.set('disabled', true);
+            androidSelect.set('disabled', true);
+            blackberrySelect.set('disabled', true);
+            ipadSelect.set('disabled', true);
+            iphoneSelect.set('disabled', true);
+            otherSelect.set('disabled', true);
+            
+        }*/
+        
+    },
+    
+    onDesktopChange : function(e){
+  
+        this._selectedThemeSet.desktopTheme = e;
+               
+    },
+    
+    onMobileChange : function(e){
+        
+        var mblSelect = dijit.byId('theme_select_mobile_theme_select');
+        var androidSelect = dijit.byId('theme_select_android_select');
+        var blackberrySelect = dijit.byId('theme_select_blackberry_select');
+        var ipadSelect = dijit.byId('theme_select_ipad_select');
+        var iphoneSelect = dijit.byId('theme_select_iphone_select');
+        var otherSelect = dijit.byId('theme_select_other_select');
+        
+        if ((e === '(device-specific)') /*&&  (this._selectedThemeSet.name === davinci.theme.none_themeset_name)*/) {
+            androidSelect.set('disabled', false);
+            blackberrySelect.set('disabled', false);
+            ipadSelect.set('disabled', false);
+            iphoneSelect.set('disabled', false);
+            otherSelect.set('disabled', false);
+        } else {
+            for (var d = 0; d < this._selectedThemeSet.mobileTheme.length; d++){
+                var device = this._selectedThemeSet.mobileTheme[d].device.toLowerCase(); 
+                this._selectedThemeSet.mobileTheme[d].theme = e;
+                switch (device) {
+                case 'android':
+                    androidSelect.attr( 'value', e);
+                    androidSelect.set('disabled', true);
+                    break;
+                case 'blackberry':
+                    blackberrySelect.attr( 'value', e);
+                    blackberrySelect.set('disabled', true);
+                    break;
+                case 'ipad':
+                    ipadSelect.attr( 'value', e);
+                    ipadSelect.set('disabled', true);
+                    break;
+                case 'iphone':
+                    iphoneSelect.attr( 'value', e);
+                    iphoneSelect.set('disabled', true);
+                    break;
+                case 'other':
+                    otherSelect.attr( 'value', e);
+                    otherSelect.set('disabled', true);
+                    break;
+                }
+            }
+        }
+   
+        
+    },
+    
+    
+    updateDeviceThemes: function(){
 
-        var box = dijit.byId('theme_select');
-        var value = box.attr("value");
-        this.changeThemeSetStore(value);
+        for (var i = 0; i < this._selectedThemeSet.mobileTheme.length; i++){
+            var select;
+            switch (this._selectedThemeSet.mobileTheme[i].device.toLowerCase()){
+            case 'android' :
+                select = dijit.byId('theme_select_android_select');
+                break;
+            case 'blackberry' :
+                select = dijit.byId('theme_select_blackberry_select');
+                break;
+            case 'ipad' :
+                select = dijit.byId('theme_select_ipad_select');
+                break;
+            case 'iphone' :
+                select = dijit.byId('theme_select_iphone_select');
+                break;
+            default :
+                select = dijit.byId('theme_select_other_select');
+                
+            }
+            this._selectedThemeSet.mobileTheme[i].theme = select.attr( 'value');
+        }
 
     },
-     
+    
+    
      onOk: function(e){
   
-         this._updateThemeSetFromDataStore(this._currentThemeSet);
          davinci.workbench.Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(),this._dojoThemeSets);
          this.onClose(e);
 
@@ -173,95 +282,7 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
          delete this._dialog;
      },
      
-     onDesktopChange: function(e){
-
-         if(e && e.length > 0){
-             this._currentThemeSet.desktopTheme = e; 
-         }
-             
-     },
-     
-     changeThemeSetStore: function(themeSet){
-         
-         var grid = dijit.byId('grid');
-         this._updateThemeSetFromDataStore(this._currentThemeSet);
-         var mydata= {"identifier":"device","items":[{"theme":"none","device":"Android"},{"theme":"none","device":"BlackBerry"},{"theme":"none","device":"iPad"},{"theme":"none","device":"iPhone"},{"theme":"none","device":"other"}]};  
-         this._currentThemeSet = null;
-         for (var i = 0; i < this._dojoThemeSets.themeSets.length; i++){
-             if (this._dojoThemeSets.themeSets[i].name === themeSet){
-                 this._currentThemeSet = this._dojoThemeSets.themeSets[i];
-                 var item = {};
-                 var items = dojo.clone(this._currentThemeSet.mobileTheme);
-                 mydata.items = items;
-             }
-         }
-         if (!this._currentThemeSet){ // new theme set
-             var newThemeSet = {};
-             newThemeSet.name = themeSet;
-             newThemeSet.desktopTheme = "claro";
-             newThemeSet.mobileTheme = [{"theme":"none","device":"Android"},{"theme":"none","device":"BlackBerry"},{"theme":"none","device":"iPad"},{"theme":"none","device":"iPhone"},{"theme":"none","device":"other"}];
-             this._dojoThemeSets.themeSets.push(newThemeSet);
-             this._currentThemeSet = newThemeSet;
-             var cb = dijit.byId('theme_select'); // add the new themeset to the combo
-             var item = {};
-             item.name = themeSet;
-             cb.store.newItem(item);
-             cb.store.save();
-             cb.attr( 'value', themeSet); 
-         }
-
-         var store = new dojo.data.ItemFileWriteStore({data: mydata });
-        
-         grid.setStore(store);
-         
-         
-     },
-     
-     _updateThemeSetFromDataStore: function(themeSet){
-         var grid = dijit.byId('grid');
-         if (themeSet){
-              var currentStore = grid.store;
-           //Fetch the data.
-             currentStore.fetch({
-                 query: {
-                     device: "*"
-                 },
-                 onBegin: function(e){},
-                 onComplete: function(items, request){
-                     themeSet.mobileTheme = [];
-                     for (var i = 0; i < items.length; i++) {
-                         var item = items[i];
-                         var themeItem = {};
-                         themeItem.theme = item.theme[0];
-                         themeItem.device = item.device[0];
-                         themeSet.mobileTheme.push(themeItem);
-                     }
-                 },
-                 onError: function(e){throw 'Error ThemeSetDialog_updateThemeSetFromDataStore';},
-                 queryOptions: {
-                     deep: true
-                 }
-             });
-         }
-     },
-     
-     _getThemeSetsDataStore: function(){
-         
-         var themeSets= {"identifier":"name","items":[]};
-
-         if (!this._dojoThemeSets){
-             this._dojoThemeSets = davinci.theme.dojoThemeSets;
-         }
-         for (var i = 0; i < this._dojoThemeSets.themeSets.length; i++){
-             var item = {};
-             item.name = this._dojoThemeSets.themeSets[i].name;
-             themeSets.items.push(item);
-         }
-         var themeStore = new dojo.data.ItemFileWriteStore({data: themeSets });
-         return themeStore;
-         
-     },
-    
+      
      onDeleteThemeSet: function(e){
 
         for (var i = 0; i < this._dojoThemeSets.themeSets.length; i++){
@@ -283,6 +304,61 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
            
         }
         
+    },
+    
+    _getTemplate: function(){
+        
+        var size = 4;
+        if (this._dojoThemeSets.themeSets.length > size) {
+            size = this._dojoThemeSets.themeSets.length;
+        } 
+        if (size > 10) {
+            size = 10;
+        }
+
+        var template = ''+
+            '<table>' +
+                '<tr>' +
+                    '<td style="width:30%; vertical-align: top;">' +
+                        '<table>' + 
+                            '<tr>' +
+                                '<td style="width:30px; vertical-align: top;" >' +
+                                    '<label>Theme sets:</label><select  id="theme_select_themeset_theme_select" name="theme_select_themeset_theme_select" size="'+size+'" style="margin-bottom: 5px;" ></select>'+
+                                    '<span style="font-size:18px; margin:5px; border: 1px solid #ccc; border-radius: 2px; color: #ccc; padding: 0px 2px 0 2px;" >+</span><span style="font-size:18px; margin:5px; border: 1px solid #ccc; border-radius: 2px; color: #ccc; padding: 0px 2px 0 2px;">-</span>'+
+                                    '</td>' +
+                                '<td><div style="border-right: 1px solid #ccc; width: 1px; height: 250px; margin-left: 10px; margin-top: 10px;"></div></td>' +
+                            '</tr>' +
+                            '<tr>' +
+                                '<td></td><td></td>' +
+                            '</tr>' +
+                        '</table>' +
+                    '</td>' +
+                    '<td>' +
+                        '<table style="width: 100%; margin-left:10px; margin-right:10px;">'+
+                            '<tr><td colspan="2">Currently selected theme set:</td><tr>' +
+                            '<tr><td style="width: 18%;">Name:</td><td style="text-align: center;"><input dojoType="dijit.form.TextBox" id="theme_select_themeset_theme_select_textbox" readonly= "true" style="width: 175px;" ></input><input type="button" dojoType="dijit.form.Button" id="theme_select_rename_button" label="Rename" style="margin-left: 5px;"></td></tr>'+
+                        '</table>' +
+                        '<div style="border-top: 1px solid; top: 231px; border-top-color: #ccc; left: 429px; width: 300px; height: 11px; margin-top: 6px; margin-left:10px;"></div>'+
+                        '<table style="margin-left: 15px; width: 100%;">'+
+                            '<tr><td>Dojo desktop 1.7 theme:</td><td><select dojoType="dijit.form.Select" id="theme_select_desktop_theme_select"type="text"  style="width: 175px;"  ></select></td></tr>'+
+                            '<tr><td>Dojo mobile 1.7 theme:</td><td><select dojoType="dijit.form.Select" id="theme_select_mobile_theme_select"type="text"  style="width: 175px;" ></select></td></tr>'+
+                        '</table>' +
+                        '<table id="theme_select_devices_table" style="margin-left:30px; border-collapse: separate; border-spacing: 0 0; width: 100%">' +
+                        '<tr><td style="width: 129px;">Android:</td><td><select dojoType="dijit.form.Select" id="theme_select_android_select" type="text"  style="width: 150px;"></select></td></tr>' +
+                        '<tr><td>Blackberry:</td><td><select dojoType="dijit.form.Select" id="theme_select_blackberry_select" type="text"  style="width: 150px;"></select></td></tr>' +
+                        '<tr><td>iPad:</td><td><select dojoType="dijit.form.Select" id="theme_select_ipad_select" type="text"  style="width: 150px;"></select></td></tr>' +
+                        '<tr><td>iPhone:</td><td><select dojoType="dijit.form.Select" id="theme_select_iphone_select" type="text"  style="width: 150px;"></select></td></tr>' +
+                        '<tr><td>Other:</td><td><select dojoType="dijit.form.Select" id="theme_select_other_select" type="text"  style="width: 150px;"></select></td></tr>' +
+                        '</table>' +
+                        '<table style="width:100%; margin-top: 10px;">'+
+                            '<tr><td style="text-align:right; width:80%;"><input type="button" dojoType="dijit.form.Button" id="theme_select_ok_button" label="Ok"></input></td><td><input type="button" dojoType="dijit.form.Button" id="theme_select_cancel_button" label="Cancel"></input></td></tr>'+
+                         '</table>' +
+                     '</td>'+
+                 '</tr>' +
+             '</table>' +
+             '';
+
+           return template; 
     }
 
 });

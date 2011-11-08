@@ -72,6 +72,18 @@
         "rightText": {
             "datatype": "string"
         },
+        "rightIcon": {
+            "datatype": "string"
+        },
+        "rightIcon2": {
+            "datatype": "string"
+        },
+        "rightIconTitle": {
+            "datatype": "string"
+        },
+        "rightIcon2Title": {
+            "datatype": "string"
+        },
         "btnClass": {
             "datatype": "string"
         },
@@ -80,6 +92,18 @@
             "defaultValue": false
         },
         "noArrow": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "selected": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "checked": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "variableHeight": {
             "datatype": "boolean",
             "defaultValue": false
         }

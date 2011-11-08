@@ -357,18 +357,6 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
             '<tr><td>iPhone:</td><td><select dojoType="dijit.form.Select" id="theme_select_iphone_select" type="text"  style="width: 150px;"></select></td></tr>' +
             '<tr><td>Other:</td><td><select dojoType="dijit.form.Select" id="theme_select_other_select" type="text"  style="width: 150px;"></select></td></tr>' +
             '</table>' +
-            /*'<table id="theme_select_radio_table" style="margin-top:5px; margin-left:30px;">' +
-            '<tr><td>Mobile theme applies to:</td><td></td></tr>' +
-            '<tr><td style="padding-left:15px;"><input showlabel="true" type="radio" id="theme_select_all_devices_radio" dojoType="dijit.form.RadioButton"></input><label>All mobile devices</label></td><td></td></tr>' +
-            '<tr><td style="padding-left:15px;"> <input showlabel="true" type="radio" id="theme_select_devices_radio" dojoType="dijit.form.RadioButton"></input><label>Selected devices</label></td><td></td></tr>' +
-            '</table>' +
-            '<table id="theme_select_devices_table" style="margin-left:60px;">' +
-                '<tr><td></td><td><input id="theme_select_android_checkbox" name="theme_select_android_checkbox" dojoType="dijit.form.CheckBox" value="Android"><label for="theme_select_android_checkbox">Android</label></td></tr>' +
-                '<tr><td></td><td><input id="theme_select_blackberry_checkbox" name="theme_select_blackberry_checkbox" dojoType="dijit.form.CheckBox" value="BlackBerry"><label for="theme_select_blackberry_checkbox">BlackBerry</label></td></tr>' +
-                '<tr><td></td><td><input id="theme_select_ipad_checkbox" name="theme_select_ipad_checkbox" dojoType="dijit.form.CheckBox" value="iPad"><label for="theme_select_ipad_checkbox">iPad</label></td></tr>' +
-                '<tr><td></td><td><input id="theme_select_iphone_checkbox" name="theme_select_iphone_checkbox" dojoType="dijit.form.CheckBox" value="iPhone"><label for="theme_select_iphone_checkbox">iPhone</label></td></tr>' +
-                '<tr><td></td><td><input id="theme_select_other_checkbox" name="theme_select_other_checkbox" dojoType="dijit.form.CheckBox" value="other"><label for="theme_select_other_checkbox">Other</label></td></tr>' +
-            '</table>'+*/
             '<table style="width:100%; margin-top: 10px;">'+
                 '<tr><td style="text-align:right; width:80%;"><input type="button" dojoType="dijit.form.Button" id="theme_select_ok_button" label="Ok"></input></td><td><input type="button" dojoType="dijit.form.Button" id="theme_select_cancel_button" label="Cancel"></input></td></tr>'+
              '</table>'+

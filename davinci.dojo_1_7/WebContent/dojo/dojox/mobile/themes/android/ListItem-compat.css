@@ -1,21 +1,11 @@
+@import url("../common/domButtons/DomButtonGrayArrow-compat.css");
+@import url("../common/domButtons/DomButtonDarkBlueCheck-compat.css");
 
-.mblDomButtonGrayArrow, .mblDomButtonArrow {
-	background-image: url(../common/domButtons/compat/mblDomButtonGrayArrow.png);
-	background-repeat: no-repeat;
-}
-.mblDomButtonGrayArrow div, .mblDomButtonArrow div {
-	display: none;
-}
-.mblDomButtonDarkBlueCheck, .mblDomButtonCheck {
-	background-image: url(../common/domButtons/compat/mblDomButtonDarkBlueCheck.png);
-	background-repeat: no-repeat;
-}
-.mblDomButtonDarkBlueCheck div, .mblDomButtonCheck div {
-	display: none;
-}
-*html li.mblListItem.mblVariableHeight { 
+/* mbl.widget.ListItem */
+*html li.mblListItem.mblVariableHeight { /* IE6 hack */
 	height: 0;
 }
+
 .mblListItemIcon {
 	top: 18px;
 }
@@ -28,9 +18,9 @@
 .mblItemSelected .mblArrow {
 	background-image: url(compat/white-arrow.png);
 }
-*html .mblListItemTextBox { 
+*html .mblListItemTextBox { /* IE6 hack */
 	height: 100%;
 }
-*html li.mblListItem.mblVariableHeight .mblListItemTextBox { 
+*html li.mblListItem.mblVariableHeight .mblListItemTextBox { /* IE6 hack */
 	height: auto;
 }

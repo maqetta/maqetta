@@ -1,15 +1,15 @@
-
+/* dojox.mobile.Slider */
 .mblSlider {
 	background-image: url(compat/slider-h-bg.png);
 	-moz-border-radius: 8px;
 	-o-border-radius: 8px;
 	-ms-border-radius: 8px; 
 	border-radius: 8px;
-	-moz-user-select: none; 
+	-moz-user-select: none; /* prevent selection */
 	-o-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-	-moz-box-sizing: content-box; 
+	-moz-box-sizing: content-box; /* make width and height consistent with a DIV */
 	-o-box-sizing: content-box;
 	-ms-box-sizing: content-box;
 	box-sizing: content-box;

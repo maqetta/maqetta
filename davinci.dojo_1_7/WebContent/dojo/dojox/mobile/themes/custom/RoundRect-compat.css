@@ -1,10 +1,11 @@
-
+/* dojox.mobile.RoundRect */
 .mblRoundRect {
 	-moz-border-radius: 5px;
 	-o-border-radius: 5px;
 	-ms-border-radius: 5px;
 	border-radius: 5px;
 }
+/* Round Corner */
 .mblRoundCorner {
 	background-color: white;
 	height: 1px;
@@ -46,6 +47,7 @@
 .mblRoundCorner5T {
 	margin: 0px 1px;
 }
+
 .mblRoundCorner0B {
 	height: 0px;
 }

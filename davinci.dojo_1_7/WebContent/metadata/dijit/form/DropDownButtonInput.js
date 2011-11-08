@@ -1,10 +1,11 @@
-dojo.provide("davinci.libraries.dojo.dijit.form.DropDownButtonInput");
-dojo.require("davinci.libraries.dojo.dijit.layout.ContainerInput");
+define([
+        "dojo/_base/declare",
+    	"../layout/ContainerInput",
+        "dojo/i18n!../nls/dijit",
+        "dojox/html/entities"
+], function(declare, ContainerInput, nls, entities){
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.libraries.dojo.dijit", "dijit");
-
-dojo.declare("davinci.libraries.dojo.dijit.form.DropDownButtonInput", davinci.libraries.dojo.dijit.layout.ContainerInput, {
+return declare("davinci.libraries.dojo.dijit.form.DropDownButtonInput", ContainerInput, {
 
 	propertyName: "label",
 		
@@ -17,8 +18,7 @@ dojo.declare("davinci.libraries.dojo.dijit.form.DropDownButtonInput", davinci.li
 	helpText: "",
 	
 	constructor : function() {
-		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dijit", "dijit");
-		this.helpText = langObj.dropDownButtonInputHelp;
+		this.helpText = nls.dropDownButtonInputHelp;
 	},
 	
 	serialize: function(widget, callback, value) {
@@ -85,16 +85,14 @@ dojo.declare("davinci.libraries.dojo.dijit.form.DropDownButtonInput", davinci.li
 	},
 	
 	parse: function(input) {
-		var result = this.parseItems(dojox.html.entities.decode(input));
+		var result = this.parseItems(entities.decode(input));
 		// i think we need to re-encode the result.text here
 		if (this._format === 'text'){
-			for (var i=0; i < result.length; i++){
-				result[i].text = dojox.html.entities.encode(result[i].text );
-			}
+			result.forEach(function(item) { item.text = entities.encode(item.text); });
 		}
 		return result;
 	},
-	
 
 	end: true
+});
 });

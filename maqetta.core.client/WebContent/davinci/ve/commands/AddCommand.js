@@ -57,6 +57,21 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 			}
 		}
 
+		// IMG elements don't have a size until they are actually loaded
+		// so selection/focus box will be wrong upon creation.
+		// To fix, register an onload handler which calls updateFocus()
+		if(widget.domNode.tagName === 'IMG'){
+			dojo.connect(widget.domNode, 'onload', dojo.hitch(this, function(){
+				var selection = context.getSelection();
+				for (var i=0; i<selection.length; i++){
+					if(selection[i] == widget){
+						context.updateFocus(widget, i);
+						return;
+					}
+				}
+			}));
+		}
+		
 		parent.addChild(  widget, this._index);
 				
 		var context = parent.getContext();

@@ -10,7 +10,8 @@ davinci.html.CSSParser = (function() {
         function normal(source, setState) {
             var ch = source.next();
             if (ch == "@") {
-                source.nextWhileMatches(/\w/);
+//                source.nextWhileMatches(/\w/);
+                source.nextWhileMatches(/[a-zA-Z0-9_-]/);
                 return "css-at";
             } else if (ch == "/" && source.equals("*")) {
                 setState(inCComment);
@@ -252,7 +253,6 @@ davinci.html.CSSParser = (function() {
         combined.combiners.push(combiner);
         combiner = ' ';
     }
-
     try {
         // debugger;
         do {
@@ -420,7 +420,6 @@ davinci.html.CSSParser = (function() {
                 var ruleName = token.content.substring(1);
                 var atRule = (ruleName == "import") ? new davinci.html.CSSImport()
                         : new davinci.html.CSSAtRule();
-                ;
                 atRule.startOffset = token.offset;
                 parentElement.addChild(atRule, undefined, true);
                 if (ruleName == "import") {
@@ -438,27 +437,54 @@ davinci.html.CSSParser = (function() {
 
                     nextToken(); // ;
 
-                } else if ( rulename.indexOf("keyframes") >= 0 ) { 
-                    var className = "";
-                    nextToken(); // get class name
-                    className = token.content;
+                } else if ( ruleName.indexOf("keyframes") >= 0 ) { 
+                    var animationName = "";
+                    var spacer = "";
+                    var needToIndent = false;
+                    var indentation = "\t\t";
+                    nextToken(); // get animation-name identifier
+                    animationName = token.content;
+                    /*
+                     * work around dojox bug where animation-name is set to a selector instead of an identifier
+                     */
+                    if ( animationName == ".") {
+                        nextToken();
+                        animationName += token.content;
+                    }
                     nextToken(); // rule opening "{"
+                    atRule.value = token.content + "\n";
+                    nextToken();
+                    if ( token.content.indexOf("from") >= 0 || 
+                         token.content.indexOf("to") >= 0  || 
+                         token.content.indexOf("%") >= 0 
+                        ) { // eat from, to and nn% selectors
+                        outerLoop: for ( ; ; ) { 
+                            atRule.value += "\t" + token.content + " "; // append keyframe selector 
+                            nextToken(); // "{"
+                            atRule.value += token.content + "\n";
+                            while ((nextToken()).content != "}") {
+                                if ( needToIndent ) { indentation = "\t\t";  needToIndent = false; }
+                                if ( token.content == ";" ) { 
+                                    spacer = "\n"; 
+                                    needToIndent = true; 
+                                } else if ( token.content == ":" || token.content == ")" ) {
+                                    spacer = " ";
+                                }
+                                atRule.value += indentation + token.content + spacer;
+                                spacer = "";
+                                indentation = "";
+                            }
+                            atRule.value += "\t" + token.content + "\n"; // grab closing brace
+                            nextToken();
+                            if ( token.content == "}" ) { // if rule closing brace
+                                break outerLoop;
+                            }
+                        }
+                    } else {
+                        error("inside keyframes decl expecting from/to blocks or nn% blocks");
+                    }
                     atRule.value += token.content;
-                    nextToken(); // from
-                    atRule.value += token.content;
-                    nextToken(); // "{"
-                    atRule.value += token.content;
-                    while ((nextToken()).content != "}")
-                        atRule.value += token.content;
-                    nextToken(); // to
-                    atRule.value += token.content;
-                    nextToken(); // "{"
-                    atRule.value += token.content;
-                    while ((nextToken()).content != "}")
-                        atRule.value += token.content;
-                    nextToken(); // rule closing "}"
-                    atRule.value += token.content;
-                    atRule.name = rulename + " " + className;
+                    atRule.name = ruleName + " " + animationName;
                 } else {
                     atRule.name = ruleName;
                     atRule.value = "";
@@ -467,7 +493,7 @@ davinci.html.CSSParser = (function() {
                 }
                 atRule.endOffset = token.offset;
 
-            }
+            } // END case css-at
                 break;
 
             } // END outer switch(token.style)

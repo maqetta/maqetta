@@ -60,7 +60,7 @@ define(["dojo/_base/array", "dojo/_base/connect"], function(array, connect) {
 				return undefined;
 			}
 			var data = {type: widget.declaredClass, properties: {}},
-				pChildNodes = widget.containerNode.childNodes,
+				pChildNodes = widget.containerNode ? widget.containerNode.childNodes : [],
 				dropDownData = [];
 
 			// search for child widgets

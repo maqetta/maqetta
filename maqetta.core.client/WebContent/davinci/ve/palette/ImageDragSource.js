@@ -76,6 +76,14 @@ dojo.declare("davinci.ve.palette.ImageDragSource", null, {
 
 	createDragClone: function()
 	{
-		return dojo.create("img", {src: this.data.getURL()});
+		// Browser doesn't know size of IMG until loaded
+		var img = dojo.create("img", {src: this.data.getURL()});
+		dojo.connect(img, 'onload', dojo.hitch(this, function(e) {
+			var image = e.target;
+			var style = image.style;
+			style.width = image.naturalWidth+'px';
+			style.height = image.naturalHeight+'px';
+		}));
+		return img;
 	}
 });

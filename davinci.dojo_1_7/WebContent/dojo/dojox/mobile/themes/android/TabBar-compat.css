@@ -1,4 +1,4 @@
-
+/* dojox.mobile.TabBarButton */
 .mblTabBar {
 	background-color: #1e1e1e;
 }
@@ -6,7 +6,7 @@
 	left: auto;
 }
 .dj_ie6 .mblTabBar .mblTabBarButton {
-  display: inline; 
+  display: inline; /* IE bug*/
 }
 .mblTabBar .mblTabBarButton.mblTabButtonSelected {
 	-moz-border-radius: 3px;
@@ -18,7 +18,7 @@
 .mblTabPanelHeader .mblTabButton.mblTabButtonSelected {
 	background-image: url(compat/tab-sel-button-bg.png);
 }
-*html .mblTabButton { 
+*html .mblTabButton { /* IE6 hack */
 	behavior: expression(
 		(function(el){
 			if(!el.previousSibling)

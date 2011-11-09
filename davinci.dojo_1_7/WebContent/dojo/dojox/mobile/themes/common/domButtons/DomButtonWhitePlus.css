@@ -1,10 +1,10 @@
-
+/* === Plus Button ==*/
 .mblDomButtonWhitePlus {
 	position: relative;
 	width: 29px;
 	height: 29px;
 }
-.mblDomButtonWhitePlus > div { 
+.mblDomButtonWhitePlus > div { /* horiz line */
 	position: absolute;
 	top: 11px;
 	left: 8px;
@@ -15,7 +15,7 @@
 	background-color: white;
 	border-top: 1px solid #4A5A71;
 }
-.mblDomButtonWhitePlus > div > div { 
+.mblDomButtonWhitePlus > div > div { /* vert line */
 	position: absolute;
 	top: -6px;
 	left: 5px;

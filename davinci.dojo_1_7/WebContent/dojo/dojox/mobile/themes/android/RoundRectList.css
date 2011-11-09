@@ -1,7 +1,8 @@
-
+/* dojox.mobile.RoundRectList */
 .mblRoundRectList {
   position: relative;
-  
+  /* IE needs this */
+
   margin: 7px 9px 16px;
   padding: 0px;
   border: 1px solid #ADAAAD;

@@ -71,9 +71,12 @@ dojo.mixin(davinci.ui.Resource, {
 					if(text){
 						resource.setText(text);
 					}
-					//FIXME: Pull from dialog values instead
+					var device = options.device;
+					if(device === 'desktop'){
+						device = 'none';
+					}
 					var newHtmlParams = {
-						device:options.device,
+						device:device,
 						flowlayout:(options.layout=='flow')+''	// value need to be strings 'true' or 'false'
 					};
 					davinci.ui.Resource.openResource(resource, newHtmlParams);

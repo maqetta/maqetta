@@ -210,10 +210,11 @@ davinci.theme.getThemeSet = function(context){
                 debugger; // why?
                 return themeSet;
             } else if ((mobileTheme == davinci.theme.default_theme) && (davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileDefault))){
+                dedbugger; //why?
                 return themeSet;
             }
-            var mobileMap = dojo.toJson(davinci.theme.getDojoxMobileThemeMap(context, themeSet.mobileTheme)); //themeSet.mobileTheme;
-            if (mobileMap == mobileTheme){
+           // var mobileMap = dojo.toJson(davinci.theme.getDojoxMobileThemeMap(context, themeSet.mobileTheme)); //themeSet.mobileTheme;
+            if (davinci.theme.themeSetEquals(dojo.fromJson(mobileTheme),themeSet.mobileTheme) /*mobileMap == mobileTheme*/){
                 // found themeMap
                 return themeSet;
             }

@@ -5,11 +5,6 @@
     "version": "1.0",
     "require": [
         {
-            "type": "javascript",
-            "src": "dojo/dojo.js",
-            "$library": "dojo"
-        },
-        {
             "type": "css",
             "src": "dojo/resources/dojo.css",
             "$library": "dojo"
@@ -21,12 +16,14 @@
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dojox.widget.FisheyeList');"
+            "src": "../dojox/widget/FisheyeList.js",
+            "module": "amd",
+            "$library": "dojo"
         }
     ],
     "library": {
         "dojo": {
-            "src": "../../../"
+            "src": "../../../dojo/dojo.js"
         }
     },
     "property": {

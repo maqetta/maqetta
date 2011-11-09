@@ -6,17 +6,14 @@
     "require": [
         {
             "type": "javascript",
-            "src": "dojo/dojo.js",
+            "src": "../dijit/layout/StackContainer.js",
+            "module": "amd",
             "$library": "dojo"
-        },
-        {
-            "type": "javascript",
-            "$text": "dojo.require('dijit.layout.StackContainer');"
         }
     ],
     "library": {
         "dojo": {
-            "src": "../../../"
+            "src": "../../../dojo/dojo.js"
         }
     },
     "property": {

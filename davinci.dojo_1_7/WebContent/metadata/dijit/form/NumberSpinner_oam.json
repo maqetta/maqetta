@@ -6,17 +6,14 @@
     "require": [
         {
             "type": "javascript",
-            "src": "dojo/dojo.js",
+            "src": "../dijit/form/NumberSpinner.js",
+            "module": "amd",
             "$library": "dojo"
-        },
-        {
-            "type": "javascript",
-            "$text": "dojo.require('dijit.form.NumberSpinner');"
         }
     ],
     "library": {
         "dojo": {
-            "src": "../../../"
+            "src": "../../../dojo/dojo.js"
         }
     },
     "property": {
@@ -31,7 +28,7 @@
         "value": {
             "datatype": "string",
             "title": "Value",
-            "defaultValue":"0"
+            "defaultValue": "0"
         },
         "tabIndex": {
             "datatype": "string",

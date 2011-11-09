@@ -6,28 +6,33 @@
     "require": [
         {
             "type": "javascript",
-            "src": "dojo/dojo.js",
+            "src": "../dojox/mobile.js",
+            "module": "amd",
             "$library": "dojo"
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dojox.mobile');"
+            "src": "../dojox/mobile/parser.js",
+            "module": "amd",
+            "$library": "dojo"
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dojox.mobile.parser');"
+            "src": "../dojox/mobile/deviceTheme.js",
+            "module": "amd",
+            "$library": "dojo"
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dojox.mobile.deviceTheme');"
+            "src": "../dojox/mobile/compat.js",
+            "module": "amd",
+            "$library": "dojo"
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dojox.mobile.compat');"
-        },
-        {
-            "type": "javascript",
-            "$text": "dojo.require('dojox.mobile.SpinWheel');"
+            "src": "../dojox/mobile/SpinWheel.js",
+            "module": "amd",
+            "$library": "dojo"
         },
         {
             "type": "css",
@@ -37,7 +42,7 @@
     ],
     "library": {
         "dojo": {
-            "src": "../../../"
+            "src": "../../../dojo/dojo.js"
         }
     },
     "property": {

@@ -5,31 +5,32 @@
     "version": "1.0",
     "require": [
         {
-            "type": "javascript",
-            "src": "dojo/dojo.js",
-            "$library": "dojo"
-        },
-        {
             "type": "css",
             "src": "dojo/resources/dojo.css",
             "$library": "dojo"
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dijit.MenuBar');"
+            "src": "../dijit/MenuBar.js",
+            "module": "amd",
+            "$library": "dojo"
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dijit.PopupMenuBarItem');"
+            "src": "../dijit/PopupMenuBarItem.js",
+            "module": "amd",
+            "$library": "dojo"
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dijit.MenuItem');"
+            "src": "../dijit/MenuItem.js",
+            "module": "amd",
+            "$library": "dojo"
         }
     ],
     "library": {
         "dojo": {
-            "src": "../../"
+            "src": "../../dojo/dojo.js"
         }
     },
     "property": {

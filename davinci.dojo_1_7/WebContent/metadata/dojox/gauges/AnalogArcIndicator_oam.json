@@ -5,23 +5,20 @@
     "version": "1.0",
     "require": [
         {
-            "type": "javascript",
-            "src": "dojo/dojo.js",
-            "$library": "dojo"
-        },
-        {
             "type": "css",
             "src": "dojo/resources/dojo.css",
             "$library": "dojo"
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dojox.gauges.AnalogArcIndicator');"
+            "src": "../dojox/gauges/AnalogArcIndicator.js",
+            "module": "amd",
+            "$library": "dojo"
         }
     ],
     "library": {
         "dojo": {
-            "src": "../../../../"
+            "src": "../../../../dojo/dojo.js"
         }
     },
     "property": {
@@ -47,7 +44,7 @@
             "description": "The text label for the indicator.",
             "hidden": false
         },
-         "title": {
+        "title": {
             "datatype": "string",
             "description": "Title to go with textfield below gauge",
             "defaultValue": "Arc",
@@ -81,7 +78,6 @@
             "defaultValue": false,
             "hidden": false
         },
-       
         "duration": {
             "datatype": "number",
             "description": "indicates how long an animation of the indicator should take",

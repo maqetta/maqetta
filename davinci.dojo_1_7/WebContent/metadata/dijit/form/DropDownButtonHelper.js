@@ -4,7 +4,9 @@ define(["dojo/_base/array", "dojo/_base/connect"], function(array, connect) {
 			var dw = widget.dijitWidget,
 				setup = function() {
 					if (dw.dropDown) {
-						dw.dropDown._popupWrapper._dvWidget.hidden = true; // this will hide the dijitMenu in designer
+						if (dw.dropDown._popupWrapper._dvWidget) {
+							dw.dropDown._popupWrapper._dvWidget.hidden = true; // this will hide the dijitMenu in designer
+						}
 						dw.dropDown.owner = dw; // leave a path to make it possible to get from the popup back to the dropdown instance
 					}
 				},
@@ -58,7 +60,7 @@ define(["dojo/_base/array", "dojo/_base/connect"], function(array, connect) {
 				return undefined;
 			}
 			var data = {type: widget.declaredClass, properties: {}},
-				pChildNodes = widget.containerNode.childNodes,
+				pChildNodes = widget.containerNode ? widget.containerNode.childNodes : [],
 				dropDownData = [];
 
 			// search for child widgets

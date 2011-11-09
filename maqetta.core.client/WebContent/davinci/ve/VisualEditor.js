@@ -300,19 +300,20 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 			this.context._setSource(content, dojo.hitch(this, function(){
 				this.savePoint = 0;
 				this.context.activate();
-				var popup=davinci.Workbench.createPopup({partID:'davinci.ve.visualEditor',
-					domNode:this.context.getContainerNode(), 
+				var popup = davinci.Workbench.createPopup({partID:'davinci.ve.visualEditor',
+					domNode: this.context.getContainerNode(), 
 					keysDomNode: this.context.getDocument(), context:this.context});
-				var context=this.context;
-				popup.adjustPosition=function (event)
-				{
-					var frameNode = context.frameNode;
-					var coords = context.getDojo().position(frameNode),
-						containerNode = context.getContainerNode();
-					return {
-						x: coords.x - containerNode.parentNode.scrollLeft,
-						y: coords.y - containerNode.parentNode.scrollTop
-					};
+				var context = this.context;
+				popup.adjustPosition=function (event) {
+					// Adjust for the x/y position of the visual editor's IFRAME relative to the workbench
+					// Adjust for the scrolled position of the document in the visual editor, since the popup menu code assumes (0, 0)
+					var coords = context.getDojo().position(context.frameNode);
+					dojo.withDoc(context.getDocument(), function(){
+						coords.x -= dojo.docScroll().x;
+						coords.y -= dojo.docScroll().y;
+					});
+
+					return coords;
 				};
 
 				// resize kludge to make Dijit visualEditor contents resize

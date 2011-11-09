@@ -1,4 +1,24 @@
-
+/* Time Picker 
+ *
+ * Styling the Time Picker consists of the following: 
+ *
+ * 1. minor time values
+ * 		.dijitTimePickerTick - set text color, size, background color of minor values
+ * 		.dijitTimePickerTickHover - set hover style of minor time values
+ * 		dijitTimePickerTickSelected - set selected style of minor time values
+ *
+ * 2. major time values - 1:00, 2:00, times on the hour 
+ * 		set text color, size, background color, left/right margins for "zoom" affect
+ * 		.dijitTimePickerMarkerHover - to set hover style of major time values
+ * 		.dijitTimePickerMarkerSelected - set selected style of major time values
+ * 
+ * 3. up and down arrow buttons
+ * 		.dijitTimePicker .dijitButtonNode - background-color, border
+ * 		.dijitTimePicker .dijitUpArrowHover, .dijitTimePicker .dijitDownArrowHover - set background-color for hover state
+ *
+ *	Other classes provide the fundamental structure of the TimePicker and should not be modified. 
+ */
+/* override Button.css */
 .claro .dijitTimePicker .dijitButtonNode {
   padding: 0 0;
   -moz-border-radius: 0;
@@ -9,10 +29,12 @@
   border-top: none;
   border-bottom: none;
   background-color: #fff;
-  
+  /* TODO: useless?   Appears to be overridden by settings on individual elements */
+
 }
 .claro .dijitTimePickerItem {
-  
+  /* dijitTimePickerItem refers to both Tick's (minor values like 2:15, 2:30, 2:45) and Marker's (major values like 2PM, 3PM) */
+
   background-image: url("images/commonHighlight.png");
   background-position: 0 -1px;
   background-repeat: repeat-x;
@@ -22,17 +44,20 @@
   margin-left: -1px;
   margin-top: -1px;
 }
+/* to make up for lack of alpha transparency in IE6 */
 .dj_ie6 .claro .dijitTimePickerItem {
   background-image: none;
 }
 .claro .dijitTimePickerTick {
-  
+  /* minor value */
+
   color: #818181;
   background-color: #efefef;
   font-size: 0.818em;
 }
 .claro .dijitTimePickerMarker {
-  
+  /* major value - 1:00, 2:00, times on the hour */
+
   background-color: #e5f2fe;
   font-size: 1em;
   white-space: nowrap;
@@ -61,9 +86,10 @@
 .dj_ie6 .claro .dijitTimePickerMarkerSelected,
 .dj_ie6 .claro .dijitTimePickerTickSelected {
   position: relative;
-  
+  /* creates widening of element */
   zoom: 1;
-  
+  /* creates widening of element */
+
 }
 .claro .dijitTimePickerTick .dijitTimePickerItemInner {
   padding: 1px;
@@ -83,7 +109,8 @@
 }
 .claro .dijitTimePicker .dijitArrowButtonInner {
   height: 100%;
-  
+  /* hack claro.button.css */
+
   background-image: url("form/images/commonFormArrows.png");
   background-repeat: no-repeat;
   background-position: -140px 45%;
@@ -91,6 +118,7 @@
 .claro .dijitTimePicker .dijitDownArrowButton .dijitArrowButtonInner {
   background-position: -35px 45%;
 }
+/* hover */
 .claro .dijitTimePicker .dijitUpArrowHover, .claro .dijitTimePicker .dijitDownArrowHover {
   background-color: #abd6ff;
 }

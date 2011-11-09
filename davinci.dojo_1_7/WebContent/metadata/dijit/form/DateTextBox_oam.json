@@ -29,16 +29,11 @@
             "datatype": "string",
             "title": "Name"
         },
-        "alt": {
-            "datatype": "string",
-            "hidden": true
-        },
         "value": {
             "datatype": "string",
             "format": "date",
             "title": "Value",
-            "hidden": true,
-            "description":"hidden because currently writing value as '7/5/2011' breaks it"
+            "description":"Enter date in format yyyy-mm-dd"
         },
         "tabIndex": {
             "datatype": "string",
@@ -118,8 +113,8 @@
         },
         "datePackage": {
             "datatype": "string",
-            "description": "JavaScript namespace to find calendar routines.  Uses Gregorian calendar routines\nat dojo.date, by default.",
-            "hidden": false
+            "description": "JavaScript namespace to find calendar routines.  Uses Gregorian calendar routines at dojo.date, by default.",
+            "hidden": true
         },
         "scrollOnFocus": {
             "datatype": "boolean",

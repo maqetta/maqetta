@@ -1,9 +1,9 @@
-
+/* dojox.mobile.TabBarButton */
 .dj_ie6 .mblTabBarButtonDiv, .dj_ie7 .mblTabBarButtonDiv {
 	left: auto;
 }
 .dj_ie6 .mblTabBar .mblTabBarButton {
-	display: inline; 
+	display: inline; /* IE bug*/
 }
 .mblTabBarButtonIcon {
 	position: absolute;
@@ -17,7 +17,7 @@
 	-moz-border-radius-topleft: 6px;
 	-moz-border-radius-topright: 6px;
 }
-*html .mblTabButton { 
+*html .mblTabButton { /* IE6 hack */
 	behavior: expression(
 		(function(el){
 			if(!el.previousSibling)

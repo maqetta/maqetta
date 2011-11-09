@@ -497,8 +497,8 @@ dojo.declare("davinci.ve.Context", null, {
 		return ro;
 	},
 	
-	setSource: function(source, callback, scope){
-		dojo.withDoc(this.getDocument(), "_setSource", this, [source, callback, scope]);
+	setSource: function(source, callback, scope, initParams){
+		dojo.withDoc(this.getDocument(), "_setSource", this, [source, callback, scope, initParams]);
 	},
 
 	getDojoUrl: function(){
@@ -622,7 +622,7 @@ dojo.declare("davinci.ve.Context", null, {
     },
 //////////////////////////////////////////////////////////////////////////////////////////////     
     
-	_setSource: function(source, callback, scope){
+	_setSource: function(source, callback, scope, newHtmlParams){
 		
 		this._srcDocument=source;
 		
@@ -639,10 +639,19 @@ dojo.declare("davinci.ve.Context", null, {
 			this.rootWidget._srcElement=this._srcDocument.getDocumentElement().getChildElement("body");
 			this.rootWidget._srcElement.setAttribute("id", "myapp");
 		}
+
+		//FIXME: Need to add logic for initial themes and device size.
+		if(newHtmlParams){
+			var modelBodyElement = source.getDocumentElement().getChildElement("body");
+			modelBodyElement.setAttribute(davinci.ve.Context.MOBILE_DEV_ATTR, newHtmlParams.device);
+			modelBodyElement.setAttribute(davinci.preference_layout_ATTRIBUTE, newHtmlParams.flowlayout);
+		}
+
 		var data = this._parse(source);
 		this._scriptAdditions=data.scriptAdditions;
 		//debugger;
-		if(!this.frameNode){ // initialize frame
+		if(!this.frameNode){
+			// initialize frame
 			var dojoUrl;
 			
 			dojo.some(data.scripts, function(url){
@@ -818,8 +827,11 @@ dojo.declare("davinci.ve.Context", null, {
 			};*/
 
 		}else{
-			console.warn("Context._setContent called after frame initialized");
-//			this._continueLoading(data, callback, this, scope); //  we shouldn't be getting here?  this will just bomb out without Dojo (this.getGlobal() will fail)
+			if(!this.getGlobal()){
+				console.warn("Context._setContent called during initialization");
+			}
+			// frame has already been initialized, changing content (such as changes from the source editor)
+			this._continueLoading(data, callback, this, scope);
 		}
 	},
 
@@ -1000,7 +1012,8 @@ dojo.declare("davinci.ve.Context", null, {
 				// the dojo parser will throw an exception trying to compute style on hidden containers
 				// so to fix this we catch the exception here and add a subscription to be notified when this editor is seleected by the user
 				// then we will reprocess the content when we have focus -- wdr
-				
+
+				console.error(e);
 				// remove all registered widgets, some may be partly constructed.
 				this.getDijit().registry.forEach(function(w){
 					  w.destroy();			 
@@ -1042,10 +1055,10 @@ dojo.declare("davinci.ve.Context", null, {
 	_editorSelectionChange: function(event){
 		// we should only be here do to a dojo.parse exception the first time we tried to process the page
 		// Now the editor tab container should have focus becouse the user selected it. So the dojo.processing should work this time
-		if (event.oldEditor.fileName === this._editor.fileName){
+		if (event.editor.fileName === this._editor.fileName){
 			dojo.unsubscribe(this._editorSelectConnection);
 			delete this._editorSelectConnection;
-			this._setSource(this._srcDocument, null, null);
+			this._setSource(this._srcDocument, null, null, null);
 		}
 	},
 

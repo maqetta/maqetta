@@ -1,9 +1,9 @@
-
+/* dojox.mobile.TabBarButton */
 .dj_ie6 .mblTabBarButtonDiv, .dj_ie7 .mblTabBarButtonDiv {
 	left: auto;
 }
 .dj_ie6 .mblTabBar .mblTabBarButton {
-  display: inline; 
+  display: inline; /* IE bug*/
 }
 .mblTabPanelHeader {
 	background-image: url(compat/heading-bg.png);
@@ -14,7 +14,7 @@
 .mblTabContainer .mblTabButtonSelected {
 	background-image: url(compat/tab-sel-button-bg.png);
 }
-*html .mblTabButton { 
+*html .mblTabButton { /* IE6 hack */
 	behavior: expression(
 		(function(el){
 			if(!el.previousSibling)

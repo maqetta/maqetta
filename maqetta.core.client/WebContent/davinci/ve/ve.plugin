@@ -562,7 +562,7 @@
             ],
             dragSource: function(object) {
                 if (object.elementType == 'File') {
-                    return /gif|jpeg|jpg|png|json/i.test(object.getExtension());
+                    return /gif|jpeg|jpg|png|svg|json/i.test(object.getExtension());
                 }
             },
             dragHandler: "davinci.ve.palette.ImageDragSource"

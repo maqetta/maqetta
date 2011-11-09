@@ -1,10 +1,12 @@
-
+/* mbl.widget.Heading */
 .mblHeading {
 	background-image: url(compat/heading-bg.png);
 }
 .mblHeadingSpanTitle {
 	white-space: normal;
 }
+
+/* Heading Arrow Button */
 .mblArrowButtonHead {
 	position: absolute;
 	top: 0px;

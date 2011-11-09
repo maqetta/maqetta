@@ -851,6 +851,6 @@ davinci.html.CSSAtRule.prototype.getCSSFile = function() {
 };
 davinci.html.CSSAtRule.prototype.getText = function(context) {
     s = "@";
-    s = s + this.name + " " + this.value + ";";
+    s = s + this.name + " " + this.value + "\n";
     return s;
 };

@@ -1,7 +1,8 @@
-
+/* dojox.mobile.EdgeToEdgeList */
 .mblEdgeToEdgeList {
   position: relative;
-  
+  /* IE needs this */
+
   margin: 0;
   padding: 0;
   background-color: #ffffff;

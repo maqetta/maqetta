@@ -67,7 +67,7 @@ dojo.mixin(davinci.ui.Resource, {
 				if(davinci.ui.Resource._checkFileName(resourcePath)){
 					var resource = system.resource.createResource(resourcePath);
 					resource.isNew = true;
-					var text = system.resource.createText("CSS", {resource:resource});
+					var text = system.resource.createText("HTML", {resource:resource});
 					if(text){
 						resource.setText(text);
 					}

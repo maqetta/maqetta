@@ -30,13 +30,21 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
         this._dojoThemeSets = davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
         if (!this._dojoThemeSets){ 
             this._dojoThemeSets =  davinci.theme.dojoThemeSets;
+            davinci.workbench.Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(),this._dojoThemeSets);
             
+        }
+        if (!this._dojoThemeSets.themeSets[0]) {
+            this._dojoThemeSets.themeSets.push(dojo.clone(davinci.theme.custom_themeset));
+            davinci.workbench.Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(),this._dojoThemeSets);
         }
         this._dojoThemeSets = dojo.clone(this._dojoThemeSets); // make a copy so we won't effect the real object
         
         this._dialog.attr("content", this._getTemplate());
         this._connections.push(dojo.connect(dojo.byId('theme_select_themeset_theme_select'), "onchange", this, "onChange"));
-        this._connections.push(dojo.connect(dojo.byId('theme_select_themeset_theme_select'), "onClick", this, "onClick"));
+        this._connections.push(dojo.connect(dojo.byId('theme_select_themeset_add'), "onclick", this, "addThemeSet"));
+        this._connections.push(dojo.connect(dojo.byId('theme_select_themeset_delete'), "onclick", this, "deleteThemeSet"));
+       // this._connections.push(dojo.connect(dojo.byId('theme_select_themeset_theme_select'), "onClick", this, "onClick"));
+        this._connections.push(dojo.connect(dijit.byId('theme_select_rename_button'), "onClick", this, "renameThemeSet"));
         this._connections.push(dojo.connect(dijit.byId('theme_select_desktop_theme_select'), "onChange", this, "onDesktopChange"));
         this._connections.push(dojo.connect(dijit.byId('theme_select_mobile_theme_select'), "onChange", this, "onMobileChange"));
         this._connections.push(dojo.connect(dijit.byId('theme_select_ok_button'), "onClick", this, "onOk"));
@@ -141,6 +149,107 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
             this.onMobileChange(davinci.theme.default_theme); //force refresh
         }
         
+    },
+    
+    addThemeSet: function(e) {
+        var newThemeSet;
+        if (this._selectedThemeSet) {
+            newThemeSet = dojo.clone(this._selectedThemeSet);
+        } else {
+            newThemeSet = dojo.clone(davinci.theme.default_themeset);
+        }
+
+        var newThemeSetName = newThemeSet.name;
+        // make sure the name is unique
+        var nameIndex = 0;
+        for (var n = 0; n < this._dojoThemeSets.themeSets.length; n++){
+            if (this._dojoThemeSets.themeSets[n].name == newThemeSetName){
+                nameIndex++;
+                newThemeSetName = newThemeSet.name + '_' + nameIndex;
+                n = -1; // start search a first theme set with new name
+            }
+        }
+        newThemeSet.name = newThemeSetName;
+        this._dojoThemeSets.themeSets.push(newThemeSet);
+        var select = dojo.byId('theme_select_themeset_theme_select');
+        var c = dojo.doc.createElement('option');
+        c.innerHTML = newThemeSet.name;
+        c.value = newThemeSet.name;
+        select.appendChild(c);
+        
+    },
+    
+    deleteThemeSet: function(e) {
+        var select = dojo.byId('theme_select_themeset_theme_select');
+        var node = select[select.selectedIndex];
+        
+        for (var n = 0; n < this._dojoThemeSets.themeSets.length; n++){
+            if (this._dojoThemeSets.themeSets[n].name == node.value){
+                this._dojoThemeSets.themeSets.splice(n, 1);
+                break;
+            }
+        }
+        this._selectedThemeSet = null;
+        select.removeChild(node);
+        dijit.byId('theme_select_themeset_theme_select_textbox').attr('value','');
+        
+    },
+    
+    renameThemeSet: function(e) {
+        var select = dojo.byId('theme_select_themeset_theme_select');
+        this._renameDialog = new dijit.Dialog({
+            id: "rename",
+            title: 'Rename theme set',
+            style:"width:300px; ",
+            
+        });
+        var content = ''+
+        '<table style="width: 100%; margin-left:10px; margin-right:10px;">'+
+            '<tr><td style="width: 18%;">Name:</td><td style="text-align: center;"><input data-dojo-type="dijit.form.ValidationTextBox" data-dojo-props="regExp:\'[a-zA-z0-9_]+\', required:true, invalidMessage:\'Invalid Text.\'" id="theme_select_themeset_rename_textbox" style="width: 175px;" ></td></tr>'+
+        '</table>' +
+        '<table style="width:100%; margin-top: 10px;">'+
+            '<tr><td style="text-align:right; width:80%;"><input type="button" dojoType="dijit.form.Button" id="theme_set_rename_ok_button" label="Ok"></input></td><td><input type="button" dojoType="dijit.form.Button" id="theme_set_rename_cancel_button" label="Cancel"></input></td></tr>'+
+        '</table>';
+        this._renameDialog.attr("content", content);
+        this._renameDialog._themesetConnections = [];
+        this._renameDialog._themesetConnections.push(dojo.connect(dijit.byId('theme_set_rename_ok_button'), "onClick", this, "onOkRename"));
+        this._renameDialog._themesetConnections.push(dojo.connect(dijit.byId('theme_set_rename_cancel_button'), "onClick", this, "onCloseRename"));
+        this._renameDialog.show();
+        var editBox = dijit.byId('theme_select_themeset_rename_textbox');
+        editBox.attr('value', this._selectedThemeSet.name);
+        dijit.selectInputText(editBox);
+         
+    },
+    
+    onOkRename: function(e) {
+        
+        var newName = dijit.byId('theme_select_themeset_rename_textbox').attr('value');
+        if (newName) {
+            for (var n = 0; n < this._dojoThemeSets.themeSets.length; n++){
+                if (this._dojoThemeSets.themeSets[n].name == newName){
+                    alert('Theme set name already use');
+                    return;
+                }
+            }
+            var select = dojo.byId('theme_select_themeset_theme_select');
+            var node = select[select.selectedIndex];
+            var oldName = this._selectedThemeSet.name;
+            node.innerHTML = newName;
+            node.value = newName;
+            this._selectedThemeSet.name = newName;
+            dijit.byId('theme_select_themeset_theme_select_textbox').attr('value',this._selectedThemeSet.name);
+        }
+        
+        this.onCloseRename(e);
+    },
+    
+    onCloseRename: function(e) {
+        while (connection = this._renameDialog._themesetConnections.pop()){
+            dojo.disconnect(connection);
+        }
+        this._renameDialog.destroyDescendants();
+        this._renameDialog.destroy();
+        delete this._renameDialog;
     },
     
     onClick: function(e) {
@@ -308,23 +417,23 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
     
     _getTemplate: function(){
         
-        var size = 4;
+        var size = 2;
         if (this._dojoThemeSets.themeSets.length > size) {
-            size = this._dojoThemeSets.themeSets.length;
+            size = this._dojoThemeSets.themeSets.length + 2; // add space at bottom
         } 
         if (size > 10) {
             size = 10;
         }
 
         var template = ''+
-            '<table>' +
+            '<table style="width:480px; " >' +
                 '<tr>' +
                     '<td style="width:30%; vertical-align: top;">' +
                         '<table>' + 
                             '<tr>' +
-                                '<td style="width:30px; vertical-align: top;" >' +
-                                    '<label>Theme sets:</label><select  id="theme_select_themeset_theme_select" name="theme_select_themeset_theme_select" size="'+size+'" style="margin-bottom: 5px;" ></select>'+
-                                    '<span style="font-size:18px; margin:5px; border: 1px solid #ccc; border-radius: 2px; color: #ccc; padding: 0px 2px 0 2px;" >+</span><span style="font-size:18px; margin:5px; border: 1px solid #ccc; border-radius: 2px; color: #ccc; padding: 0px 2px 0 2px;">-</span>'+
+                                '<td style=" vertical-align: top;" >' +
+                                    '<label>Theme sets:</label><select  id="theme_select_themeset_theme_select" name="theme_select_themeset_theme_select" size="'+size+'" style="margin-bottom: 5px; width: 120px;" ></select>'+
+                                    '<span id="theme_select_themeset_add" style="font-size:18px; margin:5px; border: 1px solid #ccc; border-radius: 2px; color: #ccc; padding: 0px 2px 0 2px;" >+</span><span id="theme_select_themeset_delete" style="font-size:18px; margin:5px; border: 1px solid #ccc; border-radius: 2px; color: #ccc; padding: 0px 2px 0 2px;">-</span>'+
                                     '</td>' +
                                 '<td><div style="border-right: 1px solid #ccc; width: 1px; height: 250px; margin-left: 10px; margin-top: 10px;"></div></td>' +
                             '</tr>' +

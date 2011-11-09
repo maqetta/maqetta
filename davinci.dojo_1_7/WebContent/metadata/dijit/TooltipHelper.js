@@ -1,8 +1,8 @@
-dojo.provide("davinci.libraries.dojo.dijit.TooltipHelper");
+define([
+], function(){
+return function() {
 
-dojo.declare("davinci.libraries.dojo.dijit.TooltipHelper", null, {
-
-		popup: function(widget){
+		this.popup = function(widget){
 			var connectId = widget.attr("connectId");
 			if(!connectId){ return; }
 			if(connectId.length){
@@ -11,9 +11,9 @@ dojo.declare("davinci.libraries.dojo.dijit.TooltipHelper", null, {
 			}
 			var dijit = widget.getContext().getDijit();
 			dijit.showTooltip(widget.domNode.innerHTML, davinci.ve.widget.byId(connectId).domNode);
-		},
+		};
 
-		tearDown: function(widget){
+		this.tearDown = function(widget){
 			var connectId = widget.attr("connectId");
 			if(!connectId){ return; }
 			if(connectId.length){
@@ -23,9 +23,10 @@ dojo.declare("davinci.libraries.dojo.dijit.TooltipHelper", null, {
 			var dijit = widget.getContext().getDijit();
 			dijit.hideTooltip(davinci.ve.widget.byId(connectId).domNode);
 			return true;
-		},
+		};
 
-		getSelectNode: function(context){
+		this.getSelectNode = function(context){
 			return context.getDijit()._masterTT.domNode;
-		}
+		};
+};
 });

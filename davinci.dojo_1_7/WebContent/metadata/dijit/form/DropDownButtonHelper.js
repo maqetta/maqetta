@@ -1,9 +1,22 @@
-define(function() {
+define(["dojo/_base/array", "dojo/_base/connect"], function(array, connect) {
 	return function() {
 		this.create = function(widget, srcElement) {
-			if (widget.dijitWidget.dropDown) {
-				widget.dijitWidget.dropDown._popupWrapper._dvWidget.hidden = true; // this will hide the dijitMenu in designer
-			}
+			var dw = widget.dijitWidget,
+				setup = function() {
+					if (dw.dropDown) {
+						if (dw.dropDown._popupWrapper._dvWidget) {
+							dw.dropDown._popupWrapper._dvWidget.hidden = true; // this will hide the dijitMenu in designer
+						}
+						dw.dropDown.owner = dw; // leave a path to make it possible to get from the popup back to the dropdown instance
+					}
+				},
+				handle = connect.connect(dw, 'startup', function() {
+					if (handle) {
+						connect.disconnect(handle);
+					}
+					setup();
+				});
+			setup();
 		};
 
 		this.getData = function(/*Widget*/ widget, /*Object*/ options) {
@@ -33,7 +46,8 @@ define(function() {
 		};
 
 		this.getChildren = function(widget) {
-			return [davinci.ve.widget.getWidget(widget.dijitWidget.dropDown.domNode)];
+			var dropDown = widget.dijitWidget.dropDown;
+			return dropDown ? [davinci.ve.widget.getWidget(dropDown.domNode)] : [];
 		};
 
 		// HACKS: There's probably a better way to do this with the new model, just stopgap measures until Phil takes a look.
@@ -46,13 +60,13 @@ define(function() {
 				return undefined;
 			}
 			var data = {type: widget.declaredClass, properties: {}},
-				pChildNodes = widget.containerNode.childNodes,
+				pChildNodes = widget.containerNode ? widget.containerNode.childNodes : [],
 				dropDownData = [];
 
 			// search for child widgets
-			dojo.forEach(pChildNodes, function(n){
+			array.forEach(pChildNodes, function(n){
 				// only interested in menus or menu items
-				if((typeof n == "object" && n.nodeType != 1 /*ELEMENT*/) || dojo.isString(n) || n.length){
+				if((typeof n == "object" && n.nodeType != 1 /*ELEMENT*/) || typeof n == "string" || n.length){
 					
 				} else {
 					// get the widget from the node

@@ -1,4 +1,4 @@
-
+/* dojox.mobile.TextArea */
 .mblTextArea {
   padding: 4px 1px;
   border-color: #9CACC0;
@@ -8,6 +8,7 @@
   font-family: Helvetica;
   font-size: 13px;
 }
+/* dojox.mobile.ExpandingTextArea */
 .mblExpandingTextArea {
   margin: 2px;
 }

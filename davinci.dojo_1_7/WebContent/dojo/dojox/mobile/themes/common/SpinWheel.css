@@ -8,6 +8,7 @@
 	color: #000000;
 	-webkit-border-radius: 3px;
 }
+
 .mblSpinWheelBar {
 	position: absolute;
 	top: 79px;
@@ -18,12 +19,15 @@
 	clear: both;
 	-webkit-opacity: 0.6;
 }
+
 .mblSpinWheelDatePicker {
 	width: 312px;
 }
+
 .mblSpinWheelTimePicker {
 	width: 208px;
 }
+
 .mblSpinWheelSlot {
 	position: relative;
 	top: 0px;
@@ -33,30 +37,37 @@
 	border-left: solid 2px #000000;
 	border-right: solid 2px #000000;
 }
+
 .mblSpinWheelSlotLabel {
 	padding: 0 8px;
 	height: 44px;
 	overflow: hidden;
 	font: bold 24px/44px Helvetica,sans-serif;
 }
+
 .mblSpinWheelSlotLabel img{
 	vertical-align: middle;
 	opacity: 0.7;
 }
+
 .mblSpinWheelSlotLabelGray {
 	color: #CCCCCC;
 }
+
 .mblSpinWheelSlotLabelBlue {
 	color: #0959D2;
 }
+
 .mblSpinWheelSlotContainer {
 	position: relative;
 }
+
 .mblSpinWheelSlotPanel {
 	position: absolute;
 	top: 0px;
 	width: 100%;
 }
+
 .mblSpinWheelSlotTouch {
 	position: absolute;
 	top: 0px;

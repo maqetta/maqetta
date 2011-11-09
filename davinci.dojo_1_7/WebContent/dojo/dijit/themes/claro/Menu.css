@@ -1,4 +1,34 @@
+/* Menu 
 
+There are three areas of styling for the Menu:  
+ 
+ 1. The menu 
+ 	There are three types of menus:
+ 	i)Context Menu
+ 	ii)Drop down Menu
+ 	iii) Navigation Menu
+ 	All three types of menus are affected by the .dijitMenu class in which you can set the background-color, padding and border
+ 	.dijitMenu affects the drop down menu in TimeTextBox, Calendar, ComboBox and FilteringSelect
+  .dijitMenuTable - for padding - also affects Select widget 	
+  	
+ 2. The menu bar
+ 	.dijitMenuBar - for border, margins, padding, background-color of the menu bar
+ 	.dijitMenuBar .dijitMenuItem - for padding, text color of menu items in the menu bar (overrides .dijitMenuItem) 
+ 	
+ 3. Menu items - items in the menu.  
+ 	.dijitMenuItem - for color
+ 	.dijitMenuItemHover, .dijitMenuItemSelected - for background-color, border, text color, padding of a menu item or menubar item that has been hovered over or selected	
+ 	.dijitMenuItemActive - for bacgkround-color of an active (mousedown) menu item
+	td.dijitMenuItemIconCell - for padding around a  menu item's icon
+	td.dijitMenuItemLabel - for padding around a menu item's label	
+	.dijitMenuSeparatorTop - for border, top border, of the separator
+	.dijitMenuSeparatorBottom - for bottom margin of the separator
+	
+	Styles specific to ComboBox and FilteringSelect widgets: 
+	.dijitComboBoxMenu .dijitMenuItem - for padding and border of a menu item in a ComboBox or FilteringSelect widget's menu
+	.dijitComboBoxMenu .dijitMenuItemSelected- for text color, background-color and border of a menu item in a ComboBox or FilteringSelect widget's menu
+
+*/
 .claro .dijitMenuBar {
   border: 1px solid #b5bcc7;
   margin: 0;
@@ -15,12 +45,14 @@
   background-repeat: repeat-y;
   background-color: #ffffff;
   border: 1px solid #759dc0;
-  
+  /* so adjoining borders of MenuBar/ComboBox and Menu overlap, avoiding double border */
+
   margin: -1px 0;
 }
 .dj_ie6 .claro .dijitMenu {
   margin: 0;
-  
+  /* above -1px makes top/bottom borders disappear on IE6 */
+
 }
 .claro .dijitMenuBar .dijitMenuItem {
   padding: 6px 10px 7px;
@@ -33,6 +65,7 @@
   background-repeat: repeat-x;
   color: #000000;
 }
+/* this prevents jiggling upon hover of a menu item */
 .claro .dijitMenuTable {
   border-collapse: separate;
   border-spacing: 0 0;
@@ -41,6 +74,7 @@
 .claro .dijitMenuItem td {
   padding: 1px;
 }
+/* hover over a MenuBarItem */
 .claro .dijitMenuPassive .dijitMenuItemHover, .claro .dijitMenuPassive .dijitMenuItemSelected {
   background-color: #abd6ff;
   border: solid 1px #759dc0;
@@ -54,6 +88,7 @@
 .dj_ie6 .claro .dijitMenuItem, .dj_ie6 .claro .dijitMenuPassive .dijitMenuItem {
   background-image: none;
 }
+/* MenuBarItem that has been selected and menu drops down from it */
 .claro .dijitMenuActive .dijitMenuItemHover, .claro .dijitMenuActive .dijitMenuItemSelected {
   border: solid 1px #759dc0;
   padding: 5px 9px 6px;
@@ -97,13 +132,15 @@
 .claro .dijitMenuSeparatorTop {
   height: auto;
   margin-top: 1px;
-  
+  /* prevents spacing above/below separator */
+
   border-bottom: 1px solid #b5bcc7;
 }
 .claro .dijitMenuSeparatorBottom {
   height: auto;
   margin-bottom: 1px;
 }
+/* the checked menu item */
 .claro .dijitCheckedMenuItemIconChar {
   display: none;
 }
@@ -120,6 +157,7 @@
 .claro .dijitCheckedMenuItemChecked .dijitCheckedMenuItemIcon {
   background-position: 0 50%;
 }
+/*ComboBox Menu*/
 .claro .dijitComboBoxMenu {
   margin-left: 0;
   background-image: none;
@@ -144,7 +182,8 @@
 .claro .dijitComboBoxMenuActive .dijitMenuItemSelected {
   background-position: 0 -177px;
   background-color: #7dbdfa;
-  
+  /* TODO: why is this a different color than normal .dijitMenuItemSelected? */
+
 }
 .claro .dijitMenuPreviousButton, .claro .dijitMenuNextButton {
   font-style: italic;

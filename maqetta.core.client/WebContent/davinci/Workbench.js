@@ -959,7 +959,7 @@ dojo.mixin(davinci.Workbench, {
 		}
 	},
 
-	openEditor: function (keywordArgs) {
+	openEditor: function (keywordArgs, newHtmlParams) {
 		
 		var fileName=keywordArgs.fileName,
 			content=keywordArgs.content,
@@ -1029,7 +1029,7 @@ dojo.mixin(davinci.Workbench, {
 			});
 			return;
 		}*/
-		var ee = this._createEditor(editorExtension,fileName,keywordArgs);
+		var ee = this._createEditor(editorExtension, fileName, keywordArgs, newHtmlParams);
 		if(editorCreateCallback){
 			editorCreateCallback.call(window, ee);
 		}
@@ -1039,7 +1039,7 @@ dojo.mixin(davinci.Workbench, {
 		}
 	},
 	
-	_createEditor: function(editorExtension, fileName, keywordArgs){
+	_createEditor: function(editorExtension, fileName, keywordArgs, newHtmlParams){
 		var nodeName = fileName.split('/').pop()
 
 		var loading = dojo.query('.loading');
@@ -1093,7 +1093,7 @@ dojo.mixin(davinci.Workbench, {
 		if (!keywordArgs.noSelect) {
 			tabContainer.selectChild(tab);
 		}
-		tab.setEditor(editorExtension,fileName,content,keywordArgs.fileName,tab.domNode);
+		tab.setEditor(editorExtension, fileName, content, keywordArgs.fileName, tab.domNode, newHtmlParams);
 		
 		if (keywordArgs.startLine) {
 			tab.editor.select(keywordArgs);
@@ -1510,6 +1510,33 @@ dojo.mixin(davinci.Workbench, {
 	setActiveProject: function(project){
 		this._state.project = project;
 		davinci.Workbench._updateWorkbenchState();
+	},
+	
+	/**
+	 * Retrieves a custom property from current workbench state
+	 * @param {string} propName  Name of custom property
+	 * @return {any} propValue  Any JavaScript value.
+	 */
+	workbenchStateCustomPropGet: function(propName){
+		if(typeof propName == 'string'){
+			return this._state[propName];
+		}
+	},
+	
+	/**
+	 * Assign a custom property to current workbench state and persist new workbench state to server
+	 * @param {string} propName  Name of custom property
+	 * @param {any} propValue  Any JavaScript value. If undefined, then remove given propName from current workbench state.
+	 */
+	workbenchStateCustomPropSet: function(propName, propValue){
+		if(typeof propName == 'string'){
+			if(typeof propValue == 'undefined'){
+				delete this._state[propName];
+			}else{
+				this._state[propName] = propValue;
+			}
+			this._updateWorkbenchState();
+		}
 	},
 	
 	_updateWorkbenchState: function()

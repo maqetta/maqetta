@@ -1,12 +1,15 @@
-
+/* dojox.mobile.Slider */
 .mblSlider {
   outline: none;
   -webkit-user-select: none;
-  
+  /* prevent selection */
+
   -webkit-box-sizing: content-box;
-  
+  /* make width and height consistent with a DIV */
+
   margin: 15px;
-  
+  /* 1/2 handle width for hanging off the ends of the bar */
+
   border: 1px outset #b5bcc7;
   background-color: #8fc9ff;
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));

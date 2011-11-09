@@ -212,6 +212,7 @@ davinci.ve.widget.getLabel = function(widget){
 	text+="</span> ";
 
 	var widgetText;
+	var domNode = widget.domNode;
 	switch(widget.type){
 		case 'dijit.form.ComboBox':
 		case 'dijit.form.Button':
@@ -221,7 +222,13 @@ davinci.ve.widget.getLabel = function(widget){
 			widgetText = widget.attr("title");
 			break;
 		case 'html.label':
-			widgetText = widget.domNode.innerHTML;
+			widgetText = domNode.innerHTML;
+			break;
+		case 'html.img':
+			widgetText = domNode.alt;
+			if(!widgetText){
+				widgetText = domNode.title;
+			}
 			break;
 		default:
 			widgetText = "";
@@ -246,6 +253,11 @@ davinci.ve.widget.getLabel = function(widget){
 			text += "." + className.replace(/\s+/g,".");
 		}
 		text += "</span> ";
+	}
+	if(widget.type === 'html.img'){
+		var src = domNode.src;
+		var s = '<span>' + src.substr(src.lastIndexOf('/')+1) + '</span>';
+		text += s;
 	}
 	return text;
 };
@@ -292,12 +304,28 @@ davinci.ve.widget._getUniqueId = function() {
     return id;
 };
 
-davinci.ve.widget.createWidget = function(data){
+/**
+ * Main routine for creating a new widget on the current page canvas
+ * @param {object} data  (Needs to be documented!)
+ * @param {object} initialCreationArgs  Initial creation info
+ *      parent - target parent widget
+ *      size - explicit size {w:, h:}
+ *      position - explicit position {x:, y:} 
+ */
+davinci.ve.widget.createWidget = function(widgetData, initialCreationArgs){
 	
-	if(!data || !data.type){
+	if(!widgetData || !widgetData.type){
 		return undefined;
 	}
-
+	// Some logic below changes the data.properties object. We don't want to mess up
+	// other downstream logic in the product, particularly given than data
+	// sometimes is a pointer to the original widget object from widgets.json.
+	// For purposes of this routine, OK to do a shallow clone of data and data.properties.
+	var data = dojo.mixin({}, widgetData);
+	if(data.properties){
+		data.properties = dojo.mixin({}, widgetData.properties);
+	}
+	
 	var type = data.type, c, theme, dojoType,
 		metadata = davinci.ve.metadata.query(type);
 	if (!metadata) {
@@ -483,6 +511,23 @@ davinci.ve.widget.createWidget = function(data){
 	var helper = davinci.ve.widget.getWidgetHelper(type);
 	if(helper && helper.preProcessData){
         data =  helper.preProcessData(data);
+	}
+	
+	// Invoke widget initialSize helper if this is widget's initial creation time
+	// (i.e., initialCreationArgs is provided)
+	if(initialCreationArgs && helper && helper.initialSize){
+        size =  helper.initialSize(initialCreationArgs);
+        if(size){
+        	var styleString = data.properties.style;
+        	var tempElem = styleString ? dojo.create('span',{style:styleString}) : dojo.create('span');
+        	if(size.width){
+        		tempElem.style.width = size.width;
+        	}
+        	if(size.height){
+        		tempElem.style.height = size.height;
+        	}
+        	data.properties.style = tempElem.style.cssText;
+        }
 	}
 		
     // Strip out event attributes. We want them in the model

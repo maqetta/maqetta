@@ -322,14 +322,21 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	height: 16px;
 }
 
-/*FIXME: The style rules below might conflict with Claro Tree widget styling */
+.fileFolderTable {
+	/* Believe it or not, margin-left/right set to auto causes a table to be centered */
+	margin-left:auto;
+	margin-right:auto;
+}
+.fileFolderTable .dijitTextBox {
+	width:16em;
+}
 .fileDialog .fileNameRow {
 	/* margin:.5em 2em 1.25em; */
 	text-align:center;
 	width:100%;
 }
 .fileDialog .fileNameRow input {
-	  width:12em; 
+	  width:13em; 
 }
 .fileDialog .parentFolderInputRow {
 	margin-right:2px;
@@ -337,11 +344,40 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 .fileDialog .parentFolderInputRow .dijitTextBox {
 	width:100%;
 }
+.fileDialogLabelCell {
+	text-align:right;
+	padding-right:.25em;
+}
+.fileDialog .folder_details_arrow {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	vertical-align: middle;
+	margin-left: 7px;
+}
+.fileFolderTable.treeCollapsed .folder_details_arrow {
+	/*background:url('img/downarrow.png');*/
+	background:url('img/sprite.png');
+	background-position: -19px 0px;
+}
+.fileFolderTable.treeExpanded .folder_details_arrow {
+	/*background:url('img/uparrow.png');*/
+	background:url('img/sprite.png');
+	background-position: -37px 0px;
+}
 .fileDialog .folderContainer {
-	border:1px solid #888;
 	margin-left:1px;
-	margin-top:1px;
+	margin-top:.3em;
+	margin-bottom:1em;
 	padding:1px;
+}
+.fileDialog .folderContainer .dijitContentPane {
+	border:1px solid #888;
+	padding:1px;
+}
+.folderContainerButtonRow {
+	margin-top:.25em;
+	text-align:right;
 }
 .fileDialog .fileDialogTreeWidget {
 	height:10em;/*100%*/
@@ -356,8 +392,11 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	outline:none;
 }
 .fileDialog .buttonRow {
-	text-align:center;
-	margin:1.2em 0 1em 0;
+	text-align:right;
+	margin:1.2em 0 .7em 0;
+}
+.fileDialog .buttonWrapperSpan {
+	margin-left: .75em;
 }
 .tabButtonLoadingIcon {
 	background: url("img/loading_wheel.gif")  no-repeat;
@@ -365,6 +404,7 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	height: 14px;
 	margin-left: 5px;
 	margin-right:-3px;
+	margin-bottom:1em;
 }
 
 /* generic */
@@ -415,4 +455,71 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 
 .NewProjectDialogLabel {
 	white-space:nowrap;
+}
+
+.nhfo_outer2 {
+	margin: .8em 0 0;
+	border: 1px solid #759DC0;
+	border-radius: 4px;
+}
+.nhfo_outer1 {
+	margin:0;
+	padding: 6px 6px 4px;
+	border: 2px solid white;
+	background: rgba(171,214,255,.1); /* #ABD6FF */
+	border-radius: 4px;
+}
+.nhfo_ct .dijitSelect .dijitButtonContents {
+	width:11em;
+}
+.nhfo_details_arrow {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	vertical-align: middle;
+	margin-left: 7px;
+}
+.nhfo_collapsed .nhfo_details_arrow {
+	/*background:url('img/downarrow.png');*/
+	background:url('img/sprite.png');
+	background-position: -19px 0px;
+}
+.nhfo_expanded .nhfo_details_arrow {
+	/*background:url('img/uparrow.png');*/
+	background:url('img/sprite.png');
+	background-position: -37px 0px;
+}
+.nhfo_details {
+	margin: .3em 0;
+}
+.nhfo_collapsed .nhfo_details {
+	display:none;
+}
+.nhfo_details table {
+	border-spacing: 0px;
+	border-collapse: collapse;
+}
+.nhfo_details table td {
+	padding:0;
+}
+.nhfo_details table td.nhfo_label {
+	width:10em;
+	text-align:right;
+	padding-right:.25em;
+}
+.nhfo_details .dijitSelect {
+	margin: 0.1em 0.2em;
+}
+.nhfo_details .dijitSelect .dijitButtonContents {
+	width:9em;
+}
+.nhfo_edit_theme {
+	display:inline-block;
+	width:16px;
+	height:16px;
+	/* background:url('img/editing_16.gif'); */
+	background:url('img/sprite.png');
+	background-position: -56px 0px;
+
+	margin-left: .5em;
 }

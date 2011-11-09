@@ -306,11 +306,12 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 				var context = this.context;
 				popup.adjustPosition=function (event) {
 					// Adjust for the x/y position of the visual editor's IFRAME relative to the workbench
-					// Adjust for the scrolled position of the document in the visual editor, since the popup menu code assumes (0, 0)
-					var coords = context.getDojo().position(context.frameNode);
+					// Adjust for the scrolled position of the document in the visual editor, since the popup menu callback assumes (0, 0)
+					var coords = dojo.position(context.frameNode);
 					dojo.withDoc(context.getDocument(), function(){
-						coords.x -= dojo.docScroll().x;
-						coords.y -= dojo.docScroll().y;
+						var scroll = dojo.docScroll();
+						coords.x -= scroll.x;
+						coords.y -= scroll.y;
 					});
 
 					return coords;

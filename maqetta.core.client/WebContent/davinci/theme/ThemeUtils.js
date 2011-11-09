@@ -135,34 +135,34 @@ davinci.theme.getHelper = function(theme){
 };
 
 davinci.theme.desktop_default = 'desktop_default';
-davinci.theme.mobile_default = 'mobile_default';
+davinci.theme.mobile_default = 'custom_default';
 davinci.theme.default_theme = '(device-specific)'; //'default';
 davinci.theme.none_themeset_name = '(none)';
 davinci.theme.other_device = 'other';
 davinci.theme.none_theme = 'none';
 davinci.theme.dojoMobileDefault = [{"theme":"android","device":"Android"},{"theme":"blackberry","device":"BlackBerry"},{"theme":"iphone","device":"iPad"},{"theme":"iphone","device":"iPhone"},{"theme":"iphone","device":"other"}];
-davinci.theme.dojoMobileNone =  [{"theme":"none","device":"Android"},{"theme":"none","device":"BlackBerry"},{"theme":"none","device":"iPad"},{"theme":"none","device":"iPhone"},{"theme":"none","device":"other"}];
+davinci.theme.dojoMobileCustom =  [{"theme":"custom","device":"Android"},{"theme":"custom","device":"BlackBerry"},{"theme":"custom","device":"iPad"},{"theme":"custom","device":"iPhone"},{"theme":"custom","device":"other"}];
 davinci.theme.none_themeset = {
         "name": davinci.theme.none_themeset_name,
         "desktopTheme": "claro",
         "mobileTheme": davinci.theme.dojoMobileDefault
         };
+davinci.theme.default_themeset = {
+        "name": davinci.theme.desktop_default,
+        "desktopTheme": "claro",
+        "mobileTheme": davinci.theme.dojoMobileDefault
+        };
+davinci.theme.custom_themeset = {
+        "name": davinci.theme.mobile_default,
+        "desktopTheme": "claro",
+        "mobileTheme": davinci.theme.dojoMobileCustom
+        };
 davinci.theme.dojoThemeSets =  { 
         "version": "1.7",
         "specVersion": "0.8",
         "helper": "davinci.libraries.dojo.dojox.mobile.ThemeHelper",
-        "themeSets": [
-            {
-                "name": davinci.theme.desktop_default,
-                "desktopTheme": "claro",
-                "mobileTheme": davinci.theme.dojoMobileNone
-            },
-            {
-                "name": davinci.theme.mobile_default,
-                "desktopTheme": "claro",
-                "mobileTheme": davinci.theme.dojoMobileDefault
-            }
-           
+        "themeSets": [ 
+               davinci.theme.custom_themeset           
         ]
 };
 
@@ -206,7 +206,8 @@ davinci.theme.getThemeSet = function(context){
     for (var s = 0; s < dojoThemeSets.themeSets.length; s++){
         var themeSet = dojoThemeSets.themeSets[s];
         if(themeSet.desktopTheme === desktopTheme.name){
-            if ((mobileTheme == davinci.theme.none_theme) && (davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileNone)) ){
+            if ((mobileTheme == davinci.theme.none_theme) && (davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileCustom)) ){
+                debugger; // why?
                 return themeSet;
             } else if ((mobileTheme == davinci.theme.default_theme) && (davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileDefault))){
                 return themeSet;

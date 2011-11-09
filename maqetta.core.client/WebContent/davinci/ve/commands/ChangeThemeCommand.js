@@ -154,7 +154,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             }
         }
         // remove the mobile theme
-        if (themeSet.mobileTheme && (!davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileNone)) && (!davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileDefault))){
+        if (themeSet.mobileTheme && /*(!davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileNone)) &&*/ (!davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileDefault))){
             this._dojoxMobileRemoveTheme(this._context);
         }
         
@@ -171,7 +171,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             }
         }
         // add the mobile theme
-        if (themeSet.mobileTheme && (!davinci.theme.themeSetEquals(themeSet.mobileTheme, davinci.theme.dojoMobileNone))){
+        if (themeSet.mobileTheme /*&& (!davinci.theme.themeSetEquals(themeSet.mobileTheme, davinci.theme.dojoMobileNone))*/){
             this._dojoxMobileAddTheme(this._context, themeSet.mobileTheme);
         }
     },

@@ -1,4 +1,4 @@
-package org.davinci.server.review;
+package maqetta.core.server.standalone;
 
 import java.io.IOException;
 import java.net.URL;
@@ -8,10 +8,13 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.davinci.server.internal.Activator;
 import maqetta.core.server.standalone.DavinciPageServlet;
-import org.maqetta.server.VURL;
+import maqetta.core.server.standalone.VURL;
+import org.davinci.server.internal.Activator;
 
+import org.davinci.server.review.Constants;
+import org.davinci.server.review.ReviewObject;
+import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.IPath;

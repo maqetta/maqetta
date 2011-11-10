@@ -1,11 +1,14 @@
-package org.davinci.server.review;
+package maqetta.core.server.standalone.user;
 
 import java.io.File;
 import java.io.Serializable;
 
-import org.davinci.server.review.user.DesignerUser;
+import org.davinci.server.review.CommentsDocument;
+import org.davinci.server.review.user.IDesignerUser;
+import org.davinci.server.user.IDavinciProject;
 
-public class DavinciProject implements Serializable {
+
+public class DavinciProject implements Serializable, IDavinciProject {
 	/**
 	 * 
 	 */
@@ -37,7 +40,7 @@ public class DavinciProject implements Serializable {
 	}
 
 	public String getCommentFilePath() {
-		DesignerUser ru = new DesignerUser(ownerId);
+		IDesignerUser ru = new DesignerUser(ownerId);
 		return ru.getCommentingDirectory().getAbsolutePath() + File.separator + "snapshot"
 				+ File.separator + "comments.xml";
 	}

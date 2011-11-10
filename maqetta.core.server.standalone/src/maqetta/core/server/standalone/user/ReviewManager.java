@@ -1,4 +1,4 @@
-package org.davinci.server.review;
+package maqetta.core.server.standalone.user;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,9 +25,13 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.davinci.server.user.IDavinciProject;
+
 import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.server.review.Constants;
-import org.davinci.server.review.user.DesignerUser;
+import org.davinci.server.review.Version;
+import org.davinci.server.review.user.IDesignerUser;
+import org.davinci.server.review.user.IReviewManager;
 import org.davinci.server.review.user.Reviewer;
 import org.davinci.server.user.LibrarySettings;
 import org.eclipse.core.runtime.IPath;
@@ -39,10 +43,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class ReviewManager {
+public class ReviewManager implements IReviewManager {
 //	private static final String LS = System.getProperty("line.separator");
 	private static ReviewManager theReviewManager;
-	private HashMap<DavinciProject, HashMap<String, ILibInfo[]>> snapshotLibs;
+	private HashMap<IDavinciProject, HashMap<String, ILibInfo[]>> snapshotLibs;
 	public File baseDirectory;
 
 
@@ -53,7 +57,7 @@ public class ReviewManager {
 		return theReviewManager;
 	}
 
-	Map<String, DesignerUser> users = Collections.synchronizedMap(new HashMap<String, DesignerUser>());
+	Map<String, IDesignerUser> users = Collections.synchronizedMap(new HashMap<String, IDesignerUser>());
 	public ReviewManager() {
 		String basePath = ServerManager.getServerManger().getDavinciProperty(IDavinciServerConstants.BASE_DIRECTORY_PROPERTY);
 		baseDirectory = new File(".");
@@ -67,7 +71,7 @@ public class ReviewManager {
 	}
 
 	public void saveDraft(String name,Version version) {
-		DesignerUser user = getDesignerUser(name);
+		IDesignerUser user = getDesignerUser(name);
 		File commentingDir = user.getCommentingDirectory();
 		if (!commentingDir.exists()) {
 			commentingDir.mkdir();
@@ -78,7 +82,7 @@ public class ReviewManager {
 	}
 
 	public void publish(String name, Version version) {
-		DesignerUser user = getDesignerUser(name);
+		IDesignerUser user = getDesignerUser(name);
 		File commentingDir = user.getCommentingDirectory();
 		if (!commentingDir.exists()) {
 			commentingDir.mkdir();
@@ -91,13 +95,13 @@ public class ReviewManager {
 
 	}
 
-	public void saveVersionFile(DesignerUser user) {
+	public void saveVersionFile(IDesignerUser user) {
 		File versionFile = new File(user.getCommentingDirectory(), "snapshot/versions.xml");
 		VersionFile file = new VersionFile();
 		file.save(versionFile, user);
 	}
 
-	private void initVersionDir(DesignerUser user, String timeStamp) {
+	private void initVersionDir(IDesignerUser user, String timeStamp) {
 		File versionDir = new File(user.getCommentingDirectory(), "snapshot/" + timeStamp);
 		if(versionDir.exists()) return;
 		versionDir.mkdir();
@@ -159,20 +163,20 @@ public class ReviewManager {
 		}
 	}
 
-	public DesignerUser getDesignerUser(String name) {
-		DesignerUser designer = users.get(name);
+	public IDesignerUser getDesignerUser(String name) {
+		IDesignerUser designer = users.get(name);
 		if (null == designer) {
 			loadUser(name);
 		}else{
 			// Update the workspace information so that the new created project
 			// will be imported.
-			designer.rawUser.rebuildWorkspace();
+			designer.getRawUser().rebuildWorkspace();
 		}
 		return users.get(name);
 	}
 
 	public Reviewer isVaild(String name, String id, String versionTime) {
-		DesignerUser user = getDesignerUser(name);
+		IDesignerUser user = getDesignerUser(name);
 		if (versionTime == null) {
 			if (user.getLatestVersion() != null)
 				versionTime = user.getLatestVersion().getTime();
@@ -201,7 +205,7 @@ public class ReviewManager {
 			versionFile = new File(this.baseDirectory, "/" + name
 					+ "/.review/snapshot/versions.xml");
 		}
-		DesignerUser user = new DesignerUser(name);
+		IDesignerUser user = new DesignerUser(name);
 
 		if (versionFile.exists()) {
 			VersionFile file = new VersionFile();
@@ -217,7 +221,7 @@ public class ReviewManager {
 		users.put(name, user);
 	}
 
-	private boolean containsPublishedFiles(File dir, DesignerUser user, String timeStamp){
+	private boolean containsPublishedFiles(File dir, IDesignerUser user, String timeStamp){
 		for(Version version : user.getVersions()){
 			if(!version.getTime().equals(timeStamp)) continue;
 			for(String res : version.resources){
@@ -234,7 +238,7 @@ public class ReviewManager {
 	class VersionFile {
 		public String latestVersionID;
 
-		public void save(File file, DesignerUser user) {
+		public void save(File file, org.davinci.server.review.user.IDesignerUser user) {
 			OutputStream out = null;
 			try {
 				if (!file.exists())
@@ -409,7 +413,7 @@ public class ReviewManager {
 		return baseDirectory;
 	}
 
-	public ILibInfo[] getSystemLibs(DavinciProject project){
+	public ILibInfo[] getSystemLibs(IDavinciProject project){
 		StringBuilder path = new StringBuilder();
 		path.append(baseDirectory.getAbsolutePath());
 		path.append("/");
@@ -421,9 +425,9 @@ public class ReviewManager {
 		return new LibrarySettings(new File(path.toString())).allLibs();
 	}
 
-	public ILibInfo[] getVersionLib(DavinciProject project, String version){
+	public ILibInfo[] getVersionLib(IDavinciProject project, String version){
 		if(snapshotLibs == null){
-			snapshotLibs = new HashMap<DavinciProject, HashMap<String, ILibInfo[]>>();
+			snapshotLibs = new HashMap<IDavinciProject, HashMap<String, ILibInfo[]>>();
 		}
 		HashMap<String, ILibInfo[]> versions = snapshotLibs.get(project);
 		if(versions == null){
@@ -455,8 +459,8 @@ public class ReviewManager {
 	public static IPath adjustPath(IPath path, String ownerId, String version, String projectName){
 		// Map the request lib path stored in the snapshot to the actual system lib path
 		// A path like: project1/./lib/dojo/dojo.js
-		ReviewManager reviewManager = ReviewManager.getReviewManager();
-		DavinciProject project = new DavinciProject();
+		IReviewManager reviewManager = ReviewManager.getReviewManager();
+		IDavinciProject project = new DavinciProject();
 		project.setOwnerId(ownerId);
 		project.setProjectName(projectName);
 		ILibInfo[] sysLibs = reviewManager.getSystemLibs(project);

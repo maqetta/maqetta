@@ -28,9 +28,10 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.davinci.server.user.IDavinciProject;
+
 import org.davinci.server.review.Comment;
 import org.davinci.server.review.Constants;
-import org.davinci.server.review.DavinciProject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -43,19 +44,19 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  */
 public class Marshaller extends DefaultHandler {
-	private DavinciProject project;
+	private IDavinciProject project;
 
 	// private volatile static long nextCommentIdNano;
 
-	public Marshaller(DavinciProject project) {
+	public Marshaller(IDavinciProject project) {
 		this.project = project;
 	}
 
-	public DavinciProject getProject() {
+	public IDavinciProject getProject() {
 		return project;
 	}
 
-	public void setProject(DavinciProject project) {
+	public void setProject(IDavinciProject project) {
 		this.project = project;
 	}
 
@@ -81,7 +82,7 @@ public class Marshaller extends DefaultHandler {
 		// Cache the DOM document, since comments may be from different project,
 		// with this cache, XML files need not to be loaded multiple times.
 		Map<String, StringBuffer> xmlFragmentMap = new HashMap<String, StringBuffer>();
-		DavinciProject prj;
+		IDavinciProject prj;
 		StringBuffer xmlFragment;
 		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = builderFactory.newDocumentBuilder();

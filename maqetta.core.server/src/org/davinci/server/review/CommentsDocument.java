@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.davinci.server.user.IDavinciProject;
+
 public class CommentsDocument implements Serializable {
 	/**
 	 * 
@@ -12,11 +14,11 @@ public class CommentsDocument implements Serializable {
 
 	public static final String COMMENT = "comment";
 
-	private DavinciProject project;
+	private IDavinciProject project;
 
 	private List<Comment> commentList;
 
-	public CommentsDocument(DavinciProject project) {
+	public CommentsDocument(IDavinciProject project) {
 		this.project = project;
 		commentList = new LinkedList<Comment>();
 	}
@@ -29,11 +31,11 @@ public class CommentsDocument implements Serializable {
 		this.commentList = commentList;
 	}
 
-	public DavinciProject getProject() {
+	public IDavinciProject getProject() {
 		return project;
 	}
 
-	public void setProject(DavinciProject project) {
+	public void setProject(IDavinciProject project) {
 		this.project = project;
 	}
 

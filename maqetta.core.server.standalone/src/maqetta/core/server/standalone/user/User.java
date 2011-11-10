@@ -30,7 +30,6 @@ import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.ajaxLibrary.ILibraryFinder;
 import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.review.Constants;
-import org.davinci.server.review.ReviewManager;
 import org.davinci.server.user.IPerson;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.LibrarySettings;

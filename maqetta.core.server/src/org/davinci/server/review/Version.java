@@ -37,7 +37,7 @@ public class Version{
 
 	private boolean hasRestarted = false;
 
-	List<String> resources= Collections.synchronizedList(new ArrayList<String>());
+	public List<String> resources= Collections.synchronizedList(new ArrayList<String>());
 
 	List<Reviewer> reviewers = Collections.synchronizedList(new ArrayList<Reviewer>());
 

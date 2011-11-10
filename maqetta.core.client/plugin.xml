@@ -6,5 +6,7 @@
         		  base-name="/WebContent" 
         		   />      
        </extension>
+	<extension point="maqetta.core.server.welcomePage"><welcomePage path="WebContent/welcome.html" priority="1"/></extension>
+   	<extension point="maqetta.core.server.previewPage"><previewPage path="WebContent/preview.html" priority="1" /></extension>
 
 </plugin>

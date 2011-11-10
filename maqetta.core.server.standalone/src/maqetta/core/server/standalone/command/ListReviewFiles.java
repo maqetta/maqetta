@@ -6,9 +6,10 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.davinci.server.review.ReviewManager;
+import maqetta.core.server.standalone.user.ReviewManager;
+
 import org.davinci.server.review.Version;
-import org.davinci.server.review.user.DesignerUser;
+import org.davinci.server.review.user.IDesignerUser;
 import org.davinci.server.user.IUser;
 import org.davinci.server.util.JSONWriter;
 import org.maqetta.server.Command;
@@ -21,7 +22,7 @@ public class ListReviewFiles extends Command {
 		String designerName = req.getParameter("designer");
 		if(designerName ==null||designerName.equals(""))
 			designerName = user.getUserName();
-		DesignerUser designer = commentingManager.getDesignerUser(designerName);
+		IDesignerUser designer = commentingManager.getDesignerUser(designerName);
 		Version version = designer.getVersion(req.getParameter("version"));
 		List<String> resource = version.getResources();
 		JSONWriter writer = new JSONWriter(true);

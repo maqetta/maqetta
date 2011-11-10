@@ -5,9 +5,10 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.davinci.server.review.ReviewManager;
+import maqetta.core.server.standalone.user.ReviewManager;
+
 import org.davinci.server.review.Version;
-import org.davinci.server.review.user.DesignerUser;
+import org.davinci.server.review.user.IDesignerUser;
 import org.davinci.server.review.user.Reviewer;
 import org.davinci.server.user.IUser;
 import org.davinci.server.util.JSONWriter;
@@ -29,7 +30,7 @@ public class ListVersions extends Command {
 		String filePath = path.toString();
 		filePath = "./" + filePath;
 */
-		DesignerUser reviewUser = commentingManager.getDesignerUser(designer);
+		IDesignerUser reviewUser = commentingManager.getDesignerUser(designer);
 
 		// this.responseString = reviewUser.getVersionsJSON();
 

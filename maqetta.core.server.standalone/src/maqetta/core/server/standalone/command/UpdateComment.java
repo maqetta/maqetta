@@ -7,15 +7,16 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import maqetta.core.server.standalone.user.DavinciProject;
+import maqetta.core.server.standalone.user.ReviewManager;
+
 import org.davinci.server.review.Comment;
 import org.davinci.server.review.Constants;
-import org.davinci.server.review.DavinciProject;
-import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.ReviewObject;
 import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.cache.ReviewCacheManager;
-import org.davinci.server.review.user.DesignerUser;
+import org.davinci.server.review.user.IDesignerUser;
 import org.davinci.server.user.IUser;
 import org.maqetta.server.Command;
 
@@ -26,7 +27,7 @@ public class UpdateComment extends Command {
 			throws IOException {
 		String designerName = ((ReviewObject) req.getSession().getAttribute(
 				Constants.REVIEW_INFO)).getDesignerName();
-		DesignerUser du =ReviewManager.getReviewManager().getDesignerUser(designerName);
+		IDesignerUser du =ReviewManager.getReviewManager().getDesignerUser(designerName);
 		DavinciProject project = new DavinciProject();
 		project.setOwnerId(du.getName());
 

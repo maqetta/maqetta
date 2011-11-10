@@ -9,17 +9,18 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import maqetta.core.server.standalone.user.DavinciProject;
+import maqetta.core.server.standalone.user.ReviewManager;
+
 import org.maqetta.server.mail.SimpleMessage;
 import org.maqetta.server.mail.SmtpPop3Mailer;
 import org.davinci.server.review.Comment;
 import org.davinci.server.review.Constants;
-import org.davinci.server.review.DavinciProject;
-import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.ReviewObject;
 import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.cache.ReviewCacheManager;
-import org.davinci.server.review.user.DesignerUser;
+import org.davinci.server.review.user.IDesignerUser;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.IUserManager;
 import org.maqetta.server.Command;
@@ -50,7 +51,7 @@ public class AddComment extends Command {
 
 			comment.setEmail(user.getPerson().getEmail());
 
-			DesignerUser du = ReviewManager.getReviewManager()
+			IDesignerUser du = ReviewManager.getReviewManager()
 					.getDesignerUser(designerName);
 			Version version = du.getVersion(comment.getPageVersion());
 

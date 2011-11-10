@@ -10,11 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import maqetta.core.server.standalone.DavinciPageServlet;
 import maqetta.core.server.standalone.VURL;
+import maqetta.core.server.standalone.user.ReviewManager;
+
 import org.davinci.server.internal.Activator;
 
 import org.davinci.server.review.Constants;
 import org.davinci.server.review.ReviewObject;
-import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.IPath;

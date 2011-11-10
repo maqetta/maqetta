@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.davinci.server.user.IDavinciProject;
+
 import org.davinci.server.util.JSONWriter;
 
 /**
@@ -115,7 +117,7 @@ public class Comment implements Serializable {
 	private String status;
 
 	// Which project the comment belongs to
-	private DavinciProject project;
+	private IDavinciProject project;
 
 	private String pageName;
 	
@@ -218,11 +220,11 @@ public class Comment implements Serializable {
 		this.pageState = pageState;
 	}
 
-	public DavinciProject getProject() {
+	public IDavinciProject getProject() {
 		return project;
 	}
 
-	public void setProject(DavinciProject project) {
+	public void setProject(IDavinciProject project) {
 		this.project = project;
 	}
 

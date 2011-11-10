@@ -5,11 +5,13 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.davinci.server.review.DavinciProject;
-import org.davinci.server.review.ReviewManager;
+import maqetta.core.server.standalone.user.DavinciProject;
+import maqetta.core.server.standalone.user.ReviewManager;
+
 import org.davinci.server.review.Version;
 import org.davinci.server.review.cache.ReviewCacheManager;
-import org.davinci.server.review.user.DesignerUser;
+import org.davinci.server.review.user.IDesignerUser;
+import org.davinci.server.user.IDavinciProject;
 import org.davinci.server.user.IUser;
 import org.maqetta.server.Command;
 
@@ -19,7 +21,7 @@ public class ManagerVersion extends Command {
 			throws IOException {
 		String type = req.getParameter("type"); // three types: close, open, delete and publish
 		String vTime = req.getParameter("vTime");
-		DesignerUser du = ReviewManager.getReviewManager()
+		IDesignerUser du = ReviewManager.getReviewManager()
 				.getDesignerUser(user.getUserName());
 		Version version = du.getVersion(vTime);
 		ReviewManager reviewManager = ReviewManager.getReviewManager();
@@ -36,7 +38,7 @@ public class ManagerVersion extends Command {
 		} else if ("delete".equalsIgnoreCase(type)) {
 			du.deleteVersion(vTime);
 			reviewManager.saveVersionFile(du);
-			DavinciProject project = new DavinciProject();
+			IDavinciProject project = new DavinciProject();
 			project.setOwnerId(du.getName());
 			ReviewCacheManager.$.clearReviewByProject(project);
 			// TODO delete the version folder

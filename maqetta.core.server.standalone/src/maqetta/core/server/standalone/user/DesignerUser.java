@@ -1,4 +1,4 @@
-package org.davinci.server.review.user;
+package maqetta.core.server.standalone.user;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -7,8 +7,9 @@ import java.util.List;
 import maqetta.core.server.standalone.VFile;
 
 import org.davinci.server.review.Constants;
-import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.Version;
+import org.davinci.server.review.user.IDesignerUser;
+import org.davinci.server.review.user.Reviewer;
 import org.davinci.server.user.IUser;
 
 import org.eclipse.core.runtime.IPath;
@@ -16,7 +17,7 @@ import org.eclipse.core.runtime.Path;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
 
-public class DesignerUser{
+public class DesignerUser implements IDesignerUser {
 	private String name;
 	private File commentingDirectory;
 	private IVResource workspace;
@@ -26,12 +27,23 @@ public class DesignerUser{
 	
 	public IUser rawUser;
 
-	public DesignerUser(String name) {
+	public IUser getRawUser() {
+        return rawUser;
+    }
+
+    public void setRawUser(IUser rawUser) {
+        this.rawUser = rawUser;
+    }
+
+    public DesignerUser(String name) {
 		this.name = name;
 		this.rawUser = ServerManager.getServerManger().getUserManager().newUser(new Reviewer(name, ""), this.getUserDirectory());
 		
 	}
 	
+	/* (non-Javadoc)
+     * @see maqetta.core.server.standalone.user.IDesignerUser#getVersion(java.lang.String)
+     */
 	public Version getVersion(String time) {
 		for (Version version : versions) {
 			if (time.equals(version.getTime()))
@@ -40,26 +52,44 @@ public class DesignerUser{
 		return null;
 	}
 
+	/* (non-Javadoc)
+     * @see maqetta.core.server.standalone.user.IDesignerUser#getName()
+     */
 	public String getName() {
 		return this.name;
 	}
 
+	/* (non-Javadoc)
+     * @see maqetta.core.server.standalone.user.IDesignerUser#getLatestVersion()
+     */
 	public Version getLatestVersion() {
 		return latestVersion;
 	}
 
+	/* (non-Javadoc)
+     * @see maqetta.core.server.standalone.user.IDesignerUser#setLatestVersion(org.davinci.server.review.Version)
+     */
 	public void setLatestVersion(Version latestVersion) {
 		this.latestVersion = latestVersion;
 	}
 
+	/* (non-Javadoc)
+     * @see maqetta.core.server.standalone.user.IDesignerUser#addVersion(org.davinci.server.review.Version)
+     */
 	public void addVersion(Version version) {
 		versions.add(version);
 	}
 
+	/* (non-Javadoc)
+     * @see maqetta.core.server.standalone.user.IDesignerUser#getVersions()
+     */
 	public List<Version> getVersions() {
 		return versions;
 	}
 
+	/* (non-Javadoc)
+     * @see maqetta.core.server.standalone.user.IDesignerUser#deleteVersion(java.lang.String)
+     */
 	public void deleteVersion(String versionTime){
 		Version version = this.getVersion(versionTime);
 		versions.remove(version);
@@ -84,6 +114,9 @@ public class DesignerUser{
 	    return dir.delete();
 	}
 
+	/* (non-Javadoc)
+     * @see maqetta.core.server.standalone.user.IDesignerUser#getCommentingDirectory()
+     */
 	public File getCommentingDirectory() {
 		if (this.commentingDirectory == null) {
 			File userDir;
@@ -101,6 +134,9 @@ public class DesignerUser{
 		return this.commentingDirectory;
 	}
 
+	/* (non-Javadoc)
+     * @see maqetta.core.server.standalone.user.IDesignerUser#getUserDirectory()
+     */
 	public File getUserDirectory() {
 		if (this.userDirectory == null) {
 			File userDir;
@@ -117,6 +153,9 @@ public class DesignerUser{
 		return this.userDirectory;
 	}
 	
+	/* (non-Javadoc)
+     * @see maqetta.core.server.standalone.user.IDesignerUser#getResource(org.eclipse.core.runtime.IPath)
+     */
 	public IVResource getResource(IPath path){
 		// Path = /.review/snapshot/20100101/project1/folder1/sample1.html
 		IVResource vr = null;

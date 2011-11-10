@@ -10,9 +10,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.davinci.server.user.IDavinciProject;
+
 import org.davinci.server.review.Comment;
 import org.davinci.server.review.CommentsDocument;
-import org.davinci.server.review.DavinciProject;
 import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.persistence.Marshaller;
@@ -28,7 +29,7 @@ public class ReviewCacheManager extends Thread {
 	static final private long SLEEP_TIME = 120000; // 2 mins
 
 	// Map<FileLocation, Hashtable<CommentId, Comment>>
-	private Hashtable<DavinciProject, Hashtable<String, Comment>> reviewFilePool = new Hashtable<DavinciProject, Hashtable<String, Comment>>();
+	private Hashtable<IDavinciProject, Hashtable<String, Comment>> reviewFilePool = new Hashtable<IDavinciProject, Hashtable<String, Comment>>();
 
 	private volatile boolean stop;
 
@@ -37,7 +38,7 @@ public class ReviewCacheManager extends Thread {
 	}
 
 	public boolean updateComments(List<Comment> comments, boolean force) throws Exception {
-		DavinciProject project;
+		IDavinciProject project;
 		Hashtable<String, Comment> reviewHash;
 		Comment fatherComment;
 		for (Comment comment : comments) {
@@ -78,7 +79,7 @@ public class ReviewCacheManager extends Thread {
 		return comment;
 	}
 
-	public List<Comment> getCommentsByPageName(DavinciProject project, String pageName) {
+	public List<Comment> getCommentsByPageName(IDavinciProject project, String pageName) {
 		// Load project's review information
 		Hashtable<String, Comment> reviewHash = loadReviewFile(project);
 		List<Comment> result = new LinkedList<Comment>();
@@ -106,7 +107,7 @@ public class ReviewCacheManager extends Thread {
 		return result;
 	}
 
-	public Comment getComment(DavinciProject project, String commentId) {
+	public Comment getComment(IDavinciProject project, String commentId) {
 		Hashtable<String, Comment> reviewHash = loadReviewFile(project);
 		if (null == reviewHash)
 			return null;
@@ -117,7 +118,7 @@ public class ReviewCacheManager extends Thread {
 		 return reviewHash.get(commentId);
 	}
 
-	public boolean updateLastAccessTime(DavinciProject project) {
+	public boolean updateLastAccessTime(IDavinciProject project) {
 		if (null == project)
 			return false;
 		synchronized(project){
@@ -137,7 +138,7 @@ public class ReviewCacheManager extends Thread {
 	 * @param project
 	 * @return
 	 */
-	private Hashtable<String, Comment> loadReviewFile(DavinciProject project) {
+	private Hashtable<String, Comment> loadReviewFile(IDavinciProject project) {
 		Hashtable<String, Comment> reviewHash;
 		if (null == project)
 			return null;
@@ -172,7 +173,7 @@ public class ReviewCacheManager extends Thread {
 	 * @param project
 	 * @return
 	 */
-	public boolean persistReviewFile(DavinciProject project) {
+	public boolean persistReviewFile(IDavinciProject project) {
 		if (null == project)
 			return false;
 
@@ -205,7 +206,7 @@ public class ReviewCacheManager extends Thread {
 		}
 	}
 
-	public boolean clearReviewByProject(DavinciProject project) {
+	public boolean clearReviewByProject(IDavinciProject project) {
 		Hashtable<String, Comment> reviewHash = reviewFilePool.get(project);
 		if (null == reviewHash)
 			return true;
@@ -223,7 +224,7 @@ public class ReviewCacheManager extends Thread {
 	 * @param project
 	 * @return
 	 */
-	private boolean destroyReviewFile(DavinciProject project, boolean forced) {
+	private boolean destroyReviewFile(IDavinciProject project, boolean forced) {
 		if (null == project)
 			return false;
 
@@ -249,8 +250,8 @@ public class ReviewCacheManager extends Thread {
 	 * @return
 	 */
 	public boolean destroyAllReview() {
-		Set<DavinciProject> keys = reviewFilePool.keySet();
-		for (DavinciProject project : keys) {
+		Set<IDavinciProject> keys = reviewFilePool.keySet();
+		for (IDavinciProject project : keys) {
 			destroyReviewFile(project, true);
 		}
 		return true;
@@ -268,8 +269,8 @@ public class ReviewCacheManager extends Thread {
 	}
 
 	public void recycle() {
-		Set<DavinciProject> keySet = reviewFilePool.keySet();
-		for (DavinciProject prj : keySet) {
+		Set<IDavinciProject> keySet = reviewFilePool.keySet();
+		for (IDavinciProject prj : keySet) {
 			if (!this.destroyReviewFile(prj, false)) { // Destroy will persist the project.
 				this.persistReviewFile(prj);
 			}
@@ -280,7 +281,7 @@ public class ReviewCacheManager extends Thread {
 		stop = true;
 	}
 
-	public boolean republish(DavinciProject project,String parentVersion, Version version) {
+	public boolean republish(IDavinciProject project,String parentVersion, Version version) {
 		synchronized(project){
 			Hashtable<String, Comment> reviewHash = loadReviewFile(project);
 			if (null == reviewHash)

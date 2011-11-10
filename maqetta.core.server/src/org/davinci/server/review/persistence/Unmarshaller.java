@@ -22,11 +22,12 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.davinci.server.user.IDavinciProject;
+
 import org.davinci.server.review.Comment;
 import org.davinci.server.review.CommentFlag;
 import org.davinci.server.review.CommentsDocument;
 import org.davinci.server.review.Constants;
-import org.davinci.server.review.DavinciProject;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -40,7 +41,7 @@ import org.xml.sax.SAXException;
  * 
  */
 public class Unmarshaller {
-	public CommentsDocument unmarshall(DavinciProject project) {
+	public CommentsDocument unmarshall(IDavinciProject project) {
 		String path = project.getCommentFilePath();
 		CommentsDocument commentsDoc = new CommentsDocument(project);
 
@@ -232,17 +233,5 @@ public class Unmarshaller {
 			if (null != os)
 				os.close();
 		}
-	}
-
-	/**
-	 * Unit Test Driver
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		DavinciProject project = new DavinciProject();
-		Unmarshaller unmarshaller = new Unmarshaller();
-		CommentsDocument doc = unmarshaller.unmarshall(project);
-		System.out.println(doc.getCommentList().size());
 	}
 }

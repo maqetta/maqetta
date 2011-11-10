@@ -15,20 +15,12 @@
     	<libraryFinder class="maqetta.core.server.standalone.DojoLibraryFinder"/>
    	 </extension>
 
-   	  
-      
      <extension id="maqetta.core.client" point="org.eclipse.equinox.http.registry.resources">
         <resource alias="/maqetta/app/system" 
         		  base-name="/WebContent/system" 
         		   />      
      </extension>
-             
-      
-
-	 
-<<<<<<< HEAD
-=======
-   <extension
+     <extension
          point="org.eclipse.equinox.http.registry.servlets">
       <servlet
             alias="/maqetta"
@@ -40,7 +32,6 @@
    </extension>
    
 
->>>>>>> master
       <extension
          point="org.eclipse.core.runtime.products">
       <product

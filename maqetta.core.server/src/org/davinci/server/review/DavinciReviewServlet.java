@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.davinci.server.internal.Activator;
-import org.davinci.server.review.DavinciPageServlet;
+import maqetta.core.server.standalone.DavinciPageServlet;
 import org.maqetta.server.VURL;
 
 import org.davinci.server.review.cache.ReviewCacheManager;

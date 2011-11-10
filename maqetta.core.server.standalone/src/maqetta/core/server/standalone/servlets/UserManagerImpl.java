@@ -3,12 +3,8 @@ package maqetta.core.server.standalone.servlets;
 import java.io.File;
 import java.util.HashMap;
 
-<<<<<<< HEAD
-=======
 import javax.servlet.http.HttpServletRequest;
 
-import maqetta.core.server.standalone.VResourceUtils;
->>>>>>> master
 import maqetta.core.server.standalone.user.User;
 import org.davinci.server.user.UserException;
 

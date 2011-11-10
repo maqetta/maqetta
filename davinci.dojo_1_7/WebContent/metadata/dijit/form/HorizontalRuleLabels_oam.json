@@ -10,15 +10,15 @@
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dijit/form/HorizontalSlider.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/HorizontalSlider",
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dijit/form/HorizontalRuleLabels.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/HorizontalRuleLabels",
             "$library": "dojo"
         }
     ],

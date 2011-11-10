@@ -10,9 +10,9 @@
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dojox/widget/gauge/AnalogNeedleIndicator.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/widget/gauge/AnalogNeedleIndicator",
             "$library": "dojo"
         }
     ],

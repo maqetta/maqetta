@@ -10,9 +10,9 @@
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dojox/form/MultiComboBox.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/form/MultiComboBox",
             "$library": "dojo"
         }
     ],

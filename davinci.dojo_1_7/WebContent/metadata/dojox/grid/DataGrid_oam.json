@@ -20,15 +20,15 @@
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dojox/io/xhrScriptPlugin.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/io/xhrScriptPlugin",
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dojox/grid/DataGrid.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/grid/DataGrid",
             "$library": "dojo"
         }
     ],

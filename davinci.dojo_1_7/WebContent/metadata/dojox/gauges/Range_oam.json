@@ -10,9 +10,9 @@
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dojox/gauges/_Gauge.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/gauges/_Gauge",
             "$library": "dojo"
         }
     ],

@@ -2,21 +2,12 @@
         name="dojox.mobile.Heading"
         spec="1.0"
         version="1.7">
-    <library name="dojo" src="../../../">
-        <require type="javascript" src="dojo/dojo.js"/>
+    <library name="dojo" src="../../../dojo/dojo.js">
+        <require type="javascript-module" format="amd" src="dojox/mobile"/>
+        <require type="javascript-module" format="amd" src="dojox/mobile/parser"/>
+        <require type="javascript-module" format="amd" src="dojox/mobile/deviceTheme"/>
+        <require type="javascript-module" format="amd" src="dojox/mobile/compat"/>
     </library>
-    <require type="javascript">
-        dojo.require('dojox.mobile');
-    </require>
-    <require type="javascript">
-        dojo.require('dojox.mobile.parser');
-    </require>
-    <require type="javascript">
-        dojo.require('dojox.mobile.deviceTheme');
-    </require>
-    <require type="javascript">
-        dojo.require('dojox.mobile.compat');
-    </require>
     <properties>
         <property name="back" datatype="string"/>
         <property name="href" datatype="string"/>

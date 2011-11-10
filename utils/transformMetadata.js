@@ -173,10 +173,10 @@ function handleMetadataFile(filepath, data) {
                 if (! m || ! m[1]) {
                     debug("ERROR: match for dojo.require failed (text = " + r.$text + ")");
                 }
-                var moduleUrl = '../' + m[1].replace(/\./g, '/') + '.js';
                 delete r.$text;
-                r.src = moduleUrl;
-                r.module = 'amd';
+                r.type = 'javascript-module';
+                r.format = 'amd';
+                r.src = m[1].replace(/\./g, '/'); // module id
                 r.$library = 'dojo';
             }
 

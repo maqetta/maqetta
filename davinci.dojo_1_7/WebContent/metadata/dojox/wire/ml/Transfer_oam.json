@@ -10,9 +10,9 @@
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dojox/wire/ml/Transfer.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/wire/ml/Transfer",
             "$library": "dojo"
         }
     ],

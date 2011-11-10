@@ -10,9 +10,9 @@
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dojo/data/ItemFileWriteStore.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojo/data/ItemFileWriteStore",
             "$library": "dojo"
         }
     ],

@@ -15,9 +15,9 @@
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dojox/widget/FisheyeList.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/widget/FisheyeList",
             "$library": "dojo"
         }
     ],

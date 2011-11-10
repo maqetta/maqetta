@@ -10,9 +10,9 @@
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dijit/form/TimeTextBox.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/TimeTextBox",
             "$library": "dojo"
         }
     ],

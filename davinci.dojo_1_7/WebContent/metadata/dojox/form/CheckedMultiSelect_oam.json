@@ -15,9 +15,9 @@
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dojox/form/CheckedMultiSelect.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/form/CheckedMultiSelect",
             "$library": "dojo"
         }
     ],

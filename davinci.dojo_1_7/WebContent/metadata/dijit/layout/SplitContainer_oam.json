@@ -10,9 +10,9 @@
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dijit/layout/SplitContainer.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/layout/SplitContainer",
             "$library": "dojo"
         }
     ],

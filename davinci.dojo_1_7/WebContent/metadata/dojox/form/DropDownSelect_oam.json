@@ -15,9 +15,9 @@
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dojox/form/DropDownSelect.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/form/DropDownSelect",
             "$library": "dojo"
         }
     ],

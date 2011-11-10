@@ -5,33 +5,33 @@
     "version": "1.7",
     "require": [
         {
-            "type": "javascript",
-            "src": "../dojox/mobile.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile",
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dojox/mobile/parser.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile/parser",
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dojox/mobile/deviceTheme.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile/deviceTheme",
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dojox/mobile/compat.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile/compat",
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dojox/mobile/ToggleButton.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile/ToggleButton",
             "$library": "dojo"
         }
     ],

@@ -10,9 +10,9 @@
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dijit/PopupMenuItem.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/PopupMenuItem",
             "$library": "dojo"
         }
     ],

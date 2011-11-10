@@ -10,9 +10,9 @@
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dijit/form/SimpleTextarea.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/SimpleTextarea",
             "$library": "dojo"
         }
     ],

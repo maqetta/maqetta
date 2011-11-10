@@ -5,9 +5,9 @@
     "version": "1.0",
     "require": [
         {
-            "type": "javascript",
-            "src": "../dijit/form/NumberSpinner.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/NumberSpinner",
             "$library": "dojo"
         }
     ],

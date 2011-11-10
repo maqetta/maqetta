@@ -5,9 +5,9 @@
     "version": "1.0",
     "require": [
         {
-            "type": "javascript",
-            "src": "../dijit/layout/StackContainer.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/layout/StackContainer",
             "$library": "dojo"
         }
     ],

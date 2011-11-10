@@ -15,9 +15,9 @@
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dojox/layout/RadioGroup.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/layout/RadioGroup",
             "$library": "dojo"
         }
     ],

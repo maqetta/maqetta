@@ -15,15 +15,15 @@
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dojox/widget/BarGauge.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/widget/BarGauge",
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dijit/Tooltip.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/Tooltip",
             "$library": "dojo"
         }
     ],

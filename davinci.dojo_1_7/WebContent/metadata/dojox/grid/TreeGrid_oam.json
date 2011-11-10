@@ -20,9 +20,9 @@
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "../dojox/grid/TreeGrid.js",
-            "module": "amd",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/grid/TreeGrid",
             "$library": "dojo"
         }
     ],

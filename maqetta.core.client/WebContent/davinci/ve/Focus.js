@@ -70,8 +70,11 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
             this._nobs[RIGHT_TOP].style.top = -this.size + "px";
         this._nobIndex = -1;
 
+        // _box holds resize/move values during dragging assuming no shift-key constraints
+        // _constrained holds resize/move values after taking into account shift-key constraints
         this._box = {l: 0, t: 0, w: 0, h: 0};
-
+        this._constrained = dojo.mixin({}, this._box);
+        
         this._resizable = {width: true, height: true};
     },
     
@@ -171,7 +174,7 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
             return;
         }
 
-        var b = dojo.mixin(this._box, box);
+        var b = dojo.mixin({}, box);
 
         // Adjust for size of border when near the top left corner of the screen
         if(b.l < this.size){
@@ -319,17 +322,45 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
                 dojo.stopEvent(event);
             }
         }
+
+        this._shiftKey = false;
+        var userdoc = this._context.getDocument();	// inner document = user's document
+        userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
+        this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(e){
+        	this.onKeyDown(e);
+        }));
+        this._keyUpHandler = dojo.connect(userdoc, "onkeyup", dojo.hitch(this, function(widgetType, e){
+        	this.onKeyUp(e);
+        }));
+    },
+    
+    onKeyDown: function(event){
+    	this._shiftKey = true;
+    	this.resize(this._constrained);
+    },
+    
+    onKeyUp: function(event){
+    	this._shiftKey = false;
+       	this.resize(this._box);
     },
 
     onMouseUp: function(event){
         var context = this._context;
 		var cp = context._chooseParent;
 		this._lastEventTarget = null;
+		dojo.disconnect(this._keyDownHandler);
+		dojo.disconnect(this._keyUpHandler);
         if(this._updateTarget){
             clearTimeout(this._updateTarget);
             delete this._updateTarget;
         }
         if(this._mover){
+        	var box;
+        	if(this._shiftKey){
+        		box = dojo.mixin({}, this._constrained);
+        	}else{
+        		box = dojo.mixin({}, this._box);
+        	}
             this._mover = undefined;
             switch(this._nobIndex){
             case -1: // frame
@@ -338,10 +369,10 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
             case RIGHT:
             case BOTTOM:
             case RIGHT_BOTTOM:
-                this.onExtentChange(this, {w: this._box.w, h: this._box.h});
+                this.onExtentChange(this, {w: box.w, h: box.h});
                 break;
             default:
-                this.onExtentChange(this, dojo.mixin(this._box, this._client));
+            	this.onExtentChange(this, dojo.mixin(box, this._client));
             }
         }
         this._nobIndex = -1;
@@ -416,7 +447,28 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
                 b.h = box.t;
                 break;
             }
-            this.resize(b);
+            dojo.mixin(this._box, b);
+            dojo.mixin(this._constrained, b);
+            if(this._selectedWidget && this._selectedWidget.type === 'html.img'){
+            	var domNode = this._selectedWidget.domNode;
+            	var naturalWidth = domNode.naturalWidth;
+            	var naturalHeight = domNode.naturalHeight;
+            	if(typeof naturalHeight == 'number' && naturalHeight > 0 && typeof naturalWidth == 'number' && naturalWidth > 0){
+            		var aspectRatio = naturalWidth / naturalHeight;
+            		if(b.w < aspectRatio * b.h){
+            			this._constrained.w = b.h * aspectRatio;
+            		}else{
+            			this._constrained.h = b.w / aspectRatio;
+            		}
+            	}
+            }else{
+                if(b.w < b.h){
+                	this._constrained.w = b.h;
+                }else{
+                	this._constrained.h = b.w;
+                }
+            }
+            this.resize(event.shiftKey ? this._constrained : this._box);
         }
     },
 

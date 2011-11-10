@@ -27,6 +27,12 @@
          
             class="maqetta.core.server.standalone.DavinciPageServlet"
             load-on-startup="true">
+           </servlet>
+
+     <servlet
+            alias="/review"
+            class="maqetta.core.server.standalone.DavinciReviewServlet"
+            load-on-startup="true">
       </servlet>
 
    </extension>

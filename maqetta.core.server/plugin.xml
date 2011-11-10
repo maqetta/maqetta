@@ -7,8 +7,8 @@
    	<extension-point id="ajaxLibrary" name="AJAX Library" schema="schema/ajaxLibrary.exsd"/>
    	<extension-point id="personManager" name="Authentication/User Manager " schema="schema/personManager.exsd"/>
    	<extension-point id="welcomePage" name="Welcome page provider" schema="schema/welcomePage.exsd"/>
-   	<!-- <extension-point id="mainPage" name="Welcome page provider" schema="schema/reviewPage.exsd"/> -->
-   	<extension-point id="previewPage" name="Preview page provider" schema="schema/previewPage.exsd"/>
+   <extension-point id="mainPage" name="Welcome page provider" schema="schema/reviewPage.exsd"/>
+   <extension-point id="previewPage" name="Preview page provider" schema="schema/previewPage.exsd"/>
    	<extension-point id="mailConfig" name="Mail Server Configuration" schema="schema/mailConfig.exsd"/>
    	<!-- <extension-point id="libraryManager" name="Library Manager" schema="schema/libraryManager.exsd"/> -->
    	<extension-point id="userManager" name="User Manager" schema="schema/userManager.exsd"/>
@@ -27,19 +27,9 @@
             class="org.maqetta.server.DavinciCommandServlet"
             load-on-startup="true">
       </servlet>
-       <servlet
-            alias="/review"
-            class="maqetta.core.server.standalone.DavinciReviewServlet"
-            load-on-startup="true">
-      </servlet>
-      <servlet
-            alias="/"
-            class="maqetta.core.server.standalone.DavinciPageServlet"
-            load-on-startup="true">
-      </servlet>
-
    </extension>
-	<extension  id="maqettaLib"  point="org.eclipse.equinox.http.registry.resources">
+
+   <extension  id="maqettaLib"  point="org.eclipse.equinox.http.registry.resources">
 	
 	        <!-- maqetta core libraries metadata (maqetta.js and states.js) -->
 	        

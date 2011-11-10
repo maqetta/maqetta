@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
+import maqetta.core.server.standalone.VResourceUtils;
 import maqetta.core.server.standalone.user.User;
 import org.davinci.server.user.UserException;
 
@@ -17,7 +18,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
-import org.maqetta.server.VResourceUtils;
 
 public class UserManagerImpl implements IUserManager {
 

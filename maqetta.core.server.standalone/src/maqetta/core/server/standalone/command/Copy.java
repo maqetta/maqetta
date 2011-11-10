@@ -5,11 +5,11 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import maqetta.core.server.standalone.VResourceUtils;
 
 import org.davinci.server.user.IUser;
 import org.maqetta.server.Command;
 import org.maqetta.server.IVResource;
-import org.maqetta.server.VResourceUtils;
 
 public class Copy extends Command {
 

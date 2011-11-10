@@ -1,4 +1,4 @@
-package org.maqetta.server;
+package maqetta.core.server.standalone;
 
 public class VWorkspaceRoot extends VDirectory {
 

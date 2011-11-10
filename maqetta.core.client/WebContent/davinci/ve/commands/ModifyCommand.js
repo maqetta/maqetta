@@ -2,6 +2,7 @@ dojo.provide("davinci.ve.commands.ModifyCommand");
 
 
 dojo.require("davinci.ve.widget");
+dojo.require("davinci.ve.utils.ImageUtils");
 
 dojo.declare("davinci.ve.commands.ModifyCommand", null, {
 
@@ -104,7 +105,14 @@ dojo.declare("davinci.ve.commands.ModifyCommand", null, {
 			if(!newWidget){
 				return;
 			}
-			
+
+			// IMG elements don't have a size until they are actually loaded
+			// so selection/focus box will be wrong upon creation.
+			// To fix, register an onload handler which calls updateFocus()
+			if(newWidget.domNode.tagName === 'IMG'){
+				davinci.ve.utils.ImageUtils.ImageUpdateFocus(newWidget, this._context);
+			}
+
 			parentWidget.addChild(newWidget,index);
 			
 //		}else{

@@ -18,10 +18,4 @@
             smtp.notificationId="noreply@maqetta.org">
       </mailConfig>
    </extension>
-   <extension
-           point="maqetta.core.server.jsPlugin">
-       <jsPlugin
-               path="app/joomlaPlugin"
-               resourcePath="WebContent/joomla" />
-   </extension>
 </plugin> 

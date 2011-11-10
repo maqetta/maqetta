@@ -1,4 +1,4 @@
-package org.maqetta.server;
+package maqetta.core.server.standalone;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,6 +16,7 @@ import java.util.Vector;
 import org.davinci.ajaxLibrary.Library;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.maqetta.server.IVResource;
 
 public class VLibraryResource implements IVResource {
     // abstracted file/resource class

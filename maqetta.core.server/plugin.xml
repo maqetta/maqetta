@@ -2,18 +2,23 @@
 <?eclipse version="3.4"?>
 <plugin>
    	<extension-point id="command" name="Davinci Command" schema="schema/command.exsd"/>
-   	<extension-point id="jsPlugin" name="Javascript Plugins" schema="schema/jsPlugin.exsd"/>
+   	<!-- <extension-point id="jsPlugin" name="Javascript Plugins" schema="schema/jsPlugin.exsd"/> -->
    	<extension-point id="initialUserFiles" name="Initial user files" schema="schema/initialUserFiles.exsd"/>
    	<extension-point id="ajaxLibrary" name="AJAX Library" schema="schema/ajaxLibrary.exsd"/>
    	<extension-point id="personManager" name="Authentication/User Manager " schema="schema/personManager.exsd"/>
    	<extension-point id="welcomePage" name="Welcome page provider" schema="schema/welcomePage.exsd"/>
-   	<extension-point id="mainPage" name="Welcome page provider" schema="schema/reviewPage.exsd"/>
+   	<!-- <extension-point id="mainPage" name="Welcome page provider" schema="schema/reviewPage.exsd"/> -->
    	<extension-point id="previewPage" name="Preview page provider" schema="schema/previewPage.exsd"/>
    	<extension-point id="mailConfig" name="Mail Server Configuration" schema="schema/mailConfig.exsd"/>
-   	<!-- <extension-point id="libraryManager" name="Library Manager" schema="schema/libraryManager.exsd"/>-->
+   	<!-- <extension-point id="libraryManager" name="Library Manager" schema="schema/libraryManager.exsd"/> -->
    	<extension-point id="userManager" name="User Manager" schema="schema/userManager.exsd"/>
    	<extension-point id="libraryManager" name="User Manager" schema="schema/userManager.exsd"/>
     <extension-point id="libraryFinder" name="Library Finder" schema="schema/libraryFinder.exsd"/>
+   
+   <extension point="org.eclipse.equinox.http.registry.httpcontexts">
+      <httpcontext id="maqetta.core.server.httpcontext"/>
+   </extension>
+   
    
    <extension point="org.eclipse.equinox.http.registry.servlets">
       <servlet
@@ -24,12 +29,12 @@
       </servlet>
        <servlet
             alias="/review"
-            class="org.davinci.server.review.DavinciReviewServlet"
+            class="maqetta.core.server.standalone.DavinciReviewServlet"
             load-on-startup="true">
       </servlet>
       <servlet
             alias="/"
-            class="org.davinci.server.review.DavinciPageServlet"
+            class="maqetta.core.server.standalone.DavinciPageServlet"
             load-on-startup="true">
       </servlet>
 

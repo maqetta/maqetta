@@ -11,8 +11,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import maqetta.core.server.standalone.VDirectory;
+import maqetta.core.server.standalone.VFile;
+import maqetta.core.server.standalone.VLibraryResource;
+import maqetta.core.server.standalone.VResourceUtils;
+import maqetta.core.server.standalone.VWorkspaceRoot;
 import maqetta.core.server.standalone.internal.Activator;
 import maqetta.core.server.standalone.internal.Links;
+import maqetta.core.server.standalone.internal.Links.Link;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.IOFileFilter;
@@ -36,11 +43,6 @@ import org.maqetta.server.ILink;
 import org.maqetta.server.ILinks;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
-import org.maqetta.server.VDirectory;
-import org.maqetta.server.VFile;
-import org.maqetta.server.VLibraryResource;
-import org.maqetta.server.VResourceUtils;
-import org.maqetta.server.VWorkspaceRoot;
 import org.osgi.framework.Bundle;
 
 public class User implements IUser {

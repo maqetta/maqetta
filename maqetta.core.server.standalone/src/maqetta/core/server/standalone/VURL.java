@@ -1,4 +1,4 @@
-package org.maqetta.server;
+package maqetta.core.server.standalone;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,6 +12,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import org.eclipse.core.runtime.Path;
+import org.maqetta.server.IVResource;
 
 public class VURL implements IVResource {
     // abstracted file/resource class

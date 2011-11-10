@@ -1,4 +1,4 @@
-package org.maqetta.server;
+package maqetta.core.server.standalone;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import org.maqetta.server.IVResource;
 import org.osgi.framework.Bundle;
 
 public class VResourceUtils {

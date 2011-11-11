@@ -19,6 +19,7 @@ public class SetWorkbenchState extends Command {
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
         File settingsDir = user.getWorkbenchSettings();
         File settingsFile = new File(settingsDir, IDavinciServerConstants.WORKBENCH_STATE_FILE);
+        if(! user.isValid(settingsFile.getAbsolutePath()) ) return;
         if (!settingsFile.exists()) {
             settingsFile.createNewFile();
         }

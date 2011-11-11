@@ -45,6 +45,10 @@ public class AddFiles extends Command {
                     File f1 = new File(userDirectory.getURI());
 
                     File uploadedFile = new File(f1, fileName);
+                    
+                    /* ensure the file is valid and in the users workspace */
+                    if(!user.isValid(uploadedFile.getAbsolutePath())) return;
+                    
                     fileNames.add(fileName);
                     item.write(uploadedFile);
                 }

@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import maqetta.core.server.standalone.Command;
+import org.maqetta.server.Command;
 import maqetta.core.server.standalone.internal.Activator;
 
 import org.davinci.ajaxLibrary.ILibraryManager;
@@ -72,7 +72,7 @@ public class DavinciPageServlet extends HttpServlet {
         }
         if (file.exists()) {
             OutputStream os = file.getOutputStreem();
-            Command.transferStreams(req.getInputStream(), os, false);
+            transferStreams(req.getInputStream(), os, false);
             if (!isWorkingCopy) {
                 // flush the working copy
                 file.flushWorkingCopy();
@@ -409,6 +409,27 @@ public class DavinciPageServlet extends HttpServlet {
         } finally {
             if (reader != null) {
                 reader.close(); // will also close input stream
+            }
+        }
+    }
+    protected static final void transferStreams(InputStream source, OutputStream destination, boolean closeInput) throws IOException {
+        byte[] buffer = new byte[8192];
+        try {
+            synchronized(buffer){
+                while (true) {
+                    int bytesRead = -1;
+                    bytesRead = source.read(buffer);
+                    if (bytesRead == -1) {
+                        break;
+                    }
+                    destination.write(buffer, 0, bytesRead);
+                }
+            }
+        } finally {
+            if (closeInput) {
+                source.close();
+            } else {
+                destination.close();
             }
         }
     }

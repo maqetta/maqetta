@@ -60,5 +60,7 @@ public interface IUser {
 	public String getUserName();
 
 	public IPerson getPerson();
+	
+	public boolean isValid(String path);
 
 }

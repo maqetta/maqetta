@@ -20,6 +20,7 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 	fileTree : null,
 	__okButton : null,
 	dialogSpecificClass : null,
+	_fileDialog : null, 
 	
 	postMixInProperties : function() {
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
@@ -52,6 +53,19 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 			var c = dojo.getObject(this.dialogSpecificClass);
 			this.dialogSpecificWidget = new c({}, this.dialogSpecificOptionsDiv);
 		}
+		
+
+		var connectHandle = dojo.connect(this._fileDialog, "onkeypress", this, function(e){
+			if(e.charOrCode===dojo.keys.ENTER){
+				if(this._checkValid()){
+					dojo.disconnect(connectHandle);
+					dojo.stopEvent(e);
+					this._okButton();
+				}
+			}
+		
+		});
+		
 	},
 
 	/**
@@ -141,6 +155,7 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		}
 		
 		this.__okButton.set( 'disabled', !valid);
+		return valid;
 	},
 	
 	_okButton : function(){

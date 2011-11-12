@@ -307,7 +307,7 @@ dojo.declare("davinci.ve.Context", null, {
 		
 			var src = r.src;
 			if (src) {	// resource with URL
-				if (r.$library) {
+				if (r.$library && r.type != "javascript-module") {
 					// Since the metadata files are 'relocatable', we don't use the metadata's
 					//  value for $library.src.  Instead, we find the base URL for the user's
 					//  currently selected library.
@@ -338,7 +338,10 @@ dojo.declare("davinci.ve.Context", null, {
 			  
 				switch (r.type) {
 					case "javascript":
-						this.addJavaScript(src, null, updateSrc, false, r.src,skipDomUpdate);
+						this.addJavaScriptSrc(src, updateSrc, r.src, skipDomUpdate);
+						break;
+					case "javascript-module":
+						this.addJavaScriptModule(src, updateSrc || doUpdateModelDojoRequires, skipDomUpdate);
 						break;
 					case "css":
 						updateSrc ? this.addModeledStyleSheet(src, r.src, skipDomUpdate) : this.loadStyleSheet(src);
@@ -350,7 +353,7 @@ dojo.declare("davinci.ve.Context", null, {
 			} else {  // resource with text content
 				switch (r.type) {
 					case "javascript":
-						this.addJavaScript(null, r.$text, updateSrc, doUpdateModelDojoRequires, null, skipDomUpdate);
+						this.addJavaScriptText(r.$text, updateSrc || doUpdateModelDojoRequires, skipDomUpdate);
 						break;
 					default:
 						console.warn("Unhandled metadata resource type '" + r.type +
@@ -857,11 +860,17 @@ dojo.declare("davinci.ve.Context", null, {
 			dojo.mixin(callbackData, e);
 			loading.innerHTML = "Uh oh! An error has occurred:<br><b>" + e.message + "</b><br>file: " + e.fileName + "<br>line: "+e.lineNumber; // FIXME: i18n
 			dojo.addClass(loading, 'error');
-		}
-		if (callback) {
-			promise.then(function(){
-				callback.call((scope || this), callbackData); // FIXME: use hitch?  use errback for the error case?
-			}.bind(this));
+		} finally {
+			if (callback) {
+				if (promise) {
+					promise.then(function(){
+						callback.call((scope || this), callbackData);
+					}.bind(this));
+				} else {
+					// FIXME: caller doesn't handle error data?
+					callback.call((scope || this), callbackData);
+				}
+			}
 		}
 	},
 
@@ -2133,64 +2142,70 @@ dojo.declare("davinci.ve.Context", null, {
 		 return id;
 	},
 
-	addJavaScript: function(url, text, doUpdateModel, doUpdateModelDojoRequires, baseSrcPath,skipDomUpdate) {
-		
-		if (url) {
-			var isDojoJS = /\/dojo.js$/.test(url);
-			// XXX HACK: Don't add dojo.js to the editor iframe, since it already has an instance.
-			//	  Adding it again will overwrite the existing Dojo, breaking some things.
-			//	  See bug 7585.
-			if (!isDojoJS && !skipDomUpdate) {
-				var absoluteUrl = (new dojo._Url(this.getDocument().baseURI, url)).toString();
-				dojo.withGlobal(this.getGlobal(),
-						function() {
-							dojo.xhrGet({
-								url: absoluteUrl,
-								sync: true,
-								handleAs: "javascript"
-							});
-						});
-			}
-			if (doUpdateModel) {
-				
-				/* update the script if found */
-				var elements = this._srcDocument.find({elementType:"HTMLElement", tag: 'script'});
-				for(var i=0;i<elements.length;i++){
-					var n = elements[i];
-					var elementUrl = n.getAttribute("src");
-					if(elementUrl && elementUrl.indexOf(baseSrcPath) > -1){
-						n.setAttribute("src", url);
-						return;
-					}
-				}
-				
-				
-				if (isDojoJS) {
-					// XXX Nasty nasty nasty special case for dojo attribute thats
-					// required. Need to generalize in the metadata somehow.
-					var fullPath = new davinci.model.Path(system.resource.getRoot().getPath());
-					var urlPath = new davinci.model.Path(url);
-					var relativeUrl = urlPath.relativeTo(fullPath);
-
-					var config = {
-						parseOnLoad: true,
-						modulePaths: { widgets: this._dojoModulePath + "/" + this._getWidgetFolder() }
-					};
-					dojo.mixin(config, this._configProps);
-					this.addHeaderScript(url, {
-						"data-dojo-config": JSON.stringify(config).slice(1, -1)
+	addJavaScriptSrc: function(url, doUpdateModel, baseSrcPath, skipDomUpdate) {
+		var isDojoJS = /\/dojo.js$/.test(url);
+		// XXX HACK: Don't add dojo.js to the editor iframe, since it already has an instance.
+		//	  Adding it again will overwrite the existing Dojo, breaking some things.
+		//	  See bug 7585.
+		if (!isDojoJS && !skipDomUpdate) {
+			var absoluteUrl = (new dojo._Url(this.getDocument().baseURI, url)).toString();
+			dojo.withGlobal(this.getGlobal(),
+				function() {
+					dojo.xhrGet({
+						url: absoluteUrl,
+						sync: true,
+						handleAs: "javascript"
 					});
-				}else{
-					this.addHeaderScript(url);
-				}
+				});
+		}
+		if (doUpdateModel) {				
+			/* update the script if found */
+			if (this._srcDocument.find({elementType:'HTMLElement', tag: 'script'}).some(function (element) {
+				var elementUrl = element.getAttribute("src");
+				if (elementUrl && elementUrl.indexOf(baseSrcPath) > -1) {
+					element.setAttribute("src", url);
+					return true;
+				}					
+			})) {
+				return;
+			};
+
+			if (isDojoJS) {
+				// XXX Nasty nasty nasty special case for dojo attribute thats
+				// required. Need to generalize in the metadata somehow.
+				var fullPath = new davinci.model.Path(system.resource.getRoot().getPath());
+				var urlPath = new davinci.model.Path(url);
+				var relativeUrl = urlPath.relativeTo(fullPath);
+
+				var config = {
+					parseOnLoad: true,
+					modulePaths: { widgets: this._dojoModulePath + "/" + this._getWidgetFolder() }
+				};
+				dojo.mixin(config, this._configProps);
+				this.addHeaderScript(url, {
+					"data-dojo-config": JSON.stringify(config).slice(1, -1)
+				});
+			}else{
+				this.addHeaderScript(url);
 			}
-		} else if (text) {
-			/* run the requires if there is an iframe */
-			if(!skipDomUpdate) { this.getGlobal()['eval'](text); }
-		//	dojo.eval(text);
-			if (doUpdateModel || doUpdateModelDojoRequires) {
-				this._scriptAdditions = this.addHeaderScriptSrc(text, this._scriptAdditions,this.getDocumentElement().getChildElement('head'),this._statesJsScriptTag);
-			}
+		}
+	},
+
+	addJavaScriptModule: function(mid, doUpdateModel, skipDomUpdate) {
+		if(!skipDomUpdate) { this.getGlobal()['eval']("dojo.require('"+mid.replace(/\//g,".")+"');"); }
+		// FIXME ASYNC
+		//if(!skipDomUpdate) { this.getGlobal()['require']([mid], ??); }
+		if (doUpdateModel) {
+			//TODO: keep all requires in a single statement?
+			this.addHeaderScriptSrc('require("' + mid + '");');
+		}
+	},
+
+	addJavaScriptText: function(text, doUpdateModel, skipDomUpdate) {
+		/* run the requires if there is an iframe */
+		if(!skipDomUpdate) { this.getGlobal()['eval'](text); }
+		if (doUpdateModel) {
+			this.addHeaderScriptSrc(text);
 		}
 	},
 
@@ -2235,23 +2250,26 @@ dojo.declare("davinci.ve.Context", null, {
 
 
 	// add JS to HEAD
-	addHeaderScriptSrc: function(text, scriptAdditions, head, statesJsScriptTag){
-		
-		var oldText = '';
-		
-		if (scriptAdditions){
-			var scriptText = scriptAdditions.find({elementType: 'HTMLText'}, true);
-			if(scriptText){
-				oldText = scriptText.getText();
-				if (oldText.indexOf(text)>0){
-					return scriptAdditions;  // already in the header
+	addHeaderScriptSrc: function(text){
+		text = '\n' + text;
+		if (this._scriptAdditions) {
+			var scriptText = this._scriptAdditions.find({elementType: 'HTMLText'}, true);
+			if (scriptText) {
+				var oldText = scriptText.getText();
+				if (oldText.indexOf(text) > -1) {
+					return;  // already in the header
 				}
-				scriptAdditions.parent.removeChild(scriptAdditions);
-				}
-			scriptAdditions = null;
+				this._scriptAdditions.parent.removeChild(this._scriptAdditions);
+				delete this._scriptAdditions;
+				text = oldText + text;
+			}
 		}
+
 		// create a new script element
-		var script = new davinci.html.HTMLElement('script');
+		var head = this.getDocumentElement().getChildElement('head'),
+			statesJsScriptTag = this._statesJsScriptTag,
+			script = new davinci.html.HTMLElement('script');
+
 		script.addAttribute('type', 'text/javascript');
 		script.script = "";
 	
@@ -2262,9 +2280,9 @@ dojo.declare("davinci.ve.Context", null, {
 			head.addChild(script);
 		}
 		var newScriptText = new davinci.html.HTMLText();
-		newScriptText.setText(oldText + "\n" + text); //wdr
-		script.addChild(newScriptText); //wdr
-		return script;
+		newScriptText.setText(text);
+		script.addChild(newScriptText);
+		this._scriptAdditions = script;
 	},
 	
 	/**

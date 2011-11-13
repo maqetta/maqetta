@@ -105,10 +105,15 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
         if(this._selectedWidget){
             var position_prop = dojo.style(this._selectedWidget.domNode,"position");
         }
+        var absolute = (position_prop=="absolute");
+        var currentParent = null;
+        if(this._selectedWidget){
+        	currentParent = this._selectedWidget.getParent();
+        }
         if(this._selectedWidget && event){
     		var parentListDiv = cp.parentListDivGet();
     		if(!parentListDiv){// Make sure there is a DIV into which list of parents should be displayed
-    			parentListDiv = cp.parentListDivCreate(this._selectedWidget.type);
+    			parentListDiv = cp.parentListDivCreate(this._selectedWidget.type, absolute, currentParent);
      		}
     		var parentIframe = context.getParentIframe();
     		if(parentIframe){
@@ -125,23 +130,11 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
     			parentListDiv.style.top = (offsetTop + event.pageY) + 'px';
             }
         }
-        var doSnapLines = (position_prop=="absolute");
+        var doSnapLines = absolute;
         var showParentsPref = this._context.getPreference('showPossibleParents');
         var spaceKeyDown = cp.isSpaceKeyDown();
         var showCandidateParents = (!showParentsPref && spaceKeyDown) || (showParentsPref && !spaceKeyDown);
         if(this._mover && (doSnapLines || showCandidateParents) && event && this._selectedWidget){
-    		var data = {type:this._selectedWidget.type};
-        	if(showCandidateParents){
-    			if(!cp.getProposedParentWidget()){
-	    			// Determine target parent(s) at current location
-	    			var target = davinci.ve.widget.getEnclosingWidget(event.target);
-	    			if(target){
-		    			var allowedParentList = cp.getAllowedTargetWidget(target, data, true);
-	    				// Choose a new proposed parent at current (x,y)
-		    			cp.setProposedParentWidget(cp.chooseParent(this._selectedWidget.type, allowedParentList));	    				
-	    			}
-    			}
-        	}
             var data = {type:this._selectedWidget.type};
             var position = { x:event.pageX, y:event.pageY};
             var snapBox = {l:b.l, t:b.t, w:0, h:0};
@@ -155,6 +148,8 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
             		data:data,
             		eventTarget:event.target,
             		position:position,
+            		absolute:absolute,
+            		currentParent:currentParent,
              		rect:snapBox, 
             		doSnapLines:doSnapLines, 
             		doFindParentsXY:showCandidateParents});
@@ -170,6 +165,14 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
     },
 
     resize: function(box, widget){
+		if(widget){
+		    this._selectedWidget = widget;
+		}
+    	this._resize(box);
+    	this._box = box;
+    },
+
+    _resize: function(box){
         if(!box){
             return;
         }
@@ -199,7 +202,9 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
         }
 
         // When a single widget at the top-level is 100%x100%, right/bottom edge must stay on screen
-        if(widget && widget.getParent().type == "html.body"){
+        var widget = this._selectedWidget;
+        var parent = widget ? widget.getParent() : null;
+        if(widget && parent && parent.type == "html.body"){
             var container = this._context.getContainerNode();
             if(widget.domNode.style.height == "100%"){
                 b.h = container.scrollHeight - this.size * 2;
@@ -246,6 +251,7 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
 
     showInline: function(widget) {
 
+        this._selectedWidget = widget;
         this._inline = davinci.ve.metadata.queryDescriptor(widget.type, "inlineEdit");
         if (this._inline && this._inline.show) {
             this._inline.show(widget.id);
@@ -291,10 +297,13 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
     },
 	
     onMouseDown: function(event){
+		this._removeKeyHandlers();
+
         // not to start Mover on the context menu
         if(event.button === 2 || event.ctrlKey){
             return;
         }
+        this._shiftKey = false;
 
         if(dojo.indexOf(this._frames, event.target) >= 0){
             this._nobIndex = -1;
@@ -320,36 +329,24 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
                     break;
                 }
                 dojo.stopEvent(event);
+                
+                var userdoc = this._context.getDocument();	// inner document = user's document
+                userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
+                this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(e){
+                	this.onKeyDown(e);
+                }));
+                this._keyUpHandler = dojo.connect(userdoc, "onkeyup", dojo.hitch(this, function(widgetType, e){
+                	this.onKeyUp(e);
+                }));
             }
-        }
-
-        this._shiftKey = false;
-        var userdoc = this._context.getDocument();	// inner document = user's document
-        userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
-        this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(e){
-        	this.onKeyDown(e);
-        }));
-        this._keyUpHandler = dojo.connect(userdoc, "onkeyup", dojo.hitch(this, function(widgetType, e){
-        	this.onKeyUp(e);
-        }));
-    },
-    
-    onKeyDown: function(event){
-    	this._shiftKey = true;
-    	this.resize(this._constrained);
-    },
-    
-    onKeyUp: function(event){
-    	this._shiftKey = false;
-       	this.resize(this._box);
-    },
+         }
+     },
 
     onMouseUp: function(event){
         var context = this._context;
 		var cp = context._chooseParent;
 		this._lastEventTarget = null;
-		dojo.disconnect(this._keyDownHandler);
-		dojo.disconnect(this._keyUpHandler);
+		this._removeKeyHandlers();
         if(this._updateTarget){
             clearTimeout(this._updateTarget);
             delete this._updateTarget;
@@ -366,13 +363,9 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
             case -1: // frame
                 this.onExtentChange(this, dojo.mixin({l: this._box.l, t: this._box.t}, this._client));
                 break;
-            case RIGHT:
-            case BOTTOM:
-            case RIGHT_BOTTOM:
-                this.onExtentChange(this, {w: box.w, h: box.h});
-                break;
             default:
-            	this.onExtentChange(this, dojo.mixin(box, this._client));
+            	//this.onExtentChange(this, dojo.mixin(box, this._client));
+            	this.onExtentChange(this, box);
             }
         }
         this._nobIndex = -1;
@@ -391,13 +384,15 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
             this.move(box, event);
             this._client = {x: event.clientX, y: event.clientY};
             if(!this._updateTarget){
+
                 this._updateTarget = setTimeout(dojo.hitch(this, function(){
                     this.onExtentChange(this, this._client, true);
                     delete this._updateTarget;
                 }), 200);
             }
         }else{
-            var b = {l: this._box.l, t: this._box.t, w: this._box.w, h: this._box.h};
+            //var b = {l: this._box.l, t: this._box.t, w: this._box.w, h: this._box.h};
+			var b = dojo.mixin({}, this._box);
             var d = 0;
             switch(this._nobIndex){
             case LEFT:
@@ -462,14 +457,28 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
             		}
             	}
             }else{
-                if(b.w < b.h){
-                	this._constrained.w = b.h;
-                }else{
-                	this._constrained.h = b.w;
-                }
+            	switch(this._nobIndex){
+	                case LEFT:
+	                case RIGHT:
+		                this._constrained.h = b.w;
+		                break;
+	                case TOP:
+	                case BOTTOM:
+		                this._constrained.w = b.h;
+		                break;
+	                default:
+	                	// If dragging corner, use max
+		                if(b.w > b.h){
+		                	this._constrained.h = b.w;
+		                }else{
+		                	this._constrained.w = b.h;
+		                }
+		                break;
+            	}
             }
-            this.resize(event.shiftKey ? this._constrained : this._box);
+            this._resize(event.shiftKey ? this._constrained : this._box);
         }
+
     },
 
     onFirstMove: function(mover){
@@ -482,6 +491,43 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
 
     //Required for Moveable interface
     onMoveStop: function(mover){
+    },
+    
+    onKeyDown: function(event){
+		if(event){
+	    	dojo.stopEvent(event);
+	    	if(event.keyCode == 16){
+	        	this._shiftKey = true;
+	        	this._resize(this._constrained);   		
+	    	}
+		}else{
+			// If event is undefined, something is wrong - remove the key handlers
+			this._removeKeyHandlers();
+		}
+    },
+    
+    onKeyUp: function(event){
+		if(event){
+	    	dojo.stopEvent(event);
+	    	if(event.keyCode == 16){
+		    	this._shiftKey = false;
+		       	this._resize(this._box);
+	    	}
+		}else{
+			// If event is undefined, something is wrong - remove the key handlers
+			this._removeKeyHandlers();
+		}
+    },
+    
+    _removeKeyHandlers: function(){
+		if(this._keyDownHandler){
+			dojo.disconnect(this._keyDownHandler);
+			this._keyDownHandler = null;
+		}
+		if(this._keyUpHandler){
+			dojo.disconnect(this._keyUpHandler);
+			this._keyUpHandler = null;
+		}
     },
 
     onExtentChange: function(focus, box){

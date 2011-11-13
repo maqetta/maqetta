@@ -2367,7 +2367,9 @@ dojo.declare("davinci.ve.Context", null, {
 	 * @param {object} params  object with following properties:
 	 *      {object|array{object}} data  For widget being dragged, either {type:<widgettype>} or array of similar objects
 	 *      {object} eventTarget  Node (usually, Element) that is current event.target (ie, node under mouse)
-	 *      {object} position x,y properties hold current mouse location
+	 *      {object} position  x,y properties hold current mouse location
+	 *      {boolean} absolute  true if current widget will be positioned absolutely
+	 *      {object} currentParent  if provided, then current parent widget for thing being dragged
 	 * 		{object} rect  l,t,w,h properties define rectangle being dragged around
 	 * 		{boolean} doSnapLines  whether to show dynamic snap lines
 	 * 		{boolean} doFindParentsXY  whether to show candidate parent widgets
@@ -2378,6 +2380,8 @@ dojo.declare("davinci.ve.Context", null, {
 		var data = params.data;
 		var eventTarget = params.eventTarget;
 		var position = params.position;
+		var absolute = params.absolute;
+		var currentParent = params.currentParent;
 		var rect = params.rect;
 		var doSnapLines = params.doSnapLines;
 		var doFindParentsXY = params.doFindParentsXY;
@@ -2392,38 +2396,27 @@ dojo.declare("davinci.ve.Context", null, {
 			if(doSnapLines){
 				davinci.ve.Snap.findSnapOpportunities(this, widget, computed_style);
 			}
-			if(doFindParentsXY){
-				// Two steps: (1) compute allowed parents at current (x,y)...
-				cp.findParentsXY(data, widget, position);
-				// (2) Update visual presentation of allowed parents at current (x,y)
-				cp.dragUpdateCandidateParents(widgetType, doFindParentsXY);
-			}
-			// Recurse through this widget's children
+			cp.findParentsXY(data, widget, position);
 			dojo.forEach(widget.getChildren(), function(w){
 				_updateThisWidget.apply(context, [w]);
 			});
 		};
 		
-		if(doSnapLines || doFindParentsXY){
-			if(doSnapLines){
-				doSnapLines = davinci.ve.Snap.updateSnapLinesBeforeTraversal(this, rect);
-			}
-			if(doFindParentsXY){
-				doFindParentsXY = cp.findParentsXYBeforeTraversal(params);
-				// Call dragUpdateCandidateParents so that (usually) "BODY" will show as initial list of parent widgets
-				cp.dragUpdateCandidateParents(widgetType, doFindParentsXY);
-			}
-			// Traverse all widgets, which will result in updates to snap lines and to 
-			// the visual popup showing possible parent widgets 
-			dojo.forEach(this.getTopWidgets(), function(w){
-				_updateThisWidget.apply(context, [w]);
-			});
-			if(doSnapLines){
-				davinci.ve.Snap.updateSnapLinesAfterTraversal(this);
-			}
-			if(doFindParentsXY){
-				cp.findParentsXYAfterTraversal();
-			}
+		if(doSnapLines){
+			doSnapLines = davinci.ve.Snap.updateSnapLinesBeforeTraversal(this, rect);
+		}
+		var differentXY = cp.findParentsXYBeforeTraversal(params);
+		// Traverse all widgets, which will result in updates to snap lines and to 
+		// the visual popup showing possible parent widgets 
+		dojo.forEach(this.getTopWidgets(), function(w){
+			_updateThisWidget.apply(context, [w]);
+		});
+		if(doSnapLines){
+			davinci.ve.Snap.updateSnapLinesAfterTraversal(this);
+		}
+		if(differentXY){
+			cp.dragUpdateCandidateParents(widgetType, doFindParentsXY, absolute, currentParent);
+			cp.findParentsXYAfterTraversal();
 		}
 
 	},

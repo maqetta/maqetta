@@ -364,7 +364,6 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
                 this.onExtentChange(this, dojo.mixin({l: this._box.l, t: this._box.t}, this._client));
                 break;
             default:
-            	//this.onExtentChange(this, dojo.mixin(box, this._client));
             	this.onExtentChange(this, box);
             }
         }
@@ -391,7 +390,6 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
                 }), 200);
             }
         }else{
-            //var b = {l: this._box.l, t: this._box.t, w: this._box.w, h: this._box.h};
 			var b = dojo.mixin({}, this._box);
             var d = 0;
             switch(this._nobIndex){

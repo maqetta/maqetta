@@ -218,7 +218,6 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 					var last = allowedParentList.length - 1;
 					console.log('allowedParentList.length='+allowedParentList.length+',last='+last);
 					proposedParentWidget = allowedParentList[last];
-					//proposedParentWidget = allowedParentList[0];
 				}
 			}
 		}

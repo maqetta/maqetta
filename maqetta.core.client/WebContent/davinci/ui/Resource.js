@@ -118,7 +118,16 @@ dojo.mixin(davinci.ui.Resource, {
 			}
 				
 		}else{
-			folder = system.resource.findResource(davinci.Runtime.getProject());
+			
+			var base = davinci.Runtime.getProject();
+			var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+			
+			if(prefs.webContentFolder!=null && prefs.webContentFolder!=""){
+				var fullPath = new davinci.model.Path(davinci.Runtime.getProject()).append(prefs.webContentFolder);
+				folder = system.resource.findResource(fullPath.toString());
+			}
+			if(folder==null)
+				folder = system.resource.findResource(davinci.Runtime.getProject());
 		}
 		
 		var proposedFileName = this.getNewFileName('folder',folder);

@@ -1,4 +1,10 @@
-define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, util) {
+// XXX This object shouldn't have a dependency on SmartInput
+define([
+    "davinci/ve/input/SmartInput",
+    "davinci/util",
+    "davinci/library"
+], function(SmartInput, util, library) {
+
 	var metadata,
     	METADATA_CLASS_BASE = "davinci.libraries.",
     
@@ -29,6 +35,30 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
         metadata.init();
     });
     
+    function getLibraryMetadata(id, version) {
+        var path = library.getMetaRoot(id, version);
+        if (! path) {
+            return null;
+        }
+
+        var result = null;
+        dojo.xhrGet({
+            url : path + "/widgets.json",
+            sync : true, // XXX should be async
+            handleAs : "json",
+            load : function(data) {
+                result = {
+                    descriptor : data,
+                    metaPath : path
+                };
+            }
+            // XXX handle error is 'widgets.json' does not exist at 'path'
+        });
+
+        return result;
+        // return (davinci.Runtime.serverJSONRequest({url:"./cmd/getLibMetadata", handleAs:"json", content:{'id': id, 'version':version},sync:true }));
+    }
+
     function parseLibraryDescriptor(data) {
     	
     	var path = new davinci.model.Path(data.metaPath),
@@ -283,20 +313,20 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
     }
 
     
-    return metadata = {
+    var metadata = {
         /**
          * Read the library metadata for all the libraries linked in the user's workspace
          */
 		init: function() {
-			dojo.forEach(davinci.library.getInstalledLibs(), function(lib) {
-				var data = davinci.library.getLibMetadata(lib.id, lib.version);
+			dojo.forEach(library.getInstalledLibs(), function(lib) {
+				var data = getLibraryMetadata(lib.id, lib.version);
 				if (data) {
 					parseLibraryDescriptor(data);
 				}
 			});
 			/* add the users custom widgets to the library metadata */
 			var base = davinci.Runtime.getProject();
-			var descriptor = davinci.library.getCustomWidgets(base);
+			var descriptor = library.getCustomWidgets(base);
 			//if(descriptor.custom) parseLibraryDescriptor({descriptor:descriptor.custom, metaPath:descriptor.custom.metaPath});
 			
 		},
@@ -333,7 +363,7 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
     		
     		var themePath = new davinci.model.Path(model.fileName);
     		/* remove the .theme file, and find themes in the given base location */
-    		var allThemes = davinci.library.getThemes(themePath.removeLastSegments(1).toString());
+    		var allThemes = library.getThemes(themePath.removeLastSegments(1).toString());
     		var themeHash = {};
     		for(var i=0;i<allThemes.length;i++){
     		    if (allThemes[i]['files']){ // #1024 theme maps do not have files
@@ -361,7 +391,7 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
     				if(url.indexOf(themeUrl)  > -1){
     					return {
     						themeUrl: url,
-    						themeMetaCache: davinci.library.getMetaData(themeHash[themeUrl]),
+    						themeMetaCache: library.getThemeMetadata(themeHash[themeUrl]),
     						theme: themeHash[themeUrl]
     					};
     				}
@@ -415,7 +445,7 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
     				var returnObject = {
     					themeUrl: url,
     					// Pull claro theme data
-    					themeMetaCache: davinci.library.getMetaData(themeHash[claroThemeUrl]),
+    					themeMetaCache: library.getThemeMetadata(themeHash[claroThemeUrl]),
     					theme: themeHash[claroThemeUrl]
     				};
     				returnObject.themeMetaCache.usingSubstituteTheme = {
@@ -456,7 +486,7 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
                                  if(url.indexOf(themeUrl)  > -1){
                                      return {
                                     	 themeUrl: url,
-                                    	 themeMetaCache: davinci.library.getMetaData(themeHash[themeUrl]),
+                                    	 themeMetaCache: library.getThemeMetadata(themeHash[themeUrl]),
                                     	 theme: themeHash[themeUrl]
                                      };
                                  }
@@ -613,4 +643,6 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
         	return getAllowedElement('Child', type);
         }
     };
+
+    return metadata;
 });

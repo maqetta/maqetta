@@ -166,7 +166,7 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 	},
 		
 	_newFolder : function(){
-		debugger;		
+		davinci.ui.Resource.newFolder();		
 	},
 	
 	_getValueAttr : function(){

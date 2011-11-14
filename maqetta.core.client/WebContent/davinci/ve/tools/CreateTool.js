@@ -82,18 +82,11 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 				}
 			}
 		}else{
+			var absolute = !context.getFlowLayout();
+			
 			// For certain widgets, put an overlay DIV on top of the widget
 			// to intercept mouse events (to prevent normal widget mouse processing)
 			this._setTarget(event.target);
-		
-			// Determine target parent(s) at current location
-			this._target = this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
-			var data = this._data;
-			if(!cp.getProposedParentWidget()){
-			    var allowedParentList = cp.getAllowedTargetWidget(this._target, this._data, true);
-				var widgetType = dojo.isArray(data) ? data[0].type : data.type;
-				cp.setProposedParentWidget(cp.chooseParent(widgetType, allowedParentList));
-			}
 
 			// Under certain conditions, show list of possible parent widgets
 			var showParentsPref = context.getPreference('showPossibleParents');
@@ -103,10 +96,12 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			var position = {x:event.pageX, y:event.pageY};
 			var box = {l:event.pageX,t:event.pageY,w:0,h:0};
 			var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
-			var doSnapLines = editorPrefs.snap && !context.getFlowLayout();
+			var doSnapLines = editorPrefs.snap && absolute;
 			context.dragMoveUpdate({
 				data:this._data,
 				position:position,
+				absolute:absolute,
+				currentParent:null,
 				eventTarget:event.target, 
 				rect:box, 
 				doSnapLines:doSnapLines, 
@@ -117,6 +112,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 	onMouseUp: function(event){
 		var context = this._context;
 		var cp = context._chooseParent; 
+		var absolute = !context.getFlowLayout();
 
 		var activeDragDiv = context.getActiveDragDiv();
 		if(activeDragDiv){
@@ -138,11 +134,21 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			target = ppw;
 		}else{
 			// Otherwise, find the appropriate parent that is located under the pointer
-			target = this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
+			var widgetUnderMouse = this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
 			var data = this._data;
-		    var allowedParentList = cp.getAllowedTargetWidget(target, data, true);
-			var widgetType = dojo.isArray(data) ? data[0].type : data.type;
-		    target = cp.chooseParent(widgetType, allowedParentList);
+		    var allowedParentList = cp.getAllowedTargetWidget(widgetUnderMouse, data, true);
+		    var widgetType = dojo.isArray(data) ? data[0].type : data.type;
+			var helper = davinci.ve.widget.getWidgetHelper(widgetType);
+			if(allowedParentList.length>1 && helper && helper.chooseParent){
+				//FIXME: Probably should pass all params to helper
+				target = helper.chooseParent(allowedParentList);
+			}else if(allowedParentList.length > 0){
+		    	if(allowedParentList.indexOf(widgetUnderMouse)>=0){
+		    		target = widgetUnderMouse;
+		    	}else{
+		    		target = allowedParentList[0];
+		    	}
+		    }
 		}
 
 		cp.setProposedParentWidget(null);
@@ -268,8 +274,11 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		var showCandidateParents = (!showParentsPref && this._spaceKeyDown) || (showParentsPref && !this._spaceKeyDown);
 		var data = this._data;
 		var widgetType = dojo.isArray(data) ? data[0].type : data.type;
-		var cp = this._context._chooseParent;
-		cp.dragUpdateCandidateParents(widgetType, showCandidateParents);
+		var context = this._context;
+		var cp = context._chooseParent;
+		var absolute = !context.getFlowLayout();
+		var currentParent = null;
+		cp.dragUpdateCandidateParents(widgetType, showCandidateParents, absolute, currentParent);
 	},
 	
 	/**
@@ -303,8 +312,11 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		var showCandidateParents = (!showParentsPref && this._spaceKeyDown) || (showParentsPref && !this._spaceKeyDown);
 		var data = this._data;
 		var widgetType = dojo.isArray(data) ? data[0].type : data.type;
-		var cp = this._context._chooseParent;
-		cp.dragUpdateCandidateParents(widgetType, showCandidateParents);
+		var context = this._context;
+		var cp = context._chooseParent;
+		var absolute = !context.getFlowLayout();
+		var currentParent = null;
+		cp.dragUpdateCandidateParents(widgetType, showCandidateParents, absolute, currentParent);
 	},
 
 	create: function(args){
@@ -333,8 +345,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		if (this._data.properties && this._data.properties.style && (this._data.properties.style.indexOf('absolute') > 0)){
 			widgetAbsoluteLayout = true;
 		}
-		if (! widgetAbsoluteLayout && this._context.getFlowLayout() ||
-		        (parent.isHtmlWidget && ! parent.isRoot)) {
+		if (! widgetAbsoluteLayout && this._context.getFlowLayout()) {
 			// do not position child under layout container... except for ContentPane
 			if (child) {
 				index = parent.indexOf(child);

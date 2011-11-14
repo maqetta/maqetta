@@ -592,7 +592,7 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
     
     
     _updateSubwidgetListForState: function() {
-        if (this._displayedWidget === this._context._selectedWidget) {
+        if ((this._displayedWidget) && (this._displayedWidget === this._context._selectedWidget)) { // #1024 exception
             var editor = davinci.Runtime.currentEditor,
                 themeMetadata = editor._theme;
             this._cm.getChildren().forEach(function(child) {

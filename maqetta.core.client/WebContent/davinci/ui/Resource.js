@@ -21,7 +21,7 @@ dojo.require("davinci.ui.widgets.NewHTMLFileOptions");
 
 dojo.mixin(davinci.ui.Resource, {
 	
-	_createNewDialog : function(fileNameLabel, createLabel, type, dialogSpecificClass){
+	_createNewDialog : function(fileNameLabel, createLabel, type, dialogSpecificClass, fileName){
 		var resource=davinci.ui.Resource.getSelectedResource();
 		var folder = null;
 		if(resource!=null){
@@ -44,7 +44,7 @@ dojo.mixin(davinci.ui.Resource, {
 			}
 		}
 		
-		var proposedFileName = this.getNewFileName('file',folder,"." + type);
+		var proposedFileName = fileName || this.getNewFileName('file',folder,"." + type);
 		var dialogOptions = {newFileName:proposedFileName,
 							fileFieldLabel:fileNameLabel, 
 							folderFieldLabel:"Where:",
@@ -118,7 +118,16 @@ dojo.mixin(davinci.ui.Resource, {
 			}
 				
 		}else{
-			folder = system.resource.findResource(davinci.Runtime.getProject());
+			
+			var base = davinci.Runtime.getProject();
+			var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+			
+			if(prefs.webContentFolder!=null && prefs.webContentFolder!=""){
+				var fullPath = new davinci.model.Path(davinci.Runtime.getProject()).append(prefs.webContentFolder);
+				folder = system.resource.findResource(fullPath.toString());
+			}
+			if(folder==null)
+				folder = system.resource.findResource(davinci.Runtime.getProject());
 		}
 		
 		var proposedFileName = this.getNewFileName('folder',folder);
@@ -141,16 +150,19 @@ dojo.mixin(davinci.ui.Resource, {
 		davinci.Workbench.showModal(newFolderDialog, langObj.createNewFolder, 'width: 300px; oppacity:0', executor);
 	},
 	
-	saveAs : function(){
+	saveAs : function(extension){
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
-		var newDialog = davinci.ui.Resource._createNewDialog(langObj.fileName, langObj.save, "html");
+		
+		var oldEditor = davinci.Workbench.getOpenEditor();
+		var oldFileName = oldEditor.fileName;
+		
+		var newDialog = davinci.ui.Resource._createNewDialog(langObj.fileName, langObj.save, extension, null, oldFileName);
 		var executor = function(){
 			if(!newDialog.cancel){
 				var resourcePath = newDialog.get('value');
 				if(davinci.ui.Resource._checkFileName(resourcePath)){
 					
-					var oldEditor = davinci.Workbench.getOpenEditor();
-					var oldFileName = oldEditor.fileName;
+
 					var oldResource = system.resource.findResource(oldFileName);
 			        var oldContent = oldEditor.editorID == "davinci.html.CSSEditor" ? oldEditor.getText() : oldEditor.model.getText();
 					var existing=system.resource.findResource(resourcePath);

@@ -224,7 +224,12 @@ public class User implements IUser {
 		/*
 		 * Load the initial user files extension point and copy the files to the projects root
 		 */
-		
+		try {
+			if(!isValid(new File(project.getURI()).getAbsolutePath() + "/" + basePath )) return null;
+		} catch (URISyntaxException e1) {
+			// TODO Auto-generated catch block
+			return null;
+		}
 		if(basePath!=null && !basePath.equals("")){
 			project.create(basePath + "/");
 		}
@@ -242,7 +247,7 @@ public class User implements IUser {
 				try {
 					
 					file = new File(project.getURI().getPath()+ "/" + basePath);
-					
+					if(!isValid(file.getAbsolutePath())) return null;
 				} catch (URISyntaxException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -264,6 +269,7 @@ public class User implements IUser {
 	 */
 	public void addBaseSettings(String base){
 		File baseFile = new File(this.userDirectory, base);
+		if(!isValid(baseFile.getAbsolutePath())) return;
 		File settings = new File(baseFile, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
 		settings.mkdirs();
 		
@@ -286,6 +292,7 @@ public class User implements IUser {
 	}
 	private LibrarySettings getLibSettings(String base) {
 		File baseFile = new File(this.userDirectory, base);
+		if(!isValid(baseFile.getAbsolutePath())) return null;
 		return getLibSettings(baseFile);
 	}
 
@@ -444,6 +451,14 @@ public class User implements IUser {
         
 	}
 	
+	public boolean isValid(String path){
+		 IPath workspaceRoot = new Path(this.userDirectory.getAbsolutePath());
+		 IPath a = new Path(path);
+	     if (a.matchingFirstSegments(workspaceRoot) != workspaceRoot.segmentCount()) {
+	         return false;
+	      }
+	     return true;
+	}
 	
 	 private IVResource getUserFile(String p1) {
 	       
@@ -500,7 +515,9 @@ public class User implements IUser {
 		} else if (path.length() > 0 && path.charAt(0) == '.') {
 			path1 = path.substring(1);
 		}
-
+		if(!this.isValid(this.userDirectory.getAbsolutePath() + "/" + path1)) return null;
+		
+		
 		ILink link = this.getLinks().hasLink(path1);
 		if (link != null) {
 			path = link.location + "/" + path1.substring(link.path.length());
@@ -510,7 +527,8 @@ public class User implements IUser {
 		}
 
 		IVResource directory = new VFile(this.userDirectory, this.workspace);
-
+		/* make sure the new resoruce is within the user directory */
+		
 		IVResource userFile = directory.create(path);
 
 		return userFile;
@@ -529,11 +547,12 @@ public class User implements IUser {
 	public File getWorkbenchSettings(String base) {
 	
 		
-			File baseFile = new File(this.userDirectory,base);
-			File settingsDirectory = new File(baseFile,IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
-			
-			if(!settingsDirectory.exists())
-				settingsDirectory.mkdirs();
+		File baseFile = new File(this.userDirectory,base);
+		File settingsDirectory = new File(baseFile,IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
+		if(!isValid(settingsDirectory.getAbsolutePath())) return null;
+		
+		if(!settingsDirectory.exists())
+			settingsDirectory.mkdirs();
 		
 
 		return settingsDirectory;
@@ -587,8 +606,7 @@ public class User implements IUser {
 		         IVResource start = this.getUserFile(startFolder);
 		         if(start!=null)
     		         try {
-    		             
-    		                 f1 = new File(start.getURI());
+    		            f1 = new File(start.getURI());
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
                     }
@@ -603,9 +621,9 @@ public class User implements IUser {
     					IPath workspacePath = new Path(workspaceFile.getPath());
     					IPath foundPath = new Path(found[i].getPath());
     					IPath elementPath = foundPath.makeRelativeTo(workspacePath);
-    
-    					IVResource[] wsFound = this.findFiles(
-    							elementPath.toString(), ignoreCase, true);
+    					if(!isValid(foundPath.toString())) return null;
+    					
+    					IVResource[] wsFound = this.findFiles(elementPath.toString(), ignoreCase, true);
     					results.addAll(Arrays.asList(wsFound));
     
     			}

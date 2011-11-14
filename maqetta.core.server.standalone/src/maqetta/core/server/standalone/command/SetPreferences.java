@@ -22,6 +22,9 @@ public class SetPreferences extends Command {
         
         File settingsDir = user.getWorkbenchSettings(base);
         File settingsFile = new File(settingsDir, id + IDavinciServerConstants.SETTINGS_EXTENSION);
+        
+        if(! user.isValid(settingsFile.getAbsolutePath()) ) return;
+        
         if (!settingsFile.exists()) {
             settingsFile.createNewFile();
         }

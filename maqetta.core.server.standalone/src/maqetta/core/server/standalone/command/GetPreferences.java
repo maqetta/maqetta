@@ -23,7 +23,7 @@ public class GetPreferences extends Command {
         
         File userSettings = user.getWorkbenchSettings(base);
         File settingsFile = new File(userSettings, path + IDavinciServerConstants.SETTINGS_EXTENSION);
-        
+        if(!user.isValid(settingsFile.getAbsolutePath()) ) return;
         
         
         InputStream inputStream;

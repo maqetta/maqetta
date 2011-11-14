@@ -40,7 +40,6 @@ dojo.declare("davinci.ui.widgets.NewFolder",   [dijit._Widget, dijit._Templated]
 		this._value = value;
 		var parentFolder = "";
 		if(value && value.elementType=="Folder"){
-			this.fileDialogParentFolder.set(value.parent.getPath());
 			this.fileDialogParentFolder.set(value.getName());
 		}else if(value){
 			this.fileDialogParentFolder.set(value.parent.getPath());
@@ -52,11 +51,25 @@ dojo.declare("davinci.ui.widgets.NewFolder",   [dijit._Widget, dijit._Templated]
 	_setNewFileNameAttr : function(name){
 		this.folderName.set( 'value', name);
 	},
+
 	_getRootAttr : function(){
-		return this._root || system.resource.findResource(davinci.Runtime.getProject());
+		
+		if(this._root) return this._root;
+		
+		var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+		
+		if(prefs.webContentFolder!=null && prefs.webContentFolder!=""){
+			var fullPath = new davinci.model.Path(davinci.Runtime.getProject()).append(prefs.webContentFolder);
+			
+			var folder = system.resource.findResource(fullPath.toString());
+			return folder;
+		}
+		
+		return system.resource.findResource(davinci.Runtime.getProject());
 	},
 	
 	_setRootAttr : function(value){
+		
 		this._root=value;
 		this.fileDialogParentFolder.set('value', value.getPath());
 		

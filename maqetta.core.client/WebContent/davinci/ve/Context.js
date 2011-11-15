@@ -1487,19 +1487,7 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 
 		if(!alreadySelected){
-			var helper = this._needsTearDown && this._needsTearDown.getHelper();
-			if(helper && helper.tearDown){
-				if(helper.tearDown(this._needsTearDown, widget)){
-					delete this._needsTearDown;
-				}
-			}
-
-			helper = widget.getHelper();			
-			if(helper && helper.popup){
-				helper.popup(this._needsTearDown = widget);
-			}
-
-			var selection; 
+			var selection;
 			if(add && this._selection){
 				index = this._selection.length;
 				selection = this._selection;
@@ -1525,6 +1513,7 @@ dojo.declare("davinci.ve.Context", null, {
 						}
 					},this);
 				}
+				var helper = widget.getHelper();
 				if(helper && helper.onSelect){
 					helper.onSelect(widget);
 				}
@@ -1536,13 +1525,6 @@ dojo.declare("davinci.ve.Context", null, {
 	deselect: function(widget){
 		if(!this._selection){
 			return;
-		}
-
-		var helper = this._needsTearDown && this._needsTearDown.getHelper();
-		if(helper && helper.tearDown){
-			if(helper.tearDown(this._needsTearDown, widget)){
-				delete this._needsTearDown;
-			}
 		}
 
 		if(widget){

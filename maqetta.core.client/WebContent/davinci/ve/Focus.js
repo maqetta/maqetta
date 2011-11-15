@@ -1,14 +1,10 @@
-dojo.provide("davinci.ve.Focus");
-
-dojo.require("dijit._Widget");
-dojo.require("dojo.dnd.Mover");
-
-dojo.require("dijit.InlineEditBox"); // should be inferred by other dependencies?
-dojo.require("dijit.Menu");
-dojo.require("davinci.ve.metadata");
-//dojo.require("davinci.ve.commands.ModifyCommand");
-
-(function(){
+define([
+    "dojo/_base/declare",
+	"dijit/_WidgetBase",
+	"dojo/dnd/Mover",
+	"davinci/ve/metadata"
+],
+function(declare, _WidgetBase, Mover, metadata){
     
 var LEFT = 0,
     RIGHT = 1,
@@ -20,7 +16,7 @@ var LEFT = 0,
     RIGHT_BOTTOM = 7,
 	DRAG_NOB = 8;	// Overlay nob that follows mouse during drag operation
 
-dojo.declare("davinci.ve.Focus", dijit._Widget, {
+return declare("davinci.ve.Focus", _WidgetBase, {
 
     size: 6,
 
@@ -276,7 +272,7 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
     showInline: function(widget) {
 
         this._selectedWidget = widget;
-        this._inline = davinci.ve.metadata.queryDescriptor(widget.type, "inlineEdit");
+        this._inline = metadata.queryDescriptor(widget.type, "inlineEdit");
         if (this._inline && this._inline.show) {
             this._inline.show(widget.id);
         }
@@ -332,14 +328,14 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
         if(dojo.indexOf(this._frames, event.target) >= 0){
             this._nobIndex = -1;
             if(this._op && this._op.move){
-                new dojo.dnd.Mover(this.domNode, event, this);
+                new Mover(this.domNode, event, this);
             }
             dojo.stopEvent(event);
             
         }else{
             this._nobIndex = dojo.indexOf(this._nobs, event.target);
             if(this._nobIndex >= 0){
-                new dojo.dnd.Mover(event.target, event, this);
+                new Mover(event.target, event, this);
                 switch(this._nobIndex){
                 case LEFT:
                 case LEFT_BOTTOM:
@@ -591,6 +587,7 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
         this.domNode.appendChild(contexDiv);
 
     },
+    //FIXME: should this code be delegated to themeEditor somehow?
     _createSubwidgetList: function() {
         //if(this._cm)return;
 
@@ -763,4 +760,4 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
     }
 });
 
-})();
+});

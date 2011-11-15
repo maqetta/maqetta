@@ -373,6 +373,10 @@ dojo.declare("davinci.ve.Context", null, {
 					break;
 				
 				case "javascript-module":
+					// currently, only support 'amd' format
+					if (r.format !== 'amd') {
+						console.error("Unknown javascript-module format");
+					}
 					if (r.src) {
 						this.addJavaScriptModule(r.src, updateSrc || doUpdateModelDojoRequires,
 								skipDomUpdate);

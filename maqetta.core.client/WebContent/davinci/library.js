@@ -14,10 +14,11 @@ function(CSSThemeProvider, query) {
  * 
  */
 
-_themesCache = {};
-_themesMetaCache = {};
-_userLibsCache = {};
-_libRootCache = {};
+var library,
+	_themesCache = {},
+	_themesMetaCache = {},
+	_userLibsCache = {},
+	_libRootCache = {};
 
 // Cache library roots so we don't make multiple server calls for the same 'id' and 'version'.  But
 // clear the cache when any of the libraries change.
@@ -27,7 +28,7 @@ dojo.subscribe("/davinci/ui/libraryChanged", this, function() {
 });
 
 /* singleton */
-var library = {
+library = {
 
 themesChanged: function(base){
 	if(base)
@@ -174,10 +175,10 @@ getCustomWidgets: function(base) {
 	return {custom:library._customWidgets[base]};
 },
 
-//FIXME: should these be cached?
 getInstalledLibs: function() {
-	if(!library._serverLibs)
+	if (! library._serverLibs) {
 		library._serverLibs = (davinci.Runtime.serverJSONRequest({url:"./cmd/listLibs", handleAs:"json", content:{},sync:true  }))[0].userLibs;
+	}
 	return library._serverLibs;
 },
 

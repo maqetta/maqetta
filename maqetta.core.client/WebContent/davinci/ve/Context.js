@@ -2237,7 +2237,7 @@ dojo.declare("davinci.ve.Context", null, {
 		//if(!skipDomUpdate) { this.getGlobal()['require']([mid], ??); }
 		if (doUpdateModel) {
 			//TODO: keep all requires in a single statement?
-			this.addHeaderScriptSrc('require("' + mid + '");');
+			this.addHeaderScriptSrc('require(["' + mid + '"]);');
 		}
 	},
 

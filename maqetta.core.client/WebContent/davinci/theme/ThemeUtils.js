@@ -106,8 +106,15 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 		var htmlFile = new davinci.html.HTMLFile(fileUrl);
 		htmlFile.setText(contents,true);
 		var element = htmlFile.find({elementType: 'HTMLElement', tag: 'body'}, true);
-		element.setAttribute('class',selector);
-		htmlFile.save();
+		// #1024 leave other classes on the body only replace the target
+		var modelAttribute = element.getAttribute('class');
+        if (!modelAttribute){
+             modelAttribute = selector; 
+        } else {
+             modelAttribute = modelAttribute.replace(oldClass, selector);
+        }
+        element.setAttribute('class',modelAttribute); //#1024
+        htmlFile.save();
 	}
 	davinci.library.themesChanged();
 };

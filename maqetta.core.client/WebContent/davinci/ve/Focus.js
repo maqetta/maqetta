@@ -2,9 +2,10 @@ define([
     "dojo/_base/declare",
 	"dijit/_WidgetBase",
 	"dojo/dnd/Mover",
-	"davinci/ve/metadata"
+	"davinci/ve/metadata",
+	"dojo/number"
 ],
-function(declare, _WidgetBase, Mover, metadata){
+function(declare, _WidgetBase, Mover, metadata, number){
     
 var LEFT = 0,
     RIGHT = 1,
@@ -29,7 +30,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
         this._frames = [];
         for(var i = 0; i < 4; i++){
-            var style = {position: "absolute", opacity: 0.5, overflow: "hidden", cursor: "move"}; // move to CSS
+            var style = {position: "absolute", opacity: 0.5, /*overflow: "hidden", */cursor: "move"}; // move to CSS
             dojo.mixin(style, i < 2 ? {width: this.size + "px", height: this.size * 2 + "px"} : {height: this.size + "px"});
             var frame = dojo.create("div", {"class": "editFocusFrame", style: style}, this.domNode);
             this._frames.push(frame);
@@ -48,10 +49,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         var border = (dojo.isIE ? 0 : 2);
         for(var i = 0; i < 9; i++){
             var nob = dojo.create("div", {"class": "editFocusNob", style: {
-                position: "absolute",
                 width: this.size - border + "px",
                 height: this.size - border + "px",
-                overflow: "hidden",
                 cursor: cursors[i]
             }}, this.domNode);
             this._nobs.push(nob);
@@ -504,12 +503,18 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		                }else{
 		                	this._constrained.w = b.h;
 		                }
-		                break;
             	}
             }
             this._resize(event.shiftKey ? this._constrained : this._box);
         }
-
+        var dim = [];
+        for (var prop in {w:1,h:1,l:1,t:1}) {
+        	var value = this._box[prop];
+        	if (value) {
+        		dim.push(prop + ":&nbsp;" + number.format(value));
+        	}
+        }
+        this.status.innerHTML = dim.join("<br>");
     },
 
     onFirstMove: function(mover){
@@ -518,10 +523,13 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
     //Required for Moveable interface 
     onMoveStart: function(mover){
+    	this.status = dojo.create("div", {"class": "editStatus"}, mover.node);
     },
 
     //Required for Moveable interface
     onMoveStop: function(mover){
+    	this.status.parentElement.removeChild(this.status);
+    	delete this.status;
     },
     
     onKeyDown: function(event){

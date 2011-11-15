@@ -285,80 +285,108 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	loadRequires: function(type, updateSrc, doUpdateModelDojoRequires, skipDomUpdate) {
-		
-		/* this method is used heavily in RebuildPage.js, so please watch out when changing  API! */
+		// this method is used heavily in RebuildPage.js, so please watch out when changing  API!
+
 		if (!type) {
 			return false;
 		}
 		
-		var module = type.split(".")[0];
-		/*
-		if (module == "html") {
-			// no require
-			return true;
-		}
-		*/
-		var requires = davinci.ve.metadata.query(type, "require");
+		var requires = davinci.ve.metadata.query(type, "require"),
+			libs = {},
+			context = this;
 		if (!requires) {
 			return true;
 		}
 
-		return dojo.every(requires, function(r) {
-		
-			var src = r.src;
-			if (src) {	// resource with URL
-				if (r.$library && r.type != "javascript-module") {
-					// Since the metadata files are 'relocatable', we don't use the metadata's
-					//  value for $library.src.  Instead, we find the base URL for the user's
-					//  currently selected library.
-					var libVer  = davinci.ve.metadata.getLibrary(r.$library).version;
-						
-					if (!libVer) {
-						libVer = davinci.ve.metadata.query(type, "library")[r.$library].version;
-					}
-					var libRoot = this.getLibraryBase(r.$library, libVer);
-					/*
-					 * need to set the module path for custom user widgets 
-					 */
-					if(r.$library.indexOf("dojo") > -1){
-						var fullLibPath = new davinci.model.Path(this.getBase()).append(libRoot).append(src);
-						this._dojoModulePath = (new davinci.model.Path(this.getBase())).relativeTo(fullLibPath, true).toString();
-					}
-					
-					if (libRoot == null /*empty string OK here, but null isn't. */) {
-						console.warn("No library found for name = '" + r.$library +	"' version = '" + libVer + "'");
-						return false;   // kill dojo.every loop
-					}
-					var fullLibPath = new davinci.model.Path(this.getBase()).append(libRoot).append(src);
-					src = fullLibPath.relativeTo(this.getPath(),true).toString();				
-				} else {
-					console.warn("metadata resource does not specify 'library'");
+		function _loadLibrary(libId) {
+			if (libs.hasOwnProperty(libId)) {
+				return true;
+			}
+
+			// calculate base library path, used in loading relative required
+			// resources
+			var lib = davinci.ve.metadata.query(type, 'library')[libId],
+				ver = davinci.ve.metadata.getLibrary(libId).version || lib.version,
+				root = context.getLibraryBase(libId, ver);
+			
+			if (root == null /*empty string OK here, but null isn't. */) {
+				console.error("No library found for name = '" + libId +	"' version = '" + ver + "'");
+				return false;
+			}
+
+			// store path
+			libs[libId] = new davinci.model.Path(context.getBase()).append(root);
+
+			// If 'library' element points to the main library JS (rather than
+			// just base directory), then load that file now.
+			if (lib.src.substr(-3) === '.js') {
+				// XXX For now, lop off relative bits and use remainder as main
+				// library file.  In the future, we should use info from
+				// package.json and library.js to find out what part of this
+				// path is the piece we're interested in.
+				var m = lib.src.match(/((?:\.\.\/)*)(.*)/);
+						// m[1] => relative path
+						// m[2] => main library JS file
+				_loadJSFile(libId, m[2]);
+			}
+
+			return true;
+		}
+
+		function _getResourcePath(libId, src) {
+			return libs[libId].append(src).relativeTo(context.getPath(), true).toString();
+		}
+
+		function _loadJSFile(libId, src) {
+			context.addJavaScriptSrc(_getResourcePath(libId, src), updateSrc, src, skipDomUpdate);
+		}
+
+		return requires.every(function(r) {
+			// If this require belongs under a library, load library file first
+			// (if necessary).
+			if (r.$library) {
+				if (! _loadLibrary(r.$library)) {
+					return false; // break 'every' loop
 				}
-				src = src.toString();
-			  
-				switch (r.type) {
-					case "javascript":
-						this.addJavaScriptSrc(src, updateSrc, r.src, skipDomUpdate);
-						break;
-					case "javascript-module":
-						this.addJavaScriptModule(src, updateSrc || doUpdateModelDojoRequires, skipDomUpdate);
-						break;
-					case "css":
-						updateSrc ? this.addModeledStyleSheet(src, r.src, skipDomUpdate) : this.loadStyleSheet(src);
-						break;
-					default:
-						console.warn("Unhandled metadata resource type '" + r.type +
-								"' for widget '" + type + "'");
-				}
-			} else {  // resource with text content
-				switch (r.type) {
-					case "javascript":
+			} else if (r.src) {
+				console.warn("metadata resource (" + r.type + ", " + r.src +
+						") does not specify 'library'");
+			}
+
+			switch (r.type) {
+				case "javascript":
+					if (r.src) {
+						_loadJSFile(r.$library, r.src);
+					} else {
 						this.addJavaScriptText(r.$text, updateSrc || doUpdateModelDojoRequires, skipDomUpdate);
-						break;
-					default:
-						console.warn("Unhandled metadata resource type '" + r.type +
-								"' for widget '" + type + "'");
-				}
+					}
+					break;
+				
+				case "javascript-module":
+					if (r.src) {
+						this.addJavaScriptModule(r.src, updateSrc || doUpdateModelDojoRequires,
+								skipDomUpdate);
+					} else {
+						console.error("Inline 'javascript-module' not handled");
+					}
+					break;
+				
+				case "css":
+					if (r.src) {
+						var src = _getResourcePath(r.$library, r.src);
+						if (updateSrc) {
+							this.addModeledStyleSheet(src, r.src, skipDomUpdate);
+						} else {
+							this.loadStyleSheet(src);
+						}
+					} else {
+						console.error("Inline CSS not handled");
+					}
+					break;
+				
+				default:
+					console.error("Unhandled metadata resource type '" + r.type +
+							"' for widget '" + type + "'");
 			}
 			return true;
 		}, this);
@@ -2192,7 +2220,9 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	addJavaScriptModule: function(mid, doUpdateModel, skipDomUpdate) {
-		if(!skipDomUpdate) { this.getGlobal()['eval']("dojo.require('"+mid.replace(/\//g,".")+"');"); }
+		if (! skipDomUpdate) {
+			this.getGlobal()['eval']("dojo.require('"+mid.replace(/\//g,".")+"');");
+		}
 		// FIXME ASYNC
 		//if(!skipDomUpdate) { this.getGlobal()['require']([mid], ??); }
 		if (doUpdateModel) {

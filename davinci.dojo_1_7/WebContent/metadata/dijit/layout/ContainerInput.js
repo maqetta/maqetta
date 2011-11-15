@@ -1,7 +1,9 @@
-dojo.provide("davinci.libraries.dojo.dijit.layout.ContainerInput");
-dojo.require("davinci.ve.input.SmartInput");
+define([
+        "dojo/_base/declare",
+        "davinci/ve/input/SmartInput"
+], function(declare, SmartInput){
 
-dojo.declare("davinci.libraries.dojo.dijit.layout.ContainerInput", davinci.ve.input.SmartInput, {
+return declare("davinci.libraries.dojo.dijit.layout.ContainerInput", SmartInput, {
 
 	propertyName: null,
 	
@@ -28,7 +30,6 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.ContainerInput", davinci.ve.in
 	},
 	
 	parse: function(input) {
-
 		var result = this.parseItems(input);
 		return result;
 	},
@@ -41,8 +42,7 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.ContainerInput", davinci.ve.in
 		return this.childType;
 	},
 	
-	update: function(widget, value) {
-		
+	update: function(widget, value) {		
 		var values = value;
 		
 		this.command = new davinci.commands.CompoundCommand();
@@ -124,5 +124,5 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.ContainerInput", davinci.ve.in
 		var editor = this._getEditor();
 		return editor && (editor.getContext && editor.getContext() || editor.context);
 	}
-
+});
 });

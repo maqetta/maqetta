@@ -15,6 +15,10 @@ public class RemoveUser extends Command {
     @Override
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
         String name = req.getParameter("userName");
+        
+      
+        /* this command can only be called from 127.0.0.1, sorry hackers */
+        if(req.getRemoteAddr().compareTo("127.0.0.1")!=0) return;
 
         try {
             ServerManager.getServerManger().getUserManager().removeUser(name);

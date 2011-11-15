@@ -5,6 +5,8 @@ dojo.require("dijit.form.Button");
 dojo.require("dijit.form.TextBox");
 dojo.require("davinci.Workbench");
 dojo.require("davinci.commands.CommandStack");
+dojo.require("davinci.review.actions.PublishAction");
+dojo.require("davinci.review.Color");
 dojo.require("davinci.ve.metadata");
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci", "webContent");
@@ -119,6 +121,78 @@ dojo.mixin(davinci.Runtime,	{
 		*/
 		davinci.Workbench.setActiveProject(projectName);
 		location.reload(true);
+	},
+	
+	getRole: function(){
+		if(!davinci.Runtime.commenting_designerName)
+			return "Designer";
+		else{
+			if(!davinci.Runtime.userInfo){
+	            var result = davinci.Runtime.serverJSONRequest({
+	                url: "./cmd/getReviewUserInfo",
+	                sync: true
+	            });
+				davinci.Runtime.userInfo = result;
+			}
+			if(davinci.Runtime.userInfo.userName==davinci.Runtime.commenting_designerName)
+				return "Designer";
+		}
+		return "Reviewer";
+	},
+	
+	getDesigner: function(){
+		if(davinci.Runtime.commenting_designerName)
+			return davinci.Runtime.commenting_designerName;
+		else{
+				if(!davinci.Runtime.userInfo){
+		            var result = davinci.Runtime.serverJSONRequest({
+		                url: "./cmd/getReviewUserInfo",
+		                sync: true
+		            });
+					davinci.Runtime.userInfo = result;
+				}
+				return davinci.Runtime.userInfo.userName;
+			}
+	},
+	
+	getDesignerEmail: function(){
+		if(davinci.Runtime.commenting_designerEmail)
+			return davinci.Runtime.commenting_designerEmail;
+		else{
+				if(!davinci.Runtime.userInfo){
+		            var result = davinci.Runtime.serverJSONRequest({
+		                url: "./cmd/getReviewUserInfo",
+		                sync: true
+		            });
+					davinci.Runtime.userInfo = result;
+				}
+				return davinci.Runtime.userInfo.email;
+			}
+	},
+	
+	publish: function(node){
+		var publish = new davinci.review.actions.PublishAction();
+		publish.run(node);
+	},
+	
+	//two modes in design page and in review page
+	getMode: function(){
+		if(davinci.Runtime.commenting_designerName)
+			return "reviewPage";
+		else return "designPage";
+	},
+	
+	
+	getColor: function(/*string*/ name){
+		var index;
+		dojo.some(this.reviewers,function(item,n){
+			if(item.name==name){
+				index = n;
+				return true;
+			}
+			return false;
+		});
+		return davinci.review.colors.colors[index];
 	},
 	
 	run: function() {

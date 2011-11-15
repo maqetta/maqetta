@@ -353,6 +353,16 @@ dojo.declare("davinci.ve.Context", null, {
 						") does not specify 'library'");
 			}
 
+			// need to set the module path for custom user widgets 
+			// XXX Get rid of Dojo-specific code.  If necessary, should be refactored
+			// and abstracted to a function.  But instead of code like this, should
+			// be using APIs from library.js or metadata.js (or something pulling
+			// in data from package.json).
+			if (r.$library === 'dojo') {
+				var path = libs.dojo.append(r.src);
+				this._dojoModulePath = (new davinci.model.Path(this.getBase())).relativeTo(path, true).toString();
+			}
+
 			switch (r.type) {
 				case "javascript":
 					if (r.src) {

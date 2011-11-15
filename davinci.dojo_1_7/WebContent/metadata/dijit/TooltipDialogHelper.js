@@ -2,7 +2,7 @@ define([
     "dojo/_base/connect"
 ], function(connect){
 return function() {
-	this.destroyWidget = function(widget) {
+	this.destroy = function(widget) {
 		if (this.handle) {
 			connect.unsubscribe(this.handle);
 			delete this.handle;

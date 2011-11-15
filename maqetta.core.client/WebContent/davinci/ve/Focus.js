@@ -201,20 +201,20 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
             b.h = 0;
         }
 
-        // When a single widget at the top-level is 100%x100%, right/bottom edge must stay on screen
+        // Adjust for size of border when near the bottom/right corner of the screen
+        var box_r = b.l + b.w + this.size;
+        var box_b = b.t + b.h + this.size;
         var widget = this._selectedWidget;
-        var parent = widget ? widget.getParent() : null;
-        if(widget && parent && parent.type == "html.body"){
-            var container = this._context.getContainerNode();
-            if(widget.domNode.style.height == "100%"){
-                b.h = container.scrollHeight - this.size * 2;
-            }
-    
-            if(widget.domNode.style.width == "100%"){
-                b.w = container.scrollWidth - this.size * 2;
-            }
+        var body = widget ? widget.domNode.ownerDocument.body : null;
+        if(body){
+        	if(box_r > body.offsetWidth){
+        		b.w -= (box_r - body.offsetWidth);
+        	}
+        	if(box_b > body.offsetHeight){
+        		b.h -= (box_b - body.offsetHeight);
+        	}
         }
-
+        
         var h = b.h + this.size * 2;
         this._frames[LEFT].style.height = h + "px";
         this._frames[RIGHT].style.height = h + "px";

@@ -134,7 +134,7 @@ addCustomWidgets: function(base, customWidgetJson) {
 	}
 	*/
 	
-	davinci.ve.metadata.parseMetaData({descriptor:customWidgetJson, metaPath:prefs.widgetFolder, localPath:true});
+	davinci.ve.metadata.parseMetaData(customWidgetJson, prefs.widgetFolder, true);
 	dojo.publish("/davinci/ui/addedCustomWidget", [customWidgetJson]);
 },
 

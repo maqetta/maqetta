@@ -2,8 +2,9 @@
 define([
     "davinci/ve/input/SmartInput",
     "davinci/util",
-    "davinci/library"
-], function(SmartInput, util, library) {
+	"davinci/library",
+	"davinci/model/Path"
+], function(SmartInput, util, library, Path) {
 
 	var metadata,
     	METADATA_CLASS_BASE = "davinci.libraries.",
@@ -35,99 +36,87 @@ define([
         metadata.init();
     });
     
-    function getLibraryMetadata(id, version) {
-        var path = library.getMetaRoot(id, version);
-        if (! path) {
-            return null;
+	function parsePackage(pkg, path) {
+		path = new Path(path);
+
+		// merge in the 'oam' and 'maqetta' overlays
+		var overlays = pkg.overlays;
+		for (var name in overlays) {
+			if (overlays.hasOwnProperty(name)) {
+				if (name === 'oam' || name === 'maqetta') {
+					util.mixin(pkg, overlays[name]);
+				}
+			}
         }
+		delete pkg.overlays;
 
-        var result = null;
-        dojo.xhrGet({
-            url : path + "/widgets.json",
-            sync : true, // XXX should be async
-            handleAs : "json",
-            load : function(data) {
-                result = {
-                    descriptor : data,
-                    metaPath : path
-                };
+		var widgetsJsonPath = path.append(pkg.scripts.widget_metadata);
+		dojo.xhrGet({
+			url : widgetsJsonPath.toString(),
+			handleAs : "json"
+		}).then(function(data) {
+			if (data) {
+				parseLibraryDescriptor(data, widgetsJsonPath);
             }
-            // XXX handle error is 'widgets.json' does not exist at 'path'
         });
-
-        return result;
-        // return (davinci.Runtime.serverJSONRequest({url:"./cmd/getLibMetadata", handleAs:"json", content:{'id': id, 'version':version},sync:true }));
     }
 
-    function parseLibraryDescriptor(data) {
-    	
-    	var path = new davinci.model.Path(data.metaPath),
-    		descriptor = data.descriptor;
-     
+	function parseLibraryDescriptor(descriptor, path) {
         descriptor.$path = path.toString();
         
-        
-        if(libraries.hasOwnProperty(descriptor.name)){
-        	  dojo.forEach(descriptor.widgets, function(item) {
-                  libraries[descriptor.name].widgets.push(item);
-              });
-        	  for(var name in descriptor.categories) {
-                  if(!libraries[descriptor.name].categories.hasOwnProperty(name)){
-                	  libraries[descriptor.name].categories[name] = descriptor.categories[name];
-                  }
-              };
-        	  
-        }else{
-        
+        if (libraries.hasOwnProperty(descriptor.name)) {
+			descriptor.widgets.forEach(function(item) {
+                libraries[descriptor.name].widgets.push(item);
+            });
+        	for (var name in descriptor.categories) {
+                if (! libraries[descriptor.name].categories.hasOwnProperty(name)) {
+              		libraries[descriptor.name].categories[name] = descriptor.categories[name];
+                }
+			}
+        } else {
         	libraries[descriptor.name] = descriptor;
     	}
     
         if (descriptor.callbacks) {
             dojo.xhrGet({
                 url: path.append(descriptor.callbacks).toString(),
-                sync: true, // XXX should be async
-                handleAs: 'javascript',
-                load: function(data) {
+				handleAs: 'javascript'
+			}).then(function(data) {
                     descriptor.callbacks = data;
-                }
             });
         }
         
-        if(descriptor.$providedTypes==null)
-        	descriptor.$providedTypes= {};
-        
-        dojo.forEach(descriptor.widgets, function(item) {
-        	
-        	 if(libraries.hasOwnProperty(descriptor.name)){
-        		 libraries[descriptor.name].$providedTypes[item.type] = item;
-        	 }else{
-        		 descriptor.$providedTypes[item.type] = item;
-        	 }
+		descriptor.$providedTypes = descriptor.$providedTypes || {};
+
+		descriptor.widgets.forEach(function(item) {
+        	if (libraries.hasOwnProperty(descriptor.name)) {
+        		libraries[descriptor.name].$providedTypes[item.type] = item;
+        	} else {
+        		descriptor.$providedTypes[item.type] = item;
+        	}
             // XXX refactor into function, so we don't change original data?
-            
-        	 
-        	 if (item.icon && !item.iconLocal) {
+
+        	if (item.icon && !item.iconLocal) {
                 item.icon = path.append(item.icon).toString();
             }
             // XXX refactor into function
             item.widgetClass = descriptor.categories[item.category].widgetClass;
-            
-           
-            if(libraries.hasOwnProperty(descriptor.name)){
-            
-            	dojo.forEach(item.data, function(data) {
-	                if (!libraries[descriptor.name].$providedTypes[data.type]) {
-	                	libraries[descriptor.name].$providedTypes[data.type] = true;
-	                }
-	            });
-            	
-            }else{
-	            dojo.forEach(item.data, function(data) {
-	                if (!descriptor.$providedTypes[data.type]) {
-	                    descriptor.$providedTypes[data.type] = true;
-	                }
-	            });
-            }
+
+            if (item.data) {
+	            if (libraries.hasOwnProperty(descriptor.name)) {
+					item.data.forEach(function(data) {
+		                if (! libraries[descriptor.name].$providedTypes[data.type]) {
+		                	libraries[descriptor.name].$providedTypes[data.type] = true;
+		                }
+		            });
+	            } else {
+					item.data.forEach(function(data) {
+		                if (!descriptor.$providedTypes[data.type]) {
+		                    descriptor.$providedTypes[data.type] = true;
+		                }
+		            });
+	            }
+	        }
         });
         
         // mix in descriptor instance functions
@@ -313,27 +302,38 @@ define([
     }
 
     
-    var metadata = {
+	metadata = {
         /**
          * Read the library metadata for all the libraries linked in the user's workspace
          */
 		init: function() {
-			dojo.forEach(library.getInstalledLibs(), function(lib) {
-				var data = getLibraryMetadata(lib.id, lib.version);
+			library.getInstalledLibs().forEach(function(lib) {
+// XXX Shouldn't be dealing with 'package.json' here; that belongs in library.js
+// (or a combined object).  Putting it here for now, to quickly integrate.
+				var path = library.getMetaRoot(lib.id, lib.version);
+				if (path) {
+					dojo.xhrGet({
+// XXX For now, 'package.json' lives inside the 'metadata' dir.  Will need to
+// move it up to the top level of library.
+						url : path + "/package.json",
+						handleAs : "json"
+					}).then(function(data) {
 				if (data) {
-					parseLibraryDescriptor(data);
+							parsePackage(data, path);
+						}
+					});
 				}
 			});
 			/* add the users custom widgets to the library metadata */
 			var base = davinci.Runtime.getProject();
 			var descriptor = library.getCustomWidgets(base);
-			//if(descriptor.custom) parseLibraryDescriptor({descriptor:descriptor.custom, metaPath:descriptor.custom.metaPath});
+			//if(descriptor.custom) parseLibraryDescriptor(descriptor.custom, descriptor.custom.metaPath);
 			
 		},
         
 		/* used to update a library descriptor after the fact */
-		parseMetaData: function(data){
-			parseLibraryDescriptor(data);
+		parseMetaData: function(descriptor, path){
+			parseLibraryDescriptor(descriptor, path);
 		},
 		
         /**
@@ -361,7 +361,7 @@ define([
     			}
     		}
     		
-    		var themePath = new davinci.model.Path(model.fileName);
+			var themePath = new Path(model.fileName);
     		/* remove the .theme file, and find themes in the given base location */
     		var allThemes = library.getThemes(themePath.removeLastSegments(1).toString());
     		var themeHash = {};

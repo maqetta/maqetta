@@ -631,7 +631,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 			//init reviewers
 			var i;
 			for(i = 0;i< node.reviewers.length;i++){
-				if(node.reviewers[i].name != davinci.review.Runtime.getDesigner()){
+				if(node.reviewers[i].name != davinci.Runtime.getDesigner()){
 					this.jsonStore.newItem({
 						name: node.reviewers[i].name,
 						email: node.reviewers[i].email,

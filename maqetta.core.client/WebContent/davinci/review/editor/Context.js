@@ -113,7 +113,7 @@ dojo.declare("davinci.review.editor.Context", null, {
 		];
 		this._cxtSubs = [
 			dojo.subscribe(this.fileName+"/davinci/review/drawing/addShape", function(shapeDef, clear, editor){
-				surface.exchangeTool.importShapes(shapeDef, clear, dojo.hitch(davinci.review.Runtime, davinci.review.Runtime.getColor)); // FIXME: Unique surface is required
+				surface.exchangeTool.importShapes(shapeDef, clear, dojo.hitch(davinci.Runtime, davinci.Runtime.getColor)); // FIXME: Unique surface is required
 			}),
 			dojo.subscribe(this.fileName+"/davinci/review/drawing/enableEditing", this, function(reviewer, commentId, pageState){
 				surface.activate();
@@ -135,7 +135,7 @@ dojo.declare("davinci.review.editor.Context", null, {
 			})),
 			dojo.subscribe(this.fileName+"/davinci/review/drawing/cancelEditing", dojo.hitch(this, function(){
 				// Restore the previous status
-				surface.exchangeTool.importShapes(surface.cached, true, dojo.hitch(davinci.review.Runtime, davinci.review.Runtime.getColor)); // FIXME: Unique surface is required
+				surface.exchangeTool.importShapes(surface.cached, true, dojo.hitch(davinci.Runtime, davinci.Runtime.getColor)); // FIXME: Unique surface is required
 				surface.deactivate();
 				this._refreshSurface(surface);
 				surface.commentId = ""; // Clear the filter so that no shapes can be selected

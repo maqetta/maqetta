@@ -629,11 +629,11 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 				children[i].destroy();
 			}
 			
-			davinci.review.Runtime.reviewers = reviewers;
+			davinci.Runtime.reviewers = reviewers;
 			dojo.forEach(reviewers, dojo.hitch(this,function(comment,index){
 				var check = new dijit.CheckedMenuItem({
 					label: "<div class='davinciReviewToolbarReviewersColor' style='background-color:"
-						+ davinci.review.Runtime.getColor(comment.name) +";'></div><span>"+comment.name+"</span>",
+						+ davinci.Runtime.getColor(comment.name) +";'></div><span>"+comment.name+"</span>",
 					onChange: dojo.hitch(this,this._reviewFilterChanged),
 					checked: true,
 					reviewer:comment,

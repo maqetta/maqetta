@@ -7,13 +7,13 @@ dojo.declare("davinci.review.actions.ViewFileAction",davinci.actions.Action,{
 		var selection = davinci.Runtime.getSelection();
 		if(!selection) return;
 		var item = selection[0].resource;
-		if(davinci.review.Runtime.getMode()=="reviewPage"){
+		if(davinci.Runtime.getMode()=="reviewPage"){
 			davinci.Workbench.openEditor({
 				fileName: item,
 				content: item.getText()
 			});
 		}
-		else if(davinci.review.Runtime.getMode()=="designPage"){
+		else if(davinci.Runtime.getMode()=="designPage"){
 			window.open(davinci.Workbench.location()+"review/"+davinci.Runtime.userName+"/"+item.parent.timeStamp+"/"
 					+item.name+"/default");
 		}

@@ -62,8 +62,8 @@ dojo.declare("davinci.review.widgets.Comment",[dijit._Widget, dijit._Templated],
 		this.focused = false;
 		
 		// Populate the comment body
-		//var color = davinci.review.Runtime.getColor(this.email);
-		var color = this.color = davinci.review.Runtime.getColor(this.ownerId);
+		//var color = davinci.Runtime.getColor(this.email);
+		var color = this.color = davinci.Runtime.getColor(this.ownerId);
 		this.subjectNode.innerHTML = this.subject;
 		dojo.style(this.subjectNode, "color", color);
 		this.ownerName.innerHTML = this.ownerId;

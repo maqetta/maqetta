@@ -16,7 +16,7 @@ dojo.declare("davinci.review.actions.RestartVersionAction",davinci.actions.Actio
 	},
 	
 	isEnabled: function(context){
-		if(davinci.review.Runtime.getRole()!="Designer") return false;
+		if(davinci.Runtime.getRole()!="Designer") return false;
 		var selection = davinci.Runtime.getSelection();
 		if(!selection || selection.length == 0) return false;
 		var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;

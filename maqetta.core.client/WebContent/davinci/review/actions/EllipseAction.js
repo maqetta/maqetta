@@ -11,7 +11,7 @@ dojo.declare("davinci.review.actions.EllipseAction", davinci.review.actions._Dra
 		createTool.deactivate();
 		createTool.setShape("Ellipse", {
 			colorAlias: surface.currentReviewer,
-			a2c: dojo.hitch(davinci.review.Runtime, davinci.review.Runtime.getColor),
+			a2c: dojo.hitch(davinci.Runtime, davinci.Runtime.getColor),
 			commentId: surface.commentId,
 			state: ""
 		});

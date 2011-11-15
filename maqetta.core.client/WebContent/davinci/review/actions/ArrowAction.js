@@ -11,7 +11,7 @@ dojo.declare("davinci.review.actions.ArrowAction", davinci.review.actions._Drawi
 		createTool.deactivate();
 		createTool.setShape("Arrow", {
 			colorAlias: surface.currentReviewer,
-			a2c: dojo.hitch(davinci.review.Runtime, davinci.review.Runtime.getColor),
+			a2c: dojo.hitch(davinci.Runtime, davinci.Runtime.getColor),
 			commentId: surface.commentId,
 			state: ""
 		});

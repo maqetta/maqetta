@@ -1,6 +1,6 @@
 dojo.provide("davinci.review.view.CommentExplorerView");
 
-dojo.require("davinci.review.Runtime");
+dojo.require("davinci.Runtime");
 dojo.require("davinci.review.model.ReviewTreeModel");
 dojo.require("davinci.Workbench");
 dojo.require("davinci.workbench.ViewPart");
@@ -64,7 +64,7 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 				domNode: this.tree.domNode, openCallback:this.tree.getMenuOpenCallback()});
 
 		this.infoCardContent = dojo.cache("davinci" ,"review/widgets/templates/InfoCard.html");
-		if(davinci.review.Runtime.getRole()!="Designer")
+		if(davinci.Runtime.getRole()!="Designer")
 		dojo.style(this.toolbarDiv, "display", "none");
 		
 		// Customize dijit._masterTT so that it will not be closed when the cursor is hovering on it
@@ -193,9 +193,9 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 	
 	_dblClick: function(node)
 	{
-		if(davinci.review.Runtime.getMode()=="reviewPage"){
+		if(davinci.Runtime.getMode()=="reviewPage"){
 			if(node.isDraft||node.parent.isDraft){
-				if(davinci.review.Runtime.getRole()=="Designer")
+				if(davinci.Runtime.getRole()=="Designer")
 				this._openPublishWizard(node.isDraft?node:node.parent);
 				return;
 			}
@@ -207,9 +207,9 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 				});
 			}
 		}
-		else if(davinci.review.Runtime.getMode()=="designPage"){
+		else if(davinci.Runtime.getMode()=="designPage"){
 			if(node.isDraft||node.parent.isDraft){
-				if(davinci.review.Runtime.getRole()=="Designer")
+				if(davinci.Runtime.getRole()=="Designer")
 				this._openPublishWizard(node.isDraft?node:node.parent);
 				return;
 			}
@@ -240,15 +240,15 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 			template.artifacts_in_rev = langObj.artifactsInRev;
 			template.reviewers = langObj.reviewers;
 			
-			template.detail_role = davinci.review.Runtime.getRole();
+			template.detail_role = davinci.Runtime.getRole();
 			template.detail_dueDate = item.dueDate == "infinite" ? "Infinite" : dojo.date.locale.format(item.dueDate, {
 				selector:'date',
 				formatLength:'long',
                 datePattern:'MMM dd, yyyy', //FIXME: use of pattern prevents globalization
                 timePattern:'HH:mm:ss' //FIXME: not used if selector is 'date'
 			});
-			template.detail_creator = davinci.review.Runtime.getDesigner()
-						+ "&nbsp;&lt" + davinci.review.Runtime.getDesignerEmail() + "&gt";
+			template.detail_creator = davinci.Runtime.getDesigner()
+						+ "&nbsp;&lt" + davinci.Runtime.getDesignerEmail() + "&gt";
 			template.detail_files = "";
 			item.getChildren(function(children){ c = children; },true);
 			dojo.forEach(c, function(i){

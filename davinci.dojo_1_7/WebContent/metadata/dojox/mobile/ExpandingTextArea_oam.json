@@ -5,34 +5,39 @@
     "version": "1.7",
     "require": [
         {
-            "type": "javascript",
-            "src": "dojo/dojo.js",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile",
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "$text": "dojo.require('dojox.mobile');"
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile/parser",
+            "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "$text": "dojo.require('dojox.mobile.parser');"
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile/deviceTheme",
+            "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "$text": "dojo.require('dojox.mobile.deviceTheme');"
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile/compat",
+            "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "$text": "dojo.require('dojox.mobile.compat');"
-        },
-        {
-            "type": "javascript",
-            "$text": "dojo.require('dojox.mobile.ExpandingTextArea');"
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile/ExpandingTextArea",
+            "$library": "dojo"
         }
     ],
     "library": {
         "dojo": {
-            "src": "../../../"
+            "src": "../../../dojo/dojo.js"
         }
     },
     "property": {

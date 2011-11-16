@@ -5,81 +5,86 @@
     "version": "1.7",
     "require": [
         {
-            "type": "javascript",
-            "src": "dojo/dojo.js",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile",
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "$text": "dojo.require('dojox.mobile');"
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile/parser",
+            "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "$text": "dojo.require('dojox.mobile.parser');"
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile/deviceTheme",
+            "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "$text": "dojo.require('dojox.mobile.deviceTheme');"
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile/compat",
+            "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "$text": "dojo.require('dojox.mobile.compat');"
-        },
-        {
-            "type": "javascript",
-            "$text": "dojo.require('dojox.mobile.TabBarButton');"
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile/TabBarButton",
+            "$library": "dojo"
         }
     ],
     "library": {
         "dojo": {
-            "src": "../../../"
+            "src": "../../../dojo/dojo.js"
         }
     },
     "property": {
-       "transition": {
-           "datatype": "string",
-           "defaultValue": "none"
-       },
-       "transitionDir": {
-           "datatype": "number",
-           "defaultValue": 1
-       },
-       "icon1": {
-           "datatype": "string"
-       },
-       "icon2": {
-           "datatype": "string"
-       },
-       "iconPos1": {
-           "datatype": "string"
-       },
-       "iconPos2": {
-           "datatype": "string"
-       },
-       "moveTo": {
-           "datatype": "string"
-       },
-       "href": {
-           "datatype": "string"
-       },
-       "hrefTarget": {
-           "datatype": "string"
-       },
-       "url": {
-           "datatype": "string"
-       },
-       "callback": {
-           "datatype": "string"
-       },
-       "sync": {
-           "datatype": "boolean",
-           "defaultValue": false
-       },
-       "label": {
-           "datatype": "string",
-           "defaultValue": "TabBarButton"
-       },
-       "selected": {
+        "transition": {
+            "datatype": "string",
+            "defaultValue": "none"
+        },
+        "transitionDir": {
+            "datatype": "number",
+            "defaultValue": 1
+        },
+        "icon1": {
+            "datatype": "string"
+        },
+        "icon2": {
+            "datatype": "string"
+        },
+        "iconPos1": {
+            "datatype": "string"
+        },
+        "iconPos2": {
+            "datatype": "string"
+        },
+        "moveTo": {
+            "datatype": "string"
+        },
+        "href": {
+            "datatype": "string"
+        },
+        "hrefTarget": {
+            "datatype": "string"
+        },
+        "url": {
+            "datatype": "string"
+        },
+        "callback": {
+            "datatype": "string"
+        },
+        "sync": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "label": {
+            "datatype": "string",
+            "defaultValue": "TabBarButton"
+        },
+        "selected": {
             "datatype": "boolean",
             "defaultValue": false
         }

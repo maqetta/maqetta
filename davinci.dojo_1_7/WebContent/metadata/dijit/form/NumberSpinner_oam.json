@@ -5,18 +5,15 @@
     "version": "1.0",
     "require": [
         {
-            "type": "javascript",
-            "src": "dojo/dojo.js",
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/NumberSpinner",
             "$library": "dojo"
-        },
-        {
-            "type": "javascript",
-            "$text": "dojo.require('dijit.form.NumberSpinner');"
         }
     ],
     "library": {
         "dojo": {
-            "src": "../../../"
+            "src": "../../../dojo/dojo.js"
         }
     },
     "property": {
@@ -31,7 +28,7 @@
         "value": {
             "datatype": "string",
             "title": "Value",
-            "defaultValue":"0"
+            "defaultValue": "0"
         },
         "tabIndex": {
             "datatype": "string",

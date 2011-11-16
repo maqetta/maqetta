@@ -5,23 +5,20 @@
     "version": "1.0",
     "require": [
         {
-            "type": "javascript",
-            "src": "dojo/dojo.js",
-            "$library": "dojo"
-        },
-        {
             "type": "css",
             "src": "dojo/resources/dojo.css",
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "$text": "dojo.require('dijit.form.Form');"
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/Form",
+            "$library": "dojo"
         }
     ],
     "library": {
         "dojo": {
-            "src": "../../../"
+            "src": "../../../dojo/dojo.js"
         }
     },
     "property": {
@@ -59,15 +56,15 @@
         },
         "accept-charset": {
             "datatype": "string",
-             "description": "List of supported charsets. - not used in test files",
+            "description": "List of supported charsets. - not used in test files",
             "title": "Accept Charset",
-            "hidden":true
+            "hidden": true
         },
         "accept": {
             "datatype": "string",
-             "description": "List of MIME types for file upload. - not used in test files",
+            "description": "List of MIME types for file upload. - not used in test files",
             "title": "Accept",
-            "hidden":true
+            "hidden": true
         },
         "target": {
             "datatype": "string",

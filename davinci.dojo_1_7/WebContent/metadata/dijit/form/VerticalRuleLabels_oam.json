@@ -5,27 +5,26 @@
     "version": "1.0",
     "require": [
         {
-            "type": "javascript",
-            "src": "dojo/dojo.js",
-            "$library": "dojo"
-        },
-        {
             "type": "css",
             "src": "dojo/resources/dojo.css",
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "$text": "dojo.require('dijit.form.VerticalSlider');"
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/VerticalSlider",
+            "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "$text": "dojo.require('dijit.form.VerticalRuleLabels');"
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/VerticalRuleLabels",
+            "$library": "dojo"
         }
     ],
     "library": {
         "dojo": {
-            "src": "../../../"
+            "src": "../../../dojo/dojo.js"
         }
     },
     "property": {

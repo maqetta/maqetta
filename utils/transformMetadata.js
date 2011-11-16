@@ -94,121 +94,218 @@ function enumerateDirSync(dir, filter, onFile, onEnd) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
 function parseMetadataDir(dir) {
-   // read in Dojo descriptor file
-   var descriptorPath = path.join(dir, "widgets.json");
-   var data = fs.readFileSync(descriptorPath, "utf8");
-   descriptor = jsonParse(data, descriptorPath);
-   
-   // get params
-   var pName,
-       pLongName,
-       pVersion;
-   for (var i = 3; i < process.argv.length; i++) {
-       var item = process.argv[i];
-       var parts = item.split("=");
-       switch (parts[0]) {
-           case "--name":
-               pName = parts[1];
-               break;
-           case "--longname":
-               pLongName = parts[1];
-               break;
-           case "--version":
-               pVersion = parts[1];
-               break;
-       }
-   }
-   if (!pName || !pLongName || !pVersion) {
-       util.log("Usage: node transformDojoMetadata.js metadataDir --name=NAME --longname=LONGNAME --version=1.0");
-       process.exit(1);
-   }
-   
-   var newDescriptor = {
-       name: pName,
-       longName: pLongName,
-       version: pVersion,
-       categories: {},
-       widgets: []
-   };
-   
-   descriptor.forEach(function(category) {
-       var categoryNickname = getCategoryName(category.category),
-           cat;
-       if (newDescriptor.categories[categoryNickname]) {
-           // category already exists -- does it have same widgetClass?
-           cat = newDescriptor.categories[categoryNickname];
-           if (category.widgetClass !== cat.widgetClass) {
-               categoryNickname += "-" + category.widgetClass.toLowerCase();
-               cat = newDescriptor.categories[categoryNickname] = {};
-           }
-       } else {
-           cat = newDescriptor.categories[categoryNickname] = {};
-       }
-       
-       cat.name = category.category;
-       delete category.category;
-       if (category.description) {
-           cat.description = category.description;
-           delete category.description;
-       }
-       if (category.widgetClass) {
-           cat.widgetClass = category.widgetClass;
-           delete category.widgetClass;
-       }
-       for (var p in category) if (category.hasOwnProperty(p)) {
-           if (p !== "items") {
-               util.debug("ERROR: unhandled category property: " + p);
+   // read in widget metadata files
+   enumerateDirSync(dir,
+       /.*_oam.json$/,
+       function onFile(filepath) {
+           var data = fs.readFileSync(filepath, "utf8");
+           handleMetadataFile(filepath, data);
+       },
+       function onEnd() {
+           // write out new metadata files for each widget
+           for (var metadataPath in metadataFiles) if (metadataFiles.hasOwnProperty(metadataPath)) {
+               var md = metadataFiles[metadataPath];
+
+               // create new object, with specific properties order
+               var order = [
+                   "id",
+                   "name",
+                   "spec",
+                   "version",
+                   "sandbox",
+                   "require",
+                   "library",
+                   "property",
+                   "childProperties",
+                   "content",
+                   "javascript"
+               ];
+               var newMd = {};
+               order.forEach(function(prop) {
+                   if (md[prop]) {
+                       newMd[prop] = md[prop];
+                   }
+                   delete md[prop];
+               });
+               
+               // don't care about "xmlns" in JSON file
+               delete md.xmlns;
+               
+               // check if any props still left in old metadata object
+               for (var p in md)  if (md.hasOwnProperty(p)) {
+                   debug("ERROR: unhandled property: " + p, metadataPath);
+               }
+               
+               fs.writeFile(metadataPath, JSON.stringify(newMd, null, "    "), "utf8", function(err) {
+                   if (err) throw err;
+               });
            }
        }
-       
-       category.items.forEach(function(item) {
-           var newItem = {};
-           if (item.name) {
-               newItem.name = item.name;
-               delete item.name;
-           }
-           if (item.description) {
-               newItem.description = item.description;
-               delete item.description;
-           }
-           if (item.type) {
-               newItem.type = item.type;
-               delete item.type;
-           }
-           newItem.category = categoryNickname;
-           for (var q in item) if (item.hasOwnProperty(q)) {
-               newItem[q] = item[q];
-           }
-           newDescriptor.widgets.push(newItem);
-       });
-   });
-   
-   // write out new widgets.json
-   fs.writeFile(descriptorPath, JSON.stringify(newDescriptor, null, "    "), "utf8", function(err) {
-       if (err) throw err;
-   });
-   // util.log(JSON.stringify(newDescriptor, null, "    "));
+   );
 }
 
-function getCategoryName(name) {
-   switch (name.toLowerCase()) {
-       case "dojo containers":
-           return "containers";
-       case "dojo controls":
-           return "controls";
-       case "untested dojo&html":
-           return "untested";
-       case "html":
-       case "jquery ui":
-       case "yui":
-           return name.toLowerCase().replace(/\s/g, "-");
-       case "lotus oneui":
-           return "oneui";
-   }
-   util.debug("ERROR: unhandled category name: " + name.toLowerCase());
-   return name.toLowerCase();
+function handleMetadataFile(filepath, data) {
+    if (path.basename(filepath).charAt(0) === "_") {
+        debug("WARNING: this metadata file should be removed", filepath);
+    }
+    
+    // store object
+    var md = metadataFiles[filepath] = jsonParse(data, filepath);
+    
+    if (md.require && md.require.length) {
+        var newReq = [];
+
+        md.require.forEach(function(r) {
+            if (r.type !== 'javascript') {
+                newReq.push(r);
+                return;
+            }
+
+            if (r.src && r.src.indexOf('dojo/dojo.js') !== -1) {
+                md.library.dojo.src += r.src;
+                return;
+            }
+
+            if (r.$text) {
+                var m = r.$text.match(/dojo\.require\(['"]([^'"]+)['"]\)/);
+                if (! m || ! m[1]) {
+                    debug("ERROR: match for dojo.require failed (text = " + r.$text + ")");
+                }
+                delete r.$text;
+                r.type = 'javascript-module';
+                r.format = 'amd';
+                r.src = m[1].replace(/\./g, '/'); // module id
+                r.$library = 'dojo';
+            }
+
+            newReq.push(r);
+        });
+
+        md.require = newReq;
+    }
 }
+
+
+
+
+
+// function parseMetadataDir(dir) {
+//    // read in Dojo descriptor file
+//    var descriptorPath = path.join(dir, "widgets.json");
+//    var data = fs.readFileSync(descriptorPath, "utf8");
+//    descriptor = jsonParse(data, descriptorPath);
+   
+//    // get params
+//    var pName,
+//        pLongName,
+//        pVersion;
+//    for (var i = 3; i < process.argv.length; i++) {
+//        var item = process.argv[i];
+//        var parts = item.split("=");
+//        switch (parts[0]) {
+//            case "--name":
+//                pName = parts[1];
+//                break;
+//            case "--longname":
+//                pLongName = parts[1];
+//                break;
+//            case "--version":
+//                pVersion = parts[1];
+//                break;
+//        }
+//    }
+//    if (!pName || !pLongName || !pVersion) {
+//        util.log("Usage: node transformDojoMetadata.js metadataDir --name=NAME --longname=LONGNAME --version=1.0");
+//        process.exit(1);
+//    }
+   
+//    var newDescriptor = {
+//        name: pName,
+//        longName: pLongName,
+//        version: pVersion,
+//        categories: {},
+//        widgets: []
+//    };
+   
+//    descriptor.forEach(function(category) {
+//        var categoryNickname = getCategoryName(category.category),
+//            cat;
+//        if (newDescriptor.categories[categoryNickname]) {
+//            // category already exists -- does it have same widgetClass?
+//            cat = newDescriptor.categories[categoryNickname];
+//            if (category.widgetClass !== cat.widgetClass) {
+//                categoryNickname += "-" + category.widgetClass.toLowerCase();
+//                cat = newDescriptor.categories[categoryNickname] = {};
+//            }
+//        } else {
+//            cat = newDescriptor.categories[categoryNickname] = {};
+//        }
+       
+//        cat.name = category.category;
+//        delete category.category;
+//        if (category.description) {
+//            cat.description = category.description;
+//            delete category.description;
+//        }
+//        if (category.widgetClass) {
+//            cat.widgetClass = category.widgetClass;
+//            delete category.widgetClass;
+//        }
+//        for (var p in category) if (category.hasOwnProperty(p)) {
+//            if (p !== "items") {
+//                util.debug("ERROR: unhandled category property: " + p);
+//            }
+//        }
+       
+//        category.items.forEach(function(item) {
+//            var newItem = {};
+//            if (item.name) {
+//                newItem.name = item.name;
+//                delete item.name;
+//            }
+//            if (item.description) {
+//                newItem.description = item.description;
+//                delete item.description;
+//            }
+//            if (item.type) {
+//                newItem.type = item.type;
+//                delete item.type;
+//            }
+//            newItem.category = categoryNickname;
+//            for (var q in item) if (item.hasOwnProperty(q)) {
+//                newItem[q] = item[q];
+//            }
+//            newDescriptor.widgets.push(newItem);
+//        });
+//    });
+   
+//    // write out new widgets.json
+//    fs.writeFile(descriptorPath, JSON.stringify(newDescriptor, null, "    "), "utf8", function(err) {
+//        if (err) throw err;
+//    });
+//    // util.log(JSON.stringify(newDescriptor, null, "    "));
+// }
+
+// function getCategoryName(name) {
+//    switch (name.toLowerCase()) {
+//        case "dojo containers":
+//            return "containers";
+//        case "dojo controls":
+//            return "controls";
+//        case "untested dojo&html":
+//            return "untested";
+//        case "html":
+//        case "jquery ui":
+//        case "yui":
+//            return name.toLowerCase().replace(/\s/g, "-");
+//        case "lotus oneui":
+//            return "oneui";
+//    }
+//    util.debug("ERROR: unhandled category name: " + name.toLowerCase());
+//    return name.toLowerCase();
+// }
 
 
 

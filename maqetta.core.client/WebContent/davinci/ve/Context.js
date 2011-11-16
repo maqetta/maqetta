@@ -1860,7 +1860,10 @@ dojo.declare("davinci.ve.Context", null, {
 					data.modules.push(module);
 				});
 
-				//TODO: grab AMD dependencies
+				// grab AMD-style dependencies
+				text.replace(/require\(\[["']([^'"]+)["']\]\)/g, function(match, module) {
+					data.modules.push(module);
+				});
 
 				data.scriptAdditions=scriptTag;
 			}
@@ -2213,20 +2216,25 @@ dojo.declare("davinci.ve.Context", null, {
 			};
 
 			if (isDojoJS) {
-				// XXX Nasty nasty nasty special case for dojo attribute thats
-				// required. Need to generalize in the metadata somehow.
+				// special case for dojo.js to provide config attribute
+				// XXX TODO: Need to generalize in the metadata somehow.
 				var fullPath = new davinci.model.Path(system.resource.getRoot().getPath());
 				var urlPath = new davinci.model.Path(url);
 				var relativeUrl = urlPath.relativeTo(fullPath);
 
 				var config = {
+					async: true,
 					parseOnLoad: true,
 					modulePaths: { widgets: this._dojoModulePath + "/" + this._getWidgetFolder() }
 				};
 				dojo.mixin(config, this._configProps);
 				this.addHeaderScript(url, {
-					"data-dojo-config": JSON.stringify(config).slice(1, -1)
+					"data-dojo-config": JSON.stringify(config).slice(1, -1).replace(/"/g, "'")
 				});
+
+				// TODO: these two dependencies should be part of widget or library metadata
+				this.addJavaScriptModule("dijit/dijit", true, true);
+				this.addJavaScriptModule("dojo/parser", true, true);
 			}else{
 				this.addHeaderScript(url);
 			}

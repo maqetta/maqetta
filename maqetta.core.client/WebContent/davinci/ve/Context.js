@@ -2229,7 +2229,7 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 		if (doUpdateModel) {
 			//TODO: keep all requires in a single statement?
-			this.addHeaderScriptSrc('require(["' + mid + '"]);');
+			this.addHeaderScriptText('require(["' + mid + '"]);');
 		}
 	},
 
@@ -2237,7 +2237,7 @@ dojo.declare("davinci.ve.Context", null, {
 		/* run the requires if there is an iframe */
 		if(!skipDomUpdate) { this.getGlobal()['eval'](text); }
 		if (doUpdateModel) {
-			this.addHeaderScriptSrc(text);
+			this.addHeaderScriptText(text);
 		}
 	},
 
@@ -2282,7 +2282,7 @@ dojo.declare("davinci.ve.Context", null, {
 
 
 	// add JS to HEAD
-	addHeaderScriptSrc: function(text){
+	addHeaderScriptText: function(text){
 		text = '\n' + text;
 		if (this._scriptAdditions) {
 			var scriptText = this._scriptAdditions.find({elementType: 'HTMLText'}, true);

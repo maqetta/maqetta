@@ -1,13 +1,17 @@
-@import url("iphone.css"");
+@import url("iphone.css");
+/* dojox.mobile.View */
 
+/* dojox.mobile.Heading */
 .dj_tablet .mblHeading {
 	background-color: #889BB3;
-	background: -webkit-gradient(linear, left top, left bottom, from(#F3F4F6), to(#A7ABB8));
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#F3F4F6), to(#A7ABB8));
 	border-top: 1px solid #FEFEFE;
 	border-bottom: 1px solid #787E8F;
 	color: #70777F;
 	text-shadow: rgba(256,256,256,0.6) 0px 1px 0px;
 }
+
+/*Headings and Button styles are overridden in Tooltips*/
 .dj_tablet .mblTooltip .mblHeading { 
 	position: relative;
 	margin: 0px;
@@ -51,14 +55,16 @@
 	-moz-border-radius: 5px;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#686F80), to(#000924), color-stop(0.5, #000B29));
 }
+
+/* Heading Arrow Button */
 .dj_tablet .mblArrowButtonHead {
 	border-color: #4D4E50;
-	background: -webkit-gradient(linear, left top, right bottom, from(#B1B5BB), to(#6A727D));
+	background-image: -webkit-gradient(linear, left top, right bottom, from(#B1B5BB), to(#6A727D));
 }
 .dj_tablet .mblArrowButtonBody {
 	border-color: #C0C0C0;
 	background-color: #8B919A;
-	background: -webkit-gradient(linear, left top, left bottom, from(#B1B5BB), to(#6A727D));
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#B1B5BB), to(#6A727D));
 	-webkit-tap-highlight-color: rgba(255,255,255,0);
 	text-shadow: rgba(0,0,0,0.6) 0px -1px 0px;
 }
@@ -68,15 +74,22 @@
 .dj_tablet .mblArrowButtonSelected .mblArrowButtonBody {
 	background: -webkit-gradient(linear, left top, left bottom, from(#9DA0A3), to(#43484F));
 }
+
+/* dojox.mobile.RoundRect */
 .dj_tablet .mblRoundRect {
 	margin: 7px 30px 30px 30px;
 }
 .dj_tablet .mblHeading + .mblRoundRect {
 	margin-top: 30px;
 }
+
+/* dojox.mobile.EdgeToEdgeCategory */
+/* dojox.mobile.RoundRectCategory */
 .dj_tablet .mblRoundRectCategory {
 	margin: 18px 0px 0px 41px;
 }
+
+/* dojox.mobile.RoundRectList */
 .dj_tablet .mblRoundRectList {
 	margin: 7px 30px 30px 30px;
 }
@@ -86,21 +99,34 @@
 .dj_tablet .mblHeading + .mblRoundRectList {
 	margin-top: 30px;
 }
+
+/* dojox.mobile.EdgeToEdgeList */
+/* dojox.mobile.ListItem */
+/* Switch */
+/* Icon Container */
+/* Icon Content Heading */
+/* dojox.mobile.Button */
+/* Tab Container */
+/* Progress Indicator */
+
+/* dojox.mobile.TabBar */
 .dj_tablet .mblTabPanelHeader {
 	background-color: #889BB3;
-	background: -webkit-gradient(linear, left top, left bottom, from(#F3F4F6), to(#A7ABB8));
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#F3F4F6), to(#A7ABB8));
 	border-top: 1px solid #FEFEFE;
 	border-bottom: 1px solid #787E8F;
 	color: #70777F;
 	text-shadow: rgba(256,256,256,0.6) 0px 1px 0px;
 }
+
+/* dojox.mobile.TabBarButton */
 .dj_tablet .mblTabButton {
 	font-weight: bold;
 	color: #70777F;
 	text-shadow: none;
 	border-color: silver;
 	background-color: #CCCED6;
-	background: -webkit-gradient(linear, left top, left bottom, from(#F3F4F6), to(#A7ABB8));
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#F3F4F6), to(#A7ABB8));
 }
 .dj_tablet .mblTabPanelHeader .mblTabButton.mblTabButtonSelected {
 	color: white;
@@ -108,13 +134,18 @@
 	background-color: #8B919A;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#B1B5BB), to(#6A727D));
 }
+
+/* dojox.mobile.ToolBarButton */
 .dj_tablet .mblToolBarButton {
 	text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0px;
 	border: 1px inset silver;
 }
+
+/* Default Button Colors */
 .dj_tablet .mblColorDefault {
 	background-color: #8B919A;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#B1B5BB), to(#6A727D));
+
 }
 .dj_tablet .mblColorDefaultSel {
 	background-color: #515761;

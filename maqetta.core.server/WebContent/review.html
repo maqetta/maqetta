@@ -4,7 +4,7 @@
     <title id="title_id"></title>
 	<meta charset="utf-8" />
 	<meta http-equiv="Cache-Control" CONTENT="no-store, no-cache, must-revalidate">
-	<meta http-equiv="Cache-Control" CONTENT="post-check=0, pre-check=0", FALSE">
+	<meta http-equiv="Cache-Control" CONTENT="post-check=0, pre-check=0">
 	<meta http-equiv="Pragma" CONTENT="no-cache">
     <style type="text/css">
 		@import url("app/davinci/workbench.css?@revision@");
@@ -64,7 +64,7 @@
 				    run();
 				}
 
-            function run(){
+            function run() {
             	davinci.Runtime.commenting_designerName = dojo.cookie("davinci_designer");
 				davinci.Runtime.commenting_designerEmail = dojo.cookie("davinci_designer_email");
             	davinci.Runtime.commenting_openFile = dojo.cookie("davinci_file");
@@ -95,8 +95,6 @@
                     davinci.Runtime.isLocalInstall = true;
                 }
 
-//				Did not see any usage
-//				davinci.ve.metadata.initMetadataProviders();
 				davinci.Runtime.subscribe("/davinci/ui/selectionChanged",davinci.Runtime._selectionChanged);
 				davinci.Workbench.runComment();
 				// intercept BS key - prevent browser from navigating backwards
@@ -122,7 +120,7 @@
 						});
 					}
 				}
-			});
+			}
 
 			dojo.addOnUnload(davinci.Runtime.unload);
 		});

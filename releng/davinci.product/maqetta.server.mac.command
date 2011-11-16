@@ -5,7 +5,7 @@ print_help() {
     echo ""
     echo "Options:"
     echo " -p, --port <port>           server listens on port # <port>; defaults to 50000"
-    echo " -m, --smtpServer <hostname> provide the hostname of an SMTP server; defaults to localhost
+    echo " -m, --smtpServer <hostname> provide the hostname of an SMTP server; defaults to localhost"
     echo " -c, --consolePort <port>    enable console, listening on port number <port>"
     echo " -h, --help                  show this message"
 }

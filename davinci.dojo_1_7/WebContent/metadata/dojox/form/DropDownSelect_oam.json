@@ -5,11 +5,6 @@
     "version": "1.0",
     "require": [
         {
-            "type": "javascript",
-            "src": "dojo/dojo.js",
-            "$library": "dojo"
-        },
-        {
             "type": "css",
             "src": "dojo/resources/dojo.css",
             "$library": "dojo"
@@ -20,13 +15,15 @@
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "$text": "dojo.require('dojox.form.DropDownSelect');"
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/form/DropDownSelect",
+            "$library": "dojo"
         }
     ],
     "library": {
         "dojo": {
-            "src": "../../../"
+            "src": "../../../dojo/dojo.js"
         }
     },
     "property": {

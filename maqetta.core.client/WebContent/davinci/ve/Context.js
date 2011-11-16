@@ -15,7 +15,7 @@ dojo.declare("davinci.ve.Context", null, {
 
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit/dijit",
-	_configProps: {},
+	_configProps: {}, //FIXME: shouldn't be shared on prototype if we're going to use this for dynamic properties
 
 /*=====
 	// keeps track of widgets-per-library loaded in context
@@ -2243,7 +2243,7 @@ dojo.declare("davinci.ve.Context", null, {
 
 	addJavaScriptModule: function(mid, doUpdateModel, skipDomUpdate) {
 		if (!skipDomUpdate) {
-			this.getGlobal().require([mid]);
+			this.getGlobal().require([mid]); //FIXME: needs to pass in async callback
 		}
 		if (doUpdateModel) {
 			//TODO: keep all requires in a single statement?

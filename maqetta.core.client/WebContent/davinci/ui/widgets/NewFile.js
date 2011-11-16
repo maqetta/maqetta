@@ -112,15 +112,17 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 	},
 	
 	_updateFields : function(){
+		
 		var resources = this.fileTree.get('selectedItems');
 		var resource = (resources!=null && resources.length > 0)? resources[0] : null;
+		var projectNameLength = ("./" + davinci.Runtime.getProject()).length;
 		if(resource==null){
-			this.fileDialogParentFolder.set( 'value', this._getForcedRootAttr().getName());
+			this.fileDialogParentFolder.set( 'value', this._getForcedRootAttr().getPath().substring(projectNameLength));
 		}else if(resource.elementType=="Folder"){
-			this.fileDialogParentFolder.set( 'value', resource.getPath());
+			this.fileDialogParentFolder.set( 'value', resource.getPath().substring(projectNameLength));
 		}else{
 			this.fileDialogFileName.set( 'value', resource.getName());
-			this.fileDialogParentFolder.set( 'value', resource.parent.getPath());
+			this.fileDialogParentFolder.set( 'value', resource.parent.getPath().substring(projectNameLength));
 		}	
 	},
 	
@@ -134,7 +136,7 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 			valid = valid && !parent.readOnly();
 		}
 		
-		var resource = system.resource.findResource(this.fileDialogParentFolder.get('value') + "/" + this.fileDialogFileName.get( 'value'));
+		var resource = system.resource.findResource( davinci.Runtime.getProject() + "/" + this.fileDialogParentFolder.get('value') + "/" + this.fileDialogFileName.get( 'value'));
 	
 		if(resource!=null){
 			valid = valid && !resource.readOnly();
@@ -144,7 +146,9 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 	},
 	
 	_okButton : function(){
-		this.value = this.fileDialogParentFolder.get('value') + "/" + this.fileDialogFileName.get( 'value');
+		var fullPath = (new davinci.model.Path(davinci.Runtime.getProject())).append(this.fileDialogParentFolder.get('value')).append(this.fileDialogFileName.get( 'value'));
+		
+		this.value =  fullPath.toString();
 		this.cancel = false;
 		this.onClose();
 		

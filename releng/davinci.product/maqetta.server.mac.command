@@ -5,6 +5,7 @@ print_help() {
     echo ""
     echo "Options:"
     echo " -p, --port <port>           server listens on port # <port>; defaults to 50000"
+    echo " -m, --smtpServer <hostname> provide the hostname of an SMTP server; defaults to localhost
     echo " -c, --consolePort <port>    enable console, listening on port number <port>"
     echo " -h, --help                  show this message"
 }
@@ -12,12 +13,17 @@ print_help() {
 # defaults
 port=50000
 consolePort="-console"
+smtpServer="localhost"
 
 # parse options
 while [ "${1+isset}" ]; do
     case "$1" in
         -p|--port)
             port=$2
+            shift 2
+            ;;
+        -m|--smtpServer)
+            smtpServer=$2
             shift 2
             ;;
         -c|--consolePort)
@@ -76,4 +82,4 @@ echo Using directory: "$absusersdir"
 
 echo Start your browser at: http://localhost:$port/maqetta
 mkdir -p "$absusersdir"
-java -Dorg.eclipse.equinox.http.jetty.http.port=$port  -Dmaqetta.localInstall=false "-Dmaqetta.baseDirectory=$absusersdir" -DloginUrl="/maqetta/welcome"  -jar "$jarFilePath" $consolePort -noExit
+java -Dorg.eclipse.equinox.http.jetty.http.port=$port -Dmaqetta.localInstall=false "-Dmaqetta.baseDirectory=$absusersdir" -DloginUrl="/maqetta/welcome" -Dsmtp.mailServer=$smtpServer -jar "$jarFilePath" $consolePort -noExit

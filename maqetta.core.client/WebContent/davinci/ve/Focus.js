@@ -1,14 +1,10 @@
-dojo.provide("davinci.ve.Focus");
-
-dojo.require("dijit._Widget");
-dojo.require("dojo.dnd.Mover");
-
-dojo.require("dijit.InlineEditBox"); // should be inferred by other dependencies?
-dojo.require("dijit.Menu");
-dojo.require("davinci.ve.metadata");
-//dojo.require("davinci.ve.commands.ModifyCommand");
-
-(function(){
+define([
+    "dojo/_base/declare",
+	"dijit/_WidgetBase",
+	"dojo/dnd/Mover",
+	"davinci/ve/metadata"
+],
+function(declare, _WidgetBase, Mover, metadata){
     
 var LEFT = 0,
     RIGHT = 1,
@@ -17,18 +13,20 @@ var LEFT = 0,
     LEFT_TOP = 4,
     LEFT_BOTTOM = 5,
     RIGHT_TOP = 6,
-    RIGHT_BOTTOM = 7;
+    RIGHT_BOTTOM = 7,
+	DRAG_NOB = 8;	// Overlay nob that follows mouse during drag operation
 
-dojo.declare("davinci.ve.Focus", dijit._Widget, {
+return declare("davinci.ve.Focus", _WidgetBase, {
 
     size: 6,
+    baseClass: "maqFocus",
 
     postCreate: function(){
         if(this.size < 2){
             this.size = 2;
         }
 
-        dojo.style(this.domNode, {position: "absolute", zIndex: 1000, display: "none"}); // FIXME: move to CSS
+        dojo.style(this.domNode, {position: "absolute", display: "none"}); // FIXME: use CSS class to change display property
 
         this._frames = [];
         for(var i = 0; i < 4; i++){
@@ -49,7 +47,7 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
         var cursors = ["w-resize", "e-resize", "n-resize", "s-resize",
             "nw-resize", "sw-resize", "ne-resize", "se-resize"];
         var border = (dojo.isIE ? 0 : 2);
-        for(var i = 0; i < 8; i++){
+        for(var i = 0; i < 9; i++){
             var nob = dojo.create("div", {"class": "editFocusNob", style: {
                 position: "absolute",
                 width: this.size - border + "px",
@@ -61,6 +59,9 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
             this.connect(nob, "onmousedown", "onMouseDown");
             this.connect(nob, "onmouseup", "onMouseUp");
         }
+        this._nobs[DRAG_NOB].style.display = 'none';	// Becomes visible upon mousedown when dragging frame
+        this._nobs[DRAG_NOB].style.background = 'transparent';
+        this._nobs[DRAG_NOB].style.border = 'none';
         
         this._nobs[LEFT].style.left =
             this._nobs[TOP].style.top =
@@ -70,6 +71,11 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
             this._nobs[RIGHT_TOP].style.top = -this.size + "px";
         this._nobIndex = -1;
 
+<<<<<<< HEAD
+=======
+        // _box holds resize values during dragging assuming no shift-key constraints
+        // _constrained holds resize values after taking into account shift-key constraints
+>>>>>>> refs/heads/master
         this._box = {l: 0, t: 0, w: 0, h: 0};
 
         this._resizable = {width: true, height: true};
@@ -97,11 +103,39 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
         b.l = box.l;
         b.t = box.t;
 
-        dojo.style(this.domNode, {left: b.l + "px", top: b.t + "px"});
         var position_prop;
         if(this._selectedWidget){
             var position_prop = dojo.style(this._selectedWidget.domNode,"position");
         }
+<<<<<<< HEAD
+=======
+        var absolute = (position_prop=="absolute");
+
+        // Constrained movement in x or y if shift key is down
+        var domNode = this._selectedWidget ? this._selectedWidget.domNode : null;
+        if(absolute && domNode && event && event.shiftKey){
+            var widgetLeft = domNode.offsetLeft;
+            var widgetTop = domNode.offsetTop;
+            var node = domNode.offsetParent;
+            while(node && node.tagName != 'BODY'){
+            	widgetLeft += node.offsetLeft;
+            	widgetTop += node.offsetTop;
+            	node = node.offsetParent;
+            }
+            if(Math.abs(b.l - widgetLeft) >= Math.abs(b.t - widgetTop)){
+            	b.t = widgetTop;
+            }else{
+            	b.l = widgetLeft;
+            }
+        }
+
+        dojo.style(this.domNode, {left: b.l + "px", top: b.t + "px"});
+
+        var currentParent = null;
+        if(this._selectedWidget){
+        	currentParent = this._selectedWidget.getParent();
+        }
+>>>>>>> refs/heads/master
         if(this._selectedWidget && event){
     		var parentListDiv = cp.parentListDivGet();
     		if(!parentListDiv){// Make sure there is a DIV into which list of parents should be displayed
@@ -243,7 +277,12 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
 
     showInline: function(widget) {
 
+<<<<<<< HEAD
         this._inline = davinci.ve.metadata.queryDescriptor(widget.type, "inlineEdit");
+=======
+        this._selectedWidget = widget;
+        this._inline = metadata.queryDescriptor(widget.type, "inlineEdit");
+>>>>>>> refs/heads/master
         if (this._inline && this._inline.show) {
             this._inline.show(widget.id);
         }
@@ -296,13 +335,14 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
         if(dojo.indexOf(this._frames, event.target) >= 0){
             this._nobIndex = -1;
             if(this._op && this._op.move){
-                new dojo.dnd.Mover(this.domNode, event, this);
+                new Mover(this.domNode, event, this);
             }
             dojo.stopEvent(event);
+            
         }else{
             this._nobIndex = dojo.indexOf(this._nobs, event.target);
             if(this._nobIndex >= 0){
-                new dojo.dnd.Mover(event.target, event, this);
+                new Mover(event.target, event, this);
                 switch(this._nobIndex){
                 case LEFT:
                 case LEFT_BOTTOM:
@@ -329,6 +369,7 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
             clearTimeout(this._updateTarget);
             delete this._updateTarget;
         }
+        this._nobs[DRAG_NOB].style.display = 'none';
         if(this._mover){
             this._mover = undefined;
             switch(this._nobIndex){
@@ -357,6 +398,17 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
 
     onMove: function(mover, box, event){
         if(this._nobIndex < 0){ // frame
+   
+            // Turn on visibility of DRAG_NOB and set its position
+            // at the current mouse position. The DRAG_NOB will always track the
+            // current mouse location, whereas the current frame DIVs might
+            // jump around due to constraint logic if shift key is down
+            // which would prevent it from noticing the mouseUp event.
+            var drag_nob_style = this._nobs[DRAG_NOB].style;
+            drag_nob_style.display = '';
+            drag_nob_style.left = (event.pageX - this.domNode.offsetLeft - this.size/2) + 'px';
+            drag_nob_style.top = (event.pageY - this.domNode.offsetTop - this.size/2) + 'px';
+
             this.move(box, event);
             this._client = {x: event.clientX, y: event.clientY};
             if(!this._updateTarget){
@@ -458,6 +510,7 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
         this.domNode.appendChild(contexDiv);
 
     },
+    //FIXME: should this code be delegated to themeEditor somehow?
     _createSubwidgetList: function() {
         //if(this._cm)return;
 
@@ -630,4 +683,4 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
     }
 });
 
-})();
+});

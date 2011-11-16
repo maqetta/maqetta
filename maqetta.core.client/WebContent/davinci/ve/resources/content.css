@@ -3,11 +3,10 @@
 
 .editFocusFrame {
 	background-image: url('images/slant.gif'); 
-    position: "absolute";
     opacity: 0.5;
     cursor: "move";
-	
 }
+
 .editFocusNob {
 	background-color: white;
 	border: 1px solid #AAA;

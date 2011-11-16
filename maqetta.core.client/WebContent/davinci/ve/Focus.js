@@ -30,7 +30,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
         this._frames = [];
         for(var i = 0; i < 4; i++){
-            var style = {position: "absolute", opacity: 0.5, /*overflow: "hidden", */cursor: "move"}; // move to CSS
+            var style = {position: "absolute"}; // move to CSS
             dojo.mixin(style, i < 2 ? {width: this.size + "px", height: this.size * 2 + "px"} : {height: this.size + "px"});
             var frame = dojo.create("div", {"class": "editFocusFrame", style: style}, this.domNode);
             this._frames.push(frame);

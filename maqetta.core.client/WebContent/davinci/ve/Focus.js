@@ -19,13 +19,14 @@ var LEFT = 0,
 return declare("davinci.ve.Focus", _WidgetBase, {
 
     size: 6,
+    baseClass: "maqFocus",
 
     postCreate: function(){
         if(this.size < 2){
             this.size = 2;
         }
 
-        dojo.style(this.domNode, {position: "absolute", zIndex: 1000, display: "none"}); // FIXME: move to CSS
+        dojo.style(this.domNode, {position: "absolute", display: "none"}); // FIXME: use CSS class to change display property
 
         this._frames = [];
         for(var i = 0; i < 4; i++){

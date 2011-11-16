@@ -2234,11 +2234,9 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	addJavaScriptModule: function(mid, doUpdateModel, skipDomUpdate) {
-		if (! skipDomUpdate) {
-			this.getGlobal()['eval']("dojo.require('"+mid.replace(/\//g,".")+"');");
+		if (!skipDomUpdate) {
+			this.getGlobal().require([mid]);
 		}
-		// FIXME ASYNC
-		//if(!skipDomUpdate) { this.getGlobal()['require']([mid], ??); }
 		if (doUpdateModel) {
 			//TODO: keep all requires in a single statement?
 			this.addHeaderScriptSrc('require(["' + mid + '"]);');

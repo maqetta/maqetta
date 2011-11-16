@@ -47,11 +47,11 @@ dojo.declare("davinci.ve.prefs.HTMLEditPreferences",davinci.workbench.Preference
 	},
 
 	_check: function(widget, checked){
-		widget.attr("checked", checked);
+		widget.set("checked", checked);
 	},
 	
 	save: function(prefs){
-		davinci.ve._preferences = prefs;
+		davinci.ve._preferences = prefs; //FIXME: missing dependency
 	}
 
 });

@@ -1,21 +1,24 @@
-dojo.provide("davinci.ve.Context");
+define([
+    "dojo/_base/declare",
+	"davinci/commands/CommandStack",
+	"davinci/ve/tools/SelectTool",
+	"davinci/ve/widget",
+	"davinci/ve/Focus",
+	"davinci/library",
+	"dojox/html/_base",
+	"preview/silhouetteiframe",
+	"davinci/ve/ChooseParent"
+], function(declare, CommandStack, SelectTool) {
 
-dojo.require("davinci.commands.CommandStack");
-dojo.require("davinci.ve.tools.SelectTool");
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.ve.util");
-dojo.require("davinci.ve.Focus");
-dojo.require("davinci.actions.SelectLayoutAction");
-dojo.require("davinci.library");
-dojo.require("dojox.html._base");
-dojo.require('preview.silhouetteiframe');
-dojo.require('davinci.ve.ChooseParent');
+davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
+var MOBILE_DEV_ATTR = 'data-maqetta-device';
 
-dojo.declare("davinci.ve.Context", null, {
+return declare("davinci.ve.Context", null, {
 
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit/dijit",
 	_configProps: {}, //FIXME: shouldn't be shared on prototype if we're going to use this for dynamic properties
+	_contextCount: 0,
 
 /*=====
 	// keeps track of widgets-per-library loaded in context
@@ -27,7 +30,7 @@ dojo.declare("davinci.ve.Context", null, {
 			args ={};
 		}
 		this._contentStyleSheet = davinci.Workbench.location() + dojo.moduleUrl("davinci.ve", "resources/content.css");
-		this._id = "_edit_context_" + davinci.ve._contextCount++;
+		this._id = "_edit_context_" + this._contextCount++;
 		this._editor = args.editor;
 		this._visualEditor = args.visualEditor;
 		this.widgetHash = {};
@@ -40,8 +43,8 @@ dojo.declare("davinci.ve.Context", null, {
 
 		this.hostNode = this.containerNode;
 
-		this._commandStack = new davinci.commands.CommandStack(this);
-		this._defaultTool = new davinci.ve.tools.SelectTool();
+		this._commandStack = new CommandStack(this);
+		this._defaultTool = new SelectTool();
 
 		this._widgetIds = [];
 		this._objectIds = [];
@@ -207,13 +210,20 @@ dojo.declare("davinci.ve.Context", null, {
 			return;
 		}
 
+		var addToArray = function(array, value){
+			var index = dojo.indexOf(array, value);
+			if(index < 0){
+				array.push(value);
+			}
+		};
+
 		var id = widget.getId();
 		if(id){
-			davinci.ve._add(this._widgetIds, id);
+			addToArray(this._widgetIds, id);
 		}
 		var objectId = widget.getObjectId(widget);
 		if(objectId){
-			davinci.ve._add(this._objectIds, objectId);
+			addToArray(this._objectIds, objectId);
 		}
 
 		// Recurse down widget hierarchy
@@ -230,18 +240,25 @@ dojo.declare("davinci.ve.Context", null, {
 
 	
 	detach: function(widget){
+		var removeFromArray = function(array, value){
+			var index = dojo.indexOf(array, value);
+			if(index >= 0){
+				array.splice(index, 1);
+			}
+		};
+
 		// FIXME: detaching context prevent destroyWidget from working
 		//widget._edit_context = undefined;
 		var id = widget.getId();
 		if(id){
-			davinci.ve._remove(this._widgetIds, id);
+			removeFromArray(this._widgetIds, id);
 		}
 		var objectId = widget.getObjectId();
 		if(objectId){
-			davinci.ve._remove(this._objectIds, objectId);
+			removeFromArray(this._objectIds, objectId);
 		}
 		if (this._selection){
-			davinci.ve._remove(this._selection,widget);
+			removeFromArray(this._selection,widget);
 		}
 
         var library = davinci.ve.metadata.getLibraryForType(widget.type);
@@ -442,7 +459,7 @@ dojo.declare("davinci.ve.Context", null, {
 	 */
 	getMobileDevice: function() {
         var bodyElement = this.getDocumentElement().getChildElement("body");
-        return bodyElement.getAttribute(davinci.ve.Context.MOBILE_DEV_ATTR);
+        return bodyElement.getAttribute(MOBILE_DEV_ATTR);
     },
 
     /**
@@ -454,9 +471,9 @@ dojo.declare("davinci.ve.Context", null, {
     	this.getGlobal()["require"](["dojo/_base/config"]).mblUserAgent = preview.silhouetteiframe.getMobileTheme(device + '.svg');
     	var bodyElement = this.getDocumentElement().getChildElement("body");
         if (! device || device === 'none') {
-            bodyElement.removeAttribute(davinci.ve.Context.MOBILE_DEV_ATTR, device);
+            bodyElement.removeAttribute(MOBILE_DEV_ATTR, device);
         } else {
-            bodyElement.addAttribute(davinci.ve.Context.MOBILE_DEV_ATTR, device);
+            bodyElement.addAttribute(MOBILE_DEV_ATTR, device);
         }
     },
 	
@@ -688,7 +705,7 @@ dojo.declare("davinci.ve.Context", null, {
 		//FIXME: Need to add logic for initial themes and device size.
 		if(newHtmlParams){
 			var modelBodyElement = source.getDocumentElement().getChildElement("body");
-			modelBodyElement.setAttribute(davinci.ve.Context.MOBILE_DEV_ATTR, newHtmlParams.device);
+			modelBodyElement.setAttribute(MOBILE_DEV_ATTR, newHtmlParams.device);
 			modelBodyElement.setAttribute(davinci.preference_layout_ATTRIBUTE, newHtmlParams.flowlayout);
 		}
 
@@ -2468,6 +2485,4 @@ dojo.declare("davinci.ve.Context", null, {
 	}
 });
 
-davinci.ve._contextCount = 0;
-davinci.ve._preferences = {};
-davinci.ve.Context.MOBILE_DEV_ATTR = 'data-maqetta-device';
+});

@@ -10,7 +10,8 @@ dojo.declare("davinci.review.editor.Context", null, {
 
 	_contentStyleSheet: "" + dojo.moduleUrl("davinci.ve", "resources/content.css"),
 	// comma-separated list of modules to load in the iframe
-	_bootstrapModules: "dijit.dijit",
+	_bootstrapModules: "dijit/dijit",
+	_configProps: {},
 
 	constructor: function(args){
 		this._id = "_edit_context_" + davinci.ve._contextCount++;
@@ -69,12 +70,12 @@ dojo.declare("davinci.review.editor.Context", null, {
 
 	getDojo: function(){
 		var win = this.getGlobal();
-		return (win.dojo || dojo);
+		return win.dojo || dojo;
 	},
 
 	getDijit: function(){
 		var win = this.getGlobal();
-		return (win && win.dijit || dijit);
+		return win && win.dijit || dijit;
 	},
 	
 	getFrameNode: function(){
@@ -216,3 +217,5 @@ dojo.declare("davinci.review.editor.Context", null, {
 });
 
 davinci.ve._contextCount = 0;
+davinci.ve._preferences = {};
+davinci.ve.Context.MOBILE_DEV_ATTR = 'data-maqetta-device';

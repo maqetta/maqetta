@@ -23,8 +23,7 @@
      <extension
          point="org.eclipse.equinox.http.registry.servlets">
       <servlet
-            alias="/maqetta"
-         
+            alias="/maqetta"         
             class="maqetta.core.server.standalone.DavinciPageServlet"
             load-on-startup="true">
            </servlet>

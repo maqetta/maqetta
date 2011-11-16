@@ -42,8 +42,7 @@
 
             davinci.Runtime.initialPerspective = "davinci.review.comment";
             
-			dojo.addOnLoad(function()
-			{
+			dojo.addOnLoad(function() {
 			    // Display a warning dialog for unsupported browsers
 				if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5.1)) {
 					var langObj = dojo.i18n.getLocalization("davinci","webContent");
@@ -64,66 +63,66 @@
 				    run();
 				}
 
-            function run() {
-            	davinci.Runtime.commenting_designerName = dojo.cookie("davinci_designer");
-				davinci.Runtime.commenting_designerEmail = dojo.cookie("davinci_designer_email");
-            	davinci.Runtime.commenting_openFile = dojo.cookie("davinci_file");
-				davinci.Runtime.commenting_commentId = dojo.cookie("davinci_commentId");
-				dojo.cookie("davinci_designer", null, {expires: -1});
-				dojo.cookie("davinci_designer_email", null, {expires: -1});
-				dojo.cookie("davinci_file", null, {expires: -1});
-				dojo.cookie("davinci_commentId", null, {expires: -1});
-
-                var userInfo;
-                var result = davinci.Runtime.serverJSONRequest({
-                    url: "cmd/getReviewUserInfo",
-                    sync: true
-                });
-
-                if(!result) return;
-                if (result && result.userName) {
-                    dojo.byId('davinci_user').innerHTML = result.userName;
-	    		 	 davinci.Runtime.userName=result;
-                } else {
-	    				//FIXME: temporary fix for running via file: URLs
-	    			   var langObj = dojo.i18n.getLocalization("davinci","webContent");
-	    		 	   dojo.byId('davinci_user').innerHTML=langObj.maqettaUser;
-                }
-                davinci.Runtime.commenting_reviewerName = result;
-                if (result && result.isLocalInstall) {
-                    //dojo.style(dojo.byId('davinci_user_container'), "visibility", "hidden");
-                    davinci.Runtime.isLocalInstall = true;
-                }
-
-				davinci.Runtime.subscribe("/davinci/ui/selectionChanged",davinci.Runtime._selectionChanged);
-				davinci.Workbench.runComment();
-				// intercept BS key - prevent browser from navigating backwards
-				dojo.connect(dojo.doc.documentElement, "onkeypress", function(e){
-					// If explicitOriginalTarget is <html> element, then no elements have focus
-					var target=e.target;
-					if(target && (target.nodeName=="HTML"||target.nodeName=="BODY") && e.charOrCode==8){
-						dojo.stopEvent(e);
-					}
-				});
-
-
-				if(davinci.Runtime.commenting_openFile){
-					var page = davinci.Runtime.commenting_openFile;
-					var path = new davinci.model.Path(page);
-					var version = path.getSegments()[0];
-					path.removeFirstSegments(1);
-					var node = davinci.review.model.Resource.root.findFile(version, path.toString());
-					if(node) {
-						davinci.Workbench.openEditor({
-							fileName: node,
-							content: node.getText()
-						});
-					}
-				}
-			}
-
-			dojo.addOnUnload(davinci.Runtime.unload);
-		});
+                function run() {
+                    davinci.Runtime.commenting_designerName = dojo.cookie("davinci_designer");
+                    davinci.Runtime.commenting_designerEmail = dojo.cookie("davinci_designer_email");
+                    davinci.Runtime.commenting_openFile = dojo.cookie("davinci_file");
+                    davinci.Runtime.commenting_commentId = dojo.cookie("davinci_commentId");
+                    dojo.cookie("davinci_designer", null, {expires: -1});
+                    dojo.cookie("davinci_designer_email", null, {expires: -1});
+                    dojo.cookie("davinci_file", null, {expires: -1});
+                    dojo.cookie("davinci_commentId", null, {expires: -1});
+    
+                    var userInfo;
+                    var result = davinci.Runtime.serverJSONRequest({
+                        url: "cmd/getReviewUserInfo",
+                        sync: true
+                    });
+    
+                    if(!result) return;
+                    if (result && result.userName) {
+                        dojo.byId('davinci_user').innerHTML = result.userName;
+                         davinci.Runtime.userName=result;
+                    } else {
+                            //FIXME: temporary fix for running via file: URLs
+                           var langObj = dojo.i18n.getLocalization("davinci","webContent");
+                           dojo.byId('davinci_user').innerHTML=langObj.maqettaUser;
+                    }
+                    davinci.Runtime.commenting_reviewerName = result;
+                    if (result && result.isLocalInstall) {
+                        //dojo.style(dojo.byId('davinci_user_container'), "visibility", "hidden");
+                        davinci.Runtime.isLocalInstall = true;
+                    }
+    
+                    davinci.Runtime.subscribe("/davinci/ui/selectionChanged",davinci.Runtime._selectionChanged);
+                    davinci.Workbench.runComment();
+                    // intercept BS key - prevent browser from navigating backwards
+                    dojo.connect(dojo.doc.documentElement, "onkeypress", function(e) {
+                        // If explicitOriginalTarget is <html> element, then no elements have focus
+                        var target=e.target;
+                        if(target && (target.nodeName=="HTML"||target.nodeName=="BODY") && e.charOrCode==8) {
+                            dojo.stopEvent(e);
+                        }
+                    });
+    
+    
+                    if(davinci.Runtime.commenting_openFile) {
+                        var page = davinci.Runtime.commenting_openFile;
+                        var path = new davinci.model.Path(page);
+                        var version = path.getSegments()[0];
+                        path.removeFirstSegments(1);
+                        var node = davinci.review.model.Resource.root.findFile(version, path.toString());
+                        if(node) {
+                            davinci.Workbench.openEditor({
+                                fileName: node,
+                                content: node.getText()
+                            });
+                        }
+                    }
+                } // END function run
+    
+                dojo.addOnUnload(davinci.Runtime.unload);
+            });
 	</script>
   </head>
 

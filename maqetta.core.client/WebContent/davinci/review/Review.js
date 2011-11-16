@@ -25,15 +25,7 @@ dojo.mixin(davinci.Workbench, {
 			new dijit.layout.ContentPane(
 					{
 						id : "editorsWelcomePage",
-						href: "app/davinci/review/resources/welcome_to_maqetta.html"
-//						content: "<div><span id='welcome_page_new_open_container'/></div>\n"+
-//							"<div id='welcome_page_content'>\n"+
-//							"<h1>Welcome to Maqetta Review Board!</h1>\n"+
-//							"<p>You can get started by using the menus at the top/right:</p>\n"+
-//							"<ul class='welcome_page_bullets'>\n"+
-//							"<li>Click on <img src='app/davinci/img/help_menu_image.png'/> for tutorials.</li>\n"+
-//							"</ul>\n"+
-//							"</div>\n"
+						href: "app/review/resources/welcome_to_maqetta.html"
 					});
 		this.showPerspective(perspective);
 		davinci.Runtime.subscribe("/davinci/ui/editorSelected",davinci.Workbench._updateMainToolBar );

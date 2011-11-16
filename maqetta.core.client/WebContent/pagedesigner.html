@@ -19,8 +19,6 @@
     <script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="parseOnLoad: true, modulePaths:{'preview':'../preview', 'system':'../system'}, cacheBust: '@revision@'"></script>
 	<script type="text/javascript">
 		require(["dijit/dijit", "davinci/davinci-common", "davinci/davinci"], function () {
-		    <!-- Globalization -->
-		    //dojo.requireLocalization("", "webContent");//to test "Loading..."
 		    dojo.addOnLoad(function () {
 		      var langObj = dojo.i18n.getLocalization("davinci","webContent");
 		      dojo.byId("davinci_user_welcome").innerHTML = langObj.welcome;
@@ -32,19 +30,19 @@
 		      //var langObj2 = dojo.i18n.getLocalization("","webContent");//to test "Loading..."
 		    });
 		    
-	    	davinci.useAppCache = true; // needed to provide FF "allow" warning
+            davinci.useAppCache = true; // needed to provide FF "allow" warning
 
 			davinci.Runtime.addPlugin( "app/davinci/ui" );
-	    	davinci.Runtime.addPlugin( "app/davinci/de/de" );
+            davinci.Runtime.addPlugin( "app/davinci/de/de" );
 //		//	davinci.Runtime.addPlugin( "app/davinci/cssEdit/cssEdit" );
-		 	davinci.Runtime.addPlugin( "app/davinci/html/html" );
-		 	davinci.Runtime.addPlugin( "app/davinci/review/review" );
+            davinci.Runtime.addPlugin( "app/davinci/html/html" );
+            davinci.Runtime.addPlugin( "app/davinci/review/review" );
 			davinci.Runtime.addPlugin( "app/davinci/ve/ve" );
 			davinci.Runtime.addPlugin( "app/davinci/ve/themeEditor/themeEditor" );
 
 			//davinci.Runtime.loadPlugins();
 
-	 		davinci.Runtime.initialPerspective="davinci.ve.pageDesign";
+            davinci.Runtime.initialPerspective="davinci.ve.pageDesign";
 			dojo.addOnLoad(function()
 			{
 			    // Display a warning dialog for unsupported browsers
@@ -68,31 +66,27 @@
 				}
 
 				function run() {
-	    			var userInfo;
-	    			var result=davinci.Runtime.getUser();
+                    var userInfo;
+                    var result=davinci.Runtime.getUser();
 
-	    			if (result )
-	    			{
-	    		 	   dojo.byId('davinci_user').innerHTML=result;
-	    		 	   davinci.Runtime.userName=result;
-	    			}
-	    			else
-	    			{
-	    				//FIXME: temporary fix for running via file: URLs
-	    			   var langObj = dojo.i18n.getLocalization("davinci","webContent");
-	    		 	   dojo.byId('davinci_user').innerHTML=langObj.maqettaUser;
-	    		 	}
-	    		 	if (!result)
-	    		 	{
-	    		 		var langObj = dojo.i18n.getLocalization("davinci","webContent");
-	    			 	dojo.byId('davinci_user').innerHTML=langObj.localhostUser;
-	    		 		dojo.byId('davinci_logoff').href="";
-	    		 		davinci.Runtime.isLocalInstall=true;
-	    		 	}
-	    		 	if ( davinci.Runtime.plugins.joomlaplugin) {
+                    if (result ) {
+                       dojo.byId('davinci_user').innerHTML=result;
+                       davinci.Runtime.userName=result;
+                    } else {
+                       //FIXME: temporary fix for running via file: URLs
+                       var langObj = dojo.i18n.getLocalization("davinci","webContent");
+                       dojo.byId('davinci_user').innerHTML=langObj.maqettaUser;
+                    }
+                    if (!result) {
+                        var langObj = dojo.i18n.getLocalization("davinci","webContent");
+                        dojo.byId('davinci_user').innerHTML=langObj.localhostUser;
+                        dojo.byId('davinci_logoff').href="";
+                        davinci.Runtime.isLocalInstall=true;
+                    }
+                    if ( davinci.Runtime.plugins.joomlaplugin) {
 	                    dojo.byId('davinci_logoff').href="http://" + window.location.hostname + "/index.php?option=com_user&task=logout&return=Lw";
-	    		 	}
-	    			davinci.Runtime.run(userInfo);
+                    }
+                    davinci.Runtime.run(userInfo);
 				}
 			});
 

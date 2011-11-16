@@ -125,7 +125,6 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             } 
             modelAttribute = modelAttribute + ' '+newThemeInfo.className;
             modelAttribute = modelAttribute.trim();
-            //header.bodyClass = modelAttribute;
             header.bodyClasses = modelAttribute;
             modelBody.removeAttribute('class');
             modelBody.addAttribute('class',modelAttribute, false);
@@ -154,7 +153,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             }
         }
         // remove the mobile theme
-        if (themeSet.mobileTheme && /*(!davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileNone)) &&*/ (!davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileDefault))){
+        if (themeSet.mobileTheme && (!davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileDefault))){
             this._dojoxMobileRemoveTheme(this._context);
         }
         
@@ -171,7 +170,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             }
         }
         // add the mobile theme
-        if (themeSet.mobileTheme /*&& (!davinci.theme.themeSetEquals(themeSet.mobileTheme, davinci.theme.dojoMobileNone))*/){
+        if (themeSet.mobileTheme ){
             this._dojoxMobileAddTheme(this._context, themeSet.mobileTheme);
         }
     },
@@ -219,7 +218,6 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
         var htmlElement = context._srcDocument.getDocumentElement();
         var head = htmlElement.getChildElement("head");
         var scriptTags=head.getChildElements("script");
-        //var testMap = dojo.toJson(davinci.theme.getDojoxMobileThemeMap(context, theme));
         if (davinci.theme.themeSetEquals(theme, davinci.theme.dojoMobileDefault)){
             var nothingToDo = true;
             dojo.forEach(scriptTags, function (scriptTag){
@@ -236,7 +234,6 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
         }
         // add the theme to the dojox.mobile.themeMap
         context.loadRequires("dojox.mobile.View", true); //  use this widget to get the correct requires added to the file.
-        //htmlElement = context._srcDocument.getDocumentElement();
         head = htmlElement.getChildElement("head");
         scriptTags=head.getChildElements("script");
 

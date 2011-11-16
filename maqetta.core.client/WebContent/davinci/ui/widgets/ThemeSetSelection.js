@@ -10,7 +10,6 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
     
     workspaceOnly : false,
     message: 'Theme version does not match workspace version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.',
-   // _THEME_SET_NONE: '(none)',
     _connections: [],
     _selectedThemeSet: null,
 
@@ -32,11 +31,6 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
         this._connections.push(dojo.connect(dijit.byId('theme_select_mobile_theme_select'), "onChange", this, "onMobileChange"));
         this._connections.push(dojo.connect(dijit.byId('theme_select_ok_button'), "onClick", this, "onOk"));
         this._connections.push(dojo.connect(dijit.byId('theme_select_cancel_button'), "onClick", this, "onClose"));
-/*        this._connections.push(dojo.connect(dijit.byId('theme_select_android_select'), "onChange", this, "onDeviceChange"));
-        this._connections.push(dojo.connect(dijit.byId('theme_select_blackberry_select'), "onChange", this, "onDeviceChange"));
-        this._connections.push(dojo.connect(dijit.byId('theme_select_ipad_select'), "onChange", this, "onDeviceChange"));
-        this._connections.push(dojo.connect(dijit.byId('theme_select_iphone_select'), "onChange", this, "onDeviceChange"));
-        this._connections.push(dojo.connect(dijit.byId('theme_select_other_select'), "onChange", this, "onDeviceChange"));*/
         this.addThemeSets();
         var select = dijit.byId('theme_select_themeset_theme_select');
         select.attr( 'value', currentThemeSet.name);
@@ -58,8 +52,6 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
             this._dojoThemeSets.themeSets.unshift(davinci.theme.none_themeset); // temp add to prefs 
         }
         var select = dijit.byId('theme_select_themeset_theme_select');
-        //var opt = {value: '(none)', label: '(none)'}; // FIXME NLS
-        //select.addOption(opt);
         for (var i = 0; i < this._dojoThemeSets.themeSets.length; i++){
             opt = {value: this._dojoThemeSets.themeSets[i].name, label: this._dojoThemeSets.themeSets[i].name};
             select.addOption(opt);
@@ -86,7 +78,6 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
         dtSelect.options = [];
         mblSelect.options = [];
         mblSelect.addOption({value: davinci.theme.default_theme, label: davinci.theme.default_theme});
-        //mblSelect.addOption({value: davinci.theme.none_theme, label: davinci.theme.none_theme});
         this._themeCount = this._themeData.length;
         for (var i = 0; i < this._themeData.length; i++){
             var opt = {value: this._themeData[i].name, label: this._themeData[i].name};
@@ -125,17 +116,10 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
         }
         if (davinci.theme.singleMobileTheme(themeSet)) {
             mblSelect.attr( 'value', themeSet.mobileTheme[themeSet.mobileTheme.length-1].theme);
-        } /*else if(davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileNone)){
-            debugger;
-            mblSelect.attr( 'value', davinci.theme.none_theme); 
-        } */else /*if(davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileDefault))*/{
-            debugger;
+        } else {
             mblSelect.attr( 'value', davinci.theme.default_theme); 
             this.onMobileChange(davinci.theme.default_theme); //force refresh
-        } /*else {
-            debugger;
-            mblSelect.attr( 'value', themeSet.mobileTheme[themeSet.mobileTheme.length-1].theme);
-        }*/
+        } 
         
     },
       
@@ -289,13 +273,7 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
     },
     
     
-    _getThemeDataAttr : function(){
-        debugger;
-        return this._themeData;
-    },
-    
     _warnOk: function(){
-        debugger;
         dojo.cookie(this._cookieName, "true");
         this._destroy();
         this.onChange();
@@ -303,14 +281,12 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
     },
     
     _warnCancel: function(){
-        debugger;
         this._destroy();
         this.onClose();
         
     },
     
     _destroy: function(){
-        debugger;
         var ok = dijit.byId('davinci.ui.widgets.ThemeSelection.ok');
         dojo.disconnect(ok);
         ok.destroy();
@@ -321,7 +297,6 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
     
     onOk: function(e){
 
-       // davinci.workbench.Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(),this._dojoThemeSets);
         this.updateDeviceThemes();
         this.onClose(e);
         var e = davinci.Workbench.getOpenEditor();

@@ -147,7 +147,7 @@ davinci.theme.default_theme = '(device-specific)'; //'default';
 davinci.theme.none_themeset_name = '(none)';
 davinci.theme.other_device = 'other';
 davinci.theme.none_theme = 'none';
-davinci.theme.dojoMobileDefault = [{"theme":"android","device":"Android"},{"theme":"blackberry","device":"BlackBerry"},{"theme":"iphone","device":"iPad"},{"theme":"iphone","device":"iPhone"},{"theme":"iphone","device":"other"}];
+davinci.theme.dojoMobileDefault = [{"theme":"android","device":"Android"},{"theme":"blackberry","device":"BlackBerry"},{"theme":"ipad","device":"iPad"},{"theme":"iphone","device":"iPhone"},{"theme":"iphone","device":"other"}];
 davinci.theme.dojoMobileCustom =  [{"theme":"custom","device":"Android"},{"theme":"custom","device":"BlackBerry"},{"theme":"custom","device":"iPad"},{"theme":"custom","device":"iPhone"},{"theme":"custom","device":"other"}];
 davinci.theme.none_themeset = {
         "name": davinci.theme.none_themeset_name,

@@ -124,7 +124,7 @@ davinci.theme.getHelper = function(theme){
     if (theme._helper){
         return theme._helper;
     }
-    var helper = theme.helper;// davinci.ve.metadata.queryDescriptor(type, "helper");
+    var helper = theme.helper;
     if (helper) {
         try {
             dojo["require"](helper);
@@ -216,37 +216,19 @@ davinci.theme.getThemeSet = function(context){
             if ((mobileTheme == davinci.theme.none_theme) && (davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileCustom)) ){
                 debugger; // why?
                 return themeSet;
-            } else if ((mobileTheme == davinci.theme.default_theme) && (davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileDefault))){
-                dedbugger; //why?
-                return themeSet;
             }
-           // var mobileMap = dojo.toJson(davinci.theme.getDojoxMobileThemeMap(context, themeSet.mobileTheme)); //themeSet.mobileTheme;
-            if (davinci.theme.themeSetEquals(dojo.fromJson(mobileTheme),themeSet.mobileTheme) /*mobileMap == mobileTheme*/){
+            if (davinci.theme.themeSetEquals(dojo.fromJson(mobileTheme),themeSet.mobileTheme)){
                 // found themeMap
                 return themeSet;
             }
         }
     }
     
-    // themeSet not found Create one with gleaned information
-
-   /* 
-    var newThemeSetName = 'myThemeSet';
-    // make sure the name is unique
-    var nameIndex = 0;
-    for (var n = 0; n < dojoThemeSets.themeSets.length; n++){
-        if (dojoThemeSets.themeSets[n].name == newThemeSetName){
-            nameIndex++;
-            newThemeSetName = 'myThemeSet_' + nameIndex;
-            n = -1; // start search a first theme set with new name
-        }
-    }
-    */
-    
+      
     var newThemeSetName = davinci.theme.none_themeset_name
     
     if (mobileTheme === davinci.theme.none_theme){
-        mobileTheme = dojo.toJson(davinci.theme.dojoMobileDefault); // dojo.toJson(davinci.theme.dojoMobileNone);
+        mobileTheme = dojo.toJson(davinci.theme.dojoMobileDefault); 
     } else  if (mobileTheme === davinci.theme.default_theme){
         mobileTheme =  dojo.toJson(davinci.theme.dojoMobileDefault);
     }
@@ -256,7 +238,6 @@ davinci.theme.getThemeSet = function(context){
             "mobileTheme": dojo.fromJson(mobileTheme)
         };  
     dojoThemeSets.themeSets.push(themeSet);
-    //davinci.workbench.Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(), dojoThemeSets);
     return themeSet;
     
 };

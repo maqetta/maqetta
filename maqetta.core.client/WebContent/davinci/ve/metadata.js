@@ -53,7 +53,8 @@ define([
 		var widgetsJsonPath = path.append(pkg.scripts.widget_metadata);
 		dojo.xhrGet({
 			url : widgetsJsonPath.toString(),
-			handleAs : "json"
+			handleAs : "json",
+			sync: true
 		}).then(function(data) {
 			if (data) {
 				parseLibraryDescriptor(data, widgetsJsonPath);
@@ -80,7 +81,8 @@ define([
         if (descriptor.callbacks) {
             dojo.xhrGet({
                 url: path.append(descriptor.callbacks).toString(),
-				handleAs: 'javascript'
+				handleAs: 'javascript',
+				sync: true
 			}).then(function(data) {
                     descriptor.callbacks = data;
             });
@@ -316,7 +318,8 @@ define([
 // XXX For now, 'package.json' lives inside the 'metadata' dir.  Will need to
 // move it up to the top level of library.
 						url : path + "/package.json",
-						handleAs : "json"
+						handleAs : "json",
+						sync: true
 					}).then(function(data) {
 				if (data) {
 							parsePackage(data, path);

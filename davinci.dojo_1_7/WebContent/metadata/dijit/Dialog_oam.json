@@ -75,10 +75,6 @@
             "defaultValue": true,
             "title": "Refocus"
         },
-        "open": {
-            "datatype": "boolean",
-            "description": "True if Dialog is currently displayed on screen."
-        },
         "autofocus": {
             "datatype": "boolean",
             "description": "A Toggle to modify the default focus behavior of a Dialog, which\nis to focus on the first dialog element after opening the dialog.\nFalse will disable autofocusing. Default: true"

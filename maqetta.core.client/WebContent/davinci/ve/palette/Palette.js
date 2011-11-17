@@ -129,15 +129,15 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		this.startupKeyNavChildren();
 	},
 
-	refresh: function(){
+	refresh: function() {
 		delete this._loaded;
 		this._createFolderTemplate();
 		this._createItemTemplate();
 		this._createHeader();
 		
-		if(this._context){
-			this.LoadPalette();
-			this.startupkeyNavChildren();
+		if (this._context) {
+			this._loadPalette();
+			this.startupKeyNavChildren();
 		}
 	},
 

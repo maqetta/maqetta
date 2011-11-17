@@ -2252,7 +2252,15 @@ return declare("davinci.ve.Context", null, {
 
 	addJavaScriptText: function(text, doUpdateModel, skipDomUpdate) {
 		/* run the requires if there is an iframe */
-		if(!skipDomUpdate) { this.getGlobal()['eval'](text); }
+		if (! skipDomUpdate) {
+			try {
+				this.getGlobal()['eval'](text);
+			} catch(e) {
+				var len = text.length;
+				console.error("eval of \"" + text.substr(0, 20) + (len > 20 ? "..." : "") +
+						"\" failed");
+			}
+		}
 		if (doUpdateModel) {
 			this.addHeaderScriptText(text);
 		}

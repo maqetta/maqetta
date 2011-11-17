@@ -87,7 +87,8 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", [davinci.workbench.WidgetLit
 /* FIXME: Gradients not working yet. Comment out switch for now 
     	                {display:"image/gradient", type:"combo", values:['image', 'gradient']},
 */  
-    	                {display:"background-image url", type:"file", target:'background-image'},
+	       		        {display:"background", type:"background", target:'background'},
+	       		        {display:"background-image url", type:"background", target:'background-image'},
     		       	    {display:"background-repeat", type:"combo", values:['', 'repeat', 'repeat-x','repeat-y','no-repeat'],  target:'background-repeat' },
     		       	    {display:"background-position", type:"multi", target:'background-position', values:['','0px','left top','center center','right bottom']},
     		       	    {display:"background-size", type:"multi", target:'size', target:'background-size', values:['','auto','contain','cover','100%']},

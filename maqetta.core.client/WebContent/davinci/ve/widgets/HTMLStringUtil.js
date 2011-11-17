@@ -10,7 +10,7 @@ dojo.require("davinci.ve.widgets.CommonProperties");
 dojo.require("davinci.ve.widgets.WidgetProperties");
 dojo.require("davinci.ui.widgets.FileFieldDialog");
 dojo.require('davinci.ve.widgets.Trblbox');
-
+dojo.require("davinci.ve.widgets.Background");
 
 davinci.ve.widgets.HTMLStringUtil.__id = 0;
 davinci.ve.widgets.HTMLStringUtil.idPrefix = "davinci_ve_widgets_properties_generated";
@@ -99,7 +99,9 @@ davinci.ve.widgets.HTMLStringUtil.getEditor = function(jsonString){
 			var text = "<div class='propertyPaneEditablevalue' dojoType='davinci.ve.widgets.ColorPicker' id='"+ id + "' ></div>";
 			return text;
 			/*todo - write color chooser widget */
-			
+		case "background":
+			var text="<div dojoType='davinci.ve.widgets.Background' id='" + id + "'></div>";
+			return text;			
 		case "file":
 			var text="<div dojoType='davinci.ui.widgets.FileFieldDialog' id='" + id + "'></div>";
 			return text;

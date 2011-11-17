@@ -476,6 +476,16 @@ davinci.html.CSSRule.prototype.getProperty = function(propertyName) {
     }
 };
 
+davinci.html.CSSRule.prototype.getProperties = function(propertyName) {
+    var values = []
+	for ( var i = 0; i < this.properties.length; i++ ) {
+        if (propertyName == this.properties[i].name)
+            values.push( this.properties[i]);
+    }
+    return values;
+};
+
+
 davinci.html.CSSRule.prototype.setProperty = function(name, value) {
     var property = this.getProperty(name);
     if (!value) {

@@ -37,7 +37,11 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 		this.inherited(arguments);
 	
 	},
-
+	
+	/* current background value.  could be array or single item */
+	_setValueAttr : function(value){
+		
+	},
 	okButton : function(){
 		this.cancel = false;
 		

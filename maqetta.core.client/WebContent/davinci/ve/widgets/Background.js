@@ -27,7 +27,7 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 	
 		this._button = dojo.byId(this._button);
 		dojo.connect(this._button,"onclick",this,function(){
-			var background = new davinci.ve.widgets.BackgroundDialog({});
+			var background = new davinci.ve.widgets.BackgroundDialog({'value': this.value});
 			
 			davinci.Workbench.showModal(background, "Background", 'width: 320px; opacity:0', function(){
 				
@@ -46,9 +46,17 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 		
 	},
 	_setValueAttr : function(value){
-		 if(this.value!= value ){
+		 
+		// value is now an array if there are more than one of a given property for the selected rule
+		
+		if(this.value!= value ){
 			this.value = value;
-			dojo.attr(this._textField, "value", value);
+			/* check if array or single value.  If its a single value we'll just set the text box to that value */
+			if(!dojo.isArray(value))
+				dojo.attr(this._textField, "value", value);
+			else{
+				// JON- this is where your regular expression will need to pick a value, and manipulate it for whatever format.
+			}
 		 }
 	},
 	_onChange : function(){

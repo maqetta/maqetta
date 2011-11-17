@@ -63,6 +63,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 				return widget.attr('value'); 
 			};
 			this._setFieldValue = function(value, loc){
+				
 				this._value = value || "";
 				this._loc = loc;
 				
@@ -732,12 +733,28 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 	},
 	
 	_getRuleTargetValue : function(rule){
+		//if(this._isTarget("background")) debugger;
+		
 		var value = null;
 		if(rule){
 			for(var i = 0;!value && i<this.target.length;i++)
-				value = rule.getProperty(this.target[i]);
+				value = rule.getProperties(this.target[i]);
 		}			
-		return value && value.value;
+		if(value!=null){
+			
+			if(value.length > 1){
+				var results = [];
+				for(var i=0;i<value.length;i++){
+					results.push(value[i].value);
+				}
+				return results;
+			}else if(value.length==1){
+				return value[0].value;
+			}
+		}
+		
+		return null;
+		
 	},
 	
 	_onChangeRemove : function(event){

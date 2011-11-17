@@ -1,13 +1,5 @@
 dojo.provide("davinci.ve.RebuildPage");
 
-dojo.require("davinci.commands.CommandStack");
-dojo.require("davinci.ve.tools.SelectTool");
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.ve.util");
-dojo.require("davinci.ve.Focus");
-dojo.require("davinci.actions.SelectLayoutAction");
-dojo.require("davinci.library");
-dojo.require("davinci.ve.Context");
 dojo.require("davinci.model.Path");
 dojo.require("davinci.ve.Context");
 

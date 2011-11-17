@@ -5,23 +5,20 @@
     "version": "1.0",
     "require": [
         {
-            "type": "javascript",
-            "src": "dojo/dojo.js",
-            "$library": "dojo"
-        },
-        {
             "type": "css",
             "src": "dojo/resources/dojo.css",
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "$text": "dojo.require('dijit.Dialog');"
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/Dialog",
+            "$library": "dojo"
         }
     ],
     "library": {
         "dojo": {
-            "src": "../../"
+            "src": "../../dojo/dojo.js"
         }
     },
     "property": {
@@ -77,10 +74,6 @@
             "datatype": "boolean",
             "defaultValue": true,
             "title": "Refocus"
-        },
-        "open": {
-            "datatype": "boolean",
-            "description": "True if Dialog is currently displayed on screen."
         },
         "autofocus": {
             "datatype": "boolean",

@@ -1,0 +1,8 @@
+{
+  "name": "maqetta",
+  "description": "Maqetta Core Metadata",
+  "version": "0.3",
+  "directories": {
+    "lib": "../samples"
+  }
+}

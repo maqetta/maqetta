@@ -1,36 +1,8 @@
-dojo.provide("davinci.ve.themeEditor.metadata.metadata"); // XXX need to rename this file and get rid of this line
-dojo.provide("davinci.ve.themeEditor.metadata.CSSDescriptorProvider");
-dojo.provide("davinci.ve.themeEditor.metadata.CSSThemeProvider");
+define(["dojo/_base/declare"], function(declare) {
 
 //TODO: Create custom HTML metadata provider similar to CSS
 
-// XXX This doesn't seem to be used anywhere
-dojo.declare("davinci.ve.themeEditor.metadata.CSSDescriptorProvider", null, {
-
-	module: "davinci.libs",
-	path: "css3/css.json",
-	
-	constructor: function(args){
-		dojo.mixin(this, args);
-	},
-
-	getDescriptor: function(){
-		if(!this._descriptor){
-			var descriptor = undefined;
-			dojo.xhrGet({
-				url: "" + dojo.moduleUrl(this.module, this.path),
-				handleAs: "json",
-				sync: true,
-				load: function(result){descriptor = result;}
-			});
-			this._descriptor = descriptor;
-		}
-		return this._descriptor;
-	}
-
-});
-
-dojo.declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
+return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 
 	module: "davinci.lib",
 	path: "theme/tundra.json", 
@@ -572,9 +544,7 @@ dojo.declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 			}
 		}
 		return false;
-		
 	}
-	
-
 });
 
+});

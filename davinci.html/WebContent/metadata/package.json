@@ -1,0 +1,19 @@
+{
+  "name": "html",
+  "version": "0.8",
+  "directories": {
+    "lib": "../html"
+  },
+  "overlays": {
+    "oam": {
+      "directories": {
+        "metadata": "."
+      }
+    },
+    "maqetta": {
+      "scripts": {
+        "widget_metadata": "./widgets.json"
+      }
+    }
+  }
+}

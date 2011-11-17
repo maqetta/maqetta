@@ -1,6 +1,30 @@
-define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
+define("davinci/ve/_Widget", ["dojo/_base/declare", "davinci/ve/metadata"], function(declare) {
 
-/*return*/ dojo.declare("davinci.ve._Widget", null, {
+var arrayEquals = function(array1, array2, func){
+	if(array1 == array2){
+		return true;
+	}
+	if(!array1 || !array2){
+		return false;
+	}
+	if(array1.length != array2.length){
+		return false;
+	}
+	for(var i = 0; i < array1.length; i++){
+		if(func){
+			if(!func(array1[i], array2[i])){
+				return false;
+			}
+		}else{
+			if(array1[i] != array2[i]){
+				return false;
+			}
+		}
+	}
+	return true;
+};
+
+return declare("davinci.ve._Widget", null, {
 
 	isWidget: true,
 
@@ -406,7 +430,7 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
 					var value = this.getPropertyValue(name);
 					if(value && value.length) {
 						if(property.datatype == "array") {
-							if(!davinci.ve._equals(value, property.defaultValue)) {
+							if(!arrayEquals(value, property.defaultValue)) {
 								data.properties[name] = value;
 							}
 						}else{
@@ -536,18 +560,16 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
 		}
 		return values;
 	},
-	_updateSrcStyle: function()
-	{
+
+	_updateSrcStyle: function() {
 		var styleValue=this.getStyle();
-		if (styleValue.length>0)
-		{
+		if (styleValue.length) {
 			this._srcElement.addAttribute("style",styleValue);
-		}
-		else
-		{
+		} else {
 			this._srcElement.removeAttribute("style");
 		}
 	},
+
 	setStyleValues: function( values) {
 		if(!values) {
 			return;
@@ -588,13 +610,11 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
 
 	},
 
-	isLayout: function()
-	{
+	isLayout: function() {
 		return false;
 	},
-	resize: function()
-	{
 
+	resize: function() {
 	},
 
 	removeChild: function( /*Widget*/child) {
@@ -629,7 +649,7 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
 			// The following check on "property" will result in false value for empty strings
 			if(property || typeof property == "boolean") {
 				var value=this._stringValue(name, property);
-				if ( ! modelOnly ) {
+				if (!modelOnly) {
 				    this.properties[name] = value;
 				}
 				this._srcElement.addAttribute(name, value);
@@ -640,38 +660,36 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
 		}
 	},
 
-	startup: function()
-	{
-
+	startup: function() {
 	},
+
 	renderWidget: function() {
 	},
+
 	destroyWidget: function(widget) {
 		var helper = this.getHelper();
-		if(helper && helper.destroyWidget) {
-			helper.destroyWidget(this);
+		if(helper && helper.destroy) {
+			helper.destroy(this);
 			return;
 		}
-		if (this.dijitWidget)
+		if (this.dijitWidget) {
 			this.dijitWidget.destroyRecursive();
-		else
-		{
-			dojo.forEach(this.getChildren(),function(each) {each.destroyWidget()});
+		} else {
+			dojo.forEach(this.getChildren(),function(each) { each.destroyWidget(); });
 		}
 	},
-	selectChild: function(widget)
-	{
 
+	selectChild: function(widget) {
 	},
-	attach: function()
-	{
+
+	attach: function() {
 		var helper = this.getHelper();
 		if(helper && helper.create) {
 			helper.create(this, this._srcElement);
 		}
 	},
-	_stringValue: function (attributeName, value)
-	{
+
+	_stringValue: function (attributeName, value) {
 	    var metadata = this.getMetadata();
 		var property = metadata.property && metadata.property[attributeName];
 		if (!property)

@@ -149,7 +149,7 @@ then
     # Save repository revision level for later referrence
     #
     cd ${MAQETTA_BUILD_DIR}/repository/maqetta
-    git describe >${MAQETTA_BUILD_DIR}/build.level
+    git log -1 | head -1 >${MAQETTA_BUILD_DIR}/build.level
 else
     if [ ! -e ${MAQETTA_BUILD_DIR}/repository/maqetta ]
     then
@@ -166,7 +166,7 @@ else
     fi
     
     cd ${maqettaCode}
-    git describe >${MAQETTA_BUILD_DIR}/build.level
+    git log -1 | head -1 >${MAQETTA_BUILD_DIR}/build.level
 fi
 
 # Retrieve external equinox dependancies

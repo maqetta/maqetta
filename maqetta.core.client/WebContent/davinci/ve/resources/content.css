@@ -1,6 +1,10 @@
 /* needed for theme editor subwidget menu pop up */
 @import url("Menu.css");
 
+.maqFocus {
+	z-index: 1000;
+}
+
 .editFocusFrame {
 	background-image: url('images/slant.gif'); 
 }

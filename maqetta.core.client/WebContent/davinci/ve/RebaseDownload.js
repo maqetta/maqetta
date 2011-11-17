@@ -1,14 +1,7 @@
 dojo.provide("davinci.ve.RebaseDownload");
 dojo.require("davinci.ve.RebuildPage");
 
-dojo.require("davinci.commands.CommandStack");
-dojo.require("davinci.ve.tools.SelectTool");
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.ve.util");
-dojo.require("davinci.ve.Focus");
-dojo.require("davinci.actions.SelectLayoutAction");
 dojo.require("davinci.library");
-dojo.require("davinci.ve.Context");
 
 dojo.declare("davinci.ve.RebaseDownload", davinci.ve.RebuildPage, {
 	
@@ -21,11 +14,12 @@ dojo.declare("davinci.ve.RebaseDownload", davinci.ve.RebuildPage, {
 		this.libs = libs;
 	},
 
-	getLibraryBase : function(id, version){
+	getLibraryBase: function(id, version){
 		for(var name in this.libs){
 			var item = this.libs[name];
-			if(item['id']==id && item['version']==version)
-				return item['root'];
+			if (item.id==id && item.version==version) {
+				return item.root;
+			}
 		}
 		return davinci.library.getLibRoot(id,version) || "";
 	}

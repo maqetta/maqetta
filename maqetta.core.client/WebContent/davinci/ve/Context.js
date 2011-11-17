@@ -1,21 +1,24 @@
-dojo.provide("davinci.ve.Context");
+define([
+    "dojo/_base/declare",
+	"davinci/commands/CommandStack",
+	"davinci/ve/tools/SelectTool",
+	"davinci/ve/widget",
+	"davinci/ve/Focus",
+	"davinci/library",
+	"dojox/html/_base",
+	"preview/silhouetteiframe",
+	"davinci/ve/ChooseParent"
+], function(declare, CommandStack, SelectTool) {
 
-dojo.require("davinci.commands.CommandStack");
-dojo.require("davinci.ve.tools.SelectTool");
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.ve.util");
-dojo.require("davinci.ve.Focus");
-dojo.require("davinci.actions.SelectLayoutAction");
-dojo.require("davinci.library");
-dojo.require("dojox.html._base");
-dojo.require('preview.silhouetteiframe');
-dojo.require('davinci.ve.ChooseParent');
+davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
+var MOBILE_DEV_ATTR = 'data-maqetta-device';
 
-dojo.declare("davinci.ve.Context", null, {
+return declare("davinci.ve.Context", null, {
 
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit/dijit",
-	_configProps: {},
+	_configProps: {}, //FIXME: shouldn't be shared on prototype if we're going to use this for dynamic properties
+	_contextCount: 0,
 
 /*=====
 	// keeps track of widgets-per-library loaded in context
@@ -27,7 +30,7 @@ dojo.declare("davinci.ve.Context", null, {
 			args ={};
 		}
 		this._contentStyleSheet = davinci.Workbench.location() + dojo.moduleUrl("davinci.ve", "resources/content.css");
-		this._id = "_edit_context_" + davinci.ve._contextCount++;
+		this._id = "_edit_context_" + this._contextCount++;
 		this._editor = args.editor;
 		this._visualEditor = args.visualEditor;
 		this.widgetHash = {};
@@ -40,8 +43,8 @@ dojo.declare("davinci.ve.Context", null, {
 
 		this.hostNode = this.containerNode;
 
-		this._commandStack = new davinci.commands.CommandStack(this);
-		this._defaultTool = new davinci.ve.tools.SelectTool();
+		this._commandStack = new CommandStack(this);
+		this._defaultTool = new SelectTool();
 
 		this._widgetIds = [];
 		this._objectIds = [];
@@ -207,13 +210,20 @@ dojo.declare("davinci.ve.Context", null, {
 			return;
 		}
 
+		var addToArray = function(array, value){
+			var index = dojo.indexOf(array, value);
+			if(index < 0){
+				array.push(value);
+			}
+		};
+
 		var id = widget.getId();
 		if(id){
-			davinci.ve._add(this._widgetIds, id);
+			addToArray(this._widgetIds, id);
 		}
 		var objectId = widget.getObjectId(widget);
 		if(objectId){
-			davinci.ve._add(this._objectIds, objectId);
+			addToArray(this._objectIds, objectId);
 		}
 
 		// Recurse down widget hierarchy
@@ -230,18 +240,25 @@ dojo.declare("davinci.ve.Context", null, {
 
 	
 	detach: function(widget){
+		var removeFromArray = function(array, value){
+			var index = dojo.indexOf(array, value);
+			if(index >= 0){
+				array.splice(index, 1);
+			}
+		};
+
 		// FIXME: detaching context prevent destroyWidget from working
 		//widget._edit_context = undefined;
 		var id = widget.getId();
 		if(id){
-			davinci.ve._remove(this._widgetIds, id);
+			removeFromArray(this._widgetIds, id);
 		}
 		var objectId = widget.getObjectId();
 		if(objectId){
-			davinci.ve._remove(this._objectIds, objectId);
+			removeFromArray(this._objectIds, objectId);
 		}
 		if (this._selection){
-			davinci.ve._remove(this._selection,widget);
+			removeFromArray(this._selection,widget);
 		}
 
         var library = davinci.ve.metadata.getLibraryForType(widget.type);
@@ -285,77 +302,122 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	loadRequires: function(type, updateSrc, doUpdateModelDojoRequires, skipDomUpdate) {
-		
-		/* this method is used heavily in RebuildPage.js, so please watch out when changing  API! */
+		// this method is used heavily in RebuildPage.js, so please watch out when changing  API!
+
 		if (!type) {
 			return false;
 		}
 		
-		var module = type.split(".")[0];
-		/*
-		if (module == "html") {
-			// no require
-			return true;
-		}
-		*/
-		var requires = davinci.ve.metadata.query(type, "require");
+		var requires = davinci.ve.metadata.query(type, "require"),
+			libs = {},
+			context = this;
 		if (!requires) {
 			return true;
 		}
 
-		return dojo.every(requires, function(r) {
-		
-			var src = r.src;
-			if (src) {	// resource with URL
-				if (r.$library) {
-					// Since the metadata files are 'relocatable', we don't use the metadata's
-					//  value for $library.src.  Instead, we find the base URL for the user's
-					//  currently selected library.
-					var libVer  = davinci.ve.metadata.getLibrary(r.$library).version;
-						
-					if (!libVer) {
-						libVer = davinci.ve.metadata.query(type, "library")[r.$library].version;
-					}
-					var libRoot = this.getLibraryBase(r.$library, libVer);
-					/*
-					 * need to set the module path for custom user widgets 
-					 */
-					if(r.$library.indexOf("dojo") > -1){
-						var fullLibPath = new davinci.model.Path(this.getBase()).append(libRoot).append(src);
-						this._dojoModulePath = (new davinci.model.Path(this.getBase())).relativeTo(fullLibPath, true).toString();
-					}
-					
-					if (libRoot == null /*empty string OK here, but null isn't. */) {
-						console.warn("No library found for name = '" + r.$library +	"' version = '" + libVer + "'");
-						return false;   // kill dojo.every loop
-					}
-					var fullLibPath = new davinci.model.Path(this.getBase()).append(libRoot).append(src);
-					src = fullLibPath.relativeTo(this.getPath(),true).toString();				
-				} else {
-					console.warn("metadata resource does not specify 'library'");
+		function _loadLibrary(libId) {
+			if (libs.hasOwnProperty(libId)) {
+				return true;
+			}
+
+			// calculate base library path, used in loading relative required
+			// resources
+			var lib = davinci.ve.metadata.query(type, 'library')[libId],
+				ver = davinci.ve.metadata.getLibrary(libId).version || lib.version,
+				root = context.getLibraryBase(libId, ver);
+			
+			if (root == null /*empty string OK here, but null isn't. */) {
+				console.error("No library found for name = '" + libId +	"' version = '" + ver + "'");
+				return false;
+			}
+
+			// store path
+			libs[libId] = new davinci.model.Path(context.getBase()).append(root);
+
+			// If 'library' element points to the main library JS (rather than
+			// just base directory), then load that file now.
+			if (lib.src.substr(-3) === '.js') {
+				// XXX For now, lop off relative bits and use remainder as main
+				// library file.  In the future, we should use info from
+				// package.json and library.js to find out what part of this
+				// path is the piece we're interested in.
+				var m = lib.src.match(/((?:\.\.\/)*)(.*)/);
+						// m[1] => relative path
+						// m[2] => main library JS file
+				_loadJSFile(libId, m[2]);
+			}
+
+			return true;
+		}
+
+		function _getResourcePath(libId, src) {
+			return libs[libId].append(src).relativeTo(context.getPath(), true).toString();
+		}
+
+		function _loadJSFile(libId, src) {
+			context.addJavaScriptSrc(_getResourcePath(libId, src), updateSrc, src, skipDomUpdate);
+		}
+
+		return requires.every(function(r) {
+			// If this require belongs under a library, load library file first
+			// (if necessary).
+			if (r.$library) {
+				if (! _loadLibrary(r.$library)) {
+					return false; // break 'every' loop
 				}
-				src = src.toString();
-			  
-				switch (r.type) {
-					case "javascript":
-						this.addJavaScript(src, null, updateSrc, false, r.src,skipDomUpdate);
-						break;
-					case "css":
-						updateSrc ? this.addModeledStyleSheet(src, r.src, skipDomUpdate) : this.loadStyleSheet(src);
-						break;
-					default:
-						console.warn("Unhandled metadata resource type '" + r.type +
-								"' for widget '" + type + "'");
-				}
-			} else {  // resource with text content
-				switch (r.type) {
-					case "javascript":
-						this.addJavaScript(null, r.$text, updateSrc, doUpdateModelDojoRequires, null, skipDomUpdate);
-						break;
-					default:
-						console.warn("Unhandled metadata resource type '" + r.type +
-								"' for widget '" + type + "'");
-				}
+			} else if (r.src) {
+				console.warn("metadata resource (" + r.type + ", " + r.src +
+						") does not specify 'library'");
+			}
+
+			// need to set the module path for custom user widgets 
+			// XXX Get rid of Dojo-specific code.  If necessary, should be refactored
+			// and abstracted to a function.  But instead of code like this, should
+			// be using APIs from library.js or metadata.js (or something pulling
+			// in data from package.json).
+			if (r.$library === 'dojo') {
+				var path = libs.dojo.append(r.src);
+				this._dojoModulePath = (new davinci.model.Path(this.getBase())).relativeTo(path, true).toString();
+			}
+
+			switch (r.type) {
+				case "javascript":
+					if (r.src) {
+						_loadJSFile(r.$library, r.src);
+					} else {
+						this.addJavaScriptText(r.$text, updateSrc || doUpdateModelDojoRequires, skipDomUpdate);
+					}
+					break;
+				
+				case "javascript-module":
+					// currently, only support 'amd' format
+					if (r.format !== 'amd') {
+						console.error("Unknown javascript-module format");
+					}
+					if (r.src) {
+						this.addJavaScriptModule(r.src, updateSrc || doUpdateModelDojoRequires,
+								skipDomUpdate);
+					} else {
+						console.error("Inline 'javascript-module' not handled");
+					}
+					break;
+				
+				case "css":
+					if (r.src) {
+						var src = _getResourcePath(r.$library, r.src);
+						if (updateSrc) {
+							this.addModeledStyleSheet(src, r.src, skipDomUpdate);
+						} else {
+							this.loadStyleSheet(src);
+						}
+					} else {
+						console.error("Inline CSS not handled");
+					}
+					break;
+				
+				default:
+					console.error("Unhandled metadata resource type '" + r.type +
+							"' for widget '" + type + "'");
 			}
 			return true;
 		}, this);
@@ -397,7 +459,7 @@ dojo.declare("davinci.ve.Context", null, {
 	 */
 	getMobileDevice: function() {
         var bodyElement = this.getDocumentElement().getChildElement("body");
-        return bodyElement.getAttribute(davinci.ve.Context.MOBILE_DEV_ATTR);
+        return bodyElement.getAttribute(MOBILE_DEV_ATTR);
     },
 
     /**
@@ -409,9 +471,9 @@ dojo.declare("davinci.ve.Context", null, {
     	this.getGlobal()["require"](["dojo/_base/config"]).mblUserAgent = preview.silhouetteiframe.getMobileTheme(device + '.svg');
     	var bodyElement = this.getDocumentElement().getChildElement("body");
         if (! device || device === 'none') {
-            bodyElement.removeAttribute(davinci.ve.Context.MOBILE_DEV_ATTR, device);
+            bodyElement.removeAttribute(MOBILE_DEV_ATTR, device);
         } else {
-            bodyElement.addAttribute(davinci.ve.Context.MOBILE_DEV_ATTR, device);
+            bodyElement.addAttribute(MOBILE_DEV_ATTR, device);
         }
     },
 	
@@ -643,7 +705,7 @@ dojo.declare("davinci.ve.Context", null, {
 		//FIXME: Need to add logic for initial themes and device size.
 		if(newHtmlParams){
 			var modelBodyElement = source.getDocumentElement().getChildElement("body");
-			modelBodyElement.setAttribute(davinci.ve.Context.MOBILE_DEV_ATTR, newHtmlParams.device);
+			modelBodyElement.setAttribute(MOBILE_DEV_ATTR, newHtmlParams.device);
 			modelBodyElement.setAttribute(davinci.preference_layout_ATTRIBUTE, newHtmlParams.flowlayout);
 		}
 
@@ -857,11 +919,17 @@ dojo.declare("davinci.ve.Context", null, {
 			dojo.mixin(callbackData, e);
 			loading.innerHTML = "Uh oh! An error has occurred:<br><b>" + e.message + "</b><br>file: " + e.fileName + "<br>line: "+e.lineNumber; // FIXME: i18n
 			dojo.addClass(loading, 'error');
-		}
-		if (callback) {
-			promise.then(function(){
-				callback.call((scope || this), callbackData); // FIXME: use hitch?  use errback for the error case?
-			}.bind(this));
+		} finally {
+			if (callback) {
+				if (promise) {
+					promise.then(function(){
+						callback.call((scope || this), callbackData);
+					}.bind(this));
+				} else {
+					// FIXME: caller doesn't handle error data?
+					callback.call((scope || this), callbackData);
+				}
+			}
 		}
 	},
 
@@ -1475,19 +1543,7 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 
 		if(!alreadySelected){
-			var helper = this._needsTearDown && this._needsTearDown.getHelper();
-			if(helper && helper.tearDown){
-				if(helper.tearDown(this._needsTearDown, widget)){
-					delete this._needsTearDown;
-				}
-			}
-
-			helper = widget.getHelper();			
-			if(helper && helper.popup){
-				helper.popup(this._needsTearDown = widget);
-			}
-
-			var selection; 
+			var selection;
 			if(add && this._selection){
 				index = this._selection.length;
 				selection = this._selection;
@@ -1513,6 +1569,7 @@ dojo.declare("davinci.ve.Context", null, {
 						}
 					},this);
 				}
+				var helper = widget.getHelper();
 				if(helper && helper.onSelect){
 					helper.onSelect(widget);
 				}
@@ -1524,13 +1581,6 @@ dojo.declare("davinci.ve.Context", null, {
 	deselect: function(widget){
 		if(!this._selection){
 			return;
-		}
-
-		var helper = this._needsTearDown && this._needsTearDown.getHelper();
-		if(helper && helper.tearDown){
-			if(helper.tearDown(this._needsTearDown, widget)){
-				delete this._needsTearDown;
-			}
 		}
 
 		if(widget){
@@ -1809,7 +1859,10 @@ dojo.declare("davinci.ve.Context", null, {
 					data.modules.push(module);
 				});
 
-				//TODO: grab AMD dependencies
+				// grab AMD-style dependencies
+				text.replace(/require\(\[["']([^'"]+)["']\]\)/g, function(match, module) {
+					data.modules.push(module);
+				});
 
 				data.scriptAdditions=scriptTag;
 			}
@@ -2133,64 +2186,75 @@ dojo.declare("davinci.ve.Context", null, {
 		 return id;
 	},
 
-	addJavaScript: function(url, text, doUpdateModel, doUpdateModelDojoRequires, baseSrcPath,skipDomUpdate) {
-		
-		if (url) {
-			var isDojoJS = /\/dojo.js$/.test(url);
-			// XXX HACK: Don't add dojo.js to the editor iframe, since it already has an instance.
-			//	  Adding it again will overwrite the existing Dojo, breaking some things.
-			//	  See bug 7585.
-			if (!isDojoJS && !skipDomUpdate) {
-				var absoluteUrl = (new dojo._Url(this.getDocument().baseURI, url)).toString();
-				dojo.withGlobal(this.getGlobal(),
-						function() {
-							dojo.xhrGet({
-								url: absoluteUrl,
-								sync: true,
-								handleAs: "javascript"
-							});
-						});
-			}
-			if (doUpdateModel) {
-				
-				/* update the script if found */
-				var elements = this._srcDocument.find({elementType:"HTMLElement", tag: 'script'});
-				for(var i=0;i<elements.length;i++){
-					var n = elements[i];
-					var elementUrl = n.getAttribute("src");
-					if(elementUrl && elementUrl.indexOf(baseSrcPath) > -1){
-						n.setAttribute("src", url);
-						return;
-					}
-				}
-				
-				
-				if (isDojoJS) {
-					// XXX Nasty nasty nasty special case for dojo attribute thats
-					// required. Need to generalize in the metadata somehow.
-					var fullPath = new davinci.model.Path(system.resource.getRoot().getPath());
-					var urlPath = new davinci.model.Path(url);
-					var relativeUrl = urlPath.relativeTo(fullPath);
-
-					var config = {
-						parseOnLoad: true,
-						modulePaths: { widgets: this._dojoModulePath + "/" + this._getWidgetFolder() }
-					};
-					dojo.mixin(config, this._configProps);
-					this.addHeaderScript(url, {
-						"data-dojo-config": JSON.stringify(config).slice(1, -1)
+	addJavaScriptSrc: function(url, doUpdateModel, baseSrcPath, skipDomUpdate) {
+		var isDojoJS = /\/dojo.js$/.test(url);
+		// XXX HACK: Don't add dojo.js to the editor iframe, since it already has an instance.
+		//	  Adding it again will overwrite the existing Dojo, breaking some things.
+		//	  See bug 7585.
+		if (!isDojoJS && !skipDomUpdate) {
+			var absoluteUrl = (new dojo._Url(this.getDocument().baseURI, url)).toString();
+			dojo.withGlobal(this.getGlobal(),
+				function() {
+					dojo.xhrGet({
+						url: absoluteUrl,
+						sync: true,
+						handleAs: "javascript"
 					});
-				}else{
-					this.addHeaderScript(url);
-				}
+				});
+		}
+		if (doUpdateModel) {				
+			/* update the script if found */
+			if (this._srcDocument.find({elementType:'HTMLElement', tag: 'script'}).some(function (element) {
+				var elementUrl = element.getAttribute("src");
+				if (elementUrl && elementUrl.indexOf(baseSrcPath) > -1) {
+					element.setAttribute("src", url);
+					return true;
+				}					
+			})) {
+				return;
+			};
+
+			if (isDojoJS) {
+				// special case for dojo.js to provide config attribute
+				// XXX TODO: Need to generalize in the metadata somehow.
+				var fullPath = new davinci.model.Path(system.resource.getRoot().getPath());
+				var urlPath = new davinci.model.Path(url);
+				var relativeUrl = urlPath.relativeTo(fullPath);
+
+				var config = {
+					async: true,
+					parseOnLoad: true,
+					modulePaths: { widgets: this._dojoModulePath + "/" + this._getWidgetFolder() }
+				};
+				dojo.mixin(config, this._configProps);
+				this.addHeaderScript(url, {
+					"data-dojo-config": JSON.stringify(config).slice(1, -1).replace(/"/g, "'")
+				});
+
+				// TODO: these two dependencies should be part of widget or library metadata
+				this.addJavaScriptModule("dijit/dijit", true, true);
+				this.addJavaScriptModule("dojo/parser", true, true);
+			}else{
+				this.addHeaderScript(url);
 			}
-		} else if (text) {
-			/* run the requires if there is an iframe */
-			if(!skipDomUpdate) { this.getGlobal()['eval'](text); }
-		//	dojo.eval(text);
-			if (doUpdateModel || doUpdateModelDojoRequires) {
-				this._scriptAdditions = this.addHeaderScriptSrc(text, this._scriptAdditions,this.getDocumentElement().getChildElement('head'),this._statesJsScriptTag);
-			}
+		}
+	},
+
+	addJavaScriptModule: function(mid, doUpdateModel, skipDomUpdate) {
+		if (!skipDomUpdate) {
+			this.getGlobal().require([mid]); //FIXME: needs to pass in async callback
+		}
+		if (doUpdateModel) {
+			//TODO: keep all requires in a single statement?
+			this.addHeaderScriptText('require(["' + mid + '"]);');
+		}
+	},
+
+	addJavaScriptText: function(text, doUpdateModel, skipDomUpdate) {
+		/* run the requires if there is an iframe */
+		if(!skipDomUpdate) { this.getGlobal()['eval'](text); }
+		if (doUpdateModel) {
+			this.addHeaderScriptText(text);
 		}
 	},
 
@@ -2235,23 +2299,26 @@ dojo.declare("davinci.ve.Context", null, {
 
 
 	// add JS to HEAD
-	addHeaderScriptSrc: function(text, scriptAdditions, head, statesJsScriptTag){
-		
-		var oldText = '';
-		
-		if (scriptAdditions){
-			var scriptText = scriptAdditions.find({elementType: 'HTMLText'}, true);
-			if(scriptText){
-				oldText = scriptText.getText();
-				if (oldText.indexOf(text)>0){
-					return scriptAdditions;  // already in the header
+	addHeaderScriptText: function(text){
+		text = '\n' + text;
+		if (this._scriptAdditions) {
+			var scriptText = this._scriptAdditions.find({elementType: 'HTMLText'}, true);
+			if (scriptText) {
+				var oldText = scriptText.getText();
+				if (oldText.indexOf(text) > -1) {
+					return;  // already in the header
 				}
-				scriptAdditions.parent.removeChild(scriptAdditions);
-				}
-			scriptAdditions = null;
+				this._scriptAdditions.parent.removeChild(this._scriptAdditions);
+				delete this._scriptAdditions;
+				text = oldText + text;
+			}
 		}
+
 		// create a new script element
-		var script = new davinci.html.HTMLElement('script');
+		var head = this.getDocumentElement().getChildElement('head'),
+			statesJsScriptTag = this._statesJsScriptTag,
+			script = new davinci.html.HTMLElement('script');
+
 		script.addAttribute('type', 'text/javascript');
 		script.script = "";
 	
@@ -2262,9 +2329,9 @@ dojo.declare("davinci.ve.Context", null, {
 			head.addChild(script);
 		}
 		var newScriptText = new davinci.html.HTMLText();
-		newScriptText.setText(oldText + "\n" + text); //wdr
-		script.addChild(newScriptText); //wdr
-		return script;
+		newScriptText.setText(text);
+		script.addChild(newScriptText);
+		this._scriptAdditions = script;
 	},
 	
 	/**
@@ -2418,6 +2485,4 @@ dojo.declare("davinci.ve.Context", null, {
 	}
 });
 
-davinci.ve._contextCount = 0;
-davinci.ve._preferences = {};
-davinci.ve.Context.MOBILE_DEV_ATTR = 'data-maqetta-device';
+});

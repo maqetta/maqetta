@@ -1,7 +1,4 @@
 {
-    "name": "dojo",
-    "longName": "Dojo Toolkit",
-    "version": "1.7",
     "categories": {
         "containers": {
             "name": "Dojo Containers",

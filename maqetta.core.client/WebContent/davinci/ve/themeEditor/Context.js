@@ -164,7 +164,7 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 	},
 	getThemeMeta: function(){
 		if(!this._themeMetaCache) {
-			this._themeMetaCache = davinci.library.getMetaData(this.theme);
+			this._themeMetaCache = davinci.library.getThemeMetadata(this.theme);
 		}
 
 		return this._themeMetaCache;

@@ -1,0 +1,19 @@
+{
+  "name": "jquery-ui",
+  "version": "1.8.11",
+  "directories": {
+    "lib": "../jquery-ui-1"
+  },
+  "overlays": {
+    "oam": {
+      "directories": {
+        "metadata": "."
+      }
+    },
+    "maqetta": {
+      "scripts": {
+        "widget_metadata": "./widgets.json"
+      }
+    }
+  }
+}

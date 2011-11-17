@@ -600,16 +600,6 @@ return declare("davinci.ve.Context", null, {
 		var filename = this.getModel().fileName;
 		return new davinci.model.Path(filename);
 	},
-	
-	/**
-	 * Get a full path for the given resource relative to the project base.
-	 * @param resource {string} resource path segment
-	 * @returns {davinci.model.Path} full path of resource
-	 */
-    getPathRelativeToProject: function(resource) {
-		var fullLibPath = new davinci.model.Path(resource.getPath());
-		return fullLibPath.relativeTo(this.getPath(),true).toString();	
-    },
 
     /* ensures the file has a valid theme.  Adds the users default if its not there alread */
     loadTheme: function(){
@@ -2252,7 +2242,15 @@ return declare("davinci.ve.Context", null, {
 
 	addJavaScriptText: function(text, doUpdateModel, skipDomUpdate) {
 		/* run the requires if there is an iframe */
-		if(!skipDomUpdate) { this.getGlobal()['eval'](text); }
+		if (! skipDomUpdate) {
+			try {
+				this.getGlobal()['eval'](text);
+			} catch(e) {
+				var len = text.length;
+				console.error("eval of \"" + text.substr(0, 20) + (len > 20 ? "..." : "") +
+						"\" failed");
+			}
+		}
 		if (doUpdateModel) {
 			this.addHeaderScriptText(text);
 		}

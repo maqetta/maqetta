@@ -1,0 +1,19 @@
+{
+  "name": "yui",
+  "version": "2.8.2r1",
+  "directories": {
+    "lib": "../yui"
+  },
+  "overlays": {
+    "oam": {
+      "directories": {
+        "metadata": "."
+      }
+    },
+    "maqetta": {
+      "scripts": {
+        "widget_metadata": "./widgets.json"
+      }
+    }
+  }
+}

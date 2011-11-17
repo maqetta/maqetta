@@ -1,8 +1,12 @@
+// XXX This probably shoudn't depend on davinci/ve/metadata.  This object should
+//   only concern itself with the notion of a library.  Metadata is handled
+//   elsewhere.
 define([
 	"davinci/ve/themeEditor/metadata/CSSThemeProvider",
-	"davinci/ve/themeEditor/metadata/query"
+	"davinci/ve/themeEditor/metadata/query",
+	"davinci/ve/metadata"
 ],
-function(CSSThemeProvider, query) {
+function(CSSThemeProvider, Query, Metadata) {
 
 /*
  * 
@@ -100,7 +104,7 @@ getThemeMetadata: function(theme) {
 		metaResources.push(resource);
 	}
 			
-	var metaDataLoader = new query(metaResources);
+	var metaDataLoader = new Query(metaResources);
 	
 	var metadata = new CSSThemeProvider(metaResources, theme.className);
 	_themesMetaCache[theme.name] =  {'loader':metaDataLoader, 'css':themeCssFiles, 'metadata':metadata};
@@ -134,7 +138,7 @@ addCustomWidgets: function(base, customWidgetJson) {
 	}
 	*/
 	
-	davinci.ve.metadata.parseMetaData(customWidgetJson, prefs.widgetFolder, true);
+	Metadata.parseMetaData(customWidgetJson.name, customWidgetJson, prefs.widgetFolder, true);
 	dojo.publish("/davinci/ui/addedCustomWidget", [customWidgetJson]);
 },
 

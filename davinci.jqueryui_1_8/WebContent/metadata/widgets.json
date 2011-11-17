@@ -1,7 +1,4 @@
 {
-    "name": "jquery-ui",
-    "longName": "jQuery UI",
-    "version": "1.8.11",
     "categories": {
         "jquery-ui": {
             "name": "jQuery UI",

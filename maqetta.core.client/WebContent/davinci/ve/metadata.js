@@ -37,6 +37,7 @@ define([
     });
     
 	function parsePackage(pkg, path) {
+		libraries[pkg.name] = pkg;
 		path = new Path(path);
 
 		// merge in the 'oam' and 'maqetta' overlays
@@ -50,79 +51,107 @@ define([
         }
 		delete pkg.overlays;
 
-		var widgetsJsonPath = path.append(pkg.scripts.widget_metadata);
-		dojo.xhrGet({
-			url : widgetsJsonPath.toString(),
-			handleAs : "json",
-			sync: true
-		}).then(function(data) {
-			if (data) {
-				parseLibraryDescriptor(data, widgetsJsonPath);
-            }
-        });
+		if (dojo.exists("scripts.widget_metadata", pkg)) {
+			var widgetsJsonPath = path.append(pkg.scripts.widget_metadata);
+			dojo.xhrGet({
+				url : widgetsJsonPath.toString(),
+				handleAs : "json",
+				sync: true // XXX should be async
+			}).then(function(data) {
+				if (data) {
+					parseLibraryDescriptor(pkg.name, data,
+							widgetsJsonPath.getParentPath()); // lop off "*.json"
+	            }
+	        });
+	    }
     }
 
-	function parseLibraryDescriptor(descriptor, path) {
+	function parseLibraryDescriptor(libName, descriptor, path) {
+		if (! libName) {
+			console.error("parseLibraryDescriptor: missing 'libName' arg");
+		}
+
+		var pkg = libraries[libName];
+
+		// XXX Should remove $path. This info is already stored in the packages
+		//   structure; just use that.
         descriptor.$path = path.toString();
         
-        if (libraries.hasOwnProperty(descriptor.name)) {
+		// Handle custom widgets, which call this function without first calling
+		// parsePackage().
+		if (!pkg) {
+			libraries[libName] = {
+				$wm: descriptor
+			};
+		} else if (pkg.$widgets) {
 			descriptor.widgets.forEach(function(item) {
-                libraries[descriptor.name].widgets.push(item);
-            });
-        	for (var name in descriptor.categories) {
-                if (! libraries[descriptor.name].categories.hasOwnProperty(name)) {
-              		libraries[descriptor.name].categories[name] = descriptor.categories[name];
-                }
+				pkg.$wm.widgets.push(item);
+			});
+			for (var name in descriptor.categories) {
+				if (! pkg.$wm.categories.hasOwnProperty(name)) {
+					pkg.$wm.categories[name] = descriptor.categories[name];
+				}
 			}
-        } else {
-        	libraries[descriptor.name] = descriptor;
-    	}
+		} else {
+			// XXX For now, put data from widgets.json as sub-property of package.json
+			//   data.  Later, this should be split up into separate APIs.
+			//   
+			//   libraries[] = pkg = {
+			//       name:
+			//       description:
+			//       version:
+			//       directories: {
+			//           lib:
+			//           metadata:
+			//       }
+			//       scripts: {
+			//           widget_metadata:  URL
+			//       }
+			//       $wm: {    // from widgets.json
+			//          categories: {}
+			//          widgets: []
+			//          $providedTypes: {}
+			//          $path:
+			//       }
+			//       $callbacks:  JS
+			//   }
+			pkg.$wm = descriptor;
+		}
+
+		var wm = pkg.$wm;
     
         if (descriptor.callbacks) {
             dojo.xhrGet({
                 url: path.append(descriptor.callbacks).toString(),
 				handleAs: 'javascript',
-				sync: true
+				sync: true // XXX should be async
 			}).then(function(data) {
-                    descriptor.callbacks = data;
+                pkg.$callbacks = data;
             });
         }
         
-		descriptor.$providedTypes = descriptor.$providedTypes || {};
+		wm.$providedTypes = wm.$providedTypes || {};
 
-		descriptor.widgets.forEach(function(item) {
-        	if (libraries.hasOwnProperty(descriptor.name)) {
-        		libraries[descriptor.name].$providedTypes[item.type] = item;
-        	} else {
-        		descriptor.$providedTypes[item.type] = item;
-        	}
-            // XXX refactor into function, so we don't change original data?
+		wm.widgets.forEach(function(item) {
+			wm.$providedTypes[item.type] = item;
 
         	if (item.icon && !item.iconLocal) {
                 item.icon = path.append(item.icon).toString();
             }
             // XXX refactor into function
-            item.widgetClass = descriptor.categories[item.category].widgetClass;
+            item.widgetClass = wm.categories[item.category].widgetClass;
 
             if (item.data) {
-	            if (libraries.hasOwnProperty(descriptor.name)) {
-					item.data.forEach(function(data) {
-		                if (! libraries[descriptor.name].$providedTypes[data.type]) {
-		                	libraries[descriptor.name].$providedTypes[data.type] = true;
-		                }
-		            });
-	            } else {
-					item.data.forEach(function(data) {
-		                if (!descriptor.$providedTypes[data.type]) {
-		                    descriptor.$providedTypes[data.type] = true;
-		                }
-		            });
-	            }
+				item.data.forEach(function(data) {
+	                if (! wm.$providedTypes[data.type]) {
+	                    wm.$providedTypes[data.type] = true;
+	                }
+	            });
 	        }
         });
         
         // mix in descriptor instance functions
-        dojo.mixin(descriptor, {
+        dojo.mixin(wm, {
             /**
              * Get a translated string for this library
              * @param key
@@ -133,17 +162,20 @@ define([
         
         // register Dojo module for metadata path; necessary for loading of helper
         // and creation tool classes
-        dojo.registerModulePath(METADATA_CLASS_BASE + descriptor.name,
+        dojo.registerModulePath(METADATA_CLASS_BASE + libName,
                 path.relativeTo(dojo.baseUrl).toString());
     }
     
+    // XXX Changed to return package, rather than widgets.json object
     function getLibraryForType(type) {
         if (type) {
-            for (var name in libraries) if (libraries.hasOwnProperty(name)) {
-                var lib = libraries[name];
-                if (lib.$providedTypes[type]) {
-                    return lib;
-                }
+            for (var name in libraries) {
+	            if (libraries.hasOwnProperty(name)) {
+	                var lib = libraries[name];
+	                if (lib.$wm.$providedTypes[type]) {
+	                    return lib;
+	                }
+	            }
             }
         }
         return null;
@@ -189,25 +221,26 @@ define([
         
         // get path from library descriptor
         var lib = getLibraryForType(type),
+            wm,
             descriptorPath;
         if (lib) {
-            descriptorPath = lib.$path;
+            descriptorPath = lib.$wm.$path;
         }
-        if (!descriptorPath) {
-            return undefined;
+        if (! descriptorPath) {
+            return null;
         }
+        wm = lib.$wm;
         
         var metadata = null;
         var metadataUrl = [ descriptorPath, "/", type.replace(/\./g, "/"), "_oam.json" ].join('');
 
-        if(!lib.localPath){
+        if (! wm.localPath){
 	        dojo.xhrGet({
 	            url: metadataUrl,
 	            handleAs: "json",
-	            sync: true, // XXX should be async
-	            load: function(data) {
-	                metadata = data;
-	            }
+	            sync: true // XXX should be async
+		    }).then(function(data) {
+                metadata = data;
 	        });
         }else{
         	var base = davinci.Runtime.getProject();
@@ -227,7 +260,7 @@ define([
         cache[type] = metadata;
 
         // OAM may be overridden by metadata in widgets.json
-        util.mixin(metadata, lib.$providedTypes[type].metadata);
+        util.mixin(metadata, wm.$providedTypes[type].metadata);
         
         return metadata;
     }
@@ -319,7 +352,7 @@ define([
 // move it up to the top level of library.
 						url : path + "/package.json",
 						handleAs : "json",
-						sync: true
+						sync: true // XXX should be async
 					}).then(function(data) {
 				if (data) {
 							parsePackage(data, path);
@@ -327,16 +360,18 @@ define([
 					});
 				}
 			});
-			/* add the users custom widgets to the library metadata */
+
+/* Unused code
+			// add the users custom widgets to the library metadata
 			var base = davinci.Runtime.getProject();
 			var descriptor = library.getCustomWidgets(base);
 			//if(descriptor.custom) parseLibraryDescriptor(descriptor.custom, descriptor.custom.metaPath);
-			
+*/
 		},
         
-		/* used to update a library descriptor after the fact */
-		parseMetaData: function(descriptor, path){
-			parseLibraryDescriptor(descriptor, path);
+		// used to update a library descriptor after the fact
+		parseMetaData: function(name, descriptor, path){
+			parseLibraryDescriptor(name, descriptor, path);
 		},
 		
         /**
@@ -346,6 +381,7 @@ define([
          * @returns library metadata if 'name' is defined; otherwise, returns
          * 			array of all libraries' metadata.
          */
+// XXX Note: this return package info now.
         getLibrary: function(name) {
         	return name ? libraries[name] : libraries;
         },
@@ -508,6 +544,9 @@ define([
     	 * @param type {string} widget type
     	 * @returns {Object} library JSON descriptor
     	 */
+// XXX This now returns the package metadata (which includes widgets metadata at
+//    pkg.$wm).  All external callers just want pkg.name -- that should come
+//    from a packages API (i.e. getPackage().name).
         getLibraryForType: function(type) {
             return getLibraryForType(type);
         },
@@ -515,7 +554,7 @@ define([
         getLibraryBase: function(type) {
             var lib = getLibraryForType(type);
             if (lib) {
-                return lib.$path;
+                return lib.$wm.$path;
             }
         },
 
@@ -529,10 +568,10 @@ define([
         invokeCallback: function(type, fnName, args) {
             var lib = getLibraryForType(type),
                 fn;
-            if (lib && lib.callbacks) {
-                fn = lib.callbacks[fnName];
+            if (lib && lib.$callbacks) {
+                fn = lib.$callbacks[fnName];
                 if (fn) {
-                    fn.apply(lib.callbacks, args);
+                    fn.apply(lib.$callbacks, args);
                 }
             }
             // XXX handle/report errors?
@@ -584,10 +623,10 @@ define([
             var lib = getLibraryForType(type),
                 item;
             if (lib) {
-                item = lib.$providedTypes[type];
+                item = lib.$wm.$providedTypes[type];
             }
             if (!item || typeof item !== "object") {
-                return undefined;
+                return;
             }
             
             var value = queryProps(item, queryString);

@@ -5,13 +5,27 @@ define([
 	"dijit/Tooltip",
 	"davinci/ui/dnd/DragSource",
 	"davinci/ve/metadata",
+	"davinci/library",
 	"./PaletteFolder",
 	"./PaletteItem",
 //FIXME: Need to separate out the logic that builds the davinci.Runtime.widgetTable
 	"davinci/Runtime",
 	"dojo/i18n!davinci/ve/nls/common",
 	"davinci/ve/tools/CreateTool"
-], function(declare, WidgetBase, _KeyNavContainer, Tooltip, DragSource, metadata, PaletteFolder, PaletteItem, Runtime, commonNls, CreateTool){
+], function(
+	declare,
+	WidgetBase,
+	_KeyNavContainer,
+	Tooltip,
+	DragSource,
+	Metadata,
+	Library,
+	PaletteFolder,
+	PaletteItem,
+	Runtime,
+	commonNls,
+	CreateTool)
+{
 
 declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 
@@ -43,18 +57,24 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		// XXX Need a better solution for enumerating through descriptor items and creating
 		//    category groups.
         var descriptorObject = {};
-		for (var name in libraries) if (libraries.hasOwnProperty(name)) {
-		    var library = libraries[name];
-		    dojo.forEach(library.widgets, function(item) {
-                var category = library.categories[item.category];
-                if (!descriptorObject[category.name]) {
-                    descriptorObject[category.name] = dojo.clone(category);
-                    descriptorObject[category.name].items = [];
-                }
-                var newItem = dojo.clone(item);
-                newItem.$library = library;
-                descriptorObject[category.name].items.push(newItem);
-		    });
+		for (var name in libraries) {
+			if (libraries.hasOwnProperty(name)) {
+			    var library = libraries[name].$wm;
+			    if (! library) {
+			        continue;
+			    }
+			    
+			    dojo.forEach(library.widgets, function(item) {
+	                var category = library.categories[item.category];
+	                if (!descriptorObject[category.name]) {
+	                    descriptorObject[category.name] = dojo.clone(category);
+	                    descriptorObject[category.name].items = [];
+	                }
+	                var newItem = dojo.clone(item);
+	                newItem.$library = library;
+	                descriptorObject[category.name].items.push(newItem);
+			    });
+			}
 		}
 		this._generateCssRules(descriptorObject);
 		
@@ -125,46 +145,58 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		if (this._loaded) { return; }
 		//debugger;
 		this._loaded = true; // call this only once
-		var allLibraries = metadata.getLibrary();
-		var userLibs = davinci.library.getUserLibs(Runtime.getProject());
+		var allLibraries = Metadata.getLibrary();
+		var userLibs = Library.getUserLibs(Runtime.getProject());
 		var libraries = {};
 		
-		function findInAll(name, version){
-			for (var n in allLibraries){
-				var lib = allLibraries[n];
-				if(lib.name===name && lib.version===version){
-					var ro = {};
-					ro[name] = allLibraries[name];
-					return ro;
+		function findInAll(name, version) {
+			for (var n in allLibraries) {
+				if (allLibraries.hasOwnProperty(n)) {
+					var lib = allLibraries[n];
+					if (lib.name === name && lib.version === version) {
+						var ro = {};
+						ro[name] = allLibraries[n];
+						return ro;
+					}
 				}
 			}
 			return null;
 		}
 		
-		for(var i=0;i<userLibs.length;i++){
-			var library = findInAll(userLibs[i].id, userLibs[i].version);
-			if (library!=null) { dojo.mixin(libraries, library); }
-		}
+		userLibs.forEach(function(ulib) {
+			var library = findInAll(ulib.id, ulib.version);
+			if (library) {
+				dojo.mixin(libraries, library);
+			}
+		});
 		
-		var customWidgets = davinci.library.getCustomWidgets(Runtime.getProject());
-		if (customWidgets!=null) { dojo.mixin(libraries, customWidgets); }
+		var customWidgets = Library.getCustomWidgets(Runtime.getProject());
+		if (customWidgets) {
+			dojo.mixin(libraries, customWidgets);
+		}
 		
 		// Merge descriptors that have the same category
 		// XXX Need a better solution for enumerating through descriptor items and creating
 		//    category groups.
         var descriptorObject = {};
-		for (var name in libraries) if (libraries.hasOwnProperty(name)) {
-		    var lib = libraries[name];
-		    dojo.forEach(lib.widgets, function(item) {
-                var category = lib.categories[item.category];
-                if (!descriptorObject[category.name]) {
-                    descriptorObject[category.name] = dojo.clone(category);
-                    descriptorObject[category.name].items = [];
-                }
-                var newItem = dojo.clone(item);
-                newItem.$library = lib;
-                descriptorObject[category.name].items.push(newItem);
-		    });
+		for (var name in libraries) {
+			if (libraries.hasOwnProperty(name)) {
+			    var lib = libraries[name].$wm;
+			    if (! lib) {
+			        continue;
+			    }
+
+			    dojo.forEach(lib.widgets, function(item) {
+	                var category = lib.categories[item.category];
+	                if (!descriptorObject[category.name]) {
+	                    descriptorObject[category.name] = dojo.clone(category);
+	                    descriptorObject[category.name].items = [];
+	                }
+	                var newItem = dojo.clone(item);
+	                newItem.$library = lib;
+	                descriptorObject[category.name].items.push(newItem);
+			    });
+			}
 		}
 		
 		// Force certain hardcoded ones to top: Containers, Controls, Other, Untested, ...

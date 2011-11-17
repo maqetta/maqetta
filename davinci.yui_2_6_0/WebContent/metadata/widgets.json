@@ -1,7 +1,4 @@
 {
-    "name": "yui",
-    "longName": "YUI Library",
-    "version": "2.8.2r1",
     "categories": {
         "yui": {
             "name": "YUI",

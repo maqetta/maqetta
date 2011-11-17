@@ -1,7 +1,6 @@
-dojo.provide("davinci.ve.themeEditor.metadata.query");
+define(["dojo/_base/declare"], function(declare) {
 
-
-dojo.declare("davinci.ve.themeEditor.metadata.query",null,{
+return declare("davinci.ve.themeEditor.metadata.query", null, {
 	
 	constructor : function(files,modules){
 		this.files = files;
@@ -16,8 +15,6 @@ dojo.declare("davinci.ve.themeEditor.metadata.query",null,{
 				this.modulePrefix += "/" + modules[i];
 			}
 		}
-		
-		
 	},
 	getType : function (widget){
 		var type = null;
@@ -59,7 +56,6 @@ dojo.declare("davinci.ve.themeEditor.metadata.query",null,{
 			dojo.mixin(this.cache, metadata);
 	},
 	
-	
 	getMetaData : function(type){
 		
 		var path = type.split(".");
@@ -95,6 +91,6 @@ dojo.declare("davinci.ve.themeEditor.metadata.query",null,{
 			}
 			return null;
 	}
-	
 });
 
+});

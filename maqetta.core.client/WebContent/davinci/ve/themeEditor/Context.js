@@ -15,7 +15,7 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 	_configProps: {async:true},
 
 	constructor: function(args){
-		this._id = "_edit_context_" + davinci.ve._contextCount++;
+		this._id = "_edit_context_" + this._contextCount++;
 		this._editor = args.editor;
 		this._visualEditor = args.visualEditor;
 		
@@ -164,7 +164,7 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 	},
 	getThemeMeta: function(){
 		if(!this._themeMetaCache) {
-			this._themeMetaCache = davinci.library.getMetaData(this.theme);
+			this._themeMetaCache = davinci.library.getThemeMetadata(this.theme);
 		}
 
 		return this._themeMetaCache;

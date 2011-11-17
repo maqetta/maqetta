@@ -1,7 +1,4 @@
 {
-    "name": "dojo",
-    "longName": "Dojo Toolkit",
-    "version": "1.7",
     "categories": {
         "containers": {
             "name": "Dojo Containers",
@@ -939,6 +936,7 @@
             "tool": "davinci.libraries.dojo.dijit.TooltipDialogCreateTool",
             "resizable": "none",
             "allowedChild": "ANY",
+            "allowedParent": "dijit.form.DropDownButton",
             "helper": "davinci.libraries.dojo.dijit.TooltipDialogHelper"
         },
         {

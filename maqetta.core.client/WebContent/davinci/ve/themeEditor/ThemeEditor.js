@@ -4,6 +4,7 @@ define([
 	"davinci/ve/ThemeModifier",
 	"davinci/ve/themeEditor/VisualThemeEditor",
 	"davinci/ve/themeEditor/metadata/query",
+	"davinci/ve/themeEditor/metadata/CSSThemeProvider",
 	"davinci/ve/themeEditor/commands/ThemeEditorCommand",
 	"davinci/ve/themeEditor/commands/SubwidgetChangeCommand",
 	"davinci/ve/themeEditor/commands/StyleChangeCommand",
@@ -15,6 +16,7 @@ define([
 			ThemeModifier,
 			VisualThemeEditor,
 			query,
+			CSSThemeProvider,
 			ThemeEditorCommand,
 			SubwidgetChangeCommand,
 			StyleChangeCommand,
@@ -22,7 +24,7 @@ define([
 			ContentPane
 	){
 
-declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier], {
+return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier], {
 	
 	children : [], //FIXME: shared array
 	visualEditor : null, 
@@ -535,7 +537,7 @@ declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier], {
 			}
 			
 			this.metaDataLoader = new query(metaResources);
-			this._theme = new davinci.ve.themeEditor.metadata.CSSThemeProvider(metaResources, this.theme);
+			this._theme = new CSSThemeProvider(metaResources, this.theme);
 			// connect to the css files, so we can update the canvas when the model changes
 			var cssFiles = this._getCssFiles();	
 			var context = this.getContext();

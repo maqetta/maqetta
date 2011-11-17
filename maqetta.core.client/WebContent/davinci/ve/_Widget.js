@@ -1,6 +1,30 @@
-define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
+define("davinci/ve/_Widget", ["dojo/_base/declare", "davinci/ve/metadata"], function(declare) {
 
-/*return*/ dojo.declare("davinci.ve._Widget", null, {
+var arrayEquals = function(array1, array2, func){
+	if(array1 == array2){
+		return true;
+	}
+	if(!array1 || !array2){
+		return false;
+	}
+	if(array1.length != array2.length){
+		return false;
+	}
+	for(var i = 0; i < array1.length; i++){
+		if(func){
+			if(!func(array1[i], array2[i])){
+				return false;
+			}
+		}else{
+			if(array1[i] != array2[i]){
+				return false;
+			}
+		}
+	}
+	return true;
+};
+
+return declare("davinci.ve._Widget", null, {
 
 	isWidget: true,
 
@@ -406,7 +430,7 @@ define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
 					var value = this.getPropertyValue(name);
 					if(value && value.length) {
 						if(property.datatype == "array") {
-							if(!davinci.ve._equals(value, property.defaultValue)) {
+							if(!arrayEquals(value, property.defaultValue)) {
 								data.properties[name] = value;
 							}
 						}else{

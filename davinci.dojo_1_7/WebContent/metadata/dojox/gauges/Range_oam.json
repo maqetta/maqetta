@@ -5,23 +5,20 @@
     "version": "1.0",
     "require": [
         {
-            "type": "javascript",
-            "src": "dojo/dojo.js",
-            "$library": "dojo"
-        },
-        {
             "type": "css",
             "src": "dojo/resources/dojo.css",
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "$text": "dojo.require('dojox.gauges._Gauge');"
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/gauges/_Gauge",
+            "$library": "dojo"
         }
     ],
     "library": {
         "dojo": {
-            "src": "../../../../"
+            "src": "../../../../dojo/dojo.js"
         }
     },
     "property": {
@@ -44,7 +41,7 @@
             "datatype": "json",
             "description": "the color of the range.  This must be an object of one of two forms:\n{'color': 'color-name'}\nOR\n(for a gradient:)\n{'type': 'linear', 'colors': [{offset: 0, color:'#C0C0C0'}, {offset: 1, color: '#E0E0E0'}] }",
             "hidden": false,
-            "defaultValue":"{'color': 'red'}"
+            "defaultValue": "{'color': 'red'}"
         },
         "size": {
             "datatype": "number",

@@ -545,7 +545,7 @@ dojo.declare("davinci.ve.Context", null, {
 	 * @returns {davinci.model.Path} full path of resource
 	 */
     getPathRelativeToProject: function(resource) {
-		var fullLibPath = new davinci.model.Path(resource.getPath());
+		var fullLibPath = new davinci.model.Path(resource);
 		return fullLibPath.relativeTo(this.getPath(),true).toString();	
     },
 

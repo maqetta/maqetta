@@ -1,4 +1,11 @@
-define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, util) {
+// XXX This object shouldn't have a dependency on SmartInput
+define([
+    "davinci/ve/input/SmartInput",
+    "davinci/util",
+	"davinci/library",
+	"davinci/model/Path"
+], function(SmartInput, util, library, Path) {
+
 	var metadata,
     	METADATA_CLASS_BASE = "davinci.libraries.",
     
@@ -29,79 +36,122 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
         metadata.init();
     });
     
-    function parseLibraryDescriptor(data) {
-    	
-    	var path = new davinci.model.Path(data.metaPath),
-    		descriptor = data.descriptor;
-     
+	function parsePackage(pkg, path) {
+		libraries[pkg.name] = pkg;
+		path = new Path(path);
+
+		// merge in the 'oam' and 'maqetta' overlays
+		var overlays = pkg.overlays;
+		for (var name in overlays) {
+			if (overlays.hasOwnProperty(name)) {
+				if (name === 'oam' || name === 'maqetta') {
+					util.mixin(pkg, overlays[name]);
+				}
+			}
+        }
+		delete pkg.overlays;
+
+		if (dojo.exists("scripts.widget_metadata", pkg)) {
+			var widgetsJsonPath = path.append(pkg.scripts.widget_metadata);
+			dojo.xhrGet({
+				url : widgetsJsonPath.toString(),
+				handleAs : "json",
+				sync: true // XXX should be async
+			}).then(function(data) {
+				if (data) {
+					parseLibraryDescriptor(pkg.name, data,
+							widgetsJsonPath.getParentPath()); // lop off "*.json"
+	            }
+	        });
+	    }
+    }
+
+	function parseLibraryDescriptor(libName, descriptor, path) {
+		if (! libName) {
+			console.error("parseLibraryDescriptor: missing 'libName' arg");
+		}
+
+		var pkg = libraries[libName];
+
+		// XXX Should remove $path. This info is already stored in the packages
+		//   structure; just use that.
         descriptor.$path = path.toString();
         
-        
-        if(libraries.hasOwnProperty(descriptor.name)){
-        	  dojo.forEach(descriptor.widgets, function(item) {
-                  libraries[descriptor.name].widgets.push(item);
-              });
-        	  for(var name in descriptor.categories) {
-                  if(!libraries[descriptor.name].categories.hasOwnProperty(name)){
-                	  libraries[descriptor.name].categories[name] = descriptor.categories[name];
-                  }
-              };
-        	  
-        }else{
-        
-        	libraries[descriptor.name] = descriptor;
-    	}
+		// Handle custom widgets, which call this function without first calling
+		// parsePackage().
+		if (!pkg) {
+			libraries[libName] = {
+				$wm: descriptor
+			};
+		} else if (pkg.$widgets) {
+			descriptor.widgets.forEach(function(item) {
+				pkg.$wm.widgets.push(item);
+			});
+			for (var name in descriptor.categories) {
+				if (! pkg.$wm.categories.hasOwnProperty(name)) {
+					pkg.$wm.categories[name] = descriptor.categories[name];
+				}
+			}
+		} else {
+			// XXX For now, put data from widgets.json as sub-property of package.json
+			//   data.  Later, this should be split up into separate APIs.
+			//   
+			//   libraries[] = pkg = {
+			//       name:
+			//       description:
+			//       version:
+			//       directories: {
+			//           lib:
+			//           metadata:
+			//       }
+			//       scripts: {
+			//           widget_metadata:  URL
+			//       }
+			//       $wm: {    // from widgets.json
+			//          categories: {}
+			//          widgets: []
+			//          $providedTypes: {}
+			//          $path:
+			//       }
+			//       $callbacks:  JS
+			//   }
+			pkg.$wm = descriptor;
+		}
+
+		var wm = pkg.$wm;
     
         if (descriptor.callbacks) {
             dojo.xhrGet({
                 url: path.append(descriptor.callbacks).toString(),
-                sync: true, // XXX should be async
-                handleAs: 'javascript',
-                load: function(data) {
-                    descriptor.callbacks = data;
-                }
+				handleAs: 'javascript',
+				sync: true // XXX should be async
+			}).then(function(data) {
+                pkg.$callbacks = data;
             });
         }
         
-        if(descriptor.$providedTypes==null)
-        	descriptor.$providedTypes= {};
-        
-        dojo.forEach(descriptor.widgets, function(item) {
-        	
-        	 if(libraries.hasOwnProperty(descriptor.name)){
-        		 libraries[descriptor.name].$providedTypes[item.type] = item;
-        	 }else{
-        		 descriptor.$providedTypes[item.type] = item;
-        	 }
-            // XXX refactor into function, so we don't change original data?
-            
-        	 
-        	 if (item.icon && !item.iconLocal) {
+		wm.$providedTypes = wm.$providedTypes || {};
+
+		wm.widgets.forEach(function(item) {
+			wm.$providedTypes[item.type] = item;
+
+        	if (item.icon && !item.iconLocal) {
                 item.icon = path.append(item.icon).toString();
             }
             // XXX refactor into function
-            item.widgetClass = descriptor.categories[item.category].widgetClass;
-            
-           
-            if(libraries.hasOwnProperty(descriptor.name)){
-            
-            	dojo.forEach(item.data, function(data) {
-	                if (!libraries[descriptor.name].$providedTypes[data.type]) {
-	                	libraries[descriptor.name].$providedTypes[data.type] = true;
+            item.widgetClass = wm.categories[item.category].widgetClass;
+
+            if (item.data) {
+				item.data.forEach(function(data) {
+	                if (! wm.$providedTypes[data.type]) {
+	                    wm.$providedTypes[data.type] = true;
 	                }
 	            });
-            	
-            }else{
-	            dojo.forEach(item.data, function(data) {
-	                if (!descriptor.$providedTypes[data.type]) {
-	                    descriptor.$providedTypes[data.type] = true;
-	                }
-	            });
-            }
+	        }
         });
         
         // mix in descriptor instance functions
-        dojo.mixin(descriptor, {
+        dojo.mixin(wm, {
             /**
              * Get a translated string for this library
              * @param key
@@ -112,17 +162,20 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
         
         // register Dojo module for metadata path; necessary for loading of helper
         // and creation tool classes
-        dojo.registerModulePath(METADATA_CLASS_BASE + descriptor.name,
+        dojo.registerModulePath(METADATA_CLASS_BASE + libName,
                 path.relativeTo(dojo.baseUrl).toString());
     }
     
+    // XXX Changed to return package, rather than widgets.json object
     function getLibraryForType(type) {
         if (type) {
-            for (var name in libraries) if (libraries.hasOwnProperty(name)) {
-                var lib = libraries[name];
-                if (lib.$providedTypes[type]) {
-                    return lib;
-                }
+            for (var name in libraries) {
+	            if (libraries.hasOwnProperty(name)) {
+	                var lib = libraries[name];
+	                if (lib.$wm && lib.$wm.$providedTypes[type]) {
+	                    return lib;
+	                }
+	            }
             }
         }
         return null;
@@ -168,25 +221,26 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
         
         // get path from library descriptor
         var lib = getLibraryForType(type),
+            wm,
             descriptorPath;
         if (lib) {
-            descriptorPath = lib.$path;
+            descriptorPath = lib.$wm.$path;
         }
-        if (!descriptorPath) {
-            return undefined;
+        if (! descriptorPath) {
+            return null;
         }
+        wm = lib.$wm;
         
         var metadata = null;
         var metadataUrl = [ descriptorPath, "/", type.replace(/\./g, "/"), "_oam.json" ].join('');
 
-        if(!lib.localPath){
+        if (! wm.localPath){
 	        dojo.xhrGet({
 	            url: metadataUrl,
 	            handleAs: "json",
-	            sync: true, // XXX should be async
-	            load: function(data) {
-	                metadata = data;
-	            }
+	            sync: true // XXX should be async
+		    }).then(function(data) {
+                metadata = data;
 	        });
         }else{
         	var base = davinci.Runtime.getProject();
@@ -206,7 +260,7 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
         cache[type] = metadata;
 
         // OAM may be overridden by metadata in widgets.json
-        util.mixin(metadata, lib.$providedTypes[type].metadata);
+        util.mixin(metadata, wm.$providedTypes[type].metadata);
         
         return metadata;
     }
@@ -283,27 +337,41 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
     }
 
     
-    return metadata = {
+	metadata = {
         /**
          * Read the library metadata for all the libraries linked in the user's workspace
          */
 		init: function() {
-			dojo.forEach(davinci.library.getInstalledLibs(), function(lib) {
-				var data = davinci.library.getLibMetadata(lib.id, lib.version);
+			library.getInstalledLibs().forEach(function(lib) {
+// XXX Shouldn't be dealing with 'package.json' here; that belongs in library.js
+// (or a combined object).  Putting it here for now, to quickly integrate.
+				var path = library.getMetaRoot(lib.id, lib.version);
+				if (path) {
+					dojo.xhrGet({
+// XXX For now, 'package.json' lives inside the 'metadata' dir.  Will need to
+// move it up to the top level of library.
+						url : path + "/package.json",
+						handleAs : "json",
+						sync: true // XXX should be async
+					}).then(function(data) {
 				if (data) {
-					parseLibraryDescriptor(data);
+							parsePackage(data, path);
+						}
+					});
 				}
 			});
-			/* add the users custom widgets to the library metadata */
+
+/* Unused code
+			// add the users custom widgets to the library metadata
 			var base = davinci.Runtime.getProject();
-			var descriptor = davinci.library.getCustomWidgets(base);
-			//if(descriptor.custom) parseLibraryDescriptor({descriptor:descriptor.custom, metaPath:descriptor.custom.metaPath});
-			
+			var descriptor = library.getCustomWidgets(base);
+			//if(descriptor.custom) parseLibraryDescriptor(descriptor.custom, descriptor.custom.metaPath);
+*/
 		},
         
-		/* used to update a library descriptor after the fact */
-		parseMetaData: function(data){
-			parseLibraryDescriptor(data);
+		// used to update a library descriptor after the fact
+		parseMetaData: function(name, descriptor, path){
+			parseLibraryDescriptor(name, descriptor, path);
 		},
 		
         /**
@@ -313,6 +381,7 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
          * @returns library metadata if 'name' is defined; otherwise, returns
          * 			array of all libraries' metadata.
          */
+// XXX Note: this return package info now.
         getLibrary: function(name) {
         	return name ? libraries[name] : libraries;
         },
@@ -331,9 +400,9 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
     			}
     		}
     		
-    		var themePath = new davinci.model.Path(model.fileName);
+			var themePath = new Path(model.fileName);
     		/* remove the .theme file, and find themes in the given base location */
-    		var allThemes = davinci.library.getThemes(themePath.removeLastSegments(1).toString());
+    		var allThemes = library.getThemes(themePath.removeLastSegments(1).toString());
     		var themeHash = {};
     		for(var i=0;i<allThemes.length;i++){
     		    if (allThemes[i]['files']){ // #1024 theme maps do not have files
@@ -361,7 +430,7 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
     				if(url.indexOf(themeUrl)  > -1){
     					return {
     						themeUrl: url,
-    						themeMetaCache: davinci.library.getMetaData(themeHash[themeUrl]),
+    						themeMetaCache: library.getThemeMetadata(themeHash[themeUrl]),
     						theme: themeHash[themeUrl]
     					};
     				}
@@ -415,7 +484,7 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
     				var returnObject = {
     					themeUrl: url,
     					// Pull claro theme data
-    					themeMetaCache: davinci.library.getMetaData(themeHash[claroThemeUrl]),
+    					themeMetaCache: library.getThemeMetadata(themeHash[claroThemeUrl]),
     					theme: themeHash[claroThemeUrl]
     				};
     				returnObject.themeMetaCache.usingSubstituteTheme = {
@@ -456,7 +525,7 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
                                  if(url.indexOf(themeUrl)  > -1){
                                      return {
                                     	 themeUrl: url,
-                                    	 themeMetaCache: davinci.library.getMetaData(themeHash[themeUrl]),
+                                    	 themeMetaCache: library.getThemeMetadata(themeHash[themeUrl]),
                                     	 theme: themeHash[themeUrl]
                                      };
                                  }
@@ -475,6 +544,9 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
     	 * @param type {string} widget type
     	 * @returns {Object} library JSON descriptor
     	 */
+// XXX This now returns the package metadata (which includes widgets metadata at
+//    pkg.$wm).  All external callers just want pkg.name -- that should come
+//    from a packages API (i.e. getPackage().name).
         getLibraryForType: function(type) {
             return getLibraryForType(type);
         },
@@ -482,7 +554,7 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
         getLibraryBase: function(type) {
             var lib = getLibraryForType(type);
             if (lib) {
-                return lib.$path;
+                return lib.$wm.$path;
             }
         },
 
@@ -496,10 +568,10 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
         invokeCallback: function(type, fnName, args) {
             var lib = getLibraryForType(type),
                 fn;
-            if (lib && lib.callbacks) {
-                fn = lib.callbacks[fnName];
+            if (lib && lib.$callbacks) {
+                fn = lib.$callbacks[fnName];
                 if (fn) {
-                    fn.apply(lib.callbacks, args);
+                    fn.apply(lib.$callbacks, args);
                 }
             }
             // XXX handle/report errors?
@@ -551,10 +623,10 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
             var lib = getLibraryForType(type),
                 item;
             if (lib) {
-                item = lib.$providedTypes[type];
+                item = lib.$wm.$providedTypes[type];
             }
             if (!item || typeof item !== "object") {
-                return undefined;
+                return;
             }
             
             var value = queryProps(item, queryString);
@@ -613,4 +685,6 @@ define(["davinci/ve/input/SmartInput", "davinci/util"], function(SmartInput, uti
         	return getAllowedElement('Child', type);
         }
     };
+
+    return metadata;
 });

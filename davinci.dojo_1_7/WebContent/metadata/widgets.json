@@ -939,6 +939,10 @@
             "tool": "davinci.libraries.dojo.dijit.TooltipDialogCreateTool",
             "resizable": "none",
             "allowedChild": "ANY",
+<<<<<<< HEAD
+=======
+			"allowedParent": "dijit.form.DropDownButton",
+>>>>>>> refs/heads/master
             "helper": "davinci.libraries.dojo.dijit.TooltipDialogHelper"
         },
         {

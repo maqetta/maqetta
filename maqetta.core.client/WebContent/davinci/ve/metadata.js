@@ -172,7 +172,7 @@ define([
             for (var name in libraries) {
 	            if (libraries.hasOwnProperty(name)) {
 	                var lib = libraries[name];
-	                if (lib.$wm.$providedTypes[type]) {
+	                if (lib.$wm && lib.$wm.$providedTypes[type]) {
 	                    return lib;
 	                }
 	            }

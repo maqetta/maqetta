@@ -33,6 +33,7 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 	
 	postCreate : function(){
 		this.inherited(arguments);
+		this.langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		dojo.connect(this.fileDialogFileName, "onkeyup", this, '_checkValid');
 		dojo.connect(this.fileDialogParentFolder, "onkeyup", this, '_checkValid');
 		this.fileTree.watch("selectedItem", dojo.hitch(this, this._updateFields));
@@ -78,19 +79,24 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		}
 		var table = dojo.query('.fileFolderTable',this.domNode)[0];
 		var folderContainer = dojo.query('.folderContainer',this.domNode)[0];
+		var showSpan = dojo.query('.folder_details_show_arrow',this.domNode)[0];
+		var hideSpan = dojo.query('.folder_details_hide_arrow',this.domNode)[0];
 		if(table){
 			if(this.treeCollapsed){
 				dojo.addClass(table, 'treeCollapsed');
 				dojo.removeClass(table, 'treeExpanded');
 				dojo.addClass(folderContainer, 'dijitHidden');
+				dojo.removeClass(showSpan, 'dijitHidden');
+				dojo.addClass(hideSpan, 'dijitHidden');
 			}else{
 				dojo.addClass(table, 'treeExpanded');
 				dojo.removeClass(table, 'treeCollapsed');
 				dojo.removeClass(folderContainer, 'dijitHidden');
+				dojo.addClass(showSpan, 'dijitHidden');
+				dojo.removeClass(hideSpan, 'dijitHidden');
 			}
 		}
-		//FIXME: add langObj
-		//this.arrowNode.title = this.treeCollapsed ? this.langObj.nhfoArrowTitleShowDetails : this.langObj.nhfoArrowTitleHideDetails;
+		this.fileDialogDetailsArrow.title = this.treeCollapsed ? this.langObj.newFileShowFiles : this.langObj.newFileHideFiles;
 	},	
 	
 	_setValueAttr : function(value){

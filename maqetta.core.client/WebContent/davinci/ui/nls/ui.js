@@ -98,6 +98,10 @@ define({ root:
 
 		"newProject":"New Project",
 		
+		//NewFile.html
+		"newFileShowFiles":"Show file picker",
+		"newFileHideFiles":"Hide file picker",
+		
 		//NewHTMLFileOptions.html - Composition type strings
 		"nhfoCompositionType":"Composition type:",
 		"nhfoCTMenu_desktop":"Desktop",
@@ -110,8 +114,8 @@ define({ root:
 		"nhfoCTTitle_wireframe":"desktop browser, absolute layout, wireframe theme",
 		"nhfoCTMenu_custom":"Custom",
 		"nhfoCTTitle_custom":"custom settings",
-		"nhfoArrowTitleShowDetails":"Show detailed options",
-		"nhfoArrowTitleHideDetails":"Hide detailed options",
+		"nhfoShowDetails":"Show details",
+		"nhfoHideDetails":"Hide details",
 		
 		//NewHTMLFileOptions.html - Device strings
 		"nhfoDevice":"Device:",

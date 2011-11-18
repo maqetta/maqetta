@@ -1,17 +1,17 @@
-define([
-    "dojo/_base/declare",
-	"dojo/text!davinci/ve/template.html",
-	"davinci/Runtime",
-	"davinci/Workbench",
-	"davinci/model/Path",
-	"davinci/ve/Context",
-	"davinci/ve/commands/ModifyRuleCommand",
-	"preview/silhouetteiframe"
-], function(declare, template, Runtime, Workbench, Path, Context, ModifyRuleCommand, SilhouetteIframe){
+dojo.provide("davinci.ve.VisualEditor");
+ 
+dojo.require("davinci.Runtime");
+dojo.require("davinci.Workbench");
+dojo.require("davinci.model.Path");
+dojo.require("davinci.ve.Context");
+//dojorequire("davinci.ve.actions.ContextActions");
+//dojorequire("davinci.ve.actions.ChildActions");
+dojo.require("davinci.ve.actions.DeviceActions");
+dojo.require("davinci.ve.commands.ModifyRuleCommand");
 
-//davinci.ve.VisualEditor.EDITOR_ID="davinci.ve.HTMLPageEditor";
+dojo.require("preview.silhouetteiframe");
 
-return declare("davinci.ve.VisualEditor", null, {
+dojo.declare("davinci.ve.VisualEditor", null, {
 
 	deviceName: 'none',
 	_orientation: 'portrait',
@@ -25,7 +25,7 @@ return declare("davinci.ve.VisualEditor", null, {
 			'</div>';
 		this.contentPane.attr('content', content);
 		var silhouette_div_container=dojo.query('.silhouette_div_container',this.contentPane.domNode)[0];
-		this.silhouetteiframe = new SilhouetteIframe({
+		this.silhouetteiframe = new preview.silhouetteiframe({
 			rootNode:silhouette_div_container,
 			margin:20
 		});
@@ -114,9 +114,8 @@ return declare("davinci.ve.VisualEditor", null, {
 
 	_objectPropertiesChange: function (event){
 
-		if (!this.isActiveEditor()) {
+		if(!this.isActiveEditor() )
 			return;
-		}
 		var context = this.getContext();
 		var command = event.command;	
 		command.setContext(context);
@@ -136,7 +135,7 @@ return declare("davinci.ve.VisualEditor", null, {
 	},
 
 	isActiveEditor: function(){
-		var currentEditor = Runtime.currentEditor;
+		var currentEditor = davinci.Runtime.currentEditor;
 		return currentEditor && currentEditor.declaredClass=="davinci.ve.PageEditor" && currentEditor.visualEditor == this;
 	},
 	
@@ -158,12 +157,12 @@ return declare("davinci.ve.VisualEditor", null, {
 			var allValues = {};
 			/* rewrite any URLs found */
 			
-			var filePath = new Path(this.fileName);
+			var filePath = new davinci.model.Path(this.fileName);
 			
 			for(var name in value.values){
 				if(davinci.ve.utils.URLRewrite.containsUrl(value.values[name])){
 					
-					var oldUrl = new Path(davinci.ve.utils.URLRewrite.getUrl(value.values[name]));
+					var oldUrl = new davinci.model.Path(davinci.ve.utils.URLRewrite.getUrl(value.values[name]));
 					if(!oldUrl.isAbsolute){
 						var newUrl = oldUrl.relativeTo(filePath).toString();
 						var newValue = davinci.ve.utils.URLRewrite.replaceUrl(value.values[name], newUrl);
@@ -173,6 +172,7 @@ return declare("davinci.ve.VisualEditor", null, {
 					}
 				}else{
 					allValues[name]=value.values[name];
+					
 				}
 			}
 			
@@ -196,7 +196,7 @@ return declare("davinci.ve.VisualEditor", null, {
 			}
 			
 			/* update the rule */
-			var command = new ModifyRuleCommand(rule, value.values);
+			var command = new davinci.ve.commands.ModifyRuleCommand(rule, value.values);
 		}
 		if(command){
 			context.getCommandStack().execute(command);
@@ -218,7 +218,17 @@ return declare("davinci.ve.VisualEditor", null, {
 	},
 
 	getTemplate: function(){
-		return template;
+		//FIXME: use dojo.cache?
+		if(!this.template){
+			dojo.xhrGet({
+				url: dojo.moduleUrl("davinci.ve", "template.html"),
+				handleAs: "text",
+				sync: true
+			}).addCallback(dojo.hitch(this, function(result){
+				this.template = result;
+			}));
+		}
+		return this.template;
 	},
 	
 	destroy: function () {
@@ -245,12 +255,12 @@ return declare("davinci.ve.VisualEditor", null, {
 	},
 	
 	_setContentRaw: function(filename, content, newHtmlParams){
-		this.fileName = filename;
-		this.basePath = new Path(filename);
+		this.fileName=filename;
+		this.basePath=new davinci.model.Path(filename);
 	   
 		if (!this.initialSet){
 			
-			var loc = Workbench.location();
+			var loc=davinci.Workbench.location();
 			//FIXME: replace this stuff with a regexp
 			if (loc.charAt(loc.length-1)=='/'){
 				loc=loc.substring(0,loc.length-1);
@@ -258,11 +268,11 @@ return declare("davinci.ve.VisualEditor", null, {
 		   	while(filename.indexOf(".")==0 || filename.indexOf("/")==0){
 		   		filename = filename.substring(1,filename.length);
 			}				
-			var baseUrl=loc+'/user/'+Runtime.userName+'/ws/workspace/'+filename;
+			var baseUrl=loc+'/user/'+davinci.Runtime.userName+'/ws/workspace/'+filename;
 
 			this._handles=[];
 			var containerNode = dojo.query('.silhouette_div_container',this.contentPane.domNode)[0];
-			this.context = new Context({
+			this.context = new davinci.ve.Context({
 				editor: this._pageEditor,
 				visualEditor: this,
 				containerNode: containerNode,
@@ -276,7 +286,7 @@ return declare("davinci.ve.VisualEditor", null, {
 //			this.context.addActionGroup(new davinci.ve.actions.ContextActions());
 //			this.context.addActionGroup(new davinci.ve.actions.ChildActions());
 
-			var prefs=davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', Runtime.getProject());
+			var prefs=davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
 			if (prefs) {
 				this.context.setPreferences(prefs);
 			}
@@ -290,21 +300,19 @@ return declare("davinci.ve.VisualEditor", null, {
 			this.context._setSource(content, dojo.hitch(this, function(){
 				this.savePoint = 0;
 				this.context.activate();
-				var popup = Workbench.createPopup({partID:'davinci.ve.visualEditor',
-					domNode: this.context.getContainerNode(), 
+				var popup=davinci.Workbench.createPopup({partID:'davinci.ve.visualEditor',
+					domNode:this.context.getContainerNode(), 
 					keysDomNode: this.context.getDocument(), context:this.context});
-				var context = this.context;
-				popup.adjustPosition=function (event) {
-					// Adjust for the x/y position of the visual editor's IFRAME relative to the workbench
-					// Adjust for the scrolled position of the document in the visual editor, since the popup menu callback assumes (0, 0)
-					var coords = dojo.position(context.frameNode);
-					dojo.withDoc(context.getDocument(), function(){
-						var scroll = dojo.docScroll();
-						coords.x -= scroll.x;
-						coords.y -= scroll.y;
-					});
-
-					return coords;
+				var context=this.context;
+				popup.adjustPosition=function (event)
+				{
+					var frameNode = context.frameNode;
+					var coords = context.getDojo().position(frameNode),
+						containerNode = context.getContainerNode();
+					return {
+						x: coords.x - containerNode.parentNode.scrollLeft,
+						y: coords.y - containerNode.parentNode.scrollTop
+					};
 				};
 
 				// resize kludge to make Dijit visualEditor contents resize
@@ -338,7 +346,7 @@ return declare("davinci.ve.VisualEditor", null, {
 			selection = context.getSelection(),
 			widget = selection.length ? selection[selection.length - 1] : undefined;
 
-		if(selection.length > 1){
+			if(selection.length > 1){
 			context.select(widget);
 		}
 		return widget;
@@ -383,7 +391,7 @@ return declare("davinci.ve.VisualEditor", null, {
 	
 	previewInBrowser: function(){
 		var deviceName = this.deviceName;
-		var editor = Workbench.getOpenEditor();
+		var editor = davinci.Workbench.getOpenEditor();
 		var fileURL = editor.resourceFile.getURL();
 		// FIXME. Phil, is there a URL to the working copy of the current file that we can use
 		// Right now I am doing an auto-save which is not right.
@@ -397,4 +405,5 @@ return declare("davinci.ve.VisualEditor", null, {
 		window.open(fileURL);
 	}
 });
-});
+
+davinci.ve.VisualEditor.EDITOR_ID="davinci.ve.HTMLPageEditor";

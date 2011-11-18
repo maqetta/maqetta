@@ -1,0 +1,807 @@
+{
+    "html": {
+        "div": {
+            "displayName": "Combobox",
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".dijitPopup": [
+                            "margin",
+                            "margin-top",
+                            "margin-right",
+                            "margin-bottom",
+                            "margin-left",
+                            "padding",
+                            "padding-top",
+                            "padding-right",
+                            "padding-bottom",
+                            "padding-left",
+                            "position",
+                            "border",
+                            "-webkit-box-shadow",
+                            "-webkit-border-radius",
+                            "border-image"
+                        ],
+                        ".mblComboBoxMenu": [
+                            "overflow-y",
+                            "position",
+                            "overflow",
+                            "overflow-x",
+                            "border",
+                            "border-color",
+                            "border-style",
+                            "border-width",
+                            "border-top-width",
+                            "border-right-width",
+                            "border-bottom-width",
+                            "border-left-width",
+                            "border-top-style",
+                            "border-right-style",
+                            "border-bottom-style",
+                            "border-left-style",
+                            "border-top-color",
+                            "border-right-color",
+                            "border-bottom-color",
+                            "border-left-color",
+                            "-webkit-border-radius",
+                            "border-radius",
+                            "border-top-left-radius",
+                            "border-top-right-radius",
+                            "border-bottom-right-radius",
+                            "border-bottom-left-radius",
+                            "background-color",
+                            "color",
+                            "border-image"
+                        ]
+                    },
+                    "query": ""
+                }
+            },
+            "subwidgets": {
+                "ComboBoxMenuPrevious/Next": {
+                    "displayName": "MenuPrevious/Next",
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".mblComboBoxMenuPreviousButton": [
+                                    "$std_10"
+                                ]
+                            },
+                            "query": ".mblComboBoxMenuPreviousButton"
+                        }
+                    }
+                },
+                "CombBoxMenuItem": {
+                    "displayName": "CombBoxMenuItem",
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".mblComboBoxMenuItem": [
+                                    "$std_10"
+                                ]
+                            },
+                            "query": ".themeEditorComboBoxItemLocator"
+                        },
+                        "Selected": {
+                            "selectors": {
+                                ".mblComboBoxMenuItemSelected": [
+                                    "$std_10"
+                                ]
+                            },
+                            "query": ".themeEditorComboBoxItemLocator",
+                            "simulate": "mblComboBoxMenuItemSelected"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "dojox": {
+        "Button": {
+            "displayName": "Button",
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".mblButton": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ""
+                },
+                "Disabled": {
+                    "selectors": {
+                        ".mblButtonDisabled": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ".mblButton",
+                    "simulate": "mblButtonDisabled"
+                },
+                "Selected": {
+                    "selectors": {
+                        ".mblButtonSelected": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ".mblButton",
+                    "simulate": "mblButtonSelected"
+                }
+            }
+        },
+        "CheckBox": {
+            "displayName": "CheckBox",
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".mblCheckBox": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ""
+                },
+                "Selected": {
+                    "selectors": {
+                        ".mblCheckBoxChecked": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ".mblCheckBox",
+                    "simulate": "mblCheckBoxChecked"
+                }
+            }
+        },
+        "EdgeToEdgeCategory": {
+            "displayName": "EdgeToEdgeCategory",
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".mblEdgeToEdgeCategory": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ""
+                }
+            }
+        },
+        "Heading": {
+            "displayName": "Heading",
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".dj_tablet .mblHeading": [
+                            "$std_10"
+                        ],
+                        ".mblHeading": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ""
+                }
+            },
+            "subwidgets": {
+                "ArrowButtonHead": {
+                    "displayName": "ArrowButtonHead",
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".mblArrowButtonHead": [
+                                    "position",
+                                    "top",
+                                    "left",
+                                    "width",
+                                    "height",
+                                    "border",
+                                    "border-color",
+                                    "border-width",
+                                    "border-style",
+                                    "border-top-width",
+                                    "border-right-width",
+                                    "border-bottom-width",
+                                    "border-left-width",
+                                    "border-top-style",
+                                    "border-right-style",
+                                    "border-bottom-style",
+                                    "border-left-style",
+                                    "border-top-color",
+                                    "border-right-color",
+                                    "border-bottom-color",
+                                    "border-left-color",
+                                    "-webkit-transform",
+                                    "background-image",
+                                    "background-color",
+                                    "border-image"
+                                ],
+                                ".dj_chrome .mblArrowButtonHead": [
+                                    "border",
+                                    "border-color",
+                                    "border-width",
+                                    "border-style",
+                                    "border-top-width",
+                                    "border-right-width",
+                                    "border-bottom-width",
+                                    "border-left-width",
+                                    "border-top-style",
+                                    "border-right-style",
+                                    "border-bottom-style",
+                                    "border-left-style",
+                                    "border-top-color",
+                                    "border-right-color",
+                                    "border-bottom-color",
+                                    "border-left-color",
+                                    "background-image",
+                                    "border-image"
+                                ],
+                                ".dj_tablet .mblArrowButtonHead": [
+                                    "border-color",
+                                    "background-image"
+                                ]
+                            },
+                            "query": ".mblArrowButtonHead"
+                        }
+                    }
+                },
+                "ArrowButtonBody": {
+                    "displayName": "ArrowButtonBody",
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".mblArrowButtonBody": [
+                                    "position",
+                                    "cursor",
+                                    "-webkit-tap-highlight-color",
+                                    "top",
+                                    "left",
+                                    "padding",
+                                    "padding-top",
+                                    "padding-right",
+                                    "padding-bottom",
+                                    "padding-left",
+                                    "height",
+                                    "border-width",
+                                    "border-top-width",
+                                    "border-right-width",
+                                    "border-bottom-width",
+                                    "border-left-width",
+                                    "border-style",
+                                    "border-top-style",
+                                    "border-right-style",
+                                    "border-bottom-style",
+                                    "border-left-style",
+                                    "border-color",
+                                    "border-top-color",
+                                    "border-right-color",
+                                    "border-bottom-color",
+                                    "border-left-color",
+                                    "font-family",
+                                    "font-size",
+                                    "color",
+                                    "line-height",
+                                    "background-color",
+                                    "background-image"
+                                ],
+                                ".dj_tablet .mblArrowButtonBody": [
+                                    "border-color",
+                                    "background-color",
+                                    "background-image",
+                                    "text-shadow"
+                                ]
+                            },
+                            "query": ".mblArrowButtonBody"
+                        }
+                    }
+                },
+                "ToolBarButton": {
+                    "displayName": "ToolBarButton",
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".mblToolBarButtonText": [
+                                    "padding",
+                                    "padding-top",
+                                    "padding-right",
+                                    "padding-bottom",
+                                    "padding-left"
+                                ],
+                                ".mblToolBarButton": [
+                                    "float",
+                                    "position",
+                                    "overflow",
+                                    "overflow-x",
+                                    "overflow-y",
+                                    "cursor",
+                                    "-webkit-tap-highlight-color",
+                                    "margin",
+                                    "margin-top",
+                                    "margin-right",
+                                    "margin-bottom",
+                                    "margin-left",
+                                    "height",
+                                    "border",
+                                    "border-top-width",
+                                    "border-right-width",
+                                    "border-bottom-width",
+                                    "border-left-width",
+                                    "border-top-style",
+                                    "border-right-style",
+                                    "border-bottom-style",
+                                    "border-left-style",
+                                    "border-top-color",
+                                    "border-right-color",
+                                    "border-bottom-color",
+                                    "border-left-color",
+                                    "font-family",
+                                    "font-size",
+                                    "font-weight",
+                                    "color",
+                                    "line-height",
+                                    "text-align",
+                                    "border-image"
+                                ],
+                                ".dj_tablet .mblToolBarButton": [
+                                    "text-shadow",
+                                    "border"
+                                ],
+                                ".mblColorDefault": [
+                                    "background-color",
+                                    "background-image"
+                                ],
+                                ".dj_tablet .mblColorDefault": [
+                                    "background-color",
+                                    "background-image"
+                                ]
+                            },
+                            "query": ".mblToolBarButton"
+                        }
+                    }
+                }
+            }
+        },
+        "RadioButton": {
+            "displayName": "RadioButton",
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".mblRadioButton": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ""
+                },
+                "Selected": {
+                    "selectors": {
+                        ".mblRadioButtonChecked": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ".mblRadioButton",
+                    "simulate": "mblRadioButtonChecked"
+                }
+            }
+        },
+        "RoundRect": {
+            "displayName": "RoundRect",
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".mblRoundRect": [
+                            "$std_10"
+                        ],
+                        ".dj_tablet .mblRoundRect": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ""
+                }
+            }
+        },
+        "RoundRectCategory": {
+            "displayName": "RoundRectCategory",
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".mblRoundRectCategory": [
+                            "$std_10"
+                        ],
+                        ".dj_tablet .mblRoundRectCategory": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ""
+                }
+            }
+        },
+        "RoundRectList": {
+            "displayName": "RoundRectList",
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".mblEdgeToEdgeList": [
+                            "position",
+                            "padding",
+                            "padding-top",
+                            "padding-right",
+                            "padding-bottom",
+                            "padding-left"
+                        ],
+                        ".mblRoundRectList": [
+                            "position",
+                            "margin",
+                            "margin-top",
+                            "margin-right",
+                            "margin-bottom",
+                            "margin-left",
+                            "padding",
+                            "padding-top",
+                            "padding-right",
+                            "padding-bottom",
+                            "padding-left",
+                            "border",
+                            "border-width",
+                            "border-style",
+                            "border-color",
+                            "border-radius",
+                            "border-top-width",
+                            "border-right-width",
+                            "border-bottom-width",
+                            "border-left-width",
+                            "border-top-style",
+                            "border-right-style",
+                            "border-bottom-style",
+                            "border-left-style",
+                            "border-top-color",
+                            "border-right-color",
+                            "border-bottom-color",
+                            "border-left-color",
+                            "-webkit-border-radius",
+                            "border-top-left-radius",
+                            "border-top-right-radius",
+                            "border-bottom-right-radius",
+                            "border-bottom-left-radius",
+                            "-moz-border-radius"
+                        ],
+                        ".dj_tablet .mblRoundRectList": [
+                            "margin"
+                        ]
+                    },
+                    "query": ""
+                }
+            },
+            "subwidgets": {
+                "ListItem": {
+                    "displayName": "ListItem",
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".mblListItem": [
+                                    "position",
+                                    "list-style-type",
+                                    "vertical-align",
+                                    "padding",
+                                    "padding-top",
+                                    "padding-right",
+                                    "padding-bottom",
+                                    "padding-left",
+                                    "height",
+                                    "border-bottom",
+                                    "border-bottom-style",
+                                    "border-bottom-width",
+                                    "border-bottom-color",
+                                    "background-color",
+                                    "font-size",
+                                    "color",
+                                    "line-height"
+                                ],
+                                ".mblListItem .mblListItemAnchor": [
+                                    "-webkit-tap-highlight-color",
+                                    "background-position",
+                                    "background-position-x",
+                                    "background-position-y",
+                                    "text-decoration",
+                                    "padding-right"
+                                ],
+                                ".mblListItemTextBox": [
+                                    "overflow",
+                                    "white-space",
+                                    "text-overflow"
+                                ]
+                            },
+                            "query": ".mblListItem"
+                        }
+                    }
+                },
+                "MoveTo": {
+                    "displayName": "MoveTo",
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".mblDomButtonGrayArrow > div": [
+                                    "border-width",
+                                    "border-top-width",
+                                    "border-right-width",
+                                    "border-bottom-width",
+                                    "border-left-width",
+                                    "border-style",
+                                    "border-color"
+                                ]
+                            },
+                            "query": ".mblListItemRightIcon"
+                        }
+                    }
+                }
+            }
+        },
+        "Switch": {
+            "displayName": "Switch",
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".mblSwitch": [
+                            "margin",
+                            "position",
+                            "width",
+                            "height",
+                            "line-height",
+                            "overflow",
+                            "text-align",
+                            "-webkit-tap-highlight-color"
+                        ],
+                        ".mblSwitchOn.mblSwitchInner": [
+                            "left"
+                        ],
+                        ".mblSwitchBgLeft": [
+                            "background-image",
+                            "left",
+                            "width",
+                            "color",
+                            "background-color"
+                        ],
+                        ".mblSwitchBg": [
+                            "border-radius",
+                            "position",
+                            "top",
+                            "height",
+                            "border-width",
+                            "border-style",
+                            "border-color",
+                            "font-family",
+                            "font-size",
+                            "font-weight",
+                            "line-height",
+                            "-webkit-box-sizing",
+                            "box-sizing"
+                        ],
+                        ".mblSwitchTextLeft": [
+                            "left"
+                        ],
+                        ".mblSwitchText": [
+                            "position",
+                            "top",
+                            "width",
+                            "height",
+                            "padding",
+                            "line-height",
+                            "text-align"
+                        ]
+                    },
+                    "query": ""
+                },
+                "Disabled": {
+                    "selectors": {
+                        ".mblSwitchBgRight": [
+                            "background-image",
+                            "left",
+                            "width",
+                            "color",
+                            "background-color"
+                        ],
+                        ".mblSwitchTextRight": [
+                            "left"
+                        ],
+                        ".mblSwitchText": [
+                            "position",
+                            "top",
+                            "width",
+                            "height",
+                            "padding",
+                            "line-height",
+                            "text-align"
+                        ]
+                    },
+                    "query": [
+                        ".mblSwitchOn",
+                        ".mblSwitchBgRight"
+                    ],
+                    "simulate": [
+                        "mblSwitchOff",
+                        ":style=''"
+                    ]
+                }
+            },
+            "subwidgets": {
+                "SwitchKnob": {
+                    "displayName": "SwitchKnob",
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".mblSwitchKnob": [
+                                    "background-image",
+                                    "background-color",
+                                    "border-radius",
+                                    "position",
+                                    "top",
+                                    "left",
+                                    "width",
+                                    "height",
+                                    "font-size",
+                                    "border-width",
+                                    "border-style",
+                                    "border-color",
+                                    "-webkit-box-sizing",
+                                    "box-sizing"
+                                ]
+                            },
+                            "query": ".mblSwitchKnob"
+                        }
+                    }
+                }
+            }
+        },
+        "TabBar": {
+            "displayName": "TabBar",
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".mblTabPanelHeader": [
+                            "$std_10"
+                        ],
+                        ".dj_tablet .mblTabPanelHeader": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ""
+                }
+            },
+            "subwidgets": {
+                "TabBarButton": {
+                    "displayName": "TabBarButton",
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".mblTabButton": [
+                                    "position",
+                                    "float",
+                                    "list-style-type",
+                                    "cursor",
+                                    "-webkit-tap-highlight-color",
+                                    "margin-right",
+                                    "width",
+                                    "height",
+                                    "border-width",
+                                    "border-top-width",
+                                    "border-right-width",
+                                    "border-bottom-width",
+                                    "border-left-width",
+                                    "border-style",
+                                    "border-top-style",
+                                    "border-right-style",
+                                    "border-bottom-style",
+                                    "border-left-style",
+                                    "border-color",
+                                    "border-top-color",
+                                    "border-right-color",
+                                    "border-bottom-color",
+                                    "border-left-color",
+                                    "background-color",
+                                    "background-image",
+                                    "font-family",
+                                    "font-size",
+                                    "color",
+                                    "text-align"
+                                ],
+                                ".dj_tablet .mblTabButton": [
+                                    "font-weight",
+                                    "color",
+                                    "text-shadow",
+                                    "border-color",
+                                    "background-color",
+                                    "background-image"
+                                ],
+                                ".mblTabPanelHeader .mblTabButton": [
+                                    "margin-top"
+                                ],
+                                ".mblTabBarButtonAnchor": [
+                                    "display",
+                                    "text-decoration"
+                                ]
+                            },
+                            "query": ".mblTabButton"
+                        },
+                        "Selected": {
+                            "selectors": {
+                                ".mblTabButtonSelected.mblTabButton": [
+                                    "background-color",
+                                    "background-image"
+                                ]
+                            },
+                            "query": ".mblTabButton",
+                            "simulate": "mblTabButtonSelected"
+                        }
+                    }
+                }
+            }
+        },
+        "TextArea": {
+            "displayName": "TextArea",
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".mblTextArea": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ""
+                }
+            }
+        },
+        "TextBox": {
+            "displayName": "TextBox",
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".mblTextBox": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ""
+                }
+            }
+        },
+        "ToggleButton": {
+            "displayName": "ToggleButton",
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".mblToggleButton": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ""
+                },
+                "Disabled": {
+                    "selectors": {
+                        ".mblToggleButton:disabled": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ".mblToggleButton",
+                    "simulate": ":disabled='true'"
+                },
+                "Selected": {
+                    "selectors": {
+                        ".mblToggleButton.mblToggleButtonChecked": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ".mblToggleButton",
+                    "simulate": "mblToggleButtonChecked"
+                }
+            }
+        },
+        "View": {
+            "displayName": "View",
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".mobile body": [
+                            "$std_10"
+                        ],
+                        ".mblView": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ""
+                }
+            }
+        }
+    }
+}

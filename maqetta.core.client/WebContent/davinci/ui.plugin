@@ -235,6 +235,12 @@
                     menubarPath: "davinci.settings/settings"
                 },
                 {
+                    id: "editThemeSets",
+                    run: "davinci.ui.ThemeSetsDialog()",
+                    label: "Theme sets...",
+                    menubarPath: "davinci.settings/settings"
+                },
+                {
                     id: "newTheme",
                     run: "davinci.Workbench.showModal(new davinci.ui.NewTheme(), 'New Theme', 'height:135px;width: 300px')",
                     label: "Theme...",

@@ -775,7 +775,8 @@ return declare("davinci.ve.Context", null, {
 				//  to remove Dojo dependencies from callback function first.
 				var baseUserWorkspace = system.resource.getRoot().getURL() + "/" + this._getWidgetFolder();
 				var config = {
-					modulePaths: {widgets: baseUserWorkspace}
+					packages: [/*{ name: 'oneui', location: '../../oneui'}, */{ name: 'widgets', location: baseUserWorkspace}],
+					baseUrl: "lib/dojo/dojo"
 				};
 				dojo.mixin(config, this._configProps);
 
@@ -2214,7 +2215,7 @@ return declare("davinci.ve.Context", null, {
 				var config = {
 					async: true,
 					parseOnLoad: true,
-					modulePaths: { widgets: this._dojoModulePath + "/" + this._getWidgetFolder() }
+					modulePaths: { widgets: this._dojoModulePath + "/" + this._getWidgetFolder() } //FIXME: change to packages, inject only as needed
 				};
 				dojo.mixin(config, this._configProps);
 				this.addHeaderScript(url, {

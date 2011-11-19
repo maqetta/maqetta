@@ -57,7 +57,7 @@ dojo.declare("davinci.libraries.dojo.dijit.form.DataListHelper", null, {
 		widget.domNode.style.display = 'none';
 	},
 	
-	destroy: function(widget){
+	destroyWidget: function(widget){
 		var localDijit = widget.getContext().getDijit();
 
 		var w= localDijit.byId(widget.id); 

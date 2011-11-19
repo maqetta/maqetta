@@ -30,6 +30,8 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 		this.deviceLabel.innerHTML = langObj.nhfoDevice;
 		this.layoutLabel.innerHTML = langObj.nhfoLayout;
 		this.themeLabel.innerHTML = langObj.nhfoTheme;
+		this.showDetailsLabel.innerHTML = langObj.nhfoShowDetails;
+		this.hideDetailsLabel.innerHTML = langObj.nhfoHideDetails;
 		
 		var lastDialogValues = davinci.Workbench.workbenchStateCustomPropGet('nhfo');
 		_updateWithLastDialogValue = function(widget, opts, lastDialogValue){
@@ -69,10 +71,15 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 				}
 			}),1);
 		}));
-		
-		this.arrowNode = dojo.query('.nhfo_details_arrow',this.domNode)[0];
-		this.connect(this.arrowNode, 'onclick', dojo.hitch(this,function(e){
-			this._update_collapse_expand(!this.collapsed);
+		var showDiv = dojo.query('.nhfo_show_details',this.domNode)[0];
+		var hideDiv = dojo.query('.nhfo_hide_details',this.domNode)[0];
+		this.connect(showDiv, 'onclick', dojo.hitch(this,function(e){
+			dojo.stopEvent(e);
+			this._update_collapse_expand(false);
+		}));
+		this.connect(hideDiv, 'onclick', dojo.hitch(this,function(e){
+			dojo.stopEvent(e);
+			this._update_collapse_expand(true);
 		}));
 
 		//FIXME: Pull this from server
@@ -154,6 +161,17 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 				this.deviceSelect.attr('value','iphone');
 			}
 		}
+		if(compType === 'mobile' || compType === 'custom'){
+			// If mobile or custom, open up details options (and set this.collapsed to false)
+			this._update_collapse_expand(false);
+		}
+		if(compType === 'mobile'){
+			// If mobile, disable the flow-vs-absolute option
+			// FIXME: May want to relax this constraint in future
+			dojo.addClass(this.nhfo_layoutRow, 'dijitHidden');
+		}else{
+			dojo.removeClass(this.nhfo_layoutRow, 'dijitHidden');
+		}
 		var standardCompType = this.standardCompTypes[compType];
 		if(standardCompType){
 			this.layoutSelect.attr('value', standardCompType.layout);
@@ -193,16 +211,21 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 			this.collapsed = collapsed;
 		}
 		var containerDiv = dojo.query('.nhfo_outer1',this.domNode)[0];
-		if(containerDiv){
+		var showDiv = dojo.query('.nhfo_show_details',this.domNode)[0];
+		var hideDiv = dojo.query('.nhfo_hide_details',this.domNode)[0];
+		if(containerDiv && showDiv && hideDiv){
 			if(this.collapsed){
 				dojo.addClass(containerDiv, 'nhfo_collapsed');
 				dojo.removeClass(containerDiv, 'nhfo_expanded');
+				dojo.removeClass(showDiv, 'dijitHidden');
+				dojo.addClass(hideDiv, 'dijitHidden');
 			}else{
 				dojo.addClass(containerDiv, 'nhfo_expanded');
 				dojo.removeClass(containerDiv, 'nhfo_collapsed');
+				dojo.addClass(showDiv, 'dijitHidden');
+				dojo.removeClass(hideDiv, 'dijitHidden');
 			}
 		}
-		this.arrowNode.title = this.collapsed ? this.langObj.nhfoArrowTitleShowDetails : this.langObj.nhfoArrowTitleHideDetails;
 	},
 	
 	getOptions: function(){

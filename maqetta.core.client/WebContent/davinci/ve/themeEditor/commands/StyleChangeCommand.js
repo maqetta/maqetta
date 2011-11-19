@@ -1,9 +1,6 @@
-define([
-    "dojo/_base/declare",
-	"davinci/ve/themeEditor/commands/ThemeEditorCommand",
-	"davinci/ve/themeEditor/ThemeColor"
-], function(declare, ThemeEditorCommand, ThemeColor) {
-return declare("davinci.ve.themeEditor.commands.StyleChangeCommand", ThemeEditorCommand, {
+dojo.require("davinci.ve.themeEditor.commands.ThemeEditorCommand");
+dojo.provide("davinci.ve.themeEditor.commands.StyleChangeCommand");
+dojo.declare("davinci.ve.themeEditor.commands.StyleChangeCommand", davinci.ve.themeEditor.commands.ThemeEditorCommand, {
 
 	constructor: function(args){
 		dojo.mixin(this, args);
@@ -11,9 +8,9 @@ return declare("davinci.ve.themeEditor.commands.StyleChangeCommand", ThemeEditor
 	execute: function(){
 		//debugger;
 		if (this._themeEditor._selectedWidget.id === 'all'){
-			var colorValues = [];
-			//this._rules = [];
-			this._oldValues = [];
+			var colorValues = new Array();
+			//this._rules = new Array();
+			this._oldValues = new Array();
 			for (var v in this._values){
 				if (v.indexOf('color')> -1){
 					colorValues[v] = this._values[v];
@@ -32,7 +29,7 @@ return declare("davinci.ve.themeEditor.commands.StyleChangeCommand", ThemeEditor
 							hColor = widgetMetadata.states[c].defaults.cssPropery[prop];
 						var color = setColorValues[prop];
 						if(nColor && hColor && color){
-							var baseColor = new ThemeColor(color);
+							var baseColor = new davinci.ve.themeEditor.ThemeColor(color);
 							var calcColor = baseColor.calculateHighlightColor(nColor, hColor);
 							setColorValues[prop] = calcColor.toHex();
 							var rules = this.getRules(this._themeEditor._selectedWidget, this._themeEditor._selectedSubWidget, c);
@@ -60,7 +57,7 @@ return declare("davinci.ve.themeEditor.commands.StyleChangeCommand", ThemeEditor
 			//this._oldValues = this._themeEditor._modifyTheme(/*this._*/rules, this._values);
 			var exsistingProps = this._themeEditor._modifyTheme(/*this._*/rules, this._values);
 			for (prop in exsistingProps){
-				this._oldValues[prop] = exsistingProps[prop]; // this will mix in the old values of existing props. but preserve a list of added props for undo
+				this._oldValues[prop] = exsistingProps[prop]; // this will mix in the old values of exsisting props. but preserve a list of added props for undo
 			}
 			this._themeEditor._hotModifyCssRule(/*this._*/rules); 
 			if (this._themeEditor._selectedWidget.resize) this._themeEditor._selectedWidget.resize(); // forces redraw of widget to adjust for new styles like border size
@@ -87,7 +84,7 @@ return declare("davinci.ve.themeEditor.commands.StyleChangeCommand", ThemeEditor
 			this._themeEditor._modifyTheme(/*this._*/rules, this._oldValues);
 			this._themeEditor._hotModifyCssRule(/*this._*/rules); 
 		}
-		if (this._themeEditor._selectedWidget.resize) { this._themeEditor._selectedWidget.resize(); } // forces redraw of widget to adjust for new styles like border size
+		if (this._themeEditor._selectedWidget.resize) this._themeEditor._selectedWidget.resize(); // forces redraw of widget to adjust for new styles like border size
 
 		var context = this._themeEditor.getContext();
 		context.onContentChange();
@@ -110,6 +107,7 @@ return declare("davinci.ve.themeEditor.commands.StyleChangeCommand", ThemeEditor
 							if(rule){
 								rules.push(rule);
 								modified = true;
+							
 							}
 						}
 					}
@@ -121,5 +119,4 @@ return declare("davinci.ve.themeEditor.commands.StyleChangeCommand", ThemeEditor
 		}
 		return rules;
 	}
-});
 });

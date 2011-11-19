@@ -1,7 +1,7 @@
 define(function() {
 	return function(){
 		//TODO: this doesnt seem necessary, and seems to cause problems		
-//		destroy: function(/*Widget*/ widget){
+//		destroyWidget: function(/*Widget*/ widget){
 //			// summary:
 //			//		Overriden to remove child widgets the user created in the Dojo Composition Tool.
 //			//

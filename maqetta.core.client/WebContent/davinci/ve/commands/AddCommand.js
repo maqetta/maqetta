@@ -1,7 +1,6 @@
 dojo.provide("davinci.ve.commands.AddCommand");
 
 dojo.require("davinci.ve.widget");
-dojo.require("davinci.ve.utils.ImageUtils");
 
 dojo.declare("davinci.ve.commands.AddCommand", null, {
 
@@ -25,7 +24,6 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 		if(!parent){
 			return;
 		}
-		var context = parent.getContext();
 		var widget = undefined;
 		if(this._data){
 			//this.undo(); // try to remove old widget first, mostly for redo
@@ -33,7 +31,7 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 				this._data.properties.id= this._id;
 			widget = davinci.ve.widget.createWidget(this._data);
 		}else if(this._id){
-			widget = davinci.ve.widget.byId(this._id, context);
+			widget = davinci.ve.widget.byId(this._id,parent.getContext());
 		}
 		if(!widget){
 			return;
@@ -43,7 +41,7 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 		// children. We need the id's to be consistent for undo/redo to work -- wdr
 			this._data = widget.getData();
 			this._data.properties.id= this._id;
-			this._data.context = context;
+			this._data.context = widget.getContext();
 		//}
 		
 
@@ -54,7 +52,7 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 				this._index = parent.indexOf(  this._index);
 			} else {
 				// _index is no longer valid since it was replaced, lets find it
-				var w = davinci.ve.widget.byId(this._index.id, context);
+				var w = davinci.ve.widget.byId(this._index.id,parent.getContext())
 				this._index = parent.indexOf(w);
 			}
 		}
@@ -63,11 +61,20 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 		// so selection/focus box will be wrong upon creation.
 		// To fix, register an onload handler which calls updateFocus()
 		if(widget.domNode.tagName === 'IMG'){
-			davinci.ve.utils.ImageUtils.ImageUpdateFocus(widget, context);
+			dojo.connect(widget.domNode, 'onload', dojo.hitch(this, function(){
+				var selection = context.getSelection();
+				for (var i=0; i<selection.length; i++){
+					if(selection[i] == widget){
+						context.updateFocus(widget, i);
+						return;
+					}
+				}
+			}));
 		}
 		
 		parent.addChild(  widget, this._index);
 				
+		var context = parent.getContext();
 		if(context){
 			context.attach(widget);
 			widget.startup();

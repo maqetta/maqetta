@@ -1,1 +1,1 @@
-define({revision: '@revision@', buildtime: '@buildtime@'});
+define({revision: '@revision@', buildtime: '@buildtime'});

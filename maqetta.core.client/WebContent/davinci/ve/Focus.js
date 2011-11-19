@@ -1,8 +1,8 @@
 define([
     "dojo/_base/declare",
-	"dijit/_WidgetBase",
-	"dojo/dnd/Mover",
-	"davinci/ve/metadata"
+    "dijit/_WidgetBase",
+    "dojo/dnd/Mover",
+    "davinci/ve/metadata"
 ],
 function(declare, _WidgetBase, Mover, metadata){
     
@@ -14,7 +14,7 @@ var LEFT = 0,
     LEFT_BOTTOM = 5,
     RIGHT_TOP = 6,
     RIGHT_BOTTOM = 7,
-	DRAG_NOB = 8;	// Overlay nob that follows mouse during drag operation
+    DRAG_NOB = 8;   // Overlay nob that follows mouse during drag operation
 
 return declare("davinci.ve.Focus", _WidgetBase, {
 
@@ -59,7 +59,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             this.connect(nob, "onmousedown", "onMouseDown");
             this.connect(nob, "onmouseup", "onMouseUp");
         }
-        this._nobs[DRAG_NOB].style.display = 'none';	// Becomes visible upon mousedown when dragging frame
+        this._nobs[DRAG_NOB].style.display = 'none';    // Becomes visible upon mousedown when dragging frame
         this._nobs[DRAG_NOB].style.background = 'transparent';
         this._nobs[DRAG_NOB].style.border = 'none';
         
@@ -85,17 +85,17 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         }
         var context = this._context;
         var cp = context._chooseParent;
-		if(event){
-			if(event.target != this._lastEventTarget){
-				// If mouse has moved over a different widget, then null out the current
-				// proposed parent widget, which will force recalculation of the list of possible parents
-				cp.setProposedParentWidget(null);
-			}
-			this._lastEventTarget = event.target;
-		}else{
-			// Sometimes this routine gets called without an event object
-			this._lastEventTarget = null;
-		}
+        if(event){
+            if(event.target != this._lastEventTarget){
+                // If mouse has moved over a different widget, then null out the current
+                // proposed parent widget, which will force recalculation of the list of possible parents
+                cp.setProposedParentWidget(null);
+            }
+            this._lastEventTarget = event.target;
+        }else{
+            // Sometimes this routine gets called without an event object
+            this._lastEventTarget = null;
+        }
 
         var b = this._box;
         b.l = box.l;
@@ -114,14 +114,14 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             var widgetTop = domNode.offsetTop;
             var node = domNode.offsetParent;
             while(node && node.tagName != 'BODY'){
-            	widgetLeft += node.offsetLeft;
-            	widgetTop += node.offsetTop;
-            	node = node.offsetParent;
+                widgetLeft += node.offsetLeft;
+                widgetTop += node.offsetTop;
+                node = node.offsetParent;
             }
             if(Math.abs(b.l - widgetLeft) >= Math.abs(b.t - widgetTop)){
-            	b.t = widgetTop;
+                b.t = widgetTop;
             }else{
-            	b.l = widgetLeft;
+                b.l = widgetLeft;
             }
         }
 
@@ -129,26 +129,26 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
         var currentParent = null;
         if(this._selectedWidget){
-        	currentParent = this._selectedWidget.getParent();
+            currentParent = this._selectedWidget.getParent();
         }
         if(this._selectedWidget && event){
-    		var parentListDiv = cp.parentListDivGet();
-    		if(!parentListDiv){// Make sure there is a DIV into which list of parents should be displayed
-    			parentListDiv = cp.parentListDivCreate(this._selectedWidget.type, absolute, currentParent);
-     		}
-    		var parentIframe = context.getParentIframe();
-    		if(parentIframe){
-    			// Ascend iframe's ancestors to calculate page-relative x,y for iframe
-    			var offsetLeft = 0;
-    			var offsetTop = 0;
-    			var offsetNode = parentIframe;
-    			while(offsetNode && offsetNode.tagName != 'BODY'){
+            var parentListDiv = cp.parentListDivGet();
+            if(!parentListDiv){// Make sure there is a DIV into which list of parents should be displayed
+                parentListDiv = cp.parentListDivCreate(this._selectedWidget.type, absolute, currentParent);
+            }
+            var parentIframe = context.getParentIframe();
+            if(parentIframe){
+                // Ascend iframe's ancestors to calculate page-relative x,y for iframe
+                var offsetLeft = 0;
+                var offsetTop = 0;
+                var offsetNode = parentIframe;
+                while(offsetNode && offsetNode.tagName != 'BODY'){
                     offsetLeft += offsetNode.offsetLeft;
                     offsetTop += offsetNode.offsetTop;
                     offsetNode = offsetNode.offsetParent;
-        		}
-    			parentListDiv.style.left = (offsetLeft + event.pageX) + 'px';
-    			parentListDiv.style.top = (offsetTop + event.pageY) + 'px';
+                }
+                parentListDiv.style.left = (offsetLeft + event.pageX) + 'px';
+                parentListDiv.style.top = (offsetTop + event.pageY) + 'px';
             }
         }
         var doSnapLines = absolute;
@@ -166,17 +166,17 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             // Call the dispatcher routine that updates snap lines and
             // list of possible parents at current (x,y) location
             this._context.dragMoveUpdate({
-            		data:data,
-            		eventTarget:event.target,
-            		position:position,
-            		absolute:absolute,
-            		currentParent:currentParent,
-             		rect:snapBox, 
-            		doSnapLines:doSnapLines, 
-            		doFindParentsXY:showCandidateParents});
+                    data:data,
+                    eventTarget:event.target,
+                    position:position,
+                    absolute:absolute,
+                    currentParent:currentParent,
+                    rect:snapBox, 
+                    doSnapLines:doSnapLines, 
+                    doFindParentsXY:showCandidateParents});
         }else{
-        	// If not showing snap lines or parents, then make sure they aren't showing
-			context.dragMoveCleanup();
+            // If not showing snap lines or parents, then make sure they aren't showing
+            context.dragMoveCleanup();
         }
         if(this._contexDiv){
             var x = b.w + 10;
@@ -186,11 +186,11 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     },
 
     resize: function(box, widget){
-		if(widget){
-		    this._selectedWidget = widget;
-		}
-    	this._resize(box);
-    	this._box = box;
+        if(widget){
+            this._selectedWidget = widget;
+        }
+        this._resize(box);
+        this._box = box;
     },
 
     _resize: function(box){
@@ -228,12 +228,12 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         var widget = this._selectedWidget;
         var body = widget ? widget.domNode.ownerDocument.body : null;
         if(body){
-        	if(box_r > body.offsetWidth){
-        		b.w -= (box_r - body.offsetWidth);
-        	}
-        	if(box_b > body.offsetHeight){
-        		b.h -= (box_b - body.offsetHeight);
-        	}
+            if(box_r > body.offsetWidth){
+                b.w -= (box_r - body.offsetWidth);
+            }
+            if(box_b > body.offsetHeight){
+                b.h -= (box_b - body.offsetHeight);
+            }
         }
         
         var h = b.h + this.size * 2;
@@ -316,9 +316,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         this._nobs[RIGHT_TOP].style.display = corner;
         this._nobs[RIGHT_BOTTOM].style.display = corner;
     },
-	
+
     onMouseDown: function(event){
-		this._removeKeyHandlers();
+        this._removeKeyHandlers();
 
         // not to start Mover on the context menu
         if(event.button === 2 || event.ctrlKey){
@@ -352,13 +352,13 @@ return declare("davinci.ve.Focus", _WidgetBase, {
                 }
                 dojo.stopEvent(event);
                 
-                var userdoc = this._context.getDocument();	// inner document = user's document
-                userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
+                var userdoc = this._context.getDocument();  // inner document = user's document
+                userdoc.defaultView.focus();    // Make sure the userdoc is the focus object for keyboard events
                 this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(e){
-                	this.onKeyDown(e);
+                    this.onKeyDown(e);
                 }));
                 this._keyUpHandler = dojo.connect(userdoc, "onkeyup", dojo.hitch(this, function(widgetType, e){
-                	this.onKeyUp(e);
+                    this.onKeyUp(e);
                 }));
             }
          }
@@ -366,34 +366,34 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
     onMouseUp: function(event){
         var context = this._context;
-		var cp = context._chooseParent;
-		this._lastEventTarget = null;
-		this._removeKeyHandlers();
+        var cp = context._chooseParent;
+        this._lastEventTarget = null;
+        this._removeKeyHandlers();
         if(this._updateTarget){
             clearTimeout(this._updateTarget);
             delete this._updateTarget;
         }
         this._nobs[DRAG_NOB].style.display = 'none';
         if(this._mover){
-        	var box;
-        	if(this._shiftKey){
-        		box = dojo.mixin({}, this._constrained);
-        	}else{
-        		box = dojo.mixin({}, this._box);
-        	}
+            var box;
+            if(this._shiftKey){
+                box = dojo.mixin({}, this._constrained);
+            }else{
+                box = dojo.mixin({}, this._box);
+            }
             this._mover = undefined;
             switch(this._nobIndex){
             case -1: // frame
                 this.onExtentChange(this, dojo.mixin({l: this._box.l, t: this._box.t}, this._client));
                 break;
             default:
-            	this.onExtentChange(this, box);
+                this.onExtentChange(this, box);
             }
         }
         this._nobIndex = -1;
         this._nobBox = null;
-		context.dragMoveCleanup();
-     	cp.parentListDivDelete();
+        context.dragMoveCleanup();
+        cp.parentListDivDelete();
     },
     
     onDblClick: function(event) {
@@ -424,7 +424,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
                 }), 200);
             }
         }else{
-			var b = dojo.mixin({}, this._box);
+            var b = dojo.mixin({}, this._box);
             var d = 0;
             switch(this._nobIndex){
             case LEFT:
@@ -477,36 +477,36 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             dojo.mixin(this._box, b);
             dojo.mixin(this._constrained, b);
             if(this._selectedWidget && this._selectedWidget.type === 'html.img'){
-            	var domNode = this._selectedWidget.domNode;
-            	var naturalWidth = domNode.naturalWidth;
-            	var naturalHeight = domNode.naturalHeight;
-            	if(typeof naturalHeight == 'number' && naturalHeight > 0 && typeof naturalWidth == 'number' && naturalWidth > 0){
-            		var aspectRatio = naturalWidth / naturalHeight;
-            		if(b.w < aspectRatio * b.h){
-            			this._constrained.w = b.h * aspectRatio;
-            		}else{
-            			this._constrained.h = b.w / aspectRatio;
-            		}
-            	}
+                var domNode = this._selectedWidget.domNode;
+                var naturalWidth = domNode.naturalWidth;
+                var naturalHeight = domNode.naturalHeight;
+                if(typeof naturalHeight == 'number' && naturalHeight > 0 && typeof naturalWidth == 'number' && naturalWidth > 0){
+                    var aspectRatio = naturalWidth / naturalHeight;
+                    if(b.w < aspectRatio * b.h){
+                        this._constrained.w = b.h * aspectRatio;
+                    }else{
+                        this._constrained.h = b.w / aspectRatio;
+                    }
+                }
             }else{
-            	switch(this._nobIndex){
-	                case LEFT:
-	                case RIGHT:
-		                this._constrained.h = b.w;
-		                break;
-	                case TOP:
-	                case BOTTOM:
-		                this._constrained.w = b.h;
-		                break;
-	                default:
-	                	// If dragging corner, use max
-		                if(b.w > b.h){
-		                	this._constrained.h = b.w;
-		                }else{
-		                	this._constrained.w = b.h;
-		                }
-		                break;
-            	}
+                switch(this._nobIndex){
+                    case LEFT:
+                    case RIGHT:
+                        this._constrained.h = b.w;
+                        break;
+                    case TOP:
+                    case BOTTOM:
+                        this._constrained.w = b.h;
+                        break;
+                    default:
+                        // If dragging corner, use max
+                        if(b.w > b.h){
+                            this._constrained.h = b.w;
+                        }else{
+                            this._constrained.w = b.h;
+                        }
+                        break;
+                }
             }
             this._resize(event.shiftKey ? this._constrained : this._box);
         }
@@ -526,40 +526,40 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     },
     
     onKeyDown: function(event){
-		if(event){
-	    	dojo.stopEvent(event);
-	    	if(event.keyCode == 16){
-	        	this._shiftKey = true;
-	        	this._resize(this._constrained);   		
-	    	}
-		}else{
-			// If event is undefined, something is wrong - remove the key handlers
-			this._removeKeyHandlers();
-		}
+        if(event){
+            dojo.stopEvent(event);
+            if(event.keyCode == 16){
+                this._shiftKey = true;
+                this._resize(this._constrained);        
+            }
+        }else{
+            // If event is undefined, something is wrong - remove the key handlers
+            this._removeKeyHandlers();
+        }
     },
     
     onKeyUp: function(event){
-		if(event){
-	    	dojo.stopEvent(event);
-	    	if(event.keyCode == 16){
-		    	this._shiftKey = false;
-		       	this._resize(this._box);
-	    	}
-		}else{
-			// If event is undefined, something is wrong - remove the key handlers
-			this._removeKeyHandlers();
-		}
+        if(event){
+            dojo.stopEvent(event);
+            if(event.keyCode == 16){
+                this._shiftKey = false;
+                this._resize(this._box);
+            }
+        }else{
+            // If event is undefined, something is wrong - remove the key handlers
+            this._removeKeyHandlers();
+        }
     },
     
     _removeKeyHandlers: function(){
-		if(this._keyDownHandler){
-			dojo.disconnect(this._keyDownHandler);
-			this._keyDownHandler = null;
-		}
-		if(this._keyUpHandler){
-			dojo.disconnect(this._keyUpHandler);
-			this._keyUpHandler = null;
-		}
+        if(this._keyDownHandler){
+            dojo.disconnect(this._keyDownHandler);
+            this._keyDownHandler = null;
+        }
+        if(this._keyUpHandler){
+            dojo.disconnect(this._keyUpHandler);
+            this._keyUpHandler = null;
+        }
     },
 
     onExtentChange: function(focus, box){
@@ -588,45 +588,39 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         this.domNode.appendChild(contexDiv);
 
     },
-    //FIXME: should this code be delegated to themeEditor somehow?
+    //FIXME: should this code be delegated to themeEditor somehow? This was moved here for future use by the page editor. 
+    // If the page editor every supports styling supwidgets...
     _createSubwidgetList: function() {
         //if(this._cm)return;
-
-        var contexDiv=this._contexDiv;
-        contexDiv.innerHTML = '<span></span>';
-        contexDiv.style.position = "absolute";
-        var x = this._box.w + 10;
-        contexDiv.style.left = x + 'px';
-        contexDiv.className = "themeSubwidgetMenu";
-        dojo.connect(contexDiv, "onmousedown", this, "stopPropagation");
-        //contexDiv.style.zIndex = "115";
-        contexDiv.style.display = "none";
-        this._contexDiv = contexDiv;
-        this.domNode.appendChild(contexDiv);
-        var span = this._contexDiv.firstElementChild,
-            menuId = this._context._themeName + '_subwidgetmenu',
-            pMenu = dijit.byId(menuId);
-        if (pMenu) {
-            pMenu.destroyRecursive(false);
-        }
-        // get the version of dijit that the theme editor html template is using.
-        // if we don't when we create the subwidget menu dojo/resources/blank.gif can't be found 
-        // and we have no check boxes on FF
-        var localDijit = this._context.getDijit();
-        //pMenu = new dijit.Menu({ id:menuId  },span);
-        pMenu = new localDijit.Menu({id:menuId}, span);
-
         var widget = this._context._selectedWidget;
-        this._displayedWidget = widget;
-        //var editor = davinci.Runtime.currentEditor;
-
         var themeMetadata = this._context.getThemeMeta().metadata;
         var widgetType = themeMetadata.getWidgetType(widget);
         var widgetMetadata = themeMetadata.getMetadata(widgetType);
         var subwidgets = widgetMetadata.subwidgets;
 
         if(subwidgets){
-            //var item = new dijit.CheckedMenuItem({
+            var contexDiv=this._contexDiv;
+            contexDiv.innerHTML = '<span></span>';
+            contexDiv.style.position = "absolute";
+            var x = this._box.w + 10;
+            contexDiv.style.left = x + 'px';
+            contexDiv.className = "themeSubwidgetMenu";
+            dojo.connect(contexDiv, "onmousedown", this, "stopPropagation");
+            contexDiv.style.display = "none";
+            this._contexDiv = contexDiv;
+            this.domNode.appendChild(contexDiv);
+            var span = this._contexDiv.firstElementChild,
+                menuId = this._context._themeName + '_subwidgetmenu',
+                pMenu = dijit.byId(menuId);
+            if (pMenu) {
+                pMenu.destroyRecursive(false);
+            }
+            // get the version of dijit that the theme editor html template is using.
+            // if we don't when we create the subwidget menu dojo/resources/blank.gif can't be found 
+            // and we have no check boxes on FF
+            var localDijit = this._context.getDijit();
+            pMenu = new localDijit.Menu({id:menuId}, span);
+            this._displayedWidget = widget;
             var checked = false;
             if (!widget.subwidget) {
                 checked = true; // no subwidget selected
@@ -639,9 +633,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             });
             pMenu.addChild(item);
             this._currentItem = item;
-            //pMenu.addChild(new dijit.MenuSeparator());
             for (var s in subwidgets){
-                //pMenu.addChild(new dijit.CheckedMenuItem({
                 checked = (widget.subwidget === s);
                 var menuItem = new localDijit.CheckedMenuItem({
                     label: s,
@@ -654,14 +646,14 @@ return declare("davinci.ve.Focus", _WidgetBase, {
                     this._currentItem = menuItem;
                 }
             }
+            pMenu.startup();
+            this._cm = pMenu;
+            this._updateSubwidgetListForState();
+            this._connections = [];
+            this._connections.push(dojo.subscribe("/davinci/ui/subwidgetSelectionChanged",dojo.hitch(this,this._subwidgetSelectedChange)));
+            this._connections.push(dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._updateSubwidgetListForState)));
         }
 
-        pMenu.startup();
-        this._cm = pMenu;
-        this._updateSubwidgetListForState();
-        this._connections = [];
-        this._connections.push(dojo.subscribe("/davinci/ui/subwidgetSelectionChanged",dojo.hitch(this,this._subwidgetSelectedChange)));
-        this._connections.push(dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._updateSubwidgetListForState)));
     },
 
     stopPropagation: function(e){

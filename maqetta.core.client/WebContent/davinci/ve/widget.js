@@ -381,7 +381,8 @@ davinci.ve.widget.createWidget = function(widgetData, initialCreationArgs){
 	// XXX eventually replace with dojo.place()?
 	// XXX Technically, there can be more than one 'content'
     var uniqueId = davinci.ve.widget._getUniqueId();
-    var content = metadata.content.trim().replace(/\s+/g, ' ').replace(/__WID__/g, uniqueId);
+    var content = data.content ||
+            metadata.content.trim().replace(/\s+/g, ' ').replace(/__WID__/g, uniqueId);
 	var node = dijit.getDocumentWindow(dojo.doc).dojo._toDom(content);
 	// XXX Used to create node like this, which added attributes from metadata, is there still a way to do this?
 	//	var node = dojo.create(metadata.tagName || "div", metadata.attributes);

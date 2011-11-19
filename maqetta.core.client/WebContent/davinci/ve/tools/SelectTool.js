@@ -121,16 +121,14 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 
 	onExtentChange: function(index, box, cursorOnly){
-		var context = this._context;
-		var cp = context._chooseParent;
-		var selection = context.getSelection();
+		var selection = this._context.getSelection();
 		var newselection = [];
 		if(selection.length <= index){
 			return;
 		}
 		var widget = selection[index];
 
-		var compoundCommand = undefined;
+		var command = undefined;
 		if(!cursorOnly && ("w" in box || "h" in box)){
 			var resizable = davinci.ve.metadata.queryDescriptor(widget.type, "resizable"),
 				w, h;
@@ -154,43 +152,25 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				break;
 			}
 
-			var resizeCommand = new davinci.ve.commands.ResizeCommand(widget, w, h);
-			if(!compoundCommand){
-				compoundCommand = new davinci.commands.CompoundCommand();
-			}
-			compoundCommand.add(resizeCommand);
-			var position_prop = dojo.style(widget.domNode, 'position');
-			if("l" in box && "t" in box && position_prop == 'absolute'){
-				var moveCommand = new davinci.ve.commands.MoveCommand(widget, box.l, box.t);
-				compoundCommand.add(moveCommand);
-			}
+			command = new davinci.ve.commands.ResizeCommand(widget, w, h);
 		}else{
 
 			var _node = widget.getStyleNode();
-			//FIXME: should use computed style instead of inline style
 			if(cursorOnly && _node.style.position != "absolute"){
 				// use mouse position for dropping in relative mode
 				box.l = box.x;
 				box.t = box.y;
 			}
-
-			//FIXME: Needs cleanup. This code is really hacky.
-			//We fall into next IF block only if box.l and box.t have a value
-			//which code just above makes true if position!=absolute.
-			//Instead, probably should just check of position!=absolute
+	
 			if("l" in box && "t" in box) {
 				if (_node.style.position != "absolute") {
-
-					var close = davinci.ve.widget.findClosest(context.getContainerNode(), box, context, widget, true,
+					var close = davinci.ve.widget.findClosest(this._context.getContainerNode(), box, this._context, widget, true,
 							dojo.hitch(this, function(w){
-								return context._chooseParent.getAllowedTargetWidget(w, widget.getData()).length;
+								return this._context._chooseParent.getAllowedTargetWidget(w, widget.getData()).length;
 							}));
 					this._resetCursor();
 					if (close && close.widget && (close.widget != widget)) {
-						
-						if(!cursorOnly && !compoundCommand){
-							compoundCommand = new davinci.commands.CompoundCommand();
-						}
+						command = cursorOnly ? undefined : new davinci.commands.CompoundCommand();
 						var child = close.widget,
 							parent = child.getParent(),
 							index = parent.indexOf(child);
@@ -211,13 +191,13 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 										containerNode.appendChild(this._cursor);
 									}
 								}
-								context._blinkCursor = true;
+								this._context._blinkCursor = true;
 								return;
 							}
 							var newwidget,
 								d = w.getData( {identify:false});
-							d.context=context;
-							dojo.withDoc(context.getDocument(), function(){
+							d.context=this._context;
+							dojo.withDoc(this._context.getDocument(), function(){
 								newwidget = davinci.ve.widget.createWidget(d);
 							}, this);		
 							if (!newwidget) {
@@ -225,9 +205,9 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 								return;
 							}
 							if(close.insert){
-								compoundCommand.add(new davinci.ve.commands.AddCommand(newwidget, close.widget, 0/*last?*/));
+								command.add(new davinci.ve.commands.AddCommand(newwidget, close.widget, 0/*last?*/));
 							}else{
-								compoundCommand.add(new davinci.ve.commands.AddCommand(newwidget, parent, index + (close.hpos ? 1 : 0)));
+								command.add(new davinci.ve.commands.AddCommand(newwidget, parent, index + (close.hpos ? 1 : 0)));
 							}
 							index++;
 							newselection.push(newwidget);
@@ -236,97 +216,59 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						// remove widget
 						if(!cursorOnly){
 							dojo.forEach(selection, function(w){
-								compoundCommand.add(new davinci.ve.commands.RemoveCommand(w));
+								command.add(new davinci.ve.commands.RemoveCommand(w));
 							}, this);
 
-							context.select(null);
+							this._context.select(null);
 						}
 					}				
 				}else if(!cursorOnly){
 					var left = box.l,
 						top = box.t,
 						parentNode = widget.domNode.offsetParent;
-					if(parentNode && parentNode != context.getContainerNode()){
-						var p = context.getContentPosition(context.getDojo().position(parentNode, true));
+					if(parentNode && parentNode != this._context.getContainerNode()){
+						var p = this._context.getContentPosition(this._context.getDojo().position(parentNode, true));
 						left -= (p.x - parentNode.scrollLeft);
 						top -= (p.y - parentNode.scrollTop);
 					}
 					var position = {x: left, y: top};
 					left = position.x;
 					top = position.y;
-					if(!compoundCommand){
-						compoundCommand = new davinci.commands.CompoundCommand();
-					}
 					var first_c = new davinci.ve.commands.MoveCommand(widget, left, top);
-					var proposedParent = cp.getProposedParentWidget();
-					compoundCommand.add(first_c);
-					var currentParent = widget.getParent();
-					if(proposedParent && proposedParent != currentParent){
-						compoundCommand.add(new davinci.ve.commands.ReparentCommand(widget, proposedParent, 'last'));
-						var newPos = this._reparentDelta(left, top, widget.getParent(), proposedParent);
-						compoundCommand.add(new davinci.ve.commands.MoveCommand(widget, newPos.l, newPos.t));
-					}
-					var b = widget.getMarginBox(),
-						dx = left - b.l,
-						dy = top - b.t;
-					dojo.forEach(selection, dojo.hitch(this, function(w){
-						if(w != widget){
-							var mb = w.getMarginBox();
-							var newLeft = mb.l + dx;
-							var newTop = mb.t + dy;
-							if(w.getStyleNode().style.position == "absolute"){
+					if(command){ // move and resize
+						command = new davinci.commands.CompoundCommand(command);
+						command.add(first_c);
+					}else if(selection.length > 1){ // multiple move
+						var b = widget.getMarginBox(),
+							dx = left - b.l,
+							dy = top - b.t;
+						command = new davinci.commands.CompoundCommand(first_c);
+						dojo.forEach(selection, function(w){
+							if(w != widget && w.getStyleNode().style.position == "absolute"){
+								b = w.getMarginBox();
 								// Because snapping will shift the first widget in a hard-to-predict
 								// way, MoveCommand will store the actual shift amount on the
 								// command object (first_c). MoveCommand will use the shift amount
 								// for first_c for the other move commands.
-								var c = new davinci.ve.commands.MoveCommand(w, newLeft, newTop, first_c);
-								compoundCommand.add(c);
+								var c = new davinci.ve.commands.MoveCommand(w, b.l + dx, b.t + dy, first_c);
+								command.add(c);
 							}
-							var currentParent = w.getParent();
-							if(proposedParent && proposedParent != currentParent){
-								compoundCommand.add(new davinci.ve.commands.ReparentCommand(w, proposedParent, 'last'));
-								var newPos = this._reparentDelta(newLeft, newTop, w.getParent(), proposedParent);
-								compoundCommand.add(new davinci.ve.commands.MoveCommand(w, newPos.l, newPos.t));
-							}
-						}
-					}));
+						});
+					}else{ // single move
+						command = first_c;
+					}
 				}
 			}
 		}
 
-
-		if(compoundCommand){
-			context.getCommandStack().execute(compoundCommand);
+		if(command){
+			this._context.getCommandStack().execute(command);
 			dojo.forEach(newselection, function(w, i) {
-				context.select(w, i > 0);
+				this._context.select(w, i > 0);
 			}, this);			
 		}else if(!cursorOnly){
-			context.select(widget); // update selection
+			this._context.select(widget); // update selection
 		}
-	},
-	
-	/**
-	 * Returns {l:, t:} which holds the amount to move left: and top: properties
-	 * when reparenting from oldParent to newParent such that widget stays at same
-	 * physical location
-	 */
-	_reparentDelta: function(currLeft, currTop, oldParent, newParent){
-		function getPageOFfset(node){
-			var pageX = 0;
-			var pageY = 0;
-			while(node.tagName != 'BODY'){
-				pageX += node.offsetLeft;
-				pageY += node.offsetTop;
-				node = node.offsetParent;
-			}
-			return { l:pageX, t:pageY };
-		}
-		var oldOffset = getPageOFfset(oldParent.domNode);
-		var newOffset = getPageOFfset(newParent.domNode);
-		return {
-			l: currLeft + (oldOffset.l - newOffset.l),
-			t: currTop + (oldOffset.t - newOffset.t)
-		};
 	},
 	
 	onKeyDown: function(event){

@@ -165,8 +165,64 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 	   return query;		
 	},
 	 
+    _simulateState: function(q, s, mode, updateWidget){
+        var querys = [];
+        if (!(q instanceof Array)){
+            querys.push(q);
+        } else {
+            querys = q; 
+        }
+        var simulates = [];
+        if (!(s instanceof Array)){
+            simulates.push(s);
+        } else {
+            simulates = s; 
+        }
+        for (var i = 0; i < simulates.length; i++){
+            var simulate = simulates[i];
+            var query = querys[i];
+            var index;
+            var attribute;
+            var attributeValue;
+            if ((index = simulate.indexOf(':')) > -1){
+                attribute = simulate.substring(index+1);
+                simulate = simulate.substring(0, index);
+                index = attribute.indexOf('=');
+                if(index > -1){
+                    attributeValue = attribute.substring(index+1);
+                    attribute = attribute.substring(0, index);
+                } else {
+                    attributeValue =  attribute;
+                }
+            }
+            var nodes = dojo.query(query,updateWidget.domNode);
+            var n = nodes[0];
+            if(!n){ // might already be at the top node.
+                n = updateWidget.domNode;
+            }
+           // if (state != 'Normal'){ // Normal is the base class do not remove it.
+                if(mode == 'add'){
+                    if(attribute){
+                        n.setAttribute(attribute, attributeValue);
+                    }
+                    if(simulate){
+                        dojo.addClass(n,simulate);
+                    }
+                } else { 
+                    if(attribute){
+                        n.removeAttribute(attribute);
+                    }
+                    if (simulate){
+                        dojo.removeClass(n,simulate);
+                    }
+                }
+          //  }
+        }
+	},
+	
 	_updateStyle: function(updateWidget, widgetType, state, mode){
-		if (updateWidget.id === 'all') return; // global all widget 
+	    
+	    if (updateWidget.id === 'all') return; // global all widget 
 		var init = false;
 		if(!state) {
 			state = 'Normal';
@@ -197,7 +253,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 				q = this._createDefaultQuery(w+n, state);
 				widget.states[''+state].query = q;
 			}
-			query = q; //.push(q);
+			
 			var s = this._widgets[w][n].states[''+state].simulate;
 			if(!s){
 				s = ' ';
@@ -212,18 +268,8 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 						s = w + state + ' ' + s; // add the default state class
 					}
 			}
-			simulate = s; //.push(s);
-			var nodes = dojo.query(query,updateWidget.domNode);
-			var n = nodes[0];
-			if(!n){ // might already be at the top node.
-				n = updateWidget.domNode;
-			}
 			if (state != 'Normal'){ // Normal is the base class do not remove it.
-				if(mode == 'add'){
-					dojo.addClass(n,simulate);
-				} else { 
-					dojo.removeClass(n,simulate);
-				}
+			    this._simulateState(q, s, mode, updateWidget);
 			}
 		}
 
@@ -253,7 +299,10 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 							s = w + state + ' ' + s; // add the default state class
 						}
 				}
-				query = q; //push(q);
+				if (state != 'Normal'){ // Normal is the base class do not remove it.
+	                this._simulateState(q, s, mode, updateWidget);
+	            }
+				/*query = q; //push(q);
 				simulate = s; //.push(s);
 				var nodes = dojo.query(query,updateWidget.domNode);
 				var n = nodes[0];
@@ -266,7 +315,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 					} else { 
 						dojo.removeClass(n,simulate);
 					}
-				}
+				}*/
 				
 			}
 		}
@@ -324,6 +373,9 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 		} catch (e) {
 			console.log(e, 'w=' + w, 'n=' + n);
 			return null;
+		}
+		if (query instanceof Array){
+		    query = query[0]; // use first element of query to find node
 		}
 		var nodes = dojo.query(query,node);
 		var n = nodes[0];

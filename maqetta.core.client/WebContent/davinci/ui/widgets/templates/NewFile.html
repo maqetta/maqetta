@@ -1,5 +1,4 @@
-<div class="fileDialog" style="position:relative" dojoAttachPoint="_fileDialog">
-	
+<div class="fileDialog" style="position:relative">
 	<table class="fileFolderTable">
 		<tr class='fileNameRow'>
 			<td class="fileDialogLabelCell">
@@ -19,7 +18,10 @@
 				<input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="fileDialogParentFolder"></input>
 			</td>
 			<td>
-				<span class="folder_details_arrow "></span>
+				<span class="folder_details_arrow " dojoAttachPoint="fileDialogDetailsArrow">
+					<span class='folder_details_show_arrow'>&#9660;</span>
+					<span class='folder_details_hide_arrow'>&#9650;</span>
+				</span>
 			</td>
 		</tr>
 	</table>
@@ -39,8 +41,7 @@
 			<button dojoType="dijit.form.Button" dojoAttachPoint="__cancelButton" dojoAttachEvent="onClick:cancelButton">${cancelButtonLabel}</button>
 		</span>
 		<span class="buttonWrapperSpan">
-			<button dojoType="dijit.form.Button" type="submit" dojoAttachPoint="__okButton" dojoAttachEvent="onClick:_okButton">${finishButtonLabel}</button>
+			<button dojoType="dijit.form.Button" dojoAttachPoint="__okButton" dojoAttachEvent="onClick:_okButton">${finishButtonLabel}</button>
 		</span>
 	</div>
-	
 </div>

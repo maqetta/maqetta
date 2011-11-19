@@ -104,10 +104,8 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 	 * 
 	 * @param {string} widgetType  For example, 'dijit.form.Button'
 	 * @param {boolean} showCandidateParents  Whether the DIV being dragged around should show possible parents
-	 * @param {boolean} absolute  true if current widget will be positioned absolutely
-	 * @param {object} currentParent  if provided, then current parent widget for thing being dragged
 	 */
-	dragUpdateCandidateParents: function(widgetType, showCandidateParents, absolute, currentParent){
+	dragUpdateCandidateParents: function(widgetType, showCandidateParents){
 		var context = this._context;
 		// NOTE: For CreateTool, the activeDragDiv is a DIV attached to dragClone
 		// For SelectTool, the activeDragDiv is created by calling parentListDivCreate() (in this JS file)
@@ -125,11 +123,11 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 				var allowedParentList = this._findParentsXYList;
 				
 				if(!this._proposedParentWidget){
-					this._proposedParentWidget = this._getDefaultParent(widgetType, allowedParentList, absolute, currentParent);
+					this._proposedParentWidget = this.chooseParent(widgetType, allowedParentList);
 				}
 
 				this.highlightNewWidgetParent(this._proposedParentWidget);
-
+				
 				// Don't recreate DIV with every mousemove if parent list is the same
 				var same = true;
 				if(this._lastProposedParentWidget != this._proposedParentWidget){
@@ -197,28 +195,30 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 	 * For absolute layout, default to the current outer container widget (e.g., the BODY)
 	 * 
 	 * @param {string} widgetType  For example, 'dijit.form.Button'
-	 * @param {[object]} allowedParentList  List of ancestor widgets of event.target that can be parents of the new widget
-	 * @param {boolean} absolute  true if current widget will be positioned absolutely
-	 * @param {object} currentParent  if provided, then current parent widget for thing being dragged
+	 * @param {object} allowedParentList  List of ancestor widgets of event.target that can be parents of the new widget
 	 */
-	_getDefaultParent: function(widgetType, allowedParentList, absolute, currentParent){
+	chooseParent: function(widgetType, allowedParentList){
 		var context = this._context;
 		var proposedParentWidget;
 		if(allowedParentList){
 			var helper = davinci.ve.widget.getWidgetHelper(widgetType);
 			if(allowedParentList.length>1 && helper && helper.chooseParent){
-				//FIXME: Probably should pass all params to helper
 				proposedParentWidget = helper.chooseParent(allowedParentList);
 			}else if (allowedParentList.length == 0){
 				proposedParentWidget = null;
 			}else{
-				if(absolute && currentParent){
-					proposedParentWidget = currentParent;
+				// For absolute layout, always drop widgets at the top-level of the document to avoid container clipping issues #6879
+				//FIXME: Pass absolute vs flow as parameter
+				if(!context.getFlowLayout()){
+					var rootWidget = context.rootWidget;
+					if(allowedParentList.indexOf(rootWidget)>=0){
+						proposedParentWidget = rootWidget;
+					}else{
+						proposedParentWidget = null;
+					}	
 				}else{
-					var last = allowedParentList.length - 1;
-					console.log('allowedParentList.length='+allowedParentList.length+',last='+last);
-					proposedParentWidget = allowedParentList[last];
-				}
+					proposedParentWidget = allowedParentList[0];
+				}				
 			}
 		}
 		return proposedParentWidget;
@@ -289,8 +289,6 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 	 *      {object|array{object}} data  For widget being dragged, either {type:<widgettype>} or array of similar objects
 	 *      {object} eventTarget  Node (usually, Element) that is current event.target (ie, node under mouse)
 	 *      {object} position x,y properties hold current mouse location
-	 *      {boolean} absolute  true if current widget will be positioned absolutely
-	 *      {object} currentParent  if provided, then current parent widget for thing being dragged
 	 * 		{object} rect  l,t,w,h properties define rectangle being dragged around
 	 * 		{boolean} doSnapLines  whether to show dynamic snap lines
 	 * 		{boolean} doFindParentsXY  whether to show candidate parent widgets
@@ -300,20 +298,14 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 		var data = params.data;
 		var eventTarget = params.eventTarget;
 		var position = params.position;
-		var absolute = params.absolute;
-		var currentParent = params.currentParent;
 		var rect = params.rect;
 		var doFindParentsXY = params.doFindParentsXY;
 		this._findParentsXYList = [];
 		var bodyWidget = eventTarget.ownerDocument.body._dvWidget;
-		if(absolute && currentParent && currentParent != bodyWidget){
-			this._findParentsXYList.push(currentParent);
-		}
 		var allowedParents = this.getAllowedTargetWidget(bodyWidget, data, false);
 		if(allowedParents.length === 1){
 			this._findParentsXYList.push(bodyWidget);
 		}
-		
 		if(typeof this.findParentsXYLastPosition == 'undefined'){
 			this.findParentsXYLastPosition = {};
 		}
@@ -370,11 +362,9 @@ dojo.declare("davinci.ve.ChooseParent", null, {
     /**
      * Create a floating DIV that will hold the list of proposed parent widgets
 	 * {string} widgetType  Type of widget (e.g., 'dijit.form.Button')
-	 * @param {boolean} absolute  true if current widget will be positioned absolutely
-	 * @param {object} currentParent  if provided, then current parent widget for thing being dragged
      * @returns {object}  DIV's domNode
      */
-    parentListDivCreate: function(widgetType, absolute, currentParent){
+    parentListDivCreate: function(widgetType){
 		var context = this._context;
     	if(!widgetType){
     		return;
@@ -382,18 +372,12 @@ dojo.declare("davinci.ve.ChooseParent", null, {
         var userdoc = context.getDocument();	// inner document = user's document
         this._oldActiveElement = document.activeElement;
         userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
-        this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(args, evt){
-        	var widgetType = args[0];
-        	var absolute = args[1];
-        	var currentParent = args[2];
-        	this.onKeyDown(evt, widgetType, absolute, currentParent);
-        }, [widgetType, absolute, currentParent]));
-        this._keyUpHandler = dojo.connect(userdoc, "onkeyup", dojo.hitch(this, function(args, evt){
-        	var widgetType = args[0];
-        	var absolute = args[1];
-        	var currentParent = args[2];
-        	this.onKeyUp(evt, widgetType, absolute, currentParent);
-        }, [widgetType, absolute, currentParent]));
+        this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(widgetType, evt){
+        	this.onKeyDown(evt, widgetType);
+        }, widgetType));
+        this._keyUpHandler = dojo.connect(userdoc, "onkeyup", dojo.hitch(this, function(widgetType, evt){
+        	this.onKeyUp(evt, widgetType);
+        }, widgetType));
  		var body = document.body;	// outer document = Maqetta app
 		parentListDiv = this._parentListDiv = dojo.create('div', {
 			className:'maqParentListDiv', 
@@ -434,29 +418,29 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 	   }
     },
     
-    _keyEventDoUpdate: function(widgetType, absolute, currentParent){
+    _keyEventDoUpdate: function(widgetType){
 		// Under certain conditions, show list of possible parent widgets
 		var showParentsPref = this._context.getPreference('showPossibleParents');
 		var showCandidateParents = (!showParentsPref && this._spaceKeyDown) || (showParentsPref && !this._spaceKeyDown);
-		this.dragUpdateCandidateParents(widgetType, showCandidateParents, absolute, currentParent);
+		this.dragUpdateCandidateParents(widgetType, showCandidateParents);
     },
     
-	onKeyDown: function(event, widgetType, absolute, currentParent){
+	onKeyDown: function(event, widgetType){
 		dojo.stopEvent(event);
 		if(event.keyCode==32){	// 32=space key
 			this._spaceKeyDown = true;
 		}else{
 			this._processKeyDown(event.keyCode);
 		}
-		this._keyEventDoUpdate(widgetType, absolute, currentParent);
+		this._keyEventDoUpdate(widgetType);
 	},
 
-	onKeyUp: function(event, widgetType, absolute, currentParent){
+	onKeyUp: function(event, widgetType){
 		dojo.stopEvent(event);
 		if(event.keyCode==32){	// 32=space key
 			this._spaceKeyDown = false;
 		}
-		this._keyEventDoUpdate(widgetType, absolute, currentParent);
+		this._keyEventDoUpdate(widgetType);
 	},
 	
 	/**

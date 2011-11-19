@@ -83,6 +83,11 @@ define("davinci/ve/DijitWidget", ["davinci/ve/_Widget", "davinci/ve/metadata"], 
 		this.containerNode=dijitWidget.containerNode;
 		this.styleNode=dijitWidget.styleNode;
 		this.id=dijitWidget.id;
+
+		var helper = this.getHelper();
+		if(helper && helper.create && srcElement) {
+			helper.create(this, srcElement);
+		}
 	},
 	getParent: function()
 	{

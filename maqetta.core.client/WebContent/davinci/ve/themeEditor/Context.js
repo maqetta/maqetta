@@ -226,6 +226,9 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 		/* no style attributes for theme editor */
 		return {};
 	},
+	_restoreStates: function(){
+	    
+	},
 	 _configDojoxMobile: function() {
 	     // override base
 	     // FIXME Add helper here

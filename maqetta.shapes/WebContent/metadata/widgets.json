@@ -1,0 +1,377 @@
+{
+    "callbacks": "callbacks.js",
+    "categories": {
+        "shapes": {
+            "name": "Drawing tools",
+            "widgetClass": "dijit"
+        }
+    },
+    "widgets": [
+	     {
+	         "name": "Hello",
+	         "description": "Hello",
+	         "type": "shapes.Hello",
+	         "category": "shapes",
+	         "icon": "resources/images/checkbox.png",
+	         "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAP9JREFUeNpi/P//P8PGnQf/M5AJWGAMf3d7kjUDLUYYAAITd94kWnO+uzqqC2DAQkGAgYEDwpbg4ICLv/jxA8IAUicefMD0Agw8+ABRCNL7geEHXBwkHG4uD2avuPAAtwEQS4Cqf3DAtX8A2p5urw6Xv3DjBZzNhMuPP6Da0TUHdu5ksNCQwG0ASEO8uToYv/iAqtmxcSODAjCMBAQ48BuAHtIwzQZAmzUkBIBhzIHfCyBnIgNkzQJIMYPVAJACkDNBmghpxhoLEkD/CXBIgBUXzjzI4GCgAHE2B4GkDE8HLxDpQACq8cWHH4TzAnqgkZyZQBmDHMAIys6UAIAAAwBz81X4fS5oMgAAAABJRU5ErkJggg==",
+	         "properties": {
+	         },
+	         "resizable": "none"
+	    }
+/*
+        {
+            "name": "TimeTextBox",
+            "description": "Time Text Box",
+            "type": "oneui.form.TimeTextBox",
+            "category": "oneui",
+            "icon": "resources/images/time-text-box.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAO7w9S5KhW2BqjJSjPP2+/f5/BhHhRlEgBpFgR1JhCNVmCZYmiBKgiNNhDlnpD9sp+zy+hZFgCRXmCJSjyNUkCdamiRSijxqpUJsouTt+DBdkUt6rhZUkRdSjxdSjhhQi1GGuHKgzHSjzXOizHelznyo0VaOvwJWlwNXlwVXl+vy93SfuXiiu87k8H+pv9bs99fs993x+9vv+d7x+8/t+9Xs993y/Nru997x+o62xoy1xarM2LLR3eb4/5C5x67O2Mrh59Tp7tDm6tLn6+v8/+z8/9js78jf4tDl583i4uHx8fD///H//8Xc29zt7PH9/P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAFAALAAAAAAQABAAAAeOgFCCg4SFhoeIhD4UCBQ+iU0KIUpPTiMKTYImmyYqEklMS6JLPymaNDQ2LiRErQytRRcuUCA0GRAUSD27Cbs9Rh5QGzQEBQdCMskNyTI3EVAYxAUTRy3WFtYtQB9QA9IrIjUv4xovMA8sUAHrAgAVPDHxMTM7KIdNCyVBOEMOJ5mIdHAw0CFHooMIEyYKBAA7",
+            "properties": {
+                "label": "test label:",
+                "labelAlignment": "horizontal"
+            },
+            "resizable": "none"
+        },
+        {
+            "name": "Textarea",
+            "description": "Text Area (Resizing)",
+            "type": "oneui.form.Textarea",
+            "category": "oneui",
+            "icon": "resources/images/textarea.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
+            "properties": {
+                "style": "width: 200px;",
+                "label": "test label:",
+                "labelAlignment": "horizontal"
+            },
+            "resizable": "none",
+            "inlineEdit": {
+                "property": "value",
+                "displayOnCreate": false,
+                "multiLine": false
+            },
+            "helper": "davinci.libraries.oneui.oneui.form.TextareaHelper"
+        },
+        {
+            "name": "DropDownSelect",
+            "description": "Select (Drop Down)",
+            "type": "oneui.form.Select",
+            "category": "oneui",
+            "icon": "resources/images/dropdown.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAVJJREFUeNpi/P//PwMlgAVEhPcf+E+RAb++fWeoz3QlqLhxxh6G+gwXBH/6bgYmEOPHp69gAVGGvwxijH8ZhP/9AbNhWJwRgn9+/AxWl5TYy/D61hOgvi8QF3z/8Akswc/JjGLjfwZGMM0IZIHY3z5ADDi4ogQs+23+XgZGUCBaRE4EByUjRBeUATOEASoANe4/0DhGqOh/aBjIm+kzfn37/n+IkxZJAbhm3zWIAX9//WHg4OVlMDBQZhD6+5doA7aceQQx4M/PnwywePRN6IVEDzsrAysnJwMHDxcDGxCDaFZODoZJqfZwA/78+AWLxh9wf+9cWkK0C359/wEx4DeQAXOBe3QPXhfAwKwsJ3D6gSckmAGHV5cT7YLf36AuADkFBmxDO4lyweJCZ7DLIbEADIz/0DA4vaGSeBcA9YETkpF/JyLNMGBJTXgAI6XZGSDAAJsyjhMJL+H/AAAAAElFTkSuQmCC",
+            "properties": {
+                "label": "test label:",
+                "labelAlignment": "horizontal"
+            },
+            "children": [
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 1"
+                    },
+                    "children": "Item 1"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 2"
+                    },
+                    "children": "Item 2"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 3"
+                    },
+                    "children": "Item 3"
+                }
+            ],
+            "resizable": "none",
+            "isControl": true,
+            "helper": "davinci.libraries.oneui.oneui.form.SelectHelper",
+            "inlineEdit": "davinci.ve.input.SelectInput"
+        },
+        {
+            "name": "NumberSpinner",
+            "description": "Number Spinner",
+            "type": "oneui.form.NumberSpinner",
+            "category": "oneui",
+            "icon": "resources/images/number-spinner.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAACI5Zi5KhTFPiTBPiTRUjTRVjTdYkDlclPP2+zhclD1jmz1jmvL2/EJrokJsokd0qeTt+Obu+EZ0qdvo9kt8sE+DtlCDtrbR7dPk9dTk9djn9u30+1OJu1OKu8Da8cnf89Pl9dTl9VaOv4C24oC14b3Z8Mnf8sTd8d7s98/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACoALAAAAAAQABAAAAZ6QJVwSCwaj0aRcslcCjupqDQl2kyuG46qkkJ4v6LJBXCZWFSU7tcr0gDeGorqkTJADIZIRJQJYUAgEioNCAZfBgxNIg4qC4VehokmHyaVCioJj3iIIidvACcHKgRqayIeIwAkHgUqA6VgKCWzKAJCAbi5urlIvb6/v0EAOw==",
+            "properties": {
+                "label": "test label:",
+                "labelAlignment": "horizontal"
+            },
+            "resizable": "none"
+        },
+        {
+            "name": "VerticalSlider",
+            "description": "Slider (Vertical)",
+            "type": "oneui.form.VerticalSlider",
+            "category": "oneui",
+            "icon": "resources/images/verticalslider.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAJurxzdYkDtelpusyDpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+NXk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6qvH36nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZWwJNwSCwaTyWIYXAshiqmQJMYKiyk01PoElFgmyHGx/M4AKahxkSicRDQjc4mgwF9nQ3ORiOyg9UbIxYCaGIUDwhnaFwJd2BWjkchJFFZQiURB0yWWUEAOw==",
+            "properties": {
+                "style": "width: 200px;",
+                "label": "test label:",
+                "labelAlignment": "horizontal"
+            },
+            "resizable": "none"
+        },
+        {
+            "name": "HorizontalSlider",
+            "description": "Slider (Horizontal)",
+            "type": "oneui.form.HorizontalSlider",
+            "category": "oneui",
+            "icon": "resources/images/horizontalslider.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAM7W5DdYkDteljpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+EZzp9Xk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZZwJNwSCwaj8ikcjkMOZ/J0KJBbSxCyMtnwulMPpdiKcSIUDZoiSfCCJWEERIB8RhpMppHglCBCA0mJgoHFiIYDgYKgQVCAAGPAQIgIAOQAQBIj0ybnJ2eJ0EAOw==",
+            "properties": {
+                "style": "width: 200px;",
+                "label": "test label:",
+                "labelAlignment": "horizontal"
+            },
+            "resizable": "none"
+        },
+        {
+            "name": "FileInput",
+            "description": "File Input",
+            "type": "oneui.form.FileInput",
+            "category": "oneui",
+            "icon": "resources/images/fileinput.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAEpjm4meyzFPiTxXjEdknENek0BajUJcj1JtpF98uISczIObyfX3+zVWjztZjU9toVBuol5+u4KdzIigzJyw06W53Ka52sLQ6jpYikhmmE5uoVBuoKW52qa626a52fH0+TxhmZmw0sXS5ff5/PX3+jtimU1vn8LR5r/M3vP2+kJsokZzqERupImozYupzpq01Ki/2sDR5cHP4Ozx9+/z+Ep5rkt7r8LR4k6AtFKGuVKFuMHS5O7z+PH1+fX4+/j6/Pf5+1OKvMfZ6VaOv8fa6uzy9/D1+fP3+vr9//b5++v2/PD1+Or2/Ob1++v3/OX1++r3/PL6/fr9/hV8RmilhLrSuv///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAFYALAAAAAAQABAAAAe5gFZTVFZWQ4eIh4WLU1OGP5CRLUOLVlWNQpGRLy5BlZdUSUQ2JUAjMC8tOoWNrQw+sD4kDCQ4jI0pRDk2LCANAkc1lVM3PR89S8c9RkYrlVYyPEO7vb80Ks8oRTPc3NszKFYaD+Tl5QgbGiYaVhBNT+9PTyci9RcxOxBWBExKTlBQnEyIQDBCggAErGSIwrAhhQUQFUgIkcEKACRSMCJBwsGCRw8dKgCwUsCAyZMnMTgYcKDAs5fPAgEAOw==",
+            "properties": {
+                "label": "test label:",
+                "labelAlignment": "horizontal"
+            },
+            "resizable": "none"
+        },
+        {
+            "name": "TextBox",
+            "description": "Text Box",
+            "type": "oneui.form.TextBox",
+            "category": "oneui",
+            "icon": "resources/images/text-box.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAM1JREFUeNpi/P//PwMlgImBQkCxASzIHIvIif/lzfQZHp66yHBieT4jUSaAwgAZm0dM+I8uhg+DXRDefwAckqGWCmBD15x48H/18QcELV9Z6MAINuDPz98MtWmODBKcTAw9QL6NvhyDipoMXs0ts/chwuD39+9gDjfDfzgtyvAXe6hDQ+bXtx8IA94+eArmsLMywml+Bmbc4cbAyPD24VOEAX9//WLIyJ7KkBJiARZctPE0w5w1JxjoEgtM2NIBiCY2ITEO/bxAsQEAAQYAGVGarS2fPq4AAAAASUVORK5CYII=",
+            "properties": {
+                "label": "test label:",
+                "labelAlignment": "horizontal"
+            },
+            "resizable": "none",
+            "inlineEdit": {
+                "property": "value",
+                "displayOnCreate": false
+            }
+        },
+        {
+            "name": "DateTextBox",
+            "description": "Date Text Box",
+            "type": "oneui.form.DateTextBox",
+            "category": "oneui",
+            "icon": "resources/images/date-text-box.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADdXkDZYkTZYkDdYkDlck2eAq3WNtHuRtrG/1vP2+zxhmD1imFN1pneRt6i50rHA1tbe6vL2/D9mnUBonkFpn0JqoEFonlJ1pnqWu5CoyKK20Ke50rLC2OLr90ZzqERvpEVvpWyOuHyawIahw9fg6+Tt+Obu+Eh2q0h3q0t7r0l2qk19sYCgxOXu+Iapzdfi7VCFt1CEtrnO4laOv8/t++j4+PD4+P+oAP///////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADkALAAAAAAQABAAAAaVwJxwSCwKZ8ikMjmM0Z7QKA02PNFKrU5pa+qaVEMJLUFORCLms2Q4EAwAg7ggIKgPKqsh5XBg8P0HFwcFKUMwODgyiIo4LohUQh4hGQ4OGw4ZISMhIRVDKIgvNzcviCyIKEMfNjYkoySsIqwgQxYYHBC5EBwYGhgYE0MLNTUIxA/EDcQKQwTEBs/RNQRscdbX1kbaQ0EAOw==",
+            "properties": {
+                "label": "test label:",
+                "labelAlignment": "horizontal"
+            },
+            "resizable": "none",
+        },
+        {
+            "name": "CurrencyTextBox",
+            "description": "Currency Text Box",
+            "type": "oneui.form.CurrencyTextBox",
+            "category": "oneui",
+            "icon": "resources/images/currency-text-box.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAALrD1y5KhZelwjJSjDNSjDdYkDpel/P2+zpelvL2/EJsouTt+Obu+Ep6rkt6rvn7/fz9/lGGuFaOv6vH38fa6s/t++f2/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVr4CWOZEkWUmGul8qOkjQVU0zFeHxJlVVYlUohSKxILpFKopBYFJ7OAoMRuTgqj0L2UDh4uYnGRYHVcp9eZkJxQVQgBUg6nagbLoNy9tnlJwh4enNfB38XAQECBQKIAIiPiCcvJSguk5eYKyEAOw==",
+            "properties": {
+                "label": "test label:",
+                "labelAlignment": "horizontal"
+            },
+            "resizable": "none",
+        },
+        {
+            "name": "CheckBoxList",
+            "description": "CheckBoxList",
+            "type": "oneui.form.CheckBoxList",
+            "category": "oneui",
+            "icon": "resources/images/multi-select.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAYVJREFUeNpi/P//P8PMfQ//T9z0hIFUkO8nw8ACYkzc+IjhaJsFhoLf/xgYWJlwG2BddZwBLM34/y+G5Kr91xnCSpfgdQHj/38QF/z/95fhH9Arf/8zgiXWH7jGMHf9KYbkQDOwK+q612Nobi0LBOsDG8Dw/zdYs0/KVIaUaAeGuUsPMqTE2DMEOGiBpZtKAzEM+Au0kPHfb6gBf/+AKZDmGfN2MWQkuTKEOmkzVHaux+n8uuIAoAv+QAwAmQQCAY7aIOcAaR2Gz7/+M1QVBuA04A+KC4CML7/+MfCwMYE1g0KelY0Rp/9BoLTAH6wPasAfoOL/DO9/QmJDkJ2ZYf3B6wzLt5xlmNkSid0Ff/+D9UHD4DfDbyBfjIMZIxZAhmFzRU6OH9ALsDD4/4dBjJMZayw8+/qXISPLD9MF//6jeoHUWEjO8EXyApBx8/1vlFi48vY3Q3SKD04DfqKEATApgxLGtXe/wJpBNEEA1P8fqI8Rlhsnz1pPcm7MTQuEGEAJAAgwAABlzVJl2jXWAAAAAElFTkSuQmCC",
+            "properties": {
+                "label": "test label:",
+                "labelAlignment": "horizontal"
+            },
+            "children": [
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 1"
+                    },
+                    "children": "Item 1"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 2"
+                    },
+                    "children": "Item 2"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 3"
+                    },
+                    "children": "Item 3"
+                }
+            ],
+            "resizable": "none",
+            "helper": "davinci.libraries.oneui.oneui.form.CheckBoxListHelper",
+            "inlineEdit": "davinci.ve.input.OptionsInput",
+            "isControl": true
+        },
+        {
+            "name": "RadioButtonSet",
+            "description": "RadioButtonSet",
+            "type": "oneui.form.RadioButtonSet",
+            "category": "oneui",
+            "icon": "resources/images/multi-select.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAYVJREFUeNpi/P//P8PMfQ//T9z0hIFUkO8nw8ACYkzc+IjhaJsFhoLf/xgYWJlwG2BddZwBLM34/y+G5Kr91xnCSpfgdQHj/38QF/z/95fhH9Arf/8zgiXWH7jGMHf9KYbkQDOwK+q612Nobi0LBOsDG8Dw/zdYs0/KVIaUaAeGuUsPMqTE2DMEOGiBpZtKAzEM+Au0kPHfb6gBf/+AKZDmGfN2MWQkuTKEOmkzVHaux+n8uuIAoAv+QAwAmQQCAY7aIOcAaR2Gz7/+M1QVBuA04A+KC4CML7/+MfCwMYE1g0KelY0Rp/9BoLTAH6wPasAfoOL/DO9/QmJDkJ2ZYf3B6wzLt5xlmNkSid0Ff/+D9UHD4DfDbyBfjIMZIxZAhmFzRU6OH9ALsDD4/4dBjJMZayw8+/qXISPLD9MF//6jeoHUWEjO8EXyApBx8/1vlFi48vY3Q3SKD04DfqKEATApgxLGtXe/wJpBNEEA1P8fqI8Rlhsnz1pPcm7MTQuEGEAJAAgwAABlzVJl2jXWAAAAAElFTkSuQmCC",
+            "properties": {
+                "label": "test label:",
+                "labelAlignment": "horizontal"
+            },
+            "children": [
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 1"
+                    },
+                    "children": "Item 1"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 2"
+                    },
+                    "children": "Item 2"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 3"
+                    },
+                    "children": "Item 3"
+                }
+            ],
+            "resizable": "none",
+            "helper": "davinci.libraries.oneui.oneui.form.RadioButtonSetHelper",
+            "inlineEdit": "davinci.ve.input.OptionsInput",
+            "isControl": true
+        },
+        {
+            "name": "CheckBoxSelect",
+            "description": "CheckBoxSelect",
+            "type": "oneui.form.CheckBoxSelect",
+            "category": "oneui",
+            "icon": "resources/images/multi-select.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAYVJREFUeNpi/P//P8PMfQ//T9z0hIFUkO8nw8ACYkzc+IjhaJsFhoLf/xgYWJlwG2BddZwBLM34/y+G5Kr91xnCSpfgdQHj/38QF/z/95fhH9Arf/8zgiXWH7jGMHf9KYbkQDOwK+q612Nobi0LBOsDG8Dw/zdYs0/KVIaUaAeGuUsPMqTE2DMEOGiBpZtKAzEM+Au0kPHfb6gBf/+AKZDmGfN2MWQkuTKEOmkzVHaux+n8uuIAoAv+QAwAmQQCAY7aIOcAaR2Gz7/+M1QVBuA04A+KC4CML7/+MfCwMYE1g0KelY0Rp/9BoLTAH6wPasAfoOL/DO9/QmJDkJ2ZYf3B6wzLt5xlmNkSid0Ff/+D9UHD4DfDbyBfjIMZIxZAhmFzRU6OH9ALsDD4/4dBjJMZayw8+/qXISPLD9MF//6jeoHUWEjO8EXyApBx8/1vlFi48vY3Q3SKD04DfqKEATApgxLGtXe/wJpBNEEA1P8fqI8Rlhsnz1pPcm7MTQuEGEAJAAgwAABlzVJl2jXWAAAAAElFTkSuQmCC",
+            "properties": {
+                "label": "test label:",
+                "labelAlignment": "horizontal"
+            },
+            "children": [
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 1"
+                    },
+                    "children": "Item 1"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 2"
+                    },
+                    "children": "Item 2"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 3"
+                    },
+                    "children": "Item 3"
+                }
+            ],
+            "resizable": "none",
+            "helper": "davinci.libraries.oneui.oneui.form.CheckBoxListHelper",
+            "inlineEdit": "davinci.ve.input.OptionsInput",
+            "isControl": true
+        },
+        {
+            "name": "ComboBox",
+            "description": "Combo Box",
+            "type": "oneui.form.ComboBox",
+            "category": "oneui",
+            "icon": "resources/images/combo-box.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjgyQUEwNTdCNTk1MTExRTBCODIzOTk0QzIzMzdBNkNGIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjgyQUEwNTdDNTk1MTExRTBCODIzOTk0QzIzMzdBNkNGIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6ODJBQTA1Nzk1OTUxMTFFMEI4MjM5OTRDMjMzN0E2Q0YiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6ODJBQTA1N0E1OTUxMTFFMEI4MjM5OTRDMjMzN0E2Q0YiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7ZOYfnAAABBUlEQVR42pRSKxCDMAztdgjkJBKJnKxETk5WIpGTlcjKykpk5SSyEolETk4iI9eRrpSud7tF5NK8vHweHHoz38cHSdmVlhFkM5lN9W2dJDTKRJDNZBgxrum5oOdynB7j9NSC+aJhXjC4VCfrHQErLO0dsN2cBUDwjosOn0fyy2y19+8JsMDWjMA3QSkRPjMCW9GJ5CFWFzllu+qW1RmsXfHoW0OlNv7oYX52XRsS+rtVCbajrdGq9EeH2/rMQfZGaRPNxYwPdivpYRo1D8W+tAo3kVJ/Q+478Bt32UH5PSAFHWFVqVllRr/ploLc0VWRCyl2nT9BBDlZ8T8hKUYE/a3SS4ABAP4rm5Sxt9t9AAAAAElFTkSuQmCC",
+            "properties": {
+                "label": "test label:",
+                "labelAlignment": "horizontal"
+            },
+            "children": [
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 1"
+                    },
+                    "children": "Item 1",
+                    "content": "<option></option>"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 2"
+                    },
+                    "children": "Item 2",
+                    "content": "<option></option>"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 3"
+                    },
+                    "children": "Item 3",
+                    "content": "<option></option>"
+                }
+            ],
+            "resizable": "width",
+            "helper": "davinci.libraries.oneui.oneui.form.SelectHelper",
+            "inlineEdit": "davinci.ve.input.SelectInput"
+        },
+        {
+            "name": "TriStateCheckBox",
+            "description": "TriStateCheckBox",
+            "type": "oneui.form.TriStateCheckBox",
+            "category": "oneui",
+            "icon": "resources/images/checkbox.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAP9JREFUeNpi/P//P8PGnQf/M5AJWGAMf3d7kjUDLUYYAAITd94kWnO+uzqqC2DAQkGAgYEDwpbg4ICLv/jxA8IAUicefMD0Agw8+ABRCNL7geEHXBwkHG4uD2avuPAAtwEQS4Cqf3DAtX8A2p5urw6Xv3DjBZzNhMuPP6Da0TUHdu5ksNCQwG0ASEO8uToYv/iAqtmxcSODAjCMBAQ48BuAHtIwzQZAmzUkBIBhzIHfCyBnIgNkzQJIMYPVAJACkDNBmghpxhoLEkD/CXBIgBUXzjzI4GCgAHE2B4GkDE8HLxDpQACq8cWHH4TzAnqgkZyZQBmDHMAIys6UAIAAAwBz81X4fS5oMgAAAABJRU5ErkJggg==",
+            "properties": {
+                "label": "test label:"
+            },
+            "resizable": "none",
+            "helper": "davinci.libraries.oneui.oneui.form.CheckBoxHelper"
+        },
+        {
+            "name": "CheckBox",
+            "description": "CheckBox",
+            "type": "oneui.form.CheckBox",
+            "category": "oneui",
+            "icon": "resources/images/checkbox.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAP9JREFUeNpi/P//P8PGnQf/M5AJWGAMf3d7kjUDLUYYAAITd94kWnO+uzqqC2DAQkGAgYEDwpbg4ICLv/jxA8IAUicefMD0Agw8+ABRCNL7geEHXBwkHG4uD2avuPAAtwEQS4Cqf3DAtX8A2p5urw6Xv3DjBZzNhMuPP6Da0TUHdu5ksNCQwG0ASEO8uToYv/iAqtmxcSODAjCMBAQ48BuAHtIwzQZAmzUkBIBhzIHfCyBnIgNkzQJIMYPVAJACkDNBmghpxhoLEkD/CXBIgBUXzjzI4GCgAHE2B4GkDE8HLxDpQACq8cWHH4TzAnqgkZyZQBmDHMAIys6UAIAAAwBz81X4fS5oMgAAAABJRU5ErkJggg==",
+            "properties": {
+                "label": "test label:"
+            },
+            "resizable": "none",
+            "helper": "davinci.libraries.oneui.oneui.form.CheckBoxHelper"
+       }
+*/
+    ]
+}

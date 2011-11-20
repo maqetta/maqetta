@@ -1,0 +1,25 @@
+{
+    "id": "http://www.maqetta.org/shapes/Hello",
+    "name": "shapes.Hello",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "shapes/Hello",
+            "$library": "shapes"
+        }
+    ],
+    "library": {
+        "shapes": {
+            "src": "../../../shapes"
+        },
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+    },
+    "content": "<span>hello</span>"
+}

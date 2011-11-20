@@ -1,0 +1,103 @@
+{
+    "id": "http://www.ibm.com/oneui/form/FileInput",
+    "name": "oneui.form.FileInput",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "css",
+            "src": "dojo/resources/dojo.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "themes/oneui/oneui.css",
+            "$library": "oneui"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "oneui/form/FileInput",
+            "$library": "oneui"
+        }
+    ],
+    "library": {
+        "oneui": {
+            "src": "../../../oneui"
+        },
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "type": {
+            "datatype": "string",
+            "defaultValue": "text",
+            "hidden": true
+        },
+        "name": {
+            "datatype": "string",
+            "defaultValue": "uploadFile",
+            "title": "Name"
+        },
+        "alt": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "value": {
+            "datatype": "string",
+            "title": "Value"
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "label": {
+            "datatype": "string",
+            "defaultValue": "Browse ...",
+            "title": "Label"
+        },
+        "cancelText": {
+            "datatype": "string",
+            "defaultValue": "Cancel",
+            "title": "Cancel Text"
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "description": "On focus, should this widget scroll into view?",
+            "hidden": false
+        },
+        "label": {
+            "datatype": "string",
+            "defaultValue": "test label:",
+            "title": "Label"
+        },
+        "labelAlignment": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "horizontal"
+                },
+                {
+                    "value": "vertical"
+                }
+            ],
+            "defaultValue": "horizontal",
+            "title": "Label alignment"
+        }
+    },
+    "content": "<input></input>"
+}

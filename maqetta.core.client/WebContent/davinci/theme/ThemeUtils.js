@@ -181,6 +181,8 @@ davinci.theme.getThemeSet = function(context){
     var dojoThemeSets = davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
     if (!dojoThemeSets){ 
         dojoThemeSets =  davinci.theme.dojoThemeSets;
+        // set the defaults
+    //    davinci.workbench.Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(), dojoThemeSets);
     }
     dojoThemeSets = dojo.clone(dojoThemeSets); // don't want to add to the real setting object
     // find the themeMap
@@ -193,7 +195,7 @@ davinci.theme.getThemeSet = function(context){
         var stop = 0;
         var start;
         if (text.length) {
-            if (text.indexOf('require(["dojox/mobile/deviceTheme"]);')) {
+            if (text.indexOf("dojo.require('dojox.mobile.deviceTheme');")/* && mobileTheme === davinci.theme.none_theme*/) {
                 mobileTheme = dojo.toJson(davinci.theme.dojoMobileDefault); //davinci.theme.default_theme;
             }
             // Look for a dojox.mobile.themeMap in the document, if found set the themeMap

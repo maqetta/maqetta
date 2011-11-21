@@ -241,7 +241,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             var text=scriptTag.getElementText();
             if (text.length) {
                 // Look for a require('dojox.mobile'); in the document, if found set the themeMap 
-                var start = text.indexOf('dojox/mobile');
+                var start = text.indexOf('dojox.mobile');
                 if (start > 0){
                     var stop = text.indexOf(';', start);
                     if (stop > start){

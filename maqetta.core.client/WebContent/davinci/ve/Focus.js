@@ -588,39 +588,45 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         this.domNode.appendChild(contexDiv);
 
     },
-    //FIXME: should this code be delegated to themeEditor somehow? This was moved here for future use by the page editor. 
-    // If the page editor every supports styling supwidgets...
+    //FIXME: should this code be delegated to themeEditor somehow?
     _createSubwidgetList: function() {
         //if(this._cm)return;
+
+        var contexDiv=this._contexDiv;
+        contexDiv.innerHTML = '<span></span>';
+        contexDiv.style.position = "absolute";
+        var x = this._box.w + 10;
+        contexDiv.style.left = x + 'px';
+        contexDiv.className = "themeSubwidgetMenu";
+        dojo.connect(contexDiv, "onmousedown", this, "stopPropagation");
+        //contexDiv.style.zIndex = "115";
+        contexDiv.style.display = "none";
+        this._contexDiv = contexDiv;
+        this.domNode.appendChild(contexDiv);
+        var span = this._contexDiv.firstElementChild,
+            menuId = this._context._themeName + '_subwidgetmenu',
+            pMenu = dijit.byId(menuId);
+        if (pMenu) {
+            pMenu.destroyRecursive(false);
+        }
+        // get the version of dijit that the theme editor html template is using.
+        // if we don't when we create the subwidget menu dojo/resources/blank.gif can't be found 
+        // and we have no check boxes on FF
+        var localDijit = this._context.getDijit();
+        //pMenu = new dijit.Menu({ id:menuId  },span);
+        pMenu = new localDijit.Menu({id:menuId}, span);
+
         var widget = this._context._selectedWidget;
+        this._displayedWidget = widget;
+        //var editor = davinci.Runtime.currentEditor;
+
         var themeMetadata = this._context.getThemeMeta().metadata;
         var widgetType = themeMetadata.getWidgetType(widget);
         var widgetMetadata = themeMetadata.getMetadata(widgetType);
         var subwidgets = widgetMetadata.subwidgets;
 
         if(subwidgets){
-            var contexDiv=this._contexDiv;
-            contexDiv.innerHTML = '<span></span>';
-            contexDiv.style.position = "absolute";
-            var x = this._box.w + 10;
-            contexDiv.style.left = x + 'px';
-            contexDiv.className = "themeSubwidgetMenu";
-            dojo.connect(contexDiv, "onmousedown", this, "stopPropagation");
-            contexDiv.style.display = "none";
-            this._contexDiv = contexDiv;
-            this.domNode.appendChild(contexDiv);
-            var span = this._contexDiv.firstElementChild,
-                menuId = this._context._themeName + '_subwidgetmenu',
-                pMenu = dijit.byId(menuId);
-            if (pMenu) {
-                pMenu.destroyRecursive(false);
-            }
-            // get the version of dijit that the theme editor html template is using.
-            // if we don't when we create the subwidget menu dojo/resources/blank.gif can't be found 
-            // and we have no check boxes on FF
-            var localDijit = this._context.getDijit();
-            pMenu = new localDijit.Menu({id:menuId}, span);
-            this._displayedWidget = widget;
+            //var item = new dijit.CheckedMenuItem({
             var checked = false;
             if (!widget.subwidget) {
                 checked = true; // no subwidget selected
@@ -633,7 +639,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             });
             pMenu.addChild(item);
             this._currentItem = item;
+            //pMenu.addChild(new dijit.MenuSeparator());
             for (var s in subwidgets){
+                //pMenu.addChild(new dijit.CheckedMenuItem({
                 checked = (widget.subwidget === s);
                 var menuItem = new localDijit.CheckedMenuItem({
                     label: s,
@@ -646,14 +654,14 @@ return declare("davinci.ve.Focus", _WidgetBase, {
                     this._currentItem = menuItem;
                 }
             }
-            pMenu.startup();
-            this._cm = pMenu;
-            this._updateSubwidgetListForState();
-            this._connections = [];
-            this._connections.push(dojo.subscribe("/davinci/ui/subwidgetSelectionChanged",dojo.hitch(this,this._subwidgetSelectedChange)));
-            this._connections.push(dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._updateSubwidgetListForState)));
         }
 
+        pMenu.startup();
+        this._cm = pMenu;
+        this._updateSubwidgetListForState();
+        this._connections = [];
+        this._connections.push(dojo.subscribe("/davinci/ui/subwidgetSelectionChanged",dojo.hitch(this,this._subwidgetSelectedChange)));
+        this._connections.push(dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._updateSubwidgetListForState)));
     },
 
     stopPropagation: function(e){

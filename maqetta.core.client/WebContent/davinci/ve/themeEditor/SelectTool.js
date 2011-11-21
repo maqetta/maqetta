@@ -5,7 +5,6 @@ dojo.require("davinci.ve.widget");
 dojo.require("davinci.commands.CompoundCommand");
 dojo.require("davinci.ve.commands.MoveCommand");
 dojo.require("davinci.ve.commands.ResizeCommand");
-dojo.require("davinci.ve.themeEditor.commands.StateChangeCommand");
 
 dojo.declare("davinci.ve.themeEditor._Tool", null, {
 
@@ -101,19 +100,8 @@ dojo.declare("davinci.ve.themeEditor.SelectTool", davinci.ve.themeEditor._Tool, 
 		 * widgets with attribute dvThemeWidget="true" are selectable.
 		 * 
 		 */
-		if(!widget) { //#1024
-		    this._context._editor._selectedWidget
-		    var cmd = new davinci.ve.themeEditor.commands.StateChangeCommand({
-		        _themeEditor: this._context._editor,
-	            _widget: this._context._editor._selectedWidget, 
-	            _newState: this._context._editor._currentState,
-	            _oldState: this._context._editor._oldState,
-	            _firstRun: true
-	        });
-		    setTimeout(function (){cmd.execute();},500);
-		    
+		if(!widget)
 			return;
-		}
 
 		var selection = this._context.getSelection();
 		var ctrlKey = navigator.appVersion.indexOf("Macintosh") < 0? event.ctrlKey: event.metaKey;

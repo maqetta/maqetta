@@ -450,6 +450,9 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	white-space:nowrap;
 }
 
+.nhfo_ct label {
+	vertical-align:middle;
+}
 .nhfo_outer2 {
 	margin: .8em 0 0;
 	border: 1px solid #759DC0;
@@ -464,6 +467,9 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 }
 .nhfo_ct .dijitSelect .dijitButtonContents {
 	width:11em;
+}
+.nhfo_show_details {
+	margin-top: 4px;
 }
 .nhfo_show_details a:link, .nhfo_show_details a:visited, .nhfo_hide_details a:link, .nhfo_hide_details a:visited {
 	text-decoration:none;

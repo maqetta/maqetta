@@ -1,4 +1,5 @@
-<div class="fileDialog" style="position:relative">
+<div class="fileDialog" style="position:relative" dojoAttachPoint="_fileDialog">
+	
 	<table class="fileFolderTable">
 		<tr class='fileNameRow'>
 			<td class="fileDialogLabelCell">
@@ -41,7 +42,8 @@
 			<button dojoType="dijit.form.Button" dojoAttachPoint="__cancelButton" dojoAttachEvent="onClick:cancelButton">${cancelButtonLabel}</button>
 		</span>
 		<span class="buttonWrapperSpan">
-			<button dojoType="dijit.form.Button" dojoAttachPoint="__okButton" dojoAttachEvent="onClick:_okButton">${finishButtonLabel}</button>
+			<button dojoType="dijit.form.Button" type="submit" dojoAttachPoint="__okButton" dojoAttachEvent="onClick:_okButton">${finishButtonLabel}</button>
 		</span>
 	</div>
+	
 </div>

@@ -1,21 +1,21 @@
-dojo.provide("davinci.ve.input.SmartInput");
-dojo.require("davinci.ve.commands.ModifyRichTextCommand");
-dojo.require("dojox.layout.FloatingPane");
-dojo.require("dijit.Editor");
-dojo.require("dijit.form.Textarea");
-dojo.require("dijit.form.TextBox");
-dojo.require("dijit._editor.plugins.LinkDialog");
-dojo.require("dijit._editor.plugins.TextColor");
-dojo.require("dijit._editor.plugins.FontChoice");
-dojo.require("dojox.html.entities");
-dojo.require("dojox.html.ellipsis");
-dojo.require("dojox.layout.ResizeHandle");
+define([
+	"dojo/_base/declare",
+	"davinci/ve/commands/ModifyRichTextCommand",
+	"dijit/layout/ContentPane",
+	"dijit/form/SimpleTextarea",
+	"dijit/form/TextBox",
+	"dojox/html/entities",
+	"dojox/html/ellipsis",
+	"dojox/layout/ResizeHandle",
+	"dojo/i18n!davinci/ve/nls/ve",
+	"dojo/i18n!dijit/nls/common"
+], function(declare, ModifyRichTextCommand, ContentPane, SimpleTextarea, TextBox, entities, ellipsis, ResizeHandle, veNls, commonNls){
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ve", "ve");
-dojo.requireLocalization("dijit", "common");
+	// temporary workaround for nls.  the i18n dependencies aren't loading properly
+//	veNls = dojo.i18n.getLocalization("davinci.ve","ve");
+//	commonNls = dojo.i18n.getLocalization("dijit","common");
 
-dojo.declare("davinci.ve.input.SmartInput", null, {
+return declare("davinci.ve.input.SmartInput", null, {
 
 	property: null,
 	_X_MOVE_RANGE: 10,
@@ -30,15 +30,13 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 	_connection: [],
 	
 	getHelpText: function(){
-		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
-	
 		if (this.helpText) {
 			return this.helpText;
 		}
 		if (this.isHtmlSupported()){
-			return langObj.smartInputHelp1;
+			return veNls.smartInputHelp1;
 		} 
-		return langObj.smartInputHelp2;
+		return veNls.smartInputHelp2;
 		
 	},
 	
@@ -307,7 +305,7 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 			                  ["\u003E","gt"]/*,
 			                  ["\u00A0","nbsp"]*/
 		                     ]; 
-			value = dojox.html.entities.decode(value, customMap);
+			value = entities.decode(value, customMap);
 			this._inline.eb.attr('value', String(value));
 			this.updateFormats();
 			this.help(false);  // first time, don't display help but resize as needed
@@ -419,8 +417,7 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 		this._connection.push(dojo.connect(m2, "onMoveStart", this, "onMoveStart")); 
 		this._connection.push(dojo.connect(m2, "onMoveStop", this, "onMoveStop")); 
 
-		var pFloatingPane = new dijit.layout.ContentPane({ 	 },
-														 inline);
+		var pFloatingPane = new ContentPane({}, inline);
 		
 		this._inline = pFloatingPane;
 		
@@ -607,7 +604,7 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 					if (djprop === 'innerHTML'){
 						values.richText = values.textContent;
 						delete values.textContent;
-						command = new davinci.ve.commands.ModifyRichTextCommand(this._widget, values, null, context);
+						command = new ModifyRichTextCommand(this._widget, values, null, context);
 					}else{
 						command = new davinci.ve.commands.ModifyCommand(this._widget, values, null, context);
 					}
@@ -651,7 +648,7 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 				
 				if(value != null && !cancel){
 				if (!this.disableEncode && this._format === 'text' ) // added to support dijit.TextBox that does not support html markup in the value and should not be encoded. wdr
-						value = dojox.html.entities.encode(value);
+						value = entities.encode(value);
 				
 					this.updateWidget(value);
 				}
@@ -672,7 +669,7 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 
 		containsHtmlMarkUp: function (str){
 			
-//			var str2 =  dojox.html.entities.encode(str);
+//			var str2 =  entities.encode(str);
 //			if (str === str2) {
 //				return false;
 //			} 
@@ -740,12 +737,11 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 			// NOTE: if you put a break point in here while debugging it will break the dojoEllipsis
 			var localDojo = this._widget.getContext().getDojo();
 			var textObj = dojo.byId("davinci.ve.input.SmartInput_radio_text_width_div");
-			//var what = dojox.html.entities.encode(dojox.html.entities.encode(value));
-			var what = dojox.html.entities.encode(value);
-			textObj.innerHTML = '<div class="dojoxEllipsis">Plain text ('+what+') </div>';
+			//var what = entities.encode(dojox.html.entities.encode(value));
+			var what = entities.encode(value);
+			textObj.innerHTML = '<div class="dojoxEllipsis">' + dojo.replace('Plain text ({0})', [what]) + '</div>'; // FIXME: i18n
 			var htmlObj = dojo.byId("davinci.ve.input.SmartInput_radio_html_width_div");
-			var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
-			htmlObj.innerHTML = '<div id="davinci.ve.input.SmartInput_radio_html_div" class="dojoxEllipsis">'+langObj.htmlMarkup+'</div>';
+			htmlObj.innerHTML = '<div id="davinci.ve.input.SmartInput_radio_html_div" class="dojoxEllipsis">'+veNls.htmlMarkup+'</div>';
 			var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
 			var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
 			var table = dojo.byId('davinci.ve.input.SmartInput_table');
@@ -777,8 +773,6 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 		},
 		
 		resize: function(e){
-			
-			
 			var tagetObj = dojo.byId("iedResizeDiv");
 			var targetEditBoxDijit = dijit.byId("davinciIleb");
 			var ieb = dojo.byId("ieb");
@@ -822,8 +816,6 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 		},
 
 		_getTemplate: function(){
-			var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
-			
 			var editBox = ''+
 				'<div id="iedResizeDiv" class="iedResizeDiv" >' + 
 //			       '<input id="davinciIleb" class="davinciIleb smartInputTextBox" type="text"  dojoType="dijit.form.TextBox"  />' +
@@ -873,7 +865,7 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 					'<div class="smartInputHelpDiv" > '+
 		        		'<span id="davinci.ve.input.SmartInput_img_help"  title="Help" class="inlineEditHelp" > </span>'+
 			        	'<span class="smartInputSpacerSpan" >'+
-			        	'<button id="davinci.ve.input.SmartInput_ok"  dojoType="dijit.form.Button" type="button" class="inlineEditHelpOk" >'+dijitLangObj.buttonOk+'</button> <button id=davinci.ve.input.SmartInput_cancel dojoType="dijit.form.Button" class="inlineEditHelpCancel"> '+dijitLangObj.buttonCancel+'</button>  '+
+			        	'<button id="davinci.ve.input.SmartInput_ok"  dojoType="dijit.form.Button" type="submit" class="inlineEditHelpOk" >'+commonNls.buttonOk+'</button> <button id=davinci.ve.input.SmartInput_cancel dojoType="dijit.form.Button" class="inlineEditHelpCancel"> '+commonNls.buttonCancel+'</button>  '+
 			        	'</span>   '+
 			        '</div> '+
 			        '<div id="davinci.ve.input.SmartInput_div_help" style="display:none;" class="smartInputHelpTextDiv" > '+
@@ -887,7 +879,6 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 		},
 		
 		_connectResizeHandle: function(){
-			
 			var resizeHandle = dijit.byId('iedResizeHandle');
 			this._connection.push(dojo.connect(resizeHandle, "onResize", this, "resize"));
 		},
@@ -898,6 +889,5 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 			this._connection.push(dojo.connect(this._inline.eb, "onMouseOut", this, "updateSimStyle"));
 			this._connection.push(dojo.connect(dojo.byId(' davinci.ve.input.SmartInput_div'), "onclick", this, "updateSimStyle"));
 		}
-			
-		
+});
 });

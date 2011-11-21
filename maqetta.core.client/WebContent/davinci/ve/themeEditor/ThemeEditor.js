@@ -103,12 +103,6 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 		var obj = domNode;
 		if (obj.offsetParent) {
 			do {
-			    if (obj.className.indexOf('theming-widget') > -1){
-                    // #1024 using ralitve div for postion
-                    realtop = domNode.offsetTop; // 1024
-                    realleft = domNode.offsetLeft ; // 1024
-                    break;
-                }
 				realleft += obj.offsetLeft;
 				realtop += obj.offsetTop;
 			} while (obj = obj.offsetParent);
@@ -123,7 +117,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 		realtop = realtop - padding;
 		realleft = realleft - padding;
 		frame.style.top = realtop + "px";
-		frame.style.left = realleft + "px"; 
+		frame.style.left = realleft + "px";
 		frame.style.padding = padding + 'px';
 		frame.style.display = "block";
 		this._selectedWidget.domNode.parentNode.appendChild(frame);
@@ -551,7 +545,6 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
                 dojo.connect(cssFiles[i], 'onChange', context,
                         '_themeChange');
             }
-
 			this._themeFileContent = this.resourceFile.getText(); // get the content for use later when setting dirty. Timing issue
 
 			var subs = this._subscriptions;
@@ -706,12 +699,6 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 		var obj = domNode;
 		if (obj.offsetParent) {
 			do {
-			    if (obj.className.indexOf('theming-widget') > -1){
-			        // #1024 using ralitve div for postion
-			        realtop = domNode.offsetTop; // 1024
-			        realleft = domNode.offsetLeft ; // 1024
-			        break;
-			    }
 				realleft += obj.offsetLeft;
 				realtop += obj.offsetTop;
 			} while (obj = obj.offsetParent);
@@ -741,20 +728,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 	canvasOnMouseDown: function(event){
 		//console.log('ThemeEditor:canvasOnMouseDown');
 		 // we should only get here when the canvas is clicked on, deslecting widget	
-	    var t = davinci.ve.widget.getEnclosingWidget(event.target);
-        if (event.target.id.indexOf('enableWidgetFocusFrame_') >-1){
-            t = event.target._widget;
-        }
-        var widget =  t ;
-        while(widget){
-            if (widget.dvAttributes && widget.dvAttributes.isThemeWidget && widget.getContext() ){ // managed widget
-                return; // break;
-            }
-            widget = davinci.ve.widget.getEnclosingWidget(widget.domNode.parentNode);
-        }
-        
-
-		if (this._selectedWidget && (event.target.className.indexOf('editFeedback') < 0)){ // #1024 mobile widgets click through
+		if (this._selectedWidget){
 			event.stopPropagation();
 			var a = [null];
 			if (this._currentSelectionRules) {

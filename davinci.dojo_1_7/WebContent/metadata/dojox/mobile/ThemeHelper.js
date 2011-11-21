@@ -19,10 +19,10 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ThemeHelper", null, {
         var resourcePath = context.getFullResourcePath();
         //var ssPath = new davinci.model.Path(context._theme.file.parent.getPath()).append(context._theme.files[0]);
         //newFilename = ssPath.relativeTo(resourcePath, true);
-        //var base = "iphone";
-        //if (context._visualEditor.theme.base){
-            var base = context._visualEditor.theme.base;
-        //}
+        var base = "iphone";
+        if (context._visualEditor.theme.base){
+            base = context._visualEditor.theme.base;
+        }
         dm.themeMap=[[".*",base,[context._visualEditor.theme.files[0]]]];
        // dm.themeMap=[[".*","",["x.css"]]];
 

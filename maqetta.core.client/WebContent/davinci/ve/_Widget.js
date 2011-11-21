@@ -482,9 +482,6 @@ return declare("davinci.ve._Widget", null, {
 			}
 		}
 		
-		// Save source for widget
-		data.content = this._getElementSource();
-		
 		// Find "on*" event attributes that are in the model and
 		// place on the data object. Note that Maqetta strips
 		// on* event attributes from the DOM that appears on visual canvas.
@@ -502,33 +499,6 @@ return declare("davinci.ve._Widget", null, {
 
 		return data;
 	},
-
-    // Save source for widget, everything except for any widget children.
-	_getElementSource: function() {
-        var srcElement = this._srcElement,
-            content = ['<'];
-        content.push(srcElement.tag);
-        srcElement.attributes.forEach(function(attr) {
-            if (this._skipAttrs.indexOf(attr.name.toLowerCase()) === -1) {
-                content.push(' $n="$v"'.replace('$n', attr.name).replace('$v', attr.value));
-            }
-        }, this);
-        content.push('>');
-        
-        // look for any model children that aren't managed widgets
-        var childWidgets = this.getChildren();
-        srcElement.children.filter(function(child) {
-            return ! childWidgets.some(function(w) {
-                return w._srcElement === child;
-            });
-        }).forEach(function(child) {
-            content.push(child.getText());
-        });
-
-        content.push('</$t>'.replace('$t', srcElement.tag));
-        return content.join('');
-	},
-
 
 	getPropertyValue: function(name) {
 		if (name === 'id') {

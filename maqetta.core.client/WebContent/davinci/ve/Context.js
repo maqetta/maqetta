@@ -609,8 +609,20 @@ return declare("davinci.ve.Context", null, {
     	 * 
     	 * */
     	var model = this.getModel();
+    	var defaultThemeName="claro";
+    	var dojoThemeSets = davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
+        if (!dojoThemeSets){ 
+            dojoThemeSets =  davinci.theme.dojoThemeSets;
+            davinci.workbench.Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(),dojoThemeSets);
+            
+        }
+        for (var i = 0; i < dojoThemeSets.themeSets.length; i++){
+            if (dojoThemeSets.themeSets[i].name === davinci.theme.desktop_default){
+                defaultThemeName = dojoThemeSets.themeSets[i].desktopTheme;
+            }
+        }
     	var imports = model.find({elementType:'CSSImport'});
-		var defaultThemeName="claro";
+		
 		
 		/* remove the .theme file, and find themes in the given base location */
 		var allThemes = davinci.library.getThemes(davinci.Runtime.getProject());

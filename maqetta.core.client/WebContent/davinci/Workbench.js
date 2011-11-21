@@ -31,6 +31,7 @@ dojo.require("davinci.ui.NewTheme");
 
 
 dojo.require("davinci.ui.OpenThemeDialog"); // ui_plugin.js
+dojo.require("davinci.ui.ThemeSetsDialog"); // ui_plugin.js
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci", "webContent");

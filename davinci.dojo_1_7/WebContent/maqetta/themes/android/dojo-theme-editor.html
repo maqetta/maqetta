@@ -64,8 +64,9 @@ require([
 
   .theming-note {
     font-size : 11px;
-    font-style : italic;
+	font-style: italic;
 }
+	
 
   -widgets#other {
     width : 40em;
@@ -101,11 +102,12 @@ require([
 }
 
   table.HtmlWidget {
-    outline : none;
+	outline: none;
 }
 
   td.HtmlWidget {
-    outline : none;
+	outline: none;
+
 }
 
   #tcNestedParent .dijitTabListWrapper {
@@ -135,55 +137,48 @@ require([
   <div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Global Styling&quot;, selected:true">
   <div class="theming-group-widgets">
      <table role="presentation" style="width:100%">
-  <tbody>
-   <tr>
-    <td>View, ScrollableView and SwapView:</td>
-    <td style="width:450px">
-     <div class="theming-widget" style="width: 250px; height: 250px;">
-      <div id="View_0" dojoType="dojox.mobile.View" class="dvThemeWidget" style="height: 100%;" selected="true">
+		<tbody>
+			<tr>
+				<td>View, ScrollableView and SwapView:</td>
+				<td style="width:450px">
+					<div class="theming-widget" style="width: 250px; height: 250px;">
+						<div id="View_0" dojoType="dojox.mobile.View" class="dvThemeWidget" style="height: 100%;" selected="true">
 							View
 						</div>
-     </div>
-    </td>
-   </tr>
-  </tbody>
- </table>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
    </div>
    </div>
    <div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Headings &amp; TabBars&quot;">
     <div class="theming-group-widgets">
      <table role="presentation" style="width:100%">
-  <tbody>
-   <tr>
-    <td>Heading:</td>
-    <td style="width:450px">
-     <div class="theming-widget" style="width: 445px;">
-      <h1 label="Heading" dojoType="dojox.mobile.Heading" class="dvThemeWidget" back="back">
-      </h1>
-     </div>
-    </td>
-   </tr>
-   <tr>
-    <td>ToolBarButton:</td>
-    <td style="width:450px">
-     <div class="theming-widget" style="width: 445px;" >
-       <div label="ToolBarButton" dojotype="dojox.mobile.ToolBarButton" sync="true" class="dvThemeWidget"></div>
-     </div>
-    </td>
-   </tr>
-   <tr>
-    <td>TabBar and TabBarButton:</td>
-    <td style="width:450px">
-     <div class="theming-widget" style="width: 445px;">
-      <ul dojoType="dojox.mobile.TabBar" barType="segmentedControl" class="dvThemeWidget">
-       <li label="TabBarButton" dojoType="dojox.mobile.TabBarButton" sync="true"></li>
-       <li label="TabBarButton" dojoType="dojox.mobile.TabBarButton" sync="true"></li>
-      </ul>
-     </div>
-    </td>
-   </tr>
-  </tbody>
- </table>
+		<tbody>
+			<tr>
+				<td>Heading and ToolBarButton:</td>
+				<td style="width:450px">
+					<div class="theming-widget" style="width: 445px;">
+						<h1 label="Heading" dojoType="dojox.mobile.Heading" class="dvThemeWidget" back="back" >
+							<div label="ToolBarButton" dojotype="dojox.mobile.ToolBarButton" sync="true"></div>
+						</h1>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>TabBar and TabBarButton:</td>
+				<td style="width:450px">
+					<div class="theming-widget" style="width: 445px;">
+						<ul dojoType="dojox.mobile.TabBar" barType="segmentedControl" class="dvThemeWidget">
+							<li label="TabBarButton" dojoType="dojox.mobile.TabBarButton" sync="true"></li>
+							<li label="TabBarButton" dojoType="dojox.mobile.TabBarButton" sync="true"></li>
+						</ul>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
    </div>
    </div>
 
@@ -193,7 +188,7 @@ require([
       <tbody>
        <tr>
         <td>RoundRectList and EdgeToEdgeList:</td>
-  <td style="width:450px">
+		<td style="width:450px">
          <div class="theming-widget" style="width: 300px;">
           <ul dojoType="dojox.mobile.RoundRectList" class="dvThemeWidget">
            <li label="Item 1" dojoType="dojox.mobile.ListItem" sync="true" moveTo="test"></li>
@@ -201,7 +196,7 @@ require([
           </ul>
          </div>
         </td>
-    </tr>
+	   </tr>
        <tr>
         <td>EdgeToEdgeCategory:</td>
         <td>
@@ -293,9 +288,9 @@ require([
        <tr>
         <td>ComboBox list:</td>
         <td style="height:120px; vertical-align: top;">
-         <div class="theming-widget" style="margin-left: 5px;">
-          <div class="dijitPopup mblComboBoxMenuPopup dvThemeWidget">
-           <div class="mblReset mblComboBoxMenu">
+         <div class="theming-widget" style="margin-left: 5px;"  >
+          <div class="dijitPopup mblComboBoxMenuPopup dvThemeWidget" >
+           <div class="mblReset mblComboBoxMenu" >
             <div>
               <div class="mblReset mblComboBoxMenuItem mblComboBoxMenuPreviousButton" role="option">Previous choices</div>
               <div class="mblReset mblComboBoxMenuItem themeEditorComboBoxItemLocator" role="option">ComboBox Item 1</div>
@@ -324,5 +319,6 @@ require([
 
 </div>
 
+</div>
 </body>
 </html>

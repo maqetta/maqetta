@@ -289,70 +289,70 @@
                             "query": ".mblArrowButtonBody"
                         }
                     }
-                }
-            }
-        },
-        "ToolBarButton": {
-            "displayName": "ToolBarButton",
-            "states": {
-                "Normal": {
-                    "selectors": {
-                        ".mblToolBarButtonText": [
-                            "padding",
-                            "padding-top",
-                            "padding-right",
-                            "padding-bottom",
-                            "padding-left"
-                        ],
-                        ".mblToolBarButton": [
-                            "float",
-                            "position",
-                            "overflow",
-                            "overflow-x",
-                            "overflow-y",
-                            "cursor",
-                            "-webkit-tap-highlight-color",
-                            "margin",
-                            "margin-top",
-                            "margin-right",
-                            "margin-bottom",
-                            "margin-left",
-                            "height",
-                            "border",
-                            "border-top-width",
-                            "border-right-width",
-                            "border-bottom-width",
-                            "border-left-width",
-                            "border-top-style",
-                            "border-right-style",
-                            "border-bottom-style",
-                            "border-left-style",
-                            "border-top-color",
-                            "border-right-color",
-                            "border-bottom-color",
-                            "border-left-color",
-                            "font-family",
-                            "font-size",
-                            "font-weight",
-                            "color",
-                            "line-height",
-                            "text-align",
-                            "border-image"
-                        ],
-                        ".dj_tablet .mblToolBarButton": [
-                            "text-shadow",
-                            "border"
-                        ],
-                        ".mblColorDefault": [
-                            "background-color",
-                            "background-image"
-                        ],
-                        ".dj_tablet .mblColorDefault": [
-                            "background-color",
-                            "background-image"
-                        ]
-                    },
-                    "query": ".mblToolBarButton"
+                },
+                "ToolBarButton": {
+                    "displayName": "ToolBarButton",
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".mblToolBarButtonText": [
+                                    "padding",
+                                    "padding-top",
+                                    "padding-right",
+                                    "padding-bottom",
+                                    "padding-left"
+                                ],
+                                ".mblToolBarButton": [
+                                    "float",
+                                    "position",
+                                    "overflow",
+                                    "overflow-x",
+                                    "overflow-y",
+                                    "cursor",
+                                    "-webkit-tap-highlight-color",
+                                    "margin",
+                                    "margin-top",
+                                    "margin-right",
+                                    "margin-bottom",
+                                    "margin-left",
+                                    "height",
+                                    "border",
+                                    "border-top-width",
+                                    "border-right-width",
+                                    "border-bottom-width",
+                                    "border-left-width",
+                                    "border-top-style",
+                                    "border-right-style",
+                                    "border-bottom-style",
+                                    "border-left-style",
+                                    "border-top-color",
+                                    "border-right-color",
+                                    "border-bottom-color",
+                                    "border-left-color",
+                                    "font-family",
+                                    "font-size",
+                                    "font-weight",
+                                    "color",
+                                    "line-height",
+                                    "text-align",
+                                    "border-image"
+                                ],
+                                ".dj_tablet .mblToolBarButton": [
+                                    "text-shadow",
+                                    "border"
+                                ],
+                                ".mblColorDefault": [
+                                    "background-color",
+                                    "background-image"
+                                ],
+                                ".dj_tablet .mblColorDefault": [
+                                    "background-color",
+                                    "background-image"
+                                ]
+                            },
+                            "query": ".mblToolBarButton"
+                        }
+                    }
                 }
             }
         },

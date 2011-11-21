@@ -110,7 +110,7 @@ dojo.declare("davinci.ve.themeEditor.SelectTool", davinci.ve.themeEditor._Tool, 
 	            _oldState: this._context._editor._oldState,
 	            _firstRun: true
 	        });
-		    setTimeout(function (){cmd.execute();},500);
+		    setTimeout(function (){debugger;cmd.execute();},500);
 		    
 			return;
 		}

@@ -155,27 +155,35 @@ return declare("davinci.ve.VisualEditor", null, {
 		var command = null;
 		
 		if(value.appliesTo=="inline"){
-			var allValues = {};
+			var allValues = [];
 			/* rewrite any URLs found */
 			
 			var filePath = new Path(this.fileName);
 			
-			for(var name in value.values){
-				if(davinci.ve.utils.URLRewrite.containsUrl(value.values[name])){
-					
-					var oldUrl = new Path(davinci.ve.utils.URLRewrite.getUrl(value.values[name]));
-					if(!oldUrl.isAbsolute){
-						var newUrl = oldUrl.relativeTo(filePath).toString();
-						var newValue = davinci.ve.utils.URLRewrite.replaceUrl(value.values[name], newUrl);
-						allValues[name]=newValue;
+			for(var i=0;i<value.values.length;i++){
+				for(var name in value.values[i]){
+				
+					if(davinci.ve.utils.URLRewrite.containsUrl(value.values[i][name])){
+						
+						var oldUrl = new Path(davinci.ve.utils.URLRewrite.getUrl(value.values[i][name]));
+						if(!oldUrl.isAbsolute){
+							var newUrl = oldUrl.relativeTo(filePath).toString();
+							var newValue = davinci.ve.utils.URLRewrite.replaceUrl(value.values[i][name], newUrl);
+							allValues.push(a);
+							
+						}else{
+							var a ={};
+							a[name] = value.values[i][name];
+						
+							allValues.push(a); //FIXME: combine with below
+						}
 					}else{
-						allValues[name]=value.values[name]; //FIXME: combine with below
+						var a ={};
+						a[name] = value.values[i][name];
+						allValues.push(a);
 					}
-				}else{
-					allValues[name]=value.values[name];
 				}
 			}
-			
 			command = new davinci.ve.commands.StyleCommand(widget, allValues, value.applyToWhichStates);	
 		}else{
 			var rule=null;

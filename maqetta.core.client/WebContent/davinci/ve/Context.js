@@ -785,13 +785,13 @@ return declare("davinci.ve.Context", null, {
 				//  depend on dojo any more.  Once issue, though, is that the callback function
 				//  makes use of dojo and thusly must be invoked only after dojo has loaded.  Need
 				//  to remove Dojo dependencies from callback function first.
-				var baseUserWorkspace = system.resource.getRoot().getURL() + "/" + this._getWidgetFolder();
-				var baseDojoUrl = system.resource.getRoot().getURL() + "/lib/dojo/dojo";
-				var config = {
-					modulePaths: {widgets: baseUserWorkspace},
-					packages: [{ name: 'oneui', location: '../../oneui'}, { name: 'widgets', location: baseUserWorkspace}], // need to make this dynamic
-					baseUrl: baseDojoUrl
-				};
+				var baseUserWorkspace = system.resource.getRoot().getURL() + "/" + this._getWidgetFolder(),
+				    baseDojoUrl = system.resource.getRoot().getURL() + "/lib/dojo/dojo",
+				    config = {
+						modulePaths: {widgets: baseUserWorkspace}, // FIXME: replaced by packages in Dojo 1.7?
+						packages: [{ name: 'widgets', location: baseUserWorkspace}], // need to add dynamically
+						baseUrl: baseDojoUrl
+					};
 				dojo.mixin(config, this._configProps);
 
 				var requires = this._bootstrapModules.split(","),

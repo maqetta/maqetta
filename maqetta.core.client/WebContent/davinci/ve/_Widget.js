@@ -145,14 +145,13 @@ return declare("davinci.ve._Widget", null, {
    
 	attr: function(name,value)
 	{
-		var attrValue=	this._attr.apply(this, arguments);
-		if (arguments.length>1)
-		{
+		var attrValue = this._attr.apply(this, arguments);
+		if (arguments.length>1) {
 			value=this._stringValue(name, value);
 			this._srcElement.addAttribute(name,value);
-		}
-		else
+		} else {
 			return attrValue;
+		}
 	},
 
 	_attr: function(name,value) {
@@ -191,7 +190,7 @@ return declare("davinci.ve._Widget", null, {
 		}
 	},
 	getParent: function() {
-			return davinci.ve.widget.getEnclosingWidget(this.domNode.parentNode) || this.domNode.parentNode;
+		return davinci.ve.widget.getEnclosingWidget(this.domNode.parentNode) || this.domNode.parentNode;
 	},
 
 	getObjectId: function(widget) {

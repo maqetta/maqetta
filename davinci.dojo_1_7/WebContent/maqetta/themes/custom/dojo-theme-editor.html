@@ -18,7 +18,9 @@ require([
     "dojox/mobile/RoundRect",
 	"dijit/form/DataList",
 	"dojox/mobile/ComboBox"
+	
 ]);
+
 </script>
 <style>@import "/maqetta/app/static/lib/dojo/1.7/dijit/themes/claro/claro.css";
 </style>
@@ -43,26 +45,38 @@ require([
     padding-top : .3em;
     padding-bottom : 0;
     border-spacing : 0;
+    margin-top : 1px;
+    margin-bottom : 10px;
 }
 
   .theming-group-title {
     color : #333;
     font-family : cursive;
+    font-size : 16px;
     background-color : #aaa;
-    padding-left : .3em;
+    padding-left : 7px;
+    padding-top : 3px;
 }
 
   .theming-group-widgets {
     padding : 0;
+    background : white;
+    font-size : 14px;
 }
 
   .theming-widget {
     position : relative;
 }
 
+  .theming-widget-spacer {
+    height : 10px;
+}
+
   .theming-note {
-    font-size : 11px;
-    font-style : italic;
+    font-size : 14px;
+    font-style : normal;
+    padding : 3px 17px;
+    margin : 2px 0;
 }
 
   -widgets#other {
@@ -98,6 +112,14 @@ require([
     outline-color : none;
 }
 
+  SPAN.HtmlWidget {
+    outline : none;
+}
+
+  A.HtmlWidget {
+    outline : none;
+}
+
   table.HtmlWidget {
     outline : none;
 }
@@ -106,221 +128,248 @@ require([
     outline : none;
 }
 
-  #tcNestedParent .dijitTabListWrapper {
-    display : none;
+  TH.HtmlWidget {
+    outline : none;
 }
 
-  #tcNestedParent .dijitTabPaneWrapper {
-    background : transparent;
-    border-color : transparent;
+  .editContextContainer FORM, .editContextContainer .dijitContentPane, .editContextContainer .dojoxScrollWindow {
+    outline : none;
 }
 
-  #tcNestedParent .dijitTabContainerTop-dijitContentPane {
-    background-color : transparent ! important;
+  .editContextContainer .dijitTabContainer .dijitContentPane {
+    outline : none;
 }
 
-  #tcNestedParent .dijitTabContainerNested .dijitTabContainerTop-tabs {
-    background-color : white;
-    font-family : Verdana, Arial, Helvetica, sans-serif;
+  div.mblView, div[dojotype="dojox.mobile.ContentPane"] {
+    outline : none;
+}
+
+  .resetClaroFontBg.resetClaroFontBg { /* Class name repeated twice to win the cascade */
+    color : black;
+    font-family : Myriad, Helvetica, Tahoma, Arial, clean, sans-serif;
+
     font-size : 12px;
-    color : #131313;
+    font-style : normal;
+    font-variant : normal;
+    font-weight : normal;
+    background-attachment : scroll;
+    background-clip : border-box;
+    background-color : white;
+    background-image : none;
+    background-origin : padding-box;
+    background-position : 0% 0%;
+    background-repeat : repeat;
+    background-size : auto auto;
+}
+
+  .fakeSilhouette3 {
+    border : 12px solid #444;
+    border-radius : 12px;
+    background : #444;
+    margin-left : 2px;
+}
+
+  .fakeSilhouette2 {
+    border : 1px solid #eee;
+    background : #eee;
+    border-radius : 6px;
+}
+
+  .fakeSilhouette1 {
+    border : 6px solid transparent;
+    border-radius : 6px;
+}
+
+  .widgetLabel {
+    margin-top : 10px;
+    margin-bottom : 3px;
+}
+
+  .widgetLabelNote {
+    margin-left : 1em;
+    font-size : 80%;
+    font-style : italic;
 }
 
 </style>
-<div style="margin: -1px;">
- <div id="tcNestedParent" data-dojo-type="dijit.layout.TabContainer" data-dojo-props="style:&quot;width: 100%; height: 600px;&quot; ">
-  <div id="tcNestedChild" data-dojo-type="dijit.layout.TabContainer" data-dojo-props="title:&quot;Tab 1&quot;, nested:true ">
-  <div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Global Styling&quot;, selected:true">
-  <div class="theming-group-widgets">
-     <table role="presentation" style="width:100%">
-  <tbody>
-   <tr>
-    <td>View, ScrollableView and SwapView:</td>
-    <td style="width:450px">
-     <div class="theming-widget" style="width: 250px; height: 250px;">
-      <div id="View_0" dojoType="dojox.mobile.View" class="dvThemeWidget" style="height: 100%;" selected="true">
-							View
-						</div>
-     </div>
-    </td>
-   </tr>
-  </tbody>
- </table>
-   </div>
-   </div>
+<div class="resetClaroFontBg" style="margin: -1px;">
+ <div class="theming-group">
+  <div class="theming-group-title">
+			Global Styling
+		</div>
+
+  <div class="theming-group-widgets" style="background:white; height:125px;">
+   <div class="theming-note">To change global font and background properties, click inside the widget below to select it, then change font properties and/or background properties in the Properties pallete.</div>
    <div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Headings &amp; TabBars&quot;">
-    <div class="theming-group-widgets">
-     <table role="presentation" style="width:100%">
-  <tbody>
-   <tr>
-    <td>Heading:</td>
-    <td style="width:450px">
-     <div class="theming-widget" style="width: 445px;">
-      <h1 label="Heading" dojoType="dojox.mobile.Heading" class="dvThemeWidget" back="back">
-      </h1>
+    <div class="fakeSilhouette3" style="width:420px;">
+     <div class="fakeSilhouette2">
+      <div class="fakeSilhouette1 useBodyFontBg" style="height:40px;">
+       <div id="View_0" dojoType="dojox.mobile.View" class="dvThemeWidget" style="height: 100%;" selected="true">
+								Font and background styling
+							</div>
+      </div>
      </div>
-    </td>
-   </tr>
-   <tr>
-    <td>ToolBarButton:</td>
-    <td style="width:450px">
-     <div class="theming-widget" style="width: 445px;" >
-       <div label="ToolBarButton" dojotype="dojox.mobile.ToolBarButton" sync="true" class="dvThemeWidget"></div>
-     </div>
-    </td>
-   </tr>
-   <tr>
-    <td>TabBar and TabBarButton:</td>
-    <td style="width:450px">
-     <div class="theming-widget" style="width: 445px;">
-      <ul dojoType="dojox.mobile.TabBar" barType="segmentedControl" class="dvThemeWidget">
-       <li label="TabBarButton" dojoType="dojox.mobile.TabBarButton" sync="true"></li>
-       <li label="TabBarButton" dojoType="dojox.mobile.TabBarButton" sync="true"></li>
-      </ul>
-     </div>
-    </td>
-   </tr>
-  </tbody>
- </table>
-   </div>
-   </div>
-
-   <div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Rects &amp; Lists&quot;">
-    <div class="theming-group-widgets">
-     <table role="presentation" style="width:100%">
-      <tbody>
-       <tr>
-        <td>RoundRectList and EdgeToEdgeList:</td>
-  <td style="width:450px">
-         <div class="theming-widget" style="width: 300px;">
-          <ul dojoType="dojox.mobile.RoundRectList" class="dvThemeWidget">
-           <li label="Item 1" dojoType="dojox.mobile.ListItem" sync="true" moveTo="test"></li>
-           <li label="Item 2" dojoType="dojox.mobile.ListItem"></li>
-          </ul>
-         </div>
-        </td>
-    </tr>
-       <tr>
-        <td>EdgeToEdgeCategory:</td>
-        <td>
-         <div class="theming-widget" style="width: 300px;">
-          <div label="EdgeToEdgeCategory" dojoType="dojox.mobile.EdgeToEdgeCategory" class="dvThemeWidget"></div>
-         </div>
-        </td>
-       </tr>
-       <tr>
-        <td>RoundRectCategory:</td>
-        <td>
-         <div class="theming-widget" style="width: 300px;">
-          <div label="RoundRectCategory" dojoType="dojox.mobile.RoundRectCategory" class="dvThemeWidget"></div>
-         </div>
-        </td>
-       </tr>
-       <tr>
-        <td>RoundRectCategory:</td>
-        <td>
-         <div class="theming-widget" style="width: 300px;">
-          <div dojoType="dojox.mobile.RoundRect" class="dvThemeWidget">RoundRect</div>
-         </div>
-        </td>
-       </tr>
-     </tbody>
-    </table>
-   </div>
-   </div>
-   <div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Controls&quot;">
-    <div class="theming-group-widgets">
-     <table role="presentation" style="width:100%">
-      <tbody>
-       <tr valign="top">
-        <td>Button:</td>
-        <td style="width:450px">
-         <div class="theming-widget">
-          <button label="Button" dojoType="dojox.mobile.Button" class="dvThemeWidget"></button>
-         </div>
-        </td>
-       </tr>
-       <tr>
-        <td>ToggleButton:</td>
-        <td>
-         <div class="theming-widget">
-          <button label="ToggleButton" dojoType="dojox.mobile.ToggleButton" class="dvThemeWidget"></button>
-         </div>
-        </td>
-       </tr>
-       <tr>
-        <td>CheckBox:</td>
-        <td>
-         <div class="theming-widget">
-          <input type="checkbox" dojoType="dojox.mobile.CheckBox" class="dvThemeWidget"></input>
-         </div>
-        </td>
-       </tr>
-       <tr>
-        <td>RadioButton:</td>
-        <td>
-         <div class="theming-widget">
-          <input type="radio" dojoType="dojox.mobile.RadioButton" class="dvThemeWidget"></input>
-         </div>
-        </td>
-       </tr>
-       <tr>
-        <td>TextArea:</td>
-        <td>
-         <div class="theming-widget">
-          <textarea dojoType="dojox.mobile.TextArea" class="dvThemeWidget">Text Area</textarea>
-         </div>
-        </td>
-       </tr>
-       <tr>
-        <td>Switch:</td>
-        <td>
-         <div class="theming-widget">
-          <div dojoType="dojox.mobile.Switch" id="mobile_theme_switch" class="dvThemeWidget"></div>
-         </div>
-        </td>
-       </tr>
-       <tr>
-        <td>TextBox and ComboBox:</td>
-        <td>
-         <div class="theming-widget">
-          <input type="text" dojoType="dojox.mobile.TextBox" class="dvThemeWidget" value="TextBox/ComboBox"></input>
-         </div>
-        </td>
-       </tr>
-       <tr>
-        <td>ComboBox list:</td>
-        <td style="height:120px; vertical-align: top;">
-         <div class="theming-widget" style="margin-left: 5px;">
-          <div class="dijitPopup mblComboBoxMenuPopup dvThemeWidget">
-           <div class="mblReset mblComboBoxMenu">
-            <div>
-              <div class="mblReset mblComboBoxMenuItem mblComboBoxMenuPreviousButton" role="option">Previous choices</div>
-              <div class="mblReset mblComboBoxMenuItem themeEditorComboBoxItemLocator" role="option">ComboBox Item 1</div>
-              <div class="mblReset mblComboBoxMenuItem" role="option">ComboBox Item 2</div>
-              <div class="mblReset mblComboBoxMenuItem mblComboBoxMenuNextButton" role="option">More choices</div>
-            </div>
-            <div style="position: absolute; overflow-x: hidden; overflow-y: hidden; right: 2px; width: 5px; top: 4px; height: 34px; -webkit-mask-image: -webkit-canvas(scrollBarMaskV); " class="mblScrollBarWrapper">
-             <div style="position: absolute; background-color: rgb(96, 96, 96); font-size: 1px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; -webkit-transform-origin-x: 0px; -webkit-transform-origin-y: 0px; z-index: 2147483647; width: 5px; height: 29px; opacity: 0; " class=""></div>
-            </div>
-           </div>
-          </div>
-         </div>
-        </td>
-       </tr>
-      </tbody>
-     </table>
     </div>
-   </div>
-  </div>
-
-  <div data-dojo-type="dijit.layout.TabContainer" data-dojo-props="title:&quot;unused tab&quot;, nested:true">
-   <div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;unused&quot;, selected:true">
    </div>
   </div>
  </div>
 
+ <div class="theming-group">
+ <div class="theming-group-title">
+		Widget Styling
+	</div>
+
+ <div class="theming-group-widgets" style="background:white; height:160px;">
+  <div class="theming-note">To change styling for particular widgets, navigate into the appropriate section below, click on a particular widget below to select it, then change styling properties in the Properties palette.</div>
+
+
+  <div data-dojo-type="dijit.layout.TabContainer" data-dojo-props="style:&quot;width: 100%; height: 600px; margin-top:10px;&quot; ">
+   <div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Headings &amp; TabBars&quot;">
+    <div class="fakeSilhouette3" style="width:420px;">
+     <div class="fakeSilhouette2">
+      <div class="fakeSilhouette1 useBodyFontBg" style="height:350px;">
+       <div class="widgetLabel">Heading:</div>
+       <div class="theming-widget" style="width: auto;">
+
+        <h1 label="Heading" dojoType="dojox.mobile.Heading" class="dvThemeWidget" back="back"></h1>
+       </div>
+       <div class="widgetLabel">ToolBarButton:</div>
+       <div class="theming-widget" style="min-height: 27px;">
+        <div label="ToolBarButton" dojotype="dojox.mobile.ToolBarButton" sync="true" class="dvThemeWidget"></div>
+       </div>
+       <div class="widgetLabel">TabBar and TabBarButton:</div>
+       <div class="theming-widget">
+        <ul dojoType="dojox.mobile.TabBar" barType="segmentedControl" class="dvThemeWidget">
+         <li label="TabBarButton" dojoType="dojox.mobile.TabBarButton" sync="true"></li>
+         <li label="TabBarButton" dojoType="dojox.mobile.TabBarButton" sync="true"></li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+
+   <div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Rects &amp; Lists&quot;">
+    <div class="fakeSilhouette3" style="width:420px;">
+     <div class="fakeSilhouette2">
+      <div class="fakeSilhouette1 useBodyFontBg" style="height:350px;">
+       <div class="theming-widget">
+               <div label="RoundRectCategory" dojoType="dojox.mobile.RoundRectCategory" class="dvThemeWidget"></div>
+       </div>
+       <div class="theming-widget-spacer"></div>
+       <div class="theming-widget">
+               <div label="EdgeToEdgeCategory" dojoType="dojox.mobile.EdgeToEdgeCategory" class="dvThemeWidget"></div>
+       </div>
+       <div class="widgetLabel">RoundRectList and EdgeToEdgeList:</div>
+       <div class="widgetLabelNote">(Note: ListItem styling is shared between RoundRectList and EdgeToEdgeList.)</div>
+       <div class="theming-widget">
+        <ul dojoType="dojox.mobile.RoundRectList" class="dvThemeWidget">
+         <li label="Item 1" dojoType="dojox.mobile.ListItem" sync="true" moveTo="test"></li>
+         <li label="Item 2" dojoType="dojox.mobile.ListItem"></li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+
+   <div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Controls&quot;">
+    <div class="fakeSilhouette3" style="width:420px;">
+     <div class="fakeSilhouette2">
+      <div class="fakeSilhouette1 useBodyFontBg" style="height:350px;">
+
+  <table>
+   <tbody>
+        <tr valign="top">
+         <td>Button:</td>
+         <td style="width:450px">
+          <div class="theming-widget">
+           <button label="Button" dojoType="dojox.mobile.Button" class="dvThemeWidget"></button>
+          </div>
+         </td>
+        </tr>
+         <tr>
+          <td>ToggleButton:</td>
+          <td>
+           <div class="theming-widget">
+            <button label="ToggleButton" dojoType="dojox.mobile.ToggleButton" class="dvThemeWidget"></button>
+           </div>
+          </td>
+         </tr>
+         <tr>
+          <td>CheckBox:</td>
+          <td>
+           <div class="theming-widget">
+            <input type="checkbox" dojoType="dojox.mobile.CheckBox" class="dvThemeWidget"></input>
+           </div>
+          </td>
+         </tr>
+         <tr>
+          <td>RadioButton:</td>
+          <td>
+           <div class="theming-widget">
+            <input type="radio" dojoType="dojox.mobile.RadioButton" class="dvThemeWidget"></input>
+           </div>
+          </td>
+         </tr>
+         <tr>
+          <td>TextArea:</td>
+          <td>
+           <div class="theming-widget">
+            <textarea dojoType="dojox.mobile.TextArea" class="dvThemeWidget">Text Area</textarea>
+           </div>
+          </td>
+         </tr>
+         <tr>
+          <td>Switch:</td>
+          <td>
+           <div class="theming-widget">
+            <div dojoType="dojox.mobile.Switch" id="mobile_theme_switch" class="dvThemeWidget"></div>
+           </div>
+          </td>
+         </tr>
+         <tr>
+          <td>TextBox and ComboBox:</td>
+          <td>
+           <div class="theming-widget">
+            <input type="text" dojoType="dojox.mobile.TextBox" class="dvThemeWidget" value="TextBox/ComboBox"></input>
+           </div>
+          </td>
+         </tr>
+         <tr>
+          <td>ComboBox list:</td>
+          <td style="height:120px; vertical-align: top;">
+           <div class="theming-widget" style="margin-left: 5px;">
+            <div class="dijitPopup mblComboBoxMenuPopup dvThemeWidget">
+             <div class="mblReset mblComboBoxMenu">
+              <div>
+                <div class="mblReset mblComboBoxMenuItem mblComboBoxMenuPreviousButton" role="option">Previous choices</div>
+                <div class="mblReset mblComboBoxMenuItem themeEditorComboBoxItemLocator" role="option">ComboBox Item 1</div>
+                <div class="mblReset mblComboBoxMenuItem" role="option">ComboBox Item 2</div>
+                <div class="mblReset mblComboBoxMenuItem mblComboBoxMenuNextButton" role="option">More choices</div>
+              </div>
+              <div style="position: absolute; overflow-x: hidden; overflow-y: hidden; right: 2px; width: 5px; top: 4px; height: 34px; -webkit-mask-image: -webkit-canvas(scrollBarMaskV); " class="mblScrollBarWrapper">
+               <div style="position: absolute; background-color: rgb(96, 96, 96); font-size: 1px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; -webkit-transform-origin-x: 0px; -webkit-transform-origin-y: 0px; z-index: 2147483647; width: 5px; height: 29px; opacity: 0; " class=""></div>
+              </div>
+             </div>
+            </div>
+           </div>
+          </td>
+         </tr>
+
+        </tbody>
+       </table>
+
+      </div>
+
+     </div>
+    </div>
+   </div>
+  </div>
+
+
+ </div>
 </div>
 
-</body>
-</html>
+</div>
+</body></html>

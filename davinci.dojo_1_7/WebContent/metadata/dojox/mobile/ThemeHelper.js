@@ -125,6 +125,32 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ThemeHelper", null, {
         var url = dj.moduleUrl('dojox.mobile', 'themes/iphone/ipad.css');
         dm.themeMap=[["Android","android",[]],["BlackBerry","blackberry",[]],["iPad","iphone",[url]],["Custom","custom",[]],[".*","iphone",[]]]; // reset themeMap to default
         dm.loadDeviceTheme(device);
+	},
+	
+	onContentChange: function(context, theme){
+		var userDoc, useBodyFontBackgroundClass;
+		if(context && context.rootNode){
+			userDoc = context.rootNode.ownerDocument;
+		}
+		if(theme){
+			useBodyFontBackgroundClass = theme.useBodyFontBackgroundClass;
+		}
+		if(userDoc && useBodyFontBackgroundClass){
+			var nodes = userDoc.querySelectorAll('.'+useBodyFontBackgroundClass);
+			var body = userDoc.body;
+			var body_style = dojo.style(body);
+			if(nodes.length>0){
+				var props = ['backgroundAttachment', 'backgroundClip', 'backgroundColor', 'backgroundImage', 
+				             'backgroundOrigin', 'backgroundPosition', 'backgroundRepeat', 'backgroundSize',
+				             'color','fontFamily', 'fontSize', 'fontStyle', 'fontWeight', 'fontVariant'];
+				for(var i=0; i<nodes.length; i++){
+					var style = nodes[i].style;
+					props.forEach(function(prop){
+						style[prop] = body_style[prop];
+					});
+				}
+			}	
+		}
 	}
 	
   

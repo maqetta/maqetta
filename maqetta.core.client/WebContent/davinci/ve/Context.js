@@ -1918,6 +1918,13 @@ return declare("davinci.ve.Context", null, {
 				this.select(w, true); // add
 			}
 		}, this);
+		if (this._editor.editorID == 'davinci.ve.ThemeEditor'){
+			var helper = davinci.theme.getHelper(this._visualEditor.theme);
+			if(helper && helper.onContentChange){
+				helper.onContentChange(this, this._visualEditor.theme);
+			}
+		}
+		
 	},
 
 	onSelectionChange: function(selection){

@@ -36,8 +36,7 @@ dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 			baseURL: resource.getURL(),
 			theme: theme
 		});
-		this.context.setTheme(this.theme);
-	
+
 		dojo.connect(this.context, "onSelectionChange",this, "onSelectionChange");
 
 		var prefs=davinci.workbench.Preferences.getPreferences('davinci.ve.themeEditor.editorPrefs', davinci.Runtime.getProject());

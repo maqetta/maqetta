@@ -787,6 +787,7 @@ return declare("davinci.ve.Context", null, {
 				//  to remove Dojo dependencies from callback function first.
 				var baseUserWorkspace = system.resource.getRoot().getURL() + "/" + this._getWidgetFolder();
 				var config = {
+					modulePaths: {widgets: baseUserWorkspace},
 					packages: [{ name: 'oneui', location: '../../oneui'}, { name: 'widgets', location: baseUserWorkspace}], // need to make this dynamic
 					baseUrl: "lib/dojo/dojo"
 				};
@@ -796,7 +797,7 @@ return declare("davinci.ve.Context", null, {
 					dependencies = ['dojo/parser', 'dojox/html/_base', 'dojo/domReady!'];
 				dependencies = dependencies.concat(requires);  // to bootstrap references to base dijit methods in container
 
-				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\" data-dojo-config=\"" + JSON.stringify(config).slice(1, -1).replace(/"/g, "'") + "\"></script>"
+				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\" data-dojo-config=\"" + JSON.stringify(config).slice(1, -1) + "\"></script>"
 					+ "<script type=\"text/javascript\">require(" + JSON.stringify(dependencies) + ", top.loading" + this._id + ");</script>";
 			}
 			var helper = davinci.theme.getHelper(this._visualEditor.theme);
@@ -2227,7 +2228,7 @@ return declare("davinci.ve.Context", null, {
 				var config = {
 					async: true,
 					parseOnLoad: true,
-					modulePaths: { widgets: this._dojoModulePath + "/" + this._getWidgetFolder() } //FIXME: change to packages, inject only as needed
+					modulePaths: { widgets: this._dojoModulePath + "/" + this._getWidgetFolder() }
 				};
 				dojo.mixin(config, this._configProps);
 				this.addHeaderScript(url, {

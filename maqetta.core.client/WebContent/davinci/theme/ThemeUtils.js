@@ -199,10 +199,10 @@ davinci.theme.getThemeSet = function(context){
                 mobileTheme = dojo.toJson(davinci.theme.dojoMobileDefault); //davinci.theme.default_theme;
             }
             // Look for a dojox.mobile.themeMap in the document, if found set the themeMap
-            while ((start = text.indexOf('dojox.mobile.themeMap', stop)) > -1 ){ // might be more than one.
+            while ((start = text.indexOf('dojoxMobile.themeMap', stop)) > -1 ){ // might be more than one.
                 var stop = text.indexOf(';', start);
                 if (stop > start){
-                    mobileTheme = text.substring(start + 'dojox.mobile.themeMap'.length + 1, stop);
+                    mobileTheme = text.substring(start + 'dojoxMobile.themeMap'.length + 1, stop);
                     mobileTheme = dojo.toJson(davinci.theme.getDojoxMobileThemesFromThemeMap (context, mobileTheme));
                 }
             }

@@ -513,7 +513,7 @@ define([
                  var text=scriptTags[s].getElementText();
                  if (text.length) {
                      // Look for a dojox.mobile.themeMap in the document, if found set the themeMap 
-                     var start = text.indexOf('dojox.mobile.themeMap');
+                     var start = text.indexOf('dojoxMobile.themeMap');
                      if (start > 0){
                          start = text.indexOf('=', start);
                          var stop = text.indexOf(';', start);

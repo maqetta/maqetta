@@ -70,7 +70,7 @@ return declare("davinci.ve.Context", null, {
                     var text=scriptTag.getElementText();
                     if (text.length) {
                         // Look for a dojox.mobile.themeMap in the document, if found set the themeMap 
-                        var start = text.indexOf('dojox.mobile.themeMap');
+                        var start = text.indexOf('dojoxMobile.themeMap');
                         if (start != -1) {
                             start = text.indexOf('=', start);
                             var stop = text.indexOf(';', start);
@@ -600,16 +600,6 @@ return declare("davinci.ve.Context", null, {
 		var filename = this.getModel().fileName;
 		return new davinci.model.Path(filename);
 	},
-	
-	/**
-	 * Get a full path for the given resource relative to the project base.
-	 * @param resource {string} resource path segment
-	 * @returns {davinci.model.Path} full path of resource
-	 */
-    getPathRelativeToProject: function(resource) {
-		var fullLibPath = new davinci.model.Path(resource.getPath());
-		return fullLibPath.relativeTo(this.getPath(),true).toString();	
-    },
 
     /* ensures the file has a valid theme.  Adds the users default if its not there alread */
     loadTheme: function(){
@@ -619,8 +609,20 @@ return declare("davinci.ve.Context", null, {
     	 * 
     	 * */
     	var model = this.getModel();
+    	var defaultThemeName="claro";
+    	var dojoThemeSets = davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
+        if (!dojoThemeSets){ 
+            dojoThemeSets =  davinci.theme.dojoThemeSets;
+            davinci.workbench.Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(),dojoThemeSets);
+            
+        }
+        for (var i = 0; i < dojoThemeSets.themeSets.length; i++){
+            if (dojoThemeSets.themeSets[i].name === davinci.theme.desktop_default){
+                defaultThemeName = dojoThemeSets.themeSets[i].desktopTheme;
+            }
+        }
     	var imports = model.find({elementType:'CSSImport'});
-		var defaultThemeName="claro";
+		
 		
 		/* remove the .theme file, and find themes in the given base location */
 		var allThemes = davinci.library.getThemes(davinci.Runtime.getProject());
@@ -783,17 +785,20 @@ return declare("davinci.ve.Context", null, {
 				//  depend on dojo any more.  Once issue, though, is that the callback function
 				//  makes use of dojo and thusly must be invoked only after dojo has loaded.  Need
 				//  to remove Dojo dependencies from callback function first.
-				var baseUserWorkspace = system.resource.getRoot().getURL() + "/" + this._getWidgetFolder();
-				var config = {
-					modulePaths: {widgets: baseUserWorkspace}
-				};
+				var baseUserWorkspace = system.resource.getRoot().getURL() + "/" + this._getWidgetFolder(),
+				    baseDojoUrl = system.resource.getRoot().getURL() + "/lib/dojo/dojo",
+				    config = {
+						modulePaths: {widgets: baseUserWorkspace}, // FIXME: replaced by packages in Dojo 1.7?
+						packages: [{ name: 'widgets', location: baseUserWorkspace}], // need to add dynamically
+						baseUrl: baseDojoUrl
+					};
 				dojo.mixin(config, this._configProps);
 
 				var requires = this._bootstrapModules.split(","),
 					dependencies = ['dojo/parser', 'dojox/html/_base', 'dojo/domReady!'];
 				dependencies = dependencies.concat(requires);  // to bootstrap references to base dijit methods in container
 
-				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\" data-dojo-config=\'" + JSON.stringify(config).slice(1, -1) + "\'></script>"
+				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\" data-dojo-config=\"" + JSON.stringify(config).slice(1, -1).replace(/"/g, "'") + "\"></script>"
 					+ "<script type=\"text/javascript\">require(" + JSON.stringify(dependencies) + ", top.loading" + this._id + ");</script>";
 			}
 			var helper = davinci.theme.getHelper(this._visualEditor.theme);
@@ -1913,6 +1918,13 @@ return declare("davinci.ve.Context", null, {
 				this.select(w, true); // add
 			}
 		}, this);
+		if (this._editor.editorID == 'davinci.ve.ThemeEditor'){
+			var helper = davinci.theme.getHelper(this._visualEditor.theme);
+			if(helper && helper.onContentChange){
+				helper.onContentChange(this, this._visualEditor.theme);
+			}
+		}
+		
 	},
 
 	onSelectionChange: function(selection){
@@ -1984,34 +1996,51 @@ return declare("davinci.ve.Context", null, {
 	},
 
 	modifyRule: function(rule, values){
+		var cleaned = dojo.clone(values);
+		
+		function indexOf(value){
+			for(var i=0;i<cleaned.length;i++){
+				if(cleaned[i]==value) return i;
+			}
+			return -1;
+		}
+		
+		// return a sorted array of sorted style values.
 		var shorthands = davinci.html.css.shorthand;
-		var cleanValues = [];
+		var lastSplice = 0;
+		/* re-order the elements putting short hands first */
 		
-		/* re-order properties */
-		
-		for(var j=0;j<shorthands.length;j++){
-			for(var i=0;i<shorthands[j].length;i++){
-					var prop = rule.getProperty(shorthands[j][i]);
-					if(shorthands[j][i] in values){
-						cleanValues.push({name:shorthands[j][i], value:values[shorthands[j][i]]});
-						delete values[shorthands[j][i]];
-					}else if(prop){
-						cleanValues.push({name:shorthands[j][i], value:prop.getValue()});
-					}
+		for(var j=0;j<shorthands.length;j++) {
+			for(var i=0;i<shorthands[j].length;i++) {
+				var index = indexOf(shorthands[j][i]);
+				if(index>-1) {
+					cleaned.splice(lastSplice,0, cleaned[index]);
+					cleaned.splice(index,1);
+					lastSplice = index+1;
+					
+				}
+				var prop = rule.getProperty(shorthands[j][i]);
 				if(prop){
 					rule.removeProperty(shorthands[j][i]);
 				}
 			}
 		}
 		
-		for(var i = 0;i<cleanValues.length;i++){
-			if(cleanValues[i].value){
-				rule.addProperty(cleanValues[i].name, cleanValues[i].value);
+		debugger;
+		for(var i = 0;i<cleaned.length;i++){
+			for(var name in cleaned[i]){
+				rule.removeProperty(name);
 			}
 		}
 		
-		for(var name in values){
-			rule.setProperty(name, values[name]);
+		for(var i = 0;i<cleaned.length;i++){
+			for(var name in cleaned[i]){
+				if(cleaned[i][name]==null ||cleaned[i][name]=="" ){
+					continue;
+				}else{
+					rule.addProperty(name, cleaned[i][name]);
+				}
+			}
 		}
 		
 		this.hotModifyCssRule(rule); 
@@ -2252,7 +2281,15 @@ return declare("davinci.ve.Context", null, {
 
 	addJavaScriptText: function(text, doUpdateModel, skipDomUpdate) {
 		/* run the requires if there is an iframe */
-		if(!skipDomUpdate) { this.getGlobal()['eval'](text); }
+		if (! skipDomUpdate) {
+			try {
+				this.getGlobal()['eval'](text);
+			} catch(e) {
+				var len = text.length;
+				console.error("eval of \"" + text.substr(0, 20) + (len > 20 ? "..." : "") +
+						"\" failed");
+			}
+		}
 		if (doUpdateModel) {
 			this.addHeaderScriptText(text);
 		}

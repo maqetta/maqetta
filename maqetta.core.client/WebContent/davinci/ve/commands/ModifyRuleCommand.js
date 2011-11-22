@@ -14,16 +14,18 @@ dojo.declare("davinci.ve.commands.ModifyRuleCommand", null, {
 	},
 
 	execute: function(context){
-		
 		if (!this.context){ // redo does not send a context, that is ok we should use the context from the first execute
 			this.context = context;
 		}
 		if(!this.cssRule || !this.values || !this.context)
 			return;
 
-		this._oldValues = {};
-		for(var name in this.values){
-			this._oldValues[name] = this.cssRule.getProperty(name);
+		this._oldValues = [];
+		for(var i=0;i<this.values.length;i++){
+			
+			for(var name in this.values[i]){
+				this._oldValues.concat( this.cssRule.getProperties(name));
+			}
 		}
 		
 		this.context.modifyRule( this.cssRule, this.values);

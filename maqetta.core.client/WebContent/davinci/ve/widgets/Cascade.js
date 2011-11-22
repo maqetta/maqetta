@@ -63,6 +63,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 				return widget.attr('value'); 
 			};
 			this._setFieldValue = function(value, loc){
+				
 				this._value = value || "";
 				this._loc = loc;
 				
@@ -186,7 +187,6 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 	},
 	
 	_changeValue : function(targetIndex,value){
-		
 		// applyToWhichStates controls whether style change is attached to Normal or other states
 		//   "current" => apply to currently active state
 		//   [...array of strings...] => apply to these states (may not yet be implemented)
@@ -196,9 +196,21 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			applyToWhichStates = "current";
 		}
 		var targetRule = this._values[targetIndex];
-		var valueObject = {};
-		for(var i = 0;i<this.target.length;i++)
-			valueObject[this.target[i]] = value;
+		var valueObject = [];
+		for(var i = 0;i<this.target.length;i++){
+			var a = {};
+			
+			if(dojo.isArray(value)){
+				for(var k=0;k<value.length;k++){
+					a[this.target[i]] = value[k];
+					valueObject.push(a);
+				}
+			}else{
+				a[this.target[i]] = value;
+				valueObject.push(a);
+
+			}
+		}
 		if(targetRule.type=="element.style"){
 			dojo.publish("/davinci/ui/styleValuesChange",[{values:valueObject, appliesTo:'inline', applyToWhichStates:applyToWhichStates }]);
 		}else{
@@ -732,12 +744,28 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 	},
 	
 	_getRuleTargetValue : function(rule){
+		//if(this._isTarget("background")) debugger;
+		
 		var value = null;
 		if(rule){
 			for(var i = 0;!value && i<this.target.length;i++)
-				value = rule.getProperty(this.target[i]);
+				value = rule.getProperties(this.target[i]);
 		}			
-		return value && value.value;
+		if(value!=null){
+			
+			if(value.length > 1){
+				var results = [];
+				for(var i=0;i<value.length;i++){
+					results.push(value[i].value);
+				}
+				return results;
+			}else if(value.length==1){
+				return value[0].value;
+			}
+		}
+		
+		return null;
+		
 	},
 	
 	_onChangeRemove : function(event){

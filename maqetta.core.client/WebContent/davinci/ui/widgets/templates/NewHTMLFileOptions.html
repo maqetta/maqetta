@@ -5,7 +5,12 @@
 			<select dojoType="dijit.form.Select" dojoAttachPoint="compositionTypeSelect">
 				<!--  values added dynamically -->
 			</select>
-			<span class="nhfo_details_arrow"></span>
+		</div>
+		<div class='nhfo_show_details'>
+			<a href="">
+				<span class='nhfo_show_details_arrow'>&#9660;</span>
+				<span class='nhfo_show_details_text' dojoAttachPoint='showDetailsLabel'></span>
+			</a>
 		</div>
 		<div class="nhfo_details">
 			<table>
@@ -17,7 +22,7 @@
 					</td>
 					<td></td>
 				</tr>
-				<tr class="nhfo_la">	<!--  la = layout -->
+				<tr class="nhfo_la" dojoAttachPoint="nhfo_layoutRow">	<!--  la = layout -->
 					<td class='nhfo_label'><label dojoAttachPoint="layoutLabel"></label></td>
 					<td>
 						<select dojoType="dijit.form.Select" dojoAttachPoint="layoutSelect">
@@ -38,6 +43,12 @@
 					</td>
 				</tr>
 			</table>
+		</div>
+		<div class='nhfo_hide_details'>
+			<a href="">
+				<span class='nhfo_hide_details_arrow'>&#9650;</span>
+				<span class='nhfo_hide_details_text' dojoAttachPoint='hideDetailsLabel'></span>
+			</a>
 		</div>
 	</div>
 </div>

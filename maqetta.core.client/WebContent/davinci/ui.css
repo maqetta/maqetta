@@ -354,16 +354,9 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	height: 16px;
 	vertical-align: middle;
 	margin-left: 7px;
-}
-.fileFolderTable.treeCollapsed .folder_details_arrow {
-	/*background:url('img/downarrow.png');*/
-	background:url('img/sprite.png');
-	background-position: -19px 0px;
-}
-.fileFolderTable.treeExpanded .folder_details_arrow {
-	/*background:url('img/uparrow.png');*/
-	background:url('img/sprite.png');
-	background-position: -37px 0px;
+	font-size:14px;
+	color:#222;
+	text-shadow: rgba(0, 0, 0, 0.3) 1px 1px 0px;
 }
 .fileDialog .folderContainer {
 	margin-left:1px;
@@ -457,6 +450,9 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	white-space:nowrap;
 }
 
+.nhfo_ct label {
+	vertical-align:middle;
+}
 .nhfo_outer2 {
 	margin: .8em 0 0;
 	border: 1px solid #759DC0;
@@ -472,22 +468,12 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 .nhfo_ct .dijitSelect .dijitButtonContents {
 	width:11em;
 }
-.nhfo_details_arrow {
-	display: inline-block;
-	width: 16px;
-	height: 16px;
-	vertical-align: middle;
-	margin-left: 7px;
+.nhfo_show_details {
+	margin-top: 4px;
 }
-.nhfo_collapsed .nhfo_details_arrow {
-	/*background:url('img/downarrow.png');*/
-	background:url('img/sprite.png');
-	background-position: -19px 0px;
-}
-.nhfo_expanded .nhfo_details_arrow {
-	/*background:url('img/uparrow.png');*/
-	background:url('img/sprite.png');
-	background-position: -37px 0px;
+.nhfo_show_details a:link, .nhfo_show_details a:visited, .nhfo_hide_details a:link, .nhfo_hide_details a:visited {
+	text-decoration:none;
+	color: #26A;
 }
 .nhfo_details {
 	margin: .3em 0;

@@ -87,12 +87,16 @@ return declare("davinci.ui.Editor", null, {
 		}
 		if (!this._textModel) {
 			this._textModel = this.editor ? this.editor.getModel() : new orion.textview.TextModel();
-			dojo.connect(this._textModel, "onChanged", this, onTextChanged); // editor.onInputChange?
 		}
 		this.fileName=filename;
 
 		this.setValue(content, true);
 		this._updateStyler();
+		
+		// deley binding to the onChange event until after initializing the content 
+		if (this._textModel) {
+			dojo.connect(this._textModel, "onChanged", this, onTextChanged); // editor.onInputChange?
+		}
 	},
 
 	setVisible: function (visible) {

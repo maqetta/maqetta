@@ -187,7 +187,6 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 	},
 	
 	_changeValue : function(targetIndex,value){
-		
 		// applyToWhichStates controls whether style change is attached to Normal or other states
 		//   "current" => apply to currently active state
 		//   [...array of strings...] => apply to these states (may not yet be implemented)
@@ -197,9 +196,21 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			applyToWhichStates = "current";
 		}
 		var targetRule = this._values[targetIndex];
-		var valueObject = {};
-		for(var i = 0;i<this.target.length;i++)
-			valueObject[this.target[i]] = value;
+		var valueObject = [];
+		for(var i = 0;i<this.target.length;i++){
+			var a = {};
+			
+			if(dojo.isArray(value)){
+				for(var k=0;k<value.length;k++){
+					a[this.target[i]] = value[k];
+					valueObject.push(a);
+				}
+			}else{
+				a[this.target[i]] = value;
+				valueObject.push(a);
+
+			}
+		}
 		if(targetRule.type=="element.style"){
 			dojo.publish("/davinci/ui/styleValuesChange",[{values:valueObject, appliesTo:'inline', applyToWhichStates:applyToWhichStates }]);
 		}else{

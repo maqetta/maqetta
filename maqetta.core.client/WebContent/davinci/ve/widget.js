@@ -207,19 +207,12 @@ davinci.ve.widget.getLabel = function(widget){
 			}
 		}
 		return returnstr;
-	};
-
+	}
 	text+=remove_prefix(widget.type);
 	text+="</span> ";
 
-	var widgetText,
-		helper = davinci.ve.widget.getWidgetHelper(widget.type);
-	if (helper && helper.getWidgetText) {
-		widgetText = helper.getWidgetText(widget);
-	}
-
-	//TODO: move to getWidgetText helper methods
-	var node = widget.domNode;
+	var widgetText;
+	var domNode = widget.domNode;
 	switch(widget.type){
 		case 'dijit.form.ComboBox':
 		case 'dijit.form.Button':
@@ -229,20 +222,23 @@ davinci.ve.widget.getLabel = function(widget){
 			widgetText = widget.attr("title");
 			break;
 		case 'html.label':
-			widgetText = node.innerHTML;
+			widgetText = domNode.innerHTML;
 			break;
 		case 'html.img':
-			widgetText = node.alt;
+			widgetText = domNode.alt;
 			if(!widgetText){
-				widgetText = node.title;
+				widgetText = domNode.title;
 			}
+			break;
+		default:
+			widgetText = "";
 	}
-
 	if (widgetText) {
 		text += "<span class='propertiesTitleWidgetText'>" + widgetText + "</span> ";
 	}
 
 	/* add the class */
+	var node = widget.domNode;
 	var srcElement = widget._srcElement;
 	var id = widget.getId();
 	var classAttr = srcElement && srcElement.getAttribute("class");
@@ -258,13 +254,7 @@ davinci.ve.widget.getLabel = function(widget){
 		}
 		text += "</span> ";
 	}
-
-	if (helper && helper.getWidgetTextExtra) {
-		text += helper.getWidgetTextExtra(widget);
-	}
-
-	//TODO: move to getWidgetTextExtra helper methods
-	if(widget.type == 'html.img'){
+	if(widget.type === 'html.img'){
 		var src = domNode.src;
 		var s = '<span>' + src.substr(src.lastIndexOf('/')+1) + '</span>';
 		text += s;

@@ -388,14 +388,9 @@ davinci.html.CSSRule.prototype.setText = function(text) {
 
 davinci.html.CSSRule.prototype.addProperty = function(name, value) {
 
-    var property;
-    property = this.getProperty(name);
-    if (property)
-        property.value = value;
-    else {
-        property = new davinci.html.CSSProperty(name, value, this);
-        this.properties.push(property);
-    }
+   
+   var property = new davinci.html.CSSProperty(name, value, this);
+    this.properties.push(property);
     this.setDirty(true);
     this.onChange();
 
@@ -475,6 +470,12 @@ davinci.html.CSSRule.prototype.getProperty = function(propertyName) {
             return this.properties[i];
     }
 };
+davinci.html.CSSRule.prototype.hasProperty = function(propertyName) {
+    for ( var i = 0; i < this.properties.length; i++ ) {
+        if (propertyName == this.properties[i].name)
+            return true;
+    }
+};
 
 davinci.html.CSSRule.prototype.getProperties = function(propertyName) {
     var values = []
@@ -508,7 +509,6 @@ davinci.html.CSSRule.prototype.removeProperty = function(propertyName) {
     for ( var i = 0; i < this.properties.length; i++ ) {
         if (propertyName == this.properties[i].name) {
             this.properties.splice(i, 1);
-            return;
         }
     }
     this.setDirty(true);

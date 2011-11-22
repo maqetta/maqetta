@@ -145,14 +145,13 @@ return declare("davinci.ve._Widget", null, {
    
 	attr: function(name,value)
 	{
-		var attrValue=	this._attr.apply(this, arguments);
-		if (arguments.length>1)
-		{
+		var attrValue = this._attr.apply(this, arguments);
+		if (arguments.length>1) {
 			value=this._stringValue(name, value);
 			this._srcElement.addAttribute(name,value);
-		}
-		else
+		} else {
 			return attrValue;
+		}
 	},
 
 	_attr: function(name,value) {
@@ -191,7 +190,7 @@ return declare("davinci.ve._Widget", null, {
 		}
 	},
 	getParent: function() {
-			return davinci.ve.widget.getEnclosingWidget(this.domNode.parentNode) || this.domNode.parentNode;
+		return davinci.ve.widget.getEnclosingWidget(this.domNode.parentNode) || this.domNode.parentNode;
 	},
 
 	getObjectId: function(widget) {
@@ -278,58 +277,48 @@ return declare("davinci.ve._Widget", null, {
 	},
 
 	_sortStyleValues: function(values) {
+		
+		var cleaned = dojo.clone(values);
+		
+		function indexOf(value){
+			for(var i=0;i<cleaned.length;i++){
+				if(cleaned[i]==value) return i;
+			}
+			return -1;
+		}
+		
 		// return a sorted array of sorted style values.
-		var v = [];
 		var shorthands = davinci.html.css.shorthand;
-
-		var foundShorthands = [];
-
+		var lastSplice = 0;
+		/* re-order the elements putting short hands first */
+		
 		for(var j=0;j<shorthands.length;j++) {
 			for(var i=0;i<shorthands[j].length;i++) {
-				if(shorthands[j][i] in values) {
-					v.push({name: shorthands[j][i], value: values[shorthands[j][i]]});
-					foundShorthands.push(shorthands[j][i]);
+				var index = indexOf(shorthands[j][i]);
+				if(index>-1) {
+					cleaned.splice(lastSplice,0, cleaned[index]);
+					cleaned.splice(index,1);
+					lastSplice = index+1;
+					
 				}
 			}
 		}
-
-		for(var name in values) {
-			var found = false;
-
-			for(var i=0;!found && i<foundShorthands.length;i++) {
-				if(foundShorthands[i] == name)
-					found=true;
-			}
-
-			if(!found)
-				v.push({name: name, value: values[name]});
-		}
-
-		return v;
+		return cleaned;
 	},
 
 	_styleText: function (v) {
 		var s = "";
 		/* if ordering is given, respect it */
-		if(dojo.isArray(v)) {
-
-			for(var i = 0;i<v.length;i++) {
-				value = davinci.ve.states.normalize("style", this, v[i].name, v[i].value);
-				if(value !== undefined && value != "" && value!=null) {
-					s += v[i].name + ": " + value + "; ";
-				}
-
-			}
-		}else{
-			for(var name in v) {
-				var value = v[name];
-				value = davinci.ve.states.normalize("style", this, name, value);
-				if(value !== undefined && value != "" && value!=null) {
-					s += name + ": " + value + "; ";
+		for(var i = 0;i<v.length;i++) {
+				for(var name in v[i]){
+				
+					value = davinci.ve.states.normalize("style", this, name, v[i][name]);
+					if(value !== undefined && value != "" && value!=null) {
+						s += name + ": " + v[i][name] + "; ";
+					}
 				}
 			}
-
-		}
+		
 		return s.trim();
 	},
 
@@ -571,16 +560,22 @@ return declare("davinci.ve._Widget", null, {
 	},
 
 	setStyleValues: function( values) {
+	
 		if(!values) {
 			return;
 		}
-		var style = this.getStyleNode().style;
+		var styleDomNode = this.getStyleNode();
 		var v = this._sortStyleValues(values);
-
+		
+		/* we used to retrieve the style properties as an array, then flatten the values.
+		 * 
+		 * changed to serialize it as text, then reset the style attribute 
+		 */
+		
+		/*
 		for(var i=0;i<v.length;i++) {
-			var value = (v[i].value || "");
-			var name = v[i].name;
-
+			for(var name in v[i]){
+			var value = v[i][name] || "";
 			if(name.indexOf("-") >= 0) {
 				// convert "property-name" to "propertyName"
 				var names = name.split("-");
@@ -590,15 +585,19 @@ return declare("davinci.ve._Widget", null, {
 					name += (n.charAt(0).toUpperCase() + n.substring(1));
 				}
 			}
-			/* lots of input boxes convert */
 			if(value=="")
 				value = null;
 
 			style[name] = value;
+		
+			}
 		}
-
+		*/
+		
 		var text = this._styleText(v);
-
+		/* reset the style attribute */
+		dojo.attr(styleDomNode, "style", text);
+		
 		if (this.dijitWidget)
 			this.dijitWidget.style = text;
 		if (text.length>0)
@@ -606,7 +605,7 @@ return declare("davinci.ve._Widget", null, {
 		else
 			this._srcElement.removeAttribute("style");
 
-		style.cssText = text;
+		//style.cssText = text;
 
 	},
 

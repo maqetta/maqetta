@@ -122,19 +122,22 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 			var file = rule.searchUp( "CSSFile");
 			var rebasedValues = dojo.clone(values);
 			var rebasedValues = this._rebaseCssRuleImagesFromStylePalette(rule, rebasedValues);
-			for(var a in rebasedValues){
-				var x = rule.getProperty(a);
-				if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget) && x){
-					if (x && !oldValues[a]){ // set by another rule
-						oldValues[a] = x.value; // just want the value not the whole CSSProperty
-					}else if (!oldValues[a]){ // set by another rule
-						oldValues[a] = x; //undefined
-					}
-					if(!rebasedValues[a]){
-						rule.removeProperty(a);
-					}else /*if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget) && x)*/{
-						rule.setProperty(a,  rebasedValues[a]);
-						unset[a] = null;
+			
+			for(var i=0;i<rebasedValues.length;i++){
+				for(var a in rebasedValues[i]){
+					var x = rule.getProperty(a);
+					if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget) && x){
+						if (x && !oldValues[a]){ // set by another rule
+							oldValues[a] = x.value; // just want the value not the whole CSSProperty
+						}else if (!oldValues[a]){ // set by another rule
+							oldValues[a] = x; //undefined
+						}
+						if(!rebasedValues[i][a]){
+							rule.removeProperty(a);
+						}else /*if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget) && x)*/{
+							rule.setProperty(a,  rebasedValues[i][a]);
+							unset[i][a] = null;
+						}
 					}
 				}
 			}
@@ -146,12 +149,14 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 			var file = rule.searchUp( "CSSFile");
 			var rebasedValues = dojo.clone(unset);
 			var rebasedValues = this._rebaseCssRuleImagesFromStylePalette(rule, rebasedValues);
-			for(var a in rebasedValues){
-				if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget) && (rebasedValues[a])){
-					//debugger;
-					rule.setProperty(a,  rebasedValues[a]);
-					//rebasedValues[a] = null;  not sure about this might be valid for more than one rule
-	
+			for(var i=0;i<rebasedValues.length;i++){
+				for(var a in rebasedValues[i]){
+					if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget) && (rebasedValues[i][a])){
+						//debugger;
+						rule.setProperty(a,  rebasedValues[a]);
+						//rebasedValues[a] = null;  not sure about this might be valid for more than one rule
+		
+					}
 				}
 			}
 			this._markDirty(file.url);
@@ -175,18 +180,20 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 		if (!rule) return values;
 
 		var basePath = new davinci.model.Path(rule.parent.url);
-		for(var a in values){
-			var str = values[a];
-			if (davinci.ve.utils.URLRewrite.containsUrl(str))
-			{
-				var url = davinci.ve.utils.URLRewrite.getUrl(str);;
-				var path=new davinci.model.Path(url);
-				var newUrl=path.relativeTo(basePath, true).toString(); // ignore the filename to get the correct path to the image
-				values[a]="url('"+ newUrl + "')";
-			}
-			
+		
+		for(var i=0;i<values.length;i++){
+			for(var a in values[i]){
+				var str = values[i][a];
+				if (davinci.ve.utils.URLRewrite.containsUrl(str))
+				{
+					var url = davinci.ve.utils.URLRewrite.getUrl(str);;
+					var path=new davinci.model.Path(url);
+					var newUrl=path.relativeTo(basePath, true).toString(); // ignore the filename to get the correct path to the image
+					values[i][a]="url('"+ newUrl + "')";
+				}
+				
 		}
-
+		}
 		return values;
 		
 	}

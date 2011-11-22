@@ -32,6 +32,11 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 		themeFile = system.resource.findResource(directory + "/" + fileName);
 	}
 
+	// FIXME: Why not do this instead?
+	// var themeJson = dojo.mixin({}, originalTheme);
+	// themeJson.className = selector;
+	// themeJson.name = name;
+	// themeJson.version = version || originalTheme.version;
 	var themeJson = {
 		className: selector,
 		name: name,
@@ -39,7 +44,8 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 		specVersion: originalTheme.specVersion,
 		files: originalTheme.files,
 		meta: originalTheme.meta,
-		themeEditorHtmls: originalTheme.themeEditorHtmls
+		themeEditorHtmls: originalTheme.themeEditorHtmls,
+		useBodyFontBackgroundClass: originalTheme.useBodyFontBackgroundClass
 	};
 
 	if(originalTheme.helper){

@@ -186,8 +186,8 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             var start;
             if (text.length) {
                 // Look for a dojox.mobile.themeMap in the document, if found set the themeMap
-                while ((start = text.indexOf('dojox.mobile.themeMap', stop)) > -1 ){ // might be more than one.
-                    var stop = text.indexOf(';', start);
+                while ((start = text.indexOf(',function(dojoxMobile){dojoxMobile.themeMap=', stop)) > -1 ){ // might be more than one.
+                    var stop = text.indexOf('}', start);
                     if (stop > start){
                         text = text.substring(0,start) + text.substring(stop+1);
                       }
@@ -223,7 +223,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             dojo.forEach(scriptTags, function (scriptTag){
                 var text=scriptTag.getElementText();
                 if (text.length) {
-                    if (text.indexOf('dojox.mobile.themeMap=') >-1) {
+                    if (text.indexOf('dojoxMobile.themeMap=') >-1) {
                         nothingToDo = false;
                     }
                 }
@@ -241,9 +241,9 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             var text=scriptTag.getElementText();
             if (text.length) {
                 // Look for a require('dojox.mobile'); in the document, if found set the themeMap 
-                var start = text.indexOf('dojox.mobile');
+                var start = text.indexOf('dojox/mobile');
                 if (start > 0){
-                    var stop = text.indexOf(';', start);
+                    var stop = text.indexOf(']', start);
                     if (stop > start){
                         var themeMap;
                         if (theme){
@@ -252,7 +252,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
                                 themeMap = null;
                             } else {
                                themeMap = dojo.toJson(davinci.theme.getDojoxMobileThemeMap(context, theme));
-                               themeMap = text.substring(0,stop+1) + '\ndojox.mobile.themeMap='+themeMap+';' + text.substring(stop+1);
+                               themeMap = text.substring(0,stop+1) + ',function(dojoxMobile){dojoxMobile.themeMap='+themeMap+';}' + text.substring(stop+1);
                             }
                         }
                         if(themeMap){

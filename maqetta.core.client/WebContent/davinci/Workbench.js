@@ -1469,7 +1469,7 @@ dojo.mixin(davinci.Workbench, {
 				var p = davinci.Runtime.getProject();
 				project = new davinci.model.Path(p);
 			}
-			
+		
 			for (var i=0;i<state.editors.length;i++){
 				if(singleProject){
 					// if running in single user mode, only load editors open for specific projects
@@ -1485,7 +1485,7 @@ dojo.mixin(davinci.Workbench, {
 						fileName: resource,
 						content: resource.getText(),
 						noSelect: noSelect,
-						isDirty: resource.isDirty,
+						isDirty: resource.isDirty(),
 						startup: false
 					});
 				}

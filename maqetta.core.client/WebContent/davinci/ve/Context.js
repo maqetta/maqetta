@@ -70,7 +70,7 @@ return declare("davinci.ve.Context", null, {
                     var text=scriptTag.getElementText();
                     if (text.length) {
                         // Look for a dojox.mobile.themeMap in the document, if found set the themeMap 
-                        var start = text.indexOf('dojox.mobile.themeMap');
+                        var start = text.indexOf('dojoxMobile.themeMap');
                         if (start != -1) {
                             start = text.indexOf('=', start);
                             var stop = text.indexOf(';', start);
@@ -1918,6 +1918,13 @@ return declare("davinci.ve.Context", null, {
 				this.select(w, true); // add
 			}
 		}, this);
+		if (this._editor.editorID == 'davinci.ve.ThemeEditor'){
+			var helper = davinci.theme.getHelper(this._visualEditor.theme);
+			if(helper && helper.onContentChange){
+				helper.onContentChange(this, this._visualEditor.theme);
+			}
+		}
+		
 	},
 
 	onSelectionChange: function(selection){
@@ -1989,34 +1996,51 @@ return declare("davinci.ve.Context", null, {
 	},
 
 	modifyRule: function(rule, values){
+		var cleaned = dojo.clone(values);
+		
+		function indexOf(value){
+			for(var i=0;i<cleaned.length;i++){
+				if(cleaned[i]==value) return i;
+			}
+			return -1;
+		}
+		
+		// return a sorted array of sorted style values.
 		var shorthands = davinci.html.css.shorthand;
-		var cleanValues = [];
+		var lastSplice = 0;
+		/* re-order the elements putting short hands first */
 		
-		/* re-order properties */
-		
-		for(var j=0;j<shorthands.length;j++){
-			for(var i=0;i<shorthands[j].length;i++){
-					var prop = rule.getProperty(shorthands[j][i]);
-					if(shorthands[j][i] in values){
-						cleanValues.push({name:shorthands[j][i], value:values[shorthands[j][i]]});
-						delete values[shorthands[j][i]];
-					}else if(prop){
-						cleanValues.push({name:shorthands[j][i], value:prop.getValue()});
-					}
+		for(var j=0;j<shorthands.length;j++) {
+			for(var i=0;i<shorthands[j].length;i++) {
+				var index = indexOf(shorthands[j][i]);
+				if(index>-1) {
+					cleaned.splice(lastSplice,0, cleaned[index]);
+					cleaned.splice(index,1);
+					lastSplice = index+1;
+					
+				}
+				var prop = rule.getProperty(shorthands[j][i]);
 				if(prop){
 					rule.removeProperty(shorthands[j][i]);
 				}
 			}
 		}
 		
-		for(var i = 0;i<cleanValues.length;i++){
-			if(cleanValues[i].value){
-				rule.addProperty(cleanValues[i].name, cleanValues[i].value);
+		debugger;
+		for(var i = 0;i<cleaned.length;i++){
+			for(var name in cleaned[i]){
+				rule.removeProperty(name);
 			}
 		}
 		
-		for(var name in values){
-			rule.setProperty(name, values[name]);
+		for(var i = 0;i<cleaned.length;i++){
+			for(var name in cleaned[i]){
+				if(cleaned[i][name]==null ||cleaned[i][name]=="" ){
+					continue;
+				}else{
+					rule.addProperty(name, cleaned[i][name]);
+				}
+			}
 		}
 		
 		this.hotModifyCssRule(rule); 

@@ -83,31 +83,14 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", [davinci.workbench.WidgetLit
     	                	]}
     	                ]},
 	           {key: "background", 
-	       		  pageTemplate : [{display:"background-color", type:"color", target:'background-color'},
-/* FIXME: Gradients not working yet. Comment out switch for now 
-    	                {display:"image/gradient", type:"combo", values:['image', 'gradient']},
-*/  
-	       		        {display:"background", type:"background", target:'background'},
-	       		        {display:"background-image url", type:"background", target:'background-image'},
-    		       	    {display:"background-repeat", type:"combo", values:['', 'repeat', 'repeat-x','repeat-y','no-repeat'],  target:'background-repeat' },
-    		       	    {display:"background-position", type:"multi", target:'background-position', values:['','0px','left top','center center','right bottom']},
-    		       	    {display:"background-size", type:"multi", target:'size', target:'background-size', values:['','auto','contain','cover','100%']},
-    		       	    {display:"background-origin", type:"combo", target:'background-origin', values:['','padding-box','border-box','content-box']},
-    		       	    {display:"background-clip", type:"combo", target:'background-clip', values:['','padding-box','border-box','content-box']}
-/* FIXME: Gradients not working yet. Comment out for now 
-,    		       	    {display:"dpi", type:"combo", target:'background-dpi', values:['']},  
-    			        
-    		       	    {display:"type", type:"combo", target:"none", values:['']},
-    			 	    {display:"origin", type:"combo",target:"none",values:[''] },
-    			 	    {html:"stop 1"},
-    			 	    {display:"color",target:"none", type:'color'},
-    			 	    {display:"pos", type:'combo', target:"none", values:['']},
-    			 	    {display:"size", target:"none", type:"multi"},
-    			 	    {html:"stop 2"},
-    			 	    {display:"color", target:"none", type:'color'},
-    			 	    {display:"pos", target:"none", type:'combo', values:['']},
-    			 	    {display:"size", target:"none", type:"multi"}
-*/                			 	    
+	       		  pageTemplate : [
+	      	       		{display:"background-color", type:"background", target:'background-color', colorswatch:true},
+	    	       		{display:"background-image", type:"background", target:'background-image'},
+    		       	    {display:"background-repeat", type:"background", values:['', 'repeat', 'repeat-x','repeat-y','no-repeat'],  target:'background-repeat' },
+    		       	    {display:"background-position", type:"background", target:'background-position', values:['','0px 0px','0% 0%','left top','center center','right bottom']},
+    		       	    {display:"background-size", type:"background", target:'size', target:'background-size', values:['','auto','contain','cover','100%']},
+    		       	    {display:"background-origin", type:"background", target:'background-origin', values:['','border-box','padding-box','content-box']},
+    		       	    {display:"background-clip", type:"background", target:'background-clip', values:['','border-box','padding-box','content-box']}
     		       	   ]},
 	           {key:"border", 
 		       		pageTemplate : [

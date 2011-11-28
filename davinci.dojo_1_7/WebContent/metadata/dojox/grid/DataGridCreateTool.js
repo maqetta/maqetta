@@ -42,26 +42,28 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridCreateTool", davinci.ve.
 		storeData.properties.id = storeId;
 		storeData.context = this._context;
 		
-		var data = storeData.properties.data;
-		var items = data.items;
-		
-		// Kludge to workaround lack of support for frames in dojo's ItemFileReadStore
-		// Replaces objects and arrays in metadata that were created with the top context with ones created in the frame context
-		var copyUsingFrameObject = dojo.hitch(this, function (items) {
-			var win = this._context.getGlobal();
-			var copyOfItems = win.eval("[]");
-			for (var i = 0; i < items.length; i++) {
-				var item = items[i];
-				var object = win.eval("new Object()");
-				var copy = this._context.getDojo().mixin(object, item);
-				copyOfItems.push(copy);
-				if (copy.children) {
-					copy.children = copyUsingFrameObject(copy.children);
-				}
-			}
-			return copyOfItems;
-		});
-		data.items = copyUsingFrameObject(items);
+		if (storeData.properties.data) { // might be url
+    		var data = storeData.properties.data;
+    		var items = data.items;
+    		
+    		// Kludge to workaround lack of support for frames in dojo's ItemFileReadStore
+    		// Replaces objects and arrays in metadata that were created with the top context with ones created in the frame context
+    		var copyUsingFrameObject = dojo.hitch(this, function (items) {
+    			var win = this._context.getGlobal();
+    			var copyOfItems = win.eval("[]");
+    			for (var i = 0; i < items.length; i++) {
+    				var item = items[i];
+    				var object = win.eval("new Object()");
+    				var copy = this._context.getDojo().mixin(object, item);
+    				copyOfItems.push(copy);
+    				if (copy.children) {
+    					copy.children = copyUsingFrameObject(copy.children);
+    				}
+    			}
+    			return copyOfItems;
+    		});
+    		data.items = copyUsingFrameObject(items);
+		}
 		
 		var dataGridId = davinci.ve.widget.getUniqueObjectId(dataGridData.type, this._context.getDocument());
 		if(!dataGridData.properties){

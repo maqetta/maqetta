@@ -87,7 +87,7 @@ dojo.declare("davinci.review.model.Resource.root",
 			  this._loading.push(onComplete);
 			  var designerName = davinci.Runtime.commenting_designerName||"";
 			  davinci.Runtime.serverJSONRequest({
-				   url:"./cmd/listVersions",
+				   url:"davinci/cmd/listVersions",
 			          content:{'designer':designerName},
 			            sync:sync,
 						load : dojo.hitch(this, function(responseObject, ioArgs) {
@@ -145,7 +145,7 @@ dojo.declare("davinci.review.model.Resource.Folder",
 			  this._loading.push(onComplete);
 			  var designerName = davinci.Runtime.commenting_designerName||"";
 			  davinci.Runtime.serverJSONRequest({
-				   url:"./cmd/listReviewFiles",
+				   url:"davinci/cmd/listReviewFiles",
 			          content:{
 						  	'designer':designerName,
 						  	'version':this.timeStamp

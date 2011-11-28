@@ -129,7 +129,7 @@ dojo.mixin(davinci.Runtime,	{
 		else{
 			if(!davinci.Runtime.userInfo){
 	            var result = davinci.Runtime.serverJSONRequest({
-	                url: "./cmd/getReviewUserInfo",
+	                url: "davinci/cmd/getReviewUserInfo",
 	                sync: true
 	            });
 				davinci.Runtime.userInfo = result;
@@ -146,7 +146,7 @@ dojo.mixin(davinci.Runtime,	{
 		else{
 				if(!davinci.Runtime.userInfo){
 		            var result = davinci.Runtime.serverJSONRequest({
-		                url: "./cmd/getReviewUserInfo",
+		                url: "davinci/cmd/getReviewUserInfo",
 		                sync: true
 		            });
 					davinci.Runtime.userInfo = result;
@@ -161,7 +161,7 @@ dojo.mixin(davinci.Runtime,	{
 		else{
 				if(!davinci.Runtime.userInfo){
 		            var result = davinci.Runtime.serverJSONRequest({
-		                url: "./cmd/getReviewUserInfo",
+		                url: "davinci/cmd/getReviewUserInfo",
 		                sync: true
 		            });
 					davinci.Runtime.userInfo = result;

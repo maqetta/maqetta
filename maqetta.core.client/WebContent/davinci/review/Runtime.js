@@ -9,7 +9,7 @@ dojo.mixin(davinci.review.Runtime,{
 		else{
 			if(!davinci.Runtime.userInfo){
 	            var result = davinci.Runtime.serverJSONRequest({
-	                url: "./cmd/getReviewUserInfo",
+	                url: "davinci/cmd/getReviewUserInfo",
 	                sync: true
 	            });
 				davinci.Runtime.userInfo = result;
@@ -26,7 +26,7 @@ dojo.mixin(davinci.review.Runtime,{
 		else{
 				if(!davinci.Runtime.userInfo){
 		            var result = davinci.Runtime.serverJSONRequest({
-		                url: "./cmd/getReviewUserInfo",
+		                url: "davinci/cmd/getReviewUserInfo",
 		                sync: true
 		            });
 					davinci.Runtime.userInfo = result;
@@ -41,7 +41,7 @@ dojo.mixin(davinci.review.Runtime,{
 		else{
 				if(!davinci.Runtime.userInfo){
 		            var result = davinci.Runtime.serverJSONRequest({
-		                url: "./cmd/getReviewUserInfo",
+		                url: "davinci/cmd/getReviewUserInfo",
 		                sync: true
 		            });
 					davinci.Runtime.userInfo = result;
@@ -79,7 +79,7 @@ dojo.mixin(davinci.review.Runtime,{
 	{
 		davinci.Runtime.unload();
 		davinci.Runtime.serverJSONRequest({
-			   url:"./cmd/logoff", handleAs:"text",
+			   url:"davinci/cmd/logoff", handleAs:"text",
 				   sync:true  });
 		var newLocation = davinci.Workbench.location(); //
 		

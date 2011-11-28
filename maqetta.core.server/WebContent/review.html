@@ -7,7 +7,7 @@
 	<meta http-equiv="Cache-Control" CONTENT="post-check=0, pre-check=0">
 	<meta http-equiv="Pragma" CONTENT="no-cache">
     <style type="text/css">
-		@import url("app/davinci/workbench.css?@revision@");
+		@import url("maqetta/app/davinci/workbench.css?@revision@");
 		html, body {
 			width: 100%;
 			height: 100%;
@@ -15,10 +15,10 @@
     </style>
     <!-- propvieweffects.css needs to be separate and not built -->
     <!-- FIXME: This LINK element should be added by the properties palette plugin -->
-    <link href="app/davinci/propvieweffects.css?@revision@" rel="stylesheet" type="text/css"></link>
-    <script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="parseOnLoad: true, modulePaths:{'preview':'../preview', 'system':'../system'}, cacheBust: '@revision@'"></script>
+    <link href="maqetta/app/davinci/propvieweffects.css?@revision@" rel="stylesheet" type="text/css"></link>
+    <script type="text/javascript" src="maqetta/app/dojo/dojo.js?@revision@" data-dojo-config="parseOnLoad: true, modulePaths:{'preview':'../preview', 'system':'../system'}, cacheBust: '@revision@'"></script>
 	<script type="text/javascript">
-		require(["dijit/dijit", "davinci/davinci-common", "davinci/davinci"], function () {
+		require(["dijit/dijit", "davinci/davinci-common", "davinci/davinci", "davinci/review/Review"], function () {
 		    <!-- Globalization -->
 		    dojo.addOnLoad(function () {
 		      var langObj = dojo.i18n.getLocalization("davinci","webContent");
@@ -32,12 +32,12 @@
 		    
 	    	davinci.useAppCache = true; // needed to provide FF "allow" warning
 
-			davinci.Runtime.addPlugin( "app/davinci/ui" );
-	    	davinci.Runtime.addPlugin( "app/davinci/de/de" );
-		 	davinci.Runtime.addPlugin( "app/davinci/html/html" );
-		 	davinci.Runtime.addPlugin( "app/davinci/review/review" );
-			davinci.Runtime.addPlugin( "app/davinci/ve/ve" );
-			davinci.Runtime.addPlugin( "app/davinci/ve/themeEditor/themeEditor" );
+			davinci.Runtime.addPlugin( "maqetta/app/davinci/ui" );
+	    	davinci.Runtime.addPlugin( "maqetta/app/davinci/de/de" );
+		 	davinci.Runtime.addPlugin( "maqetta/app/davinci/html/html" );
+		 	davinci.Runtime.addPlugin( "maqetta/app/davinci/review/review" );
+			davinci.Runtime.addPlugin( "maqetta/app/davinci/ve/ve" );
+			davinci.Runtime.addPlugin( "maqetta/app/davinci/ve/themeEditor/themeEditor" );
 
 
             davinci.Runtime.initialPerspective = "davinci.review.comment";
@@ -75,7 +75,7 @@
     
                     var userInfo;
                     var result = davinci.Runtime.serverJSONRequest({
-                        url: "cmd/getReviewUserInfo",
+                        url: "maqetta/cmd/getReviewUserInfo",
                         sync: true
                     });
     
@@ -112,7 +112,7 @@
                         var version = path.getSegments()[0];
                         path.removeFirstSegments(1);
                         var node = davinci.review.model.Resource.root.findFile(version, path.toString());
-                        if(node) {
+                        if (node) {
                             davinci.Workbench.openEditor({
                                 fileName: node,
                                 content: node.getText()
@@ -123,6 +123,7 @@
     
                 dojo.addOnUnload(davinci.Runtime.unload);
             });
+        });
 	</script>
   </head>
 

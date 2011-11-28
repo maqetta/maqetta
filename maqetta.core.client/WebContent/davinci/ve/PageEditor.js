@@ -100,7 +100,8 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 		}
 		if (newMode!="design") {
 			this._bc.addChild(this._srcCP);
-			this.htmlEditor.setVisible(true);
+			// defer Orion editor initialization due to dependencies on re-layout and new geometry
+			setTimeout(function(){this.htmlEditor.setVisible(true);}.bind(this), 0);
 		}
 		this._displayMode=newMode;
 		this._bc._layoutChildren(this._srcCP.id, dim-1); // kludge: have to resize twice to get src to draw on some browsers

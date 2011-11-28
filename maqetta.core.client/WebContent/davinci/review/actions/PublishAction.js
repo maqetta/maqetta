@@ -22,34 +22,34 @@ dojo.require("dojo.i18n");
 dojo.requireLocalization("davinci.review.actions", "actions");
 
 dojo.declare("davinci.review.actions.PublishAction", davinci.actions.Action, {
-	constructor: function(node,isRestart){
-		this.node =  node;
-		this.isRestart = isRestart;
-		if(node&&node.isRestart)
-			this.isRestart = true;
-	},
-	run : function() {
-		var publishWizard = this.publishWizard = new davinci.review.widgets.PublishWizard();
-		var langObj = dojo.i18n.getLocalization("davinci.review.actions", "actions");
-		this.dialog = new dijit.Dialog( {
-			title : langObj.newReview,
-			onCancle: dojo.hitch(this,this.close),
-			onHide: dojo.hitch(this, this.hide)
-		});
-		this.dialog.setContent(publishWizard);
-		this.dialog.show();
-		dojo.connect(publishWizard,"onClose",this,this.close);
-		publishWizard.initData(this.node,this.isRestart);
-		publishWizard.updateSubmit();
-		publishWizard.reviewerStackContainer.resize();
-		
-	},
-	
-	hide: function(){
-		this.dialog.destroyRecursive();
-	},
-	
-	close: function(){
-		this.dialog.hide();
-	}
+    constructor: function(node,isRestart){
+        this.node =  node;
+        this.isRestart = isRestart;
+        if(node&&node.isRestart)
+            this.isRestart = true;
+    },
+    run : function() {
+        var publishWizard = this.publishWizard = new davinci.review.widgets.PublishWizard();
+        var langObj = dojo.i18n.getLocalization("davinci.review.actions", "actions");
+        this.dialog = new dijit.Dialog( {
+            title : langObj.newReview,
+            onCancle: dojo.hitch(this,this.close),
+            onHide: dojo.hitch(this, this.hide)
+        });
+        this.dialog.setContent(publishWizard);
+        this.dialog.show();
+        dojo.connect(publishWizard,"onClose",this,this.close);
+        publishWizard.initData(this.node,this.isRestart);
+        publishWizard.updateSubmit();
+        publishWizard.reviewerStackContainer.resize();
+        
+    },
+    
+    hide: function(){
+        this.dialog.destroyRecursive();
+    },
+    
+    close: function(){
+        this.dialog.hide();
+    }
 });

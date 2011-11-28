@@ -782,7 +782,7 @@ dojo.mixin(davinci.Workbench, {
 			if (item != button) {
 				item.set('checked', false);
 			}
-		})
+		});
 		this._runAction(button.item,context,button.item.id);
 	},
 	_runAction: function (item,context,arg)
@@ -1004,7 +1004,7 @@ dojo.mixin(davinci.Workbench, {
 			dojo.some(editorExtensions, function(extension){
 			editorExtension = extension;
 			return extension.isDefault;
-		})}
+		});}
 		/*{
 			var data={
 					listData:editorExtensions
@@ -1040,7 +1040,7 @@ dojo.mixin(davinci.Workbench, {
 	},
 	
 	_createEditor: function(editorExtension, fileName, keywordArgs, newHtmlParams){
-		var nodeName = fileName.split('/').pop()
+		var nodeName = fileName.split('/').pop();
 
 		var loading = dojo.query('.loading');
 		if (loading[0]){
@@ -1368,7 +1368,7 @@ dojo.mixin(davinci.Workbench, {
 					mainBodyContainer.layout();
 				});
 */
-			}
+			};
 		}
 
 		var toggleAllButCenter = function(widget) {
@@ -1415,7 +1415,7 @@ dojo.mixin(davinci.Workbench, {
 		var newTitle=this._baseTitle;
 		if (currentEditor)
 		{
-			newTitle=newTitle+" - "
+			newTitle=newTitle+" - ";
 			if (currentEditor.isDirty) {
 				newTitle=newTitle+"*";
 			}

@@ -3,7 +3,6 @@ dojo.provide("davinci.review.editor.Context");
 dojo.require("davinci.commands.CommandStack");
 dojo.require("davinci.ve.tools.SelectTool");
 dojo.require("davinci.ve.widget");
-dojo.require("davinci.ve.util");
 dojo.require("davinci.ve.Focus");
 
 dojo.declare("davinci.review.editor.Context", null, {
@@ -83,7 +82,7 @@ dojo.declare("davinci.review.editor.Context", null, {
     },
 
     getContainerNode: function(){
-        return this.frame.contentDocument.body||this.frame.contentWindow.document.body;
+        return this.frame.contentDocument.body||this.frame.contentWindow.document.body||this.containerNode;
     },
     getSelection: function(){
         return null;

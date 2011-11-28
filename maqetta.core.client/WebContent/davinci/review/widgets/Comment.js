@@ -26,7 +26,7 @@ dojo.declare("davinci.review.widgets.Comment",[dijit._Widget, dijit._Templated],
 		if(!this.existed){
 			// Ensure that the comment is created on the server when it is "newed".
 			dojo.xhrPost({
-				url: "./cmd/addComment",
+				url: "maqetta/cmd/addComment",
 				handleAs: "json",
 				content: {
 					id: this.commentId,
@@ -171,7 +171,7 @@ dojo.declare("davinci.review.widgets.Comment",[dijit._Widget, dijit._Templated],
 		// Indicate that this is a change of the comment status (open/close)
 		var updateStatus = arg && arg.statusChanged;
 		dojo.xhrPost({
-			url: "./cmd/updateComment",
+			url: "maqetta/cmd/updateComment",
 			handleAs: "json",
 			content: {
 				id: this.commentId,

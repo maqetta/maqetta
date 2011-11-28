@@ -11,7 +11,7 @@ dojo.declare("davinci.review.actions.OpenVersionAction",davinci.actions.Action,{
     var selection = davinci.Runtime.getSelection();
     if(!selection) return;
     var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
-        dojo.xhrGet({url:"./cmd/managerVersion",sync:false,handleAs:"text",
+        dojo.xhrGet({url:"maqetta/cmd/managerVersion",sync:false,handleAs:"text",
             content:{
             'type' :'open',
             'vTime':item.timeStamp}

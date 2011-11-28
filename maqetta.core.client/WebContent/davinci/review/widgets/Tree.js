@@ -9,7 +9,7 @@ dojo.declare("davinci.review.widgets._TreeNode", davinci.ui.widgets._ToggleTreeN
 	postCreate: function(){
 		this.inherited(arguments);
 
-		var divDom = dojo.create("img", { src:"app/dojo/resources/blank.gif","class":"deleteImg"});
+		var divDom = dojo.create("img", { src:"maqetta/app/dojo/resources/blank.gif","class":"deleteImg"});
 		dojo.connect(divDom,"onclick",this,dojo.hitch(this,function(){
 			dojo.publish("/davinci/review/deleteReviewFile",[this.item]);
 		}));

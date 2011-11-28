@@ -421,7 +421,7 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 		//		Load the comments attached to the opened page
 		//		and sort them by time order
 		this._cached[pageName] = davinci.Runtime.serverJSONRequest({
-			url: "./cmd/getComments",
+			url: "maqetta/cmd/getComments",
 			sync: true,
 			content:{
 				ownerId: davinci.Runtime.commenting_designerName,

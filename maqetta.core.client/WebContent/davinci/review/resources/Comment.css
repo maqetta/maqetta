@@ -267,7 +267,7 @@
 */
 
 .emptyIcon {
-	background: no-repeat url("../../../dojo/resources/blank.gif");
+	background: no-repeat url("../../../../dojo/resources/blank.gif");
 	display: none;
 }
 
@@ -406,7 +406,7 @@
 }
 
 .deleteImg{
-	background: url("../../../dojo/resources/blank.gif") no-repeat ;
+	background: url("../../../../dojo/resources/blank.gif") no-repeat ;
 	width:25px;
 	height:14px;
 	cursor: pointer;

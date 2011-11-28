@@ -13,7 +13,7 @@ dojo.declare("davinci.review.actions.SubmitDraftAction",davinci.actions.Action,{
         item.getChildren(function(c){children=c;},true);
         
         if(children&&children.length>0){
-            dojo.xhrGet({url:"./cmd/managerVersion",sync:false,handleAs:"text",
+            dojo.xhrGet({url:"maqetta/cmd/managerVersion",sync:false,handleAs:"text",
                 content:{
                 'type' :'publish',
                 'vTime':item.timeStamp}

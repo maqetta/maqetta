@@ -66,7 +66,7 @@
 //                dojo.byId('davinci_review_title').innerHTML = davinci.Runtime.commenting_designerName+"'s Review Board";
                 var userInfo;
                 var result = davinci.Runtime.serverJSONRequest({
-                    url: "cmd/getReviewUserInfo",
+                    url: "maqetta/cmd/getReviewUserInfo",
                     sync: true
                 });
 
@@ -123,8 +123,8 @@
                         <div dojoType="dijit.form.DropDownButton">
                             <span id="help_drop_down"></span>
                             <div dojoType="dijit.Menu">
-                                <div id="menu_help" dojoType="dijit.MenuItem" onClick="window.open('app/docs/index.html')"></div>
-                                <div id="menu_tutorials" dojoType="dijit.MenuItem" onClick="window.open('app/docs/index.html#tutorials/tutorials')"></div>
+                                <div id="menu_help" dojoType="dijit.MenuItem" onClick="window.open('maqetta/app/docs/index.html')"></div>
+                                <div id="menu_tutorials" dojoType="dijit.MenuItem" onClick="window.open('maqetta/app/docs/index.html#tutorials/tutorials')"></div>
                                 <div id="menu_about" dojoType="dijit.MenuItem" onClick="davinci.ui.about()"></div>
                             </div>
                         </div>

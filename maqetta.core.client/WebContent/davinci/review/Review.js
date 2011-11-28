@@ -25,7 +25,7 @@ dojo.mixin(davinci.Workbench, {
             new dijit.layout.ContentPane(
                     {
                         id : "editorsWelcomePage",
-                        href: "app/review/resources/welcome_to_maqetta.html"
+                        href: "maqetta/app/davinci/review/resources/welcome_to_maqetta.html"
                     });
         this.showPerspective(perspective);
         davinci.Runtime.subscribe("/davinci/ui/editorSelected",davinci.Workbench._updateMainToolBar );
@@ -152,7 +152,7 @@ dojo.mixin(davinci.Runtime, {
             var isInput=false;
             var    dialog = new dijit.Dialog({id: "connectDialog", closable: true, title:"Please login", 
                 login:function(){
-                    dojo.xhrGet({url:"./cmd/login",sync:true,handleAs:"text",
+                    dojo.xhrGet({url:"maqetta/cmd/login",sync:true,handleAs:"text",
                         error:function(e){
                             dojo.byId("review_login_result").innerHTML="Invalid userid or password!";
                             dojo.style("review_login_result","color","red");

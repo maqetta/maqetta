@@ -2,11 +2,14 @@
 }
 .colorPicker .colorPickerSelected{
 	float:right;	
-	height:14px;
+	height:16px;
 	width:26px;
 	margin:0 2px;
 	padding:0;
 	border:1px solid black;
+}
+.colorPicker .colorPickerSelected.colorPickerSelectedSkinny{
+	width:16px;
 }
 .colorPickerComboContainer{
 	margin:0 38px 0 0;

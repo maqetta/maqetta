@@ -59,6 +59,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 	startup : function(){
 		var widget = dijit.byId(this.targetField);
 		if(widget){
+			widget._cascade = this;
 			this._getFieldValue = function(){
 				return widget.attr('value'); 
 			};
@@ -69,7 +70,6 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 				
 				if(widget._setBaseLocationAttr)
 					widget.attr('baseLocation', loc?loc.getPath():null);
-				
 				widget.attr('value', this._value, true);
 			};
 			dojo.connect(widget, "onChange", this, "_onFieldChange");
@@ -109,17 +109,39 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		
 	},
 	
-	
-	
+	/**
+	 * Invoked whenever the input field (TextBox, ComboBox, ...) on a property changes.
+	 * To get the new value, usually call this._getFieldValue(), but for background-image,
+	 * which provides an array for gradients, look at this._valueArrayNew.
+	 * Existing values are stored in this._value and this._valueArray.
+	 */
 	_onFieldChange : function(){
-		
-		if(this.context)
+		// Return true if two valueArray objects are equivalent
+		var valueArrayCompare = function(arr1, arr2){
+			if(!arr1 && !arr2){
+				return true;
+			}
+			if((!arr1 && arr2) || (arr1 && !arr2)){
+				return false;
+			}
+			if(arr1.length != arr2.length){
+				return false;
+			}
+			for(var i=0; i<arr1.length; i++){
+				if(arr1[i] !== arr2[i]){
+					return false;
+				}
+			}
+			return true;
+		};
+
+		if(this.context){
 			this.context.blockChange(false);
-		
-		if(this._value==this._getFieldValue())
+		}
+		if(this._value==this._getFieldValue() && valueArrayCompare(this._valueArray, this._valueArrayNew)){
 			return;
+		}
 		if(this._getFieldValue()=="(overrides)"){
-			
 			this._setFieldValue("(overrides)", null);
 			return;
 		}
@@ -181,8 +203,9 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			
 		}else{
 			this._value=this._getFieldValue();
-			this._changeValue(this._targetValueIndex,this._value);
-			
+			this._valueArray = this._valueArrayNew;
+			var value = (this._valueArray && dojo.isArray(this._valueArray) && this._valueArray.length>0) ? this._valueArray : this._value;
+			this._changeValue(this._targetValueIndex, value);
 		}
 	},
 	
@@ -198,14 +221,14 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		var targetRule = this._values[targetIndex];
 		var valueObject = [];
 		for(var i = 0;i<this.target.length;i++){
-			var a = {};
-			
 			if(dojo.isArray(value)){
 				for(var k=0;k<value.length;k++){
+					var a = {};
 					a[this.target[i]] = value[k];
 					valueObject.push(a);
 				}
 			}else{
+				var a = {};
 				a[this.target[i]] = value;
 				valueObject.push(a);
 
@@ -848,7 +871,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 	},
 	
 	_widgetSelectionChanged : function (changeEvent){
-	//	debugger;
+		//	debugger;
 	//	if(	!this._editor )
 	//		return;
 		//if(this._isTarget("font-family")) debugger;

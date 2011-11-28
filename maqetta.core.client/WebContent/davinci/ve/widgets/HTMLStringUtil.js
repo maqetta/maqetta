@@ -100,7 +100,10 @@ davinci.ve.widgets.HTMLStringUtil.getEditor = function(jsonString){
 			return text;
 			/*todo - write color chooser widget */
 		case "background":
-			var text="<div dojoType='davinci.ve.widgets.Background' id='" + id + "'></div>";
+			var valuesText = dojo.isArray(jsonString.values) ? " data='" + dojo.toJson(jsonString.values) + "'" : "";		
+			var propNameText = " propname='" + (dojo.isArray(jsonString.target) ? dojo.toJson(jsonString.target) : jsonString.target) + "'";
+			var swatchText = jsonString.colorswatch ? " colorswatch='true'" : '';
+			var text="<div dojoType='davinci.ve.widgets.Background' id='" + id + "'" + valuesText + propNameText + swatchText + "></div>";
 			return text;			
 		case "file":
 			var text="<div dojoType='davinci.ui.widgets.FileFieldDialog' id='" + id + "'></div>";
@@ -157,8 +160,8 @@ davinci.ve.widgets.HTMLStringUtil.generateTable = function(page,rowsOnly){
 	tableHtml += "<col style='width:15px;' />"
 	tableHtml +="<col class='gap02' />";
 	tableHtml +="<col class='gap03' />";
-	tableHtml +="<col style='width:24px;' />";
-	tableHtml += "<col style='width:8px;' />"
+	tableHtml +="<col style='width:20px;' />";
+	tableHtml += "<col style='width:6px;' />"
 	tableHtml +="</colgroup>";
 //	tableHtml +="<tr class='property_table_rowgap property_table_rowgap_group_separator'><td colspan='7'/></tr>";
 	if(!rowsOnly)

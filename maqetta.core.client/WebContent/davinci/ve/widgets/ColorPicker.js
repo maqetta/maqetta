@@ -29,7 +29,7 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 		if(!this.data ){
 			this.data=[{value:this._statics[0]}];
 			this.data.push({value:this._statics[2],run:this._chooseColorValue});
-			this.data.push({value:this._statics[3],run:function(){this.attr('value','')}});
+			this.data.push({value:this._statics[3],run:function(){this.attr('value','');}});
 			this.data.push({value:this._statics[1]});   
 			this.data.push({value:'transparent'});
 			this.data.push({value:'black'});
@@ -41,7 +41,7 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 		              
 		}else{
 			this.data.push({value:davinci.ve.widgets.ColorPicker.divider});
-			this.data.push({value:langObj.removeValue,run:function(){this.attr('value','')}});
+			this.data.push({value:langObj.removeValue,run:function(){this.attr('value','');}});
 		}
 		var displayValues = [];
 		for(var i = 0;i<this.data.length;i++){
@@ -57,7 +57,7 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 		var top = dojo.doc.createElement("div");
 		dojo.addClass(top, 'colorPicker');
 		this._selectedColor = dojo.doc.createElement("div");
-		this._selectedColor.innerHTML = "&nbsp;"
+		this._selectedColor.innerHTML = "&nbsp;";
 		dojo.addClass(this._selectedColor, 'colorPickerSelected');
 		dojo.connect(this._selectedColor,'onclick',dojo.hitch(this,function(event){
 			this._chooseColorValue();
@@ -99,6 +99,7 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 		dialog.connect(content, "onCancel", dojo.hitch(this, closePopup));
 		dialog.connect(content, "onClose", dojo.hitch(this, closePopup));
 		
+//FIXME: Remove code below and replace with call to davinci.ve.widgets.ColorPickerFlat.show
 		
 		var colorpicker = dijit.byNode(dojo.query("[widgetId]", dialog.domNode)[0]);
 		

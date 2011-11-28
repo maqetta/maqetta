@@ -1,0 +1,781 @@
+<!--
+================================================
+                  FIXME
+This file contains test code for CssUtils.js. The testing cases below
+worked at one time when this page was placed on a web server with Dojo nearby
+but will not run successfully in its current location.
+
+Checking into source control just so we do not lose this testing code,
+which took a long time to assemble.
+================================================ 
+-->
+
+<script type='text/javascript' src='dojo-release-1.7.0b6-src/dojo/dojo.js'></script>
+
+<script type='text/javascript' src='CssUtils.js'></script>
+
+<div style='width:100.5px; height:100px; background-color:red;'>hello</div>
+
+
+<!--
+// Need some standard regex strings for sub-grammar validators
+
+Direction#1
+// Input is an array holding all property declarations within style declaration
+// Output is the following structure
+Direction#2
+// Input is following structure
+// Output an array of property declarations
+
+background-image = {
+function:'url|-moz-linear-gradient|...',
+type:'url|linear|radial',
+url:string,
+stops:[{
+	color:string,
+	pos:undefined|null|string}+],
+	
+		Notes:
+		* color is a validationtextbox with dropdown menu options, with swatch
+		* pos is a validationtextbox with dropdown menu options
+
+=======================
+	LINEAR GRADIENT:
+	[stop #1:   [color][v][ ] [pos][v] (can select)
+	[stop #2:   [color][v][ ] [pos][v]
+	[+][-][^][v]
+
+	angle: [to bottom][v]
+
+		Notes:
+		* angle is a validationtextbox with dropdown menu options
+		* color is a validationtextbox with dropdown menu options, with swatch
+		* color is a validationtextbox with dropdown menu options
+=======================
+linear_params:{
+	angle:undefined|null|string,
+},
+
+=======================
+	RADIAL GRADIENT:
+	[stop #1:   [color][v][ ] [pos][v] (can select)
+	[stop #2:   [color][v][ ] [pos][v]
+	[+][-][^][v]
+
+	position:[center][v]         Preview here
+	shape:   [circle][v]
+	size:    [closest-side][v]
+
+		Notes:
+		* Don't include angle - only available for -moz-* - dropped with each change
+		* position is a validationtextbox with dropdown menu options
+		* shape is a strict menu
+		* size is validationtextbox with dropdown menu options
+=======================
+
+radial_params:{
+	position:undefined|null|string,
+	angle:undefined|null|string,
+	shape:undefined|null|string,
+	size:undefined|null|string
+}
+}
+
+-->
+
+<script type='text/javascript'>
+
+/*
+console.log('len_or_pct start');
+var regex = new RegExp(len_or_pct);
+var result = '0'.match(regex);
+console.dir(result);
+var result = '80%'.match(regex);
+console.dir(result);
+var result = '-50.6px'.match(regex);
+console.dir(result);
+var result = '80'.match(regex);	// finds '0' not '80'
+console.dir(result);
+console.log('len_or_pct end');
+
+console.log('posn_component start');
+var regex = new RegExp(posn_component);
+var result = '0'.match(regex);
+console.dir(result);
+var result = '80%'.match(regex);
+console.dir(result);
+var result = '20px'.match(regex);
+console.dir(result);
+var result = 'left'.match(regex);	// finds '0' not '80'
+console.dir(result);
+var result = 'top'.match(regex);	// finds '0' not '80'
+console.dir(result);
+console.log('posn_component end');
+
+console.log('posn start');
+var regex = new RegExp(posn);
+var result = '0'.match(regex);
+console.dir(result);
+var result = '80% 20px'.match(regex);
+console.dir(result);
+var result = '20px top'.match(regex);
+console.dir(result);
+var result = 'left'.match(regex);	// finds '0' not '80'
+console.dir(result);
+var result = 'top left'.match(regex);	// finds '0' not '80'
+console.dir(result);
+console.log('posn end');
+
+console.log('extent start');
+console.dir(result);
+var result = 'closest-side'.match(regex);
+console.dir(result);
+var result = 'farthest-side'.match(regex);
+console.dir(result);
+var result = 'closest-corner'.match(regex);
+console.dir(result);
+var result = 'farthest-corner'.match(regex);
+console.dir(result);
+var result = '-10%'.match(regex);
+console.dir(result);
+var result = '20px'.match(regex);
+console.dir(result);
+var result = '20px 10%'.match(regex);
+console.dir(result);
+console.log('extent end');
+
+console.log('shape start');
+var regex = new RegExp(shape);
+var result = 'circle'.match(regex);
+console.dir(result);
+var result = 'ellipse'.match(regex);
+console.dir(result);
+console.log('shape end');
+
+console.log('side and to_side start');
+var regex = new RegExp(to_side);
+var result = 'to bottom left'.match(regex);
+console.dir(result);
+var result = 'to bottom'.match(regex);
+console.dir(result);
+var result = 'zzz bottom'.match(regex);
+console.dir(result);
+var result = 'bottom'.match(regex);
+console.dir(result);
+var regex = new RegExp(side);
+var result = 'bottom left'.match(regex);
+console.dir(result);
+var result = 'bottom'.match(regex);
+console.dir(result);
+var result = 'zzz bottom'.match(regex);
+console.dir(result);
+var result = 'xxx'.match(regex);
+console.dir(result);
+console.log('side and to_side end');
+
+console.log('angle start');
+var regex = new RegExp(angle);
+var result = '0deg'.match(regex);
+console.dir(result);
+var result = '-45deg'.match(regex);
+console.dir(result);
+var result = '-5.66deg'.match(regex);
+console.dir(result);
+var result = '45'.match(regex);
+console.dir(result);
+console.log('angle end');
+
+console.log('dir start');
+// Note: to_side is for W3C syntax, side for -moz- syntax
+// Unifying into single regex for expediency and figuring Maqetta should
+// be forgiving because if user changes values, Maqetta will overwrite
+// any of the bad values with good values
+var regex = new RegExp(dir);
+var result = '0deg'.match(regex);
+console.dir(result);
+var result = 'to bottom left'.match(regex);
+console.dir(result);
+var result = 'to bottom'.match(regex);
+console.dir(result);
+console.log('dir end');
+
+console.log('cssColorNames.length='+cssColorNames.length);
+console.log('cssColorNames.length/2='+cssColorNames.length/2);
+console.dir(cssColorNames);
+var regex = new RegExp(colornames);
+var result = 'red'.match(regex);
+console.dir(result);
+
+console.log('rgbcolor and hslcolor');
+var regex = new RegExp(colorfunc3);
+var result = 'rgb(0,0,0)'.match(regex);
+console.dir(result);
+var result = 'hsl(50%,0,255)'.match(regex);
+console.dir(result);
+
+console.log('rgbacolor and hslacolor');
+var regex = new RegExp(colorfunc4);
+var result = 'rgba(255,255,255,0)'.match(regex);
+console.dir(result);
+var result = 'hsla(80%,90%,30%,0.5)'.match(regex);
+console.dir(result);
+
+console.log('full color syntax');
+var regex = new RegExp(color);
+var result = 'yellowgreen'.match(regex);
+console.dir(result);
+var result = 'smoke'.match(regex);
+console.dir(result);
+var result = '#FFF'.match(regex);
+console.dir(result);
+var result = '#0aF9e3'.match(regex);
+console.dir(result);
+var result = 'rgb(0,0,0)'.match(regex);
+console.dir(result);
+var result = 'rgba(255,255,255,0)'.match(regex);
+console.dir(result);
+var result = 'hsl(50%,0,255)'.match(regex);
+console.dir(result);
+
+console.log('colorstop start');
+var regex = new RegExp(colorstop);
+var result = 'yellow 0%'.match(regex);
+console.dir(result);
+var result = 'yellow'.match(regex);
+console.dir(result);
+console.log('colorstop end');
+*/
+
+
+/*
+console.log('posn_and_or_angle_opt_comma start');
+var regex = new RegExp(posn_and_or_angle);
+var result = '10px -20px'.match(regex);
+console.dir(result);
+var result = '20deg'.match(regex);
+console.dir(result);
+var result = '10px -20px 20deg'.match(regex);
+console.dir(result);
+var regex = new RegExp(posn_and_or_angle_opt_comma);
+var result = ''.match(regex);
+console.dir(result);
+var result = '10px -20px 20deg ,'.match(regex);
+console.dir(result);
+console.log('posn_and_or_angle_opt_comma end');
+
+console.log('shape_and_or_extent_opt_comma start');
+var regex = new RegExp(shape_and_or_extent);
+var result = 'circle'.match(regex);
+console.dir(result);
+var result = 'farthest-corner'.match(regex);
+console.dir(result);
+var result = 'circle closest-side'.match(regex);
+console.dir(result);
+var regex = new RegExp(shape_and_or_extent_opt_comma);
+var result = ''.match(regex);
+console.dir(result);
+var result = 'circle closest-side ,'.match(regex);
+console.dir(result);
+var result = 'ellipse cover,'.match(regex);
+console.dir(result);
+var result = 'bottom left,'.match(regex);
+console.dir(result);
+var result = 'farthest-side,'.match(regex);
+console.dir(result);
+var result = 'bottom left, farthest-side,'.match(regex);
+console.dir(result);
+console.log('shape_and_or_extent_opt_comma end');
+*/
+
+function test_comma_point(){
+	console.log('test_comma_point start');
+	var regex = new RegExp(comma_point);
+	var result = ',0 -30%'.match(regex);
+	console.dir(result);	
+	console.log('test_comma_point end');
+}
+function test_comma_radius(){
+	console.log('test_comma_radius start');
+	var regex = new RegExp(comma_radius);
+	var result = ', 30'.match(regex);
+	console.dir(result);
+	console.log('test_comma_radius end');
+}
+function test_colorstopfunc(){
+	console.log('test_colorstopfunc start');
+	var regex = new RegExp(colorstopfunc);
+	var result = 'color-stop( 10%, #abdddd)'.match(regex);
+	console.dir(result);	
+	console.log('test_colorstopfunc end');
+}
+function test_fromfunc(){
+	console.log('test_fromfunc start');
+	var regex = new RegExp(fromfunc);
+	var result = 'from( brown )'.match(regex);
+	console.dir(result);
+	console.log('test_fromfunc end');
+}
+function test_tofunc(){
+	console.log('test_tofunc start');
+	var regex = new RegExp(tofunc);
+	var result = ' to ( rgb(100,100,100)) '.match(regex);
+	console.dir(result);
+	console.log('test_tofunc end');
+}
+function test_stopfunc(){
+	console.log('test_stopfunc start');
+	var regex = new RegExp(comma_stopfunc);
+	var result = ',color-stop( 10%, #abdddd)'.match(regex);
+	console.dir(result);
+	var result = ',from( brown )'.match(regex);
+	console.dir(result);
+	var result = ' , to ( rgb(100,100,100)) '.match(regex);
+	console.dir(result);
+	console.log('test_stopfunc end');
+}
+function test_webkit_linear_gradient_orig(){
+	console.log('test_webkit_linear_gradient_orig start');
+	var regex = new RegExp(CssUtils.webkit_linear_gradient_orig);
+	var result = '-webkit-gradient(linear, left top, left bottom, from(#6BA2E7), to(#216DD6), color-stop(0.5, #4282DE), color-stop(0.5, #216DD6))'.match(regex);
+	console.dir(result);
+	console.log('test_webkit_linear_gradient_orig end');
+}
+function test_webkit_radial_gradient_orig(){
+	console.log('test_webkit_radial_gradient_orig start');
+	var regex = new RegExp(CssUtils.webkit_radial_gradient_orig);
+	var result = '-webkit-gradient(radial, 45 45, 10, 52 50, 30, from(#A7D30C), to(rgba(1,159,98,0)), color-stop(90%, #019F62))'.match(regex);
+	console.dir(result);
+	console.log('test_webkit_radial_gradient_orig end');
+}
+
+function test_linear_gradient_spec_samples(){
+	console.log('test_linear_gradient_spec_samples start');
+	var regex = new RegExp(davinci.ve.utils.CssUtils.linear_gradient);
+	var w3c_and_mdn_examples = [
+	// From https://developer.mozilla.org/en/CSS/-moz-linear-gradient
+	'-moz-linear-gradient(top, hsl(0, 80%, 70%), #BADA55)',
+	'-moz-linear-gradient(top left, red, rgba(255,0,0,0))',
+	'-moz-linear-gradient(left, red, orange, yellow, green, blue, indigo, violet)',
+	// From http://dev.w3.org/csswg/css3-images/#linear-gradients
+	'linear-gradient(yellow, blue)',
+	'linear-gradient(to bottom, yellow, blue)',
+	'linear-gradient(180deg, yellow, blue)',
+	'linear-gradient(to top, blue, yellow)',
+	'linear-gradient(to bottom, yellow 0%, blue 100%)',
+	'linear-gradient(135deg, yellow, blue)',
+	'linear-gradient(-45deg, blue, yellow)',
+	'linear-gradient(yellow, blue 20%, #0f0)',
+	'linear-gradient(to top right, red, white, blue)'
+	];
+	for (var i=0; i<w3c_and_mdn_examples.length; i++){
+		var result = w3c_and_mdn_examples[i].match(regex);
+		//console.dir(result);
+		if(result == null){
+			console.log('null for: '+w3c_and_mdn_examples[i]);
+		}
+	}
+	console.log('test_linear_gradient_spec_samples end');
+}
+
+function test_radial_gradient_spec_samples(){
+	console.log('test_radial_gradient_spec_samples start');
+	var regex = new RegExp(davinci.ve.utils.CssUtils.radial_gradient);
+	var w3c_and_mdn_examples = [
+	// From https://developer.mozilla.org/en/CSS/-moz-radial-gradient
+	'-moz-radial-gradient(center 45deg, circle closest-side, orange 0%, red 100%)',
+	'-moz-radial-gradient(45px 45px 45deg, circle cover, aqua 0%, rgba(0, 0, 255, 0) 100%, blue 95%)',
+	'-moz-radial-gradient(45px 45px, ellipse farthest-corner, aqua 0%, rgba(0, 0, 255, 0) 100%, blue 95%)',
+	'-moz-radial-gradient(45px 45px, cover, rgb(255, 0, 0) 0%, rgb(0, 0, 255) 100%)',
+	// From http://dev.w3.org/csswg/css3-images/#radial-gradients
+	'radial-gradient(yellow, green)',
+	'radial-gradient(center, ellipse cover, yellow 0%, green 100%)',
+	'radial-gradient(50% 50%, farthest-corner, yellow, green)',
+	'radial-gradient(circle, yellow, green)',
+	'radial-gradient(red, yellow, green)',
+	'radial-gradient(bottom left, farthest-side, red, yellow 50px, green)',
+	'radial-gradient(20px 30px, contain, red, yellow, green)',
+	'radial-gradient(20px 30px, 20px 30px, red, yellow, green)',	// Example in W3C spec, but doesn't match formal grammar at W3C or Mozilla page
+	'radial-gradient(20px 30px, circle contain, red, yellow, green)',
+	'radial-gradient(20px 30px, 20px 20px, red, yellow, green)'	// Example in W3C spec, but doesn't match formal grammar at W3C or Mozilla page
+	];
+	for (var i=0; i<w3c_and_mdn_examples.length; i++){
+		var result = w3c_and_mdn_examples[i].match(regex);
+		//console.dir(result);
+		if(result == null){
+			console.log('null for: '+w3c_and_mdn_examples[i]);
+		}
+	}
+	console.log('test_radial_gradient_spec_samples end');
+}
+
+function test_dojoxmobilesamples(){
+	console.log('test_dojoxmobilesamples start');
+	var dojoxmobilesamples = [
+	'-webkit-gradient(linear, left top, left bottom, from(#B0BCCD), to(#6D84A2), color-stop(0.5, #889BB3), color-stop(0.5, #8195AF))',
+	'-webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#cecece), color-stop(0.5, #f8f8f8), color-stop(0.5, #eeeeee))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7a9de9), to(#2362dd), color-stop(0.5, #366edf), color-stop(0.5, #215fdc))',
+	'-webkit-gradient(linear, left top, left bottom, from(#ad7500), to(#ffaa00), color-stop(0.06, #ffb200), color-stop(0.5, #ffc700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#fa9d58), to(#ee4115), color-stop(0.5, #ff4d25), color-stop(0.5, #ed4d15))',
+	'-webkit-gradient(linear, left top, left bottom, from(#ad7500), to(#ffaa00), color-stop(0.06, #ffb200), color-stop(0.5, #ffc700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#ad7500), to(#ffaa00), color-stop(0.06, #ffb200), color-stop(0.5, #ffc700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#cecece), color-stop(0.5, #f8f8f8), color-stop(0.5, #eeeeee))',
+	'-webkit-gradient(linear, left top, left bottom, from(#ad7500), to(#ffaa00), color-stop(0.06, #ffb200), color-stop(0.5, #ffc700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#00a200), to(#00d300), color-stop(0.2, #00ba00), color-stop(0.2, #00ba00))',
+	'-webkit-gradient(linear, left top, left bottom, from(#ad7500), to(#ffaa00), color-stop(0.06, #ffb200), color-stop(0.5, #ffc700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#048bf4), to(#005ce5))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7a9de9), to(#2362dd), color-stop(0.5, #366edf), color-stop(0.5, #215fdc))',
+	'-webkit-gradient(linear, left top, left bottom, from(#e5e5e5), to(#7f7f7f), color-stop(0.5, #adadad), color-stop(0.5, #909090))',
+	'-webkit-gradient(linear, left top, left bottom, from(#ad7500), to(#ffaa00), color-stop(0.06, #ffb200), color-stop(0.5, #ffc700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#9c9e9c), to(#848284))',
+	'-webkit-gradient(linear, left top, left bottom, from(#e5e5e5), to(#7f7f7f), color-stop(0.5, #adadad), color-stop(0.5, #909090))',
+	'-webkit-gradient(linear, left top, left bottom, from(#e5e5e5), to(#7f7f7f), color-stop(0.5, #adadad), color-stop(0.5, #909090))',
+	'-webkit-gradient(linear, left top, left bottom, from(#ad7500), to(#ffaa00), color-stop(0.06, #ffb200), color-stop(0.5, #ffc700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#e0e4e7), to(#b4bec6), color-stop(0.5, #c4ccd2), color-stop(0.5, #bfc8ce))',
+	'-webkit-gradient(linear, left top, left bottom, from(#ad7500), to(#ffaa00), color-stop(0.06, #ffb200), color-stop(0.5, #ffc700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#cecece), color-stop(0.5, #f8f8f8), color-stop(0.5, #eeeeee))',
+	'-webkit-gradient(linear, left top, left bottom, from(#00a200), to(#00d300), color-stop(0.2, #00ba00), color-stop(0.2, #00ba00))',
+	'-webkit-gradient(linear, left top, left bottom, from(#ad7500), to(#ffaa00), color-stop(0.06, #ffb200), color-stop(0.5, #ffc700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#bdbebd), to(#f7f3f7))',
+	'-webkit-gradient(linear, left top, left bottom, from(#00a200), to(#00d300), color-stop(0.2, #00ba00), color-stop(0.2, #00ba00))',
+	'-webkit-gradient(linear, left top, left bottom, from(#9c9a9c), to(#848284))',
+	'-webkit-gradient(linear, left top, left bottom, from(#00a200), to(#00d300), color-stop(0.2, #00ba00), color-stop(0.2, #00ba00))',
+	'-webkit-gradient(linear, left top, left bottom, from(#bdbebd), to(#f7f3f7))',
+	'-webkit-gradient(linear, left top, left bottom, from(#9c9a9c), to(#848284))',
+	'-webkit-gradient(linear, left top, left bottom, from(#2d2d2d), to(#000000))',
+	'-webkit-gradient(linear, left top, left bottom, from(#484848), to(#242424))',
+	'-webkit-gradient(linear, left top, left bottom, from(#181818), to(#100c10), color-stop(0.1, #313031))',
+	'-webkit-gradient(linear, left top, left bottom, from(#a59ea5), to(#848284))',
+	'-webkit-gradient(linear, left top, left bottom, from(#ffcb00), to(#ff9a00))',
+	'-webkit-gradient(linear, left top, left bottom, from(#e5e5e5), to(#7f7f7f), color-stop(0.5, #adadad), color-stop(0.5, #909090))',
+	'-webkit-gradient(linear, left top, left bottom, from(#ad7500), to(#ffaa00), color-stop(0.06, #ffb200), color-stop(0.5, #ffc700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#cecece), color-stop(0.5, #f8f8f8), color-stop(0.5, #eeeeee))',
+	'-webkit-gradient(linear, left top, left bottom, from(#ad7500), to(#ffaa00), color-stop(0.06, #ffb200), color-stop(0.5, #ffc700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#00a200), to(#00d300), color-stop(0.2, #00ba00), color-stop(0.2, #00ba00))',
+	'-webkit-gradient(linear, left top, left bottom, from(#ad7500), to(#ffaa00), color-stop(0.06, #ffb200), color-stop(0.5, #ffc700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#9c9e9c), to(#848284))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7A9DE9), to(#2362DD), color-stop(0.5, #366EDF), color-stop(0.5, #215FDC))',
+	'-webkit-gradient(linear, left top, left bottom, from(#E5E5E5), to(#7F7F7F), color-stop(0.5, #ADADAD), color-stop(0.5, #909090))',
+	'-webkit-gradient(linear, left top, left bottom, from(#AD7500), to(#FFAA00), color-stop(0.06, #FFB200), color-stop(0.5, #FFC700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#9C9E9C), to(#848284))',
+	'-webkit-gradient(linear, left top, left bottom, from(#E5E5E5), to(#7F7F7F), color-stop(0.5, #ADADAD), color-stop(0.5, #909090))',
+	'-webkit-gradient(linear, left top, left bottom, from(#E5E5E5), to(#7F7F7F), color-stop(0.5, #ADADAD), color-stop(0.5, #909090))',
+	'-webkit-gradient(linear, left top, left bottom, from(#AD7500), to(#FFAA00), color-stop(0.06, #FFB200), color-stop(0.5, #FFC700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#AD7500), to(#FFAA00), color-stop(0.06, #FFB200), color-stop(0.5, #FFC700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#00A200), to(#00D300), color-stop(0.2, #00BA00), color-stop(0.2, #00BA00))',
+	'-webkit-gradient(linear, left top, left bottom, from(#BDBEBD), to(#F7F3F7))',
+	'-webkit-gradient(linear, left top, left bottom, from(#9C9A9C), to(#848284))',
+	'-webkit-gradient(linear, left top, left bottom, from(#FDFDFD), to(#CECECE), color-stop(0.5, #F8F8F8), color-stop(0.5, #EEEEEE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7A9DE9), to(#2362DD), color-stop(0.5, #366EDF), color-stop(0.5, #215FDC))',
+	'-webkit-gradient(linear, left top, left bottom, from(#AD7500), to(#FFAA00), color-stop(0.06, #FFB200), color-stop(0.5, #FFC700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#FA9D58), to(#EE4115), color-stop(0.5, #FF4D25), color-stop(0.5, #ED4D15))',
+	'-webkit-gradient(linear, left top, left bottom, from(#AD7500), to(#FFAA00), color-stop(0.06, #FFB200), color-stop(0.5, #FFC700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#AD7500), to(#FFAA00), color-stop(0.06, #FFB200), color-stop(0.5, #FFC700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#FDFDFD), to(#CECECE), color-stop(0.5, #F8F8F8), color-stop(0.5, #EEEEEE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#AD7500), to(#FFAA00), color-stop(0.06, #FFB200), color-stop(0.5, #FFC700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#00A200), to(#00D300), color-stop(0.2, #00BA00), color-stop(0.2, #00BA00))',
+	'-webkit-gradient(linear, left top, left bottom, from(#AD7500), to(#FFAA00), color-stop(0.06, #FFB200), color-stop(0.5, #FFC700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#048BF4), to(#005CE5))',
+	'-webkit-gradient(linear, left top, left bottom, from(#E0E4E7), to(#B4BEC6), color-stop(0.5, #C4CCD2), color-stop(0.5, #BFC8CE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#FDFDFD), to(#CECECE), color-stop(0.5, #F8F8F8), color-stop(0.5, #EEEEEE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#00A200), to(#00D300), color-stop(0.2, #00BA00), color-stop(0.2, #00BA00))',
+	'-webkit-gradient(linear, left top, left bottom, from(#AD7500), to(#FFAA00), color-stop(0.06, #FFB200), color-stop(0.5, #FFC700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#BDBEBD), to(#F7F3F7))',
+	'-webkit-gradient(linear, left top, left bottom, from(#00A200), to(#00D300), color-stop(0.2, #00BA00), color-stop(0.2, #00BA00))',
+	'-webkit-gradient(linear, left top, left bottom, from(#9C9A9C), to(#848284))',
+	'-webkit-gradient(linear, left top, left bottom, from(#2D2D2D), to(#000000))',
+	'-webkit-gradient(linear, left top, left bottom, from(#484848), to(#242424))',
+	'-webkit-gradient(linear, left top, left bottom, from(#181818), to(#100C10), color-stop(0.1, #313031))',
+	'-webkit-gradient(linear, left top, left bottom, from(#A59EA5), to(#848284))',
+	'-webkit-gradient(linear, left top, left bottom, from(#FFCB00), to(#FF9A00))',
+	'-webkit-gradient(linear, left top, left bottom, from(#e5e5e5), to(#7f7f7f), color-stop(0.5, #adadad), color-stop(0.5, #909090))',
+	'-webkit-gradient(linear, left top, left bottom, from(#ad7500), to(#ffaa00), color-stop(0.06, #ffb200), color-stop(0.5, #ffc700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#FDFDFD), to(#CECECE), color-stop(0.5, #F8F8F8), color-stop(0.5, #EEEEEE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#AD7500), to(#FFAA00), color-stop(0.06, #FFB200), color-stop(0.5, #FFC700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#00A200), to(#00D300), color-stop(0.2, #00BA00), color-stop(0.2, #00BA00))',
+	'-webkit-gradient(linear, left top, left bottom, from(#AD7500), to(#FFAA00), color-stop(0.06, #FFB200), color-stop(0.5, #FFC700))',
+	'-webkit-gradient(linear, left top, left bottom, from(#9C9E9C), to(#848284))',
+	'-webkit-gradient(linear, left top, left bottom, from(#f7fbf7), to(#cecfd6), color-stop(0.5, #ced3ce))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7a9de9), to(#2362dd), color-stop(0.5, #366edf), color-stop(0.5, #215fdc))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088eef), to(#0851ad), color-stop(0.5, #0869c6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#fa9d58), to(#ee4115), color-stop(0.5, #ff4d25), color-stop(0.5, #ed4d15))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088eef), to(#0851ad), color-stop(0.5, #0869c6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088eef), to(#0851ad), color-stop(0.5, #0869c6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#f7fbf7), to(#cecfd6), color-stop(0.5, #ced3ce))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088eef), to(#0851ad), color-stop(0.5, #0869c6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#f7fbf7), to(#cecfd6), color-stop(0.5, #ced3ce))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088eef), to(#0851ad), color-stop(0.5, #0869c6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088eef), to(#0851ad), color-stop(0.5, #0869c6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7a9de9), to(#2362dd), color-stop(0.5, #366edf), color-stop(0.5, #215fdc))',
+	'-webkit-gradient(linear, left top, left bottom, from(#f7fbf7), to(#cecfd6), color-stop(0.5, #ced3ce))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088eef), to(#0851ad), color-stop(0.5, #0869c6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#4a4d52), to(#292c31))',
+	'-webkit-gradient(linear, left top, left bottom, from(#f7fbf7), to(#cecfd6), color-stop(0.5, #ced3ce))',
+	'-webkit-gradient(linear, left top, left bottom, from(#f7fbf7), to(#cecfd6), color-stop(0.5, #ced3ce))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088eef), to(#0851ad), color-stop(0.5, #0869c6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#e0e4e7), to(#b4bec6), color-stop(0.5, #c4ccd2), color-stop(0.5, #bfc8ce))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088eef), to(#0851ad), color-stop(0.5, #0869c6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#f7fbf7), to(#cecfd6), color-stop(0.5, #ced3ce))',
+	'-webkit-gradient(linear, left top, left bottom, from(#f7fbf7), to(#cecfd6), color-stop(0.5, #ced3ce))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088eef), to(#0851ad), color-stop(0.5, #0869c6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#f7f3f7), to(#cec5d6), color-stop(0.5, #ced3ce))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088eef), to(#0851ad), color-stop(0.5, #0869c6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#fafafa), to(#999999), color-stop(0.5, #bbbbbb))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088eef), to(#0851ad), color-stop(0.5, #0869c6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#f7f3f7), to(#cec5d6), color-stop(0.5, #ced3ce))',
+	'-webkit-gradient(linear, left top, left bottom, from(#fafafa), to(#999999), color-stop(0.5, #bbbbbb))',
+	'-webkit-gradient(linear, left top, left bottom, from(#4a4d52), to(#292c31))',
+	'-webkit-gradient(linear, left top, left bottom, from(#484848), to(#242424), color-stop(0.5, #353535), color-stop(0.5, #242424))',
+	'-webkit-gradient(linear, left top, left bottom, from(#181818), to(#100c10), color-stop(0.1, #313031))',
+	'-webkit-gradient(linear, left top, left bottom, from(#a59ea5), to(#848284))',
+	'-webkit-gradient(linear, left top, left bottom, from(#ffcb00), to(#ff9a00))',
+	'-webkit-gradient(linear, left top, left bottom, from(#484848), to(#242424), color-stop(0.5, #353535), color-stop(0.5, #242424))',
+	'-webkit-gradient(linear, left top, left bottom, from(#f7fbf7), to(#cecfd6), color-stop(0.5, #ced3ce))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088eef), to(#0851ad), color-stop(0.5, #0869c6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#f7fbf7), to(#cecfd6), color-stop(0.5, #ced3ce))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088eef), to(#0851ad), color-stop(0.5, #0869c6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#f7fbf7), to(#cecfd6), color-stop(0.5, #ced3ce))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088eef), to(#0851ad), color-stop(0.5, #0869c6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#4a4d52), to(#292c31))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7a9de9), to(#2362dd), color-stop(0.5, #366edf), color-stop(0.5, #215fdc))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F7FBF7), to(#CECFD6), color-stop(0.5, #CED3CE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088EEF), to(#0851AD), color-stop(0.5, #0869C6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#4A4D52), to(#292C31))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F7FBF7), to(#CECFD6), color-stop(0.5, #CED3CE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F7FBF7), to(#CECFD6), color-stop(0.5, #CED3CE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088EEF), to(#0851AD), color-stop(0.5, #0869C6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088EEF), to(#0851AD), color-stop(0.5, #0869C6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088EEF), to(#0851AD), color-stop(0.5, #0869C6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F7F3F7), to(#CEC5D6), color-stop(0.5, #CED3CE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#FAFAFA), to(#999999), color-stop(0.5, #BBBBBB))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F7FBF7), to(#CECFD6), color-stop(0.5, #CED3CE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7A9DE9), to(#2362DD), color-stop(0.5, #366EDF), color-stop(0.5, #215FDC))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088EEF), to(#0851AD), color-stop(0.5, #0869C6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#FA9D58), to(#EE4115), color-stop(0.5, #FF4D25), color-stop(0.5, #ED4D15))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088EEF), to(#0851AD), color-stop(0.5, #0869C6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088EEF), to(#0851AD), color-stop(0.5, #0869C6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F7FBF7), to(#CECFD6), color-stop(0.5, #CED3CE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088EEF), to(#0851AD), color-stop(0.5, #0869C6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F7FBF7), to(#CECFD6), color-stop(0.5, #CED3CE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088EEF), to(#0851AD), color-stop(0.5, #0869C6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088EEF), to(#0851AD), color-stop(0.5, #0869C6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#E0E4E7), to(#B4BEC6), color-stop(0.5, #C4CCD2), color-stop(0.5, #BFC8CE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F7FBF7), to(#CECFD6), color-stop(0.5, #CED3CE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F7FBF7), to(#CECFD6), color-stop(0.5, #CED3CE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088EEF), to(#0851AD), color-stop(0.5, #0869C6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F7F3F7), to(#CEC5D6), color-stop(0.5, #CED3CE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088EEF), to(#0851AD), color-stop(0.5, #0869C6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#FAFAFA), to(#999999), color-stop(0.5, #BBBBBB))',
+	'-webkit-gradient(linear, left top, left bottom, from(#4A4D52), to(#292C31))',
+	'-webkit-gradient(linear, left top, left bottom, from(#484848), to(#242424), color-stop(0.5, #353535), color-stop(0.5, #242424))',
+	'-webkit-gradient(linear, left top, left bottom, from(#181818), to(#100C10), color-stop(0.1, #313031))',
+	'-webkit-gradient(linear, left top, left bottom, from(#A59EA5), to(#848284))',
+	'-webkit-gradient(linear, left top, left bottom, from(#FFCB00), to(#FF9A00))',
+	'-webkit-gradient(linear, left top, left bottom, from(#484848), to(#242424), color-stop(0.5, #353535), color-stop(0.5, #242424))',
+	'-webkit-gradient(linear, left top, left bottom, from(#f7fbf7), to(#cecfd6), color-stop(0.5, #ced3ce))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088eef), to(#0851ad), color-stop(0.5, #0869c6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F7FBF7), to(#CECFD6), color-stop(0.5, #CED3CE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088EEF), to(#0851AD), color-stop(0.5, #0869C6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F7FBF7), to(#CECFD6), color-stop(0.5, #CED3CE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#088EEF), to(#0851AD), color-stop(0.5, #0869C6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#4A4D52), to(#292C31))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F6F6F6), to(#CCCCD1))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F6F6F6), to(#CCCCD1))',
+	'-webkit-gradient(linear, left top, left bottom, from(#84AFF4), to(#2758B3))',
+	'-webkit-gradient(linear, left top, left bottom, from(#6BA2E7), to(#216DD6), color-stop(0.5, #4282DE), color-stop(0.5, #216DD6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#6BA2E7), to(#216DD6), color-stop(0.5, #4282DE), color-stop(0.5, #216DD6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#6BA2E7), to(#216DD6), color-stop(0.5, #4282DE), color-stop(0.5, #216DD6))',
+	'-webkit-gradient(linear, left top, left bottom, from(#EFF3EF), to(#BDBEBD))',
+	'-webkit-gradient(linear, left top, left bottom, from(#EFF3EF), to(#BDBEBD))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7A9DE9), to(#2362DD), color-stop(0.5, #366EDF), color-stop(0.5, #215FDC))',
+	'-webkit-gradient(linear, left top, left bottom, from(#8EA4C1), to(#4A6C9B), color-stop(0.5, #5877A2), color-stop(0.5, #476999))',
+	'-webkit-gradient(linear, left top, left bottom, from(#D3656D), to(#BC1320), color-stop(0.5, #C9404B), color-stop(0.5, #BC1421))',
+	'-webkit-gradient(linear, left top, left bottom, from(#59E738), to(#0AA908))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7BE75A), to(#398C08), color-stop(0.5, #6BC642), color-stop(0.5, #4AAD21))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7BE75A), to(#398C08), color-stop(0.5, #6BC642), color-stop(0.5, #4AAD21))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7BE75A), to(#398C08), color-stop(0.5, #6BC642), color-stop(0.5, #4AAD21))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F9E20A), to(#FF6B0A))',
+	'-webkit-gradient(linear, left top, left bottom, from(#EC9B9D), to(#D73C3F))',
+	'-webkit-gradient(linear, left top, left bottom, from(#D3656D), to(#BC1320), color-stop(0.5, #C9404B), color-stop(0.5, #BC1421))',
+	'-webkit-gradient(linear, left top, left bottom, from(#D3656D), to(#BC1320), color-stop(0.5, #C9404B), color-stop(0.5, #BC1421))',
+	'-webkit-gradient(linear, left top, left bottom, from(#D3656D), to(#BC1320), color-stop(0.5, #C9404B), color-stop(0.5, #BC1421))',
+	'-webkit-gradient(linear, left top, left bottom, from(#EFEFEF), to(#C2C2C2))',
+	'-webkit-gradient(linear, left top, left bottom, from(#979797), to(#616161))',
+	'-webkit-gradient(linear, left top, left bottom, from(#EFEFEF), to(#C2C2C2))',
+	'-webkit-gradient(linear, left top, left bottom, from(#D4D4D4), to(#BABABA))',
+	'-webkit-gradient(linear, left top, left bottom, from(#EFEFEF), to(#C2C2C2))',
+	'-webkit-gradient(radial, center center, 0, center center, 6, from(#17DF25), to(#1BA51C))',
+	'-webkit-gradient(linear, left top, left bottom, from(#EFEFEF), to(#C2C2C2))',
+	'-webkit-gradient(linear, left top, left bottom, from(#EFEFEF), to(#C2C2C2))',
+	'-webkit-gradient(radial, center center, 0, center center, 6, from(#FF7A07), to(#E66B03))',
+	'-webkit-gradient(linear, left top, left bottom, from(#EFEFEF), to(#C2C2C2))',
+	'-moz-linear-gradient(top, #313137 0%, #73747D 5%, #92939B 7%, #ABABB5 9%, #C5C6CE 12%, #DFE0E4 16%, #F4F5F6 22%, #FBFCFC 35%, #FBFCFC 50%, #FBFCFC 61%, #B4C1C7 61%, #FBFCFC 65%, #F4F5F6 78%, #DFE0E4 84%, #C5C6CE 88%, #ABABB5 91%, #92939B 93%, #73747D 95%, #313137 100%)',
+	'-moz-linear-gradient(top, #EDEEF2 0%, #C8CADD 25%, #BBBFD4 49%, #9FA8C6 51%, #A2A9C7 81%, #A6ABC9 82%, #A7ADCA 1%)',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #313137), color-stop(0.05, #73747D), color-stop(0.07, #92939B), color-stop(0.09, #ABABB5), color-stop(0.12, #C5C6CE), color-stop(0.16, #DFE0E4), color-stop(0.22, #F4F5F6), color-stop(0.35, #FBFCFC), color-stop(0.5, #FBFCFC), color-stop(0.61, #FBFCFC), color-stop(0.61, #B4C1C7), color-stop(0.65, #FBFCFC), color-stop(0.78, #F4F5F6), color-stop(0.84, #DFE0E4), color-stop(0.88, #C5C6CE), color-stop(0.91, #ABABB5), color-stop(0.93, #92939B), color-stop(0.95, #73747D), color-stop(1, #313137))',
+	'-webkit-gradient(linear, left top, left bottom, from(#EDEEF2), to(#A7ADCA), color-stop(0, #EDEEF2), color-stop(0.25, #C8CADD), color-stop(0.49, #BBBFD4), color-stop(0.51, #9FA8C6), color-stop(0.81, #A2A9C7), color-stop(0.82, #A6ABC9), color-stop(1, #A7ADCA))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(2.5%, #ffffff), color-stop(2.5%, rgba(255, 255, 255, 0.14)), color-stop(5%, rgba(255, 255, 255, 0.14)), color-stop(5%, rgba(255, 255, 255, 0.52)), color-stop(7.5%, rgba(255, 255, 255, 0.52)), color-stop(7.5%, rgba(255, 255, 255, 0.68)), color-stop(10%, rgba(255, 255, 255, 0.68)), color-stop(1, rgba(255, 255, 255, 0)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(2.5%, #ffffff), color-stop(2.5%, rgba(255, 255, 255, 0.14)), color-stop(5%, rgba(255, 255, 255, 0.14)), color-stop(5%, rgba(255, 255, 255, 0.52)), color-stop(7.5%, rgba(255, 255, 255, 0.52)), color-stop(7.5%, rgba(255, 255, 255, 0.68)), color-stop(10%, rgba(255, 255, 255, 0.68)), color-stop(1, rgba(255, 255, 255, 0)))',
+	'-webkit-gradient(linear, left top, right bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(2.5%, #ffffff), color-stop(2.5%, rgba(255, 255, 255, 0.14)), color-stop(5%, rgba(255, 255, 255, 0.14)), color-stop(5%, rgba(255, 255, 255, 0.52)), color-stop(7.5%, rgba(255, 255, 255, 0.52)), color-stop(7.5%, rgba(255, 255, 255, 0.68)), color-stop(10%, rgba(255, 255, 255, 0.68)), color-stop(1, rgba(255, 255, 255, 0)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(2.5%, #ffffff), color-stop(2.5%, rgba(255, 255, 255, 0.14)), color-stop(5%, rgba(255, 255, 255, 0.14)), color-stop(5%, rgba(255, 255, 255, 0.52)), color-stop(7.5%, rgba(255, 255, 255, 0.52)), color-stop(7.5%, rgba(255, 255, 255, 0.68)), color-stop(10%, rgba(255, 255, 255, 0.68)), color-stop(1, rgba(255, 255, 255, 0)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	'-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	//LESS variable: '-webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(255, 255, 255, 1)), color-stop(@delta * 1, rgba(255, 255, 255, 1)), color-stop(@delta * 1, rgba(255, 255, 255, 0.14)), color-stop(@delta * 2, rgba(255, 255, 255, 0.14)), color-stop(@delta * 2, rgba(255, 255, 255, 0.52)), color-stop(@delta * 3, rgba(255, 255, 255, 0.52)), color-stop(@delta * 3, rgba(255, 255, 255, 0.68)), color-stop(@delta * 4, rgba(255, 255, 255, 0.68)), color-stop(1, rgba(255, 255, 255, 0)))',
+	//LESS variable: '-webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(255, 255, 255, 1)), color-stop(@delta * 1, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	//LESS variable: '-webkit-gradient(linear, left top, right bottom, color-stop(0, rgba(255, 255, 255, 1)), color-stop(@delta * 1, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))',
+	'-webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#cecece), color-stop(0.5, #f8f8f8), color-stop(0.5, #eeeeee))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7a9de9), to(#2362dd), color-stop(0.5, #366edf), color-stop(0.5, #215fdc))',
+	'-webkit-gradient(linear, left top, left bottom, from(#8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999))',
+	'-webkit-gradient(linear, left top, left bottom, from(#fa9d58), to(#ee4115), color-stop(0.5, #ff4d25), color-stop(0.5, #ed4d15))',
+	'-webkit-gradient(linear, left top, left bottom, from(#c1a48e), to(#9b6c4a), color-stop(0.5, #a27758), color-stop(0.5, #996947))',
+	'-webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#bfbfbf), color-stop(0.5, #ebebeb), color-stop(0.5, #dedede))',
+	'-webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#cecece), color-stop(0.5, #f8f8f8), color-stop(0.5, #eeeeee))',
+	'-webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#bfbfbf), color-stop(0.5, #ebebeb), color-stop(0.5, #dedede))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7a9de9), to(#2362dd), color-stop(0.5, #366edf), color-stop(0.5, #215fdc))',
+	'-webkit-gradient(linear, left top, left bottom, from(#8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999))',
+	'-webkit-gradient(linear, left top, left bottom, from(#048bf4), to(#005ce5))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7a9de9), to(#2362dd), color-stop(0.5, #366edf), color-stop(0.5, #215fdc))',
+	'-webkit-gradient(linear, left top, left bottom, from(#8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7c87a4), to(#263e6c), color-stop(0.5, #394d77), color-stop(0.5, #243b69))',
+	'-webkit-gradient(linear, left top, left bottom, from(#8f9ea9), to(#b7c0c7))',
+	'-webkit-gradient(linear, left top, left bottom, from(#b0bccd), to(#6d84a2), color-stop(0.5, #889bb3), color-stop(0.5, #8195af))',
+	'-webkit-gradient(linear, left top, right bottom, from(#8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999))',
+	'-webkit-gradient(linear, left top, left bottom, from(#8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999))',
+	'-webkit-gradient(linear, left top, right bottom, from(#7c87a4), to(#263e6c), color-stop(0.5, #394d77), color-stop(0.5, #243b69))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7c87a4), to(#263e6c), color-stop(0.5, #394d77), color-stop(0.5, #243b69))',
+	'-webkit-gradient(linear, left top, left bottom, from(#e0e4e7), to(#b4bec6), color-stop(0.5, #c4ccd2), color-stop(0.5, #bfc8ce))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F3F4F6), to(#A7ABB8))',
+	'-webkit-gradient(linear, left top, left bottom, from(#5E6167), to(#1A1D24), color-stop(0.5, #2E322B))',
+	'-webkit-gradient(linear, left top, left bottom, from(#686F80), to(#000924), color-stop(0.5, #000B29))',
+	'-webkit-gradient(linear, left top, right bottom, from(#B1B5BB), to(#6A727D))',
+	'-webkit-gradient(linear, left top, left bottom, from(#B1B5BB), to(#6A727D))',
+	'-webkit-gradient(linear, left top, right bottom, from(#9DA0A3), to(#43484F))',
+	'-webkit-gradient(linear, left top, left bottom, from(#9DA0A3), to(#43484F))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F3F4F6), to(#A7ABB8))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F3F4F6), to(#A7ABB8))',
+	'-webkit-gradient(linear, left top, left bottom, from(#B1B5BB), to(#6A727D))',
+	'-webkit-gradient(linear, left top, left bottom, from(#B1B5BB), to(#6A727D))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7A7E85), to(#303845))',
+	'-webkit-gradient(linear, left top, left bottom, from(#B0BCCD), to(#6D84A2), color-stop(0.5, #889BB3), color-stop(0.5, #8195AF))',
+	'-webkit-gradient(linear, left top, left bottom, from(#048bf4), to(#005ce5))',
+	'-webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#cecece))',
+	'-webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#cecece), color-stop(0.5, #f8f8f8), color-stop(0.5, #eeeeee))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7a9de9), to(#2362dd), color-stop(0.5, #366edf), color-stop(0.5, #215fdc))',
+	'-webkit-gradient(linear, left top, left bottom, from(#8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999))',
+	'-webkit-gradient(linear, left top, left bottom, from(#ababab), to(#fefefe))',
+	'-webkit-gradient(linear, left top, left bottom, from(#0d48a8), to(#68a6f8))',
+	'-webkit-gradient(linear, left top, left bottom, from(#a6a6a6), to(#fcfcfc))',
+	'-webkit-gradient(linear, left top, left bottom, from(#2859b1), to(#75acfb), color-stop(0.5, #3f84eb), color-stop(0.5, #4c8eee))',
+	'-webkit-gradient(linear, left top, left bottom, from(#cecece), to(#fdfdfd), color-stop(0.5, #eeeeee), color-stop(0.5, #f8f8f8))',
+	'-webkit-gradient(linear, left top, left bottom, from(#cccccc), to(#fafafa))',
+	'-webkit-gradient(linear, left top, left bottom, from(#2d2d2d), to(#000000), color-stop(0.5, #141414), color-stop(0.5, #000000))',
+	'-webkit-gradient(linear, left top, left bottom, from(#484848), to(#242424), color-stop(0.5, #353535), color-stop(0.5, #242424))',
+	'-webkit-gradient(linear, left top, left bottom, from(#abb9ca), to(#788da9), color-stop(0.5, #8297af), color-stop(0.5, #768ba7))',
+	'-webkit-gradient(linear, left top, left bottom, from(#b0bccd), to(#6d84a2), color-stop(0.5, #889bb3), color-stop(0.5, #8195af))',
+	'-webkit-gradient(linear, left top, left bottom, from(#8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999))',
+	'-webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#cecece), color-stop(0.5, #f8f8f8), color-stop(0.5, #eeeeee))',
+	'-webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#bfbfbf), color-stop(0.5, #ebebeb), color-stop(0.5, #dedede))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7a9de9), to(#2362dd), color-stop(0.5, #366edf), color-stop(0.5, #215fdc))',
+	'-webkit-gradient(linear, left top, left bottom, from(#8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999))',
+	'-webkit-gradient(linear, left top, left bottom, from(#656872), to(#121b2f), color-stop(0.1, #2c3345), color-stop(0.1, #161f32))',
+	'-webkit-gradient(linear, left top, left bottom, from(#5e6167), to(#1a1d24), color-stop(0.5, #2e322b))',
+	'-webkit-gradient(linear, left top, left bottom, from(#686f80), to(#000924), color-stop(0.5, #000b29))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7A9DE9), to(#2362DD), color-stop(0.5, #366EDF), color-stop(0.5, #215FDC))',
+	'-webkit-gradient(linear, left top, left bottom, from(#8EA4C1), to(#4A6C9B), color-stop(0.5, #5877A2), color-stop(0.5, #476999))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7C87A4), to(#263E6C), color-stop(0.5, #394D77), color-stop(0.5, #243B69))',
+	'-webkit-gradient(linear, left top, left bottom, from(#B0BCCD), to(#6D84A2), color-stop(0.5, #889BB3), color-stop(0.5, #8195AF))',
+	'-webkit-gradient(linear, left top, right bottom, from(#8EA4C1), to(#4A6C9B), color-stop(0.5, #5877A2), color-stop(0.5, #476999))',
+	'-webkit-gradient(linear, left top, left bottom, from(#8EA4C1), to(#4A6C9B), color-stop(0.5, #5877A2), color-stop(0.5, #476999))',
+	'-webkit-gradient(linear, left top, right bottom, from(#7C87A4), to(#263E6C), color-stop(0.5, #394D77), color-stop(0.5, #243B69))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7C87A4), to(#263E6C), color-stop(0.5, #394D77), color-stop(0.5, #243B69))',
+	'-webkit-gradient(linear, left top, left bottom, from(#8F9EA9), to(#B7C0C7))',
+	'-webkit-gradient(linear, left top, left bottom, from(#048BF4), to(#005CE5))',
+	'-webkit-gradient(linear, left top, left bottom, from(#2859B1), to(#75ACFB), color-stop(0.5, #3F84EB), color-stop(0.5, #4C8EEE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#CECECE), to(#FDFDFD), color-stop(0.5, #EEEEEE), color-stop(0.5, #F8F8F8))',
+	'-webkit-gradient(linear, left top, left bottom, from(#CCCCCC), to(#FAFAFA))',
+	'-webkit-gradient(linear, left top, left bottom, from(#FDFDFD), to(#CECECE), color-stop(0.5, #F8F8F8), color-stop(0.5, #EEEEEE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7A9DE9), to(#2362DD), color-stop(0.5, #366EDF), color-stop(0.5, #215FDC))',
+	'-webkit-gradient(linear, left top, left bottom, from(#8EA4C1), to(#4A6C9B), color-stop(0.5, #5877A2), color-stop(0.5, #476999))',
+	'-webkit-gradient(linear, left top, left bottom, from(#FA9D58), to(#EE4115), color-stop(0.5, #FF4D25), color-stop(0.5, #ED4D15))',
+	'-webkit-gradient(linear, left top, left bottom, from(#C1A48E), to(#9B6C4A), color-stop(0.5, #A27758), color-stop(0.5, #996947))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F0F0F0), to(#BFBFBF), color-stop(0.5, #EBEBEB), color-stop(0.5, #DEDEDE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#FDFDFD), to(#CECECE), color-stop(0.5, #F8F8F8), color-stop(0.5, #EEEEEE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F0F0F0), to(#BFBFBF), color-stop(0.5, #EBEBEB), color-stop(0.5, #DEDEDE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7A9DE9), to(#2362DD), color-stop(0.5, #366EDF), color-stop(0.5, #215FDC))',
+	'-webkit-gradient(linear, left top, left bottom, from(#8EA4C1), to(#4A6C9B), color-stop(0.5, #5877A2), color-stop(0.5, #476999))',
+	'-webkit-gradient(linear, left top, left bottom, from(#048BF4), to(#005CE5))',
+	'-webkit-gradient(linear, left top, left bottom, from(#E0E4E7), to(#B4BEC6), color-stop(0.5, #C4CCD2), color-stop(0.5, #BFC8CE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#FDFDFD), to(#CECECE), color-stop(0.5, #F8F8F8), color-stop(0.5, #EEEEEE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7A9DE9), to(#2362DD), color-stop(0.5, #366EDF), color-stop(0.5, #215FDC))',
+	'-webkit-gradient(linear, left top, left bottom, from(#8EA4C1), to(#4A6C9B), color-stop(0.5, #5877A2), color-stop(0.5, #476999))',
+	'-webkit-gradient(linear, left top, left bottom, from(#ABABAB), to(#FEFEFE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#0D48A8), to(#68A6F8))',
+	'-webkit-gradient(linear, left top, left bottom, from(#A6A6A6), to(#FCFCFC))',
+	'-webkit-gradient(linear, left top, left bottom, from(#2D2D2D), to(#000000), color-stop(0.5, #141414), color-stop(0.5, #000000))',
+	'-webkit-gradient(linear, left top, left bottom, from(#484848), to(#242424), color-stop(0.5, #353535), color-stop(0.5, #242424))',
+	'-webkit-gradient(linear, left top, left bottom, from(#ABB9CA), to(#788DA9), color-stop(0.5, #8297AF), color-stop(0.5, #768BA7))',
+	'-webkit-gradient(linear, left top, left bottom, from(#B0BCCD), to(#6D84A2), color-stop(0.5, #889BB3), color-stop(0.5, #8195AF))',
+	'-webkit-gradient(linear, left top, left bottom, from(#8EA4C1), to(#4A6C9B), color-stop(0.5, #5877A2), color-stop(0.5, #476999))',
+	'-webkit-gradient(linear, left top, left bottom, from(#FDFDFD), to(#CECECE), color-stop(0.5, #F8F8F8), color-stop(0.5, #EEEEEE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#F0F0F0), to(#BFBFBF), color-stop(0.5, #EBEBEB), color-stop(0.5, #DEDEDE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#7A9DE9), to(#2362DD), color-stop(0.5, #366EDF), color-stop(0.5, #215FDC))',
+	'-webkit-gradient(linear, left top, left bottom, from(#8EA4C1), to(#4A6C9B), color-stop(0.5, #5877A2), color-stop(0.5, #476999))',
+	'-webkit-gradient(linear, left top, left bottom, from(#FDFDFD), to(#CECECE))',
+	'-webkit-gradient(linear, left top, left bottom, from(#656872), to(#121B2F), color-stop(0.1,#2C3345),color-stop(0.1,#161F32))',
+	'-webkit-gradient(linear, left top, left bottom, from(#5E6167), to(#1A1D24), color-stop(0.5, #2E322B))',
+	'-webkit-gradient(linear, left top, left bottom, from(#686F80), to(#000924), color-stop(0.5, #000B29))'
+	];
+	var regex_linear = new RegExp(davinci.ve.utils.CssUtils.linear_gradient);
+	var regex_radial = new RegExp(davinci.ve.utils.CssUtils.radial_gradient);
+	var regex_webkit_linear_gradient_orig = new RegExp(davinci.ve.utils.CssUtils.webkit_linear_gradient_orig);
+	var regex_webkit_radial_gradient_orig = new RegExp(davinci.ve.utils.CssUtils.webkit_radial_gradient_orig);
+	for (var i=0; i<dojoxmobilesamples.length; i++){
+		var result = dojoxmobilesamples[i].match(regex_webkit_linear_gradient_orig);
+		if(!result){
+			result = dojoxmobilesamples[i].match(regex_webkit_radial_gradient_orig);
+		}
+		if(!result){
+			result = dojoxmobilesamples[i].match(regex_linear);
+		}
+		if(!result){
+			result = dojoxmobilesamples[i].match(regex_radial);
+		}
+		if(result == null){
+			console.log('null for: '+dojoxmobilesamples[i]);
+		}
+		//console.dir(result);
+	}
+	console.log('test_dojoxmobilesamples end');	
+}
+
+/* -web-kit radial gradient examples from http://www.the-art-of-web.com/css/radial-gradients/
+ * background: -webkit-gradient( radial, 500 25%, 20, 500 25%, 40, from(blue), to(#eef) );
+ * background: -webkit-gradient( radial, 500 25%, 0, 500 25%, 40, from(blue), to(#eef) ) #f90;
+ * background: -webkit-gradient( radial, 490 25%, 20, 500 25%, 40, from(blue), to(#eef) ) #f90;
+ * background: -webkit-gradient( radial, 500 50%, 10, 500 50%, 80, from(orange), color-stop(0.2, #fff), to(lightblue))
+ * background: -webkit-gradient( radial, 500 50%, 20, 500 50%, 100, from(red), color-stop(0.2, orange), color-stop(0.4, yellow), color-stop(0.6, green), color-stop(0.8, blue), to(#fff) )
+ */
+
+console.log('Start tests.\nFailed tests show lines that say "null for: <test string>".\n\n');
+test_linear_gradient_spec_samples();
+test_radial_gradient_spec_samples();
+test_dojoxmobilesamples();
+
+</script>
+

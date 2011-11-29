@@ -8,7 +8,7 @@
         <meta http-equiv="Cache-Control" CONTENT="post-check=0, pre-check=0",  FALSE">
         <meta http-equiv="Pragma" CONTENT="no-cache">
         <style type="text/css">
-            @import url("app/davinci/workbench.css");
+            @import url("maqetta/app/davinci/workbench.css");
 
             html, body {
                 width: 100%;
@@ -19,26 +19,25 @@
         <script type="text/javascript" src="app/OpenAjax/hub20/OpenAjaxManagedHub-core.js"></script>
         <script type="text/javascript" src="app/OpenAjax/widget/openajax_metadata.js"></script>
         -->
-        <script type="text/javascript" src="app/dojo/dojo.js" djConfig="parseOnLoad: false"></script>
+        <script type="text/javascript" src="maqetta/app/dojo/dojo.js" djConfig="parseOnLoad: false"></script>
         <script type="text/javascript">
             dojo.require("dijit.dijit");
             dojo.require("davinci.davinci-common");
             dojo.require("davinci.davinci");
             dojo.require("davinci.review.Review");
 
-            davinci.Runtime.addPlugin("app/davinci/ui");
-            davinci.Runtime.addPlugin("app/davinci/js/js");
+            davinci.Runtime.addPlugin("maqetta/app/davinci/ui");
+            davinci.Runtime.addPlugin("maqetta/app/davinci/js/js");
 
-            davinci.Runtime.addPlugin("app/davinci/html/html");
-            davinci.Runtime.addPlugin("app/davinci/review/review");
-            davinci.Runtime.addPlugin("app/davinci/ve/ve");
-            davinci.Runtime.addPlugin("app/davinci/html/html" );
-            davinci.Runtime.addPlugin("app/davinci/ve/themeEditor/themeEditor" );
+            davinci.Runtime.addPlugin("maqetta/app/davinci/html/html");
+            davinci.Runtime.addPlugin("maqetta/app/davinci/review/review");
+            davinci.Runtime.addPlugin("maqetta/app/davinci/ve/ve");
+            davinci.Runtime.addPlugin("maqetta/app/davinci/html/html" );
+            davinci.Runtime.addPlugin("maqetta/app/davinci/ve/themeEditor/themeEditor" );
 
             davinci.Runtime.initialPerspective = "davinci.review.comment";
             
-            function globalize()
-            {
+            function globalize() {
               var langObj = dojo.i18n.getLocalization("davinci","webContent");
               dojo.byId("davinci_user_welcome").innerHTML = langObj.welcome;
               dojo.byId("davinci_logoff").innerHTML = langObj.logOff;
@@ -73,8 +72,7 @@
                 if(!result) return;
                 if (result && result.userName) {
                     dojo.byId('davinci_user').innerHTML = result.userName;
-                }
-                else {
+                } else {
                     //FIXME: temporary fix for running via file: URLs
                     dojo.byId('davinci_user').innerHTML = "Davinci User";
                 }

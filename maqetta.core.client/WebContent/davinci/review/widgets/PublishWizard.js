@@ -181,7 +181,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 		var formatPic = function(result){
 			if(!this.photoRepositoryUrl){
 				this.photoRepositoryUrl = davinci.Runtime.serverJSONRequest({
-					url:"maqetta/cmd/getBluePageInfo",
+					url:"cmd/getBluePageInfo",
 					handleAs: "text",
 					content:{'type': "photo"},
 					sync: true
@@ -259,7 +259,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 		},this.addReviewerButton);
 		
 		var stateStore = new dojox.data.QueryReadStore({
-			url: "maqetta/cmd/getBluePageInfo",
+			url: "cmd/getBluePageInfo",
 			fetch: function(request) {
 				var searchQuery = request.query.displayName;
 				searchQuery = searchQuery.substring(0, searchQuery.length - 1);
@@ -581,7 +581,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 		this.isRestart =  isRestart;
 		if(!node){
 			var	latestVersionId = davinci.Runtime.serverJSONRequest({
-	            url: "maqetta/cmd/getLatestVersionId",
+	            url: "cmd/getLatestVersionId",
 	            sync: true
 	        });
 			
@@ -677,7 +677,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 		var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
 		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 		
-		dojo.xhrPost({url:"maqetta/cmd/publish",sync:false,handleAs:"text",
+		dojo.xhrPost({url:"cmd/publish",sync:false,handleAs:"text",
 			content:{
 			'isUpdate':this.node&&!this.isRestart?true:false,
 			'isRestart':this.isRestart?true:false,

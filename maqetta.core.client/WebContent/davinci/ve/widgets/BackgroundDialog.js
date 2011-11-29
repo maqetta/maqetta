@@ -17,6 +17,7 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 	
 	templateString: dojo.cache("davinci.ve.widgets", "templates/BackgroundDialog.html"),
 	widgetsInTemplate: true,
+	_filePicker : null,
 	
 	stopRowTemplate:"<tr class='bgdGradOptRow bgdStopRow' style='display:none;'>"+
 				"<td class='bgdCol1'></td>"+
@@ -122,10 +123,7 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 		}));
 		bgProps['background-color'].bgdWidget = this.bgdColorCB;
 
-		var bgdFileNameTextBox = this.fileDialogFileName;
-		bgdFileNameTextBox.attr('store', ppImageCB.store);
-		bgdFileNameTextBox.attr('value', (bgddata && bgddata.url) ? bgddata.url : '');
-		this.fileDialogButton.attr('label', langObj.bgdPickFile);
+	
 
 		var ppRepeatCB = bgProps['background-repeat'].comboBox;
 		ppValue = ppRepeatCB.attr('value');
@@ -235,7 +233,24 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 		}
 		this._initializeStops(stops);
 	},
-	
+	startup: function(){
+		this.inherited(arguments);
+		/* back ground image box */
+		
+		this._filePicker.attr('value', (this.bgddata && this.bgddata.url) ? this.bgddata.url : '');
+		this.connect(this._filePicker, 'onChange', dojo.hitch(this,function(){
+			this.bgddata.url = this._filePicker.attr('value');
+			this._onFieldChanged();
+		}));
+		
+	},
+	/*
+	 * This is the base location for the file in question.  Used to caluclate relativity for url(...)
+	 */
+	_setBaseLocationAttr : function(baseLocation){
+		dojo.attr(this._filePicker, "baseLocation", baseLocation);
+	},
+
 	_updateBackgroundImageType : function(type){
 		var domNode = this.domNode;
 		if(!(type && (type=='none' || type=='url' || type=='linear' || type=='radial' || type=='other'))){
@@ -403,6 +418,7 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 
 	_updateBackgroundPreview: function(){
 //FIXME: Only supports gradients so far
+	
 		var CssUtils = davinci.ve.utils.CssUtils;
 		var previewSpan = dojo.query('.bgdPreview', this.domNode)[0];
 		var a = CssUtils.buildBackgroundImage(this.bgddata);

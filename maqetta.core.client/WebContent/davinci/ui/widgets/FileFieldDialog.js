@@ -68,14 +68,16 @@ dojo.declare("davinci.ui.widgets.FileFieldDialog", [davinci.workbench.WidgetLite
 			dojo.connect(okButton, "onclick", this, function(){  
 				fileDialog.saveData();
 				var value = data.file.getPath(); 
-				dojo.attr(this._textField, "value", value);
+				var _textField = dojo.byId(this._textField);
+				dojo.attr(_textField, "value", value);
 				dialog.hide();
 				this._onChange();
 			}, true);
 		});
 		
-		this._textField = dojo.byId(this._textField);
-		dojo.connect(this._textField,"onchange", this,"_onChange");
+	//	this._textField = dojo.byId(this._textField);
+		var _textField = dojo.byId(this._textField);
+		dojo.connect(_textField,"onchange", this,"_onChange");
 		
 	},
 	_setBaseLocationAttr : function(baseLocation){
@@ -87,24 +89,28 @@ dojo.declare("davinci.ui.widgets.FileFieldDialog", [davinci.workbench.WidgetLite
 	_setValueAttr : function(value){
 		 if(this.value!= value ){
 			this.value = value;
-			dojo.attr(this._textField, "value", value);
+			var _textField = dojo.byId(this._textField);
+			dojo.attr(_textField, "value", value);
 		 }
 	},
 	_onChange : function(){
-		var v1 = dojo.attr(this._textField, "value");
+		var _textField = dojo.byId(this._textField);
+		var v1 = dojo.attr(_textField, "value");
 		
 		var path=new davinci.model.Path(v1);
 		var value=path.relativeTo(new davinci.model.Path(this._baseLocation), true).toString(); // ignore the filename to get the correct path to the image
 		
+		/*
 		if(v1 && v1!="")
 			value = "url('" + value + "')";
 		else 
 			value = "";
-		
+		*/
 		if(this.value!=value){
 			
 			this.value = value;
-			dojo.attr(this._textField, 'value', this.value);
+			var _textField = dojo.byId(this._textField);
+			dojo.attr(_textField, 'value', this.value);
 			this.onChange(value);
 		}
 	},

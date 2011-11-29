@@ -156,6 +156,7 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 					cascade._valueArrayNew = cascade._valueArray;
 				}
 			}
+			background.attr('baseLocation', this._baseLocation);
 			davinci.Workbench.showModal(background, "Background", 'opacity:0', executor);
 		});
 		this.connect(this._comboBox, 'onChange', dojo.hitch(this, function(event){

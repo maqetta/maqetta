@@ -79,10 +79,14 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 				node=parentNode.children[i];
 				if(dojo.hasClass(node,"mblView")){
 					if(node==domNode){
-						command.add(new davinci.ve.commands.StyleCommand(node._dvWidget, {display:""}));	
+						var a = [];
+						a.push({display:""})
+						command.add(new davinci.ve.commands.StyleCommand(node._dvWidget, a));	
 						command.add(new davinci.ve.commands.ModifyAttributeCommand(node._dvWidget, {selected:"true"}));	
 					}else{
-						command.add(new davinci.ve.commands.StyleCommand(node._dvWidget, {display:"none"}));	
+						var a = [];
+						a.push({display:"none"})
+						command.add(new davinci.ve.commands.StyleCommand(node._dvWidget, a));	
 						command.add(new davinci.ve.commands.ModifyAttributeCommand(node._dvWidget, {selected:null}));
 					}	
 				}

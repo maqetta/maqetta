@@ -47,6 +47,13 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
         this._connections.push(dojo.connect(dijit.byId('theme_select_mobile_theme_select'), "onChange", this, "onMobileChange"));
         this._connections.push(dojo.connect(dijit.byId('theme_select_ok_button'), "onClick", this, "onOk"));
         this._connections.push(dojo.connect(dijit.byId('theme_select_cancel_button'), "onClick", this, "onClose"));
+        
+        this._connections.push(dojo.connect(dijit.byId('theme_select_android_select'), "onChange", this, "onAndroidThemeChange"));
+        this._connections.push(dojo.connect(dijit.byId('theme_select_blackberry_select'), "onChange", this, "onBlackberryThemeChange"));
+        this._connections.push(dojo.connect(dijit.byId('theme_select_ipad_select'), "onChange", this, "oniPadThemeChange"));
+        this._connections.push(dojo.connect(dijit.byId('theme_select_iphone_select'), "onChange", this, "oniPhoneThemeChange"));
+        this._connections.push(dojo.connect(dijit.byId('theme_select_other_select'), "onChange", this, "onOtherThemeChange"));
+        
         this.addThemeSets();
         this._selectedThemeSet = this._dojoThemeSets.themeSets[0];
         dijit.byId('theme_select_themeset_theme_select_textbox').attr('value',this._selectedThemeSet.name);
@@ -243,6 +250,7 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
     },
     
     onChange : function(e){
+
         var name = e.target[e.target.selectedIndex].value;
         for (var i = 0; i < this._dojoThemeSets.themeSets.length; i++){
             if (this._dojoThemeSets.themeSets[i].name == name) {
@@ -308,36 +316,38 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
         
     },
     
-    
-    updateDeviceThemes: function(){
-
-        for (var i = 0; i < this._selectedThemeSet.mobileTheme.length; i++){
-            var select;
-            switch (this._selectedThemeSet.mobileTheme[i].device.toLowerCase()){
-            case 'android' :
-                select = dijit.byId('theme_select_android_select');
+    onDeviceThemeChange: function(device, e){
+        for (var d = 0; d < this._selectedThemeSet.mobileTheme.length; d++){
+            if (this._selectedThemeSet.mobileTheme[d].device.toLowerCase() === device.toLowerCase()){
+                this._selectedThemeSet.mobileTheme[d].theme = e;
                 break;
-            case 'blackberry' :
-                select = dijit.byId('theme_select_blackberry_select');
-                break;
-            case 'ipad' :
-                select = dijit.byId('theme_select_ipad_select');
-                break;
-            case 'iphone' :
-                select = dijit.byId('theme_select_iphone_select');
-                break;
-            default :
-                select = dijit.byId('theme_select_other_select');
-                
             }
-            this._selectedThemeSet.mobileTheme[i].theme = select.attr( 'value');
         }
-
     },
     
+    onAndroidThemeChange: function(e){
+        this.onDeviceThemeChange('android', e);
+    },
     
+    onBlackberryThemeChange: function(e){
+        this.onDeviceThemeChange('blackberry', e);
+    },
+    
+    oniPadThemeChange: function(e){
+        this.onDeviceThemeChange('ipad', e);
+    },
+    
+    oniPhoneThemeChange: function(e){
+        this.onDeviceThemeChange('iphone', e);
+    },
+    
+    onOtherThemeChange: function(e){
+        this.onDeviceThemeChange('other', e);
+    },
+    
+       
      onOk: function(e){
-  
+
          davinci.workbench.Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(),this._dojoThemeSets);
          this.onClose(e);
 

@@ -34,6 +34,23 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 		this.hideDetailsLabel.innerHTML = langObj.nhfoHideDetails;
 		
 		var lastDialogValues = davinci.Workbench.workbenchStateCustomPropGet('nhfo');
+		this._selectedThemeSet = lastDialogValues.themeSet;
+		if (this._selectedThemeSet && this._selectedThemeSet.name != davinci.theme.none_themeset_name) {
+		   // refresh the stored themeset in case it was changed
+		    var themeSetName = this._selectedThemeSet.name;
+		    this._selectedThemeSet = dojo.clone(davinci.theme.none_themeset); // this will act as the default if the last used themeset has been deleted
+		    var dojoThemeSets = davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
+		    if (dojoThemeSets) {
+		        for (var s = 0; s < dojoThemeSets.themeSets.length; s++){
+		            if (dojoThemeSets.themeSets[s].name === themeSetName) {
+		                // replace to make sure it is fresh
+		                this._selectedThemeSet = dojo.clone(dojoThemeSets.themeSets[s]);
+		                break;
+		            }
+		        }
+		    }
+		    
+		}
 		_updateWithLastDialogValue = function(widget, opts, lastDialogValue){
 			// If there was a persisted value from last time dialog was shown
 			// and persisted value is a valid choice, then update the given widget
@@ -99,8 +116,7 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 		    {value: "absolute", label: langObj.nhfoLAMenu_absolute}
 		];
 		this.layoutSelect.addOption(optsLA);
-
-		//FIXME: Need to make a query call to collect available themes and theme sets
+		
 		var optsTH = [
 		  	{value: "deviceSpecific", label: langObj.nhfoTHMenu_devicespecific},
 			{value: "claro", label: 'claro'},
@@ -109,8 +125,12 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 		this.themeSelect.addOption(optsTH);
 		this.editThemeNode = dojo.query('.nhfo_edit_theme',this.domNode)[0];
 		this.connect(this.editThemeNode, 'onclick', dojo.hitch(this,function(e){
-			//FIXME: Need to bring up theme select dialog
-			alert('Edit theme button not yet implemented');
+			this._themeSelectionDialog = new davinci.ui.widgets.ThemeSetSelection({newFile: true});
+			this._themeSelectionDialog.buildRendering();
+			this.connect(this._themeSelectionDialog, 'onOk', dojo.hitch(this, function(e){
+			    this._selectedThemeSet = this._themeSelectionDialog._selectedThemeSet;
+			    this._updateThemesAndThemeSets();
+			}));
 		}));
 
 		if(lastDialogValues){
@@ -122,6 +142,7 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 			_updateWithLastDialogValue(this.layoutSelect, optsLA, lastDialogValues.layout);
 			_updateWithLastDialogValue(this.themeSelect, optsTH, lastDialogValues.theme);
 		}
+		//this._updateThemesAndThemeSets();
 		this.connect(this.compositionTypeSelect, 'onChange', dojo.hitch(this,function(){
 			this._update_comp_type();
 		}));
@@ -129,6 +150,9 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 			var compType = this.compositionTypeSelect.attr('value');
 			if(compType == 'mobile' || compType == 'custom'){
 				this.lastExplicitDevice = this.deviceSelect.attr('value');
+			}
+			if (compType == 'custom' && this._selectedThemeSet) {
+			    this._updateThemesAndThemeSets();
 			}
 			this._switch_to_custom();
 		}));
@@ -151,6 +175,11 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 	 */
 	_update_comp_type: function(){
 		var compType = this.compositionTypeSelect.attr('value');
+		if (compType != 'custom') {
+		    delete this._selectedThemeSet;
+		} else if (!this._selectedThemeSet){
+		    this._selectedThemeSet = dojo.clone(davinci.theme.none_themeset);
+		}
 		this.compositionTypeSelect.attr('title',this.langObj['nhfoCTTitle_'+compType]);	// tooltip
 		if(compType === 'desktop' || compType === 'sketch' || compType === 'wireframe'){
 			this.deviceSelect.attr('value','desktop');
@@ -175,9 +204,9 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 		var standardCompType = this.standardCompTypes[compType];
 		if(standardCompType){
 			this.layoutSelect.attr('value', standardCompType.layout);
-			//FIXME: Needs to replaced with something more complicated that deals with theme sets
 			this.themeSelect.attr('value', standardCompType.theme);
 		}
+
 	},
 	
 	/**
@@ -234,8 +263,41 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 			device: this.deviceSelect.attr('value'),
 			layout: this.layoutSelect.attr('value'),
 			theme: this.themeSelect.attr('value'),
-			lastExplicitDevice: this.lastExplicitDevice
+			lastExplicitDevice: this.lastExplicitDevice,
+			themeSet: this._selectedThemeSet
 		};
+	},
+	
+	_updateThemesAndThemeSets: function(e){
+	    
+	    var themeName = this._selectedThemeSet.name;
+	    if (themeName == davinci.theme.none_themeset_name){
+	        var deviceSelect = this.deviceSelect.attr('value');
+	        if (deviceSelect == 'desktop') {
+	            themeName = this._selectedThemeSet.desktopTheme;
+	        } else {
+    	        for (var x = 0; x < this._selectedThemeSet.mobileTheme.length; x  ++){
+    	            if (deviceSelect.toLowerCase().indexOf(this._selectedThemeSet.mobileTheme[x].device.toLowerCase()) > -1){ 
+    	                themeName = this._selectedThemeSet.mobileTheme[x].theme;
+    	                break;
+    	            }
+    	        }
+	        }
+	        
+	    }
+	    var found = false;
+	    for (var i=0; i<this.themeSelect.options.length; i++){
+            if(this.themeSelect.options[i].value == themeName){
+                found = true;
+                break;
+            }
+        }
+	    if (!found){
+	        this.themeSelect.addOption({value: themeName, label: themeName});
+	    } 
+	    this.themeSelect.attr('value', themeName);
+	    
+
 	}
 
 });

@@ -78,17 +78,16 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 			for(var i=0;i<parentNode.children.length;i++){
 				node=parentNode.children[i];
 				if(dojo.hasClass(node,"mblView")){
+					var display, selected;
 					if(node==domNode){
-						var a = [];
-						a.push({display:""})
-						command.add(new davinci.ve.commands.StyleCommand(node._dvWidget, a));	
-						command.add(new davinci.ve.commands.ModifyAttributeCommand(node._dvWidget, {selected:"true"}));	
+						display = "";
+						selected = "true";
 					}else{
-						var a = [];
-						a.push({display:"none"})
-						command.add(new davinci.ve.commands.StyleCommand(node._dvWidget, a));	
-						command.add(new davinci.ve.commands.ModifyAttributeCommand(node._dvWidget, {selected:null}));
+						display = "none";
+						selected = null;
 					}	
+					command.add(new davinci.ve.commands.StyleCommand(node._dvWidget, [{display: display}]));	
+					command.add(new davinci.ve.commands.ModifyAttributeCommand(node._dvWidget, {selected: selected}));	
 				}
 			}
 			context.getCommandStack().execute(command);
@@ -99,7 +98,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 	 * Called by Outline palette whenever user toggles visibility by clicking on eyeball.
 	 * @param {davinci.ve._Widget} widget  Widget whose visibility is being toggled
 	 * @param {boolean} on  Whether given widget is currently visible
-	 * @return {boolean}  whether standard toggle proceessing should proceed
+	 * @return {boolean}  whether standard toggle processing should proceed
 	 * FIXME: Better if helper had a class inheritance setup
 	 */
 	onToggleVisibility: function(widget, on){

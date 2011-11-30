@@ -34,7 +34,7 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 		this.hideDetailsLabel.innerHTML = langObj.nhfoHideDetails;
 		
 		var lastDialogValues = davinci.Workbench.workbenchStateCustomPropGet('nhfo');
-		this._selectedThemeSet = lastDialogValues.themeSet;
+		this._selectedThemeSet = lastDialogValues ? lastDialogValues.themeSet : undefined;
 		if (this._selectedThemeSet && this._selectedThemeSet.name != davinci.theme.none_themeset_name) {
 		   // refresh the stored themeset in case it was changed
 		    var themeSetName = this._selectedThemeSet.name;

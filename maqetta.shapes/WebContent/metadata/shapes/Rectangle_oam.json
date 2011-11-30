@@ -1,0 +1,46 @@
+{
+    "id": "http://www.maqetta.org/shapes/Rectangle",
+    "name": "Rectangle",
+    "spec": "1.0",
+    "version": "1.0",
+    "library": {
+        "shapes": {
+            "src": "../../../shapes"
+        },
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "shapes/Rectangle",
+            "$library": "shapes"
+        },
+        {
+            "type": "css",
+            "src": "shapes.css",
+            "$library": "shapes"
+        }
+    ],
+    "property": {
+    	"x":{
+            "datatype": "number",
+            "defaultValue": "0"
+        },
+    	"y":{
+            "datatype": "number",
+            "defaultValue": "0"
+        },
+    	"width":{
+            "datatype": "number",
+            "defaultValue": "80"
+        },
+    	"height":{
+            "datatype": "number",
+            "defaultValue": "80"
+        }
+    },
+    "content": "<span></span>"
+}

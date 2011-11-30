@@ -1,0 +1,34 @@
+{
+    "id": "http://www.maqetta.org/shapes/Text",
+    "name": "shapes.Text",
+    "spec": "1.0",
+    "version": "1.0",
+    "library": {
+        "shapes": {
+            "src": "../../../shapes"
+        },
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "shapes/Text",
+            "$library": "shapes"
+        },
+        {
+            "type": "css",
+            "src": "shapes.css",
+            "$library": "shapes"
+        }
+    ],
+    "property": {
+    	"content":{
+            "datatype": "string",
+            "defaultValue": "Text"
+        }
+    },
+    "content": "<span></span>"
+}

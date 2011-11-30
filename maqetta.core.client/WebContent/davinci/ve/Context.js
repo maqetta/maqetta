@@ -611,7 +611,7 @@ return declare("davinci.ve.Context", null, {
     	var model = this.getModel();
        	var defaultThemeName="claro";
        	if (newHtmlParms && newHtmlParms.themeSet) {
-       	 defaultThemeName = newHtmlParms.themeSet.desktopTheme;
+       	    defaultThemeName = newHtmlParms.themeSet.desktopTheme;
        	}
     	var imports = model.find({elementType:'CSSImport'});
 		
@@ -651,9 +651,10 @@ return declare("davinci.ve.Context", null, {
 			}
 		}
 
-		if (this._loadThemeDojoxMobile(this, newHtmlParms)){
+		/*if (this._loadThemeDojoxMobile(this, newHtmlParms)){
             return;
-        }
+        }*/
+		this._loadThemeDojoxMobile(this, newHtmlParms);
 		var body = model.find({elementType:'HTMLElement', tag:'body'},true);
 		body.setAttribute("class", defaultTheme.className);
 		/* add the css */

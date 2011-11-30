@@ -48,16 +48,14 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
           helper.removeTheme(this._context, oldTheme);  
         } else {
             var modelDoc = this._context.getModel().getDocumentElement(); 
-            var d = this._context.getDocument();
-            var modelHead = modelDoc.getChildElement('head');
-            var b = d.getElementsByTagName("body");
-            var modelBody = modelDoc.getChildElement('body');
+           var modelHead = modelDoc.getChildElement('head');
+           var modelBody = modelDoc.getChildElement('body');
             
-            var header = dojo.clone( this._context.getHeader());
-            var resourcePath = this._context.getFullResourcePath();
+           var header = dojo.clone( this._context.getHeader());
+           // var resourcePath = this._context.getFullResourcePath();
             // find the old theme file name
             function sameSheet(headerSheet, file){
-                return (headerSheet.indexOf(file) > -1)
+                return (headerSheet.indexOf(file) > -1);
             }
             
             var files = oldTheme.files;
@@ -72,7 +70,6 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
                         var modelAttribute = modelBody.getAttribute('class');
                         if (modelAttribute){
                             modelAttribute = modelAttribute.replace(oldTheme.className,'');
-                            //header.bodyClass = modelAttribute;
                             header.bodyClasses = modelAttribute; // seems to have changed to this
                             modelBody.removeAttribute('class');
                             if (modelAttribute.length > 0){
@@ -106,9 +103,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
           helper.addTheme(this._context, newThemeInfo);  
         } else {
             var modelDoc = this._context.getModel().getDocumentElement(); 
-            var d = this._context.getDocument();
             var modelHead = modelDoc.getChildElement('head');
-            var b = d.getElementsByTagName("body");
             var modelBody = modelDoc.getChildElement('body');
             
             var header = dojo.clone( this._context.getHeader());

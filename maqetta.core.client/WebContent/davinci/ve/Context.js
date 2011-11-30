@@ -602,7 +602,7 @@ return declare("davinci.ve.Context", null, {
 	},
 
     /* ensures the file has a valid theme.  Adds the users default if its not there alread */
-    loadTheme: function(){
+    loadTheme: function(newHtmlParms){
     	/* 
     	 * Ensure the model has a default theme.  Defaulting to Claro for now, should
     	 * should load from prefs 
@@ -610,17 +610,6 @@ return declare("davinci.ve.Context", null, {
     	 * */
     	var model = this.getModel();
     	var defaultThemeName="claro";
-    	var dojoThemeSets = davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
-        if (!dojoThemeSets){ 
-            dojoThemeSets =  davinci.theme.dojoThemeSets;
-            davinci.workbench.Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(),dojoThemeSets);
-            
-        }
-        for (var i = 0; i < dojoThemeSets.themeSets.length; i++){
-            if (dojoThemeSets.themeSets[i].name === davinci.theme.desktop_default){
-                defaultThemeName = dojoThemeSets.themeSets[i].desktopTheme;
-            }
-        }
     	var imports = model.find({elementType:'CSSImport'});
 		
 		
@@ -658,8 +647,8 @@ return declare("davinci.ve.Context", null, {
 				}
 			}
 		}
-		
-		if (this._loadThemeDojoxMobile(this)){
+
+		if (this._loadThemeDojoxMobile(this, newHtmlParms)){
             return;
         }
 		var body = model.find({elementType:'HTMLElement', tag:'body'},true);
@@ -672,16 +661,29 @@ return declare("davinci.ve.Context", null, {
     },
     
 // FIXME this bit of code should be moved to toolkit specific //////////////////////////////   
-    _loadThemeDojoxMobile: function(context){
-      
+    _loadThemeDojoxMobile: function(context, newHtmlParms){
+
         var htmlElement = context._srcDocument.getDocumentElement();
         var head = htmlElement.getChildElement("head");
+        // only add the theme map if it is not the dojo defaults
+        if (newHtmlParms && newHtmlParms.themeSet && (!davinci.theme.themeSetEquals(davinci.theme.dojoMobileDefault,newHtmlParms.themeSet.mobileTheme))) {
+            var script = new davinci.html.HTMLElement('script');
+            script.addAttribute('type', 'text/javascript');
+            script.script = "";
+            head.addChild(script);
+            var newScriptText = new davinci.html.HTMLText();
+            var themeMap = dojo.toJson(davinci.theme.getDojoxMobileThemeMap(this, newHtmlParms.themeSet.mobileTheme));
+            var text = '\nrequire(["dojox/mobile"],function(dojoxMobile){dojoxMobile.themeMap='+themeMap +';});\nrequire(["dojox/mobile/parser"]);\nrequire(["dojox/mobile/deviceTheme"]);\n';
+            newScriptText.setText(text); 
+            script.addChild(newScriptText); 
+        }
         var scriptTags=head.getChildElements("script");
+        
         return dojo.some(scriptTags, function(tag) {
             var text=tag.getElementText();
                 // Look for a dojox.mobile.themeMap in the document, if found set the themeMap 
                // var start = text.indexOf('dojox.mobile.themeMap');
-            return text.length && text.indexOf('dojox.mobile.deviceTheme') != -1;
+            return text.length && text.indexOf('dojoxMobile.themeMap=') != -1;
         });
     },
 //////////////////////////////////////////////////////////////////////////////////////////////     
@@ -692,8 +694,9 @@ return declare("davinci.ve.Context", null, {
 		
 		/* determinte if its the theme editor loading */
 		if(!source.themeCssfiles){ // css files need to be added to doc before body content
-			this.loadTheme();
+			//this.loadTheme(newHtmlParams);
 			this.loadRequires("html.body", true/*doUpdateModel*/, false, true /* skip UI load */ );
+			this.loadTheme(newHtmlParams);
 		}
 		/* ensure the top level body deps are met (ie. maqetta.js, states.js and app.css) */
 		/* make sure this file has a valid/good theme */

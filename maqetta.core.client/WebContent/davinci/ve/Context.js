@@ -609,7 +609,10 @@ return declare("davinci.ve.Context", null, {
     	 * 
     	 * */
     	var model = this.getModel();
-    	var defaultThemeName="claro";
+       	var defaultThemeName="claro";
+       	if (newHtmlParms && newHtmlParms.themeSet) {
+       	 defaultThemeName = newHtmlParms.themeSet.desktopTheme;
+       	}
     	var imports = model.find({elementType:'CSSImport'});
 		
 		

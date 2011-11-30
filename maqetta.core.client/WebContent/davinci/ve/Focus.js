@@ -70,6 +70,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             this._nobs[LEFT_BOTTOM].style.left =
             this._nobs[RIGHT_TOP].style.top = -this.size + "px";
         this._nobIndex = -1;
+		
+		this._custom = dojo.create("div", {"class": "editFocusCustom"}, this.domNode);
 
         // _box holds resize values during dragging assuming no shift-key constraints
         // _constrained holds resize values after taking into account shift-key constraints
@@ -199,6 +201,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         }
 
         var b = dojo.mixin({}, box);
+		
+		// bboxActual is box before adjustments
+		this._bboxActual = {l:b.l, t:b.t};
 
         // Adjust for size of border when near the top left corner of the screen
         if(b.l < this.size){
@@ -221,6 +226,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         if(b.h < 0){
             b.h = 0;
         }
+		this._bboxActual.w = b.w;
+		this._bboxActual.h = b.h;
 
         // Adjust for size of border when near the bottom/right corner of the screen
         var box_r = b.l + b.w + this.size;
@@ -256,16 +263,27 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         this._nobs[RIGHT_TOP].style.left = b.w + "px";
         this._nobs[RIGHT_BOTTOM].style.left = b.w + "px";
         this._nobs[RIGHT_BOTTOM].style.top = b.h + "px";
+		
+		this._bboxAdjusted = b;
     },
     
     
     show: function(widget, inline){
         //debugger;
+		this._custom.innerHTML = '';
         this.domNode.style.display = "block";
         this._selectedWidget = widget;
+		var helper = widget.getHelper();
+		var delete_inline = true;
+		if(helper && helper.onShowSelection){
+			helper.onShowSelection({widget:widget, customDiv:this._custom,
+				bboxActual:this._bboxActual, bboxAdjusted:this._bboxAdjusted});
+		}
         if (inline) {
             this.showInline(widget); // sometimes the widget changes from undo/redo som get the current widget
-        } else {
+			delete_inline = false;
+		}
+		if(delete_inline){
             delete this._inline; // delete any old inline kicking around
         }
     },
@@ -283,8 +301,16 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
     hide: function(inline){
 
+		var widget = this._selectedWidget;
+		var helper = widget.getHelper();
+		if(helper && helper.onHideSelection){
+			// Don't know if any widgets actually use this helper
+			// Included for completeness
+			helper.onHideSelection({widget:widget, customDiv:this._custom});
+		}
         this.domNode.style.display = "none";
-        this._displayedWidget = null;
+		this._selectedWidget = null;	// Used by page editor
+		this._displayedWidget = null;	// Used by theme editor
         if (this._inline){
             this._inline.hide();
             delete this._inline;

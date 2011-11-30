@@ -258,7 +258,12 @@ return declare("davinci.ve.Context", null, {
 			removeFromArray(this._objectIds, objectId);
 		}
 		if (this._selection){
-			removeFromArray(this._selection,widget);
+			for(var i=0; i<this._selection.length; i++){
+				if(this._selection[i] == widget){
+					this.focus(null, i);
+					removeFromArray(this._selection,widget);
+				}
+			}
 		}
 
         var library = davinci.ve.metadata.getLibraryForType(widget.type);
@@ -1654,11 +1659,13 @@ return declare("davinci.ve.Context", null, {
 				}
 				var w = this.getSelection();
 				focus.resize(state.box, w[0]);
+				var windex = index < w.length ? index : 0;	// Just being careful in case index is messed up
+				focus.resize(state.box, w[windex]);
 				focus.allow(state.op);
 				if(focus.domNode.parentNode != containerNode){
 					containerNode.appendChild(focus.domNode);
 				}
-				focus.show(w[0],inline);
+				focus.show(w[windex],inline);
 			}else{ // hide
 				focus.hide();
 			}

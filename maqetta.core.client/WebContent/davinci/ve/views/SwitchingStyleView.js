@@ -195,6 +195,11 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", [davinci.workbench.WidgetLit
     	                {display:"white-space", type:"combo", target:'white-space', values:['','normal','nowrap','pre','pre-line','pre-wrap']},
     	                {display:"text-indent", type:"multi", target:"text-indent", values:['','0','1em','10px']},
     	                {display:"line-height", type:"multi", target:"line-height", values:['','normal','1.2','120%']}
+    	                ]},
+ 	           {key: "shapesSVG",
+	                  pageTemplate:[{display:"stroke", type:"color", target:"stroke"},
+    	                {display:"stroke-width", type:"multi", target:"stroke-width", values:['','1', '2', '3', '4', '5', '10']},
+    	                {display:"fill", type:"color", target:"fill"}
     	                ]}
 		      /*,
              {title:"Animations",

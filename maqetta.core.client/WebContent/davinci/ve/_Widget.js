@@ -309,6 +309,8 @@ return declare("davinci.ve._Widget", null, {
 	_styleText: function (v) {
 		var s = "";
 		/* if ordering is given, respect it */
+		
+		if(dojo.isArray(v)){
 		for(var i = 0;i<v.length;i++) {
 				for(var name in v[i]){
 				
@@ -318,7 +320,15 @@ return declare("davinci.ve._Widget", null, {
 					}
 				}
 			}
-		
+		}else{
+			for(var name in v){
+				
+				value = davinci.ve.states.normalize("style", this, name, v[name]);
+				if(value !== undefined && value != "" && value!=null) {
+					s += name + ": " + v[name] + "; ";
+				}
+			}
+		}
 		return s.trim();
 	},
 
@@ -560,7 +570,7 @@ return declare("davinci.ve._Widget", null, {
 	},
 
 	setStyleValues: function( values) {
-	
+		
 		if(!values) {
 			return;
 		}
@@ -628,6 +638,7 @@ return declare("davinci.ve._Widget", null, {
 	},
 
 	setProperties: function(properties, modelOnly) {
+		
 		if(!this.properties) {
 			this.properties = {};
 		}
@@ -689,6 +700,7 @@ return declare("davinci.ve._Widget", null, {
 	},
 
 	_stringValue: function (attributeName, value) {
+		
 	    var metadata = this.getMetadata();
 		var property = metadata.property && metadata.property[attributeName];
 		if (!property)

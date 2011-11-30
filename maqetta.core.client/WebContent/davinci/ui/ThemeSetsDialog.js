@@ -187,19 +187,21 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
     },
     
     renameThemeSet: function(e) {
+        
+        var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
         var select = dojo.byId('theme_select_themeset_theme_select');
         this._renameDialog = new dijit.Dialog({
             id: "rename",
-            title: 'Rename theme set',
+            title: langObj.renameThemeSet,
             style:"width:300px; ",
             
         });
         var content = ''+
         '<table style="width: 100%; margin-left:10px; margin-right:10px;">'+
-            '<tr><td style="width: 18%;">Name:</td><td style="text-align: center;"><input data-dojo-type="dijit.form.ValidationTextBox" data-dojo-props="regExp:\'[a-zA-z0-9_]+\', required:true, invalidMessage:\'Invalid Text.\'" id="theme_select_themeset_rename_textbox" style="width: 175px;" ></td></tr>'+
+            '<tr><td style="width: 18%;">'+langObj.themeSetName+'</td><td style="text-align: center;"><input data-dojo-type="dijit.form.ValidationTextBox" data-dojo-props="regExp:\'[a-zA-z0-9_]+\', required:true, invalidMessage:\'Invalid Text.\'" id="theme_select_themeset_rename_textbox" style="width: 175px;" ></td></tr>'+
         '</table>' +
         '<table style="width:100%; margin-top: 10px;">'+
-            '<tr><td style="text-align:right; width:80%;"><input type="button" dojoType="dijit.form.Button" id="theme_set_rename_ok_button" label="Ok"></input></td><td><input type="button" dojoType="dijit.form.Button" id="theme_set_rename_cancel_button" label="Cancel"></input></td></tr>'+
+            '<tr><td style="text-align:right; width:80%;"><input type="button" dojoType="dijit.form.Button" id="theme_set_rename_ok_button" label="'+langObj.ok+'"></input></td><td><input type="button" dojoType="dijit.form.Button" id="theme_set_rename_cancel_button" label="'+langObj.cancel+'"></input></td></tr>'+
         '</table>';
         this._renameDialog.attr("content", content);
         this._renameDialog._themesetConnections = [];
@@ -389,6 +391,7 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
     
     _getTemplate: function(){
         
+        var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
         var size = 2;
         if (this._dojoThemeSets.themeSets.length > size) {
             size = this._dojoThemeSets.themeSets.length + 2; // add space at bottom
@@ -404,7 +407,7 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
                         '<table>' + 
                             '<tr>' +
                                 '<td style=" vertical-align: top;" >' +
-                                    '<label>Theme sets:</label><select  id="theme_select_themeset_theme_select" name="theme_select_themeset_theme_select" size="'+size+'" style="margin-bottom: 5px; width: 120px;" ></select>'+
+                                    '<label>'+langObj.themeSets+'</label><select  id="theme_select_themeset_theme_select" name="theme_select_themeset_theme_select" size="'+size+'" style="margin-bottom: 5px; width: 120px;" ></select>'+
                                     '<span id="theme_select_themeset_add" style="font-size:18px; margin:5px; border: 1px solid #ccc; border-radius: 2px; color: #ccc; padding: 0px 2px 0 2px;" >+</span><span id="theme_select_themeset_delete" style="font-size:18px; margin:5px; border: 1px solid #ccc; border-radius: 2px; color: #ccc; padding: 0px 2px 0 2px;">-</span>'+
                                     '</td>' +
                                 '<td><div style="border-right: 1px solid #ccc; width: 1px; height: 250px; margin-left: 10px; margin-top: 10px;"></div></td>' +
@@ -416,23 +419,23 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
                     '</td>' +
                     '<td>' +
                         '<table style="width: 100%; margin-left:10px; margin-right:10px;">'+
-                            '<tr><td colspan="2">Currently selected theme set:</td><tr>' +
-                            '<tr><td style="width: 18%;">Name:</td><td style="text-align: center;"><input dojoType="dijit.form.TextBox" id="theme_select_themeset_theme_select_textbox" readonly= "true" style="width: 175px;" ></input><input type="button" dojoType="dijit.form.Button" id="theme_select_rename_button" label="Rename" style="margin-left: 5px;"></td></tr>'+
+                            '<tr><td colspan="2">'+langObj.currentlySelectedThemeSet+'</td><tr>' +
+                            '<tr><td style="width: 18%;">'+langObj.themeSetName+'</td><td style="text-align: center;"><input dojoType="dijit.form.TextBox" id="theme_select_themeset_theme_select_textbox" readonly= "true" style="width: 175px;" ></input><input type="button" dojoType="dijit.form.Button" id="theme_select_rename_button" label="Rename" style="margin-left: 5px;"></td></tr>'+
                         '</table>' +
                         '<div style="border-top: 1px solid; top: 231px; border-top-color: #ccc; left: 429px; width: 300px; height: 11px; margin-top: 6px; margin-left:10px;"></div>'+
                         '<table style="margin-left: 15px; width: 100%;">'+
-                            '<tr><td>Dojo desktop 1.7 theme:</td><td><select dojoType="dijit.form.Select" id="theme_select_desktop_theme_select"type="text"  style="width: 175px;"  ></select></td></tr>'+
-                            '<tr><td>Dojo mobile 1.7 theme:</td><td><select dojoType="dijit.form.Select" id="theme_select_mobile_theme_select"type="text"  style="width: 175px;" ></select></td></tr>'+
+                            '<tr><td>'+langObj.desktopTheme+'</td><td><select dojoType="dijit.form.Select" id="theme_select_desktop_theme_select"type="text"  style="width: 175px;"  ></select></td></tr>'+
+                            '<tr><td>'+langObj.mobileTheme+'</td><td><select dojoType="dijit.form.Select" id="theme_select_mobile_theme_select"type="text"  style="width: 175px;" ></select></td></tr>'+
                         '</table>' +
                         '<table id="theme_select_devices_table" style="margin-left:30px; border-collapse: separate; border-spacing: 0 0; width: 100%">' +
-                        '<tr><td style="width: 129px;">Android:</td><td><select dojoType="dijit.form.Select" id="theme_select_android_select" type="text"  style="width: 150px;"></select></td></tr>' +
-                        '<tr><td>Blackberry:</td><td><select dojoType="dijit.form.Select" id="theme_select_blackberry_select" type="text"  style="width: 150px;"></select></td></tr>' +
-                        '<tr><td>iPad:</td><td><select dojoType="dijit.form.Select" id="theme_select_ipad_select" type="text"  style="width: 150px;"></select></td></tr>' +
-                        '<tr><td>iPhone:</td><td><select dojoType="dijit.form.Select" id="theme_select_iphone_select" type="text"  style="width: 150px;"></select></td></tr>' +
-                        '<tr><td>Other:</td><td><select dojoType="dijit.form.Select" id="theme_select_other_select" type="text"  style="width: 150px;"></select></td></tr>' +
+                        '<tr><td style="width: 129px;">'+langObj.android+'</td><td><select dojoType="dijit.form.Select" id="theme_select_android_select" type="text"  style="width: 150px;"></select></td></tr>' +
+                        '<tr><td>'+langObj.blackberry+'</td><td><select dojoType="dijit.form.Select" id="theme_select_blackberry_select" type="text"  style="width: 150px;"></select></td></tr>' +
+                        '<tr><td>'+langObj.ipad+'</td><td><select dojoType="dijit.form.Select" id="theme_select_ipad_select" type="text"  style="width: 150px;"></select></td></tr>' +
+                        '<tr><td>'+langObj.iphone+'</td><td><select dojoType="dijit.form.Select" id="theme_select_iphone_select" type="text"  style="width: 150px;"></select></td></tr>' +
+                        '<tr><td>'+langObj.other+'</td><td><select dojoType="dijit.form.Select" id="theme_select_other_select" type="text"  style="width: 150px;"></select></td></tr>' +
                         '</table>' +
                         '<table style="width:100%; margin-top: 10px;">'+
-                            '<tr><td style="text-align:right; width:80%;"><input type="button" dojoType="dijit.form.Button" id="theme_select_ok_button" label="Ok"></input></td><td><input type="button" dojoType="dijit.form.Button" id="theme_select_cancel_button" label="Cancel"></input></td></tr>'+
+                            '<tr><td style="text-align:right; width:80%;"><input type="button" dojoType="dijit.form.Button" id="theme_select_ok_button" label="'+langObj.ok+'"></input></td><td><input type="button" dojoType="dijit.form.Button" id="theme_select_cancel_button" label="'+langObj.cancel+'"></input></td></tr>'+
                          '</table>' +
                      '</td>'+
                  '</tr>' +

@@ -67,8 +67,6 @@ define({ root:
 		"create":"Create",
 		"open":"Open",
 		"save":"Save",
-		"ok":"Ok",
-		"cancel":"Cancel",
 		
 		//fileDialog
 		"fileName":"File name",//used in templates/download.html

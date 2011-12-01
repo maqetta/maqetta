@@ -8,6 +8,7 @@ dojo.require("dojo.data.ObjectStore");
 dojo.require("dojox.grid.DataGrid");
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.ui", "ui");
+dojo.requireLocalization("dijit", "common");
 
 dojo.require("dojo.date.locale");
 dojo.require("dojo.date.stamp");
@@ -189,6 +190,7 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
     renameThemeSet: function(e) {
         
         var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
+        var loc = dojo.i18n.getLocalization("dijit", "common");
         var select = dojo.byId('theme_select_themeset_theme_select');
         this._renameDialog = new dijit.Dialog({
             id: "rename",
@@ -201,7 +203,7 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
             '<tr><td style="width: 18%;">'+langObj.themeSetName+'</td><td style="text-align: center;"><input data-dojo-type="dijit.form.ValidationTextBox" data-dojo-props="regExp:\'[a-zA-z0-9_]+\', required:true, invalidMessage:\'Invalid Text.\'" id="theme_select_themeset_rename_textbox" style="width: 175px;" ></td></tr>'+
         '</table>' +
         '<table style="width:100%; margin-top: 10px;">'+
-            '<tr><td style="text-align:right; width:80%;"><input type="button" dojoType="dijit.form.Button" id="theme_set_rename_ok_button" label="'+langObj.ok+'"></input></td><td><input type="button" dojoType="dijit.form.Button" id="theme_set_rename_cancel_button" label="'+langObj.cancel+'"></input></td></tr>'+
+            '<tr><td style="text-align:right; width:80%;"><input type="button" dojoType="dijit.form.Button" id="theme_set_rename_ok_button" label="'+loc.buttonOk+'"></input></td><td><input type="button" dojoType="dijit.form.Button" id="theme_set_rename_cancel_button" label="'+loc.buttonCancel+'"></input></td></tr>'+
         '</table>';
         this._renameDialog.attr("content", content);
         this._renameDialog._themesetConnections = [];
@@ -392,7 +394,9 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
     _getTemplate: function(){
         
         var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
+        var loc = dojo.i18n.getLocalization("dijit", "common");
         var size = 2;
+        
         if (this._dojoThemeSets.themeSets.length > size) {
             size = this._dojoThemeSets.themeSets.length + 2; // add space at bottom
         } 
@@ -435,7 +439,7 @@ dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
                         '<tr><td>'+langObj.other+'</td><td><select dojoType="dijit.form.Select" id="theme_select_other_select" type="text"  style="width: 150px;"></select></td></tr>' +
                         '</table>' +
                         '<table style="width:100%; margin-top: 10px;">'+
-                            '<tr><td style="text-align:right; width:80%;"><input type="button" dojoType="dijit.form.Button" id="theme_select_ok_button" label="'+langObj.ok+'"></input></td><td><input type="button" dojoType="dijit.form.Button" id="theme_select_cancel_button" label="'+langObj.cancel+'"></input></td></tr>'+
+                            '<tr><td style="text-align:right; width:80%;"><input type="button" dojoType="dijit.form.Button" id="theme_select_ok_button" label="'+loc.buttonOk+'"></input></td><td><input type="button" dojoType="dijit.form.Button" id="theme_select_cancel_button" label="'+loc.buttonCancel+'"></input></td></tr>'+
                          '</table>' +
                      '</td>'+
                  '</tr>' +

@@ -7,6 +7,7 @@ dojo.require("dijit.layout.ContentPane");
 dojo.require("davinci.ui.widgets.ThemeStore");
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.ui", "ui");
+dojo.requireLocalization("dijit", "common");
 
 dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
     
@@ -295,6 +296,7 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
     _onChange :function(){ 
 
         var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
+        var loc = dojo.i18n.getLocalization("dijit", "common");
         var currentValue = this._getValueAttr();
         if( currentValue==null  ||  this._blockChange)
             return;
@@ -304,7 +306,7 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
         if (this.dojoVersion && currentValue.version !== this.dojoVersion && !warnCookie){
             this._warnDiv.innerHTML = '<table>' + 
                                             '<tr><td></td><td>'+langObj.themeVersionMessage+'</td><td></td></tr>'+
-                                             '<tr><td></td><td align="center"><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.ok">Ok</button><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.cancel">Cancel</button></td><td></td></tr>'+
+                                             '<tr><td></td><td align="center"><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.ok">'+loc.buttonOk+'</button><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.cancel">+'loc.buttonCancel+'</button></td><td></td></tr>'+
                                        '</table>';
             var ok = dijit.byId('davinci.ui.widgets.ThemeSelection.ok');
             var cancel = dijit.byId('davinci.ui.widgets.ThemeSelection.cancel');
@@ -368,6 +370,7 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
     _getTemplate: function(){
         
         var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
+        var loc = dojo.i18n.getLocalization("dijit", "common");
         var template = ''+
             '<table style="width: 100%; margin-left:10px; margin-right:10px;">'+
                 '<tr><td style="width: 18%;">'+langObj.themeSet+'</td><td style="text-align: center;"><select dojoType="dijit.form.Select" id="theme_select_themeset_theme_select" type="text" style="width: 175px;" ></select></td></tr>'+
@@ -385,7 +388,7 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
             '<tr><td>'+langObj.other+'</td><td><select dojoType="dijit.form.Select" id="theme_select_other_select" type="text"  style="width: 150px;"></select></td></tr>' +
             '</table>' +
             '<table style="width:100%; margin-top: 10px;">'+
-                '<tr><td style="text-align:right; width:80%;"><input type="button" dojoType="dijit.form.Button" id="theme_select_ok_button" label="'+langObj.ok+'"></input></td><td><input type="button" dojoType="dijit.form.Button" id="theme_select_cancel_button" label="'+langObj.cancel+'"></input></td></tr>'+
+                '<tr><td style="text-align:right; width:80%;"><input type="button" dojoType="dijit.form.Button" id="theme_select_ok_button" label="'+loc.buttonOk+'"></input></td><td><input type="button" dojoType="dijit.form.Button" id="theme_select_cancel_button" label="'+loc.buttonCancel+'"></input></td></tr>'+
              '</table>'+
              '';
 

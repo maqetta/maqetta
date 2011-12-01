@@ -420,6 +420,10 @@ return declare("davinci.ve.Context", null, {
 					}
 					break;
 				
+				case "image":
+					// Allow but ignore type=image
+					break;
+					
 				default:
 					console.error("Unhandled metadata resource type '" + r.type +
 							"' for widget '" + type + "'");

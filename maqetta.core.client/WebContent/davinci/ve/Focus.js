@@ -502,7 +502,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             }
             dojo.mixin(this._box, b);
             dojo.mixin(this._constrained, b);
-            if(this._selectedWidget && this._selectedWidget.type === 'html.img'){
+            if(this._selectedWidget && this._selectedWidget.domNode.nodeName === 'IMG'){
                 var domNode = this._selectedWidget.domNode;
                 var naturalWidth = domNode.naturalWidth;
                 var naturalHeight = domNode.naturalHeight;

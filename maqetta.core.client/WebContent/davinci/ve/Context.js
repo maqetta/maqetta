@@ -2023,7 +2023,7 @@ return declare("davinci.ve.Context", null, {
 			}
 		}
 		
-		debugger;
+		
 		for(var i = 0;i<cleaned.length;i++){
 			for(var name in cleaned[i]){
 				rule.removeProperty(name);

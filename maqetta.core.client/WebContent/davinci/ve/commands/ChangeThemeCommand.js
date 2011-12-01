@@ -198,6 +198,9 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
              }
         }, this);
         var device = context.getMobileDevice() || 'none';
+        if (device != 'none'){
+            device = preview.silhouetteiframe.themeMap[device+'.svg'];
+        }
         var dm = context.getDojo().getObject("dojox.mobile", true);
         if (dm){
             var dj = context.getDojo();
@@ -264,18 +267,22 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
                             newScriptText.setText(themeMap); 
                             script.addChild(newScriptText); 
                             scriptTag.parent.removeChild(scriptTag);
+                            if (!newFile) {
+                                var device = context.getMobileDevice() || 'none';
+                                if (device != 'none'){
+                                    device = preview.silhouetteiframe.themeMap[device+'.svg'];
+                                }
+                                var dm = context.getDojo().getObject("dojox.mobile", true);
+                                dm.themeMap= davinci.theme.getDojoxMobileThemeMap(context, theme);
+                                dm.loadDeviceTheme(device);
+                            }
                         }
                         
                     }
                 }
              }
         }, this);
-        if (!newFile) {
-            var device = context.getMobileDevice() || 'none';
-            var dm = context.getDojo().getObject("dojox.mobile", true);
-            dm.loadDeviceTheme(device);
-        }
-                 
+            
             
 
     },

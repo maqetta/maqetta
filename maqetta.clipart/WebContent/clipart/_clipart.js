@@ -11,15 +11,13 @@ define([
 
 		buildRendering: function(){
 			this.inherited(arguments);
-			/*
 			if(!this._url){
 				var index = this.declaredClass.lastIndexOf('.');
 				if(index < 0){
 					index = 0;
 				}
-				this._url = 'art/'+this.declaredClass.substr(index+1)+'.svg';
+				this._url = this.declaredClass.substr(index+1)+'.svg';
 			}
-			*/
 			var dj = this.domNode.ownerDocument.defaultView.dojo;
 			this.url = dj.moduleUrl("clipart", this._url);
 			this.domNode.setAttribute('src', this.url);

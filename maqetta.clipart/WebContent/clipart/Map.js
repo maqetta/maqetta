@@ -5,7 +5,5 @@ define([
 	
 	return declare("clipart.Map", [_clipart], {
 		
-		_url: 'map.svg',	
-		
 	});
 });

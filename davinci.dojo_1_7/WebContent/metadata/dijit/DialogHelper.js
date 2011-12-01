@@ -2,10 +2,6 @@ define([
         "dojo/_base/connect"
 ], function(connect) {
 return function() {
-	this.create = function(widget) {
-		
-	};
-
 	this.destroy = function(widget) {
 		if (this.handle) {
 			connect.unsubscribe(this.handle);
@@ -29,9 +25,18 @@ return function() {
 
 		var id = widget.dijitWidget.id,
 		context = widget.getContext();
+		//FIXME: not safe to use 'this' since the helper instance does not correspond to the widget
 		this.handle = connect.subscribe("/davinci/ui/widgetSelected", null, function(selected) {
-			for(var w = selected[0]; w && w != widget; w = w.getParent && w.getParent());
-			if(!w || w.id != id) {
+			var w = selected[0];
+			while (w && w.id != id) {
+				if (w._ownerId) {
+					w = context.getDijit().registry.byId(w._ownerId);
+				} else {
+					w = w.getParent && w.getParent();
+				}
+			}
+
+			if (!w || w.id != id) {
 				context.getDijit().registry.byId(id).hide();
 				connect.disconnect(this.handle);
 				delete this.handle;

@@ -81,7 +81,7 @@ dojo.declare("davinci.libraries.shapes.shapes._PathHelperMixin", null, {
 			dy = params.dy,
 			pageX = params.pageX,
 			pageY = params.pageY,
-			e = params.e;
+			event = params.e;
 		var dijitWidget = this._widget.dijitWidget;
 		if(index < 0 || index >= dijitWidget._points.length || dijitWidget._points.length < 2){
 			return;
@@ -94,7 +94,7 @@ dojo.declare("davinci.libraries.shapes.shapes._PathHelperMixin", null, {
 		var p = dijitWidget._points[index];
 
 		// Shift modifier causes constrained drawing (i.e., horiz or vert versus previous point)
-		if(e.shiftKey){
+		if(event.shiftKey){
 			// If point#0, constrain relative to point#1
 			if(index==0){
 				refPoint = dijitWidget._points[1];
@@ -126,7 +126,33 @@ dojo.declare("davinci.libraries.shapes.shapes._PathHelperMixin", null, {
 		dijitWidget.adjustBBox_Widget(newBbox);
 		dijitWidget._svgroot.style.marginLeft = (newBbox.x - dijitWidget._bboxStartup.x) + 'px';
 		dijitWidget._svgroot.style.marginTop = (newBbox.y - dijitWidget._bboxStartup.y) + 'px';
-		davinci.ve.Snap.updateSnapLines(this._widget.getContext(), {l:pageX,t:pageY,w:0,h:0});
+        var context = this._widget ? this._widget.getContext() : undefined;
+        var position_prop;
+        if(this._widget){
+            var position_prop = dojo.style(this._widget.domNode,"position");
+        }
+        var absolute = (position_prop=="absolute");
+        var doSnapLines = absolute;
+        if(doSnapLines && event && this._widget && context){
+            var data = {type:this._widget.type};
+            var position = { x:event.pageX, y:event.pageY};
+            var snapBox = {l:pageX,t:pageY,w:0,h:0};
+            // Call the dispatcher routine that updates snap lines and
+            // list of possible parents at current (x,y) location
+            context.dragMoveUpdate({
+                    data:data,
+                    eventTarget:event.target,
+                    position:position,
+                    absolute:absolute,
+                    currentParent:null,
+                    rect:snapBox, 
+                    doSnapLines:doSnapLines, 
+                    doFindParentsXY:false});
+        }else if(context){
+            // If not showing snap lines or parents, then make sure they aren't showing
+            context.dragMoveCleanup();
+        }
+
 	},
 
 	/*
@@ -178,6 +204,8 @@ dojo.declare("davinci.libraries.shapes.shapes._PathHelperMixin", null, {
 		var s_points = arr.join();
 		var valuesObject = {points:s_points};
 		command.add(davinci.ve.commands.ModifyCommand(widget, valuesObject, null));
+        var context = this._widget ? this._widget.getContext() : undefined;
+        context.dragMoveCleanup();
 	}
 
 });

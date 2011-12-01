@@ -8,6 +8,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
     constructor: function(newTheme, context){
         this._newTheme = newTheme;
         this._context = context;
+        this.resetDojoxMobileNeed = false;
         this._oldTheme  = davinci.theme.getThemeSet(this._context);
         if (!this._oldTheme){ 
             this._oldTheme = davinci.theme.dojoThemeSets.themeSets[0]; // default;
@@ -33,6 +34,11 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             this.addTheme(newThemeInfo);
         } else {
             this.addThemeSet(newThemeInfo);
+        }
+        if(this.resetDojoxMobileNeed){
+            // this is here due to timing if deleting and then adding themeMap
+            this._resetDojoxMobileTheme(this._context);
+            this.resetDojoxMobileNeed = false;
         }
         var text = this._context.getModel().getText();
         var e = davinci.Workbench.getOpenEditor();
@@ -197,6 +203,11 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
                 scriptTag.parent.removeChild(scriptTag);
              }
         }, this);
+        this.resetDojoxMobileNeed = true;
+        
+    },
+    
+    _resetDojoxMobileTheme: function(context){
         var device = context.getMobileDevice() || 'none';
         if (device != 'none'){
             device = preview.silhouetteiframe.themeMap[device+'.svg'];
@@ -207,8 +218,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             var url = dj.moduleUrl('dojox.mobile', 'themes/iphone/ipad.css');
             dm.themeMap=[["Android","android",[]],["BlackBerry","blackberry",[]],["iPad","iphone",[url]],["Custom","custom",[]],[".*","iphone",[]]]; // reset themeMap to default
             dm.loadDeviceTheme(device);
-        }
-        
+        } 
     },
     
     _dojoxMobileAddTheme: function(context, theme, newFile){
@@ -275,6 +285,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
                                 var dm = context.getDojo().getObject("dojox.mobile", true);
                                 dm.themeMap= davinci.theme.getDojoxMobileThemeMap(context, theme);
                                 dm.loadDeviceTheme(device);
+                                this.resetDojoxMobileNeed = false;
                             }
                         }
                         

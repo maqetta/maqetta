@@ -306,7 +306,7 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
         if (this.dojoVersion && currentValue.version !== this.dojoVersion && !warnCookie){
             this._warnDiv.innerHTML = '<table>' + 
                                             '<tr><td></td><td>'+langObj.themeVersionMessage+'</td><td></td></tr>'+
-                                             '<tr><td></td><td align="center"><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.ok">'+loc.buttonOk+'</button><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.cancel">+'loc.buttonCancel+'</button></td><td></td></tr>'+
+                                             '<tr><td></td><td align="center"><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.ok">'+loc.buttonOk+'</button><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.cancel">'+loc.buttonCancel+'</button></td><td></td></tr>'+
                                        '</table>';
             var ok = dijit.byId('davinci.ui.widgets.ThemeSelection.ok');
             var cancel = dijit.byId('davinci.ui.widgets.ThemeSelection.cancel');

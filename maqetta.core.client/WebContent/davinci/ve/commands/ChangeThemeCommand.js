@@ -208,7 +208,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
         
     },
     
-    _dojoxMobileAddTheme: function(context, theme){
+    _dojoxMobileAddTheme: function(context, theme, newFile){
         
         var htmlElement = context._srcDocument.getDocumentElement();
         var head = htmlElement.getChildElement("head");
@@ -228,7 +228,11 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             }
         }
         // add the theme to the dojox.mobile.themeMap
-        context.loadRequires("dojox.mobile.View", true); //  use this widget to get the correct requires added to the file.
+        if (newFile){
+            context.loadRequires("dojox.mobile.View", true/*doUpdateModel*/, false, true /* skip UI load */ );
+        } else {
+            context.loadRequires("dojox.mobile.View", true); //  use this widget to get the correct requires added to the file. 
+        }
         head = htmlElement.getChildElement("head");
         scriptTags=head.getChildElements("script");
 
@@ -266,9 +270,11 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
                 }
              }
         }, this);
-        var device = context.getMobileDevice() || 'none';
-        var dm = context.getDojo().getObject("dojox.mobile", true);
-        dm.loadDeviceTheme(device);
+        if (!newFile) {
+            var device = context.getMobileDevice() || 'none';
+            var dm = context.getDojo().getObject("dojox.mobile", true);
+            dm.loadDeviceTheme(device);
+        }
                  
             
 

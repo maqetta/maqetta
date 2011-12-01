@@ -651,10 +651,8 @@ return declare("davinci.ve.Context", null, {
 			}
 		}
 
-		/*if (this._loadThemeDojoxMobile(this, newHtmlParms)){
-            return;
-        }*/
-		this._loadThemeDojoxMobile(this, newHtmlParms);
+
+		this._loadThemeDojoxMobile(this);
 		var body = model.find({elementType:'HTMLElement', tag:'body'},true);
 		body.setAttribute("class", defaultTheme.className);
 		/* add the css */
@@ -665,22 +663,10 @@ return declare("davinci.ve.Context", null, {
     },
     
 // FIXME this bit of code should be moved to toolkit specific //////////////////////////////   
-    _loadThemeDojoxMobile: function(context, newHtmlParms){
+    _loadThemeDojoxMobile: function(context){
 
         var htmlElement = context._srcDocument.getDocumentElement();
         var head = htmlElement.getChildElement("head");
-        // only add the theme map if it is not the dojo defaults
-        if (newHtmlParms && newHtmlParms.themeSet && (!davinci.theme.themeSetEquals(davinci.theme.dojoMobileDefault,newHtmlParms.themeSet.mobileTheme))) {
-            var script = new davinci.html.HTMLElement('script');
-            script.addAttribute('type', 'text/javascript');
-            script.script = "";
-            head.addChild(script);
-            var newScriptText = new davinci.html.HTMLText();
-            var themeMap = dojo.toJson(davinci.theme.getDojoxMobileThemeMap(this, newHtmlParms.themeSet.mobileTheme));
-            var text = '\nrequire(["dojox/mobile"],function(dojoxMobile){dojoxMobile.themeMap='+themeMap +';});\nrequire(["dojox/mobile/parser"]);\nrequire(["dojox/mobile/deviceTheme"]);\n';
-            newScriptText.setText(text); 
-            script.addChild(newScriptText); 
-        }
         var scriptTags=head.getChildElements("script");
         
         return dojo.some(scriptTags, function(tag) {
@@ -716,6 +702,10 @@ return declare("davinci.ve.Context", null, {
 			var modelBodyElement = source.getDocumentElement().getChildElement("body");
 			modelBodyElement.setAttribute(MOBILE_DEV_ATTR, newHtmlParams.device);
 			modelBodyElement.setAttribute(davinci.preference_layout_ATTRIBUTE, newHtmlParams.flowlayout);
+			if (newHtmlParams.themeSet){
+    			var cmd = new davinci.ve.commands.ChangeThemeCommand(newHtmlParams.themeSet, this);
+    			cmd._dojoxMobileAddTheme(this, newHtmlParams.themeSet.mobileTheme, true); // new file
+			}
 		}
 
 		var data = this._parse(source);

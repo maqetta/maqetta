@@ -1,0 +1,12 @@
+.shape {
+	stroke:black;
+	stroke-width:3;
+	fill:none;
+}
+.draw.drawText {
+	/*font-size:12pt;*/
+	fill:black;
+	stroke:none;
+	stroke-width:1;
+}
+	

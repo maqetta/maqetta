@@ -269,7 +269,11 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     
     
     show: function(widget, inline){
-        //debugger;
+
+        if (!widget){
+            // sometimes you get no widget when  DnD in split screen
+            return; 
+        }
 		this._custom.innerHTML = '';
         this.domNode.style.display = "block";
         this._selectedWidget = widget;

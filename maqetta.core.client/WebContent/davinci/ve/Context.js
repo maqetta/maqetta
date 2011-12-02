@@ -2254,7 +2254,7 @@ return declare("davinci.ve.Context", null, {
 			if (this._srcDocument.find({elementType:'HTMLElement', tag: 'script'}).some(function (element) {
 				var elementUrl = element.getAttribute("src");
 				if (elementUrl && elementUrl.indexOf(baseSrcPath) > -1) {
-					element.setAttribute("src", url);
+					//element.setAttribute("src", url);
 					return true;
 				}					
 			})) {
@@ -2355,30 +2355,43 @@ return declare("davinci.ve.Context", null, {
 
 	// add JS to HEAD
 	addHeaderScriptText: function(text){
-		text = '\n' + text;
+	    var splits = text.split('"');
+	    text = '\n' + text;
+	    var testStr;
+	    if (splits.length === 3){
+	        // the require may have a function on it.. 
+	        //require(["dojox/mobile"],function(dojoxMobile){dojoxMobile.themeMap=[["Android","",["themes/custom/custom.css"]],["BlackBerry","",["themes/custom/custom.css"]],["iPad","",["themes/custom/custom.css"]],["iPhone","",["themes/custom/custom.css"]],[".*","",["themes/custom/custom.css"]]];dojoxMobile.themeFiles = [];});
+	        testStr = splits[1];
+	    } else {
+	        testStr = text;
+	    }
 		if (this._scriptAdditions) {
 			var scriptText = this._scriptAdditions.find({elementType: 'HTMLText'}, true);
 			if (scriptText) {
 				var oldText = scriptText.getText();
-				if (oldText.indexOf(text) > -1) {
+				if (oldText.indexOf(testStr) > -1) {
 					return;  // already in the header
 				}
-				this._scriptAdditions.parent.removeChild(this._scriptAdditions);
-				delete this._scriptAdditions;
+				//this._scriptAdditions.parent.removeChild(this._scriptAdditions);
+				//delete this._scriptAdditions;
 				text = oldText + text;
 			}
 		}
 
 		// create a new script element
 		var head = this.getDocumentElement().getChildElement('head'),
-			statesJsScriptTag = this._statesJsScriptTag,
-			script = new davinci.html.HTMLElement('script');
-
+		statesJsScriptTag = this._statesJsScriptTag,
+		script = new davinci.html.HTMLElement('script');
 		script.addAttribute('type', 'text/javascript');
 		script.script = "";
 	
+		if (this._scriptAdditions){ // #1322
+		    // the safest thing to do is put the script element back where it was
+            head.insertBefore(script, this._scriptAdditions);
+            this._scriptAdditions.parent.removeChild(this._scriptAdditions);
+            delete this._scriptAdditions;
+		} else if (statesJsScriptTag) { 
 		// XXX Bug 7499 - (HACK) See comment in addHeaderScript()
-		if (statesJsScriptTag) {
 			head.insertBefore(script, statesJsScriptTag);
 		} else {
 			head.addChild(script);

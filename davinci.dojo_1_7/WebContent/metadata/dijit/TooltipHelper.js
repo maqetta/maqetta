@@ -44,7 +44,9 @@ return function() {
 	};
 
 	this.getSelectNode = function(context){
-		return context.getDijit()._masterTT.domNode;
+//		var master = context.getGlobal().require("dijit/Tooltip")._masterTT;
+		var master = context.getDijit().Tooltip._masterTT;
+		return master && master.domNode;
 	};
 };
 });

@@ -29,7 +29,7 @@ davinci.model.Resource.Resource= function(){
  }
  
  davinci.model.Resource.Resource.prototype.readOnly= function(){
-	 
+	
 	 if (this.hasOwnProperty("_readOnly")){
 		 return this._readOnly || (this.parent!=null && this.parent.readOnly());
 	 }
@@ -155,18 +155,22 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
 		 file = this;
 		 isFolder = this.elementType=="Folder";
 	 }
-	 
 	 var response= (!localOnly) ? davinci.Runtime.serverJSONRequest({
 		   url:"./cmd/createResource", handleAs:"text",
 	       content:{'path':file.getPath(), 'isFolder': isFolder},sync:true  }): "OK";
 	  if (response=="OK" && name!=null){
 		  this.children.push(file);
+		  delete file.libraryId;
+		  delete file.libVersion;
+		  delete file._readOnly;
 		  dojo.publish("/davinci/resource/resourceChanged",["created",file]);
 		  return file;
 	  } else if (response!="OK"){
 		  alert(response);
 	  }else{
-		  this.libraryId = this.libVersion = null;
+		  delete file.libraryId;
+		  delete file.libVersion;
+		  delete file._readOnly;
 		  return this;
 	  }
 	  

@@ -9,7 +9,7 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 	var fileBase = originalTheme.file.parent;
 	var themeRootPath = new davinci.model.Path(directory).removeLastSegments(0);
 	var resource = system.resource.findResource(themeRootPath.toString());
-	if (resource.libraryId) {
+	if (resource.readOnly()) {
 		resource.createResource();
 	}
 	system.resource.copy(fileBase, directory, true);

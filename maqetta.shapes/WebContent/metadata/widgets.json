@@ -2,7 +2,7 @@
     "callbacks": "callbacks.js",
     "categories": {
         "shapes": {
-            "name": "Drawing tools",
+            "name": "Drawing Tools",
             "widgetClass": "dijit"
         }
     },

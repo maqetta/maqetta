@@ -46,20 +46,23 @@ dojo.declare("davinci.ve.commands.StyleCommand", null, {
 			this._state = undefined;
 		}
 		var isNormalState = veStates.isNormalState(this._state);
-		
-		/* may need to trickle down duplicate background properties for a state into the state code. */
-		for(var i=0;i<cleanValues.length;i++){
-			veStates.setStyle(widget, this._state, cleanValues[i], undefined, isNormalState);			
-		}
-		
+
 		if (isNormalState) {
+			//FIXME: what about oldValue when not normal state?
 			if(!this._oldValues){
 				this._oldValues = (widget.getStyleValues() || {});
 				if(!this._oldValues){
 					return;
 				}
-			}			
-			cleanValues = this._mergeProperties(cleanValues, this._oldValues);
+			}
+		}
+		/* may need to trickle down duplicate background properties for a state into the state code. */
+		for(var i=0;i<cleanValues.length;i++){
+			veStates.setStyle(widget, this._state, cleanValues[i], undefined, isNormalState);			
+		}
+
+		if (isNormalState) {
+			cleanValues = this._mergeProperties(cleanValues, this._oldValues);			
 			widget.setStyleValues( cleanValues);
 			this._refresh(widget);
 			

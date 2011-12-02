@@ -116,18 +116,25 @@ dojo.declare("davinci.ve.widgets.WidgetProperties", [davinci.workbench.ViewLite]
 			};
 		}
 		for(var i in this._pageLayout){
-			var widget = dijit.byId(this._pageLayout[i].id); 
-			if(!widget){
+			//FIXME: Probably can remove commented out code, but leaving
+			// it in for now in case there is a case where widget==null
+			// The way things are coded now, widget is always null
+			//var widget = dijit.byId(this._pageLayout[i].id); 
+			//if(!widget){
 				/* onchange is lowercase for DOM/non dijit */
 				var box = dojo.byId(this._pageLayout[i].id);
 				this._connect(box, "onchange", this, makeOnChange(i));
-				dojo.connect(widget, "onfocus", this, "_onFieldFocus");
-				dojo.connect(widget, "onblur", this, "_onFieldBlur");
+				this._connect(box, "onfocus", this, "_onFieldFocus");
+				this._connect(box, "onblur", this, "_onFieldBlur");
+				//dojo.connect(widget, "onfocus", this, "_onFieldFocus");
+				//dojo.connect(widget, "onblur", this, "_onFieldBlur");
+			/*
 			}else{
 				dojo.connect(widget, "onFocus", this, "_onFieldFocus");
 				dojo.connect(widget, "onBlur", this, "_onFieldBlur");
 				this._connect(widget, "onChange", this, makeOnChange(i));
 			}
+			*/
 		}
 	},
 	

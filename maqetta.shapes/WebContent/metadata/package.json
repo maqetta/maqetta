@@ -1,0 +1,22 @@
+{
+  "name": "shapes",
+  "version": "1.0",
+  "directories": {
+    "lib": "../shapes"
+  },
+  "dependencies": {
+    "dojo": "1.7"
+  },
+  "overlays": {
+    "oam": {
+      "directories": {
+        "metadata": "."
+      }
+    },
+    "maqetta": {
+      "scripts": {
+        "widget_metadata": "./widgets.json"
+      }
+    }
+  }
+}

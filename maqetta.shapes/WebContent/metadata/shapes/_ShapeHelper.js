@@ -149,9 +149,9 @@ dojo.declare("davinci.libraries.shapes.shapes._ShapeHelper", null, {
 		// in marginLeft and marginTop updates that happened during dragging
     	var props;
 		if(position == 'absolute' || position == 'fixed'){
-			props = {left:left, top:top, width:width, height:height};
+			props = [{left:left}, {top:top}, {width:width}, {height:height}];
 		}else{
-			props = {width:width, height:height};
+			props = [{width:width}, {height:height}];
 		}
 		command.add(new davinci.ve.commands.StyleCommand(widget, props));
 

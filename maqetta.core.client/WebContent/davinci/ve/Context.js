@@ -79,6 +79,16 @@ return declare("davinci.ve.Context", null, {
                                 dm.themeMap = themeMap;
                             }
                         }
+                        //Look for a dojox.mobile.themeFiles in the document, if found set the themeFiles 
+                        var start = text.indexOf('dojoxMobile.themeFiles');
+                        if (start != -1) {
+                            start = text.indexOf('=', start);
+                            var stop = text.indexOf(';', start);
+                            if (stop > start){
+                                var themeFiles = dojo.fromJson(text.substring(start+1,stop));
+                                dm.themeFiles = themeFiles;
+                            }
+                        }
                      }
                 }, this);
                 loadDeviceTheme(device);

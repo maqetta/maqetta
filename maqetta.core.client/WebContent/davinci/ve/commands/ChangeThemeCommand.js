@@ -217,6 +217,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             var dj = context.getDojo();
             var url = dj.moduleUrl('dojox.mobile', 'themes/iphone/ipad.css');
             dm.themeMap=[["Android","android",[]],["BlackBerry","blackberry",[]],["iPad","iphone",[url]],["Custom","custom",[]],[".*","iphone",[]]]; // reset themeMap to default
+            delete dm.themeFiles;
             dm.loadDeviceTheme(device);
         } 
     },
@@ -264,7 +265,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
                                 themeMap = null;
                             } else {
                                themeMap = dojo.toJson(davinci.theme.getDojoxMobileThemeMap(context, theme));
-                               themeMap = text.substring(0,stop+1) + ',function(dojoxMobile){dojoxMobile.themeMap='+themeMap+';}' + text.substring(stop+1);
+                               themeMap = text.substring(0,stop+1) + ',function(dojoxMobile){dojoxMobile.themeMap='+themeMap+';dojoxMobile.themeFiles = [];}' + text.substring(stop+1);
                             }
                         }
                         if(themeMap){
@@ -284,6 +285,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
                                 }
                                 var dm = context.getDojo().getObject("dojox.mobile", true);
                                 dm.themeMap= davinci.theme.getDojoxMobileThemeMap(context, theme);
+                                dm.themeFiles = [];
                                 dm.loadDeviceTheme(device);
                                 this.resetDojoxMobileNeed = false;
                             }

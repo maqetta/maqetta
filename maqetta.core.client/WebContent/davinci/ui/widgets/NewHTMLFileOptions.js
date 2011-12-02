@@ -20,7 +20,7 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 	    desktop: { layout:'flow', theme:'claro' },
 	    mobile: { layout:'flow', theme:'deviceSpecific' },
 	    sketch: { layout:'absolute', theme:'claro' },
-	    wireframe: { layout:'absolute', theme:'sketch' }
+	    wireframe: { layout:'absolute', theme:'Sketch' }
 	},
 		
 	postCreate : function(){
@@ -120,7 +120,7 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 		var optsTH = [
 		  	{value: "deviceSpecific", label: langObj.nhfoTHMenu_devicespecific},
 			{value: "claro", label: 'claro'},
-		    {value: "sketch", label: 'sketch'}
+		    {value: "Sketch", label: 'sketch'}
 		];
 		this.themeSelect.addOption(optsTH);
 		this.editThemeNode = dojo.query('.nhfo_edit_theme',this.domNode)[0];

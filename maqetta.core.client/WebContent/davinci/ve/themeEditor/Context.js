@@ -190,6 +190,12 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 		}else{
 			selection = [widget];
 		}
+		var selectionChanged = false;
+		if(!this._selection || this._selection.length > 1 || selection.length > 1 ||
+				selection[0] != this._selection[0]){
+			this._selection = selection;
+			selectionChanged = true;
+		}
 		
 		var box = undefined;
 		var op = undefined;
@@ -213,9 +219,7 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 		this.focus({box: box, op: op}, index);
 		this._focuses[0].showContext(this, widget);
 
-		if(!this._selection || this._selection.length > 1 || selection.length > 1 ||
-			selection[0] != this._selection[0]){
-			this._selection = selection;
+		if(selectionChanged){
 			this.onSelectionChange(this.getSelection());
 		}
 	},

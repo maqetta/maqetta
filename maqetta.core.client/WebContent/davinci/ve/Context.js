@@ -631,6 +631,8 @@ return declare("davinci.ve.Context", null, {
        	var defaultThemeName="claro";
        	if (newHtmlParms && newHtmlParms.themeSet) {
        	    defaultThemeName = newHtmlParms.themeSet.desktopTheme;
+       	} else if (newHtmlParms && newHtmlParms.theme){
+       	    defaultThemeName = newHtmlParms.theme;
        	}
     	var imports = model.find({elementType:'CSSImport'});
 		

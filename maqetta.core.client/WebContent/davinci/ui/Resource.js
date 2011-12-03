@@ -78,6 +78,7 @@ dojo.mixin(davinci.ui.Resource, {
 					var newHtmlParams = {
 						device:device,
 						flowlayout:(options.layout=='flow')+'',	// value need to be strings 'true' or 'false'
+						theme: options.theme,
 						themeSet:newDialog.dialogSpecificWidget._selectedThemeSet
 					};
 					davinci.ui.Resource.openResource(resource, newHtmlParams);

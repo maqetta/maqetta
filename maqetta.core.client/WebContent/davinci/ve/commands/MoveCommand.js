@@ -79,7 +79,7 @@ dojo.declare("davinci.ve.commands.MoveCommand", null, {
 		this._deltaX = this._newBox.l - this._oldBox.l;
 		this._deltaY = this._newBox.t - this._oldBox.t;
 
-		var cleanValues = { left: this._newBox.l, top: this._newBox.t, position: "absolute"};
+		var cleanValues = { left: this._newBox.l, top: this._newBox.t};
 		davinci.ve.states.setStyle(widget, this._state, cleanValues, undefined, isNormalState);	
 		
 		if (isNormalState) {

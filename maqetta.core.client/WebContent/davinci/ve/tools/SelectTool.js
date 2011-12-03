@@ -365,8 +365,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			return;
 		}
 		var dx = 0, dy = 0;
-		var pitch = this._context.getPreference("keyboardMovePitch") ||	//TODO: enable this preference
-					6;
+		var pitch = event.shiftKey ? 10 : 1;
 		switch(event.keyCode){
 		case dojo.keys.RIGHT_ARROW:	dx = pitch;	break;
 		case dojo.keys.LEFT_ARROW:	dx = -pitch;break;

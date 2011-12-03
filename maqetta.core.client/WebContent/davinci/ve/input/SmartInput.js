@@ -285,7 +285,14 @@ return declare("davinci.ve.input.SmartInput", null, {
 		return result;
 	},
 	
-
+	inlineEditActive: function() {
+		if(this._inline && this._inline.style.display != "none" && this._inline.eb){
+			return true;
+		}else{
+			return false;
+		}
+	},
+	
 	show: function(widgetId) {
 		this._widget = davinci.ve.widget.byId(widgetId);
 		

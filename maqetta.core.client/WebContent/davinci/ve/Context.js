@@ -1506,6 +1506,17 @@ return declare("davinci.ve.Context", null, {
 		return this._selection;
 	},
 	
+	// Returns true if inline edit is showing
+	inlineEditActive: function(){
+		for(var i=0; i<this._selection.length; i++){
+			var focus = this._focuses[i];
+			if(focus.inlineEditActive()){
+				return true;
+			}
+		}
+		return false;
+	},
+	
 	updateFocus: function(widget, index, inline){
 		var box, op, parent;
 

@@ -302,6 +302,15 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         return;
     },
 
+	// Returns true if inline edit is showing
+	inlineEditActive: function(){
+		if(this._inline && this._inline.inlineEditActive){
+			return this._inline.inlineEditActive();
+		}else{
+			return false;
+		}
+		
+	},
 
     hide: function(inline){
 
@@ -318,9 +327,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         if (this._inline){
             this._inline.hide();
             delete this._inline;
-        
         }
-
+        var userdoc = this._context.getDocument();	// inner document = user's document
+        userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
     },
     
     allow: function(op){

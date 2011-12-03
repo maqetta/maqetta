@@ -259,6 +259,10 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			// in order to avoid drag/drop issues.
 			context.setActiveTool(null);
 			context.dragMoveCleanup();
+			if(!context.inlineEditActive()){
+	            var userdoc = this._context.getDocument();	// inner document = user's document
+	            userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
+			}
 		}
 	},
 

@@ -409,6 +409,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			args.index));
 
 		if(args.position){
+			command.add(new davinci.ve.commands.StyleCommand(w, [{position:'absolute'}]));
 			command.add(new davinci.ve.commands.MoveCommand(w, args.position.x, args.position.y));
 		}
 		if(args.size || w.isLayoutContainer){

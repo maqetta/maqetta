@@ -233,13 +233,13 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         var box_r = b.l + b.w + this.size;
         var box_b = b.t + b.h + this.size;
         var widget = this._selectedWidget;
-        var body = widget ? widget.domNode.ownerDocument.body : null;
-        if(body){
-        	if(box_r > body.offsetWidth){
-        		b.w -= (box_r - body.offsetWidth);
+        var htmlElem = widget ? widget.domNode.ownerDocument.body.parentNode : null;
+        if(htmlElem){
+        	if(box_r > htmlElem.scrollWidth){
+        		b.w -= (box_r - htmlElem.scrollWidth);
         	}
-        	if(box_b > body.offsetHeight){
-        		b.h -= (box_b - body.offsetHeight);
+        	if(box_b > htmlElem.scrollHeight){
+        		b.h -= (box_b - htmlElem.scrollHeight);
         	}
         }
         

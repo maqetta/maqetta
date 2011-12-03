@@ -121,6 +121,17 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 
 	onExtentChange: function(index, box, cursorOnly){
+		
+		function adjustLTOffsetParent(left, top){
+			var parentNode = widget.domNode.offsetParent;
+			if(parentNode && parentNode != context.getContainerNode()){
+				var p = context.getContentPosition(context.getDojo().position(parentNode, true));
+				left -= (p.x - parentNode.scrollLeft);
+				top -= (p.y - parentNode.scrollTop);
+			}
+			return {left:left, top:top};
+		}
+		
 		var context = this._context;
 		var cp = context._chooseParent;
 		var selection = context.getSelection();
@@ -161,7 +172,10 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			compoundCommand.add(resizeCommand);
 			var position_prop = dojo.style(widget.domNode, 'position');
 			if("l" in box && "t" in box && position_prop == 'absolute'){
-				var moveCommand = new davinci.ve.commands.MoveCommand(widget, box.l, box.t);
+				var p = adjustLTOffsetParent(box.l, box.t);
+				var left = p.left;
+				var top = p.top;
+				var moveCommand = new davinci.ve.commands.MoveCommand(widget, left, top);
 				compoundCommand.add(moveCommand);
 			}
 		}else{
@@ -244,13 +258,10 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 					}				
 				}else if(!cursorOnly){
 					var left = box.l,
-						top = box.t,
-						parentNode = widget.domNode.offsetParent;
-					if(parentNode && parentNode != context.getContainerNode()){
-						var p = context.getContentPosition(context.getDojo().position(parentNode, true));
-						left -= (p.x - parentNode.scrollLeft);
-						top -= (p.y - parentNode.scrollTop);
-					}
+						top = box.t;
+					var p = adjustLTOffsetParent(left, top);
+					left = p.left;
+					top = p.top;
 					var position = {x: left, y: top};
 					left = position.x;
 					top = position.y;

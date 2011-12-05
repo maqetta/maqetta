@@ -152,8 +152,7 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 			for(var i=0;i<rebasedValues.length;i++){
 				for(var a in rebasedValues[i]){
 					if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget) && (rebasedValues[i][a])){
-						//debugger;
-						rule.setProperty(a,  rebasedValues[a]);
+						rule.setProperty(a,  rebasedValues[i][a]);
 						//rebasedValues[a] = null;  not sure about this might be valid for more than one rule
 		
 					}

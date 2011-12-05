@@ -138,7 +138,7 @@ return declare("davinci.libraries.dojo.dijit.form.DropDownButtonInput", Containe
 		var textObj = dojo.byId("davinci.ve.input.SmartInput_radio_text_width_div");
 		//var what = entities.encode(dojox.html.entities.encode(value));
 		var what = entities.encode(value);
-		textObj.innerHTML = '<div class="dojoxEllipsis">' + dojo.replace('Plain text ({0})', [what]) + '</div>'; // FIXME: i18n
+		textObj.innerHTML = '<div class="dojoxEllipsis">' + dojo.replace(nls.plainText, [what]) + '</div>';
 		var htmlObj = dojo.byId("davinci.ve.input.SmartInput_radio_html_width_div");
 		htmlObj.innerHTML = '<div id="davinci.ve.input.SmartInput_radio_html_div" class="dojoxEllipsis">'+veNls.htmlMarkup+'</div>';
 		var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');

@@ -245,6 +245,32 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
              } 
          }
 	    
+	 },
+	 
+	 /*
+     * @returns the path to the file being edited
+     */
+	 getPath: function(){
+        
+        /*
+         * FIXME:
+         * We dont set the path along with the content in the context class, so
+         * have to pull the resource path from the model.  
+         * 
+         * I would rather see the path passed in, rather than assume the model has the proper URL,
+         * but using the model for now.
+         * 
+         */
+	    /*theme editor sets the file name to DEFAULT_PAGE
+	     * so use the path theme file to find the html
+	     *
+         */  
+	     var path = 'project1/themes/claro1/dojo-theme-editor.html';
+        var path = this.theme.file.getPath();
+        path = path.substring(0, path.lastIndexOf('/'));
+        path = path + '/' + this.theme.themeEditorHtmls[0];
+        return path;
 	 }
+	 
 });
 

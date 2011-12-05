@@ -1,6 +1,14 @@
 /* needed for theme editor subwidget menu pop up */
 @import url("Menu.css");
 
+.maqHidden {
+	display: none;
+}
+
+.maqShown {
+	visibility: visible !important;
+}
+
 .maqFocus {
 	z-index: 1000;
 }

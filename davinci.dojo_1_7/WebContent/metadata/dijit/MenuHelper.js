@@ -7,7 +7,7 @@ return function() {
 			context = widget.getContext();
 		domClass.add(widget.domNode, "dvHidden");
 		widget._helperHandle = connect.subscribe("/davinci/ui/widgetSelected", null, function(selected) {
-			if (!widget.properties.contextMenuForWindow) { return; }
+			if (widget.properties && !widget.properties.contextMenuForWindow) { return; }
 			var w = selected[0];
 			while (w && w.id != id) {
 				if (w._ownerId) {

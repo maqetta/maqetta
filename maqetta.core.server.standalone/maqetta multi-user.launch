@@ -22,9 +22,5 @@
 <booleanAttribute key="tracing" value="false"/>
 <booleanAttribute key="useCustomFeatures" value="false"/>
 <booleanAttribute key="useDefaultConfigArea" value="true"/>
-<<<<<<< HEAD
-<stringAttribute key="workspace_bundles" value="davinci.dojo_1_7@default:default,davinci.html@default:true,davinci.jqueryui_1_8@default:true,davinci.oneui_2010_08_02@default:default,davinci.server.gzip@default:true,davinci.yui_2_6_0@default:true,maqetta.core.client@default:default,maqetta.core.server.standalone@default:true,maqetta.core.server@default:default,org.apache.commons.fileupload@default:true,org.apache.commons.io@default:true"/>
-=======
-<stringAttribute key="workspace_bundles" value="javax.activation@default:default,davinci.oneui_2010_08_02@default:default,maqetta.clipart@default:true,maqetta.shapes@default:true,davinci.mvc_0_1@default:default,davinci.yui_2_6_0@default:true,maqetta.core.server@default:default,davinci.jqueryui_1_8@default:true,davinci.server.gzip@default:true,org.apache.commons.fileupload@default:true,davinci.review@default:default,maqetta.core.server.standalone@default:true,davinci.dojo_1_7@default:default,javax.mail@default:default,davinci.html@default:true,davinci.svgweb_2009_11_23@default:default,maqetta.core.client@default:default,org.apache.commons.io@default:true"/>
->>>>>>> master
+<stringAttribute key="workspace_bundles" value="javax.activation@default:default,davinci.oneui_2010_08_02@default:default,maqetta.clipart@default:true,maqetta.shapes@default:true,davinci.mvc_0_1@default:default,davinci.yui_2_6_0@default:true,maqetta.core.server@default:default,davinci.jqueryui_1_8@default:true,davinci.server.gzip@default:true,org.apache.commons.fileupload@default:true,maqetta.core.server.standalone@default:true,davinci.dojo_1_7@default:default,javax.mail@default:default,davinci.html@default:true,davinci.svgweb_2009_11_23@default:default,maqetta.core.client@default:default,org.apache.commons.io@default:true"/>
 </launchConfiguration>

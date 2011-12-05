@@ -5,7 +5,6 @@ return function() {
 	this.create = function(widget) {
 		var id = widget.dijitWidget.id,
 			context = widget.getContext();
-		//FIXME: not safe to use 'this' since the helper instance does not correspond to the widget
 		widget._helperHandle = connect.subscribe("/davinci/ui/widgetSelected", null, function(selected) {
 			var w = selected[0];
 			while (w && w.id != id) {
@@ -16,11 +15,11 @@ return function() {
 				}
 			}
 
-			var dialog = context.getDijit().registry.byId(id);
-			if (!w) {
-				dialog.hide();
-			} else {
+			var dialog = context.getDijit().registry.byId(id); // use widget
+			if (w) {
 				dialog.show();
+			} else {
+				dialog.hide();
 			}
 		}.bind(this));		
 	};

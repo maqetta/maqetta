@@ -182,10 +182,12 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 			/* check if array or single value.  If its a single value we'll just set the text box to that value */
 			if(!dojo.isArray(value)){
 				this._comboBox.set('value', value);
-				this._onChange();
+			}else if(value.length>0){
+				this._comboBox.set('value', value[value.length-1]);
 			}else{
-				// JON- this is where your regular expression will need to pick a value, and manipulate it for whatever format.
+				this._comboBox.set('value', '');
 			}
+			this._onChange();
 		 }
 
 	},

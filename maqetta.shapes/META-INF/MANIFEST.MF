@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: shapes
+Bundle-SymbolicName: maqetta.shapes;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: org.eclipse.equinox.http.registry;bundle-version="1.0.200",
+ org.eclipse.osgi;bundle-version="3.5.0"

@@ -34,10 +34,23 @@ define({ root:
 		//OpenThemeDialog.js
 		"noUserThemes":"No user themes found in workspace. Please create a new theme before editing.",
 		
-		//ThemeSetsDialog.js
+		//ThemeSetsDialog.js and widgets/ThemeSetSelection.js
 		"themeSetsDialog":"Manage theme sets",
-		"themeSetName":"Theme set name:",
-		"desktopTheme":"Desktop theme:",
+		"renameThemeSet":"Rename theme set",
+		"themeSets":"Theme sets:",
+		"currentlySelectedThemeSet":"Currently selected theme set:",
+		"themeSetName":"Name:",
+		"desktopTheme":"Dojo desktop 1.7 theme:",
+		"mobileTheme":"Dojo mobile 1.7 theme:",
+		"android":"Android:",
+		"blackberry":"Blackberry:",
+		"ipad":"iPad:",
+		"iphone":"iPhone:",
+		"other":"Other:",
+		"selectTheme":"Select theme",
+		"themeSet":"Theme set:",
+	    "themeVersionMessage": "Theme version does not match workspace version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.",
+
 		
 		//SaveAsWidgetForm.js
 		//right now it has its own nls file called "common." 

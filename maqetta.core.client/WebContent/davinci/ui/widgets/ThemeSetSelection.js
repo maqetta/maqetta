@@ -5,21 +5,32 @@ dojo.require('davinci.workbench.WidgetLite');
 dojo.require("davinci.ve.widgets.HTMLStringUtil");
 dojo.require("dijit.layout.ContentPane");
 dojo.require("davinci.ui.widgets.ThemeStore");
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ui", "ui");
+dojo.requireLocalization("dijit", "common");
 
 dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
     
     workspaceOnly : false,
-    message: 'Theme version does not match workspace version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.',
     _connections: [],
     _selectedThemeSet: null,
-
+    
+    constructor: function(/* Object */args){
+        dojo.safeMixin(this, args);
+    },
+    
     buildRendering: function(){
+        var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
         this._dialog = new dijit.Dialog({
-            title: "Select theme",
+            title: langObj.selectTheme,
             style: "width: 372px"
         });
         dojo.connect(this._dialog, "onCancel", this, "onClose");
-        var currentThemeSet = davinci.theme.getThemeSet(davinci.Workbench.getOpenEditor().getContext());
+        var context = null;
+        if (!this.newFile) {
+            context = davinci.Workbench.getOpenEditor().getContext();
+        } 
+        var currentThemeSet = davinci.theme.getThemeSet(context);
         if (!currentThemeSet){
             currentThemeSet = davinci.theme.dojoThemeSets.themeSets[0]; // default;
             
@@ -31,6 +42,13 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
         this._connections.push(dojo.connect(dijit.byId('theme_select_mobile_theme_select'), "onChange", this, "onMobileChange"));
         this._connections.push(dojo.connect(dijit.byId('theme_select_ok_button'), "onClick", this, "onOk"));
         this._connections.push(dojo.connect(dijit.byId('theme_select_cancel_button'), "onClick", this, "onClose"));
+        
+        this._connections.push(dojo.connect(dijit.byId('theme_select_android_select'), "onChange", this, "onAndroidThemeChange"));
+        this._connections.push(dojo.connect(dijit.byId('theme_select_blackberry_select'), "onChange", this, "onBlackberryThemeChange"));
+        this._connections.push(dojo.connect(dijit.byId('theme_select_ipad_select'), "onChange", this, "oniPadThemeChange"));
+        this._connections.push(dojo.connect(dijit.byId('theme_select_iphone_select'), "onChange", this, "oniPhoneThemeChange"));
+        this._connections.push(dojo.connect(dijit.byId('theme_select_other_select'), "onChange", this, "onOtherThemeChange"));
+
         this.addThemeSets();
         var select = dijit.byId('theme_select_themeset_theme_select');
         select.attr( 'value', currentThemeSet.name);
@@ -118,7 +136,7 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
             mblSelect.attr( 'value', themeSet.mobileTheme[themeSet.mobileTheme.length-1].theme);
         } else {
             mblSelect.attr( 'value', davinci.theme.default_theme); 
-            this.onMobileChange(davinci.theme.default_theme); //force refresh
+//            this.onMobileChange(davinci.theme.default_theme); //force refresh
         } 
         
     },
@@ -163,9 +181,38 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
                
     },
     
+    onDeviceThemeChange: function(device, e){
+        for (var d = 0; d < this._selectedThemeSet.mobileTheme.length; d++){
+            if (this._selectedThemeSet.mobileTheme[d].device.toLowerCase() === device.toLowerCase()){
+                this._selectedThemeSet.mobileTheme[d].theme = e;
+                break;
+            }
+        }
+    },
+    
+    onAndroidThemeChange: function(e){
+        this.onDeviceThemeChange('android', e);
+    },
+    
+    onBlackberryThemeChange: function(e){
+        this.onDeviceThemeChange('blackberry', e);
+    },
+    
+    oniPadThemeChange: function(e){
+        this.onDeviceThemeChange('ipad', e);
+    },
+    
+    oniPhoneThemeChange: function(e){
+        this.onDeviceThemeChange('iphone', e);
+    },
+    
+    onOtherThemeChange: function(e){
+        this.onDeviceThemeChange('other', e);
+    },
+    
+    
     onMobileChange : function(e){
         
-        var mblSelect = dijit.byId('theme_select_mobile_theme_select');
         var androidSelect = dijit.byId('theme_select_android_select');
         var blackberrySelect = dijit.byId('theme_select_blackberry_select');
         var ipadSelect = dijit.byId('theme_select_ipad_select');
@@ -237,7 +284,8 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
 
     },
     
-      
+     
+    
     _changeTheme : function(){
         debugger;
         var e = davinci.Workbench.getOpenEditor();
@@ -246,7 +294,9 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
     },
     
     _onChange :function(){ 
-        debugger;
+
+        var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
+        var loc = dojo.i18n.getLocalization("dijit", "common");
         var currentValue = this._getValueAttr();
         if( currentValue==null  ||  this._blockChange)
             return;
@@ -255,8 +305,8 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
         var warnCookie = dojo.cookie(this._cookieName);
         if (this.dojoVersion && currentValue.version !== this.dojoVersion && !warnCookie){
             this._warnDiv.innerHTML = '<table>' + 
-                                            '<tr><td></td><td>'+this.message+'</td><td></td></tr>'+
-                                             '<tr><td></td><td align="center"><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.ok">Ok</button><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.cancel">Cancel</button></td><td></td></tr>'+
+                                            '<tr><td></td><td>'+langObj.themeVersionMessage+'</td><td></td></tr>'+
+                                             '<tr><td></td><td align="center"><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.ok">'+loc.buttonOk+'</button><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.cancel">'+loc.buttonCancel+'</button></td><td></td></tr>'+
                                        '</table>';
             var ok = dijit.byId('davinci.ui.widgets.ThemeSelection.ok');
             var cancel = dijit.byId('davinci.ui.widgets.ThemeSelection.cancel');
@@ -297,11 +347,14 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
     
     onOk: function(e){
 
-        this.updateDeviceThemes();
+      // this.updateDeviceThemes();
         this.onClose(e);
-        var e = davinci.Workbench.getOpenEditor();
-        if (e && e.getContext)
-            e.getContext().getCommandStack().execute(new davinci.ve.commands.ChangeThemeCommand(this._selectedThemeSet, e.getContext()));
+        if (!this.newFile) {
+            var e = davinci.Workbench.getOpenEditor();
+            if (e && e.getContext) {
+                e.getContext().getCommandStack().execute(new davinci.ve.commands.ChangeThemeCommand(this._selectedThemeSet, e.getContext()));
+            }
+        }
     },
     
     onClose: function(e){
@@ -315,25 +368,27 @@ dojo.declare("davinci.ui.widgets.ThemeSetSelection", null, {
     },
     
     _getTemplate: function(){
-
+        
+        var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
+        var loc = dojo.i18n.getLocalization("dijit", "common");
         var template = ''+
             '<table style="width: 100%; margin-left:10px; margin-right:10px;">'+
-                '<tr><td style="width: 18%;">Theme set:</td><td style="text-align: center;"><select dojoType="dijit.form.Select" id="theme_select_themeset_theme_select" type="text" style="width: 175px;" ></select></td></tr>'+
+                '<tr><td style="width: 18%;">'+langObj.themeSet+'</td><td style="text-align: center;"><select dojoType="dijit.form.Select" id="theme_select_themeset_theme_select" type="text" style="width: 175px;" ></select></td></tr>'+
             '</table>' +
             '<div style="border-top: 1px solid black; top: 231px; border-top-color: #ccc; left: 429px; width: 300px; height: 11px; margin-top: 6px; margin-left:10px;"></div>'+
             '<table style="margin-left: 15px; width: 100%;">'+
-                '<tr><td>Dojo desktop 1.7 theme:</td><td><select dojoType="dijit.form.Select" id="theme_select_desktop_theme_select"type="text"  style="width: 175px;"  ></select></td></tr>'+
-                '<tr><td>Dojo mobile 1.7 theme:</td><td><select dojoType="dijit.form.Select" id="theme_select_mobile_theme_select"type="text"  style="width: 175px;" ></select></td></tr>'+
+                '<tr><td>'+langObj.desktopTheme+'</td><td><select dojoType="dijit.form.Select" id="theme_select_desktop_theme_select"type="text"  style="width: 175px;"  ></select></td></tr>'+
+                '<tr><td>'+langObj.mobileTheme+'</td><td><select dojoType="dijit.form.Select" id="theme_select_mobile_theme_select"type="text"  style="width: 175px;" ></select></td></tr>'+
             '</table>' +
             '<table id="theme_select_devices_table" style="margin-left:30px; border-collapse: separate; border-spacing: 0 0; width: 100%">' +
-            '<tr><td style="width: 139px;">Android:</td><td><select dojoType="dijit.form.Select" id="theme_select_android_select" type="text"  style="width: 150px;"></select></td></tr>' +
-            '<tr><td>Blackberry:</td><td><select dojoType="dijit.form.Select" id="theme_select_blackberry_select" type="text"  style="width: 150px;"></select></td></tr>' +
-            '<tr><td>iPad:</td><td><select dojoType="dijit.form.Select" id="theme_select_ipad_select" type="text"  style="width: 150px;"></select></td></tr>' +
-            '<tr><td>iPhone:</td><td><select dojoType="dijit.form.Select" id="theme_select_iphone_select" type="text"  style="width: 150px;"></select></td></tr>' +
-            '<tr><td>Other:</td><td><select dojoType="dijit.form.Select" id="theme_select_other_select" type="text"  style="width: 150px;"></select></td></tr>' +
+            '<tr><td style="width: 139px;">'+langObj.android+'</td><td><select dojoType="dijit.form.Select" id="theme_select_android_select" type="text"  style="width: 150px;"></select></td></tr>' +
+            '<tr><td>'+langObj.blackberry+'</td><td><select dojoType="dijit.form.Select" id="theme_select_blackberry_select" type="text"  style="width: 150px;"></select></td></tr>' +
+            '<tr><td>'+langObj.ipad+'</td><td><select dojoType="dijit.form.Select" id="theme_select_ipad_select" type="text"  style="width: 150px;"></select></td></tr>' +
+            '<tr><td>'+langObj.iphone+'</td><td><select dojoType="dijit.form.Select" id="theme_select_iphone_select" type="text"  style="width: 150px;"></select></td></tr>' +
+            '<tr><td>'+langObj.other+'</td><td><select dojoType="dijit.form.Select" id="theme_select_other_select" type="text"  style="width: 150px;"></select></td></tr>' +
             '</table>' +
             '<table style="width:100%; margin-top: 10px;">'+
-                '<tr><td style="text-align:right; width:80%;"><input type="button" dojoType="dijit.form.Button" id="theme_select_ok_button" label="Ok"></input></td><td><input type="button" dojoType="dijit.form.Button" id="theme_select_cancel_button" label="Cancel"></input></td></tr>'+
+                '<tr><td style="text-align:right; width:80%;"><input type="button" dojoType="dijit.form.Button" id="theme_select_ok_button" label="'+loc.buttonOk+'"></input></td><td><input type="button" dojoType="dijit.form.Button" id="theme_select_cancel_button" label="'+loc.buttonCancel+'"></input></td></tr>'+
              '</table>'+
              '';
 

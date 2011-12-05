@@ -70,6 +70,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             this._nobs[LEFT_BOTTOM].style.left =
             this._nobs[RIGHT_TOP].style.top = -this.size + "px";
         this._nobIndex = -1;
+		
+		this._custom = dojo.create("div", {"class": "editFocusCustom"}, this.domNode);
 
         // _box holds resize values during dragging assuming no shift-key constraints
         // _constrained holds resize values after taking into account shift-key constraints
@@ -199,6 +201,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         }
 
         var b = dojo.mixin({}, box);
+		
+		// bboxActual is box before adjustments
+		this._bboxActual = {l:b.l, t:b.t};
 
         // Adjust for size of border when near the top left corner of the screen
         if(b.l < this.size){
@@ -221,18 +226,20 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         if(b.h < 0){
             b.h = 0;
         }
+		this._bboxActual.w = b.w;
+		this._bboxActual.h = b.h;
 
         // Adjust for size of border when near the bottom/right corner of the screen
         var box_r = b.l + b.w + this.size;
         var box_b = b.t + b.h + this.size;
         var widget = this._selectedWidget;
-        var body = widget ? widget.domNode.ownerDocument.body : null;
-        if(body){
-        	if(box_r > body.offsetWidth){
-        		b.w -= (box_r - body.offsetWidth);
+        var htmlElem = widget ? widget.domNode.ownerDocument.body.parentNode : null;
+        if(htmlElem){
+        	if(box_r > htmlElem.scrollWidth){
+        		b.w -= (box_r - htmlElem.scrollWidth);
         	}
-        	if(box_b > body.offsetHeight){
-        		b.h -= (box_b - body.offsetHeight);
+        	if(box_b > htmlElem.scrollHeight){
+        		b.h -= (box_b - htmlElem.scrollHeight);
         	}
         }
         
@@ -256,16 +263,31 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         this._nobs[RIGHT_TOP].style.left = b.w + "px";
         this._nobs[RIGHT_BOTTOM].style.left = b.w + "px";
         this._nobs[RIGHT_BOTTOM].style.top = b.h + "px";
+		
+		this._bboxAdjusted = b;
     },
     
     
     show: function(widget, inline){
-        //debugger;
+
+        if (!widget){
+            // sometimes you get no widget when  DnD in split screen
+            return; 
+        }
+		this._custom.innerHTML = '';
         this.domNode.style.display = "block";
         this._selectedWidget = widget;
+		var helper = widget.getHelper();
+		var delete_inline = true;
+		if(helper && helper.onShowSelection){
+			helper.onShowSelection({widget:widget, customDiv:this._custom,
+				bboxActual:this._bboxActual, bboxAdjusted:this._bboxAdjusted});
+		}
         if (inline) {
             this.showInline(widget); // sometimes the widget changes from undo/redo som get the current widget
-        } else {
+			delete_inline = false;
+		}
+		if(delete_inline){
             delete this._inline; // delete any old inline kicking around
         }
     },
@@ -280,17 +302,34 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         return;
     },
 
+	// Returns true if inline edit is showing
+	inlineEditActive: function(){
+		if(this._inline && this._inline.inlineEditActive){
+			return this._inline.inlineEditActive();
+		}else{
+			return false;
+		}
+		
+	},
 
     hide: function(inline){
 
+		var widget = this._selectedWidget;
+		var helper = widget.getHelper();
+		if(helper && helper.onHideSelection){
+			// Don't know if any widgets actually use this helper
+			// Included for completeness
+			helper.onHideSelection({widget:widget, customDiv:this._custom});
+		}
         this.domNode.style.display = "none";
-        this._displayedWidget = null;
+		this._selectedWidget = null;	// Used by page editor
+		this._displayedWidget = null;	// Used by theme editor
         if (this._inline){
             this._inline.hide();
             delete this._inline;
-        
         }
-
+        var userdoc = this._context.getDocument();	// inner document = user's document
+        userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
     },
     
     allow: function(op){
@@ -476,18 +515,18 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             }
             dojo.mixin(this._box, b);
             dojo.mixin(this._constrained, b);
-            if(this._selectedWidget && this._selectedWidget.type === 'html.img'){
-            	var domNode = this._selectedWidget.domNode;
-            	var naturalWidth = domNode.naturalWidth;
-            	var naturalHeight = domNode.naturalHeight;
-            	if(typeof naturalHeight == 'number' && naturalHeight > 0 && typeof naturalWidth == 'number' && naturalWidth > 0){
-            		var aspectRatio = naturalWidth / naturalHeight;
-            		if(b.w < aspectRatio * b.h){
-            			this._constrained.w = b.h * aspectRatio;
-            		}else{
-            			this._constrained.h = b.w / aspectRatio;
-            		}
-            	}
+            if(this._selectedWidget && this._selectedWidget.domNode.nodeName === 'IMG'){
+                var domNode = this._selectedWidget.domNode;
+                var naturalWidth = domNode.naturalWidth;
+                var naturalHeight = domNode.naturalHeight;
+                if(typeof naturalHeight == 'number' && naturalHeight > 0 && typeof naturalWidth == 'number' && naturalWidth > 0){
+                    var aspectRatio = naturalWidth / naturalHeight;
+                    if(b.w < aspectRatio * b.h){
+                        this._constrained.w = b.h * aspectRatio;
+                    }else{
+                        this._constrained.h = b.w / aspectRatio;
+                    }
+                }
             }else{
             	switch(this._nobIndex){
 	                case LEFT:

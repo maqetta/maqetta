@@ -1,6 +1,40 @@
 define([
-], function() {
+	"dojo/_base/connect", "dojo/dom-class"
+], function(connect, domClass) {
 return function() {
+	this.create = function(widget) {
+		var id = widget.dijitWidget.id,
+			context = widget.getContext();
+		domClass.add(widget.domNode, "dvHidden");
+		widget._helperHandle = connect.subscribe("/davinci/ui/widgetSelected", null, function(selected) {
+			if (!widget.properties.contextMenuForWindow) { return; }
+			var w = selected[0];
+			while (w && w.id != id) {
+				if (w._ownerId) {
+					w = context.getDijit().registry.byId(w._ownerId);
+				} else {
+					w = w.getParent && w.getParent();
+				}
+			}
+	
+			var menu = context.getDijit().registry.byId(id); // use widget?
+			if (w) {
+				domClass.remove(menu.domNode, "maqHidden");
+				domClass.add(menu.domNode, "maqShown");
+			} else {
+				domClass.add(menu.domNode, "maqHidden");
+				domClass.remove(menu.domNode, "maqShown");
+			}
+		}.bind(this));
+	};
+
+	this.destroy = function(widget) {
+		connect.unsubscribe(widget._helperHandle);
+		delete widget._helperHandle;
+
+		widget.dijitWidget.destroyRecursive();
+	};
+
 	this.getData = function(/*Widget*/ widget, /*Object*/ options) {
 		// summary:
 		//		Returns a serialized form of the passed Menu/MenuBar, also serializing the children MenuItems and Menus.
@@ -74,18 +108,6 @@ return function() {
 				}
 		});
 		return data;
-	};
-
-	this.onSelect = function(widget) {
-		// use listener logic like dialog to trigger this code when child widgets are selected
-		widget._visibility = widget.domNode.style.visibility;
-		widget.domNode.style.visibility = "visible";
-	};
-
-	this.onDeselect = function(widget) {
-		widget.domNode.style.visibility = widget._visibility;
-		delete widget._visibility;
-		return true;
 	};
 
 	this.getWidgetTextExtra = function(widget) {

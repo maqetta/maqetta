@@ -1,33 +1,27 @@
-dojo.provide("davinci.ui.ModelEditor");
- 
-dojo.require("davinci.ui.TextEditor");
+define(["dojo/_base/declare", "davinci/ui/TextEditor"], function(declare, TextEditor) {
 
-dojo.declare("davinci.ui.ModelEditor", davinci.ui.TextEditor, {
+return declare("davinci.ui.ModelEditor", TextEditor, {
 
-    constructor : function (element) {
-		this.model=null;
+    constructor: function (element) {
+//		this.model = null;
 		this.subscribe("/davinci/ui/selectionChanged", this.selectModel);
-
 	},
 	
-	colorize : function (text) {
+	colorize: function (text) {
 	    return null;
 	},
 	
-	setContent : function (filename, content) {
+	setContent: function (filename, content) {
 		this.inherited(arguments);
-		this.model.fileName=filename;
-		
+		this.model.fileName = filename;
 		this.model.setText(content);
-	
 	},
 		
-    getHoverText : function(x,y) {
-			var lineColPos=this.convertMouseToLine(x,y);
-			var childModel=this.model.findChildAtPosition(
-					{startOffset:lineColPos.row,endOffset:lineColPos.col});
-			return childModel.getLabel();
-	        
+    getHoverText: function(x,y) {
+		var lineColPos = this.convertMouseToLine(x,y);
+		var childModel = this.model.findChildAtPosition(
+				{startOffset:lineColPos.row,endOffset:lineColPos.col});
+		return childModel.getLabel();
 	},
 	
 	handleChange: function(text) {
@@ -50,7 +44,7 @@ dojo.declare("davinci.ui.ModelEditor", davinci.ui.TextEditor, {
 		}
 	},
 
-	selectionChange : function (selection) {
+	selectionChange: function (selection) {
        var childModel = this.model.findChildAtPosition(selection);
        selection.model = childModel;
        if (childModel != this._selectedModel) {
@@ -61,40 +55,31 @@ dojo.declare("davinci.ui.ModelEditor", davinci.ui.TextEditor, {
        this._selectedModel = childModel;
 	},
 
-	getSyntaxPositions : function (text,lineNumber) {
+	getSyntaxPositions: function (text,lineNumber) {
 		
 		this.model.setText(text);
 		
-		if (this.model.getSyntaxPositions)
-		{
-			var positions=this.model.getSyntaxPositions(lineNumber);
+		if (this.model.getSyntaxPositions) {
+			var positions = this.model.getSyntaxPositions(lineNumber);
 		
-			function sortPositions(a,b)
-			{
-				if (a.line!=b.line)
+			function sortPositions(a,b) {
+				if (a.line != b.line) {
 					return a.line-b.line;
+				}
 				return a.col-b.col;
 			}
-			positions=positions.sort(sortPositions);
+			positions = positions.sort(sortPositions);
 			return positions;
 		}
 	},
 	
-	save : function () {
-		var text= this.getText();
-		this.model.setText(text);
+	save: function () {
+		this.model.setText(this.getText());
 		this.inherited(arguments);
-		
 	},
 	
-	getErrors : function () {
-	    if ( this.model.errors ) {
-	        return this.model.errors;	        
-	    } else {
-	        return []; // return empty array to be kind to iterators.
-	    }
+	getErrors: function () {
+	    return this.model.errors || []; // return empty array to be kind to iterators.
 	}
-
 });
-
- 
+});

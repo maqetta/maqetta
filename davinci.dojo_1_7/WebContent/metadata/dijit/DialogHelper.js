@@ -3,14 +3,31 @@ define([
 ], function(connect) {
 return function() {
 	this.create = function(widget) {
-		
+		var id = widget.dijitWidget.id,
+			context = widget.getContext();
+		widget._helperHandle = connect.subscribe("/davinci/ui/widgetSelected", null, function(selected) {
+			var w = selected[0];
+			while (w && w.id != id) {
+				if (w._ownerId) {
+					w = context.getDijit().registry.byId(w._ownerId);
+				} else {
+					w = w.getParent && w.getParent();
+				}
+			}
+
+			var dialog = context.getDijit().registry.byId(id); // use widget
+			if (w) {
+				dialog.show();
+			} else {
+				dialog.hide();
+			}
+		}.bind(this));		
 	};
 
 	this.destroy = function(widget) {
-		if (this.handle) {
-			connect.unsubscribe(this.handle);
-			delete this.handle;
-		}
+		connect.unsubscribe(widget._helperHandle);
+		delete widget._helperHandle;
+
 		widget.dijitWidget.destroyRecursive();
 	};
 
@@ -22,21 +39,6 @@ return function() {
 	 */
 	this.onToggleVisibility = function(widget, on) {
 		return false;
-	};
-
-	this.onSelect = function(widget) {
-		widget.dijitWidget.show();
-
-		var id = widget.dijitWidget.id,
-		context = widget.getContext();
-		this.handle = connect.subscribe("/davinci/ui/widgetSelected", null, function(selected) {
-			for(var w = selected[0]; w && w != widget; w = w.getParent && w.getParent());
-			if(!w || w.id != id) {
-				context.getDijit().registry.byId(id).hide();
-				connect.disconnect(this.handle);
-				delete this.handle;
-			}
-		}.bind(this));
 	};
 };
 });

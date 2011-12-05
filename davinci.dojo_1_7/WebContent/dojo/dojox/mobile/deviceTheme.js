@@ -21,10 +21,8 @@ var _b=[].concat(m[i][2]);
 for(j=t.length-1;j>=0;j--){
 var _c=_3.isArray(t[j])?(t[j][0]||"").replace(/\./g,"/"):"dojox/mobile";
 var _d=_3.isArray(t[j])?t[j][1]:t[j];
-if (_a && _a.length > 0){
 var f="themes/"+_a+"/"+(_d==="@theme"?_a:_d)+".css";
 _b.unshift(_7.toUrl(_c+"/"+f));
-}
 }
 _1.forEach(dm.loadedCssFiles,function(n){
 n.parentNode.removeChild(n);

@@ -8,6 +8,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
     constructor: function(newTheme, context){
         this._newTheme = newTheme;
         this._context = context;
+        this.resetDojoxMobileNeed = false;
         this._oldTheme  = davinci.theme.getThemeSet(this._context);
         if (!this._oldTheme){ 
             this._oldTheme = davinci.theme.dojoThemeSets.themeSets[0]; // default;
@@ -34,6 +35,11 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
         } else {
             this.addThemeSet(newThemeInfo);
         }
+        if(this.resetDojoxMobileNeed){
+            // this is here due to timing if deleting and then adding themeMap
+            this._resetDojoxMobileTheme(this._context);
+            this.resetDojoxMobileNeed = false;
+        }
         var text = this._context.getModel().getText();
         var e = davinci.Workbench.getOpenEditor();
         e.setContent(e.fileName,text); // force regen of HTML Model to load new theme
@@ -48,16 +54,14 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
           helper.removeTheme(this._context, oldTheme);  
         } else {
             var modelDoc = this._context.getModel().getDocumentElement(); 
-            var d = this._context.getDocument();
-            var modelHead = modelDoc.getChildElement('head');
-            var b = d.getElementsByTagName("body");
-            var modelBody = modelDoc.getChildElement('body');
+           var modelHead = modelDoc.getChildElement('head');
+           var modelBody = modelDoc.getChildElement('body');
             
-            var header = dojo.clone( this._context.getHeader());
-            var resourcePath = this._context.getFullResourcePath();
+           var header = dojo.clone( this._context.getHeader());
+           // var resourcePath = this._context.getFullResourcePath();
             // find the old theme file name
             function sameSheet(headerSheet, file){
-                return (headerSheet.indexOf(file) > -1)
+                return (headerSheet.indexOf(file) > -1);
             }
             
             var files = oldTheme.files;
@@ -72,7 +76,6 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
                         var modelAttribute = modelBody.getAttribute('class');
                         if (modelAttribute){
                             modelAttribute = modelAttribute.replace(oldTheme.className,'');
-                            //header.bodyClass = modelAttribute;
                             header.bodyClasses = modelAttribute; // seems to have changed to this
                             modelBody.removeAttribute('class');
                             if (modelAttribute.length > 0){
@@ -106,9 +109,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
           helper.addTheme(this._context, newThemeInfo);  
         } else {
             var modelDoc = this._context.getModel().getDocumentElement(); 
-            var d = this._context.getDocument();
             var modelHead = modelDoc.getChildElement('head');
-            var b = d.getElementsByTagName("body");
             var modelBody = modelDoc.getChildElement('body');
             
             var header = dojo.clone( this._context.getHeader());
@@ -202,18 +203,26 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
                 scriptTag.parent.removeChild(scriptTag);
              }
         }, this);
+        this.resetDojoxMobileNeed = true;
+        
+    },
+    
+    _resetDojoxMobileTheme: function(context){
         var device = context.getMobileDevice() || 'none';
+        if (device != 'none'){
+            device = preview.silhouetteiframe.themeMap[device+'.svg'];
+        }
         var dm = context.getDojo().getObject("dojox.mobile", true);
         if (dm){
             var dj = context.getDojo();
             var url = dj.moduleUrl('dojox.mobile', 'themes/iphone/ipad.css');
             dm.themeMap=[["Android","android",[]],["BlackBerry","blackberry",[]],["iPad","iphone",[url]],["Custom","custom",[]],[".*","iphone",[]]]; // reset themeMap to default
+            delete dm.themeFiles;
             dm.loadDeviceTheme(device);
-        }
-        
+        } 
     },
     
-    _dojoxMobileAddTheme: function(context, theme){
+    _dojoxMobileAddTheme: function(context, theme, newFile){
         
         var htmlElement = context._srcDocument.getDocumentElement();
         var head = htmlElement.getChildElement("head");
@@ -233,7 +242,11 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             }
         }
         // add the theme to the dojox.mobile.themeMap
-        context.loadRequires("dojox.mobile.View", true); //  use this widget to get the correct requires added to the file.
+        if (newFile){
+            context.loadRequires("dojox.mobile.View", true/*doUpdateModel*/, false, true /* skip UI load */ );
+        } else {
+            context.loadRequires("dojox.mobile.View", true); //  use this widget to get the correct requires added to the file. 
+        }
         head = htmlElement.getChildElement("head");
         scriptTags=head.getChildElements("script");
 
@@ -252,7 +265,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
                                 themeMap = null;
                             } else {
                                themeMap = dojo.toJson(davinci.theme.getDojoxMobileThemeMap(context, theme));
-                               themeMap = text.substring(0,stop+1) + ',function(dojoxMobile){dojoxMobile.themeMap='+themeMap+';}' + text.substring(stop+1);
+                               themeMap = text.substring(0,stop+1) + ',function(dojoxMobile){dojoxMobile.themeMap='+themeMap+';dojoxMobile.themeFiles = [];}' + text.substring(stop+1);
                             }
                         }
                         if(themeMap){
@@ -265,16 +278,24 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
                             newScriptText.setText(themeMap); 
                             script.addChild(newScriptText); 
                             scriptTag.parent.removeChild(scriptTag);
+                            if (!newFile) {
+                                var device = context.getMobileDevice() || 'none';
+                                if (device != 'none'){
+                                    device = preview.silhouetteiframe.themeMap[device+'.svg'];
+                                }
+                                var dm = context.getDojo().getObject("dojox.mobile", true);
+                                dm.themeMap= davinci.theme.getDojoxMobileThemeMap(context, theme);
+                                dm.themeFiles = [];
+                                dm.loadDeviceTheme(device);
+                                this.resetDojoxMobileNeed = false;
+                            }
                         }
                         
                     }
                 }
              }
         }, this);
-        var device = context.getMobileDevice() || 'none';
-        var dm = context.getDojo().getObject("dojox.mobile", true);
-        dm.loadDeviceTheme(device);
-                 
+            
             
 
     },

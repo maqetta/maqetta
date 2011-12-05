@@ -219,7 +219,7 @@ davinci.ve.widget.getLabel = function(widget){
 	}
 
 	//TODO: move to getWidgetText helper methods
-	var node = widget.domNode;
+	var domNode = widget.domNode;
 	switch(widget.type){
 		case 'dijit.form.ComboBox':
 		case 'dijit.form.Button':
@@ -229,12 +229,12 @@ davinci.ve.widget.getLabel = function(widget){
 			widgetText = widget.attr("title");
 			break;
 		case 'html.label':
-			widgetText = node.innerHTML;
+			widgetText = domNode.innerHTML;
 			break;
 		case 'html.img':
-			widgetText = node.alt;
+			widgetText = domNode.alt;
 			if(!widgetText){
-				widgetText = node.title;
+				widgetText = domNode.title;
 			}
 	}
 
@@ -249,7 +249,7 @@ davinci.ve.widget.getLabel = function(widget){
 	var className = classAttr && classAttr.trim();
 	if (id || className) {
 		text += "<span class='propertiesTitleClassName'>";
-		//text += node.tagName;
+		//text += domNode.tagName;
 		if (id) {
 			text += "#" + id;
 		}
@@ -265,7 +265,7 @@ davinci.ve.widget.getLabel = function(widget){
 
 	//TODO: move to getWidgetTextExtra helper methods
 	if (widget.type == 'html.img') {
-		text += '<span>' + node.src.substr(node.src.lastIndexOf('/') + 1) + '</span>';
+		text += '<span>' + domNode.src.substr(node.src.lastIndexOf('/') + 1) + '</span>';
 	}
 	return text;
 };

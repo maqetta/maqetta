@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+    <extension id="clipartMetaData" point="org.eclipse.equinox.http.registry.resources">
+            <resource alias="/maqetta/app/metadata/clipart/1.0" base-name="/WebContent/metadata" />
+             <resource alias="/maqetta/app/static/lib/clipart/1.0" base-name="/WebContent/clipart"/>
+    </extension>
+    
+      <extension point="maqetta.core.server.ajaxLibrary">
+         <ajaxLibrary name="clipart" id="clipart" version="1.0">
+            <libraryPath location="WebContent/clipart" name="/lib/clipart"></libraryPath>
+            <metadata location="app/metadata/clipart/1.0" />
+    
+         </ajaxLibrary>
+      </extension>
+      
+</plugin>

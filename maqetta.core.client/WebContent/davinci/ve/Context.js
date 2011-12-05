@@ -79,6 +79,16 @@ return declare("davinci.ve.Context", null, {
                                 dm.themeMap = themeMap;
                             }
                         }
+                        //Look for a dojox.mobile.themeFiles in the document, if found set the themeFiles 
+                        var start = text.indexOf('dojoxMobile.themeFiles');
+                        if (start != -1) {
+                            start = text.indexOf('=', start);
+                            var stop = text.indexOf(';', start);
+                            if (stop > start){
+                                var themeFiles = dojo.fromJson(text.substring(start+1,stop));
+                                dm.themeFiles = themeFiles;
+                            }
+                        }
                      }
                 }, this);
                 loadDeviceTheme(device);
@@ -258,7 +268,12 @@ return declare("davinci.ve.Context", null, {
 			removeFromArray(this._objectIds, objectId);
 		}
 		if (this._selection){
-			removeFromArray(this._selection,widget);
+			for(var i=0; i<this._selection.length; i++){
+				if(this._selection[i] == widget){
+					this.focus(null, i);
+					removeFromArray(this._selection,widget);
+				}
+			}
 		}
 
         var library = davinci.ve.metadata.getLibraryForType(widget.type);
@@ -415,6 +430,10 @@ return declare("davinci.ve.Context", null, {
 					}
 					break;
 				
+				case "image":
+					// Allow but ignore type=image
+					break;
+					
 				default:
 					console.error("Unhandled metadata resource type '" + r.type +
 							"' for widget '" + type + "'");
@@ -602,25 +621,19 @@ return declare("davinci.ve.Context", null, {
 	},
 
     /* ensures the file has a valid theme.  Adds the users default if its not there alread */
-    loadTheme: function(){
+    loadTheme: function(newHtmlParms){
     	/* 
     	 * Ensure the model has a default theme.  Defaulting to Claro for now, should
     	 * should load from prefs 
     	 * 
     	 * */
     	var model = this.getModel();
-    	var defaultThemeName="claro";
-    	var dojoThemeSets = davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
-        if (!dojoThemeSets){ 
-            dojoThemeSets =  davinci.theme.dojoThemeSets;
-            davinci.workbench.Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(),dojoThemeSets);
-            
-        }
-        for (var i = 0; i < dojoThemeSets.themeSets.length; i++){
-            if (dojoThemeSets.themeSets[i].name === davinci.theme.desktop_default){
-                defaultThemeName = dojoThemeSets.themeSets[i].desktopTheme;
-            }
-        }
+       	var defaultThemeName="claro";
+       	if (newHtmlParms && newHtmlParms.themeSet) {
+       	    defaultThemeName = newHtmlParms.themeSet.desktopTheme;
+       	} else if (newHtmlParms && newHtmlParms.theme){
+       	    defaultThemeName = newHtmlParms.theme;
+       	}
     	var imports = model.find({elementType:'CSSImport'});
 		
 		
@@ -658,10 +671,9 @@ return declare("davinci.ve.Context", null, {
 				}
 			}
 		}
-		
-		if (this._loadThemeDojoxMobile(this)){
-            return;
-        }
+
+
+		this._loadThemeDojoxMobile(this);
 		var body = model.find({elementType:'HTMLElement', tag:'body'},true);
 		body.setAttribute("class", defaultTheme.className);
 		/* add the css */
@@ -673,15 +685,16 @@ return declare("davinci.ve.Context", null, {
     
 // FIXME this bit of code should be moved to toolkit specific //////////////////////////////   
     _loadThemeDojoxMobile: function(context){
-      
+
         var htmlElement = context._srcDocument.getDocumentElement();
         var head = htmlElement.getChildElement("head");
         var scriptTags=head.getChildElements("script");
+        
         return dojo.some(scriptTags, function(tag) {
             var text=tag.getElementText();
                 // Look for a dojox.mobile.themeMap in the document, if found set the themeMap 
                // var start = text.indexOf('dojox.mobile.themeMap');
-            return text.length && text.indexOf('dojox.mobile.deviceTheme') != -1;
+            return text.length && text.indexOf('dojoxMobile.themeMap=') != -1;
         });
     },
 //////////////////////////////////////////////////////////////////////////////////////////////     
@@ -692,8 +705,9 @@ return declare("davinci.ve.Context", null, {
 		
 		/* determinte if its the theme editor loading */
 		if(!source.themeCssfiles){ // css files need to be added to doc before body content
-			this.loadTheme();
+			//this.loadTheme(newHtmlParams);
 			this.loadRequires("html.body", true/*doUpdateModel*/, false, true /* skip UI load */ );
+			this.loadTheme(newHtmlParams);
 		}
 		/* ensure the top level body deps are met (ie. maqetta.js, states.js and app.css) */
 		/* make sure this file has a valid/good theme */
@@ -709,6 +723,10 @@ return declare("davinci.ve.Context", null, {
 			var modelBodyElement = source.getDocumentElement().getChildElement("body");
 			modelBodyElement.setAttribute(MOBILE_DEV_ATTR, newHtmlParams.device);
 			modelBodyElement.setAttribute(davinci.preference_layout_ATTRIBUTE, newHtmlParams.flowlayout);
+			if (newHtmlParams.themeSet){
+    			var cmd = new davinci.ve.commands.ChangeThemeCommand(newHtmlParams.themeSet, this);
+    			cmd._dojoxMobileAddTheme(this, newHtmlParams.themeSet.mobileTheme, true); // new file
+			}
 		}
 
 		var data = this._parse(source);
@@ -1488,6 +1506,17 @@ return declare("davinci.ve.Context", null, {
 		return this._selection;
 	},
 	
+	// Returns true if inline edit is showing
+	inlineEditActive: function(){
+		for(var i=0; i<this._selection.length; i++){
+			var focus = this._focuses[i];
+			if(focus.inlineEditActive()){
+				return true;
+			}
+		}
+		return false;
+	},
+	
 	updateFocus: function(widget, index, inline){
 		var box, op, parent;
 
@@ -1656,11 +1685,13 @@ return declare("davinci.ve.Context", null, {
 				}
 				var w = this.getSelection();
 				focus.resize(state.box, w[0]);
+				var windex = index < w.length ? index : 0;	// Just being careful in case index is messed up
+				focus.resize(state.box, w[windex]);
 				focus.allow(state.op);
 				if(focus.domNode.parentNode != containerNode){
 					containerNode.appendChild(focus.domNode);
 				}
-				focus.show(w[0],inline);
+				focus.show(w[windex],inline);
 			}else{ // hide
 				focus.hide();
 			}
@@ -2026,7 +2057,7 @@ return declare("davinci.ve.Context", null, {
 			}
 		}
 		
-		debugger;
+		
 		for(var i = 0;i<cleaned.length;i++){
 			for(var name in cleaned[i]){
 				rule.removeProperty(name);
@@ -2236,7 +2267,7 @@ return declare("davinci.ve.Context", null, {
 			if (this._srcDocument.find({elementType:'HTMLElement', tag: 'script'}).some(function (element) {
 				var elementUrl = element.getAttribute("src");
 				if (elementUrl && elementUrl.indexOf(baseSrcPath) > -1) {
-					element.setAttribute("src", url);
+					//element.setAttribute("src", url);
 					return true;
 				}					
 			})) {
@@ -2337,30 +2368,43 @@ return declare("davinci.ve.Context", null, {
 
 	// add JS to HEAD
 	addHeaderScriptText: function(text){
-		text = '\n' + text;
+	    var splits = text.split('"');
+	    text = '\n' + text;
+	    var testStr;
+	    if (splits.length === 3){
+	        // the require may have a function on it.. 
+	        //require(["dojox/mobile"],function(dojoxMobile){dojoxMobile.themeMap=[["Android","",["themes/custom/custom.css"]],["BlackBerry","",["themes/custom/custom.css"]],["iPad","",["themes/custom/custom.css"]],["iPhone","",["themes/custom/custom.css"]],[".*","",["themes/custom/custom.css"]]];dojoxMobile.themeFiles = [];});
+	        testStr = splits[1];
+	    } else {
+	        testStr = text;
+	    }
 		if (this._scriptAdditions) {
 			var scriptText = this._scriptAdditions.find({elementType: 'HTMLText'}, true);
 			if (scriptText) {
 				var oldText = scriptText.getText();
-				if (oldText.indexOf(text) > -1) {
+				if (oldText.indexOf(testStr) > -1) {
 					return;  // already in the header
 				}
-				this._scriptAdditions.parent.removeChild(this._scriptAdditions);
-				delete this._scriptAdditions;
+				//this._scriptAdditions.parent.removeChild(this._scriptAdditions);
+				//delete this._scriptAdditions;
 				text = oldText + text;
 			}
 		}
 
 		// create a new script element
 		var head = this.getDocumentElement().getChildElement('head'),
-			statesJsScriptTag = this._statesJsScriptTag,
-			script = new davinci.html.HTMLElement('script');
-
+		statesJsScriptTag = this._statesJsScriptTag,
+		script = new davinci.html.HTMLElement('script');
 		script.addAttribute('type', 'text/javascript');
 		script.script = "";
 	
+		if (this._scriptAdditions){ // #1322
+		    // the safest thing to do is put the script element back where it was
+            head.insertBefore(script, this._scriptAdditions);
+            this._scriptAdditions.parent.removeChild(this._scriptAdditions);
+            delete this._scriptAdditions;
+		} else if (statesJsScriptTag) { 
 		// XXX Bug 7499 - (HACK) See comment in addHeaderScript()
-		if (statesJsScriptTag) {
 			head.insertBefore(script, statesJsScriptTag);
 		} else {
 			head.addChild(script);

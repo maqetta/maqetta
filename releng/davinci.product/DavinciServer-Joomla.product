@@ -29,6 +29,8 @@
       <plugin id="davinci.dojo_1_7"/>
       <plugin id="davinci.html"/>
       <plugin id="davinci.joomla"/>
+      <plugin id="maqetta.clipart"/>
+      <plugin id="maqetta.shapes"/>
       <plugin id="davinci.jqueryui_1_8"/>
       <plugin id="davinci.yui_2_6_0"/>
       <plugin id="javax.servlet"/>

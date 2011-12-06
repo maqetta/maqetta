@@ -98,6 +98,158 @@
         } 
     },
     "dojox": {
+    	"$all":{
+			"displayName": "All widgets", 
+			"states": {
+				"Normal": {
+					"selectors": {
+						".globalWidget .mblHeading": [
+							"background-color"
+						],
+						".mblHeading" : [
+							"background-color"
+                        ],
+                        ".mblColorDefault" : [
+							"background-color"
+                        ],
+						".mblTabPanelHeader" : [
+							"background-color"
+                        ],
+						".mblTabButton" : [
+							"background-color"
+                        ],
+						".mblArrowButtonHead" : [
+							"background-color"
+                        ],
+						".mblArrowButtonBody" : [
+							"background-color"
+                        ],
+						".mblEdgeToEdgeCategory" : [
+							"background-color"
+                        ],
+						".mblButton" : [
+							"background-color"
+                        ],
+						".mblToggleButton" : [
+							"background-color"
+                        ],
+						".mblCheckBox" : [
+							"background-color"
+                        ],
+						".mblRadioButton" : [
+							"background-color"
+                        ]
+						
+					},
+					"query": ".mblHeading",
+					/*"simulate": "dijitChecked dijitTabChecked",*/
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#5cb0ff"
+							/*"border-color":  "#b5bcc7"*/
+						}
+					}
+			
+				},
+				"Selected": {
+					"selectors": {
+						".mblTabPanelHeader .mblTabButton.mblTabButtonSelected": [
+							"background-color"
+							/*"border-color" */
+						],
+						".mblButtonSelected": [
+							"background-color"
+							/*"border-color" */
+						],
+						".mblToggleButton.mblToggleButtonChecked": [
+							"background-color"
+							/*"border-color" */
+						],
+						".mblCheckBoxChecked": [
+							"background-color"
+							/*"border-color" */
+						],
+						".mblRadioButtonChecked": [
+							"background-color"
+							/*"border-color" */
+						]
+	
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#0064C2"
+							/*"border-color":  "#92bce1"*/
+						}
+					}
+				},
+				"Disabled": {
+					"selectors": {
+						".mblButtonDisabled": [
+							"background-color"
+						],
+						".mblToggleButton:disabled": [
+							"background-color"
+						] 						
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#8FC9FF"
+						}
+					}
+				},
+				"ComboBoxMenuItemSelected": {
+					"selectors": {
+						".mblComboBoxMenuItemSelected": [
+							"background-color"
+						]  
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#5CB0FF"
+						}
+					}
+				},
+				"SwitchBgLeft": {
+					"selectors": {
+						".mblSwitchBgLeft": [
+							"background-color"
+						]  
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#007EF5"
+						}
+					}
+				},
+				"SwitchBgRight": {
+					"selectors": {
+						".mblSwitchBgRight": [
+							"background-color"
+						]  
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#8FC9FF"
+						}
+					}
+				},
+				"SwitchKnob": {
+					"selectors": {
+						".mblSwitchKnob": [
+							"background-color",
+							"border-color"
+						]  
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#5CB0FF",
+							"border-color": "#7B879B"
+						}
+					}
+				}
+			}
+		},
+		
         "Button": {
             "displayName": "Button",
             "states": {
@@ -680,7 +832,7 @@
 						},
 						"Selected": {
 							"selectors": {
-								".mblTabButtonSelected.mblTabButton": [
+								".mblTabPanelHeader .mblTabButton.mblTabButtonSelected": [
 									"background-color",
 									"background-image"
 								]

@@ -163,10 +163,17 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 	_modifyTheme : function (rules, values){
 
 		var unset = dojo.clone(values);
+		
 		for (var r = 0; r < rules.length; r++){
 			var rule = rules[r];
 			var file = rule.searchUp( "CSSFile");
-			var rebasedValues = dojo.clone(values);
+			var rebasedValues; // = dojo.clone(values);
+			if (values.length < 1) {
+			    rebasedValues = [];
+			    rebasedValues[0] = dojo.clone(values);;
+			} else {
+			    rebasedValues = dojo.clone(values);
+			}
 			var rebasedValues = this._rebaseCssRuleImagesFromStylePalette(rule, rebasedValues);
 			var propertiesAlreadyProcessed = {};
 			

@@ -1,4 +1,3 @@
-
 .token_singleline_comment {
 	color: green;
 }
@@ -30,15 +29,6 @@
 .token_keyword {
 	color: darkred;
 	font-weight: bold;
-}
-
-.token_bracket_outline {
-	outline: 1px solid red;
-}
-
-.token_bracket {
-	color: white;
-	background-color: grey;
 }
 
 .token_space {

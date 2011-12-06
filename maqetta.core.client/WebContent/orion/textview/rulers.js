@@ -1,4 +1,5 @@
 /*******************************************************************************
+ * @license
  * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
@@ -8,49 +9,40 @@
  * Contributors: IBM Corporation - initial API and implementation
  ******************************************************************************/
 
-/*global window define setTimeout clearTimeout setInterval clearInterval Node */
+/*global define setTimeout clearTimeout setInterval clearInterval Node */
 
-/**
- * @namespace The global container for Orion APIs.
- */ 
-//var orion = orion || {};
-/**
- * @namespace The container for textview APIs.
- */ 
-orion.textview = orion.textview || {};
+define(['orion/textview/tooltip'], function(mTooltip) {
 
-/**
- * Constructs a new ruler. 
- * <p>
- * The default implementation does not implement all the methods in the interface
- * and is useful only for objects implementing rulers.
- * <p/>
- * 
- * @param {orion.textview.AnnotationModel} annotationModel the annotation model for the ruler.
- * @param {String} [rulerLocation="left"] the location for the ruler.
- * @param {String} [rulerOverview="page"] the overview for the ruler.
- * @param {orion.textview.Style} [rulerStyle] the style for the ruler. 
- * 
- * @class This interface represents a ruler for the text view.
- * <p>
- * A Ruler is a graphical element that is placed either on the left or on the right side of 
- * the view. It can be used to provide the view with per line decoration such as line numbering,
- * bookmarks, breakpoints, folding disclosures, etc. 
- * </p><p>
- * There are two types of rulers: page and document. A page ruler only shows the content for the lines that are
- * visible, while a document ruler always shows the whole content.
- * </p>
- * <b>See:</b><br/>
- * {@link orion.textview.LineNumberRuler}<br/>
- * {@link orion.textview.AnnotationRuler}<br/>
- * {@link orion.textview.OverviewRuler}<br/> 
- * {@link orion.textview.TextView}<br/>
- * {@link orion.textview.TextView#addRuler}
- * </p>		 
- * @name orion.textview.Ruler
- */
-orion.textview.Ruler = (function() {
-	/** @private */
+	/**
+	 * Constructs a new ruler. 
+	 * <p>
+	 * The default implementation does not implement all the methods in the interface
+	 * and is useful only for objects implementing rulers.
+	 * <p/>
+	 * 
+	 * @param {orion.textview.AnnotationModel} annotationModel the annotation model for the ruler.
+	 * @param {String} [rulerLocation="left"] the location for the ruler.
+	 * @param {String} [rulerOverview="page"] the overview for the ruler.
+	 * @param {orion.textview.Style} [rulerStyle] the style for the ruler. 
+	 * 
+	 * @class This interface represents a ruler for the text view.
+	 * <p>
+	 * A Ruler is a graphical element that is placed either on the left or on the right side of 
+	 * the view. It can be used to provide the view with per line decoration such as line numbering,
+	 * bookmarks, breakpoints, folding disclosures, etc. 
+	 * </p><p>
+	 * There are two types of rulers: page and document. A page ruler only shows the content for the lines that are
+	 * visible, while a document ruler always shows the whole content.
+	 * </p>
+	 * <b>See:</b><br/>
+	 * {@link orion.textview.LineNumberRuler}<br/>
+	 * {@link orion.textview.AnnotationRuler}<br/>
+	 * {@link orion.textview.OverviewRuler}<br/> 
+	 * {@link orion.textview.TextView}<br/>
+	 * {@link orion.textview.TextView#addRuler}
+	 * </p>		 
+	 * @name orion.textview.Ruler
+	 */
 	function Ruler (annotationModel, rulerLocation, rulerOverview, rulerStyle) {
 		this._location = rulerLocation || "left";
 		this._overview = rulerOverview || "page";
@@ -58,8 +50,11 @@ orion.textview.Ruler = (function() {
 		this._types = [];
 		this._view = null;
 		var self = this;
-		this._annotationModelListener = {
-			onChanged: function(e) {
+		this._listener = {
+			onTextModelChanged: function(e) {
+				self._onTextModelChanged(e);
+			},
+			onAnnotationModelChanged: function(e) {
 				self._onAnnotationModelChanged(e);
 			}
 		};
@@ -110,7 +105,7 @@ orion.textview.Ruler = (function() {
 				var annotation = annotations.next();
 				if (!this.isAnnotationTypeVisible(annotation.type)) { continue; }
 				var annotationLineStart = baseModel.getLineAtOffset(annotation.start);
-				var annotationLineEnd = baseModel.getLineAtOffset(annotation.end - 1);
+				var annotationLineEnd = baseModel.getLineAtOffset(Math.max(annotation.start, annotation.end - 1));
 				for (var lineIndex = annotationLineStart; lineIndex<=annotationLineEnd; lineIndex++) {
 					var visualLineIndex = lineIndex;
 					if (model !== baseModel) {
@@ -232,11 +227,11 @@ orion.textview.Ruler = (function() {
 		 */
 		setAnnotationModel: function (annotationModel) {
 			if (this._annotationModel) {
-				this._annotationModel.removeListener(this._annotationModelListener); 
+				this._annotationModel.removEventListener("Changed", this._listener.onAnnotationModelChanged); 
 			}
 			this._annotationModel = annotationModel;
 			if (this._annotationModel) {
-				this._annotationModel.addListener(this._annotationModelListener); 
+				this._annotationModel.addEventListener("Changed", this._listener.onAnnotationModelChanged); 
 			}
 		},
 		/**
@@ -274,11 +269,11 @@ orion.textview.Ruler = (function() {
 		 */
 		setView: function (view) {
 			if (this._onTextModelChanged && this._view) {
-				this._view.removeEventListener("ModelChanged", this, this._onTextModelChanged); 
+				this._view.removeEventListener("ModelChanged", this._listener.onTextModelChanged); 
 			}
 			this._view = view;
 			if (this._onTextModelChanged && this._view) {
-				this._view.addEventListener("ModelChanged", this, this._onTextModelChanged);
+				this._view.addEventListener("ModelChanged", this._listener.onTextModelChanged);
 			}
 		},
 		/**
@@ -307,7 +302,7 @@ orion.textview.Ruler = (function() {
 		 * @param {DOMEvent} e the mouse move event.
 		 */
 		onMouseMove: function(lineIndex, e) {
-			var tooltip = orion.textview.Tooltip.getTooltip(this._view);
+			var tooltip = mTooltip.Tooltip.getTooltip(this._view);
 			if (!tooltip) { return; }
 			if (tooltip.isVisible() && this._tooltipLineIndex === lineIndex) { return; }
 			this._tooltipLineIndex = lineIndex;
@@ -326,7 +321,9 @@ orion.textview.Ruler = (function() {
 		 * @param {Number} lineIndex the line index of the annotation under the pointer.
 		 * @param {DOMEvent} e the mouse over event.
 		 */
-		onMouseOver: this._onMouseMove,
+		onMouseOver: function(lineIndex, e) {
+			this.onMouseMove(lineIndex, e);
+		},
 		/**
 		 * This event is sent when the mouse pointer exits a line annotation.
 		 *
@@ -335,7 +332,7 @@ orion.textview.Ruler = (function() {
 		 * @param {DOMEvent} e the mouse out event.
 		 */
 		onMouseOut: function(lineIndex, e) {
-			var tooltip = orion.textview.Tooltip.getTooltip(this._view);
+			var tooltip = mTooltip.Tooltip.getTooltip(this._view);
 			if (!tooltip) { return; }
 			tooltip.setTarget(null);
 		},
@@ -466,37 +463,34 @@ orion.textview.Ruler = (function() {
 			return result;
 		}
 	};
-	return Ruler;
-}());
 
-/**
- * Constructs a new line numbering ruler. 
- *
- * @param {String} [rulerLocation="left"] the location for the ruler.
- * @param {orion.textview.Style} [rulerStyle=undefined] the style for the ruler.
- * @param {orion.textview.Style} [oddStyle={style: {backgroundColor: "white"}] the style for lines with odd line index.
- * @param {orion.textview.Style} [evenStyle={backgroundColor: "white"}] the style for lines with even line index.
- *
- * @augments orion.textview.Ruler
- * @class This objects implements a line numbering ruler.
- *
- * <p><b>See:</b><br/>
- * {@link orion.textview.Ruler}
- * </p>
- * @name orion.textview.LineNumberRuler
- */
-orion.textview.LineNumberRuler = (function() {
-	/** @private */
+	/**
+	 * Constructs a new line numbering ruler. 
+	 *
+	 * @param {orion.textview.AnnotationModel} annotationModel the annotation model for the ruler.
+	 * @param {String} [rulerLocation="left"] the location for the ruler.
+	 * @param {orion.textview.Style} [rulerStyle=undefined] the style for the ruler.
+	 * @param {orion.textview.Style} [oddStyle={style: {backgroundColor: "white"}] the style for lines with odd line index.
+	 * @param {orion.textview.Style} [evenStyle={backgroundColor: "white"}] the style for lines with even line index.
+	 *
+	 * @augments orion.textview.Ruler
+	 * @class This objects implements a line numbering ruler.
+	 *
+	 * <p><b>See:</b><br/>
+	 * {@link orion.textview.Ruler}
+	 * </p>
+	 * @name orion.textview.LineNumberRuler
+	 */
 	function LineNumberRuler (annotationModel, rulerLocation, rulerStyle, oddStyle, evenStyle) {
-		orion.textview.Ruler.call(this, annotationModel, rulerLocation, "page", rulerStyle);
+		Ruler.call(this, annotationModel, rulerLocation, "page", rulerStyle);
 		this._oddStyle = oddStyle || {style: {backgroundColor: "white"}};
 		this._evenStyle = evenStyle || {style: {backgroundColor: "white"}};
 		this._numOfDigits = 0;
 	}
-	LineNumberRuler.prototype = new orion.textview.Ruler(); 
+	LineNumberRuler.prototype = new Ruler(); 
 	/** @ignore */
 	LineNumberRuler.prototype.getAnnotations = function(startLine, endLine) {
-		var result = orion.textview.Ruler.prototype.getAnnotations.call(this, startLine, endLine);
+		var result = Ruler.prototype.getAnnotations.call(this, startLine, endLine);
 		var model = this._view.getModel();
 		for (var lineIndex = startLine; lineIndex < endLine; lineIndex++) {
 			var style = lineIndex & 1 ? this._oddStyle : this._evenStyle;
@@ -528,74 +522,67 @@ orion.textview.LineNumberRuler = (function() {
 			this._view.redrawLines(startLine,  model.getLineCount(), this);
 		}
 	};
-	return LineNumberRuler;
-}());
-/** 
- * @class This is class represents an annotation for the AnnotationRuler. 
- * <p> 
- * <b>See:</b><br/> 
- * {@link orion.textview.AnnotationRuler}
- * </p> 
- * 
- * @name orion.textview.Annotation 
- * 
- * @property {String} [html=""] The html content for the annotation, typically contains an image.
- * @property {orion.textview.Style} [style] the style for the annotation.
- * @property {orion.textview.Style} [overviewStyle] the style for the annotation in the overview ruler.
- */ 
-/**
- * Contructs a new annotation ruler. 
- *
- * @param {String} [rulerLocation="left"] the location for the ruler.
- * @param {orion.textview.Style} [rulerStyle=undefined] the style for the ruler.
- * @param {orion.textview.Annotation} [defaultAnnotation] the default annotation.
- *
- * @augments orion.textview.Ruler
- * @class This objects implements an annotation ruler.
- *
- * <p><b>See:</b><br/>
- * {@link orion.textview.Ruler}<br/>
- * {@link orion.textview.Annotation}
- * </p>
- * @name orion.textview.AnnotationRuler
- */
-orion.textview.AnnotationRuler = (function() {
-	/** @private */
-	function AnnotationRuler (annotationModel, rulerLocation, rulerStyle) {
-		orion.textview.Ruler.call(this, annotationModel, rulerLocation, "page", rulerStyle);
-	}
-	AnnotationRuler.prototype = new orion.textview.Ruler();
 	
-	return AnnotationRuler;
-}());
-
-/**
- * Contructs an overview ruler. 
- * <p>
- * The overview ruler is used in conjunction with a AnnotationRuler, for each annotation in the 
- * AnnotationRuler this ruler displays a mark in the overview. Clicking on the mark causes the 
- * view to scroll to the annotated line.
- * </p>
- *
- * @param {String} [rulerLocation="left"] the location for the ruler.
- * @param {orion.textview.Style} [rulerStyle=undefined] the style for the ruler.
- * @param {orion.textview.AnnotationRuler} [annotationRuler] the annotation ruler for the overview.
- *
- * @augments orion.textview.Ruler
- * @class This objects implements an overview ruler.
- *
- * <p><b>See:</b><br/>
- * {@link orion.textview.AnnotationRuler} <br/>
- * {@link orion.textview.Ruler} 
- * </p>
- * @name orion.textview.OverviewRuler
- */
-orion.textview.OverviewRuler = (function() {
-	/** @private */
-	function OverviewRuler (annotationModel, rulerLocation, rulerStyle) {
-		orion.textview.Ruler.call(this, annotationModel, rulerLocation, "document", rulerStyle);
+	/** 
+	 * @class This is class represents an annotation for the AnnotationRuler. 
+	 * <p> 
+	 * <b>See:</b><br/> 
+	 * {@link orion.textview.AnnotationRuler}
+	 * </p> 
+	 * 
+	 * @name orion.textview.Annotation 
+	 * 
+	 * @property {String} [html=""] The html content for the annotation, typically contains an image.
+	 * @property {orion.textview.Style} [style] the style for the annotation.
+	 * @property {orion.textview.Style} [overviewStyle] the style for the annotation in the overview ruler.
+	 */ 
+	/**
+	 * Constructs a new annotation ruler. 
+	 *
+	 * @param {orion.textview.AnnotationModel} annotationModel the annotation model for the ruler.
+	 * @param {String} [rulerLocation="left"] the location for the ruler.
+	 * @param {orion.textview.Style} [rulerStyle=undefined] the style for the ruler.
+	 * @param {orion.textview.Annotation} [defaultAnnotation] the default annotation.
+	 *
+	 * @augments orion.textview.Ruler
+	 * @class This objects implements an annotation ruler.
+	 *
+	 * <p><b>See:</b><br/>
+	 * {@link orion.textview.Ruler}<br/>
+	 * {@link orion.textview.Annotation}
+	 * </p>
+	 * @name orion.textview.AnnotationRuler
+	 */
+	function AnnotationRuler (annotationModel, rulerLocation, rulerStyle) {
+		Ruler.call(this, annotationModel, rulerLocation, "page", rulerStyle);
 	}
-	OverviewRuler.prototype = new orion.textview.Ruler();
+	AnnotationRuler.prototype = new Ruler();
+	
+	/**
+	 * Constructs a new overview ruler. 
+	 * <p>
+	 * The overview ruler is used in conjunction with a AnnotationRuler, for each annotation in the 
+	 * AnnotationRuler this ruler displays a mark in the overview. Clicking on the mark causes the 
+	 * view to scroll to the annotated line.
+	 * </p>
+	 *
+	 * @param {orion.textview.AnnotationModel} annotationModel the annotation model for the ruler.
+	 * @param {String} [rulerLocation="left"] the location for the ruler.
+	 * @param {orion.textview.Style} [rulerStyle=undefined] the style for the ruler.
+	 *
+	 * @augments orion.textview.Ruler
+	 * @class This objects implements an overview ruler.
+	 *
+	 * <p><b>See:</b><br/>
+	 * {@link orion.textview.AnnotationRuler} <br/>
+	 * {@link orion.textview.Ruler} 
+	 * </p>
+	 * @name orion.textview.OverviewRuler
+	 */
+	function OverviewRuler (annotationModel, rulerLocation, rulerStyle) {
+		Ruler.call(this, annotationModel, rulerLocation, "document", rulerStyle);
+	}
+	OverviewRuler.prototype = new Ruler();
 	
 	/** @ignore */
 	OverviewRuler.prototype.getRulerStyle = function() {
@@ -619,7 +606,7 @@ orion.textview.OverviewRuler = (function() {
 			}
 			return "Line: " + (mapLine + 1);
 		}
-		return orion.textview.Ruler.prototype._getTooltipContents.call(this, lineIndex, annotations);
+		return Ruler.prototype._getTooltipContents.call(this, lineIndex, annotations);
 	};
 	/** @ignore */
 	OverviewRuler.prototype._mergeAnnotation = function(previousAnnotation, annotation, annotationLineIndex, annotationLineCount) {
@@ -633,15 +620,27 @@ orion.textview.OverviewRuler = (function() {
 		}
 		return result;
 	};
-	return OverviewRuler;
-}());
 
-orion.textview.FoldingRuler = (function() {
-	/** @private */
+	/**
+	 * Constructs a new folding ruler. 
+	 *
+	 * @param {orion.textview.AnnotationModel} annotationModel the annotation model for the ruler.
+	 * @param {String} [rulerLocation="left"] the location for the ruler.
+	 * @param {orion.textview.Style} [rulerStyle=undefined] the style for the ruler.
+	 *
+	 * @augments orion.textview.Ruler
+	 * @class This objects implements an overview ruler.
+	 *
+	 * <p><b>See:</b><br/>
+	 * {@link orion.textview.AnnotationRuler} <br/>
+	 * {@link orion.textview.Ruler} 
+	 * </p>
+	 * @name orion.textview.OverviewRuler
+	 */
 	function FoldingRuler (annotationModel, rulerLocation, rulerStyle) {
-		orion.textview.AnnotationRuler.call(this, annotationModel, rulerLocation, rulerStyle);
+		AnnotationRuler.call(this, annotationModel, rulerLocation, rulerStyle);
 	}
-	FoldingRuler.prototype = new orion.textview.AnnotationRuler();
+	FoldingRuler.prototype = new AnnotationRuler();
 	
 	/** @ignore */
 	FoldingRuler.prototype.onClick =  function(lineIndex, e) {
@@ -663,7 +662,7 @@ orion.textview.FoldingRuler = (function() {
 			annotation = a;
 		}
 		if (annotation) {
-			var tooltip = orion.textview.Tooltip.getTooltip(this._view);
+			var tooltip = mTooltip.Tooltip.getTooltip(this._view);
 			if (tooltip) {
 				tooltip.setTarget(null);
 			}
@@ -682,12 +681,12 @@ orion.textview.FoldingRuler = (function() {
 				return null;
 			}
 		}
-		return orion.textview.AnnotationRuler.prototype._getTooltipContents.call(this, lineIndex, annotations);
+		return AnnotationRuler.prototype._getTooltipContents.call(this, lineIndex, annotations);
 	};
 	/** @ignore */
 	FoldingRuler.prototype._onAnnotationModelChanged = function(e) {
 		if (e.textModelChangedEvent) {
-			orion.textview.AnnotationRuler.prototype._onAnnotationModelChanged.call(this, e);
+			AnnotationRuler.prototype._onAnnotationModelChanged.call(this, e);
 			return;
 		}
 		var view = this._view;
@@ -715,11 +714,11 @@ orion.textview.FoldingRuler = (function() {
 		}
 	};
 	
-	return FoldingRuler;
-}());
-
-if (typeof window !== "undefined" && typeof window.define !== "undefined") {
-	define(['orion/textview/tooltip'], function() {
-		return orion.textview;
-	});
-}
+	return {
+		Ruler: Ruler,
+		AnnotationRuler: AnnotationRuler,
+		LineNumberRuler: LineNumberRuler,
+		OverviewRuler: OverviewRuler,
+		FoldingRuler: FoldingRuler
+	};
+}, "orion/textview");

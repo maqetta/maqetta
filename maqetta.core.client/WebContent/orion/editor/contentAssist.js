@@ -1,4 +1,5 @@
 /*******************************************************************************
+ * @license
  * Copyright (c) 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
@@ -8,32 +9,30 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-/*global define orion:true window*/
+/*global define */
 /*jslint maxerr:150 browser:true devel:true */
 
-/**
- * @namespace The container for Orion APIs.
- */ 
-//var orion = orion || {};
-orion.editor = orion.editor || {};
+define(['orion/textview/keyBinding', 'orion/textview/eventTarget'], function(mKeyBinding, mEventTarget) {
 
-/**
- * @name orion.editor.ContentAssist
- * @class A key mode for {@link orion.editor.Editor} that displays content assist suggestions.
- * @description Creates a <code>ContentAssist</code>. A ContentAssist displays suggestions from registered content assist providers
- * to the user. Content assist providers are registered by calling {@link #addProvider}.</p>
- * <p>A ContentAssist emits events, for which listeners may be registered using {@link #addEventListener}. Supported event types are:</p>
- * <dl>
- * <dt><code>show</code></dt> <dd>Dispatched when this ContentAssist is activated.</dd>
- * <dt><code>hide</code></dt> <dd>Dispatched when this ContentAssist is dismissed.</dd>
- * <dt><code>accept</code></dt> <dd>Dispatched when a proposal has been accepted by the user. The event's <code>data</code> field
- * contains information about the accepted proposal.</dd>
- * </dl>
- * @param {orion.editor.Editor} editor The Editor to provide content assist for.
- * @param {String|DomNode} contentAssistId The ID or DOMNode to use as the parent for content assist.
- */
-orion.editor.ContentAssist = (function() {
-	/** @private */
+	/**
+	 * @name orion.editor.ContentAssist
+	 * @class A key mode for {@link orion.editor.Editor} that displays content assist suggestions.
+	 * @description Creates a <code>ContentAssist</code>. A ContentAssist displays suggestions from registered content assist providers
+	 * to the user. Content assist providers are registered by calling {@link #addProvider}.</p>
+	 * <p>A ContentAssist emits events, for which listeners may be registered using {@link #addEventListener}. Supported event types are:</p>
+	 * <dl>
+	 * <dt><code>show</code></dt> <dd>Dispatched when this ContentAssist is activated.</dd>
+	 * <dt><code>hide</code></dt> <dd>Dispatched when this ContentAssist is dismissed.</dd>
+	 * <dt><code>accept</code></dt> <dd>Dispatched when a proposal has been accepted by the user. The event's <code>data</code> field
+	 * contains information about the accepted proposal.</dd>
+	 * </dl>
+	 * @param {orion.editor.Editor} editor The Editor to provide content assist for.
+	 * @param {String|DomNode} contentAssistId The ID or DOMNode to use as the parent for content assist.
+	 *
+	 * @borrows orion.textview.EventTarget#addEventListener as #addEventListener
+	 * @borrows orion.textview.EventTarget#removeEventListener as #removeEventListener
+	 * @borrows orion.textview.EventTarget#dispatchEvent as #dispatchEvent
+	 */
 	function ContentAssist(editor, contentAssistId) {
 		this.editor = editor;
 		this.textView = editor.getTextView();
@@ -44,22 +43,22 @@ orion.editor.ContentAssist = (function() {
 		this.providers = [];
 		this.filteredProviders = [];
 		
-		this.listeners = {};
 		this.proposals = [];
+		var self = this;
 		this.contentAssistListener = {
 			onModelChanging: function(event) {
-				this.ignoreNextChange = this.isIgnorable(event);
+				self.ignoreNextChange = self.isIgnorable(event);
 			},
 			onModelChanged: function(event) {
-				if (this.ignoreNextChange) {
-					this.cancel();
+				if (self.ignoreNextChange) {
+					self.cancel();
 				} else {
-					this.showContentAssist(true, event);
+					self.showContentAssist(true, event);
 				}
-				this.ignoreNextChange = false;
+				self.ignoreNextChange = false;
 			},
 			onScroll: function(event) {
-				this.cancel();
+				self.cancel();
 			}
 		};
 		this.init();
@@ -68,38 +67,11 @@ orion.editor.ContentAssist = (function() {
 		/** @private */
 		init: function() {
 			var isMac = navigator.platform.indexOf("Mac") !== -1;
-			this.textView.setKeyBinding(isMac ? new orion.textview.KeyBinding(' ', false, false, false, true) : new orion.textview.KeyBinding(' ', true), "Content Assist");
+			this.textView.setKeyBinding(isMac ? new mKeyBinding.KeyBinding(' ', false, false, false, true) : new mKeyBinding.KeyBinding(' ', true), "Content Assist");
 			this.textView.setAction("Content Assist", function() {
 				this.showContentAssist(true);
 				return true;
 			}.bind(this));
-		},
-		/** Registers a listener with this <code>ContentAssist</code>. */
-		addEventListener: function(/**String*/ type, /**Function*/ listener) {
-			if (!this.listeners[type]) {
-				this.listeners[type] = [];
-			}
-			this.listeners[type].push(listener);
-		},
-		/** Removes a registered event listener. */
-		removeEventListener: function(/**String*/ type, /**Function*/ listener) {
-			var listeners = this.listeners[type];
-			if (listeners) {
-				var index = listeners.indexOf(listener);
-				if (index !== -1) {
-					listeners.splice(index, 1);
-				}
-			}
-		},
-		/** @private */
-		dispatchEvent: function(/**String*/ type, /** Object */ data) {
-			var event = { type: type, data: data };
-			var listeners = this.listeners[type];
-			if (listeners) {
-				for (var i=0; i < listeners.length; i++) {
-					listeners[i](event);
-				}
-			}
 		},
 		/** @private */
 		cancel: function() {
@@ -164,7 +136,7 @@ orion.editor.ContentAssist = (function() {
 				start: this.textView.getCaretOffset() - this.prefix.length,
 				end: this.textView.getCaretOffset()
 			};
-			this.dispatchEvent("accept", data);
+			this.dispatchEvent({type: "accept", data: data });
 			return true;
 		},
 		/** @private */
@@ -224,14 +196,14 @@ orion.editor.ContentAssist = (function() {
 				return;
 			}
 			var eventType = enable ? "show" : "hide";
-			this.dispatchEvent(eventType, null);
+			this.dispatchEvent({type: eventType, data: null});
 			
 			this.filterProviders(this.editor.getTitle());
 			if (!enable) {
 				if (this.listenerAdded) {
-					this.textView.removeEventListener("ModelChanging", this, this.contentAssistListener.onModelChanging);
-					this.textView.removeEventListener("ModelChanged", this, this.contentAssistListener.onModelChanged);
-					this.textView.removeEventListener("Scroll", this, this.contentAssistListener.onScroll);
+					this.textView.removeEventListener("ModelChanging", this.contentAssistListener.onModelChanging);
+					this.textView.removeEventListener("ModelChanged", this.contentAssistListener.onModelChanged);
+					this.textView.removeEventListener("Scroll", this.contentAssistListener.onScroll);
 					this.listenerAdded = false;
 				}
 				this.active = false;
@@ -312,9 +284,9 @@ orion.editor.ContentAssist = (function() {
 						}
 
 						if (!this.listenerAdded) {
-							this.textView.addEventListener("ModelChanging", this, this.contentAssistListener.onModelChanging);
-							this.textView.addEventListener("ModelChanged", this, this.contentAssistListener.onModelChanged);
-							this.textView.addEventListener("Scroll", this, this.contentAssistListener.onScroll);
+							this.textView.addEventListener("ModelChanging", this.contentAssistListener.onModelChanging);
+							this.textView.addEventListener("ModelChanged", this.contentAssistListener.onModelChanged);
+							this.textView.addEventListener("Scroll", this.contentAssistListener.onScroll);
 						}
 						this.listenerAdded = true;
 						this.contentAssistPanel.onclick = this.click.bind(this);
@@ -417,11 +389,7 @@ orion.editor.ContentAssist = (function() {
 			}
 		}
 	};
-	return ContentAssist;
-}());
-
-if (typeof window !== "undefined" && typeof window.define !== "undefined") {
-	define(['orion/textview/keyBinding'], function() {
-		return orion.editor;	
-	});
-}
+	mEventTarget.EventTarget.addMixin(ContentAssist.prototype);
+	
+	return {ContentAssist: ContentAssist};
+}, "orion/editor");

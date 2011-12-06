@@ -265,7 +265,6 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 	     * so use the path theme file to find the html
 	     *
          */  
-	     var path = 'project1/themes/claro1/dojo-theme-editor.html';
         var path = this.theme.file.getPath();
         path = path.substring(0, path.lastIndexOf('/'));
         path = path + '/' + this.theme.themeEditorHtmls[0];

@@ -636,7 +636,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         var widgetType = themeMetadata.getWidgetType(widget);
         var widgetMetadata = themeMetadata.getMetadata(widgetType);
         var subwidgets = widgetMetadata.subwidgets;
-
+        
+        this._displayedWidget = widget;
         if(subwidgets){
             var contexDiv=this._contexDiv;
             contexDiv.innerHTML = '<span></span>';
@@ -659,7 +660,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             // and we have no check boxes on FF
             var localDijit = this._context.getDijit();
             pMenu = new localDijit.Menu({id:menuId}, span);
-            this._displayedWidget = widget;
             var checked = false;
             if (!widget.subwidget) {
                 checked = true; // no subwidget selected

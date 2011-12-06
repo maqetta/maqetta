@@ -246,5 +246,6 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
          }
 	    
 	 }
+	 
 });
 

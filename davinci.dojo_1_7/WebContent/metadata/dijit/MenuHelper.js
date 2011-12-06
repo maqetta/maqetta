@@ -5,9 +5,20 @@ return function() {
 	this.create = function(widget) {
 		var id = widget.dijitWidget.id,
 			context = widget.getContext();
+<<<<<<< HEAD
 		domClass.add(widget.domNode, "dvHidden");
 		widget._helperHandle = connect.subscribe("/davinci/ui/widgetSelected", null, function(selected) {
 			if (!widget.properties.contextMenuForWindow) { return; }
+=======
+		if (widget.properties && widget.properties.contextMenuForWindow) {
+			domClass.add(widget.domNode, "dvHidden");			
+		}
+		//FIXME: widget is not be a great place to stash things... gets regenerated on modify events
+		widget._helperHandle = connect.subscribe("/davinci/ui/widgetSelected", null, function(selected) {
+			var menu = context.getDijit().registry.byId(id);
+//			if (!menu) { this.destroy(widget); }
+			if (!menu.properties || !menu.properties.contextMenuForWindow) { return; }
+>>>>>>> master
 			var w = selected[0];
 			while (w && w.id != id) {
 				if (w._ownerId) {
@@ -17,7 +28,10 @@ return function() {
 				}
 			}
 	
+<<<<<<< HEAD
 			var menu = context.getDijit().registry.byId(id); // use widget?
+=======
+>>>>>>> master
 			if (w) {
 				domClass.remove(menu.domNode, "maqHidden");
 				domClass.add(menu.domNode, "maqShown");

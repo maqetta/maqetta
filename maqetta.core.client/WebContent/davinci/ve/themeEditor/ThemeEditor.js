@@ -176,9 +176,9 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 		for(var s = 0; s < rules.length; s++){
 			var rule=rules[s];
 			for(var p = 0;p<rule.properties.length;p++){
-				if(!allProps[rule.properties[p].name]){ // set to first found
+				//if(!allProps[rule.properties[p].name]){ // set to first found
 					allProps[rule.properties[p].name] = rule.properties[p].value;
-				}
+				//}
 			}
 		}
 		allProps = this.convertShortHandProps(allProps);

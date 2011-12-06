@@ -680,7 +680,7 @@
 						},
 						"Selected": {
 							"selectors": {
-								".mblTabButtonSelected.mblTabButton": [
+								".mblTabPanelHeader .mblTabButton.mblTabButtonSelected": [
 									"background-color",
 									"background-image"
 								]

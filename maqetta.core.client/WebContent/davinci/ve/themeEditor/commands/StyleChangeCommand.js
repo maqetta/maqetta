@@ -14,9 +14,12 @@ return declare("davinci.ve.themeEditor.commands.StyleChangeCommand", ThemeEditor
 			var colorValues = [];
 			//this._rules = [];
 			this._oldValues = [];
-			for (var v in this._values){
-				if (v.indexOf('color')> -1){
-					colorValues[v] = this._values[v];
+			for(var i=0; i < this._values.length; i++){
+				var arritem = this._values[i];
+				for (var v in arritem){
+					if (v.indexOf('color')> -1){
+						colorValues[v] = arritem[v];
+					}
 				}
 			}
 			var widgetMetadata = this._themeEditor._theme.getMetadata(this._themeEditor._theme.getWidgetType(this._themeEditor._selectedWidget));
@@ -36,16 +39,15 @@ return declare("davinci.ve.themeEditor.commands.StyleChangeCommand", ThemeEditor
 							var calcColor = baseColor.calculateHighlightColor(nColor, hColor);
 							setColorValues[prop] = calcColor.toHex();
 							var rules = this.getRules(this._themeEditor._selectedWidget, this._themeEditor._selectedSubWidget, c);
-							this._oldValues[c] = this._themeEditor._modifyTheme(rules, setColorValues);
-							this._themeEditor._hotModifyCssRule(rules); 
-
+							this._oldValues[c] = this._themeEditor.getOldValues(rules, setColorValues);
+							this._themeEditor._modifyTheme(rules, setColorValues);
 						} 
 					}
 				} else {
 					//Normal
 					var rules = this.getRules(this._themeEditor._selectedWidget, this._themeEditor._selectedSubWidget, this._themeEditor._currentState);
-					this._oldValues[c] = this._themeEditor._modifyTheme(rules, this._values);
-					this._themeEditor._hotModifyCssRule(rules); 
+					this._oldValues[c] = this._themeEditor.getOldValues(rules, this._values);
+					this._themeEditor._modifyTheme(rules, this._values);
 				}
 			}
 			if (this._themeEditor._selectedWidget.resize) this._themeEditor._selectedWidget.resize(); // forces redraw of widget to adjust for new styles like border size
@@ -57,12 +59,11 @@ return declare("davinci.ve.themeEditor.commands.StyleChangeCommand", ThemeEditor
 			for (prop in this._values){
 				this._oldValues[prop] = null; // this will create a list of props that were added to the rule
 			}			
-			//this._oldValues = this._themeEditor._modifyTheme(/*this._*/rules, this._values);
-			var exsistingProps = this._themeEditor._modifyTheme(/*this._*/rules, this._values);
+			var exsistingProps = this._themeEditor.getOldValues(/*this._*/rules, this._values);
+			this._themeEditor._modifyTheme(/*this._*/rules, this._values);
 			for (prop in exsistingProps){
 				this._oldValues[prop] = exsistingProps[prop]; // this will mix in the old values of existing props. but preserve a list of added props for undo
 			}
-			this._themeEditor._hotModifyCssRule(/*this._*/rules); 
 			if (this._themeEditor._selectedWidget.resize) this._themeEditor._selectedWidget.resize(); // forces redraw of widget to adjust for new styles like border size
 			
 		}

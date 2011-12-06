@@ -613,6 +613,7 @@
 							"border",
 							"border-style",
 							"border-color",
+							"padding",
 							"padding-top",
 							"padding-right",
 							"padding-bottom",

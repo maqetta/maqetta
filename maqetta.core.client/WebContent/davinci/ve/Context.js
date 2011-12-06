@@ -2048,12 +2048,11 @@ return declare("davinci.ve.Context", null, {
 					cleaned.splice(lastSplice,0, cleaned[index]);
 					cleaned.splice(index,1);
 					lastSplice = index+1;
-					
-				}
-				var prop = rule.getProperty(shorthands[j][i]);
-				if(prop){
-					rule.removeProperty(shorthands[j][i]);
-				}
+					var prop = rule.getProperty(shorthands[j][i]);
+    				if(prop){
+    					rule.removeProperty(shorthands[j][i]);
+    				}
+                }
 			}
 		}
 		

@@ -134,8 +134,9 @@ return declare("davinci.ui.Editor", null, {
 			model = this._textModel,
 			options = {
 				statusReporter: function(message, isError) {
-					var method = isError ? "error" : "log";
-					console[method]("orion.editor: " + message);
+//					var method = isError ? "error" : "log";
+//					console[method]("orion.editor: " + message);
+				    if ( isError ) { console.error("orion.editor: " + message); }
 				},
 				textViewFactory: function() {
 					return new orion.textview.TextView({

@@ -140,4 +140,4 @@ define([], function() {
 		}
 	};
 	return {EventTarget: EventTarget};
-}, "orion/textview");
+});

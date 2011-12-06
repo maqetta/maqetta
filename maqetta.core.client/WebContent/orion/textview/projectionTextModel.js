@@ -581,4 +581,4 @@ define(['orion/textview/textModel', 'orion/textview/eventTarget'], function(mTex
 	mEventTarget.EventTarget.addMixin(ProjectionTextModel.prototype);
 
 	return {ProjectionTextModel: ProjectionTextModel};
-}, "orion/textview");
+});

@@ -136,4 +136,4 @@ define([], function() {
 	};
 
 	return {TextDND: TextDND};
-}, "orion/textview");
+});

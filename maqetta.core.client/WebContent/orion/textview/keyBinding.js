@@ -82,4 +82,4 @@ define([], function() {
 		} 
 	};
 	return {KeyBinding: KeyBinding};
-}, "orion/textview");
+});

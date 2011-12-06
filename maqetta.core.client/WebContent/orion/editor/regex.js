@@ -18,4 +18,4 @@ define([], function() {
 	}
 	
 	return {escapeRegex: escapeRegex};
-}, "orion/regex");
+});

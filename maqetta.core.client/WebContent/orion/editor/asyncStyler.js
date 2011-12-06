@@ -157,4 +157,4 @@ define([], function() {
 	};
 	
 	return { AsyncStyler: AsyncStyler };
-}, "orion/editor");
+});

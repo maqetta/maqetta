@@ -377,4 +377,4 @@ define([], function() {
 	return {
 		UndoStack: UndoStack
 	};
-}, "orion/textview");
+});

@@ -57,4 +57,4 @@ define([], function() {
 		CssContentAssistProvider: CssContentAssistProvider,
 		JavaScriptContentAssistProvider: JavaScriptContentAssistProvider
 	};
-}, "orion/editor");
+});

@@ -6035,5 +6035,5 @@ define(['orion/textview/textModel', 'orion/textview/keyBinding', 'orion/textview
 	mEventTarget.EventTarget.addMixin(TextView.prototype);
 	
 	return {TextView: TextView};
-}, "orion/textview");
+});
 

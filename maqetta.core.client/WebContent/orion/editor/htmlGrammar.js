@@ -101,4 +101,4 @@ define([], function() {
 	}
 
 	return {HtmlGrammar: HtmlGrammar};
-}, "orion/editor");
+});

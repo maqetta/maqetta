@@ -961,4 +961,4 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND) {
 		SourceCodeActions: SourceCodeActions,
 		LinkedMode: LinkedMode
 	};
-}, "orion/editor");
+});

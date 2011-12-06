@@ -1,4 +1,4 @@
-if (typeof orion == "undefined") { orion = {}; } // workaround because orion code did not declare orion global in a way that works with the Dojo loader
+//if (typeof orion == "undefined") { orion = {}; } // workaround because orion code did not declare orion global in a way that works with the Dojo loader
 
 define([
 	"davinci/commands/CommandStack",
@@ -10,8 +10,9 @@ define([
 	"orion/editor/editorFeatures",
 	"orion/editor/htmlGrammar",
 	"orion/editor/textMateStyler",
-	"orion/textview/textView"
-], function(CommandStack, doLater, declare, Action, TextStyler) {
+	"orion/textview/textView",
+	"orion/textview/textModel"
+], function(CommandStack, doLater, declare, Action, TextStyler, mEditor, mEditorFeatures, mHtmlGrammar, mTextMateStyler, mTextView, mTextModel) {
 	declare("davinci.ui._EditorCutAction", Action, {
 		constructor: function (editor) {
 			this._editor=editor;
@@ -86,7 +87,7 @@ return declare("davinci.ui.Editor", null, {
 			this._createEditor();
 		}
 		if (!this._textModel) {
-			this._textModel = this.editor ? this.editor.getModel() : new orion.textview.TextModel();
+			this._textModel = this.editor ? this.editor.getModel() : new mTextModel.TextModel();
 		}
 		this.fileName=filename;
 
@@ -138,7 +139,7 @@ return declare("davinci.ui.Editor", null, {
 					console[method]("orion.editor: " + message);
 				},
 				textViewFactory: function() {
-					return new orion.textview.TextView({
+					return new mTextView.TextView({
 						parent: parent,
 						model: model,
 						tabSize: 4,
@@ -147,14 +148,14 @@ return declare("davinci.ui.Editor", null, {
 						]
 					});
 				},
-				undoStackFactory: new orion.editor.UndoFactory(),
-				annotationFactory: new orion.editor.AnnotationFactory(),
-				lineNumberRulerFactory: new orion.editor.LineNumberRulerFactory(),
+				undoStackFactory: new mEditorFeatures.UndoFactory(),
+				annotationFactory: new mEditorFeatures.AnnotationFactory(),
+				lineNumberRulerFactory: new mEditorFeatures.LineNumberRulerFactory(),
 				contentAssistFactory: null,
 //TODO				keyBindingFactory: keyBindingFactory, 
 				domNode: parent // redundant with textView parent?
 		};
-		this.editor = new orion.editor.Editor(options);
+		this.editor = new mEditor.Editor(options);
 		this.editor.installTextView();
 		this.editor.getTextView().focus();
 		this.editor.getTextView().setHorizontalPixel(1);
@@ -188,7 +189,7 @@ return declare("davinci.ui.Editor", null, {
 			this._styler = new TextStyler(view, lang, this.editor._annotationModel/*view.annotationModel*/);
 			break;
 		case "html":
-			this._styler = new orion.editor.TextMateStyler(view, orion.editor.HtmlGrammar.grammar);
+			this._styler = new mTextMateStyler.TextMateStyler(view, (new mHtmlGrammar.HtmlGrammar()).grammar);
 		}
 		view.setText(this.getText());
 	},

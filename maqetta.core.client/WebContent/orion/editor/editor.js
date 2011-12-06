@@ -885,4 +885,4 @@ define(['orion/textview/keyBinding', 'orion/textview/eventTarget', 'orion/textvi
 		Editor: Editor,
 		util: util
 	};
-}, "orion/editor");
+});

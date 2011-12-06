@@ -1072,5 +1072,5 @@ define(['orion/textview/annotations'], function(mAnnotations) {
 		}
 	};
 	
-	return {TextStyler: TextStyler};
-}, "examples/textview");
+	return TextStyler;
+});

@@ -440,4 +440,4 @@ define(['orion/textview/eventTarget'], function(mEventTarget) {
 	mEventTarget.EventTarget.addMixin(TextModel.prototype);
 	
 	return {TextModel: TextModel};
-}, "orion/textview");
+});

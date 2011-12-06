@@ -235,4 +235,4 @@ define(['orion/textview/textView', 'orion/textview/textModel', 'orion/textview/p
 		}
 	};
 	return {Tooltip: Tooltip};
-}, "orion/textview");
+});

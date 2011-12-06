@@ -1358,4 +1358,4 @@ var RegexUtil = {
 		RegexUtil: RegexUtil,
 		TextMateStyler: TextMateStyler
 	};
-}, "orion/editor");
+});

@@ -721,4 +721,4 @@ define(['orion/textview/tooltip'], function(mTooltip) {
 		OverviewRuler: OverviewRuler,
 		FoldingRuler: FoldingRuler
 	};
-}, "orion/textview");
+});

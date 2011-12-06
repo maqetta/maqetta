@@ -392,4 +392,4 @@ define(['orion/textview/keyBinding', 'orion/textview/eventTarget'], function(mKe
 	mEventTarget.EventTarget.addMixin(ContentAssist.prototype);
 	
 	return {ContentAssist: ContentAssist};
-}, "orion/editor");
+});

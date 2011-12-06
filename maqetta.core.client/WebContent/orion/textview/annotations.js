@@ -617,4 +617,4 @@ define(['orion/textview/eventTarget'], function(mEventTarget) {
 		AnnotationModel: AnnotationModel,
 		AnnotationStyler: AnnotationStyler
 	};
-}, "orion/textview");
+});

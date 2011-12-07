@@ -1107,9 +1107,10 @@ davinci.states = new davinci.States();
 				var hook = function(parser) {
 					var parse = parser.parse;
 	                dojo.parser.parse = function() {
-	                    _preserveStates(cache);
-	    				_restoreStates(cache);
-	                    return parse.apply(this, arguments);
+						_preserveStates(cache);
+						var results = parse.apply(this, arguments);
+						_restoreStates(cache);
+						return results;
 	                };
 				};
 				// only include the regular parser if the mobile parser isn't available

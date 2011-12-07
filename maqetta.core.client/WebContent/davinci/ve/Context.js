@@ -2251,15 +2251,14 @@ return declare("davinci.ve.Context", null, {
 		//	  Adding it again will overwrite the existing Dojo, breaking some things.
 		//	  See bug 7585.
 		if (!isDojoJS && !skipDomUpdate) {
-			var absoluteUrl = (new dojo._Url(this.getDocument().baseURI, url)).toString();
-			dojo.withGlobal(this.getGlobal(),
-				function() {
-					dojo.xhrGet({
-						url: absoluteUrl,
-						sync: true,
-						handleAs: "javascript"
-					});
-				});
+			var context = this,
+				absoluteUrl = (new dojo._Url(this.getDocument().baseURI, url)).toString();
+			dojo.xhrGet({
+				url: absoluteUrl,
+				sync: true    // XXX -> async
+			}).then(function(data) {
+				context.getGlobal()['eval'](data);
+			});
 		}
 		if (doUpdateModel) {				
 			/* update the script if found */

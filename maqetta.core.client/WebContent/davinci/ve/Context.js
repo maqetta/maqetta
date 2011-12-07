@@ -632,7 +632,11 @@ return declare("davinci.ve.Context", null, {
        	if (newHtmlParms && newHtmlParms.themeSet) {
        	    defaultThemeName = newHtmlParms.themeSet.desktopTheme;
        	} else if (newHtmlParms && newHtmlParms.theme){
-       	    defaultThemeName = newHtmlParms.theme;
+       	    if (newHtmlParms.theme == 'deviceSpecific') {
+       	     defaultThemeName = "claro"; 
+       	    } else {
+       	        defaultThemeName = newHtmlParms.theme;
+       	    }
        	}
     	var imports = model.find({elementType:'CSSImport'});
 		

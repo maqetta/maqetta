@@ -144,10 +144,11 @@ require([
     outline : none;
 }
 
-  .resetClaroFontBg.resetClaroFontBg { /* Class name repeated twice to win the cascade */
-    color : black;
-    font-family : Myriad, Helvetica, Tahoma, Arial, clean, sans-serif;
+  .resetClaroFontBg.resetClaroFontBg {
+    color : black;/* Class name repeated twice to win the cascade 
+    */
 
+    font-family : Myriad, Helvetica, Tahoma, Arial, clean, sans-serif;
     font-size : 12px;
     font-style : normal;
     font-variant : normal;
@@ -193,30 +194,44 @@ require([
 
 </style>
 <div class="resetClaroFontBg" style="margin: -1px;">
- <div class="theming-group">
-  <div class="theming-group-title">
+	<div class="theming-group">
+		<div class="theming-group-title">
 			Global Styling
 		</div>
 
-  <div class="theming-group-widgets" style="background:white; height:125px;">
-   <div class="theming-note">To change global font and background properties, click inside the widget below to select it, then change font properties and/or background properties in the Properties pallete.</div>
-   <div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Headings &amp; TabBars&quot;">
-    <div class="fakeSilhouette3" style="width:420px;">
-     <div class="fakeSilhouette2">
-      <div class="fakeSilhouette1 useBodyFontBg" style="height:40px;">
-       <div id="View_0" dojoType="dojox.mobile.View" class="dvThemeWidget" style="height: 100%;" selected="true">
-			Font and background styling
-		<div class="globalWidget">
-			<h1 label="Global Styling" dojoType="dojox.mobile.Heading" class="dvThemeWidget" id="all" back="back"></h1>
-		</div>
-		</div>
+		<div class="theming-group-widgets" style="background:white; height:125px;">
+			<div class="theming-note">To change global font and background properties, click inside the widget below to select it, then change font properties and/or background properties in the Properties pallete.</div>
+			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Headings &amp; TabBars&quot;">
+				<div class="fakeSilhouette3" style="width:420px;">
+					<div class="fakeSilhouette2">
+						<div class="fakeSilhouette1 useBodyFontBg" style="height:40px;">
+							<div id="View_0" dojoType="dojox.mobile.View" class="dvThemeWidget" style="height: 100%;" selected="true">
+								Font and background styling
+								
+							</div>
 
-      </div>
-     </div>
-    </div>
-   </div>
-  </div>
- </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="theming-group-widgets" style="background:white; height:125px;">
+			<div class="theming-note">This widget applies background color changes on a global basis to all 
+							the widgets for all the states.</div>
+			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Headings &amp; TabBars&quot;">
+				<div class="fakeSilhouette3" style="width:420px;">
+					<div class="fakeSilhouette2">
+						<div class="fakeSilhouette1 useBodyFontBg" style="height:40px;">
+							<div class="globalWidget">
+								<h1 label="Global Styling" dojoType="dojox.mobile.Heading" class="dvThemeWidget" id="all" ></h1>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
  <div class="theming-group">
  <div class="theming-group-title">

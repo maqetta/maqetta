@@ -45,7 +45,7 @@ dojo.declare("davinci.ve.States", davinci.maqetta.States, {
 		var currentEditor = top.davinci.Runtime.currentEditor;
 		var context = currentEditor.getContext();
 
-		var command = new davinci.ve.commands.StyleCommand(widget, style);	
+		var command = new davinci.ve.commands.StyleCommand(widget, [style]);	
 		
 		context.getCommandStack().execute(command);
 	},

@@ -83,7 +83,7 @@ davinci.maqetta.States.prototype = {
 		var oldState = widget.states.current;
 		
 		if (this.isNormalState(newState)) {
-			if (!widget.states.current) return;
+			if (!widget.states.current) { return; }
 			delete widget.states.current;
 			newState = undefined;
 		} else {
@@ -115,21 +115,23 @@ davinci.maqetta.States.prototype = {
 	},
 	
 	getStyle: function(widget, state, name) {
+		var style;
 		widget = this._getWidget(widget);
-		if (arguments.length <= 2) { // return all styles specific to this state
-			if (arguments.length == 1) {
-				state = this.getState();
-			}
-			return widget && widget.states && widget.states[state] && widget.states[state].style;
-		} else { // return a named style specific to this state
-			return widget && widget.states && widget.states[state] && widget.states[state].style && widget.states[state].style[name];
+		if (arguments.length == 1) {
+			state = this.getState();
 		}
+		// return all styles specific to this state
+		style = widget && widget.states && widget.states[state] && widget.states[state].style;
+		if (arguments.length > 2) { 
+			style = style && widget.states[state].style[name];
+		}
+		return style;
 	},
-	
+
 	hasStyle: function(widget, state, name) {
 		widget = this._getWidget(widget);
 
-		if (!widget || !name) return;
+		if (!widget || !name) { return; }
 		
 		return widget.states && widget.states[state] && widget.states[state].style && widget.states[state].style.hasOwnProperty(name);
 	},
@@ -137,7 +139,7 @@ davinci.maqetta.States.prototype = {
 	setStyle: function(widget, state, style, value, silent) {
 		widget = this._getWidget(widget);
 
-		if (!widget || !style) return;
+		if (!widget || !style) { return; }
 			
 		if (typeof style == "string") {
 			var name = style;
@@ -486,20 +488,20 @@ davinci.states = new davinci.maqetta.States();
 		
 		// Patch the dojo parse method to preserve states data
 		if (typeof require != "undefined") {
-			require(["dojo/_base/lang", "dojo/query", "dojo/domReady!"], function(lang) {
-				var cache = {};
+			require(["dojo/_base/lang", "dojo/query", "dojo/domReady!"], function(lang, query) {
+				var cache = {}; // could be local to hook function?
 
 				// hook main dojo.parser (or dojox.mobile.parser, which also
 				// defines "dojo.parser" object)
 				// Note: Uses global 'dojo' reference, which may not work in the future
 				var hook = function(parser) {
 					var parse = parser.parse;
-	                dojo.parser.parse = function() {
+					dojo.parser.parse = function() {
 						_preserveStates(cache);
 						var results = parse.apply(this, arguments);
 						_restoreStates(cache);
 						return results;
-	                };
+					};
 				};
 				// only include the regular parser if the mobile parser isn't available
 				var parser = lang.getObject("dojox.mobile.parser.parse");
@@ -508,59 +510,59 @@ davinci.states = new davinci.maqetta.States();
 				} else {
 					hook.apply(parser);
 				}
-			});
 			
-			// preserve states specified on widgets
-			function _preserveStates(cache){
-				var doc = davinci.states.getDocument();
-
-				// Preserve the body states directly on the dom node
-				var states = davinci.states.retrieve(doc.body);
-				if (states) {
-					cache["body"] = states;
-				}
-
-				// Preserve states of children of body in the cache
-				require("dojo/query")("*", doc).forEach(function(node){
-					var states = davinci.states.retrieve(node);
+				// preserve states specified on widgets
+				var _preserveStates = function (cache) {
+					var doc = davinci.states.getDocument();
+	
+					// Preserve the body states directly on the dom node
+					var states = davinci.states.retrieve(doc.body);
 					if (states) {
-						if (!node.id) {
-							node.id = _getTemporaryId(node);
-						}
-						if (node.tagName != "BODY") {
-							cache[node.id] = states;
-						}
+						cache.body = states;
 					}
-				});
-			}
-
-			// restore widget states from cache
-			function _restoreStates(cache){
-				var doc = davinci.states.getDocument();
-				var currentStateCache = [];
-				for(var id in cache){
-					var widget = id == "body" ? doc.body : dijit.byId(id) || dojo.byId(id);
-					if (!widget) {
-						console.error("States: Failed to get widget by id: ", id);
+	
+					// Preserve states of children of body in the cache
+					query("*", doc).forEach(function(node){
+						var states = davinci.states.retrieve(node);
+						if (states) {
+							if (!node.id) {
+								node.id = _getTemporaryId(node);
+							}
+							if (node.tagName != "BODY") {
+								cache[node.id] = states;
+							}
+						}
+					});
+				};
+	
+				// restore widget states from cache
+				var _restoreStates = function (cache) {
+					var doc = davinci.states.getDocument(),
+						currentStateCache = [];
+					for(var id in cache){
+						var widget = id == "body" ? doc.body : dijit.byId(id) || dojo.byId(id);
+						if (!widget) {
+							console.error("States: Failed to get widget by id: ", id);
+						}
+						var states = davinci.states.deserialize(cache[id]);
+						delete states.current; // always start in normal state for runtime
+						davinci.states.store(widget, states);
 					}
-					var states = davinci.states.deserialize(cache[id]);
-					delete states["current"]; // always start in normal state for runtime
-					davinci.states.store(widget, states);
-				}
-			}
-				
-			function _getTemporaryId(type){
-				if (!type) {
-					return undefined;
-				}
-				if (type.domNode) { // widget
-					type = type.declaredClass;
-				} else if (type.nodeType === 1) { // Element
-					type = (type.getAttribute("dojoType") || type.nodeName.toLowerCase());
-				}
-				type = (type ? type.replace(/\./g, "_") : "");
-				return dijit.getUniqueId(type);
-			}
+				};
+					
+				var _getTemporaryId = function (type) {
+					if (!type) {
+						return undefined;
+					}
+					if (type.domNode) { // widget
+						type = type.declaredClass;
+					} else if (type.nodeType === 1) { // Element
+						type = (type.getAttribute("dojoType") || type.nodeName.toLowerCase());
+					}
+					type = type ? type.replace(/\./g, "_") : "";
+					return dijit.getUniqueId(type);
+				};
+			});
 		}
 	}
 })();

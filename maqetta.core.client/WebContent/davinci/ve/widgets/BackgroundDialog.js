@@ -22,7 +22,7 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 	stopRowTemplate:"<tr class='bgdGradOptRow bgdStopRow' style='display:none;'>"+
 				"<td class='bgdCol1'></td>"+
 				"<td class='bgdOptsLabel bdgStopLabel'>Template:</td>"+
-				"<td>"+
+				"<td class='bgdStopColorTD'>"+
 				"<select class='bgdColor' dojoType='dijit.form.ComboBox'>"+
 				"</select>"+
 				"</td>"+

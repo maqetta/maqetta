@@ -34,8 +34,14 @@ dojo.declare("davinci.ve.themeEditor.commands.ThemeEditorCommand", null, {
 		this._themeEditor._rebaseCssRuleImagesForStylePalette(rules, v);
 		var domNode;
 		var widgetType = this._themeEditor._selectedWidget.type;
+/*
 		if(this._themeEditor._selectedWidget.id === 'all'){ // this is the mythical widget used for global change of widgets 
 			widgetType = widgetType + '.$all'; // add this to the end so it will match the key in the metadata
+		}
+*/
+		var id = this._themeEditor._selectedWidget.id;
+		if(id.indexOf('all') === 0){ // this is a  mythical widget used for global change of widgets 
+			widgetType = widgetType + '.$' + id; // add this to the end so it will match the key in the metadata
 		}
 		var domNode = this._themeEditor._theme.getDomNode(this._themeEditor._selectedWidget.domNode, widgetType, this._themeEditor._selectedSubWidget);
 		var allStyle = dojo.getComputedStyle(domNode);

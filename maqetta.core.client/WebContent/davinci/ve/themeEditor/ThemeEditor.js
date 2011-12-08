@@ -345,12 +345,19 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 			return null;
 		}
 		
-		var type = this.metaDataLoader.getType(widget);
+		var widgetType = this.metaDataLoader.getType(widget);
 		
-		if(!type)
+		if(!widgetType)
 			return null;
+
+/*
 		if(widget.id === 'all'){ // this is the mythical widget used for global change of widgets 
-			type = type + '.$all'; // add this to the end so it will match the key in the metadata
+			widgetType = widgetType + '.$all'; // add this to the end so it will match the key in the metadata
+		}
+*/
+		var id = widget.id;
+		if(id.indexOf('all') === 0){ // this is a  mythical widget used for global change of widgets 
+			widgetType = widgetType + '.$' + id; // add this to the end so it will match the key in the metadata
 		}
 		
 		
@@ -362,7 +369,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 			state = "Normal";
 		var allClasses = [];
 		if(this.__DEBUG_TO_CONSOLE) console.log("[theme editor] query metadata, widget: " + widget.declaredClass + " subwidget:" + subWidget  + " state:" + state);
-		var metadata = this._theme.getStyleSelectors(type,state,subWidget);
+		var metadata = this._theme.getStyleSelectors(widgetType,state,subWidget);
 		
 		for(var aa in metadata){
 			

@@ -296,7 +296,16 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
         this._selectedWidget = widget;
         this._inline = metadata.queryDescriptor(widget.type, "inlineEdit");
-        if (this._inline && this._inline.show) {
+    	var context = this._context;
+        if (this._inline && this._inline.useParent) {
+        	var parentWidget = widget.getParent();
+        	if(parentWidget){
+            	context.deselect(widget);
+            	context.select(parentWidget);
+            	var parentFocusObject = context.getFocus(parentWidget);
+            	parentFocusObject.showInline(parentWidget);
+        	}
+        }else if (this._inline && this._inline.show) {
             this._inline.show(widget.id);
         }
         return;

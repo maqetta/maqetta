@@ -1658,6 +1658,17 @@ return declare("davinci.ve.Context", null, {
 		this.onSelectionChange(this.getSelection());
 	},
 	
+	// If widget is in selection, returns the focus object for that widget
+	getFocus: function(widget){
+		var selection = this.getSelection();
+		for(var i=0; i<selection.length; i++){
+			if(widget == selection[i]){
+				return this._focuses[i];
+			}
+		}
+		return null;
+	},
+	
 	focus: function(state, index, inline){
 		if(!this._focuses){
 			this._focuses = [];

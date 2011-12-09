@@ -61,6 +61,8 @@ define({ root:
 		"bgdPickFile":"Choose...",
 		//stops
 		"bgdStop":"Stop",
+		"bgdAddStop":"Add a new gradient stop after this stop",
+		"bgdRemoveStop":"Remove this gradient stop",
 		
 		//widgets/ColorPicker.js
 		"colorPicker":"Color picker....",

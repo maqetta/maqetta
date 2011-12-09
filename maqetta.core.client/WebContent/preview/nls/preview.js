@@ -1,7 +1,7 @@
-({
-		//singlepreview.js
-		"device":"Device:",
-		"zoom":"Zoom:",
-		"angle":"Angle:"
-
-})
+define({ root:
+{
+	"device":"Device:",
+	"zoom":"Zoom:",
+	"angle":"Angle:"
+}
+});

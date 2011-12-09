@@ -2072,7 +2072,8 @@
             "inlineEdit": {
                 "property": "label",
                 "displayOnCreate": true,
-                "supportsHTML": true
+                "supportsHTML": true,
+                "useParent": true
             },
             "allowedParent": "dojox.mobile.RoundRectList, dojox.mobile.EdgeToEdgeList",
             "allowedChild": "dojox.mobile.Switch"

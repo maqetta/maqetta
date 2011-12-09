@@ -1887,6 +1887,9 @@
                     }
                 }
             },
+            "properties": {
+                "style": "z-index:0;"
+            },
             "helper": "davinci.libraries.dojo.dojox.mobile.HeadingHelper",
             "inlineEdit": {
                 "property": "label",

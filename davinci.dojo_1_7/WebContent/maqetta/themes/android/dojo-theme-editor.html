@@ -50,12 +50,12 @@ require([
 }
 
   .theming-group-title {
-    color : #333;
-    font-family : cursive;
-    font-size : 16px;
-    background-color : #aaa;
+    color : black;
+    font-family : Arial;
+    font-size : 14px;
+    font-weight: bold;
     padding-left : 7px;
-    padding-top : 3px;
+    padding-top : 7px;
 }
 
   .theming-group-widgets {
@@ -73,10 +73,16 @@ require([
 }
 
   .theming-note {
-    font-size : 14px;
+    font-size : 12px;
     font-style : normal;
-    padding : 7px 17px 2px;
+    padding : 4px 17px 10px;
     margin : 2px 0;
+}
+
+  .global-widget-names {
+    font-size : 12px;
+    font-style : italic;
+    text-align: center;
 }
 
   -widgets#other {
@@ -194,6 +200,10 @@ require([
     font-style : italic;
 }
 
+  .dijitTabContainer .dijitContentPane {
+  	padding:10px;
+}
+
 </style>
 <div class="resetClaroFontBg" style="margin: -1px;">
  <div class="theming-group">
@@ -205,7 +215,7 @@ require([
 			<div class="theming-note">To change page-level backgrounds and fonts, 
 				click inside the box below to select it, 
 				then change background properties and/or font properties in the Properties palette.</div>
-			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Headings &amp; TabBars&quot;" style="padding-top:3px;">
+			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Page styling&quot;" style="padding-top:3px;">
 				<div class="fakeSilhouette3" style="width:420px;">
 					<div class="fakeSilhouette2">
 						<div class="fakeSilhouette1 useBodyFontBg" style="height:40px;">
@@ -221,13 +231,13 @@ require([
 		
 		<div class="theming-group-widgets" style="background:white; height:130px;">
 			<div class="theming-note">To change shared background and font properties across multiple widgets, click on one of widgets below and change background and/or font properties in the Properties palette:</div>
-			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Headings &amp; TabBars&quot;" style="padding-top:3px;">
+			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Shared widget styling&quot;">
 				<table border="0" cellspacing="0" cellpadding="0">
 					<tbody>
 						<tr>
-							<td style='text-align:center;font-style:italic;'>Heading, TabBar, EdgeToEdgeCategory</td>
+							<td class='global-widget-names'>Heading, TabBar, EdgeToEdgeCategory</td>
 							<td>&nbsp;</td>
-							<td style='text-align:center;font-style:italic;'>Buttons, CheckBox, RadioButton</td>
+							<td class='global-widget-names'>Buttons, CheckBox, RadioButton</td>
 						</tr>
 						<tr>
 							<td>
@@ -269,7 +279,7 @@ require([
   <div class="theming-note">To change styling for particular widgets, navigate into the appropriate section below, click on a particular widget below to select it, then change styling properties in the Properties palette.</div>
 
 
-  <div data-dojo-type="dijit.layout.TabContainer" data-dojo-props="style:&quot;width: 100%; height: 600px; margin:15px;&quot; ">
+  <div data-dojo-type="dijit.layout.TabContainer" data-dojo-props="style:&quot;width: 100%; height: 600px; margin:0 15px;&quot; ">
    <div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Headings &amp; TabBars&quot;">
     <div class="fakeSilhouette3" style="width:420px;">
      <div class="fakeSilhouette2">

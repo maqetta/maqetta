@@ -300,6 +300,7 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 	},
 	
 	_initializeStops: function(stops){
+		var langObj = this.langObj;
 		CssUtils = davinci.ve.utils.CssUtils;
 		if(!stops){
 			stops = this.bgddata.stops;
@@ -353,6 +354,7 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 			}));
 			var plusNode = dojo.query('.bgdPlusButton', newStopRow)[0];
 			var plusButton = dijit.byNode(plusNode);
+			plusButton.attr('title', langObj.bgdAddStop);
 			this.connect(plusButton, 'onClick', dojo.hitch(this, function(rownum){
 				var stop = this.bgddata.stops[rownum];
 				// Duplicate row <rownum>
@@ -361,6 +363,7 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 			}, i));
 			var minusNode = dojo.query('.bgdMinusButton', newStopRow)[0];
 			var minusButton = dijit.byNode(minusNode);
+			minusButton.attr('title', langObj.bgdRemoveStop);
 			this.connect(minusButton, 'onClick', dojo.hitch(this, function(rownum){
 				var stop = this.bgddata.stops[rownum];
 				// Remove row <rownum>

@@ -350,11 +350,6 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 		if(!widgetType)
 			return null;
 
-/*
-		if(widget.id === 'all'){ // this is the mythical widget used for global change of widgets 
-			widgetType = widgetType + '.$all'; // add this to the end so it will match the key in the metadata
-		}
-*/
 		var id = widget.id;
 		if(id.indexOf('all') === 0){ // this is a  mythical widget used for global change of widgets 
 			widgetType = widgetType + '.$' + id; // add this to the end so it will match the key in the metadata

@@ -3,7 +3,7 @@
 <plugin>
    <extension
          point="maqetta.core.server.personManager">
-         <personManager class="davinci.joomla.JoomlaPersonManager"/>
+         <personManager class="davinci.joomla.JoomlaPersonManager" priority="1"/>
    </extension>
    <extension
          point="maqetta.core.server.welcomePage">

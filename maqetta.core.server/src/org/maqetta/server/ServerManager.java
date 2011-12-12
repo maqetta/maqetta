@@ -144,18 +144,30 @@ public class ServerManager implements IServerManager {
     /* (non-Javadoc)
 	 * @see org.davinci.server.IServerManager#getExtension(java.lang.String, java.lang.String)
 	 */
+    
+    
     public IConfigurationElement getExtension(String extensionPoint, String elementTag) {
-        IExtension[] extensions = this.getExtensions(extensionPoint);
-        for (int i = 0; i < extensions.length; i++) {
-            IConfigurationElement[] elements = extensions[i].getConfigurationElements();
-            for (int j = 0; j < elements.length; j++) {
-                if (elements[j].getName().equals(elementTag)) {
-                    return elements[j];
+    	IExtension[] extensions = this.getExtensions(extensionPoint);
+        
+    	  IConfigurationElement winner = null;
+      	  int highest = -100000;
+      	  for(int i=0;i<extensions.length;i++){
+      		    IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+                for (int j = 0; j < elements.length; j++) {
+                    if (elements[j].getName().equals(elementTag)) {
+                    	String stringPriority = elements[j].getAttribute(IDavinciServerConstants.EP_ATTR_PAGE_PRIORITY);
+                    	int priority = -10000;
+                    	if(stringPriority!=null)
+                    		priority= Integer.parseInt(stringPriority);
+                    	if(priority > highest){
+            	      		winner = elements[j];
+            	      		highest = priority;
+            	      	}
+            	 	  }
+                    }
                 }
-            }
-        }
-
-        return null;
+    
+        return winner;
     }
 
     private static final IExtension[] EMPTY_EXTENSIONS = {};

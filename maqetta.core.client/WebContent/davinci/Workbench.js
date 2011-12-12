@@ -17,7 +17,7 @@ dojo.require("davinci.model.Path");
 //dojo.require("davinci.workbench._ToolbaredContainer");
 dojo.require("davinci.workbench.ViewPart");
 dojo.require("davinci.workbench.EditorContainer");
-dojo.require("davinci.de.resource");
+dojo.require("davinci.de.resource"); // FIXME: not used here
 dojo.require("davinci.ui.Resource");
 //dojo.require("davinci.ui.Panel");
 dojo.require("davinci.util");
@@ -510,8 +510,9 @@ dojo.mixin(davinci.Workbench, {
 			actionSets =  davinci.Runtime.getExtensions("davinci.actionSets", function (actionSet)
 			{
 				var associations=davinci.Runtime.getExtensions("davinci.actionSetPartAssociations",function (actionSetPartAssociation){
-					if (actionSetPartAssociation.targetID==actionSet.id)
+					if (actionSetPartAssociation.targetID==actionSet.id) {
 						return true;
+					}
 				});	
 				return associations.length==0;
 			});
@@ -1395,7 +1396,7 @@ dojo.mixin(davinci.Workbench, {
 		this._updateTitle(newEditor);
 		davinci.Workbench._state.activeEditor=newEditor ? newEditor.fileName : null;
 	
-		if(newEditor && newEditor.focus) newEditor.focus();
+		if(newEditor && newEditor.focus) { newEditor.focus(); }
 
 		setTimeout(function(){
 			// resize kludge to make Dijit visualEditor contents resize
@@ -1449,7 +1450,7 @@ dojo.mixin(davinci.Workbench, {
 	_initializeWorkbenchState: function(){
 		
 		if(this._state==null || !this._state.hasOwnProperty("editors")) 
-			(this._state=davinci.Runtime.serverJSONRequest({url:"./cmd/getWorkbenchState", handleAs:"json", sync:true  }));
+			(this._state=davinci.Runtime.serverJSONRequest({url:"cmd/getWorkbenchState", handleAs:"json", sync:true  }));
 		
 		var state = this._state;
 		
@@ -1499,7 +1500,7 @@ dojo.mixin(davinci.Workbench, {
 	getActiveProject: function(){
 		
 		if(this._state==null )
-			this._state=davinci.Runtime.serverJSONRequest({url:"./cmd/getWorkbenchState", handleAs:"json", sync:true  });
+			this._state=davinci.Runtime.serverJSONRequest({url:"cmd/getWorkbenchState", handleAs:"json", sync:true  });
 		
 		if(this._state.hasOwnProperty("project"))
 			return this._state.project;
@@ -1541,13 +1542,12 @@ dojo.mixin(davinci.Workbench, {
 	
 	_updateWorkbenchState: function()
 	{
-		davinci.Runtime.serverPut(
-				{
-					url: "./cmd/setWorkbenchState",
-					putData: dojo.toJson(this._state),
-					handleAs:"json",
-					contentType:"text/html"
-				});	
+		dojo.xhrPut({
+			url: "cmd/setWorkbenchState",
+			putData: dojo.toJson(this._state),
+			handleAs:"json",
+			contentType:"text/html"
+		});	
 	},
 
 	_autoSave: function(){

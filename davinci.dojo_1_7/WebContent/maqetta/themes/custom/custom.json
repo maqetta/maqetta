@@ -111,23 +111,6 @@
 			"states": {
 				"Normal": {
 					"selectors": {
-						".globalWidget .mblHeading": [
-							"background-color",
-							"background-image",
-							"background-position",
-							"background-position-x",
-							"background-position-y",
-							"background-repeat",
-							"background-origin",
-							"background-size",
-							"background-clip",
-							"font-family",
-							"font-size",
-							"font-style",
-							"font-weight",
-							"color",
-							"text-align"
-						],
 						".mblHeading" : [
 							"background-color",
 							"background-image",
@@ -217,23 +200,6 @@
 			"states": {
 				"Normal": {
 					"selectors": {
-						".globalWidget .mblButton": [
-							"background-color",
-							"background-image",
-							"background-position",
-							"background-position-x",
-							"background-position-y",
-							"background-repeat",
-							"background-origin",
-							"background-size",
-							"background-clip",
-							"font-family",
-							"font-size",
-							"font-style",
-							"font-weight",
-							"color",
-							"text-align"
-						]	,
 						".mblToolBarButton" : [
 							"background-color",
 							"background-image",

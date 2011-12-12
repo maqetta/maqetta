@@ -2370,38 +2370,34 @@ return declare("davinci.ve.Context", null, {
 
 	// add JS to HEAD
 	addHeaderScriptText: function(text){
-		text = '\n' + text;
-		if (this._scriptAdditions) {
-			var scriptText = this._scriptAdditions.find({elementType: 'HTMLText'}, true);
-			if (scriptText) {
-				var oldText = scriptText.getText();
-				if (oldText.indexOf(text) > -1) {
-					return;  // already in the header
-				}
-				this._scriptAdditions.parent.removeChild(this._scriptAdditions);
-				delete this._scriptAdditions;
-				text = oldText + text;
+		if (! this._scriptAdditions) {
+			// create a new script element
+			var head = this.getDocumentElement().getChildElement('head'),
+				statesJsScriptTag = this._statesJsScriptTag,
+				script = new davinci.html.HTMLElement('script');
+			
+			script.addAttribute('type', 'text/javascript');
+			script.script = "";
+		
+			// XXX Bug 7499 - (HACK) See comment in addHeaderScript()
+			if (statesJsScriptTag) {
+				head.insertBefore(script, statesJsScriptTag);
+			} else {
+				head.addChild(script);
 			}
+
+			this._scriptAdditions = script;
 		}
 
-		// create a new script element
-		var head = this.getDocumentElement().getChildElement('head'),
-			statesJsScriptTag = this._statesJsScriptTag,
-			script = new davinci.html.HTMLElement('script');
-
-		script.addAttribute('type', 'text/javascript');
-		script.script = "";
-	
-		// XXX Bug 7499 - (HACK) See comment in addHeaderScript()
-		if (statesJsScriptTag) {
-			head.insertBefore(script, statesJsScriptTag);
-		} else {
-			head.addChild(script);
+		var scriptText = this._scriptAdditions.find({elementType: 'HTMLText'}, true);
+		if (! scriptText) {
+			scriptText = new davinci.html.HTMLText();
+			this._scriptAdditions.addChild(scriptText);
 		}
-		var newScriptText = new davinci.html.HTMLText();
-		newScriptText.setText(text);
-		script.addChild(newScriptText);
-		this._scriptAdditions = script;
+		var oldText = scriptText.getText();
+		if (oldText.indexOf(text) === -1) {
+			scriptText.setText(oldText + '\n' + text);
+		}
 	},
 	
 	/**

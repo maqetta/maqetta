@@ -385,16 +385,6 @@ return declare("davinci.ve.Context", null, {
 						") does not specify 'library'");
 			}
 
-			// need to set the module path for custom user widgets 
-			// XXX Get rid of Dojo-specific code.  If necessary, should be refactored
-			// and abstracted to a function.  But instead of code like this, should
-			// be using APIs from library.js or metadata.js (or something pulling
-			// in data from package.json).
-			if (r.$library === 'dojo') {
-				var path = libs.dojo.append(r.src);
-				this._dojoModulePath = (new davinci.model.Path(this.getBase())).relativeTo(path, true).toString();
-			}
-
 			switch (r.type) {
 				case "javascript":
 					if (r.src) {
@@ -458,11 +448,6 @@ return declare("davinci.ve.Context", null, {
 		return folder;
 	},
 
-	//FIXME: remove accessor
-	_getDojoModulePath: function(){
-		return this._dojoModulePath;
-	},
-	
 	_require: function(module){
 		try{
 			return this.getGlobal()["require"]([module.replace(/\./g, "/")]);
@@ -807,13 +792,9 @@ return declare("davinci.ve.Context", null, {
 				//  depend on dojo any more.  Once issue, though, is that the callback function
 				//  makes use of dojo and thusly must be invoked only after dojo has loaded.  Need
 				//  to remove Dojo dependencies from callback function first.
-				var baseUserWorkspace = system.resource.getRoot().getURL() + "/" + this._getWidgetFolder(),
-				    baseDojoUrl = system.resource.getRoot().getURL() + "/lib/dojo/dojo",
-				    config = {
-						modulePaths: {widgets: baseUserWorkspace}, // FIXME: replaced by packages in Dojo 1.7?
-						packages: [{ name: 'widgets', location: baseUserWorkspace}], // need to add dynamically
-						baseUrl: baseDojoUrl
-					};
+				var config = {
+					packages: this._getLoaderPackages() // XXX need to add dynamically
+				};
 				dojo.mixin(config, this._configProps);
 
 				var requires = this._bootstrapModules.split(","),
@@ -958,6 +939,36 @@ return declare("davinci.ve.Context", null, {
 				}
 			}
 		}
+	},
+
+	_getLoaderPackages: function() {
+		var libs = davinci.library.getUserLibs(this.getBase()),
+			dojoBase,
+			packages = [];
+		
+		// get dojo base path
+		libs.some(function(lib) {
+			if (lib.id === 'dojo') {
+				dojoBase = new davinci.model.Path(lib.root + '/dojo');
+				return true; // break
+			}
+			return false;
+		});
+
+		// Add namespace for custom widgets
+		libs = libs.concat({ id: 'widgets', root: this._getWidgetFolder() });
+
+		libs.forEach(function(lib) {
+			var id = lib.id;
+			// since to loader, everything is relative to 'dojo', ignore here
+			if (! lib.root || id === 'dojo' || id === 'DojoThemes') {
+				return;
+			}
+			var root = new davinci.model.Path(lib.root).relativeTo(dojoBase).toString();
+			packages.push({ name: lib.id, location: root });
+		});
+
+		return packages;
 	},
 
 	_setSourceData: function(data){
@@ -2279,14 +2290,10 @@ return declare("davinci.ve.Context", null, {
 			if (isDojoJS) {
 				// special case for dojo.js to provide config attribute
 				// XXX TODO: Need to generalize in the metadata somehow.
-				var fullPath = new davinci.model.Path(system.resource.getRoot().getPath());
-				var urlPath = new davinci.model.Path(url);
-				var relativeUrl = urlPath.relativeTo(fullPath);
-
 				var config = {
 					async: true,
 					parseOnLoad: true,
-					modulePaths: { widgets: this._dojoModulePath + "/" + this._getWidgetFolder() }
+					packages: this._getLoaderPackages()
 				};
 				dojo.mixin(config, this._configProps);
 				this.addHeaderScript(url, {

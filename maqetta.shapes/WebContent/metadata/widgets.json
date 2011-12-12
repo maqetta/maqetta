@@ -1,5 +1,4 @@
 {
-    "callbacks": "callbacks.js",
     "categories": {
         "shapes": {
             "name": "Drawing Tools",

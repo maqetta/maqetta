@@ -324,11 +324,14 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 
 .fileFolderTable {
 	/* Believe it or not, margin-left/right set to auto causes a table to be centered */
+/*
 	margin-left:auto;
 	margin-right:auto;
+*/
+	width:100%;
 }
 .fileFolderTable .dijitTextBox {
-	width:16em;
+	width:100%;
 }
 .fileDialog .fileNameRow {
 	/* margin:.5em 2em 1.25em; */
@@ -345,8 +348,12 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	width:100%;
 }
 .fileDialogLabelCell {
+/*
 	text-align:right;
+*/
 	padding-right:.25em;
+	width: 1px;
+	white-space: nowrap;
 }
 .fileDialog .folder_details_arrow {
 	display: inline-block;
@@ -385,11 +392,17 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	outline:none;
 }
 .fileDialog .buttonRow {
+/*
 	text-align:right;
-	margin:1.2em 0 .7em 0;
+*/
+	margin:18px 0 8px 0;
+	min-height:27px;
+}
+.fileDialog .buttonRow .fileDialogStdButtons {
+	float:right;
 }
 .fileDialog .buttonWrapperSpan {
-	margin-left: .75em;
+	margin-left: 2px;
 }
 .tabButtonLoadingIcon {
 	background: url("img/loading_wheel.gif")  no-repeat;
@@ -450,17 +463,30 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	white-space:nowrap;
 }
 
+.nhfo_ct {
+	white-space:nowrap;
+}
 .nhfo_ct label {
 	vertical-align:middle;
 }
+.nhfo_ct .dijitSelectLabel {
+	padding-left:.05em;
+	padding-right:.25em;
+}
 .nhfo_outer2 {
+/*
 	margin: .8em 0 0;
+*/
+	margin: 8px 2px 0;
 	border: 1px solid #759DC0;
 	border-radius: 4px;
 }
 .nhfo_outer1 {
 	margin:0;
+/*
 	padding: 6px 6px 4px;
+*/
+	padding: 3px 6px 4px;
 	border: 2px solid white;
 	background: rgba(171,214,255,.1); /* #ABD6FF */
 	border-radius: 4px;
@@ -489,15 +515,21 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	padding:0;
 }
 .nhfo_details table td.nhfo_label {
+/*
 	width:10em;
 	text-align:right;
+*/
 	padding-right:.25em;
+	white-space:nowrap;
 }
 .nhfo_details .dijitSelect {
 	margin: 0.1em 0.2em;
 }
 .nhfo_details .dijitSelect .dijitButtonContents {
 	width:9em;
+}
+.nhfo_th .nhfo_label {
+	padding-left:2em;
 }
 .nhfo_edit_theme {
 	display:inline-block;
@@ -506,6 +538,8 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	/* background:url('img/editing_16.gif'); */
 	background:url('img/sprite.png');
 	background-position: -56px 0px;
-
+	vertical-align: middle;
+/*
 	margin-left: .5em;
+*/
 }

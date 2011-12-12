@@ -122,30 +122,17 @@ define({ root:
 		
 		//NewHTMLFileOptions.html - Composition type strings
 		"nhfoCompositionType":"Composition type:",
-		"nhfoCTMenu_desktop":"Desktop",
-		"nhfoCTTitle_desktop":"desktop browser, flow layout, production theme",
-		"nhfoCTMenu_mobile":"Mobile",
-		"nhfoCTTitle_mobile":"mobile device, flow layout, production theme",
-		"nhfoCTMenu_sketch":"Sketch",
-		"nhfoCTTitle_sketch":"desktop browser, absolute layout, production theme",
-		"nhfoCTMenu_wireframe":"Wireframe",
-		"nhfoCTTitle_wireframe":"desktop browser, absolute layout, wireframe theme",
-		"nhfoCTMenu_custom":"Custom",
-		"nhfoCTTitle_custom":"custom settings",
-		"nhfoShowDetails":"Show details",
-		"nhfoHideDetails":"Hide details",
-		
-		//NewHTMLFileOptions.html - Device strings
-		"nhfoDevice":"Device:",
-		"nhfoDVMenu_desktop":"Desktop",
-		
-		//NewHTMLFileOptions.html - Layout strings
-		"nhfoLayout":"Layout:",
-		"nhfoLAMenu_flow":"flow",
-		"nhfoLAMenu_absolute":"absolute",
+		'nhfoCompositionTypeTooltip':'<div>Composition type establishes the initial editing mode for the New HTML page. Choices:</div>'+
+			'<ul><li><b>Device</b>: "desktop" or one of various mobile devices (e.g., iphone)</li>'+
+			'<li><b>Hi-fi vs lo-fi</b>: high fidelity uses a final-form theme, low fidelity uses a pseudo hand-drawn theme</li>'+
+			'<li><b>Page vs sketch</b>: "page" uses flow layout, "sketch" uses absolute layout</li></ul>'+
+			'<div>For mobile devices, only hi fidelity and flow layout are supported.',
+		"nhfoCTMenu_desktop_hifi_absolute":"Desktop hi-fi sketch",
+		"nhfoCTMenu_desktop_hifi_flow":"Desktop hi-fi page",
+		"nhfoCTMenu_desktop_lofi_absolute":"Desktop lo-fi sketch",
+		"nhfoCTMenu_desktop_lofi_flow":"Desktop lo-fi page",
 		
 		//NewHTMLFileOptions.html - Theme strings
-		"nhfoTheme":"Theme or theme set:",
-		"nhfoTHMenu_devicespecific":"(device-specific)"
+		"nhfoThemeButton":"Theme..."
 }
 });

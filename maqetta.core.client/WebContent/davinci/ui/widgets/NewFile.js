@@ -52,10 +52,9 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		
 		if(this.dialogSpecificClass){
 			var c = dojo.getObject(this.dialogSpecificClass);
-			this.dialogSpecificWidget = new c({}, this.dialogSpecificOptionsDiv);
+			this.dialogSpecificWidget = new c({dialogSpecificButtonsSpan:this.dialogSpecificButtonsSpan}, this.dialogSpecificOptionsDiv);
 		}
 		
-
 		var connectHandle = dojo.connect(this._fileDialog, "onkeypress", this, function(e){
 			if(e.charOrCode===dojo.keys.ENTER){
 				if(this._checkValid()){
@@ -67,6 +66,12 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		
 		});
 		
+	},
+	
+	startup: function(){
+		if(this.dialogSpecificWidget && this.dialogSpecificWidget.startup){
+			this.dialogSpecificWidget.startup();
+		}
 	},
 
 	/**
@@ -151,7 +156,7 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		// make sure the project name is OK.
 		var name = dojo.attr(this.fileDialogFileName, "value");
 		var valid = name!=null && name.length > 0;
-		var parent = system.resource.findResource(this.fileDialogParentFolder.get('value'))
+		var parent = system.resource.findResource(this.fileDialogParentFolder.get('value'));
 		if(parent!=null){
 			valid = valid && !parent.readOnly();
 		}
@@ -195,10 +200,7 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		var folder = system.resource.findResource(this.fileDialogParentFolder.get('value'));
 		return folder.createResource(this.fileDialogFileName.get( 'value'));
 	},
-	onClose : function(){}
-
-
 	
-
+	onClose : function(){}
 
 });

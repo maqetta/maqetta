@@ -2368,32 +2368,47 @@ return declare("davinci.ve.Context", null, {
 	},
 
 
-	// add JS to HEAD
-	addHeaderScriptText: function(text){
-		if (! this._scriptAdditions) {
+	/**
+	 * Add inline JavaScript to <head>.
+	 * 
+	 * This function looks for the last inline JS element in <head> which comes
+	 * after the last <script src='...'> element.  If a script URL exists after
+	 * the last inline JS element, or if no inline JS element exists, then we
+	 * create one.
+	 * 
+	 * @param {string} text inline JS to add
+	 */
+	addHeaderScriptText: function(text) {
+		// XXX cache 'head'
+		var head = this.getDocumentElement().getChildElement('head'),
+			scriptText,
+			children = head.children,
+			i,
+			node;
+
+		for (i = children.length - 1; i >= 0; i--) {
+			node = children[i];
+			if (node.elementType === 'HTMLElement' && node.tag === 'script') {
+				// Script element will either have inline script or a URL.
+				// If the latter, this breaks with 'inlineScript' equal to 'null'
+				// and a new inline script is created later.  This is done so
+				// that new inline script comes after the latest added JS file.
+				scriptText = node.find({elementType: 'HTMLText'}, true);
+				break;
+			}
+		}
+
+		if (! scriptText) {
 			// create a new script element
-			var head = this.getDocumentElement().getChildElement('head'),
-				statesJsScriptTag = this._statesJsScriptTag,
-				script = new davinci.html.HTMLElement('script');
-			
+			var script = new davinci.html.HTMLElement('script');
 			script.addAttribute('type', 'text/javascript');
 			script.script = "";
-		
-			// XXX Bug 7499 - (HACK) See comment in addHeaderScript()
-			if (statesJsScriptTag) {
-				head.insertBefore(script, statesJsScriptTag);
-			} else {
-				head.addChild(script);
-			}
+			head.addChild(script);
 
-			this._scriptAdditions = script;
-		}
-
-		var scriptText = this._scriptAdditions.find({elementType: 'HTMLText'}, true);
-		if (! scriptText) {
 			scriptText = new davinci.html.HTMLText();
-			this._scriptAdditions.addChild(scriptText);
+			script.addChild(scriptText);
 		}
+
 		var oldText = scriptText.getText();
 		if (oldText.indexOf(text) === -1) {
 			scriptText.setText(oldText + '\n' + text);

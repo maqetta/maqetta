@@ -86,7 +86,7 @@ dojo.mixin(davinci.ui.Resource, {
 				}
 			}
 		};
-		davinci.Workbench.showModal(newDialog, langObj.createNewHTMLFile, 'width: 320px; opacity:0', executor);
+		davinci.Workbench.showModal(newDialog, langObj.createNewHTMLFile, 'opacity:0', executor);
 	},
 	
 	newCSS : function(){

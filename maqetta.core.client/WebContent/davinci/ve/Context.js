@@ -828,7 +828,7 @@ return declare("davinci.ve.Context", null, {
 			    head += helper.getHeadImports(this._visualEditor.theme);
 			} else if(source.themeCssfiles) { // css files need to be added to doc before body content
 				head += '<style type="text/css">'
-					+ source.themeCssfiles.map(function(file) { return '@import "' + file + '";'; }).join();
+					+ source.themeCssfiles.map(function(file) { return '@import "' + file + '";'; }).join()
 					+ '</style>';
 			}
 			/*
@@ -836,7 +836,6 @@ return declare("davinci.ve.Context", null, {
 				this.loadTheme();
 			}
 			*/
-			//head += '<style type="text/css">@import "claro.css";</style>';
 			head += "</head><body></body></html>";
 
 			var context = this;
@@ -1512,7 +1511,8 @@ return declare("davinci.ve.Context", null, {
 	
 	// Returns true if inline edit is showing
 	inlineEditActive: function(){
-		for(var i=0; i<this._selection.length; i++){
+	    var selection = this.getSelection();
+		for(var i=0; i<selection.length; i++){
 			var focus = this._focuses[i];
 			if(focus.inlineEditActive()){
 				return true;
@@ -1656,6 +1656,23 @@ return declare("davinci.ve.Context", null, {
 		}
 
 		this.onSelectionChange(this.getSelection());
+	},
+	
+	deselectInvisible: function(){
+		if(this._selection){
+			for(var i=this._selection.length-1; i>=0; i--){
+				var widget = this._selection[i];
+				var domNode = widget.domNode;
+				while(domNode.tagName != 'BODY'){
+					var computed_style_display = dojo.style(domNode, 'display');
+					if(computed_style_display == 'none'){
+						this.deselect(widget);
+						break;
+					}
+					domNode = domNode.parentNode;
+				}
+			}
+		}
 	},
 	
 	// If widget is in selection, returns the focus object for that widget

@@ -44,7 +44,7 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		}
 		this.fileTree.watch("selectedItem", dojo.hitch(this, this._checkValid));
 		
-		this.arrowNode = dojo.query('.folder_details_arrow',this.domNode)[0];
+		this.arrowNode = this.fileDialogDetailsArrow;
 		this.connect(this.arrowNode, 'onclick', dojo.hitch(this,function(e){
 			this._tree_collapse_expand(!this.treeCollapsed);
 		}));

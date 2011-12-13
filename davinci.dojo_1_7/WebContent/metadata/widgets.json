@@ -246,7 +246,7 @@
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAVxJREFUeNqkUz1LA0EQfRvzKVYW9voHYinYyAkWaptGRCsrIVGLpBBFEINJIYhNTJdCm4hgpSik9td4MWp27/Y2697saRPUJM4xt7dvZ9683dljWms4R08aI1o8fEnOcVFaHjo5X7m3BF6nQ8CSU+gLemyd/4iLt1dL0HVdcD/A3cMZ1jerFKDNc9UoEn57c9pHwH2F7ouLGE3aLj54gHchUavtYHJmGvXLPZqHzuPMuIkbYxD0zQzug5vCpEC0O+Ay+GY/3F2lyn+ZMFtnYRemZrdH6wKLupBdmMfJwdrQ+fvH15Yg8H0CtjbKtrepBBKZDNIT40gaD8dEJo16fpHWU0zD0wzK5FkCT9JCq1ka/AKZTUsvIhCqR6CTq/yq4MsaBQdJo4IrbQlUYE/8uVkcqLqKxhgXloB1BQFzuerACmxhaQl6ajgFiJrek8reg+xKeeS/kQj+Y58CDAA9vJ+nCFLrswAAAABJRU5ErkJggg==",
             "properties": {
                 "title": "Pane",
-                "style": "width: 100%; min-width:1em;"
+                "style": "width: 300px; min-width:1em;"
             },
             "resizable": "width",
             "allowedChild": "ANY",
@@ -256,7 +256,8 @@
                 "displayOnCreate": true,
                 "supportsHTML": true,
                 "multiLine": false
-            }
+            },
+            "helper": "davinci.libraries.dojo.dijit.layout.TitlePaneHelper"
         },
         {
             "name": "Toolbar",

@@ -23,7 +23,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 
 	onMouseDown: function(event){
-console.log('selectTool - onMouseDown');
 
 		if((dojo.isMac && event.ctrlKey) || event.button == 2){
 			// this is a context menu ("right" click)  Don't change the selection.
@@ -92,7 +91,6 @@ console.log('selectTool - onMouseDown');
 	},
 
 	onMouseMove: function(event){
-console.log('selectTool - onMouseMove');
 		this._setTarget(event.target);
 	},
 

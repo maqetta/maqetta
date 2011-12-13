@@ -388,12 +388,14 @@ dojo.mixin(davinci.Runtime,	{
 		dojo.addClass(loading, 'loading');
 		this.unload();
 		davinci.Runtime.serverJSONRequest({
-			   url:"cmd/logoff", handleAs:"text",
-				   sync:true  });
+			url:"cmd/logoff", handleAs:"text",
+			sync:true
+		});
 		var newLocation = davinci.Workbench.location(); //
 		var lastChar=newLocation.length-1;
-		if (newLocation.charAt(lastChar)=='/')
+		if (newLocation.charAt(lastChar)=='/') {
 			newLocation=newLocation.substr(0,lastChar);
+		}
 		location.href = newLocation+"/welcome";
 	}
 });

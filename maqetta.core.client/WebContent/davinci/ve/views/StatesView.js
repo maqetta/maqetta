@@ -327,6 +327,7 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 					if(context && bodyWidget){
 						var state = item.name[0];
 						davinci.ve.states.setState(bodyWidget, state);
+						context.deselectInvisible();
 					}
 				}
 			}

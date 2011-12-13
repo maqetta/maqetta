@@ -1658,6 +1658,23 @@ return declare("davinci.ve.Context", null, {
 		this.onSelectionChange(this.getSelection());
 	},
 	
+	deselectInvisible: function(){
+		if(this._selection){
+			for(var i=this._selection.length-1; i>=0; i--){
+				var widget = this._selection[i];
+				var domNode = widget.domNode;
+				while(domNode.tagName != 'BODY'){
+					var computed_style_display = dojo.style(domNode, 'display');
+					if(computed_style_display == 'none'){
+						this.deselect(widget);
+						break;
+					}
+					domNode = domNode.parentNode;
+				}
+			}
+		}
+	},
+	
 	// If widget is in selection, returns the focus object for that widget
 	getFocus: function(widget){
 		var selection = this.getSelection();

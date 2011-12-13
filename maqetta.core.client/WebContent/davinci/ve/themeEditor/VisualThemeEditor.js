@@ -97,6 +97,7 @@ dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 					// to the head of the document prior to page load, or resize() should be called
 					// directly to conform with the way Dijit works.
 					setTimeout(dojo.hitch(this, function(){
+						// FIXME: could just resize getTopWidgets
 						this.context.getDijit().registry.forEach(function(widget){
 							if(widget.resize){ widget.resize({}); }
 						});

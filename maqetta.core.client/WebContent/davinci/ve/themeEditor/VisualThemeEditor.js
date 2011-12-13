@@ -11,7 +11,8 @@ dojo.require("davinci.workbench.Preferences");
  * HTML rendered as the theme editor
  */
 
-davinci.ve.themeEditor._themeHtml = dojo.moduleUrl("davinci.ve.themeEditor", "davinci-dojo-theme-editor.html"); 
+// no longer used?
+//davinci.ve.themeEditor._themeHtml = dojo.moduleUrl("davinci.ve.themeEditor", "davinci-dojo-theme-editor.html"); 
 
 
 
@@ -119,6 +120,7 @@ dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 	},
 	
 	themeVersionWarn: function(){
+		//FIXME: i18n
 		var message = 'Theme version does not match workspace version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.';
 
 		this._dialog = new dijit.Dialog({

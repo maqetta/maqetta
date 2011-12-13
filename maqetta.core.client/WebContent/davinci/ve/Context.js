@@ -2418,7 +2418,13 @@ return declare("davinci.ve.Context", null, {
 
 		var oldText = scriptText.getText();
 		if (oldText.indexOf(text) === -1) {
+			var newText = oldText + '\n' + text;
 			scriptText.setText(oldText + '\n' + text);
+			// XXX For some reason, <script> text is handled differently in the
+			//   Model than that of other elements.  I think I only need to call
+			//   setScript(), but the correct process should be to just update
+			//   HTMLText. See issue #1350.
+			scriptText.parent.setScript(oldText + '\n' + text);
 		}
 	},
 	

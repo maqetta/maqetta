@@ -13,7 +13,7 @@ dojo.require("davinci.workbench.ViewLite");
 dojo.declare("davinci.ve.widgets.CommonProperties", [davinci.workbench.ViewLite], {
 	
 	buildRendering : function(){
-		var props = ["id", "title"];
+		var props = ["title"];
 		var template = "<table width='100%' class='property_table_stretchable' border='0' cellspacing='0' cellpadding='0'>";
 		template += "<colgroup>"; 
 		template += "<col style='width:15px;' />"
@@ -142,13 +142,7 @@ dojo.declare("davinci.ve.widgets.CommonProperties", [davinci.workbench.ViewLite]
 		for(var name in this._boxes){
 			var widget = this._widget,
 				box = this._boxes[name];
-			if(name=='id'){
-				var id = widget.getId() || "";
-				if(box.value != id){
-					box.value = id;
-					dojo.attr(box.domNode, "value", box.value);
-				}
-			}else if(widget.getPropertyValue){
+		if(widget.getPropertyValue){
 				var value = widget.getPropertyValue(name);
 				if(box.value != value){
 					box.value = value;

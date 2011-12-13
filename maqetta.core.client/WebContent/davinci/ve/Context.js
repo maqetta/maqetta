@@ -1511,7 +1511,8 @@ return declare("davinci.ve.Context", null, {
 	
 	// Returns true if inline edit is showing
 	inlineEditActive: function(){
-		for(var i=0; i<this._selection.length; i++){
+	    var selection = this.getSelection();
+		for(var i=0; i<selection.length; i++){
 			var focus = this._focuses[i];
 			if(focus.inlineEditActive()){
 				return true;

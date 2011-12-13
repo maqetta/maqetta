@@ -1503,24 +1503,16 @@ return declare("davinci.ve.Context", null, {
 	},
 
 	getSelection: function(){
-		if(!this._selection){
-			return [];
-		}
-		return this._selection;
+		return this._selection || [];
 	},
 	
 	// Returns true if inline edit is showing
 	inlineEditActive: function(){
-	    var selection = this.getSelection();
-		for(var i=0; i<selection.length; i++){
-			var focus = this._focuses[i];
-			if(focus.inlineEditActive()){
-				return true;
-			}
-		}
-		return false;
+	    return this.getSelection().some(function(item, i){
+	    	return this._focuses[i].inlineEditActive();
+	    }, this);
 	},
-	
+
 	updateFocus: function(widget, index, inline){
 		var box, op, parent;
 
@@ -1677,19 +1669,12 @@ return declare("davinci.ve.Context", null, {
 	
 	// If widget is in selection, returns the focus object for that widget
 	getFocus: function(widget){
-		var selection = this.getSelection();
-		for(var i=0; i<selection.length; i++){
-			if(widget == selection[i]){
-				return this._focuses[i];
-			}
-		}
-		return null;
+		var i = this.getSelection().indexOf(widget);
+		return i == -1 ? null : this._focuses[i];
 	},
 	
 	focus: function(state, index, inline){
-		if(!this._focuses){
-			this._focuses = [];
-		}
+		this._focuses = this._focuses || [];
 		var clear = false;
 		if(index === undefined){
 			clear = true;
@@ -2122,13 +2107,14 @@ return declare("davinci.ve.Context", null, {
 		}
 		
 		var widget = this.getSelection();
-		if(widget.length>0)
+		if(widget.length) {
 			widget = widget[0];
+		}
 		
 		var widgetType = theme.loader.getType(widget);
 		var selector = [];
 		for(var i =0;i<target.length;i++) {
-			selector = selector.concat( theme.metadata.getRelativeStyleSelectorsText(widgetType,state,null,target));
+			selector = selector.concat( theme.metadata.getRelativeStyleSelectorsText(widgetType,state,null,target));  //FIXME: use push?  adds same selector each time through loop?
 		}
 		
 		return selector;

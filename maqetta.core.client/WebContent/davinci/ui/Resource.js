@@ -49,6 +49,7 @@ dojo.mixin(davinci.ui.Resource, {
 							fileFieldLabel:fileNameLabel, 
 							folderFieldLabel:"Where:",
 							finishButtonLabel:createLabel,
+							value: folder,
 							dialogSpecificClass:dialogSpecificClass};
 		return new davinci.ui.widgets.NewFile(dialogOptions);
 		

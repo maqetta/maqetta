@@ -258,7 +258,7 @@ dojo.mixin(davinci.Runtime,	{
 	
 	
 	handleError: function(error) {
-		alert(error);
+		window.document.body.innerHTML = "<div><h1>Problem connecting to the Maqetta Server...</h1></div><div><center><h1><a href='./welcome'>Return to Maqetta Login</a></h1></center></div><br><br><div><h2>Error description:</h2>" + error + "</div>"
 	},
 
 	_loadCSS: function(plugin,pluginURL) {
@@ -354,7 +354,7 @@ dojo.mixin(davinci.Runtime,	{
 			}
 			else if (response.status==400)
 			{
-				console.warn("unknown error: status="+response.status);
+				davinci.Runtime.handleError("unknown error: status="+ response.status);
 			}
 			else if (userOnError)
 			{
@@ -362,7 +362,8 @@ dojo.mixin(davinci.Runtime,	{
 			}
 			else
 			{
-				console.warn("unknown error: status="+response.status);
+				davinci.Runtime.handleError("unknown error: status="+ response.status);
+				//console.warn("unknown error: status="+response.status);
 			}
 		}
 		args.error=onError;
@@ -374,7 +375,7 @@ dojo.mixin(davinci.Runtime,	{
 			 		resultObj=result;
 			 	}
 			 	}, function(error) {
-			 		console.warn("unknown error: result ="+result);
+			 		davinci.Runtime.handleError(error);
 			 	});
 			 } while (retry);	
 

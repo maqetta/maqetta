@@ -16,6 +16,24 @@ define([
 			}
 		},
 		
+		resize: function(){
+			// If inline style has width or height in px units, and we haven't already
+			// set initial size, then set the size from inline style width/height
+			// Note: CreateTool calls ResizeCommand which ultimately puts puts initial size on inline style)
+			var style = this.domNode ? this.domNode.style : undefined;
+			if(style){
+				var regex = /(\d+)px/;
+				var w = style.width ? style.width.replace(regex,'$1') : undefined;
+				var h = style.height ? style.height.replace(regex,'$1') : undefined;
+				if(!this.initialSizeSet && w && h){
+					this.initialSizeSet = true;
+					this.rx = this._rx = w/2;
+					this.ry = this._ry = h/2;
+				}
+			}
+			this._resize();
+		},
+		
 		createGraphics: function(){
 			var rx = (typeof this._rx != "undefined") ? this._rx : this._r;
 			var ry = (typeof this._ry != "undefined") ? this._ry : this._r;

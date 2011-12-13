@@ -11,7 +11,7 @@ define([
 		width:'80',
 		height:'80',
 		cornerRadius:'0',	
-
+		
 		buildRendering: function(){
 			this.inherited(arguments);			
 			this.createGraphics();

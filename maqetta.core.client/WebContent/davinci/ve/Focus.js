@@ -324,7 +324,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     hide: function(inline){
 
 		var widget = this._selectedWidget;
-		var helper = widget.getHelper();
+		var helper = widget ? widget.getHelper() : undefined;
 		if(helper && helper.onHideSelection){
 			// Don't know if any widgets actually use this helper
 			// Included for completeness

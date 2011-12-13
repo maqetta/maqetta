@@ -719,8 +719,6 @@ return declare("davinci.ve.Context", null, {
 		}
 
 		var data = this._parse(source);
-		this._scriptAdditions=data.scriptAdditions;
-		//debugger;
 		if(!this.frameNode){
 			// initialize frame
 			var dojoUrl;
@@ -1914,8 +1912,6 @@ return declare("davinci.ve.Context", null, {
 				text.replace(/require\(\[["']([^'"]+)["']\]\)/g, function(match, module) {
 					data.modules.push(module);
 				});
-
-				data.scriptAdditions=scriptTag;
 			}
 			
 			// XXX Bug 7499 - (HACK) See comment in addHeaderScript()

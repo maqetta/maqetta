@@ -142,12 +142,12 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		var resource = (resources!=null && resources.length > 0)? resources[0] : null;
 		var projectNameLength = ("./" + davinci.Runtime.getProject()).length + 1;
 		if(resource==null){
-			this.fileDialogParentFolder.set( 'value', this._getForcedRootAttr().getPath().substring(projectNameLength+1));
+			this.fileDialogParentFolder.set( 'value', this._getForcedRootAttr().getPath().substring(projectNameLength));
 		}else if(resource.elementType=="Folder"){
-			this.fileDialogParentFolder.set( 'value', resource.getPath().substring(projectNameLength+1));
+			this.fileDialogParentFolder.set( 'value', resource.getPath().substring(projectNameLength));
 		}else{
 			this.fileDialogFileName.set( 'value', resource.getName());
-			this.fileDialogParentFolder.set( 'value', resource.parent.getPath().substring(projectNameLength+1));
+			this.fileDialogParentFolder.set( 'value', resource.parent.getPath().substring(projectNameLength));
 		}	
 	},
 	

@@ -381,6 +381,7 @@ dojo.declare("davinci.ve.ChooseParent", null, {
     	}
         var userdoc = context.getDocument();	// inner document = user's document
         this._oldActiveElement = document.activeElement;
+        //TODO it is possible that giving focus to defaultView will break the PageEditor split view mode. Needs investigation
         userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
         this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(args, evt){
         	var widgetType = args[0];

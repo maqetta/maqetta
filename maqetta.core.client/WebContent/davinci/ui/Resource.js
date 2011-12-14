@@ -21,8 +21,8 @@ dojo.require("davinci.ui.widgets.NewHTMLFileOptions");
 
 dojo.mixin(davinci.ui.Resource, {
 	
-	_createNewDialog : function(fileNameLabel, createLabel, type, dialogSpecificClass, fileName){
-		var resource=davinci.ui.Resource.getSelectedResource();
+	_createNewDialog : function(fileNameLabel, createLabel, type, dialogSpecificClass, fileName, existingResource){
+		var resource=existingResource || davinci.ui.Resource.getSelectedResource();
 		var folder = null;
 		if(resource!=null){
 			if(resource.elementType=="Folder"){
@@ -164,7 +164,10 @@ dojo.mixin(davinci.ui.Resource, {
 		var oldEditor = davinci.Workbench.getOpenEditor();
 		var oldFileName = oldEditor.fileName;
 		
-		var newDialog = davinci.ui.Resource._createNewDialog(langObj.fileName, langObj.save, extension, null, oldFileName);
+		var newFileName = (new davinci.model.Path(oldFileName)).lastSegment();
+		var oldResource = system.resource.findResource(oldFileName);
+		
+		var newDialog = davinci.ui.Resource._createNewDialog(langObj.fileName, langObj.save, extension, null, newFileName, oldResource);
 		var executor = function(){
 			if(!newDialog.cancel){
 				var resourcePath = newDialog.get('value');

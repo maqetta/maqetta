@@ -168,6 +168,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             // Call the dispatcher routine that updates snap lines and
             // list of possible parents at current (x,y) location
             this._context.dragMoveUpdate({
+            		widgets:[this._selectedWidget],
             		data:data,
             		eventTarget:event.target,
             		position:position,
@@ -296,7 +297,16 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
         this._selectedWidget = widget;
         this._inline = metadata.queryDescriptor(widget.type, "inlineEdit");
-        if (this._inline && this._inline.show) {
+    	var context = this._context;
+        if (this._inline && this._inline.useParent) {
+        	var parentWidget = widget.getParent();
+        	if(parentWidget){
+            	context.deselect(widget);
+            	context.select(parentWidget);
+            	var parentFocusObject = context.getFocus(parentWidget);
+            	parentFocusObject.showInline(parentWidget);
+        	}
+        }else if (this._inline && this._inline.show) {
             this._inline.show(widget.id);
         }
         return;
@@ -315,7 +325,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     hide: function(inline){
 
 		var widget = this._selectedWidget;
-		var helper = widget.getHelper();
+		var helper = widget ? widget.getHelper() : undefined;
 		if(helper && helper.onHideSelection){
 			// Don't know if any widgets actually use this helper
 			// Included for completeness

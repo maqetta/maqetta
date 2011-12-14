@@ -43,6 +43,10 @@ define([
 		},
 
 		resize: function(){
+			this._resize();
+		},
+
+		_resize: function(){
 			dojo.addClass(this.domNode,'shape');
 			this.createGraphics();
 			var gbbox = this._g.getBBox();

@@ -116,7 +116,9 @@ dojo.declare("davinci.ve.States", davinci.maqetta.States, {
 		
 			this.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(e) { 
 				var editor = this.getEditor();
-				if (!editor || editor.declaredClass == "davinci.ve.themeEditor.ThemeEditor"){ return; } // ignore updates in theme editor
+				if (!dojo.isObject(e.widget) || !editor || editor.declaredClass == "davinci.ve.themeEditor.ThemeEditor"){
+					return;
+				} // ignore if e.widget is not an object (eg '$all') and ignore updates in theme editor
 
 				dojo.publish("/davinci/states/state/changed/start");
 				// If rootWidget, then loop through children, else loop starting with this widget.

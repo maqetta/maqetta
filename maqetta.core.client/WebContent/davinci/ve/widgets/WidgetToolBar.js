@@ -62,7 +62,7 @@ dojo.declare("davinci.ve.widgets.WidgetToolBar", [davinci.workbench.ViewLite], {
 		
 		dojo.addClass(this.domNode, "propertiesSelection");
 		this.domNode.innerHTML= this.widgetDescStart + displayName + "</div>";
-		// Provide a type-in box for the 'class' attribute
+		// Provide a type-in box for the 'class' and ID attribute
 		var srcElement = this._widget._srcElement;
 		if(srcElement){
 			var classDiv = dojo.doc.createElement("div");
@@ -74,15 +74,48 @@ dojo.declare("davinci.ve.widgets.WidgetToolBar", [davinci.workbench.ViewLite], {
 			labelSpan.appendChild(classLabelElement);
 			var classAttr = srcElement.getAttribute("class");
 			var className = (classAttr && dojo.trim(classAttr)) || "";
-			var classInputElement = dojo.create("input", {type:'text',value:className,className:'propClassInput'});
+			var classInputElement = dojo.create("input", {type:'text',value:className,className:'propClassInput', size:8});
 			this._classInputElement = classInputElement;
 			this._oldClassName = className;
 			classInputElement.onchange=dojo.hitch(this,this._onChangeClassAttribute);		
 			labelSpan.appendChild(classInputElement);
 			labelSpan.className = "propClassInputCell";
 			classDiv.appendChild(labelSpan);
+			/* add the ID element */
+			labelSpan = dojo.doc.createElement("span");
+			classLabelElement = dojo.create("label", {className:'propClassLabel propertyDisplayName'});
+			classLabelElement.innerHTML = "ID";
+			labelSpan.appendChild(classLabelElement);
+			var idAttr = this._widget.getId();
+			var idName = (idAttr && dojo.trim(idAttr)) || "";
+			var idInputElement = dojo.create("input", {type:'text',value:idName,className:'propClassInput', size:8});
+			this._IDInputElement = idInputElement;
+			this._oldIDName = idName;
+			idInputElement.onchange=dojo.hitch(this,this._onChangeIDAttribute);		
+			labelSpan.appendChild(idInputElement);
+			labelSpan.className = "propClassInputCell";
+			classDiv.appendChild(labelSpan);
 			this.domNode.appendChild(classDiv);
+			
+			
+			
 		}
+	},
+	_onChangeIDAttribute : function(){
+		var inputElement = this._IDInputElement;
+		if(!inputElement){
+			return;
+		}
+		if(this.context)
+			this.context.blockChange(false);
+		
+		if(inputElement.value != this._oldIDName ){
+			this._oldIDName = inputElement.value;
+			var valuesObject = {};
+			valuesObject['id'] = inputElement.value;
+			var command = new davinci.ve.commands.ModifyCommand(this._widget, valuesObject, null);
+			dojo.publish("/davinci/ui/widgetPropertiesChanges",[{source:this._editor.editor_id, command:command}]);
+		}	
 	},
 	
 	_onChangeClassAttribute : function(){

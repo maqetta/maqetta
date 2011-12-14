@@ -1,54 +1,16 @@
 <div class="nhfo_outer2">	<!--  nhfo = NewHTMLFileOptions -->
 	<div class="nhfo_outer1">
-		<div class="nhfo_ct">	<!--  ct = Composition Type -->
-			<label dojoAttachPoint="compositionTypeLabel"></label>
-			<select dojoType="dijit.form.Select" dojoAttachPoint="compositionTypeSelect">
-				<!--  values added dynamically -->
-			</select>
-		</div>
-		<div class='nhfo_show_details'>
-			<a href="">
-				<span class='nhfo_show_details_arrow'>&#9660;</span>
-				<span class='nhfo_show_details_text' dojoAttachPoint='showDetailsLabel'></span>
-			</a>
-		</div>
 		<div class="nhfo_details">
 			<table>
-				<tr class="nhfo_dv">	<!--  dv = device -->
-					<td class='nhfo_label'><label dojoAttachPoint="deviceLabel"></label></td>
-					<td>
-						<select dojoType="dijit.form.Select" dojoAttachPoint="deviceSelect">
-						</select>
-					</td>
-					<td></td>
-				</tr>
-				<tr class="nhfo_la" dojoAttachPoint="nhfo_layoutRow">	<!--  la = layout -->
-					<td class='nhfo_label'><label dojoAttachPoint="layoutLabel"></label></td>
-					<td>
-						<select dojoType="dijit.form.Select" dojoAttachPoint="layoutSelect">
+				<tr class="nhfo_ct">	<!--  ct = Composition Type -->
+					<td class='nhfo_label'>
+						<label dojoAttachPoint="compositionTypeLabel"></label>
+						<select dojoType="dijit.form.Select" dojoAttachPoint="compositionTypeSelect">
 							<!--  values added dynamically -->
 						</select>
-					</td>
-					<td></td>
-				</tr>
-				<tr class="nhfo_th">	<!--  th = theme set -->
-					<td class='nhfo_label'><label dojoAttachPoint="themeLabel"></label></td>
-					<td>
-						<select dojoType="dijit.form.Select" dojoAttachPoint="themeSelect" disabled="true">
-							<!--  values added dynamically -->
-						</select>
-					</td>
-					<td>
-						<span class="nhfo_edit_theme"></span>
 					</td>
 				</tr>
 			</table>
-		</div>
-		<div class='nhfo_hide_details'>
-			<a href="">
-				<span class='nhfo_hide_details_arrow'>&#9650;</span>
-				<span class='nhfo_hide_details_text' dojoAttachPoint='hideDetailsLabel'></span>
-			</a>
 		</div>
 	</div>
 </div>

@@ -240,7 +240,7 @@ orion.textview.Tooltip = (function() {
 }());
 
 if (typeof window !== "undefined" && typeof window.define !== "undefined") {
-	define([], function() {
+	define(["orion/textview/projectionTextModel"], function() {
 		return orion.textview;
 	});
 }

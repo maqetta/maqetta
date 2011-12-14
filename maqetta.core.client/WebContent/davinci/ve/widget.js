@@ -265,7 +265,7 @@ davinci.ve.widget.getLabel = function(widget){
 
 	//TODO: move to getWidgetTextExtra helper methods
 	if (widget.type == 'html.img') {
-		text += '<span>' + domNode.src.substr(node.src.lastIndexOf('/') + 1) + '</span>';
+		text += '<span>' + domNode.src.substr(domNode.src.lastIndexOf('/') + 1) + '</span>';
 	}
 	return text;
 };

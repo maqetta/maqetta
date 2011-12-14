@@ -44,7 +44,7 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		}
 		this.fileTree.watch("selectedItem", dojo.hitch(this, this._checkValid));
 		
-		this.arrowNode = dojo.query('.folder_details_arrow',this.domNode)[0];
+		this.arrowNode = this.fileDialogDetailsArrow;
 		this.connect(this.arrowNode, 'onclick', dojo.hitch(this,function(e){
 			this._tree_collapse_expand(!this.treeCollapsed);
 		}));
@@ -52,10 +52,9 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		
 		if(this.dialogSpecificClass){
 			var c = dojo.getObject(this.dialogSpecificClass);
-			this.dialogSpecificWidget = new c({}, this.dialogSpecificOptionsDiv);
+			this.dialogSpecificWidget = new c({dialogSpecificButtonsSpan:this.dialogSpecificButtonsSpan}, this.dialogSpecificOptionsDiv);
 		}
 		
-
 		var connectHandle = dojo.connect(this._fileDialog, "onkeypress", this, function(e){
 			if(e.charOrCode===dojo.keys.ENTER){
 				if(this._checkValid()){
@@ -67,6 +66,12 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		
 		});
 		
+	},
+	
+	startup: function(){
+		if(this.dialogSpecificWidget && this.dialogSpecificWidget.startup){
+			this.dialogSpecificWidget.startup();
+		}
 	},
 
 	/**
@@ -135,7 +140,7 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		
 		var resources = this.fileTree.get('selectedItems');
 		var resource = (resources!=null && resources.length > 0)? resources[0] : null;
-		var projectNameLength = ("./" + davinci.Runtime.getProject()).length;
+		var projectNameLength = ("./" + davinci.Runtime.getProject()).length + 1;
 		if(resource==null){
 			this.fileDialogParentFolder.set( 'value', this._getForcedRootAttr().getPath().substring(projectNameLength+1));
 		}else if(resource.elementType=="Folder"){
@@ -151,7 +156,7 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		// make sure the project name is OK.
 		var name = dojo.attr(this.fileDialogFileName, "value");
 		var valid = name!=null && name.length > 0;
-		var parent = system.resource.findResource(this.fileDialogParentFolder.get('value'))
+		var parent = system.resource.findResource(this.fileDialogParentFolder.get('value'));
 		if(parent!=null){
 			valid = valid && !parent.readOnly();
 		}
@@ -177,7 +182,10 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 	},
 		
 	_newFolder : function(){
-		davinci.ui.Resource.newFolder();		
+		davinci.ui.Resource.newFolder(dojo.hitch(this,function(newFolder){
+			this.fileTree.set("selectedItems", [newFolder]);
+		}));
+		
 	},
 	
 	_getValueAttr : function(){
@@ -195,10 +203,7 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		var folder = system.resource.findResource(this.fileDialogParentFolder.get('value'));
 		return folder.createResource(this.fileDialogFileName.get( 'value'));
 	},
-	onClose : function(){}
-
-
 	
-
+	onClose : function(){}
 
 });

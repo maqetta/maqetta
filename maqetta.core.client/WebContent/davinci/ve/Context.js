@@ -807,7 +807,7 @@ return declare("davinci.ve.Context", null, {
 			    head += helper.getHeadImports(this._visualEditor.theme);
 			} else if(source.themeCssfiles) { // css files need to be added to doc before body content
 				head += '<style type="text/css">'
-					+ source.themeCssfiles.map(function(file) { return '@import "' + file + '";'; }).join();
+					+ source.themeCssfiles.map(function(file) { return '@import "' + file + '";'; }).join()
 					+ '</style>';
 			}
 			/*
@@ -815,7 +815,6 @@ return declare("davinci.ve.Context", null, {
 				this.loadTheme();
 			}
 			*/
-			//head += '<style type="text/css">@import "claro.css";</style>';
 			head += "</head><body></body></html>";
 
 			var context = this;
@@ -1513,23 +1512,16 @@ return declare("davinci.ve.Context", null, {
 	},
 
 	getSelection: function(){
-		if(!this._selection){
-			return [];
-		}
-		return this._selection;
+		return this._selection || [];
 	},
 	
 	// Returns true if inline edit is showing
 	inlineEditActive: function(){
-		for(var i=0; i<this._selection.length; i++){
-			var focus = this._focuses[i];
-			if(focus.inlineEditActive()){
-				return true;
-			}
-		}
-		return false;
+	    return this.getSelection().some(function(item, i){
+	    	return this._focuses[i].inlineEditActive();
+	    }, this);
 	},
-	
+
 	updateFocus: function(widget, index, inline){
 		var box, op, parent;
 
@@ -1667,10 +1659,31 @@ return declare("davinci.ve.Context", null, {
 		this.onSelectionChange(this.getSelection());
 	},
 	
-	focus: function(state, index, inline){
-		if(!this._focuses){
-			this._focuses = [];
+	deselectInvisible: function(){
+		if(this._selection){
+			for(var i=this._selection.length-1; i>=0; i--){
+				var widget = this._selection[i];
+				var domNode = widget.domNode;
+				while(domNode.tagName != 'BODY'){
+					var computed_style_display = dojo.style(domNode, 'display');
+					if(computed_style_display == 'none'){
+						this.deselect(widget);
+						break;
+					}
+					domNode = domNode.parentNode;
+				}
+			}
 		}
+	},
+	
+	// If widget is in selection, returns the focus object for that widget
+	getFocus: function(widget){
+		var i = this.getSelection().indexOf(widget);
+		return i == -1 ? null : this._focuses[i];
+	},
+	
+	focus: function(state, index, inline){
+		this._focuses = this._focuses || [];
 		var clear = false;
 		if(index === undefined){
 			clear = true;
@@ -1764,8 +1777,9 @@ return declare("davinci.ve.Context", null, {
 			bodyElement = htmlElement.getChildElement("body"),
 			flowLayout = bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE);
 		if (!flowLayout){ // if flowLayout has not been set in the context check the edit prefs
-			var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
-			flowLayout = editorPrefs.flowLayout;
+			//var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
+			//flowLayout = editorPrefs.flowLayout;
+			flowLayout = true;
 			this.setFlowLayout(flowLayout);
 		} else {
 			flowLayout = (flowLayout === 'true');
@@ -1886,8 +1900,8 @@ return declare("davinci.ve.Context", null, {
 			var states = bodyElement.getAttribute(davinci.ve.states.ATTRIBUTE);
 			davinci.ve.states.store(data, states);
 
-			this.setPreference("flowLayout", 
-					bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE) !== 'false');
+			/*this.setPreference("flowLayout", 
+					bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE) !== 'false');*/
 		}
 		
 		var titleElement=head.getChildElement("title");
@@ -2101,13 +2115,14 @@ return declare("davinci.ve.Context", null, {
 		}
 		
 		var widget = this.getSelection();
-		if(widget.length>0)
+		if(widget.length) {
 			widget = widget[0];
+		}
 		
 		var widgetType = theme.loader.getType(widget);
 		var selector = [];
 		for(var i =0;i<target.length;i++) {
-			selector = selector.concat( theme.metadata.getRelativeStyleSelectorsText(widgetType,state,null,target));
+			selector = selector.concat( theme.metadata.getRelativeStyleSelectorsText(widgetType,state,null,target));  //FIXME: use push?  adds same selector each time through loop?
 		}
 		
 		return selector;
@@ -2510,6 +2525,7 @@ return declare("davinci.ve.Context", null, {
 	 * Perform any visual updates in response to mousemove event while performing a
 	 * drag operation on the visual canvas.
 	 * @param {object} params  object with following properties:
+	 * 		[array{object}] widgets  Array of widgets being dragged (can be empty array)
 	 *      {object|array{object}} data  For widget being dragged, either {type:<widgettype>} or array of similar objects
 	 *      {object} eventTarget  Node (usually, Element) that is current event.target (ie, node under mouse)
 	 *      {object} position  x,y properties hold current mouse location
@@ -2522,6 +2538,7 @@ return declare("davinci.ve.Context", null, {
 	dragMoveUpdate: function(params) {
 		var context = this;
 		var cp = this._chooseParent;
+		var widgets = params.widgets;
 		var data = params.data;
 		var eventTarget = params.eventTarget;
 		var position = params.position;
@@ -2535,6 +2552,15 @@ return declare("davinci.ve.Context", null, {
 		// inner function that gets called recurively for each widget in document
 		// The "this" object for this function is the Context object
 		_updateThisWidget = function(widget){
+			if(params.widgets){
+				for(var i=0; i<params.widgets.length; i++){
+					// Drag operations shouldn't apply to any of the widget being dragged
+					if(widget == params.widgets[i]){
+						return;
+					}
+				}
+			}
+			
 			var node = widget.domNode;
 			var dj = this.getDojo();
 			var computed_style = dj.style(node);

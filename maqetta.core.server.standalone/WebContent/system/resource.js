@@ -66,7 +66,7 @@ dojo.mixin(system.resource, {
 		parent = parent || system.resource.getWorkspace();
 		var length = !isFolder? namesplit.length-1 : namesplit.length;
 			for(var i=0;i<length;i++){
-				if(namesplit[i]==".") continue;
+				if(namesplit[i]=="." || namesplit[i]=="") continue;
 				
 				var folder = parent.getChild(namesplit[i]);
 				if(folder!=null){

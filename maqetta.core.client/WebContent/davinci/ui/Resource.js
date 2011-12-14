@@ -109,7 +109,7 @@ dojo.mixin(davinci.ui.Resource, {
 		davinci.Workbench.showModal(newDialog, langObj.createNewCSSFile, 'width: 300px; oppacity:0', executor);
 	},
 	
-	newFolder : function(){
+	newFolder : function(callBack){
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		var resource=davinci.ui.Resource.getSelectedResource();
 		var folder = null;
@@ -141,16 +141,21 @@ dojo.mixin(davinci.ui.Resource, {
 							finishButtonLabel:"Create Folder" };
 		
 		var newFolderDialog =  new davinci.ui.widgets.NewFolder(dialogOptions);
+		var finished = false;
+		var newFolder = null;
 		var executor = function(){
 			if(!newFolderDialog.cancel){
 				var resourcePath = newFolderDialog.get('value');
 				if(davinci.ui.Resource._checkFileName(resourcePath)){
-					system.resource.createResource(resourcePath,true);
+					newFolder= system.resource.createResource(resourcePath,true);
 				}
 			}
+			if(callBack)
+				callBack(newFolder);
 		};
 		
 		davinci.Workbench.showModal(newFolderDialog, langObj.createNewFolder, 'width: 300px; oppacity:0', executor);
+		
 	},
 	
 	saveAs : function(extension){

@@ -140,7 +140,7 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		
 		var resources = this.fileTree.get('selectedItems');
 		var resource = (resources!=null && resources.length > 0)? resources[0] : null;
-		var projectNameLength = ("./" + davinci.Runtime.getProject()).length;
+		var projectNameLength = ("./" + davinci.Runtime.getProject()).length + 1;
 		if(resource==null){
 			this.fileDialogParentFolder.set( 'value', this._getForcedRootAttr().getPath().substring(projectNameLength+1));
 		}else if(resource.elementType=="Folder"){
@@ -182,7 +182,10 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 	},
 		
 	_newFolder : function(){
-		davinci.ui.Resource.newFolder();		
+		davinci.ui.Resource.newFolder(dojo.hitch(this,function(newFolder){
+			this.fileTree.set("selectedItems", [newFolder]);
+		}));
+		
 	},
 	
 	_getValueAttr : function(){

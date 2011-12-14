@@ -1768,8 +1768,9 @@ return declare("davinci.ve.Context", null, {
 			bodyElement = htmlElement.getChildElement("body"),
 			flowLayout = bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE);
 		if (!flowLayout){ // if flowLayout has not been set in the context check the edit prefs
-			var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
-			flowLayout = editorPrefs.flowLayout;
+			//var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
+			//flowLayout = editorPrefs.flowLayout;
+			flowLayout = true;
 			this.setFlowLayout(flowLayout);
 		} else {
 			flowLayout = (flowLayout === 'true');
@@ -1890,8 +1891,8 @@ return declare("davinci.ve.Context", null, {
 			var states = bodyElement.getAttribute(davinci.ve.states.ATTRIBUTE);
 			davinci.ve.states.store(data, states);
 
-			this.setPreference("flowLayout", 
-					bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE) !== 'false');
+			/*this.setPreference("flowLayout", 
+					bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE) !== 'false');*/
 		}
 		
 		var titleElement=head.getChildElement("title");

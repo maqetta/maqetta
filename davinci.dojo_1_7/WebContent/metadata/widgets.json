@@ -485,7 +485,7 @@
             "name": "Dialog",
             "description": "Dialog",
             "type": "dijit.Dialog",
-            "category": "controls",
+            "category": "untested",
             "icon": "resources/images/dialog.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPb1+x02ay9MiC5KhTBNhzJRizJRijVWjzlbkzFJbzhclDximTJLcTNMcj9onz9onkRupUxmik5oi0RupEh1qkd2q0d1qkd2qkh2q0h2qkt7r7PO67vT7U6BtE+BtUx8r7PO6rXQ7LXQ67jS7LrT7bvU7fT4/FGHuVGHuFSKvFSLvFaNv7fS7NDj9NLk9dLk9NTl9VaOv8zh88/j9M7i89Tm9dnp9uz1/Mns/////////wAAAAAAAAAAAAAAAAAAACH5BAEAADoALAAAAAAQABAAAAaXQF1sSCwOV0OhjNZywWyAqBQQ06Vkm9CoBA1IcpKASaU7YUMsDjTc8JpQuo4MJGKRoDlGgJEzeXQac3V3ABEBCQERJh86FoJ2XRE5hiYZOhNLMy81UFNREDoOGRSjFRgXGReoFBQPOgs4sbKzsgs6Cjg3uru8ugg6BziewwAHOgXCxFMGOgTJylECOgPU1dbXOtna29w6QQA7",
             "properties": {
@@ -606,7 +606,7 @@
         {
             "name": "Menu",
             "type": "dijit.Menu",
-            "category": "controls",
+            "category": "untested",
             "icon": "resources/images/contextmenu.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5KhTJRijdakzpeljpfljpflTtfljtflT1jmT9mnT9nnT9onUJtokVyp0Zyp0Zypkl3rEp4q0x9sU1+sU19sE+DtVSLvVKHuVKIuVWLvVaOv////////wAAAAAAAAAAACH5BAEAABwALAAAAAAQABAAAAVQICeOZGmepqaurEpmWyzPFoltABAISTNdmwupMituKiQKTsfzASUkiHEWIT2Wu95v4yAxpjIGSYFtbhckBDiGIA0KhwPBIB8QCgaUfs/vhwAAOw==",
             "properties": {
@@ -791,7 +791,7 @@
             "name": "Tooltip",
             "description": "Tooltip",
             "type": "dijit.Tooltip",
-            "category": "controls",
+            "category": "untested",
             "icon": "resources/images/tooltip.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAEJ1o2GMs2GMsmmRtmmRtW+WuXOZuz5zoUh6plCAqlCAqViGrmiStmmStmiStW+Xudr0/+P3/+T3//X8/9r1/9v1/+z6/+36//T8//X9//r+/////wAAAAAAAAAAAAAAACH5BAEAABsALAAAAAAQABAAAAVU4CaOZGme6GakpUGt7PZAUVWkgyNFfMQwg0FjQBAFIMikEikQLSTQKC8qWYgUVOg0mhAhLODw5RK2IEQAjHqdmawxANFBQ6/b6Qf5Yc/v82OAgYEhADs=",
             "children": "Text",
@@ -805,7 +805,7 @@
             "name": "TooltipDialog",
             "description": "Tooltip Dialog",
             "type": "dijit.TooltipDialog",
-            "category": "controls",
+            "category": "untested",
             "icon": "resources/images/tooltip.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAEJ1o2GMs2GMsmmRtmmRtW+WuXOZuz5zoUh6plCAqlCAqViGrmiStmmStmiStW+Xudr0/+P3/+T3//X8/9r1/9v1/+z6/+36//T8//X9//r+/////wAAAAAAAAAAAAAAACH5BAEAABsALAAAAAAQABAAAAVU4CaOZGme6GakpUGt7PZAUVWkgyNFfMQwg0FjQBAFIMikEikQLSTQKC8qWYgUVOg0mhAhLODw5RK2IEQAjHqdmawxANFBQ6/b6Qf5Yc/v82OAgYEhADs=",
             "children": "Text",

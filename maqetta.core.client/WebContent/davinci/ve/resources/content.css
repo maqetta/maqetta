@@ -124,4 +124,5 @@ div[dojotype="dojox.mobile.ContentPane"] {
 	padding-top: 10px;
     outline: 1px dotted #AAA;
     outline-color:rgba(128,128,128,0.5);
+    background-clip:content-box;
 }

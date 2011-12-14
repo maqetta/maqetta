@@ -168,6 +168,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             // Call the dispatcher routine that updates snap lines and
             // list of possible parents at current (x,y) location
             this._context.dragMoveUpdate({
+            		widgets:[this._selectedWidget],
             		data:data,
             		eventTarget:event.target,
             		position:position,

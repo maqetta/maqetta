@@ -2517,6 +2517,7 @@ return declare("davinci.ve.Context", null, {
 	 * Perform any visual updates in response to mousemove event while performing a
 	 * drag operation on the visual canvas.
 	 * @param {object} params  object with following properties:
+	 * 		[array{object}] widgets  Array of widgets being dragged (can be empty array)
 	 *      {object|array{object}} data  For widget being dragged, either {type:<widgettype>} or array of similar objects
 	 *      {object} eventTarget  Node (usually, Element) that is current event.target (ie, node under mouse)
 	 *      {object} position  x,y properties hold current mouse location
@@ -2529,6 +2530,7 @@ return declare("davinci.ve.Context", null, {
 	dragMoveUpdate: function(params) {
 		var context = this;
 		var cp = this._chooseParent;
+		var widgets = params.widgets;
 		var data = params.data;
 		var eventTarget = params.eventTarget;
 		var position = params.position;
@@ -2542,6 +2544,15 @@ return declare("davinci.ve.Context", null, {
 		// inner function that gets called recurively for each widget in document
 		// The "this" object for this function is the Context object
 		_updateThisWidget = function(widget){
+			if(params.widgets){
+				for(var i=0; i<params.widgets.length; i++){
+					// Drag operations shouldn't apply to any of the widget being dragged
+					if(widget == params.widgets[i]){
+						return;
+					}
+				}
+			}
+			
 			var node = widget.domNode;
 			var dj = this.getDojo();
 			var computed_style = dj.style(node);

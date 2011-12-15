@@ -27,84 +27,12 @@ return declare("davinci.ui.ModelEditor", TextEditor, {
 	handleChange: function(text) {
         this.inherited(arguments);
         
-        var oldChildren = this.model.children;
-        var oldLabel = this.model.getLabel();
         this.model.setText(text);
         
-//        var notifyChanges = false;
-//        var modelChanges = [];
-        
-//         if (notifyChanges) {
-// //            debugger; // never saw this trigger... does this code get called?
-        
-//             function calculateChange(model, oldChildren, oldModel) {
-//                 var newLength = model.length;
-//                 var oldLength = oldChildren.length;
-//                 var newInx = 0, oldInx = 0;
-        
-//                 if (oldLength == newLength) {
-//                     for ( var i = 0; i < newLength; i++) {
-//                         if (model[i].getLabel() != oldChildren[i].getLabel()) {
-//                             modelChanges.push({
-//                                 type: 'change',
-//                                 model: model[i]
-//                             });
-//                         }
-//                         calculateChange(model[i].children, oldChildren[i].children,
-//                                 oldChildren[i]);
-//                     }
-//                 } else {
-//                     var startNew = 0;
-//                     for ( var oldInx = 0; oldInx < oldLength; oldInx++) {
-//                         var same_found = false;
-//                         var added = [];
-//                         for ( var newInx = startNew; newInx < newLength; newInx++) {
-//                             if (oldChildren[oldInx].getLabel() == model[newInx]
-//                                     .getLabel()) {
-//                                 sameFound = model[newInx];
-//                                 calculateChange(model[i].children,
-//                                         oldChildren[i].children, oldChildren[i]);
-//                                 startNew = newInx + 1;
-//                                 break;
-//                             } else {
-//                                 added.push(model[newInx]);
-//                             }
-//                         }
-//                         if (sameFound) {
-//                             for ( var j = 0; j < pluses.length; j++) {
-//                                 modelChanges.push({
-//                                     type: 'new',
-//                                     model: added[j],
-//                                     parent: oldModel
-//                                 });
-//                             }
-//                         } else {
-//                             modelChanges.push({
-//                                 type: 'delete',
-//                                 model: oldChildren[oldInx],
-//                                 parent: oldModel
-//                             });
-//                         }
-//                     }
-        
-//                     // pushing down the trailing elements
-//                     for ( var newInx = startNew; newInx < newLength; newInx++) {
-//                         modelChanges.push({
-//                             type: 'new',
-//                             model: model[newInx],
-//                             parent: oldModel
-//                         });
-//                     }
-//                 }        
-//             }
-        
-//             calculateChange(this.model.children, oldChildren, this.model);
-//         }
-
-        // var changeEvent = {
-        //         newModel: this.model
-        // };
-        //dojo.publish("/davinci/ui/modelChanged", [changeEvent]);
+        var changeEvent = {
+                newModel: this.model
+        };
+        dojo.publish("/davinci/ui/modelChanged", [changeEvent]);
 	},
 	
 	selectModel: function (selection, editor) {
@@ -123,7 +51,7 @@ return declare("davinci.ui.ModelEditor", TextEditor, {
        var childModel = this.model.findChildAtPosition(selection);
        selection.model = childModel;
        if (childModel != this._selectedModel) {
-    	   this.publishingSelect = true;
+           this.publishingSelect = true;
            dojo.publish("/davinci/ui/selectionChanged", [[selection], this]);
            this.publishingSelect = false;
        }

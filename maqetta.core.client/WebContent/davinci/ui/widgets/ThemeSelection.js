@@ -26,7 +26,7 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 
     /* populate the theme selection, depends on the "workspaceOnly" attribute being set post create */
     postCreate : function(){
-    
+    	
         this._themeData = davinci.library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly);
         this._themeCount = this._themeData.length;
         for (var i = 0; i < this._themeData.length; i++){
@@ -54,6 +54,8 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
     },
     
     _setValueAttr : function(value){
+    	if(!this._hasValue(value)) return;
+    	
         this._selection = value;
         if(value && value.className){
             this._selection = value.className; 

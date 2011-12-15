@@ -402,7 +402,7 @@ define([
     		
 			var themePath = new Path(model.fileName);
     		/* remove the .theme file, and find themes in the given base location */
-    		var allThemes = Library.getThemes(themePath.removeLastSegments(1).toString());
+    		var allThemes = Library.getThemes(themePath.firstSegment());
     		var themeHash = {};
     		for(var i=0;i<allThemes.length;i++){
     		    if (allThemes[i]['files']){ // #1024 theme maps do not have files

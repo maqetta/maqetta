@@ -29,6 +29,8 @@ davinci.html.unEscapeXml = function(value) {
     return value.replace(/&quot;/g, '"').replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/&amp;/g, "&");
 };
 
+//==============================================================================
+
 /**  
  * @class davinci.html.HTMLItem
  * @constructor 
@@ -83,17 +85,21 @@ davinci.html.HTMLItem.prototype.getHTMLFile = function() {
     return element;
 };
 
+//==============================================================================
+
 /**
  * @class davinci.html.HTMLFile
  * @constructor
  * @extends davinci.html.HTMLItem
  */
-davinci.html.HTMLFile= function(fileName) {
+davinci.html.HTMLFile = function(fileName) {
     this.fileName = fileName;
-    this.inherits( davinci.html.HTMLItem);
-    this.elementType="HTMLFile";
-    this._loadedCSS={};
+    this.inherits(davinci.html.HTMLItem);
+    this.elementType = "HTMLFile";
+    this._loadedCSS = {};
+    this._styleElem = null;
 };
+
 davinci.Inherits(davinci.html.HTMLFile,davinci.html.HTMLItem);
 
 davinci.html.HTMLFile.prototype.save = function (isWorkingCopy) {
@@ -199,9 +205,10 @@ davinci.html.HTMLFile.prototype.getRule = function(selector) {
 };
 
 davinci.html.HTMLFile.prototype.setText = function (text, noImport) {
-
-    var oldChildren = this.children;
+    // clear cached values
     this.children = [];
+    this._styleElem = null;
+
     var result = davinci.html.HTMLParser.parse(text || "", this);
     var formattedHTML = "";
     if (!noImport && result.errors.length == 0) {
@@ -231,7 +238,6 @@ davinci.html.HTMLFile.prototype.setText = function (text, noImport) {
         });
     }
     this.onChange();
-
 };   
 
 davinci.html.HTMLFile.prototype.hasStyleSheet = function (url) {
@@ -328,6 +334,8 @@ davinci.html.HTMLFile.prototype.reportPositions = function() {
     });
 };
 
+//==============================================================================
+
 /**
  * @class davinci.html.HTMLElement
  * @constructor
@@ -383,7 +391,8 @@ davinci.html.HTMLElement.prototype.getText = function(context) {
                 for (var i=0;i<this.children.length; i++) {
                     s=s+this.children[i].getText(context);
                     if (isStyle) {
-                        var lines=this._fmChildLine,indent=this._fmChildIndent || 0;
+                        var lines = this._fmChildLine,
+                            indent = this._fmChildIndent || 0;
                         if (i+1==this.children.length) {
                             lines=this._fmLine;
                             indent=this._fmIndent;
@@ -782,6 +791,8 @@ davinci.html.HTMLElement.prototype.visit = function (visitor) {
 };
 
 davinci.html.HTMLElement.prototype.setText = function (text) {
+    // clear cached values
+    this.script = '';
 
     var options={xmode:'outer'};
     var currentParent=this.parent;
@@ -799,6 +810,8 @@ davinci.html.HTMLElement.prototype.setText = function (text) {
     });
     this.onChange();
 };
+
+//==============================================================================
 
 /**
  * @class davinci.html.HTMLAttribute
@@ -828,6 +841,8 @@ davinci.html.HTMLAttribute.prototype.setValue = function(value) {
     this.value=davinci.html.unEscapeXml(value);
     this.onChange();
 };
+
+//==============================================================================
 
 /**
  * @class davinci.html.HTMLText
@@ -862,6 +877,8 @@ davinci.html.HTMLText.prototype.getLabel = function() {
         return this.value;
     return this.value.substring(0, 15) + "...";
 };
+
+//==============================================================================
 
 /**
  * @class davinci.html.HTMLComment

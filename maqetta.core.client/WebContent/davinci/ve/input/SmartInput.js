@@ -659,6 +659,9 @@ return declare("davinci.ve.input.SmartInput", null, {
 				
 					this.updateWidget(value);
 				}
+				var context=this._widget.getContext();
+				var userdoc = context.getDocument();	// inner document = user's document
+				userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
 			}
  
 		}

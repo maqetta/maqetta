@@ -513,8 +513,14 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			var width = args.size && args.size.w,
 				height = args.size && args.size.h;
 			command.add(new davinci.ve.commands.ResizeCommand(w, width, height));
+			var helper = davinci.ve.widget.getWidgetHelper(w.type);
+			if(helper && helper.onCreateResize){
+				helper.onCreateResize(command, w, width, height);
+			}
 		}
+		var w_id = w.id;
 		this._context.getCommandStack().execute(command);
+		var w = widget.byId(w_id);
 		this._select(w);
 		this._widget = w;
 		return w;

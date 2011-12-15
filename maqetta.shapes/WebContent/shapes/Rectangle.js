@@ -6,10 +6,10 @@ define([
 	
 	return declare("shapes.Rectangle", [_Shape, _RectMixin], {
 			
-		x:'0',
-		y:'0',
-		width:'80',
-		height:'80',
+		width:null,
+		defaultWidth:'80',
+		height:null,
+		defaultHeight:'80',
 		cornerRadius:'0',	
 		
 		buildRendering: function(){

@@ -3,7 +3,12 @@
     "name": "html.body",
     "spec": "1.0",
     "version": "1.0",
-     "require": [
+    "require": [
+        {
+            "type": "css",
+            "src": "app.css",
+            "$library": "maqetta"
+        },
         {
             "type": "javascript",
             "src": "maqetta/maqetta.js",
@@ -13,13 +18,7 @@
             "type": "javascript",
             "src": "maqetta/States.js",
             "$library": "maqetta"
-        },    
-        {
-            "type": "css",
-            "src": "app.css",
-            "$library": "maqetta"
         }
-
     ],
     "library": {
         "maqetta": {

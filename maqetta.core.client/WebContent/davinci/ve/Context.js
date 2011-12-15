@@ -953,7 +953,8 @@ return declare("davinci.ve.Context", null, {
 		});
 
 		// Add namespace for custom widgets
-		libs = libs.concat({ id: 'widgets', root: this._getWidgetFolder() });
+// FIXME: should add this only when compound widgets are part of the page
+//		libs = libs.concat({ id: 'widgets', root: this._getWidgetFolder() });
 
 		libs.forEach(function(lib) {
 			var id = lib.id;

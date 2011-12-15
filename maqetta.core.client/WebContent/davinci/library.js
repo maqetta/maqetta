@@ -143,6 +143,12 @@ addCustomWidgets: function(base, customWidgetJson) {
 },
 
 getCustomWidgets: function(base) {
+	
+	
+	/* loads custom widgets from the users workspace.  removing this feature for M4 */
+	
+	return;
+	
 	if (! library._customWidgets || ! library._customWidgets[base]){
 		/* load the custom widgets from the users workspace */
 		

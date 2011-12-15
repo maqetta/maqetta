@@ -109,10 +109,10 @@ dojo.mixin(davinci.ui.Resource, {
 		davinci.Workbench.showModal(newDialog, langObj.createNewCSSFile, 'width: 300px; oppacity:0', executor);
 	},
 	
-	newFolder : function(callBack){
+	newFolder : function(parentFolder, callBack){
 		
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
-		var resource=davinci.ui.Resource.getSelectedResource();
+		var resource=parentFolder || davinci.ui.Resource.getSelectedResource();
 		var folder = null;
 		if(resource!=null){
 			if(resource.elementType=="Folder"){

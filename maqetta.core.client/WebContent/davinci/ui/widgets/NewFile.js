@@ -182,7 +182,10 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 	},
 		
 	_newFolder : function(){
-		davinci.ui.Resource.newFolder(dojo.hitch(this,function(newFolder){
+		var resources = this.fileTree.get('selectedItems');
+		var resource = (resources!=null && resources.length > 0)? resources[0] : null;
+		
+		davinci.ui.Resource.newFolder(resource, dojo.hitch(this,function(newFolder){
 			this.fileTree.set("selectedItems", [newFolder]);
 		}));
 		

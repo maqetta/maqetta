@@ -3,11 +3,14 @@ define(["dojo/_base/array", "dojo/_base/connect"], function(array, connect) {
 		this.create = function(widget, srcElement) {
 			var dw = widget.dijitWidget,
 				setup = function() {
-					if (dw.dropDown) {
-						if (dw.dropDown._popupWrapper._dvWidget) {
-							dw.dropDown._popupWrapper._dvWidget.hidden = true; // this will hide the dijitMenu in designer
+					var dropDown = dw.dropDown;
+					if (dropDown) {
+						var widget = dropDown._popupWrapper._dvWidget;
+						if (widget) {
+							widget.hidden = true; // this will hide the dijitMenu in designer  //FIXME: is this used?
+							widget.internal = true; // this will hide the dijitMenu in the outline
 						}
-						dw.dropDown.owner = dw; // leave a path to make it possible to get from the popup back to the dropdown instance
+						dropDown.owner = dw; // leave a path to make it possible to get from the popup back to the dropdown instance
 					}
 				},
 				handle = connect.connect(dw, 'startup', function() {
@@ -70,8 +73,9 @@ define(["dojo/_base/array", "dojo/_base/connect"], function(array, connect) {
 					
 				} else {
 					// get the widget from the node
-					var pWidget = context.getDijit().byNode(n),
-						pData = {type: pWidget.declaredClass, properties: {}};
+					var pWidget = context.getDijit().byNode(n);
+					if (!pWidget) { return; }
+					var pData = {type: pWidget.declaredClass, properties: {}};
 
 					if (pWidget.label) {
 						pData.properties.label = pWidget.label;

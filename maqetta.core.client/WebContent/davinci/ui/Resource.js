@@ -110,11 +110,12 @@ dojo.mixin(davinci.ui.Resource, {
 	},
 	
 	newFolder : function(callBack){
+		
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		var resource=davinci.ui.Resource.getSelectedResource();
 		var folder = null;
 		if(resource!=null){
-			if(resource.elementType=="folder"){
+			if(resource.elementType=="Folder"){
 				folder = resource;
 			}else{
 				folder = resource.parent;

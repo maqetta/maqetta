@@ -385,16 +385,6 @@ return declare("davinci.ve.Context", null, {
 						") does not specify 'library'");
 			}
 
-			// need to set the module path for custom user widgets 
-			// XXX Get rid of Dojo-specific code.  If necessary, should be refactored
-			// and abstracted to a function.  But instead of code like this, should
-			// be using APIs from library.js or metadata.js (or something pulling
-			// in data from package.json).
-			if (r.$library === 'dojo') {
-				var path = libs.dojo.append(r.src);
-				this._dojoModulePath = (new davinci.model.Path(this.getBase())).relativeTo(path, true).toString();
-			}
-
 			switch (r.type) {
 				case "javascript":
 					if (r.src) {
@@ -458,11 +448,6 @@ return declare("davinci.ve.Context", null, {
 		return folder;
 	},
 
-	//FIXME: remove accessor
-	_getDojoModulePath: function(){
-		return this._dojoModulePath;
-	},
-	
 	_require: function(module){
 		try{
 			return this.getGlobal()["require"]([module.replace(/\./g, "/")]);
@@ -734,8 +719,6 @@ return declare("davinci.ve.Context", null, {
 		}
 
 		var data = this._parse(source);
-		this._scriptAdditions=data.scriptAdditions;
-		//debugger;
 		if(!this.frameNode){
 			// initialize frame
 			var dojoUrl;
@@ -807,13 +790,9 @@ return declare("davinci.ve.Context", null, {
 				//  depend on dojo any more.  Once issue, though, is that the callback function
 				//  makes use of dojo and thusly must be invoked only after dojo has loaded.  Need
 				//  to remove Dojo dependencies from callback function first.
-				var baseUserWorkspace = system.resource.getRoot().getURL() + "/" + this._getWidgetFolder(),
-				    baseDojoUrl = system.resource.getRoot().getURL() + "/lib/dojo/dojo",
-				    config = {
-						modulePaths: {widgets: baseUserWorkspace}, // FIXME: replaced by packages in Dojo 1.7?
-						packages: [{ name: 'widgets', location: baseUserWorkspace}], // need to add dynamically
-						baseUrl: baseDojoUrl
-					};
+				var config = {
+					packages: this._getLoaderPackages() // XXX need to add dynamically
+				};
 				dojo.mixin(config, this._configProps);
 
 				var requires = this._bootstrapModules.split(","),
@@ -957,6 +936,37 @@ return declare("davinci.ve.Context", null, {
 				}
 			}
 		}
+	},
+
+	_getLoaderPackages: function() {
+		var libs = davinci.library.getUserLibs(this.getBase()),
+			dojoBase,
+			packages = [];
+		
+		// get dojo base path
+		libs.some(function(lib) {
+			if (lib.id === 'dojo') {
+				dojoBase = new davinci.model.Path(lib.root + '/dojo');
+				return true; // break
+			}
+			return false;
+		});
+
+		// Add namespace for custom widgets
+// FIXME: should add this only when compound widgets are part of the page
+//		libs = libs.concat({ id: 'widgets', root: this._getWidgetFolder() });
+
+		libs.forEach(function(lib) {
+			var id = lib.id;
+			// since to loader, everything is relative to 'dojo', ignore here
+			if (! lib.root || id === 'dojo' || id === 'DojoThemes') {
+				return;
+			}
+			var root = new davinci.model.Path(lib.root).relativeTo(dojoBase).toString();
+			packages.push({ name: lib.id, location: root });
+		});
+
+		return packages;
 	},
 
 	_setSourceData: function(data){
@@ -1917,8 +1927,6 @@ return declare("davinci.ve.Context", null, {
 				text.replace(/require\(\[["']([^'"]+)["']\]\)/g, function(match, module) {
 					data.modules.push(module);
 				});
-
-				data.scriptAdditions=scriptTag;
 			}
 			
 			// XXX Bug 7499 - (HACK) See comment in addHeaderScript()
@@ -2284,7 +2292,7 @@ return declare("davinci.ve.Context", null, {
 			if (this._srcDocument.find({elementType:'HTMLElement', tag: 'script'}).some(function (element) {
 				var elementUrl = element.getAttribute("src");
 				if (elementUrl && elementUrl.indexOf(baseSrcPath) > -1) {
-					//element.setAttribute("src", url);
+					element.setAttribute("src", url);
 					return true;
 				}					
 			})) {
@@ -2294,14 +2302,10 @@ return declare("davinci.ve.Context", null, {
 			if (isDojoJS) {
 				// special case for dojo.js to provide config attribute
 				// XXX TODO: Need to generalize in the metadata somehow.
-				var fullPath = new davinci.model.Path(system.resource.getRoot().getPath());
-				var urlPath = new davinci.model.Path(url);
-				var relativeUrl = urlPath.relativeTo(fullPath);
-
 				var config = {
 					async: true,
 					parseOnLoad: true,
-					modulePaths: { widgets: this._dojoModulePath + "/" + this._getWidgetFolder() }
+					packages: this._getLoaderPackages()
 				};
 				dojo.mixin(config, this._configProps);
 				this.addHeaderScript(url, {
@@ -2383,53 +2387,57 @@ return declare("davinci.ve.Context", null, {
 	},
 
 
-	// add JS to HEAD
-	addHeaderScriptText: function(text){
-	    var splits = text.split('"');
-	    text = '\n' + text;
-	    var testStr;
-	    if (splits.length === 3){
-	        // the require may have a function on it.. 
-	        //require(["dojox/mobile"],function(dojoxMobile){dojoxMobile.themeMap=[["Android","",["themes/custom/custom.css"]],["BlackBerry","",["themes/custom/custom.css"]],["iPad","",["themes/custom/custom.css"]],["iPhone","",["themes/custom/custom.css"]],[".*","",["themes/custom/custom.css"]]];dojoxMobile.themeFiles = [];});
-	        testStr = splits[1];
-	    } else {
-	        testStr = text;
-	    }
-		if (this._scriptAdditions) {
-			var scriptText = this._scriptAdditions.find({elementType: 'HTMLText'}, true);
-			if (scriptText) {
-				var oldText = scriptText.getText();
-				if (oldText.indexOf(testStr) > -1) {
-					return;  // already in the header
-				}
-				//this._scriptAdditions.parent.removeChild(this._scriptAdditions);
-				//delete this._scriptAdditions;
-				text = oldText + text;
+	/**
+	 * Add inline JavaScript to <head>.
+	 * 
+	 * This function looks for the last inline JS element in <head> which comes
+	 * after the last <script src='...'> element.  If a script URL exists after
+	 * the last inline JS element, or if no inline JS element exists, then we
+	 * create one.
+	 * 
+	 * @param {string} text inline JS to add
+	 */
+	addHeaderScriptText: function(text) {
+		// XXX cache 'head'
+		var head = this.getDocumentElement().getChildElement('head'),
+			scriptText,
+			children = head.children,
+			i,
+			node;
+
+		for (i = children.length - 1; i >= 0; i--) {
+			node = children[i];
+			if (node.elementType === 'HTMLElement' && node.tag === 'script') {
+				// Script element will either have inline script or a URL.
+				// If the latter, this breaks with 'inlineScript' equal to 'null'
+				// and a new inline script is created later.  This is done so
+				// that new inline script comes after the latest added JS file.
+				scriptText = node.find({elementType: 'HTMLText'}, true);
+				break;
 			}
 		}
 
-		// create a new script element
-		var head = this.getDocumentElement().getChildElement('head'),
-		statesJsScriptTag = this._statesJsScriptTag,
-		script = new davinci.html.HTMLElement('script');
-		script.addAttribute('type', 'text/javascript');
-		script.script = "";
-	
-		if (this._scriptAdditions){ // #1322
-		    // the safest thing to do is put the script element back where it was
-            head.insertBefore(script, this._scriptAdditions);
-            this._scriptAdditions.parent.removeChild(this._scriptAdditions);
-            delete this._scriptAdditions;
-		} else if (statesJsScriptTag) { 
-		// XXX Bug 7499 - (HACK) See comment in addHeaderScript()
-			head.insertBefore(script, statesJsScriptTag);
-		} else {
+		if (! scriptText) {
+			// create a new script element
+			var script = new davinci.html.HTMLElement('script');
+			script.addAttribute('type', 'text/javascript');
+			script.script = "";
 			head.addChild(script);
+
+			scriptText = new davinci.html.HTMLText();
+			script.addChild(scriptText);
 		}
-		var newScriptText = new davinci.html.HTMLText();
-		newScriptText.setText(text);
-		script.addChild(newScriptText);
-		this._scriptAdditions = script;
+
+		var oldText = scriptText.getText();
+		if (oldText.indexOf(text) === -1) {
+			var newText = oldText + '\n' + text;
+			scriptText.setText(oldText + '\n' + text);
+			// XXX For some reason, <script> text is handled differently in the
+			//   Model than that of other elements.  I think I only need to call
+			//   setScript(), but the correct process should be to just update
+			//   HTMLText. See issue #1350.
+			scriptText.parent.setScript(oldText + '\n' + text);
+		}
 	},
 	
 	/**

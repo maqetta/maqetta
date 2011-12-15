@@ -338,8 +338,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             this._inline.hide();
             delete this._inline;
         }
-        var userdoc = this._context.getDocument();	// inner document = user's document
-        userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
     },
     
     allow: function(op){

@@ -689,7 +689,9 @@ return declare("davinci.ve.Context", null, {
 //////////////////////////////////////////////////////////////////////////////////////////////     
     
 	_setSource: function(source, callback, scope, newHtmlParams){
-		
+		// Get the helper before creating the IFRAME, or bad things happen in FF
+		var helper = davinci.theme.getHelper(this._visualEditor.theme);
+
 		this._srcDocument=source;
 		
 		/* determinte if its the theme editor loading */
@@ -802,7 +804,6 @@ return declare("davinci.ve.Context", null, {
 				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\" data-dojo-config=\"" + JSON.stringify(config).slice(1, -1).replace(/"/g, "'") + "\"></script>"
 					+ "<script type=\"text/javascript\">require(" + JSON.stringify(dependencies) + ", top.loading" + this._id + ");</script>";
 			}
-			var helper = davinci.theme.getHelper(this._visualEditor.theme);
 			if (helper && helper.getHeadImports){
 			    head += helper.getHeadImports(this._visualEditor.theme);
 			} else if(source.themeCssfiles) { // css files need to be added to doc before body content

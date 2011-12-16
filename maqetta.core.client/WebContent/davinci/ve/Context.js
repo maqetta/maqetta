@@ -323,22 +323,24 @@ return declare("davinci.ve.Context", null, {
 			return false;
 		}
 		
-		var requires = davinci.ve.metadata.query(type, "require"),
-			libs = {},
-			context = this;
+		var requires = davinci.ve.metadata.query(type, "require");
 		if (!requires) {
 			return true;
 		}
 
-		function _loadLibrary(libId) {
+		var libraries = davinci.ve.metadata.query(type, 'library'),
+			libs = {},
+			context = this,
+			succeeded;
+
+		function _loadLibrary(libId, lib) {
 			if (libs.hasOwnProperty(libId)) {
 				return true;
 			}
 
 			// calculate base library path, used in loading relative required
 			// resources
-			var lib = davinci.ve.metadata.query(type, 'library')[libId],
-				ver = davinci.ve.metadata.getLibrary(libId).version || lib.version,
+			var ver = davinci.ve.metadata.getLibrary(libId).version || lib.version,
 				root = context.getLibraryBase(libId, ver);
 			
 			if (root == null /*empty string OK here, but null isn't. */) {
@@ -373,6 +375,17 @@ return declare("davinci.ve.Context", null, {
 			context.addJavaScriptSrc(_getResourcePath(libId, src), updateSrc, src, skipDomUpdate);
 		}
 
+		// first load any referenced libraries
+		for (var libId in libraries) {
+			if (libraries.hasOwnProperty(libId)) {
+				succeeded = _loadLibrary(libId, libraries[libId]);
+				if (! succeeded) {
+					return false;
+				}
+			}
+		}
+
+		// next, load the require statements
 		return requires.every(function(r) {
 			// If this require belongs under a library, load library file first
 			// (if necessary).
@@ -689,7 +702,9 @@ return declare("davinci.ve.Context", null, {
 //////////////////////////////////////////////////////////////////////////////////////////////     
     
 	_setSource: function(source, callback, scope, newHtmlParams){
-		
+		// Get the helper before creating the IFRAME, or bad things happen in FF
+		var helper = davinci.theme.getHelper(this._visualEditor.theme);
+
 		this._srcDocument=source;
 		
 		/* determinte if its the theme editor loading */
@@ -802,7 +817,6 @@ return declare("davinci.ve.Context", null, {
 				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\" data-dojo-config=\"" + JSON.stringify(config).slice(1, -1).replace(/"/g, "'") + "\"></script>"
 					+ "<script type=\"text/javascript\">require(" + JSON.stringify(dependencies) + ", top.loading" + this._id + ");</script>";
 			}
-			var helper = davinci.theme.getHelper(this._visualEditor.theme);
 			if (helper && helper.getHeadImports){
 			    head += helper.getHeadImports(this._visualEditor.theme);
 			} else if(source.themeCssfiles) { // css files need to be added to doc before body content

@@ -140,6 +140,7 @@ dojo.declare("davinci.libraries.shapes.shapes._PathHelperMixin", null, {
             // Call the dispatcher routine that updates snap lines and
             // list of possible parents at current (x,y) location
             context.dragMoveUpdate({
+        			widgets:[this._widget],
                     data:data,
                     eventTarget:event.target,
                     position:position,

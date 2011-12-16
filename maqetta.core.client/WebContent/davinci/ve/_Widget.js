@@ -282,7 +282,7 @@ return declare("davinci.ve._Widget", null, {
 		
 		function indexOf(value){
 			for(var i=0;i<cleaned.length;i++){
-				if(cleaned[i]==value) return i;
+				if(cleaned[i].hasOwnProperty(value)) return i;
 			}
 			return -1;
 		}
@@ -296,8 +296,10 @@ return declare("davinci.ve._Widget", null, {
 			for(var i=0;i<shorthands[j].length;i++) {
 				var index = indexOf(shorthands[j][i]);
 				if(index>-1) {
-					cleaned.splice(lastSplice,0, cleaned[index]);
+					var element = cleaned[index];
 					cleaned.splice(index,1);
+					cleaned.splice(lastSplice,0, element);
+					
 					lastSplice = index+1;
 					
 				}

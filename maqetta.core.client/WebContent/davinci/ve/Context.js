@@ -2068,7 +2068,6 @@ return declare("davinci.ve.Context", null, {
 
 	modifyRule: function(rule, values){
 		var cleaned = dojo.clone(values);
-		debugger;
 		function indexOf(value){
 			for(var i=0;i<cleaned.length;i++){
 				if(cleaned[i].hasOwnProperty(value)) return i;

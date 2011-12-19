@@ -123,17 +123,17 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 					return;
 				}
 				
-				// Variables used to with complexities around attempting to change
+				// Variables used to deal with complexities around attempting to change
 				// multiple properties at once given that the property changes might
 				// be targeting read-only CSS files or read-write theme CSS files,
-				// both of which generate an (async) model dialog in Cascade.js.
+				// both of which generate an (async) modal dialog in Cascade.js.
 				// The logic in this routine ensures that each of the N properties
 				// that are changed are processed in a particular order, thus ensuring
 				// Cascade.js has prompted user (if necessary) on first property before we
 				// invoke logic to update other properties.
 				// There are actually two bits of async logic that make things difficult.
 				// First, dojo's onchange handlers are launched in a timeout.
-				// Second, Cascade.js modeal dialogs are also async.
+				// Second, Cascade.js modal dialogs are also async.
 				if(!context.cascadeBatch){
 					context.cascadeBatch = {};
 				}

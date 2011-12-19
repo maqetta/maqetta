@@ -247,30 +247,28 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 		 
 		// value is now an array if there are more than one of a given property for the selected rule
 		
-		//if(this.value!= value ){
-			var oldComboBoxValue = this._comboBox.get('value');
-			var newComboBoxValue;
-			//this.value = value;
-			if(this._colorswatch){
-				dojo.style(this._selectedColor, "backgroundColor", value);
+		var oldComboBoxValue = this._comboBox.get('value');
+		var newComboBoxValue;
+		//this.value = value;
+		if(this._colorswatch){
+			dojo.style(this._selectedColor, "backgroundColor", value);
+		}
+		/* check if array or single value.  If its a single value we'll just set the text box to that value */
+		if(!dojo.isArray(value)){
+			newComboBoxValue = value;
+		}else if(value.length>0){
+			newComboBoxValue = value[value.length-1];
+		}else{
+			newComboBoxValue = '';
+		}
+		if(oldComboBoxValue !== newComboBoxValue){
+			// Flag to tell onChange handler to not invoke onChange logic
+			// within Cascade.js
+			if(this._comboBoxUpdateDueTo !== 'backgroundDialog' && this._comboBoxUpdateDueTo !== 'colorSwatch' ){
+				this._comboBoxUpdateDueTo = 'setAttr';	
 			}
-			/* check if array or single value.  If its a single value we'll just set the text box to that value */
-			if(!dojo.isArray(value)){
-				newComboBoxValue = value;
-			}else if(value.length>0){
-				newComboBoxValue = value[value.length-1];
-			}else{
-				newComboBoxValue = '';
-			}
-			if(oldComboBoxValue !== newComboBoxValue){
-				// Flag to tell onChange handler to not invoke onChange logic
-				// within Cascade.js
-				if(this._comboBoxUpdateDueTo !== 'backgroundDialog' && this._comboBoxUpdateDueTo !== 'colorSwatch' ){
-					this._comboBoxUpdateDueTo = 'setAttr';	
-				}
-				this._comboBox.set('value', newComboBoxValue);
-			}
-		 //}
+			this._comboBox.set('value', newComboBoxValue);
+		}
 
 	},
 	_onChange : function(event){
@@ -290,9 +288,7 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 		}
 
 		var value = this._comboBox.get("value");
-		//if(this.value != value){
-			this.value = value;
-		//}
+		this.value = value;
 		this.onChange(event);
 	},
 	

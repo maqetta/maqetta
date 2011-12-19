@@ -166,11 +166,6 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 				var askUserResponse = cascadeBatch.askUserResponse;
 				if(cascadeBatch.deferreds){
 					var deferreds = cascadeBatch.deferreds;
-/*
-					if(propName && deferreds[propName]){
-						deferreds[propName].resolve();
-					}
-*/
 				}
 			}
 		}

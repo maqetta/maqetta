@@ -88,10 +88,13 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 				davinci.ve.widgets.ColorPickerFlat.show(this._colorPickerFlat, initialValue, this, isLeftToRight);
 			}));
 			buttonDiv2.appendChild(this._selectedColor);
+			// Part of convoluted logic to make sure onChange logic doesn't trigger
+			// ask user prompts for read-only themes or global theme changes to read/write themes
+			// ColorPickerFlat.js uses this long-winded property
+			this._colorPickerFlat_comboBoxUpdateDueTo = 'colorSwatch';
 		}
 
 		this.domNode.appendChild(comboDiv);
-		//dojo.connect(this._comboBox, "onChange", this, "_onChange");
 	
 		if(typeof this.propname == 'string' && this._comboBox){
 			// Add to cross-reference table for all of the background properties.
@@ -101,7 +104,6 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 					comboBox: this._comboBox
 			};
 		}
-
 		this.inherited(arguments);
 	},
 
@@ -114,40 +116,102 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 
 			var background = new davinci.ve.widgets.BackgroundDialog({});	
 			var executor = dojo.hitch(this, function(background){
+				var context = (this._cascade && this._cascade._widget && this._cascade._widget.getContext)
+					? this._cascade._widget.getContext() : null;
+				if(!context){
+					console.error('Background.js. no context');
+					return;
+				}
+				
+				// Variables used to with complexities around attempting to change
+				// multiple properties at once given that the property changes might
+				// be targeting read-only CSS files or read-write theme CSS files,
+				// both of which generate an (async) model dialog in Cascade.js.
+				// The logic in this routine ensures that each of the N properties
+				// that are changed are processed in a particular order, thus ensuring
+				// Cascade.js has prompted user (if necessary) on first property before we
+				// invoke logic to update other properties.
+				// There are actually two bits of async logic that make things difficult.
+				// First, dojo's onchange handlers are launched in a timeout.
+				// Second, Cascade.js modeal dialogs are also async.
+				if(!context.cascadeBatch){
+					context.cascadeBatch = {};
+				}
+				var cascadeBatch = context.cascadeBatch;
+				var propNum = 0;
+				var propList = cascadeBatch.propList = [];	// Array of properties whose values actually changed
+				var actions = cascadeBatch.actions = {};	// per-prop: logic to change the combox box on properties palette
+				var deferreds = cascadeBatch.deferreds = {};	// per-prop: dojo.Deferred objects to help with managing async issues
+				cascadeBatch.askUserResponse = undefined;
+				
 				// Call buildBackgroundImage to convert the bgddata object
 				// into an array of background-image property declarations
 				// which cause gradients to magically work across different browsers.
 				if(!background.cancel){
 					var xref = davinci.ve.widgets.Background.BackgroundWidgets;
-					for(var propname in xref){
-						var o = xref[propname];
+					for(var propName in xref){
+						var o = xref[propName];
 						if(o.bgdWidget){
 							var newValue = o.bgdWidget.attr('value');
-							o.propPaletteWidget.attr('value', newValue);
-							o.propPaletteWidget.onChange(newValue);
+							var oldValue = o.propPaletteWidget.attr('value');
+							if(newValue !== oldValue){
+								propList.push(propName);
+								actions[propName] = dojo.hitch(this, function(o, newValue){
+									o.propPaletteWidget._comboBoxUpdateDueTo = 'backgroundDialog';
+									o.propPaletteWidget.attr('value', newValue);
+								}, o, newValue);
+								deferreds[propName] = new dojo.Deferred();
+							}
 						}
 					}
-					var o = xref['background-image'];
+					var propName = 'background-image';
+					var o = xref[propName];
 					var a = davinci.ve.utils.CssUtils.buildBackgroundImage(background.bgddata);
-					var val;
+					var newValue;
 					if(a.length == 0){
-						val = '';
+						newValue = '';
 					}else{
-						val = a[a.length-1];
+						newValue = a[a.length-1];
 					}
-					// Hack: put the values array onto the cascade object with assumption
-					// that cascade object's onChange callback will know how to deal with the array
-					// Used by Cascade.js:_onFieldChange()
-					if(o.propPaletteWidget._cascade){
-						o.propPaletteWidget._cascade._valueArrayNew = a;
+					var oldValue = o.propPaletteWidget.attr('value');
+					if(newValue !== oldValue){
+						// Hack: put the values array onto the cascade object with assumption
+						// that cascade object's onChange callback will know how to deal with the array
+						// Used by Cascade.js:_onFieldChange()
+						if(o.propPaletteWidget._cascade){
+							o.propPaletteWidget._cascade._valueArrayNew = a;
+						}
+						propList.push(propName);
+						actions[propName] = dojo.hitch(this, function(i, newValue){
+							o.propPaletteWidget._comboBoxUpdateDueTo = 'backgroundDialog';
+							o.propPaletteWidget.attr('value', newValue);
+						}, o, newValue);
+						deferreds[propName] = new dojo.Deferred();
 					}
-					o.propPaletteWidget.attr('value', val);
-					o.propPaletteWidget.onChange();
+					for(var i=0; i<propList.length; i++){
+						var propName = propList[i];
+						var deferred = deferreds[propName];
+						deferred.then(dojo.hitch(this, function(propNum){
+							// Trigger change in next property
+							var propName = propList[propNum+1];
+							if(propName){
+								actions[propName].apply();
+							}else{
+								// All done with all properties
+								delete context.cascadeBatch;
+							}
+						}, i));
+					}
+					// Trigger change in first property
+					if(propList.length > 0){
+						var propName = propList[0];
+						actions[propName].apply();
+					}
 				}
 			}, background);
 			var xref = davinci.ve.widgets.Background.BackgroundWidgets;
-			for(var propname in xref){
-				var o = xref[propname];
+			for(var propName in xref){
+				var o = xref[propName];
 				var cascade = o.propPaletteWidget._cascade;
 				if(cascade){
 					// Before launching dialog, make sure all _valueArrayNew properties
@@ -160,6 +224,15 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 			davinci.Workbench.showModal(background, "Background", 'opacity:0', executor);
 		});
 		this.connect(this._comboBox, 'onChange', dojo.hitch(this, function(event){
+			// If onChange was triggered by an internal update to the text field,
+			// don't invoke onChange() function (which triggers update logic in Cascade.js).
+			// You see, Cascade.js logic can't tell difference between user changes to a field
+			// versus software updates to the field, such as due to a new widget selection.
+			var dueTo = this._comboBoxUpdateDueTo;
+			this._comboBoxUpdateDueTo = undefined;
+			if(dueTo == 'setAttr'){
+				return;
+			}
 			this._onChange(event);
 		}));
 	},
@@ -174,21 +247,30 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 		 
 		// value is now an array if there are more than one of a given property for the selected rule
 		
-		if(this.value!= value ){
-			this.value = value;
+		//if(this.value!= value ){
+			var oldComboBoxValue = this._comboBox.get('value');
+			var newComboBoxValue;
+			//this.value = value;
 			if(this._colorswatch){
 				dojo.style(this._selectedColor, "backgroundColor", value);
 			}
 			/* check if array or single value.  If its a single value we'll just set the text box to that value */
 			if(!dojo.isArray(value)){
-				this._comboBox.set('value', value);
+				newComboBoxValue = value;
 			}else if(value.length>0){
-				this._comboBox.set('value', value[value.length-1]);
+				newComboBoxValue = value[value.length-1];
 			}else{
-				this._comboBox.set('value', '');
+				newComboBoxValue = '';
 			}
-			this._onChange();
-		 }
+			if(oldComboBoxValue !== newComboBoxValue){
+				// Flag to tell onChange handler to not invoke onChange logic
+				// within Cascade.js
+				if(this._comboBoxUpdateDueTo !== 'backgroundDialog' && this._comboBoxUpdateDueTo !== 'colorSwatch' ){
+					this._comboBoxUpdateDueTo = 'setAttr';	
+				}
+				this._comboBox.set('value', newComboBoxValue);
+			}
+		 //}
 
 	},
 	_onChange : function(event){
@@ -208,9 +290,9 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 		}
 
 		var value = this._comboBox.get("value");
-		if(this.value != value){
+		//if(this.value != value){
 			this.value = value;
-		}
+		//}
 		this.onChange(event);
 	},
 	

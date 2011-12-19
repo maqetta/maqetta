@@ -180,6 +180,7 @@ dojo.provide("davinci.ve.utils.CssUtils");
 	
 	CssUtils.regex_num = new RegExp('^' + num + '$');
 	CssUtils.regstr_angle = '^\\s*' + dir_strict + '\\s*$';
+	CssUtils.regstr_len_or_pct = '^\\s*' + len_or_pct + '\\s*$';
 	CssUtils.regstr_posn = '^\\s*' + posn + '\\s*$';
 	CssUtils.regstr_shape = '^\\s*' + shape + '\\s*$';
 	CssUtils.regstr_extent = '^\\s*' + extent + '\\s*$';

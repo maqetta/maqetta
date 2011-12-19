@@ -115,6 +115,15 @@ davinci.ve.widgets.ColorPickerFlat.show = function(content, initialValue, parent
 					: {'BR':'TR', 'BL':'TL', 'TR':'BR', 'TL':'BL'},
 				onClose: function(){
 					if(!colorpicker.canceled){
+						// This is part of some convoluted logic to deal with complex interactions
+						// between Background.js, BackgroundDialog.js and Cascade.js.
+						// The onChange function in Background.js needs to know whether an onChange
+						// event was due to Maqetta logic changing the value or user changing
+						// value. If Maqetta is changing value, then Cascade.js shouldn't prompt
+						// user for read-only themes or global theme changes to read/write themes.
+						if(parentWidget._colorPickerFlat_comboBoxUpdateDueTo){
+							parentWidget._comboBoxUpdateDueTo = parentWidget._colorPickerFlat_comboBoxUpdateDueTo;
+						}
 						//var oldValue = target._dropDown.attr("value");
 						var oldValue = parentWidget.attr("value");
 						//target._dropDown.attr("value", colorpicker.attr("value"));

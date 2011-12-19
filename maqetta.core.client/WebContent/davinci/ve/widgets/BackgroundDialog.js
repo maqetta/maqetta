@@ -156,7 +156,7 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 		ppValue = ppSizeCB.attr('value');
 		var bgdSizeCB = this.bgdSizeCB;
 		bgdSizeCB.attr('store', ppSizeCB.store);
-		bgdSizeCB.attr('regExp', 'border-box|padding-box|content-box');
+		bgdSizeCB.attr('regExp', 'auto|contain|cover|'+CssUtils.regstr_len_or_pct);
 		bgdSizeCB.attr('value', ppValue);
 		bgddata.backgroundSize = ppValue;
 		this.connect(this.bgdSizeCB, 'onChange', dojo.hitch(this,function(){
@@ -169,6 +169,7 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 		ppValue = ppOriginCB.attr('value');
 		var bgdOriginCB = this.bgdOriginCB;
 		bgdOriginCB.attr('store', ppOriginCB.store);
+		bgdOriginCB.attr('regExp', 'border-box|padding-box|content-box');
 		bgdOriginCB.attr('value', ppValue);
 		bgddata.backgroundOrigin = ppValue;
 		this.connect(this.bgdOriginCB, 'onChange', dojo.hitch(this,function(){
@@ -181,6 +182,7 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 		ppValue = ppClipCB.attr('value');
 		var bgdClipCB = this.bgdClipCB;
 		bgdClipCB.attr('store', ppClipCB.store);
+		bgdClipCB.attr('regExp', 'border-box|padding-box|content-box');
 		bgdClipCB.attr('value', ppValue);
 		bgddata.backgroundClip = ppValue;
 		this.connect(this.bgdClipCB, 'onChange', dojo.hitch(this,function(){

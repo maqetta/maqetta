@@ -11,7 +11,7 @@
 
 /*global define setTimeout clearTimeout setInterval clearInterval Node */
 
-define(['orion/textview/tooltip'], function(mTooltip) {
+define("orion/textview/rulers", ['orion/textview/tooltip'], function(mTooltip) {
 
 	/**
 	 * Constructs a new ruler. 

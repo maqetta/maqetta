@@ -13,7 +13,7 @@
  
 /*global define window*/
 
-define(['orion/textview/eventTarget'], function(mEventTarget) {
+define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEventTarget) {
 	var isWindows = window.navigator.platform.indexOf("Win") !== -1;
 
 	/**

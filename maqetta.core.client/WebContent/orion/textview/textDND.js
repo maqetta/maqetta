@@ -13,7 +13,7 @@
  
 /*global define */
 
-define([], function() {
+define("orion/textview/textDND", [], function() {
 
 	function TextDND(view, undoStack) {
 		this._view = view;

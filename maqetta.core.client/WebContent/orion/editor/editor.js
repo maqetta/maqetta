@@ -12,7 +12,7 @@
  /*global define window */
  /*jslint maxerr:150 browser:true devel:true laxbreak:true regexp:false*/
 
-define(['orion/textview/keyBinding', 'orion/textview/eventTarget', 'orion/textview/tooltip'], function(mKeyBinding, mEventTarget, mTooltip) {
+define("orion/editor/editor", ['orion/textview/keyBinding', 'orion/textview/eventTarget', 'orion/textview/tooltip'], function(mKeyBinding, mEventTarget, mTooltip) {
 
 	/**
 	 * @name orion.editor.util
@@ -395,20 +395,6 @@ define(['orion/textview/keyBinding', 'orion/textview/eventTarget', 'orion/textvi
 				result = regexp.exec(text.substring(searchStart));
 				return result && {index: result.index + searchStart, length: result[0].length};
 			}
-		},
-		
-		/**
-		 * @private
-		 * @static
-		 * @param {String} Input string
-		 * @returns {pattern:String, flags:String} if str looks like a RegExp, or null otherwise
-		 */
-		parseRegExp: function(str) {
-			var regexp = /^\s*\/(.+)\/([gim]{0,3})\s*$/.exec(str);
-			if (regexp) {
-				return {pattern: regexp[1], flags: regexp[2]};
-			}
-			return null;
 		},
 		
 		/** @private */

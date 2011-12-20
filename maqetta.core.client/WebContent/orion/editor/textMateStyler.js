@@ -12,7 +12,7 @@
 /*jslint regexp:false laxbreak:true*/
 /*global define */
 
-define([], function() {
+define("orion/editor/textMateStyler", ['orion/editor/regex'], function(mRegex) {
 
 var RegexUtil = {
 	// Rules to detect some unsupported Oniguruma features
@@ -153,17 +153,12 @@ var RegexUtil = {
 			var backrefMatch = /\\(\d+)/.exec(term);
 			if (backrefMatch) {
 				var text = sub[backrefMatch[1]] || "";
-				array.push(escape ? RegexUtil.escapeRegex(text) : text);
+				array.push(escape ? mRegex.escape(text) : text);
 			} else {
 				array.push(term);
 			}
 		}
 		return new RegExp(array.join(""));
-	},
-	
-	/** @returns {String} The input string with regex special characters escaped. */
-	escapeRegex: function(/**String*/ str) {
-		return str.replace(/([\\$\^*\/+?\.\(\)|{}\[\]])/g, "\\$&");
 	},
 	
 	/**

@@ -12,8 +12,9 @@
 /*global define */
 /*jslint maxerr:150 browser:true devel:true */
 
-define(['orion/textview/undoStack', 'orion/textview/keyBinding', 'orion/textview/rulers', 'orion/textview/annotations', 'orion/textview/textDND'],
-function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND) {
+define("orion/editor/editorFeatures", ['orion/textview/undoStack', 'orion/textview/keyBinding', 'orion/textview/rulers', 'orion/textview/annotations', 'orion/textview/textDND',
+	'orion/editor/regex'],
+function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 
 	function UndoFactory() {
 	}
@@ -100,16 +101,14 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND) {
 			var self = this;
 			this._incrementalFindListener = {
 				onVerify: function(e){
-					/** @returns {String} with regex special characters escaped. */
-					function regexpEscape(/**String*/ str) {
-						return str.replace(/([\\$\^*\/+?\.\(\)|{}\[\]])/g, "\\$&");
-					}
 					var editor = self.editor;
 					var model = editor.getModel();
 					var start = editor.mapOffset(e.start), end = editor.mapOffset(e.end);
 					var txt = model.getText(start, end);
 					var prefix = self._incrementalFindPrefix;
-					var match = prefix.match(new RegExp("^"+regexpEscape(txt), "i"));
+					// TODO: mRegex is pulled in just for this one call so we can get case-insensitive search
+					// is it really necessary
+					var match = prefix.match(new RegExp("^" + mRegex.escape(txt), "i"));
 					if (match && match.length > 0) {
 						prefix = self._incrementalFindPrefix += e.text;
 						self.editor.reportStatus("Incremental find: " + prefix);
@@ -754,6 +753,7 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND) {
 			}
 			this.textView.setText(proposal, event.data.start, event.data.end);
 			
+			//if the proposal specifies linked positions, build the model and enter linked mode
 			if (proposalInfo.positions && this.linkedMode) {
 				var positionGroups = [];
 				for (var i = 0; i < proposalInfo.positions.length; ++i) {
@@ -770,6 +770,9 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND) {
 					escapePosition: proposalInfo.escapePosition
 				};
 				this.linkedMode.enterLinkedMode(linkedModeModel);
+			} else if (proposalInfo.escapePosition) {
+				//we don't want linked mode, but there is an escape position, so just set cursor position
+				this.textView.setCaretOffset(proposalInfo.escapePosition);
 			}
 			return true;
 		},

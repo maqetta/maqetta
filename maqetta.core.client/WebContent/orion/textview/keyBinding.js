@@ -13,7 +13,7 @@
 
 /*global window define */
 
-define([], function() {
+define("orion/textview/keyBinding", [], function() {
 	var isMac = window.navigator.platform.indexOf("Mac") !== -1;
 
 	/**

@@ -11,7 +11,7 @@
  *******************************************************************************/
 /*global define */
 
-define([], function() {
+define("orion/editor/webContentAssist", [], function() {
 
 	/**
 	 * @name orion.contentAssist.CssContentAssistProvider

@@ -12,7 +12,7 @@
 /*global define */
 /*jslint maxerr:150 browser:true devel:true */
 
-define(['orion/textview/keyBinding', 'orion/textview/eventTarget'], function(mKeyBinding, mEventTarget) {
+define("orion/editor/contentAssist", ['orion/textview/keyBinding', 'orion/textview/eventTarget'], function(mKeyBinding, mEventTarget) {
 
 	/**
 	 * @name orion.editor.ContentAssist
@@ -300,12 +300,22 @@ define(['orion/textview/keyBinding', 'orion/textview/eventTarget'], function(mKe
 			if (isSelected) {
 				div.className = "selected";
 			}
-			div.innerHTML = proposal;
+			var textNode = document.createTextNode(proposal);
+			div.appendChild(textNode, div);
 			parent.appendChild(div);
 		},
 		/** @private */
 		getDisplayString: function(proposal) {
-			return typeof proposal === "string" ? proposal : proposal.proposal;
+			//for simple string content assist, the display string is just the proposal
+			if (typeof proposal === "string") {
+				return proposal;
+			}
+			//return the description if applicable
+			if (proposal.description && typeof proposal.description === "string") {
+				return proposal.description;
+			}
+			//by default return the straight proposal text
+			return proposal.proposal;
 		},
 		/** @private */
 		matchesPrefix: function(str) {

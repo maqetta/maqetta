@@ -11,7 +11,7 @@
  ******************************************************************************/
  
 /*global define */
-define([], function() {
+define("orion/textview/eventTarget", [], function() {
 	/** 
 	 * Constructs a new EventTarget object.
 	 * 

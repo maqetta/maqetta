@@ -21,15 +21,15 @@
  * This function is intented to by used when RequireJS is not available.
  * </p>
  *
+ * @param {String} name The mixin module name.
  * @param {String[]} deps The array of dependency names.
  * @param {Function} callback The definition function.
- * @param {String} moduleName The mixin module name.
  */
 if (!window.define) {
-	window.define = function(deps, callback, moduleName) {
+	window.define = function(name, deps, callback) {
 		var module = this;
-		var split = (moduleName || "").split("/"), i, j;
-		for (i = 0; i < split.length; i++) {
+		var split = (name || "").split("/"), i, j;
+		for (i = 0; i < split.length - 1; i++) {
 			module = module[split[i]] = (module[split[i]] || {});
 		}
 		var depModules = [], depModule;

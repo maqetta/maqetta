@@ -13,7 +13,7 @@
 
 /*global define */
 
-define(['orion/textview/textModel', 'orion/textview/eventTarget'], function(mTextModel, mEventTarget) {
+define("orion/textview/projectionTextModel", ['orion/textview/textModel', 'orion/textview/eventTarget'], function(mTextModel, mEventTarget) {
 
 	/**
 	 * @class This object represents a projection range. A projection specifies a

@@ -493,7 +493,6 @@ dojo.mixin(davinci.Workbench, {
 			style: style || "width: 300px"
 		});
 		var handle = dojo.connect(content, "onClose", this, function(){
-			myDialog.hide();
 			dojo.disconnect(handle);
 			if (callback) { callback(); }
 		});

@@ -831,8 +831,16 @@ davinci.html.HTMLAttribute.prototype.getText = function(context) {
     if (this.noPersist && !context.includeNoPersist)
         return "";
     var s=this.name;
-    if (!this.noValue)
+    var bool = {checked: 1, selected: 1, disabled: 1, readonly: 1, multiple: 1, ismap: 1};
+    if (bool[this.name.toLowerCase()]) {
+    	if (this.value) {
+    		s += '="' + this.name + '"';
+    	} else {
+    		s = "";
+    	}
+    } else if (!this.noValue) {
         s=s+'="'+davinci.html.escapeXml(String(this.value))+'"';
+    }
     return s;
 };
 

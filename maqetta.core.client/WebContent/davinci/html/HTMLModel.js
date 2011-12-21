@@ -250,7 +250,7 @@ davinci.html.HTMLFile.prototype.hasStyleSheet = function (url) {
 	return false;
 };
 
-davinci.html.HTMLFile.prototype.addStyleSheet = function(url, content, dontLoad) {
+davinci.html.HTMLFile.prototype.addStyleSheet = function(url, content, dontLoad, beforeChild) {
     // create CSS File model
 
     if(!dontLoad){
@@ -284,7 +284,11 @@ davinci.html.HTMLFile.prototype.addStyleSheet = function(url, content, dontLoad)
     }
     var css = new davinci.html.CSSImport();
     css.url = url;
-    this._styleElem.addChild(css);
+    if(beforeChild){
+    	this._styleElem.insertBefore(css, beforeChild);
+    }else{
+    	this._styleElem.addChild(css);
+    }
     if(!dontLoad){ 
         css.load(true);
     }

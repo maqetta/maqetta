@@ -1,4 +1,5 @@
 /*******************************************************************************
+ * @license
  * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
@@ -10,55 +11,44 @@
  *		Silenio Quarti (IBM Corporation) - initial API and implementation
  ******************************************************************************/
 
-/*global window define */
+/*global define */
 
-/**
- * @namespace The global container for Orion APIs.
- */ 
-//var orion = orion || {};
-/**
- * @namespace The container for textview APIs.
- */ 
-orion.textview = orion.textview || {};
-
-/**
- * @class This object represents a decoration attached to a range of text. Annotations are added to a
- * <code>AnnotationModel</code> which is attached to a <code>TextModel</code>.
- * <p>
- * <b>See:</b><br/>
- * {@link orion.textview.AnnotationModel}<br/>
- * {@link orion.textview.Ruler}<br/>
- * </p>		 
- * @name orion.textview.Annotation
- * 
- * @property {String} type The annotation type (for example, orion.annotation.error).
- * @property {Number} start The start offset of the annotation in the text model.
- * @property {Number} end The end offset of the annotation in the text model.
- * @property {String} html The HTML displayed for the annotation.
- * @property {String} title The text description for the annotation.
- * @property {orion.textview.Style} style The style information for the annotation used in the annotations ruler and tooltips.
- * @property {orion.textview.Style} overviewStyle The style information for the annotation used in the overview ruler.
- * @property {orion.textview.Style} rangeStyle The style information for the annotation used in the text view to decorate a range of text.
- * @property {orion.textview.Style} lineStyle The style information for the annotation used in the text view to decorate a line of text.
- */
- 
-/**
- * Constructs a new folding annotation.
- * 
- * @param {orion.textview.ProjectionTextModel} projectionModel The projection text model.
- * @param {String} type The annotation type.
- * @param {Number} start The start offset of the annotation in the text model.
- * @param {Number} end The end offset of the annotation in the text model.
- * @param {String} expandedHTML The HTML displayed for this annotation when it is expanded.
- * @param {orion.textview.Style} expandedStyle The style information for the annotation when it is expanded.
- * @param {String} collapsedHTML The HTML displayed for this annotation when it is collapsed.
- * @param {orion.textview.Style} collapsedStyle The style information for the annotation when it is collapsed.
- * 
- * @class This object represents a folding annotation.
- * @name orion.textview.FoldingAnnotation
- */
-orion.textview.FoldingAnnotation = (function() {
-	/** @private */
+define("orion/textview/annotations", ['orion/textview/eventTarget'], function(mEventTarget) {
+	/**
+	 * @class This object represents a decoration attached to a range of text. Annotations are added to a
+	 * <code>AnnotationModel</code> which is attached to a <code>TextModel</code>.
+	 * <p>
+	 * <b>See:</b><br/>
+	 * {@link orion.textview.AnnotationModel}<br/>
+	 * {@link orion.textview.Ruler}<br/>
+	 * </p>		 
+	 * @name orion.textview.Annotation
+	 * 
+	 * @property {String} type The annotation type (for example, orion.annotation.error).
+	 * @property {Number} start The start offset of the annotation in the text model.
+	 * @property {Number} end The end offset of the annotation in the text model.
+	 * @property {String} html The HTML displayed for the annotation.
+	 * @property {String} title The text description for the annotation.
+	 * @property {orion.textview.Style} style The style information for the annotation used in the annotations ruler and tooltips.
+	 * @property {orion.textview.Style} overviewStyle The style information for the annotation used in the overview ruler.
+	 * @property {orion.textview.Style} rangeStyle The style information for the annotation used in the text view to decorate a range of text.
+	 * @property {orion.textview.Style} lineStyle The style information for the annotation used in the text view to decorate a line of text.
+	 */
+	/**
+	 * Constructs a new folding annotation.
+	 * 
+	 * @param {orion.textview.ProjectionTextModel} projectionModel The projection text model.
+	 * @param {String} type The annotation type.
+	 * @param {Number} start The start offset of the annotation in the text model.
+	 * @param {Number} end The end offset of the annotation in the text model.
+	 * @param {String} expandedHTML The HTML displayed for this annotation when it is expanded.
+	 * @param {orion.textview.Style} expandedStyle The style information for the annotation when it is expanded.
+	 * @param {String} collapsedHTML The HTML displayed for this annotation when it is collapsed.
+	 * @param {orion.textview.Style} collapsedStyle The style information for the annotation when it is collapsed.
+	 * 
+	 * @class This object represents a folding annotation.
+	 * @name orion.textview.FoldingAnnotation
+	 */
 	function FoldingAnnotation (projectionModel, type, start, end, expandedHTML, expandedStyle, collapsedHTML, collapsedStyle) {
 		this.type = type;
 		this.start = start;
@@ -100,30 +90,26 @@ orion.textview.FoldingAnnotation = (function() {
 		}
 	};
 	
-	return FoldingAnnotation;
-}());
-
-/**
- * Constructs an annotation model.
- * 
- * @param {textModel} textModel The text model.
- * 
- * @class This object manages annotations for a <code>TextModel</code>.
- * <p>
- * <b>See:</b><br/>
- * {@link orion.textview.Annotation}<br/>
- * {@link orion.textview.TextModel}<br/> 
- * </p>	
- * @name orion.textview.AnnotationModel
- */
-orion.textview.AnnotationModel = (function() {
-
-	/** @private */
+	/**
+	 * Constructs an annotation model.
+	 * 
+	 * @param {textModel} textModel The text model.
+	 * 
+	 * @class This object manages annotations for a <code>TextModel</code>.
+	 * <p>
+	 * <b>See:</b><br/>
+	 * {@link orion.textview.Annotation}<br/>
+	 * {@link orion.textview.TextModel}<br/> 
+	 * </p>	
+	 * @name orion.textview.AnnotationModel
+	 * @borrows orion.textview.EventTarget#addEventListener as #addEventListener
+	 * @borrows orion.textview.EventTarget#removeEventListener as #removeEventListener
+	 * @borrows orion.textview.EventTarget#dispatchEvent as #dispatchEvent
+	 */
 	function AnnotationModel(textModel) {
 		this._annotations = [];
-		this._listeners = [];
 		var self = this;
-		this._modelListener = {
+		this._listener = {
 			onChanged: function(modelChangedEvent) {
 				self._onChanged(modelChangedEvent);
 			}
@@ -132,32 +118,6 @@ orion.textview.AnnotationModel = (function() {
 	}
 
 	AnnotationModel.prototype = /** @lends orion.textview.AnnotationModel.prototype */ {
-		/**
-		 * Adds a listener to the model.
-		 * 
-		 * @param {Object} listener the listener to add.
-		 * @param {Function} [listener.onChanged] see {@link #onChanged}.
-		 * 
-		 * @see #removeListener
-		 */
-		addListener: function(listener) {
-			this._listeners.push(listener);
-		},
-		/**
-		 * Removes a listener from the model.
-		 * 
-		 * @param {Object} listener the listener to remove
-		 * 
-		 * @see #addListener
-		 */
-		removeListener: function(listener) {
-			for (var i = 0; i < this._listeners.length; i++) {
-				if (this._listeners[i] === listener) {
-					this._listeners.splice(i, 1);
-					return;
-				}
-			}
-		},
 		/**
 		 * Adds an annotation to the annotation model. 
 		 * <p>The annotation model listeners are notified of this change.</p>
@@ -172,6 +132,7 @@ orion.textview.AnnotationModel = (function() {
 			var index = this._binarySearch(annotations, annotation.start);
 			annotations.splice(index, 0, annotation);
 			var e = {
+				type: "Changed",
 				added: [annotation],
 				removed: [],
 				changed: []
@@ -207,20 +168,30 @@ orion.textview.AnnotationModel = (function() {
 		 * @return {orion.textview.AnnotationIterator} an annotation iterartor.
 		 */
 		getAnnotations: function(start, end) {
-			var annotations = this._annotations;
-			var startIndex = this._binarySearch(annotations, start, true);
+			var annotations = this._annotations, current;
+			//TODO binary search does not work for range intersection when there are overlaping ranges, need interval search tree for this
+			var i = 0;
+			var skip = function() {
+				while (i < annotations.length) {
+					var a =  annotations[i++];
+					if ((start === a.start) || (start > a.start ? start < a.end : a.start < end)) {
+						return a;
+					}
+					if (a.start >= end) {
+						break;
+					}
+				}
+				return null;
+			};
+			current = skip();
 			return {
 				next: function() {
-					if (startIndex < annotations.length) {
-						var annotation = annotations[startIndex++];
-						if (annotation.start < end) {
-							return annotation;
-						}
-					}
-					return null;
+					var result = current;
+					if (result) { current = skip(); }
+					return result;					
 				},
 				hasNext: function() {
-					return startIndex < annotations.length && annotations[startIndex].start < end;
+					return current !== null;
 				}
 			};
 		},
@@ -234,23 +205,15 @@ orion.textview.AnnotationModel = (function() {
 		 */
 		modifyAnnotation: function(annotation) {
 			if (!annotation) { return; }
-			var annotations = this._annotations;
-			var index = this._binarySearch(annotations, annotation.start);
+			var index = this._getAnnotationIndex(annotation);
+			if (index < 0) { return; }
 			var e = {
+				type: "Changed",
 				added: [],
 				removed: [],
-				changed: []
+				changed: [annotation]
 			};
-			while (index < annotations.length && annotations[index].start === annotation.start) {
-				if (annotations[index] === annotation) {
-					e.changed.push(annotation);
-					break;
-				}
-				index++;
-			}
-			if (e.changed.length > 0) {
-				this.onChanged(e);
-			}
+			this.onChanged(e);
 		},
 		/**
 		 * Notifies all listeners that the annotation model has changed.
@@ -261,12 +224,7 @@ orion.textview.AnnotationModel = (function() {
 		 * @param {ModelChangedEvent} textModelChangedEvent the text model changed event that trigger this change, can be null if the change was trigger by a method call (for example, {@link #addAnnotation}).
 		 */
 		onChanged: function(e) {
-			for (var i = 0; i < this._listeners.length; i++) {
-				var l = this._listeners[i]; 
-				if (l && l.onChanged) { 
-					l.onChanged(e);
-				}
-			}
+			return this.dispatchEvent(e);
 		},
 		/**
 		 * Removes all annotations of the given <code>type</code>. All annotations
@@ -294,6 +252,7 @@ orion.textview.AnnotationModel = (function() {
 				annotations = [];
 			}
 			var e = {
+				type: "Changed",
 				removed: removed,
 				added: [],
 				changed: []
@@ -309,13 +268,12 @@ orion.textview.AnnotationModel = (function() {
 		 * @see #addAnnotation
 		 */
 		removeAnnotation: function(annotation) {
-			var annotations = this._annotations;
-			var index = this._binarySearch(annotations, annotation.start);
-			if (!(0 <= index && index < annotations.length)) { return; }
-			if (annotations[index] !== annotation) { return; }
-			annotations.splice(index, 1);
+			if (!annotation) { return; }
+			var index = this._getAnnotationIndex(annotation);
+			if (index < 0) { return; }
 			var e = {
-				removed: [annotation],
+				type: "Changed",
+				removed: this._annotations.splice(index, 1),
 				added: [],
 				changed: []
 			};
@@ -332,23 +290,25 @@ orion.textview.AnnotationModel = (function() {
 		 * @see #removeAnnotation
 		 */
 		replaceAnnotations: function(remove, add) {
-			var annotations = this._annotations, i, index, annotation;
-			if (!add) { add = []; }
-			if (!remove) { remove = []; }
-			for (i = 0; i < remove.length; i++) {
-				annotation = remove[i];
-				index = this._binarySearch(annotations, annotation.start);
-				if (!(0 <= index && index < annotations.length)) { continue; }
-				if (annotations[index] !== annotation) { continue; }
-				annotations.splice(index, 1);
+			var annotations = this._annotations, i, index, annotation, removed = [];
+			if (remove) {
+				for (i = remove.length - 1; i >= 0; i--) {
+					annotation = remove[i];
+					index = this._getAnnotationIndex(annotation);
+					if (index < 0) { continue; }
+					annotations.splice(index, 1);
+					removed.splice(0, 0, annotation);
+				}
 			}
+			if (!add) { add = []; }
 			for (i = 0; i < add.length; i++) {
 				annotation = add[i];
 				index = this._binarySearch(annotations, annotation.start);
 				annotations.splice(index, 0, annotation);
 			}
 			var e = {
-				removed: remove,
+				type: "Changed",
+				removed: removed,
 				added: add,
 				changed: []
 			};
@@ -365,23 +325,20 @@ orion.textview.AnnotationModel = (function() {
 		 */
 		setTextModel: function(textModel) {
 			if (this._model) {
-				this._model.removeListener(this._modelListener);
+				this._model.removeEventListener("Changed", this._listener.onChanged);
 			}
 			this._model = textModel;
 			if (this._model) {
-				this._model.addListener(this._modelListener);
+				this._model.addEventListener("Changed", this._listener.onChanged);
 			}
 		},
 		/** @ignore */
-		_binarySearch: function (array, offset, inclusive) {
+		_binarySearch: function (array, offset) {
 			var high = array.length, low = -1, index;
 			while (high - low > 1) {
 				index = Math.floor((high + low) / 2);
 				if (offset <= array[index].start) {
 					high = index;
-				} else if (inclusive && offset < array[index].end) {
-					high = index;
-					break;
 				} else {
 					low = index;
 				}
@@ -389,66 +346,153 @@ orion.textview.AnnotationModel = (function() {
 			return high;
 		},
 		/** @ignore */
+		_getAnnotationIndex: function(annotation) {
+			var annotations = this._annotations;
+			var index = this._binarySearch(annotations, annotation.start);
+			while (index < annotations.length && annotations[index].start === annotation.start) {
+				if (annotations[index] === annotation) {
+					return index;
+				}
+				index++;
+			}
+			return -1;
+		},
+		/** @ignore */
 		_onChanged: function(modelChangedEvent) {
 			var start = modelChangedEvent.start;
 			var addedCharCount = modelChangedEvent.addedCharCount;
 			var removedCharCount = modelChangedEvent.removedCharCount;
 			var annotations = this._annotations, end = start + removedCharCount;
-			var startIndex = this._binarySearch(annotations, start, true);
+			//TODO binary search does not work for range intersection when there are overlaping ranges, need interval search tree for this
+			var startIndex = 0;
 			if (!(0 <= startIndex && startIndex < annotations.length)) { return; }
 			var e = {
+				type: "Changed",
 				added: [],
+				removed: [],
 				changed: [],
 				textModelChangedEvent: modelChangedEvent
 			};
 			var changeCount = addedCharCount - removedCharCount, i;
-			var endIndex = this._binarySearch(annotations, end, true);
-			for (i = endIndex; i < annotations.length; i++) {
+			for (i = startIndex; i < annotations.length; i++) {
 				var annotation = annotations[i];
-				if (annotation.start > start) {
+				if (annotation.start >= end) {
 					annotation.start += changeCount;
-				}
-				if (annotation.end > start) {
 					annotation.end += changeCount;
+					e.changed.push(annotation);
+				} else if (annotation.end <= start) {
+					//nothing
+				} else if (annotation.start < start && end < annotation.end) {
+					annotation.end += changeCount;
+					e.changed.push(annotation);
+				} else {
+					annotations.splice(i, 1);
+					e.removed.push(annotation);
+					i--;
 				}
-				e.changed.push(annotation);
 			}
-			e.removed = annotations.splice(startIndex, endIndex - startIndex);
-			this.onChanged(e);
+			if (e.added.length > 0 || e.removed.length > 0 || e.changed.length > 0) {
+				this.onChanged(e);
+			}
 		}
 	};
+	mEventTarget.EventTarget.addMixin(AnnotationModel.prototype);
 
-	return AnnotationModel;
-}());
-
-
-/** @ignore */
-orion.textview.AnnotationStyler = (function() {
-	/** @private */
+	/**
+	 * Constructs a new styler for annotations.
+	 * 
+	 * @param {orion.textview.TextView} view The styler view.
+	 * @param {orion.textview.AnnotationModel} view The styler annotation model.
+	 * 
+	 * @class This object represents a styler for annotation attached to a text view.
+	 * @name orion.textview.AnnotationStyler
+	 */
 	function AnnotationStyler (view, annotationModel) {
 		this._view = view;
 		this._annotationModel = annotationModel;
-		view.addEventListener("LineStyle", this, this._onLineStyle);
+		this._types = [];
 		var self = this;
-		this._annotationModelListener = {
+		this._listener = {
+			onDestroy: function(e) {
+				self._onDestroy(e);
+			},
+			onLineStyle: function(e) {
+				self._onLineStyle(e);
+			},
 			onChanged: function(e) {
 				self._onAnnotationModelChanged(e);
 			}
 		};
-		annotationModel.addListener(this._annotationModelListener);
+		view.addEventListener("Destroy", this._listener.onDestroy);
+		view.addEventListener("LineStyle", this._listener.onLineStyle);
+		annotationModel.addEventListener("Changed", this._listener.onChanged);
 	}
 	AnnotationStyler.prototype = /** @lends orion.textview.AnnotationStyler.prototype */ {
+		/**
+		 * Adds an annotation type to the receiver.
+		 * <p>
+		 * Only annotations of the specified types will be shown by
+		 * this receiver.
+		 * </p>
+		 *
+		 * @param type {Object} the annotation type to be shown
+		 * 
+		 * @see #removeAnnotationType
+		 * @see #isAnnotationTypeVisible
+		 */
+		addAnnotationType: function(type) {
+			this._types.push(type);
+		},
+		/**
+		 * Destroys the styler. 
+		 * <p>
+		 * Removes all listeners added by this styler.
+		 * </p>
+		 */
 		destroy: function() {
 			var view = this._view;
 			if (view) {
-				view.removeEventListener("Destroy", this, this._onDestroy);
-				view.removeEventListener("LineStyle", this, this._onLineStyle);
+				view.removeEventListener("Destroy", this._listener.onDestroy);
+				view.removeEventListener("LineStyle", this._listener.onLineStyle);
 				this.view = null;
 			}
 			var annotationModel = this._annotationModel;
 			if (annotationModel) {
-				annotationModel.removeListener(this._annotationModelListener);
+				annotationModel.removeEventListener("Changed", this._listener.onChanged);
 				annotationModel = null;
+			}
+		},
+		/**
+		 * Returns whether the receiver shows annotations of the specified type.
+		 *
+		 * @param {Object} type the annotation type 
+		 * @returns {Boolean} whether the specified annotation type is shown
+		 * 
+		 * @see #addAnnotationType
+		 * @see #removeAnnotationType
+		 */
+		isAnnotationTypeVisible: function(type) {
+			for (var i = 0; i < this._types.length; i++) {
+				if (this._types[i] === type) {
+					return true;
+				}
+			}
+			return false;
+		},
+		/**
+		 * Removes an annotation type from the receiver.
+		 *
+		 * @param {Object} type the annotation type to be removed
+		 * 
+		 * @see #addAnnotationType
+		 * @see #isAnnotationTypeVisible
+		 */
+		removeAnnotationType: function(type) {
+			for (var i = 0; i < this._types.length; i++) {
+				if (this._types[i] === type) {
+					this._types.splice(i, 1);
+					break;
+				}
 			}
 		},
 		_mergeStyle: function(result, style) {
@@ -480,6 +524,7 @@ orion.textview.AnnotationStyler = (function() {
 			return result;
 		},
 		_mergeStyleRanges: function(ranges, styleRange) {
+			if (!ranges) { return; }
 			for (var i=0; i<ranges.length; i++) {
 				var range = ranges[i];
 				if (styleRange.end <= range.start) { break; }
@@ -513,10 +558,11 @@ orion.textview.AnnotationStyler = (function() {
 			}
 			var view = this._view;
 			if (!view) { return; }
+			var self = this;
 			var model = view.getModel();
 			function redraw(changes) {
 				for (var i = 0; i < changes.length; i++) {
-					if (!changes[i].rangeStyle) { continue; }
+					if (!self.isAnnotationTypeVisible(changes[i].type)) { continue; }
 					var start = changes[i].start;
 					var end = changes[i].end;
 					if (model.getBaseModel) {
@@ -548,6 +594,7 @@ orion.textview.AnnotationStyler = (function() {
 			var annotations = annotationModel.getAnnotations(start, end);
 			while (annotations.hasNext()) {
 				var annotation = annotations.next();
+				if (!this.isAnnotationTypeVisible(annotation.type)) { continue; }
 				if (annotation.rangeStyle) {
 					var annotationStart = annotation.start;
 					var annotationEnd = annotation.end;
@@ -564,11 +611,10 @@ orion.textview.AnnotationStyler = (function() {
 			}
 		}
 	};
-	return AnnotationStyler;
-}());
-
-if (typeof window !== "undefined" && typeof window.define !== "undefined") {
-	define([], function() {
-		return orion.textview;
-	});
-}
+	
+	return {
+		FoldingAnnotation: FoldingAnnotation,
+		AnnotationModel: AnnotationModel,
+		AnnotationStyler: AnnotationStyler
+	};
+});

@@ -1,4 +1,5 @@
 /*******************************************************************************
+ * @license
  * Copyright (c) 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
@@ -8,17 +9,14 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-/*global orion:true*/
+/*global define */
 
-//var orion = orion || {};
-orion.editor = orion.editor || {};
+define("orion/editor/webContentAssist", [], function() {
 
-/**
- * @name orion.contentAssist.CssContentAssistProvider
- * @class Provides content assist for CSS keywords.
- */
-orion.editor.CssContentAssistProvider = (function() {
-	/** @private */
+	/**
+	 * @name orion.contentAssist.CssContentAssistProvider
+	 * @class Provides content assist for CSS keywords.
+	 */
 	function CssContentAssistProvider() {
 	}
 	CssContentAssistProvider.prototype = /** @lends orion.editor.CssContentAssistProvider.prototype */ {
@@ -40,15 +38,11 @@ orion.editor.CssContentAssistProvider = (function() {
 					"top", "vertical-align", "visibility", "width", "z-index" ];
 		}
 	};
-	return CssContentAssistProvider;
-}());
 
-/**
- * @name orion.editor.JavaScriptContentAssistProvider
- * @class Provides content assist for JavaScript keywords.
- */
-orion.editor.JavaScriptContentAssistProvider = (function() {
-	/** @private */
+	/**
+	 * @name orion.editor.JavaScriptContentAssistProvider
+	 * @class Provides content assist for JavaScript keywords.
+	 */
 	function JavaScriptContentAssistProvider() {
 	}
 	JavaScriptContentAssistProvider.prototype = /** @lends orion.editor.JavaScriptContentAssistProvider.prototype */ {
@@ -58,12 +52,9 @@ orion.editor.JavaScriptContentAssistProvider = (function() {
 					"this", "throw", "try", "typeof", "var", "void", "while", "with" ];
 		}
 	};
-	return JavaScriptContentAssistProvider;
-}());
-
-if (typeof window !== "undefined" && typeof window.define !== "undefined") {
-	define([], function() {
-		return orion.editor;
-	});
-}
-
+	
+	return {
+		CssContentAssistProvider: CssContentAssistProvider,
+		JavaScriptContentAssistProvider: JavaScriptContentAssistProvider
+	};
+});

@@ -1,4 +1,5 @@
 /*******************************************************************************
+ * @license
  * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
@@ -8,19 +9,10 @@
  * Contributors: IBM Corporation - initial API and implementation
  ******************************************************************************/
 
-/*global window define setTimeout clearTimeout setInterval clearInterval Node */
+/*global define setTimeout clearTimeout setInterval clearInterval Node */
 
-/**
- * @namespace The global container for Orion APIs.
- */ 
-//var orion = orion || {};
-/**
- * @namespace The container for textview APIs.
- */ 
-orion.textview = orion.textview || {};
+define("orion/textview/tooltip", ['orion/textview/textView', 'orion/textview/textModel', 'orion/textview/projectionTextModel'], function(mTextView, mTextModel, mProjectionTextModel) {
 
-/** @ignore */
-orion.textview.Tooltip = (function() {
 	/** @private */
 	function Tooltip (view) {
 		this._view = view;
@@ -117,14 +109,15 @@ orion.textview.Tooltip = (function() {
 				(contentsDiv = this._htmlParent).innerHTML = contents;
 			} else if (contents instanceof Node) {
 				(contentsDiv = this._htmlParent).appendChild(contents);
-			} else if (contents instanceof orion.textview.ProjectionTextModel) {
+			} else if (contents instanceof mProjectionTextModel.ProjectionTextModel) {
 				if (!this._contentsView) {
-					this._emptyModel = new orion.textview.TextModel("");
+					this._emptyModel = new mTextModel.TextModel("");
 					//TODO need hook into setup.js (or editor.js) to create a text view (and styler)
-					var newView = this._contentsView = new orion.textview.TextView({
+					var newView = this._contentsView = new mTextView.TextView({
 						model: this._emptyModel,
 						parent: this._viewParent,
 						tabSize: 4,
+						sync: true,
 						stylesheet: ["/orion/textview/tooltip.css", "/orion/textview/rulers.css",
 							"/examples/textview/textstyler.css", "/css/default-theme.css"]
 					});
@@ -132,7 +125,12 @@ orion.textview.Tooltip = (function() {
 					newView._clientDiv.contentEditable = false;
 					//TODO need to find a better way of sharing the styler for multiple views
 					var view = this._view;
-					newView.addEventListener("LineStyle", view, view.onLineStyle);
+					var listener = {
+						onLineStyle: function(e) {
+							view.onLineStyle(e);
+						}
+					};
+					newView.addEventListener("LineStyle", listener.onLineStyle);
 				}
 				var contentsView = this._contentsView;
 				contentsView.setModel(contents);
@@ -194,16 +192,16 @@ orion.textview.Tooltip = (function() {
 				annotation = annotations[0];
 				if (annotation.title) {
 					title = annotation.title.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-					return annotation.html + "&nbsp;" + title;
+					return "<div>" + annotation.html + "&nbsp;<span style='vertical-align:mddle;'>" + title + "</span><div>";
 				} else {
-					var newModel = new orion.textview.ProjectionTextModel(baseModel);
+					var newModel = new mProjectionTextModel.ProjectionTextModel(baseModel);
 					var lineStart = baseModel.getLineStart(baseModel.getLineAtOffset(annotation.start));
 					newModel.addProjection({start: annotation.end, end: newModel.getCharCount()});
 					newModel.addProjection({start: 0, end: lineStart});
 					return newModel;
 				}
 			} else {
-				var tooltipHTML = "<em>Multiple annotations:</em><br>";
+				var tooltipHTML = "<div><em>Multiple annotations:</em></div>";
 				for (var i = 0; i < annotations.length; i++) {
 					annotation = annotations[i];
 					title = annotation.title;
@@ -211,7 +209,7 @@ orion.textview.Tooltip = (function() {
 						title = getText(annotation.start, annotation.end);
 					}
 					title = title.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-					tooltipHTML += annotation.html + "&nbsp;" + title + "<br>";
+					tooltipHTML += "<div>" + annotation.html + "&nbsp;<span style='vertical-align:mddle;'>" + title + "</span><div>";
 				}
 				return tooltipHTML;
 			}
@@ -236,11 +234,5 @@ orion.textview.Tooltip = (function() {
 			return value || defaultValue;
 		}
 	};
-	return Tooltip;
-}());
-
-if (typeof window !== "undefined" && typeof window.define !== "undefined") {
-	define(["orion/textview/projectionTextModel"], function() {
-		return orion.textview;
-	});
-}
+	return {Tooltip: Tooltip};
+});

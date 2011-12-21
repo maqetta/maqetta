@@ -1,4 +1,5 @@
 /*******************************************************************************
+ * @license
  * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
@@ -8,41 +9,50 @@
  * Contributors: IBM Corporation - initial API and implementation
  ******************************************************************************/
  
- /*global define window orion:true eclipse:true */
+ /*global define window */
  /*jslint maxerr:150 browser:true devel:true laxbreak:true regexp:false*/
 
-//var orion = orion || {};
-orion.editor = orion.editor || {};	
+define("orion/editor/editor", ['orion/textview/keyBinding', 'orion/textview/eventTarget', 'orion/textview/tooltip'], function(mKeyBinding, mEventTarget, mTooltip) {
 
-/**
- * @name orion.editor.Editor
- * @class An <code>Editor</code> is a user interface for editing text that provides additional features over the basic {@link orion.textview.TextView}.
- * Some of <code>Editor</code>'s features include:
- * <ul>
- * <li>Additional actions and key bindings for editing text</li>
- * <li>Content assist</li>
- * <li>Find and Incremental Find</li>
- * <li>Rulers for displaying line numbers and annotations</li>
- * <li>Status reporting</li>
- * </ul>
- * 
- * @description Creates a new Editor with the given options.
- * @param {Object} options Options controlling the features of this Editor.
- * @param {Object} options.annotationFactory
- * @param {Object} options.contentAssistFactory
- * @param {Object} options.domNode
- * @param {Object} options.keyBindingFactory
- * @param {Object} options.lineNumberRulerFactory
- * @param {Object} options.statusReporter
- * @param {Object} options.syntaxHighlightProviders
- * @param {Object} options.textViewFactory
- * @param {Object} options.undoStackFactory
- */
-orion.editor.Editor = (function() {
-	/** @private */
+	/**
+	 * @name orion.editor.util
+	 * @class Basic helper functions used by <code>orion.editor</code>.
+	 */
+	var util;
+
+	/**
+	 * @name orion.editor.Editor
+	 * @class An <code>Editor</code> is a user interface for editing text that provides additional features over the basic {@link orion.textview.TextView}.
+	 * Some of <code>Editor</code>'s features include:
+	 * <ul>
+	 * <li>Additional actions and key bindings for editing text</li>
+	 * <li>Content assist</li>
+	 * <li>Find and Incremental Find</li>
+	 * <li>Rulers for displaying line numbers and annotations</li>
+	 * <li>Status reporting</li>
+	 * </ul>
+	 * 
+	 * @description Creates a new Editor with the given options.
+	 * @param {Object} options Options controlling the features of this Editor.
+	 * @param {Object} options.annotationFactory
+	 * @param {Object} options.contentAssistFactory
+	 * @param {Object} options.domNode
+	 * @param {Object} options.keyBindingFactory
+	 * @param {Object} options.lineNumberRulerFactory
+	 * @param {Object} options.statusReporter
+	 * @param {Object} options.syntaxHighlightProviders
+	 * @param {Object} options.textViewFactory
+	 * @param {Object} options.undoStackFactory
+	 * @param {Object} options.textDNDFactory
+	 *
+	 * @borrows orion.textview.EventTarget#addEventListener as #addEventListener
+	 * @borrows orion.textview.EventTarget#removeEventListener as #removeEventListener
+	 * @borrows orion.textview.EventTarget#dispatchEvent as #dispatchEvent
+	 */
 	function Editor(options) {
 		this._textViewFactory = options.textViewFactory;
 		this._undoStackFactory = options.undoStackFactory;
+		this._textDNDFactory = options.textDNDFactory;
 		this._annotationFactory = options.annotationFactory;
 		this._foldingRulerFactory = options.foldingRulerFactory;
 		this._lineNumberRulerFactory = options.lineNumberRulerFactory;
@@ -65,6 +75,10 @@ orion.editor.Editor = (function() {
 		warningType: "orion.annotation.warning",
 		taskType: "orion.annotation.task",
 		foldingType: "orion.annotation.folding",
+		currentBracketType: "orion.annotation.currentBracket",
+		matchingBracketType: "orion.annotation.matchingBracket",
+		currentLineType: "orion.annotation.currentLine",
+		highlightErrorType: "orion.annotation.highlightError",
 		
 		/**
 		 * Returns the underlying <code>TextView</code> used by this editor. 
@@ -77,11 +91,11 @@ orion.editor.Editor = (function() {
 		/**
 		 * @private
 		 */
-		reportStatus: function(message, isError, isProgress) {
+		reportStatus: function(message, type) {
 			if (this._statusReporter) {
-				this._statusReporter(message, isError, isProgress);
+				this._statusReporter(message, type);
 			} else {
-				window.alert(isError ? "ERROR: " + message : message);
+				window.alert(type === "error" ? "ERROR: " + message : message);
 			}
 		},
 		
@@ -228,7 +242,7 @@ orion.editor.Editor = (function() {
 			if (linePixel < topPixel || linePixel > bottomPixel) {
 				var height = bottomPixel - topPixel;
 				var target = Math.max(0, linePixel- Math.floor((linePixel<topPixel?3:1)*height / 4));
-				var a = new orion.editor.util.Animation({
+				var a = new util.Animation({
 					node: textView,
 					duration: 300,
 					curve: [topPixel, target],
@@ -259,14 +273,47 @@ orion.editor.Editor = (function() {
 		isDirty : function() {
 			return this._dirty;
 		},
+		/**
+		 * Sets whether the editor is dirty.
+		 *
+		 * @param {Boollean} dirty
+		 */
+		setDirty: function(dirty) {
+			if (this._dirty === dirty) { return; }
+			this._dirty = dirty;
+			this.onDirtyChanged({type: "DirtyChanged"});
+		},
 		/** @private */
 		checkDirty : function() {
-			var dirty = !this._undoStack.isClean();
-			if (this._dirty === dirty) {
-				return;
-			}
-			this.onDirtyChange(dirty);
+			this.setDirty(!this._undoStack.isClean());
 		},
+		
+		/** @private */
+		_getTooltipInfo: function(x, y) {
+			var textView = this._textView;			
+			var annotationModel = this.getAnnotationModel();
+			if (!annotationModel) { return null; }
+			var annotationStyler = this._annotationStyler;
+			if (!annotationStyler) { return null; }
+			var offset = textView.getOffsetAtLocation(x, y);
+			if (offset === -1) { return null; }
+			var iter = annotationModel.getAnnotations(offset, offset + 1);
+			var annotation, annotations = [];
+			while (iter.hasNext()) {
+				annotation = iter.next();
+				if (!annotationStyler.isAnnotationTypeVisible(annotation.type) || !annotation.rangeStyle) { continue; }
+				annotations.push(annotation);
+			}
+			if (annotations.length === 0) { return null; }
+			var pt = textView.convert({x: x, y: y}, "document", "page");
+			var info = {
+				contents: annotations,
+				anchor: "left",
+				x: pt.x + 10,
+				y: pt.y + 20
+			};
+			return info;
+		}, 
 		
 		/**
 		 * 
@@ -350,18 +397,40 @@ orion.editor.Editor = (function() {
 			}
 		},
 		
-		/**
-		 * @private
-		 * @static
-		 * @param {String} Input string
-		 * @returns {pattern:String, flags:String} if str looks like a RegExp, or null otherwise
-		 */
-		parseRegExp: function(str) {
-			var regexp = /^\s*\/(.+)\/([gim]{0,3})\s*$/.exec(str);
-			if (regexp) {
-				return {pattern: regexp[1], flags: regexp[2]};
+		/** @private */
+		_highlightCurrentLine: function(newSelection, oldSelection) {
+			var annotationModel = this._annotationModel;
+			if (!annotationModel) { return; }
+			var textView = this._textView;	
+			var model = textView.getModel();
+			var oldLineIndex = oldSelection ? model.getLineAtOffset(oldSelection.start) : -1;
+			var lineIndex = model.getLineAtOffset(newSelection.start);
+			var newEmpty = newSelection.start === newSelection.end;
+			var oldEmpty = !oldSelection || oldSelection.start === oldSelection.end;
+			if (!(oldLineIndex === lineIndex && oldEmpty && newEmpty)) {
+				var remove = this._currentLineAnnotation ? [this._currentLineAnnotation] : null;
+				this._currentLineAnnotation = null;
+				var add;
+				if (newEmpty) {
+					var start = model.getLineStart(lineIndex);
+					var end = model.getLineEnd(lineIndex);
+					if (model.getBaseModel) {
+						start = model.mapOffset(start);
+						end = model.mapOffset(end);
+					}
+					this._currentLineAnnotation = {
+						start: start,
+						end: end,
+						type: this.currentLineType,
+						title: "Current Line",
+						html: "<div class='annotationHTML currentLine'></div>",
+						overviewStyle: {styleClass: "annotationOverview currentLine"},
+						lineStyle: {styleClass: "annotationLine currentLine"}
+					};
+					add = [this._currentLineAnnotation];
+				}
+				annotationModel.replaceAnnotations(remove, add);
 			}
-			return null;
 		},
 		
 		highlightAnnotations: function() {
@@ -371,6 +440,12 @@ orion.editor.Editor = (function() {
 			}
 			if (this._annotationFactory) {
 				this._annotationStyler = this._annotationFactory.createAnnotationStyler(this.getTextView(), this._annotationModel);
+				this._annotationStyler.addAnnotationType(this.errorType);
+				this._annotationStyler.addAnnotationType(this.warningType);
+				this._annotationStyler.addAnnotationType(this.matchingBracketType);
+				this._annotationStyler.addAnnotationType(this.currentBracketType);
+				this._annotationStyler.addAnnotationType(this.currentLineType);
+				this._annotationStyler.addAnnotationType(this.highlightErrorType);
 			}
 		},
 		
@@ -383,12 +458,50 @@ orion.editor.Editor = (function() {
 			if (this._undoStackFactory) {
 				this._undoStack = this._undoStackFactory.createUndoStack(this);
 			}
+			if (this._textDNDFactory) {
+				this._textDND = this._textDNDFactory.createTextDND(this, this._undoStack);
+			}
 			if (this._contentAssistFactory) {
 				this._contentAssist = this._contentAssistFactory(this);
 				this._keyModes.push(this._contentAssist);
 			}
 			
 			var editor = this, textView = this._textView;
+			
+			var self = this;
+			this._listener = {
+				onModelChanged: function(e) {
+					self.checkDirty();
+				},
+				onMouseOver: function(e) {
+					self._listener.onMouseMove(e);
+				},
+				onMouseMove: function(e) {
+					var tooltip = mTooltip.Tooltip.getTooltip(textView);
+					if (!tooltip) { return; }
+					tooltip.setTarget({
+						x: e.x,
+						y: e.y,
+						getTooltipInfo: function() {
+							return self._getTooltipInfo(this.x, this.y);
+						}
+					});
+				},
+				onMouseOut: function(lineIndex, e) {
+					var tooltip = mTooltip.Tooltip.getTooltip(textView);
+					if (!tooltip) { return; }
+					tooltip.setTarget(null);
+				},
+				onSelection: function(e) {
+					self._updateCursorStatus();
+					self._highlightCurrentLine(e.newValue, e.oldValue);
+				}
+			};
+			textView.addEventListener("ModelChanged", this._listener.onModelChanged);
+			textView.addEventListener("Selection", this._listener.onSelection);
+			textView.addEventListener("MouseOver", this._listener.onMouseOver);
+			textView.addEventListener("MouseOut", this._listener.onMouseOut);
+			textView.addEventListener("MouseMove", this._listener.onMouseMove);
 						
 			// Set up keybindings
 			if (this._keyBindingFactory) {
@@ -396,14 +509,16 @@ orion.editor.Editor = (function() {
 			}
 			
 			// Set keybindings for keys that apply to different modes
-			textView.setKeyBinding(new orion.textview.KeyBinding(27), "Cancel Current Mode");
+			textView.setKeyBinding(new mKeyBinding.KeyBinding(27), "Cancel Current Mode");
 			textView.setAction("Cancel Current Mode", function() {
+				// loop through all modes in case multiple modes are active.  Keep track of whether we processed the key.
+				var keyUsed = false;
 				for (var i=0; i<this._keyModes.length; i++) {
 					if (this._keyModes[i].isActive()) {
-						return this._keyModes[i].cancel();
+						keyUsed = this._keyModes[i].cancel() || keyUsed;
 					}
 				}
-				return false;
+				return keyUsed;
 			}.bind(this));
 
 			textView.setAction("lineUp", function() {
@@ -432,29 +547,6 @@ orion.editor.Editor = (function() {
 				return false;
 			}.bind(this));
 						
-			/** @this {orion.editor.Editor} */
-			function updateCursorStatus() {
-				var model = this.getModel();
-				var caretOffset = this.getCaretOffset();
-				var lineIndex = model.getLineAtOffset(caretOffset);
-				var lineStart = model.getLineStart(lineIndex);
-				var offsetInLine = caretOffset - lineStart;
-				// If we are in a mode and it owns status reporting, we bail out from reporting the cursor position.
-				for (var i=0; i<this._keyModes.length; i++) {
-					var mode = this._keyModes[i];
-					if (mode.isActive() && mode.isStatusActive && mode.isStatusActive()) {
-						return;
-					}
-				}
-				this.reportStatus("Line " + (lineIndex + 1) + " : Col " + (offsetInLine + 1));
-			}
-			
-			// Listener for dirty state
-			textView.addEventListener("ModelChanged", this, this.checkDirty);
-					
-			//Adding selection changed listener
-			textView.addEventListener("Selection", this, updateCursorStatus);
-			
 			// Create rulers
 			if (this._annotationFactory) {
 				var textModel = textView.getModel();
@@ -492,6 +584,9 @@ orion.editor.Editor = (function() {
 				this._overviewRuler.addAnnotationType(this.errorType);
 				this._overviewRuler.addAnnotationType(this.warningType);
 				this._overviewRuler.addAnnotationType(this.taskType);
+				this._overviewRuler.addAnnotationType(this.matchingBracketType);
+				this._overviewRuler.addAnnotationType(this.currentBracketType);
+				this._overviewRuler.addAnnotationType(this.currentLineType);
 				textView.addRuler(this._annotationRuler);
 				textView.addRuler(this._overviewRuler);
 			}
@@ -502,6 +597,28 @@ orion.editor.Editor = (function() {
 			}
 			
 			this._updateFoldingRuler();
+			
+			var textViewInstalledEvent = {
+				type: "TextViewInstalled",
+				textView: textView
+			};
+			this.dispatchEvent(textViewInstalledEvent);
+		},
+		
+		_updateCursorStatus: function() {
+			var model = this.getModel();
+			var caretOffset = this.getCaretOffset();
+			var lineIndex = model.getLineAtOffset(caretOffset);
+			var lineStart = model.getLineStart(lineIndex);
+			var offsetInLine = caretOffset - lineStart;
+			// If we are in a mode and it owns status reporting, we bail out from reporting the cursor position.
+			for (var i=0; i<this._keyModes.length; i++) {
+				var mode = this._keyModes[i];
+				if (mode.isActive() && mode.isStatusActive && mode.isStatusActive()) {
+					return;
+				}
+			}
+			this.reportStatus("Line " + (lineIndex + 1) + " : Col " + (offsetInLine + 1));
 		},
 		
 		showProblems: function(problems) {
@@ -574,33 +691,50 @@ orion.editor.Editor = (function() {
 		},
 		
 		/**
-		 * Called when the editor's contents have changed.
+		 * Sets the editor's contents.
+		 *
 		 * @param {String} title
 		 * @param {String} message
 		 * @param {String} contents
 		 * @param {Boolean} contentsSaved
 		 */
-		onInputChange : function (title, message, contents, contentsSaved) {
+		setInput: function(title, message, contents, contentsSaved) {
 			this._title = title;
-			if (contentsSaved && this._textView) {
-				// don't reset undo stack on save, just mark it clean so that we don't lose the undo past the save
-				this._undoStack.markClean();
-				this.checkDirty();
-				return;
-			}
 			if (this._textView) {
-				if (message) {
-					this._textView.setText(message);
+				if (contentsSaved) {
+					// don't reset undo stack on save, just mark it clean so that we don't lose the undo past the save
+					this._undoStack.markClean();
+					this.checkDirty();
 				} else {
-					if (contents !== null && contents !== undefined) {
-						this._textView.setText(contents);
-						this._textView.getModel().setLineDelimiter("auto");
+					if (message) {
+						this._textView.setText(message);
+					} else {
+						if (contents !== null && contents !== undefined) {
+							this._textView.setText(contents);
+							this._textView.getModel().setLineDelimiter("auto");
+							this._highlightCurrentLine(this._textView.getSelection());
+						}
 					}
+					this._undoStack.reset();
+					this.checkDirty();
+					this._textView.focus();
 				}
-				this._undoStack.reset();
-				this.checkDirty();
-				this._textView.focus();
 			}
+			this.onInputChanged({
+				type: "InputChanged",
+				title: title,
+				message: message,
+				contents: contents,
+				contentsSaved: contentsSaved
+			});
+		},
+		
+		/**
+		 * Called when the editor's contents have changed.
+		 * @param {Event} inputChangedEvent
+		 */
+		onInputChanged: function (inputChangedEvent) {
+			return this.dispatchEvent(inputChangedEvent);
 		},
 		/**
 		 * Reveals a line in the editor, and optionally selects a portion of the line.
@@ -633,131 +767,108 @@ orion.editor.Editor = (function() {
 		},
 		
 		/**
-		 * Called when the dirty state of the editor is changing.
-		 * @param {Boolean} isDirty
+		 * Called when the dirty state of the editor changes.
+		 * @param {Event} dirtyChangedEvent
 		 */
-		onDirtyChange: function(isDirty) {
-			this._dirty = isDirty;
+		onDirtyChanged: function(dirtyChangedEvent) {
+			return this.dispatchEvent(dirtyChangedEvent);
 		},
 		
 		getTitle: function() {
 			return this._title;
 		}
 	};
-	return Editor;
-}());
+	mEventTarget.EventTarget.addMixin(Editor.prototype);
 
-/**
- * @name orion.editor.util
- * @class Basic helper functions used by <code>orion.editor</code>.
- */
-orion.editor.util = {
 	/**
-	 * Event handling helper. Similar to <code>dojo.connect</code>.
-	 * Differences: doesn't return a handle, doesn't support the <code>dontFix</code> parameter.
-	 * @deprecated Once Bug 349957 is fixed, this function should be deleted.
+	 * @name orion.editor.util
+	 * @class Basic helper functions used by <code>orion.editor</code>.
 	 */
-	connect: function(/**Object*/ obj, /**String*/ event, /**Object*/ context, /**String|Function*/ method) {
-		var oldFunction = obj[event];
-		obj[event] = function() {
-			var listenerContext = context;
-			if (context === null || typeof(context) === "undefined") {
-				listenerContext = obj;
-			}
-			var listener = (typeof(method) === "string") ? context[method] : method;
-			// call old, then invoke listener
-			if (typeof(oldFunction) === "function") {
-				oldFunction.apply(obj, arguments);
-			}
-			listener.apply(listenerContext, arguments);
-		};
-	},
-	
-	/**
-	 * @class
-	 * @private
-	 * @name orion.editor.Animation
-	 * @description Creates an animation.
-	 * @param {Object} options Options controlling the animation.
-	 * @param {Array} options.curve Array of 2 values giving the start and end points for the animation.
-	 * @param {Number} [options.duration=350] Duration of the animation, in milliseconds.
-	 * @param {Function} [options.easing]
-	 * @param {Function} [options.onAnimate]
-	 * @param {Function} [options.onEnd]
-	 * @param {Number} [options.rate=20] The time between frames, in milliseconds.
-	 */
-	Animation: (function() {
-		function Animation(options) {
-			this.options = options;
-		}
+	util = {
 		/**
-		 * Plays this animation.
-		 * @methodOf orion.editor.Animation.prototype
-		 * @name play
+		 * @class
+		 * @private
+		 * @name orion.editor.Animation
+		 * @description Creates an animation.
+		 * @param {Object} options Options controlling the animation.
+		 * @param {Array} options.curve Array of 2 values giving the start and end points for the animation.
+		 * @param {Number} [options.duration=350] Duration of the animation, in milliseconds.
+		 * @param {Function} [options.easing]
+		 * @param {Function} [options.onAnimate]
+		 * @param {Function} [options.onEnd]
+		 * @param {Number} [options.rate=20] The time between frames, in milliseconds.
 		 */
-		Animation.prototype.play = function() {
-			var duration = (typeof this.options.duration === "number") ? this.options.duration : 350,
-			    rate = (typeof this.options.rate === "number") ? this.options.rate : 20,
-			    easing = this.options.easing || this.defaultEasing,
-			    onAnimate = this.options.onAnimate || function() {},
-			    onEnd = this.options.onEnd || function () {},
-			    start = this.options.curve[0],
-			    end = this.options.curve[1],
-			    range = (end - start);
-			var i = 0,
-			    propertyValue,
-			    interval,
-			    startedAt = -1;
-			
-			function onFrame() {
-				startedAt = (startedAt === -1) ? new Date().getTime() : startedAt;
-				var now = new Date().getTime(),
-				    percentDone = (now - startedAt) / duration;
-				if (percentDone < 1) {
-					var eased = easing(percentDone);
-					propertyValue = start + (eased * range);
-					onAnimate(propertyValue);
-				} else {
-					clearInterval(interval);
-					onEnd();
-				}
+		Animation: (function() {
+			function Animation(options) {
+				this.options = options;
 			}
-			interval = setInterval(onFrame, rate);
-		};
-		Animation.prototype.defaultEasing = function(x) {
-			return Math.sin(x * (Math.PI / 2));
-		};
-		return Animation;
-	}()),
-	
-	/**
-	 * @private
-	 * @param context Value to be used as the returned function's <code>this</code> value.
-	 * @param [arg1, arg2, ...] Fixed argument values that will prepend any arguments passed to the returned function when it is invoked.
-	 * @returns {Function} A function that always executes this function in the given <code>context</code>.
-	 */
-	bind: function(context) {
-		var fn = this,
-		    fixed = Array.prototype.slice.call(arguments, 1);
-		if (fixed.length) {
+			/**
+			 * Plays this animation.
+			 * @methodOf orion.editor.Animation.prototype
+			 * @name play
+			 */
+			Animation.prototype.play = function() {
+				var duration = (typeof this.options.duration === "number") ? this.options.duration : 350,
+				    rate = (typeof this.options.rate === "number") ? this.options.rate : 20,
+				    easing = this.options.easing || this.defaultEasing,
+				    onAnimate = this.options.onAnimate || function() {},
+				    onEnd = this.options.onEnd || function () {},
+				    start = this.options.curve[0],
+				    end = this.options.curve[1],
+				    range = (end - start);
+				var propertyValue,
+				    interval,
+				    startedAt = -1;
+				
+				function onFrame() {
+					startedAt = (startedAt === -1) ? new Date().getTime() : startedAt;
+					var now = new Date().getTime(),
+					    percentDone = (now - startedAt) / duration;
+					if (percentDone < 1) {
+						var eased = easing(percentDone);
+						propertyValue = start + (eased * range);
+						onAnimate(propertyValue);
+					} else {
+						clearInterval(interval);
+						onEnd();
+					}
+				}
+				interval = setInterval(onFrame, rate);
+			};
+			Animation.prototype.defaultEasing = function(x) {
+				return Math.sin(x * (Math.PI / 2));
+			};
+			return Animation;
+		}()),
+		
+		/**
+		 * @private
+		 * @param context Value to be used as the returned function's <code>this</code> value.
+		 * @param [arg1, arg2, ...] Fixed argument values that will prepend any arguments passed to the returned function when it is invoked.
+		 * @returns {Function} A function that always executes this function in the given <code>context</code>.
+		 */
+		bind: function(context) {
+			var fn = this,
+			    fixed = Array.prototype.slice.call(arguments, 1);
+			if (fixed.length) {
+				return function() {
+					return arguments.length
+						? fn.apply(context, fixed.concat(Array.prototype.slice.call(arguments)))
+						: fn.apply(context, fixed);
+				};
+			}
 			return function() {
-				return arguments.length
-					? fn.apply(context, fixed.concat(Array.prototype.slice.call(arguments)))
-					: fn.apply(context, fixed);
+				return arguments.length ? fn.apply(context, arguments) : fn.call(context);
 			};
 		}
-		return function() {
-			return arguments.length ? fn.apply(context, arguments) : fn.call(context);
-		};
+	};
+	
+	if (!Function.prototype.bind) {
+		Function.prototype.bind = util.bind;
 	}
-};
 
-if (!Function.prototype.bind) {
-	Function.prototype.bind = orion.editor.util.bind;
-}
-
-if (typeof window !== "undefined" && typeof window.define !== "undefined") {
-	define(['orion/textview/keyBinding'], function(){
-		return orion.editor;
-	});
-}
+	return {
+		Editor: Editor,
+		util: util
+	};
+});

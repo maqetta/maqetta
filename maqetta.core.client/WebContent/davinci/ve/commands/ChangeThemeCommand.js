@@ -117,8 +117,9 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
           
            
             var ssPath = new davinci.model.Path(newThemeInfo.file.parent.getPath()).append(newThemeInfo.files[0]);
-            newFilename = ssPath.relativeTo(resourcePath, true);
-            header.styleSheets[header.styleSheets.length] = newFilename;
+            var newFileObj = ssPath.relativeTo(resourcePath, true);
+            var newFileName = newFileObj.toString();
+            header.styleSheets[header.styleSheets.length] = newFileName;
             
             var modelAttribute = modelBody.getAttribute('class');
             if (!modelAttribute){
@@ -136,7 +137,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
                 modelHead.addChild(style);
             }
             var css = new davinci.html.CSSImport();
-            css.url = newFilename.toString();
+            css.url = newFileName;
             style.addChild(css,0);
         }
         

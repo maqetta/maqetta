@@ -49,7 +49,6 @@ return declare("davinci.ve.Context", null, {
 		this._widgetIds = [];
 		this._objectIds = [];
 		this._widgets = [];
-		this._links = [];
 		this._chooseParent = new davinci.ve.ChooseParent({context:this});
 
 	},
@@ -1336,8 +1335,9 @@ return declare("davinci.ve.Context", null, {
 	 */
 	loadStyleSheet: function(url) {
         // don't add if stylesheet is already loaded in the page
-		var links = this._links,
-		    doc = this.getDocument();
+		var doc = this.getDocument();
+		var dj = this.getDojo();
+		var links = dj.query('link');
 		var found = links.some(function(val) {
 			return val.getAttribute('href') === url;
 		});
@@ -1351,11 +1351,38 @@ return declare("davinci.ve.Context", null, {
     	            rel: 'stylesheet',
     	            type: 'text/css',
     	            href: url
-    	        },
-	            doc.getElementsByTagName('head')[0]
+    	        }
 	        );
-	        
-	        links.push(link);
+	        // Make sure app.css is the after library CSS files, and content.css is after app.css
+	        // FIXME: Shouldn't hardcode this sort of thing
+	        var headElem = doc.getElementsByTagName('head')[0];
+			var isAppCss = (url.indexOf('app.css') > -1);
+			var isContentCss = (url.indexOf('content.css') > -1);
+			var appCssLink, contentCssLink, appCssIndex, contentCssIndex;
+			for(var i=0; i<links.length; i++){
+				if(links[i].href.indexOf('app.css') > -1){
+					appCssLink = links[i];
+					appCssIndex = i;
+				}else if(links[i].href.indexOf('content.css') > -1){
+					contentCssLink = links[i];
+					contentCssIndex = i;
+				}
+			}
+			var index;
+			if(!isContentCss){
+				if(isAppCss && contentCssLink){
+					beforeChild = contentCssLink;
+					index = contentCssIndex;
+				}else{
+					beforeChild = appCssLink;
+					index = appCssIndex;
+				}
+			}
+			if(beforeChild){
+				headElem.insertBefore(link, beforeChild);
+			}else{
+		        headElem.appendChild(link);
+			}
 		});
 	},
 
@@ -1365,9 +1392,11 @@ return declare("davinci.ve.Context", null, {
 	 */
     unloadStyleSheet: function(url) {
         var self = this;
-        this._links.some(function(val, idx) {
+		var doc = this.getDocument();
+		var dj = this.getDojo();
+		var links = dj.query('link');
+        links.some(function(val, idx) {
             if (val.getAttribute('href') === url) {
-                self._links.splice(idx, 1);
                 dojo.destroy(val);
                 return true; // break
             }
@@ -1377,7 +1406,21 @@ return declare("davinci.ve.Context", null, {
 	addModeledStyleSheet: function(url, libBasePath, skipDomUpdate) {
 		if(!skipDomUpdate) this.loadStyleSheet(url);
 		if (!this.model.hasStyleSheet(url)) {
-			this.model.addStyleSheet(url);
+			// Make sure app.css is the last CSS file within the list of @import statements
+	        // FIXME: Shouldn't hardcode this sort of thing
+			var isAppCss = (url.indexOf('app.css') > -1);
+			var appCssImport;
+			var styleElem = this.model.find({'elementType':"HTMLElement",'tag':'style'}, true);
+			if(styleElem){
+				var kids = styleElem.children;
+				for(var i=0; i<kids.length; i++){
+					if(kids[i].url.indexOf('app.css') > -1){
+						appCssImport = kids[i];
+					}
+				}
+			}
+			var beforeChild = isAppCss ? undefined : appCssImport;
+			this.model.addStyleSheet(url, undefined, undefined, beforeChild);
 			for (var css in this.model._loadedCSS) {
 				dojo.connect(this.model._loadedCSS[css], 'onChange', this,
 						'_themeChange');

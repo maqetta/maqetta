@@ -2,6 +2,7 @@ define([
     "dojo/_base/declare",
 	"davinci/commands/CommandStack",
 	"davinci/ve/tools/SelectTool",
+	"davinci/Workbench",
 	"davinci/ve/widget",
 	"davinci/ve/Focus",
 	"davinci/library",
@@ -9,8 +10,6 @@ define([
 	"preview/silhouetteiframe",
 	"davinci/ve/ChooseParent"
 ], function(declare, CommandStack, SelectTool) {
-
-dojo.require("davinci.Workbench");
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
 var MOBILE_DEV_ATTR = 'data-maqetta-device';
@@ -55,7 +54,7 @@ return declare("davinci.ve.Context", null, {
 
 	},
 
-	    _configDojoxMobile: function() {
+	_configDojoxMobile: function() {
         // dojox.mobile.configDeviceTheme should run only the first time dojox.mobile.deviceTheme runs, to establish
         // monitoring of which stylesheets get loaded for a given theme
 

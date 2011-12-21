@@ -40,7 +40,9 @@
          <command path="managerVersion"
          	   class="org.davinci.server.review.command.ManagerVersion" />
          <command path="getReviewUserInfo"
-         	   class="org.davinci.server.review.command.GetReviewUserInfo" />   
+         	   class="org.davinci.server.review.command.GetReviewUserInfo" />
+		 <command path="detectLinkedFile"
+         	   class="org.davinci.server.review.command.DetectLinkedFile" />
       </extension>
             <extension
             point="maqetta.core.server.jsPlugin">

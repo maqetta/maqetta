@@ -282,7 +282,7 @@
                 },
                 {
                     id: "davinci.ui.addFiles",
-                    label: "Upload file",
+                    label: "Upload files...",
                     run: "davinci.ui.Resource.addFiles()",
                     
                     isEnabled: davinci.ui.Resource.canModify,

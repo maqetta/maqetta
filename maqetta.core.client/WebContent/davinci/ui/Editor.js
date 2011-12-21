@@ -92,8 +92,7 @@ return declare("davinci.ui.Editor", null, {
 		this.fileName=filename;
 
 		this.setValue(content, true);
-		// defer Orion editor call due to dependencies on re-layout and new geometry
-		setTimeout(function(){this._updateStyler();}.bind(this), 0);
+		this._updateStyler();
 		
 		// delay binding to the onChange event until after initializing the content 
 		if (this._textModel) {
@@ -108,7 +107,6 @@ return declare("davinci.ui.Editor", null, {
 			if (visible && this._existWhenVisible) {
 				this._createEditor();
 				this._updateStyler();
-				this.editor.getTextView().setHorizontalPixel(1);
 			} else {
 	            this.editor.getTextView().removeEventListener("Selection", this, onSelectionChanged);
 //	            try {
@@ -159,7 +157,6 @@ return declare("davinci.ui.Editor", null, {
 		this.editor = new mEditor.Editor(options);
 		this.editor.installTextView();
 		this.editor.getTextView().focus();
-		this.editor.getTextView().setHorizontalPixel(1);
 
 		dojo.style(this.contentDiv, "overflow", "hidden");
 
@@ -169,7 +166,6 @@ return declare("davinci.ui.Editor", null, {
 		this.cutAction=new davinci.ui._EditorCutAction(this.editor);
 		this.copyAction=new davinci.ui._EditorCopyAction(this.editor);
 		this.pasteAction=new davinci.ui._EditorPasteAction(this.editor);
-
 	},
 
 	_updateStyler: function () {

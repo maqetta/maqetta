@@ -392,23 +392,20 @@ dojo.mixin(davinci.ui.Resource, {
 	    if( selection.length!=1) return;
 	    var resource = selection[0];
 	    resource.parent.getChildren(function(parentChildren){
-		    var invalid = [];
+		    var invalid = parentChildren.map(function(child) {
+		    	return child.name;
+		    });
 
-	    	for(var i=0;i<parentChildren.length;i++){
-	  	    	invalid.push(parentChildren[i].name);
-	  	    }
 	    	var renameDialog = new davinci.ui.Rename({value:resource.name, invalid:invalid});
-	  		davinci.Workbench.showModal(renameDialog, 'Rename To....', '',function(){ //FIXME: i18n
-	  			
+	  		davinci.Workbench.showModal(renameDialog, 'Rename To....', '', function(){ //FIXME: i18n
 	  			var cancel = renameDialog.attr("cancel");
 	  			var newName = renameDialog.attr("value");
 	  			if(!cancel){
 		  			resource.rename(newName);
-
 				}
+	  			return true;
 	  		});	
-	    },true);
-		
+	    }, true);
 	},
 	
 	getResourceIcon: function(item, opened){

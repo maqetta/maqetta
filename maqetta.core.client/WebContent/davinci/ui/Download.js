@@ -180,6 +180,7 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 		this.onClose();
 	},
 	cancelButton : function(){
+		this.cancel = true;
 		this.onClose();
 	}
 	

@@ -490,11 +490,26 @@ dojo.mixin(davinci.Workbench, {
 		var myDialog = new dijit.Dialog({
 			title: title,
 			content: content,
-			style: style || "width: 300px"
+			style: style
 		});
-		var handle = dojo.connect(content, "onClose", this, function(){
-			dojo.disconnect(handle);
-			if (callback) { callback(); }
+		var handle = dojo.connect(content, "onClose", content, function(){
+			var teardown = true;
+			if (callback) {
+				var teardown = callback();
+				if (!teardown) {
+					// prevent the dialog from being torn down by temporarily overriding _onSubmit() with a call-once, no-op function
+					var oldHandler = myDialog._onSubmit;
+					myDialog._onSubmit = function() {
+						myDialog._onSubmit = oldHandler;
+					};
+				}
+			}
+			if (teardown) {
+				dojo.disconnect(handle);
+			}
+			if (this.cancel) {
+				myDialog.hide();
+			}
 		});
 		myDialog.show();
 	},

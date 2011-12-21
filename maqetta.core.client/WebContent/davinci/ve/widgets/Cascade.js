@@ -171,7 +171,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		}
 
 		function innerResolveFunc(){
-			if(propName && deferreds[propName]){
+			if(propName && deferreds && deferreds[propName]){
 				deferreds[propName].resolve();
 			}
 		}

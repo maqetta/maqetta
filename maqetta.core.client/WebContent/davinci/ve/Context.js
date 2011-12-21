@@ -10,6 +10,8 @@ define([
 	"davinci/ve/ChooseParent"
 ], function(declare, CommandStack, SelectTool) {
 
+dojo.require("davinci.Workbench");
+
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
 var MOBILE_DEV_ATTR = 'data-maqetta-device';
 
@@ -2038,6 +2040,10 @@ return declare("davinci.ve.Context", null, {
 				helper.onContentChange(this, this._visualEditor.theme);
 			}
 		}
+		setTimeout(function(){
+			// Invoke autoSave, with "this" set to davinci.Workbench
+			davinci.Workbench._autoSave.call(davinci.Workbench);
+		}, 0);
 		
 	},
 

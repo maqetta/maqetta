@@ -171,14 +171,13 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		return valid;
 	},
 	
-	_okButton : function(){
+	_okButton : function(e){
 		
 		var fullPath = (new davinci.model.Path(davinci.Runtime.getProject())).append(this.fileDialogParentFolder.get('value')).append(this.fileDialogFileName.get( 'value'));
 		
 		this.value =  fullPath.toString();
 		this.cancel = false;
 		this.onClose();
-		
 	},
 		
 	_newFolder : function(){

@@ -1,4 +1,5 @@
 /*******************************************************************************
+ * @license
  * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
@@ -10,40 +11,32 @@
  *		Silenio Quarti (IBM Corporation) - initial API and implementation
  ******************************************************************************/
  
-/*global window define */
+/*global define window*/
 
-/**
- * @namespace The global container for Orion APIs.
- */ 
-//var orion = orion || {};
-/**
- * @namespace The container for textview APIs.
- */ 
-orion.textview = orion.textview || {};
-
-/**
- * Constructs a new TextModel with the given text and default line delimiter.
- *
- * @param {String} [text=""] the text that the model will store
- * @param {String} [lineDelimiter=platform delimiter] the line delimiter used when inserting new lines to the model.
- *
- * @name orion.textview.TextModel
- * @class The TextModel is an interface that provides text for the view. Applications may
- * implement the TextModel interface to provide a custom store for the view content. The
- * view interacts with its text model in order to access and update the text that is being
- * displayed and edited in the view. This is the default implementation.
- * <p>
- * <b>See:</b><br/>
- * {@link orion.textview.TextView}<br/>
- * {@link orion.textview.TextView#setModel}
- * </p>
- */
-orion.textview.TextModel = (function() {
+define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEventTarget) {
 	var isWindows = window.navigator.platform.indexOf("Win") !== -1;
 
-	/** @private */
+	/**
+	 * Constructs a new TextModel with the given text and default line delimiter.
+	 *
+	 * @param {String} [text=""] the text that the model will store
+	 * @param {String} [lineDelimiter=platform delimiter] the line delimiter used when inserting new lines to the model.
+	 *
+	 * @name orion.textview.TextModel
+	 * @class The TextModel is an interface that provides text for the view. Applications may
+	 * implement the TextModel interface to provide a custom store for the view content. The
+	 * view interacts with its text model in order to access and update the text that is being
+	 * displayed and edited in the view. This is the default implementation.
+	 * <p>
+	 * <b>See:</b><br/>
+	 * {@link orion.textview.TextView}<br/>
+	 * {@link orion.textview.TextView#setModel}
+	 * </p>
+	 * @borrows orion.textview.EventTarget#addEventListener as #addEventListener
+	 * @borrows orion.textview.EventTarget#removeEventListener as #removeEventListener
+	 * @borrows orion.textview.EventTarget#dispatchEvent as #dispatchEvent
+	 */
 	function TextModel(text, lineDelimiter) {
-		this._listeners = [];
 		this._lastLineIndex = -1;
 		this._text = [""];
 		this._lineOffsets = [0];
@@ -52,33 +45,6 @@ orion.textview.TextModel = (function() {
 	}
 
 	TextModel.prototype = /** @lends orion.textview.TextModel.prototype */ {
-		/**
-		 * Adds a listener to the model.
-		 * 
-		 * @param {Object} listener the listener to add.
-		 * @param {Function} [listener.onChanged] see {@link #onChanged}.
-		 * @param {Function} [listener.onChanging] see {@link #onChanging}.
-		 * 
-		 * @see removeListener
-		 */
-		addListener: function(listener) {
-			this._listeners.push(listener);
-		},
-		/**
-		 * Removes a listener from the model.
-		 * 
-		 * @param {Object} listener the listener to remove
-		 * 
-		 * @see #addListener
-		 */
-		removeListener: function(listener) {
-			for (var i = 0; i < this._listeners.length; i++) {
-				if (this._listeners[i] === listener) {
-					this._listeners.splice(i, 1);
-					return;
-				}
-			}
-		},
 		/**
 		 * Returns the number of characters in the model.
 		 *
@@ -303,12 +269,7 @@ orion.textview.TextModel = (function() {
 		 * @param {orion.textview.ModelChangingEvent} modelChangingEvent the changing event
 		 */
 		onChanging: function(modelChangingEvent) {
-			for (var i = 0; i < this._listeners.length; i++) {
-				var l = this._listeners[i]; 
-				if (l && l.onChanging) { 
-					l.onChanging(modelChangingEvent);
-				}
-			}
+			return this.dispatchEvent(modelChangingEvent);
 		},
 		/**
 		 * Notifies all listeners that the text has changed.
@@ -325,12 +286,7 @@ orion.textview.TextModel = (function() {
 		 * @param {orion.textview.ModelChangedEvent} modelChangedEvent the changed event
 		 */
 		onChanged: function(modelChangedEvent) {
-			for (var i = 0; i < this._listeners.length; i++) {
-				var l = this._listeners[i]; 
-				if (l && l.onChanged) { 
-					l.onChanged(modelChangedEvent);
-				}
-			}
+			return this.dispatchEvent(modelChangedEvent);
 		},
 		/**
 		 * Sets the line delimiter that is used by the view
@@ -407,6 +363,7 @@ orion.textview.TextModel = (function() {
 			}
 		
 			var modelChangingEvent = {
+				type: "Changing",
 				text: text,
 				start: eventStart,
 				removedCharCount: removedCharCount,
@@ -470,6 +427,7 @@ orion.textview.TextModel = (function() {
 			if (this._text.length === 0) { this._text = [""]; }
 			
 			var modelChangedEvent = {
+				type: "Changed",
 				start: eventStart,
 				removedCharCount: removedCharCount,
 				addedCharCount: addedCharCount,
@@ -479,12 +437,7 @@ orion.textview.TextModel = (function() {
 			this.onChanged(modelChangedEvent);
 		}
 	};
+	mEventTarget.EventTarget.addMixin(TextModel.prototype);
 	
-	return TextModel;
-}());
-
-if (typeof window !== "undefined" && typeof window.define !== "undefined") {
-	define([], function() {
-		return orion.textview;
-	});
-}
+	return {TextModel: TextModel};
+});

@@ -1482,7 +1482,21 @@ return declare("davinci.ve.Context", null, {
 		for(var id in cache){
 			//FIXME: This logic depends on the user never add ID "body" to any of his widgets.
 			//That's bad. We should find another way to achieve special case logic for BODY widget.
-			var node = id == "body" ? this.getContainerNode() : this.getDocument().getElementById(id);
+			// Carefully pick the correct root node for this widget
+			var node = null;
+			if(id == "body"){	
+				node = this.getContainerNode();
+			}
+			if(!node){
+				// Look for dvWidget with that ID. Note that sometimes Dojo puts IDs on subnodes. This logic finds root node. 
+				var w = davinci.ve.widget.byId(id, this.getDocument());	
+				if(w){
+					node = w.domNode;	// Root note for that widget
+				}
+			}
+			if(!node){
+				node = this.getDocument().getElementById(id);	// Else find the node using DOM call
+			}
 			var widget = davinci.ve.widget.getWidget(node);
 			var states = cache[id];
 			states = davinci.states.deserialize(states);

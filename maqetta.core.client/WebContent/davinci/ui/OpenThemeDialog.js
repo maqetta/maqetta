@@ -56,10 +56,9 @@ dojo.declare("davinci.ui.OpenThemeDialog",   [dijit._Widget, dijit._Templated], 
 		davinci.Workbench.openEditor({
 			fileName: newTheme.file,
 			content: newTheme});
-		this.destroy();
-		
 	},
 	cancelButton : function(){
+		this.cancel = true;
 		this.onClose();
 	}
 	

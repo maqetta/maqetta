@@ -223,8 +223,8 @@
 
                 {
                     id: "openThemeEditor",
-                    run: "davinci.Workbench.showModal(new davinci.ui.OpenThemeDialog(), 'Open Theme...', 'height:110px;width: 200px')",
-                    label: "Theme Editor",
+                    run: "davinci.Workbench.showModal(new davinci.ui.OpenThemeDialog(), 'Open Theme', 'height:110px;width: 200px')",
+                    label: "Theme Editor...",
                     menubarPath: "davinci.open/open2"
                 },
 

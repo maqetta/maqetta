@@ -2,6 +2,7 @@ define([
     "dojo/_base/declare",
 	"davinci/commands/CommandStack",
 	"davinci/ve/tools/SelectTool",
+	"dojo/window",
 	"davinci/Workbench",
 	"davinci/ve/widget",
 	"davinci/ve/Focus",
@@ -9,7 +10,7 @@ define([
 	"dojox/html/_base",
 	"preview/silhouetteiframe",
 	"davinci/ve/ChooseParent"
-], function(declare, CommandStack, SelectTool) {
+], function(declare, CommandStack, SelectTool, windowUtils) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
 var MOBILE_DEV_ATTR = 'data-maqetta-device';
@@ -772,7 +773,8 @@ return declare("davinci.ve.Context", null, {
 			containerNode.style.overflow = "hidden";
 			var frame = dojo.create("iframe", this.iframeattrs, containerNode);
 			frame.dvContext = this;
-//			/* this defaults to the base page */
+			this.frameNode = frame;
+			/* this defaults to the base page */
 			var realUrl = davinci.Workbench.location() + "/" ;
 			
 			/* change the base if needed */
@@ -836,8 +838,9 @@ return declare("davinci.ve.Context", null, {
 				delete window["loading" + context._id];
 				var callbackData = context;
 			try {
-					var win = dijit.getDocumentWindow(doc),
+					var win = windowUtils.get(doc),
 					 	body = (context.rootNode = doc.body);
+
 					body.id = "myapp";
 
 					// Kludge to enable full-screen layout widgets, like BorderContainer.
@@ -860,7 +863,6 @@ return declare("davinci.ve.Context", null, {
 						win.dojo._postLoad = true; // this is needed for FF4 to keep dijit._editor.RichText from throwing at line 32 dojo 1.5						
 					}
 
-					context.frameNode = frame;
 					// see Dojo ticket #5334
 					// If you do not have this particular dojo.isArray code, DataGrid will not render in the tool.
 					// Also, any array value will be converted to {0: val0, 1: val1, ...}
@@ -869,7 +871,7 @@ return declare("davinci.ve.Context", null, {
 						return it && Object.prototype.toString.call(it)=="[object Array]";
 					};
 				} catch(e) {
-					console.error(e);
+					console.error(e.stack || e);
 					// recreate the Error since we crossed frames
 					callbackData = new Error(e.message, e.fileName, e.lineNumber);
 					dojo.mixin(callbackData, e);
@@ -936,7 +938,14 @@ return declare("davinci.ve.Context", null, {
 			// recreate the Error since we crossed frames
 			callbackData = new Error(e.message, e.fileName, e.lineNumber);
 			dojo.mixin(callbackData, e);
-			loading.innerHTML = "Uh oh! An error has occurred:<br><b>" + e.message + "</b><br>file: " + e.fileName + "<br>line: "+e.lineNumber; // FIXME: i18n
+			var message = "Uh oh! An error has occurred:<br><b>" + e.message + "</b>";
+			if (e.fileName) {
+				message += "<br>file: " + e.fileName + "<br>line: "+e.lineNumber;
+			}
+			if (e.stack) {
+				message += "<br>" + e.stack;
+			}
+			loading.innerHTML = message;
 			dojo.addClass(loading, 'error');
 		} finally {
 			if (callback) {

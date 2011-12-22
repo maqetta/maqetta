@@ -347,6 +347,20 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 .fileDialog .parentFolderInputRow .dijitTextBox {
 	width:100%;
 }
+.fileDialogWhereIcon {
+	background-image:url(img/sprite.png);
+	background-position:-20px -22px;
+	background-repeat:no-repeat;
+	width:20px;
+	height:16px;
+}
+.fileDialog .folderNameRow .dijitDropDownButton {
+	margin: 0.2em 0;
+}
+.fileDialog .folderNameRow .dijitDropDownButton .dijitButtonText {
+	width: 10em;
+	text-align: left;
+}
 .fileDialogLabelCell {
 /*
 	text-align:right;

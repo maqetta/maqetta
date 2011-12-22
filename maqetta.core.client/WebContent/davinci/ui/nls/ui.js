@@ -119,6 +119,7 @@ define({ root:
 		//NewFile.html
 		"newFileShowFiles":"Show file picker",
 		"newFileHideFiles":"Hide file picker",
+		"root":"(root)",
 		
 		//NewHTMLFileOptions.html - Composition type strings
 		"nhfoCompositionType":"Composition type:",

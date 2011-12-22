@@ -5,6 +5,7 @@ dojo.require("dojo.parser");
 dojo.require("davinci.ve.widgets.MutableStore");
 dojo.require("davinci.ve.utils.CssUtils");
 dojo.require("dojo.i18n");  
+dojo.requireLocalization("dijit", "common");
 dojo.requireLocalization("davinci.ve", "ve");
 dojo.require("davinci.ve.widgets.ColorPickerFlat");
 dojo.require("dijit.form.TextBox");
@@ -33,6 +34,11 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 				"<td class='bgdPlusMinusButtons'><span class='bgdPlusButton' dojoType='dijit.form.Button'>+</span><span class='bgdMinusButton' dojoType='dijit.form.Button'>-</span></td>"+
 				"</tr>",
 
+	postMixInProperties: function(){
+		this.inherited(arguments);
+		dojo.mixin(this, dojo.i18n.getLocalization("dijit", "common"));
+	},
+
 	postCreate: function(){
 		this.inherited(arguments);
 		var langObj = this.langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
@@ -45,8 +51,7 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 
 		//FIXME: Following code is mostly a copy/paste from ColorPicker.js
 		//Should be refactored into a shared utility
-		var langObjVE = dojo.i18n.getLocalization("davinci.ve", "ve");
-		this._statics = ['', davinci.ve.widgets.ColorPicker.divider, langObjVE.colorPicker, langObjVE.removeValue];
+		this._statics = ['', davinci.ve.widgets.ColorPicker.divider, langObj.colorPicker, langObj.removeValue];
 		var colormenu_data=[{value:this._statics[0]}];
 		colormenu_data.push({value:this._statics[2],action:'_colorpicker'});
 		colormenu_data.push({value:this._statics[3],action:'_removevalue'});

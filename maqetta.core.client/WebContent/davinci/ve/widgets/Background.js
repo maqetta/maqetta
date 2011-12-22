@@ -208,6 +208,7 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 						actions[propName].apply();
 					}
 				}
+				return true;
 			}, background);
 			var xref = davinci.ve.widgets.Background.BackgroundWidgets;
 			for(var propName in xref){
@@ -221,7 +222,7 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 				}
 			}
 			background.attr('baseLocation', this._baseLocation);
-			davinci.Workbench.showModal(background, "Background", 'opacity:0', executor);
+			davinci.Workbench.showModal(background, "Background", '', executor);
 		});
 		this.connect(this._comboBox, 'onChange', dojo.hitch(this, function(event){
 			// If onChange was triggered by an internal update to the text field,

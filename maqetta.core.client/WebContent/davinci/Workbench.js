@@ -36,9 +36,6 @@ dojo.require("davinci.ui.ThemeSetsDialog"); // ui_plugin.js
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci", "webContent");
 
-
-dojo.provide("davinci.Workbench");
-
 dojo.mixin(davinci.Workbench, {
 	activePerspective: "",
 	actionScope: [],

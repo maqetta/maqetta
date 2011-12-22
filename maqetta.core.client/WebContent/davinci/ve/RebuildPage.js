@@ -1,12 +1,12 @@
-dojo.provide("davinci.ve.RebuildPage");
+define([
+	"dojo/_base/declare",
+	"davinci/ve/Context",
+	"davinci/model/Path"
+], function(declare, Context, Path){
 
-dojo.require("davinci.model.Path");
-dojo.require("davinci.ve.Context");
-
-
-dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
-	/* rebuilds a pages imports based on widget dependancies.
-	 * useful if dependancies break due to library path changes or missing deps.
+return declare("davinci.ve.RebuildPage", Context, {
+	/* rebuilds a pages imports based on widget dependencies.
+	 * useful if dependencies break due to library path changes or missing deps.
 	 * 
 	 * this uses the library type loader from the Contex.js class
 	 * 
@@ -16,12 +16,12 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
 	},
 	
 	
-	getPageCss : function(){
+	getPageCss: function(){
 		// returns CSS known to be in the page (our libs, sorta hacky)
 		return ["app.css"];
 	},
 	
-	getPageJs : function(){
+	getPageJs: function(){
 		// returns CSS known to be in the page (our libs, sorta hacky)
 		return ["maqetta/States.js","maqetta/maqetta.js" ];
 	},
@@ -35,9 +35,9 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
 		
 		this._resourcePath = null;
 		if(resource)
-			this._resourcePath = new davinci.model.Path(resource.getPath());
+			this._resourcePath = new Path(resource.getPath());
 		else 
-			this._resourcePath = new davinci.model.Path("");
+			this._resourcePath = new Path("");
 		
 		this.model.fileName = this._resourcePath.toString();
 		/* big cheat here.  removing 1 layer of .. for prefix of project, could figure this out with logic and have infinite project depth */
@@ -47,7 +47,7 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
 		 
        var themeMetaobject = davinci.ve.metadata.loadThemeMeta(this._srcDocument);
 
-        var elements = this._srcDocument.find({'elementType' : "HTMLElement"});
+        var elements = this._srcDocument.find({elementType: "HTMLElement"});
         
         this.loadRequires("html.body", true, true,true);
         
@@ -62,23 +62,22 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
         }
       
         
-        if (themeMetaobject)
-            this.changeThemeBase(themeMetaobject['theme'],
-                    this._resourcePath);
-
+        if (themeMetaobject) {
+            this.changeThemeBase(themeMetaobject.theme, this._resourcePath);
+        }
 		
         /*
         var cssChanges = this.getPageCss();
         var jsChanges = this.getPageJs();
 
         for ( var i = 0; i < cssChanges.length; i++ ) {
-        	var filename = new davinci.model.Path(cssChanges[i]).relativeTo(this._resourcePath);
+        	var filename = new Path(cssChanges[i]).relativeTo(this._resourcePath);
             //var filename = basePath.append(cssChanges[i]);
             this.addModeledStyleSheet(filename.toString(), cssChanges[i]);
         }
 
         for ( var i = 0; i < jsChanges.length; i++ ) {
-        	var filename = new davinci.model.Path(jsChanges[i]).relativeTo(this._resourcePath);
+        	var filename = new Path(jsChanges[i]).relativeTo(this._resourcePath);
             this.addJavaScript(filename.toString(), null, null, null,
                     jsChanges[i]);
         }
@@ -89,13 +88,13 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
 
 
 	
-	addModeledStyleSheet : function(url, baseSrcPath) {
+	addModeledStyleSheet: function(url, baseSrcPath) {
 		// "baseSrcPath" is the tail of the style sheet path
 		// * this is so we can determine if a link already exists in the file but has the 
 		// * wrong directory
 		 //
 		
-		var elements = this._srcDocument.find({'elementType':"CSSImport"});
+		var elements = this._srcDocument.find({elementType: "CSSImport"});
 		
 		for(var i=0;i<elements.length;i++){
 			var n = elements[i];
@@ -108,11 +107,11 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
        this._srcDocument.addStyleSheet(url, null, true);
     },
  
-    _findScriptAdditions : function(){
+    _findScriptAdditions: function(){
     	// this is a bit gross and dojo specific, but...... guess a necisary evil.
     	   	
-    	var documentHeader = this._srcDocument.find({'elementType':"HTMLElement",'tag':'head'}, true);
-    	var scriptsInHeader = documentHeader.find({elementType:"HTMLElement", 'tag':'script'});
+    	var documentHeader = this._srcDocument.find({elementType: "HTMLElement", tag:'head'}, true);
+    	var scriptsInHeader = documentHeader.find({elementType:"HTMLElement", tag:'script'});
     	for(var i=0;i<scriptsInHeader.length;i++){
     		var text = scriptsInHeader[i].getText();
     		if(text.indexOf("dojo.require") > -1)
@@ -123,7 +122,7 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
     	
     },
     /*
-    addJavaScript : function(url, text, doUpdateModel, doUpdateDojo, baseSrcPath) {
+    addJavaScript: function(url, text, doUpdateModel, doUpdateDojo, baseSrcPath) {
 		var elements = this._srcDocument.find({'elementType':"HTMLElement", 'tag': 'script'});
 		
 		for(var i=0;i<elements.length;i++){
@@ -152,16 +151,17 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
     	// find the old theme file name
 		var files = theme.files;
 		/* fixme CHEATING, should determine this programatically */
-		var parentPath = (new davinci.model.Path(theme.file.parent.getPath()));
+		var parentPath = (new Path(theme.file.parent.getPath()));
 	
 		for (var x=0; x<files.length; x++){
 			var filename = parentPath.append(theme.files[x]);
 			var relativePath = filename.relativeTo(resourcePath, true);
 			
-			this.addModeledStyleSheet(relativePath.toString(), new davinci.model.Path(theme.files[x]), true);
+			this.addModeledStyleSheet(relativePath.toString(), new Path(theme.files[x]), true);
 
 		}
 	}
     
 
+});
 });

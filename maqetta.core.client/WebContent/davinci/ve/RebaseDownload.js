@@ -1,9 +1,6 @@
-dojo.provide("davinci.ve.RebaseDownload");
-dojo.require("davinci.ve.RebuildPage");
+define(["dojo/_base/declare", "davinci/ve/RebuildPage", "davinci/library"], function(declare, RebuildPage, library){
 
-dojo.require("davinci.library");
-
-dojo.declare("davinci.ve.RebaseDownload", davinci.ve.RebuildPage, {
+return declare("davinci.ve.RebaseDownload", RebuildPage, {
 	
 	/* libs should look like:
 	 * [{id:'dojo', version '1.8' base:'http://blahblahblah/dojo/'}]
@@ -21,7 +18,9 @@ dojo.declare("davinci.ve.RebaseDownload", davinci.ve.RebuildPage, {
 				return item.root;
 			}
 		}
-		return davinci.library.getLibRoot(id,version) || "";
+		return library.getLibRoot(id,version) || "";
 	}
 	
 });
+});
+

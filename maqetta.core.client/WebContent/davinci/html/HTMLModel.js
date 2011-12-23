@@ -8,12 +8,11 @@ dojo.require("davinci.html.HTMLParser");
 if (!davinci.html)
     davinci.html={};    
 
-davinci.html._noFormatElements=
-    ({
-        'span':true,
-        'b':true,
-        'it':true
-    });
+davinci.html._noFormatElements = {
+    span:true,
+    b:true,
+    it:true
+};
 
 davinci.html.escapeXml = function(value) {
     if(!value){
@@ -837,7 +836,7 @@ davinci.html.HTMLAttribute.prototype.getText = function(context) {
     var s=this.name;
     var bool = {checked: 1, selected: 1, disabled: 1, readonly: 1, multiple: 1, ismap: 1};
     if (bool[this.name.toLowerCase()]) {
-    	if (this.value) {
+    	if (this.value && this.value != "false") {
     		s += '="' + this.name + '"';
     	} else {
     		s = "";

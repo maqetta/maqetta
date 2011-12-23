@@ -835,11 +835,23 @@ return declare("davinci.ve.Context", null, {
 
 			var context = this;
 			window["loading" + context._id] = function(parser, htmlUtil) { //FIXME: should be able to get doc reference from domReady! plugin?
-				delete window["loading" + context._id];
 				var callbackData = context;
 			try {
 					var win = windowUtils.get(doc),
 					 	body = (context.rootNode = doc.body);
+
+					if (!body) {
+						// Should never get here if domReady! fired?  Try again.
+						context._waiting = context._waiting || 0;
+						if(context._waiting++ < 10) {
+							setTimeout(window["loading" + context._id], 500);
+							console.log("waiting for doc.body");
+							return;
+						}
+						throw "doc.body is null";
+					}
+
+					delete window["loading" + context._id];
 
 					body.id = "myapp";
 

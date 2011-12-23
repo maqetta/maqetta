@@ -325,6 +325,21 @@ davinci.html.HTMLFile.prototype.updatePositions = function(startOffset,delta) {
     });
 };
 
+/*
+ * The PageEditor uses the HTML model as its base model. However, 
+ * the visual editor aspect of the PageEditor injects temporary 
+ * runtime content into the model which skews offsets. When in 
+ * split view we need to correct the model element positions by 
+ * removing temporary content length from rendered content length.
+ */
+davinci.html.HTMLFile.prototype.mapPositions = function(element) {
+    var s = this.getText();
+    var et = element.getText();
+    var start = s.indexOf(et);
+    var end   = start + et.length;
+    return {startOffset:start, endOffset:end};
+};
+
 davinci.html.HTMLFile.prototype.reportPositions = function() {
     this.visit({
             visit: function(element) {

@@ -39,10 +39,12 @@ return declare("davinci.ui.ModelEditor", TextEditor, {
 		if (this.publishingSelect || (editor && this != editor)) {
 			return;
 		}
-		if (selection.length && selection[0].model) {
+		
+        if (selection.length && selection[0].model) {
 			var model=selection[0].model;
 			if (model.elementType) {
-				this.select({ startOffset:model.startOffset, endOffset:model.endOffset});
+			    var sobj = this.model.mapPositions(model);
+				this.select(sobj);
 			}
 		}
 	},

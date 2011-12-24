@@ -62,10 +62,6 @@
             "datatype": "boolean",
             "defaultValue": false
         },
-        "label": {
-            "datatype": "string",
-            "defaultValue": "ListItem"
-        },
         "rightText": {
             "datatype": "string"
         },
@@ -105,5 +101,5 @@
             "defaultValue": false
         }
     },
-    "content": "<li label='ListItem'></li>"
+    "content": "<li></li>"
 }

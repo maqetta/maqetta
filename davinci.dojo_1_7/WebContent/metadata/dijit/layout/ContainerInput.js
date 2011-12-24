@@ -21,7 +21,13 @@ return declare("davinci.libraries.dojo.dijit.layout.ContainerInput", SmartInput,
 		
 		for (var i = 0; i < children.length; i++) {
 			var child = children[i];
-			result.push(child.attr(this.propertyName));
+			var dijitWidget = child.dijitWidget;
+			if(dijitWidget){
+				var djprop = (this.propertyName==="textContent") ? "innerHTML" : this.propertyName;
+				result.push(child.attr(djprop));
+			}else{
+				result.push("");
+			}
 		}
 		
 		result = this.serializeItems(result);

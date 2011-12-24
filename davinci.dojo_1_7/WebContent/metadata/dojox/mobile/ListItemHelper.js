@@ -22,6 +22,18 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ListItemHelper", null, {
 				e.stopPropagation();		
 			}, true);
 		}
+	},
+	
+	getChildrenData: function(/*Widget*/ widget, /*Object*/ options){
+		// Pull child markup from model
+		var text = '';
+		if(widget && widget._srcElement && widget._srcElement.children){
+			var children = widget._srcElement.children;
+			for(var i=0; i<children.length; i++){
+				text += children[i].getText();
+			}
+		}
+		return text;
 	}
 
 });

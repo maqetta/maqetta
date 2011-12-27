@@ -134,6 +134,7 @@ define({ root:
 		"nhfoCTMenu_desktop_lofi_flow":"Desktop lo-fi page",
 		
 		//NewHTMLFileOptions.html - Theme strings
-		"nhfoThemeButton":"Theme..."
+		"nhfoThemeButtonLabel":"Theme...",
+		"nhfoThemeButtonTitle":"Select themes or theme set for new HTML file"
 }
 });

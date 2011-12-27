@@ -99,7 +99,7 @@
             actions: [
                 {
                     id: "davinci.ve.cut",
-                    label: "cut",
+                    label: "Cut",
                     keySequence: "M1+X",
                     iconClass: "editActionIcon editCutIcon",
                     action: "davinci.ve.actions.CutAction",
@@ -107,7 +107,7 @@
                 },
                 {
                     id: "davinci.ve.copy",
-                    label: "copy",
+                    label: "Copy",
                     keySequence: "M1+C",
                     iconClass: "editActionIcon editCopyIcon",
                     action: "davinci.ve.actions.CopyAction",
@@ -117,7 +117,7 @@
                     id: "davinci.ve.paste",
                     keySequence: "M1+V",
                     iconClass: "editActionIcon editPasteIcon",
-                    label: "paste",
+                    label: "Paste",
                     action: "davinci.ve.actions.PasteAction",
                     menubarPath: "davinci.edit/cut"
                 },
@@ -125,28 +125,28 @@
                     id: "davinci.ve.delete",
                     keySequence: "DEL",
                     iconClass: "editActionIcon editDeleteIcon",
-                    label: "delete",
+                    label: "Delete",
                     action: "davinci.ve.actions.DeleteAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
                     id: "davinci.ve.surround.a",
                     iconClass: "editActionIcon",
-                    label: "surround with &lt;A&gt;",
+                    label: "Surround with &lt;A&gt;",
                     action: "davinci.ve.actions.SurroundAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
                     id: "davinci.ve.surround.div",
                     iconClass: "editActionIcon",
-                    label: "surround with &lt;DIV&gt;",
+                    label: "Surround with &lt;DIV&gt;",
                     action: "davinci.ve.actions.SurroundAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
                     id: "davinci.ve.surround.span",
                     iconClass: "editActionIcon",
-                    label: "surround with &lt;SPAN&gt;",
+                    label: "Surround with &lt;SPAN&gt;",
                     action: "davinci.ve.actions.SurroundAction",
                     menubarPath: "davinci.edit/cut"
                 },
@@ -354,7 +354,7 @@
             actions: [
                 {
                     id: "cut",
-                    label: "cut",
+                    label: "Cut",
                     keySequence: "M1+X",
                     iconClass: "editActionIcon editCutIcon",
                     actionsContainer: "davinci.ve.actions.ContextActions",
@@ -363,7 +363,7 @@
                 },
                 {
                     id: "copy",
-                    label: "copy",
+                    label: "Copy",
                     keySequence: "M1+C",
                     iconClass: "editActionIcon editCopyIcon",
                     actionsContainer: "davinci.ve.actions.ContextActions",
@@ -374,7 +374,7 @@
                     id: "paste",
                     keySequence: "M1+V",
                     iconClass: "editActionIcon editPasteIcon",
-                    label: "paste",
+                    label: "Paste",
                     actionsContainer: "davinci.ve.actions.ContextActions",
                     action: "davinci.ve.actions.PasteAction",
                     toolbarPath: "cutcopypaste"
@@ -397,7 +397,7 @@
                     id: "delete",
                     keySequence: "DEL",
                     iconClass: "editActionIcon editDeleteIcon",
-                    label: "delete",
+                    label: "Delete",
                     actionsContainer: "davinci.ve.actions.ContextActions",
                     action: "davinci.ve.actions.DeleteAction",
                     toolbarPath: "delete"

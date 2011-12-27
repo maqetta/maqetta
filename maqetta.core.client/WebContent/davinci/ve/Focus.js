@@ -404,7 +404,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
                 this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(e){
                 	this.onKeyDown(e);
                 }));
-                this._keyUpHandler = dojo.connect(userdoc, "onkeyup", dojo.hitch(this, function(widgetType, e){
+                this._keyUpHandler = dojo.connect(userdoc, "onkeyup", dojo.hitch(this, function(e){
                 	this.onKeyUp(e);
                 }));
             }

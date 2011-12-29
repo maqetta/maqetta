@@ -201,8 +201,9 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 	            var helpLink = "<a href='app/docs/index.html#peAppCss' target='_blank'>"+ langObj.creatingStyleRules +"</a>";
 				var content = langObj.propChangeCannotComplete + "<br><br>" + dojo.string.substitute(langObj.toChangeProperty,[helpLink]) + "<br/><br/>";
 				var errorDialog = new davinci.ui.ErrorDialog({errorText: content});
-				davinci.Workbench.showModal(errorDialog, langObj.errorModifyingValue, null, dojo.hitch(this, function(){
+				davinci.Workbench.showModal(errorDialog, langObj.errorModifyingValue, 'width:300px', dojo.hitch(this, function(){
 					innerResolveFunc();
+					return true;
 				}));
 				if(cascadeBatch){
 					cascadeBatch.askUserResponse = false;

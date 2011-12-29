@@ -94,7 +94,7 @@
 		<li>You'll want to set up a virgin user environment by creating a whole new user login or resetting the existing user login (ask engineers about how to do that).
 				Clear the browser cache. Launch the Maqetta server. Login if necessary. </li>
 		<li>Add a new HTML file, such as mmm.html (see above for instructions). Close the page editor tab that appears. Then, in the Files palette, click on mmm.html and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "Delete resource". Click OK on "are you sure" warning dialog. The Files palette should no longer show the file.</li>
-		<li>Create a new folder (see instructions above), perhaps named "nnn". Add a new file (e.g., ooo.html) into that folder (see instructions above). Close the page editor tab that appears.  Then, in the Files palette, click on ooo.html and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "Delete resource". Click OK on "are you sure" warning dialog. The Files palette should no longer show the file.</li>
+		<li>Create a new folder (see instructions above), perhaps named "nnn". Add a new file (e.g., ooo.html) into that folder (see instructions above). Close the page editor tab that appears.  Then, in the Files palette, click on ooo.html and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "Delete". Click OK on "are you sure" warning dialog. The Files palette should no longer show the file.</li>
 		<li>Create a new folder (e.g., www) and add a file into that folder (e.g., via New operations - see instructions above for how to do this.) In the Files palette, click on www and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "Delete resource". Click OK on "are you sure" warning dialog. The Files palette should no longer show the folder (or any of the files that were in the folder).</li>
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
@@ -102,7 +102,20 @@
 		<li>See description above for expected results.</li>
 	</ol>
 
-	<h2 class="test_section">download as ZIP</h2>
+    <h2 class="test_section">rename files</h2>
+    <h3 class="steps_subsection">Steps</h3>
+    <ol class="steps">
+        <li>You'll want to set up a virgin user environment by creating a whole new user login or resetting the existing user login (ask engineers about how to do that).
+                Clear the browser cache. Launch the Maqetta server. Login if necessary. </li>
+        <li>Add a new HTML file, such as mmm.html (see above for instructions). Close the page editor tab that appears. Then, in the Files palette, click on mmm.html and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "Delete resource". Click OK on "are you sure" warning dialog. The Files palette should no longer show the file.</li>
+        <li>Create a new folder (see instructions above), perhaps named "n2". Add a new file (e.g., o2.html) into that folder (see instructions above). Close the page editor tab that appears.  Then, in the Files palette, click on ooo.html and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "Rename...". Enter a new name (e.g., o3.html). The Files palette should show the renamed files.</li>
+    </ol>
+    <h3 class="expectedResults_subsection">Expected results</h3>
+    <ol class="expectedResults">
+        <li>See description above for expected results.</li>
+    </ol>
+
+	<h2 class="test_section">download as ZIP (context menu)</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
 		<li>Click on one file in Files palette to select it. 
@@ -119,6 +132,24 @@
 	<ol class="expectedResults">
 		<li>See description above for expected results.</li>
 	</ol>
+
+
+    <h2 class="test_section">File palette toolbar: download as ZIP and modify libraries</h2>
+    <h3 class="steps_subsection">Steps</h3>
+    <ol class="steps">
+        <li>Click on the first icon at button bar of Files palette to download entire workspace. 
+            Complete process (accepting defaults) and verify that the downloaded ZIP contains all files from the workspace and all libraries (e.g., Dojo).
+            Using MAMP, XAMPP or other localhost server, unzip the contents of ZIP onto your localhost server and verify that the HTML files can be opened successfully.</li>
+        <li>Click on Sample1.html to select it, then Ctl-click (Cmd-Click on Mac) on app.css and SampleBanner.jpg to select them, also. 
+            Click on the second icon in the button bar to download selected files. 
+            Complete process (accepting defaults) and verify that the downloaded ZIP contains all files from the workspace and all libraries (e.g., Dojo).
+            Using MAMP, XAMPP or other localhost server, unzip the contents of ZIP onto your localhost server and verify that the HTML files can be opened successfully.</li>
+        <li>Use 3rd icon (Modify libraries) to move Dojo to different locations, such as ./dojo and ./mylibs/dojo. Verify that Sample1.html successfully reopens and works in preview-in-browser after each relocation.</li>
+    </ol>
+    <h3 class="expectedResults_subsection">Expected results</h3>
+    <ol class="expectedResults">
+        <li>See description above for expected results.</li>
+    </ol>
 
 </body>
 </html>

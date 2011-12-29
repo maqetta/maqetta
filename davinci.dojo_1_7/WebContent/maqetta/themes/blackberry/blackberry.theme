@@ -1,0 +1,1 @@
+({"className":"blackberry","name":"blackberry","version":"1.7","specVersion":"0.8","files":["blackberry.css"],"meta":["blackberry.json"],"themeEditorHtmls":["dojo-theme-editor.html"],"helper":"davinci.libraries.dojo.dojox.mobile.ThemeHelper","type":"dojox.mobile","base":"","useBodyFontBackgroundClass":"useBodyFontBg"})

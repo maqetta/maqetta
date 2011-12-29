@@ -1,0 +1,22 @@
+{
+  "name": "clipart",
+  "version": "1.0",
+  "directories": {
+    "lib": "../clipart"
+  },
+  "dependencies": {
+    "dojo": "1.7"
+  },
+  "overlays": {
+    "oam": {
+      "directories": {
+        "metadata": "."
+      }
+    },
+    "maqetta": {
+      "scripts": {
+        "widget_metadata": "./widgets.json"
+      }
+    }
+  }
+}

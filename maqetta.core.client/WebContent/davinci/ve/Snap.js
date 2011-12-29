@@ -81,33 +81,48 @@ davinci.ve.Snap = function() {
 				widgetSnapInfo = helper.getSnapInfo(widget, widgetSnapInfo);
 			}
 			
-			function snapX(type,x,delta){
+			function snapX(typeRefObj, typeCurrObj, x, delta){
 				if(delta<currentDeltaX){
-					context._snapX = {type:type, x:x, widget:widget, delta:delta};
+					context._snapX = {type:typeRefObj, typeRefObj:typeRefObj, typeCurrObj:typeCurrObj, x:x, widget:widget, delta:delta};
 					currentDeltaX = delta;
 				}
 			}
-			function snapY(type,y,delta){
+			function snapY(typeRefObj, typeCurrObj, y, delta){
 				if(delta<currentDeltaY){
-					context._snapY = {type:type, y:y, widget:widget, delta:delta};
+					context._snapY = {type:typeRefObj, typeRefObj:typeRefObj, typeCurrObj:typeCurrObj, y:y, widget:widget, delta:delta};
 					currentDeltaY = delta;
 				}
 			}
 			var rect = widgetSnapInfo.snapRect;
-			var deltaLeft, deltaCenter, deltaRight, deltaTop, deltaMiddle, deltaBottom;
+			var deltaLeft, deltaCenter, deltaRight, deltaTop, deltaMiddle, deltaBottom, delta;
 			if(rect){
 				deltaLeft = Math.abs(rect.l-snapBox.l);
 				deltaCenter = Math.abs(rect.c-snapBox.c);
 				deltaRight = Math.abs(rect.r-snapBox.r);
-				snapX("left",rect.l,deltaLeft);
-				snapX("center",rect.c, deltaCenter);
-				snapX("right",rect.r, deltaRight);
+				snapX("left", "left", rect.l,deltaLeft);
+				snapX("center", "center", rect.c, deltaCenter);
+				snapX("right", "right", rect.r, deltaRight);
+				
+				snapX("left", "center", rect.c, Math.abs(rect.c-snapBox.l));
+				snapX("left", "right", rect.r, Math.abs(rect.r-snapBox.l));
+				snapX("right", "left", rect.l, Math.abs(rect.l-snapBox.r));
+				snapX("right", "center", rect.c, Math.abs(rect.c-snapBox.r));
+				snapX("center", "left", rect.l, Math.abs(rect.l-snapBox.c));
+				snapX("center", "right", rect.r, Math.abs(rect.r-snapBox.c));
+
 				deltaTop = Math.abs(rect.t-snapBox.t);
 				deltaMiddle = Math.abs(rect.m-snapBox.m);
 				deltaBottom = Math.abs(rect.b-snapBox.b);
-				snapY("top",rect.t,deltaTop);
-				snapY("middle",rect.m, deltaMiddle);
-				snapY("bottom",rect.b, deltaBottom);
+				snapY("top", "top", rect.t,deltaTop);
+				snapY("middle", "middle", rect.m, deltaMiddle);
+				snapY("bottom", "bottom", rect.b, deltaBottom);
+				
+				snapY("top", "middle", rect.m, Math.abs(rect.m-snapBox.t));
+				snapY("top", "bottom", rect.b, Math.abs(rect.b-snapBox.t));
+				snapY("bottom", "top", rect.t, Math.abs(rect.t-snapBox.b));
+				snapY("bottom", "middle", rect.m, Math.abs(rect.m-snapBox.b));
+				snapY("middle", "top", rect.t, Math.abs(rect.t-snapBox.m));
+				snapY("middle", "bottom", rect.b, Math.abs(rect.b-snapBox.m));
 			}
 			var points = widgetSnapInfo.snapPoints;
 			if(points){
@@ -155,7 +170,7 @@ davinci.ve.Snap = function() {
 			}
 			context._snapLinesDiv.style.display="block";
 			var box; // Initial values are assigned by internal function snapSetup below leveraging closure
-			function snapSetup(context,widget,widgetDiv,alignDiv){
+			function snapSetup(context, widget, widgetDiv, alignDiv){
 				widgetDiv.style.display='block';
 				alignDiv.style.display='block';		
 				var dj = context.getDojo();
@@ -171,8 +186,10 @@ davinci.ve.Snap = function() {
 				//FIXME: Put into stylesheet
 				widgetDiv.style.backgroundColor='rgba(255,0,255,.05)';
 			}
+			var style = context._snapLinesDivAlignX.style;
 			if(context._snapX){
-				snapSetup(context,context._snapX.widget,context._snapLinesDivWidgetX,context._snapLinesDivAlignX);
+				var snapX = context._snapX;
+				snapSetup(context, snapX.widget, context._snapLinesDivWidgetX, context._snapLinesDivAlignX);
 				var t,h;
 				if(box.y<snapBox.t){
 					t = box.y;
@@ -181,26 +198,28 @@ davinci.ve.Snap = function() {
 					t = snapBox.t;
 					h = box.y - snapBox.t;
 				}
-				if(context._snapX.type=="point"){
-					context._snapLinesDivAlignX.style.left = context._snapX.x+'px';
-				}else if(context._snapX.type=="left"){
-					context._snapLinesDivAlignX.style.left = box.x+'px';
-				}else if(context._snapX.type=="center"){
-					context._snapLinesDivAlignX.style.left = box.c+'px';
+				if(snapX.typeCurrObj=="point"){
+					style.left = context._snapX.x+'px';
+				}else if(snapX.typeCurrObj=="left"){
+					style.left = box.x+'px';
+				}else if(snapX.typeCurrObj=="center"){
+					style.left = box.c+'px';
 				}else{	// "right"
-					context._snapLinesDivAlignX.style.left = box.r+'px';
+					style.left = box.r+'px';
 				}
-				context._snapLinesDivAlignX.style.top = t+'px';
-				context._snapLinesDivAlignX.style.width = '1px';
-				context._snapLinesDivAlignX.style.height = h+'px';
+				style.top = t+'px';
+				style.width = '1px';
+				style.height = h+'px';
 				//FIXME: Put into stylesheet
-				context._snapLinesDivAlignX.style.backgroundColor='rgba(255,0,255,.75)';
+				style.backgroundColor='rgba(255,0,255,.75)';
 			}else{
-				context._snapLinesDivWidgetX.style.display='none';
-				context._snapLinesDivAlignX.style.display='none';
+				style.display='none';
+				style.display='none';
 			}
+			var style = context._snapLinesDivAlignY.style;
 			if(context._snapY){
-				snapSetup(context,context._snapY.widget,context._snapLinesDivWidgetY,context._snapLinesDivAlignY);
+				var snapY = context._snapY;
+				snapSetup(context, snapY.widget, context._snapLinesDivWidgetY, context._snapLinesDivAlignY);
 				var l,w;
 				if(box.x<snapBox.l){
 					l = box.x;
@@ -209,23 +228,23 @@ davinci.ve.Snap = function() {
 					l = snapBox.l;
 					w = box.x - snapBox.l;
 				}
-				if(context._snapY.type=="point"){
-					context._snapLinesDivAlignY.style.top = context._snapY.y+'px';
-				}else if(context._snapY.type=="top"){
-					context._snapLinesDivAlignY.style.top = box.y+'px';
-				}else if(context._snapY.type=="middle"){
-					context._snapLinesDivAlignY.style.top = box.m+'px';
+				if(snapY.type=="point"){
+					style.top = snapY.y+'px';
+				}else if(snapY.typeCurrObj=="top"){
+					style.top = box.y+'px';
+				}else if(snapY.typeCurrObj=="middle"){
+					style.top = box.m+'px';
 				}else{	// "bottom"
-					context._snapLinesDivAlignY.style.top = box.b+'px';
+					style.top = box.b+'px';
 				}
-				context._snapLinesDivAlignY.style.left = l+'px';
-				context._snapLinesDivAlignY.style.height = '1px';
-				context._snapLinesDivAlignY.style.width = w+'px';
+				style.left = l+'px';
+				style.height = '1px';
+				style.width = w+'px';
 				//FIXME: Put into stylesheet
-				context._snapLinesDivAlignY.style.backgroundColor='rgba(255,0,255,.75)';
+				style.backgroundColor='rgba(255,0,255,.75)';
 			}else{
-				context._snapLinesDivWidgetY.style.display='none';
-				context._snapLinesDivAlignY.style.display='none';
+				style.display='none';
+				style.display='none';
 			}
 		},
 		

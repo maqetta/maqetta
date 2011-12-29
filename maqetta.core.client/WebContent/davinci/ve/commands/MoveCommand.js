@@ -56,22 +56,22 @@ dojo.declare("davinci.ve.commands.MoveCommand", null, {
 			if(context && context._snapX){
 				var w = this._oldBox.w;
 				var snapX_relative = context._snapX.x - offsetParentPageBox.x;
-				if(context._snapX.type=="left"){
+				if(context._snapX.typeRefObj=="left"){
 					this._newBox.l = snapX_relative;
-				}else if(w && context._snapX.type=="right"){
+				}else if(w && context._snapX.typeRefObj=="right"){
 					this._newBox.l = snapX_relative - w;
-				}else if(w && context._snapX.type=="center"){
+				}else if(w && context._snapX.typeRefObj=="center"){
 					this._newBox.l = snapX_relative - w/2;
 				}
 			}
 			if(context && context._snapY){
 				var h = this._oldBox.h;
 				var snapY_relative = context._snapY.y - offsetParentPageBox.y;
-				if(context._snapY.type=="top"){
+				if(context._snapY.typeRefObj=="top"){
 					this._newBox.t = snapY_relative;
-				}else if(h && context._snapY.type=="bottom"){
+				}else if(h && context._snapY.typeRefObj=="bottom"){
 					this._newBox.t = snapY_relative - h;
-				}else if(h && context._snapY.type=="middle"){
+				}else if(h && context._snapY.typeRefObj=="middle"){
 					this._newBox.t = snapY_relative - h/2;
 				}
 			}
@@ -79,7 +79,7 @@ dojo.declare("davinci.ve.commands.MoveCommand", null, {
 		this._deltaX = this._newBox.l - this._oldBox.l;
 		this._deltaY = this._newBox.t - this._oldBox.t;
 
-		var cleanValues = { left: this._newBox.l, top: this._newBox.t, position: "absolute"};
+		var cleanValues = { left: this._newBox.l, top: this._newBox.t};
 		davinci.ve.states.setStyle(widget, this._state, cleanValues, undefined, isNormalState);	
 		
 		if (isNormalState) {

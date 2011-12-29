@@ -1,0 +1,11 @@
+.shape {
+	stroke:black;
+	stroke-width:3;
+	fill:none;
+}
+.draw.drawText {
+	fill:black;
+	stroke:none;
+	stroke-width:1;
+}
+	

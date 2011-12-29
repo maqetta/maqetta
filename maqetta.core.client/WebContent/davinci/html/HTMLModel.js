@@ -8,12 +8,11 @@ dojo.require("davinci.html.HTMLParser");
 if (!davinci.html)
     davinci.html={};    
 
-davinci.html._noFormatElements=
-    ({
-        'span':true,
-        'b':true,
-        'it':true
-    });
+davinci.html._noFormatElements = {
+    span:true,
+    b:true,
+    it:true
+};
 
 davinci.html.escapeXml = function(value) {
     if(!value){
@@ -28,6 +27,8 @@ davinci.html.unEscapeXml = function(value) {
     }
     return value.replace(/&quot;/g, '"').replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/&amp;/g, "&");
 };
+
+//==============================================================================
 
 /**  
  * @class davinci.html.HTMLItem
@@ -83,17 +84,21 @@ davinci.html.HTMLItem.prototype.getHTMLFile = function() {
     return element;
 };
 
+//==============================================================================
+
 /**
  * @class davinci.html.HTMLFile
  * @constructor
  * @extends davinci.html.HTMLItem
  */
-davinci.html.HTMLFile= function(fileName) {
+davinci.html.HTMLFile = function(fileName) {
     this.fileName = fileName;
-    this.inherits( davinci.html.HTMLItem);
-    this.elementType="HTMLFile";
-    this._loadedCSS={};
+    this.inherits(davinci.html.HTMLItem);
+    this.elementType = "HTMLFile";
+    this._loadedCSS = {};
+    this._styleElem = null;
 };
+
 davinci.Inherits(davinci.html.HTMLFile,davinci.html.HTMLItem);
 
 davinci.html.HTMLFile.prototype.save = function (isWorkingCopy) {
@@ -199,9 +204,10 @@ davinci.html.HTMLFile.prototype.getRule = function(selector) {
 };
 
 davinci.html.HTMLFile.prototype.setText = function (text, noImport) {
-
-    var oldChildren = this.children;
+    // clear cached values
     this.children = [];
+    this._styleElem = null;
+
     var result = davinci.html.HTMLParser.parse(text || "", this);
     var formattedHTML = "";
     if (!noImport && result.errors.length == 0) {
@@ -231,7 +237,6 @@ davinci.html.HTMLFile.prototype.setText = function (text, noImport) {
         });
     }
     this.onChange();
-
 };   
 
 davinci.html.HTMLFile.prototype.hasStyleSheet = function (url) {
@@ -244,7 +249,7 @@ davinci.html.HTMLFile.prototype.hasStyleSheet = function (url) {
 	return false;
 };
 
-davinci.html.HTMLFile.prototype.addStyleSheet = function(url, content, dontLoad) {
+davinci.html.HTMLFile.prototype.addStyleSheet = function(url, content, dontLoad, beforeChild) {
     // create CSS File model
 
     if(!dontLoad){
@@ -278,7 +283,11 @@ davinci.html.HTMLFile.prototype.addStyleSheet = function(url, content, dontLoad)
     }
     var css = new davinci.html.CSSImport();
     css.url = url;
-    this._styleElem.addChild(css);
+    if(beforeChild){
+    	this._styleElem.insertBefore(css, beforeChild);
+    }else{
+    	this._styleElem.addChild(css);
+    }
     if(!dontLoad){ 
         css.load(true);
     }
@@ -316,6 +325,21 @@ davinci.html.HTMLFile.prototype.updatePositions = function(startOffset,delta) {
     });
 };
 
+/*
+ * The PageEditor uses the HTML model as its base model. However, 
+ * the visual editor aspect of the PageEditor injects temporary 
+ * runtime content into the model which skews offsets. When in 
+ * split view we need to correct the model element positions by 
+ * removing temporary content length from rendered content length.
+ */
+davinci.html.HTMLFile.prototype.mapPositions = function(element) {
+    var s = this.getText();
+    var et = element.getText();
+    var start = s.indexOf(et);
+    var end   = start + et.length;
+    return {startOffset:start, endOffset:end};
+};
+
 davinci.html.HTMLFile.prototype.reportPositions = function() {
     this.visit({
             visit: function(element) {
@@ -327,6 +351,8 @@ davinci.html.HTMLFile.prototype.reportPositions = function() {
             }
     });
 };
+
+//==============================================================================
 
 /**
  * @class davinci.html.HTMLElement
@@ -383,7 +409,8 @@ davinci.html.HTMLElement.prototype.getText = function(context) {
                 for (var i=0;i<this.children.length; i++) {
                     s=s+this.children[i].getText(context);
                     if (isStyle) {
-                        var lines=this._fmChildLine,indent=this._fmChildIndent || 0;
+                        var lines = this._fmChildLine,
+                            indent = this._fmChildIndent || 0;
                         if (i+1==this.children.length) {
                             lines=this._fmLine;
                             indent=this._fmIndent;
@@ -782,6 +809,8 @@ davinci.html.HTMLElement.prototype.visit = function (visitor) {
 };
 
 davinci.html.HTMLElement.prototype.setText = function (text) {
+    // clear cached values
+    this.script = '';
 
     var options={xmode:'outer'};
     var currentParent=this.parent;
@@ -799,6 +828,8 @@ davinci.html.HTMLElement.prototype.setText = function (text) {
     });
     this.onChange();
 };
+
+//==============================================================================
 
 /**
  * @class davinci.html.HTMLAttribute
@@ -818,8 +849,16 @@ davinci.html.HTMLAttribute.prototype.getText = function(context) {
     if (this.noPersist && !context.includeNoPersist)
         return "";
     var s=this.name;
-    if (!this.noValue)
+    var bool = {checked: 1, selected: 1, disabled: 1, readonly: 1, multiple: 1, ismap: 1};
+    if (bool[this.name.toLowerCase()]) {
+    	if (this.value && this.value != "false") {
+    		s += '="' + this.name + '"';
+    	} else {
+    		s = "";
+    	}
+    } else if (!this.noValue) {
         s=s+'="'+davinci.html.escapeXml(String(this.value))+'"';
+    }
     return s;
 };
 
@@ -828,6 +867,8 @@ davinci.html.HTMLAttribute.prototype.setValue = function(value) {
     this.value=davinci.html.unEscapeXml(value);
     this.onChange();
 };
+
+//==============================================================================
 
 /**
  * @class davinci.html.HTMLText
@@ -862,6 +903,8 @@ davinci.html.HTMLText.prototype.getLabel = function() {
         return this.value;
     return this.value.substring(0, 15) + "...";
 };
+
+//==============================================================================
 
 /**
  * @class davinci.html.HTMLComment

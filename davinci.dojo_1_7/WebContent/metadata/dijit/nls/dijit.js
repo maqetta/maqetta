@@ -20,7 +20,8 @@ define({ root: {
 		
 		//form/DropDownButtonInput.js
 		"dropDownButtonInputHelp":"Enter multiple lines of data. The first line is the button text and each addtional line is a drop down option. Optionally indicate option items by putting one \">\" character at the start of a line.",
-		
+		"plainText":"Plain text ({0})",
+
 		//MenuBarInput.js
 		"menuBarInputHelp":"Enter multiple lines of data, one for each menu option. Indicate nesting levels by putting one or more \">\" characters at the start of a line.",
 		

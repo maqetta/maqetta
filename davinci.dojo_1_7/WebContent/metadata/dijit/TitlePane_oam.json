@@ -74,10 +74,11 @@
             "datatype": "boolean",
             "description": "Whether pane is opened or closed."
         },
-        "content": {
+ /* FIXME: Temporarily comment out some properties that result in really ugly attributes in generated source code or are broken.
+       "content": {
             "datatype": "string",
             "description": "|| DomNode || NodeList || dijit._Widget\nThe innerHTML of the ContentPane.\nNote that the initialization parameter / argument to attr(\"content\", ...)\ncan be a String, DomNode, Nodelist, or _Widget."
-        },
+        },*/
 /*FIXME: Temporarily comment out some properties that result in really ugly attributes in generated source code or are broken.
         "ioArgs": {
             "datatype": "json",

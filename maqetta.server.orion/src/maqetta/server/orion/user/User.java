@@ -680,4 +680,9 @@ public class User implements IUser {
 		return this.person;
 	}
 
+	public boolean isValid(String path) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

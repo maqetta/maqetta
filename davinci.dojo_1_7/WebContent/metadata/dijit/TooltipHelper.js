@@ -1,6 +1,16 @@
 define([
 ], function(){
 return function() {
+	this.create = function(widget) {
+		var connectId = widget.attr("connectId");
+		if (!connectId || connectId.length == 0) { return; }
+		if (widget.getContext().getDojo().isArray(connectId)) {
+			connectId = connectId[0];
+		}
+
+		widget._ownerId = connectId;
+	};
+
 	/*
 	 * Called by Outline palette whenever user toggles visibility by clicking on eyeball.
 	 * @param {davinci.ve._Widget} widget  Widget whose visibility is being toggled
@@ -13,8 +23,8 @@ return function() {
 
 	this.onSelect = function(widget) {
 		var connectId = widget.attr("connectId");
-		if (!connectId) { return; }
-		if (connectId.length) {
+		if (!connectId || connectId.length == 0) { return; }
+		if (widget.getContext().getDojo().isArray(connectId)) {
 			// just show the first
 			connectId = connectId[0];
 		}
@@ -24,9 +34,8 @@ return function() {
 
 	this.onDeselect = function(widget){
 		var connectId = widget.attr("connectId");
-		if(!connectId){ return; }
-		if(connectId.length){
-			// just show the first
+		if (!connectId || connectId.length == 0) { return; }
+		if (widget.getContext().getDojo().isArray(connectId)) {
 			connectId = connectId[0];
 		}
 		var dijit = widget.getContext().getDijit();
@@ -35,7 +44,9 @@ return function() {
 	};
 
 	this.getSelectNode = function(context){
-		return context.getDijit()._masterTT.domNode;
+//		var master = context.getGlobal().require("dijit/Tooltip")._masterTT;
+		var master = context.getDijit().Tooltip._masterTT;
+		return master && master.domNode;
 	};
 };
 });

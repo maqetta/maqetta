@@ -49,6 +49,21 @@ define({ root:
 		"line":" line: ${0})",
 		"propUndefined":"undefined",
 		
+		//widgets/BackgroundDialog.js
+		//background-image type dropdown
+		"bgdType_emptystring":"",	// For all languages, must be an empty string
+		"bgdType_none":"none",
+		"bgdType_url":"image",	// In English, value='url' but displayValue='image'
+		"bgdType_linear":"linear gradient",
+		"bgdType_radial":"radial gradient",
+		"bgdType_other":"other",
+		//File picker launch button
+		"bgdPickFile":"Choose...",
+		//stops
+		"bgdStop":"Stop",
+		"bgdAddStop":"Add a new gradient stop after this stop",
+		"bgdRemoveStop":"Remove this gradient stop",
+		
 		//widgets/ColorPicker.js
 		"colorPicker":"Color picker....",
 		"removeValue":"Remove Value",

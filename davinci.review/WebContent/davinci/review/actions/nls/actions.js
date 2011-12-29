@@ -1,4 +1,5 @@
-({
+define({ root:
+{
 		//CloseVersionAction.js
 		"areYouSureClose":"Are you sure you want to close this version?",
 		"closeSuccessful":"Closed the version successfully!",
@@ -12,5 +13,5 @@
 		
 		//PublishAction.js
 		"newReview":"New Review"
-
-})
+}
+});

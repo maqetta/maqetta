@@ -207,11 +207,18 @@ davinci.ve.widget.getLabel = function(widget){
 			}
 		}
 		return returnstr;
-	}
+	};
+
 	text+=remove_prefix(widget.type);
 	text+="</span> ";
 
-	var widgetText;
+	var widgetText,
+		helper = davinci.ve.widget.getWidgetHelper(widget.type);
+	if (helper && helper.getWidgetText) {
+		widgetText = helper.getWidgetText(widget);
+	}
+
+	//TODO: move to getWidgetText helper methods
 	var domNode = widget.domNode;
 	switch(widget.type){
 		case 'dijit.form.ComboBox':
@@ -229,23 +236,20 @@ davinci.ve.widget.getLabel = function(widget){
 			if(!widgetText){
 				widgetText = domNode.title;
 			}
-			break;
-		default:
-			widgetText = "";
 	}
+
 	if (widgetText) {
 		text += "<span class='propertiesTitleWidgetText'>" + widgetText + "</span> ";
 	}
 
 	/* add the class */
-	var node = widget.domNode;
 	var srcElement = widget._srcElement;
 	var id = widget.getId();
 	var classAttr = srcElement && srcElement.getAttribute("class");
 	var className = classAttr && classAttr.trim();
 	if (id || className) {
 		text += "<span class='propertiesTitleClassName'>";
-		//text += node.tagName;
+		//text += domNode.tagName;
 		if (id) {
 			text += "#" + id;
 		}
@@ -254,10 +258,14 @@ davinci.ve.widget.getLabel = function(widget){
 		}
 		text += "</span> ";
 	}
-	if(widget.type === 'html.img'){
-		var src = domNode.src;
-		var s = '<span>' + src.substr(src.lastIndexOf('/')+1) + '</span>';
-		text += s;
+
+	if (helper && helper.getWidgetTextExtra) {
+		text += helper.getWidgetTextExtra(widget);
+	}
+
+	//TODO: move to getWidgetTextExtra helper methods
+	if (widget.type == 'html.img') {
+		text += '<span>' + domNode.src.substr(domNode.src.lastIndexOf('/') + 1) + '</span>';
 	}
 	return text;
 };

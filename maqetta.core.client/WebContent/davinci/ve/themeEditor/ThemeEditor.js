@@ -4,6 +4,7 @@ define([
 	"davinci/ve/ThemeModifier",
 	"davinci/ve/themeEditor/VisualThemeEditor",
 	"davinci/ve/themeEditor/metadata/query",
+	"davinci/ve/themeEditor/metadata/CSSThemeProvider",
 	"davinci/ve/themeEditor/commands/ThemeEditorCommand",
 	"davinci/ve/themeEditor/commands/SubwidgetChangeCommand",
 	"davinci/ve/themeEditor/commands/StyleChangeCommand",
@@ -15,6 +16,7 @@ define([
 			ThemeModifier,
 			VisualThemeEditor,
 			query,
+			CSSThemeProvider,
 			ThemeEditorCommand,
 			SubwidgetChangeCommand,
 			StyleChangeCommand,
@@ -22,7 +24,7 @@ define([
 			ContentPane
 	){
 
-declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier], {
+return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier], {
 	
 	children : [], //FIXME: shared array
 	visualEditor : null, 
@@ -101,6 +103,12 @@ declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier], {
 		var obj = domNode;
 		if (obj.offsetParent) {
 			do {
+			    if (obj.className.indexOf('theming-widget') > -1){
+                    // #1024 using ralitve div for postion
+                    realtop = domNode.offsetTop; // 1024
+                    realleft = domNode.offsetLeft ; // 1024
+                    break;
+                }
 				realleft += obj.offsetLeft;
 				realtop += obj.offsetTop;
 			} while (obj = obj.offsetParent);
@@ -115,7 +123,7 @@ declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier], {
 		realtop = realtop - padding;
 		realleft = realleft - padding;
 		frame.style.top = realtop + "px";
-		frame.style.left = realleft + "px";
+		frame.style.left = realleft + "px"; 
 		frame.style.padding = padding + 'px';
 		frame.style.display = "block";
 		this._selectedWidget.domNode.parentNode.appendChild(frame);
@@ -168,9 +176,9 @@ declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier], {
 		for(var s = 0; s < rules.length; s++){
 			var rule=rules[s];
 			for(var p = 0;p<rule.properties.length;p++){
-				if(!allProps[rule.properties[p].name]){ // set to first found
+				//if(!allProps[rule.properties[p].name]){ // set to first found
 					allProps[rule.properties[p].name] = rule.properties[p].value;
-				}
+				//}
 			}
 		}
 		allProps = this.convertShortHandProps(allProps);
@@ -337,12 +345,14 @@ declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier], {
 			return null;
 		}
 		
-		var type = this.metaDataLoader.getType(widget);
+		var widgetType = this.metaDataLoader.getType(widget);
 		
-		if(!type)
+		if(!widgetType)
 			return null;
-		if(widget.id === 'all'){ // this is the mythical widget used for global change of widgets 
-			type = type + '.$all'; // add this to the end so it will match the key in the metadata
+
+		var id = widget.id;
+		if(id.indexOf('all') === 0){ // this is a  mythical widget used for global change of widgets 
+			widgetType = widgetType + '.$' + id; // add this to the end so it will match the key in the metadata
 		}
 		
 		
@@ -354,7 +364,7 @@ declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier], {
 			state = "Normal";
 		var allClasses = [];
 		if(this.__DEBUG_TO_CONSOLE) console.log("[theme editor] query metadata, widget: " + widget.declaredClass + " subwidget:" + subWidget  + " state:" + state);
-		var metadata = this._theme.getStyleSelectors(type,state,subWidget);
+		var metadata = this._theme.getStyleSelectors(widgetType,state,subWidget);
 		
 		for(var aa in metadata){
 			
@@ -535,7 +545,7 @@ declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier], {
 			}
 			
 			this.metaDataLoader = new query(metaResources);
-			this._theme = new davinci.ve.themeEditor.metadata.CSSThemeProvider(metaResources, this.theme);
+			this._theme = new CSSThemeProvider(metaResources, this.theme);
 			// connect to the css files, so we can update the canvas when the model changes
 			var cssFiles = this._getCssFiles();	
 			var context = this.getContext();
@@ -697,6 +707,12 @@ declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier], {
 		var obj = domNode;
 		if (obj.offsetParent) {
 			do {
+			    if (obj.className.indexOf('theming-widget') > -1){
+			        // #1024 using ralitve div for postion
+			        realtop = domNode.offsetTop; // 1024
+			        realleft = domNode.offsetLeft ; // 1024
+			        break;
+			    }
 				realleft += obj.offsetLeft;
 				realtop += obj.offsetTop;
 			} while (obj = obj.offsetParent);
@@ -726,7 +742,20 @@ declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier], {
 	canvasOnMouseDown: function(event){
 		//console.log('ThemeEditor:canvasOnMouseDown');
 		 // we should only get here when the canvas is clicked on, deslecting widget	
-		if (this._selectedWidget){
+	    var t = davinci.ve.widget.getEnclosingWidget(event.target);
+        if (event.target.id.indexOf('enableWidgetFocusFrame_') >-1){
+            t = event.target._widget;
+        }
+        var widget =  t ;
+        while(widget){
+            if (widget.dvAttributes && widget.dvAttributes.isThemeWidget && widget.getContext() ){ // managed widget
+                return; // break;
+            }
+            widget = davinci.ve.widget.getEnclosingWidget(widget.domNode.parentNode);
+        }
+        
+
+		if (this._selectedWidget && (event.target.className.indexOf('editFeedback') < 0)){ // #1024 mobile widgets click through
 			event.stopPropagation();
 			var a = [null];
 			if (this._currentSelectionRules) {

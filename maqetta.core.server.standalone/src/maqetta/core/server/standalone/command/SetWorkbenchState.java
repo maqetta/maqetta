@@ -22,6 +22,9 @@ public class SetWorkbenchState extends Command {
         if(! user.isValid(settingsFile.getAbsolutePath()) ) return;
         if (!settingsFile.exists()) {
             settingsFile.createNewFile();
+        }else{
+        	settingsFile.delete();
+        	settingsFile.createNewFile();
         }
         OutputStream os = new BufferedOutputStream(new FileOutputStream(settingsFile));
         Command.transferStreams(req.getInputStream(), os, false);

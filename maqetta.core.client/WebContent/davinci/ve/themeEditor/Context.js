@@ -164,7 +164,7 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 	},
 	getThemeMeta: function(){
 		if(!this._themeMetaCache) {
-			this._themeMetaCache = davinci.library.getMetaData(this.theme);
+			this._themeMetaCache = davinci.library.getThemeMetadata(this.theme);
 		}
 
 		return this._themeMetaCache;
@@ -190,6 +190,12 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 		}else{
 			selection = [widget];
 		}
+		var selectionChanged = false;
+		if(!this._selection || this._selection.length > 1 || selection.length > 1 ||
+				selection[0] != this._selection[0]){
+			this._selection = selection;
+			selectionChanged = true;
+		}
 		
 		var box = undefined;
 		var op = undefined;
@@ -213,9 +219,7 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 		this.focus({box: box, op: op}, index);
 		this._focuses[0].showContext(this, widget);
 
-		if(!this._selection || this._selection.length > 1 || selection.length > 1 ||
-			selection[0] != this._selection[0]){
-			this._selection = selection;
+		if(selectionChanged){
 			this.onSelectionChange(this.getSelection());
 		}
 	},
@@ -225,6 +229,9 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 	getStyleAttributeValues: function(widget){
 		/* no style attributes for theme editor */
 		return {};
+	},
+	_restoreStates: function(){
+	    
 	},
 	 _configDojoxMobile: function() {
 	     // override base
@@ -238,6 +245,31 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
              } 
          }
 	    
+	 },
+	 
+	 /*
+     * @returns the path to the file being edited
+     */
+	 getPath: function(){
+        
+        /*
+         * FIXME:
+         * We dont set the path along with the content in the context class, so
+         * have to pull the resource path from the model.  
+         * 
+         * I would rather see the path passed in, rather than assume the model has the proper URL,
+         * but using the model for now.
+         * 
+         */
+	    /*theme editor sets the file name to DEFAULT_PAGE
+	     * so use the path theme file to find the html
+	     *
+         */  
+        var path = this.theme.file.getPath();
+        path = path.substring(0, path.lastIndexOf('/'));
+        path = path + '/' + this.theme.themeEditorHtmls[0];
+        return path;
 	 }
+	 
 });
 

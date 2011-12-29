@@ -1,7 +1,4 @@
 {
-    "name": "dojo",
-    "longName": "Dojo Toolkit",
-    "version": "1.7",
     "categories": {
         "containers": {
             "name": "Dojo Containers",
@@ -244,12 +241,12 @@
             "name": "TitlePane",
             "description": "Title Pane",
             "type": "dijit.TitlePane",
-            "category": "untested",
+            "category": "containers",
             "icon": "resources/images/title-pane.png",
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAVxJREFUeNqkUz1LA0EQfRvzKVYW9voHYinYyAkWaptGRCsrIVGLpBBFEINJIYhNTJdCm4hgpSik9td4MWp27/Y2697saRPUJM4xt7dvZ9683dljWms4R08aI1o8fEnOcVFaHjo5X7m3BF6nQ8CSU+gLemyd/4iLt1dL0HVdcD/A3cMZ1jerFKDNc9UoEn57c9pHwH2F7ouLGE3aLj54gHchUavtYHJmGvXLPZqHzuPMuIkbYxD0zQzug5vCpEC0O+Ay+GY/3F2lyn+ZMFtnYRemZrdH6wKLupBdmMfJwdrQ+fvH15Yg8H0CtjbKtrepBBKZDNIT40gaD8dEJo16fpHWU0zD0wzK5FkCT9JCq1ka/AKZTUsvIhCqR6CTq/yq4MsaBQdJo4IrbQlUYE/8uVkcqLqKxhgXloB1BQFzuerACmxhaQl6ajgFiJrek8reg+xKeeS/kQj+Y58CDAA9vJ+nCFLrswAAAABJRU5ErkJggg==",
             "properties": {
                 "title": "Pane",
-                "style": "width: 100%; min-width:1em;"
+                "style": "width: 300px; min-width:1em;"
             },
             "resizable": "width",
             "allowedChild": "ANY",
@@ -259,7 +256,8 @@
                 "displayOnCreate": true,
                 "supportsHTML": true,
                 "multiLine": false
-            }
+            },
+            "helper": "davinci.libraries.dojo.dijit.layout.TitlePaneHelper"
         },
         {
             "name": "Toolbar",
@@ -484,6 +482,23 @@
             "resizable": "width"
         },
         {
+            "name": "Dialog",
+            "description": "Dialog",
+            "type": "dijit.Dialog",
+            "category": "untested",
+            "icon": "resources/images/dialog.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPb1+x02ay9MiC5KhTBNhzJRizJRijVWjzlbkzFJbzhclDximTJLcTNMcj9onz9onkRupUxmik5oi0RupEh1qkd2q0d1qkd2qkh2q0h2qkt7r7PO67vT7U6BtE+BtUx8r7PO6rXQ7LXQ67jS7LrT7bvU7fT4/FGHuVGHuFSKvFSLvFaNv7fS7NDj9NLk9dLk9NTl9VaOv8zh88/j9M7i89Tm9dnp9uz1/Mns/////////wAAAAAAAAAAAAAAAAAAACH5BAEAADoALAAAAAAQABAAAAaXQF1sSCwOV0OhjNZywWyAqBQQ06Vkm9CoBA1IcpKASaU7YUMsDjTc8JpQuo4MJGKRoDlGgJEzeXQac3V3ABEBCQERJh86FoJ2XRE5hiYZOhNLMy81UFNREDoOGRSjFRgXGReoFBQPOgs4sbKzsgs6Cjg3uru8ugg6BziewwAHOgXCxFMGOgTJylECOgPU1dbXOtna29w6QQA7",
+            "properties": {
+                "style": "min-width: 200px;",
+                "title": "Dialog"
+            },
+            "allowedChild": "ANY",
+            "isLayered": true,
+            "resizable": "none",
+            "tool": "davinci.libraries.dojo.dijit.DialogCreateTool",
+            "helper": "davinci.libraries.dojo.dijit.DialogHelper"
+        },
+        {
             "name": "DropDownButton",
             "description": "Drop Down Button",
             "type": "dijit.form.DropDownButton",
@@ -587,6 +602,41 @@
             "resizable": "width",
             "helper": "davinci.libraries.dojo.dijit.form.SelectHelper",
             "inlineEdit": "davinci.libraries.dojo.dijit.form.SelectInput"
+        },
+        {
+            "name": "Menu",
+            "type": "dijit.Menu",
+            "category": "untested",
+            "icon": "resources/images/contextmenu.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5KhTJRijdakzpeljpfljpflTtfljtflT1jmT9mnT9nnT9onUJtokVyp0Zyp0Zypkl3rEp4q0x9sU1+sU19sE+DtVSLvVKHuVKIuVWLvVaOv////////wAAAAAAAAAAACH5BAEAABwALAAAAAAQABAAAAVQICeOZGmepqaurEpmWyzPFoltABAISTNdmwupMituKiQKTsfzASUkiHEWIT2Wu95v4yAxpjIGSYFtbhckBDiGIA0KhwPBIB8QCgaUfs/vhwAAOw==",
+            "properties": {
+                "contextMenuForWindow": true,
+                "style": "visibility: hidden;"
+            },
+            "children": [
+                {
+                    "type": "dijit.MenuItem",
+                    "properties": {
+                        "label": "Menu item 1"
+                    }
+                },
+                {
+                    "type": "dijit.MenuItem",
+                    "properties": {
+                        "label": "Menu item 2"
+                    }
+                },
+                {
+                    "type": "dijit.MenuItem",
+                    "properties": {
+                        "label": "Menu item 3"
+                    }
+                }
+            ],
+            "resizable": "none",
+            "isLayered": true,
+            "allowedChild": "DijitMenuItems",
+            "helper": "davinci.libraries.dojo.dijit.MenuHelper"
         },
         {
             "name": "MultiSelect",
@@ -736,6 +786,34 @@
                 "multiLine": false,
                 "supportsHTML": true
             }
+        },
+        {
+            "name": "Tooltip",
+            "description": "Tooltip",
+            "type": "dijit.Tooltip",
+            "category": "untested",
+            "icon": "resources/images/tooltip.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAEJ1o2GMs2GMsmmRtmmRtW+WuXOZuz5zoUh6plCAqlCAqViGrmiStmmStmiStW+Xudr0/+P3/+T3//X8/9r1/9v1/+z6/+36//T8//X9//r+/////wAAAAAAAAAAAAAAACH5BAEAABsALAAAAAAQABAAAAVU4CaOZGme6GakpUGt7PZAUVWkgyNFfMQwg0FjQBAFIMikEikQLSTQKC8qWYgUVOg0mhAhLODw5RK2IEQAjHqdmawxANFBQ6/b6Qf5Yc/v82OAgYEhADs=",
+            "children": "Text",
+            "tool": "davinci.libraries.dojo.dijit.TooltipCreateTool",
+            "resizable": "none",
+            "allowedChild": "ANY",
+            "helper": "davinci.libraries.dojo.dijit.TooltipHelper",
+            "inlineEdit": "davinci.ve.input.RichTextInput"
+        },
+        {
+            "name": "TooltipDialog",
+            "description": "Tooltip Dialog",
+            "type": "dijit.TooltipDialog",
+            "category": "untested",
+            "icon": "resources/images/tooltip.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAEJ1o2GMs2GMsmmRtmmRtW+WuXOZuz5zoUh6plCAqlCAqViGrmiStmmStmiStW+Xudr0/+P3/+T3//X8/9r1/9v1/+z6/+36//T8//X9//r+/////wAAAAAAAAAAAAAAACH5BAEAABsALAAAAAAQABAAAAVU4CaOZGme6GakpUGt7PZAUVWkgyNFfMQwg0FjQBAFIMikEikQLSTQKC8qWYgUVOg0mhAhLODw5RK2IEQAjHqdmawxANFBQ6/b6Qf5Yc/v82OAgYEhADs=",
+            "children": "Text",
+            "tool": "davinci.libraries.dojo.dijit.TooltipDialogCreateTool",
+            "resizable": "none",
+            "allowedChild": "ANY",
+			"allowedParent": "dijit.form.DropDownButton",
+            "helper": "davinci.libraries.dojo.dijit.TooltipDialogHelper"
         },
         {
             "name": "Tree",
@@ -898,50 +976,6 @@
             "resizable": "width"
         },
         {
-            "name": "Dialog",
-            "description": "Dialog",
-            "type": "dijit.Dialog",
-            "category": "untested",
-            "icon": "resources/images/dialog.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPb1+x02ay9MiC5KhTBNhzJRizJRijVWjzlbkzFJbzhclDximTJLcTNMcj9onz9onkRupUxmik5oi0RupEh1qkd2q0d1qkd2qkh2q0h2qkt7r7PO67vT7U6BtE+BtUx8r7PO6rXQ7LXQ67jS7LrT7bvU7fT4/FGHuVGHuFSKvFSLvFaNv7fS7NDj9NLk9dLk9NTl9VaOv8zh88/j9M7i89Tm9dnp9uz1/Mns/////////wAAAAAAAAAAAAAAAAAAACH5BAEAADoALAAAAAAQABAAAAaXQF1sSCwOV0OhjNZywWyAqBQQ06Vkm9CoBA1IcpKASaU7YUMsDjTc8JpQuo4MJGKRoDlGgJEzeXQac3V3ABEBCQERJh86FoJ2XRE5hiYZOhNLMy81UFNREDoOGRSjFRgXGReoFBQPOgs4sbKzsgs6Cjg3uru8ugg6BziewwAHOgXCxFMGOgTJylECOgPU1dbXOtna29w6QQA7",
-            "properties": {
-                "style": "width: 250px; height: 250px;",
-                "title": "Dialog"
-            },
-            "allowedChild": "ANY",
-            "isLayered": true,
-            "resizable": "none",
-            "tool": "davinci.libraries.dojo.dijit.DialogCreateTool",
-            "helper": "davinci.libraries.dojo.dijit.DialogHelper"
-        },
-        {
-            "name": "Tooltip",
-            "description": "Tooltip",
-            "type": "dijit.Tooltip",
-            "category": "untested",
-            "icon": "resources/images/tooltip.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAEJ1o2GMs2GMsmmRtmmRtW+WuXOZuz5zoUh6plCAqlCAqViGrmiStmmStmiStW+Xudr0/+P3/+T3//X8/9r1/9v1/+z6/+36//T8//X9//r+/////wAAAAAAAAAAAAAAACH5BAEAABsALAAAAAAQABAAAAVU4CaOZGme6GakpUGt7PZAUVWkgyNFfMQwg0FjQBAFIMikEikQLSTQKC8qWYgUVOg0mhAhLODw5RK2IEQAjHqdmawxANFBQ6/b6Qf5Yc/v82OAgYEhADs=",
-            "children": "Text",
-            "tool": "davinci.libraries.dojo.dijit.TooltipCreateTool",
-            "resizable": "none",
-            "allowedChild": "ANY",
-            "helper": "davinci.libraries.dojo.dijit.TooltipHelper",
-            "inlineEdit": "davinci.ve.input.RichTextInput"
-        },
-        {
-            "name": "TooltipDialog",
-            "description": "Tooltip Dialog",
-            "type": "dijit.TooltipDialog",
-            "category": "untested",
-            "icon": "resources/images/tooltip.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAEJ1o2GMs2GMsmmRtmmRtW+WuXOZuz5zoUh6plCAqlCAqViGrmiStmmStmiStW+Xudr0/+P3/+T3//X8/9r1/9v1/+z6/+36//T8//X9//r+/////wAAAAAAAAAAAAAAACH5BAEAABsALAAAAAAQABAAAAVU4CaOZGme6GakpUGt7PZAUVWkgyNFfMQwg0FjQBAFIMikEikQLSTQKC8qWYgUVOg0mhAhLODw5RK2IEQAjHqdmawxANFBQ6/b6Qf5Yc/v82OAgYEhADs=",
-            "children": "Text",
-            "tool": "davinci.libraries.dojo.dijit.TooltipDialogCreateTool",
-            "resizable": "none",
-            "allowedChild": "ANY",
-            "helper": "davinci.libraries.dojo.dijit.TooltipDialogHelper"
-        },
-        {
             "name": "TimeTextBox",
             "description": "Time Text Box",
             "type": "dijit.form.TimeTextBox",
@@ -1031,41 +1065,6 @@
                 "container":"rightDecoration"
             },
             "allowedParent": "dijit.form.VerticalSlider"
-        },
-        {
-            "name": "Menu",
-            "type": "dijit.Menu",
-            "category": "untested",
-            "icon": "resources/images/contextmenu.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5KhTJRijdakzpeljpfljpflTtfljtflT1jmT9mnT9nnT9onUJtokVyp0Zyp0Zypkl3rEp4q0x9sU1+sU19sE+DtVSLvVKHuVKIuVWLvVaOv////////wAAAAAAAAAAACH5BAEAABwALAAAAAAQABAAAAVQICeOZGmepqaurEpmWyzPFoltABAISTNdmwupMituKiQKTsfzASUkiHEWIT2Wu95v4yAxpjIGSYFtbhckBDiGIA0KhwPBIB8QCgaUfs/vhwAAOw==",
-            "properties": {
-                "contextMenuForWindow": true,
-                "style": "visibility: hidden;"
-            },
-            "children": [
-                {
-                    "type": "dijit.MenuItem",
-                    "properties": {
-                        "label": "Menu item 1"
-                    }
-                },
-                {
-                    "type": "dijit.MenuItem",
-                    "properties": {
-                        "label": "Menu item 2"
-                    }
-                },
-                {
-                    "type": "dijit.MenuItem",
-                    "properties": {
-                        "label": "Menu item 3"
-                    }
-                }
-            ],
-            "resizable": "none",
-            "isLayered": true,
-            "allowedChild": "DijitMenuItems",
-            "helper": "davinci.libraries.dojo.dijit.MenuHelper"
         },
         {
             "name": "PopupMenuBarItem",
@@ -1889,6 +1888,9 @@
                     }
                 }
             },
+            "properties": {
+                "style": "z-index:0;"
+            },
             "helper": "davinci.libraries.dojo.dojox.mobile.HeadingHelper",
             "inlineEdit": {
                 "property": "label",
@@ -1943,16 +1945,12 @@
             "children": [
                 {
                     "type": "dojox.mobile.ListItem",
-                    "properties": {
-                        "label": "Item 1"
-                    }
-                },
+                    children:"Item 1"
+                 },
                 {
                     "type": "dojox.mobile.ListItem",
-                    "properties": {
-                        "label": "Item 2"
-                    }
-                }
+                    children:"Item 2"
+                 }
             ]
         },
         {
@@ -2015,16 +2013,12 @@
             "children": [
                 {
                     "type": "dojox.mobile.ListItem",
-                    "properties": {
-                        "label": "Item 1"
-                    }
-                },
+                    children:"Item 1"
+                 },
                 {
                     "type": "dojox.mobile.ListItem",
-                    "properties": {
-                        "label": "Item 2"
-                    }
-                }
+                    children:"Item 2"
+                 }
             ]
         },
         {
@@ -2072,9 +2066,10 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5Khd/k7jJRit7j7N3i6zdak+Dm79/l7j9mnUJqoEVyp0ZxpuHo8UVypkl3q0p4q0x9sU1+sVCDteTs9OLq8lKHueTt9ePs9P///////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABkALAAAAAAQABAAAAVbYCaOZClaaKqumYW9cAxb2YQRNzEEBkNdF8wkE5QZMZeMBMJsOp2ZyNEIyTgwACxAUEAoIpUK5pFZTGWNzHPdTGQM55ghc7jldr1f8ECPw/gHgYKDhCaGh4giIQA7",
             "helper": "davinci.libraries.dojo.dojox.mobile.ListItemHelper",
             "inlineEdit": {
-                "property": "label",
+                //"property": "textContent",
                 "displayOnCreate": true,
-                "supportsHTML": true
+                //"supportsHTML": true,
+                "useParent": true
             },
             "allowedParent": "dojox.mobile.RoundRectList, dojox.mobile.EdgeToEdgeList",
             "allowedChild": "dojox.mobile.Switch"

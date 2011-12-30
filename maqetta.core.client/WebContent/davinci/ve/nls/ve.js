@@ -65,7 +65,7 @@ define({ root:
 		"bgdRemoveStop":"Remove this gradient stop",
 		
 		//widgets/ColorPicker.js
-		"colorPicker":"Color picker....",
+		"colorPicker":"Color picker...",
 		"removeValue":"Remove Value",
 		"selectColor":"select a color",
 		

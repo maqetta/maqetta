@@ -35,14 +35,16 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 			this._selectedColor.innerHTML = "&nbsp;";
 			dojo.addClass(this._selectedColor, 'colorPickerSelected');
 			dojo.addClass(this._selectedColor, 'colorPickerSelectedSkinny');
+			
+			this._colorPickerFlat = new davinci.ve.widgets.ColorPickerFlat({});
 		}
 		
 		var comboDiv = dojo.create("div", {className:'bgPropComboDiv', style:'margin-right:' + marginRight + 'px;padding:1px 0;'});
  		var values = dojo.isArray(this.data) ? this.data : [''];
+		var langObjVE = this.langObjVE = dojo.i18n.getLocalization("davinci.ve", "ve");
  		if(colorswatch){
 			//FIXME: Following code is mostly a copy/paste from ColorPicker.js
 			//Should be refactored into a shared utility
-			var langObjVE = dojo.i18n.getLocalization("davinci.ve", "ve");
 			this._statics = ["", davinci.ve.widgets.ColorPicker.divider, langObjVE.colorPicker, langObjVE.removeValue];
 			this._run = {};
 			if(!this.data ){
@@ -77,15 +79,9 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 
 		if(colorswatch){
 			this.domNode.appendChild(buttonDiv2);
-			this._colorPickerFlat = new davinci.ve.widgets.ColorPickerFlat({});
 			dojo.connect(buttonDiv2,'onclick',dojo.hitch(this,function(event){
 				dojo.stopEvent(event);
-				if(this._isReadOnly){
-					return;
-				}
-				var initialValue = this._comboBox.get("value");
-				var isLeftToRight = this.isLeftToRight();
-				davinci.ve.widgets.ColorPickerFlat.show(this._colorPickerFlat, initialValue, this, isLeftToRight);
+				this._chooseColorValue();
 			}));
 			buttonDiv2.appendChild(this._selectedColor);
 			// Part of convoluted logic to make sure onChange logic doesn't trigger
@@ -225,6 +221,14 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 			davinci.Workbench.showModal(background, "Background", '', executor);
 		});
 		this.connect(this._comboBox, 'onChange', dojo.hitch(this, function(event){
+			// If new value is divider or color picker, reset the value in the ComboBox to previous value
+			//FIXME: This is a hack to overcome fact that choosing value in ComboBox menu
+			//causes the textbox to get whatever was selected in menu, even when it doesn't represent
+			//a valid color vlaue. Resetting it here resets the value before Cascade.js gets invoked 
+			//due to call to this.onChange() 
+			if(event == davinci.ve.widgets.ColorPicker.divider || event == this.langObjVE.colorPicker){
+				this._comboBox.attr('value', this.value);
+			}
 			// If onChange was triggered by an internal update to the text field,
 			// don't invoke onChange() function (which triggers update logic in Cascade.js).
 			// You see, Cascade.js logic can't tell difference between user changes to a field
@@ -304,6 +308,15 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 		this._isReadOnly = isReadOnly;
 		this._comboBox.attr("disabled", isReadOnly);
 		this._button.disabled = isReadOnly;
+	},
+	
+	_chooseColorValue: function() {
+		if(this._isReadOnly){
+			return;
+		}
+		var initialValue = this._comboBox.get("value");
+		var isLeftToRight = this.isLeftToRight();
+		davinci.ve.widgets.ColorPickerFlat.show(this._colorPickerFlat, initialValue, this, isLeftToRight);
 	}
 
 	

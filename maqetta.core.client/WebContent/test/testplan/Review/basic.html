@@ -17,14 +17,136 @@
 	<hr />
 	<h1 class="test_title">Review & Commenting</h1>
 
-	<h2 class="test_section">Test it!</h2>
+	<h2 class="test_section">Setup actions before running tests</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>Test it good!</li>
+		<li><strong>You'll need to run the application on a server that is integrated with sendmail. </strong>
+			In fact, best to test on multiple server configurations because a large part of the user management and sendmail logic
+			is stored in a server-dependent logic. The default build when pulling down sources from github
+			uses a bare-bones user management system without hookup to sendmail. There is a special OSGi plugin
+			specifically for http://maqetta.org that integrates with that server's user management system
+			and sendmail. Company-specific builds are likely to add their own OSGi plugin to integrate with
+			the company's LDAP and sendmail.</li>
+		<li><strong>You'll need multiple logins for each test server. </strong>
+			Best if there are at least 3 logins available (users A, B and C), each with their own separate email addresses,
+			where you are able to process the mail for those email addresses. (e.g., Suppose you are John Smith.
+			You might have these email addresses under your control: JohnSmith@MyCompany.Com, JohnSmith@me.com, JohnSmith@gmail.com.)
+			For internal company LDAP environments, where people often cannot create dummy email addresses,
+			it might be necessary to have 3 people work together on these tests.</li>
+	</ol>
+
+	<h2 class="test_section">Create a new review</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Login to the server as user A and open up the application.</li>
+		<li>Invoke New Review... from the New menu at the top of the application.</li>
+		<li>In the wizard that comes up, on the first pane, enter information for each field. Click on the Next button.</li>
+		<li>On the second pane, double-click on Sample1.html to make it one of the selected files. Click on the Next button.</li>
+		<li>On the third pane, enter the email addresses for users B and C. Click on the Publish button and watch the lower-right corner of the screen for a green popup message.</li>
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
-		<li>It should work.</li>
+		<li>Potentially after a few seconds, a green popup should appear saying that reviewers have been successfully invited.</li>
+	</ol>
+
+	<h2 class="test_section">Receiving a review invitation</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>As users A, B and C, login to your mail client and look for email review invitations.
+		  <div class='expectedResults_subsection'>You should see an email review invitation that includes
+		  	short explanation and a hyperlink for running the review software.</div>
+		</li>
+		<li>As user B, either using a different browser or a different computer,
+			activate the hyperlink.
+		  <div class='expectedResults_subsection'>You should be directed to the Maqetta server.
+		  	In almost all cases, you will be prompted to create a new user or login as an existing user.
+		  	In many systems (particularly http://maqetta.org) after completely the new user or login processes,
+		  	you should be taken to the review UI rather than the page editor UI.</div>
+		</li>
+		<li>Once reviewer UI appears, in the left-side Reviews palette, click on "+" to open up the latest review.
+		  <div class='expectedResults_subsection'>The latest review should be at the top.
+		  After clicking on the "+", you should see Sample1.html.rev listed as the only child of the review element.</div>
+		</li>
+		<li>Double-click on Sample1.html.
+		  <div class='expectedResults_subsection'>The canvas should show Sample1.html. The States palette on the right should
+		  	show the 3 states: Normal, Add Task and Task Added.</div>
+		</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>See notes above.</li>
+	</ol>
+
+	<h2 class="test_section">Adding review comments and annotations</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Continuing as user B, in the Comments palette, click on the "add comment" icon on the toolbar.
+			<div class='expectedResults_subsection'>A small comment entry form should appear just under the toolbar.</div>
+			Enter some text for the subject and some text for the description. Click Submit.
+			<div class='expectedResults_subsection'>The comment should be added to the top of the Comments palette
+			with a solid color border (e.g., blue) with "Edit" and "Reply" hyperlinks at top.</div>
+		</li>
+		<li>Continuing as user B, in the Comments palette, click on the "add comment" icon again.
+			Add a second comment, but before hitting Submit, add a circle/oval invitation to the page
+			by clicking on the circle/oval icon and then dragging out a circle. After dragging the circle,
+			verify that the circle can be moved and resized.
+			<div class='expectedResults_subsection'>The circle should be the same color as the border shown
+			on your comments in the Comments palette.</div>
+		</li>
+		<li>Continuing as user B, in the States palette, switch to the "Add Task" state.
+			<div class='expectedResults_subsection'>The "Add new task" dialog should appear on canvas.</div>
+			Add a 3rd comment, along with each of the other annotation types (text, rectangle, arrow).
+			Verify the each of these annotations types can be moved and resized.
+			Click Submit.</li>
+		<li>In States palette, switch to "Task Added" state.
+			<div class='expectedResults_subsection'>The annotations for the "Add Task" state should disappear.</div>
+			In States palette, switch to "Normal" state.
+			<div class='expectedResults_subsection'>The annotations for the "Add Task" state should continue to be hidden.</div>
+		</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>See notes above.</li>
+	</ol>
+
+	<h2 class="test_section">Replying to comments from others</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>As user C, either using a different browser or a different computer,
+			activate the hyperlink in the review invitation. Register and/or sign in and
+			ultimately get to the review UI.</li>
+		<li>Once reviewer UI appears, in the left-side Reviews palette, click on "+" to open up the latest review,
+			and then double-click on Sample1.html.rev.
+		  <div class='expectedResults_subsection'>The canvas should show Sample1.html. 
+			You should see the comments and annotation(s) that user B added to Normal state.</div>
+		</li>
+		<li>In the States palette, go to the Add Task state.
+		  <div class='expectedResults_subsection'>You should see the annotations that user B
+		  	added to the "Add Task" state.</div>
+		</li>
+		<li>In the Comments palette, while in "Add Task" state, click on the "Reply" icon for the last comment.
+			Add a descriptive comment and add a couple of annotations on the canvas. Click Submit.
+		  <div class='expectedResults_subsection'>Your comment block should be indented under the original comment and
+		  	have a different color border (e.g., green)
+		  	and the same color should be used for annotations on the canvas.</div>
+		</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>See notes above.</li>
+	</ol>
+
+
+	<h2 class="test_section">Author checking review comments</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>As user A, go to the Maqetta page editor.
+			Go to Reviews palette, open up the latest review session by clicking on "+", and then
+			double-click on Sample1.html.rev. 
+		  <div class='expectedResults_subsection'>The review UI should open in a separate browser tab.</div></li>
+		<li>Verify that the review comments from users B and C are visible, properly color-coded,
+			and that different annotations appear/disappear as you change states in the States palette.
+		</li>
 	</ol>
 
 </body>

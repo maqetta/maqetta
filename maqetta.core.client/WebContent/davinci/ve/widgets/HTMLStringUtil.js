@@ -93,7 +93,7 @@ davinci.ve.widgets.HTMLStringUtil.getEditor = function(jsonString){
 			return text;
 		case "state":
 			var text="<div dojoType='davinci.ve.widgets.MetaDataStore' jsId='davinci.properties.event"+ (id) + ('_Store') + "'>";
-			text+="<div dojoType='dijit.form.ComboBox' id='"+ id +"'store='davinci.properties.event"+ (id) + ('_Store') + "' class='propertyPaneEditablevalue' style='display:inline-block; width:100%;'></div>";
+			text+="<div dojoType='dijit.form.ComboBox' id='"+ id +"'store='davinci.properties.event"+ (id) + ('_Store') + "' class='propertyPaneEditablevalue' style='display:inline-block; width:100%;' autoComplete='false'></div>";
 			return text;
 		case "color":
 			var text = "<div class='propertyPaneEditablevalue' dojoType='davinci.ve.widgets.ColorPicker' id='"+ id + "' ></div>";

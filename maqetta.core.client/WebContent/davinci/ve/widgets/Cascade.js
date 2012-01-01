@@ -280,6 +280,8 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 
 			}
 		}
+		// Flag that the cascade list for this property needs to be recalculated/refreshed
+		this._dirtyCascadeList = true;
 		if(targetRule.type=="element.style"){
 			dojo.publish("/davinci/ui/styleValuesChange",[{values:valueObject, appliesTo:'inline', applyToWhichStates:applyToWhichStates }]);
 		}else{
@@ -860,18 +862,32 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 	},
 	
 	_widgetValuesChanged : function(event){
-		/* have to listen for style values post change in case a shortcut property is updated */
-		var shorthands = this._getShortHands();
-		var values = event.values;
-		for(var name in values){
-			for(var i = 0;i<shorthands.length;i++){
-				if(shorthands[i]==name){
-					this._updateCascadeList();	
-					return;
+		// If widget's values have changed and this particular property
+		// has the dirty bit set on the cascade list, then update the cascade list.
+		//FIXME: This is a bandaid fix to address bug #1005. It might have been better to
+		//force a call to _updateCascadeList() for all properties whenever anything widget
+		//properties change. This fix was safer.
+		if(this._dirtyCascadeList){
+			this._updateCascadeList();
+			this._dirtyCascadeList = false;
+			
+		// Else update cascade list if this property is a sub-component of
+		// a shorthand property (e.g., padding-left is a sub-component of padding)
+		}else{
+			/* have to listen for style values post change in case a shortcut property is updated */
+			var shorthands = this._getShortHands();
+			var values = event.values;
+			for(var name in values){
+				for(var i = 0;i<shorthands.length;i++){
+					if(shorthands[i]==name){
+						this._updateCascadeList();	
+						return;
+					}
 				}
 			}
 		}
 	},
+	
 	_formatRuleString : function(r){
 		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 		if(r.type=="element.style"){

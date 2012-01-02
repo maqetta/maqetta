@@ -54,6 +54,13 @@
                     	for(var item=0;item<data.items.length; item++){
                         	getUrlsRecursive(data.items[item]);
                     	}
+                    	var bc2 = dijit.byId('borderContainerTwo');
+                    	// Force resize action on outer BorderContainer so that
+                    	// left-side Tree widget will resize and properly indent the TreeItems.
+                    	// (Tree resize needs to be called after Tree is added to DOM)
+                    	setTimeout(function(){
+                        	bc2.resize();
+                    	}, 2000);
                     },
                     error: function(error) {
                         console.log("unable to load maqettadocs.json");

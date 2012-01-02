@@ -2066,9 +2066,7 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5Khd/k7jJRit7j7N3i6zdak+Dm79/l7j9mnUJqoEVyp0ZxpuHo8UVypkl3q0p4q0x9sU1+sVCDteTs9OLq8lKHueTt9ePs9P///////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABkALAAAAAAQABAAAAVbYCaOZClaaKqumYW9cAxb2YQRNzEEBkNdF8wkE5QZMZeMBMJsOp2ZyNEIyTgwACxAUEAoIpUK5pFZTGWNzHPdTGQM55ghc7jldr1f8ECPw/gHgYKDhCaGh4giIQA7",
             "helper": "davinci.libraries.dojo.dojox.mobile.ListItemHelper",
             "inlineEdit": {
-                //"property": "textContent",
                 "displayOnCreate": true,
-                //"supportsHTML": true,
                 "useParent": true
             },
             "allowedParent": "dojox.mobile.RoundRectList, dojox.mobile.EdgeToEdgeList",

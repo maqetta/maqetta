@@ -25,6 +25,7 @@
         }
     ],
     "property": {
+<<<<<<< HEAD
     	"x":{
             "datatype": "number",
             "defaultValue": "0"
@@ -33,6 +34,8 @@
             "datatype": "number",
             "defaultValue": "0"
         },
+=======
+>>>>>>> master
     	"width":{
             "datatype": "number",
             "defaultValue": "80"
@@ -40,6 +43,13 @@
     	"height":{
             "datatype": "number",
             "defaultValue": "80"
+<<<<<<< HEAD
+=======
+        },
+    	"cornerRadius":{
+            "datatype": "number",
+            "defaultValue": "0"
+>>>>>>> master
         }
     },
     "content": "<span></span>"

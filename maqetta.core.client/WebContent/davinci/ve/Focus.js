@@ -168,6 +168,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             // Call the dispatcher routine that updates snap lines and
             // list of possible parents at current (x,y) location
             this._context.dragMoveUpdate({
+            		widgets:[this._selectedWidget],
             		data:data,
             		eventTarget:event.target,
             		position:position,
@@ -296,7 +297,16 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
         this._selectedWidget = widget;
         this._inline = metadata.queryDescriptor(widget.type, "inlineEdit");
-        if (this._inline && this._inline.show) {
+    	var context = this._context;
+        if (this._inline && this._inline.useParent) {
+        	var parentWidget = widget.getParent();
+        	if(parentWidget){
+            	context.deselect(widget);
+            	context.select(parentWidget);
+            	var parentFocusObject = context.getFocus(parentWidget);
+            	parentFocusObject.showInline(parentWidget);
+        	}
+        }else if (this._inline && this._inline.show) {
             this._inline.show(widget.id);
         }
         return;
@@ -315,7 +325,11 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     hide: function(inline){
 
 		var widget = this._selectedWidget;
+<<<<<<< HEAD
 		var helper = widget.getHelper();
+=======
+		var helper = widget ? widget.getHelper() : undefined;
+>>>>>>> master
 		if(helper && helper.onHideSelection){
 			// Don't know if any widgets actually use this helper
 			// Included for completeness
@@ -328,8 +342,11 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             this._inline.hide();
             delete this._inline;
         }
+<<<<<<< HEAD
         var userdoc = this._context.getDocument();	// inner document = user's document
         userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
+=======
+>>>>>>> master
     },
     
     allow: function(op){
@@ -396,7 +413,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
                 this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(e){
                 	this.onKeyDown(e);
                 }));
-                this._keyUpHandler = dojo.connect(userdoc, "onkeyup", dojo.hitch(this, function(widgetType, e){
+                this._keyUpHandler = dojo.connect(userdoc, "onkeyup", dojo.hitch(this, function(e){
                 	this.onKeyUp(e);
                 }));
             }
@@ -636,7 +653,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         var widgetType = themeMetadata.getWidgetType(widget);
         var widgetMetadata = themeMetadata.getMetadata(widgetType);
         var subwidgets = widgetMetadata.subwidgets;
-
+        
+        this._displayedWidget = widget;
         if(subwidgets){
             var contexDiv=this._contexDiv;
             contexDiv.innerHTML = '<span></span>';
@@ -659,7 +677,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             // and we have no check boxes on FF
             var localDijit = this._context.getDijit();
             pMenu = new localDijit.Menu({id:menuId}, span);
-            this._displayedWidget = widget;
             var checked = false;
             if (!widget.subwidget) {
                 checked = true; // no subwidget selected

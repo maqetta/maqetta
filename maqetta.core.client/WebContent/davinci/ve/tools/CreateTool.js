@@ -22,7 +22,9 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 	constructor: function(data) {
 		this._data = data;
 		if (data && data.type) {
-			var resizable = davinci.ve.metadata.queryDescriptor(data.type, "resizable");
+			// Use resizableOnCreate property if present, else use resizable
+			var resizableOnCreate = davinci.ve.metadata.queryDescriptor(data.type, "resizableOnCreate");
+			var resizable = resizableOnCreate ? resizableOnCreate : davinci.ve.metadata.queryDescriptor(data.type, "resizable");
 			if (resizable !== "none") {
 				this._resizable = resizable;
 			}
@@ -52,6 +54,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		// 2) Click on canvas to indicate drop location
 		this._target = davinci.ve.widget.getEnclosingWidget(event.target);
 		this._mdPosition = this._context.getContentPosition(event); // mouse down position
+		this._dragRect = null;
 	},
 
 	onMouseMove: function(event){
@@ -69,12 +72,54 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			
 			// Only perform drag operation if widget is resizable
 			if(this._resizable){
-				
+				context.deselect();				
 				var p = context.getContentPosition(event);
-				var w = p.x - this._mdPosition.x;
-				var h = p.y - this._mdPosition.y;
+				var l, t, w, h;
+				var pos_x = true;
+				var pos_y = true;
+				if(p.x >= this._mdPosition.x){
+					l = this._mdPosition.x;
+					w = p.x - this._mdPosition.x;
+				}else{
+					l = p.x;
+					w = this._mdPosition.x - p.x;
+					pos_x = false;
+				}
+				if(p.y >= this._mdPosition.y){
+					t = this._mdPosition.y;
+					h = p.y - this._mdPosition.y;
+				}else{
+					t = p.y;
+					h = this._mdPosition.y - p.y;
+					pos_y = false;
+				}
+				if(event.shiftKey){	// force square-ish shape
+					if(w >= h){
+						h = w;
+						if(!pos_y){
+							t = this._mdPosition.y - h;
+						}
+					}else{
+						w = h;
+						if(!pos_x){
+							l = this._mdPosition.x - w;
+						}
+					}
+				}
+				
+				// Dynamic rectangle showing size the user is dragging
+				if(!this._dragSizeRect){
+					var body = context.getDocument().body;
+					this._dragSizeRect = dojo.create('div',{style:'border:1px dashed black;z-index:1000;position:absolute;'},body);
+				}
+				var style = this._dragSizeRect.style;
+				style.left = l + "px";
+				style.top = t + "px";
+				style.width = w + "px";
+				style.height = h + "px";
+
 				if(w > 4 || h > 4){
-					var box = {l: this._mdPosition.x, t: this._mdPosition.y,
+					var box = {l: l, t: t,
 						w: (w > 0 ? w : 1), h: (h > 0 ? h : 1)};
 					context.focus({box: box, op: {}});
 				}else{
@@ -114,6 +159,12 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		var cp = context._chooseParent; 
 		var absolute = !context.getFlowLayout();
 
+		if(this._dragSizeRect){
+			var parentNode = this._dragSizeRect.parentNode;
+			parentNode.removeChild(this._dragSizeRect);
+			this._dragSizeRect = null;
+		}
+
 		var activeDragDiv = context.getActiveDragDiv();
 		if(activeDragDiv){
 			var elems = dojo.query('.maqCandidateParents',activeDragDiv);
@@ -125,9 +176,57 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		
 		// If _mdPosition has a value, then user did a 2-click widget addition (see onMouseDown())
 		// If so, then use mousedown position, else get current position
-		this._position = this._mdPosition ? this._mdPosition : context.getContentPosition(event);
+		var size, target, w, h;
+		var p = context.getContentPosition(event);
+		if(this._mdPosition){
+			var pos_x = true;
+			var pos_y = true;
+			this._position = dojo.mixin({}, this._mdPosition);
+			if(p.x < this._mdPosition.x){
+				this._position.x = p.x;
+			}
+			if(this._resizable == "height"){
+				w = 0;
+			}else if(p.x - this._mdPosition.x >= 0){
+				w = p.x - this._mdPosition.x;
+			}else{
+				w = this._mdPosition.x - p.x;
+				pos_x = false;
+			}
+			if(p.y < this._mdPosition.y){
+				this._position.y = p.y;
+			}
+			if(this._resizable == "width"){
+				h = 0;
+			}else if(p.y - this._mdPosition.y >= 0){
+				h = p.y - this._mdPosition.y;
+			}else{
+				h = this._mdPosition.y - p.y;
+				pos_y = false;
+			}
+			if(event.shiftKey){	// force square-ish shape
+				if(w >= h){
+					h = w;
+					if(!pos_y){
+						t = this._mdPosition.y - h;
+					}
+				}else{
+					w = h;
+					if(!pos_x){
+						l = this._mdPosition.x - w;
+					}
+				}
+			}
+		}else{
+			this._position = p;
+		}
+		if(this._resizable && this._position){
+			var w, h;
+			if(w > 4 || h > 4){
+				size = {w: (w > 0 ? w : undefined), h: (h > 0 ? h : undefined)};
+			}
+		}
 
-		var size, target;
 		var ppw = cp.getProposedParentWidget();
 		if(ppw){
 			// Use last computed parent from onMouseMove handler
@@ -208,15 +307,6 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 					             '</span>.'].join(''); // FIXME: i18n
 				}
 				throw new InvalidTargetWidgetError(errorMsg);
-			}
-
-			if(this._resizable && this._position){
-				var p = context.getContentPosition(event);
-				var w = (this._resizable != "height" ? p.x - this._position.x : 0);
-				var h = (this._resizable != "width" ? p.y - this._position.y : 0);
-				if(w > 4 || h > 4){
-					size = {w: (w > 0 ? w : undefined), h: (h > 0 ? h : undefined)};
-				}
 			}
 
 			for (var i = 0; i < data.length; i++){
@@ -423,8 +513,14 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			var width = args.size && args.size.w,
 				height = args.size && args.size.h;
 			command.add(new davinci.ve.commands.ResizeCommand(w, width, height));
+			var helper = davinci.ve.widget.getWidgetHelper(w.type);
+			if(helper && helper.onCreateResize){
+				helper.onCreateResize(command, w, width, height);
+			}
 		}
+		var w_id = w.id;
 		this._context.getCommandStack().execute(command);
+		var w = widget.byId(w_id);
 		this._select(w);
 		this._widget = w;
 		return w;

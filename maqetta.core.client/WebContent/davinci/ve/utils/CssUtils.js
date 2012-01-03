@@ -180,6 +180,7 @@ dojo.provide("davinci.ve.utils.CssUtils");
 	
 	CssUtils.regex_num = new RegExp('^' + num + '$');
 	CssUtils.regstr_angle = '^\\s*' + dir_strict + '\\s*$';
+	CssUtils.regstr_len_or_pct = '^\\s*' + len_or_pct + '\\s*$';
 	CssUtils.regstr_posn = '^\\s*' + posn + '\\s*$';
 	CssUtils.regstr_shape = '^\\s*' + shape + '\\s*$';
 	CssUtils.regstr_extent = '^\\s*' + extent + '\\s*$';
@@ -497,11 +498,10 @@ dojo.provide("davinci.ve.utils.CssUtils");
 					w3c_stops += ', ';
 				}
 				w3c_stops += stop.color;
-				if(pos.length > 0){
-					if((i!=0 && !(pos.length == 0 || pos == '0%' || (pos-0) == 0)) &&
-						(i!=o.stops.length-1 && !(pos.length == 0 || pos == '100%' || (pos-0) == 1))){
-						w3c_stops += ' ' + pos;
-					}
+				if((i>0 && i<o.stops.length-1) ||	// intermediate stop
+					(i==0 && !(pos.length == 0 || pos == '0%' || (pos-0) == 0)) || // first stop
+					(i==o.stops.length-1 && !(pos.length == 0 || pos == '100%' || (pos-0) == 1))) {
+					w3c_stops += ' ' + pos;
 				}
 				if(i==0 && (pos.length == 0 || pos == '0%' || (pos-0) == 0)){
 					webkit_from = 'from(' + stop.color+ ')';

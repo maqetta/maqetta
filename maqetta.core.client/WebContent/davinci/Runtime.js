@@ -50,9 +50,8 @@ dojo.mixin(davinci.Runtime,	{
 		});
 	},
 
-	getUser : function(){
+	getUser: function(){
 		return dojo.cookie("DAVINCI.USER");
-		
 	},
 	
 	loadPlugins: function() {
@@ -220,7 +219,7 @@ dojo.mixin(davinci.Runtime,	{
 			}
 		});	
 		window.onbeforeunload = function (e) {
-			var shouldDisplay = new Date().getTime() - window.davinciBackspaceKeyTime < 100;
+			var shouldDisplay = Date.now() - window.davinciBackspaceKeyTime < 100;
 			if (shouldDisplay) {
 				var langObj = dojo.i18n.getLocalization("davinci","webContent");
 				var message = langObj.careful;
@@ -253,11 +252,11 @@ dojo.mixin(davinci.Runtime,	{
 		dojo.forEach(this.subscriptions, dojo.unsubscribe);
 	},
 	_loadPlugin: function(plugin,url) {
-		
 		var pluginID = plugin.id;
 		this.plugins[pluginID]= plugin;
-		if (plugin.css)
+		if (plugin.css) {
 			this._loadCSS(plugin,url);
+		}
 		for (var id in plugin) {
 			var extension = plugin[id];
 			if (typeof (extension) != "string") {
@@ -274,13 +273,15 @@ dojo.mixin(davinci.Runtime,	{
 	
 	_addExtension: function(id, extension, pluginID) {
 		
-		if (extension.id)
+		if (extension.id) {
 			extension.id = pluginID + "." + extension.id;
+		}
 		var extensions = this.extensionPoints[id];
-		if (extensions == null)
+		if (extensions == null) {
 			extensions = [];
+		}
 		extensions.push(extension);
-		if(!this.extensionPoints[id]) this.extensionPoints[id] = [];
+		if (!this.extensionPoints[id]) { this.extensionPoints[id] = []; }
 		this.extensionPoints[id] = extensions;
 	},
 	
@@ -290,18 +291,21 @@ dojo.mixin(davinci.Runtime,	{
 		if (testFunction) {
 			var matching=[];
 			var isFunction = testFunction instanceof Function;
-			if (extensions)
-				for ( var i = 0, len = extensions.length; i < len; i++)
-					if (isFunction)
-					{
-						if (testFunction(extensions[i]))
+			if (extensions) {
+				for (var i = 0, len = extensions.length; i < len; i++) { // FIXME: use filter
+					if (isFunction) {
+						if (testFunction(extensions[i])) {
 							matching.push(extensions[i]);
-					}
-					else if (extensions[i].id == testFunction)
+						}
+					} else if (extensions[i].id == testFunction) {
 						matching.push(extensions[i]);
-			return matching;
-		} else
+					}
+				}
+				return matching;
+			}
+		} else {
 			return extensions;
+		}
 	},
 	
 	getExtension: function(extensionID, testFunction) {
@@ -312,11 +316,13 @@ dojo.mixin(davinci.Runtime,	{
 				for ( var i = 0, len = extensions.length; i < len; i++)
 					if (isFunction)
 					{
-						if (testFunction(extensions[i]))
+						if (testFunction(extensions[i])) {
 							return extensions[i];
+						}
 					}
-					else if (extensions[i].id == testFunction)
+					else if (extensions[i].id == testFunction) {
 						return extensions[i];
+					}
 			return null;
 		} else {
 			return extensions[0];
@@ -326,7 +332,7 @@ dojo.mixin(davinci.Runtime,	{
 	
 	
 	handleError: function(error) {
-		alert(error);
+		window.document.body.innerHTML = "<div><h1>Problem connecting to the Maqetta Server...</h1></div><div><center><h1><a href='./welcome'>Return to Maqetta Login</a></h1></center></div><br><br><div><h2>Error description:</h2>" + error + "</div>"
 	},
 
 	_loadCSS: function(plugin,pluginURL) {
@@ -370,7 +376,7 @@ dojo.mixin(davinci.Runtime,	{
         "<td><input dojoType=\dijit.form.TextBox\ type=\"text\" name=\"username\" id='username' ></input></td></tr>" +
         "<tr><td><label for=\"password\">Password: </label></td> <td><input dojoType=\"dijit.form.TextBox\" type=\"password\" name=\"password\" id='password'></input></td></tr>" +
         "<tr><td colspan=\"2\" align=\"center\"><button dojoType=dijit.form.Button type=\"submit\" >Login</button></td>" +
-        "</tr></table>";
+        "</tr></table>"; // FIXME: i18n
 		do {
 			var isInput=false;
 			var	dialog = new dijit.Dialog({id: "connectDialog", title:"Please login", 
@@ -422,7 +428,7 @@ dojo.mixin(davinci.Runtime,	{
 			}
 			else if (response.status==400)
 			{
-				console.warn("unknown error: status="+response.status);
+				davinci.Runtime.handleError("unknown error: status="+ response.status);
 			}
 			else if (userOnError)
 			{
@@ -430,7 +436,8 @@ dojo.mixin(davinci.Runtime,	{
 			}
 			else
 			{
-				console.warn("unknown error: status="+response.status);
+				davinci.Runtime.handleError("unknown error: status="+ response.status);
+				//console.warn("unknown error: status="+response.status);
 			}
 		}
 		args.error=onError;
@@ -442,29 +449,28 @@ dojo.mixin(davinci.Runtime,	{
 			 		resultObj=result;
 			 	}
 			 	}, function(error) {
-			 		console.warn("unknown error: result ="+result);
+			 		davinci.Runtime.handleError(error);
 			 	});
 			 } while (retry);	
 
 		return resultObj;
 	},
-	serverPut: function(args)
-	{
-		dojo.xhrPut(args);	
-	},
+
 	logoff: function(args)
 	{
 		var loading = dojo.create("div",null, dojo.body(), "first");
-		loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Logging off...</td></tr></table>';
+		loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Logging off...</td></tr></table>'; // FIXME: i18n
 		dojo.addClass(loading, 'loading');
 		this.unload();
 		davinci.Runtime.serverJSONRequest({
-			   url:"cmd/logoff", handleAs:"text",
-				   sync:true  });
+			url:"cmd/logoff", handleAs:"text",
+			sync:true
+		});
 		var newLocation = davinci.Workbench.location(); //
 		var lastChar=newLocation.length-1;
-		if (newLocation.charAt(lastChar)=='/')
+		if (newLocation.charAt(lastChar)=='/') {
 			newLocation=newLocation.substr(0,lastChar);
+		}
 		location.href = newLocation+"/welcome";
 	}
 });

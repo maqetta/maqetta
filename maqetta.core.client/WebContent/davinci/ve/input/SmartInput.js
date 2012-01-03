@@ -643,14 +643,12 @@ return declare("davinci.ve.input.SmartInput", null, {
 				this._format = this.getFormat();
 				this._inline.style.display = "none";
 				if (this._inline.eb){
-					//this._inline.eb.destroy(); 
 					this._inline.eb.destroyRecursive();
 					delete this._inline.eb;
 				}
 				this._inline.destroyRecursive();
-				//this._inline.destroy();
 				delete this._inline;  
-				var iebPointer = dojo.byId('iebPointer');
+                var iebPointer = contentPaneAncestor.ownerDocument.getElementById('iebPointer');
 				contentPaneAncestor.removeChild(iebPointer);
 				
 				if(value != null && !cancel){
@@ -659,6 +657,9 @@ return declare("davinci.ve.input.SmartInput", null, {
 				
 					this.updateWidget(value);
 				}
+				var context=this._widget.getContext();
+				var userdoc = context.getDocument();	// inner document = user's document
+				userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
 			}
  
 		}

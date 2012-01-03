@@ -5,6 +5,7 @@ dojo.require("dojo.parser");
 dojo.require("davinci.ve.widgets.MutableStore");
 dojo.require("davinci.ve.utils.CssUtils");
 dojo.require("dojo.i18n");  
+dojo.requireLocalization("dijit", "common");
 dojo.requireLocalization("davinci.ve", "ve");
 dojo.require("davinci.ve.widgets.ColorPickerFlat");
 dojo.require("dijit.form.TextBox");
@@ -22,7 +23,7 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 	stopRowTemplate:"<tr class='bgdGradOptRow bgdStopRow' style='display:none;'>"+
 				"<td class='bgdCol1'></td>"+
 				"<td class='bgdOptsLabel bdgStopLabel'>Template:</td>"+
-				"<td>"+
+				"<td class='bgdStopColorTD'>"+
 				"<select class='bgdColor' dojoType='dijit.form.ComboBox'>"+
 				"</select>"+
 				"</td>"+
@@ -32,6 +33,11 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 				"</td>"+
 				"<td class='bgdPlusMinusButtons'><span class='bgdPlusButton' dojoType='dijit.form.Button'>+</span><span class='bgdMinusButton' dojoType='dijit.form.Button'>-</span></td>"+
 				"</tr>",
+
+	postMixInProperties: function(){
+		this.inherited(arguments);
+		dojo.mixin(this, dojo.i18n.getLocalization("dijit", "common"));
+	},
 
 	postCreate: function(){
 		this.inherited(arguments);
@@ -45,8 +51,7 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 
 		//FIXME: Following code is mostly a copy/paste from ColorPicker.js
 		//Should be refactored into a shared utility
-		var langObjVE = dojo.i18n.getLocalization("davinci.ve", "ve");
-		this._statics = ['', davinci.ve.widgets.ColorPicker.divider, langObjVE.colorPicker, langObjVE.removeValue];
+		this._statics = ['', davinci.ve.widgets.ColorPicker.divider, langObj.colorPicker, langObj.removeValue];
 		var colormenu_data=[{value:this._statics[0]}];
 		colormenu_data.push({value:this._statics[2],action:'_colorpicker'});
 		colormenu_data.push({value:this._statics[3],action:'_removevalue'});
@@ -156,7 +161,7 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 		ppValue = ppSizeCB.attr('value');
 		var bgdSizeCB = this.bgdSizeCB;
 		bgdSizeCB.attr('store', ppSizeCB.store);
-		bgdSizeCB.attr('regExp', 'border-box|padding-box|content-box');
+		bgdSizeCB.attr('regExp', 'auto|contain|cover|'+CssUtils.regstr_len_or_pct);
 		bgdSizeCB.attr('value', ppValue);
 		bgddata.backgroundSize = ppValue;
 		this.connect(this.bgdSizeCB, 'onChange', dojo.hitch(this,function(){
@@ -169,6 +174,7 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 		ppValue = ppOriginCB.attr('value');
 		var bgdOriginCB = this.bgdOriginCB;
 		bgdOriginCB.attr('store', ppOriginCB.store);
+		bgdOriginCB.attr('regExp', 'border-box|padding-box|content-box');
 		bgdOriginCB.attr('value', ppValue);
 		bgddata.backgroundOrigin = ppValue;
 		this.connect(this.bgdOriginCB, 'onChange', dojo.hitch(this,function(){
@@ -181,6 +187,7 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 		ppValue = ppClipCB.attr('value');
 		var bgdClipCB = this.bgdClipCB;
 		bgdClipCB.attr('store', ppClipCB.store);
+		bgdClipCB.attr('regExp', 'border-box|padding-box|content-box');
 		bgdClipCB.attr('value', ppValue);
 		bgddata.backgroundClip = ppValue;
 		this.connect(this.bgdClipCB, 'onChange', dojo.hitch(this,function(){
@@ -300,6 +307,7 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 	},
 	
 	_initializeStops: function(stops){
+		var langObj = this.langObj;
 		CssUtils = davinci.ve.utils.CssUtils;
 		if(!stops){
 			stops = this.bgddata.stops;
@@ -353,6 +361,7 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 			}));
 			var plusNode = dojo.query('.bgdPlusButton', newStopRow)[0];
 			var plusButton = dijit.byNode(plusNode);
+			plusButton.attr('title', langObj.bgdAddStop);
 			this.connect(plusButton, 'onClick', dojo.hitch(this, function(rownum){
 				var stop = this.bgddata.stops[rownum];
 				// Duplicate row <rownum>
@@ -361,6 +370,7 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 			}, i));
 			var minusNode = dojo.query('.bgdMinusButton', newStopRow)[0];
 			var minusButton = dijit.byNode(minusNode);
+			minusButton.attr('title', langObj.bgdRemoveStop);
 			this.connect(minusButton, 'onClick', dojo.hitch(this, function(rownum){
 				var stop = this.bgddata.stops[rownum];
 				// Remove row <rownum>

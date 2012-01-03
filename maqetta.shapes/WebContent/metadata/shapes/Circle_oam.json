@@ -25,6 +25,7 @@
         }
     ],
     "property": {
+<<<<<<< HEAD
     	"cx":{
             "datatype": "number",
             "defaultValue": "40"
@@ -33,6 +34,8 @@
             "datatype": "number",
             "defaultValue": "40"
         },
+=======
+>>>>>>> master
     	"rx":{
             "datatype": "number",
             "defaultValue": "40"

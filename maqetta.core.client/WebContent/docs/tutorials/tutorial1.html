@@ -7,6 +7,31 @@
 </head>
 <body class="maqettadocs">
 
+<style type="text/css">
+table.CompTypeTable {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+table.CompTypeTable td, table.CompTypeTable th {
+	padding:3px;
+	border:1px solid black;
+}
+table.CompTypeTable th {
+	font-style:italic;
+	font-weight:bold;
+	background:#888;
+}
+table td.CompTypeOption {
+	font-weight:bold;
+}
+tr.desktop {
+	background-color:#ddf;
+}
+tr.mobile {
+	background-color:#dfd;
+}
+</style>
+
 <div id="pagebody">
 
 <table class="breadcrumbs noprint"><tr>
@@ -41,7 +66,7 @@
 <div>Click on the image to enlarge it.</div>
 </div>
 
-<p>Upon opening a file, the middle area becomes the page editor canvas. The following picture
+<p>Upon opening a file (which we will be doing momentarily), the middle area becomes the page editor canvas. The following picture
 shows how the application looks after opening up one of the sample files:</p>
 
 <div class="image">
@@ -50,38 +75,171 @@ shows how the application looks after opening up one of the sample files:</p>
 </div>
 
 
-<a name="newfile"><h2>Creating a new HTML page in the page editor</h2></a>
+<a name="newfile"><h2>The New HTML File dialog</h2></a>
 
 <ol>
 <li>Click <b>New &gt; HTML File...</b> on the Maqetta menubar.</li>
-<li>The <b>Create New HTML File</b> dialog will be displayed with a default filename.</li> 
-<li>Click the <b>Create</b> button to create a new file with the default filename.</li>
-<li>A new blank HTML file is opened in the page editor, with the filename displayed at the top.</li>
+<li>The <b>Create New HTML File</b> dialog will be displayed with a default filename.
+<div class="image">
+<a href="img/NewHtmlDialog.png" target="_blank"><img alt="image" src="img/NewHtmlDialog.png" style="margin: 1em 1em 0pt 0pt; width:200px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+</li> 
 </ol>
 
-<p>Your workspace should now look something like this:</p>
+<a name="flow_vs_absolute"><h2>Composition types: desktop versus mobile, hi-fi vs lo-fi, page vs sketch</h2></a>
+
+<p>The New HTML File dialog offers a drop-down button where
+you can choose one of several <em>composition types</em>. If you click on the Composition Type drop down menu, you will
+see the available composition types:</p>
 <div class="image">
-<a href="img/PageEditorNewFile.png" target="_blank"><img alt="image" src="img/PageEditorNewFile.png" style="margin: 1em 1em 0pt 0pt;" width="500" /></a>
+<a href="img/CompositionTypes.png" target="_blank"><img alt="image" src="img/CompositionTypes.png" style="margin: 1em 1em 0pt 0pt; width:200px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+<p>The following table shows the types of compositions you can create:</p>
+<table class='CompTypeTable'>
+<tr><th>Composition type</th><th>Target device</th><th>Fidelity</th><th>Page (flow) versus Sketch (absolute)</th></tr>
+<tr class="desktop"><td class="CompTypeOption">Desktop hi-fi page</td><td>Desktop</td><td>High</td><td>Page (flow layout)</td></tr>
+<tr class="desktop"><td class="CompTypeOption">Desktop hi-fi sketch</td><td>Desktop</td><td>High</td><td>Sketch (absolute layout)</td></tr>
+<tr class="desktop"><td class="CompTypeOption">Desktop li-fi page</td><td>Desktop</td><td>Low</td><td>Page (flow layout)</td></tr>
+<tr class="desktop"><td class="CompTypeOption">Desktop hi-fi page</td><td>Desktop</td><td>Low</td><td>Sketch (absolute layout)</td></tr>
+<tr class="mobile"><td class="CompTypeOption">Android 340x480</td><td>Android 340x480</td><td>High</td><td>Page (flow layout)</td></tr>
+<tr class="mobile"><td class="CompTypeOption">Android 480x800</td><td>Android 480x800</td><td>High</td><td>Page (flow layout)</td></tr>
+<tr class="mobile"><td class="CompTypeOption">Android Tablet</td><td>Android Tablet</td><td>High</td><td>Page (flow layout)</td></tr>
+<tr class="mobile"><td class="CompTypeOption">Blackberry</td><td>Blackberry</td><td>High</td><td>Page (flow layout)</td></tr>
+<tr class="mobile"><td class="CompTypeOption">iPad</td><td>iPad</td><td>High</td><td>Page (flow layout)</td></tr>
+<tr class="mobile"><td class="CompTypeOption">iPhone</td><td>iPhone</td><td>High</td><td>Page (flow layout)</td></tr>
+</table>
+<p>For desktop devices, Maqetta offers four different composition types:</p>
+<ul>
+<li><strong>Desktop hi-fi page</strong> - This option creates a desktop user interface using a 
+final-form, production-ready CSS theme to render the widgets, using <em>flow layout</em>.
+With <em>flow layout</em>, in most cases the page content 
+begins at the top/left and then flows left-to-right and then top-to-bottom.
+This is the "natural" layout approach used by HTML and CSS, whose original
+designs were centered on flowable documents. It is usually better for your developers
+if you create a user interface using flow layout instead of absolute layout because
+flow layout is usually more adaptable to different browser window sizes and different user font size choices.</li>
+<li><strong>Desktop hi-fi sketch</strong> - This option creates a WYSIWYG desktop user interface using a 
+final-form, production-ready CSS theme to render the widgets, but instead of flow layout,
+Maqetta initializes the page to use <em>absolute layout</em> where widgets are positioned
+at absolute locations on the page, similar to how drawing tools work. 
+Absolute layout is often better for quick UI mockups.</li>
+<li><strong>Desktop lo-fi page</strong> - Same as Desktop hi-fi page in that
+it defaults to <em>flow layout</em>, but uses a low fidelity CSS theme that renders widgets
+in black-and-white using a CSS theme that provides a pseudo hand-drawn appearance.
+Low fidelity mockups are often good for early-stage UI mockups where you want colleagues to focus on
+the overall design and flow of your UI rather than focusing on the visual styling such as colors and fonts.</li>
+<li><strong>Desktop lo-fi sketch</strong> - Uses a low fidelity CSS theme that provides a pseudo hand-drawn appearance,
+and initializes the page to use <em>absolute layout</em> where widgets are positioned
+at absolute locations on the page, similar to how drawing tools work. 
+This option is often a good choice for early-stage UI mockups.</li>
+</ul>
+<p>The other composition types are for mobile devices. When you choose one of these composition types,
+Maqetta will open the page editor within a actual size replica of the selected device. With the current release of Maqetta,
+mobile composition types always use a high fidelity CSS theme and always initialize with absolute layout.</p>
+
+<a name="flow_vs_absolute"><h2>Other features in the New HTML File Dialog</h2></a>
+
+<p>When you first run Maqetta, the New HTML File dialog by default will store your HTML file in the <em>root</em> folder of your workspace.
+You can view the contents of your workspace by clicking on the right arrow icon to the right of the "Where" drop down menu. The dialog will
+grow to show the contents of your workspace:</p>
+
+<div class="image">
+<a href="img/NewHtmlFileShowWorkspace.png" target="_blank"><img alt="image" src="img/NewHtmlFileShowWorkspace.png" style="margin: 1em 1em 0pt 0pt; width:200px;" /></a>
 <div>Click on the image to enlarge it.</div>
 </div>
 
-<a name="flow_vs_absolute"><h2>Flow layout versus absolute layout</h2></a>
+<p>Note that a <strong>New Folder...</strong> button appears. This allows you to create folders from the New HTML File dialog.</p>
+<p>Finally, notice the <strong>Theme...</strong> button at the lower-left. This button brings up the <strong>Select theme...</strong> dialog
+in case you would like the page editor to open using particular CSS theme(s). This is a more advanced feature that we won't 
+be covering in this tutorial.</p>
 
-<p>Maqetta defaults to <em>flow layout</em>. With flow layout, in most cases the page content 
-begins at the top/left and then flows left-to-right and then top-to-bottom.
-This is the "natural" layout approach used by HTML and CSS, whose original
-designs were centered on flowable documents.
-If you start adding simple UI controls such as buttons and textboxes to the page, you'll see that
-the first widget snaps to the top/left of the page and the second widget will be placed either just to the right
-of the first widget or just below the first widget.</p>
-
-<p>Maqetta also supports <em>absolute layout</em>. With absolute layout, widgets and HTML elements
-are placed at particular (x,y) locations on the page. Other sections of the documentation provide more
-information about how to switch into absolute layout mode.</p>
-
-<a name="dojo"><h2>Add Dojo controls to the page</h2></a>
+<a name="newfile"><h2>Creating a new HTML page in the page editor (desktop hi-fi page)</h2></a>
 
 <ol>
+<li>Bring up the <b>New &gt; HTML File...</b> dialog if it isn't showing already. The <b>New HTML File</b> dialog will be displayed with a default filename.
+</li> 
+<li>Set Composition Type to "Desktop hi-fi page". (The first option.)</li>
+<li>Click the <b>Create</b> button to create a new file with the default filename.</li>
+<li>A new blank HTML file is opened in the page editor, with the filename displayed at the top.
+Your workspace should now look something like this:</p>
+<div class="image">
+<a href="img/PageEditorNewFile.png" target="_blank"><img alt="image" src="img/PageEditorNewFile.png" style="margin: 1em 1em 0pt 0pt; width:500px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+</li>
+<li>In the <b>Widgets</b> palette, click on the <b>Dojo Controls</b> section to open that section.</li>
+<li>Find the <b>Text Box</b> widget in the list of Dojo Controls. The controls are alphabetized, so
+	the TextBox entry will be towards the bottom of the list of controls. Drag a TextBox widget onto the canvas.</li>
+<li>Find the <b>Button</b> widget in the list of Dojo Controls. Drag/drop 2 Button widgets onto the canvas.
+<div class="image">
+<a href="img/NewHtmlHiFiPage.png" target="_blank"><img alt="image" src="img/NewHtmlHiFiPage.png" style="margin: 1em 1em 0pt 0pt; width:400px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+<div class='note'>Note that the TextBox and Buttons have final-form visual styling (using the "claro" theme from Dojo)
+and are using <em>flow layout</em>.</div>
+</li>
+<li>In the <b>Widgets</b> palette, click on the <b>Dojo Controls</b> section title to close the section.</li>
+<li>Click the "x" button on the editor tab just under the toolbar to close this page editor. Click OK for the prompt that asks "are you sure?"</li>
+</ol>
+
+<a name="newfile"><h2>Creating a new HTML page in the page editor (desktop hi-fi sketch)</h2></a>
+
+<ol>
+<li>Bring up the <b>New &gt; HTML File...</b> dialog agin. The <b>New HTML File</b> dialog will be displayed with a default filename.
+</li> 
+<li>Set Composition Type to "Desktop hi-fi sketch". (The second option.)</li>
+<li>Click the <b>Create</b> button to create a new file with the default filename.</li>
+<li>In the <b>Widgets</b> palette, click on the <b>Dojo Controls</b> section to open that section.</li>
+<li>Drag a TextBox widget onto the canvas.</li>
+<li>Drag/drop 2 Button widgets onto the canvas.
+<div class="image">
+<a href="img/NewHtmlHiFiSketch.png" target="_blank"><img alt="image" src="img/NewHtmlHiFiSketch.png" style="margin: 1em 1em 0pt 0pt; width:400px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+<div class='note'>Note that the TextBox and Buttons have final-form visual styling (using the "claro" theme from Dojo)
+but are positioned at absolute locations on the page. (Your screen probably looks much different than this snapshot
+because you probably dropped the widgets at different locations that what is shown here.)</div>
+</li>
+<div class='note'>As you dragged the Buttons onto the page, you might have noticed magenta-colored
+horizontal and vertical lines appear and disappear. These are "snap lines" that help you align
+widgets to one another. Snap lines only work for widgets that are positioned on the page absolutely.</div>
+</li>
+<li>In the <b>Widgets</b> palette, click on the <b>Dojo Controls</b> section title to close the section.</li>
+<li>Click the "x" button on the editor tab just under the toolbar to close this page editor. Click OK for the prompt that asks "are you sure?"</li>
+</ol>
+
+
+<a name="newfile"><h2>Creating a new HTML page in the page editor (desktop lo-fi sketch)</h2></a>
+
+<ol>
+<li>Bring up the <b>New &gt; HTML File...</b> dialog agin. The <b>New HTML File</b> dialog will be displayed with a default filename.
+</li> 
+<li>Set Composition Type to "Desktop lo-fi sketch". (The fourth option.)</li>
+<li>Click the <b>Create</b> button to create a new file with the default filename.</li>
+<li>In the <b>Widgets</b> palette, click on the <b>Dojo Controls</b> section to open that section.</li>
+<li>Drag a TextBox widget onto the canvas.</li>
+<li>Drag/drop 2 Button widgets onto the canvas.
+<div class="image">
+<a href="img/NewHtmlLoFiSketch.png" target="_blank"><img alt="image" src="img/NewHtmlLoFiSketch.png" style="margin: 1em 1em 0pt 0pt; width:400px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+<div class='note'>Note that the TextBox and Buttons have pseudo hand-drawn, black-and-white visual styling
+and are positioned at absolute locations on the page.</div>
+</li>
+<li>In the <b>Widgets</b> palette, click on the <b>Dojo Controls</b> section title to close the section.</li>
+<li>Click the "x" button on the editor tab just under the toolbar to close this page editor. Click OK for the prompt that asks "are you sure?"</li>
+</ol>
+
+<a name="newfile"><h2>Using the page editor</h2></a>
+
+<ol>
+<li>Bring up the <b>New &gt; HTML File...</b> dialog. The <b>New HTML File</b> dialog will be displayed with a default filename.
+</li> 
+<li>Set Composition Type to "Desktop hi-fi page". (The first option.)</li>
+<li>Click the <b>Create</b> button to create a new file with the default filename.</li>
+<li>A new blank HTML file is opened in the page editor</li>
 <li>In the <b>Widgets</b> palette, click on the <b>Dojo Controls</b> section to open that section.</li>
 <li>Find the <b>Text Box</b> widget in the list of Dojo Controls. The controls are alphabetized, so
 	the TextBox entry will be towards the bottom of the list of controls. Drag a TextBox widget onto the canvas.</li>

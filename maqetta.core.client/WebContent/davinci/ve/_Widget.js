@@ -280,9 +280,9 @@ return declare("davinci.ve._Widget", null, {
 		
 		var cleaned = dojo.clone(values);
 		
-		function indexOf(value){
+		function indexWithProperty(value){
 			for(var i=0;i<cleaned.length;i++){
-				if(cleaned[i]==value) return i;
+				if(cleaned[i] && cleaned[i].hasOwnProperty(value)) { return i; }
 			}
 			return -1;
 		}
@@ -294,12 +294,13 @@ return declare("davinci.ve._Widget", null, {
 		
 		for(var j=0;j<shorthands.length;j++) {
 			for(var i=0;i<shorthands[j].length;i++) {
-				var index = indexOf(shorthands[j][i]);
+				var index = indexWithProperty(shorthands[j][i]);
 				if(index>-1) {
-					cleaned.splice(lastSplice,0, cleaned[index]);
+					var element = cleaned[index];
 					cleaned.splice(index,1);
-					lastSplice = index+1;
+					cleaned.splice(lastSplice,0, element);
 					
+					lastSplice = index+1;
 				}
 			}
 		}

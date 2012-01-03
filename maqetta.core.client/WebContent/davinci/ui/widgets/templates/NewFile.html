@@ -15,13 +15,13 @@
 			<td class="fileDialogLabelCell">
 				<label>${folderFieldLabel}</label>
 			</td>
-			<td>
-				<input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="fileDialogParentFolder"></input>
+			<td dojoAttachPoint="fileDialogWhereDropDownCell">
+				<!-- DropDownButton goes here -->
 			</td>
 			<td>
-				<span class="folder_details_arrow " dojoAttachPoint="fileDialogDetailsArrow">
-					<span class='folder_details_show_arrow'>&#9660;</span>
-					<span class='folder_details_hide_arrow'>&#9650;</span>
+				<span dojoAttachPoint="fileDialogDetailsArrow">
+					<span class='folder_details_arrow folder_details_show_arrow'>&nbsp;</span>
+					<span class='folder_details_arrow folder_details_hide_arrow'>&nbsp;</span>
 				</span>
 			</td>
 		</tr>
@@ -38,11 +38,14 @@
 	<div dojoAttachPoint="dialogSpecificOptionsDiv"></div>
 	
 	<div class="buttonRow">
-		<span class="buttonWrapperSpan">
-			<button dojoType="dijit.form.Button" dojoAttachPoint="__cancelButton" dojoAttachEvent="onClick:cancelButton">${cancelButtonLabel}</button>
-		</span>
-		<span class="buttonWrapperSpan">
-			<button dojoType="dijit.form.Button" type="submit" dojoAttachPoint="__okButton" dojoAttachEvent="onClick:_okButton">${finishButtonLabel}</button>
+		<span dojoAttachPoint="dialogSpecificButtonsSpan"></span>
+		<span class="fileDialogStdButtons">
+			<span class="buttonWrapperSpan">
+				<button dojoType="dijit.form.Button" dojoAttachPoint="__cancelButton" dojoAttachEvent="onClick:cancelButton">${cancelButtonLabel}</button>
+			</span>
+			<span class="buttonWrapperSpan">
+				<button dojoType="dijit.form.Button" type="submit" dojoAttachPoint="__okButton" dojoAttachEvent="onClick:_okButton">${finishButtonLabel}</button>
+			</span>
 		</span>
 	</div>
 	

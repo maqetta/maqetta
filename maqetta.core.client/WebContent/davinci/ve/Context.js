@@ -2,13 +2,15 @@ define([
     "dojo/_base/declare",
 	"davinci/commands/CommandStack",
 	"davinci/ve/tools/SelectTool",
+	"dojo/window",
+	"davinci/Workbench",
 	"davinci/ve/widget",
 	"davinci/ve/Focus",
 	"davinci/library",
 	"dojox/html/_base",
 	"preview/silhouetteiframe",
 	"davinci/ve/ChooseParent"
-], function(declare, CommandStack, SelectTool) {
+], function(declare, CommandStack, SelectTool, windowUtils) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
 var MOBILE_DEV_ATTR = 'data-maqetta-device';
@@ -49,12 +51,11 @@ return declare("davinci.ve.Context", null, {
 		this._widgetIds = [];
 		this._objectIds = [];
 		this._widgets = [];
-		this._links = [];
 		this._chooseParent = new davinci.ve.ChooseParent({context:this});
 
 	},
 
-	    _configDojoxMobile: function() {
+	_configDojoxMobile: function() {
         // dojox.mobile.configDeviceTheme should run only the first time dojox.mobile.deviceTheme runs, to establish
         // monitoring of which stylesheets get loaded for a given theme
 
@@ -323,22 +324,24 @@ return declare("davinci.ve.Context", null, {
 			return false;
 		}
 		
-		var requires = davinci.ve.metadata.query(type, "require"),
-			libs = {},
-			context = this;
+		var requires = davinci.ve.metadata.query(type, "require");
 		if (!requires) {
 			return true;
 		}
 
-		function _loadLibrary(libId) {
+		var libraries = davinci.ve.metadata.query(type, 'library'),
+			libs = {},
+			context = this,
+			succeeded;
+
+		function _loadLibrary(libId, lib) {
 			if (libs.hasOwnProperty(libId)) {
 				return true;
 			}
 
 			// calculate base library path, used in loading relative required
 			// resources
-			var lib = davinci.ve.metadata.query(type, 'library')[libId],
-				ver = davinci.ve.metadata.getLibrary(libId).version || lib.version,
+			var ver = davinci.ve.metadata.getLibrary(libId).version || lib.version,
 				root = context.getLibraryBase(libId, ver);
 			
 			if (root == null /*empty string OK here, but null isn't. */) {
@@ -373,6 +376,17 @@ return declare("davinci.ve.Context", null, {
 			context.addJavaScriptSrc(_getResourcePath(libId, src), updateSrc, src, skipDomUpdate);
 		}
 
+		// first load any referenced libraries
+		for (var libId in libraries) {
+			if (libraries.hasOwnProperty(libId)) {
+				succeeded = _loadLibrary(libId, libraries[libId]);
+				if (! succeeded) {
+					return false;
+				}
+			}
+		}
+
+		// next, load the require statements
 		return requires.every(function(r) {
 			// If this require belongs under a library, load library file first
 			// (if necessary).
@@ -383,16 +397,6 @@ return declare("davinci.ve.Context", null, {
 			} else if (r.src) {
 				console.warn("metadata resource (" + r.type + ", " + r.src +
 						") does not specify 'library'");
-			}
-
-			// need to set the module path for custom user widgets 
-			// XXX Get rid of Dojo-specific code.  If necessary, should be refactored
-			// and abstracted to a function.  But instead of code like this, should
-			// be using APIs from library.js or metadata.js (or something pulling
-			// in data from package.json).
-			if (r.$library === 'dojo') {
-				var path = libs.dojo.append(r.src);
-				this._dojoModulePath = (new davinci.model.Path(this.getBase())).relativeTo(path, true).toString();
 			}
 
 			switch (r.type) {
@@ -458,11 +462,6 @@ return declare("davinci.ve.Context", null, {
 		return folder;
 	},
 
-	//FIXME: remove accessor
-	_getDojoModulePath: function(){
-		return this._dojoModulePath;
-	},
-	
 	_require: function(module){
 		try{
 			return this.getGlobal()["require"]([module.replace(/\./g, "/")]);
@@ -632,7 +631,15 @@ return declare("davinci.ve.Context", null, {
        	if (newHtmlParms && newHtmlParms.themeSet) {
        	    defaultThemeName = newHtmlParms.themeSet.desktopTheme;
        	} else if (newHtmlParms && newHtmlParms.theme){
+<<<<<<< HEAD
        	    defaultThemeName = newHtmlParms.theme;
+=======
+       	    if (newHtmlParms.theme == 'deviceSpecific') {
+       	     defaultThemeName = "claro"; 
+       	    } else {
+       	        defaultThemeName = newHtmlParms.theme;
+       	    }
+>>>>>>> master
        	}
     	var imports = model.find({elementType:'CSSImport'});
 		
@@ -700,7 +707,9 @@ return declare("davinci.ve.Context", null, {
 //////////////////////////////////////////////////////////////////////////////////////////////     
     
 	_setSource: function(source, callback, scope, newHtmlParams){
-		
+		// Get the helper before creating the IFRAME, or bad things happen in FF
+		var helper = davinci.theme.getHelper(this._visualEditor.theme);
+
 		this._srcDocument=source;
 		
 		/* determinte if its the theme editor loading */
@@ -730,8 +739,6 @@ return declare("davinci.ve.Context", null, {
 		}
 
 		var data = this._parse(source);
-		this._scriptAdditions=data.scriptAdditions;
-		//debugger;
 		if(!this.frameNode){
 			// initialize frame
 			var dojoUrl;
@@ -770,7 +777,8 @@ return declare("davinci.ve.Context", null, {
 			containerNode.style.overflow = "hidden";
 			var frame = dojo.create("iframe", this.iframeattrs, containerNode);
 			frame.dvContext = this;
-//			/* this defaults to the base page */
+			this.frameNode = frame;
+			/* this defaults to the base page */
 			var realUrl = davinci.Workbench.location() + "/" ;
 			
 			/* change the base if needed */
@@ -803,13 +811,9 @@ return declare("davinci.ve.Context", null, {
 				//  depend on dojo any more.  Once issue, though, is that the callback function
 				//  makes use of dojo and thusly must be invoked only after dojo has loaded.  Need
 				//  to remove Dojo dependencies from callback function first.
-				var baseUserWorkspace = system.resource.getRoot().getURL() + "/" + this._getWidgetFolder(),
-				    baseDojoUrl = system.resource.getRoot().getURL() + "/lib/dojo/dojo",
-				    config = {
-						modulePaths: {widgets: baseUserWorkspace}, // FIXME: replaced by packages in Dojo 1.7?
-						packages: [{ name: 'widgets', location: baseUserWorkspace}], // need to add dynamically
-						baseUrl: baseDojoUrl
-					};
+				var config = {
+					packages: this._getLoaderPackages() // XXX need to add dynamically
+				};
 				dojo.mixin(config, this._configProps);
 
 				var requires = this._bootstrapModules.split(","),
@@ -819,12 +823,11 @@ return declare("davinci.ve.Context", null, {
 				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\" data-dojo-config=\"" + JSON.stringify(config).slice(1, -1).replace(/"/g, "'") + "\"></script>"
 					+ "<script type=\"text/javascript\">require(" + JSON.stringify(dependencies) + ", top.loading" + this._id + ");</script>";
 			}
-			var helper = davinci.theme.getHelper(this._visualEditor.theme);
 			if (helper && helper.getHeadImports){
 			    head += helper.getHeadImports(this._visualEditor.theme);
 			} else if(source.themeCssfiles) { // css files need to be added to doc before body content
 				head += '<style type="text/css">'
-					+ source.themeCssfiles.map(function(file) { return '@import "' + file + '";'; }).join();
+					+ source.themeCssfiles.map(function(file) { return '@import "' + file + '";'; }).join()
 					+ '</style>';
 			}
 			/*
@@ -832,16 +835,28 @@ return declare("davinci.ve.Context", null, {
 				this.loadTheme();
 			}
 			*/
-			//head += '<style type="text/css">@import "claro.css";</style>';
 			head += "</head><body></body></html>";
 
 			var context = this;
 			window["loading" + context._id] = function(parser, htmlUtil) { //FIXME: should be able to get doc reference from domReady! plugin?
-				delete window["loading" + context._id];
 				var callbackData = context;
 			try {
-					var win = dijit.getDocumentWindow(doc),
+					var win = windowUtils.get(doc),
 					 	body = (context.rootNode = doc.body);
+
+					if (!body) {
+						// Should never get here if domReady! fired?  Try again.
+						context._waiting = context._waiting || 0;
+						if(context._waiting++ < 10) {
+							setTimeout(window["loading" + context._id], 500);
+							console.log("waiting for doc.body");
+							return;
+						}
+						throw "doc.body is null";
+					}
+
+					delete window["loading" + context._id];
+
 					body.id = "myapp";
 
 					// Kludge to enable full-screen layout widgets, like BorderContainer.
@@ -864,7 +879,6 @@ return declare("davinci.ve.Context", null, {
 						win.dojo._postLoad = true; // this is needed for FF4 to keep dijit._editor.RichText from throwing at line 32 dojo 1.5						
 					}
 
-					context.frameNode = frame;
 					// see Dojo ticket #5334
 					// If you do not have this particular dojo.isArray code, DataGrid will not render in the tool.
 					// Also, any array value will be converted to {0: val0, 1: val1, ...}
@@ -873,7 +887,7 @@ return declare("davinci.ve.Context", null, {
 						return it && Object.prototype.toString.call(it)=="[object Array]";
 					};
 				} catch(e) {
-					console.error(e);
+					console.error(e.stack || e);
 					// recreate the Error since we crossed frames
 					callbackData = new Error(e.message, e.fileName, e.lineNumber);
 					dojo.mixin(callbackData, e);
@@ -940,7 +954,14 @@ return declare("davinci.ve.Context", null, {
 			// recreate the Error since we crossed frames
 			callbackData = new Error(e.message, e.fileName, e.lineNumber);
 			dojo.mixin(callbackData, e);
-			loading.innerHTML = "Uh oh! An error has occurred:<br><b>" + e.message + "</b><br>file: " + e.fileName + "<br>line: "+e.lineNumber; // FIXME: i18n
+			var message = "Uh oh! An error has occurred:<br><b>" + e.message + "</b>";
+			if (e.fileName) {
+				message += "<br>file: " + e.fileName + "<br>line: "+e.lineNumber;
+			}
+			if (e.stack) {
+				message += "<br>" + e.stack;
+			}
+			loading.innerHTML = message;
 			dojo.addClass(loading, 'error');
 		} finally {
 			if (callback) {
@@ -954,6 +975,37 @@ return declare("davinci.ve.Context", null, {
 				}
 			}
 		}
+	},
+
+	_getLoaderPackages: function() {
+		var libs = davinci.library.getUserLibs(this.getBase()),
+			dojoBase,
+			packages = [];
+		
+		// get dojo base path
+		libs.some(function(lib) {
+			if (lib.id === 'dojo') {
+				dojoBase = new davinci.model.Path(lib.root + '/dojo');
+				return true; // break
+			}
+			return false;
+		});
+
+		// Add namespace for custom widgets
+// FIXME: should add this only when compound widgets are part of the page
+//		libs = libs.concat({ id: 'widgets', root: this._getWidgetFolder() });
+
+		libs.forEach(function(lib) {
+			var id = lib.id;
+			// since to loader, everything is relative to 'dojo', ignore here
+			if (! lib.root || id === 'dojo' || id === 'DojoThemes') {
+				return;
+			}
+			var root = new davinci.model.Path(lib.root).relativeTo(dojoBase).toString();
+			packages.push({ name: lib.id, location: root });
+		});
+
+		return packages;
 	},
 
 	_setSourceData: function(data){
@@ -1309,8 +1361,9 @@ return declare("davinci.ve.Context", null, {
 	 */
 	loadStyleSheet: function(url) {
         // don't add if stylesheet is already loaded in the page
-		var links = this._links,
-		    doc = this.getDocument();
+		var doc = this.getDocument();
+		var dj = this.getDojo();
+		var links = dj.query('link');
 		var found = links.some(function(val) {
 			return val.getAttribute('href') === url;
 		});
@@ -1324,11 +1377,38 @@ return declare("davinci.ve.Context", null, {
     	            rel: 'stylesheet',
     	            type: 'text/css',
     	            href: url
-    	        },
-	            doc.getElementsByTagName('head')[0]
+    	        }
 	        );
-	        
-	        links.push(link);
+	        // Make sure app.css is the after library CSS files, and content.css is after app.css
+	        // FIXME: Shouldn't hardcode this sort of thing
+	        var headElem = doc.getElementsByTagName('head')[0];
+			var isAppCss = (url.indexOf('app.css') > -1);
+			var isContentCss = (url.indexOf('content.css') > -1);
+			var appCssLink, contentCssLink, appCssIndex, contentCssIndex;
+			for(var i=0; i<links.length; i++){
+				if(links[i].href.indexOf('app.css') > -1){
+					appCssLink = links[i];
+					appCssIndex = i;
+				}else if(links[i].href.indexOf('content.css') > -1){
+					contentCssLink = links[i];
+					contentCssIndex = i;
+				}
+			}
+			var index;
+			if(!isContentCss){
+				if(isAppCss && contentCssLink){
+					beforeChild = contentCssLink;
+					index = contentCssIndex;
+				}else{
+					beforeChild = appCssLink;
+					index = appCssIndex;
+				}
+			}
+			if(beforeChild){
+				headElem.insertBefore(link, beforeChild);
+			}else{
+		        headElem.appendChild(link);
+			}
 		});
 	},
 
@@ -1338,9 +1418,11 @@ return declare("davinci.ve.Context", null, {
 	 */
     unloadStyleSheet: function(url) {
         var self = this;
-        this._links.some(function(val, idx) {
+		var doc = this.getDocument();
+		var dj = this.getDojo();
+		var links = dj.query('link');
+        links.some(function(val, idx) {
             if (val.getAttribute('href') === url) {
-                self._links.splice(idx, 1);
                 dojo.destroy(val);
                 return true; // break
             }
@@ -1350,7 +1432,21 @@ return declare("davinci.ve.Context", null, {
 	addModeledStyleSheet: function(url, libBasePath, skipDomUpdate) {
 		if(!skipDomUpdate) this.loadStyleSheet(url);
 		if (!this.model.hasStyleSheet(url)) {
-			this.model.addStyleSheet(url);
+			// Make sure app.css is the last CSS file within the list of @import statements
+	        // FIXME: Shouldn't hardcode this sort of thing
+			var isAppCss = (url.indexOf('app.css') > -1);
+			var appCssImport;
+			var styleElem = this.model.find({'elementType':"HTMLElement",'tag':'style'}, true);
+			if(styleElem){
+				var kids = styleElem.children;
+				for(var i=0; i<kids.length; i++){
+					if(kids[i].url.indexOf('app.css') > -1){
+						appCssImport = kids[i];
+					}
+				}
+			}
+			var beforeChild = isAppCss ? undefined : appCssImport;
+			this.model.addStyleSheet(url, undefined, undefined, beforeChild);
 			for (var css in this.model._loadedCSS) {
 				dojo.connect(this.model._loadedCSS[css], 'onChange', this,
 						'_themeChange');
@@ -1411,7 +1507,21 @@ return declare("davinci.ve.Context", null, {
 		for(var id in cache){
 			//FIXME: This logic depends on the user never add ID "body" to any of his widgets.
 			//That's bad. We should find another way to achieve special case logic for BODY widget.
-			var node = id == "body" ? this.getContainerNode() : this.getDocument().getElementById(id);
+			// Carefully pick the correct root node for this widget
+			var node = null;
+			if(id == "body"){	
+				node = this.getContainerNode();
+			}
+			if(!node){
+				// Look for dvWidget with that ID. Note that sometimes Dojo puts IDs on subnodes. This logic finds root node. 
+				var w = davinci.ve.widget.byId(id, this.getDocument());	
+				if(w){
+					node = w.domNode;	// Root note for that widget
+				}
+			}
+			if(!node){
+				node = this.getDocument().getElementById(id);	// Else find the node using DOM call
+			}
 			var widget = davinci.ve.widget.getWidget(node);
 			var states = cache[id];
 			states = davinci.states.deserialize(states);
@@ -1500,14 +1610,12 @@ return declare("davinci.ve.Context", null, {
 	},
 
 	getSelection: function(){
-		if(!this._selection){
-			return [];
-		}
-		return this._selection;
+		return this._selection || [];
 	},
 	
 	// Returns true if inline edit is showing
 	inlineEditActive: function(){
+<<<<<<< HEAD
 		for(var i=0; i<this._selection.length; i++){
 			var focus = this._focuses[i];
 			if(focus.inlineEditActive()){
@@ -1517,6 +1625,13 @@ return declare("davinci.ve.Context", null, {
 		return false;
 	},
 	
+=======
+	    return this.getSelection().some(function(item, i){
+	    	return this._focuses[i].inlineEditActive();
+	    }, this);
+	},
+
+>>>>>>> master
 	updateFocus: function(widget, index, inline){
 		var box, op, parent;
 
@@ -1654,10 +1769,31 @@ return declare("davinci.ve.Context", null, {
 		this.onSelectionChange(this.getSelection());
 	},
 	
-	focus: function(state, index, inline){
-		if(!this._focuses){
-			this._focuses = [];
+	deselectInvisible: function(){
+		if(this._selection){
+			for(var i=this._selection.length-1; i>=0; i--){
+				var widget = this._selection[i];
+				var domNode = widget.domNode;
+				while(domNode.tagName != 'BODY'){
+					var computed_style_display = dojo.style(domNode, 'display');
+					if(computed_style_display == 'none'){
+						this.deselect(widget);
+						break;
+					}
+					domNode = domNode.parentNode;
+				}
+			}
 		}
+	},
+	
+	// If widget is in selection, returns the focus object for that widget
+	getFocus: function(widget){
+		var i = this.getSelection().indexOf(widget);
+		return i == -1 ? null : this._focuses[i];
+	},
+	
+	focus: function(state, index, inline){
+		this._focuses = this._focuses || [];
 		var clear = false;
 		if(index === undefined){
 			clear = true;
@@ -1751,8 +1887,9 @@ return declare("davinci.ve.Context", null, {
 			bodyElement = htmlElement.getChildElement("body"),
 			flowLayout = bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE);
 		if (!flowLayout){ // if flowLayout has not been set in the context check the edit prefs
-			var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
-			flowLayout = editorPrefs.flowLayout;
+			//var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
+			//flowLayout = editorPrefs.flowLayout;
+			flowLayout = true;
 			this.setFlowLayout(flowLayout);
 		} else {
 			flowLayout = (flowLayout === 'true');
@@ -1873,8 +2010,8 @@ return declare("davinci.ve.Context", null, {
 			var states = bodyElement.getAttribute(davinci.ve.states.ATTRIBUTE);
 			davinci.ve.states.store(data, states);
 
-			this.setPreference("flowLayout", 
-					bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE) !== 'false');
+			/*this.setPreference("flowLayout", 
+					bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE) !== 'false');*/
 		}
 		
 		var titleElement=head.getChildElement("title");
@@ -1899,8 +2036,6 @@ return declare("davinci.ve.Context", null, {
 				text.replace(/require\(\[["']([^'"]+)["']\]\)/g, function(match, module) {
 					data.modules.push(module);
 				});
-
-				data.scriptAdditions=scriptTag;
 			}
 			
 			// XXX Bug 7499 - (HACK) See comment in addHeaderScript()
@@ -1955,6 +2090,10 @@ return declare("davinci.ve.Context", null, {
 				helper.onContentChange(this, this._visualEditor.theme);
 			}
 		}
+		setTimeout(function(){
+			// Invoke autoSave, with "this" set to davinci.Workbench
+			davinci.Workbench._autoSave.call(davinci.Workbench);
+		}, 0);
 		
 	},
 
@@ -2028,10 +2167,9 @@ return declare("davinci.ve.Context", null, {
 
 	modifyRule: function(rule, values){
 		var cleaned = dojo.clone(values);
-		
 		function indexOf(value){
 			for(var i=0;i<cleaned.length;i++){
-				if(cleaned[i]==value) return i;
+				if(cleaned[i].hasOwnProperty(value)) return i;
 			}
 			return -1;
 		}
@@ -2045,15 +2183,16 @@ return declare("davinci.ve.Context", null, {
 			for(var i=0;i<shorthands[j].length;i++) {
 				var index = indexOf(shorthands[j][i]);
 				if(index>-1) {
-					cleaned.splice(lastSplice,0, cleaned[index]);
+					var element = cleaned[index];
 					cleaned.splice(index,1);
+					cleaned.splice(lastSplice,0, element);
 					lastSplice = index+1;
-					
-				}
-				var prop = rule.getProperty(shorthands[j][i]);
-				if(prop){
-					rule.removeProperty(shorthands[j][i]);
-				}
+
+					var prop = rule.getProperty(shorthands[j][i]);
+    				if(prop){
+    					rule.removeProperty(shorthands[j][i]);
+    				}
+                }
 			}
 		}
 		
@@ -2091,13 +2230,14 @@ return declare("davinci.ve.Context", null, {
 		}
 		
 		var widget = this.getSelection();
-		if(widget.length>0)
+		if(widget.length) {
 			widget = widget[0];
+		}
 		
 		var widgetType = theme.loader.getType(widget);
 		var selector = [];
 		for(var i =0;i<target.length;i++) {
-			selector = selector.concat( theme.metadata.getRelativeStyleSelectorsText(widgetType,state,null,target));
+			selector = selector.concat( theme.metadata.getRelativeStyleSelectorsText(widgetType,state,null,target));  //FIXME: use push?  adds same selector each time through loop?
 		}
 		
 		return selector;
@@ -2252,15 +2392,14 @@ return declare("davinci.ve.Context", null, {
 		//	  Adding it again will overwrite the existing Dojo, breaking some things.
 		//	  See bug 7585.
 		if (!isDojoJS && !skipDomUpdate) {
-			var absoluteUrl = (new dojo._Url(this.getDocument().baseURI, url)).toString();
-			dojo.withGlobal(this.getGlobal(),
-				function() {
-					dojo.xhrGet({
-						url: absoluteUrl,
-						sync: true,
-						handleAs: "javascript"
-					});
-				});
+			var context = this,
+				absoluteUrl = (new dojo._Url(this.getDocument().baseURI, url)).toString();
+			dojo.xhrGet({
+				url: absoluteUrl,
+				sync: true    // XXX -> async
+			}).then(function(data) {
+				context.getGlobal()['eval'](data);
+			});
 		}
 		if (doUpdateModel) {				
 			/* update the script if found */
@@ -2277,14 +2416,10 @@ return declare("davinci.ve.Context", null, {
 			if (isDojoJS) {
 				// special case for dojo.js to provide config attribute
 				// XXX TODO: Need to generalize in the metadata somehow.
-				var fullPath = new davinci.model.Path(system.resource.getRoot().getPath());
-				var urlPath = new davinci.model.Path(url);
-				var relativeUrl = urlPath.relativeTo(fullPath);
-
 				var config = {
 					async: true,
 					parseOnLoad: true,
-					modulePaths: { widgets: this._dojoModulePath + "/" + this._getWidgetFolder() }
+					packages: this._getLoaderPackages()
 				};
 				dojo.mixin(config, this._configProps);
 				this.addHeaderScript(url, {
@@ -2366,6 +2501,7 @@ return declare("davinci.ve.Context", null, {
 	},
 
 
+<<<<<<< HEAD
 	// add JS to HEAD
 	addHeaderScriptText: function(text){
 	    var splits = text.split('"');
@@ -2407,12 +2543,59 @@ return declare("davinci.ve.Context", null, {
 		// XXX Bug 7499 - (HACK) See comment in addHeaderScript()
 			head.insertBefore(script, statesJsScriptTag);
 		} else {
-			head.addChild(script);
+=======
+	/**
+	 * Add inline JavaScript to <head>.
+	 * 
+	 * This function looks for the last inline JS element in <head> which comes
+	 * after the last <script src='...'> element.  If a script URL exists after
+	 * the last inline JS element, or if no inline JS element exists, then we
+	 * create one.
+	 * 
+	 * @param {string} text inline JS to add
+	 */
+	addHeaderScriptText: function(text) {
+		// XXX cache 'head'
+		var head = this.getDocumentElement().getChildElement('head'),
+			scriptText,
+			children = head.children,
+			i,
+			node;
+
+		for (i = children.length - 1; i >= 0; i--) {
+			node = children[i];
+			if (node.elementType === 'HTMLElement' && node.tag === 'script') {
+				// Script element will either have inline script or a URL.
+				// If the latter, this breaks with 'inlineScript' equal to 'null'
+				// and a new inline script is created later.  This is done so
+				// that new inline script comes after the latest added JS file.
+				scriptText = node.find({elementType: 'HTMLText'}, true);
+				break;
+			}
 		}
-		var newScriptText = new davinci.html.HTMLText();
-		newScriptText.setText(text);
-		script.addChild(newScriptText);
-		this._scriptAdditions = script;
+
+		if (! scriptText) {
+			// create a new script element
+			var script = new davinci.html.HTMLElement('script');
+			script.addAttribute('type', 'text/javascript');
+			script.script = "";
+>>>>>>> master
+			head.addChild(script);
+
+			scriptText = new davinci.html.HTMLText();
+			script.addChild(scriptText);
+		}
+
+		var oldText = scriptText.getText();
+		if (oldText.indexOf(text) === -1) {
+			var newText = oldText + '\n' + text;
+			scriptText.setText(oldText + '\n' + text);
+			// XXX For some reason, <script> text is handled differently in the
+			//   Model than that of other elements.  I think I only need to call
+			//   setScript(), but the correct process should be to just update
+			//   HTMLText. See issue #1350.
+			scriptText.parent.setScript(oldText + '\n' + text);
+		}
 	},
 	
 	/**
@@ -2501,6 +2684,7 @@ return declare("davinci.ve.Context", null, {
 	 * Perform any visual updates in response to mousemove event while performing a
 	 * drag operation on the visual canvas.
 	 * @param {object} params  object with following properties:
+	 * 		[array{object}] widgets  Array of widgets being dragged (can be empty array)
 	 *      {object|array{object}} data  For widget being dragged, either {type:<widgettype>} or array of similar objects
 	 *      {object} eventTarget  Node (usually, Element) that is current event.target (ie, node under mouse)
 	 *      {object} position  x,y properties hold current mouse location
@@ -2513,6 +2697,7 @@ return declare("davinci.ve.Context", null, {
 	dragMoveUpdate: function(params) {
 		var context = this;
 		var cp = this._chooseParent;
+		var widgets = params.widgets;
 		var data = params.data;
 		var eventTarget = params.eventTarget;
 		var position = params.position;
@@ -2526,6 +2711,15 @@ return declare("davinci.ve.Context", null, {
 		// inner function that gets called recurively for each widget in document
 		// The "this" object for this function is the Context object
 		_updateThisWidget = function(widget){
+			if(params.widgets){
+				for(var i=0; i<params.widgets.length; i++){
+					// Drag operations shouldn't apply to any of the widget being dragged
+					if(widget == params.widgets[i]){
+						return;
+					}
+				}
+			}
+			
 			var node = widget.domNode;
 			var dj = this.getDojo();
 			var computed_style = dj.style(node);

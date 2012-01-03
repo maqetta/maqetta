@@ -7,6 +7,10 @@ return function() {
 			context = widget.getContext();
 		widget._helperHandle = connect.subscribe("/davinci/ui/widgetSelected", null, function(selected) {
 			var w = selected[0];
+<<<<<<< HEAD
+=======
+			if (!w || w.getContext() != context) { return; }
+>>>>>>> master
 			while (w && w.id != id) {
 				if (w._ownerId) {
 					w = context.getDijit().registry.byId(w._ownerId);
@@ -15,7 +19,11 @@ return function() {
 				}
 			}
 
+<<<<<<< HEAD
 			var dialog = context.getDijit().registry.byId(id); // use widget
+=======
+			var dialog = context.getDijit().registry.byId(id);
+>>>>>>> master
 			if (w) {
 				dialog.show();
 			} else {

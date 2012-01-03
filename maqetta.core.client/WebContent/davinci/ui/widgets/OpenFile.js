@@ -2,13 +2,12 @@ dojo.provide("davinci.ui.widgets.OpenFile");
 
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
+dojo.require("dijit.Tree");
 dojo.require("dijit.form.Button");
-dojo.require("dijit.form.TextBox");
-dojo.require("dijit.form.RadioButton");
+dojo.require("dijit.layout.ContentPane");
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.ui", "ui");
 dojo.requireLocalization("dijit", "common");
-dojo.require("dojox.widget.Standby");
 
 dojo.declare("davinci.ui.widgets.OpenFile",   [dijit._Widget,dijit._Templated], {
 	widgetsInTemplate: true,
@@ -16,7 +15,6 @@ dojo.declare("davinci.ui.widgets.OpenFile",   [dijit._Widget,dijit._Templated], 
 	
 	fileDialogFileName : null,
 	fileDialogParentFolder: null,
-	fileTree : null,
 	
 	postMixInProperties : function() {
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
@@ -35,7 +33,10 @@ dojo.declare("davinci.ui.widgets.OpenFile",   [dijit._Widget,dijit._Templated], 
 			this._setValueAttr(this._getForcedRootAttr());
 		}
 	},
-	
+
+	startup: function() {
+		this.fileTree.startup();
+	},
 	
 	_setValueAttr : function(value){
 		/* full resource expected */
@@ -81,11 +82,5 @@ dojo.declare("davinci.ui.widgets.OpenFile",   [dijit._Widget,dijit._Templated], 
 		this.onClose();
 	},
 	
-
 	onClose : function(){}
-
-
-	
-
-
 });

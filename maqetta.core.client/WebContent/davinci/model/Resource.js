@@ -23,8 +23,9 @@ davinci.model.Resource.Resource= function(){
  
  davinci.model.Resource.Resource.prototype.getPath= function()
  {
-	 if (this.parent)
+	 if (this.parent) {
 		 return this.parent.getPath()+"/"+this.name;
+	 }
 	 return this.name;
  }
  
@@ -34,8 +35,9 @@ davinci.model.Resource.Resource= function(){
 		 return this._readOnly || (this.parent!=null && this.parent.readOnly());
 	 }
 		 
-	if( this.parent)
+	if( this.parent) {
 		 return this.parent.readOnly();
+	}
 	
 	 return false;
  }
@@ -58,8 +60,9 @@ davinci.model.Resource.Resource.prototype.getURL = function(){
 		 path = path.substring(1,path.length);
 	 }
 	    var loc=davinci.Workbench.location();;
-	    if (loc.charAt(loc.length-1)=='/')
+	    if (loc.charAt(loc.length-1)=='/') {
 	    	loc=loc.substring(0,loc.length-1);
+	    }
 
 	 return loc+'/user/'+davinci.Runtime.userName+'/ws/workspace/'+ path;
 	 
@@ -82,15 +85,15 @@ davinci.model.Resource.Resource.prototype.rename = function(newName){
  
  davinci.model.Resource.Resource.prototype.getParentFolder = function(){
 	 
-	 if (this.elementType=="File")
+	 if (this.elementType=="File") {
 		 return this.parent;
+	 }
 	 return this;
 	 
  }
 
 davinci.model.Resource.Resource.prototype.isVirtual = function(){
-	 return (this.libraryId!=null)
-	 
+	 return (this.libraryId!=null);
 }
 
  davinci.model.Resource.Resource.prototype.visit= function(visitor,dontLoad){
@@ -98,7 +101,7 @@ davinci.model.Resource.Resource.prototype.isVirtual = function(){
 	
 	 if(!this._isLoaded && this.elementType=="Folder" && !dontLoad){
 		this.getChildren(dojo.hitch(this,function(){ 
-							dojo.forEach(this.children, function(child){child.visit(visitor,dontLoad)});
+							dojo.forEach(this.children, function(child){child.visit(visitor,dontLoad);});
 						 }));
 	 }else if (this.children && !dontVisitChildren){
 		 dojo.forEach(this.children, function(child){
@@ -151,11 +154,14 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
 	 if(name!=null){
 		 file = isFolder ?   new davinci.model.Resource.Folder(name,this) :  new davinci.model.Resource.File(name,this);
   	 }else{
-		 
 		 file = this;
 		 isFolder = this.elementType=="Folder";
 	 }
+<<<<<<< HEAD
 	 var response= (!localOnly) ? davinci.Runtime.serverJSONRequest({
+=======
+	 var response= !localOnly ? davinci.Runtime.serverJSONRequest({
+>>>>>>> master
 		   url:"./cmd/createResource", handleAs:"text",
 	       content:{'path':file.getPath(), 'isFolder': isFolder},sync:true  }): "OK";
 	  if (response=="OK" && name!=null){
@@ -224,15 +230,17 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
 			var hasChild = (child!=null);
 			
 			if (responseObject[i].isDir || responseObject[i].isLib) {
-				if(!hasChild)
+				if(!hasChild) {
 					child=new davinci.model.Resource.Folder(responseObject[i].name,this);
+				}
 			    
 				if (responseObject[i].isLib) {
 			        child.isLibrary = true;
 			    }
 			} else {
-				if(!hasChild)
+				if(!hasChild) {
 					child=new davinci.model.Resource.File(responseObject[i].name,this);
+				}
 			}
           
             child.link=responseObject[i].link;
@@ -242,8 +250,9 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
             	child.libraryId = responseObject[i].libraryId;
             	child.libVersion = responseObject[i].libVersion;
             }
-            if(!hasChild)
+            if(!hasChild) {
             	this.children.push(child);
+            }
 		}
 		this._isLoaded=true;
 	  
@@ -257,8 +266,9 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
 			  markers=resource.getMarkers(markerTypes);
 			  result.concat(markers);
 		  }
-		  else if (!allChildren)
+		  else if (!allChildren) {
 			  return true;
+		  }
 	  }},true);
 	  return result;
   }
@@ -297,7 +307,7 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
   	this.elementType="File";
   	this.name=name;
   	this.parent=parent;
-   this.markers=[];
+    this.markers=[];
 	this.extension=name.substr(name.lastIndexOf('.')+1);
 
   }
@@ -327,15 +337,17 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
 		   for (var i=0;i<this.markers.length; i++)
 		   {
 			   var marker=this.markers[i];
-			   if (!markerTypes)
+			   if (!markerTypes) {
 				   result.push(marker);
-				else if (typeof markerTypes == 'string')
+			   } else if (typeof markerTypes == 'string')
 				{ 
-					if (marker.type==markerTypes)
+					if (marker.type==markerTypes) {
 					   result.push(marker);
+					}
 				}
-				else
-					dojo.forEach(markerTypes,function (type){if (type==marker.type) result.push(marker)});
+				else {
+					dojo.forEach(markerTypes,function (type){if (type==marker.type) result.push(marker);});
+				}
 		   }
 	   return result;
    }
@@ -347,33 +359,30 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
 	   }
 	   var workingCopyExtension = isWorkingCopy?".workingcopy":"";
 	   var path=encodeURIComponent(this.getPath() + workingCopyExtension);
-    	davinci.Runtime.serverPut(
-				{
-					url: path,
-					putData: content,
-					handleAs:"text",
-					contentType:"text/html"
-				});	
-		dojo.publish("/davinci/resource/resourceChanged",["modified",this]);
+	   dojo.xhrPut({
+			url: path,
+			putData: content,
+			handleAs:"text",
+			contentType:"text/html"
+		});	
+	   dojo.publish("/davinci/resource/resourceChanged",["modified",this]);
    }
 
    davinci.model.Resource.File.prototype.getText= function(){
-	   	 
- 		  var contents=davinci.Runtime.serverJSONRequest({
- 			   url:this.getURL(), handleAs:"text", sync:true
- 	  	  });
- 		  return contents;
+		return davinci.Runtime.serverJSONRequest({
+			url:this.getURL(), handleAs:"text", sync:true
+		});
    }
-
 
    davinci.model.Resource.File.prototype.removeWorkingCopy= function()
    {
  		 davinci.Runtime.serverJSONRequest({
  			   url:"./cmd/removeWorkingCopy", handleAs:"text",
  		          content:{'path':this.getPath()}, sync:true
- 	  	  });
- 		 if (this.isNew)
+ 		 });
+ 		 if (this.isNew) {
  			 this.deleteResource(true);
+ 		 }
    }
 
 

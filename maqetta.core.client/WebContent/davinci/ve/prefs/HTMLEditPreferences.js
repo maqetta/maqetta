@@ -7,7 +7,7 @@ dojo.require("dijit.form.CheckBox");
 dojo.declare("davinci.ve.prefs.HTMLEditPreferences",davinci.workbench.PreferencePane, {
 
 	templateString: "<div><table style='margin: 4px;' cellspacing='4'><tbody>" +
-		"<tr><td>${_loc.flowLayout}:</td><td><div dojoAttachPoint='flowBoxNode'></div></td></tr>" +
+		//"<tr><td>${_loc.flowLayout}:</td><td><div dojoAttachPoint='flowBoxNode'></div></td></tr>" +
 		"<tr><td>${_loc.snapToNearestWidget}:</td><td><div dojoAttachPoint='snapNode'></div></td></tr>" +
 		"<tr><td>${_loc.showPossibleParents}:</td><td><div dojoAttachPoint='showPossibleParentsNode'></div></td></tr>" +
 		"<tr><td>${_loc.warnOnCSSOverride}:</td><td><div dojoAttachPoint='cssOverrideWarn'></div></td></tr>" +
@@ -18,7 +18,7 @@ dojo.declare("davinci.ve.prefs.HTMLEditPreferences",davinci.workbench.Preference
 	},	
 
 	postCreate: function(){
-		this._flowBox = new dijit.form.CheckBox({}, this.flowBoxNode);
+		//this._flowBox = new dijit.form.CheckBox({}, this.flowBoxNode);
 		this._snap = new dijit.form.CheckBox({}, this.snapNode);
 		this._showPossibleParents = new dijit.form.CheckBox({}, this.showPossibleParentsNode);
 		this._cssOverrideWarn = new dijit.form.CheckBox({}, this.cssOverrideWarn);
@@ -30,7 +30,7 @@ dojo.declare("davinci.ve.prefs.HTMLEditPreferences",davinci.workbench.Preference
 
 	setPreferences: function(preferences){
 		preferences = (preferences || {});
-		this._check(this._flowBox, !!preferences.flowLayout);
+		//this._check(this._flowBox, !!preferences.flowLayout);
 		this._check(this._snap, !!preferences.snap);
 		this._check(this._showPossibleParents, !!preferences.showPossibleParents);
 		this._check(this._cssOverrideWarn, !!preferences.cssOverrideWarn);
@@ -38,7 +38,7 @@ dojo.declare("davinci.ve.prefs.HTMLEditPreferences",davinci.workbench.Preference
 
 	getPreferences: function(){
 		var preferences = {
-			flowLayout: this._flowBox.checked,
+			//flowLayout: this._flowBox.checked,
 			snap: this._snap.checked,
 			showPossibleParents: this._showPossibleParents.checked,
 			cssOverrideWarn: this._cssOverrideWarn.checked

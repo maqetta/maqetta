@@ -16,15 +16,9 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ThemeHelper", null, {
 
         // Pull in _compat.js immediately, since it redefines methods like loadCssFile which we wish to add advice to now
         context.getDojo()["require"]("dojox.mobile.compat");
-        var resourcePath = context.getFullResourcePath();
-        //var ssPath = new davinci.model.Path(context._theme.file.parent.getPath()).append(context._theme.files[0]);
-        //newFilename = ssPath.relativeTo(resourcePath, true);
-        //var base = "iphone";
-        //if (context._visualEditor.theme.base){
-            var base = context._visualEditor.theme.base;
-        //}
+        var base = context._visualEditor.theme.base;
+        dm.themeFiles = [];
         dm.themeMap=[[".*",base,[context._visualEditor.theme.files[0]]]];
-       // dm.themeMap=[[".*","",["x.css"]]];
 
 	},
 	

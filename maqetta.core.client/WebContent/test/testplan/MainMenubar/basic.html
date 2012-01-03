@@ -17,13 +17,14 @@
 	<hr />
 	<h1 class="test_title">Main menubar basic tests</h1>
 
-	<h2 class="test_section">New menu: New HTML File - default filename, no save</h2>
+	<h2 class="test_section">New menu: New HTML File - default filename, default options, no save</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
 		<li>Standard setup things: Clear the browser cache. Launch the Maqetta server. 
 				Login if necessary. 
 				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
 		<li>From the New menu on the banner, choose "HTML File..."</li>
+		<li>Make sure the Composition type is set to "Desktop hi-fi page"</li>
 		<li>Click Create to accept the default file name (file1.html)</li>
 		<li>Drag/drop any widget onto canvas</li>
 		<li>Close the editor by clicking "x" on editor's tab</li>
@@ -42,7 +43,8 @@
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
 		<li>From the New menu on the banner, choose "HTML File..."</li>
-		<li>Click OK to accept the default file name (file1.html)</li>
+        <li>Make sure the Composition type is set to "Desktop hi-fi page"</li>
+		<li>Click Create to accept the default file name (file1.html)</li>
 		<li>Drag/drop any widget onto canvas</li>
 		<li>Click the "Save" button on editor toolbar</li>
 		<li>Close the editor by clicking "x" on editor's tab</li>
@@ -51,7 +53,7 @@
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
-		<li>After clicking OK on file dialog, ...(same as above)...</li>
+		<li>After clicking Create on file dialog, ...(same as above)...</li>
 		<li>After clicking save, dirty indicator (*) should disappear from editor's tab.</li>
 		<li>(With 0.6, there is a known bug with dirty logic where you are prompted "are you sure" even though no changes since last save)</li>
 		<li>After closing, the file name should continue to be visible in Files palette.</li>

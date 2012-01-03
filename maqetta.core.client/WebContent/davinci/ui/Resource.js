@@ -21,8 +21,8 @@ dojo.require("davinci.ui.widgets.NewHTMLFileOptions");
 
 dojo.mixin(davinci.ui.Resource, {
 	
-	_createNewDialog : function(fileNameLabel, createLabel, type, dialogSpecificClass, fileName){
-		var resource=davinci.ui.Resource.getSelectedResource();
+	_createNewDialog: function(fileNameLabel, createLabel, type, dialogSpecificClass, fileName, existingResource){
+		var resource=existingResource || davinci.ui.Resource.getSelectedResource();
 		var folder = null;
 		if(resource!=null){
 			if(resource.elementType=="Folder"){
@@ -47,24 +47,27 @@ dojo.mixin(davinci.ui.Resource, {
 		var proposedFileName = fileName || this.getNewFileName('file',folder,"." + type);
 		var dialogOptions = {newFileName:proposedFileName,
 							fileFieldLabel:fileNameLabel, 
-							folderFieldLabel:"Where:",
+							folderFieldLabel:"Where:", // FIXME: i18n
 							finishButtonLabel:createLabel,
+							value: folder,
 							dialogSpecificClass:dialogSpecificClass};
 		return new davinci.ui.widgets.NewFile(dialogOptions);
 		
 	},
 	
 	
-	newHTML : function(){
+	newHTML: function(){
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		var dialogSpecificClass = "davinci.ui.widgets.NewHTMLFileOptions";
 		var newDialog = davinci.ui.Resource._createNewDialog(langObj.fileName, langObj.create, "html", dialogSpecificClass);
 		var executor = function(){
+			var teardown = true;
 			if(!newDialog.cancel){
 				var optionsWidget = newDialog.dialogSpecificWidget;
 				var options = optionsWidget.getOptions();
 				var resourcePath = newDialog.get('value');
-				if(davinci.ui.Resource._checkFileName(resourcePath)){
+				var check = davinci.ui.Resource._checkFileName(resourcePath);
+				if(check){
 					var resource = system.resource.createResource(resourcePath);
 					resource.isNew = true;
 					var text = system.resource.createText("HTML", {resource:resource});
@@ -83,37 +86,46 @@ dojo.mixin(davinci.ui.Resource, {
 					};
 					davinci.ui.Resource.openResource(resource, newHtmlParams);
 					davinci.Workbench.workbenchStateCustomPropSet('nhfo',options);
+				} else {
+					teardown = false;
 				}
 			}
+			return teardown;
 		};
-		davinci.Workbench.showModal(newDialog, langObj.createNewHTMLFile, 'width: 320px; opacity:0', executor);
+		davinci.Workbench.showModal(newDialog, langObj.createNewHTMLFile, '', executor);
 	},
 	
-	newCSS : function(){
+	newCSS: function(){
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		var newDialog = davinci.ui.Resource._createNewDialog(langObj.fileName, langObj.create, "css");
 		var executor = function(){
+			var teardown = true;
 			if(!newDialog.cancel){
 				var resourcePath = newDialog.get('value');
-				if(davinci.ui.Resource._checkFileName(resourcePath)){
+				var check = davinci.ui.Resource._checkFileName(resourcePath);
+				if (check) {
 					var resource = system.resource.createResource(resourcePath);
 					resource.isNew = true;
 					var text = system.resource.createText("CSS", {resource:resource});
 					if(text)
 						resource.setText(text);
 					davinci.ui.Resource.openResource(resource);
+				} else {
+					teardown = false;
 				}
 			}
+			return teardown;
 		};
-		davinci.Workbench.showModal(newDialog, langObj.createNewCSSFile, 'width: 300px; oppacity:0', executor);
+		davinci.Workbench.showModal(newDialog, langObj.createNewCSSFile, '', executor);
 	},
 	
-	newFolder : function(){
+	newFolder: function(parentFolder, callback){
+		
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
-		var resource=davinci.ui.Resource.getSelectedResource();
+		var resource=parentFolder || davinci.ui.Resource.getSelectedResource();
 		var folder = null;
 		if(resource!=null){
-			if(resource.elementType=="folder"){
+			if(resource.elementType=="Folder"){
 				folder = resource;
 			}else{
 				folder = resource.parent;
@@ -128,43 +140,57 @@ dojo.mixin(davinci.ui.Resource, {
 				var fullPath = new davinci.model.Path(davinci.Runtime.getProject()).append(prefs.webContentFolder);
 				folder = system.resource.findResource(fullPath.toString());
 			}
-			if(folder==null)
+			if(folder==null) {
 				folder = system.resource.findResource(davinci.Runtime.getProject());
+			}
 		}
 		
 		var proposedFileName = this.getNewFileName('folder',folder);
 		var dialogOptions = {newFileName:proposedFileName,
 							fileFieldLabel:langObj.folderName, 
-							folderFieldLabel:"Parent Folder:",
+							folderFieldLabel:"Parent Folder:", // FIXME: i18n
 							root:folder,
-							finishButtonLabel:"Create Folder" };
+							finishButtonLabel:"Create Folder" }; // FIXME: i18n
 		
 		var newFolderDialog =  new davinci.ui.widgets.NewFolder(dialogOptions);
+		var finished = false;
+		var newFolder;
 		var executor = function(){
+			var teardown = true;
 			if(!newFolderDialog.cancel){
 				var resourcePath = newFolderDialog.get('value');
-				if(davinci.ui.Resource._checkFileName(resourcePath)){
-					system.resource.createResource(resourcePath,true);
+				var check = davinci.ui.Resource._checkFileName(resourcePath);
+				if (check) {
+					newFolder= system.resource.createResource(resourcePath,true);
+				} else {
+					teardown = false;
 				}
 			}
+			if(callback) {
+				callback(newFolder);
+			}
+			return teardown;
 		};
 		
-		davinci.Workbench.showModal(newFolderDialog, langObj.createNewFolder, 'width: 300px; oppacity:0', executor);
+		davinci.Workbench.showModal(newFolderDialog, langObj.createNewFolder, '', executor);
 	},
 	
-	saveAs : function(extension){
+	saveAs: function(extension){
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		
 		var oldEditor = davinci.Workbench.getOpenEditor();
 		var oldFileName = oldEditor.fileName;
 		
-		var newDialog = davinci.ui.Resource._createNewDialog(langObj.fileName, langObj.save, extension, null, oldFileName);
+		var newFileName = (new davinci.model.Path(oldFileName)).lastSegment();
+		var oldResource = system.resource.findResource(oldFileName);
+		
+		var newDialog = davinci.ui.Resource._createNewDialog(langObj.fileName, langObj.save, extension, null, newFileName, oldResource);
 		var executor = function(){
+			var teardown = true;
 			if(!newDialog.cancel){
 				var resourcePath = newDialog.get('value');
-				if(davinci.ui.Resource._checkFileName(resourcePath)){
-					
-
+				var check = davinci.ui.Resource._checkFileName(resourcePath);
+				if (check) {
 					var oldResource = system.resource.findResource(oldFileName);
 			        var oldContent = oldEditor.editorID == "davinci.html.CSSEditor" ? oldEditor.getText() : oldEditor.model.getText();
 					var existing=system.resource.findResource(resourcePath);
@@ -182,29 +208,38 @@ dojo.mixin(davinci.ui.Resource, {
 					var newText = pageBuilder.rebuildSource(oldContent, file);
 					file.setContents(newText);
 					davinci.Workbench.openEditor({fileName: file, content: newText});
+				} else {
+					teardown = false;
 				}
 			}
+			return teardown;
 		};
-		davinci.Workbench.showModal(newDialog, langObj.saveFileAs, 'width: 300px; oppacity:0', executor);
+		davinci.Workbench.showModal(newDialog, langObj.saveFileAs, '', executor);
 	},
 	
-	newJS : function(){
+	newJS: function(){
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		var newDialog = davinci.ui.Resource._createNewDialog(langObj.fileName, langObj.create, "js");
 		var executor = function(){
+			var teardown = true;
 			if(!newDialog.cancel){
 				var resourcePath = newDialog.get('value');
-				if(davinci.ui.Resource._checkFileName(resourcePath)){
+				var check = davinci.ui.Resource._checkFileName(resourcePath);
+				if (check) {
 					var resource = system.resource.createResource(resourcePath);
 					resource.isNew = true;
 					var text = system.resource.createText("CSS", {resource:resource});
-					if(text)
+					if(text) {
 						resource.setText(text);
+					}
 					davinci.ui.Resource.openResource(resource);
+				} else {
+					teardown = false;
 				}
 			}
+			return teardown;
 		};
-		davinci.Workbench.showModal(newDialog, langObj.createNewJSFile, 'width: 300px; oppacity:0', executor);
+		davinci.Workbench.showModal(newDialog, langObj.createNewJSFile, '', executor);
 	},
 	
 	openFile: function(){
@@ -230,8 +265,9 @@ dojo.mixin(davinci.ui.Resource, {
 				var resource = openDialog.get('value');
 				davinci.ui.Resource.openResource(resource);
 			}
+			return true;
 		};
-		davinci.Workbench.showModal(openDialog, langObj.openFile, 'width: 300px; oppacity:0', executor);
+		davinci.Workbench.showModal(openDialog, langObj.openFile, '', executor);
 	},
 	
 	
@@ -310,7 +346,7 @@ dojo.mixin(davinci.ui.Resource, {
 		dialog.setContent(formHtml);
 		dialog.show();
 	},
-	getNewFileName : function (fileOrFolder, fileDialogParentFolder, extension){
+	getNewFileName: function (fileOrFolder, fileDialogParentFolder, extension){
 		
 		var existing, proposedName;
 		var count=0;
@@ -330,52 +366,46 @@ dojo.mixin(davinci.ui.Resource, {
 		return proposedName;
 	},
 	
-	_checkFileName : function(fullPath){
+	_checkFileName: function(fullPath){
 		
 		var resource = system.resource.findResource(fullPath);
-		if(resource!=null){
+		if(resource){
 			alert("File already exists!");
-			return false;
 		}
-		
-		
-		return true;
-		
+
+		return !resource;
 	},
-	canModify : function(item){
+
+	canModify: function(item){
 		return !item.readOnly();
-		
 	},
 	
-	newProject : function(){
+	newProject: function(){
 		var projectDialog = new davinci.ui.NewProject({}),
 			langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
-	    davinci.Workbench.showModal(projectDialog, langObj.newProject, 'width: 250px');
+	    davinci.Workbench.showModal(projectDialog, langObj.newProject, '');
 	},
 	
-	renameAction : function(){
+	renameAction: function(){
 		
 		var selection = this.getSelectedResources();
 	    if( selection.length!=1) return;
 	    var resource = selection[0];
 	    resource.parent.getChildren(function(parentChildren){
-		    var invalid = [];
+		    var invalid = parentChildren.map(function(child) {
+		    	return child.name;
+		    });
 
-	    	for(var i=0;i<parentChildren.length;i++){
-	  	    	invalid.push(parentChildren[i].name);
-	  	    }
 	    	var renameDialog = new davinci.ui.Rename({value:resource.name, invalid:invalid});
-	  		davinci.Workbench.showModal(renameDialog, 'Rename To....', 'height:110px;width: 200px',function(){
-	  			
+	  		davinci.Workbench.showModal(renameDialog, 'Rename To....', '', function(){ //FIXME: i18n
 	  			var cancel = renameDialog.attr("cancel");
 	  			var newName = renameDialog.attr("value");
 	  			if(!cancel){
 		  			resource.rename(newName);
-
 				}
+	  			return true;
 	  		});	
-	    },true);
-		
+	    }, true);
 	},
 	
 	getResourceIcon: function(item, opened){
@@ -426,30 +456,30 @@ dojo.mixin(davinci.ui.Resource, {
 	  if (selection[0]&&selection[0].resource)
 		  return dojo.map(selection,function(item){return item.resource;});
 	},
-	alphabeticalSortFilter : {
-	     filterList : function(list)
+	alphabeticalSortFilter: {
+	     filterList: function(list)
 	    {
 		    return list.sort(function (file1,file2)
 		    	{return file1.name>file2.name ? 1 : file1.name<file2.name ? -1 : 0;});
 	    }
 	
 	},
-	foldersFilter : {
-	     filterItem : function(item)
+	foldersFilter: {
+	     filterItem: function(item)
 	    {
 		    if (item.elementType=='File')
 		    	return true;
 	    }
 	},
 
-	openPath : function(path,text){
+	openPath: function(path,text){
 		var options = {fileName:path};
 		if(text)
 			options.text = text;
 		davinci.Workbench.openEditor(options);
 	},
 	
-	openResource : function(resource, newHtmlParams){
+	openResource: function(resource, newHtmlParams){
 
 		if(resource.elementType=="File"){
 			davinci.Workbench.openEditor({
@@ -458,7 +488,4 @@ dojo.mixin(davinci.ui.Resource, {
 			}, newHtmlParams);
 		}
 	}
-	
-	 
-	
 });

@@ -176,6 +176,7 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 	},
 	
 	cancelButton: function(){
+		this.cancel = true;
 		this.onClose();
 	},
 

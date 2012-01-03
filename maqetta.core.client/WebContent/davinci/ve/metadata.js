@@ -4,7 +4,7 @@ define([
     "davinci/util",
 	"davinci/library",
 	"davinci/model/Path"
-], function(SmartInput, util, library, Path) {
+], function(SmartInput, Util, Library, Path) {
 
 	var metadata,
     	METADATA_CLASS_BASE = "davinci.libraries.",
@@ -45,7 +45,7 @@ define([
 		for (var name in overlays) {
 			if (overlays.hasOwnProperty(name)) {
 				if (name === 'oam' || name === 'maqetta') {
-					util.mixin(pkg, overlays[name]);
+					Util.mixin(pkg, overlays[name]);
 				}
 			}
         }
@@ -260,7 +260,7 @@ define([
         cache[type] = metadata;
 
         // OAM may be overridden by metadata in widgets.json
-        util.mixin(metadata, wm.$providedTypes[type].metadata);
+        Util.mixin(metadata, wm.$providedTypes[type].metadata);
         
         return metadata;
     }
@@ -342,10 +342,10 @@ define([
          * Read the library metadata for all the libraries linked in the user's workspace
          */
 		init: function() {
-			library.getInstalledLibs().forEach(function(lib) {
+			Library.getUserLibs(davinci.Runtime.getProject()).forEach(function(lib) {
 // XXX Shouldn't be dealing with 'package.json' here; that belongs in library.js
 // (or a combined object).  Putting it here for now, to quickly integrate.
-				var path = library.getMetaRoot(lib.id, lib.version);
+				var path = Library.getMetaRoot(lib.id, lib.version);
 				if (path) {
 					dojo.xhrGet({
 // XXX For now, 'package.json' lives inside the 'metadata' dir.  Will need to
@@ -364,7 +364,7 @@ define([
 /* Unused code
 			// add the users custom widgets to the library metadata
 			var base = davinci.Runtime.getProject();
-			var descriptor = library.getCustomWidgets(base);
+			var descriptor = Library.getCustomWidgets(base);
 			//if(descriptor.custom) parseLibraryDescriptor(descriptor.custom, descriptor.custom.metaPath);
 */
 		},
@@ -402,7 +402,7 @@ define([
     		
 			var themePath = new Path(model.fileName);
     		/* remove the .theme file, and find themes in the given base location */
-    		var allThemes = library.getThemes(themePath.removeLastSegments(1).toString());
+    		var allThemes = Library.getThemes(themePath.firstSegment());
     		var themeHash = {};
     		for(var i=0;i<allThemes.length;i++){
     		    if (allThemes[i]['files']){ // #1024 theme maps do not have files
@@ -430,7 +430,7 @@ define([
     				if(url.indexOf(themeUrl)  > -1){
     					return {
     						themeUrl: url,
-    						themeMetaCache: library.getThemeMetadata(themeHash[themeUrl]),
+    						themeMetaCache: Library.getThemeMetadata(themeHash[themeUrl]),
     						theme: themeHash[themeUrl]
     					};
     				}
@@ -484,7 +484,7 @@ define([
     				var returnObject = {
     					themeUrl: url,
     					// Pull claro theme data
-    					themeMetaCache: library.getThemeMetadata(themeHash[claroThemeUrl]),
+    					themeMetaCache: Library.getThemeMetadata(themeHash[claroThemeUrl]),
     					theme: themeHash[claroThemeUrl]
     				};
     				returnObject.themeMetaCache.usingSubstituteTheme = {
@@ -525,7 +525,7 @@ define([
                                  if(url.indexOf(themeUrl)  > -1){
                                      return {
                                     	 themeUrl: url,
-                                    	 themeMetaCache: library.getThemeMetadata(themeHash[themeUrl]),
+                                    	 themeMetaCache: Library.getThemeMetadata(themeHash[themeUrl]),
                                     	 theme: themeHash[themeUrl]
                                      };
                                  }

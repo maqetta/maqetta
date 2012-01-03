@@ -1,4 +1,5 @@
-({
+define({ root:
+{
 		//Comment.js
 		"open":"Open",
 		"close":"Close",
@@ -76,5 +77,5 @@
 		//MailFailurDialogContent.html
 		"inviteNotSent":"Invitation was not sent",
 		"mailFailureMsg":"It seems that the mail service is down or not configured. Please copy the invitation below and send it manually."
-
-})
+}
+});

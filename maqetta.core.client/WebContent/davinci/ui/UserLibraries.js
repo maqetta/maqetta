@@ -231,7 +231,7 @@ dojo.declare("davinci.ui.UserLibraries",   [dijit._Widget, dijit._Templated], {
 		this.onClose();
 	},
 	cancelButton : function(){
-		
+		this.cancel = true;		
 		this.onClose();
 	},
 	_rewriteDojo : function(){

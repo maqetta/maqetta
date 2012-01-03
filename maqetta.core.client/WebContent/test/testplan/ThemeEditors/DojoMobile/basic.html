@@ -1,0 +1,155 @@
+<html>
+<head>
+<title>Mobile theme editor basic tests</title>
+<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+<link href="../../css/testplan.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="scayt-enabled">
+<div class="navbar"><a href="./" title="show directory contents"><code>./</code>
+(show contents of this directory)</a> &nbsp;&nbsp;&nbsp;&nbsp; <a href="../"
+	title="show directory contents"><code>../</code> (show contents of
+parent directory)</a></div>
+<hr />
+<h1 class="test_title">Mobile theme editor basic tests</h1>
+<h2 class="test_section">Mobile theme cloning, saving and opening</h2>
+<h3 class="steps_subsection">Steps</h3>
+<ol class="steps">
+	<li>You'll want to setup a virgin user environment by creating a whole new user
+	login or resetting the existing user login (e.g., delete users/ folder, restart server).
+	Clear the browser cache. Launch the Maqetta server. Login if
+	necessary.</li>
+	<li>Bring up the New Theme dialog multiple times to clone "custom" into "mymobiletheme" (or whatever), "android" into "android1" (or whatever), "iphone" into "iphone1" (or whatever), "ipad" into "ipad1" (or whatever) and "blackberry" into "blackberry1" (or whatever).</li>
+	<li>Close two of the new theme editor windows by clicking on the "x" on the editor tab. Then reopen those theme editor tabs using the Open Theme... command.</li>
+</ol>
+<h3 class="expectedResults_subsection">Expected results</h3>
+<ol class="expectedResults">
+	<li>A new theme editor tab should open for each of your new themes after issuing the New Theme command.</li>
+	<li>The theme editor should show a global section at the top and a TabContainer at bottom where you can click on tabs to go to different groups of specific widgets.</li>
+	<li>The cloned theme's look should be exactly the same
+		as the original theme (i.e., the theme that was clone.)</li>
+	<li>The Open Theme... command should show a list of all cloned themes and be able to open the theme editor on any of the cloned themes.</li>
+</ol>
+<h2 class="test_section">Global theming</h2>
+<h3 class="steps_subsection">Steps</h3>
+<ol class="steps">
+	<li>Do the following operations for each of your newly cloned themes:
+		<ol>
+			<li>From the states tab select the Normal state. <span
+				style="color: #006400;">All widgets should be enabled</span></li>
+			<li>Click to select the "Page backgrounds and Fonts" widget at the top of the editing window. 
+			In the
+			Styling palette, make sure you can change background-color and background-image using a gradient.
+			(You'll need to click on the "..." button to bring up the Background dialog in order to create/edit gradients.)
+			Also in the Styling palette, change some
+			combination of font-family, font-size, font-color, and boldness. <blockquote>You should see the effect on
+			the canvas as you change properties. Some of the property changes such
+			as font-family and font-size should affect multiple widgets.</blockquote></li>
+			<li>Click to select the "Heading Background" widget. In the
+			Styling palette, change background color, background-image (using gradients in some cases),
+			and some font properties. <blockquote>You should see the effect on
+			the canvas as you change properties. Some of the property changes such
+			as font-family and font-size should affect multiple widgets. Be sure to click on all of the tabs
+			of the TabContainer surrounding the bottom-half of the mobile theme editor to see the effect
+			of global styling changes across multiple widgets.</blockquote></li>
+			<li>Click to select the "Button Background" widget. In the
+			Styling palette, change background color, background-image (using gradients in some cases),
+			and some font properties. <blockquote>You should see the effect on
+			the canvas as you change properties. Some of the property changes such
+			as font-family and font-size should affect multiple widgets. Be sure to click on all of the tabs
+			of the TabContainer surrounding the bottom-half of the mobile theme editor to see the effect
+			of global styling changes across multiple widgets.</blockquote></li>
+			<li>Click on the Save icon on the main toolbar to save
+			the new file. </li>
+			<li>Click on the X close button for the editor tab for
+			this file</li>
+			<li>Re-open the theme editor for this theme from the Open menu.</li>
+			<li>Issue a Create HTML File command, and set composition type to one of the mobile devices.</li>
+			<li>Add some Dojo Mobile widgets (e.g., View, Heading, TabBar, Button, Switch) to the canvas.</li>
+			<li>Click on the Switch Theme icon on the toolbar and switch to this new mobile theme.</li>
+		</ol>
+	</li>
+</ol>
+<h3 class="expectedResults_subsection">Expected results</h3>
+<ol class="expectedResults">
+	<li>As you change properties in the theme editor, the canvas
+	should update so that the widgets reflect the styling changes you made.</li>
+	<li>After save and reopen, the saved theme should open and its
+	contents should be the same as how it was when you clicked on the Save
+	button.</li>
+	<li>After you have created your new HTML file with the widgets,
+	you should see that the widgets have the styling changes you made in
+	the theme editor.</li>
+</ol>
+<h2 class="test_section">Primitive widget theming and states</h2>
+<h3 class="steps_subsection">Steps</h3>
+<ol class="steps">
+	<li>From the states tab select the Normal state. <span
+		style="color: #006400;">All widgets should be enabled</span></li>
+	<li>Click to on a few widgets and attempt to change Styling properties,
+	particularly backgrounds, borders, fonts, and padding. 
+	For example, Heading, Button and TextBox. <blockquote>In most cases, you should see the effect on
+			the canvas as you change properties. Note that there are various
+			complexities with the theme editor, so not every CSS property
+			can be changed for every widget. Usually, you are able to change
+			backgrounds, borders and fonts.</blockquote>
+			 <blockquote>Another complexity involves backgrounds.
+			 If there is a background-image (including gradients) and it's fully opaque,
+			 it might entirely obscure the background-color..</blockquote>
+	</li>
+	<li>Change the state on the States palette from Normal to Selected. Change font and background on Button when in Selected state.</li>
+	<li>Change properties on various widgets in various states.</li>
+	<li>Click on the Save icon on the main toolbar to save
+	the modified theme.</li>
+	<li>Click on the X close button for the editor tab for
+	this file</li>
+	<li>Re-open the theme editor for this theme </li>
+	<li>Create a new HTML file with composition type of one of the mobile devices (e.g., iphone). Before clicking Create,
+		click on the "Theme..." button. In the Select theme dialog, for mobile theme, change "(device-specific)" to the name of your new theme.
+		Then back in the New HTML file dialog, click Create.</li>
+	<li>Add various widgets to the page for which you modified styling in the theme editor.</li>
+</ol>
+<h3 class="expectedResults_subsection">Expected results</h3>
+<ol class="expectedResults">
+	<li>After you have created your new HTML file with the widgets,
+	you should see that the widgets have the styling changes you made in
+	the theme editor.</li>
+</ol>
+<h2 class="test_section">Subwidget theming</h2>
+<h3 class="steps_subsection">Steps</h3>
+<ol class="steps">
+	<li>If necessary, re-open the theme editor for one of your newly cloned mobile themes from the Open menu.</li>
+	<li>Go to the "Rects and Lists" section at the bottom and click to select on the "Item 1" widget.</li>
+	<li>With Widget Outer Container checked as the current subwidget, go to the Borders section of the Properties palette,
+		choose "Show: props", and then set border-color to a different color.
+		<blockquote>The border of the ListItem should reflect the new color.</blockquote></li>
+	<li>Click on the ListItem subwidget. Change background-color to pink.
+		<blockquote>Both ListItems should show the new background color.</blockquote></li>
+	<li>Click on the MoveTo subwidget. Change border-color to green.
+		<blockquote>The arrow should now be green.</blockquote></li>
+	<li>Click-select other widgets and find other widgets that have subwidgets. Try changing various properties.
+	<blockquote>In some cases, you will see the effect on
+			the canvas as you change properties, but in other cases not. Note that there are various
+			complexities with the theme editor, so not every CSS property
+			can be changed for every widget or sub-widget.</blockquote></li>
+	<li>Click on the Save icon on the main toolbar to save
+	the modified theme.</li>
+	<li>Click on the X close button for the editor tab for
+	this file</li>
+	<li>Re-open the theme editor for this theme </li>
+	<li>Create a new HTML file with composition type of one of the mobile devices (e.g., iphone). Before clicking Create,
+		click on the "Theme..." button. In the Select theme dialog, for mobile theme, change "(device-specific)" to the name of your new theme.
+		Then back in the New HTML file dialog, click Create.</li>
+</ol>
+<h3 class="expectedResults_subsection">Expected results</h3>
+<ol class="expectedResults">
+	<li>As you change properties in the theme editor, the canvas
+	should update so that the widgets reflect the styling changes you made.</li>
+	<li>After save and reopen, the saved theme should open and its
+	contents should be the same as how it was when you clicked on the Save
+	button.</li>
+	<li>After you have created your new HTML file with the widgets,
+	you should see that the widgets have the styling changes you made in
+	the theme editor.</li>
+</ol>
+</body>
+</html>

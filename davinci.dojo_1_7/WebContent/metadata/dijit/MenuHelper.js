@@ -6,10 +6,13 @@ return function() {
 		var id = widget.dijitWidget.id,
 			context = widget.getContext();
 <<<<<<< HEAD
+<<<<<<< HEAD
 		domClass.add(widget.domNode, "dvHidden");
 		widget._helperHandle = connect.subscribe("/davinci/ui/widgetSelected", null, function(selected) {
 			if (!widget.properties.contextMenuForWindow) { return; }
 =======
+=======
+>>>>>>> master
 		if (widget.properties && widget.properties.contextMenuForWindow) {
 			domClass.add(widget.domNode, "dvHidden");			
 		}
@@ -17,6 +20,11 @@ return function() {
 		widget._helperHandle = connect.subscribe("/davinci/ui/widgetSelected", null, function(selected) {
 			var menu = context.getDijit().registry.byId(id);
 //			if (!menu) { this.destroy(widget); }
+<<<<<<< HEAD
+			if (!menu.properties || !menu.properties.contextMenuForWindow) { return; }
+>>>>>>> master
+=======
+			if (!menu) { console.log("MenuHelper: menu is null"); return; }
 			if (!menu.properties || !menu.properties.contextMenuForWindow) { return; }
 >>>>>>> master
 			var w = selected[0];
@@ -29,7 +37,10 @@ return function() {
 			}
 	
 <<<<<<< HEAD
+<<<<<<< HEAD
 			var menu = context.getDijit().registry.byId(id); // use widget?
+=======
+>>>>>>> master
 =======
 >>>>>>> master
 			if (w) {

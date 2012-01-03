@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Visual page editor basic tests (part 3 - Snap and ChooseParent)</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Visual page editor basic tests (part 3 - Snap and ChooseParent)</h1>
+
+	<h2 class="test_section">Snapping</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the Maqetta server. 
+				Login if necessary. 
+				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
+		<li>Go to preferences and look at "Snap to nearest widget" setting. 
+            <div class='expectedResults_subsection'>It should be on by default.</div></li>
+		<li>Click on the "New file" icon on the main toolbar. Set composition type to "Desktop hi-fi page". Choose any filename.</li>
+		<li>Drag a few primitive widgets onto the canvas (e.g., Button, TextBox, Calendar, ColorPalette).
+            <div class='expectedResults_subsection'>The widgets should be laid out with flow layout.</div></li>
+		<li>Drag one of the widgets (e.g., Button) around on the canvas such that various edges (left, center, right, top, middle, bottom)
+			align with one of the other widgets.
+            <div class='expectedResults_subsection'>Because the widget uses flow layout, no snap lines should appear.</div></li>
+		<li>Select one of the widgets (e.g., Button) and change the 'position' property to absolute.
+			Drag that widget around on the canvas such that various edges (left, center, right, top, middle, bottom)
+			align with one of the other widgets.
+            <div class='expectedResults_subsection'>You should see magenta horizontal and vertical snap lines
+            as the horizontal and vertical edges align with other widgets, and the widget(s) to which the dragged widget
+            will snap should have a magenta overlay.</div></li>
+		<li>Click on the "X" close button for the editor tab for this file</li>
+		<li>Click on the "New file" icon on the main toolbar. Set composition type to "Desktop hi-fi sketch". Choose any filename.</li>
+		<li>Drag a Calendar onto the canvas.
+            <div class='expectedResults_subsection'>The widgets should be laid out with absolute layout.</div></li>
+		<li>Drag a Button onto the canvas. While dragging, position the mouse such that it aligns with various
+			edges (left, center, right, top, middle, bottom) of the Calendar.
+            <div class='expectedResults_subsection'>You should see magenta horizontal or vertical snap lines
+            as the horizontal and vertical edges align with the other widget, and the widget to which the dragged widget
+            will snap should have a magenta overlay.</div></li>
+		<li>Click on the DIV widget in the Widget palette, and then drag out a rectangle on the canvas that is roughly 300px by 200px in size.
+            <div class='expectedResults_subsection'>The DIV's size and position should match the rectangular area you dragged out.</div></li>
+		<li>Set the DIV's 'border' property to "1px solid black".</li>
+		<li>Drag a LABEL onto the canvas and drop it inside the DIV about 30px from the top and left edges of the DIV.
+			Drag a second LABEL onto the canvas and, while dragging, position the mouse directly under the left edge
+			of the first LABEL and about 20px under the first label.
+            <div class='expectedResults_subsection'>During drag operation, while under the first DIV, you should see a vertical
+            snap line.</div>
+            Mouse up while vertical snap line is visible.
+            <div class='expectedResults_subsection'>The left edge of the second LABEL should be exactly aligned with the left edge of the first LABEL.</div>
+        </li>
+		<li>Drag a TextBox onto the canvas and, while dragging, position the mouse horizontally about 20px to the right of the right edge
+			of the first LABEL and at the vertical middle of the LABEL.
+            <div class='expectedResults_subsection'>During drag operation, while the mouse is aligned with the vertical middle of the LABEL, 
+            you should see a horizontal snap line.</div>
+            Mouse up while horizontal snap line is visible.
+            <div class='expectedResults_subsection'>The vertical middle of the TextBox should be exactly aligned with the vertical middle of the first LABEL.</div>
+        </li>
+		<li>Drag a second TextBox onto the canvas and, while dragging, position the mouse horizontally under left edge
+			of the first TextBox and vertically at the vertical middle of the second LABEL.
+            <div class='expectedResults_subsection'>During drag operation, while the mouse is aligned with the 
+            left edge of the first TextBox and the vertical middle of the second LABEL, 
+            you should see both a horizontal snap line and a vertical snap line.</div>
+            Mouse up while horizontal snap line is visible.
+            <div class='expectedResults_subsection'>The TextBox should snap horizontally to the left edge of the first TextBox and 
+            vertically to the vertical middle of the second LABEL.</div>
+        </li>
+		<li>Drag a Button widget from the Widget palette onto the canvas inside the DIV under the two pairs
+			of LABEL/TextBox widgets, with the mouse near the horizontal center of the DIV.
+            <div class='expectedResults_subsection'>When the mouse is within a few pixels of the horizontal center of the DIV, you should
+			see a vertical snap line for aligning the center of the Button with the center of the DIV.</div>
+            Mouse up while vertical snap line is visible.
+            <div class='expectedResults_subsection'>The Button should snap horizontally such that its center
+            should align with the DIV's center.</div>
+        </li>
+		<li>Go to the Drawing Tools section of the Widgets palette.
+			Drag one of each of the widgets from the Drawing Tools section onto the canvas, and, while dragging,
+			verify that snap lines appear when near the various edges (left, center, right, top, middle, bottom) of existing widgets.
+            <div class='expectedResults_subsection'>Snapping should be working with the various shapes at drag/create time.</div>
+        </li>
+		<li>Select each of the shape widgets and drag various yellow control handles around on the canvas
+			such that while dragging the control handles such that the control handles align with edges of other widgets.
+            <div class='expectedResults_subsection'>You should see snap lines during dragging as the control handle
+            aligns vertically or horizontally with edges of other widgets.</div>
+        </li>
+		<li>Take one of the line or arrow widgets, and under widget-specific, change the value for the 'points'
+			property to include 6 coordinates instead of 4. (e.g., 0,0,100,100,200,0) so that the line with have
+			2 segments. Drag around one of the other widgets such that the edges of that widget align with
+			the various points of the line or arrow widget, particularly the middle point.
+            <div class='expectedResults_subsection'>You should see snap lines whenever a horizontal or vertical edge
+            of the dragged widget aligns with any of the points on the line or arrow.</div>
+            Drag around the middle point of the line or arrow such that the point aligns with various edges
+            of existing widgets.
+            <div class='expectedResults_subsection'>You should see snap lines whenever the point aligns with
+            a horizontal or vertical edge of one of the widgets.</div>
+        </li>
+	</ol>
+
+	<h2 class="test_section">Choose Parent</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the Maqetta server. 
+				Login if necessary. 
+				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
+		<li>Go to preferences and look at "When dragging, show possible parents" setting. 
+            <div class='expectedResults_subsection'>It should be off by default.</div>
+            Turn this preference on and click OK and close the Preferences dialog.</li>
+		<li>Click on the "New file" icon on the main toolbar. Set composition type to "Desktop hi-fi page". Choose any filename.</li>
+		<li>Drag BorderContainer onto the canvas, accepting default options. 
+			Drag a TabContainer into the middle pane of BorderContainer, accepting defaults.
+			Drag 3 DIVs into the TabContainer (siblings DIVs, not DIVs within DIVs).
+			Drag a SPAN into the first DIV.
+            <div class='expectedResults_subsection'>As you drag all of the above widgets,
+            you should see some UI what shows a list of candidate parents.</div></li>
+		<li>Drag a Button from Widgets palette onto canvas and, while dragging, notice
+			the list of candidate parents. While dragging, position the mouse over the SPAN that inside the first DIV.
+            <div class='expectedResults_subsection'>You should see the following list of candidate parents:
+            SPAN, DIV, ContentPane (Tab 1), ContentPane, BODY.</div>
+            Mouse up over the SPAN.
+            <div class='expectedResults_subsection'>Look at the Outline palette and verify that the Button
+            is a child of SPAN, which is a child of DIV, etc..</div></li>
+		<li>Drag a CheckBox from Widgets palette onto canvas and, while dragging, notice
+			the list of candidate parents. While dragging, position the mouse over the Button you just added.
+            <div class='expectedResults_subsection'>You should see the following list of candidate parents:
+            SPAN, DIV, ContentPane (Tab 1), ContentPane, BODY.</div>
+			Click on the number key that corresponds to <code>ContentPane "Tab 1"</code> (probably "3").
+            <div class='expectedResults_subsection'>The arrow icon should now point to <code>ContentPane "Tab 1"</code>.</div>
+            Mouse up over the Button.
+            <div class='expectedResults_subsection'>The CheckBox should be added as a child of the <code>ContentPane "Tab 1"</code></div>
+        </li>
+		<li>Click-select the CheckBox if not already selected.
+			Drag the CheckBox and hover over the Button.
+            <div class='expectedResults_subsection'>You should see the following list of candidate parents:
+            SPAN, DIV, ContentPane (Tab 1), ContentPane, BODY, with the arrow pointing
+            to the SPAN that is the parent of the Button.</div>
+            Click on the number key that corresponds to the DIV that is the parent of the SPAN (probably "2").
+            <div class='expectedResults_subsection'>The arrow icon should now point to <code>&lt;div&gt;</code>.</div>
+            Mouse up.
+            <div class='expectedResults_subsection'>Study the Outline palette and verify that the CheckBox 
+            was added as a child of the DIV and therefore a sibling of the SPAN.</div>
+        </li>
+		<li>Click on the "flow/absolute" layout icon on the toolbar and switch to absolute layout mode.
+			Drag/drop a Calendar widget and drop inside the TabContainer but under the 3 DIVs 
+			so that the Calendar widget will be a child of the "Tab 1" ContentPane but absolutely positioned.
+			After dropping the Calendar, drag it just a bit to the right and look at the arrow in the choose parent overlay.
+            <div class='expectedResults_subsection'>Arrow should be pointing to <code>Content Pane "Tab 1"</code>.</div>
+            Drag the Calendar such that the mouse pointer is over the 3rd DIV.
+            <div class='expectedResults_subsection'>The arrow icon should still be pointing to <code>&lt;div&gt;</code>
+            because the default behavior for absolute positioning is that current parent doesn't change during dragging.</div>
+            Click on the number key that corresponds to the DIV (probably "1").
+            <div class='expectedResults_subsection'>The arrow icon should now point to <code>&lt;div&gt;</code>.</div>
+            Mouse up.
+            <div class='expectedResults_subsection'>Study the Outline palette and verify that the Calendar 
+            is now a child of the DIV.</div>
+        </li>
+	</ol>
+
+</body>
+</html>

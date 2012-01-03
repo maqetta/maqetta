@@ -120,6 +120,9 @@ div.mblView,
 div[dojotype="dojox.mobile.ContentPane"] {
     min-width:1em;
     min-height:1em; 
+    margin-top: -10px;	/* These two lines prevent vertical scrollbar when View has RoundRectList as first child */
+	padding-top: 10px;
     outline: 1px dotted #AAA;
     outline-color:rgba(128,128,128,0.5);
+    background-clip:content-box;
 }

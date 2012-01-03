@@ -4,7 +4,10 @@
 	fill:none;
 }
 .draw.drawText {
+<<<<<<< HEAD
 	/*font-size:12pt;*/
+=======
+>>>>>>> master
 	fill:black;
 	stroke:none;
 	stroke-width:1;

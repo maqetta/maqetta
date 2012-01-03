@@ -27,19 +27,30 @@ return declare("davinci.ui.ModelEditor", TextEditor, {
 	handleChange: function(text) {
         this.inherited(arguments);
         
+<<<<<<< HEAD
         var oldLabel = this.model.getLabel();
         this.model.setText(text);
         
+=======
+        this.model.setText(text);
+        
+        var changeEvent = {
+                newModel: this.model
+        };
+        dojo.publish("/davinci/ui/modelChanged", [changeEvent]);
+>>>>>>> master
 	},
 	
 	selectModel: function (selection, editor) {
 		if (this.publishingSelect || (editor && this != editor)) {
 			return;
 		}
-		if (selection.length && selection[0].model) {
+		
+        if (selection.length && selection[0].model) {
 			var model=selection[0].model;
 			if (model.elementType) {
-				this.select({ startOffset:model.startOffset, endOffset:model.endOffset});
+			    var sobj = this.model.mapPositions(model);
+				this.select(sobj);
 			}
 		}
 	},
@@ -48,7 +59,7 @@ return declare("davinci.ui.ModelEditor", TextEditor, {
        var childModel = this.model.findChildAtPosition(selection);
        selection.model = childModel;
        if (childModel != this._selectedModel) {
-    	   this.publishingSelect = true;
+           this.publishingSelect = true;
            dojo.publish("/davinci/ui/selectionChanged", [[selection], this]);
            this.publishingSelect = false;
        }

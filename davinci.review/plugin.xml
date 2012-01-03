@@ -5,7 +5,7 @@
    <extension
          point="org.eclipse.equinox.http.registry.servlets">
        <servlet
-            alias="/review"
+            alias="/maqetta/review"
             class="org.davinci.server.review.DavinciReviewServlet"
             load-on-startup="true">
       </servlet>
@@ -14,7 +14,7 @@
            id="testResource"
            point="org.eclipse.equinox.http.registry.resources">
         <resource
-              alias="/app/davinci/review"
+              alias="/maqetta/app/davinci/review"
               base-name="/WebContent/davinci/review"
               />
       </extension>

@@ -1,4 +1,5 @@
-({
+define({ root:
+{
 		//CommentExplorerView.js
 		"closeVersion":"Close Version",
 		"openVersion":"Open Version",
@@ -9,5 +10,5 @@
 		"allReviewers":"All Reviewers",
 		"addComment": "Add comment",
 		"showReviewer":"Show review participants"
-
-})
+}
+});

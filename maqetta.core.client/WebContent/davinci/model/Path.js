@@ -190,6 +190,11 @@ davinci.model.Path.prototype.lastSegment = function(  ){
 	
 }
 
+davinci.model.Path.prototype.firstSegment = function(length  ){
+	return this.segments[length || 0];
+	
+}
+
 davinci.model.Path.prototype.equals = function( anotherPath ){
 	if(this.segments.length!=anotherPath.segments.length) return false;
 	

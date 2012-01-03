@@ -46,16 +46,16 @@ require([
     padding-bottom : 0;
     border-spacing : 0;
     margin-top : 1px;
-    margin-bottom : 10px;
+    margin-bottom : 22px;
 }
 
   .theming-group-title {
-    color : #333;
-    font-family : cursive;
-    font-size : 16px;
-    background-color : #aaa;
+    color : black;
+    font-family : Arial;
+    font-size : 14px;
+    font-weight: bold;
     padding-left : 7px;
-    padding-top : 3px;
+    padding-top : 7px;
 }
 
   .theming-group-widgets {
@@ -73,10 +73,16 @@ require([
 }
 
   .theming-note {
-    font-size : 14px;
+    font-size : 12px;
     font-style : normal;
-    padding : 3px 17px;
+    padding : 4px 17px 10px;
     margin : 2px 0;
+}
+
+  .global-widget-names {
+    font-size : 12px;
+    font-style : italic;
+    text-align: center;
 }
 
   -widgets#other {
@@ -144,9 +150,12 @@ require([
     outline : none;
 }
 
-  .resetClaroFontBg.resetClaroFontBg { /* Class name repeated twice to win the cascade */
+  .resetClaroFontBg.resetClaroFontBg {
     color : black;
-    font-family : Myriad, Helvetica, Tahoma, Arial, clean, sans-serif;
+    font-family : Myriad, Helvetica, Tahoma, Arial, clean, sans-serif;/* Class name repeated twice to win the cascade 
+    
+
+    */
 
     font-size : 12px;
     font-style : normal;
@@ -191,6 +200,10 @@ require([
     font-style : italic;
 }
 
+  .dijitTabContainer .dijitContentPane {
+  	padding:10px;
+}
+
 </style>
 <div class="resetClaroFontBg" style="margin: -1px;">
  <div class="theming-group">
@@ -198,20 +211,63 @@ require([
 			Global Styling
 		</div>
 
-  <div class="theming-group-widgets" style="background:white; height:125px;">
-   <div class="theming-note">To change global font and background properties, click inside the widget below to select it, then change font properties and/or background properties in the Properties pallete.</div>
-   <div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Headings &amp; TabBars&quot;">
-    <div class="fakeSilhouette3" style="width:420px;">
-     <div class="fakeSilhouette2">
-      <div class="fakeSilhouette1 useBodyFontBg" style="height:40px;">
-       <div id="View_0" dojoType="dojox.mobile.View" class="dvThemeWidget" style="height: 100%;" selected="true">
-								Font and background styling
+		<div class="theming-group-widgets" style="background:white; height:130px;">
+			<div class="theming-note">To change page-level backgrounds and fonts, 
+				click inside the box below to select it, 
+				then change background properties and/or font properties in the Properties palette.</div>
+			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Page styling&quot;" style="padding-top:3px;">
+				<div class="fakeSilhouette3" style="width:420px;">
+					<div class="fakeSilhouette2">
+						<div class="fakeSilhouette1 useBodyFontBg" style="height:40px;">
+							<div id="View_0" dojoType="dojox.mobile.View" class="dvThemeWidget" style="height: 100%;" selected="true">
+								Page background and fonts
 							</div>
-      </div>
-     </div>
-    </div>
-   </div>
-  </div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="theming-group-widgets" style="background:white; height:130px;">
+			<div class="theming-note">To change shared background and font properties across multiple widgets, click on one of widgets below and change background and/or font properties in the Properties palette:</div>
+			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Shared widget styling&quot;">
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tbody>
+						<tr>
+							<td class='global-widget-names'>Heading, TabBar, EdgeToEdgeCategory</td>
+							<td>&nbsp;</td>
+							<td class='global-widget-names'>Buttons, CheckBox, RadioButton</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="fakeSilhouette3" style="width:300px; display:inline-block; vertical-align:top;">
+									<div class="fakeSilhouette2">
+										<div class="fakeSilhouette1 useBodyFontBg" style="height:40px;">
+											<div class="globalWidget">
+												<h1 label="Heading Background" dojoType="dojox.mobile.Heading" class="dvThemeWidget" id="allHeadingBackground" ></h1>
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+							<td>&nbsp;</td>
+							<td>
+								<div class="fakeSilhouette3" style="width:300px; display:inline-block; vertical-align:top;">
+									<div class="fakeSilhouette2">
+										<div class="fakeSilhouette1 useBodyFontBg" style="height:40px;">
+											<div class="globalWidget">
+												<button label="Button Background" dojoType="dojox.mobile.Button" class="dvThemeWidget" id="allButtonBackground"></button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
  </div>
 
  <div class="theming-group">
@@ -223,7 +279,7 @@ require([
   <div class="theming-note">To change styling for particular widgets, navigate into the appropriate section below, click on a particular widget below to select it, then change styling properties in the Properties palette.</div>
 
 
-  <div data-dojo-type="dijit.layout.TabContainer" data-dojo-props="style:&quot;width: 100%; height: 600px; margin-top:10px;&quot; ">
+  <div data-dojo-type="dijit.layout.TabContainer" data-dojo-props="style:&quot;width: 100%; height: 600px; margin:0 15px;&quot; ">
    <div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Headings &amp; TabBars&quot;">
     <div class="fakeSilhouette3" style="width:420px;">
      <div class="fakeSilhouette2">

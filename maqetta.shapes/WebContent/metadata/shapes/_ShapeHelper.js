@@ -161,7 +161,10 @@ dojo.declare("davinci.libraries.shapes.shapes._ShapeHelper", null, {
 		
 		//FIXME: This has side effect of flushing command stack. Ugly coding. See #1057
 		dojo.publish("/davinci/ui/widgetPropertiesChanges",[{source:context._editor.editor_id, command:command}]);
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 	}
 	
 });

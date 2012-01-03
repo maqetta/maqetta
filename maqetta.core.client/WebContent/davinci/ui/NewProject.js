@@ -73,6 +73,7 @@ dojo.declare("davinci.ui.NewProject",   [dijit._Widget,dijit._Templated], {
 		return this.value;
 	},
 	cancelButton: function(){
+		this.cancel = true;
 		this.onClose();
 	},
 

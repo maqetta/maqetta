@@ -134,6 +134,7 @@ dojo.declare("davinci.ve.palette.PaletteItem", dijit._Widget,{
 		this.palette.selectedItem = this;
 		this.palette.pushedItem = null;
 		var tool = undefined;
+		var dataCopy = dojo.clone(this.data);
 		if(this.tool){
 			// prime the metadata cache to make sure the loader is set up properly
 			davinci.ve.metadata.query(this.type);
@@ -141,9 +142,9 @@ dojo.declare("davinci.ve.palette.PaletteItem", dijit._Widget,{
 //            dojo._loadUri(system.resource.findResource(
 //                    './' + this.tool.replace(/\./g, "/") + ".js").getURL());
 			var ctor = dojo.getObject(this.tool);
-			tool = new ctor(this.data);
+			tool = new ctor(dataCopy);
 		}else{
-			tool = new davinci.ve.tools.CreateTool(this.data);
+			tool = new davinci.ve.tools.CreateTool(dataCopy);
 		}
 		this.palette._context.setActiveTool(tool);
 		this.connect(this.palette._context, "onMouseUp", function(e){
@@ -160,6 +161,7 @@ dojo.declare("davinci.ve.palette.PaletteItem", dijit._Widget,{
 		}
 		var context = this.palette._context;
 		var tool = undefined;
+		var dataCopy = dojo.clone(this.data);
 		if(this.tool){
 			// prime the metadata cache to make sure the loader is set up properly
 			davinci.ve.metadata.query(this.type);
@@ -167,9 +169,9 @@ dojo.declare("davinci.ve.palette.PaletteItem", dijit._Widget,{
             dojo._loadUri(system.resource.findResource(
                     './' + this.tool.replace(/\./g, "/") + ".js").getURL());
 			var ctor = dojo.getObject(this.tool);
-			tool = new ctor(this.data);
+			tool = new ctor(dataCopy);
 		}else{
-			tool = new davinci.ve.tools.CreateTool(this.data);
+			tool = new davinci.ve.tools.CreateTool(dataCopy);
 		}
 		context.setActiveTool(tool);
 		tool.create({target: context.getSelection()[0], position: {x:50, y:50}});

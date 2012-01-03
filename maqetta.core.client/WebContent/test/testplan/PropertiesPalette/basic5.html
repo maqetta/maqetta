@@ -6,6 +6,12 @@
 
 	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
 	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+	<style type="text/css">
+		.inlineExpected {
+		color:darkred;
+		font-style:italic;
+	}
+	</style>
 </head>
 
 <body>
@@ -17,14 +23,128 @@
 	<hr />
 	<h1 class="test_title">Properties palette basic tests (part 5)</h1>
 
-	<h2 class="test_section">Complex Input Controls</h2>
-	<h3 class="steps_subsection">Color picker</h3>
+	<h2 class="test_section">Background Controls</h2>
+	<h3 class="steps_subsection">background-color on a DIV</h3>
 	<ol class="steps">
-		<li> Open Visual Editor (any page) and add any widget.  Select the widget</li>
+		<li> Open Visual Editor (any page) and add a DIV.  Select the widget. Resize the DIV to a large size (e.g, 300x300px).</li>
 		<li> Expand the Background Section</li>
-		<li> Select a color from the dropdown </li>
-		<li> Select the "Choose..." option and verify that the color picker popup appears. Select a color and verify that OK and Cancel buttons work </li>
-		<li> Select the "Remove value.." option to verify that the value is removed.
+		<li> Under background-color, type "yellow" into the type-in area. <span class='inlineExpected'>Verify that DIV now has yellow background</span> </li>
+		<li> Under background-color, select "green" from the dropdown. <span class='inlineExpected'>Verify that DIV now has green background</span> </li>
+		<li> Under background-color, select "Remove value" from the dropdown. <span class='inlineExpected'>Verify that DIV now has no background</span> </li>
+		<li> Under background-color, choose "color picker" from the dropdown to bring up the color picker. Pick a color and click OK. <span class='inlineExpected'>Verify that DIV now has the new background color</span> </li>
+		<li> Under background-color, click on color switch to bring up color picker. Pick a color and click OK. <span class='inlineExpected'>Verify that DIV now has the new background color</span> </li>
+		<li> Under background-color, select the blank (empty) entry from the dropdown. <span class='inlineExpected'>Verify that DIV now has no background</span> </li>
+	</ol>
+	
+	<h3 class="steps_subsection">background-color on a Button using claro</h3>
+	<ol class="steps">
+		<li> Invoke the New Theme... command to clone claro into a new custom theme (e.g., "myclaro").</li>
+		<li> Add a dijit.form.Button widget. It should be styled with claro. Select the widget.</li>
+		<li> Expand the Background Section</li>
+		<li> <span class='inlineExpected'>Each of the following steps should generate an error prompt saying you cannot modify a read-only theme, and after clicking OK, the background-color value and swatch should be reset to its previous value.</span></li>
+		<li> Under background-color, type "yellow" into the type-in area.</li>
+		<li> Under background-color, select "green" from the dropdown.</li>
+		<li> Under background-color, click on color switch to bring up color picker. Pick a color and click OK.  </li>
+		<li> Under background-color, click on the "..." button to bring up the Background dialog. Change the background-color on this dialog and click OK.</li>
+	</ol>
+	
+	<h3 class="steps_subsection">background-color on a Button using a custom theme</h3>
+	<ol class="steps">
+		<li> Invoke the New Theme... command to clone claro into a new custom theme (e.g., "myclaro"). OK to leave the new theme as an unchanged copy of claro.</li>
+		<li> Back in the page editor from previous steps, click on the Switch theme icon and change the desktop theme to "myclaro".
+		<li> Select the Button widget.</li>
+		<li> <span class='inlineExpected'>Each of the following steps should generate an "are you sure" prompt warning about making global CSS changes that might affect multiple widgets. Click OK for each prompt. After clicking OK, the color value and swatch should retain their new value and not reset to previous value.</span></li>
+		<li> Under background-color, type "yellow" into the type-in area.</li>
+		<li> Under background-color, select "green" from the dropdown.</li>
+		<li> Under background-color, click on color switch to bring up color picker. Pick a color and click OK.  </li>
+		<li> Under background-color, click on the "..." button to bring up the Background dialog. Change the background-color on this dialog and click OK.</li>
+	</ol>
+	
+	<h3 class="steps_subsection">background-image on a DIV</h3>
+	<ol class="steps">
+		<li> Select the DIV.</li>
+		<li> Under background-image, type "url(SampleBanner.jpg). " <span class='inlineExpected'>Verify that DIV now has an image background.</span></li>
+		<li> Under background-image, select "Remove value" from the dropdown. <span class='inlineExpected'>Verify that DIV now has no background image.</span></li>
+		<li> Under background-image, click on the "..." button to bring up the Background dialog. 
+			In that dialog, click on the "..." icon to bring up the file picker and choose "SampleBanner.jpg". 
+			Click OK to get out of the dialog(s). 
+			<span class='inlineExpected'>Verify that DIV now has an image background.</span>
+			</li>
+		<li> Try out each of the other background-properties on the Properties palette to verify that
+			it is possible to choose various dropdown menu options and to type values into the text field. <span class='inlineExpected'>Verify that the screen updates to reflect the new values.</span> </li>
+		<li> Under background-image, click on the "..." button to bring up the Background dialog. 
+			<span class='inlineExpected'>In that dialog, verify that the type of background-image is "image", that the URL for the image is showing in the dialog,
+			and that the various detailed options (background-position, etc) have been copied over from the Properties palette.</span>
+			Click OK to get out of the dialog(s). 
+			<span class='inlineExpected'>Verify that the Properties palette shows the same values you entered into the dialog and that the screen properly reflects
+			the new property values.</span>
+			</li>
+	</ol>
+	
+	<h3 class="steps_subsection">Multiple option changes using Background dialog on a read/write and read/only themes</h3>
+	<ol class="steps">
+		<li> Select the Button.</li>
+		<li> Under background-image, click on the "..." button to bring up the Background dialog. 
+			In that dialog, click on the "..." icon to bring up the file picker and choose "SampleBanner.jpg". 
+			Change the value a couple of other properties (e.g., background-position and background-repeat).
+			Click OK to get out of the dialog. 
+			<span class='inlineExpected'>You should see a single dialog warning you about changing a global CSS file. Click OK to proceed. 
+				The Button theming should be updated to reflect your changes.</span>
+			</li>
+		<li> Click on the Switch theme dialog and switch back to "claro".</li>
+		<li> Under background-image, click on the "..." button to bring up the Background dialog. 
+			In that dialog, make sure background-image type is "image".
+			Click on the "..." icon to bring up the file picker and choose "SampleBanner.jpg". 
+			Change the value a couple of other properties (e.g., background-position and background-repeat).
+			Click OK to get out of the dialog(s). 
+			<span class='inlineExpected'>You should see a single error dialog telling you you cannot change properties on a read-only theme.</span> 
+			Click OK to proceed. 
+			<span class='inlineExpected'>Verify that the background properties in the properties palette and the screen revert back to claro styling.</span>
+			</li>
+	</ol>
+	
+	<h3 class="steps_subsection">Linear Gradients</h3>
+	<ol class="steps">
+		<li> Select the DIV</li>
+		<li> Under background-image, click on the "..." button to bring up the Background dialog. 
+			In that dialog, select a background-image type of "linear gradient". 
+			<span class='inlineExpected'>You should see two color stops, white 0% and black 100%.</span>
+			</li>
+		<li> For the first color stop, use the menu to choose "blue".</li>
+		<li> For the last color stop, use the menu to choose "red".</li>
+		<li> Click on the "+" icon to the right of the first color stop. 
+			<span class='inlineExpected'>You should see a new intermediate color stop that is a clone of the first color stop</span></li>
+		<li> For the middle color stop, type "green" into the color field and choose "30%" for the position.
+			<span class='inlineExpected'>The color swatch on the top-right of the dialog should now show a red-green-blue gradient.</span></li>
+		<li> Click on the "+" icon to the right of the green color stop to clone that stop so there are now 4 color stops.
+			For the 3rd (new) color stop, choose "Color picker" from the menu and pick a yellowish color in the color picker.
+			Set the position value to 60%. 
+			<span class='inlineExpected'>The color swatch on the top-right of the dialog should now show a red-green-yellow-blue gradient.</span></li>
+		<li> Click on the "-" icon to the right of the green color stop to remove that stop so there are now 3 color stops.
+			<span class='inlineExpected'>The color swatch on the top-right of the dialog should now show a red-yellow-blue gradient.</span></li>
+		<li> Set the angle property at the bottom of the dialog to the value: "to right"</li>
+		<li> Click OK to get out of the dialog(s). 
+			<span class='inlineExpected'>The DIV on the screen should have a red-yellow-blue left-to-right gradient.</span>
+			</li>
+	</ol>
+	
+	<h3 class="steps_subsection">Radial Gradients</h3>
+	<ol class="steps">
+		<li> Select the DIV</li>
+		<li> Under background-image, click on the "..." button to bring up the Background dialog. 
+			Due to the previous step, the dialog should say background-image type of "linear-gradient".
+			In that dialog, select a background-image type of "radial gradient". 
+			<span class='inlineExpected'>In the color swatch at the top right, you should see a radial gradient with a red center, then yellow then blue as it expands outward.</span>
+			</li>
+		<li> Set properties as follows: Position:60% 40%, Shape: ellipse, Extent: farthest corner. 
+			<span class='inlineExpected'>The color swatch at the top right should update with each of the changes.</span>
+			</li>
+		<li> Click OK to get out of the dialog(s). 
+			<span class='inlineExpected'>The DIV on the screen should have a red-yellow-blue radial gradient.</span>
+			</li>
+		<li> Save, close, reopen, preview in browser.
+			<span class='inlineExpected'>The radial gradient should appear in both the page editor and in preview.</span>
+			</li>
 	</ol>
 	
 </body>

@@ -70,17 +70,8 @@ return declare("davinci.ve.tools._Tool", null, {
 
 			var domNode = w.domNode;
 			var parentNode = domNode.parentNode;
+			this._updateTarget();
 			
-			//FIXME: no side effects? index is never used?
-			for(var index=0;index<parentNode.children.length;index++){
-				if(domNode == parentNode.children[index]){
-					break;
-				}
-			}
-			this._feedback.style.left = domNode.offsetLeft+"px";
-			this._feedback.style.top = domNode.offsetTop+"px";
-			this._feedback.style.width = domNode.offsetWidth+"px";
-			this._feedback.style.height = domNode.offsetHeight+"px";
 			/*FIXME: Need to get z-index from computed style instead */
 			this._feedback.style.zIndex = domNode.style.zIndex;
 			parentNode.insertBefore(this._feedback,domNode.nextSibling);
@@ -92,6 +83,26 @@ return declare("davinci.ve.tools._Tool", null, {
 			}
 			this._target = null;
 		}
+	},
+	
+	// Calculate bounds for "target" overlay rectangle
+	_updateTarget: function(){
+		if(this._feedback && this._target){
+			var domNode = this._target.domNode;
+			var parentNode = domNode.parentNode;
+			
+			//FIXME: no side effects? index is never used?
+			for(var index=0;index<parentNode.children.length;index++){
+				if(domNode == parentNode.children[index]){
+					break;
+				}
+			}
+			this._feedback.style.left = domNode.offsetLeft+"px";
+			this._feedback.style.top = domNode.offsetTop+"px";
+			this._feedback.style.width = domNode.offsetWidth+"px";
+			this._feedback.style.height = domNode.offsetHeight+"px";			
+		}
 	}
+
 });
 });

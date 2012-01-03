@@ -156,57 +156,103 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		
 		var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
 		
-		var askUser = false;
-		// New logic: prompt user only if theme CSS files are going to change
-		var content = null;
-		
-		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
-		if(this._values[this._targetValueIndex].readOnly){
-			//FIXME: the commented out message in next line provides a more informative error message
-            var helpLink = "<a href='app/docs/index.html#peAppCss' target='_blank'>"+ langObj.creatingStyleRules +"</a>";
-			var content = langObj.propChangeCannotComplete + "<br><br>" + dojo.string.substitute(langObj.toChangeProperty,[helpLink]) + "<br/><br/>";
-			var errorDialog = new davinci.ui.ErrorDialog({errorText: content});
-			davinci.Workbench.showModal(errorDialog, langObj.errorModifyingValue);
-            
-            //alert("Error- cant change read only value")
-			this._setFieldValue(this._value,this._loc);
-			return;
-		}else if(this._values[this._targetValueIndex].type=="theme" &&
-				   editorPrefs.cssOverrideWarn &&
-					this._editor.supports("MultiPropTarget")){
-			askUser = true;
-			var helpLink = "<a href='app/docs/index.html#peAppCss' target='_blank'>"+ langObj.creatingStyleRules +"</a>";
-            content = langObj.changeWillModify+"<br><br>"+dojo.string.substitute(langObj.insteadOfChanging,[helpLink])+"<br><br>"+langObj.okToProceed;
-        }
-		// Old prompt if changing app.css or other non-theme CSS file:
-		// content = "This change will modify a CSS rule within a CSS file and therefore may globally effect other widgets. OK to proceed with this change?";
-
-		if(askUser){
-			var overRide = new davinci.ui.widgets.DocileDialog({content:content,
-																callBack:dojo.hitch(this, function(result){
-																
-																	if(result.value=="OK"){
-																		this._value=this._getFieldValue();
-																		this._changeValue(this._targetValueIndex,this._value);
-																	}else{
-																		// set back to original value
-																		this._setFieldValue(this._value,this._loc);
-																	}
-																	
-																	if(!result.alwaysShow){
-																		editorPrefs.cssOverrideWarn = false;
-																		davinci.workbench.Preferences.savePreferences('davinci.ve.editorPrefs',null, editorPrefs);
-																	}
-																	
-																})});
-																	
-			
-		}else{
-			this._value=this._getFieldValue();
-			this._valueArray = this._valueArrayNew;
-			var value = (this._valueArray && dojo.isArray(this._valueArray) && this._valueArray.length>0) ? this._valueArray : this._value;
-			this._changeValue(this._targetValueIndex, value);
+		if(this._widget && this.target && this.target.length>0){
+			var propName = this.target[0];
+			var context = this._widget.getContext();
+			if(context){
+				var cascadeBatch = context.cascadeBatch;
+			}
+			if(cascadeBatch){
+				var askUserResponse = cascadeBatch.askUserResponse;
+				if(cascadeBatch.deferreds){
+					var deferreds = cascadeBatch.deferreds;
+				}
+			}
 		}
+
+		function innerResolveFunc(){
+			if(propName && deferreds && deferreds[propName]){
+				deferreds[propName].resolve();
+			}
+		}
+		function innerChangeValueFunc(that){
+			that._value=that._getFieldValue();
+			that._valueArray = that._valueArrayNew;
+			var value = (that._valueArray && dojo.isArray(that._valueArray) && that._valueArray.length>0) ? that._valueArray : that._value;
+			that._changeValue(that._targetValueIndex, value);
+		}
+		
+		if(askUserResponse === false){
+			// Reset current field
+			this._setFieldValue(this._value,this._loc);
+			innerResolveFunc();
+			
+		}else if(askUserResponse === true){
+			innerChangeValueFunc(this);		
+			innerResolveFunc();
+	
+		}else{		// askUserResponse is undefined
+			var askUser = false;
+			// New logic: prompt user only if theme CSS files are going to change
+			var content = null;		
+			var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+			if(this._values[this._targetValueIndex].readOnly){
+				//FIXME: the commented out message in next line provides a more informative error message
+	            var helpLink = "<a href='app/docs/index.html#peAppCss' target='_blank'>"+ langObj.creatingStyleRules +"</a>";
+				var content = langObj.propChangeCannotComplete + "<br><br>" + dojo.string.substitute(langObj.toChangeProperty,[helpLink]) + "<br/><br/>";
+				var errorDialog = new davinci.ui.ErrorDialog({errorText: content});
+				davinci.Workbench.showModal(errorDialog, langObj.errorModifyingValue, 'width:300px', dojo.hitch(this, function(){
+					innerResolveFunc();
+					return true;
+				}));
+				if(cascadeBatch){
+					cascadeBatch.askUserResponse = false;
+				}
+				this._setFieldValue(this._value,this._loc);
+				return;
+			}else if(this._values[this._targetValueIndex].type=="theme" &&
+					   editorPrefs.cssOverrideWarn &&
+						this._editor.supports("MultiPropTarget")){
+				askUser = true;
+				var helpLink = "<a href='app/docs/index.html#peAppCss' target='_blank'>"+ langObj.creatingStyleRules +"</a>";
+	            content = langObj.changeWillModify+"<br><br>"+dojo.string.substitute(langObj.insteadOfChanging,[helpLink])+"<br><br>"+langObj.okToProceed;
+	        }
+			// Old prompt if changing app.css or other non-theme CSS file:
+			// content = "This change will modify a CSS rule within a CSS file and therefore may globally effect other widgets. OK to proceed with this change?";
+	
+			if(askUser){
+				var overRide = new davinci.ui.widgets.DocileDialog({content:content,
+																	callBack:dojo.hitch(this, function(result){
+																	
+																		if(result.value=="OK"){
+																			if(cascadeBatch){
+																				cascadeBatch.askUserResponse = true;
+																			}
+																			innerChangeValueFunc(this);
+																			innerResolveFunc();
+																		}else{
+																			if(cascadeBatch){
+																				cascadeBatch.askUserResponse = false;
+																			}
+																			// set back to original value
+																			this._setFieldValue(this._value,this._loc);
+																			innerResolveFunc();
+																		}
+																		
+																		if(!result.alwaysShow){
+																			editorPrefs.cssOverrideWarn = false;
+																			davinci.workbench.Preferences.savePreferences('davinci.ve.editorPrefs',null, editorPrefs);
+																		}
+																		
+																	})});
+																		
+				
+			}else{
+				innerChangeValueFunc(this);
+				innerResolveFunc();
+			}
+		}
+		
 	},
 	
 	_changeValue : function(targetIndex,value){
@@ -234,6 +280,8 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 
 			}
 		}
+		// Flag that the cascade list for this property needs to be recalculated/refreshed
+		this._dirtyCascadeList = true;
 		if(targetRule.type=="element.style"){
 			dojo.publish("/davinci/ui/styleValuesChange",[{values:valueObject, appliesTo:'inline', applyToWhichStates:applyToWhichStates }]);
 		}else{
@@ -814,18 +862,32 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 	},
 	
 	_widgetValuesChanged : function(event){
-		/* have to listen for style values post change in case a shortcut property is updated */
-		var shorthands = this._getShortHands();
-		var values = event.values;
-		for(var name in values){
-			for(var i = 0;i<shorthands.length;i++){
-				if(shorthands[i]==name){
-					this._updateCascadeList();	
-					return;
+		// If widget's values have changed and this particular property
+		// has the dirty bit set on the cascade list, then update the cascade list.
+		//FIXME: This is a bandaid fix to address bug #1005. It might have been better to
+		//force a call to _updateCascadeList() for all properties whenever anything widget
+		//properties change. This fix was safer.
+		if(this._dirtyCascadeList){
+			this._updateCascadeList();
+			this._dirtyCascadeList = false;
+			
+		// Else update cascade list if this property is a sub-component of
+		// a shorthand property (e.g., padding-left is a sub-component of padding)
+		}else{
+			/* have to listen for style values post change in case a shortcut property is updated */
+			var shorthands = this._getShortHands();
+			var values = event.values;
+			for(var name in values){
+				for(var i = 0;i<shorthands.length;i++){
+					if(shorthands[i]==name){
+						this._updateCascadeList();	
+						return;
+					}
 				}
 			}
 		}
 	},
+	
 	_formatRuleString : function(r){
 		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 		if(r.type=="element.style"){

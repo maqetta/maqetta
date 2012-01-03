@@ -1,7 +1,7 @@
 <div class="backgroundDialog" style="position:relative" dojoAttachPoint="_fileDialog">
 	<style type="text/css">
 		.backgroundDialog {
-			width:29em;
+			width:31em;
 		}
 		.bgdTopDiv {
 			margin-top: 4px;
@@ -27,7 +27,7 @@
 		}
 		.bgdPreview {
 			display:inline-block;
-			width: 4.2em;
+			width: 6em;
 			height: 2.8em;
 			margin-left:12px;
 			border:1px solid gray;
@@ -87,6 +87,9 @@
 		}
 		.bgdOptionsDiv .dijitTextBox {
 			width:10.6em;
+		}
+		.bgdStopColorTD .dijitTextBox {
+			width:14em;
 		}
 		.bgdOptionsDiv .dijitSelect {
 			margin:0;
@@ -275,14 +278,13 @@
 
 		</table>
 	</div>
-<!-- FIXME: Localize OK and Cancel -->
 		<table class='templateTable'> 
 			<tr> 
 			<td class='templateFiller3'>&nbsp;</td>
 				<td class='templateFiller4'>&nbsp;</td> 
-				<td class='templateButton'><span dojoType='dijit.form.Button' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='OK' /></td> 
+				<td class='templateButton'><span dojoType='dijit.form.Button' type='submit' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${buttonOk}' /></td> 
 				<td class='templateFiller4'>&nbsp;</td> 
-				<td class='templateButton'><span dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='Cancel'/></td> 
+				<td class='templateButton'><span dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='${buttonCancel}'/></td> 
 				<td class='templateFiller4'>&nbsp;</td> 
 				<td class='templateFiller3'>&nbsp;</td>
 			</tr> 

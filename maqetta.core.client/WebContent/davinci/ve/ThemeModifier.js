@@ -112,59 +112,111 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 		}
 
 	},
-	
-	_modifyTheme : function (rules, values){
 
+	getOldValues : function (rules, values){
+		function oldValuesIncludesProp(propName){
+			for(k=0;k<oldValues.length;k++){
+				if(oldValues[k][propName]){
+					return true;
+				}
+			}
+			return false;
+		}
+		function oldValuesAddIfNewValue(propName, propValue){
+			for(k=0;k<oldValues.length;k++){
+				if(oldValues[k][propName] === propValue){
+					return;
+				}
+			}
+			var o = {};
+			o[a] = x.value;
+			oldValues.push(o);
+		}
 		var oldValues = new Array();
-		var unset = dojo.clone(values);
 		for (var r = 0; r < rules.length; r++){
 			var rule = rules[r];
-			var file = rule.searchUp( "CSSFile");
-			var rebasedValues = dojo.clone(values);
+			var rebasedValues; // = dojo.clone(values);
+            if (values.length < 1) {
+                rebasedValues = [];
+                rebasedValues[0] = dojo.clone(values);;
+            } else {
+                rebasedValues = dojo.clone(values);
+            }
 			var rebasedValues = this._rebaseCssRuleImagesFromStylePalette(rule, rebasedValues);
 			
 			for(var i=0;i<rebasedValues.length;i++){
 				for(var a in rebasedValues[i]){
-					var x = rule.getProperty(a);
-					if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget) && x){
-						if (x && !oldValues[a]){ // set by another rule
-							oldValues[a] = x.value; // just want the value not the whole CSSProperty
-						}else if (!oldValues[a]){ // set by another rule
-							oldValues[a] = x; //undefined
-						}
-						if(!rebasedValues[i][a]){
-							rule.removeProperty(a);
-						}else /*if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget) && x)*/{
-							rule.setProperty(a,  rebasedValues[i][a]);
-							unset[i][a] = null;
+					var propDeclarations = rule.getProperties(a);
+					if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget) && propDeclarations.length > 0){
+						for(var p=0; p<propDeclarations.length; p++){
+							var x = propDeclarations[p];
+							var oldValueAlready = oldValuesIncludesProp(a);
+							if (x && !oldValueAlready){ // set by another rule
+//FIXME: for undo purposes, don't we need to store away the CSSRule that needs to be updated?
+								oldValuesAddIfNewValue(a, x.value);
+							}else if (!oldValueAlready){ // set by another rule
+//FIXME: Does this actually remove an existing property?
+								oldValuesAddIfNewValue(a, undefined);
+							}
 						}
 					}
 				}
 			}
-			this._markDirty(file.url);
 		}
-		// now set the new properties.
+		return oldValues;
+	},
+
+	_modifyTheme : function (rules, values){
+
+		if (!values) {
+		    return;
+		}
+	    var unset = dojo.clone(values);
+		
 		for (var r = 0; r < rules.length; r++){
 			var rule = rules[r];
 			var file = rule.searchUp( "CSSFile");
-			var rebasedValues = dojo.clone(unset);
+			var rebasedValues; // = dojo.clone(values);
+			if (values.length < 1) {
+			    rebasedValues = [];
+			    rebasedValues[0] = dojo.clone(values);;
+			} else {
+			    rebasedValues = dojo.clone(values);
+			}
 			var rebasedValues = this._rebaseCssRuleImagesFromStylePalette(rule, rebasedValues);
+			var propertiesAlreadyProcessed = {};
+			
 			for(var i=0;i<rebasedValues.length;i++){
 				for(var a in rebasedValues[i]){
+<<<<<<< HEAD
 					if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget) && (rebasedValues[i][a])){
 						rule.setProperty(a,  rebasedValues[i][a]);
 						//rebasedValues[a] = null;  not sure about this might be valid for more than one rule
 		
+=======
+					var propDeclarations = rule.getProperties(a);
+					if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget) && rebasedValues[i][a]){
+						if(!propertiesAlreadyProcessed[a]){
+							var context = this.visualEditor.context;
+							// Process all property declarations for given property
+							var allPropValues = [];
+							for(var i2=0;i2<rebasedValues.length;i2++){
+								if(rebasedValues[i2][a]){
+									var o = {};
+									o[a] = rebasedValues[i2][a];
+									allPropValues.push(o)
+								}
+							}
+							context.modifyRule(rule, allPropValues);
+							this._markDirty(file.url);
+							propertiesAlreadyProcessed[a] = true;
+						}
+>>>>>>> master
 					}
 				}
 			}
-			this._markDirty(file.url);
 		}
-		
-		return oldValues;
-		
 	},
-	
 
 	_markDirty : function (file,cssModelObject){
 		if(!this._dirtyResource)

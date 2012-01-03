@@ -1,5 +1,5 @@
 ({defaultValues : {
-		"flowLayout":true,
+		//"flowLayout":true,
 		"snap":true,
 		"showPossibleParents":false,
 		"cssOverrideWarn":true 

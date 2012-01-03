@@ -32,6 +32,7 @@
 		    
             davinci.useAppCache = true; // needed to provide FF "allow" warning
 
+<<<<<<< HEAD
 			davinci.Runtime.addPlugin( "app/davinci/ui" );
             davinci.Runtime.addPlugin( "app/davinci/de/de" );
 //		//	davinci.Runtime.addPlugin( "app/davinci/cssEdit/cssEdit" );
@@ -41,6 +42,16 @@
 			davinci.Runtime.addPlugin( "app/davinci/ve/themeEditor/themeEditor" );
 
 			//davinci.Runtime.loadPlugins();
+=======
+			//davinci.Runtime.addPlugin( "app/davinci/ui" );
+	    	//davinci.Runtime.addPlugin( "app/davinci/de/de" );
+//		//	davinci.Runtime.addPlugin( "app/davinci/cssEdit/cssEdit" );
+		 	//davinci.Runtime.addPlugin( "app/davinci/html/html" );
+			//davinci.Runtime.addPlugin( "app/davinci/ve/ve" );
+			//davinci.Runtime.addPlugin( "app/davinci/ve/themeEditor/themeEditor" );
+			//davinci.Runtime.addPlugin( "app/davinci/review/review" );
+			davinci.Runtime.loadPlugins();
+>>>>>>> master
 
             davinci.Runtime.initialPerspective="davinci.ve.pageDesign";
 			dojo.addOnLoad(function()

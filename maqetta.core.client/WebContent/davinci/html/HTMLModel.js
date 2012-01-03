@@ -319,7 +319,7 @@ davinci.html.HTMLFile.prototype.updatePositions = function(startOffset,delta) {
             visit: function(element) {
                 if (element.endOffset<startOffset) {return true;}
                 if (element.elementType=="HTMLElement" && element.startTagOffset>startOffset) {
-                    element.startTagOffset+=delta;				    
+                    element.startTagOffset+=delta;
                 }
             }
     });
@@ -336,7 +336,7 @@ davinci.html.HTMLFile.prototype.mapPositions = function(element) {
     var s = this.getText();
     var et = element.getText();
     var start = s.indexOf(et);
-    var end   = start + et.length;
+    var end   = start + et.lastIndexOf(">") + 1;
     return {startOffset:start, endOffset:end};
 };
 

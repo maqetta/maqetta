@@ -25,7 +25,7 @@
 		<li>Look at Files palette. You should see an initial set of files. For 0.6, there is Sample1.html, Sample2.html, SampleBanner.jpg, SampleJs.js, app.css and a themes/ folder with dijit.css, dijit_rtl.css and two folders (claro, sketch) each with many files inside.</li>
 		<li>Verify the tree control and that you can expand and close folders by clicking on + and - squares.</li>
 		<li>With the mouse inside of the Files palette's main area, click the right mouse button (or Ctrl-click on Mac) to bring up context menu. 
-		You should see <!-- DISABLED FOR NOW. SEE #43 "New file...",--> "New folder...", "Upload file", "Delete resource" and "Download". (Don't activate these commands yet - see below for specific tests for each of these commands.)</li>
+		You should see <!-- DISABLED FOR NOW. SEE #43 "New file...",--> "New folder...", "Upload files...", "Rename...", "Delete" and "Download". (Don't activate these commands yet - see below for specific tests for each of these commands.)</li>
 		<li>Try double-clicking on the various file types to make sure that the appropriate editor is launched.
 			<ul>
 				<li>Double-click on Sample1.html. The page editor should show the sample contents, which (with 0.5 completed) should include a states demo where some controls appear and disappear at runtime depending on what the user clicks on at runtime.</li>
@@ -93,9 +93,9 @@
 	<ol class="steps">
 		<li>You'll want to set up a virgin user environment by creating a whole new user login or resetting the existing user login (ask engineers about how to do that).
 				Clear the browser cache. Launch the Maqetta server. Login if necessary. </li>
-		<li>Add a new HTML file, such as mmm.html (see above for instructions). Close the page editor tab that appears. Then, in the Files palette, click on mmm.html and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "Delete resource". Click OK on "are you sure" warning dialog. The Files palette should no longer show the file.</li>
+		<li>Add a new HTML file, such as mmm.html (see above for instructions). Close the page editor tab that appears. Then, in the Files palette, click on mmm.html and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "Delete". Click OK on "are you sure" warning dialog. The Files palette should no longer show the file.</li>
 		<li>Create a new folder (see instructions above), perhaps named "nnn". Add a new file (e.g., ooo.html) into that folder (see instructions above). Close the page editor tab that appears.  Then, in the Files palette, click on ooo.html and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "Delete". Click OK on "are you sure" warning dialog. The Files palette should no longer show the file.</li>
-		<li>Create a new folder (e.g., www) and add a file into that folder (e.g., via New operations - see instructions above for how to do this.) In the Files palette, click on www and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "Delete resource". Click OK on "are you sure" warning dialog. The Files palette should no longer show the folder (or any of the files that were in the folder).</li>
+		<li>Create a new folder (e.g., www) and add a file into that folder (e.g., via New operations - see instructions above for how to do this.) In the Files palette, click on www and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "Delete". Click OK on "are you sure" warning dialog. The Files palette should no longer show the folder (or any of the files that were in the folder).</li>
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
@@ -107,8 +107,9 @@
     <ol class="steps">
         <li>You'll want to set up a virgin user environment by creating a whole new user login or resetting the existing user login (ask engineers about how to do that).
                 Clear the browser cache. Launch the Maqetta server. Login if necessary. </li>
-        <li>Add a new HTML file, such as mmm.html (see above for instructions). Close the page editor tab that appears. Then, in the Files palette, click on mmm.html and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "Delete resource". Click OK on "are you sure" warning dialog. The Files palette should no longer show the file.</li>
-        <li>Create a new folder (see instructions above), perhaps named "n2". Add a new file (e.g., o2.html) into that folder (see instructions above). Close the page editor tab that appears.  Then, in the Files palette, click on ooo.html and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "Rename...". Enter a new name (e.g., o3.html). The Files palette should show the renamed files.</li>
+        <li>Add a new HTML file, such as mmm.html (see above for instructions). Close the page editor tab that appears. Then, in the Files palette, click on mmm.html and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "Rename..." and enter a new name (e.g., mmm2.html). The Files palette should show mmm2.html instead of mmm.html.</li>
+        <li>Create a new folder (see instructions above), perhaps named "n2". Add a new file (e.g., o2.html) into that folder (see instructions above). Close the page editor tab that appears.  Then, in the Files palette, click on ooo.html and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "Rename...". Enter a new name (e.g., o3.html). 
+        The Files palette should show the renamed files.</li>
     </ol>
     <h3 class="expectedResults_subsection">Expected results</h3>
     <ol class="expectedResults">

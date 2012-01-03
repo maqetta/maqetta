@@ -111,7 +111,7 @@
 			"states": {
 				"Normal": {
 					"selectors": {
-						".mblHeading" : [
+						".dj_tablet .mblHeading" : [
 							"background-color",
 							"background-image",
 							"background-position",
@@ -128,7 +128,7 @@
 							"color",
 							"text-align"
                         ],
-                        ".mblColorDefault" : [
+                        ".dj_tablet .mblColorDefault" : [
 							"background-color",
 							"background-image",
 							"background-position",
@@ -145,7 +145,7 @@
 							"color",
 							"text-align"
                         ],
-						".mblTabPanelHeader" : [
+						".dj_tablet .mblTabPanelHeader" : [
 							"background-color",
 							"background-image",
 							"background-position",
@@ -200,7 +200,7 @@
 			"states": {
 				"Normal": {
 					"selectors": {
-						".mblToolBarButton" : [
+						".dj_tablet .mblToolBarButton" : [
 							"background-color",
 							"background-image",
 							"background-position",
@@ -217,7 +217,7 @@
 							"color",
 							"text-align"
                         ]	,
-						".mblTabButton" : [
+						".dj_tablet .mblTabButton" : [
 							"background-color",
 							"background-image",
 							"background-position",
@@ -234,7 +234,7 @@
 							"color",
 							"text-align"
                         ],
-						".mblArrowButtonHead" : [
+						".dj_tablet .mblArrowButtonHead" : [
 							"background-color",
 							"background-image",
 							"background-position",
@@ -251,7 +251,7 @@
 							"color",
 							"text-align"
                         ],
-						".mblArrowButtonBody" : [
+						".dj_tablet .mblArrowButtonBody" : [
 							"background-color",
 							"background-image",
 							"background-position",
@@ -372,7 +372,7 @@
 				},
 				"Selected": {
 					"selectors": {
-						".mblTabPanelHeader .mblTabButton.mblTabButtonSelected": [
+						".dj_tablet .mblTabPanelHeader .mblTabButton.mblTabButtonSelected": [
 							"background-color",
 							"background-image",
 							"background-position",
@@ -700,7 +700,7 @@
 			"states": {
 				"Normal": {
 					"selectors": {
-						".mblHeading": [
+						".dj_tablet .mblHeading": [
 							"$std_10"
 						]
 					},
@@ -713,7 +713,7 @@
 					"states": {
 						"Normal": {
 							"selectors": {
-								".mblArrowButtonHead": [
+								".dj_tablet .mblArrowButtonHead": [
 									"position", 
 									"top", 
 									"left", 
@@ -785,7 +785,7 @@
 					"states": {
 						"Normal": {
 							"selectors": {
-								".mblArrowButtonBody": [
+								".dj_tablet .mblArrowButtonBody": [
 									"position", 
 									"cursor", 
 									"-webkit-tap-highlight-color", 
@@ -847,7 +847,7 @@
 							"padding-left"
 
 						],
-						".mblToolBarButton": [
+						".dj_tablet .mblToolBarButton": [
 							"float", 
 							"position", 
 							"overflow", 
@@ -882,7 +882,7 @@
 							"text-align", 
 							"border-image"
 						],
-						".mblColorDefault": [
+						".dj_tablet .mblColorDefault": [
 							"background-color",
 							"background-image",
 							"background-position",
@@ -925,7 +925,7 @@
 			"states": {
 				"Normal": {
 					"selectors": {
-						".mblRoundRect": [
+						".dj_tablet .mblRoundRect": [
 							"$std_10"
 						]
 					},
@@ -938,7 +938,7 @@
 			"states": {
 				"Normal": {
 					"selectors": {
-						".mblRoundRectCategory": [
+						".dj_tablet .mblRoundRectCategory": [
 							"$std_10"
 						]
 					},
@@ -959,7 +959,7 @@
 							"padding-bottom",
 							"padding-left"
                         ],
-						".mblRoundRectList": [
+						".dj_tablet .mblRoundRectList": [
 							"position",
 							"margin",
 							"margin-top",
@@ -1210,7 +1210,7 @@
 			"states": {
 				"Normal": {
 					"selectors": {
-						".mblTabPanelHeader": [
+						".dj_tablet .mblTabPanelHeader": [
 							"$std_10"
 						]
 					},
@@ -1223,7 +1223,7 @@
 					"states": {
 						"Normal": {
 							"selectors": {
-								".mblTabButton": [
+								".dj_tablet .mblTabButton": [
 									"position",
 									"float",
 									"list-style-type",
@@ -1275,7 +1275,7 @@
 						},
 						"Selected": {
 							"selectors": {
-								".mblTabPanelHeader .mblTabButton.mblTabButtonSelected": [
+								".dj_tablet .mblTabPanelHeader .mblTabButton.mblTabButtonSelected": [
 									"background-color",
 									"background-image"
 								]

@@ -163,7 +163,11 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 			this._format = this.getFormat();
 	    	this.updateWidgetForUrlStore(true); 
 		}
-	    this.hide(true); // we already updated the widget so just do a hide like cancel
+	    this.hide(); 
+	},
+	
+	hide: function(){
+	    this.inherited(arguments, [ true ]); // we already updated the widget so just do a hide like cancel
 	},
 	
     updateWidget: function() {
@@ -184,7 +188,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 
     },
     
-    updateStore: function(structure) {
+    updateStore: function(structure, value) {
     	var oldStructure = structure, // we are defining the structure by row one of text area
     		structure = [],
     		textArea = dijit.byId("davinciIleb"),

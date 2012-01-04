@@ -1,4 +1,5 @@
-({
+define({ root:
+{
 		//ui/FormatOptions.js
 		"newLineForBlocks":"New line for blocks",
 		"blockIndention":"Block indentation",
@@ -14,4 +15,5 @@
 		"objectLiteralFieldSpacing":"Object literal field spacing"
 		
 
-})
+}
+});

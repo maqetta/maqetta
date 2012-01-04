@@ -3,7 +3,7 @@ dojo.provide("davinci.review.editor.Context");
 dojo.require("davinci.commands.CommandStack");
 dojo.require("davinci.ve.tools.SelectTool");
 dojo.require("davinci.ve.widget");
-dojo.require("davinci.ve.util");
+//dojo.require("davinci.ve.util");
 dojo.require("davinci.ve.Focus");
 
 dojo.declare("davinci.review.editor.Context", null, {
@@ -82,7 +82,12 @@ dojo.declare("davinci.review.editor.Context", null, {
 	},
 
 	getContainerNode: function(){
-		return this.frame.contentDocument.body||this.frame.contentWindow.document.body;
+		if(this.frame.contentDocument)
+			return this.frame.contentDocument.body
+		else if(this.frame.contentWindow)
+			return this.frame.contentWindow.document.body;
+		
+		return null;
 	},
 	getSelection: function(){
 		return null;
@@ -156,7 +161,7 @@ dojo.declare("davinci.review.editor.Context", null, {
 				this.containerEditor.isDirty = false;
 			})),
 			dojo.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, function(obj){
-				if(this === obj.oldEditor.getContext()){
+				if(obj.oldEditor!=null && this === obj.oldEditor.getContext()){
 					// Determine if the editor is closed, if the editor is closed then
 					// getDocument() will throw an exception
 					try {

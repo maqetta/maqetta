@@ -40,11 +40,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             this._resetDojoxMobileTheme(this._context);
             this.resetDojoxMobileNeed = false;
         }
-        var text = this._context.getModel().getText();
-        var e = davinci.Workbench.getOpenEditor();
-        e.setContent(e.fileName,text); // force regen of HTML Model to load new theme
-     // Recompute styling properties in case we aren't in Normal state
-        davinci.ve.states.resetState(this._context.rootWidget);
+
     },
     
         

@@ -6,7 +6,6 @@ define([
 
 		buildRendering: function() {
 			this.inherited(arguments);
-<<<<<<< HEAD
 			this._cx = this.cx - 0;	// -0 to force conversion to number
 			this._cy = this.cy - 0;
 			if(typeof this.rx == "undefined"){
@@ -15,15 +14,6 @@ define([
 				this._rx = this.rx - 0;	
 				this._ry = this.ry - 0;
 			}
-=======
-			// -0 to force conversion to number
-			this._rx = (this.rx ? this.rx : this.defaultRx) - 0;
-			this._ry = (this.ry ? this.ry : this.defaultRy) - 0;
-		},
-		
-		resize: function(){
-			this._resize();
->>>>>>> master
 		},
 		
 		createGraphics: function(){

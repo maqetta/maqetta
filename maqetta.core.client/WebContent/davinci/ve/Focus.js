@@ -270,7 +270,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     
     
     show: function(widget, inline){
-
+        //debugger;
         if (!widget){
             // sometimes you get no widget when  DnD in split screen
             return; 
@@ -312,7 +312,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         return;
     },
 
-	// Returns true if inline edit is showing
+
 	inlineEditActive: function(){
 		if(this._inline && this._inline.inlineEditActive){
 			return this._inline.inlineEditActive();
@@ -325,11 +325,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     hide: function(inline){
 
 		var widget = this._selectedWidget;
-<<<<<<< HEAD
-		var helper = widget.getHelper();
-=======
 		var helper = widget ? widget.getHelper() : undefined;
->>>>>>> master
 		if(helper && helper.onHideSelection){
 			// Don't know if any widgets actually use this helper
 			// Included for completeness
@@ -342,11 +338,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             this._inline.hide();
             delete this._inline;
         }
-<<<<<<< HEAD
-        var userdoc = this._context.getDocument();	// inner document = user's document
-        userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
-=======
->>>>>>> master
     },
     
     allow: function(op){

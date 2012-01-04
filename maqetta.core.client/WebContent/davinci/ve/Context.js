@@ -631,15 +631,11 @@ return declare("davinci.ve.Context", null, {
        	if (newHtmlParms && newHtmlParms.themeSet) {
        	    defaultThemeName = newHtmlParms.themeSet.desktopTheme;
        	} else if (newHtmlParms && newHtmlParms.theme){
-<<<<<<< HEAD
-       	    defaultThemeName = newHtmlParms.theme;
-=======
        	    if (newHtmlParms.theme == 'deviceSpecific') {
        	     defaultThemeName = "claro"; 
        	    } else {
        	        defaultThemeName = newHtmlParms.theme;
        	    }
->>>>>>> master
        	}
     	var imports = model.find({elementType:'CSSImport'});
 		
@@ -692,7 +688,7 @@ return declare("davinci.ve.Context", null, {
     
 // FIXME this bit of code should be moved to toolkit specific //////////////////////////////   
     _loadThemeDojoxMobile: function(context){
-
+      
         var htmlElement = context._srcDocument.getDocumentElement();
         var head = htmlElement.getChildElement("head");
         var scriptTags=head.getChildElements("script");
@@ -1612,26 +1608,14 @@ return declare("davinci.ve.Context", null, {
 	getSelection: function(){
 		return this._selection || [];
 	},
-	
+
 	// Returns true if inline edit is showing
 	inlineEditActive: function(){
-<<<<<<< HEAD
-		for(var i=0; i<this._selection.length; i++){
-			var focus = this._focuses[i];
-			if(focus.inlineEditActive()){
-				return true;
-			}
-		}
-		return false;
-	},
-	
-=======
 	    return this.getSelection().some(function(item, i){
 	    	return this._focuses[i].inlineEditActive();
 	    }, this);
 	},
-
->>>>>>> master
+	
 	updateFocus: function(widget, index, inline){
 		var box, op, parent;
 
@@ -2237,7 +2221,7 @@ return declare("davinci.ve.Context", null, {
 		var widgetType = theme.loader.getType(widget);
 		var selector = [];
 		for(var i =0;i<target.length;i++) {
-			selector = selector.concat( theme.metadata.getRelativeStyleSelectorsText(widgetType,state,null,target));  //FIXME: use push?  adds same selector each time through loop?
+			selector = selector.concat( theme.metadata.getRelativeStyleSelectorsText(widgetType,state,null,target));
 		}
 		
 		return selector;
@@ -2501,49 +2485,6 @@ return declare("davinci.ve.Context", null, {
 	},
 
 
-<<<<<<< HEAD
-	// add JS to HEAD
-	addHeaderScriptText: function(text){
-	    var splits = text.split('"');
-	    text = '\n' + text;
-	    var testStr;
-	    if (splits.length === 3){
-	        // the require may have a function on it.. 
-	        //require(["dojox/mobile"],function(dojoxMobile){dojoxMobile.themeMap=[["Android","",["themes/custom/custom.css"]],["BlackBerry","",["themes/custom/custom.css"]],["iPad","",["themes/custom/custom.css"]],["iPhone","",["themes/custom/custom.css"]],[".*","",["themes/custom/custom.css"]]];dojoxMobile.themeFiles = [];});
-	        testStr = splits[1];
-	    } else {
-	        testStr = text;
-	    }
-		if (this._scriptAdditions) {
-			var scriptText = this._scriptAdditions.find({elementType: 'HTMLText'}, true);
-			if (scriptText) {
-				var oldText = scriptText.getText();
-				if (oldText.indexOf(testStr) > -1) {
-					return;  // already in the header
-				}
-				//this._scriptAdditions.parent.removeChild(this._scriptAdditions);
-				//delete this._scriptAdditions;
-				text = oldText + text;
-			}
-		}
-
-		// create a new script element
-		var head = this.getDocumentElement().getChildElement('head'),
-		statesJsScriptTag = this._statesJsScriptTag,
-		script = new davinci.html.HTMLElement('script');
-		script.addAttribute('type', 'text/javascript');
-		script.script = "";
-	
-		if (this._scriptAdditions){ // #1322
-		    // the safest thing to do is put the script element back where it was
-            head.insertBefore(script, this._scriptAdditions);
-            this._scriptAdditions.parent.removeChild(this._scriptAdditions);
-            delete this._scriptAdditions;
-		} else if (statesJsScriptTag) { 
-		// XXX Bug 7499 - (HACK) See comment in addHeaderScript()
-			head.insertBefore(script, statesJsScriptTag);
-		} else {
-=======
 	/**
 	 * Add inline JavaScript to <head>.
 	 * 
@@ -2579,7 +2520,6 @@ return declare("davinci.ve.Context", null, {
 			var script = new davinci.html.HTMLElement('script');
 			script.addAttribute('type', 'text/javascript');
 			script.script = "";
->>>>>>> master
 			head.addChild(script);
 
 			scriptText = new davinci.html.HTMLText();
@@ -2596,8 +2536,7 @@ return declare("davinci.ve.Context", null, {
 			//   HTMLText. See issue #1350.
 			scriptText.parent.setScript(oldText + '\n' + text);
 		}
-	},
-	
+	},	
 	/**
 	 * Significant attributes for HTML elements; used for matching duplicates.
 	 * If an element isn't listed here, defaults to 'src'.

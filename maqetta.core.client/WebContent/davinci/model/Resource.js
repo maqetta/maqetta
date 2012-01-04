@@ -30,7 +30,7 @@ davinci.model.Resource.Resource= function(){
  }
  
  davinci.model.Resource.Resource.prototype.readOnly= function(){
-	
+	 
 	 if (this.hasOwnProperty("_readOnly")){
 		 return this._readOnly || (this.parent!=null && this.parent.readOnly());
 	 }
@@ -156,12 +156,8 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
   	 }else{
 		 file = this;
 		 isFolder = this.elementType=="Folder";
-	 }
-<<<<<<< HEAD
+	 }	 
 	 var response= (!localOnly) ? davinci.Runtime.serverJSONRequest({
-=======
-	 var response= !localOnly ? davinci.Runtime.serverJSONRequest({
->>>>>>> master
 		   url:"./cmd/createResource", handleAs:"text",
 	       content:{'path':file.getPath(), 'isFolder': isFolder},sync:true  }): "OK";
 	  if (response=="OK" && name!=null){

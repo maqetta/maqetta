@@ -151,15 +151,6 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		var folderResource;
 		var projectNameLength = ("./" + davinci.Runtime.getProject()).length + 1;
 		if(resource==null){
-<<<<<<< HEAD
-			this.fileDialogParentFolder.set( 'value', this._getForcedRootAttr().getPath().substring(projectNameLength+1));
-		}else if(resource.elementType=="Folder"){
-			this.fileDialogParentFolder.set( 'value', resource.getPath().substring(projectNameLength+1));
-		}else{
-			this.fileDialogFileName.set( 'value', resource.getName());
-			this.fileDialogParentFolder.set( 'value', resource.parent.getPath().substring(projectNameLength+1));
-		}	
-=======
 			folderResource = this._getForcedRootAttr();
 		}else if(resource.elementType=="Folder"){
 			folderResource = resource;
@@ -200,11 +191,10 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 				infiniteLoopCheck++;
 			} while(!done && infiniteLoopCheck < 100);
 		}
->>>>>>> master
 	},
 	
 	_checkValid : function(){
-		
+	
 		// make sure the project name is OK.
 		var name = dojo.attr(this.fileDialogFileName, "value");
 		var valid = name!=null && name.length > 0;
@@ -223,17 +213,9 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		return valid;
 	},
 	
-<<<<<<< HEAD
 	_okButton : function(){
-		
-		var fullPath = (new davinci.model.Path(davinci.Runtime.getProject())).append(this.fileDialogParentFolder.get('value')).append(this.fileDialogFileName.get( 'value'));
-		
-=======
-	_okButton : function(e){
-
 		var fullPath = (new davinci.model.Path(davinci.Runtime.getProject())).append(this._whereMenu.attr('value')).append(this.fileDialogFileName.get( 'value'));
-
->>>>>>> master
+		
 		this.value =  fullPath.toString();
 		this.cancel = false;
 		this.onClose();

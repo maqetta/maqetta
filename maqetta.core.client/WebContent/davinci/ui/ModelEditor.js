@@ -3,7 +3,7 @@ define(["dojo/_base/declare", "davinci/ui/TextEditor"], function(declare, TextEd
 return declare("davinci.ui.ModelEditor", TextEditor, {
 
     constructor: function (element) {
-//		this.model = null;
+
 		this.subscribe("/davinci/ui/selectionChanged", this.selectModel);
 	},
 	
@@ -27,18 +27,12 @@ return declare("davinci.ui.ModelEditor", TextEditor, {
 	handleChange: function(text) {
         this.inherited(arguments);
         
-<<<<<<< HEAD
-        var oldLabel = this.model.getLabel();
-        this.model.setText(text);
-        
-=======
         this.model.setText(text);
         
         var changeEvent = {
                 newModel: this.model
         };
         dojo.publish("/davinci/ui/modelChanged", [changeEvent]);
->>>>>>> master
 	},
 	
 	selectModel: function (selection, editor) {

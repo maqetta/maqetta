@@ -249,7 +249,7 @@ davinci.ve.widget.getLabel = function(widget){
 	var className = classAttr && classAttr.trim();
 	if (id || className) {
 		text += "<span class='propertiesTitleClassName'>";
-		//text += domNode.tagName;
+		//text += node.tagName;
 		if (id) {
 			text += "#" + id;
 		}
@@ -265,11 +265,7 @@ davinci.ve.widget.getLabel = function(widget){
 
 	//TODO: move to getWidgetTextExtra helper methods
 	if (widget.type == 'html.img') {
-<<<<<<< HEAD
-		text += '<span>' + domNode.src.substr(node.src.lastIndexOf('/') + 1) + '</span>';
-=======
 		text += '<span>' + domNode.src.substr(domNode.src.lastIndexOf('/') + 1) + '</span>';
->>>>>>> master
 	}
 	return text;
 };

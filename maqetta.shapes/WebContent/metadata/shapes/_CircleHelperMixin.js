@@ -4,14 +4,6 @@ dojo.require("davinci.ve.Snap");
 
 dojo.declare("davinci.libraries.shapes.shapes._CircleHelperMixin", null, {
 
-<<<<<<< HEAD
-=======
-	onCreateResize: function(compoundCommand, widget, width, height){
-		var valuesObject = this._updateCenterAndRadius(widget, width/2, height/2);
-		compoundCommand.add(davinci.ve.commands.ModifyCommand(widget, valuesObject, null));
-	},
-
->>>>>>> master
 	dragPointsStrings:['left_top','center_top','right_top','right_middle',
 	    	           'right_bottom','center_bottom','left_bottom','left_middle'],
 	    	
@@ -153,10 +145,6 @@ dojo.declare("davinci.libraries.shapes.shapes._CircleHelperMixin", null, {
             // Call the dispatcher routine that updates snap lines and
             // list of possible parents at current (x,y) location
             context.dragMoveUpdate({
-<<<<<<< HEAD
-=======
-        			widgets:[this._widget],
->>>>>>> master
                     data:data,
                     eventTarget:event.target,
                     position:position,
@@ -196,7 +184,6 @@ dojo.declare("davinci.libraries.shapes.shapes._CircleHelperMixin", null, {
 	 */
 	onMouseUp_Widget: function(command){
 		var widget = this._widget;
-<<<<<<< HEAD
 		var dijitWidget = widget.dijitWidget;
 		
 		// Normalize coordinates so that minX, minY is at (0,0)
@@ -215,26 +202,4 @@ dojo.declare("davinci.libraries.shapes.shapes._CircleHelperMixin", null, {
         var context = this._widget ? this._widget.getContext() : undefined;
         context.dragMoveCleanup();
 	}
-=======
-		var dijitWidget = widget.dijitWidget;	
-		var valuesObject = this._updateCenterAndRadius(widget, dijitWidget._rx, dijitWidget._ry);
-		command.add(new davinci.ve.commands.ModifyCommand(widget, valuesObject, null));
-        var context = this._widget ? this._widget.getContext() : undefined;
-        context.dragMoveCleanup();
-	},
-    
-    _updateCenterAndRadius: function(widget, rx, ry){
-		var dijitWidget = widget.dijitWidget;
-		
-		// Normalize coordinates so that minX, minY is at (0,0)
-		dijitWidget._cx = rx / 2;
-		dijitWidget._cy = ry / 2;
-		
-		var valuesObject = {cx:dijitWidget._cx, cy:dijitWidget._cy};
-		valuesObject.rx = rx;
-		valuesObject.ry = ry;
-		return valuesObject;
-	
-    }
->>>>>>> master
 });

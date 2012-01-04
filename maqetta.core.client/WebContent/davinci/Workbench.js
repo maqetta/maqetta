@@ -17,7 +17,7 @@ dojo.require("davinci.model.Path");
 //dojo.require("davinci.workbench._ToolbaredContainer");
 dojo.require("davinci.workbench.ViewPart");
 dojo.require("davinci.workbench.EditorContainer");
-dojo.require("davinci.de.resource"); // FIXME: not used here
+dojo.require("davinci.de.resource");
 dojo.require("davinci.ui.Resource");
 //dojo.require("davinci.ui.Panel");
 dojo.require("davinci.util");
@@ -494,7 +494,7 @@ dojo.mixin(davinci.Workbench, {
 			if (callback) {
 				var teardown = callback();
 				if (!teardown) {
-					// prevent the dialog from being torn down by temporarily overriding _onSubmit() with a call-once, no-op function
+
 					var oldHandler = myDialog._onSubmit;
 					myDialog._onSubmit = function() {
 						myDialog._onSubmit = oldHandler;
@@ -1017,16 +1017,10 @@ dojo.mixin(davinci.Workbench, {
 		var editorExtension = editorExtensions[0];
 		if (editorExtensions.length>1){
 			dojo.some(editorExtensions, function(extension){
-<<<<<<< HEAD
-			editorExtension = extension;
-			return extension.isDefault;
-		});}
-=======
 				editorExtension = extension;
 				return extension.isDefault;
 			});
 		}
->>>>>>> master
 		/*{
 			var data={
 					listData:editorExtensions
@@ -1423,8 +1417,8 @@ dojo.mixin(davinci.Workbench, {
 		if(newEditor && newEditor.focus) { newEditor.focus(); }
 
 		setTimeout(function(){
-			// kludge: if there is a visualeditor and it is already populated, resize to make Dijit visualEditor contents resize
-			// If editor is still starting up, there is code on completion to do a resize
+			// resize kludge to make Dijit visualEditor contents resize
+			// seems necessary due to combination of 100%x100% layouts and extraneous width/height measurements serialized in markup
 			// seems necessary due to combination of 100%x100% layouts and extraneous width/height measurements serialized in markup
 			if (newEditor && newEditor.visualEditor && newEditor.visualEditor.context.isActive()) {
 				newEditor.visualEditor.context.getTopWidgets().forEach(function (widget) { if (widget.resize) { widget.resize(); } });

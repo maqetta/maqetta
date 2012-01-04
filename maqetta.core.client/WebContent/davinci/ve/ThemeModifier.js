@@ -167,7 +167,7 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 	},
 
 	_modifyTheme : function (rules, values){
-
+		// now set the new properties.
 		if (!values) {
 		    return;
 		}
@@ -188,12 +188,6 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 			
 			for(var i=0;i<rebasedValues.length;i++){
 				for(var a in rebasedValues[i]){
-<<<<<<< HEAD
-					if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget) && (rebasedValues[i][a])){
-						rule.setProperty(a,  rebasedValues[i][a]);
-						//rebasedValues[a] = null;  not sure about this might be valid for more than one rule
-		
-=======
 					var propDeclarations = rule.getProperties(a);
 					if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget) && rebasedValues[i][a]){
 						if(!propertiesAlreadyProcessed[a]){
@@ -211,7 +205,6 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 							this._markDirty(file.url);
 							propertiesAlreadyProcessed[a] = true;
 						}
->>>>>>> master
 					}
 				}
 			}

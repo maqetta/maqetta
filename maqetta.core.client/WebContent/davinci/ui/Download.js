@@ -110,11 +110,12 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 		var folder = system.resource.findResource(project);
 		
 		/* get all sub files */
+	
 		var list = [];
 		for(var i = 0;i<folder.children.length;i++){
 			list.push(folder.children[i].getPath());
 		}
-		return {'userFiles':list, 'userLibs': this._getLibs()};
+		return {'userFiles':[project], 'userLibs': this._getLibs()};
 	},
 	
 	_rewriteUrls : function(){

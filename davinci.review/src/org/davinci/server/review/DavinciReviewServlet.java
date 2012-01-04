@@ -93,9 +93,10 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 			}
 		} else {
 			IPath path = new Path(pathInfo);
+		
 			String prefix = path.segment(0);
 			if(prefix == null){
-				resp.sendRedirect(contextString + "/review");
+				resp.sendRedirect(contextString + "./review");
 				return;
 			}
 
@@ -132,7 +133,7 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 
 				}
 				req.getSession().setAttribute(Constants.REVIEW_INFO, reviewObject);
-				resp.sendRedirect(contextString + "/review");
+				resp.sendRedirect("/maqetta/review");
 				return;
 			}
 		}

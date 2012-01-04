@@ -27,10 +27,12 @@
 		<li>Drag a Button, TextBox and Calendar onto the canvas.</li>
 		<li>Make the Properties palette visible.</li>
 		<li>Select the TextBox. Go to Properties palette and set Value to "abc".</li>
-		<li>Select the Button. There should be no resize handles.</li>
+		<li>Select the Button. There should be no resize handles.
+		      Try to change the Width property on the Properties palette.
+              You should get a prompt telling you that you cannot change a property that is defined on a read-only CSS theme.</li>
 		<li>Select the TextBox. There should be only horizontal resize handles. 
-				Change the Width property on the Properties palette.
-				You should get a prompt telling you that you cannot change a property that is defined on a read-only CSS theme.</li>
+              Try to change the Width property on the Properties palette. It should work.
+				</li>
 		<li>Select the Calendar. There should be resize handles for both Width and Height and
 				the Width and Height properties should be enabled on the Properties palette. 
 				Change both the width and the height on the Properties palette.</li>
@@ -62,7 +64,7 @@
 		<li>Drag a Button into first ContentPane and a TextBox into second ContentPane.</li>
 		<li>Select each of the ContentPanes, set position to "absolute" in Properties palette, and drag each ContentPane to a new absolute location.</li>
 		<li>Select the Button and set position to "absolute" and drag around to a different absolute location.</li>
-		<li>Restore all elements to relative positioning.</li>
+		<li>Restore all elements to position:static (normal CSS flow layout).</li>
 		<li>Save, reopen.</li>
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>

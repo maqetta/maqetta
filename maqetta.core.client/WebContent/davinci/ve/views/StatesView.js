@@ -316,8 +316,9 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 			var item = this._grid.getItem(index);
 			if (item) {
 				if (this.isThemeEditor()){
-					if (!this._silent)
-						this.publish("/davinci/states/state/changed", [{widget:'$all', newState:item.name[0], oldState:this._themeState}]);
+					if (!this._silent) {
+						this.publish("/davinci/states/state/changed", [{widget:'$all', newState:item.name[0], oldState:this._themeState, context: this._editor.context}]);
+					}
 					this._themeState = item.name[0];
 					this._silent = false;
 				} else {
@@ -353,11 +354,9 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 	},
 	
 	isThemeEditor: function() {
-		if (this._editor && this._editor.declaredClass === 'davinci.ve.themeEditor.ThemeEditor')
-			return true;
-		else 
-			return false;
+		return this._editor && this._editor.declaredClass === 'davinci.ve.themeEditor.ThemeEditor';
 	},
+
 	_updateViewForThemeEditor: function() {
 		
 		

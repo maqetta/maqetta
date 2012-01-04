@@ -1,5 +1,6 @@
-dojo.require("davinci.ve.themeEditor.commands.ThemeEditorCommand");
 dojo.provide("davinci.ve.themeEditor.commands.StateChangeCommand");
+
+dojo.require("davinci.ve.themeEditor.commands.ThemeEditorCommand");
 dojo.declare("davinci.ve.themeEditor.commands.StateChangeCommand", davinci.ve.themeEditor.commands.ThemeEditorCommand, {
 
 	constructor: function(args){
@@ -39,12 +40,12 @@ dojo.declare("davinci.ve.themeEditor.commands.StateChangeCommand", davinci.ve.th
 
 		if (!this._firstRun){
 			this._widget.processingUndoRedo = true;
-			dojo.publish("/davinci/states/state/changed", [{widget:'$all', newState:this._newState, oldState:this._oldState, origin: this.declaredClass}]); 
+			dojo.publish("/davinci/states/state/changed", [{widget:'$all', newState:this._newState, oldState:this._oldState, origin: this.declaredClass, context: this._themeEditor.context}]); 
 		}
 		this._firstRun = false;
 		this.updatePropertiesView();
-		
 	},
+
 	undo: function(){
 		//debugger;
 		this._themeEditor._selectedWidget = this.old_selectedWidget;
@@ -74,8 +75,6 @@ dojo.declare("davinci.ve.themeEditor.commands.StateChangeCommand", davinci.ve.th
 		//davinci.ve.states.setState(this._widget, this._oldState); 
 		this.updatePropertiesView();
 
-		dojo.publish("/davinci/states/state/changed", [{widget:'$all', newState:this._oldState, oldState:this._newState, origin: this.declaredClass}]); 
-		
-						
+		dojo.publish("/davinci/states/state/changed", [{widget:'$all', newState:this._oldState, oldState:this._newState, origin: this.declaredClass, context: this._themeEditor.context}]); 
 	}
 });

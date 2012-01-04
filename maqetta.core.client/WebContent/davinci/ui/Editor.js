@@ -108,7 +108,7 @@ return declare("davinci.ui.Editor", null, {
 				this._createEditor();
 				this._updateStyler();
 			} else {
-	            this.editor.getTextView().removeEventListener("Selection", this, onSelectionChanged);
+	            this.editor.getTextView().removeEventListener("Selection", dojo.hitch(this, onSelectionChanged));
 //	            try {
 //					this.editor.destroy();
 //	            } catch (e){ console.error(e); }
@@ -161,7 +161,7 @@ return declare("davinci.ui.Editor", null, {
 		dojo.style(this.contentDiv, "overflow", "hidden");
 
 		if (this.selectionChange) {
-            this.editor.getTextView().addEventListener("Selection", this, onSelectionChanged);
+            this.editor.getTextView().addEventListener("Selection", dojo.hitch(this, onSelectionChanged));
 		}
 		this.cutAction=new davinci.ui._EditorCutAction(this.editor);
 		this.copyAction=new davinci.ui._EditorCopyAction(this.editor);

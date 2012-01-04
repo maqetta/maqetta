@@ -161,7 +161,7 @@ dojo.declare("davinci.review.editor.Context", null, {
 				this.containerEditor.isDirty = false;
 			})),
 			dojo.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, function(obj){
-				if(this === obj.oldEditor.getContext()){
+				if(obj.oldEditor!=null && this === obj.oldEditor.getContext()){
 					// Determine if the editor is closed, if the editor is closed then
 					// getDocument() will throw an exception
 					try {

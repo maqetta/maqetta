@@ -89,7 +89,6 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
                                 importElements[i].parent.removeChild(importElements[i]);
                                 var dj = this._context.getDojo();
                                 dj.query('link[href="' + url + '"]').orphan();
-                                delete importElements[i];
                                 this._context.theme = null;
                                 break;
                             }

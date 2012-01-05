@@ -100,9 +100,17 @@ define([
 			}
 			var halfW = params.width/2;
 			if(params.type == 'start'){
-				s = '<path transform="translate('+x0+','+y0+') rotate('+angle+')" d="M0,-'+halfW+'L'+params.height+',0L0,'+halfW+'z"';
+				if(params.arrowDir === 'backward'){
+					s = '<path transform="translate('+x0+','+y0+') rotate('+angle+')" d="M'+params.height+',-'+halfW+'L0,0L'+params.height+','+halfW+'z"';
+				}else{
+					s = '<path transform="translate('+x0+','+y0+') rotate('+angle+')" d="M0,-'+halfW+'L'+params.height+',0L0,'+halfW+'z"';
+				}
 			}else{
-				s = '<path transform="translate('+x1+','+y1+') rotate('+angle+')" d="M-'+params.height+',-'+halfW+'L0,0L-'+params.height+','+halfW+'z"';
+				if(params.arrowDir === 'backward'){
+					s = '<path transform="translate('+x1+','+y1+') rotate('+angle+')" d="M0,-'+halfW+'L-'+params.height+',0L0,'+halfW+'z"';
+				}else{
+					s = '<path transform="translate('+x1+','+y1+') rotate('+angle+')" d="M-'+params.height+',-'+halfW+'L0,0L-'+params.height+','+halfW+'z"';
+				}
 			}
 			if(params.fill){
 				s += ' fill="'+params.fill+'"';
@@ -117,25 +125,20 @@ define([
 			return s;
 		},
 		
-		_checkForward: function(val){
-			return (val.toLowerCase() === 'forward');
-		},
-		
-		_checkBackward: function(val){
-			return (val.toLowerCase() === 'backward');
+		_checkForwardBackward: function(val){
+			return (val.toLowerCase() === 'forward' || val.toLowerCase() === 'backward');
 		},
 		
 		createGraphics: function(){
 			var pathdata = this._computePathData(this._points);
 			//FIXME: Do we really need class="arrow"? Don't think so.
 			var s_shape = '<path class="arrow" d="'+pathdata+'"/>';
-			//FIXME: Need to distinguish between forward and backward
 			var stroke = dojo.style(this.domNode, 'stroke');
 			var strokeWidth = dojo.style(this.domNode, 'stroke-width');
-			var s_startarrow = this._checkForward(this.startarrow) ?
-					this._computeArrowHead(this._points, {type:'start',width:8,height:13,fill:stroke,stroke:stroke,strokeWidth:strokeWidth}) : '';
-			var s_endarrow = this._checkForward(this.endarrow) ?
-					this._computeArrowHead(this._points, {type:'end',width:8,height:13,fill:stroke,stroke:stroke,strokeWidth:strokeWidth}) : '';
+			var s_startarrow = this._checkForwardBackward(this.startarrow) ?
+					this._computeArrowHead(this._points, {type:'start',arrowDir:this.startarrow,width:8,height:13,fill:stroke,stroke:stroke,strokeWidth:strokeWidth}) : '';
+			var s_endarrow = this._checkForwardBackward(this.endarrow) ?
+					this._computeArrowHead(this._points, {type:'end',arrowDir:this.endarrow,width:8,height:13,fill:stroke,stroke:stroke,strokeWidth:strokeWidth}) : '';
 		    this.domNode.innerHTML = this._header + s_shape + s_startarrow + s_endarrow + this._footer;
 			this._shape = dojo.query('path.arrow',this.domNode)[0];		
 			this._g = dojo.query('g.shapeg',this.domNode)[0];

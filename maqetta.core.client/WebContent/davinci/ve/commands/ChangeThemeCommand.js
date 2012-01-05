@@ -84,9 +84,13 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
                         
                         for(var i=0;i<importElements.length;i++){
                             if(sameSheet(importElements[i].url, filename)){
+                                var url = importElements[i].url;
                                 importElements[i].url = 'x';
                                 importElements[i].parent.removeChild(importElements[i]);
+                                var dj = this._context.getDojo();
+                                dj.query('link[href="' + url + '"]').orphan();
                                 delete importElements[i];
+                                this._context.theme = null;
                                 break;
                             }
                         }   
@@ -135,6 +139,7 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
             var css = new davinci.html.CSSImport();
             css.url = newFileName;
             style.addChild(css,0);
+            this._context.theme = newThemeInfo;
         }
         
     },

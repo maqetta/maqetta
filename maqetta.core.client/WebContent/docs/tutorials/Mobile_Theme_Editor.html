@@ -1,0 +1,248 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Tutorial - Mobile Theme Editor</title>
+</head>
+<body class="maqettadocs">
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="tutorials/tutorials.html">Tutorials</a>
+    </td>
+    <td class="prevnext">
+	<a href="tutorials/Mobile_User_Interfaces.html">Previous</a> / <a href="tutorials/Export_to_Developer_Tools.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Tutorial - Mobile Theme Editor</h1>
+
+<a name="newtheme"><h2>Introduction to mobile themes</h2></a>
+
+<p>Maqetta provides a mobile theme editor that allows you to clone and then customize the built-in CSS themes
+that ship with the Dojo Mobile (dojox.mobile) widget set. Dojo Mobile ships with the following CSS themes: 
+</p> 
+<ul>
+	<li><strong>android</strong> - CSS styling that provides native-looking styling for Android devices</li>
+	<li><strong>blackberry</strong> - CSS styling that provides native-looking styling for Blackberry devices</li>
+	<li><strong>iphone</strong> - CSS styling that provides native-looking styling for iPhones</li>
+	<li><strong>ipad</strong> - CSS styling that provides native-looking styling for iPads (slight variations versus iPhone)</li>
+</ul>
+<p>and also the following generic, cross-platform theme:</p>
+<ul>
+	<li><strong>custom</strong> - A simple theme designed explicitly to provide the basis for company-specific, custom theme development</li>
+</ul>
+
+<p>Maqetta's mobile theme editing and management features allows you to clone and customize any of the above themes.</p>
+
+<a name="newtheme"><h2>Associating CSS themes to particular devices</h2></a>
+
+<p>By default, Dojo and Maqetta delivers native-platform look-and-feel, where the widgets 
+look and act just like the native controls found in the applications that ship standard on the device.
+At run-time, Dojo's default behavior is to detect which device the widgets are running on and then dynamically load
+the correct CSS theme that matches the given device (i.e., the "android" theme for Android devices, the "iphone" theme for iPhones, etc.) </p> 
+
+<p>With Dojo and Maqetta, you can create your own custom CSS themes and then define which theme should be used for which device.
+In Maqetta, you can define which themes are used on which devices using the <strong>Select theme</strong> dialog, which can be invoked
+in multiple ways (described in subsequent sections). Below is a snapshot of the <strong>Select theme</strong> dialog.</p>
+
+<p><a href="img/Select_Theme.png" target="_blank"><img alt="image" src="img/Select_Theme.png" style="margin: 1em 1em 0pt 0pt;" width="280" /></a></p>
+
+<p>The above snapshot shows the default associations of CSS themes to mobile devices:</p>
+<ul>
+	<li>Under "Dojo 1.7 Mobile Theme", the default value is "(device specific)", meaning that a different CSS theme is used for each different device.</li>
+	<li>Android devices will use Dojo's built-in "android" theme</li>
+	<li>Blackberry devices will use Dojo's built-in "blackberry" theme</li>
+	<li>iPhones will use Dojo's built-in "iphone" theme</li>
+	<li>iPads will use Dojo's built-in "ipad" theme</li>
+	<li>Other devices will use Dojo's built-in "iphone" theme</li>
+</ul>
+
+<p>You can use this dialog to:</p>
+<ul>
+	<li>Choose a different theme for each different device, such as using your own custom "myandroidtheme" for Android devices, your own custom "myiphonetheme" for iPhones, etc.</li>
+	<li>Choose a single theme for all devices (or any set of devices). For example, you might choose to use your own custom "mymobiletheme" across all target devices.</li>
+</ul>
+
+<a name="newtheme"><h2>Cloning the "custom" theme and launching the theme editor</h2></a>
+
+<p>For this tutorial, we will clone and customize the "custom" theme (Dojo's generic cross-platform mobile theme CSS).</p>
+<p class="note">Note that
+	with Maqetta you can also clone and customize any of the native-looking mobile themes (i.e., "android", "blackberry", "iphone" and "ipad").</p>
+	
+<p>To clone and customize the "custom" theme, 
+	select the <b>New &gt; Theme...</b> command from the Maqetta menu bar.
+	A dialog will appear. In the first field, choose "custom" as the theme to clone.
+	In the second field, enter "mymobiletheme" as the name for the cloned theme.
+	<em>(Note: theme names must not contain spaces or other special characters.)</em>
+	This will create a new CSS styling theme in your workspace named "mymobiletheme" and launch 
+	the theme editor on your new "mymobiletheme".
+	<div class="note">Subsequently, you can open the theme editor on your new theme
+	using the <b>Open &gt; Theme Editor...</b> command.
+	</div>
+</p> 
+	
+<p>After issuing the <b>New &gt; Theme...</b> command, the Maqetta application should look something like this:</p>
+
+<p><a href="img/MobileThemeEditor.png" target="_blank"><img alt="image" src="img/MobileThemeEditor.png" style="margin: 1em 1em 0pt 0pt;" width="650" /></a></p>
+
+<p>The mobile theme editor is divided into the following sections:</p>
+<ul>
+	<li><strong>Global Styling</strong> - visual styling that applies globally across multiple widgets. There are 3 sub-sections:
+		<ul>
+			<li><strong>Page backgrounds and fonts</strong> - This control allows you to change page backgrounds and the default font properties used globally across your mobile user interfaces.</li>
+			<li><strong>Heading backgrounds and fonts</strong> - This control allows you to backgrounds and font properties that apply globally across all widgets that share visual styling with the Heading widget (i.e., TabBar and EdgeToEdgeList).</li>
+			<li><strong>Buttons backgrounds and fonts</strong> - This control allows you to backgrounds and font properties that apply globally across all widgets that share visual styling with the Button widget (e.g., ToolbarButton, CheckBox, RadioButton and others).</li>
+		</ul>
+	</li>
+	<li><strong>Widget Styling</strong> - visual styling that applies to specific widgets. There are 3 tabs, each of which shows a collection of widgets:
+		<ul>
+			<li><strong>Headings and TabBars</strong> - The snapshot above shows the list of widgets in this group.</li>
+			<li><strong>Rects and Lists</strong> - See below for a snapshot of the widgets in this group:
+			<p><a href="img/MobileTERectsLists.png" target="_blank"><img alt="image" src="img/MobileTERectsLists.png" style="margin: 1em 1em 0pt 0pt;" width="250" /></a></p>
+			</li>
+			<li><strong>Controls</strong> - See below for a snapshot of the widgets in this group:
+			<p><a href="img/MobileTEControls.png" target="_blank"><img alt="image" src="img/MobileTEControls.png" style="margin: 1em 1em 0pt 0pt;" width="250" /></a></p>
+			</li>
+		</ul>
+	</li>
+</ul>
+
+<h2>Global Styling - Page Backgrounds and Fonts</h2>
+
+<ol>
+<li>
+<p>At the top of the Global Styling section, click inside of the rectangular object that contains the words "Page backgrounds and fonts".
+	This is the "widget" that you can select to customize background and font properties that apply at a full page level.
+	After clicking, you should see a gray selection border surrounding the widget:</p>
+<p><a href="img/MobileTEPageStylingSelected.png" target="_blank"><img alt="image" src="img/MobileTEPageStylingSelected.png" style="margin: 1em 1em 0pt 0pt;" width="250" /></a></p>
+</li>
+<li>Open the <b>Background</b> section of the Properties palette.</li>
+<li>Change the background color to green by choosing "green" from the dropdown menu for the background-color property.
+<p><a href="img/MobileTEBackgroundColorDropdown.png" target="_blank"><img alt="image" src="img/MobileTEBackgroundColorDropdown.png" style="margin: 1em 1em 0pt 0pt;" width="160" /></a></p>
+<p class="note">The page background should now be green inside the various sections of the mobile theme editor.</p>
+</li>
+<li>Change the background color again by clicking on the rectangular color swatch that is just to the right of the dropdown menu. <img alt="image" src="img/MobileTEColorSwatch.png" style="margin: 1em 1em 0pt 0pt;" width="24" />
+(The color swatch should have turned green after the previous operation.)
+After clicking on the color swatch, a color picker popup should appear:
+<p><a href="img/MobileTEColorPicker.png" target="_blank"><img alt="image" src="img/MobileTEColorPicker.png" style="margin: 1em 1em 0pt 0pt;" width="210" /></a></p>
+Select a light purple color from the color picker and then click OK.
+<p class="note">The page background should now be light purple inside the various sections of the mobile theme editor.</p>
+</li>
+<li>Click on the any of the "..." buttons <img alt="image" src="img/MobileTEBackgroundDialogButton.png" style="margin: 1em 1em 0pt 0pt;" width="32" />
+	to bring up the Background dialog:
+	<p><a href="img/MobileTEBackgroundDialog1.png" target="_blank"><img alt="image" src="img/MobileTEBackgroundDialog1.png" style="margin: 1em 1em 0pt 0pt;" width="300" /></a></p>
+	Notice that you can change the 'background-color' property on this dialog, also. The Background dialog
+	is good for defining advanced backgrounds such as images and gradients. But for now, just click on the Cancel button.
+</li>
+<li>Open the <b>Fonts and Text</b> section of the Properties palette.</li>
+<li>For the 'color' property, enter the string "#606" into the text entry field so that the default text color is a dark purple.
+<p class="note">Various text strings, particularly straight HTML text, should be dark purple instead of charcoal.</p>
+</li>
+<li>For the 'font-size' property, click on the "+" icon twice to change font size from 14px to 16px.
+<p class="note">Various text strings in the mobile theme editor should be larger.</p>
+</li>
+<li>Click on the <b>Save</b> icon <img class="inline" src="img/save_icon.png" /> to save your theme changes.</li>
+</ol>
+
+
+<h2>Global Styling - Headings and Buttons</h2>
+
+<ol>
+<li>
+<p>Within the Global Styling section, click inside of the rectangular object that contains the words "Heading backgrounds" to select the Heading Backgrounds and Fonts widget.
+	This is the "widget" that you can select to customize background and font properties that apply Headings, TabBars and EdgeToEdgeCategory widgets.
+</li>
+<li>Open the <b>Background</b> section of the Properties palette.</li>
+<li>We will now create a background gradient for these widgets. 
+	Click on any of the "..." buttons <img alt="image" src="img/MobileTEBackgroundDialogButton.png" style="margin: 1em 1em 0pt 0pt;" width="32" />
+	on the right side of the Backgrounds sections to bring up the Backgrounds dialog.
+	<p><a href="img/MobileTEBackgroundDialog2.png" target="_blank"><img alt="image" src="img/MobileTEBackgroundDialog2.png" style="margin: 1em 1em 0pt 0pt;" width="300" /></a></p>
+	<p class="note">Note that the original background for Heading widgets within the "custom" theme is a complex linear gradient consisting of 9 gradient stops.
+		Also notice that the gradient uses rgba() values for some of the color stops. The "a" part of "rgba" is "alpha",
+		which defines the opacity (transparency) of the particular color stop. A value of "1" is fully opaque, a value of 
+		"0" is fully transparent.</p>
+</li>
+<li>Let's now simplify the gradient by removing stops. Click on the "-" icon for all gradient stops except for the first one (position=0%) and the last one (position=100%).
+	Set the color value for the first gradient stop to "#FAF" (light purple) and the second gradient stop to "#828" (darker purple).
+	<p class="note">The color swatch at the top right of the dialog should show a gradient that starts with light purple at the top
+	and transitions into dark purple at the bottom.</p>
+	Click OK at the bottom of the dialog.
+	<p class="note">The Heading, TabBar and EdgeToEdgeCategory widgets should now have the purple gradient for their backgrounds.</p>
+</li>
+<li>
+<p>Repeat the above steps for the "Button backgrounds" widget. Click inside of the rectangular object that contains the words "Button backgrounds" to select the Button Backgrounds and Fonts widget.
+	This is the "widget" that you can select to customize background and font properties that apply various Button widgets, CheckBox and Radio Button.
+	Once again, click any of the "..." buttons <img alt="image" src="img/MobileTEBackgroundDialogButton.png" style="margin: 1em 1em 0pt 0pt;" width="32" />
+	on the right side of the Backgrounds sections to bring up the Backgrounds dialog, and once again
+	remove all gradient stops except for the first one (position=0%) and the last one (position=100%).
+	Set the color value for the first gradient stop to "#FAF" (light purple) and the second gradient stop to "#828" (darker purple).
+	Click OK at the bottom of the dialog. The mobile theme editor should now look like this:
+	<p><a href="img/MobileTEAfterBackgrounds.png" target="_blank"><img alt="image" src="img/MobileTEAfterBackgrounds.png" style="margin: 1em 1em 0pt 0pt;" width="450" /></a></p>
+</li>
+<li>Click on the <b>Save</b> icon <img class="inline" src="img/save_icon.png" /> to save your theme changes.</li>
+</ol>
+
+<h2>Widget Styling</h2>
+
+<ol>
+<li>In the Widget Styling section, you can do extensive and deep customizations of the CSS styling properties on a widget-by-widget basis.
+	At this point, click on each of the 3 tabs in the Widget Styling section and review the list of widgets.
+</li>
+<li>Click on the Controls tab, then click on the "TextBox/ComboBox" widget to select it.
+	Go to the "Padding/Margins" section of the Properties palette and enter "5px" for the 'padding' property.
+	<p class='note'>One page editor canvas, you should see a large white space around the text for the TextBox/ComboBox widget.</p></li>
+<li>Click on the Rects &amp; Lists tab, then click on the "ListItem" widget to select it (e.g., click on the string "Item 1").
+	Notice the popup that appears that shows 3 subwidgets: WidgetOuterContainer, ListItem and MoveTo. 
+	Initially WidgetOuterContainer is selected. 
+	Go to the "Borders" section of the Properties palette, set the "show" option to "props", and then enter "blue" as the value for the the 'border-color' property.
+	<p class='note'>One page editor canvas, the border around the list widgets should now be blue.</p></li>
+<li>In the subwidget popup, click on "ListItem" to select that sub-widget.
+	<p class='note'>One page editor canvas, you should see a red-dashed rectangle around the ListItem labeled "Item 1".
+		This red-dashed rectangle highlights one piece of the widget that corresponds to the currently selected subwidget.</p></li>
+<li>Go to the "Backgrounds" section of the Properties palette and then enter "#FCF" as the value for the the 'background-color' property.
+	<p class='note'>One page editor canvas, the background on the 2 ListItem widgets "Item 1" and "Item 2" should be light purple.</p></li>
+<li>In the subwidget popup, click on "MoveTo" to select that sub-widget.
+	<p class='note'>One page editor canvas, you should see a red-dashed rectangle around the right-pointing arrow.</p></li>
+<li>Go to the "Borders" section of the Properties palette, set the "show" option to "props",  and then enter "#808" as the value for the the 'border-color' property.
+	<p class='note'>One page editor canvas, the arrow should be purple.</p>
+	<p><a href="img/MobileTEListItem.png" target="_blank"><img alt="image" src="img/MobileTEListItem.png" style="margin: 1em 1em 0pt 0pt;" width="450" /></a></p>
+</li>
+<li>Click on the <b>Save</b> icon <img class="inline" src="img/save_icon.png" /> to save your theme changes.</li>
+</ol>
+
+<h2>Using your custom theme in a new HTML page</h2>
+
+<ol>
+<li>Go to the New menu at the top of the application, and issue a "New HTML File" command.
+	In the New HTML File dialog, set the Composition type to "iphone" using the drop-down menu. 
+	You can either accept the default filename
+	(e.g., <code>file1.html</code>) or enter a custom filename.</li>
+<li>Click on the Theme... button to bring up the Switch/Select Theme dialog. In the dialog,
+	for the entry labeled "Dojo 1.7 mobile theme", choose "mymobiletheme" from the dropdown menu.
+	<p><a href="img/MobileTESelectTheme.png" target="_blank"><img alt="image" src="img/MobileTESelectTheme.png" style="margin: 1em 1em 0pt 0pt;" width="250" /></a></p>
+</li>
+<li>Click OK on the Select Theme dialog and then click on the Create button on the New HTML File dialog.
+<p class='note'>The mobile page editor should open, showing the device silhouette for an iPhone.</p>
+</li>
+<li>In the Widgets palette, open the "Dojo Mobile" section, and drag the following widgets onto the canvas:
+<ul>
+	<li>View</li>
+	<li>Heading</li>
+	<li>EdgeToEdgeCategory</li>
+	<li>EdgeToEdgeList</li>
+</ul>
+<p class='note'>The widgets should be styled using the purple-colored styling from "mymobiletheme".</p>
+p><a href="img/MobileTEResult.png" target="_blank"><img alt="image" src="img/MobileTEResult.png" style="margin: 1em 1em 0pt 0pt;" width="250" /></a></p>
+</li>
+</ol>
+
+<p class="prevnext"><a href="tutorials/Mobile_User_Interfaces.html">Previous</a> / <a href="tutorials/Export_to_Developer_Tools.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

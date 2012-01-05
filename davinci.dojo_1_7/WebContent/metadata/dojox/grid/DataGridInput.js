@@ -432,6 +432,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 			textRadio.set("checked", false);        	
         }
         this.updateFormats();
+        this._inline.eb.focus();
 
 	},
 	

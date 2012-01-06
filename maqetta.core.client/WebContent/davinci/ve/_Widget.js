@@ -300,7 +300,7 @@ return declare("davinci.ve._Widget", null, {
 					cleaned.splice(index,1);
 					cleaned.splice(lastSplice,0, element);
 					
-					lastSplice = index+1;
+					lastSplice++;
 				}
 			}
 		}

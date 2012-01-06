@@ -2170,7 +2170,7 @@ return declare("davinci.ve.Context", null, {
 					var element = cleaned[index];
 					cleaned.splice(index,1);
 					cleaned.splice(lastSplice,0, element);
-					lastSplice = index+1;
+					lastSplice++;
 
 					var prop = rule.getProperty(shorthands[j][i]);
     				if(prop){

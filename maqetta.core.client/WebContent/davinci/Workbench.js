@@ -44,9 +44,7 @@ dojo.mixin(davinci.Workbench, {
 		this._initKeys();
 		
 		this._baseTitle = dojo.doc.title;
-		
-		this._initializeWorkbenchState();
-		
+
 		var perspective= davinci.Runtime.initialPerspective || "davinci.ui.main";
 		this.showPerspective(perspective);
 		this._updateTitle();
@@ -100,7 +98,7 @@ dojo.mixin(davinci.Workbench, {
 		top.setContent(dijit.byId("mainBody"));
 		top.startup();
 */
-		
+		this._initializeWorkbenchState();
 	
 		var loading = dojo.query('.loading');
 		if (loading[0]){ // remove the loading div

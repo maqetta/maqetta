@@ -739,16 +739,12 @@ return declare("davinci.ve.Context", null, {
 		var scriptTags=source.find({elementType:'HTMLElement', tag:'script'}); 
 		for (var i=0; i<scriptTags.length; i++){
 			var scriptTag = scriptTags[i];
-			var found = false;
 			for (var j=0; j<scriptTag.children.length; j++){
 				var text = scriptTag.children[j].getText();
 				if(text.indexOf('dojo.require')>=0){
-					found = true;
+					scriptTag.parent.removeChild(scriptTag);
 					break;
 				}
-			}
-			if(found){
-				scriptTag.parent.removeChild(scriptTag);
 			}
 		}
 

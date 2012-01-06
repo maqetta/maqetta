@@ -47,6 +47,7 @@ To the right of the login name are four drop-down menu commands, and then the <u
  </ul></li>
  <li><b>Settings</b>
  <ul><li>Preferences...</li>
+ <li>Theme Sets...</li>
  </ul></li>
  <li><b>Help</b>
  <ul><li>Documentation</li>
@@ -61,19 +62,19 @@ To the right of the login name are four drop-down menu commands, and then the <u
 
 <p>This creates a new User HTML file, which is what you use to create your page designs. The file is created with the tags needed to use the Maqetta widgets and the Maqetta theme files. See <a href="peUserHTML.html">About the User HTML File</a> for more information on source that is auto-generated for HTML files.</p> 
 
-<p>A dialog window opens where you can enter a filename and specify the folder in which to place the new file.  A default filename is provided for convenience, which you can change if desired. To select a sub-folder, scroll through the list to find the desired sub-folder, then select it by clicking on it. The sub-folder will appear in the text box under <b>Parent Folder:</b>. If you want to place your new file in a folder that doesn't yet exist, first select <b>New Folder...</b> to create the folder.
+<p>A dialog window opens where you can enter a filename and specify the folder in which to place the new file.  A default filename is provided for convenience, which you can change if desired. 
 
 <h3>CSS File...</h3>
 
 <p>This creates a new CSS file which can be used in addition to or instead of <a href="peAppCss.html">app.css</a>, which is provided by Maqetta as the default application CSS file. If you create your own CSS file, you will need to update the &lt;style&gt; tag in your HTML file (see <a href="peSourceEditing.htm">Source Editing</a>) to link to your CSS file. (app.css is already linked in for you.)</p>  
 
-<p>A dialog window opens where you can enter a filename and specify the folder in which to place the new file.  A default filename is provided for convenience, which you can change if desired. To select a sub-folder, scroll through the list to find the desired sub-folder, then select it by clicking on it. The sub-folder will appear in the text box under <b>Parent Folder:</b>. If you want to place your new file in a folder that doesn't yet exist, first select <b>New Folder...</b> to create the folder.
+<p>A dialog window opens where you can enter a filename and specify the folder in which to place the new file.  A default filename is provided for convenience, which you can change if desired. 
 
 <h3>JavaScript File</h3>
 
 <p>This creates a new JavaScript file. You will need to update your HTML file (see <a href="peSourceEditing.htm">Source Editing</a>) to link to your JavaScript file.</p> 
 
-<p>A dialog window opens where you can enter a filename and specify the folder in which to place the new file.  A default filename is provided for convenience, which you can change if desired. To select a sub-folder, scroll through the list to find the desired sub-folder, then select it by clicking on it. The sub-folder will appear in the text box under <b>Parent Folder:</b>. If you want to place your new file in a folder that doesn't yet exist, first select <b>New Folder...</b> to create the folder.
+<p>A dialog window opens where you can enter a filename and specify the folder in which to place the new file.  A default filename is provided for convenience, which you can change if desired. 
 
 <!-- FIXME: Maybe restore this if we get Save/SaveAs buttons in toolbar for generic New File source editing
 <h3>File...</h3>
@@ -101,7 +102,7 @@ launches the theme editor to allow you to customize your new theme.</p>
 
 <h3>Folder</h3>
 
-<p>This creates a new folder under the Maqetta root folder or one of its sub-folders.  A default folder name is provided for your convenience, which you can change if desired. To select a sub-folder, scroll through the list to find the desired sub-folder, then select it by clicking on it. The sub-folder will appear in the text box under <b>Parent Folder:</b>.</p>
+<p>This creates a new folder under the Maqetta root folder or one of its sub-folders.  A default folder name is provided for your convenience, which you can change if desired. 
 
 <h3>Review</h3>
 
@@ -135,11 +136,15 @@ or on-screen annotations.</p>
 
 <table class="palette">
 <thead><tr><th colspan="2">Visual Editor Preferences</th></tr></thead>
-<tr><th width="20%">Flow Layout</th><td>(Default is checked) Checked turns on flow layout as the default system-wide positioning for all widgets. Unchecked uses absolute positioning as the default system-wide positioning for all widgets.  The system-wide positioning can be overridden on any particular widget by setting the <b>Position</b> property, in the <b>Layout</b> section of the <a href="pePropertiesPalette.html">Properties palette</a>.</td></tr>
-<tr><th>Snap To Grid</th><td>(Default is unchecked) Not implemented yet.</td></tr>
-<tr><th>Show Grid</th><td>(Default is unchecked) Not implemented yet.</td></tr>
+<tr><th>Snap to nearest widget</th><td>(Default is checked) Whether dynamic snap lines should show during widget drag operations which allow you to snap the edge of one widget to the edge of another widget. Only applies to widgets that use absolute positioning.</td></tr>
+<tr><th>When dragging, show possible parents</th><td>(Default is unchecked) Whether to show supplemental drag-time user interface that shows the list of possible parents for the current widget at the current (x,y) location.</td></tr>
 <tr><th>Warn on CSS Override</th><td>(Default is checked) Provides a warning message if you attempt to update a style rule from one of the /theme files while making style changes using the <a href="pePropertiesPalette.html">Properties palette</a>.</td></tr>
 </table>
+
+<h3 style="margin-top:1em;">Theme Sets...</h3>
+
+<p>Brings up a dialog that allows you to define and manage "theme sets", which are a collection of CSS themes and
+the association of which theme to use for which device (e.g., use theme A for Android and use theme B for iPhone).</p>
 
 <h3><b>Help</b></h3>
 <h3 style="margin-top:1em;">Documentation</h3>

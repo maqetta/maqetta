@@ -202,7 +202,7 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		// Force certain hardcoded ones to top: Containers, Controls, Other, Untested, ...
 		// FIXME: Need a more flexible approach (versus hardcoding in JavaScript)
 		var orderedDescriptors = [];
-		var predefined = ["Dojo Containers", "Dojo Controls", "HTML", "Dojox Mobile", "Untested Dojo & HTML"];
+		var predefined = ["Dojo Containers", "Dojo Controls", "HTML", "Dojox Mobile", "Clip Art", "Drawing Tools", "Untested Dojo & HTML"];
 		dojo.forEach(predefined, function(name) {
 		    if (descriptorObject[name]) {
 		        orderedDescriptors.push(descriptorObject[name]);
@@ -271,6 +271,8 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			"Dojo Containers":"dojo-objects.png",
 			"Dojo Controls":"dojo-objects.png",
 			"HTML":"html-widgets.png",
+			"Drawing Tools":"drawing-tools-widgets.png",
+			"Clip Art":"clipart-widgets.png",
 			"Untested Dojo & HTML":"untested.gif",
 			"jQuery UI":"jquery-wdgts.gif",
 			"YUI":"yui-widgets.gif",

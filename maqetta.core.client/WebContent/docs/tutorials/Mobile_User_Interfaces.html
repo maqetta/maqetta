@@ -37,7 +37,7 @@
 	In the New HTML File dialog, set the Composition type to "iphone" using the drop-down menu. 
 	You can either accept the default filename
 	(e.g., <code>file1.html</code>) or enter a custom filename. Click on the Create button.</li>
-<li>The page canvas should now show a near life-size silhouette of an iPhone.
+<li>The page canvas should now show a life-size silhouette of an iPhone.
 	<p><a href="img/iphone_silhouette.png" target="_blank"><img alt="image" src="img/iphone_silhouette.png" style="margin: 1em 1em 0pt 0pt;" height="400" /></a></p>	
 	</li>
 <li>Notice the Choose Device icon
@@ -175,8 +175,8 @@
 	</li>
 <li>In order to allow easy authoring of multiple screens, 
 	the Dojox Mobile widget uses the '<code>id</code>' attribute to put a referenceable name
-	on widgets. To put a name on this View widget, go to the Properties palette.
-	Open up the "Common" section. Type "root_view" as the value for the 
+	on widgets. To put a name on this View widget, go to the top of the Properties palette.
+	Type "root_view" as the value for the 
 	'<code>id</code>' attribute and then hit Return to complete the operation.
 	The top of the Properties palette should now show <code>for: dojox.mobile.View #root_view</code>:
 	<p><a href="img/Mobile_ID_root_view.png" target="_blank"><img alt="image" src="img/Mobile_ID_root_view.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>	
@@ -223,7 +223,7 @@
 			is selected or made visible, the other View widget becomes invisible.
 			For the following steps, make sure the second View is visible.
 	</li>
-<li>With the second View widget selected, go to the Common section of the Properties palette 
+<li>With the second View widget selected, go to the top of the Properties palette 
 	and type "alerts_view" as the value for the 
 	'<code>id</code>' attribute and then hit Return to complete the operation.
 	The top of the Properties palette should now show <code>for: dojox.mobile.View #alerts_view</code>
@@ -243,7 +243,7 @@
 </p>
 
 <ul>
-<li>Select the first View so that the "My Mobile App" heading is visible on the page canvs.</li>
+<li>Select the first View so that the "My Mobile App" heading is visible on the page canvas.</li>
 <li>Drag/drop a RoundRectList widget into the middle of the View.
 	A data entry popup widget should appear, showing two lines that say "Item 1" and "Item 2".
 	Replace the data with the following three lines:
@@ -253,12 +253,7 @@ News</pre>
 	The result should look like this:
 	<p><a href="img/Mobile_Root_View_RectList.png" target="_blank"><img alt="image" src="img/Mobile_Root_View_RectList.png" style="margin: 1em 1em 0pt 0pt;" height="175" /></a></p>
 	<div class="note">
-		Note: You can edit the list of items either by
-		selecting the RoundRectList widget (probably in the Outline palette)
-		and then double-clicking on the selection chrome around the RoundRectList widget,
-		or click-selecting the individual ListItem widgets inside of the RoundRectList,
-		or adding additional ListItem widgets by dragging/dropping one or more
-		ListItem widgets from the Widgets palette and dropping onto the RoundRectList widget.
+		Note: You can edit the list of items either by double-clicking on the RoundRectList widget.
 	</div>
 	</li>
 <li>Select the first list item ("Alerts").
@@ -318,7 +313,7 @@ News</pre>
 	After hitting Return, a button labeled "Home" should appear on the left side of the Heading:
 	<p><a href="img/Mobile_MoveTo_Root_Arrow.png" target="_blank"><img alt="image" src="img/Mobile_MoveTo_Root_Arrow.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>
 	</li>
-<li>Use the Outline palette to make the first View visible so that you
+<li>Use the Outline palette to make the first View visible. Click on the View with 'id' of <code>root_view</code> so that you will now
 	see the "My Mobile App" heading on the top of the page canvas.
 	<p><a href="img/Mobile_first_view_visible.png" target="_blank"><img alt="image" src="img/Mobile_first_view_visible.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>
 	</li>

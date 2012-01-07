@@ -23,7 +23,7 @@ dojo.declare("davinci.review.drawing.shapes.Text", davinci.review.drawing.shapes
 	},
 	
 	getText: function(){
-		return this.shapeNode.innerHTML;
+		return this.shapeNode.innerHTML.replace(/"/g, "'");
 	},
 	
 	getEditMode: function(){

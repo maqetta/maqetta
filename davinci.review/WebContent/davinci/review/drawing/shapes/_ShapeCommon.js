@@ -33,7 +33,22 @@ dojo.declare("davinci.review.drawing.shapes._ShapeCommon", null, {
 	},
 	
 	style: function(style){
-		dojo.style(this.shapeNode, style);
+		//FIXME: Quick hack before Preview 4. For some reason, sometimes this.shapeNode doesn't yet
+		// have a defaultView at this point. If it doesn't, try again within a setTimeout().
+		if(this.shapeNode && this.shapeNode.ownerDocument && this.shapeNode.ownerDocument.defaultView){
+			dojo.style(this.shapeNode, style);
+		}else{
+			console.error('this.shapeNode.ownerDocument.defaultView has no value');
+			var that = this;
+			setTimeout(function(){
+				if(that.shapeNode && that.shapeNode.ownerDocument && that.shapeNode.ownerDocument.defaultView){
+					dojo.style(that.shapeNode, style);
+				}else{
+					console.error('this.shapeNode.ownerDocument.defaultView has no value after setTimeout');
+				}
+			},10);
+		}
+		
 	},
 	
 	render: function(){

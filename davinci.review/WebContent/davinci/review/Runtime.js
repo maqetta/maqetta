@@ -66,7 +66,9 @@ dojo.mixin(davinci.review.Runtime,{
 	getColor: function(/*string*/ name){
 		var index;
 		dojo.some(this.reviewers,function(item,n){
-			if(item.name==name){
+			//FIXME: Some parts of code use username as uniqueId, other parts use email
+			//Need to consolidate and pick one or the other
+			if(item.name==name || item.email==name){
 				index = n;
 				return true;
 			}

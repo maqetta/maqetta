@@ -43,6 +43,13 @@ dojo.mixin(system.resource, {
 			/* force the resource parent to update its children */
 			parent.getChildren(function(children){system.resource.onChildrenChange(parent,children);}, true);	
 		}
+		
+		if(type=='deleted'){
+			/* make sure the resource tree has 'deselected' the deleted resource */
+			var resourceTree = dijit.byId('resourceTree');
+			resourceTree.attr('selectedItem', null);
+		}
+		
 	},
 
 	/*

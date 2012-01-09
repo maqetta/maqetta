@@ -116,8 +116,6 @@ the drop-down menu on the 'border' property. Your screen should now look like th
 <div>Click on the image to enlarge it.</div>
 </div>
 </li>
-<li>Drag the gray/shaded selection border on the <b>&lt;div&gt;</b> until the <b>&lt;div&gt;</b> is approximately
-50px from both the top and left edges of the page editing canvas. </li>
 <li>In the <b>Widgets</b> palette, in the <b>HTML</b> section
 	find the <b>&lt;label&gt;</b> widget. Drag a <b>&lt;label&gt;</b> widget inside of the black-bordered <b>&lt;div&gt;</b>
 	but in the top/left area of the <b>&lt;div&gt;</b>. A data popup will appear. Enter "First name:" into the data popup:
@@ -161,8 +159,8 @@ and then click OK. The page canvas should show a <b>&lt;label&gt;</b> element wh
 </div>
 </li>
 <li>Drag a <b>Button</b> widget from the Widget palette anywhere in the bottom area of the <b>&lt;div&gt;</b>. After dropping the <b>Button</b>,
-	move it around in various ways. First, click on arrow keys (on your keyboard) and notice that the Button moves 1px in the given direction with each press on an arrow key. 
-	With the Shift key depressed, clik on the arrow keys and notice that the Button move 10px in the given direction. Now, position the mouse over the gray/shaded border
+	move it around in various ways. First, press on arrow keys (on your keyboard) and notice that the Button moves 1px in the given direction with each press on an arrow key. 
+	With the Shift key depressed, press on the arrow keys and notice that the Button moves 10px in the given direction. Now, position the mouse over the gray/shaded border
 	of the Button and drag the Button slowly around to different positions in the bottom area of the <b>&lt;div&gt;</b>. You should sometimes see
 	magenta-colored dynamic snap lines. While dragging, hold down the shift key and drag the button left, right, up and down, and you should notice that
 	the shift key constrains dragging to either horizontal or vertical movement. Lift up on the shift key and drag the Button to the horizontal middle
@@ -206,6 +204,11 @@ over the canvas and drag out a rectangular area approximately 300px by 300px. Yo
 <a href="img/SketchAddRectangle.png" target="_blank"><img alt="image" src="img/SketchAddRectangle.png" style="margin: 1em 1em 0pt 0pt; width:360px;" /></a>
 <div>Click on the image to enlarge it.</div>
 </div>
+<div class='note'>Note that the shapes widgets within the <b>Drawing Tools</b> section
+are rendered by Maqetta as SVG. Maqetta supports the ability to customize
+the fill color, stroke color and stroke width of the shapes using the 
+<b>Graphics/SVG</b> section of the Properties palette.
+</div>
 </li>
 <li>Now find the <b>Rectangle</b> widget again but this time drag the Rectangle onto the canvas such that the mouse is near
 the top-left corner of the first Rectangle, and then release the mouse button to complete the drag operation.Your screen should now look something like this:
@@ -222,7 +225,7 @@ location as the top/left corner of the first Rectangle.</li>
 to the right and slightly up until the second Rectangle's right edge aligns with the right edge of the first Rectangle, and
 also so that the second Rectangle is about 40px high. Make sure there is a magenta-colored snap line (vertical) that aligns
 with the right edge of the first Rectangle. Release the mouse to complete the resize operation. 
-over the canvas and drag out a rectangular area approximately 300px by 300px. Your screen should now look something like this:
+Your screen should now look something like this:
 <div class="image">
 <a href="img/SketchResizeRectangle.png" target="_blank"><img alt="image" src="img/SketchResizeRectangle.png" style="margin: 1em 1em 0pt 0pt; width:360px;" /></a>
 <div>Click on the image to enlarge it.</div>
@@ -260,14 +263,21 @@ Release the mouse and a large image of a map should appear, most likely too larg
 Drag the lower-right yellow selection knob of the Map widget to resize the Map so that it fits inside of the first Rectangle.
 While dragging, hold down the shift key so that the resize preserves the aspect ratio of the original Map widget.
 When the widget is the correct size, release the mouse to complete the resize operation. 
-should appear within the second Rectangle, with gray shaded selection chrome around the close icon widget.
-Put the mouse over the gray shaded selection chrome and drag the close icon widget to a position that is very close
-to the right edge of the second Rectangle and centered vertically within the second Rectangle. (You should see
-a magenta-colored snap line when the close icon is at the vertical center of the second Rectangle.
-Release the mouse to complete the drag operation. Your screen should now look something like this:
+Your screen should now look something like this:
 <div class="image">
 <a href="img/SketchResizeMap.png" target="_blank"><img alt="image" src="img/SketchResizeMap.png" style="margin: 1em 1em 0pt 0pt; width:360px;" /></a>
 <div>Click on the image to enlarge it.</div>
+</div>
+<div class='note'>Note that the clip art widgets 
+are rendered by Maqetta as SVG, and therefore the clip art widgets are "scalable vector graphics"
+that preserve graphics quality no matter how small or large.
+</div>
+<div class='note'>You can import your own clip art into Maqetta
+by simply uploading arbitrary artwork (*.png, *.jpg, *.gif and even *.svg)
+from your laptop computer's disk
+into your cloud workspace using the "Upload files" command found on the context menu (right-mouse-button)
+within the Files palette. Once uploaded, you can then drag the uploaded 
+images from the Files palette onto your page canvas.
 </div>
 </li>
 <li>From the Dojo Controls section of the <b>Widgets</b> palette, find the <b>ComboBox</b> widget. 
@@ -281,9 +291,28 @@ the mouse is inside the first Rectangle and to the right of the Map and under th
 <a href="img/SketchLoFiAddWidgets.png" target="_blank"><img alt="image" src="img/SketchLoFiAddWidgets.png" style="margin: 1em 1em 0pt 0pt; width:360px;" /></a>
 <div>Click on the image to enlarge it.</div>
 </div>
-<div class='note'>Note that the Dojo widgets have been styled using a pseudo hand-drawn CSS theme
-and that there is similar visual styling for the shapes (the rectangles in this case), the clip art and the widgets.</div>
+<div class='note'>Note that the Dojo widgets have been styled using a pseudo hand-drawn CSS theme.
+Note that the visual styling for the Dojo widgets, 
+the shapes (in this example, the two Rectangles) and the clip art is similar.
+All of the objects use black&amp;white coloring and similar stroke widths.
+</div>
 </li>
+<li>On the toolbar, click on the "Switch themes" icon: <img src="img/stylesheet.gif" style="margin:0"></img>.
+	This will bring up a dialog that allows you to switch to a different theme. Notice
+	that the current desktop theme is "Sketch". Change the current desktop theme to "claro" and click OK.
+	Your screen should now look something like this:
+<div class="image">
+<a href="img/SketchSwitchToClaro.png" target="_blank"><img alt="image" src="img/SketchSwitchToClaro.png" style="margin: 1em 1em 0pt 0pt; width:360px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+<div class='note'>Note that the Dojo widgets are now rendered using the high fidelity Claro theme
+instead of the pseudo hand-drawn look from the Sketch theme. For example, notice that the button has a blue background
+instead of having simple black&amp;white styling.
+In Maqetta, you can switch between high fidelity and low fidelity at any time 
+by clicking on the "Switch themes" icon: <img src="img/stylesheet.gif" style="margin:0"></img>.
+</div>
+</li>
+</ol>
 <br />
 <p class="prevnext"><a href="tutorials/Introducing_the_Page_Editor.html">Previous</a> / <a href="tutorials/App_States_Part_1.html">Next</a></p>
 

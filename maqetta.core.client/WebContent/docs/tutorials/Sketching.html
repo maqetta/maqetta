@@ -1,0 +1,293 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Tutorial - Quick UI Sketching</title>
+</head>
+<body class="maqettadocs">
+
+<style type="text/css">
+table.CompTypeTable {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+table.CompTypeTable td, table.CompTypeTable th {
+	padding:3px;
+	border:1px solid black;
+}
+table.CompTypeTable th {
+	font-style:italic;
+	font-weight:bold;
+	background:#888;
+}
+table td.CompTypeOption {
+	font-weight:bold;
+}
+tr.desktop {
+	background-color:#ddf;
+}
+tr.mobile {
+	background-color:#dfd;
+}
+</style>
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="tutorials/tutorials.html">Tutorials</a> 
+    </td>
+    <td class="prevnext">
+	<a href="tutorials/Introducing_the_Page_Editor.html">Previous</a> / <a href="tutorials/App_States_Part_1.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Tutorial - Quick UI Sketching</h1>
+<!--
+<ul>
+<li><a href="#newfile">Creating a new HTML page</a></li>
+<li><a href="#dojo">Add Dojo controls to the page</a></li>
+<li><a href="#button">Button widget and on-screen text editing</a></li>
+<li><a href="#html">Add HTML elements to the page</a></li>
+<li><a href="#image">Add an image to the page</a></li>
+<li><a href="#workwidgets">Working with widgets</a></li>
+<li><a href="#deletewidgets">Deleting widgets</a></li>
+<li><a href="#saveopen">Saving and opening files</a></li>
+</ul>
+-->
+
+<p>This tutorial introduces various features in Maqetta that allow for quick sketching of user interfaces.
+The sketching features are often useful in the early stages of designing a user interface when
+you want to create a visual mockup quickly and solicit early feedback from colleagues and customers.</p>
+
+<a name="pageeditor"><h2>New page composition - desktop hi-fi sketch</h2></a>
+
+<ol>
+<li><p>Initialize the Maqetta page editor in <em>desktop hi-fi sketch</em> mode following the steps below.</p>
+<div class='note'>Note that a composition type of "desktop hi-fi sketch" initializes the Maqetta page editor as follows:
+<ul>
+<li>Widgets are rendered using a high fidelity CSS theme (the Dojo Claro theme)</li>
+<li>Widgets are positioned absolutely (similar to how simple drawing tools work)</li>
+</ul>
+</div>
+</li>
+<li>Select the <b>New &gt; HTML File...</b> command from the Maqetta menubar.</li>
+<li>Click on the Composition Type drop-down menu to display its options:
+<div class="image">
+<a href="img/CompositionTypes.png" target="_blank"><img alt="image" src="img/CompositionTypes.png" style="margin: 1em 1em 0pt 0pt; width:200px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+</li>
+<li>Select "Desktop hi-fi sketch". (The second choice on the drop-down menu.)</li>
+<li>Click the <b>Create</b> button to create a new file with the default filename.</li>
+<li>A new blank HTML file is opened in the page editor, with the filename displayed at the top.
+Your workspace should now look something like this:</p>
+<div class="image">
+<a href="img/PageEditorNewFile.png" target="_blank"><img alt="image" src="img/PageEditorNewFile.png" style="margin: 1em 1em 0pt 0pt; width:500px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+</li>
+<li>In the <b>Widgets</b> palette, click on the <b>HTML</b> section to open that section.</li>
+<li>Find the <b>&lt;div&gt;</b> widget. Drag the <b>&lt;div&gt;</b> widget somewhere in the middle of the canvas.
+<div class="image">
+<a href="img/SketchAddDiv.png" target="_blank"><img alt="image" src="img/SketchAddDiv.png" style="margin: 1em 1em 0pt 0pt; width:360px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+<div class='note'> Notice that the <b>&lt;div&gt;</b> widget is placed such that its top/left corner is placed
+at the mouse location where you dropped the widget. The <b>&lt;div&gt;</b> is using <em>absolute positioning</em>
+because composition type "desktop hi-fi sketch" initializes the page editor in absolute positioning mode. </div>
+<div class='note'> Also, notice that default size of the <b>&lt;div&gt;</b> widget in absolute positioning mode
+is small (1em wide and 1em high, where an "em" unit is based on current font size.</div>
+</li>
+<li>Drag the bottom-right selection handle for the <b>&lt;div&gt;</b> widget down and to the right until
+the <b>&lt;div&gt;</b> is roughly 250px by 150px.
+<div class="image">
+<a href="img/SketchResizeDiv.png" target="_blank"><img alt="image" src="img/SketchResizeDiv.png" style="margin: 1em 1em 0pt 0pt; width:360px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+</li>
+<li>Drag the gray/shaded selection border on the <b>&lt;div&gt;</b> until the <b>&lt;div&gt;</b> is approximately
+50px from both the top and left edges of the page editing canvas. </li>
+<li>In the Properties palette, open up the Borders section, and set the 'border' property to "1px solid black" using
+the drop-down menu on the 'border' property. Your screen should now look like this:
+<div class="image">
+<a href="img/SketchDivBorder.png" target="_blank"><img alt="image" src="img/SketchDivBorder.png" style="margin: 1em 1em 0pt 0pt; width:360px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+</li>
+<li>Drag the gray/shaded selection border on the <b>&lt;div&gt;</b> until the <b>&lt;div&gt;</b> is approximately
+50px from both the top and left edges of the page editing canvas. </li>
+<li>In the <b>Widgets</b> palette, in the <b>HTML</b> section
+	find the <b>&lt;label&gt;</b> widget. Drag a <b>&lt;label&gt;</b> widget inside of the black-bordered <b>&lt;div&gt;</b>
+	but in the top/left area of the <b>&lt;div&gt;</b>. A data popup will appear. Enter "First name:" into the data popup:
+<div class="image">
+<a href="img/SketchAddLabel.png" target="_blank"><img alt="image" src="img/SketchAddLabel.png" style="margin: 1em 1em 0pt 0pt; width:360px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+and then click OK. The page canvas should show a <b>&lt;label&gt;</b> element whose text content is "First name:".
+</li>
+<li>Drag another <b>&lt;label&gt;</b> widget from the Widget palette onto the canvas, and while dragging,
+	position the mouse directly under the left edge of the "First name:" label. You should see a magenta-colored
+	dynamic snap line (vertical line) when the mouse is at the same "x" location as the left edge of the "First name:" label.
+	When the snap line appears, let up on the mouse to complete the drag/drop operation. A data popup will appear. Enter "Last name:" into the data popup
+	and then click OK. The page canvas should show a second <b>&lt;label&gt;</b> with text content "Last name:" directly under the first label.
+</li>
+<li>In the <b>Widgets</b> palette, in the <b>Dojo Controls</b> section
+	find the <b>TextBox</b> widget. Drag a TextBox widget, and while dragging,
+	position the mouse to the right of the "First name:" label such that the mouse is aligned with the vertical center of the "First name:" label.
+	You should see a magenta-colored dynamic snap line (horizontal line) coming from the vertical middle of the label. If the snap line is
+	coming from the top or bottom of the label, move your mouse a little bit up or down until you see a snap line coming from the vertical middle of the
+	label. With the snap line coming from the vertical middle of the label, release the mouse button to complete the drag/drop operation. 
+	The TextBox should be aligned with the "First name:" label such that the vertical center of the TextBox is at the same location as the 
+	vertical center of the label.
+<div class="image">
+<a href="img/SketchAddTextBox.png" target="_blank"><img alt="image" src="img/SketchAddTextBox.png" style="margin: 1em 1em 0pt 0pt; width:360px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+</li>
+<li>Drag another <b>TextBox</b> widget from the Widget palette onto the canvas, and while dragging,
+	position the mouse to the right of the "Last name:" label such that the mouse is aligned with the vertical center of the "Last name:" label.
+	You should see a magenta-colored dynamic snap line (horizontal line) coming from the vertical middle of the label. If the snap line is
+	coming from the top or bottom of the label, move your mouse a little bit up or down until you see a snap line coming from the vertical middle of the
+	label. While still dragging, mouse the mouse horizontally (left or right, depending) to that the mouse is directly under the left edge of the
+	first TextBox widget. Move the mouse small amounts left, right, top, bottom until you see two magenta-colored snap lines - 
+	a horizontal snap line from vertical center of the "Last name:" label, and a vertical snap line from the left edge of the first TextBox.
+	When you see both of the snap lines, release the mouse button to complete the drag/drop operation. The second TextBox should have snapped
+	in both x and y to the TextBox and "Last name:" label.
+<div class="image">
+<a href="img/SketchAddSecondTextBox.png" target="_blank"><img alt="image" src="img/SketchAddSecondTextBox.png" style="margin: 1em 1em 0pt 0pt; width:360px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+</li>
+<li>Drag a <b>Button</b> widget from the Widget palette anywhere in the bottom area of the <b>&lt;div&gt;</b>. After dropping the <b>Button</b>,
+	move it around in various ways. First, click on arrow keys (on your keyboard) and notice that the Button moves 1px in the given direction with each press on an arrow key. 
+	With the Shift key depressed, clik on the arrow keys and notice that the Button move 10px in the given direction. Now, position the mouse over the gray/shaded border
+	of the Button and drag the Button slowly around to different positions in the bottom area of the <b>&lt;div&gt;</b>. You should sometimes see
+	magenta-colored dynamic snap lines. While dragging, hold down the shift key and drag the button left, right, up and down, and you should notice that
+	the shift key constrains dragging to either horizontal or vertical movement. Lift up on the shift key and drag the Button to the horizontal middle
+	of the <b>&lt;div&gt;</b> until you see a vertical snap line that is coming from the horizontal center of the <b>&lt;div&gt;</b>.
+	When this snap line is visible, release the mouse button to complete the drag/drop operation. The horizontal center of the Button
+	should snap to the horizontal center of the <b>&lt;div&gt;</b> and your screen should look something like this:
+<div class="image">
+<a href="img/SketchAddButton.png" target="_blank"><img alt="image" src="img/SketchAddButton.png" style="margin: 1em 1em 0pt 0pt; width:360px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+</li>
+<li>Click on the black border of the <b>&lt;div&gt;</b> to select it. Position the mouse over the gray/shaded border
+	of the <b>&lt;div&gt;</b> and drag the <b>&lt;div&gt;</b> to the right by about 50px, then lift up the mouse, The <b>&lt;div&gt;</b>
+	and all of the widgets inside should all now be approximately 50px to the right of their previous locations.
+<div class="note">
+In sketch mode, if you move a container widget, all of the container's children will move also because children are positioned relative to their parent.
+</div>
+</li>
+</ol>
+
+<a name="pageeditor"><h2>New page composition - desktop lo-fi sketch, using widgets, clip art and shapes</h2></a>
+
+<p>In this exercise, we will sketch out a user interface in low fidelity mode, using widgets, clip art and shapes.</p>
+<ol>
+<li><p>Initialize the Maqetta page editor in <em>desktop lo-fi sketch</em> mode following the steps below.</p>
+<div class='note'>Note that a composition type of "desktop lo-fi sketch" initializes the Maqetta page editor as follows:
+<ul>
+<li>Widgets are rendered using a low fidelity CSS theme that renders widgets with a pseudo hand-drawn look&amp;feel (black&amp;white with thick strokes).</li>
+<li>Widgets are positioned absolutely (same as with <em>desktop hi-fi sketch</em> from previous exercise)</li>
+</ul>
+</div>
+</li>
+<li>Select the <b>New &gt; HTML File...</b> command from the Maqetta menubar.</li>
+<li>Set the Composition Type to "Desktop lo-fi sketch". (The fourth choice on the drop-down menu.)</li>
+<li>Click the <b>Create</b> button to create a new file with the default filename.</li>
+<li>A new blank HTML file is opened in the page editor, with the filename displayed at the top.</li>
+<li>In the <b>Widgets</b> palette, click on the <b>Drawing Tools</b> section to open that section.</li>
+<li>Find the <b>Rectangle</b> widget. Click on the Rectangle widget in the Widgets palette. Then move the mouse
+over the canvas and drag out a rectangular area approximately 300px by 300px. Your screen should now look something like this:
+<div class="image">
+<a href="img/SketchAddRectangle.png" target="_blank"><img alt="image" src="img/SketchAddRectangle.png" style="margin: 1em 1em 0pt 0pt; width:360px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+</li>
+<li>Now find the <b>Rectangle</b> widget again but this time drag the Rectangle onto the canvas such that the mouse is near
+the top-left corner of the first Rectangle, and then release the mouse button to complete the drag operation.Your screen should now look something like this:
+<div class="image">
+<a href="img/SketchAddSecondRectangle.png" target="_blank"><img alt="image" src="img/SketchAddSecondRectangle.png" style="margin: 1em 1em 0pt 0pt; width:360px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+</li>
+<li>Put the mouse over the gray shaded selection border around the second Rectangle and drag the second Rectangle until its top/left corner
+is at the same location as the top/left corner of the first Rectangle. You will probably see magenta-colored highlighting due to the automatic
+snapping feature. Release the mouse and the top/left corner of the second Rectangle should be positioned at the exact same
+location as the top/left corner of the first Rectangle.</li>
+<li>Put the mouse over the yellow grab handle at the bottom/right of the second Rectangle and drag the bottom/right corner
+to the right and slightly up until the second Rectangle's right edge aligns with the right edge of the first Rectangle, and
+also so that the second Rectangle is about 40px high. Make sure there is a magenta-colored snap line (vertical) that aligns
+with the right edge of the first Rectangle. Release the mouse to complete the resize operation. 
+over the canvas and drag out a rectangular area approximately 300px by 300px. Your screen should now look something like this:
+<div class="image">
+<a href="img/SketchResizeRectangle.png" target="_blank"><img alt="image" src="img/SketchResizeRectangle.png" style="margin: 1em 1em 0pt 0pt; width:360px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+</li>
+<li>In the <b>Widgets</b> palette, within the Drawing Tools section, drag a <b>Text</b> widget from
+the Widgets palette onto the canvas and drop the Text widget inside of the second Rectangle 
+and near the left edge of the second Rectangle. When the data popup appears, enter "Dialog Title" and click OK.
+Put the mouse over the gray shaded selection chrome surround the new Text widget and drag the Text widget to a position that is very close
+to the left edge of the second Rectangle and centered vertically within the second Rectangle. (You should see
+a magenta-colored snap line when the close icon is at the vertical center of the second Rectangle.
+Release the mouse to complete the drag operation. Your screen should now look something like this:
+<div class="image">
+<a href="img/SketchAddText.png" target="_blank"><img alt="image" src="img/SketchAddText.png" style="margin: 1em 1em 0pt 0pt; width:360px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+</li>
+<li>In the <b>Widgets</b> palette, click on the <b>Clip Art</b> section to open that section.</li>
+<li>Find the <b>Close</b> widget. Drag the Close widget from the Widgets palette onto the canvas until
+the mouse is inside the second Rectangle and near the right edge. Release the mouse and a 16x16 close box icon
+should appear within the second Rectangle, with gray shaded selection chrome around the close icon widget.
+Put the mouse over the gray shaded selection chrome and drag the close icon widget to a position that is very close
+to the right edge of the second Rectangle and centered vertically within the second Rectangle. (You should see
+a magenta-colored snap line when the close icon is at the vertical center of the second Rectangle.
+Release the mouse to complete the drag operation. Your screen should now look something like this:
+<div class="image">
+<a href="img/SketchAddCloseIcon.png" target="_blank"><img alt="image" src="img/SketchAddCloseIcon.png" style="margin: 1em 1em 0pt 0pt; width:360px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+</li>
+<li>From the Clip Art section of the <b>Widgets</b> palette, find the <b>Map</b> widget. 
+Drag the Map widget from the Widgets palette onto the canvas until
+the mouse is inside the first Rectangle and below the second Rectangle (which is the Rectangle with the title and close box).
+Release the mouse and a large image of a map should appear, most likely too large to fit in the first rectangle.
+Drag the lower-right yellow selection knob of the Map widget to resize the Map so that it fits inside of the first Rectangle.
+While dragging, hold down the shift key so that the resize preserves the aspect ratio of the original Map widget.
+When the widget is the correct size, release the mouse to complete the resize operation. 
+should appear within the second Rectangle, with gray shaded selection chrome around the close icon widget.
+Put the mouse over the gray shaded selection chrome and drag the close icon widget to a position that is very close
+to the right edge of the second Rectangle and centered vertically within the second Rectangle. (You should see
+a magenta-colored snap line when the close icon is at the vertical center of the second Rectangle.
+Release the mouse to complete the drag operation. Your screen should now look something like this:
+<div class="image">
+<a href="img/SketchResizeMap.png" target="_blank"><img alt="image" src="img/SketchResizeMap.png" style="margin: 1em 1em 0pt 0pt; width:360px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+</li>
+<li>From the Dojo Controls section of the <b>Widgets</b> palette, find the <b>ComboBox</b> widget. 
+Drag a ComboBox widget from the Widgets palette onto the canvas until
+the mouse is inside the first Rectangle and to the right of the Map. After dropping the ComboBox,
+drag the resize knob to make it small enough to fit inside the first Rectangle.</li>
+<li>From the Dojo Controls section of the <b>Widgets</b> palette, find the <b>Button</b> widget. 
+Drag a Button widget from the Widgets palette onto the canvas until
+the mouse is inside the first Rectangle and to the right of the Map and under the ComboBox. Your screen should now look something like this:
+<div class="image">
+<a href="img/SketchLoFiAddWidgets.png" target="_blank"><img alt="image" src="img/SketchLoFiAddWidgets.png" style="margin: 1em 1em 0pt 0pt; width:360px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+<div class='note'>Note that the Dojo widgets have been styled using a pseudo hand-drawn CSS theme
+and that there is similar visual styling for the shapes (the rectangles in this case), the clip art and the widgets.</div>
+</li>
+<br />
+<p class="prevnext"><a href="tutorials/Introducing_the_Page_Editor.html">Previous</a> / <a href="tutorials/App_States_Part_1.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

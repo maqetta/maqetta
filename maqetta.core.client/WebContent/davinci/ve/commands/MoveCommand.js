@@ -9,7 +9,8 @@ dojo.declare("davinci.ve.commands.MoveCommand", null, {
 	constructor: function(widget, left, top, commandForXYDeltas){
 		this._id = (widget ? widget.id : undefined);
 		this._context = widget.getContext();
-		this._newBox = {l: left, t: top};
+		
+		this._newBox = {l: left , t: top};
 		// Because snapping will shift the first widget in a hard-to-predict
 		// way, MoveCommand will store the actual shift amount on each command
 		// object upon computing the actual final shift amount and then store
@@ -79,12 +80,16 @@ dojo.declare("davinci.ve.commands.MoveCommand", null, {
 		this._deltaX = this._newBox.l - this._oldBox.l;
 		this._deltaY = this._newBox.t - this._oldBox.t;
 
-		var cleanValues = { left: this._newBox.l, top: this._newBox.t};
+		// Adjust for parent border width
+		var parentBorderLeft = parseInt(dojo.style(widget.domNode.offsetParent, 'border-left-width'));
+		var parentBorderTop = parseInt(dojo.style(widget.domNode.offsetParent, 'border-top-width'));
+		var cleanValues = { left: this._newBox.l - parentBorderLeft, top: this._newBox.t - parentBorderTop};
 		davinci.ve.states.setStyle(widget, this._state, cleanValues, undefined, isNormalState);	
 		
 		if (isNormalState) {
 			node.style.position = "absolute";
-			widget.setMarginBox( this._newBox);
+			var size = { l: cleanValues.left, t: cleanValues.top };
+			widget.setMarginBox( size);
 		}
 		
 		// Recompute styling properties in case we aren't in Normal state

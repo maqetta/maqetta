@@ -33,7 +33,7 @@ dojo.declare("davinci.review.drawing.tools.ExchangeTool", davinci.review.drawing
 				}
 			}
 			if(type == "Text"){
-				tmpStr += ",text:\"" + shape.getText() + "\"}";
+				tmpStr += ",text:\"" + escape(shape.getText()) + "\"}";
 			}else{
 				tmpStr += "}";
 			}
@@ -69,7 +69,7 @@ dojo.declare("davinci.review.drawing.tools.ExchangeTool", davinci.review.drawing
 			shape.filterAttributes = this.filterAttributes;
 			shape.render();
 			if(type == "Text"){
-				shape.setText(text);
+				shape.setText(unescape(text));
 			}
 			this.surface.shapes.push(shape);
 		}, this);

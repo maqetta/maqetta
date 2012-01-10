@@ -939,6 +939,10 @@ return declare("davinci.ve.Context", null, {
 			if(!this.getGlobal()){
 				console.warn("Context._setContent called during initialization");
 			}
+
+			// tear down old error message, if any
+			dojo.query(".loading", this.frameNode.parentNode).orphan();
+
 			// frame has already been initialized, changing content (such as changes from the source editor)
 			this._continueLoading(data, callback, this, scope);
 		}

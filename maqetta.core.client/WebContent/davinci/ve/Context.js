@@ -1072,7 +1072,12 @@ return declare("davinci.ve.Context", null, {
 			}
 		});
 
-		// Set content
+		// remove all registered widgets
+        this.getDijit().registry.forEach(function(w) {
+              w.destroy();           
+        });
+
+        // Set content
 		//  Content may contain inline scripts. We use dojox.html.set() to pull
 		// out those scripts and execute them later, after _processWidgets()
 		// has loaded any required resources (i.e. <head> scripts)

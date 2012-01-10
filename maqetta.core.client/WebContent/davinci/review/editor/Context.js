@@ -9,8 +9,7 @@ dojo.declare("davinci.review.editor.Context", null, {
 
     _contentStyleSheet: "" + dojo.moduleUrl("davinci.ve", "resources/content.css"),
     // comma-separated list of modules to load in the iframe
-    _bootstrapModules: "dijit/dijit",
-    _configProps: {},
+	_bootstrapModules: "dijit.dijit",
 
     constructor: function(args){
         this._id = "_edit_context_" + davinci.ve._contextCount++;
@@ -81,12 +80,17 @@ dojo.declare("davinci.review.editor.Context", null, {
         return this._frameNode;
     },
 
-    getContainerNode: function(){
-        return this.frame.contentDocument.body||this.frame.contentWindow.document.body||this.containerNode;
-    },
-    getSelection: function(){
-        return null;
-    },
+	getContainerNode: function(){
+		if(this.frame.contentDocument)
+			return this.frame.contentDocument.body
+		else if(this.frame.contentWindow)
+			return this.frame.contentWindow.document.body;
+		
+		return null;
+	},
+	getSelection: function(){
+		return null;
+	},
 
     _initDrawing: function(){
         // summary:
@@ -156,7 +160,7 @@ dojo.declare("davinci.review.editor.Context", null, {
                 this.containerEditor.isDirty = false;
             })),
             dojo.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, function(obj){
-                if(this === obj.oldEditor.getContext()){
+                if(obj.oldEditor!=null && this === obj.oldEditor.getContext()){
                     // Determine if the editor is closed, if the editor is closed then
                     // getDocument() will throw an exception
                     try {
@@ -173,37 +177,59 @@ dojo.declare("davinci.review.editor.Context", null, {
     _refreshSurface: function(surface){
         var shapes = surface.shapes, result;
         
-        dojo.forEach(shapes, function(shape){
-            result = "hidden";
-            if(dojo.some(surface.filterColorAliases, function(colorAlias){ return shape.colorAlias == colorAlias; })){
-                if(surface.filterComments && surface.filterComments.length > 0){
-                    if(dojo.some(surface.filterComments, function(commentId){ 
-                        return shape.commentId == commentId;
-                        })){
-                        result = "visible";
-                        surface.highlightTool && (surface.highlightTool.shape = shape);
-                    }else{
-                        result = "partial";
-                    }
-                    if(shape.state != surface.filterState){
-                        result = "hidden";
-                    }
-                }else{
-                    if(shape.state == surface.filterState){
-                        result = "visible";
-                    }else{
-                        result = "hidden";
-                    }
-                }
-            }
-            if(shape.commentId == surface.commentId){
-                // Keep the shapes in editing
-                result = "visible";
-            }
-            shape.setVisible(result);
-        });
-    },
-    
+		dojo.forEach(shapes, function(shape){
+			result = "hidden";
+			if(dojo.some(surface.filterColorAliases, function(colorAlias){
+				//FIXME: Hack to fix #1486 just before Preview 4 release
+				// Old code - quick check - covers case where server uses same string for username and email
+				if(shape.colorAlias == colorAlias){
+					return true;
+				}else if(davinci && davinci.review && davinci.review.Runtime && dojo.isArray(davinci.review.Runtime.reviewers)){
+					// New code hack - see if colorAlias matches either username or email corresponding to shape.colorAlias
+					var reviewers = davinci.review.Runtime.reviewers;
+					var found = false;
+					for(var i=0; i<reviewers.length; i++){
+						if(colorAlias == reviewers[i].name || colorAlias == reviewers[i].email){
+							found = true;
+							break;
+						}
+					}
+					if(found){
+						if(shape.colorAlias == reviewers[i].name || shape.colorAlias == reviewers[i].email){
+							return true;
+						}
+					}
+					return false;
+				}
+			})){
+				if(surface.filterComments && surface.filterComments.length > 0){
+					if(dojo.some(surface.filterComments, function(commentId){ 
+						return shape.commentId == commentId;
+						})){
+						result = "visible";
+						surface.highlightTool && (surface.highlightTool.shape = shape);
+					}else{
+						result = "partial";
+					}
+					if(shape.state != surface.filterState){
+						result = "hidden";
+					}
+				}else{
+					if(shape.state == surface.filterState){
+						result = "visible";
+					}else{
+						result = "hidden";
+					}
+				}
+			}
+			if(shape.commentId == surface.commentId){
+				// Keep the shapes in editing
+				result = "visible";
+			}
+			shape.setVisible(result);
+		});
+	},
+   
     _destroyDrawing: function(){
         try{
             var doc = this.getDocument(), surface = (doc && doc.annotationSurface);

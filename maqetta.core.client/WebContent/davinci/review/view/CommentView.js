@@ -124,11 +124,18 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 				// No need to render when the editor is opened in the background
 				this._currentPage = pageName;
 				this._destroyCommentWidgets();
-				this._updateToolbar({editor:context});
-				this._render();
 				// Show annotations
-				this._reviewFilterChanged(); // Set reviewer list to be shown
-				dojo.publish(this._currentPage+"/davinci/review/drawing/filter", ["Normal", []]);
+				//Postpone updating shapes with setTimeout. Something happened
+				//with Preview 4 code where page loading has altered timing.
+				var that = this;
+				setTimeout(function(){
+					that._render();
+					that._updateToolbar({editor:context});
+					// Show annotations
+					that._reviewFilterChanged(); // Set reviewer list to be shown
+					dojo.publish(that._currentPage+"/davinci/review/drawing/filter", ["Normal", []]);
+					
+				}, 100);
 			}
 			// Repsonse to the state change event in the review editor
 			if(global&&global.davinci&&global.davinci.states){

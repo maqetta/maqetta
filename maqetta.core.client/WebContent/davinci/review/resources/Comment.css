@@ -1,26 +1,26 @@
 .davinciReviewToolbarAdd{
-	background-image: url("img/add_comment.gif");
+	background-image: url("img/add_comment.gif") !important;
 	background-position: center center;
 	background-repeat: no-repeat;
 	height: 18px;
 	width: 18px;
 }
 .dijitButtonDisabled .davinciReviewToolbarAdd{
-	background-image: url("img/add_comment_disable.gif");
+	background-image: url("img/add_comment_disable.gif") !important;
 	background-position: center center;
 	background-repeat: no-repeat;
 	height: 18px;
 	width: 18px;
 }
-.davinciReviewToolbarReply{
-	background-image: url("img/reply.gif");
+.davinciReviewToolbarReply, .replyButtonIcon{
+	background-image: url("img/reply.gif") !important;
 	background-position: center center;
 	background-repeat: no-repeat;
 	height: 18px;
 	width: 18px;
 }
 .dijitButtonDisabled .davinciReviewToolbarReply{
-	background-image: url("img/reply_disable.gif");
+	background-image: url("img/reply_disable.gif") !important;
 	background-position: center center;
 	background-repeat: no-repeat;
 	height: 18px;
@@ -28,14 +28,14 @@
 }
 
 .davinciReviewToolbarReviewers{
-	background-image: url("img/filter_reviewers.gif");
+	background-image: url("img/filter_reviewers.gif") !important;
 	background-position: center center;
 	background-repeat: no-repeat;
 	height: 18px;
 	width: 18px;
 }
 .dijitDropDownButtonDisabled .davinciReviewToolbarReviewers{
-	background-image: url("img/filter_reviewers_disable.gif");
+	background-image: url("img/filter_reviewers_disable.gif") !important;
 	background-position: center center;
 	background-repeat: no-repeat;
 	height: 18px;
@@ -57,7 +57,7 @@
 }
 
 .editButtonIcon {
-	background-image: url("img/edit_comment.gif");
+	background-image: url("img/edit_comment.gif") !important;
 	background-position: center center;
 	background-repeat: no-repeat;
 	height: 18px;
@@ -65,7 +65,7 @@
 }
 
 .collapseViewActive {
-	background-image: url("img/collapse_active.gif");
+	background-image: url("img/collapse_active.gif") !important;
 	background-position: center center;
 	background-repeat: no-repeat;
 	height: 18px;
@@ -75,7 +75,7 @@
 	background:url("img/collapse_deactive.gif") no-repeat;
 }
 .expandViewActive {
-	background-image: url("img/expand_active.gif");
+	background-image: url("img/expand_active.gif") !important;
 	background-position: center center;
 	background-repeat: no-repeat;
 	height: 18px;
@@ -288,60 +288,60 @@
 }
 
 .reviewFileIcon {
-	background-image: url(img/review.gif);
+	background-image: url(img/review.gif) !important;
 }
 
 .disabledReviewFileIcon {
-	background-image: url(img/review_disabled.gif);
+	background-image: url(img/review_disabled.gif) !important;
 }
 
 .reviewFolder-open-disabled {
-	background-image: url(img/published_disabled.gif);
+	background-image: url(img/published_disabled.gif) !important;
 }
 
 .reviewFolder-open {
-	background-image: url(img/published.gif);
+	background-image: url(img/published.gif) !important;
 }
 
 .reviewFolder-closed-disabled{
-	background-image: url(img/published_closed_disabled.gif);
+	background-image: url(img/published_closed_disabled.gif) !important;
 }
 .reviewFolder-closed{
-	background-image: url(img/published_closed.gif);
+	background-image: url(img/published_closed.gif) !important;
 }
 
 .draft-open{
-	background-image: url(img/draft.gif);
+	background-image: url(img/draft.gif) !important;
 }
 
 .editVersionIcon{
-	background-image: url(img/edit_review.gif);
+	background-image: url(img/edit_review.gif) !important;
 }
 .dijitButtonDisabled .editVersionIcon{
-	background-image: url("img/edit_review_disabled.gif");
+	background-image: url("img/edit_review_disabled.gif") !important;
 }
 
 .closeVersionIcon{
-	background-image: url(img/close_review.gif);
+	background-image: url(img/close_review.gif) !important;
 }
 .dijitButtonDisabled .closeVersionIcon{
-	background-image: url("img/close_review_disabled.gif");
+	background-image: url("img/close_review_disabled.gif") !important;
 }
 
 .openVersionIcon{
-	background-image: url(img/open_review.gif);
+	background-image: url(img/open_review.gif) !important;
 }
 
 .dijitButtonDisabled .openVersionIcon{
-	background-image: url(img/open_review_disabled.gif);
+	background-image: url(img/open_review_disabled.gif) !important;
 }
 
 .deleteVersionIcon{
-	background-image: url(img/del_review.gif);
+	background-image: url(img/del_review.gif) !important;
 }
 
 .dijitButtonDisabled .deleteVersionIcon{
-	background-image: url(img/del_review_disabled.gif);
+	background-image: url(img/del_review_disabled.gif) !important;
 }
 
 .todo{

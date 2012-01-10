@@ -40,6 +40,8 @@ public class CreateResource extends Command {
                 OutputStream stream = newFile.getOutputStreem();
                 stream.flush();
                 stream.close();
+                stream = null;
+                System.gc();
                 responseString = "OK";
 
             }

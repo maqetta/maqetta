@@ -2143,7 +2143,11 @@ return declare("davinci.ve.Context", null, {
 			var foundSheet;
 			var rules = sheet.cssRules;
 			for (var r = 0; r < rules.length; r++){
-				if (rules[r] instanceof CSSImportRule){
+			    // NOTE: For some reason the instanceof check does not work on Safari..
+			    // So we are testing the constructor instead, but we have to test it as a string...
+			    var x = '' + rules[r].constructor;
+				if (rules[r] instanceof CSSImportRule || x === '[object CSSImportRuleConstructor]'){
+				    var n = rules[r].href;
 					if (rules[r].href == sheetName) {
 						foundSheet = rules[r].styleSheet;
 						//break;

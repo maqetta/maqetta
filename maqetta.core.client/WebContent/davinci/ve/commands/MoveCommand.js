@@ -81,8 +81,8 @@ dojo.declare("davinci.ve.commands.MoveCommand", null, {
 		this._deltaY = this._newBox.t - this._oldBox.t;
 
 		// Adjust for parent border width
-		var parentBorderLeft = parseInt(dojo.style(widget.domNode.offsetParent, 'border-left-width'));
-		var parentBorderTop = parseInt(dojo.style(widget.domNode.offsetParent, 'border-top-width'));
+        var parentBorderLeft = parseInt(dojo.style(widget.domNode.offsetParent, 'borderLeftWidth'));
+        var parentBorderTop = parseInt(dojo.style(widget.domNode.offsetParent, 'borderTopWidth'));
 		var cleanValues = { left: this._newBox.l - parentBorderLeft, top: this._newBox.t - parentBorderTop};
 		davinci.ve.states.setStyle(widget, this._state, cleanValues, undefined, isNormalState);	
 		

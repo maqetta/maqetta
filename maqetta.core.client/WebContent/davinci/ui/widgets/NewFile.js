@@ -113,21 +113,28 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		this.fileDialogDetailsArrow.title = this.treeCollapsed ? this.langObj.newFileShowFiles : this.langObj.newFileHideFiles;
 	},	
 	
-	_setValueAttr : function(value){
+	_setValueAttr: function(value){
 		/* full resource expected */
-		if(value==this._value) return;
+		if (value==this._value) {
+			return;
+		}
 		this._value = value;
-		this.fileTree.set("selectedItems", [value]);
+		var path = [];
+		for(var i=value; i.parent; i = i.parent) {
+			path.unshift(i);
+		}
+		return this.fileTree.set("path", path);
 	},
 	
-	_setNewFileNameAttr : function(name){
-		this.fileDialogFileName.set( 'value', name);
+	_setNewFileNameAttr: function(name){
+		this.fileDialogFileName.set('value', name);
 	},
 	
-	_getForcedRootAttr : function(){
+	_getForcedRootAttr: function(){
 		
-		if(this._forcedRoot)
+		if(this._forcedRoot) {
 			return this._forcedRoot;
+		}
 		
 		var base = davinci.Runtime.getProject();
 		var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);

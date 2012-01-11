@@ -15,9 +15,6 @@ public class DeleteResource extends Command {
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
         String path = req.getParameter("path");
         IVResource file = user.getResource(path);
-        
-        /* force garbage collection.  in some instances files aren't deleted on windows without doing this */
-        System.gc();
         if (file.isDirectory()) {
             deleteDir(file);
         } else {

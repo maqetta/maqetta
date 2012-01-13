@@ -16,7 +16,11 @@
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
 <<<<<<< HEAD
+<<<<<<< HEAD
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Declipse.ignoreApp=true -Dosgi.noShutdown=true  -Dorg.eclipse.equinox.http.jetty.http.port=8081 -Dmaqetta.baseDirectory=${env_var:MAQETTA_WORKSPACE} -Dmaqetta.serverDebug=true -Dmaqetta.cacheLevel=100 -Dmaqetta.localInstall=true -Dsmtp.mailServer=relay.us.ibm.com"/>
+=======
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Declipse.ignoreApp=true -Dosgi.noShutdown=true  -Dorg.eclipse.equinox.http.jetty.http.port=8081 -Dmaqetta.baseDirectory=${env_var:MAQETTA_WORKSPACE} -Dmaqetta.serverDebug=true -DloginUrl=&quot;/maqetta/welcome&quot;  -Dmaqetta.cacheLevel=100 -Dmaqetta.localInstall=true"/>
+>>>>>>> master
 =======
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Declipse.ignoreApp=true -Dosgi.noShutdown=true  -Dorg.eclipse.equinox.http.jetty.http.port=8081 -Dmaqetta.baseDirectory=${env_var:MAQETTA_WORKSPACE} -Dmaqetta.serverDebug=true -DloginUrl=&quot;/maqetta/welcome&quot;  -Dmaqetta.cacheLevel=100 -Dmaqetta.localInstall=true"/>
 >>>>>>> master

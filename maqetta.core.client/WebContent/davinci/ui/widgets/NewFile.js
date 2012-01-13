@@ -201,12 +201,7 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		}
 	},
 	
-<<<<<<< HEAD
-	_checkValid : function(){
-	
-=======
 	_checkValid: function() {
->>>>>>> master
 		// make sure the project name is OK.
 		var name = this.fileDialogFileName.get('value'),
 			valid = name && name.length > 0,

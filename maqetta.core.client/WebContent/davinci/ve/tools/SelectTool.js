@@ -379,8 +379,12 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			if(node.style.position != "absolute"){
 				return;
 			}
+			// MoveCommand treats (x,y) as positions relative to offsetParent's margin box
+			// and therefore does a subtraction adjustment to take into account border width.
+			var parentBorderLeft = parseInt(dojo.style(node.offsetParent, 'border-left-width'));
+			var parentBorderTop = parseInt(dojo.style(node.offsetParent, 'border-top-width'));
 			var box = dojo.marginBox(node);
-			var position = {x: box.l + dx, y: box.t + dy};
+			var position = {x: box.l + parentBorderLeft + dx, y: box.t + parentBorderTop + dy};
 			command.add(new davinci.ve.commands.MoveCommand(w, position.x, position.y));
 		}, this);
 		if(!command.isEmpty()){

@@ -39,7 +39,11 @@
 <ul style="margin-top: 0pt;" type="disc">
 	<li><p><span class='majortopic'>Mobile theme editor</span> -  
 		The Preview 4 release includes a mobile theme editor feature that
-		allows users to create custom CSS themes. The mobile theme editor allows:</p>
+		allows users to create custom CSS themes.</p>
+		<p>The documentation includes
+		a new <em>mobile theme editor tutorial</em>. You can find the list of tutorials by 
+		invoking the <strong>Help &gt; Tutorials</strong> command from the main menubar.</p>
+		<p>The mobile theme editor allows:</p>
 		<ul>
 			<li><span class='minortopic'>Page-level styling</span> -
 				At the top of the mobile theme editor, there is a "page backgrounds and fonts" section
@@ -99,7 +103,7 @@
 				Preview 4 includes intelligence within the mobile visual page editor for the
 				'fixed' property on the ScrollableView container widget. The 'fixed' property
 				(available on Headings and TabBars)
-				can be set to 'top' (provides a fixed heading on the page or screen) or 'bottom'
+				can be set to 'top' (provides a fixed header on the page or screen) or 'bottom'
 				(provides a fixed footer on the page or screen). Both at authoring time and at runtime
 				in the browser, any fixed Headings or TabBars will stay glued to the top or bottom
 				of the current page view as the rest of the page scrolls.</li>
@@ -109,7 +113,7 @@
 				text strings or arbitrary rich HTML content. This new flexibility allows
 				ListItem content to contain multi-line text, styled text (e.g., bold, italic)
 				and &lt;img&gt; elements (e.g., to reference a small icon image or even SVG vector graphics).
-				To include arbitrary HTML content within a ListItem, simply type markup (e.g., &lt;i&gt;italic text&lt;/i&gt;)into the 
+				To include arbitrary HTML content within a ListItem, simply type markup (e.g., &lt;i&gt;italic text&lt;/i&gt;) into the 
 				data entry popup that appears when double-clicking on a mobile list widget.
 				This will cause 2 radio buttons to appear where you can tell Maqetta whether
 				to treat the content as plain text or rich HTML markup.</li>
@@ -128,14 +132,15 @@
 		The Preview 4 release includes major enhancements and countless minor bug fixes in the general area
 		of "quick UI sketching" where users can place widgets, raster graphics and vector graphics
 		onto the page canvas at absolute positions, similar to how simple drawing and illustration software works. 
-		This mode allows users to quickly sketch out UI proposals
-		without having to go up learning curves or battle through the layout complexities when sketching
-		out the UI of a production application. </p>
-		<p>In this mode, Maqetta provides similar drawing tool
+		This mode allows users to quickly sketch out UI proposals, avoiding some of the layout complexities with CSS flow layout. </p>
+		<p>In this mode, Maqetta provides simple drawing tool
 		functionality. Sketching can be done either using a <span class='minortopic'>high fidelity</span> CSS theme ("high fidelity" means
 		the exact same visual styling that you would have in your final production application) or
 		a <span class='minortopic'>low fidelity</span> CSS theme ("low fidelity" means the widgets are rendered with a pseudo hand-drawn
 		look and feel in black and white).</p>
+		<p>The documentation includes
+		a new <em>quick UI sketching tutorial</em>. You can find the list of tutorials by 
+		invoking the <strong>Help &gt; Tutorials</strong> command from the main menubar.</p>
 		<p>Among the highlights in this area:</p>
 		<ul>
 			<li><span class='minortopic'>Ability to go into sketch mode at page creation time</span> -
@@ -182,7 +187,7 @@
 				using absolute positioning (which is what you get when opening a New HTML File
 				with either Desktop hi-fi sketch of Desktop lo-fi sketch).
 				Previously, these widgets would default to 100% for both flow and absolute layout.
-				Now, these widgets default to 100% for flow and roughly 300px for absolute.</li>
+				Now, these widgets default to 100% only in particular flow layout scenarois and default to (roughly) 300px for absolute layouts.</li>
 			<li><span class='minortopic'>Drag out widget size at widget creation time</span> -
 				Preview 4 now allows you to click a widget in the Widgets palette
 				and then drag out a rectangle on the canvas for the initial size and position (when using absolute layout)
@@ -227,7 +232,7 @@
 				<ul>
 					<li><span class='minortopic'>Desktop hi-fi page</span> -
 						This is when you are defining the detailed UI for a desktop web application
-						and/or quick sketching of a piece of user interface (e.g., a dialog).
+						and/or detailed UI for a piece of user interface (e.g., a dialog).
 						The new HTML page will be for desktop browsers (i.e., no mobile device silhouette),
 						using a high-fidelity CSS theme suitable for final product delivery such as claro,
 						and will open using flow layout.
@@ -244,7 +249,7 @@
 					<li><span class='minortopic'>Desktop lo-fi page</span> -
 						Same as "Desktop hi-fi page" except the page will be initialized using
 						the "sketch" theme which provides a pseudo hand-drawn look and feel where
-						most widgets are rendering in black-and-white with thick strokes on the widget outlines.
+						most widgets are rendered in black-and-white with thick strokes on the widget outlines.
 						Low fidelity mode is sometimes useful in early wireframing scenarios.</li>
 					<li><span class='minortopic'>Desktop lo-fi sketch</span> -
 						Same as "Desktop hi-fi sketch" (i.e., suitable for quick UI sketching) 

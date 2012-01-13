@@ -7,6 +7,7 @@
         }
     },
     "widgets": [
+<<<<<<< HEAD
 	    {
 	        "name": "Text",
 	        "type": "shapes.Text",
@@ -106,5 +107,109 @@
 	        },
 	        "helper": "davinci.libraries.shapes.shapes.RectangleHelper"
 	    }
+=======
+        {
+            "name": "Text",
+            "type": "shapes.Text",
+            "category": "shapes",
+            "icon": "resources/images/text.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAJEAANXV1h8fH////wAAACH5BAEAAAIALAAAAAAQABAAAAIplI+pq+EPHXKgUhsmONSAfGxcIAplQzJJp46nyrZC3NILVr1TpMv+UgAAOw==",
+            "inlineEdit": {
+                "property": "content",
+                "displayOnCreate": true
+            },
+            "properties": {
+                "style": "font-size:14px"
+            },
+            "resizable": "none",
+            "helper": "davinci.libraries.shapes.shapes.TextHelper"
+        },
+        {
+            "name": "Horizontal Line",
+            "type": "shapes.Line",
+            "category": "shapes",
+            "icon": "resources/images/horizontalLine.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAJiYmJSUlJGRkYyMjIiIiIODg0lJSUZGRkFBQTw8PDc3NzIyMisrK////wAAAAAAACH5BAEAAA0ALAAAAAAQABAAAAQfsMlJq7046827x8aBJEppmgvTAIEwEHAsF19t33h+RQA7",
+            "enablePointerEvents": true,
+            "resizable": "none",
+            "helper": "davinci.libraries.shapes.shapes.LineHelper"
+        },
+        {
+            "name": "Vertical Line",
+            "type": "shapes.Line",
+            "category": "shapes",
+            "icon": "resources/images/verticalLine.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAJiYmJSUlJGRkYyMjIiIiIODg0lJSUZGRkFBQTw8PDc3NzIyMisrK////wAAAAAAACH5BAEAAA0ALAAAAAAQABAAAAQosMnZgKEYh5N7E4iXDYmIEYpJoerEts3byipt2iLu6R2xwI0CAyiKAAA7",
+            "enablePointerEvents": true,
+            "resizable": "none",
+            "properties": {
+                "points": "0,100,0,0"
+            },
+            "helper": "davinci.libraries.shapes.shapes.LineHelper"
+        },
+        {
+            "name": "Line",
+            "type": "shapes.Line",
+            "category": "shapes",
+            "icon": "resources/images/line.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAJiYmJSUlJGRkYyMjIiIiIODg0lJSUZGRkFBQTw8PDc3NzIyMisrK////wAAAAAAACH5BAEAAA0ALAAAAAAQABAAAAQfsMlJq7046827x8aBJEppmgvTAIEwEHAsF19t33h+RQA7",
+            "enablePointerEvents": true,
+            "resizable": "none",
+            "properties": {
+                "points": "0,100,100,0"
+            },
+            "helper": "davinci.libraries.shapes.shapes.LineHelper"
+        },
+        {
+            "name": "Arrow",
+            "type": "shapes.Line",
+            "category": "shapes",
+            "icon": "resources/images/arrow.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAAL+/v5aWlmNjYzMzMxwcHBYWFv///wAAACH5BAEAAAYALAAAAAAQABAAAAMgaLrc/jBKFsBcg9g7iuaFZwlhaZrD1Ikqq35Xdc10PScAOw==",
+            "enablePointerEvents": true,
+            "resizable": "none",
+            "properties": {
+                "points": "0,100,100,0",
+                "endarrow": "forward"
+            },
+            "helper": "davinci.libraries.shapes.shapes.LineHelper"
+        },
+        {
+            "name": "Circle",
+            "type": "shapes.Circle",
+            "category": "shapes",
+            "icon": "resources/images/circle.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAANXT1vj4+eLi49ra29nZ2tbW19XV1tTU1dDQ0c3NzpCQkf////7+/u/v7+zs7OPj49HR0c/Pz87Ozs3NzczMzKOjo6GhoZ6enp2dnZycnJubm4+Pj4aGhoWFhYGBgX5+fnR0dGlpaVdXV1VVVVNTU1FRUU5OTkxMTDY2NjMzMzIyMi8vLyoqKiYmJiMjI////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAAAQABAAAAaXwJfwFfmcVq7V6RMZDi+mTYJQIEg2povzEqIIGgFGoCGghLRE08SxaLsXjomp6VEI3niBwvMyQRp4bw0IJi8qAwGBbgEDKi8tBQyKbQwFLS8piJMLjCkvJQaAkw0GJS8dGg+bDxodRCMHbIEOByNNLxYgBw9gYg0PByAVThUiGAYDAAMGGSPDTi8QHCQoLCgkHBDQ29wvQQA7",
+            "enablePointerEvents": true,
+            "resizable": "none",
+            "resizableOnCreate": "both",
+            "helper": "davinci.libraries.shapes.shapes.CircleHelper"
+        },
+        {
+            "name": "Rectangle",
+            "type": "shapes.Rectangle",
+            "category": "shapes",
+            "icon": "resources/images/rectangle.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAANXV1v///0lJSUZGRkJCQkFBQTw8PDg4ODc3NzQ0NDExMS4uLiwsLCoqKv///wAAACH5BAEAAA4ALAAAAAAQABAAAARE0MlJq71V6M25FEAojqEgDUCgriwwSEXKzgAhGfK8AoZ05LoAACFJAHWAhERxpCkki2ZrIWGQrgCGpMHter2YsHg8jgAAOw==",
+            "enablePointerEvents": true,
+            "resizable": "none",
+            "resizableOnCreate": "both",
+            "helper": "davinci.libraries.shapes.shapes.RectangleHelper"
+        },
+        {
+            "name": "RoundedRectangle",
+            "type": "shapes.Rectangle",
+            "category": "shapes",
+            "icon": "resources/images/roundedRectangle.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAANXV1v///8jIyJGRkWdnZ1BQUElJSURERDw8PDQ0NCoqKv///wAAAAAAAAAAAAAAACH5BAEAAAsALAAAAAAQABAAAARHcMlJq72XmM05oYYAjCQpGBIhBmzbAsJ3AG7NAseC0LYLIDpe7wbcDV/AhHAISCwKg2UNMChIFNFSaaCgFBTgcNiKKZvP5wgAOw==",
+            "enablePointerEvents": true,
+            "resizable": "none",
+            "resizableOnCreate": "both",
+            "properties": {
+                "cornerRadius": "10"
+            },
+            "helper": "davinci.libraries.shapes.shapes.RectangleHelper"
+        }
+>>>>>>> master
     ]
 }

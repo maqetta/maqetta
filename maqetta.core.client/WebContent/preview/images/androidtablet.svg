@@ -19,10 +19,10 @@
 <path fill="none" stroke="#8A8C8E" stroke-width="4.062" stroke-miterlimit="10" d="M75.329,781.705
 	c-24.528,0-44.482-19.264-44.482-42.943V129.124c0-23.679,19.954-42.943,44.482-42.943h375.17c24.527,0,44.482,19.265,44.482,42.943
 	v609.638c0,23.68-19.955,42.943-44.482,42.943H75.329z"/>
-<rect id="ScreenRect" x="90.099" y="136.281" fill="#FFFFFF" width="347.728" height="593.456"/>
+<rect id="ScreenRect" x="90.099" y="136.281" display="none" fill="#FFFFFF" width="347.728" height="593.456"/>
 <path fill="none" stroke="#000000" stroke-width="1.0151" stroke-miterlimit="10" d="M499.718,738.762
 	c0,26.451-22.191,47.894-49.567,47.894H75.299c-27.375,0-49.567-21.442-49.567-47.894V129.124c0-26.451,22.192-47.893,49.567-47.893
 	H450.15c27.376,0,49.567,21.442,49.567,47.893V738.762z"/>
 <rect id="DeviceRect" x="24.826" y="80.306" display="none" fill="none" stroke="#000000" stroke-miterlimit="10" width="475.654" height="706.11"/>
-<rect id="ResolutionRect" x="293.495" y="300.051" width="800" height="1280" fill="none"/>
+<rect id="ResolutionRect" x="293.495" y="300.051" display="none" width="800" height="1280" fill="none"/>
 </svg>

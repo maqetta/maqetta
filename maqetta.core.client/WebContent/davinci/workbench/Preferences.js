@@ -14,6 +14,7 @@ dojo.mixin(davinci.workbench.Preferences, {
 			url: "./cmd/setPreferences?id="+id + "&base=" + escape(base),
 			putData: dojo.toJson(preferences),
 			handleAs:"json",
+			sync:true,
 			contentType:"text/html"
 		});	
 		

@@ -178,7 +178,9 @@ public class Publish extends Command {
 
 	private String getUrl(IUser user, String version, String requestUrl, String reviewer) {
 		String host = requestUrl.substring(0, requestUrl.indexOf('/', "http://".length()));
-		String prefix =  System.getProperty("org.eclipse.equinox.http.jetty.context.path");
+		//String prefix =  System.getProperty("org.eclipse.equinox.http.jetty.context.path");
+		String prefix =  "/maqetta";
+		
 		if(prefix != null){
 			return host + prefix + "/review/" + user.getUserName() + "?revieweeuser=" + user.getUserName();
 		} else {

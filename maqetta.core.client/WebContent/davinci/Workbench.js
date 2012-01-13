@@ -1560,11 +1560,11 @@ dojo.mixin(davinci.Workbench, {
 	_updateWorkbenchState: function()
 	{
 		dojo.xhrPut({
-			url: "cmd/setWorkbenchState",
+			url: "./cmd/setWorkbenchState",
 			putData: dojo.toJson(this._state),
-			handleAs:"json",
-			contentType:"text/html"
-		});	
+			handleAs:"text",
+			sync:true
+		});
 	},
 
 	_autoSave: function(){

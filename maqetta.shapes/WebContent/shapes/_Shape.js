@@ -40,6 +40,14 @@ define([
 		startup: function(){
 			this.resize();
 			this._bboxStartup = this._bbox;
+			var that = this;
+			//FIXME: setTimeout hack to address possible timing problem
+			//with loading of the shapes.css file, which might not be available
+			//for the first shapes widget added to a document.
+			setTimeout(function(){
+				that.resize();
+				that._bboxStartup = that._bbox;
+			}, 1000);
 		},
 
 		resize: function(){

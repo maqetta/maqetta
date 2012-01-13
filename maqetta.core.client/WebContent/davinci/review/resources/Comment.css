@@ -48,13 +48,6 @@
 	margin:0 5px 0 0;
 	float: left;
 }
-.replyButtonIcon {
-	background-image: url("img/reply.gif");
-	background-position: center center;
-	background-repeat: no-repeat;
-	height: 18px;
-	width: 18px;
-}
 
 .editButtonIcon {
 	background-image: url("img/edit_comment.gif") !important;

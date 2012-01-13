@@ -19,7 +19,6 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 	treeCollapsed:true,
 
 	fileDialogFileName : null,
-	fileDialogParentFolder: null,
 	fileTree : null,
 	__okButton : null,
 	dialogSpecificClass : null,
@@ -37,7 +36,6 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 	postCreate : function(){
 		this.inherited(arguments);
 		dojo.connect(this.fileDialogFileName, "onkeyup", this, '_checkValid');
-		//dojo.connect(this.fileDialogParentFolder, "onkeyup", this, '_checkValid');
 		this.fileTree.watch("selectedItem", dojo.hitch(this, this._updateFields));
 		
 		/* set initial value */
@@ -59,11 +57,14 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		
 		var connectHandle = dojo.connect(this._fileDialog, "onkeypress", this, function(e){
 			if(e.charOrCode===dojo.keys.ENTER){
-				if(this._checkValid()){
-					dojo.disconnect(connectHandle);
-					dojo.stopEvent(e);
-					this._okButton();
-				}
+				// XXX HACK This is to circumvent the problem where the Enter key
+				//   isn't handled.  Normally, the Dijit Dialog handles that for
+				//   us, but our dialog classes are messed up right now.  Hence
+				//   this.
+				var evt = document.createEvent("MouseEvents");
+				evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false,
+						false, 0, null);
+				this.__okButton._onClick(evt);
 			}
 		
 		});
@@ -112,21 +113,28 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		this.fileDialogDetailsArrow.title = this.treeCollapsed ? this.langObj.newFileShowFiles : this.langObj.newFileHideFiles;
 	},	
 	
-	_setValueAttr : function(value){
+	_setValueAttr: function(value){
 		/* full resource expected */
-		if(value==this._value) return;
+		if (value==this._value) {
+			return;
+		}
 		this._value = value;
-		this.fileTree.set("selectedItems", [value]);
+		var path = [];
+		for(var i=value; i.parent; i = i.parent) {
+			path.unshift(i);
+		}
+		return this.fileTree.set("path", path);
 	},
 	
-	_setNewFileNameAttr : function(name){
-		this.fileDialogFileName.set( 'value', name);
+	_setNewFileNameAttr: function(name){
+		this.fileDialogFileName.set('value', name);
 	},
 	
-	_getForcedRootAttr : function(){
+	_getForcedRootAttr: function(){
 		
-		if(this._forcedRoot)
+		if(this._forcedRoot) {
 			return this._forcedRoot;
+		}
 		
 		var base = davinci.Runtime.getProject();
 		var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
@@ -193,23 +201,29 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 		}
 	},
 	
+<<<<<<< HEAD
 	_checkValid : function(){
 	
+=======
+	_checkValid: function() {
+>>>>>>> master
 		// make sure the project name is OK.
-		var name = dojo.attr(this.fileDialogFileName, "value");
-		var valid = name!=null && name.length > 0;
-		var parent = system.resource.findResource(this._whereMenu.attr('value'));
-		if(parent!=null){
+		var name = this.fileDialogFileName.get('value'),
+			valid = name && name.length > 0,
+			folderName = this._whereMenu.attr('value'),
+			parent = system.resource.findResource(davinci.Runtime.getProject() + 
+					(folderName ? '/' + folderName : '')),
+			resource;
+		if (parent) {
 			valid = valid && !parent.readOnly();
 		}
 		
-		var resource = system.resource.findResource( davinci.Runtime.getProject() + "/" + this.fileDialogParentFolder.get('value') + "/" + this.fileDialogFileName.get( 'value'));
-	
-		if(resource!=null){
+		resource = parent.getChild(name);
+		if (resource) {
 			valid = valid && !resource.readOnly();
 		}
 		
-		this.__okButton.set( 'disabled', !valid);
+		this.__okButton.set('disabled', !valid);
 		return valid;
 	},
 	

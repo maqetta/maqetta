@@ -22,8 +22,8 @@ if(!davinci.html.css.shorthand){
 	/* priority ordering of shorthand properties.  0 at start of attribute ... n at bottom */
 	
 	davinci.html.css.shorthand = [['border', 'background', 'padding', 'margin','border-radius', '-moz-border-radius'],
-	                              ['border-top', 'border-right', 'border-left', 'border-bottom','background-top', 'background-right', 'background-left', 'background-bottom'],
-	                              ['border-color', 'border-width', 'border-height', 'border-style', 'background-color', 'background-width', 'background-height', 'background-style','border-top-left-radius','border-top-right-radius','border-bottom-right-radius','border-bottom-left-radius','-moz-border-radius-topleft','-moz-border-radius-topright','-moz-border-radius-bottomright','-moz-border-radius-bottomleft']];
+	                              ['border-top', 'border-right', 'border-left', 'border-bottom'],
+	                              ['border-color', 'border-width', 'border-style']];
 }
 
 var c=new davinci.html.dd();

@@ -21,6 +21,7 @@ dojo.declare("davinci.ui.OpenThemeDialog",   [dijit._Widget, dijit._Templated], 
 			setTimeout(dojo.hitch(this,function(){
 					 				
 								    this.destroyRecursive();
+								    this.cancel = true;
 									this.onClose();}, 500));
 			
 			
@@ -47,7 +48,6 @@ dojo.declare("davinci.ui.OpenThemeDialog",   [dijit._Widget, dijit._Templated], 
 		this._okButton.set( 'disabled', !isOk);
 	},
 	
-	onClose : function(){},
 	
 	okButton : function(){
 		var newTheme = this._themeChooser.attr('value');

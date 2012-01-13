@@ -15,6 +15,7 @@ public class RemoveWorkingCopy extends Command {
         String path = req.getParameter("path");
         IVResource file = user.getResource(path);
         if (file != null) {
+        	/* have to force garbage collection, or on windows the resource is never deleted */
             file.removeWorkingCopy();
         }
     }

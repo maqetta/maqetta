@@ -158,12 +158,12 @@ davinci.theme.dojoMobileCustom =  [{"theme":"custom","device":"Android"},{"theme
 davinci.theme.none_themeset = {
         "name": davinci.theme.none_themeset_name,
         "desktopTheme": "claro",
-        "mobileTheme": davinci.theme.dojoMobileDefault
+        "mobileTheme": dojo.clone(davinci.theme.dojoMobileDefault) 
         };
 davinci.theme.default_themeset = {
         "name": davinci.theme.desktop_default,
         "desktopTheme": "claro",
-        "mobileTheme": davinci.theme.dojoMobileDefault
+        "mobileTheme": dojo.clone(davinci.theme.dojoMobileDefault) 
         };
 davinci.theme.custom_themeset = {
         "name": davinci.theme.mobile_default,

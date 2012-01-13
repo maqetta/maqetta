@@ -114,14 +114,7 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 	},
 
 	getOldValues : function (rules, values){
-		function oldValuesIncludesProp(propName){
-			for(k=0;k<oldValues.length;k++){
-				if(oldValues[k][propName]){
-					return true;
-				}
-			}
-			return false;
-		}
+
 		function oldValuesAddIfNewValue(propName, propValue){
 			for(k=0;k<oldValues.length;k++){
 				if(oldValues[k][propName] === propValue){
@@ -129,13 +122,13 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 				}
 			}
 			var o = {};
-			o[a] = x.value;
+			o[a] = propValue; // x.value;
 			oldValues.push(o);
 		}
 		var oldValues = new Array();
 		for (var r = 0; r < rules.length; r++){
 			var rule = rules[r];
-			var rebasedValues; // = dojo.clone(values);
+			var rebasedValues; 
             if (values.length < 1) {
                 rebasedValues = [];
                 rebasedValues[0] = dojo.clone(values);;
@@ -147,18 +140,16 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 			for(var i=0;i<rebasedValues.length;i++){
 				for(var a in rebasedValues[i]){
 					var propDeclarations = rule.getProperties(a);
-					if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget) && propDeclarations.length > 0){
-						for(var p=0; p<propDeclarations.length; p++){
-							var x = propDeclarations[p];
-							var oldValueAlready = oldValuesIncludesProp(a);
-							if (x && !oldValueAlready){ // set by another rule
-//FIXME: for undo purposes, don't we need to store away the CSSRule that needs to be updated?
-								oldValuesAddIfNewValue(a, x.value);
-							}else if (!oldValueAlready){ // set by another rule
-//FIXME: Does this actually remove an existing property?
-								oldValuesAddIfNewValue(a, undefined);
-							}
-						}
+					if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget) /*&& propDeclarations.length > 0*/){
+					    if (propDeclarations.length > 0) {
+    						for(var p=0; p<propDeclarations.length; p++){
+    							var x = propDeclarations[p];
+   								oldValuesAddIfNewValue(a, x.value);
+      						}
+					    }else{
+					        // this actually remove an existing property?
+                            oldValuesAddIfNewValue(a, "");  
+					    }
 					}
 				}
 			}
@@ -189,17 +180,17 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 			for(var i=0;i<rebasedValues.length;i++){
 				for(var a in rebasedValues[i]){
 					var propDeclarations = rule.getProperties(a);
-					if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget) && rebasedValues[i][a]){
+					if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget) /*&& rebasedValues[i][a]*/){
 						if(!propertiesAlreadyProcessed[a]){
 							var context = this.visualEditor.context;
 							// Process all property declarations for given property
 							var allPropValues = [];
 							for(var i2=0;i2<rebasedValues.length;i2++){
-								if(rebasedValues[i2][a]){
+								//if(rebasedValues[i2][a]){
 									var o = {};
 									o[a] = rebasedValues[i2][a];
 									allPropValues.push(o)
-								}
+								//}   
 							}
 							context.modifyRule(rule, allPropValues);
 							this._markDirty(file.url);

@@ -7,18 +7,19 @@
 @import "app.css";
 @import "lib/dojo/dojo/resources/dojo.css";
 </style>
-<script type="text/javascript" src="lib/dojo/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+<script type="text/javascript" src="maqetta/maqetta.js"></script>
+<script type="text/javascript" data-dojo-config="'async':true,'parseOnLoad':true,'packages':[{'name':'clipart','location':'../../clipart'},{'name':'shapes','location':'../../shapes'}]" src="lib/dojo/dojo/dojo.js"></script>
+<script type="text/javascript" src="maqetta/States.js"></script>
 <script type="text/javascript">
-dojo.require('dijit.layout.ContentPane');
-dojo.require('dijit.form.TextBox');
-dojo.require('dijit.form.Button');
-dojo.require('dijit.layout.TabContainer');
-dojo.require('dijit.Calendar');</script>
-<script src="maqetta/States.js"></script>
-<script src="maqetta/maqetta.js"></script>
+require(['dijit/layout/ContentPane']);
+require(['dijit/form/TextBox']);
+require(['dijit/form/Button']);
+require(['dijit/layout/TabContainer']);
+require(['dijit/Calendar']);
+</script>
 </head>
 <body class="claro" data-davinci-ws="collapse" id="myapp" dvFlowLayout="false" dvStates="{'Home':{'origin':true}}">
- <img src="./SampleBanner.jpg" style="left: 17px; top: 18px; position: absolute;"></img>
+ <img src="SampleBanner.jpg" style="left: 17px; top: 18px; position: absolute;"></img>
  <div dojoType="dijit.layout.ContentPane" title="Pane" doLayout="false" style="left: 26px; top: 108px; position: absolute; width: 255px; height: 136px; display: block;" dvStates="{'Home':{'style':{'display':'none'}}}">
 <label style="top: 32px; left: 25px; position: absolute;">
     Login:</label>

@@ -123,6 +123,7 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 				// Only need rendering when it is the current editor
 				// No need to render when the editor is opened in the background
 				this._currentPage = pageName;
+<<<<<<< HEAD:maqetta.core.client/WebContent/davinci/review/view/CommentView.js
 				this._destroyCommentWidgets();
 				// Show annotations
 				//Postpone updating shapes with setTimeout. Something happened
@@ -135,6 +136,20 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 					that._reviewFilterChanged(); // Set reviewer list to be shown
 					dojo.publish(that._currentPage+"/davinci/review/drawing/filter", ["Normal", []]);
 					
+=======
+				this._destroyCommentWidgets();
+				//FIXME: Hack
+				//Postpone updating shapes with setTimeout. Something happened
+				//with Preview 4 code where page loading has altered timing.
+				var that = this;
+				setTimeout(function(){
+					that._render();
+					that._updateToolbar({editor:context});
+					// Show annotations
+					that._reviewFilterChanged(); // Set reviewer list to be shown
+					dojo.publish(that._currentPage+"/davinci/review/drawing/filter", ["Normal", []]);
+					
+>>>>>>> master:davinci.review/WebContent/davinci/review/view/CommentView.js
 				}, 100);
 			}
 			// Repsonse to the state change event in the review editor

@@ -57,10 +57,16 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 			this._userLibs[i].initRoot = this._getLibRoot(this._userLibs[i]['id'],this._userLibs[i]['version']);
 			var name = this._userLibs[i]['id']; // may want to use a better name here eventually
 			
+			if(this._userLibs[i].initRoot==null) continue;
+			
+			
 			uiArray.push("<tr>");
 			uiArray.push("<td class='columna'>" + name + "</td>");
 			uiArray.push("<td class='columnb'>" + this._userLibs[i]['version'] + "</td>");
 			uiArray.push("<td class='columnc'><input type='checkbox' libItemCheck='"+ i +"' checked></input></td>");
+			
+			
+			
 			uiArray.push("<td class='columnd'><input type='text' value='" + this._userLibs[i].initRoot + "' libItemPath='"+i+ "'></input></td>");
 			
 			uiArray.push("</tr>");
@@ -110,11 +116,12 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 		var folder = system.resource.findResource(project);
 		
 		/* get all sub files */
+	
 		var list = [];
 		for(var i = 0;i<folder.children.length;i++){
 			list.push(folder.children[i].getPath());
 		}
-		return {'userFiles':list, 'userLibs': this._getLibs()};
+		return {'userFiles':[project], 'userLibs': this._getLibs()};
 	},
 	
 	_rewriteUrls : function(){

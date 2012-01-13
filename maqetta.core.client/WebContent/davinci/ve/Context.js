@@ -733,6 +733,20 @@ return declare("davinci.ve.Context", null, {
     			cmd._dojoxMobileAddTheme(this, newHtmlParams.themeSet.mobileTheme, true); // new file
 			}
 		}
+		
+		// Remove any SCRIPT elements from model that include dojo.require() syntax
+		// With Preview 4, user files must use AMD loader
+		var scriptTags=source.find({elementType:'HTMLElement', tag:'script'}); 
+		for (var i=0; i<scriptTags.length; i++){
+			var scriptTag = scriptTags[i];
+			for (var j=0; j<scriptTag.children.length; j++){
+				var text = scriptTag.children[j].getText();
+				if(text.indexOf('dojo.require')>=0){
+					scriptTag.parent.removeChild(scriptTag);
+					break;
+				}
+			}
+		}
 
 		var data = this._parse(source);
 		if(!this.frameNode){
@@ -925,6 +939,10 @@ return declare("davinci.ve.Context", null, {
 			if(!this.getGlobal()){
 				console.warn("Context._setContent called during initialization");
 			}
+
+			// tear down old error message, if any
+			dojo.query(".loading", this.frameNode.parentNode).orphan();
+
 			// frame has already been initialized, changing content (such as changes from the source editor)
 			this._continueLoading(data, callback, this, scope);
 		}
@@ -1058,7 +1076,12 @@ return declare("davinci.ve.Context", null, {
 			}
 		});
 
-		// Set content
+		// remove all registered widgets
+        this.getDijit().registry.forEach(function(w) {
+              w.destroy();           
+        });
+
+        // Set content
 		//  Content may contain inline scripts. We use dojox.html.set() to pull
 		// out those scripts and execute them later, after _processWidgets()
 		// has loaded any required resources (i.e. <head> scripts)
@@ -2124,7 +2147,11 @@ return declare("davinci.ve.Context", null, {
 			var foundSheet;
 			var rules = sheet.cssRules;
 			for (var r = 0; r < rules.length; r++){
-				if (rules[r] instanceof CSSImportRule){
+			    // NOTE: For some reason the instanceof check does not work on Safari..
+			    // So we are testing the constructor instead, but we have to test it as a string...
+			    var x = '' + rules[r].constructor;
+				if (rules[r] instanceof CSSImportRule || x === '[object CSSImportRuleConstructor]'){
+				    var n = rules[r].href;
 					if (rules[r].href == sheetName) {
 						foundSheet = rules[r].styleSheet;
 						//break;
@@ -2170,7 +2197,7 @@ return declare("davinci.ve.Context", null, {
 					var element = cleaned[index];
 					cleaned.splice(index,1);
 					cleaned.splice(lastSplice,0, element);
-					lastSplice = index+1;
+					lastSplice++;
 
 					var prop = rule.getProperty(shorthands[j][i]);
     				if(prop){

@@ -95,6 +95,10 @@ dojo.mixin(davinci.Runtime,	{
 	},
 	
 	
+	singleUserMode : function(){
+		return davinci.Runtime.isLocalInstall;
+	},
+
 	/*
 	 * If in single user mode, returns the current active project.
 	 * 
@@ -332,7 +336,12 @@ dojo.mixin(davinci.Runtime,	{
 	
 	
 	handleError: function(error) {
-		window.document.body.innerHTML = "<div><h1>Problem connecting to the Maqetta Server...</h1></div><div><center><h1><a href='./welcome'>Return to Maqetta Login</a></h1></center></div><br><br><div><h2>Error description:</h2>" + error + "</div>"
+		var redirectUrl = "./welcome";
+		if(davinci.Runtime.singleUserMode()){
+			redirectUrl = ".";
+		}
+		
+		window.document.body.innerHTML = "<div><h1>Problem connecting to the Maqetta Server...</h1></div><div><center><h1><a href='"+ redirectUrl + "'>Return to Maqetta Login</a></h1></center></div><br><br><div><h2>Error description:</h2>" + error + "</div>"
 	},
 
 	_loadCSS: function(plugin,pluginURL) {

@@ -69,7 +69,6 @@
 				function run() {
 	    			var userInfo;
 	    			var result=davinci.Runtime.getUser();
-
 	    			if (result )
 	    			{
 	    		 	   dojo.byId('davinci_user').innerHTML=result;
@@ -91,6 +90,16 @@
 	    		 	if ( davinci.Runtime.plugins.joomlaplugin) {
 	                    dojo.byId('davinci_logoff').href="http://" + window.location.hostname + "/index.php?option=com_user&task=logout&return=Lw";
 	    		 	}
+	    		 	// Hide logoff if single-user mode
+	    			var singleProject = davinci.Runtime.singleProjectMode();
+	    			if(singleProject){
+	    				var logoff = dojo.byId('davinci_logoff');
+	    				var main_menu = dojo.byId('davinci_main_menu');
+	    				if(logoff && main_menu){
+	    					logoff.style.display = 'none';
+	    					main_menu.style.marginRight = '3em';
+	    				}
+	    			}
 	    			davinci.Runtime.run(userInfo);
 				}
 			});

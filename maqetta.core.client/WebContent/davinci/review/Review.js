@@ -40,7 +40,7 @@ dojo.mixin(davinci.Workbench, {
             view = davinci.Runtime.getExtension("davinci.view", viewId),
             mainBody = dojo.byId('mainBody'),
             perspectiveId = this.getActivePerspective(),
-            perspective = davinci.Runtime.getExtension("davinci.perspective",    perspectiveId),
+			perspective = davinci.Runtime.getExtension("davinci.perspective",	perspectiveId),
             position = 'left',
             cp1 = null,
             created = false,
@@ -50,10 +50,10 @@ dojo.mixin(davinci.Workbench, {
             if(view.viewID ==  viewId){
                 position = view.position;
                 return true;
-            }    
+			}	
         });
         
-        mainBody.tabs = mainBody.tabs || {};                
+		mainBody.tabs = mainBody.tabs || {};				
         mainBody.tabs.perspective = mainBody.tabs.perspective || {};
 
         if(position == 'right' && !mainBody.tabs.perspective.right){
@@ -150,7 +150,7 @@ dojo.mixin(davinci.Runtime, {
         "</tr></table>";
         
             var isInput=false;
-            var    dialog = new dijit.Dialog({id: "connectDialog", closable: true, title:"Please login", 
+			var	dialog = new dijit.Dialog({id: "connectDialog", closable: true, title:"Please login", 
                 login:function(){
                     dojo.xhrGet({url:"maqetta/cmd/login",sync:true,handleAs:"text",
                         error:function(e){
@@ -174,8 +174,8 @@ dojo.mixin(davinci.Runtime, {
                     isInput=true;
                 },
                 onCancel:function(){}
-            });    
-            dialog.setContent(formHtml);        
+			});	
+			dialog.setContent(formHtml);		
             dialog.show();
             dojo.connect(dojo.byId("password"),"onkeypress",function(e){
                 if(e.keyCode==13)
@@ -214,7 +214,7 @@ dojo.mixin(davinci.Runtime, {
                      resultObj=result;
                  }
                  });
-             } while (retry);    
+			 } while (retry);	
         return resultObj;
     }
 });

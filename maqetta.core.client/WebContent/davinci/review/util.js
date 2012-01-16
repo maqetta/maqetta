@@ -56,7 +56,7 @@ davinci.review.util = {
         return new Date( dateInGmt0.getTime() + direction * diff * 3600000  ); 
     },
     
-    getNewGuid: function() {
+	getNewGuid: function(){
         var guid = "";
         for (var i = 1; i <= 32; i++){
             var n = Math.floor(Math.random()*16.0).toString(16);

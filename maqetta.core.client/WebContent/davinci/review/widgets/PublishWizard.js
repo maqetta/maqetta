@@ -565,7 +565,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
             });
             if (extension)
                 icon=extension.iconClass;
-            return icon ||    "dijitLeaf";
+			return icon ||	"dijitLeaf";
 
         }
         return "dijitLeaf";
@@ -575,7 +575,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
         this.node = node;
         this.isRestart =  isRestart;
         if(!node){
-            var    latestVersionId = davinci.Runtime.serverJSONRequest({
+            var latestVersionId = davinci.Runtime.serverJSONRequest({
                 url: "cmd/getLatestVersionId",
                 sync: true
             });
@@ -663,7 +663,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
                     timePattern:'HH:mm:ss'}).toLowerCase():"infinite";
         var desireWidth = this.desireWidth.value||0;
         var desireHeight = this.desireHeight.value||0;
-        var    resources=dojo.map(this.reviewFiles,function(item){
+		var	resources=dojo.map(this.reviewFiles,function(item){
             return item.getPath();
         });
         var receiveEmail = this.receiveEmail.get("value")=="on"?"true":"false";
@@ -739,5 +739,5 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
         delete this._subs;
         this.sourceTree.destroyRecursive();
         this.targetTree.destroyRecursive();
-    }
+	}	
 });

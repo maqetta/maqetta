@@ -23,7 +23,7 @@ dojo.declare("davinci.review.editor.Context", null, {
     },
     
     setSource: function(){
-//        dojo.withDoc(this.getDocument(), "_setSource", this, []);
+//		dojo.withDoc(this.getDocument(), "_setSource", this, []);
         var containerNode = this.containerNode;
         var versionInfo = this.resourceFile.parent;
         if(!versionInfo.width)
@@ -233,7 +233,7 @@ dojo.declare("davinci.review.editor.Context", null, {
     _destroyDrawing: function(){
         try{
             var doc = this.getDocument(), surface = (doc && doc.annotationSurface);
-            if(surface)    surface.destroy();
+			if(surface)	surface.destroy();
         }catch(err){ /*Do nothing*/ }
         dojo.forEach(this._cxtConns, dojo.disconnect);
         dojo.forEach(this._cxtSubs, dojo.unsubscribe);

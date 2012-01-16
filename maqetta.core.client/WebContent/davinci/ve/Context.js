@@ -2417,7 +2417,7 @@ return declare("davinci.ve.Context", null, {
 			if (this._srcDocument.find({elementType:'HTMLElement', tag: 'script'}).some(function (element) {
 				var elementUrl = element.getAttribute("src");
 				if (elementUrl && elementUrl.indexOf(baseSrcPath) > -1) {
-					//element.setAttribute("src", url);
+					element.setAttribute("src", url);
 					return true;
 				}					
 			})) {
@@ -2563,7 +2563,8 @@ return declare("davinci.ve.Context", null, {
 			//   HTMLText. See issue #1350.
 			scriptText.parent.setScript(oldText + '\n' + text);
 		}
-	},	
+	},
+	
 	/**
 	 * Significant attributes for HTML elements; used for matching duplicates.
 	 * If an element isn't listed here, defaults to 'src'.

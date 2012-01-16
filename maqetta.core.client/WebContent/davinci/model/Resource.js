@@ -156,8 +156,8 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
   	 }else{
 		 file = this;
 		 isFolder = this.elementType=="Folder";
-	 }	 
-	 var response= (!localOnly) ? davinci.Runtime.serverJSONRequest({
+	 }
+	 var response= !localOnly ? davinci.Runtime.serverJSONRequest({
 		   url:"./cmd/createResource", handleAs:"text",
 	       content:{'path':file.getPath(), 'isFolder': isFolder},sync:true  }): "OK";
 	  if (response=="OK" && name!=null){

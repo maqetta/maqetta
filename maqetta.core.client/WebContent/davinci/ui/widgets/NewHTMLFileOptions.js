@@ -111,7 +111,7 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 		this._update_comp_type();
 
 		//FIXME: Add logic for 'for' attributes point to correct id
-
+		
 		this.themeButton = new dijit.form.Button({label:this.langObj.nhfoThemeButtonLabel, title:this.langObj.nhfoThemeButtonTitle}, this.dialogSpecificButtonsSpan);
 		this.connect(this.themeButton, 'onClick', dojo.hitch(this,function(e){
 			this._themeSelectionDialog = new davinci.ui.widgets.ThemeSetSelection({newFile: true});

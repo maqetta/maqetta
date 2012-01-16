@@ -6,6 +6,32 @@
         		  base-name="/WebContent" 
         		   />      
        </extension>
+       <extension
+            point="maqetta.core.server.jsPlugin">
+         <jsPlugin
+               path="app/davinci/ui"
+               resourcePath="WebContent/davinci/ui"/>
+         <jsPlugin
+               path="app/js/js"
+               resourcePath="WebContent/davinci/js/js"/>
+         <jsPlugin
+               path="app/html/html"
+               resourcePath="WebContent/davinci/html/html"/>
+         <jsPlugin
+               path="app/ve/ve"
+               resourcePath="WebContent/davinci/ve/ve"/>
+         <jsPlugin
+               path="app/davinci/ve/themeEditor/themeEditor"
+               resourcePath="WebContent/davinci/ve/themeEditor/themeEditor"/>
+          <jsPlugin
+               path="app/de/de"
+               resourcePath="WebContent/davinci/de/de"/>
+     <jsPlugin
+               path="app/de/de"
+          resourcePath="WebContent/davinci/review/review"
+/>            </extension>
+
+      
 	<extension point="maqetta.core.server.welcomePage"><welcomePage path="WebContent/welcome.html" priority="1"/></extension>
 	<extension point="maqetta.core.server.mainPage"><mainPage path="WebContent/pagedesigner.html" priority="1"/></extension>
    	<extension point="maqetta.core.server.previewPage"><previewPage path="WebContent/preview.html" priority="1" /></extension>

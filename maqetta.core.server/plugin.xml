@@ -2,8 +2,8 @@
 <?eclipse version="3.4"?>
 <plugin>
    	<extension-point id="command" name="Davinci Command" schema="schema/command.exsd"/>
-   	<!-- <extension-point id="jsPlugin" name="Javascript Plugins" schema="schema/jsPlugin.exsd"/> -->
-   	<extension-point id="initialUserFiles" name="Initial user files" schema="schema/initialUserFiles.exsd"/>
+   <extension-point id="jsPlugin" name="Javascript Plugins" schema="schema/jsPlugin.exsd"/>
+   <extension-point id="initialUserFiles" name="Initial user files" schema="schema/initialUserFiles.exsd"/>
    	<extension-point id="ajaxLibrary" name="AJAX Library" schema="schema/ajaxLibrary.exsd"/>
    	<extension-point id="personManager" name="Authentication/User Manager " schema="schema/personManager.exsd"/>
    	<extension-point id="welcomePage" name="Welcome page provider" schema="schema/welcomePage.exsd"/>
@@ -21,7 +21,8 @@
    
    
    <extension point="org.eclipse.equinox.http.registry.servlets">
-      <servlet     		
+      <servlet
+      		
             alias="/maqetta/cmd"
             class="org.maqetta.server.DavinciCommandServlet"
             load-on-startup="true">

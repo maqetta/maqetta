@@ -1,8 +1,4 @@
 {
-<<<<<<< HEAD
-    "callbacks": "callbacks.js",
-=======
->>>>>>> master
     "categories": {
         "clipart": {
             "name": "Clip Art",

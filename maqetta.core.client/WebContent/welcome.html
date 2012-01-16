@@ -23,7 +23,7 @@
 
 			.sniff {
 				color: red;
-				font-weight: bold;
+				font-style: bold;
 				font-size: 200%;
 				padding: 2em;
 			}
@@ -31,7 +31,7 @@
 
     <script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="parseOnLoad: true, cacheBust: '@revision@'"></script>
     <script type="text/javascript">
-        require(["dijit/dijit", "davinci/davinci-common"]);
+    	require(["dijit/dijit", "davinci/davinci-common"]);
     </script>
     <script type="text/javascript">
 
@@ -42,15 +42,14 @@
 		dojo.xhrGet({url:"cmd/login",sync:true,handleAs:"text",
 			content:{'userName':user, 'password': password}
 		}).then(function(result){
-			if (result=="OK") {
+			if (result=="OK"){
 				var loading = dojo.create("div",null, dojo.body(), "first");
 				loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Loading Maqetta...</td></tr></table>';
 				dojo.addClass(loading, 'loading');
-                showMainPage(".");
-			} else {
+		   		showMainPage(".");
+			}else
 				showMainPage(result);
-            }
-            return;
+	 		return;
 		}, function(error){
 			dojo.attr("error-holder", "innerHTML", "Invalid userid or password");
 		});
@@ -69,17 +68,17 @@
                dialog.destroy();
                var loading = dojo.create("div",null, dojo.body(), "first");
 			   dojo.addClass(loading, 'loading');
-               showMainPage(".");
-               return true;
+     		   showMainPage(".");
+     		   return true;
             }
             else
             {
                alert(result);
             }
-          }, function(error) {
+          }, function(error){
             //TODO: parse result and display more detailed error message?
-            console.info(error.responseText);
-            dojo.attr("error-holder", "innerHTML", "Failed to create new user '"+user+"'");
+  			console.info(error.responseText);
+          	dojo.attr("error-holder", "innerHTML", "Failed to create new user '"+user+"'");
           });
     }
 

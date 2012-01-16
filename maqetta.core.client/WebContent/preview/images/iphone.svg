@@ -87,7 +87,7 @@
 	<path fill="#636466" d="M377.565,274.086c0,0.71-0.575,1.285-1.285,1.285h-22.134c-0.71,0-1.286-0.575-1.286-1.285l0,0
 		c0-0.709,0.576-1.285,1.286-1.285h22.134C376.99,272.801,377.565,273.377,377.565,274.086L377.565,274.086z"/>
 </g>
-<rect id="ScreenRect" x="293.495" y="300.051" fill="#FFFFFF" width="138.636" height="207.955"/>
+<rect id="ScreenRect" x="293.495" y="300.051" display="none" fill="#FFFFFF" width="138.636" height="207.955"/>
 <rect id="DeviceRect" x="280.04" y="242.205" display="none" fill="none" stroke="#000000" stroke-miterlimit="10" width="167.041" height="324"/>
-<rect id="ResolutionRect" x="293.495" y="300.051" width="320" height="480" fill="none"/>
+<rect id="ResolutionRect" x="293.495" y="300.051" display="none" width="320" height="480" fill="none"/>
 </svg>

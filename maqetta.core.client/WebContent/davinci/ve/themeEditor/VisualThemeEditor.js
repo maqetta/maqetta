@@ -50,7 +50,7 @@ dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 				url: resource.getURL(),
 				handleAs: "text",
 				sync: true,
-				content:{/*'updateRoot':'%root%', 'id':theme.libId, 'version':theme.libVersion*/} //FIXME: Dojo version is hard-coded
+				content:{} 
 			}).addCallback(dojo.hitch(this, function(result){
 				this.setContent("DEFAULT_PAGE", 
 								result,

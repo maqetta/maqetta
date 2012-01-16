@@ -347,7 +347,7 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
 		   }
 	   return result;
    }
-
+   
    davinci.model.Resource.File.prototype.setContents = function(content, isWorkingCopy){
 	   var workingCopy=isWorkingCopy ? "true":"false";
 	   if (this.isNew && !isWorkingCopy){
@@ -355,13 +355,21 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
 	   }
 	   var workingCopyExtension = isWorkingCopy?".workingcopy":"";
 	   var path=encodeURIComponent(this.getPath() + workingCopyExtension);
-	   dojo.xhrPut({
+	   var defered = dojo.xhrPut({
 			url: path,
 			putData: content,
 			handleAs:"text",
 			contentType:"text/html"
 		});	
+	   defered.then(function(res){
+	       // do nothing on success
+	   },function(err){
+	       // This shouldn't occur, but it's defined just in case
+	       // more meaningful error message should be reported to user higher up the food chain...
+	       console.error("An error occurred: davinci.model.Resource.File.prototype.setContents " + err + " : " + path);
+	   });
 	   dojo.publish("/davinci/resource/resourceChanged",["modified",this]);
+	   return defered;
    }
 
    davinci.model.Resource.File.prototype.getText= function(){

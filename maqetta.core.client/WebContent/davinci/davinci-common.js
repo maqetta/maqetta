@@ -1,5 +1,4 @@
-dojo.provide("davinci.davinci-common");
-
+define([
 /*=====
 davinci["davinci-common"] = {
 	// summary:
@@ -13,19 +12,22 @@ davinci["davinci-common"] = {
 };
 =====*/
 
-dojo.require("davinci.version");
-dojo.require("davinci.repositoryinfo");
-dojo.require("dijit.dijit");
-
-dojo.require("dojo.parser");
-dojo.require("dijit.Dialog");
-dojo.require("dijit.Menu");
-dojo.require("dijit.MenuItem");
-dojo.require("dijit.Tooltip");
-dojo.require("dijit.form.Button");
-dojo.require("dijit.form.DropDownButton");
-dojo.require("dijit.form.Form");
-dojo.require("dijit.form.TextBox");
-dojo.require("dijit.form.ValidationTextBox");
-dojo.require("dojox.form.PasswordValidator");
-dojo.require("dojox.validate.regexp");
+	"./version",
+	"./repositoryinfo",
+	"dijit/dijit",
+	
+	"dojo/parser",
+	"dijit/Dialog",
+	"dijit/Menu",
+	"dijit/MenuItem",
+	"dijit/Tooltip",
+	"dijit/form/Button",
+	"dijit/form/DropDownButton",
+	"dijit/form/Form",
+	"dijit/form/TextBox",
+	"dijit/form/ValidationTextBox",
+	"dojox/form/PasswordValidator",
+	"dojox/validate/regexp"
+],
+function(){}
+);

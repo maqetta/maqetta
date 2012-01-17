@@ -1,7 +1,9 @@
-dojo.provide("davinci.libraries.dojo.dojox.grid.DataGridHelper");
+define([
+    "dojo/_base/declare",
+    "davinci/ve/widget"
+], function(declare, Widget) {
 
-dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridHelper", null, {
-
+return declare("davinci.libraries.dojo.dojox.grid.DataGridHelper", null, {
 	getData: function(/*Widget*/ widget, /*Object*/ options){
 	// summary:
 	//		Serialize the passed DataGrid.
@@ -114,7 +116,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridHelper", null, {
     
     	var storeId = srcElement.getAttribute("store");
     	if(storeId){
-    		var storeWidget = davinci.ve.widget.byId(storeId);
+    		var storeWidget = Widget.byId(storeId);
     		if (storeWidget && widget.dijitWidget && widget.dijitWidget.store){
     		    this._reparentTheStore(widget, storeWidget);
     		    this.addScripts(widget);
@@ -128,7 +130,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridHelper", null, {
     reparent: function(widget) {
         var storeId = widget._srcElement.getAttribute("store");
         if(storeId){
-            var storeWidget = davinci.ve.widget.byId(storeId);
+            var storeWidget = Widget.byId(storeId);
             if (storeWidget && widget.dijitWidget && widget.dijitWidget.store){
                 this._reparentTheStore(widget, storeWidget);
             }
@@ -231,4 +233,5 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridHelper", null, {
     
     }
 
+});
 });

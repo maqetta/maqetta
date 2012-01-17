@@ -115,14 +115,36 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridHelper", null, {
     	var storeId = srcElement.getAttribute("store");
     	if(storeId){
     		var storeWidget = davinci.ve.widget.byId(storeId);
-    
-    		if (storeWidget /*&& storeWidget.properties*/ && widget.dijitWidget && widget.dijitWidget.store){  //wdr 3-11
+    		if (storeWidget && widget.dijitWidget && widget.dijitWidget.store){
+    		    this._reparentTheStore(widget, storeWidget);
     		    this.addScripts(widget);
     		    this.updateStore(widget, storeWidget);
     		}
     	
     	}
     
+    },
+    
+    reparent: function(widget) {
+        var storeId = widget._srcElement.getAttribute("store");
+        if(storeId){
+            var storeWidget = davinci.ve.widget.byId(storeId);
+            if (storeWidget && widget.dijitWidget && widget.dijitWidget.store){
+                this._reparentTheStore(widget, storeWidget);
+            }
+        
+        }
+    },
+    
+    _reparentTheStore: function(widget, storeWidget) {
+        var dataGridParent = widget.getParent();
+        var storeParent = storeWidget.getParent();
+        if ( (dataGridParent != storeParent) || ((dataGridParent === storeParent) && (dataGridParent.indexOf(widget) < storeParent.indexOf(storeWidget))) ) {
+            var newIndex = (dataGridParent.indexOf(widget) < 1) ? 0 : dataGridParent.indexOf(widget)-1;
+            var command = new davinci.ve.commands.ReparentCommand(storeWidget, dataGridParent, newIndex);
+            //this._context.getCommandStack().execute(command);
+            command.execute();
+        }
     },
     
     updateStore: function(widget,  storeWidget, w) { 

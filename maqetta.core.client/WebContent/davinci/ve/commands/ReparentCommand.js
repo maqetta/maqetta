@@ -38,6 +38,10 @@ dojo.declare("davinci.ve.commands.ReparentCommand", null, {
 		newParent.addChild(widget, this._newIndex);
 		var context = newParent.getContext();
 		if(context){
+		    var helper = widget.getHelper();
+		    if (helper && helper.reparent){
+		        helper.reparent(widget);
+		    }
 			widget.startup();
 			widget.renderWidget();
 		}
@@ -67,6 +71,10 @@ dojo.declare("davinci.ve.commands.ReparentCommand", null, {
 		oldParent.addChild( widget, this._oldIndex);
 		var context = oldParent.getContext();
 		if(context){
+		    var helper = widget.getHelper();
+            if (helper && helper.reparent){
+                helper.reparent(widget);
+            }
 			widget.startup();
 			widget.renderWidget();
 		}

@@ -1,9 +1,10 @@
-dojo.provide("davinci.ve.commands.ReparentCommand");
+define([
+    "dojo/_base/declare",
+    "davinci/ve/widget",
+    "davinci/ve/states"
+], function(declare, Widget, States) {
 
-dojo.require("davinci.ve.widget");
-
-dojo.declare("davinci.ve.commands.ReparentCommand", null, {
-
+return declare("davinci.ve.commands.ReparentCommand", null, {
 	name: "reparent",
 
 	constructor: function(widget, parent, index){
@@ -16,13 +17,13 @@ dojo.declare("davinci.ve.commands.ReparentCommand", null, {
 		if(!this._id || !this._newParentId){
 			return;
 		}
-		var widget = davinci.ve.widget.byId(this._id);
+		var widget = Widget.byId(this._id);
 		if(!widget){
 			return;
 		}
 		var oldParent = widget.getParent();
 		if(!oldParent){ oldParent = dojo.byId("myapp"); }
-		var newParent = davinci.ve.widget.byId(this._newParentId);
+		var newParent = Widget.byId(this._newParentId);
 		if(!newParent){ newParent = dojo.byId("myapp"); }
 
 
@@ -54,15 +55,15 @@ dojo.declare("davinci.ve.commands.ReparentCommand", null, {
 		if(!this._id || !this._oldParentId || !this._newParentId){
 			return;
 		}
-		var widget = davinci.ve.widget.byId(this._id);
+		var widget = Widget.byId(this._id);
 		if(!widget){
 			return;
 		}
-		var oldParent = davinci.ve.widget.byId(this._oldParentId);
+		var oldParent = Widget.byId(this._oldParentId);
 		if(!oldParent){
 			return;
 		}
-		var newParent = davinci.ve.widget.byId(this._newParentId);
+		var newParent = Widget.byId(this._newParentId);
 		if(!newParent){
 			return;
 		}
@@ -83,4 +84,5 @@ dojo.declare("davinci.ve.commands.ReparentCommand", null, {
 		davinci.ve.states.resetState(widget);
 	}
 
+});
 });

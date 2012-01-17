@@ -183,13 +183,13 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
                 });
             }
             if(this.photoRepositoryUrl == "" || this.photoRepositoryUrl == "not-implemented"){
-                this.photoRepositoryUrl =  "maqetta/app/davinci/review/resources/img/profileNoPhoto.gif?";
+                this.photoRepositoryUrl =  "app/davinci/review/resources/img/profileNoPhoto.gif?";
             }
             return '<img src="' + this.photoRepositoryUrl + result + '" width="35px" height="35px" alt="User Photo"></img>';
         };
         
         var formatHref = function(result){
-            return '<a href="javascript:dojo.publish(\'/davinci/review/deleteReviewer\',[])"><img class="delImg" src="maqetta/app/davinci/review/resources/img/del.gif"/></a>';
+            return '<a href="javascript:dojo.publish(\'/davinci/review/deleteReviewer\',[])"><img class="delImg" src="app/davinci/review/resources/img/del.gif"/></a>';
         };
         var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
         var layoutCountries = [ {

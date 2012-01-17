@@ -82,7 +82,7 @@ dojo.declare("davinci.review.model.Resource.root",
               this._loading.push(onComplete);
               var designerName = davinci.Runtime.commenting_designerName||"";
               davinci.Runtime.serverJSONRequest({
-                   url:"maqetta/cmd/listVersions",
+                   url:"cmd/listVersions",
                       content:{'designer':designerName},
                         sync:sync,
                         load : dojo.hitch(this, function(responseObject, ioArgs) {

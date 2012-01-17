@@ -126,12 +126,13 @@ davinci.html.CSSFile = function(args) {
 davinci.Inherits(davinci.html.CSSFile, davinci.html.CSSElement);
 
 davinci.html.CSSFile.prototype.save = function(isWorkingCopy) {
-
+    var deferred;
     var file = this.getResource();
     if (file) {
         var text = this.getText();
-        file.setContents(text, isWorkingCopy);
+        deferred = file.setContents(text, isWorkingCopy);
     }
+    return deferred;
 };
  
 davinci.html.CSSFile.prototype.close = function() {

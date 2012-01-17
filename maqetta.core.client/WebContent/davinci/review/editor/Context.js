@@ -184,9 +184,9 @@ dojo.declare("davinci.review.editor.Context", null, {
 				// Old code - quick check - covers case where server uses same string for username and email
 				if(shape.colorAlias == colorAlias){
 					return true;
-				}else if(davinci && davinci.review && davinci.review.Runtime && dojo.isArray(davinci.review.Runtime.reviewers)){
+				}else if(davinci && davinci.review && dojo.isArray(davinci.Runtime.reviewers)){
 					// New code hack - see if colorAlias matches either username or email corresponding to shape.colorAlias
-					var reviewers = davinci.review.Runtime.reviewers;
+					var reviewers = davinci.Runtime.reviewers;
 					var found = false;
 					for(var i=0; i<reviewers.length; i++){
 						if(colorAlias == reviewers[i].name || colorAlias == reviewers[i].email){

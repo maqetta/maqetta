@@ -81,7 +81,7 @@
 		actions: [
 					{
 						id: "newReview",
-						run: "davinci.review.Runtime.publish()",
+						run: "davinci.Runtime.publish()",
 						label: "Review...",
 						menubarPath: "davinci.new/additions"	  
 					}

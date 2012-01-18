@@ -91,8 +91,11 @@ define([
 			this._svgroot.style.height = h+'px';
 			this.domNode.style.width = w+'px';
 			this.domNode.style.height = h+'px';
-			this.domNode.style.display = 'inline-block';
-
+			var computedDisplay = dojo.style(this.domNode, 'display');
+			if(computedDisplay != 'none' && computedDisplay != 'block'){
+				// force inline-block instead of just inline
+				this.domNode.style.display = 'inline-block';
+			}
 		}
 	});
 });

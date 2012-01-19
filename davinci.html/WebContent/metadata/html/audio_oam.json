@@ -1,0 +1,47 @@
+{
+    "id": "http://www.w3.org/html/audio",
+    "name": "html.audio",
+    "spec": "1.0",
+    "version": "1.0",
+    "property": {
+        "autoplay": {
+            "datatype": "boolean",
+            "title": "Autoplay",
+            "description": "Specifies that the audio will start playing as soon as it is ready"
+        },
+        "controls": {
+            "datatype": "boolean",
+            "title": "Controls",
+            "description": "Specifies that audio controls should be displayed (such as a play/pause button etc.)"
+        },
+        "loop": {
+            "datatype": "boolean",
+            "title": "Loop",
+            "description": "Specifies that the audio will start over again, every time it is finished"
+        },
+        "preload": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "auto"
+                },
+                {
+                    "value": "metadata"
+                },
+                {
+                    "value": "none"
+                }
+            ],
+            "title": "Preload",
+            "defaultValue": "auto",
+            "description": "Specifies if and how the author thinks the audio should be loaded when the page loads",
+        },
+        "src": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL",
+            "description": "Specifies the URL of the audio file"
+        }        
+    },
+    "content": "<audio></audio>"
+}

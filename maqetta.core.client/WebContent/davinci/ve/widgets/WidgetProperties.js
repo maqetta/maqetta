@@ -12,7 +12,7 @@ dojo.declare("davinci.ve.widgets.WidgetProperties", [davinci.workbench.ViewLite]
 	buildRendering: function(){
 		this.domNode = this.propDom = dojo.doc.createElement("div");
 		dojo.addClass(this.domNode, "propGroup");
-		dojo.attr(this.domNode, "propGroup", this.displayName)
+		dojo.attr(this.domNode, "propGroup", this.displayName);
 		this.inherited(arguments);
 	},
 	
@@ -87,7 +87,7 @@ dojo.declare("davinci.ve.widgets.WidgetProperties", [davinci.workbench.ViewLite]
 			if(property.option){
 				this._pageLayout[this._pageLayout.length-1].values = dojo.map(property.option, function(option){ return option.value; });
 				
-				if(property.unconstrainted){
+				if(property.unconstrained){
 					this._pageLayout[this._pageLayout.length-1].type = "comboEdit";
 				}else{
 					this._pageLayout[this._pageLayout.length-1].type = "combo";
@@ -116,11 +116,18 @@ dojo.declare("davinci.ve.widgets.WidgetProperties", [davinci.workbench.ViewLite]
 			};
 		}
 		for(var i in this._pageLayout){
-			//FIXME: Probably can remove commented out code, but leaving
-			// it in for now in case there is a case where widget==null
-			// The way things are coded now, widget is always null
-			//var widget = dijit.byId(this._pageLayout[i].id); 
-			//if(!widget){
+		    //NOTE: This comment was present here and the "var widget..." and "if(!widget){" lines 
+		    //were commented out:
+		    //
+			//               FIXME: Probably can remove commented out code, but leaving
+			//               it in for now in case there is a case where widget==null
+			//               The way things are coded now, widget is always null
+		    //
+		    //HOWEVER, I found a case where the assumption widget would always be null is _wrong_. The
+		    //case is when the property is unconstrained and a comboEdit is in place. So, I've uncommented the 
+		    //aforementioned lines.
+			var widget = dijit.byId(this._pageLayout[i].id); 
+			if(!widget){
 				/* onchange is lowercase for DOM/non dijit */
 				var box = dojo.byId(this._pageLayout[i].id);
 				this._connect(box, "onchange", this, makeOnChange(i));
@@ -128,13 +135,11 @@ dojo.declare("davinci.ve.widgets.WidgetProperties", [davinci.workbench.ViewLite]
 				this._connect(box, "onblur", this, "_onFieldBlur");
 				//dojo.connect(widget, "onfocus", this, "_onFieldFocus");
 				//dojo.connect(widget, "onblur", this, "_onFieldBlur");
-			/*
 			}else{
 				dojo.connect(widget, "onFocus", this, "_onFieldFocus");
 				dojo.connect(widget, "onBlur", this, "_onFieldBlur");
 				this._connect(widget, "onChange", this, makeOnChange(i));
 			}
-			*/
 		}
 	},
 	

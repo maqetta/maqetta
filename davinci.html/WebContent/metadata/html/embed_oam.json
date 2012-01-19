@@ -1,0 +1,32 @@
+{
+    "id": "http://www.w3.org/html/embed",
+    "name": "html.embed",
+    "spec": "1.0",
+    "version": "1.0",
+    "property": {
+        "height": {
+            "datatype": "string",
+            "title": "Height",
+            "description": "Specifies the height of the embedded content",
+            "hidden": true,
+        },
+        "src": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL",
+            "description": "Specifies the address of the external file to embed"
+        },
+        "type": {
+            "datatype": "string",
+            "title": "MIME Type",
+            "description": "Specifies the MIME type of the embedded content"
+        },
+        "width": {
+            "datatype": "string",
+            "title": "Width",
+            "description": "Specifies the width of the embedded content",
+            "hidden": true
+        }      
+    },
+    "content": "<embed></embed>"
+}

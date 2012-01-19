@@ -28,7 +28,8 @@
                     "value": "_top"
                 }
             ],
-            "title": "Target"
+            "title": "Target",
+            "unconstrained": "true"
         }
     },
     "content": "<a></a>"

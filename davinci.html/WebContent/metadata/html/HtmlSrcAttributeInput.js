@@ -16,37 +16,46 @@ dojo.declare("davinci.libraries.html.html.HtmlSrcAttributeInput", davinci.ve.inp
 	show: function(widgetId){
         this._widget = davinci.ve.widget.byId(widgetId);
         
-        var definition = [
-            { 
-              type: "tree",
-              data: "file",
-              model: system.resource,
-              filters: "davinci.ui.widgets.OpenFileDialog.filter",
-              link : { target: "textValue",
-            	targetFunction : function (input){
-        		  var path=new davinci.model.Path(input.getPath());
-        		  return path.relativeTo(new davinci.model.Path(this._widget._edit_context._srcDocument.fileName), true).toString(); // ignore the filename to get the correct path to the image
-              }}
-            },
+
+        var definition =
+        [
             {
-        	      id: "textValue",
-                  type: "textBox",
-                  label: langObj.typeFileUrl,
-                  data: "textValue"	    	
+                type: "tree",
+                data: "file",
+                model: system.resource,
+                filters: "davinci.ui.widgets.OpenFileDialog.filter",
+                link: {
+                    target: "textValue",
+                    targetFunction: function(input) {
+                        var path = new davinci.model.Path(input.getPath());
+                        // ignore the filename to get the correct path to the image
+                        return path
+                                .relativeTo(
+                                        new davinci.model.Path(
+                                                this._widget._edit_context._srcDocument.fileName),
+                                        true).toString();
+                    }
+                }
+            }, {
+                id: "textValue",
+                type: "textBox",
+                label: langObj.typeFileUrl,
+                data: "textValue"
             }
-          ];
+        ];
         
-        var data={
-                file  : null,
-                textValue : this._widget._srcElement.getAttribute('src') || ''
+
+        var data = {
+            file: null,
+            textValue: this._widget._srcElement.getAttribute('src') || ''
         };
 
         if (this.supportsAltText) {
             definition.push({
-                  type: "textBox",
-                  label: langObj.typeAltText,
-                  data: "altText"           
-                });
+                type: "textBox",
+                label: langObj.typeAltText,
+                data: "altText"
+            });
             data.altText = this._widget.attr('alt') || '';
         }
           

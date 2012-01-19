@@ -6,8 +6,6 @@ dojo.require("dojox.grid.DataGrid");
 dojo.require("dojo.data.ItemFileWriteStore");
 
 dojo.declare("davinci.workbench.ProblemsView", davinci.workbench.ViewPart, {
-	
-	outlineProvider:null,
 
 	postCreate: function()
 	{

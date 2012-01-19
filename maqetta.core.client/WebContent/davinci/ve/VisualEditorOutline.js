@@ -1,11 +1,10 @@
 dojo.provide("davinci.ve.VisualEditorOutline");
-dojo.require("davinci.workbench.OutlineProvider");
 dojo.require("davinci.ve.commands.ReparentCommand");
 dojo.require("davinci.ve.widget");
 dojo.require("davinci.ve.States");
 dojo.require("dijit.tree.dndSource");
 
-dojo.declare("davinci.ve.VisualEditorOutline",davinci.workbench.OutlineProvider, {
+dojo.declare("davinci.ve.VisualEditorOutline", null, {
 	
 	
 	toolbarID: "davinci.ve.outline",

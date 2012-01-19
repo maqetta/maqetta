@@ -670,7 +670,7 @@ var Workbench = {
 		  });
 		  menus=menu.menus;
 		  connectFunction="onOpen";
-//					  Workbench._openMenu(dojoMenu, menus);
+//					  this._openMenu(dojoMenu, menus);
 //					  return dojoMenu;
 		  
 		}
@@ -684,7 +684,7 @@ var Workbench = {
 		dojoMenu.domNode.style.display = "none";
 		dojoMenu.actionContext = context;
 		dojo.connect(dojoMenu, connectFunction, this, function(evt){
-		   Workbench._openMenu(dojoMenu, menus,evt).focus(); // call focus again, now that we messed with the widget contents
+		   this._openMenu(dojoMenu, menus,evt).focus(); // call focus again, now that we messed with the widget contents
 		});
 		return dojoMenu;
 	},
@@ -1600,7 +1600,7 @@ dojo.declare("davinci.workbench._PopupMenu", Menu, {
 						open.call(dijit.popup, args);
 					};
 			}
-			Workbench.inherited(arguments);
+			this.inherited(arguments);
 		}finally{
 			if(open){
 				dijit.popup.open = open;

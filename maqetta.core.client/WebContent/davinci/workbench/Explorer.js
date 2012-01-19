@@ -1,21 +1,23 @@
-dojo.provide("davinci.workbench.Explorer");
-
-dojo.require("davinci.Workbench");
-dojo.require("davinci.workbench.ViewPart");
-
-dojo.require("dijit.Tree");
-dojo.require("davinci.ui.widgets.TransformTreeMixin");
-dojo.require("davinci.ui.dnd.DragSource");
-dojo.require("system.resource");
-dojo.require("davinci.ui.widgets.ProjectSelection");
-
-//ui_plugin.js
-dojo.require("davinci.ui.Download");
-dojo.require("davinci.ui.DownloadSelected");
-dojo.require("davinci.ui.UserLibraries");
-dojo.require("davinci.ui.widgets.ProjectToolbar");
-
-dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
+define([
+	"dojo/_base/declare",
+	"davinci/workbench/ViewPart",
+	"davinci/Workbench",
+	"davinci/Runtime",
+	
+	"dijit/Tree",
+	"davinci/ui/Resource",
+	"davinci/ui/widgets/TransformTreeMixin",
+	"davinci/ui/dnd/DragSource",
+	"system/resource",
+	"davinci/ui/widgets/ProjectToolbar",
+	
+	//ui_plugin/js
+	"davinci/ui/Download",
+	"davinci/ui/DownloadSelected",
+	"davinci/ui/UserLibraries",
+], function(declare, ViewPart, Workbench, Runtime, Tree) {
+	
+return declare("davinci.workbench.Explorer", ViewPart, {
 	
 	toolbarID: "workbench.Explorer",
 	getActionsID: function () {
@@ -28,7 +30,7 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 	postCreate: function(){
 		this.inherited(arguments);
 
-		var dragSources=davinci.Runtime.getExtensions("davinci.dnd", function (extension){
+		var dragSources=Runtime.getExtensions("davinci.dnd", function (extension){
 			 return dojo.some(extension.parts,function(item){ return item=="davinci.ui.navigator"; }) && extension.dragSource;
 		});
 		
@@ -37,7 +39,7 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 		// Patch Tree to allow for image drag-and-drop.  code moved from davinci.ui.widget.Tree.
 		// TODO: Would be better and more efficient to make use of the dijit.Tree drag-and-drop with dojo.dnd,
 		// but it does not seem to perform well over an IFRAME and would require some reworking of the drag source and target.
-		var imageDragTree = dojo.declare("", dijit.Tree, { //FIXME: why won't null work as first arg to dojo.declare?
+		var imageDragTree = declare("", Tree, { //FIXME: why won't null work as first arg to dojo.declare?
 			_createTreeNode: function(args){
 				var treeNode = this.inherited(arguments);
 		 		if (dragSources && args.item){
@@ -84,22 +86,20 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 					dojo.stopEvent = stop;	
 				}
 			};
+
 		tree.dndController.onMouseDown = dojo.hitch(null, handler, down);
 		
 		var topDiv = dojo.doc.createElement('div');
 
-		if(davinci.Runtime.singleProjectMode()){
+		if(Runtime.singleProjectMode()){
 			var projectSelection = new davinci.ui.widgets.ProjectToolbar({});
 			topDiv.appendChild(projectSelection.domNode);
-			
-			
+
 			dojo.connect(projectSelection, "onChange", function(){
-				var project = this.value;
-				davinci.Runtime.loadProject(project);
+				Runtime.loadProject(this.value);
 			});
-			
-			
 		}
+
 		topDiv.appendChild(tree.domNode);
 		this.setContent(topDiv);
 		
@@ -111,7 +111,7 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 			this.publish("/davinci/ui/selectionChanged", [items, this]);
 		}));
 
-		var popup=davinci.Workbench.createPopup({
+		Workbench.createPopup({
 			partID: 'davinci.ui.navigator',
 			domNode: this.tree.domNode,
 			openCallback:function (event)
@@ -124,21 +124,21 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 						tree.set("selectedNodes", [w]);
 					}
 				}
-			}});
+			}
+		});
 	},
 
 	destroy: function(){
 		this.inherited(arguments);
 	},
 	
-	_dblClick: function(node)
-	{
-		if (node.elementType=="File")
-		{
-			davinci.Workbench.openEditor({
+	_dblClick: function(node) {
+		if (node.elementType=="File") {
+			Workbench.openEditor({
 				fileName: node,
 				content: node.getText()
 			});
 		}
 	}
+});
 });

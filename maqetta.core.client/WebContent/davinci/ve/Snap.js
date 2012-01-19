@@ -1,12 +1,7 @@
-dojo.provide("davinci.ve.Snap");
-
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.ve.Context");
-
-/**
- * @static
- */
-davinci.ve.Snap = function() {
+define([
+    "davinci/ve/widget",
+    "davinci/ve/Context"
+], function(widget, Context) {;
 
 	return /** @scope davinci.ve.Snap */ {
 		
@@ -214,7 +209,6 @@ davinci.ve.Snap = function() {
 				style.backgroundColor='rgba(255,0,255,.75)';
 			}else{
 				style.display='none';
-				style.display='none';
 			}
 			var style = context._snapLinesDivAlignY.style;
 			if(context._snapY){
@@ -258,4 +252,4 @@ davinci.ve.Snap = function() {
 			context._snapX = context._snapY = null;
 		}
     };
-}();
+});

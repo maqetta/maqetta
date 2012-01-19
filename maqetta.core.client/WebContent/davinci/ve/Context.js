@@ -32,7 +32,7 @@ return declare("davinci.ve.Context", null, {
 		if(!args) {
 			args ={};
 		}
-		this._contentStyleSheet = Workbench.location() + dojo.moduleUrl("davinci.ve", "resources/content.css");
+		this._contentStyleSheet = Workbench.location() + require.toUrl("davinci/ve/resources/content.css");
 		this._id = "_edit_context_" + this._contextCount++;
 		this._editor = args.editor;
 		this._visualEditor = args.visualEditor;

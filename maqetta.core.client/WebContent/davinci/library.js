@@ -3,10 +3,10 @@
 //   elsewhere.
 define([
 	"davinci/ve/themeEditor/metadata/CSSThemeProvider",
-	"davinci/ve/themeEditor/metadata/query",
-	"davinci/ve/metadata"
+	"davinci/ve/themeEditor/metadata/query"
+//	"davinci/ve/metadata" // FIXME: circular ref?
 ],
-function(CSSThemeProvider, Query, Metadata) {
+function(CSSThemeProvider, Query/*, Metadata*/) {
 
 /*
  * 
@@ -138,7 +138,7 @@ addCustomWidgets: function(base, customWidgetJson) {
 	}
 	*/
 	
-	Metadata.parseMetaData(customWidgetJson.name, customWidgetJson, prefs.widgetFolder, true);
+	davinci.ve.metadata.parseMetaData(customWidgetJson.name, customWidgetJson, prefs.widgetFolder, true);
 	dojo.publish("/davinci/ui/addedCustomWidget", [customWidgetJson]);
 },
 

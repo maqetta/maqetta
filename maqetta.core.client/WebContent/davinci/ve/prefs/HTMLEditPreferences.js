@@ -1,10 +1,12 @@
-dojo.provide("davinci.ve.prefs.HTMLEditPreferences");
+define([
+    "dojo/_base/declare",
+	"dijit/layout/ContentPane",
+	"dijit/_TemplatedMixin",
+	"dijit/form/CheckBox",
+	"dojo/i18n!davinci/ve/nls/common"
+], function(declare, ContentPane, TemplatedMixin, CheckBox, commonNls) {
 
-dojo.require("davinci.workbench.PreferencePane");
-dojo.require("dijit.form.CheckBox");
-
-
-dojo.declare("davinci.ve.prefs.HTMLEditPreferences",davinci.workbench.PreferencePane, {
+return declare("davinci.ve.prefs.HTMLEditPreferences", [ContentPane, TemplatedMixin], {
 
 	templateString: "<div><table style='margin: 4px;' cellspacing='4'><tbody>" +
 		//"<tr><td>${_loc.flowLayout}:</td><td><div dojoAttachPoint='flowBoxNode'></div></td></tr>" +
@@ -14,28 +16,29 @@ dojo.declare("davinci.ve.prefs.HTMLEditPreferences",davinci.workbench.Preference
 		"</tbody></table></div>",
 
 	postMixInProperties: function(){
-		this._loc = dojo.i18n.getLocalization("davinci.ve", "common");
+		this._loc = commonNls;
 	},	
 
 	postCreate: function(){
-		//this._flowBox = new dijit.form.CheckBox({}, this.flowBoxNode);
-		this._snap = new dijit.form.CheckBox({}, this.snapNode);
-		this._showPossibleParents = new dijit.form.CheckBox({}, this.showPossibleParentsNode);
-		this._cssOverrideWarn = new dijit.form.CheckBox({}, this.cssOverrideWarn);
+		//this._flowBox = new CheckBox({}, this.flowBoxNode);
+		this._snap = new CheckBox({}, this.snapNode);
+		this._showPossibleParents = new CheckBox({}, this.showPossibleParentsNode);
+		this._cssOverrideWarn = new CheckBox({}, this.cssOverrideWarn);
 		
 		if(!this.containerNode){
 			this.containerNode = this.domNode;
 		}
 	},
 
-	setPreferences: function(preferences){
-		preferences = (preferences || {});
-		//this._check(this._flowBox, !!preferences.flowLayout);
-		this._check(this._snap, !!preferences.snap);
-		this._check(this._showPossibleParents, !!preferences.showPossibleParents);
-		this._check(this._cssOverrideWarn, !!preferences.cssOverrideWarn);
+	getDefaults: function () {
 	},
-
+	
+	setDefaults: function () {
+	},
+	
+	doApply: function () {
+	},
+	
 	getPreferences: function(){
 		var preferences = {
 			//flowLayout: this._flowBox.checked,
@@ -46,6 +49,14 @@ dojo.declare("davinci.ve.prefs.HTMLEditPreferences",davinci.workbench.Preference
 		return preferences;
 	},
 
+	setPreferences: function(preferences){
+		preferences = (preferences || {});
+		//this._check(this._flowBox, !!preferences.flowLayout);
+		this._check(this._snap, !!preferences.snap);
+		this._check(this._showPossibleParents, !!preferences.showPossibleParents);
+		this._check(this._cssOverrideWarn, !!preferences.cssOverrideWarn);
+	},
+
 	_check: function(widget, checked){
 		widget.set("checked", checked);
 	},
@@ -54,4 +65,5 @@ dojo.declare("davinci.ve.prefs.HTMLEditPreferences",davinci.workbench.Preference
 		davinci.ve._preferences = prefs; //FIXME: missing dependency
 	}
 
+});
 });

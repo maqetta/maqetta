@@ -1,18 +1,20 @@
-dojo.provide("davinci.ui.ProjectPreferences");
-
-dojo.require("davinci.workbench.PreferencePane");
-dojo.require("dijit.form.CheckBox");
+define([
+	"dojo/_base/declare",
+	"dijit/layout/ContentPane",
+	"dijit/_TemplatedMixin",
+	"dijit/form/TextBox",
+	"dojo/i18n!davinci/ve/nls/common"
+], function(declare, ContentPane, TemplatedMixin, TextBox, commonNls) {
 
 
 /*
  * 
- * Big to-do to finish this.  Just copied the HTML editors for now.
+ * FIXME: Big to-do to finish this.  Just copied the HTML editors for now.
  * 
  * 
  */
 
-
-dojo.declare("davinci.ui.ProjectPreferences",davinci.workbench.PreferencePane, {
+return declare("davinci.ui.ProjectPreferences", [ContentPane, TemplatedMixin], {
 
 	templateString: "<div><table style='margin: 4px;' cellspacing='4'><tbody>" +
 	"<tr><td>Web Content:</td><td><div dojoAttachPoint='webContentNode'></div></td></tr>" +
@@ -22,13 +24,13 @@ dojo.declare("davinci.ui.ProjectPreferences",davinci.workbench.PreferencePane, {
 
 	
 	postMixInProperties: function(){
-		this._loc = dojo.i18n.getLocalization("davinci.ve", "common");
+		this._loc = commonNls;
 	},	
 
 	postCreate: function(){
-		this._webContentNode = new dijit.form.TextBox({}, this.webContentNode);
-		this._themeFolderNode = new dijit.form.TextBox({}, this.themeFolderNode);
-		this._widgetFolderNode = new dijit.form.TextBox({}, this.widgetFolderNode);
+		this._webContentNode = new TextBox({}, this.webContentNode);
+		this._themeFolderNode = new TextBox({}, this.themeFolderNode);
+		this._widgetFolderNode = new TextBox({}, this.widgetFolderNode);
 		
 		
 		if(!this.containerNode){
@@ -36,27 +38,35 @@ dojo.declare("davinci.ui.ProjectPreferences",davinci.workbench.PreferencePane, {
 		}
 	},
 
+	getDefaults: function () {
+	},
+	
+	setDefaults: function () {
+	},
+	
+	doApply: function () {
+	},
+	
 	setPreferences: function(preferences){
 		
-		preferences = (preferences || {});
-		this._webContentNode.set( 'value', preferences['webContentFolder']);
-		this._themeFolderNode.set( 'value', preferences['themeFolder']);
-		this._widgetFolderNode.set( 'value', preferences['widgetFolder']);
-		
+		preferences = preferences || {};
+		this._webContentNode.set('value', preferences['webContentFolder']);
+		this._themeFolderNode.set('value', preferences['themeFolder']);
+		this._widgetFolderNode.set('value', preferences['widgetFolder']);
 	},
 
 	getPreferences: function(){
 		
 		var themeFolderNode = this._themeFolderNode;
 		var webContentNode = this._webContentNode;
-		var widgetFoldertNode = this._widgetFoldertNode;
+		var widgetFolderNode = this._widgetFoldertNode;
 		
 		var preferences = {
-			'themeFolder': dojo.attr(themeFolderNode, 'value'),
-			'webContentFolder': dojo.attr(webContentNode, 'value'),
-			'widgetFolder': dojo.attr(widgetFolderNode, 'value'),
+			themeFolder: dojo.attr(themeFolderNode, 'value'),
+			webContentFolder: dojo.attr(webContentNode, 'value'),
+			widgetFolder: dojo.attr(widgetFolderNode, 'value')
 		};
 		return preferences;
-	},
-
+	}
+});
 });

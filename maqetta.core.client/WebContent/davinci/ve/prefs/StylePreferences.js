@@ -1,16 +1,18 @@
-dojo.provide("davinci.ve.prefs.StylePreferences");
+define([
+	"dojo/_base/declare",
+	"dijit/layout/ContentPane",
+	"dijit/_TemplatedMixin",
+	"dijit/form/CheckBox",
+	"dojo/i18n!davince/ve/nls/common"
+], function(declare, ContentPane, TemplatedMixin, CheckBox, commonNls) {
 
-dojo.require("davinci.workbench.PreferencePane");
-dojo.require("dijit.form.CheckBox");
-
-
-dojo.declare("davinci.ve.prefs.StylePreferences",davinci.workbench.PreferencePane, {
+return declare("davinci.ve.prefs.StylePreferences", [ContentPane, TemplatedMixin], {
 
 	templateString: "<div><div dojoAttachPoint='prefContainer'></div></div>",
 	defaultValues: {},
 	
 	postMixInProperties: function(){
-		this._loc = dojo.i18n.getLocalization("davinci.ve", "common");
+		this._loc = commonNls;
 	},	
 	
 	getTableDomNode : function (){
@@ -42,20 +44,20 @@ dojo.declare("davinci.ve.prefs.StylePreferences",davinci.workbench.PreferencePan
 		return table;
 	},
 	
-	_getDescriptorFor : function(category){
+	_getDescriptorFor: function(category){
 
+		var descriptor;
 		if(!this._descriptor){
-			var descriptor = undefined;
 			dojo.xhrGet({
 				url: "" + dojo.moduleUrl("davinci.ve.views.style", "metadata/css.json"),
 				handleAs: "json",
 				sync: true,
 				load: function(result){descriptor = result;}
 			});
-			this._descriptor = descriptor;
+			this._descriptor = descriptor; //FIXME: should make assignment in load callback
 		}
 		
-		var descriptor = {};
+		descriptor = {};
 		
 		for(var name in this._descriptor){
 			var property = this._descriptor[name];
@@ -110,9 +112,9 @@ dojo.declare("davinci.ve.prefs.StylePreferences",davinci.workbench.PreferencePan
 				row.appendChild(cell);
 				this._boxes[name] = {};
 				
-				this._boxes[name]['davinci.ve.style.norm'] = new dijit.form.CheckBox({});
-				this._boxes[name]['davinci.ve.style.alpha'] = new dijit.form.CheckBox({});
-				this._boxes[name]['davinci.ve.style.cat'] = new dijit.form.CheckBox({});
+				this._boxes[name]['davinci.ve.style.norm'] = new CheckBox({});
+				this._boxes[name]['davinci.ve.style.alpha'] = new CheckBox({});
+				this._boxes[name]['davinci.ve.style.cat'] = new CheckBox({});
 				
 				cell = dojo.doc.createElement("td");
 				cell.align="center";
@@ -152,7 +154,14 @@ dojo.declare("davinci.ve.prefs.StylePreferences",davinci.workbench.PreferencePan
 		}
 	},
 
+	getDefaults: function () {
+	},
 	
+	setDefaults: function () {
+	},
+	
+	doApply: function () {
+	},
 	
 	getPreferences: function(){
 
@@ -175,11 +184,11 @@ dojo.declare("davinci.ve.prefs.StylePreferences",davinci.workbench.PreferencePan
 		}else {
 			widget.setAttribute("checked", checked)
 		}
+	},
+
+	getDefaults: function (){
+		var p1 = dojo.xhrGet({url: "davinci/ve/prefs/default_style_prefs.js", sync: true, handleAs: "json"});
+		return p1.results[0].defaultValues;
 	}
-
 });
-davinci.ve.prefs.StylePreferences.getDefaults = function (){
-
-	var p1  =	dojo.xhrGet({url:"./davinci/ve/prefs/default_style_prefs.js",sync:true,handleAs:"json"});
-	return p1.results[0]['defaultValues'];
-}
+});

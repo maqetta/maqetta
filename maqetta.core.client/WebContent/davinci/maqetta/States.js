@@ -560,9 +560,7 @@ davinci.states = new davinci.maqetta.States();
 						type = (type.getAttribute("dojoType") || type.nodeName.toLowerCase());
 					}
 					type = type ? type.replace(/\./g, "_") : "";
-					var uid= dijit.getUniqueId(type);
-console.log("calling dijit.getUniqueId("+type+"), uid="+uid);
-return uid;
+					return dijit.getUniqueId(type);
 				};
 			});
 		}

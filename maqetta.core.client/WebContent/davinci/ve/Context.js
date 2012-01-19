@@ -3,6 +3,7 @@ define([
 	"davinci/commands/CommandStack",
 	"davinci/ve/tools/SelectTool",
 	"dojo/window",
+	"davinci/model/Path",
 	"davinci/Workbench",
 	"davinci/ve/widget",
 	"davinci/ve/Focus",
@@ -10,7 +11,7 @@ define([
 	"dojox/html/_base",
 	"preview/silhouetteiframe",
 	"davinci/ve/ChooseParent"
-], function(declare, CommandStack, SelectTool, windowUtils) {
+], function(declare, CommandStack, SelectTool, windowUtils, Path, Workbench) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
 var MOBILE_DEV_ATTR = 'data-maqetta-device';
@@ -31,7 +32,7 @@ return declare("davinci.ve.Context", null, {
 		if(!args) {
 			args ={};
 		}
-		this._contentStyleSheet = davinci.Workbench.location() + dojo.moduleUrl("davinci.ve", "resources/content.css");
+		this._contentStyleSheet = Workbench.location() + dojo.moduleUrl("davinci.ve", "resources/content.css");
 		this._id = "_edit_context_" + this._contextCount++;
 		this._editor = args.editor;
 		this._visualEditor = args.visualEditor;
@@ -131,7 +132,7 @@ return declare("davinci.ve.Context", null, {
 		 * 
 		 */
 		var path = this.getModel().fileName;
-		return new davinci.model.Path(path);
+		return new Path(path);
 	},
 
 
@@ -215,7 +216,8 @@ return declare("davinci.ve.Context", null, {
 		
 		widget.attach();
 
-		if(widget.type.charAt(widget.type.lastIndexOf(".") + 1) == "_"){ //TODO: dijit-specific convention of "private" widgets
+		//TODO: dijit-specific convention of "private" widgets
+		if(widget.type.charAt(widget.type.lastIndexOf(".") + 1) == "_"){
 			widget.internal = true;
 			// internal Dijit widget, such as _StackButton, _Splitter, _MasterTooltip
 			return;
@@ -350,7 +352,7 @@ return declare("davinci.ve.Context", null, {
 			}
 
 			// store path
-			libs[libId] = new davinci.model.Path(context.getBase()).append(root);
+			libs[libId] = new Path(context.getBase()).append(root);
 
 			// If 'library' element points to the main library JS (rather than
 			// just base directory), then load that file now.
@@ -486,9 +488,10 @@ return declare("davinci.ve.Context", null, {
      */
     setMobileDevice: function(device) {
     	this.getDojo().config.mblUserAgent = /* remove this line for Dojo 1.7 final */
-    	this.getGlobal()["require"](["dojo/_base/config"]).mblUserAgent = preview.silhouetteiframe.getMobileTheme(device + '.svg');
+    	this.getGlobal()["require"](["dojo/_base/config"]).mblUserAgent =
+    			preview.silhouetteiframe.getMobileTheme(device + '.svg');
     	var bodyElement = this.getDocumentElement().getChildElement("body");
-        if (! device || device === 'none') {
+        if (!device || device === 'none') {
             bodyElement.removeAttribute(MOBILE_DEV_ATTR, device);
         } else {
             bodyElement.addAttribute(MOBILE_DEV_ATTR, device);
@@ -582,7 +585,7 @@ return declare("davinci.ve.Context", null, {
 	},
 
 	getDojoUrl: function(){
-		var loc=davinci.Workbench.location();
+		var loc=Workbench.location();
 		if (loc.charAt(loc.length-1)=='/') {
 			loc=loc.substring(0,loc.length-1);
 		}
@@ -616,7 +619,7 @@ return declare("davinci.ve.Context", null, {
 	
 	getFullResourcePath: function() {
 		var filename = this.getModel().fileName;
-		return new davinci.model.Path(filename);
+		return new Path(filename);
 	},
 
     /* ensures the file has a valid theme.  Adds the users default if its not there alread */
@@ -632,58 +635,59 @@ return declare("davinci.ve.Context", null, {
        	    defaultThemeName = newHtmlParms.themeSet.desktopTheme;
        	} else if (newHtmlParms && newHtmlParms.theme){
        	    if (newHtmlParms.theme == 'deviceSpecific') {
-       	     defaultThemeName = "claro"; 
+       	    	defaultThemeName = "claro"; 
        	    } else {
        	        defaultThemeName = newHtmlParms.theme;
        	    }
        	}
     	var imports = model.find({elementType:'CSSImport'});
-		
-		
+
 		/* remove the .theme file, and find themes in the given base location */
-		var allThemes = davinci.library.getThemes(davinci.Runtime.getProject());
-		var themeHash = {};
-		var defaultTheme;
-		
-		for(var i=0;i<allThemes.length;i++){
-			
-			if(allThemes[i].name==defaultThemeName) {
-				defaultTheme = allThemes[i];
+		var allThemes = davinci.library.getThemes(davinci.Runtime.getProject()),
+			themeHash = {},
+			defaultTheme;
+
+		allThemes.forEach(function(theme){
+			if(theme.name==defaultThemeName) {
+				defaultTheme = theme;
 			}
 			
-			if (allThemes[i].files){ // #1024 some theme's may not contain files, themeMaps
-			  //FIXME: this can't be right...
-    			for(var k=0;k<allThemes[i].files.length;k++){
-    			        themeHash[allThemes[i].files] = allThemes[i];
-    			}
-            }
-		}
+			if (theme.files){ // #1024 some themes may not contain files, themeMaps
+			  //FIXME: Brad: this can't be right...
+				theme.files.forEach(function(){
+   			        themeHash[theme.files] = theme;
+				});
+            }			
+		});
+
 		/* check the header file for a themes CSS.  
 		 * 
 		 * TODO: This is a first level check, a good second level check
 		 * would be to grep the body classes for the themes className. this would be a bit safer.
 		 */
 		
-		for(var i=0;i<imports.length;i++){
-			var url = imports[i].url;
+		if(imports.some(function(imp){
 			/* trim off any relative prefix */
 			for(var themeUrl in themeHash){
-				if(url.indexOf(themeUrl)  > -1){
+				if(imp.url.indexOf(themeUrl)  > -1){
 					// theme already exists
 					return true;
 				}
 			}
-		}
+		})){
+			return true;
+		};
 
 
 		this._loadThemeDojoxMobile(this);
-		var body = model.find({elementType:'HTMLElement', tag:'body'},true);
+		var body = model.find({elementType: 'HTMLElement', tag: 'body'}, true);
 		body.setAttribute("class", defaultTheme.className);
 		/* add the css */
-		for(var i=0;i<defaultTheme.files.length;i++){
-			var url = new davinci.model.Path(defaultTheme.file.getPath()).removeLastSegments(1).append(defaultTheme.files[i]).relativeTo(this.getPath(),true);
+		var filePath = defaultTheme.file.getPath();
+		defaultTheme.files.forEach(function(file) {
+			var url = new Path(filePath).removeLastSegments(1).append(file).relativeTo(this.getPath(), true);
 			this.addModeledStyleSheet(url.toString(), null, true);
-		}
+		});
     },
     
 // FIXME this bit of code should be moved to toolkit specific //////////////////////////////   
@@ -768,10 +772,9 @@ return declare("davinci.ve.Context", null, {
 				// pull Dojo path from installed libs, if available
 				dojo.some(davinci.library.getUserLibs(resourceBase.toString()), function(lib) {
 					if (lib.id === "dojo") {
-						
-						var fullDojoPath = new davinci.model.Path(this.getBase()).append(lib.root).append("dojo/dojo.js");
+						var fullDojoPath = new Path(this.getBase()).append(lib.root).append("dojo/dojo.js");
 						dojoUrl = fullDojoPath.relativeTo(this.getPath(),true).toString();
-						//dojoUrl = new davinci.model.Path(this.relativePrefix).append(lib.root).append("dojo/dojo.js").toString();
+						//dojoUrl = new Path(this.relativePrefix).append(lib.root).append("dojo/dojo.js").toString();
 						return true;
 					}
 					return false;
@@ -789,7 +792,7 @@ return declare("davinci.ve.Context", null, {
 			frame.dvContext = this;
 			this.frameNode = frame;
 			/* this defaults to the base page */
-			var realUrl = davinci.Workbench.location() + "/" ;
+			var realUrl = Workbench.location() + "/" ;
 			
 			/* change the base if needed */
 			
@@ -797,7 +800,8 @@ return declare("davinci.ve.Context", null, {
 				realUrl = this.baseURL;
 			}
 
-// TODO: This needs to be more flexible to allow things like HTML5 DOCTYPE's (should be based on a preference)
+// TODO: This needs to be more flexible to allow things like HTML5 DOCTYPE's
+// (should be based on a preference)
 			var doc = frame.contentDocument || frame.contentWindow.document,
 				win = dijit.getDocumentWindow(doc),
 				head = "<!DOCTYPE html>";
@@ -806,7 +810,9 @@ return declare("davinci.ve.Context", null, {
 // added to the page. That causes scrollbars when page was loaded initially,
 // which went want when first Dojo widget was added.
 // Need to rethink this whole business of width:100%;height:100%;margin:0
-			head += "<html style=\"height: 100%; width: 100%; margin:0;\"><head><base href=\"" + realUrl + "\"/>";
+			head += "<html style=\"height: 100%; width: 100%; margin:0;\"><head><base href=\""
+				+ realUrl
+				+ "\"/>";
 
 			// XXX Must load dojo.js here;  we cannot wait to add it when first Dojo/Dijit widget
 			//   is dropped on page.  The reason is that dojo.js from the SDK (which is what we use
@@ -828,10 +834,17 @@ return declare("davinci.ve.Context", null, {
 
 				var requires = this._bootstrapModules.split(","),
 					dependencies = ['dojo/parser', 'dojox/html/_base', 'dojo/domReady!'];
-				dependencies = dependencies.concat(requires);  // to bootstrap references to base dijit methods in container
 
-				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\" data-dojo-config=\"" + JSON.stringify(config).slice(1, -1).replace(/"/g, "'") + "\"></script>"
-					+ "<script type=\"text/javascript\">require(" + JSON.stringify(dependencies) + ", top.loading" + this._id + ");</script>";
+				// to bootstrap references to base dijit methods in container
+				dependencies = dependencies.concat(requires); 
+
+				head += "<script type=\"text/javascript\" src=\"" + dojoUrl
+					+ "\" data-dojo-config=\""
+					+ JSON.stringify(config).slice(1, -1).replace(/"/g, "'")
+					+ "\"></script>"
+					+ "<script type=\"text/javascript\">require("
+					+ JSON.stringify(dependencies)
+					+ ", top.loading" + this._id + ");</script>";
 			}
 			if (helper && helper.getHeadImports){
 			    head += helper.getHeadImports(this._visualEditor.theme);
@@ -848,7 +861,7 @@ return declare("davinci.ve.Context", null, {
 			head += "</head><body></body></html>";
 
 			var context = this;
-			window["loading" + context._id] = function(parser, htmlUtil) { //FIXME: should be able to get doc reference from domReady! plugin?
+			window["loading" + context._id] = function(parser, htmlUtil) {
 				var callbackData = context;
 			try {
 					var win = windowUtils.get(doc),
@@ -886,7 +899,8 @@ return declare("davinci.ve.Context", null, {
 
 					var requires = context._bootstrapModules.split(",");
 					if (requires.indexOf('dijit/dijit-all') != -1){
-						win.dojo._postLoad = true; // this is needed for FF4 to keep dijit._editor.RichText from throwing at line 32 dojo 1.5						
+						// this is needed for FF4 to keep dijit._editor.RichText from throwing at line 32 dojo 1.5						
+						win.dojo._postLoad = true;
 					}
 
 					// see Dojo ticket #5334
@@ -952,9 +966,13 @@ return declare("davinci.ve.Context", null, {
 		var loading;
 		try {
 			loading = dojo.create("div",
-					{innerHTML: dojo.replace('<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;{0}</td></tr></table>', ["Loading..."])}, // FIXME: i18n
-					this.frameNode.parentNode,
-					"first");
+				{
+					innerHTML: dojo.replace(
+							'<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;{0}</td></tr></table>',
+							["Loading..."]) // FIXME: i18n
+				},
+				this.frameNode.parentNode,
+				"first");
 			dojo.addClass(loading, 'loading');
 
 			if (callbackData instanceof Error) {
@@ -999,7 +1017,7 @@ return declare("davinci.ve.Context", null, {
 		// get dojo base path
 		libs.some(function(lib) {
 			if (lib.id === 'dojo') {
-				dojoBase = new davinci.model.Path(lib.root + '/dojo');
+				dojoBase = new Path(lib.root + '/dojo');
 				return true; // break
 			}
 			return false;
@@ -1012,11 +1030,11 @@ return declare("davinci.ve.Context", null, {
 		libs.forEach(function(lib) {
 			var id = lib.id;
 			// since to loader, everything is relative to 'dojo', ignore here
-			if (! lib.root || id === 'dojo' || id === 'DojoThemes') {
+			if (!lib.root || id === 'dojo' || id === 'DojoThemes') {
 				return;
 			}
-			var root = new davinci.model.Path(lib.root).relativeTo(dojoBase).toString();
-			packages.push({ name: lib.id, location: root });
+			var root = new Path(lib.root).relativeTo(dojoBase).toString();
+			packages.push({name: lib.id, location: root });
 		});
 
 		return packages;
@@ -1035,9 +1053,11 @@ return declare("davinci.ve.Context", null, {
 				data.styleSheets[ss] = sheet.replace(new RegExp("/"+oldThemeName,"g"),"/"+newThemeName);
 			}
 			data.bodyClasses = data.bodyClasses.replace(new RegExp("\\b"+oldThemeName+"\\b","g"),newThemeName);
-			//FIXME: Needs to be globalized
+
 			if(this._editor && this._editor.visualEditor && this._editor.visualEditor._onloadMessages){
-				this._editor.visualEditor._onloadMessages.push("Warning. File refers to CSS theme '"+oldThemeName+"' which is not in your workspace. Using CSS theme '"+newThemeName+" instead.");
+				this._editor.visualEditor._onloadMessages.push(dojo.replace(
+					"Warning. File refers to CSS theme '{0}' which is not in your workspace. Using CSS theme '{1}' instead.", //FIXME: Needs to be globalized
+					[oldThemeName, newThemeName]));
 			}
 		}
 
@@ -1078,7 +1098,7 @@ return declare("davinci.ve.Context", null, {
 
 		// remove all registered widgets
         this.getDijit().registry.forEach(function(w) {
-              w.destroy();           
+             w.destroy();           
         });
 
         // Set content
@@ -1178,7 +1198,7 @@ return declare("davinci.ve.Context", null, {
 				console.error(e);
 				// remove all registered widgets, some may be partly constructed.
 				this.getDijit().registry.forEach(function(w){
-					  w.destroy();			 
+					w.destroy();			 
 				});
 	
 				this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",
@@ -1211,7 +1231,6 @@ return declare("davinci.ve.Context", null, {
         if(helper && helper.preProcess){
             helper.preProcess(node, this);
         }
-        
     },
 	    
 	_editorSelectionChange: function(event){
@@ -1239,18 +1258,16 @@ return declare("davinci.ve.Context", null, {
 		dojo.query("> *", containerNode).map(davinci.ve.widget.getWidget).forEach(this.attach, this);
 		var currentStateCache = [];
 		var rootWidget = containerNode._dvWidget;
-		rootWidget._srcElement.visit({ visit: function(element){
-			if (element.elementType=="HTMLElement")
-			{
+		rootWidget._srcElement.visit({ visit: function(element) {
+			if (element.elementType=="HTMLElement") {
 				var stateSrc=element.getAttribute(davinci.ve.states.ATTRIBUTE);
-				if (stateSrc && stateSrc.length>0)
-				{
+				if (stateSrc && stateSrc.length) {
 					var id=element.getAttribute("id");
 					var widget;
-					if (id){
+					if (id) {
 					  widget=davinci.ve.widget.byId(id);
-					}else{
-						if (element==rootWidget._srcElement){
+					} else {
+						if (element==rootWidget._srcElement) {
 							widget=rootWidget;
 						}
 					}	
@@ -1400,10 +1417,10 @@ return declare("davinci.ve.Context", null, {
 	        );
 	        // Make sure app.css is the after library CSS files, and content.css is after app.css
 	        // FIXME: Shouldn't hardcode this sort of thing
-	        var headElem = doc.getElementsByTagName('head')[0];
-			var isAppCss = (url.indexOf('app.css') > -1);
-			var isContentCss = (url.indexOf('content.css') > -1);
-			var appCssLink, contentCssLink, appCssIndex, contentCssIndex;
+	        var headElem = doc.getElementsByTagName('head')[0],
+				isAppCss = url.indexOf('app.css') > -1,
+				isContentCss = url.indexOf('content.css') > -1,
+				appCssLink, contentCssLink, appCssIndex, contentCssIndex;
 			for(var i=0; i<links.length; i++){
 				if(links[i].href.indexOf('app.css') > -1){
 					appCssLink = links[i];
@@ -2098,8 +2115,8 @@ return declare("davinci.ve.Context", null, {
 			}
 		}
 		setTimeout(function(){
-			// Invoke autoSave, with "this" set to davinci.Workbench
-			davinci.Workbench._autoSave.call(davinci.Workbench);
+			// Invoke autoSave, with "this" set to Workbench
+			Workbench._autoSave.call(Workbench);
 		}, 0);
 		
 	},
@@ -2246,14 +2263,13 @@ return declare("davinci.ve.Context", null, {
 		}
 		
 		var widgetType = theme.loader.getType(widget);
-		var selector = [];
-		for(var i =0;i<target.length;i++) {
-			selector = selector.concat( theme.metadata.getRelativeStyleSelectorsText(widgetType,state,null,target));  //FIXME: use push?  adds same selector each time through loop?
-		}
-		
-		return selector;
+		return target.map(function(){
+			//FIXME: Brad, is it intentional to add the same thing to the selector array for each element in target?
+			return theme.metadata.getRelativeStyleSelectorsText(widgetType, state, null, target);
+		});
 	},
-	getSelector: function( widget, target){
+
+	getSelector: function(widget, target){
 		// return rules based on metadata IE theme
 		
 		var theme = this.getThemeMeta();
@@ -2274,35 +2290,33 @@ return declare("davinci.ve.Context", null, {
 		var metadata = theme.metadata.getStyleSelectors(widgetType,state);
 		if(metadata){
 			for(var name in metadata){
-				var found = false;
 				for(var i=0;i<metadata[name].length;i++){
-					for(var s = 0;s<target.length;s++)
+					for(var s = 0;s<target.length;s++) {
 						if(target[s]==metadata[name][i]){
 							return name;
 						}
+					}
 				}
-	
 			}
 		}
-		
 	},
 	
-	getMetaTargets: function(widget, target){
-		var name = this.getSelector(widget,target);
-		var model = this.getModel();
+	getMetaTargets: function(widget, target) {
+		var name = this.getSelector(widget, target),
+			model = this.getModel();
 		return model.getRule(name);
-		
 	},
 	
 	/* returns the top/target dom node for a widget for a specific property */
 	
-	getWidgetTopDom: function (widget,propertyTarget){
+	getWidgetTopDom: function (widget, propertyTarget) {
 	
 		var selector = this.getSelector(widget, propertyTarget);
 		// find the DOM node associated with this rule.
 		function findTarget(target, rule){
-			if(rule.matches(target))
+			if(rule.matches(target)) {
 				return target;
+			}
 			for(var i = 0;i<target.children.length;i++){
 				return findTarget(target.children[i], rule);
 			}
@@ -2316,19 +2330,18 @@ return declare("davinci.ve.Context", null, {
 	},
 	
 	getSelectionCssRules: function(targetDomNode){
-		if (!this._cssCache) { this._cssCache = {}; } // prevent undefined exception in theme editor
+		this._cssCache = this._cssCache || {}; // prevent undefined exception in theme editor
 		var hashDomNode = function (node) {
 			return node.id + "_" + node.className;
 			
 		}
 		var selection = this.getSelection();
-		if(!targetDomNode && selection.length==0){
-			return {rules:null, matchLevels:null};
+		if (!targetDomNode && !selection.length) {
+			return {rules: null, matchLevels: null};
 		}
 		
-		var targetDom = targetDomNode || selection[0].domNode || selection[0];
-		
-		var domHash = hashDomNode(targetDom);
+		var targetDom = targetDomNode || selection[0].domNode || selection[0],
+			domHash = hashDomNode(targetDom);
 		
 		/*
 		if(this._cssCache[domHash])
@@ -2336,23 +2349,19 @@ return declare("davinci.ve.Context", null, {
 		*/
 		
 		if(selection.length){
-			
-			var matchLevels = [];
-			this._cssCache[domHash] =  this.model.getMatchingRules(targetDom, true);
-			
-			
-			for(var i =0;i<this._cssCache[domHash].rules.length;i++){
+			var match = this._cssCache[domHash] = this.model.getMatchingRules(targetDom, true);
+			match.rules.forEach(function(rule) {
 				/* remove stale elements from the cache if they change */
-				var handle = dojo.hitch(this._cssCache[domHash].rules[i],"onChange",this,function(){
+				var handle = dojo.hitch(rule, "onChange", this, function(){
 					delete this._cssCache[domHash];
 					dojo.unsubscribe(handle);
 				});
-			}
+			}, this);
 			
-			return this._cssCache[domHash];
+			return match;
 		}
 
-		return {rules:null, matchLevels:null};
+		return {rules: null, matchLevels: null};
 	},
 	
 	getStyleAttributeValues: function(widget){
@@ -2458,7 +2467,7 @@ return declare("davinci.ve.Context", null, {
 
 	addJavaScriptText: function(text, doUpdateModel, skipDomUpdate) {
 		/* run the requires if there is an iframe */
-		if (! skipDomUpdate) {
+		if (!skipDomUpdate) {
 			try {
 				this.getGlobal()['eval'](text);
 			} catch(e) {
@@ -2636,8 +2645,10 @@ return declare("davinci.ve.Context", null, {
 		// remove from DOM...
 		dojo.withGlobal(this.getGlobal(), function() {
 			var queryStr = tag;
-			for (var name in attrs) if (attrs.hasOwnProperty(name)) {
-				queryStr += '[' + name + '="' + attrs[name] + '"]';
+			for (var name in attrs) {
+				if (attrs.hasOwnProperty(name)) {
+					queryStr += '[' + name + '="' + attrs[name] + '"]';
+				}
 			}
 			//dojo.destroy(dojo.query(queryStr)[0]);
 			var n = dojo.query(queryStr)[0];
@@ -2662,34 +2673,35 @@ return declare("davinci.ve.Context", null, {
 	 * 		{boolean} doFindParentsXY  whether to show candidate parent widgets
 	 */
 	dragMoveUpdate: function(params) {
-		var context = this;
-		var cp = this._chooseParent;
-		var widgets = params.widgets;
-		var data = params.data;
-		var eventTarget = params.eventTarget;
-		var position = params.position;
-		var absolute = params.absolute;
-		var currentParent = params.currentParent;
-		var rect = params.rect;
-		var doSnapLines = params.doSnapLines;
-		var doFindParentsXY = params.doFindParentsXY;
-		var widgetType = dojo.isArray(data) ? data[0].type : data.type;
+		var context = this,
+			cp = this._chooseParent,
+			widgets = params.widgets,
+			data = params.data,
+			eventTarget = params.eventTarget,
+			position = params.position,
+			absolute = params.absolute,
+			currentParent = params.currentParent,
+			rect = params.rect,
+			doSnapLines = params.doSnapLines,
+			doFindParentsXY = params.doFindParentsXY,
+			widgetType = dojo.isArray(data) ? data[0].type : data.type;
 
 		// inner function that gets called recurively for each widget in document
 		// The "this" object for this function is the Context object
 		_updateThisWidget = function(widget){
 			if(params.widgets){
-				for(var i=0; i<params.widgets.length; i++){
+				if (params.widgets.some(function(widget) {
 					// Drag operations shouldn't apply to any of the widget being dragged
-					if(widget == params.widgets[i]){
-						return;
-					}
+					return widget == params.widgets[i];
+				})) {
+					return;
 				}
 			}
 			
-			var node = widget.domNode;
-			var dj = this.getDojo();
-			var computed_style = dj.style(node);
+			var node = widget.domNode,
+				dj = this.getDojo(),
+				computed_style = dj.style(node);
+
 			if(doSnapLines){
 				davinci.ve.Snap.findSnapOpportunities(this, widget, computed_style);
 			}

@@ -3,7 +3,7 @@ dojo.require("davinci.ui.Panel");
 dojo.require("davinci.js.JSModel");
 dojo.require("davinci.js.Format");
 
-dojo.require("davinci.workbench.PreferencePane");
+dojo.require("davinci.workbench.PanelPreferencePane");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.js", "js");

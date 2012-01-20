@@ -1200,28 +1200,24 @@ var Workbench = {
 		}
 	},
 	
-	_initActionsKeys: function(actionSets,args)
-	{
-		var keysDomNode=args.keysDomNode || args.domNode;
-		var keys={};
-		var wasKey;
+	_initActionsKeys: function(actionSets, args) {
+		var keysDomNode = args.keysDomNode || args.domNode,
+			keys = {},
+			wasKey;
 		dojo.forEach(actionSets, function(actionSet){
 			dojo.forEach(actionSet.actions, function(action){
-				if (action.keySequence)
-				{
+				if (action.keySequence) {
 					keys[action.keySequence]=action;
 					wasKey=true;
 				}
 			});
 		});
-		//FIXME: missing braces below?
-		if (wasKey)
+		if (wasKey) {
 			var context=args.context;
           dojo.connect(keysDomNode, "onkeydown", function (e){
-        	  var seq=Workbench._keySequence(e);
-        	  var actionItem=keys[seq];
-        	  if (actionItem)
-        	  {
+				var seq = Workbench._keySequence(e),
+					actionItem = keys[seq];
+				if (actionItem) {
 					if (actionItem.action.shouldShow && !actionItem.action.shouldShow(context)) {
 						return;
 					}
@@ -1230,11 +1226,10 @@ var Workbench = {
 					}
         	  }
           });
-
+		}
 	},
 	
-	_initKeys: function ()
-	{
+	_initKeys: function () {
 		var keys={all: []};
 		var keyExtensions=Runtime.getExtensions("davinci.keyBindings");
 		dojo.forEach(keyExtensions, function(keyExt){
@@ -1428,7 +1423,7 @@ var Workbench = {
 		var newTitle=Workbench._baseTitle;
 		if (currentEditor)
 		{
-			newTitle=newTitle+" - ";
+			newTitle=newTitle+" - "
 			if (currentEditor.isDirty) {
 				newTitle=newTitle+"*";
 			}
@@ -1587,7 +1582,7 @@ var Workbench = {
 	_XX_last_member: true	// dummy with no trailing ','
 };
 
-dojo.declare("davinci.workbench._PopupMenu", dijit.Menu, {
+dojo.declare("davinci.workbench._PopupMenu", Menu, {
 
 	menuOpened: function (event) {},
 	

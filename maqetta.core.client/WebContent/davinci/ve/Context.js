@@ -1,16 +1,17 @@
 define([
     "dojo/_base/declare",
-	"davinci/commands/CommandStack",
-	"davinci/ve/tools/SelectTool",
+	"../commands/CommandStack",
+	"./tools/SelectTool",
 	"dojo/window",
-	"davinci/model/Path",
-	"davinci/Workbench",
-	"davinci/ve/widget",
-	"davinci/ve/Focus",
-	"davinci/library",
+	"../model/Path",
+	"../Workbench",
+	"./widget",
+	"./Focus",
+	"../library",
 	"dojox/html/_base",
 	"preview/silhouetteiframe",
-	"davinci/ve/ChooseParent"
+	"./ChooseParent",
+	"./Snap"
 ], function(declare, CommandStack, SelectTool, windowUtils, Path, Workbench) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -688,7 +689,7 @@ return declare("davinci.ve.Context", null, {
 		defaultTheme.files.forEach(function(file) {
 			var url = new Path(filePath).removeLastSegments(1).append(file).relativeTo(this.getPath(), true);
 			this.addModeledStyleSheet(url.toString(), null, true);
-		});
+		}, this);
     },
     
 // FIXME this bit of code should be moved to toolkit specific //////////////////////////////   

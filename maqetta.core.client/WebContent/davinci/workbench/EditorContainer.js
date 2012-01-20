@@ -1,34 +1,35 @@
-dojo.provide("davinci.workbench.EditorContainer");
-dojo.require("davinci.workbench._ToolbaredContainer");
+define([
+	"dojo/_base/declare",
+	"davinci/workbench/_ToolbaredContainer",
+	"dojo/i18n!davinci/workbench/nls/workbench"  
+], function(declare, ToolbaredContainer, workbenchStrings) {
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.workbench", "workbench");  
+return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 
-dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredContainer, {
-
-	constructor:function(args){
+	constructor: function(args){
 		// Menu routines in Dojo and Workbench require unique names
-		var unique="m"+Date.now();
-		this.toolbarMenuActionSets=[
+		var unique= "m" + Date.now();
+		this.toolbarMenuActionSets = [
       		{
       			 id: unique+"-DropdownMenuActionSet",
       			 visible:true,
       			 menu: [
       				{ 
-      					__mainMenu : true,
-      					separator :
+      					__mainMenu: true,
+      					separator:
       					[
       					 	"dropdown",false
       					]
       				},
       				{ 
-      					 label : "",
-      					 path : "dropdown",
-      					 id : unique+"-DropdownMenu",
-      					 separator :
-      						  [ unique+"-DropdownMenu.action1",true,
-      						  unique+"-DropdownMenu.action2",true
-      						  ]
+      					label: "",
+      					path: "dropdown",
+      					id: unique+"-DropdownMenu",
+      					separator:
+      					[
+      						unique+"-DropdownMenu.action1",true,
+      						unique+"-DropdownMenu.action2",true
+      					]
       				 }/*, 
       				 { 
       					 label : "Do Something",
@@ -43,7 +44,7 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
       					 run: "alert('something else works')"
       				 }*/
       			],
-      			actions:[]
+      			actions: []
       		}
       	];
 	},
@@ -60,14 +61,12 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
 		editor.editorID=editorExtension.id;
 		editor.isDirty= !editor.isReadOnly && this.isDirty;
 		this._createToolbar();
-		if (!content)
-		{
+		if (!content) {
 			content=editor.getDefaultContent();
 			editor.isDirty=!editor.isReadOnly;
 			editor.lastModifiedTime=Date.now();
 		}
-		if (!content)
-		{
+		if (!content) {
 			content="";
 		}
 		editor.resourceFile=file;
@@ -94,8 +93,7 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
 		//dojo.publish("/davinci/ui/EditorOpening", [this.editor]);
 	},
 
-	setDirty: function (isDirty)
-	{
+	setDirty: function (isDirty) {
 		var title=this.attr("title");
 		if (title[0]=="*"){
 			title=title.substring(1);
@@ -115,22 +113,20 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
 
 	_close: function(editor, dirtycheck){
 		dojo.publish("/davinci/ui/EditorClosing", [editor]);
-		var langObj = dojo.i18n.getLocalization("davinci.workbench", "workbench");
 		var okToClose = true;
 		if (dirtycheck && editor && editor.isDirty){
-		     okToClose=confirm(langObj.fileHasUnsavedChanges);
+		     okToClose=confirm(workbenchStrings.fileHasUnsavedChanges);
 		}
 		if (okToClose){
 	    	this._isClosing = true;
 	    	
 			//this.editor.resourceFile.removeWorkingCopy();
 			if(editor.getFileEditors){
-				function removeWorkingCopy(editor){
-					if (editor.isReadOnly) return;
+				editor.getFileEditors().forEach(function(editor) {
+					if (editor.isReadOnly) {
+						return;
+					}
 					editor.resourceFile.removeWorkingCopy();
-				}
-				dojo.forEach(editor.getFileEditors(), function (editor){
-					removeWorkingCopy(editor);
 				});	
 			}else if(editor.resourceFile){
 				editor.resourceFile.removeWorkingCopy();	 
@@ -155,8 +151,7 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
 			this.destroyRecursive();
 		}
 	},
-	_getViewActions: function()
-	{
+	_getViewActions: function() {
 		var editorID=this.editorExtension.id;
 		var editorActions=[];
 		var extensions = davinci.Runtime.getExtensions('davinci.editorActions', function(ext){
@@ -169,13 +164,11 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
 		return editorActions;
 	},
 
-	_getViewContext: function()
-	{
+	_getViewContext: function() {
 		return this.editor;
 	},
 
-	destroy: function()
-	{
+	destroy: function() {
 		this.inherited(arguments);
 		//TODO: should we implement getChildren() in _ToolbaredContainer instead so that the children will get destroyed automatically?
         if (this.editor){
@@ -183,4 +176,5 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
         }
         delete this.editor;
 	}
+});
 });

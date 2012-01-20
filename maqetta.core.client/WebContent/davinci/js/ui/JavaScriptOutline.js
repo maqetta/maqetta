@@ -1,9 +1,8 @@
 dojo.provide("davinci.js.ui.JavaScriptOutline");
-dojo.require("davinci.workbench.OutlineProvider");
 dojo.require("davinci.ui.widgets.DavinciModelTreeModel");
 
 
-dojo.declare("davinci.js.ui.JavaScriptOutline",davinci.workbench.OutlineProvider, {
+dojo.declare("davinci.js.ui.JavaScriptOutline", null, {
 	
 	constructor : function (model)
 	{

@@ -1,1 +1,3 @@
 /bin
+.project        #ignore eclipse project file
+

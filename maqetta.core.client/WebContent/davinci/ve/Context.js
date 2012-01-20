@@ -2693,12 +2693,10 @@ return declare("davinci.ve.Context", null, {
 
 		// inner function that gets called recurively for each widget in document
 		// The "this" object for this function is the Context object
-		_updateThisWidget = function(widget){
+		var _updateThisWidget = function(widget){
 			if(params.widgets){
-				if (params.widgets.some(function(widget) {
+				if(params.widgets.indexOf(widget) >= 0){
 					// Drag operations shouldn't apply to any of the widget being dragged
-					return widget == params.widgets[i];
-				})) {
 						return;
 					}
 				}

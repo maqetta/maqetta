@@ -1,4 +1,6 @@
+dojo.require("dojox.io.xhrScriptPlugin");
 dojo.provide("davinci.libraries.dojo.dojo.data.ItemFileReadStoreHelper");
+
 
 dojo.declare("davinci.libraries.dojo.dojo.data.ItemFileReadStoreHelper", null, {
 
@@ -31,7 +33,14 @@ dojo.declare("davinci.libraries.dojo.dojo.data.ItemFileReadStoreHelper", null, {
         var xhrParams = this.getXhrScriptPluginParameters(url, context);
         if (xhrParams){
            var dj = context.getDojo();
-           dj.dojox.io.xhrScriptPlugin(xhrParams.url,xhrParams.callback);
+           try{
+               dj["require"]('dojo.data.ItemFileReadStore');
+               dj["require"]('dojox.io.xhrScriptPlugin');
+               dj.dojox.io.xhrScriptPlugin(xhrParams.url,xhrParams.callback);
+           }catch(e){
+               console.warn("FAILED: failure for module=dojo.data.ItemFileReadStoreHelper");
+           }
+           
         }
             
    
@@ -84,7 +93,7 @@ dojo.declare("davinci.libraries.dojo.dojo.data.ItemFileReadStoreHelper", null, {
     },
     
     setXhrScriptPluginParameters: function(url, context){
-        debugger;
+
         var htmlElement = context._srcDocument.getDocumentElement();
         var head = htmlElement.getChildElement("head");
         var scriptTags=head.getChildElements("script");

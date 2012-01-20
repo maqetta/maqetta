@@ -416,10 +416,6 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", [davinci.workbench.WidgetLit
 			}
 			/* find all cascade elements belong to each section and store them in an array */
 			var sectionId = this.pageTemplate[v].id;
-			if(sectionId){
-				this.pageTemplate[v].widget = dijit.byId(sectionId);
-				dojo.connect(this.pageTemplate[v].widget, "_onShow", this, function(targetIndex){return function(){this._titlePaneOpen(targetIndex);};}(v) );
-			}
 			var nodeList = dojo.query("#" + sectionId + " .CascadeTop");
 			
 			nodeList.forEach(function(target){ return function(p){
@@ -445,7 +441,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", [davinci.workbench.WidgetLit
 			for(var i = 0;i<page.length;i++){
 				var widget = page[i]['widget'];
 				if(widget)
-					widget.attr("readOnly", isReadOnly);
+					widget.set("readOnly", isReadOnly);
 				else{
 					var node = page[i].domNode;
 					if(node)

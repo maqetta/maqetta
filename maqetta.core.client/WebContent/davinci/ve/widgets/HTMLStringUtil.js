@@ -3,7 +3,6 @@ dojo.require("davinci.ve.widgets.MultiInputDropDown");
 dojo.require("davinci.ve.widgets.MetaDataStore");
 dojo.require("davinci.ve.widgets.FontDataStore");
 dojo.require("dijit.form.ComboBox");
-dojo.require("dijit.TitlePane");
 dojo.require("davinci.ve.widgets.ColorPicker");
 dojo.require("davinci.ve.widgets.EventSelection");
 dojo.require("davinci.ve.widgets.CommonProperties");
@@ -271,7 +270,6 @@ davinci.ve.widgets.HTMLStringUtil.generateTable = function(page,rowsOnly){
 	
 }
 davinci.ve.widgets.HTMLStringUtil.generateTemplate = function(jsonString){
-	
 	var htmlText = "";
 	
 	if(jsonString['pageTemplate']){

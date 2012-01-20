@@ -121,12 +121,12 @@ dojo.declare("davinci.ve.widgets.CommonProperties", [davinci.workbench.ViewLite]
 	
 	onWidgetSelectionChange : function(){
 		if(!this._widget){
-			this.attr("readOnly", true);
+			this.set("readOnly", true);
 			this._clearValues();
 			return;
 		}else{
 			this._setValues();
-			this.attr("readOnly", false);
+			this.set("readOnly", false);
 		}
 	},
 	

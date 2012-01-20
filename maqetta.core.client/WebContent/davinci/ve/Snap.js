@@ -1,9 +1,9 @@
 define([
-    "davinci/ve/widget",
-    "davinci/ve/Context"
+    "./widget",
+    "./Context"
 ], function(widget, Context) {;
-
-	return /** @scope davinci.ve.Snap */ {
+	dojo.getObject("davinci.ve.Snap", true); // FIXME: shouldn't neede this
+	return davinci.ve.Snap = /** @scope davinci.ve.Snap */ {
 		
 		/**
 		 * Preparation routine called during dynamic dragging if snapping is active

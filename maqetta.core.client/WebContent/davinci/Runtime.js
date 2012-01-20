@@ -119,49 +119,49 @@ var Runtime = {
 	},
 	
 	getRole: function(){
-		if(!davinci.Runtime.commenting_designerName)
+		if(!Runtime.commenting_designerName)
 			return "Designer";
 		else{
-			if(!davinci.Runtime.userInfo){
-	            var result = davinci.Runtime.serverJSONRequest({
+			if(!Runtime.userInfo){
+	            var result = Runtime.serverJSONRequest({
 	                url: "maqetta/cmd/getReviewUserInfo",
 	                sync: true
 	            });
-				davinci.Runtime.userInfo = result;
+				Runtime.userInfo = result;
 			}
-			if(davinci.Runtime.userInfo.userName==davinci.Runtime.commenting_designerName)
+			if(Runtime.userInfo.userName==Runtime.commenting_designerName)
 				return "Designer";
 		}
 		return "Reviewer";
 	},
 	
 	getDesigner: function(){
-		if(davinci.Runtime.commenting_designerName)
-			return davinci.Runtime.commenting_designerName;
+		if(Runtime.commenting_designerName)
+			return Runtime.commenting_designerName;
 		else{
-				if(!davinci.Runtime.userInfo){
-		            var result = davinci.Runtime.serverJSONRequest({
+				if(!Runtime.userInfo){
+		            var result = Runtime.serverJSONRequest({
 		                url: "maqetta/cmd/getReviewUserInfo",
 		                sync: true
 		            });
-					davinci.Runtime.userInfo = result;
+					Runtime.userInfo = result;
 				}
-				return davinci.Runtime.userInfo.userName;
+				return Runtime.userInfo.userName;
 			}
 	},
 	
 	getDesignerEmail: function(){
-		if(davinci.Runtime.commenting_designerEmail)
-			return davinci.Runtime.commenting_designerEmail;
+		if(Runtime.commenting_designerEmail)
+			return Runtime.commenting_designerEmail;
 		else{
-				if(!davinci.Runtime.userInfo){
-		            var result = davinci.Runtime.serverJSONRequest({
+				if(!Runtime.userInfo){
+		            var result = Runtime.serverJSONRequest({
 		                url: "maqetta/cmd/getReviewUserInfo",
 		                sync: true
 		            });
-					davinci.Runtime.userInfo = result;
+					Runtime.userInfo = result;
 				}
-				return davinci.Runtime.userInfo.email;
+				return Runtime.userInfo.email;
 			}
 	},
 	
@@ -172,7 +172,7 @@ var Runtime = {
 	
 	//two modes in design page and in review page
 	getMode: function(){
-		if(davinci.Runtime.commenting_designerName)
+		if(Runtime.commenting_designerName)
 			return "reviewPage";
 		else return "designPage";
 	},

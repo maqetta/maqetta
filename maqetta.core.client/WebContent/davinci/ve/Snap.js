@@ -1,8 +1,7 @@
 define([
-    "./widget",
-    "./Context"
-], function(widget, Context) {;
-	dojo.getObject("davinci.ve.Snap", true); // FIXME: shouldn't neede this
+    "./widget"
+], function(widget) {
+	dojo.getObject("davinci.ve.Snap", true); // FIXME: shouldn't need this
 	return davinci.ve.Snap = /** @scope davinci.ve.Snap */ {
 		
 		/**

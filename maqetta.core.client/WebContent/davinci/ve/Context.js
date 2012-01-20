@@ -688,7 +688,7 @@ return declare("davinci.ve.Context", null, {
 		defaultTheme.files.forEach(function(file) {
 			var url = new Path(filePath).removeLastSegments(1).append(file).relativeTo(this.getPath(), true);
 			this.addModeledStyleSheet(url.toString(), null, true);
-		});
+		}, this);
     },
     
 // FIXME this bit of code should be moved to toolkit specific //////////////////////////////   

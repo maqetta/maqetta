@@ -1,16 +1,17 @@
 define([
     "dojo/_base/declare",
-	"davinci/commands/CommandStack",
-	"davinci/ve/tools/SelectTool",
+	"../commands/CommandStack",
+	"./tools/SelectTool",
 	"dojo/window",
-	"davinci/model/Path",
-	"davinci/Workbench",
-	"davinci/ve/widget",
-	"davinci/ve/Focus",
-	"davinci/library",
+	"../model/Path",
+	"../Workbench",
+	"./widget",
+	"./Focus",
+	"../library",
 	"dojox/html/_base",
 	"preview/silhouetteiframe",
-	"davinci/ve/ChooseParent"
+	"./ChooseParent",
+	"./Snap"
 ], function(declare, CommandStack, SelectTool, windowUtils, Path, Workbench) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency

@@ -1,34 +1,29 @@
 {
-    "id": "http://www.w3.org/html/select",
-    "name": "html.select",
-    "spec": "1.0",
-    "version": "1.0",
-    "property": {	
+	"id": "http://www.w3.org/html/select",
+	"name": "html.select",
+	"spec": "1.0",
+	"version": "1.0",
+	"property": {	
 		"autofocus": {
-            "datatype": "boolean",
-            "title": "Autofocus",
-            "description": "Specifies that the drop-down list should automatically get focus when the page loads"
-        },	
-         "disabled": {
-            "datatype": "boolean",
-            "title": "Disabled",
-            "description": "Specifies that the drop-down list should be disabled"
-        },
+			"datatype": "boolean",
+			"description": "Specifies that the drop-down list should automatically get focus when the page loads"
+		},	
+		 "disabled": {
+			"datatype": "boolean",
+			"description": "Specifies that the drop-down list should be disabled"
+		},
 		"multiple": {
-            "datatype": "boolean",
-            "title": "Multiple",
-            "description": "Specifies that multiple items can be selected at once"
-        },
+			"datatype": "boolean",
+			"description": "Specifies that multiple items can be selected at once"
+		},
 		"name": {
-            "datatype": "string",
-            "title": "Name",
-            "description": "Defines a name for the drop-down list"
-        },
+			"datatype": "string",
+			"description": "Defines a name for the drop-down list"
+		},
 		"size": {
-            "datatype": "number",
-            "title": "Size",
-            "description": "Defines the number of visible options in the drop-down list",
-        }
-    },
-    "content": "<select></select>"
+			"datatype": "number",
+			"description": "Defines the number of visible options in the drop-down list",
+		}
+	},
+	"content": "<select></select>"
 }

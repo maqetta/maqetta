@@ -1,19 +1,17 @@
 {
-    "id": "http://www.w3.org/html/optgroup",
-    "name": "html.optgroup",
-    "spec": "1.0",
-    "version": "1.0",
-    "property": {
+	"id": "http://www.w3.org/html/optgroup",
+	"name": "html.optgroup",
+	"spec": "1.0",
+	"version": "1.0",
+	"property": {
 		"disabled": {
-            "datatype": "boolean",
-            "title": "Disabled",
-            "description": "Specifies that an option-group should be disabled"
-        },
-        "label": {
-            "datatype": "string",
-            "title": "Label",
-            "description": "Specifies that an option-group should be disabled"
-       }
-    },
-    "content": "<optgroup></optgroup>"
+			"datatype": "boolean",
+			"description": "Specifies that an option-group should be disabled"
+		},
+		"label": {
+			"datatype": "string",
+			"description": "Specifies that an option-group should be disabled"
+	   }
+	},
+	"content": "<optgroup></optgroup>"
 }

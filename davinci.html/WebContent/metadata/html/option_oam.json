@@ -1,29 +1,25 @@
 {
-    "id": "http://www.w3.org/html/option",
-    "name": "html.option",
-    "spec": "1.0",
-    "version": "1.0",
-    "property": {
+	"id": "http://www.w3.org/html/option",
+	"name": "html.option",
+	"spec": "1.0",
+	"version": "1.0",
+	"property": {
 		"disabled": {
-            "datatype": "boolean",
-            "title": "Disabled",
-            "description": "Specifies that an option should be disabled"
-        },
-        "label": {
-            "datatype": "string",
-            "title": "Label",
-            "description": "Specifies a shorter label for an option"
-        },
-        "selected": {
-            "datatype": "boolean",
-            "title": "Selected",
-            "description": "Specifies that an option should be disabled"
-        },
-        "value": {
-            "datatype": "string",
-            "title": "Value",
-            "description": "Specifies that an option should be pre-selected when the page loads"
-        }
-    },
-    "content": "<option></option>"
+			"datatype": "boolean",
+			"description": "Specifies that an option should be disabled"
+		},
+		"label": {
+			"datatype": "string",
+			"description": "Specifies a shorter label for an option"
+		},
+		"selected": {
+			"datatype": "boolean",
+			"description": "Specifies that an option should be disabled"
+		},
+		"value": {
+			"datatype": "string",
+			"description": "Specifies that an option should be pre-selected when the page loads"
+		}
+	},
+	"content": "<option></option>"
 }

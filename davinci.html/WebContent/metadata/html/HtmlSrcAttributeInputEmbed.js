@@ -1,12 +1,12 @@
-dojo.provide("davinci.libraries.html.html.HtmlSrcAttributeInputEmbed");
-dojo.require("davinci.libraries.html.html.HtmlSrcAttributeInput");
+define([
+    	"dojo/_base/declare",
+    	"davinci/libraries/html/html/HtmlSrcAttributeInput"
+    ], function(declare, HtmlSrcAttributeInput){
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.libraries.html.html", "html");
-var langObj = dojo.i18n.getLocalization("davinci.libraries.html.html", "html");
+return declare("davinci.libraries.html.html.HtmlSrcAttributeInputEmbed", HtmlSrcAttributeInput, {
 
-dojo.declare("davinci.libraries.html.html.HtmlSrcAttributeInputEmbed", davinci.libraries.html.html.HtmlSrcAttributeInput, {
-    constructor: function(/*Object*/ args){
-        this.supportsAltText = false;
-    }
+	constructor: function(/*Object*/args) {
+		this.supportsAltText = false;
+	}
+});
 });

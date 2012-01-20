@@ -1,17 +1,15 @@
-dojo.provide("davinci.workbench.Preferences");
-dojo.require("davinci.ui.Panel");
+define([
+    "davinci/ui/Panel",
+    "dojo/i18n!davinci/workbench/nls/workbench",
+    "dojo/i18n!dijit/nls/common"
+], function(Panel, workbenchStrings, commonStrings) {
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.workbench", "workbench");
-dojo.requireLocalization("dijit", "common");
-
-dojo.mixin(davinci.workbench.Preferences, {
-	
+return {
 	_allPrefs: {},
 
 	savePreferences: function(id, base, preferences){
 		dojo.xhrPut({
-			url: "./cmd/setPreferences?id="+id + "&base=" + escape(base),
+			url: "cmd/setPreferences?id="+id + "&base=" + escape(base),
 			putData: dojo.toJson(preferences),
 			handleAs:"json",
 			sync:true,
@@ -31,14 +29,15 @@ dojo.mixin(davinci.workbench.Preferences, {
 	
 	showPreferencePage: function(){
 		this._loadExtensions();
-		var langObj = dojo.i18n.getLocalization("davinci.workbench", "workbench");
-		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
+		var langObj = workbenchStrings;
+		var dijitLangObj = commonStrings;
 	    var prefJson = davinci.workbench.Preferences.getPrefJson();
  	    if(!prefJson || prefJson.length < 1) {
  	    	alert(langObj.noUserPref);
  	    	return;
  	    	
  	    }
+ 	    //FIXME: move template to html file and reference with dojo/text! dependency
     	var html_template = "<div dojoType='dijit.layout.BorderContainer' style='width: 700px; height: 500px;' gutters='false' liveSplitters='true' id='preferencesContainer'>"+
 		    "<div dojoType='dijit.layout.ContentPane' id='pref.TreePane' splitter='true' region='leading' style='width: 200px;' minSize='100' maxSize='300'></div>"+
 		    "<div dojoType='dijit.layout.ContentPane' region='bottom' style='height: 25px'>"+
@@ -52,13 +51,20 @@ dojo.mixin(davinci.workbench.Preferences, {
 		    "<div dojoType='dijit.layout.ContentPane' region='center' id='pref.RightPane'></div>"+
 		 "</div>";
 
-		var	dialog = new dijit.Dialog({id: "preference.main.dialog", title: langObj.preferences, "content": html_template, onCancel:function(){this.destroyRecursive(false);}});	
+		var	dialog = new dijit.Dialog({
+			id: "preference.main.dialog",
+			title: langObj.preferences,
+			content: html_template,
+			onCancel:function(){
+				this.destroyRecursive(false);
+			}
+		});	
 
 		var itemStore = new dojo.data.ItemFileReadStore({data:prefJson, jsId: "prefTreeDataStore"});	
 		var forestModel = new dijit.tree.ForestStoreModel({jsId:"fileModel",labelAttr: "name", store:itemStore}) ;
 		
 		var dojoTree = dijit.byId("prefTree");
-		if(dojoTree==null) {
+		if(!dojoTree) {
 			dojoTree = new dijit.Tree({
 				model: forestModel, 
 				id:'prefTree',
@@ -130,6 +136,7 @@ dojo.mixin(davinci.workbench.Preferences, {
 		}
 		return freechildren;
 	},
+
 	setPaneContent: function(node){
 		var domNode;
 		this._currentPane=null;
@@ -145,7 +152,7 @@ dojo.mixin(davinci.workbench.Preferences, {
 			domNode=pane.domNode;
 		}
 		else if (extension.panel){
-			var widget=	 new davinci.ui.Panel({definition:extension.panel, data:prefs});
+			var widget = new Panel({definition:extension.panel, data:prefs});
 			domNode=widget.domNode;
 		}
 		else if (extension.pageContent){
@@ -181,12 +188,13 @@ dojo.mixin(davinci.workbench.Preferences, {
 				this._save(listOfPages[i].children);
 			}
 		}
-		
 	},
+
 	save: function (){
 		this._save(this._extensions);
 		this.finish();
 	},
+
 	finish: function (){
 		this._extensions=null;
 		this._currentPane=null;
@@ -201,8 +209,10 @@ dojo.mixin(davinci.workbench.Preferences, {
 		
 		if (!this._allPrefs[base][id]){
 			var prefs= davinci.Runtime.serverJSONRequest({
-			   url:"cmd/getPreferences", handleAs:"json",
-			   content:{'id':id, 'base': base},sync:true
+			   url:"cmd/getPreferences",
+			   handleAs:"json",
+			   content:{id:id, base: base},
+			   sync: true
 			});
 			if(!prefs){
 				prefs=this.getDefaultPreferences(id);
@@ -226,4 +236,5 @@ dojo.mixin(davinci.workbench.Preferences, {
 		}
 	}
 	
+};
 });

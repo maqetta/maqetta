@@ -1,9 +1,8 @@
 dojo.provide("davinci.html.ui.HTMLOutline");
-dojo.require("davinci.workbench.OutlineProvider");
 dojo.require("davinci.ui.widgets.DavinciModelTreeModel");
 
 
-dojo.declare("davinci.html.ui.HTMLOutline",davinci.workbench.OutlineProvider, {
+dojo.declare("davinci.html.ui.HTMLOutline", null, {
 	
 	
 	constructor : function (model)

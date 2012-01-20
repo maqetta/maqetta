@@ -1,42 +1,41 @@
-dojo.provide("davinci.ve.ThemeModifier");
-dojo.require("davinci.ve.utils.URLRewrite");
+define([
+    "dojo/_base/declare",
+    "davinci/model/Path",
+	"davinci/ve/utils/URLRewrite"
+], function(declare, Path, URLRewrite) {
 
-dojo.declare("davinci.ve.ThemeModifier", null, {
+return declare("davinci.ve.ThemeModifier", null, {
 
-	_getCssFiles : function(){
+	_getCssFiles: function(){
 		
-		if(this.cssFiles)
+		if(this.cssFiles) {
 			return this.cssFiles;
+		}
 		
 		this.cssFiles = [];
 		
 		for(var i = 0;i<this.themeCssfiles.length;i++){
-			var cssURL= this._themePath.getParentPath().append(this.themeCssfiles[i]).toString();
-			this.cssFiles.push(davinci.model.Factory.getInstance().getModel({url:cssURL,
-			    includeImports : true,
-			    loader:function(url){
-					var resource=  system.resource.findResource(url);
-					return resource.getText();
+			var cssURL = this._themePath.getParentPath().append(this.themeCssfiles[i]).toString();
+			this.cssFiles.push(davinci.model.Factory.getInstance().getModel({
+				url: cssURL,
+			    includeImports: true,
+			    loader: function(url){
+					return system.resource.findResource(url).getText();
 				}
 			}));
 		}
 		return this.cssFiles;
-		
-		
 	},
 	
 
-	_getThemeResource : function (fileName)
-	{
+	_getThemeResource: function (fileName) {
 		var absoluteLocation = this._themePath.getParentPath().append(fileName).toString();
 		var resource=  system.resource.findResource(absoluteLocation);
 		return resource;
 	},
 	
 	_hotModifyCssRule: function(rules){
-		//debugger;
 		function updateSheet(sheet, rule){
-			////debugger;;
 			var fileName = rule.parent.relativeURL || rule.parent.url;
 			var selectorText = rule.getSelectorText();
 			selectorText = selectorText.replace(/^\s+|\s+$/g,""); // trim white space
@@ -74,7 +73,6 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 				}
 			}
 			return false;
-			
 		}
 		
 		function findSheet(sheet, sheetName){
@@ -97,7 +95,6 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 				}
 			}
 			return foundSheet;
-			
 		}
 		
 		for (var r = 0; r < rules.length; r++){
@@ -110,10 +107,9 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 				}
 			}
 		}
-
 	},
 
-	getOldValues : function (rules, values){
+	getOldValues: function (rules, values){
 
 		function oldValuesAddIfNewValue(propName, propValue){
 			for(k=0;k<oldValues.length;k++){
@@ -135,7 +131,7 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
             } else {
                 rebasedValues = dojo.clone(values);
             }
-			var rebasedValues = this._rebaseCssRuleImagesFromStylePalette(rule, rebasedValues);
+			rebasedValues = this._rebaseCssRuleImagesFromStylePalette(rule, rebasedValues);
 			
 			for(var i=0;i<rebasedValues.length;i++){
 				for(var a in rebasedValues[i]){
@@ -157,7 +153,7 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 		return oldValues;
 	},
 
-	_modifyTheme : function (rules, values){
+	_modifyTheme: function (rules, values) {
 
 		if (!values) {
 		    return;
@@ -202,34 +198,35 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 		}
 	},
 
-	_markDirty : function (file,cssModelObject){
-		if(!this._dirtyResource)
+	_markDirty: function (file,cssModelObject){
+		if(!this._dirtyResource) {
 			this._dirtyResource = {};
+		}
 		
-		this._dirtyResource[file] = {time:new Date().getTime(), modelObject:cssModelObject};
+		this._dirtyResource[file] = {time: Date.now(), modelObject: cssModelObject};
 		this._srcChanged();
-		
 	},	
+
 	_rebaseCssRuleImagesFromStylePalette: function(rule, values){ // the style palete assumes the basedir for images user/. where css in relation to the file.
 		//debugger;
-		if (!rule) return values;
+		if (!rule) {
+			return values;
+		}
 
-		var basePath = new davinci.model.Path(rule.parent.url);
+		var basePath = new Path(rule.parent.url);
 		
 		for(var i=0;i<values.length;i++){
 			for(var a in values[i]){
 				var str = values[i][a];
-				if (davinci.ve.utils.URLRewrite.containsUrl(str))
-				{
-					var url = davinci.ve.utils.URLRewrite.getUrl(str);;
-					var path=new davinci.model.Path(url);
+				if (URLRewrite.containsUrl(str)) {
+					var url = URLRewrite.getUrl(str);
+					var path = new Path(url);
 					var newUrl=path.relativeTo(basePath, true).toString(); // ignore the filename to get the correct path to the image
 					values[i][a]="url('"+ newUrl + "')";
 				}
-				
-		}
+			}
 		}
 		return values;
-		
 	}
+});
 });

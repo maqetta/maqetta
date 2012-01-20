@@ -1,16 +1,14 @@
-dojo.provide("davinci.workbench.ProblemsView");
+define([
+    "dojo/_base/declare",
+	"davinci/Workbench",
+	"davinci/workbench/ViewPart",
+	"dojox/grid/DataGrid",
+	"dojo/data/ItemFileWriteStore"
+], function(declare, Workbench, ViewPart, DataGrid, ItemFileWriteStore) {
 
-dojo.require("davinci.Workbench");
-dojo.require("davinci.workbench.ViewPart");
-dojo.require("dojox.grid.DataGrid");
-dojo.require("dojo.data.ItemFileWriteStore");
+return declare("davinci.workbench.ProblemsView", ViewPart, {
 
-dojo.declare("davinci.workbench.ProblemsView", davinci.workbench.ViewPart, {
-	
-	outlineProvider:null,
-
-	postCreate: function()
-	{
+	postCreate: function() {
 		this.inherited(arguments);
 
 		this.subscribe("/davinci/resource/resourceChanged", this.resourceChanged);
@@ -21,11 +19,11 @@ dojo.declare("davinci.workbench.ProblemsView", davinci.workbench.ViewPart, {
 //		path:"",line:2, type:"JavaScript Problem"} ]
 		};
 	
-		this.dataStore= new dojo.data.ItemFileWriteStore({
+		this.dataStore= new ItemFileWriteStore({
 			 data:problemsJson, jsId: "problemsDataStore" 
 		});
 	
-		var grid = new dojox.grid.DataGrid({
+		var grid = new DataGrid({
 			id: "problemsViewGrid",
 			store: this.dataStore,
 			structure: [
@@ -42,7 +40,7 @@ dojo.declare("davinci.workbench.ProblemsView", davinci.workbench.ViewPart, {
 				line = this.dataStore.getValue(item, "line"),
 				resource = this.dataStore.getValue(item, "resource");
 		
-			davinci.Workbench.openEditor({fileName:resource, startLine: line});
+			Workbench.openEditor({fileName:resource, startLine: line});
 		}));
 
 		this.setContent(grid);
@@ -77,7 +75,7 @@ dojo.declare("davinci.workbench.ProblemsView", davinci.workbench.ViewPart, {
 		};
 	},
 	
-	resourceChanged : function(type,resourceChanges)
+	resourceChanged: function(type,resourceChanges)
 	{
 		var items, changedResource=resourceChanges;
 		this.dataStore.fetch({
@@ -97,4 +95,5 @@ dojo.declare("davinci.workbench.ProblemsView", davinci.workbench.ViewPart, {
 			this.dataStore.newItem(problem, null);
 		}, this);
 	}
+});
 });

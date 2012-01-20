@@ -1,7 +1,7 @@
 define([
     "dojo/_base/declare",
-    "davinci/ve/widget",
-    "davinci/ve/states"
+    "../widget",
+    "../States"
 ], function(declare, Widget, States) {
 
 return declare("davinci.ve.commands.ReparentCommand", null, {

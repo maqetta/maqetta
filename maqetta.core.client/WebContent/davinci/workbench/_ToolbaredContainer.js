@@ -1,8 +1,10 @@
-dojo.provide("davinci.workbench._ToolbaredContainer");
-dojo.require("dijit.layout._LayoutWidget");
-dojo.require("dijit._Templated");
+define([
+    "dojo/_base/declare",
+    "dijit/layout/_LayoutWidget",
+    "dijit/_Templated"
+], function(declare, LayoutWidget, Templated){
 
-dojo.declare("davinci.workbench._ToolbaredContainer", [dijit.layout._LayoutWidget, dijit._Templated], {
+return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated], {
 	templateString: "<div><div dojoAttachPoint='toolbarDiv' class='toolbaredContainer_toolbarDiv'></div><div dojoAttachPoint='containerNode'></div></div>",
 
 	gutters: false,
@@ -47,9 +49,10 @@ dojo.declare("davinci.workbench._ToolbaredContainer", [dijit.layout._LayoutWidge
 		var newContainer=dojo.doc.createElement("div");
 		dojo.place( newContainer, this.containerNode,"replace");
 		this.containerNode=newContainer;
-		if (this.mainWidget)
+		if (this.mainWidget) {
 			this.mainWidget.destroy();
-		this.mainWidget=null;
+		}
+		delete this.mainWidget;
 	},
 	
 	_getViewActions: function(){},
@@ -60,14 +63,15 @@ dojo.declare("davinci.workbench._ToolbaredContainer", [dijit.layout._LayoutWidge
 	{		
 		
 		var topAddition=this.getTopAdditions();
-		if (topAddition)
+		if (topAddition) {
 			this.toolbarDiv.appendChild(topAddition);
+		}
 		
 		// If descendant class provides a value for toolbarMenuActionSets,
 		// then use that value to create a right-side dropdown menu
     	if(this.toolbarMenuActionSets){
     		// Note: menu routines in Dojo and Workbench require unique names
-    		var unique="m"+(new Date().getTime());
+    		var unique="m" + Date.now();
     		var menuContainerId=unique+"_menucontainer";
         	var menuContainerElem = dojo.create("span", {'id':menuContainerId, 'class':"paletteDropdown"}, this.toolbarDiv);
     		var menuId=unique+"_menu";
@@ -91,4 +95,5 @@ dojo.declare("davinci.workbench._ToolbaredContainer", [dijit.layout._LayoutWidge
 	}
 
 //TODO: implement destroy/getChildren to destroy toolbarDiv and containerNode?
+});
 });

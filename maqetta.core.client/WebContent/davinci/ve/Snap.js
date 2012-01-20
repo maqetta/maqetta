@@ -1,14 +1,8 @@
-dojo.provide("davinci.ve.Snap");
-
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.ve.Context");
-
-/**
- * @static
- */
-davinci.ve.Snap = function() {
-
-	return /** @scope davinci.ve.Snap */ {
+define([
+    "./widget"
+], function(widget) {
+	dojo.getObject("davinci.ve.Snap", true); // FIXME: shouldn't need this
+	return davinci.ve.Snap = /** @scope davinci.ve.Snap */ {
 		
 		/**
 		 * Preparation routine called during dynamic dragging if snapping is active
@@ -214,7 +208,6 @@ davinci.ve.Snap = function() {
 				style.backgroundColor='rgba(255,0,255,.75)';
 			}else{
 				style.display='none';
-				style.display='none';
 			}
 			var style = context._snapLinesDivAlignY.style;
 			if(context._snapY){
@@ -258,4 +251,4 @@ davinci.ve.Snap = function() {
 			context._snapX = context._snapY = null;
 		}
     };
-}();
+});

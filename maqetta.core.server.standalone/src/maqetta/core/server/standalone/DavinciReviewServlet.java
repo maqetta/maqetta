@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IVResource;
+import org.maqetta.server.ServerManager;
 
 @SuppressWarnings("serial")
 public class DavinciReviewServlet extends DavinciPageServlet {
@@ -57,19 +58,21 @@ public class DavinciReviewServlet extends DavinciPageServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-            IOException {
-
-        if(serverManager==null)
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if(serverManager==null) {
             initialize();
+        }
 
         revieweeName  = req.getParameter("revieweeuser");
 
         String contextString = req.getContextPath();
 
         String pathInfo = req.getPathInfo();
-
         IUser user = (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
+        if (ServerManager.DEBUG_IO_TO_CONSOLE) {
+            System.out.println("Review Servlet request: " + pathInfo + ", logged in=" + (user != null));
+        }
+        
         if(user==null){
             req.getSession().setAttribute(IDavinciServerConstants.REDIRECT_TO, req.getRequestURL().toString());
             resp.sendRedirect(this.getLoginUrl(req));
@@ -102,23 +105,22 @@ public class DavinciReviewServlet extends DavinciPageServlet {
         } else {
             IPath path = new Path(pathInfo);
             String prefix = path.segment(0);
-            if(prefix == null){
+            if (prefix == null) {
                 resp.sendRedirect(contextString + "/review");
                 return;
             }
 
-            if(handleReviewRequest(req, resp, path) || handleLibraryRequest(req, resp, path, user)) {
-                return;
-            }
-
             if (prefix.equals(IDavinciServerConstants.APP_URL.substring(1))
-//                    || prefix.equals(IDavinciServerConstants.USER_URL.substring(1))
                     || prefix.equals(Constants.CMD_URL.substring(1))) {
-                // Forward to DavinciPageServlet such as "/app/img/1.jpg"
+                // Forward to DavinciPageServlet such as "/app/img/1.jpg" or "cmd/getUserInfo"
                 req.getRequestDispatcher(pathInfo).forward(req, resp);
                 return;
             }
             
+            if(handleReviewRequest(req, resp, path) || handleLibraryRequest(req, resp, path, user)) {
+                return;
+            }
+
             // Check if it is a valid user name.
             // If it is a valid user name, do login
             // Else, error.
@@ -145,23 +147,6 @@ public class DavinciReviewServlet extends DavinciPageServlet {
             }
         }
     }
-
-//    private void writeWelcomePage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        IConfigurationElement welcomeExtension = serverManager.getExtension(IDavinciServerConstants.EXTENSION_POINT_WELCOME_PAGE, IDavinciServerConstants.EP_TAG_WELCOME_PAGE);
-//        if (welcomeExtension==null)
-//            writeInternalPage(req, resp, "welcome.html");
-//        else{
-//            String name = welcomeExtension.getDeclaringExtension().getContributor().getName();
-//            Bundle bundle=Activator.getActivator().getOtherBundle(name);
-//            if (bundle!=null)
-//            {
-//                String path=welcomeExtension.getAttribute(IDavinciServerConstants.EP_ATTR_WELCOME_PAGE_PATH);
-//                VURL resourceURL = new VURL(bundle.getResource(path));
-//                this.writePage(req, resp, resourceURL, false);
-//            }
-//
-//        }
-//    }
 
     @Override
     protected boolean handleLibraryRequest(HttpServletRequest req, HttpServletResponse resp, IPath path, IUser user) throws ServletException, IOException{
@@ -193,7 +178,7 @@ public class DavinciReviewServlet extends DavinciPageServlet {
             String designerName = path.segment(1);
             path = path.removeFirstSegments(4);
             IVResource vr = reviewManager.getDesignerUser(designerName).getResource(path);
-            if(null != vr){
+            if (vr != null) {
                 writePage(req, resp, vr, true);
                 return true;
             }

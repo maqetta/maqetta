@@ -191,34 +191,38 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 		this.inherited(arguments);
 	},
 	
-	_dblClick: function(node)
-	{
-		if(davinci.Runtime.getMode()=="reviewPage"){
-			if(node.isDraft||node.parent.isDraft){
+	_dblClick: function(node) {
+		if (davinci.Runtime.getMode()=="reviewPage") {
+			if (node.isDraft||node.parent.isDraft) {
 				if(davinci.Runtime.getRole()=="Designer")
 				this._openPublishWizard(node.isDraft?node:node.parent);
 				return;
 			}
-			if (node.elementType=="ReviewFile")
-			{
+			if (node.elementType=="ReviewFile") {
 				davinci.Workbench.openEditor({
 					fileName: node,
 					content: node.getText()
 				});
 			}
-		}
-		else if(davinci.Runtime.getMode()=="designPage"){
-			if(node.isDraft||node.parent.isDraft){
-				if(davinci.Runtime.getRole()=="Designer")
+		} else if (davinci.Runtime.getMode()=="designPage") {
+			if (node.isDraft||node.parent.isDraft) {
+				if (davinci.Runtime.getRole()=="Designer")
 				this._openPublishWizard(node.isDraft?node:node.parent);
 				return;
 			}
-			if (node.elementType=="ReviewFile")
-			{
-				window.open(davinci.Workbench.location()+"review/"+davinci.Runtime.userName+"/"+node.parent.timeStamp+"/"
+			if (node.elementType=="ReviewFile") {
+				window.open(this._location()+"review/"+davinci.Runtime.userName+"/"+node.parent.timeStamp+"/"
 						+node.name+"/default");
 			}
 		}
+	},
+	
+	_location: function() {
+		var fullPath = document.location.href;
+		var split = fullPath.split("?");
+		var location = split[0].match(/http:\/\/.+:\d+\//);
+			
+		return location;
 	},
 	
 	_click: function(node){

@@ -1,9 +1,12 @@
-dojo.provide("davinci.ve.commands.StyleCommand");
+define([
+    	"dojo/_base/declare",
+    	"davinci/ve/widget",
+    	"davinci/ve/States"
+], function(declare, Widget, States){
 
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.ve.States");
 
-dojo.declare("davinci.ve.commands.StyleCommand", null, {
+return declare("davinci.ve.commands.StyleCommand", null, {
+	
 
 	name: "style",
 
@@ -32,7 +35,7 @@ dojo.declare("davinci.ve.commands.StyleCommand", null, {
 		if(!this._id || !this._newValues){
 			return;
 		}
-		var widget = davinci.ve.widget.byId(this._id);
+		var widget = Widget.byId(this._id);
 		if(!widget){
 			return;
 		}
@@ -103,7 +106,7 @@ dojo.declare("davinci.ve.commands.StyleCommand", null, {
 		if(!this._id || !this._oldValues){
 			return;
 		}
-		var widget = davinci.ve.widget.byId(this._id);
+		var widget = Widget.byId(this._id);
 		if(!widget){
 			return;
 		}
@@ -130,12 +133,13 @@ dojo.declare("davinci.ve.commands.StyleCommand", null, {
 		var parent = widget.parent; 
 		if (!parent && widget.getParent)
 			parent = widget.getParent();
-		if (/*widget.parent && widget.*/parent.dijitWidget){
-			this._refresh(/*widget.*/parent);
+		if (parent.dijitWidget){
+			this._refresh(parent);
 		} else if (widget && widget.resize){
 			widget.resize();
 		}
 		
 	}
 
+});
 });

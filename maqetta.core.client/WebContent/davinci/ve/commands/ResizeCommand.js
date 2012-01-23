@@ -1,8 +1,12 @@
-dojo.provide("davinci.ve.commands.ResizeCommand");
+define([
+    	"dojo/_base/declare",
+    	"davinci/ve/widget",
+    	"davinci/ve/States"
+], function(declare, Widget, States){
 
-dojo.require("davinci.ve.widget");
 
-dojo.declare("davinci.ve.commands.ResizeCommand", null, {
+return declare("davinci.ve.commands.ResizeCommand", null, {
+
 
 	name: "resize",
 
@@ -26,7 +30,7 @@ dojo.declare("davinci.ve.commands.ResizeCommand", null, {
 		if(!this._id){
 			return;
 		}
-		var widget = davinci.ve.widget.byId(this._id);
+		var widget = Widget.byId(this._id);
 		if(!widget){
 			return;
 		}
@@ -67,7 +71,7 @@ dojo.declare("davinci.ve.commands.ResizeCommand", null, {
 		if(!this._id){
 			return;
 		}
-		var widget = davinci.ve.widget.byId(this._id);
+		var widget = Widget.byId(this._id);
 		if(!widget){
 			return;
 		}
@@ -93,4 +97,5 @@ dojo.declare("davinci.ve.commands.ResizeCommand", null, {
 		widget._updateSrcStyle();
 	}
 
+});
 });

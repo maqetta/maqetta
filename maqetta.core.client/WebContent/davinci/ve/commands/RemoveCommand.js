@@ -41,7 +41,7 @@ return declare("davinci.ve.commands.RemoveCommand", null, {
 		widget.destroyWidget();
 		
 		// Recompute styling properties in case we aren't in Normal state
-		States.resetState(widget);
+		davinci.ve.states.resetState(widget);
 	},
 
 	undo: function(){

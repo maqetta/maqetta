@@ -1,9 +1,16 @@
-dojo.provide("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListHelper");
+define([
+	"dojo/_base/lang",
+	"dojo/query",
+	"davinci/ve/widget"
+], function (
+	lang,
+	query,
+	Widget
+) {
 
-dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListHelper", null, {
+return {
 
-	getData: function(/*Widget*/ widget, /*Object*/ options){
-
+	getData: function(/*Widget*/ widget, /*Object*/ options) {
 		if(!widget){
 			return undefined;
 		}
@@ -18,35 +25,33 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListHelper", nul
 		return data;
 	},
 
-	create: function(widget, srcElement){
-	
+	create: function(widget, srcElement) {
 		var storeId = srcElement.getAttribute("store");
 		if(storeId){
-			var storeWidget = davinci.ve.widget.byId(storeId);
+			var storeWidget = Widget.byId(storeId);
 	
-			if (storeWidget /*&& storeWidget.properties*/ && widget.dijitWidget && widget.dijitWidget.store){  //wdr 3-11
+			if (storeWidget && widget.dijitWidget && widget.dijitWidget.store) {
 				this.updateStore(widget.dijitWidget.store, storeWidget/*.properties*//*.data*/, widget);
-	
 			}
-		
 		}
 		this.stopOnClickListItems(widget);
-	
 	},
 
 	updateStore: function(store, /*properties*/ storeWidget, widget) { 
-	
 		var data = storeWidget._srcElement.getAttribute('data'); 
 		var url = storeWidget._srcElement.getAttribute('url'); 
 		if (data){ 
 			var value = data; 
 			var storeData = eval('storeData = '+value);
-			var data = { identifier: storeData.identifier,  items:[] };
+			data = {
+				identifier: storeData.identifier,
+				items: []
+			};
 		
 			var items = data.items;
 			var storeDataItems = storeData.items;
 			for (var r = 0; r < storeDataItems.length; r++){
-				var item = new Object();
+				var item = {};
 				var dataStoreItem = storeDataItems[r];
 				for (var name in dataStoreItem){
 					item[name] = dataStoreItem[name];
@@ -68,7 +73,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListHelper", nul
 		store.fetch({
 			query: this.query,
 			queryOptions:{deep:true}, 
-			onComplete: dojo.hitch(this, function(items){
+			onComplete: lang.hitch(this, function(items){
 				for (var i = 0; i < items.length; i++) {
 					var item = items[i];
 					console.warn("label=", i, "moveTo=", item);
@@ -76,8 +81,6 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListHelper", nul
 				widget.dijitWidget.refresh(); 
 			})
 		});
-	
-	
 	}, 
 	
 	stopOnClickListItems: function(widget){
@@ -93,7 +96,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListHelper", nul
 			// that calls stopPropagation(), which prevents the ListItem's onclick logic from getting invoked.
 			// This allows event to bubble up to ancestor widgets, and therefore
 			// will be caught by Maqetta and will cause a selection action to occur.
-			dojo.query(".mblListItemAnchor", dijitWidget.containerNode).forEach(function(node, index, arr){
+			query(".mblListItemAnchor", dijitWidget.containerNode).forEach(function(node, index, arr){
 				node.addEventListener("click",function(e){
 					e.stopPropagation();		
 				}, true);
@@ -101,6 +104,6 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListHelper", nul
 		}
 	}
 
-
+};
 
 });

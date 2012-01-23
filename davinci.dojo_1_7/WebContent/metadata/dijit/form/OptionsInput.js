@@ -1,8 +1,18 @@
-dojo.provide("davinci.libraries.dojo.dijit.form.OptionsInput");
-dojo.require("davinci.ve.input.SmartInput");
-dojo.require("dojox.html.entities");
+define([
+	"dojo/_base/declare",
+	"davinci/ve/input/SmartInput",
+	"davinci/ve/commands/ModifyCommand",
+	"davinci/ve/commands/RemoveCommand",
+	"davinci/ve/widget"
+], function(
+	declare,
+	SmartInput,
+	ModifyCommand,
+	RemoveCommand,
+	Widget
+) {
 
-dojo.declare("davinci.libraries.dojo.dijit.form.OptionsInput", davinci.ve.input.SmartInput, {
+return declare("davinci.libraries.dojo.dijit.form.OptionsInput", SmartInput, {
 
 	property: "value",
 	
@@ -79,7 +89,7 @@ dojo.declare("davinci.libraries.dojo.dijit.form.OptionsInput", davinci.ve.input.
 			}
 		}
 		
-		var command = new davinci.ve.commands.ModifyCommand(widget, this.getProperties(widget, values), children);
+		var command = new ModifyCommand(widget, this.getProperties(widget, values), children);
 		this._getContext().getCommandStack().execute(command);
 		return command.newWidget;
 	},
@@ -147,12 +157,12 @@ dojo.declare("davinci.libraries.dojo.dijit.form.OptionsInput", davinci.ve.input.
 		var properties = {};
 		properties[name] = value;
 		
-		var command = new davinci.ve.commands.ModifyCommand(widget, properties);
+		var command = new ModifyCommand(widget, properties);
 		this._addOrExecCommand(command);
 	},
 	
 	_removeChild: function(widget) {
-		var command = new davinci.ve.commands.RemoveCommand(widget);
+		var command = new RemoveCommand(widget);
 		this._addOrExecCommand(command);
 	},
 	
@@ -183,8 +193,7 @@ dojo.declare("davinci.libraries.dojo.dijit.form.OptionsInput", davinci.ve.input.
 			if ((widget.isContainer || widget.isLayoutContainer) && widget.declaredClass != "dojox.layout.ScrollPane"){
 				return widget;
 			}
-			debugger;
-			widget = davinci.ve.widget.getParent(widget); 
+			widget = Widget.getParent(widget); 
 		}
 		return undefined;
 	},
@@ -197,5 +206,7 @@ dojo.declare("davinci.libraries.dojo.dijit.form.OptionsInput", davinci.ve.input.
 		var editor = this._getEditor();
 		return editor && (editor.getContext && editor.getContext() || editor.context);
 	}
+
+});
 
 });

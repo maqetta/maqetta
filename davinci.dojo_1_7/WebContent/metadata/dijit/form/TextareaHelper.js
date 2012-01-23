@@ -1,7 +1,6 @@
-dojo.provide("davinci.libraries.dojo.dijit.form.TextareaHelper");
+define(function() {
 
-dojo.declare("davinci.libraries.dojo.dijit.form.TextareaHelper", null, {
-
+return {
 	getChildrenData: function(/*Widget*/ widget, /*Object*/ options){
 		// summary:
 		//		Returns the passed TextArea's text, so that the text appears as a direct descendant of the widget in the markup.
@@ -13,5 +12,6 @@ dojo.declare("davinci.libraries.dojo.dijit.form.TextareaHelper", null, {
 
 		return widget.dijitWidget.getValue();
 	}
+};
 
 });

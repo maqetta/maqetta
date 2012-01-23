@@ -1,11 +1,18 @@
-dojo.provide("davinci.libraries.dojo.dojox.grid.TreeGridInput");
-dojo.require("davinci.ve.input.SmartInput");
+define([
+	"dojo/_base/declare",
+	"davinci/ve/input/SmartInput",
+	"davinci/ve/widget",
+	"davinci/ve/commands/ModifyCommand",
+	"dojo/i18n!../../nls/dijit"
+], function(
+	declare,
+	SmartInput,
+	Widget,
+	ModifyCommand,
+	dijitNls
+) {
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.libraries.dojo.dijit", "dijit");
-
-dojo.declare("davinci.libraries.dojo.dojox.grid.TreeGridInput", davinci.ve.input.SmartInput, {
-
+return declare("davinci.libraries.dojo.dojox.grid.TreeGridInput", SmartInput, {
 
 	property: null, 
 	
@@ -18,8 +25,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.TreeGridInput", davinci.ve.input
 	_structure: [],
 	
 	constructor : function() {
-		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dijit", "dijit");
-		this.helpText = langObj.treeInputHelp;
+		this.helpText = dijitNls.treeInputHelp;
 	},
 	
 	serialize: function(widget, callback, value) {
@@ -157,7 +163,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.TreeGridInput", davinci.ve.input
 		//var modelWidget = davinci.ve.widget.byId(modelId);
 		//var storeId = modelWidget._srcElement.getAttribute("store");
 		var storeId = this._widget.domNode._dvWidget._srcElement.getAttribute("store");
-		var storeWidget = davinci.ve.widget.byId(storeId);
+		var storeWidget = Widget.byId(storeId);
 		this._attr(storeWidget, "data", data);
 		store.data = data;
 		
@@ -175,7 +181,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.TreeGridInput", davinci.ve.input
 		var properties = {};
 		properties[name] = value;
 		
-		var command = new davinci.ve.commands.ModifyCommand(widget, properties);
+		var command = new ModifyCommand(widget, properties);
 		this._addOrExecCommand(command);
 	},
 	
@@ -224,11 +230,13 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.TreeGridInput", davinci.ve.input
 		var s = t;
 		for (var i = 0; i < this._structure.length; i++){
 			var cell = {field: "children", children:[]};
-			item = this._structure[i];
+			var item = this._structure[i];
 			var count = 0;
-			for (n in item){
-				cell.children[count++] = {field: n, name: n}
-				
+			for (var n in item) {
+				cell.children[count++] = {
+					field: n,
+					name: n
+				};
 			}
 			t.push(cell);
 			t = cell.children;
@@ -257,12 +265,15 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.TreeGridInput", davinci.ve.input
 			if(item.children){
 				this._childStructure(item.children, level + 1);
 			}
-			for (name in item){
-				if (name !== 'children' && name !== 'id')
+			for (var name in item) {
+				if (name !== 'children' && name !== 'id') {
 					this._structure[level][name] = name;
+				}
 				
 			}
 		}
 	}
 	
+});
+
 });

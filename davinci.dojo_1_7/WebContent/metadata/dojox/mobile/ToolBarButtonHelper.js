@@ -1,8 +1,6 @@
-dojo.provide("davinci.libraries.dojo.dojox.mobile.ToolBarButtonHelper");
+define(function() {
 
-
-dojo.declare("davinci.libraries.dojo.dojox.mobile.ToolBarButtonHelper", null, {
-
+return {
 	
 	create: function(widget, srcElement){
 		// Fix for #705.
@@ -29,5 +27,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ToolBarButtonHelper", null, {
 			}
 		}
 	}
+
+};
 
 });

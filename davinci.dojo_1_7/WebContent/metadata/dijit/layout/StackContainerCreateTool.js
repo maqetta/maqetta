@@ -1,13 +1,22 @@
-dojo.provide("davinci.libraries.dojo.dijit.layout.StackContainerCreateTool");
+define([
+	"dojo/_base/declare",
+	"davinci/ve/tools/CreateTool",
+	"davinci/ve/widget",
+	"davinci/commands/CompoundCommand",
+	"davinci/ve/commands/AddCommand",
+	"davinci/ve/commands/MoveCommand",
+	"davinci/ve/commands/ResizeCommand"
+], function(
+	declare,
+	CreateTool,
+	Widget,
+	CompoundCommand,
+	AddCommand,
+	MoveCommand,
+	ResizeCommand
+) {
 
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.commands.CompoundCommand");
-dojo.require("davinci.ve.commands.AddCommand");
-dojo.require("davinci.ve.commands.MoveCommand");
-dojo.require("davinci.ve.commands.ResizeCommand");
-dojo.require("davinci.ve.tools.CreateTool");
-
-dojo.declare("davinci.libraries.dojo.dijit.layout.StackContainerCreateTool", davinci.ve.tools.CreateTool, {
+return declare("davinci.libraries.dojo.dijit.layout.StackContainerCreateTool", CreateTool, {
 
 	constructor: function(data){
 		this._resizable = "both";
@@ -30,7 +39,7 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.StackContainerCreateTool", dav
 			return;
 		}
 
-		var containerId = davinci.ve.widget.getUniqueObjectId(containerData.type, this._context.getDocument());
+		var containerId = Widget.getUniqueObjectId(containerData.type, this._context.getDocument());
 		if(controllerData.properties){
 			controllerData.properties.containerId = containerId;
 		}else{
@@ -44,33 +53,32 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.StackContainerCreateTool", dav
 		containerData.context = this._context;
 		controllerData.context = this._context;
 
-		var controller = undefined;
-		var container = undefined;
+		var controller,
+			container;
 		dojo.withDoc(this._context.getDocument(), function(){
-			container = davinci.ve.widget.createWidget(containerData);
-			controller = davinci.ve.widget.createWidget(controllerData);
+			container = Widget.createWidget(containerData);
+			controller = Widget.createWidget(controllerData);
 		});
 		if(!controller || !container){
 			return;
 		}
 
-		var command = new davinci.commands.CompoundCommand();
-		command.add(new davinci.ve.commands.AddCommand(controller, args.parent, args.index));
+		var command = new CompoundCommand();
+		command.add(new AddCommand(controller, args.parent, args.index));
 		var index = (args.index !== undefined && args.index >= 0 ? args.index + 1 : undefined);
-		command.add(new davinci.ve.commands.AddCommand(container, args.parent, index));
+		command.add(new AddCommand(container, args.parent, index));
 		if(args.position){
-			command.add(new davinci.ve.commands.MoveCommand(controller, args.position.x, args.position.y - 30));
-			command.add(new davinci.ve.commands.MoveCommand(container, args.position.x, args.position.y));
+			command.add(new MoveCommand(controller, args.position.x, args.position.y - 30));
+			command.add(new MoveCommand(container, args.position.x, args.position.y));
 		}
 		if(args.size){
-			command.add(new davinci.ve.commands.ResizeCommand(container, args.size.w, args.size.h));
+			command.add(new ResizeCommand(container, args.size.w, args.size.h));
 		}
 		this._container = container;
         return command;
 	},
     
     addPasteCreateCommand: function(command, args){
-
         this._context = this._data.context;
         var data = [];
         data[0] = {type: 'dijit.layout.StackController'};
@@ -78,7 +86,7 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.StackContainerCreateTool", dav
         this._data = data;
         command.add( this._getCreateCommand(args));
         return this._container;
-
     }
+});
 
 });

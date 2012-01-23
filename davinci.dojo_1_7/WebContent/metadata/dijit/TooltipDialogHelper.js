@@ -29,7 +29,7 @@ return function() {
 		var id = widget.dijitWidget.id,
 		context = widget.getContext();
 		this.handle = connect.subscribe("/davinci/ui/widgetSelected", null, function(selected) {
-			for(var w = selected[0]; w && w != widget; w = w.getParent && w.getParent());
+			for(var w = selected[0]; w && w != widget; w = w.getParent && w.getParent()) {}
 			if (!w || w.getContext() != context) { return; }
 			if(!w || w.id != id) {
 				var owner = context.getDijit().registry.byId(id).owner;

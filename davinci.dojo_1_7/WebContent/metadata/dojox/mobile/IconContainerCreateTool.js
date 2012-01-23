@@ -1,11 +1,22 @@
-dojo.provide("davinci.libraries.dojo.dojox.mobile.IconContainerCreateTool");
-
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.commands.CompoundCommand");
-dojo.require("davinci.ve.commands.AddCommand");
-dojo.require("davinci.ve.commands.MoveCommand");
-dojo.require("davinci.ve.commands.ResizeCommand");
-dojo.require("davinci.ve.tools.CreateTool");
+define([
+    "dojo/_base/declare",
+    "dojo/_base/window",
+    "davinci/ve/tools/CreateTool",
+    "davinci/ve/widget",
+    "davinci/commands/CompoundCommand",
+    "davinci/ve/commands/AddCommand",
+    "davinci/ve/commands/MoveCommand",
+    "davinci/ve/commands/ResizeCommand"
+], function (
+    declare,
+    Window,
+    CreateTool,
+    Widget,
+    CompoundCommand,
+    AddCommand,
+    MoveCommand,
+    ResizeCommand
+) {
 
 /**
  * GitHub #801
@@ -19,7 +30,7 @@ dojo.require("davinci.ve.tools.CreateTool");
  * first instantiating IconContainer and then its children IconItem.
  */
 
-dojo.declare("davinci.libraries.dojo.dojox.mobile.IconContainerCreateTool", davinci.ve.tools.CreateTool, {
+return declare("davinci.libraries.dojo.dojox.mobile.IconContainerCreateTool", CreateTool, {
 
     _create: function(args) {
         var iconContainerData = this._data[0],
@@ -40,40 +51,42 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.IconContainerCreateTool", davi
         iconContainerData.context = context;
         var iconContainer,
             children = [];
-        dojo.withDoc(context.getDocument(), function() {
-            iconContainer = davinci.ve.widget.createWidget(iconContainerData);
+        Window.withDoc(context.getDocument(), function() {
+            iconContainer = Widget.createWidget(iconContainerData);
             childrenData.forEach(function(child) {
                 child.context = context;
-                children.push(davinci.ve.widget.createWidget(child));
+                children.push(Widget.createWidget(child));
             });
         });
         if (! iconContainer) {
             return;
         }
 
-        var command = new davinci.commands.CompoundCommand();
+        var command = new CompoundCommand();
 
         // first add parent IconContainer...
-        command.add(new davinci.ve.commands.AddCommand(iconContainer,
+        command.add(new AddCommand(iconContainer,
                 args.parent, args.index));
         // ... followed by its children
         children.forEach(function(child, idx) {
-            command.add(new davinci.ve.commands.AddCommand(child, iconContainer,
+            command.add(new AddCommand(child, iconContainer,
                     idx));
         });
 
         if (args.position) {
-            command.add(new davinci.ve.commands.MoveCommand(iconContainer,
+            command.add(new MoveCommand(iconContainer,
                     args.position.x, args.position.y));
         }
         if (args.size) {
             var w = args.size && args.size.w,
                 h = args.size && args.size.h;
-            command.add(new davinci.ve.commands.ResizeCommand(iconContainer, w, h));
+            command.add(new ResizeCommand(iconContainer, w, h));
         }
         context.getCommandStack().execute(command);
         this._select(iconContainer);
         return iconContainer;
     }
+
+});
 
 });

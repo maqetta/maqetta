@@ -1,11 +1,14 @@
-dojo.provide("davinci.libraries.dojo.dijit.CalendarInput");
-dojo.require("davinci.ve.input.SmartInput");
+define([
+	"dojo/_base/declare",
+	"davinci/ve/input/SmartInput",
+	"dojo/i18n!../nls/dijit"
+], function(
+	declare,
+	SmartInput,
+	dijitNls
+) {
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.libraries.dojo.dijit", "dijit");
-
-dojo.declare("davinci.libraries.dojo.dijit.CalendarInput", davinci.ve.input.SmartInput, {
-
+return declare("davinci.libraries.dojo.dijit.CalendarInput", SmartInput, {
 
 	property: "value",
 	supportsHTML: "false",
@@ -13,13 +16,12 @@ dojo.declare("davinci.libraries.dojo.dijit.CalendarInput", davinci.ve.input.Smar
 	helpText: "",
 	
 	constructor : function() {
-		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dijit", "dijit");
-		this.helpText = langObj.calendarInputHelp;
+		this.helpText = dijitNls.calendarInputHelp;
 	},
 	
 	serialize: function(widget, updateEditBoxValue, value) {
 		// TODO: Add code to simplify the initial text
-	   // don't use the udateEditBoxValue function that is passed in use our local override.
+		// don't use the udateEditBoxValue function that is passed in use our local override.
 		this.updateEditBoxValue(value); 
 	},
 	
@@ -46,4 +48,6 @@ dojo.declare("davinci.libraries.dojo.dijit.CalendarInput", davinci.ve.input.Smar
 		dijit.selectInputText(this._inline.eb.textbox);
 		this.updateSimStyle();
 	}
+});
+
 });

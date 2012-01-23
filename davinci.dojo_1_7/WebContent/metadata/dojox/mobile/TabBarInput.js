@@ -1,8 +1,15 @@
-dojo.provide("davinci.libraries.dojo.dojox.mobile.TabBarInput");
-dojo.require("davinci.libraries.dojo.dijit.layout.ContainerInput");
+define([
+	"dojo/_base/declare",
+	"../../dijit/layout/ContainerInput"
+], function(
+	declare,
+	ContainerInput
+) {
 
-dojo.declare("davinci.libraries.dojo.dojox.mobile.TabBarInput", davinci.libraries.dojo.dijit.layout.ContainerInput, {
+return declare("davinci.libraries.dojo.dojox.mobile.TabBarInput", ContainerInput, {
 
-	propertyName: "label",
+	propertyName: "label"
 	
+});
+
 });

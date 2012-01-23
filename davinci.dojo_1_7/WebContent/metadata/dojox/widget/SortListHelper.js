@@ -1,6 +1,14 @@
-dojo.provide("davinci.libraries.dojo.dojox.widget.SortListHelper");
+define([
+	"dojo/_base/array",
+	"dojo/query",
+	"davinci/ve/widget"
+], function(
+	array,
+	query,
+	Widget
+) {
 
-dojo.declare("davinci.libraries.dojo.dojox.widget.SortListHelper", null, {
+return {
 
 	getData: function(/*Widget*/ widget, /*Object*/ options){
 		// summary:
@@ -10,10 +18,10 @@ dojo.declare("davinci.libraries.dojo.dojox.widget.SortListHelper", null, {
 			return undefined;
 		}
 
-		var data = davinci.ve.widget._getData(widget, options);
+		var data = Widget._getData(widget, options);
 		if(data && data.properties && data.properties.store){
 			// "store" property must be object ID "string"
-			data.properties.store = davinci.ve.widget.getObjectId(data.properties.store);
+			data.properties.store = Widget.getObjectId(data.properties.store);
 		}
 		return data;
 	},
@@ -30,8 +38,8 @@ dojo.declare("davinci.libraries.dojo.dojox.widget.SortListHelper", null, {
 			return undefined;
 		}
 		var childrenData = [];
-		var nodes = dojo.query("li", widget.containerNode);
-		dojo.forEach(nodes, function(n){
+		var nodes = query("li", widget.containerNode);
+		array.forEach(nodes, function(n){
 			childrenData.push({type: "html.li", children: n.innerHTML});
 		});
 		if(childrenData.length === 0){
@@ -39,5 +47,7 @@ dojo.declare("davinci.libraries.dojo.dojox.widget.SortListHelper", null, {
 		}
 		return childrenData;
 	}
+
+};
 
 });

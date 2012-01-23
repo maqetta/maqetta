@@ -1,11 +1,16 @@
-dojo.provide("davinci.libraries.dojo.dijit.MenuBarInput");
-dojo.require("davinci.libraries.dojo.dijit.layout.ContainerInput");
+define([
+	"dojo/_base/declare",
+	"./layout/ContainerInput",
+	"davinci/ve/commands/ModifyCommand",
+	"dojo/i18n!../nls/dijit"
+], function(
+	declare,
+	ContainerInput,
+	ModifyCommand,
+	dijitNls
+) {
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.libraries.dojo.dijit", "dijit");
-
-dojo.declare("davinci.libraries.dojo.dijit.MenuBarInput", davinci.libraries.dojo.dijit.layout.ContainerInput, {
-
+return declare("davinci.libraries.dojo.dijit.MenuBarInput", ContainerInput, {
 
 	propertyName: "label",
 	
@@ -17,12 +22,12 @@ dojo.declare("davinci.libraries.dojo.dijit.MenuBarInput", davinci.libraries.dojo
 	//supportsHTML: "false",
 	
 	helpText: "",
-	
-	constructor : function() {
-		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dijit", "dijit");
-		this.helpText = langObj.menuBarInputHelp;
-	},
 
+	end: true,
+
+	constructor : function() {
+		this.helpText = dijitNls.menuBarInputHelp;
+	},
 	
 	serialize: function(widget, callback, value) {
 		var result = [];
@@ -113,7 +118,7 @@ dojo.declare("davinci.libraries.dojo.dijit.MenuBarInput", davinci.libraries.dojo
 			}
 		}
 		
-		var command = new davinci.ve.commands.ModifyCommand(widget, this.getProperties(widget, values), popupMenuBarItems);
+		var command = new ModifyCommand(widget, this.getProperties(widget, values), popupMenuBarItems);
 		this._getContext().getCommandStack().execute(command);
 		return command.newWidget;
 	},
@@ -153,8 +158,8 @@ dojo.declare("davinci.libraries.dojo.dijit.MenuBarInput", davinci.libraries.dojo
 			}
 		}
 		return result;
-	},
-	
+	}
 
-	end: true
+});
+
 });

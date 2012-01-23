@@ -1,11 +1,26 @@
-dojo.provide("davinci.libraries.dojo.dojox.mobile.MobileComboBoxInput");
-dojo.require("davinci.ve.input.SmartInput");
-dojo.require("davinci.commands.OrderedCompoundCommand");
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dijit/registry",
+	"dojox/html/entities",
+	"davinci/ve/input/SmartInput",
+	"davinci/ve/widget",
+	"davinci/commands/OrderedCompoundCommand",
+	"davinci/ve/commands/ModifyCommand",
+	"dojo/i18n!../nls/dojox"
+], function (
+	declare,
+	Lang,
+	Registry,
+	Entities,
+	SmartInput,
+	Widget,
+	OrderedCompoundCommand,
+	ModifyCommand,
+	dojoxNls
+) {
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.libraries.dojo.dojox", "dojox");
-
-dojo.declare("davinci.libraries.dojo.dojox.mobile.MobileComboBoxInput", davinci.ve.input.SmartInput, {
+return declare("davinci.libraries.dojo.dojox.mobile.MobileComboBoxInput", SmartInput, {
 
 	property: "value",
 	
@@ -15,14 +30,12 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.MobileComboBoxInput", davinci.
 	
 	format: "rows",
 	
-	displayOnCreate: "true",
-	
 	supportsHTML: "false",
+
 	helpText: "",
 	
 	constructor : function() {
-		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
-		this.helpText = langObj.mobileComboBoxHelp1 + "<br />" + langObj.mobileComboBoxHelp2;
+		this.helpText = dojoxNls.mobileComboBoxHelp1 + "<br />" + dojoxNls.mobileComboBoxHelp2;
 	},
 	
 	getProperties: function(widget, options) {
@@ -41,16 +54,14 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.MobileComboBoxInput", davinci.
 	},
 	
 	serialize: function(widget, updateEditBoxValue, value) {
-		
-
-		var data = widget.dijitWidget.store.domNode._dvWidget.getData();;
+		var data = widget.dijitWidget.store.domNode._dvWidget.getData();
 		var children = data.children;
 		var result = [];
 		
 		for (var i = 0; i < children.length; i++) {
 			var child = children[i];
 			var text = child.properties.value;
-			text = dojox.html.entities.decode(text);
+			text = Entities.decode(text);
 			var selected = (value == text) ? "+" : "";
 			result.push(selected + text);
 		}
@@ -63,15 +74,16 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.MobileComboBoxInput", davinci.
 	parse: function(input) {
 		var value = this.parseItems(input);
 		for (var x = 0; x < value.length; x++){
-			value[x].text = dojox.html.entities.encode(value[x].text);
+			value[x].text = Entities.encode(value[x].text);
 		}
 		return value;
 	},
 	
 	update: function(widget, values) {
-		if (values.length < 1)
+		if (values.length < 1) {
 			return;
-		var data = widget.dijitWidget.store.domNode._dvWidget.getData();;
+		}
+		var data = widget.dijitWidget.store.domNode._dvWidget.getData();
 		var children = data.children;
 		var selectedItem;
 		for (var i = 0; i < values.length; i++) {
@@ -88,7 +100,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.MobileComboBoxInput", davinci.
 				children.push(this.createChildData(text, text, value.selected));
 			}
 			if (!this.isHtmlSupported()){
-				values[i].text = dojox.html.entities.decode(text);
+				values[i].text = Entities.decode(text);
 			}
 		}
 		
@@ -100,7 +112,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.MobileComboBoxInput", davinci.
 			}
 		}
 		var dataListId = widget.dijitWidget.store.id;
-		var dataListWidget = davinci.ve.widget.byId(dataListId);
+		var dataListWidget = Widget.byId(dataListId);
 		var comboBoxProps = {}; 
 		var dataListProps = {};
 		if (!selectedItem) {
@@ -108,20 +120,19 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.MobileComboBoxInput", davinci.
 		}
 		dataListProps['data-dojo-props'] = 'id:"'+dataListId+'"';
 		comboBoxProps['data-dojo-props'] = 'value:"'+selectedItem+'", list:"'+dataListId+'"';
-		var command = new davinci.commands.OrderedCompoundCommand();
-		var x = dojo.getObject(dataListId);
-		var y = dijit.byId(dataListId);
+		var command = new OrderedCompoundCommand();
+		var x = Lang.getObject(dataListId);
+		var y = Registry.byId(dataListId);
 		
-		command.add(new davinci.ve.commands.ModifyCommand(dataListWidget, dataListProps, children));
-		var comboBoxCommand = new davinci.ve.commands.ModifyCommand(widget, comboBoxProps, []);
+		command.add(new ModifyCommand(dataListWidget, dataListProps, children));
+		var comboBoxCommand = new ModifyCommand(widget, comboBoxProps, []);
 		command.add(comboBoxCommand);
 		this._getContext().getCommandStack().execute(command);
 		return comboBoxCommand.newWidget;
 	},
 
-	show: function(widgetId){
-
-		 this._widget = davinci.ve.widget.byId(widgetId);
+	show: function(widgetId) {
+		 this._widget = Widget.byId(widgetId);
 		 this.inherited(arguments);
 	},
 	
@@ -137,8 +148,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.MobileComboBoxInput", davinci.
 	createChildData: function(value, text, selected) {
 		return {type: "html.option", properties: {value: value}, children: text || value};
 	}
-	
 
-	
+});
 
 });

@@ -1,8 +1,12 @@
-dojo.provide("davinci.libraries.dojo.dojox.widget.BarGaugeHelper");
+define([
+	"dojo/_base/lang",
+	"./_GaugeHelper"
+], function(
+	lang,
+	_GaugeHelper
+) {
 
-dojo.require("davinci.libraries.dojo.dojox.widget._GaugeHelper");
-
-dojo.declare("davinci.libraries.dojo.dojox.widget.BarGaugeHelper", davinci.libraries.dojo.dojox.widget._GaugeHelper, {
+var BarGaugeHelper = {
 	// _widget: String
 	// 		Override for BarGauge.
 	_widget: "BarGauge",
@@ -15,7 +19,13 @@ dojo.declare("davinci.libraries.dojo.dojox.widget.BarGaugeHelper", davinci.libra
 		// delete copied private data
 		if(this.majorTicks){ delete this.majorTicks._ticks; }
 		if(this.minorTicks){ delete this.minorTicks._ticks; }
-		dojo.hitch(this,dojo.metadata.dojox.widget.BarGaugeHelper._oldPostCreate)();
+		lang.hitch(this, BarGaugeHelper._oldPostCreate)();
 		this.useTooltip=oldUseTooltip;
 	}
+};
+
+lang.extend(BarGaugeHelper, _GaugeHelper);
+
+return BarGaugeHelper;
+
 });

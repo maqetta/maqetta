@@ -1,13 +1,15 @@
-dojo.provide("davinci.libraries.dojo.dijit.PopupMenuBarItemHelper");
+define(function() {
 
-dojo.declare("davinci.libraries.dojo.dijit.PopupMenuBarItemHelper", null, {
+return {
 
-	create: function(widget, srcElement){
-
-		if (widget.dijitWidget.popup)
-			widget.dijitWidget.popup.domNode._dvWidget.hidden=true; // this will hide the dijitMenu in designer
-
+	create: function(widget, srcElement) {
+		var popup = widget.dijitWidget.popup;
+		if (popup) {
+			// this will hide the dijitMenu in designer
+			popup.domNode._dvWidget.hidden = true;
+		}
 	}
-	
+
+};
 
 });

@@ -1,10 +1,34 @@
-dojo.provide("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeListInput");
-dojo.require("davinci.libraries.dojo.dijit.layout.ContainerInput");
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/window",
+	"dojo/query",
+	"dojo/dom-class",
+	"dojo/dom-construct",
+	"dojox/html/entities",
+	"../../dijit/layout/ContainerInput",
+	"davinci/ve/widget",
+	"davinci/commands/CompoundCommand",
+	"davinci/ve/commands/AddCommand",
+	"davinci/ve/commands/ModifyCommand",
+	"dojo/i18n!../nls/dojox"
+], function (
+	declare,
+	lang,
+	window,
+	query,
+	domClass,
+	construct,
+	entities,
+	ContainerInput,
+	Widget,
+	CompoundCommand,
+	AddCommand,
+	ModifyCommand,
+	dojoxNls
+) {
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.libraries.dojo.dojox", "dojox");
-
-dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeListInput", davinci.libraries.dojo.dijit.layout.ContainerInput, {
+return declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeListInput", ContainerInput, {
 
 	multiLine: "true",
 	format: "rows",
@@ -12,8 +36,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeListInput", davinci.
 	helpText:  "",
 	
 	constructor : function() {
-		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
-		this.helpText = langObj.edgeToEdgeListHelp;
+		this.helpText = dojoxNls.edgeToEdgeListHelp;
 	},
 
 	parse: function(input) {
@@ -24,13 +47,13 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeListInput", davinci.
 	update: function(widget, value) {
 		var values = value;
 		
-		this.command = new davinci.commands.CompoundCommand();
+		this.command = new CompoundCommand();
 
 		var children = widget.getChildren();
 		for (var i = 0; i < values.length; i++) {
 			var text = values[i].text;
 			if (this._format === 'html'){
-				text = dojox.html.entities.decode(text);
+				text = entities.decode(text);
 			}
 			if (i < children.length) {
 				var child = children[i];
@@ -53,21 +76,21 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeListInput", davinci.
 	
 	_attr: function(widget, value) {
 		var properties = {};
-		var command = new davinci.ve.commands.ModifyCommand(widget, properties, value);
+		var command = new ModifyCommand(widget, properties, value);
 		this._addOrExecCommand(command);
 	},
 	
 	_addChildOfTypeWithProperty: function(widget, type, value) {
 		var data = {type: type, properties: {}, context: this._getContext()};
 		
-		var child = undefined;
-		dojo.withDoc(this._getContext().getDocument(), function(){
-			child = davinci.ve.widget.createWidget(data);
+		var child;
+		window.withDoc(this._getContext().getDocument(), function(){
+			child = Widget.createWidget(data);
 		}, this);
 		
-		var command = new davinci.ve.commands.AddCommand(child, widget);
+		var command = new AddCommand(child, widget);
 		this._addOrExecCommand(command);
-		var command = new davinci.ve.commands.ModifyCommand(child, data.properties, value);
+		command = new ModifyCommand(child, data.properties, value);
 		this._addOrExecCommand(command);
 	},
 	
@@ -101,16 +124,16 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeListInput", davinci.
 		for (var i = 0; i < children.length; i++) {
 			var child = children[i];
 			var dijitWidget = child.dijitWidget;
-			var textBoxNode = dojo.query('.mblListItemTextBox', dijitWidget.domNode)[0];
+			var textBoxNode = query('.mblListItemTextBox', dijitWidget.domNode)[0];
 			var text = "";
 			for (var j=0; j<textBoxNode.childNodes.length; j++){
 				var n = textBoxNode.childNodes[j];
 				if(n.nodeType === 1){	// element
-					if(dojo.hasClass(n, 'mblListItemLabel')){
+					if(domClass.hasClass(n, 'mblListItemLabel')){
 						// Don't show the markup around mblListItemLabel nodes
-						text += dojo.trim(n.innerHTML);
+						text += lang.trim(n.innerHTML);
 					}else{
-						text += dojo.trim(n.outerHTML);
+						text += lang.trim(n.outerHTML);
 					}
 				}else if(n.nodeType === 3){	//textNode
 					text += n.nodeValue;
@@ -118,7 +141,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeListInput", davinci.
 			}
 			// remove extraneous whitespace, particularly newlines
 			//FIXME: This should be an option to the model code
-			var div = dojo.create('DIV', {innerHTML:text});
+			var div = construct.create('DIV', {innerHTML:text});
 			var collapsed = this._collapse(div);
 			result.push(collapsed);
 		}
@@ -127,5 +150,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeListInput", davinci.
 	
 		callback(result); 
 	}
+
+});
 
 });

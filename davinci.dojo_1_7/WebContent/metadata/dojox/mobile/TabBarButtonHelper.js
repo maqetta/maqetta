@@ -1,8 +1,8 @@
-dojo.provide("davinci.libraries.dojo.dojox.mobile.TabBarButtonHelper");
+define([
+	"dojo/query"
+], function(query) {
 
-
-dojo.declare("davinci.libraries.dojo.dojox.mobile.TabBarButtonHelper", null, {
-
+return {
 	
 	create: function(widget, srcElement){
 		// Fix for #705.
@@ -19,7 +19,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.TabBarButtonHelper", null, {
 		var dijitWidget = widget.dijitWidget;
 		if(dijitWidget){
 			var domNode = dijitWidget.domNode;
-			var mblTabBarButtonAnchorNode = dojo.query('.mblTabBarButtonAnchor',domNode)[0];
+			var mblTabBarButtonAnchorNode = query('.mblTabBarButtonAnchor',domNode)[0];
 			if(mblTabBarButtonAnchorNode){
 				mblTabBarButtonAnchorNode.addEventListener("click",function(e){
 					e.stopPropagation();		
@@ -27,5 +27,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.TabBarButtonHelper", null, {
 			}
 		}
 	}
+
+};
 
 });

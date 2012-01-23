@@ -1,13 +1,22 @@
-dojo.provide("davinci.libraries.dojo.dijit.TreeCreateTool");
+define([
+	"dojo/_base/declare",
+	"davinci/ve/tools/CreateTool",
+	"davinci/ve/widget",
+	"davinci/commands/CompoundCommand",
+	"davinci/ve/commands/AddCommand",
+	"davinci/ve/commands/MoveCommand",
+	"davinci/ve/commands/ResizeCommand"
+], function(
+	declare,
+	CreateTool,
+	Widget,
+	CompoundCommand,
+	AddCommand,
+	MoveCommand,
+	ResizeCommand
+) {
 
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.commands.CompoundCommand");
-dojo.require("davinci.ve.commands.AddCommand");
-dojo.require("davinci.ve.commands.MoveCommand");
-dojo.require("davinci.ve.commands.ResizeCommand");
-dojo.require("davinci.ve.tools.CreateTool");
-
-dojo.declare("davinci.libraries.dojo.dijit.TreeCreateTool", davinci.ve.tools.CreateTool, {
+return declare("davinci.libraries.dojo.dijit.TreeCreateTool", CreateTool, {
 
 	constructor: function(data){
 		this._resizable = "both";
@@ -34,7 +43,7 @@ dojo.declare("davinci.libraries.dojo.dijit.TreeCreateTool", davinci.ve.tools.Cre
 			return;
 		}
 
-		var storeId = davinci.ve.widget.getUniqueObjectId(storeData.type, this._context.getDocument());
+		var storeId = Widget.getUniqueObjectId(storeData.type, this._context.getDocument());
 		if(!storeData.properties){
 			storeData.properties = {};
 		}
@@ -63,7 +72,7 @@ dojo.declare("davinci.libraries.dojo.dijit.TreeCreateTool", davinci.ve.tools.Cre
 		});
 		data.items = copyUsingFrameObject(items);
 		
-		var modelId = davinci.ve.widget.getUniqueObjectId(modelData.type, this._context.getDocument());
+		var modelId = Widget.getUniqueObjectId(modelData.type, this._context.getDocument());
 		if(!modelData.properties){
 			modelData.properties = {};
 		}
@@ -76,38 +85,38 @@ dojo.declare("davinci.libraries.dojo.dijit.TreeCreateTool", davinci.ve.tools.Cre
 		}
 		treeData.context = this._context;
 
-		var store = undefined;
-		var model = undefined;
-		var tree = undefined;
+		var store,
+			model,
+			tree;
 		
 		var dj = this._context.getDojo();
 		dojo.withDoc(this._context.getDocument(), function(){
-			store = davinci.ve.widget.createWidget(storeData);
+			store = Widget.createWidget(storeData);
 			modelData.properties.store = dj.getObject(storeId);
-			model = davinci.ve.widget.createWidget(modelData);
+			model = Widget.createWidget(modelData);
 			treeData.properties.model = dj.getObject(modelId);
-			tree = davinci.ve.widget.createWidget(treeData);
+			tree = Widget.createWidget(treeData);
 		});
 		
 		if(!store || !model || !tree){
 			return;
 		}
 
-		var command = new davinci.commands.CompoundCommand();
+		var command = new CompoundCommand();
 		var index = args.index;
 		// always put store and model as first element under body, to ensure they are constructed by dojo before they are used
-       // var bodyWidget = davinci.ve.widget.getWidget(this._context.rootNode);
-		command.add(new davinci.ve.commands.AddCommand(store, args.parent, index));
+       // var bodyWidget = Widget.getWidget(this._context.rootNode);
+		command.add(new AddCommand(store, args.parent, index));
 		index = (index !== undefined && index >= 0 ? index + 1 : undefined);
-		command.add(new davinci.ve.commands.AddCommand(model, args.parent, index+1));
+		command.add(new AddCommand(model, args.parent, index+1));
 		index = (index !== undefined && index >= 0 ? index + 1 : undefined);
-		command.add(new davinci.ve.commands.AddCommand(tree, args.parent, index+2));
+		command.add(new AddCommand(tree, args.parent, index+2));
 		
 		if(args.position){
-			command.add(new davinci.ve.commands.MoveCommand(tree, args.position.x, args.position.y));
+			command.add(new MoveCommand(tree, args.position.x, args.position.y));
 		}
 		if(args.size){
-			command.add(new davinci.ve.commands.ResizeCommand(tree, args.size.w, args.size.h));
+			command.add(new ResizeCommand(tree, args.size.w, args.size.h));
 		}
 		
 		//this._context.getCommandStack().execute(command);
@@ -121,19 +130,19 @@ dojo.declare("davinci.libraries.dojo.dijit.TreeCreateTool", davinci.ve.tools.Cre
 
 		this._context = this._data.context;
 		var model = this._data.properties.model;
-		var modelWidget = davinci.ve.widget.byId(model.id);
+		var modelWidget = Widget.byId(model.id);
 		var modelData = modelWidget.getData();
-		var storeWidget = davinci.ve.widget.byId(model.store._edit_object_id);
-   		var storeData = storeWidget.getData();
-   		var data = [];
-   		data[0] = storeData;
-   		data[1] = modelData;
-   		data[2] = this._data;
-   		this._data = data;
-   		command.add( this._getCreateCommand(args));
-   		return this._tree;
-
+		var storeWidget = Widget.byId(model.store._edit_object_id);
+		var storeData = storeWidget.getData();
+		var data = [];
+		data[0] = storeData;
+		data[1] = modelData;
+		data[2] = this._data;
+		this._data = data;
+		command.add( this._getCreateCommand(args));
+		return this._tree;
 	}
-	
+
+});
 
 });

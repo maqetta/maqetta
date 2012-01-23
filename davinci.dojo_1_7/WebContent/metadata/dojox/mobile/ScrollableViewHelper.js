@@ -1,10 +1,14 @@
-dojo.provide("davinci.libraries.dojo.dojox.mobile.ScrollableViewHelper");
+define([
+	"dojo/_base/lang",
+	"./ViewHelper",
+	"davinci/ve/widget"
+], function(
+	Lang,
+	ViewHelper,
+	Widget
+) {
 
-dojo.require("davinci.libraries.dojo.dojox.mobile.ViewHelper");
-dojo.require("davinci.ve.widget");
-
-
-dojo.declare("davinci.libraries.dojo.dojox.mobile.ScrollableViewHelper", [davinci.libraries.dojo.dojox.mobile.ViewHelper], {
+var ScrollableViewHelper =  {
 
 	/**
 	 * Disable the scrolling mechanism at design time (only) because it conflicts
@@ -30,12 +34,12 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ScrollableViewHelper", [davinc
 	getChildren: function(widget, attach) {
 		function getWidget(node) {
 			if (attach) {
-				return davinci.ve.widget.getWidget(node);
-			} else {
-				var widget = node._dvWidget;
-				if (widget) {
-					return widget;
-				}
+				return Widget.getWidget(node);
+			}
+
+			var widget = node._dvWidget;
+			if (widget) {
+				return widget;
 			}
 		}
 
@@ -58,5 +62,11 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ScrollableViewHelper", [davinc
 		}
 		return children;
 	}
+
+};
+
+Lang.extend(ScrollableViewHelper, ViewHelper);
+
+return ScrollableViewHelper;
 
 });

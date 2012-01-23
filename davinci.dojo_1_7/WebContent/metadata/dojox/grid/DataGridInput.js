@@ -1,17 +1,26 @@
-dojo.provide("davinci.libraries.dojo.dojox.grid.DataGridInput");
-dojo.require("davinci.ve.input.SmartInput");
-//dojo.require("davinci.ve.commands.ModifyFileItemStoreCommand");
-dojo.require("davinci.commands.OrderedCompoundCommand");
-dojo.require("dojox.grid.cells");
-dojo.require("dojox.form.DropDownSelect");
-dojo.require("dojox.io.xhrScriptPlugin");
-dojo.require('dojo.data.ItemFileReadStore');
+define([
+	"dojo/_base/declare",
+	"davinci/ve/input/SmartInput",
+	"davinci/ve/commands/ModifyCommand",
+	"davinci/commands/OrderedCompoundCommand",
+	"davinci/ve/widget",
+	"davinci/model/Path",
+	"davinci/ui/Panel",
+	"dojo/i18n!dijit/nls/common",
+	"dojo/i18n!../nls/dojox"
+], function(
+	declare,
+	SmartInput,
+	ModifyCommand,
+	OrderedCompoundCommand,
+	Widget,
+	Path,
+	Panel,
+	commonNls,
+	dojoxNls
+) {
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.libraries.dojo.dojox", "dojox");
-dojo.requireLocalization("dijit", "common");
-
-dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input.SmartInput, {
+return declare("davinci.libraries.dojo.dojox.grid.DataGridInput", SmartInput, {
 
 	propertyName: "structure",
 
@@ -22,17 +31,16 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 	delimiter: ", ",
 	
 	multiLine: "true",
-	supportsHTML: "true", 
+
+	supportsHTML: "true",
+
 	//helpText:  'First line is column headers separated by commons all following lines are data for those columns.',
 
 	helpText:  "",
 	
 	constructor : function() {
-		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
-		this.helpText = langObj.dataGridInputHelp;
-		
+		this.helpText = dojoxNls.dataGridInputHelp;
 	},
-
 
 	serialize: function(widget, callback, value) {
         var structure = value || widget.attr('structure');
@@ -48,16 +56,15 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 	// splits the input by rows then columns
 	// see @update() for format
 	parse: function(input) {
-		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
 		var values = this.parseGrid(input);
         if (values.length < 2) {
-            alert(langObj.invalidInput1);
+            alert(dojoxNls.invalidInput1);
             return input;
         }
         var fields = values[0];
         var names = values[1];
         if (fields.length < names.length) {
-            alert(langObj.invalidInput2);
+            alert(dojoxNls.invalidInput2);
             return input;
         }
         var structure = [];
@@ -76,7 +83,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 	update: function(widget, structure) {
 	    if (structure.length > 0) {
 	        var properties = {structure: structure};
-	        var command = new davinci.ve.commands.ModifyCommand(widget, properties, null, this._getContext());
+	        var command = new ModifyCommand(widget, properties, null, this._getContext());
 	        this._getContext().getCommandStack().execute(command);
 	        return command.newWidget;
 	    }
@@ -86,10 +93,11 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 	
 	_getContainer: function(widget){
 		while(widget){
-			if ((widget.isContainer || widget.isLayoutContainer) && widget.declaredClass != "dojox.layout.ScrollPane"){
+			if ((widget.isContainer || widget.isLayoutContainer) &&
+					widget.declaredClass != "dojox.layout.ScrollPane") {
 				return widget;
 			}
-			widget = davinci.ve.widget.getParent(widget); 
+			widget = Widget.getParent(widget); 
 		}
 		return undefined;
 	},
@@ -103,16 +111,6 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 		return editor && (editor.getContext && editor.getContext() || editor.context);
 	},
 
-	/*
-    cellTypeTranslator: { 'Text':dojox.grid.cells.Cell,
-	                      'CheckBox':dojox.grid.cells.Bool,
-                          'Select':dojox.grid.cells.Select,
-                          'dojox.grid.cells.Cell':'Text',
-                          'dojox.grid.cells.Bool':'CheckBox',
-                          'dojox.grid.cells.Select':'Select'
-	},
-	*/
-	
 	refreshStoreView: function(){
 		var textArea = dijit.byId("davinciIleb");
 		var structure = this._widget.attr("structure");
@@ -134,8 +132,6 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 		textArea.attr('value', String(value));
 	},
 	
-	
-
     addOne: function() {
         this._gridColDS.newItem({rowid: this._rowid++, width: "auto", editable: true, hidden: false});
     },
@@ -146,7 +142,6 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
             gridColDS.deleteItem(item);
         });
     },
-    
 	
 	onOk: function(e){
 		
@@ -167,7 +162,8 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 	},
 	
 	hide: function(){
-	    this.inherited(arguments, [ true ]); // we already updated the widget so just do a hide like cancel
+		// we already updated the widget so just do a hide like cancel
+	    this.inherited(arguments, [ true ]);
 	},
 	
     updateWidget: function() {
@@ -179,13 +175,19 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
     	var storeCmd = this.updateStore(structure);
     	structure = this._structure;
     	var escapeHTML = (this.getFormat() === 'text');
-        var command = new davinci.ve.commands.ModifyCommand(widget, {structure: structure, escapeHTMLInData:escapeHTML}, null, context);
-        var compoundCommand = new davinci.commands.OrderedCompoundCommand();
+        var command = new ModifyCommand(widget,
+	        	{
+		        	structure: structure,
+		        	escapeHTMLInData: escapeHTML
+		        },
+		        null,
+		        context
+		    );
+        var compoundCommand = new OrderedCompoundCommand();
         compoundCommand.add(storeCmd);
         compoundCommand.add(command);
         context.getCommandStack().execute(compoundCommand);  
         context.select(command.newWidget);
-
     },
     
     updateStore: function(structure, value) {
@@ -210,7 +212,8 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 		var data = { identifier: 'uniqe_id', items:[]},
 			rows = value.split('\n'),
 			items = data.items;
-		for (var r = 1; r < rows.length; r++){ // row 0 of the textarea defines colums in data grid structure
+		// row 0 of the textarea defines colums in data grid structure
+		for (var r = 1; r < rows.length; r++) {
 			var cols = rows[r].split(',');
 		
 			var item = {uniqe_id: r};
@@ -223,8 +226,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 			}
 			items.push(item);
 		}
-	
-		
+
 		return this.replaceDataGridStoreData(data);
 	},
 	
@@ -249,12 +251,13 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 		var store = this._widget.dijitWidget.store;
 
 		var storeId = this._widget.domNode._dvWidget._srcElement.getAttribute("store");
-		var storeWidget = davinci.ve.widget.byId(storeId);
+		var storeWidget = Widget.byId(storeId);
 		var properties = {};
 		properties['data'] = data;
 		storeWidget._srcElement.setAttribute('url', ''); 
-		properties.url = ''; // this is needed to prevent ModifyCommmand mixin from puttting it back//delete properties.url; // wdr 3-11
-		var command = new davinci.ve.commands.ModifyCommand(storeWidget, properties);
+		// this is needed to prevent ModifyCommmand mixin from puttting it back
+		properties.url = '';
+		var command = new ModifyCommand(storeWidget, properties);
 		store.data = data;
 
 		return command;
@@ -264,7 +267,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 		var properties = {};
 		properties[name] = value;
 		
-		var command = new davinci.ve.commands.ModifyCommand(widget, properties);
+		var command = new ModifyCommand(widget, properties);
 		this._addOrExecCommand(command);
 	},
 	
@@ -276,8 +279,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 		}	
 	},
 	
-	updateWidgetForUrlStore: function(jsonP){
-		
+	updateWidgetForUrlStore: function(jsonP) {
 		var structure = [];
     	var textArea = dijit.byId("davinciIleb");
     	var callbackTextBox = dijit.byId("davinci.ve.input.SmartInput_callback_editbox");
@@ -287,8 +289,10 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
     	if (patt.test(this._url)){ // absolute url
     		url = this._url;
     	} else {
-    		var parentFolder = new davinci.model.Path(this._widget._edit_context._srcDocument.fileName).getParentPath().toString();
-    		var file = system.resource.findResource(this._url, null, parentFolder); // relative so we have to get the absolute for the update of the store
+    		var parentFolder = new Path(this._widget._edit_context._srcDocument.fileName)
+    				.getParentPath().toString();
+    		// relative so we have to get the absolute for the update of the store
+    		var file = system.resource.findResource(this._url, null, parentFolder);
     		if (!file){
     			alert('File: ' + this._url + ' does not exsist.');
     			return;
@@ -318,13 +322,9 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
     		onError: function(e){ alert('File ' + e  );}
     	});
     	this._urlDataStore = store;
-    	
-    
-    	
 	},
 	
-	_urlDataStoreLoaded : function(items){
-
+	_urlDataStoreLoaded : function(items) {
 		if (items.length < 1){
 			console.error("Data store empty");
 			return;
@@ -347,30 +347,42 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 		}
 		var store = this._widget.dijitWidget.store;
 		var storeId = this._widget.domNode._dvWidget._srcElement.getAttribute("store");
-		var storeWidget = davinci.ve.widget.byId(storeId);
+		var storeWidget = Widget.byId(storeId);
 		var properties = {};
 		var context = this._getContext();
         var widget = this._widget;
 		properties.url = this._url;
 		var scripts;
 		if (this._callback){
-			scripts = [{type: "text/javascript", value: 'dojox.io.xhrScriptPlugin("'+this._url+'","'+this._callback+'");'}];
+			scripts = [
+				{
+					type: "text/javascript",
+					value: 'dojox.io.xhrScriptPlugin("' + this._url + '","' + this._callback + '");'
+				}
+			];
 		} 
 		storeWidget._srcElement.setAttribute('data', ''); 
 		properties.data = ''; // to prevent ModifyCommand mixin from putting it back
-		var storeCmd = new davinci.ve.commands.ModifyCommand(storeWidget, properties);
+		var storeCmd = new ModifyCommand(storeWidget, properties);
 		var escapeHTML = (this._format === 'text');
-        var command = new davinci.ve.commands.ModifyCommand(widget, {structure: structure, escapeHTMLInData:escapeHTML}, null, context, scripts);
-        var compoundCommand = new davinci.commands.OrderedCompoundCommand();
+        var command = new ModifyCommand(widget,
+	        	{
+		        	structure: structure,\
+		        	escapeHTMLInData: escapeHTML
+		        },
+		        null, 
+		        context,
+		        scripts
+		    );
+        var compoundCommand = new OrderedCompoundCommand();
         compoundCommand.add(storeCmd);
         compoundCommand.add(command);
         context.getCommandStack().execute(compoundCommand);  
         context.select(command.newWidget);
-
 	},
 	
 	show: function(widgetId) {
-        this._widget = davinci.ve.widget.byId(widgetId);
+        this._widget = Widget.byId(widgetId);
 	    
 	    var width = 200;
 		var height = 155;
@@ -393,7 +405,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
         var dataStoreType = dijit.byId("davinci.ve.input.DataGridInput.dataStoreType");
         this._connection.push(dojo.connect(dataStoreType, "onChange", this, "changeDataStoreType"));
         var storeId = this._widget._srcElement.getAttribute("store"); 
-   		var storeWidget = davinci.ve.widget.byId(storeId);
+   		var storeWidget = Widget.byId(storeId);
         this._data = storeWidget._srcElement.getAttribute('data'); 
         this._url = storeWidget._srcElement.getAttribute('url'); 
         this._callback = this.getCallback(this._url);
@@ -433,11 +445,9 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
         }
         this.updateFormats();
         this._inline.eb.focus();
-
 	},
 	
-	handleEvent: function(event){
-
+	handleEvent: function(event) {
 		if (event.keyCode == 13) {
 			var multiLine = this.multiLine;
 			if (!multiLine || multiLine == "false" || this._lastKeyCode == 13){ // back to back CR
@@ -458,52 +468,46 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
       	      style: "height:10em;overflow:auto",
       	      model: system.resource,
       	      filters: "davinci.ui.widgets.OpenFileDialog.filter"
-
       	    }
-      	  ];
+      	];
       	  
-      	  var data={
-      			  file  : null
+      	var data = {
+      	  	file: null
+        };
+  		this._fileSelectionDialog = Panel.openDialog( {
+  			definition: definition,
+  			data: data,
+  			style: "width:275px;height:225px;padding:0px;background-color:white;",
+  			title: dojoxNls.selectSource,
+  			contextObject: this,
+  			buttonStyle: 'padding:8px;',
+  			onOK : function () {
+  				if (data.file) {
+  					var path = new Path(data.file.getPath()),
+  						srcDocPath = new Path(this._widget._edit_context._srcDocument.fileName),
+  						// ignore the filename to get the correct path to the image
+  						value = path.relativeTo(srcDocPath, true).toString(),
+  						textArea = dijit.byId("davinciIleb");
+  			    	textArea.setValue(value); 
+  			    	textArea.focus();
+  			    	this._url = data.file;
+  			    	delete this._fileSelectionDialog;
+  			    	this.updateFormats();
+  				}
+  			
+  			}
 
-            };
-      	  	var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
-      		this._fileSelectionDialog = davinci.ui.Panel.openDialog( {
-      			definition: definition,
-      			data: data,
-      			style: "width:275px;height:225px;padding:0px;background-color:white;",
-      			title:langObj.selectSource,
-      			contextObject: this,
-      			buttonStyle: 'padding:8px;',
-      			onOK : function ()
-      			{
-      				if(data.file){
-      					var path=new davinci.model.Path(data.file.getPath());
-      					var value=path.relativeTo(new davinci.model.Path(this._widget._edit_context._srcDocument.fileName), true).toString(); // ignore the filename to get the correct path to the image
-      					var textArea = dijit.byId("davinciIleb");
-      			    	textArea.setValue(value); 
-      			    	textArea.focus();
-      			    	this._url = data.file;
-      			    	delete this._fileSelectionDialog;
-      			    	this.updateFormats();
-      				}
-      			
-      			}
-
-      		});
-      		this._connection.push(dojo.connect(this._fileSelectionDialog, "onCancel", this, "onCancelFileSelection"));
-      		
-
+  		});
+  		this._connection.push(dojo.connect(this._fileSelectionDialog, "onCancel", this,
+  				"onCancelFileSelection"));
 	},
 	
-	onCancelFileSelection: function(e)
-	{
+	onCancelFileSelection: function(e) {
 		delete this._fileSelectionDialog;
 	},
 	
-	updateFormats: function(){
-			
+	updateFormats: function() {
 		// NOTE: if you put a break point in here while debugging it will break the dojoEllipsis
-		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
 		var callbackTr = dojo.byId("davinci.ve.input.SmartInput_callback");
 		dojo.style(callbackTr, 'display', 'none');
 		if (this._dataStoreType === 'file' || this._dataStoreType === 'url'){
@@ -513,8 +517,8 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 			var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
 			var table = dojo.byId('davinci.ve.input.SmartInput_table');
 			
-			textObj.innerHTML = '<div class="dojoxEllipsis">'+langObj.plainText+'  </div>';
-			htmlObj.innerHTML = '<div id="davinci.ve.input.SmartInput_radio_html_div" class="dojoxEllipsis">'+langObj.htmlMarkup+'</div>';
+			textObj.innerHTML = '<div class="dojoxEllipsis">' + dojoxNls.plainText + '  </div>';
+			htmlObj.innerHTML = '<div id="davinci.ve.input.SmartInput_radio_html_div" class="dojoxEllipsis">'+dojoxNls.htmlMarkup+'</div>';
 			htmlRadio.setDisabled(false);
 			textRadio.setDisabled(false);
 			dojo.removeClass(textObj,'inlineEditDisabled');
@@ -526,9 +530,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 			dojo.style(table, 'display', '');
 			if (this._dataStoreType === 'url'){
 				dojo.style(callbackTr, 'display', '');
-				
 			}
-			
 		} else {
 			this.inherited(arguments);
 			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', 'none');
@@ -536,7 +538,6 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 	},
 	
 	changeDataStoreType: function (e){
-
 		this._dataStoreType = e;
 	    var textArea = dijit.byId("davinciIleb");
 	    var tagetObj = dojo.byId("iedResizeDiv");
@@ -572,8 +573,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
     	this.resize(null);
 	},
 	
-	resize: function(e){
-		
+	resize: function(e) {
 		this.inherited(arguments);	
 		var tagetObj = dojo.byId("iedResizeDiv");
 		var targetEditBoxDijit = dijit.byId("davinciIleb");
@@ -601,54 +601,18 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 		}
 	},
 	
-	 getCallback: function(url){
-	     
-	    var helper = davinci.ve.widget.getWidgetHelper('dojo.data.ItemFileReadStore');
+	 getCallback: function(url) {
+	    var helper = Widget.getWidgetHelper('dojo.data.ItemFileReadStore');
         if(helper && helper.getXhrScriptPluginParameters){
            xhrParams = helper.getXhrScriptPluginParameters(url, this._widget._edit_context);
             if ( xhrParams){ // must be the one we were looking for.
                 return xhrParams.callback;
             }
         }
-/*
-	       if (!url){
-	           return;// must be data
-	       }
-	       url = url.trim();
-	       var context = this._widget._edit_context;
-	       var scripts = context.model.children[1].getChildElements('script', true);
-	       for (var x=0; x < scripts.length; x++){
-	           if (scripts[x].children[0]){
-    	           var child = scripts[x].children[0];
-    	           var start = child.value.indexOf('dojox.io.xhrScriptPlugin');
-    	           if(start > -1) {
-    	               var end = child.value.indexOf(')', start);
-    	               // check to see if it matches the store url
-    	               if (end > -1){
-    	                   var pStart = child.value.indexOf('(', start);
-    	                   var temp = child.value.substring(pStart+1,end);
-    	                   var parms = temp.split(',');
-    	                   if (parms.length == 2){
-    	                       parms[0] = parms[0].replace(/'/g, "");
-    	                       parms[0] = parms[0].replace(/"/g, "");
-    	                       parms[1] = parms[1].replace(/'/g, "");
-    	                       parms[1] = parms[1].replace(/"/g, "");
-    	                       parms[1] = parms[1].trim();
-    	                       if ( parms[0] == url){ // must be the one we were looking for.
-    	                           return parms[1];
-    	                       }
-    	                   }
-    	               }
-    	           }
-	           }
-	       }*/
-
-	    },
+    },
 	
-	_getTemplate: function(){
-		
-		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
-		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
+	// XXX TODO Move this code to an HTML template file
+	_getTemplate: function() {
 		var template = ''+
 		'<div id="davinciDataGridSmartInputFolderDiv" class="smartInputDataGridFolderDiv" style="background-color: #F7FCFF;	margin: 0 0 0 -1px;"> ' +
 		'<table id="davinci.ve.input.DataGridInput_table" > ' +
@@ -657,9 +621,9 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 					'<td></td>' + 
 					'<td>' +
 						'<select id="davinci.ve.input.DataGridInput.dataStoreType" name="davinci.ve.input.DataGridInput.dataStoreType" dojoType="dojox.form.DropDownSelect" style="width:15em;"> ' +
-							'<option value="dummyData">'+langObj.commaSeparatedData+'</option> ' +
-							'<option value="file">'+langObj.dataFromWorkspace+'</option> ' +
-							'<option value="url">'+langObj.dataFromJsonpURL+'</option> ' +
+							'<option value="dummyData">'+dojoxNls.commaSeparatedData+'</option> ' +
+							'<option value="file">'+dojoxNls.dataFromWorkspace+'</option> ' +
+							'<option value="url">'+dojoxNls.dataFromJsonpURL+'</option> ' +
 						'</select>' +
 					'<td>' +
 					'<td></td>' + 
@@ -695,7 +659,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
              				'</td> '+
      					'</tr> '+
      					'<tr id="davinci.ve.input.SmartInput_callback"> '+
-     					'<td class="smartInputTd1">'+langObj.callbackParameter+'</td> '+
+     					'<td class="smartInputTd1">'+dojoxNls.callbackParameter+'</td> '+
      					'<td class="smartInputTd2">'+
    							'<input type="text" name="davinci.ve.input.SmartInput_callback_editbox" value="callback" data-dojo-type="dijit.form.TextBox" data-dojo-props="trim:true" id="davinci.ve.input.SmartInput_callback_editbox">' +
          				'</td> '+
@@ -705,7 +669,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 				'<div class="smartInputHelpDiv" > '+
 	        		'<span id="davinci.ve.input.SmartInput_img_help"  title="Help" class="inlineEditHelp" > </span>'+
 		        	'<span class="smartInputSpacerSpan" >'+
-		        	'<button id="davinci.ve.input.SmartInput_ok"  dojoType="dijit.form.Button" type="button" class="inlineEditHelpOk" >'+dijitLangObj.buttonOk+'</button> <button id=davinci.ve.input.SmartInput_cancel dojoType="dijit.form.Button" class="inlineEditHelpCancel"> '+dijitLangObj.buttonCancel+'</button>  '+
+		        	'<button id="davinci.ve.input.SmartInput_ok"  dojoType="dijit.form.Button" type="button" class="inlineEditHelpOk" >'+commonNls.buttonOk+'</button> <button id=davinci.ve.input.SmartInput_cancel dojoType="dijit.form.Button" class="inlineEditHelpCancel"> '+commonNls.buttonCancel+'</button>  '+
 		        	'</span>   '+
 		        '</div> '+
 		        '<div id="davinci.ve.input.SmartInput_div_help" style="display:none;" class="smartInputHelpTextDiv" > '+
@@ -715,9 +679,9 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 	        '</div>' + 
         '</div> '+
         '';
-			return template;
+		return template;
 	}
-	
-	
+
+});
 
 });

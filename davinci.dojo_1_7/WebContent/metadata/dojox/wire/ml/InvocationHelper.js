@@ -1,4 +1,8 @@
-[{
+define([
+	"davinci/ve/widget"
+], function(Widget) {
+
+return {
 
 	getChildrenData: function(/*Widget*/ widget, /*Object*/ options){
 		if(!widget){
@@ -20,7 +24,9 @@
 			}
 		}
 
-		return davinci.ve.widget._getChildrenData(widget, options); 
+		return Widget._getChildrenData(widget, options); 
 	}
 
-}]
+};
+
+});

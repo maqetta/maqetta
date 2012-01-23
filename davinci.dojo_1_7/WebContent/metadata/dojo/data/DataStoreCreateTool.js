@@ -1,9 +1,14 @@
-dojo.provide("davinci.libraries.dojo.dojo.data.DataStoreCreateTool");
+define([
+	"dojo/_base/declare",
+	"davinci/ve/tools/CreateTool",
+	"davinci/ve/widget"
+], function(
+	declare,
+	CreateTool,
+	Widget
+) {
 
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.ve.tools.CreateTool");
-
-dojo.declare("davinci.libraries.dojo.dojo.data.DataStoreCreateTool", davinci.ve.tools.CreateTool, {
+return declare("davinci.libraries.dojo.dojo.data.DataStoreCreateTool", CreateTool, {
     // override CreateTool.create() to force the DataStore to the top of the HTML file under the root
     // this prevents the DataStore from being referenced before it has been instantiated
     create: function(args) {
@@ -11,8 +16,10 @@ dojo.declare("davinci.libraries.dojo.dojo.data.DataStoreCreateTool", davinci.ve.
         args.index = 0;
         
         // force parent to be the HTML root node
-        args.target = davinci.ve.widget.getEnclosingWidget(this._context.rootNode);
+        args.target = Widget.getEnclosingWidget(this._context.rootNode);
         
         this.inherited(arguments);
     }
+});
+
 });

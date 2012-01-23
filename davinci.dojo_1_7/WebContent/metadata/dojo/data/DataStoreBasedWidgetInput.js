@@ -1,12 +1,22 @@
-dojo.provide("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput");
-dojo.require("davinci.ve.input.SmartInput");
-//dojo.require("davinci.ve.commands.ModifyFileItemStoreCommand");
-dojo.require("davinci.commands.OrderedCompoundCommand");
-dojo.require("dojox.grid.cells");
-dojo.require("dojox.form.DropDownSelect");
+define([
+	"dojo/_base/declare",
+	"davinci/ve/input/SmartInput",
+	"davinci/ve/widget",
+	"davinci/ve/commands/ModifyCommand",
+	"davinci/commands/OrderedCompoundCommand",
+	"davinci/model/Path",
+	"davinci/ui/Panel"
+], function(
+	declare,
+	SmartInput,
+	Widget,
+	ModifyCommand,
+	OrderedCompoundCommand,
+	Path,
+	Panel
+) {
 
-dojo.declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", davinci.ve.input.SmartInput, {
-
+return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", SmartInput, {
 
 	displayOnCreate: "true",
 	
@@ -18,9 +28,6 @@ dojo.declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", davin
 
 	helpText:  'If the CSV data format is selected enter text in the format: first line is column headers separated by commas all following lines are data for those columns.'+
     		   ' If data file from workspace is selected chose a json item file using the file explore folder.',
-
-
-
 
 /*	parse: function(input) {
 		debugger;
@@ -52,7 +59,7 @@ dojo.declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", davin
 		debugger;
 	    if (structure.length > 0) {
 	       // var properties = {structure: structure};
-	        var command = new davinci.ve.commands.ModifyCommand(widget, properties, null, this._getContext());
+	        var command = new ModifyCommand(widget, properties, null, this._getContext());
 	        this._getContext().getCommandStack().execute(command);
 	        return command.newWidget;
 	    }
@@ -65,7 +72,7 @@ dojo.declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", davin
 			if ((widget.isContainer || widget.isLayoutContainer) && widget.declaredClass != "dojox.layout.ScrollPane"){
 				return widget;
 			}
-			widget = davinci.ve.widget.getParent(widget); 
+			widget = Widget.getParent(widget); 
 		}
 		return undefined;
 	},
@@ -139,8 +146,8 @@ dojo.declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", davin
         var widget = this._widget;
         	
     	var storeCmd = this.updateStore();
-        var command = new davinci.ve.commands.ModifyCommand(widget, null, null, context);
-        var compoundCommand = new davinci.commands.OrderedCompoundCommand();
+        var command = new ModifyCommand(widget, null, null, context);
+        var compoundCommand = new OrderedCompoundCommand();
         compoundCommand.add(storeCmd);
         compoundCommand.add(command);
         context.getCommandStack().execute(compoundCommand);  
@@ -199,12 +206,12 @@ dojo.declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", davin
 		var store = this._widget.dijitWidget.store;
 
 		var storeId = this._widget.domNode._dvWidget._srcElement.getAttribute("store");
-		var storeWidget = davinci.ve.widget.byId(storeId);
+		var storeWidget = Widget.byId(storeId);
 		var properties = {};
 		properties['data'] = data;
 		storeWidget._srcElement.setAttribute('url', ''); 
 		properties.url = ''; // this is needed to prevent ModifyCommmand mixin from puttting it back//delete properties.url; 
-		var command = new davinci.ve.commands.ModifyCommand(storeWidget, properties);
+		var command = new ModifyCommand(storeWidget, properties);
 		store.data = data;
 
 		return command;
@@ -215,7 +222,7 @@ dojo.declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", davin
 		var properties = {};
 		properties[name] = value;
 		
-		var command = new davinci.ve.commands.ModifyCommand(widget, properties);
+		var command = new ModifyCommand(widget, properties);
 		this._addOrExecCommand(command);
 	},*/
 	
@@ -237,7 +244,7 @@ dojo.declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", davin
     	if (patt.test(this._url)){ // absolute url
     		url = this._url;
     	} else {
-    		var parentFolder = new davinci.model.Path(this._widget._edit_context._srcDocument.fileName).getParentPath().toString();
+    		var parentFolder = new Path(this._widget._edit_context._srcDocument.fileName).getParentPath().toString();
             var file = system.resource.findResource(this._url, null, parentFolder); // relative so we have to get the absolute for the update of the store
             if (!file){
                 alert('File: ' + this._url + ' does not exsist.');
@@ -272,16 +279,16 @@ dojo.declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", davin
 			console.warn("i=", i, "item=", item);
 		}
 		var storeId = this._widget.domNode._dvWidget._srcElement.getAttribute("store");
-		var storeWidget = davinci.ve.widget.byId(storeId);
+		var storeWidget = Widget.byId(storeId);
 		var properties = {};
 		var context = this._getContext();
         var widget = this._widget;
 		properties.url = this._url; 
 		storeWidget._srcElement.setAttribute('data', ''); 
 		properties.data = ''; // to prevent ModifyCommand mixin from putting it back
-		var storeCmd = new davinci.ve.commands.ModifyCommand(storeWidget, properties);
-        var command = new davinci.ve.commands.ModifyCommand(widget, null, null, context);
-        var compoundCommand = new davinci.commands.OrderedCompoundCommand();
+		var storeCmd = new ModifyCommand(storeWidget, properties);
+        var command = new ModifyCommand(widget, null, null, context);
+        var compoundCommand = new OrderedCompoundCommand();
         compoundCommand.add(storeCmd);
         compoundCommand.add(command);
         context.getCommandStack().execute(compoundCommand);  
@@ -291,7 +298,7 @@ dojo.declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", davin
 	
 	show: function(widgetId) {
 		
-        this._widget = davinci.ve.widget.byId(widgetId);
+        this._widget = Widget.byId(widgetId);
 	    
 	    var width = 200;
 		var height = 155;
@@ -314,7 +321,7 @@ dojo.declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", davin
         var dataStoreType = dijit.byId("davinci.ve.input.DataGridInput.dataStoreType");
         this._connection.push(dojo.connect(dataStoreType, "onChange", this, "changeDataStoreType"));
         var storeId = this._widget._srcElement.getAttribute("store"); 
-   		var storeWidget = davinci.ve.widget.byId(storeId);
+   		var storeWidget = Widget.byId(storeId);
         this._data = storeWidget._srcElement.getAttribute('data'); 
         this._url = storeWidget._srcElement.getAttribute('url'); 
         this._inline.eb = dijit.byId("davinciIleb");
@@ -377,7 +384,7 @@ dojo.declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", davin
 
             };
       	
-      		this._fileSelectionDialog = davinci.ui.Panel.openDialog( {
+      		this._fileSelectionDialog = Panel.openDialog( {
       			definition: definition,
       			data: data,
       			style: "width:275px;height:225px;padding:0px;background-color:white;",
@@ -387,8 +394,8 @@ dojo.declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", davin
       			onOK : function ()
       			{
       				if(data.file){
-      					var path=new davinci.model.Path(data.file.getPath());
-      					var value=path.relativeTo(new davinci.model.Path(this._widget._edit_context._srcDocument.fileName), true).toString(); // ignore the filename to get the correct path to the image
+      					var path=new Path(data.file.getPath());
+      					var value=path.relativeTo(new Path(this._widget._edit_context._srcDocument.fileName), true).toString(); // ignore the filename to get the correct path to the image
       					var textArea = dijit.byId("davinciIleb");
       			    	textArea.setValue(value); 
       			    	textArea.focus();
@@ -500,7 +507,7 @@ dojo.declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", davin
 	},
 	
 	_getTemplate: function(){
-		
+		// XXX TODO THis should be moved to an HTML file.
 		var template = ''+
 		'<div id="davinciDataGridSmartInputFolderDiv" class="smartInputDataGridFolderDiv" style="background-color: #F7FCFF;	margin: 0 0 0 -1px;"> ' +
 		'<table id="davinci.ve.input.DataGridInput_table" > ' +
@@ -563,7 +570,7 @@ dojo.declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", davin
         '';
 			return template;
 	}
-	
-	
+
+});
 
 });

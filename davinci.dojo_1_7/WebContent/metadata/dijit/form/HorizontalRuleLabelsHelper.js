@@ -1,28 +1,28 @@
-dojo.provide("davinci.libraries.dojo.dijit.form.HorizontalRuleLabelsHelper");
+define(function() {
 
-dojo.declare("davinci.libraries.dojo.dijit.form.HorizontalRuleLabelsHelper", null, {
-
-	preProcessData: function(data){
+return {
+	preProcessData: function(data) {
 		//process labels if user makes changes and adjust Count
-		if(data.properties.labels){
-			if(typeof data.properties.labels == "string"){
-				var labelString = dojo.trim(data.properties.labels);
+		var props = data.properties;
+		if (props.labels) {
+			var propsCount = parseInt(props.count, 10);
+			if (typeof props.labels == "string") {
+				var labelString = dojo.trim(props.labels);
 				var strArray = labelString.split(",");
-				data.properties.labels = strArray;
-				data.properties.count = strArray.length;
-				data.properties.numericMargin = 0;//numericMargin > 0 only if labels aren't specified
-			} else if(data.properties.labels.length != parseInt(data.properties.count) || data.properties.numericMargin){
+				props.labels = strArray;
+				props.count = strArray.length;
+				props.numericMargin = 0; //numericMargin > 0 only if labels aren't specified
+			} else if(props.labels.length != propsCount || props.numericMargin) {
 				//remove Labels if user changes Count so that it can calculate the percentages for the Labels
-				if(parseInt(data.properties.count) > 1)
-					delete data.properties.labels;
-				else{//Dojo doesn't handle a count of just 1
-					data.properties.labels = new Array("50%");
+				if (propsCount > 1) {
+					delete props.labels;
+				} else {  //Dojo doesn't handle a count of just 1
+					props.labels = new Array("50%");
 				}
 			}
 		}
 		return data;
 	}
+};
 
-	
-	
 });

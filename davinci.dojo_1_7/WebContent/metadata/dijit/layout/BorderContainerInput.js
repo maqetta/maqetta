@@ -1,23 +1,24 @@
-dojo.provide("davinci.libraries.dojo.dijit.layout.BorderContainerInput");
-dojo.require("davinci.libraries.dojo.dijit.layout.ContainerInput");
-dojo.require("dijit.layout.ContentPane");
-dojo.require("dijit.layout.BorderContainer");
-dojo.require("dijit.layout.LayoutContainer");
+define([
+	"dojo/_base/declare",
+	"./ContainerInput",
+	"dojo/i18n!dijit/nls/common",
+	"dojo/i18n!davinci/ve/nls/ve",
+	"dojo/i18n!../nls/dijit"
+], function(
+	declare,
+	ContainerInput,
+	commonNls,
+	veNls
+	dijitNls
+) {
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.libraries.dojo.dijit", "dijit");
-dojo.requireLocalization("dijit", "common");
-
-dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci.libraries.dojo.dijit.layout.ContainerInput, {
+return declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", ContainerInput, {
 	
-	show: function(widgetId){
-	//debugger;
-	this._widget = davinci.ve.widget.byId(widgetId);
-	var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dijit", "dijit");
-	var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
+	show: function(widgetId) {
+		this._widget = davinci.ve.widget.byId(widgetId);
 		if (!this._inline) {
 			this._inline = new dijit.Dialog({
-                title: langObj.borderContainerDialog,
+                title: dijitNls.borderContainerDialog,
                 style: "width: 350px; height:350px"
             });
 			this._inline.onCancel = dojo.hitch(this, "cancel");
@@ -25,17 +26,17 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci
 			var s = '<div id="davinci.libraries.dojo.dijit.layout.BorderContainerInput_div" >';
 			s +='<div dojoType="dijit.layout.BorderContainer" design="headline" gutters="false" style="width: 325px; height:285px" liveSplitters="true" id="borderContainer">';
 			s += '	<div dojoType="dijit.layout.LayoutContainer" style="height: 3em;" region="top">';
-			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="left" style="width: 100px">'+langObj.borderDesign+'</div>';
-			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="client" style="width: 100px"><input type="radio" dojoType="dijit.form.RadioButton" name="headline" id="headlineRadio" value="headline" /> <label for="headlineRadio"> '+langObj.borderHeadline+'  </label></div>';
-			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="right" ><input type="radio" dojoType="dijit.form.RadioButton" name="sidebar" id="sidebarRadio" value="sidebar" /> <label for="sidebarRadio"> '+langObj.borderSidebar+'  </label></div>';
+			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="left" style="width: 100px">'+dijitNls.borderDesign+'</div>';
+			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="client" style="width: 100px"><input type="radio" dojoType="dijit.form.RadioButton" name="headline" id="headlineRadio" value="headline" /> <label for="headlineRadio"> '+dijitNls.borderHeadline+'  </label></div>';
+			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="right" ><input type="radio" dojoType="dijit.form.RadioButton" name="sidebar" id="sidebarRadio" value="sidebar" /> <label for="sidebarRadio"> '+dijitNls.borderSidebar+'  </label></div>';
 			s += '	</div>';
 			s += '	<div dojoType="dijit.layout.ContentPane" style="width: 7em;" region="leading">';
 			s += '		<table>';
-	        s += '			<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="left" id="leftCheckBox" value="left" /> <label for="leftCheckBox"> '+langObj.borderLeft+'  </label></td></tr>';
-	        s += '			<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="right" id="rightCheckBox" value="right" /> <label for="rightCheckBox"> '+langObj.borderRight+'  </label></td></tr>';
-	        s += '			<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="top" id="topCheckBox" value="top" /> <label for="topCheckBox"> '+langObj.borderTop+'  </label></td></tr>';
-	        s += '			<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="bottom" id="bottomCheckBox" value="bottom" /> <label for="bottomCheckBox"> '+langObj.borderBottom+'  </label></td></tr>';
-	        s += '			<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="center" id="centerCheckBox" value="center" /> <label for="centerCheckBox"> '+langObj.borderCenter+'  </label></td></tr>';
+	        s += '			<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="left" id="leftCheckBox" value="left" /> <label for="leftCheckBox"> '+dijitNls.borderLeft+'  </label></td></tr>';
+	        s += '			<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="right" id="rightCheckBox" value="right" /> <label for="rightCheckBox"> '+dijitNls.borderRight+'  </label></td></tr>';
+	        s += '			<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="top" id="topCheckBox" value="top" /> <label for="topCheckBox"> '+dijitNls.borderTop+'  </label></td></tr>';
+	        s += '			<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="bottom" id="bottomCheckBox" value="bottom" /> <label for="bottomCheckBox"> '+dijitNls.borderBottom+'  </label></td></tr>';
+	        s += '			<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="center" id="centerCheckBox" value="center" /> <label for="centerCheckBox"> '+dijitNls.borderCenter+'  </label></td></tr>';
 	        s += '		</table>';
 			s += '	</div>';
 			s += '	<div dojoType="dijit.layout.ContentPane"  region="center" id="centerWorkspace">';
@@ -49,8 +50,8 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci
 	        s += '	</div>';
 	        s += '	<div dojoType="dijit.layout.LayoutContainer" style="height: 4em;" region="bottom">';
 			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="left" style="width: 100px"></div>';
-			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="client" style="width: 100px"><button dojoType="dijit.form.Button" type="button" id="okButton" > '+dijitLangObj.buttonOk+' </button></div>';
-			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="right" ><button dojoType="dijit.form.Button" type="button" id="cancelButton"> '+dijitLangObj.buttonCancel+' </button></div>';
+			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="client" style="width: 100px"><button dojoType="dijit.form.Button" type="button" id="okButton" > '+commonNls.buttonOk+' </button></div>';
+			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="right" ><button dojoType="dijit.form.Button" type="button" id="cancelButton"> '+commonNls.buttonCancel+' </button></div>';
 			s += '	</div>';
 			s += '</div>';
 			s += '</div>';
@@ -92,10 +93,7 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci
 				dojo.style(obj.domNode, "display", "none");
 			}
 			this.updateDialog();
-			
 		}
-		
-	//debugger;
 	},
 	
 	onKeyPress: function(event){
@@ -105,8 +103,6 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci
 	},
 			
 	onChange: function(event){
-		//debugger;
-		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 		var checked = 0;
 		var obj = dijit.byId('leftCheckBox');
 		checked += obj.checked ? 1 : 0;
@@ -121,7 +117,7 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci
 		if (checked < 1){
 			obj = dijit.byId(event.currentTarget.id);
 			obj.setChecked(true);
-			alert(langObj.regionMustBeSelected);
+			alert(veNls.regionMustBeSelected);
 		}
 
 		if (event.target.id === 'headlineRadio'){
@@ -137,14 +133,12 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci
 		} else if (event.target.id === 'okButton_label'){
 			this.updateWidget();
 		} else if (event.target.id === 'cancelButton_label'){
-			//debugger;
 			return;
 		}
 		this.updateDesign();
 	},
 	
 	updateDesign: function(){
-		//debugger;
 		var obj = dijit.byId('headlineRadio');
 		if (obj.checked){
 			type = 'headline';
@@ -175,13 +169,9 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci
         s += '		</div>';
         var obj = dijit.byId('centerWorkspace');
         obj.attr("content", s);
-
-        //debugger;
-		
 	},
 	
 	updateWidget: function(){
-		//debugger;
 		var region = {};
 		var obj = dijit.byId('headlineRadio');
 		var type = obj.checked ? 'headline' : 'sidebar';
@@ -226,7 +216,7 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci
         		
         	}
        }
-        //debugger;
+
         if (data.properties.isTempID){
         	delete data.properties.id; // delete temp id so it does not make it's way out to the source
         }
@@ -236,10 +226,7 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci
 		this._widget._edit_context._focuses[0]._selectedWidget = this._widget; // get the focus on the current node
 		var context=this._widget.getContext();
 		context.select(this._widget, null, false); // redraw the box around the widget
-        //debugger;
-
 	},
-	
 	
 	cancel: function(){
 		this._inline.destroyDescendants();
@@ -248,7 +235,6 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci
 	},
 	
 	updateDialog: function(){
-		//debugger;
         var data = this._widget.getData(); 
         var headlineRadio = dijit.byId('headlineRadio');
         var sidebarRadio = dijit.byId('sidebarRadio');
@@ -270,9 +256,7 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci
 		obj.set('disabled', true);
         
         this.updateDesign();
-
 	}
-	
+});
 
-	
 });

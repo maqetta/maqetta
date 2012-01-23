@@ -1,12 +1,22 @@
-dojo.provide("davinci.libraries.dojo.dojox.mobile.ViewHelper");
-dojo.require("davinci.commands.CompoundCommand");
-dojo.require("davinci.ve.commands.StyleCommand");
-dojo.require("davinci.ve.commands.ModifyAttributeCommand");
+define([
+	"dojo/_base/connect",
+	"dojo/dom-class",
+	"dijit/_base/window",
+	"davinci/commands/CompoundCommand",
+	"davinci/ve/commands/StyleCommand",
+	"davinci/ve/commands/ModifyAttributeCommand"
+], function(
+	connect,
+	domClass,
+	Window,
+	CompoundCommand,
+	StyleCommand,
+	ModifyAttributeCommand
+) {
 
+return {
 
-dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
-
-	constructor: function(){		
+	constructor: function() {
 		//FIXME: Need helper added to StatesView palette
 	},
 
@@ -29,12 +39,12 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 	create: function(widget, srcElement) {
 		var view = widget.dijitWidget,
 			node = widget.domNode;
-		dojo.connect(view, 'startup', function() {
+		connect(view, 'startup', function() {
 			// Since this may get called twice, check that we haven't already
 			// created this interval.
 			if (! widget._dvDisplayInterval) {
 				widget._dvDisplayInterval = setInterval(function() {
-					var win = dijit.getDocumentWindow(node.ownerDocument);
+					var win = Window.getDocumentWindow(node.ownerDocument);
 					if (win.dojox.mobile.currentView === view ||
 							node.style.display === 'none') {
 						node.style.display = 'block';
@@ -52,7 +62,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 	 * @param {davinci.ve._Widget} widget  Widget that needs it visibility turned on
 	 */
 	_updateVisibility: function(domNode){
-		if(!domNode || !domNode._dvWidget || !dojo.hasClass(domNode,"mblView")){
+		if(!domNode || !domNode._dvWidget || !domClass.hasClass(domNode,"mblView")){
 			return;
 		}
 		var widget = domNode._dvWidget;
@@ -65,7 +75,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 		}else{
 			for(var i=0;i<parentNode.children.length;i++){
 				node=parentNode.children[i];
-				if(dojo.hasClass(node,"mblView")){
+				if(domClass.hasClass(node,"mblView")){
 					if(node!=domNode && (node.style.display != "none" || domNode.getAttribute("selected") == "true")){
 						changesNeeded = true;
 						break;
@@ -74,10 +84,10 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 			}
 		}
 		if(changesNeeded){
-			var command = new davinci.commands.CompoundCommand();
+			var command = new CompoundCommand();
 			for(var i=0;i<parentNode.children.length;i++){
 				node=parentNode.children[i];
-				if(dojo.hasClass(node,"mblView")){
+				if(domClass.hasClass(node,"mblView")){
 					var display, selected;
 					if(node==domNode){
 						display = "";
@@ -86,8 +96,8 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 						display = "none";
 						selected = null;
 					}	
-					command.add(new davinci.ve.commands.StyleCommand(node._dvWidget, [{display: display}]));	
-					command.add(new davinci.ve.commands.ModifyAttributeCommand(node._dvWidget, {selected: selected}));	
+					command.add(new StyleCommand(node._dvWidget, [{display: display}]));	
+					command.add(new ModifyAttributeCommand(node._dvWidget, {selected: selected}));	
 				}
 			}
 			context.getCommandStack().execute(command);
@@ -102,7 +112,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 	 * FIXME: Better if helper had a class inheritance setup
 	 */
 	onToggleVisibility: function(widget, on){
-		if(!widget || !widget.domNode || !dojo.hasClass(widget.domNode,"mblView")){
+		if(!widget || !widget.domNode || !domClass.hasClass(widget.domNode,"mblView")){
 			return true;
 		}
 		var domNode = widget.domNode;
@@ -113,14 +123,14 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 			var count = 0;
 			for(var i=0;i<parentNode.children.length;i++){
 				node=parentNode.children[i];
-				if(dojo.hasClass(node,"mblView")){
+				if(domClass.hasClass(node,"mblView")){
 					count++;
 				}
 			}
 			if(count>1){
 				for(var i=0;i<parentNode.children.length;i++){
 					node=parentNode.children[i];
-					if(dojo.hasClass(node,"mblView")){
+					if(domClass.hasClass(node,"mblView")){
 						if(node!=domNode){
 							this._updateVisibility(node);
 							break;
@@ -136,7 +146,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 	},
 	
 	onSelect: function(widget){
-		if(!widget || !widget.domNode || !dojo.hasClass(widget.domNode,"mblView")){
+		if(!widget || !widget.domNode || !domClass.hasClass(widget.domNode,"mblView")){
 			return;
 		}
 		this._updateVisibility(widget.domNode);
@@ -155,7 +165,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 	 * @return {davinci.ve._Widget} One of the elements in the allowedParentList
 	 */
 	chooseParent: function(allowedParentList){
-		if(allowedParentList.length>1 && dojo.hasClass(allowedParentList[0].domNode,"mblView")){
+		if(allowedParentList.length>1 && domClass.hasClass(allowedParentList[0].domNode,"mblView")){
 			return allowedParentList[1];
 		}else{
 			return allowedParentList[0];
@@ -180,7 +190,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 		// If none found, then pick first View node
 		for(var i=0;i<parentNode.children.length;i++){
 			node=parentNode.children[i];
-			if(dojo.hasClass(node,"mblView")){
+			if(domClass.hasClass(node,"mblView")){
 				if(!selectedNode){
 					selectedNode = node;
 				}
@@ -194,4 +204,6 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 		this._updateVisibility(selectedNode);
 	}
 	
+};
+
 });

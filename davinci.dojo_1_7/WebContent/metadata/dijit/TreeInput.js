@@ -1,11 +1,18 @@
-dojo.provide("davinci.libraries.dojo.dijit.TreeInput");
-dojo.require("davinci.ve.input.SmartInput");
+define([
+	"dojo/_base/declare",
+	"davinci/ve/input/SmartInput",
+	"davinci/ve/widget",
+	"davinci/ve/commands/ModifyCommand",
+	"dojo/i18n!../nls/dijit"
+], function(
+	declare,
+	SmartInput,
+	Widget,
+	ModifyCommand,
+	dijitNls
+) {
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.libraries.dojo.dijit", "dijit");
-
-dojo.declare("davinci.libraries.dojo.dijit.TreeInput", davinci.ve.input.SmartInput, {
-
+return declare("davinci.libraries.dojo.dijit.TreeInput", SmartInput, {
 
 	property: null, 
 	
@@ -14,11 +21,11 @@ dojo.declare("davinci.libraries.dojo.dijit.TreeInput", davinci.ve.input.SmartInp
 	multiLine: "true",
 	
 	supportsHTML: "false",
+
 	helpText: "",
 	
 	constructor : function() {
-		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dijit", "dijit");
-		this.helpText = langObj.treeInputHelp;
+		this.helpText = dijitNls.treeInputHelp;
 	},
 	
 	serialize: function(widget, callback, value) {
@@ -149,21 +156,21 @@ dojo.declare("davinci.libraries.dojo.dijit.TreeInput", davinci.ve.input.SmartInp
 		
 		// Kludge to save the data back on the store for serialization later
 		var modelId = tree.domNode._dvWidget._srcElement.getAttribute("model");
-		var modelWidget = davinci.ve.widget.byId(modelId);
+		var modelWidget = Widget.byId(modelId);
 		var storeId = modelWidget._srcElement.getAttribute("store");
-		var storeWidget = davinci.ve.widget.byId(storeId);
+		var storeWidget = Widget.byId(storeId);
 		this._attr(storeWidget, "data", data);
 		store.data = data;
 		// FIXME: How do we set this such that the model recognizes the update?
 		// Berkland: How do we get the corresponding dv widget handle from something like a dojo data store object? Doesn't seem to be any handle attached.
-		var dvWidget = davinci.ve.widget.getWidget(store.domNode);
+		var dvWidget = Widget.getWidget(store.domNode);
 	},
 		
 	_attr: function(widget, name, value) {
 		var properties = {};
 		properties[name] = value;
 		
-		var command = new davinci.ve.commands.ModifyCommand(widget, properties);
+		var command = new ModifyCommand(widget, properties);
 		this._addOrExecCommand(command);
 	},
 	
@@ -189,4 +196,6 @@ dojo.declare("davinci.libraries.dojo.dijit.TreeInput", davinci.ve.input.SmartInp
 		return context && context.getGlobal && context.getGlobal();
 	}
 	
+});
+
 });

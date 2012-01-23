@@ -1,4 +1,10 @@
-[ {
+define([
+	"davinci/ve/widget"
+], function(
+	Widget
+) {
+
+return {
 
 	getData: function(/*Widget*/ widget, /*Object*/ options){
 		// summary:
@@ -11,7 +17,7 @@
 		}
 
 		// call the old _getData
-		var data = davinci.ve.widget._getData(widget, options);
+		var data = Widget._getData(widget, options);
 		// only write the script tag if this call is for serializing and there is a structure to serialize
 		if(data && options && options.serialize && widget.structure){
 			// the JS that sets the structure, this=the DataGrid
@@ -45,7 +51,7 @@
 		if(!structure){
 			return undefined;
 		}
-		var columns = undefined;
+		var columns;
 		try{
 			columns = structure[0].cells[0];
 		}catch(e){
@@ -105,4 +111,6 @@
 		return "[{cells: [[" + s + "]]}]";
 	}
 
-}]
+};
+
+});

@@ -1,7 +1,6 @@
-dojo.provide("davinci.libraries.dojo.dijit.form.SelectHelper");
+define(function() {
 
-dojo.declare("davinci.libraries.dojo.dijit.form.SelectHelper", null, {
-
+return {
 	getChildrenData: function(/*Widget*/ widget, /*Object*/ options){
 		// summary:
 		//		If a dojo.data store is specified on the passed widget, returns [].
@@ -58,5 +57,6 @@ dojo.declare("davinci.libraries.dojo.dijit.form.SelectHelper", null, {
 		}
 		return children;
 	}
+};
 
 });

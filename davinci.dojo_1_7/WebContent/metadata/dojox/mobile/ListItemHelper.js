@@ -1,11 +1,8 @@
-dojo.provide("davinci.libraries.dojo.dojox.mobile.ListItemHelper");
+define(function() {
 
+return {
 
-dojo.declare("davinci.libraries.dojo.dojox.mobile.ListItemHelper", null, {
-
-	
-	create: function(widget, srcElement){
-
+	create: function(widget, srcElement) {
 		var dijitWidget = widget.dijitWidget;
 		if(dijitWidget && dijitWidget.anchorNode){
 			// Fix for #705.
@@ -35,5 +32,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ListItemHelper", null, {
 		}
 		return text;
 	}
+
+};
 
 });

@@ -1,17 +1,20 @@
-dojo.provide("davinci.libraries.dojo.dijit.form.SelectInput");
-dojo.require("davinci.libraries.dojo.dijit.form.OptionsInput");
+define([
+	"dojo/_base/declare",
+	"../OptionsInput",
+	"dojo/i18n!../nls/dijit"
+], function(
+	declare,
+	OptionsInput,
+	dijitNls
+) {
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.libraries.dojo.dijit", "dijit");
+return declare("davinci.libraries.dojo.dijit.form.SelectInput", OptionsInput, {
 
-dojo.declare("davinci.libraries.dojo.dijit.form.SelectInput", davinci.libraries.dojo.dijit.form.OptionsInput, {
-	
 	supportsHTML: "false",
 	helpText: "",
 	
 	constructor : function() {
-		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dijit", "dijit");
-		this.helpText = langObj.selectInputHelp;
+		this.helpText = dijitNls.selectInputHelp;
 	},
 	
 	getProperties: function(widget, options) {
@@ -28,5 +31,6 @@ dojo.declare("davinci.libraries.dojo.dijit.form.SelectInput", davinci.libraries.
 		}
 		return {value:value};
 	}
+});
 
 });

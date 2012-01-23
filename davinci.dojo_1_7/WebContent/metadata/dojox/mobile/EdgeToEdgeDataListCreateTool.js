@@ -1,42 +1,49 @@
-dojo.provide("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool");
-
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.commands.CompoundCommand");
-dojo.require("davinci.ve.commands.AddCommand");
-dojo.require("davinci.ve.commands.MoveCommand");
-dojo.require("davinci.ve.commands.ResizeCommand");
-dojo.require("davinci.ve.tools.CreateTool");
+define([
+	"dojo/_base/declare",
+	"davinci/ve/tools/CreateTool",
+	"davinci/ve/widget",
+	"davinci/commands/CompoundCommand",
+	"davinci/ve/commands/AddCommand",
+	"davinci/ve/commands/MoveCommand",
+	"davinci/ve/commands/ResizeCommand"
+], function (
+	declare,
+	CreateTool,
+	Widget,
+	CompoundCommand,
+	AddCommand,
+	MoveCommand,
+	ResizeCommand
+) {
 
 // NOTE: Used by EdgeToEdgeDataList, RoundRectDataList, Carousel
 
-dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool", davinci.ve.tools.CreateTool, {
-	constructor: function(data){
-		
+return declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool", CreateTool, {
+
+	constructor: function(data) {
 		this._resizable = "both";
 	},
 	
-	 _create: function(args) {
-
+	_create: function(args) {
         var command = this._getCreateCommand(args);
         this._context.getCommandStack().execute(command);
         this._select(this._mobileWidget);
     },
 
-    _getCreateCommand: function(args){
-		
+    _getCreateCommand: function(args) {
 		if(this._data.length !== 2){
 			return;
 		}
 		
-		var storeData = this._data[0]
-		var edge2EdgeData = this._data[1];
+		var storeData = this._data[0],
+			edge2EdgeData = this._data[1];
 		
 		if(!this._context.loadRequires(storeData.type,true) ||
 			!this._context.loadRequires(edge2EdgeData.type,true)){
 			return;
 		}
 	
-		var storeId = davinci.ve.widget.getUniqueObjectId(storeData.type, this._context.getDocument());
+		var storeId = Widget.getUniqueObjectId(storeData.type, this._context.getDocument());
 		if(!storeData.properties){
 			storeData.properties = {};
 		}
@@ -65,51 +72,49 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool",
 		});
 		data.items = copyUsingFrameObject(items);
 		
-		var edge2EdgeDataId = davinci.ve.widget.getUniqueObjectId(edge2EdgeData.type, this._context.getDocument());
+		var edge2EdgeDataId = Widget.getUniqueObjectId(edge2EdgeData.type, this._context.getDocument());
 		if(!edge2EdgeData.properties){
 			edge2EdgeData.properties = { };
 		}
 		edge2EdgeData.context = this._context;
 	
-		var store = undefined;
-		var edge2Edge = undefined;
+		var store,
+			edge2Edge;
 		
 		var dj = this._context.getDojo();
 		dojo.withDoc(this._context.getDocument(), function(){
-			store = davinci.ve.widget.createWidget(storeData);
+			store = Widget.createWidget(storeData);
 			edge2EdgeData.properties.store = dj.getObject(storeId);
-			edge2Edge = davinci.ve.widget.createWidget(edge2EdgeData);
+			edge2Edge = Widget.createWidget(edge2EdgeData);
 		});
 		
 		if(!store || !edge2Edge){
 			return;
 		}
 	
-		var command = new davinci.commands.CompoundCommand();
+		var command = new CompoundCommand();
 		var index = args.index;
 		// always put store and model as first element under body, to ensure they are constructed by dojo before they are used
-        var bodyWidget = davinci.ve.widget.getWidget(this._context.rootNode);
-		command.add(new davinci.ve.commands.AddCommand(store, bodyWidget, 0));
+        var bodyWidget = Widget.getWidget(this._context.rootNode);
+		command.add(new AddCommand(store, bodyWidget, 0));
 		index = (index !== undefined && index >= 0 ? index + 1 : undefined);
-		command.add(new davinci.ve.commands.AddCommand(edge2Edge, args.parent, index));
+		command.add(new AddCommand(edge2Edge, args.parent, index));
 		
 		if(args.position){
-			command.add(new davinci.ve.commands.MoveCommand(edge2Edge, args.position.x, args.position.y));
+			command.add(new MoveCommand(edge2Edge, args.position.x, args.position.y));
 		}
 		if(args.size){
-			command.add(new davinci.ve.commands.ResizeCommand(edge2Edge, args.size.w, args.size.h));
+			command.add(new ResizeCommand(edge2Edge, args.size.w, args.size.h));
 		}
 		
 		this._mobileWidget = edge2Edge;
         return command;
-		
 	},
     
-    addPasteCreateCommand: function(command, args){
-
+    addPasteCreateCommand: function(command, args) {
         this._context = this._data.context;
         var storeId = this._data.properties.store._edit_object_id;
-        var storeWidget = davinci.ve.widget.byId(storeId);
+        var storeWidget = Widget.byId(storeId);
         var storeData = storeWidget.getData();
         var data = [];
         data[0] = storeData;
@@ -117,9 +122,8 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool",
         this._data = data;
         command.add( this._getCreateCommand(args));
         return this._mobileWidget;
-        
-   
     }
-	
+
+});
 
 });

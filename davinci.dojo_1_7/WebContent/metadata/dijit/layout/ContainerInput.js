@@ -1,7 +1,24 @@
 define([
-        "dojo/_base/declare",
-        "davinci/ve/input/SmartInput"
-], function(declare, SmartInput){
+    "dojo/_base/declare",
+    "dojox/html/entities",
+    "davinci/ve/input/SmartInput",
+    "davinci/ve/metadata",
+    "davinci/ve/widget",
+    "davinci/commands/CompoundCommand",
+    "davinci/ve/commands/ModifyCommand",
+    "davinci/ve/commands/RemoveCommand",
+    "davinci/ve/commands/AddCommand"
+], function(
+	declare,
+	Entities,
+	SmartInput,
+	Metadata,
+	Widget,
+	CompoundCommand,
+	ModifyCommand,
+	RemoveCommand,
+	AddCommand
+) {
 
 return declare("davinci.libraries.dojo.dijit.layout.ContainerInput", SmartInput, {
 
@@ -14,8 +31,7 @@ return declare("davinci.libraries.dojo.dijit.layout.ContainerInput", SmartInput,
 	displayOnCreate: "true",
 	
 	format: "columns",
-	
-	serialize: function(widget, callback, value) {
+		serialize: function(widget, callback, value) {
 		var result = [];
 		var children = widget.getChildren();
 		
@@ -42,7 +58,7 @@ return declare("davinci.libraries.dojo.dijit.layout.ContainerInput", SmartInput,
 	
 	getChildType: function(parentType){
 		if (!this.childType){
-			var allowedChild = davinci.ve.metadata.getAllowedChild(parentType);
+			var allowedChild = Metadata.getAllowedChild(parentType);
 			this.childType = allowedChild[0];
 		}
 		return this.childType;
@@ -51,14 +67,15 @@ return declare("davinci.libraries.dojo.dijit.layout.ContainerInput", SmartInput,
 	update: function(widget, value) {		
 		var values = value;
 		
-		this.command = new davinci.commands.CompoundCommand();
+		this.command = new CompoundCommand();
 
 		var children = widget.getChildren();
 		for (var i = 0; i < values.length; i++) {
 			var text = values[i].text;
-			//text = dojox.html.entities.encode(text);
-			if (this.isHtmlSupported() && (this.getFormat() === 'html')) // added to support dijit.TextBox that does not support html markup in the value and should not be encoded. wdr
-				text = dojox.html.entities.encode(text);
+			// added to support dijit.TextBox that does not support html markup in the value and should not be encoded. wdr
+			if (this.isHtmlSupported() && (this.getFormat() === 'html')) {
+				text = Entities.encode(text);
+			}
 			if (i < children.length) {
 				var child = children[i];
 				this._attr(child, this.propertyName, text);
@@ -81,12 +98,12 @@ return declare("davinci.libraries.dojo.dijit.layout.ContainerInput", SmartInput,
 		var properties = {};
 		properties[name] = value;
 		
-		var command = new davinci.ve.commands.ModifyCommand(widget, properties);
+		var command = new ModifyCommand(widget, properties);
 		this._addOrExecCommand(command);
 	},
 	
 	_removeChild: function(widget) {
-		var command = new davinci.ve.commands.RemoveCommand(widget);
+		var command = new RemoveCommand(widget);
 		this._addOrExecCommand(command);
 	},
 	
@@ -94,12 +111,12 @@ return declare("davinci.libraries.dojo.dijit.layout.ContainerInput", SmartInput,
 		var data = {type: type, properties: {}, context: this._getContext()};
 		data.properties[propertyName] = value;
 		
-		var child = undefined;
+		var child;
 		dojo.withDoc(this._getContext().getDocument(), function(){
-			child = davinci.ve.widget.createWidget(data);
+			child = Widget.createWidget(data);
 		}, this);
 		
-		var command = new davinci.ve.commands.AddCommand(child, widget);
+		var command = new AddCommand(child, widget);
 		this._addOrExecCommand(command);
 	},
 	
@@ -116,8 +133,7 @@ return declare("davinci.libraries.dojo.dijit.layout.ContainerInput", SmartInput,
 			if ((widget.isContainer || widget.isLayoutContainer) && widget.declaredClass != "dojox.layout.ScrollPane"){
 				return widget;
 			}
-//			debugger;
-			widget = davinci.ve.widget.getParent(widget); 
+			widget = Widget.getParent(widget); 
 		}
 		return undefined;
 	},
@@ -131,4 +147,5 @@ return declare("davinci.libraries.dojo.dijit.layout.ContainerInput", SmartInput,
 		return editor && (editor.getContext && editor.getContext() || editor.context);
 	}
 });
+
 });

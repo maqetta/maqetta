@@ -31,8 +31,8 @@ define([
 
 		this._data.context = this._context;
 		var w = this._create({parent: bodyWidget});
-		var body = davinci.ve.states.getContainer();
-		davinci.ve.states.add(body, "_show:" + w.getId());
+		var body = States.getContainer();
+		States.add(body, "_show:" + w.getId());
 	}
 });
 });

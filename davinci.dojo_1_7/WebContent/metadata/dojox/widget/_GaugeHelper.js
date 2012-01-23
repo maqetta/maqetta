@@ -1,6 +1,6 @@
-dojo.provide("davinci.libraries.dojo.dojox.widget._GaugeHelper");
+define(function() {
 
-dojo.declare("davinci.libraries.dojo.dojox.widget._GaugeHelper", null, {
+return {
 
 	// _widget: String
 	// 		Class name of the _Gauge ("AnalogGauge", "BarGauge").
@@ -126,4 +126,6 @@ dojo.declare("davinci.libraries.dojo.dojox.widget._GaugeHelper", null, {
 	// 	}
 	// 	return value;
 	// }
+};
+
 });

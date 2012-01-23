@@ -1,7 +1,6 @@
-dojo.provide("davinci.libraries.dojo.dojox.mobile.SwitchHelper");
+define(function() {
 
-
-dojo.declare("davinci.libraries.dojo.dojox.mobile.SwitchHelper", null, {
+return  {
 
 	create: function(widget, srcElement) {
 		var parent = widget.dijitWidget.getParent();
@@ -11,5 +10,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.SwitchHelper", null, {
 			// XXX need to add style to Model as well
 		}
 	}
+
+};
 
 });

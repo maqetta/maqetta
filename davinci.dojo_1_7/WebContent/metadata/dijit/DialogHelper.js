@@ -1,6 +1,7 @@
 define([
-        "dojo/_base/connect"
+	"dojo/_base/connect"
 ], function(connect) {
+
 return function() {
 	this.create = function(widget) {
 		var id = widget.dijitWidget.id,
@@ -42,4 +43,5 @@ return function() {
 		return false;
 	};
 };
+
 });

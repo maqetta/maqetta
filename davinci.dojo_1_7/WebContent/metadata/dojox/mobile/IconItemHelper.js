@@ -1,10 +1,8 @@
-dojo.provide("davinci.libraries.dojo.dojox.mobile.IconItemHelper");
+define(function() {
 
+return {
 
-dojo.declare("davinci.libraries.dojo.dojox.mobile.IconItemHelper", null, {
-
-	
-	create: function(widget, srcElement){
+	create: function(widget, srcElement) {
 		// Fix for #705.
 		// The IconItem widget's startup logic registers an onclick
 		// handler on its DOM node if there is a
@@ -29,5 +27,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.IconItemHelper", null, {
 			}
 		}
 	}
+
+};
 
 });

@@ -1,8 +1,12 @@
-dojo.provide("davinci.libraries.dojo.dojox.widget.AnalogGaugeHelper");
+define([
+	"dojo/_base/lang",
+	"./_GaugeHelper"
+], function(
+	lang,
+	_GaugeHelper
+) {
 
-dojo.require("davinci.libraries.dojo.dojox.widget._GaugeHelper");
-
-dojo.declare("davinci.libraries.dojo.dojox.widget.AnalogGaugeHelper", davinci.libraries.dojo.dojox.widget._GaugeHelper, {
+var AnalogGaugeHelper = {
 	// _widget: String
 	// 		Override for AnalogGauge.
 	_widget: "AnalogGauge",
@@ -18,7 +22,14 @@ dojo.declare("davinci.libraries.dojo.dojox.widget.AnalogGaugeHelper", davinci.li
 		// delete copied private data
 		if(this.majorTicks){ delete this.majorTicks._ticks; }
 		if(this.minorTicks){ delete this.minorTicks._ticks; }
-		dojo.hitch(this,dojo.metadata.dojox.widget.AnalogGaugeHelper._oldPostCreate)();
+		lang.hitch(this, AnalogGaugeHelper._oldPostCreate)();
 		this.useTooltip=oldUseTooltip;
 	}
+
+};
+
+lang.extend(AnalogGaugeHelper, _GaugeHelper);
+
+return AnalogGaugeHelper;
+
 });

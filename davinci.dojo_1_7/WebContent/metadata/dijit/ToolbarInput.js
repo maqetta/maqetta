@@ -1,9 +1,16 @@
-dojo.provide("davinci.libraries.dojo.dijit.ToolbarInput");
-dojo.require("davinci.libraries.dojo.dijit.layout.ContainerInput");
+define([
+	"dojo/_base/declare",
+	"./layout/ContainerInput"
+], function(
+	declare,
+	ContainerInput
+) {
 
-dojo.declare("davinci.libraries.dojo.dijit.ToolbarInput", davinci.libraries.dojo.dijit.layout.ContainerInput, {
+return declare("davinci.libraries.dojo.dijit.ToolbarInput", ContainerInput, {
 
 	propertyName: "label",
 	supportsHTML: true
 	
+});
+
 });

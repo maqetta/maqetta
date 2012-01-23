@@ -1,16 +1,16 @@
-dojo.provide("davinci.review.actions.OpenVersionAction");
+define([
+	"dojo/_base/declare",
+	"davinci/actions/Action",
+	"dojox.widget.Toaster",
+	"dojo/i18n!davinci/review/actions/nls/actions"
+], function(declare, Action, Toaster, langObj){
 
-dojo.require("davinci.actions.Action");
-dojo.require("dojox.widget.Toaster");
+return declare("davinci.review.actions.OpenVersionAction", Action, {
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.review.actions", "actions");
-
-dojo.declare("davinci.review.actions.OpenVersionAction",davinci.actions.Action,{
 	run: function(context){
-	var selection = davinci.Runtime.getSelection();
-	if(!selection) return;
-	var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
+		var selection = davinci.Runtime.getSelection();
+		if(!selection) return;
+		var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
 		dojo.xhrGet({url:"./cmd/managerVersion",sync:false,handleAs:"text",
 			content:{
 			'type' :'open',
@@ -26,7 +26,6 @@ dojo.declare("davinci.review.actions.OpenVersionAction",davinci.actions.Action,{
 	            	});
 	            	hasToaster = true;
             	}
-            	var langObj = dojo.i18n.getLocalization("davinci.review.actions", "actions");
             	dojo.publish("/davinci/review/resourceChanged", [{message:langObj.openSuccessful, type:"message"},"open",item]);
             }
 		});
@@ -44,4 +43,5 @@ dojo.declare("davinci.review.actions.OpenVersionAction",davinci.actions.Action,{
 		if(item.closed&&item.closedManual&&!item.isDraft) return true;
 		return false;
 	}
+});
 });

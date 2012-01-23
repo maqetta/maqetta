@@ -1,8 +1,10 @@
-dojo.provide("davinci.review.actions.EllipseAction");
+define([
+	"dojo/_base/declare",
+	"davinci/review/actions/_DrawingCommon"
+], function(declare, _DrawingCommon){
 
-dojo.require("davinci.review.actions._DrawingCommon");
+return declare("davinci.review.actions.EllipseAction", _DrawingCommon, {
 
-dojo.declare("davinci.review.actions.EllipseAction", davinci.review.actions._DrawingCommon, {
 	run: function(context){
 		this.inherited(arguments);
 		var commentPalette = dijit.byId("davinci.review.comment");
@@ -17,4 +19,5 @@ dojo.declare("davinci.review.actions.EllipseAction", davinci.review.actions._Dra
 		});
 		createTool.activate();
 	}
+});
 });

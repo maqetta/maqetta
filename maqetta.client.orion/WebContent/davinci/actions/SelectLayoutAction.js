@@ -1,12 +1,11 @@
-dojo.provide("davinci.actions.SelectLayoutAction");
-dojo.require("davinci.actions.Action");
-dojo.require("system.resource");
-//dojo.require("davinci.ve.commands.ChangeThemeCommand");
+define([
+	"dojo/_base/declare",
+	"davinci/actions/Action",
+	"system/resource",
+	"dojo/i18n!davinci/actions/nls/actions"
+], function(declare, Action, resource, langObj){
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.actions", "actions");
-
-dojo.declare("davinci.actions.SelectLayoutAction", davinci.actions.Action, {
+return declare("davinci.actions.SelectLayoutAction", Action, {
 	
 	run: function(selection){
 		if (!this.isEnabled(null)) return;
@@ -22,7 +21,6 @@ dojo.declare("davinci.actions.SelectLayoutAction", davinci.actions.Action, {
 		else return false;
 
 	},
-
 
 	_changeLayoutCommand: function(newLayout){
 		
@@ -42,7 +40,6 @@ dojo.declare("davinci.actions.SelectLayoutAction", davinci.actions.Action, {
 		}
 	},
 	
-	
 	showLayouts : function(){
 
 		var e = davinci.Workbench.getOpenEditor();
@@ -59,7 +56,6 @@ dojo.declare("davinci.actions.SelectLayoutAction", davinci.actions.Action, {
 			formHtml = formHtml + '<option>Flow positioning</option>';
 		}
 			
-		var langObj = dojo.i18n.getLocalization("davinci.actions", "actions");
 		formHtml = formHtml + '</select><br/>';
 		var	dialog = new dijit.Dialog({id: "selectLayout", title:langObj.newWidgetsShouldUse,
 			onCancel:function(){this.destroyRecursive(false);}});	
@@ -80,8 +76,6 @@ dojo.declare("davinci.actions.SelectLayoutAction", davinci.actions.Action, {
 		
 		dialog.show();
 	}
-
-
-}
-	);
+});
+});
 davinci.preference_layout_ATTRIBUTE = 'dvFlowLayout';

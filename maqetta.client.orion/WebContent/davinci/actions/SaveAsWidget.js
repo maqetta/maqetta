@@ -1,20 +1,19 @@
-dojo.provide("davinci.actions.SaveAsWidget");
+define([
+	"dojo/_base/declare",
+	"davinci/actions/Action",
+	"dijit/Dialog",
+	"davinci.ui.SaveAsWidgetForm",
+	"dojo/i18n!davinci.ui.nls.common"
+], function(declare, Action, Dialog, SaveAsWidgetForm, langObj){
 
-dojo.require("davinci.actions.Action");
-dojo.require("dijit.Dialog");
-dojo.require("davinci.ui.SaveAsWidgetForm");
-dojo.require("dojo.i18n");
-
-dojo.requireLocalization("davinci.ui", "common");
+return declare("davinci.actions.SaveAsWidget", Action, {
 
 // XXX How do we handle the properties from the individual widgets?  Doesn't make sense to put them
 //  all as properties of the composite widget.  Maybe present user with a dialog showing all the
 //  properties from the widgets and allow user to select which properties to expose in composite
 //  widget, or allow to add new ones.
 
-
-dojo.declare("davinci.actions.SaveAsWidget", davinci.actions.Action, {
-    
+   
     run: function(context) {
         if (context.declaredClass !== "davinci.ve.Context") {
             if (typeof context.getContext === "function") {
@@ -122,7 +121,7 @@ dojo.declare("davinci.actions.SaveAsWidget", davinci.actions.Action, {
     
     _showDialog: function(metadata) {
         var formDialog = new dijit.Dialog({
-            title: dojo.i18n.getLocalization("davinci.ui", "common").sawdTitle,
+            title: langObj.sawdTitle,
             "class": "dvSaveAsWidgetDialog",
             execute: dojo.hitch(this, function() {
                 this._saveMetadata(arguments[0].metadata);
@@ -147,4 +146,5 @@ dojo.declare("davinci.actions.SaveAsWidget", davinci.actions.Action, {
         console.log("Custom Widget Metadata:");
         console.dir(metadata);
     }
+});
 });

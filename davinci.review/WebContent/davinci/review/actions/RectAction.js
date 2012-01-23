@@ -1,8 +1,10 @@
-dojo.provide("davinci.review.actions.RectAction");
+define([
+	"dojo/_base/declare",
+	"davinci/review/actions/_DrawingCommon"
+], function(declare, _DrawingCommon){
 
-dojo.require("davinci.review.actions._DrawingCommon");
+return declare("davinci.review.actions.RectAction", _DrawingCommon, {
 
-dojo.declare("davinci.review.actions.RectAction", davinci.review.actions._DrawingCommon, {
 	run: function(context){
 		this.inherited(arguments);
 		var commentPalette = dijit.byId("davinci.review.comment");
@@ -17,4 +19,5 @@ dojo.declare("davinci.review.actions.RectAction", davinci.review.actions._Drawin
 		});
 		createTool.activate();
 	}
+});
 });

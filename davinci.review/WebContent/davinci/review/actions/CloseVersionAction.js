@@ -1,20 +1,19 @@
-dojo.provide("davinci.review.actions.CloseVersionAction");
+define([
+	"dojo/_base/declare",
+	"davinci/actions/Action",
+	"dojox.widget.Toaster",
+	"dojo/i18n!davinci/review/actions/nls/actions"
+], function(declare, Action, Toaster, langObj){
 
-dojo.require("davinci.actions.Action");
-dojo.require("dojox.widget.Toaster");
+return declare("davinci.review.actions.CloseVersionAction", Action, {
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.review.actions", "actions");
-
-dojo.declare("davinci.review.actions.CloseVersionAction",davinci.actions.Action,{
 	run: function(context){
-	var selection = davinci.Runtime.getSelection();
-	var langObj = dojo.i18n.getLocalization("davinci.review.actions", "actions");
-	if(!selection) return;
-	okToClose=confirm(langObj.areYouSureClose);
-	if(!okToClose)
-		return;
-	var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
+		var selection = davinci.Runtime.getSelection();
+		if(!selection) return;
+		okToClose=confirm(langObj.areYouSureClose);
+		if(!okToClose)
+			return;
+		var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
 		dojo.xhrGet({url:"./cmd/managerVersion",sync:false,handleAs:"text",
 			content:{
 			'type' :'close',
@@ -47,4 +46,5 @@ dojo.declare("davinci.review.actions.CloseVersionAction",davinci.actions.Action,
 		if(!item.closed&&!item.isDraft) return true;
 		return false;
 	}
+});
 });

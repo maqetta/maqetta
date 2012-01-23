@@ -1,8 +1,10 @@
-dojo.provide("davinci.review.actions.EditVersionAction");
+define([
+	"dojo/_base/declare",
+	"davinci/actions/Action",
+], function(declare, Action){
 
-dojo.require("davinci.actions.Action");
+return declare("davinci.review.actions.EditVersionAction", Action, {
 
-dojo.declare("davinci.review.actions.EditVersionAction",davinci.actions.Action,{
 	run: function(context){
 		var selection = davinci.Runtime.getSelection();
 		if(!selection) return;
@@ -20,4 +22,5 @@ dojo.declare("davinci.review.actions.EditVersionAction",davinci.actions.Action,{
 		var selection = davinci.Runtime.getSelection();
 		return selection && selection.length > 0 ? true : false;
 	}
+});
 });

@@ -1,13 +1,15 @@
-dojo.provide("davinci.review.actions._DrawingCommon");
+define([
+	"dojo/_base/declare",
+	"davinci/actions/Action",
+	"davinci/review/drawing/Surface",
+	"davinci/review/drawing/tools/CreateTool",
+	"davinci/review/drawing/tools/SelectTool",
+	"davinci/review/drawing/tools/ExchangeTool",
+	"davinci/review/drawing/tools/HighlightTool"
+], function(declare, Action, Surface, CreateTool, SelectTool, ExchangeTool, HighlightTool){
 
-dojo.require("davinci.actions.Action");
-dojo.require("davinci.review.drawing.Surface");
-dojo.require("davinci.review.drawing.tools.CreateTool");
-dojo.require("davinci.review.drawing.tools.SelectTool");
-dojo.require("davinci.review.drawing.tools.ExchangeTool");
-dojo.require("davinci.review.drawing.tools.HighlightTool");
-
-dojo.declare("davinci.review.actions._DrawingCommon", davinci.actions.Action, {
+return declare("davinci.review.actions._DrawingCommon", Action, {
+	
 	run: function(context){
 		var e = davinci.Workbench.getOpenEditor(), ctx;
 		if(e && e.getContext){
@@ -25,4 +27,5 @@ dojo.declare("davinci.review.actions._DrawingCommon", davinci.actions.Action, {
 			ctx._frameNode.contentWindow.focus();
 		}
 	}
+});
 });

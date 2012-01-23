@@ -1,15 +1,17 @@
-dojo.provide("davinci.actions.CopyAction");
-dojo.require("davinci.actions.Action");
+define([
+	"dojo/_base/declare",
+	"davinci/actions/Action"
+], function(declare, Action){
 
-dojo.declare("davinci.actions.CopyAction", davinci.actions.Action, {
-	
+return declare("davinci.actions.CopyAction", Action, {
+
 	run: function(selection){
 	  davinci.Runtime.clipboard=selection;
-},
-
-isEnabled: function(selection){
-	return selection.length>0;
-}
-
-
+	},
+	
+	isEnabled: function(selection){
+		return selection.length>0;
+	}
 });
+});
+

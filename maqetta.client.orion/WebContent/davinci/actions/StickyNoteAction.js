@@ -1,11 +1,12 @@
-dojo.provide("davinci.actions.StickyNoteAction");
-dojo.require("davinci.actions.Action");
-dojo.require("system.resource");
-dojo.require("davinci.ve.commands.AddCommand");
+define([
+	"dojo/_base/declare",
+	"davinci/actions/Action",
+	"system/resource",
+	"davinci/ve/commands/AddCommand"
+], function(declare, Action, resource, AddCommand){
 
+return declare("davinci.actions.StickyNoteAction", Action, {
 
-dojo.declare("davinci.actions.StickyNoteAction", davinci.actions.Action, {
-	
 	run: function(selection){
 
 		var e = davinci.Workbench.getOpenEditor();
@@ -64,5 +65,5 @@ dojo.declare("davinci.actions.StickyNoteAction", davinci.actions.Action, {
 		else return false;
 		//	return davinci.Runtime.commandStack.canRedo();
 	}
-}
-);
+});
+});

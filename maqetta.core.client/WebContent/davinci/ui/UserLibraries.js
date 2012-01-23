@@ -15,7 +15,7 @@ define(["dojo/_base/declare",
         "system/resource",
         "davinci/ve/RebuildPage",
         "dojo/text!./templates/UserLibraries.html",
-        "davinci/theme/ThemeUtils",
+        "davinci/theme/ThemeUtils"
         
 ], function(declare, _Templated, _Widget, Button, TextBox, RadioButton,MenuItem,Menu,Library, ComboBox, uiNLS, commonNLS, Runtime, Path, Resource, RebuildPage, templateString){
 	

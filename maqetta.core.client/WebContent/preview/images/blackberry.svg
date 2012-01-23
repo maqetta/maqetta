@@ -78,7 +78,7 @@
 			c15.016-4.56,37.175-7.445,61.905-7.445c23.753,0,45.131,2.663,60.087,6.913C364.647,488.36,343.27,488.913,319.517,488.913z"/>
 	</g>
 </g>
-<rect id="ScreenRect" x="247.053" y="246.733" fill="#FFFFFF" width="144.462" height="192.617"/>
+<rect id="ScreenRect" x="247.053" y="246.733" display="none" fill="#FFFFFF" width="144.462" height="192.617"/>
 <rect id="DeviceRect" x="231.071" y="200.047" display="none" fill="none" stroke="#000000" stroke-miterlimit="10" width="176.4" height="318.96"/>
-<rect id="ResolutionRect" x="247.053" y="246.733" fill="none" width="360" height="480"/>
+<rect id="ResolutionRect" x="247.053" y="246.733" display="none" fill="none" width="360" height="480"/>
 </svg>

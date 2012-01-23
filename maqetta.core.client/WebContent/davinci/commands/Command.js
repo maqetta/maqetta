@@ -1,7 +1,9 @@
-dojo.provide("davinci.commands.Command");
-
-dojo.declare("davinci.commands.Command", null, {
-
+define([
+	    "dojo/_base/declare"
+], function(declare){
+	
+return declare("davinci.commands.Command", null, {
+	
 	constructor: function(args){
 		dojo.mixin(this, args);
 	},
@@ -11,5 +13,7 @@ dojo.declare("davinci.commands.Command", null, {
 
 	undo: function(){
 	}
-
+	
 });
+});
+

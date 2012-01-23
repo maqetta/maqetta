@@ -30,6 +30,7 @@ define({ root:
 		//NewTheme.js
 		"themeAlreadyExists":"Theme already Exists!",
 		"invalidThemeName": "Invalid theme name",
+		"errorCreatingTheme": "Error creating theme: ",
 		
 		//OpenThemeDialog.js
 		"noUserThemes":"No user themes found in workspace. Please create a new theme before editing.",

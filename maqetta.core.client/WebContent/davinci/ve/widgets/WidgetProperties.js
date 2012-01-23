@@ -170,7 +170,7 @@ dojo.declare("davinci.ve.widgets.WidgetProperties", [davinci.workbench.ViewLite]
 		}else{
 			 box = dijit.byId(this._pageLayout[index]['id']);
 			 if(box) {
-				 value = box.attr('value');
+				 value = box.get('value');
 			 }
 		}
 

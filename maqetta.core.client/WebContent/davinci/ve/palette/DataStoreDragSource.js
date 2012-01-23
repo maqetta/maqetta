@@ -1,9 +1,16 @@
-dojo.provide("davinci.ve.palette.DataStoreDragSource");
+/**
+ * This routine is a companion to DataStoreView, which is not
+ * used by the product at the time this comment was written.
+ */
 
-dojo.require("davinci.ve.tools.CreateTool");
-dojo.require("davinci.ui.dnd.DragSource");
+define([
+	"dojo/_base/declare",
+	"davinci/ve/tools/CreateTool",
+	"davinci/ui/dnd/DragSource"
+], function(declare, CreateTool, DragSource){
 
-dojo.declare("davinci.ve.palette.DataStoreDragSource", null, {
+return declare("davinci.ve.palette.DataStoreDragSource", null, {
+	
     constructor: function(data) {
         // data from the item being dragged
         this.data = data;
@@ -48,4 +55,5 @@ dojo.declare("davinci.ve.palette.DataStoreDragSource", null, {
     _setTargetAttributes: function(dropTarget) {
         davinci.ve.views.DataStoresView.bindDS(dropTarget, this.data.dsId, this.data.attrId);
     }
+});
 });

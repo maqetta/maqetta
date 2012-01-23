@@ -102,11 +102,13 @@ davinci.html.HTMLFile = function(fileName) {
 davinci.Inherits(davinci.html.HTMLFile,davinci.html.HTMLItem);
 
 davinci.html.HTMLFile.prototype.save = function (isWorkingCopy) {
+    var deferred;
     var file = system.resource.findResource(this.fileName);
     if(file){
         var text = this.getText();
-        file.setContents(text,isWorkingCopy);
+        deferred = file.setContents(text,isWorkingCopy);
     }
+    return deferred;
 };
 
 //WHOEVER Added this should rename so it doesnt conflict with the real getText 

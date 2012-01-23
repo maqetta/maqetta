@@ -1,8 +1,8 @@
-dojo.provide("davinci.workbench.ViewLite");
- 
-dojo.require("davinci.workbench._ToolbaredContainer"); //FIXME: should not be required here?
-dojo.require("davinci.ve.States");
-dojo.require("davinci.workbench.WidgetLite");
+define([
+	"dojo/_base/declare",
+	"./WidgetLite",
+	"../ve/States"
+], function(declare, WidgetLite) {
 
 /**
  * This class is a base class for various pieces of the Properties palette
@@ -13,7 +13,7 @@ dojo.require("davinci.workbench.WidgetLite");
  *   davinci/ve/widgets/WidgetProperties.js
  *   davinci/ve/widgets/WidgetToolBar.js
  */
-dojo.declare("davinci.workbench.ViewLite", [davinci.workbench.WidgetLite], {
+return declare("davinci.workbench.ViewLite", [WidgetLite], {
 	/* selected editor */
 	_editor : null,
 	/* selected widget */
@@ -29,21 +29,26 @@ dojo.declare("davinci.workbench.ViewLite", [davinci.workbench.WidgetLite], {
 		dojo.subscribe("/davinci/ui/widgetSelected", dojo.hitch(this, this._widgetSelectionChanged));
 	},
 	
-	_widgetSelectionChanged : function (changeEvent){
-		if(	!this._editor )
+	_widgetSelectionChanged: function (changeEvent){
+		if(	!this._editor ) {
 			return;
+		}
 		var widget=changeEvent[0];
-		if(this._widget == widget && this._subwidget==widget.subwidget)
+		if(this._widget == widget && this._subwidget==widget.subwidget) {
 			return false;
+		}
 		this._widget = widget;
 		this._subwidget = widget && widget.subwidget;
-		if(this.onWidgetSelectionChange)
+		if(this.onWidgetSelectionChange) {
 				this.onWidgetSelectionChange();
+		}
 	},
-	_editorSelected : function(editorChange){
+
+	_editorSelected: function(editorChange){
 		this._editor = editorChange.editor;
-		if(this.onEditorSelected)
+		if(this.onEditorSelected) {
 			this.onEditorSelected(this._editor);
+		}
 	 },	
 
 	subscribe: function(topic,func){
@@ -76,4 +81,5 @@ dojo.declare("davinci.workbench.ViewLite", [davinci.workbench.WidgetLite], {
 		});
 		delete this.subscriptions;
 	}
+});
 });

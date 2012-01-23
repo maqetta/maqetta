@@ -1,10 +1,12 @@
-dojo.provide("davinci.workbench.WidgetLite");
-dojo.require("dijit._Widget");
-dojo.require("dojo.parser");
+define([
+	"dojo/_base/declare",
+    "dijit/_WidgetBase",
+	"dojo/parser"
+], function(declare, WidgetBase, parser) {
 
-dojo.declare("davinci.workbench.WidgetLite", [dijit._Widget], {
+return declare("davinci.workbench.WidgetLite", [WidgetBase], {
 	
-	/* super lite weight templated widget constructed programatically */
+	/* super lite weight templated widget constructed programmatically */
 	
 	buildRendering: function(){
 		if(!this.domNode){
@@ -14,7 +16,7 @@ dojo.declare("davinci.workbench.WidgetLite", [dijit._Widget], {
 		if(/dojotype/i.test(this.domNode.innerHTML || "")){
 			// Make sure dojoType is used for parsing widgets in template.
 			// The dojo.parser.query could be changed from multiversion support.
-			var parser = dojo.parser, qry, attr;
+			var qry, attr;
 			if(parser._query != "[dojoType]"){
 				qry = parser._query;
 				attr = parser._attrName;
@@ -23,10 +25,10 @@ dojo.declare("davinci.workbench.WidgetLite", [dijit._Widget], {
 			}
 
 			// Store widgets that we need to start at a later point in time
-			var cw = (this._startupWidgets = dojo.parser.parse(this.domNode, {
+			this._startupWidgets = dojo.parser.parse(this.domNode, {
 				noStart: !this._earlyTemplatedStartup,
 				inherited: {dir: this.dir, lang: this.lang}
-			}));
+			});
 
 			// Restore the query.
 			if(qry){
@@ -60,4 +62,5 @@ dojo.declare("davinci.workbench.WidgetLite", [dijit._Widget], {
 		});
 		this.inherited(arguments);
 	}
+});
 });

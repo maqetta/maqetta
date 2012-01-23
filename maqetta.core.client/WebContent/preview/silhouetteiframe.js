@@ -307,7 +307,14 @@ preview.silhouetteiframe.prototype = {
 			var ai_scale_adjust = 4/3;
 			scale_adjust_x = scale_adjust_y = ai_scale_adjust * scalefactor;
 		}
-
+		
+		// Make sure the 3 reference rectangles are invisible
+		device_elem.setAttribute('display', 'none');
+		screen_elem.setAttribute('display', 'none');
+		if(resolution_elem){
+			resolution_elem.setAttribute('display', 'none');
+		}
+		
 		obj_style = object_elem.style;
 		obj_style.overflow = 'hidden';
 
@@ -376,6 +383,17 @@ preview.silhouetteiframe.prototype = {
 			a2_elem.setAttribute('type','rotate');
 			a2_elem.setAttribute('additive','sum');
 		}
+		
+		// Add a lightgray rectangle 1px inside of ScreenRect.
+		// The 1px inset is to deal with browser off-by-one errors when attempting
+		// to superimpose the iframe on top of SVG silhouette
+		var gray_rect = svg_doc.createElementNS(svg_ns,'rect');
+		gray_rect.setAttribute('x', screen_x+1);
+		gray_rect.setAttribute('y', screen_y+1);
+		gray_rect.setAttribute('width', screen_width-2);
+		gray_rect.setAttribute('height', screen_height-2);
+		gray_rect.setAttribute('fill', 'lightgray');
+		g2_elem.appendChild(gray_rect);
 		
 		var div_style = silhouetteiframe_div_container.style;
 		div_style.position="relative";

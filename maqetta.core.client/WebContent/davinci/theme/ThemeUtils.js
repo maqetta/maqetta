@@ -5,7 +5,9 @@ davinci.theme.isThemeHTML = function(resource){
 };
 
 davinci.theme.CloneTheme = function(name, version, selector, directory, originalTheme, renameFiles){
-	
+    
+	var deferreds = [];
+
 	var fileBase = originalTheme.file.parent;
 	var themeRootPath = new davinci.model.Path(directory).removeLastSegments(0);
 	var resource = system.resource.findResource(themeRootPath.toString());
@@ -89,10 +91,10 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 		}
 	}
 	
-	themeFile.setContents("(" + dojo.toJson(themeJson)+")");
+	deferreds.push(themeFile.setContents("(" + dojo.toJson(themeJson)+")"));
 	
 	for(var name in toSave){
-		toSave[name].save();
+	    deferreds.push(toSave[name].save());
 	}
 	/* re-write metadata */
 	
@@ -101,7 +103,7 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 		var file = system.resource.findResource(fileUrl.toString());
 		var contents = file.getText();
 		var newContents = contents.replace(new RegExp(oldClass, "g"), selector);
-		file.setContents(newContents);
+		deferreds.push(file.setContents(newContents));
 	}
 	
 	/* rewrite theme editor HTML */
@@ -120,9 +122,12 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
              modelAttribute = modelAttribute.replace(oldClass, selector);
         }
         element.setAttribute('class',modelAttribute); //#1024
-        htmlFile.save();
+        deferreds.push(htmlFile.save());
 	}
+	
+    var defs = new dojo.DeferredList(deferreds);
 	davinci.library.themesChanged();
+	return defs;
 };
 
 davinci.theme.getHelper = function(theme){

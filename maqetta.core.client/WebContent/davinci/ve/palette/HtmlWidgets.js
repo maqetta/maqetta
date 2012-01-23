@@ -1,9 +1,10 @@
-dojo.provide("davinci.ve.palette.HtmlWidgets");
+define([
+	"dojo/_base/declare",
+	"davinci/workbench/ViewPart",
+	"davinci/ve/palette/Palette"
+], function(declare, ViewPart, Palette){
 
-dojo.require("davinci.workbench.ViewPart");
-dojo.require("davinci.ve.palette.Palette");
-
-dojo.declare("davinci.ve.palette.HtmlWidgets", davinci.workbench.ViewPart, {
+return declare("davinci.ve.palette.HtmlWidgets", davinci.workbench.ViewPart, {
 
 	constructor: function(params, srcNodeRef){
 		dojo.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, this._editorSelected));
@@ -45,5 +46,6 @@ dojo.declare("davinci.ve.palette.HtmlWidgets", davinci.workbench.ViewPart, {
 			}
 		}
 	}
+});
 });
 

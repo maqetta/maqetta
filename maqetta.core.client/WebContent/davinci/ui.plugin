@@ -1,6 +1,6 @@
 ({
     id: "davinci.ui",
-    css: "./ui.css",
+    css: "ui.css",
     "davinci.view": [
         {
             id: "navigator",
@@ -66,8 +66,8 @@
             pane: "davinci.ui.ProjectPreferences",
             defaultValues: {
                 "webContentFolder": "",
-                "themeFolder": "./themes",
-                "widgetFolder": "./lib/widgets"
+                "themeFolder": "themes",
+                "widgetFolder": "lib/widgets"
             },
             
         }
@@ -179,7 +179,7 @@
             actions: [
                 {
                     id: "newHTML",
-                    // icon: './davinci/img/add.gif',
+                    // icon: 'davinci/img/add.gif',
                     run: "davinci.ui.Resource.newHTML()",
                     label: "HTML File...",
                     // toolbarPath: "davinci.toolbar.main/edit",

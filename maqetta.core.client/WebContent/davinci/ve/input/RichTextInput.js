@@ -1,33 +1,21 @@
-dojo.provide("davinci.ve.input.RichTextInput");
-dojo.require("davinci.ve.commands.ModifyRichTextCommand");
-dojo.require("dojox.layout.FloatingPane");
-dojo.require("dijit.Editor");
-dojo.require("dijit.form.Textarea");
-dojo.require("dijit.form.TextBox");
-dojo.require("dijit._editor.plugins.LinkDialog");
-dojo.require("dijit._editor.plugins.TextColor");
-dojo.require("dijit._editor.plugins.FontChoice");
-dojo.require("dojox.html.entities");
-dojo.require("dojox.html.ellipsis");
-dojo.require("dojox.layout.ResizeHandle");
+define([
+	"dojo/_base/declare",
+	"davinci/ve/commands/ModifyRichTextCommand",
+	"dijit/Editor",  // we need editor in order for the editor to be displayed
+	"dijit/_editor/plugins/LinkDialog", // need the plugins for the editor toolbar
+	"dijit/_editor/plugins/TextColor", // need the plugins for the editor toolbar
+	"dijit/_editor/plugins/FontChoice", // need the plugins for the editor toolbar
+	"dojox/html/entities",
+	"dojo/i18n!davinci/ve/nls/ve",
+	"dojo/i18n!dijit/nls/common"
+], function(declare, ModifyRichTextCommand,  Editor, LinkDialog, 
+		TextColor, FontChoice, Entities, veNls, commonNls){
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ve", "ve");
-dojo.requireLocalization("dijit", "common");
 
-dojo.declare("davinci.ve.input.RichTextInput", davinci.ve.input.SmartInput, {
+return declare("davinci.ve.input.RichTextInput", [davinci.ve.input.SmartInput], {
 
-//	property: null,
-//	_ATTRIBUTE: 'data-davinci-inlineeditformat',
-	
-//	multiLine: "false",
-	//supportsHTML: "false",
-	//helpText:  "test",
-	
-//	displayOnCreate: "true",
 	property: 'richText',
     displayOnCreate: 'true',
-//	_connection: [],
 	
     
 	getHelpText: function(){
@@ -42,11 +30,6 @@ dojo.declare("davinci.ve.input.RichTextInput", davinci.ve.input.SmartInput, {
 		var width = 400;
 		var height = 265;
 		this._loading(height, width);
-//		var content = '<div id="iedResizeDiv" class="iedResizeDiv" style="width: 600px; height: 200px;" >' + 
-//		"<div dojoType=\"dijit.Editor\"  id=\"editor1\"  plugins=\"['undo','redo','|','cut','copy','paste','|','bold','italic','underline','strikethrough','foreColor','hiliteColor','insertHorizontalRule','createLink','unlink','insertImage','delete','removeFormat','|', 'insertOrderedList','insertUnorderedList','indent', 'outdent', 'justifyLeft', 'justifyCenter', 'justifyRight','fontName', 'fontSize', 'formatBlock']\" > </div>"+
-//			'<div id="smartInputSim" class="smartInputSim" ></div>'+
-//			'<div id="iedResizeHandle" dojoType="dojox.layout.ResizeHandle" targetId="iedResizeDiv" constrainMin="true" maxWidth="900" maxHeight="900" minWidth="400" minHeight="200"  activeResize="true" intermediateChanges="true" ></div>' +
-//		'</div>';
 		var content = this._getTemplate();
 		this._inline.attr("content",  content); 
 		var children = this._inline.getChildren();
@@ -58,9 +41,6 @@ dojo.declare("davinci.ve.input.RichTextInput", davinci.ve.input.SmartInput, {
 		}
 		var text = this._widget._srcElement.getElementText(this._context); // just the inside text
 		this._inline.eb.setValue(text);
-		//this._inline.eb.onBlur =  dojo.hitch(this, "hide");
-		//var resizeHandle = dijit.byId('iedResizeHandle');
-		//this._connection.push(dojo.connect(resizeHandle, "onResize", this, "resize"));
 		this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk"));  
 		this._connection.push(dojo.connect(this._inline.eb, "onMouseDown", this, "stopEvent")); 
 		this._connection.push(dojo.connect(this._inline.eb, "onClick", this, "updateSimStyle"));
@@ -69,7 +49,6 @@ dojo.declare("davinci.ve.input.RichTextInput", davinci.ve.input.SmartInput, {
 		this._connectSimDiv();
 		this.updateFormats();
 		this._loadingDiv.style.backgroundImage = 'none'; // turn off spinner
-		//dojo.style(this._inline.domNode, 'backgroundColor', 'red');
 		this._inline.eb.focus();
 		this.resize(null);
 		
@@ -77,35 +56,30 @@ dojo.declare("davinci.ve.input.RichTextInput", davinci.ve.input.SmartInput, {
 	
 	updateWidget: function(value){
 	
-		if (this._widget._destroyed)
+		if (this._widget._destroyed) {
 			return;
+		}
 
-//			if (this.parse) {
-//				value = this.parse(value);
-//			}
+		var node = this._node(this._widget);
+        var context=this._widget.getContext();
+		var inlineEditProp = this.property;
+		var values={};
+		if (value && (typeof value == 'string')){
+			value = value.replace(/\n/g, ''); // new lines breaks create widget richtext
+		}
+		values[inlineEditProp]=value;
+		var command;
+			values.richText = Entities.decode( values.richText); // get back to reg html
+			 var customMap = [
+			                   ["\u00a0", "nbsp"]
+		                     ];
+        values.richText = Entities.encode( values.richText, customMap);
+		command = new ModifyRichTextCommand(this._widget, values, context);
 
-			var node = this._node(this._widget);
-            var context=this._widget.getContext();
-			var inlineEditProp = this.property;
-		//	var djprop = (inlineEditProp==="textContent") ? "innerHTML" : inlineEditProp;
-					var values={};
-					if (value && (typeof value == 'string')){
-						value = value.replace(/\n/g, ''); // new lines breaks create widget richtext
-					}
-					values[inlineEditProp]=value;
-					//values[this._ATTRIBUTE]= 'html'/*this._format*/;
-					var command;
-						values.richText = dojox.html.entities.decode( values.richText); // get back to reg html
-						 var customMap = [
-						                   ["\u00a0", "nbsp"]
-					                     ];
-		                values.richText = dojox.html.entities.encode( values.richText, customMap);
-						command = new davinci.ve.commands.ModifyRichTextCommand(this._widget, values, context);
-
-					this._widget._edit_context.getCommandStack().execute(command);
-					this._widget=command.newWidget;	
-					this._widget._edit_context._focuses[0]._selectedWidget = this._widget; // get the focus on the current node
-                context.select(this._widget, null, false); // redraw the box around the widget
+		this._widget._edit_context.getCommandStack().execute(command);
+		this._widget=command.newWidget;	
+		this._widget._edit_context._focuses[0]._selectedWidget = this._widget; // get the focus on the current node
+		context.select(this._widget, null, false); // redraw the box around the widget
 
 	},
 	_getTemplate: function(){
@@ -182,25 +156,18 @@ dojo.declare("davinci.ve.input.RichTextInput", davinci.ve.input.SmartInput, {
 		var smartInputRadioDivWidth = tagetObj.clientWidth -12;
 		var obj = dojo.byId("davinci.ve.input.SmartInput_radio_div");
 		dojo.style(obj,'width',smartInputRadioDivWidth+ "px");
-		//targetEditBoxDijit.setAttribute('height',tagetObj.clientHeight );
 		
 	},
 	
-//	setFormat: function(value){  // temp override
-//	},
-	
+
 
 	updateSimStyle: function(e){
-		//this.inherited("resize", arguments);
-		
-		//dojo.addClass("smartInputSim", "dijitEditorIFrame");
 		
 		var n = dijit.byId("davinciIleb");
 		var targetEditBoxDijit = dojo.query(".dijitEditorIFrame", n.domNode);
 		var simObj = dojo.byId("smartInputSim");
 		if (simObj){
 			var s = dojo.style(targetEditBoxDijit[0]);
-			//dojo.style(simObj,'borderColor',s.borderTopColor);
 			dojo.style(simObj,'backgroundColor',s.backgroundColor);
 			dojo.style(simObj,'height','22px');
 		}
@@ -209,4 +176,5 @@ dojo.declare("davinci.ve.input.RichTextInput", davinci.ve.input.SmartInput, {
 	}
 			
 		
+});
 });

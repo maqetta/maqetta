@@ -354,7 +354,8 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 		properties.url = this._url;
 		var scripts;
 		if (this._callback){
-			scripts = [{type: "text/javascript", value: 'dojox.io.xhrScriptPlugin("'+this._url+'","'+this._callback+'");'}];
+			//scripts = [{type: "text/javascript", value: 'dojox.io.xhrScriptPlugin("'+this._url+'","'+this._callback+'");'}];
+			this.setCallback('"'+this._url+'","'+this._callback+'"');
 		} 
 		storeWidget._srcElement.setAttribute('data', ''); 
 		properties.data = ''; // to prevent ModifyCommand mixin from putting it back
@@ -584,8 +585,9 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 		dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + 15 + "px");
 		
 	
-		if (targetEditBoxDijit)
+		if (targetEditBoxDijit) {
 			targetEditBoxDijit._setStyleAttr({width: boxWidth + "px", height: boxheight + "px", maxHeight: boxheight + "px"}); // needed for multi line
+		}
 		targetEditBoxDijit._setStyleAttr({width: tagetObj.clientWidth - 20 + "px"});
 				
 		if (this._dataStoreType === 'file') {
@@ -610,40 +612,16 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
                 return xhrParams.callback;
             }
         }
-/*
-	       if (!url){
-	           return;// must be data
-	       }
-	       url = url.trim();
-	       var context = this._widget._edit_context;
-	       var scripts = context.model.children[1].getChildElements('script', true);
-	       for (var x=0; x < scripts.length; x++){
-	           if (scripts[x].children[0]){
-    	           var child = scripts[x].children[0];
-    	           var start = child.value.indexOf('dojox.io.xhrScriptPlugin');
-    	           if(start > -1) {
-    	               var end = child.value.indexOf(')', start);
-    	               // check to see if it matches the store url
-    	               if (end > -1){
-    	                   var pStart = child.value.indexOf('(', start);
-    	                   var temp = child.value.substring(pStart+1,end);
-    	                   var parms = temp.split(',');
-    	                   if (parms.length == 2){
-    	                       parms[0] = parms[0].replace(/'/g, "");
-    	                       parms[0] = parms[0].replace(/"/g, "");
-    	                       parms[1] = parms[1].replace(/'/g, "");
-    	                       parms[1] = parms[1].replace(/"/g, "");
-    	                       parms[1] = parms[1].trim();
-    	                       if ( parms[0] == url){ // must be the one we were looking for.
-    	                           return parms[1];
-    	                       }
-    	                   }
-    	               }
-    	           }
-	           }
-	       }*/
 
-	    },
+
+	},
+	
+	setCallback: function(url){
+	    var helper = davinci.ve.widget.getWidgetHelper('dojo.data.ItemFileReadStore');
+        if(helper && helper.setXhrScriptPluginParameters){
+           helper.setXhrScriptPluginParameters(url, this._widget._edit_context);
+        }
+	},
 	
 	_getTemplate: function(){
 		

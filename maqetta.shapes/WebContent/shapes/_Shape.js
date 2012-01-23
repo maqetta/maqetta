@@ -9,7 +9,11 @@ define([
 			this.inherited(arguments);
 			
 			this.domNode = this.srcNodeRef;
-			this.domNode.style.display="inline-block";
+			var computedDisplay = dojo.style(this.domNode, 'display');
+			if(computedDisplay != 'none' && computedDisplay != 'block' && computedDisplay != 'inline-block'){
+				// force inline-block instead of just inline
+				this.domNode.style.display = 'inline-block';
+			}
 			this.domNode.style.pointerEvents="none";
 			this.domNode.style.lineHeight='0px';
 
@@ -91,8 +95,11 @@ define([
 			this._svgroot.style.height = h+'px';
 			this.domNode.style.width = w+'px';
 			this.domNode.style.height = h+'px';
-			this.domNode.style.display = 'inline-block';
-
+			var computedDisplay = dojo.style(this.domNode, 'display');
+			if(computedDisplay != 'none' && computedDisplay != 'block' && computedDisplay != 'inline-block'){
+				// force inline-block instead of just inline
+				this.domNode.style.display = 'inline-block';
+			}
 		}
 	});
 });

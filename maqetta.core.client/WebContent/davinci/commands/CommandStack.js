@@ -1,6 +1,8 @@
-dojo.provide("davinci.commands.CommandStack");
-
-dojo.declare("davinci.commands.CommandStack", null, {
+define([
+	    "dojo/_base/declare"
+], function(declare){
+	
+return declare("davinci.commands.CommandStack", null, {
 	// summary:
 //	A history of commands that have occurred that keeps track of undo and redo history.
 
@@ -160,3 +162,5 @@ dojo.declare("davinci.commands.CommandStack", null, {
 		
 	}
 });
+});
+

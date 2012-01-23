@@ -354,12 +354,7 @@ return declare("davinci.libraries.dojo.dojox.grid.DataGridInput", SmartInput, {
 		properties.url = this._url;
 		var scripts;
 		if (this._callback){
-			scripts = [
-				{
-					type: "text/javascript",
-					value: 'dojox.io.xhrScriptPlugin("' + this._url + '","' + this._callback + '");'
-				}
-			];
+			this.setCallback('"' + this._url + '","' + this._callback + '"');
 		} 
 		storeWidget._srcElement.setAttribute('data', ''); 
 		properties.data = ''; // to prevent ModifyCommand mixin from putting it back
@@ -584,8 +579,9 @@ return declare("davinci.libraries.dojo.dojox.grid.DataGridInput", SmartInput, {
 		dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + 15 + "px");
 		
 	
-		if (targetEditBoxDijit)
+		if (targetEditBoxDijit) {
 			targetEditBoxDijit._setStyleAttr({width: boxWidth + "px", height: boxheight + "px", maxHeight: boxheight + "px"}); // needed for multi line
+		}
 		targetEditBoxDijit._setStyleAttr({width: tagetObj.clientWidth - 20 + "px"});
 				
 		if (this._dataStoreType === 'file') {
@@ -610,6 +606,13 @@ return declare("davinci.libraries.dojo.dojox.grid.DataGridInput", SmartInput, {
             }
         }
     },
+	
+	setCallback: function(url){
+	    var helper = davinci.ve.widget.getWidgetHelper('dojo.data.ItemFileReadStore');
+        if(helper && helper.setXhrScriptPluginParameters){
+           helper.setXhrScriptPluginParameters(url, this._widget._edit_context);
+        }
+	},
 	
 	// XXX TODO Move this code to an HTML template file
 	_getTemplate: function() {

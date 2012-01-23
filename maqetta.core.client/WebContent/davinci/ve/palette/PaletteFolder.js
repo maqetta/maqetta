@@ -1,12 +1,11 @@
-dojo.provide("davinci.ve.palette.PaletteFolder");
+define([
+	"dojo/_base/declare",
+	"dijit/_Widget",
+	"dojo/fx",
+	"davinci/ve/palette/PaletteItem"
+], function(declare, _Widget, fx, PaletteItem){
 
-dojo.require("dijit._Widget");
-dojo.require("dojo.fx");
-dojo.require("davinci.ve.palette.PaletteItem");
-
-dojo.requireLocalization("davinci.ve", "common");
-
-dojo.declare("davinci.ve.palette.PaletteFolder", dijit._Widget,{
+return declare("davinci.ve.palette.PaletteFolder", dijit._Widget, {
 
 	icon: "",
 	displayName: "",
@@ -75,4 +74,5 @@ dojo.declare("davinci.ve.palette.PaletteFolder", dijit._Widget,{
 		dojo.addClass(this.domNode, "dojoyPaletteFolderLow");
 	}
 	
+});
 });

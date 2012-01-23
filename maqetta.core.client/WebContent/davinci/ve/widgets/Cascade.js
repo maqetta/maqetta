@@ -61,7 +61,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		if(widget){
 			widget._cascade = this;
 			this._getFieldValue = function(){
-				return widget.attr('value'); 
+				return widget.get('value'); 
 			};
 			this._setFieldValue = function(value, loc){
 				
@@ -69,8 +69,8 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 				this._loc = loc;
 				
 				if(widget._setBaseLocationAttr)
-					widget.attr('baseLocation', loc?loc.getPath():null);
-				widget.attr('value', this._value, true);
+					widget.set('baseLocation', loc?loc.getPath():null);
+				widget.set('value', this._value);
 			};
 			dojo.connect(widget, "onChange", this, "_onFieldChange");
 			dojo.connect(widget, "onFocus", this, "_onFieldFocus");

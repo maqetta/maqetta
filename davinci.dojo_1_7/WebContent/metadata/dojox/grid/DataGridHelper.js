@@ -48,168 +48,195 @@ return {
 		return data;
 	},
 
-	_serializeStructure: function(/*Object*/ structure){
-		// summary:
-		//		Serialize the passed DataGrid's structure.
-		//		DataGrid does additional parsing to a structure once the DataGrid loads it, so undo that work and return the JSON.
-		//
-
-		if(!structure){
-			return undefined;
-		}
-		var columns;
-		try{
-			columns = structure.cells;
-		}catch(e){
-		}
-		if(!columns){
-			return undefined;
-		}
-
-		// returned string
-		var s = "";
-		// serialize each column of the structure
-		// assumption: there is only one row declaration
-		dojo.forEach(columns, function(c){
-			var cs = "";
-			// parameters to serialize: field, name, width, editor
-			var field = c.field;
-			if(field || field === 0){
-				cs += "field: " + (dojo.isString(field) ? "\"" + field + "\"" : field);  
-			}
-			var name = c.name;
-			if(name){
-				if(cs){
-					cs += ", ";
-				}
-				cs += "name: \"" + name + "\"";
-			}
-			var width = c.width;
-			if(width){
-				if(cs){
-					cs += ", ";
-				}
-				cs += "width: " + (dojo.isString(width) ? "\"" + width + "\"" : width);
-			}
-			var editor = c.editor;
-			if(editor){
-				// supported editors: Input, Bool, Select
-				if(cs){
-					cs += ", ";
-				}
-				if(editor == dojox.grid.editors.Input){
-					cs += "editor: dojox.grid.editors.Input";
-				}else if(editor == dojox.grid.editors.Bool){
-					cs += "editor: dojox.grid.editors.Bool";
-				}else if(editor == dojox.grid.editors.Select){
-					cs += "editor: dojox.grid.editors.Select";
-					var options = c.options;
-					if(options){
-						cs += ", options: " + dojo.toJson(options);
-					}
-				}
-			}
-			if(s){
-				s += ", ";
-			}
-			s += "{" + cs + "}";
-		});
-		return "{cells: [" + s + "]}";
-	},
-	
-	create: function(widget, srcElement){
-	
-		var storeId = srcElement.getAttribute("store");
-		if(storeId){
-			var storeWidget = Widget.byId(storeId);
-	
-			if (storeWidget /*&& storeWidget.properties*/ && widget.dijitWidget && widget.dijitWidget.store){  //wdr 3-11
-				this.addScripts(widget);
-				this.updateStore(widget, storeWidget);
-			}
-		}
-	},
-	
-	updateStore: function(widget,  storeWidget, w) { 
-		var store = widget.dijitWidget.store;
-		var data = storeWidget._srcElement.getAttribute('data'); 
-		var url = storeWidget._srcElement.getAttribute('url'); 
-		if (data){ 
-			var value = data; 
-			var storeData = eval('storeData = '+value);
-			data = {
-				identifier: storeData.identifier,
-				items: []
-			};
-		
-			var items = data.items;
-			var storeDataItems = storeData.items;
-			for (var r = 0; r < storeDataItems.length; r++){
-				var item = {};
-				var dataStoreItem = storeDataItems[r];
-				for (var name in dataStoreItem) {
-					item[name] = dataStoreItem[name];
-				}
-				items.push(item);
-			}
-			
-			store.clearOnClose = true;
-			store.data = data;
-			delete store.url; // wdr remove old url if switching
-			store.close();
-			store.fetch({
-				query: this.query,
-				queryOptions:{deep:true}, 
-				onComplete: dojo.hitch(this, function(items){
-					for (var i = 0; i < items.length; i++) {
-						var item = items[i];
-						console.warn("i=", i, "item=", item);
-					}
-					widget.dijitWidget.setStore(store);
-				})
-			});
-		}else{ // must be url data store
-			store.clearOnClose = true;
-			store.url = url; 
-			delete store.data; // wdr remove old url if switching
-			store.close();
-					
-		}
-	},
-	
-	addScripts: function(widget){
-		var dj = widget.getContext().getDojo();
-		var o = dojo.getObject("io.xhrScriptPlugin", true, dojox);
-		try{
-			dj["require"]('dojo.data.ItemFileReadStore');
-			dj["require"]('dojox.io.xhrScriptPlugin');
-		}catch(e){
-			console.warn("FAILED: failure for module=dojo.data.ItemFileReadStore");
-		}
-		
-		if (!widget.scripts) {
-			return;
-		}
-		for (var x in widget.scripts) {
-			this.addScript(widget, widget.scripts[x]);
-		}
-	},
-	
-	addScript: function(widget, script) {
-		var elements = widget._edit_context._srcDocument.find({'elementType':"HTMLElement", 'tag': 'script'});
-		for(var i=0;i<elements.length;i++){
-			var n = elements[i];
-			if (n.script && n.script.indexOf(script.value) > -1){
-				return; // found it
-			}
-		}
-		var scriptTag = new HTMLElement('script');
-		scriptTag.addAttribute('type', 'text/javascript');
-		var text = new HTMLText(script.value);
-		scriptTag.addChild(text);
-		var head =  widget._edit_context._srcDocument.find({elementType: 'HTMLElement', tag: 'head'}, true);
-		head.addChild(scriptTag);
-	}
+    _serializeStructure: function(/*Object*/ structure){
+    	// summary:
+    	//		Serialize the passed DataGrid's structure.
+    	//		DataGrid does additional parsing to a structure once the DataGrid loads it, so undo that work and return the JSON.
+    	//
+    
+    	if(!structure){
+    		return undefined;
+    	}
+    	var columns = undefined;
+    	try{
+    		columns = structure.cells;
+    	}catch(e){
+    	}
+    	if(!columns){
+    		return undefined;
+    	}
+    
+    	// returned string
+    	var s = "";
+    	// serialize each column of the structure
+    	// assumption: there is only one row declaration
+    	dojo.forEach(columns, function(c){
+    		var cs = "";
+    		// parameters to serialize: field, name, width, editor
+    		var field = c.field;
+    		if(field || field === 0){
+    			cs += "field: " + (dojo.isString(field) ? "\"" + field + "\"" : field);  
+    		}
+    		var name = c.name;
+    		if(name){
+    			if(cs){
+    				cs += ", ";
+    			}
+    			cs += "name: \"" + name + "\"";
+    		}
+    		var width = c.width;
+    		if(width){
+    			if(cs){
+    				cs += ", ";
+    			}
+    			cs += "width: " + (dojo.isString(width) ? "\"" + width + "\"" : width);
+    		}
+    		var editor = c.editor;
+    		if(editor){
+    			// supported editors: Input, Bool, Select
+    			if(cs){
+    				cs += ", ";
+    			}
+    			if(editor == dojox.grid.editors.Input){
+    				cs += "editor: dojox.grid.editors.Input";
+    			}else if(editor == dojox.grid.editors.Bool){
+    				cs += "editor: dojox.grid.editors.Bool";
+    			}else if(editor == dojox.grid.editors.Select){
+    				cs += "editor: dojox.grid.editors.Select";
+    				var options = c.options;
+    				if(options){
+    					cs += ", options: " + dojo.toJson(options);
+    				}
+    			}
+    		}
+    		if(s){
+    			s += ", ";
+    		}
+    		s += "{" + cs + "}";
+    	});
+    	return "{cells: [" + s + "]}";
+    },
+    
+    create: function(widget, srcElement){
+    
+    	var storeId = srcElement.getAttribute("store");
+    	if(storeId){
+    		var storeWidget = Widget.byId(storeId);
+    		if (storeWidget && widget.dijitWidget && widget.dijitWidget.store){
+    		    this._reparentTheStore(widget, storeWidget);
+    		    this.addScripts(widget);
+    		    this.updateStore(widget, storeWidget);
+    		}
+    	
+    	}
+    
+    },
+    
+    reparent: function(widget) {
+        var storeId = widget._srcElement.getAttribute("store");
+        if(storeId){
+            var storeWidget = Widget.byId(storeId);
+            if (storeWidget && widget.dijitWidget && widget.dijitWidget.store){
+                this._reparentTheStore(widget, storeWidget);
+            }
+        
+        }
+    },
+    
+    _reparentTheStore: function(widget, storeWidget) {
+        var dataGridParent = widget.getParent();
+        var storeParent = storeWidget.getParent();
+        if ( (dataGridParent != storeParent) || ((dataGridParent === storeParent) && (dataGridParent.indexOf(widget) < storeParent.indexOf(storeWidget))) ) {
+            var newIndex = (dataGridParent.indexOf(widget) < 1) ? 0 : dataGridParent.indexOf(widget)-1;
+            var command = new davinci.ve.commands.ReparentCommand(storeWidget, dataGridParent, newIndex);
+            //this._context.getCommandStack().execute(command);
+            command.execute();
+        }
+    },
+    
+    updateStore: function(widget,  storeWidget, w) { 
+    	var store = widget.dijitWidget.store;
+    	var data = storeWidget._srcElement.getAttribute('data'); 
+    	var url = storeWidget._srcElement.getAttribute('url'); 
+    	if (data){ 
+    		var value = data; 
+    		var storeData = eval('storeData = '+value);
+    		var data = { identifier: storeData.identifier,  items:[] };
+    	
+    		var items = data.items;
+    		var storeDataItems = storeData.items;
+    		for (var r = 0; r < storeDataItems.length; r++){
+    			var item = new Object();
+    			var dataStoreItem = storeDataItems[r];
+    			for (var name in dataStoreItem){
+    				item[name] = dataStoreItem[name];
+    			}
+    			items.push(item);
+    		}
+    		
+    		store.clearOnClose = true;
+    		store.data = data;
+    		delete store.url; // wdr remove old url if switching
+    		store.close();
+    		store.fetch({
+    			query: this.query,
+    			queryOptions:{deep:true}, 
+    			onComplete: dojo.hitch(this, function(items){
+    				for (var i = 0; i < items.length; i++) {
+    					var item = items[i];
+    					console.warn("i=", i, "item=", item);
+    				}
+    				widget.dijitWidget.setStore(store);
+    			})
+    		});
+    	}else{ // must be url data store
+     		store.clearOnClose = true;
+    		store.url = url; 
+    		delete store.data; // wdr remove old url if switching
+    		store.close();
+     	    		
+    	}
+    	
+    
+    },
+    
+    addScripts: function(widget){
+        var dj = widget.getContext().getDojo();
+        var o = dojo.getObject("io.xhrScriptPlugin", true, dojox);
+        try{
+            dj["require"]('dojo.data.ItemFileReadStore');
+            dj["require"]('dojox.io.xhrScriptPlugin');
+        }catch(e){
+            console.warn("FAILED: failure for module=dojo.data.ItemFileReadStore");
+        }
+        
+        if (!widget.scripts) return;
+        for (x in widget.scripts){
+            this.addScript(widget, widget.scripts[x]);
+        }
+        
+       
+    },
+    
+    addScript: function(widget, script){
+       
+        var script = widget.scripts[x];
+        var elements = widget._edit_context._srcDocument.find({'elementType':"HTMLElement", 'tag': 'script'});
+        for(var i=0;i<elements.length;i++){
+            var n = elements[i];
+            if (n.script && n.script.indexOf(script.value) > -1){
+                return; // found it
+            }
+        }
+        var scriptTag = new davinci.html.HTMLElement('script');
+        scriptTag.addAttribute('type', 'text/javascript');
+        var text = new davinci.html.HTMLText(script.value);
+        scriptTag.addChild(text);
+        var head =  widget._edit_context._srcDocument.find({elementType: 'HTMLElement', tag: 'head'}, true);
+        head.addChild(scriptTag);
+    
+    
+    }
 
 };
 

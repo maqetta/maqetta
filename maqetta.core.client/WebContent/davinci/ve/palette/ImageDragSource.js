@@ -1,9 +1,11 @@
-dojo.provide("davinci.ve.palette.ImageDragSource");
+define([
+	"dojo/_base/declare",
+	"davinci/ve/tools/CreateTool",
+	"davinci/ui/dnd/DragSource"
+], function(declare, CreateTool, DragSource){
 
-dojo.require("davinci.ve.tools.CreateTool");
-dojo.require("davinci.ui.dnd.DragSource");
-
-dojo.declare("davinci.ve.palette.ImageDragSource", null, {
+return declare("davinci.ve.palette.ImageDragSource", null, {
+	
 	constructor: function(data){
 		this.data = data;
 	},
@@ -86,4 +88,5 @@ dojo.declare("davinci.ve.palette.ImageDragSource", null, {
 		}));
 		return img;
 	}
+});
 });

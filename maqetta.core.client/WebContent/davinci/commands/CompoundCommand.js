@@ -1,6 +1,8 @@
-dojo.provide("davinci.commands.CompoundCommand");
-
-dojo.declare("davinci.commands.CompoundCommand", null, {
+define([
+	    "dojo/_base/declare"
+], function(declare){
+	
+return declare("davinci.commands.CompoundCommand", null, {
 	// summary:
 //	Represents a command that consists of multiple subcommands.
 
@@ -91,4 +93,5 @@ dojo.declare("davinci.commands.CompoundCommand", null, {
 		}
 	}
 
+});
 });

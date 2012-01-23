@@ -91,8 +91,8 @@
 	                    dojo.byId('davinci_logoff').href="http://" + window.location.hostname + "/index.php?option=com_user&task=logout&return=Lw";
 	    		 	}
 	    		 	// Hide logoff if single-user mode
-	    			var singleProject = davinci.Runtime.singleProjectMode();
-	    			if(singleProject){
+	    			var singleUser = davinci.Runtime.singleUserMode();
+	    			if(singleUser){
 	    				var logoff = dojo.byId('davinci_logoff');
 	    				var main_menu = dojo.byId('davinci_main_menu');
 	    				if(logoff && main_menu){

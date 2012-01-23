@@ -1,60 +1,56 @@
 {
-    "id": "http://www.w3.org/html/td",
-    "name": "html.td",
-    "spec": "1.0",
-    "version": "1.0",
-    "property": {
-        "colspan": {
-            "datatype": "string",
-            "title": "Column Span",
-            "hidden": true
-        },
-        "rowspan": {
-            "datatype": "string",
-            "title": "Row Span",
-            "hidden": true
-        },
-        "align": {
-            "datatype": "string",
-            "option": [
-                {
-                    "value": ""
-                },
-                {
-                    "value": "left"
-                },
-                {
-                    "value": "center"
-                },
-                {
-                    "value": "right"
-                }
-            ],
-            "defaultValue": "left",
-            "title": "Horizontal Alignment"
-        },
-        "valign": {
-            "datatype": "string",
-            "option": [
-                {
-                    "value": ""
-                },
-                {
-                    "value": "top"
-                },
-                {
-                    "value": "middle"
-                },
-                {
-                    "value": "bottom"
-                },
-                {
-                    "value": "baseline"
-                }
-            ],
-            "defaultValue": "middle",
-            "title": "Vertical Alignment"
-        }
-    },
-    "content": "<td></td>"
+	"id": "http://www.w3.org/html/td",
+	"name": "html.td",
+	"spec": "1.0",
+	"version": "1.0",
+	"property": {
+		"colspan": {
+			"datatype": "string",
+			"hidden": true
+		},
+		"rowspan": {
+			"datatype": "string",
+			"hidden": true
+		},
+		"align": {
+			"datatype": "string",
+			"option": [
+				{
+					"value": ""
+				},
+				{
+					"value": "left"
+				},
+				{
+					"value": "center"
+				},
+				{
+					"value": "right"
+				}
+			],
+			"defaultValue": "left",
+		},
+		"valign": {
+			"datatype": "string",
+			"option": [
+				{
+					"value": ""
+				},
+				{
+					"value": "top"
+				},
+				{
+					"value": "middle"
+				},
+				{
+					"value": "bottom"
+				},
+				{
+					"value": "baseline"
+				}
+			],
+			"defaultValue": "middle",
+		}
+	},
+	"content": "<td></td>"
 }

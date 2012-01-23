@@ -1,7 +1,7 @@
 {
-    "id": "http://www.w3.org/html/h3",
-    "name": "html.h3",
-    "spec": "1.0",
-    "version": "1.0",
-    "content": "<h3></h3>"
+	"id": "http://www.w3.org/html/h3",
+	"name": "html.h3",
+	"spec": "1.0",
+	"version": "1.0",
+	"content": "<h3></h3>"
 }

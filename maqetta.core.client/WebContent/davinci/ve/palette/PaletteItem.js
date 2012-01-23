@@ -1,15 +1,13 @@
-dojo.provide("davinci.ve.palette.PaletteItem");
+define([
+	"dojo/_base/declare",
+	"dijit/_Widget",
+	"dijit/Tooltip",
+	"dojo/fx",
+	"davinci/ve/tools/CreateTool",
+	"davinci/ui/dnd/DragManager"
+], function(declare, _Widget, Tooltip, fx, CreateTool, DragManager){
 
-dojo.require("dijit._Widget");
-dojo.require("dijit.Tooltip");
-dojo.require("dojo.i18n");
-dojo.require("dojo.fx");
-dojo.require("davinci.ve.tools.CreateTool");
-dojo.require("davinci.ui.dnd.DragManager");
-
-dojo.requireLocalization("davinci.ve", "common");
-
-dojo.declare("davinci.ve.palette.PaletteItem", dijit._Widget,{
+return declare("davinci.ve.palette.PaletteItem", dijit._Widget,{
 
 	icon: "",
 	displayName: "",
@@ -196,4 +194,5 @@ dojo.declare("davinci.ve.palette.PaletteItem", dijit._Widget,{
 		dojo.removeClass(div, "dojoyPaletteItemRaised");
 		dojo.addClass(div, "dojoyPaletteItemSunken");
 	}
+});
 });

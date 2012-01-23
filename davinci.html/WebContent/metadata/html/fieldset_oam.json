@@ -1,0 +1,17 @@
+{
+	"id": "http://www.w3.org/html/fieldset",
+	"name": "html.fieldset",
+	"spec": "1.0",
+	"version": "1.0",
+	"property": {
+		"disabled": {
+			"datatype": "boolean",
+			"description": "Specifies that a button should be disabled"
+		},
+		"name": {
+			"datatype": "string",
+			"description": "Specifies a name for the button"
+		}
+	},
+	"content": "<fieldset></fieldset>"
+}

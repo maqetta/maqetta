@@ -1,35 +1,35 @@
 {
-    "id": "http://www.w3.org/html/a",
-    "name": "html.a",
-    "spec": "1.0",
-    "version": "1.0",
-    "property": {
-        "href": {
-            "datatype": "string",
-            "format": "url",
-            "title": "URL"
-        },
-        "target": {
-            "datatype": "string",
-            "option": [
-                {
-                    "value": ""
-                },
-                {
-                    "value": "_blank"
-                },
-                {
-                    "value": "_parent"
-                },
-                {
-                    "value": "_self"
-                },
-                {
-                    "value": "_top"
-                }
-            ],
-            "title": "Target"
-        }
-    },
-    "content": "<a></a>"
+	"id": "http://www.w3.org/html/a",
+	"name": "html.a",
+	"spec": "1.0",
+	"version": "1.0",
+	"property": {
+		"href": {
+			"datatype": "string",
+			"format": "url",
+		},
+		"target": {
+			"datatype": "string",
+			"option": [
+				{
+					"value": ""
+				},
+				{
+					"value": "_blank"
+				},
+				{
+					"value": "_parent"
+				},
+				{
+					"value": "_self"
+				},
+				{
+					"value": "_top"
+				}
+			],
+			"defaultValue": "_self",
+			"unconstrained": "true"
+		}
+	},
+	"content": "<a></a>"
 }

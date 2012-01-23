@@ -244,9 +244,9 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 		this.inherited(arguments);
 		/* back ground image box */
 		
-		this._filePicker.attr('value', (this.bgddata && this.bgddata.url) ? this.bgddata.url : '');
+		this._filePicker.set('value', (this.bgddata && this.bgddata.url) ? this.bgddata.url : '');
 		this.connect(this._filePicker, 'onChange', dojo.hitch(this,function(){
-			this.bgddata.url = this._filePicker.attr('value');
+			this.bgddata.url = this._filePicker.get('value');
 			this._onFieldChanged();
 		}));
 		
@@ -255,7 +255,7 @@ dojo.declare("davinci.ve.widgets.BackgroundDialog",   [dijit._Widget, dijit._Tem
 	 * This is the base location for the file in question.  Used to caluclate relativity for url(...)
 	 */
 	_setBaseLocationAttr : function(baseLocation){
-		dojo.attr(this._filePicker, "baseLocation", baseLocation);
+		this._filePicker.set("baseLocation", baseLocation);
 	},
 
 	_updateBackgroundImageType : function(type){

@@ -1,7 +1,7 @@
 {
-    "id": "http://www.w3.org/html/div",
-    "name": "html.div",
-    "spec": "1.0",
-    "version": "1.0",
-    "content": "<div></div>"
+	"id": "http://www.w3.org/html/div",
+	"name": "html.div",
+	"spec": "1.0",
+	"version": "1.0",
+	"content": "<div></div>"
 }

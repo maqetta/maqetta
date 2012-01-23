@@ -50,7 +50,9 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 			if(!this.data ){
 				this.data=[{value:this._statics[0]}];
 				this.data.push({value:this._statics[2],run:this._chooseColorValue});
-				this.data.push({value:this._statics[3],run:function(){this.attr('value','');}});
+				this.data.push({value:this._statics[3],run:function(){
+					this.set('value','');
+				}});
 				this.data.push({value:this._statics[1]});   
 				this.data.push({value:'transparent'});
 				this.data.push({value:'black'});
@@ -60,7 +62,9 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 				this.data.push({value:'blue'});
 			}else{
 				this.data.push({value:davinci.ve.widgets.ColorPicker.divider});
-				this.data.push({value:langObj.removeValue,run:function(){this.attr('value','');}});
+				this.data.push({value:langObj.removeValue,run:function(){
+					this.set('value','');
+				}});
 			}
 			var displayValues = [];
 			for(var i = 0;i<this.data.length;i++){
@@ -148,13 +152,13 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 					for(var propName in xref){
 						var o = xref[propName];
 						if(o.bgdWidget){
-							var newValue = o.bgdWidget.attr('value');
-							var oldValue = o.propPaletteWidget.attr('value');
+							var newValue = o.bgdWidget.get('value');
+							var oldValue = o.propPaletteWidget.get('value');
 							if(newValue !== oldValue){
 								propList.push(propName);
 								actions[propName] = dojo.hitch(this, function(o, newValue){
 									o.propPaletteWidget._comboBoxUpdateDueTo = 'backgroundDialog';
-									o.propPaletteWidget.attr('value', newValue);
+									o.propPaletteWidget.set('value', newValue);
 								}, o, newValue);
 								deferreds[propName] = new dojo.Deferred();
 							}
@@ -169,7 +173,7 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 					}else{
 						newValue = a[a.length-1];
 					}
-					var oldValue = o.propPaletteWidget.attr('value');
+					var oldValue = o.propPaletteWidget.get('value');
 					if(newValue !== oldValue){
 						// Hack: put the values array onto the cascade object with assumption
 						// that cascade object's onChange callback will know how to deal with the array
@@ -180,7 +184,7 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 						propList.push(propName);
 						actions[propName] = dojo.hitch(this, function(i, newValue){
 							o.propPaletteWidget._comboBoxUpdateDueTo = 'backgroundDialog';
-							o.propPaletteWidget.attr('value', newValue);
+							o.propPaletteWidget.set('value', newValue);
 						}, o, newValue);
 						deferreds[propName] = new dojo.Deferred();
 					}
@@ -217,7 +221,7 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 					cascade._valueArrayNew = cascade._valueArray;
 				}
 			}
-			background.attr('baseLocation', this._baseLocation);
+			background.set('baseLocation', this._baseLocation);
 			davinci.Workbench.showModal(background, "Background", '', executor);
 		});
 		this.connect(this._comboBox, 'onChange', dojo.hitch(this, function(event){
@@ -227,7 +231,7 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 			//a valid color vlaue. Resetting it here resets the value before Cascade.js gets invoked 
 			//due to call to this.onChange() 
 			if(event == davinci.ve.widgets.ColorPicker.divider || event == this.langObjVE.colorPicker){
-				this._comboBox.attr('value', this.value);
+				this._comboBox.set('value', this.value);
 			}
 			// If onChange was triggered by an internal update to the text field,
 			// don't invoke onChange() function (which triggers update logic in Cascade.js).
@@ -283,7 +287,7 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 			if(event in this._run){
 				dojo.hitch(this,this._run[event])();
 			}else if (event == davinci.ve.widgets.ColorPicker.divider){
-				this._comboBox.attr("value", this._store.getItemNumber(0));
+				this._comboBox.set("value", this._store.getItemNumber(0));
 			//}else if(!this._store.contains(event)){
 				//this._store.insert(this.insertPosition, event);
 				//dojo.style(this._selectedColor, "backgroundColor", event);
@@ -306,7 +310,7 @@ dojo.declare("davinci.ve.widgets.Background", [davinci.workbench.WidgetLite], {
 	
 	_setReadOnlyAttr: function(isReadOnly){
 		this._isReadOnly = isReadOnly;
-		this._comboBox.attr("disabled", isReadOnly);
+		this._comboBox.set("disabled", isReadOnly);
 		this._button.disabled = isReadOnly;
 	},
 	

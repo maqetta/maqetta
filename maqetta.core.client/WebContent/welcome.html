@@ -76,7 +76,7 @@
                alert(result);
             }
           }, function(error){
-  			//TODO: parse result and display more detailed error message?
+            //TODO: parse result and display more detailed error message?
   			console.info(error.responseText);
           	dojo.attr("error-holder", "innerHTML", "Failed to create new user '"+user+"'");
           });

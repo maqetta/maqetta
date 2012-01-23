@@ -39,7 +39,6 @@
         <populateDir project="davinci.html"/>
         <populateDir project="maqetta.clipart"/>
         <populateDir project="maqetta.shapes"/>
-        <populateDir project="davinci.review"/>
         <populateDir project="org.apache.commons.fileupload"/>
         <populateDir project="org.apache.commons.io"/>
     </target>

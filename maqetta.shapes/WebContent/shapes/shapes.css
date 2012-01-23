@@ -4,6 +4,8 @@
 	fill:none;
 }
 .draw.drawText {
+
+	/*font-size:12pt;*/
 	fill:black;
 	stroke:none;
 	stroke-width:1;

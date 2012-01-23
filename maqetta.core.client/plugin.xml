@@ -23,11 +23,10 @@
          <jsPlugin
                path="app/davinci/ve/themeEditor/themeEditor"
                resourcePath="WebContent/davinci/ve/themeEditor/themeEditor"/>
-          <jsPlugin
-               path="app/de/de"
-               resourcePath="WebContent/davinci/de/de"/>
-      </extension>
-
+         <jsPlugin
+               path="app/davinci/review/review"
+               resourcePath="WebContent/davinci/review/review"/>            
+    </extension>
       
 	<extension point="maqetta.core.server.welcomePage"><welcomePage path="WebContent/welcome.html" priority="1"/></extension>
 	<extension point="maqetta.core.server.mainPage"><mainPage path="WebContent/pagedesigner.html" priority="1"/></extension>

@@ -18,9 +18,7 @@
     <link href="app/davinci/propvieweffects.css?@revision@" rel="stylesheet" type="text/css"></link>
     <script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="parseOnLoad: true, modulePaths:{'preview':'../preview', 'system':'../system'}, cacheBust: '@revision@'"></script>
 	<script type="text/javascript">
-		require(["dijit/dijit", "davinci/davinci-common", "davinci/davinci"], function () {
-		    <!-- Globalization -->
-		    //dojo.requireLocalization("", "webContent");//to test "Loading..."
+		require(["dijit/dijit", "davinci/davinci-common", "davinci/davinci", "davinci/review/Review"], function () {
 		    dojo.addOnLoad(function () {
 		      var langObj = dojo.i18n.getLocalization("davinci","webContent");
 		      dojo.byId("davinci_user_welcome").innerHTML = langObj.welcome;
@@ -67,27 +65,24 @@
 				}
 
 				function run() {
-	    			var userInfo;
-	    			var result=davinci.Runtime.getUser();
-	    			if (result )
-	    			{
-	    		 	   dojo.byId('davinci_user').innerHTML=result;
-	    		 	   davinci.Runtime.userName=result;
-	    			}
-	    			else
-	    			{
+                    var userInfo;
+                    var result=davinci.Runtime.getUser();
+
+                    if (result ) {
+                       dojo.byId('davinci_user').innerHTML=result;
+                       davinci.Runtime.userName=result;
+                    } else {
 	    				//FIXME: temporary fix for running via file: URLs
-	    			   var langObj = dojo.i18n.getLocalization("davinci","webContent");
-	    		 	   dojo.byId('davinci_user').innerHTML=langObj.maqettaUser;
-	    		 	}
-	    		 	if (!result)
-	    		 	{
-	    		 		var langObj = dojo.i18n.getLocalization("davinci","webContent");
-	    			 	dojo.byId('davinci_user').innerHTML=langObj.localhostUser;
-	    		 		dojo.byId('davinci_logoff').href="";
-	    		 		davinci.Runtime.isLocalInstall=true;
-	    		 	}
-	    		 	if ( davinci.Runtime.plugins.joomlaplugin) {
+                       var langObj = dojo.i18n.getLocalization("davinci","webContent");
+                       dojo.byId('davinci_user').innerHTML=langObj.maqettaUser;
+                    }
+                    if (!result) {
+                        var langObj = dojo.i18n.getLocalization("davinci","webContent");
+                        dojo.byId('davinci_user').innerHTML=langObj.localhostUser;
+                        dojo.byId('davinci_logoff').href="";
+                        davinci.Runtime.isLocalInstall=true;
+                    }
+                    if ( davinci.Runtime.plugins.joomlaplugin) {
 	                    dojo.byId('davinci_logoff').href="http://" + window.location.hostname + "/index.php?option=com_user&task=logout&return=Lw";
 	    		 	}
 	    		 	// Hide logoff if single-user mode

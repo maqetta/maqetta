@@ -25,6 +25,14 @@
         }
     ],
     "property": {
+    	"cx":{
+            "datatype": "number",
+            "defaultValue": "40"
+        },
+    	"cy":{
+            "datatype": "number",
+            "defaultValue": "40"
+        },
     	"rx":{
             "datatype": "number",
             "defaultValue": "40"

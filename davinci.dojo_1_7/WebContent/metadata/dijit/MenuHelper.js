@@ -22,7 +22,7 @@ return function() {
 					w = w.getParent && w.getParent();
 				}
 			}
-	
+
 			if (w) {
 				domClass.remove(menu.domNode, "maqHidden");
 				domClass.add(menu.domNode, "maqShown");
@@ -39,7 +39,6 @@ return function() {
 
 		widget.dijitWidget.destroyRecursive();
 	};
-
 	this.getData = function(/*Widget*/ widget, /*Object*/ options) {
 		// summary:
 		//		Returns a serialized form of the passed Menu/MenuBar, also serializing the children MenuItems and Menus.

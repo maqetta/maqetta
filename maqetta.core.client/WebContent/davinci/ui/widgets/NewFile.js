@@ -225,7 +225,7 @@ dojo.declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
 	_okButton : function(e){
 
 		var fullPath = (new davinci.model.Path(davinci.Runtime.getProject())).append(this._whereMenu.attr('value')).append(this.fileDialogFileName.get( 'value'));
-
+		
 		this.value =  fullPath.toString();
 		this.cancel = false;
 		this.onClose();

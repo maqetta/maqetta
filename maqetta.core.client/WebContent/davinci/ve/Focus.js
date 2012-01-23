@@ -270,7 +270,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     
     
     show: function(widget, inline){
-
+        //debugger;
         if (!widget){
             // sometimes you get no widget when  DnD in split screen
             return; 
@@ -312,7 +312,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         return;
     },
 
-	// Returns true if inline edit is showing
+
 	inlineEditActive: function(){
 		if(this._inline && this._inline.inlineEditActive){
 			return this._inline.inlineEditActive();

@@ -1,19 +1,14 @@
-dojo.provide("davinci.Runtime");
+define([
+//	"./Workbench", //FIXME: circular ref?
+	"./commands/CommandStack",
+	"./ve/metadata",
+	"dojo/i18n!./nls/webContent",
+	"dijit/Dialog",
+	"dijit/form/Button",
+	"dijit/form/TextBox"
+], function(/*Workbench, */CommandStack, metadata, webContent, Dialog) {
 
-dojo.require("dijit.Dialog");
-dojo.require("dijit.form.Button");
-dojo.require("dijit.form.TextBox");
-dojo.require("davinci.Workbench");
-dojo.require("davinci.commands.CommandStack");
-dojo.require("davinci.review.actions.PublishAction");
-dojo.require("davinci.review.Color");
-dojo.require("davinci.ve.metadata");
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci", "webContent");
-
-dojo.declare("davinci.Runtime", null, {});
-
-dojo.mixin(davinci.Runtime,	{
+var Runtime = {
 	plugins: [],
 	extensionPoints: [],
 	subscriptions: [],
@@ -22,8 +17,8 @@ dojo.mixin(davinci.Runtime,	{
 	_DEFAULT_PROJECT: "project1",
 	
 	currentSelection: [],
-	commandStack: new davinci.commands.CommandStack(),
-	clipboard: null,
+	commandStack: new CommandStack(),
+//	clipboard: null,
 	
 	addPlugin: function(pluginName) {
 		url = pluginName + ".plugin";
@@ -34,14 +29,13 @@ dojo.mixin(davinci.Runtime,	{
 			handleAs:"json",
 			sync:true,
 			load: function(responseObject, ioArgs) {
-				davinci.Runtime._loadPlugin(responseObject,url);
+				Runtime._loadPlugin(responseObject,url);
 			},
 			error: function(response, ioArgs) {
 				if (response.status==401) {
 					window.location.reload();
 				} else {
-					var langObj = dojo.i18n.getLocalization("davinci","webContent");
-					davinci.Runtime.handleError(dojo.string.substitute(langObj.errorLoadingPlugin, [pluginName, response]));
+					Runtime.handleError(dojo.string.substitute(webContent.errorLoadingPlugin, [pluginName, response]));
 				}
 			}
 		});
@@ -59,14 +53,13 @@ dojo.mixin(davinci.Runtime,	{
 			handleAs:"json",
 			sync:true,
 			load: function(responseObject, ioArgs) {
-			   davinci.Runtime._loadPlugins(responseObject);
+			   Runtime._loadPlugins(responseObject);
 			},
 			error: function(response, ioArgs) {
 				if (response.status==401) {
 					window.location.href= 'welcome';
 				} else {
-					var langObj = dojo.i18n.getLocalization("davinci","webContent");
-					davinci.Runtime.handleError(langObj.errorLoadingPlugins);
+					Runtime.handleError(webContent.errorLoadingPlugins);
 				}
 			}
 		});
@@ -76,11 +69,11 @@ dojo.mixin(davinci.Runtime,	{
 		for (var i=0;i<plugins.length;i+=2) {
 			var url=plugins[i];
 			var plugin=plugins[i+1];
-			this._loadPlugin(plugin, url);
+			Runtime._loadPlugin(plugin, url);
 		}
 	},
 	/*
-	 * running in single project mode or mulit project mode
+	 * running in single project mode or multi project mode
 	 */
 	singleProjectMode: function() {
 		return true;
@@ -88,7 +81,7 @@ dojo.mixin(davinci.Runtime,	{
 	
 	
 	singleUserMode : function() {
-		return davinci.Runtime.isLocalInstall;
+		return Runtime.isLocalInstall;
 	},
 
 	/*
@@ -103,7 +96,7 @@ dojo.mixin(davinci.Runtime,	{
 			return decodeURI(params.project);
 		}
 		*/
-		return davinci.Workbench.getActiveProject() || davinci.Runtime._DEFAULT_PROJECT;
+		return davinci.Workbench.getActiveProject() || Runtime._DEFAULT_PROJECT;
 	},
 	
 	loadProject: function(projectName) {
@@ -119,52 +112,52 @@ dojo.mixin(davinci.Runtime,	{
 	},
 	
 	getRole: function() {
-		if (!davinci.Runtime.commenting_designerName) { 
+		if (!Runtime.commenting_designerName) { 
 			return "Designer";
 		} else {
 			if (!davinci.Runtime.userInfo) {
 		        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
-				var result = davinci.Runtime.serverJSONRequest({
+				var result = Runtime.serverJSONRequest({
 					url: location + "maqetta/cmd/getReviewUserInfo",
 					sync: true
 				});
-				davinci.Runtime.userInfo = result;
+				Runtime.userInfo = result;
 			}
-			if(davinci.Runtime.userInfo.userName==davinci.Runtime.commenting_designerName)
+			if(Runtime.userInfo.userName==Runtime.commenting_designerName)
 				return "Designer";
 		}
 		return "Reviewer";
 	},
 	
 	getDesigner: function() {
-		if (davinci.Runtime.commenting_designerName) {
-			return davinci.Runtime.commenting_designerName;
+		if (Runtime.commenting_designerName) {
+			return Runtime.commenting_designerName;
 		} else {
-			if (!davinci.Runtime.userInfo) {
+			if (!Runtime.userInfo) {
 		        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
-				var result = davinci.Runtime.serverJSONRequest({
+				var result = Runtime.serverJSONRequest({
 					url: location + "maqetta/cmd/getReviewUserInfo",
 					sync: true
 				});
-				davinci.Runtime.userInfo = result;
+					Runtime.userInfo = result;
 			}
-			return davinci.Runtime.userInfo.userName;
+			return Runtime.userInfo.userName;
 		}
 	},
 	
 	getDesignerEmail: function() {
-		if (davinci.Runtime.commenting_designerEmail) {
+		if (Runtime.commenting_designerEmail) {
 			return davinci.Runtime.commenting_designerEmail;
 		} else {
-			if (!davinci.Runtime.userInfo) {
+			if (!Runtime.userInfo) {
 		        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
-				var result = davinci.Runtime.serverJSONRequest({
+				var result = Runtime.serverJSONRequest({
 					url: location + "maqetta/cmd/getReviewUserInfo",
 					sync: true
 				});
-				davinci.Runtime.userInfo = result;
+				Runtime.userInfo = result;
 			}
-			return davinci.Runtime.userInfo.email;
+			return Runtime.userInfo.email;
 		}
 	},
 	
@@ -175,15 +168,15 @@ dojo.mixin(davinci.Runtime,	{
 	
 	//two modes in design page and in review page
 	getMode: function() {
-		if(davinci.Runtime.commenting_designerName)
+		if (Runtime.commenting_designerName) {
 			return "reviewPage";
-		else return "designPage";
+		} else { return "designPage"; }
 	},
 	
 	
 	getColor: function(/*string*/ name) {
 		var index;
-		dojo.some(davinci.Runtime.reviewers, function(item,n) {
+		dojo.some(Runtime.reviewers,function(item,n){
 			if (item.name==name) {
 				index = n;
 				return true;
@@ -204,24 +197,23 @@ dojo.mixin(davinci.Runtime,	{
 		
 	    // determine if the browser supports CSS3 transitions
 	    var thisStyle = document.body.style;
-	    davinci.Runtime.supportsCSS3Transitions = thisStyle.WebkitTransition !== undefined ||
+	    Runtime.supportsCSS3Transitions = thisStyle.WebkitTransition !== undefined ||
 	        thisStyle.MozTransition !== undefined ||
 	        thisStyle.OTransition !== undefined ||
 	        thisStyle.transition !== undefined;
-		davinci.ve.metadata.init();
-		this.subscribe("/davinci/ui/selectionChanged",davinci.Runtime._selectionChanged );
+		metadata.init();
+		Runtime.subscribe("/davinci/ui/selectionChanged",Runtime._selectionChanged);
 		davinci.Workbench.run();
 		// intercept BS key - prompt user before navigating backwards
 		dojo.connect(dojo.doc.documentElement, "onkeypress", function(e){
 			if(e.charOrCode==8){
-				window.davinciBackspaceKeyTime = new Date().getTime();
+				window.davinciBackspaceKeyTime = Date.now();
 			}
 		});	
 		window.onbeforeunload = function (e) {
 			var shouldDisplay = Date.now() - window.davinciBackspaceKeyTime < 100;
 			if (shouldDisplay) {
-				var langObj = dojo.i18n.getLocalization("davinci","webContent");
-				var message = langObj.careful;
+				var message = webContent.careful;
 				// Mozilla/IE
 				// Are you sure you want to navigate away from this page?
 				// Careful! You will lose any unsaved work if you leave this page now.
@@ -242,28 +234,28 @@ dojo.mixin(davinci.Runtime,	{
 	},
 	
 	subscribe: function(topic,func) {
-		this.subscriptions.push(dojo.subscribe(topic,this,func));
+		Runtime.subscriptions.push(dojo.subscribe(topic,this,func));
 	},
 	
 	destroy: function() {
-		dojo.forEach(this.subscriptions, dojo.unsubscribe);
+		dojo.forEach(Runtime.subscriptions, dojo.unsubscribe);
 	},
 	
 	_loadPlugin: function(plugin,url) {
 		var pluginID = plugin.id;
-		this.plugins[pluginID]= plugin;
+		Runtime.plugins[pluginID] = plugin;
 		if (plugin.css) {
-			this._loadCSS(plugin,url);
+			Runtime._loadCSS(plugin,url);
 		}
 		for (var id in plugin) {
 			var extension = plugin[id];
-			if (typeof (extension) != "string") {
+			if (typeof extension != "string") {
 				if (extension instanceof Array) {
-					for ( var i = 0, len = extension.length; i < len; i++) {
-						this._addExtension(id, extension[i], pluginID);
-					}
+					extension.forEach(function(ext) {
+						Runtime._addExtension(id, ext, pluginID);						
+					});
 				} else {
-					this._addExtension(id, extension, pluginID);
+					Runtime._addExtension(id, extension, pluginID);
 				}
 			}
 		}
@@ -274,68 +266,43 @@ dojo.mixin(davinci.Runtime,	{
 		if (extension.id) {
 			extension.id = pluginID + "." + extension.id;
 		}
-		var extensions = this.extensionPoints[id];
+		var extensions = Runtime.extensionPoints[id];
 		if (extensions == null) {
 			extensions = [];
 		}
 		extensions.push(extension);
-		if (!this.extensionPoints[id]) { this.extensionPoints[id] = []; }
-		this.extensionPoints[id] = extensions;
+		if (!Runtime.extensionPoints[id]) { Runtime.extensionPoints[id] = []; }
+		Runtime.extensionPoints[id] = extensions;
 	},
 	
 	getExtensions: function(extensionID, testFunction) {
 		
-		var extensions = this.extensionPoints[extensionID];
+		var extensions = Runtime.extensionPoints[extensionID];
 		if (testFunction) {
 			var matching=[];
 			var isFunction = testFunction instanceof Function;
 			if (extensions) {
-				for (var i = 0, len = extensions.length; i < len; i++) { // FIXME: use filter
-					if (isFunction) {
-						if (testFunction(extensions[i])) {
-							matching.push(extensions[i]);
+				return extensions.filter(function(ext) {
+					return (isFunction && testFunction(ext)) || ext.id == testFunction;
+				});
 						}
-					} else if (extensions[i].id == testFunction) {
-						matching.push(extensions[i]);
 					}
-				}
-				return matching;
-			}
-		} else {
 			return extensions;
-		}
 	},
 	
 	getExtension: function(extensionID, testFunction) {
-		var extensions = this.extensionPoints[extensionID];
-		if (testFunction) {
-			var isFunction = testFunction instanceof Function;
-			if (extensions)
-				for ( var i = 0, len = extensions.length; i < len; i++)
-					if (isFunction)
-					{
-						if (testFunction(extensions[i])) {
-							return extensions[i];
-						}
-					}
-					else if (extensions[i].id == testFunction) {
-						return extensions[i];
-					}
-			return null;
-		} else {
-			return extensions[0];
-		}
+		return Runtime.getExtensions(extensionID, testFunction)[0];
 	},
 	
 	
 	
 	handleError: function(error) {
-		var redirectUrl = "./welcome";
-		if(davinci.Runtime.singleUserMode()){
+		var redirectUrl = "welcome";
+		if(Runtime.singleUserMode()){
 			redirectUrl = ".";
 		}
 		
-		window.document.body.innerHTML = "<div><h1>Problem connecting to the Maqetta Server...</h1></div><div><center><h1><a href='"+ redirectUrl + "'>Return to Maqetta Login</a></h1></center></div><br><br><div><h2>Error description:</h2>" + error + "</div>"
+		window.document.body.innerHTML = "<div><h1>Problem connecting to the Maqetta Server...</h1></div><div><center><h1><a href='"+ redirectUrl + "'>Return to Maqetta Login</a></h1></center></div><br><br><div><h2>Error description:</h2>" + error + "</div>" // TODO: i18n
 	},
 
 	_loadCSS: function(plugin,pluginURL) {
@@ -352,19 +319,18 @@ dojo.mixin(davinci.Runtime,	{
 	},
 		
 	executeCommand: function(cmdID) {
-		var cmd=this.getExtension("davinci.commands", cmdID);
-		if (cmd && cmd.run)
-		{
+		var cmd=Runtime.getExtension("davinci.commands", cmdID);
+		if (cmd && cmd.run) {
 			cmd.run();
 		}
 	},
 	
 	_selectionChanged: function(selection) {
-		this.currentSelection=selection;
+		Runtime.currentSelection=selection;
 	},
 	
 	getSelection: function() {
-		return this.currentSelection;
+		return Runtime.currentSelection;
 	},
 
 	doLogin: function() {
@@ -377,7 +343,7 @@ dojo.mixin(davinci.Runtime,	{
         "</tr></table>"; // FIXME: i18n
 		do {
 			var isInput=false;
-			var	dialog = new dijit.Dialog({id: "connectDialog", title:"Please login", 
+			var	dialog = new Dialog({id: "connectDialog", title:"Please login", 
 				onExecute:function(){
 					dojo.xhrGet({url:"cmd/login",sync:true,handleAs:"text",
 						content:{'userName':dojo.byId("username").value, 'password': dojo.byId("password").value, 'noRedirect':true}
@@ -395,7 +361,7 @@ dojo.mixin(davinci.Runtime,	{
 					});
 				    isInput=true;
 				},
-				onCancel:function() { isInput=true;this.destroyRecursive(false); }
+				onCancel:function(){isInput=true;Runtime.destroyRecursive(false);}
 			});	
 			dialog.setContent(formHtml);
 			dialog.show();			
@@ -410,16 +376,13 @@ dojo.mixin(davinci.Runtime,	{
 		var retry = false;
 		function onError(response, ioArgs) {
 			if (response.status==401) {
-//				davinci.Runtime.doLogin();
-//				retry=true;
-				//window.location.reload();
 				window.location.href= 'welcome';
 			} else if (response.status==400) {
-				davinci.Runtime.handleError("unknown error: status="+ response.status);
+				Runtime.handleError("unknown error: status="+ response.status);
 			} else if (userOnError) {
 				userOnError(response, ioArgs);
 			} else {
-				davinci.Runtime.handleError("unknown error: status="+ response.status);
+				Runtime.handleError("unknown error: status="+ response.status);
 				//console.warn("unknown error: status="+response.status);
 			}
 		}
@@ -431,7 +394,7 @@ dojo.mixin(davinci.Runtime,	{
 					resultObj=result;
 				}
 			}, function(error) {
-				davinci.Runtime.handleError(error);
+		 		Runtime.handleError(error);
 			});
 		} while (retry);	
 
@@ -442,10 +405,9 @@ dojo.mixin(davinci.Runtime,	{
 		var loading = dojo.create("div",null, dojo.body(), "first");
 		loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Logging off...</td></tr></table>'; // FIXME: i18n
 		dojo.addClass(loading, 'loading');
-		this.unload();
-		davinci.Runtime.serverJSONRequest({
-			url:"cmd/logoff", handleAs:"text",
-			sync:true
+		Runtime.unload();
+		Runtime.serverJSONRequest({
+			url:"cmd/logoff", handleAs:"text", sync:true
 		});
 		var newLocation = davinci.Workbench.location(); //
 		var lastChar=newLocation.length-1;
@@ -454,6 +416,8 @@ dojo.mixin(davinci.Runtime,	{
 		}
 		location.href = newLocation+"/welcome";
 	}
-});
+};
 
-davinci.isMac = dojo.isMac; //FIXME: remove
+davinci.Runtime = Runtime; //FIXME: shouldn't need this
+return Runtime;
+});

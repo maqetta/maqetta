@@ -1,10 +1,10 @@
-dojo.provide("davinci.ve.commands.EventCommand");
+define([
+    	"dojo/_base/declare",
+    	"davinci/ve/widget"
+], function(declare, Widget){
 
 
-dojo.require("davinci.ve.widget");
-
-dojo.declare("davinci.ve.commands.EventCommand", null, {
-
+return declare("davinci.ve.commands.EventCommand", null, {
 	name: "EventCommand",
 
 	constructor: function(widget, properties){
@@ -22,7 +22,7 @@ dojo.declare("davinci.ve.commands.EventCommand", null, {
 		if(!this._oldId || !this._properties){
 			return;
 		}
-		var widget = davinci.ve.widget.byId(this._oldId);
+		var widget = Widget.byId(this._oldId);
 		this._oldProps = widget.properties || {};
 		
 		widget.setProperties(this._properties, /*modelOnly*/ true);
@@ -51,10 +51,11 @@ dojo.declare("davinci.ve.commands.EventCommand", null, {
 		if(!this._newId ){
 			return;
 		}
-		var widget = davinci.ve.widget.byId(this._newId);
+		var widget = Widget.byId(this._newId);
 	
 		widget.setProperties(this._oldProps);
 		
 	}
 
+});
 });

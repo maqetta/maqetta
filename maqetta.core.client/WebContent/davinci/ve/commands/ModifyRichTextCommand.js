@@ -1,10 +1,11 @@
-dojo.provide("davinci.ve.commands.ModifyRichTextCommand");
+define([
+    	"dojo/_base/declare",
+    	"davinci/ve/widget",
+    	"davinci/ve/States"
+], function(declare, Widget, States){
 
 
-dojo.require("davinci.ve.widget");
-
-dojo.declare("davinci.ve.commands.ModifyRichTextCommand", null, {
-
+return declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 	name: "modify",
 
 	constructor: function(widget, properties, children, context){
@@ -47,7 +48,7 @@ dojo.declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 			return;
 		}
 		
-		var widget = davinci.ve.widget.byId(this._oldId);
+		var widget = Widget.byId(this._oldId);
 		if(!widget){
 			return;
 		}
@@ -64,18 +65,13 @@ dojo.declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 			
 			this._newData = {type: this._oldData.type,
 				properties: dojo.mixin({}, this._oldData.properties, this._properties),
-				//properties: {id: this._oldId},
 				children: this._newText,
-				//scripts: this._oldData.scripts,
-				//scripts: this._oldData.scripts,
 				states: this._oldData.states,
 				context:this._context
 				};
 			this._oldData = {type: this._oldData.type,
 					properties: dojo.mixin({}, this._oldData.properties, this._properties),
-					//properties: {id: this._oldId },
 					children: this._oldText,
-					//scripts: this._oldData.scripts,
 					states: this._oldData.states,
 					context:this._context
 					};
@@ -95,28 +91,20 @@ dojo.declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 			this._oldId_isTempID = this._oldData.properties.isTempID;
 		}
 		var newWidget = null;
-		/* make sure the parent widget supports our re-childrening commands */
-//		if(parentWidget && parentWidget.getIndexOfChild && parentWidget.removeChild && parentWidget.addChild ){
-			var index = this._parentWidget.indexOf(widget);
-			this._parentWidget.removeChild(widget);
-			widget.destroyWidget(); 
-			if (this._newId)
-				this._newData.properties.id = this._newId; // make sure the id is restored
-			if (this._newId_isTempID)
-				this._newData.properties.isTempID = this._newId_isTempID; 
-			newWidget = davinci.ve.widget.createWidget(this._newData);
-			
-			if(!newWidget){
-				return;
-			}
-			
-			this._parentWidget.addChild(newWidget,index);
-			
-
+		var index = this._parentWidget.indexOf(widget);
+		this._parentWidget.removeChild(widget);
+		widget.destroyWidget(); 
+		if (this._newId)
+			this._newData.properties.id = this._newId; // make sure the id is restored
+		if (this._newId_isTempID)
+			this._newData.properties.isTempID = this._newId_isTempID; 
+		newWidget = Widget.createWidget(this._newData);
 		
-			this._newId = newWidget.id;
-
-		//davinci.ve.widget.addChild(parent, widget, index);
+		if(!newWidget){
+			return;
+		}
+		this._parentWidget.addChild(newWidget,index);
+		this._newId = newWidget.id;
 		if(this._context){
 			this._refresh(newWidget);
 		
@@ -133,7 +121,7 @@ dojo.declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 		if(!this._newId || !this._oldData){
 			return;
 		}
-		var widget = davinci.ve.widget.byId(this._newId);
+		var widget = Widget.byId(this._newId);
 		if(!widget){
 			return;
 		}
@@ -158,7 +146,7 @@ dojo.declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 		// add old
 		this._oldData.children = this._oldText;
 		this._oldData.properties.id = this._oldId; // make sure the id is restored
-		var newWidget = davinci.ve.widget.createWidget(this._oldData);
+		var newWidget = Widget.createWidget(this._oldData);
 		if(!widget){
 			debugger;
 			return;
@@ -194,4 +182,5 @@ dojo.declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 			this._context._attachChildren(containerNode);
 		}
 	}
+});
 });

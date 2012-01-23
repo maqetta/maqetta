@@ -19,15 +19,15 @@ define([
 	"dijit/layout/ContentPane",
 	"dijit/layout/TabContainer",
 	"system/resource",
-	
+
 	/*
 	 * Dialog deps from davinci/dialog
 	 */
-	
+
 	"./ui/NewTheme",
 	"./ui/OpenThemeDialog", // ui_plugin/js
 	"./ui/ThemeSetsDialog", // ui_plugin/js
-	
+
 	"dojo/i18n!./nls/webContent"
 ], function(Runtime, Path, UIResource, util, ViewPart, EditorContainer, Dialog, Toolbar, ToolbarSeparator, Menu, MenuBar, PopupMenuBarItem,
 		Button, BorderContainer, StackContainer, ContentPane, TabContainer, sysResource) {
@@ -180,7 +180,7 @@ var Workbench = {
 		
 	
 		var toolbar1 = new Toolbar({'class':"davinciToolbar"}, targetDiv);   
-		var radioGroups = {};
+		var radioGroups={};
 		var firstgroup = true;
 		for(var value  in _toolbarcache){
 			if(!firstgroup){
@@ -339,6 +339,7 @@ var Workbench = {
 		});		
 		mainBodyContainer.startup();
 
+
 		// Put the toolbar and the main window in a border container
 		var appBorderContainer = dijit.byId('davinci_app');
 		if (!appBorderContainer) {
@@ -359,8 +360,10 @@ var Workbench = {
 			Workbench._orginalOnResize = window.onresize;
 			window.onresize = Workbench.onResize; //alert("All done");}
 			dojo.connect(mainBodyContainer, 'onMouseUp', this, 'onResize');
-		}
 
+		}
+		
+		
 		/* close all of the old views */
 		for(position in mainBody.tabs.perspective){
 			var view = mainBody.tabs.perspective[position];
@@ -387,6 +390,7 @@ var Workbench = {
 	},
 
 	onResize: function(e){
+
 		var target = e.explicitOriginalTarget ? e.explicitOriginalTarget : e.srcElement;
 		if (e.type == 'resize' || ( (target.id && (target.id.indexOf('dijit_layout__Splitter_')>-1) || (target.nextSibling && target.nextSibling.id && target.nextSibling.id.indexOf('dijit_layout__Splitter_')>-1))  )  ){
 			var ed = davinci && Runtime.currentEditor;
@@ -1200,28 +1204,28 @@ var Workbench = {
 		var keysDomNode = args.keysDomNode || args.domNode,
 			keys = {},
 			wasKey;
-		dojo.forEach(actionSets, function(actionSet) {
-			dojo.forEach(actionSet.actions, function(action) {
+		dojo.forEach(actionSets, function(actionSet){
+			dojo.forEach(actionSet.actions, function(action){
 				if (action.keySequence) {
-					keys[action.keySequence] = action;
+					keys[action.keySequence]=action;
 					wasKey=true;
 				}
 			});
 		});
 		if (wasKey) {
 			var context=args.context;
-			dojo.connect(keysDomNode, "onkeydown", function (e) {
+          dojo.connect(keysDomNode, "onkeydown", function (e){
 				var seq = Workbench._keySequence(e),
 					actionItem = keys[seq];
 				if (actionItem) {
 					if (actionItem.action.shouldShow && !actionItem.action.shouldShow(context)) {
 						return;
 					}
-					if (actionItem.action.isEnabled(context)) {
-						Workbench._runAction(actionItem, context);
+					if ( actionItem.action.isEnabled(context)) {
+						Workbench._runAction(actionItem,context);
 					}
-				}
-			});
+        	  }
+          });
 		}
 	},
 	
@@ -1603,6 +1607,5 @@ dojo.declare("davinci.workbench._PopupMenu", Menu, {
 		}
 	}
 });
-
 return Workbench;
 });

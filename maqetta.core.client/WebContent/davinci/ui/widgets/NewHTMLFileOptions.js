@@ -84,9 +84,9 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 		this.compositionTypeSelect.addOption(optsCT);
 		var _this = this;
 		function closeTooltip(){
-			// Dojo annoying reposts tooltip if user hovers over the dijit.form.Select
-			// (to bring up tooltip) and then brings up menu, and then closes menu.
-			// Logic below forces the tooltip to go away.
+			// Dijit doesn't support 'title' attribute or tooltip natively on options,
+			// so do some monkeybusiness to attach tooltips to the TR elements used in menu
+			// Have to do setTimeout because table isn't constructed until after onFocus event.
 			if(_this.ctTooltip && _this.ctTooltip.close){
 				_this.ctTooltip.close();
 			}
@@ -109,7 +109,7 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 			this._update_comp_type();
 		}));
 		this._update_comp_type();
-		
+
 		//FIXME: Add logic for 'for' attributes point to correct id
 		
 		this.themeButton = new dijit.form.Button({label:this.langObj.nhfoThemeButtonLabel, title:this.langObj.nhfoThemeButtonTitle}, this.dialogSpecificButtonsSpan);
@@ -122,7 +122,7 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 			}));
 		}));
 	},
-	
+
 	startup: function(){
 		var label = this.compositionTypeLabel;
 		var select = this.compositionTypeSelect;
@@ -151,7 +151,7 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 			delete this._selectedThemeSet;
 		}
 	},
-	
+
 	getOptions: function(){
 		var o = this._currentCompTypeObject('getOptions');
 		return{
@@ -162,7 +162,7 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 			themeSet: this._selectedThemeSet
 		};
 	},
-	
+
 	_updateThemesAndThemeSets: function(e){
 		var themeName = this._selectedThemeSet.name;
 		if (themeName == davinci.theme.none_themeset_name){
@@ -181,7 +181,7 @@ dojo.declare("davinci.ui.widgets.NewHTMLFileOptions",   [dijit._Widget,dijit._Te
 		}
 		this._selectedTheme = themeName;
 	},
-	
+
 	_currentCompTypeObject: function(callingFunc){
 		var compType = this.compositionTypeSelect.attr('value');
 		var found = false;

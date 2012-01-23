@@ -6,7 +6,7 @@ define([
 
 return declare("davinci.ve.ThemeModifier", null, {
 
-	_getCssFiles: function(){
+	_getCssFiles : function(){
 		
 		if(this.cssFiles) {
 			return this.cssFiles;
@@ -15,16 +15,18 @@ return declare("davinci.ve.ThemeModifier", null, {
 		this.cssFiles = [];
 		
 		for(var i = 0;i<this.themeCssfiles.length;i++){
-			var cssURL = this._themePath.getParentPath().append(this.themeCssfiles[i]).toString();
+			var cssURL= this._themePath.getParentPath().append(this.themeCssfiles[i]).toString();
 			this.cssFiles.push(davinci.model.Factory.getInstance().getModel({
 				url: cssURL,
-			    includeImports: true,
-			    loader: function(url){
+			    includeImports : true,
+			    loader:function(url){
 					return system.resource.findResource(url).getText();
 				}
 			}));
 		}
 		return this.cssFiles;
+		
+		
 	},
 	
 
@@ -73,6 +75,7 @@ return declare("davinci.ve.ThemeModifier", null, {
 				}
 			}
 			return false;
+			
 		}
 		
 		function findSheet(sheet, sheetName){
@@ -95,6 +98,7 @@ return declare("davinci.ve.ThemeModifier", null, {
 				}
 			}
 			return foundSheet;
+			
 		}
 		
 		for (var r = 0; r < rules.length; r++){
@@ -107,9 +111,10 @@ return declare("davinci.ve.ThemeModifier", null, {
 				}
 			}
 		}
+
 	},
 
-	getOldValues: function (rules, values){
+	getOldValues : function (rules, values){
 
 		function oldValuesAddIfNewValue(propName, propValue){
 			for(k=0;k<oldValues.length;k++){
@@ -153,7 +158,7 @@ return declare("davinci.ve.ThemeModifier", null, {
 		return oldValues;
 	},
 
-	_modifyTheme: function (rules, values) {
+	_modifyTheme : function (rules, values){
 
 		if (!values) {
 		    return;
@@ -198,7 +203,7 @@ return declare("davinci.ve.ThemeModifier", null, {
 		}
 	},
 
-	_markDirty: function (file,cssModelObject){
+	_markDirty : function (file,cssModelObject){
 		if(!this._dirtyResource) {
 			this._dirtyResource = {};
 		}
@@ -206,7 +211,7 @@ return declare("davinci.ve.ThemeModifier", null, {
 		this._dirtyResource[file] = {time: Date.now(), modelObject: cssModelObject};
 		this._srcChanged();
 	},	
-
+		
 	_rebaseCssRuleImagesFromStylePalette: function(rule, values){ // the style palete assumes the basedir for images user/. where css in relation to the file.
 		//debugger;
 		if (!rule) {
@@ -224,9 +229,11 @@ return declare("davinci.ve.ThemeModifier", null, {
 					var newUrl=path.relativeTo(basePath, true).toString(); // ignore the filename to get the correct path to the image
 					values[i][a]="url('"+ newUrl + "')";
 				}
-			}
+				
+		}
 		}
 		return values;
+		
 	}
 });
 });

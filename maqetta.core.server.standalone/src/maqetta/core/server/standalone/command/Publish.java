@@ -32,7 +32,7 @@ import org.maqetta.server.ServerManager;
 public class Publish extends Command {
 	SmtpPop3Mailer mailer = SmtpPop3Mailer.getDefault();
 
-	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
+    public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
 			IUser user) throws IOException {
 
 		Version version = null;
@@ -181,10 +181,10 @@ public class Publish extends Command {
 		//String prefix =  System.getProperty("org.eclipse.equinox.http.jetty.context.path");
 		String prefix =  "/maqetta";
 		
-		if(prefix != null){
-			return host + prefix + "/review/" + user.getUserName() + "?revieweeuser=" + user.getUserName();
-		} else {
+//		if(prefix != null){
+//			return host + prefix + "/review/" + user.getUserName() + "?revieweeuser=" + user.getUserName();
+//		} else {
 			return host + "/review/" + user.getUserName() + "?revieweeuser=" + user.getUserName();
-		}
+//		}
 	}
 }

@@ -8,7 +8,6 @@ define(["dojo/_base/declare",
         "dijit/Menu",
         "davinci/library",
         "dijit/form/ComboBox",
-       
         "dojo/i18n!davinci/ui/nls/ui",
         "dojo/i18n!dijit/nls/common",
         "davinci/Runtime",

@@ -172,17 +172,18 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
         targetTree.startup();
     },
     
-    _initPage3: function(){
-        var formatPic = function(result){
-            if(!this.photoRepositoryUrl){
-                this.photoRepositoryUrl = davinci.Runtime.serverJSONRequest({
-                    url:"cmd/getBluePageInfo",
-                    handleAs: "text",
-                    content:{'type': "photo"},
-                    sync: true
-                });
-            }
-            if(this.photoRepositoryUrl == "" || this.photoRepositoryUrl == "not-implemented"){
+    _initPage3: function() {
+    	var formatPic = function(result){
+    		if(!this.photoRepositoryUrl){
+    	        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+    			this.photoRepositoryUrl = davinci.Runtime.serverJSONRequest({
+    				url: location + "maqetta/cmd/getBluePageInfo",
+    				handleAs: "text",
+    				content:{'type': "photo"},
+    				sync: true
+    			});
+    		}
+            if (this.photoRepositoryUrl == "" || this.photoRepositoryUrl == "not-implemented") {
                 this.photoRepositoryUrl =  "app/davinci/review/resources/img/profileNoPhoto.gif?";
             }
             return '<img src="' + this.photoRepositoryUrl + result + '" width="35px" height="35px" alt="User Photo"></img>';
@@ -253,8 +254,9 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
             label: "<div style='width:75px;height:10px;margin:-6px 0 0 0'>"+langObj.add+"</div>"
         },this.addReviewerButton);
         
+        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
         var stateStore = new dojox.data.QueryReadStore({
-            url: "cmd/getBluePageInfo",
+            url: location + "maqetta/cmd/getBluePageInfo",
             fetch: function(request) {
                 var searchQuery = request.query.displayName;
                 searchQuery = searchQuery.substring(0, searchQuery.length - 1);
@@ -571,72 +573,80 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
         return "dijitLeaf";
     },
     
-    initData: function(node,isRestart){
-        this.node = node;
-        this.isRestart =  isRestart;
-        if(!node){
-            var latestVersionId = davinci.Runtime.serverJSONRequest({
-                url: "cmd/getLatestVersionId",
-                sync: true
-            });
-            
-            this.versionTitle.set("value","version " +latestVersionId);
-        }
-        if(node){
-            var vName = !isRestart?node.name:node.name+" (R)";
-            this.versionTitle.set('value',vName);
-            if(!this.isRestart)
-                this.dueDate.set('value', node.dueDate == "infinite" ? new Date("") : node.dueDate);
-                this.desireWidth.set('value',node.width==0?"":node.width);
-                this.desireHeight.set('value',node.height==0?"":node.height);
-                if(node.description){
-                    this.descriptions.set('value',node.description);
-            }
-            this.receiveEmail.set('value',node.receiveEmail);
-            //init review files
-            var children;
-            node.getChildren(function(c){children=c;},true);
-            dojo.forEach(children,dojo.hitch(this,function(item){
-                var path = new davinci.model.Path(item.name);
-                var segments = path.getSegments();
-                item = this.sourceTreeModel.root;
-                var i;
-                var search = function(item,name){
-                    var newChildren;
-                    if(item.getChildren){
-                        item.getChildren(function(children){
-                            newChildren = children;
-                        }, true);
-                        for(var i = 0; i < newChildren.length; i++){
-                            if (newChildren[i].name == name) 
-                                return newChildren[i];
-                        }
-                    }
-                    return null;
-                };
-                for(i = 0;i < segments.length; i++){
-                    item = search(item,segments[i]);
-                    if(item == null)
-                        break;
-                }
-                if(item != null){
-                    this.addFiles([item]);
-                }
-            }));
-            //init reviewers
-            var i;
-            for(i = 0;i< node.reviewers.length;i++){
-                if(node.reviewers[i].name != davinci.Runtime.getDesigner()){
-                    this.jsonStore.newItem({
-                        name: node.reviewers[i].name,
-                        email: node.reviewers[i].email,
-                        displayName: node.reviewers[i].name+' ('+node.reviewers[i].email+')'
-                    });
-                }
-            }
-            
-            
-        }
+    initData: function(node,isRestart) {
+    	this.node = node;
+    	this.isRestart = isRestart;
+    	if (!node) {
+            var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+    		var latestVersionId = davinci.Runtime.serverJSONRequest({
+    			url: location + "maqetta/cmd/getLatestVersionId",
+    			sync: true
+    		});
+
+    		this.versionTitle.set("value", "version " + latestVersionId);
+    	}
+    	if (node) {
+    		var vName = !isRestart ? node.name : node.name + " (R)";
+    		this.versionTitle.set('value', vName);
+    		if (!this.isRestart)
+    			this.dueDate.set('value', node.dueDate == "infinite" ? new Date("")
+    			: node.dueDate);
+    		this.desireWidth.set('value', node.width == 0 ? "" : node.width);
+    		this.desireHeight.set('value', node.height == 0 ? "" : node.height);
+    		if (node.description) {
+    			this.descriptions.set('value', node.description);
+    		}
+    		this.receiveEmail.set('value', node.receiveEmail);
+    		// init review files
+    		var children;
+    		node.getChildren(function(c) {
+    			children = c;
+    		}, true);
+    		dojo.forEach(children, dojo.hitch(this, function(item) {
+    			var path = new davinci.model.Path(item.name);
+    			var segments = path.getSegments();
+    			item = this.sourceTreeModel.root;
+    			var i;
+    			var search = function(item, name) {
+    				var newChildren;
+    				if (item.getChildren) {
+    					item.getChildren(function(children) {
+    						newChildren = children;
+    					}, true);
+    					for ( var i = 0; i < newChildren.length; i++) {
+    						if (newChildren[i].name == name) {
+    							return newChildren[i];
+    						}
+    					}
+    				}
+    				return null;
+    			};
+    			for (i = 0; i < segments.length; i++) {
+    				item = search(item, segments[i]);
+    				if (item == null) {
+    					break;
+    				}
+    			}
+    			if (item != null) {
+    				this.addFiles([
+    				               item
+    				               ]);
+    			}
+    		}));
+    		// init reviewers
+    		var i;
+    		for (i = 0; i < node.reviewers.length; i++) {
+    			if (node.reviewers[i].name != davinci.Runtime.getDesigner()) {
+    				this.jsonStore.newItem({
+    					name: node.reviewers[i].name,
+    					email: node.reviewers[i].email,
+    					displayName: node.reviewers[i].name + ' ('
+    					+ node.reviewers[i].email + ')'
+    				});
+    			}
+    		}
+
+    	}
     },
     
     publish : function(value) {
@@ -672,22 +682,27 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
         var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
         var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
         
-        dojo.xhrPost({url:"cmd/publish",sync:false,handleAs:"text",
-            content:{
-            'isUpdate':this.node&&!this.isRestart?true:false,
-            'isRestart':this.isRestart?true:false,
-            'vTime':this.node?this.node.timeStamp:null,
-            'reviewers':reviewers,
-            'emails':emails,
-            'message':message,
-            'versionTitle':versionTitle,
-            'resources' :resources,
-            'desireWidth':desireWidth,
-            'desireHeight':desireHeight,
-            'savingDraft':value,
-            'dueDate':dueDateString,
-            'receiveEmail':receiveEmail},
-            error: function(response){
+        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+        dojo.xhrPost({
+        	url: location + "maqetta/cmd/publish",
+        	sync:false,
+        	handleAs:"text",
+        	content:{
+        		'isUpdate': this.node && !this.isRestart ? true:false,
+        		'isRestart':this.isRestart?true:false,
+        		'vTime':this.node?this.node.timeStamp:null,
+        		'reviewers':reviewers,
+        		'emails':emails,
+        		'message':message,
+        		'versionTitle':versionTitle,
+        		'resources' :resources,
+        		'desireWidth':desireWidth,
+        		'desireHeight':desireHeight,
+        		'savingDraft':value,
+        		'dueDate':dueDateString,
+        		'receiveEmail':receiveEmail
+        	},
+            error: function(response) {
                 var msg = response.responseText;
                 msg = msg.substring(msg.indexOf("<title>")+7, msg.indexOf("</title>"));
                 davinci.Runtime.handleError(dojo.string.substitute(langObj.errorPublish, [response, msg]));

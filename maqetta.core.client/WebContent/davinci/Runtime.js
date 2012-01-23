@@ -1,14 +1,19 @@
-define([
-//	"./Workbench", //FIXME: circular ref?
-	"./commands/CommandStack",
-	"./ve/metadata",
-	"dojo/i18n!./nls/webContent",
-	"dijit/Dialog",
-	"dijit/form/Button",
-	"dijit/form/TextBox"
-], function(/*Workbench, */CommandStack, metadata, webContent, Dialog) {
+dojo.provide("davinci.Runtime");
 
-var Runtime = {
+dojo.require("dijit.Dialog");
+dojo.require("dijit.form.Button");
+dojo.require("dijit.form.TextBox");
+dojo.require("davinci.Workbench");
+dojo.require("davinci.commands.CommandStack");
+dojo.require("davinci.review.actions.PublishAction");
+dojo.require("davinci.review.Color");
+dojo.require("davinci.ve.metadata");
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci", "webContent");
+
+dojo.declare("davinci.Runtime", null, {});
+
+dojo.mixin(davinci.Runtime,	{
 	plugins: [],
 	extensionPoints: [],
 	subscriptions: [],
@@ -17,8 +22,8 @@ var Runtime = {
 	_DEFAULT_PROJECT: "project1",
 	
 	currentSelection: [],
-	commandStack: new CommandStack(),
-//	clipboard: null,
+	commandStack: new davinci.commands.CommandStack(),
+	clipboard: null,
 	
 	addPlugin: function(pluginName) {
 		url = pluginName + ".plugin";
@@ -29,22 +34,20 @@ var Runtime = {
 			handleAs:"json",
 			sync:true,
 			load: function(responseObject, ioArgs) {
-				Runtime._loadPlugin(responseObject,url);
+				davinci.Runtime._loadPlugin(responseObject,url);
 			},
 			error: function(response, ioArgs) {
-				if (response.status==401)
-				{
-//					Runtime.doLogin();
-//					retry=true;
+				if (response.status==401) {
 					window.location.reload();
 				} else {
-					Runtime.handleError(dojo.string.substitute(webContent.errorLoadingPlugin, [pluginName, response]));
+					var langObj = dojo.i18n.getLocalization("davinci","webContent");
+					davinci.Runtime.handleError(dojo.string.substitute(langObj.errorLoadingPlugin, [pluginName, response]));
 				}
 			}
 		});
 	},
 
-	getUser: function(){
+	getUser: function() {
 		return dojo.cookie("DAVINCI.USER");
 	},
 	
@@ -56,17 +59,14 @@ var Runtime = {
 			handleAs:"json",
 			sync:true,
 			load: function(responseObject, ioArgs) {
-			   Runtime._loadPlugins(responseObject);
+			   davinci.Runtime._loadPlugins(responseObject);
 			},
 			error: function(response, ioArgs) {
-				if (response.status==401)
-				{
-//					Runtime.doLogin();
-//					retry=true;
-					//window.location.reload();
+				if (response.status==401) {
 					window.location.href= 'welcome';
-				}else{
-					Runtime.handleError(webContent.errorLoadingPlugins);
+				} else {
+					var langObj = dojo.i18n.getLocalization("davinci","webContent");
+					davinci.Runtime.handleError(langObj.errorLoadingPlugins);
 				}
 			}
 		});
@@ -76,19 +76,19 @@ var Runtime = {
 		for (var i=0;i<plugins.length;i+=2) {
 			var url=plugins[i];
 			var plugin=plugins[i+1];
-			Runtime._loadPlugin(plugin, url);
+			this._loadPlugin(plugin, url);
 		}
 	},
 	/*
-	 * running in single project mode or multi project mode
+	 * running in single project mode or mulit project mode
 	 */
-	singleProjectMode: function(){
+	singleProjectMode: function() {
 		return true;
 	},
 	
 	
-	singleUserMode : function(){
-		return Runtime.isLocalInstall;
+	singleUserMode : function() {
+		return davinci.Runtime.isLocalInstall;
 	},
 
 	/*
@@ -96,17 +96,17 @@ var Runtime = {
 	 * 
 	 */
 	
-	getProject: function(){
+	getProject: function() {
 		/*
 		var params = davinci.Workbench.queryParams();
 		if(params.project) {
 			return decodeURI(params.project);
 		}
 		*/
-		return davinci.Workbench.getActiveProject() || Runtime._DEFAULT_PROJECT;
+		return davinci.Workbench.getActiveProject() || davinci.Runtime._DEFAULT_PROJECT;
 	},
 	
-	loadProject: function(projectName){
+	loadProject: function(projectName) {
 		/*
 		var params = davinci.Workbench.queryParams();
 		params.project = encodeURI(projectName);
@@ -118,70 +118,73 @@ var Runtime = {
 		location.reload(true);
 	},
 	
-	getRole: function(){
-		if(!Runtime.commenting_designerName)
+	getRole: function() {
+		if (!davinci.Runtime.commenting_designerName) { 
 			return "Designer";
-		else{
-			if(!Runtime.userInfo){
-	            var result = Runtime.serverJSONRequest({
-	                url: "maqetta/cmd/getReviewUserInfo",
-	                sync: true
-	            });
-				Runtime.userInfo = result;
+		} else {
+			if (!davinci.Runtime.userInfo) {
+		        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+				var result = davinci.Runtime.serverJSONRequest({
+					url: location + "maqetta/cmd/getReviewUserInfo",
+					sync: true
+				});
+				davinci.Runtime.userInfo = result;
 			}
-			if(Runtime.userInfo.userName==Runtime.commenting_designerName)
+			if(davinci.Runtime.userInfo.userName==davinci.Runtime.commenting_designerName)
 				return "Designer";
 		}
 		return "Reviewer";
 	},
 	
-	getDesigner: function(){
-		if(Runtime.commenting_designerName)
-			return Runtime.commenting_designerName;
-		else{
-				if(!Runtime.userInfo){
-		            var result = Runtime.serverJSONRequest({
-		                url: "maqetta/cmd/getReviewUserInfo",
-		                sync: true
-		            });
-					Runtime.userInfo = result;
-				}
-				return Runtime.userInfo.userName;
+	getDesigner: function() {
+		if (davinci.Runtime.commenting_designerName) {
+			return davinci.Runtime.commenting_designerName;
+		} else {
+			if (!davinci.Runtime.userInfo) {
+		        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+				var result = davinci.Runtime.serverJSONRequest({
+					url: location + "maqetta/cmd/getReviewUserInfo",
+					sync: true
+				});
+				davinci.Runtime.userInfo = result;
 			}
+			return davinci.Runtime.userInfo.userName;
+		}
 	},
 	
-	getDesignerEmail: function(){
-		if(Runtime.commenting_designerEmail)
-			return Runtime.commenting_designerEmail;
-		else{
-				if(!Runtime.userInfo){
-		            var result = Runtime.serverJSONRequest({
-		                url: "maqetta/cmd/getReviewUserInfo",
-		                sync: true
-		            });
-					Runtime.userInfo = result;
-				}
-				return Runtime.userInfo.email;
+	getDesignerEmail: function() {
+		if (davinci.Runtime.commenting_designerEmail) {
+			return davinci.Runtime.commenting_designerEmail;
+		} else {
+			if (!davinci.Runtime.userInfo) {
+		        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+				var result = davinci.Runtime.serverJSONRequest({
+					url: location + "maqetta/cmd/getReviewUserInfo",
+					sync: true
+				});
+				davinci.Runtime.userInfo = result;
 			}
+			return davinci.Runtime.userInfo.email;
+		}
 	},
 	
-	publish: function(node){
+	publish: function(node) {
 		var publish = new davinci.review.actions.PublishAction();
 		publish.run(node);
 	},
 	
 	//two modes in design page and in review page
-	getMode: function(){
-		if(Runtime.commenting_designerName)
+	getMode: function() {
+		if(davinci.Runtime.commenting_designerName)
 			return "reviewPage";
 		else return "designPage";
 	},
 	
 	
-	getColor: function(/*string*/ name){
+	getColor: function(/*string*/ name) {
 		var index;
-		dojo.some(this.reviewers,function(item,n){
-			if(item.name==name){
+		dojo.some(davinci.Runtime.reviewers, function(item,n) {
+			if (item.name==name) {
 				index = n;
 				return true;
 			}
@@ -195,29 +198,30 @@ var Runtime = {
 		// this is because of different alignment on mac/chrome vs win/chrome
 		// FIXME: this platform-dependent logic might not be necessary if
 		// main toolbar changes or different CSS applies to that toolbar
-		if(dojo.isMac){
+		if (dojo.isMac) {
 			dojo.addClass(document.documentElement,"isMac");
 		}
 		
 	    // determine if the browser supports CSS3 transitions
 	    var thisStyle = document.body.style;
-	    Runtime.supportsCSS3Transitions = thisStyle.WebkitTransition !== undefined ||
+	    davinci.Runtime.supportsCSS3Transitions = thisStyle.WebkitTransition !== undefined ||
 	        thisStyle.MozTransition !== undefined ||
 	        thisStyle.OTransition !== undefined ||
 	        thisStyle.transition !== undefined;
-		metadata.init();
-		Runtime.subscribe("/davinci/ui/selectionChanged",Runtime._selectionChanged);
+		davinci.ve.metadata.init();
+		this.subscribe("/davinci/ui/selectionChanged",davinci.Runtime._selectionChanged );
 		davinci.Workbench.run();
 		// intercept BS key - prompt user before navigating backwards
 		dojo.connect(dojo.doc.documentElement, "onkeypress", function(e){
 			if(e.charOrCode==8){
-				window.davinciBackspaceKeyTime = Date.now();
+				window.davinciBackspaceKeyTime = new Date().getTime();
 			}
 		});	
 		window.onbeforeunload = function (e) {
 			var shouldDisplay = Date.now() - window.davinciBackspaceKeyTime < 100;
 			if (shouldDisplay) {
-				var message = webContent.careful;
+				var langObj = dojo.i18n.getLocalization("davinci","webContent");
+				var message = langObj.careful;
 				// Mozilla/IE
 				// Are you sure you want to navigate away from this page?
 				// Careful! You will lose any unsaved work if you leave this page now.
@@ -233,32 +237,33 @@ var Runtime = {
 		};
 	},
 	
-	unload: function () {
+	unload: function() {
 		davinci.Workbench.unload();
 	},
-
-	subscribe: function(topic, func) {
-		Runtime.subscriptions.push(dojo.subscribe(topic,this,func));
+	
+	subscribe: function(topic,func) {
+		this.subscriptions.push(dojo.subscribe(topic,this,func));
 	},
 	
-	destroy: function () {
-		dojo.forEach(Runtime.subscriptions, dojo.unsubscribe);
+	destroy: function() {
+		dojo.forEach(this.subscriptions, dojo.unsubscribe);
 	},
+	
 	_loadPlugin: function(plugin,url) {
 		var pluginID = plugin.id;
-		Runtime.plugins[pluginID] = plugin;
+		this.plugins[pluginID]= plugin;
 		if (plugin.css) {
-			Runtime._loadCSS(plugin,url);
+			this._loadCSS(plugin,url);
 		}
 		for (var id in plugin) {
 			var extension = plugin[id];
-			if (typeof extension != "string") {
+			if (typeof (extension) != "string") {
 				if (extension instanceof Array) {
-					extension.forEach(function(ext) {
-						Runtime._addExtension(id, ext, pluginID);						
-					});
+					for ( var i = 0, len = extension.length; i < len; i++) {
+						this._addExtension(id, extension[i], pluginID);
+					}
 				} else {
-					Runtime._addExtension(id, extension, pluginID);
+					this._addExtension(id, extension, pluginID);
 				}
 			}
 		}
@@ -269,43 +274,68 @@ var Runtime = {
 		if (extension.id) {
 			extension.id = pluginID + "." + extension.id;
 		}
-		var extensions = Runtime.extensionPoints[id];
+		var extensions = this.extensionPoints[id];
 		if (extensions == null) {
 			extensions = [];
 		}
 		extensions.push(extension);
-		if (!Runtime.extensionPoints[id]) { Runtime.extensionPoints[id] = []; }
-		Runtime.extensionPoints[id] = extensions;
+		if (!this.extensionPoints[id]) { this.extensionPoints[id] = []; }
+		this.extensionPoints[id] = extensions;
 	},
 	
 	getExtensions: function(extensionID, testFunction) {
 		
-		var extensions = Runtime.extensionPoints[extensionID];
+		var extensions = this.extensionPoints[extensionID];
 		if (testFunction) {
 			var matching=[];
 			var isFunction = testFunction instanceof Function;
 			if (extensions) {
-				return extensions.filter(function(ext) {
-					return (isFunction && testFunction(ext)) || ext.id == testFunction;
-				});
+				for (var i = 0, len = extensions.length; i < len; i++) { // FIXME: use filter
+					if (isFunction) {
+						if (testFunction(extensions[i])) {
+							matching.push(extensions[i]);
+						}
+					} else if (extensions[i].id == testFunction) {
+						matching.push(extensions[i]);
+					}
+				}
+				return matching;
 			}
+		} else {
+			return extensions;
 		}
-		return extensions;
 	},
 	
 	getExtension: function(extensionID, testFunction) {
-		return Runtime.getExtensions(extensionID, testFunction)[0];
+		var extensions = this.extensionPoints[extensionID];
+		if (testFunction) {
+			var isFunction = testFunction instanceof Function;
+			if (extensions)
+				for ( var i = 0, len = extensions.length; i < len; i++)
+					if (isFunction)
+					{
+						if (testFunction(extensions[i])) {
+							return extensions[i];
+						}
+					}
+					else if (extensions[i].id == testFunction) {
+						return extensions[i];
+					}
+			return null;
+		} else {
+			return extensions[0];
+		}
 	},
 	
 	
 	
 	handleError: function(error) {
-		var redirectUrl = "welcome";
-		if(Runtime.singleUserMode()){
+		var redirectUrl = "./welcome";
+		if(davinci.Runtime.singleUserMode()){
 			redirectUrl = ".";
 		}
 		
-		window.document.body.innerHTML = "<div><h1>Problem connecting to the Maqetta Server...</h1></div><div><center><h1><a href='"+ redirectUrl + "'>Return to Maqetta Login</a></h1></center></div><br><br><div><h2>Error description:</h2>" + error + "</div>" // TODO: i18n
+		window.document.body.innerHTML = "<div><h1>Problem connecting to the Maqetta Server...</h1></div><div><center><h1><a href='"+ redirectUrl + "'>Return to Maqetta Login</a></h1></center></div><br><br><div><h2>Error description:</h2>" + error + "</div>"
 	},
 
 	_loadCSS: function(plugin,pluginURL) {
@@ -321,24 +351,23 @@ var Runtime = {
 		headID.appendChild(cssNode);
 	},
 		
-	executeCommand: function (cmdID) {
-		var cmd=Runtime.getExtension("davinci.commands", cmdID);
-		if (cmd && cmd.run) {
+	executeCommand: function(cmdID) {
+		var cmd=this.getExtension("davinci.commands", cmdID);
+		if (cmd && cmd.run)
+		{
 			cmd.run();
 		}
 	},
 	
-	_selectionChanged: function (selection) {
-		Runtime.currentSelection=selection;
+	_selectionChanged: function(selection) {
+		this.currentSelection=selection;
 	},
 	
-	getSelection: function () {
-		return Runtime.currentSelection;
+	getSelection: function() {
+		return this.currentSelection;
 	},
 
-
-	doLogin: function(){
-
+	doLogin: function() {
 		var retry=true;
 		var formHtml = "<table>" +
         "<tr><td><label for=\"username\">User: </label></td>" +
@@ -348,13 +377,12 @@ var Runtime = {
         "</tr></table>"; // FIXME: i18n
 		do {
 			var isInput=false;
-			var	dialog = new Dialog({id: "connectDialog", title:"Please login", 
+			var	dialog = new dijit.Dialog({id: "connectDialog", title:"Please login", 
 				onExecute:function(){
 					dojo.xhrGet({url:"cmd/login",sync:true,handleAs:"text",
 						content:{'userName':dojo.byId("username").value, 'password': dojo.byId("password").value, 'noRedirect':true}
-					}).then(function(result){
-			            if (result=="OK")
-			            {
+					}).then(function(result) {
+			            if (result=="OK") {
 			            	// cheap fix.
 			            	//window.location.reload();
 			            	window.location.href= 'welcome';
@@ -362,21 +390,16 @@ var Runtime = {
 			            } else {
 			            	console.warn("Unknown error: result="+result);
 			            }
-					}, function(error){
+					}, function(error) {
 						console.warn("Login error", error);
 					});
 				    isInput=true;
 				},
-				onCancel:function(){isInput=true;Runtime.destroyRecursive(false);}
+				onCancel:function() { isInput=true;this.destroyRecursive(false); }
 			});	
 			dialog.setContent(formHtml);
-			dialog.show();
-//TODO: find a way to wait here (instead of alert)
-			//alert("must log in");
-			
+			dialog.show();			
 		} while (retry);
-		
-
 	},
 	
 	serverJSONRequest: function (ioArgs) {
@@ -387,30 +410,30 @@ var Runtime = {
 		var retry = false;
 		function onError(response, ioArgs) {
 			if (response.status==401) {
-//				Runtime.doLogin();
+//				davinci.Runtime.doLogin();
 //				retry=true;
 				//window.location.reload();
 				window.location.href= 'welcome';
 			} else if (response.status==400) {
-				Runtime.handleError("unknown error: status="+ response.status);
+				davinci.Runtime.handleError("unknown error: status="+ response.status);
 			} else if (userOnError) {
 				userOnError(response, ioArgs);
 			} else {
-				Runtime.handleError("unknown error: status="+ response.status);
+				davinci.Runtime.handleError("unknown error: status="+ response.status);
 				//console.warn("unknown error: status="+response.status);
 			}
 		}
 		args.error=onError;
 			    
-			 do {
-			 	dojo.xhrGet(args).then(function(result){
-			 	if (result) {
-			 		resultObj=result;
-			 	}
-			 	}, function(error) {
-		 		Runtime.handleError(error);
-			 	});
-			 } while (retry);	
+		do {
+			dojo.xhrGet(args).then(function(result) {
+				if (result) {
+					resultObj=result;
+				}
+			}, function(error) {
+				davinci.Runtime.handleError(error);
+			});
+		} while (retry);	
 
 		return resultObj;
 	},
@@ -419,9 +442,10 @@ var Runtime = {
 		var loading = dojo.create("div",null, dojo.body(), "first");
 		loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Logging off...</td></tr></table>'; // FIXME: i18n
 		dojo.addClass(loading, 'loading');
-		Runtime.unload();
-		Runtime.serverJSONRequest({
-			url:"cmd/logoff", handleAs:"text", sync:true
+		this.unload();
+		davinci.Runtime.serverJSONRequest({
+			url:"cmd/logoff", handleAs:"text",
+			sync:true
 		});
 		var newLocation = davinci.Workbench.location(); //
 		var lastChar=newLocation.length-1;
@@ -430,8 +454,6 @@ var Runtime = {
 		}
 		location.href = newLocation+"/welcome";
 	}
-};
-
-davinci.Runtime = Runtime; //FIXME: shouldn't need this
-return Runtime;
 });
+
+davinci.isMac = dojo.isMac; //FIXME: remove

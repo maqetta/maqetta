@@ -1,5 +1,6 @@
 dojo.provide("davinci.review.widgets.Tree");
 
+dojo.require("davinci.Workbench");
 dojo.require("dijit.Tree");
 
 //FIXME: should be able to override dijit.Tree directly?
@@ -9,7 +10,12 @@ dojo.declare("davinci.review.widgets._TreeNode", davinci.ui.widgets._ToggleTreeN
     postCreate: function(){
         this.inherited(arguments);
 
-        var divDom = dojo.create("img", { src:"app/dojo/resources/blank.gif","class":"deleteImg"});
+        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+        console.debug("review Tree @ "+location);
+        var divDom = dojo.create("img", { 
+        	src: location + "maqetta/app/dojo/resources/blank.gif",
+        	"class":"deleteImg"
+        		});
         dojo.connect(divDom,"onclick",this,dojo.hitch(this,function(){
             dojo.publish("/davinci/review/deleteReviewFile",[this.item]);
         }));

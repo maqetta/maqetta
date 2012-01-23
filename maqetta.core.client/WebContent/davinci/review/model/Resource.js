@@ -81,8 +81,9 @@ dojo.declare("davinci.review.model.Resource.root",
               this._loading=[];
               this._loading.push(onComplete);
               var designerName = davinci.Runtime.commenting_designerName||"";
+              var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
               davinci.Runtime.serverJSONRequest({
-                   url:"cmd/listVersions",
+                   url:  location + "maqetta/cmd/listVersions",
                       content:{'designer':designerName},
                         sync:sync,
                         load : dojo.hitch(this, function(responseObject, ioArgs) {
@@ -136,8 +137,9 @@ dojo.declare("davinci.review.model.Resource.Folder",
               this._loading=[];
               this._loading.push(onComplete);
               var designerName = davinci.Runtime.commenting_designerName||"";
+              var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
               davinci.Runtime.serverJSONRequest({
-                   url:"maqetta/cmd/listReviewFiles",
+                   url: location + "maqetta/cmd/listReviewFiles",
                       content:{
                               'designer':designerName,
                               'version':this.timeStamp

@@ -32,7 +32,6 @@ import org.maqetta.server.ServerManager;
 public class Publish extends Command {
 	SmtpPop3Mailer mailer = SmtpPop3Mailer.getDefault();
 
-	@Override
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
 			IUser user) throws IOException {
 

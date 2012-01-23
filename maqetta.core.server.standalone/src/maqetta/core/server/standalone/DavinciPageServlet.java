@@ -55,6 +55,7 @@ public class DavinciPageServlet extends HttpServlet {
      * (non-Javadoc)
      * @see javax.servlet.http.HttpServlet#doPut(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
+    @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         IUser user = (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
         String path = req.getPathInfo();
@@ -84,15 +85,17 @@ public class DavinciPageServlet extends HttpServlet {
     }
     
 
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if(serverManager==null)
+        if(serverManager==null) {
             initialize();
+        }
         String previewParam = req.getParameter(IDavinciServerConstants.PREVIEW_PARAM);
         
         IUser user = (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
         String pathInfo = req.getPathInfo();
         if (ServerManager.DEBUG_IO_TO_CONSOLE) {
-            System.out.println("request: " + pathInfo + ", logged in=" + (user != null));
+            System.out.println("Page Servlet request: " + pathInfo + ", logged in=" + (user != null));
         }
 
         /* add the user name to a cookie, prob should move to login but login wasn't persisting the cookie properly */

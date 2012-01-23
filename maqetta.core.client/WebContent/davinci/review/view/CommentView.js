@@ -423,12 +423,13 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 		_comment.status = comment.status;
 	},
 	
-	_loadCommentData: function(/*String*/ pageName){
+	_loadCommentData: function(/*String*/ pageName) {
 		// summary:
 		//		Load the comments attached to the opened page
 		//		and sort them by time order
+        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
 		this._cached[pageName] = davinci.Runtime.serverJSONRequest({
-			url: "./cmd/getComments",
+			url: location + "maqetta/cmd/getComments",
 			sync: true,
 			content:{
 				ownerId: davinci.Runtime.commenting_designerName,
@@ -441,11 +442,11 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 		this._cached[pageName].focusedComments = [];
 	},
 	
-	_destroyCommentWidgets: function(){
+	_destroyCommentWidgets: function() {
 		// summary:
 		//		Destroy the comment widgets
 		var comments = this.comments;
-		dojo.forEach(comments, function(comment){
+		dojo.forEach(comments, function(comment) {
 			comment.destroyRecursive();
 		});
 		this.comments = [];
@@ -453,9 +454,9 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 		this._commentConns = [];
 	},
 	
-	_render: function(){
+	_render: function() {
 		var _comments = this._cached[this._currentPage];
-		dojo.forEach(_comments, function(_comment, i){
+		dojo.forEach(_comments, function(_comment, i) {
 			var comment = new davinci.review.widgets.Comment({
 				commentId: _comment.id,
 				subject: _comment.subject,
@@ -495,25 +496,25 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 			}
 			
 			// Populate the shapes
-			if(!_comment._hasPopulate){
+			if (!_comment._hasPopulate) {
 				dojo.publish(this._currentPage+"/davinci/review/drawing/addShape", [comment.drawingJson]);
 				_comment._hasPopulate = true;
 			}
 		}, this);
-		dojo.forEach(this.comments, function(comment){
+		dojo.forEach(this.comments, function(comment) {
 			comment.collapse(true);
 		});
 		
 	},
 	
-	_onEditComment: function(args){
+	_onEditComment: function(args) {
 		var form = this._commentForm,
 			comment = this.commentIndices[args.commentId];
 		
-		if(comment.ownerId != davinci.Runtime.commenting_reviewerName.userName ||
-		comment.email != davinci.Runtime.commenting_reviewerName.email) return;
+		if (comment.ownerId != davinci.Runtime.commenting_reviewerName.userName ||
+			comment.email != davinci.Runtime.commenting_reviewerName.email) { return; }
 		
-		if(form.isShowing){
+		if (form.isShowing) {
 			// The form is open, we need to do some cleaning.
 			this._onCommentFormCancel();
 		}
@@ -543,10 +544,10 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 		]);
 	},
 	
-	_onNewReply: function(args){
+	_onNewReply: function(args) {
 		var form = this._commentForm;
 		
-		if(form.isShowing){
+		if (form.isShowing) {
 			this._onCommentFormCancel();
 		}
 		
@@ -567,35 +568,36 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 		]);
 	},
 	
-	_onCommentFocus: function(widget, evt){
+	_onCommentFocus: function(widget, evt) {
 		var focusedComments = this._cached[this._currentPage].focusedComments;
-		if(!evt || (!evt.ctrlKey && !evt.metaKey)){
-			dojo.forEach(focusedComments, function(commentId){
+		if (!evt || (!evt.ctrlKey && !evt.metaKey)) {
+			dojo.forEach(focusedComments, function(commentId) {
 				this.commentIndices[commentId].blurComment(true);
 			}, this);
 			focusedComments.length = 0;
 			focusedComments.push(widget.commentId);
-		}else if(evt.ctrlKey || evt.metaKey){
-			if(!dojo.some(focusedComments, function(commentId){ return commentId == widget.commentId; })){
+		} else if (evt.ctrlKey || evt.metaKey) {
+			if (!dojo.some(focusedComments, function(commentId){ return commentId == widget.commentId; })) {
 				focusedComments.push(widget.commentId);
 			}
 		}
 
-		if(!evt || !evt.silent){
-			if(this.states)
+		if (!evt || !evt.silent) {
+			if (this.states) { 
 				this.states.setState(widget.pageState);
+			}
 			this.publish(this._currentPage + "/davinci/review/drawing/filter", [widget.pageState, focusedComments]);
 		}
 	},
 	
-	_onCommentBlur: function(widget){
+	_onCommentBlur: function(widget) {
 		var focusedComments = this._cached[this._currentPage].focusedComments;
 		var i;
-		for(i = 0; i < focusedComments.length; i++){
-			if(focusedComments[i] == widget.commentId){
-				if(i == focusedComments.length - 1){
+		for (i = 0; i < focusedComments.length; i++) {
+			if (focusedComments[i] == widget.commentId) {
+				if (i == focusedComments.length - 1) {
 					focusedComments.pop();
-				}else{
+				} else { 
 					focusedComments[i] = focusedComments.pop();
 				}
 			}
@@ -604,52 +606,59 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 		this.publish(this._currentPage+"/davinci/review/drawing/filter", [widget.pageState, focusedComments]);
 	},
 	
-	_onCommentFormCancel: function(){
+	_onCommentFormCancel: function() {
 		dojo.publish(this._currentPage+"/davinci/review/drawing/cancelEditing", []);
 		var dim = this._cached[this._currentPage],
 			pageState = dim.pageState,
 			focusedComments = dim.focusedComments;
-		if(focusedComments.length > 0){
+		if (focusedComments.length > 0) {
 			this.commentIndices[focusedComments[0]].show();
 		}
 		dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [pageState, focusedComments]);
 	},
 	
-	_updateToolbar: function(args){
+	_updateToolbar: function(args) {
 		dijit.byId("davinciReviewToolbar.Add").set("disabled", this._versionClosed);
 		dijit.byId("davinciReviewToolbar.Reviewers").set("disabled", false);
 		var editor = args.editor;
-		if(editor && editor.resourceFile){
+
+		if (editor && editor.resourceFile) {
 			var item = editor.resourceFile.parent;
 			var reviewers = item.reviewers;
 			var comments = this._cached[this._currentPage];
-			dojo.forEach(comments,function(comment){
-				if(!dojo.some(reviewers,function(item){
-					if(item.email==comment.email)return true;
-					else return false;
+			dojo.forEach(comments, function(comment) {
+				if (!dojo.some(reviewers, function(item) {
+					if (item.email == comment.email) {
+						return true;
+					} else {
+						return false;
+					}
 				}) && davinci.Runtime.commenting_designerName != item.name)
-				reviewers.push({name:comment.ownerId,email:comment.email});
+					reviewers.push({
+						name: comment.ownerId,
+						email: comment.email
+					});
 			});
 			var children = this.reviewerList.getChildren();
 			var i;
-			for(i = 2 ; i < children.length; i++){
+			for (i = 2 ; i < children.length; i++) {
 				children[i].destroy();
 			}
 			
-			davinci.review.Runtime.reviewers = reviewers;
-			dojo.forEach(reviewers, dojo.hitch(this,function(comment,index){
+			davinci.Runtime.reviewers = reviewers;
+			dojo.forEach(reviewers, dojo.hitch(this,function(comment,index){ 
 				var check = new dijit.CheckedMenuItem({
 					label: "<div class='davinciReviewToolbarReviewersColor' style='background-color:"
-						+ davinci.review.Runtime.getColor(comment.name) +";'></div><span>"+comment.name+"</span>",
+						+ davinci.Runtime.getColor(comment.name) +";'></div><span>"+comment.name+"</span>",
 					onChange: dojo.hitch(this,this._reviewFilterChanged),
 					checked: true,
 					reviewer:comment,
 					title: comment.email
 				});
 				this.reviewerList.addChild(check);
-				if(this._cached[this._currentPage]&&this._cached[this._currentPage].shownColors){
-					var checked = dojo.some(this._cached[this._currentPage].shownColors,function(name){
-						if(name==comment.name) return true;
+				if (this._cached[this._currentPage]&&this._cached[this._currentPage].shownColors) {
+					var checked = dojo.some(this._cached[this._currentPage].shownColors,function(name) {
+						if (name==comment.name) return true;
 						return false;
 					});
 					check.set("checked",checked);
@@ -659,7 +668,7 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 		}
 	},
 	
-	getTopAdditions: function(){
+	getTopAdditions: function() {
 		this.category = "content";
 		var langObj = dojo.i18n.getLocalization("davinci.review.view", "view");
 		var filter = new dijit.form.TextBox({

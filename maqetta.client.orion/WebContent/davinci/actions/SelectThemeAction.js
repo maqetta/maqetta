@@ -1,20 +1,22 @@
-define([
-	"dojo/_base/declare",
-	"davinci/actions/Action",
-	"system/resource",
-	"davinci/ui/widgets/ThemeSelection",
-	"davinci/ve/commands/ChangeThemeCommand",
-	"dojo/i18n!davinci/actions/nls/actions"
-], function(declare, Action, resource, ThemeSelection, ChangeThemeCommand, langObj){
+dojo.provide("davinci.actions.SelectThemeAction");
+dojo.require("davinci.actions.Action");
+dojo.require("system.resource");
+dojo.require("davinci.ui.widgets.ThemeSelection");
+dojo.require("davinci.ve.commands.ChangeThemeCommand");
 
-return declare("davinci.actions.SelectThemeAction", Action, {
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.actions", "actions");
+
+dojo.declare("davinci.actions.SelectThemeAction", davinci.actions.Action, {
 	
 	run: function(selection){
+		
 		var e = davinci.Workbench.getOpenEditor();
 		
 		var theme = e.getContext().getTheme();
 		var ldojoVersion = e.getContext().getDojo().version.major +'.'+ e.getContext().getDojo().version.minor;
 		
+		var langObj = dojo.i18n.getLocalization("davinci.actions", "actions");
 		this._themeChooser = new davinci.ui.widgets.ThemeSelection({'value':theme, workspaceOnly:false, dojoVersion: ldojoVersion });
 		davinci.Workbench.showModal(this._themeChooser, langObj.selectTheme, "width:200px");//width needs to be adjusted to fit language
 		dojo.connect(this._themeChooser, "onChange", this, "_changeTheme");
@@ -30,5 +32,7 @@ return declare("davinci.actions.SelectThemeAction", Action, {
 		if (e && e.getContext)
 			e.getContext().getCommandStack().execute(new davinci.ve.commands.ChangeThemeCommand(newTheme, e.getContext()));
 	}
-});
+	
+	
+
 });

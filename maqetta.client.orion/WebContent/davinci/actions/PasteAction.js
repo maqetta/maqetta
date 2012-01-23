@@ -1,15 +1,15 @@
-define([
-	"dojo/_base/declare",
-	"davinci/actions/Action"
-], function(declare, Action){
+dojo.provide("davinci.actions.PasteAction");
+dojo.require("davinci.actions.Action");
 
-return declare("davinci.actions.PasteAction", Action, {
+dojo.declare("davinci.actions.PasteAction", davinci.actions.Action, {
 	
-	run: function(selection){  
-	},
+	run: function(selection){
+	  
+},
 
-	isEnabled: function(selection){
-		return davinci.Runtime.clipboard;
-	}
-});
+isEnabled: function(selection){
+	return davinci.Runtime.clipboard;
+}
+
+
 });

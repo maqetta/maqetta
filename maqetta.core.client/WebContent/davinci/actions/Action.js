@@ -1,21 +1,18 @@
-define([
-	"dojo/_base/declare"
-], function(declare){
+dojo.provide("davinci.actions.Action");
 
-return declare("davinci.actions.Action", null, {
-
+dojo.declare("davinci.actions.Action", null, {
+	
 	item:null,
 
 	run: function(selection){
-	},
-	
-	isEnabled: function(selection){
-		return true;
-	},
-	
-	getName: function(){
-		return this.item.label;
-	}
+},
 
-});
+isEnabled: function(selection){
+	return true;
+},
+
+getName: function(){
+	return this.item.label;
+}
+
 });

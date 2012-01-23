@@ -1,11 +1,9 @@
-define([
-	"dojo/_base/declare",
-	"davinci/actions/Action",
-	"dojox.widget.Toaster"
-], function(declare, Action, Toaster){
+dojo.provide("davinci.review.actions.SubmitDraftAction");
 
-return declare("davinci.review.actions.SubmitDraftAction", Action, {
+dojo.require("davinci.actions.Action");
+dojo.require("dojox.widget.Toaster");
 
+dojo.declare("davinci.review.actions.SubmitDraftAction",davinci.actions.Action,{
 	run: function(context){
 		var selection = davinci.Runtime.getSelection();
 		if(!selection) return;
@@ -57,5 +55,4 @@ return declare("davinci.review.actions.SubmitDraftAction", Action, {
 		if(item.isDraft) return true;
 		return false;
 	}
-});
 });

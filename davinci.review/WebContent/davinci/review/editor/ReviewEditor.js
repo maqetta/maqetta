@@ -1,16 +1,14 @@
-define([
-	"dojo/_base/declare",
-	"davinci/actions/Action",
-	"davinci/ui/ModelEditor",
-	"dijit/layout/BorderContainer",
-	"dijit/layout/ContentPane",
-	"davinci/commands/CommandStack",
-	"davinci/ve/utils/URLRewrite",
-	"davinci/review/editor/Context"
-], function(declare, Action, ModelEditor, BorderContainer, ContentPane, CommandStack, URLRewrite, Context) {
+dojo.provide("davinci.review.editor.ReviewEditor");
 
-return declare("davinci.review.editor.ReviewEditor", Action, {
+dojo.require("davinci.actions.Action");
+dojo.require("davinci.ui.ModelEditor");
+dojo.require("dijit.layout.BorderContainer");
+dojo.require("dijit.layout.ContentPane");
+dojo.require("davinci.commands.CommandStack");
+dojo.require("davinci.ve.utils.URLRewrite");
+dojo.require("davinci.review.editor.Context");
 
+dojo.declare("davinci.review.editor.ReviewEditor", davinci.ui.ModelEditor, {
 	isReadOnly: true,
 	constructor: function (element) {
 	    this._bc = new dijit.layout.BorderContainer({}, element);
@@ -78,5 +76,4 @@ return declare("davinci.review.editor.ReviewEditor", Action, {
 	onResize: function(){
 		
 	}
-});
 });

@@ -1,10 +1,8 @@
-define([
-	"dojo/_base/declare",
-	"davinci/actions/Action"
-], function(declare, Action){
+dojo.provide("davinci.review.actions.ViewFileAction");
 
-return declare("davinci.review.actions.ViewFileAction", Action, {
-	
+dojo.require("davinci.actions.Action");
+
+dojo.declare("davinci.review.actions.ViewFileAction",davinci.actions.Action,{
 	run: function(context){
 		var selection = davinci.Runtime.getSelection();
 		if(!selection) return;
@@ -32,5 +30,4 @@ return declare("davinci.review.actions.ViewFileAction", Action, {
 		return item.elementType=="ReviewFile";
 	
 	}
-});
 });

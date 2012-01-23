@@ -1,10 +1,8 @@
-define([
-	"dojo/_base/declare",
-	"davinci/actions/Action",
-], function(declare, Action){
+dojo.provide("davinci.review.actions.RestartVersionAction");
 
-return declare("davinci.review.actions.RestartVersionAction", Action, {
+dojo.require("davinci.actions.Action");
 
+dojo.declare("davinci.review.actions.RestartVersionAction",davinci.actions.Action,{
 	run: function(context){
 		var selection = davinci.Runtime.getSelection();
 		if(!selection) return;
@@ -25,5 +23,4 @@ return declare("davinci.review.actions.RestartVersionAction", Action, {
 		if(item.closed) return true;
 		return false;
 	}
-});
 });

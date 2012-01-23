@@ -1,14 +1,16 @@
-define([
-	"dojo/_base/declare",
-	"davinci/actions/Action",
-	"system/resource",
-	"davinci/ve/commands/ChangeThemeCommand",
-	"dojo/i18n!davinci/actions/nls/actions"
-], function(declare, Action, resource, ChangeThemeCommand, langObj){
+dojo.provide("davinci.actions.OpenThemeEditor");
+dojo.require("davinci.actions.Action");
+dojo.require("system.resource");
+dojo.require("davinci.ve.commands.ChangeThemeCommand");
 
-return declare("davinci.actions.OpenThemeEditor", null, {
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.actions", "actions");
 
+dojo.declare("davinci.actions.OpenThemeEditor", null, {
+	
 	constructor: function(){
+	
+		var langObj = dojo.i18n.getLocalization("davinci.actions", "actions");
 		this._themeChooser = new davinci.ui.widgets.ThemeSelection({value:"                ", 'searchWorkspace':false});
 		var diag = null;
 		if(this._themeChooser.get('numberOfThemes') > 0)
@@ -29,5 +31,7 @@ return declare("davinci.actions.OpenThemeEditor", null, {
 			fileName: newTheme.file,
 			content: newTheme});
 	}
-});
+	
+	
+
 });

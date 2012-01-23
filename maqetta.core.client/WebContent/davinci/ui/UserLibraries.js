@@ -19,7 +19,7 @@ define(["dojo/_base/declare",
         "davinci/theme/ThemeUtils",
         
 ], function(declare, _Templated, _Widget, Button, TextBox, RadioButton,MenuItem,Menu,Library, ComboBox, uiNLS, commonNLS, Runtime, Path, Resource, RebuildPage, templateString){
-	debugger;
+	
 	return declare("davinci.ui.UserLibraries",   [_Widget, _Templated], {
 		
 		widgetsInTemplate: true,
@@ -38,7 +38,7 @@ define(["dojo/_base/declare",
 		templateString : templateString,
 		
 		buildRendering : function(){
-			debugger;
+			
 			this.inherited(arguments);
 			this._handles = [];
 			this._allLibs = Library.getInstalledLibs();

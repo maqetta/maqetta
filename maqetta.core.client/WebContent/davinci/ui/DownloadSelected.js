@@ -2,10 +2,8 @@ define(["dojo/_base/declare",
         "davinci/ui/Download",
         "davinci/ui/Resource",
         "dojo/i18n!davinci/ui/nls/ui",
-        "dojo/i18n!dijit/nls/common",
-        "dojo/text!./templates/NewProject.html",
-        
-   ],function(declare,  Download, ResourceUI, uiNLS, commonNLS, templateString){
+        "dojo/i18n!dijit/nls/common"
+   ],function(declare,  Download, ResourceUI, uiNLS, commonNLS){
 	dojo.declare("davinci.ui.DownloadSelected",   [Download], {
 		buildRendering : function(){
 			var langObj = uiNLS;

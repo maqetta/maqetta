@@ -1,7 +1,6 @@
 define([
 ], function() {
-	dojo.getObject("davinci.ve.utils.ImageUtils", true); // FIXME: shouldn't need this
-	return davinci.ve.utils.ImageUtils = /** @scope davinci.ve.utils.ImageUtils */ {
+	return /** @scope davinci.ve.utils.ImageUtils */ {
 
 		/*
 		 * Utility functions for html <img> nodes

@@ -1,4 +1,3 @@
-
 define(["dojo/_base/declare",
         "dijit/_Templated",
         "dijit/_Widget",

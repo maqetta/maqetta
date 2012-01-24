@@ -1,23 +1,18 @@
-dojo.provide("davinci.ve.themeEditor.VisualThemeEditor");
- 
+define([
+    	"dojo/_base/declare",
+    	"davinci/ve/themeEditor/Context",
+    	"davinci/workbench/Preferences",
+    	"davinci/model/Path"
+], function(declare, Context, Preferences, Path){
 
-dojo.require("dijit.layout.ContentPane");
-dojo.require("davinci.ve.themeEditor.Context");
-dojo.require("davinci.ve.themeEditor.VisualThemeOutline");
-dojo.require("davinci.workbench.Preferences");
+
+return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 
 /*
  * 
  * HTML rendered as the theme editor
  */
 
-// no longer used?
-//davinci.ve.themeEditor._themeHtml = dojo.moduleUrl("davinci.ve.themeEditor", "davinci-dojo-theme-editor.html"); 
-
-
-
-dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
-	
 
 	constructor : function (themeEditor, element,filename,themeCssfiles, themeEditorHtmls,theme) {
 		this._themeEditor = themeEditor;
@@ -25,12 +20,12 @@ dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 		this.theme = theme;
 		var resource= themeEditorHtmls[0]; 
 
-		this.basePath=new davinci.model.Path(resource.getPath());
+		this.basePath=new Path(resource.getPath());
 
 		
 
 		this._handles=[];
-		this.context = new davinci.ve.themeEditor.Context({
+		this.context = new Context({
 			editor: this._themeEditor,
 			visualEditor: this,
 			containerNode: this.domNode,
@@ -40,7 +35,7 @@ dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 
 		dojo.connect(this.context, "onSelectionChange",this, "onSelectionChange");
 
-		var prefs=davinci.workbench.Preferences.getPreferences('davinci.ve.themeEditor.editorPrefs', davinci.Runtime.getProject());
+		var prefs=Preferences.getPreferences('davinci.ve.themeEditor.editorPrefs', davinci.Runtime.getProject());
 		if (prefs) {
 			this.context.setPreferences(prefs);
 		}
@@ -164,5 +159,6 @@ dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 	
 	
 
+});
 });
 

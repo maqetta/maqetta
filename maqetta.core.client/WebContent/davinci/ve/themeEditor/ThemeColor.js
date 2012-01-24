@@ -1,5 +1,10 @@
-dojo.provide("davinci.ve.themeEditor.ThemeColor");
-dojo.declare("davinci.ve.themeEditor.ThemeColor", dojo.Color, {
+define([
+    	"dojo/_base/declare"
+], function(declare){
+
+
+return declare("davinci.ve.themeEditor.ThemeColor", [dojo.Color], {
+	
   constructor: function(/* Object */args){
     dojo.safeMixin(this, args);
 
@@ -142,7 +147,6 @@ dojo.declare("davinci.ve.themeEditor.ThemeColor", dojo.Color, {
 	calculateHighlightColor: function(normal, highlight){
 		var normalColor =new davinci.ve.themeEditor.ThemeColor(normal); 
 		var highlightColor = new davinci.ve.themeEditor.ThemeColor(highlight);
-		//var greenNormal = new davinci.ve.themeEditor.ThemeColor("#D5FFD4");
 		var calculateHighlight = new davinci.ve.themeEditor.ThemeColor('#FFFFFF'); //  just a place holder
 		var normalHsl = normalColor.toHsl();
 		var highlightHsl = highlightColor.toHsl();
@@ -161,7 +165,6 @@ dojo.declare("davinci.ve.themeEditor.ThemeColor", dojo.Color, {
 	getHoverColor: function(){
 		var normalColor =new davinci.ve.themeEditor.ThemeColor(normal); 
 		var highlightColor = new davinci.ve.themeEditor.ThemeColor(highlight);
-		//var greenNormal = new davinci.ve.themeEditor.ThemeColor("#D5FFD4");
 		var calculateHighlight = new davinci.ve.themeEditor.ThemeColor('#FFFFFF'); //  just a place holder
 		var normalHsl = normalColor.toHsl();
 		var highlightHsl = highlightColor.toHsl();
@@ -179,4 +182,5 @@ dojo.declare("davinci.ve.themeEditor.ThemeColor", dojo.Color, {
 	}
 
 
+});
 });

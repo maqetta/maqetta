@@ -1,7 +1,6 @@
 define([
 ], function() {
-	dojo.getObject("davinci.ve.utils.CssShortHand", true); // FIXME: shouldn't need this
-	return davinci.ve.utils.CssShortHand = /** @scope davinci.ve.utils.CssShortHand */ {
+	return /** @scope davinci.ve.utils.CssShortHand */ {
 
 		map:{
 				 'border' : ['border-width', 'border-style','border-color', 'border-top', 'border-left', 'border-right', 'border-bottom'],

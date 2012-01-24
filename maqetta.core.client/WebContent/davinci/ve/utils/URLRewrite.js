@@ -1,24 +1,23 @@
 define([
 ], function() {
-	dojo.getObject("davinci.ve.utils.URLRewrite", true); // FIXME: shouldn't need this
 
-	var URLRewrite = davinci.ve.utils.URLRewrite;
+/*
+ * 
+ * this class parses out the resource portion of a URL.  for example:
+ * 
+ * url('/something/something/1.jpg') will re
+ */
 
-	/*
-	 * 
-	 * this class parses out the resource portion of a URL.  for example:
-	 * 
-	 * url('/something/something/1.jpg') will re
-	 */
+var _START_REG_EX = /url{1}\s*\(('|"){1}/i;
+var _REWRITE_REG_EX = /url{1}\s*\(('|"){1}(.*)['"]\)/i;
+
+return {
 	
 	
-	URLRewrite._START_REG_EX =/url{1}\s*\(('|"){1}/i;
-	URLRewrite._REWRITE_REG_EX =/url{1}\s*\(('|"){1}(.*)['"]\)/i;
-	
-	URLRewrite.getUrlStartOffset = function(url){
+	getUrlStartOffset: function(url){
 		if(url==null)
 			return -1;
-		var foundAt = url.search(davinci.ve.utils.URLRewrite._START_REG_EX);
+		var foundAt = url.search(_START_REG_EX);
 		
 		for(var i = foundAt;i<url.length;i++){
 			if(url.charAt(i)=="'" || url.charAt(i)=="\"")
@@ -27,10 +26,10 @@ define([
 		}
 		
 		return ;
-	};
+	},
 	
-	URLRewrite.getUrlEndOffset = function(url){
-		var start = davinci.ve.utils.URLRewrite.getUrlStartOffset(url);
+	getUrlEndOffset: function(url){
+		var start = this.getUrlStartOffset(url);
 		
 		if(start<0) return start;
 		var found = 0;
@@ -40,36 +39,36 @@ define([
 				return i;
 			
 		}
-	};
+	},
 	
-	URLRewrite.containsUrl = function(url){
+	containsUrl: function(url){
 		if(url==null)
 			return false;
 		
-		return url.search(davinci.ve.utils.URLRewrite._START_REG_EX) >-1 ;
+		return url.search(_START_REG_EX) >-1 ;
 		
-	};
+	},
 	
-	URLRewrite.replaceUrl = function(oldUrl, newUrl){
+	replaceUrl: function(oldUrl, newUrl){
 		if(url==null)
 			return false;
 		
-		return oldUrl.replace(davinci.ve.utils.URLRewrite._REWRITE_REG_EX, "url('"+ newUrl + "')")  ;
+		return oldUrl.replace(_REWRITE_REG_EX, "url('"+ newUrl + "')")  ;
 		
-	};
+	},
 	
-	URLRewrite.getUrl = function(url){
+	getUrl: function(url){
 		
 		if(url==null)
 			return null;
 		
 		
-		var start = davinci.ve.utils.URLRewrite.getUrlStartOffset(url);
-		var end = davinci.ve.utils.URLRewrite.getUrlEndOffset(url);
+		var start = this.getUrlStartOffset(url);
+		var end = this.getUrlEndOffset(url);
 		
 		return url.substring(start,end);
-	};
+	}
 	
-	return URLRewrite;
+};
 	
 });

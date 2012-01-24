@@ -1,95 +1,93 @@
-dojo.provide("davinci.ui.Rename");
+define(["dojo/_base/declare",
+        "dijit/_Templated",
+        "dijit/_Widget",
+        "dojo/i18n!davinci/ui/nls/ui",
+        "dojo/i18n!dijit/nls/common",
+        "dojo/text!./templates/Rename.html"
 
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-dojo.require("dijit.form.Button");
-dojo.require("dijit.form.TextBox");
-dojo.require("dijit.form.RadioButton");
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ui", "ui");
-dojo.requireLocalization("dijit", "common");
-dojo.require("dojox.widget.Standby");
-
-dojo.declare("davinci.ui.Rename",   [dijit._Widget,dijit._Templated], {
-	widgetsInTemplate: true,
-	templateString: dojo.cache("davinci.ui", "templates/Rename.html"),
-	_okButton: null,
-	_newName : null,
-	_eclipseSupport: null,
+], function(declare, _Templated, _Widget,  uiNLS, commonNLS, templateString){
 	
-	postMixInProperties : function() {
-		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
-		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
-		dojo.mixin(this, langObj);
-		dojo.mixin(this, dijitLangObj);
-		if(!this.invalid)
-			this.invalid = {};
+	return declare("davinci.ui.Rename",   [_Widget,_Templated], {
+		widgetsInTemplate: true,
+		templateString: templateString,
+		_okButton: null,
+		_newName : null,
+		_eclipseSupport: null,
 		
-		this.inherited(arguments);
-	},
-	postCreate : function(){
-		this.inherited(arguments);
-		dojo.connect(this._newName, "onkeyup", this, '_checkValid');
-		if(this.value){
-			this._setValueAttr(this.value);
-		}
-		
-		if(this.invalid){
-			this._setInvalidAttr(this.invalid);
-		}
-		
-	},
-	
-	_setInvalidAttr : function(values){
-		this.invalid = values;
-	},
-	
-	_checkValid : function(){
-		
-		// make sure the project name is OK.
-		var name = dojo.attr(this._newName, "value");
-		var valid = (name!=null && name.length>0);
-		
-		for(var i=0;i<this.invalid.length && valid;i++){
-			if(this.invalid[i]==name) 
-				valid = false;
-		}
-		this._okButton.set( 'disabled', !valid);
-	},
-	
-	okButton : function(){
-		this.value = dojo.attr(this._newName, "value");
+		postMixInProperties : function() {
+			var langObj = uiNLS;
+			var dijitLangObj = commonNLS;
+			dojo.mixin(this, langObj);
+			dojo.mixin(this, dijitLangObj);
+			if(!this.invalid)
+				this.invalid = {};
 			
-		this.onClose();
-	},
-	
-	_getValueAttr : function(){
-		return this.value;
-	},
-	
-	_setValueAttr : function(value){
+			this.inherited(arguments);
+		},
+		postCreate : function(){
+			this.inherited(arguments);
+			dojo.connect(this._newName, "onkeyup", this, '_checkValid');
+			if(this.value){
+				this._setValueAttr(this.value);
+			}
+			
+			if(this.invalid){
+				this._setInvalidAttr(this.invalid);
+			}
+			
+		},
 		
-		this.value = value;
-		if(this._newName){
-			dojo.attr(this._newName, "value", this.value);
-		}
-		this._checkValid();
-	},
-	
-	
-	cancelButton: function(){
-		this.cancel = true;
-		this.onClose();
-	},
+		_setInvalidAttr : function(values){
+			this.invalid = values;
+		},
+		
+		_checkValid : function(){
+			
+			// make sure the project name is OK.
+			var name = dojo.attr(this._newName, "value");
+			var valid = (name!=null && name.length>0);
+			
+			for(var i=0;i<this.invalid.length && valid;i++){
+				if(this.invalid[i]==name) 
+					valid = false;
+			}
+			this._okButton.set( 'disabled', !valid);
+		},
+		
+		okButton : function(){
+			this.value = dojo.attr(this._newName, "value");
+				
+			this.onClose();
+		},
+		
+		_getValueAttr : function(){
+			return this.value;
+		},
+		
+		_setValueAttr : function(value){
+			
+			this.value = value;
+			if(this._newName){
+				dojo.attr(this._newName, "value", this.value);
+			}
+			this._checkValid();
+		},
+		
+		
+		cancelButton: function(){
+			this.cancel = true;
+			this.onClose();
+		},
 
-	_getCancelAttr : function(value){
-		return this.cancel;
-	},
-	
-	onClose : function(){}
+		_getCancelAttr : function(value){
+			return this.cancel;
+		},
+		
+		onClose : function(){}
 
 
-	
+		
 
 
+	});
 });

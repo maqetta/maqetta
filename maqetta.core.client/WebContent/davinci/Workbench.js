@@ -1587,11 +1587,11 @@ dojo.declare("davinci.workbench._PopupMenu", Menu, {
 	menuOpened: function (event) {},
 	
 	_openMyself: function(event){
-		Workbench.menuOpened(event);
+		this.menuOpened(event);
 		var open = undefined;
 		try{
-			if(Workbench.adjustPosition){
-				var offsetPosition=Workbench.adjustPosition(event);
+			if(this.adjustPosition){
+				var offsetPosition=this.adjustPosition(event);
 					open = dijit.popup.open;
 					dijit.popup.open = function(args){
 						args.x += offsetPosition.x;

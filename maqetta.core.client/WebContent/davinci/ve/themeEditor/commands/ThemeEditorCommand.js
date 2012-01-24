@@ -1,5 +1,9 @@
-dojo.provide("davinci.ve.themeEditor.commands.ThemeEditorCommand");
-dojo.declare("davinci.ve.themeEditor.commands.ThemeEditorCommand", null, {
+define([
+    	"dojo/_base/declare"
+], function(declare){
+
+
+return declare("davinci.ve.themeEditor.commands.ThemeEditorCommand", null, {
 
 	constructor: function(args){
 		dojo.mixin(this, args);
@@ -58,5 +62,6 @@ dojo.declare("davinci.ve.themeEditor.commands.ThemeEditorCommand", null, {
 	}
 		
 
+});
 });
 

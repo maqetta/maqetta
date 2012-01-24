@@ -1,8 +1,9 @@
-dojo.provide("davinci.ve.commands.ChangeThemeCommand");
+define([
+    	"dojo/_base/declare"
+], function(declare){
 
 
-dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
-
+return declare("davinci.ve.commands.ChangeThemeCommand", null, {
     name: "changeTheme",
 
     constructor: function(newTheme, context){
@@ -302,5 +303,6 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
     
   
 
+});
 });
 

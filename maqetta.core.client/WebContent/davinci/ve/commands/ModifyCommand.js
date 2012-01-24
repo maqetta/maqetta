@@ -1,11 +1,12 @@
-dojo.provide("davinci.ve.commands.ModifyCommand");
+define([
+    	"dojo/_base/declare",
+    	"davinci/ve/widget",
+    	"davinci/ve/utils/ImageUtils",
+    	"davinci/ve/States"
+], function(declare, Widget,  ImageUtils, States){
 
 
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.ve.utils.ImageUtils");
-
-dojo.declare("davinci.ve.commands.ModifyCommand", null, {
-
+return declare("davinci.ve.commands.ModifyCommand", null, {
 	name: "modify",
 
 	// XXX Most often only called with first 2 params. SmartInput.js passes in
@@ -15,12 +16,7 @@ dojo.declare("davinci.ve.commands.ModifyCommand", null, {
 
 		this._oldId = (widget ? widget.id : undefined);
 		this._properties = properties = (properties || {});
-//		if (properties.richText) {// wdr richtext
-//			this._children = properties.richText; //wdr richtext
-//			delete properties.richText; //wdr richtext
-//		}
-//		else 
-			this._children = children || properties._children;
+		this._children = children || properties._children;
 		this._context = context || widget.getContext();;
 		this._scripts = scripts;
 		delete this._properties._children;
@@ -51,7 +47,7 @@ dojo.declare("davinci.ve.commands.ModifyCommand", null, {
 			return;
 		}
 		
-		var widget = davinci.ve.widget.byId(this._oldId);
+		var widget = Widget.byId(this._oldId);
 		if(!widget){
 			return;
 		}
@@ -96,50 +92,25 @@ dojo.declare("davinci.ve.commands.ModifyCommand", null, {
 		var parentWidget = widget.getParent();
 		var newWidget = null;
 		/* make sure the parent widget supports our re-childrening commands */
-//		if(parentWidget && parentWidget.getIndexOfChild && parentWidget.removeChild && parentWidget.addChild ){
-			var index = parentWidget.indexOf(widget);
-			parentWidget.removeChild(widget);
-			widget.destroyWidget(); 
-			newWidget = davinci.ve.widget.createWidget(this._newData);
-			
-			if(!newWidget){
-				return;
-			}
 
-			// IMG elements don't have a size until they are actually loaded
-			// so selection/focus box will be wrong upon creation.
-			// To fix, register an onload handler which calls updateFocus()
-			if(newWidget.domNode.tagName === 'IMG'){
-				davinci.ve.utils.ImageUtils.ImageUpdateFocus(newWidget, this._context);
-			}
+		var index = parentWidget.indexOf(widget);
+		parentWidget.removeChild(widget);
+		widget.destroyWidget(); 
+		newWidget = Widget.createWidget(this._newData);
+		
+		if(!newWidget){
+			return;
+		}
 
-			parentWidget.addChild(newWidget,index);
+		// IMG elements don't have a size until they are actually loaded
+		// so selection/focus box will be wrong upon creation.
+		// To fix, register an onload handler which calls updateFocus()
+		if(newWidget.domNode.tagName === 'IMG'){
+			ImageUtils.ImageUpdateFocus(newWidget, this._context);
+		}
+
+		parentWidget.addChild(newWidget,index);
 			
-//		}else{
-//			var tempDiv = dojo.doc.createElement("div");
-//			var domNode = widget.domNode?widget.domNode:widget;
-//		
-//			var parent = domNode.parentNode;
-//			
-//			parent.replaceChild(tempDiv, domNode);
-//			widget.destroyWidget();
-//			newWidget = davinci.ve.widget.createWidget(this._newData);
-//			
-//			if(!newWidget){
-//				return;
-//			}
-//			var domNode = null;
-//			if(newWidget.domNode)
-//				domNode = newWidget.domNode;
-//			else
-//				domNode = newWidget;
-//
-//			// add new
-//			parent.replaceChild(  domNode, tempDiv);
-//			if(!this._newId){
-//				this._newId = newWidget.id;
-//			}
-//		}
 		
 		this._newId = newWidget.id;
 
@@ -187,7 +158,7 @@ dojo.declare("davinci.ve.commands.ModifyCommand", null, {
 		if(!this._newId || !this._oldData){
 			return;
 		}
-		var widget = davinci.ve.widget.byId(this._newId);
+		var widget = Widget.byId(this._newId);
 		if(!widget){
 			return;
 		}
@@ -209,7 +180,7 @@ dojo.declare("davinci.ve.commands.ModifyCommand", null, {
 		widget.destroyWidget(); 
 
 		// add old
-		newWidget = davinci.ve.widget.createWidget(this._oldData);
+		newWidget = Widget.createWidget(this._oldData);
 		if(!newWidget){
 			return;
 		}
@@ -230,4 +201,5 @@ dojo.declare("davinci.ve.commands.ModifyCommand", null, {
 		davinci.ve.states.resetState(newWidget);
 	}
 
+});
 });

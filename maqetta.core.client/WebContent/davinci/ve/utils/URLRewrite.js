@@ -70,4 +70,6 @@ define([
 		return url.substring(start,end);
 	};
 	
+	return URLRewrite;
+	
 });

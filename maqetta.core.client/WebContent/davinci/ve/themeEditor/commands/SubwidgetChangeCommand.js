@@ -1,12 +1,16 @@
-dojo.require("davinci.ve.themeEditor.commands.ThemeEditorCommand");
-dojo.provide("davinci.ve.themeEditor.commands.SubwidgetChangeCommand");
-dojo.declare("davinci.ve.themeEditor.commands.SubwidgetChangeCommand", davinci.ve.themeEditor.commands.ThemeEditorCommand, {
+define([
+    	"dojo/_base/declare",
+    	"davinci/ve/themeEditor/commands/ThemeEditorCommand"
+], function(declare, ThemeEditorCommand){
+
+
+return declare("davinci.ve.themeEditor.commands.SubwidgetChangeCommand", [ThemeEditorCommand], {
 
 	constructor: function(args){
 		dojo.mixin(this, args);
 	},
+	
 	execute: function(){
-		//debugger;
 		this._old__selectedWidget = this._themeEditor._selectedWidget;
 		this._old_selectedSubWidget = this._themeEditor._selectedSubWidget;
 		this._themeEditor._selectedSubWidget = this._subwidget;
@@ -21,7 +25,6 @@ dojo.declare("davinci.ve.themeEditor.commands.SubwidgetChangeCommand", davinci.v
 		
 	},
 	undo: function(){
-		//debugger;
 		this._themeEditor.deselectSubwidget(this._themeEditor._selectedWidget,this._themeEditor._selectedSubWidget);
 		this._themeEditor.selectSubwidget(this._old__selectedWidget,this._old_selectedSubWidget);
 		this._themeEditor._selectedWidget = this._old__selectedWidget;
@@ -32,4 +35,5 @@ dojo.declare("davinci.ve.themeEditor.commands.SubwidgetChangeCommand", davinci.v
 
 	
 	}
+});
 });

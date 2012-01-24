@@ -1,5 +1,6 @@
 define([
 	"dojo/_base/declare",
+	"davinci/ve/input/SmartInput",
 	"davinci/ve/commands/ModifyRichTextCommand",
 	"dijit/Editor",  // we need editor in order for the editor to be displayed
 	"dijit/_editor/plugins/LinkDialog", // need the plugins for the editor toolbar
@@ -8,11 +9,11 @@ define([
 	"dojox/html/entities",
 	"dojo/i18n!davinci/ve/nls/ve",
 	"dojo/i18n!dijit/nls/common"
-], function(declare, ModifyRichTextCommand,  Editor, LinkDialog, 
+], function(declare, SmartInput, ModifyRichTextCommand,  Editor, LinkDialog, 
 		TextColor, FontChoice, Entities, veNls, commonNls){
 
 
-return declare("davinci.ve.input.RichTextInput", [davinci.ve.input.SmartInput], {
+return declare("davinci.ve.input.RichTextInput", [SmartInput], {
 
 	property: 'richText',
     displayOnCreate: 'true',

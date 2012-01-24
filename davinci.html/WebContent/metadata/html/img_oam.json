@@ -1,22 +1,19 @@
 {
-    "id": "http://www.w3.org/html/img",
-    "name": "html.img",
-    "spec": "1.0",
-    "version": "1.0",
-    "property": {
-        "name": {
-            "datatype": "string",
-            "title": "Name"
-        },
-        "src": {
-            "datatype": "string",
-            "format": "url",
-            "title": "URL"
-        },
-        "alt": {
-            "datatype": "string",
-            "title": "Alt text"
-        }
-    },
-    "content": "<img></img>"
+	"id": "http://www.w3.org/html/img",
+	"name": "html.img",
+	"spec": "1.0",
+	"version": "1.0",
+	"property": {
+		"name": {
+			"datatype": "string"
+		},
+		"src": {
+			"datatype": "string",
+			"format": "url"
+		},
+		"alt": {
+			"datatype": "string"
+		}
+	},
+	"content": "<img></img>"
 }

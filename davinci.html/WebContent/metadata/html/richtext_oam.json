@@ -1,7 +1,7 @@
 {
-    "id": "http://www.ibm.com/davinci/richtext",
-    "name": "html.richtext",
-    "spec": "1.0",
-    "version": "1.0",
-    "content": "<div></div>"
+	"id": "http://www.ibm.com/davinci/richtext",
+	"name": "html.richtext",
+	"spec": "1.0",
+	"version": "1.0",
+	"content": "<div></div>"
 }

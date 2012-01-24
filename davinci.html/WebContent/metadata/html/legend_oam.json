@@ -1,0 +1,7 @@
+{
+	"id": "http://www.w3.org/html/legend",
+    "name": "html.legend",
+    "spec": "1.0",
+    "version": "1.0",
+	"content": "<legend></legend>"
+}

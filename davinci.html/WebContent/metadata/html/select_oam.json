@@ -1,0 +1,29 @@
+{
+	"id": "http://www.w3.org/html/select",
+	"name": "html.select",
+	"spec": "1.0",
+	"version": "1.0",
+	"property": {	
+		"autofocus": {
+			"datatype": "boolean",
+			"description": "Specifies that the drop-down list should automatically get focus when the page loads"
+		},	
+		 "disabled": {
+			"datatype": "boolean",
+			"description": "Specifies that the drop-down list should be disabled"
+		},
+		"multiple": {
+			"datatype": "boolean",
+			"description": "Specifies that multiple items can be selected at once"
+		},
+		"name": {
+			"datatype": "string",
+			"description": "Defines a name for the drop-down list"
+		},
+		"size": {
+			"datatype": "number",
+			"description": "Defines the number of visible options in the drop-down list",
+		}
+	},
+	"content": "<select></select>"
+}

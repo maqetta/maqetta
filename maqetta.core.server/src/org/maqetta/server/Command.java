@@ -37,7 +37,7 @@ public abstract class Command {
         return workingCopy;
     }
 
-    protected static final void transferStreams(InputStream source, OutputStream destination, boolean closeInput) throws IOException {
+    public static final void transferStreams(InputStream source, OutputStream destination, boolean closeInput) throws IOException {
         byte[] buffer = new byte[8192];
         try {
             synchronized(buffer){

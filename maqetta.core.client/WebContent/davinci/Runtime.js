@@ -32,10 +32,7 @@ var Runtime = {
 				Runtime._loadPlugin(responseObject,url);
 			},
 			error: function(response, ioArgs) {
-				if (response.status==401)
-				{
-//					Runtime.doLogin();
-//					retry=true;
+				if (response.status==401) {
 					window.location.reload();
 				} else {
 					Runtime.handleError(dojo.string.substitute(webContent.errorLoadingPlugin, [pluginName, response]));
@@ -44,7 +41,7 @@ var Runtime = {
 		});
 	},
 
-	getUser: function(){
+	getUser: function() {
 		return dojo.cookie("DAVINCI.USER");
 	},
 	
@@ -59,13 +56,9 @@ var Runtime = {
 			   Runtime._loadPlugins(responseObject);
 			},
 			error: function(response, ioArgs) {
-				if (response.status==401)
-				{
-//					Runtime.doLogin();
-//					retry=true;
-					//window.location.reload();
+				if (response.status==401) {
 					window.location.href= 'welcome';
-				}else{
+				} else {
 					Runtime.handleError(webContent.errorLoadingPlugins);
 				}
 			}
@@ -82,12 +75,12 @@ var Runtime = {
 	/*
 	 * running in single project mode or multi project mode
 	 */
-	singleProjectMode: function(){
+	singleProjectMode: function() {
 		return true;
 	},
 	
 	
-	singleUserMode: function(){
+	singleUserMode : function() {
 		return Runtime.isLocalInstall;
 	},
 
@@ -96,7 +89,7 @@ var Runtime = {
 	 * 
 	 */
 	
-	getProject: function(){
+	getProject: function() {
 		/*
 		var params = davinci.Workbench.queryParams();
 		if(params.project) {
@@ -106,7 +99,7 @@ var Runtime = {
 		return davinci.Workbench.getActiveProject() || Runtime._DEFAULT_PROJECT;
 	},
 	
-	loadProject: function(projectName){
+	loadProject: function(projectName) {
 		/*
 		var params = davinci.Workbench.queryParams();
 		params.project = encodeURI(projectName);
@@ -118,12 +111,87 @@ var Runtime = {
 		location.reload(true);
 	},
 	
+	getRole: function() {
+		if (!Runtime.commenting_designerName) { 
+			return "Designer";
+		} else {
+			if (!davinci.Runtime.userInfo) {
+		        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+				var result = Runtime.serverJSONRequest({
+					url: location + "maqetta/cmd/getReviewUserInfo",
+					sync: true
+				});
+				Runtime.userInfo = result;
+			}
+			if(Runtime.userInfo.userName==Runtime.commenting_designerName)
+				return "Designer";
+		}
+		return "Reviewer";
+	},
+	
+	getDesigner: function() {
+		if (Runtime.commenting_designerName) {
+			return Runtime.commenting_designerName;
+		} else {
+			if (!Runtime.userInfo) {
+		        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+				var result = Runtime.serverJSONRequest({
+					url: location + "maqetta/cmd/getReviewUserInfo",
+					sync: true
+				});
+					Runtime.userInfo = result;
+			}
+			return Runtime.userInfo.userName;
+		}
+	},
+	
+	getDesignerEmail: function() {
+		if (Runtime.commenting_designerEmail) {
+			return davinci.Runtime.commenting_designerEmail;
+		} else {
+			if (!Runtime.userInfo) {
+		        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+				var result = Runtime.serverJSONRequest({
+					url: location + "maqetta/cmd/getReviewUserInfo",
+					sync: true
+				});
+				Runtime.userInfo = result;
+			}
+			return Runtime.userInfo.email;
+		}
+	},
+	
+	publish: function(node) {
+		var publish = new davinci.review.actions.PublishAction();
+		publish.run(node);
+	},
+	
+	//two modes in design page and in review page
+	getMode: function() {
+		if (Runtime.commenting_designerName) {
+			return "reviewPage";
+		} else { return "designPage"; }
+	},
+	
+	
+	getColor: function(/*string*/ name) {
+		var index;
+		dojo.some(Runtime.reviewers,function(item,n){
+			if (item.name==name) {
+				index = n;
+				return true;
+			}
+			return false;
+		});
+		return davinci.review.colors.colors[index];
+	},
+	
 	run: function() {
 		// add class to root HTML element to indicate if mac or windows
 		// this is because of different alignment on mac/chrome vs win/chrome
 		// FIXME: this platform-dependent logic might not be necessary if
 		// main toolbar changes or different CSS applies to that toolbar
-		if(dojo.isMac){
+		if (dojo.isMac) {
 			dojo.addClass(document.documentElement,"isMac");
 		}
 		
@@ -161,18 +229,18 @@ var Runtime = {
 		};
 	},
 	
-	unload: function () {
+	unload: function() {
 		davinci.Workbench.unload();
 	},
-
-	subscribe: function(topic, func) {
+	
+	subscribe: function(topic,func) {
 		Runtime.subscriptions.push(dojo.subscribe(topic,this,func));
 	},
 	
-	destroy: function () {
+	destroy: function() {
 		dojo.forEach(Runtime.subscriptions, dojo.unsubscribe);
 	},
-
+	
 	_loadPlugin: function(plugin,url) {
 		var pluginID = plugin.id;
 		Runtime.plugins[pluginID] = plugin;
@@ -217,15 +285,17 @@ var Runtime = {
 				return extensions.filter(function(ext) {
 					return (isFunction && testFunction(ext)) || ext.id == testFunction;
 				});
-			}
-		}
-		return extensions;
+						}
+					}
+			return extensions;
 	},
 	
 	getExtension: function(extensionID, testFunction) {
 		return Runtime.getExtensions(extensionID, testFunction)[0];
 	},
-
+	
+	
+	
 	handleError: function(error) {
 		var redirectUrl = "welcome";
 		if(Runtime.singleUserMode()){
@@ -248,24 +318,22 @@ var Runtime = {
 		headID.appendChild(cssNode);
 	},
 		
-	executeCommand: function (cmdID) {
+	executeCommand: function(cmdID) {
 		var cmd=Runtime.getExtension("davinci.commands", cmdID);
 		if (cmd && cmd.run) {
 			cmd.run();
 		}
 	},
 	
-	_selectionChanged: function (selection) {
+	_selectionChanged: function(selection) {
 		Runtime.currentSelection=selection;
 	},
 	
-	getSelection: function () {
+	getSelection: function() {
 		return Runtime.currentSelection;
 	},
 
-
-	doLogin: function(){
-
+	doLogin: function() {
 		var retry=true;
 		var formHtml = "<table>" +
         "<tr><td><label for=\"username\">User: </label></td>" +
@@ -279,9 +347,8 @@ var Runtime = {
 				onExecute:function(){
 					dojo.xhrGet({url:"cmd/login",sync:true,handleAs:"text",
 						content:{'userName':dojo.byId("username").value, 'password': dojo.byId("password").value, 'noRedirect':true}
-					}).then(function(result){
-			            if (result=="OK")
-			            {
+					}).then(function(result) {
+			            if (result=="OK") {
 			            	// cheap fix.
 			            	//window.location.reload();
 			            	window.location.href= 'welcome';
@@ -289,7 +356,7 @@ var Runtime = {
 			            } else {
 			            	console.warn("Unknown error: result="+result);
 			            }
-					}, function(error){
+					}, function(error) {
 						console.warn("Login error", error);
 					});
 				    isInput=true;
@@ -297,13 +364,8 @@ var Runtime = {
 				onCancel:function(){isInput=true;Runtime.destroyRecursive(false);}
 			});	
 			dialog.setContent(formHtml);
-			dialog.show();
-//TODO: find a way to wait here (instead of alert)
-			//alert("must log in");
-			
+			dialog.show();			
 		} while (retry);
-		
-
 	},
 	
 	serverJSONRequest: function (ioArgs) {
@@ -314,9 +376,6 @@ var Runtime = {
 		var retry = false;
 		function onError(response, ioArgs) {
 			if (response.status==401) {
-//				Runtime.doLogin();
-//				retry=true;
-				//window.location.reload();
 				window.location.href= 'welcome';
 			} else if (response.status==400) {
 				Runtime.handleError("unknown error: status="+ response.status);
@@ -330,13 +389,13 @@ var Runtime = {
 		args.error=onError;
 			    
 		do {
-		 	dojo.xhrGet(args).then(function(result) {
-			 	if (result) {
-			 		resultObj = result;
-			 	}
-		 	}, function(error) {
+			dojo.xhrGet(args).then(function(result) {
+				if (result) {
+					resultObj=result;
+				}
+			}, function(error) {
 		 		Runtime.handleError(error);
-		 	});
+			});
 		} while (retry);	
 
 		return resultObj;

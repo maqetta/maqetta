@@ -851,7 +851,7 @@ davinci.html.HTMLAttribute.prototype.getText = function(context) {
     if (this.noPersist && !context.includeNoPersist)
         return "";
     var s=this.name;
-    var bool = {checked: 1, selected: 1, disabled: 1, readonly: 1, multiple: 1, ismap: 1};
+    var bool = {checked: 1, selected: 1, disabled: 1, readonly: 1, multiple: 1, ismap: 1, autofocus: 1, autoplay: 1, controls: 1, formnovalidate: 1, loop: 1, muted: 1, required: 1};
     if (bool[this.name.toLowerCase()]) {
     	if (this.value && this.value != "false") {
     		s += '="' + this.name + '"';

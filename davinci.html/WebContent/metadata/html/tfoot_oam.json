@@ -1,50 +1,48 @@
 {
-    "id": "http://www.w3.org/html/tfoot",
-    "name": "html.tfoot",
-    "spec": "1.0",
-    "version": "1.0",
-    "property": {
-        "align": {
-            "datatype": "string",
-            "option": [
-                {
-                    "value": ""
-                },
-                {
-                    "value": "left"
-                },
-                {
-                    "value": "center"
-                },
-                {
-                    "value": "right"
-                }
-            ],
-            "defaultValue": "left",
-            "title": "Horizontal Alignment"
-        },
-        "valign": {
-            "datatype": "string",
-            "option": [
-                {
-                    "value": ""
-                },
-                {
-                    "value": "top"
-                },
-                {
-                    "value": "middle"
-                },
-                {
-                    "value": "bottom"
-                },
-                {
-                    "value": "baseline"
-                }
-            ],
-            "defaultValue": "middle",
-            "title": "Vertical Alignment"
-        }
-    },
-    "content": "<tfoot></tfoot>"
+	"id": "http://www.w3.org/html/tfoot",
+	"name": "html.tfoot",
+	"spec": "1.0",
+	"version": "1.0",
+	"property": {
+		"align": {
+			"datatype": "string",
+			"option": [
+				{
+					"value": ""
+				},
+				{
+					"value": "left"
+				},
+				{
+					"value": "center"
+				},
+				{
+					"value": "right"
+				}
+			],
+			"defaultValue": "left",
+		},
+		"valign": {
+			"datatype": "string",
+			"option": [
+				{
+					"value": ""
+				},
+				{
+					"value": "top"
+				},
+				{
+					"value": "middle"
+				},
+				{
+					"value": "bottom"
+				},
+				{
+					"value": "baseline"
+				}
+			],
+			"defaultValue": "middle",
+		}
+	},
+	"content": "<tfoot></tfoot>"
 }

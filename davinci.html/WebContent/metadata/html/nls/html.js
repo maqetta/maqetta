@@ -1,8 +1,8 @@
-({
+define({ root: {
 		
 		//html/HtmlSrcAttributeInput.js
-		"typeFileUrl":"type file url",
-		"typeAltText":"type alternate text",
+		"typeFileUrl":"File URL:",
+		"typeAltText":"Alt text:",
 		"selectSource":"Select a source"
 
-})
+}});

@@ -1,208 +1,216 @@
 define([
 	"dojo/_base/Color"
 ], function(Color) {
-	dojo.getObject("davinci.ve.utils.CssUtils", true); // FIXME: shouldn't need this
-
-	var CssUtils = davinci.ve.utils.CssUtils;
 	
-	// Build an array of colors from dojo._base.Color
-	var names = [];
-	for(var name in Color.named){
-		if(name!='transparent'){	// Dojo lists transparent as a color, but it really isn't a color, it's a keyword
-			names.push(name);
-		}
+// Build an array of colors from dojo._base.Color
+var names = [];
+for(var name in Color.named){
+	if(name!='transparent'){	// Dojo lists transparent as a color, but it really isn't a color, it's a keyword
+		names.push(name);
 	}
-	names.sort(function(a,b){
-		// regex logic needs lavendarblush to be before lavendar, etc, otherwise will never match lavendarblush
-		// so special handling if the first N letters of a are at start of b, or first N letters of b are at start of a
-		if(b.indexOf(a)==0){
-			return 1;
-		}else if(a.indexOf(b)==0){
-			return -1;
-		}else{
-			// regular old string compare
-			return a < b ? -1 : 1;
-		}
-	});
-	var cssColorNames = [];
-	names.forEach(function(name){
-		cssColorNames.push(name);
-		var val = Color.named[name];
-		var hex = "#" + ((1 << 24) + (val[0] << 16) + (val[1] << 8) + val[2]).toString(16).slice(1);
-		cssColorNames.push(hex);
-	});
-
-	var nonneg = '(?:\\d*\\.\\d+|\\d+)';
-	var num = '\\-?' + nonneg;
-	var hex = '[0-9A-Fa-f]';
-	var hexcolor = '\\#(?:' + hex + '{6}|' + hex + '{3})';
-	var nonneg_or_pct = '(?:' + nonneg + '%?)';
-	var num_or_pct = '(?:' + num + '%?)';
-	var angle = '(?:' + num + 'deg)';
-	var len_or_pct = '(?:' + num + '(?:in|cm|mm|pt|pc|px|%)|0)';	
-	var posn_component = '(?:' + len_or_pct + '|(?:left|center|right|top|bottom))';
-	var posn = '\\s*' + posn_component + '(?:\\s*' + posn_component + ')?';
-	var extent_keyword = '(?:closest-side|farthest-side|closest-corner|farthest-corner|contain|cover)';
-	var extent = '(?:' + extent_keyword + '|(?:' + len_or_pct + '(?:\\s+' + len_or_pct + '\\s*)?))';
-	var extent_grouped = '(?:(' + extent_keyword + ')|(?:(' + len_or_pct + ')(?:\\s+(' + len_or_pct + ')\\s*)?))';
-	CssUtils.regex_extent_grouped = new RegExp(extent_grouped);
-	var shape = 'circle|ellipse';
-	var side = '(?:\\s*left\\s*|\\s*right\\s*|\\s*top\\s*|\\s*bottom\\s*){1,2}';
-	var to_side = 'to\\s+(' + side + ')';
-	var dir = '(?:' + to_side + '|(' + side + ')|(' + angle + '))';
-	var dir_strict = '(?:' + to_side + '|(' + angle + '))';
-	var optional_dir = '(?:' + dir + '\\s*,\\s*)?';
-	var colorfunc3 = '(?:rgb|hsl)\\s*\\(\\s*' + nonneg_or_pct + '\\s*,\\s*' + nonneg_or_pct + '\\s*,\\s*' + nonneg_or_pct + '\\s*\\)';
-	var colorfunc4 = '(?:rgba|hsla)\\s*\\(\\s*' + nonneg_or_pct + '\\s*,\\s*' + nonneg_or_pct + '\\s*,\\s*' + nonneg_or_pct + '\\s*,\\s*' + nonneg + '\\s*\\)';
-	var shape_and_or_extent = '(?:\\s*(' + shape + ')\\s*(' + extent + ')\\s*|\\s*(' + extent + ')\\s*(' + shape+ ')\\s*|\\s*(' + shape + ')\\s*|\\s*(' + extent + ')\\s*)';
-	var posn_and_or_angle = '(?:\\s*(' + posn + ')\\s*(' + angle + ')\\s*|\\s*(' + posn + ')\\s*|\\s*(' + angle + ')\\s*)';
-	var posn_and_or_angle_opt_comma = '(?:\\s*' + posn_and_or_angle + '\\s*,\\s*)?';
-	var shape_and_or_extent_opt_comma = '(?:\\s*' + shape_and_or_extent + '\\s*,\\s*)?';
-	
-	CssUtils.regex_num = new RegExp('^' + num + '$');
-	CssUtils.regstr_angle = '^\\s*' + dir_strict + '\\s*$';
-	CssUtils.regstr_len_or_pct = '^\\s*' + len_or_pct + '\\s*$';
-	CssUtils.regstr_posn = '^\\s*' + posn + '\\s*$';
-	CssUtils.regstr_shape = '^\\s*' + shape + '\\s*$';
-	CssUtils.regstr_extent = '^\\s*' + extent + '\\s*$';
-	
-	var colornames = '(?:';
-	for (var i=0; i<cssColorNames.length; i+=2){
-		if(i!=0){
-			colornames += '|';
-		}
-		var colorname = cssColorNames[i];
-		colornames += colorname;
+}
+names.sort(function(a,b){
+	// regex logic needs lavendarblush to be before lavendar, etc, otherwise will never match lavendarblush
+	// so special handling if the first N letters of a are at start of b, or first N letters of b are at start of a
+	if(b.indexOf(a)==0){
+		return 1;
+	}else if(a.indexOf(b)==0){
+		return -1;
+	}else{
+		// regular old string compare
+		return a < b ? -1 : 1;
 	}
-	colornames += ')';
-	
-	var color = '(?:' + colornames + '|' + hexcolor + '|' + colorfunc3 + '|' + colorfunc4 + ')';
-	var colorstop = '(?:' + color + '(?:\\s+' + len_or_pct + ')?)';
-	CssUtils.colorstop_first = '(?:\\s*(' + color + ')\\s*(' + len_or_pct + ')?\\s*,?(.*))';
-	CssUtils.regex_colorstop_first = new RegExp(CssUtils.colorstop_first);
-	var colorstops = '(' + colorstop + '(?:\\s*,\\s*' + colorstop + ')*' + ')';
+});
+var cssColorNames = [];
+names.forEach(function(name){
+	cssColorNames.push(name);
+	var val = Color.named[name];
+	var hex = "#" + ((1 << 24) + (val[0] << 16) + (val[1] << 8) + val[2]).toString(16).slice(1);
+	cssColorNames.push(hex);
+});
 
-	var linearfunc = '(?:-moz-linear-gradient|-webkit-linear-gradient|-ms-linear-gradient|-o-linear-gradient|linear-gradient)';
-	var radialfunc = '(?:-moz-radial-gradient|-webkit-radial-gradient|-ms-radial-gradient|-o-radial-gradient|radial-gradient)';
-	
-	var singlequotedUrl = '\\\'([^\\\']*)\\\'*';
-	var doublequotedUrl = '\\\"([^\\\"]*)\\\"';
-	var unquotedUrl = '([^\\\'\\\"]*)';
-	var urlValue = '(?:' + singlequotedUrl + '|' + doublequotedUrl + '|' + unquotedUrl + ')';
-	
-	CssUtils.url = '^\\s*' + '(url)' + '\\s*\\(\\s*' + urlValue + '\\s*\\)\\s*$';
-	CssUtils.regex_url = new RegExp(CssUtils.url);
-	CssUtils.regstr_stop_color = '\\s*' + color + '\\s*';
-	CssUtils.regstr_stop_pos = '\\s*' + len_or_pct + '\\s*';
+var nonneg = '(?:\\d*\\.\\d+|\\d+)';
+var num = '\\-?' + nonneg;
+var hex = '[0-9A-Fa-f]';
+var hexcolor = '\\#(?:' + hex + '{6}|' + hex + '{3})';
+var nonneg_or_pct = '(?:' + nonneg + '%?)';
+var num_or_pct = '(?:' + num + '%?)';
+var angle = '(?:' + num + 'deg)';
+var len_or_pct = '(?:' + num + '(?:in|cm|mm|pt|pc|px|%)|0)';	
+var posn_component = '(?:' + len_or_pct + '|(?:left|center|right|top|bottom))';
+var posn = '\\s*' + posn_component + '(?:\\s*' + posn_component + ')?';
+var extent_keyword = '(?:closest-side|farthest-side|closest-corner|farthest-corner|contain|cover)';
+var extent = '(?:' + extent_keyword + '|(?:' + len_or_pct + '(?:\\s+' + len_or_pct + '\\s*)?))';
+var extent_grouped = '(?:(' + extent_keyword + ')|(?:(' + len_or_pct + ')(?:\\s+(' + len_or_pct + ')\\s*)?))';
+var regex_extent_grouped = new RegExp(extent_grouped);
+var shape = 'circle|ellipse';
+var side = '(?:\\s*left\\s*|\\s*right\\s*|\\s*top\\s*|\\s*bottom\\s*){1,2}';
+var to_side = 'to\\s+(' + side + ')';
+var dir = '(?:' + to_side + '|(' + side + ')|(' + angle + '))';
+var dir_strict = '(?:' + to_side + '|(' + angle + '))';
+var optional_dir = '(?:' + dir + '\\s*,\\s*)?';
+var colorfunc3 = '(?:rgb|hsl)\\s*\\(\\s*' + nonneg_or_pct + '\\s*,\\s*' + nonneg_or_pct + '\\s*,\\s*' + nonneg_or_pct + '\\s*\\)';
+var colorfunc4 = '(?:rgba|hsla)\\s*\\(\\s*' + nonneg_or_pct + '\\s*,\\s*' + nonneg_or_pct + '\\s*,\\s*' + nonneg_or_pct + '\\s*,\\s*' + nonneg + '\\s*\\)';
+var shape_and_or_extent = '(?:\\s*(' + shape + ')\\s*(' + extent + ')\\s*|\\s*(' + extent + ')\\s*(' + shape+ ')\\s*|\\s*(' + shape + ')\\s*|\\s*(' + extent + ')\\s*)';
+var posn_and_or_angle = '(?:\\s*(' + posn + ')\\s*(' + angle + ')\\s*|\\s*(' + posn + ')\\s*|\\s*(' + angle + ')\\s*)';
+var posn_and_or_angle_opt_comma = '(?:\\s*' + posn_and_or_angle + '\\s*,\\s*)?';
+var shape_and_or_extent_opt_comma = '(?:\\s*' + shape_and_or_extent + '\\s*,\\s*)?';
 
-	CssUtils.linear_gradient = '^\\s*(' + linearfunc + ')\\s*\\(\\s*' + optional_dir + '\\s*' + colorstops + '\\s*\\)\\s*$';
-	CssUtils.regex_linear = new RegExp(CssUtils.linear_gradient);
+/* global */
+var regex_num = new RegExp('^' + num + '$');
+var regstr_angle = '^\\s*' + dir_strict + '\\s*$';
+var regstr_len_or_pct = '^\\s*' + len_or_pct + '\\s*$';
+var regstr_posn = '^\\s*' + posn + '\\s*$';
+var regstr_shape = '^\\s*' + shape + '\\s*$';
+var regstr_extent = '^\\s*' + extent + '\\s*$';
+
+var colornames = '(?:';
+for (var i=0; i<cssColorNames.length; i+=2){
+	if(i!=0){
+		colornames += '|';
+	}
+	var colorname = cssColorNames[i];
+	colornames += colorname;
+}
+colornames += ')';
+
+var color = '(?:' + colornames + '|' + hexcolor + '|' + colorfunc3 + '|' + colorfunc4 + ')';
+var colorstop = '(?:' + color + '(?:\\s+' + len_or_pct + ')?)';
+var colorstop_first = '(?:\\s*(' + color + ')\\s*(' + len_or_pct + ')?\\s*,?(.*))';
+var regex_colorstop_first = new RegExp(colorstop_first);
+var colorstops = '(' + colorstop + '(?:\\s*,\\s*' + colorstop + ')*' + ')';
+
+var linearfunc = '(?:-moz-linear-gradient|-webkit-linear-gradient|-ms-linear-gradient|-o-linear-gradient|linear-gradient)';
+var radialfunc = '(?:-moz-radial-gradient|-webkit-radial-gradient|-ms-radial-gradient|-o-radial-gradient|radial-gradient)';
+
+var singlequotedUrl = '\\\'([^\\\']*)\\\'*';
+var doublequotedUrl = '\\\"([^\\\"]*)\\\"';
+var unquotedUrl = '([^\\\'\\\"]*)';
+var urlValue = '(?:' + singlequotedUrl + '|' + doublequotedUrl + '|' + unquotedUrl + ')';
+
+var url = '^\\s*' + '(url)' + '\\s*\\(\\s*' + urlValue + '\\s*\\)\\s*$';
+var regex_url = new RegExp(url);
+var regstr_stop_color = '\\s*' + color + '\\s*';
+var regstr_stop_pos = '\\s*' + len_or_pct + '\\s*';
+
+var linear_gradient = '^\\s*(' + linearfunc + ')\\s*\\(\\s*' + optional_dir + '\\s*' + colorstops + '\\s*\\)\\s*$';
+var regex_linear = new RegExp(linear_gradient);
 
 //FIXME: Why posn_and_or_angle_opt_comma ????
 //FIXME: Actually should have 2 separate regexes, one for circle (with only one possible value for extent)
 //  and another for ellipse (with two possible values for extent)
-	CssUtils.radial_gradient = '^\\s*(' + radialfunc + ')\\s*\\(\\s*' + posn_and_or_angle_opt_comma + '\\s*' + shape_and_or_extent_opt_comma + '\\s*' + colorstops + '\\s*\\)\\s*$';
-	CssUtils.regex_radial = new RegExp(CssUtils.radial_gradient);
-	
-	var coord = '(?:top|bottom|left|right|center|' + num_or_pct + ')';
-	var point = '(?:\\s*' + coord + '\\s+' + coord + '\\s*)';
-	var point_grouped = '(?:\\s*(' + coord + ')\\s+(' + coord + ')\\s*)';
-	CssUtils.regex_webkit_point_grouped = new RegExp(point_grouped);
-	var comma_point = '(?:\\s*,\\s*(' + point + ')\\s*)';
-	var comma_radius = '(?:\\s*,\\s*(' + nonneg + ')\\s*)';
-	
-	// Note: following regex doesn't account for spec constraint where if stop value is a number it must be between 0 and 1.0
-	var colorstopfunc = '(?:color-stop\\s*\\(\\s*' + num_or_pct + '\\s*,\\s*' + color + '\\s*\\)\\s*)';
-	var colorstopfunc_grouped = '(?:(color-stop)\\s*\\(\\s*(' + num_or_pct + ')\\s*,\\s*(' + color + ')\\s*\\)\\s*)';
-	var fromfunc = '(?:from\\s*\\(\\s*' + color + '\\s*\\)\\s*)';
-	var fromfunc_grouped = '(?:(from)\\s*\\(\\s*(' + color + ')\\s*\\)\\s*)';
-	var tofunc = '(?:to\\s*\\(\\s*' + color + '\\s*\\)\\s*)';
-	var tofunc_grouped = '(?:(to)\\s*\\(\\s*(' + color + ')\\s*\\)\\s*)';
-	var stopfunc = '(?:' + colorstopfunc + '|' + fromfunc + '|' + tofunc + ')';
-	var stopfunc_grouped = '(?:' + colorstopfunc_grouped + '|' + fromfunc_grouped + '|' + tofunc_grouped + ')';
-	var comma_stopfunc = '(?:\\s*,\\s*' + stopfunc + '\\s*)';
-	var comma_stopfunc_grouped = '(?:\\s*,\\s*' + stopfunc_grouped + '\\s*)';
-	var comma_stopfuncs = '(' + comma_stopfunc + '+)';
-	var comma_stopfuncs_first = comma_stopfunc_grouped + '(.*)';
-	CssUtils.regex_webkit_comma_stopfuncs_first = new RegExp(comma_stopfuncs_first);
-	
-	CssUtils.webkit_linear_gradient_orig = '(?:\\s*(-webkit-gradient)\\s*\\(\\s*(linear)\\s*' + comma_point + comma_point + comma_stopfuncs + '\\s*\\)\\s*)';
-	CssUtils.regex_webkit_linear_gradient_orig = new RegExp(CssUtils.webkit_linear_gradient_orig);
+var radial_gradient = '^\\s*(' + radialfunc + ')\\s*\\(\\s*' + posn_and_or_angle_opt_comma + '\\s*' + shape_and_or_extent_opt_comma + '\\s*' + colorstops + '\\s*\\)\\s*$';
+var regex_radial = new RegExp(radial_gradient);
 
-	CssUtils.webkit_radial_gradient_orig = '(?:\\s*(-webkit-gradient)\\s*\\(\\s*(radial)\\s*' + '(?:' + comma_point + comma_radius + comma_point + comma_radius + '?)' + comma_stopfuncs + '\\s*\\)\\s*)';
-	CssUtils.regex_webkit_radial_gradient_orig = new RegExp(CssUtils.webkit_radial_gradient_orig);
+var coord = '(?:top|bottom|left|right|center|' + num_or_pct + ')';
+var point = '(?:\\s*' + coord + '\\s+' + coord + '\\s*)';
+var point_grouped = '(?:\\s*(' + coord + ')\\s+(' + coord + ')\\s*)';
+var regex_webkit_point_grouped = new RegExp(point_grouped);
+var comma_point = '(?:\\s*,\\s*(' + point + ')\\s*)';
+var comma_radius = '(?:\\s*,\\s*(' + nonneg + ')\\s*)';
+
+// Note: following regex doesn't account for spec constraint where if stop value is a number it must be between 0 and 1.0
+var colorstopfunc = '(?:color-stop\\s*\\(\\s*' + num_or_pct + '\\s*,\\s*' + color + '\\s*\\)\\s*)';
+var colorstopfunc_grouped = '(?:(color-stop)\\s*\\(\\s*(' + num_or_pct + ')\\s*,\\s*(' + color + ')\\s*\\)\\s*)';
+var fromfunc = '(?:from\\s*\\(\\s*' + color + '\\s*\\)\\s*)';
+var fromfunc_grouped = '(?:(from)\\s*\\(\\s*(' + color + ')\\s*\\)\\s*)';
+var tofunc = '(?:to\\s*\\(\\s*' + color + '\\s*\\)\\s*)';
+var tofunc_grouped = '(?:(to)\\s*\\(\\s*(' + color + ')\\s*\\)\\s*)';
+var stopfunc = '(?:' + colorstopfunc + '|' + fromfunc + '|' + tofunc + ')';
+var stopfunc_grouped = '(?:' + colorstopfunc_grouped + '|' + fromfunc_grouped + '|' + tofunc_grouped + ')';
+var comma_stopfunc = '(?:\\s*,\\s*' + stopfunc + '\\s*)';
+var comma_stopfunc_grouped = '(?:\\s*,\\s*' + stopfunc_grouped + '\\s*)';
+var comma_stopfuncs = '(' + comma_stopfunc + '+)';
+var comma_stopfuncs_first = comma_stopfunc_grouped + '(.*)';
+var regex_webkit_comma_stopfuncs_first = new RegExp(comma_stopfuncs_first);
+
+var webkit_linear_gradient_orig = '(?:\\s*(-webkit-gradient)\\s*\\(\\s*(linear)\\s*' + comma_point + comma_point + comma_stopfuncs + '\\s*\\)\\s*)';
+var regex_webkit_linear_gradient_orig = new RegExp(webkit_linear_gradient_orig);
+
+var webkit_radial_gradient_orig = '(?:\\s*(-webkit-gradient)\\s*\\(\\s*(radial)\\s*' + '(?:' + comma_point + comma_radius + comma_point + comma_radius + '?)' + comma_stopfuncs + '\\s*\\)\\s*)';
+var regex_webkit_radial_gradient_orig = new RegExp(webkit_radial_gradient_orig);
 
 
-	parseColorStops = function(allstops){
-		var stops = [];
-		do {
-			var result = allstops.match(CssUtils.regex_colorstop_first);
-			if(result){
-				stops.push({ color:result[1], pos:result[2] });
-				allstops = result[3];
-			}
-		} while(result);
-		return stops;
-	};
-
-	parseWebKitColorStops = function(allstops){
-		var stops = [];
-		var colorstops = [];
-		var from;
-		var to;
-		do {
-			var result = allstops.match(CssUtils.regex_webkit_comma_stopfuncs_first);
-			// result[1]=> 'color-stop'
-			// result[2]=> <posn> (for 'color-stop()')
-			// result[3]=> <color> (for 'color-stop()')
-			// result[4]=> 'from'
-			// result[5]=> <color> (for 'from')
-			// result[6]=> 'to'
-			// result[7]=> <color> (for 'from')
-			// result[8]=> remainder of string
-			if(result){
-				if(result[4]){
-					from = { color:result[5] };
-				}else if(result[6]){
-					to = { color:result[7] };
-				}else{
-					var pos = result[2].match(CssUtils.regex_num) ? (result[2]*100)+'%' : result[2];
-					colorstops.push({ color:result[3], pos:pos });
-				}
-				allstops = result[8];
-			}
-		} while(result);
-		if(from){
-			stops.push(from);
-		}
-		for(var i=0; i<colorstops.length; i++){
-			stops.push(colorstops[i]);
-		}
-		if(to){
-			stops.push(to);
-		}
-		return stops;
-	};
-	
-	webKitPosnAddPx = function(posn){
-		var result = posn.match(CssUtils.regex_webkit_point_grouped);
-		var s;
+var parseColorStops = function(allstops){
+	var stops = [];
+	do {
+		var result = allstops.match(regex_colorstop_first);
 		if(result){
-			var coord1 = result[1];
-			if(coord1.match(/^\d+$/)){
-				coord1 += 'px';
-			}
-			var coord2 = result[2];
-			if(coord2.match(/^\d+$/)){
-				coord2 += 'px';
-			}
-			s = coord1 + ' ' + coord2;
-			return s;
-		}else{
-			return posn;
+			stops.push({ color:result[1], pos:result[2] });
+			allstops = result[3];
 		}
-	};
+	} while(result);
+	return stops;
+};
 
+var parseWebKitColorStops = function(allstops){
+	var stops = [];
+	var colorstops = [];
+	var from;
+	var to;
+	do {
+		var result = allstops.match(regex_webkit_comma_stopfuncs_first);
+		// result[1]=> 'color-stop'
+		// result[2]=> <posn> (for 'color-stop()')
+		// result[3]=> <color> (for 'color-stop()')
+		// result[4]=> 'from'
+		// result[5]=> <color> (for 'from')
+		// result[6]=> 'to'
+		// result[7]=> <color> (for 'from')
+		// result[8]=> remainder of string
+		if(result){
+			if(result[4]){
+				from = { color:result[5] };
+			}else if(result[6]){
+				to = { color:result[7] };
+			}else{
+				var pos = result[2].match(regex_num) ? (result[2]*100)+'%' : result[2];
+				colorstops.push({ color:result[3], pos:pos });
+			}
+			allstops = result[8];
+		}
+	} while(result);
+	if(from){
+		stops.push(from);
+	}
+	for(var i=0; i<colorstops.length; i++){
+		stops.push(colorstops[i]);
+	}
+	if(to){
+		stops.push(to);
+	}
+	return stops;
+};
+
+var webKitPosnAddPx = function(posn){
+	var result = posn.match(regex_webkit_point_grouped);
+	var s;
+	if(result){
+		var coord1 = result[1];
+		if(coord1.match(/^\d+$/)){
+			coord1 += 'px';
+		}
+		var coord2 = result[2];
+		if(coord2.match(/^\d+$/)){
+			coord2 += 'px';
+		}
+		s = coord1 + ' ' + coord2;
+		return s;
+	}else{
+		return posn;
+	}
+};
+
+return {
+	// regexp strings use elsewhere in product, pull values from closure
+	regstr_posn: regstr_posn,
+	regstr_len_or_pct: regstr_len_or_pct,
+	regstr_angle: regstr_angle,
+	regstr_shape: regstr_shape,
+	regstr_extent: regstr_extent,
+	regstr_stop_color: regstr_stop_color,
+	regstr_stop_pos: regstr_stop_pos,
+	
 	/**
 	 * Parses many different background-image syntaxes, including:
 	 *   url() function
@@ -213,7 +221,7 @@ define([
 	 *  @param {string} propValue  String to parse
 	 *  @returns {object}   An object which holds all of the various pieces extracted from the string
 	 */
-	CssUtils.parseBackgroundImage = function(propValue){
+	parseBackgroundImage: function(propValue){
 		var o = {};
 		var result = propValue.match(/^\s*$/);
 		if(result){
@@ -223,14 +231,14 @@ define([
 			if(result){
 				o.type = 'none';
 			}else{
-				var result = propValue.match(CssUtils.regex_url);
+				var result = propValue.match(regex_url);
 				if(result){
 					o.type = 'url';
 					// result[1]=>'url', result[2]=>single quoted, [3]=>double quoted, [4]=>unquoted
 					o.func = result[1];
 					o.url = result[2] ? result[2] : (result[3] ? result[3] : result[4]);
 				}else{
-					result = propValue.match(CssUtils.regex_webkit_linear_gradient_orig);
+					result = propValue.match(regex_webkit_linear_gradient_orig);
 					if(result){
 						o.type = 'linear';
 						// result[1]=> '-webkit-gradient'
@@ -272,7 +280,7 @@ define([
 						}
 						o.stops = parseWebKitColorStops(result[5]);
 					}else{
-						result = propValue.match(CssUtils.regex_webkit_radial_gradient_orig);
+						result = propValue.match(regex_webkit_radial_gradient_orig);
 						if(result){
 							o.type = 'radial';
 							// result[1]=> '-webkit-gradient'
@@ -297,7 +305,7 @@ define([
 							o.extent = o.webKitRadius2 ? o.webKitRadius2 + 'px' : (o.webKitRadius1 ? o.webKitRadius1 + 'px' : 'farthest-corner');
 							o.stops = parseWebKitColorStops(result[7]);
 						}else{
-							result = propValue.match(CssUtils.regex_linear);
+							result = propValue.match(regex_linear);
 							if(result){
 								o.type = 'linear';
 								// result[1]=> 'linear-gradient' | '-webkit-linear-gradient' | ...
@@ -309,7 +317,7 @@ define([
 								o.angle = result[2] ? 'to '+result[2] : (result[3] ? 'to '+result[3] : result[4]);
 								o.stops = parseColorStops(result[5]);
 							}else{
-								result = propValue.match(CssUtils.regex_radial);
+								result = propValue.match(regex_radial);
 								if(result){
 									o.type = 'radial';
 									// result[1]=> 'radial-gradient' | '-webkit-radial-gradient' | ...
@@ -342,7 +350,7 @@ define([
 		}
 		return o;
 
-	};
+	},
 	
 	/**
 	 * Using the same data structure generated by parseBackgroundImage,
@@ -358,7 +366,7 @@ define([
 	 * 
 	 * @returns [string]
 	 */
-	CssUtils.buildBackgroundImage = function(o){
+	buildBackgroundImage: function(o){
 		var a = [];
 		if(o.type == 'emptystring'){
 			a.push('');
@@ -416,7 +424,7 @@ define([
 			if(o.type == 'linear'){
 				var w3c = '(';
 				var angle = o.angle;
-				var angle_result = (typeof angle == 'string' && angle.length>0) ? angle.match(new RegExp(CssUtils.regstr_angle)) : null;
+				var angle_result = (typeof angle == 'string' && angle.length>0) ? angle.match(new RegExp(regstr_angle)) : null;
 				if(!angle_result){
 					angle = 'to bottom';
 				}
@@ -522,7 +530,9 @@ define([
 		}
 //FIXME: Unknown
 		return a;
-	};
+	}
+	
+}
 
 });
 

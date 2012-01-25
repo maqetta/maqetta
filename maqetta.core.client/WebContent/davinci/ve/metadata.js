@@ -1,12 +1,13 @@
 // XXX This object shouldn't have a dependency on SmartInput
 define([
+    "dojo/_base/Deferred",
     "davinci/ve/input/SmartInput",
     "davinci/util",
 	"davinci/library",
 	"davinci/model/Path"
-], function(SmartInput, Util, Library, Path) {
+], function(Deferred, SmartInput, Util, Library, Path) {
 
-	var metadata,
+	var Metadata,
     	METADATA_CLASS_BASE = "davinci.libraries.",
     
     // Array of library descriptors.
@@ -33,7 +34,7 @@ define([
         libraries = {};
         cache = {};
         l10n = null;
-        metadata.init();
+        Metadata.init();
     });
     
 	function parsePackage(pkg, path) {
@@ -327,7 +328,7 @@ define([
     
     function getAllowedElement(name, type) {
     	var propName = 'allowed' + name,
-    		prop = metadata.queryDescriptor(type, propName);
+    		prop = Metadata.queryDescriptor(type, propName);
     	if (! prop) {
     		// set default -- 'ANY' for 'allowedParent' and 'NONE' for
     		// 'allowedChild'
@@ -337,7 +338,7 @@ define([
     }
 
     
-	metadata = {
+	Metadata = {
         /**
          * Read the library metadata for all the libraries linked in the user's workspace
          */
@@ -438,7 +439,7 @@ define([
     		}
     		
     		// check for single mobile theme's
-    		if (ro = metadata._loadThemeMetaDojoxMobile(model, themeHash)){
+    		if (ro = Metadata._loadThemeMetaDojoxMobile(model, themeHash)){
     		    return ro;
     		}
 
@@ -683,8 +684,44 @@ define([
          */
         getAllowedChild: function(type) {
         	return getAllowedElement('Child', type);
+        },
+
+        getHelper: function(type, helperType) {
+            var helpertypes = [
+                'helper',
+                'tool',
+                'inlineEdit'
+            ];
+            if (helpertypes.indexOf(helperType) === -1) {
+                return null;
+            }
+
+            var helperPath = Metadata.queryDescriptor(type, helperType);
+            if (!helperPath) {
+                return null;
+            }
+
+            var lib = getLibraryForType(type),
+                path = new Path(lib.$wm.$path).append(helperPath),
+                url = path.toString() + '.js',
+                dfd = new Deferred();
+            
+            //////    XXX This is the AMD approach, but is async.
+            // require([path], function(obj) {
+            //     dfd.resolve(obj);
+            // });
+            //
+            // return dfd.promise();
+             
+            dojo.xhrGet({
+                url: url,
+                handleAs: 'javascript',
+                sync: true // XXX should be async
+            }).then(function(obj) {
+                return obj;
+            });
         }
     };
 
-    return metadata;
+    return Metadata;
 });

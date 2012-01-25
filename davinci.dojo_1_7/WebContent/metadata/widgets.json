@@ -52,7 +52,7 @@
             ],
             "allowedChild": "dijit.layout.ContentPane",
             "inlineEdit": "davinci.libraries.dojo.dijit.layout.AccordionContainerInput",
-            "helper": "davinci.libraries.dojo.dijit.layout.AccordionContainerHelper"
+            "helper": "./dijit/layout/AccordionContainerHelper"
         },
         {
             "name": "BorderContainer",
@@ -112,7 +112,7 @@
             ],
             "allowedChild": "dijit.layout.ContentPane",
             "inlineEdit": "davinci.libraries.dojo.dijit.layout.BorderContainerInput",
-            "helper": "davinci.libraries.dojo.dijit.layout.BorderContainerHelper"
+            "helper": "./dijit/layout/BorderContainerHelper"
         },
         {
             "name": "ContentPane",
@@ -127,7 +127,7 @@
                 "style": "width: 250px; height: 250px;"
             },
             "allowedChild": "ANY",
-            "helper": "davinci.libraries.dojo.dijit.layout.ContentPaneHelper"
+            "helper": "./dijit/layout/ContentPaneHelper"
         },
         {
             "name": "Form",
@@ -203,7 +203,7 @@
             ],
             "isLayered": true,
             "allowedChild": "dijit.PopupMenuBarItem",
-            "helper": "davinci.libraries.dojo.dijit.MenuHelper",
+            "helper": "./dijit/MenuHelper",
             "inlineEdit": "davinci.libraries.dojo.dijit.MenuBarInput"
         },
         {
@@ -235,7 +235,7 @@
             ],
             "allowedChild": "dijit.layout.ContentPane",
             "inlineEdit": "davinci.libraries.dojo.dijit.layout.StackContainerInput",
-            "helper": "davinci.libraries.dojo.dijit.layout.TabContainerHelper"
+            "helper": "./dijit/layout/TabContainerHelper"
         },
         {
             "name": "TitlePane",
@@ -250,14 +250,14 @@
             },
             "resizable": "width",
             "allowedChild": "ANY",
-            "helper": "davinci.libraries.dojo.dijit.layout.ContentPaneHelper",
+            "helper": "./dijit/layout/ContentPaneHelper",
             "inlineEdit": {
                 "property": "title",
                 "displayOnCreate": true,
                 "supportsHTML": true,
                 "multiLine": false
             },
-            "helper": "davinci.libraries.dojo.dijit.layout.TitlePaneHelper"
+            "helper": "./dijit/layout/TitlePaneHelper"
         },
         {
             "name": "Toolbar",
@@ -302,7 +302,7 @@
                 "label": "Button"
             },
             "resizable": "none",
-            "helper": "davinci.libraries.dojo.dijit.form.ButtonHelper",
+            "helper": "./dijit/form/ButtonHelper",
             "inlineEdit": {
                 "property": "label",
                 "displayOnCreate": true,
@@ -327,7 +327,7 @@
             "icon": "resources/images/checkbox.png",
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAP9JREFUeNpi/P//P8PGnQf/M5AJWGAMf3d7kjUDLUYYAAITd94kWnO+uzqqC2DAQkGAgYEDwpbg4ICLv/jxA8IAUicefMD0Agw8+ABRCNL7geEHXBwkHG4uD2avuPAAtwEQS4Cqf3DAtX8A2p5urw6Xv3DjBZzNhMuPP6Da0TUHdu5ksNCQwG0ASEO8uToYv/iAqtmxcSODAjCMBAQ48BuAHtIwzQZAmzUkBIBhzIHfCyBnIgNkzQJIMYPVAJACkDNBmghpxhoLEkD/CXBIgBUXzjzI4GCgAHE2B4GkDE8HLxDpQACq8cWHH4TzAnqgkZyZQBmDHMAIys6UAIAAAwBz81X4fS5oMgAAAABJRU5ErkJggg==",
             "resizable": "none",
-            "helper": "davinci.libraries.dojo.dijit.form.CheckBoxHelper"
+            "helper": "./dijit/form/CheckBoxHelper"
         },
         {
             "name": "ColorPalette",
@@ -372,7 +372,7 @@
                 }
             ],
             "resizable": "width",
-            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper",
+            "helper": "./dijit/form/SelectHelper",
             "inlineEdit": "davinci.libraries.dojo.dijit.form.SelectInput"
         },
         {
@@ -408,7 +408,7 @@
             ],
             "resizable": "none",
             "isControl": true,
-            "helper": "davinci.libraries.dojo.dijit.form.DropDownButtonHelper",
+            "helper": "./dijit/form/DropDownButtonHelper",
             "inlineEdit": "davinci.libraries.dojo.dijit.form.DropDownButtonInput"
         },
         {
@@ -469,7 +469,7 @@
                 }
             ],
             "tool": "davinci.libraries.dojo.dojox.grid.DataGridCreateTool",
-            "helper": "davinci.libraries.dojo.dojox.grid.DataGridHelper",
+            "helper": "./dojox/grid/DataGridHelper",
             "inlineEdit": "davinci.libraries.dojo.dojox.grid.DataGridInput"
         },
         {
@@ -496,7 +496,7 @@
             "isLayered": true,
             "resizable": "none",
             "tool": "davinci.libraries.dojo.dijit.DialogCreateTool",
-            "helper": "davinci.libraries.dojo.dijit.DialogHelper"
+            "helper": "./dijit/DialogHelper"
         },
         {
             "name": "DropDownButton",
@@ -530,7 +530,7 @@
             ],
             "resizable": "none",
             "isControl": true,
-            "helper": "davinci.libraries.dojo.dijit.form.DropDownButtonHelper",
+            "helper": "./dijit/form/DropDownButtonHelper",
             "inlineEdit": "davinci.libraries.dojo.dijit.form.DropDownButtonInput",
             "allowedChild": "dijit.Menu, dijit.TooltipDialog"
         },
@@ -566,7 +566,7 @@
             ],
             "resizable": "none",
             "isControl": true,
-            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper",
+            "helper": "./dijit/form/SelectHelper",
             "inlineEdit": "davinci.libraries.dojo.dijit.form.SelectInput"
         },
         {
@@ -600,7 +600,7 @@
                 }
             ],
             "resizable": "width",
-            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper",
+            "helper": "./dijit/form/SelectHelper",
             "inlineEdit": "davinci.libraries.dojo.dijit.form.SelectInput"
         },
         {
@@ -636,7 +636,7 @@
             "resizable": "none",
             "isLayered": true,
             "allowedChild": "DijitMenuItems",
-            "helper": "davinci.libraries.dojo.dijit.MenuHelper"
+            "helper": "./dijit/MenuHelper"
         },
         {
             "name": "MultiSelect",
@@ -672,7 +672,7 @@
                 }
             ],
             "resizable": "width",
-            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper",
+            "helper": "./dijit/form/SelectHelper",
             "inlineEdit": "davinci.libraries.dojo.dijit.form.OptionsInput"
         },
         {
@@ -704,7 +704,7 @@
             "icon": "resources/images/radio-button.png",
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAYFJREFUeNqMU6t2AjEQnXAq4ojbuF23uOCQ9A9ax6+0qpJv6SfUFYkDxzrWZV3WxW3nDk3KY+khnEOYyzzu3MyoYRho7HRdd/NHURTqGnu6Btq2HSLf3gcKIQimtSYNLMTB8I+yLNXdBEcOpBjJWEvLhcv4vmk5EXHSyAn+/FVqAZURbNjLuVqwpusl4cwaKotpTgRmFTBmkhlE+Yrkfqu+f24z/e9DEI/1akGuLulr40/+fCZJMPRsbJWDweR5ZunjxckNOyW13B78ETdJDEDL1QV1fS/2vDJkWLFt2/EN24KPtAUWYDsuIosE2jgHHzJutRERoUnNely0cH4qrirPGOMFHtgGAvFOcsXLBIZ5QuFiOhVFvWcm/LEyAzo/L6rDD/45ASbMcubgvYDrleOKRDsO2h2D3LDfXucnNuwHf8Q9MAeRaWupLHOwb6SdNAfqehc22/2QJlHUPptEYcgFeELVzST+twtJI9DG+5zvghrbxrFNvLeR6t46P3p+BBgAiJjb9hNPKQcAAAAASUVORK5CYII=",
             "resizable": "none",
-            "helper": "davinci.libraries.dojo.dijit.form.CheckBoxHelper"
+            "helper": "./dijit/form/CheckBoxHelper"
         },
         {
             "name": "SimpleTextarea",
@@ -724,7 +724,7 @@
                 "displayOnCreate": false,
                 "multiLine": false
             },
-            "helper": "davinci.libraries.dojo.dijit.form.TextareaHelper"
+            "helper": "./dijit/form/TextareaHelper"
         },
         {
             "name": "Textarea",
@@ -742,7 +742,7 @@
                 "displayOnCreate": false,
                 "multiLine": false
             },
-            "helper": "davinci.libraries.dojo.dijit.form.TextareaHelper"
+            "helper": "./dijit/form/TextareaHelper"
         },
         {
             "name": "TextBox",
@@ -798,7 +798,7 @@
             "tool": "davinci.libraries.dojo.dijit.TooltipCreateTool",
             "resizable": "none",
             "allowedChild": "ANY",
-            "helper": "davinci.libraries.dojo.dijit.TooltipHelper",
+            "helper": "./dijit/TooltipHelper",
             "inlineEdit": "davinci.ve.input.RichTextInput"
         },
         {
@@ -813,7 +813,7 @@
             "resizable": "none",
             "allowedChild": "ANY",
 			"allowedParent": "dijit.form.DropDownButton",
-            "helper": "davinci.libraries.dojo.dijit.TooltipDialogHelper"
+            "helper": "./dijit/TooltipDialogHelper"
         },
         {
             "name": "Tree",
@@ -963,7 +963,7 @@
                 }
             ],
             "tool": "davinci.libraries.dojo.dojox.grid.TreeGridCreateTool",
-            "helper": "davinci.libraries.dojo.dojox.grid.TreeGridHelper"
+            "helper": "./dojox/grid/TreeGridHelper"
             /*"inlineEdit": "davinci.libraries.dojo.dojox.grid.TreeGridInput" */
         },
         {
@@ -1009,7 +1009,7 @@
                 "container":"bottomDecoration",
                 "count": "3"
             },
-            "helper": "davinci.libraries.dojo.dijit.form.HorizontalRuleLabelsHelper",
+            "helper": "./dijit/form/HorizontalRuleLabelsHelper",
             "allowedParent": "dijit.form.HorizontalSlider"
         },
         {
@@ -1050,7 +1050,7 @@
                 "container":"rightDecoration",
                 "count": "3"
             },
-            "helper": "davinci.libraries.dojo.dijit.form.HorizontalRuleLabelsHelper",
+            "helper": "./dijit/form/HorizontalRuleLabelsHelper",
             "allowedParent": "dijit.form.VerticalSlider"
         },
         {
@@ -1071,7 +1071,7 @@
             "description": "Popup Menu Bar Item",
             "type": "dijit.PopupMenuBarItem",
             "category": "untested",
-            "helper": "davinci.libraries.dojo.dijit.PopupMenuBarItemHelper",
+            "helper": "./dijit/PopupMenuBarItemHelper",
             "icon": "resources/images/popupmenubaritem.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAJimxDBNiJmoxTFRijximTximD1imENvpEl4q0+Bs1OJupi94FaOv7bb8Mjn+OHw+b3h8+j1/M/t++Tz+uj2/Ov4/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABYALAAAAAAQABAAAAVt4MKMjEia46JUbKVIsLS2ShJReOIEgZPgOcRkOEFAAACIkIg4PJ4oUul5WBgIhVcspiAQFpawRceTDHoJsdqIlAiSCLX40KjbGwd5OHrSW7RbMn5kAWZofmwAbnB+dHd1eXpWXgUFBAZgfppiIQA7",
             "properties": {
@@ -1176,7 +1176,7 @@
                 "property": "value",
                 "displayOnCreate": false
             },
-            "helper": "davinci.libraries.dojo.dijit.form.TextareaHelper"
+            "helper": "./dijit/form/TextareaHelper"
         },
         {
             "name": "ProgressBar",
@@ -1236,7 +1236,7 @@
             "icon": "resources/images/analoggauge.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC1CdF1wmVt3qoedxIugxmmEsm+JtXGLt3qTvYihyYyix42jx6Gz0bnH38TQ49DZ6Ka51o2z4Zu95aPC56bC5s/e8JfG+Z3J+pO44rfX+tPh8ODt+6bP+rDU+tnp+eDt+sbf9svh9tHl9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACMALAAAAAAQABAAAAaAwJFwSCwah4HjMQBIKouA5/DBQAAQjIdysGhkAJnGYmAUQDpoALoDERAPAo6cA5hzBAehIzERXP4AfxcCGgkOIwQUEn0XFgAWgx8fFQQjBRgYEhICCgAKAh6hHgUjAhGnpwIAAiAiriJupqgRABsAICG5IW4GAr6/q7++BlLFxUEAOw==",
             "allowedParent": "dojox.gauges.AnalogGauge",
-            "helper": "davinci.libraries.dojo.dojox.gauges.RangeHelper"
+            "helper": "./dojox/gauges/RangeHelper"
          },
          {
             "name": "AnalogLineIndicator",
@@ -1361,7 +1361,7 @@
                 }
             ],
             "allowedChild": "DojoxGauges",
-            "helper": "davinci.libraries.dojo.dojox.gauges.AnalogGaugeHelper"
+            "helper": "./dojox/gauges/AnalogGaugeHelper"
         },
         {
             "name": "BarGauge",
@@ -1436,7 +1436,7 @@
                     }
                 ]
             },
-            "helper": "davinci.libraries.dojo.dojox.widget.BarGaugeHelper"
+            "helper": "./dojox/widget/BarGaugeHelper"
         },
         {
             "name": "EnhancedCalendar",
@@ -1490,7 +1490,7 @@
                     }
                 }
             ],
-            "helper": "davinci.libraries.dojo.dojox.charting.widget.Chart2DHelper"
+            "helper": "./dojox/charting/widget/Chart2DHelper"
         },
         {
             "name": "MultiComboBox",
@@ -1523,7 +1523,7 @@
                 }
             ],
             "resizable": "width",
-            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper"
+            "helper": "./dijit/form/SelectHelper"
         },
         {
             "name": "CheckedMultiSelect",
@@ -1558,7 +1558,7 @@
                     "children": "Item 3"
                 }
             ],
-            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper"
+            "helper": "./dijit/form/SelectHelper"
         },
         {
             "name": "FileInput",
@@ -1621,7 +1621,7 @@
                     "children": "Item3"
                 }
             ],
-            "helper": "davinci.libraries.dojo.dojox.widget.SortListHelper"
+            "helper": "./dojox/widget/SortListHelper"
         },
         {
             "name": "GridContainer",
@@ -1652,7 +1652,7 @@
                 "style": "width: 300px; height: 300px;"
             },
             "allowedChild": "ANY",
-            "helper": "davinci.libraries.dojo.dijit.layout.ContentPaneHelper"
+            "helper": "./dijit/layout/ContentPaneHelper"
         },
         {
             "name": "ScrollPane",
@@ -1775,7 +1775,7 @@
             "tool": "davinci.libraries.dojo.dojo.data.DataStoreCreateTool",
             "resizable": "none",
             "invisible": false,
-            "helper": "davinci.libraries.dojo.dojo.data.ItemFileReadStoreHelper",
+            "helper": "./dojo/data/ItemFileReadStoreHelper",
             "inlineEdit": "davinci.libraries.dojo.dojo.data.ItemFileReadStoreInput"
         },
         {
@@ -1796,7 +1796,7 @@
             "category": "untested-obj",
             "hidden": true,
             "invisible": true,
-            "helper": "davinci.libraries.dojo.dijit.tree.ForestStoreModelHelper"
+            "helper": "./dijit/tree/ForestStoreModelHelper"
         },
         {
             "name": "DataList",
@@ -1835,7 +1835,7 @@
                     "content": "<option></option>"
                 }
             ],
-            "helper": "davinci.libraries.dojo.dijit.form.DataListHelper",
+            "helper": "./dijit/form/DataListHelper",
             "tool": "davinci.libraries.dojo.dijit.form.DataListCreateTool",
             /*"inlineEdit": "davinci.libraries.dojo.dojo.data.ItemFileReadStoreInput" */
         },
@@ -1850,7 +1850,7 @@
                  "style": "height: 100%;"
             },
             "allowedChild": "ANY",
-            "helper": "davinci.libraries.dojo.dojox.mobile.ViewHelper",
+            "helper": "./dojox/mobile/ViewHelper",
             "requiresId":true
         },
         {
@@ -1861,7 +1861,7 @@
             "icon": "resources/images/dx-mbl-scrollable-view.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFOiPj6/jJRijRTjTRUjTdXkTdXkLrH3+Hp+OHp9zdakzZYkDdYkDlbkzlck97o+ODp+N/o9ztflj5km/L2/Pj6/T5mnD9mnT5lm0FqoENupENuo0Ruo0ZxpvL2+0l3rEl4rEh2qkl3q0l2qk6BtE1+sU+BtFCDtVCFt1CEtlSLvVOJulOHuVaOv7nW78/t+////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADIALAAAAAAQABAAAAaAQJlwSCwKXcikcilzxZ5QaApGVclWMUAWMFhgYiRYACGStaJoDKzyuchQr7hc3jAwGAeZCR1lKRIRLDIjWVtdXyUSEhAnMh58UCCKECEyGnOYHRsbHBwyFJBPGVQwFDIThQBcXjEOYggOMg+hMQUwFgIEsg+8vb0BwMBGw8TFQkEAOw==",
             "allowedChild": "ANY",
-            "helper": "davinci.libraries.dojo.dojox.mobile.ScrollableViewHelper",
+            "helper": "./dojox/mobile/ScrollableViewHelper",
             "requiresId":true
         },
         {
@@ -1872,7 +1872,7 @@
             "icon": "resources/images/dx-mbl--flippable-iew.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADlck77J2+nt87/M3r7L3EVyp8DO4MPS40x9sU+CtU1+sWKf28bX6MTU5ejx+lKHuWKf2WKh2VWLvVaOv7nW78jg84C/64DB6ZfX9v///7q6urOzs7KysqmpqaioqHBwcG5ubmxsbGpqamdnZ////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACQALAAAAAAQABAAAAaFQNJkOCQZj0gSZrmcGD/Q6IeUyVwsFslTw+2SIpEFZPEwgjaZDWezISne74Qx5PF0OnVSZb9vGEUjgYJUVVUARgqFhSQFCg8MAIckBxkIioQZkZoAilUkFBQODpFGBqCnFJiGJAADnRmMjgwZBKycDZeKm5GdtgABAgG2AQGbSUeSx8rLQQA7",
             "allowedChild": "ANY",
-            "helper": "davinci.libraries.dojo.dojox.mobile.ViewHelper",
+            "helper": "./dojox/mobile/ViewHelper",
             "requiresId":true
         },
         {
@@ -1891,7 +1891,7 @@
             "properties": {
                 "style": "z-index:0;"
             },
-            "helper": "davinci.libraries.dojo.dojox.mobile.HeadingHelper",
+            "helper": "./dojox/mobile/HeadingHelper",
             "inlineEdit": {
                 "property": "label",
                 "displayOnCreate": true,
@@ -1906,7 +1906,7 @@
             "category": "mobile",
             "icon": "resources/images/dx-mbl--toolbar-button.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFPijZXkDZYkDxhmTtimUJsouHr9/D1+0h2q0l3q7XQ7bbQ7bbQ7MLX79vo9k6AtE6Bs6TH6bbR7NLj9FKJu1OJulaNv5C95aTH6KTI6LXR7L/Z8Mje8laOv36z4X604JC95LnW77/a8Nzr9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZiwJJwSCwaj8hk0cP0XJpQj9ByqFqvVUSlFDk4vuCw4wApKR6MxmLCbm8mj0TJQNFI7nh8hmIoFTohGIKDgyEdBCUDHCAfHyCPkI0jAiUBIpeYmZckAUIAn6ChoEqkpaanRUEAOw==",
-            "helper": "davinci.libraries.dojo.dojox.mobile.ToolBarButtonHelper",
+            "helper": "./dojox/mobile/ToolBarButtonHelper",
             "inlineEdit": {
                 "property": "label",
                 "displayOnCreate": true,
@@ -1987,7 +1987,7 @@
                 }
             ],
             "tool": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool",
-            "helper": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListHelper",
+            "helper": "./dojox/mobile/EdgeToEdgeDataListHelper",
             "inlineEdit": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListInput"
         },
         {
@@ -2055,7 +2055,7 @@
                 }
             ],
             "tool": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool",
-            "helper": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListHelper",
+            "helper": "./dojox/mobile/EdgeToEdgeDataListHelper",
             "inlineEdit": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListInput"
         },
         {
@@ -2064,7 +2064,7 @@
             "category": "mobile",
             "icon": "resources/images/dx-mbl-list-item.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5Khd/k7jJRit7j7N3i6zdak+Dm79/l7j9mnUJqoEVyp0ZxpuHo8UVypkl3q0p4q0x9sU1+sVCDteTs9OLq8lKHueTt9ePs9P///////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABkALAAAAAAQABAAAAVbYCaOZClaaKqumYW9cAxb2YQRNzEEBkNdF8wkE5QZMZeMBMJsOp2ZyNEIyTgwACxAUEAoIpUK5pFZTGWNzHPdTGQM55ghc7jldr1f8ECPw/gHgYKDhCaGh4giIQA7",
-            "helper": "davinci.libraries.dojo.dojox.mobile.ListItemHelper",
+            "helper": "./dojox/mobile/ListItemHelper",
             "inlineEdit": {
                 "displayOnCreate": true,
                 "useParent": true
@@ -2104,7 +2104,7 @@
             "icon": "resources/images/dx-mbl-switch.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPHf8SAwcCg4gDBAiDBIiDhQmEBgoEhoqFBwsMDQ8Njg8HCQyEBoqICg0JCw4LDA2MDQ6MjY8FiAuGCIwJiw0LDI6Iio0KDA6FCAuHio4Hio2JCw0KDA4LjQ6NDg8ODo8P////Dw8Ojo6ODg4NjY2NDQ0MjIyLCwsKioqKCgoJiYmJCQkP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACwALAAAAAAQABAAAAZxQJZwSCwaj8hkUcBsBk7QqHDQqVY3J1BoGwKdWISEJkOeoEKj9CiEYhUijrhjcVav2wYP58JvpEQkgSQiKSwHChWJFRZ/JY4lhCwIHxCVEBQqIyabJiMqLBgfoqIPKgB2AJ8sEqytDCuwsUqztLW2RUEAOw==",
             "resizable": "none",
-            "helper": "davinci.libraries.dojo.dojox.mobile.SwitchHelper"
+            "helper": "./dojox/mobile/SwitchHelper"
         },
         {
             "name": "CheckBox",
@@ -2180,7 +2180,7 @@
                 }
             ],
             "tool": "davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool",
-            "helper": "davinci.libraries.dojo.dojox.mobile.ComboBoxHelper",
+            "helper": "./dojox/mobile/ComboBoxHelper",
             "inlineEdit": "davinci.libraries.dojo.dojox.mobile.MobileComboBoxInput"
         },
         {
@@ -2220,7 +2220,7 @@
                     }
                 }
             },
-            "helper": "davinci.libraries.dojo.dojox.mobile.TabBarHelper",
+            "helper": "./dojox/mobile/TabBarHelper",
             "inlineEdit": "davinci.libraries.dojo.dojox.mobile.TabBarInput",
             "allowedChild": "dojox.mobile.TabBarButton",
             "properties": {
@@ -2247,7 +2247,7 @@
             "category": "mobile",
             "icon": "resources/images/dx-mbl--toolbar-button.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFPijZXkDZYkDxhmTtimUJsouHr9/D1+0h2q0l3q7XQ7bbQ7bbQ7MLX79vo9k6AtE6Bs6TH6bbR7NLj9FKJu1OJulaNv5C95aTH6KTI6LXR7L/Z8Mje8laOv36z4X604JC95LnW77/a8Nzr9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZiwJJwSCwaj8hk0cP0XJpQj9ByqFqvVUSlFDk4vuCw4wApKR6MxmLCbm8mj0TJQNFI7nh8hmIoFTohGIKDgyEdBCUDHCAfHyCPkI0jAiUBIpeYmZckAUIAn6ChoEqkpaanRUEAOw==",
-            "helper": "davinci.libraries.dojo.dojox.mobile.TabBarButtonHelper",
+            "helper": "./dojox/mobile/TabBarButtonHelper",
             "allowedParent": "dojox.mobile.TabBar",
             "inlineEdit": {
                 "property": "label",
@@ -2309,7 +2309,7 @@
             "category": "mobile",
             "icon": "resources/images/dx-mbl--icon-item.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAC5KhTBOiW+DrW+DrDNTjTJRijdakzthmTthmD9mnUBonz9pn0RwpkVyp0VwpUh4rEl4rLDN7LTP7Ux+sk1/sk1+sVGEt4i14ZO75JjA557D6KPG6qPH6qTG6qPG6aTG6aTH6abI6ajJ66jJ6qnJ66nK66nJ6q7M6rXR7brT7b7W71CFt1SKvFSKu4O14oS04Ya14Ym55Iq55Iq545G95pG85ZG95ZO95JfA55jB55jB5pjA5Z/F6Z7E6J/F51aOv3qx4IO24oS24oa34Yq65Im544mw0v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEcALAAAAAAQABAAAAefgEeCP4SFhj+Cg0YqjI2NRoiCLSkqEZaXESopLIkWKCUmIyYiJiYkIxIrnSgbHBwgHR4cHyCpiRMnPT0avLq6JxSJDyE6OcU4OsUZIRCJDDw0NjY1NdLTPg6JCjsz3TExRTFEMjsLiQcYLi5B7EHrQjcIiQQXMED3+EAwQwSJAQIvAgoUOCBAoiMAEipcCOCgw4cQFxYwkKBBBYgYDwYCADs=",
-            "helper": "davinci.libraries.dojo.dojox.mobile.IconItemHelper",
+            "helper": "./dojox/mobile/IconItemHelper",
             "allowedParent": "dojox.mobile.IconContainer"
         },
         {

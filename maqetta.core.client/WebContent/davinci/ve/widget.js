@@ -658,20 +658,21 @@ davinci.ve.widget._parseNodeData = function(node, options){
 	return data;
 };
 
-davinci.ve.widget.getWidgetHelper = function(type){
+davinci.ve.widget.getWidgetHelper = function(type) {
+	return davinci.ve.metadata.getHelper(type, 'helper');
 
-    var helper = davinci.ve.metadata.queryDescriptor(type, "helper");
-    if (helper) {
-    	var helperConstructor;
-        try {
-        	helperConstructor = dojo["require"](helper) && dojo.getObject(helper); /* remove && dojo.getObject after transition to AMD */;
-        } catch(e) {
-            console.error("Failed to load helper: " + helper);
-            console.error(e);
-            throw e;
-        }
-        return /*this._edit_helper = */new helperConstructor();
-    }
+    // var helper = davinci.ve.metadata.queryDescriptor(type, "helper");
+    // if (helper) {
+    // 	var helperConstructor;
+    //     try {
+    //     	helperConstructor = dojo["require"](helper) && dojo.getObject(helper); /* remove && dojo.getObject after transition to AMD */;
+    //     } catch(e) {
+    //         console.error("Failed to load helper: " + helper);
+    //         console.error(e);
+    //         throw e;
+    //     }
+    //     return /*this._edit_helper = */new helperConstructor();
+    // }
 };
 
 davinci.ve.widget.getWidget = function(node){

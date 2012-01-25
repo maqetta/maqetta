@@ -1,6 +1,6 @@
 define([
 	"dojo/_base/declare",
-	"../OptionsInput",
+	"./OptionsInput",
 	"dojo/i18n!../nls/dijit"
 ], function(
 	declare,

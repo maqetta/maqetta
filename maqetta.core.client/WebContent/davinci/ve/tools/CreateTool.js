@@ -539,7 +539,7 @@ return declare("davinci.ve.tools.CreateTool", Tool, {
 	},
 	
 	_select: function(w) {
-		var inLineEdit = Metadata.queryDescriptor(w.type, "inlineEdit");
+		var inLineEdit = Metadata.getHelper(w.type, "inlineEdit");
 		if (!this._data.fileDragCreate && inLineEdit && inLineEdit.displayOnCreate) {
 			w.inLineEdit_displayOnCreate = inLineEdit.displayOnCreate;
 			this._context.select(w, null, true); // display inline

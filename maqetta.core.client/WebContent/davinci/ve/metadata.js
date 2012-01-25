@@ -633,29 +633,11 @@ define([
             var value = queryProps(item, queryString);
             
             // post-process some values
-            switch (queryString) {
-                case "resizable":
-                    // default to "both" if not defined
-                    if (!value) {
-                        value = "both";
-                    }
-                    break;
-                case "inlineEdit":
-                    // instantiate inline edit object
-                    if (value) {
-                        if (typeof value == "string") {
-                            dojo['require'](value);
-                            var aClass = dojo.getObject(value);
-                            if (aClass) {
-                                value = new aClass();
-                            }
-                        } else {
-                            var si = new SmartInput();
-                            dojo.mixin(si, value);
-                            value = si;
-                        }
-                    }
-                    break;
+            if (queryString === 'resizable') {
+                // default to "both" if not defined
+                if (!value) {
+                    value = "both";
+                }
             }
             return value;
         },
@@ -709,13 +691,21 @@ define([
                 return null;
             }
 
-            var helperPath = Metadata.queryDescriptor(type, helperType);
-            if (!helperPath) {
+            var value = Metadata.queryDescriptor(type, helperType);
+            if (!value) {
                 return null;
             }
 
+            // Handle the declarative form of 'inlineEdit', where `value` is
+            // an object, not a path.
+            if (helperType === 'inlineEdit' && typeof value !== 'string') {
+                var si = new SmartInput();
+                dojo.mixin(si, value);
+                return si;
+            }
+
             var lib = getLibraryForType(type),
-                path = new Path(lib.$wm.$path).append(helperPath),
+                path = new Path(lib.$wm.$path).append(value),
                 url = path.toString() + '.js',
                 dfd = new Deferred();
             

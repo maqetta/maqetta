@@ -51,7 +51,7 @@
                 }
             ],
             "allowedChild": "dijit.layout.ContentPane",
-            "inlineEdit": "davinci.libraries.dojo.dijit.layout.AccordionContainerInput",
+            "inlineEdit": "./dijit/layout/AccordionContainerInput",
             "helper": "./dijit/layout/AccordionContainerHelper"
         },
         {
@@ -111,7 +111,7 @@
                 }
             ],
             "allowedChild": "dijit.layout.ContentPane",
-            "inlineEdit": "davinci.libraries.dojo.dijit.layout.BorderContainerInput",
+            "inlineEdit": "./dijit/layout/BorderContainerInput",
             "helper": "./dijit/layout/BorderContainerHelper"
         },
         {
@@ -204,7 +204,7 @@
             "isLayered": true,
             "allowedChild": "dijit.PopupMenuBarItem",
             "helper": "./dijit/MenuHelper",
-            "inlineEdit": "davinci.libraries.dojo.dijit.MenuBarInput"
+            "inlineEdit": "./dijit/MenuBarInput"
         },
         {
             "name": "TabContainer",
@@ -234,7 +234,7 @@
                 }
             ],
             "allowedChild": "dijit.layout.ContentPane",
-            "inlineEdit": "davinci.libraries.dojo.dijit.layout.StackContainerInput",
+            "inlineEdit": "./dijit/layout/StackContainerInput",
             "helper": "./dijit/layout/TabContainerHelper"
         },
         {
@@ -288,7 +288,7 @@
             ],
             "resizable": "none",
             "allowedChild": "dijit.form.Button",
-            "inlineEdit": "davinci.libraries.dojo.dijit.ToolbarInput"
+            "inlineEdit": "./dijit/ToolbarInput"
         },
         {
             "name": "Button",
@@ -373,7 +373,7 @@
             ],
             "resizable": "width",
             "helper": "./dijit/form/SelectHelper",
-            "inlineEdit": "davinci.libraries.dojo.dijit.form.SelectInput"
+            "inlineEdit": "./dijit/form/SelectInput"
         },
         {
             "name": "ComboButton",
@@ -409,7 +409,7 @@
             "resizable": "none",
             "isControl": true,
             "helper": "./dijit/form/DropDownButtonHelper",
-            "inlineEdit": "davinci.libraries.dojo.dijit.form.DropDownButtonInput"
+            "inlineEdit": "./dijit/form/DropDownButtonInput"
         },
         {
             "name": "CurrencyTextBox",
@@ -470,7 +470,7 @@
             ],
             "tool": "davinci.libraries.dojo.dojox.grid.DataGridCreateTool",
             "helper": "./dojox/grid/DataGridHelper",
-            "inlineEdit": "davinci.libraries.dojo.dojox.grid.DataGridInput"
+            "inlineEdit": "./dojox/grid/DataGridInput"
         },
         {
             "name": "DateTextBox",
@@ -531,7 +531,7 @@
             "resizable": "none",
             "isControl": true,
             "helper": "./dijit/form/DropDownButtonHelper",
-            "inlineEdit": "davinci.libraries.dojo.dijit.form.DropDownButtonInput",
+            "inlineEdit": "./dijit/form/DropDownButtonInput",
             "allowedChild": "dijit.Menu, dijit.TooltipDialog"
         },
         {
@@ -567,7 +567,7 @@
             "resizable": "none",
             "isControl": true,
             "helper": "./dijit/form/SelectHelper",
-            "inlineEdit": "davinci.libraries.dojo.dijit.form.SelectInput"
+            "inlineEdit": "./dijit/form/SelectInput"
         },
         {
             "name": "FilteringSelect",
@@ -601,7 +601,7 @@
             ],
             "resizable": "width",
             "helper": "./dijit/form/SelectHelper",
-            "inlineEdit": "davinci.libraries.dojo.dijit.form.SelectInput"
+            "inlineEdit": "./dijit/form/SelectInput"
         },
         {
             "name": "Menu",
@@ -673,7 +673,7 @@
             ],
             "resizable": "width",
             "helper": "./dijit/form/SelectHelper",
-            "inlineEdit": "davinci.libraries.dojo.dijit.form.OptionsInput"
+            "inlineEdit": "./dijit/form/OptionsInput"
         },
         {
             "name": "NumberSpinner",
@@ -799,7 +799,7 @@
             "resizable": "none",
             "allowedChild": "ANY",
             "helper": "./dijit/TooltipHelper",
-            "inlineEdit": "davinci.ve.input.RichTextInput"
+            "inlineEdit": "davinci/ve/input/RichTextInput"
         },
         {
             "name": "TooltipDialog",
@@ -882,7 +882,7 @@
                 }
             ],
             "tool": "davinci.libraries.dojo.dijit.TreeCreateTool",
-            "inlineEdit": "davinci.libraries.dojo.dijit.TreeInput"
+            "inlineEdit": "./dijit/TreeInput"
         },
         {
             "name": "TreeGrid",
@@ -964,7 +964,7 @@
             ],
             "tool": "davinci.libraries.dojo.dojox.grid.TreeGridCreateTool",
             "helper": "./dojox/grid/TreeGridHelper"
-            /*"inlineEdit": "davinci.libraries.dojo.dojox.grid.TreeGridInput" */
+            /*"inlineEdit": "./dojox/grid/TreeGridInput" */
         },
         {
             "name": "ValidationTextBox",
@@ -1694,7 +1694,7 @@
                 }
             ],
             "allowedChild": "dijit.layout.ContentPane",
-            "inlineEdit": "davinci.libraries.dojo.dijit.layout.StackContainerInput"
+            "inlineEdit": "./dijit/layout/StackContainerInput"
         },
         {
             "name": "RadioGroupFade",
@@ -1724,7 +1724,7 @@
                 }
             ],
             "allowedChild": "dijit.layout.ContentPane",
-            "inlineEdit": "davinci.libraries.dojo.dijit.layout.StackContainerInput"
+            "inlineEdit": "./dijit/layout/StackContainerInput"
         },
         {
             "name": "RadioGroupSlide",
@@ -1754,7 +1754,7 @@
                 }
             ],
             "allowedChild": "dijit.layout.ContentPane",
-            "inlineEdit": "davinci.libraries.dojo.dijit.layout.StackContainerInput"
+            "inlineEdit": "./dijit/layout/StackContainerInput"
         },
         {
             "name": "ColorPicker",
@@ -1776,7 +1776,7 @@
             "resizable": "none",
             "invisible": false,
             "helper": "./dojo/data/ItemFileReadStoreHelper",
-            "inlineEdit": "davinci.libraries.dojo.dojo.data.ItemFileReadStoreInput"
+            "inlineEdit": "./dojo/data/ItemFileReadStoreInput"
         },
         {
             "name": "ItemFileWriteStore",
@@ -1788,7 +1788,7 @@
             "tool": "davinci.libraries.dojo.dojo.data.DataStoreCreateTool",
             "resizable": "none",
             "invisible": false,
-            "inlineEdit": "davinci.libraries.dojo.dojo.data.ItemFileReadStoreInput"
+            "inlineEdit": "./dojo/data/ItemFileReadStoreInput"
         },
         {
             "name": "ForestStoreModel",
@@ -1837,7 +1837,7 @@
             ],
             "helper": "./dijit/form/DataListHelper",
             "tool": "davinci.libraries.dojo.dijit.form.DataListCreateTool",
-            /*"inlineEdit": "davinci.libraries.dojo.dojo.data.ItemFileReadStoreInput" */
+            /*"inlineEdit": "./dojo/data/ItemFileReadStoreInput" */
         },
         {
             "name": "View",
@@ -1941,7 +1941,7 @@
             "icon": "resources/images/dx-mbl-roundrectlist.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADlck9jf6ra/zGiKukNvpERvo/P3/Ex7r0x9sUx8r1KHuVKHuFaOv3io0bnW78jg8////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABEALAAAAAAQABAAAAVWYCSOZGmeptEwbNs2hmgwgWHfd8DETQD9wKAh0IgsDBBEcGlQRBLIpfTwdFiv2CsVKp1GCkhlF2IgRAaC8c8gGEQeAAFuLgA8RI8BYM/nD+4ogYKDgiEAOw==",
             "allowedChild": "dojox.mobile.ListItem",
-            "inlineEdit": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeListInput",
+            "inlineEdit": "./dojox/mobile/EdgeToEdgeListInput",
             "children": [
                 {
                     "type": "dojox.mobile.ListItem",
@@ -1988,7 +1988,7 @@
             ],
             "tool": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool",
             "helper": "./dojox/mobile/EdgeToEdgeDataListHelper",
-            "inlineEdit": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListInput"
+            "inlineEdit": "./dojox/mobile/EdgeToEdgeDataListInput"
         },
         {
             "name": "EdgeToEdgeCategory",
@@ -2009,7 +2009,7 @@
             "icon": "resources/images/dx-mbl-edge-edgellist.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5KhTJRijdakzlckztfljtglj5kmz9mnT5lmkFqoEJqoEVyp0ZxpkVypkl3q0p4q0x9sU+CtU1+sVCDtVSLvVKHuVOHuVWLvVaOv7nW7////////wAAAAAAAAAAAAAAACH5BAEAABsALAAAAAAQABAAAAVa4CaOZCliaKquG6a9cAxjG6UBNxAIxyJVFc1lY5EZX5XNJMNsOpuRjeRohGwct9yu9ws+NgyqrLFJPM9MxcYgjiE2hCxAx/MBNYXNoA0b6AeAgYKCJoWGhyIhADs=",
             "allowedChild": "dojox.mobile.ListItem",
-            "inlineEdit": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeListInput",
+            "inlineEdit": "./dojox/mobile/EdgeToEdgeListInput",
             "children": [
                 {
                     "type": "dojox.mobile.ListItem",
@@ -2056,7 +2056,7 @@
             ],
             "tool": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool",
             "helper": "./dojox/mobile/EdgeToEdgeDataListHelper",
-            "inlineEdit": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListInput"
+            "inlineEdit": "./dojox/mobile/EdgeToEdgeDataListInput"
         },
         {
             "name": "ListItem",
@@ -2181,7 +2181,7 @@
             ],
             "tool": "davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool",
             "helper": "./dojox/mobile/ComboBoxHelper",
-            "inlineEdit": "davinci.libraries.dojo.dojox.mobile.MobileComboBoxInput"
+            "inlineEdit": "./dojox/mobile/MobileComboBoxInput"
         },
         {
             "name": "TextArea",
@@ -2221,7 +2221,7 @@
                 }
             },
             "helper": "./dojox/mobile/TabBarHelper",
-            "inlineEdit": "davinci.libraries.dojo.dojox.mobile.TabBarInput",
+            "inlineEdit": "./dojox/mobile/TabBarInput",
             "allowedChild": "dojox.mobile.TabBarButton",
             "properties": {
                 "barType": "segmentedControl"
@@ -2344,7 +2344,7 @@
             "properties": {
                 "labels": ['A','B','C','D','E']
             },
-            "inlineEdit": "davinci.libraries.dojo.dojox.mobile.SpinWheelSlotInput"
+            "inlineEdit": "./dojox/mobile/SpinWheelSlotInput"
         },
         {
             "name": "SpinWheelDatePicker",

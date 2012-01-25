@@ -1,13 +1,17 @@
-dojo.provide("davinci.ve.themeEditor.commands.StateChangeCommand");
+define([
+    	"dojo/_base/declare",
+    	"davinci/ve/themeEditor/commands/ThemeEditorCommand"
+], function(declare, ThemeEditorCommand){
 
-dojo.require("davinci.ve.themeEditor.commands.ThemeEditorCommand");
-dojo.declare("davinci.ve.themeEditor.commands.StateChangeCommand", davinci.ve.themeEditor.commands.ThemeEditorCommand, {
+
+return declare("davinci.ve.themeEditor.commands.StateChangeCommand", [ThemeEditorCommand], {
+
 
 	constructor: function(args){
 		dojo.mixin(this, args);
 	},
 	execute: function(){
-		//debugger;;
+	
 		this.old_selectedWidget = this._themeEditor._selectedWidget;
 		this.old_selectedSubWidget = this._themeEditor._selectedSubWidget;
 		this._themeEditor._currentState = this._newState; // the state is for all the widgets on the page
@@ -16,7 +20,6 @@ dojo.declare("davinci.ve.themeEditor.commands.StateChangeCommand", davinci.ve.th
     	
 
 		if(!this._widgets){
-			//this._widgets = dojo.query('[dvThemeWidget="true"]');
 			this._widgets = this._themeEditor.getContext().getDocument().querySelectorAll('.dvThemeWidget');
 		}
 		var widgets = this._widgets; 
@@ -47,7 +50,7 @@ dojo.declare("davinci.ve.themeEditor.commands.StateChangeCommand", davinci.ve.th
 	},
 
 	undo: function(){
-		//debugger;
+
 		this._themeEditor._selectedWidget = this.old_selectedWidget;
 		this._themeEditor._selectedSubWidget = this.old_selectedSubWidget;
 		this._themeEditor._currentState = this._oldState; // the state is for all the widgets on the page
@@ -77,4 +80,5 @@ dojo.declare("davinci.ve.themeEditor.commands.StateChangeCommand", davinci.ve.th
 
 		dojo.publish("/davinci/states/state/changed", [{widget:'$all', newState:this._oldState, oldState:this._newState, origin: this.declaredClass, context: this._themeEditor.context}]); 
 	}
+});
 });

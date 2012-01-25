@@ -1,9 +1,11 @@
-dojo.provide("davinci.ve.commands.ModifyRuleCommand");
+define([
+    	"dojo/_base/declare",
+    	"davinci/ve/widget",
+    	"davinci/ve/States"
+], function(declare, Widget, States){
 
 
-dojo.require("davinci.ve.widget");
-
-dojo.declare("davinci.ve.commands.ModifyRuleCommand", null, {
+return declare("davinci.ve.commands.ModifyRuleCommand", null, {
 
 	name: "modify rule",
 
@@ -51,4 +53,5 @@ dojo.declare("davinci.ve.commands.ModifyRuleCommand", null, {
 
 	}
 
+});
 });

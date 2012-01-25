@@ -1,8 +1,11 @@
-dojo.provide("davinci.ve.commands.ModifyAttributeCommand");
+define([
+    	"dojo/_base/declare",
+    	"davinci/ve/widget",
+    	"davinci/ve/States"
+], function(declare, Widget,  States){
 
-dojo.require("davinci.ve.widget");
 
-dojo.declare("davinci.ve.commands.ModifyAttributeCommand", null, {
+return declare("davinci.ve.commands.ModifyAttributeCommand", null, {
 
 	name: "ModifyAttributeCommand",
 
@@ -102,4 +105,5 @@ dojo.declare("davinci.ve.commands.ModifyAttributeCommand", null, {
 		
 	}
 
+});
 });

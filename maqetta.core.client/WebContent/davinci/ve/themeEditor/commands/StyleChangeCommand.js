@@ -3,7 +3,7 @@ define([
 	"davinci/ve/themeEditor/commands/ThemeEditorCommand",
 	"davinci/ve/themeEditor/ThemeColor"
 ], function(declare, ThemeEditorCommand, ThemeColor) {
-return declare("davinci.ve.themeEditor.commands.StyleChangeCommand", ThemeEditorCommand, {
+return declare("davinci.ve.themeEditor.commands.StyleChangeCommand", [ThemeEditorCommand], {
 
 	constructor: function(args){
 		dojo.mixin(this, args);

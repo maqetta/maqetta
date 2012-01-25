@@ -1,29 +1,29 @@
 {
-    "id": "http://www.w3.org/html/body",
-    "name": "html.body",
-    "spec": "1.0",
-    "version": "1.0",
-    "require": [
-        {
-            "type": "css",
-            "src": "app.css",
-            "$library": "maqetta"
-        },
-        {
-            "type": "javascript",
-            "src": "maqetta/maqetta.js",
-            "$library": "maqetta"
-        },
-        {
-            "type": "javascript",
-            "src": "maqetta/States.js",
-            "$library": "maqetta"
-        }
-    ],
-    "library": {
-        "maqetta": {
-            "src": ""
-        }
-    },
-    "content": "<body></body>",
+	"id": "http://www.w3.org/html/body",
+	"name": "html.body",
+	"spec": "1.0",
+	"version": "1.0",
+	"require": [
+		{
+			"type": "css",
+			"src": "app.css",
+			"$library": "maqetta"
+		},
+		{
+			"type": "javascript",
+			"src": "maqetta/maqetta.js",
+			"$library": "maqetta"
+		},
+		{
+			"type": "javascript",
+			"src": "maqetta/States.js",
+			"$library": "maqetta"
+		}
+	],
+	"library": {
+		"maqetta": {
+			"src": ""
+		}
+	},
+	"content": "<body></body>",
 }

@@ -1,0 +1,105 @@
+{
+	"id": "http://www.w3.org/html/button",
+	"name": "html.button",
+	"spec": "1.0",
+	"version": "1.0",
+	"property": {
+		"autofocus": {
+			"datatype": "boolean",
+			"description": "Specifies that a button should automatically get focus when the page loads"
+		},	
+		"disabled": {
+			"datatype": "boolean",
+			"description": "Specifies that a button should be disabled"
+		},
+		"formaction": {
+			"datatype": "string",
+			"format": "url",
+			"hidden": "true",
+			"description": "Specifies where to send the form-data when a form is submitted. Only for type=\"submit\""
+		},
+		"formenctype": {
+			"datatype": "string",
+			"option": [
+				{
+					"value": "application/x-www-form-urlencoded"
+				},
+				{
+					"value": "multipart/form-data"
+				},
+				{
+					"value": "text/plain"
+				}
+			],
+			"defaultValue": "application/x-www-form-urlencoded",
+			"hidden": "true",
+			"description": "Specifies how form-data should be encoded before sending it to a server. Only for type=\"submit\""
+		},
+		"formmethod": {
+			"datatype": "string",
+			"option": [
+				{
+					"value": "get"
+				},
+				{
+					"value": "post"
+				}
+			],
+			"defaultValue": "get",
+			"hidden": "true",
+			"description": "Specifies how to send the form-data (which HTTP method to use). Only for type=\"submit\""
+		},
+		"formnovalidate": {
+			"datatype": "boolean",
+			"hidden": "true",
+			"description": "Specifies that the form-data should not be validated on submission. Only for type=\"submit\""
+		},
+		"formtarget": {
+			"datatype": "string",
+			"option": [
+					{
+						"value": "_blank"
+					},
+					{
+						"value": "_parent"
+					},
+					{
+						"value": "_self"
+					},
+					{
+						"value": "_top"
+					}
+			],
+			"unconstrained": "true",
+			"defaultValue": "_self",
+			"hidden": "true",
+			"description": "Specifies where to display the response after submitting the form. Only for type=\"submit\"",
+		},
+		"name": {
+			"datatype": "string",
+			"description": "Specifies a name for the button"
+		},
+		"type": {
+			"datatype": "string",
+			"option": [
+				{
+					"value": "button"
+				},
+				{
+					"value": "reset"
+				},
+				{
+					"value": "submit"
+				}
+			],
+			"defaultValue": "submit",
+			"description": "Specifies a type for the button"
+		},
+		"value": {
+			"datatype": "string",
+			"description": "Specifies an initial value for the button",
+			"hidden": true
+		}
+	},
+	"content": "<button></button>"
+}

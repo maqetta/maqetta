@@ -1,9 +1,12 @@
-dojo.provide("davinci.ve.commands.AddCommand");
+define([
+    	"dojo/_base/declare",
+    	"davinci/ve/widget",
+    	"davinci/ve/utils/ImageUtils",
+    	"davinci/ve/States"
+], function(declare, Widget,  ImageUtils, States){
 
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.ve.utils.ImageUtils");
 
-dojo.declare("davinci.ve.commands.AddCommand", null, {
+return declare("davinci.ve.commands.AddCommand", null, {
 
 	name: "add",
 
@@ -21,7 +24,7 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 
 	execute: function(){
 
-		var parent = davinci.ve.widget.byId(this._parentId); 
+		var parent = Widget.byId(this._parentId); 
 		if(!parent){
 			return;
 		}
@@ -31,20 +34,18 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 			//this.undo(); // try to remove old widget first, mostly for redo
 			if (this._id && this._data.properties)
 				this._data.properties.id= this._id;
-			widget = davinci.ve.widget.createWidget(this._data);
+			widget = Widget.createWidget(this._data);
 		}else if(this._id){
-			widget = davinci.ve.widget.byId(this._id, context);
+			widget = Widget.byId(this._id, context);
 		}
 		if(!widget){
 			return;
 		}
-		//if(!this._data){ // save for redo -- wdr
 		// after creating the widget we need to refresh the data, the createWidget function removes the id's of the widgets and 
 		// children. We need the id's to be consistent for undo/redo to work -- wdr
-			this._data = widget.getData();
-			this._data.properties.id= this._id;
-			this._data.context = context;
-		//}
+		this._data = widget.getData();
+		this._data.properties.id= this._id;
+		this._data.context = context;
 		
 
 
@@ -54,7 +55,7 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 				this._index = parent.indexOf(  this._index);
 			} else {
 				// _index is no longer valid since it was replaced, lets find it
-				var w = davinci.ve.widget.byId(this._index.id, context);
+				var w = Widget.byId(this._index.id, context);
 				this._index = parent.indexOf(w);
 			}
 		}
@@ -63,7 +64,7 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 		// so selection/focus box will be wrong upon creation.
 		// To fix, register an onload handler which calls updateFocus()
 		if(widget.domNode.tagName === 'IMG'){
-			davinci.ve.utils.ImageUtils.ImageUpdateFocus(widget, context);
+			ImageUtils.ImageUpdateFocus(widget, context);
 		}
 		
 		parent.addChild(  widget, this._index);
@@ -74,17 +75,7 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 			widget.renderWidget();
 		}
 
-//		if(!this._data){
-//			this._data = davinci.ve.widget.getData(widget);
-//		}else if(!this._id){
-//			this._id = widget.id;
-//			// hold auto-assigned ID in data
-//			if(!this._data.properties){
-//				this._data.properties = {id: widget.id};
-//			}else{
-//				this._data.properties.id = widget.id;
-//			}
-//		}
+
 		// Recompute styling properties in case we aren't in Normal state
 		davinci.ve.states.resetState(widget);
 	},
@@ -94,12 +85,12 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 		if(!this._id || !this._parentId){
 			return;
 		}
-		var widget = davinci.ve.widget.byId(this._id);
+		var widget = Widget.byId(this._id);
 		if(!widget){
 			return;
 		}
 		
-		var parent = davinci.ve.widget.byId(this._parentId);
+		var parent = Widget.byId(this._parentId);
 		if(!parent){
 			return;
 		}
@@ -116,4 +107,5 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 		davinci.ve.states.resetState(widget);
 	}
 
+});
 });

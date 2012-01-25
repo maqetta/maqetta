@@ -249,7 +249,7 @@ davinci.ve.widget.getLabel = function(widget){
 	var className = classAttr && classAttr.trim();
 	if (id || className) {
 		text += "<span class='propertiesTitleClassName'>";
-		//text += domNode.tagName;
+		//text += node.tagName;
 		if (id) {
 			text += "#" + id;
 		}

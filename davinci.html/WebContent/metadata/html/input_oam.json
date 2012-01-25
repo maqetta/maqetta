@@ -1,0 +1,266 @@
+{
+	"id": "http://www.w3.org/html/input",
+	"name": "html.input",
+	"spec": "1.0",
+	"version": "1.0",
+	"property": {
+		"accept": {
+			"datatype": "string",
+			"option": [
+				{
+					"value": ""
+				},
+				{
+					"value": "audio/*"
+				},
+				{
+					"value": "video/*"
+				},
+				{
+					"value": "image/*"
+				}
+			],
+			"unconstrained": "true",
+			"defaultValue": "",
+			"description": "Specifies the types of files that the server accepts (only for type=\"file\")"
+		},
+		"alt": {
+			"datatype": "string",
+			"description": "Specifies an alternate text for images (only for type=\"image\")"
+		},
+		"autocomplete": {
+			"datatype": "string",
+			"option": [
+				{
+					"value": "on"
+				},
+				{
+					"value": "off"
+				}
+			],
+			"description": "Specifies whether an <input> element should have autocomplete enabled"
+		},
+		"autofocus": {
+			"datatype": "boolean",
+			"description": "Specifies that an <input> element should automatically get focus when the page loads"
+		},	
+		"checked": {
+			"datatype": "boolean",
+			"description": "Specifies that an <input> element should be pre-selected when the page loads (for type=\"checkbox\" or type=\"radio\")"
+		},
+		 "disabled": {
+			"datatype": "boolean",
+			"defaultValue": false,
+			"description": "Specifies that an <input> element should be disabled"
+		},
+		"formaction": {
+			"datatype": "string",
+			"format": "url",
+			"hidden": "true",
+			"description": "Specifies the URL of the file that will process the input control when the form is submitted (for type=\"submit\" and type=\"image\")"
+		},
+		"formenctype": {
+			"datatype": "string",
+			"option": [
+				{
+					"value": "application/x-www-form-urlencoded"
+				},
+				{
+					"value": "multipart/form-data"
+				},
+				{
+					"value": "text/plain"
+				}
+			],
+			"defaultValue": "application/x-www-form-urlencoded",
+			"hidden": "true",
+			"description": "Specifies how the form-data should be encoded when submitting it to the server (for type=\"submit\" and type=\"image\")"
+		},
+		"formmethod": {
+			"datatype": "string",
+			"option": [
+				{
+					"value": "get"
+				},
+				{
+					"value": "post"
+				}
+			],
+			"defaultValue": "get",
+			"hidden": "true",
+			"description": "Defines the HTTP method for sending data to the action URL (for type=\"submit\" and type=\"image\")"
+		},
+		"formnovalidate": {
+			"datatype": "boolean",
+			"hidden": "true",
+			"description": "Defines that form elements should not be validated when submitted"
+		},
+		"formtarget": {
+			"datatype": "string",
+			"option": [
+				{
+					"value": "_blank"
+				},
+				{
+					"value": "_parent"
+				},
+				{
+					"value": "_self"
+				},
+				{
+					"value": "_top"
+				}
+			],
+			"defaultValue": "_self",
+			"hidden": "true",
+			"description": "Specifies where to display the response that is received after submitting the form",
+			"unconstrained": true
+		},
+		"height": {
+			"datatype": "string",
+			"description": "Specifies the height of an <input> element (only for type=\"image\")",
+			"hidden": true
+		},
+		"list": {
+			"datatype": "string",
+			"description": "Refers to a <datalist> element that contains pre-defined options for an <input> element",
+			"hidden": true
+		},
+		"max": {
+			"datatype": "number|date",
+			"description": "Specifies the maximum value for an <input> element (can be a number or a date)"
+		},
+		"maxlength": {
+			"datatype": "number",
+			"description": "Specifies the maximum number of characters allowed in an <input> element"
+		},
+		"min": {
+			"datatype": "number|date",
+			"description": "Specifies a minimum value for an <input> element (can be a number or a date)"
+		},
+		"multiple": {
+			"datatype": "boolean",
+			"description": "Specifies that a user can enter more than one value in an <input> element"
+		},
+		"name": {
+			"datatype": "string",
+			"description": "Specifies the name of an <input> element"
+		},
+		"pattern": {
+			"datatype": "regexp",
+			"description": "Specifies a regular expression that an <input> element's value is checked against"
+		},
+		"placeholder": {
+			"datatype": "string",
+			"description": "Specifies a short hint that describes the expected value of an <input> element"
+		},
+		"readonly": {
+			"datatype": "boolean",
+			"description": "Specifies that an input field is read-only"
+		},
+		"required": {
+			"datatype": "boolean",
+			"description": "Specifies that an input field must be filled out before submitting the form"
+		},
+		"size": {
+			"datatype": "number",
+			"description": "Specifies the width, in characters, of an <input> element"
+		},
+		"src": {
+			"datatype": "string",
+			"format": "url",
+			"description": "Specifies the URL of the image to use as a submit button (only for type=\"image\")",
+		},
+		"step": {
+			"datatype": "number",
+			"description": "Specifies the legal number intervals for an input field",
+			"hidden": true
+		},
+		"type": {
+			"datatype": "string",
+			"option": [
+				{
+					"value": "button"
+				},
+				{
+					"value": "checkbox"
+				},
+				{
+					"value": "color"
+				},
+				{
+					"value": "date"
+				},
+				{
+					"value": "datetime"
+				},
+				{
+					"value": "datetime-local"
+				},
+				{
+					"value": "email"
+				},
+				{
+					"value": "file"
+				},
+				{
+					"value": "hidden"
+				},
+				{
+					"value": "image"
+				},
+				{
+					"value": "month"
+				},
+				{
+					"value": "number"
+				},
+				{
+					"value": "password"
+				},
+				{
+					"value": "radio"
+				},
+				{
+					"value": "range"
+				},
+				{
+					"value": "reset"
+				},
+				{
+					"value": "search"
+				},
+				{
+					"value": "submit"
+				},
+				{
+					"value": "tel"
+				},
+				{
+					"value": "text"
+				},
+				{
+					"value": "time"
+				},
+				{
+					"value": "url"
+				},
+				{
+					"value": "week"
+				}
+			],
+			"defaultValue": "text",
+			"description": "Specifies the type <input> element to display"
+		},
+		"value": {
+			"datatype": "string",
+			"description": "Specifies the value of an <input> element"
+		},
+		"width": {
+			"datatype": "string",
+			"description": "Specifies the width of an <input> element (only for type=\"image\")",
+			"hidden": true
+		}
+	},
+	"content": "<input></input>"
+}

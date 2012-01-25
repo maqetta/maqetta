@@ -29,6 +29,7 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.ajaxLibrary.ILibraryFinder;
 import org.davinci.ajaxLibrary.Library;
+import org.davinci.server.review.Constants;
 import org.davinci.server.user.IPerson;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.LibrarySettings;
@@ -51,7 +52,19 @@ public class User implements IUser {
 	private Links links;
 	private IPerson person;
 	private IVResource workspace;
-	
+    static {
+        Constants.LOCAL_INSTALL_USER_OBJ = 
+             new User(new IPerson() {
+                public String getUserName() {
+                    return Constants.LOCAL_INSTALL_USER_NAME;
+                }
+                public String getEmail() {
+                    return "";
+                }
+             }
+            ,ReviewManager.getReviewManager().getBaseDirectory());
+        
+    }	
 
 
 	public User(IPerson person, File userDirectory) {

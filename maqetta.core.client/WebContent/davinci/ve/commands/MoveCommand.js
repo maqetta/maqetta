@@ -1,9 +1,11 @@
-dojo.provide("davinci.ve.commands.MoveCommand");
+define([
+    	"dojo/_base/declare",
+    	"davinci/ve/widget",
+    	"davinci/ve/States"
+], function(declare, Widget, States){
 
-dojo.require("davinci.ve.widget");
 
-dojo.declare("davinci.ve.commands.MoveCommand", null, {
-
+return declare("davinci.ve.commands.MoveCommand", null, {
 	name: "move",
 
 	constructor: function(widget, left, top, commandForXYDeltas){
@@ -24,7 +26,7 @@ dojo.declare("davinci.ve.commands.MoveCommand", null, {
 		if(!this._id){
 			return;
 		}
-		var widget = davinci.ve.widget.byId(this._id);
+		var widget = Widget.byId(this._id);
 		if(!widget){
 			return;
 		}
@@ -108,7 +110,7 @@ dojo.declare("davinci.ve.commands.MoveCommand", null, {
 		if(!this._id){
 			return;
 		}
-		var widget = davinci.ve.widget.byId(this._id);
+		var widget = Widget.byId(this._id);
 		if(!widget){
 			return;
 		}
@@ -126,4 +128,5 @@ dojo.declare("davinci.ve.commands.MoveCommand", null, {
 		dojo.publish("/davinci/ui/widgetPropertiesChanged",[[widget]]);
 	}
 
+});
 });

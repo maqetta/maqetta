@@ -1,14 +1,17 @@
-dojo.provide("davinci.ve.themeEditor.Context");
+define([
+    	"dojo/_base/declare",
+    	"davinci/commands/CommandStack",
+    	"davinci/ve/widget",
+    	"davinci/ve/themeEditor/SelectTool",
+    	"davinci/ve/Context",
+    	"davinci/util",
+    	"davinci/library",
+    	"davinci/ve/metadata"
+], function(declare, CommandStack, Widget, SelectTool, Context, Util, Library, Metadata){
 
-dojo.require("davinci.commands.CommandStack");
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.ve.themeEditor.SelectTool");
-dojo.require("davinci.ve.Context");
-dojo.require("davinci.util"); 
 
-
-dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
-
+return declare("davinci.ve.themeEditor.Context", [Context], {
+	
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit/dijit,dijit/dijit-all", // dijit-all hangs FF4 and does not seem to be needed.
 	//_bootstrapModules: "dijit/dijit",
@@ -18,17 +21,12 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 		this._id = "_edit_context_" + this._contextCount++;
 		this._editor = args.editor;
 		this._visualEditor = args.visualEditor;
-		
 		dojo.mixin(this, args);
-
 		if(dojo.isString(this.containerNode)){
 			this.containerNode = dijit.byId(this.containerNode);
 		}
-
-		//this._commandStack = new davinci.commands.CommandStack(this);
-		this._commandStack = new davinci.commands.CommandStack(this);
-		this._defaultTool = new davinci.ve.themeEditor.SelectTool();
-
+		this._commandStack = CommandStack(this);
+		this._defaultTool = new SelectTool();
 		this._widgetIds = [];
 		this._objectIds = [];
 		this._widgets=[];
@@ -71,26 +69,12 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 			scripts: data.scripts,
 			modules: data.modules,
 			styleSheets: data.styleSheets,
-			//className: data.className,
 			theme: data.theme,
 			bodyClasses: data.bodyClasses,
 			style: data.style
 		});
-
 		content = (data.content || "");
-		
-		//check whether theme exists.. can this be treated as exception?
-//		var themeExist = content.indexOf("theme");
-//		debugger;
-//		if(themeExist != -1){
-//			//if exists then extract the theme name from the content.
-//			var end = content.indexOf("\r", themeExist);
-//			var themeName = content.substring(themeExist+7, end-1);
-//			//store in container node to store it in theme object.
-//			this._themeName = themeName;
-//		}
-		this._themeName = data.theme; // wdr
-		
+		this._themeName = data.theme; 
 		var containerNode = this.getContainerNode();
 		var active = this.isActive();
 		if(active){
@@ -109,7 +93,6 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 		containerNode.innerHTML = content;
 		dojo.forEach(dojo.query("*", containerNode), function(n){
 			this.loadRequires(n.getAttribute("dojoType"));
-//				this.resolveUrl(n);
 		}, this);
 		this.getGlobal()["require"]("dojo/ready")(function(){
 			try {
@@ -135,7 +118,6 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 		if(active){
 			dojo.query("> *", this.rootNode).map(davinci.ve.widget.getWidget).forEach(this.attach, this);
 		}
-
 		// remove the styles from all widgets and subwidgets that supported the state
 		dojo.query('.dvThemeWidget').forEach(this.theme.removeWidgetStyleValues);
 			// set the style on all widgets and subwidgets that support the state
@@ -148,7 +130,6 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 		if(!widget || widget.internal){
 			return;
 		}
-//		var isThemeWidget = "true"==widget._srcElement.getAttribute('dvThemeWidget');
 		var isThemeWidget = false;
 		var classes = widget.getClassNames();
 		if (classes && classes.indexOf('dvThemeWidget') > -1){
@@ -159,12 +140,13 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 				isThemeWidget: isThemeWidget
 		};
 		if (isThemeWidget) {
-			davinci.util.arrayAddOnce(this._widgets, widget);
+			Util.arrayAddOnce(this._widgets, widget);
 		}
 	},
+	
 	getThemeMeta: function(){
 		if(!this._themeMetaCache) {
-			this._themeMetaCache = davinci.library.getThemeMetadata(this.theme);
+			this._themeMetaCache = Library.getThemeMetadata(this.theme);
 		}
 
 		return this._themeMetaCache;
@@ -199,20 +181,12 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 		
 		var box = undefined;
 		var op = undefined;
-		if (!davinci.ve.metadata.queryDescriptor(widget.type, "isInvisible")) {
+		if (!Metadata.queryDescriptor(widget.type, "isInvisible")) {
 			var node = widget.getStyleNode();
 			box = this.getDojo().position(node, true);
-			/*var p = this.getContentPosition(box);
-			var e = dojo._getMarginExtents(node);
-			box.l = Math.round(p.x - e.l);
-			box.t = Math.round(p.y - e.t);*/
 			box.l = box.x;
 			box.t = box.y;
-
 			op = {move: false};
-
-			//FIXME: need to consult metadata to see if layoutcontainer children are resizable, and if so on which axis
-			
 			op.resizeWidth = false;
 			op.resizeHeight = false;
 		}
@@ -223,13 +197,16 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 			this.onSelectionChange(this.getSelection());
 		}
 	},
+	
 	onSelectionChange: function(selection){
-		//dojo.publish("/davinci/ui/widgetSelected",[selection]);
+
 	},
+	
 	getStyleAttributeValues: function(widget){
 		/* no style attributes for theme editor */
 		return {};
 	},
+	
 	_restoreStates: function(){
 	    
 	},
@@ -271,5 +248,6 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
         return path;
 	 }
 	 
+});
 });
 

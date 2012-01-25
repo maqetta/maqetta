@@ -492,7 +492,7 @@ return declare("davinci.ve.Context", null, {
     	this.getGlobal()["require"](["dojo/_base/config"]).mblUserAgent =
     			preview.silhouetteiframe.getMobileTheme(device + '.svg');
     	var bodyElement = this.getDocumentElement().getChildElement("body");
-        if (!device || device === 'none') {
+        if (! device || device === 'none') {
             bodyElement.removeAttribute(MOBILE_DEV_ATTR, device);
         } else {
             bodyElement.addAttribute(MOBILE_DEV_ATTR, device);
@@ -636,18 +636,19 @@ return declare("davinci.ve.Context", null, {
        	    defaultThemeName = newHtmlParms.themeSet.desktopTheme;
        	} else if (newHtmlParms && newHtmlParms.theme){
        	    if (newHtmlParms.theme == 'deviceSpecific') {
-       	    	defaultThemeName = "claro"; 
+       	     defaultThemeName = "claro"; 
        	    } else {
        	        defaultThemeName = newHtmlParms.theme;
        	    }
        	}
     	var imports = model.find({elementType:'CSSImport'});
-
+		
+		
 		/* remove the .theme file, and find themes in the given base location */
 		var allThemes = davinci.library.getThemes(davinci.Runtime.getProject()),
 			themeHash = {},
 			defaultTheme;
-
+		
 		allThemes.forEach(function(theme){
 			if(theme.name==defaultThemeName) {
 				defaultTheme = theme;
@@ -658,9 +659,9 @@ return declare("davinci.ve.Context", null, {
 				theme.files.forEach(function(){
    			        themeHash[theme.files] = theme;
 				});
-            }			
+			}
 		});
-
+			
 		/* check the header file for a themes CSS.  
 		 * 
 		 * TODO: This is a first level check, a good second level check
@@ -681,7 +682,7 @@ return declare("davinci.ve.Context", null, {
 
 
 		this._loadThemeDojoxMobile(this);
-		var body = model.find({elementType: 'HTMLElement', tag: 'body'}, true);
+		var body = model.find({elementType:'HTMLElement', tag:'body'},true);
 		body.setAttribute("class", defaultTheme.className);
 		/* add the css */
 		var filePath = defaultTheme.file.getPath();
@@ -693,7 +694,7 @@ return declare("davinci.ve.Context", null, {
     
 // FIXME this bit of code should be moved to toolkit specific //////////////////////////////   
     _loadThemeDojoxMobile: function(context){
-
+      
         var htmlElement = context._srcDocument.getDocumentElement();
         var head = htmlElement.getChildElement("head");
         var scriptTags=head.getChildElements("script");
@@ -972,8 +973,8 @@ return declare("davinci.ve.Context", null, {
 							'<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;{0}</td></tr></table>',
 							["Loading..."]) // FIXME: i18n
 				},
-				this.frameNode.parentNode,
-				"first");
+					this.frameNode.parentNode,
+					"first");
 			dojo.addClass(loading, 'loading');
 
 			if (callbackData instanceof Error) {
@@ -1031,11 +1032,11 @@ return declare("davinci.ve.Context", null, {
 		libs.forEach(function(lib) {
 			var id = lib.id;
 			// since to loader, everything is relative to 'dojo', ignore here
-			if (!lib.root || id === 'dojo' || id === 'DojoThemes') {
+			if (! lib.root || id === 'dojo' || id === 'DojoThemes') {
 				return;
 			}
 			var root = new Path(lib.root).relativeTo(dojoBase).toString();
-			packages.push({name: lib.id, location: root });
+			packages.push({ name: lib.id, location: root });
 		});
 
 		return packages;
@@ -1099,7 +1100,7 @@ return declare("davinci.ve.Context", null, {
 
 		// remove all registered widgets
         this.getDijit().registry.forEach(function(w) {
-             w.destroy();           
+              w.destroy();           
         });
 
         // Set content
@@ -1199,7 +1200,7 @@ return declare("davinci.ve.Context", null, {
 				console.error(e);
 				// remove all registered widgets, some may be partly constructed.
 				this.getDijit().registry.forEach(function(w){
-					w.destroy();			 
+					  w.destroy();			 
 				});
 	
 				this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",
@@ -1232,6 +1233,7 @@ return declare("davinci.ve.Context", null, {
         if(helper && helper.preProcess){
             helper.preProcess(node, this);
         }
+        
     },
 	    
 	_editorSelectionChange: function(event){
@@ -1259,16 +1261,16 @@ return declare("davinci.ve.Context", null, {
 		dojo.query("> *", containerNode).map(davinci.ve.widget.getWidget).forEach(this.attach, this);
 		var currentStateCache = [];
 		var rootWidget = containerNode._dvWidget;
-		rootWidget._srcElement.visit({ visit: function(element) {
+		rootWidget._srcElement.visit({ visit: function(element){
 			if (element.elementType=="HTMLElement") {
 				var stateSrc=element.getAttribute(davinci.ve.states.ATTRIBUTE);
 				if (stateSrc && stateSrc.length) {
 					var id=element.getAttribute("id");
 					var widget;
-					if (id) {
+					if (id){
 					  widget=davinci.ve.widget.byId(id);
-					} else {
-						if (element==rootWidget._srcElement) {
+					}else{
+						if (element==rootWidget._srcElement){
 							widget=rootWidget;
 						}
 					}	
@@ -1649,14 +1651,14 @@ return declare("davinci.ve.Context", null, {
 	getSelection: function(){
 		return this._selection || [];
 	},
-	
+
 	// Returns true if inline edit is showing
 	inlineEditActive: function(){
 	    return this.getSelection().some(function(item, i){
 	    	return this._focuses[i].inlineEditActive();
 	    }, this);
 	},
-
+	
 	updateFocus: function(widget, index, inline){
 		var box, op, parent;
 
@@ -2269,8 +2271,8 @@ return declare("davinci.ve.Context", null, {
 			return theme.metadata.getRelativeStyleSelectorsText(widgetType, state, null, target);
 		});
 	},
-
-	getSelector: function(widget, target){
+		
+	getSelector: function( widget, target){
 		// return rules based on metadata IE theme
 		
 		var theme = this.getThemeMeta();
@@ -2297,20 +2299,22 @@ return declare("davinci.ve.Context", null, {
 							return name;
 						}
 					}
+	
 				}
 			}
 		}
 	},
 	
-	getMetaTargets: function(widget, target) {
+	getMetaTargets: function(widget, target){
 		var name = this.getSelector(widget, target),
 			model = this.getModel();
 		return model.getRule(name);
+		
 	},
 	
 	/* returns the top/target dom node for a widget for a specific property */
 	
-	getWidgetTopDom: function (widget, propertyTarget) {
+	getWidgetTopDom: function (widget,propertyTarget){
 	
 		var selector = this.getSelector(widget, propertyTarget);
 		// find the DOM node associated with this rule.
@@ -2338,7 +2342,7 @@ return declare("davinci.ve.Context", null, {
 		}
 		var selection = this.getSelection();
 		if (!targetDomNode && !selection.length) {
-			return {rules: null, matchLevels: null};
+			return {rules:null, matchLevels:null};
 		}
 		
 		var targetDom = targetDomNode || selection[0].domNode || selection[0],
@@ -2362,7 +2366,7 @@ return declare("davinci.ve.Context", null, {
 			return match;
 		}
 
-		return {rules: null, matchLevels: null};
+		return {rules:null, matchLevels:null};
 	},
 	
 	getStyleAttributeValues: function(widget){
@@ -2468,7 +2472,7 @@ return declare("davinci.ve.Context", null, {
 
 	addJavaScriptText: function(text, doUpdateModel, skipDomUpdate) {
 		/* run the requires if there is an iframe */
-		if (!skipDomUpdate) {
+		if (! skipDomUpdate) {
 			try {
 				this.getGlobal()['eval'](text);
 			} catch(e) {
@@ -2693,9 +2697,9 @@ return declare("davinci.ve.Context", null, {
 			if(params.widgets){
 				if(params.widgets.indexOf(widget) >= 0){
 					// Drag operations shouldn't apply to any of the widget being dragged
-					return;
+						return;
+					}
 				}
-			}
 			
 			var node = widget.domNode,
 				dj = this.getDojo(),

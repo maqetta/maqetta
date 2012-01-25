@@ -4,11 +4,6 @@ dojo.require("davinci.ve.Snap");
 
 dojo.declare("davinci.libraries.shapes.shapes._RectHelperMixin", null, {
 	
-	onCreateResize: function(compoundCommand, widget, width, height){
-		var valuesObject = {width:width, height:height};
-		compoundCommand.add(davinci.ve.commands.ModifyCommand(widget, valuesObject, null));
-	},
-	
 	dragPointsStrings:['left_top','center_top','right_top','right_middle',
 	           'right_bottom','center_bottom','left_bottom','left_middle'],
 	
@@ -53,8 +48,8 @@ dojo.declare("davinci.libraries.shapes.shapes._RectHelperMixin", null, {
 		// this.orig_* holds original x,y,width,height
 		// this.un_* holds dynamically updated "unconstrained" values for x,y,width,height
 		// (unconstrained means shift key is not held down)
-		this.un_x = this.orig_x = dijitWidget._x = 0;
-		this.un_y = this.orig_y = dijitWidget._y = 0;
+		this.un_x = this.orig_x = dijitWidget._x;
+		this.un_y = this.orig_y = dijitWidget._y;
 		this.un_width = this.orig_width = dijitWidget._width;
 		this.un_height = this.orig_height = dijitWidget._height;
 	},
@@ -154,7 +149,6 @@ dojo.declare("davinci.libraries.shapes.shapes._RectHelperMixin", null, {
             // Call the dispatcher routine that updates snap lines and
             // list of possible parents at current (x,y) location
             context.dragMoveUpdate({
-            		widgets:[this._widget],
                     data:data,
                     eventTarget:event.target,
                     position:position,

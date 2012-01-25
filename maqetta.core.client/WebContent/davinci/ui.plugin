@@ -261,7 +261,7 @@
 
                 {
                     id: "about",
-                    run: "davinci.ui.about()",
+                    run: "davinci.ui.about.show()",
                     label: "About Maqetta",
                     menubarPath: "davinci.help/about"
                 }

@@ -1,7 +1,7 @@
 {
-    "id": "http://www.w3.org/html/table",
-    "name": "html.table",
-    "spec": "1.0",
-    "version": "1.0",
-    "content": "<table></table>"
+	"id": "http://www.w3.org/html/table",
+	"name": "html.table",
+	"spec": "1.0",
+	"version": "1.0",
+	"content": "<table></table>"
 }

@@ -25,9 +25,6 @@
             "category": "html",
             "icon": "resources/images/html-a.png",
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAARVJREFUeNpi/P//PwMlgAVdQLBsB4PCy+dSQGYaEFdAhTuAeNYDccln77s88BsABSDNyUBcBuWXQukGgi6AglAg7gbaOAnEAboIRHVhM4CJgUKAywWrQc6G2gzzQgcpBsyC0l3IgYhNISN6NIJiAQZUf34HS95m52SEiREbC5AAYmMD2YE3DDACUYONFe4kRnY2BmZ2dqxyOA1gYWdluNXm8RvCZmdgAvJBACTGAmWjAFAYIGMGvbL/tp3H/7/6/f+3befR/3ZADGLbAcVAcujqMcJAwN2R8fDS9f/DWFlYmFkhNoZNPs1yaOl6sBxRCQmk8MCC1QyMQANA+MCCNVg1440FkIb9s5f/h7FxqWOkNDsDBBgAdphub5oEopsAAAAASUVORK5CYII=",
-            "properties": {
-                "href": ""
-            },
             "children": "Link",
             "resizable": "none",
             "isControl": true,
@@ -38,50 +35,44 @@
             }
         },
         {
-            "name": "<b>",
-            "description": "Bold text",
-            "type": "html.b",
+            "name": "<audio>",
+            "description": "Audio",
+            "type": "html.audio",
+            "category": "html",
+            "icon": "resources/images/element.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKEDABBVisLT4sHo/wAAACH+FUNyZWF0ZWQgd2l0aCBUaGUgR0lNUAAh+QQBCgADACwAAAAAEAAQAAACI5yPqcvtD1UACQQJRBIWTa1wl5E13PEtolciazJVY0TX9lIAADs=",
+            "properties": {
+                "controls": "controls"
+            },
+            "inlineEdit": "davinci.libraries.html.html.HtmlSrcAttributeInputEmbed"
+        },
+        {
+            "name": "<body>",
+            "type": "html.body",
             "category": "html",
             "hidden": true,
-            "resizable": "none",
-            "inlineEdit": {
-                "property": "textContent",
-                "displayOnCreate": true
-            }
+            "allowedChild": "ANY" 
         },
         {
             "name": "<br>",
             "description": "Line Break",
             "type": "html.br",
             "category": "html",
-            "hidden": true,
-            "resizable": "none"
-        },
-        {
-            "name": "<code>",
-            "description": "Code Fragment",
-            "type": "html.code",
-            "category": "html",
-            "hidden": true,
-            "resizable": "none"
-        },
-        {
-            "name": "<dd>",
-            "description": "Definition Description",
-            "type": "html.dd",
-            "category": "html",
-            "hidden": true,
             "resizable": "none",
-            "allowedParent": "html.dd"
+            "invisible": true
         },
         {
-            "name": "<dl>",
-            "description": "Definition List",
-            "type": "html.dl",
+            "name": "<button>",
+            "description": "Button",
+            "type": "html.button",
             "category": "html",
-            "hidden": true,
-            "resizable": "none",
-            "allowedChild": "html.dt, html.dd"
+            "icon": "resources/images/button.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjdDQjJCMEM2NTk1MDExRTBCNUNCOEUyN0UxMkJCM0EzIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjdDQjJCMEM3NTk1MDExRTBCNUNCOEUyN0UxMkJCM0EzIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6N0NCMkIwQzQ1OTUwMTFFMEI1Q0I4RTI3RTEyQkIzQTMiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6N0NCMkIwQzU1OTUwMTFFMEI1Q0I4RTI3RTEyQkIzQTMiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5rUarGAAAA00lEQVR42mL8//8/AyWAiYFCwAJjBHbuJNkp68vdGRlBXgBpttCQYPAwUCBa844LDxhO3HiBcAFM84MPPwhqVhDgAKsHGQAJgx8QTTde/IAwofgHFDOgiYHUwfSxwPT/+IGwGd0N2NwEUg/SwgJT8oOBA8UQQgCkHkSywEyDGUM8gFgINuDDiw8MH4AcIEU0kBAAWgfUgBKIGhIcDGhhhhWD1UHDjQUWSjs2HGBw8HBgMJDgIMoFB3YcAOtjhOUFTc9GklPi9e31jIwDnpkoNgAgwABCAXZ5t0pvnQAAAABJRU5ErkJggg==",
+            "children": "Button",
+            "inlineEdit": {
+                "property": "textContent",
+                "displayOnCreate": true
+            },
         },
         {
             "name": "<div>",
@@ -97,13 +88,40 @@
             }
         },
         {
-            "name": "<dt>",
-            "description": "Definition Term",
-            "type": "html.dt",
+            "name": "<embed>",
+            "description": "Embed",
+            "type": "html.embed",
             "category": "html",
-            "hidden": true,
-            "resizable": "none",
-            "allowedParent": "html.dd"
+            "icon": "resources/images/element.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKEDABBVisLT4sHo/wAAACH+FUNyZWF0ZWQgd2l0aCBUaGUgR0lNUAAh+QQBCgADACwAAAAAEAAQAAACI5yPqcvtD1UACQQJRBIWTa1wl5E13PEtolciazJVY0TX9lIAADs=",
+            "inlineEdit": "davinci.libraries.html.html.HtmlSrcAttributeInputEmbed"
+        },
+        {
+            "name": "<fieldset>",
+            "description": "Fieldset",
+            "type": "html.fieldset",
+            "category": "html",
+            "icon": "resources/images/element.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKEDABBVisLT4sHo/wAAACH+FUNyZWF0ZWQgd2l0aCBUaGUgR0lNUAAh+QQBCgADACwAAAAAEAAQAAACI5yPqcvtD1UACQQJRBIWTa1wl5E13PEtolciazJVY0TX9lIAADs=",
+            "allowedChild": "ANY",
+            "children": [
+                {
+                    "type": "html.legend",
+                    "children": "Legend"
+                }
+            ]
+        },
+        {
+            "name": "<form>",
+            "description": "Form",
+            "type": "html.form",
+            "category": "html",
+            "icon": "resources/images/form.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPj4+fX19uTk5eDg4TteljxgmD5km0Bon0BonkFon0NsokFonkVxp0NtokZxpkl2q0h2q0h2qkt7r0l2qk5/s06As05/slGEtvr7/FCFt1CEtlSLvFOIulWLvVaOv/T19dzd3dTV1f7+/vz8/Pv7+/r6+vn5+fj4+PX19fT09PHx8fDw8P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACwALAAAAAAQABAAAAaEQBbLQywai8KhiMRsOj3JjuhoJG2SHNEEw+1iJiROUiMimM9n0yVpEZne8DglKZkS43BJ8iGqpCoBHhcPCwQBEEkMIwqMKo6PKg5JDSUClpeYCkkIAEUDn6ADB0kGJxUrFSAeGREJBCAGSQUojAoht7ghBUkEH76/wB8EvGjFZ0nIyclBADs=",
+            "properties": {
+                "style": "width: 250px; height: 250px;"
+            },
+            "allowedChild": "ANY"
         },
         {
             "name": "<h1>",
@@ -148,24 +166,12 @@
             }
         },
         {
-            "name": "hr",
+            "name": "<hr>",
             "description": "Horizonal Rule",
             "type": "html.hr",
-            "category": "untested",
+            "category": "html",
             "icon": "resources/images/horizontalrule.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAJEAANHg7wRMjf///wAAACH5BAEAAAIALAAAAAAQABAAAAImlI+py70BHIJSBBvVNeF26gGdtYEiRY4YhpKuiarWCsXVjed6VQAAOw=="
-        },
-        {
-            "name": "<i>",
-            "description": "Italic text",
-            "type": "html.i",
-            "category": "html",
-            "hidden": true,
-            "resizable": "none",
-            "inlineEdit": {
-                "property": "textContent",
-                "displayOnCreate": true
-            }
         },
         {
             "name": "<iframe>",
@@ -175,7 +181,6 @@
             "icon": "resources/images/html-iframe.png",
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkQwRkRERDFCNTk1NTExRTA4NEJGQzUzN0ZERTM1M0Q0IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkQwRkRERDFDNTk1NTExRTA4NEJGQzUzN0ZERTM1M0Q0Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6RDBGREREMTk1OTU1MTFFMDg0QkZDNTM3RkRFMzUzRDQiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6RDBGREREMUE1OTU1MTFFMDg0QkZDNTM3RkRFMzUzRDQiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz6Eqoq3AAABGUlEQVR42mL8//8/AyWABUTMPPjwP0UGgEC6vTzJmoEWIwwAga0T7TAUeecfIs4FIPD3HyODe/ZeBnRD8RnCBKF+gMk//5gY/gIDFRmr6dpjdRlMHxMy9zfQBf+AeM7aswyZdSvBbDZuYbAhK7udcHuBA+IAhl9/mRj+/P3PEOdnDMYgNr92NgMoqn+f8sLQDNKHEgYgA34DNS3feo7hw6evDG/efmT4+OkbQ09VGMPPv0z4AhHihN9QF4R6GKIoAhn6G6sBP7C5gIFhw+7zKC5oKQll+PWPiXA0/gbFwj8GBl9nJBcw/gfGDsgFjIQN+AMM9VWTQhgYQAkbpP4/lhjHZ0B562aSkzMTA4UA7oKFOy+SZQBAgAEAMraHalKpFP0AAAAASUVORK5CYII=",
             "properties": {
-                "src": "",
                 "style": "width: 300px; height: 300px;"
             },
             "inlineEdit": "davinci.libraries.html.html.HtmlSrcAttributeInput"
@@ -187,10 +192,15 @@
             "category": "html",
             "icon": "resources/images/html-image.png",
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkY2QThBRTQ3NTk1NDExRTBBNTdGOUM4MUM1RjkwOTYwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkY2QThBRTQ4NTk1NDExRTBBNTdGOUM4MUM1RjkwOTYwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6RjZBOEFFNDU1OTU0MTFFMEE1N0Y5QzgxQzVGOTA5NjAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6RjZBOEFFNDY1OTU0MTFFMEE1N0Y5QzgxQzVGOTA5NjAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz610jG7AAACA0lEQVR42qSTPWhTURTHf/e9BJsoRmOGEGhaxaIpRu2g4iIqlIKgImrtIg5OLp3ExYK0rsWhopSC4KIUV4eiVSGDX4gWosWPaqNDyAdKSggxr+/jevOapCZdCjmXwznv3Pf/33P+lyuklLRjGm2ap55M37siheZZN1A6NkOX74oGwsFL7+lb6yZYeHKzuQPT1t04/iC55udKarUm0ZkYGeS71FoJVtLh42E3vnx0na6dhyh2nedxOgVeD0I5ukATYFl6s4j1DsK7IkxMTfLjZ5EgeQ4H0/T29YE/itwQUASbFIFg2fE0d7Bsed0YlSX2i3lel+DZ5zQX3ozSHYxTjvSQs4PqoG4UHtPRmwmM2gjvL17i1NkOYt8CxH1hAmN3yD6dwVz4SE8khOH3o6sZDLOlA9NaScsHjvK25MP+MMOiN8dA3qL/xEn2lQf4lExiyIpLYNveZg2WawRzG7ey+8gZNm8JETVhcXLMrf/+leNFIsG7V7OuBmZNA611hEIxi5FJcXDvHrap7475r9iJ52yPdeIYFXL5rLoI0RB9zS3cuHaVeGeEL7EdhI71uzNmZhP4VBwaPEdpKYOmUFZNRKqPqerDI7fl3B9TVgxbuVNz+z935N9GzZGj4/dlFbcqoimZnnqIVyhChFrKhKifQnVpQlMlgSMdCoWSuyXafc7/BBgAyIPnKcd4fywAAAAASUVORK5CYII=",
-            "properties": {
-                "src": ""
-            },
             "inlineEdit": "davinci.libraries.html.html.HtmlSrcAttributeInput"
+        },
+        {
+            "name": "<input>",
+            "description": "Input",
+            "type": "html.input",
+            "category": "html",
+            "icon": "resources/images/text-box.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAM1JREFUeNpi/P//PwMlgImBQkCxASzIHIvIif/lzfQZHp66yHBieT4jUSaAwgAZm0dM+I8uhg+DXRDefwAckqGWCmBD15x48H/18QcELV9Z6MAINuDPz98MtWmODBKcTAw9QL6NvhyDipoMXs0ts/chwuD39+9gDjfDfzgtyvAXe6hDQ+bXtx8IA94+eArmsLMywml+Bmbc4cbAyPD24VOEAX9//WLIyJ7KkBJiARZctPE0w5w1JxjoEgtM2NIBiCY2ITEO/bxAsQEAAQYAGVGarS2fPq4AAAAASUVORK5CYII="
         },
         {
             "name": "<label>",
@@ -207,38 +217,58 @@
             }
         },
         {
-            "name": "<li>",
-            "description": "List Item",
-            "type": "html.li",
+            "name": "<legend>",
+            "description": "Legend",
+            "type": "html.legend",
             "category": "html",
-            "hidden": true,
+            "icon": "resources/images/element.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKEDABBVisLT4sHo/wAAACH+FUNyZWF0ZWQgd2l0aCBUaGUgR0lNUAAh+QQBCgADACwAAAAAEAAQAAACI5yPqcvtD1UACQQJRBIWTa1wl5E13PEtolciazJVY0TX9lIAADs=",
             "resizable": "none",
-            "allowedParent": "html.ul, html.ol",
-            "allowedChild": "ANY",
+            "allowedParent": "html.fieldset, html.figure, html.details",
+            "children": "Legend",
             "inlineEdit": {
                 "property": "textContent",
                 "displayOnCreate": true
             }
         },
         {
-            "name": "<ol>",
-            "description": "Ordered List",
-            "type": "html.ol",
+            "name": "<optgroup>",
+            "description": "<optgroup>",
+            "type": "html.optgroup",
             "category": "html",
-            "hidden": true,
+            "icon": "resources/images/element.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKEDABBVisLT4sHo/wAAACH+FUNyZWF0ZWQgd2l0aCBUaGUgR0lNUAAh+QQBCgADACwAAAAAEAAQAAACI5yPqcvtD1UACQQJRBIWTa1wl5E13PEtolciazJVY0TX9lIAADs=",
+            "properties": {
+                "label": "Option Group"
+            },
             "resizable": "none",
-            "allowedChild": "html.li"
+            "allowedParent": "html.select",
+            "allowedChild": "html.option"
+        },
+        {
+            "name": "<option>",
+            "description": "<option>",
+            "type": "html.option",
+            "category": "html",
+            "icon": "resources/images/element.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKEDABBVisLT4sHo/wAAACH+FUNyZWF0ZWQgd2l0aCBUaGUgR0lNUAAh+QQBCgADACwAAAAAEAAQAAACI5yPqcvtD1UACQQJRBIWTa1wl5E13PEtolciazJVY0TX9lIAADs=",
+            "properties": {
+                "label": "Item X",
+                "value": "Item X"
+            },
+            "resizable": "none",
+            "allowedParent": "html.select, html.datalist, html.optgroup"
         },
         {
             "name": "<p>",
             "description": "Paragraph",
             "type": "html.p",
             "category": "html",
-            "hidden": true,
+            "children": "Paragraph",
             "resizable": "none",
             "allowedChild": "ANY",
             "inlineEdit": {
-                "property": "richText",
+                "property": "textContent",
                 "displayOnCreate": true
             }
         },
@@ -248,7 +278,40 @@
             "type": "html.script",
             "category": "html",
             "hidden": true,
+            "resizable": "none",
             "invisible": true
+        },
+        {
+            "name": "<select>",
+            "description": "Select",
+            "type": "html.select",
+            "category": "html",
+            "icon": "resources/images/dropdown.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAVJJREFUeNpi/P//PwMlgAVEhPcf+E+RAb++fWeoz3QlqLhxxh6G+gwXBH/6bgYmEOPHp69gAVGGvwxijH8ZhP/9AbNhWJwRgn9+/AxWl5TYy/D61hOgvi8QF3z/8Akswc/JjGLjfwZGMM0IZIHY3z5ADDi4ogQs+23+XgZGUCBaRE4EByUjRBeUATOEASoANe4/0DhGqOh/aBjIm+kzfn37/n+IkxZJAbhm3zWIAX9//WHg4OVlMDBQZhD6+5doA7aceQQx4M/PnwywePRN6IVEDzsrAysnJwMHDxcDGxCDaFZODoZJqfZwA/78+AWLxh9wf+9cWkK0C359/wEx4DeQAXOBe3QPXhfAwKwsJ3D6gSckmAGHV5cT7YLf36AuADkFBmxDO4lyweJCZ7DLIbEADIz/0DA4vaGSeBcA9YETkpF/JyLNMGBJTXgAI6XZGSDAAJsyjhMJL+H/AAAAAElFTkSuQmCC",
+            "children": [
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 1"
+                    },
+                    "children": "Item 1"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 2"
+                    },
+                    "children": "Item 2"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 3"
+                    },
+                    "children": "Item 3"
+                }
+            ],
+            "allowedChild": "html.optgroup, html.option",
         },
         {
             "name": "<span>",
@@ -372,8 +435,6 @@
             "allowedParent": "html.tr",
             "allowedChild": "ANY"
         },
-        
-        
         {
             "name": "<thead>",
             "description": "Table Header",
@@ -405,16 +466,31 @@
             "allowedChild": "html.td, html.th"
         },
         {
-            "name": "<ul>",
-            "description": "Unordered List",
-            "type": "html.ul",
+            "name": "<textarea>",
+            "description": "<textarea>",
+            "type": "html.textarea",
             "category": "html",
-            "hidden": true,
-            "resizable": "none",
-            "allowedChild": "html.li"
+            "icon": "resources/images/textarea.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
+            "inlineEdit": {
+                "property": "textContent",
+                "displayOnCreate": false
+            }
         },
         {
-            "name": "HTML Rich Text",
+            "name": "<video>",
+            "description": "Video",
+            "type": "html.video",
+            "category": "html",
+            "icon": "resources/images/element.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKEDABBVisLT4sHo/wAAACH+FUNyZWF0ZWQgd2l0aCBUaGUgR0lNUAAh+QQBCgADACwAAAAAEAAQAAACI5yPqcvtD1UACQQJRBIWTa1wl5E13PEtolciazJVY0TX9lIAADs=",
+            "properties": {
+                "controls": "controls"
+            },
+            "inlineEdit": "davinci.libraries.html.html.HtmlSrcAttributeInputEmbed"
+        },
+        {
+            "name": "Rich Text",
             "description": "HTML Rich Text",
             "type": "html.richtext",
             "category": "html-generic",
@@ -426,10 +502,10 @@
             "inlineEdit": "davinci.ve.input.RichTextInput"
         },
         {
-            "name": "HTML Sticky Note",
+            "name": "Sticky Note",
             "description": "HTML Sticky Note",
             "type": "html.stickynote",
-            "category": "untested-generic",
+            "category": "html",
             "icon": "resources/images/HTML-sticky-note.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAYeZAkkbQ0seA0sdxY7iCtZojZmrDZlqzdnrThorTlprjpqrzxssEBws0R0tkt8u1WGwVeIwlaHwVqKxFyMxF6OxmGRx2KSyGWUymaVymuYzHWh0Xmk04y02+71+9zr97na8MPf8szk9M3k9NDl9NXo9dfp9trr99/u+ODu+OTw+Ov0+onC5pfJ6qTQ7KjS7afS7K/W77DX77fZ77vc8Nbp9ePw+Ojz+enz+f///wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADkALAAAAAAQABAAAAaQwJxwSCwaj4SC5mgcNByajHQq5XQ6hIazkLF5vzbPY/B4NAIETGrNTq0Ghca4k7t8TqeP/oNrAAoANxs5FjWGNSUlKioCfg84FjkVIyKVIiMmAiibKSYVORQhoqMkJ6MzLRQ5EyCtrjSuDAoGBzkRMrgxMbi4LgsItTkSMC/EL8fELAkGQxDOz9AQzEzU1UxBADs=",
             "properties": {
@@ -438,26 +514,6 @@
             "children": "<i>Enter Note</i>",
             "allowedChild": "ANY",
             "inlineEdit": "davinci.ve.input.RichTextInput"
-        },
-        {
-            "name": "<option>",
-            "description": "<option>",
-            "type": "html.option",
-            "category": "untested-generic",
-            "icon": "resources/images/element.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKEDABBVisLT4sHo/wAAACH+FUNyZWF0ZWQgd2l0aCBUaGUgR0lNUAAh+QQBCgADACwAAAAAEAAQAAACI5yPqcvtD1UACQQJRBIWTa1wl5E13PEtolciazJVY0TX9lIAADs=",
-            "properties": {
-                "value": "Option X"
-            },
-            "children": "Option X",
-            "resizable": "none"
-        },
-        {
-            "name": "<body>",
-            "type": "html.body",
-            "category": "html",
-            "hidden": true,
-            "allowedChild": "ANY"
-        },
+        }
     ]
 }

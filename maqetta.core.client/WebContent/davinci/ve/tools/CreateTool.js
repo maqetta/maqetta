@@ -1,30 +1,32 @@
 define(["dojo/_base/declare",
-    	"davinci/ve/tools/_Tool",
-    	"davinci/Workbench",
-    	"davinci/ve/metadata",
-    	"davinci/ve/widget",
-    	"davinci/ui/ErrorDialog",
-    	"davinci/commands/CompoundCommand",
-    	"davinci/ve/commands/AddCommand",
-    	"davinci/ve/commands/MoveCommand",
-    	"davinci/ve/commands/ResizeCommand",
-    	"davinci/ve/Snap",
-    	"davinci/ve/ChooseParent"], function(
-    		declare,
-			tool,
-			workbench,
-			metadata,
-			widget
-			){
+		"davinci/ve/tools/_Tool",
+		"davinci/Workbench",
+		"davinci/ve/metadata",
+		"davinci/ve/widget",
+		"davinci/ui/ErrorDialog",
+		"davinci/commands/CompoundCommand",
+		"davinci/ve/commands/AddCommand",
+		"davinci/ve/commands/MoveCommand",
+		"davinci/ve/commands/ResizeCommand",
+		"davinci/ve/Snap",
+		"davinci/ve/ChooseParent"
+], function(
+		declare,
+		Tool,
+		Workbench,
+		Metadata,
+		Widget
+) {
 
-return declare("davinci.ve.tools.CreateTool", tool, {
+return declare("davinci.ve.tools.CreateTool", Tool, {
 
 	constructor: function(data) {
 		this._data = data;
 		if (data && data.type) {
 			// Use resizableOnCreate property if present, else use resizable
-			var resizableOnCreate = davinci.ve.metadata.queryDescriptor(data.type, "resizableOnCreate");
-			var resizable = resizableOnCreate ? resizableOnCreate : davinci.ve.metadata.queryDescriptor(data.type, "resizable");
+			var resizableOnCreate = Metadata.queryDescriptor(data.type, "resizableOnCreate");
+			var resizable = resizableOnCreate ? resizableOnCreate :
+					Metadata.queryDescriptor(data.type, "resizable");
 			if (resizable !== "none") {
 				this._resizable = resizable;
 			}
@@ -52,7 +54,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		// This function gets called if user does a 2-click widget addition:
 		// 1) Click on widget in widget palette to select
 		// 2) Click on canvas to indicate drop location
-		this._target = davinci.ve.widget.getEnclosingWidget(event.target);
+		this._target = Widget.getEnclosingWidget(event.target);
 		this._mdPosition = this._context.getContentPosition(event); // mouse down position
 		this._dragRect = null;
 	},
@@ -110,7 +112,10 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 				// Dynamic rectangle showing size the user is dragging
 				if(!this._dragSizeRect){
 					var body = context.getDocument().body;
-					this._dragSizeRect = dojo.create('div',{style:'border:1px dashed black;z-index:1000;position:absolute;'},body);
+					this._dragSizeRect = dojo.create('div',
+							{style:'border:1px dashed black;z-index:1000;position:absolute;'},
+							body
+						);
 				}
 				var style = this._dragSizeRect.style;
 				style.left = l + "px";
@@ -135,12 +140,14 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 
 			// Under certain conditions, show list of possible parent widgets
 			var showParentsPref = context.getPreference('showPossibleParents');
-			var showCandidateParents = (!showParentsPref && this._spaceKeyDown) || (showParentsPref && !this._spaceKeyDown);
+			var showCandidateParents = (!showParentsPref && this._spaceKeyDown) ||
+									   (showParentsPref && !this._spaceKeyDown);
 			
 			// Show dynamic snap lines
 			var position = {x:event.pageX, y:event.pageY};
 			var box = {l:event.pageX,t:event.pageY,w:0,h:0};
-			var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
+			var editorPrefs = Workbench.Preferences.getPreferences('davinci.ve.editorPrefs', 
+					davinci.Runtime.getProject());
 			var doSnapLines = editorPrefs.snap && absolute;
 			context.dragMoveUpdate({
 				data:this._data,
@@ -233,11 +240,11 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			target = ppw;
 		}else{
 			// Otherwise, find the appropriate parent that is located under the pointer
-			var widgetUnderMouse = this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
+			var widgetUnderMouse = this._getTarget() || Widget.getEnclosingWidget(event.target);
 			var data = this._data;
 		    var allowedParentList = cp.getAllowedTargetWidget(widgetUnderMouse, data, true);
 		    var widgetType = dojo.isArray(data) ? data[0].type : data.type;
-			var helper = davinci.ve.widget.getWidgetHelper(widgetType);
+			var helper = Widget.getWidgetHelper(widgetType);
 			if(allowedParentList.length>1 && helper && helper.chooseParent){
 				//FIXME: Probably should pass all params to helper
 				target = helper.chooseParent(allowedParentList);
@@ -274,7 +281,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			if (!target) {
 				// returns an array consisting of 'type' and any 'class' properties
 				function getClassList(type) {
-					var classList = davinci.ve.metadata.queryDescriptor(type, 'class');
+					var classList = Metadata.queryDescriptor(type, 'class');
 					if (classList) {
 						return classList.split(/\s+/).push(type);
 					}
@@ -289,7 +296,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 				// Get data for all widgets
 				children = data.map(function(elem) {
 					return {
-						allowedParent: davinci.ve.metadata.getAllowedParent(elem.type),
+						allowedParent: Metadata.getAllowedParent(elem.type),
 				        classList: getClassList(elem.type)
 					};
 			    });
@@ -317,17 +324,17 @@ return declare("davinci.ve.tools.CreateTool", tool, {
     			// NOTE: These functions must be invoked before loading the widget
     			// or its required resources.  Since create() and _create() can be
     			// overridden by "subclasses", but put this call here.
-    	        var library = davinci.ve.metadata.getLibraryForType(type),
+    	        var library = Metadata.getLibraryForType(type),
     	            libId = library.name,
     	            args = [type, context];
     	        if (! context._widgets.hasOwnProperty(libId)) {
     	            context._widgets[libId] = 0;
     	        }
     	        if (++context._widgets[libId] == 1) {
-    	            davinci.ve.metadata.invokeCallback(type, 'onFirstAdd', args);
+    	            Metadata.invokeCallback(type, 'onFirstAdd', args);
     	        }
     	        // Always invoke the 'onAdd' callback.
-    	        davinci.ve.metadata.invokeCallback(type, 'onAdd', args);
+    	        Metadata.invokeCallback(type, 'onAdd', args);
 	        }
 			this.create({target: target, directTarget: this._getTarget(), size: size});
 		} catch(e) {
@@ -342,7 +349,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 				console.error(e);
 			}
             var errorDialog = new davinci.ui.ErrorDialog({errorText: content});
-            workbench.showModal(errorDialog, title);
+            Workbench.showModal(errorDialog, title);
 		} finally {
 			// Make sure that if calls above fail due to invalid target or some
 			// unknown creation error that we properly unset the active tool,
@@ -365,7 +372,8 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			this._processKeyDown(event.keyCode);
 		}
 		dojo.stopEvent(event);
-		var showCandidateParents = (!showParentsPref && this._spaceKeyDown) || (showParentsPref && !this._spaceKeyDown);
+		var showCandidateParents = (!showParentsPref && this._spaceKeyDown) ||
+				(showParentsPref && !this._spaceKeyDown);
 		var data = this._data;
 		var widgetType = dojo.isArray(data) ? data[0].type : data.type;
 		var context = this._context;
@@ -403,7 +411,8 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		}
 		dojo.stopEvent(event);
 		var showParentsPref = this._context.getPreference('showPossibleParents');
-		var showCandidateParents = (!showParentsPref && this._spaceKeyDown) || (showParentsPref && !this._spaceKeyDown);
+		var showCandidateParents = (!showParentsPref && this._spaceKeyDown) ||
+				(showParentsPref && !this._spaceKeyDown);
 		var data = this._data;
 		var widgetType = dojo.isArray(data) ? data[0].type : data.type;
 		var context = this._context;
@@ -436,7 +445,8 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		var index = args.index;
 		var position;
 		var widgetAbsoluteLayout = false;
-		if (this._data.properties && this._data.properties.style && (this._data.properties.style.indexOf('absolute') > 0)){
+		if (this._data.properties && this._data.properties.style &&
+				(this._data.properties.style.indexOf('absolute') > 0)) {
 			widgetAbsoluteLayout = true;
 		}
 		if (! widgetAbsoluteLayout && this._context.getFlowLayout()) {
@@ -468,13 +478,13 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 		//debugger;
 //      var data = this._data;
 //		if(data && data.type && data.type.indexOf("html.") == 0){
-//			var metadata = davinci.ve.metadata.getMetadata(data.type);
+//			var metadata = Metadata.getMetadata(data.type);
 //			data.properties = data.properties || {};
 //			data.properties.id = widget.getUniqueId(metadata.tagName, this._context.rootNode);
 //		}else if(data && data.length){
 //			for(var i = 0;i<data.length;i++){
 //				var d = data[i];
-//				var metadata = davinci.ve.metadata.getMetadata(d.type);
+//				var metadata = Metadata.getMetadata(d.type);
 //				d.properties = d.properties || {};
 //				d.properties.id = widget.getUniqueId(metadata.tagName, this._context.rootNode);
 //			}
@@ -490,7 +500,7 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 
 		var w;
 		dojo.withDoc(this._context.getDocument(), function(){
-			w = widget.createWidget(this._data, args);
+			w = Widget.createWidget(this._data, args);
 		}, this);
 		if(!w){
 			return;
@@ -513,21 +523,21 @@ return declare("davinci.ve.tools.CreateTool", tool, {
 			var width = args.size && args.size.w,
 				height = args.size && args.size.h;
 			command.add(new davinci.ve.commands.ResizeCommand(w, width, height));
-			var helper = davinci.ve.widget.getWidgetHelper(w.type);
+			var helper = Widget.getWidgetHelper(w.type);
 			if(helper && helper.onCreateResize){
 				helper.onCreateResize(command, w, width, height);
 			}
 		}
 		var w_id = w.id;
 		this._context.getCommandStack().execute(command);
-		var w = widget.byId(w_id);
+		var w = Widget.byId(w_id);
 		this._select(w);
 		this._widget = w;
 		return w;
 	},
 	
 	_select: function(w) {
-		var inLineEdit = davinci.ve.metadata.queryDescriptor(w.type, "inlineEdit");
+		var inLineEdit = Metadata.queryDescriptor(w.type, "inlineEdit");
 		if (!this._data.fileDragCreate && inLineEdit && inLineEdit.displayOnCreate) {
 			w.inLineEdit_displayOnCreate = inLineEdit.displayOnCreate;
 			this._context.select(w, null, true); // display inline

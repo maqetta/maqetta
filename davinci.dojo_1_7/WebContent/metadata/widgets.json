@@ -468,7 +468,7 @@
                     }
                 }
             ],
-            "tool": "davinci/libraries/dojo/dojox/grid/DataGridCreateTool",
+            "tool": "./dojox/grid/DataGridCreateTool",
             "helper": "./dojox/grid/DataGridHelper",
             "inlineEdit": "./dojox/grid/DataGridInput"
         },
@@ -495,7 +495,7 @@
             "allowedChild": "ANY",
             "isLayered": true,
             "resizable": "none",
-            "tool": "davinci/libraries/dojo/dijit/DialogCreateTool",
+            "tool": "./dijit/DialogCreateTool",
             "helper": "./dijit/DialogHelper"
         },
         {
@@ -795,7 +795,7 @@
             "icon": "resources/images/tooltip.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAEJ1o2GMs2GMsmmRtmmRtW+WuXOZuz5zoUh6plCAqlCAqViGrmiStmmStmiStW+Xudr0/+P3/+T3//X8/9r1/9v1/+z6/+36//T8//X9//r+/////wAAAAAAAAAAAAAAACH5BAEAABsALAAAAAAQABAAAAVU4CaOZGme6GakpUGt7PZAUVWkgyNFfMQwg0FjQBAFIMikEikQLSTQKC8qWYgUVOg0mhAhLODw5RK2IEQAjHqdmawxANFBQ6/b6Qf5Yc/v82OAgYEhADs=",
             "children": "Text",
-            "tool": "davinci/libraries/dojo/dijit/TooltipCreateTool",
+            "tool": "./dijit/TooltipCreateTool",
             "resizable": "none",
             "allowedChild": "ANY",
             "helper": "./dijit/TooltipHelper",
@@ -809,7 +809,7 @@
             "icon": "resources/images/tooltip.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAEJ1o2GMs2GMsmmRtmmRtW+WuXOZuz5zoUh6plCAqlCAqViGrmiStmmStmiStW+Xudr0/+P3/+T3//X8/9r1/9v1/+z6/+36//T8//X9//r+/////wAAAAAAAAAAAAAAACH5BAEAABsALAAAAAAQABAAAAVU4CaOZGme6GakpUGt7PZAUVWkgyNFfMQwg0FjQBAFIMikEikQLSTQKC8qWYgUVOg0mhAhLODw5RK2IEQAjHqdmawxANFBQ6/b6Qf5Yc/v82OAgYEhADs=",
             "children": "Text",
-            "tool": "davinci/libraries/dojo/dijit/TooltipDialogCreateTool",
+            "tool": "./dijit/TooltipDialogCreateTool",
             "resizable": "none",
             "allowedChild": "ANY",
 			"allowedParent": "dijit.form.DropDownButton",
@@ -881,7 +881,7 @@
                     }
                 }
             ],
-            "tool": "davinci/libraries/dojo/dijit/TreeCreateTool",
+            "tool": "./dijit/TreeCreateTool",
             "inlineEdit": "./dijit/TreeInput"
         },
         {
@@ -962,7 +962,7 @@
                     }
                 }
             ],
-            "tool": "davinci/libraries/dojo/dojox/grid/TreeGridCreateTool",
+            "tool": "./dojox/grid/TreeGridCreateTool",
             "helper": "./dojox/grid/TreeGridHelper"
             /*"inlineEdit": "./dojox/grid/TreeGridInput" */
         },
@@ -1224,7 +1224,7 @@
                     ]
                 }
             ],
-            "tool": "davinci/libraries/dojo/dijit/layout/StackContainerCreateTool",
+            "tool": "./dijit/layout/StackContainerCreateTool",
             "allowedChild": "ANY"
         },
         {
@@ -1772,7 +1772,7 @@
             "category": "untested-obj",
             "icon": "resources/images/DataPanel.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAAAAP////P2/Pf5/WZ9pmd9pmd+pmZ9pWd9pWt/opmpxevw+fD0+2Z+pmd+pWp/oW+BnoaYto2fvKS0zeXs+Obt+OXs9+3y+m+Bnau70+Pr9+jv+fL2/Pn7/nSEmXSDmOTs9+vx+fX4/Obu+Ojv+PP3/Obu93qHlO/1+/f6/fn7/XqHk/j7/YCJjs/t+3+KjoWMiIuPgoyPgpGSfZGRfZeUd5yXc6CZbpyWc6ecaKWba6Sba6GZb////wAAAAAAACH5BAEAAD0ALAAAAAAQABAAAAaZwJ5wSCz2csikctnTuZ7QKHTXu2mu2CyW17NZMhEQKDNRSL4RCq5XM1XeFfdbPqr1aBswiUQ25yMkMz0xCyGGIYWGiQsyPTAXYBeQZRKQERcwPS0oDJ0MnJ2gDC89JxxgAgJ9EqcRJSs9HiKztLW0Hz0QKWApu5S7EQMYPQ8sHccdxsfKKgk9BAgNBwUICA4H1gYODgVG3kRBADs=",
-            "tool": "davinci/libraries/dojo/dojo/data/DataStoreCreateTool",
+            "tool": "./dojo/data/DataStoreCreateTool",
             "resizable": "none",
             "invisible": false,
             "helper": "./dojo/data/ItemFileReadStoreHelper",
@@ -1785,7 +1785,7 @@
             "category": "untested-obj",
             "icon": "resources/images/DataPanel.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAAAAP////P2/Pf5/WZ9pmd9pmd+pmZ9pWd9pWt/opmpxevw+fD0+2Z+pmd+pWp/oW+BnoaYto2fvKS0zeXs+Obt+OXs9+3y+m+Bnau70+Pr9+jv+fL2/Pn7/nSEmXSDmOTs9+vx+fX4/Obu+Ojv+PP3/Obu93qHlO/1+/f6/fn7/XqHk/j7/YCJjs/t+3+KjoWMiIuPgoyPgpGSfZGRfZeUd5yXc6CZbpyWc6ecaKWba6Sba6GZb////wAAAAAAACH5BAEAAD0ALAAAAAAQABAAAAaZwJ5wSCz2csikctnTuZ7QKHTXu2mu2CyW17NZMhEQKDNRSL4RCq5XM1XeFfdbPqr1aBswiUQ25yMkMz0xCyGGIYWGiQsyPTAXYBeQZRKQERcwPS0oDJ0MnJ2gDC89JxxgAgJ9EqcRJSs9HiKztLW0Hz0QKWApu5S7EQMYPQ8sHccdxsfKKgk9BAgNBwUICA4H1gYODgVG3kRBADs=",
-            "tool": "davinci/libraries/dojo/dojo/data/DataStoreCreateTool",
+            "tool": "./dojo/data/DataStoreCreateTool",
             "resizable": "none",
             "invisible": false,
             "inlineEdit": "./dojo/data/ItemFileReadStoreInput"
@@ -1836,7 +1836,7 @@
                 }
             ],
             "helper": "./dijit/form/DataListHelper",
-            "tool": "davinci/libraries/dojo/dijit/form/DataListCreateTool",
+            "tool": "./dijit/form/DataListCreateTool",
             /*"inlineEdit": "./dojo/data/ItemFileReadStoreInput" */
         },
         {
@@ -1986,7 +1986,7 @@
                     }
                 }
             ],
-            "tool": "davinci/libraries/dojo/dojox/mobile/EdgeToEdgeDataListCreateTool",
+            "tool": "./dojox/mobile/EdgeToEdgeDataListCreateTool",
             "helper": "./dojox/mobile/EdgeToEdgeDataListHelper",
             "inlineEdit": "./dojox/mobile/EdgeToEdgeDataListInput"
         },
@@ -2054,7 +2054,7 @@
                     }
                 }
             ],
-            "tool": "davinci/libraries/dojo/dojox/mobile/EdgeToEdgeDataListCreateTool",
+            "tool": "./dojox/mobile/EdgeToEdgeDataListCreateTool",
             "helper": "./dojox/mobile/EdgeToEdgeDataListHelper",
             "inlineEdit": "./dojox/mobile/EdgeToEdgeDataListInput"
         },
@@ -2179,7 +2179,7 @@
                     }
                 }
             ],
-            "tool": "davinci/libraries/dojo/dojox/mobile/ComboBoxCreateTool",
+            "tool": "./dojox/mobile/ComboBoxCreateTool",
             "helper": "./dojox/mobile/ComboBoxHelper",
             "inlineEdit": "./dojox/mobile/MobileComboBoxInput"
         },
@@ -2300,7 +2300,7 @@
                     ]
                 }
             ],
-            "tool": "davinci/libraries/dojo/dojox/mobile/IconContainerCreateTool",
+            "tool": "./dojox/mobile/IconContainerCreateTool",
             "allowedChild": "dojox.mobile.IconItem"
         },
         {
@@ -2389,7 +2389,7 @@
                     }
                 }
             ],
-            "tool": "davinci/libraries/dojo/dojox/mobile/EdgeToEdgeDataListCreateTool"
+            "tool": "./dojox/mobile/EdgeToEdgeDataListCreateTool"
         },
         {
             "name": "FixedSplitter",

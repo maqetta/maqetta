@@ -12,7 +12,17 @@ define([
 	"preview/silhouetteiframe",
 	"./ChooseParent",
 	"./Snap"
-], function(declare, CommandStack, SelectTool, windowUtils, Path, Workbench) {
+], function(
+	declare,
+	CommandStack,
+	SelectTool,
+	windowUtils,
+	Path,
+	Workbench,
+	Widget,
+	Focus,
+	Library
+) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
 var MOBILE_DEV_ATTR = 'data-maqetta-device';
@@ -317,7 +327,7 @@ return declare("davinci.ve.Context", null, {
 	},
 
 	getLibraryBase: function(id, version){
-		return davinci.library.getLibRoot(id,version, this.getBase()) || "";
+		return Library.getLibRoot(id,version, this.getBase()) || "";
 	},
 
 	loadRequires: function(type, updateSrc, doUpdateModelDojoRequires, skipDomUpdate) {
@@ -645,7 +655,7 @@ return declare("davinci.ve.Context", null, {
 		
 		
 		/* remove the .theme file, and find themes in the given base location */
-		var allThemes = davinci.library.getThemes(davinci.Runtime.getProject()),
+		var allThemes = Library.getThemes(davinci.Runtime.getProject()),
 			themeHash = {},
 			defaultTheme;
 		
@@ -772,7 +782,7 @@ return declare("davinci.ve.Context", null, {
 			var resourceBase = this.getBase();
 			if (!dojoUrl) {
 				// pull Dojo path from installed libs, if available
-				dojo.some(davinci.library.getUserLibs(resourceBase.toString()), function(lib) {
+				dojo.some(Library.getUserLibs(resourceBase.toString()), function(lib) {
 					if (lib.id === "dojo") {
 						var fullDojoPath = new Path(this.getBase()).append(lib.root).append("dojo/dojo.js");
 						dojoUrl = fullDojoPath.relativeTo(this.getPath(),true).toString();
@@ -1012,7 +1022,7 @@ return declare("davinci.ve.Context", null, {
 	},
 
 	_getLoaderPackages: function() {
-		var libs = davinci.library.getUserLibs(this.getBase()),
+		var libs = Library.getUserLibs(this.getBase()),
 			dojoBase,
 			packages = [];
 		
@@ -1229,7 +1239,7 @@ return declare("davinci.ve.Context", null, {
    preProcess: function (node){
          //need a helper to pre process widget
         var type = node.getAttribute("dojoType");
-        var helper = davinci.ve.widget.getWidgetHelper(type);
+        var helper = Widget.getWidgetHelper(type);
         if(helper && helper.preProcess){
             helper.preProcess(node, this);
         }
@@ -1258,7 +1268,7 @@ return declare("davinci.ve.Context", null, {
 
 	_attachChildren: function (containerNode)
 	{
-		dojo.query("> *", containerNode).map(davinci.ve.widget.getWidget).forEach(this.attach, this);
+		dojo.query("> *", containerNode).map(Widget.getWidget).forEach(this.attach, this);
 		var currentStateCache = [];
 		var rootWidget = containerNode._dvWidget;
 		rootWidget._srcElement.visit({ visit: function(element){
@@ -1268,7 +1278,7 @@ return declare("davinci.ve.Context", null, {
 					var id=element.getAttribute("id");
 					var widget;
 					if (id){
-					  widget=davinci.ve.widget.byId(id);
+					  widget=Widget.byId(id);
 					}else{
 						if (element==rootWidget._srcElement){
 							widget=rootWidget;
@@ -1300,7 +1310,7 @@ return declare("davinci.ve.Context", null, {
 	 */
 	_onLoadHelpers: function(){
 		var onLoadHelpersSoFar={};
-		dojo.query("> *", this.rootNode).map(davinci.ve.widget.getWidget).forEach(function(widget){
+		dojo.query("> *", this.rootNode).map(Widget.getWidget).forEach(function(widget){
 			var helper = widget.getHelper();
 			if(helper && helper.onLoad){
 				var already = onLoadHelpersSoFar[widget.type];
@@ -1376,9 +1386,9 @@ return declare("davinci.ve.Context", null, {
 	},
 
 	setStyle: function(style){
-		var values = (davinci.ve.widget.parseStyleValues(style));
+		var values = (Widget.parseStyleValues(style));
 		if(this._header){
-			var oldValues = davinci.ve.widget.parseStyleValues(this._header.style);
+			var oldValues = Widget.parseStyleValues(this._header.style);
 			if(oldValues){
 				for(var name in oldValues){
 					if(!values[name]){
@@ -1391,7 +1401,7 @@ return declare("davinci.ve.Context", null, {
 			this._header = {style: style};
 		}
 /* TODO: implement Context::setStyle */		
-//		davinci.ve.widget.setStyleValues(this.container, values); //TODO
+//		Widget.setStyleValues(this.container, values); //TODO
 	},
 
 	/**
@@ -1553,7 +1563,7 @@ return declare("davinci.ve.Context", null, {
 			}
 			if(!node){
 				// Look for dvWidget with that ID. Note that sometimes Dojo puts IDs on subnodes. This logic finds root node. 
-				var w = davinci.ve.widget.byId(id, this.getDocument());	
+				var w = Widget.byId(id, this.getDocument());
 				if(w){
 					node = w.domNode;	// Root note for that widget
 				}
@@ -1561,7 +1571,7 @@ return declare("davinci.ve.Context", null, {
 			if(!node){
 				node = this.getDocument().getElementById(id);	// Else find the node using DOM call
 			}
-			var widget = davinci.ve.widget.getWidget(node);
+			var widget = Widget.getWidget(node);
 			var states = cache[id];
 			states = davinci.states.deserialize(states);
 			delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
@@ -1831,7 +1841,7 @@ return declare("davinci.ve.Context", null, {
 			focus = this._focuses[index];
 		}else{
 			dojo.withDoc(this.getDocument(), dojo.hitch(this, function(){
-				focus = new davinci.ve.Focus();
+				focus = new Focus();
 				focus._edit_focus = true;
 				focus._context = this;
 			}));

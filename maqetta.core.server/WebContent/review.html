@@ -63,8 +63,9 @@
 
 //                dojo.byId('davinci_review_title').innerHTML = davinci.Runtime.commenting_designerName+"'s Review Board";
                 var userInfo;
+                var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
                 var result = davinci.Runtime.serverJSONRequest({
-                    url: "maqetta/cmd/getReviewUserInfo",
+                    url: location + "maqetta/cmd/getReviewUserInfo",
                     sync: true
                 });
 
@@ -100,7 +101,7 @@
                     var path = new davinci.model.Path(page);
                     var version = path.getSegments()[0];
                     path.removeFirstSegments(1);
-                    var node = davinci.review.model.Resource.root.findFile(version, path.toString());
+                    var node = davinci.review.model.resource.root.findFile(version, path.toString());
                     if(node) {
                         davinci.Workbench.openEditor({
                             fileName: node,

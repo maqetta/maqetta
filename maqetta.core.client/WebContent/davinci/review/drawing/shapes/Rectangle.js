@@ -1,10 +1,12 @@
-dojo.provide("davinci.review.drawing.shapes.Rectangle");
+define([
+	"dojo/_base/declare",
+	"./_ShapeCommon"
+], function(declare, _ShapeCommon) {
+	
+return declare("davinci.review.drawing.shapes.Rectangle", _ShapeCommon, {
 
-dojo.require("davinci.review.drawing.shapes._ShapeCommon");
-
-dojo.declare("davinci.review.drawing.shapes.Rectangle", davinci.review.drawing.shapes._ShapeCommon, {
-	render: function(){
-		if(!this.shapeNode){
+	render: function(){ 
+		if (!this.shapeNode) {
 			this._createRectangle();
 			this._evtConns.push(
 				dojo.connect(this.shapeNode, "mouseover", this, "onMouseOver"),
@@ -15,8 +17,8 @@ dojo.declare("davinci.review.drawing.shapes.Rectangle", davinci.review.drawing.s
 		this._transformRectangle();
 		this.inherited(arguments);
 	},
-	
-	_createRectangle: function(){
+
+	_createRectangle: function() {
 		this.shapeNode = dojo.create("div");
 		this.width = Math.abs(this.x1 - this.x2);
 		this.height = Math.abs(this.y1 - this.y2);
@@ -44,8 +46,8 @@ dojo.declare("davinci.review.drawing.shapes.Rectangle", davinci.review.drawing.s
 			"borderRadius": "6px"
 		});
 	},
-	
-	_transformRectangle: function(){
+
+	_transformRectangle: function() {
 		this.width = Math.abs(this.x1 - this.x2);
 		this.height = Math.abs(this.y1 - this.y2);
 		dojo.style(this.shapeNode, {
@@ -55,4 +57,6 @@ dojo.declare("davinci.review.drawing.shapes.Rectangle", davinci.review.drawing.s
 			"height": this.height + "px"
 		});
 	}
+
+});
 });

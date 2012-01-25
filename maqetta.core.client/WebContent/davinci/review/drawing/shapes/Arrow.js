@@ -1,10 +1,12 @@
-dojo.provide("davinci.review.drawing.shapes.Arrow");
+define([
+	"dojo/_base/declare",
+	"./_ShapeCommon"
+], function(declare, _ShapeCommon) {
+	
+return declare("davinci.review.drawing.shapes.Arrow", _ShapeCommon, {
 
-dojo.require("davinci.review.drawing.shapes._ShapeCommon");
-
-dojo.declare("davinci.review.drawing.shapes.Arrow", davinci.review.drawing.shapes._ShapeCommon, {
-	render: function(){
-		if(!this.shapeNode){
+	render: function() {
+		if (!this.shapeNode) {
 			this._createArrowBody();
 			this._createArrowHead();
 			this._evtConns.push(
@@ -17,13 +19,13 @@ dojo.declare("davinci.review.drawing.shapes.Arrow", davinci.review.drawing.shape
 		this._transformArrowhead();
 		this.inherited(arguments);
 	},
-	
-	destroy: function(){
+
+	destroy: function() {
 		this._triangle.right = this._triangle.left = null;
 		this.inherited(arguments);
 	},
-	
-	_createArrowBody: function(){
+
+	_createArrowBody: function() {
 		this.shapeNode = dojo.create("div");
 		dojo.style(this.shapeNode, {
 			"position": "absolute",
@@ -35,8 +37,8 @@ dojo.declare("davinci.review.drawing.shapes.Arrow", davinci.review.drawing.shape
 			"WebkitTransformOrigin": "0 0"
 		});
 	},
-	
-	_createArrowHead: function(){
+
+	_createArrowHead: function() {
 		this._triangle = {};
 		this._triangle.left = dojo.create("div", null, this.shapeNode);
 		dojo.style(this._triangle.left, {
@@ -67,11 +69,13 @@ dojo.declare("davinci.review.drawing.shapes.Arrow", davinci.review.drawing.shape
 			"WebkitTransform": "rotate(-15deg)"
 		});
 	},
-	
-	_transformArrowBody: function(){
+
+	_transformArrowBody: function() {
 		this.angle = 90 - (180 / Math.PI) * Math.atan((this.x1 - this.x2)/(this.y1 - this.y2));
-		if(isNaN(this.angle)){ this.angle = 0; }
-		if(this.y2 <= this.y1){
+		if (isNaN(this.angle)) { 
+			this.angle = 0;
+		}
+		if (this.y2 <= this.y1) {
 			this.angle = this.angle + 180;
 		}
 		this.length = Math.sqrt(Math.pow(this.x1 - this.x2, 2) + Math.pow(this.y1 - this.y2, 2));
@@ -85,13 +89,15 @@ dojo.declare("davinci.review.drawing.shapes.Arrow", davinci.review.drawing.shape
 			"WebkitTransform": "rotate(" + this.angle + "deg)"
 		});
 	},
-	
-	_transformArrowhead: function(){
+
+	_transformArrowhead: function() {
 		dojo.style(this._triangle.left, {
 			"left": this.length - 17 + "px"
 		});
 		dojo.style(this._triangle.right, {
 			"left": this.length - 17 + "px"
 		});
-    }
+	}
+
+});
 });

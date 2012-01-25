@@ -686,6 +686,19 @@ define([
         	return getAllowedElement('Child', type);
         },
 
+        /**
+         * Returns the object instance of the given "helper" type.  Only works
+         * with:
+         *     'helper'
+         *     'tool'
+         *     'inlineEdit'
+         *
+         * @param  {String} type
+         *             Widget type (i.e. "dijit.form.Button")
+         * @param  {String} helperType
+         *             One of the accepted 'helper' types (see description)
+         * @return {Object}
+         */
         getHelper: function(type, helperType) {
             var helpertypes = [
                 'helper',

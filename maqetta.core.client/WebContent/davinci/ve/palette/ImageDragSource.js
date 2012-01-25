@@ -55,9 +55,9 @@ return declare("davinci.ve.palette.ImageDragSource", null, {
 			}
             createData.fileDragCreate = true; 
 
-			var toolCtor = davinci.ve.metadata.getHelper(createData.type, 'tool') ||
+			var ToolCtor = davinci.ve.metadata.getHelper(createData.type, 'tool') ||
 						   davinci.ve.tools.CreateTool,
-				tool = new toolCtor(createData);
+				tool = new ToolCtor(createData);
 			this.context.setActiveTool(tool);
 		}
 	},

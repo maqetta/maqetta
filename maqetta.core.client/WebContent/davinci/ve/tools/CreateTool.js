@@ -539,9 +539,13 @@ return declare("davinci.ve.tools.CreateTool", Tool, {
 	},
 	
 	_select: function(w) {
-		var inLineEdit = Metadata.getHelper(w.type, "inlineEdit");
-		if (!this._data.fileDragCreate && inLineEdit && inLineEdit.displayOnCreate) {
-			w.inLineEdit_displayOnCreate = inLineEdit.displayOnCreate;
+		var InlineEditCtor = Metadata.getHelper(w.type, "inlineEdit"),
+			inlineEdit;
+		if (InlineEditCtor) {
+			inlineEdit = new InlineEditCtor();
+		}
+		if (!this._data.fileDragCreate && inlineEdit && inlineEdit.displayOnCreate) {
+			w.inLineEdit_displayOnCreate = inlineEdit.displayOnCreate;
 			this._context.select(w, null, true); // display inline
 		} else {
 			this._context.select(w); // no inline on create

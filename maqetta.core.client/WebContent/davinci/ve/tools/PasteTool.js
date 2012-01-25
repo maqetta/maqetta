@@ -54,10 +54,10 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 			var w;
 			dojo.withDoc(this._context.getDocument(), function(){
 				d.context=this._context;
-				var toolCtor = davinci.ve.metadata.getHelper(d.type, "tool"),
+				var ToolCtor = davinci.ve.metadata.getHelper(d.type, "tool"),
 					myTool;
-			    if (tool) {
-			    	myTool = new toolCtor(d);
+			    if (ToolCtor) {
+			    	myTool = new ToolCtor(d);
 		        }
 		        if(myTool && myTool.addPasteCreateCommand){
 		        	var myArgs = {};

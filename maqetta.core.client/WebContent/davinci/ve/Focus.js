@@ -295,18 +295,21 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
     showInline: function(widget) {
         this._selectedWidget = widget;
-        this._inline = Metadata.getHelper(widget.type, "inlineEdit");
-    	var context = this._context;
-        if (this._inline && this._inline.useParent) {
-        	var parentWidget = widget.getParent();
-        	if(parentWidget){
-            	context.deselect(widget);
-            	context.select(parentWidget);
-            	var parentFocusObject = context.getFocus(parentWidget);
-            	parentFocusObject.showInline(parentWidget);
-        	}
-        }else if (this._inline && this._inline.show) {
-            this._inline.show(widget.id);
+        var context = this._context;
+        var InlineCtor = Metadata.getHelper(widget.type, "inlineEdit");
+        if (InlineCtor) {
+            this._inline = new InlineCtor();
+            if (this._inline.useParent) {
+                var parentWidget = widget.getParent();
+                if (parentWidget) {
+                    context.deselect(widget);
+                    context.select(parentWidget);
+                    var parentFocusObject = context.getFocus(parentWidget);
+                    parentFocusObject.showInline(parentWidget);
+                }
+            } else if (this._inline.show) {
+                this._inline.show(widget.id);
+            }
         }
         return;
     },

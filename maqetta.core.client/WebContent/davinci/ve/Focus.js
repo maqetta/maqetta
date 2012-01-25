@@ -4,7 +4,7 @@ define([
 	"dojo/dnd/Mover",
 	"davinci/ve/metadata"
 ],
-function(declare, _WidgetBase, Mover, metadata){
+function(declare, _WidgetBase, Mover, Metadata){
     
 var LEFT = 0,
     RIGHT = 1,
@@ -294,9 +294,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     },
 
     showInline: function(widget) {
-
         this._selectedWidget = widget;
-        this._inline = metadata.queryDescriptor(widget.type, "inlineEdit");
+        this._inline = Metadata.getHelper(widget.type, "inlineEdit");
     	var context = this._context;
         if (this._inline && this._inline.useParent) {
         	var parentWidget = widget.getParent();

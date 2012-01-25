@@ -6,11 +6,11 @@ define(["dojo/_base/declare",
     	"davinci/ve/commands/MoveCommand",
     	"davinci/ve/commands/ResizeCommand"], function(
     		declare,
-			createTool,
+			CreateTool,
 			widget
 			){
 
-return declare("davinci.ve.tools.PasteTool", createTool, {
+return declare("davinci.ve.tools.PasteTool", CreateTool, {
 
 	_create: function(args){
 		var command = new davinci.commands.CompoundCommand(),
@@ -54,21 +54,10 @@ return declare("davinci.ve.tools.PasteTool", createTool, {
 			var w;
 			dojo.withDoc(this._context.getDocument(), function(){
 				d.context=this._context;
-				var tool = davinci.ve.metadata.queryDescriptor(d.type, "tool");
-				var myTool;
+				var toolCtor = davinci.ve.metadata.getHelper(d.type, "tool"),
+					myTool;
 			    if (tool) {
-			        try {
-			            dojo["require"](tool);
-			        } catch(e) {
-			            console.error("Failed to load tool: " + tool);
-			            console.error(e);
-			        }
-			        var aClass = dojo.getObject(tool);
-			        if (aClass) {
-			        	myTool  = new aClass(d);
-					}
-			       // var obj = dojo.getObject(tool);
-			        //myTool = new obj();
+			    	myTool = new toolCtor(d);
 		        }
 		        if(myTool && myTool.addPasteCreateCommand){
 		        	var myArgs = {};

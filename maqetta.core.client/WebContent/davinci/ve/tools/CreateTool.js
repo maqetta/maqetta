@@ -1,6 +1,7 @@
 define(["dojo/_base/declare",
 		"davinci/ve/tools/_Tool",
 		"davinci/Workbench",
+		"davinci/workbench/Preferences",
 		"davinci/ve/metadata",
 		"davinci/ve/widget",
 		"davinci/ui/ErrorDialog",
@@ -14,6 +15,7 @@ define(["dojo/_base/declare",
 		declare,
 		Tool,
 		Workbench,
+		Preferences,
 		Metadata,
 		Widget
 ) {
@@ -146,7 +148,7 @@ return declare("davinci.ve.tools.CreateTool", Tool, {
 			// Show dynamic snap lines
 			var position = {x:event.pageX, y:event.pageY};
 			var box = {l:event.pageX,t:event.pageY,w:0,h:0};
-			var editorPrefs = Workbench.Preferences.getPreferences('davinci.ve.editorPrefs', 
+			var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
 					davinci.Runtime.getProject());
 			var doSnapLines = editorPrefs.snap && absolute;
 			context.dragMoveUpdate({

@@ -161,10 +161,15 @@ define([
             _maqGetString: getDescriptorString
         });
         
-        // register Dojo module for metadata path; necessary for loading of helper
-        // and creation tool classes
-        dojo.registerModulePath(METADATA_CLASS_BASE + libName,
-                path.relativeTo(dojo.baseUrl).toString());
+        // Register a module identifier for the metadata path; necessary for
+        // loading of helper and creation tool classes.
+        pkg.$moduleId = 'maq-metadata-' + pkg.name + '-' + pkg.version;
+        require = require({
+            packages: [{
+                name: pkg.$moduleId,
+                location: new Path(location.href).append(path).toString()
+            }]
+        });
     }
     
     // XXX Changed to return package, rather than widgets.json object
@@ -705,24 +710,15 @@ define([
             }
 
             var lib = getLibraryForType(type),
-                path = new Path(lib.$wm.$path).append(value),
-                url = path.toString() + '.js',
-                dfd = new Deferred();
+                moduleId = new Path(lib.$moduleId).append(value).toString(),
+                helper;
             
-            //////    XXX This is the AMD approach, but is async.
-            // require([path], function(obj) {
-            //     dfd.resolve(obj);
-            // });
-            //
-            // return dfd.promise();
-             
-            dojo.xhrGet({
-                url: url,
-                handleAs: 'javascript',
-                sync: true // XXX should be async
-            }).then(function(obj) {
-                return obj;
+            // XXX TODO This assumes synchronous flow.  Need to make async.
+            require([moduleId], function(module) {
+                helper = module;
             });
+
+            return helper;
         }
     };
 

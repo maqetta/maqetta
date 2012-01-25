@@ -105,13 +105,14 @@ return declare("davinci.ve.palette.PaletteItem", dijit._Widget,{
 			this.palette.selectedItem = null;
 		}
 		this.palette.pushedItem = this;
-		davinci.ui.dnd.dragManager.document = this.palette._context.getDocument();
+			
+		DragManager.document = this.palette._context.getDocument();
 		var frameNode = this.palette._context.frameNode;
 		if(frameNode){
 			var coords = dojo.coords(frameNode);
 			var containerNode = this.palette._context.getContainerNode();
-			davinci.ui.dnd.dragManager.documentX = coords.x - containerNode.scrollLeft;
-			davinci.ui.dnd.dragManager.documentY = coords.y - containerNode.scrollTop
+			DragManager.documentX = coords.x - containerNode.scrollLeft;
+			DragManager.documentY = coords.y - containerNode.scrollTop
 		}
 	},
 

@@ -6,7 +6,7 @@ return {
 		//		If a dojo.data store is specified on the passed widget, returns [].
 		//		Otherwise, returns the passed select widget's option tags, recreating them if no longer available in the source.
 		//
-		veWidget = widget;
+		var veWidget = widget;
 		widget = veWidget && veWidget.dijitWidget;
 		if(!widget){
 			return undefined;
@@ -28,13 +28,10 @@ return {
 
 			}
 			// If the passed ComboBox uses a store other than the internal store _ComboBoxDataStore, return [].
-		}else{
+		} else {
 			// If the passed select widget is not a ComboBox (DropDownSelect, CheckedMultiSelect, MultiSelect), return the widget's option tags.
-			if(widget.options){
-				var values = widget.getValue();
-				if(!dojo.isArray(values)){
-					values = [];
-				}
+			var values = (widget.getValue() || []);
+			if (widget.options) {
 				dojo.forEach(widget.options, function(o){
 					var p = {value: o.value};
 					var c = o.label;
@@ -44,7 +41,6 @@ return {
 					children.push({type: "html.option", properties: p, children: c});
 				});
 			}else if(widget.containerNode){ // MultiSelect
-				var values = (widget.getValue() || []);
 				dojo.query("option", widget.containerNode).forEach(function(n){
 					var p = {value: n.value};
 					var c = n.innerHTML;

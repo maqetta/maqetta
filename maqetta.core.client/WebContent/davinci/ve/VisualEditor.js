@@ -1,11 +1,11 @@
 define([
     "dojo/_base/declare",
 	"dojo/text!davinci/ve/template.html",
-	"davinci/Runtime",
-	"davinci/Workbench",
-	"davinci/model/Path",
-	"davinci/ve/Context",
-	"davinci/ve/commands/ModifyRuleCommand",
+	"../Runtime",
+	"../Workbench",
+	"../model/Path",
+	"./Context",
+	"./commands/ModifyRuleCommand",
 	"preview/silhouetteiframe"
 ], function(declare, template, Runtime, Workbench, Path, Context, ModifyRuleCommand, SilhouetteIframe){
 
@@ -281,8 +281,6 @@ return declare("davinci.ve.VisualEditor", null, {
 
 			this.context._commandStack=this._commandStack;
 			this._commandStack._context=this.context;
-//			this.context.addActionGroup(new davinci.ve.actions.ContextActions());
-//			this.context.addActionGroup(new davinci.ve.actions.ChildActions());
 
 			var prefs=davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', Runtime.getProject());
 			if (prefs) {

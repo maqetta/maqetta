@@ -1,6 +1,7 @@
 define([
 ], function() {
 	dojo.getObject("davinci.ve.Snap", true); // FIXME: shouldn't need this
+	//dojo.getObject("davinci.ve", true); // FIXME: shouldn't need this
 	return davinci.ve.Snap = /** @scope davinci.ve.Snap */ {
 		
 		/**

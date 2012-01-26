@@ -1,10 +1,15 @@
-dojo.provide("davinci.ve.actions.DeviceActions");
-dojo.require("davinci.actions.Action");
+define([
+    	"dojo/_base/declare",
+    	"davinci/actions/Action",
+    	"davinci/commands/CompoundCommand",
+    	"davinci/ve/commands/RemoveCommand",
+    	"dojo/i18n!davinci/ve/nls/ve",
+    	"dojo/i18n!dijit/nls/common"
+], function(declare, Action, CompoundCommand, RemoveCommand, veNls, commonNls){
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ve", "ve");  
 
-dojo.declare("davinci.ve.actions.ChooseDeviceAction", davinci.actions.Action, {
+return declare("davinci.ve.actions.ChooseDeviceAction", [Action], {
+
 	
 	run: function(selection){
 		if (!this.isEnabled(null)){ return; }
@@ -18,7 +23,6 @@ dojo.declare("davinci.ve.actions.ChooseDeviceAction", davinci.actions.Action, {
 
 	showDevices: function(){
 
-		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 		var e = davinci.Workbench.getOpenEditor(),
 			c = e.getContext(),
 			device = c.visualEditor.deviceName,
@@ -29,7 +33,7 @@ dojo.declare("davinci.ve.actions.ChooseDeviceAction", davinci.actions.Action, {
 			return '<option' + (name == device ? ' selected' : '') + '>' + name+ '</option>';			
 		}).join("")
 			+ '</select><br/>';
-		var	dialog = new dijit.Dialog({id: "selectDevices", title:langObj.chooseDeviceSilhouette,
+		var	dialog = new dijit.Dialog({id: "selectDevices", title:veNls.chooseDeviceSilhouette,
 			onCancel:function(){this.destroyRecursive(false);}});	
 		dojo.connect(dialog, 'onLoad', function(){
 			var cb = dijit.byId('devices');
@@ -47,21 +51,4 @@ dojo.declare("davinci.ve.actions.ChooseDeviceAction", davinci.actions.Action, {
 	}
 });
 
-dojo.declare("davinci.ve.actions.RotateDeviceAction", davinci.actions.Action, {
-	
-	run: function(selection){
-		var e = davinci.Workbench.getOpenEditor();
-		var context = e.getContext();
-		context.visualEditor.toggleOrientation();		
-	},
-	
-	isEnabled: function(selection){
-		var e = davinci.Workbench.getOpenEditor();
-		if (e && e.getContext)
-	//	if (e.declaredClass == 'davinci.themeEditor.ThemeEditor') // this is a hack to only support undo for theme editor for 0.5
-			return (e.getContext().getCommandStack().canRedo());
-		else return false;
-		//	return davinci.Runtime.commandStack.canRedo();
-	}
-}
-);
+});

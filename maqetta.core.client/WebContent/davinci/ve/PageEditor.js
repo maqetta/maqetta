@@ -1,30 +1,33 @@
-dojo.provide("davinci.ve.PageEditor");
- 
-dojo.require("dijit.layout.BorderContainer");
-dojo.require("dijit.layout.ContentPane");
-dojo.require("davinci.html.ui.HTMLEditor");
-dojo.require("davinci.model.Path");
-dojo.require("davinci.ve.VisualEditor");
-dojo.require("davinci.ve.VisualEditorOutline");
-dojo.require("davinci.commands.CommandStack");
-dojo.require("davinci.ve.utils.URLRewrite");
+define([
+	"dojo/_base/declare",
+	"davinci/ui/ModelEditor",
+	"dijit/layout/BorderContainer",
+	"dijit/layout/ContentPane",
+	"../commands/CommandStack",
+	"../html/ui/HTMLEditor",
+	"../model/Path",
+	"./VisualEditor",
+	"./VisualEditorOutline",
+	"./widget",
+	"../Runtime"
+], function(declare, ModelEditor, BorderContainer, ContentPane, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline){
 
-dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
+return declare("davinci.ve.PageEditor", ModelEditor, {
 	   
     constructor: function (element) {
 
-        this._bc = new dijit.layout.BorderContainer({}, element);
+        this._bc = new BorderContainer({}, element);
 
         this.domNode = this._bc.domNode;
 
-        this._commandStack = new davinci.commands.CommandStack(this);
+        this._commandStack = new CommandStack(this);
         this.savePoint=0;
 
-        this._designCP = new dijit.layout.ContentPane({region:'center'});
+        this._designCP = new ContentPane({region:'center'});
         this._bc.addChild(this._designCP);
 
 
-        this.visualEditor=new davinci.ve.VisualEditor(this._designCP.domNode, this);
+        this.visualEditor=new VisualEditor(this._designCP.domNode, this);
         this.currentEditor=this.visualEditor;
         this.currentEditor._commandStack=this._commandStack;
 
@@ -38,7 +41,7 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
             oldResize.apply(this, arguments);
         };
 
-        this.htmlEditor=new davinci.html.ui.HTMLEditor(this._srcCP.domNode,true);
+        this.htmlEditor = new HTMLEditor(this._srcCP.domNode,true);
         this.htmlEditor.setVisible(false);
         this.model=this.htmlEditor.model;
 
@@ -180,7 +183,7 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 	
 	getOutline: function() {
 		if (!this.outline) {
-			this.outline=new davinci.ve.VisualEditorOutline(this);
+			this.outline = new VisualEditorOutline(this);
 		}
 		return this.outline;
 	},
@@ -191,18 +194,17 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 	
 	
 	setContent: function (filename, content, newHtmlParams) {
-
-	    this.fileName=filename;
+	    this.fileName = filename;
 	    this.htmlEditor.setContent(filename,content);
 	    if (this._isNewFile && this.resourceFile.parent!=system.resource.getRoot()) {
-	        var rootPath=new davinci.model.Path([]);
-	        var newPath=new davinci.model.Path(this.resourceFile.getPath()).getParentPath();
-	        function updatePath(src) {
-	            var fullPath=rootPath.append(src);
-	            var newSrc=fullPath.relativeTo(newPath);
-	            return newSrc.toString();
-	        }
-	        var visitor={visit: function (element) {
+	        var rootPath = new Path([]),
+	        	newPath = new Path(this.resourceFile.getPath()).getParentPath(),
+	        	updatePath = function (src) {
+		            var fullPath=rootPath.append(src);
+		            var newSrc=fullPath.relativeTo(newPath);
+		            return newSrc.toString();
+		        };
+	        var visitor = {visit: function (element) {
 	            if (element.elementType=="HTMLElement") {
 	                if (element.tag=="script") {
 	                    var src=element.getAttribute("src");
@@ -289,3 +291,4 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 		}
 	}
 });
+}); 

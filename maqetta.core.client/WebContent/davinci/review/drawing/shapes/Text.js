@@ -1,10 +1,12 @@
-dojo.provide("davinci.review.drawing.shapes.Text");
+define([
+	"dojo/_base/declare",
+	"./_ShapeCommon"
+], function(declare, _ShapeCommon) {
+	
+return declare("davinci.review.drawing.shapes.Text", _ShapeCommon, {
 
-dojo.require("davinci.review.drawing.shapes._ShapeCommon");
-
-dojo.declare("davinci.review.drawing.shapes.Text", davinci.review.drawing.shapes._ShapeCommon, {
-	render: function(){
-		if(!this.shapeNode){
+	render: function() {
+		if (!this.shapeNode) {
 			this._createEditArea();
 			this._evtConns.push(
 				dojo.connect(this.shapeNode, "mouseover", this, "onMouseOver"),
@@ -17,24 +19,24 @@ dojo.declare("davinci.review.drawing.shapes.Text", davinci.review.drawing.shapes
 		this._transformTextArea();
 		this.inherited(arguments);
 	},
-	
-	setText: function(text){
+
+	setText: function(text) {
 		this.shapeNode.innerHTML = text;
 	},
-	
-	getText: function(){
+
+	getText: function() {
 		return this.shapeNode.innerHTML;
 	},
-	
-	getEditMode: function(){
+
+	getEditMode: function() {
 		if(!this.surface.isActivated) return;
 		this.editable = true;
 		dojo.attr(this.shapeNode, "contenteditable", "true");
 		dojo.style(this.shapeNode, "cursor", "");
 		this.shapeNode.focus();
 	},
-	
-	_createEditArea: function(){
+
+	_createEditArea: function() {
 		this.shapeNode = dojo.create("div");
 		this.width = Math.abs(this.x1 - this.x2);
 		this.height = Math.abs(this.y1 - this.y2);
@@ -49,8 +51,8 @@ dojo.declare("davinci.review.drawing.shapes.Text", davinci.review.drawing.shapes
 			"height": this.height + "px"
 		});
 	},
-	
-	_transformTextArea: function(){
+
+	_transformTextArea: function() {
 		this.width = Math.abs(this.x1 - this.x2);
 		this.height = Math.abs(this.y1 - this.y2);
 		dojo.style(this.shapeNode, {
@@ -60,26 +62,32 @@ dojo.declare("davinci.review.drawing.shapes.Text", davinci.review.drawing.shapes
 			"height": this.height + "px"
 		});
 	},
-	
-	_onDoubleClick: function(evt){
-		if(!this.surface.isActivated || !this.isReadOnly()) return;
+
+	_onDoubleClick: function(evt) {
+		if (!this.surface.isActivated || !this.isReadOnly()) {
+			return;
+		}
 		this.editable = true;
 		dojo.attr(this.shapeNode, "contenteditable", "true");
 		dojo.style(this.shapeNode, "cursor", "");
 		this.shapeNode.focus();
 	},
-	
-	_onblur: function(evt){
-		if(!this.surface.isActivated) return;
+
+	_onblur: function(evt) {
+		if (!this.surface.isActivated) {
+			return;
+		}
 		this.editable = false;
 		dojo.attr(this.shapeNode, "contenteditable", "false");
 		dojo.style(this.shapeNode, "cursor", "auto");
 	},
-	
+
 	isReadOnly: function(){
 		var surface = this.surface, secAttrs = this.filterAttributes;
-		return dojo.every(secAttrs, function(attr){
+		return dojo.every(secAttrs, function(attr) {
 			return this[attr] && surface[attr] && this[attr] == surface[attr];
 		}, this);
 	}
+
+});
 });

@@ -1,25 +1,24 @@
-dojo.provide("davinci.ve.actions.StateActions");
-dojo.require("davinci.actions.Action");
-dojo.require("davinci.ve.States");
+define([
+    	"dojo/_base/declare",
+    	"davinci/actions/Action",
+    	"dojo/i18n!davinci/ve/nls/ve",
+    	"dojo/i18n!dijit/nls/common"
+], function(declare, Action, veNls, commonNls){
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ve", "ve");
 
-
-dojo.declare("davinci.ve.AddState", davinci.actions.Action, {
+return declare("davinci.ve.actions.AddState", [Action], {
 
 	run: function(context){
 		// TODO: Replace dialog with UI to add nodes inline to list
 		// FIXME: Localize state action messages
-		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 		var state,
 		widget = this.getWidget(),
 		dialogId = "createStateDialog",
 		inputId = "createStateInput",
-		title = langObj.createNewState,
+		title = veNls.createNewState,
 		content = dojo.string.substitute('${StateLabel}: <input id="${id}" type="text"></input> ' + 
 			'<button dojoType="dijit.form.Button" type="submit" onClick="return dijit.byId(\'${dialogId}\').isValid();">${CreateLabel}</button>', 
-			{ id: inputId, dialogId: dialogId, CreateLabel: langObj.createLabel, StateLabel: langObj.stateLabel }
+			{ id: inputId, dialogId: dialogId, CreateLabel: veNls.createLabel, StateLabel: veNls.stateLabel }
 		);
 		var dialog = new dijit.Dialog({
 			id: dialogId,
@@ -35,7 +34,7 @@ dojo.declare("davinci.ve.AddState", davinci.actions.Action, {
 					alert(langObj.enterStateName);
 					return false;
 				} else if (davinci.ve.states.hasState(widget, state)) {
-					alert(dojo.string.substitute(langObj.stateNameExists, { name: state }));
+					alert(dojo.string.substitute(veNls.stateNameExists, { name: state }));
 					return false;
 				}
 				return true;
@@ -70,34 +69,4 @@ dojo.declare("davinci.ve.AddState", davinci.actions.Action, {
 		return widget;
 	}
 });
-
-dojo.declare("davinci.ve.RemoveState", davinci.actions.Action, {
-
-	run: function(context){
-		var widget = this.getWidget();
-		var state = this.getState(arguments[1] || arguments[0]);
-		davinci.ve.states.remove(widget, state);
-	},
-
-	isEnabled: function(context){
-		return this.getWidget();
-	},
-
-	shouldShow: function(context){
-		return this.getWidget();
-	},
-	
-	getWidget: function(widget) {
-		if (!widget) {
-			widget = davinci.ve.states.getContainer();
-		}
-		return widget;
-	},
-	
-	getState: function(state) {
-		if (!state || typeof state != "string") {
-			state = davinci.ve.states.getState();
-		}
-		return state;
-	}
 });

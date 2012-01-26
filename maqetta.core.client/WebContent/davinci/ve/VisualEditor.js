@@ -281,8 +281,6 @@ return declare("davinci.ve.VisualEditor", null, {
 
 			this.context._commandStack=this._commandStack;
 			this._commandStack._context=this.context;
-//			this.context.addActionGroup(new davinci.ve.actions.ContextActions());
-//			this.context.addActionGroup(new davinci.ve.actions.ChildActions());
 
 			var prefs=davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', Runtime.getProject());
 			if (prefs) {

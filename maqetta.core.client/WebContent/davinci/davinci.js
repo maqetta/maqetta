@@ -33,8 +33,7 @@ davinci/davinci = {
 	"./actions/DownloadAction",
 	"./actions/StickyNoteAction",
 	"./actions/SaveAsWidget",
-	"./ve/actions/ContextActions",
-	"./ve/actions/StateActions",
+	
 	"./ve/commands/ModifyAttributeCommand",
 	
 	"./html/ui/CSSEditor",

@@ -1,31 +1,31 @@
-dojo.provide("davinci.ve.actions.LayoutActions");
+define([
+    	"dojo/_base/declare",
+    	"davinci/actions/Action",
+    	"davinci/commands/CompoundCommand",
+    	"davinci/commands/MoveCommand",
+    	"davinci/ve/widget"
+], function(declare, Action, CompoundCommand, MoveCommand, Widget){
 
-dojo.require("davinci.actions.Action");
-dojo.require("davinci.commands.CompoundCommand");
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.ve.commands.AddCommand");
-dojo.require("davinci.ve.commands.ModifyCommand");
-dojo.require("davinci.ve.commands.MoveCommand");
 
-dojo.declare("davinci.ve.actions.AlignAction", davinci.actions.Action, {
+return declare("davinci.ve.actions.AlignAction", [Action], {
 
 	run: function(context){
 		if(!context){
 			return;
 		}
 
-		var command = new davinci.commands.CompoundCommand();
+		var command = new CompoundCommand();
 		var selection = context.getSelection();
 		var parent = undefined;
 		var baseline = undefined;
 		dojo.forEach(selection, function(w){
-			var node = davinci.ve.widget.getStyleNode(w);
+			var node = Widget.getStyleNode(w);
 			if(node.style.position != "absolute"){
 				return;
 			}
 			var box = dojo.marginBox(node);
 			if(parent){
-				if(davinci.ve.widget.getParent(w) != parent){
+				if(Widget.getParent(w) != parent){
 					context.deselect(w);
 					return;
 				}
@@ -47,9 +47,9 @@ dojo.declare("davinci.ve.actions.AlignAction", davinci.actions.Action, {
 				default:
 					return;
 				}
-				command.add(new davinci.ve.commands.MoveCommand(w, left, top));
+				command.add(new MoveCommand(w, left, top));
 			}else{
-				parent = davinci.ve.widget.getParent(w);
+				parent = Widget.getParent(w);
 				baseline = box;
 			}
 		}, this);
@@ -64,14 +64,15 @@ dojo.declare("davinci.ve.actions.AlignAction", davinci.actions.Action, {
 		if(selection.length < 2){
 			return false;
 		}
-		var parent = davinci.ve.widget.getParent(selection[0]);
+		var parent = Widget.getParent(selection[0]);
 		for(var i = 1; i < selection.length; i++){
-			if(davinci.ve.widget.getParent(selection[i]) != parent){
+			if(Widget.getParent(selection[i]) != parent){
 				return false;
 			}
 		}
 		return true;
 	}
 
+});
 });
 

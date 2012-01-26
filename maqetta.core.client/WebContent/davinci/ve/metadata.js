@@ -704,9 +704,13 @@ define([
             // Handle the declarative form of 'inlineEdit', where `value` is
             // an object, not a path.
             if (helperType === 'inlineEdit' && typeof value !== 'string') {
-                var si = new SmartInput();
-                dojo.mixin(si, value);
-                return si;
+                // In the case that follows, this function returns a constructor
+                // for 'inlineEdit'.  Do the same in this case.
+                function SI() {
+                    dojo.mixin(this, value);
+                }
+                SI.prototype = new SmartInput();
+                return SI;
             }
 
             var lib = getLibraryForType(type),

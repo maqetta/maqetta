@@ -4,10 +4,19 @@ define([
 	"dijit/Tooltip",
 	"dojo/fx",
 	"davinci/ve/tools/CreateTool",
-	"davinci/ui/dnd/DragManager"
-], function(declare, _Widget, Tooltip, fx, CreateTool, DragManager){
+	"davinci/ui/dnd/DragManager",
+	"davinci/ve/metadata"
+], function(
+	declare,
+	_Widget,
+	Tooltip,
+	fx,
+	CreateTool,
+	DragManager,
+	Metadata
+){
 
-return declare("davinci.ve.palette.PaletteItem", dijit._Widget,{
+return declare("davinci.ve.palette.PaletteItem", _Widget,{
 
 	icon: "",
 	displayName: "",
@@ -26,16 +35,6 @@ return declare("davinci.ve.palette.PaletteItem", dijit._Widget,{
 		dojo.attr(a, "tabIndex", "0");
 		a.onclick = this.palette.nop; // to avoid firing the onbeforeunload event (dojo.event.connect doesn't work for this purpose)
 		var img = a.firstChild;
-
-// XXX Sprited images not supported. Use base64 instead.
-//		var offsetX = 0;
-//		var offsetY = 0;
-//		if(this.icon.indexOf(",") != -1){
-//			var arr = this.icon.split(",");
-//			this.icon = arr[0];
-//			offsetX = arr[1] - 0;
-//			offsetY = arr[2] - 0;
-//		}
 
 		img.src = this.icon;
 		a.appendChild(dojo.doc.createTextNode(this.displayName));
@@ -115,6 +114,10 @@ return declare("davinci.ve.palette.PaletteItem", dijit._Widget,{
 		}
 	},
 
+	/**
+	 * Invoked when user clicks on a widget entry (but not to perform drag/drop).
+	 * @param {Event} e
+	 */
 	itemMouseUpHandler: function(e){
 		if(this.palette.pushedItem != this){
 			this.palette.pushedItem = null;
@@ -131,19 +134,11 @@ return declare("davinci.ve.palette.PaletteItem", dijit._Widget,{
 		}
 		this.palette.selectedItem = this;
 		this.palette.pushedItem = null;
-		var tool = undefined;
-		var dataCopy = dojo.clone(this.data);
-		if(this.tool){
-			// prime the metadata cache to make sure the loader is set up properly
-			davinci.ve.metadata.query(this.type);
-			dojo["require"](this.tool);
-//            dojo._loadUri(system.resource.findResource(
-//                    './' + this.tool.replace(/\./g, "/") + ".js").getURL());
-			var ctor = dojo.getObject(this.tool);
-			tool = new ctor(dataCopy);
-		}else{
-			tool = new davinci.ve.tools.CreateTool(dataCopy);
-		}
+
+		var dataCopy = dojo.clone(this.data),
+			ToolCtor = Metadata.getHelper(this.type, 'tool') || CreateTool,
+			tool = new ToolCtor(dataCopy);
+
 		this.palette._context.setActiveTool(tool);
 		this.connect(this.palette._context, "onMouseUp", function(e){
 			this.palette.selectedItem = null;
@@ -151,26 +146,21 @@ return declare("davinci.ve.palette.PaletteItem", dijit._Widget,{
 		});
 	},
 	
+	/**
+	 * Invoked when travelling widget list using arrow keys.
+	 * @param {Event} e
+	 */
 	itemKeyDownHandler: function(e){
 		if(e.keyCode != dojo.keys.ENTER){return;}
 		if(this.palette.selectedItem){
 			this.flat(this.palette.selectedItem.domNode);
 			this.palette.selectedItem = null;
 		}
-		var context = this.palette._context;
-		var tool = undefined;
-		var dataCopy = dojo.clone(this.data);
-		if(this.tool){
-			// prime the metadata cache to make sure the loader is set up properly
-			davinci.ve.metadata.query(this.type);
-//			dojo["require"](this.tool);
-            dojo._loadUri(system.resource.findResource(
-                    './' + this.tool.replace(/\./g, "/") + ".js").getURL());
-			var ctor = dojo.getObject(this.tool);
-			tool = new ctor(dataCopy);
-		}else{
-			tool = new davinci.ve.tools.CreateTool(dataCopy);
-		}
+		var context = this.palette._context,
+			dataCopy = dojo.clone(this.data),
+			ToolCtor = Metadata.getHelper(this.type, 'tool') || CreateTool,
+			tool = new ToolCtor(dataCopy);
+
 		context.setActiveTool(tool);
 		tool.create({target: context.getSelection()[0], position: {x:50, y:50}});
 		context.setActiveTool(null);

@@ -316,7 +316,6 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 				paletteId: this.id,
 				type: item.type,
 				data: item.data || {type: item.type, properties: item.properties, children: item.children},
-				tool: item.tool,
 				category: component.name
 			};
 			this._createItem(opt);
@@ -432,14 +431,12 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	},
 	
 	onDragStart: function(e){	
-		var data = e.dragSource.data;
-		require([data.tool && data.tool.replace(/\./g, "/") || "davinci/ve/tools/CreateTool"], function(toolClass) {
+		var data = e.dragSource.data,
 			// Copy the data in case something modifies it downstream -- what types can data.data be?
-			var dataCopy = dojo.clone(data.data),
-				tool = new toolClass(dataCopy);
-			tool._type = data.type;
-			this._context.setActiveTool(tool);
-		}.bind(this));
+			dataCopy = dojo.clone(data.data),
+			ToolCtor = Metadata.getHelper(data.type, 'tool') || CreateTool,
+			tool = new ToolCtor(dataCopy);
+		this._context.setActiveTool(tool);
 
 		// Sometimes blockChange doesn't get cleared, force a clear upon starting a widget drag operation
 		this._context.blockChange(false);

@@ -3,7 +3,7 @@ define([
 	"davinci/ve/input/SmartInput",
 	"davinci/ve/widget",
 	"davinci/ve/commands/ModifyCommand",
-	"dojo/i18n!../nls/dijit"
+	"dojo/i18n!./nls/dijit"
 ], function(
 	declare,
 	SmartInput,

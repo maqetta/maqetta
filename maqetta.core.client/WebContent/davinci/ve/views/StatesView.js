@@ -1,23 +1,21 @@
-dojo.provide("davinci.ve.views.StatesView");
+define([
+    	"dojo/_base/declare",
+    	"davinci/workbench/ViewPart",
+    	"dijit/layout/BorderContainer",
+    	"dijit/layout/ContentPane",
+    	"dijit/form/ComboBox",
+    	"dojox/grid/DataGrid",
+    	"davinci/ve/States",
+    	"dojo/data/ItemFileReadStore",
+    	"dojo/data/ItemFileWriteStore",
+    	"davinci/Runtime"
+], function(declare, ViewPart, BorderContainer,  ContentPane, ComboBox, 
+			DataGrid, States, ItemFileReadStore, ItemFileWriteStore, Runtime
+		    ){
 
-dojo.require("davinci.workbench.ViewPart");
-dojo.require("dijit.layout.AccordionContainer");
-dojo.require("dijit.layout.ContentPane");
-dojo.require("dijit.TitlePane");
-dojo.require("davinci.Workbench");
 
-dojo.require("dijit.form.ComboBox");
-dojo.require("dijit.form.TextBox");
-dojo.require("dojox.grid.DataGrid");
+return declare("davinci.ve.views.StatesView", [ViewPart], {
 
-dojo.require("davinci.ve.States");
-//dojo.require("davinci.ve.actions.StateActions");
-dojo.require("davinci.ve.actions.AddState");
-dojo.require("davinci.ve.actions.RemoveState");
-
-dojo.require("davinci.workbench.ViewPart");
-
-dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 
 	toolbarMenuActionSets:[
 		{
@@ -39,19 +37,7 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 						  [ "statesDropdownMenu.action1",true,
 						   "statesDropdownMenu.action2",true
 						  ]
-				 }/*, 
-				 { 
-					 label : "Do Something",
-					 path : "davinci.statesDropdownMenu/statesDropdownMenu.action1",
-					 id : "statesDropdownMenu.action1",
-					 run: "alert('something works')"
-				 }, 
-				 { 
-					 label : "Do Something Else",
-					 path : "davinci.statesDropdownMenu/statesDropdownMenu.action2",
-					 id : "statesDropdownMenu.action2",
-					 run: "alert('something else works')"
-				 }*/
+				 }
 			],
 			actions:[]
 		}
@@ -61,23 +47,17 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 		this.inherited(arguments);
 		this._themeState = null;
 		
-		this.container = new dijit.layout.BorderContainer({       
+		this.container = new BorderContainer({       
 			design: "headline",
 			gutters: false,
 			liveSplitters: false
 		});
 		
-		//this.topPane = new dijit.layout.ContentPane({region: "top"});
-		this.centerPane = new dijit.layout.ContentPane({region: "center"});
-		
-		//this.container.addChild(this.topPane);
+		this.centerPane = new ContentPane({region: "center"});
 		this.container.addChild(this.centerPane);
-		
 		this.container.layout();	
 		this.container.startup();
-		
 		this.setContent(this.container);
-				
 		this.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, this._editorSelected));
 		this.subscribe("/davinci/ui/context/loaded", dojo.hitch(this, this._contextLoaded));
 		this.subscribe("/davinci/states/state/added", dojo.hitch(this, this._addState));
@@ -121,24 +101,20 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 
 			dojo.style(this.container.domNode, "display", "block");
 			if (editor.declaredClass === 'davinci.ve.themeEditor.ThemeEditor'){
-				//dojo.style(this.topPane.domNode, "display", "none");
-				//this.toolbarDiv.style.display
 				dojo.style(this.toolbarDiv, "display", "none");
 				var d = dijit.byId(this.toolbarDiv.parentNode.id);
 				d.resize();
 				this._updateViewForThemeEditor();
 				if(!this._themeState){
 					this._silent = false;
-					this._updateThemeSelection("Normal", true /*false*/);
+					this._updateThemeSelection("Normal", true);
 				}else {
 					this._silent = true;
 					this._updateThemeSelection(this._themeState);
 				}
 			} else {
 				this._updateView();
-				//dojo.style(this.topPane.domNode, "display", "block");
 				dojo.style(this.toolbarDiv, "display", "block");
-				//this.toolbarDiv.parentNode.id
 				var d = dijit.byId(this.toolbarDiv.parentNode.id);
 				d.resize();
 			}
@@ -158,65 +134,6 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 		}
 		return doc;
 	},
-	/* Removed until ready to add transitions functionality.
-	getTopAdditions: function(){
-		var span=dojo.doc.createElement("span");
-		var transitionText = dojo.doc.createTextNode("Transition: ");
-		span.appendChild(transitionText);
-		span.appendChild( this._createComboBox());
-		return span;
-	},*/
-
-//	_createToolbar: function() {
-//		var dvStatesViewToolbar = dojo.doc.createElement('div');
-//		dvStatesViewToolbar.id = "dvStatesViewToolbar";
-//		
-//			var dvStatesViewActions = dojo.doc.createElement('div');
-//			dvStatesViewActions.id = "dvStatesViewActions";
-//				var dvStatesViewTransition = dojo.doc.createElement('div');
-//				dvStatesViewTransition.id = "dvStatesViewTransition";
-//				dvStatesViewActions.appendChild(dvStatesViewTransition);
-//				var transitionText = dojo.doc.createTextNode("Transition: ");
-//				dvStatesViewTransition.appendChild(transitionText);
-//				var dvStatesViewTransitionBox = this._createComboBox();
-//				dvStatesViewTransition.appendChild(dvStatesViewTransitionBox);
-//
-//				var dvAddState = this._getBox("dvAddState", "plusButton.gif");
-//				var dvAddStateAction = new davinci.ve.AddState();
-//				dvAddState.onclick = dojo.hitch(this, function() { dvAddStateAction.run(); });
-//				dvAddState.style.cursor = "pointer";
-//				dvStatesViewActions.appendChild(dvAddState);
-//				dvStatesViewActions.appendChild(dojo.doc.createTextNode(" "));
-//				
-//				var dvRemoveState = this._getBox("dvRemoveState", "minusButton.gif");
-//				var dvRemoveStateAction = new davinci.ve.RemoveState();
-//				dvRemoveState.onclick = dojo.hitch(this, function() { 
-//					dvRemoveStateAction.run(); 
-//				});
-//				dvRemoveState.style.cursor = "pointer";	
-//				dvStatesViewActions.appendChild(dvRemoveState);
-//				
-//				dvStatesViewActions.appendChild(dojo.doc.createTextNode("  "));
-//				var dvStatesToolbarMenuAnchor = this._getBox("dvStatesToolbarMenuAnchor", "arrowDown.gif");
-//				this._attachMenu(dvStatesToolbarMenuAnchor);
-//				dvStatesViewActions.appendChild(dvStatesToolbarMenuAnchor);
-//
-//			dvStatesViewToolbar.appendChild(dvStatesViewActions);
-//			
-//			var dvStatesViewToolbarFooter = dojo.doc.createElement('div');
-//			dvStatesViewToolbarFooter.id = "dvStatesViewToolbarFooter";
-//			dvStatesViewToolbar.appendChild(dvStatesViewToolbarFooter);
-//
-//		this.topPane.domNode.appendChild(dvStatesViewToolbar);
-//	},
-//	
-//	_getBox: function(id, image) {
-//		var dvBox = dojo.doc.createElement('img');
-//		dvBox.id = id;
-//		dojo.addClass(dvBox, "dvStatesViewAction");
-//		dvBox.src = "davinci/themes/architect/images/" + image;
-//		return dvBox;
-//	},
 		
 	_createComboBox: function() {
 		var timingData = {
@@ -231,8 +148,8 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 				{ duration:"13s" }
 			]
 		};
-		var stateStore = new dojo.data.ItemFileReadStore({data:timingData});
-		var comboBox = new dijit.form.ComboBox({
+		var stateStore = new ItemFileReadStore({data:timingData});
+		var comboBox = new ComboBox({
 				id: "dvStatesViewTransitionBox",
 				name: "duration",
 				value: "0s",
@@ -243,54 +160,17 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 		return comboBox.domNode;
 	},
 	
-//	_attachMenu: function(element) {
-//		var dvAddStateAction = new davinci.ve.AddState();
-//		var dvRemoveStateAction = new davinci.ve.RemoveState();
-//
-//		element.style.cursor = "pointer";
-//
-//		var pMenu = new dijit.Menu({
-//			targetNodeIds: [element], leftClickToOpen: true
-//		});
-//		pMenu.addChild(new dijit.MenuItem({
-//			label: "Add state",
-//			onClick: dojo.hitch(this, function() {
-//				dvAddStateAction.run();
-//			})
-//		}));
-//		pMenu.addChild(new dijit.MenuItem({
-//			label: "Remove state",
-//			onClick: dojo.hitch(this, function() {
-//				dvRemoveStateAction.run();
-//			})
-//		}));
-//		/*pMenu.addChild(new dijit.MenuItem({
-//			label: "Duplicate state",
-//			disabled: true,
-//			onClick: function() {
-//				console.warn('TODO: Duplicate state')
-//			}
-//		}));
-//		pMenu.addChild(new dijit.MenuItem({
-//			label: "Rename state",
-//			disabled: true,
-//			onClick: function() {
-//				console.warn('TODO: Rename state')
-//			}
-//		}));*/
-//		pMenu.startup();
-//	},
-	
+
 	_createStateList: function() {
 		// Setup our data store:
 		var statesData = {
 			identifier: "id",
 			"items": [{ name: "Normal", id: "Normal"}]
 		};
-		this._store = new dojo.data.ItemFileWriteStore({ data: statesData });
+		this._store = new ItemFileWriteStore({ data: statesData });
 		dojo.connect(this._store, "onSet", function(item, attribute, oldValue, newValue){
 			if (oldValue !== newValue) {
-				davinci.ve.states.rename(oldValue, newValue);
+				States.rename(oldValue, newValue);
 			}
 		});
 
@@ -303,7 +183,7 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 		}];
 		
 		// Create a new grid:
-		this._grid = new dojox.grid.DataGrid({
+		this._grid = DataGrid({
 				id: "dvStatesDataGrid",
 				store: this._store,
 				structure: layout,
@@ -324,12 +204,12 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 					this._themeState = item.name[0];
 					this._silent = false;
 				} else {
-					var currentEditor = top.davinci.Runtime.currentEditor;
+					var currentEditor = Runtime.currentEditor;
 					var context = currentEditor.getContext();
 					var bodyWidget = context.rootWidget;
 					if(context && bodyWidget){
 						var state = item.name[0];
-						davinci.ve.states.setState(bodyWidget, state);
+						States.setState(bodyWidget, state);
 						context.deselectInvisible();
 					}
 				}
@@ -361,10 +241,6 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 
 	_updateViewForThemeEditor: function() {
 		
-		
-		//var latestStates = this._getRuntimeStates().getStates(this._getWidget(), true), storedStates = this._getStates();
-		
-		//var context = this.getContext();
 		var states = this._editor._theme.getStatesForAllWidgets();
 		var names = {"Normal": "Normal"};
 		if (states) {
@@ -398,7 +274,7 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 	},
 	
 	_updateList: function() {
-		var latestStates = davinci.ve.states.getStates(this._getWidget(), true), 
+		var latestStates = States.getStates(this._getWidget(), true), 
 			storedStates = this._getStates();
 		
 		// Remove all stored states not in latestStates
@@ -422,7 +298,7 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 	
 	_updateSelection: function() {
 		var selectionIndex = 0;
-		var currentState = davinci.ve.states.getState(this._getWidget());
+		var currentState = States.getState(this._getWidget());
 
 		this._store.fetch({query: {name:"*"}, onComplete: dojo.hitch(this, function(items, request){
 				for (var i = 0; i < items.length; i++){
@@ -440,12 +316,8 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 	},
 
 	_updateThemeSelection: function(currentState, silent) {
-		var selected = this._grid.selection.getSelected();//selectedIndex
-		//this._grid.selection.setSelected(2, true);
 		
-		//return;
 		var selectionIndex = 0;
-		//var currentState = this._getRuntimeStates().getState(this._getWidget());
 		if (!currentState) return;
 		var items = this._grid._by_idx;
 		for (var i = 0; i < items.length; i++){
@@ -457,7 +329,6 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 			}
 		}
 
-		//this._getStateList().selection.clear();
 		this._grid.selection.clear();
 		if (silent == undefined){
 			this._silent = true;
@@ -493,4 +364,5 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 		});
 		this._store.save();
 	}
+});
 });

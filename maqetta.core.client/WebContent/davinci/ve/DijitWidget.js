@@ -1,6 +1,11 @@
-define("davinci/ve/DijitWidget", ["davinci/ve/_Widget", "davinci/ve/metadata"], function() {
+define([
+        "dojo/_base/declare",
+        "./_Widget",
+        "./metadata",
+        "./widget"
+], function(declare, _Widget, metadata) {
 
-/*return*/ dojo.declare("davinci.ve.DijitWidget", davinci.ve._Widget, {
+return declare("davinci.ve.DijitWidget", _Widget, {
 
 	isDijitWidget: true,
 

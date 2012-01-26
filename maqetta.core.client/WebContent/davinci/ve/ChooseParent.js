@@ -1,10 +1,10 @@
-dojo.provide("davinci.ve.ChooseParent");
+define([
+        "dojo/_base/declare",
+        "./widget",
+        "./_Widget"
+], function(declare, widget, _Widget){
 
-dojo.require("davinci.ve.widget");
-dojo.require("davinci.ve._Widget");
-dojo.require("davinci.ve.Context");
-
-dojo.declare("davinci.ve.ChooseParent", null, {
+return declare("davinci.ve.ChooseParent", null, {
 	
 	constructor: function(args){
 		this._context = args.context;
@@ -27,7 +27,7 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 	 */
 	getAllowedTargetWidget: function(target, data, climb) {
 		// get data for widget we are adding to page
-		var getEnclosingWidget = davinci.ve.widget.getEnclosingWidget,
+		var getEnclosingWidget = widget.getEnclosingWidget,
 			newTarget = target,
 			allowedParentList = [],
 			data = data.length ? data : [data],
@@ -44,7 +44,7 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 		});
 
 		do {
-			var parentType = newTarget instanceof davinci.ve._Widget ?
+			var parentType = newTarget instanceof _Widget ?
 					newTarget.type : newTarget._dvWidget.type;
 			var parentClassList = this.getClassList(parentType);
 			if(this.isAllowed(children, newTarget, parentType, parentClassList)){
@@ -166,17 +166,22 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 							headerDiv.innerHTML = langObj.noValidParents;
 						}else if(len == 1){
 							headerDiv.innerHTML = langObj.willBeChildOf;
-							div = dojo.create('div',{className:'maqCandidateListItem maqCandidateCurrent',innerHTML:davinci.ve.widget.getLabel(allowedParentList[0])},listDiv);
+							div = dojo.create('div', {
+									className: 'maqCandidateListItem maqCandidateCurrent',
+									innerHTML: widget.getLabel(allowedParentList[0])
+								}, listDiv);
 						}else{
 							headerDiv.innerHTML = langObj.candidateParents;
 							var s = '<table>';
-							var j;
 							for(var i=allowedParentList.length-1, j=1; i >= 0; i--, j++){
 								var className = 'maqCandidateListItem';
 								if(allowedParentList[i] == this._proposedParentWidget){
 									className += ' maqCandidateCurrent';
 								}
-								s += '<tr class="'+className+'"><td class="maqCandidateCheckedColumn">&rarr;</td><td class="maqCandidateNumberColumn">'+j+'</td><td class="maqCandidateParentColumn">'+davinci.ve.widget.getLabel(allowedParentList[i])+'</td></tr>';
+								s += '<tr class="' + className +
+									'"><td class="maqCandidateCheckedColumn">&rarr;</td><td class="maqCandidateNumberColumn">' + j +
+									'</td><td class="maqCandidateParentColumn">' + widget.getLabel(allowedParentList[i]) +
+									'</td></tr>';
 							}
 							s += '</table>';
 							listDiv.innerHTML = s;
@@ -205,7 +210,7 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 		var context = this._context;
 		var proposedParentWidget;
 		if(allowedParentList){
-			var helper = davinci.ve.widget.getWidgetHelper(widgetType);
+			var helper = widget.getWidgetHelper(widgetType);
 			if(allowedParentList.length>1 && helper && helper.chooseParent){
 				//FIXME: Probably should pass all params to helper
 				proposedParentWidget = helper.chooseParent(allowedParentList);
@@ -485,5 +490,5 @@ dojo.declare("davinci.ve.ChooseParent", null, {
 	isSpaceKeyDown: function(){
 		return this._spaceKeyDown;
 	}
-
+});
 });

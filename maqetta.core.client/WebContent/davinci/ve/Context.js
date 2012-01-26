@@ -826,7 +826,7 @@ return declare("davinci.ve.Context", null, {
 // TODO: This needs to be more flexible to allow things like HTML5 DOCTYPE's
 // (should be based on a preference)
 			var doc = frame.contentDocument || frame.contentWindow.document,
-				win = dijit.getDocumentWindow(doc),
+				win = windowUtils.get(doc),
 				head = "<!DOCTYPE html>";
 // TODO: margin:0 is a temporary hack. In previous releases, we always included dojo.css
 // which set margin:0, but we now only include dojo.css with the first Dojo widget
@@ -1606,7 +1606,7 @@ return declare("davinci.ve.Context", null, {
 	},
 
 	getGlobal: function(){
-		return dijit.getDocumentWindow(this.getDocument());
+		return windowUtils.get(this.getDocument());
 	},
 
 	getDojo: function(){

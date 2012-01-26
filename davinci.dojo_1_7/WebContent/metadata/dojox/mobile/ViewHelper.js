@@ -1,14 +1,14 @@
 define([
 	"dojo/_base/connect",
 	"dojo/dom-class",
-	"dijit/_base/window",
+	"dojo/window",
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/StyleCommand",
 	"davinci/ve/commands/ModifyAttributeCommand"
 ], function(
 	connect,
 	domClass,
-	Window,
+	windowUtils,
 	CompoundCommand,
 	StyleCommand,
 	ModifyAttributeCommand
@@ -44,7 +44,7 @@ return {
 			// created this interval.
 			if (! widget._dvDisplayInterval) {
 				widget._dvDisplayInterval = setInterval(function() {
-					var win = Window.getDocumentWindow(node.ownerDocument);
+					var win = windowUtils.get(node.ownerDocument);
 					if (win.dojox.mobile.currentView === view ||
 							node.style.display === 'none') {
 						node.style.display = 'block';

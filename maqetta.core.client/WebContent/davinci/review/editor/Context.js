@@ -1,12 +1,13 @@
 define([
     "dojo/_base/declare",
+    "dojo/window",
 	"../drawing/Surface",
 	"../drawing/tools/CreateTool",
 	"../drawing/tools/ExchangeTool",
 	"../drawing/tools/HighlightTool",
 	"../drawing/tools/SelectTool",
 	"davinci/Runtime"
-], function(declare, Surface, CreateTool, ExchangeTool, HighlightTool, SelectTool, Runtime) {
+], function(declare, windowUtils, Surface, CreateTool, ExchangeTool, HighlightTool, SelectTool, Runtime) {
 	
 return declare("davinci.review.editor.Context", null, {
 
@@ -68,7 +69,7 @@ return declare("davinci.review.editor.Context", null, {
 		if (!this.getDocument()) {
 			return null;
 		}
-		return dijit.getDocumentWindow(this.getDocument());
+		return windowUtils.get(this.getDocument());
 	},
 
 	getDojo: function() {

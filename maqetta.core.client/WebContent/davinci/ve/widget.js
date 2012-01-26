@@ -7,18 +7,19 @@ dojo.require("davinci.ve.DijitWidget");
 dojo.require("davinci.ve.GenericWidget");
 dojo.require("davinci.ve.HTMLWidget");
 dojo.require("davinci.ve.ObjectWidget");
+dojo.require("dojo.window");
 
 
 davinci.ve.widget._dojo = function(node){
 	var doc = node ? (node.ownerDocument || node) : dojo.doc;
 //TODO: for some reason node.ownerDocument is occasionally null
 	doc=doc||dojo.doc;
-	var win = dijit.getDocumentWindow(doc);
+	var win = dojo.window.get(doc);
 	return win.dojo || dojo;
 };
 davinci.ve.widget._dijit = function(node){
 	var doc = node ? (node.ownerDocument || node) : dojo.doc;
-	var win = dijit.getDocumentWindow(doc);
+	var win = dojo.window.get(doc);
 	return win.dijit || dijit;
 };
 
@@ -304,7 +305,7 @@ davinci.ve.widget.byNode = function(node){
 };
 
 davinci.ve.widget._getUniqueId = function() {
-    var dj = dijit.getDocumentWindow(dojo.doc).dojo,
+    var dj = dojo.window.get(dojo.doc).dojo,
         id;
     do {
         id = "widget_" + Math.floor(0x7FF * Math.random());
@@ -380,7 +381,7 @@ davinci.ve.widget.createWidget = function(widgetData, initialCreationArgs){
 	// XXX Technically, there can be more than one 'content'
     var uniqueId = davinci.ve.widget._getUniqueId();
     var content = metadata.content.trim().replace(/\s+/g, ' ').replace(/__WID__/g, uniqueId);
-	var node = dijit.getDocumentWindow(dojo.doc).dojo._toDom(content);
+	var node = dojo.window.get(dojo.doc).dojo._toDom(content);
 	// XXX Used to create node like this, which added attributes from metadata, is there still a way to do this?
 	//	var node = dojo.create(metadata.tagName || "div", metadata.attributes);
 

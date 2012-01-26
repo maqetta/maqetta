@@ -1,8 +1,15 @@
 define([
-	"dojo/_base/connect", "dojo/dom-class"
-], function(connect, domClass) {
-return function() {
-	this.create = function(widget) {
+	"dojo/_base/connect",
+	"dojo/_base/array",
+	"dojo/dom-class"
+], function(
+	connect,
+	array,
+	domClass
+) {
+
+var MenuHelper = {
+	create: function(widget) {
 		var id = widget.dijitWidget.id,
 			context = widget.getContext();
 		if (widget.properties && widget.properties.contextMenuForWindow) {
@@ -30,16 +37,17 @@ return function() {
 				domClass.add(menu.domNode, "maqHidden");
 				domClass.remove(menu.domNode, "maqShown");
 			}
-		}.bind(this));
-	};
+		});
+	},
 
-	this.destroy = function(widget) {
+	destroy: function(widget) {
 		connect.unsubscribe(widget._helperHandle);
 		delete widget._helperHandle;
 
 		widget.dijitWidget.destroyRecursive();
-	};
-	this.getData = function(/*Widget*/ widget, /*Object*/ options) {
+	},
+
+	getData: function(/*Widget*/ widget, /*Object*/ options) {
 		// summary:
 		//		Returns a serialized form of the passed Menu/MenuBar, also serializing the children MenuItems and Menus.
 		//
@@ -52,15 +60,15 @@ return function() {
 		}
 		var childNodes = data.children;
 		if (childNodes) {
-			dojo.forEach(childNodes, function(c) {
+			array.forEach(childNodes, function(c) {
 				// only interested in menus or menu items
 				// FIXME: should this also check for length like in serializePopup?
-				if (dojo.isString(c)) {
+				if (typeof c === 'string') {
 				} else {
 					var childData = [];
 					if (c.properties.popup) {
 						//childData = this.dojo.metadata.dijit.MenuHelper.serializePopup(c.properties.popup, widget._edit_context);
-						childData = this.serializePopup(c.properties.popup, widget._edit_context);
+						childData = MenuHelper.serializePopup(c.properties.popup, widget._edit_context);
 						if (childData) {
 							// clear reference to popup to avoid duplication in the source
 							delete c.properties.popup;
@@ -68,14 +76,14 @@ return function() {
 						}
 					}
 				}
-			}, this);
+			});
 		}
 		return data;
-	};
+	},
 	
 	// HACKS: There's probably a better way to do this with the new model, just stopgap measures until Phil takes a look.
 	// Calling widget.declaredClass, passing in context instead of using a dvWidget because I couldn't find a handle to one.
-	this.serializePopup = function(widget, context) {
+	serializePopup: function(widget, context) {
 		// summary:
 		//		Returns a serialized form of the passed popup, collecting only a minimal set of information about the child widgets.
 		//
@@ -87,11 +95,10 @@ return function() {
 			pData,
 			popupData = [];
 		// search for child widgets
-		dojo.forEach(pChildNodes, function(n) {
+		array.forEach(pChildNodes, function(n) {
 				// only interested in menus or menu items
-				if ((typeof n == "object" && n.nodeType != 1 /*ELEMENT*/) || dojo.isString(n) || n.length) {
-					
-				} else {
+				if (! (typeof n == "object" && n.nodeType != 1 /*ELEMENT*/) &&
+						typeof n !== 'string' && ! n.length) {
 					// get the widget from the node
 					var pWidget = context.getDijit().byNode(n);
 					pData = {type: pWidget.declaredClass, properties: pWidget.label ? {label: pWidget.label} : {}};
@@ -112,10 +119,13 @@ return function() {
 				}
 		});
 		return data;
-	};
+	},
 
-	this.getWidgetTextExtra = function(widget) {
+	getWidgetTextExtra: function(widget) {
 		return widget.properties && widget.properties.contextMenuForWindow ? "(context)" : "";
-	};
+	}
 };
+
+return MenuHelper;
+
 });

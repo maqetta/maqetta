@@ -2,8 +2,8 @@ define([
 	"dojo/_base/connect"
 ], function(connect) {
 
-return function() {
-	this.create = function(widget) {
+return {
+	create: function(widget) {
 		var id = widget.dijitWidget.id,
 			context = widget.getContext();
 		widget._helperHandle = connect.subscribe("/davinci/ui/widgetSelected", null, function(selected) {
@@ -23,15 +23,15 @@ return function() {
 			} else {
 				dialog.hide();
 			}
-		}.bind(this));		
-	};
+		});		
+	},
 
-	this.destroy = function(widget) {
+	destroy: function(widget) {
 		connect.unsubscribe(widget._helperHandle);
 		delete widget._helperHandle;
 
 		widget.dijitWidget.destroyRecursive();
-	};
+	},
 
 	/*
 	 * Called by Outline palette whenever user toggles visibility by clicking on eyeball.
@@ -39,9 +39,9 @@ return function() {
 	 * @param {boolean} on  Whether given widget is currently visible
 	 * @return {boolean}  whether standard toggle processing should proceed
 	 */
-	this.onToggleVisibility = function(widget, on) {
+	onToggleVisibility: function(widget, on) {
 		return false;
-	};
+	}
 };
 
 });

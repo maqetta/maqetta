@@ -1,15 +1,18 @@
-define([
-], function(){
-return function() {
-	this.create = function(widget) {
+define(function(){
+
+return {
+
+	create: function(widget) {
 		var connectId = widget.attr("connectId");
-		if (!connectId || connectId.length == 0) { return; }
+		if (!connectId || connectId.length === 0) {
+			return;
+		}
 		if (widget.getContext().getDojo().isArray(connectId)) {
 			connectId = connectId[0];
 		}
 
 		widget._ownerId = connectId;
-	};
+	},
 
 	/*
 	 * Called by Outline palette whenever user toggles visibility by clicking on eyeball.
@@ -17,36 +20,41 @@ return function() {
 	 * @param {boolean} on  Whether given widget is currently visible
 	 * @return {boolean}  whether standard toggle processing should proceed
 	 */
-	this.onToggleVisibility = function(widget, on) {
+	onToggleVisibility: function(widget, on) {
 		return false;
-	};
+	},
 
-	this.onSelect = function(widget) {
+	onSelect: function(widget) {
 		var connectId = widget.attr("connectId");
-		if (!connectId || connectId.length == 0) { return; }
+		if (!connectId || connectId.length === 0) {
+			return;
+		}
 		if (widget.getContext().getDojo().isArray(connectId)) {
 			// just show the first
 			connectId = connectId[0];
 		}
 		var dijit = widget.getContext().getDijit();
 		dijit.showTooltip(widget.domNode.innerHTML, davinci.ve.widget.byId(connectId).domNode);
-	};
+	},
 
-	this.onDeselect = function(widget){
+	onDeselect: function(widget){
 		var connectId = widget.attr("connectId");
-		if (!connectId || connectId.length == 0) { return; }
+		if (!connectId || connectId.length === 0) {
+			return;
+		}
 		if (widget.getContext().getDojo().isArray(connectId)) {
 			connectId = connectId[0];
 		}
 		var dijit = widget.getContext().getDijit();
 		dijit.hideTooltip(davinci.ve.widget.byId(connectId).domNode);
 		return true;
-	};
+	},
 
-	this.getSelectNode = function(context){
+	getSelectNode: function(context){
 //		var master = context.getGlobal().require("dijit/Tooltip")._masterTT;
 		var master = context.getDijit().Tooltip._masterTT;
 		return master && master.domNode;
-	};
+	}
+
 };
 });

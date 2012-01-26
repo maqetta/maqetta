@@ -1,4 +1,4 @@
-define(["dojo/_base/declare", "davinci/ve/RebuildPage", "davinci/library"], function(declare, RebuildPage, library){
+define(["dojo/_base/declare", "./RebuildPage", "../library"], function(declare, RebuildPage, library){
 
 return declare("davinci.ve.RebaseDownload", RebuildPage, {
 	

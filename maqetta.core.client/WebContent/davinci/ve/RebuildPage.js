@@ -1,7 +1,7 @@
 define([
 	"dojo/_base/declare",
-	"davinci/ve/Context",
-	"davinci/model/Path"
+	"./Context",
+	"../model/Path"
 ], function(declare, Context, Path){
 
 return declare("davinci.ve.RebuildPage", Context, {

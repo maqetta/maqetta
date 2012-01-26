@@ -2,14 +2,11 @@ define([
     "dojo/_base/array",
     "dojo/dom-style",
     "davinci/model/Path",
-    "davinci/html/HTMLElement",
-    "davinci/html/HTMLText"
+    "davinci/html/HTMLModel" // HTMLElement, HTMLText
 ], function(
     array,
     domStyle,
-    Path,
-    HTMLElement,
-    HTMLText
+    Path
 ) {
 
 return {
@@ -75,7 +72,7 @@ return {
                             script.addAttribute('type', 'text/javascript');
                             script.script = "";
                             head.insertBefore(script, scriptTag);
-                            var newScriptText = new HTMLText();
+                            var newScriptText = new davinci.html.HTMLText();
                             newScriptText.setText(themeMap); 
                             script.addChild(newScriptText); 
                             scriptTag.parent.removeChild(scriptTag);
@@ -110,11 +107,11 @@ return {
                         text = text.substring(0,start) + text.substring(stop+1);
                       }
                 }
-                var script = new HTMLElement('script');
+                var script = new davinci.html.HTMLElement('script');
                 script.addAttribute('type', 'text/javascript');
                 script.script = "";
                 head.insertBefore(script, scriptTag);
-                var newScriptText = new HTMLText();
+                var newScriptText = new davinci.html.HTMLText();
                 newScriptText.setText(text); 
                 script.addChild(newScriptText); 
                 scriptTag.parent.removeChild(scriptTag);

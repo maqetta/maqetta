@@ -1,4 +1,9 @@
-define(function() {
+define([
+	"dojo/_base/array",
+	"davinci/html/HTMLModel" // HTMLElement, HTMLText
+], function(
+	array
+) {
 
 return {
 
@@ -61,9 +66,9 @@ return {
                             var temp = child.value.substring(pStart+1,end);
                             var urlStart = temp.indexOf(url);
                             if (urlStart > -1){
-                                var urlStop = temp.indexOf(')', urlStart);
-                                var urlTemp = temp.substring(urlStart, urlStop )
-                                var parms = urlTemp.split(',');
+                                var urlStop = temp.indexOf(')', urlStart),
+                                    urlTemp = temp.substring(urlStart, urlStop ),
+                                    parms = urlTemp.split(',');
                                 if (parms.length == 2){
                                     parms[0] = parms[0].replace(/'/g, "");
                                     parms[0] = parms[0].replace(/"/g, "");
@@ -90,7 +95,7 @@ return {
         var htmlElement = context._srcDocument.getDocumentElement();
         var head = htmlElement.getChildElement("head");
         var scriptTags=head.getChildElements("script");
-        dojo.forEach(scriptTags, function (scriptTag){
+        array.forEach(scriptTags, function (scriptTag){
             var text=scriptTag.getElementText();
             if (text.length) {
                 // Look for a require(['dojox/io/xhrScriptPlugin']); in the document

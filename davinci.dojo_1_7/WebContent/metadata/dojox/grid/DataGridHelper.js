@@ -1,11 +1,16 @@
 define([
+	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dojo/dom-form",
 	"davinci/ve/widget",
-	"davinci/html/HTMLElement",
-	"davinci/html/HTMLText"
+	"davinci/ve/commands/ReparentCommand",
+	"davinci/html/HTMLModel" // HTMLElement, HTMLText
 ], function(
+	lang,
+	array,
+	form,
 	Widget,
-	HTMLElement,
-	HTMLText
+	ReparentCommand
 ) {
 
 return {
@@ -27,7 +32,7 @@ return {
 			var value = "this.setStructure(" + this._serializeStructure(widget.structure) + ");";
 			// if there is already a script tag, try to find a dojo/method script tag and append the JS to it
 			if(data.scripts){
-				if(!dojo.some(data.scripts, function(s){
+				if (!array.some(data.scripts, function(s) {
 					if(s.type == "dojo/method" && !s.name && s.value &&
 						s.value.substring(0, 18) == "this.setStructure("){
 						s.value = value;
@@ -57,7 +62,7 @@ return {
     	if(!structure){
     		return undefined;
     	}
-    	var columns = undefined;
+		var columns;
     	try{
     		columns = structure.cells;
     	}catch(e){
@@ -70,12 +75,12 @@ return {
     	var s = "";
     	// serialize each column of the structure
     	// assumption: there is only one row declaration
-    	dojo.forEach(columns, function(c){
+		array.forEach(columns, function(c) {
     		var cs = "";
     		// parameters to serialize: field, name, width, editor
     		var field = c.field;
     		if(field || field === 0){
-    			cs += "field: " + (dojo.isString(field) ? "\"" + field + "\"" : field);  
+				cs += "field: " + (typeof field === 'string' ? "\"" + field + "\"" : field);  
     		}
     		var name = c.name;
     		if(name){
@@ -89,7 +94,7 @@ return {
     			if(cs){
     				cs += ", ";
     			}
-    			cs += "width: " + (dojo.isString(width) ? "\"" + width + "\"" : width);
+				cs += "width: " + (typeof width === 'string' ? "\"" + width + "\"" : width);
     		}
     		var editor = c.editor;
     		if(editor){
@@ -105,7 +110,7 @@ return {
     				cs += "editor: dojox.grid.editors.Select";
     				var options = c.options;
     				if(options){
-    					cs += ", options: " + dojo.toJson(options);
+						cs += ", options: " + form.toJson(options);
     				}
     			}
     		}
@@ -118,7 +123,6 @@ return {
     },
     
     create: function(widget, srcElement){
-    
     	var storeId = srcElement.getAttribute("store");
     	if(storeId){
     		var storeWidget = Widget.byId(storeId);
@@ -127,9 +131,7 @@ return {
     		    this.addScripts(widget);
     		    this.updateStore(widget, storeWidget);
     		}
-    	
     	}
-    
     },
     
     reparent: function(widget) {
@@ -139,7 +141,6 @@ return {
             if (storeWidget && widget.dijitWidget && widget.dijitWidget.store){
                 this._reparentTheStore(widget, storeWidget);
             }
-        
         }
     },
     
@@ -148,7 +149,7 @@ return {
         var storeParent = storeWidget.getParent();
         if ( (dataGridParent != storeParent) || ((dataGridParent === storeParent) && (dataGridParent.indexOf(widget) < storeParent.indexOf(storeWidget))) ) {
             var newIndex = (dataGridParent.indexOf(widget) < 1) ? 0 : dataGridParent.indexOf(widget)-1;
-            var command = new davinci.ve.commands.ReparentCommand(storeWidget, dataGridParent, newIndex);
+			var command = new ReparentCommand(storeWidget, dataGridParent, newIndex);
             //this._context.getCommandStack().execute(command);
             command.execute();
         }
@@ -161,12 +162,12 @@ return {
     	if (data){ 
     		var value = data; 
     		var storeData = eval('storeData = '+value);
-    		var data = { identifier: storeData.identifier,  items:[] };
+			data = { identifier: storeData.identifier,  items:[] };
     	
     		var items = data.items;
     		var storeDataItems = storeData.items;
     		for (var r = 0; r < storeDataItems.length; r++){
-    			var item = new Object();
+				var item = {};
     			var dataStoreItem = storeDataItems[r];
     			for (var name in dataStoreItem){
     				item[name] = dataStoreItem[name];
@@ -181,7 +182,7 @@ return {
     		store.fetch({
     			query: this.query,
     			queryOptions:{deep:true}, 
-    			onComplete: dojo.hitch(this, function(items){
+				onComplete: lang.hitch(this, function(items){
     				for (var i = 0; i < items.length; i++) {
     					var item = items[i];
     					console.warn("i=", i, "item=", item);
@@ -194,10 +195,7 @@ return {
     		store.url = url; 
     		delete store.data; // wdr remove old url if switching
     		store.close();
-     	    		
     	}
-    	
-    
     },
     
     addScripts: function(widget){
@@ -210,16 +208,15 @@ return {
             console.warn("FAILED: failure for module=dojo.data.ItemFileReadStore");
         }
         
-        if (!widget.scripts) return;
-        for (x in widget.scripts){
+		if (!widget.scripts) {
+			return;
+		}
+		for (var x in widget.scripts){
             this.addScript(widget, widget.scripts[x]);
         }
-        
-       
     },
     
     addScript: function(widget, script){
-       
         var script = widget.scripts[x];
         var elements = widget._edit_context._srcDocument.find({'elementType':"HTMLElement", 'tag': 'script'});
         for(var i=0;i<elements.length;i++){
@@ -234,8 +231,6 @@ return {
         scriptTag.addChild(text);
         var head =  widget._edit_context._srcDocument.find({elementType: 'HTMLElement', tag: 'head'}, true);
         head.addChild(scriptTag);
-    
-    
     }
 
 };

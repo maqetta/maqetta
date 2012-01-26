@@ -1,8 +1,3 @@
-
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ui", "ui");
-dojo.requireLocalization("dijit", "common");
-
 define(["dojo/_base/declare",
         "davinci/workbench/WidgetLite",
         "davinci/ui/Panel",

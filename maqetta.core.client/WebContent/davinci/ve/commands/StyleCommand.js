@@ -41,7 +41,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		}
 		var cleanValues = dojo.clone(this._newValues);
 		
-		var veStates = davinci.ve.states;
+		var veStates = States;
 		var currentState = veStates.getState();
 		if(this._applyToWhichStates === "current"){
 			this._state = currentState;
@@ -70,7 +70,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 			this._refresh(widget);
 			
 			// Recompute styling properties in case we aren't in Normal state
-			davinci.ve.states.resetState(widget);
+			States.resetState(widget);
 		}
 		
 		//FIXME: Various widget changed events (/davinci/ui/widget*Changed) need to be cleaned up.
@@ -115,7 +115,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		this._refresh(widget);
 		
 		// Recompute styling properties in case we aren't in Normal state
-		davinci.ve.states.resetState(widget);
+		States.resetState(widget);
 		
 		//FIXME: Various widget changed events (/davinci/ui/widget*Changed) need to be cleaned up.
 		// I defined yet another one here (widgetPropertiesChanged) just before Preview3

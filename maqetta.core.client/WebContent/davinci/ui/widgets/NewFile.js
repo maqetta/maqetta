@@ -17,7 +17,7 @@ define(["dojo/_base/declare",
         "dijit/form/RadioButton"
 
 ],function(declare, _Templated, _Widget,  Library, Resource,  Preferences, Runtime,  Menu, MenuItem, Path, DropDownButton, uiNLS, commonNLS, templateString){
-	return declare("davinci.ui.widgets.NewFile",   [dijit._Widget,dijit._Templated], {
+	return declare("davinci.ui.widgets.NewFile",   [_Widget,_Templated], {
 		widgetsInTemplate: true,
 		templateString: templateString,
 		treeCollapsed:true,

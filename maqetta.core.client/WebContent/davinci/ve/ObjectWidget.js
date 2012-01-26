@@ -1,6 +1,10 @@
-define("davinci/ve/ObjectWidget", ["davinci/ve/_Widget"], function() {
+define([
+        "dojo/_base/declare",
+        "./_Widget",
+        "./widget"
+], function(declare, _Widget, widget) {
 
-dojo.declare("davinci.ve.ObjectWidget",davinci.ve._Widget, {
+return declare("davinci.ve.ObjectWidget", _Widget, {
 	isObjectWidget: true,
 
 	constructor: function (params,node,dijitWidget,metadata,srcElement) {

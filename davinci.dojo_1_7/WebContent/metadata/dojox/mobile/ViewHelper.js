@@ -62,7 +62,7 @@ return {
 	 * @param {davinci.ve._Widget} widget  Widget that needs it visibility turned on
 	 */
 	_updateVisibility: function(domNode){
-		if(!domNode || !domNode._dvWidget || !domClass.hasClass(domNode,"mblView")){
+		if(!domNode || !domNode._dvWidget || !domClass.contains(domNode,"mblView")){
 			return;
 		}
 		var widget = domNode._dvWidget;
@@ -75,7 +75,7 @@ return {
 		}else{
 			for(var i=0;i<parentNode.children.length;i++){
 				node=parentNode.children[i];
-				if(domClass.hasClass(node,"mblView")){
+				if(domClass.contains(node,"mblView")){
 					if(node!=domNode && (node.style.display != "none" || domNode.getAttribute("selected") == "true")){
 						changesNeeded = true;
 						break;
@@ -87,7 +87,7 @@ return {
 			var command = new CompoundCommand();
 			for(var i=0;i<parentNode.children.length;i++){
 				node=parentNode.children[i];
-				if(domClass.hasClass(node,"mblView")){
+				if(domClass.contains(node,"mblView")){
 					var display, selected;
 					if(node==domNode){
 						display = "";
@@ -112,7 +112,7 @@ return {
 	 * FIXME: Better if helper had a class inheritance setup
 	 */
 	onToggleVisibility: function(widget, on){
-		if(!widget || !widget.domNode || !domClass.hasClass(widget.domNode,"mblView")){
+		if(!widget || !widget.domNode || !domClass.contains(widget.domNode,"mblView")){
 			return true;
 		}
 		var domNode = widget.domNode;
@@ -123,14 +123,14 @@ return {
 			var count = 0;
 			for(var i=0;i<parentNode.children.length;i++){
 				node=parentNode.children[i];
-				if(domClass.hasClass(node,"mblView")){
+				if(domClass.contains(node,"mblView")){
 					count++;
 				}
 			}
 			if(count>1){
 				for(var i=0;i<parentNode.children.length;i++){
 					node=parentNode.children[i];
-					if(domClass.hasClass(node,"mblView")){
+					if(domClass.contains(node,"mblView")){
 						if(node!=domNode){
 							this._updateVisibility(node);
 							break;
@@ -146,7 +146,7 @@ return {
 	},
 	
 	onSelect: function(widget){
-		if(!widget || !widget.domNode || !domClass.hasClass(widget.domNode,"mblView")){
+		if(!widget || !widget.domNode || !domClass.contains(widget.domNode,"mblView")){
 			return;
 		}
 		this._updateVisibility(widget.domNode);
@@ -165,7 +165,7 @@ return {
 	 * @return {davinci.ve._Widget} One of the elements in the allowedParentList
 	 */
 	chooseParent: function(allowedParentList){
-		if(allowedParentList.length>1 && domClass.hasClass(allowedParentList[0].domNode,"mblView")){
+		if(allowedParentList.length>1 && domClass.contains(allowedParentList[0].domNode,"mblView")){
 			return allowedParentList[1];
 		}else{
 			return allowedParentList[0];
@@ -190,7 +190,7 @@ return {
 		// If none found, then pick first View node
 		for(var i=0;i<parentNode.children.length;i++){
 			node=parentNode.children[i];
-			if(domClass.hasClass(node,"mblView")){
+			if(domClass.contains(node,"mblView")){
 				if(!selectedNode){
 					selectedNode = node;
 				}

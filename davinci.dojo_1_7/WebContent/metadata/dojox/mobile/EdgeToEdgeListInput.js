@@ -129,7 +129,7 @@ return declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeListInput", Contai
 			for (var j=0; j<textBoxNode.childNodes.length; j++){
 				var n = textBoxNode.childNodes[j];
 				if(n.nodeType === 1){	// element
-					if(domClass.hasClass(n, 'mblListItemLabel')){
+					if(domClass.contains(n, 'mblListItemLabel')){
 						// Don't show the markup around mblListItemLabel nodes
 						text += lang.trim(n.innerHTML);
 					}else{

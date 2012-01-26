@@ -1,26 +1,35 @@
-dojo.provide("davinci.ve.views.DataStoresView");
+define([
+    	"dojo/_base/declare",
+    	"davinci/workbench/ViewPart",
+    	"davinci/ve/widget",
+    	"dijit/Tree",
+    	"dijit/tree/dndSource",
+    	"dijit/layout/BorderContainer",
+    	"dojo/data/ItemFileReadStore",
+    	"dojo/data/ItemFileWriteStore",
+    	"dijit/tree/ForestStoreModel", 
+    	"davinci/Workbench",
+    	"davinci/ve/commands/AddCommand", 
+    	"davinci/ve/commands/ModifyCommand",
+    	"davinci/Runtime",
+    	"davinci/ve/metadata"
 
-dojo.require("davinci.workbench.ViewPart");
-dojo.require("davinci.ve.widget");
+], function(declare, ViewPart, Widget, Tree, dndSource, BorderContainer, ItemFileReadStore, 
+		    ItemFileWriteStore, ForestStoreModel, Workbench, AddCommand, ModifyCommand, Runtime, 
+		    Metadata
+		    ){
 
-dojo.require("dijit.Tree");
-dojo.require("dijit.tree.dndSource");
 
-dojo.require("dijit.layout.BorderContainer");
-
-dojo.require("dojo.data.ItemFileReadStore");
-dojo.require("dojo.data.ItemFileWriteStore");
-
-dojo.declare("davinci.ve.views.DataStoresView", [davinci.workbench.ViewPart], {
-
-    treeStore: new dojo.data.ItemFileWriteStore({data: {identifier: "id", items:[]}}),
+return declare("davinci.ve.views.DataStoresView", [ViewPart], {
+	
+    treeStore: new ItemFileWriteStore({data: {identifier: "id", items:[]}}),
 
     postCreate: function() {
         this.inherited(arguments);
         
         this._mainBody = dojo.byId("mainBody");
 
-        this.container = new dijit.layout.BorderContainer({
+        this.container = new BorderContainer({
             style: "height: 300px"
         }, "DataStoresContainer");
         
@@ -58,9 +67,9 @@ dojo.declare("davinci.ve.views.DataStoresView", [davinci.workbench.ViewPart], {
         // TODO: this should support other DataStore types as well
         var ds;
         if (widget.getAttribute('url'))
-            ds = new dojo.data.ItemFileReadStore({url: widget.getAttribute('url')});
+            ds = new ItemFileReadStore({url: widget.getAttribute('url')});
         else if (widget.getAttribute('data'))
-            ds = new dojo.data.ItemFileReadStore({data: dojo.fromJson(widget.getAttribute('data'))});
+            ds = new ItemFileReadStore({data: dojo.fromJson(widget.getAttribute('data'))});
         if (ds)
             dojo.publish("/davinci/data/datastoreAdded", [widget.getAttribute('jsId'), ds, widget.type]);
     },
@@ -114,7 +123,7 @@ dojo.declare("davinci.ve.views.DataStoresView", [davinci.workbench.ViewPart], {
         this.treeStore.save();
 
         // callback for fetch, add each attribute as leaf on datastore branch
-        var addAttrs = davinci.ve.views.DataStoresView.introspectItem(ds, dojo.hitch(this, function(attrName) {
+        var addAttrs = this.introspectItem(ds, dojo.hitch(this, function(attrName) {
             this.treeStore.newItem({id: dsId+":"+attrName, sourceClass: "Attribute", label: attrName, dsId: dsId, attrId: attrName}, {parent: dsItem, attribute: "children"});
             this.treeStore.save();            
         }));
@@ -128,7 +137,7 @@ dojo.declare("davinci.ve.views.DataStoresView", [davinci.workbench.ViewPart], {
     _showDataStores: function() {
         var dataStoresView = this;
         
-        var treeModel = this.treeModel = new dijit.tree.ForestStoreModel({
+        var treeModel = this.treeModel = new ForestStoreModel({
             store: this.treeStore,
             query: {sourceClass: "DataStore"},
             labelAttr: "label",
@@ -156,7 +165,7 @@ dojo.declare("davinci.ve.views.DataStoresView", [davinci.workbench.ViewPart], {
                                                 dragSources: dragSources
                                                }
                                                , "dataSourcesTree");
-        var popup = davinci.Workbench.createPopup({ partID: 'davinci.ve.datastores',
+        var popup = Workbench.createPopup({ partID: 'davinci.ve.datastores',
             domNode: tree.domNode, openCallback: tree.getMenuOpenCallback()});
         
         var that = this;
@@ -166,17 +175,13 @@ dojo.declare("davinci.ve.views.DataStoresView", [davinci.workbench.ViewPart], {
 
         tree.startup();
         this.container.addChild(tree);        
-    }
+    },
 
-
-});
-
-dojo.mixin(davinci.ve.views.DataStoresView, {
     loadType: function(data) {
         if(!data || !data.type){
             return false;
         }
-        if( !davinci.Workbench.getOpenEditor().getContext().loadRequires(data.type,true)){
+        if( !Workbench.getOpenEditor().getContext().loadRequires(data.type,true)){
             return false;
         }
         var that = this;
@@ -198,16 +203,16 @@ dojo.mixin(davinci.ve.views.DataStoresView, {
     },
     
     _createForm: function() {
-        var context = davinci.Workbench.getOpenEditor().getContext();
+        var context = Workbench.getOpenEditor().getContext();
         var data = {type: "dijit.form.Form",
                 properties: {style: "height: 250px; width: 350px;"},
                 context: context, children: []};
         var form = undefined;
         this.loadType(data);
         dojo.withDoc(context.getDocument(), function() {
-            form = davinci.ve.widget.createWidget(data);
+            form = Widget.createWidget(data);
         }, this);
-        var command = new davinci.ve.commands.AddCommand(form, context.getContainerNode());
+        var command = new AddCommand(form, context.getContainerNode());
         context.getCommandStack().execute(command);
         return form;
     },
@@ -220,46 +225,46 @@ dojo.mixin(davinci.ve.views.DataStoresView, {
     },
     
     _createTable: function() {
-        var context = davinci.Workbench.getOpenEditor().getContext();
+        var context = Workbench.getOpenEditor().getContext();
         var data = { type: "dojox.grid.DataGrid", properties: { rowSelector: "20px" }, context: context };
         var table = undefined;
         this.loadType(data);
         dojo.withDoc(context.getDocument(), function() {
-            table = davinci.ve.widget.createWidget(data);
+            table = Widget.createWidget(data);
         }, this);
-        var command = new davinci.ve.commands.AddCommand(table, context.getContainerNode());
+        var command = new AddCommand(table, context.getContainerNode());
         context.getCommandStack().execute(command);
         return table;
     },
     
     _getSelectedDsId: function() {
-        var context = davinci.Workbench.getOpenEditor().getContext();
-        var selectedNode = davinci.Runtime.getSelection();
+        var context = Workbench.getOpenEditor().getContext();
+        var selectedNode = Runtime.getSelection();
         var dsId = selectedNode.dsId;
         return dsId;
     },
     
     bindDS: function(widget, dsId, attrId) {
-        var context = davinci.Workbench.getOpenEditor().getContext();
+        var context = Workbench.getOpenEditor().getContext();
         while (dojo.isArrayLike(dsId))
             dsId = dsId[0];
         var ds = context.getDojo().getObject(dsId);
         
         var isForm = /^form$/i.test(widget._srcElement.tag);
-        var hasStructure = !!davinci.ve.metadata.query(widget.type, "property.structure.defaultValue");
+        var hasStructure = !!Metadata.query(widget.type, "property.structure.defaultValue");
         
         var width = 60; // enough space for selector and scrollbar
         
         var that = this;
 
         var structure = null;        
-        var addAttrs = davinci.ve.views.DataStoresView.introspectItem(ds, function(attrName) {
+        var addAttrs = this.introspectItem(ds, function(attrName) {
             structure.push({ field: attrName, name: attrName, width: "40px" });
             width += 45;
         });
         
         var children = null;
-        var addChildren = davinci.ve.views.DataStoresView.introspectItem(ds, function(attrName) {
+        var addChildren = this.introspectItem(ds, function(attrName) {
             var childData = {type: "html.div", children: [], properties: {}};
             childData.properties['style'] = "padding: 10px;";
             var labelData = {type: "html.label", children: attrName, properties: {}};
@@ -288,7 +293,7 @@ dojo.mixin(davinci.ve.views.DataStoresView, {
             if (children) {
                 that.loadType({type: widget.type, children: children});
             }
-            var command = new davinci.ve.commands.ModifyCommand(widget, properties, children, context);
+            var command = new ModifyCommand(widget, properties, children, context);
             context.getCommandStack().execute(command);
         };
         
@@ -315,4 +320,5 @@ dojo.mixin(davinci.ve.views.DataStoresView, {
             }
         };
     }
+});
 });

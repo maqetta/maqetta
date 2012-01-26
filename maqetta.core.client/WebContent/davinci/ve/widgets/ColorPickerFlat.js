@@ -51,7 +51,7 @@ dojo.declare("davinci.ve.widgets.ColorPickerFlat", [dijit._Widget], {
 	_onOk : function(){
 		
 		delete this.canceled;
-		this._value = this._colorPicker.attr('value');
+		this._value = this._colorPicker.get('value');
 		this.onClose();
 	},
 
@@ -124,15 +124,15 @@ davinci.ve.widgets.ColorPickerFlat.show = function(content, initialValue, parent
 						if(parentWidget._colorPickerFlat_comboBoxUpdateDueTo){
 							parentWidget._comboBoxUpdateDueTo = parentWidget._colorPickerFlat_comboBoxUpdateDueTo;
 						}
-						//var oldValue = target._dropDown.attr("value");
-						var oldValue = parentWidget.attr("value");
-						//target._dropDown.attr("value", colorpicker.attr("value"));
-						parentWidget.attr("value", colorpicker.attr("value"));
+						//var oldValue = target._dropDown.get("value");
+						var oldValue = parentWidget.get("value");
+						//target._dropDown.set("value", colorpicker.get("value"));
+						parentWidget.set("value", colorpicker.get("value"));
 					}
 					
 					closePopup();
 					/*
-					if(!colorpicker.canceled && oldValue!=colorpicker.attr("value")) 
+					if(!colorpicker.canceled && oldValue!=colorpicker.get("value")) 
 						target.onChange();
 				    */
 				}
@@ -147,9 +147,9 @@ davinci.ve.widgets.ColorPickerFlat.show = function(content, initialValue, parent
 	if(initialValue in dojo.Color.named){
 		
 		var value = dojo.colorFromString(initialValue);
-		content.attr('value', value.toHex());
+		content.set('value', value.toHex());
 	}else{
-		content.attr('value', initialValue || "", true);
+		content.set('value', initialValue || "", true);
 	}
 	popup()();
 };

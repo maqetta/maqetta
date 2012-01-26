@@ -1,6 +1,7 @@
 define([
     "dojo/_base/declare",
 	"../commands/CommandStack",
+	"./commands/ChangeThemeCommand",
 	"./tools/SelectTool",
 	"dojo/window",
 	"../model/Path",
@@ -8,20 +9,30 @@ define([
 	"./widget",
 	"./Focus",
 	"../library",
-	"dojox/html/_base",
-	"preview/silhouetteiframe",
+	"./metadata",
 	"./ChooseParent",
-	"./Snap"
+	"./Snap",
+	"./HTMLWidget",
+	"../html/CSSModel", // CSSRule
+	"../html/HTMLModel", // HTMLElement, HTMLText
+	"../workbench/Preferences",
+	"preview/silhouetteiframe",
+	"dojox/html/_base"
 ], function(
 	declare,
 	CommandStack,
+	ChangeThemeCommand,
 	SelectTool,
 	windowUtils,
 	Path,
 	Workbench,
 	Widget,
 	Focus,
-	Library
+	Library,
+	metadata,
+	ChooseParent,
+	Snap,
+	HTMLWidget
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -63,7 +74,7 @@ return declare("davinci.ve.Context", null, {
 		this._widgetIds = [];
 		this._objectIds = [];
 		this._widgets = [];
-		this._chooseParent = new davinci.ve.ChooseParent({context:this});
+		this._chooseParent = new ChooseParent({context:this});
 
 	},
 
@@ -222,7 +233,7 @@ return declare("davinci.ve.Context", null, {
 			}
 		}
 
-		widget.metadata = widget.metadata || davinci.ve.metadata.query(widget.type);
+		widget.metadata = widget.metadata || metadata.query(widget.type);
 		widget._edit_context = this;
 		
 		widget.attach();
@@ -290,18 +301,18 @@ return declare("davinci.ve.Context", null, {
 			}
 		}
 
-        var library = davinci.ve.metadata.getLibraryForType(widget.type);
+        var library = metadata.getLibraryForType(widget.type);
         if (library){
             var libId = library.name,
                 data = [widget.type, this];
 
             // Always invoke the 'onRemove' callback.
-            davinci.ve.metadata.invokeCallback(widget.type, 'onRemove', data);
+            metadata.invokeCallback(widget.type, 'onRemove', data);
             // If this is the last widget removed from page from a given library,
             // then invoke the 'onLastRemove' callback.
             this._widgets[libId] -= 1;
             if (this._widgets[libId] === 0) {
-                davinci.ve.metadata.invokeCallback(widget.type, 'onLastRemove', data);
+                metadata.invokeCallback(widget.type, 'onLastRemove', data);
             }
         }
 
@@ -337,12 +348,12 @@ return declare("davinci.ve.Context", null, {
 			return false;
 		}
 		
-		var requires = davinci.ve.metadata.query(type, "require");
+		var requires = metadata.query(type, "require");
 		if (!requires) {
 			return true;
 		}
 
-		var libraries = davinci.ve.metadata.query(type, 'library'),
+		var libraries = metadata.query(type, 'library'),
 			libs = {},
 			context = this,
 			succeeded;
@@ -354,7 +365,7 @@ return declare("davinci.ve.Context", null, {
 
 			// calculate base library path, used in loading relative required
 			// resources
-			var ver = davinci.ve.metadata.getLibrary(libId).version || lib.version,
+			var ver = metadata.getLibrary(libId).version || lib.version,
 				root = context.getLibraryBase(libId, ver);
 			
 			if (root == null /*empty string OK here, but null isn't. */) {
@@ -462,10 +473,10 @@ return declare("davinci.ve.Context", null, {
 	_getWidgetFolder: function(){
 		
 		var base = this.getBase();
-		var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 		if(!prefs.widgetFolder){
 			prefs.widgetFolder = "WebContent/widgets";
-			davinci.workbench.Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
+			Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
 		}
 	
 		var folder = prefs.widgetFolder;
@@ -586,7 +597,7 @@ return declare("davinci.ve.Context", null, {
 	loadThemeMeta: function(model){
 		// try to find the theme using path magic
 
-		var ro = davinci.ve.metadata.loadThemeMeta(model);
+		var ro = metadata.loadThemeMeta(model);
 		//this._editor._visualChanged(); // do not know why we are calling this handler method inline
 		return ro;
 	},
@@ -745,7 +756,7 @@ return declare("davinci.ve.Context", null, {
 			modelBodyElement.setAttribute(MOBILE_DEV_ATTR, newHtmlParams.device);
 			modelBodyElement.setAttribute(davinci.preference_layout_ATTRIBUTE, newHtmlParams.flowlayout);
 			if (newHtmlParams.themeSet){
-    			var cmd = new davinci.ve.commands.ChangeThemeCommand(newHtmlParams.themeSet, this);
+    			var cmd = new ChangeThemeCommand(newHtmlParams.themeSet, this);
     			cmd._dojoxMobileAddTheme(this, newHtmlParams.themeSet.mobileTheme, true); // new file
 			}
 		}
@@ -1258,7 +1269,7 @@ return declare("davinci.ve.Context", null, {
 
 	_attachAll: function()
 	{
-		var rootWidget=this.rootWidget=new davinci.ve.HTMLWidget({},this.rootNode);
+		var rootWidget=this.rootWidget=new HTMLWidget({},this.rootNode);
 		rootWidget._edit_context=this;
 		rootWidget.isRoot=true;
 		rootWidget._srcElement=this._srcDocument.getDocumentElement().getChildElement("body");
@@ -1515,7 +1526,7 @@ return declare("davinci.ve.Context", null, {
 //			return;
 //		}
 //		var type = (node.getAttribute("dvwidget") || node.getAttribute("oawidget") || node.getAttribute("dojoType") || "html." + node.nodeName.toLowerCase());
-//		var metadata = davinci.ve.metadata.getMetadata(type);
+//		var metadata = metadata.getMetadata(type);
 //		if(!metadata.resolveUrl){
 //			return;
 //		}
@@ -1672,7 +1683,7 @@ return declare("davinci.ve.Context", null, {
 	updateFocus: function(widget, index, inline){
 		var box, op, parent;
 
-		if (!davinci.ve.metadata.queryDescriptor(widget.type, "isInvisible")) {
+		if (!metadata.queryDescriptor(widget.type, "isInvisible")) {
 			var node = widget.getStyleNode(),
 				helper = widget.getHelper();
 			if(helper && helper.getSelectNode){
@@ -1687,7 +1698,7 @@ return declare("davinci.ve.Context", null, {
 
 			//FIXME: need to consult metadata to see if layoutcontainer children are resizable, and if so on which axis
 			var resizable = (parent && parent.isLayout() ) ?
-					"none" : davinci.ve.metadata.queryDescriptor(widget.type, "resizable");
+					"none" : metadata.queryDescriptor(widget.type, "resizable");
 			switch(resizable){
 			case "width":
 				op.resizeWidth = true;
@@ -1924,7 +1935,7 @@ return declare("davinci.ve.Context", null, {
 			bodyElement = htmlElement.getChildElement("body"),
 			flowLayout = bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE);
 		if (!flowLayout){ // if flowLayout has not been set in the context check the edit prefs
-			//var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
+			//var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
 			//flowLayout = editorPrefs.flowLayout;
 			flowLayout = true;
 			this.setFlowLayout(flowLayout);
@@ -2282,7 +2293,7 @@ return declare("davinci.ve.Context", null, {
 		});
 	},
 		
-	getSelector: function( widget, target){
+	getSelector: function(widget, target){
 		// return rules based on metadata IE theme
 		
 		var theme = this.getThemeMeta();
@@ -2298,18 +2309,17 @@ return declare("davinci.ve.Context", null, {
 			state = davinci.ve.states.getState();
 		}
 		
-		var widgetType = theme.loader.getType(widget);
-		
-		var metadata = theme.metadata.getStyleSelectors(widgetType,state);
-		if(metadata){
-			for(var name in metadata){
-				for(var i=0;i<metadata[name].length;i++){
-					for(var s = 0;s<target.length;s++) {
-						if(target[s]==metadata[name][i]){
+		var widgetType = theme.loader.getType(widget),
+			selectors = theme.metadata.getStyleSelectors(widgetType,state);
+
+		if(selectors){
+			for(var name in selectors){
+				for(var i = 0; i < selectors[name].length; i++){
+					for(var s = 0 ; s < target.length; s++) {
+						if(target[s] == selectors[name][i]){
 							return name;
 						}
 					}
-	
 				}
 			}
 		}
@@ -2348,8 +2358,7 @@ return declare("davinci.ve.Context", null, {
 		this._cssCache = this._cssCache || {}; // prevent undefined exception in theme editor
 		var hashDomNode = function (node) {
 			return node.id + "_" + node.className;
-			
-		}
+		};
 		var selection = this.getSelection();
 		if (!targetDomNode && !selection.length) {
 			return {rules:null, matchLevels:null};
@@ -2716,7 +2725,7 @@ return declare("davinci.ve.Context", null, {
 				computed_style = dj.style(node);
 
 			if(doSnapLines){
-				davinci.ve.Snap.findSnapOpportunities(this, widget, computed_style);
+				Snap.findSnapOpportunities(this, widget, computed_style);
 			}
 			cp.findParentsXY(data, widget, position);
 			dojo.forEach(widget.getChildren(), function(w){
@@ -2725,7 +2734,7 @@ return declare("davinci.ve.Context", null, {
 		};
 		
 		if(doSnapLines){
-			doSnapLines = davinci.ve.Snap.updateSnapLinesBeforeTraversal(this, rect);
+			doSnapLines = Snap.updateSnapLinesBeforeTraversal(this, rect);
 		}
 		var differentXY = cp.findParentsXYBeforeTraversal(params);
 		// Traverse all widgets, which will result in updates to snap lines and to 
@@ -2734,7 +2743,7 @@ return declare("davinci.ve.Context", null, {
 			_updateThisWidget.apply(context, [w]);
 		});
 		if(doSnapLines){
-			davinci.ve.Snap.updateSnapLinesAfterTraversal(this);
+			Snap.updateSnapLinesAfterTraversal(this);
 		}
 		if(differentXY){
 			cp.dragUpdateCandidateParents(widgetType, doFindParentsXY, absolute, currentParent);
@@ -2747,7 +2756,7 @@ return declare("davinci.ve.Context", null, {
 	 * Cleanups after completing drag operations.
 	 */
 	dragMoveCleanup: function() {
-		davinci.ve.Snap.clearSnapLines(this);
+		Snap.clearSnapLines(this);
 		this._chooseParent.cleanup(this);
 	}
 });

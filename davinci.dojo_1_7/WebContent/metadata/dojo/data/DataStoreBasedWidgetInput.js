@@ -367,7 +367,7 @@ dojo.declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", davin
       	      data: "file",
       	      style: "height:10em;overflow:auto",
       	      model: system.resource,
-      	      filters: "davinci.ui.widgets.OpenFileDialog.filter"
+      	      filters: "new system.resource.FileTypeFilter(parms.fileTypes || '*');"
 
       	    }
       	  ];

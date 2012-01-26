@@ -28,7 +28,7 @@ return declare("davinci.libraries.html.html.HtmlSrcAttributeInput", SmartInput, 
 						type: "tree",
 						data: "file",
 						model: system.resource,
-						filters: "davinci.ui.widgets.OpenFileDialog.filter",
+						filters: "new system.resource.FileTypeFilter(parms.fileTypes || '*');",
 						link: {
 							target: "textValue",
 							targetFunction: function(input) {

@@ -1,9 +1,10 @@
 define([
 	"dojo/_base/declare",
-	"davinci/model/Resource/Resource"
-], function(declare, Resource) {
+], function(declare) {
 
-return declare("davinci.review.model.resource.Empty", Resource, {
+dojo.require("davinci.model.Resource");
+
+return declare("davinci.review.model.resource.Empty", davinci.model.Resource.Resource, {
 
 	constructor: function(args) {
 		this.elementType="Folder";

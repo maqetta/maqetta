@@ -4,10 +4,14 @@ define([
 	"davinci/review/widgets/PublishWizard",
 	"davinci/Runtime",
 	"dojox/widget/Toaster",
-	"dojo/i18n!../nls/actions"
+	"dojo/i18n!./nls/actions"
 ], function(declare, Action, PublishWizard, Runtime, Toaster, actionsNls) {
-	
-return declare("davinci.review.actions.PublishAction", davinci.actions.Action, {
+
+if (typeof davinci.review.actions === "undefined") {
+	davinci.review.actions = {};
+}
+
+var PublishAction = davinci.review.actions.PublishAction = declare("davinci.review.actions.PublishAction", davinci.actions.Action, {
 
 	constructor: function(node, isRestart) {
 		this.node =  node;
@@ -42,4 +46,7 @@ return declare("davinci.review.actions.PublishAction", davinci.actions.Action, {
 	}
 
 });
+
+return PublishAction;
+
 });

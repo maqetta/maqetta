@@ -3,8 +3,12 @@ define([
 	"davinci/review/actions/_DrawingCommon",
 	"davinci/Runtime"
 ], function(declare, _DrawingCommon, Runtime) {
-	
-return declare("davinci.review.actions.EllipseAction", _DrawingCommon, {
+
+if (typeof davinci.review.actions === "undefined") {
+	davinci.review.actions = {};
+}
+
+var EllipseAction = davinci.review.actions.EllipseAction = declare("davinci.review.actions.EllipseAction", _DrawingCommon, {
 
 	run: function(context) {
 		this.inherited(arguments);
@@ -26,4 +30,7 @@ return declare("davinci.review.actions.EllipseAction", _DrawingCommon, {
 	}
 
 });
+
+return EllipseAction;
+
 });

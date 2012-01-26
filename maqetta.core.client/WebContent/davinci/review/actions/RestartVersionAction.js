@@ -4,8 +4,12 @@ define([
 	"davinci/review/actions/PublishAction",
 	"davinci/Runtime",
 ], function(declare, Action, PublishAction, Runtime) {
-	
-return declare("davinci.review.actions.RestartVersionAction", Action, {
+
+if (typeof davinci.review.actions === "undefined") {
+	davinci.review.actions = {};
+}
+
+var RestartVersionAction = davinci.review.actions.RestartVersionAction = declare("davinci.review.actions.RestartVersionAction", Action, {
 
 	run: function(context) {
 		var selection = Runtime.getSelection();
@@ -37,4 +41,7 @@ return declare("davinci.review.actions.RestartVersionAction", Action, {
 	}
 
 });
+
+return RestartVersionAction;
+
 });

@@ -3,8 +3,12 @@ define([
 	"davinci/actions/Action",
 	"davinci/Runtime",
 ], function(declare, Action, Runtime) {
-	
-return declare("davinci.review.actions.ViewFileAction", Action, {
+
+if (typeof davinci.review.actions === "undefined") {
+	davinci.review.actions = {};
+}
+
+var ViewFileAction = davinci.review.actions.ViewFileAction = declare("davinci.review.actions.ViewFileAction", Action, {
 
 	run: function(context) {
 		var selection = Runtime.getSelection();
@@ -38,4 +42,7 @@ return declare("davinci.review.actions.ViewFileAction", Action, {
 	}
 
 });
+
+return ViewFileAction;
+
 });

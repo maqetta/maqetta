@@ -4,8 +4,12 @@ define([
 	"davinci/review/actions/PublishAction",
 	"davinci/Runtime",
 ], function(declare, Action, PublishAction, Runtime) {
-	
-return declare("davinci.review.actions.SubmitDraftAction", Action, {
+
+if (typeof davinci.review.actions === "undefined") {
+	davinci.review.actions = {};
+}
+
+var SubmitDraftAction = davinci.review.actions.SubmitDraftAction = declare("davinci.review.actions.SubmitDraftAction", Action, {
 
 	run: function(context) {
 		var selection = davinci.Runtime.getSelection();
@@ -72,4 +76,7 @@ return declare("davinci.review.actions.SubmitDraftAction", Action, {
 	}
 
 });
+
+return SubmitDraftAction;
+
 });

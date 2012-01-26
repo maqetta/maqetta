@@ -1,9 +1,10 @@
 define([
 	"dojo/_base/declare",
-	"davinci/model/Resource/Resource"
-], function(declare, Resource) {
+], function(declare) {
 
-return declare("davinci.review.model.resource.Folder", Resource, {
+dojo.require("davinci.model.Resource");
+
+return declare("davinci.review.model.resource.Folder", davinci.model.Resource.Resource, {
 
 	isDraft:false,
 	closed: false,
@@ -13,7 +14,7 @@ return declare("davinci.review.model.resource.Folder", Resource, {
 	constructor: function(proc) {
 		this.elementType="ReviewVersion";
 		dojo.mixin(this,proc);
-		this.dueDate = this.dueDate=="infinite"?this.dueDate:dojo.date.locale.parse(this.dueDate,{
+		this.dueDate = this.dueDate == "infinite" ? this.dueDate : dojo.date.locale.parse(this.dueDate,{
 			selector:'date',
 			formatLength:'long',
 			datePattern:'MM/dd/yyyy', 
@@ -29,7 +30,7 @@ return declare("davinci.review.model.resource.Folder", Resource, {
 			}
 			this._loading=[];
 			this._loading.push(onComplete);
-			var designerName = davinci.Runtime.commenting_designerName||"";
+			var designerName = davinci.Runtime.commenting_designerName || "";
 			var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
 			davinci.Runtime.serverJSONRequest({
 				url: location + "maqetta/cmd/listReviewFiles",
@@ -40,8 +41,8 @@ return declare("davinci.review.model.resource.Folder", Resource, {
 				sync:sync,
 				load : dojo.hitch(this, function(responseObject, ioArgs) {
 					this.children=[];
-					for (var i=0;i<responseObject.length;i++) {
-						var child =new davinci.review.model.Resource.File(responseObject[i].path,this);
+					for (var i=0; i<responseObject.length; i++) {
+						var child =new davinci.review.model.Resource.File(responseObject[i].path, this);
 						this.children.push(child);
 					}
 					this._isLoaded=true;
@@ -59,7 +60,7 @@ return declare("davinci.review.model.resource.Folder", Resource, {
 
 	getPath: function() {
 		if (this.parent) {
-			return this.parent.getPath()+"/"+this.timeStamp;
+			return this.parent.getPath() + "/" + this.timeStamp;
 		}
 		return this.timeStamp;
 	}

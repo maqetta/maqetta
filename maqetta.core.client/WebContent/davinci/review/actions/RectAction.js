@@ -3,8 +3,12 @@ define([
 	"davinci/review/actions/_DrawingCommon",
 	"davinci/Runtime"
 ], function(declare, _DrawingCommon, Runtime) {
-	
-return declare("davinci.review.actions.RectAction", davinci.review.actions._DrawingCommon, {
+
+if (typeof davinci.review.actions === "undefined") {
+	davinci.review.actions = {};
+}
+
+var RectAction = davinci.review.actions.RectAction = declare("davinci.review.actions.RectAction", davinci.review.actions._DrawingCommon, {
 
 	run: function(context) {
 		this.inherited(arguments);
@@ -26,4 +30,7 @@ return declare("davinci.review.actions.RectAction", davinci.review.actions._Draw
 	}
 
 });
+
+return RectAction;
+
 });

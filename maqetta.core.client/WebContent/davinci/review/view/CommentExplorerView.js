@@ -62,7 +62,7 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 			}
 		});
 
-		var popup = WorkBench.createPopup({ 
+		var popup = Workbench.createPopup({ 
 			partID: 'davinci.review.reviewNavigator',
 			domNode: this.tree.domNode, 
 			openCallback:this.tree.getMenuOpenCallback()

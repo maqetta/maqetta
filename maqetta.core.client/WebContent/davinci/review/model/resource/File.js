@@ -1,9 +1,10 @@
 define([
 	"dojo/_base/declare",
-	"davinci/model/Resource/File"
 ], function(declare, File) {
 
-return declare("davinci.review.model.resource.File", File, {
+dojo.require("davinci.model.Resource");
+
+return declare("davinci.review.model.resource.File", davinci.model.Resource.File, {
 
 	constructor: function(name, parent) {
 		this.elementType="ReviewFile";

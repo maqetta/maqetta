@@ -3,8 +3,12 @@ define([
 	"davinci/review/actions/_DrawingCommon",
 	"davinci/Runtime"
 ], function(declare, _DrawingCommon, Runtime) {
-	
-return declare("davinci.review.actions.TextAction", _DrawingCommon, {
+
+if (typeof davinci.review.actions === "undefined") {
+	davinci.review.actions = {};
+}
+
+var TextAction = davinci.review.actions.TextAction = declare("davinci.review.actions.TextAction", _DrawingCommon, {
 
 	run: function(context) {
 		this.inherited(arguments);
@@ -26,4 +30,7 @@ return declare("davinci.review.actions.TextAction", _DrawingCommon, {
 	}
 
 });
+
+return TextAction;
+
 });

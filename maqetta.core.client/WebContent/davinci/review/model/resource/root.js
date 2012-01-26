@@ -1,9 +1,10 @@
 define([
-	"dojo/_base/declare",
-	"davinci/model/Resource/Resource"
-], function(declare, Resource) {
+	"dojo/_base/declare"
+], function(declare) {
 
-return declare("davinci.review.model.resource.root", Resource, {
+dojo.require("davinci.model.Resource");
+
+return declare("davinci.review.model.resource.root", davinci.model.Resource.Resource, {
 
 	constructor: function(args) {
 		this.elementType="ReviewRoot";
@@ -22,9 +23,10 @@ return declare("davinci.review.model.resource.root", Resource, {
 		});
 		if (node!=null) {
 			node.getChildren(function(c) { children= c; }, true);
-			dojo.forEach(children,function(item) {
-				if(item.name==fileName)
+			dojo.forEach(children, function(item) {
+				if (item.name == fileName) { 
 					result = item;
+				}
 			});
 		}
 		return result;
@@ -32,8 +34,8 @@ return declare("davinci.review.model.resource.root", Resource, {
 
 	findVersion: function(version) {
 		var node;
-		dojo.forEach(this.children,function(item) {
-			if (item.timeStamp==version) {
+		dojo.forEach(this.children, function(item) {
+			if (item.timeStamp == version) {
 				node =item;
 			}
 		});
@@ -48,7 +50,7 @@ return declare("davinci.review.model.resource.root", Resource, {
 			}
 			this._loading=[];
 			this._loading.push(onComplete);
-			var designerName = davinci.Runtime.commenting_designerName||"";
+			var designerName = davinci.Runtime.commenting_designerName || "";
 			var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
 			davinci.Runtime.serverJSONRequest({
 				url:  location + "maqetta/cmd/listVersions",
@@ -56,7 +58,7 @@ return declare("davinci.review.model.resource.root", Resource, {
 				sync:sync,
 				load : dojo.hitch(this, function(responseObject, ioArgs) {
 					this.children=[];
-					for (var i=0;i<responseObject.length;i++) {
+					for (var i=0; i<responseObject.length; i++) {
 						var child =new davinci.review.model.resource.Folder(dojo.mixin({
 							name:responseObject[i].versionTitle,
 							parent:this

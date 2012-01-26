@@ -3,10 +3,14 @@ define([
 	"davinci/actions/Action",
 	"davinci/Runtime",
 	"dojox/widget/Toaster",
-	"dojo/i18n!../nls/actions"
+	"dojo/i18n!./nls/actions"
 ], function(declare, Action, Runtime, Toaster, nls) {
-	
-return declare("davinci.review.actions.OpenVersionAction", Action, {
+
+if (typeof davinci.review.actions === "undefined") {
+	davinci.review.actions = {};
+}
+
+var OpenVersionAction = davinci.review.actions.OpenVersionAction = declare("davinci.review.actions.OpenVersionAction", Action, {
 
 	run: function(context) {
 		var selection = Runtime.getSelection();
@@ -57,4 +61,7 @@ return declare("davinci.review.actions.OpenVersionAction", Action, {
 	}
 
 });
+
+return OpenVersionAction;
+
 });

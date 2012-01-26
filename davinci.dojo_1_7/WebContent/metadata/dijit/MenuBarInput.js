@@ -2,7 +2,7 @@ define([
 	"dojo/_base/declare",
 	"./layout/ContainerInput",
 	"davinci/ve/commands/ModifyCommand",
-	"dojo/i18n!../nls/dijit"
+	"dojo/i18n!./nls/dijit"
 ], function(
 	declare,
 	ContainerInput,

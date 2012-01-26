@@ -1,28 +1,43 @@
 define([
 	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/dom",
+	"dojo/dom-style",
+	"dijit/registry",
+	"dijit/Dialog",
 	"./ContainerInput",
+	"davinci/ve/widget",
+	"davinci/ve/commands/ModifyCommand",
 	"dojo/i18n!dijit/nls/common",
 	"dojo/i18n!davinci/ve/nls/ve",
 	"dojo/i18n!../nls/dijit"
 ], function(
 	declare,
+	lang,
+	dom,
+	style,
+	registry,
+	Dialog,
 	ContainerInput,
+	Widget,
+	ModifyCommand,
 	commonNls,
-	veNls
+	veNls,
 	dijitNls
 ) {
 
 return declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", ContainerInput, {
 	
 	show: function(widgetId) {
-		this._widget = davinci.ve.widget.byId(widgetId);
+		this._widget = Widget.byId(widgetId);
 		if (!this._inline) {
-			this._inline = new dijit.Dialog({
+			this._inline = new Dialog({
                 title: dijitNls.borderContainerDialog,
                 style: "width: 350px; height:350px"
             });
-			this._inline.onCancel = dojo.hitch(this, "cancel");
+			this._inline.onCancel = lang.hitch(this, "cancel");
 			this._inline.callBackObj = this;
+            // XXX TODO This (and the hitching that follows) should all be handled in a template!
 			var s = '<div id="davinci.libraries.dojo.dijit.layout.BorderContainerInput_div" >';
 			s +='<div dojoType="dijit.layout.BorderContainer" design="headline" gutters="false" style="width: 325px; height:285px" liveSplitters="true" id="borderContainer">';
 			s += '	<div dojoType="dijit.layout.LayoutContainer" style="height: 3em;" region="top">';
@@ -59,38 +74,38 @@ return declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", Conta
 			this._inline.attr("content", s);
 			this._inline.show();
 	
-			var obj = dojo.byId('davinci.libraries.dojo.dijit.layout.BorderContainerInput_div');
-			obj.onkeypress = dojo.hitch(this,"onKeyPress");
-			obj = dijit.byId('sidebarRadio');
-			obj.onClick = dojo.hitch(this, "onChange");
-			obj = dijit.byId('headlineRadio');
+			var obj = dom.byId('davinci.libraries.dojo.dijit.layout.BorderContainerInput_div');
+			obj.onkeypress = lang.hitch(this,"onKeyPress");
+			obj = registry.byId('sidebarRadio');
+			obj.onClick = lang.hitch(this, "onChange");
+			obj = registry.byId('headlineRadio');
 			obj.setChecked(false);
-			obj.onClick = dojo.hitch(this, "onChange");
-			obj = dijit.byId('leftCheckBox');
+			obj.onClick = lang.hitch(this, "onChange");
+			obj = registry.byId('leftCheckBox');
 			obj.setChecked(false);
-			obj.onClick = dojo.hitch(this, "onChange");
-			obj = dijit.byId('rightCheckBox');
+			obj.onClick = lang.hitch(this, "onChange");
+			obj = registry.byId('rightCheckBox');
 			obj.setChecked(false);
-			obj.onClick = dojo.hitch(this, "onChange");
-			obj = dijit.byId('topCheckBox');
+			obj.onClick = lang.hitch(this, "onChange");
+			obj = registry.byId('topCheckBox');
 			obj.setChecked(false);
-			obj.onClick = dojo.hitch(this, "onChange");
-			obj = dijit.byId('bottomCheckBox');
+			obj.onClick = lang.hitch(this, "onChange");
+			obj = registry.byId('bottomCheckBox');
 			obj.setChecked(false);
-			obj.onClick = dojo.hitch(this, "onChange");
-			obj = dijit.byId('centerCheckBox');
-			obj.setChecked(false);;
-			obj.onClick = dojo.hitch(this, "onChange");
-			obj = dijit.byId('okButton');
-			obj.onClick = dojo.hitch(this, "updateWidget");
-			dojo.style('okButton', "width", "50px");
-			obj = dijit.byId('cancelButton');
-			obj.onClick = dojo.hitch(this, "cancel");
-			dojo.style('cancelButton', "width", "50px");
+			obj.onClick = lang.hitch(this, "onChange");
+			obj = registry.byId('centerCheckBox');
+			obj.setChecked(false);
+			obj.onClick = lang.hitch(this, "onChange");
+			obj = registry.byId('okButton');
+			obj.onClick = lang.hitch(this, "updateWidget");
+			style.set('okButton', "width", "50px");
+			obj = registry.byId('cancelButton');
+			obj.onClick = lang.hitch(this, "cancel");
+			style.set('cancelButton', "width", "50px");
 			if (this._widget.inLineEdit_displayOnCreate){
 				// hide cancel on widget creation #120
 				delete this._widget.inLineEdit_displayOnCreate;
-				dojo.style(obj.domNode, "display", "none");
+				style.set(obj.domNode, "display", "none");
 			}
 			this.updateDialog();
 		}
@@ -104,31 +119,31 @@ return declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", Conta
 			
 	onChange: function(event){
 		var checked = 0;
-		var obj = dijit.byId('leftCheckBox');
+		var obj = registry.byId('leftCheckBox');
 		checked += obj.checked ? 1 : 0;
-		obj = dijit.byId('rightCheckBox');
+		obj = registry.byId('rightCheckBox');
 		checked += obj.checked ? 1 : 0;
-		obj = dijit.byId('topCheckBox');
+		obj = registry.byId('topCheckBox');
 		checked += obj.checked ? 1 : 0;
-		obj = dijit.byId('bottomCheckBox');
+		obj = registry.byId('bottomCheckBox');
 		checked += obj.checked ? 1 : 0;
-		obj = dijit.byId('centerCheckBox');
+		obj = registry.byId('centerCheckBox');
 		checked += obj.checked ? 1 : 0;
 		if (checked < 1){
-			obj = dijit.byId(event.currentTarget.id);
+			obj = registry.byId(event.currentTarget.id);
 			obj.setChecked(true);
 			alert(veNls.regionMustBeSelected);
 		}
 
 		if (event.target.id === 'headlineRadio'){
-			var obj = dijit.byId('headlineRadio');
+			obj = registry.byId('headlineRadio');
 			obj.setChecked(true);
-			obj = dijit.byId('sidebarRadio');
+			obj = registry.byId('sidebarRadio');
 			obj.setChecked(false);
 		} else if (event.target.id === 'sidebarRadio'){
-			var obj = dijit.byId('headlineRadio');
+			obj = registry.byId('headlineRadio');
 			obj.setChecked(false);
-			obj = dijit.byId('sidebarRadio');
+			obj = registry.byId('sidebarRadio');
 			obj.setChecked(true);
 		} else if (event.target.id === 'okButton_label'){
 			this.updateWidget();
@@ -139,52 +154,53 @@ return declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", Conta
 	},
 	
 	updateDesign: function(){
-		var obj = dijit.byId('headlineRadio');
+		var obj = registry.byId('headlineRadio'),
+			type;
 		if (obj.checked){
 			type = 'headline';
 		}else{
 			type = 'sidebar';
 		}
 		var s = '	<div dojoType="dijit.layout.BorderContainer" design="'+type+'" gutters="true" liveSplitters="true" id="workspaceBorderContainerSidebar">';
-		obj = dijit.byId('leftCheckBox');
+		obj = registry.byId('leftCheckBox');
 		if (obj.checked){
 			s += '			<div dojoType="dijit.layout.ContentPane" splitter="true" region="left">  </div>';
 		}
-		obj = dijit.byId('rightCheckBox');
+		obj = registry.byId('rightCheckBox');
 		if (obj.checked){
 			s += '			<div dojoType="dijit.layout.ContentPane" splitter="true" region="right">  </div>';
 		}
-		obj = dijit.byId('topCheckBox');
+		obj = registry.byId('topCheckBox');
 		if (obj.checked){
 			s += '			<div dojoType="dijit.layout.ContentPane" splitter="true" region="top">  </div>';
 		}
-        obj = dijit.byId('bottomCheckBox');
+        obj = registry.byId('bottomCheckBox');
 		if (obj.checked){
 			s += '			<div dojoType="dijit.layout.ContentPane" splitter="true" region="bottom">  </div>';
 		}
-        obj = dijit.byId('centerCheckBox');
+        obj = registry.byId('centerCheckBox');
 		if (obj.checked){
 			s += '			<div dojoType="dijit.layout.ContentPane" splitter="true" region="center">  </div>';
 		}
         s += '		</div>';
-        var obj = dijit.byId('centerWorkspace');
+        obj = registry.byId('centerWorkspace');
         obj.attr("content", s);
 	},
 	
 	updateWidget: function(){
 		var region = {};
-		var obj = dijit.byId('headlineRadio');
+		var obj = registry.byId('headlineRadio');
 		var type = obj.checked ? 'headline' : 'sidebar';
-		obj = dijit.byId('leftCheckBox');
-		region['left'] = obj.checked ? true : false;
-		obj = dijit.byId('rightCheckBox');
-		region['right'] = obj.checked ? true : false;
-		obj = dijit.byId('topCheckBox');
-		region['top'] = obj.checked ? true : false;
-        obj = dijit.byId('bottomCheckBox');
-        region['bottom'] = obj.checked ? true : false;
-        obj = dijit.byId('centerCheckBox');
-        region['center'] = obj.checked ? true : false;
+		obj = registry.byId('leftCheckBox');
+		region.left = obj.checked ? true : false;
+		obj = registry.byId('rightCheckBox');
+		region.right = obj.checked ? true : false;
+		obj = registry.byId('topCheckBox');
+		region.top = obj.checked ? true : false;
+        obj = registry.byId('bottomCheckBox');
+        region.bottom = obj.checked ? true : false;
+        obj = registry.byId('centerCheckBox');
+        region.center = obj.checked ? true : false;
         this.cancel();
         var data = this._widget.getData(); 
         data.properties.design = type;
@@ -198,20 +214,21 @@ return declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", Conta
         	delete region[regionName];
         	
         }
-        for (r in region){
+        for (var r in region){
         	//var name = '' + r;
         	if (region[r]){ 
         		// add region
-        		var child = dojo.clone(data.children[0]);
+        		var child = lang.clone(data.children[0]);
         		child.properties.region = r;
         		delete child.properties.id; 
         		//child.properties.style = 'height: 50px; top: 0px; left: 0px; right: 0px';
-        		if (r == 'top' || r == 'bottom')
+        		if (r == 'top' || r == 'bottom') {
         			child.properties.style = 'height: 50px;';
-        		else if ( r == 'left' || r == 'right')
+        		} else if ( r == 'left' || r == 'right') {
         			child.properties.style = 'width: 50px;';
-        		else 
+        		} else {
         			delete child.properties.style;
+        		}
         		newChildren[newChildren.length] = child;
         		
         	}
@@ -220,7 +237,7 @@ return declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", Conta
         if (data.properties.isTempID){
         	delete data.properties.id; // delete temp id so it does not make it's way out to the source
         }
-        var command = new davinci.ve.commands.ModifyCommand(this._widget, data.properties, newChildren, this._widget._edit_context);
+        var command = new ModifyCommand(this._widget, data.properties, newChildren, this._widget._edit_context);
 		this._widget._edit_context.getCommandStack().execute(command);
 		this._widget=command.newWidget;
 		this._widget._edit_context._focuses[0]._selectedWidget = this._widget; // get the focus on the current node
@@ -235,9 +252,10 @@ return declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", Conta
 	},
 	
 	updateDialog: function(){
-        var data = this._widget.getData(); 
-        var headlineRadio = dijit.byId('headlineRadio');
-        var sidebarRadio = dijit.byId('sidebarRadio');
+        var data = this._widget.getData(),
+            headlineRadio = registry.byId('headlineRadio'),
+            sidebarRadio = registry.byId('sidebarRadio'),
+            obj;
         if (data.properties.design && data.properties.design === 'sidebar'){
         	headlineRadio.setChecked(false);
         	sidebarRadio.setChecked(true);
@@ -247,11 +265,11 @@ return declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", Conta
         }
         for (var i=0; i <  data.children.length; i++){
         	var regionCheckBox = data.children[i].properties.region + 'CheckBox';
-        	var obj = dijit.byId(regionCheckBox);
+        	obj = registry.byId(regionCheckBox);
     		obj.setChecked(true);
         }
         // the center pane is require for border container
-        var obj = dijit.byId('centerCheckBox');
+        obj = registry.byId('centerCheckBox');
 		obj.setChecked(true);
 		obj.set('disabled', true);
         

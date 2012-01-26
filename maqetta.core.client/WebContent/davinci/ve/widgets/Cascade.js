@@ -70,7 +70,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 				
 				if(widget._setBaseLocationAttr)
 					widget.set('baseLocation', loc?loc.getPath():null);
-				widget.set('value', this._value);
+				widget.set('value', this._value, true);
 			};
 			dojo.connect(widget, "onChange", this, "_onFieldChange");
 			dojo.connect(widget, "onFocus", this, "_onFieldFocus");

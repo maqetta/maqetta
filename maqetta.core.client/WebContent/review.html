@@ -64,8 +64,9 @@
 
 //                dojo.byId('davinci_review_title').innerHTML = davinci.Runtime.commenting_designerName+"'s Review Board";
                 var userInfo;
+                var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
                 var result = davinci.Runtime.serverJSONRequest({
-                    url: davinci.Workbench.location() + "cmd/getReviewUserInfo",
+                    url: location + "maqetta/cmd/getReviewUserInfo",
                     sync: true
                 });
 
@@ -101,7 +102,7 @@
                     var path = new davinci.model.Path(page);
                     var version = path.getSegments()[0];
                     path.removeFirstSegments(1);
-                    var node = davinci.review.model.Resource.root.findFile(version, path.toString());
+                    var node = davinci.review.model.resource.root.findFile(version, path.toString());
                     if(node) {
                         davinci.Workbench.openEditor({
                             fileName: node,
@@ -123,7 +124,7 @@
                             <div dojoType="dijit.Menu">
                                 <div id="menu_help" dojoType="dijit.MenuItem" onClick="window.open('maqetta/app/docs/index.html')"></div>
                                 <div id="menu_tutorials" dojoType="dijit.MenuItem" onClick="window.open('maqetta/app/docs/index.html#tutorials/tutorials')"></div>
-                                <div id="menu_about" dojoType="dijit.MenuItem" onClick="davinci.ui.about()"></div>
+                                <div id="menu_about" dojoType="dijit.MenuItem" onClick="davinci.ui.about.show()"></div>
                             </div>
                         </div>
                         <a id="davinci_logoff" href='javascript:davinci.Runtime.logoff()'> </a>

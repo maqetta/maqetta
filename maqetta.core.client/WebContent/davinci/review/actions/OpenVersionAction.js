@@ -1,17 +1,24 @@
-dojo.provide("davinci.review.actions.OpenVersionAction");
+define([
+	"dojo/_base/declare",
+	"davinci/actions/Action",
+	"davinci/Runtime",
+	"dojox/widget/Toaster",
+	"dojo/i18n!./nls/actions"
+], function(declare, Action, Runtime, Toaster, nls) {
 
-dojo.require("davinci.actions.Action");
-dojo.require("dojox.widget.Toaster");
+if (typeof davinci.review.actions === "undefined") {
+	davinci.review.actions = {};
+}
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.review.actions", "actions");
+var OpenVersionAction = davinci.review.actions.OpenVersionAction = declare("davinci.review.actions.OpenVersionAction", Action, {
 
-dojo.declare("davinci.review.actions.OpenVersionAction",davinci.actions.Action, {
 	run: function(context) {
-		var selection = davinci.Runtime.getSelection();
-		if (!selection)  { return; }
+		var selection = Runtime.getSelection();
+		if (!selection)  { 
+			return;
+		}
 		var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
-        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+		var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
 		dojo.xhrGet({
 			url: location + "maqetta/cmd/managerVersion",
 			sync:false,
@@ -19,32 +26,42 @@ dojo.declare("davinci.review.actions.OpenVersionAction",davinci.actions.Action, 
 			content:{
 				'type' :'open',
 				'vTime':item.timeStamp}
-		}).then(function (result){
+		}).then(function (result) {
 			if (result=="OK") {
 				if (typeof hasToaster == "undefined") {
-					new dojox.widget.Toaster({
+					new Toaster({
 						position: "br-left",
 						duration: 4000,
 						messageTopic: "/davinci/review/resourceChanged"
 					});
 					hasToaster = true;
 				}
-				var langObj = dojo.i18n.getLocalization("davinci.review.actions", "actions");
-				dojo.publish("/davinci/review/resourceChanged", [{message:langObj.openSuccessful, type:"message"},"open",item]);
+				dojo.publish("/davinci/review/resourceChanged", [{message:nls.openSuccessful, type:"message"},"open",item]);
 			}
 		});
 	},
 
-    shouldShow: function(context) {
-        return true;
-    },
-    
-    isEnabled: function(context) {
-        if (davinci.Runtime.getRole()!="Designer") { return false; }
-        var selection = davinci.Runtime.getSelection();
-        if (!selection || selection.length == 0) { return false; }
-        var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
-        if (item.closed&&item.closedManual&&!item.isDraft) { return true; }
-        return false;
-    }
+	shouldShow: function(context) {
+		return true;
+	},
+
+	isEnabled: function(context) {
+		if (davinci.Runtime.getRole()!="Designer") { 
+			return false;
+		}
+		var selection = davinci.Runtime.getSelection();
+		if (!selection || selection.length == 0) { 
+			return false;
+		}
+		var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
+		if (item.closed&&item.closedManual&&!item.isDraft) { 
+			return true;
+		}
+		return false;
+	}
+
+});
+
+return OpenVersionAction;
+
 });

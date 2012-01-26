@@ -1,18 +1,22 @@
-dojo.provide("davinci.review.actions.DeleteVersionAction");
+define([
+	"dojo/_base/declare",
+	"davinci/actions/Action",
+	"davinci/Runtime",
+	"dojox/widget/Toaster",
+	"dojo/i18n!./nls/actions"
+], function(declare, Action, Runtime, Toaster, nls) {
 
-dojo.require("davinci.actions.Action");
-dojo.require("dojox.widget.Toaster");
+if (typeof davinci.review.actions === "undefined") {
+	davinci.review.actions = {};
+}
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.review.actions", "actions");
+var DeleteVersionAction = davinci.review.actions.DeleteVersionAction = declare("davinci.review.actions.DeleteVersionAction", Action, {
 
-dojo.declare("davinci.review.actions.DeleteVersionAction",davinci.actions.Action,{
 	run: function(context) {
-		var selection = davinci.Runtime.getSelection();
+		var selection = Runtime.getSelection();
 		if(!selection) return;
-		var langObj = dojo.i18n.getLocalization("davinci.review.actions", "actions");
 
-		okToClose=confirm(langObj.areYouSureDelete);
+		okToClose=confirm(nls.areYouSureDelete);
 		if(!okToClose)
 			return;
 		var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
@@ -28,14 +32,14 @@ dojo.declare("davinci.review.actions.DeleteVersionAction",davinci.actions.Action
 		}).then(function (result) {
 			if (result=="OK") {
 				if (typeof hasToaster == "undefined") {
-					new dojox.widget.Toaster({
+					new Toaster({
 						position: "br-left",
 						duration: 4000,
 						messageTopic: "/davinci/review/resourceChanged"
 					});
 					hasToaster = true;
 				}
-				dojo.publish("/davinci/review/resourceChanged", [{message:langObj.deleteSuccessful, type:"message"},"delete",item]);
+				dojo.publish("/davinci/review/resourceChanged", [{message:nls.deleteSuccessful, type:"message"},"delete",item]);
 				for (var i=0;i<item.children.length;i++) {
 					dojo.publish("/davinci/resource/resourceChanged",["deleted",item.children[i]]);
 				}
@@ -52,4 +56,9 @@ dojo.declare("davinci.review.actions.DeleteVersionAction",davinci.actions.Action
 		var selection = davinci.Runtime.getSelection();
 		return selection && selection.length > 0 ? true : false;
 	}
+
+});
+
+return DeleteVersionAction;
+
 });

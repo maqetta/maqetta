@@ -1,9 +1,11 @@
-dojo.provide("davinci.ve.States");
-dojo.require("davinci.maqetta.States");
-//dojo.require("davinci.ve.commands.EventCommand");
-dojo.require("davinci.ve.commands.StyleCommand");
+define([
+        "dojo/_base/declare",
+        "app/davinci/maqetta/States.js",
+        "./commands/EventCommand",
+        "./commands/StyleCommand"
+], function(declare, maqettaStates, EventCommand, StyleCommand){
 
-dojo.declare("davinci.ve.States", davinci.maqetta.States, {
+declare("davinci.ve.States", davinci.maqetta.States, {
 	
 	_update: function(widget, newState, oldState) {
 		this.inherited(arguments);
@@ -36,16 +38,16 @@ dojo.declare("davinci.ve.States", davinci.maqetta.States, {
 		
 		var context = this.getContext();
 		if (context) {
-			var command = new davinci.ve.commands.EventCommand(widget, properties);
+			var command = new EventCommand(widget, properties);
 			context.getCommandStack().execute(command);
 		}
 	},
 	
 	_styleChange: function (widget, style){
-		var currentEditor = top.davinci.Runtime.currentEditor;
+		var currentEditor = top.davinci.Runtime.currentEditor; //TODO: use require?
 		var context = currentEditor.getContext();
 
-		var command = new davinci.ve.commands.StyleCommand(widget, [style]);	
+		var command = new StyleCommand(widget, [style]);	
 		
 		context.getCommandStack().execute(command);
 	},
@@ -186,7 +188,9 @@ dojo.declare("davinci.ve.States", davinci.maqetta.States, {
 	}
 });
 
+//TODO: change to use singleton pattern for this module?
 davinci.ve.states = new davinci.ve.States();
 davinci.ve.states.initialize();
 
-
+return davinci.ve.states;
+});

@@ -1,20 +1,36 @@
-dojo.provide("davinci.review.actions.TextAction");
+define([
+	"dojo/_base/declare",
+	"davinci/review/actions/_DrawingCommon",
+	"davinci/Runtime"
+], function(declare, _DrawingCommon, Runtime) {
 
-dojo.require("davinci.review.actions._DrawingCommon");
+if (typeof davinci.review.actions === "undefined") {
+	davinci.review.actions = {};
+}
 
-dojo.declare("davinci.review.actions.TextAction", davinci.review.actions._DrawingCommon, {
-    run: function(context){
-        this.inherited(arguments);
-        var commentPalette = dijit.byId("davinci.review.comment");
-        if(!commentPalette._commentForm.isShowing) return;
-        var surface = this.doc.annotationSurface, createTool = surface.createTool;
-        createTool.deactivate();
-        createTool.setShape("Text", {
-            colorAlias: surface.currentReviewer,
-            a2c: dojo.hitch(davinci.Runtime, davinci.Runtime.getColor),
-            commentId: surface.commentId,
-            state: ""
-        });
-        createTool.activate();
-    }
+var TextAction = davinci.review.actions.TextAction = declare("davinci.review.actions.TextAction", _DrawingCommon, {
+
+	run: function(context) {
+		this.inherited(arguments);
+		var commentPalette = dijit.byId("davinci.review.comment");
+		if (!commentPalette._commentForm.isShowing) {
+			return;
+		}
+		var surface = this.doc.annotationSurface, 
+		createTool = surface.createTool;
+
+		createTool.deactivate();
+		createTool.setShape("Text", {
+			colorAlias: surface.currentReviewer,
+			a2c: dojo.hitch(Runtime, Runtime.getColor),
+			commentId: surface.commentId,
+			state: ""
+		});
+		createTool.activate();
+	}
+
+});
+
+return TextAction;
+
 });

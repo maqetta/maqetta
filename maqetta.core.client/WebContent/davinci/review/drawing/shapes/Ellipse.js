@@ -1,10 +1,12 @@
-dojo.provide("davinci.review.drawing.shapes.Ellipse");
+define([
+	"dojo/_base/declare",
+	"./_ShapeCommon"
+], function(declare, _ShapeCommon) {
+	
+return declare("davinci.review.drawing.shapes.Ellipse", _ShapeCommon, {
 
-dojo.require("davinci.review.drawing.shapes._ShapeCommon");
-
-dojo.declare("davinci.review.drawing.shapes.Ellipse", davinci.review.drawing.shapes._ShapeCommon, {
-	render: function(){
-		if(!this.shapeNode){
+	render: function() {
+		if (!this.shapeNode) {
 			this._createEllipse();
 			this._evtConns.push(
 				dojo.connect(this.shapeNode, "mouseover", this, "onMouseOver"),
@@ -15,19 +17,19 @@ dojo.declare("davinci.review.drawing.shapes.Ellipse", davinci.review.drawing.sha
 		this._transformEllipse();
 		this.inherited(arguments);
 	},
-	
-	destroy: function(){
+
+	destroy: function() {
 		this._innerEllipse = null;
 		this.inherited(arguments);
 	},
-	
-	_createEllipse: function(){
+
+	_createEllipse: function() {
 		this.shapeNode = dojo.create("div");
 		var width = this.width = Math.abs(this.x1 - this.x2),
-			height = this.height = Math.abs(this.y1 - this.y2),
-			radius = this.radius = (width / 2 + 1) + "px " + (height / 2 + 1) + "px",
-			radiusInner = (width / 2 - 1) + "px " + (height / 2 - 1) + "px";
-		
+		height = this.height = Math.abs(this.y1 - this.y2),
+		radius = this.radius = (width / 2 + 1) + "px " + (height / 2 + 1) + "px",
+		radiusInner = (width / 2 - 1) + "px " + (height / 2 - 1) + "px";
+
 		dojo.style(this.shapeNode, {
 			"position": "absolute",
 			"padding": "0px",
@@ -71,18 +73,18 @@ dojo.declare("davinci.review.drawing.shapes.Ellipse", davinci.review.drawing.sha
 			"WebkitBorderBottomRightRadius": radiusInner
 		});
 	},
-	
-	_transformEllipse: function(){
+
+	_transformEllipse: function() {
 		var width = this.width = Math.abs(this.x1 - this.x2),
-			height = this.height = Math.abs(this.y1 - this.y2),
-			radius = this.radius = (width / 2 + 1) + "px " + (height / 2 + 1) + "px",
-			radiusInner = (width / 2 - 1) + "px " + (height / 2 - 1) + "px";
+		height = this.height = Math.abs(this.y1 - this.y2),
+		radius = this.radius = (width / 2 + 1) + "px " + (height / 2 + 1) + "px",
+		radiusInner = (width / 2 - 1) + "px " + (height / 2 - 1) + "px";
 		dojo.style(this.shapeNode, {
 			"left": this.x1 + "px",
 			"top": this.y1 + "px",
 			"width": width + "px",
 			"height": height + "px",
-			
+
 			"borderTopLeftRadius": radius,
 			"borderTopRightRadius": radius,
 			"borderBottomLeftRadius": radius,
@@ -113,4 +115,6 @@ dojo.declare("davinci.review.drawing.shapes.Ellipse", davinci.review.drawing.sha
 			"WebkitBorderBottomRightRadius": radiusInner
 		});
 	}
+
+});
 });

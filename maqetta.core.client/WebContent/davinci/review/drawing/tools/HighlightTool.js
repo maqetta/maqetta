@@ -1,14 +1,18 @@
-dojo.provide("davinci.review.drawing.tools.HighlightTool");
+define([
+	"dojo/_base/declare",
+	"./_ToolCommon"
+], function(declare, _ToolCommon) {
+	
+return declare("davinci.review.drawing.tools.HighlightTool", _ToolCommon, {
 
-dojo.require("davinci.review.drawing.tools._ToolCommon");
-
-dojo.declare("davinci.review.drawing.tools.HighlightTool", davinci.review.drawing.tools._ToolCommon, {
-	constructor: function(surface){
+	constructor: function(surface) {
 		surface.highlightTool = this;
 	},
-	
-	activate: function(){
-		if(this.activated) return;
+
+	activate: function() {
+		if (this.activated) { 
+			return;
+		}
 		this._evtSubs = [
 			dojo.subscribe("/davinci/review/drawing/shapemouseover", this, "_onShapeMouseOver"),
 			dojo.subscribe("/davinci/review/drawing/shapemouseout", this, "_onShapeMouseOut"),
@@ -16,46 +20,54 @@ dojo.declare("davinci.review.drawing.tools.HighlightTool", davinci.review.drawin
 		];
 		this.activated = true;
 	},
-	
-	_onShapeMouseOver: function(shape, evt, surface){
-		if(this.surface !== surface || this.surface.isDrawing){ return; }
+
+	_onShapeMouseOver: function(shape, evt, surface) {
+		if (this.surface !== surface || this.surface.isDrawing) { 
+			return;
+		}
 		var shapes = this.surface.shapes;
 		shape.style({"cursor": "pointer"});
-		if(!this.shape){
+		if (!this.shape) {
 			shape.style({"opacity": "0.5"});
 		}
 	},
-	
-	_onShapeMouseOut: function(shape, evt, surface){
-		if(this.surface !== surface || this.surface.isDrawing){ return; }
+
+	_onShapeMouseOut: function(shape, evt, surface) {
+		if (this.surface !== surface || this.surface.isDrawing) { 
+			return;
+		}
 		var shapes = this.surface.shapes;
 		shape.style({"cursor": ""});
-		if(!this.shape){
+		if (!this.shape) {
 			shape.style({"opacity": "1.0"});
 		}
 	},
-	
-	_onShapeMouseDown: function(shape, evt, surface){
-		if(this.surface !== surface || this.surface.isDrawing){ return; }
-		if(this.shape === shape){
+
+	_onShapeMouseDown: function(shape, evt, surface) {
+		if (this.surface !== surface || this.surface.isDrawing) { 
+			return;
+		}
+		if (this.shape === shape) {
 			shape.style({"opacity": "0.5"});
 			this.shape = null;
-		}else{
+		} else {
 			shape.style({"opacity": "1.0"});
 			this.shape = shape;
 		}
 		this.onShapeMouseDown(shape);
 	},
-	
-	onShapeMouseDown: function(shape){
+
+	onShapeMouseDown: function(shape) {
 		// Placeholder
 	},
-	
-	deactivate: function(){
-		if(!this.activated) return;
+
+	deactivate: function() {
+		if (!this.activated) { 
+			return;
+		}
 		var shapes = this.surface.shapes;
-		if(this.shape){
-			dojo.forEach(shapes, function(shape){
+		if (this.shape) {
+			dojo.forEach(shapes, function(shape) {
 				shape.style({"opacity": "1.0", "cursor": ""});
 			});
 		}
@@ -63,4 +75,6 @@ dojo.declare("davinci.review.drawing.tools.HighlightTool", davinci.review.drawin
 		this.shape = null;
 		this.activated = false;
 	}
+
+});
 });

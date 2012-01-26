@@ -1,6 +1,8 @@
-dojo.provide("davinci.review.Color");
-
-dojo.declare("davinci.review.Color",null,{
+define([
+	    "dojo/_base/declare"
+], function(declare){
+	
+return declare("davinci.review.Color", null, {
 	colors:[
 	        "red",
 	        "blue",
@@ -15,3 +17,5 @@ dojo.declare("davinci.review.Color",null,{
 });
 
 davinci.review.colors = new davinci.review.Color();
+
+});

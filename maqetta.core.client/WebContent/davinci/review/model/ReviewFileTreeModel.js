@@ -1,92 +1,88 @@
-dojo.provide("davinci.review.model.ReviewFileTreeModel");
-
-dojo.declare(
-	"davinci.review.model.ReviewFileTreeModel",
-	null,
-{
+define([
+	    "dojo/_base/declare",
+], function(declare){
 	
-   foldersOnly : false,
-		
-	constructor: function(args)	
-	{
-			this.root=args && args.root;
-			//this.subscription=dojo.subscribe("/davinci/resource/resourceChanged",this,this.resourceChanged);
-			this.foldersOnly=args && args.foldersOnly;
+return declare("davinci.review.model.ReviewFileTreeModel", null, {
+
+	foldersOnly : false,
+
+	constructor: function(args) {
+		this.root=args && args.root;
+		//this.subscription=dojo.subscribe("/davinci/resource/resourceChanged",this,this.resourceChanged);
+		this.foldersOnly=args && args.foldersOnly;
 	},
-		
-	destroy: function(){
+
+	destroy: function() {
 		dojo.unsubscribe(this.subscription);
 	},
-	
+
 	// =======================================================================
 	// Methods for traversing hierarchy
-	
-	getRoot: function(onItem){
+
+	getRoot: function(onItem) {
 		onItem(this.root);
 	},
-	
-	mayHaveChildren: function(/*dojo.data.Item*/ item){
-       return item.elementType=="Folder";
-		
+
+	mayHaveChildren: function(/*dojo.data.Item*/ item) {
+		return item.elementType=="Folder";
+
 	},
-	
-	getChildren: function(/*dojo.data.Item*/ parentItem, /*function(items)*/ onComplete){
-		if (!this.foldersOnly)
-		{
+
+	getChildren: function(/*dojo.data.Item*/ parentItem, /*function(items)*/ onComplete) {
+		if (!this.foldersOnly) {
 			parentItem.getChildren(onComplete, true); // need to make the call sync, chrome is to fast for async
-		}
-		else
-		{
-			parentItem.getChildren(function (items){
+		} else {
+			parentItem.getChildren(function (items) {
 				var children=[];
 				var i;
-				for (i=0;i<items.length;i++)
-					if (items[i].elementType=="Folder")
+				for (i=0;i<items.length;i++) {
+					if (items[i].elementType == "Folder") {
 						children.push(items[i]);
+					}
+				}
 				onComplete(children);
 			});
 		}
-			
+
 	},
-	
+
 	// =======================================================================
 	// Inspecting items
-	
-	getIdentity: function(/* item */ item){
-	
+
+	getIdentity: function(/* item */ item) {
 		return item.getPath();
 	},
-	
-	getLabel: function(/*dojo.data.Item*/ item){
 
+	getLabel: function(/*dojo.data.Item*/ item) {
 		var label=item.getName();
-		if (item.link)
+		if (item.link) { 
 			label=label+'  ['+item.link+']';
+		}
 		return label;
 	},
-	
-	resourceChanged : function(type,changedResource)
-	{
-		if (type=='created'||type=='deleted')
-		{
+
+	resourceChanged : function(type,changedResource) {
+		if (type == 'created' || type == 'deleted') {
 			var parent=changedResource.parent;
 			var newChildren;
-			parent.getChildren(function(children){newChildren=children;});
+			parent.getChildren(function(children) { newChildren = children; });
 			this.onChildrenChange(parent,newChildren);
 		}
 	},
-	
-	newItem: function(/* Object? */ args, /*Item?*/ parent){
+
+	newItem: function(/* Object? */ args, /*Item?*/ parent) {
 	},
-	
-	pasteItem: function(/*Item*/ childItem, /*Item*/ oldParentItem, /*Item*/ newParentItem, /*Boolean*/ bCopy){
+
+	pasteItem: function(/*Item*/ childItem, /*Item*/ oldParentItem, /*Item*/ newParentItem, /*Boolean*/ bCopy) {
 	},
-	
-	
-	onChange: function(/*dojo.data.Item*/ item){
+
+
+	onChange: function(/*dojo.data.Item*/ item) {
 	},
-	
-	onChildrenChange: function(/*dojo.data.Item*/ parent, /*dojo.data.Item[]*/ newChildrenList){
+
+	onChildrenChange: function(/*dojo.data.Item*/ parent, /*dojo.data.Item[]*/ newChildrenList) {
 	}
+
+});
 });
 

@@ -1,33 +1,48 @@
-dojo.provide("davinci.review.actions.ViewFileAction");
+define([
+	"dojo/_base/declare",
+	"davinci/actions/Action",
+	"davinci/Runtime",
+], function(declare, Action, Runtime) {
 
-dojo.require("davinci.actions.Action");
+if (typeof davinci.review.actions === "undefined") {
+	davinci.review.actions = {};
+}
 
-dojo.declare("davinci.review.actions.ViewFileAction",davinci.actions.Action,{
-    run: function(context){
-        var selection = davinci.Runtime.getSelection();
-        if(!selection) return;
-        var item = selection[0].resource;
-        if(davinci.Runtime.getMode()=="reviewPage"){
-            davinci.Workbench.openEditor({
-                fileName: item,
-                content: item.getText()
-            });
-        }
-        else if(davinci.Runtime.getMode()=="designPage"){
-            window.open(davinci.Workbench.location()+"review/"+davinci.Runtime.userName+"/"+item.parent.timeStamp+"/"
-                    +item.name+"/default");
-        }
-    },
+var ViewFileAction = davinci.review.actions.ViewFileAction = declare("davinci.review.actions.ViewFileAction", Action, {
 
-    shouldShow: function(context){
-        return true;
-    },
-    
-    isEnabled: function(context){
-        var selection = davinci.Runtime.getSelection();
-        if(!selection || selection.length == 0) return false;
-        var item = selection[0].resource;
-        return item.elementType=="ReviewFile";
-    
-    }
+	run: function(context) {
+		var selection = Runtime.getSelection();
+		if (!selection) {
+			return;
+		}
+		var item = selection[0].resource;
+		if (Runtime.getMode()=="reviewPage") {
+			davinci.Workbench.openEditor({
+				fileName: item,
+				content: item.getText()
+			});
+		} else if (Runtime.getMode()=="designPage") {
+			window.open(davinci.Workbench.location()+"review/"+Runtime.userName+"/"+item.parent.timeStamp+"/"
+					+item.name+"/default");
+		}
+	},
+
+	shouldShow: function(context) {
+		return true;
+	},
+
+	isEnabled: function(context) {
+		var selection = Runtime.getSelection();
+		if (!selection || selection.length == 0) {
+			return false;
+		}
+		var item = selection[0].resource;
+		return item.elementType=="ReviewFile";
+
+	}
+
+});
+
+return ViewFileAction;
+
 });

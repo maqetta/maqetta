@@ -39,7 +39,7 @@ return {
 	create: function(widget, srcElement) {
 		var view = widget.dijitWidget,
 			node = widget.domNode;
-		connect(view, 'startup', function() {
+		connect.connect(view, 'startup', function() {
 			// Since this may get called twice, check that we haven't already
 			// created this interval.
 			if (! widget._dvDisplayInterval) {

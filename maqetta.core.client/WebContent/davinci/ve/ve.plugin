@@ -95,7 +95,6 @@
         {
             id: "cutCopyPaste",
             visible: true,
-            actionsContainer: "davinci.ve.actions.ContextActions",
             actions: [
                 {
                     id: "davinci.ve.cut",
@@ -215,7 +214,6 @@
         {
             id: "stateActions",
             visible: true,
-            actionsContainer: "davinci.ve.actions.StateActions",
             actions: [
                 {
                     id: "davinci.ve.addTableColumn",
@@ -263,14 +261,14 @@
                     id: "davinci.ve.addstate",
                     icon: null,
                     label: "Add state",
-                    action: "davinci.ve.AddState",
+                    action: "davinci.ve.actions.AddState",
                     menubarPath: "state"
                 },
                 {
                     id: "davinci.ve.removestate",
                     icon: null,
                     label: "Remove state",
-                    action: "davinci.ve.RemoveState",
+                    action: "davinci.ve.actions.RemoveState",
                     menubarPath: "state"
                 }
             ]
@@ -309,12 +307,11 @@
         {
             viewContribution: {
                 targetID: "davinci.ve.states",
-                actionsContainer: "davinci.ve.actions.StateActions",
                 actions: [
                     {
                         id: "addState",
                         iconClass: 'viewActionIcon addStateIcon',
-                        action: "davinci.ve.AddState",
+                        action: "davinci.ve.actions.AddState",
                         label: "Add State",
                         // menubarPath: "davinci.edit/cut",
                         toolbarPath: "add"
@@ -322,7 +319,7 @@
                     {
                         id: "removeState",
                         iconClass: 'viewActionIcon removeStateIcon',
-                        action: "davinci.ve.RemoveState",
+                        action: "davinci.ve.actions.RemoveState",
                         label: "Remove State",
                         // menubarPath: "davinci.edit/cut",
                         toolbarPath: "remove"
@@ -357,7 +354,6 @@
                     label: "Cut",
                     keySequence: "M1+X",
                     iconClass: "editActionIcon editCutIcon",
-                    actionsContainer: "davinci.ve.actions.ContextActions",
                     action: "davinci.ve.actions.CutAction",
                     toolbarPath: "cutcopypaste"
                 },
@@ -366,7 +362,6 @@
                     label: "Copy",
                     keySequence: "M1+C",
                     iconClass: "editActionIcon editCopyIcon",
-                    actionsContainer: "davinci.ve.actions.ContextActions",
                     action: "davinci.ve.actions.CopyAction",
                     toolbarPath: "cutcopypaste"
                 },
@@ -375,7 +370,6 @@
                     keySequence: "M1+V",
                     iconClass: "editActionIcon editPasteIcon",
                     label: "Paste",
-                    actionsContainer: "davinci.ve.actions.ContextActions",
                     action: "davinci.ve.actions.PasteAction",
                     toolbarPath: "cutcopypaste"
                 },
@@ -398,7 +392,6 @@
                     keySequence: "DEL",
                     iconClass: "editActionIcon editDeleteIcon",
                     label: "Delete",
-                    actionsContainer: "davinci.ve.actions.ContextActions",
                     action: "davinci.ve.actions.DeleteAction",
                     toolbarPath: "delete"
                 },
@@ -491,7 +484,6 @@
                 {
                     id: "chooseDevice",
                     iconClass: 'deviceIcon',
-                    actionsContainer: "davinci.ve.actions.DeviceActions",
                     action: "davinci.ve.actions.ChooseDeviceAction",
                     label: "Choose device",
                     toolbarPath: "chooseDevice"
@@ -499,7 +491,6 @@
                 {
                     id: "rotateDevice",
                     iconClass: 'rotateIcon',
-                    actionsContainer: "davinci.ve.actions.DeviceActions",
                     action: "davinci.ve.actions.RotateDeviceAction",
                     label: "Rotate device",
                     toolbarPath: "rotateDevice"

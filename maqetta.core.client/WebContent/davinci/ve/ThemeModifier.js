@@ -1,8 +1,9 @@
 define([
     "dojo/_base/declare",
     "../model/Path",
+    "../model/Factory",
 	"./utils/URLRewrite"
-], function(declare, Path, URLRewrite) {
+], function(declare, Path, Factory, URLRewrite) {
 
 return declare("davinci.ve.ThemeModifier", null, {
 
@@ -16,7 +17,7 @@ return declare("davinci.ve.ThemeModifier", null, {
 		
 		for(var i = 0;i<this.themeCssfiles.length;i++){
 			var cssURL = this._themePath.getParentPath().append(this.themeCssfiles[i]).toString();
-			this.cssFiles.push(davinci.model.Factory.getInstance().getModel({
+			this.cssFiles.push(Factory.getInstance().getModel({
 				url: cssURL,
 			    includeImports: true,
 			    loader: function(url){

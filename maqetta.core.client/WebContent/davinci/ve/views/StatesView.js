@@ -11,7 +11,9 @@ dojo.require("dijit.form.TextBox");
 dojo.require("dojox.grid.DataGrid");
 
 dojo.require("davinci.ve.States");
-dojo.require("davinci.ve.actions.StateActions");
+//dojo.require("davinci.ve.actions.StateActions");
+dojo.require("davinci.ve.actions.AddState");
+dojo.require("davinci.ve.actions.RemoveState");
 
 dojo.require("davinci.workbench.ViewPart");
 

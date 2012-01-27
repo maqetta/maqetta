@@ -200,5 +200,5 @@ define(["dojo/_base/declare",
 		}	
 		
 	});
- return dojo.mixin(colorPicker, {divider:"---"});
+ 	return dojo.mixin(colorPicker, {divider:"---"});
 });

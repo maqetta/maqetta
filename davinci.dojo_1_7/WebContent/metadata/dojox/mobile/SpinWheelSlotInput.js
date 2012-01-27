@@ -1,8 +1,8 @@
 define([
 	"dojo/_base/declare",
-	"dijit/form/_TextBoxMixin.js",
+	"dijit/form/_TextBoxMixin",
 	"davinci/ve/input/SmartInput",
-	"davinci/ui/Error",
+	"davinci/ui/ErrorDialog",
 	"davinci/Workbench",
 	"davinci/ve/commands/ModifyCommand",
 	"dojo/i18n!../nls/dojox"
@@ -10,7 +10,7 @@ define([
 	declare,
 	_TextBoxMixin,
 	SmartInput,
-	Error,
+	ErrorDialog,
 	Workbench,
 	ModifyCommand,
 	dojoxNls
@@ -62,7 +62,7 @@ return declare("davinci.libraries.dojo.dojox.mobile.SpinWheelSlotInput", SmartIn
 			} else {
 				var content = this.getHelpText();
 				var title = 'Invalid Value';
-				var errorDialog = new Error({errorText: content});
+				var errorDialog = new ErrorDialog({errorText: content});
 				Workbench.showModal(errorDialog, title);
 				return;
 			}

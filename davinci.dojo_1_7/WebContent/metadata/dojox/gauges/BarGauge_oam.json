@@ -1,6 +1,6 @@
 {
-    "id": "http://dojotoolkit.org/dojox/widget/BarGauge",
-    "name": "dojox.widget.BarGauge",
+    "id": "http://dojotoolkit.org/dojox/gauges/BarGauge",
+    "name": "dojox.gauges.BarGauge",
     "spec": "1.0",
     "version": "1.0",
     "require": [
@@ -11,13 +11,13 @@
         },
         {
             "type": "css",
-            "src": "dojox/widget/gauge/_Gauge.css",
+            "src": "dojox/gauges/_Gauge.css",
             "$library": "dojo"
         },
         {
             "type": "javascript-module",
             "format": "amd",
-            "src": "dojox/widget/BarGauge",
+            "src": "dojox/gauges/BarGauge",
             "$library": "dojo"
         },
         {

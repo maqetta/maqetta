@@ -1,6 +1,6 @@
 {
-    "id": "http://dojotoolkit.org/dojox/widget/gauge/BarLineIndicator",
-    "name": "dojox.widget.gauge.BarLineIndicator",
+    "id": "http://dojotoolkit.org/dojox/gauges/BarIndicator",
+    "name": "dojox.gauges.BarIndicator",
     "spec": "1.0",
     "version": "1.0",
     "require": [
@@ -12,13 +12,13 @@
         {
             "type": "javascript-module",
             "format": "amd",
-            "src": "dojox/widget/gauge/BarLineIndicator",
+            "src": "dojox/gauges/BarIndicator",
             "$library": "dojo"
         }
     ],
     "library": {
         "dojo": {
-            "src": "../../../../dojo/dojo.js"
+            "src": "../../../dojo/dojo.js"
         }
     },
     "property": {

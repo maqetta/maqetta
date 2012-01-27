@@ -1,6 +1,6 @@
 {
-    "id": "http://dojotoolkit.org/dojox/widget/gauge/AnalogArcIndicator",
-    "name": "dojox.widget.gauge.AnalogArcIndicator",
+    "id": "http://dojotoolkit.org/dojox/gauges/BarLineIndicator",
+    "name": "dojox.gauges.BarLineIndicator",
     "spec": "1.0",
     "version": "1.0",
     "require": [
@@ -12,16 +12,20 @@
         {
             "type": "javascript-module",
             "format": "amd",
-            "src": "dojox/widget/gauge/AnalogArcIndicator",
+            "src": "dojox/gauges/BarLineIndicator",
             "$library": "dojo"
         }
     ],
     "library": {
         "dojo": {
-            "src": "../../../../dojo/dojo.js"
+            "src": "../../../dojo/dojo.js"
         }
     },
     "property": {
+        "width": {
+            "datatype": "number",
+            "hidden": false
+        },
         "value": {
             "datatype": "number",
             "description": "The value (on the gauge) that this indicator should be placed at",
@@ -45,11 +49,6 @@
         "length": {
             "datatype": "number",
             "description": "The length of the indicator.  In the above example, the radius of the AnalogGauge\nis 125, but the length of the indicator is 135, meaning it would project beyond\nthe edge of the AnalogGauge",
-            "hidden": false
-        },
-        "width": {
-            "datatype": "number",
-            "description": "The width of the indicator.",
             "hidden": false
         },
         "offset": {

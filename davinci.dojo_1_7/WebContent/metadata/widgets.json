@@ -1363,7 +1363,7 @@
         {
             "name": "BarGauge",
             "description": "BarGauge",
-            "type": "dojox.widget.BarGauge",
+            "type": "dojox.gauges.BarGauge",
             "category": "untested",
             "icon": "resources/images/bargauge.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADdYkDpdlTlckzxgmDxhlz5kmneTu3WPtz9mnEFonvD1/EJtokJtoUVwpkh1qkdzp3ubweLt+kt5roGjyb7b+sDc+kx+sUp6rU6As0+CtLXW+bbX+bfY+bnZ+brZ+b3b+uTv+uPu+ebw+ujx+vD2/FGGuFOJu1SKvFWMvYiw1IWrz5q93FaOv5C32Y6115K42ZW62pi82+31/Oz0++rz+v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADUALAAAAAAQABAAAAaQwFqKVSsajaykEXVsskjEoql5qtZOilNRVWqWKt2SrFvM1DDoMwVznrGLltpldZF/6hdavTaR1B4xD38egg8jgkUONQswC4sdjgsijkUNNQgvCJccmgggmjUQDDUELQSkG6cEIadFCTUCLgKwGrMCEbNFBTUAvby+vQBFBgNNxkcBycrLy0YHRc810dPH1TVBADs=",
@@ -1433,7 +1433,7 @@
                     }
                 ]
             },
-            "helper": "./dojox/widget/BarGaugeHelper"
+            "helper": "./dojox/gauges/BarGaugeHelper"
         },
         {
             "name": "EnhancedCalendar",

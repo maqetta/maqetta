@@ -1,6 +1,7 @@
 define([
-    	"dojo/_base/declare"
-], function(declare){
+    	"dojo/_base/declare",
+    	"davinci/Theme"
+], function(declare, Theme){
 
 
 return declare("davinci.ve.commands.ChangeThemeCommand", null, {
@@ -10,9 +11,9 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
         this._newTheme = newTheme;
         this._context = context;
         this.resetDojoxMobileNeed = false;
-        this._oldTheme  = davinci.theme.getThemeSet(this._context);
+        this._oldTheme  = Theme.getThemeSet(this._context);
         if (!this._oldTheme){ 
-            this._oldTheme = davinci.theme.dojoThemeSets.themeSets[0]; // default;
+            this._oldTheme = Theme.dojoThemeSets.themeSets[0]; // default;
         }
     },
 
@@ -45,7 +46,7 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
     
         
     removeTheme: function(oldTheme){
-        var helper = davinci.theme.getHelper(oldTheme);
+        var helper = Theme.getHelper(oldTheme);
         if (helper && helper.removeTheme){
           helper.removeTheme(this._context, oldTheme);  
         } else {
@@ -103,7 +104,7 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
     },
     
     addTheme: function(newThemeInfo){
-        var helper = davinci.theme.getHelper(newThemeInfo);
+        var helper = Theme.getHelper(newThemeInfo);
         if (helper && helper.addTheme){
           helper.addTheme(this._context, newThemeInfo);  
         } else {
@@ -155,7 +156,7 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
             }
         }
         // remove the mobile theme
-        if (themeSet.mobileTheme && (!davinci.theme.themeSetEquals(themeSet.mobileTheme,davinci.theme.dojoMobileDefault))){
+        if (themeSet.mobileTheme && (!Theme.themeSetEquals(themeSet.mobileTheme,Theme.dojoMobileDefault))){
             this._dojoxMobileRemoveTheme(this._context);
         }
         
@@ -228,7 +229,7 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
         var htmlElement = context._srcDocument.getDocumentElement();
         var head = htmlElement.getChildElement("head");
         var scriptTags=head.getChildElements("script");
-        if (davinci.theme.themeSetEquals(theme, davinci.theme.dojoMobileDefault)){
+        if (Theme.themeSetEquals(theme, Theme.dojoMobileDefault)){
             var nothingToDo = true;
             dojo.forEach(scriptTags, function (scriptTag){
                 var text=scriptTag.getElementText();
@@ -262,10 +263,10 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
                         var themeMap;
                         if (theme){
                             themeMap = theme;
-                            if (davinci.theme.themeSetEquals(themeMap, davinci.theme.dojoMobileDefault)){
+                            if (Theme.themeSetEquals(themeMap, Theme.dojoMobileDefault)){
                                 themeMap = null;
                             } else {
-                               themeMap = dojo.toJson(davinci.theme.getDojoxMobileThemeMap(context, theme));
+                               themeMap = dojo.toJson(Theme.getDojoxMobileThemeMap(context, theme));
                                themeMap = text.substring(0,stop+1) + ',function(dojoxMobile){dojoxMobile.themeMap='+themeMap+';dojoxMobile.themeFiles = [];}' + text.substring(stop+1);
                             }
                         }
@@ -285,7 +286,7 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
                                     device = preview.silhouetteiframe.themeMap[device+'.svg'];
                                 }
                                 var dm = context.getDojo().getObject("dojox.mobile", true);
-                                dm.themeMap= davinci.theme.getDojoxMobileThemeMap(context, theme);
+                                dm.themeMap= Theme.getDojoxMobileThemeMap(context, theme);
                                 dm.themeFiles = [];
                                 dm.loadDeviceTheme(device);
                                 this.resetDojoxMobileNeed = false;

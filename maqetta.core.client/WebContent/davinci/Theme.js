@@ -1,10 +1,28 @@
-dojo.provide("davinci.theme.ThemeUtils");
+define([
+    	"dojo/_base/declare",
+    	"davinci/ve/widget",
+    	"davinci/ve/States"
+], function(declare, Widget, States){
 
-davinci.theme.isThemeHTML = function(resource){
+//return declare("davinci.Theme", null, {
+
+	var Theme = {
+	desktop_default : 'desktop_default',
+
+	mobile_default : 'custom_default',
+	default_theme : '(device-specific)', //'default';
+	none_themeset_name : '(none)',
+	other_device : 'other',
+	none_theme : 'none',
+	dojoMobileDefault : [{"theme":"android","device":"Android"},{"theme":"blackberry","device":"BlackBerry"},{"theme":"ipad","device":"iPad"},{"theme":"iphone","device":"iPhone"},{"theme":"iphone","device":"other"}],
+	dojoMobileCustom :  [{"theme":"custom","device":"Android"},{"theme":"custom","device":"BlackBerry"},{"theme":"custom","device":"iPad"},{"theme":"custom","device":"iPhone"},{"theme":"custom","device":"other"}],
+	
+
+isThemeHTML: function(resource){
 	return resource.getName().indexOf("dojo-theme-editor.html") > -1;
-};
+},
 
-davinci.theme.CloneTheme = function(name, version, selector, directory, originalTheme, renameFiles){
+ CloneTheme: function(name, version, selector, directory, originalTheme, renameFiles){
     
 	var deferreds = [];
 
@@ -128,9 +146,9 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
     var defs = new dojo.DeferredList(deferreds);
 	davinci.library.themesChanged();
 	return defs;
-};
+},
 
-davinci.theme.getHelper = function(theme){
+getHelper: function(theme){
 	if (!theme) { return; } 
     if (theme._helper){
         return theme._helper;
@@ -150,48 +168,18 @@ davinci.theme.getHelper = function(theme){
         var obj = dojo.getObject(helper);
         return new obj();
     }
-};
-
-davinci.theme.desktop_default = 'desktop_default';
-davinci.theme.mobile_default = 'custom_default';
-davinci.theme.default_theme = '(device-specific)'; //'default';
-davinci.theme.none_themeset_name = '(none)';
-davinci.theme.other_device = 'other';
-davinci.theme.none_theme = 'none';
-davinci.theme.dojoMobileDefault = [{"theme":"android","device":"Android"},{"theme":"blackberry","device":"BlackBerry"},{"theme":"ipad","device":"iPad"},{"theme":"iphone","device":"iPhone"},{"theme":"iphone","device":"other"}];
-davinci.theme.dojoMobileCustom =  [{"theme":"custom","device":"Android"},{"theme":"custom","device":"BlackBerry"},{"theme":"custom","device":"iPad"},{"theme":"custom","device":"iPhone"},{"theme":"custom","device":"other"}];
-davinci.theme.none_themeset = {
-        "name": davinci.theme.none_themeset_name,
-        "desktopTheme": "claro",
-        "mobileTheme": dojo.clone(davinci.theme.dojoMobileDefault) 
-        };
-davinci.theme.default_themeset = {
-        "name": davinci.theme.desktop_default,
-        "desktopTheme": "claro",
-        "mobileTheme": dojo.clone(davinci.theme.dojoMobileDefault) 
-        };
-davinci.theme.custom_themeset = {
-        "name": davinci.theme.mobile_default,
-        "desktopTheme": "claro",
-        "mobileTheme": davinci.theme.dojoMobileCustom
-        };
-davinci.theme.dojoThemeSets =  { 
-        "version": "1.7",
-        "specVersion": "0.8",
-        "helper": "davinci.libraries.dojo.dojox.mobile.ThemeHelper",
-        "themeSets": [ 
-               davinci.theme.custom_themeset           
-        ]
-};
+},
 
 
 
-davinci.theme.getThemeSet = function(context){
+
+
+ getThemeSet: function(context){
     
     var returnThemeSet;
     var dojoThemeSets = davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
     if (!dojoThemeSets){ 
-        dojoThemeSets =  davinci.theme.dojoThemeSets;
+        dojoThemeSets =  this.dojoThemeSets;
         // set the defaults
     //    davinci.workbench.Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(), dojoThemeSets);
     }
@@ -201,21 +189,21 @@ davinci.theme.getThemeSet = function(context){
         var htmlElement = context._srcDocument.getDocumentElement();
         var head = htmlElement.getChildElement("head");
         var scriptTags=head.getChildElements("script");
-        var mobileTheme = dojo.toJson(davinci.theme.dojoMobileDefault); //davinci.theme.none_theme;
+        var mobileTheme = dojo.toJson(this.dojoMobileDefault); //davinci.theme.none_theme;
         dojo.forEach(scriptTags, function (scriptTag){
             var text=scriptTag.getElementText();
             var stop = 0;
             var start;
             if (text.length) {
                 if (text.indexOf("dojo.require('dojox.mobile.deviceTheme');")/* && mobileTheme === davinci.theme.none_theme*/) {
-                    mobileTheme = dojo.toJson(davinci.theme.dojoMobileDefault); //davinci.theme.default_theme;
+                    mobileTheme = dojo.toJson(this.dojoMobileDefault); //davinci.theme.default_theme;
                 }
                 // Look for a dojox.mobile.themeMap in the document, if found set the themeMap
                 while ((start = text.indexOf('dojoxMobile.themeMap', stop)) > -1 ){ // might be more than one.
                     var stop = text.indexOf(';', start);
                     if (stop > start){
                         mobileTheme = text.substring(start + 'dojoxMobile.themeMap'.length + 1, stop);
-                        mobileTheme = dojo.toJson(davinci.theme.getDojoxMobileThemesFromThemeMap (context, mobileTheme));
+                        mobileTheme = dojo.toJson(this.getDojoxMobileThemesFromThemeMap (context, mobileTheme));
                     }
                 }
            }
@@ -229,7 +217,7 @@ davinci.theme.getThemeSet = function(context){
                     debugger; // why?
                     return themeSet;
                 }*/
-                if (davinci.theme.themeSetEquals(dojo.fromJson(mobileTheme),themeSet.mobileTheme)){
+                if (this.themeSetEquals(dojo.fromJson(mobileTheme),themeSet.mobileTheme)){
                     // found themeMap
                     return themeSet;
                 }
@@ -237,44 +225,44 @@ davinci.theme.getThemeSet = function(context){
         }
     
     }  // no theme map or context
-    var newThemeSetName = davinci.theme.none_themeset_name
+    var newThemeSetName = this.none_themeset_name
     
-    if (mobileTheme === davinci.theme.none_theme){
-        mobileTheme = dojo.toJson(davinci.theme.dojoMobileDefault); 
-    } else  if (mobileTheme === davinci.theme.default_theme){
-        mobileTheme =  dojo.toJson(davinci.theme.dojoMobileDefault);
+    if (mobileTheme === this.none_theme){
+        mobileTheme = dojo.toJson(this.dojoMobileDefault); 
+    } else  if (mobileTheme === this.default_theme){
+        mobileTheme =  dojo.toJson(this.dojoMobileDefault);
     }
     themeSet =  {
             "name": newThemeSetName,
             "desktopTheme": context ? desktopTheme.name : 'claro',
-            "mobileTheme": context ? dojo.fromJson(mobileTheme) : dojo.clone(davinci.theme.dojoMobileDefault)
+            "mobileTheme": context ? dojo.fromJson(mobileTheme) : dojo.clone(this.dojoMobileDefault)
         };  
     dojoThemeSets.themeSets.push(themeSet);
     return themeSet;
     
-};
+},
 
-davinci.theme.getTheme = function(name){
+/*davinci.theme.*/ getTheme:  function(name){
     var themeData = davinci.library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly);
     for (var i = 0; i < themeData.length; i++){
         if(themeData[i].name === name){
             return themeData[i];
         }
     }
-};
+},
 
-davinci.theme.getDojoxMobileThemeMap = function(context, mobileTheme){
+/*davinci.theme.*/getDojoxMobileThemeMap: function(context, mobileTheme){
     
     var themeMap = [];
     var other = [".*","iphone",[]]; // set default to ensure we have one
     for (var i =0; i < mobileTheme.length; i++){
-        if(mobileTheme[i].theme != davinci.theme.none_theme && mobileTheme[i].theme != davinci.theme.default_theme){
-            var theme = davinci.theme.getTheme(mobileTheme[i].theme);
+        if(mobileTheme[i].theme != this.none_theme && mobileTheme[i].theme != this.default_theme){
+            var theme = this.getTheme(mobileTheme[i].theme);
             if (theme){ // user may have deleted theme
                 var ssPath = new davinci.model.Path(theme.file.parent.getPath()).append(theme.files[0]);
                 var resourcePath = context.getFullResourcePath();
                 var filename = ssPath.relativeTo(resourcePath, true).toString();
-                if (mobileTheme[i].device === davinci.theme.other_device){
+                if (mobileTheme[i].device === this.other_device){
                   other = ['.*',theme.base,[filename]];  
                 } else {
                     themeMap.push([mobileTheme[i].device,theme.base,[filename]]);
@@ -284,9 +272,9 @@ davinci.theme.getDojoxMobileThemeMap = function(context, mobileTheme){
     }
     themeMap.push(other); // ensure the catch all is at the end.
     return themeMap;
-};
+},
 
-davinci.theme.getDojoxMobileThemesFromThemeMap = function(context, themeMap){
+/*davinci.theme.*/ getDojoxMobileThemesFromThemeMap: function(context, themeMap){
     
     var themeData = davinci.library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly, true);
     var map = dojo.fromJson(themeMap);
@@ -312,11 +300,11 @@ davinci.theme.getDojoxMobileThemesFromThemeMap = function(context, themeMap){
     }, this);
     
    return mobileTheme;
-};
+},
 
 
 
-davinci.theme.themeSetEquals = function (o1, o2) {
+/*davinci.theme.*/ themeSetEquals: function (o1, o2) {
     //compares to objects to see if they are the same
     
     function countProperties(obj) {
@@ -343,7 +331,7 @@ davinci.theme.themeSetEquals = function (o1, o2) {
         }
         var r = true;
         for (k in o1) {
-            r = davinci.theme.themeSetEquals(o1[k], o2[k]);
+            r = this.themeSetEquals(o1[k], o2[k]);
             if (!r) {
                 return false;
             }
@@ -352,10 +340,10 @@ davinci.theme.themeSetEquals = function (o1, o2) {
     } else {
         return o1 === o2;
     }
-};
+},
 
 
-davinci.theme.singleMobileTheme = function (themeSet) {
+/*davinci.theme.*/singleMobileTheme: function (themeSet) {
     //returns true if all mobile device use the same theme
     var themeName = themeSet.mobileTheme[0].theme;
     for (var i = 1; i < themeSet.mobileTheme.length; i++) {
@@ -365,7 +353,38 @@ davinci.theme.singleMobileTheme = function (themeSet) {
     }
     return true;
    
+}
 };
+//});
+	Theme.none_themeset = {
+        "name": Theme.none_themeset_name,
+        "desktopTheme": "claro",
+        "mobileTheme": dojo.clone(Theme.dojoMobileDefault) 
+        },
+Theme.default_themeset = {
+        "name": Theme.desktop_default,
+        "desktopTheme": "claro",
+        "mobileTheme": dojo.clone(Theme.dojoMobileDefault) 
+        },
+Theme.custom_themeset = {
+        "name": Theme.mobile_default,
+        "desktopTheme": "claro",
+        "mobileTheme": Theme.dojoMobileCustom
+        },
+Theme.dojoThemeSets =  { 
+        "version": "1.7",
+        "specVersion": "0.8",
+        "helper": "davinci.libraries.dojo.dojox.mobile.ThemeHelper",
+        "themeSets": [ 
+               Theme.custom_themeset           
+        ]
+},
+davinci.Theme = Theme; //FIXME: shouldn't need this
+	debugger;
+return Theme;
+});
+
+
 
 
 

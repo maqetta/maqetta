@@ -8,6 +8,7 @@ define(["dojo/_base/declare",
         "dojo/i18n!davinci/ui/nls/ui",
         "dojo/i18n!dijit/nls/common",
         "dojo/text!./templates/download.html",
+        "davinci/Theme",
         "davinci/ui/widgets/ThemeSelection",
         "dijit/form/Button",
         "dijit/form/TextBox",
@@ -17,10 +18,10 @@ define(["dojo/_base/declare",
         "dijit/Menu",
         "dijit/form/ComboBox",
         "davinci/ui/widgets/FolderSelection",
-        "davinci/ui/widgets/ThemeSelection",
-        "davinci/theme/ThemeUtils"
+        "davinci/ui/widgets/ThemeSelection"
+        
 
-],function(declare, _Templated, _Widget,  Library, Resource,  Runtime, RebaseDownload, uiNLS, commonNLS, templateString){
+],function(declare, _Templated, _Widget,  Library, Resource,  Runtime, RebaseDownload, uiNLS, commonNLS, templateString, Theme){
 	return declare("davinci.ui.Download",   [_Widget, _Templated], {
 		templateString: dojo.cache("davinci.ui", "templates/download.html"),
 		widgetsInTemplate: true,
@@ -145,7 +146,7 @@ define(["dojo/_base/declare",
 				}
 				
 				for(var k=0;k<allResources.length;k++){
-					if( davinci.theme.isThemeHTML(allResources[k])) continue;
+					if( Theme.isThemeHTML(allResources[k])) continue;
 					var newSource = pageBuilder.rebuildSource(allResources[k].getText(), allResources[k]);
 					allResources[k].setContents(newSource, true);
 				}

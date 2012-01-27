@@ -3,10 +3,11 @@ define(["dijit/Dialog",
         "davinci/library",
         "dojo/i18n!davinci/ui/nls/ui",
         "dojo/i18n!dijit/nls/common",
+        "davinci/Theme",
         "dijit/form/ValidationTextBox",
-        "dijit/form/Button",
-        "davinci/theme/ThemeUtils"
-],function(Dialog, Preferences, Library, uiNLS, commonNLS){
+        "dijit/form/Button"
+        
+],function(Dialog, Preferences, Library, uiNLS, commonNLS, Theme){
 	
 	return dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
 	    
@@ -21,12 +22,12 @@ define(["dijit/Dialog",
 	        dojo.connect(this._dialog, "onCancel", this, "onClose");
 	        this._dojoThemeSets = Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
 	        if (!this._dojoThemeSets){ 
-	            this._dojoThemeSets =  davinci.theme.dojoThemeSets;
+	            this._dojoThemeSets =  Theme.dojoThemeSets;
 	            Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(),this._dojoThemeSets);
 	            
 	        }
 	        if (!this._dojoThemeSets.themeSets[0]) {
-	            this._dojoThemeSets.themeSets.push(dojo.clone(davinci.theme.custom_themeset));
+	            this._dojoThemeSets.themeSets.push(dojo.clone(Theme.custom_themeset));
 	            Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(),this._dojoThemeSets);
 	        }
 	        this._dojoThemeSets = dojo.clone(this._dojoThemeSets); // make a copy so we won't effect the real object
@@ -89,7 +90,7 @@ define(["dijit/Dialog",
 	        var mblSelect = dijit.byId('theme_select_mobile_theme_select');
 	        dtSelect.options = [];
 	        mblSelect.options = [];
-	        mblSelect.addOption({value: davinci.theme.default_theme, label: davinci.theme.default_theme});
+	        mblSelect.addOption({value: Theme.default_theme, label: Theme.default_theme});
 	        this._themeCount = this._themeData.length;
 	        for (var i = 0; i < this._themeData.length; i++){
 	            var opt = {value: this._themeData[i].name, label: this._themeData[i].name};
@@ -126,11 +127,11 @@ define(["dijit/Dialog",
 	                break;
 	            }
 	        }
-	        if (davinci.theme.singleMobileTheme(themeSet)) {
+	        if (Theme.singleMobileTheme(themeSet)) {
 	            mblSelect.attr( 'value', themeSet.mobileTheme[themeSet.mobileTheme.length-1].theme);
 	        } else {
-	            mblSelect.attr( 'value', davinci.theme.default_theme); 
-	            this.onMobileChange(davinci.theme.default_theme); //force refresh
+	            mblSelect.attr( 'value', Theme.default_theme); 
+	            this.onMobileChange(Theme.default_theme); //force refresh
 	        }
 	        
 	    },
@@ -140,7 +141,7 @@ define(["dijit/Dialog",
 	        if (this._selectedThemeSet) {
 	            newThemeSet = dojo.clone(this._selectedThemeSet);
 	        } else {
-	            newThemeSet = dojo.clone(davinci.theme.default_themeset);
+	            newThemeSet = dojo.clone(Theme.default_themeset);
 	        }
 
 	        var newThemeSetName = newThemeSet.name;

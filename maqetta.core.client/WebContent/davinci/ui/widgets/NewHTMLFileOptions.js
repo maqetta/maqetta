@@ -16,10 +16,14 @@ define(["dojo/_base/declare",
         "dojo/text!./templates/NewHTMLFileOptions.html",
         "dijit/form/Button",
         "davinci/ui/widgets/ThemeSetSelection",
+        "davinci/Theme",
         "dijit/form/TextBox",
         "dijit/form/RadioButton"
 
-],function(declare, _Templated, _Widget,  Library, Resource,  Preferences, Runtime,  Workbench, Menu, MenuItem, Path, ToolTip, DropDownButton, uiNLS, commonNLS, templateString, Button, ThemeSelection){
+],function(declare, _Templated, _Widget,  Library, Resource,  Preferences, Runtime,  Workbench, 
+			Menu, MenuItem, Path, ToolTip, DropDownButton, uiNLS, commonNLS, templateString,
+			Button, ThemeSelection, Theme
+			){
 	return declare("davinci.ui.widgets.NewHTMLFileOptions",   [_Widget,_Templated], {
 		widgetsInTemplate: true,
 		templateString: templateString,
@@ -48,10 +52,10 @@ define(["dojo/_base/declare",
 			
 			var lastDialogValues = Workbench.workbenchStateCustomPropGet('nhfo');
 			this._selectedThemeSet = lastDialogValues ? lastDialogValues.themeSet : undefined;
-			if (this._selectedThemeSet && this._selectedThemeSet.name != davinci.theme.none_themeset_name) {
+			if (this._selectedThemeSet && this._selectedThemeSet.name != Theme.none_themeset_name) {
 			   // refresh the stored themeset in case it was changed
 			    var themeSetName = this._selectedThemeSet.name;
-			    this._selectedThemeSet = dojo.clone(davinci.theme.none_themeset); // this will act as the default if the last used themeset has been deleted
+			    this._selectedThemeSet = dojo.clone(Theme.none_themeset); // this will act as the default if the last used themeset has been deleted
 			    var dojoThemeSets = Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
 			    if (dojoThemeSets) {
 			        for (var s = 0; s < dojoThemeSets.themeSets.length; s++){
@@ -177,7 +181,7 @@ define(["dojo/_base/declare",
 	
 		_updateThemesAndThemeSets: function(e){
 			var themeName = this._selectedThemeSet.name;
-			if (themeName == davinci.theme.none_themeset_name){
+			if (themeName == Theme.none_themeset_name){
 				var o = this._currentCompTypeObject('_updateThemesAndThemeSets');
 			    var deviceSelect = o.device;
 			    if (deviceSelect == 'desktop') {

@@ -15,9 +15,11 @@ define(["dojo/_base/declare",
         "system/resource",
         "davinci/ve/RebuildPage",
         "dojo/text!./templates/UserLibraries.html",
-        "davinci/theme/ThemeUtils"
+        "davinci/Theme"
         
-], function(declare, _Templated, _Widget, Button, TextBox, RadioButton,MenuItem,Menu,Library, ComboBox, uiNLS, commonNLS, Runtime, Path, Resource, RebuildPage, templateString){
+], function(declare, _Templated, _Widget, Button, TextBox, RadioButton,MenuItem,Menu,Library, 
+			ComboBox, uiNLS, commonNLS, Runtime, Path, Resource, RebuildPage, templateString, Theme
+			){
 	
 	return declare("davinci.ui.UserLibraries",   [_Widget, _Templated], {
 		
@@ -173,7 +175,7 @@ define(["dojo/_base/declare",
 			
 			for(var i=0;i<pages.length;i++){
 				/* dont process theme editor pages */
-				if(davinci.theme.isThemeHTML(pages[i])) continue;
+				if(Theme.isThemeHTML(pages[i])) continue;
 				
 				var newSource = pageBuilder.rebuildSource(pages[i].getText(), pages[i]);
 				pages[i].setContents(newSource, false);

@@ -7,6 +7,7 @@ define(["dojo/_base/declare",
         "dojo/i18n!davinci/ui/nls/ui",
         "dojo/i18n!dijit/nls/common",
         "dojo/text!./templates/newtheme.html",
+        "davinci/Theme",
         "davinci/ui/widgets/ThemeSelection",
         "dijit/form/Button",
         "dijit/form/TextBox",
@@ -17,10 +18,10 @@ define(["dojo/_base/declare",
         "dijit/form/TextBox",
         "dijit/form/ComboBox",
         "davinci/ui/widgets/FolderSelection",
-        "davinci/ui/widgets/ThemeSelection",
-        "davinci/theme/ThemeUtils"
+        "davinci/ui/widgets/ThemeSelection"
+        
 
-],function(declare, _Templated, _Widget,  Library, Resource,  uiNLS, commonNLS, templateString){
+],function(declare, _Templated, _Widget,  Library, Resource,  uiNLS, commonNLS, templateString, Theme){
 	return declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 		templateString: templateString,
 		widgetsInTemplate: true,
@@ -101,7 +102,7 @@ define(["dojo/_base/declare",
 				alert(langObj.themeAlreadyExists);
 			}else{
 			    var basePath = this.getBase();
-				var deferedList = davinci.theme.CloneTheme(themeName,  version, selector, newBase, oldTheme, true);
+				var deferedList = Theme.CloneTheme(themeName,  version, selector, newBase, oldTheme, true);
 				deferedList.then(function(results){
 				    function findTheme(basePath, theme){
 			            /* flush the theme cache after creating so new themes show up */

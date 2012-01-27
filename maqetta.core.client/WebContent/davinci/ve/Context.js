@@ -1,5 +1,6 @@
 define([
     "dojo/_base/declare",
+    "davinci/Theme",
 	"../commands/CommandStack",
 	"./commands/ChangeThemeCommand",
 	"./tools/SelectTool",
@@ -13,6 +14,7 @@ define([
 	"./ChooseParent",
 	"./Snap",
 	"./HTMLWidget",
+	
 	"../html/CSSModel", // CSSRule
 	"../html/HTMLModel", // HTMLElement, HTMLText
 	"../workbench/Preferences",
@@ -20,6 +22,7 @@ define([
 	"dojox/html/_base"
 ], function(
 	declare,
+	Theme,
 	CommandStack,
 	ChangeThemeCommand,
 	SelectTool,
@@ -33,6 +36,7 @@ define([
 	ChooseParent,
 	Snap,
 	HTMLWidget
+	
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -731,7 +735,7 @@ return declare("davinci.ve.Context", null, {
     
 	_setSource: function(source, callback, scope, newHtmlParams){
 		// Get the helper before creating the IFRAME, or bad things happen in FF
-		var helper = davinci.theme.getHelper(this._visualEditor.theme);
+		var helper = Theme.getHelper(this._visualEditor.theme);
 
 		this._srcDocument=source;
 		
@@ -2133,7 +2137,7 @@ return declare("davinci.ve.Context", null, {
 			}
 		}, this);
 		if (this._editor.editorID == 'davinci.ve.ThemeEditor'){
-			var helper = davinci.theme.getHelper(this._visualEditor.theme);
+			var helper = Theme.getHelper(this._visualEditor.theme);
 			if(helper && helper.onContentChange){
 				helper.onContentChange(this, this._visualEditor.theme);
 			}

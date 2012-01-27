@@ -6,10 +6,10 @@ define([
 		_FixedElemMixin
 ) {
 
-var TabBarHelper = function() {};
+var TabBarHelper = {};
 
 // brings in getPropertyValue()
-lang.extend(TabBarHelper, _FixedElemMixin);
+lang.mixin(TabBarHelper, _FixedElemMixin);
 
 return TabBarHelper;
 

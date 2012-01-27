@@ -3,12 +3,12 @@ define([
 	"./ViewHelper",
 	"davinci/ve/widget"
 ], function(
-	Lang,
+	lang,
 	ViewHelper,
 	Widget
 ) {
 
-var ScrollableViewHelper =  {
+var ScrollableViewHelper = {
 
 	/**
 	 * Disable the scrolling mechanism at design time (only) because it conflicts
@@ -65,7 +65,7 @@ var ScrollableViewHelper =  {
 
 };
 
-Lang.extend(ScrollableViewHelper, ViewHelper);
+lang.mixin(ScrollableViewHelper, ViewHelper);
 
 return ScrollableViewHelper;
 

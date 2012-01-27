@@ -28,7 +28,7 @@ var AnalogGaugeHelper = {
 
 };
 
-lang.extend(AnalogGaugeHelper, _GaugeHelper);
+lang.mixin(AnalogGaugeHelper, _GaugeHelper);
 
 return AnalogGaugeHelper;
 

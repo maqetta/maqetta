@@ -24,7 +24,7 @@ var BarGaugeHelper = {
 	}
 };
 
-lang.extend(BarGaugeHelper, _GaugeHelper);
+lang.mixin(BarGaugeHelper, _GaugeHelper);
 
 return BarGaugeHelper;
 

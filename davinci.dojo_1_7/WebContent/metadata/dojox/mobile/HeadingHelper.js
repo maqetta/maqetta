@@ -39,7 +39,7 @@ HeadingHelper.prototype = {
 };
 
 // brings in getPropertyValue()
-lang.extend(HeadingHelper, _FixedElemMixin);
+lang.mixin(HeadingHelper, _FixedElemMixin);
 
 return HeadingHelper;
 

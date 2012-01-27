@@ -41,11 +41,11 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 			this._oldBox = {w: box.w, h: box.h};
 		}
 		
-		this._state = davinci.ve.states.getState();
-		var isNormalState = davinci.ve.states.isNormalState(this._state);
+		this._state = States.getState();
+		var isNormalState = States.isNormalState(this._state);
 
 		var cleanValues = { width: this._newBox.w, height: this._newBox.h };
-		davinci.ve.states.setStyle(widget, this._state, cleanValues, undefined, isNormalState);
+		States.setStyle(widget, this._state, cleanValues, undefined, isNormalState);
 
 		if (isNormalState) {
 			dojo.contentBox(node, this._newBox);
@@ -53,7 +53,7 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 		}
 		
 		// Recompute styling properties in case we aren't in Normal state
-		davinci.ve.states.resetState(widget);
+		States.resetState(widget);
 		
 		//FIXME: Various widget changed events (/davinci/ui/widget*Changed) need to be cleaned up.
 		// I defined yet another one here (widgetPropertiesChanged) just before Preview3
@@ -81,7 +81,7 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 		this._resize(widget);
 		
 		// Recompute styling properties in case we aren't in Normal state
-		davinci.ve.states.resetState(widget);
+		States.resetState(widget);
 		
 		dojo.publish("/davinci/ui/widgetPropertiesChanged",[[widget]]);
 	},

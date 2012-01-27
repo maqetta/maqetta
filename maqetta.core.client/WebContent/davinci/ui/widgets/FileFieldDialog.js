@@ -11,7 +11,6 @@ define(["dojo/_base/declare",
         
         "davinci/ve/widgets/HTMLStringUtil",
         "dijit/layout/ContentPane",
-        "davinci/ui/widgets/OpenFileDialog",
         "davinci/ve/widgets/HTMLStringUtil"
 
    ],function(declare, WidgetLite, Panel, ContentPane, Dialog, Path, uiNLS, commonNLS){
@@ -37,7 +36,7 @@ define(["dojo/_base/declare",
 							                  type: "tree",
 							                  data: "file",
 							                  model: system.resource,
-							                  filters: "davinci.ui.widgets.OpenFileDialog.filter",
+							                  filters: "new system.resource.FileTypeFilter(parms.fileTypes || '*');",
 							                  style: "height: 150px;width:100%"
 		
 							                }						],

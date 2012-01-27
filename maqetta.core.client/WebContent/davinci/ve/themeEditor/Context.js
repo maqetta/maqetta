@@ -6,8 +6,9 @@ define([
     	"davinci/ve/Context",
     	"davinci/util",
     	"davinci/library",
-    	"davinci/ve/metadata"
-], function(declare, CommandStack, Widget, SelectTool, Context, Util, Library, Metadata){
+    	"davinci/ve/metadata",
+    	"davinci/Theme"
+], function(declare, CommandStack, Widget, SelectTool, Context, Util, Library, Metadata, Theme){
 
 
 return declare("davinci.ve.themeEditor.Context", [Context], {
@@ -216,7 +217,7 @@ return declare("davinci.ve.themeEditor.Context", [Context], {
 	
 	     var helper;
          if (this._visualEditor.theme && this._visualEditor.theme.helper){
-             helper = davinci.theme.getHelper(this._visualEditor.theme);
+             helper = Theme.getHelper(this._visualEditor.theme);
              if (helper && helper.preThemeConfig){
                  helper.preThemeConfig(this);
              } 

@@ -35,7 +35,7 @@ return declare("davinci.ve.commands.ModifyRuleCommand", null, {
 		file.setDirty(true);
 		
 		// Recompute styling properties in case we aren't in Normal state
-		davinci.ve.states.resetState(this.context.rootWidget);
+		States.resetState(this.context.rootWidget);
 		
 	},
 
@@ -49,7 +49,7 @@ return declare("davinci.ve.commands.ModifyRuleCommand", null, {
 		file.setDirty(true);
 		
 		// Recompute styling properties in case we aren't in Normal state
-		davinci.ve.states.resetState(this.context.rootWidget);
+		States.resetState(this.context.rootWidget);
 
 	}
 

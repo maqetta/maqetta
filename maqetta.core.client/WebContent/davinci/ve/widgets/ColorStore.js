@@ -1,11 +1,13 @@
-dojo.provide("davinci.ve.widgets.ColorStore");
+define(["dojo/_base/declare",
+      
+        "dojo/data/ItemFileReadStore",
+        "dojo/i18n!davinci/ve/nls/ve",
+        "dojo/i18n!dijit/nls/common"
+        
+       
+],function(declare, ItemFileReadStore){
 
-dojo.require("dojo.data.ItemFileWriteStore");
-
-
-
-
-dojo.declare("davinci.ve.widgets.ColorStore", dojo.data.ItemFileReadStore, {
+  return declare("davinci.ve.widgets.ColorStore", ItemFileReadStore, {
 	
 	constructor: function(args){
 		this.clearValues();
@@ -72,4 +74,5 @@ dojo.declare("davinci.ve.widgets.ColorStore", dojo.data.ItemFileReadStore, {
 		this._loadFinished = false;
 	}
 	
+});
 });

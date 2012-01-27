@@ -1,18 +1,16 @@
-dojo.provide("davinci.ve.views.SwitchingStyleView");
-dojo.require("davinci.workbench.Preferences");
-dojo.require("davinci.workbench.ViewLite");
-dojo.require("davinci.ve.widgets.HTMLStringUtil");
-dojo.require("davinci.ve.widgets.CommonProperties");
-dojo.require("davinci.ve.widgets.EventSelection");
-dojo.require("davinci.ve.widgets.WidgetProperties");
-dojo.require("davinci.ve.widgets.WidgetToolBar");
-dojo.require("davinci.ve.widgets.Cascade");
+define([
+    	"dojo/_base/declare",
+    	"dojo/i18n!davinci/ve/nls/ve",
+    	"dojo/i18n!dijit/nls/common",
+    	"davinci/workbench/WidgetLite",
+    	"davinci/ve/widgets/HTMLStringUtil",
+    	"davinci/ve/widgets/WidgetToolBar",
+    	"davinci/ve/widgets/Cascade"
+], function(declare, veNls, commonNls, WidgetLite, HTMLStringUtil,
+		   	WidgetToolBar,  Cascade
+		    ){
+return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ve", "ve");  
-
-
-dojo.declare("davinci.ve.views.SwitchingStyleView", [davinci.workbench.WidgetLite], {
 
 	/* FIXME: These won't expand into pageTemplate. Not sure if that's a JS issue or dojo.declare issue.
 	 * Temporary copied into each property below but would be better if could get reusable values working somehow.
@@ -206,7 +204,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", [davinci.workbench.WidgetLit
 		template+="<tr>";
 		template+="<td class='propPaletteRoot'>";
 		//run through pageTemplate to insert localized strings
-		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+		var langObj = veNls; 
 		for(var i=0;i<this.pageTemplate.length;i++){
 			this.pageTemplate[i].title = langObj[this.pageTemplate[i].key] ? langObj[this.pageTemplate[i].key] : "Key not found";
 			if(this.pageTemplate[i].pageTemplate){
@@ -520,4 +518,5 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", [davinci.workbench.WidgetLit
 		this._tooltips = undefined;
 	}
 
+});
 });

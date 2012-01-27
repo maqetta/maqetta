@@ -388,9 +388,8 @@ return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", Sma
               type: "tree",
       	      data: "file",
       	      style: "height:10em;overflow:auto",
-			  model: resource,
-      	      filters: "davinci.ui.widgets.OpenFileDialog.filter"
-
+      	      model: system.resource,
+      	      filters: "new system.resource.FileTypeFilter(parms.fileTypes || '*');"
       	    }
       	  ];
       	  

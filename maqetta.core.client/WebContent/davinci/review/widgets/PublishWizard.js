@@ -24,7 +24,7 @@ define([
 	"dijit/tree/TreeStoreModel",
 	"davinci/review/model/store/GeneralReviewReadStore",
 	"dojo/i18n!../nls/widgets",
-	"dojo/i18n!dijit/common"
+	"dojo/i18n!dijit/nls/common"
 ], function(declare, _Widget, _Templated, StackContainer, ContentPane, SimpleTextarea, NumberTextBox, ValidationTextBox, 
 		DateTextBox, Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojostring, 
 		Menu, MenuItem, Dialog, Tree, sysResource, Resource, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls) {

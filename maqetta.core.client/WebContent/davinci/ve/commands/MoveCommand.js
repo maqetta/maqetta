@@ -49,8 +49,8 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 			return;
 		}
 		
-		this._state = davinci.ve.states.getState();
-		var isNormalState = davinci.ve.states.isNormalState(this._state);
+		this._state = States.getState();
+		var isNormalState = States.isNormalState(this._state);
 
 		if(this._commandForXYDeltas){
 			this._newBox.l = this._oldBox.l + this._commandForXYDeltas._deltaX;
@@ -86,7 +86,7 @@ return declare("davinci.ve.commands.MoveCommand", null, {
         var parentBorderLeft = parseInt(dojo.style(widget.domNode.offsetParent, 'borderLeftWidth'));
         var parentBorderTop = parseInt(dojo.style(widget.domNode.offsetParent, 'borderTopWidth'));
 		var cleanValues = { left: this._newBox.l - parentBorderLeft, top: this._newBox.t - parentBorderTop};
-		davinci.ve.states.setStyle(widget, this._state, cleanValues, undefined, isNormalState);	
+		States.setStyle(widget, this._state, cleanValues, undefined, isNormalState);	
 		
 		if (isNormalState) {
 			node.style.position = "absolute";
@@ -95,7 +95,7 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		}
 		
 		// Recompute styling properties in case we aren't in Normal state
-		davinci.ve.states.resetState(widget);
+		States.resetState(widget);
 		
 		//FIXME: Various widget changed events (/davinci/ui/widget*Changed) need to be cleaned up.
 		// I defined yet another one here (widgetPropertiesChanged) just before Preview3

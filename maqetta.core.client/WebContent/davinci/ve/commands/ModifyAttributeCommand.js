@@ -60,7 +60,7 @@ return declare("davinci.ve.commands.ModifyAttributeCommand", null, {
 		this._refresh(widget);
 		
 		// Recompute styling properties in case we aren't in Normal state
-		davinci.ve.states.resetState(widget);
+		States.resetState(widget);
 	},
 
 	undo: function(){
@@ -87,7 +87,7 @@ return declare("davinci.ve.commands.ModifyAttributeCommand", null, {
 		this._refresh(widget);
 		
 		// Recompute styling properties in case we aren't in Normal state
-		davinci.ve.states.resetState(widget);
+		States.resetState(widget);
 	},
 	
 	_refresh: function(widget){

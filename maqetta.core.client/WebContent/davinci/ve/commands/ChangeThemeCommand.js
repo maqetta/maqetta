@@ -1,7 +1,8 @@
 define([
     	"dojo/_base/declare",
-    	"davinci/Theme"
-], function(declare, Theme){
+    	"davinci/Theme",
+    	"davinci/library"
+], function(declare, Theme, Library){
 
 
 return declare("davinci.ve.commands.ChangeThemeCommand", null, {
@@ -146,7 +147,7 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
     
     removeThemeSet: function(themeSet){
         
-        var themeData = davinci.library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly, true);
+        var themeData = Library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly, true);
         // remove the desktop theme
         if (themeSet.desktopTheme){
             for (var i = 0; i < themeData.length; i++){
@@ -163,7 +164,7 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
     },
     
     addThemeSet: function(themeSet){
-        var themeData = davinci.library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly, true);
+        var themeData = Library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly, true);
         // add the desktop theme
         if (themeSet.desktopTheme){
             for (var i = 0; i < themeData.length; i++){

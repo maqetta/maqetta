@@ -10,7 +10,6 @@ define(["dojo/_base/declare",
         "dijit/Menu",
         "dijit/MenuItem",
         "davinci/model/Path",
-
         "dijit/form/DropDownButton",
         "dijit/Dialog",
         "dojo/i18n!davinci/ui/nls/ui",
@@ -22,12 +21,12 @@ define(["dojo/_base/declare",
         "dijit/layout/ContentPane",
         "dijit/Tree",
         "dijit/form/Select",
-        "davinci/theme/ThemeUtils"
+        "davinci/Theme"
     	
-],function(declare, _Templated, _Widget,  Library, Resource,  Preferences, Runtime, Workbench,ChangeThemeCommand, Menu, MenuItem, Path, DropDownButton, Dialog, uiNLS, commonNLS, Dialog){
+],function(declare, _Templated, _Widget,  Library, Resource,  Preferences, Runtime, Workbench,
+			ChangeThemeCommand, Menu, MenuItem, Path, DropDownButton, Dialog, uiNLS, commonNLS,
+			Dialog, Button, TextBox, RadioButton, ContentPane, Tree, Select, Theme){
 	return declare("davinci.ui.widgets.ThemeSetSelection", null, {
-
-
 
 	    workspaceOnly : false,
 	    _connections: [],
@@ -38,7 +37,7 @@ define(["dojo/_base/declare",
 	    },
 	    
 	    buildRendering: function(){
- var langObj = uiNLS;
+		 var langObj = uiNLS;
 
 	        this._dialog = new Dialog({
 	            title: langObj.selectTheme,
@@ -49,10 +48,10 @@ define(["dojo/_base/declare",
 	        if (!this.newFile) {
 	            context = Workbench.getOpenEditor().getContext();
 	        } 
-   var currentThemeSet = davinci.theme.getThemeSet(context);
+			var currentThemeSet = Theme.getThemeSet(context);
 
 	        if (!currentThemeSet){
-	            currentThemeSet = davinci.theme.dojoThemeSets.themeSets[0]; // default;
+	            currentThemeSet = Theme.dojoThemeSets.themeSets[0]; // default;
 	            
 	        }
 	        this._selectedThemeSet = currentThemeSet;
@@ -80,14 +79,14 @@ define(["dojo/_base/declare",
 	
 	        this._dojoThemeSets = Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
 	        if (!this._dojoThemeSets){ 
-	            this._dojoThemeSets =  davinci.theme.dojoThemeSets;
+	            this._dojoThemeSets =  Theme.dojoThemeSets;
 	            
 	        }
 	        this._dojoThemeSets = dojo.clone(this._dojoThemeSets); // make a copy so we won't effect the real object
-	        if (this._selectedThemeSet.name == davinci.theme.none_themeset_name){
+	        if (this._selectedThemeSet.name == Theme.none_themeset_name){
 	            this._dojoThemeSets.themeSets.unshift(this._selectedThemeSet); // temp add to prefs
 	        } else {
-	            this._dojoThemeSets.themeSets.unshift(davinci.theme.none_themeset); // temp add to prefs 
+	            this._dojoThemeSets.themeSets.unshift(Theme.none_themeset); // temp add to prefs 
 	        }
 	        var select = dijit.byId('theme_select_themeset_theme_select');
 	        for (var i = 0; i < this._dojoThemeSets.themeSets.length; i++){
@@ -115,7 +114,7 @@ define(["dojo/_base/declare",
 	        var mblSelect = dijit.byId('theme_select_mobile_theme_select');
 	        dtSelect.options = [];
 	        mblSelect.options = [];
-	        mblSelect.addOption({value: davinci.theme.default_theme, label: davinci.theme.default_theme});
+	        mblSelect.addOption({value: Theme.default_theme, label: Theme.default_theme});
 	        this._themeCount = this._themeData.length;
 	        for (var i = 0; i < this._themeData.length; i++){
 	            var opt = {value: this._themeData[i].name, label: this._themeData[i].name};
@@ -152,11 +151,11 @@ define(["dojo/_base/declare",
 	                break;
 	            }
 	        }
-	        if (davinci.theme.singleMobileTheme(themeSet)) {
+	        if (Theme.singleMobileTheme(themeSet)) {
 	            mblSelect.attr( 'value', themeSet.mobileTheme[themeSet.mobileTheme.length-1].theme);
 	        } else {
-	            mblSelect.attr( 'value', davinci.theme.default_theme); 
-	//            this.onMobileChange(davinci.theme.default_theme); //force refresh
+	            mblSelect.attr( 'value', Theme.default_theme); 
+	//            this.onMobileChange(Theme.default_theme); //force refresh
 	        } 
 	        
 	    },
@@ -173,7 +172,7 @@ define(["dojo/_base/declare",
 	        }
 	        var mblSelect = dijit.byId('theme_select_mobile_theme_select');
 	        var dtSelect = dijit.byId('theme_select_desktop_theme_select');
-	        if (e === davinci.theme.none_themeset_name) {
+	        if (e === Theme.none_themeset_name) {
 	            mblSelect.set('disabled', false);
 	            dtSelect.set('disabled', false);
 	        } else {
@@ -239,7 +238,7 @@ define(["dojo/_base/declare",
 	        var iphoneSelect = dijit.byId('theme_select_iphone_select');
 	        var otherSelect = dijit.byId('theme_select_other_select');
 	        
-	        if ((e === '(device-specific)') &&  (this._selectedThemeSet.name === davinci.theme.none_themeset_name)) {
+	        if ((e === '(device-specific)') &&  (this._selectedThemeSet.name === Theme.none_themeset_name)) {
 	            androidSelect.set('disabled', false);
 	            blackberrySelect.set('disabled', false);
 	            ipadSelect.set('disabled', false);
@@ -416,5 +415,4 @@ define(["dojo/_base/declare",
 	    }
 	    
 	});
-});
 });

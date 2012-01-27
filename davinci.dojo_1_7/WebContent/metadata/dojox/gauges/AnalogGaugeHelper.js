@@ -1,6 +1,7 @@
 define(function() {
 
-return {
+var AnalogGaugeHelper = function() {};
+AnalogGaugeHelper.prototype = {
 
 	checkValue: function(value) {
 		// summary:
@@ -13,5 +14,7 @@ return {
 	}
 
 };
+
+return AnalogGaugeHelper;
 
 });

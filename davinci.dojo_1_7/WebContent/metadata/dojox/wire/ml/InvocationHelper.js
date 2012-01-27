@@ -2,7 +2,8 @@ define([
 	"davinci/ve/widget"
 ], function(Widget) {
 
-return {
+var InvocationHelper = function() {};
+InvocationHelper.prototype = {
 
 	getChildrenData: function(/*Widget*/ widget, /*Object*/ options){
 		if(!widget){
@@ -28,5 +29,7 @@ return {
 	}
 
 };
+
+return InvocationHelper;
 
 });

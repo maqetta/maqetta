@@ -1,6 +1,7 @@
 define(function() {
 
-return {
+var IconItemHelper = function() {};
+IconItemHelper.prototype = {
 
 	create: function(widget, srcElement) {
 		// Fix for #705.
@@ -29,5 +30,7 @@ return {
 	}
 
 };
+
+return IconItemHelper;
 
 });

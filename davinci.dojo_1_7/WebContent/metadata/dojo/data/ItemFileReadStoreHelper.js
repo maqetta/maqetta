@@ -5,7 +5,8 @@ define([
 	array
 ) {
 
-return {
+var ItemFileReadStoreHelper = function() {};
+ItemFileReadStoreHelper.prototype = {
 
 	getData: function(/*Widget*/ widget, /*Object*/ options){
 		if(!widget){
@@ -141,5 +142,7 @@ return {
     }
 	
 };
+
+return ItemFileReadStoreHelper;
 
 });

@@ -3,7 +3,9 @@ define([
 	"dojo/_base/connect"
 ], function(array, connect) {
 
-return {
+var BorderContainerHelper = function() {};
+BorderContainerHelper.prototype = {
+
 	create: function(/*Widget*/ widget, /*Object*/srcElement) {
 		// wire panel size changes to the shadow dom so splitters become effective
 		connect.connect(widget.dijitWidget, "_layoutChildren", srcElement, function(/*String?*/changedRegion, /*Number?*/ changedRegionSize){
@@ -62,4 +64,7 @@ return {
 	}
 
 };
+
+return BorderContainerHelper;
+
 });

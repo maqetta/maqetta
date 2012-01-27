@@ -2,7 +2,8 @@ define([
 	"davinci/ve/metadata"
 ], function(Metadata) {
 
-return {
+var Chart2DHelper = function() {};
+Chart2DHelper.prototype = {
 
 	getContainerNode: function(/*Widget*/ widget){
 		if(!widget){
@@ -23,9 +24,12 @@ return {
 		var plotType = [];
 		if(widget.dijitWidget.chart.axes){
 			var axes = widget.dijitWidget.chart.axes;
-			for(var axis in axes){
+			for (var axis in axes) {
 				var axisData = widget.dijitWidget.chart.getAxis(axis);
-				var axisWidget = {type:"html.div", properties: this.getAxisProperties(axisData)}; 
+				var axisWidget = {
+					type: "html.div",
+					properties: this.getAxisProperties(axisData)
+				};
 				if(axisWidget){
 					childrenData.push(axisWidget);
 				}
@@ -33,11 +37,14 @@ return {
 		}
 		if(widget.dijitWidget.chart.stack){
 			dojo.forEach(widget.dijitWidget.chart.stack, function(plot){
-				var plotData = {type:"html.div", properties: this.getPlotProperties(plot)};
+				var plotData = {
+					type: "html.div",
+					properties: this.getPlotProperties(plot)
+				};
 				if(plotData){
 					childrenData.push(plotData);
 				}
-			}, this);
+			});
 		}
 		if(widget.dijitWidget.chart.series){
 			dojo.forEach(widget.dijitWidget.chart.series, function(s){
@@ -144,5 +151,7 @@ return {
 	}
 
 };
+
+return Chart2DHelper;
 
 });

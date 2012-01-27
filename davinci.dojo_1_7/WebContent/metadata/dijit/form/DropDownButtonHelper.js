@@ -53,7 +53,10 @@ define([
 		return data;
 	};
 
-	return {
+	var DropDownButtonHelper = function() {};
+
+	DropDownButtonHelper.prototype = {
+
 		create: function(widget, srcElement) {
 			var dw = widget.dijitWidget,
 				setup = function() {
@@ -106,5 +109,8 @@ define([
 			var dropDown = widget.dijitWidget.dropDown;
 			return dropDown ? [Widget.getWidget(dropDown.domNode)] : [];
 		}
+
 	};
+
+	return DropDownButtonHelper;
 });

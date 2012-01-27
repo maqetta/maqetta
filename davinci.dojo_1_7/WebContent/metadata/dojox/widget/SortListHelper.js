@@ -8,7 +8,8 @@ define([
 	Widget
 ) {
 
-return {
+var SortListHelper = function() {};
+SortListHelper.prototype = {
 
 	getData: function(/*Widget*/ widget, /*Object*/ options){
 		// summary:
@@ -49,5 +50,7 @@ return {
 	}
 
 };
+
+return SortListHelper;
 
 });

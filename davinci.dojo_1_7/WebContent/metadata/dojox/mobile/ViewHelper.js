@@ -14,11 +14,11 @@ define([
 	ModifyAttributeCommand
 ) {
 
-return {
+var ViewHelper = function() {
+	//FIXME: Need helper added to StatesView palette
+};
 
-	constructor: function() {
-		//FIXME: Need helper added to StatesView palette
-	},
+ViewHelper.prototype = {
 
 	/**
 	 * Override default dojox.mobile.View behavior, which is to automatically
@@ -205,5 +205,7 @@ return {
 	}
 	
 };
+
+return ViewHelper;
 
 });

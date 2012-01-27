@@ -1,6 +1,7 @@
 define(function(){
 
-return {
+var TooltipHelper = function() {};
+TooltipHelper.prototype = {
 
 	create: function(widget) {
 		var connectId = widget.attr("connectId");
@@ -57,4 +58,7 @@ return {
 	}
 
 };
+
+return TooltipHelper;
+
 });

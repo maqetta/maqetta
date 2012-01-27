@@ -1,6 +1,7 @@
 define(function() {
 
-return {
+var ListItemHelper = function() {};
+ListItemHelper.prototype = {
 
 	create: function(widget, srcElement) {
 		var dijitWidget = widget.dijitWidget;
@@ -34,5 +35,7 @@ return {
 	}
 
 };
+
+return ListItemHelper;
 
 });

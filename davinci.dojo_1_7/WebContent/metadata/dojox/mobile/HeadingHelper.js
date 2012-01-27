@@ -1,16 +1,14 @@
 define([
-	"dojo/_base/lang",
+	"dojo/_base/declare",
 	"dojo/query",
 	"./_FixedElemMixin"
 ], function(
-		lang,
-		query,
-		_FixedElemMixin
+	declare,
+	query,
+	_FixedElemMixin
 ) {
 
-var HeadingHelper = function() {};
-
-HeadingHelper.prototype = {
+return declare(_FixedElemMixin, {
 
 	create: function(widget, srcElement){
 		// Fix for #705.
@@ -36,11 +34,6 @@ HeadingHelper.prototype = {
 		}
 	}
 
-};
-
-// brings in getPropertyValue()
-lang.mixin(HeadingHelper, _FixedElemMixin);
-
-return HeadingHelper;
+});
 
 });

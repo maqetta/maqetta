@@ -1,6 +1,7 @@
 define(function() {
 
-return {
+var PopupMenuBarItemHelper = function() {};
+PopupMenuBarItemHelper.prototype = {
 
 	create: function(widget, srcElement) {
 		var popup = widget.dijitWidget.popup;
@@ -11,5 +12,7 @@ return {
 	}
 
 };
+
+return PopupMenuBarItemHelper;
 
 });

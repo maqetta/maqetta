@@ -2,9 +2,10 @@ define([
     "dojo/_base/connect"
 ], function(connect){
 
-var handle;
+var handle,
+	TooltipDialogHelper = function() {};
 
-return {
+TooltipDialogHelper.prototype = {
 
 	destroy: function(widget) {
 		if (handle) {
@@ -47,4 +48,7 @@ return {
 	}
 
 };
+
+return TooltipDialogHelper;
+
 });

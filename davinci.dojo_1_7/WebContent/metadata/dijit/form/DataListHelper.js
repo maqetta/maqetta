@@ -1,6 +1,8 @@
 define(function() {
 
-	return {
+var DataListHelper = function() {};
+DataListHelper.prototype = {
+
 		getChildrenData: function(/*Widget*/ widget, /*Object*/ options){
 			if(!widget){
 				return undefined;
@@ -45,8 +47,8 @@ define(function() {
 		
 		create: function(widget, srcElement){
 			if (widget.dijitWidget){
-				widget.dijitWidget.getChildren = dojo.hitch(this, 'getChildren');
-				widget.dijitWidget.startup = dojo.hitch(this, 'startup');
+				widget.dijitWidget.getChildren = this.getChildren;
+				widget.dijitWidget.startup = this.startup;
 			}
 			
 			widget.domNode.style.display = 'none';
@@ -58,5 +60,9 @@ define(function() {
 			var w= localDijit.byId(widget.id); 
 			w.destroy();
 		}
-	};
+
+};
+
+return DataListHelper;
+
 });

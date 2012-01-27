@@ -1,15 +1,17 @@
 define(function() {
 
-return {
-
+var _GaugeHelper = function() {
 	// _widget: String
 	// 		Class name of the _Gauge ("AnalogGauge", "BarGauge").
-	_widget: null,
+	this._widget = null;
 
 	// _oldPostCreate: Function
 	//		postCreate function that this helper replaces (to stop the tooltip from showing).
 	//		Invoked in the correct context after the tooltip is disabled.
-	_oldPostCreate: null,
+	this._oldPostCreate = null;
+};
+
+_GaugeHelper.prototype = {
 
 	_postCreate: function(){
 		// summary:
@@ -22,7 +24,7 @@ return {
 		// delete copied private data
 		if(this.majorTicks){ delete this.majorTicks._ticks; }
 		if(this.minorTicks){ delete this.minorTicks._ticks; }
-		dojo.hitch(this,dojo.metadata.dojox.gauges._GaugeHelper._oldPostCreate)();
+		this._oldPostCreate();
 		this.useTooltip=oldUseTooltip;
 	},
 
@@ -133,5 +135,7 @@ return {
 	// 	return value;
 	// }
 };
+
+return _GaugeHelper;
 
 });

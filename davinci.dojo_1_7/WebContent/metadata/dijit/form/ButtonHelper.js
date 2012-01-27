@@ -1,6 +1,8 @@
 define(function() {
 
-	return {
+var ButtonHelper = function() {};
+ButtonHelper.prototype = {
+
 		getChildrenData: function(/*Widget*/ widget, /*Object*/ options){
 			// summary:
 			//		The child in the markup of a button tag is its text content, so return that.
@@ -33,4 +35,7 @@ define(function() {
 		// 	return widget._getPropertyValue(name);
 		// };
 	};
+
+return ButtonHelper;
+
 });

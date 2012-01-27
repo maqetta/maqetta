@@ -1,14 +1,14 @@
 define([
-	"dojo/_base/lang",
+	"dojo/_base/declare",
 	"./ViewHelper",
 	"davinci/ve/widget"
 ], function(
-	lang,
+	declare,
 	ViewHelper,
 	Widget
 ) {
 
-var ScrollableViewHelper = {
+return declare(ViewHelper, {
 
 	/**
 	 * Disable the scrolling mechanism at design time (only) because it conflicts
@@ -63,10 +63,6 @@ var ScrollableViewHelper = {
 		return children;
 	}
 
-};
-
-lang.mixin(ScrollableViewHelper, ViewHelper);
-
-return ScrollableViewHelper;
+});
 
 });

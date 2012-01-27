@@ -4,7 +4,8 @@ define([
 	Widget
 ) {
 
-return {
+var GridHelper = function() {};
+GridHelper.prototype = {
 
 	getData: function(/*Widget*/ widget, /*Object*/ options){
 		// summary:
@@ -112,5 +113,7 @@ return {
 	}
 
 };
+
+return GridHelper;
 
 });

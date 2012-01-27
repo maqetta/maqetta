@@ -1,12 +1,12 @@
 define([
-	"dojo/_base/lang",
+	"dojo/_base/declare",
 	"./_GaugeHelper"
 ], function(
-	lang,
+	declare,
 	_GaugeHelper
 ) {
 
-var AnalogGaugeHelper = {
+return declare(_GaugeHelper, {
 	// _widget: String
 	// 		Override for AnalogGauge.
 	_widget: "AnalogGauge",
@@ -22,14 +22,10 @@ var AnalogGaugeHelper = {
 		// delete copied private data
 		if(this.majorTicks){ delete this.majorTicks._ticks; }
 		if(this.minorTicks){ delete this.minorTicks._ticks; }
-		lang.hitch(this, AnalogGaugeHelper._oldPostCreate)();
+		this_oldPostCreate();
 		this.useTooltip=oldUseTooltip;
 	}
 
-};
-
-lang.mixin(AnalogGaugeHelper, _GaugeHelper);
-
-return AnalogGaugeHelper;
+});
 
 });

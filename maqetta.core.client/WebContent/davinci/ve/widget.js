@@ -660,7 +660,11 @@ davinci.ve.widget._parseNodeData = function(node, options){
 };
 
 davinci.ve.widget.getWidgetHelper = function(type) {
-	return davinci.ve.metadata.getHelper(type, 'helper');
+	var HelperCtor = davinci.ve.metadata.getHelper(type, 'helper');
+	if (HelperCtor) {
+		// XXX need to cache
+		return new HelperCtor();
+	}
 
     // var helper = davinci.ve.metadata.queryDescriptor(type, "helper");
     // if (helper) {

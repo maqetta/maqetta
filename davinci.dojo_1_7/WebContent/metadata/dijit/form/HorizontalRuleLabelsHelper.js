@@ -1,6 +1,8 @@
 define(function() {
 
-return {
+var HorizontalRuleLabelsHelper = function() {};
+HorizontalRuleLabelsHelper.prototype = {
+
 	preProcessData: function(data) {
 		//process labels if user makes changes and adjust Count
 		var props = data.properties;
@@ -23,6 +25,9 @@ return {
 		}
 		return data;
 	}
+
 };
+
+return HorizontalRuleLabelsHelper;
 
 });

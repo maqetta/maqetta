@@ -2,7 +2,8 @@ define([
 	"dojo/query"
 ], function(query) {
 
-return {
+var TabBarButtonHelper = function() {};
+TabBarButtonHelper.prototype = {
 	
 	create: function(widget, srcElement){
 		// Fix for #705.
@@ -29,5 +30,7 @@ return {
 	}
 
 };
+
+return TabBarButtonHelper;
 
 });

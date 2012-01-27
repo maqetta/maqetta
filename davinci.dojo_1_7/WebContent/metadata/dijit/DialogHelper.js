@@ -2,7 +2,9 @@ define([
 	"dojo/_base/connect"
 ], function(connect) {
 
-return {
+var DialogHelper = function() {};
+DialogHelper.prototype = {
+
 	create: function(widget) {
 		var id = widget.dijitWidget.id,
 			context = widget.getContext();
@@ -42,6 +44,9 @@ return {
 	onToggleVisibility: function(widget, on) {
 		return false;
 	}
+
 };
+
+return DialogHelper;
 
 });

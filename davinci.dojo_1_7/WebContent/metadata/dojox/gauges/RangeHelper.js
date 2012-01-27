@@ -1,6 +1,7 @@
 define(function() {
 
-return {
+var RangeHelper = function() {};
+RangeHelper.prototype = {
 
 	//color comes in as string so we switch back to object
 	preProcessData: function(data) {
@@ -11,5 +12,7 @@ return {
 	}
 
 };
+
+return RangeHelper;
 
 });

@@ -1,6 +1,7 @@
 define(function() {
 
-return {
+var ComboBoxHelper = function() {};
+ComboBoxHelper.prototype ={
 	
 	create: function(widget, srcElement) {
 		this.updateDataListWidget(widget);
@@ -64,5 +65,7 @@ return {
 	}
 
 };
+
+return ComboBoxHelper;
 
 });

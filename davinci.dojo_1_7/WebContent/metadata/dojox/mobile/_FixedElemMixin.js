@@ -1,6 +1,7 @@
 define(function() {
-	
-	return {
+
+var _FixedElemMixin = function() {};
+_FixedElemMixin.prototype = {
 
 		getPropertyValue: function(widget, prop) {
 			// dojox.mobile doesn't keep the "fixed" property on the widget object;
@@ -14,6 +15,8 @@ define(function() {
 			return widget._getPropertyValue(prop);
 		}
 
-	};
+};
+
+return _FixedElemMixin;
 
 });

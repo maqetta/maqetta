@@ -1,12 +1,12 @@
 define([
-	"dojo/_base/lang",
+	"dojo/_base/declare",
 	"./_GaugeHelper"
 ], function(
-	lang,
+	declare,
 	_GaugeHelper
 ) {
 
-var BarGaugeHelper = {
+return declare(_GaugeHelper, {
 	// _widget: String
 	// 		Override for BarGauge.
 	_widget: "BarGauge",
@@ -19,13 +19,9 @@ var BarGaugeHelper = {
 		// delete copied private data
 		if(this.majorTicks){ delete this.majorTicks._ticks; }
 		if(this.minorTicks){ delete this.minorTicks._ticks; }
-		lang.hitch(this, BarGaugeHelper._oldPostCreate)();
+		this._oldPostCreate();
 		this.useTooltip=oldUseTooltip;
 	}
-};
-
-lang.mixin(BarGaugeHelper, _GaugeHelper);
-
-return BarGaugeHelper;
+});
 
 });

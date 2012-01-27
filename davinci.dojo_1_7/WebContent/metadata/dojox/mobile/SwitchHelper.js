@@ -1,6 +1,7 @@
 define(function() {
 
-return  {
+var SwitchHelper = function() {};
+SwitchHelper.prototype = {
 
 	create: function(widget, srcElement) {
 		var parent = widget.dijitWidget.getParent();
@@ -12,5 +13,7 @@ return  {
 	}
 
 };
+
+return SwitchHelper;
 
 });

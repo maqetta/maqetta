@@ -1,14 +1,13 @@
 define([
-	"dojo/_base/lang",
 	"dojo/query",
 	"davinci/ve/widget"
 ], function (
-	lang,
 	query,
 	Widget
 ) {
 
-return {
+var EdgeToEdgeDataListHelper = function() {};
+EdgeToEdgeDataListHelper.prototype = {
 
 	getData: function(/*Widget*/ widget, /*Object*/ options) {
 		if(!widget){
@@ -31,7 +30,7 @@ return {
 			var storeWidget = Widget.byId(storeId);
 	
 			if (storeWidget && widget.dijitWidget && widget.dijitWidget.store) {
-				this.updateStore(widget.dijitWidget.store, storeWidget/*.properties*//*.data*/, widget);
+				this.updateStore(widget.dijitWidget.store, storeWidget, widget);
 			}
 		}
 		this.stopOnClickListItems(widget);
@@ -71,15 +70,15 @@ return {
 		}
 		store.close();
 		store.fetch({
-			query: this.query,
+			query: this.query, // XXX No `query` func on this obj
 			queryOptions:{deep:true}, 
-			onComplete: lang.hitch(this, function(items){
+			onComplete: function(items) {
 				for (var i = 0; i < items.length; i++) {
 					var item = items[i];
 					console.warn("label=", i, "moveTo=", item);
 				}
 				widget.dijitWidget.refresh(); 
-			})
+			}
 		});
 	}, 
 	
@@ -105,5 +104,7 @@ return {
 	}
 
 };
+
+return EdgeToEdgeDataListHelper;
 
 });

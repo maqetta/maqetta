@@ -1,16 +1,11 @@
 define([
-	"dojo/_base/lang",
+	"dojo/_base/declare",
 	"./_FixedElemMixin"
 ], function(
-		lang,
-		_FixedElemMixin
+	declare,
+	_FixedElemMixin
 ) {
 
-var TabBarHelper = {};
-
-// brings in getPropertyValue()
-lang.mixin(TabBarHelper, _FixedElemMixin);
-
-return TabBarHelper;
+return declare(_FixedElemMixin, {});
 
 });

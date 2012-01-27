@@ -1,5 +1,7 @@
 define(function() {
-	return function(){
+
+var ContentPaneHelper = function() {};
+ContentPaneHelper.prototype = {
 		//TODO: this doesnt seem necessary, and seems to cause problems		
 //		destroy: function(/*Widget*/ widget){
 //			// summary:
@@ -17,7 +19,7 @@ define(function() {
 //			});
 //			widget.destroy();
 //		},
-		this.create = function(widget, srcElement){
+		create: function(widget, srcElement){
 			//
 			// RadioGroupSlide in particular needs the contentPanes to have a background for the sliding to look right
 			//
@@ -27,9 +29,9 @@ define(function() {
 					widget.setStyleValues({background: "white"});
 				}
 			}
-		};
+		},
 
-		this.getContainerNode = function(/*Widget*/ widget){
+		getContainerNode: function(/*Widget*/ widget){
 			// summary:
 			//		Overriden to only return the container node if this is not a href ContentPane
 			//
@@ -43,6 +45,9 @@ define(function() {
 				return undefined;
 			}
 			return widget.containerNode || widget.domNode;
-		};
+		}
 	};
+
+return ContentPaneHelper;
+
 });

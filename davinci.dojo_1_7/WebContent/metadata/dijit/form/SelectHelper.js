@@ -1,6 +1,8 @@
 define(function() {
 
-return {
+var SelectHelper = function() {};
+SelectHelper.prototype = {
+
 	getChildrenData: function(/*Widget*/ widget, /*Object*/ options){
 		// summary:
 		//		If a dojo.data store is specified on the passed widget, returns [].
@@ -53,6 +55,9 @@ return {
 		}
 		return children;
 	}
+
 };
+
+return SelectHelper;
 
 });

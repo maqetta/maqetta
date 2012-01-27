@@ -1,6 +1,7 @@
 define(function() {
 
-return {
+var _GaugeHelper = function () {};
+_GaugeHelper.prototype = {
 
 	// _widget: String
 	// 		Class name of the _Gauge ("AnalogGauge", "BarGauge").
@@ -22,7 +23,7 @@ return {
 		// delete copied private data
 		if(this.majorTicks){ delete this.majorTicks._ticks; }
 		if(this.minorTicks){ delete this.minorTicks._ticks; }
-		dojo.hitch(this,dojo.metadata.dojox.widget._GaugeHelper._oldPostCreate)();
+		this._oldPostCreate();
 		this.useTooltip=oldUseTooltip;
 	},
 
@@ -127,5 +128,7 @@ return {
 	// 	return value;
 	// }
 };
+
+return _GaugeHelper;
 
 });

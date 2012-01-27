@@ -2,7 +2,8 @@ define([
 	"davinci/ve/widget"
 ], function(Widget) {
 
-return {
+var TreeGridHelper = function() {};
+TreeGridHelper.prototype = {
 
 	getData: function(/*Widget*/ widget, /*Object*/ options){
 		// summary:
@@ -181,5 +182,7 @@ return {
 	}
 
 };
+
+return TreeGridHelper;
 
 });

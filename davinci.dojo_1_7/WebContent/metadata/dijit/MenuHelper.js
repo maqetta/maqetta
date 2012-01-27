@@ -8,7 +8,9 @@ define([
 	domClass
 ) {
 
-var MenuHelper = {
+var MenuHelper = function() {};
+MenuHelper.prototype = {
+
 	create: function(widget) {
 		var id = widget.dijitWidget.id,
 			context = widget.getContext();
@@ -68,7 +70,7 @@ var MenuHelper = {
 					var childData = [];
 					if (c.properties.popup) {
 						//childData = this.dojo.metadata.dijit.MenuHelper.serializePopup(c.properties.popup, widget._edit_context);
-						childData = MenuHelper.serializePopup(c.properties.popup, widget._edit_context);
+						childData = this.serializePopup(c.properties.popup, widget._edit_context);
 						if (childData) {
 							// clear reference to popup to avoid duplication in the source
 							delete c.properties.popup;
@@ -76,7 +78,7 @@ var MenuHelper = {
 						}
 					}
 				}
-			});
+			}, this);
 		}
 		return data;
 	},

@@ -1,19 +1,39 @@
 define([
 	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/connect",
+	"dojo/dom-style",
+	// XXX TODO This file (and others) makes too much use of style.set().  Need
+	//   to refactor this and create one (or more) CSS classes that can be set
+	//   on the outermost element of this widget -- setting/unsetting this class
+	//   then sets the proper CSS on interior elements.
+	"dojo/dom",
+	"dojo/dom-class",
+	"dojo/data/ItemFileReadStore",
+	"dijit/registry",
 	"davinci/ve/input/SmartInput",
 	"davinci/ve/widget",
 	"davinci/ve/commands/ModifyCommand",
 	"davinci/commands/OrderedCompoundCommand",
 	"davinci/model/Path",
-	"davinci/ui/Panel"
+	"davinci/ui/Panel",
+	"system/resource"
 ], function(
 	declare,
+	lang,
+	connect,
+	style,
+	dom,
+	domClass,
+	ItemFileReadStore,
+	registry,
 	SmartInput,
 	Widget,
 	ModifyCommand,
 	OrderedCompoundCommand,
 	Path,
-	Panel
+	Panel,
+	resource
 ) {
 
 return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", SmartInput, {
@@ -88,10 +108,8 @@ return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", Sma
 
 	
 	refreshStoreView: function(){
-	
-		var textArea = dijit.byId("davinciIleb");
-
-		var value ='';
+		var textArea = registry.byId("davinciIleb"),
+			value ='';
 		for (var i = 0; i <  this._widget.dijitWidget.store._arrayOfAllItems.length; i++){
 			var item = this._widget.dijitWidget.store._arrayOfAllItems[i];
 				value +=  item.label[0];
@@ -157,14 +175,11 @@ return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", Sma
     
     updateStore: function() {
     	// widget specific data here, this example is EdgeToEdgeDataList
-    		textArea = dijit.byId("davinciIleb"),
+		var textArea = registry.byId("davinciIleb"),
     		value = textArea.attr('value'),
     		nodes = value,
     		rows = value.split('\n'),
-    		cols = rows[0].split(',');
-
-		var data = { identifier: 'label', items:[]},
-			rows = value.split('\n'),
+			data = { identifier: 'label', items:[]},
 			items = data.items;
 		for (var r = 0; r < rows.length; r++){ 
 			var cols = rows[r].split(',');
@@ -192,7 +207,7 @@ return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", Sma
 		store.fetch({
 			query: this.query,
 			queryOptions:{deep:true}, 
-			onComplete: dojo.hitch(this, function(items){
+			onComplete: lang.hitch(this, function(items){
 				for (var i = 0; i < items.length; i++) {
 					var item = items[i];
 					console.warn("i=", i, "item=", item);
@@ -208,7 +223,7 @@ return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", Sma
 		var storeId = this._widget.domNode._dvWidget._srcElement.getAttribute("store");
 		var storeWidget = Widget.byId(storeId);
 		var properties = {};
-		properties['data'] = data;
+		properties.data = data;
 		storeWidget._srcElement.setAttribute('url', ''); 
 		properties.url = ''; // this is needed to prevent ModifyCommmand mixin from puttting it back//delete properties.url; 
 		var command = new ModifyCommand(storeWidget, properties);
@@ -237,7 +252,7 @@ return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", Sma
 	
 	updateWidgetForUrlStore: function(){
 		
-    	var textArea = dijit.byId("davinciIleb");
+		var textArea = registry.byId("davinciIleb");
     	this._url = textArea.value;
     	var url;
     	var patt=/http:\/\//i;
@@ -245,7 +260,7 @@ return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", Sma
     		url = this._url;
     	} else {
     		var parentFolder = new Path(this._widget._edit_context._srcDocument.fileName).getParentPath().toString();
-            var file = system.resource.findResource(this._url, null, parentFolder); // relative so we have to get the absolute for the update of the store
+			var file = resource.findResource(this._url, null, parentFolder); // relative so we have to get the absolute for the update of the store
             if (!file){
                 alert('File: ' + this._url + ' does not exsist.');
                 return;
@@ -254,11 +269,11 @@ return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", Sma
     	}
     	//this._widget._edit_context.baseURL = http://localhost:8080/davinci/user/user5/ws/workspace/file1.html
     	//url = 'http://localhost:8080/davinci/user/user5/ws/workspace/' + url;
-    	var store = new dojo.data.ItemFileReadStore({url: url});
+		var store = new ItemFileReadStore({url: url});
     	store.fetch({
     		query: this.query,
     		queryOptions:{deep:true}, 
-    		onComplete: dojo.hitch(this, this._urlDataStoreLoaded),
+			onComplete: lang.hitch(this, this._urlDataStoreLoaded),
     		onError: function(e){ alert('File ' + e  );}
     	});
     	this._urlDataStore = store;
@@ -304,28 +319,28 @@ return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", Sma
 		var height = 155;
 		this._loading(height, width);
 	    
-		dojo.style('ieb', 'background-color', '#F7FDFF');
+		style.set('ieb', 'background-color', '#F7FDFF');
         var content = this._getTemplate();
         this._inline.attr("content", content);
-        this._inline.eb = dijit.byId("davinciIleb");
+		this._inline.eb = registry.byId("davinciIleb");
         this._inline.callBackObj = this;
  
-        this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk")); 
-        this._connection.push(dojo.connect(this._inline.eb, "onKeyUp", this, "handleEvent"));
-		var folder = dojo.byId('davinci.ve.input.DataGridInput_img_folder');
-		this._connection.push(dojo.connect(folder, "onclick", this, "fileSelection"));
+		this._connection.push(connect.connect(this._inline, "onBlur", this, "onOk")); 
+		this._connection.push(connect.connect(this._inline.eb, "onKeyUp", this, "handleEvent"));
+		var folder = dom.byId('davinci.ve.input.DataGridInput_img_folder');
+		this._connection.push(connect.connect(folder, "onclick", this, "fileSelection"));
 		this._connectHelpDiv();
 		this._connectResizeHandle();
 		this._connectSimDiv();
 		this._loadingDiv.style.backgroundImage = 'none'; // turn off spinner
-        var dataStoreType = dijit.byId("davinci.ve.input.DataGridInput.dataStoreType");
-        this._connection.push(dojo.connect(dataStoreType, "onChange", this, "changeDataStoreType"));
+		var dataStoreType = registry.byId("davinci.ve.input.DataGridInput.dataStoreType");
+		this._connection.push(connect.connect(dataStoreType, "onChange", this, "changeDataStoreType"));
         var storeId = this._widget._srcElement.getAttribute("store"); 
    		var storeWidget = Widget.byId(storeId);
         this._data = storeWidget._srcElement.getAttribute('data'); 
         this._url = storeWidget._srcElement.getAttribute('url'); 
-        this._inline.eb = dijit.byId("davinciIleb");
-        this._connection.push(dojo.connect(this._inline.eb, "onMouseDown", this, "stopEvent"));
+		this._inline.eb = registry.byId("davinciIleb");
+		this._connection.push(connect.connect(this._inline.eb, "onMouseDown", this, "stopEvent"));
         if(this._data){ 
         	dataStoreType.setValue('dummyData');
         	this._dataStoreType = 'dummyData';
@@ -338,10 +353,10 @@ return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", Sma
         	this._data = ' ';
         }
         this.changeDataStoreType(this._dataStoreType);
-        dojo.style('iedResizeDiv', 'background-color', 'white');
+		style.set('iedResizeDiv', 'background-color', 'white');
         var html = this._widget.getPropertyValue('escapeHTMLInData');
-        var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
-		var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
+		var htmlRadio = registry.byId('davinci.ve.input.SmartInput_radio_html');
+		var textRadio = registry.byId('davinci.ve.input.SmartInput_radio_text');
         if(html){
         	htmlRadio.set("checked", false);
 			textRadio.set("checked", true);
@@ -373,7 +388,7 @@ return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", Sma
               type: "tree",
       	      data: "file",
       	      style: "height:10em;overflow:auto",
-      	      model: system.resource,
+			  model: resource,
       	      filters: "davinci.ui.widgets.OpenFileDialog.filter"
 
       	    }
@@ -381,7 +396,6 @@ return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", Sma
       	  
       	  var data={
       			  file  : null
-
             };
       	
       		this._fileSelectionDialog = Panel.openDialog( {
@@ -396,7 +410,7 @@ return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", Sma
       				if(data.file){
       					var path=new Path(data.file.getPath());
       					var value=path.relativeTo(new Path(this._widget._edit_context._srcDocument.fileName), true).toString(); // ignore the filename to get the correct path to the image
-      					var textArea = dijit.byId("davinciIleb");
+					var textArea = registry.byId("davinciIleb");
       			    	textArea.setValue(value); 
       			    	textArea.focus();
       			    	this._url = data.file;
@@ -407,9 +421,7 @@ return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", Sma
       			}
 
       		});
-      		this._connection.push(dojo.connect(this._fileSelectionDialog, "onCancel", this, "onCancelFileSelection"));
-      		
-
+		this._connection.push(connect.connect(this._fileSelectionDialog, "onCancel", this, "onCancelFileSelection"));
 	},
 	
 	onCancelFileSelection: function(e)
@@ -421,56 +433,56 @@ return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", Sma
 			
 		// NOTE: if you put a break point in here while debugging it will break the dojoEllipsis
 		if (this._dataStoreType === 'file' ){
-			var textObj = dojo.byId("davinci.ve.input.SmartInput_radio_text_width_div");
-			var htmlObj = dojo.byId("davinci.ve.input.SmartInput_radio_html_width_div");
-			var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
-			var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
-			var table = dojo.byId('davinci.ve.input.SmartInput_table');
+			var textObj = dom.byId("davinci.ve.input.SmartInput_radio_text_width_div");
+			var htmlObj = dom.byId("davinci.ve.input.SmartInput_radio_html_width_div");
+			var htmlRadio = registry.byId('davinci.ve.input.SmartInput_radio_html');
+			var textRadio = registry.byId('davinci.ve.input.SmartInput_radio_text');
+			var table = dom.byId('davinci.ve.input.SmartInput_table');
 			
 			textObj.innerHTML = '<div class="dojoxEllipsis">Plain text  </div>';
 			htmlObj.innerHTML = '<div id="davinci.ve.input.SmartInput_radio_html_div" class="dojoxEllipsis">HTML markup</div>';
 			htmlRadio.setDisabled(false);
 			textRadio.setDisabled(false);
-			dojo.removeClass(textObj,'inlineEditDisabled');
-			dojo.removeClass(htmlObj,'inlineEditDisabled');
-			dojo.style(textRadio.domNode, 'display', '');
-			dojo.style(htmlRadio.domNode, 'display', '');
-			dojo.style(htmlObj, 'display', '');
-			dojo.style(textObj, 'display', '');
-			if (this.isHtmlSupported())
-				dojo.style(table, 'display', '');
-			else{
-				dojo.style(table, 'display', 'none');
+			domClass.remove(textObj,'inlineEditDisabled');
+			domClass.remove(htmlObj,'inlineEditDisabled');
+			style.set(textRadio.domNode, 'display', '');
+			style.set(htmlRadio.domNode, 'display', '');
+			style.set(htmlObj, 'display', '');
+			style.set(textObj, 'display', '');
+			if (this.isHtmlSupported()) {
+				style.set(table, 'display', '');
+			} else {
+				style.set(table, 'display', 'none');
 			}
 			
 		} else {
 			this.inherited(arguments);
-			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', 'none');
+			style.set('davinci.ve.input.DataGridInput_img_folder', 'display', 'none');
 		}
 	},
 	
 	changeDataStoreType: function (e){
 
 		this._dataStoreType = e;
-	    var textArea = dijit.byId("davinciIleb");
-	    var tagetObj = dojo.byId("iedResizeDiv");
-	    var resizeWidth = dojo.style('iedResizeDiv', 'width');
+		var textArea = registry.byId("davinciIleb");
+		var tagetObj = dom.byId("iedResizeDiv");
+		var resizeWidth = style.get('iedResizeDiv', 'width');
 		if (e === 'dummyData'){
 			textArea.setValue( this._data);
 	    	tagetObj.style.height = '85px';
-	    	dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', 'none');
-			dojo.style('ieb', 'width', resizeWidth + 15 + 'px' );
+			style.set('davinci.ve.input.DataGridInput_img_folder', 'display', 'none');
+			style.set('ieb', 'width', resizeWidth + 15 + 'px' );
 			
 		}else if ( e=== 'file'){
-			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', '');
+			style.set('davinci.ve.input.DataGridInput_img_folder', 'display', '');
 			textArea.setValue( this._url);
 	    	tagetObj.style.height = '40px';
 			
 		}else if (e === 'url'){
-			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', 'none');
+			style.set('davinci.ve.input.DataGridInput_img_folder', 'display', 'none');
 			textArea.setValue( this._url);
 	    	tagetObj.style.height = '40px';
-	    	dojo.style('ieb', 'width', resizeWidth + 15 + 'px' );
+			style.set('ieb', 'width', resizeWidth + 15 + 'px' );
 			
 		} else {
 			// we should not ever get here.
@@ -483,26 +495,27 @@ return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", Sma
 	resize: function(e){
 		
 		this.inherited(arguments);	
-		var tagetObj = dojo.byId("iedResizeDiv");
-		var targetEditBoxDijit = dijit.byId("davinciIleb");
+		var tagetObj = dom.byId("iedResizeDiv");
+		var targetEditBoxDijit = registry.byId("davinciIleb");
 		var boxWidth = tagetObj.clientWidth  - 5;
 		var boxheight = tagetObj.clientHeight -6;
 		boxWidth = tagetObj.clientWidth  /*+2*/ -8;
 		boxheight = tagetObj.clientHeight  -20; // new for text area
-		dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + 15 + "px");
+		style.set("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + 15 + "px");
 		
 	
-		if (targetEditBoxDijit)
+		if (targetEditBoxDijit) {
 			targetEditBoxDijit._setStyleAttr({width: boxWidth + "px", height: boxheight + "px", maxHeight: boxheight + "px"}); // needed for multi line
+		}
 		targetEditBoxDijit._setStyleAttr({width: tagetObj.clientWidth - 20 + "px"});
 				
+			style.set('ieb', 'width', tagetObj.clientWidth + 30 + "px");
 		if (this._dataStoreType === 'file') {
-			dojo.style('ieb', 'width', tagetObj.clientWidth + 30 + "px");
-			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', '');
-			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'left', tagetObj.clientWidth + 1  + 'px');
-			dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + 15 + "px");
+			style.set('davinci.ve.input.DataGridInput_img_folder', 'display', '');
+			style.set('davinci.ve.input.DataGridInput_img_folder', 'left', tagetObj.clientWidth + 1  + 'px');
+			style.set("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + 15 + "px");
 		} else {
-			dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + "px");
+			style.set("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + "px");
 		}
 	},
 	

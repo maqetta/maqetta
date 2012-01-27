@@ -1,8 +1,9 @@
 define([
 	"dojo/_base/declare",
 	"davinci/ve/tools/CreateTool",
+	"davinci/ui/dnd/DragManager",
 	"davinci/ui/dnd/DragSource"
-], function(declare, CreateTool, DragSource){
+], function(declare, CreateTool, dragManager, DragSource){
 
 return declare("davinci.ve.palette.ImageDragSource", null, {
 	
@@ -14,17 +15,15 @@ return declare("davinci.ve.palette.ImageDragSource", null, {
 		var editor=davinci.Workbench.getOpenEditor();
 		if (editor && editor.currentEditor && editor.currentEditor.context)	{
 			this.context=editor.currentEditor.context;
-			davinci.ui.dnd.dragManager.document = this.context.getDocument();
+			dragManager.document = this.context.getDocument();
 			var frameNode = this.context.frameNode;
 			if(frameNode){
 				var coords = dojo.coords(frameNode);
 				var containerNode = this.context.getContainerNode();
-				davinci.ui.dnd.dragManager.documentX = coords.x - containerNode.scrollLeft;
-				davinci.ui.dnd.dragManager.documentY = coords.y - containerNode.scrollTop;
+				dragManager.documentX = coords.x - containerNode.scrollLeft;
+				dragManager.documentY = coords.y - containerNode.scrollTop;
 			}
-		}
-		else
-		{
+		} else {
 			this.context=null;
 		}
 	},

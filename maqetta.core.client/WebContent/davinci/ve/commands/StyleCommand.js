@@ -2,7 +2,7 @@ define([
     	"dojo/_base/declare",
     	"davinci/ve/widget"
 //    	"davinci/ve/States" // circular dep
-], function(declare, Widget, States){
+], function(declare, Widget){
 
 
 return declare("davinci.ve.commands.StyleCommand", null, {
@@ -69,7 +69,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 			this._refresh(widget);
 			
 			// Recompute styling properties in case we aren't in Normal state
-			States.resetState(widget);
+			veStates.resetState(widget);
 		}
 		
 		//FIXME: Various widget changed events (/davinci/ui/widget*Changed) need to be cleaned up.
@@ -114,7 +114,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		this._refresh(widget);
 		
 		// Recompute styling properties in case we aren't in Normal state
-		States.resetState(widget);
+		davinci.ve.states.resetState(widget);
 		
 		//FIXME: Various widget changed events (/davinci/ui/widget*Changed) need to be cleaned up.
 		// I defined yet another one here (widgetPropertiesChanged) just before Preview3

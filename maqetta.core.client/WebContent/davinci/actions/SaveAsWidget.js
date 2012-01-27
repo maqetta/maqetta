@@ -1,11 +1,11 @@
-dojo.provide("davinci.actions.SaveAsWidget");
-
-dojo.require("davinci.actions.Action");
-dojo.require("dijit.Dialog");
-dojo.require("davinci.ui.SaveAsWidgetForm");
-dojo.require("dojo.i18n");
-
-dojo.requireLocalization("davinci.ui", "common");
+define([
+	"dojo/_base/declare",
+	"./Action",
+	"../Workbench",
+	"dijit/Dialog",
+	"../ui/SaveAsWidgetForm",
+	"dojo/i18n!davinci/ui/nls/common"
+], function(declare, Action, Workbench, Dialog, SaveAsWidgetForm, commonStrings){
 
 // XXX How do we handle the properties from the individual widgets?  Doesn't make sense to put them
 //  all as properties of the composite widget.  Maybe present user with a dialog showing all the
@@ -13,14 +13,14 @@ dojo.requireLocalization("davinci.ui", "common");
 //  widget, or allow to add new ones.
 
 
-dojo.declare("davinci.actions.SaveAsWidget", davinci.actions.Action, {
+return declare("davinci.actions.SaveAsWidget", Action, {
     
     run: function(context) {
         if (context.declaredClass !== "davinci.ve.Context") {
             if (typeof context.getContext === "function") {
                 context = context.getContext();
             } else {
-                context = davinci.Workbench.getOpenEditor().getContext();
+                context = Workbench.getOpenEditor().getContext();
             }
         }
         
@@ -121,8 +121,8 @@ dojo.declare("davinci.actions.SaveAsWidget", davinci.actions.Action, {
     },
     
     _showDialog: function(metadata) {
-        var formDialog = new dijit.Dialog({
-            title: dojo.i18n.getLocalization("davinci.ui", "common").sawdTitle,
+        var formDialog = new Dialog({
+            title: commonStrings.sawdTitle,
             "class": "dvSaveAsWidgetDialog",
             execute: dojo.hitch(this, function() {
                 this._saveMetadata(arguments[0].metadata);
@@ -134,9 +134,9 @@ dojo.declare("davinci.actions.SaveAsWidget", davinci.actions.Action, {
             }
         });
         
-        var form = new davinci.ui.SaveAsWidgetForm({
-            'parentId': formDialog.id,
-            'metadata': metadata
+        var form = new SaveAsWidgetForm({
+            parentId: formDialog.id,
+            metadata: metadata
         });
         
         formDialog.set("content", form);
@@ -147,4 +147,5 @@ dojo.declare("davinci.actions.SaveAsWidget", davinci.actions.Action, {
         console.log("Custom Widget Metadata:");
         console.dir(metadata);
     }
+});
 });

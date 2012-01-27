@@ -7,7 +7,7 @@ define(["dojo/_base/declare",
        
 ],function(declare, ItemFileReadStore){
 
-	var fontStore = declare("davinci.ve.widgets.FontDataStore", dojo.data.ItemFileReadStore, {
+	var fontStore = declare("davinci.ve.widgets.FontDataStore", ItemFileReadStore, {
 		_allValues : [],
 		
 		

@@ -1,13 +1,11 @@
 define(["dojo/_base/declare",
-        "dijit/_Widget",
+      
         "dojo/data/ItemFileReadStore",
-        "dijit/form/Button",
-        "dojox/widget/ColorPicker",
         "dojo/i18n!davinci/ve/nls/ve",
         "dojo/i18n!dijit/nls/common"
         
        
-],function(declare,  _Widget,ItemFileReadStore){
+],function(declare, ItemFileReadStore){
 
   return declare("davinci.ve.widgets.ColorStore", ItemFileReadStore, {
 	

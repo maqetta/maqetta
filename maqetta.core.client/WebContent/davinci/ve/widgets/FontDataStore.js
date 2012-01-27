@@ -1,55 +1,57 @@
-dojo.provide("davinci.ve.widgets.FontDataStore");
+define(["dojo/_base/declare",
+        
+        "dojo/data/ItemFileReadStore",
+        "dojo/i18n!davinci/ve/nls/ve",
+        "dojo/i18n!dijit/nls/common"
+        
+       
+],function(declare, ItemFileReadStore){
 
-dojo.require("dojo.data.ItemFileWriteStore");
-
-
-
-dojo.declare("davinci.ve.widgets.FontDataStore", dojo.data.ItemFileReadStore, {
-	_allValues : [],
-	
-	
-	
-	constructor: function(args){
-	
-		this.setValues(args.values || davinci.ve.widgets.FontDataStore.fonts);
-	},
-
-	setValues: function(values){
+	var fontStore = declare("davinci.ve.widgets.FontDataStore", dojo.data.ItemFileReadStore, {
+		_allValues : [],
 		
-		this._allValues = this._allValues.concat(values);
-	
-		this._jsonData = {label: "name", identifier:"value", items: this._allValues};
 		
-		this._loadFinished = false;
-	},
+		
+		constructor: function(args){
+		
+			this.setValues(args.values || davinci.ve.widgets.FontDataStore.fonts);
+		},
 	
-	contains : function(value){
-		for(var i = 0;i<this._allValues.length;i++){
+		setValues: function(values){
 			
-			if(this._allValues[i].value  == value)
-				return i;
+			this._allValues = this._allValues.concat(values);
+		
+			this._jsonData = {label: "name", identifier:"value", items: this._allValues};
 			
-			if(this._allValues[i].name  == value)
-				return i;
+			this._loadFinished = false;
+		},
+		
+		contains : function(value){
+			for(var i = 0;i<this._allValues.length;i++){
+				
+				if(this._allValues[i].value  == value)
+					return i;
+				
+				if(this._allValues[i].name  == value)
+					return i;
+				
+			}
+			return false;
+		},
+			clearValues : function(){
+			this._allValues = [];
+			this._loadFinished = false;
 			
+		},
+		
+		lookupValue : function (itemName){
+			var index = this.contains(itemName);
+			return this._allValues[index].value[0];
 		}
-		return false;
-	},
-		clearValues : function(){
-		this._allValues = [];
-		this._loadFinished = false;
+	
 		
-	},
-	
-	lookupValue : function (itemName){
-		var index = this.contains(itemName);
-		return this._allValues[index].value[0];
-	}
-
-	
-});
-
-davinci.ve.widgets.FontDataStore.fonts = 
+	});
+	return dojo.mixin(fontStore, {fonts :
 
 	[	{name:"", value:""},
 		{name:"Arial", value:"Arial,Helvetica,sans-serif"},
@@ -76,5 +78,7 @@ davinci.ve.widgets.FontDataStore.fonts =
 		{name:"serif", value:"serif"},
 		{name:"monospace", value:"monospace"},
 		{name:"cursive", value:"cursive"}
-	];
+	]})
+});
+
 

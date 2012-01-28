@@ -1,6 +1,6 @@
 define([
 	"dojo/_base/declare",
-	"./Action",
+	"../actions/Action",
 	"./PublishAction",
 	"../Runtime",
 	"dojox/widget/Toaster",

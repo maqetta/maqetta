@@ -65,8 +65,6 @@
 	"anycolumn": "n'importe quelle colonne",
 	"statusTipTitleNoFilter": "Barre de filtre",
 	"statusTipTitleHasFilter": "Filtrer",
-	"statusTipRelPre": "Satisfaire",
-	"statusTipRelPost": "règles.",
 	
 	"defaultItemsName": "éléments",
 	"filterBarMsgHasFilterTemplate": "${0} sur ${1} ${2} affichés.",

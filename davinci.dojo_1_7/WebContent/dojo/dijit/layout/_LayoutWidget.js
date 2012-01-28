@@ -11,7 +11,7 @@ this.inherited(arguments);
 var _b=this.getParent&&this.getParent();
 if(!(_b&&_b.isLayoutContainer)){
 this.resize();
-this.connect(_9("ie")?this.domNode:_a.global,"onresize",function(){
+this.connect(_a.global,"onresize",function(){
 this.resize();
 });
 }

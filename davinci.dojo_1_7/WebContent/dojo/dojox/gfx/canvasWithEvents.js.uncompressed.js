@@ -67,6 +67,7 @@ define("dojox/gfx/canvasWithEvents", ["dojo/_base/lang", "dojo/_base/declare", "
 				if (input.target) 
 					continue;
 				var x = input.x, y = input.y;
+				ctx.clearRect(0,0,1,1);
 				ctx.save();
 				ctx.translate(-x, -y);
 				this._render(ctx, true);

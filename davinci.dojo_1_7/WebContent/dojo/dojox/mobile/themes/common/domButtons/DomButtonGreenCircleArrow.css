@@ -1,10 +1,9 @@
-/* === Green Circle Arrow Buttons ==*/
+
 .mblDomButtonGreenCircleArrow {
 	position: relative;
 	width: 29px;
 	height: 29px;
 }
-
 .mblDomButtonGreenCircleArrow > div {
 	position: relative;
 	top: 2px;

@@ -1875,6 +1875,7 @@ define({ root:
 'dijit/_HasDropDown':function(){
 define([
 	"dojo/_base/declare", // declare
+	"dojo/_base/Deferred",
 	"dojo/_base/event", // event.stop
 	"dojo/dom", // dom.isDescendant
 	"dojo/dom-attr", // domAttr.set
@@ -1891,7 +1892,7 @@ define([
 	"./focus",
 	"./popup",
 	"./_FocusMixin"
-], function(declare, event,dom, domAttr, domClass, domGeometry, domStyle, has, keys, lang, touch,
+], function(declare, Deferred, event,dom, domAttr, domClass, domGeometry, domStyle, has, keys, lang, touch,
 			win, winUtils, registry, focus, popup, _FocusMixin){
 
 /*=====
@@ -2174,7 +2175,7 @@ define([
 
 		isLoaded: function(){
 			// summary:
-			//		Returns whether or not the dropdown is loaded.  This can
+			//		Returns true if the dropdown exists and it's data is loaded.  This can
 			//		be overridden in order to force a call to loadDropDown().
 			// tags:
 			//		protected
@@ -2182,15 +2183,40 @@ define([
 			return true;
 		},
 
-		loadDropDown: function(/* Function */ loadCallback){
+		loadDropDown: function(/*Function*/ loadCallback){
 			// summary:
-			//		Loads the data for the dropdown, and at some point, calls
-			//		the given callback.   This is basically a callback when the
-			//		user presses the down arrow button to open the drop down.
+			//		Creates the drop down if it doesn't exist, loads the data
+			//		if there's an href and it hasn't been loaded yet, and then calls
+			//		the given callback.
 			// tags:
 			//		protected
 
+			// TODO: for 2.0, change API to return a Deferred, instead of calling loadCallback?
 			loadCallback();
+		},
+
+		loadAndOpenDropDown: function(){
+			// summary:
+			//		Creates the drop down if it doesn't exist, loads the data
+			//		if there's an href and it hasn't been loaded yet, and
+			//		then opens the drop down.  This is basically a callback when the
+			//		user presses the down arrow button to open the drop down.
+			// returns: Deferred
+			//		Deferred for the drop down widget that
+			//		fires when drop down is created and loaded
+			// tags:
+			//		protected
+			var d = new Deferred(),
+				afterLoad = lang.hitch(this, function(){
+					this.openDropDown();
+					d.resolve(this.dropDown);
+				});
+			if(!this.isLoaded()){
+				this.loadDropDown(afterLoad);
+			}else{
+				afterLoad();
+			}
+			return d;
 		},
 
 		toggleDropDown: function(){
@@ -2203,12 +2229,7 @@ define([
 
 			if(this.disabled || this.readOnly){ return; }
 			if(!this._opened){
-				// If we aren't loaded, load it first so there isn't a flicker
-				if(!this.isLoaded()){
-					this.loadDropDown(lang.hitch(this, "openDropDown"));
-				}else{
-					this.openDropDown();
-				}
+				this.loadAndOpenDropDown();
 			}else{
 				this.closeDropDown();
 			}
@@ -11293,6 +11314,7 @@ define([
 'dijit/form/DropDownButton':function(){
 define([
 	"dojo/_base/declare", // declare
+	"dojo/_base/lang",	// hitch
 	"dojo/query", // query
 	"../registry",	// registry.byNode
 	"../popup",		// dijit.popup2.hide
@@ -11300,7 +11322,7 @@ define([
 	"../_Container",
 	"../_HasDropDown",
 	"dojo/text!./templates/DropDownButton.html"
-], function(declare, query, registry, popup, Button, _Container, _HasDropDown, template){
+], function(declare, lang, query, registry, popup, Button, _Container, _HasDropDown, template){
 
 /*=====
 	Button = dijit.form.Button;
@@ -11375,19 +11397,16 @@ return declare("dijit.form.DropDownButton", [Button, _Container, _HasDropDown], 
 		return (!!dropDown && (!dropDown.href || dropDown.isLoaded));
 	},
 
-	loadDropDown: function(){
-		// Loads our dropdown
+	loadDropDown: function(/*Function*/ callback){
+		// Default implementation assumes that drop down already exists,
+		// but hasn't loaded it's data (ex: ContentPane w/href).
+		// App must override if the drop down is lazy-created.
 		var dropDown = this.dropDown;
-		if(!dropDown){ return; }
-		if(!this.isLoaded()){
-			var handler = dropDown.on("load", this, function(){
-				handler.remove();
-				this.openDropDown();
-			});
-			dropDown.refresh();
-		}else{
-			this.openDropDown();
-		}
+		var handler = dropDown.on("load", lang.hitch(this, function(){
+			handler.remove();
+			callback();
+		}));
+		dropDown.refresh();		// tell it to load
 	},
 
 	isFocusable: function(){
@@ -13927,6 +13946,9 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 
 	destroy: function(){
 		if(!this.isClosed){ this.close(false); }
+		if(this._updateTimer){
+			clearTimeout(this._updateTimer);
+		}
 		this.inherited(arguments);
 		if(RichText._globalSaveHandler){
 			delete RichText._globalSaveHandler[this.id];
@@ -19483,6 +19505,7 @@ return declare("dijit.layout.StackContainer", _LayoutWidget, {
 
 	destroyDescendants: function(/*Boolean*/ preserveDom){
 		this._descendantsBeingDestroyed = true;
+		this.selectedChildWidget = undefined;
 		array.forEach(this.getChildren(), function(child){
 			if(!preserveDom){
 				this.removeChild(child);
@@ -20153,11 +20176,11 @@ var LinkDialog = declare("dijit._editor.plugins.LinkDialog", _Plugin, {
 
 	// _hostRxp [private] RegExp
 	//		Regular expression used to validate url fragments (ip address, hostname, etc)
-	_hostRxp:  new RegExp("^((([^\\[:]+):)?([^@]+)@)?(\\[([^\\]]+)\\]|([^\\[:]*))(:([0-9]+))?$"),
+	_hostRxp: /^((([^\[:]+):)?([^@]+)@)?(\[([^\]]+)\]|([^\[:]*))(:([0-9]+))?$/,
 
 	// _userAtRxp [private] RegExp
 	//		Regular expression used to validate e-mail address fragment.
-	_userAtRxp: new RegExp("^([!#-'*+\\-\\/-9=?A-Z^-~]+[.])*[!#-'*+\\-\\/-9=?A-Z^-~]+@", "i"),
+	_userAtRxp: /^([!#-'*+\-\/-9=?A-Z^-~]+[.])*[!#-'*+\-\/-9=?A-Z^-~]+@/i,
 
 	// linkDialogTemplate: [protected] String
 	//		Template for contents of TooltipDialog to pick URL
@@ -20466,20 +20489,36 @@ var LinkDialog = declare("dijit._editor.plugins.LinkDialog", _Plugin, {
 			var t = e.target;
 			var tg = t.tagName? t.tagName.toLowerCase() : "";
 			if(tg === this.tag && domAttr.get(t,"href")){
-				win.withGlobal(this.editor.window,
+				var editor = this.editor;
+
+				win.withGlobal(editor.window,
 					 "selectElement",
 					 selectionapi, [t]);
-				this.editor.onDisplayChanged();
 
-				setTimeout(lang.hitch(this, function(){
+				editor.onDisplayChanged();
+
+				// Call onNormalizedDisplayChange() now, rather than on timer.
+				// On IE, when focus goes to the first <input> in the TooltipDialog, the editor loses it's selection.
+				// Later if onNormalizedDisplayChange() gets called via the timer it will disable the LinkDialog button
+				// (actually, all the toolbar buttons), at which point clicking the <input> will close the dialog,
+				// since (for unknown reasons) focus.js ignores disabled controls.
+				if(editor._updateTimer){
+					clearTimeout(editor._updateTimer);
+					delete editor._updateTimer;
+				}
+				editor.onNormalizedDisplayChanged();
+
+				var button = this.button;
+				setTimeout(function(){
 					// Focus shift outside the event handler.
 					// IE doesn't like focus changes in event handles.
-					this.button.set("disabled", false);
-					this.button.openDropDown();
-					if(this.button.dropDown.focus){
-						this.button.dropDown.focus();
-					}
-				}), 10);
+					button.set("disabled", false);
+					button.loadAndOpenDropDown().then(function(){
+						if(button.dropDown.focus){
+							button.dropDown.focus();
+						}
+					});
+				}, 10);
 			}
 		}
 	}
@@ -20609,21 +20648,37 @@ var ImgLinkDialog = declare("dijit._editor.plugins.ImgLinkDialog", [LinkDialog],
 		//		protected.
 		if(e && e.target){
 			var t = e.target;
-			var tg = t.tagName? t.tagName.toLowerCase() : "";
+			var tg = t.tagName ? t.tagName.toLowerCase() : "";
 			if(tg === this.tag && domAttr.get(t,"src")){
-				win.withGlobal(this.editor.window,
+				var editor = this.editor;
+
+				win.withGlobal(editor.window,
 					 "selectElement",
 					 selectionapi, [t]);
-				this.editor.onDisplayChanged();
-				setTimeout(lang.hitch(this, function(){
+				editor.onDisplayChanged();
+
+				// Call onNormalizedDisplayChange() now, rather than on timer.
+				// On IE, when focus goes to the first <input> in the TooltipDialog, the editor loses it's selection.
+				// Later if onNormalizedDisplayChange() gets called via the timer it will disable the LinkDialog button
+				// (actually, all the toolbar buttons), at which point clicking the <input> will close the dialog,
+				// since (for unknown reasons) focus.js ignores disabled controls.
+				if(editor._updateTimer){
+					clearTimeout(editor._updateTimer);
+					delete editor._updateTimer;
+				}
+				editor.onNormalizedDisplayChanged();
+
+				var button = this.button;
+				setTimeout(function(){
 					// Focus shift outside the event handler.
 					// IE doesn't like focus changes in event handles.
-					this.button.set("disabled", false);
-					this.button.openDropDown();
-					if(this.button.dropDown.focus){
-						this.button.dropDown.focus();
-					}
-				}), 10);
+					button.set("disabled", false);
+					button.loadAndOpenDropDown().then(function(){
+						if(button.dropDown.focus){
+							button.dropDown.focus();
+						}
+					});
+				}, 10);
 			}
 		}
 	}
@@ -21071,6 +21126,9 @@ define([
 		//		In markup, this is specified as "readOnly".
 		//		Similar to disabled except readOnly form values are submitted.
 		readOnly: false,
+		
+		// aria-pressed for toggle buttons, and aria-checked for checkboxes
+		_aria_attr: "aria-checked",
 
 		_setReadOnlyAttr: function(/*Boolean*/ value){
 			this._set("readOnly", value);
@@ -28361,8 +28419,8 @@ return dijit.range;
 
 },
 'dojo/store/util/QueryResults':function(){
-define(["../../_base/kernel", "../../_base/lang", "../../_base/Deferred"
-], function(kernel, lang, Deferred) {
+define(["../../_base/array", "../../_base/lang", "../../_base/Deferred"
+], function(array, lang, Deferred) {
   //  module:
   //    dojo/store/util/QueryResults
   //  summary:
@@ -28407,7 +28465,7 @@ util.QueryResults = function(results){
 				var args = arguments;
 				return Deferred.when(results, function(results){
 					Array.prototype.unshift.call(args, results);
-					return util.QueryResults(dojo[method].apply(dojo, args));
+					return util.QueryResults(array[method].apply(array, args));
 				});
 			};
 		}
@@ -29241,7 +29299,8 @@ define([
 	"dojo/query", // query
 	"./_Widget",
 	"./_TemplatedMixin",
-	"./_WidgetsInTemplateMixin"
+	"./_WidgetsInTemplateMixin",
+	"dojo/NodeList-dom"
 ], function(array, connect, declare, lang, parser, query, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin){
 
 /*=====
@@ -30568,6 +30627,9 @@ return declare("dijit.form._ToggleButtonMixin", null, {
 	//		or the radio button is selected, etc.
 	checked: false,
 
+	// aria-pressed for toggle buttons, and aria-checked for checkboxes
+	_aria_attr: "aria-pressed",
+
 	_onClick: function(/*Event*/ evt){
 		var original = this.checked;
 		this._set('checked', !original); // partially set the toggled value, assuming the toggle will work, so it can be overridden in the onclick handler
@@ -30579,7 +30641,7 @@ return declare("dijit.form._ToggleButtonMixin", null, {
 	_setCheckedAttr: function(/*Boolean*/ value, /*Boolean?*/ priorityChange){
 		this._set("checked", value);
 		domAttr.set(this.focusNode || this.domNode, "checked", value);
-		(this.focusNode || this.domNode).setAttribute("aria-pressed", value);
+		(this.focusNode || this.domNode).setAttribute(this._aria_attr, value ? "true" : "false"); // aria values should be strings
 		this._handleOnChange(value, priorityChange);
 	},
 
@@ -31370,8 +31432,7 @@ if(!dojo.isAsync){
 	});
 }
 
-	var coreFx = {};
-	dojo.fx = baseFx;
+	var coreFx = dojo.fx = {};
 
 	var _baseObj = {
 			_fire: function(evt, args){
@@ -31491,7 +31552,7 @@ if(!dojo.isAsync){
 	});
 	lang.extend(_chain, _baseObj);
 
-	coreFx.chain = dojo.fx.chain = function(/*dojo.Animation[]*/ animations){
+	coreFx.chain = /*===== dojo.fx.chain = =====*/ function(/*dojo.Animation[]*/ animations){
 		// summary:
 		//		Chain a list of `dojo.Animation`s to run in sequence
 		//
@@ -31584,7 +31645,7 @@ if(!dojo.isAsync){
 	});
 	lang.extend(_combine, _baseObj);
 
-	coreFx.combine = dojo.fx.combine = function(/*dojo.Animation[]*/ animations){
+	coreFx.combine = /*===== dojo.fx.combine = =====*/ function(/*dojo.Animation[]*/ animations){
 		// summary:
 		//		Combine a list of `dojo.Animation`s to run in parallel
 		//
@@ -31614,7 +31675,7 @@ if(!dojo.isAsync){
 		return new _combine(animations); // dojo.Animation
 	};
 
-	coreFx.wipeIn = dojo.fx.wipeIn = function(/*Object*/ args){
+	coreFx.wipeIn = /*===== dojo.fx.wipeIn = =====*/ function(/*Object*/ args){
 		// summary:
 		//		Expand a node to it's natural height.
 		//
@@ -31670,7 +31731,7 @@ if(!dojo.isAsync){
 		return anim; // dojo.Animation
 	};
 
-	coreFx.wipeOut = dojo.fx.wipeOut = function(/*Object*/ args){
+	coreFx.wipeOut = /*===== dojo.fx.wipeOut = =====*/ function(/*Object*/ args){
 		// summary:
 		//		Shrink a node to nothing and hide it.
 		//
@@ -31711,7 +31772,7 @@ if(!dojo.isAsync){
 		return anim; // dojo.Animation
 	};
 
-	coreFx.slideTo = dojo.fx.slideTo = function(/*Object*/ args){
+	coreFx.slideTo = /*===== dojo.fx.slideTo = =====*/ function(/*Object*/ args){
 		// summary:
 		//		Slide a node to a new top/left position
 		//
@@ -31759,7 +31820,6 @@ if(!dojo.isAsync){
 
 		return anim; // dojo.Animation
 	};
-	lang.mixin(dojo.fx, coreFx); // Add the core api's to the base fx api's for compat.
 
 	return coreFx;
 });

@@ -45,4 +45,5 @@ return ls;
 var ls=this.toLineString(p1,p2,_11);
 return new _2(ls);
 },DEG2RAD:Math.PI/180,RAD2DEG:180/Math.PI,TOLERANCE:0.00001};
+return dojox.geo.openlayers.GreatCircle;
 });

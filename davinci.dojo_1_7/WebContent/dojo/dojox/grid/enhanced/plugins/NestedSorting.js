@@ -17,7 +17,7 @@ this._setGridSortIndex(this.grid.sortFields,null,true);
 }
 this.connect(this.grid.views,"render","_initSort");
 this.initCookieHandler();
-_3.subscribe("dojox/grid/rearrange/move/"+this.grid.id,_4.hitch(this,"_onColumnDnD"));
+this.subscribe("dojox/grid/rearrange/move/"+this.grid.id,_4.hitch(this,"_onColumnDnD"));
 },onStartUp:function(){
 this.inherited(arguments);
 this.connect(this.grid,"onHeaderCellClick","_onHeaderCellClick");

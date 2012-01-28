@@ -41,11 +41,15 @@ var n,n1,_b,_c,_d=new _5({data:""});
 if(typeof this.get("length")==="number"&&/^[0-9]+$/.test(_9.toString())){
 n=_9;
 if(!this.get(n)){
+if(this.get("length")==0&&n==0){
+this.set(n,_a);
+}else{
 n1=n-1;
 if(!this.get(n1)){
 throw new Error("Out of bounds insert attempted, must be contiguous.");
 }
 this.set(n,_a);
+}
 }else{
 n1=n-0+1;
 _b=_a;
@@ -109,12 +113,10 @@ return this.toPlainObject();
 },toString:function(){
 return this.value===""&&this.data?this.data.toString():this.value.toString();
 },constructor:function(_11){
-var _12=(_11&&_11.data)||this.data;
-if(_12){
+var _12=(_11&&"data" in _11)?_11.data:this.data;
 this._createModel(_12);
-}
 },_createModel:function(obj){
-if(_1.isObject(obj)&&!(obj instanceof Date)&&!(obj instanceof RegExp)){
+if(_1.isObject(obj)&&!(obj instanceof Date)&&!(obj instanceof RegExp)&&obj!==null){
 for(var x in obj){
 var _13=new _5({data:obj[x]});
 this.set(x,_13);

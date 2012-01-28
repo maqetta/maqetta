@@ -1,10 +1,9 @@
-/* === Red Circle Plus Buttons ==*/
+
 .mblDomButtonRedCirclePlus {
 	position: relative;
 	width: 29px;
 	height: 29px;
 }
-
 .mblDomButtonRedCirclePlus > div {
 	position: relative;
 	top: 2px;

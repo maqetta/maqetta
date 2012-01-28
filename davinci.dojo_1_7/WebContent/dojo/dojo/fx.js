@@ -12,8 +12,7 @@ var _c=["./fx/Toggler"];
 _b(_c);
 });
 }
-var _d={};
-_3.fx=_6;
+var _d=_3.fx={};
 var _e={_fire:function(_f,_10){
 if(this[_f]){
 this[_f].apply(this,_10||[]);
@@ -125,7 +124,7 @@ _5.disconnect(this._onEndCtx);
 }
 }});
 _1.extend(_11,_e);
-_d.chain=_3.fx.chain=function(_1c){
+_d.chain=function(_1c){
 return new _11(_1c);
 };
 var _1d=function(_1e){
@@ -189,10 +188,10 @@ return this._pseudoAnimation.status();
 _4.forEach(this._connects,_5.disconnect);
 }});
 _1.extend(_1d,_e);
-_d.combine=_3.fx.combine=function(_2a){
+_d.combine=function(_2a){
 return new _1d(_2a);
 };
-_d.wipeIn=_3.fx.wipeIn=function(_2b){
+_d.wipeIn=function(_2b){
 var _2c=_2b.node=_7.byId(_2b.node),s=_2c.style,o;
 var _2d=_6.animateProperty(_1.mixin({properties:{height:{start:function(){
 o=s.overflow;
@@ -217,7 +216,7 @@ _5.connect(_2d,"onStop",_2f);
 _5.connect(_2d,"onEnd",_2f);
 return _2d;
 };
-_d.wipeOut=_3.fx.wipeOut=function(_30){
+_d.wipeOut=function(_30){
 var _31=_30.node=_7.byId(_30.node),s=_31.style,o;
 var _32=_6.animateProperty(_1.mixin({properties:{height:{end:1}}},_30));
 _5.connect(_32,"beforeBegin",function(){
@@ -234,7 +233,7 @@ _5.connect(_32,"onStop",_33);
 _5.connect(_32,"onEnd",_33);
 return _32;
 };
-_d.slideTo=_3.fx.slideTo=function(_34){
+_d.slideTo=function(_34){
 var _35=_34.node=_7.byId(_34.node),top=null,_36=null;
 var _37=(function(n){
 return function(){
@@ -257,6 +256,5 @@ var _38=_6.animateProperty(_1.mixin({properties:{top:_34.top||0,left:_34.left||0
 _5.connect(_38,"beforeBegin",_38,_37);
 return _38;
 };
-_1.mixin(_3.fx,_d);
 return _d;
 });

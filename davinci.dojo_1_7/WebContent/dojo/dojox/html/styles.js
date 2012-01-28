@@ -84,7 +84,7 @@ _15="default";
 }
 if(!_5[_15]){
 if(_3.doc.createStyleSheet){
-_5[_15]=d.doc.createStyleSheet();
+_5[_15]=_3.doc.createStyleSheet();
 if(_4("ie")<9){
 _5[_15].title=_15;
 }

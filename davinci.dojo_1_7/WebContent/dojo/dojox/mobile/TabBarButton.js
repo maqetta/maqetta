@@ -40,14 +40,11 @@ for(var i=0,_c=r.childNodes.length;i<_c;i++){
 var n=r.firstChild;
 if(n.nodeType===3){
 _b+=_2.trim(n.nodeValue);
-n.nodeValue=this._cv?this._cv(n.nodeValue):n.nodeValue;
 }
 _a.appendChild(n);
 }
 }
-if(this.label){
-_a.appendChild(_3.doc.createTextNode(this._cv?this._cv(this.label):this.label));
-}else{
+if(!this.label){
 this.label=_b;
 }
 this.domNode=this.srcNodeRef||_5.create(this.tag);
@@ -143,5 +140,8 @@ this._setIcon(_12,null,2,!this.selected);
 this._setIcon(null,pos,1,this.selected);
 },_setIconPos2Attr:function(pos){
 this._setIcon(null,pos,2,!this.selected);
+},_setLabelAttr:function(_13){
+this.label=_13;
+this.box.innerHTML=this._cv?this._cv(_13):_13;
 }});
 });

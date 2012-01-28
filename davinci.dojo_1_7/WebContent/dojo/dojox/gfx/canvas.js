@@ -273,22 +273,25 @@ ctx.closePath();
 }
 }});
 _13(_a.Text,"setFont");
-if(typeof _4.doc.createElement("canvas").getContext("2d").fillText!="function"){
+if(_4.global.CanvasRenderingContext2D){
+var _19=_4.doc.createElement("canvas").getContext("2d");
+if(_19&&typeof _19.fillText!="function"){
 _a.Text.extend({getTextWidth:function(){
 return 0;
 },_renderShape:function(){
 }});
 }
-var _19={M:"_moveToA",m:"_moveToR",L:"_lineToA",l:"_lineToR",H:"_hLineToA",h:"_hLineToR",V:"_vLineToA",v:"_vLineToR",C:"_curveToA",c:"_curveToR",S:"_smoothCurveToA",s:"_smoothCurveToR",Q:"_qCurveToA",q:"_qCurveToR",T:"_qSmoothCurveToA",t:"_qSmoothCurveToR",A:"_arcTo",a:"_arcTo",Z:"_closePath",z:"_closePath"};
+}
+var _1a={M:"_moveToA",m:"_moveToR",L:"_lineToA",l:"_lineToR",H:"_hLineToA",h:"_hLineToR",V:"_vLineToA",v:"_vLineToR",C:"_curveToA",c:"_curveToR",S:"_smoothCurveToA",s:"_smoothCurveToR",Q:"_qCurveToA",q:"_qCurveToR",T:"_qSmoothCurveToA",t:"_qSmoothCurveToR",A:"_arcTo",a:"_arcTo",Z:"_closePath",z:"_closePath"};
 _3("dojox.gfx.canvas.Path",[_a.Shape,_8.Path],{constructor:function(){
 this.lastControl={};
 },setShape:function(){
 this.canvasPath=[];
 return this.inherited(arguments);
-},_updateWithSegment:function(_1a){
-var _1b=_1.clone(this.last);
-this[_19[_1a.action]](this.canvasPath,_1a.action,_1a.args);
-this.last=_1b;
+},_updateWithSegment:function(_1b){
+var _1c=_1.clone(this.last);
+this[_1a[_1b.action]](this.canvasPath,_1b.action,_1b.args);
+this.last=_1c;
 this.inherited(arguments);
 },_renderShape:function(ctx){
 var r=this.canvasPath;
@@ -296,148 +299,148 @@ ctx.beginPath();
 for(var i=0;i<r.length;i+=2){
 ctx[r[i]].apply(ctx,r[i+1]);
 }
-},_moveToA:function(_1c,_1d,_1e){
-_1c.push("moveTo",[_1e[0],_1e[1]]);
-for(var i=2;i<_1e.length;i+=2){
-_1c.push("lineTo",[_1e[i],_1e[i+1]]);
+},_moveToA:function(_1d,_1e,_1f){
+_1d.push("moveTo",[_1f[0],_1f[1]]);
+for(var i=2;i<_1f.length;i+=2){
+_1d.push("lineTo",[_1f[i],_1f[i+1]]);
 }
-this.last.x=_1e[_1e.length-2];
-this.last.y=_1e[_1e.length-1];
+this.last.x=_1f[_1f.length-2];
+this.last.y=_1f[_1f.length-1];
 this.lastControl={};
-},_moveToR:function(_1f,_20,_21){
+},_moveToR:function(_20,_21,_22){
 if("x" in this.last){
-_1f.push("moveTo",[this.last.x+=_21[0],this.last.y+=_21[1]]);
+_20.push("moveTo",[this.last.x+=_22[0],this.last.y+=_22[1]]);
 }else{
-_1f.push("moveTo",[this.last.x=_21[0],this.last.y=_21[1]]);
+_20.push("moveTo",[this.last.x=_22[0],this.last.y=_22[1]]);
 }
-for(var i=2;i<_21.length;i+=2){
-_1f.push("lineTo",[this.last.x+=_21[i],this.last.y+=_21[i+1]]);
-}
-this.lastControl={};
-},_lineToA:function(_22,_23,_24){
-for(var i=0;i<_24.length;i+=2){
-_22.push("lineTo",[_24[i],_24[i+1]]);
-}
-this.last.x=_24[_24.length-2];
-this.last.y=_24[_24.length-1];
-this.lastControl={};
-},_lineToR:function(_25,_26,_27){
-for(var i=0;i<_27.length;i+=2){
-_25.push("lineTo",[this.last.x+=_27[i],this.last.y+=_27[i+1]]);
+for(var i=2;i<_22.length;i+=2){
+_20.push("lineTo",[this.last.x+=_22[i],this.last.y+=_22[i+1]]);
 }
 this.lastControl={};
-},_hLineToA:function(_28,_29,_2a){
-for(var i=0;i<_2a.length;++i){
-_28.push("lineTo",[_2a[i],this.last.y]);
+},_lineToA:function(_23,_24,_25){
+for(var i=0;i<_25.length;i+=2){
+_23.push("lineTo",[_25[i],_25[i+1]]);
 }
-this.last.x=_2a[_2a.length-1];
+this.last.x=_25[_25.length-2];
+this.last.y=_25[_25.length-1];
 this.lastControl={};
-},_hLineToR:function(_2b,_2c,_2d){
-for(var i=0;i<_2d.length;++i){
-_2b.push("lineTo",[this.last.x+=_2d[i],this.last.y]);
-}
-this.lastControl={};
-},_vLineToA:function(_2e,_2f,_30){
-for(var i=0;i<_30.length;++i){
-_2e.push("lineTo",[this.last.x,_30[i]]);
-}
-this.last.y=_30[_30.length-1];
-this.lastControl={};
-},_vLineToR:function(_31,_32,_33){
-for(var i=0;i<_33.length;++i){
-_31.push("lineTo",[this.last.x,this.last.y+=_33[i]]);
+},_lineToR:function(_26,_27,_28){
+for(var i=0;i<_28.length;i+=2){
+_26.push("lineTo",[this.last.x+=_28[i],this.last.y+=_28[i+1]]);
 }
 this.lastControl={};
-},_curveToA:function(_34,_35,_36){
-for(var i=0;i<_36.length;i+=6){
-_34.push("bezierCurveTo",_36.slice(i,i+6));
+},_hLineToA:function(_29,_2a,_2b){
+for(var i=0;i<_2b.length;++i){
+_29.push("lineTo",[_2b[i],this.last.y]);
 }
-this.last.x=_36[_36.length-2];
-this.last.y=_36[_36.length-1];
-this.lastControl.x=_36[_36.length-4];
-this.lastControl.y=_36[_36.length-3];
+this.last.x=_2b[_2b.length-1];
+this.lastControl={};
+},_hLineToR:function(_2c,_2d,_2e){
+for(var i=0;i<_2e.length;++i){
+_2c.push("lineTo",[this.last.x+=_2e[i],this.last.y]);
+}
+this.lastControl={};
+},_vLineToA:function(_2f,_30,_31){
+for(var i=0;i<_31.length;++i){
+_2f.push("lineTo",[this.last.x,_31[i]]);
+}
+this.last.y=_31[_31.length-1];
+this.lastControl={};
+},_vLineToR:function(_32,_33,_34){
+for(var i=0;i<_34.length;++i){
+_32.push("lineTo",[this.last.x,this.last.y+=_34[i]]);
+}
+this.lastControl={};
+},_curveToA:function(_35,_36,_37){
+for(var i=0;i<_37.length;i+=6){
+_35.push("bezierCurveTo",_37.slice(i,i+6));
+}
+this.last.x=_37[_37.length-2];
+this.last.y=_37[_37.length-1];
+this.lastControl.x=_37[_37.length-4];
+this.lastControl.y=_37[_37.length-3];
 this.lastControl.type="C";
-},_curveToR:function(_37,_38,_39){
-for(var i=0;i<_39.length;i+=6){
-_37.push("bezierCurveTo",[this.last.x+_39[i],this.last.y+_39[i+1],this.lastControl.x=this.last.x+_39[i+2],this.lastControl.y=this.last.y+_39[i+3],this.last.x+_39[i+4],this.last.y+_39[i+5]]);
-this.last.x+=_39[i+4];
-this.last.y+=_39[i+5];
+},_curveToR:function(_38,_39,_3a){
+for(var i=0;i<_3a.length;i+=6){
+_38.push("bezierCurveTo",[this.last.x+_3a[i],this.last.y+_3a[i+1],this.lastControl.x=this.last.x+_3a[i+2],this.lastControl.y=this.last.y+_3a[i+3],this.last.x+_3a[i+4],this.last.y+_3a[i+5]]);
+this.last.x+=_3a[i+4];
+this.last.y+=_3a[i+5];
 }
 this.lastControl.type="C";
-},_smoothCurveToA:function(_3a,_3b,_3c){
-for(var i=0;i<_3c.length;i+=4){
-var _3d=this.lastControl.type=="C";
-_3a.push("bezierCurveTo",[_3d?2*this.last.x-this.lastControl.x:this.last.x,_3d?2*this.last.y-this.lastControl.y:this.last.y,_3c[i],_3c[i+1],_3c[i+2],_3c[i+3]]);
-this.lastControl.x=_3c[i];
-this.lastControl.y=_3c[i+1];
+},_smoothCurveToA:function(_3b,_3c,_3d){
+for(var i=0;i<_3d.length;i+=4){
+var _3e=this.lastControl.type=="C";
+_3b.push("bezierCurveTo",[_3e?2*this.last.x-this.lastControl.x:this.last.x,_3e?2*this.last.y-this.lastControl.y:this.last.y,_3d[i],_3d[i+1],_3d[i+2],_3d[i+3]]);
+this.lastControl.x=_3d[i];
+this.lastControl.y=_3d[i+1];
 this.lastControl.type="C";
 }
-this.last.x=_3c[_3c.length-2];
-this.last.y=_3c[_3c.length-1];
-},_smoothCurveToR:function(_3e,_3f,_40){
-for(var i=0;i<_40.length;i+=4){
-var _41=this.lastControl.type=="C";
-_3e.push("bezierCurveTo",[_41?2*this.last.x-this.lastControl.x:this.last.x,_41?2*this.last.y-this.lastControl.y:this.last.y,this.last.x+_40[i],this.last.y+_40[i+1],this.last.x+_40[i+2],this.last.y+_40[i+3]]);
-this.lastControl.x=this.last.x+_40[i];
-this.lastControl.y=this.last.y+_40[i+1];
+this.last.x=_3d[_3d.length-2];
+this.last.y=_3d[_3d.length-1];
+},_smoothCurveToR:function(_3f,_40,_41){
+for(var i=0;i<_41.length;i+=4){
+var _42=this.lastControl.type=="C";
+_3f.push("bezierCurveTo",[_42?2*this.last.x-this.lastControl.x:this.last.x,_42?2*this.last.y-this.lastControl.y:this.last.y,this.last.x+_41[i],this.last.y+_41[i+1],this.last.x+_41[i+2],this.last.y+_41[i+3]]);
+this.lastControl.x=this.last.x+_41[i];
+this.lastControl.y=this.last.y+_41[i+1];
 this.lastControl.type="C";
-this.last.x+=_40[i+2];
-this.last.y+=_40[i+3];
+this.last.x+=_41[i+2];
+this.last.y+=_41[i+3];
 }
-},_qCurveToA:function(_42,_43,_44){
-for(var i=0;i<_44.length;i+=4){
-_42.push("quadraticCurveTo",_44.slice(i,i+4));
+},_qCurveToA:function(_43,_44,_45){
+for(var i=0;i<_45.length;i+=4){
+_43.push("quadraticCurveTo",_45.slice(i,i+4));
 }
-this.last.x=_44[_44.length-2];
-this.last.y=_44[_44.length-1];
-this.lastControl.x=_44[_44.length-4];
-this.lastControl.y=_44[_44.length-3];
+this.last.x=_45[_45.length-2];
+this.last.y=_45[_45.length-1];
+this.lastControl.x=_45[_45.length-4];
+this.lastControl.y=_45[_45.length-3];
 this.lastControl.type="Q";
-},_qCurveToR:function(_45,_46,_47){
-for(var i=0;i<_47.length;i+=4){
-_45.push("quadraticCurveTo",[this.lastControl.x=this.last.x+_47[i],this.lastControl.y=this.last.y+_47[i+1],this.last.x+_47[i+2],this.last.y+_47[i+3]]);
-this.last.x+=_47[i+2];
-this.last.y+=_47[i+3];
+},_qCurveToR:function(_46,_47,_48){
+for(var i=0;i<_48.length;i+=4){
+_46.push("quadraticCurveTo",[this.lastControl.x=this.last.x+_48[i],this.lastControl.y=this.last.y+_48[i+1],this.last.x+_48[i+2],this.last.y+_48[i+3]]);
+this.last.x+=_48[i+2];
+this.last.y+=_48[i+3];
 }
 this.lastControl.type="Q";
-},_qSmoothCurveToA:function(_48,_49,_4a){
-for(var i=0;i<_4a.length;i+=2){
-var _4b=this.lastControl.type=="Q";
-_48.push("quadraticCurveTo",[this.lastControl.x=_4b?2*this.last.x-this.lastControl.x:this.last.x,this.lastControl.y=_4b?2*this.last.y-this.lastControl.y:this.last.y,_4a[i],_4a[i+1]]);
+},_qSmoothCurveToA:function(_49,_4a,_4b){
+for(var i=0;i<_4b.length;i+=2){
+var _4c=this.lastControl.type=="Q";
+_49.push("quadraticCurveTo",[this.lastControl.x=_4c?2*this.last.x-this.lastControl.x:this.last.x,this.lastControl.y=_4c?2*this.last.y-this.lastControl.y:this.last.y,_4b[i],_4b[i+1]]);
 this.lastControl.type="Q";
 }
-this.last.x=_4a[_4a.length-2];
-this.last.y=_4a[_4a.length-1];
-},_qSmoothCurveToR:function(_4c,_4d,_4e){
-for(var i=0;i<_4e.length;i+=2){
-var _4f=this.lastControl.type=="Q";
-_4c.push("quadraticCurveTo",[this.lastControl.x=_4f?2*this.last.x-this.lastControl.x:this.last.x,this.lastControl.y=_4f?2*this.last.y-this.lastControl.y:this.last.y,this.last.x+_4e[i],this.last.y+_4e[i+1]]);
+this.last.x=_4b[_4b.length-2];
+this.last.y=_4b[_4b.length-1];
+},_qSmoothCurveToR:function(_4d,_4e,_4f){
+for(var i=0;i<_4f.length;i+=2){
+var _50=this.lastControl.type=="Q";
+_4d.push("quadraticCurveTo",[this.lastControl.x=_50?2*this.last.x-this.lastControl.x:this.last.x,this.lastControl.y=_50?2*this.last.y-this.lastControl.y:this.last.y,this.last.x+_4f[i],this.last.y+_4f[i+1]]);
 this.lastControl.type="Q";
-this.last.x+=_4e[i];
-this.last.y+=_4e[i+1];
+this.last.x+=_4f[i];
+this.last.y+=_4f[i+1];
 }
-},_arcTo:function(_50,_51,_52){
-var _53=_51=="a";
-for(var i=0;i<_52.length;i+=7){
-var x1=_52[i+5],y1=_52[i+6];
-if(_53){
+},_arcTo:function(_51,_52,_53){
+var _54=_52=="a";
+for(var i=0;i<_53.length;i+=7){
+var x1=_53[i+5],y1=_53[i+6];
+if(_54){
 x1+=this.last.x;
 y1+=this.last.y;
 }
-var _54=ga.arcAsBezier(this.last,_52[i],_52[i+1],_52[i+2],_52[i+3]?1:0,_52[i+4]?1:0,x1,y1);
-_2.forEach(_54,function(p){
-_50.push("bezierCurveTo",p);
+var _55=ga.arcAsBezier(this.last,_53[i],_53[i+1],_53[i+2],_53[i+3]?1:0,_53[i+4]?1:0,x1,y1);
+_2.forEach(_55,function(p){
+_51.push("bezierCurveTo",p);
 });
 this.last.x=x1;
 this.last.y=y1;
 }
 this.lastControl={};
-},_closePath:function(_55,_56,_57){
-_55.push("closePath",[]);
+},_closePath:function(_56,_57,_58){
+_56.push("closePath",[]);
 this.lastControl={};
 }});
-_2.forEach(["moveTo","lineTo","hLineTo","vLineTo","curveTo","smoothCurveTo","qCurveTo","qSmoothCurveTo","arcTo","closePath"],function(_58){
-_13(_a.Path,_58);
+_2.forEach(["moveTo","lineTo","hLineTo","vLineTo","curveTo","smoothCurveTo","qCurveTo","qSmoothCurveTo","arcTo","closePath"],function(_59){
+_13(_a.Path,_59);
 });
 _3("dojox.gfx.canvas.TextPath",[_a.Shape,_8.TextPath],{_renderShape:function(ctx){
 var s=this.shape;
@@ -448,22 +451,22 @@ _3("dojox.gfx.canvas.Surface",gs.Surface,{constructor:function(){
 gs.Container._init.call(this);
 this.pendingImageCount=0;
 this.makeDirty();
-},setDimensions:function(_59,_5a){
-this.width=g.normalizedLength(_59);
-this.height=g.normalizedLength(_5a);
+},setDimensions:function(_5a,_5b){
+this.width=g.normalizedLength(_5a);
+this.height=g.normalizedLength(_5b);
 if(!this.rawNode){
 return this;
 }
-var _5b=false;
+var _5c=false;
 if(this.rawNode.width!=this.width){
 this.rawNode.width=this.width;
-_5b=true;
+_5c=true;
 }
 if(this.rawNode.height!=this.height){
 this.rawNode.height=this.height;
-_5b=true;
+_5c=true;
 }
-if(_5b){
+if(_5c){
 this.makeDirty();
 }
 return this;
@@ -489,14 +492,14 @@ if(!this.pendingImagesCount&&!("pendingRender" in this)){
 this.pendingRender=setTimeout(_1.hitch(this,this._render),0);
 }
 },downloadImage:function(img,url){
-var _5c=_1.hitch(this,this.onImageLoad);
+var _5d=_1.hitch(this,this.onImageLoad);
 if(!this.pendingImageCount++&&"pendingRender" in this){
 clearTimeout(this.pendingRender);
 delete this.pendingRender;
 }
-img.onload=_5c;
-img.onerror=_5c;
-img.onabort=_5c;
+img.onload=_5d;
+img.onerror=_5d;
+img.onabort=_5d;
 img.src=url;
 },onImageLoad:function(){
 if(!--this.pendingImageCount){
@@ -507,57 +510,57 @@ return null;
 },connect:function(){
 },disconnect:function(){
 }});
-_a.createSurface=function(_5d,_5e,_5f){
-if(!_5e&&!_5f){
-var pos=_5.position(_5d);
-_5e=_5e||pos.w;
-_5f=_5f||pos.h;
-}
-if(typeof _5e=="number"){
-_5e=_5e+"px";
+_a.createSurface=function(_5e,_5f,_60){
+if(!_5f&&!_60){
+var pos=_5.position(_5e);
+_5f=_5f||pos.w;
+_60=_60||pos.h;
 }
 if(typeof _5f=="number"){
 _5f=_5f+"px";
 }
-var s=new _a.Surface(),p=_6.byId(_5d),c=p.ownerDocument.createElement("canvas");
-c.width=g.normalizedLength(_5e);
-c.height=g.normalizedLength(_5f);
+if(typeof _60=="number"){
+_60=_60+"px";
+}
+var s=new _a.Surface(),p=_6.byId(_5e),c=p.ownerDocument.createElement("canvas");
+c.width=g.normalizedLength(_5f);
+c.height=g.normalizedLength(_60);
 p.appendChild(c);
 s.rawNode=c;
 s._parent=p;
 s.surface=s;
 return s;
 };
-var C=gs.Container,_60={add:function(_61){
+var C=gs.Container,_61={add:function(_62){
 this.surface.makeDirty();
 return C.add.apply(this,arguments);
-},remove:function(_62,_63){
+},remove:function(_63,_64){
 this.surface.makeDirty();
 return C.remove.apply(this,arguments);
 },clear:function(){
 this.surface.makeDirty();
 return C.clear.apply(this,arguments);
-},_moveChildToFront:function(_64){
+},_moveChildToFront:function(_65){
 this.surface.makeDirty();
 return C._moveChildToFront.apply(this,arguments);
-},_moveChildToBack:function(_65){
+},_moveChildToBack:function(_66){
 this.surface.makeDirty();
 return C._moveChildToBack.apply(this,arguments);
 }};
-var _66={createObject:function(_67,_68){
-var _69=new _67();
-_69.surface=this.surface;
-_69.setShape(_68);
-this.add(_69);
-return _69;
+var _67={createObject:function(_68,_69){
+var _6a=new _68();
+_6a.surface=this.surface;
+_6a.setShape(_69);
+this.add(_6a);
+return _6a;
 }};
-_e(_a.Group,_60);
+_e(_a.Group,_61);
 _e(_a.Group,gs.Creator);
-_e(_a.Group,_66);
-_e(_a.Surface,_60);
+_e(_a.Group,_67);
+_e(_a.Surface,_61);
 _e(_a.Surface,gs.Creator);
-_e(_a.Surface,_66);
-_a.fixTarget=function(_6a,_6b){
+_e(_a.Surface,_67);
+_a.fixTarget=function(_6b,_6c){
 return true;
 };
 return _a;

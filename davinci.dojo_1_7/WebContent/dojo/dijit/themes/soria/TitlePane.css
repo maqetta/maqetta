@@ -1,7 +1,3 @@
-/**
- * dijit.TitlePane
- *
- */
 
 .soria .dijitTitlePaneTitle {
 	background: #cccccc;
@@ -15,21 +11,17 @@
 .soria .dijitTitlePaneTitleHover {
 	background: #f9f9f9 url("images/accordionItemActive.png") top repeat-x;
 }
-
 .soria .dijitTitlePaneTitle * {
 	vertical-align: middle;
 }
-
 .soria .dijitTitlePane .dijitOpen .dijitArrowNode,
 .soria .dijitTitlePane .dijitClosed .dijitArrowNode {
 	width:15px;
 	height:15px;
 }
-
 .soria .dijitTitlePaneTextNode {
 	color: #243C5F;
 }
-
 .soria .dijitTitlePane .dijitClosed .dijitArrowNode {
 	background: url('images/spriteRoundedIconsSmall.png') no-repeat -30px top;
 }
@@ -42,7 +34,6 @@
 .dj_ie6 .soria .dijitTitlePane .dijitOpen .dijitArrowNode {
 	background:url('images/spriteRoundedIconsSmall.gif') no-repeat -15px top;
 }
-
 .soria .dijitTitlePaneContentOuter {
 	background: #ffffff;
 	border: 1px solid #bfbfbf;
@@ -51,7 +42,6 @@
 .soria .dijitTitlePaneContentInner {
 	padding:10px;
 }
-
 .soria .dijitTitlePaneTextNode {
 	margin-left: 4px;
 	margin-right: 4px;

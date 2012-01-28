@@ -1007,7 +1007,7 @@ var scrollable = function(/*Object?*/dojo, /*Object?*/dojox){
 	};
 
 	this.flashScrollBar = function(){
-		if(this.disableFlashScrollBar){ return; }
+		if(this.disableFlashScrollBar || !this.domNode){ return; }
 		this._dim = this.getDim();
 		if(this._dim.d.h <= 0){ return; } // dom is not ready
 		this.showScrollBar();

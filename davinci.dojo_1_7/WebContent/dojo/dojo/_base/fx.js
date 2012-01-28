@@ -285,7 +285,7 @@ _32.start=(p=="opacity")?+_32.start:parseFloat(_32.start);
 }
 this.curve=new _2b(pm);
 });
-_5.connect(_31,"onAnimate",_2.hitch(_1,"style",_31.node));
+_5.connect(_31,"onAnimate",_2.hitch(_8,"set",_31.node));
 return _31;
 };
 _1.anim=function(_36,_37,_38,_39,_3a,_3b){

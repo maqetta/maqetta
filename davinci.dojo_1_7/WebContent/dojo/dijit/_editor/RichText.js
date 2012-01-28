@@ -978,6 +978,9 @@ this.editorObject=null;
 if(!this.isClosed){
 this.close(false);
 }
+if(this._updateTimer){
+clearTimeout(this._updateTimer);
+}
 this.inherited(arguments);
 if(_1b._globalSaveHandler){
 delete _1b._globalSaveHandler[this.id];

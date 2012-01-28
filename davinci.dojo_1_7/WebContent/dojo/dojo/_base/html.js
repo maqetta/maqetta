@@ -13,7 +13,7 @@ _1.getAttr=_4.get;
 _1.setAttr=_4.set;
 _1.hasAttr=_4.has;
 _1.removeAttr=_4.remove;
-_1.getPropNode=_4.getNodeProp;
+_1.getNodeProp=_4.getNodeProp;
 _1.attr=function(_9,_a,_b){
 if(arguments.length==2){
 return _4[typeof _a=="string"?"get":"set"](_9,_a);

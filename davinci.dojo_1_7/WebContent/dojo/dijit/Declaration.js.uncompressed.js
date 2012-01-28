@@ -8,7 +8,8 @@ define("dijit/Declaration", [
 	"dojo/query", // query
 	"./_Widget",
 	"./_TemplatedMixin",
-	"./_WidgetsInTemplateMixin"
+	"./_WidgetsInTemplateMixin",
+	"dojo/NodeList-dom"
 ], function(array, connect, declare, lang, parser, query, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin){
 
 /*=====

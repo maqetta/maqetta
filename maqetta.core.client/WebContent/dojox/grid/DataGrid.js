@@ -400,9 +400,6 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 		this._bop = this._eop = -1;
 		this._isLoaded = false;
 		this._isLoading = false;
-		if(!this.allItemsSelected){
-			this.selection.selected = [];
-		}
 	},
 
 	getItem: function(idx){

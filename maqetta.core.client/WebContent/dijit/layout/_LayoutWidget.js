@@ -73,11 +73,9 @@ define([
 
 				// Since my parent isn't a layout container, and my style *may be* width=height=100%
 				// or something similar (either set directly or via a CSS class),
-				// monitor when my size changes so that I can re-layout.
-				// For browsers where I can't directly monitor when my size changes,
-				// monitor when the viewport changes size, which *may* indicate a size change for me.
-				this.connect(has("ie") ? this.domNode : win.global, 'onresize', function(){
-					// Using function(){} closure to ensure no arguments to resize.
+				// monitor when viewport size changes so that I can re-layout.
+				this.connect(win.global, 'onresize', function(){
+					// Using function(){} closure to ensure no arguments passed to resize().
 					this.resize();
 				});
 			}

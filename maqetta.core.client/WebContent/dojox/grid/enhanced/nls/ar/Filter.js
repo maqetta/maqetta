@@ -64,8 +64,6 @@ define(
 	"anycolumn": "أي عمود",
 	"statusTipTitleNoFilter": "خط ترشيح البيانات",
 	"statusTipTitleHasFilter": "ترشيح البيانات",
-	"statusTipRelPre": "مطابقة",
-	"statusTipRelPost": "قواعد.",
 	
 	"defaultItemsName": "بنود",
 	"filterBarMsgHasFilterTemplate": "يتم عرض ${0} من ${1} ${2}.",

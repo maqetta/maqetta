@@ -4,9 +4,9 @@ NAME
 DESCRIPTION
      Discover and process a set of resources with an ordered synchronized set of transforms.
 
-     See http://livedocs.dojotoolkit.org/build/index for reference documentation.
+     See http://dojotoolkit.org/reference-guide/build/index.html for reference documentation.
      
-     See http://livedocs.dojotoolkit.org/build/qref for a quick reference manual.
+     See http://dojotoolkit.org/reference-guide/build/qref.html for a quick reference manual.
 
      Typically this program is executed with the convience wrapper /util/buildscripts/build.bat (Window) or
      /util/buildscripts/build.sh (all other environments); it may also be executed explicitly.

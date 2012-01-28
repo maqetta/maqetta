@@ -408,13 +408,18 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", 
 	modifyMethod(canvas.Text, "setFont");
 	
 	// the next test is from https://github.com/phiggins42/has.js
-	if(typeof win.doc.createElement("canvas").getContext("2d").fillText != "function"){
-		canvas.Text.extend({
-			getTextWidth: function(){
-				return 0;
-			},
-			_renderShape: function(){}
-		});
+	if(win.global.CanvasRenderingContext2D){
+		// need to doublecheck canvas is supported since module can be loaded if building layers (ticket 14288)
+		var ctx2d = win.doc.createElement("canvas").getContext("2d");
+		if(ctx2d && typeof ctx2d.fillText != "function"){
+			canvas.Text.extend({
+				getTextWidth: function(){
+					return 0;
+				},
+				_renderShape: function(){
+				}
+			});
+		}
 	}
 	
 

@@ -4,7 +4,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", "dojo/_ba
 	"../scaler/primitive", "dojox/gfx", "dojox/gfx/matrix", "dojox/gfx/fx", "dojox/lang/functional", 
 	"dojox/lang/utils", "dojo/fx/easing"],
 	function(lang, declare, hub, html, arr, domGeom, baseFx, coreFx, has, 
-			Element, PlotEvents, dcolors, dxcolor, dc, da, primitive, 
+			Element, PlotEvents, Color, dxcolor, dc, da, primitive,
 			g, m, gfxfx, df, du, easing){
 /*=====
 var Element = dojox.charting.Element;
@@ -492,7 +492,7 @@ var PlotEvents = dojox.charting.plot2d._PlotEvents;
 				a.anim = gfxfx.animateFill({
 					shape:	  o.shape,
 					duration: 800,
-					easing:	  coreFx.easing.backOut,
+					easing:	  easing.backOut,
 					color:	  {start: start, end: end}
 				});
 				a.anim.play();

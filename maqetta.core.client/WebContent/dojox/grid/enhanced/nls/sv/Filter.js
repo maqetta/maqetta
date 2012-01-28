@@ -64,8 +64,6 @@ define(
 	"anycolumn": "alla kolumner",
 	"statusTipTitleNoFilter": "Filterfält",
 	"statusTipTitleHasFilter": "Filter",
-	"statusTipRelPre": "Matcha",
-	"statusTipRelPost": "regler.",
 	
 	"defaultItemsName": "objekt",
 	"filterBarMsgHasFilterTemplate": "${0} av ${1} ${2} visas.",

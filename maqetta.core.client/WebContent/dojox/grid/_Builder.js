@@ -425,7 +425,8 @@ define([
 			if(has('ie')){
 				var tN = e.target;
 				if(html.hasClass(tN, "dojoxGridArrowButtonNode") ||
-					html.hasClass(tN, "dojoxGridArrowButtonChar")){
+					html.hasClass(tN, "dojoxGridArrowButtonChar") ||
+					html.hasClass(tN, "dojoxGridColCaption")){
 					return false;
 				}
 			}
@@ -449,7 +450,8 @@ define([
 			if(has('ie')){
 				var tN = e.target;
 				if(html.hasClass(tN, "dojoxGridArrowButtonNode") ||
-					html.hasClass(tN, "dojoxGridArrowButtonChar")){
+					html.hasClass(tN, "dojoxGridArrowButtonChar") ||
+					html.hasClass(tN, "dojoxGridColCaption")){
 					return false;
 				}
 			}

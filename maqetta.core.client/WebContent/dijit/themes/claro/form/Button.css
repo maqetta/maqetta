@@ -106,7 +106,7 @@
   -moz-transition-duration: 0.2s;
   transition-duration: 0.2s;
 }
-/* checked status */
+/* active, checked status */
 .claro .dijitButtonActive .dijitButtonNode,
 .claro .dijitDropDownButtonActive .dijitButtonNode,
 .claro .dijitComboButtonActive .dijitButtonNode,

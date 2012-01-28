@@ -30,6 +30,7 @@
 			dojo.require("dijit.form.DateTextBox");
 			dojo.require("dijit.form.HorizontalSlider");
 			dojo.require("dijit.form.NumberSpinner");
+			dojo.require("dijit.form.NumberTextBox");
 			dojo.require("dijit.form.SimpleTextarea");		
 			dojo.require("dijit.form.Textarea");
 			dojo.require("dojo.data.ItemFileReadStore");
@@ -124,6 +125,8 @@
 
 			// create a model for dijit.ColorPalette
 			var deccolormodel = new dojox.mvc.newStatefulModel({data: {code: "#000000"}});
+
+			var nanmodel = new dojox.mvc.newStatefulModel({data: {num: null}});
 
 	</script>
 
@@ -352,6 +355,13 @@
 			
 			textareatext.startup();
 			textareaWid.startup();
+
+			var numBox = new dijit.form.NumberTextBox({
+				ref: nanmodel.num // bind to model.num
+			}, document.getElementById('nannb'));
+
+			numBox.startup();
+
 			
 		});
 
@@ -1078,11 +1088,35 @@
 								doh.is(outputval,wid.get('value'),"wid.get('value') should be set same as outputval");
 						}
 
-
 					}
 				}
 			]);
 
+
+			// Test reset all declarative 
+			doh.register("Test NaN values and bindings", [
+				{
+					name: "NaN-test",
+					runTest: function(){
+						var button = dijit.byId("decselReset"); // reset the model
+						button.onClick();
+						var wid, wid2; 
+
+						// test for NaN stuff here, uses nanmodel, without fix for ticket 14190 FF crashes
+						wid = dijit.byId("nannb");
+						wid.focus();
+						wid2 = dijit.byId("textareatext");
+						wid2.focus();
+						wid = dijit.byId("nannb");
+						wid.focus();
+						wid2.focus();
+						if (wid) {
+								doh.t(isNaN(wid.get('value')),"isNaN(wid.get('value') should be true");
+						}
+
+					}
+				}
+			]);
 
 			doh.run();
 
@@ -1167,6 +1201,10 @@
 								<td><div id="textareaoutput"></div></td>
 								<td><div id="textareareset"></div></td>
 							</tr>
+							<tr>
+								<td><label for="nannb">TextBox nan test:</label></td>
+								<td><div id="nannb"></div></td>
+							</tr>							
 						</tbody>
 					</table>
 	  

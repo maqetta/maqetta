@@ -381,6 +381,7 @@
 
 							var checked = dijit.byId("toggle1").get("checked");
 							doh.t(checked, "toggle1 initially checked");
+							doh.is("true", dojo.byId('toggle1').getAttribute("aria-pressed"), "aria-pressed 1");
 
 							var watchOld, watchNew;
 							dijit.byId("toggle1").set("onChange", function(v){ checked = v; });
@@ -394,6 +395,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.f(checked, "toggle1 unchecked");
+								doh.is("false", dojo.byId('toggle1').getAttribute("aria-pressed"), "aria-pressed 2");
 								doh.t(watchOld, "watch: previous == checked");
 								doh.f(watchNew, "watch: new == unchecked");
 							}), 1000);
@@ -408,6 +410,7 @@
 
 							var checked = dijit.byId("toggle1").get("checked");
 							doh.f(checked, "toggle1 unchecked");
+							doh.is("false", dojo.byId('toggle1').getAttribute("aria-pressed"), "aria-pressed 1");
 
 							var watchOld, watchNew;
 							dijit.byId("toggle1").set("onChange", function(v){ checked = v; });
@@ -421,6 +424,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.t(checked, "toggle1 checked");
+								doh.is("true", dojo.byId('toggle1').getAttribute("aria-pressed"), "aria-pressed 2");
 								doh.f(watchOld, "watch: previous == unchecked");
 								doh.t(watchNew, "watch: new == checked");
 							}), 1000);

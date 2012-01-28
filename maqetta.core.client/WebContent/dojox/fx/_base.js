@@ -1,5 +1,5 @@
-define(["dojo/_base/array","dojo/_base/lang", "dojo/_base/fx", "dojo/fx", "dojo/dom", "dojo/dom-style", "dojo/dom-geometry", 
-		"dojo/_base/connect", "dojo/_base/html"],
+define(["dojo/_base/array","dojo/_base/lang", "dojo/_base/fx", "dojo/fx", "dojo/dom", "dojo/dom-style",
+	    "dojo/dom-geometry", "dojo/_base/connect", "dojo/_base/html"],
 	function(arrayUtil, lang, baseFx, coreFx, dom, domStyle, domGeom, connectUtil, htmlUtil){
 // summary: Experimental and extended Animations beyond Dojo Core / Base functionality.
 //	Provides advanced Lines, Animations, and convenience aliases.
@@ -19,15 +19,15 @@ lang.mixin(dojox.fx, {
 	//		Fade an element from an opacity to an opacity.
 	//		Omit `start:` property to detect. `end:` property is required.
 	//		Ultimately an alias to `dojo._fade`
-	fadeTo: dojo.fx._fade,
+	fadeTo: dojo._fade,
 
 	// fadeIn: Function
 	//	Alias of `dojo.fadeIn` - Fade a node in.
-	fadeIn: dojo.fx.fadeIn,
+	fadeIn: dojo.fadeIn,
 	
 	// fadeOut: Function
 	//	Alias of `dojo.fadeOut` - Fades a node out.
-	fadeOut: dojo.fx.fadeOut,
+	fadeOut: dojo.fadeOut,
 
 	// combine: Function
 	//	Alias of `dojo.fx.combine` - Run an array of animations in parallel

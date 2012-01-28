@@ -64,8 +64,6 @@ define(
 	"anycolumn": "enhver kolonne",
 	"statusTipTitleNoFilter": "Filterlinje",
 	"statusTipTitleHasFilter": "Filter",
-	"statusTipRelPre": "Samsvar med",
-	"statusTipRelPost": "regler.",
 	
 	"defaultItemsName": "elementer",
 	"filterBarMsgHasFilterTemplate": "${0} av ${1} ${2} vist.",

@@ -76,6 +76,10 @@ define(["./buildControl", "./fileUtils", "./fs", "./stringify", "dojo/has", "./p
 				return;
 			}
 			dirsProcessed[srcPath] = 1;
+			if(!fileUtils.dirExists(srcPath)){
+				bc.log("missingDirDuringDiscovery", ["directory", srcPath]);
+				return;
+			}
 			var
 				srcPathLength = srcPath.length,
 				subdirs = [];

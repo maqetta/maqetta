@@ -1769,6 +1769,9 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 
 	destroy: function(){
 		if(!this.isClosed){ this.close(false); }
+		if(this._updateTimer){
+			clearTimeout(this._updateTimer);
+		}
 		this.inherited(arguments);
 		if(RichText._globalSaveHandler){
 			delete RichText._globalSaveHandler[this.id];

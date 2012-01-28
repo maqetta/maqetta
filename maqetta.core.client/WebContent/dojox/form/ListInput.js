@@ -1002,7 +1002,7 @@ var _ListInputInputBox = declare("dojox.form._ListInputInputBox", [ValidationTex
 		}
 		this._sizer.innerHTML = value;
 		var w = domGeometry.getContentBox(this._sizer).w + this.minWidth;
-		domGeometry.setContentBox(this.domNode,{ w : w });
+		domGeometry.setContentSize(this.domNode,{ w : w });
 	},
 
 	destroy: function(){

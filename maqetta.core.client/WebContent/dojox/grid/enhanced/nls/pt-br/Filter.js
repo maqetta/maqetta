@@ -62,8 +62,6 @@
 	"anycolumn": "qualquer coluna",
 	"statusTipTitleNoFilter": "Barra de Filtro",
 	"statusTipTitleHasFilter": "Filtrar",
-	"statusTipRelPre": "Corresponder",
-	"statusTipRelPost": "regras.",
 	
 	"defaultItemsName": "itens",
 	"filterBarMsgHasFilterTemplate": "${0} de ${1} ${2} mostrado.",

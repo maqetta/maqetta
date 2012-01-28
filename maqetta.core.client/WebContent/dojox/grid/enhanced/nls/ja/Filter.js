@@ -64,8 +64,6 @@ define(
 	"anycolumn": "いずれかの列",
 	"statusTipTitleNoFilter": "フィルター・バー",
 	"statusTipTitleHasFilter": "フィルター",
-	"statusTipRelPre": "一致",
-	"statusTipRelPost": "ルール",
 	
 	"defaultItemsName": "項目",
 	"filterBarMsgHasFilterTemplate": "${0}/${1} ${2} が表示されました。",

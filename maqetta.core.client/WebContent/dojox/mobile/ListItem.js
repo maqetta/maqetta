@@ -99,7 +99,10 @@ define([
 		//		Deprecated. For backward compatibility.
 		btnClass2: "",
 
-	
+		// tag: String
+		//		A name of html tag to create as domNode.
+		tag: "li",
+
 		postMixInProperties: function(){
 			// for backward compatibility
 			if(this.btnClass){
@@ -110,6 +113,7 @@ define([
 		},
 
 		buildRendering: function(){
+			this.domNode = this.srcNodeRef || domConstruct.create(this.tag);
 			this.inherited(arguments);
 			this.domNode.className = "mblListItem" + (this.selected ? " mblItemSelected" : "");
 
@@ -181,7 +185,7 @@ define([
 			var li = a.parentNode;
 			if(domClass.contains(li, "mblItemSelected")){ return; } // already selected
 			if(this.anchorLabel){
-				for(var p = e.target; p.tagName !== "LI"; p = p.parentNode){
+				for(var p = e.target; p.tagName !== this.tag.toUpperCase(); p = p.parentNode){
 					if(p.className == "mblListItemTextBox"){
 						domClass.add(p, "mblListItemTextBoxSelected");
 						setTimeout(function(){

@@ -148,7 +148,8 @@
 				function createProgramatically(){
 					originalWidgetCnt = dijit.registry.length;
 
-					bc = new dijit.layout.BorderContainer({style:'height:400px;width:500px;border:1px solid black'}, dojo.byId('main'));
+					bc = new dijit.layout.BorderContainer({style:'height:400px;width:500px;border:1px solid black'}).
+							placeAt("programmatic", "after");
 		
 					cp1 = new dijit.layout.ContentPane({region:'top',style:'height:100px;background-color:red',splitter:true, id:"cp1"});
 					cp1.domNode.innerHTML = "top pane";
@@ -202,18 +203,19 @@
 
 			doh.register("exceptions", [
 				function createProgramatically(){
+					bc = new dijit.layout.BorderContainer({style:'height:400px;width:500px;border:1px solid black'}, dojo.byId('main'));
+					doh.isNot(null, bc.domNode.parentNode, "has parent");
+
+					cp1 = new dijit.layout.ContentPane({region:'top',style:'height:100px;background-color:red',splitter:true, id:"cp1"});
+					cp1.domNode.innerHTML = "top pane";
+					bc.addChild(cp1);
+
+					cp2 = new dijit.layout.ContentPane({region:'center',style:'background-color:green', id:'cp2'});
+					cp2.domNode.innerHTML = "center pane";
+					bc.addChild(cp2);
+
 					var exception;
-					try {
-						bc = new dijit.layout.BorderContainer({style:'height:400px;width:500px;border:1px solid black'}, dojo.byId('main'));
-
-						cp1 = new dijit.layout.ContentPane({region:'top',style:'height:100px;background-color:red',splitter:true, id:"cp1"});
-						cp1.domNode.innerHTML = "top pane";
-						bc.addChild(cp1);
-
-						cp2 = new dijit.layout.ContentPane({region:'center',style:'background-color:green', id:'cp2'});
-						cp2.domNode.innerHTML = "center pane";
-						bc.addChild(cp2);
-
+					try{
 						cp3 = new dijit.layout.ContentPane({splitter: true, style:'width: 100px;', id:'cp3'});
 						cp3.domNode.innerHTML = "left pane";
 						bc.addChild(cp3);
@@ -287,7 +289,7 @@
 		</div>
 	</div>
 
-	<p>Programatically created, then destroyed</p>
+	<p id="programmatic">Programatically created, then destroyed</p>
 	<div id='main'></div>
 
 	<p>BorderContainer with MenuBar</p>

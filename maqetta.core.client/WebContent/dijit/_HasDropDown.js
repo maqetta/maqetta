@@ -1,5 +1,6 @@
 define([
 	"dojo/_base/declare", // declare
+	"dojo/_base/Deferred",
 	"dojo/_base/event", // event.stop
 	"dojo/dom", // dom.isDescendant
 	"dojo/dom-attr", // domAttr.set
@@ -16,7 +17,7 @@ define([
 	"./focus",
 	"./popup",
 	"./_FocusMixin"
-], function(declare, event,dom, domAttr, domClass, domGeometry, domStyle, has, keys, lang, touch,
+], function(declare, Deferred, event,dom, domAttr, domClass, domGeometry, domStyle, has, keys, lang, touch,
 			win, winUtils, registry, focus, popup, _FocusMixin){
 
 /*=====
@@ -299,7 +300,7 @@ define([
 
 		isLoaded: function(){
 			// summary:
-			//		Returns whether or not the dropdown is loaded.  This can
+			//		Returns true if the dropdown exists and it's data is loaded.  This can
 			//		be overridden in order to force a call to loadDropDown().
 			// tags:
 			//		protected
@@ -307,15 +308,40 @@ define([
 			return true;
 		},
 
-		loadDropDown: function(/* Function */ loadCallback){
+		loadDropDown: function(/*Function*/ loadCallback){
 			// summary:
-			//		Loads the data for the dropdown, and at some point, calls
-			//		the given callback.   This is basically a callback when the
-			//		user presses the down arrow button to open the drop down.
+			//		Creates the drop down if it doesn't exist, loads the data
+			//		if there's an href and it hasn't been loaded yet, and then calls
+			//		the given callback.
 			// tags:
 			//		protected
 
+			// TODO: for 2.0, change API to return a Deferred, instead of calling loadCallback?
 			loadCallback();
+		},
+
+		loadAndOpenDropDown: function(){
+			// summary:
+			//		Creates the drop down if it doesn't exist, loads the data
+			//		if there's an href and it hasn't been loaded yet, and
+			//		then opens the drop down.  This is basically a callback when the
+			//		user presses the down arrow button to open the drop down.
+			// returns: Deferred
+			//		Deferred for the drop down widget that
+			//		fires when drop down is created and loaded
+			// tags:
+			//		protected
+			var d = new Deferred(),
+				afterLoad = lang.hitch(this, function(){
+					this.openDropDown();
+					d.resolve(this.dropDown);
+				});
+			if(!this.isLoaded()){
+				this.loadDropDown(afterLoad);
+			}else{
+				afterLoad();
+			}
+			return d;
 		},
 
 		toggleDropDown: function(){
@@ -328,12 +354,7 @@ define([
 
 			if(this.disabled || this.readOnly){ return; }
 			if(!this._opened){
-				// If we aren't loaded, load it first so there isn't a flicker
-				if(!this.isLoaded()){
-					this.loadDropDown(lang.hitch(this, "openDropDown"));
-				}else{
-					this.openDropDown();
-				}
+				this.loadAndOpenDropDown();
 			}else{
 				this.closeDropDown();
 			}

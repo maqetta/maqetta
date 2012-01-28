@@ -11,8 +11,9 @@ var NumberUtils
 return declare("dojox.gauges.GlossyHorizontalGauge", [BarGauge], {
 	// summary:
 	//		Represents an horizontal bar gauge with a glossy appearance.
+	//
 	// example:
-	//	|<div dojoType="dojox.gauges.GlossyHorizontalGauge"
+	//	|	<div dojoType="dojox.gauges.GlossyHorizontalGauge"
 	//	|		id="testGauge"
 	//	|		width="500"
 	//	|		height="100"
@@ -30,9 +31,9 @@ return declare("dojox.gauges.GlossyHorizontalGauge", [BarGauge], {
 	//	|		title="title"
 	//	|		scalePrecision="0"
 	//	|	>
-	//	|</div>
-	
-	
+	//	|	</div>
+
+
 	// the type of default indicator to create
 	_defaultIndicator: BarCircleIndicator,
 	

@@ -192,9 +192,8 @@ define([
 							modulesSeen[match[1]] = 1;
 							return match[1];
 						}else if((match = mid.match(dojoModuleRe))){
-							// hopefully a dojo module
+							// assuming a dojo module
 							bc.log("assumeLayerDependencyIsDojoModule", ["layer dependency", mid]);
-							modulesSeen[match[1]] = 1;
 							return match[1];
 						}else{
 							bc.log("cannotDeduceModuleIdFrom16LayerDependency", ["layer name", layerName, "layer dependency name", mid]);
@@ -211,27 +210,31 @@ define([
 
 				fixedLayers = {};
 			layers.forEach(function(layer){
-				var match,
-					name = layer.name;
-				if(/^\.\//.test(name)){
-					name = name.substring(2);
-				}
-				if(layer.name=="dojo.js"){
-					// custom base
-					name = "dojo/dojo";
-					if(!layer.customBase){
-						layer.dependencies.push("dojo/main");
-					}
-					layer.boot = true;
-				}else if((match = name.match(nameRe))){
-					// sibling of dojo
-					name = match[1];
-				}else if((match = name.match(dojoModuleRe))){
-					// hopefully a dojo module
-					name = match[1];
-					bc.log("assumeLayerIsDojoModule", ["layer name", layer.name]);
+				var match, name;
+				if(layer.resourceName){
+					name = layer.resourceName.replace(/\./g, "/");
 				}else{
-					bc.log("cannotDeduceModuleIdFrom16LayerName", ["layer name", layer.name]);
+					name = layer.name;
+					if(/^\.\//.test(name)){
+						name = name.substring(2);
+					}
+					if(layer.name=="dojo.js"){
+						// custom base
+						name = "dojo/dojo";
+						if(!layer.customBase){
+							layer.dependencies.push("dojo/main");
+						}
+						layer.boot = true;
+					}else if((match = name.match(nameRe))){
+						// sibling of dojo
+						name = match[1];
+					}else if((match = name.match(dojoModuleRe))){
+						// hopefully a dojo module
+						name = "dojo/" + match[1];
+						bc.log("assumeLayerIsDojoModule", ["layer name", layer.name]);
+					}else{
+						bc.log("cannotDeduceModuleIdFrom16LayerName", ["layer name", layer.name]);
+					}
 				}
 				layer.include = transformDependencies(layer.dependencies);
 				layer.exclude = transformLayerDependencies(layer.layerDependencies, layer.name);
@@ -239,6 +242,7 @@ define([
 					layer.exclude.push("dojo/dojo");
 				}
 				layer.name = name;
+				modulesSeen[name.split("/")[0]] = 1;
 				layer.copyright = getLayerCopyrightMessage(layer.copyright, name);
 				fixedLayers[name] = layer;
 			});

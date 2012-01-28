@@ -54,8 +54,7 @@ kernel.experimental("dojox.gesture.swipe");
 
 // Declare an internal anonymous class which will only be exported
 // by module return value e.g. dojox.gesture.swipe.Swipe
-// should be changed to "declare(Base, {...});" once http://bugs.dojotoolkit.org/ticket/13890 is fixed
-var clz = declare(" ", Base, {
+var clz = declare(/*===== "dojox.gesture.swipe", =====*/Base, {
 
 	// defaultEvent: [readonly] String
 	//		Default event - 'swipe'

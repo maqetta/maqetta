@@ -64,8 +64,6 @@ define(
 	"anycolumn": "bilo koji stupac",
 	"statusTipTitleNoFilter": "Traka filtera",
 	"statusTipTitleHasFilter": "Filter",
-	"statusTipRelPre": "Odgovara",
-	"statusTipRelPost": "pravila.",
 	
 	"defaultItemsName": "stavke",
 	"filterBarMsgHasFilterTemplate": "${0} od ${1} ${2} prikazano.",

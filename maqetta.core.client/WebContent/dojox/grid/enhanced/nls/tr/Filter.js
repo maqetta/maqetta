@@ -64,8 +64,6 @@ define(
 	"anycolumn": "herhangi bir sütun",
 	"statusTipTitleNoFilter": "Süzgeç Çubuğu",
 	"statusTipTitleHasFilter": "Süzgeç",
-	"statusTipRelPre": "Eşleştir",
-	"statusTipRelPost": "kurallar.",
 	
 	"defaultItemsName": "öğe",
 	"filterBarMsgHasFilterTemplate": "${0} / ${1} ${2} gösteriliyor.",

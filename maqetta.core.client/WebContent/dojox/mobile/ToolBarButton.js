@@ -53,7 +53,6 @@ define([
 			if(!this.label){
 				this.label = this.domNode.innerHTML;
 			}
-			this.domNode.innerHTML = this._cv ? this._cv(this.label) : this.label;
 
 			if(this.icon && this.icon != "none"){
 				this.iconNode = domConstruct.create("div", {className:"mblToolBarButtonIcon"}, this.domNode);
@@ -98,6 +97,11 @@ define([
 			if(common.createDomButton(this.domNode)){
 				domClass.add(this.domNode, "mblToolBarButtonDomButton");
 			}
+		},
+
+		_setLabelAttr: function(/*String*/text){
+			this.label = text;
+			this.domNode.innerHTML = this._cv ? this._cv(text) : text;
 		}
 	});
 });

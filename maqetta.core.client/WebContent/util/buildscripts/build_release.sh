@@ -7,9 +7,9 @@ svnUserName=$2
 #The svn revision number to use for tag. Should be a number, like 11203
 svnRevision=$3
 
-#If no svnRevision number, get the latest one from he repo.
+#If no svnRevision number, get the latest one from the repo.
 if [ "$svnRevision" = "" ]; then
-	svnRevision=`svn info http://svn.dojotoolkit.org/src/util/trunk/buildscripts/build_release.sh | grep Revision | sed 's/Revision: //'`
+	svnRevision=`svn info http://svn.dojotoolkit.org/src/branches/1.7/util/buildscripts/build_release.sh | grep Revision | sed 's/Revision: //'`
 fi
 
 tagName=release-$version
@@ -20,11 +20,11 @@ read -p "If you mean to create a tag for Dojo $version from r$svnRevision ... pr
 
 #Make the SVN tag.
 svn mkdir -m "Using r$svnRevision to create a tag for the $version release." https://svn.dojotoolkit.org/src/tags/$tagName
-svn copy -r $svnRevision https://svn.dojotoolkit.org/src/dojo/trunk  https://svn.dojotoolkit.org/src/tags/$tagName/dojo -m "Using r$svnRevision to create a tag for the $version release."
-svn copy -r $svnRevision https://svn.dojotoolkit.org/src/dijit/trunk https://svn.dojotoolkit.org/src/tags/$tagName/dijit -m "Using r$svnRevision to create a tag for the $version release."
-svn copy -r $svnRevision https://svn.dojotoolkit.org/src/dojox/trunk https://svn.dojotoolkit.org/src/tags/$tagName/dojox -m "Using r$svnRevision to create a tag for the $version release."
-svn copy -r $svnRevision https://svn.dojotoolkit.org/src/util/trunk  https://svn.dojotoolkit.org/src/tags/$tagName/util -m "Using r$svnRevision to create a tag for the $version release."
-svn copy -r $svnRevision https://svn.dojotoolkit.org/src/demos/trunk https://svn.dojotoolkit.org/src/tags/$tagName/demos -m "Using r$svnRevision to create a tag for the $version release."
+svn copy -r $svnRevision https://svn.dojotoolkit.org/src/branches/1.7/dojo  https://svn.dojotoolkit.org/src/tags/$tagName/dojo -m "Using r$svnRevision to create a tag for the $version release."
+svn copy -r $svnRevision https://svn.dojotoolkit.org/src/branches/1.7/dijit https://svn.dojotoolkit.org/src/tags/$tagName/dijit -m "Using r$svnRevision to create a tag for the $version release."
+svn copy -r $svnRevision https://svn.dojotoolkit.org/src/branches/1.7/dojox https://svn.dojotoolkit.org/src/tags/$tagName/dojox -m "Using r$svnRevision to create a tag for the $version release."
+svn copy -r $svnRevision https://svn.dojotoolkit.org/src/branches/1.7/util  https://svn.dojotoolkit.org/src/tags/$tagName/util -m "Using r$svnRevision to create a tag for the $version release."
+svn copy -r $svnRevision https://svn.dojotoolkit.org/src/branches/1.7/demos https://svn.dojotoolkit.org/src/tags/$tagName/demos -m "Using r$svnRevision to create a tag for the $version release."
 
 #Check out the tag
 mkdir ../../build
@@ -36,10 +36,13 @@ cd $buildName/util/buildscripts
 java -jar ../shrinksafe/js.jar changeVersion.js $version ../../dojo/_base/kernel.js
 java -jar ../shrinksafe/js.jar changeVersion.js $version ../../dojo/package.json
 java -jar ../shrinksafe/js.jar changeVersion.js $version ../../dijit/package.json
+java -jar ../shrinksafe/js.jar changeVersion.js $version ../../dojox/package.json
 cd ../../dojo
 svn commit -m "Updating dojo version for the tag. \!strict" package.json _base/kernel.js
 cd ../dijit
 svn commit -m "Updating dijit version for the tag. \!strict" package.json
+cd ../dojox
+svn commit -m "Updating dojox version for the tag. \!strict" package.json
 
 #Erase the SVN dir and replace with an exported SVN contents.
 cd ../..

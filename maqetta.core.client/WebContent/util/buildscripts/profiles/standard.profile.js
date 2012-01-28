@@ -5,6 +5,8 @@ dependencies = {
 	//But in general for a build, console.warn/error should be the only things to survive anyway.
 	stripConsole: "normal",
 
+	selectorEngine:"acme",
+
 	layers: [
 		{
 			name: "../dijit/dijit.js",

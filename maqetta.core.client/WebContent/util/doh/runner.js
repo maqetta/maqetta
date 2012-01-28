@@ -114,8 +114,7 @@ doh.extend(doh.Deferred, {
 			if(this.fired == -1){
 				this.errback(new Error("Deferred(unfired)"));
 			}
-		}else if(this.fired == 0 &&
-					(this.results[0] instanceof doh.Deferred)){
+		}else if(this.fired == 0 && this.results[0] && this.results[0].cancel){
 			this.results[0].cancel();
 		}
 	},
@@ -216,7 +215,7 @@ doh.extend(doh.Deferred, {
 			try {
 				res = f(res);
 				fired = ((res instanceof Error) ? 1 : 0);
-				if(res instanceof doh.Deferred){
+				if(res && res.addCallback){
 					cb = function(res){
 						self._continue(res);
 					};
@@ -1026,12 +1025,12 @@ doh._handleFailure = function(groupName, fixture, e){
 		this._failureCount++;
 		if(e["fileName"]){ out += e.fileName + ':'; }
 		if(e["lineNumber"]){ out += e.lineNumber + ' '; }
-		out += e+": "+e.message;
-		this.debug("\t_AssertFailure:", out);
+		out += e.message;
+		this.error("\t_AssertFailure:", out);
 	}else{
 		this._errorCount++;
+		this.error("\tError:", e.message || e); // printing Error on IE9 (and other browsers?) yields "[Object Error]"
 	}
-	this.error(e);
 	if(fixture.runTest["toSource"]){
 		var ss = fixture.runTest.toSource();
 		this.debug("\tERROR IN:\n\t\t", ss);
@@ -1148,7 +1147,7 @@ doh._runPerfFixture = function(/*String*/groupName, /*Object*/fixture){
 							state.countdown--;
 							if(state.countdown){
 								var ret = fixture.runTest(doh);
-								if(ret instanceof doh.Deferred){
+								if(ret && ret.addCallback){
 									//Deferreds have to be handled async,
 									//otherwise we just keep looping.
 									var atState = {
@@ -1248,7 +1247,7 @@ doh._calcTrialIterations =	function(/*String*/ groupName, /*Object*/ fixture){
 				if(state.curIter < state.iterations){
 					try{
 						var ret = testFunc(doh);
-						if(ret instanceof doh.Deferred){
+						if(ret && ret.addCallback){
 							var aState = {
 								start: state.start,
 								curIter: state.curIter + 1,
@@ -1313,7 +1312,7 @@ doh._runRegFixture = function(/*String*/groupName, /*Object*/fixture){
 	// if we get a deferred back from the test runner, we know we're
 	// gonna wait for an async result. It's up to the test code to trap
 	// errors and give us an errback or callback.
-	if(ret instanceof doh.Deferred) {
+	if(ret && ret.addCallback){
 		tg.inFlight++;
 		ret.groupName = groupName;
 		ret.fixture = fixture;

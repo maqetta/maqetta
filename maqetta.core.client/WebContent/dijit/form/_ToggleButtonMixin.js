@@ -19,6 +19,9 @@ return declare("dijit.form._ToggleButtonMixin", null, {
 	//		or the radio button is selected, etc.
 	checked: false,
 
+	// aria-pressed for toggle buttons, and aria-checked for checkboxes
+	_aria_attr: "aria-pressed",
+
 	_onClick: function(/*Event*/ evt){
 		var original = this.checked;
 		this._set('checked', !original); // partially set the toggled value, assuming the toggle will work, so it can be overridden in the onclick handler
@@ -30,7 +33,7 @@ return declare("dijit.form._ToggleButtonMixin", null, {
 	_setCheckedAttr: function(/*Boolean*/ value, /*Boolean?*/ priorityChange){
 		this._set("checked", value);
 		domAttr.set(this.focusNode || this.domNode, "checked", value);
-		(this.focusNode || this.domNode).setAttribute("aria-pressed", value);
+		(this.focusNode || this.domNode).setAttribute(this._aria_attr, value ? "true" : "false"); // aria values should be strings
 		this._handleOnChange(value, priorityChange);
 	},
 

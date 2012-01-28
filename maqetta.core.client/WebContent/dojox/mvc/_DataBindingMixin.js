@@ -224,6 +224,14 @@ define([
 			}
 		},
 
+		_isEqual: function(one, other){
+        	// test for equality
+			return one === other ||
+				// test for NaN === NaN
+				isNaN(one) && typeof one === 'number' &&
+				isNaN(other) && typeof other === 'number';
+		},
+
 		_updateBinding: function(name, old, current){
 			// summary:
 			//		Set the data binding to the supplied value, which must be a
@@ -252,16 +260,16 @@ define([
 				this._modelWatchHandles = [
 					// 1. value - no default
 					binding.watch("value", function (name, old, current){
-						if(old === current){return;}
-						if(pThis.get('value') === current){return;}
+						if(pThis._isEqual(old, current)){return;}
+						if(pThis._isEqual(pThis.get('value'), current)){return;}
 						pThis.set("value", current);
 					}),
 					// 2. valid - default "true"
 					binding.watch("valid", function (name, old, current){
 						pThis._updateProperty(name, old, current, true);
-						if(current !== pThis.get("binding").get(name)){
+						if(current !== pThis.get(name)){
 							if(pThis.validate && lang.isFunction(pThis.validate)){
-								pThis.validate(true);
+								pThis.validate();
 							}
 						}
 					}),

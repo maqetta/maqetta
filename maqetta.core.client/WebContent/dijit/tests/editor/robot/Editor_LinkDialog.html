@@ -259,7 +259,9 @@
 								target = dijit.byId(ldPlugin._uniqueId + "_targetSelect");
 
 								oldUrl = url.get("value");
+								doh.is("http://www.example.com/example.html", oldUrl, "old url");
 								oldDesc = desc.get("value");
+								doh.is("This is an example link in the page.", oldDesc, "old desc");
 
 								url.set("value", oldUrl + "_2");
 								desc.set("value", oldDesc + "_2");
@@ -552,22 +554,23 @@
 							doh.robot.mouseClick({left:true}, 100);
 							doh.robot.mouseClick({left:true}, 100);
 
-							doh.robot.sequence(d.getTestCallback(function(){
+							var f;
+							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(isVisible(ldPlugin.dropDown.domNode),  "tooltip dialog is visible");
-
-								var f = dijit.getFocus();
-								if(f.node){
-									var w = dijit.getEnclosingWidget(f.node);
-									if(w){
-										var val = w.get("value");
-										doh.t(new RegExp("http://www.example.com/example.html").test(val), "Verifying the contents contained link url");
-									}else{
-										doh.t(false, "Failed to enclosing textbox widget.");
-									}
-								}else{
-									doh.t(false, "Failed to get focus.");	
-								}
+								f = dijit.getFocus();
+								doh.isNot(null, f && f.node, "is focus");
+								var w = dijit.getEnclosingWidget(f.node);
+								doh.isNot(null, w, "focused on widget");
+								var val = w.get("value");
+								doh.t(new RegExp("http://www.example.com/example.html").test(val), "Verifying the contents contained link url");
 							}), 2000);
+
+							// Clicking the <input> shouldn't close TooltipDialog (#14395)
+							doh.robot.mouseMoveAt(function(){ return f.node; }, 500, 1);
+							doh.robot.mouseClick({left:true}, 100);
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(isVisible(ldPlugin.dropDown.domNode),  "tooltip dialog still visible");
+							}), 1000);
 
 							return d;
 						},
@@ -700,7 +703,9 @@
 							doh.robot.sequence(d.getTestErrback(function(){
 								url = dijit.byId(ldPlugin._uniqueId + "_urlInput");
 								desc = dijit.byId(ldPlugin._uniqueId + "_textInput");
+								doh.t(new RegExp(".*/sample.jpg").test(url.get("value")), "original URL");
 								oldDesc = desc.get("value");
+								doh.is("Sample Image", oldDesc, "original alt-text");
 								url.set("value", "./sample2.jpg");
 								desc.set("value", oldDesc + "_2");
 							}), 2000);
@@ -835,10 +840,11 @@
 							doh.robot.mouseClick({left:true}, 100);
 							doh.robot.mouseClick({left:true}, 100);
 
-							doh.robot.sequence(d.getTestCallback(function(){
+							var f;
+							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(isVisible(ldPlugin.dropDown.domNode),  "tooltip dialog is visible");
 
-								var f = dijit.getFocus();
+								f = dijit.getFocus();
 								doh.t(f.node, "got focus");
 
 								var w = dijit.getEnclosingWidget(f.node);
@@ -847,6 +853,13 @@
 								var val = w.get("value");
 								doh.t(new RegExp(".*/sample.jpg").test(val), "Verifying the contents contained image name");
 							}), 2000);
+
+							// Clicking the <input> shouldn't close TooltipDialog (#14395)
+							doh.robot.mouseMoveAt(function(){ return f.node; }, 500, 1);
+							doh.robot.mouseClick({left:true}, 100);
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(isVisible(ldPlugin.dropDown.domNode),  "tooltip dialog still visible");
+							}), 1000);
 
 							return d;
 						},

@@ -9,6 +9,7 @@ return declare("dojox.gauges.GlossyCircularGaugeNeedle", [AnalogIndicatorBase], 
 	// summary:
 	//		The needle for the dojox.gauges.GlossyCircularGauge and
 	//		dojox.gauges.GlossySemiCircularGauge.
+	//
 	// description:
 	//		This object defines the needle for the dojox.gauges.GlossyCircularGauge and
 	//		dojox.gauges.GlossySemiCircularGauge.

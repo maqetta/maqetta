@@ -1,5 +1,5 @@
-define(["dojo/_base/kernel", "dojo/_base/lang", "dojox/fx","dojo/NodeList-fx"],
-	function(kernel, lang, CoreFx, NodeList){
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/fx", "dojox/fx","dojo/NodeList-fx"],
+	function(kernel, lang, baseFx, CoreFx, NodeList){
 kernel.experimental("dojox.fx.ext-dojo.NodeList");
 // summary: Core extensions to dojo.NodeList providing addtional fx to dojo.NodeList-fx
 // description:
@@ -46,7 +46,7 @@ lang.extend(NodeList, {
 		//	example:
 		//	|	// fade all elements with class "bar" to to 50% opacity
 		//	|	dojo.query(".bar").fadeTo({ end: 0.5 }).play();
-		return this._anim(CoreFx,"_fade",args);
+		return this._anim(baseFx,"_fade",args);
 	},
 	
 	wipeTo: function(args){

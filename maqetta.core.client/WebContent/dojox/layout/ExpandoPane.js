@@ -282,7 +282,7 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	
 	_trap: function(e){
 		// summary: Trap stray events
-		eventUtil.stopEvent(e);
+		eventUtil.stop(e);
 	}
 });
 });

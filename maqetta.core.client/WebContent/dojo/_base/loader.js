@@ -12,26 +12,6 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 		return 0;
 	}
 
-	var isXdUrl = function(){ return 0;};
-	if(has("dom")){
-		var locationProtocol = location.protocol,
-			locationHost = location.host,
-			fileProtocol = !locationHost;
-		isXdUrl = function(url){
-			if(fileProtocol || /^\./.test(url)){
-				// begins with a dot is always relative to page URL; therefore not xdomain
-				return false;
-			}
-			if(/^\/\//.test(url)){
-				// for v1.6- backcompat, url starting with // indicates xdomain
-				return true;
-			}
-			// get protocol and host
-			var match = url.match(/^([^\/\:]+\:)\/\/([^\/]+)/);
-			return match && (match[1] != locationProtocol || match[2] != locationHost);
-		};
-	}
-
 	var makeErrorToken = function(id){
 			return {src:thisModule.id, id:id};
 		},
@@ -343,7 +323,7 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 			    "define(" + dojo.toJson(names.concat(["dojo/loadInit!"+id])) + ", function(" + names.join(",") + "){\n" + extractResult[0] + "});";
 		},
 
-		loaderVars = require.initSyncLoader(dojoRequirePlugin, checkDojoRequirePlugin, transformToAmd, isXdUrl),
+		loaderVars = require.initSyncLoader(dojoRequirePlugin, checkDojoRequirePlugin, transformToAmd),
 
 		sync =
 			loaderVars.sync,
@@ -525,6 +505,8 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 			// if the module is a legacy module, this is the same as executing
 			// but if the module is an AMD module, this means defining, not executing
 			injectModule(module);
+			// the inject may have changed the mode
+			currentMode = getLegacyMode();
 
 			// in sync mode to dojo.require is to execute
 			if(module.executed!==executed && module.injected===arrived){

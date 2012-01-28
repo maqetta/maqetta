@@ -105,8 +105,7 @@ define([
 	lang.getObject("gesture", true, dojox);
 
 	// Declare an internal anonymous class which will only be exported by module return value
-	// should be changed to "declare(null, {...});" once http://bugs.dojotoolkit.org/ticket/13890 is fixed
-	return declare(" ", null, {
+	return declare(/*===== "dojox.gesture.Base", =====*/null, {
 
 		// defaultEvent: [readonly] String
 		//		Default event e.g. 'tap' is a default event of dojox.gesture.tap

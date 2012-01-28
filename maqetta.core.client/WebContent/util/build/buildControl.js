@@ -124,7 +124,7 @@ define([
 				if(p=="hasCache"){
 					mix(bc.defaultConfig.hasCache, src.defaultConfig.hasCache);
 				}else{
-					bc.defaultConfig[p]= bc.defaultConfig[p];
+					bc.defaultConfig[p]= src.defaultConfig[p];
 				}
 			}
 		};

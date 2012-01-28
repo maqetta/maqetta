@@ -3,7 +3,7 @@ define(["./fs"], function(fs) {
 
 	return function(contents, replacement) {
 		var encoding= "utf8";
-		if (replacement[1] instanceof Array) {
+		if (replacement instanceof Array) {
 			// replacement is a vector of replacement instructions; maybe the first item is an encoding
 			if (typeof replacement[0]=="string") {
 				encoding= replacement[0];

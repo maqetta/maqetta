@@ -1,6 +1,6 @@
 {
 	"name": "dojox",
-	"version":"1.7.0dev",
+	"version":"1.7.1",
 	"directories": {
 		"lib": "."
 	},

@@ -64,8 +64,6 @@ define(
 	"anycolumn": "vilkårlig kolonne",
 	"statusTipTitleNoFilter": "Filterlinje",
 	"statusTipTitleHasFilter": "Filter",
-	"statusTipRelPre": "Match",
-	"statusTipRelPost": "regler.",
 	
 	"defaultItemsName": "elementer",
 	"filterBarMsgHasFilterTemplate": "${0} af ${1} ${2} vist.",

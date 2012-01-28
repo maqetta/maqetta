@@ -12,9 +12,9 @@ if [ -z $version ]; then
 fi
 
 dobuild() {
-	java -classpath ../shrinksafe/js.jar:../shrinksafe/shrinksafe.jar org.mozilla.javascript.tools.shell.Main build.js profile=standard releaseName=$1 cssOptimize=comments.keepLines optimize=shrinksafe stripConsole=normal loader=xdomain xdDojoPath=$3 version=$1 copyTests=false mini=true action=release xdDojoScopeName=window[\(typeof\(djConfig\)\!\=\"undefined\"\&\&djConfig.scopeMap\&\&djConfig.scopeMap[0][1]\)\|\|\"dojo\"]
-	mv ../../release/$1 ../../release/$1-cdn/$2
-	cd ../../release/$1-cdn/$2
+	java -classpath ../shrinksafe/js.jar:../shrinksafe/shrinksafe.jar org.mozilla.javascript.tools.shell.Main ../../dojo/dojo.js baseUrl=../../dojo load=build profile=standard releaseName=$1 cssOptimize=comments.keepLines optimize=shrinksafe stripConsole=normal version=$1 copyTests=false mini=true action=release
+	mv ../../release/$1 ../../release/$1-cdn
+	cd ../../release/$1-cdn
 	zip -rq $1.zip $1/*
 	sha1sum $1.zip > sha1.txt
 	cd $1
@@ -24,16 +24,12 @@ dobuild() {
 
 # Generate locale info
 cd cldr
+ant clean  # necessary until cldr scripts can handle existing AMD files
 ant
 cd ..
 
 # Setup release area
-mkdir ../../release
-mkdir ../../release/$version-cdn
-mkdir ../../release/$version-cdn/google
-mkdir ../../release/$version-cdn/aol
+mkdir -p ../../release/$version-cdn
 
 # Google build
-dobuild $version "google" "http://ajax.googleapis.com/ajax/libs/dojo/$version"
-# AOL build
-dobuild $version "aol" "http://o.aolcdn.com/dojo/$version"
+dobuild $version

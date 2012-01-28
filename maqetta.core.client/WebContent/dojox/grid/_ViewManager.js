@@ -98,7 +98,7 @@ return declare('dojox.grid._ViewManager', null, {
 	
 			//Work around odd FF3 rendering bug: #8864.
 			//A one px increase fixes FireFox 3's rounding bug for fractional font sizes.
-			if(has('mozilla') && h){h++;}
+			if((has('mozilla') || has('ie') > 8 ) && h){h++;}
 		}
 		for(i=0; (n=inRowNodes[i]); i++){
 			if(currHeights[i] != h){

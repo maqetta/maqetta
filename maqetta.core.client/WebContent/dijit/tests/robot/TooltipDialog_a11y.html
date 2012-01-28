@@ -360,6 +360,32 @@
 							}), 2000);
 							return d;
 						}
+					},
+					{
+						name: "href",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
+							var button = dijit.byId("slowLoadButton"),
+								dialog = dijit.byId("slowLoad");
+
+							// open TooltipDialog
+							doh.robot.sequence(function(){
+								button.focus();
+							}, 1000, 1000);
+							doh.robot.keyPress(dojo.keys.SPACE, 500, {});
+							doh.robot.sequence(d.getTestErrback(function(){
+								doh.t(button._opened, "TooltipDialog should be showing");
+								doh.t(/Delayed by 0.5 sec/.test(dialog.domNode.innerHTML), "data was loaded")
+							}), 2000);
+
+							// close TooltipDialog
+							doh.robot.keyPress(dojo.keys.ESCAPE, 500, {});
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.f(button._opened, "TooltipDialog should not be showing after Esc");
+							}), 1000);
+							return d;
+						}
 					}
 				]);
 

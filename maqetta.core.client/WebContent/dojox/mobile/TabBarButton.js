@@ -104,14 +104,11 @@ define([
 					var n = r.firstChild;
 					if(n.nodeType === 3){
 						label += lang.trim(n.nodeValue);
-						n.nodeValue = this._cv ? this._cv(n.nodeValue) : n.nodeValue;
 					}
 					box.appendChild(n);
 				}
 			}
-			if(this.label){
-				box.appendChild(win.doc.createTextNode(this._cv ? this._cv(this.label) : this.label));
-			}else{
+			if(!this.label){
 				this.label = label;
 			}
 	
@@ -224,6 +221,11 @@ define([
 	
 		_setIconPos2Attr: function(pos){
 			this._setIcon(null, pos, 2, !this.selected);
+		},
+
+		_setLabelAttr: function(/*String*/text){
+			this.label = text;
+			this.box.innerHTML = this._cv ? this._cv(text) : text;
 		}
 	});
 });

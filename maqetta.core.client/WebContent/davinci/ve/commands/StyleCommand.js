@@ -1,19 +1,18 @@
 define([
     	"dojo/_base/declare",
-    	"davinci/ve/widget",
-    	"davinci/ve/States"
-], function(declare, Widget, States){
+    	"davinci/ve/widget"
+//    	"davinci/ve/States" // circular dep
+], function(declare, Widget){
 
 
 return declare("davinci.ve.commands.StyleCommand", null, {
-	
 
 	name: "style",
 
 	constructor: function(widget, values, applyToWhichStates){
 	
 		this._newValues = values;
-		this._id = (widget ? widget.id : undefined);
+		this._id = widget ? widget.id : undefined;
 		// applyToWhichStates controls whether style change is attached to Normal or other states
 		//   "current" => apply to currently active state
 		//   [...array of strings...] => apply to these states (may not yet be implemented)
@@ -41,7 +40,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		}
 		var cleanValues = dojo.clone(this._newValues);
 		
-		var veStates = States;
+		var veStates = davinci.ve.states;
 		var currentState = veStates.getState();
 		if(this._applyToWhichStates === "current"){
 			this._state = currentState;
@@ -70,7 +69,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 			this._refresh(widget);
 			
 			// Recompute styling properties in case we aren't in Normal state
-			States.resetState(widget);
+			veStates.resetState(widget);
 		}
 		
 		//FIXME: Various widget changed events (/davinci/ui/widget*Changed) need to be cleaned up.
@@ -115,7 +114,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		this._refresh(widget);
 		
 		// Recompute styling properties in case we aren't in Normal state
-		States.resetState(widget);
+		davinci.ve.states.resetState(widget);
 		
 		//FIXME: Various widget changed events (/davinci/ui/widget*Changed) need to be cleaned up.
 		// I defined yet another one here (widgetPropertiesChanged) just before Preview3

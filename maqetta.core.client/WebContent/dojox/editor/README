@@ -181,31 +181,31 @@ Documentation
 The plugins directory contains extensions which work with dijit.Editor.
 
 See also:
-	http://docs.dojocampus.org/dojox/editor/plugins/TablePlugins
-	http://docs.dojocampus.org/dojox/editor/plugins/PrettyPrint
-	http://docs.dojocampus.org/dojox/editor/plugins/PageBreak
-	http://docs.dojocampus.org/dojox/editor/plugins/ShowBlockNodes
-	http://docs.dojocampus.org/dojox/editor/plugins/Preview
-	http://docs.dojocampus.org/dojox/editor/plugins/Save
-	http://docs.dojocampus.org/dojox/editor/plugins/ToolbarLineBreak
-	http://docs.dojocampus.org/dojox/editor/plugins/InsertEntity
-	http://docs.dojocampus.org/dojox/editor/plugins/NormalizeIndentOutdent
-	http://docs.dojocampus.org/dojox/editor/plugins/Breadcrumb
-	http://docs.dojocampus.org/dojox/editor/plugins/FindReplace
-	http://docs.dojocampus.org/dojox/editor/plugins/CollapsibleToolbar
-	http://docs.dojocampus.org/dojox/editor/plugins/Blockquote
-	http://docs.dojocampus.org/dojox/editor/plugins/PasteFromWord
-	http://docs.dojocampus.org/dojox/editor/plugins/InsertAnchor       
-	http://docs.dojocampus.org/dojox/editor/plugins/TextColor
-	http://docs.dojocampus.org/dojox/editor/plugins/NormalizeStyle
-	http://docs.dojocampus.org/dojox/editor/plugins/StatusBar 
-	http://docs.dojocampus.org/dojox/editor/plugins/LocalImage
-	http://docs.dojocampus.org/dojox/editor/plugins/AutoUrlLink
-	http://docs.dojocampus.org/dojox/editor/plugins/ResizeTableColumn
-	http://docs.dojocampus.org/dojox/editor/plugins/AutoSave
-	http://docs.dojocampus.org/dojox/editor/plugins/SpellCheck
-	http://docs.dojocampus.org/dojox/editor/plugins/SafePaste
-
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/TablePlugins.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/PrettyPrint.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/PageBreak.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/ShowBlockNodes.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/Preview.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/Save.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/ToolbarLineBreak.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/InsertEntity.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/NormalizeIndentOutdent.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/Breadcrumb.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/FindReplace.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/CollapsibleToolbar.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/Blockquote.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/PasteFromWord.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/InsertAnchor.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/TextColor.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/NormalizeStyle.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/StatusBar.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/LocalImage.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/AutoUrlLink.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/ResizeTableColumn.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/AutoSave.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/SpellCheck.html
+	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/SafePaste.html
+.html
 	
 -------------------------------------------------------------------------------
 Plugin Installation instructions

@@ -64,8 +64,6 @@ define(
 	"anycolumn": "bármely oszlop",
 	"statusTipTitleNoFilter": "Szűrősáv",
 	"statusTipTitleHasFilter": "Szűrő",
-	"statusTipRelPre": "Egyezik",
-	"statusTipRelPost": "szabályok.",
 	
 	"defaultItemsName": "elemek",
 	"filterBarMsgHasFilterTemplate": "${0} / ${1} ${2} megjelenítve.",

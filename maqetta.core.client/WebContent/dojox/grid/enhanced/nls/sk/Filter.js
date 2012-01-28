@@ -64,8 +64,6 @@ define(
 	"anycolumn": "ľubovoľný stĺpec",
 	"statusTipTitleNoFilter": "Lišta filtra",
 	"statusTipTitleHasFilter": "Filter",
-	"statusTipRelPre": "Vyhovieť",
-	"statusTipRelPost": "pravidlá.",
 	
 	"defaultItemsName": "položky",
 	"filterBarMsgHasFilterTemplate": "Zobrazuje sa ${0} z ${1} ${2}.",

@@ -44,7 +44,7 @@ define(
 			getParameters : function(){
 				//	summary:
 				//		Retreives the parameters describing the widget.
-				//	returns:
+				//	returns: Object
 				//		The parameters describing the widget.
 				return this._params;
 			},

@@ -16,7 +16,6 @@ _3.add(this.domNode,_8);
 if(!this.label){
 this.label=this.domNode.innerHTML;
 }
-this.domNode.innerHTML=this._cv?this._cv(this.label):this.label;
 if(this.icon&&this.icon!="none"){
 this.iconNode=_4.create("div",{className:"mblToolBarButtonIcon"},this.domNode);
 _6.createIcon(this.icon,this.iconPos,null,this.alt,this.iconNode);
@@ -48,5 +47,8 @@ _3.add(_a,_9);
 if(_6.createDomButton(this.domNode)){
 _3.add(this.domNode,"mblToolBarButtonDomButton");
 }
+},_setLabelAttr:function(_b){
+this.label=_b;
+this.domNode.innerHTML=this._cv?this._cv(_b):_b;
 }});
 });

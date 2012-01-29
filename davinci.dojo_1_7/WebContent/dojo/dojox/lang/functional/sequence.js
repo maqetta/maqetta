@@ -1,6 +1,6 @@
 //>>built
-define("dojox/lang/functional/sequence",["./lambda"],function(df){
-dojo.mixin(df,{repeat:function(n,f,z,o){
+define("dojox/lang/functional/sequence",["dojo/_base/lang","./lambda"],function(_1,df){
+_1.mixin(df,{repeat:function(n,f,z,o){
 o=o||dojo.global;
 f=df.lambda(f);
 var t=new Array(n),i=1;
@@ -17,4 +17,5 @@ for(;!pr.call(o,z);t.push(z),z=f.call(o,z)){
 }
 return t;
 }});
+return df;
 });

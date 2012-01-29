@@ -1,8 +1,8 @@
 define([
 	"dojo/_base/declare",
-	"../actions/Action",
+	"../../actions/Action",
 	"./PublishAction",
-	"../Runtime",
+	"../../Runtime",
 	"dojox/widget/Toaster",
 	"dojo/i18n!./nls/actions"
 ], function(declare, Action, PublishAction, Runtime, Toaster, nls) {

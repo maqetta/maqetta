@@ -65,8 +65,6 @@ define(
 	"anycolumn": "mikä tahansa sarake",
 	"statusTipTitleNoFilter": "Suodatinpalkki",
 	"statusTipTitleHasFilter": "Suodatin",
-	"statusTipRelPre": "Vastine",
-	"statusTipRelPost": "säännöt.",
 	
 	"defaultItemsName": "nimikkeet",
 	"filterBarMsgHasFilterTemplate": "näkyvissä ${0} / ${1} ${2}.",

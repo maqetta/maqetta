@@ -142,6 +142,7 @@ _21.destroyRecursive();
 }
 },destroyDescendants:function(_23){
 this._descendantsBeingDestroyed=true;
+this.selectedChildWidget=undefined;
 _1.forEach(this.getChildren(),function(_24){
 if(!_23){
 this.removeChild(_24);

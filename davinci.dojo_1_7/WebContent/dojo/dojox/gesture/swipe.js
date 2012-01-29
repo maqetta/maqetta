@@ -1,7 +1,7 @@
 //>>built
 define("dojox/gesture/swipe",["dojo/_base/kernel","dojo/_base/declare","./Base","../main"],function(_1,_2,_3,_4){
 _1.experimental("dojox.gesture.swipe");
-var _5=_2(" ",_3,{defaultEvent:"swipe",subEvents:["end"],press:function(_6,e){
+var _5=_2(_3,{defaultEvent:"swipe",subEvents:["end"],press:function(_6,e){
 if(e.touches&&e.touches.length>=2){
 delete _6.context;
 return;

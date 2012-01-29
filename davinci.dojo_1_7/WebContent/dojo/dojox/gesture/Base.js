@@ -2,7 +2,7 @@
 define("dojox/gesture/Base",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/lang","dojo/dom","dojo/on","dojo/touch","dojo/has","../main"],function(_1,_2,_3,_4,_5,on,_6,_7,_8){
 _1.experimental("dojox.gesture.Base");
 _4.getObject("gesture",true,_8);
-return _2(" ",null,{defaultEvent:" ",subEvents:[],touchOnly:false,_elements:null,constructor:function(_9){
+return _2(null,{defaultEvent:" ",subEvents:[],touchOnly:false,_elements:null,constructor:function(_9){
 _4.mixin(this,_9);
 this.init();
 },init:function(){

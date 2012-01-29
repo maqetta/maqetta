@@ -3386,7 +3386,7 @@ define("dojox/charting/Chart", ["dojo/_base/lang", "dojo/_base/array","dojo/_bas
 		//	|			{ stroke: { color: "green" }, fill: "lightgreen" }
 		//	|		)
 		//	|		.render();
-		//
+		
 		//	theme: dojox.charting.Theme?
 		//		An optional theme to use for styling the chart.
 		//	axes: dojox.charting.Axis{}?
@@ -4421,7 +4421,7 @@ define("dojox/charting/Chart", ["dojo/_base/lang", "dojo/_base/array","dojo/_bas
 
 },
 'dojox/lang/functional/sequence':function(){
-define("dojox/lang/functional/sequence", ["./lambda"], function(df){
+define("dojox/lang/functional/sequence", ["dojo/_base/lang", "./lambda"], function(lang, df){
 
 // This module adds high-level functions and related constructs:
 //	- sequence generators
@@ -4436,7 +4436,7 @@ define("dojox/lang/functional/sequence", ["./lambda"], function(df){
 	var df = dojox.lang.functional;
  =====*/
 
-	dojo.mixin(df, {
+	lang.mixin(df, {
 		// sequence generators
 		repeat: function(/*Number*/ n, /*Function|String|Array*/ f, /*Object*/ z, /*Object?*/ o){
 			// summary: builds an array by repeatedly applying a unary function N times
@@ -4456,6 +4456,8 @@ define("dojox/lang/functional/sequence", ["./lambda"], function(df){
 			return t;	// Array
 		}
 	});
+	
+	return df;
 });
 
 },
@@ -4569,8 +4571,7 @@ if(!dojo.isAsync){
 	});
 }
 
-	var coreFx = {};
-	dojo.fx = baseFx;
+	var coreFx = dojo.fx = {};
 
 	var _baseObj = {
 			_fire: function(evt, args){
@@ -4690,7 +4691,7 @@ if(!dojo.isAsync){
 	});
 	lang.extend(_chain, _baseObj);
 
-	coreFx.chain = dojo.fx.chain = function(/*dojo.Animation[]*/ animations){
+	coreFx.chain = /*===== dojo.fx.chain = =====*/ function(/*dojo.Animation[]*/ animations){
 		// summary:
 		//		Chain a list of `dojo.Animation`s to run in sequence
 		//
@@ -4783,7 +4784,7 @@ if(!dojo.isAsync){
 	});
 	lang.extend(_combine, _baseObj);
 
-	coreFx.combine = dojo.fx.combine = function(/*dojo.Animation[]*/ animations){
+	coreFx.combine = /*===== dojo.fx.combine = =====*/ function(/*dojo.Animation[]*/ animations){
 		// summary:
 		//		Combine a list of `dojo.Animation`s to run in parallel
 		//
@@ -4813,7 +4814,7 @@ if(!dojo.isAsync){
 		return new _combine(animations); // dojo.Animation
 	};
 
-	coreFx.wipeIn = dojo.fx.wipeIn = function(/*Object*/ args){
+	coreFx.wipeIn = /*===== dojo.fx.wipeIn = =====*/ function(/*Object*/ args){
 		// summary:
 		//		Expand a node to it's natural height.
 		//
@@ -4869,7 +4870,7 @@ if(!dojo.isAsync){
 		return anim; // dojo.Animation
 	};
 
-	coreFx.wipeOut = dojo.fx.wipeOut = function(/*Object*/ args){
+	coreFx.wipeOut = /*===== dojo.fx.wipeOut = =====*/ function(/*Object*/ args){
 		// summary:
 		//		Shrink a node to nothing and hide it.
 		//
@@ -4910,7 +4911,7 @@ if(!dojo.isAsync){
 		return anim; // dojo.Animation
 	};
 
-	coreFx.slideTo = dojo.fx.slideTo = function(/*Object*/ args){
+	coreFx.slideTo = /*===== dojo.fx.slideTo = =====*/ function(/*Object*/ args){
 		// summary:
 		//		Slide a node to a new top/left position
 		//
@@ -4958,7 +4959,6 @@ if(!dojo.isAsync){
 
 		return anim; // dojo.Animation
 	};
-	lang.mixin(dojo.fx, coreFx); // Add the core api's to the base fx api's for compat.
 
 	return coreFx;
 });
@@ -6782,13 +6782,13 @@ var Default = dojox.charting.plot2d.Default;
 
 },
 'dojo/fx/easing':function(){
-define(["../_base/kernel","../_base/lang"], function(dojo, lang) {
-	// module:
-	//		dojo/fx/easing
-	// summary:
-	//		This module defines standard easing functions that are useful for animations.
-var fxEasing = lang.getObject("dojo.fx.easing",true);
-var easingFuncs = {
+define(["../_base/lang"], function(lang) {
+// module:
+//		dojo/fx/easing
+// summary:
+//		This module defines standard easing functions that are useful for animations.
+
+var easingFuncs = /*===== dojo.fx.easing= =====*/ {
 	// summary:
 	//		Collection of easing functions to use beyond the default
 	//		`dojo._defaultEasing` function.
@@ -7061,7 +7061,9 @@ var easingFuncs = {
 		return (easingFuncs.bounceOut(n * 2 - 1) / 2) + 0.5; // Decimal
 	}
 };
-lang.mixin(fxEasing,easingFuncs);
+
+lang.setObject("dojo.fx.easing", easingFuncs);
+
 return easingFuncs;
 });
 
@@ -8388,7 +8390,7 @@ define("dojox/charting/plot2d/Spider", ["dojo/_base/lang", "dojo/_base/declare",
 	"../scaler/primitive", "dojox/gfx", "dojox/gfx/matrix", "dojox/gfx/fx", "dojox/lang/functional", 
 	"dojox/lang/utils", "dojo/fx/easing"],
 	function(lang, declare, hub, html, arr, domGeom, baseFx, coreFx, has, 
-			Element, PlotEvents, dcolors, dxcolor, dc, da, primitive, 
+			Element, PlotEvents, Color, dxcolor, dc, da, primitive,
 			g, m, gfxfx, df, du, easing){
 /*=====
 var Element = dojox.charting.Element;
@@ -8876,7 +8878,7 @@ var PlotEvents = dojox.charting.plot2d._PlotEvents;
 				a.anim = gfxfx.animateFill({
 					shape:	  o.shape,
 					duration: 800,
-					easing:	  coreFx.easing.backOut,
+					easing:	  easing.backOut,
 					color:	  {start: start, end: end}
 				});
 				a.anim.play();
@@ -17612,7 +17614,7 @@ return declare("dijit._WidgetBase", Stateful, {
 		//			  tree
 		// description:
 		//		Create calls a number of widget methods (postMixInProperties, buildRendering, postCreate,
-		//		etc.), some of which of you'll want to override. See http://docs.dojocampus.org/dijit/_Widget
+		//		etc.), some of which of you'll want to override. See http://dojotoolkit.org/reference-guide/dijit/_WidgetBase.html
 		//		for a discussion of the widget creation lifecycle.
 		//
 		//		Of course, adventurous developers could override create entirely, but this should

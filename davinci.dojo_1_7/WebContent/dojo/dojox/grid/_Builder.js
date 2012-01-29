@@ -300,7 +300,7 @@ return false;
 }
 if(_6("ie")){
 var tN=e.target;
-if(_b.hasClass(tN,"dojoxGridArrowButtonNode")||_b.hasClass(tN,"dojoxGridArrowButtonChar")){
+if(_b.hasClass(tN,"dojoxGridArrowButtonNode")||_b.hasClass(tN,"dojoxGridArrowButtonChar")||_b.hasClass(tN,"dojoxGridColCaption")){
 return false;
 }
 }
@@ -315,7 +315,7 @@ return false;
 }
 if(_6("ie")){
 var tN=e.target;
-if(_b.hasClass(tN,"dojoxGridArrowButtonNode")||_b.hasClass(tN,"dojoxGridArrowButtonChar")){
+if(_b.hasClass(tN,"dojoxGridArrowButtonNode")||_b.hasClass(tN,"dojoxGridArrowButtonChar")||_b.hasClass(tN,"dojoxGridColCaption")){
 return false;
 }
 }

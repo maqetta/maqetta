@@ -9,6 +9,7 @@ define("dojox/gauges/GlossyHorizontalGaugeMarker", ["dojo/_base/declare","dojo/_
 return declare("dojox.gauges.GlossyHorizontalGaugeMarker", [BarLineIndicator], {
 	// summary:
 	//		The marker for the dojox.gauges.GlossyHorizontalGauge.
+	//
 	// description:
 	//		This object defines the marker for the dojox.gauges.GlossyHorizontalGauge.
 	//		Since the needle is created by the gauges class, you do not have to use this class directly.

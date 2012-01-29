@@ -5,7 +5,7 @@
 */
 
 //>>built
-define("dojo/store/util/QueryResults",["../../_base/kernel","../../_base/lang","../../_base/Deferred"],function(_1,_2,_3){
+define("dojo/store/util/QueryResults",["../../_base/array","../../_base/lang","../../_base/Deferred"],function(_1,_2,_3){
 var _4=_2.getObject("dojo.store.util",true);
 _4.QueryResults=function(_5){
 if(!_5){
@@ -20,7 +20,7 @@ _5[_7]=function(){
 var _8=arguments;
 return _3.when(_5,function(_9){
 Array.prototype.unshift.call(_8,_9);
-return _4.QueryResults(dojo[_7].apply(dojo,_8));
+return _4.QueryResults(_1[_7].apply(_1,_8));
 });
 };
 }

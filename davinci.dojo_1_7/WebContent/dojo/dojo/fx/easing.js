@@ -5,9 +5,8 @@
 */
 
 //>>built
-define("dojo/fx/easing",["../_base/kernel","../_base/lang"],function(_1,_2){
-var _3=_2.getObject("dojo.fx.easing",true);
-var _4={linear:function(n){
+define("dojo/fx/easing",["../_base/lang"],function(_1){
+var _2={linear:function(n){
 return n;
 },quadIn:function(n){
 return Math.pow(n,2);
@@ -134,7 +133,7 @@ return -0.5*(Math.pow(2,10*n)*Math.sin((n-s)*(2*Math.PI)/p));
 n-=1;
 return 0.5*(Math.pow(2,-10*n)*Math.sin((n-s)*(2*Math.PI)/p))+1;
 },bounceIn:function(n){
-return (1-_4.bounceOut(1-n));
+return (1-_2.bounceOut(1-n));
 },bounceOut:function(n){
 var s=7.5625;
 var p=2.75;
@@ -158,10 +157,10 @@ l=s*Math.pow(n,2)+0.984375;
 return l;
 },bounceInOut:function(n){
 if(n<0.5){
-return _4.bounceIn(n*2)/2;
+return _2.bounceIn(n*2)/2;
 }
-return (_4.bounceOut(n*2-1)/2)+0.5;
+return (_2.bounceOut(n*2-1)/2)+0.5;
 }};
-_2.mixin(_3,_4);
-return _4;
+_1.setObject("dojo.fx.easing",_2);
+return _2;
 });

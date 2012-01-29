@@ -135,7 +135,7 @@ define("dojox/html/ext-dojo/style", ["dojo/_base/kernel", "dojo/dom-style", "doj
 				transforms = t.split(")"),
 				toRad = 1, toRad1 = 1,
 				mstr = "DXImageTransform.Microsoft.Matrix",
-				hasAttr = DOMAttr.hasAttr,
+				hasAttr = DOMAttr.has,
 				attr = Html.attr,
 				// Math functions
 				PI = Math.PI, cos = Math.cos, sin = Math.sin, tan = Math.tan, max = Math.max, min = Math.min, abs = Math.abs,

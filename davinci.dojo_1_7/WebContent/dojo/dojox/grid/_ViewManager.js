@@ -55,7 +55,7 @@ h=Math.max(h,_c[i]);
 }
 }
 h=(h>=0?h:0);
-if(_2("mozilla")&&h){
+if((_2("mozilla")||_2("ie")>8)&&h){
 h++;
 }
 }

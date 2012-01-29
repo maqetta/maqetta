@@ -5,7 +5,7 @@
 */
 
 //>>built
-define("dojo/store/Observable",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/Deferred","dojo/_base/array"],function(_1,_2,_3,_4){
+define("dojo/store/Observable",["../_base/kernel","../_base/lang","../_base/Deferred","../_base/array"],function(_1,_2,_3,_4){
 var ds=_2.getObject("dojo.store",true);
 return ds.Observable=function(_5){
 var _6,_7=[],_8=0;
@@ -32,7 +32,7 @@ if(_13.push(_15)==1){
 _7.push(_14=function(_17,_18){
 _3.when(_f,function(_19){
 var _1a=_19.length!=_e.count;
-var i,l;
+var i,l,_15;
 if(++_12!=_8){
 throw new Error("Query is out of date, you must observe() the query prior to any data modifications");
 }
@@ -56,13 +56,14 @@ var _1f=_1c>-1?_1c:_19.length;
 _19.splice(_1f,0,_17);
 _1d=_4.indexOf(_11(_19),_17);
 _19.splice(_1f,1);
-_19.splice(_1d,0,_17);
-if((_e.start&&_1d==0)||(!_1a&&_1d==_19.length-1)){
+if((_e.start&&_1d==0)||(!_1a&&_1d==_19.length)){
 _1d=-1;
+}else{
+_19.splice(_1d,0,_17);
 }
 }
 }else{
-if(_17){
+if(_17&&!_e.start){
 _1d=_1c>=0?_1c:(_5.defaultIndex||0);
 }
 }
@@ -76,44 +77,47 @@ _15(_17||_1b,_1c,_1d);
 });
 }
 return {cancel:function(){
-_13.splice(_4.indexOf(_13,_15),1);
+var _21=_4.indexOf(_13,_15);
+if(_21>-1){
+_13.splice(_21,1);
 if(!_13.length){
 _7.splice(_4.indexOf(_7,_14),1);
+}
 }
 }};
 };
 }
 return _f;
 };
-var _21;
-function _22(_23,_24){
-var _25=_5[_23];
-if(_25){
-_5[_23]=function(_26){
-if(_21){
-return _25.apply(this,arguments);
+var _22;
+function _23(_24,_25){
+var _26=_5[_24];
+if(_26){
+_5[_24]=function(_27){
+if(_22){
+return _26.apply(this,arguments);
 }
-_21=true;
+_22=true;
 try{
-var _27=_25.apply(this,arguments);
-_3.when(_27,function(_28){
-_24((typeof _28=="object"&&_28)||_26);
+var _28=_26.apply(this,arguments);
+_3.when(_28,function(_29){
+_25((typeof _29=="object"&&_29)||_27);
 });
-return _27;
+return _28;
 }
 finally{
-_21=false;
+_22=false;
 }
 };
 }
 };
-_22("put",function(_29){
-_5.notify(_29,_5.getIdentity(_29));
+_23("put",function(_2a){
+_5.notify(_2a,_5.getIdentity(_2a));
 });
-_22("add",function(_2a){
-_5.notify(_2a);
+_23("add",function(_2b){
+_5.notify(_2b);
 });
-_22("remove",function(id){
+_23("remove",function(id){
 _5.notify(undefined,id);
 });
 return _5;

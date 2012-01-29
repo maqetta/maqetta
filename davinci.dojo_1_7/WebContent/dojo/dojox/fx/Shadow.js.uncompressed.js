@@ -1,7 +1,8 @@
 //>>built
 define("dojox/fx/Shadow", ["dojo/_base/kernel", "dojo/_base/query" ,"dojo/_base/lang", "dojo/_base/declare", "dojo/_base/sniff",
-		"dojo/dom-construct", "dojo/dom-class", "dojo/dom-geometry", "dojo/fx", "dijit/_Widget","dojo/NodeList-fx"], 
-  function(kernel, query, lang, declare, has, domConstruct, domClass, domGeom, coreFx, Widget, NodeListFx){
+		"dojo/dom-construct", "dojo/dom-class", "dojo/dom-geometry", "dojo/_base/fx", "dojo/fx", "dijit/_Widget",
+		"dojo/NodeList-fx"], 
+  function(kernel, query, lang, declare, has, domConstruct, domClass, domGeom, baseFx, coreFx, Widget, NodeListFx){
 kernel.experimental("dojox.fx.Shadow");
 declare("dojox.fx.Shadow", Widget,{
 		// summary: Adds a drop-shadow to a node.
@@ -93,7 +94,7 @@ declare("dojox.fx.Shadow", Widget,{
 			if(this.animate){
 				var _anims = [];
 				this.nodeList.forEach(function(node){
-					_anims.push(coreFx._fade(lang.mixin(animArgs,{ node: node, end: n })));
+					_anims.push(baseFx._fade(lang.mixin(animArgs,{ node: node, end: n })));
 				});
 				coreFx.combine(_anims).play();
 			}else{
@@ -142,5 +143,5 @@ declare("dojox.fx.Shadow", Widget,{
 			}
 		}
 	});
-	return coreFx.Shadow;
+	return dojox.fx.Shadow;
 });

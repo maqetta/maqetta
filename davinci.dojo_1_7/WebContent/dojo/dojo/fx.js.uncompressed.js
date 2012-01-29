@@ -34,8 +34,7 @@ if(!dojo.isAsync){
 	});
 }
 
-	var coreFx = {};
-	dojo.fx = baseFx;
+	var coreFx = dojo.fx = {};
 
 	var _baseObj = {
 			_fire: function(evt, args){
@@ -155,7 +154,7 @@ if(!dojo.isAsync){
 	});
 	lang.extend(_chain, _baseObj);
 
-	coreFx.chain = dojo.fx.chain = function(/*dojo.Animation[]*/ animations){
+	coreFx.chain = /*===== dojo.fx.chain = =====*/ function(/*dojo.Animation[]*/ animations){
 		// summary:
 		//		Chain a list of `dojo.Animation`s to run in sequence
 		//
@@ -248,7 +247,7 @@ if(!dojo.isAsync){
 	});
 	lang.extend(_combine, _baseObj);
 
-	coreFx.combine = dojo.fx.combine = function(/*dojo.Animation[]*/ animations){
+	coreFx.combine = /*===== dojo.fx.combine = =====*/ function(/*dojo.Animation[]*/ animations){
 		// summary:
 		//		Combine a list of `dojo.Animation`s to run in parallel
 		//
@@ -278,7 +277,7 @@ if(!dojo.isAsync){
 		return new _combine(animations); // dojo.Animation
 	};
 
-	coreFx.wipeIn = dojo.fx.wipeIn = function(/*Object*/ args){
+	coreFx.wipeIn = /*===== dojo.fx.wipeIn = =====*/ function(/*Object*/ args){
 		// summary:
 		//		Expand a node to it's natural height.
 		//
@@ -334,7 +333,7 @@ if(!dojo.isAsync){
 		return anim; // dojo.Animation
 	};
 
-	coreFx.wipeOut = dojo.fx.wipeOut = function(/*Object*/ args){
+	coreFx.wipeOut = /*===== dojo.fx.wipeOut = =====*/ function(/*Object*/ args){
 		// summary:
 		//		Shrink a node to nothing and hide it.
 		//
@@ -375,7 +374,7 @@ if(!dojo.isAsync){
 		return anim; // dojo.Animation
 	};
 
-	coreFx.slideTo = dojo.fx.slideTo = function(/*Object*/ args){
+	coreFx.slideTo = /*===== dojo.fx.slideTo = =====*/ function(/*Object*/ args){
 		// summary:
 		//		Slide a node to a new top/left position
 		//
@@ -423,7 +422,6 @@ if(!dojo.isAsync){
 
 		return anim; // dojo.Animation
 	};
-	lang.mixin(dojo.fx, coreFx); // Add the core api's to the base fx api's for compat.
 
 	return coreFx;
 });

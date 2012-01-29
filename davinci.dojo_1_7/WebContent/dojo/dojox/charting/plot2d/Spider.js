@@ -245,7 +245,7 @@ a=this.animations[_5b]={};
 if(o.element=="spider_poly"){
 if(!a.color){
 var _5c=o.shape.getFill();
-if(!_5c||!(_5c instanceof Color)){
+if(!_5c||!(_5c instanceof _c)){
 return;
 }
 a.color={start:_5c,end:_5d(_5c)};
@@ -256,7 +256,7 @@ var t=_5e;
 _5e=end;
 end=t;
 }
-a.anim=_f.animateFill({shape:o.shape,duration:800,easing:_8.easing.backOut,color:{start:_5e,end:end}});
+a.anim=_f.animateFill({shape:o.shape,duration:800,easing:_10.backOut,color:{start:_5e,end:end}});
 a.anim.play();
 }else{
 if(o.element=="spider_circle"){

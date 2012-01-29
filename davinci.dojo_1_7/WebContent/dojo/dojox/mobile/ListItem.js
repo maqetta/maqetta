@@ -1,12 +1,13 @@
 //>>built
 define("dojox/mobile/ListItem",["dojo/_base/array","dojo/_base/connect","dojo/_base/declare","dojo/_base/lang","dojo/dom-class","dojo/dom-construct","dojo/has","./common","./_ItemBase","./TransitionEvent"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a){
-return _3("dojox.mobile.ListItem",_9,{rightText:"",rightIcon:"",rightIcon2:"",anchorLabel:false,noArrow:false,selected:false,checked:false,arrowClass:"mblDomButtonArrow",checkClass:"mblDomButtonCheck",variableHeight:false,rightIconTitle:"",rightIcon2Title:"",btnClass:"",btnClass2:"",postMixInProperties:function(){
+return _3("dojox.mobile.ListItem",_9,{rightText:"",rightIcon:"",rightIcon2:"",anchorLabel:false,noArrow:false,selected:false,checked:false,arrowClass:"mblDomButtonArrow",checkClass:"mblDomButtonCheck",variableHeight:false,rightIconTitle:"",rightIcon2Title:"",btnClass:"",btnClass2:"",tag:"li",postMixInProperties:function(){
 if(this.btnClass){
 this.rightIcon=this.btnClass;
 }
 this._setBtnClassAttr=this._setRightIconAttr;
 this._setBtnClass2Attr=this._setRightIcon2Attr;
 },buildRendering:function(){
+this.domNode=this.srcNodeRef||_6.create(this.tag);
 this.inherited(arguments);
 this.domNode.className="mblListItem"+(this.selected?" mblItemSelected":"");
 var _b=this.box=_6.create("DIV");
@@ -71,7 +72,7 @@ if(_5.contains(li,"mblItemSelected")){
 return;
 }
 if(this.anchorLabel){
-for(var p=e.target;p.tagName!=="LI";p=p.parentNode){
+for(var p=e.target;p.tagName!==this.tag.toUpperCase();p=p.parentNode){
 if(p.className=="mblListItemTextBox"){
 _5.add(p,"mblListItemTextBoxSelected");
 setTimeout(function(){

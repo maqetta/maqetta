@@ -417,7 +417,7 @@ this._sizer=_9.create("div",{style:{position:"absolute",left:"-10000px",top:"-10
 }
 this._sizer.innerHTML=_4a;
 var w=_a.getContentBox(this._sizer).w+this.minWidth;
-_a.setContentBox(this.domNode,{w:w});
+_a.setContentSize(this.domNode,{w:w});
 },destroy:function(){
 _9.destroy(this._sizer);
 this.inherited(arguments);

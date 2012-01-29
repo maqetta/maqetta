@@ -1,8 +1,11 @@
 //>>built
-define("dojox/editor/plugins/SafePaste",["dojo","dijit","dojox","dijit/Dialog","dojo/_base/connect","dojo/_base/declare","dojo/i18n","dojo/string","dojox/editor/plugins/PasteFromWord","dojo/i18n!dojox/editor/plugins/nls/SafePaste"],function(_1,_2,_3){
+define("dojox/editor/plugins/SafePaste",["dojo","dijit","dojox","dijit/Dialog","dojo/_base/connect","dojo/_base/declare","dojo/i18n","dojo/string","dojox/editor/plugins/PasteFromWord","dojo/i18n!dojox/editor/plugins/nls/SafePaste","dojo/i18n!dijit/nls/common","dojo/i18n!dijit/_editor/nls/commands"],function(_1,_2,_3){
 _1.declare("dojox.editor.plugins.SafePaste",[_3.editor.plugins.PasteFromWord],{_initButton:function(){
 this._filters=this._filters.slice(0);
 var _4=_1.i18n.getLocalization("dojox.editor.plugins","SafePaste");
+_1.mixin(_4,_1.i18n.getLocalization("dijit","common"));
+_4.cancel=_4.buttonCancel;
+_1.mixin(_4,_1.i18n.getLocalization("dijit._editor","commands"));
 this._uId=_2.getUniqueId(this.editor.id);
 _4.uId=this._uId;
 _4.width=this.width||"400px";

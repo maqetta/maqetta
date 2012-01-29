@@ -9,6 +9,7 @@ define("dojox/gauges/GlossyCircularGauge", ["dojo/_base/declare","dojo/_base/Col
 return declare("dojox.gauges.GlossyCircularGauge", [GlossyCircularGaugeBase], {
 	// summary:
 	//		Represents a circular gauge with a glossy appearance.
+	//
 	// example:
 	//	|	<div	dojoType="dojox.gauges.GlossyCircularGauge"
 	//	|		id="testGauge"
@@ -41,9 +42,10 @@ return declare("dojox.gauges.GlossyCircularGauge", [GlossyCircularGaugeBase], {
 	_designTextIndicatorX :	187.19173,
 	_designTextIndicatorY :	267.81589,	
 	
-	// summary:
-	//		Creates a new GlossyCircularGauge.
+
 	constructor: function(){
+		// summary:
+		//		Creates a new GlossyCircularGauge.
 		this.startAngle= -135;
 		this.endAngle= 135;
 		this.min = 0;

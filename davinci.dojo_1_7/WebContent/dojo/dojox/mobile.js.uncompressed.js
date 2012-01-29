@@ -792,7 +792,7 @@ return declare("dijit._WidgetBase", Stateful, {
 		//			  tree
 		// description:
 		//		Create calls a number of widget methods (postMixInProperties, buildRendering, postCreate,
-		//		etc.), some of which of you'll want to override. See http://docs.dojocampus.org/dijit/_Widget
+		//		etc.), some of which of you'll want to override. See http://dojotoolkit.org/reference-guide/dijit/_WidgetBase.html
 		//		for a discussion of the widget creation lifecycle.
 		//
 		//		Of course, adventurous developers could override create entirely, but this should
@@ -2783,7 +2783,10 @@ define("dojox/mobile/ListItem", [
 		//		Deprecated. For backward compatibility.
 		btnClass2: "",
 
-	
+		// tag: String
+		//		A name of html tag to create as domNode.
+		tag: "li",
+
 		postMixInProperties: function(){
 			// for backward compatibility
 			if(this.btnClass){
@@ -2794,6 +2797,7 @@ define("dojox/mobile/ListItem", [
 		},
 
 		buildRendering: function(){
+			this.domNode = this.srcNodeRef || domConstruct.create(this.tag);
 			this.inherited(arguments);
 			this.domNode.className = "mblListItem" + (this.selected ? " mblItemSelected" : "");
 
@@ -2865,7 +2869,7 @@ define("dojox/mobile/ListItem", [
 			var li = a.parentNode;
 			if(domClass.contains(li, "mblItemSelected")){ return; } // already selected
 			if(this.anchorLabel){
-				for(var p = e.target; p.tagName !== "LI"; p = p.parentNode){
+				for(var p = e.target; p.tagName !== this.tag.toUpperCase(); p = p.parentNode){
 					if(p.className == "mblListItemTextBox"){
 						domClass.add(p, "mblListItemTextBoxSelected");
 						setTimeout(function(){
@@ -4019,7 +4023,6 @@ define([
 			if(!this.label){
 				this.label = this.domNode.innerHTML;
 			}
-			this.domNode.innerHTML = this._cv ? this._cv(this.label) : this.label;
 
 			if(this.icon && this.icon != "none"){
 				this.iconNode = domConstruct.create("div", {className:"mblToolBarButtonIcon"}, this.domNode);
@@ -4064,6 +4067,11 @@ define([
 			if(common.createDomButton(this.domNode)){
 				domClass.add(this.domNode, "mblToolBarButtonDomButton");
 			}
+		},
+
+		_setLabelAttr: function(/*String*/text){
+			this.label = text;
+			this.domNode.innerHTML = this._cv ? this._cv(text) : text;
 		}
 	});
 });

@@ -50,7 +50,7 @@ define("dojox/geo/openlayers/TouchInteractionSupport", ["dojo/_base/kernel",
 		_getTouchBarycenter : function(touchEvent){
 			//	summary: 
 			//		returns the midpoint of the two first fingers (or the first finger location if only one)
-			//	touchEvent:
+			//	touchEvent: Event
 			//		a touch event
 			//	returns: dojox.gfx.Point
 			//		the midpoint
@@ -80,7 +80,7 @@ define("dojox/geo/openlayers/TouchInteractionSupport", ["dojo/_base/kernel",
 		_getFingerSpacing : function(touchEvent){
 			//	summary: 
 			//		computes the distance between the first two fingers
-			//	touchEvent: 
+			//	touchEvent: Event
 			//		a touch event
 			//	returns: float
 			//		a distance. -1 if less that 2 fingers
@@ -100,7 +100,7 @@ define("dojox/geo/openlayers/TouchInteractionSupport", ["dojo/_base/kernel",
 			//	summary: 
 			//		checks whether the specified touchStart event is a double tap 
 			//		(i.e. follows closely a previous touchStart at approximately the same location)
-			//	touchEvent: 
+			//	touchEvent: Event
 			//		a touch event
 			//	returns: boolean
 			//		true if this event is considered a double tap
@@ -132,7 +132,8 @@ define("dojox/geo/openlayers/TouchInteractionSupport", ["dojo/_base/kernel",
 		_doubleTapHandler : function(touchEvent){
 			//	summary: 
 			//		action performed on the map when a double tap was triggered 
-			//	touchEvent: a touch event
+			//	touchEvent: Event 
+			//		a touch event
 			//	tags:
 			//		private
 			// perform a basic 2x zoom on touch
@@ -149,7 +150,8 @@ define("dojox/geo/openlayers/TouchInteractionSupport", ["dojo/_base/kernel",
 		_touchStartHandler : function(touchEvent){
 			//	summary: 
 			//		action performed on the map when a touch start was triggered 
-			//	touchEvent: a touch event
+			//	touchEvent: Event 
+			// 		a touch event
 			//	tags:
 			//		private
 			event.stop(touchEvent);
@@ -182,7 +184,8 @@ define("dojox/geo/openlayers/TouchInteractionSupport", ["dojo/_base/kernel",
 		_touchEndHandler : function(touchEvent){
 			//	summary: 
 			//		action performed on the map when a touch end was triggered 
-			//	touchEvent: a touch event
+			//	touchEvent: Event 
+			//		a touch event
 			//	tags:
 			//		private
 			event.stop(touchEvent);
@@ -210,7 +213,7 @@ define("dojox/geo/openlayers/TouchInteractionSupport", ["dojo/_base/kernel",
 		_touchMoveHandler : function(touchEvent){
 			//	summary: 
 			//		action performed on the map when a touch move was triggered 
-			//	touchEvent: 
+			//	touchEvent: Event
 			//		a touch event
 			//	tags:
 			//		private

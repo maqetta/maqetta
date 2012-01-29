@@ -227,12 +227,13 @@ if(!_4c||!_4c.listeners){
 var _4d=_4c;
 _49[_4a]=_4c=Function("event","var callee = arguments.callee; for(var i = 0; i<callee.listeners.length; i++){var listener = _dojoIEListeners_[callee.listeners[i]]; if(listener){listener.call(this,event);}}");
 _4c.listeners=[];
+_4c.global=this;
 if(_4d){
 _4c.listeners.push(_dojoIEListeners_.push(_4d)-1);
 }
 }
 var _4e;
-_4c.listeners.push(_4e=(_dojoIEListeners_.push(_4b)-1));
+_4c.listeners.push(_4e=(_4c.global._dojoIEListeners_.push(_4b)-1));
 return new _45(_4e);
 }
 return _1.after(_49,_4a,_4b,true);

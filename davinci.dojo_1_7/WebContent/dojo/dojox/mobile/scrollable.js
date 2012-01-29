@@ -816,7 +816,7 @@ this._scrollBarWrapperH.style.webkitMaskImage="-webkit-canvas(scrollBarMaskH)";
 }
 };
 this.flashScrollBar=function(){
-if(this.disableFlashScrollBar){
+if(this.disableFlashScrollBar||!this.domNode){
 return;
 }
 this._dim=this.getDim();

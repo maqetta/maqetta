@@ -1,53 +1,52 @@
 define([
 	"dojo/_base/declare",
 	"davinci/ve/input/SmartInput",
-	"dijit/layout/ContentPane",
-	"dijit/layout/BorderContainer",
-	"dijit/layout/LayoutContainer",
-	"davinci/ui/widgets/OpenFileDialog",
-	"dojo/i18n!./nls/html",
-], function(declare, SmartInput, ContentPane, BorderContainer, LayoutContainer, OpenFileDialog, langObj){
+	"davinci/model/Path",
+	"davinci/ve/widget",
+	"davinci/ve/commands/ModifyCommand",
+	"davinci/ui/Panel",
+	"dojo/i18n!./nls/html"
+], function(
+	declare,
+	SmartInput,
+	Path,
+	Widget,
+	ModifyCommand,
+	Panel,
+	htmlNls
+) {
 
-	/*
-	 * dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.libraries.html.html", "html");
-var langObj = dojo.i18n.getLocalization("davinci.libraries.html.html", "html");
-	 */
-	
 return declare("davinci.libraries.html.html.HtmlSrcAttributeInput", SmartInput, {
 	// Added this so we can re-use this class for elements that do not support an
 	// "alt" attribute (such as AUDIO, EMBED, and VIDEO)
 	supportsAltText: true,
 
 	show: function(widgetId) {
-		this._widget = davinci.ve.widget.byId(widgetId);
+		this._widget = Widget.byId(widgetId);
 
-		var definition =
-				[
-					{
-						type: "tree",
-						data: "file",
-						model: system.resource,
-						filters: "new system.resource.FileTypeFilter(parms.fileTypes || '*');",
-						link: {
-							target: "textValue",
-							targetFunction: function(input) {
-								var path = new davinci.model.Path(input.getPath());
-								// ignore the filename to get the correct path to the image
-								return path
-										.relativeTo(
-												new davinci.model.Path(
-														this._widget._edit_context._srcDocument.fileName),
-												true).toString();
-							}
-						}
-					}, {
-						id: "textValue",
-						type: "textBox",
-						label: langObj.typeFileUrl,
-						data: "textValue"
+		var definition = [
+			{
+				type: "tree",
+				data: "file",
+				model: system.resource,
+				filters: "new system.resource.FileTypeFilter(parms.fileTypes || '*');",
+				link: {
+					target: "textValue",
+					targetFunction: function(input) {
+						var inputPath = new Path(input.getPath()),
+							filePath = new Path(this._widget._edit_context._srcDocument.fileName);
+						// ignore the filename to get the correct path to the image
+						return inputPath.relativeTo(filePath, true).toString();
 					}
-				];
+				}
+			},
+			{
+				id: "textValue",
+				type: "textBox",
+				label: htmlNls.typeFileUrl,
+				data: "textValue"
+			}
+		];
 
 		var data = {
 			file: null,
@@ -57,20 +56,21 @@ return declare("davinci.libraries.html.html.HtmlSrcAttributeInput", SmartInput, 
 		if (this.supportsAltText) {
 			definition.push({
 				type: "textBox",
-				label: langObj.typeAltText,
+				label: htmlNls.typeAltText,
 				data: "altText"
 			});
 			data.altText = this._widget.attr('alt') || '';
 		}
 
-		davinci.ui.Panel.openDialog({
+		Panel.openDialog({
 			definition: definition,
 			data: data,
-			title: langObj.selectSource,
+			title: htmlNls.selectSource,
 			contextObject: this,
 			onOK: function() {
-				if (data.textValue != "")
+				if (data.textValue !== "") {
 					this.updateWidget(data.textValue, data.altText);
+				}
 			}
 		});
 	},
@@ -84,30 +84,24 @@ return declare("davinci.libraries.html.html.HtmlSrcAttributeInput", SmartInput, 
 	},
 
 	updateDialog: function(value) {
-		if (value && value != "") {
+		if (value && value !== "") {
 			var obj = dijit.byId('srcFileURLInputBox');
-			var path = new davinci.model.Path(value);
+			var valuePath = new Path(value),
+				filePath = new Path(this._widget._edit_context._srcDocument.fileName);
 			// ignore the filename to get the correct path to the image
-			var value =
-					path
-							.relativeTo(
-									new davinci.model.Path(
-											this._widget._edit_context._srcDocument.fileName),
-									true).toString();
+			value = valuePath.relativeTo(filePath, true).toString();
 			obj.attr('value', value);
 		}
 	},
 
 	updateWidget: function(value, altText) {
 		var values = {};
-		values['src'] = value;
+		values.src = value;
 		if (this.supportsAltText) {
-			values['alt'] = altText;
+			values.alt = altText;
 		}
 		var context = this._widget.getContext();
-		command =
-				new davinci.ve.commands.ModifyCommand(this._widget, values, null,
-						context);
+		var command = new ModifyCommand(this._widget, values, null, context);
 		this._widget._edit_context.getCommandStack().execute(command);
 		this._widget = command.newWidget;
 		// get the focus on the current node

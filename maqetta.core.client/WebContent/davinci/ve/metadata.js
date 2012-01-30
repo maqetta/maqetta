@@ -1,11 +1,11 @@
 // XXX This object shouldn't have a dependency on SmartInput
-define([
+define(["dojo/_base/declare",
     "dojo/_base/Deferred",
     "davinci/ve/input/SmartInput",
     "davinci/util",
 	"davinci/library",
 	"davinci/model/Path"
-], function(Deferred, SmartInput, Util, Library, Path) {
+], function(declare, Deferred, SmartInput, Util, Library, Path) {
 
 	var Metadata,
     	METADATA_CLASS_BASE = "davinci.libraries.",
@@ -732,6 +732,6 @@ define([
             return helper;
         }
     };
-
-    return Metadata;
+	var cMetadata = declare("davinci.ve.metadata",null);
+    return dojo.mixin(cMetadata, Metadata);
 });

@@ -7,7 +7,7 @@ define([
 	"dijit/_editor/plugins/TextColor", // need the plugins for the editor toolbar
 	"dijit/_editor/plugins/FontChoice", // need the plugins for the editor toolbar
 	"dojox/html/entities",
-	"dojo/i18n!davinci/ve/nls/ve",
+	"dojo/i18n!../nls/ve",
 	"dojo/i18n!dijit/nls/common"
 ], function(declare, SmartInput, ModifyRichTextCommand,  Editor, LinkDialog, 
 		TextColor, FontChoice, Entities, veNls, commonNls){
@@ -20,8 +20,7 @@ return declare("davinci.ve.input.RichTextInput", [SmartInput], {
 	
     
 	getHelpText: function(){
-		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
-		return langObj.richTextInputHelp;
+		return veNls.richTextInputHelp;
 	},
     
     show: function(widgetId){ 
@@ -83,9 +82,9 @@ return declare("davinci.ve.input.RichTextInput", [SmartInput], {
 		context.select(this._widget, null, false); // redraw the box around the widget
 
 	},
-	_getTemplate: function(){
-		
-		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
+
+	_getTemplate: function() {
+		// XXX TODO this should be moved to an HTML template file.
 		var editBox = ''+
 		'<div id="iedResizeDiv"  class="iedResizeDiv" style="width: 400px; height: 245px;" >' + 
 		"<div dojoType=\"dijit.Editor\" width=\"600\" height=\"200\" id=\"davinciIleb\"  style=\"border-width: 0px;\" plugins=\"['undo','redo','|','cut','copy','paste','|','bold','italic','underline','strikethrough','foreColor','hiliteColor','insertHorizontalRule','createLink','unlink','insertImage','delete','removeFormat','|', 'insertOrderedList','insertUnorderedList','indent', 'outdent', 'justifyLeft', 'justifyCenter', 'justifyRight','fontName', 'fontSize', 'formatBlock']\" > </div>"+
@@ -119,7 +118,7 @@ return declare("davinci.ve.input.RichTextInput", [SmartInput], {
 				'<div class="smartInputHelpDiv" > '+
 	        		'<span id="davinci.ve.input.SmartInput_img_help" title="Help" class="inlineEditHelp" > </span>'+
 		        	'<span class="smartInputSpacerSpan" >'+
-		        	'<button id="davinci.ve.input.SmartInput_ok"  dojoType="dijit.form.Button" type="button" class="inlineEditHelpOk" >'+dijitLangObj.buttonOk+'</button> <button id=davinci.ve.input.SmartInput_cancel dojoType="dijit.form.Button" class="inlineEditHelpCancel"> '+dijitLangObj.buttonCancel+'</button>  '+
+		        	'<button id="davinci.ve.input.SmartInput_ok"  dojoType="dijit.form.Button" type="button" class="inlineEditHelpOk" >'+commonNls.buttonOk+'</button> <button id=davinci.ve.input.SmartInput_cancel dojoType="dijit.form.Button" class="inlineEditHelpCancel"> '+commonNls.buttonCancel+'</button>  '+
 		        	'</span>   '+
 		        '</div> '+
 		        '<div id="davinci.ve.input.SmartInput_div_help" style="display:none;" class="smartInputHelpTextDiv" > '+

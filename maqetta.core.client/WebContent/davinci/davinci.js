@@ -14,7 +14,8 @@ davinci/davinci = {
 =====*/
 	"./davinci-common",
 	"./Runtime",
-	
+
+	"./review/Review",
 	"./ui/about",
 	"./workbench/Explorer",
 	"./workbench/OutlineView",

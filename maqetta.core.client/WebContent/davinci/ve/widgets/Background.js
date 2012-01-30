@@ -6,22 +6,30 @@ define(["dojo/_base/declare",
         "dijit/form/ComboBox",
         "davinci/ve/widgets/BackgroundDialog",
         "davinci/Workbench",
+      
         "dojo/i18n!davinci/ve/nls/ve",
         "dojo/i18n!dijit/nls/common",
         "davinci/ve/utils/CssUtils",
-        "davinci/ve/widgets/ColorPicker",
-        "davinci/ve/widgets/HTMLStringUtil"
+        "davinci/ve/widgets/ColorPicker"
+        
 
 ],function(declare, WidgetLite, ColorPickerFlat, ColorStore, MutableStore, ComboBox,BackgroundDialog, Workbench, veNLS, commonNLS){
-	var background = declare("davinci.ve.widgets.Background", [WidgetLite], {
-	
+	var BackgroundWidgets={};
+	var idPrefix = "davinci_ve_widgets_properties_border_generated"
+	var	__id=0;
+	function getId(){
+		return  (idPrefix + (__id++));
+	}
+	return declare("davinci.ve.widgets.Background", [WidgetLite], {
+		__id : 0,
+		
 		data : null,
-		BackgroundWidgets:{},
+		
 		
 		buildRendering: function(){
 			this.domNode =   dojo.doc.createElement("div",{style:"width:100%"});
-			this._textFieldId = davinci.ve.widgets.HTMLStringUtil.getId();
-			this._buttonId = davinci.ve.widgets.HTMLStringUtil.getId();
+			this._textFieldId = getId();
+			this._buttonId = getId();
 	
 			var buttonDiv = dojo.create("div", {className:'bgPropButtonDiv', style:'float:right; width:28px;'});
 			var button = dojo.create("button", {innerHTML:'...', id:this._buttonId, className:'bgPropButton', style:'font-size:1em;'}, buttonDiv);
@@ -101,7 +109,7 @@ define(["dojo/_base/declare",
 			if(typeof this.propname == 'string' && this._comboBox){
 				// Add to cross-reference table for all of the background properties.
 				// This table is used by Background palette.
-				davinci.ve.widgets.Background.BackgroundWidgets[this.propname] = {
+				BackgroundWidgets[this.propname] = {
 						propPaletteWidget: this,
 						comboBox: this._comboBox
 				};
@@ -150,7 +158,7 @@ define(["dojo/_base/declare",
 					// into an array of background-image property declarations
 					// which cause gradients to magically work across different browsers.
 					if(!background.cancel){
-						var xref = davinci.ve.widgets.Background.BackgroundWidgets;
+						var xref = BackgroundWidgets;
 						for(var propName in xref){
 							var o = xref[propName];
 							if(o.bgdWidget){
@@ -212,7 +220,7 @@ define(["dojo/_base/declare",
 					}
 					return true;
 				}, background);
-				var xref = davinci.ve.widgets.Background.BackgroundWidgets;
+				var xref = BackgroundWidgets;
 				for(var propName in xref){
 					var o = xref[propName];
 					var cascade = o.propPaletteWidget._cascade;
@@ -328,6 +336,5 @@ define(["dojo/_base/declare",
 		
 	});
 
-	return dojo.mixin(background, {BackgroundWidgets:{}})
 	
 });

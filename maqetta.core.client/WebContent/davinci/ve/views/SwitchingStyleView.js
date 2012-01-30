@@ -5,7 +5,10 @@ define([
     	"davinci/workbench/WidgetLite",
     	"davinci/ve/widgets/HTMLStringUtil",
     	"davinci/ve/widgets/WidgetToolBar",
-    	"davinci/ve/widgets/Cascade"
+    	"davinci/ve/widgets/Cascade",
+    	"davinci/ve/widgets/CommonProperties",
+    	"davinci/ve/widgets/WidgetProperties",
+    	"davinci/ve/widgets/EventSelection"
 ], function(declare, veNls, commonNls, WidgetLite, HTMLStringUtil,
 		   	WidgetToolBar,  Cascade
 		    ){
@@ -243,7 +246,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		template+='</div>';
 		template+='</div>';		
 		for(var i=0;i<this.pageTemplate.length;i++){
-			template+= davinci.ve.widgets.HTMLStringUtil.generateTemplate(this.pageTemplate[i] );
+			template+= HTMLStringUtil.generateTemplate(this.pageTemplate[i] );
 		}
 		template+="</td></tr></table>";
 		template+="</div>";
@@ -267,7 +270,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 				// instances for each button with correct title/index values
 				dojo.hitch(this, 
 					function(title,index){
-						davinci.ve.widgets.HTMLStringUtil.transitionRootToSection(title,
+						HTMLStringUtil.transitionRootToSection(title,
 							// dojo.hitch necessary to provide "this" object
 							dojo.hitch(this,function(){
 								var visibleCascade = this._getVisibleCascade(index);
@@ -301,7 +304,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	},
 	
 	_widgetValuesChanged : function(event){
-		var currentPropSection = davinci.ve.widgets.HTMLStringUtil.getCurrentPropSection();
+		var currentPropSection = HTMLStringUtil.getCurrentPropSection();
 		if(currentPropSection){
 			var found=false;
 			for(var propSectionIndex = 0;propSectionIndex<this.pageTemplate.length;propSectionIndex++){
@@ -322,7 +325,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		if(targetIndex)
 			return this.pageTemplate[targetIndex]['cascade'];
 		var visibleCascade = [];
-		var currentPropSection = davinci.ve.widgets.HTMLStringUtil.getCurrentPropSection();
+		var currentPropSection = HTMLStringUtil.getCurrentPropSection();
 		if(currentPropSection){
 			for(var i = 0;i<this.pageTemplate.length;i++){
 				if(this.pageTemplate[i].title == currentPropSection){

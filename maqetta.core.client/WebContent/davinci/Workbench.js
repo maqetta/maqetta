@@ -1,7 +1,6 @@
 define([
 	"./Runtime",
 	"./model/Path",
-	"./ui/Resource",
 	//"davinci/ui/Panel",
 	"./util",
 	//"./workbench/_ToolbaredContainer",
@@ -19,6 +18,7 @@ define([
 	"dijit/layout/ContentPane",
 	"dijit/layout/TabContainer",
 	"system/resource",
+	"dojo/i18n!./nls/webContent",
 
 	/*
 	 * Dialog deps from davinci/dialog
@@ -26,11 +26,9 @@ define([
 
 	"./ui/NewTheme",
 	"./ui/OpenThemeDialog", // ui_plugin/js
-	"./ui/ThemeSetsDialog", // ui_plugin/js
-
-	"dojo/i18n!./nls/webContent"
-], function(Runtime, Path, UIResource, util, ViewPart, EditorContainer, Dialog, Toolbar, ToolbarSeparator, Menu, MenuBar, PopupMenuBarItem,
-		Button, BorderContainer, StackContainer, ContentPane, TabContainer, sysResource) {
+	"./ui/ThemeSetsDialog" // ui_plugin/js
+], function(Runtime, Path,  util, ViewPart, EditorContainer, Dialog, Toolbar, ToolbarSeparator, Menu, MenuBar, PopupMenuBarItem,
+		Button, BorderContainer, StackContainer, ContentPane, TabContainer, sysResource, webContent) {
 
 var filename2id = function(fileName) {
 	return "editor-" + encodeURIComponent(fileName.replace(/[\/| |\t]/g, "_")).replace(/%/g, ":");
@@ -119,6 +117,12 @@ var Workbench = {
 		setInterval(dojo.hitch(this,"_autoSave"),30000);
 	},
 	
+	/* Copy and paste from davinci/ui/Resource to avoid circular dependancy */
+	getSelectedResource:function(){
+		  var selection=Runtime.getSelection();
+		  if (selection[0]&&selection[0].resource)
+			  return selection[0].resource;
+		},
 	_getHeightInPixels: function(){
 		var mainBodyContainer = dijit.byId('mainBody');
 		return mainBodyContainer.getHeight();
@@ -270,8 +274,7 @@ var Workbench = {
 
 
 		if (!perspective){
-			var langObj = dojo.i18n.getLocalization("davinci","webContent");
-			Runtime.handleError(dojo.string.substitute(langObj.perspectiveNotFound,[perspectiveID]));
+			Runtime.handleError(dojo.string.substitute(webContent.perspectiveNotFound,[perspectiveID]));
 		}
 
 		perspective=dojo.clone(perspective);	// clone so views aren't added to original definition
@@ -748,7 +751,7 @@ var Workbench = {
 					} else {
 						var enabled=true;
 						if(item.isEnabled){
-							var resource = UIResource.getSelectedResource();
+							var resource = this.getSelectedResource();
 							enabled = item.isEnabled(resource);
 						}
 
@@ -794,43 +797,31 @@ var Workbench = {
 		})
 		Workbench._runAction(button.item,context,button.item.id);
 	},
-	_runAction: function (item,context,arg)
-	{
-		if (item.run)
-		{
+
+	_runAction: function (item,context,arg) {
+		if (item.run) {
 			if (item.run instanceof Function) {
 				item.run();
-			}
-			else
-			{
-				if (item.scope)
-				{
-					var scope=Workbench.actionScope[item.scope];
-					if (!scope){
-						var langObj = dojo.i18n.getLocalization("davinci","webContent");
-						Runtime.handleError(dojo.string.substitute(langObj.scopeNotDefined,[item.id]));
-					}
-					else
-					{
-						var func=scope[item.run];
+			} else {
+				if (item.scope) {
+					var scope = Workbench.actionScope[item.scope];
+					if (!scope) {
+						Runtime.handleError(dojo.string.substitute(webContent.scopeNotDefined, [item.id]));
+					} else {
+						var func = scope[item.run];
 						if (!func){
-							var langObj = dojo.i18n.getLocalization("davinci","webContent");
-							Runtime.handleError(dojo.string.substitute(langObj.funcNotDefined,[item.id]));
-						}
-						else
+							Runtime.handleError(dojo.string.substitute(webContent.funcNotDefined, [item.id]));
+						} else {
 							func.apply(this);
+						}
 					}
-				}
-				else {
-				  eval(item.run);
+				} else {
+					eval(item.run); //FIXME: remove eval
 				}
 			}
-		}
-		else if (item.action)
-		{
+		} else if (item.action) {
 			item.action.run(context);
-		}
-		else if (item.method && context && context[item.method] instanceof Function) {
+		} else if (item.method && context && context[item.method] instanceof Function) {
 			context[item.method](arg);
 		} else if (item.commandID) {
 			Runtime.executeCommand(item.commandID);

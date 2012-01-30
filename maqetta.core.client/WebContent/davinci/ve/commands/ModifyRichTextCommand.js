@@ -1,8 +1,8 @@
 define([
-    	"dojo/_base/declare",
-    	"davinci/ve/widget",
-    	"davinci/ve/States"
-], function(declare, Widget, States){
+    	"dojo/_base/declare"
+    	//"davinci/ve/widget",// circular dep
+    	//"davinci/ve/States"// circular dep
+], function(declare/*, Widget, States*/){
 
 
 return declare("davinci.ve.commands.ModifyRichTextCommand", null, {
@@ -48,7 +48,7 @@ return declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 			return;
 		}
 		
-		var widget = Widget.byId(this._oldId);
+		var widget = davinci.ve.widget.byId(this._oldId);
 		if(!widget){
 			return;
 		}
@@ -98,7 +98,7 @@ return declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 			this._newData.properties.id = this._newId; // make sure the id is restored
 		if (this._newId_isTempID)
 			this._newData.properties.isTempID = this._newId_isTempID; 
-		newWidget = Widget.createWidget(this._newData);
+		newWidget = davinci.ve.widget.createWidget(this._newData);
 		
 		if(!newWidget){
 			return;
@@ -113,7 +113,7 @@ return declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 		dojo.publish("/davinci/ui/widget/replaced", [newWidget, widget]);
 		
 		// Recompute styling properties in case we aren't in Normal state
-		States.resetState(newWidget);
+		davinci.ve.states.resetState(newWidget);
 	},
 
 	undo: function(){
@@ -121,7 +121,7 @@ return declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 		if(!this._newId || !this._oldData){
 			return;
 		}
-		var widget = Widget.byId(this._newId);
+		var widget = davinci.ve.widget.byId(this._newId);
 		if(!widget){
 			return;
 		}
@@ -146,7 +146,7 @@ return declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 		// add old
 		this._oldData.children = this._oldText;
 		this._oldData.properties.id = this._oldId; // make sure the id is restored
-		var newWidget = Widget.createWidget(this._oldData);
+		var newWidget = davinci.ve.widget.createWidget(this._oldData);
 		if(!widget){
 			debugger;
 			return;
@@ -161,7 +161,7 @@ return declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 		dojo.publish("/davinci/ui/widget/replaced", [newWidget, widget]);
 		
 		// Recompute styling properties in case we aren't in Normal state
-		States.resetState(newWidget);
+		davinci.ve.states.resetState(newWidget);
 	},
 	
 	_refresh: function(widget){

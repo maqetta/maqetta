@@ -1,8 +1,10 @@
 define([
 	"dojo/_base/declare",
 	"davinci/model/resource/Resource",
-	"davinci/model/resource/Folder"
-], function(declare, Resource, Folder) {
+	"davinci/model/resource/Folder",
+	"davinci/Runtime",
+	"davinci/Workbench"
+], function(declare, Resource, Folder, Runtime, Workbench) {
 
 var root = declare("davinci.review.model.resource.root", Resource, {
 
@@ -17,7 +19,7 @@ var root = declare("davinci.review.model.resource.root", Resource, {
 		var result = null;
 		this.getChildren(function(c) { children= c; }, true);
 		var node;
-		dojo.forEach(children,function(item) {
+		dojo.forEach(children, function(item) {
 			if (item.timeStamp == version) {
 				node = item;
 			}

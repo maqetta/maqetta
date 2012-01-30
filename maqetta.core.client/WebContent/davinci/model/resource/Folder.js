@@ -26,7 +26,7 @@ var Folder = declare("davinci.model.resource.Folder", Resource, {
 	createResource: function(name, isFolder, localOnly) {
 		var file;
 		if (name != null) {
-			file = isFolder ? new Folder(name,this) : new File(name,this);
+			file = isFolder ? new Folder(name, this) : new File(name, this);
 		} else {
 			file = this;
 			isFolder = this.elementType == "Folder";
@@ -154,6 +154,7 @@ var Folder = declare("davinci.model.resource.Folder", Resource, {
 	}
 
 });
+
 davinci.model.resource.root = new Folder(".", null);
 
 });

@@ -3,15 +3,15 @@ define([
 	"davinci/review/model/resource/root"
 ], function(declare, root) {
 
-return declare("davinci.review.model.Resource", null, {
+var _root = null;
 
-	root: null,
+return {
 
 	getRoot : function() {
-		if (!this.root) {
-			this.root = new root();
+		if (!_root) {
+			_root = root;
 		}
-		return this.root;
+		return _root;
 	},
 
 	dateSortFilter : {
@@ -22,7 +22,7 @@ return declare("davinci.review.model.Resource", null, {
 		}
 	}
 
-});
+};
 });
 
  

@@ -6,7 +6,7 @@ define([
 	"davinci/Workbench"
 ], function(declare, Resource, Folder, Runtime, Workbench) {
 
-var root = declare("davinci.review.model.resource.root", Resource, {
+var root = declare(Resource, {
 
 	constructor: function(args) {
 		this.elementType = "ReviewRoot";
@@ -86,9 +86,7 @@ var root = declare("davinci.review.model.resource.root", Resource, {
 
 });
 
-davinci.review.model.resource.root = new root();
-
-return root;
+return dojo.setObject("davinci.review.model.resource.root", new root());
 
 });
      

@@ -12,7 +12,7 @@ define([
 
 var Folder = declare("davinci.model.resource.Folder", Resource, {
 
-	constructor: function(name,parent) {
+	constructor: function(name, parent) {
 		this.elementType = "Folder";
 		this.name = name;
 		this.parent = parent;
@@ -156,6 +156,7 @@ var Folder = declare("davinci.model.resource.Folder", Resource, {
 });
 
 davinci.model.resource.root = new Folder(".", null);
+return Folder;
 
 });
   

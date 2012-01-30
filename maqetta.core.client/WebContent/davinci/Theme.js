@@ -3,7 +3,7 @@ define([
     	"davinci/ve/widget",
     	"davinci/ve/States",
     	"davinci/library",
-    	"davinci/ve/metadata"
+    	"davinci/ve/metadata",
     	"davinci/html/HTMLFile"
 ], function(declare, Widget, States, Library, Metadata, HTMLFile){
 

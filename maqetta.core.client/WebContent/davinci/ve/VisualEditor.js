@@ -6,8 +6,9 @@ define([
 	"../model/Path",
 	"./Context",
 	"./commands/ModifyRuleCommand",
-	"preview/silhouetteiframe"
-], function(declare, template, Runtime, Workbench, Path, Context, ModifyRuleCommand, SilhouetteIframe){
+	"preview/silhouetteiframe",
+	"./utils/URLRewrite"
+], function(declare, template, Runtime, Workbench, Path, Context, ModifyRuleCommand, SilhouetteIframe, URLRewrite){
 
 //davinci.ve.VisualEditor.EDITOR_ID="davinci.ve.HTMLPageEditor";
 
@@ -163,12 +164,12 @@ return declare("davinci.ve.VisualEditor", null, {
 			for(var i=0;i<value.values.length;i++){
 				for(var name in value.values[i]){
 				
-					if(davinci.ve.utils.URLRewrite.containsUrl(value.values[i][name])){
+					if(URLRewrite.containsUrl(value.values[i][name])){
 						
-						var oldUrl = new Path(davinci.ve.utils.URLRewrite.getUrl(value.values[i][name]));
+						var oldUrl = new Path(URLRewrite.getUrl(value.values[i][name]));
 						if(!oldUrl.isAbsolute){
 							var newUrl = oldUrl.relativeTo(filePath).toString();
-							var newValue = davinci.ve.utils.URLRewrite.replaceUrl(value.values[i][name], newUrl);
+							var newValue = URLRewrite.replaceUrl(value.values[i][name], newUrl);
 							allValues.push(a);
 							
 						}else{

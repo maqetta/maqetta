@@ -739,6 +739,6 @@ define([
         }
     };
 
-return Metadata;
+return dojo.setObject('davinci.ve.metadata', Metadata);
 
 });

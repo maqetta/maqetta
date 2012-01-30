@@ -1,4 +1,10 @@
-define("davinci/ve/_Widget", ["dojo/_base/declare", "davinci/ve/metadata"], function(declare) {
+define("davinci/ve/_Widget", [
+	"dojo/_base/declare",
+	"./metadata"
+], function(
+	declare,
+	metadata
+) {
 
 var arrayEquals = function(array1, array2, func){
 	if(array1 == array2){
@@ -115,7 +121,7 @@ return declare("davinci.ve._Widget", null, {
 			return helper.getContainerNode(this);
 		}
 
-		if (davinci.ve.metadata.getAllowedChild(this.type)[0] !== 'NONE') {
+		if (metadata.getAllowedChild(this.type)[0] !== 'NONE') {
 			return this._getContainerNode();
 		}
 		return null;
@@ -127,7 +133,7 @@ return declare("davinci.ve._Widget", null, {
 
 	getMetadata: function() {
         if (!this.metadata) {
-            this.metadata = davinci.ve.metadata.query(this);
+            this.metadata = metadata.query(this);
         }
         return this.metadata;
     },
@@ -403,10 +409,10 @@ return declare("davinci.ve._Widget", null, {
 		}
 
 		// get all properties
-	    var properties = davinci.ve.metadata.query(this, "property");
+	    var properties = metadata.query(this, "property");
 	    if (this.domNode && this.domNode.parentNode) {
 	        var parent = davinci.ve.widget.getEnclosingWidget(this.domNode.parentNode);
-	        var childProperties = davinci.ve.metadata.query(parent, "childProperties");
+	        var childProperties = metadata.query(parent, "childProperties");
 	        if (childProperties) {
 	            if (!properties) {
 	                properties = childProperties;
@@ -546,7 +552,7 @@ return declare("davinci.ve._Widget", null, {
 					values.top = style.top;
 				}
 			}
-			var resizable = davinci.ve.metadata.queryDescriptor(this.type, "resizable");
+			var resizable = metadata.queryDescriptor(this.type, "resizable");
 			if(style.width) {
 				if(resizable == "both" || resizable == "width") {
 					values.width = style.width;

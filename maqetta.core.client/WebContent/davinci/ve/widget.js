@@ -6,7 +6,10 @@ define([
 	"davinci/ve/HTMLWidget",
 	"davinci/ve/ObjectWidget",
 	"dojo/window"
-], function(){
+], function(
+	HTMLModel,
+	metadata
+) {
 
 var getUniqueId = function() {
     var dj = dojo.window.get(dojo.doc).dojo,
@@ -116,7 +119,7 @@ allWidgets: function(containerNode) {
 findClosest: function(containerNode, dim, context, target, hLock, allowedFilter) {
 	var result = {distance: Infinity, widget: target},
 		t = dim,
-		isContainer = function(type) { return davinci.ve.metadata.getAllowedChild(type)[0] !== 'NONE'; };
+		isContainer = function(type) { return metadata.getAllowedChild(type)[0] !== 'NONE'; };
 
 	if(containerNode){
 		var list = widgetObject.allWidgets(containerNode);
@@ -393,8 +396,8 @@ createWidget: function(widgetData, initialCreationArgs) {
 	}
 	
 	var type = data.type, c, theme, dojoType,
-		metadata = davinci.ve.metadata.query(type);
-	if (!metadata) {
+		md = metadata.query(type);
+	if (!md) {
 	    return undefined;
 	}
 
@@ -408,7 +411,7 @@ createWidget: function(widgetData, initialCreationArgs) {
 			theme = data.properties.theme.themeName;
 		}
 	}
-	var widgetClassId = davinci.ve.metadata.queryDescriptor(type, "widgetClass");
+	var widgetClassId = metadata.queryDescriptor(type, "widgetClass");
 	var widgetClassName;
 	if(widgetClassId == "object"){
 		dojoType = type;
@@ -417,8 +420,8 @@ createWidget: function(widgetData, initialCreationArgs) {
 		// see davinci.ve.ObjectWidget::postCreate::if(id)::var type = this.getObjectType(); (type = undefined without the following lines to add dojoType to the element attributes)
 		// Drag tree onto canvas to test.
 		// Berkland: Please review! (needs replacing)
-		metadata.attributes = metadata.attributes || {};
-		metadata.attributes.dojoType = dojoType;
+		md.attributes = md.attributes || {};
+		md.attributes.dojoType = dojoType;
 	}else if(widgetClassId == "html"){
 		widgetClassName="davinci.ve.HTMLWidget";
 //	}else if(widgetClassId == "OpenAjax"){
@@ -437,10 +440,10 @@ createWidget: function(widgetData, initialCreationArgs) {
 	// XXX eventually replace with dojo.place()?
 	// XXX Technically, there can be more than one 'content'
     var uniqueId = getUniqueId();
-    var content = metadata.content.trim().replace(/\s+/g, ' ').replace(/__WID__/g, uniqueId);
+    var content = md.content.trim().replace(/\s+/g, ' ').replace(/__WID__/g, uniqueId);
 	var node = dojo.window.get(dojo.doc).dojo._toDom(content);
 	// XXX Used to create node like this, which added attributes from metadata, is there still a way to do this?
-	//	var node = dojo.create(metadata.tagName || "div", metadata.attributes);
+	//	var node = dojo.create(md.tagName || "div", md.attributes);
 
 	// Check if widget content consists of more than one node
 	if (node.nodeType === 11 /*DOCUMENT_FRAGMENT_NODE*/) {
@@ -475,13 +478,13 @@ createWidget: function(widgetData, initialCreationArgs) {
         srcElement.addText(node.innerHTML);
     }
 
-    if (metadata.javascript) {
+    if (md.javascript) {
         var js = {};
-        js.location = metadata.javascript.location || "afterContent";
-        if (metadata.javascript.src) {
-            js.src = metadata.javascript.src;
+        js.location = md.javascript.location || "afterContent";
+        if (md.javascript.src) {
+            js.src = md.javascript.src;
         } else {
-            js.$text = (metadata.javascript.$text || metadata.javascript).replace(/__WID__/g, uniqueId);
+            js.$text = (md.javascript.$text || md.javascript).replace(/__WID__/g, uniqueId);
         }
 
         if (js.location == "atEnd") {
@@ -516,8 +519,8 @@ createWidget: function(widgetData, initialCreationArgs) {
         srcElement = wrapperModel;
     }
 
-    var requiresId = davinci.ve.metadata.queryDescriptor(type,"requiresId");
-    var name = davinci.ve.metadata.queryDescriptor(type,"name");
+    var requiresId = metadata.queryDescriptor(type,"requiresId");
+    var name = metadata.queryDescriptor(type,"name");
     var idRoot = node.tagName.toLowerCase();
     if(name.match(/^[A-Za-z]\w*$/) != null){
     	idRoot = name;
@@ -607,7 +610,7 @@ createWidget: function(widgetData, initialCreationArgs) {
     		props[p] = propval;
     	}
     }
-	var widget = new c(props, node, type, metadata, srcElement);
+	var widget = new c(props, node, type, md, srcElement);
 	widget._srcElement=srcElement;
 
 	if(widget.chart && (data.properties && data.properties.theme)){
@@ -653,24 +656,11 @@ _createSrcElement: function(node) {
 },
 
 getWidgetHelper: function(type) {
-	var HelperCtor = davinci.ve.metadata.getHelper(type, 'helper');
+	var HelperCtor = metadata.getHelper(type, 'helper');
 	if (HelperCtor) {
 		// XXX need to cache
 		return new HelperCtor();
 	}
-
-    // var helper = davinci.ve.metadata.queryDescriptor(type, "helper");
-    // if (helper) {
-    // 	var helperConstructor;
-    //     try {
-    //     	helperConstructor = dojo["require"](helper) && dojo.getObject(helper); /* remove && dojo.getObject after transition to AMD */;
-    //     } catch(e) {
-    //         console.error("Failed to load helper: " + helper);
-    //         console.error(e);
-    //         throw e;
-    //     }
-    //     return /*this._edit_helper = */new helperConstructor();
-    // }
 },
 
 getWidget: function(node){

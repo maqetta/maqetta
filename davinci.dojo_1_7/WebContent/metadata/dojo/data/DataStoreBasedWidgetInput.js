@@ -17,7 +17,8 @@ define([
 	"davinci/commands/OrderedCompoundCommand",
 	"davinci/model/Path",
 	"davinci/ui/Panel",
-	"system/resource"
+	"system/resource",
+	"dojox/form/DropDownSelect"	// used in template
 ], function(
 	declare,
 	lang,
@@ -34,6 +35,7 @@ define([
 	Path,
 	Panel,
 	resource
+	/*DropDownSelect*/
 ) {
 
 return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", SmartInput, {
@@ -362,7 +364,7 @@ return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", Sma
 			textRadio.set("checked", true);
         }else{
         	htmlRadio.set("checked", true);
-			textRadio.set("checked", false);        	
+			textRadio.set("checked", false);
         }
         this.updateFormats();
 

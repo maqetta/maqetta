@@ -7,7 +7,8 @@ define([
 	"davinci/model/Path",
 	"davinci/ui/Panel",
 	"dojo/i18n!dijit/nls/common",
-	"dojo/i18n!../nls/dojox"
+	"dojo/i18n!../nls/dojox",
+	"dojox/form/DropDownSelect"		// used in template
 ], function(
 	declare,
 	SmartInput,
@@ -18,6 +19,7 @@ define([
 	Panel,
 	commonNls,
 	dojoxNls
+	/*DropDownSelect*/
 ) {
 
 return declare("davinci.libraries.dojo.dojox.grid.DataGridInput", SmartInput, {

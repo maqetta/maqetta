@@ -2,7 +2,6 @@ dojo.provide("system.resource");
 dojo.provide("system.resource.FileTypeFilter");
 dojo.provide("system.resource.alphabeticalSortFilter");
 dojo.provide("system.resource.foldersFilter");
-dojo.require("davinci.model.Resource");
 dojo.require("davinci.model.Path");
 
 
@@ -163,7 +162,7 @@ dojo.mixin(system.resource, {
 	
 	getWorkspace : function(){
 		if(this.workspace==null){
-			this.workspace = new davinci.model.Resource.Folder(".",null);
+			this.workspace = new davinci.model.resource.Folder(".",null);
 		}
 		return this.workspace;
 	},
@@ -284,7 +283,7 @@ dojo.mixin(system.resource, {
 							var name=foundFile.parents[j+1].name;
 							var newResource=loadResource.getChild(name);
 							if (!newResource) {
-								newResource= new davinci.model.Resource.Folder(name,loadResource);
+								newResource= new davinci.model.resource.Folder(name,loadResource);
 							}
 							loadResource=newResource;
 						}

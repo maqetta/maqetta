@@ -1,55 +1,18 @@
-dojo.provide("davinci.html.ui.HTMLOutline");
-dojo.require("davinci.ui.widgets.DavinciModelTreeModel");
-
-
-dojo.declare("davinci.html.ui.HTMLOutline", null, {
+define([
+	"dojo/_base/declare",
+	"davinci.html.ui.HTMLOutlineModel"
+], function(declare, HTMLOutlineModel){
 	
-	
-	constructor : function (model)
-	{
-		this._htmlModel=model;
+return declare("davinci/html/ui/HTMLOutline", null, {
+
+	constructor : function(model) {
+		this._htmlModel = model;
 	},
 	
-	
-	getModel : function()
-	{
-		this._model=new davinci.html.ui.HTMLOutlineModel(this._htmlModel);
+	getModel : function() {
+		this._model = new HTMLOutlineModel(this._htmlModel);
 		return this._model;
 	}
+
 });
-dojo.declare("davinci.html.ui.HTMLOutlineModel",	davinci.ui.widgets.DavinciModelTreeModel, {
-
-	
-	_childList: function(item)
-	{
-	    var children=[];
-		switch (item.elementType)
-		{
-		case "HTMLFile":
-			for (var i=0;i<item.children.length;i++)
-			{
-				switch (item.children[i].elementType)
-				{
-				case  "HTMLElement":
-					children.push(item.children[i]);
-				}
-			}
-			break;
-		case "HTMLElement":
-			for (var i=0;i<item.children.length;i++)
-			{
-				switch (item.children[i].elementType)
-				{
-				case  "HTMLElement":
-					children.push(item.children[i]);
-				}
-			}
-			break;
-			default:
-//				children=null;
-		}
-		
-		return children;
-	}
-
 });

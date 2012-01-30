@@ -1,27 +1,28 @@
 define([
-	"dojo/_base/declare"
-], function(declare) {
+	"dojo/_base/declare",
+	"davinci/model/resource/Resource",
+	"davinci/model/resource/Folder"
+], function(declare, Resource, Folder) {
 
-dojo.require("davinci.model.Resource");
-
-return declare("davinci.review.model.resource.root", davinci.model.Resource.Resource, {
+return declare("davinci.review.model.resource.root", Resource, {
 
 	constructor: function(args) {
-		this.elementType="ReviewRoot";
-		this.name="root";
-		this.parent=null;
+		this.elementType = "ReviewRoot";
+		this.name = "root";
+		this.parent = null;
 	},
 
 	findFile: function(version, fileName) {
 		var children;
-		var result=null;
+		var result = null;
 		this.getChildren(function(c) { children= c; }, true);
 		var node;
 		dojo.forEach(children,function(item) {
-			if(item.timeStamp==version)
+			if (item.timeStamp == version) {
 				node = item;
+			}
 		});
-		if (node!=null) {
+		if (node != null) {
 			node.getChildren(function(c) { children= c; }, true);
 			dojo.forEach(children, function(item) {
 				if (item.name == fileName) { 
@@ -48,18 +49,18 @@ return declare("davinci.review.model.resource.root", davinci.model.Resource.Reso
 				this._loading.push(onComplete);
 				return;
 			}
-			this._loading=[];
+			this._loading = [];
 			this._loading.push(onComplete);
-			var designerName = davinci.Runtime.commenting_designerName || "";
-			var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
-			davinci.Runtime.serverJSONRequest({
+			var designerName = Runtime.commenting_designerName || "";
+			var location = Workbench.location().match(/http:\/\/.*:\d+\//);
+			Runtime.serverJSONRequest({
 				url:  location + "maqetta/cmd/listVersions",
 				content:{'designer':designerName},
 				sync:sync,
 				load : dojo.hitch(this, function(responseObject, ioArgs) {
 					this.children=[];
 					for (var i=0; i<responseObject.length; i++) {
-						var child =new davinci.review.model.resource.Folder(dojo.mixin({
+						var child = new Folder(dojo.mixin({
 							name:responseObject[i].versionTitle,
 							parent:this
 						},responseObject[i]));

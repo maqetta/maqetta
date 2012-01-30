@@ -412,9 +412,8 @@ define(["dojo/_base/declare",
     		var themeHash = {};
     		for(var i=0;i<allThemes.length;i++){
     		    if (allThemes[i]['files']){ // #1024 theme maps do not have files
-    		    	// This can't be right... making the same assignment k times.  See also Context.js loadThenme ~line 572
         			for(var k=0;k<allThemes[i]['files'].length;k++){
-        				themeHash[allThemes[i]['files']] = allThemes[i];
+        				themeHash[allThemes[i]['files'][k]] = allThemes[i];
         			}
     		    }
     		}

@@ -180,7 +180,7 @@
                 {
                     id: "newHTML",
                     // icon: 'davinci/img/add.gif',
-                    run: "davinci.ui.Resource.newHTML()",
+                    run: davinci.ui.Resource.newHTML,
                     label: "HTML File...",
                     // toolbarPath: "davinci.toolbar.main/edit",
                     menubarPath: "davinci.new/new"

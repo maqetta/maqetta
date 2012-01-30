@@ -713,9 +713,16 @@ define([
                 return SI;
             }
 
-            var lib = getLibraryForType(type),
-                moduleId = new Path(lib.$moduleId).append(value).toString(),
-                helper;
+            var lib,
+            	moduleId,
+            	helper;
+            if (value.substr(0, 2) === './') {
+            	// if path is relative...
+	            lib = getLibraryForType(type);
+                moduleId = new Path(lib.$moduleId).append(value).toString();
+            } else {
+            	moduleId = value;
+            }
             
             // XXX TODO This assumes synchronous flow.  Need to make async.
             require([moduleId], function(module) {

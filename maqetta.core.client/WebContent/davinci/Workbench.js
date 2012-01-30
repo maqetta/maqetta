@@ -1,7 +1,6 @@
 define([
 	"./Runtime",
 	"./model/Path",
-	"./ui/Resource",
 	//"davinci/ui/Panel",
 	"./util",
 	//"./workbench/_ToolbaredContainer",
@@ -28,7 +27,7 @@ define([
 	"./ui/NewTheme",
 	"./ui/OpenThemeDialog", // ui_plugin/js
 	"./ui/ThemeSetsDialog" // ui_plugin/js
-], function(Runtime, Path, UIResource, util, ViewPart, EditorContainer, Dialog, Toolbar, ToolbarSeparator, Menu, MenuBar, PopupMenuBarItem,
+], function(Runtime, Path,  util, ViewPart, EditorContainer, Dialog, Toolbar, ToolbarSeparator, Menu, MenuBar, PopupMenuBarItem,
 		Button, BorderContainer, StackContainer, ContentPane, TabContainer, sysResource, webContent) {
 
 var filename2id = function(fileName) {
@@ -118,6 +117,12 @@ var Workbench = {
 		setInterval(dojo.hitch(this,"_autoSave"),30000);
 	},
 	
+	/* Copy and paste from davinci/ui/Resource to avoid circular dependancy */
+	getSelectedResource:function(){
+		  var selection=Runtime.getSelection();
+		  if (selection[0]&&selection[0].resource)
+			  return selection[0].resource;
+		},
 	_getHeightInPixels: function(){
 		var mainBodyContainer = dijit.byId('mainBody');
 		return mainBodyContainer.getHeight();
@@ -746,7 +751,7 @@ var Workbench = {
 					} else {
 						var enabled=true;
 						if(item.isEnabled){
-							var resource = UIResource.getSelectedResource();
+							var resource = this.getSelectedResource();
 							enabled = item.isEnabled(resource);
 						}
 

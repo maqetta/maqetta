@@ -5,7 +5,7 @@ define(["dojo/_base/declare",
         "davinci/ve/widgets/HTMLStringUtil"
         
        
-],function(declare,   WidgetLite, ItemFileReadStore, veNLS,commonNLS){
+],function(declare,   WidgetLite, ItemFileReadStore, veNLS,commonNLS, HTMLStringUtil){
 
 	return declare("davinci.ve.widgets.Trblbox", [WidgetLite], {
 		
@@ -30,7 +30,7 @@ define(["dojo/_base/declare",
 	
 				                     ],
 	
-				this.domNode.innerHTML =  davinci.ve.widgets.HTMLStringUtil.generateTable(this.pageTemplate);
+				this.domNode.innerHTML =  HTMLStringUtil.generateTable(this.pageTemplate);
 				this.inherited(arguments);
 			},
 			

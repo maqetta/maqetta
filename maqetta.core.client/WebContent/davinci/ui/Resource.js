@@ -1,76 +1,85 @@
 //FIXME: A bunch of hard-coded strings in here that need to be globalized
-define(["dojo/_base/declare",
+define(['dojo/_base/declare',
         'system/resource',
-       'davinci/model/Path',
-       'davinci/Runtime',
-       'davinci/Workbench',
-       'davinci/workbench/Preferences',
-       'davinci/ve/RebuildPage',
-       'davinci/ui/Rename',
-       'davinci/ui/widgets/NewHTMLFileOptions',
-       'davinci/ui/widgets/OpenFile',
-       'davinci/ui/widgets/NewFolder',
-       'davinci/ui/widgets/NewFile', 
-       'davinci/ui/NewProject',
+       '../model/Path',
+       '../Runtime',
+       '../Workbench',
+       '../workbench/Preferences',
+       '../ve/RebuildPage',
+       './Rename',
+       './widgets/NewHTMLFileOptions',
+       './widgets/OpenFile',
+       './widgets/NewFolder',
+       './widgets/NewFile', 
+       './NewProject',
        'dojox/form/uploader/FileList', 
        'dojox/form/Uploader','dijit/Dialog',
-       "dojo/i18n!davinci/ui/nls/ui",
-       "dojo/i18n!dijit/nls/common",
+       'dojo/i18n!./nls/ui',
+       'dojo/i18n!dijit/nls/common',
        'dijit/form/Button','dijit/Tree',
        'dijit/form/TextBox',
        'dojox/form/uploader/plugins/HTML5'
        
 ],function(declare, Resource, Path, Runtime,Workbench, Preferences, RebuildPage, Rename, NewHTMLFileOption, OpenFile, NewFolder, NewFile, NewProject, FileList, Uploader, Dialog, uiNLS, commonNLS){
-	
-	
-	var uiResource = declare("davinci.ui.Resource",null);
-	
-	return dojo.mixin(uiResource,{
-		_createNewDialog: function(fileNameLabel, createLabel, type, dialogSpecificClass, fileName, existingResource){
-	
-			var resource=existingResource || this.getSelectedResource();
-			var folder = null;
-			if(resource!=null){
-				if(resource.elementType=="Folder"){
-					folder = resource;
-				}else{
-					folder = resource.parent;
-				}
-					
-			}else{
-				var base = Runtime.getProject();
-				var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
-				
-				if(prefs.webContentFolder!=null && prefs.webContentFolder!=""){
-					var fullPath = new Path(Runtime.getProject()).append(prefs.webContentFolder);
-					folder = Resource.findResource(fullPath.toString());
-					
-				}else{
-					folder= Resource.findResource(Runtime.getProject());
-				}
-			}
+
+var createNewDialog = function(fileNameLabel, createLabel, type, dialogSpecificClass, fileName, existingResource) {
+	var resource=existingResource || getSelectedResource();
+	var folder;
+	if (resource) {
+		if(resource.elementType=="Folder"){
+			folder = resource;
+		}else{
+			folder = resource.parent;
+		}
+	}else{
+		var base = Runtime.getProject();
+		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+		
+		if(prefs.webContentFolder!=null && prefs.webContentFolder!=""){
+			var fullPath = new Path(Runtime.getProject()).append(prefs.webContentFolder);
+			folder = Resource.findResource(fullPath.toString());
 			
-			var proposedFileName = fileName || this.getNewFileName('file',folder,"." + type);
-			var dialogOptions = {newFileName:proposedFileName,
-								fileFieldLabel:fileNameLabel, 
-								folderFieldLabel:"Where:", // FIXME: i18n
-								finishButtonLabel:createLabel,
-								value: folder,
-								dialogSpecificClass:dialogSpecificClass};
-			return new NewFile(dialogOptions);
-			
-		},
+		}else{
+			folder= Resource.findResource(Runtime.getProject());
+		}
+	}
+	
+	var proposedFileName = fileName || uiResource.getNewFileName('file',folder,"." + type);
+	var dialogOptions = {newFileName:proposedFileName,
+						fileFieldLabel:fileNameLabel, 
+						folderFieldLabel:"Where:", // FIXME: i18n
+						finishButtonLabel:createLabel,
+						value: folder,
+						dialogSpecificClass:dialogSpecificClass};
+	return new NewFile(dialogOptions);
+};
+
+
+var checkFileName = function(fullPath) {
+	var resource = Resource.findResource(fullPath);
+	if(resource){
+		alert("File already exists!");
+	}
+
+	return !resource;
+};
+
+var getSelectedResource = function(){
+	return (uiResource.getSelectedResources() || [])[0];
+};
+
+var uiResource = {
 		newHTML: function(){
 				var langObj = uiNLS;
-				var dialogSpecificClass = "NewHTMLFileOptions";
-				var newDialog = this._createNewDialog(langObj.fileName, langObj.create, "html", dialogSpecificClass);
+				var dialogSpecificClass = "davinci.ui.widgets.NewHTMLFileOptions";
+				var newDialog = createNewDialog(langObj.fileName, langObj.create, "html", dialogSpecificClass);
 				var executor = function(){
 					var teardown = true;
 					if(!newDialog.cancel){
 						var optionsWidget = newDialog.dialogSpecificWidget;
 						var options = optionsWidget.getOptions();
 						var resourcePath = newDialog.get('value');
-						var check = this._checkFileName(resourcePath);
+						var check = checkFileName(resourcePath);
 						if(check){
 							var resource = Resource.createResource(resourcePath);
 							resource.isNew = true;
@@ -88,7 +97,7 @@ define(["dojo/_base/declare",
 								theme: options.theme,
 								themeSet:newDialog.dialogSpecificWidget._selectedThemeSet
 							};
-							this.openResource(resource, newHtmlParams);
+							openResource(resource, newHtmlParams);
 							Workbench.workbenchStateCustomPropSet('nhfo',options);
 						} else {
 							teardown = false;
@@ -101,19 +110,19 @@ define(["dojo/_base/declare",
 	
 		newCSS: function(){
 			var langObj = uiNLS;
-			var newDialog = this._createNewDialog(langObj.fileName, langObj.create, "css");
+			var newDialog = createNewDialog(langObj.fileName, langObj.create, "css");
 			var executor = function(){
 				var teardown = true;
 				if(!newDialog.cancel){
 					var resourcePath = newDialog.get('value');
-					var check = this._checkFileName(resourcePath);
+					var check = checkFileName(resourcePath);
 					if (check) {
 						var resource = Resource.createResource(resourcePath);
 						resource.isNew = true;
 						var text = Resource.createText("CSS", {resource:resource});
 						if(text)
 							resource.setText(text);
-						this.openResource(resource);
+						openResource(resource);
 					} else {
 						teardown = false;
 					}
@@ -126,7 +135,7 @@ define(["dojo/_base/declare",
 		newFolder: function(parentFolder, callback){
 			
 			var langObj = uiNLS;
-			var resource=parentFolder || this.getSelectedResource();
+			var resource=parentFolder || getSelectedResource();
 			var folder = null;
 			if(resource!=null){
 				if(resource.elementType=="Folder"){
@@ -149,7 +158,7 @@ define(["dojo/_base/declare",
 				}
 			}
 			
-			var proposedFileName = this.getNewFileName('folder',folder);
+			var proposedFileName = uiResource.getNewFileName('folder',folder);
 			var dialogOptions = {newFileName:proposedFileName,
 								fileFieldLabel:langObj.folderName, 
 								folderFieldLabel:"Parent Folder:", // FIXME: i18n
@@ -163,7 +172,7 @@ define(["dojo/_base/declare",
 				var teardown = true;
 				if(!newFolderDialog.cancel){
 					var resourcePath = newFolderDialog.get('value');
-					var check = this._checkFileName(resourcePath);
+					var check = checkFileName(resourcePath);
 					if (check) {
 						newFolder= Resource.createResource(resourcePath,true);
 					} else {
@@ -188,12 +197,12 @@ define(["dojo/_base/declare",
 			var newFileName = (new Path(oldFileName)).lastSegment();
 			var oldResource = Resource.findResource(oldFileName);
 			
-			var newDialog = this._createNewDialog(langObj.fileName, langObj.save, extension, null, newFileName, oldResource);
+			var newDialog = createNewDialog(langObj.fileName, langObj.save, extension, null, newFileName, oldResource);
 			var executor = function(){
 				var teardown = true;
 				if(!newDialog.cancel){
 					var resourcePath = newDialog.get('value');
-					var check = this._checkFileName(resourcePath);
+					var check = checkFileName(resourcePath);
 					if (check) {
 						var oldResource = Resource.findResource(oldFileName);
 				        var oldContent = oldEditor.editorID == "davinci.html.CSSEditor" ? oldEditor.getText() : oldEditor.model.getText();
@@ -223,12 +232,12 @@ define(["dojo/_base/declare",
 	
 		newJS: function(){
 			var langObj = uiNLS
-			var newDialog = this._createNewDialog(langObj.fileName, langObj.create, "js");
+			var newDialog = createNewDialog(langObj.fileName, langObj.create, "js");
 			var executor = function(){
 				var teardown = true;
 				if(!newDialog.cancel){
 					var resourcePath = newDialog.get('value');
-					var check = this._checkFileName(resourcePath);
+					var check = checkFileName(resourcePath);
 					if (check) {
 						var resource = Resource.createResource(resourcePath);
 						resource.isNew = true;
@@ -236,7 +245,7 @@ define(["dojo/_base/declare",
 						if(text) {
 							resource.setText(text);
 						}
-						this.openResource(resource);
+						openResource(resource);
 					} else {
 						teardown = false;
 					}
@@ -248,7 +257,7 @@ define(["dojo/_base/declare",
 	
 		openFile: function(){
 			var langObj = uiNLS
-			var resource=this.getSelectedResource();
+			var resource=getSelectedResource();
 			var folder = null;
 			if(resource!=null){
 				if(resource.elementType=="Folder"){
@@ -266,8 +275,7 @@ define(["dojo/_base/declare",
 			
 			var executor = function(){
 				if(!openDialog.cancel){
-					var resource = openDialog.get('value');
-					this.openResource(resource);
+					openResource(openDialog.get('value'));
 				}
 				return true;
 			};
@@ -276,7 +284,7 @@ define(["dojo/_base/declare",
 	
 	
 		addFiles: function(){
-			var langObj = uiNLS
+			var langObj = uiNLS;
 			var formHtml = 
 			'<label for=\"fileDialogParentFolder\">'+ langObj.parentFolder +' </label><div id="fileDialogParentFolder" ></div>'+
 	        '<div id="btn0"></div><br/>'+
@@ -289,7 +297,7 @@ define(["dojo/_base/declare",
 			
 			dialog.connect(dialog, 'onLoad', function(){
 				var folder=Resource.getRoot();
-				var resource=this.getSelectedResource();
+				var resource=getSelectedResource();
 				if (resource)
 				{
 					folder = resource.elementType == 'Folder' ? resource : resource.parent;
@@ -299,7 +307,7 @@ define(["dojo/_base/declare",
 	
 				var f0 = new Uploader({
 					label: "Select Files...", // shouldn't need to localize this after Dojo 1.6
-					url:'./cmd/addFiles?path='+folder.getPath(), 
+					url:'cmd/addFiles?path='+folder.getPath(), 
 					multiple:true
 				});
 	
@@ -369,16 +377,6 @@ define(["dojo/_base/declare",
 			}while(existing);
 			return proposedName;
 		},
-	
-		_checkFileName: function(fullPath){
-			
-			var resource = Resource.findResource(fullPath);
-			if(resource){
-				alert("File already exists!");
-			}
-	
-			return !resource;
-		},
 
 		canModify: function(item){
 			return !item.readOnly();
@@ -392,7 +390,7 @@ define(["dojo/_base/declare",
 	
 		renameAction: function(){
 		
-			var selection = this.getSelectedResources();
+			var selection = uiResource.getSelectedResources();
 		    if( selection.length!=1) return;
 		    var resource = selection[0];
 		    resource.parent.getChildren(function(parentChildren){
@@ -437,7 +435,7 @@ define(["dojo/_base/declare",
 		},
 	
 		deleteAction: function(){
-			var selection = this.getSelectedResources(),
+			var selection = uiResource.getSelectedResources(),
 			    paths = selection.map(function(resource){ return resource.getPath(); }).join("\n\t"),
 	
 			    langObj = uiNLS
@@ -450,16 +448,12 @@ define(["dojo/_base/declare",
 			});
 		},
 
-		getSelectedResource:function(){
-		  var selection=Runtime.getSelection();
-		  if (selection[0]&&selection[0].resource)
-			  return selection[0].resource;
-		},
 		getSelectedResources: function(){
 		  var selection=Runtime.getSelection();
 		  if (selection[0]&&selection[0].resource)
 			  return dojo.map(selection,function(item){return item.resource;});
 		},
+
 		alphabeticalSortFilter:{
 		     filterList: function(list){
 			    return list.sort(function (file1,file2)
@@ -491,5 +485,7 @@ define(["dojo/_base/declare",
 			}
 		}
 
-	});
+	};
+
+return dojo.setObject("davinci.ui.Resource", uiResource);
 });

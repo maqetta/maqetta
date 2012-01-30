@@ -1,6 +1,6 @@
 define(["dojo/_base/declare",
         "dijit/_Widget",
-        "dijit._Templated",
+        "dijit/_Templated",
         "dojo/text!./templates/NewDijit.html",
         "dijit/form/RadioButton",
         "dijit/form/TextBox",

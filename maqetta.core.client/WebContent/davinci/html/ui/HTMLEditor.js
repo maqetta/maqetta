@@ -1,35 +1,32 @@
-dojo.provide("davinci.html.ui.HTMLEditor");
+define([
+	"dojo/_base/declare",
+	"davinci/ui/ModelEditor",
+	"davinci/model/Factory",
+	"davinci/html/ui/HTMLOutline"
+], function(declare, ModelEditor, Factory, HTMLOutline){
  
-dojo.require("davinci.ui.ModelEditor");
-dojo.require("davinci.html.HTMLModel");
-dojo.require("davinci.html.ui.HTMLOutline");
+return declare("davinci.html.ui.HTMLEditor", ModelEditor, {
 
+	constructor : function(element) {
+		this.htmlFile = Factory.newHTML();
+		this.model = this.htmlFile;
+	},
 
-dojo.declare("davinci.html.ui.HTMLEditor", davinci.ui.ModelEditor, {
+	destroy : function() {
+		this.htmlFile.close();
+		this.inherited(arguments);
+	},
 
-    constructor : function (element) {
-        this.htmlFile=davinci.model.Factory.newHTML();
-        this.model=this.htmlFile;
-//      this.inherited(arguments);
-    },
+	getOutline : function() {
+		if (!this.outline) {
+			this.outline = new HTMLOutline(this.model);
+		}
+		return this.outline;
+	},
 
-    destroy : function () {
-        this.htmlFile.close();
-        this.inherited(arguments);
-
-
-    },
-
-    getOutline : function () {
-        if (!this.outline)
-            this.outline=new davinci.html.ui.HTMLOutline(this.model);
-        return this.outline;
-    },
-
-    getDefaultContent : function () {
-        return "<html>\n <head></head>\n <body></body>\n</html>";
-    }
+	getDefaultContent : function () {
+		return "<html>\n <head></head>\n <body></body>\n</html>";
+	}
 
 });
-
-
+});

@@ -1,10 +1,12 @@
 define([
 	"dojo/_base/declare",
-], function(declare) {
+	"davinci/model/resource/Resource",
+	"davinci/model/resource/File",
+	"davinci/Runtime",
+	"davinci/Workbench"
+], function(declare, Resource, File, Runtime, Workbench) {
 
-dojo.require("davinci.model.Resource");
-
-return declare("davinci.review.model.resource.Folder", davinci.model.Resource.Resource, {
+return declare("davinci.review.model.resource.Folder", Resource, {
 
 	isDraft:false,
 	closed: false,
@@ -12,8 +14,8 @@ return declare("davinci.review.model.resource.Folder", davinci.model.Resource.Re
 	height:0,
 
 	constructor: function(proc) {
-		this.elementType="ReviewVersion";
-		dojo.mixin(this,proc);
+		this.elementType = "ReviewVersion";
+		dojo.mixin(this, proc);
 		this.dueDate = this.dueDate == "infinite" ? this.dueDate : dojo.date.locale.parse(this.dueDate,{
 			selector:'date',
 			formatLength:'long',
@@ -30,9 +32,9 @@ return declare("davinci.review.model.resource.Folder", davinci.model.Resource.Re
 			}
 			this._loading=[];
 			this._loading.push(onComplete);
-			var designerName = davinci.Runtime.commenting_designerName || "";
-			var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
-			davinci.Runtime.serverJSONRequest({
+			var designerName = Runtime.commenting_designerName || "";
+			var location = Workbench.location().match(/http:\/\/.*:\d+\//);
+			Runtime.serverJSONRequest({
 				url: location + "maqetta/cmd/listReviewFiles",
 				content:{
 					'designer':designerName,
@@ -42,7 +44,7 @@ return declare("davinci.review.model.resource.Folder", davinci.model.Resource.Re
 				load : dojo.hitch(this, function(responseObject, ioArgs) {
 					this.children=[];
 					for (var i=0; i<responseObject.length; i++) {
-						var child =new davinci.review.model.Resource.File(responseObject[i].path, this);
+						var child = new File(responseObject[i].path, this);
 						this.children.push(child);
 					}
 					this._isLoaded=true;
@@ -56,7 +58,6 @@ return declare("davinci.review.model.resource.Folder", davinci.model.Resource.Re
 		}
 		onComplete(this.children);
 	},
-
 
 	getPath: function() {
 		if (this.parent) {

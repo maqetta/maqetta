@@ -4,7 +4,7 @@ define([
 	"./widget",
 	"./States",
 	"dijit/tree/dndSource",
-	"../html/ui/HTMLOutline" //FIXME: break out HTMLOutlineModel
+	"../html/ui/HTMLOutlineModel"
 ], function(declare){
 
 var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
@@ -238,7 +238,7 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 		
 		
 		this._widgetModel=new OutlineTreeModel(this._context);
-		this._srcModel=new davinci.html.ui.HTMLOutlineModel(editor.model);
+		this._srcModel=new HTMLOutlineModel(editor.model);
 		davinci.states.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(e) { 
 			if ((typeof davinci != "undefined" && davinci.Runtime.currentEditor && davinci.Runtime.currentEditor.declaredClass) == "davinci.themeEditor.ThemeEditor") {
 				return; // ignore updates in theme editor

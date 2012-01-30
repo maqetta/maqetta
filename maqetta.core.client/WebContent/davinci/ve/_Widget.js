@@ -1,9 +1,11 @@
 define("davinci/ve/_Widget", [
 	"dojo/_base/declare",
-	"./metadata"
+	"./metadata",
+	"../html/CSSModel"
 ], function(
 	declare,
-	metadata
+	metadata,
+	CSSModel
 ) {
 
 var arrayEquals = function(array1, array2, func){
@@ -294,7 +296,7 @@ return declare("davinci.ve._Widget", null, {
 		}
 		
 		// return a sorted array of sorted style values.
-		var shorthands = davinci.html.css.shorthand;
+		var shorthands = CSSModel.shorthand;
 		var lastSplice = 0;
 		/* re-order the elements putting short hands first */
 		

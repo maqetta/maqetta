@@ -3,12 +3,15 @@ define([
 	"dojo/dom-form",
 	"davinci/ve/widget",
 	"davinci/ve/commands/ReparentCommand",
-	"davinci/html/HTMLModel" // HTMLElement, HTMLText
+	"davinci/html/HTMLElement",
+	"davinci/html/HTMLText"
 ], function(
 	array,
 	form,
 	Widget,
-	ReparentCommand
+	ReparentCommand,
+	HTMLElement,
+	HTMLText
 ) {
 
 var DataGridHelper = function() {};
@@ -223,9 +226,9 @@ DataGridHelper.prototype = {
 				return; // found it
 			}
 		}
-		var scriptTag = new davinci.html.HTMLElement('script');
+		var scriptTag = new HTMLElement('script');
 		scriptTag.addAttribute('type', 'text/javascript');
-		var text = new davinci.html.HTMLText(script.value);
+		var text = new HTMLText(script.value);
 		scriptTag.addChild(text);
 		var head =  widget._edit_context._srcDocument.find({elementType: 'HTMLElement', tag: 'head'}, true);
 		head.addChild(scriptTag);

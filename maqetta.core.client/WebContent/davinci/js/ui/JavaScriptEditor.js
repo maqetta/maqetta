@@ -1,27 +1,30 @@
-dojo.provide("davinci.js.ui.JavaScriptEditor");
- 
-dojo.require("davinci.ui.ModelEditor");
-dojo.require("davinci.js.JSModel");
-dojo.require("davinci.js.ui.JavaScriptOutline");
+define([
+	"dojo/_base/declare",
+	"davinci/Runtime",
+	"davinci/js/ui/JavaScriptOutline",
+	"davinci/model/Factory",
+	"davinci/ui/ModelEditor",
+	"davinci/workbench/Preferences"
+], function(declare, Runtime, JavaScriptOutline, Factory, ModelEditor, Preferences) {
 
+return declare("davinci.js.ui.JavaScriptEditor", ModelEditor, {
 
+	constructor : function(element) {
+		this.jsFile = Factory.newJS();
+		this.model = this.jsFile;
+	},
 
-dojo.declare("davinci.js.ui.JavaScriptEditor", davinci.ui.ModelEditor, {
-    
-    constructor : function (element) {
-        this.jsFile=davinci.model.Factory.newJS();
-        this.model=this.jsFile;
-    },
+	getOutline: function() {
+		if (!this.outline) {
+			this.outline = new JavaScriptOutline(this.model);
+		}
+		return this.outline;
+	},
 
-    getOutline : function () {
-        if (!this.outline)
-            this.outline=new davinci.js.ui.JavaScriptOutline(this.model);
-        return this.outline;
-    },
+	getDefaultContent: function() {
+		return "function functionName ()\n{\n}\n";
+	}
 
-    getDefaultContent : function () {
-        return "function functionName ()\n{\n}\n";
-    }
 });
-
+});
 

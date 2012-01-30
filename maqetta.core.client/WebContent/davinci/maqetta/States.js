@@ -4,6 +4,7 @@
 
 // Code below is looking for dojo at davinci.dojo. Don't ask why.
 
+if ( typeof davinci === "undefined" ) { davinci = {}; }
 davinci.dojo = dojo;
 
 davinci.maqetta = davinci.maqetta || {};

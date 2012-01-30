@@ -3,7 +3,8 @@ define([
     	"davinci/ve/widget",
     	"davinci/ve/States",
     	"davinci/library",
-], function(declare, Widget, States, Library){
+    	"davinci/ve/metadata"
+], function(declare, Widget, States, Library, Metadata) {
 
 	var Theme = {
 		desktop_default : 'desktop_default',
@@ -168,18 +169,10 @@ define([
 	    }
 	    var helper = theme.helper;
 	    if (helper) {
-	        try {
-	            dojo["require"](helper);
-	        } catch(e) {
-	            console.error("Failed to load helper: " + helper);
-	            console.error(e);
-	        }
-	        var aClass = dojo.getObject(helper);
-	        if (aClass) {
-	            theme._helper  = new aClass();
-	        }
-	        var obj = dojo.getObject(helper);
-	        return new obj();
+			require([helper], function(module) {
+				helper = module;
+			});
+			return helper;
 	    }
 	},
 
@@ -374,10 +367,11 @@ Theme.custom_themeset = {
         "desktopTheme": "claro",
         "mobileTheme": Theme.dojoMobileCustom
 };
-Theme.dojoThemeSets =  { 
+// XXX This should be moved to Dojo library metadata.
+Theme.dojoThemeSets =  {
         "version": "1.7",
         "specVersion": "0.8",
-        "helper": "dojox/mobile/ThemeHelper",
+        "helper": "maq-metadata-dojo-1.7/dojox/mobile/ThemeHelper",
         "themeSets": [ 
                Theme.custom_themeset           
         ]

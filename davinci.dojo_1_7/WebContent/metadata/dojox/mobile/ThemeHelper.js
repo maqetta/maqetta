@@ -143,7 +143,7 @@ return {
 		if(userDoc && useBodyFontBackgroundClass){
 			var nodes = userDoc.querySelectorAll('.'+useBodyFontBackgroundClass);
 			var body = userDoc.body;
-			var body_style = domStyle.style(body);
+			var body_style = domStyle.get(body);
 			if(nodes.length>0){
 				var props = ['backgroundAttachment', 'backgroundClip', 'backgroundColor', 'backgroundImage', 
 				             'backgroundOrigin', 'backgroundPosition', 'backgroundRepeat', 'backgroundSize',

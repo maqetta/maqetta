@@ -325,8 +325,7 @@ define(["dojo/_base/declare",
 		},
 		
 		_onChangeOverride : function(){
-			var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
-			alert(langObj.valueIsOverriden);
+			alert(veNLS.valueIsOverriden);
 			return false;
 		},
 			
@@ -538,7 +537,6 @@ define(["dojo/_base/declare",
 				dojo.addClass(this.container,"dijitHidden");
 				return;
 			}
-			var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 			dojo.removeClass(this.container,"dijitHidden");
 			this._buildCssRuleset();
 			function makeOnChange(target){return function(){return this._onChange({target:target});};}
@@ -556,7 +554,7 @@ define(["dojo/_base/declare",
 			row.className = "propApplyToLabelRow";
 			column = dojo.doc.createElement("td");
 			column.colSpan = '3';
-			column.innerHTML = langObj.applyToWhich;
+			column.innerHTML = veNLS.applyToWhich;
 			column.className = "propApplyToLabelCell";
 			row.appendChild(column);
 			table.appendChild(row);

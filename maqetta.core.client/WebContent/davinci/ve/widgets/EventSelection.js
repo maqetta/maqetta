@@ -1,10 +1,9 @@
 define(["dojo/_base/declare",
         "davinci/workbench/ViewLite",
-        "dojo/i18n!davinci/ve/nls/ve",
-        "dojo/i18n!dijit/nls/common",
         "davinci/ve/widgets/HTMLStringUtil",
+        
         "davinci/ve/commands/ModifyCommand"
-],function(declare,  ViewLite, ModifyCommand){
+],function(declare,  ViewLite, HTMLStringUtil, ModifyCommand){
   return declare("davinci.ve.widgets.EventSelection", [ViewLite], {
 		pageTemplate: [{display:"onclick", target:"onclick",type:"state", hideCascade:true},
 			{display:"ondblclick",target:"ondblclick",type:"state", hideCascade:true},
@@ -21,7 +20,7 @@ define(["dojo/_base/declare",
 		                
 		buildRendering : function(){
 			this.domNode =  dojo.doc.createElement("div");
-			this.domNode.innerHTML = davinci.ve.widgets.HTMLStringUtil.generateTable(this.pageTemplate);
+			this.domNode.innerHTML = HTMLStringUtil.generateTable(this.pageTemplate);
 			this.inherited(arguments);
 		},
 		setReadOnly : function(isReadOnly){

@@ -1,31 +1,100 @@
-dojo.provide("davinci.ve.widget");
+define([
+	"davinci/html/HTMLModel", //HTMLElement
+	"davinci/ve/metadata",
+	"davinci/ve/DijitWidget",
+	"davinci/ve/GenericWidget",
+	"davinci/ve/HTMLWidget",
+	"davinci/ve/ObjectWidget",
+	"dojo/window"
+], function(){
 
-dojo.require("davinci.html.HTMLModel");
-dojo.require("davinci.ve.metadata");
+var getUniqueId = function() {
+    var dj = dojo.window.get(dojo.doc).dojo,
+        id;
+    do {
+        id = "widget_" + Math.floor(0x7FF * Math.random());
+    } while(dj.byId(id));
+    return id;
+};
 
-dojo.require("davinci.ve.DijitWidget");
-dojo.require("davinci.ve.GenericWidget");
-dojo.require("davinci.ve.HTMLWidget");
-dojo.require("davinci.ve.ObjectWidget");
-dojo.require("dojo.window");
+//Add temporary IDs to nested children
+//Assumes iframe's DOM and the model are in sync regarding the order of child nodes
+var childrenAddIds = function(context, node, srcElement) {
+	 for (var i=0;i<srcElement.children.length; i++) {
+		 var childNodeDOM = node.childNodes[i];
+		 var childNodeModel = srcElement.children[i];
+		 if((childNodeDOM && childNodeDOM.nodeType==1/*element*/) && childNodeModel.elementType=="HTMLElement"){ //node may have a different child count - wdr
+			 childNodeDOM.id = context.getUniqueID(childNodeModel);
+			 childrenAddIds(context,childNodeDOM,childNodeModel);
+		 }
+	 }
+};
 
+var parseNodeData = function(node, options) {
+	// summary:
+	// 		Same general routine as widgetObject._getData,
+	// 		only adding the "html." prefix to the widget type to make it look like a widget to the Dojo Composition Tool.
+	//
+	if(!node){
+		return undefined;
+	}
 
-davinci.ve.widget._dojo = function(node){
+	options = options || {};
+
+	var data = {};
+	data.properties = {};
+
+	for(var i = 0; i < node.attributes.length; i++){
+		var a = node.attributes[i];
+		if(!a.specified || !a.nodeValue){
+			continue;
+		}
+		var n = a.nodeName.toLowerCase();
+		if(n == "id" || n == "widgetid" || n == "style"){
+			continue;
+		}else if(n.charAt(0) == "_"){
+			continue;
+		}
+		var v = a.nodeValue;
+		if(v && n == "class"){
+			v = v.replace("HtmlWidget", "").trim();
+			if(!v){
+				continue;
+			}
+		}
+//		if(options.serialize){
+//			var p = properties[n];
+//			if(p && p.type == "url"){
+//				v = context.getContentUrl(v);
+//			}
+//		}
+		data.properties[n] = v;
+	}
+
+	if(node.tagName.toLowerCase() == "script"){
+		data.children = (node.innerHTML || undefined);
+	}//else{
+	//	data.children = widgetObject._getChildrenData(widget, options);
+	//}
+	return data;
+};
+
+var widgetObject = {
+_dojo: function(node) {
 	var doc = node ? (node.ownerDocument || node) : dojo.doc;
 //TODO: for some reason node.ownerDocument is occasionally null
 	doc=doc||dojo.doc;
 	var win = dojo.window.get(doc);
 	return win.dojo || dojo;
-};
-davinci.ve.widget._dijit = function(node){
+},
+
+_dijit: function(node) {
 	var doc = node ? (node.ownerDocument || node) : dojo.doc;
 	var win = dojo.window.get(doc);
 	return win.dijit || dijit;
-};
+},
 
-
-
-davinci.ve.widget.allWidgets = function(containerNode){
+allWidgets: function(containerNode) {
 	var result=[];
 	function find(element)
 	{
@@ -40,17 +109,17 @@ davinci.ve.widget.allWidgets = function(containerNode){
 	}
 	find(containerNode);
 	return result;
-};
+},
 
 //recursively search for widget closest to target under root
 //FIXME: Used by SelectTool.  Move code there?
-davinci.ve.widget.findClosest = function(containerNode, dim, context, target, hLock, allowedFilter){
+findClosest: function(containerNode, dim, context, target, hLock, allowedFilter) {
 	var result = {distance: Infinity, widget: target},
 		t = dim,
 		isContainer = function(type) { return davinci.ve.metadata.getAllowedChild(type)[0] !== 'NONE'; };
 
 	if(containerNode){
-		var list = davinci.ve.widget.allWidgets(containerNode);
+		var list = widgetObject.allWidgets(containerNode);
 		if (allowedFilter) {
 			// remove anything that wouldn't be a valid sibling.  Would be much more efficient to do during list construction.
 			list = list.filter(function(w){
@@ -103,10 +172,9 @@ davinci.ve.widget.findClosest = function(containerNode, dim, context, target, hL
 	}
 
 	return result;
-};
+},
 
-
-davinci.ve.widget.parseStyleValues = function(text){
+parseStyleValues: function(text) {
 	var values = {};
 	if(text){
 		dojo.forEach(text.split(";"), function(s){
@@ -119,9 +187,9 @@ davinci.ve.widget.parseStyleValues = function(text){
 		});
 	}
 	return values;
-};
+},
 
-davinci.ve.widget.getStyleString = function(style){
+getStyleString: function(style) {
 	var styleStr = '';
 	for (var p in style){
 		if (style[p]){
@@ -129,7 +197,7 @@ davinci.ve.widget.getStyleString = function(style){
 		}
 	}
 	return styleStr;
-};
+},
 
 /**
  * Return instance of "managed" widget which contains the given 'node'.
@@ -141,8 +209,8 @@ davinci.ve.widget.getStyleString = function(style){
  * 			such valid widget instance is found.
  * @type {davinci.ve._Widget}
  */
-davinci.ve.widget.getEnclosingWidget = function(node) {
-	var richText = davinci.ve.widget.getEnclosingWidgetForRichText(node);
+getEnclosingWidget: function(node) {
+	var richText = widgetObject.getEnclosingWidgetForRichText(node);
 	if (richText) {
 		return richText;
 	}
@@ -154,20 +222,20 @@ davinci.ve.widget.getEnclosingWidget = function(node) {
 		//        DOMElement || davinci.ve._Widget
 		enc = enc.parentNode || (enc.domNode && enc.domNode.parentNode);
 	}
-};
+},
 
-davinci.ve.widget.getEnclosingWidgetForRichText = function(node){
+getEnclosingWidgetForRichText: function(node) {
 	if (!node || !node._dvWidget){ return; }
 	if (node._dvWidget.type === 'html.stickynote' || node._dvWidget.type === 'html.richtext' ){
 		return node._dvWidget;
 	} else if (node.parentNode){
-		return davinci.ve.widget.getEnclosingWidgetForRichText(node.parentNode);
+		return widgetObject.getEnclosingWidgetForRichText(node.parentNode);
 	} else {
 		return null;
 	}
-};
+},
 
-davinci.ve.widget.getUniqueObjectId = function(type, node){
+getUniqueObjectId: function(type, node) {
 	if(!type){
 		return undefined;
 	}
@@ -175,14 +243,14 @@ davinci.ve.widget.getUniqueObjectId = function(type, node){
 	var base = type.substring(type.lastIndexOf(".") + 1);
 	var i = 1;
 	var id = base + "_" + i++;
-	var dj = davinci.ve.widget._dojo(node);
+	var dj = widgetObject._dojo(node);
 	while(dj.getObject(id)){
 		id = base + "_" + i++;
 	}
 	return id;
-};
+},
 
-davinci.ve.widget.getLabel = function(widget){
+getLabel: function(widget) {
 	var text = "<span class='propertiesTitleWidgetName'>";
 	//FIXME: This is a hack so that meaningful names
 	//don't show a bunch of ugly prefix stuff.
@@ -214,7 +282,7 @@ davinci.ve.widget.getLabel = function(widget){
 	text+="</span> ";
 
 	var widgetText,
-		helper = davinci.ve.widget.getWidgetHelper(widget.type);
+		helper = widgetObject.getWidgetHelper(widget.type);
 	if (helper && helper.getWidgetText) {
 		widgetText = helper.getWidgetText(widget);
 	}
@@ -269,16 +337,16 @@ davinci.ve.widget.getLabel = function(widget){
 		text += '<span>' + domNode.src.substr(domNode.src.lastIndexOf('/') + 1) + '</span>';
 	}
 	return text;
-};
+},
 
-davinci.ve.widget.byId = function(id, doc){
+byId: function(id, doc) {
 	var node=dojo.byId(id, doc && doc.body ? doc : undefined); // we're sometimes getting called with context as the second arg; don't pass it as a doc.
 	if (node)
 	{
 		if (node._dvWidget) {
 			return node._dvWidget;
 		}
-		var widget=davinci.ve.widget.getEnclosingWidget(node);
+		var widget=widgetObject.getEnclosingWidget(node);
 		if (widget.id==id) {
 			return widget;
 		}
@@ -288,30 +356,20 @@ davinci.ve.widget.byId = function(id, doc){
 		return context.widgetHash[id];
 	}
 	return undefined;
-};
+},
 
-davinci.ve.widget.byNode = function(node){
+byNode: function(node) {
 	if (node._dvWidget) {
 		return node._dvWidget;
 	}
-//	var d = davinci.ve.widget._dijit(node);
+//	var d = widgetObject._dijit(node);
 //	var w= d.byNode(node);
 //	if (w)
 //	{
 //		node._dvWidget=w;
 //	}
 //	return w;
-
-};
-
-davinci.ve.widget._getUniqueId = function() {
-    var dj = dojo.window.get(dojo.doc).dojo,
-        id;
-    do {
-        id = "widget_" + Math.floor(0x7FF * Math.random());
-    } while(dj.byId(id));
-    return id;
-};
+},
 
 /**
  * Main routine for creating a new widget on the current page canvas
@@ -321,8 +379,7 @@ davinci.ve.widget._getUniqueId = function() {
  *      size - explicit size {w:, h:}
  *      position - explicit position {x:, y:} 
  */
-davinci.ve.widget.createWidget = function(widgetData, initialCreationArgs){
-	
+createWidget: function(widgetData, initialCreationArgs) {
 	if(!widgetData || !widgetData.type){
 		return undefined;
 	}
@@ -379,7 +436,7 @@ davinci.ve.widget.createWidget = function(widgetData, initialCreationArgs){
 
 	// XXX eventually replace with dojo.place()?
 	// XXX Technically, there can be more than one 'content'
-    var uniqueId = davinci.ve.widget._getUniqueId();
+    var uniqueId = getUniqueId();
     var content = metadata.content.trim().replace(/\s+/g, ' ').replace(/__WID__/g, uniqueId);
 	var node = dojo.window.get(dojo.doc).dojo._toDom(content);
 	// XXX Used to create node like this, which added attributes from metadata, is there still a way to do this?
@@ -487,7 +544,7 @@ davinci.ve.widget.createWidget = function(widgetData, initialCreationArgs){
 				srcElement.addAttribute(idattr.name,idattr.value,idattr.noPersist);
 			}
 			// Add a temporary ID to all of the nested elements that do not have an ID
-			davinci.ve.widget._childrenAddIds(data.context,node,srcElement);
+			childrenAddIds(data.context, node, srcElement);
 		}else{ // Array
 			dojo.forEach(children, function(c){
 				if (!c){
@@ -505,7 +562,7 @@ davinci.ve.widget.createWidget = function(widgetData, initialCreationArgs){
 				}else{
 					c.context=data.context;
                     // XXX Need to load requires on 'c' first?
-					var child = davinci.ve.widget.createWidget(c);
+					var child = widgetObject.createWidget(c);
 					if(child){
 						node.appendChild(child.domNode);
 						srcElement.addChild(child._srcElement);
@@ -516,7 +573,7 @@ davinci.ve.widget.createWidget = function(widgetData, initialCreationArgs){
 	}
 	//need a helper to process the data for horizontalSlider prior to creating the widget
 	// -- may be needed for other widgets with properties of dataype array
-	var helper = davinci.ve.widget.getWidgetHelper(type);
+	var helper = widgetObject.getWidgetHelper(type);
 	if(helper && helper.preProcessData){
         data =  helper.preProcessData(data);
 	}
@@ -561,7 +618,7 @@ davinci.ve.widget.createWidget = function(widgetData, initialCreationArgs){
 	if(data.scripts){
 		widget.scripts = data.scripts;
 	}
-//	var df = davinci.ve.widget.getDavinciFields(data);
+//	var df = widgetObject.getDavinciFields(data);
 //
 //	dojo.mixin(widget, df);
 
@@ -582,22 +639,9 @@ davinci.ve.widget.createWidget = function(widgetData, initialCreationArgs){
 	}
 
 	return widget;
-};
+},
 
-// Add temporary IDs to nested children
-// Assumes iframe's DOM and the model are in sync regarding the order of child nodes
-davinci.ve.widget._childrenAddIds = function(context, node, srcElement){
-	 for (var i=0;i<srcElement.children.length; i++) {
-		 var childNodeDOM = node.childNodes[i];
-		 var childNodeModel = srcElement.children[i];
-		 if((childNodeDOM && childNodeDOM.nodeType==1/*element*/) && childNodeModel.elementType=="HTMLElement"){ //node may have a different child count - wdr
-			 childNodeDOM.id = context.getUniqueID(childNodeModel);
-			 davinci.ve.widget._childrenAddIds(context,childNodeDOM,childNodeModel);
-		 }
-	 }
-}
-
-davinci.ve.widget._createSrcElement = function( node){
+_createSrcElement: function(node) {
 	var srcElement = new davinci.html.HTMLElement(node.tagName.toLowerCase());
 	if (node.hasAttributes()) {
 	    var attrs = node.attributes;
@@ -606,60 +650,9 @@ davinci.ve.widget._createSrcElement = function( node){
 	    }
 	}
 	return srcElement;
-}
+},
 
-davinci.ve.widget._parseNodeData = function(node, options){
-
-
-	// summary:
-	// 		Same general routine as davinci.ve.widget._getData,
-	// 		only adding the "html." prefix to the widget type to make it look like a widget to the Dojo Composition Tool.
-	//
-	if(!node){
-		return undefined;
-	}
-
-	options = (options || {});
-
-	var data = {};
-	data.properties = {};
-
-	for(var i = 0; i < node.attributes.length; i++){
-		var a = node.attributes[i];
-		if(!a.specified || !a.nodeValue){
-			continue;
-		}
-		var n = a.nodeName.toLowerCase();
-		if(n == "id" || n == "widgetid" || n == "style"){
-			continue;
-		}else if(n.charAt(0) == "_"){
-			continue;
-		}
-		var v = a.nodeValue;
-		if(v && n == "class"){
-			v = v.replace("HtmlWidget", "").trim();
-			if(!v){
-				continue;
-			}
-		}
-//		if(options.serialize){
-//			var p = properties[n];
-//			if(p && p.type == "url"){
-//				v = context.getContentUrl(v);
-//			}
-//		}
-		data.properties[n] = v;
-	}
-
-	if(node.tagName.toLowerCase() == "script"){
-		data.children = (node.innerHTML || undefined);
-	}//else{
-	//	data.children = davinci.ve.widget._getChildrenData(widget, options);
-	//}
-	return data;
-};
-
-davinci.ve.widget.getWidgetHelper = function(type) {
+getWidgetHelper: function(type) {
 	var HelperCtor = davinci.ve.metadata.getHelper(type, 'helper');
 	if (HelperCtor) {
 		// XXX need to cache
@@ -678,22 +671,22 @@ davinci.ve.widget.getWidgetHelper = function(type) {
     //     }
     //     return /*this._edit_helper = */new helperConstructor();
     // }
-};
+},
 
-davinci.ve.widget.getWidget = function(node){
+getWidget: function(node){
 
 	if(!node || node.nodeType != 1){
 		return undefined;
 	}
 
-	var widget = davinci.ve.widget.byNode(node);
+	var widget = widgetObject.byNode(node);
 	if(!widget){
 		var ctor;
-		var data = davinci.ve.widget._parseNodeData(node);
+		var data = parseNodeData(node);
 //		var oaWidgetType=node.getAttribute("oawidget");
 		var dvWidgetType=node.getAttribute("dvwidget");
 		if(node.getAttribute("widgetid") || node.getAttribute("dojotype")){
-			var d = davinci.ve.widget._dijit(node);
+			var d = widgetObject._dijit(node);
 			var w= d.byNode(node);
 			if (w) {
 				widget=new davinci.ve.DijitWidget(data,node,w);
@@ -714,4 +707,8 @@ davinci.ve.widget.getWidget = function(node){
 	}
 
 	return widget;
+}
 };
+
+return widgetObject;
+});

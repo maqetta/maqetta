@@ -18,20 +18,15 @@
     <link href="app/davinci/propvieweffects.css?@revision@" rel="stylesheet" type="text/css"></link>
     <script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="parseOnLoad: true, modulePaths:{'preview':'../preview', 'system':'../system'}, cacheBust: '@revision@'"></script>
 	<script type="text/javascript">
-		require(["dijit/dijit", "davinci/davinci-common", "davinci/davinci", "davinci/review/Review"], function () {
-		    dojo.addOnLoad(function () {
-		      var langObj = dojo.i18n.getLocalization("davinci","webContent");
-		      dojo.byId("davinci_user_welcome").innerHTML = langObj.welcome;
-		      dojo.byId("load_screen").innerHTML = langObj.loadingMaqetta;
-		      dojo.byId("davinci_logoff").innerHTML = langObj.logOff;
-		      dojo.byId("maqetta_designer").innerHTML = langObj.designer;
+		require(["dojo/i18n!davinci/nls/webContent", "dojo/domReady!"], function (webContent) {
+		      dojo.byId("davinci_user_welcome").innerHTML = webContent.welcome;
+		      dojo.byId("load_screen").innerHTML = webContent.loadingMaqetta;
+		      dojo.byId("davinci_logoff").innerHTML = webContent.logOff;
+		      dojo.byId("maqetta_designer").innerHTML = webContent.designer;
 		      dojo.byId("maqetta_version").innerHTML = davinci.version;
-		      dojo.byId("title_id").text = langObj.pageDesignerTitle;
-		      //var langObj2 = dojo.i18n.getLocalization("","webContent");//to test "Loading..."
-		    });
-		    
-	    	davinci.useAppCache = true; // needed to provide FF "allow" warning
-
+		      dojo.byId("title_id").text = webContent.pageDesignerTitle;
+		});
+		require(["dojo/i18n!davinci/nls/webContent", "dijit/dijit", "davinci/davinci-common", "davinci/davinci"], function (webContent) {
 			//davinci.Runtime.addPlugin( "app/davinci/ui" );
 	    	//davinci.Runtime.addPlugin( "app/davinci/de/de" );
 //		//	davinci.Runtime.addPlugin( "app/davinci/cssEdit/cssEdit" );
@@ -46,14 +41,13 @@
 			{
 			    // Display a warning dialog for unsupported browsers
 				if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5.1)) {
-					var langObj = dojo.i18n.getLocalization("davinci","webContent");
 	                var unsupportedDialog = new dijit.Dialog({
 	                    id: "unsupportedBrowserDialog",
-	                    title: langObj.unsupportedBrowser,
-	                    content: ["<p>"+ langObj.unsupportedNote +"</p>",
+	                    title: webContent.unsupportedBrowser,
+	                    content: ["<p>"+ webContent.unsupportedNote +"</p>",
 	                              "<div class='maqButtonArea'>",
 	                              "   <button dojoType='dijit.form.Button' type='submit'>",
-	                              langObj.buttonContinue,
+	                              webContent.buttonContinue,
 	                              "   </button>",
 	                              "</div>"
 	                             ].join(" "),
@@ -68,21 +62,19 @@
                     var userInfo;
                     var result=davinci.Runtime.getUser();
 
-                    if (result ) {
+                    if (result) {
                        dojo.byId('davinci_user').innerHTML=result;
                        davinci.Runtime.userName=result;
                     } else {
 	    				//FIXME: temporary fix for running via file: URLs
-                       var langObj = dojo.i18n.getLocalization("davinci","webContent");
-                       dojo.byId('davinci_user').innerHTML=langObj.maqettaUser;
+                       dojo.byId('davinci_user').innerHTML=webContent.maqettaUser;
                     }
                     if (!result) {
-                        var langObj = dojo.i18n.getLocalization("davinci","webContent");
-                        dojo.byId('davinci_user').innerHTML=langObj.localhostUser;
+                        dojo.byId('davinci_user').innerHTML=webContent.localhostUser;
                         dojo.byId('davinci_logoff').href="";
                         davinci.Runtime.isLocalInstall=true;
                     }
-                    if ( davinci.Runtime.plugins.joomlaplugin) {
+                    if (davinci.Runtime.plugins.joomlaplugin) {
 	                    dojo.byId('davinci_logoff').href="http://" + window.location.hostname + "/index.php?option=com_user&task=logout&return=Lw";
 	    		 	}
 	    		 	// Hide logoff if single-user mode

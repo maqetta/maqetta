@@ -1,7 +1,6 @@
 define([
 	"./Runtime",
 	"./model/Path",
-	"./ui/Resource",
 	//"davinci/ui/Panel",
 	"./util",
 	//"./workbench/_ToolbaredContainer",
@@ -19,6 +18,7 @@ define([
 	"dijit/layout/ContentPane",
 	"dijit/layout/TabContainer",
 	"system/resource",
+	"dojo/i18n!./nls/webContent",
 
 	/*
 	 * Dialog deps from davinci/dialog
@@ -26,11 +26,9 @@ define([
 
 	"./ui/NewTheme",
 	"./ui/OpenThemeDialog", // ui_plugin/js
-	"./ui/ThemeSetsDialog", // ui_plugin/js
-
-	"dojo/i18n!./nls/webContent"
-], function(Runtime, Path, UIResource, util, ViewPart, EditorContainer, Dialog, Toolbar, ToolbarSeparator, Menu, MenuBar, PopupMenuBarItem,
-		Button, BorderContainer, StackContainer, ContentPane, TabContainer, sysResource) {
+	"./ui/ThemeSetsDialog" // ui_plugin/js
+], function(Runtime, Path,  util, ViewPart, EditorContainer, Dialog, Toolbar, ToolbarSeparator, Menu, MenuBar, PopupMenuBarItem,
+		Button, BorderContainer, StackContainer, ContentPane, TabContainer, sysResource, webContent) {
 
 var filename2id = function(fileName) {
 	return "editor-" + encodeURIComponent(fileName.replace(/[\/| |\t]/g, "_")).replace(/%/g, ":");
@@ -44,6 +42,63 @@ var updateMainToolBar = function (change, toolbarID) {
 				child.set('disabled', !child.isEnabled(change.targetObjectId));
 			}
 		});
+	}
+};
+
+var getSelectedResource = function(){
+	var selection=Runtime.getSelection();
+	if (selection[0]&&selection[0].resource) {
+		return selection[0].resource;
+	}
+};
+
+var initializeWorkbenchState = function(){
+	
+	if(Workbench._state==null || !Workbench._state.hasOwnProperty("editors")) 
+		(Workbench._state=Runtime.serverJSONRequest({url:"cmd/getWorkbenchState", handleAs:"json", sync:true  }));
+	
+	var state = Workbench._state;
+	
+	
+	if(state && state.project){
+		Workbench.setActiveProject(state.project);
+	}
+	
+	if (state&&state.editors){
+		state.version = davinci.version;
+		
+		var project = null;
+	
+		var singleProject = Runtime.singleProjectMode();
+	
+		if(singleProject){
+			var p = Runtime.getProject();
+			project = new Path(p);
+		}
+	
+		for (var i=0;i<state.editors.length;i++){
+			if(singleProject){
+				// if running in single user mode, only load editors open for specific projects
+				var path = new Path(state.editors[i]);
+				if(!path.startsWith(project)) continue;
+			}
+			
+			var resource= sysResource.findResource(state.editors[i]);
+			var noSelect=state.editors[i]!=state.activeEditor;
+			if (resource){
+				
+				Workbench.openEditor({
+					fileName: resource,
+					content: resource.getText(),
+					noSelect: noSelect,
+					isDirty: resource.isDirty(),
+					startup: false
+				});
+			}
+		}
+	}
+	if (!Workbench._state.hasOwnProperty("editors")) {
+		Workbench._state = {editors:[], version:davinci.version, project:Runtime._DEFAULT_PROJECT};
 	}
 };
 
@@ -109,7 +164,7 @@ var Workbench = {
 		top.setContent(dijit.byId("mainBody"));
 		top.startup();
 */
-		Workbench._initializeWorkbenchState();
+		initializeWorkbenchState();
 	
 		var loading = dojo.query('.loading');
 		if (loading[0]){ // remove the loading div
@@ -117,27 +172,6 @@ var Workbench = {
 		}
 		Workbench._lastAutoSave = Date.now();
 		setInterval(dojo.hitch(this,"_autoSave"),30000);
-	},
-	
-	_getHeightInPixels: function(){
-		var mainBodyContainer = dijit.byId('mainBody');
-		return mainBodyContainer.getHeight();
-	},
-	
-	_getWidthInPixels: function (){
-		var mainBodyContainer = dijit.byId('mainBody');
-		return mainBodyContainer.getWidth();
-	},
-	
-	_pushImageCss: function (urlToImage){
-		var className = "." + urlToImage.replace(/[\/\.:]/g,"_");
-		dojox.html.insertCssRule(className,
-			"background-image: url('" + urlToImage + "');" +
-			"background-repeat: no-repeat;" +
-			"width: 18px;" + 
-			"height: 18px;" + 
-			"text-align: center;");
-		return className;
 	},
 
 	_resourceChanged: function (type,changedResource)
@@ -270,8 +304,7 @@ var Workbench = {
 
 
 		if (!perspective){
-			var langObj = dojo.i18n.getLocalization("davinci","webContent");
-			Runtime.handleError(dojo.string.substitute(langObj.perspectiveNotFound,[perspectiveID]));
+			Runtime.handleError(dojo.string.substitute(webContent.perspectiveNotFound,[perspectiveID]));
 		}
 
 		perspective=dojo.clone(perspective);	// clone so views aren't added to original definition
@@ -748,7 +781,7 @@ var Workbench = {
 					} else {
 						var enabled=true;
 						if(item.isEnabled){
-							var resource = UIResource.getSelectedResource();
+							var resource = getSelectedResource();
 							enabled = item.isEnabled(resource);
 						}
 
@@ -794,54 +827,37 @@ var Workbench = {
 		})
 		Workbench._runAction(button.item,context,button.item.id);
 	},
-	_runAction: function (item,context,arg)
-	{
-		if (item.run)
-		{
+
+	_runAction: function (item,context,arg) {
+		if (item.run) {
 			if (item.run instanceof Function) {
 				item.run();
-			}
-			else
-			{
-				if (item.scope)
-				{
-					var scope=Workbench.actionScope[item.scope];
-					if (!scope){
-						var langObj = dojo.i18n.getLocalization("davinci","webContent");
-						Runtime.handleError(dojo.string.substitute(langObj.scopeNotDefined,[item.id]));
-					}
-					else
-					{
-						var func=scope[item.run];
+			} else {
+				if (item.scope) {
+					var scope = Workbench.actionScope[item.scope];
+					if (!scope) {
+						Runtime.handleError(dojo.string.substitute(webContent.scopeNotDefined, [item.id]));
+					} else {
+						var func = scope[item.run];
 						if (!func){
-							var langObj = dojo.i18n.getLocalization("davinci","webContent");
-							Runtime.handleError(dojo.string.substitute(langObj.funcNotDefined,[item.id]));
-						}
-						else
+							Runtime.handleError(dojo.string.substitute(webContent.funcNotDefined, [item.id]));
+						} else {
 							func.apply(this);
+						}
 					}
-				}
-				else {
-				  eval(item.run);
+				} else {
+					eval(item.run); //FIXME: remove eval
 				}
 			}
-		}
-		else if (item.action)
-		{
+		} else if (item.action) {
 			item.action.run(context);
-		}
-		else if (item.method && context && context[item.method] instanceof Function) {
+		} else if (item.method && context && context[item.method] instanceof Function) {
 			context[item.method](arg);
 		} else if (item.commandID) {
 			Runtime.executeCommand(item.commandID);
 		}
 	},
 
-	_getPageHeight: function (){
-		var mainBodyContainer = dijit.byId('mainBody');
-		return mainBodyContainer._borderBox.h;
-	},
-	
 	showView: function(viewId, shouldFocus){
 		
 	  try {
@@ -854,7 +870,7 @@ var Workbench = {
 			position = 'left',
 			cp1 = null,
 			created = false,
-			pxHeight = Workbench._getPageHeight() - 5;
+			pxHeight = dijit.byId('mainBody')._borderBox.h - 5;
 		
 		dojo.some(perspective.views, function(view){
 			if(view.viewID ==  viewId){
@@ -1221,7 +1237,7 @@ var Workbench = {
 					if (actionItem.action.shouldShow && !actionItem.action.shouldShow(context)) {
 						return;
 					}
-					if ( actionItem.action.isEnabled(context)) {
+					if (actionItem.action.isEnabled(context)) {
 						Workbench._runAction(actionItem,context);
 					}
         	  }
@@ -1245,11 +1261,6 @@ var Workbench = {
 		Workbench.keyBindings=keys;
 	},
 
-	_keyTable: {
-		46: "del",
-		114: "f3"
-		
-	},
 	handleKey: function (e)
 	{
 		if (!Workbench.keyBindings) {
@@ -1316,7 +1327,12 @@ var Workbench = {
 		}
 		else
 		{
-			letter=Workbench._keyTable[e.keyCode]||"xxxxxxxxxx";
+			var keyTable = {
+				46: "del",
+				114: "f3"
+			};
+
+			letter = keyTable[e.keyCode] || "xxxxxxxxxx";
 		}
 		letter=letter.toUpperCase();
 		if (letter==' ') {
@@ -1447,56 +1463,6 @@ var Workbench = {
 			if (editorsStackContainer && editorsWelcomePage){
 				editorsStackContainer.selectChild(editorsWelcomePage);
 			}
-		}
-	},
-
-	_initializeWorkbenchState: function(){
-		
-		if(Workbench._state==null || !Workbench._state.hasOwnProperty("editors")) 
-			(Workbench._state=Runtime.serverJSONRequest({url:"cmd/getWorkbenchState", handleAs:"json", sync:true  }));
-		
-		var state = Workbench._state;
-		
-		
-		if(state && state.project){
-			Workbench.setActiveProject(state.project);
-		}
-		
-		if (state&&state.editors){
-			state.version = davinci.version;
-			
-			var project = null;
-		
-			var singleProject = Runtime.singleProjectMode();
-		
-			if(singleProject){
-				var p = Runtime.getProject();
-				project = new Path(p);
-			}
-		
-			for (var i=0;i<state.editors.length;i++){
-				if(singleProject){
-					// if running in single user mode, only load editors open for specific projects
-					var path = new Path(state.editors[i]);
-					if(!path.startsWith(project)) continue;
-				}
-				
-				var resource= sysResource.findResource(state.editors[i]);
-				var noSelect=state.editors[i]!=state.activeEditor;
-				if (resource){
-					
-					Workbench.openEditor({
-						fileName: resource,
-						content: resource.getText(),
-						noSelect: noSelect,
-						isDirty: resource.isDirty(),
-						startup: false
-					});
-				}
-			}
-		}
-		if (!Workbench._state.hasOwnProperty("editors")) {
-			Workbench._state = {editors:[], version:davinci.version, project:Runtime._DEFAULT_PROJECT};
 		}
 	},
 

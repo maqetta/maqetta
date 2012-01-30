@@ -3,8 +3,9 @@ define([
     	"davinci/ve/widget",
     	"davinci/ve/States",
     	"davinci/library",
+    	"davinci/ve/metadata"
     	"davinci/html/HTMLFile"
-], function(declare, Widget, States, Library, HTMLFile){
+], function(declare, Widget, States, Library, Metadata, HTMLFile){
 
 	var Theme = {
 		desktop_default : 'desktop_default',
@@ -104,13 +105,13 @@ define([
 		var oldClass = originalTheme.className;
 		var toSave = {};
 		/* re-write CSS Selectors */
-		for(var i=0;i<themeJson['files'].length;i++){
-			var fileUrl = directoryPath.append(themeJson['files'][i]);
+		for (var i = 0, len = themeJson.files.length; i < len; i++) {
+			var fileUrl = directoryPath.append(themeJson.files[i]);
 			var resource = system.resource.findResource(fileUrl);
 			if(!sameName && renameFiles && resource.getName().indexOf(oldClass) > -1){
 				var newName = resource.getName().replace(oldClass, selector);
 				resource.rename(newName);
-				themeJson['files'][i] =newName;
+				themeJson.files[i] =newName;
 			}
 			var cssModel = davinci.model.Factory.getInstance().getModel({url:resource.getPath(),
 				includeImports: true,
@@ -132,16 +133,16 @@ define([
 		    deferreds.push(toSave[name].save());
 		}
 		/* re-write metadata */
-		for(var i=0;i<themeJson['meta'].length;i++){
-			var fileUrl = directoryPath.append(themeJson['meta'][i]);
+		for (var i = 0, len = themeJson.meta.length; i < len; i++) {
+			var fileUrl = directoryPath.append(themeJson.meta[i]);
 			var file = system.resource.findResource(fileUrl.toString());
 			var contents = file.getText();
 			var newContents = contents.replace(new RegExp(oldClass, "g"), selector);
 			deferreds.push(file.setContents(newContents));
 		}
 		/* rewrite theme editor HTML */
-		for(var i=0;i<themeJson['themeEditorHtmls'].length;i++){
-			var fileUrl = directoryPath.append(themeJson['themeEditorHtmls'][i]);
+		for (var i = 0, len = themeJson.themeEditorHtmls.length; i < len; i++) {
+			var fileUrl = directoryPath.append(themeJson.themeEditorHtmls[i]);
 			var file = system.resource.findResource(fileUrl.toString());
 			var contents = file.getText();
 			var htmlFile = new HTMLFile(fileUrl);
@@ -169,19 +170,11 @@ define([
 	    }
 	    var helper = theme.helper;
 	    if (helper) {
-	        try {
-	            dojo["require"](helper);
-	        } catch(e) {
-	            console.error("Failed to load helper: " + helper);
-	            console.error(e);
+			require([helper], function(module) {
+				helper = module;
+			});
+			return helper;
 	        }
-	        var aClass = dojo.getObject(helper);
-	        if (aClass) {
-	            theme._helper  = new aClass();
-	        }
-	        var obj = dojo.getObject(helper);
-	        return new obj();
-	    }
 	},
 
 	 getThemeSet: function(context){
@@ -229,7 +222,7 @@ define([
 	        }
 	    
 	    }  // no theme map or context
-	    var newThemeSetName = this.none_themeset_name
+	    var newThemeSetName = this.none_themeset_name;
 	    if (!mobileTheme || mobileTheme === this.none_theme){
 	        mobileTheme = dojo.toJson(this.dojoMobileDefault); 
 	    } else  if (mobileTheme === this.default_theme){
@@ -312,7 +305,7 @@ define([
 	    
 	    function countProperties(obj) {
 	        var count = 0;
-	        for (k in obj) {
+	        for (var k in obj) {
 	            if (obj.hasOwnProperty(k)) {
 	                count++;
 	            }
@@ -333,7 +326,7 @@ define([
 	            return false;
 	        }
 	        var r = true;
-	        for (k in o1) {
+	        for (var k in o1) {
 	            r = this.themeSetEquals(o1[k], o2[k]);
 	            if (!r) {
 	                return false;
@@ -364,30 +357,29 @@ Theme.none_themeset = {
         "name": Theme.none_themeset_name,
         "desktopTheme": "claro",
         "mobileTheme": dojo.clone(Theme.dojoMobileDefault) 
-        },
+};
 Theme.default_themeset = {
         "name": Theme.desktop_default,
         "desktopTheme": "claro",
         "mobileTheme": dojo.clone(Theme.dojoMobileDefault) 
-        },
+};
 Theme.custom_themeset = {
         "name": Theme.mobile_default,
         "desktopTheme": "claro",
         "mobileTheme": Theme.dojoMobileCustom
-        },
+};
+// XXX This should be moved to Dojo library metadata.
 Theme.dojoThemeSets =  { 
         "version": "1.7",
         "specVersion": "0.8",
-        "helper": "davinci.libraries.dojo.dojox.mobile.ThemeHelper",
+        "helper": "maq-metadata-dojo-1.7/dojox/mobile/ThemeHelper",
         "themeSets": [ 
                Theme.custom_themeset           
         ]
-}
+};
 
 return Theme;
 });
-
-
 
 
 

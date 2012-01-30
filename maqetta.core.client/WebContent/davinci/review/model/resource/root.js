@@ -4,7 +4,7 @@ define([
 	"davinci/model/resource/Folder"
 ], function(declare, Resource, Folder) {
 
-return declare("davinci.review.model.resource.root", Resource, {
+var root = declare("davinci.review.model.resource.root", Resource, {
 
 	constructor: function(args) {
 		this.elementType = "ReviewRoot";
@@ -84,7 +84,9 @@ return declare("davinci.review.model.resource.root", Resource, {
 
 });
 
-davinci.review.model.resource.root = new davinci.review.model.resource.root();
+davinci.review.model.resource.root = new root();
+
+return root;
 
 });
      

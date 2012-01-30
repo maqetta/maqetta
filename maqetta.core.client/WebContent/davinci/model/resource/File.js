@@ -5,7 +5,7 @@
    */
  define([
 	"dojo/_base/declare",
-	"/davinci/Runtime",
+	"davinci/Runtime",
 	"davinci/model/resource/Resource"
 ], function(declare, Runtime, Resource) {
 

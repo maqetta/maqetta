@@ -4,9 +4,7 @@ define([
 	"davinci/Workbench",
 	"dijit/layout/BorderContainer",
 	"dijit/layout/ContentPane",
-	"dijit/layout/TabContainer",
-	"dijit/Dialog",
-	"dojox/widget/Standby"
+	"dijit/layout/TabContainer"
 ], function(lang, Runtime, Workbench, BorderContainer, ContentPane, TabContainer) {
 
 davinci.review = {};

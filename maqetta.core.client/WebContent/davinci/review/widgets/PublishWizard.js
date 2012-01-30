@@ -490,11 +490,11 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 				file.index = item.index;
 				targetTreeModel.root.children.push(file);
 			}
-		}else if (item.elementType=="Folder") {
+		}else if (item.elementType == "Folder") {
 			var children;
 			item.getChildren(function(c) { children=c; }, true);
 			dojo.forEach(children, dojo.hitch(this, function(item) {
-				if (item.elementType=="File") {
+				if (item.elementType == "File") {
 					this.getChildrenFiles(item);
 				}
 			}));

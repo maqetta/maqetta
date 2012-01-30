@@ -1,10 +1,9 @@
 define([
-	"dojo/_base/declare",
-	"davinci/model/Model",
+	"dojo/_base/lang",
 	"davinci/review/model/resource/root"
-], function(declare, Model, root) {
+], function(declare, root) {
 
-return declare("davinci.review.model.Resource", null, {
+var Resource = lang.mixin(davinci.review.model.Resource, {
 
 	root: null,
 
@@ -24,6 +23,9 @@ return declare("davinci.review.model.Resource", null, {
 	}
 
 });
+
+return Resource;
+
 });
 
  

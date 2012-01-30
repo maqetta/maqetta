@@ -19,6 +19,7 @@ define([
 	"dijit/layout/ContentPane",
 	"dijit/layout/TabContainer",
 	"system/resource",
+	"dojo/i18n!./nls/webContent",
 
 	/*
 	 * Dialog deps from davinci/dialog
@@ -26,11 +27,9 @@ define([
 
 	"./ui/NewTheme",
 	"./ui/OpenThemeDialog", // ui_plugin/js
-	"./ui/ThemeSetsDialog", // ui_plugin/js
-
-	"dojo/i18n!./nls/webContent"
+	"./ui/ThemeSetsDialog" // ui_plugin/js
 ], function(Runtime, Path, UIResource, util, ViewPart, EditorContainer, Dialog, Toolbar, ToolbarSeparator, Menu, MenuBar, PopupMenuBarItem,
-		Button, BorderContainer, StackContainer, ContentPane, TabContainer, sysResource) {
+		Button, BorderContainer, StackContainer, ContentPane, TabContainer, sysResource, webContent) {
 
 var filename2id = function(fileName) {
 	return "editor-" + encodeURIComponent(fileName.replace(/[\/| |\t]/g, "_")).replace(/%/g, ":");
@@ -270,8 +269,7 @@ var Workbench = {
 
 
 		if (!perspective){
-			var langObj = dojo.i18n.getLocalization("davinci","webContent");
-			Runtime.handleError(dojo.string.substitute(langObj.perspectiveNotFound,[perspectiveID]));
+			Runtime.handleError(dojo.string.substitute(webContent.perspectiveNotFound,[perspectiveID]));
 		}
 
 		perspective=dojo.clone(perspective);	// clone so views aren't added to original definition
@@ -794,43 +792,31 @@ var Workbench = {
 		})
 		Workbench._runAction(button.item,context,button.item.id);
 	},
-	_runAction: function (item,context,arg)
-	{
-		if (item.run)
-		{
+
+	_runAction: function (item,context,arg) {
+		if (item.run) {
 			if (item.run instanceof Function) {
 				item.run();
-			}
-			else
-			{
-				if (item.scope)
-				{
-					var scope=Workbench.actionScope[item.scope];
-					if (!scope){
-						var langObj = dojo.i18n.getLocalization("davinci","webContent");
-						Runtime.handleError(dojo.string.substitute(langObj.scopeNotDefined,[item.id]));
-					}
-					else
-					{
-						var func=scope[item.run];
+			} else {
+				if (item.scope) {
+					var scope = Workbench.actionScope[item.scope];
+					if (!scope) {
+						Runtime.handleError(dojo.string.substitute(webContent.scopeNotDefined, [item.id]));
+					} else {
+						var func = scope[item.run];
 						if (!func){
-							var langObj = dojo.i18n.getLocalization("davinci","webContent");
-							Runtime.handleError(dojo.string.substitute(langObj.funcNotDefined,[item.id]));
-						}
-						else
+							Runtime.handleError(dojo.string.substitute(webContent.funcNotDefined, [item.id]));
+						} else {
 							func.apply(this);
+						}
 					}
-				}
-				else {
-				  eval(item.run);
+				} else {
+					eval(item.run); //FIXME: remove eval
 				}
 			}
-		}
-		else if (item.action)
-		{
+		} else if (item.action) {
 			item.action.run(context);
-		}
-		else if (item.method && context && context[item.method] instanceof Function) {
+		} else if (item.method && context && context[item.method] instanceof Function) {
 			context[item.method](arg);
 		} else if (item.commandID) {
 			Runtime.executeCommand(item.commandID);

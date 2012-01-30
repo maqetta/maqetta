@@ -5,11 +5,11 @@ define(["dojo/_base/declare",
         "davinci/Workbench",
         "davinci/Runtime",
         */
-        "davinci/ve/utils/CssShortHand",
-        "davinci/ui/widgets/DocileDialog",
-        "davinci/ve/states",
-        "davinci/ui/ErrorDialog",
-        "dojo/i18n!davinci/ve/nls/ve",
+        "../utils/CssShortHand",
+        "../../ui/widgets/DocileDialog",
+        "../States",
+        "../../ui/ErrorDialog",
+        "dojo/i18n!../nls/ve",
         "dojo/i18n!dijit/nls/common",
         
         

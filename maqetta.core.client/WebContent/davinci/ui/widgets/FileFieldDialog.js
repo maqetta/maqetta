@@ -4,7 +4,7 @@ define(["dojo/_base/declare",
         "dijit/layout/ContentPane",
         "dijit/Dialog",
         "davinci/model/Path",
-        "davinci/ve/widgets/HTMLStringUtil",
+       
         "dojo/i18n!davinci/ui/nls/ui",
         "dojo/i18n!dijit/nls/common",
         "dijit/TooltipDialog",
@@ -12,12 +12,19 @@ define(["dojo/_base/declare",
         "dijit/layout/ContentPane",
        
 
-   ],function(declare, WidgetLite, Panel, ContentPane, Dialog, Path, HTMLStringUtil, uiNLS, commonNLS){
+   ],function(declare, WidgetLite, Panel, ContentPane, Dialog, Path,  uiNLS, commonNLS){
+		var idPrefix = "davinci_ve_widgets_properties_border_generated"
+		var	__id=0;
+		function getId(){
+			return  (idPrefix + (__id++));
+		}
+		
+		
 		return declare("davinci.ui.widgets.FileFieldDialog", WidgetLite, {
 			buildRendering: function(){
 				this.domNode =   dojo.doc.createElement("div",{style:"width:100%"});
-				this._textField = HTMLStringUtil.getId();
-				this._button = HTMLStringUtil.getId();
+				this._textField = getId();
+				this._button = getId();
 				var template="<div style='float:right;'><button type='button' style='font-size:1em;' id='" + this._button + "'>...</button></div>";
 				template += "<div style='margin-right:35px;padding:1px 0;'><input style='width:100%; padding:1.5px 0;' type='text' id='" + this._textField + "'></input></div>";
 				this.domNode.innerHTML = template;

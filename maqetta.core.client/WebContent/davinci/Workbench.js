@@ -45,6 +45,63 @@ var updateMainToolBar = function (change, toolbarID) {
 	}
 };
 
+var getSelectedResource = function(){
+	var selection=Runtime.getSelection();
+	if (selection[0]&&selection[0].resource) {
+		return selection[0].resource;
+	}
+};
+
+var initializeWorkbenchState = function(){
+	
+	if(Workbench._state==null || !Workbench._state.hasOwnProperty("editors")) 
+		(Workbench._state=Runtime.serverJSONRequest({url:"cmd/getWorkbenchState", handleAs:"json", sync:true  }));
+	
+	var state = Workbench._state;
+	
+	
+	if(state && state.project){
+		Workbench.setActiveProject(state.project);
+	}
+	
+	if (state&&state.editors){
+		state.version = davinci.version;
+		
+		var project = null;
+	
+		var singleProject = Runtime.singleProjectMode();
+	
+		if(singleProject){
+			var p = Runtime.getProject();
+			project = new Path(p);
+		}
+	
+		for (var i=0;i<state.editors.length;i++){
+			if(singleProject){
+				// if running in single user mode, only load editors open for specific projects
+				var path = new Path(state.editors[i]);
+				if(!path.startsWith(project)) continue;
+			}
+			
+			var resource= sysResource.findResource(state.editors[i]);
+			var noSelect=state.editors[i]!=state.activeEditor;
+			if (resource){
+				
+				Workbench.openEditor({
+					fileName: resource,
+					content: resource.getText(),
+					noSelect: noSelect,
+					isDirty: resource.isDirty(),
+					startup: false
+				});
+			}
+		}
+	}
+	if (!Workbench._state.hasOwnProperty("editors")) {
+		Workbench._state = {editors:[], version:davinci.version, project:Runtime._DEFAULT_PROJECT};
+	}
+};
+
 var Workbench = {
 	activePerspective: "",
 	actionScope: [],
@@ -107,7 +164,7 @@ var Workbench = {
 		top.setContent(dijit.byId("mainBody"));
 		top.startup();
 */
-		Workbench._initializeWorkbenchState();
+		initializeWorkbenchState();
 	
 		var loading = dojo.query('.loading');
 		if (loading[0]){ // remove the loading div
@@ -115,33 +172,6 @@ var Workbench = {
 		}
 		Workbench._lastAutoSave = Date.now();
 		setInterval(dojo.hitch(this,"_autoSave"),30000);
-	},
-	
-	/* Copy and paste from davinci/ui/Resource to avoid circular dependancy */
-	getSelectedResource:function(){
-		  var selection=Runtime.getSelection();
-		  if (selection[0]&&selection[0].resource)
-			  return selection[0].resource;
-		},
-	_getHeightInPixels: function(){
-		var mainBodyContainer = dijit.byId('mainBody');
-		return mainBodyContainer.getHeight();
-	},
-	
-	_getWidthInPixels: function (){
-		var mainBodyContainer = dijit.byId('mainBody');
-		return mainBodyContainer.getWidth();
-	},
-	
-	_pushImageCss: function (urlToImage){
-		var className = "." + urlToImage.replace(/[\/\.:]/g,"_");
-		dojox.html.insertCssRule(className,
-			"background-image: url('" + urlToImage + "');" +
-			"background-repeat: no-repeat;" +
-			"width: 18px;" + 
-			"height: 18px;" + 
-			"text-align: center;");
-		return className;
 	},
 
 	_resourceChanged: function (type,changedResource)
@@ -751,7 +781,7 @@ var Workbench = {
 					} else {
 						var enabled=true;
 						if(item.isEnabled){
-							var resource = this.getSelectedResource();
+							var resource = getSelectedResource();
 							enabled = item.isEnabled(resource);
 						}
 
@@ -828,11 +858,6 @@ var Workbench = {
 		}
 	},
 
-	_getPageHeight: function (){
-		var mainBodyContainer = dijit.byId('mainBody');
-		return mainBodyContainer._borderBox.h;
-	},
-	
 	showView: function(viewId, shouldFocus){
 		
 	  try {
@@ -845,7 +870,7 @@ var Workbench = {
 			position = 'left',
 			cp1 = null,
 			created = false,
-			pxHeight = Workbench._getPageHeight() - 5;
+			pxHeight = dijit.byId('mainBody')._borderBox.h - 5;
 		
 		dojo.some(perspective.views, function(view){
 			if(view.viewID ==  viewId){
@@ -1212,7 +1237,7 @@ var Workbench = {
 					if (actionItem.action.shouldShow && !actionItem.action.shouldShow(context)) {
 						return;
 					}
-					if ( actionItem.action.isEnabled(context)) {
+					if (actionItem.action.isEnabled(context)) {
 						Workbench._runAction(actionItem,context);
 					}
         	  }
@@ -1236,11 +1261,6 @@ var Workbench = {
 		Workbench.keyBindings=keys;
 	},
 
-	_keyTable: {
-		46: "del",
-		114: "f3"
-		
-	},
 	handleKey: function (e)
 	{
 		if (!Workbench.keyBindings) {
@@ -1307,7 +1327,12 @@ var Workbench = {
 		}
 		else
 		{
-			letter=Workbench._keyTable[e.keyCode]||"xxxxxxxxxx";
+			var keyTable = {
+				46: "del",
+				114: "f3"
+			};
+
+			letter = keyTable[e.keyCode] || "xxxxxxxxxx";
 		}
 		letter=letter.toUpperCase();
 		if (letter==' ') {
@@ -1438,56 +1463,6 @@ var Workbench = {
 			if (editorsStackContainer && editorsWelcomePage){
 				editorsStackContainer.selectChild(editorsWelcomePage);
 			}
-		}
-	},
-
-	_initializeWorkbenchState: function(){
-		
-		if(Workbench._state==null || !Workbench._state.hasOwnProperty("editors")) 
-			(Workbench._state=Runtime.serverJSONRequest({url:"cmd/getWorkbenchState", handleAs:"json", sync:true  }));
-		
-		var state = Workbench._state;
-		
-		
-		if(state && state.project){
-			Workbench.setActiveProject(state.project);
-		}
-		
-		if (state&&state.editors){
-			state.version = davinci.version;
-			
-			var project = null;
-		
-			var singleProject = Runtime.singleProjectMode();
-		
-			if(singleProject){
-				var p = Runtime.getProject();
-				project = new Path(p);
-			}
-		
-			for (var i=0;i<state.editors.length;i++){
-				if(singleProject){
-					// if running in single user mode, only load editors open for specific projects
-					var path = new Path(state.editors[i]);
-					if(!path.startsWith(project)) continue;
-				}
-				
-				var resource= sysResource.findResource(state.editors[i]);
-				var noSelect=state.editors[i]!=state.activeEditor;
-				if (resource){
-					
-					Workbench.openEditor({
-						fileName: resource,
-						content: resource.getText(),
-						noSelect: noSelect,
-						isDirty: resource.isDirty(),
-						startup: false
-					});
-				}
-			}
-		}
-		if (!Workbench._state.hasOwnProperty("editors")) {
-			Workbench._state = {editors:[], version:davinci.version, project:Runtime._DEFAULT_PROJECT};
 		}
 	},
 

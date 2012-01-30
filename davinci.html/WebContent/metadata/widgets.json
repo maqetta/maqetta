@@ -44,7 +44,7 @@
             "properties": {
                 "controls": "controls"
             },
-            "inlineEdit": "davinci.libraries.html.html.HtmlSrcAttributeInputEmbed"
+            "inlineEdit": "./html/HtmlSrcAttributeInputEmbed"
         },
         {
             "name": "<body>",
@@ -94,7 +94,7 @@
             "category": "html",
             "icon": "resources/images/element.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKEDABBVisLT4sHo/wAAACH+FUNyZWF0ZWQgd2l0aCBUaGUgR0lNUAAh+QQBCgADACwAAAAAEAAQAAACI5yPqcvtD1UACQQJRBIWTa1wl5E13PEtolciazJVY0TX9lIAADs=",
-            "inlineEdit": "davinci.libraries.html.html.HtmlSrcAttributeInputEmbed"
+            "inlineEdit": "./html/HtmlSrcAttributeInputEmbed"
         },
         {
             "name": "<fieldset>",
@@ -183,7 +183,7 @@
             "properties": {
                 "style": "width: 300px; height: 300px;"
             },
-            "inlineEdit": "davinci.libraries.html.html.HtmlSrcAttributeInput"
+            "inlineEdit": "./html/HtmlSrcAttributeInput"
         },
         {
             "name": "<img>",
@@ -192,7 +192,7 @@
             "category": "html",
             "icon": "resources/images/html-image.png",
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkY2QThBRTQ3NTk1NDExRTBBNTdGOUM4MUM1RjkwOTYwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkY2QThBRTQ4NTk1NDExRTBBNTdGOUM4MUM1RjkwOTYwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6RjZBOEFFNDU1OTU0MTFFMEE1N0Y5QzgxQzVGOTA5NjAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6RjZBOEFFNDY1OTU0MTFFMEE1N0Y5QzgxQzVGOTA5NjAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz610jG7AAACA0lEQVR42qSTPWhTURTHf/e9BJsoRmOGEGhaxaIpRu2g4iIqlIKgImrtIg5OLp3ExYK0rsWhopSC4KIUV4eiVSGDX4gWosWPaqNDyAdKSggxr+/jevOapCZdCjmXwznv3Pf/33P+lyuklLRjGm2ap55M37siheZZN1A6NkOX74oGwsFL7+lb6yZYeHKzuQPT1t04/iC55udKarUm0ZkYGeS71FoJVtLh42E3vnx0na6dhyh2nedxOgVeD0I5ukATYFl6s4j1DsK7IkxMTfLjZ5EgeQ4H0/T29YE/itwQUASbFIFg2fE0d7Bsed0YlSX2i3lel+DZ5zQX3ozSHYxTjvSQs4PqoG4UHtPRmwmM2gjvL17i1NkOYt8CxH1hAmN3yD6dwVz4SE8khOH3o6sZDLOlA9NaScsHjvK25MP+MMOiN8dA3qL/xEn2lQf4lExiyIpLYNveZg2WawRzG7ey+8gZNm8JETVhcXLMrf/+leNFIsG7V7OuBmZNA611hEIxi5FJcXDvHrap7475r9iJ52yPdeIYFXL5rLoI0RB9zS3cuHaVeGeEL7EdhI71uzNmZhP4VBwaPEdpKYOmUFZNRKqPqerDI7fl3B9TVgxbuVNz+z935N9GzZGj4/dlFbcqoimZnnqIVyhChFrKhKifQnVpQlMlgSMdCoWSuyXafc7/BBgAyIPnKcd4fywAAAAASUVORK5CYII=",
-            "inlineEdit": "davinci.libraries.html.html.HtmlSrcAttributeInput"
+            "inlineEdit": "./html/HtmlSrcAttributeInput"
         },
         {
             "name": "<input>",
@@ -487,7 +487,7 @@
             "properties": {
                 "controls": "controls"
             },
-            "inlineEdit": "davinci.libraries.html.html.HtmlSrcAttributeInputEmbed"
+            "inlineEdit": "./html/HtmlSrcAttributeInputEmbed"
         },
         {
             "name": "Rich Text",
@@ -499,7 +499,7 @@
             "children": "Enter Text",
             "resizable": "none",
             "allowedChild": "ANY",
-            "inlineEdit": "davinci.ve.input.RichTextInput"
+            "inlineEdit": "davinci/ve/input/RichTextInput"
         },
         {
             "name": "Sticky Note",
@@ -513,7 +513,7 @@
             },
             "children": "<i>Enter Note</i>",
             "allowedChild": "ANY",
-            "inlineEdit": "davinci.ve.input.RichTextInput"
+            "inlineEdit": "davinci/ve/input/RichTextInput"
         }
     ]
 }

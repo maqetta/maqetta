@@ -6,8 +6,11 @@
 define([
 	"dojo/_base/declare",
 	"davinci/html/HTMLItem",
-	"davinci/html/HTMLParser"
-], function(declare, HTMLItem, HTMLParser) {
+	"davinci/html/HTMLParser",
+	"davinci/html/HTMLText",
+	"davinci/html/HTMLComment",
+	"davinci/html/HTMLAttribute"
+], function(declare, HTMLItem, HTMLParser, HTMLText, HTMLComment, HTMLAttribute) {
 
 return declare("davinci.html.HTMLElement", HTMLItem, {
 
@@ -237,12 +240,12 @@ return declare("davinci.html.HTMLElement", HTMLItem, {
 	},
 
 	addText: function(text) {
-		this.addChild(new davinci.html.HTMLText(text));
+		this.addChild(new HTMLText(text));
 		this.onChange();
 	},
 
 	addComment: function(text) {
-		this.addChild(new davinci.html.HTMLComment(text));
+		this.addChild(new HTMLComment(text));
 		this.onChange();
 	},
 
@@ -263,7 +266,7 @@ return declare("davinci.html.HTMLElement", HTMLItem, {
 				var attr = this._getAttribute(name);
 				var add;
 				if (!attr) {
-					attr = new davinci.html.HTMLAttribute();
+					attr = new HTMLAttribute();
 					add = true;
 					delta = name.length + value.length + 4;
 					attr.startOffset = startOffset;
@@ -387,7 +390,7 @@ return declare("davinci.html.HTMLElement", HTMLItem, {
 			}
 
 		}
-		davinci.html.HTMLItem.prototype.addChild.apply(this,arguments);
+		HTMLItem.prototype.addChild.apply(this,arguments);
 	},
 
 	removeChild: function(child) {
@@ -414,7 +417,7 @@ return declare("davinci.html.HTMLElement", HTMLItem, {
 				this.getHTMLFile().updatePositions(child.startOffset,0-delta);
 			}
 		}
-		davinci.html.HTMLItem.prototype.removeChild.apply(this,arguments);
+		HTMLItem.prototype.removeChild.apply(this,arguments);
 	},
 
 	_textModify: function(newText, oldText) {

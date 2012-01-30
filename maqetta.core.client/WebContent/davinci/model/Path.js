@@ -1,5 +1,5 @@
 define([
-	"dojo/_base/declare",
+	"dojo/_base/declare"
 ], function(declare) {
 
 if ( typeof davinci.model === "undefined" ) { davinci.model = {}; }
@@ -67,7 +67,7 @@ var Path = declare("davinci.model.Path", null, {
 		if (!this._parentPath) {
 			var parentSegments = dojo.clone(this.segments);
 			parentSegments.pop();
-			this._parentPat h= new Path(parentSegments, this.hasLeading);
+			this._parentPath = new Path(parentSegments, this.hasLeading);
 		}
 		return dojo.clone(this._parentPath);
 	},
@@ -79,7 +79,7 @@ var Path = declare("davinci.model.Path", null, {
 	append: function(tail) {
 		tail = tail || "";
 		if (typeof tail == 'string') {
-			tail = new davinci.model.Path(tail);
+			tail = new Path(tail);
 		}
 		if (tail.isAbsolute()) {
 			return tail;

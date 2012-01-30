@@ -5,8 +5,11 @@
  */
 define([
 	"dojo/_base/declare",
-	"davinci/html/CSSElement"
-], function(declare, CSSElement) {
+	"davinci/html/CSSElement",
+	"davinci/html/CSSRule",
+	"davinci/html/CSSParser",
+	"davinci/html/CSSSelector"
+], function(declare, CSSElement, CSSRule, CSSParser, CSSSelector) {
 
 return declare("davinci.html.CSSFile", CSSElement, {
 
@@ -62,7 +65,7 @@ return declare("davinci.html.CSSFile", CSSElement, {
 
 	addRule: function (ruleText) {
 
-		var rule = new davinci.html.CSSRule();
+		var rule = new CSSRule();
 		rule.setText(ruleText);
 		this.addChild(rule);
 		this.setDirty(true);
@@ -72,7 +75,7 @@ return declare("davinci.html.CSSFile", CSSElement, {
 	setText: function(text) {
 		var oldChildren = this.children;
 		this.children = [];
-		var result = davinci.html.CSSParser.parse(text, this);
+		var result = CSSParser.parse(text, this);
 		this.errors = result.errors;
 
 		if (this.errors.length > 0 && this.errors[this.errors.length - 1].isException)  {
@@ -140,7 +143,7 @@ return declare("davinci.html.CSSFile", CSSElement, {
 		if (!selector) {
 			return [];
 		}
-		var selectors = davinci.html.CSSSelector.parseSelectors(selector);
+		var selectors = CSSSelector.parseSelectors(selector);
 		for ( var i = 0; i < this.children.length; i++ ) {
 			var child = this.children[i];
 			if (child.elementType == 'CSSRule') {
@@ -157,7 +160,7 @@ return declare("davinci.html.CSSFile", CSSElement, {
 	},
 
 	getRules: function(selector) {
-		var selectors = davinci.html.CSSSelector.parseSelectors(selector);
+		var selectors = CSSSelector.parseSelectors(selector);
 		var matchingRules = new Array();
 		for ( var i = 0; i < this.children.length; i++ ) {
 			var child = this.children[i];

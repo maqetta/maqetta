@@ -1,6 +1,7 @@
 define([
-	"dojo/_base/declare"
-], function(declare) {
+	"dojo/_base/declare",
+	"davinci/html/CSSEditorWidget"
+], function(declare, CSSEditorWidget) {
 
 return declare("davinci.html.CSSEditorContext", null, {
 
@@ -22,7 +23,7 @@ return declare("davinci.html.CSSEditorContext", null, {
 				var rule = model.getCSSRule();
 				var fire = rule != this.selectedRule;
 				if (rule) {
-					this.selectedWidget = new davinci.html.CSSEditorWidget(this);
+					this.selectedWidget = new CSSEditorWidget(this);
 				} else {
 					this.selectedWidget = null;
 				}

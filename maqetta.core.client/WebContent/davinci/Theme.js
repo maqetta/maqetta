@@ -3,7 +3,8 @@ define([
     	"davinci/ve/widget",
     	"davinci/ve/States",
     	"davinci/library",
-], function(declare, Widget, States, Library){
+    	"davinci/html/HTMLFile"
+], function(declare, Widget, States, Library, HTMLFile){
 
 	var Theme = {
 		desktop_default : 'desktop_default',
@@ -143,7 +144,7 @@ define([
 			var fileUrl = directoryPath.append(themeJson['themeEditorHtmls'][i]);
 			var file = system.resource.findResource(fileUrl.toString());
 			var contents = file.getText();
-			var htmlFile = new davinci.html.HTMLFile(fileUrl);
+			var htmlFile = new HTMLFile(fileUrl);
 			htmlFile.setText(contents,true);
 			var element = htmlFile.find({elementType: 'HTMLElement', tag: 'body'}, true);
 			// #1024 leave other classes on the body only replace the target

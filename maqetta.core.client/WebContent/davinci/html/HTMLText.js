@@ -13,7 +13,6 @@ return declare("davinci.html.HTMLText", HTMLItem, {
 	constructor: function(value) {
 		this.elementType = "HTMLText";
 		this.value=value ||"";
-
 	},
 
 	getText: function(context) {

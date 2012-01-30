@@ -1,6 +1,10 @@
 define([
 	"dojo/_base/declare",
-], function(declare){
+	"davinci/html/HTMLText",
+	"davinci/html/HTMLElement",
+	"davinci/html/HTMLAttribute",
+	"davinci/html/HTMLComment"
+], function(declare, HTMLText, HTMLAttribute, HTMLComment){
 
 /* This file defines an XML parser, with a few kludges to make it
  * useable for HTML. autoSelfClosers defines a set of tag names that
@@ -371,66 +375,67 @@ parse = function(text, parentElement) {
 			switch (token.style) {
 			case "xml-punctuation" : {
 				updateText();
-				if (token.content=="<") {
-					var model=new davinci.html.HTMLElement();
-					model.wasParsed=true;
-					model.startOffset=token.offset;
-					stack[stack.length-1].addChild(model,undefined,true);
+				if (token.content == "<") {
+					var model = new HTMLElement();
+					model.wasParsed = true;
+					model.startOffset = token.offset;
+					stack[stack.length-1].addChild(model, undefined, true);
 					nextToken(true);
-					if (token.style=="xml-tagname")
-						model.tag=token.content;
+					if (token.style == "xml-tagname")
+						model.tag = token.content;
 					else
 						error("expecting tag name");
 
-					while ((token=nextToken(true)).style=="xml-attname") {
-						var attribute=new davinci.html.HTMLAttribute();
-						attribute.wasParsed=true;
+					while ((token=nextToken(true)).style == "xml-attname") {
+						var attribute = new HTMLAttribute();
+						attribute.wasParsed = true;
 						model.attributes.push(attribute);
-						attribute.name=token.content;
-						attribute.startOffset=token.offset;
+						attribute.name = token.content;
+						attribute.startOffset = token.offset;
 						nextToken(true);
-						if (token.content=="=") {
-							token=parser.next();
-							if (token.style=="xml-attribute") {
+						if (token.content == "=") {
+							token = parser.next();
+							if (token.style == "xml-attribute") {
 								var s=token.content;
 								attribute.setValue(s.substring(1,s.length-1));
 
-							} else
+							} else {
 								error ("expecting attribute value");
-
+							}
 						} else {
-							attribute.noValue=true;
+							attribute.noValue = true;
 							attribute.setValue(true);
 						}
-						attribute.endOffset=token.offset-1;
-						if (attribute.noValue && token.style!="xml-attname")
+						attribute.endOffset = token.offset-1;
+						if (attribute.noValue && token.style != "xml-attname")
 							break;
 					}
-					if (token.style!="xml-punctuation")
+					if (token.style != "xml-punctuation")
 						error("expecting >");
 					else {
-						model.startTagOffset=token.offset;
-						if (token.content==">")
+						model.startTagOffset = token.offset;
+						if (token.content == ">")
 							stack.push(model);
 						else {
-							model.noEndTag=true;
-							model=stack[stack.length-1];
+							model.noEndTag = true;
+							model = stack[stack.length-1];
 						}
 						addTrailingWS(token);
 					}
-					if (model.tag=="style") {
+					if (model.tag == "style") {
 						parseStyle();
 					}
 
-				} else if (token.value=="</") {
-					var prevModel=model;
-					token=parser.next();
-					if (model.tag=="script")
+				} else if (token.value == "</") {
+					var prevModel = model;
+					token = parser.next();
+					if (model.tag == "script") {
 						model.script=model.getElementText();
+					}
 					stack.pop();
-					model=stack[stack.length-1];
-					token=parser.next();
-					prevModel.endOffset=token.offset;
+					model = stack[stack.length-1];
+					token = parser.next();
+					prevModel.endOffset = token.offset;
 					addTrailingWS(token);
 				}
 			}
@@ -450,35 +455,35 @@ parse = function(text, parentElement) {
 			break;
 			case "xml-comment" : {
 				updateText();
-				var comment=new davinci.html.HTMLComment();
-				comment.wasParsed=true;
-				comment.startOffset=token.offset;
-				comment.value=token.content.substring(4,token.content.length-3);
-				comment.endOffset=token.offset+token.content.length;
-				stack[stack.length-1].addChild(comment,undefined,true);
+				var comment = new HTMLComment();
+				comment.wasParsed = true;
+				comment.startOffset = token.offset;
+				comment.value = token.content.substring(4,token.content.length-3);
+				comment.endOffset = token.offset+token.content.length;
+				stack[stack.length-1].addChild(comment, undefined, true);
 
 			}
 			break;
 			case "xml-doctype" : {
 				if (!inComment)  {
 					updateText();
-					var comment=new davinci.html.HTMLComment();
-					comment.wasParsed=true;
-					comment.startOffset=token.offset;
-					comment.value=token.value.substring(2);
-					stack[stack.length-1].addChild(comment,undefined,true);
-					comment.isProcessingInstruction=true;
-					token=parser.next();
+					var comment = new HTMLComment();
+					comment.wasParsed = true;
+					comment.startOffset = token.offset;
+					comment.value = token.value.substring(2);
+					stack[stack.length-1].addChild(comment, undefined, true);
+					comment.isProcessingInstruction = true;
+					token = parser.next();
 				}
-				var lastChar=token.content.length-1;
-				if (token.content.charAt(token.content.length-1)==">") {
-					comment.endOffset=token.offset+token.content.length;
-					comment.value+=token.content.substring(0,lastChar);
+				var lastChar = token.content.length-1;
+				if (token.content.charAt(token.content.length-1) == ">") {
+					comment.endOffset = token.offset + token.content.length;
+					comment.value += token.content.substring(0, lastChar);
 					addTrailingWS(token);
-					inComment=undefined;
+					inComment = undefined;
 				}  else {
-					inComment=comment;
-					comment.value+=token.content;
+					inComment = comment;
+					comment.value += token.content;
 				}
 			}
 			break;		  

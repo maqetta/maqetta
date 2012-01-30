@@ -1,8 +1,11 @@
 define([
 	"dojo/_base/array",
-	"davinci/html/HTMLModel" // HTMLElement, HTMLText
+	"davinci/html/HTMLElement",
+	"davinci/html/HTMLText"
 ], function(
-	array
+	array,
+	HTMLElement,
+	HTMLText
 ) {
 
 var ItemFileReadStoreHelper = function() {};
@@ -126,11 +129,11 @@ ItemFileReadStoreHelper.prototype = {
                         }
                         if (newText){
                             // create a new script element
-                            var script = new davinci.html.HTMLElement('script');
+                            var script = new HTMLElement('script');
                             script.addAttribute('type', 'text/javascript');
                             script.script = "";
                             head.insertBefore(script, scriptTag);
-                            var newScriptText = new davinci.html.HTMLText();
+                            var newScriptText = new HTMLText();
                             newScriptText.setText(newText); 
                             script.addChild(newScriptText); 
                             scriptTag.parent.removeChild(scriptTag);

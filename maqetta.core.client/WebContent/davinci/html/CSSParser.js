@@ -1,11 +1,15 @@
 define([
 	"dojo/_base/declare",
-	"davinci/html/CSSModel",
-	"davinci/mode/parser/Tokenizer",
+	"davinci/html/CSSSelector",
+	"davinci/html/CSSCombinedSelector",
+	"davinci/html/CSSRule",
+	"davinci/html/CSSProperty",
+	"davinci/html/CSSAtRule",
+	"davinci/model/parser/Tokenizer",
 	"davinci/model/Path",
 	"system/resource",
-	"davinci/model/Factory"
-], function(declare, CSSModel, Tokenizer, Path, sysResource, Factory) {
+	"davinci/model/Factory",
+], function(declare, CSSSelector, CSSCombinedSelector, CSSRule, CSSProperty, CSSAtRule, Tokenizer, Path, sysResource, Factory) {
 
 	var pushComment=null;
 
@@ -171,7 +175,7 @@ define([
 	return {make: parseCSS, electricChars: "}"};
 })();
 
-	davinci.html.CSSParser.parse = function (text, parentElement) {
+	CSSParser.parse = function (text, parentElement) {
 		var stream, inHtml;
 		if (typeof text == "string") {
 			var txtStream = {
@@ -190,7 +194,7 @@ define([
 			stream = text;
 			inHtml = true;
 		}
-		var parser = davinci.html.CSSParser.make(stream);
+		var parser = CSSParser.make(stream);
 		var token;
 		var selector;
 		var combined;
@@ -244,7 +248,7 @@ define([
 		}
 
 		function createSelector() {
-			selector = new davinci.html.CSSSelector();
+			selector = new CSSSelector();
 			selector.startOffset = token.offset;
 			selector.parent = model;
 			// selector.setStart(nexttoken.line,nexttoken.from);
@@ -259,7 +263,7 @@ define([
 			var prev = selector;
 			prev.endOffset = token.offset - 1;
 			if (!combined) {
-				combined = new davinci.html.CSSCombinedSelector();
+				combined = new CSSCombinedSelector();
 				combined.parent = model;
 				combined.selectors.push(prev);
 				selector.startOffset = prev.startOffset;
@@ -281,7 +285,7 @@ define([
 						stream.push("<");
 						throw StopIteration;
 					}
-					model = new davinci.html.CSSRule();
+					model = new CSSRule();
 					model.startOffset = token.offset;
 					parentElement.addChild(model, undefined, true);
 
@@ -441,8 +445,8 @@ define([
 				break;
 				case "css-at": {
 					var ruleName = token.content.substring(1);
-					var atRule = (ruleName == "import") ? new davinci.html.CSSImport()
-					: new davinci.html.CSSAtRule();
+					var atRule = (ruleName == "import") ? new CSSImport()
+					: new CSSAtRule();
 					atRule.startOffset = token.offset;
 					parentElement.addChild(atRule, undefined, true);
 					if (ruleName == "import") {

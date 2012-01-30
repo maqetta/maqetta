@@ -6,14 +6,16 @@
 define([
 	"dojo/_base/declare",
 	"davinci/html/HTMLItem",
-	"davinci/html/HTMLParser"
-], function(declare, HTMLItem, HTMLParser) {
+	"davinci/html/HTMLParser",
+	"davinci/html/CSSSelector",
+	"davinci/html/HTMLElement",
+	"davinci/html/CSSImport"
+], function(declare, HTMLItem, HTMLParser, CSSSelector, HTMLElement, CSSImport) {
 
 return declare("davinci.html.HTMLFile", HTMLItem, {
 
 	constructor: function(fileName) {
 		this.fileName = fileName;
-		this.inherits(davinci.html.HTMLItem);
 		this.elementType = "HTMLFile";
 		this._loadedCSS = {};
 		this._styleElem = null;
@@ -179,7 +181,7 @@ return declare("davinci.html.HTMLFile", HTMLItem, {
 		// add CSS link to HTML
 		//  XXX This isn't yet supported.  Instead, add an "@import" inside of a "<style>" element in
 		//  the head.
-		//  var link = new davinci.html.HTMLElement('link');
+		//  var link = new HTMLElement('link');
 		//  link.addAttribute('rel', 'stylesheet');
 		//  link.addAttribute('type', 'text/css');
 		//  link.addAttribute('href', url);
@@ -188,12 +190,12 @@ return declare("davinci.html.HTMLFile", HTMLItem, {
 			var head = this.find({'elementType':"HTMLElement",'tag':'head'}, true);
 			var style = head.getChildElement('style');
 			if (!style) {
-				style = new davinci.html.HTMLElement('style');
+				style = new HTMLElement('style');
 				head.addChild(style);
 			}
 			this._styleElem = style;
 		}
-		var css = new davinci.html.CSSImport();
+		var css = new CSSImport();
 		css.url = url;
 		if(beforeChild){
 			this._styleElem.insertBefore(css, beforeChild);

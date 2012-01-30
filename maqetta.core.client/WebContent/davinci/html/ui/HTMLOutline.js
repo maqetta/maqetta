@@ -1,6 +1,6 @@
 define([
 	"dojo/_base/declare",
-	"davinci.html.ui.HTMLOutlineModel"
+	"davinci/html/ui/HTMLOutlineModel"
 ], function(declare, HTMLOutlineModel){
 	
 return declare("davinci/html/ui/HTMLOutline", null, {

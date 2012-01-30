@@ -1,6 +1,6 @@
 define([
 	"dojo/_base/declare",
-	"/davinci/Runtime",
+	"davinci/Runtime",
 	"davinci/model/Model",
 	"davinci/Workbench",
 	"davinci/model/Path"

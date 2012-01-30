@@ -6,8 +6,9 @@
 
 define([
 	"dojo/_base/declare",
-	"davinci/html/CSSElement"
-], function(declare, CSSElement) {
+	"davinci/html/CSSElement",
+	"davinci/html/CSSFile"
+], function(declare, CSSElement, CSSFile) {
 
 var CSSSelector = declare("davinci.html.CSSSelector", CSSElement, {
 
@@ -123,7 +124,7 @@ var CSSSelector = declare("davinci.html.CSSSelector", CSSElement, {
 CSSSelector.parseSelectors = function(selector) {
     if (typeof selector == "string") {
         selector = selector + "{}";
-        var cssFile = new davinci.html.CSSFile();
+        var cssFile = new CSSFile();
         cssFile.setText(selector);
         return cssFile.children[0].selectors;
     } else

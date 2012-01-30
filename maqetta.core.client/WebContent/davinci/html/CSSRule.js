@@ -5,8 +5,10 @@
  */
 define([
 	"dojo/_base/declare",
-	"davinci/html/CSSElement"
-], function(declare, CSSElement) {
+	"davinci/html/CSSElement",
+	"davinci/html/CSSParser",
+	"davinci/html/CSSProperty"
+], function(declare, CSSElement, CSSParser, CSSProperty) {
 
 return declare("davinci.html.CSSRule", CSSElement, {
 
@@ -36,7 +38,7 @@ return declare("davinci.html.CSSRule", CSSElement, {
 				xmode : 'style',
 				css : true
 		};
-		var result = davinci.html.CSSParser.parse(text, this);
+		var result = CSSParser.parse(text, this);
 
 		// first child is actually the parsed element, so replace this with child
 		dojo.mixin(this, this.children[0]);
@@ -46,7 +48,7 @@ return declare("davinci.html.CSSRule", CSSElement, {
 	},
 
 	addProperty: function(name, value) {
-		var property = new davinci.html.CSSProperty(name, value, this);
+		var property = new CSSProperty(name, value, this);
 		this.properties.push(property);
 		this.setDirty(true);
 		this.onChange();
@@ -60,7 +62,7 @@ return declare("davinci.html.CSSRule", CSSElement, {
 			this.removeProperty(name);
 		}
 
-		property = new davinci.html.CSSProperty(name, value, this);
+		property = new CSSProperty(name, value, this);
 		this.properties.splice(atIndex, 0, property);
 		this.setDirty(true);
 		this.onChange();
@@ -162,7 +164,7 @@ return declare("davinci.html.CSSRule", CSSElement, {
 		} else if (property) {
 			property.value = value;
 		} else {
-			property = new davinci.html.CSSProperty();
+			property = new CSSProperty();
 			property.name = name;
 			property.value = value;
 			this.properties.push(property);

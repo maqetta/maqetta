@@ -3,10 +3,9 @@ define([
 	"davinci/model/Model"
 ], function(declare, Model) {
 
-if (!davinci)
-	davinci={};
+if ( typeof davinci === "undefined" ) { davinci={}; }
 
-davinci.Inherits = function(clazz, parent ) {
+davinci.Inherits = function(clazz, parent) {
 	clazz.prototype = new parent();
 	clazz.prototype.constructor = clazz;
 };
@@ -149,7 +148,7 @@ return declare("davinci.model.Model", null, {
 		if(visitor.endVisit) visitor.endVisit(this);	
 	},
 
-	updatePositions: function (model, offset, delta) {
+	updatePositions: function(model, offset, delta) {
 		visitor = {
 				visit: function(element) {
 					if (element.endOffset < offset) {

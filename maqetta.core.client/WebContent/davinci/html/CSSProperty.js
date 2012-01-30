@@ -48,7 +48,7 @@ return declare("davinci.html.CSSProperty", CSSElement, {
 	},
 	
 	addProperty: function(name, value) {
-		var property = new davinci.html.CSSProperty(name, value, this);
+		var property = new CSSProperty(name, value, this);
 		this.properties.push(property);
 	},
 

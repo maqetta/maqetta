@@ -13,14 +13,14 @@ define(["dojo/_base/declare",
 		"davinci/ve/ChooseParent"
 ], function(
 		declare,
-		Tool,
+		_Tool,
 		Workbench,
 		Preferences,
 		Metadata,
 		Widget
 ) {
 
-return declare("davinci.ve.tools.CreateTool", Tool, {
+return declare("davinci.ve.tools.CreateTool", _Tool, {
 
 	constructor: function(data) {
 		this._data = data;

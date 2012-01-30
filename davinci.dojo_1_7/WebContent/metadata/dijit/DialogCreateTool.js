@@ -19,7 +19,7 @@ return declare("davinci.libraries.dojo.dijit.DialogCreateTool", CreateTool, {
 			this._data.properties = {};
 		}
 		// Name the widget so it can be referenced by a state name
-		this._data.properties.id = dijit.getUniqueId(this._type.replace(/\./g,"_"));
+		this._data.properties.id = dijit.getUniqueId(this._data.type.replace(/\./g,"_"));
 		this._data.context = this._context;
 		var widget = this._create({parent: bodyWidget});
 		var body = States.getContainer();

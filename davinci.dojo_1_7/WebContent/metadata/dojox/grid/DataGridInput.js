@@ -253,7 +253,7 @@ return declare("davinci.libraries.dojo.dojox.grid.DataGridInput", SmartInput, {
 		var storeId = this._widget.domNode._dvWidget._srcElement.getAttribute("store");
 		var storeWidget = Widget.byId(storeId);
 		var properties = {};
-		properties['data'] = data;
+		properties.data = data;
 		storeWidget._srcElement.setAttribute('url', ''); 
 		// this is needed to prevent ModifyCommmand mixin from puttting it back
 		properties.url = '';
@@ -331,7 +331,7 @@ return declare("davinci.libraries.dojo.dojox.grid.DataGridInput", SmartInput, {
 		}
 		var structure = [],
 			item = items[0];
-		for (name in item){
+		for (var name in item){
 			if (name !== '_0' && name !== '_RI' && name !== '_S'){
 				structure.push({
 					cellType: dojox.grid.cells.Cell,
@@ -362,7 +362,7 @@ return declare("davinci.libraries.dojo.dojox.grid.DataGridInput", SmartInput, {
 		var escapeHTML = (this._format === 'text');
         var command = new ModifyCommand(widget,
 	        	{
-		        	structure: structure,\
+					structure: structure,
 		        	escapeHTMLInData: escapeHTML
 		        },
 		        null, 
@@ -557,7 +557,7 @@ return declare("davinci.libraries.dojo.dojox.grid.DataGridInput", SmartInput, {
 			} else {
 				callbackTextBox.setValue('callback'); // provide a default
 			}
-	    	tagetObj.style.height = '40px'
+			tagetObj.style.height = '40px';
 	    	dojo.style('ieb', 'width', resizeWidth + 15 + 'px' );
 			
 		} else {
@@ -600,7 +600,7 @@ return declare("davinci.libraries.dojo.dojox.grid.DataGridInput", SmartInput, {
 	 getCallback: function(url) {
 	    var helper = Widget.getWidgetHelper('dojo.data.ItemFileReadStore');
         if(helper && helper.getXhrScriptPluginParameters){
-           xhrParams = helper.getXhrScriptPluginParameters(url, this._widget._edit_context);
+		   var xhrParams = helper.getXhrScriptPluginParameters(url, this._widget._edit_context);
             if ( xhrParams){ // must be the one we were looking for.
                 return xhrParams.callback;
             }
@@ -608,7 +608,7 @@ return declare("davinci.libraries.dojo.dojox.grid.DataGridInput", SmartInput, {
     },
 	
 	setCallback: function(url){
-	    var helper = davinci.ve.widget.getWidgetHelper('dojo.data.ItemFileReadStore');
+		var helper = Widget.getWidgetHelper('dojo.data.ItemFileReadStore');
         if(helper && helper.setXhrScriptPluginParameters){
            helper.setXhrScriptPluginParameters(url, this._widget._edit_context);
         }

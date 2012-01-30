@@ -684,9 +684,8 @@ return declare("davinci.ve.Context", null, {
 			}
 			
 			if (theme.files){ // #1024 some themes may not contain files, themeMaps
-			  //FIXME: Brad: this can't be right...
-				theme.files.forEach(function(){
-   			        themeHash[theme.files] = theme;
+				theme.files.forEach(function(file){
+   			        themeHash[file] = theme;
 				});
 			}
 		});

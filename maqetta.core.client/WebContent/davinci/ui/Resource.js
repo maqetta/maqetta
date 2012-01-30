@@ -71,7 +71,7 @@ var getSelectedResource = function(){
 var uiResource = {
 		newHTML: function(){
 				var langObj = uiNLS;
-				var dialogSpecificClass = "davinci.ui.widgets.NewHTMLFileOptions";
+				var dialogSpecificClass = "davinci/ui/widgets/NewHTMLFileOptions";
 				var newDialog = createNewDialog(langObj.fileName, langObj.create, "html", dialogSpecificClass);
 				var executor = function(){
 					var teardown = true;

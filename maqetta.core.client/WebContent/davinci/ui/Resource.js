@@ -71,7 +71,7 @@ var getSelectedResource = function(){
 var uiResource = {
 		newHTML: function(){
 				var langObj = uiNLS;
-				var dialogSpecificClass = "davinci.ui.widgets.NewHTMLFileOptions";
+				var dialogSpecificClass = "davinci/ui/widgets/NewHTMLFileOptions";
 				var newDialog = createNewDialog(langObj.fileName, langObj.create, "html", dialogSpecificClass);
 				var executor = function(){
 					var teardown = true;
@@ -97,7 +97,7 @@ var uiResource = {
 								theme: options.theme,
 								themeSet:newDialog.dialogSpecificWidget._selectedThemeSet
 							};
-							openResource(resource, newHtmlParams);
+							uiResource.openResource(resource, newHtmlParams);
 							Workbench.workbenchStateCustomPropSet('nhfo',options);
 						} else {
 							teardown = false;
@@ -122,7 +122,7 @@ var uiResource = {
 						var text = Resource.createText("CSS", {resource:resource});
 						if(text)
 							resource.setText(text);
-						openResource(resource);
+						uiResource.openResource(resource);
 					} else {
 						teardown = false;
 					}
@@ -245,7 +245,7 @@ var uiResource = {
 						if(text) {
 							resource.setText(text);
 						}
-						openResource(resource);
+						uiResource.openResource(resource);
 					} else {
 						teardown = false;
 					}
@@ -275,7 +275,7 @@ var uiResource = {
 			
 			var executor = function(){
 				if(!openDialog.cancel){
-					openResource(openDialog.get('value'));
+					uiResource.openResource(openDialog.get('value'));
 				}
 				return true;
 			};

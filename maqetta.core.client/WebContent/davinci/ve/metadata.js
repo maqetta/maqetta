@@ -1,14 +1,16 @@
-// XXX This object shouldn't have a dependency on SmartInput
-define(["dojo/_base/declare",
+define([
+	"require",
     "dojo/_base/Deferred",
-    "davinci/ve/input/SmartInput",
-    "davinci/util",
-	"davinci/library",
-	"davinci/model/Path"
-], function(declare, Deferred, SmartInput, Util, Library, Path) {
+	// XXX This object shouldn't have a dependency on SmartInput
+	"./input/SmartInput",
+	"../util",
+	"../library",
+	"../model/Path"
+	//"../Runtime"	// required in init(), to prevent circular dep
+], function(require, Deferred, SmartInput, Util, Library, Path) {
 
 	var Metadata,
-    	METADATA_CLASS_BASE = "davinci.libraries.",
+		runtime,
     
     // Array of library descriptors.
     	libraries = {},
@@ -249,7 +251,7 @@ define(["dojo/_base/declare",
                 metadata = data;
 	        });
         }else{
-        	var base = davinci.Runtime.getProject();
+			var base = runtime.getProject();
         	var resource = system.resource.findResource("./"+ base + "/" + metadataUrl);
         	metadata = dojo.fromJson(resource.getText());
         }
@@ -348,7 +350,10 @@ define(["dojo/_base/declare",
          * Read the library metadata for all the libraries linked in the user's workspace
          */
 		init: function() {
-			Library.getUserLibs(davinci.Runtime.getProject()).forEach(function(lib) {
+			// lazy-load Runtime in order to prevent circular dependency
+			runtime = require('../Runtime');
+
+			Library.getUserLibs(runtime.getProject()).forEach(function(lib) {
 // XXX Shouldn't be dealing with 'package.json' here; that belongs in library.js
 // (or a combined object).  Putting it here for now, to quickly integrate.
 				var path = Library.getMetaRoot(lib.id, lib.version);
@@ -443,7 +448,8 @@ define(["dojo/_base/declare",
     		}
     		
     		// check for single mobile theme's
-    		if (ro = Metadata._loadThemeMetaDojoxMobile(model, themeHash)){
+			var ro = Metadata._loadThemeMetaDojoxMobile(model, themeHash);
+			if (ro) {
     		    return ro;
     		}
 
@@ -731,6 +737,7 @@ define(["dojo/_base/declare",
             return helper;
         }
     };
-	var cMetadata = declare("davinci.ve.metadata",null);
-    return dojo.mixin(cMetadata, Metadata);
+
+return Metadata;
+
 });

@@ -24,6 +24,7 @@ if(_10.target){
 continue;
 }
 var x=_10.x,y=_10.y;
+_e.clearRect(0,0,1,1);
 _e.save();
 _e.translate(-x,-y);
 this._render(_e,true);

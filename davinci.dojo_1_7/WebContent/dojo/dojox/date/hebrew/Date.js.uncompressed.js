@@ -470,7 +470,7 @@ dojo.declare("dojox.date.hebrew.Date", null, {
 	_setDay: function(){
 		var day = this._startOfYear(this._year);
 		if(this._month != 0){
-			day += (this.isLeapYear(this._year) ? this._LEAP_MONTH_START : this._MONTH_START)[this._month][this._yearType(this._year)];
+			day += (this.isLeapYear(this._year) ? this._LEAP_MONTH_START : this._MONTH_START)[this._month || 0][this._yearType(this._year)];
 		}
 		day += this._date - 1;
 		this._day = (day+1) % 7;
@@ -567,15 +567,16 @@ dojo.declare("dojox.date.hebrew.Date", null, {
 		// |		var dateHebrew = new dojox.date.hebrew.Date();
 		// |		var dateGregorian = new Date(2008,10,12);
 		// |		dateHebrew.fromGregorian(dateGregorian);
-		var result = this._computeHebrewFields(gdate);
-		this._year = result[0];
-		this._month = result[1];
-		this._date = result[2];
+
+		var result = (!isNaN(gdate)) ? this._computeHebrewFields(gdate) : NaN;
+		this._year = (!isNaN(gdate)) ? result[0] : NaN;
+		this._month = (!isNaN(gdate))? result[1] : NaN;
+		this._date = (!isNaN(gdate)) ? result[2] : NaN;
 		this._hours = gdate.getHours();
 		this._milliseconds = gdate.getMilliseconds();
 		this._minutes = gdate.getMinutes();
 		this._seconds = gdate.getSeconds();
-		this._setDay();
+		if (!isNaN(gdate)) this._setDay();
 		return this;
 	},
 
@@ -614,9 +615,10 @@ dojo.declare("dojox.date.hebrew.Date", null, {
 		// example:
 		// |		var dateHebrew = new dojox.date.hebrew.Date(5768,11,20);
 		// |		var dateGregorian = dateHebrew.toGregorian();
-		var hYear = this._year,
-			hMonth = this._month,
-			hDate = this._date,
+		
+		var hYear = this._year || 0,
+			hMonth = this._month || 0,
+			hDate = this._date || 0,
 			day = this._startOfYear(hYear);
 
 		if(hMonth != 0){
@@ -703,7 +705,7 @@ dojo.declare("dojox.date.hebrew.Date", null, {
 			Math.floor(y/400) + 1721426 - 1;
 		// At this point julianDay indicates the day BEFORE the first day
 		// of January 1, <eyear> of the Gregorian calendar.
-		if(month != 0){
+		if(month > 0) {
 			julianDay += this._GREGORIAN_MONTH_COUNT[month][isLeap ? 3 : 2];
 		}
 		

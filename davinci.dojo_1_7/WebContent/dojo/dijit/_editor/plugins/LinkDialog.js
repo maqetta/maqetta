@@ -1,6 +1,6 @@
 //>>built
 define("dijit/_editor/plugins/LinkDialog",["require","dojo/_base/declare","dojo/dom-attr","dojo/keys","dojo/_base/lang","dojo/_base/sniff","dojo/string","dojo/_base/window","../../_Widget","../_Plugin","../../form/DropDownButton","../range","../selection"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b,_c,_d){
-var _e=_2("dijit._editor.plugins.LinkDialog",_a,{buttonClass:_b,useDefaultCommand:false,urlRegExp:"((https?|ftps?|file)\\://|./|/|)(/[a-zA-Z]{1,1}:/|)(((?:(?:[\\da-zA-Z](?:[-\\da-zA-Z]{0,61}[\\da-zA-Z])?)\\.)*(?:[a-zA-Z](?:[-\\da-zA-Z]{0,80}[\\da-zA-Z])?)\\.?)|(((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])|(0[xX]0*[\\da-fA-F]?[\\da-fA-F]\\.){3}0[xX]0*[\\da-fA-F]?[\\da-fA-F]|(0+[0-3][0-7][0-7]\\.){3}0+[0-3][0-7][0-7]|(0|[1-9]\\d{0,8}|[1-3]\\d{9}|4[01]\\d{8}|42[0-8]\\d{7}|429[0-3]\\d{6}|4294[0-8]\\d{5}|42949[0-5]\\d{4}|429496[0-6]\\d{3}|4294967[01]\\d{2}|42949672[0-8]\\d|429496729[0-5])|0[xX]0*[\\da-fA-F]{1,8}|([\\da-fA-F]{1,4}\\:){7}[\\da-fA-F]{1,4}|([\\da-fA-F]{1,4}\\:){6}((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])))(\\:\\d+)?(/(?:[^?#\\s/]+/)*(?:[^?#\\s/]{0,}(?:\\?[^?#\\s/]*)?(?:#.*)?)?)?",emailRegExp:"<?(mailto\\:)([!#-'*+\\-\\/-9=?A-Z^-~]+[.])*[!#-'*+\\-\\/-9=?A-Z^-~]+"+"@"+"((?:(?:[\\da-zA-Z](?:[-\\da-zA-Z]{0,61}[\\da-zA-Z])?)\\.)+(?:[a-zA-Z](?:[-\\da-zA-Z]{0,6}[\\da-zA-Z])?)\\.?)|localhost|^[^-][a-zA-Z0-9_-]*>?",htmlTemplate:"<a href=\"${urlInput}\" _djrealurl=\"${urlInput}\""+" target=\"${targetSelect}\""+">${textInput}</a>",tag:"a",_hostRxp:new RegExp("^((([^\\[:]+):)?([^@]+)@)?(\\[([^\\]]+)\\]|([^\\[:]*))(:([0-9]+))?$"),_userAtRxp:new RegExp("^([!#-'*+\\-\\/-9=?A-Z^-~]+[.])*[!#-'*+\\-\\/-9=?A-Z^-~]+@","i"),linkDialogTemplate:["<table><tr><td>","<label for='${id}_urlInput'>${url}</label>","</td><td>","<input data-dojo-type='dijit.form.ValidationTextBox' required='true' "+"id='${id}_urlInput' name='urlInput' data-dojo-props='intermediateChanges:true'/>","</td></tr><tr><td>","<label for='${id}_textInput'>${text}</label>","</td><td>","<input data-dojo-type='dijit.form.ValidationTextBox' required='true' id='${id}_textInput' "+"name='textInput' data-dojo-props='intermediateChanges:true'/>","</td></tr><tr><td>","<label for='${id}_targetSelect'>${target}</label>","</td><td>","<select id='${id}_targetSelect' name='targetSelect' data-dojo-type='dijit.form.Select'>","<option selected='selected' value='_self'>${currentWindow}</option>","<option value='_blank'>${newWindow}</option>","<option value='_top'>${topWindow}</option>","<option value='_parent'>${parentWindow}</option>","</select>","</td></tr><tr><td colspan='2'>","<button data-dojo-type='dijit.form.Button' type='submit' id='${id}_setButton'>${set}</button>","<button data-dojo-type='dijit.form.Button' type='button' id='${id}_cancelButton'>${buttonCancel}</button>","</td></tr></table>"].join(""),_initButton:function(){
+var _e=_2("dijit._editor.plugins.LinkDialog",_a,{buttonClass:_b,useDefaultCommand:false,urlRegExp:"((https?|ftps?|file)\\://|./|/|)(/[a-zA-Z]{1,1}:/|)(((?:(?:[\\da-zA-Z](?:[-\\da-zA-Z]{0,61}[\\da-zA-Z])?)\\.)*(?:[a-zA-Z](?:[-\\da-zA-Z]{0,80}[\\da-zA-Z])?)\\.?)|(((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])|(0[xX]0*[\\da-fA-F]?[\\da-fA-F]\\.){3}0[xX]0*[\\da-fA-F]?[\\da-fA-F]|(0+[0-3][0-7][0-7]\\.){3}0+[0-3][0-7][0-7]|(0|[1-9]\\d{0,8}|[1-3]\\d{9}|4[01]\\d{8}|42[0-8]\\d{7}|429[0-3]\\d{6}|4294[0-8]\\d{5}|42949[0-5]\\d{4}|429496[0-6]\\d{3}|4294967[01]\\d{2}|42949672[0-8]\\d|429496729[0-5])|0[xX]0*[\\da-fA-F]{1,8}|([\\da-fA-F]{1,4}\\:){7}[\\da-fA-F]{1,4}|([\\da-fA-F]{1,4}\\:){6}((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])))(\\:\\d+)?(/(?:[^?#\\s/]+/)*(?:[^?#\\s/]{0,}(?:\\?[^?#\\s/]*)?(?:#.*)?)?)?",emailRegExp:"<?(mailto\\:)([!#-'*+\\-\\/-9=?A-Z^-~]+[.])*[!#-'*+\\-\\/-9=?A-Z^-~]+"+"@"+"((?:(?:[\\da-zA-Z](?:[-\\da-zA-Z]{0,61}[\\da-zA-Z])?)\\.)+(?:[a-zA-Z](?:[-\\da-zA-Z]{0,6}[\\da-zA-Z])?)\\.?)|localhost|^[^-][a-zA-Z0-9_-]*>?",htmlTemplate:"<a href=\"${urlInput}\" _djrealurl=\"${urlInput}\""+" target=\"${targetSelect}\""+">${textInput}</a>",tag:"a",_hostRxp:/^((([^\[:]+):)?([^@]+)@)?(\[([^\]]+)\]|([^\[:]*))(:([0-9]+))?$/,_userAtRxp:/^([!#-'*+\-\/-9=?A-Z^-~]+[.])*[!#-'*+\-\/-9=?A-Z^-~]+@/i,linkDialogTemplate:["<table><tr><td>","<label for='${id}_urlInput'>${url}</label>","</td><td>","<input data-dojo-type='dijit.form.ValidationTextBox' required='true' "+"id='${id}_urlInput' name='urlInput' data-dojo-props='intermediateChanges:true'/>","</td></tr><tr><td>","<label for='${id}_textInput'>${text}</label>","</td><td>","<input data-dojo-type='dijit.form.ValidationTextBox' required='true' id='${id}_textInput' "+"name='textInput' data-dojo-props='intermediateChanges:true'/>","</td></tr><tr><td>","<label for='${id}_targetSelect'>${target}</label>","</td><td>","<select id='${id}_targetSelect' name='targetSelect' data-dojo-type='dijit.form.Select'>","<option selected='selected' value='_self'>${currentWindow}</option>","<option value='_blank'>${newWindow}</option>","<option value='_top'>${topWindow}</option>","<option value='_parent'>${parentWindow}</option>","</select>","</td></tr><tr><td colspan='2'>","<button data-dojo-type='dijit.form.Button' type='submit' id='${id}_setButton'>${set}</button>","<button data-dojo-type='dijit.form.Button' type='button' id='${id}_cancelButton'>${buttonCancel}</button>","</td></tr></table>"].join(""),_initButton:function(){
 this.inherited(arguments);
 this.button.loadDropDown=_5.hitch(this,"_loadDropDown");
 this._connectTagEvents();
@@ -157,28 +157,36 @@ if(e&&e.target){
 var t=e.target;
 var tg=t.tagName?t.tagName.toLowerCase():"";
 if(tg===this.tag&&_3.get(t,"href")){
-_8.withGlobal(this.editor.window,"selectElement",_d,[t]);
-this.editor.onDisplayChanged();
-setTimeout(_5.hitch(this,function(){
-this.button.set("disabled",false);
-this.button.openDropDown();
-if(this.button.dropDown.focus){
-this.button.dropDown.focus();
+var _22=this.editor;
+_8.withGlobal(_22.window,"selectElement",_d,[t]);
+_22.onDisplayChanged();
+if(_22._updateTimer){
+clearTimeout(_22._updateTimer);
+delete _22._updateTimer;
 }
-}),10);
+_22.onNormalizedDisplayChanged();
+var _23=this.button;
+setTimeout(function(){
+_23.set("disabled",false);
+_23.loadAndOpenDropDown().then(function(){
+if(_23.dropDown.focus){
+_23.dropDown.focus();
+}
+});
+},10);
 }
 }
 }});
-var _22=_2("dijit._editor.plugins.ImgLinkDialog",[_e],{linkDialogTemplate:["<table><tr><td>","<label for='${id}_urlInput'>${url}</label>","</td><td>","<input dojoType='dijit.form.ValidationTextBox' regExp='${urlRegExp}' "+"required='true' id='${id}_urlInput' name='urlInput' data-dojo-props='intermediateChanges:true'/>","</td></tr><tr><td>","<label for='${id}_textInput'>${text}</label>","</td><td>","<input data-dojo-type='dijit.form.ValidationTextBox' required='false' id='${id}_textInput' "+"name='textInput' data-dojo-props='intermediateChanges:true'/>","</td></tr><tr><td>","</td><td>","</td></tr><tr><td colspan='2'>","<button data-dojo-type='dijit.form.Button' type='submit' id='${id}_setButton'>${set}</button>","<button data-dojo-type='dijit.form.Button' type='button' id='${id}_cancelButton'>${buttonCancel}</button>","</td></tr></table>"].join(""),htmlTemplate:"<img src=\"${urlInput}\" _djrealurl=\"${urlInput}\" alt=\"${textInput}\" />",tag:"img",_getCurrentValues:function(img){
-var url,_23;
+var _24=_2("dijit._editor.plugins.ImgLinkDialog",[_e],{linkDialogTemplate:["<table><tr><td>","<label for='${id}_urlInput'>${url}</label>","</td><td>","<input dojoType='dijit.form.ValidationTextBox' regExp='${urlRegExp}' "+"required='true' id='${id}_urlInput' name='urlInput' data-dojo-props='intermediateChanges:true'/>","</td></tr><tr><td>","<label for='${id}_textInput'>${text}</label>","</td><td>","<input data-dojo-type='dijit.form.ValidationTextBox' required='false' id='${id}_textInput' "+"name='textInput' data-dojo-props='intermediateChanges:true'/>","</td></tr><tr><td>","</td><td>","</td></tr><tr><td colspan='2'>","<button data-dojo-type='dijit.form.Button' type='submit' id='${id}_setButton'>${set}</button>","<button data-dojo-type='dijit.form.Button' type='button' id='${id}_cancelButton'>${buttonCancel}</button>","</td></tr></table>"].join(""),htmlTemplate:"<img src=\"${urlInput}\" _djrealurl=\"${urlInput}\" alt=\"${textInput}\" />",tag:"img",_getCurrentValues:function(img){
+var url,_25;
 if(img&&img.tagName.toLowerCase()===this.tag){
 url=img.getAttribute("_djrealurl")||img.getAttribute("src");
-_23=img.getAttribute("alt");
+_25=img.getAttribute("alt");
 _8.withGlobal(this.editor.window,"selectElement",_d,[img,true]);
 }else{
-_23=_8.withGlobal(this.editor.window,_d.getSelectedText);
+_25=_8.withGlobal(this.editor.window,_d.getSelectedText);
 }
-return {urlInput:url||"",textInput:_23||""};
+return {urlInput:url||"",textInput:_25||""};
 },_isValid:function(){
 return this._urlInput.isValid();
 },_connectTagEvents:function(){
@@ -194,28 +202,36 @@ if(tg===this.tag){
 _8.withGlobal(this.editor.window,"selectElement",_d,[t]);
 }
 }
-},_checkValues:function(_24){
-if(_24&&_24.urlInput){
-_24.urlInput=_24.urlInput.replace(/"/g,"&quot;");
+},_checkValues:function(_26){
+if(_26&&_26.urlInput){
+_26.urlInput=_26.urlInput.replace(/"/g,"&quot;");
 }
-if(_24&&_24.textInput){
-_24.textInput=_24.textInput.replace(/"/g,"&quot;");
+if(_26&&_26.textInput){
+_26.textInput=_26.textInput.replace(/"/g,"&quot;");
 }
-return _24;
+return _26;
 },_onDblClick:function(e){
 if(e&&e.target){
 var t=e.target;
 var tg=t.tagName?t.tagName.toLowerCase():"";
 if(tg===this.tag&&_3.get(t,"src")){
-_8.withGlobal(this.editor.window,"selectElement",_d,[t]);
-this.editor.onDisplayChanged();
-setTimeout(_5.hitch(this,function(){
-this.button.set("disabled",false);
-this.button.openDropDown();
-if(this.button.dropDown.focus){
-this.button.dropDown.focus();
+var _27=this.editor;
+_8.withGlobal(_27.window,"selectElement",_d,[t]);
+_27.onDisplayChanged();
+if(_27._updateTimer){
+clearTimeout(_27._updateTimer);
+delete _27._updateTimer;
 }
-}),10);
+_27.onNormalizedDisplayChanged();
+var _28=this.button;
+setTimeout(function(){
+_28.set("disabled",false);
+_28.loadAndOpenDropDown().then(function(){
+if(_28.dropDown.focus){
+_28.dropDown.focus();
+}
+});
+},10);
 }
 }
 }});
@@ -223,8 +239,8 @@ _a.registry["createLink"]=function(){
 return new _e({command:"createLink"});
 };
 _a.registry["insertImage"]=function(){
-return new _22({command:"insertImage"});
+return new _24({command:"insertImage"});
 };
-_e.ImgLinkDialog=_22;
+_e.ImgLinkDialog=_24;
 return _e;
 });

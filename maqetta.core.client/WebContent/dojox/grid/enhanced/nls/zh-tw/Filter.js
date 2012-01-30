@@ -64,8 +64,6 @@ define(
 	"anycolumn": "任何直欄",
 	"statusTipTitleNoFilter": "過濾器列",
 	"statusTipTitleHasFilter": "過濾器",
-	"statusTipRelPre": "符合",
-	"statusTipRelPost": "規則。",
 	
 	"defaultItemsName": "項目",
 	"filterBarMsgHasFilterTemplate": "顯示 ${1} ${2} 之 ${0}。",

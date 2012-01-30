@@ -3726,6 +3726,14 @@ define("dojox/grid/_Grid", [
 			// save our input values, if any, and use them there when it gets
 			// called.  This saves us an extra call to _resize(), which can
 			// get kind of heavy.
+			
+			// fixes #11101, should ignore resize when in autoheight mode(IE) to avoid a deadlock
+			// e.g when an autoheight editable grid put in dijit.form.Form or other similar containers,
+			// grid switch to editing mode --> grid height change --> From height change
+			// ---> Form call grid.resize() ---> grid height change  --> deaklock
+			if(dojo.isIE && !changeSize && !resultSize && this._autoHeight){
+				return;
+			}
 			this._pendingChangeSize = changeSize;
 			this._pendingResultSize = resultSize;
 			this.sizeChange();
@@ -8481,7 +8489,7 @@ return declare('dojox.grid._ViewManager', null, {
 	
 			//Work around odd FF3 rendering bug: #8864.
 			//A one px increase fixes FireFox 3's rounding bug for fractional font sizes.
-			if(has("mozilla") && h){h++;}
+			if((has("mozilla") || has("ie") > 8 ) && h){h++;}
 		}
 		for(i=0; (n=inRowNodes[i]); i++){
 			if(currHeights[i] != h){
@@ -11707,7 +11715,8 @@ define("dojox/grid/_Builder", [
 			if(has("ie")){
 				var tN = e.target;
 				if(html.hasClass(tN, "dojoxGridArrowButtonNode") ||
-					html.hasClass(tN, "dojoxGridArrowButtonChar")){
+					html.hasClass(tN, "dojoxGridArrowButtonChar") ||
+					html.hasClass(tN, "dojoxGridColCaption")){
 					return false;
 				}
 			}
@@ -11731,7 +11740,8 @@ define("dojox/grid/_Builder", [
 			if(has("ie")){
 				var tN = e.target;
 				if(html.hasClass(tN, "dojoxGridArrowButtonNode") ||
-					html.hasClass(tN, "dojoxGridArrowButtonChar")){
+					html.hasClass(tN, "dojoxGridArrowButtonChar") ||
+					html.hasClass(tN, "dojoxGridColCaption")){
 					return false;
 				}
 			}
@@ -13320,7 +13330,7 @@ return declare("dijit._WidgetBase", Stateful, {
 		//			  tree
 		// description:
 		//		Create calls a number of widget methods (postMixInProperties, buildRendering, postCreate,
-		//		etc.), some of which of you'll want to override. See http://docs.dojocampus.org/dijit/_Widget
+		//		etc.), some of which of you'll want to override. See http://dojotoolkit.org/reference-guide/dijit/_WidgetBase.html
 		//		for a discussion of the widget creation lifecycle.
 		//
 		//		Of course, adventurous developers could override create entirely, but this should
@@ -14605,9 +14615,6 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 		this._bop = this._eop = -1;
 		this._isLoaded = false;
 		this._isLoading = false;
-		if(!this.allItemsSelected){
-			this.selection.selected = [];
-		}
 	},
 
 	getItem: function(idx){

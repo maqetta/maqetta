@@ -65,8 +65,6 @@ define(
 	"anycolumn": "beliebige Spalte",
 	"statusTipTitleNoFilter": "Filterleiste",
 	"statusTipTitleHasFilter": "Filter",
-	"statusTipRelPre": "Übereinstimmung",
-	"statusTipRelPost": "Regeln.",
 	
 	"defaultItemsName": "Elemente",
 	"filterBarMsgHasFilterTemplate": "${0} von ${1} ${2} angezeigt.",

@@ -64,8 +64,6 @@ define(
 	"anycolumn": "cualquier columna",
 	"statusTipTitleNoFilter": "Barra de filtro",
 	"statusTipTitleHasFilter": "Filtro",
-	"statusTipRelPre": "Coincidir",
-	"statusTipRelPost": "reglas.",
 	
 	"defaultItemsName": "elementos",
 	"filterBarMsgHasFilterTemplate": "${0} de ${1} ${2} mostrados.",

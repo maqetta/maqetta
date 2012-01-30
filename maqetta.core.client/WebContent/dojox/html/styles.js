@@ -151,7 +151,7 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/window", "dojo/_base/
 		if(!styleSheetName){ styleSheetName="default"; }
 		if(!dynamicStyleMap[styleSheetName]){
 			if(Window.doc.createStyleSheet){ //IE
-				dynamicStyleMap[styleSheetName] = d.doc.createStyleSheet();
+				dynamicStyleMap[styleSheetName] = Window.doc.createStyleSheet();
 				if(has("ie") < 9) {
 					// IE9 calls this read-only. Loving the new browser so far.
 					dynamicStyleMap[styleSheetName].title = styleSheetName;

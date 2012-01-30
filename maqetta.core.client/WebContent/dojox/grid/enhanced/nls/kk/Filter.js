@@ -64,8 +64,6 @@ define(
 	"anycolumn": "кез келген баған",
 	"statusTipTitleNoFilter": "Сүзгі тақтасы",
 	"statusTipTitleHasFilter": "Сүзгі",
-	"statusTipRelPre": "Сәйкес келу",
-	"statusTipRelPost": "ережелер.",
 	
 	"defaultItemsName": "элементтер",
 	"filterBarMsgHasFilterTemplate": "${1} ${2} ішінен ${0} көрсетілді.",

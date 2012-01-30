@@ -1,7 +1,7 @@
 //>>built
 define("dojox/gesture/tap",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","./Base","../main"],function(_1,_2,_3,_4,_5){
 _1.experimental("dojox.gesture.tap");
-var _6=_2(" ",_4,{defaultEvent:"tap",subEvents:["hold","doubletap"],holdThreshold:500,doubleTapTimeout:250,tapRadius:10,press:function(_7,e){
+var _6=_2(_4,{defaultEvent:"tap",subEvents:["hold","doubletap"],holdThreshold:500,doubleTapTimeout:250,tapRadius:10,press:function(_7,e){
 if(e.touches&&e.touches.length>=2){
 delete _7.context;
 return;

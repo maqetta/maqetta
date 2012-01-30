@@ -64,8 +64,6 @@ define(
 	"anycolumn": "οποιαδήποτε στήλη",
 	"statusTipTitleNoFilter": "Γραμμή φίλτρου",
 	"statusTipTitleHasFilter": "Φίλτρο",
-	"statusTipRelPre": "Αντιστοιχία",
-	"statusTipRelPost": "κανόνες.",
 	
 	"defaultItemsName": "στοιχεία",
 	"filterBarMsgHasFilterTemplate": "Εμφανίζονται ${0} από ${1} ${2}.",

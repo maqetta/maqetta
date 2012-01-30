@@ -392,8 +392,8 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/array", "dojo/_base
 			var style = this.rawNode.style;
 			style.left   = shape.x.toFixed();
 			style.top    = shape.y.toFixed();
-			style.width  = (typeof shape.width == "string" && shape.width.indexOf("%") >= 0)  ? shape.width  : shape.width.toFixed();
-			style.height = (typeof shape.height == "string" && shape.height.indexOf("%") >= 0) ? shape.height : shape.height.toFixed();
+			style.width  = (typeof shape.width == "string" && shape.width.indexOf("%") >= 0)  ? shape.width  : Math.max(shape.width.toFixed(),0);
+			style.height = (typeof shape.height == "string" && shape.height.indexOf("%") >= 0) ? shape.height : Math.max(shape.height.toFixed(),0);
 			// set all necessary styles, which are lost by VML (yes, it's a VML's bug)
 			return this.setTransform(this.matrix).setFill(this.fillStyle).setStroke(this.strokeStyle);	// self
 		}

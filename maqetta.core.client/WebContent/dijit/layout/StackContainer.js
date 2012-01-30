@@ -354,6 +354,7 @@ return declare("dijit.layout.StackContainer", _LayoutWidget, {
 
 	destroyDescendants: function(/*Boolean*/ preserveDom){
 		this._descendantsBeingDestroyed = true;
+		this.selectedChildWidget = undefined;
 		array.forEach(this.getChildren(), function(child){
 			if(!preserveDom){
 				this.removeChild(child);

@@ -64,8 +64,6 @@ define(
 	"anycolumn": "katerikoli stolpec",
 	"statusTipTitleNoFilter": "Vrstica za filtriranje",
 	"statusTipTitleHasFilter": "Filter",
-	"statusTipRelPre": "Ujemanje",
-	"statusTipRelPost": "pravila.",
 	
 	"defaultItemsName": "postavke",
 	"filterBarMsgHasFilterTemplate": "Prikazanih je ${0} od ${1} ${2}.",

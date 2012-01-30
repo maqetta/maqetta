@@ -252,11 +252,11 @@ define("dojox/geo/openlayers/Map", ["dojo/_base/kernel",
 		getScale : function(geodesic){
 			//	summary: 
 			//		Returns the current scale
-			//	geodesic:
+			//	geodesic: Boolean
 			//		Tell if geodesic calculation should be performed. If set to
 			//		true, the scale will be calculated based on the horizontal size of the
 			//		pixel in the center of the map viewport.
-			//	returns:
+			//	returns: Number
 			//		The current scale.
 			var scale;
 			var om = this.olMap;
@@ -360,7 +360,7 @@ define("dojox/geo/openlayers/Map", ["dojo/_base/kernel",
 		removeLayer : function(/* dojox.geo.openlayers.Layer */layer){
 			//	summary: 
 			//		Remove the specified layer from the map.
-			//	layer: 
+			//	layer: dojox.geo.openlayers.Layer
 			//		The layer to remove from the map.
 			var om = this.olMap;
 			var i = array.indexOf(this._layerDictionary.layers, layer);
@@ -557,7 +557,7 @@ define("dojox/geo/openlayers/Map", ["dojo/_base/kernel",
 			//		in the <em>from</em> coordinate system and is transformed to the map coordinate system.
 			//	p : Object {x, y}
 			//		The point to transform
-			//		from: OpenLayers.Projection
+			//	from: OpenLayers.Projection
 			//		The projection in which the point is expressed.
 			return this.transformXY(p.x, p.y, from, to);
 		},

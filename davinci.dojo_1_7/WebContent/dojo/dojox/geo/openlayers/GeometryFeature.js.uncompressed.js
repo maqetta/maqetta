@@ -354,7 +354,7 @@ define("dojox/geo/openlayers/GeometryFeature", ["dojo/_base/kernel",
 		getStroke : function(){
 			//	summary:
 			//		Retrieves the stroke style
-			//	returns:
+			//	returns: Object
 			//		The stroke style
 			return this._stroke;
 		},
@@ -371,7 +371,7 @@ define("dojox/geo/openlayers/GeometryFeature", ["dojo/_base/kernel",
 		getFill : function(){
 			//	summary:
 			//		Retrieves the fill style
-			//	returns:
+			//	returns: Object
 			//		The fill style
 			return this._fill;
 		},

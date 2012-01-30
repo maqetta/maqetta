@@ -79,58 +79,60 @@ this._updateBinding("binding",null,_e);
 throw new Error("dojox.mvc._DataBindingMixin: '"+this.domNode+"' widget with illegal ref not evaluating to a dojo.Stateful node: '"+_d+"'");
 }
 }
-},_updateBinding:function(_10,old,_11){
+},_isEqual:function(one,_10){
+return one===_10||isNaN(one)&&typeof one==="number"&&isNaN(_10)&&typeof _10==="number";
+},_updateBinding:function(_11,old,_12){
 this._unwatchArray(this._modelWatchHandles);
-var _12=this.get("binding");
-if(_12&&_1.isFunction(_12.watch)){
-var _13=this;
-this._modelWatchHandles=[_12.watch("value",function(_14,old,_15){
-if(old===_15){
+var _13=this.get("binding");
+if(_13&&_1.isFunction(_13.watch)){
+var _14=this;
+this._modelWatchHandles=[_13.watch("value",function(_15,old,_16){
+if(_14._isEqual(old,_16)){
 return;
 }
-if(_13.get("value")===_15){
+if(_14._isEqual(_14.get("value"),_16)){
 return;
 }
-_13.set("value",_15);
-}),_12.watch("valid",function(_16,old,_17){
-_13._updateProperty(_16,old,_17,true);
-if(_17!==_13.get("binding").get(_16)){
-if(_13.validate&&_1.isFunction(_13.validate)){
-_13.validate(true);
+_14.set("value",_16);
+}),_13.watch("valid",function(_17,old,_18){
+_14._updateProperty(_17,old,_18,true);
+if(_18!==_14.get(_17)){
+if(_14.validate&&_1.isFunction(_14.validate)){
+_14.validate();
 }
 }
-}),_12.watch("required",function(_18,old,_19){
-_13._updateProperty(_18,old,_19,false,_18,_19);
-}),_12.watch("readOnly",function(_1a,old,_1b){
-_13._updateProperty(_1a,old,_1b,false,_1a,_1b);
-}),_12.watch("relevant",function(_1c,old,_1d){
-_13._updateProperty(_1c,old,_1d,false,"disabled",!_1d);
+}),_13.watch("required",function(_19,old,_1a){
+_14._updateProperty(_19,old,_1a,false,_19,_1a);
+}),_13.watch("readOnly",function(_1b,old,_1c){
+_14._updateProperty(_1b,old,_1c,false,_1b,_1c);
+}),_13.watch("relevant",function(_1d,old,_1e){
+_14._updateProperty(_1d,old,_1e,false,"disabled",!_1e);
 })];
-var val=_12.get("value");
+var val=_13.get("value");
 if(val!=null){
 this.set("value",val);
 }
 }
 this._updateChildBindings();
-},_updateProperty:function(_1e,old,_1f,_20,_21,_22){
-if(old===_1f){
+},_updateProperty:function(_1f,old,_20,_21,_22,_23){
+if(old===_20){
 return;
 }
-if(_1f===null&&_20!==undefined){
-_1f=_20;
+if(_20===null&&_21!==undefined){
+_20=_21;
 }
-if(_1f!==this.get("binding").get(_1e)){
-this.get("binding").set(_1e,_1f);
+if(_20!==this.get("binding").get(_1f)){
+this.get("binding").set(_1f,_20);
 }
-if(_21){
-this.set(_21,_22);
+if(_22){
+this.set(_22,_23);
 }
 },_updateChildBindings:function(){
-var _23=this.get("binding");
-if(_23&&!this._beingBound){
-_2.forEach(_4.findWidgets(this.domNode),function(_24){
-if(_24._setupBinding){
-_24._setupBinding(_23);
+var _24=this.get("binding");
+if(_24&&!this._beingBound){
+_2.forEach(_4.findWidgets(this.domNode),function(_25){
+if(_25._setupBinding){
+_25._setupBinding(_24);
 }
 });
 }
@@ -147,8 +149,8 @@ break;
 pn=pw?pw.domNode.parentNode:null;
 }
 return pb;
-},_unwatchArray:function(_25){
-_2.forEach(_25,function(h){
+},_unwatchArray:function(_26){
+_2.forEach(_26,function(h){
 h.unwatch();
 });
 }});

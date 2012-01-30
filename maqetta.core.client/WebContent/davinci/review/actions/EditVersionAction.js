@@ -1,17 +1,13 @@
 define([
 	"dojo/_base/declare",
-	"davinci/actions/Action",
-	"davinci/review/actions/PublishAction",
-	"davinci/Runtime",
+	"../../actions/Action",
+	"./PublishAction",
+	"../../Runtime",
 	"dojox/widget/Toaster",
 	"dojo/i18n!./nls/actions"
 ], function(declare, Action, PublishAction, Runtime, Toaster, nls) {
 
-if (typeof davinci.review.actions === "undefined") {
-	davinci.review.actions = {};
-}
-
-var EditVersionAction = davicni.review.actions.EditVersionAction = declare("davinci.review.actions.EditVersionAction", Action, {
+return declare("davinci.review.actions.EditVersionAction", Action, {
 
 	run: function(context) {
 		var selection = Runtime.getSelection();
@@ -30,11 +26,7 @@ var EditVersionAction = davicni.review.actions.EditVersionAction = declare("davi
 			return false;
 		}
 		var selection = Runtime.getSelection();
-		return selection && selection.length > 0 ? true : false;
+		return selection && selection.length;
 	}
-
 });
-
-return EditVersionAction;
-
 });

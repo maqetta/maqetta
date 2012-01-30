@@ -1,4 +1,4 @@
-define(["./lambda"], function(df){
+define(["dojo/_base/lang", "./lambda"], function(lang, df){
 
 // This module adds high-level functions and related constructs:
 //	- sequence generators
@@ -13,7 +13,7 @@ define(["./lambda"], function(df){
 	var df = dojox.lang.functional;
  =====*/
 
-	dojo.mixin(df, {
+	lang.mixin(df, {
 		// sequence generators
 		repeat: function(/*Number*/ n, /*Function|String|Array*/ f, /*Object*/ z, /*Object?*/ o){
 			// summary: builds an array by repeatedly applying a unary function N times
@@ -33,4 +33,6 @@ define(["./lambda"], function(df){
 			return t;	// Array
 		}
 	});
+	
+	return df;
 });

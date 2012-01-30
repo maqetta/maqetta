@@ -66,6 +66,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", "dojo/_ba
 				if (input.target) 
 					continue;
 				var x = input.x, y = input.y;
+				ctx.clearRect(0,0,1,1);
 				ctx.save();
 				ctx.translate(-x, -y);
 				this._render(ctx, true);

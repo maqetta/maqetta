@@ -64,8 +64,6 @@ define(
 	"anycolumn": "คอลัมน์ใดๆ",
 	"statusTipTitleNoFilter": "แถบตัวกรอง",
 	"statusTipTitleHasFilter": "ตัวกรอง",
-	"statusTipRelPre": "ตรงกับ",
-	"statusTipRelPost": "กฏ",
 	
 	"defaultItemsName": "ไอเท็ม",
 	"filterBarMsgHasFilterTemplate": "${0} ของ ${1} ${2} จะถูกแสดง",

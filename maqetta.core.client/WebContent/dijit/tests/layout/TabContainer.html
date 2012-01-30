@@ -71,10 +71,18 @@
 				// Test that on destroyDescendants(), the second tab doesn't get selected
 				// for a split second as the TabContainer is being destroyed.
 				{
-					name: 'destroyRecursive',
+					name: 'destroyDescendants',
 					runTest: function(t){
-						var cp1 = new dijit.layout.ContentPane({title: "test pane 1", closable: true})
-							cp2 = new dijit.layout.ContentPane({title: "test pane 2", href: "doc0.html"})
+						var cp1 = new dijit.layout.ContentPane({
+								id: "destroyDescendants_pane1",
+								title: "test pane 1",
+								closable: true
+							}),
+							cp2 = new dijit.layout.ContentPane({
+								id: "destroyDescendants_pane2",
+								title: "test pane 2",
+								href: "doc0.html"
+							}),
 							tc = new dijit.layout.TabContainer({
 								id:"destroyDescendants",
 								useMenu:true
@@ -97,6 +105,7 @@
 
 						t.f(cp2selected, "second pane wasn't temporarily selected");
 						t.f(downloadStarted, "second pane never started downloading");
+						t.is(undefined, tc._selectedChildWidget, "no selected child widget");
 					}
 				},
 

@@ -275,6 +275,19 @@
 			console.log("after reset str.match(test4_model.regex.get('value')) is ",str.match(test4_model.regex.get('value')));
 			*/
 			// *** Test4 setup end: ***
+
+			// *** Test5 setup begin: Falsy Test***
+			var d = {
+				u: undefined,
+				z: 0,
+				n: null,
+				f: false,
+				s: ""
+			};
+			test5_model = new StatefulModel({data: d});
+			//console.log(test5_model.toPlainObject());
+			// *** Test5 setup end: ***
+
 	
 
 				require([
@@ -557,6 +570,18 @@
 								doh.is("def", str.match(test4_model.regex.get('value')),"str.match(test4_model.regex.get('value')) after set /def/ should be def");
 								test4_model.regex.reset();
 								doh.is("ABC", str.match(test4_model.regex.get('value')),"str.match(test4_model.regex.get('value')) after reset should be ABC");
+							}
+						}]);
+
+
+						doh.register("test falsy in model", [{
+							name : "falsy-test5",
+							runTest : function() {
+								doh.t(null === test5_model.n.get('value'),"test5_model.n.get(value) should be null");
+								doh.t(0 === test5_model.z.get('value'),"test5_model.z.get(value) should be 0");
+								doh.t(undefined === test5_model.u.get('value'),"test5_model.u.get(value) should be undefined");
+								doh.t(false === test5_model.f.get('value'),"test5_model.f.get(value) should be false");
+								doh.t("" === test5_model.s.get('value'),"test5_model.s.get(value) should be an empty string");
 							}
 						}]);
 

@@ -1,5 +1,6 @@
 define([
 	"dojo/_base/declare", // declare
+	"dojo/_base/lang",	// hitch
 	"dojo/query", // query
 	"../registry",	// registry.byNode
 	"../popup",		// dijit.popup2.hide
@@ -7,7 +8,7 @@ define([
 	"../_Container",
 	"../_HasDropDown",
 	"dojo/text!./templates/DropDownButton.html"
-], function(declare, query, registry, popup, Button, _Container, _HasDropDown, template){
+], function(declare, lang, query, registry, popup, Button, _Container, _HasDropDown, template){
 
 /*=====
 	Button = dijit.form.Button;
@@ -82,19 +83,16 @@ return declare("dijit.form.DropDownButton", [Button, _Container, _HasDropDown], 
 		return (!!dropDown && (!dropDown.href || dropDown.isLoaded));
 	},
 
-	loadDropDown: function(){
-		// Loads our dropdown
+	loadDropDown: function(/*Function*/ callback){
+		// Default implementation assumes that drop down already exists,
+		// but hasn't loaded it's data (ex: ContentPane w/href).
+		// App must override if the drop down is lazy-created.
 		var dropDown = this.dropDown;
-		if(!dropDown){ return; }
-		if(!this.isLoaded()){
-			var handler = dropDown.on("load", this, function(){
-				handler.remove();
-				this.openDropDown();
-			});
-			dropDown.refresh();
-		}else{
-			this.openDropDown();
-		}
+		var handler = dropDown.on("load", lang.hitch(this, function(){
+			handler.remove();
+			callback();
+		}));
+		dropDown.refresh();		// tell it to load
 	},
 
 	isFocusable: function(){

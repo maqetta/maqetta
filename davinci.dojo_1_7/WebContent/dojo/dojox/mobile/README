@@ -32,11 +32,11 @@ required in separately.
 -------------------------------------------------------------------------------
 Dependencies:
         dojo base
-        dijit/_Widget.js
+        dijit/_WidgetBase.js
 -------------------------------------------------------------------------------
 Documentation
-        Documentatation will reside at:
-        http://docs.dojocampus.org/dojox/mobile
+        Documentation resides at:
+        http://dojotoolkit.org/reference-guide/dojox/mobile.html
 
 -------------------------------------------------------------------------------
 Installation instructions

@@ -597,7 +597,7 @@ define("dojo/_base/fx", ["./kernel", "./lang", "../Evented", "./Color", "./conne
 			}
 			this.curve = new PropLine(pm);
 		});
-		connect.connect(anim, "onAnimate", lang.hitch(dojo, "style", anim.node));
+		connect.connect(anim, "onAnimate", lang.hitch(style, "set", anim.node));
 		return anim; // dojo.Animation
 	};
 

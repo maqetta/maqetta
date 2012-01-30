@@ -1220,11 +1220,9 @@ define("dijit/layout/_LayoutWidget", [
 
 				// Since my parent isn't a layout container, and my style *may be* width=height=100%
 				// or something similar (either set directly or via a CSS class),
-				// monitor when my size changes so that I can re-layout.
-				// For browsers where I can't directly monitor when my size changes,
-				// monitor when the viewport changes size, which *may* indicate a size change for me.
-				this.connect(has("ie") ? this.domNode : win.global, 'onresize', function(){
-					// Using function(){} closure to ensure no arguments to resize.
+				// monitor when viewport size changes so that I can re-layout.
+				this.connect(win.global, 'onresize', function(){
+					// Using function(){} closure to ensure no arguments passed to resize().
 					this.resize();
 				});
 			}
@@ -6886,7 +6884,7 @@ return declare("dijit._WidgetBase", Stateful, {
 		//			  tree
 		// description:
 		//		Create calls a number of widget methods (postMixInProperties, buildRendering, postCreate,
-		//		etc.), some of which of you'll want to override. See http://docs.dojocampus.org/dijit/_Widget
+		//		etc.), some of which of you'll want to override. See http://dojotoolkit.org/reference-guide/dijit/_WidgetBase.html
 		//		for a discussion of the widget creation lifecycle.
 		//
 		//		Of course, adventurous developers could override create entirely, but this should

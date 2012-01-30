@@ -64,8 +64,6 @@ define(
 	"anycolumn": "jakýkoli sloupec",
 	"statusTipTitleNoFilter": "Panel filtrování",
 	"statusTipTitleHasFilter": "Filtr",
-	"statusTipRelPre": "Shoda",
-	"statusTipRelPost": "pravidla.",
 	
 	"defaultItemsName": "položek",
 	"filterBarMsgHasFilterTemplate": "${0} z ${1} ${2} zobrazeno.",

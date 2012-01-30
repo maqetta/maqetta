@@ -64,8 +64,6 @@ define(
 	"anycolumn": "任何列",
 	"statusTipTitleNoFilter": "过滤器栏",
 	"statusTipTitleHasFilter": "过滤器",
-	"statusTipRelPre": "符合",
-	"statusTipRelPost": "规则。",
 	
 	"defaultItemsName": "项目",
 	"filterBarMsgHasFilterTemplate": "显示的 ${1} ${2} 的 ${0}。",

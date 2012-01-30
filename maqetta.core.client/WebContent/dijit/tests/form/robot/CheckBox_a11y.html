@@ -50,6 +50,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.t(dijit.byId('cb1').checked, "cb1 was not checked");
+								doh.is("true", dojo.byId('cb1').getAttribute("aria-checked"), "aria-checked");
 							}), 1000);
 
 							return d;
@@ -67,6 +68,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.f(dijit.byId('cb2').checked, "cb2 was checked");
+								doh.is("false", dojo.byId('cb2').getAttribute("aria-checked"), "aria-checked");
 							}), 1000);
 
 							return d;
@@ -84,6 +86,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.t(dijit.byId('cb4').checked, "cb4 was not checked");
+								doh.is("true", dojo.byId('cb4').getAttribute("aria-checked"), "aria-checked");
 							}), 1000);
 
 							return d;
@@ -102,6 +105,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.f(dijit.byId('cb6').checked, "cb6 was checked");
+								doh.is("false", dojo.byId('cb6').getAttribute("aria-checked"), "aria-checked");
 							}), 1000);
 
 							return d;
@@ -117,6 +121,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.t(dijit.byId('cb6').checked, "cb6 was not checked");
+								doh.is("true", dojo.byId('cb6').getAttribute("aria-checked"), "aria-checked");
 							}), 1000);
 
 							return d;
@@ -139,6 +144,9 @@
 								doh.f(dijit.byId('g1rb1').checked, "news was checked");
 								doh.f(dijit.byId('g1rb2').checked, "talk was checked");
 								doh.t(dijit.byId('g1rb3').checked, "weather was not checked");
+								doh.is("false", dojo.byId('g1rb1').getAttribute("aria-checked")||"false", "aria-checked 1");
+								doh.is("false", dojo.byId('g1rb2').getAttribute("aria-checked")||"false", "aria-checked 2");
+								doh.is("true", dojo.byId('g1rb3').getAttribute("aria-checked"), "aria-checked 3");
 							}), 1000);
 
 							return d;
@@ -159,6 +167,9 @@
 								doh.t(dijit.byId('g2rb3').checked, "country was not checked");
 								doh.f(dijit.byId('g2rb2').checked, "oldies was checked");
 								doh.f(dijit.byId('g2rb1').checked, "top 40 was checked");
+								doh.is("false", dojo.byId('g2rb1').getAttribute("aria-checked")||"false", "aria-checked 1");
+								doh.is("false", dojo.byId('g2rb2').getAttribute("aria-checked")||"false", "aria-checked 2");
+								doh.is("true", dojo.byId('g2rb3').getAttribute("aria-checked"), "aria-checked 3");
 							}), 1000);
 
 							return d;
@@ -177,6 +188,9 @@
 								doh.f(dijit.byId('g2rb3').checked, "country was checked");
 								doh.f(dijit.byId('g2rb2').checked, "oldies was checked");
 								doh.t(dijit.byId('g2rb1').checked, "top 40 was not checked");
+								doh.is("true", dojo.byId('g2rb1').getAttribute("aria-checked"), "aria-checked 1");
+								doh.is("false", dojo.byId('g2rb2').getAttribute("aria-checked")||"false", "aria-checked 2");
+								doh.is("false", dojo.byId('g2rb3').getAttribute("aria-checked")||"false", "aria-checked 3");
 							}), 1000);
 
 							return d;

@@ -285,7 +285,7 @@ return declare("dijit._WidgetBase", Stateful, {
 		//			  tree
 		// description:
 		//		Create calls a number of widget methods (postMixInProperties, buildRendering, postCreate,
-		//		etc.), some of which of you'll want to override. See http://docs.dojocampus.org/dijit/_Widget
+		//		etc.), some of which of you'll want to override. See http://dojotoolkit.org/reference-guide/dijit/_WidgetBase.html
 		//		for a discussion of the widget creation lifecycle.
 		//
 		//		Of course, adventurous developers could override create entirely, but this should

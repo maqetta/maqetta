@@ -82,7 +82,7 @@ define("dojox/geo/openlayers/GreatCircle", ["dojo/_base/lang",
 			//	p2: Point
 			//		The second point of the geodetic line. x and y fields are longitude and
 			//		latitude in decimal degrees.
-			//		increment: Float
+			//	increment: Float
 			//		The value at which a new point is computed. 
 			var wp = this.toPointArray(p1, p2, increment);
 			var ls = new OpenLayers.Geometry.LineString(wp);
@@ -117,4 +117,6 @@ define("dojox/geo/openlayers/GreatCircle", ["dojo/_base/lang",
 
 		TOLERANCE : 0.00001
 	};
+
+	return dojox.geo.openlayers.GreatCircle;
 });

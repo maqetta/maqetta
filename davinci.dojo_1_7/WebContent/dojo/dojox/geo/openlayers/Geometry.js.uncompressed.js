@@ -28,7 +28,7 @@ define("dojox/geo/openlayers/Geometry", ["dojo/_base/kernel", "dojo/_base/declar
 		constructor : function(coords){
 			//	summary:
 			//		Constructs a new geometry
-			//	coords:
+			//	coords: {x, y}
 			//		Coordinates of the geometry. {x:<x>, y:<y>} object for a point geometry, array of {x:<x>, y:<y>} 
 			//	objects for line string geometry, array of geometries for collection geometry.
 			this.coordinates = coords;

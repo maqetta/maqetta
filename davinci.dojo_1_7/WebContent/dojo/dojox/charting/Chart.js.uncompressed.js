@@ -100,7 +100,7 @@ define("dojox/charting/Chart", ["dojo/_base/lang", "dojo/_base/array","dojo/_bas
 		//	|			{ stroke: { color: "green" }, fill: "lightgreen" }
 		//	|		)
 		//	|		.render();
-		//
+		
 		//	theme: dojox.charting.Theme?
 		//		An optional theme to use for styling the chart.
 		//	axes: dojox.charting.Axis{}?

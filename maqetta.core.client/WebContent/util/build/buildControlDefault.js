@@ -58,7 +58,6 @@ define(["./buildControlBase"], function(bc) {
 			'dojo-moduleUrl':1,
 			'dojo-publish-privates':0,
 			'dojo-requirejs-api':0,
-			'dojo-scopeMap':1,
 			'dojo-sniff':1,
 			'dojo-sync-loader':1,
 			'dojo-timeout-api':1,

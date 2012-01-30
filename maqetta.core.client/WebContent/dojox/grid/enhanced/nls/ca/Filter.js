@@ -64,8 +64,6 @@ define(
 	"anycolumn": "qualsevol columna",
 	"statusTipTitleNoFilter": "Barra de filtre",
 	"statusTipTitleHasFilter": "Filtre",
-	"statusTipRelPre": "Coincidència",
-	"statusTipRelPost": "regles.",
 	
 	"defaultItemsName": "elements",
 	"filterBarMsgHasFilterTemplate": "Es mostren ${0} de ${1} ${2}.",

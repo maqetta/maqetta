@@ -21,7 +21,7 @@ s=dv.getComputedStyle(_5,null);
 return s||{};
 };
 }else{
-if(_1("ie")){
+if(_1("ie")&&(_1("ie")<9||_1("quirks"))){
 _3=function(_6){
 return _6.nodeType==1?_6.currentStyle:{};
 };

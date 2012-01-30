@@ -1,1 +1,9 @@
-@import url("Calendar-compat.css");
+.dijitCalendar thead {
+	background-image: url(compat/calendar-month-bg.png);
+}
+.dijitCalendarDayLabelTemplate {
+	background-image: url(compat/calendar-daylabel-bg.png);
+}
+.dijitCalendarYearLabel {
+	background-image: url(compat/calendar-year-bg.png);
+}

@@ -39,7 +39,7 @@ is provided (buildFlashStorage.sh)
 -------------------------------------------------------------------------------
 Documentation
 
-See http://docs.dojocampus.org/dojox/storage for Dojo Storage docs.
+See http://dojotoolkit.org/reference-guide/dojox/storage.html for Dojo Storage docs.
 
 See dojox/storage/demos/helloworld.html for a simple Hello World example
 you can base your code off of.

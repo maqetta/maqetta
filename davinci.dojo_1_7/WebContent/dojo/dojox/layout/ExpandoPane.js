@@ -135,6 +135,6 @@ _a.setMarginBox(this.domNode,_17);
 }
 this._layoutChildren();
 },_trap:function(e){
-_6.stopEvent(e);
+_6.stop(e);
 }});
 });

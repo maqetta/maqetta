@@ -203,9 +203,9 @@ var _3b=this,g=this.grid;
 this.plugin.connect(g,"_resize",_5.hitch(this,"_resetGridHeight"));
 this._originalResize=_5.hitch(g,"resize");
 g.resize=function(_3c,_3d){
-_3b._changeSize=g._pendingChangeSize=_3c;
-_3b._resultSize=g._pendingResultSize=_3d;
-g.sizeChange();
+_3b._changeSize=_3c;
+_3b._resultSize=_3d;
+_3b._originalResize();
 };
 this.focus=_27(this);
 this._placeSelf();

@@ -265,6 +265,9 @@ this.render();
 },hasLayout:function(){
 return this.layout.cells.length;
 },resize:function(_2f,_30){
+if(_1.isIE&&!_2f&&!_30&&this._autoHeight){
+return;
+}
 this._pendingChangeSize=_2f;
 this._pendingResultSize=_30;
 this.sizeChange();

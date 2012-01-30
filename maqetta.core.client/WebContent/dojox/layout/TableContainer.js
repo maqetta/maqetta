@@ -1,11 +1,11 @@
 define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/dom-class", "dojo/dom-construct", 
-		"dojo/_base/array", "dojo/dom-prop", "dojo/_base/html", "dijit/layout/_LayoutWidget"],function(
-	kernel, lang, declare, domClass, domConstruct, array, domProp, html, LayoutWidget ){
+		"dojo/_base/array", "dojo/dom-prop", "dojo/dom-style", "dijit/_WidgetBase", "dijit/layout/_LayoutWidget"],
+function(kernel, lang, declare, domClass, domConstruct, arrayUtil, domProp, domStyle, _WidgetBase, _LayoutWidget){
 
 kernel.experimental("dojox.layout.TableContainer");
 
 /*===== var LayoutWidget = dijit.layout._LayoutWidget; =====*/
-var TableContainer = declare("dojox.layout.TableContainer", LayoutWidget, {
+var TableContainer = declare("dojox.layout.TableContainer", _LayoutWidget, {
 	// summary:
 	//		A container that lays out its child widgets in a table layout.
 	//
@@ -63,7 +63,7 @@ var TableContainer = declare("dojox.layout.TableContainer", LayoutWidget, {
 			if(value && (name == "orientation" || name == "customClass" || name == "cols")) {
 				this.layout();
 			}
-		})
+		});
 	},
 
 	startup: function() {
@@ -83,7 +83,7 @@ var TableContainer = declare("dojox.layout.TableContainer", LayoutWidget, {
 		domClass.add(this.domNode, "dijitTableLayout");
 
 		// Call startup on all child widgets
-		array.forEach(children, function(child){
+		arrayUtil.forEach(children, function(child){
 			if(!child.started && !child._started) {
 				child.startup();
 			}
@@ -97,7 +97,7 @@ var TableContainer = declare("dojox.layout.TableContainer", LayoutWidget, {
 		//		Resizes all children.  This widget itself
 		//		does not resize, as it takes up 100% of the
 		//		available width.
-		array.forEach(this.getChildren(), function(child){
+		arrayUtil.forEach(this.getChildren(), function(child){
 			if(typeof child.resize == "function") {
 				child.resize();
 			}
@@ -128,11 +128,11 @@ var TableContainer = declare("dojox.layout.TableContainer", LayoutWidget, {
 		}
 
 		// Find any new children that have been added since the last layout() call
-		array.forEach(this._children, lang.hitch(this, function(child){
+		arrayUtil.forEach(this._children, lang.hitch(this, function(child){
 			childIds[child.id] = child;
 		}));
 
-		array.forEach(children, lang.hitch(this, function(child, index){
+		arrayUtil.forEach(children, lang.hitch(this, function(child, index){
 			if(!childIds[child.id]) {
 				// Add pre-existing children to the start of the array
 				this._children.push(child);
@@ -161,7 +161,7 @@ var TableContainer = declare("dojox.layout.TableContainer", LayoutWidget, {
 		var numCols = 0;
 
 		// Iterate over the children, adding them to the table.
-		array.forEach(this._children, lang.hitch(this, function(child, index){
+		arrayUtil.forEach(this._children, lang.hitch(this, function(child, index){
 			
 			var colspan = child.colspan || 1;
 			
@@ -197,7 +197,7 @@ var TableContainer = declare("dojox.layout.TableContainer", LayoutWidget, {
 						String(this.labelWidth).indexOf("%") > -1) {
 							
 						// Set the width of the label cell with either a pixel or percentage value
-						html.style(labelCell, "width",
+						domStyle.set(labelCell, "width",
 							String(this.labelWidth).indexOf("%") < 0
 								? this.labelWidth + "px" : this.labelWidth);
 					}
@@ -230,7 +230,7 @@ var TableContainer = declare("dojox.layout.TableContainer", LayoutWidget, {
 		}
 		// Refresh the layout of any child widgets, allowing them to resize
 		// to their new parent.
-		array.forEach(children, function(child){
+		arrayUtil.forEach(children, function(child){
 			if(typeof child.layout == "function") {
 				child.layout();
 			}
@@ -243,7 +243,7 @@ var TableContainer = declare("dojox.layout.TableContainer", LayoutWidget, {
 		// summary:
 		//      Destroys all the widgets inside this.containerNode,
 		//      but not this widget itself
-		array.forEach(this._children, function(child){ child.destroyRecursive(preserveDom); });
+		arrayUtil.forEach(this._children, function(child){ child.destroyRecursive(preserveDom); });
 	},
 	
 	_setSpacingAttr: function(value) {
@@ -258,7 +258,7 @@ var TableContainer = declare("dojox.layout.TableContainer", LayoutWidget, {
 
 // Extend the default widget with both label and title elements, as
 // well as a "spanLabel" attribute.  If a widget
-lang.extend(dijit._Widget, {
+lang.extend(_WidgetBase, {
 	// label: String
 	//		The label to display for a given widget
 	label: "",

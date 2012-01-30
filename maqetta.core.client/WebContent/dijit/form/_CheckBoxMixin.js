@@ -35,6 +35,9 @@ define([
 		//		In markup, this is specified as "readOnly".
 		//		Similar to disabled except readOnly form values are submitted.
 		readOnly: false,
+		
+		// aria-pressed for toggle buttons, and aria-checked for checkboxes
+		_aria_attr: "aria-checked",
 
 		_setReadOnlyAttr: function(/*Boolean*/ value){
 			this._set("readOnly", value);

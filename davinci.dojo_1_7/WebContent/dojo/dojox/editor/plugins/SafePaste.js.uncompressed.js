@@ -9,7 +9,9 @@ define("dojox/editor/plugins/SafePaste", [
 	"dojo/i18n",
 	"dojo/string",
 	"dojox/editor/plugins/PasteFromWord",
-	"dojo/i18n!dojox/editor/plugins/nls/SafePaste"
+	"dojo/i18n!dojox/editor/plugins/nls/SafePaste",
+	"dojo/i18n!dijit/nls/common",
+	"dojo/i18n!dijit/_editor/nls/commands"
 ], function(dojo, dijit, dojox) {
 
 dojo.declare("dojox.editor.plugins.SafePaste", [dojox.editor.plugins.PasteFromWord],{
@@ -27,6 +29,9 @@ dojo.declare("dojox.editor.plugins.SafePaste", [dojox.editor.plugins.PasteFromWo
 		// Create instance local copy.
 		this._filters = this._filters.slice(0); 
 		var strings = dojo.i18n.getLocalization("dojox.editor.plugins", "SafePaste");
+		dojo.mixin(strings, dojo.i18n.getLocalization("dijit", "common"));
+		strings.cancel = strings.buttonCancel;
+		dojo.mixin(strings, dojo.i18n.getLocalization("dijit._editor", "commands"));
 
 		this._uId = dijit.getUniqueId(this.editor.id);
 

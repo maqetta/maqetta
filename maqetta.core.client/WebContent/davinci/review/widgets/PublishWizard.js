@@ -23,18 +23,18 @@ define([
 	"davinci/model/Resource",
 	"dijit/tree/TreeStoreModel",
 	"davinci/review/model/store/GeneralReviewReadStore",
-	"dojo/i18n!../nls/widgets",
-	"dojo/i18n!dijit/nls/common"
+	"dojo/i18n!../widgets/nls/widgets",
+	"dojo/i18n!dijit/nls/common",
+	"dojo/text!./templates/PublishWizard.html",
+	"dojo/text!./templates/MailFailureDialogContent.html"
 ], function(declare, _Widget, _Templated, StackContainer, ContentPane, SimpleTextarea, NumberTextBox, ValidationTextBox, 
 		DateTextBox, Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojostring, 
-		Menu, MenuItem, Dialog, Tree, sysResource, Resource, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls) {
+		Menu, MenuItem, Dialog, Tree, sysResource, Resource, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls,
+		templateString, warningString) {
 	
 return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 
-	templateString: dojo.cache("davinci", "review/widgets/templates/PublishWizard.html"),
-	warningString: dojo.cache("davinci", "review/widgets/templates/MailFailureDialogContent.html"),
-
-	postMixInProperties : function() {
+	postMixInProperties: function() {
 		this.inherited(arguments);
 	},
 

@@ -190,7 +190,7 @@ return this;
 },_setDay:function(){
 var day=this._startOfYear(this._year);
 if(this._month!=0){
-day+=(this.isLeapYear(this._year)?this._LEAP_MONTH_START:this._MONTH_START)[this._month][this._yearType(this._year)];
+day+=(this.isLeapYear(this._year)?this._LEAP_MONTH_START:this._MONTH_START)[this._month||0][this._yearType(this._year)];
 }
 day+=this._date-1;
 this._day=(day+1)%7;
@@ -231,15 +231,17 @@ return day;
 var x=(_22*12+17)%19;
 return x>=((x<0)?-7:12);
 },fromGregorian:function(_23){
-var _24=this._computeHebrewFields(_23);
-this._year=_24[0];
-this._month=_24[1];
-this._date=_24[2];
+var _24=(!isNaN(_23))?this._computeHebrewFields(_23):NaN;
+this._year=(!isNaN(_23))?_24[0]:NaN;
+this._month=(!isNaN(_23))?_24[1]:NaN;
+this._date=(!isNaN(_23))?_24[2]:NaN;
 this._hours=_23.getHours();
 this._milliseconds=_23.getMilliseconds();
 this._minutes=_23.getMinutes();
 this._seconds=_23.getSeconds();
+if(!isNaN(_23)){
 this._setDay();
+}
 return this;
 },_computeHebrewFields:function(_25){
 var _26=this._getJulianDayFromGregorianDate(_25),d=_26-347997,m=Math.floor((d*24*1080)/(29*24*1080+12*1080+793)),_27=Math.floor((19*m+234)/235)+1,ys=this._startOfYear(_27),_28=(d-ys);
@@ -256,7 +258,7 @@ _2b--;
 var _2c=_28-_2a[_2b][_29];
 return [_27,_2b,_2c];
 },toGregorian:function(){
-var _2d=this._year,_2e=this._month,_2f=this._date,day=this._startOfYear(_2d);
+var _2d=this._year||0,_2e=this._month||0,_2f=this._date||0,day=this._startOfYear(_2d);
 if(_2e!=0){
 day+=(this.isLeapYear(_2d)?this._LEAP_MONTH_START:this._MONTH_START)[_2e][this._yearType(_2d)];
 }
@@ -293,7 +295,7 @@ return (day+1)%7;
 },_getJulianDayFromGregorianDate:function(_42){
 var _43=_42.getFullYear(),_44=_42.getMonth(),d=_42.getDate(),_45=!(_43%4)&&(_43%100||!(_43%400)),y=_43-1;
 var _46=365*y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400)+1721426-1;
-if(_44!=0){
+if(_44>0){
 _46+=this._GREGORIAN_MONTH_COUNT[_44][_45?3:2];
 }
 _46+=d;

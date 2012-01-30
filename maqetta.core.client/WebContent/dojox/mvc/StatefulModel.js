@@ -261,11 +261,15 @@ define([
 			if(typeof this.get("length") === "number" && /^[0-9]+$/.test(name.toString())){
 				n = name;
 				if(!this.get(n)){
-					n1 = n-1;
-					if(!this.get(n1)){
-						throw new Error("Out of bounds insert attempted, must be contiguous.");
+					if(this.get("length") == 0 && n == 0){ // handle the empty array case
+						this.set(n, stateful);
+					} else {
+						n1 = n-1;
+						if(!this.get(n1)){
+							throw new Error("Out of bounds insert attempted, must be contiguous.");
+						}
+						this.set(n, stateful);
 					}
-					this.set(n, stateful);
 				}else{
 					n1 = n-0+1;
 					elem = stateful;
@@ -370,10 +374,8 @@ define([
 			//		the data structure.
 			// tags:
 			//		private
-			var data = (args && args.data) || this.data;
-			if(data){
-				this._createModel(data);
-			}
+			var data = (args && "data" in args) ? args.data : this.data; 
+			this._createModel(data);
 		},
 
 		//////////////////////// PRIVATE METHODS ////////////////////////
@@ -385,7 +387,7 @@ define([
 			//		The input for the model, as a plain JavaScript object.
 			// tags:
 			//		private
-			if(lang.isObject(obj) && !(obj instanceof Date) && !(obj instanceof RegExp)){	
+			if(lang.isObject(obj) && !(obj instanceof Date) && !(obj instanceof RegExp) && obj !== null){
 				for(var x in obj){
 					var newProp = new StatefulModel({ data : obj[x] });
 					this.set(x, newProp);

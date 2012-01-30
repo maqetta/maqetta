@@ -64,8 +64,6 @@ define(
 	"anycolumn": "qualquer coluna",
 	"statusTipTitleNoFilter": "Barra do filtro",
 	"statusTipTitleHasFilter": "Filtro",
-	"statusTipRelPre": "Corresponder",
-	"statusTipRelPost": "regras.",
 	
 	"defaultItemsName": "itens",
 	"filterBarMsgHasFilterTemplate": "${0} de ${1} ${2} apresentado(s).",

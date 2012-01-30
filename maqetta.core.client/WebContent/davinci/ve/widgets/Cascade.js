@@ -1,6 +1,7 @@
 dojo.provide("davinci.ve.widgets.Cascade");
 dojo.require('davinci.workbench.WidgetLite');
 dojo.require("davinci.html.CSSModel");
+dojo.require("davinci.ve.utils.CssUtils");
 dojo.require("davinci.ve.widget");
 dojo.require("davinci.ui.ErrorDialog");
 dojo.require("davinci.ui.widgets.DocileDialog");

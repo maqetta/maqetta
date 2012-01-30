@@ -66,7 +66,7 @@ var NestedSorting = declare("dojox.grid.enhanced.plugins.NestedSorting", _Plugin
 		}
 		this.connect(this.grid.views, 'render', '_initSort');//including column resize
 		this.initCookieHandler();
-		connect.subscribe("dojox/grid/rearrange/move/" + this.grid.id, lang.hitch(this, '_onColumnDnD'));
+		this.subscribe("dojox/grid/rearrange/move/" + this.grid.id, lang.hitch(this, '_onColumnDnD'));
 	},
 	onStartUp: function(){
 		//overwrite base Grid functions

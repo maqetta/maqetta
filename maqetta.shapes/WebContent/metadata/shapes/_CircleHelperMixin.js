@@ -1,8 +1,9 @@
-dojo.provide("davinci.libraries.shapes.shapes._CircleHelperMixin");
-dojo.require("davinci.ve.commands.ModifyCommand");
-dojo.require("davinci.ve.Snap");
+define([
+	"davinci/ve/commands/ModifyCommand"
+], function(ModifyCommand) {
 
-dojo.declare("davinci.libraries.shapes.shapes._CircleHelperMixin", null, {
+var _CircleHelperMixin = function() {};
+_CircleHelperMixin.prototype = {
 
 	dragPointsStrings:['left_top','center_top','right_top','right_middle',
 	    	           'right_bottom','center_bottom','left_bottom','left_middle'],
@@ -198,8 +199,12 @@ dojo.declare("davinci.libraries.shapes.shapes._CircleHelperMixin", null, {
 
 			valuesObject.r = dijitWidget._rx;
 		}
-		command.add(new davinci.ve.commands.ModifyCommand(widget, valuesObject, null));
+		command.add(new ModifyCommand(widget, valuesObject, null));
         var context = this._widget ? this._widget.getContext() : undefined;
         context.dragMoveCleanup();
 	}
+};
+
+return _CircleHelperMixin;
+
 });

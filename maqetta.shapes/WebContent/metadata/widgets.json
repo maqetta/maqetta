@@ -21,7 +21,7 @@
                 "style": "font-size:14px"
             },
             "resizable": "none",
-            "helper": "davinci.libraries.shapes.shapes.TextHelper"
+            "helper": "./shapes/TextHelper"
         },
         {
             "name": "Horizontal Line",
@@ -31,7 +31,7 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAJiYmJSUlJGRkYyMjIiIiIODg0lJSUZGRkFBQTw8PDc3NzIyMisrK////wAAAAAAACH5BAEAAA0ALAAAAAAQABAAAAQfsMlJq7046827x8aBJEppmgvTAIEwEHAsF19t33h+RQA7",
             "enablePointerEvents": true,
             "resizable": "none",
-            "helper": "davinci.libraries.shapes.shapes.LineHelper"
+            "helper": "./shapes/LineHelper"
         },
         {
             "name": "Vertical Line",
@@ -44,7 +44,7 @@
             "properties": {
                 "points": "0,100,0,0"
             },
-            "helper": "davinci.libraries.shapes.shapes.LineHelper"
+            "helper": "./shapes/LineHelper"
         },
         {
             "name": "Line",
@@ -57,7 +57,7 @@
             "properties": {
                 "points": "0,100,100,0"
             },
-            "helper": "davinci.libraries.shapes.shapes.LineHelper"
+            "helper": "./shapes/LineHelper"
         },
         {
             "name": "Arrow",
@@ -71,7 +71,7 @@
                 "points": "0,100,100,0",
                 "endarrow": "forward"
             },
-            "helper": "davinci.libraries.shapes.shapes.LineHelper"
+            "helper": "./shapes/LineHelper"
         },
         {
             "name": "Circle",
@@ -82,7 +82,7 @@
             "enablePointerEvents": true,
             "resizable": "none",
             "resizableOnCreate": "both",
-            "helper": "davinci.libraries.shapes.shapes.CircleHelper"
+            "helper": "./shapes/CircleHelper"
         },
         {
             "name": "Rectangle",
@@ -93,7 +93,7 @@
             "enablePointerEvents": true,
             "resizable": "none",
             "resizableOnCreate": "both",
-            "helper": "davinci.libraries.shapes.shapes.RectangleHelper"
+            "helper": "./shapes/RectangleHelper"
         },
         {
             "name": "RoundedRectangle",
@@ -107,7 +107,7 @@
             "properties": {
                 "cornerRadius": "10"
             },
-            "helper": "davinci.libraries.shapes.shapes.RectangleHelper"
+            "helper": "./shapes/RectangleHelper"
         }
     ]
 }

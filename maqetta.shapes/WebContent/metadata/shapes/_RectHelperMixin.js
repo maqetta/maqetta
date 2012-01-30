@@ -1,8 +1,9 @@
-dojo.provide("davinci.libraries.shapes.shapes._RectHelperMixin");
-dojo.require("davinci.ve.commands.ModifyCommand");
-dojo.require("davinci.ve.Snap");
+define([
+	"davinci/ve/commands/ModifyCommand"
+], function(ModifyCommand) {
 
-dojo.declare("davinci.libraries.shapes.shapes._RectHelperMixin", null, {
+var _RectHelperMixin = function() {};
+_RectHelperMixin.prototype = {
 	
 	dragPointsStrings:['left_top','center_top','right_top','right_middle',
 	           'right_bottom','center_bottom','left_bottom','left_middle'],
@@ -195,9 +196,13 @@ dojo.declare("davinci.libraries.shapes.shapes._RectHelperMixin", null, {
 		dijitWidget._y = 0;
 		
 		var valuesObject = {width:dijitWidget._width, height:dijitWidget._height};
-		command.add(davinci.ve.commands.ModifyCommand(widget, valuesObject, null));
+		command.add(new ModifyCommand(widget, valuesObject, null));
         var context = this._widget ? this._widget.getContext() : undefined;
         context.dragMoveCleanup();
 	}
+
+};
+
+return _RectHelperMixin;
 
 });

@@ -1,7 +1,9 @@
-dojo.provide("davinci.libraries.shapes.shapes._PathHelperMixin");
-dojo.require("davinci.ve.commands.ModifyCommand");
+define([
+	"davinci/ve/commands/ModifyCommand"
+], function(ModifyCommand) {
 
-dojo.declare("davinci.libraries.shapes.shapes._PathHelperMixin", null, {
+var _PathHelperMixin = function() {};
+_PathHelperMixin.prototype = {
 
 	/**
 	 * Invoked by Snap.js from core application to get a snapping rect for this widget
@@ -96,10 +98,11 @@ dojo.declare("davinci.libraries.shapes.shapes._PathHelperMixin", null, {
 		// Shift modifier causes constrained drawing (i.e., horiz or vert versus previous point)
 		if(event.shiftKey){
 			// If point#0, constrain relative to point#1
-			if(index==0){
+			var refPoint;
+			if (! index) {
 				refPoint = dijitWidget._points[1];
 			// Otherwise, constrain versus previous point
-			}else{
+			} else {
 				refPoint = dijitWidget._points[index-1];
 			}
 			var absDeltaX = Math.abs(this.un_p.x - refPoint.x);
@@ -203,9 +206,13 @@ dojo.declare("davinci.libraries.shapes.shapes._PathHelperMixin", null, {
 		}
 		var s_points = arr.join();
 		var valuesObject = {points:s_points};
-		command.add(davinci.ve.commands.ModifyCommand(widget, valuesObject, null));
+		command.add(new ModifyCommand(widget, valuesObject, null));
         var context = this._widget ? this._widget.getContext() : undefined;
         context.dragMoveCleanup();
 	}
+
+};
+
+return _PathHelperMixin;
 
 });

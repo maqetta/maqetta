@@ -1,8 +1,11 @@
-dojo.provide("davinci.libraries.shapes.shapes._ShapeHelper");
-dojo.require("davinci.commands.CompoundCommand");
-dojo.require("davinci.ve.commands.StyleCommand");
+define([
+	"davinci/commands/CompoundCommand",
+	"davinci/ve/commands/ModifyCommand",
+	"davinci/ve/commands/StyleCommand"
+], function(CompoundCommand, ModifyCommand, StyleCommand) {
 
-dojo.declare("davinci.libraries.shapes.shapes._ShapeHelper", null, {
+var _ShapeHelper = function() {};
+_ShapeHelper.prototype = {
 	
 	/*
 	 * Called by Focus.js right after Maqetta shows selection chrome around a widget.
@@ -31,7 +34,7 @@ dojo.declare("davinci.libraries.shapes.shapes._ShapeHelper", null, {
 		
 		var div = obj.customDiv;
 		var l,t;
-		w,h;
+
 		// The focus selection DIV is sometimes pulled in from left/top
 		// so that it won't get clipped off the screen. Need to unadjust the adjustments.
 		var xadjust = obj.bboxAdjusted.l - obj.bboxActual.l;
@@ -134,7 +137,7 @@ dojo.declare("davinci.libraries.shapes.shapes._ShapeHelper", null, {
 		var top = (spanTop + svgMarginTop) + 'px';
 		var width = (spanWidth + svgMarginLeft) + 'px';
 		var height = (spanHeight + svgMarginTop) + 'px';
-		var command = new davinci.commands.CompoundCommand();
+		var command = new CompoundCommand();
 		
 		// Restore SPAN positioning properties to values before dragging started
 		// Otherwise, undo logic gets confused
@@ -153,17 +156,20 @@ dojo.declare("davinci.libraries.shapes.shapes._ShapeHelper", null, {
 		}else{
 			props = [{width:width}, {height:height}];
 		}
-		command.add(new davinci.ve.commands.StyleCommand(widget, props));
+		command.add(new StyleCommand(widget, props));
 
 		if(this.onMouseUp_Widget){
 			this.onMouseUp_Widget(command);
 		}
 		
 		//FIXME: This has side effect of flushing command stack. Ugly coding. See #1057
-		dojo.publish("/davinci/ui/widgetPropertiesChanges",[{source:context._editor.editor_id, command:command}]);
+		dojo.publish("/davinci/ui/widgetPropertiesChanges",
+				[{source: context._editor.editor_id, command: command}]);
 
 	}
-	
+
+};
+
+return _ShapeHelper;
+
 });
-
-

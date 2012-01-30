@@ -1,10 +1,13 @@
-dojo.provide("davinci.libraries.shapes.shapes.CircleHelper");
-dojo.require("davinci.libraries.shapes.shapes._ShapeHelper");
-dojo.require("davinci.libraries.shapes.shapes._CircleHelperMixin");
+define([
+	"dojo/_base/declare",
+	"./_ShapeHelper",
+	"./_CircleHelperMixin"
+], function(
+	declare,
+	_ShapeHelper,
+	_CircleHelperMixin
+) {
 
-dojo.declare("davinci.libraries.shapes.shapes.CircleHelper", 
-	[davinci.libraries.shapes.shapes._ShapeHelper, 
-	 davinci.libraries.shapes.shapes._CircleHelperMixin], {
+return declare([_ShapeHelper, _CircleHelperMixin], {});
 
 });
-

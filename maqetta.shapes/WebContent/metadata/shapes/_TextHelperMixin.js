@@ -1,6 +1,7 @@
-dojo.provide("davinci.libraries.shapes.shapes._TextHelperMixin");
+define(function() {
 
-dojo.declare("davinci.libraries.shapes.shapes._TextHelperMixin", null, {
+var _TextHelperMixin = function() {};
+_TextHelperMixin.prototype = {
 			
 	//FIXME: Looks like this can be shared between rects and ellipses
 	
@@ -15,5 +16,9 @@ dojo.declare("davinci.libraries.shapes.shapes._TextHelperMixin", null, {
 		// No drag points for text widget
 		return {points:[]};
 	}
+
+};
+
+return _TextHelperMixin;
 
 });

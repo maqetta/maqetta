@@ -1,9 +1,13 @@
-dojo.provide("davinci.libraries.shapes.shapes.LineHelper");
-dojo.require("davinci.libraries.shapes.shapes._ShapeHelper");
-dojo.require("davinci.libraries.shapes.shapes._PathHelperMixin");
+define([
+	"dojo/_base/declare",
+	"./_ShapeHelper",
+	"./_PathHelperMixin"
+], function(
+	declare,
+	_ShapeHelper,
+	_PathHelperMixin
+) {
 
-dojo.declare("davinci.libraries.shapes.shapes.LineHelper", 
-	[davinci.libraries.shapes.shapes._ShapeHelper, 
-	 davinci.libraries.shapes.shapes._PathHelperMixin], {
-	
+return declare([_ShapeHelper, _PathHelperMixin], {});
+
 });

@@ -1,20 +1,18 @@
 define([
 //	"./Workbench", //FIXME: circular ref?
 	"./commands/CommandStack",
-	"./ve/metadata",
+	
 	"dojo/i18n!./nls/webContent",
 	"dijit/Dialog",
 	"dijit/form/Button",
 	"dijit/form/TextBox"
-], function(/*Workbench, */CommandStack, metadata, webContent, Dialog) {
+], function(/*Workbench, */CommandStack, webContent, Dialog) {
 
 var Runtime = {
 	plugins: [],
 	extensionPoints: [],
 	subscriptions: [],
 	widgetTable: {},
-	
-	_DEFAULT_PROJECT: "project1",
 	
 	currentSelection: [],
 	commandStack: new CommandStack(),
@@ -72,13 +70,6 @@ var Runtime = {
 			Runtime._loadPlugin(plugin, url);
 		}
 	},
-	/*
-	 * running in single project mode or multi project mode
-	 */
-	singleProjectMode: function() {
-		return true;
-	},
-	
 	
 	singleUserMode : function() {
 		return Runtime.isLocalInstall;
@@ -89,26 +80,13 @@ var Runtime = {
 	 * 
 	 */
 	
-	getProject: function() {
-		/*
-		var params = davinci.Workbench.queryParams();
-		if(params.project) {
-			return decodeURI(params.project);
-		}
-		*/
-		return davinci.Workbench.getActiveProject() || Runtime._DEFAULT_PROJECT;
-	},
-	
-	loadProject: function(projectName) {
-		/*
-		var params = davinci.Workbench.queryParams();
-		params.project = encodeURI(projectName);
+	location: function(){
+		// reloads the browser with the current project.
+		var fullPath = document.location.href;
+		var split = fullPath.split("?");
 		
-		
-		window.location.href=davinci.Workbench.location() + "?" + dojo.objectToQuery(params);
-		*/
-		davinci.Workbench.setActiveProject(projectName);
-		location.reload(true);
+		var searchString = split.length>1? split[1] : "";
+		return split[0];
 	},
 	
 	getRole: function() {
@@ -116,7 +94,7 @@ var Runtime = {
 			return "Designer";
 		} else {
 			if (!davinci.Runtime.userInfo) {
-		        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+		        var location = Runtime.location().match(/http:\/\/.*:\d+\//);
 				var result = Runtime.serverJSONRequest({
 					url: location + "maqetta/cmd/getReviewUserInfo",
 					sync: true
@@ -134,7 +112,7 @@ var Runtime = {
 			return Runtime.commenting_designerName;
 		} else {
 			if (!Runtime.userInfo) {
-		        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+		        var location = Runtime.location().match(/http:\/\/.*:\d+\//);
 				var result = Runtime.serverJSONRequest({
 					url: location + "maqetta/cmd/getReviewUserInfo",
 					sync: true
@@ -150,7 +128,7 @@ var Runtime = {
 			return davinci.Runtime.commenting_designerEmail;
 		} else {
 			if (!Runtime.userInfo) {
-		        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+		        var location = Runtime.location().match(/http:\/\/.*:\d+\//);
 				var result = Runtime.serverJSONRequest({
 					url: location + "maqetta/cmd/getReviewUserInfo",
 					sync: true
@@ -201,9 +179,9 @@ var Runtime = {
 	        thisStyle.MozTransition !== undefined ||
 	        thisStyle.OTransition !== undefined ||
 	        thisStyle.transition !== undefined;
-		metadata.init();
+		
 		Runtime.subscribe("/davinci/ui/selectionChanged",Runtime._selectionChanged);
-		davinci.Workbench.run();
+		
 		// intercept BS key - prompt user before navigating backwards
 		dojo.connect(dojo.doc.documentElement, "onkeypress", function(e){
 			if(e.charOrCode==8){
@@ -227,10 +205,6 @@ var Runtime = {
 				return message;
 			}
 		};
-	},
-	
-	unload: function() {
-		davinci.Workbench.unload();
 	},
 	
 	subscribe: function(topic,func) {
@@ -409,7 +383,7 @@ var Runtime = {
 		Runtime.serverJSONRequest({
 			url:"cmd/logoff", handleAs:"text", sync:true
 		});
-		var newLocation = davinci.Workbench.location(); //
+		var newLocation = Runtime.location(); //
 		var lastChar=newLocation.length-1;
 		if (newLocation.charAt(lastChar)=='/') {
 			newLocation=newLocation.substr(0,lastChar);

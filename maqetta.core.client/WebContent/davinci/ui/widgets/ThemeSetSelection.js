@@ -77,7 +77,7 @@ define(["dojo/_base/declare",
 	
 	    addThemeSets: function(){
 	
-	        this._dojoThemeSets = Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
+	        this._dojoThemeSets = Preferences.getPreferences("maqetta.dojo.themesets", Workbench.getProject());
 	        if (!this._dojoThemeSets){ 
 	            this._dojoThemeSets =  Theme.dojoThemeSets;
 	            
@@ -98,7 +98,7 @@ define(["dojo/_base/declare",
 	    
 	    addThemes: function(themeSet){
 	
-	        this._themeData = Library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly, true);
+	        this._themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly, true);
 	        var dtSelect = dijit.byId('theme_select_desktop_theme_select');
 	        dtSelect.options = [];
 	        var androidSelect = dijit.byId('theme_select_android_select');

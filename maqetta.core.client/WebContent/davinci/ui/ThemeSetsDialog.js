@@ -1,5 +1,6 @@
 define(["dijit/Dialog",
         "davinci/workbench/Preferences",
+        "davinci/Workbench",
         "davinci/library",
         "dojo/i18n!davinci/ui/nls/ui",
         "dojo/i18n!dijit/nls/common",
@@ -7,7 +8,7 @@ define(["dijit/Dialog",
         "dijit/form/ValidationTextBox",
         "dijit/form/Button"
         
-],function(Dialog, Preferences, Library, uiNLS, commonNLS, Theme){
+],function(Dialog, Preferences,Workbench, Library, uiNLS, commonNLS, Theme){
 	
 	return dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
 	    
@@ -20,15 +21,15 @@ define(["dijit/Dialog",
 	            
 	        });
 	        dojo.connect(this._dialog, "onCancel", this, "onClose");
-	        this._dojoThemeSets = Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
+	        this._dojoThemeSets = Preferences.getPreferences("maqetta.dojo.themesets", Workbench.getProject());
 	        if (!this._dojoThemeSets){ 
 	            this._dojoThemeSets =  Theme.dojoThemeSets;
-	            Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(),this._dojoThemeSets);
+	            Preferences.savePreferences("maqetta.dojo.themesets", Workbench.getProject(),this._dojoThemeSets);
 	            
 	        }
 	        if (!this._dojoThemeSets.themeSets[0]) {
 	            this._dojoThemeSets.themeSets.push(dojo.clone(Theme.custom_themeset));
-	            Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(),this._dojoThemeSets);
+	            Preferences.savePreferences("maqetta.dojo.themesets", Workbench.getProject(),this._dojoThemeSets);
 	        }
 	        this._dojoThemeSets = dojo.clone(this._dojoThemeSets); // make a copy so we won't effect the real object
 	        
@@ -74,7 +75,7 @@ define(["dijit/Dialog",
 	    
 	    addThemes: function(themeSet){
 
-	        this._themeData = Library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly, true);
+	        this._themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly, true);
 	        var dtSelect = dijit.byId('theme_select_desktop_theme_select');
 	        dtSelect.options = [];
 	        var androidSelect = dijit.byId('theme_select_android_select');
@@ -345,7 +346,7 @@ define(["dijit/Dialog",
 	       
 	     onOk: function(e){
 
-	         Preferences.savePreferences("maqetta.dojo.themesets", davinci.Runtime.getProject(),this._dojoThemeSets);
+	         Preferences.savePreferences("maqetta.dojo.themesets", Workbench.getProject(),this._dojoThemeSets);
 	         this.onClose(e);
 
 	     },

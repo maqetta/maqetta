@@ -32,15 +32,15 @@ var createNewDialog = function(fileNameLabel, createLabel, type, dialogSpecificC
 			folder = resource.parent;
 		}
 	}else{
-		var base = Runtime.getProject();
+		var base = Workbench.getProject();
 		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 		
 		if(prefs.webContentFolder!=null && prefs.webContentFolder!=""){
-			var fullPath = new Path(Runtime.getProject()).append(prefs.webContentFolder);
+			var fullPath = new Path(Workbench.getProject()).append(prefs.webContentFolder);
 			folder = Resource.findResource(fullPath.toString());
 			
 		}else{
-			folder= Resource.findResource(Runtime.getProject());
+			folder= Resource.findResource(Workbench.getProject());
 		}
 	}
 	
@@ -146,15 +146,15 @@ var uiResource = {
 					
 			}else{
 				
-				var base = Runtime.getProject();
+				var base = Workbench.getProject();
 				var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 				
 				if(prefs.webContentFolder!=null && prefs.webContentFolder!=""){
-					var fullPath = new Path(Runtime.getProject()).append(prefs.webContentFolder);
+					var fullPath = new Path(Workbench.getProject()).append(prefs.webContentFolder);
 					folder = Resource.findResource(fullPath.toString());
 				}
 				if(folder==null) {
-					folder = Resource.findResource(Runtime.getProject());
+					folder = Resource.findResource(Workbench.getProject());
 				}
 			}
 			
@@ -267,7 +267,7 @@ var uiResource = {
 				}
 					
 			}else{
-				folder = Resource.findResource(Runtime.getProject());
+				folder = Resource.findResource(Workbench.getProject());
 			}
 			
 			var dialogOptions = {finishButtonLabel:langObj.open };

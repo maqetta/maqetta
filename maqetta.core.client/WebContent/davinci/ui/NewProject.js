@@ -62,7 +62,7 @@ define(["dojo/_base/declare",
 				Preferences.savePreferences('davinci.ui.ProjectPrefs',newProjectName, prefValue);
 			}
 			
-			if(Runtime.singleProjectMode())
+			if(Workbench.singleProjectMode())
 				Runtime.loadProject(newProjectName);
 			
 			this.onClose();

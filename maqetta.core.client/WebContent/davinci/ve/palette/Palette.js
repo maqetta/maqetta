@@ -1,6 +1,7 @@
 define([
     "dojo/_base/declare",
 	"dijit/_WidgetBase",
+	"davinci/Workbench",
 	"dijit/_KeyNavContainer",
 	"dijit/Tooltip",
 	"davinci/ui/dnd/DragSource",
@@ -15,6 +16,7 @@ define([
 ], function(
 	declare,
 	WidgetBase,
+	Workbench,
 	_KeyNavContainer,
 	Tooltip,
 	DragSource,
@@ -146,7 +148,7 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		//debugger;
 		this._loaded = true; // call this only once
 		var allLibraries = Metadata.getLibrary();
-		var userLibs = Library.getUserLibs(Runtime.getProject());
+		var userLibs = Library.getUserLibs(Workbench.getProject());
 		var libraries = {};
 		
 		function findInAll(name, version) {
@@ -170,7 +172,7 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			}
 		});
 		
-		var customWidgets = Library.getCustomWidgets(Runtime.getProject());
+		var customWidgets = Library.getCustomWidgets(Workbench.getProject());
 		if (customWidgets) {
 			dojo.mixin(libraries, customWidgets);
 		}
@@ -330,7 +332,7 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	    		return uri;
 	    	}
 	    	
-	    	return davinci.Workbench.location() + uri;
+	    	return Workbench.location() + uri;
 	    }
 	    return require.toUrl("davinci/" + fallbackUri);
 	},

@@ -87,7 +87,7 @@ define(["dojo/_base/declare",
 		getResourceBase : function(){
 			// returns the base folder for this change.
 			
-			if(Runtime.singleProjectMode())
+			if(Workbench.singleProjectMode())
 				return Resource.getRoot().getName();
 		},
 

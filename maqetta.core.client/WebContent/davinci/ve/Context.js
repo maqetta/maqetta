@@ -642,8 +642,8 @@ return declare("davinci.ve.Context", null, {
 	},
 
 	getBase: function(){
-		if(davinci.Runtime.singleProjectMode()) {
-			return davinci.Runtime.getProject();
+		if(davinci.Workbench.singleProjectMode()) {
+			return Workbench.getProject();
 		}
 	},
 	
@@ -674,7 +674,7 @@ return declare("davinci.ve.Context", null, {
 		
 		
 		/* remove the .theme file, and find themes in the given base location */
-		var allThemes = Library.getThemes(davinci.Runtime.getProject()),
+		var allThemes = Library.getThemes(Workbench.getProject()),
 			themeHash = {},
 			defaultTheme;
 		
@@ -1942,7 +1942,7 @@ return declare("davinci.ve.Context", null, {
 			bodyElement = htmlElement.getChildElement("body"),
 			flowLayout = bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE);
 		if (!flowLayout){ // if flowLayout has not been set in the context check the edit prefs
-			//var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
+			//var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', Workbench.getProject());
 			//flowLayout = editorPrefs.flowLayout;
 			flowLayout = true;
 			this.setFlowLayout(flowLayout);

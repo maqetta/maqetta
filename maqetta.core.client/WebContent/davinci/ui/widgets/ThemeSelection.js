@@ -2,10 +2,11 @@ define(["dojo/_base/declare",
         "dijit/_Widget",
         "davinci/library",
         "davinci/Runtime",
+        "davinci/Workbench",
         "system/resource",
         "dojo/i18n!davinci/ui/nls/ui",
         "dojo/i18n!dijit/nls/common"
-  ],function(declare, _Widget, Library,Runtime, Resource,uiNLS, commonNLS){
+  ],function(declare, _Widget, Library,Runtime, Workbench, Resource,uiNLS, commonNLS){
 	return declare("davinci.ui.widgets.ThemeSelection", [_Widget], {
 	    
 	    workspaceOnly : true,
@@ -27,7 +28,7 @@ define(["dojo/_base/declare",
 	    /* populate the theme selection, depends on the "workspaceOnly" attribute being set post create */
 	    postCreate : function(){
 	    	
-	        this._themeData = Library.getThemes(Runtime.getProject(), this.workspaceOnly);
+	        this._themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly);
 	        this._themeCount = this._themeData.length;
 	        for (var i = 0; i < this._themeData.length; i++){
 	            if(this._hasValue(this._themeData[i].className)) continue;

@@ -3,6 +3,7 @@ define(["dojo/_base/declare",
         "dijit/_Templated",
         "dijit/_Widget",
         "davinci/library",
+        "davinci/Workbench",
         "system/resource",
         "davinci/workbench/Preferences",
         "davinci/Runtime",
@@ -17,7 +18,7 @@ define(["dojo/_base/declare",
         "dijit/form/TextBox",
         "dijit/form/RadioButton"
 
-],function(declare, _Templated, _Widget,  Library, Resource,  Preferences, Runtime,  Menu, MenuItem, Path, DropDownButton, uiNLS, commonNLS, templateString){
+],function(declare, _Templated, _Widget,  Library, Workbench, Resource,  Preferences, Runtime,  Menu, MenuItem, Path, DropDownButton, uiNLS, commonNLS, templateString){
 
 	return declare("davinci.ui.widgets.NewFolder",   [_Widget, _Templated], {
 	
@@ -67,13 +68,13 @@ define(["dojo/_base/declare",
 			var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 			
 			if(prefs.webContentFolder!=null && prefs.webContentFolder!=""){
-				var fullPath = new Path(Runtime.getProject()).append(prefs.webContentFolder);
+				var fullPath = new Path(Workbench.getProject()).append(prefs.webContentFolder);
 				
 				var folder = Resource.findResource(fullPath.toString());
 				return folder;
 			}
 			
-			return Resource.findResource(Runtime.getProject());
+			return Resource.findResource(Workbench.getProject());
 		},
 		
 		_setRootAttr : function(value){

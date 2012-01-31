@@ -1,8 +1,9 @@
 define([
     "davinci/ui/Panel",
+    "davinci/Workbench",
     "dojo/i18n!davinci/workbench/nls/workbench",
     "dojo/i18n!dijit/nls/common"
-], function(Panel, workbenchStrings, commonStrings) {
+], function(Panel,Workbench,workbenchStrings, commonStrings) {
 
 return {
 	_allPrefs: {},
@@ -141,7 +142,7 @@ return {
 		var domNode;
 		this._currentPane=null;
 		var extension= this._extensions[node.index[0]];
-		var prefs=this.getPreferences(extension.id, davinci.Runtime.getProject());
+		var prefs=this.getPreferences(extension.id, Workbench.getProject());
 		if (extension.pane){
 			dojo["require"](extension.pane); //FIXME: use require
 			var cls=eval(extension.pane); // FIXME: avoid eval?
@@ -171,7 +172,7 @@ return {
 		{
 			var prefs=this._currentPane.getPreferences();
 			var id=this._currentPane._extension.id;
-			var base = davinci.Runtime.getProject();
+			var base = Workbench.getProject();
 			
 			this.savePreferences(id, base, prefs);
 			if(this._currentPane.save){

@@ -66,7 +66,7 @@ define(["dojo/_base/declare",
 		},
 		
 		_rename : function(){
-			var oldProject = Runtime.getProject();
+			var oldProject = Workbench.getProject();
 			var renameDialog = new Rename({value:oldProject, invalid: this._projectSelection.attr("projects")});
 			
 			Workbench.showModal(renameDialog, 'Rename Project To....', 'height:110px;width: 200px',function(){

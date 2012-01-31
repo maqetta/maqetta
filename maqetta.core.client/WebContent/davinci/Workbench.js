@@ -19,6 +19,7 @@ define([
 	"dijit/layout/TabContainer",
 	"system/resource",
 	"dojo/i18n!./nls/webContent",
+	"./ve/metadata",
 
 	/*
 	 * Dialog deps from davinci/dialog
@@ -28,7 +29,7 @@ define([
 	"./ui/OpenThemeDialog", // ui_plugin/js
 	"./ui/ThemeSetsDialog" // ui_plugin/js
 ], function(Runtime, Path,  util, ViewPart, EditorContainer, Dialog, Toolbar, ToolbarSeparator, Menu, MenuBar, PopupMenuBarItem,
-		Button, BorderContainer, StackContainer, ContentPane, TabContainer, sysResource, webContent) {
+		Button, BorderContainer, StackContainer, ContentPane, TabContainer, sysResource, webContent, metadata) {
 
 var filename2id = function(fileName) {
 	return "editor-" + encodeURIComponent(fileName.replace(/[\/| |\t]/g, "_")).replace(/%/g, ":");
@@ -69,10 +70,10 @@ var initializeWorkbenchState = function(){
 		
 		var project = null;
 	
-		var singleProject = Runtime.singleProjectMode();
+		var singleProject = Workbench.singleProjectMode();
 	
 		if(singleProject){
-			var p = Runtime.getProject();
+			var p = Workbench.getProject();
 			project = new Path(p);
 		}
 	
@@ -100,14 +101,17 @@ var initializeWorkbenchState = function(){
 	if (!Workbench._state.hasOwnProperty("editors")) {
 		Workbench._state = {editors:[], version:davinci.version, project:Runtime._DEFAULT_PROJECT};
 	}
+	
 };
 
 var Workbench = {
 	activePerspective: "",
 	actionScope: [],
-
+	_DEFAULT_PROJECT: "project1",
+	
 	run: function() {
 		Workbench._initKeys();
+		metadata.init();
 		
 		Workbench._baseTitle = dojo.doc.title;
 
@@ -725,14 +729,37 @@ var Workbench = {
 		});
 		return dojoMenu;
 	},
+	/*
+	 * running in single project mode or multi project mode
+	 */
+	singleProjectMode: function() {
+		return true;
+	},
+	
+	getProject: function() {
+		/*
+		var params = davinci.Workbench.queryParams();
+		if(params.project) {
+			return decodeURI(params.project);
+		}
+		*/
+		return Workbench.getActiveProject() || Workbench._DEFAULT_PROJECT;
+	},
+	
+	loadProject: function(projectName) {
+		/*
+		var params = davinci.Workbench.queryParams();
+		params.project = encodeURI(projectName);
+		
+		
+		window.location.href=davinci.Workbench.location() + "?" + dojo.objectToQuery(params);
+		*/
+		Workbench.setActiveProject(projectName);
+		location.reload(true);
+	},
 	
 	location: function(){
-		// reloads the browser with the current project.
-		var fullPath = document.location.href;
-		var split = fullPath.split("?");
-		
-		var searchString = split.length>1? split[1] : "";
-		return split[0];
+		return Runtime.location();
 	},
 	
 	queryParams: function(){
@@ -1476,7 +1503,7 @@ var Workbench = {
 			return Workbench._state.project;
 		}
 
-		return Runtime._DEFAULT_PROJECT;
+		return Workbench._DEFAULT_PROJECT;
 	},
 	
 	setActiveProject: function(project){

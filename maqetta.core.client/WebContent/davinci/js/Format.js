@@ -1,14 +1,15 @@
 define([
 	"dojo/_base/declare",
 	"davinci/Runtime",
+	"davinci/Workbench",
 	"davinci/workbench/Preferences"
-], function(declare, Runtime, Preferences) {
+], function(declare, Runtime, Workbench, Preferences) {
  
 if (typeof davinci.js === "undefined") { davinci.js = {}; }
 
 var Format =  davinci.js.format = function(model, opt) {
 
-	var options = opt || Preferences.getPreferences("davinci.js.format", Runtime.getProject());
+	var options = opt || Preferences.getPreferences("davinci.js.format", Workbench.getProject());
 	var indentLevel = 0;
 	var output=[];
 	var newline = "\n";

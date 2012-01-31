@@ -1,10 +1,11 @@
 define(["dojo/_base/declare",
         "davinci/workbench/WidgetLite",
         "davinci/workbench/Preferences",
-        /*
+       
         "davinci/Workbench",
+       
         "davinci/Runtime",
-        */
+        
         "davinci/ve/utils/CssShortHand",
         "davinci/ui/widgets/DocileDialog",
         "davinci/ve/states",
@@ -14,7 +15,7 @@ define(["dojo/_base/declare",
         
         
        
-],function(declare,WidgetLite,Preferences,/*Workbench, Runtime,*/ CSSShortHand, DocileDialog, States, ErrorDialog, veNLS,commonNLS){
+],function(declare,WidgetLite,Preferences,Workbench, Runtime, CSSShortHand, DocileDialog, States, ErrorDialog, veNLS,commonNLS){
 	var cascade =  declare("davinci.ve.widgets.Cascade",  [WidgetLite], {
 	
 		target : null,
@@ -158,7 +159,7 @@ define(["dojo/_base/declare",
 				return;
 			}
 			
-			var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', Runtime.getProject());
+			var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', Workbench.getProject());
 			
 			if(this._widget && this.target && this.target.length>0){
 				var propName = this.target[0];

@@ -43,7 +43,7 @@ dojo.declare("davinci.actions.DownloadAction", davinci.actions.Action, {
 		var path=value.zipFileName;
 		
 		
-		system.resource.download(resources, path + ".zip", davinci.Runtime.getProject());	
+		system.resource.download(resources, path + ".zip", davinci.Workbench.getProject());	
 
 	
 	

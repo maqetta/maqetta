@@ -26,7 +26,7 @@
 		      dojo.byId("maqetta_version").innerHTML = davinci.version;
 		      dojo.byId("title_id").text = webContent.pageDesignerTitle;
 		});
-		require(["dojo/i18n!davinci/nls/webContent", "dijit/dijit", "davinci/davinci-common", "davinci/davinci"], function (webContent) {
+		require(["davinci/Workbench", "dojo/i18n!davinci/nls/webContent", "dijit/dijit", "davinci/davinci-common", "davinci/davinci", ], function (Workbench, webContent) {
 			//davinci.Runtime.addPlugin( "app/davinci/ui" );
 	    	//davinci.Runtime.addPlugin( "app/davinci/de/de" );
 //		//	davinci.Runtime.addPlugin( "app/davinci/cssEdit/cssEdit" );
@@ -35,7 +35,8 @@
 			//davinci.Runtime.addPlugin( "app/davinci/ve/themeEditor/themeEditor" );
 			//davinci.Runtime.addPlugin( "app/davinci/review/review" );
 			davinci.Runtime.loadPlugins();
-
+			
+			
 	 		davinci.Runtime.initialPerspective="davinci.ve.pageDesign";
 			dojo.addOnLoad(function()
 			{
@@ -88,10 +89,12 @@
 	    				}
 	    			}
 	    			davinci.Runtime.run(userInfo);
+	    			Workbench.run();
 				}
 			});
 
 			dojo.addOnUnload(davinci.Runtime.unload);
+			dojo.addOnUnload(Workbench.unload);
 		});
 	</script>
   </head>

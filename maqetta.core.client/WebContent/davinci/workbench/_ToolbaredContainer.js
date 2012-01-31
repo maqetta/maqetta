@@ -59,8 +59,8 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
 
 	getTopAdditions: function(){},
 
-	_createToolbar: function()
-	{		
+	_createToolbar: function(){
+		var Workbench = require('davinci/Workbench');
 		
 		var topAddition=this.getTopAdditions();
 		if (topAddition) {
@@ -76,14 +76,15 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
         	var menuContainerElem = dojo.create("span", {'id':menuContainerId, 'class':"paletteDropdown"}, this.toolbarDiv);
     		var menuId=unique+"_menu";
         	var menuElem = dojo.create("span", {id:menuId}, menuContainerElem);
-        	davinci.Workbench.updateMenubar(menuElem, this.toolbarMenuActionSets);
+        	Workbench.updateMenubar(menuElem, this.toolbarMenuActionSets);
     	}
     	
 		var viewActions=this._getViewActions();
         if (viewActions && viewActions.length)
         {
     		var tb=dojo.create("span", {style: {display: "inline-block"}},this.toolbarDiv);
-        	var toolbar = davinci.Workbench._createToolBar("xx", tb, viewActions,this._getViewContext());
+    		
+        	var toolbar = Workbench._createToolBar("xx", tb, viewActions,this._getViewContext());
     		dojo.style(toolbar.domNode,{"display":"inline-block", "float":"left"});
         }
 		this._toolbarCreated=true;

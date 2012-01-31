@@ -283,7 +283,7 @@ return declare("davinci.ve.VisualEditor", null, {
 			this.context._commandStack=this._commandStack;
 			this._commandStack._context=this.context;
 
-			var prefs=davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', Runtime.getProject());
+			var prefs=davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', Workbench.getProject());
 			if (prefs) {
 				this.context.setPreferences(prefs);
 			}
@@ -399,7 +399,7 @@ return declare("davinci.ve.VisualEditor", null, {
 		editor.save();
 		if(deviceName && deviceName.length && deviceName!='none'){
 			var orientation_param = (this._orientation == 'landscape') ? '&orientation='+this._orientation : "";
-			fileURL = davinci.Workbench.location()+'?preview=1&device='+encodeURI(deviceName)+'&file='+encodeURI(fileURL)+orientation_param;
+			fileURL = Workbench.location()+'?preview=1&device='+encodeURI(deviceName)+'&file='+encodeURI(fileURL)+orientation_param;
 		}
 		window.open(fileURL);
 	}

@@ -1,12 +1,13 @@
 define([
 	"dojo/_base/declare",
 	"davinci/Runtime",
+	"davinci/Workbench",
 	"davinci/js/JSFile",
 	"davinci/js/Format",
 	"davinci/workbench/PanelPreferencePane",
 	"davinci/workbench/Preferences",
 	"dojo/i18n!../nls/js"
-], function(declare, Runtime, JSFile, Format, PanelPreferencePane, Preferences, jsNls) {
+], function(declare, Runtime, Workbench, JSFile, Format, PanelPreferencePane, Preferences, jsNls) {
  
 return declare("davinci.js.ui.FormatOptions", PanelPreferencePane, {
 
@@ -98,7 +99,7 @@ return declare("davinci.js.ui.FormatOptions", PanelPreferencePane, {
 				right: [{
 					type: "dynamic",
 					createNode: function(fieldData,parentNode, panel) {
-						var options = Preferences.getPreferences("davinci.js.format", Runtime.getProject());
+						var options = Preferences.getPreferences("davinci.js.format", Workbench.getProject());
 						var div = dojo.doc.createElement("div");
 						dojo.connect(panel,"onChange", function() {
 							panel.saveData();

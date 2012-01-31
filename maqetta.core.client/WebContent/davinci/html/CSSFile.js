@@ -8,8 +8,9 @@ define([
 	"davinci/html/CSSElement",
 	"davinci/html/CSSRule",
 	"davinci/html/CSSParser",
-	"davinci/html/CSSSelector"
-], function(declare, CSSElement, CSSRule, CSSParser, CSSSelector) {
+	"davinci/html/CSSSelector",
+	"davinci/model/Factory"
+], function(declare, CSSElement, CSSRule, CSSParser, CSSSelector, Factory) {
 
 return declare("davinci.html.CSSFile", CSSElement, {
 
@@ -55,7 +56,7 @@ return declare("davinci.html.CSSFile", CSSElement, {
 				}
 			}
 		});
-		davinci.model.Factory.getInstance().closeModel(this);
+		Factory.closeModel(this);
 	},
 
 	getResource: function (isWorkingCopy) {

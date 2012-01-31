@@ -17,7 +17,7 @@ return declare("davinci.ve.ThemeModifier", null, {
 		
 		for(var i = 0;i<this.themeCssfiles.length;i++){
 			var cssURL = this._themePath.getParentPath().append(this.themeCssfiles[i]).toString();
-			this.cssFiles.push(Factory.getInstance().getModel({
+			this.cssFiles.push(Factory.getModel({
 				url: cssURL,
 			    includeImports: true,
 			    loader: function(url){

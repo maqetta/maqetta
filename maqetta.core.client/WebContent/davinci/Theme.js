@@ -4,8 +4,9 @@ define([
     	"davinci/ve/States",
     	"davinci/library",
     	"davinci/ve/metadata",
-    	"davinci/html/HTMLFile"
-], function(declare, Widget, States, Library, Metadata, HTMLFile){
+    	"davinci/html/HTMLFile",
+    	"davinci/model/Factory"
+], function(declare, Widget, States, Library, Metadata, HTMLFile, Factory) {
 
 	var Theme = {
 		desktop_default : 'desktop_default',
@@ -113,7 +114,7 @@ define([
 				resource.rename(newName);
 				themeJson.files[i] =newName;
 			}
-			var cssModel = davinci.model.Factory.getInstance().getModel({url:resource.getPath(),
+			var cssModel = Factory.getModel({url:resource.getPath(),
 				includeImports: true,
 				loader:function(url){
 					var r1=  system.resource.findResource(url);

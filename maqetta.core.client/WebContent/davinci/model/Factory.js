@@ -5,21 +5,11 @@ define([
 	"davinci/html/HTMLFile"
 ], function(declare, CSSFile, JSFile, HTMLFile) {
 
-if (typeof davinci.model === "undefined") { davinci.model={}; }
-
-var _instance = null;
 var _instances = [];
 var _resources = [];
 
-function Factory() { /* private constructor */ }
+var Factory = {
 
-return Factory.prototype = {
-
-	getInstance: function() {
-		_instance = _instance || new Factory();
-		return _instance;
-	},
-	
 	/* return a model based on resource */
 	getModel: function(args) {
 		var url = args.url;
@@ -106,5 +96,7 @@ return Factory.prototype = {
 		} // end switch
 	}
 };
-});
 
+return Factory;
+
+});

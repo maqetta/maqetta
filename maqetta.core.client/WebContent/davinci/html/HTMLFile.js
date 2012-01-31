@@ -9,8 +9,9 @@ define([
 	"davinci/html/HTMLParser",
 	"davinci/html/CSSSelector",
 	"davinci/html/HTMLElement",
-	"davinci/html/CSSImport"
-], function(declare, HTMLItem, HTMLParser, CSSSelector, HTMLElement, CSSImport) {
+	"davinci/html/CSSImport",
+	"davinci/model/Factory"
+], function(declare, HTMLItem, HTMLParser, CSSSelector, HTMLElement, CSSImport, Factory) {
 
 return declare("davinci.html.HTMLFile", HTMLItem, {
 
@@ -167,7 +168,7 @@ return declare("davinci.html.HTMLFile", HTMLItem, {
 		// create CSS File model
 
 		if(!dontLoad){
-			this._loadedCSS[url] = davinci.model.Factory.getInstance().getModel({
+			this._loadedCSS[url] = Factory.getModel({
 				url : url,
 				includeImports : true
 			});

@@ -3,8 +3,9 @@ define([
 	"davinci/html/HTMLText",
 	"davinci/html/HTMLElement",
 	"davinci/html/HTMLAttribute",
-	"davinci/html/HTMLComment"
-], function(declare, HTMLText, HTMLAttribute, HTMLComment){
+	"davinci/html/HTMLComment",
+	"davinci/model/parser/Tokenizer"
+], function(declare, HTMLText, HTMLElement, HTMLAttribute, HTMLComment, Tokenizer) {
 
 /* This file defines an XML parser, with a few kludges to make it
  * useable for HTML. autoSelfClosers defines a set of tag names that
@@ -14,7 +15,7 @@ define([
  * {useHTMLKludges: false} as parserConfig option.
  */
 
-davinci.html.XMLParser  = (function() {
+var XMLParser  = (function() {
 	var Kludges = {
 			autoSelfClosers: {"br": true, "img": true, "hr": true, "link": true, "input": true,
 				"meta": true, "col": true, "frame": true, "base": true, "area": true},
@@ -118,7 +119,7 @@ davinci.html.XMLParser  = (function() {
 		}
 
 		return function(source, startState) {
-			return davinci.model.parser.tokenizer(source, startState || inText);
+			return Tokenizer.tokenizer(source, startState || inText);
 		};
 	})();
 
@@ -296,10 +297,10 @@ davinci.html.XMLParser  = (function() {
 	};
 })();
 
-parse = function(text, parentElement) {
+var parse = function(text, parentElement) {
 //	debugger;
 	var txtStream = { next : function () {if (++this.count==1)  return text; else {throw StopIteration;}} , count:0, text:text};
-	var stream = davinci.model.parser.stringStream(txtStream);
+	var stream = Tokenizer.stringStream(txtStream);
 	var parser = XMLParser.make(stream);
 	var token;
 	var errors=[];
@@ -494,6 +495,8 @@ parse = function(text, parentElement) {
 	return { errors:errors, endOffset:(token?token.offset:0) };
 };
 
-return declare("davinci.html.HTMLParser", null, {
-});
+return {
+	parse: parse
+}
+
 });

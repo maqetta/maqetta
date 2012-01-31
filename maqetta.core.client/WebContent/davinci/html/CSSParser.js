@@ -101,7 +101,7 @@ define([
 			}
 
 			return function(source, startState) {
-				return davinci.model.parser.tokenizer(source, startState || normal);
+				return Tokenizer.tokenizer(source, startState || normal);
 			};
 		})();
 
@@ -188,7 +188,7 @@ define([
 					count : 0,
 					text : text
 			};
-			stream = davinci.model.parser.stringStream(txtStream);
+			stream = Tokenizer.stringStream(txtStream);
 		} else {
 			stream = text;
 			inHtml = true;

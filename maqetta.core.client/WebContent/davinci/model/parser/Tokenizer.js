@@ -3,7 +3,7 @@ define([
 	"davinci/js/JSExpression"
 ], function(declare, JSExpression) {
 
-return declare("davinci.model.parser.Tokenizer", null, {
+return {
 
 	/* String streams are the things fed to parsers (which can feed them
 	 * to a tokenizer if they want). They provide peek and next methods
@@ -253,6 +253,6 @@ return declare("davinci.model.parser.Tokenizer", null, {
 		return tokenizer;
 	}
 
-});
-});
+};
 
+});

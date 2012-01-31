@@ -5,8 +5,9 @@
  */
 define([
 	"dojo/_base/declare",
-	"davinci/html/CSSElement"
-], function(declare, CSSElement) {
+	"davinci/html/CSSElement",
+	"davinci/model/Factory"
+], function(declare, CSSElement, Factory) {
 
 return declare("davinci.html.CSSImport", CSSElement, {
 
@@ -48,7 +49,7 @@ return declare("davinci.html.CSSImport", CSSElement, {
 	},
 	
 	close: function(includeImports) {
-		davinci.model.Factory.getInstance().closeModel(this.cssFile);
+		Factory.closeModel(this.cssFile);
 		if (this.connection) {
 			dojo.disconnect(this.connection);
 		}
@@ -64,7 +65,7 @@ return declare("davinci.html.CSSImport", CSSElement, {
 		var path = new davinci.model.Path(p.url || p.fileName);
 		path = path.getParentPath().append(this.url);
 		var myUrl = path.toString();
-		this.cssFile = davinci.model.Factory.getInstance().getModel({
+		this.cssFile = Factory.getModel({
 			url : myUrl,
 			loader : this.parent.loader,
 			includeImports : this.parent.includeImports || includeImports

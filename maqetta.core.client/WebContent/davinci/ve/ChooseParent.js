@@ -1,8 +1,9 @@
 define([
         "dojo/_base/declare",
         "./widget",
-        "./_Widget"
-], function(declare, widget, _Widget){
+        "./_Widget",
+        "./metadata"
+], function(declare, widget, _Widget, metadata) {
 
 return declare("davinci.ve.ChooseParent", null, {
 	
@@ -30,15 +31,15 @@ return declare("davinci.ve.ChooseParent", null, {
 		var getEnclosingWidget = widget.getEnclosingWidget,
 			newTarget = target,
 			allowedParentList = [],
-			data = data.length ? data : [data],
 			children = [];
+		data = data.length ? data : [data];
 
 		// 'data' may represent a single widget or an array of widgets.
 		// Get data for all widgets, for use later in isAllowed().
 		var _this = this;
 		data.forEach(function(elem) {
 			children.push({
-				allowedParent: davinci.ve.metadata.getAllowedParent(elem.type),
+				allowedParent: metadata.getAllowedParent(elem.type),
 				classList: _this.getClassList(elem.type)
 			});
 		});
@@ -67,7 +68,7 @@ return declare("davinci.ve.ChooseParent", null, {
 			});
 		}
 
-		var allowedChild = davinci.ve.metadata.getAllowedChild(parentType);
+		var allowedChild = metadata.getAllowedChild(parentType);
 		
 		// special case for HTML <body>
 		if (parentType === "html.body") {
@@ -88,7 +89,7 @@ return declare("davinci.ve.ChooseParent", null, {
 
 	// returns an array consisting of 'type' and any 'class' properties
 	getClassList: function(type) {
-		var classList = davinci.ve.metadata.queryDescriptor(type, 'class');
+		var classList = metadata.queryDescriptor(type, 'class');
 		if (classList) {
 			classList = classList.split(/\s+/);
 			classList.push(type);

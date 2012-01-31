@@ -14,9 +14,10 @@ define([
 	"./ChooseParent",
 	"./Snap",
 	"./HTMLWidget",
-	
-	"../html/CSSModel", // CSSRule
-	"../html/HTMLModel", // HTMLElement, HTMLText
+	"../html/CSSModel", // shorthands
+	"../html/CSSRule",
+	"../html/HTMLElement",
+	"../html/HTMLText",
 	"../workbench/Preferences",
 	"preview/silhouetteiframe",
 	"dojox/html/_base"
@@ -35,8 +36,11 @@ define([
 	metadata,
 	ChooseParent,
 	Snap,
-	HTMLWidget
-	
+	HTMLWidget,
+	CSSModel,
+	CSSRule,
+	HTMLElement,
+	HTMLText
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -680,9 +684,8 @@ return declare("davinci.ve.Context", null, {
 			}
 			
 			if (theme.files){ // #1024 some themes may not contain files, themeMaps
-			  //FIXME: Brad: this can't be right...
-				theme.files.forEach(function(){
-   			        themeHash[theme.files] = theme;
+				theme.files.forEach(function(file){
+   			        themeHash[file] = theme;
 				});
 			}
 		});
@@ -2231,7 +2234,7 @@ return declare("davinci.ve.Context", null, {
 		}
 		
 		// return a sorted array of sorted style values.
-		var shorthands = davinci.html.css.shorthand;
+		var shorthands = CSSModel.shorthand;
 		var lastSplice = 0;
 		/* re-order the elements putting short hands first */
 		
@@ -2351,7 +2354,7 @@ return declare("davinci.ve.Context", null, {
 			}
 		}
 		if(selector){
-			var rule = new davinci.html.CSSRule();
+			var rule = new CSSRule();
 			rule.setText(selector + "{}");
 			return findTarget(widget.domNode || widget, rule);
 		}
@@ -2521,7 +2524,7 @@ return declare("davinci.ve.Context", null, {
 		}
 		*/
 		
-		var script = new davinci.html.HTMLElement('script');
+		var script = new HTMLElement('script');
 		script.addAttribute('type', 'text/javascript');
 		script.addAttribute('src', url);
 		
@@ -2581,12 +2584,12 @@ return declare("davinci.ve.Context", null, {
 
 		if (! scriptText) {
 			// create a new script element
-			var script = new davinci.html.HTMLElement('script');
+			var script = new HTMLElement('script');
 			script.addAttribute('type', 'text/javascript');
 			script.script = "";
 			head.addChild(script);
 
-			scriptText = new davinci.html.HTMLText();
+			scriptText = new HTMLText();
 			script.addChild(scriptText);
 		}
 
@@ -2636,7 +2639,7 @@ return declare("davinci.ve.Context", null, {
 		}
 		
 		// add to Model...
-		var elem = new davinci.html.HTMLElement(tag);
+		var elem = new HTMLElement(tag);
 		for (var name in attrs) if (attrs.hasOwnProperty(name)) {
 			elem.addAttribute(name, attrs[name]);
 		}

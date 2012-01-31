@@ -1,8 +1,9 @@
 define([
 	"dojo/_base/declare",
 	"./Context",
-	"../model/Path"
-], function(declare, Context, Path){
+	"../model/Path",
+	"davinci/model/Factory"
+], function(declare, Context, Path, Factory) {
 
 return declare("davinci.ve.RebuildPage", Context, {
 	/* rebuilds a pages imports based on widget dependencies.
@@ -31,7 +32,7 @@ return declare("davinci.ve.RebuildPage", Context, {
 		
 		if ( !( resource && resource.extension && resource.extension == "html")) return source;
 		
-		this.model = this._srcDocument =  davinci.model.Factory.getNewFromResource(resource);
+		this.model = this._srcDocument = Factory.getNewFromResource(resource);
 		
 		this._resourcePath = null;
 		if(resource)

@@ -1,141 +1,125 @@
-dojo.provide("davinci.js.ui.FormatOptions");
-dojo.require("davinci.ui.Panel");
-dojo.require("davinci.js.JSModel");
-dojo.require("davinci.js.Format");
+define([
+	"dojo/_base/declare",
+	"davinci/Runtime",
+	"davinci/js/JSFile",
+	"davinci/js/Format",
+	"davinci/workbench/PanelPreferencePane",
+	"davinci/workbench/Preferences",
+	"dojo/i18n!../nls/js"
+], function(declare, Runtime, JSFile, Format, PanelPreferencePane, Preferences, jsNls) {
+ 
+return declare("davinci.js.ui.FormatOptions", PanelPreferencePane, {
 
-dojo.require("davinci.workbench.PanelPreferencePane");
-
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.js", "js");
-
-dojo.declare("davinci.js.ui.FormatOptions",davinci.workbench.PanelPreferencePane, {
-	getPanel : function (){
-	var langObj = dojo.i18n.getLocalization("davinci.js", "js");
-    var panel1 =
-        [
-      
-         {
-      	type:"layout",
-      	left:[
-          
-          {
-            type: "checkBox",
-            label: langObj.newLineForBlocks,
-            data: "blockNewLine",
-            defaultValue:true
-          }
-          ,
-          {
-            type: "numberTextBox",
-            label: langObj.blockIndention,
-            data: "blockIndent",
-            defaultValue:3,
-            min:0, max:32
-          }
-          ,
-          {
-            type: "checkBox",
-            label: langObj.newLineForFuncBodies,
-            data: "functionNewLine",
-            defaultValue:true
-          }
-          ,
-          {
-            type: "numberTextBox",
-            label: langObj.functionIndention,
-            data: "functionIndent",
-            defaultValue:5,
-            min:0, max:32
-          },
-          {
-            type: "numberTextBox",
-            label: langObj.funcParameterListSpacing,
-            data: "functionParamSpaceing",
-            defaultValue:1,
-            min:0, max:32
-          },
-          {
-            type: "numberTextBox",
-            label: langObj.labelSpacing,
-            data: "labelSpace",
-            defaultValue:1,
-            min:0, max:32
-          },
-          {
-            type: "checkBox",
-            label: langObj.newLineAfterLabel,
-            data: "breakOnLabel",
-            defaultValue:true
-          },
-          {
-            type: "numberTextBox",
-            label: langObj.forStatementSpacing,
-            data: "forParamSpacing",
-            defaultValue:1,
-            min:0, max:32
-          },
-          {
-            type: "numberTextBox",
-            label: langObj.ifStatementSpacing,
-            data: "ifStmtSpacing",
-            defaultValue:1,
-            min:0, max:32
-          },
-          {
-            type: "numberTextBox",
-            label: langObj.varAssignmentSpacing,
-            data: "varAssignmentSpaceing",
-            defaultValue:1,
-            min:0, max:32
-          },
-          {
-            type: "numberTextBox",
-            label: langObj.switchSpacing,
-            data: "switchSpacing",
-            defaultValue:3,
-            min:0, max:32
-          },
-          {
-            type: "numberTextBox",
-            label: langObj.objectLiteralFieldSpacing,
-            data: "objectLitFieldSpace",
-            defaultValue:1,
-            min:0, max:32
-          }
-                 ],
-        right:[
-          
-          {
-            type: "dynamic",
-            createNode : function (fieldData,parentNode,panel){
-            
-            var options=davinci.workbench.Preferences.getPreferences("davinci.js.format", davinci.Runtime.getProject());
-             var div = dojo.doc.createElement("div");
-
-               dojo.connect(panel,"onChange",function(){
-                  panel.saveData();
-                  updateExample(panel.data);
-               });
-
- 		    function updateExample(options) {
- 		    
-               var exampleJS="function abc(def,jhk){ var a=1; var obj={a:2,b:'33'}; label: if (true) { return;} for (i;i<2;i++){} switch (a){case 1: a=1; case 2:a=2;}}";
- 				var jsFile = new davinci.js.JSFile();
- 				jsFile.setText(exampleJS);
- 				var formatted_text = davinci.js.format(jsFile,options);
-            
- 	            div.innerHTML="<div border=\"3\"><pre>"+formatted_text+"</pre></div>";
- 	            }
- 	            
- 	        updateExample(options);
- 			return div;              
-            }
-          }
- 	    ]
- 	    }
-        ];
-    return panel1;
+	getPanel: function() {
+		var panel1 =
+			[{
+				type:"layout",
+				left:[{
+					type: "checkBox",
+					label: jsNls.newLineForBlocks,
+					data: "blockNewLine",
+					defaultValue:true
+				},
+				{
+					type: "numberTextBox",
+					label: jsNls.blockIndention,
+					data: "blockIndent",
+					defaultValue:3,
+					min:0, max:32
+				},
+				{
+					type: "checkBox",
+					label: jsNls.newLineForFuncBodies,
+					data: "functionNewLine",
+					defaultValue:true
+				},
+				{
+					type: "numberTextBox",
+					label: jsNls.functionIndention,
+					data: "functionIndent",
+					defaultValue:5,
+					min:0, max:32
+				},
+				{
+					type: "numberTextBox",
+					label: jsNls.funcParameterListSpacing,
+					data: "functionParamSpaceing",
+					defaultValue:1,
+					min:0, max:32
+				},
+				{
+					type: "numberTextBox",
+					label: jsNls.labelSpacing,
+					data: "labelSpace",
+					defaultValue:1,
+					min:0, max:32
+				},
+				{
+					type: "checkBox",
+					label: jsNls.newLineAfterLabel,
+					data: "breakOnLabel",
+					defaultValue:true
+				},
+				{
+					type: "numberTextBox",
+					label: jsNls.forStatementSpacing,
+					data: "forParamSpacing",
+					defaultValue:1,
+					min:0, max:32
+				},
+				{
+					type: "numberTextBox",
+					label: jsNls.ifStatementSpacing,
+					data: "ifStmtSpacing",
+					defaultValue:1,
+					min:0, max:32
+				},
+				{
+					type: "numberTextBox",
+					label: jsNls.varAssignmentSpacing,
+					data: "varAssignmentSpaceing",
+					defaultValue:1,
+					min:0, max:32
+				},
+				{
+					type: "numberTextBox",
+					label: jsNls.switchSpacing,
+					data: "switchSpacing",
+					defaultValue:3,
+					min:0, max:32
+				},
+				{
+					type: "numberTextBox",
+					label: jsNls.objectLiteralFieldSpacing,
+					data: "objectLitFieldSpace",
+					defaultValue:1,
+					min:0, max:32
+				}],
+				right: [{
+					type: "dynamic",
+					createNode: function(fieldData,parentNode, panel) {
+						var options = Preferences.getPreferences("davinci.js.format", Runtime.getProject());
+						var div = dojo.doc.createElement("div");
+						dojo.connect(panel,"onChange", function() {
+							panel.saveData();
+							updateExample(panel.data);
+						});
+						function updateExample(options) {
+							var exampleJS = "function abc(def,jhk){ var a=1; var obj={a:2,b:'33'}; label: if (true) { return;} for (i;i<2;i++){} switch (a){case 1: a=1; case 2:a=2;}}";
+							var jsFile = new JSFile();
+							jsFile.setText(exampleJS);
+							var formatted_text = Format(jsFile, options);
+							div.innerHTML="<div border=\"3\"><pre>" + formatted_text + "</pre></div>";
+						}
+						updateExample(options);
+						return div;              
+					}
+				}]
+			}];
+		return panel1;
 	}
+
+});
 });
 
 

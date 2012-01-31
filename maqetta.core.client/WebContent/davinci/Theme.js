@@ -3,8 +3,10 @@ define([
     	"davinci/ve/widget",
     	"davinci/ve/States",
     	"davinci/library",
-    	"davinci/ve/metadata"
-], function(declare, Widget, States, Library, Metadata) {
+    	"davinci/ve/metadata",
+    	"davinci/html/HTMLFile",
+    	"davinci/model/Factory"
+], function(declare, Widget, States, Library, Metadata, HTMLFile, Factory) {
 
 	var Theme = {
 		desktop_default : 'desktop_default',
@@ -112,7 +114,7 @@ define([
 				resource.rename(newName);
 				themeJson.files[i] =newName;
 			}
-			var cssModel = davinci.model.Factory.getInstance().getModel({url:resource.getPath(),
+			var cssModel = Factory.getModel({url:resource.getPath(),
 				includeImports: true,
 				loader:function(url){
 					var r1=  system.resource.findResource(url);
@@ -144,7 +146,7 @@ define([
 			var fileUrl = directoryPath.append(themeJson.themeEditorHtmls[i]);
 			var file = system.resource.findResource(fileUrl.toString());
 			var contents = file.getText();
-			var htmlFile = new davinci.html.HTMLFile(fileUrl);
+			var htmlFile = new HTMLFile(fileUrl);
 			htmlFile.setText(contents,true);
 			var element = htmlFile.find({elementType: 'HTMLElement', tag: 'body'}, true);
 			// #1024 leave other classes on the body only replace the target
@@ -173,7 +175,7 @@ define([
 				helper = module;
 			});
 			return helper;
-	    }
+	        }
 	},
 
 	 getThemeSet: function(context){
@@ -310,7 +312,7 @@ define([
 	            }
 	        }
 	        return count;
-	    }
+	    };
 	    
 	    if (typeof(o1) !== typeof(o2)) {
 	        return false;
@@ -368,7 +370,7 @@ Theme.custom_themeset = {
         "mobileTheme": Theme.dojoMobileCustom
 };
 // XXX This should be moved to Dojo library metadata.
-Theme.dojoThemeSets =  {
+Theme.dojoThemeSets =  { 
         "version": "1.7",
         "specVersion": "0.8",
         "helper": "maq-metadata-dojo-1.7/dojox/mobile/ThemeHelper",
@@ -378,5 +380,8 @@ Theme.dojoThemeSets =  {
 };
 
 return Theme;
-
 });
+
+
+
+

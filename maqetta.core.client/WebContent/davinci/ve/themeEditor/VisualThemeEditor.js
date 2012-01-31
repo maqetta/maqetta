@@ -2,9 +2,9 @@ define([
     	"dojo/_base/declare",
     	"davinci/ve/themeEditor/Context",
     	"davinci/workbench/Preferences",
-    	"davinci/model/Path"
-], function(declare, Context, Preferences, Path){
-
+    	"davinci/model/Path",
+    	"davinci/model/Factory"
+], function(declare, Context, Preferences, Path, Factory) {
 
 return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 
@@ -71,7 +71,7 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 		if(fileName.toLowerCase().indexOf(".css")>0){
 			// add the style sheet to the theme editor
 		}else if(fileName == "DEFAULT_PAGE"){
-			var htmlFile = davinci.model.Factory.newHTML();
+			var htmlFile = Factory.newHTML();
 			htmlFile.fileName = fileName;
 			htmlFile.setText(content);
 			htmlFile.themeCssfiles = themeCssfiles; // css files need to be added to doc before body content

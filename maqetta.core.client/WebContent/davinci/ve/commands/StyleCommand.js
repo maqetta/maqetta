@@ -1,8 +1,8 @@
 define([
     	"dojo/_base/declare",
-    	"davinci/ve/widget"
-//    	"davinci/ve/States" // circular dep
-], function(declare, Widget){
+    	//"davinci/ve/widget", // circular dep
+    	//"davinci/ve/States" // circular dep
+], function(declare){
 
 
 return declare("davinci.ve.commands.StyleCommand", null, {
@@ -34,7 +34,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		if(!this._id || !this._newValues){
 			return;
 		}
-		var widget = Widget.byId(this._id);
+		var widget = davinci.ve.widget.byId(this._id);
 		if(!widget){
 			return;
 		}
@@ -105,7 +105,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		if(!this._id || !this._oldValues){
 			return;
 		}
-		var widget = Widget.byId(this._id);
+		var widget = davinci.ve.widget.byId(this._id);
 		if(!widget){
 			return;
 		}

@@ -107,6 +107,7 @@ var Workbench = {
 	actionScope: [],
 
 	run: function() {
+		Runtime.run();
 		Workbench._initKeys();
 		
 		Workbench._baseTitle = dojo.doc.title;
@@ -731,7 +732,7 @@ var Workbench = {
 		var fullPath = document.location.href;
 		var split = fullPath.split("?");
 		
-		var searchString = split.length>1? split[1] : "";
+		var searchString = split.length>1? split[1] : "";//FIXME: unused
 		return split[0];
 	},
 	

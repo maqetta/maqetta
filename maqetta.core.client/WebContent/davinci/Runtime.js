@@ -1,5 +1,4 @@
 define([
-//	"./Workbench", //FIXME: circular ref?
 	"./commands/CommandStack",
 	"./ve/metadata",
 	"dojo/i18n!./nls/webContent",
@@ -7,6 +6,10 @@ define([
 	"dijit/form/Button",
 	"dijit/form/TextBox"
 ], function(/*Workbench, */CommandStack, metadata, webContent, Dialog) {
+
+var location = function() {
+	return document.location.href.split("?")[0];
+};
 
 var Runtime = {
 	plugins: [],
@@ -80,7 +83,7 @@ var Runtime = {
 	},
 	
 	
-	singleUserMode : function() {
+	singleUserMode: function() {
 		return Runtime.isLocalInstall;
 	},
 
@@ -96,7 +99,7 @@ var Runtime = {
 			return decodeURI(params.project);
 		}
 		*/
-		return davinci.Workbench.getActiveProject() || Runtime._DEFAULT_PROJECT;
+		return require("./Workbench").getActiveProject() || Runtime._DEFAULT_PROJECT;
 	},
 	
 	loadProject: function(projectName) {
@@ -105,9 +108,9 @@ var Runtime = {
 		params.project = encodeURI(projectName);
 		
 		
-		window.location.href=davinci.Workbench.location() + "?" + dojo.objectToQuery(params);
+		window.location.href=location() + "?" + dojo.objectToQuery(params);
 		*/
-		davinci.Workbench.setActiveProject(projectName);
+		require("./Workbench").setActiveProject(projectName);
 		location.reload(true);
 	},
 	
@@ -116,15 +119,16 @@ var Runtime = {
 			return "Designer";
 		} else {
 			if (!davinci.Runtime.userInfo) {
-		        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+		        var location = location().match(/http:\/\/.*:\d+\//);
 				var result = Runtime.serverJSONRequest({
 					url: location + "maqetta/cmd/getReviewUserInfo",
 					sync: true
 				});
 				Runtime.userInfo = result;
 			}
-			if(Runtime.userInfo.userName==Runtime.commenting_designerName)
+			if (Runtime.userInfo.userName==Runtime.commenting_designerName) {
 				return "Designer";
+			}
 		}
 		return "Reviewer";
 	},
@@ -134,7 +138,7 @@ var Runtime = {
 			return Runtime.commenting_designerName;
 		} else {
 			if (!Runtime.userInfo) {
-		        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+		        var location = location().match(/http:\/\/.*:\d+\//);
 				var result = Runtime.serverJSONRequest({
 					url: location + "maqetta/cmd/getReviewUserInfo",
 					sync: true
@@ -150,7 +154,7 @@ var Runtime = {
 			return davinci.Runtime.commenting_designerEmail;
 		} else {
 			if (!Runtime.userInfo) {
-		        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+		        var location = location().match(/http:\/\/.*:\d+\//);
 				var result = Runtime.serverJSONRequest({
 					url: location + "maqetta/cmd/getReviewUserInfo",
 					sync: true
@@ -202,8 +206,7 @@ var Runtime = {
 	        thisStyle.OTransition !== undefined ||
 	        thisStyle.transition !== undefined;
 		metadata.init();
-		Runtime.subscribe("/davinci/ui/selectionChanged",Runtime._selectionChanged);
-		davinci.Workbench.run();
+		Runtime.subscribe("/davinci/ui/selectionChanged", Runtime._selectionChanged);
 		// intercept BS key - prompt user before navigating backwards
 		dojo.connect(dojo.doc.documentElement, "onkeypress", function(e){
 			if(e.charOrCode==8){
@@ -228,17 +231,13 @@ var Runtime = {
 			}
 		};
 	},
-	
-	unload: function() {
-		davinci.Workbench.unload();
-	},
-	
+
 	subscribe: function(topic,func) {
 		Runtime.subscriptions.push(dojo.subscribe(topic,this,func));
 	},
 	
 	destroy: function() {
-		dojo.forEach(Runtime.subscriptions, dojo.unsubscribe);
+		Runtime.subscriptions.forEach(dojo.unsubscribe);
 	},
 	
 	_loadPlugin: function(plugin,url) {
@@ -339,14 +338,20 @@ var Runtime = {
         "<tr><td><label for=\"username\">User: </label></td>" +
         "<td><input dojoType=\dijit.form.TextBox\ type=\"text\" name=\"username\" id='username' ></input></td></tr>" +
         "<tr><td><label for=\"password\">Password: </label></td> <td><input dojoType=\"dijit.form.TextBox\" type=\"password\" name=\"password\" id='password'></input></td></tr>" +
-        "<tr><td colspan=\"2\" align=\"center\"><button dojoType=dijit.form.Button type=\"submit\" >Login</button></td>" +
+        "<tr><td colspan=\"2\" align=\"center\"><button dojoType=\"dijit.form.Button\" type=\"submit\" >Login</button></td>" +
         "</tr></table>"; // FIXME: i18n
 		do {
 			var isInput=false;
 			var	dialog = new Dialog({id: "connectDialog", title:"Please login", 
 				onExecute:function(){
-					dojo.xhrGet({url:"cmd/login",sync:true,handleAs:"text",
-						content:{'userName':dojo.byId("username").value, 'password': dojo.byId("password").value, 'noRedirect':true}
+					dojo.xhrGet({url:"cmd/login",
+						sync:true,
+						handleAs:"text",
+						content:{
+							userName: dojo.byId("username").value,
+							password: dojo.byId("password").value,
+							noRedirect:true
+						}
 					}).then(function(result) {
 			            if (result=="OK") {
 			            	// cheap fix.
@@ -361,7 +366,10 @@ var Runtime = {
 					});
 				    isInput=true;
 				},
-				onCancel:function(){isInput=true;Runtime.destroyRecursive(false);}
+				onCancel:function(){
+					isInput=true;
+					Runtime.destroyRecursive(false);
+				}
 			});	
 			dialog.setContent(formHtml);
 			dialog.show();			
@@ -409,7 +417,7 @@ var Runtime = {
 		Runtime.serverJSONRequest({
 			url:"cmd/logoff", handleAs:"text", sync:true
 		});
-		var newLocation = davinci.Workbench.location(); //
+		var newLocation = location();
 		var lastChar=newLocation.length-1;
 		if (newLocation.charAt(lastChar)=='/') {
 			newLocation=newLocation.substr(0,lastChar);

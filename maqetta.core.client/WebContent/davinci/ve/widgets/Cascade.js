@@ -1,10 +1,8 @@
 define(["dojo/_base/declare",
         "davinci/workbench/WidgetLite",
         "davinci/workbench/Preferences",
-        /*
         "davinci/Workbench",
         "davinci/Runtime",
-        */
         "../utils/CssShortHand",
         "../../ui/widgets/DocileDialog",
         "../States",
@@ -14,7 +12,7 @@ define(["dojo/_base/declare",
         
         
        
-],function(declare,WidgetLite,Preferences,/*Workbench, Runtime,*/ CSSShortHand, DocileDialog, States, ErrorDialog, veNLS,commonNLS){
+],function(declare, WidgetLite, Preferences, Workbench, Runtime, CSSShortHand, DocileDialog, States, ErrorDialog, veNLS,commonNLS){
 	var cascade =  declare("davinci.ve.widgets.Cascade",  [WidgetLite], {
 	
 		target : null,
@@ -205,7 +203,7 @@ define(["dojo/_base/declare",
 		            var helpLink = "<a href='app/docs/index.html#peAppCss' target='_blank'>"+ langObj.creatingStyleRules +"</a>";
 					var content = langObj.propChangeCannotComplete + "<br><br>" + dojo.string.substitute(langObj.toChangeProperty,[helpLink]) + "<br/><br/>";
 					var errorDialog = new ErrorDialog({errorText: content});
-					davinci.Workbench.showModal(errorDialog, langObj.errorModifyingValue, 'width:300px', dojo.hitch(this, function(){
+					Workbench.showModal(errorDialog, langObj.errorModifyingValue, 'width:300px', dojo.hitch(this, function(){
 						innerResolveFunc();
 						return true;
 					}));

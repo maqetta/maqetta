@@ -8,8 +8,9 @@
 //NOTE: davinci.review still uses this widget for UI-level filtering
 //FIXME: review any code not related to toggle to determine if it's still necessary
 define(["dojo/_base/declare",
-        "dijit/Tree"
-],function(declare,Tree){
+        "dijit/Tree",
+        "davinci/ui/widgets/_ToggleTreeNode",
+],function(declare, Tree, ToggleTreeNode){
 	return declare("davinci.ui.widgets.ToggleTree", Tree, {
 		
 		
@@ -212,10 +213,10 @@ define(["dojo/_base/declare",
 				var iNode = this.selectedNodes[i];
 				selectedItems.push(iNode.item);
 			}
-			return selectedItems ;
+			return selectedItems;
 		},
 		_createTreeNode: function(/*Object*/ args){
-	 		return new dijit._TreeNode(args);
+	 		return new ToggleTreeNode(args);
 		},
 	    
 		toggledItems: {},	
@@ -246,8 +247,9 @@ define(["dojo/_base/declare",
 	//			dojo.style(this._menu.domNode, "display", "none");
 				return;
 			}
-			if (dojo.indexOf(this.selectedNodes,w) >= 0)
+			if (dojo.indexOf(this.selectedNodes,w) >= 0) {
 				return;
+			}
 			this._selectNode(w);
 	 	}
 	});

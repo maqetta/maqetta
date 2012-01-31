@@ -12,11 +12,7 @@ define([
 
 	var pushComment=null;
 
-	if (!davinci.html) {
-		davinci.html = {};
-	}
-
-	var CSSParser = davinci.html.CSSParser = (function() {
+	var CSSParser = (function() {
 		var tokenizeCSS = (function() {
 			function normal(source, setState) {
 				var ch = source.next();
@@ -405,7 +401,7 @@ define([
 							}
 						}
 
-						var property = new davinci.html.CSSProperty();
+						var property = new CSSProperty();
 						property.startOffset = nameOffset;
 						property.parent = model;
 						// property.setStart(nexttoken.line,nexttoken.from);

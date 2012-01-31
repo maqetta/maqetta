@@ -312,58 +312,58 @@ var parse = function(text, parentElement) {
 	var inComment;
 
 	function addText(text, offset) {
-		htmlText=new davinci.html.HTMLText();
-		htmlText.wasParsed=true;
-		htmlText.startOffset=offset;
-		stack[stack.length-1].addChild(htmlText,undefined,true);
-		htmlText.value=text;
+		htmlText = new HTMLText();
+		htmlText.wasParsed = true;
+		htmlText.startOffset = offset;
+		stack[stack.length-1].addChild(htmlText, undefined, true);
+		htmlText.value = text;
 
 	}
 
 	function addTrailingWS(token) {
 		if (token.content != token.value) {
-			addText(token.value.substring(token.content.length),token.offset+token.value.length);
+			addText(token.value.substring(token.content.length), token.offset+token.value.length);
 		}
 	}
 
 	function updateFMInfo(str,element) {
-		var lines=str.split("\n");
-		var indent=lines[lines.length-1].length;
+		var lines = str.split("\n");
+		var indent = lines[lines.length-1].length;
 		if (element.children.length) {
-			lastElement=element.children[element.children.length-1];
-			lastElement._fmLine=lines.length-1;
-			lastElement._fmIndent=indent;
+			lastElement = element.children[element.children.length-1];
+			lastElement._fmLine = lines.length-1;
+			lastElement._fmIndent = indent;
 		}  else {
-			element._fmChildLine=lines.length-1;
-			element._fmChildIndent=indent;
+			element._fmChildLine = lines.length-1;
+			element._fmChildIndent = indent;
 		}
 	}
 
 	function updateText() {
-		if (htmlText!=null && !htmlText.value.match(/\S/)) {
-			var lastElement=stack[stack.length-1];
+		if (htmlText != null && !htmlText.value.match(/\S/)) {
+			var lastElement = stack[stack.length-1];
 			lastElement.children.pop();	// remove the htmlText
-			updateFMInfo(htmlText.value,lastElement);
+			updateFMInfo(htmlText.value, lastElement);
 		}
-		htmlText=null;
+		htmlText = null;
 	}
 
 	function parseStyle()  {
-		var lastElement=stack[stack.length-1];
+		var lastElement = stack[stack.length-1];
 		stream.nextWhileMatches(/[\s\u00a0]/);
-		var str=stream.get();
-		if (htmlText!=null)  {
-			htmlText.value+=str;
+		var str = stream.get();
+		if (htmlText != null)  {
+			htmlText.value += str;
 			updateText();
 		} else {
-			updateFMInfo(str,lastElement);
+			updateFMInfo(str, lastElement);
 		}
-		CSSParser.parse(stream,lastElement);
+		CSSParser.parse(stream, lastElement);
 	}
 
 	function nextToken(ignoreWS) {
-		token=parser.next();
-		while (ignoreWS &&  token.style=="whitespace") {
+		token = parser.next();
+		while (ignoreWS &&  token.style == "whitespace") {
 			token = parser.next();
 		}
 		return token;
@@ -371,7 +371,7 @@ var parse = function(text, parentElement) {
 
 	try {
 		do {
-			token=parser.next();
+			token = parser.next();
 //			console.log("style="+token.style + "  type="+token.type + "  ==> "+token.value);
 			switch (token.style) {
 			case "xml-punctuation" : {
@@ -387,7 +387,7 @@ var parse = function(text, parentElement) {
 					else
 						error("expecting tag name");
 
-					while ((token=nextToken(true)).style == "xml-attname") {
+					while ((token = nextToken(true)).style == "xml-attname") {
 						var attribute = new HTMLAttribute();
 						attribute.wasParsed = true;
 						model.attributes.push(attribute);
@@ -445,12 +445,12 @@ var parse = function(text, parentElement) {
 			case "whitespace" :
 			case "xml-entity" : {
 				if (inComment) {
-					inComment.value+=token.value;
+					inComment.value += token.value;
 				} else
 					if (!htmlText) {
-						addText(token.value,token.offset);
+						addText(token.value, token.offset);
 					} else
-						htmlText.value+=token.value;
+						htmlText.value += token.value;
 
 			}
 			break;
@@ -497,6 +497,6 @@ var parse = function(text, parentElement) {
 
 return {
 	parse: parse
-}
+};
 
 });

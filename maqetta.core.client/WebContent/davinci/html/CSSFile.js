@@ -8,9 +8,8 @@ define([
 	"davinci/html/CSSElement",
 	"davinci/html/CSSRule",
 	"davinci/html/CSSParser",
-	"davinci/html/CSSSelector",
-	"davinci/model/Factory"
-], function(declare, CSSElement, CSSRule, CSSParser, CSSSelector, Factory) {
+	"davinci/html/CSSSelector"
+], function(declare, CSSElement, CSSRule, CSSParser, CSSSelector) {
 
 return declare("davinci.html.CSSFile", CSSElement, {
 
@@ -56,16 +55,16 @@ return declare("davinci.html.CSSFile", CSSElement, {
 				}
 			}
 		});
-		Factory.closeModel(this);
+		require(["dojo/_base/connect"], function(connect) {
+			connect.publish("davinci/model/closeModel", [this]);
+		});
 	},
 
 	getResource: function (isWorkingCopy) {
-
 		return system.resource.findResource(this.url);
 	},
 
 	addRule: function (ruleText) {
-
 		var rule = new CSSRule();
 		rule.setText(ruleText);
 		this.addChild(rule);

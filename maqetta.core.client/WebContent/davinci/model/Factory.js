@@ -51,7 +51,7 @@ var Factory = {
 
 	newHTML: function(args) {
 		if (args && args.url) {
-			return Factory.getInstance().getModel(args);
+			return Factory.getModel(args);
 		}
 		var model = new HTMLFile(args);
 		_resources.push(model);
@@ -96,6 +96,10 @@ var Factory = {
 		} // end switch
 	}
 };
+
+var _connection = require(["dojo/_base/connect"], function(connect) {
+	connect.subscribe("davinci/model/closeModel", /*context*/ Factory, Factory.closeModel);
+}); 
 
 return Factory;
 

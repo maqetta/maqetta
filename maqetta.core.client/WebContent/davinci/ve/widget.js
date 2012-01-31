@@ -1,5 +1,5 @@
 define([
-	"davinci/html/HTMLModel", //HTMLElement
+	"davinci/html/HTMLElement", //HTMLElement
 	"davinci/ve/metadata",
 	"davinci/ve/DijitWidget",
 	"davinci/ve/GenericWidget",
@@ -7,7 +7,7 @@ define([
 	"davinci/ve/ObjectWidget",
 	"dojo/window"
 ], function(
-	HTMLModel,
+	HTMLElement,
 	metadata
 ) {
 
@@ -467,7 +467,7 @@ createWidget: function(widgetData, initialCreationArgs) {
         node = n;
 	}
 
-    var srcElement = new davinci.html.HTMLElement(node.tagName.toLowerCase());
+    var srcElement = new HTMLElement(node.tagName.toLowerCase());
     if (node.hasAttributes()) {
         var attrs = node.attributes;
         for (var j = attrs.length - 1; j >= 0; --j) {
@@ -493,7 +493,7 @@ createWidget: function(widgetData, initialCreationArgs) {
         }
 
         var script = dojo.doc.createElement("script");
-        var scriptModel = new davinci.html.HTMLElement("script");
+        var scriptModel = new HTMLElement("script");
         if (js.src) {
             script.setAttribute("src", js.src);
             scriptModel.addAttribute("src", js.src);
@@ -504,7 +504,7 @@ createWidget: function(widgetData, initialCreationArgs) {
         }
 
         var wrapper = dojo.doc.createElement("div");
-        var wrapperModel = new davinci.html.HTMLElement("div");
+        var wrapperModel = new HTMLElement("div");
         if (js.location == "beforeContent") {
             wrapper.appendChild(script);
             wrapperModel.addChild(scriptModel);
@@ -645,7 +645,7 @@ createWidget: function(widgetData, initialCreationArgs) {
 },
 
 _createSrcElement: function(node) {
-	var srcElement = new davinci.html.HTMLElement(node.tagName.toLowerCase());
+	var srcElement = new HTMLElement(node.tagName.toLowerCase());
 	if (node.hasAttributes()) {
 	    var attrs = node.attributes;
 	    for (var j = attrs.length - 1; j >= 0; --j) {

@@ -42,10 +42,10 @@ return declare("davinci.html.HTMLElement", HTMLItem, {
 			}
 		}
 		if (this.noEndTag) {
-			s=s+"/>";
+			s = s + "/>";
 		} else {
-			s=s+'>';
-			s=s+this._addWS(this._fmChildLine, this._fmChildIndent);
+			s = s + '>';
+			s = s + this._addWS(this._fmChildLine, this._fmChildIndent);
 			if (this.statements) {
 				for (var i=0; i<this.statements.length; i++) {
 					s = s + this.statements[i].printStatement(context, this.statements[i]);

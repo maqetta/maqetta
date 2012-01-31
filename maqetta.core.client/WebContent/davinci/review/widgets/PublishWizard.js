@@ -20,7 +20,8 @@ define([
 	"dijit/Tree",
 	"davinci/review/widgets/Tree",
 	"system/resource",
-	"davinci/model/Resource",
+	"davinci/model/resource/Folder",
+	"davinci/model/resource/File",
 	"dijit/tree/TreeStoreModel",
 	"davinci/review/model/store/GeneralReviewReadStore",
 	"dojo/i18n!../widgets/nls/widgets",
@@ -29,7 +30,7 @@ define([
 	"dojo/text!./templates/MailFailureDialogContent.html"
 ], function(declare, _Widget, _Templated, StackContainer, ContentPane, SimpleTextarea, NumberTextBox, ValidationTextBox, 
 		DateTextBox, Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojostring, 
-		Menu, MenuItem, Dialog, Tree, sysResource, Resource, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls,
+		Menu, MenuItem, Dialog, Tree, sysResource, Folder, File, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls,
 		templateString, warningString) {
 	
 return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
@@ -118,7 +119,7 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 		var sourceTreeModel = this.sourceTreeModel = new TreeStoreModel({
 			deferItemLoadingUntilExpand: true,
 			store: new GeneralReviewReadStore({
-				root: new Resource.Folder(".", null),
+				root: new Folder(".", null),
 				getLabel: function(item) {
 					var label = item.getName();
 					if (item.link) { label=label + "  [" + item.link + "]"; }
@@ -485,15 +486,15 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 			if (!this.containReviewFile(item)) {
 				item.index = this.fileIndex++;
 				reviewFiles.push(item);
-				var file = new Resource.File(item.name, targetTreeModel.root);
+				var file = new File(item.name, targetTreeModel.root);
 				file.index = item.index;
 				targetTreeModel.root.children.push(file);
 			}
-		}else if (item.elementType=="Folder") {
+		}else if (item.elementType == "Folder") {
 			var children;
 			item.getChildren(function(c) { children=c; }, true);
 			dojo.forEach(children, dojo.hitch(this, function(item) {
-				if (item.elementType=="File") {
+				if (item.elementType == "File") {
 					this.getChildrenFiles(item);
 				}
 			}));

@@ -1,6 +1,6 @@
 define([
         "dojo/_base/declare",
-        "app/davinci/maqetta/States.js",
+        "davinci/maqetta/States",
         "./commands/EventCommand",
         "./commands/StyleCommand"
 ], function(declare, maqettaStates, EventCommand, StyleCommand){

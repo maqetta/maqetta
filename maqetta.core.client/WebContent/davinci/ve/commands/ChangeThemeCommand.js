@@ -1,8 +1,11 @@
 define([
     	"dojo/_base/declare",
     	"davinci/Theme",
-    	"davinci/library"
-], function(declare, Theme, Library){
+    	"davinci/library",
+    	"davinci/html/CSSImport",
+    	"davinci/html/HTMLElement",
+    	"davinci/html/HTMLText",
+], function(declare, Theme, Library, CSSImport, HTMLElement, HTMLText){
 
 
 return declare("davinci.ve.commands.ChangeThemeCommand", null, {
@@ -134,10 +137,10 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
             this._context.setHeader(header);
             var style = modelHead.getChildElement('style');
             if (!style) {
-                style = new davinci.html.HTMLElement('style');
+                style = new HTMLElement('style');
                 modelHead.addChild(style);
             }
-            var css = new davinci.html.CSSImport();
+            var css = new CSSImport();
             css.url = newFileName;
             style.addChild(css,0);
             this._context.theme = newThemeInfo;
@@ -196,11 +199,11 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
                         text = text.substring(0,start) + text.substring(stop+1);
                       }
                 }
-                var script = new davinci.html.HTMLElement('script');
+                var script = new HTMLElement('script');
                 script.addAttribute('type', 'text/javascript');
                 script.script = "";
                 head.insertBefore(script, scriptTag);
-                var newScriptText = new davinci.html.HTMLText();
+                var newScriptText = new HTMLText();
                 newScriptText.setText(text); 
                 script.addChild(newScriptText); 
                 scriptTag.parent.removeChild(scriptTag);
@@ -273,11 +276,11 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
                         }
                         if(themeMap){
                             // create a new script element
-                            var script = new davinci.html.HTMLElement('script');
+                            var script = new HTMLElement('script');
                             script.addAttribute('type', 'text/javascript');
                             script.script = "";
                             head.insertBefore(script, scriptTag);
-                            var newScriptText = new davinci.html.HTMLText();
+                            var newScriptText = new HTMLText();
                             newScriptText.setText(themeMap); 
                             script.addChild(newScriptText); 
                             scriptTag.parent.removeChild(scriptTag);

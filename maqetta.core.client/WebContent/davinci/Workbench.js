@@ -746,6 +746,7 @@ var Workbench = {
 		return Workbench.getActiveProject() || Workbench._DEFAULT_PROJECT;
 	},
 	
+	
 	loadProject: function(projectName) {
 		/*
 		var params = davinci.Workbench.queryParams();

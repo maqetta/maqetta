@@ -7,9 +7,8 @@ define([
 	"dojo/_base/declare",
 	"davinci/html/CSSElement",
 	"davinci/html/CSSRule",
-	"davinci/html/CSSParser",
 	"davinci/html/CSSSelector"
-], function(declare, CSSElement, CSSRule, CSSParser, CSSSelector) {
+], function(declare, CSSElement, CSSRule, CSSSelector) {
 
 return declare("davinci.html.CSSFile", CSSElement, {
 
@@ -75,7 +74,7 @@ return declare("davinci.html.CSSFile", CSSElement, {
 	setText: function(text) {
 		var oldChildren = this.children;
 		this.children = [];
-		var result = CSSParser.parse(text, this);
+		var result = require("davinci/html/CSSParser").parse(text, this);
 		this.errors = result.errors;
 
 		if (this.errors.length > 0 && this.errors[this.errors.length - 1].isException)  {

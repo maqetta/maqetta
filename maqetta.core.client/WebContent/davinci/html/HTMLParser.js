@@ -4,8 +4,9 @@ define([
 	"davinci/html/HTMLElement",
 	"davinci/html/HTMLAttribute",
 	"davinci/html/HTMLComment",
-	"davinci/model/parser/Tokenizer"
-], function(declare, HTMLText, HTMLElement, HTMLAttribute, HTMLComment, Tokenizer) {
+	"davinci/model/parser/Tokenizer",
+	"davinci/html/CSSParser"
+], function(declare, HTMLText, HTMLElement, HTMLAttribute, HTMLComment, Tokenizer, CSSParser) {
 
 /* This file defines an XML parser, with a few kludges to make it
  * useable for HTML. autoSelfClosers defines a set of tag names that

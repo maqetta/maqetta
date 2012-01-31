@@ -6,11 +6,10 @@
 define([
 	"dojo/_base/declare",
 	"davinci/html/HTMLItem",
-	"davinci/html/HTMLParser",
 	"davinci/html/HTMLText",
 	"davinci/html/HTMLComment",
 	"davinci/html/HTMLAttribute"
-], function(declare, HTMLItem, HTMLParser, HTMLText, HTMLComment, HTMLAttribute) {
+], function(declare, HTMLItem, HTMLText, HTMLComment, HTMLAttribute) {
 
 return declare("davinci.html.HTMLElement", HTMLItem, {
 
@@ -472,7 +471,7 @@ return declare("davinci.html.HTMLElement", HTMLItem, {
 
 		var options = {xmode:'outer'};
 		var currentParent = this.parent;
-		var result = HTMLParser.parse(text,this);
+		var result = require("davinci/html/HTMLParser").parse(text,this);
 
 		this.errors = result.errors;
 		// first child is actually the parsed element, so replace this with child

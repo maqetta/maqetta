@@ -10,8 +10,9 @@ define([
 	"davinci/html/CSSSelector",
 	"davinci/html/HTMLElement",
 	"davinci/html/CSSImport",
-	"davinci/html/CSSFile"
-], function(declare, HTMLItem, HTMLParser, CSSSelector, HTMLElement, CSSImport, CSSFile) {
+	"davinci/html/CSSFile",
+	"davinci/model/Model"
+], function(declare, HTMLItem, HTMLParser, CSSSelector, HTMLElement, CSSImport, CSSFile, Model) {
 
 return declare("davinci.html.HTMLFile", HTMLItem, {
 
@@ -227,7 +228,7 @@ return declare("davinci.html.HTMLFile", HTMLItem, {
 	},
 
 	updatePositions: function(startOffset, delta) {
-		davinci.model.Model.updatePositions(this,startOffset,delta);
+		new Model(this).updatePositions(this, startOffset, delta);
 		this.visit({
 			visit: function(element) {
 				if (element.endOffset < startOffset) { return true; }

@@ -103,7 +103,7 @@ return declare("davinci.html.HTMLFile", HTMLItem, {
 	getRule: function(selector) {
 		if (!selector)
 			return [];
-		var selectors = davinci.html.CSSSelector.parseSelectors(selector);
+		var selectors = CSSSelector.parseSelectors(selector);
 		var visitor = {
 				visit: function(node) {
 					if (node.elementType == "CSSFile") {

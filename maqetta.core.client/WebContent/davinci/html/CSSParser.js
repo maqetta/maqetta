@@ -7,9 +7,8 @@ define([
 	"davinci/html/CSSAtRule",
 	"davinci/model/parser/Tokenizer",
 	"davinci/model/Path",
-	"system/resource",
-	"davinci/model/Factory",
-], function(declare, CSSSelector, CSSCombinedSelector, CSSRule, CSSProperty, CSSAtRule, Tokenizer, Path, sysResource, Factory) {
+	"system/resource"
+], function(declare, CSSSelector, CSSCombinedSelector, CSSRule, CSSProperty, CSSAtRule, Tokenizer, Path, sysResource) {
 
 	var pushComment=null;
 

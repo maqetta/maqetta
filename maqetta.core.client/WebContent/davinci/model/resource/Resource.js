@@ -2,7 +2,7 @@ define([
 	"dojo/_base/declare",
 	"davinci/Runtime",
 	"davinci/model/Model",
-	"davinci/Workbench",
+//	"davinci/Workbench",
 	"davinci/model/Path"
 ], function(declare, Runtime, Model, Workbench, Path) {
 
@@ -45,7 +45,7 @@ return declare("davinci.model.resource.Resource", Model, {
 		while(path.indexOf(".") == 0 || path.indexOf("/") == 0) {
 			path = path.substring(1, path.length);
 		}
-		var loc = Workbench.location();;
+		var loc = davinci.Workbench.location();;
 		if (loc.charAt(loc.length-1) == '/') {
 			loc = loc.substring(0,loc.length-1);
 		}

@@ -6,42 +6,40 @@ define([
 ], function(declare, CSSFile, JSFile, HTMLFile) {
 
 if (typeof davinci.model === "undefined") { davinci.model={}; }
-if (typeof davinci.model.Factory === "undefined") { davinci.model.Factory={}; }
 
-return declare("davinci.model.Factory", null, {
+var _instance = null;
+var _instances = [];
+var _resources = [];
 
-	constructor: function() {
-		this._resources = [];
-		this._instances = [];
+function Factory() { /* private constructor */ }
+
+return Factory.prototype = {
+
+	getInstance: function() {
+		_instance = _instance || new Factory();
+		return _instance;
 	},
-
-	getInstance: function(){
-		if (davinci.model.Factory._instance == null) {
-			davinci.model.Factory._instance = new davinci.model.Factory();
-		}
-		return davinci.model.Factory._instance;
-	},
-
+	
 	/* return a model based on resource */
 	getModel: function(args) {
 		var url = args.url;
 		if (!url) {
 			return null;
 		}
-		for (var i = 0; i<this._resources.length; i++) {
-			if (this._resources[i].url == url) {
-				this._instances[i]++;
-				return this._resources[i];
+		for (var i = 0; i<_resources.length; i++) {
+			if (_resources[i].url == url) {
+				_instances[i]++;
+				return _resources[i];
 			}
 		}
 		if (url.indexOf("css") > 0) {
-			return davinci.model.Factory.newCSS(args);
+			return Factory.newCSS(args);
 		}
 		if (url.indexOf("html") > 0) {
-			return davinci.model.Factory.newHTML(args);
+			return Factory.newHTML(args);
 		}
 		if(url.indexOf("js") > 0) {
-			return davinci.model.Factory.newJS(args);
+			return Factory.newJS(args);
 		}
 	},
 
@@ -50,12 +48,12 @@ return declare("davinci.model.Factory", null, {
 		if (!url) {
 			return null;
 		}
-		for(var i = 0; i<this._resources.length; i++) {
-			if (this._resources[i].url == url) {
-				this._instances[i]--;
-				if (this._instances[i] == 0) {
-					this._resources.splice(i,1);
-					this._instances.splice(i,1);
+		for(var i = 0; i<_resources.length; i++) {
+			if (_resources[i].url == url) {
+				_instances[i]--;
+				if (_instances[i] == 0) {
+					_resources.splice(i,1);
+					_instances.splice(i,1);
 				}
 			}
 		}
@@ -63,54 +61,50 @@ return declare("davinci.model.Factory", null, {
 
 	newHTML: function(args) {
 		if (args && args.url) {
-			return davinci.model.Factory.getInstance().getModel(args);
+			return Factory.getInstance().getModel(args);
 		}
 		var model = new HTMLFile(args);
-		davinci.model.Factory.getInstance()._resources.push(model);
-		var count = davinci.model.Factory.getInstance()._resources.length - 1;
-		davinci.model.Factory.getInstance()._instances[count] = 1;
+		_resources.push(model);
+		var count = _resources.length - 1;
+		_instances[count] = 1;
 		return model;
 	},
 
 	newCSS: function(args) {
 		var model = new CSSFile(args);
-		davinci.model.Factory.getInstance()._resources.push(model);
-		var count = davinci.model.Factory.getInstance()._resources.length - 1;
-		davinci.model.Factory.getInstance()._instances[count] = 1;
+		_resources.push(model);
+		var count = _resources.length - 1;
+		_instances[count] = 1;
 		return model;
 	},
 
 	newJS: function(args) {
 		var model = new JSFile(args);
-		davinci.model.Factory.getInstance()._resources.push(model);
-		var count = davinci.model.Factory.getInstance()._resources.length - 1;
-		davinci.model.Factory.getInstance()._instances[count] = 1;
+		_resources.push(model);
+		var count = _resources.length - 1;
+		_instances[count] = 1;
 		return model;
 	},
 
 	getNewFromResource: function(resource) {
 		var extension = resource.extension;
-		if(!extension) { return davinci.model.Factory.newHTML();} // default to HTML
+		if (!extension) { return Factory.newHTML(); } // default to HTML
 
 		switch(extension) {
 		case "html": 
-			return davinci.model.Factory.newHTML();
+			return Factory.newHTML();
 			break;
-
 		case "css": 
-			return davinci.model.Factory.newCSS();
+			return Factory.newCSS();
 			break;
-
 		case "js":
 		case "json": 
-			return davinci.model.Factory.newJS();
+			return Factory.newJS();
 			break;
-
 		default: 
-			return davinci.model.Factory.newHTML(); // default to HTML
-		}; // end switch
+			return Factory.newHTML(); // default to HTML
+		} // end switch
 	}
-
-});
+};
 });
 

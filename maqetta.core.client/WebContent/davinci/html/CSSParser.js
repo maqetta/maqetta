@@ -100,12 +100,18 @@ var CSSParser = (function() {
 			};
 	})();
 
+	// XXX This doesn't work, `indentUnit` is not defined anywhere
 	function indentCSS(inBraces, inRule, base) {
 		return function(nextChars) {
-			if (!inBraces || /^\}/.test(nextChars)) return base;
-		else if (inRule) return base + indentUnit * 2;
-		else return base + indentUnit;
-	};
+			if (!inBraces || /^\}/.test(nextChars)) {
+				return base;
+			} else if (inRule) {
+				return base + indentUnit * 2;
+			} else {
+				return base + indentUnit;
+			}
+		};
+	}
 
 	// This is a very simplistic parser -- since CSS does not really
 	// nest, it works acceptably well, but some nicer colouroing could
@@ -113,7 +119,7 @@ var CSSParser = (function() {
 	function parseCSS(source, basecolumn) {
 		basecolumn = basecolumn || 0;
 		var tokens = tokenizeCSS(source);
-		var inBraces = false, inRule = false, inDecl = false;;
+		var inBraces = false, inRule = false, inDecl = false;
 
 		var iter = {
 				next: function() {
@@ -164,17 +170,22 @@ var CSSParser = (function() {
 		};
 		return iter;
 	}
-	return {make: parseCSS, electricChars: "}"};
-};
+
+	// public API
+	return {
+		make: parseCSS,
+		electricChars: "}"
+	};
+})();
 
 CSSParser.parse = function (text, parentElement) {
 	var stream, inHtml;
 	if (typeof text == "string") {
 		var txtStream = {
 				next : function() {
-					if ( ++this.count == 1)
+					if ( ++this.count == 1) {
 						return text;
-					else {
+					} else {
 						throw StopIteration;
 					}
 				},
@@ -199,40 +210,46 @@ CSSParser.parse = function (text, parentElement) {
 	}
 
 	function nextToken() {
+		var start,
+			stop,
+			s;
+
 		token = parser.next();
-		while (token.style == "css-comment" || token.style == "whitespace"
-			|| (token.content == '/' && stream.peek() == '/')) {
+		while (token.style == "css-comment" || token.style == "whitespace" ||
+				(token.content == '/' && stream.peek() == '/')) {
 			if (token.style == "css-comment") {
-				if (pushComment == null) {
+				if (! pushComment) {
 					pushComment = new davinci.model.Comment();
 				}
-				var start, stop;
 				var commentStart = false;
-				var s = token.content;
-				if (token.content.indexOf("/*") == 0) {
+				s = token.content;
+				if (token.content.indexOf("/*") === 0) {
 					s = s.substring(2);
 					commentStart = true;
 				}
-				if (s.lastIndexOf("*/") == s.length - 2)
+				if (s.lastIndexOf("*/") == s.length - 2) {
 					s = s.substring(0, s.length - 2);
-				if (commentStart)
+				}
+				if (commentStart) {
 					pushComment.addComment('block', start, stop, s);
-				else
+				} else {
 					pushComment.appendComment(s);
-
+				}
 			} else if (token.content == '/') {
-				var start = token.offset;
+				start = token.offset;
 				parser.next();// second slash
-				if (pushComment == null) {
+				if (! pushComment) {
 					pushComment = new davinci.model.Comment();
 				}
-				while (!stream.endOfLine())
+				while (!stream.endOfLine()) {
 					stream.next();
-				var s = stream.get();
+				}
+				s = stream.get();
 				pushComment.addComment('line', start, start + s.length, s);
 			} else {
-				if (pushComment)
+				if (pushComment) {
 					pushComment.appendComment(token.value);
+				}
 			}
 			token = parser.next();
 		}
@@ -247,8 +264,9 @@ CSSParser.parse = function (text, parentElement) {
 		if (combined) {
 			combined.selectors.push(selector);
 			selector.parent = combined;
-		} else
+		} else {
 			model.selectors.push(selector);
+		}
 	}
 
 	function startNew() {
@@ -266,13 +284,14 @@ CSSParser.parse = function (text, parentElement) {
 		combiner = ' ';
 	}
 
+	var wasSelector;
+
 	try {
-		// debugger;
 		do {
 			nextToken();
 			switch (token.style) {
 			case "css-selector":
-			case "css-select-op": {
+			case "css-select-op":
 				if (inHtml && token.content == "<") {
 					stream.push("<");
 					throw StopIteration;
@@ -289,55 +308,60 @@ CSSParser.parse = function (text, parentElement) {
 				selectorLoop: for (;;) {
 
 					switch (token.style) {
-					case "css-select-op": {
+					case "css-select-op":
 						switch (token.content) {
-						case ",":
-							combined = undefined;
-							wasSelector = false;
-							createSelector();
-							break;
-						case ".":
-							if (wsAfterSel)
+							case ",":
+								combined = undefined;
+								wasSelector = false;
+								createSelector();
+								break;
+
+							case ".":
+								if (wsAfterSel) {
+									startNew();
+								}
+								nextToken();
+								if (selector.cls) {
+									selector.cls = selector.cls + "." + token.content;
+								} else {
+									selector.cls = token.content;
+								}
+								wsAfterSel = token.value.length > token.content.length;
+								break;
+
+							case "*":
+								if (selector.element || selector.cls) {
+									startNew();
+								}
+								selector.element = "*";
+								break;
+
+							case "+":
+							case ">":
+								combiner = token.content;
 								startNew();
-							nextToken();
-							if (selector.cls)
-								selector.cls = selector.cls + "."
-								+ token.content;
-							else
-								selector.cls = token.content;
-							wsAfterSel = token.value.length > token.content.length;
-
-							break;
-						case "*":
-							if (selector.element || selector.cls)
-								startNew();
-							selector.element = "*";
-
-							break;
-						case "+":
-						case ">":
-							combiner = token.content;
-							startNew();
-
-							break;
+								break;
 						} // END inner switch
 						break;
+					// END case css-select-op
 
-					} // END case css-select-op
 					case "css-selector":
 						if (token.type == "css-identifier") {
-							if (selector.element || selector.cls)
+							if (selector.element || selector.cls) {
 								startNew();
+							}
 							selector.element = token.content;
 
 						} else if (token.type == "css-hash") {
-							if (selector.id || wsAfterSel)
+							if (selector.id || wsAfterSel) {
 								startNew();
+							}
 							selector.id = token.content.substring(1);
 						}
 						wsAfterSel = token.value.length > token.content.length;
 						break;
-					case "css-punctuation": {
+
+					case "css-punctuation":
 						if (token.content == "{") {
 							break selectorLoop;
 						} else if (token.content == ":") {
@@ -354,21 +378,22 @@ CSSParser.parse = function (text, parentElement) {
 									name : token.content
 							};
 							nextToken();
-							if (token.content === '=' || token.content === '~='
-								|| token.content === '|=') {
+							if (token.content === '=' || token.content === '~=' ||
+									token.content === '|=') {
 								selector.attribute.type = token.content;
 								nextToken();
 								selector.attribute.value = token.content
-								.substring(1, token.content.length - 1);
+										.substring(1, token.content.length - 1);
 								nextToken(); // ]
 							}
 						}
-					} // END case css-punctuation
+					// END case css-punctuation
 					break;
 					} // END inner switch(token.style)
 					wasSelector = true;
 					nextToken();
 				} // END selectorLoop for(;;) loop
+
 				selector.endOffset = token.offset - 1;
 				while (nextToken().content != "}") {
 					var nameOffset = token.offset;
@@ -408,22 +433,25 @@ CSSParser.parse = function (text, parentElement) {
 					while ((nextToken()).content != ";" && token.content != "}") {
 						property.value += token.value;
 					}
-					if (pushComment != null) {
+					if (pushComment) {
 						property.postComment = pushComment;
 						pushComment = null;
 					}
 					property.endOffset = token.offset - 1;
-					if (token.content == "}")
+					if (token.content == "}") {
 						break;
+					}
 				} // END while (nextToken().content != '}')
-				if (pushComment != null) {
+
+				if (pushComment) {
 					property.postComment = pushComment;
 					pushComment = null;
 				}
 				model.endOffset = token.offset;
-			} // END case css-selector, css-select-op
-			break;
-			case "css-at": {
+				// END case css-selector, css-select-op
+				break;
+
+			case "css-at":
 				var ruleName = token.content.substring(1);
 				var atRule = (ruleName == "import") ? new CSSImport()
 				: new CSSAtRule();
@@ -438,8 +466,9 @@ CSSParser.parse = function (text, parentElement) {
 						nextToken(); // value
 					}
 					cssImport.url = token.content.substring(1, token.content.length - 1);
-					if (cssImport.isURL)
+					if (cssImport.isURL) {
 						nextToken();
+					}
 					nextToken(); // ;
 				} else if ( ruleName.indexOf("keyframes") >= 0 ) { 
 					var animationName = "";
@@ -492,12 +521,13 @@ CSSParser.parse = function (text, parentElement) {
 				} else {
 					atRule.name = ruleName;
 					atRule.value = "";
-					while ((nextToken()).content != ";")
+					while ((nextToken()).content != ";") {
 						atRule.value += token.content;
+					}
 				}
 				atRule.endOffset = token.offset;
-			} // END case css-at
-			break;
+				break;
+			// END case css-at
 
 			} // END outer switch(token.style)
 		} while (true);
@@ -508,7 +538,3 @@ CSSParser.parse = function (text, parentElement) {
 return CSSParser;
 
 });
-});
-
-
-

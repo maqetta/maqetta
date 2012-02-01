@@ -47,12 +47,7 @@ davinci/davinci = {
 	
 	// Used by DataGridInput
 	"./commands/OrderedCompoundCommand",
-	
-	// dependencies from ./review/  This is fragile/ We need to find a way to include ./review or build as a dependent layer!
-	"dojox/data/QueryReadStore",
-	"dijit/form/DateTextBox",
-	"dijit/form/MultiSelect",
-	
+
 	"dojo/i18n!./nls/webContent",
 	"./version"
 ],

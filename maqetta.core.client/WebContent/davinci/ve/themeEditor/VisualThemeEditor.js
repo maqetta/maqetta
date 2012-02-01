@@ -1,10 +1,11 @@
 define([
     	"dojo/_base/declare",
+    	"davinci/Workbench",
     	"davinci/ve/themeEditor/Context",
     	"davinci/workbench/Preferences",
     	"davinci/model/Path",
     	"davinci/model/Factory"
-], function(declare, Context, Preferences, Path, Factory) {
+], function(declare, Workbench, Context, Preferences, Path, Factory) {
 
 return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 
@@ -35,7 +36,7 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 
 		dojo.connect(this.context, "onSelectionChange",this, "onSelectionChange");
 
-		var prefs=Preferences.getPreferences('davinci.ve.themeEditor.editorPrefs', davinci.Runtime.getProject());
+		var prefs=Preferences.getPreferences('davinci.ve.themeEditor.editorPrefs', Workbench.getProject());
 		if (prefs) {
 			this.context.setPreferences(prefs);
 		}

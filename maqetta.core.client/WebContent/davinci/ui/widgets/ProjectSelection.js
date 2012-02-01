@@ -4,8 +4,9 @@ define(["dojo/_base/declare",
         "davinci/Runtime",
 		"dojo/data/ItemFileReadStore",
 		"davinci/ui/widgets/ProjectDataStore",
-		"dijit/form/ComboBox"
-  ],function(declare, _Widget, Resource, Runtime, ItemFileReadStore, ProjectDataStore, ComboBox){
+		"dijit/form/ComboBox",
+		"davinci/Workbench"
+  ],function(declare, _Widget, Resource, Runtime, ItemFileReadStore, ProjectDataStore, ComboBox, Workbench){
 
 	return declare("davinci.ui.widgets.ProjectSelection",   _Widget, {
 
@@ -54,7 +55,7 @@ define(["dojo/_base/declare",
 			Resource.listProjects(dojo.hitch(this,function(projects){
 				
 				store.setValues(projects);
-				var activeProject = Runtime.getProject();
+				var activeProject = Workbench.getProject();
 				this.value = activeProject;
 				this._numberOfProjects = projects.length;
 				this._allProjects = [];
@@ -66,7 +67,7 @@ define(["dojo/_base/declare",
 			/*
 			workspace.getChildren(function(projects){
 				store.setValues(projects);
-				var activeProject = davinci.Runtime.getProject();
+				var activeProject = davinci.Workbench.getProject();
 				combo.attr('value', activeProject);
 			});
 			*/

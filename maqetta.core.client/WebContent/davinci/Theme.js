@@ -1,12 +1,14 @@
 define([
     	"dojo/_base/declare",
+    	
     	"davinci/ve/widget",
     	"davinci/ve/States",
+    	"davinci/Workbench",
     	"davinci/library",
     	"davinci/ve/metadata",
     	"davinci/html/HTMLFile",
     	"davinci/model/Factory"
-], function(declare, Widget, States, Library, Metadata, HTMLFile, Factory) {
+], function(declare, Widget, States, Workbench, Library, Metadata, HTMLFile, Factory) {
 
 	var Theme = {
 		desktop_default : 'desktop_default',
@@ -181,7 +183,7 @@ define([
 	 getThemeSet: function(context){
 	    
 	    var returnThemeSet;
-	    var dojoThemeSets = davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
+	    var dojoThemeSets = davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", Workbench.getProject());
 	    if (!dojoThemeSets){ 
 	        dojoThemeSets =  this.dojoThemeSets;
 	    }
@@ -240,7 +242,7 @@ define([
 	},
 	
 	getTheme:  function(name){
-	    var themeData = Library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly);
+	    var themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly);
 	    for (var i = 0; i < themeData.length; i++){
 	        if(themeData[i].name === name){
 	            return themeData[i];
@@ -273,7 +275,7 @@ define([
 
 	getDojoxMobileThemesFromThemeMap: function(context, themeMap){
 	    
-	    var themeData = Library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly, true);
+	    var themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly, true);
 	    var map = dojo.fromJson(themeMap);
 	    var mobileTheme = [];
 	    map.forEach(function(item, idx, arr) {

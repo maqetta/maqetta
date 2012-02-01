@@ -1,6 +1,7 @@
 define([
     "dojo/_base/declare",
 	"dijit/_WidgetBase",
+	"davinci/Workbench",
 	"dijit/_KeyNavContainer",
 	"dijit/Tooltip",
 	"davinci/ui/dnd/DragSource",
@@ -8,13 +9,12 @@ define([
 	"davinci/library",
 	"./PaletteFolder",
 	"./PaletteItem",
-//FIXME: Need to separate out the logic that builds the davinci.Runtime.widgetTable
-	"davinci/Runtime",
 	"dojo/i18n!davinci/ve/nls/common",
 	"davinci/ve/tools/CreateTool"
 ], function(
 	declare,
 	WidgetBase,
+	Workbench,
 	_KeyNavContainer,
 	Tooltip,
 	DragSource,
@@ -22,7 +22,6 @@ define([
 	Library,
 	PaletteFolder,
 	PaletteItem,
-	Runtime,
 	commonNls,
 	CreateTool)
 {
@@ -82,7 +81,7 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			var component = descriptorObject[name];
 			var iconFolder = "ve/resources/images/";
 			var defaultIconFile = "fldr_obj.gif";
-			var	iconFile = defaultIconFile;
+			var iconFile = defaultIconFile;
 			var iconUri = iconFolder + iconFile;
 			
 			var componentIcon = this._getIconUri(component.icon, iconUri);
@@ -146,7 +145,7 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		//debugger;
 		this._loaded = true; // call this only once
 		var allLibraries = Metadata.getLibrary();
-		var userLibs = Library.getUserLibs(Runtime.getProject());
+		var userLibs = Library.getUserLibs(Workbench.getProject());
 		var libraries = {};
 		
 		function findInAll(name, version) {
@@ -170,7 +169,7 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			}
 		});
 		
-		var customWidgets = Library.getCustomWidgets(Runtime.getProject());
+		var customWidgets = Library.getCustomWidgets(Workbench.getProject());
 		if (customWidgets) {
 			dojo.mixin(libraries, customWidgets);
 		}
@@ -330,7 +329,7 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	    		return uri;
 	    	}
 	    	
-	    	return davinci.Workbench.location() + uri;
+	    	return Workbench.location() + uri;
 	    }
 	    return require.toUrl("davinci/" + fallbackUri);
 	},

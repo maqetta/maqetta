@@ -1,8 +1,9 @@
 define(["dojo/_base/declare",
         "davinci/model/Path",
         "davinci/Runtime",
+        "davinci/Workbench",
         "davinci/model/resource/Folder"
-],function(declare, Path, Runtime, Folder){
+],function(declare, Path, Runtime, Workbench, Folder){
 	var resource = declare("system.resource",null);
 
 	dojo.mixin(resource, {
@@ -143,8 +144,8 @@ define(["dojo/_base/declare",
 		//debugger;
 		if (!system.resource.root){
 			var workspace = system.resource.getWorkspace();
-				if(Runtime.singleProjectMode()){
-					var project = Runtime.getProject();
+				if(Workbench.singleProjectMode()){
+					var project = Workbench.getProject();
 				system.resource.root = system.resource.findResource(project,false, workspace);
 			}else{
 				system.resource.root = workspace;

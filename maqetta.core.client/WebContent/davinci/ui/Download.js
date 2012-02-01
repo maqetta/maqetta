@@ -4,6 +4,7 @@ define(["dojo/_base/declare",
         "davinci/library",
         "system/resource",
         "davinci/Runtime",
+        "davinci/Workbench",
         "davinci/ve/RebaseDownload",
         "dojo/i18n!davinci/ui/nls/ui",
         "dojo/i18n!dijit/nls/common",
@@ -21,7 +22,7 @@ define(["dojo/_base/declare",
         "davinci/ui/widgets/ThemeSelection"
         
 
-],function(declare, _Templated, _Widget,  Library, Resource,  Runtime, RebaseDownload, uiNLS, commonNLS, templateString, Theme){
+],function(declare, _Templated, _Widget,  Library, Resource,  Runtime, Workbench, RebaseDownload, uiNLS, commonNLS, templateString, Theme){
 	return declare("davinci.ui.Download",   [_Widget, _Templated], {
 		templateString: dojo.cache("davinci.ui", "templates/download.html"),
 		widgetsInTemplate: true,
@@ -108,14 +109,14 @@ define(["dojo/_base/declare",
 		},
 		
 		getRoot : function(){
-			if(Runtime.singleProjectMode()){
-				return Runtime.getProject();
+			if(Workbench.singleProjectMode()){
+				return Workbench.getProject();
 			}
 		},
 		
 		_getResources : function(){
 		
-			var project=Runtime.getProject();
+			var project=Workbench.getProject();
 			var folder = Resource.findResource(project);
 			
 			/* get all sub files */

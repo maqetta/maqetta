@@ -149,7 +149,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			var position = {x:event.pageX, y:event.pageY};
 			var box = {l:event.pageX,t:event.pageY,w:0,h:0};
 			var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
-					davinci.Runtime.getProject());
+					Workbench.getProject());
 			var doSnapLines = editorPrefs.snap && absolute;
 			context.dragMoveUpdate({
 				data:this._data,

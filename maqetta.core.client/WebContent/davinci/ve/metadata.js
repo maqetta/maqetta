@@ -1,16 +1,17 @@
 define([
 	"require",
     "dojo/_base/Deferred",
+   // "davinci/Workbench",
 	// XXX This object shouldn't have a dependency on SmartInput
 	"./input/SmartInput",
 	"../util",
 	"../library",
 	"../model/Path"
-	//"../Runtime"	// required in init(), to prevent circular dep
+	
 ], function(require, Deferred, SmartInput, Util, Library, Path) {
 
 	var Metadata,
-		runtime,
+		Workbench,
     
     // Array of library descriptors.
     	libraries = {},
@@ -251,7 +252,7 @@ define([
                 metadata = data;
 	        });
         }else{
-			var base = runtime.getProject();
+			var base = Workbench.getProject();
         	var resource = system.resource.findResource("./"+ base + "/" + metadataUrl);
         	metadata = dojo.fromJson(resource.getText());
         }
@@ -351,9 +352,9 @@ define([
          */
 		init: function() {
 			// lazy-load Runtime in order to prevent circular dependency
-			runtime = require('../Runtime');
+			Workbench = require('../Workbench');
 
-			Library.getUserLibs(runtime.getProject()).forEach(function(lib) {
+			Library.getUserLibs(Workbench.getProject()).forEach(function(lib) {
 // XXX Shouldn't be dealing with 'package.json' here; that belongs in library.js
 // (or a combined object).  Putting it here for now, to quickly integrate.
 				var path = Library.getMetaRoot(lib.id, lib.version);
@@ -374,7 +375,7 @@ define([
 
 /* Unused code
 			// add the users custom widgets to the library metadata
-			var base = davinci.Runtime.getProject();
+			var base = davinci.Workbench.getProject();
 			var descriptor = Library.getCustomWidgets(base);
 			//if(descriptor.custom) parseLibraryDescriptor(descriptor.custom, descriptor.custom.metaPath);
 */

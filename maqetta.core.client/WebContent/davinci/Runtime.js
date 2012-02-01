@@ -1,24 +1,17 @@
 define([
-//	"./Workbench", //FIXME: circular ref?
 	"./commands/CommandStack",
-	"./ve/metadata",
 	"dojo/i18n!./nls/webContent",
 	"dijit/Dialog",
 	"dijit/form/Button",
 	"dijit/form/TextBox"
-], function(/*Workbench, */CommandStack, metadata, webContent, Dialog) {
+], function(CommandStack, webContent, Dialog) {
 
 var Runtime = {
 	plugins: [],
 	extensionPoints: [],
 	subscriptions: [],
-	widgetTable: {},
-	
-	_DEFAULT_PROJECT: "project1",
-	
 	currentSelection: [],
 	commandStack: new CommandStack(),
-//	clipboard: null,
 	
 	addPlugin: function(pluginName) {
 		url = pluginName + ".plugin";
@@ -72,13 +65,6 @@ var Runtime = {
 			Runtime._loadPlugin(plugin, url);
 		}
 	},
-	/*
-	 * running in single project mode or multi project mode
-	 */
-	singleProjectMode: function() {
-		return true;
-	},
-	
 	
 	singleUserMode : function() {
 		return Runtime.isLocalInstall;
@@ -89,26 +75,8 @@ var Runtime = {
 	 * 
 	 */
 	
-	getProject: function() {
-		/*
-		var params = davinci.Workbench.queryParams();
-		if(params.project) {
-			return decodeURI(params.project);
-		}
-		*/
-		return davinci.Workbench.getActiveProject() || Runtime._DEFAULT_PROJECT;
-	},
-	
-	loadProject: function(projectName) {
-		/*
-		var params = davinci.Workbench.queryParams();
-		params.project = encodeURI(projectName);
-		
-		
-		window.location.href=davinci.Workbench.location() + "?" + dojo.objectToQuery(params);
-		*/
-		davinci.Workbench.setActiveProject(projectName);
-		location.reload(true);
+	location: function(){
+		return document.location.href.split("?")[0];
 	},
 	
 	getRole: function() {
@@ -116,7 +84,7 @@ var Runtime = {
 			return "Designer";
 		} else {
 			if (!davinci.Runtime.userInfo) {
-		        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+		        var location = Runtime.location().match(/http:\/\/.*:\d+\//);
 				var result = Runtime.serverJSONRequest({
 					url: location + "maqetta/cmd/getReviewUserInfo",
 					sync: true
@@ -134,7 +102,7 @@ var Runtime = {
 			return Runtime.commenting_designerName;
 		} else {
 			if (!Runtime.userInfo) {
-		        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+		        var location = Runtime.location().match(/http:\/\/.*:\d+\//);
 				var result = Runtime.serverJSONRequest({
 					url: location + "maqetta/cmd/getReviewUserInfo",
 					sync: true
@@ -150,7 +118,7 @@ var Runtime = {
 			return davinci.Runtime.commenting_designerEmail;
 		} else {
 			if (!Runtime.userInfo) {
-		        var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+		        var location = Runtime.location().match(/http:\/\/.*:\d+\//);
 				var result = Runtime.serverJSONRequest({
 					url: location + "maqetta/cmd/getReviewUserInfo",
 					sync: true
@@ -201,9 +169,9 @@ var Runtime = {
 	        thisStyle.MozTransition !== undefined ||
 	        thisStyle.OTransition !== undefined ||
 	        thisStyle.transition !== undefined;
-		metadata.init();
+		
 		Runtime.subscribe("/davinci/ui/selectionChanged",Runtime._selectionChanged);
-		davinci.Workbench.run();
+		
 		// intercept BS key - prompt user before navigating backwards
 		dojo.connect(dojo.doc.documentElement, "onkeypress", function(e){
 			if(e.charOrCode==8){
@@ -227,10 +195,6 @@ var Runtime = {
 				return message;
 			}
 		};
-	},
-	
-	unload: function() {
-		davinci.Workbench.unload();
 	},
 	
 	subscribe: function(topic,func) {
@@ -266,12 +230,10 @@ var Runtime = {
 		if (extension.id) {
 			extension.id = pluginID + "." + extension.id;
 		}
+
+		Runtime.extensionPoints[id] = Runtime.extensionPoints[id] || [];
 		var extensions = Runtime.extensionPoints[id];
-		if (extensions == null) {
-			extensions = [];
-		}
 		extensions.push(extension);
-		if (!Runtime.extensionPoints[id]) { Runtime.extensionPoints[id] = []; }
 		Runtime.extensionPoints[id] = extensions;
 	},
 	
@@ -285,17 +247,15 @@ var Runtime = {
 				return extensions.filter(function(ext) {
 					return (isFunction && testFunction(ext)) || ext.id == testFunction;
 				});
-						}
-					}
-			return extensions;
+			}
+		}
+		return extensions;
 	},
 	
 	getExtension: function(extensionID, testFunction) {
 		return Runtime.getExtensions(extensionID, testFunction)[0];
 	},
-	
-	
-	
+
 	handleError: function(error) {
 		var redirectUrl = "welcome";
 		if(Runtime.singleUserMode()){
@@ -318,6 +278,7 @@ var Runtime = {
 		headID.appendChild(cssNode);
 	},
 		
+	
 	executeCommand: function(cmdID) {
 		var cmd=Runtime.getExtension("davinci.commands", cmdID);
 		if (cmd && cmd.run) {
@@ -339,29 +300,41 @@ var Runtime = {
         "<tr><td><label for=\"username\">User: </label></td>" +
         "<td><input dojoType=\dijit.form.TextBox\ type=\"text\" name=\"username\" id='username' ></input></td></tr>" +
         "<tr><td><label for=\"password\">Password: </label></td> <td><input dojoType=\"dijit.form.TextBox\" type=\"password\" name=\"password\" id='password'></input></td></tr>" +
-        "<tr><td colspan=\"2\" align=\"center\"><button dojoType=dijit.form.Button type=\"submit\" >Login</button></td>" +
+        "<tr><td colspan=\"2\" align=\"center\"><button dojoType=\"dijit.form.Button\" type=\"submit\" >Login</button></td>" +
         "</tr></table>"; // FIXME: i18n
 		do {
 			var isInput=false;
-			var	dialog = new Dialog({id: "connectDialog", title:"Please login", 
-				onExecute:function(){
-					dojo.xhrGet({url:"cmd/login",sync:true,handleAs:"text",
-						content:{'userName':dojo.byId("username").value, 'password': dojo.byId("password").value, 'noRedirect':true}
+			var dialog = new Dialog({
+				id: "connectDialog",
+				title: "Please login", 
+				onExecute: function(){
+					dojo.xhrGet({
+						url: "cmd/login",
+						sync: true,
+						handleAs: "text",
+						content:{
+						    userName: dojo.byId("username").value,
+						    password: dojo.byId("password").value,
+						    noRedirect: true
+						}
 					}).then(function(result) {
-			            if (result=="OK") {
-			            	// cheap fix.
-			            	//window.location.reload();
-			            	window.location.href= 'welcome';
-			            	//retry=false;
-			            } else {
-			            	console.warn("Unknown error: result="+result);
-			            }
-					}, function(error) {
+						if (result=="OK") {
+						    // cheap fix.
+						    //window.location.reload();
+						    window.location.href= 'welcome';
+						    //retry=false;
+						} else {
+						    console.warn("Unknown error: result="+result);
+						}
+					    }, function(error) {
 						console.warn("Login error", error);
-					});
-				    isInput=true;
+					    });
+					isInput=true;
 				},
-				onCancel:function(){isInput=true;Runtime.destroyRecursive(false);}
+				onCancel:function(){
+				    isInput=true;
+				    Runtime.destroyRecursive(false);
+				}
 			});	
 			dialog.setContent(formHtml);
 			dialog.show();			
@@ -405,11 +378,11 @@ var Runtime = {
 		var loading = dojo.create("div",null, dojo.body(), "first");
 		loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Logging off...</td></tr></table>'; // FIXME: i18n
 		dojo.addClass(loading, 'loading');
-		Runtime.unload();
+		Runtime.unload(); //FIXME: needs to call Workbench.  use pub/sub?
 		Runtime.serverJSONRequest({
 			url:"cmd/logoff", handleAs:"text", sync:true
 		});
-		var newLocation = davinci.Workbench.location(); //
+		var newLocation = Runtime.location(); //
 		var lastChar=newLocation.length-1;
 		if (newLocation.charAt(lastChar)=='/') {
 			newLocation=newLocation.substr(0,lastChar);

@@ -3,7 +3,10 @@ define(["dojo/_base/declare",
         "dijit/_Widget",
         "davinci/library",
         "system/resource",
-      
+        "davinci/Runtime",
+        "davinci/model/Path",
+        "davinci/Workbench",
+        "davinci/workbench/Preferences",
         "dojo/i18n!davinci/ui/nls/ui",
         "dojo/i18n!dijit/nls/common",
         "dojo/text!./templates/newtheme.html",
@@ -21,7 +24,7 @@ define(["dojo/_base/declare",
         "davinci/ui/widgets/ThemeSelection"
         
 
-],function(declare, _Templated, _Widget,  Library, Resource,  uiNLS, commonNLS, templateString, Theme){
+],function(declare, _Templated, _Widget,  Library, Resource, Runtime, Path, Workbench, Preferences, uiNLS, commonNLS, templateString, Theme){
 	return declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 		templateString: templateString,
 		widgetsInTemplate: true,
@@ -123,7 +126,7 @@ define(["dojo/_base/declare",
 			        if (!error){
 			            var found = findTheme(basePath, base);
 			            if (found){
-			                davinci.Workbench.openEditor({
+			                Workbench.openEditor({
 			                       fileName: found.file,
 			                       content: found.file.getText()});
 			            } else {
@@ -143,8 +146,8 @@ define(["dojo/_base/declare",
 		 * @return the project for the target theme.
 		 */
 		getBase : function(){
-			if(davinci.Runtime.singleProjectMode()){
-				return davinci.Runtime.getProject();
+			if(Workbench.singleProjectMode()){
+				return Workbench.getProject();
 			}
 		},
 		
@@ -158,9 +161,9 @@ define(["dojo/_base/declare",
 			//if(resource.libraryId)
 			//	resource.mkdir();
 			var base = this.getBase();
-			var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+			var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 			
-			var projectThemeBase = (new davinci.model.Path(base).append(prefs['themeFolder']));
+			var projectThemeBase = (new Path(base).append(prefs['themeFolder']));
 			
 			return  projectThemeBase.append(selector).toString();
 		},

@@ -5,6 +5,7 @@ define(["dojo/_base/declare",
         "system/resource",
         "davinci/workbench/Preferences",
         "davinci/Runtime",
+        "davinci/Workbench",
         "dijit/Menu",
         "dijit/MenuItem",
         "davinci/model/Path",
@@ -18,7 +19,7 @@ define(["dojo/_base/declare",
         "dijit/layout/ContentPane",
         "dijit/Tree"
 
-],function(declare, _Templated, _Widget,  Library, Resource,  Preferences, Runtime,  Menu, MenuItem, Path, DropDownButton, uiNLS, commonNLS, templateString){
+],function(declare, _Templated, _Widget,  Library, Resource,  Preferences, Runtime,  Workbench, Menu, MenuItem, Path, DropDownButton, uiNLS, commonNLS, templateString){
 	return declare("davinci.ui.widgets.OpenFile",   [_Widget,_Templated], {
 		widgetsInTemplate: true,
 		templateString: dojo.cache("davinci.ui.widgets", "templates/OpenFile.html"),
@@ -58,7 +59,7 @@ define(["dojo/_base/declare",
 	
 		
 		_getForcedRootAttr : function(){
-			return this._forcedRoot || Resource.findResource(davinci.Runtime.getProject());
+			return this._forcedRoot || Resource.findResource(Workbench.getProject());
 		},
 		
 		_setForcedRootAttr : function(value){

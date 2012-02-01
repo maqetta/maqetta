@@ -109,4 +109,3 @@ return declare("davinci.model.resource.Resource", Model, {
 
 });
 });
-

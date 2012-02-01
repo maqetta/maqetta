@@ -2,6 +2,7 @@ define(["dojo/_base/declare",
         "dijit/_Templated",
         "dijit/_Widget",
         "davinci/library",
+        "davinci/Workbench",
         "system/resource",
         "davinci/workbench/Preferences",
         "davinci/Runtime",
@@ -16,7 +17,7 @@ define(["dojo/_base/declare",
         "dijit/form/TextBox",
         "dijit/form/RadioButton"
 
-],function(declare, _Templated, _Widget,  Library, Resource,  Preferences, Runtime,  Menu, MenuItem, Path, DropDownButton, uiNLS, commonNLS, templateString){
+],function(declare, _Templated, _Widget,  Library, Workbench, Resource,  Preferences, Runtime,  Menu, MenuItem, Path, DropDownButton, uiNLS, commonNLS, templateString){
 	return declare("davinci.ui.widgets.NewFile",   [_Widget,_Templated], {
 		widgetsInTemplate: true,
 		templateString: templateString,
@@ -148,16 +149,16 @@ define(["dojo/_base/declare",
 				return this._forcedRoot;
 			}
 			
-			var base = Runtime.getProject();
+			var base = Workbench.getProject();
 			var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 			
 			if(prefs.webContentFolder!=null && prefs.webContentFolder!=""){
-				var fullPath = new Path(Runtime.getProject()).append(prefs.webContentFolder);
+				var fullPath = new Path(Workbench.getProject()).append(prefs.webContentFolder);
 				
 				var folder = Resource.findResource(fullPath.toString());
 				return folder;
 			}
-			return Resource.findResource(Runtime.getProject());
+			return Resource.findResource(Workbench.getProject());
 		},
 		
 		_setForcedRootAttr : function(value){
@@ -169,7 +170,7 @@ define(["dojo/_base/declare",
 			var resources = this.fileTree.get('selectedItems');
 			var resource = (resources!=null && resources.length > 0)? resources[0] : null;
 			var folderResource;
-			var projectNameLength = ("./" + Runtime.getProject()).length + 1;
+			var projectNameLength = ("./" + Workbench.getProject()).length + 1;
 			if(resource==null){
 				folderResource = this._getForcedRootAttr();
 			}else if(resource.elementType=="Folder"){
@@ -198,7 +199,7 @@ define(["dojo/_base/declare",
 					menuItem = new MenuItem({label: folderNameString, value: folderPathString, onClick:dojo.hitch(this, function(label, value, e){
 						this._whereMenu.attr('value', value);
 						this._whereDropDownButton.attr( 'label', label);
-						var folderPath = new Path(Runtime.getProject()).append(value);
+						var folderPath = new Path(Workbench.getProject()).append(value);
 						var folder = Resource.findResource(folderPath.toString());
 						this.fileTree.set("selectedItems", [folder]);
 					}, folderNameString, folderPathString)});
@@ -218,7 +219,7 @@ define(["dojo/_base/declare",
 			var name = this.fileDialogFileName.get('value'),
 				valid = name && name.length > 0,
 				folderName = this._whereMenu.attr('value'),
-				parent = Resource.findResource(Runtime.getProject() + 
+				parent = Resource.findResource(Workbench.getProject() + 
 						(folderName ? '/' + folderName : '')),
 				resource;
 			if (parent) {
@@ -236,7 +237,7 @@ define(["dojo/_base/declare",
 		
 		_okButton : function(e){
 	
-			var fullPath = (new Path(Runtime.getProject())).append(this._whereMenu.attr('value')).append(this.fileDialogFileName.get( 'value'));
+			var fullPath = (new Path(Workbench.getProject())).append(this._whereMenu.attr('value')).append(this.fileDialogFileName.get( 'value'));
 			
 			this.value =  fullPath.toString();
 			this.cancel = false;

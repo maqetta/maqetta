@@ -91,7 +91,7 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 		
 		var topDiv = dojo.doc.createElement('div');
 
-		if(Runtime.singleProjectMode()){
+		if(Workbench.singleProjectMode()){
 			var projectSelection = new davinci.ui.widgets.ProjectToolbar({});
 			topDiv.appendChild(projectSelection.domNode);
 

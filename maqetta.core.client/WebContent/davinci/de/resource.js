@@ -29,7 +29,7 @@ define(["davinci/de/widgets/NewDijit",
 		
 		_createNameSpace : function(name, parent){
 			var namesplit = name.split(".");
-			var base = Runtime.getProject();
+			var base = Workbench.getProject();
 			parent = parent || Resource.findResource(base);
 			
 			if(namesplit.length>1){
@@ -48,7 +48,7 @@ define(["davinci/de/widgets/NewDijit",
 		
 		_createFolder : function(name, parent){
 			var namesplit = name.split("/");
-			var base = Runtime.getProject();
+			var base = Workbench.getProject();
 			parent = parent || Resource.findResource(base);
 			
 			if(namesplit.length){
@@ -73,7 +73,7 @@ define(["davinci/de/widgets/NewDijit",
 			var qualifiedWidget = "widgets." + name;
 			
 			
-			var base = Runtime.getProject();
+			var base = Workbench.getProject();
 			var prefs = dPreferences.getPreferences('davinci.ui.ProjectPrefs',base);
 			if(!prefs['widgetFolder']){
 				prefs.widgetFolder = "./WebContent/widgets";

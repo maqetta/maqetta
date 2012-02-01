@@ -56,7 +56,7 @@ define(["dojo/_base/declare",
 			   // refresh the stored themeset in case it was changed
 			    var themeSetName = this._selectedThemeSet.name;
 			    this._selectedThemeSet = dojo.clone(Theme.none_themeset); // this will act as the default if the last used themeset has been deleted
-			    var dojoThemeSets = Preferences.getPreferences("maqetta.dojo.themesets", davinci.Runtime.getProject());
+			    var dojoThemeSets = Preferences.getPreferences("maqetta.dojo.themesets", Workbench.getProject());
 			    if (dojoThemeSets) {
 			        for (var s = 0; s < dojoThemeSets.themeSets.length; s++){
 			            if (dojoThemeSets.themeSets[s].name === themeSetName) {

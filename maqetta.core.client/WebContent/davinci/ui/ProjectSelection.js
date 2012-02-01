@@ -1,9 +1,10 @@
 define(["dojo/_base/declare", 
         "davinci/ui/ProjectDataStoree",
         "dijit/form/ComboBox",
-        "system/resource"
+        "system/resource",
+        "davinci/Workbench"
 
- ],function(declare, ProjectDataStore, ComboBox, Resource){
+ ],function(declare, ProjectDataStore, ComboBox, Resource, Workbench){
 	return declare("davinci.ui.ProjectSelection",   dijit._Widget, {
 		postCreate : function(){
 			this._store=new ProjectDataStore({});
@@ -18,7 +19,7 @@ define(["dojo/_base/declare",
 			var combo = this.combo;
 			workspace.getChildren(function(projects){
 				store.setValues(projects);
-				var activeProject = davinci.Runtime.getProject();
+				var activeProject = Workbench.getProject();
 				combo.attr('value', activeProject);
 			});
 

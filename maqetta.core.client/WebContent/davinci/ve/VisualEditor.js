@@ -7,8 +7,9 @@ define([
 	"./Context",
 	"./commands/ModifyRuleCommand",
 	"preview/silhouetteiframe",
-	"./utils/URLRewrite"
-], function(declare, template, Runtime, Workbench, Path, Context, ModifyRuleCommand, SilhouetteIframe, URLRewrite){
+	"./utils/URLRewrite",
+	"davinci/workbench/Preferences"
+], function(declare, template, Runtime, Workbench, Path, Context, ModifyRuleCommand, SilhouetteIframe, URLRewrite, Preferences){
 
 //davinci.ve.VisualEditor.EDITOR_ID="davinci.ve.HTMLPageEditor";
 
@@ -283,7 +284,7 @@ return declare("davinci.ve.VisualEditor", null, {
 			this.context._commandStack=this._commandStack;
 			this._commandStack._context=this.context;
 
-			var prefs=davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', Workbench.getProject());
+			var prefs=Preferences.getPreferences('davinci.ve.editorPrefs', Workbench.getProject());
 			if (prefs) {
 				this.context.setPreferences(prefs);
 			}

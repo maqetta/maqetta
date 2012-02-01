@@ -118,8 +118,8 @@ define([
 				//debugger;
 				if (!system.resource.root){
 					var workspace = system.resource.getWorkspace();
-					if(davinci.Workbench.singleProjectMode()){
-						var project = davinci.Workbench.getProject();
+					if(davinci.Runtime.singleProjectMode()){
+						var project = davinci.Runtime.getProject();
 						system.resource.root = system.resource.findResource(project,false, workspace);
 					}else{
 						system.resource.root = workspace;

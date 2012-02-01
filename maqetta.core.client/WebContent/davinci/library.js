@@ -3,10 +3,11 @@
 //   elsewhere.
 define([
 	"davinci/ve/themeEditor/metadata/CSSThemeProvider",
-	"davinci/ve/themeEditor/metadata/query"
+	"davinci/ve/themeEditor/metadata/query",
+	"davinci/workbench/Preferences"
 //	"davinci/ve/metadata" // FIXME: circular ref?
 ],
-function(CSSThemeProvider, Query/*, Metadata*/) {
+function(CSSThemeProvider, Query/*, Metadata*/, Preferences) {
 
 /*
  * 
@@ -67,7 +68,7 @@ getThemes: function(base, workspaceOnly, flushCache){
 	
 	if(_themesCache[base]) return result();
 	
-	var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+	var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 	var projectThemeBase = (new davinci.model.Path(base).append(prefs.themeFolder));
 	var allThemes = system.resource.findResource("*.theme", true, projectThemeBase.toString());
 	var results = [];
@@ -112,10 +113,10 @@ getThemeMetadata: function(theme) {
 },
 
 addCustomWidgets: function(base, customWidgetJson) {
-	var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+	var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 	if(!prefs.widgetFolder){
 		prefs.widgetFolder = "./widgets";
-		davinci.workbench.Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
+		Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
 	}
 	if(!library._customWidgets[base].hasOwnProperty("name")){
 		library._customWidgets[base]= customWidgetJson;	
@@ -157,10 +158,10 @@ getCustomWidgets: function(base) {
 		if(!library._customWidgets[base])
 			library._customWidgets[base]= [];	
 			
-		var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 		if(!prefs.widgetFolder){
 			prefs.widgetFolder = "./widgets";
-			davinci.workbench.Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
+			Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
 		}
 		
 		var widgetFolderSetting = (new davinci.model.Path(base).append(prefs.widgetFolder));

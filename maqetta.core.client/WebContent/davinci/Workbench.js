@@ -1601,5 +1601,6 @@ dojo.declare("davinci.workbench._PopupMenu", Menu, {
 		}
 	}
 });
+dojo.setObject("davinci.Workbench", Workbench);
 return Workbench;
 });

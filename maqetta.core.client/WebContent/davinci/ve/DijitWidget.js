@@ -1,8 +1,8 @@
 define([
         "dojo/_base/declare",
         "./_Widget",
-        "./metadata",
-        "./widget"
+        "./metadata"
+//        "./widget"
 ], function(declare, _Widget, metadata) {
 
 return declare("davinci.ve.DijitWidget", _Widget, {
@@ -12,7 +12,7 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 	constructor: function(mixin, node, dijitWidget, metadata, srcElement) {
 	
 		if (dojo.isString(dijitWidget)) {
-			var c = davinci.ve.widget._dojo(node).getObject(dijitWidget);
+			var c = require("davinci/ve/widget")._dojo(node).getObject(dijitWidget);
 			// create the instance (follow parser.js)
 			// XXX Bug 7674 - This whole code should be replaced with call to dojo.parser.parse()
 			dojo.attr(node, "dojoType", dijitWidget);
@@ -89,11 +89,11 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 		this.styleNode=dijitWidget.styleNode;
 		this.id=dijitWidget.id;
 	},
-	getParent: function()
-	{
+
+	getParent: function() {
 		var widget;
 		do{
-			widget = davinci.ve.widget.getEnclosingWidget(this.dijitWidget.domNode.parentNode);
+			widget = require("davinci/ve/widget").getEnclosingWidget(this.dijitWidget.domNode.parentNode);
 		}while(widget && widget.dijitWidget && widget.dijitWidget.declaredClass.split(".").pop().charAt(0) == "_");
 			// skip intermediates, like _AccordionInnerContentPane
 			//TODO: use widget.getParent() and have it support this behavior?
@@ -110,7 +110,7 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 		if (davinci.ve.metadata.getAllowedChild(this.type)[0] !== 'NONE') {
 			this.dijitWidget.getChildren().forEach(function(child) {
 				if (attach) {
-					children.push(davinci.ve.widget.getWidget(child.domNode));
+					children.push(require("davinci/ve/widget").getWidget(child.domNode));
 				} else {
                     var widget = child.domNode && child.domNode._dvWidget;
                     if (widget) {

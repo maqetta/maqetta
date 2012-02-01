@@ -3,10 +3,14 @@ define(["dojo/_base/declare",
 		"davinci/ve/widget",
 		"davinci/ve/metadata",
 		"davinci/commands/CompoundCommand",
+		"davinci/ve/commands/AddCommand",
+		"davinci/ve/commands/RemoveCommand",
+		"davinci/ve/commands/ReparentCommand",
 		"davinci/ve/commands/MoveCommand",
 		"davinci/ve/commands/ResizeCommand"], function(
 				declare,
-				tool
+				tool,
+				widgetUtils
 		){
 
 
@@ -38,12 +42,12 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			return;
 		}
 		*/
-		var widget = (this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target));
+		var widget = this._getTarget() || widgetUtils.getEnclosingWidget(event.target);
 		while(widget){
 			if(widget.getContext()){ // managed widget
 				break;
 			}
-			widget = davinci.ve.widget.getEnclosingWidget(widget.domNode.parentNode);
+			widget = widgetUtils.getEnclosingWidget(widget.domNode.parentNode);
 		}
 		if(!widget){
 			return;
@@ -66,12 +70,12 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	
 	onDblClick: function(event){
 
-		var widget = (this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target));
+		var widget = (this._getTarget() || widgetUtils.getEnclosingWidget(event.target));
 		while(widget){
 			if(widget.getContext()){ // managed widget
 				break;
 			}
-			widget = davinci.ve.widget.getEnclosingWidget(widget.domNode.parentNode);
+			widget = widgetUtils.getEnclosingWidget(widget.domNode.parentNode);
 		}
 		if(!widget){
 			return;
@@ -195,7 +199,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			if("l" in box && "t" in box) {
 				if (_node.style.position != "absolute") {
 
-					var close = davinci.ve.widget.findClosest(context.getContainerNode(), box, context, widget, true,
+					var close = widgetUtils.findClosest(context.getContainerNode(), box, context, widget, true,
 							dojo.hitch(this, function(w){
 								return context._chooseParent.getAllowedTargetWidget(w, widget.getData()).length;
 							}));
@@ -232,7 +236,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 								d = w.getData( {identify:false});
 							d.context=context;
 							dojo.withDoc(context.getDocument(), function(){
-								newwidget = davinci.ve.widget.createWidget(d);
+								newwidget = widgetUtils.createWidget(d);
 							}, this);		
 							if (!newwidget) {
 								console.debug("Widget is null!!");

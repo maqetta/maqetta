@@ -7,7 +7,6 @@ define("davinci/ve/_Widget", [
 	metadata,
 	CSSModel
 ) {
-
 var arrayEquals = function(array1, array2, func){
 	if(array1 == array2){
 		return true;
@@ -104,7 +103,7 @@ return declare("davinci.ve._Widget", null, {
 		if (containerNode) {
 			dojo.forEach(containerNode.children, function(node) {
 				if (attach) {
-					children.push(davinci.ve.widget.getWidget(node));
+					children.push(require("davinci/ve/widget").getWidget(node));
 				} else {
 					var widget = node._dvWidget;
 					if (widget) {
@@ -142,7 +141,7 @@ return declare("davinci.ve._Widget", null, {
 
 	getHelper: function() {
         if (!this._edit_helper) {
-            this._edit_helper = davinci.ve.widget.getWidgetHelper(this.type);
+            this._edit_helper = require("davinci/ve/widget").getWidgetHelper(this.type);
     	    if (!this._edit_helper) {
     	        this._edit_helper = true; // FIXME: why not just assign null and skip the boolean stuff?
     	    }
@@ -198,7 +197,7 @@ return declare("davinci.ve._Widget", null, {
 		}
 	},
 	getParent: function() {
-		return davinci.ve.widget.getEnclosingWidget(this.domNode.parentNode) || this.domNode.parentNode;
+		return require("davinci/ve/widget").getEnclosingWidget(this.domNode.parentNode) || this.domNode.parentNode;
 	},
 
 	getObjectId: function(widget) {
@@ -353,40 +352,7 @@ return declare("davinci.ve._Widget", null, {
 	},
 
 	_getChildrenData: function( options) {
-			return this.getChildren().map(function(w) { return w.getData( options); });
-//		var childrenData = [];
-//		var containerNode = davinci.ve.widget.getContainerNode(widget);
-//		if(containerNode) {
-//			var childNodes = containerNode.childNodes;
-//			for(var i = 0; i < childNodes.length; i++) {
-//				var n = childNodes[i];
-//				var d = undefined;
-//				switch(n.nodeType) {
-//				case 1: // Element
-//					var w = davinci.ve.widget.byNode(n);
-//					if(w) {
-//						d = davinci.ve.widget.getData(w, options);
-//					}
-//					break;
-//				case 3: // Text
-//					d = dojo.trim(n.nodeValue);
-//					if(d && options.serialize) {
-//						d = davinci.html.escapeXml(d);
-//					}
-//					break;
-//				case 8: // Comment
-//					d = "<!--" + n.nodeValue + "-->";
-//					break;
-//				}
-//				if(d) {
-//					childrenData.push(d);
-//				}
-//			}
-//		}
-//		if(childrenData.length === 0) {
-//			return undefined;
-//		}
-//		return childrenData;
+		return this.getChildren().map(function(w) { return w.getData(options); });
 	},
 
 	getClassNames: function() {
@@ -394,11 +360,12 @@ return declare("davinci.ve._Widget", null, {
 	},
 
 	_getData: function(options) {
-		var data = {type: this.type, properties: {}};
+		var data = {type: this.type, properties: {}},
+			widgetUtils = require("davinci/ve/widget");
 		//FIXME: Might need OpenAjax widgets logic here someday
 		if(options.identify) {
 			if(!this._srcElement) { //wdr why is the _srcElement missing?
-				this._srcElement = davinci.ve.widget._createSrcElement(this.domNode);
+				this._srcElement = widgetUtils._createSrcElement(this.domNode);
 			}
 			var idProp = this._srcElement._getAttribute("id");
 			//if (this._srcElement._getAttribute("id").noPersist)
@@ -413,7 +380,7 @@ return declare("davinci.ve._Widget", null, {
 		// get all properties
 	    var properties = metadata.query(this, "property");
 	    if (this.domNode && this.domNode.parentNode) {
-	        var parent = davinci.ve.widget.getEnclosingWidget(this.domNode.parentNode);
+	        var parent = widgetUtils.getEnclosingWidget(this.domNode.parentNode);
 	        var childProperties = metadata.query(parent, "childProperties");
 	        if (childProperties) {
 	            if (!properties) {
@@ -431,7 +398,7 @@ return declare("davinci.ve._Widget", null, {
 				}
 				var property = properties[name];
 				/*if(name == "theme") {
-					value = (davinci.ve.widget.getPropertyValue(widget, name)).themeName;
+					value = require("davinci/ve/widget").getPropertyValue(widget, name).themeName;
 					data.properties[name] = value;
 				}
 				else{*/
@@ -539,7 +506,7 @@ return declare("davinci.ve._Widget", null, {
 		var style = this.getStyleNode().style;
 		var text = this._srcElement.getAttribute("style");
 
-		var values =davinci.ve.widget.parseStyleValues(text);
+		var values = require("davinci/ve/widget").parseStyleValues(text);
 
 		if(style) {
 			if(style.position == "absolute" || style.position == "relative") {

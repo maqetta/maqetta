@@ -1,7 +1,7 @@
 define([
         "dojo/_base/declare",
-        "./_Widget",
-        "./widget"
+        "./_Widget"
+//        "./widget"
 ], function(declare, _Widget) {
 
 return declare("davinci.ve.GenericWidget", _Widget, {
@@ -42,7 +42,7 @@ return declare("davinci.ve.GenericWidget", _Widget, {
 			var d;
 			switch(n.nodeType) {
 			case 1: // Element
-				var w = davinci.ve.widget.byNode(n);
+				var w = require("davinci/ve/widget").byNode(n);
 				if(w) {
 					d = w.getData( options);
 				}

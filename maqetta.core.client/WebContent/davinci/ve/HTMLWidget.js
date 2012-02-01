@@ -1,7 +1,6 @@
 define([
         "dojo/_base/declare",
-        "./_Widget",
-        "./widget"
+        "./_Widget"
 ], function(declare, _Widget) {
 
 return declare("davinci.ve.HTMLWidget", _Widget, {
@@ -62,7 +61,7 @@ return declare("davinci.ve.HTMLWidget", _Widget, {
             var d;
             switch (node.nodeType) {
             case 1: // Element
-                var w = davinci.ve.widget.byNode(node);
+                var w = require("davinci/ve/widget").byNode(node);
                 if (w) {
                     d = w.getData(options);
                 }

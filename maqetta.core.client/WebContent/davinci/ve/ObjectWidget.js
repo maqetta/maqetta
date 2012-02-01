@@ -1,7 +1,7 @@
 define([
         "dojo/_base/declare",
-        "./_Widget",
-        "./widget"
+        "./_Widget"
+//        "./widget"
 ], function(declare, _Widget, widget) {
 
 return declare("davinci.ve.ObjectWidget", _Widget, {
@@ -17,13 +17,13 @@ return declare("davinci.ve.ObjectWidget", _Widget, {
 	},
 
 	postCreate: function() {
-		var id = this._params.jsId;
+		var id = this._params.jsId,
+			dj = require("davinci/ve/widget")._dojo(this.domNode);
 		if(id) {
 			this.domNode.setAttribute("jsId", id);
 			var type = this.getObjectType();
 			if(type) {
-				var d = davinci.ve.widget._dojo(this.domNode);
-				var c = d.getObject(type);
+				var c = dj.getObject(type);
 				if(c) {
 					var object = undefined;
 					if(c.markupFactory) {
@@ -35,14 +35,14 @@ return declare("davinci.ve.ObjectWidget", _Widget, {
 					}
 					if(object) {
 						object._edit_object_id = id;
-						d.setObject(id, object);
+						dj.setObject(id, object);
 					}
 				}
 			}
 		} else {
 			id =this.getObjectId();
 			if(id) {
-				var object = davinci.ve.widget._dojo(this.domNode).getObject(id);
+				var object = dj.getObject(id);
 				if(object) {
 					object._edit_object_id = id;
 				}

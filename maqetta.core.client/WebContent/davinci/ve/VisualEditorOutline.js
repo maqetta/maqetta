@@ -34,14 +34,18 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 			this._connect("activate", "refresh");
 			this._connect("setSource", "refresh");
 
-			dojo.subscribe("/davinci/states/state/changed/start", dojo.hitch(this, function(e) {
-				this._skipRefresh = true;
-			}));
-			dojo.subscribe("/davinci/states/state/changed/end", dojo.hitch(this, function(e) {
-				delete this._skipRefresh;
-				this.refresh();
-			}));
-	},
+			dojo.subscribe("/davinci/states/state/changed/start", this,
+				function(e) {
+					this._skipRefresh = true;
+				}
+			);
+			dojo.subscribe("/davinci/states/state/changed/end", this,
+				function(e) {
+					delete this._skipRefresh;
+					this.refresh();
+				}
+			);
+		},
 		
 		_connect: function(contextFunction, thisFunction)
 		{
@@ -60,7 +64,7 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 		}, 
 		
 		mayHaveChildren: function(/*dojo.data.Item*/ item){
-			if (item && item.type && item.type.indexOf("OpenAjax.")==0) {
+			if (item && item.type && item.type.indexOf("OpenAjax.") === 0) {
 				return false;
 			}
 
@@ -81,8 +85,7 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 				widgets = parentItem.getChildren();
 			}
 
-			dojo.forEach(widgets, function(widget)
-			{
+			dojo.forEach(widgets, function(widget) {
 				if ( widget.getContext && widget.getContext() && ! widget.internal ) {
 					// managed widget only
 					widget.parent = parentItem;
@@ -114,15 +117,16 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 				label = Widget.getLabel(item);
 				return label;
 			}
-			if(!type)
+			if (!type) {
 				return;
+			}
 			
 			var lt = (this.useRichTextLabel ? "&lt;" : "<");
 			var gt = (this.useRichTextLabel ? "&gt;" : ">");
 
-			if (type.indexOf("html.") == 0) {
+			if (type.indexOf("html.") === 0) {
 				label = lt + type.substring("html.".length) + gt;
-			} else if (type.indexOf("OpenAjax.") == 0) {
+			} else if (type.indexOf("OpenAjax.") === 0) {
 				label = lt + type.substring("OpenAjax.".length) + gt;
 			} else if (type.indexOf(".") > 0 ) {
 				label = type.substring(type.lastIndexOf(".")+1);
@@ -246,37 +250,38 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 		
 		this._widgetModel=new OutlineTreeModel(this._context);
 		this._srcModel=new HTMLOutlineModel(editor.model);
-		states.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(e) {
-			if ((typeof davinci != "undefined" && davinci.Runtime.currentEditor && davinci.Runtime.currentEditor.declaredClass) == "davinci.themeEditor.ThemeEditor") {
-				return; // ignore updates in theme editor
-			}
-			if (!this._tree) {
-				return;
-			}
-			var children = states.getChildren(e.widget);
-			while (children.length) {
-				var child = children.shift();
-				if (child) {
-					var node = this._tree.getNode(child);
-					if (node) {
-						var visible = states.isVisible(child, e.newState);
-						node._setToggleAttr(!visible);
+		states.subscribe("/davinci/states/state/changed", this,
+			function(e) {
+				var declaredClass = (typeof davinci !== "undefined") &&
+						davinci.Runtime.currentEditor &&
+						davinci.Runtime.currentEditor.declaredClass;
+				if (declaredClass === "davinci.themeEditor.ThemeEditor") {
+					return; // ignore updates in theme editor
+				}
+				if (!this._tree) {
+					return;
+				}
+				var children = states.getChildren(e.widget);
+				while (children.length) {
+					var child = children.shift();
+					if (child) {
+						var node = this._tree.getNode(child);
+						if (node) {
+							var visible = states.isVisible(child, e.newState);
+							node._setToggleAttr(!visible);
+						}
+						children = children.concat(states.getChildren(child));
 					}
-					children = children.concat(states.getChildren(child));
 				}
 			}
-		}));
+		);
 	},
 
 	getActionsID: function () {
-		switch (this._outlineMode)
-		{
-		case "design" :
+		if (this._outlineMode === 'design') {
 			return "davinci.ve.VisualEditorOutline";
-
 		}
 	},
-		
 
 	_connect: function(contextFunction, thisFunction) {
 		this._handles.push(dojo.connect(this._context,contextFunction,this,thisFunction));
@@ -319,9 +324,7 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 	},
 	
 	getIconClass: function(item, opened){
-		switch (this._outlineMode)
-		{
-		case "design":
+		if (this._outlineMode === 'design') {
 			var type = item.type;
 			var icon;
 			//FIXME: Might need OpenAjax widgets logic here someday

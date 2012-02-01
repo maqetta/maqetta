@@ -3,10 +3,6 @@ define([
 	"davinci/model/Model"
 ], function(declare, Model) {
 
-// FIXME: these are globals
-var pushComment = null;
-var pushLabel = null;
-
 if (!davinci.js) {
     davinci.js = {};
 }

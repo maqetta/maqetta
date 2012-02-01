@@ -17,8 +17,6 @@ return declare("davinci.html.ui.CSSEditor", ModelEditor, {
 	destroy : function() {
 		this.cssFile.close();
 		this.inherited(arguments);
-
-
 	},
 
 	getOutline : function() {

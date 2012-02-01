@@ -8,6 +8,10 @@ define([
 	"davinci/js/JSModel"
 ], function(declare, JSModel) {
 
+var pushComment = null;
+
+var pushLabel = null;
+
 return declare("davinci.js.JSElement", JSModel, {
 
 	constructor: function() {

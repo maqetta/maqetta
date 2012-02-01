@@ -9,8 +9,6 @@ define([
 	"davinci/library",
 	"./PaletteFolder",
 	"./PaletteItem",
-//FIXME: Need to separate out the logic that builds the davinci.Runtime.widgetTable
-	"davinci/Runtime",
 	"dojo/i18n!davinci/ve/nls/common",
 	"davinci/ve/tools/CreateTool"
 ], function(
@@ -24,7 +22,6 @@ define([
 	Library,
 	PaletteFolder,
 	PaletteItem,
-	Runtime,
 	commonNls,
 	CreateTool)
 {
@@ -84,7 +81,7 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			var component = descriptorObject[name];
 			var iconFolder = "ve/resources/images/";
 			var defaultIconFile = "fldr_obj.gif";
-			var	iconFile = defaultIconFile;
+			var iconFile = defaultIconFile;
 			var iconUri = iconFolder + iconFile;
 			
 			var componentIcon = this._getIconUri(component.icon, iconUri);

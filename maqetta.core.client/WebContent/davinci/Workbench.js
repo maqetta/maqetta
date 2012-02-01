@@ -111,7 +111,7 @@ var Workbench = {
 	
 	run: function() {
 		Workbench._initKeys();
-		metadata.init();
+		davinci.ve.metadata.init(); //FIXME: shouldn't need 'davinci' reference
 		
 		Workbench._baseTitle = dojo.doc.title;
 

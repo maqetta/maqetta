@@ -1,15 +1,15 @@
 define([
 	"dojo/_base/lang",
 	"davinci/Runtime",
-	"davinci/Workbench",
+//	"davinci/Workbench",
 	"dijit/layout/BorderContainer",
 	"dijit/layout/ContentPane",
 	"dijit/layout/TabContainer"
-], function(lang, Runtime, Workbench, BorderContainer, ContentPane, TabContainer) {
+], function(lang, Runtime, /*Workbench,*/ BorderContainer, ContentPane, TabContainer) {
 
 davinci.review = {};
 
-var Review = davinci.review.Review = lang.mixin(Workbench, {
+var Review = davinci.review.Review = lang.mixin(davinci.Workbench, {
 
 	_updateWorkbenchState: function() {
 		//override for NOOP
@@ -20,14 +20,14 @@ var Review = davinci.review.Review = lang.mixin(Workbench, {
 		this._baseTitle = dojo.doc.title;
 		var perspective = Runtime.initialPerspective || "davinci.review.comment";
 		var mainBody = dojo.byId('mainBody');
-		var location = Workbench.location().match(/http:\/\/.*:\d+\//);
+		var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
 		mainBody.editorsWelcomePage =
 			new ContentPane({
 				id : "editorsWelcomePage",
 				href: location + "maqetta/app/davinci/review/resources/welcome_to_maqetta.html"
 			});
 		this.showPerspective(perspective);
-		Runtime.subscribe("/davinci/ui/editorSelected", Workbench._updateMainToolBar );
+		Runtime.subscribe("/davinci/ui/editorSelected", davinci.Workbench._updateMainToolBar );
 		Runtime.subscribe("/davinci/resource/resourceChanged", this._resourceChanged );
 		this._state={editors:[]};
 	},
@@ -39,7 +39,7 @@ var Review = davinci.review.Review = lang.mixin(Workbench, {
 			var mainBodyContainer = dijit.byId('mainBody'),
 			view = Runtime.getExtension("davinci.view", viewId),
 			mainBody = dojo.byId('mainBody'),
-			perspectiveId = Workbench.getActivePerspective(),
+			perspectiveId = davinci.Workbench.getActivePerspective(),
 			perspective = Runtime.getExtension("davinci.perspective",	perspectiveId),
 			position = 'left',
 			cp1 = null;

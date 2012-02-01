@@ -1,7 +1,7 @@
 define([
 	"dojo/_base/declare",
 	"davinci/model/resource/Resource"
-], function(declare) {
+], function(declare, Resource) {
 
 return declare("davinci.review.model.resource.Empty", Resource, {
 

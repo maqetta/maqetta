@@ -5,7 +5,7 @@ define([
 	"davinci/html/CSSModel",
 	"davinci/html/ui/CSSOutline",
 	"davinci/model/Factory"
-], function(declare, ModelEditor, CSSEditorContext, CSSOutline, Factory){
+], function(declare, ModelEditor, CSSEditorContext, CSSModel, CSSOutline, Factory){
 
 return declare("davinci.html.ui.CSSEditor", ModelEditor, {
 

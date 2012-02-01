@@ -20,17 +20,20 @@ define([
 	"dijit/Tree",
 	"davinci/review/widgets/Tree",
 	"system/resource",
+	"davinci/Runtime",
+	"davinci/Workbench",
 	"davinci/model/resource/Folder",
 	"davinci/model/resource/File",
+	"davinci/review/model/resource/Empty",
 	"dijit/tree/TreeStoreModel",
 	"davinci/review/model/store/GeneralReviewReadStore",
 	"dojo/i18n!../widgets/nls/widgets",
 	"dojo/i18n!dijit/nls/common",
 	"dojo/text!./templates/PublishWizard.html",
 	"dojo/text!./templates/MailFailureDialogContent.html"
-], function(declare, _Widget, _Templated, StackContainer, ContentPane, SimpleTextarea, NumberTextBox, ValidationTextBox, 
-		DateTextBox, Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojostring, 
-		Menu, MenuItem, Dialog, Tree, sysResource, Folder, File, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls,
+], function(declare, _Widget, _Templated, StackContainer, ContentPane, SimpleTextarea, NumberTextBox, ValidationTextBox, DateTextBox, 
+		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojostring, Dialog, dijitTree, reviewTree,  
+		sysResource, Runtime, Workbench, Folder, File, Empty, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls, 
 		templateString, warningString) {
 	
 return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
@@ -41,7 +44,7 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 
 	postCreate: function() {
 
-		var sc = this.reviewerStackContainer = new StackContainer({},this.reviewerStackContainer);
+		var sc = this.reviewerStackContainer = new StackContainer({}, this.reviewerStackContainer);
 
 		var page1 = this.page1 = new ContentPane({style:"overflow:hidden;"});
 		var page2 = this.page2 = new ContentPane({style:"overflow:hidden;"});
@@ -111,9 +114,8 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 		this.sourceTreeCP.appendChild(sourceTreeCP.domNode);
 		this.targetTreeCP.appendChild(targetTreeCP.domNode);
 
-
 		var reviewFiles = [];
-		var fileIndex= this.fileIndex = 1;
+		var fileIndex = this.fileIndex = 1;
 		this.reviewFiles = reviewFiles;
 
 		var sourceTreeModel = this.sourceTreeModel = new TreeStoreModel({
@@ -131,7 +133,7 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 		var doubleClick = function(item) {
 			this.addFiles([item]);
 		};
-		var sourceTree = this.sourceTree = new dijit.Tree({
+		var sourceTree = this.sourceTree = new dijitTree({
 			id: "reviewWizardSourceTree",
 			showRoot:false,
 			model: sourceTreeModel, 
@@ -146,7 +148,7 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 
 		var targetTreeModel = this.targetTreeModel = new TreeStoreModel({
 			store: new GeneralReviewReadStore({
-				root: new davinci.review.model.resource.Empty(),
+				root: new Empty(),
 				getLabel: function(item) {
 					var label = item.getName();
 					if (item.link){ label=label + "  [" + item.link + "]"; }
@@ -155,7 +157,7 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 			})
 		});
 
-		var targetTree = this.targetTree = new davinci.review.widgets.Tree({
+		var targetTree = this.targetTree = new reviewTree({
 			id: "reviewWizardTargetTree",
 			showRoot: false,
 			model: targetTreeModel, 
@@ -170,8 +172,8 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 	_initPage3: function() {
 		var formatPic = function(result) {
 			if (!this.photoRepositoryUrl) {
-				var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
-				this.photoRepositoryUrl = davinci.Runtime.serverJSONRequest({
+				var location = Workbench.location().match(/http:\/\/.*:\d+\//);
+				this.photoRepositoryUrl = Runtime.serverJSONRequest({
 					url: location + "maqetta/cmd/getBluePageInfo",
 					handleAs: "text",
 					content:{'type': "photo"},
@@ -245,7 +247,7 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 			label: "<div style='width:75px;height:10px;margin:-6px 0 0 0'>" + widgetsNls.add + "</div>"
 		},this.addReviewerButton);
 
-		var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+		var location = Workbench.location().match(/http:\/\/.*:\d+\//);
 		var stateStore = new QueryReadStore({
 			url: location + "maqetta/cmd/getBluePageInfo",
 			fetch: function(request) {
@@ -272,7 +274,7 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 			pageSize: 10,
 			searchDelay: 500,
 			placeHolder: widgetsNls.enterNameOrEmail
-		},this.addReviewerCombox);
+		}, this.addReviewerCombox);
 	},
 
 	_emailAddress: function(/*Object?*/flags) {
@@ -558,7 +560,7 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 		if (item.elementType == "File") {
 			var icon;
 			var fileType = item.getExtension();
-			var extension = davinci.Runtime.getExtension("davinci.fileType", function (extension) {
+			var extension = Runtime.getExtension("davinci.fileType", function (extension) {
 				return extension.extension == fileType;
 			});
 			if (extension) {
@@ -573,8 +575,8 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 		this.node = node;
 		this.isRestart = isRestart;
 		if (!node) {
-			var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
-			var latestVersionId = davinci.Runtime.serverJSONRequest({
+			var location = Workbench.location().match(/http:\/\/.*:\d+\//);
+			var latestVersionId = Runtime.serverJSONRequest({
 				url: location + "maqetta/cmd/getLatestVersionId",
 				sync: true
 			});
@@ -631,7 +633,7 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 			// init reviewers
 			var i;
 			for (i = 0; i < node.reviewers.length; i++) {
-				if (node.reviewers[i].name != davinci.Runtime.getDesigner()) {
+				if (node.reviewers[i].name != Runtime.getDesigner()) {
 					this.jsonStore.newItem({
 						name: node.reviewers[i].name,
 						email: node.reviewers[i].email,
@@ -672,7 +674,7 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 			var receiveEmail = this.receiveEmail.get("value") == "on" ? "true" : "false";
 			var warningString = this.warningString;
 
-			var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+			var location = Workbench.location().match(/http:\/\/.*:\d+\//);
 			dojo.xhrPost({
 				url: location + "maqetta/cmd/publish",
 				sync:false,
@@ -695,7 +697,7 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 				error: function(response) {
 					var msg = response.responseText;
 					msg = msg.substring(msg.indexOf("<title>")+7, msg.indexOf("</title>"));
-					davinci.Runtime.handleError(dojo.string.substitute(widgetsNls.errorPublish, [response, msg]));
+					Runtime.handleError(dojostring.substitute(widgetsNls.errorPublish, [response, msg]));
 				}
 			}).then(function(result) {
 				if (typeof hasToaster == "undefined") {
@@ -713,8 +715,9 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 						dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls.draftSaved, type:"message"}, "create"]);
 					}
 				} else {
-					var dialogContent = dojo.string.substitute(warningString, {htmlContent: result, inviteNotSent:widgetsNls.inviteNotSent, mailFailureMsg:widgetsNls.mailFailureMsg, buttonOk:dijitNls.buttonOk});
-					dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls.inviteFailed, type:"warning"},"create"]);
+					var dialogContent = dojostring.substitute(warningString, {htmlContent: result, inviteNotSent: widgetsNls.inviteNotSent, 
+						mailFailureMsg: widgetsNls.mailFailureMsg, buttonOk: dijitNls.buttonOk});
+					dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls.inviteFailed, type:"warning"}, "create"]);
 					if (!this.invitationDialog) {
 						this.invitationDialog = new dijit.Dialog({
 							title: widgetsNls.warning,

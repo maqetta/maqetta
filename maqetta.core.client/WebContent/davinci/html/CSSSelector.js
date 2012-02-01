@@ -122,14 +122,15 @@ var CSSSelector = declare("davinci.html.CSSSelector", CSSElement, {
 });
 
 CSSSelector.parseSelectors = function(selector) {
-    if (typeof selector == "string") {
-        selector = selector + "{}";
-        var cssFile = new require("davinci/html/CSSFile");
-        cssFile.setText(selector);
-        return cssFile.children[0].selectors;
-    } else {
-        return selector; // already parsed
-    }
+	if (typeof selector == "string") {
+		selector = selector + "{}";
+		var cssFileClass = require("davinci/html/CSSFile");
+		var cssFile = new cssFileClass();
+		cssFile.setText(selector);
+		return cssFile.children[0].selectors;
+	} else {
+		return selector; // already parsed
+	}
 };
 
 return CSSSelector;

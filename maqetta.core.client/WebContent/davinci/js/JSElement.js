@@ -16,12 +16,12 @@ return declare("davinci.js.JSElement", JSModel, {
 
 	constructor: function() {
 		this.elementType = "JSElement";
-		if (pushComment != null) {
+		if (pushComment !== null) {
 			this.comment = pushComment;
 			pushComment = null;
 
 		}
-		if (pushLabel != null) {
+		if (pushLabel !== null) {
 			this.label = pushLabel;
 			pushLabel = null;
 		}
@@ -35,8 +35,7 @@ return declare("davinci.js.JSElement", JSModel, {
 	},
 
 	printStatement: function(context, stmt) {
-		return this.printNewLine(context) + stmt.getText(context)
-		+ (stmt.nosemicolon ? "" : ";");
+		return this.printNewLine(context) + stmt.getText(context) + (stmt.nosemicolon ? "" : ";");
 	},
 
 	add: function(e) {

@@ -11,7 +11,7 @@ define([
 return declare("davinci.html.CSSElement", CSSModel, {
 
 	constructor: function() {
-		if (typeof pushComment != 'undefined' && pushComment != null) {
+		if (typeof pushComment != 'undefined' && pushComment !== null) {
 			this.comment = pushComment;
 			pushComment = null;
 

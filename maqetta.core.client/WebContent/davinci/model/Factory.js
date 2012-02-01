@@ -41,7 +41,7 @@ var Factory = {
 		for(var i = 0; i<_resources.length; i++) {
 			if (_resources[i].url == url) {
 				_instances[i]--;
-				if (_instances[i] == 0) {
+				if (_instances[i] === 0) {
 					_resources.splice(i,1);
 					_instances.splice(i,1);
 				}

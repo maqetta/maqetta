@@ -64,10 +64,10 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 
 		sc.startup();
 		this._subs=[
-		    dojo.subscribe(sc.id+"-selectChild", dojo.hitch(this, this._onPageSelected)),
-		    dojo.subscribe("/davinci/review/publish/valueChanged", dojo.hitch(this, this.updateSubmit)),
-		    dojo.subscribe("/davinci/review/deleteReviewFile", dojo.hitch(this, this.delFiles)),
-		    dojo.subscribe("/davinci/review/deleteReviewer", dojo.hitch(this, this.delRow))
+			dojo.subscribe(sc.id+"-selectChild", dojo.hitch(this, this._onPageSelected)),
+			dojo.subscribe("/davinci/review/publish/valueChanged", dojo.hitch(this, this.updateSubmit)),
+			dojo.subscribe("/davinci/review/deleteReviewFile", dojo.hitch(this, this.delFiles)),
+			dojo.subscribe("/davinci/review/deleteReviewer", dojo.hitch(this, this.delRow))
 		];
 	},
 
@@ -180,7 +180,7 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 					sync: true
 				});
 			}
-			if (this.photoRepositoryUrl == "" || this.photoRepositoryUrl == "not-implemented") {
+			if (this.photoRepositoryUrl === "" || this.photoRepositoryUrl == "not-implemented") {
 				this.photoRepositoryUrl =  "app/davinci/review/resources/img/profileNoPhoto.gif?";
 			}
 			return '<img src="' + this.photoRepositoryUrl + result + '" width="35px" height="35px" alt="User Photo"></img>';
@@ -254,8 +254,9 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 				var searchQuery = request.query.displayName;
 				searchQuery = searchQuery.substring(0, searchQuery.length - 1);
 				request.serverQuery = {searchname: searchQuery};
-				if(searchQuery=="")
+				if (searchQuery === "") {
 					return;
+				}
 				return this.inherited("fetch", arguments);
 			}
 		});
@@ -377,11 +378,11 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 				}
 
 				dojo.fx.chain([
-				               dojo.fadeOut({ node: elem, duration: 300 }),
-				               dojo.fadeIn({ node: elem, duration:700 }),
-				               dojo.fadeOut({ node: elem, duration: 300 }),
-				               dojo.fadeIn({ node: elem, duration:700 })
-				               ]).play();
+					dojo.fadeOut({ node: elem, duration: 300 }),
+					dojo.fadeIn({ node: elem, duration:700 }),
+					dojo.fadeOut({ node: elem, duration: 300 }),
+					dojo.fadeIn({ node: elem, duration:700 })
+				]).play();
 			};
 			_flash(node);
 			node.removeAttribute("style");
@@ -588,8 +589,8 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 			if (!this.isRestart) {
 				this.dueDate.set('value', node.dueDate == "infinite" ? new Date("") : node.dueDate);
 			}
-			this.desireWidth.set('value', node.width == 0 ? "" : node.width);
-			this.desireHeight.set('value', node.height == 0 ? "" : node.height);
+			this.desireWidth.set('value', node.width === 0 ? "" : node.width);
+			this.desireHeight.set('value', node.height === 0 ? "" : node.height);
 			if (node.description) {
 				this.descriptions.set('value', node.description);
 			}
@@ -620,14 +621,14 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 				};
 				for (i = 0; i < segments.length; i++) {
 					item = search(item, segments[i]);
-					if (item == null) {
+					if (item === null) {
 						break;
 					}
 				}
-				if (item != null) {
+				if (item !== null) {
 					this.addFiles([
-					               item
-					               ]);
+						item
+					]);
 				}
 			}));
 			// init reviewers
@@ -637,8 +638,7 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 					this.jsonStore.newItem({
 						name: node.reviewers[i].name,
 						email: node.reviewers[i].email,
-						displayName: node.reviewers[i].name + ' ('
-						+ node.reviewers[i].email + ')'
+						displayName: node.reviewers[i].name + ' (' + node.reviewers[i].email + ')'
 					});
 				}
 			}
@@ -651,7 +651,7 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 		var emails = "";
 		var i;
 		for (i=0;i<this.userData.length;i++) {
-			if(this.userData[i].name&&this.userData[i].name!="") { 
+			if (this.userData[i].name && this.userData[i].name !== "") { 
 				reviewers = reviewers + this.userData[i].name+",";
 			} else {
 				reviewers = reviewers + this.userData[i].email+",";

@@ -38,7 +38,7 @@ return declare("davinci.html.CSSRule", CSSElement, {
 				xmode : 'style',
 				css : true
 		};
-		var result = CSSParser.parse(text, this);
+		var result = require("davinci/html/CSSParser").parse(text, this);
 
 		// first child is actually the parsed element, so replace this with child
 		dojo.mixin(this, this.children[0]);

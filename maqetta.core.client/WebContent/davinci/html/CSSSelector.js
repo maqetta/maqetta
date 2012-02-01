@@ -5,9 +5,10 @@
  */
 
 define([
+	"require",
 	"dojo/_base/declare",
-	"davinci/html/CSSElement",
-], function(declare, CSSElement) {
+	"davinci/html/CSSElement"
+], function(require, declare, CSSElement) {
 
 var CSSSelector = declare("davinci.html.CSSSelector", CSSElement, {
 
@@ -123,11 +124,12 @@ var CSSSelector = declare("davinci.html.CSSSelector", CSSElement, {
 CSSSelector.parseSelectors = function(selector) {
     if (typeof selector == "string") {
         selector = selector + "{}";
-        var cssFile = new require("davinci/html/CSSFile").CSSFile();
+        var cssFile = new require("davinci/html/CSSFile");
         cssFile.setText(selector);
         return cssFile.children[0].selectors;
-    } else
+    } else {
         return selector; // already parsed
+    }
 };
 
 return CSSSelector;

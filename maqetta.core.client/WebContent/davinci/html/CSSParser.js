@@ -6,8 +6,19 @@ define([
 	"davinci/html/CSSProperty",
 	"davinci/html/CSSAtRule",
 	"davinci/html/CSSImport",
-	"davinci/model/parser/Tokenizer"
-], function(declare, CSSSelector, CSSCombinedSelector, CSSRule, CSSProperty, CSSAtRule, CSSImport, Tokenizer) {
+	"davinci/model/parser/Tokenizer",
+	"davinci/model/Comment"
+], function(
+	declare,
+	CSSSelector,
+	CSSCombinedSelector,
+	CSSRule,
+	CSSProperty,
+	CSSAtRule,
+	CSSImport,
+	Tokenizer,
+	Comment
+) {
 
 var pushComment=null;
 
@@ -219,7 +230,7 @@ CSSParser.parse = function (text, parentElement) {
 				(token.content == '/' && stream.peek() == '/')) {
 			if (token.style == "css-comment") {
 				if (! pushComment) {
-					pushComment = new davinci.model.Comment();
+					pushComment = new Comment();
 				}
 				var commentStart = false;
 				s = token.content;
@@ -239,7 +250,7 @@ CSSParser.parse = function (text, parentElement) {
 				start = token.offset;
 				parser.next();// second slash
 				if (! pushComment) {
-					pushComment = new davinci.model.Comment();
+					pushComment = new Comment();
 				}
 				while (!stream.endOfLine()) {
 					stream.next();

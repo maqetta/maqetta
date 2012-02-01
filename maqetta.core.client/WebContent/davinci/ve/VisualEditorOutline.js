@@ -5,7 +5,14 @@ define([
 	"./States",
 	"dijit/tree/dndSource",
 	"../html/ui/HTMLOutlineModel"
-], function(declare){
+], function(
+	declare,
+	ReparentCommand,
+	Widget,
+	states,
+	dndSource,
+	HTMLOutlineModel
+){
 
 var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 
@@ -104,7 +111,7 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 				return this._context.model.fileName;//"Application";
 			}
 			if (item.isWidget) {
-				label = davinci.ve.widget.getLabel(item); 
+				label = Widget.getLabel(item);
 				return label;
 			}
 			if(!type)
@@ -123,7 +130,7 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 				label = item.label || type;
 			}
 			
-			var widget = davinci.ve.widget.byId(item.id, this._context.getDocument());
+			var widget = Widget.byId(item.id, this._context.getDocument());
 			if (widget) {
 				var id = widget.getId();
 				if (id ) {
@@ -167,13 +174,13 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 		
 		_toggle: function(widget, on, node) {
 			var visible = !on;
-			var state = davinci.ve.states.getState();
+			var state = states.getState();
 			var value = visible ? "" : "none";
-			davinci.ve.states.setStyle(widget, state, "display", value);
+			states.setStyle(widget, state, "display", value);
 		},
 		
 		isToggleOn: function(item) {
-			return !davinci.ve.states.isVisible(item);
+			return !states.isVisible(item);
 		},
 		
 		newItem: function(/* Object? */ args, /*Item?*/ parent){
@@ -186,7 +193,7 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 			if (newParentItem.id == "myapp") {
 				newParentItem = this._context.rootNode;
 			}
-			var command = new davinci.ve.commands.ReparentCommand(childItem, newParentItem, newIndex);
+			var command = new ReparentCommand(childItem, newParentItem, newIndex);
 			this._context.getCommandStack().execute(command);
 		},
 		
@@ -239,23 +246,23 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 		
 		this._widgetModel=new OutlineTreeModel(this._context);
 		this._srcModel=new HTMLOutlineModel(editor.model);
-		davinci.states.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(e) { 
+		states.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(e) {
 			if ((typeof davinci != "undefined" && davinci.Runtime.currentEditor && davinci.Runtime.currentEditor.declaredClass) == "davinci.themeEditor.ThemeEditor") {
 				return; // ignore updates in theme editor
 			}
 			if (!this._tree) {
 				return;
 			}
-			var children = davinci.ve.states.getChildren(e.widget);
+			var children = states.getChildren(e.widget);
 			while (children.length) {
 				var child = children.shift();
 				if (child) {
 					var node = this._tree.getNode(child);
 					if (node) {
-						var visible = davinci.ve.states.isVisible(child, e.newState);
+						var visible = states.isVisible(child, e.newState);
 						node._setToggleAttr(!visible);
 					}
-					children = children.concat(davinci.ve.states.getChildren(child));					
+					children = children.concat(states.getChildren(child));
 				}
 			}
 		}));

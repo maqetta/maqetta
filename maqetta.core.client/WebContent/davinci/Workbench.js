@@ -20,14 +20,6 @@ define([
 	"system/resource",
 	"dojo/i18n!./nls/webContent",
 	"./ve/metadata",
-
-	/*
-	 * Dialog deps from davinci/dialog
-	 */
-
-	"./ui/NewTheme",
-	"./ui/OpenThemeDialog", // ui_plugin/js
-	"./ui/ThemeSetsDialog" // ui_plugin/js
 ], function(Runtime, Path,  util, ViewPart, EditorContainer, Dialog, Toolbar, ToolbarSeparator, Menu, MenuBar, PopupMenuBarItem,
 		Button, BorderContainer, StackContainer, ContentPane, TabContainer, sysResource, webContent, metadata) {
 

@@ -223,7 +223,7 @@
 
                 {
                     id: "openThemeEditor",
-                    run: "davinci.Workbench.showModal(new davinci.ui.OpenThemeDialog(), 'Open Theme', 'height:110px;width: 200px')",
+                    run: "require(['davinci/Workbench', 'davinci/ui/OpenThemeDialog'], function(Workbench, OpenThemeDialog){Workbench.showModal(new OpenThemeDialog(), 'Open Theme', 'width: 200px');})",
                     label: "Theme Editor...",
                     menubarPath: "davinci.open/open2"
                 },
@@ -236,13 +236,13 @@
                 },
                 {
                     id: "editThemeSets",
-                    run: "davinci.ui.ThemeSetsDialog()",
+                    run: "require(['davinci/ui/ThemeSetsDialog'], function(ThemeSetsDialog){ThemeSetsDialog();})",
                     label: "Theme sets...",
                     menubarPath: "davinci.settings/settings"
                 },
                 {
                     id: "newTheme",
-                    run: "davinci.Workbench.showModal(new davinci.ui.NewTheme(), 'New Theme', 'height:135px;width: 300px')",
+                    run: "require(['davinci/Workbench', 'davinci/ui/NewTheme'], function(Workbench, NewTheme){Workbench.showModal(new NewTheme(), 'New Theme', 'width: 300px');})",
                     label: "Theme...",
                     menubarPath: "davinci.new/new"
                 },

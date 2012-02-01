@@ -1,12 +1,11 @@
-define(["dojo/_base/declare",
+define(["require",
+        "dojo/_base/declare",
         "davinci/model/Path",
         "davinci/Runtime",
-        "davinci/Workbench",
+//        "davinci/Workbench",
         "davinci/model/resource/Folder"
-],function(declare, Path, Runtime, Workbench, Folder){
-	var resource = declare("system.resource",null);
-
-	dojo.mixin(resource, {
+],function(require, declare, Path, Runtime, Folder){
+var resource = {
 	root:null,
 	
 	__CASE_SENSITIVE:false,
@@ -60,12 +59,10 @@ define(["dojo/_base/declare",
 	 * 
 	 */
 	createText : function(type, options){
-		switch(type){
-		default:
+//		switch(type){
+//		default:
 			return "";
-			break;
-	
-		}
+//		}
 	},
 	
 	createResource : function(fullPath,  isFolder, parent){
@@ -102,7 +99,7 @@ define(["dojo/_base/declare",
 	},
 	
 	createProject : function(projectName, initContent, eclipseSupport){
-			 Runtime.serverJSONRequest({url:"./cmd/createProject", handleAs:"text", content:{"name": projectName, "initContent": initContent, 'eclipseSupport': eclipseSupport},sync:true  });
+			 Runtime.serverJSONRequest({url:"cmd/createProject", handleAs:"text", content:{"name": projectName, "initContent": initContent, 'eclipseSupport': eclipseSupport},sync:true  });
 	},
 	
 	/* Resource tree model methods */
@@ -143,15 +140,15 @@ define(["dojo/_base/declare",
 	getRoot: function(onComplete){
 		//debugger;
 		if (!system.resource.root){
-			var workspace = system.resource.getWorkspace();
-				if(Workbench.singleProjectMode()){
-					var project = Workbench.getProject();
+			var workspace = system.resource.getWorkspace(),
+				Workbench = require("davinci/Workbench");
+			if(Workbench.singleProjectMode()){
+				var project = Workbench.getProject();
 				system.resource.root = system.resource.findResource(project,false, workspace);
 			}else{
 				system.resource.root = workspace;
 			}
 			system.resource.root._readOnly = false;
-			
 		}
 		
 		if(onComplete){
@@ -161,8 +158,8 @@ define(["dojo/_base/declare",
 		}
 	},
 	
-	getWorkspace : function(){
-		if(this.workspace==null){
+	getWorkspace: function(){
+		if(!this.workspace){
 			this.workspace = new Folder(".",null);
 		}
 		return this.workspace;
@@ -176,7 +173,7 @@ define(["dojo/_base/declare",
 		var path = sourceFile.getPath? sourceFile.getPath() : sourceFile;
 		var destPath = destFile.getPath? destFile.getPath() : destFile;
 			var response = Runtime.serverJSONRequest({
-			url:"./cmd/copy", 
+			url:"cmd/copy", 
 			handleAs:"text", 
 			sync:true,
 			content:{source:path, dest: destPath, recurse: String(recurse)}  });
@@ -198,7 +195,7 @@ define(["dojo/_base/declare",
 		if(root)
 			rootString = "&root="+ escape(root);
 		
-		window.location.href= "./cmd/download?fileName=" + archiveName + rootString + "&resources="+escape(dojo.toJson(files))+libString ;
+		window.location.href= "cmd/download?fileName=" + archiveName + rootString + "&resources="+escape(dojo.toJson(files))+libString ;
 	},
 	
 	
@@ -263,7 +260,7 @@ define(["dojo/_base/declare",
 		if (!found && (serverFind || isWildcard))
 		{			
 				var response = Runtime.serverJSONRequest({
-				  url:"./cmd/findResource", 
+				  url:"cmd/findResource", 
 			          content:{path: name, ignoreCase: ignoreCase, workspaceOnly: workspaceOnly, inFolder: inFolder!=null?inFolder.getPath():null}, sync:true  });
 			
 			if (response && response.length>0)
@@ -305,17 +302,16 @@ define(["dojo/_base/declare",
 			foundResources[0]=found;
 		}
 		return isWildcard ? foundResources : foundResources[0];
-		},
-		alphabeticalSort : function(items){
-			return items.sort(function(a,b) {
-				a = a.name.toLowerCase();
-				b = b.name.toLowerCase();
-				return a < b ? -1 : (a > b ? 1 : 0);
-			});
+	},
+	alphabeticalSort: function(items){
+		return items.sort(function(a,b) {
+			a = a.name.toLowerCase();
+			b = b.name.toLowerCase();
+			return a < b ? -1 : (a > b ? 1 : 0);
+		});
 	}
-	
-});
+};
 
 	var subscriptions = [dojo.subscribe("/davinci/resource/resourceChanged",resource, function(){return resource.resourceChanged;}())];
-	return resource;
+	return dojo.setObject("system.resource", resource);
 });

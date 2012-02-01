@@ -395,9 +395,9 @@ define(["dojo/_base/declare",
 					var node=rowParent.children[i];
 					if(node.nodeType==1 && dojo.hasClass(node,"cssPropertySection")){	// 1=Element. IE7 bug - children[] includes comments
 						if(node==thisPropertyRowTR){
-							this._addRemoveClasses(node, allTRAnimClasses, []);
+							Util._addRemoveClasses(node, allTRAnimClasses, []);
 						}else{
-							this._addRemoveClasses(node, allTRAnimClasses, ["propRowHidden"]);
+							Util._addRemoveClasses(node, allTRAnimClasses, ["propRowHidden"]);
 						}
 					}
 				}
@@ -418,7 +418,7 @@ define(["dojo/_base/declare",
 				dojo.disconnect(webkitConnection);
 				dojo.disconnect(connection);
 				hideAllButThisRow();			
-				var ruleIndex = this._findRule(Util.animShowDetailsClassSelector);
+				var ruleIndex = Util._findRule(Util.animShowDetailsClassSelector);
 				ss.deleteRule(ruleIndex);
 				ss.insertRule(Util.animShowDetailsClassSelector + " { margin-top:0px; }",ruleIndex);
 				fadeInCascade();

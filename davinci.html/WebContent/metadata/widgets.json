@@ -505,7 +505,7 @@
             "name": "Sticky Note",
             "description": "HTML Sticky Note",
             "type": "html.stickynote",
-            "category": "html",
+            "category": "html-generic",
             "icon": "resources/images/HTML-sticky-note.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAYeZAkkbQ0seA0sdxY7iCtZojZmrDZlqzdnrThorTlprjpqrzxssEBws0R0tkt8u1WGwVeIwlaHwVqKxFyMxF6OxmGRx2KSyGWUymaVymuYzHWh0Xmk04y02+71+9zr97na8MPf8szk9M3k9NDl9NXo9dfp9trr99/u+ODu+OTw+Ov0+onC5pfJ6qTQ7KjS7afS7K/W77DX77fZ77vc8Nbp9ePw+Ojz+enz+f///wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADkALAAAAAAQABAAAAaQwJxwSCwaj4SC5mgcNByajHQq5XQ6hIazkLF5vzbPY/B4NAIETGrNTq0Ghca4k7t8TqeP/oNrAAoANxs5FjWGNSUlKioCfg84FjkVIyKVIiMmAiibKSYVORQhoqMkJ6MzLRQ5EyCtrjSuDAoGBzkRMrgxMbi4LgsItTkSMC/EL8fELAkGQxDOz9AQzEzU1UxBADs=",
             "properties": {

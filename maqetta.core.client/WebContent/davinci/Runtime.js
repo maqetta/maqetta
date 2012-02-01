@@ -1,22 +1,17 @@
 define([
-//	"./Workbench", //FIXME: circular ref?
 	"./commands/CommandStack",
-	
 	"dojo/i18n!./nls/webContent",
 	"dijit/Dialog",
 	"dijit/form/Button",
 	"dijit/form/TextBox"
-], function(/*Workbench, */CommandStack, webContent, Dialog) {
+], function(CommandStack, webContent, Dialog) {
 
 var Runtime = {
 	plugins: [],
 	extensionPoints: [],
 	subscriptions: [],
-	widgetTable: {},
-	
 	currentSelection: [],
 	commandStack: new CommandStack(),
-//	clipboard: null,
 	
 	addPlugin: function(pluginName) {
 		url = pluginName + ".plugin";
@@ -81,12 +76,7 @@ var Runtime = {
 	 */
 	
 	location: function(){
-		// reloads the browser with the current project.
-		var fullPath = document.location.href;
-		var split = fullPath.split("?");
-		
-		var searchString = split.length>1? split[1] : "";
-		return split[0];
+		return document.location.href.split("?")[0];
 	},
 	
 	getRole: function() {
@@ -240,12 +230,10 @@ var Runtime = {
 		if (extension.id) {
 			extension.id = pluginID + "." + extension.id;
 		}
+
+		Runtime.extensionPoints[id] = Runtime.extensionPoints[id] || [];
 		var extensions = Runtime.extensionPoints[id];
-		if (extensions == null) {
-			extensions = [];
-		}
 		extensions.push(extension);
-		if (!Runtime.extensionPoints[id]) { Runtime.extensionPoints[id] = []; }
 		Runtime.extensionPoints[id] = extensions;
 	},
 	
@@ -259,17 +247,15 @@ var Runtime = {
 				return extensions.filter(function(ext) {
 					return (isFunction && testFunction(ext)) || ext.id == testFunction;
 				});
-						}
-					}
-			return extensions;
+			}
+		}
+		return extensions;
 	},
 	
 	getExtension: function(extensionID, testFunction) {
 		return Runtime.getExtensions(extensionID, testFunction)[0];
 	},
-	
-	
-	
+
 	handleError: function(error) {
 		var redirectUrl = "welcome";
 		if(Runtime.singleUserMode()){
@@ -314,29 +300,41 @@ var Runtime = {
         "<tr><td><label for=\"username\">User: </label></td>" +
         "<td><input dojoType=\dijit.form.TextBox\ type=\"text\" name=\"username\" id='username' ></input></td></tr>" +
         "<tr><td><label for=\"password\">Password: </label></td> <td><input dojoType=\"dijit.form.TextBox\" type=\"password\" name=\"password\" id='password'></input></td></tr>" +
-        "<tr><td colspan=\"2\" align=\"center\"><button dojoType=dijit.form.Button type=\"submit\" >Login</button></td>" +
+        "<tr><td colspan=\"2\" align=\"center\"><button dojoType=\"dijit.form.Button\" type=\"submit\" >Login</button></td>" +
         "</tr></table>"; // FIXME: i18n
 		do {
 			var isInput=false;
-			var	dialog = new Dialog({id: "connectDialog", title:"Please login", 
-				onExecute:function(){
-					dojo.xhrGet({url:"cmd/login",sync:true,handleAs:"text",
-						content:{'userName':dojo.byId("username").value, 'password': dojo.byId("password").value, 'noRedirect':true}
+			var dialog = new Dialog({
+				id: "connectDialog",
+				title: "Please login", 
+				onExecute: function(){
+					dojo.xhrGet({
+						url: "cmd/login",
+						sync: true,
+						handleAs: "text",
+						content:{
+						    userName: dojo.byId("username").value,
+						    password: dojo.byId("password").value,
+						    noRedirect: true
+						}
 					}).then(function(result) {
-			            if (result=="OK") {
-			            	// cheap fix.
-			            	//window.location.reload();
-			            	window.location.href= 'welcome';
-			            	//retry=false;
-			            } else {
-			            	console.warn("Unknown error: result="+result);
-			            }
-					}, function(error) {
+						if (result=="OK") {
+						    // cheap fix.
+						    //window.location.reload();
+						    window.location.href= 'welcome';
+						    //retry=false;
+						} else {
+						    console.warn("Unknown error: result="+result);
+						}
+					    }, function(error) {
 						console.warn("Login error", error);
-					});
-				    isInput=true;
+					    });
+					isInput=true;
 				},
-				onCancel:function(){isInput=true;Runtime.destroyRecursive(false);}
+				onCancel:function(){
+				    isInput=true;
+				    Runtime.destroyRecursive(false);
+				}
 			});	
 			dialog.setContent(formHtml);
 			dialog.show();			
@@ -380,7 +378,7 @@ var Runtime = {
 		var loading = dojo.create("div",null, dojo.body(), "first");
 		loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Logging off...</td></tr></table>'; // FIXME: i18n
 		dojo.addClass(loading, 'loading');
-		Runtime.unload();
+		Runtime.unload(); //FIXME: needs to call Workbench.  use pub/sub?
 		Runtime.serverJSONRequest({
 			url:"cmd/logoff", handleAs:"text", sync:true
 		});

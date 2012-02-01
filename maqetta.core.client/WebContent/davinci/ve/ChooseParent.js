@@ -163,7 +163,7 @@ return declare("davinci.ve.ChooseParent", null, {
 						var listDiv = dojo.create('div',{className:'maqCandidateParentsList'},parentListDiv);
 						var helpDiv = dojo.create('div',{className:'maqCandidateParentsHelp'},parentListDiv);
 						var div;
-						if(len == 0){
+						if(len === 0){
 							headerDiv.innerHTML = langObj.noValidParents;
 						}else if(len == 1){
 							headerDiv.innerHTML = langObj.willBeChildOf;
@@ -215,7 +215,7 @@ return declare("davinci.ve.ChooseParent", null, {
 			if(allowedParentList.length>1 && helper && helper.chooseParent){
 				//FIXME: Probably should pass all params to helper
 				proposedParentWidget = helper.chooseParent(allowedParentList);
-			}else if (allowedParentList.length == 0){
+			}else if (allowedParentList.length === 0){
 				proposedParentWidget = null;
 			}else{
 				if(absolute && currentParent){
@@ -404,7 +404,7 @@ return declare("davinci.ve.ChooseParent", null, {
         	this.onKeyUp(evt, widgetType, absolute, currentParent);
         }, [widgetType, absolute, currentParent]));
  		var body = document.body;	// outer document = Maqetta app
-		parentListDiv = this._parentListDiv = dojo.create('div', {
+		var parentListDiv = this._parentListDiv = dojo.create('div', {
 			className:'maqParentListDiv', 
 			style:'position:absolute;z-index:1000; opacity:.7;pointer-events:none;'}, 
 			body);

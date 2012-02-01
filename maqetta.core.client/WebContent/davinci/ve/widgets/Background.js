@@ -52,6 +52,7 @@ define(["dojo/_base/declare",
 			var comboDiv = dojo.create("div", {className:'bgPropComboDiv', style:'margin-right:' + marginRight + 'px;padding:1px 0;'});
 	 		var values = dojo.isArray(this.data) ? this.data : [''];
 			var langObjVE = this.langObjVE = veNLS;
+			
 	 		if(colorswatch){
 				//FIXME: Following code is mostly a copy/paste from ColorPicker.js
 				//Should be refactored into a shared utility
@@ -83,7 +84,7 @@ define(["dojo/_base/declare",
 						this._run[this.data[i].value] = this.data[i].run;
 					}
 				}
-				this._store = new ColorPickerFlat({values:displayValues, noncolors:this._statics});
+				this._store = new ColorStore({values:displayValues, noncolors:this._statics});
 	 		}else{
 	 			this._store = new MutableStore({values:values});
 	 		}

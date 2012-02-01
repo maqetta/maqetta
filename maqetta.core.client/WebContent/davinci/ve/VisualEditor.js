@@ -8,8 +8,9 @@ define([
 	"./commands/ModifyRuleCommand",
 	"preview/silhouetteiframe",
 	"./utils/URLRewrite",
-	"davinci/workbench/Preferences"
-], function(declare, template, Runtime, Workbench, Path, Context, ModifyRuleCommand, SilhouetteIframe, URLRewrite, Preferences){
+	"davinci/workbench/Preferences",
+	"davinci/ve/widget"
+], function(declare, template, Runtime, Workbench, Path, Context, ModifyRuleCommand, SilhouetteIframe, URLRewrite, Preferences, widgetUtils){
 
 //davinci.ve.VisualEditor.EDITOR_ID="davinci.ve.HTMLPageEditor";
 
@@ -124,7 +125,7 @@ return declare("davinci.ve.VisualEditor", null, {
 		command.setContext(context);
 		context.getCommandStack().execute(command);
 		if(command._newId){
-			var widget = davinci.ve.widget.byId(command._newId, context.getDocument());
+			var widget = widgetUtils.byId(command._newId, context.getDocument());
 			context.select(widget);
 		}else{
 			var selection = context.getSelection();
@@ -211,7 +212,7 @@ return declare("davinci.ve.VisualEditor", null, {
 		if(command){
 			context.getCommandStack().execute(command);
 			if(command._newId){
-				var widget = davinci.ve.widget.byId(command._newId, context.getDocument());
+				var widget = widgetUtils.byId(command._newId, context.getDocument());
 				this.context.select(widget);
 			}
 			

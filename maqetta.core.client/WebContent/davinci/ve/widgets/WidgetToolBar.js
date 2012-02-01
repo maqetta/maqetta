@@ -1,25 +1,21 @@
 
 define(["dojo/_base/declare",
         "davinci/workbench/ViewLite",
-        
         "davinci/ve/commands/ModifyCommand",
         "dojo/i18n!davinci/ve/nls/ve",
         "dojo/i18n!dijit/nls/common",
         "davinci/ve/widget"
-        
-       
-],function(declare,   ViewLite, ModifyCommand, veNLS,commonNLS){
+],function(declare, ViewLite, ModifyCommand, veNLS,commonNLS, widgetUtils){
 	return declare("davinci.ve.widgets.WidgetToolBar", ViewLite, {
 	
 		widgetDescStart:"",
 		widgetDescUnselectEnd:"",
 		
 		postMixInProperties : function() {
-			var langObj = veNLS;
-			var str1 = "<div class='propertiesWidgetDescription'><span class='propertiesWidgetDescriptionFor'>"+langObj.toolBarFor+"</span>";
-			var str2 = langObj.noSelection + "</div>";
-			this.widgetDescStart = str1;
-			this.widgetDescUnselectEnd = str2;
+			this.widgetDescStart =
+				"<div class='propertiesWidgetDescription'><span class='propertiesWidgetDescriptionFor'>" + veNLS.toolBarFor + "</span>";
+			this.widgetDescUnselectEnd =
+				veNLS.noSelection + "</div>";
 			this.inherited(arguments);
 		},
 		
@@ -53,7 +49,7 @@ define(["dojo/_base/declare",
 			var displayName = "";
 			
 			if(this._widget){
-				displayName = davinci.ve.widget.getLabel(this._widget); 
+				displayName = widgetUtils.getLabel(this._widget); 
 			}else{
 				this.domNode.innerHTML = this.widgetDescStart+this.widgetDescUnselectEnd;
 				dojo.removeClass(this.domNode, "propertiesSelection");

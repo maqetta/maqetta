@@ -141,18 +141,19 @@ var Workbench = {
 		// bind overlay widgets to corresponding davinci states. singleton; no need to unsubscribe
 		davinci.states.subscribe("/davinci/states/state/changed", function(args){
 			var prefix = "_show:", widget, dvWidget, helper,
-				thisDijit = Runtime.currentEditor.visualEditor.context.getDijit();
+				thisDijit = Runtime.currentEditor.visualEditor.context.getDijit(),
+				widgetUtils = require("davinci/ve/widget");
 			if(args.newState && !args.newState.indexOf(prefix)){
 				widget = thisDijit.byId(args.newState.substring(6));
 //    				widget && widget.show();
-				dvWidget = davinci.ve.widget.getWidget(widget.domNode);
+				dvWidget = widgetUtils.getWidget(widget.domNode);
 				helper = dvWidget.getHelper();
 				helper && helper.popup && helper.popup(dvWidget);
 			}
 			if(args.oldState && !args.oldState.indexOf(prefix)){
 				widget = thisDijit.byId(args.oldState.substring(6));
 //    				widget && widget.hide();
-				dvWidget = davinci.ve.widget.getWidget(widget.domNode);
+				dvWidget = widgetUtils.getWidget(widget.domNode);
 				helper = dvWidget.getHelper();
 				helper && helper.tearDown && helper.tearDown(dvWidget);
 			}

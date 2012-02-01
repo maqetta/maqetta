@@ -10,7 +10,7 @@ define([
 	"./VisualEditorOutline",
 	"./widget",
 	"../Runtime"
-], function(declare, ModelEditor, BorderContainer, ContentPane, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline){
+], function(declare, ModelEditor, BorderContainer, ContentPane, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils){
 
 return declare("davinci.ve.PageEditor", ModelEditor, {
 	   
@@ -126,7 +126,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 			if ( htmlElement && htmlElement.elementType == "HTMLElement" ) {
 				var id = htmlElement.getAttribute("id");
 				if ( id && this._displayMode!="source" ) {
-					var widget = davinci.ve.widget.byId(id, this.visualEditor.context.getDocument());
+					var widget = widgetUtils.byId(id, this.visualEditor.context.getDocument());
 					this.visualEditor.context.select(widget);
 				}
 			}

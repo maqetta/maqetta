@@ -700,5 +700,6 @@ getWidget: function(node){
 }
 };
 
+dojo.setObject("davinci.ve.widget", widgetObject); // temporary
 return widgetObject;
 });

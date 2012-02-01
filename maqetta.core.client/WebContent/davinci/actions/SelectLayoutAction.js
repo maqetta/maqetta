@@ -3,7 +3,7 @@ define([
 	"./Action",
 	"../Workbench",
 	"dojo/i18n!./nls/actions"
-], function(declare, Action, actionsStrings) {
+], function(declare, Action, Workbench, actionsStrings) {
 
 davinci.preference_layout_ATTRIBUTE = 'dvFlowLayout';
 

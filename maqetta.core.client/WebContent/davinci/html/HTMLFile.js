@@ -10,8 +10,9 @@ define([
 	"davinci/html/CSSSelector",
 	"davinci/html/HTMLElement",
 	"davinci/html/CSSImport",
-	"davinci/model/Factory"
-], function(declare, HTMLItem, HTMLParser, CSSSelector, HTMLElement, CSSImport, Factory) {
+	"davinci/html/CSSFile",
+	"davinci/model/Model"
+], function(declare, HTMLItem, HTMLParser, CSSSelector, HTMLElement, CSSImport, CSSFile, Model) {
 
 return declare("davinci.html.HTMLFile", HTMLItem, {
 
@@ -167,8 +168,8 @@ return declare("davinci.html.HTMLFile", HTMLItem, {
 	addStyleSheet: function(url, content, dontLoad, beforeChild) {
 		// create CSS File model
 
-		if(!dontLoad){
-			this._loadedCSS[url] = Factory.getModel({
+		if (!dontLoad) {
+			this._loadedCSS[url] = new CSSFile({
 				url : url,
 				includeImports : true
 			});
@@ -227,7 +228,7 @@ return declare("davinci.html.HTMLFile", HTMLItem, {
 	},
 
 	updatePositions: function(startOffset, delta) {
-		davinci.model.Model.updatePositions(this,startOffset,delta);
+		new Model(this).updatePositions(this, startOffset, delta);
 		this.visit({
 			visit: function(element) {
 				if (element.endOffset < startOffset) { return true; }

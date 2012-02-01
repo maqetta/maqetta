@@ -3,6 +3,8 @@ define([
 	"davinci/model/Model",
 ], function(declare, Model) {
 
+var CSSModel = {};
+
 return declare("davinci.html.CSSModel", Model, {
 
 	constructor: function() {

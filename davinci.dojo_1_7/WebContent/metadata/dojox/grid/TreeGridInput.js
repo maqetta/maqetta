@@ -12,7 +12,7 @@ define([
 	dijitNls
 ) {
 
-return declare("davinci.libraries.dojo.dojox.grid.TreeGridInput", SmartInput, {
+return declare(SmartInput, {
 
 	property: null, 
 	

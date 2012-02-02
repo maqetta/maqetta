@@ -10,7 +10,7 @@ define([
 	States
 ) {
 
-return declare("davinci.libraries.dojo.dijit.DialogCreateTool", CreateTool, {
+return declare(CreateTool, {
 
 	create: function(args){
 		var bodyWidget = Widget.getWidget(this._context.rootNode);

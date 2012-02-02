@@ -6,7 +6,7 @@ define([
 	ContainerInput
 ) {
 
-return declare("davinci.libraries.dojo.dijit.ToolbarInput", ContainerInput, {
+return declare(ContainerInput, {
 
 	propertyName: "label",
 	supportsHTML: true

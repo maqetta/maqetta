@@ -30,7 +30,7 @@ define([
  * first instantiating IconContainer and then its children IconItem.
  */
 
-return declare("davinci.libraries.dojo.dojox.mobile.IconContainerCreateTool", CreateTool, {
+return declare(CreateTool, {
 
     _create: function(args) {
         var iconContainerData = this._data[0],

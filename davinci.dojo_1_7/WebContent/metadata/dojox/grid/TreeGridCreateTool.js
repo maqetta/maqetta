@@ -16,7 +16,7 @@ define([
 	ResizeCommand
 ) {
 
-return declare("davinci.libraries.dojo.dojox.grid.TreeGridCreateTool", CreateTool, {
+return declare(CreateTool, {
 
 	constructor: function(data) {
 		this._resizable = "both";

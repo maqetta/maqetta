@@ -10,7 +10,7 @@ define([
 	dijitNls
 ) {
 
-return declare("davinci.libraries.dojo.dijit.MenuBarInput", ContainerInput, {
+return declare(ContainerInput, {
 
 	propertyName: "label",
 	

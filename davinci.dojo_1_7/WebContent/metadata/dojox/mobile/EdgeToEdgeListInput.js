@@ -28,7 +28,7 @@ define([
 	dojoxNls
 ) {
 
-return declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeListInput", ContainerInput, {
+return declare(ContainerInput, {
 
 	multiLine: "true",
 	format: "rows",

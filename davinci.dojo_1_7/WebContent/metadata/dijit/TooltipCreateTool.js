@@ -4,8 +4,9 @@ define([
 	"davinci/ve/widget",
 	"davinci/ve/commands/ModifyCommand",
 	"davinci/ve/States"
-], function(declare, CreateTool, widget, ModifyCommand, States){
-	return declare("davinci.libraries.dojo.dijit.TooltipCreateTool", CreateTool, {
+], function(declare, CreateTool, widget, ModifyCommand, States) {
+
+	return declare(CreateTool, {
 
 	create: function(args){
 		var bodyWidget = widget.getWidget(this._context.rootNode),

@@ -57,72 +57,9 @@ MenuHelper.prototype = {
 			return;
 		}
 		var data = widget._getData(options);
-		if (!data) {
-			return;
-		}
-		var childNodes = data.children;
-		if (childNodes) {
-			array.forEach(childNodes, function(c) {
-				// only interested in menus or menu items
-				// FIXME: should this also check for length like in serializePopup?
-				if (typeof c === 'string') {
-				} else {
-					var childData = [];
-					if (c.properties.popup) {
-						//childData = this.dojo.metadata.dijit.MenuHelper.serializePopup(c.properties.popup, widget._edit_context);
-						childData = this.serializePopup(c.properties.popup, widget._edit_context);
-						if (childData) {
-							// clear reference to popup to avoid duplication in the source
-							delete c.properties.popup;
-							c.children.push(childData);
-						}
-					}
-				}
-			}, this);
-		}
 		return data;
 	},
 	
-	// HACKS: There's probably a better way to do this with the new model, just stopgap measures until Phil takes a look.
-	// Calling widget.declaredClass, passing in context instead of using a dvWidget because I couldn't find a handle to one.
-	serializePopup: function(widget, context) {
-		// summary:
-		//		Returns a serialized form of the passed popup, collecting only a minimal set of information about the child widgets.
-		//
-		if (!widget) {
-			return;
-		}
-		var data = {type: widget.declaredClass, properties: {}},
-			pChildNodes = widget.containerNode.childNodes,
-			pData,
-			popupData = [];
-		// search for child widgets
-		array.forEach(pChildNodes, function(n) {
-				// only interested in menus or menu items
-				if (! (typeof n == "object" && n.nodeType != 1 /*ELEMENT*/) &&
-						typeof n !== 'string' && ! n.length) {
-					// get the widget from the node
-					var pWidget = context.getDijit().byNode(n);
-					pData = {type: pWidget.declaredClass, properties: pWidget.label ? {label: pWidget.label} : {}};
-
-					// FIXME: when is pData reset?
-					// seems like this would keep adding the same popup
-					if (pData) {
-						if (!popupData) {
-							popupData = pData;
-						} else {
-							popupData.push(pData);
-						}
-					}
-					// FIXME: should this really be happening inside the forEach?
-					if (popupData) {
-						data.children = popupData;
-					}
-				}
-		});
-		return data;
-	},
-
 	getWidgetTextExtra: function(widget) {
 		return widget.properties && widget.properties.contextMenuForWindow ? "(context)" : "";
 	}

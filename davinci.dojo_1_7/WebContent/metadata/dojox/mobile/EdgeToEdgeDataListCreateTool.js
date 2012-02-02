@@ -18,7 +18,7 @@ define([
 
 // NOTE: Used by EdgeToEdgeDataList, RoundRectDataList, Carousel
 
-return declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool", CreateTool, {
+return declare(CreateTool, {
 
 	constructor: function(data) {
 		this._resizable = "both";

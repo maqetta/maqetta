@@ -1,9 +1,9 @@
 define([
     	"dojo/_base/declare",
-    	"davinci/actions/Action",
-    	"davinci/commands/CompoundCommand",
-    	"davinci/commands/MoveCommand",
-    	"davinci/ve/widget"
+    	"../../actions/Action",
+    	"../../commands/CompoundCommand",
+    	"../commands/MoveCommand",
+    	"../widget"
 ], function(declare, Action, CompoundCommand, MoveCommand, Widget){
 
 

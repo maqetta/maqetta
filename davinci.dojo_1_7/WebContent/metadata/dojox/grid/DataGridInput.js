@@ -22,7 +22,7 @@ define([
 	/*DropDownSelect*/
 ) {
 
-return declare("davinci.libraries.dojo.dojox.grid.DataGridInput", SmartInput, {
+return declare(SmartInput, {
 
 	propertyName: "structure",
 

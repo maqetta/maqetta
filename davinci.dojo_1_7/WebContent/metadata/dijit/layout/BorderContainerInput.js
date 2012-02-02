@@ -26,7 +26,7 @@ define([
 	dijitNls
 ) {
 
-return declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", ContainerInput, {
+return declare(ContainerInput, {
 	
 	show: function(widgetId) {
 		this._widget = Widget.byId(widgetId);

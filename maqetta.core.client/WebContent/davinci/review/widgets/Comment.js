@@ -6,7 +6,7 @@ define([
 	"dijit/Menu",
 	"dijit/MenuItem",
 	"dijit/form/DropDownButton",
-	"dojo/i18n!../nls/widgets"
+	"dojo/i18n!./nls/widgets"
 ], function(declare, _Widget, _Templated, util, Menu, MenuItem, DropDownButton, widgetsNls) {
 	
 return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {

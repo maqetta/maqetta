@@ -53,8 +53,12 @@ define([
 				that._bboxStartup = that._bbox;
 			}, 1000);
 		},
-
+		
 		resize: function(){
+			this._resize();
+		},
+
+		_resize: function(){
 			dojo.addClass(this.domNode,'shape');
 			this.createGraphics();
 			var gbbox = this._g.getBBox();

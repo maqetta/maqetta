@@ -8,7 +8,7 @@ define([
 	dijitNls
 ) {
 
-return declare("davinci.libraries.dojo.dijit.layout.StackContainerInput", ContainerInput, {
+return declare(ContainerInput, {
 
 	propertyName: "title",
 	supportsHTML: "true",

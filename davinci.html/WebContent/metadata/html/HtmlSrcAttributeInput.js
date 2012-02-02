@@ -16,7 +16,7 @@ define([
 	htmlNls
 ) {
 
-return declare("davinci.libraries.html.html.HtmlSrcAttributeInput", SmartInput, {
+return declare(SmartInput, {
 	// Added this so we can re-use this class for elements that do not support an
 	// "alt" attribute (such as AUDIO, EMBED, and VIDEO)
 	supportsAltText: true,

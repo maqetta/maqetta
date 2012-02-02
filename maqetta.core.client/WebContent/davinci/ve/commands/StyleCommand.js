@@ -34,13 +34,13 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		if(!this._id || !this._newValues){
 			return;
 		}
-		var widget = davinci.ve.widget.byId(this._id);
+		var widget = require("davinci/ve/widget").byId(this._id);
 		if(!widget){
 			return;
 		}
 		var cleanValues = dojo.clone(this._newValues);
 		
-		var veStates = davinci.ve.states;
+		var veStates = require("davinci/ve/States");
 		var currentState = veStates.getState();
 		if(this._applyToWhichStates === "current"){
 			this._state = currentState;
@@ -105,7 +105,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		if(!this._id || !this._oldValues){
 			return;
 		}
-		var widget = davinci.ve.widget.byId(this._id);
+		var widget = require("davinci/ve/widget").byId(this._id);
 		if(!widget){
 			return;
 		}
@@ -114,7 +114,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		this._refresh(widget);
 		
 		// Recompute styling properties in case we aren't in Normal state
-		davinci.ve.states.resetState(widget);
+		require("davinci/ve/States").resetState(widget);
 		
 		//FIXME: Various widget changed events (/davinci/ui/widget*Changed) need to be cleaned up.
 		// I defined yet another one here (widgetPropertiesChanged) just before Preview3
@@ -122,7 +122,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		// the Preview 3 release to minimize risk of bad side effects, with idea we would clean up later.
 		// For time being, I made payload compatible with /davinci/ui/widgetSelectionChanged. 
 		// Double array is necessary because dojo.publish strips out the outer array.
-		dojo.publish("/davinci/ui/widgetPropertiesChanged",[[widget]]);
+		dojo.publish("/davinci/ui/widgetPropertiesChanged", [[widget]]);
 	},
 	
 	_refresh: function(widget){

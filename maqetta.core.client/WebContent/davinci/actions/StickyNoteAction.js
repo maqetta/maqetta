@@ -46,11 +46,7 @@ dojo.declare("davinci.actions.StickyNoteAction", davinci.actions.Action, {
 				command.add(new davinci.ve.commands.ResizeCommand(widget, w, h));
 			}
 			e.getContext().getCommandStack().execute(command);
-			var InlineEditCtor = davinci.ve.metadata.getHelper(widget.type, "inlineEdit"),
-				inlineEdit;
-			if (InlineEditCtor) {
-				inlineEdit = new InlineEditCtor();
-			}
+			var inlineEdit = davinci.ve.VisualEditor.getSmartInput(widget.type);
 			if (inlineEdit && inlineEdit.displayOnCreate && inlineEdit.displayOnCreate.toLowerCase() == 'true') {
 				e.getContext().select(widget,null,true); // display inline
 			} else {

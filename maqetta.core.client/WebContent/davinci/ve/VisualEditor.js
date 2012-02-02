@@ -1,4 +1,5 @@
 define([
+	"require",
     "dojo/_base/declare",
 	"dojo/text!davinci/ve/template.html",
 	"../Runtime",
@@ -9,12 +10,27 @@ define([
 	"preview/silhouetteiframe",
 	"./utils/URLRewrite",
 	"davinci/workbench/Preferences",
-	"davinci/ve/widget"
-], function(declare, template, Runtime, Workbench, Path, Context, ModifyRuleCommand, SilhouetteIframe, URLRewrite, Preferences, widgetUtils){
+	"./widget",
+	"./metadata",
+	"./input/SmartInput"
+], function(
+	require,
+	declare,
+	template,
+	Runtime,
+	Workbench,
+	Path,
+	Context,
+	ModifyRuleCommand,
+	SilhouetteIframe,
+	URLRewrite,
+	Preferences,
+	widgetUtils,
+	metadataUtils,
+	SmartInput
+){
 
-//davinci.ve.VisualEditor.EDITOR_ID="davinci.ve.HTMLPageEditor";
-
-return declare("davinci.ve.VisualEditor", null, {
+var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 
 	deviceName: 'none',
 	_orientation: 'portrait',
@@ -357,10 +373,6 @@ return declare("davinci.ve.VisualEditor", null, {
 		return this._selectedSubWidget;
 	},
 
-	getDefaultContent: function (){
-		return null;
-	},
-
 	saved: function(){
 		this.save();
 	},
@@ -406,4 +418,34 @@ return declare("davinci.ve.VisualEditor", null, {
 		window.open(fileURL);
 	}
 });
+
+/**
+ * Returns the SmartInput instance for the given `type`.
+ * @param  {String} type Widget type (i.e. "dijit.form.Button")
+ * @return {Object}
+ */
+VisualEditor.getSmartInput = function(type) {
+	var moduleId = metadataUtils.getHelper(type, 'inlineEdit', false),
+		si;
+
+	if (! moduleId) {
+		return null;
+	}
+
+	if (typeof moduleId === 'string') {
+		// XXX TODO this assumes synchronous flow. Need to make async.
+		require([moduleId], function(Module) {
+			si = new Module();
+		});
+	} else {
+		// `moduleId` is an object
+		si = new SmartInput();
+		dojo.mixin(si, moduleId);
+	}
+
+	return si;	// XXX TODO cache
+};
+
+return VisualEditor;
+
 });

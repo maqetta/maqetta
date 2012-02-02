@@ -1,10 +1,11 @@
 define([
+    "require",
     "dojo/_base/declare",
 	"dijit/_WidgetBase",
-	"dojo/dnd/Mover",
-	"davinci/ve/metadata"
+	"dojo/dnd/Mover"
+    //"./VisualEditor"
 ],
-function(declare, _WidgetBase, Mover, Metadata){
+function(require, declare, _WidgetBase, Mover) {
     
 var LEFT = 0,
     RIGHT = 1,
@@ -296,10 +297,10 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     showInline: function(widget) {
         this._selectedWidget = widget;
         var context = this._context;
-        var InlineCtor = Metadata.getHelper(widget.type, "inlineEdit");
-        if (InlineCtor) {
-            this._inline = new InlineCtor();
-            if (this._inline.useParent) {
+        var inline = require('./VisualEditor').getSmartInput(widget.type);
+        if (inline) {
+            this._inline = inline;
+            if (inline.useParent) {
                 var parentWidget = widget.getParent();
                 if (parentWidget) {
                     context.deselect(widget);
@@ -307,8 +308,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
                     var parentFocusObject = context.getFocus(parentWidget);
                     parentFocusObject.showInline(parentWidget);
                 }
-            } else if (this._inline.show) {
-                this._inline.show(widget.id);
+            } else if (inline.show) {
+                inline.show(widget.id);
             }
         }
         return;

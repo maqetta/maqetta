@@ -1,23 +1,25 @@
 define(["dojo/_base/declare",
-		"davinci/ve/tools/_Tool",
+		"../tools/_Tool",
 		"davinci/Workbench",
 		"davinci/workbench/Preferences",
-		"davinci/ve/metadata",
-		"davinci/ve/widget",
+		"../metadata",
+		"../widget",
+		"../VisualEditor",
 		"davinci/ui/ErrorDialog",
 		"davinci/commands/CompoundCommand",
-		"davinci/ve/commands/AddCommand",
-		"davinci/ve/commands/MoveCommand",
-		"davinci/ve/commands/ResizeCommand",
-		"davinci/ve/Snap",
-		"davinci/ve/ChooseParent"
+		"../commands/AddCommand",
+		"../commands/MoveCommand",
+		"../commands/ResizeCommand",
+		"../Snap",
+		"../ChooseParent"
 ], function(
 		declare,
 		_Tool,
 		Workbench,
 		Preferences,
 		Metadata,
-		Widget
+		Widget,
+		VisualEditor
 ) {
 
 return declare("davinci.ve.tools.CreateTool", _Tool, {
@@ -539,11 +541,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 	},
 	
 	_select: function(w) {
-		var InlineEditCtor = Metadata.getHelper(w.type, "inlineEdit"),
-			inlineEdit;
-		if (InlineEditCtor) {
-			inlineEdit = new InlineEditCtor();
-		}
+		var inlineEdit = VisualEditor.getSmartInput(w.type);
 		if (!this._data.fileDragCreate && inlineEdit && inlineEdit.displayOnCreate) {
 			w.inLineEdit_displayOnCreate = inlineEdit.displayOnCreate;
 			this._context.select(w, null, true); // display inline

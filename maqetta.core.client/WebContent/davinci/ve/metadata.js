@@ -2,13 +2,11 @@ define([
 	"require",
     "dojo/_base/Deferred",
    // "davinci/Workbench",
-	// XXX This object shouldn't have a dependency on SmartInput
-	"./input/SmartInput",
 	"../util",
 	"../library",
 	"../model/Path"
 	
-], function(require, Deferred, SmartInput, Util, Library, Path) {
+], function(require, Deferred, Util, Library, Path) {
 
 	var Metadata,
 		Workbench,
@@ -680,8 +678,8 @@ define([
         },
 
         /**
-         * Returns the object instance of the given "helper" type.  Only works
-         * with:
+         * Returns the object instance or module ID of the given "helper" type.
+         * Only works with:
          *     'helper'
          *     'tool'
          *     'inlineEdit'
@@ -690,46 +688,36 @@ define([
          *             Widget type (i.e. "dijit.form.Button")
          * @param  {String} helperType
          *             One of the accepted 'helper' types (see description)
+         * @param {Boolean} doInstantiate
+         *             If true, the requested module is instantiated and returned.
+         *             Otherwise, returns module ID.  Defaults to true.
          * @return {Object}
          */
-        getHelper: function(type, helperType) {
-            var helpertypes = [
-                'helper',
-                'tool',
-                'inlineEdit'
-            ];
-            if (helpertypes.indexOf(helperType) === -1) {
-                return null;
-            }
+        getHelper: function(type, helperType, doInstantiate) {
+        	if (typeof doInstantiate === 'undefined') {
+        		doInstantiate = true;
+        	}
 
             var value = Metadata.queryDescriptor(type, helperType);
             if (!value) {
                 return null;
             }
 
-            // Handle the declarative form of 'inlineEdit', where `value` is
-            // an object, not a path.
-            if (helperType === 'inlineEdit' && typeof value !== 'string') {
-                // In the case that follows, this function returns a constructor
-                // for 'inlineEdit'.  Do the same in this case.
-                function SI() {
-                    dojo.mixin(this, value);
-                }
-                SI.prototype = new SmartInput();
-                return SI;
-            }
-
             var lib,
             	moduleId,
             	helper;
-            if (value.substr(0, 2) === './') {
+            if (typeof value === 'string' && value.substr(0, 2) === './') {
             	// if path is relative...
 	            lib = getLibraryForType(type);
                 moduleId = new Path(lib.$moduleId).append(value).toString();
             } else {
             	moduleId = value;
             }
-            
+
+            if (! doInstantiate) {
+            	return moduleId;
+            }
+
             // XXX TODO This assumes synchronous flow.  Need to make async.
             require([moduleId], function(module) {
                 helper = module;

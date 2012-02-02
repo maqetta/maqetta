@@ -1,13 +1,10 @@
 define([
-	"system/model/Resource",
+	"system/Orion",
 	"davinci/model/Path",
 	
-],function(model, mPath) {
+],function(Orion, mPath) {
 	
 	var serviceRegistry, fileClient, preferences;
-	
-	debugger;
-	
 	return {
 			root:null,
 			

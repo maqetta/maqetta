@@ -1,7 +1,7 @@
 define([
 	"dojo/_base/declare",
 	"davinci/model/resource/File",
-	"davinci/model/resource/Path"
+	"davinci/model/Path"
 ], function(declare, File) {
 
 return declare("davinci.review.model.resource.File", File, {

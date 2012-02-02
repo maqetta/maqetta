@@ -6,7 +6,7 @@ define([
     	"davinci/html/CSSImport",
     	"davinci/html/HTMLElement",
     	"davinci/html/HTMLText",
-], function(declare, Theme, Library, CSSImport, HTMLElement, HTMLText){
+], function(declare, Theme, Workbench, Library, CSSImport, HTMLElement, HTMLText){
 
 
 return declare("davinci.ve.commands.ChangeThemeCommand", null, {

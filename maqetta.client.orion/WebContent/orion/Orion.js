@@ -16,7 +16,7 @@ define([
 			pluginRegistry = core.pluginRegistry;
 			var root = [];
 			var fileClient = new mFileClient.FileClient(serviceRegistry);
-			fileClient.loadWorkspaces("/*/*");
+			fileClient.loadWorkspaces("");
 			
 			fileClient.loadWorkspace("").then(
 					

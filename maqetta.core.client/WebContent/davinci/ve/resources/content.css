@@ -126,3 +126,12 @@ div[dojotype="dojox.mobile.ContentPane"] {
     outline-color:rgba(128,128,128,0.5);
     background-clip:content-box;
 }
+
+body {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+	

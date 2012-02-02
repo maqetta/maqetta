@@ -15,7 +15,9 @@ define([
     	libraries = {},
     // Widget metadata cache
     // XXX Should there be a limit on metadata objects in memory?
-    	cache = {},
+    	mdCache = {},
+    // Cache for instantiated helper objects.  See getHelper().
+    	helperCache = {},
     // Localization strings
     	l10n = null,
 
@@ -33,7 +35,8 @@ define([
         //  changed.  This code currently nukes everything, reloading all libs, even those that
         //  haven't changed.
         libraries = {};
-        cache = {};
+        mdCache = {};
+        helperCache = {};
         l10n = null;
         Metadata.init();
     });
@@ -222,8 +225,8 @@ define([
             return undefined;
         }
         
-        if (cache.hasOwnProperty(type)) {
-            return cache[type];
+        if (mdCache.hasOwnProperty(type)) {
+            return mdCache[type];
         }
         
         // get path from library descriptor
@@ -264,7 +267,7 @@ define([
         // store location of this metadata file, since some resources are relative to it
         metadata.$src = metadataUrl;
         // XXX localize(metadata);
-        cache[type] = metadata;
+        mdCache[type] = metadata;
 
         // OAM may be overridden by metadata in widgets.json
         Util.mixin(metadata, wm.$providedTypes[type].metadata);
@@ -683,6 +686,8 @@ define([
          *     'helper'
          *     'tool'
          *     'inlineEdit'
+         * 
+         * Note: return values are cached.
          *
          * @param  {String} type
          *             Widget type (i.e. "dijit.form.Button")
@@ -694,6 +699,11 @@ define([
          * @return {Object}
          */
         getHelper: function(type, helperType, doInstantiate) {
+        	var idx = type + ':' + helperType;
+        	if (idx in helperCache) {
+        		return helperCache[idx];
+        	}
+
         	if (typeof doInstantiate === 'undefined') {
         		doInstantiate = true;
         	}
@@ -721,6 +731,7 @@ define([
             // XXX TODO This assumes synchronous flow.  Need to make async.
             require([moduleId], function(module) {
                 helper = module;
+                helperCache[idx] = module;
             });
 
             return helper;

@@ -1,6 +1,8 @@
 define([
 	"require",
     "dojo/_base/declare",
+    "dojo/_base/lang",
+    "dojo/_base/connect",
 	"dojo/text!davinci/ve/template.html",
 	"../Runtime",
 	"../Workbench",
@@ -16,6 +18,8 @@ define([
 ], function(
 	require,
 	declare,
+	lang,
+	connect,
 	template,
 	Runtime,
 	Workbench,
@@ -312,7 +316,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		
 			this.title = dojo.doc.title;
 
-			this.context._setSource(content, dojo.hitch(this, function(){
+			this.context._setSource(content, lang.hitch(this, function(){
 				this.savePoint = 0;
 				this.context.activate();
 				var popup = Workbench.createPopup({partID:'davinci.ve.visualEditor',
@@ -419,12 +423,25 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 	}
 });
 
+var smartInputCache = {};
+
+connect.subscribe("/davinci/ui/libraryChanged", function() {
+	// XXX We should be smart about this and only reload data for libraries whose path has
+	//  changed.  This code currently nukes everything, reloading all libs, even those that
+	//  haven't changed.
+	smartInputCache = {};
+});
+
 /**
  * Returns the SmartInput instance for the given `type`.
  * @param  {String} type Widget type (i.e. "dijit.form.Button")
  * @return {Object}
  */
 VisualEditor.getSmartInput = function(type) {
+	if (type in smartInputCache) {
+		return smartInputCache[type];
+	}
+
 	var moduleId = metadataUtils.getHelper(type, 'inlineEdit', false),
 		si;
 
@@ -440,10 +457,11 @@ VisualEditor.getSmartInput = function(type) {
 	} else {
 		// `moduleId` is an object
 		si = new SmartInput();
-		dojo.mixin(si, moduleId);
+		lang.mixin(si, moduleId);
 	}
 
-	return si;	// XXX TODO cache
+	smartInputCache[type] = si;
+	return si;
 };
 
 return VisualEditor;

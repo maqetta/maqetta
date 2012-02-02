@@ -10,17 +10,7 @@ define(["dojo/_base/declare",
         "dojo/i18n!dijit/nls/common",
         "dojo/text!./templates/download.html",
         "davinci/Theme",
-        "davinci/ui/widgets/ThemeSelection",
-        "dijit/form/Button",
-        "dijit/form/TextBox",
-        "dijit/form/ValidationTextBox",
-        "dijit/form/RadioButton",
-        "dijit/MenuItem",
-        "dijit/Menu",
-        "dijit/form/ComboBox",
-        "davinci/ui/widgets/FolderSelection",
-        "davinci/ui/widgets/ThemeSelection"
-        
+        "dijit/form/Button"
 
 ],function(declare, _Templated, _Widget,  Library, Resource,  Runtime, Workbench, RebaseDownload, uiNLS, commonNLS, templateString, Theme){
 	return declare("davinci.ui.Download",   [_Widget, _Templated], {
@@ -147,21 +137,16 @@ define(["dojo/_base/declare",
 				}
 				
 				for(var k=0;k<allResources.length;k++){
-					if( Theme.isThemeHTML(allResources[k])) continue;
+					if(Theme.isThemeHTML(allResources[k])) continue;
 					var newSource = pageBuilder.rebuildSource(allResources[k].getText(), allResources[k]);
 					allResources[k].setContents(newSource, true);
 				}
 			}
-		
-			
 		},
 		
 		okButton : function(){
 			function makeTimeoutFunction(downloadFiles, fileName, root, libs){
 				return function(){
-					
-					
-					
 					var files = downloadFiles;
 					var fn = fileName
 				

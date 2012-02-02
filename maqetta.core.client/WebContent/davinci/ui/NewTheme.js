@@ -13,16 +13,7 @@ define(["dojo/_base/declare",
         "davinci/Theme",
         "davinci/ui/widgets/ThemeSelection",
         "dijit/form/Button",
-        "dijit/form/TextBox",
         "dijit/form/ValidationTextBox",
-        "dijit/form/RadioButton",
-        "dijit/MenuItem",
-        "dijit/Menu",
-        "dijit/form/TextBox",
-        "dijit/form/ComboBox",
-        "davinci/ui/widgets/FolderSelection",
-        "davinci/ui/widgets/ThemeSelection"
-        
 
 ],function(declare, _Templated, _Widget,  Library, Resource, Runtime, Path, Workbench, Preferences, uiNLS, commonNLS, templateString, Theme){
 	return declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {

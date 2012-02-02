@@ -13,10 +13,8 @@ davinci/davinci = {
 };
 =====*/
 	"./davinci-common",
-	"./Runtime",
-
+	"./Workbench",
 	"./review/Review",
-	"./ui/about",
 	"./workbench/Explorer",
 	"./workbench/OutlineView",
 	"./workbench/ProblemsView",
@@ -35,7 +33,7 @@ davinci/davinci = {
 	"./actions/StickyNoteAction",
 	"./actions/SaveAsWidget",
 	
-	"./ve/commands/ModifyAttributeCommand",
+//	"./ve/commands/ModifyAttributeCommand",
 	
 	"./html/ui/CSSEditor",
 	"./html/ui/HTMLEditor",
@@ -48,7 +46,6 @@ davinci/davinci = {
 	// Used by DataGridInput
 	"./commands/OrderedCompoundCommand",
 
-	"dojo/i18n!./nls/webContent",
 	"./version"
 ],
 function(){}

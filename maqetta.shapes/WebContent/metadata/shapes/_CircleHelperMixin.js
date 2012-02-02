@@ -7,11 +7,7 @@ _CircleHelperMixin.prototype = {
 
 	dragPointsStrings:['left_top','center_top','right_top','right_middle',
 	    	           'right_bottom','center_bottom','left_bottom','left_middle'],
-	    	
-	create: function(widget, srcElement){
-		//FIXME: Maybe we don't need this function
-	},
-	
+	    		
 	//FIXME: Looks like this can be shared between rects and ellipses
 	
 	/*

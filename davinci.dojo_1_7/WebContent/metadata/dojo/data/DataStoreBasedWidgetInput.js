@@ -38,7 +38,7 @@ define([
 	/*DropDownSelect*/
 ) {
 
-return declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", SmartInput, {
+return declare(SmartInput, {
 
 	displayOnCreate: "true",
 	

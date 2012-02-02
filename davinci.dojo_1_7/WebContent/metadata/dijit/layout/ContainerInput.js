@@ -20,7 +20,7 @@ define([
 	AddCommand
 ) {
 
-return declare("davinci.libraries.dojo.dijit.layout.ContainerInput", SmartInput, {
+return declare(SmartInput, {
 
 	propertyName: null,
 	

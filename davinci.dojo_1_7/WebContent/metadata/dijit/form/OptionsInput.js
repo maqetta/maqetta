@@ -12,7 +12,7 @@ define([
 	Widget
 ) {
 
-return declare("davinci.libraries.dojo.dijit.form.OptionsInput", SmartInput, {
+return declare(SmartInput, {
 
 	property: "value",
 	

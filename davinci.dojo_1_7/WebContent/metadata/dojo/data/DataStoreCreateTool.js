@@ -8,7 +8,7 @@ define([
 	Widget
 ) {
 
-return declare("davinci.libraries.dojo.dojo.data.DataStoreCreateTool", CreateTool, {
+return declare(CreateTool, {
     // override CreateTool.create() to force the DataStore to the top of the HTML file under the root
     // this prevents the DataStore from being referenced before it has been instantiated
     create: function(args) {

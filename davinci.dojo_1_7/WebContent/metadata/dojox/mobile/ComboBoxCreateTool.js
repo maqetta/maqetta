@@ -18,7 +18,7 @@ define([
 	ComboBoxHelper
 ) {
 
-return declare("davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool", CreateTool, {
+return declare(CreateTool, {
 
 	constructor: function(data) {
 		this._resizable = "both";

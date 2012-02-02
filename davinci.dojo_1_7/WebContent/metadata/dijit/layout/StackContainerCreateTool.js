@@ -16,7 +16,7 @@ define([
 	ResizeCommand
 ) {
 
-return declare("davinci.libraries.dojo.dijit.layout.StackContainerCreateTool", CreateTool, {
+return declare(CreateTool, {
 
 	constructor: function(data){
 		this._resizable = "both";

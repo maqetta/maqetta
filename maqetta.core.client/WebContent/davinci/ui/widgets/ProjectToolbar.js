@@ -4,6 +4,7 @@ define(["dojo/_base/declare",
         "davinci/Workbench",
         "davinci/library",
         "system/resource",
+        "davinci/Workbench",
         "davinci/workbench/Preferences",
         "davinci/Runtime",
         "dijit/Menu",
@@ -21,7 +22,7 @@ define(["dojo/_base/declare",
         "davinci/ui/widgets/ProjectSelection",
         "dijit/Tree"
 
-],function(declare, _Templated, _Widget,  Workbench, Library, Resource,  Preferences, Runtime,  Menu, MenuItem, Path, Rename, DropDownButton, uiNLS, commonNLS, templateString){
+],function(declare, _Templated, _Widget,  Workbench, Library, Resource, Workbench, Preferences, Runtime,  Menu, MenuItem, Path, Rename, DropDownButton, uiNLS, commonNLS, templateString){
 	
 	return declare("davinci.ui.widgets.ProjectToolbar",   [_Widget, _Templated], {
 
@@ -44,7 +45,7 @@ define(["dojo/_base/declare",
 			
 			var newProject = this._projectSelection.attr("value");
 			if(newProject==this._currentProject) return;
-			Runtime.loadProject(newProject);
+			Workbench.loadProject(newProject);
 			
 		},
 		

@@ -25,14 +25,6 @@
         }
     ],
     "property": {
-    	"x":{
-            "datatype": "number",
-            "defaultValue": "0"
-        },
-    	"y":{
-            "datatype": "number",
-            "defaultValue": "0"
-        },
     	"width":{
             "datatype": "number",
             "defaultValue": "80"
@@ -40,6 +32,10 @@
     	"height":{
             "datatype": "number",
             "defaultValue": "80"
+         },
+     	"cornerRadius":{
+             "datatype": "number",
+             "defaultValue": "0"
         }
     },
     "content": "<span></span>"

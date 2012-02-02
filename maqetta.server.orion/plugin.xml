@@ -10,6 +10,8 @@
             load-on-startup="true">
       </servlet>
 
+
+   
    </extension>
    
       <extension point="maqetta.core.server.userManager">

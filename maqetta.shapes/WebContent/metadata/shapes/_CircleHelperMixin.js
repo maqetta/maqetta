@@ -5,6 +5,11 @@ define([
 var _CircleHelperMixin = function() {};
 _CircleHelperMixin.prototype = {
 
+	onCreateResize: function(compoundCommand, widget, width, height){
+		var valuesObject = this._updateCenterAndRadius(widget, width/2, height/2);
+		compoundCommand.add(davinci.ve.commands.ModifyCommand(widget, valuesObject, null));
+	},
+
 	dragPointsStrings:['left_top','center_top','right_top','right_middle',
 	    	           'right_bottom','center_bottom','left_bottom','left_middle'],
 	    		
@@ -142,6 +147,7 @@ _CircleHelperMixin.prototype = {
             // Call the dispatcher routine that updates snap lines and
             // list of possible parents at current (x,y) location
             context.dragMoveUpdate({
+                    widgets:[this._widget],
                     data:data,
                     eventTarget:event.target,
                     position:position,
@@ -182,23 +188,25 @@ _CircleHelperMixin.prototype = {
 	onMouseUp_Widget: function(command){
 		var widget = this._widget;
 		var dijitWidget = widget.dijitWidget;
-		
-		// Normalize coordinates so that minX, minY is at (0,0)
-		dijitWidget._cx = dijitWidget._rx / 2;
-		dijitWidget._cy = dijitWidget._ry / 2;
-		
-		var valuesObject = {cx:dijitWidget._cx, cy:dijitWidget._cy};
-		if(dijitWidget.rx != "undefined"){
-			valuesObject.rx = dijitWidget._rx;
-			valuesObject.ry = dijitWidget._ry;
-		}else{
-
-			valuesObject.r = dijitWidget._rx;
-		}
+		var valuesObject = this._updateCenterAndRadius(widget, dijitWidget._rx, dijitWidget._ry);
 		command.add(new ModifyCommand(widget, valuesObject, null));
         var context = this._widget ? this._widget.getContext() : undefined;
         context.dragMoveCleanup();
-	}
+	},
+    
+    _updateCenterAndRadius: function(widget, rx, ry){
+		var dijitWidget = widget.dijitWidget;
+		
+		// Normalize coordinates so that minX, minY is at (0,0)
+		dijitWidget._cx = rx / 2;
+		dijitWidget._cy = ry / 2;
+		
+		var valuesObject = {cx:dijitWidget._cx, cy:dijitWidget._cy};
+		valuesObject.rx = rx;
+		valuesObject.ry = ry;
+		return valuesObject;
+	
+    }
 };
 
 return _CircleHelperMixin;

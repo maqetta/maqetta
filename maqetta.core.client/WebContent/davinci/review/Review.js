@@ -11,9 +11,11 @@ davinci.review = {};
 
 var Review = davinci.review.Review = lang.mixin(davinci.Workbench, {
 
-	_updateWorkbenchState: function() {
-		//override for NOOP
-	},
+	
+	/* casues bugs #1661 1646 and 1626. TODO: @waynevicknair: refactor this in Review editor in tab changes. */
+//	_updateWorkbenchState: function() {
+//		//override for NOOP
+//	},
 
 	runComment: function() {
 		this._initKeys();

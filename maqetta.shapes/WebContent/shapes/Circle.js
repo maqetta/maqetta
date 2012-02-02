@@ -6,10 +6,10 @@ define([
 	
 	return declare("shapes.Circle", [_Shape, _CircleMixin], {
 			
-		cx:'40',
-		cy:'40',
-		rx:'40',
-		ry:'40',
+		rx:null,
+		defaultRx:'40',
+		ry:null,
+		defaultRy:'40',
 
 		buildRendering: function(){
 			this.inherited(arguments);	

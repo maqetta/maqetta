@@ -1,14 +1,15 @@
 define([
     	"dojo/_base/declare",
-    	
-    	"davinci/ve/widget",
-    	"davinci/ve/States",
-    	"davinci/Workbench",
-    	"davinci/library",
-    	"davinci/ve/metadata",
-    	"davinci/html/HTMLFile",
-    	"davinci/model/Factory"
-], function(declare, Widget, States, Workbench, Library, Metadata, HTMLFile, Factory) {
+    	"dojo/DeferredList",
+
+    	"./Workbench",
+    	"./library",
+    	"./workbench/Preferences",
+    	"./model/Path",
+    	"./html/HTMLFile",
+    	"./model/Factory",
+    	"system/resource"
+], function(declare, DeferredList, Workbench, Library, Preferences, Path, HTMLFile, Factory, systemResource) {
 
 	var Theme = {
 		desktop_default : 'desktop_default',
@@ -17,74 +18,74 @@ define([
 		none_themeset_name : '(none)',
 		other_device : 'other',
 		none_theme : 'none',
-						dojoMobileDefault: [
-							{
-								"theme": "android",
-								"device": "Android"
-							}, {
-								"theme": "blackberry",
-								"device": "BlackBerry"
-							}, {
-								"theme": "ipad",
-								"device": "iPad"
-							}, {
-								"theme": "iphone",
-								"device": "iPhone"
-							}, {
-								"theme": "iphone",
-								"device": "other"
-							}
-						],
-						dojoMobileCustom: [
-							{
-								"theme": "custom",
-								"device": "Android"
-							}, {
-								"theme": "custom",
-								"device": "BlackBerry"
-							}, {
-								"theme": "custom",
-								"device": "iPad"
-							}, {
-								"theme": "custom",
-								"device": "iPhone"
-							}, {
-								"theme": "custom",
-								"device": "other"
-							}
-						],
+		dojoMobileDefault: [
+			{
+				"theme": "android",
+				"device": "Android"
+			}, {
+				"theme": "blackberry",
+				"device": "BlackBerry"
+			}, {
+				"theme": "ipad",
+				"device": "iPad"
+			}, {
+				"theme": "iphone",
+				"device": "iPhone"
+			}, {
+				"theme": "iphone",
+				"device": "other"
+			}
+		],
+		dojoMobileCustom: [
+			{
+				"theme": "custom",
+				"device": "Android"
+			}, {
+				"theme": "custom",
+				"device": "BlackBerry"
+			}, {
+				"theme": "custom",
+				"device": "iPad"
+			}, {
+				"theme": "custom",
+				"device": "iPhone"
+			}, {
+				"theme": "custom",
+				"device": "other"
+			}
+		],
 		
 
 	isThemeHTML: function(resource){
 		return resource.getName().indexOf("dojo-theme-editor.html") > -1;
 	},
 
-	 CloneTheme: function(name, version, selector, directory, originalTheme, renameFiles){
+	CloneTheme: function(name, version, selector, directory, originalTheme, renameFiles){
 	    
 		var deferreds = [];
 		var fileBase = originalTheme.file.parent;
-		var themeRootPath = new davinci.model.Path(directory).removeLastSegments(0);
-		var resource = system.resource.findResource(themeRootPath.toString());
+		var themeRootPath = new Path(directory).removeLastSegments(0);
+		var resource = systemResource.findResource(themeRootPath.toString());
 		if (resource.readOnly()) {
 			resource.createResource();
 		}
-		system.resource.copy(fileBase, directory, true);
-		var themeRoot = system.resource.findResource(directory);
+		systemResource.copy(fileBase, directory, true);
+		var themeRoot = systemResource.findResource(directory);
 		var fileName = originalTheme.file.getName();
 		/* remove the copied theme */
 		var sameName = (name==originalTheme.name);
 		var themeFile = null;
 		if(!sameName){
-			var badTheme = system.resource.findResource(directory + "/" + fileName);
+			var badTheme = systemResource.findResource(directory + "/" + fileName);
 			badTheme.deleteResource();
 		}
-		var directoryPath = new davinci.model.Path(themeRoot.getPath());
+		var directoryPath = new Path(themeRoot.getPath());
 		var lastSeg = directoryPath.lastSegment();
 		/* create the .theme file */
 		if (!sameName) {
 			themeFile = themeRoot.createResource(lastSeg + ".theme");
 		} else{
-			themeFile = system.resource.findResource(directory + "/" + fileName);
+			themeFile = systemResource.findResource(directory + "/" + fileName);
 		}
 		var themeJson = {
 			className: selector,
@@ -110,7 +111,7 @@ define([
 		/* re-write CSS Selectors */
 		for (var i = 0, len = themeJson.files.length; i < len; i++) {
 			var fileUrl = directoryPath.append(themeJson.files[i]);
-			var resource = system.resource.findResource(fileUrl);
+			var resource = systemResource.findResource(fileUrl);
 			if(!sameName && renameFiles && resource.getName().indexOf(oldClass) > -1){
 				var newName = resource.getName().replace(oldClass, selector);
 				resource.rename(newName);
@@ -119,7 +120,7 @@ define([
 			var cssModel = Factory.getModel({url:resource.getPath(),
 				includeImports: true,
 				loader:function(url){
-					var r1=  system.resource.findResource(url);
+					var r1=  systemResource.findResource(url);
 					return r1.getText();
 				}
 			});
@@ -138,7 +139,7 @@ define([
 		/* re-write metadata */
 		for (var i = 0, len = themeJson.meta.length; i < len; i++) {
 			var fileUrl = directoryPath.append(themeJson.meta[i]);
-			var file = system.resource.findResource(fileUrl.toString());
+			var file = systemResource.findResource(fileUrl.toString());
 			var contents = file.getText();
 			var newContents = contents.replace(new RegExp(oldClass, "g"), selector);
 			deferreds.push(file.setContents(newContents));
@@ -146,7 +147,7 @@ define([
 		/* rewrite theme editor HTML */
 		for (var i = 0, len = themeJson.themeEditorHtmls.length; i < len; i++) {
 			var fileUrl = directoryPath.append(themeJson.themeEditorHtmls[i]);
-			var file = system.resource.findResource(fileUrl.toString());
+			var file = systemResource.findResource(fileUrl.toString());
 			var contents = file.getText();
 			var htmlFile = new HTMLFile(fileUrl);
 			htmlFile.setText(contents,true);
@@ -161,7 +162,7 @@ define([
 	        element.setAttribute('class',modelAttribute); //#1024
 	        deferreds.push(htmlFile.save());
 		}
-	    var defs = new dojo.DeferredList(deferreds);
+	    var defs = new DeferredList(deferreds);
 		Library.themesChanged();
 		return defs;
 	},
@@ -180,10 +181,10 @@ define([
 	        }
 	},
 
-	 getThemeSet: function(context){
+	getThemeSet: function(context){
 	    
 	    var returnThemeSet;
-	    var dojoThemeSets = davinci.workbench.Preferences.getPreferences("maqetta.dojo.themesets", Workbench.getProject());
+	    var dojoThemeSets = Preferences.getPreferences("maqetta.dojo.themesets", Workbench.getProject());
 	    if (!dojoThemeSets){ 
 	        dojoThemeSets =  this.dojoThemeSets;
 	    }
@@ -258,7 +259,7 @@ define([
 	        if(mobileTheme[i].theme != this.none_theme && mobileTheme[i].theme != this.default_theme){
 	            var theme = this.getTheme(mobileTheme[i].theme);
 	            if (theme){ // user may have deleted theme
-	                var ssPath = new davinci.model.Path(theme.file.parent.getPath()).append(theme.files[0]);
+	                var ssPath = new Path(theme.file.parent.getPath()).append(theme.files[0]);
 	                var resourcePath = context.getFullResourcePath();
 	                var filename = ssPath.relativeTo(resourcePath, true).toString();
 	                if (mobileTheme[i].device === this.other_device){
@@ -281,7 +282,7 @@ define([
 	    map.forEach(function(item, idx, arr) {
 	        for (var i = 0; i < themeData.length; i++){
 	            var theme = themeData[i];
-	            var ssPath = new davinci.model.Path(theme.file.parent.getPath()).append(theme.files[0]);
+	            var ssPath = new Path(theme.file.parent.getPath()).append(theme.files[0]);
 	            var resourcePath = context.getFullResourcePath();
 	            var filename = ssPath.relativeTo(resourcePath, true).toString();
 	            if (filename == item[2][0]){
@@ -355,7 +356,7 @@ define([
 };
 
 	
-// Intialize the object
+// Initialize the object
 Theme.none_themeset = {
         "name": Theme.none_themeset_name,
         "desktopTheme": "claro",
@@ -383,7 +384,4 @@ Theme.dojoThemeSets =  {
 
 return Theme;
 });
-
-
-
 

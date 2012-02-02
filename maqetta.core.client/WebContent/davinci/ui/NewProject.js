@@ -5,6 +5,7 @@ define(["dojo/_base/declare",
         "system/resource",
         "davinci/workbench/Preferences",
         "davinci/Runtime",
+        "davinci/Workbench",
         "dojo/i18n!davinci/ui/nls/ui",
         "dojo/i18n!dijit/nls/common",
         "dojo/text!./templates/NewProject.html",
@@ -12,7 +13,7 @@ define(["dojo/_base/declare",
         "dijit/form/RadioButton",
         "dijit/form/TextBox"
         
-],function(declare, _Templated, _Widget,  Library, Resource, Preferences,  Runtime, uiNLS, commonNLS, templateString){
+],function(declare, _Templated, _Widget,  Library, Resource, Preferences,  Runtime, Workbench, uiNLS, commonNLS, templateString){
 	return dojo.declare("davinci.ui.NewProject",   [_Widget,_Templated], {
 		widgetsInTemplate: true,
 		templateString: templateString,

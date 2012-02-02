@@ -3,7 +3,7 @@ define([
 	"./HtmlSrcAttributeInput"
 ], function(declare, HtmlSrcAttributeInput){
 
-return declare("davinci.libraries.html.html.HtmlSrcAttributeInputEmbed", HtmlSrcAttributeInput, {
+return declare(HtmlSrcAttributeInput, {
 
 	constructor: function(/*Object*/args) {
 		this.supportsAltText = false;

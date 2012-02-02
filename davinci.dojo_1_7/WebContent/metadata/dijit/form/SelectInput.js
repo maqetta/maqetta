@@ -8,7 +8,7 @@ define([
 	dijitNls
 ) {
 
-return declare("davinci.libraries.dojo.dijit.form.SelectInput", OptionsInput, {
+return declare(OptionsInput, {
 
 	supportsHTML: "false",
 	helpText: "",

@@ -20,7 +20,7 @@ define([
 	dojoxNls
 ) {
 
-return declare("davinci.libraries.dojo.dojox.mobile.MobileComboBoxInput", SmartInput, {
+return declare(SmartInput, {
 
 	property: "value",
 	

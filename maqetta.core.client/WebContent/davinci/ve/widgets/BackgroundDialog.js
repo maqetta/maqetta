@@ -48,7 +48,7 @@ define(["dojo/_base/declare",
 			this.stoppos_store = new MutableStore({values:['0%','100%','10%','20%','30%','40%','50%','60%','70%','80%','90%']});
 	
 			// bpProps will hold some useful info about the backgrounds rows in the Properties palette
-			var bgProps = davinci.ve.widgets.Background.BackgroundWidgets;
+			var bgProps = davinci.ve._BackgroundWidgets;
 	
 			//FIXME: Following code is mostly a copy/paste from ColorPicker.js
 			//Should be refactored into a shared utility

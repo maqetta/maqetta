@@ -12,7 +12,7 @@ define([
 	dojoxNls
 ) {
 
-return declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListInput", DataStoreBasedWidgetInput, {
+return declare(DataStoreBasedWidgetInput, {
 
 	displayOnCreate: "true",
 	

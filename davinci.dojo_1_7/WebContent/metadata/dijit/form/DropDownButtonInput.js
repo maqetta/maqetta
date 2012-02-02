@@ -7,7 +7,7 @@ define([
     	"dojo/i18n!dijit/nls/common"
 ], function(declare, ContainerInput, nls, entities, veNls, commonNls){
 
-return declare("davinci.libraries.dojo.dijit.form.DropDownButtonInput", ContainerInput, {
+return declare(ContainerInput, {
 
 	propertyName: "label",
 		

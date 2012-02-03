@@ -1,10 +1,38 @@
 define([
-	"./commands/CommandStack",
 	"dojo/i18n!./nls/webContent",
 	"dijit/Dialog",
 	"dijit/form/Button",
-	"dijit/form/TextBox"
-], function(CommandStack, webContent, Dialog) {
+	"dijit/form/TextBox",
+	"./commands/CommandStack",
+	"./ui.plugin",
+	"./html/html.plugin",
+	"./js/js.plugin",
+	"./ve/ve.plugin",
+	"./ve/themeEditor/themeEditor.plugin",
+	"./review/review.plugin"
+], function(
+	webContent,
+	Dialog,
+	Button,
+	TextBox,
+	CommandStack,
+	ui_plugin,
+	html_plugin,
+	js_plugin,
+	ve_plugin,
+	themeEditor_plugin,
+	review_plugin
+) {
+
+// list of plugins to load
+var plugins = [
+	ui_plugin,
+	html_plugin,
+	js_plugin,
+	ve_plugin,
+	themeEditor_plugin,
+	review_plugin
+];
 
 var Runtime = {
 	plugins: [],
@@ -39,31 +67,22 @@ var Runtime = {
 	},
 	
 	loadPlugins: function() {
-		dojo.xhrGet( {
-			// The following URL must match that used to test
-			// the server.
-			url:'cmd/getPlugins',
-			handleAs:"json",
-			sync:true,
-			load: function(responseObject, ioArgs) {
-			   Runtime._loadPlugins(responseObject);
-			},
-			error: function(response, ioArgs) {
-				if (response.status==401) {
-					window.location.href= 'welcome';
-				} else {
-					Runtime.handleError(webContent.errorLoadingPlugins);
+		plugins.forEach(function(plugin) {
+			var pluginID = plugin.id;
+			Runtime.plugins[pluginID] = plugin;
+			for (var id in plugin) {
+				var extension = plugin[id];
+				if (typeof extension != "string") {
+					if (extension instanceof Array) {
+						extension.forEach(function(ext) {
+							Runtime._addExtension(id, ext, pluginID);
+						});
+					} else {
+						Runtime._addExtension(id, extension, pluginID);
+					}
 				}
 			}
 		});
-	},
-	
-	_loadPlugins: function(plugins) {
-		for (var i=0;i<plugins.length;i+=2) {
-			var url=plugins[i];
-			var plugin=plugins[i+1];
-			Runtime._loadPlugin(plugin, url);
-		}
 	},
 	
 	singleUserMode : function() {
@@ -205,28 +224,7 @@ var Runtime = {
 		dojo.forEach(Runtime.subscriptions, dojo.unsubscribe);
 	},
 	
-	_loadPlugin: function(plugin,url) {
-		var pluginID = plugin.id;
-		Runtime.plugins[pluginID] = plugin;
-		if (plugin.css) {
-			Runtime._loadCSS(plugin,url);
-		}
-		for (var id in plugin) {
-			var extension = plugin[id];
-			if (typeof extension != "string") {
-				if (extension instanceof Array) {
-					extension.forEach(function(ext) {
-						Runtime._addExtension(id, ext, pluginID);						
-					});
-				} else {
-					Runtime._addExtension(id, extension, pluginID);
-				}
-			}
-		}
-	},
-	
 	_addExtension: function(id, extension, pluginID) {
-		
 		if (extension.id) {
 			extension.id = pluginID + "." + extension.id;
 		}
@@ -265,20 +263,6 @@ var Runtime = {
 		window.document.body.innerHTML = "<div><h1>Problem connecting to the Maqetta Server...</h1></div><div><center><h1><a href='"+ redirectUrl + "'>Return to Maqetta Login</a></h1></center></div><br><br><div><h2>Error description:</h2>" + error + "</div>" // TODO: i18n
 	},
 
-	_loadCSS: function(plugin,pluginURL) {
-		pluginURL=pluginURL.split('/');
-		var cssURL=plugin.css.split('/');
-		pluginURL.pop(); //remove plugin name
-		cssURL=pluginURL.concat(cssURL).join('/');
-		var headID = dojo.doc.getElementsByTagName("head")[0];         
-		var cssNode = dojo.doc.createElement('link');
-		cssNode.type = 'text/css';
-		cssNode.rel = 'stylesheet';
-		cssNode.href = cssURL;
-		headID.appendChild(cssNode);
-	},
-		
-	
 	executeCommand: function(cmdID) {
 		var cmd=Runtime.getExtension("davinci.commands", cmdID);
 		if (cmd && cmd.run) {

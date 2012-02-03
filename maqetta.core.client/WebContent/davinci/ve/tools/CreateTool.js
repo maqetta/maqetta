@@ -161,7 +161,8 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				eventTarget:event.target, 
 				rect:box, 
 				doSnapLines:doSnapLines, 
-				doFindParentsXY:showCandidateParents});
+				doFindParentsXY:showCandidateParents,
+				doCursor:!absolute});
 		}
 	},
 

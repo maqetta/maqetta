@@ -2715,6 +2715,7 @@ return declare("davinci.ve.Context", null, {
 			rect = params.rect,
 			doSnapLines = params.doSnapLines,
 			doFindParentsXY = params.doFindParentsXY,
+			doCursor = params.doCursor,
 			widgetType = dojo.isArray(data) ? data[0].type : data.type;
 
 		// inner function that gets called recurively for each widget in document
@@ -2734,7 +2735,7 @@ return declare("davinci.ve.Context", null, {
 			if(doSnapLines){
 				Snap.findSnapOpportunities(this, widget, computed_style);
 			}
-			cp.findParentsXY(data, widget, position);
+			cp.findParentsXY({data:data, widget:widget, position:position, doCursor:doCursor});
 			dojo.forEach(widget.getChildren(), function(w){
 				_updateThisWidget.apply(context, [w]);
 			});

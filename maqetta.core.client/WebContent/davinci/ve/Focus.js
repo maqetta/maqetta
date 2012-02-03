@@ -158,7 +158,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         var showParentsPref = this._context.getPreference('showPossibleParents');
         var spaceKeyDown = cp.isSpaceKeyDown();
         var showCandidateParents = (!showParentsPref && spaceKeyDown) || (showParentsPref && !spaceKeyDown);
-        if(this._mover && (doSnapLines || showCandidateParents) && event && this._selectedWidget){
+        if(this._mover && event && this._selectedWidget){
             var data = {type:this._selectedWidget.type};
             var position = { x:event.pageX, y:event.pageY};
             var snapBox = {l:b.l, t:b.t, w:0, h:0};
@@ -177,7 +177,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             		currentParent:currentParent,
              		rect:snapBox, 
             		doSnapLines:doSnapLines, 
-            		doFindParentsXY:showCandidateParents});
+            		doFindParentsXY:showCandidateParents,
+            		doCursor:!absolute});
         }else{
         	// If not showing snap lines or parents, then make sure they aren't showing
 			context.dragMoveCleanup();

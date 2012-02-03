@@ -19,7 +19,6 @@ define([
 	"dijit/Dialog",
 	"dijit/Tree",
 	"davinci/review/widgets/Tree",
-	"system/resource",
 	"davinci/Runtime",
 	"davinci/Workbench",
 	"davinci/model/resource/Folder",
@@ -33,7 +32,7 @@ define([
 	"dojo/text!./templates/MailFailureDialogContent.html"
 ], function(declare, _Widget, _Templated, StackContainer, ContentPane, SimpleTextarea, NumberTextBox, ValidationTextBox, DateTextBox, 
 		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojostring, Dialog, dijitTree, reviewTree,  
-		sysResource, Runtime, Workbench, Folder, File, Empty, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls, 
+		Runtime, Workbench, Folder, File, Empty, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls, 
 		templateString, warningString) {
 	
 return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
@@ -141,7 +140,13 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 			getIconClass: dojo.hitch(this, this._getIconClass),
 			isMultiSelect: true,
 			onDblClick: dojo.hitch(this, doubleClick),
-			transforms: [sysResource.alphabeticalSort]
+			transforms: [function(items) {
+				return items.sort(function(a,b) {
+					a = a.name.toLowerCase();
+					b = b.name.toLowerCase();
+					return a < b ? -1 : (a > b ? 1 : 0);
+				});
+			}]
 		});
 		sourceTreeCP.domNode.appendChild(sourceTree.domNode);
 		sourceTree.startup();

@@ -59,6 +59,7 @@ dependencies = {
 	],
 
 	prefixes: [
+		[ "system", "../system" ],
 		[ "preview", "../preview" ],
 		[ "orion", "../orion" ],
 		[ "davinci", "../davinci" ],

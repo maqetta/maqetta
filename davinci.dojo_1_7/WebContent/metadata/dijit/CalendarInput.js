@@ -8,7 +8,7 @@ define([
 	dijitNls
 ) {
 
-return declare("davinci.libraries.dojo.dijit.CalendarInput", SmartInput, {
+return declare(SmartInput, {
 
 	property: "value",
 	supportsHTML: "false",

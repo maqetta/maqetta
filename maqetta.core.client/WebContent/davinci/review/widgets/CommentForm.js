@@ -8,7 +8,7 @@ define([
 	"dijit/MenuItem",
 	"dijit/form/Button",
 	"dijit/form/DropDownButton",
-	"dojo/i18n!../nls/widgets"
+	"dojo/i18n!./nls/widgets"
 ], function(declare, _Widget, _Templated, TextBox, SimpleTextarea, Menu, MenuItem, 
 		Button, DropDownButton, widgetsNls) {
 	

@@ -6,11 +6,16 @@ define([
 
 		buildRendering: function() {
 			this.inherited(arguments);
-			this._x = this.x - 0;	// -0 to force conversion to number
-			this._y = this.y - 0;
-			this._width = this.width - 0;
-			this._height = this.height - 0;
-			this._cornerRadius = this.cornerRadius ? this.cornerRadius - 0 : 0;
+			// -0 to force conversion to number
+			this._x = 0;
+			this._y = 0;
+			this._width = (this.width ? this.width : this.defaultWidth) - 0;
+			this._height = (this.height ? this.height : this.defaultHeight) - 0;
+			this._cornerRadius = this.cornerRadius - 0;
+		},
+		
+		resize: function(){
+			this._resize();
 		},
 		
 		createGraphics: function(){

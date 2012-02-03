@@ -13,8 +13,7 @@ define(["dojo/_base/declare",
         "davinci/ve/widgets/ColorPicker"
         
 
-],function(declare, WidgetLite, ColorPickerFlat, ColorStore, MutableStore, ComboBox,BackgroundDialog, Workbench, veNLS, commonNLS){
-	var BackgroundWidgets={};
+],function(declare, WidgetLite, ColorPickerFlat, ColorStore, MutableStore, ComboBox,BackgroundDialog, Workbench, veNLS, commonNLS, CssUtils, ColorPicker){
 	var idPrefix = "davinci_ve_widgets_properties_border_generated"
 	var	__id=0;
 	function getId(){
@@ -108,9 +107,12 @@ define(["dojo/_base/declare",
 			this.domNode.appendChild(comboDiv);
 		
 			if(typeof this.propname == 'string' && this._comboBox){
+				if(!davinci.ve._BackgroundWidgets){
+					davinci.ve._BackgroundWidgets = {};
+				}
 				// Add to cross-reference table for all of the background properties.
 				// This table is used by Background palette.
-				BackgroundWidgets[this.propname] = {
+				davinci.ve._BackgroundWidgets[this.propname] = {
 						propPaletteWidget: this,
 						comboBox: this._comboBox
 				};
@@ -159,7 +161,7 @@ define(["dojo/_base/declare",
 					// into an array of background-image property declarations
 					// which cause gradients to magically work across different browsers.
 					if(!background.cancel){
-						var xref = BackgroundWidgets;
+						var xref = davinci.ve._BackgroundWidgets;
 						for(var propName in xref){
 							var o = xref[propName];
 							if(o.bgdWidget){
@@ -177,7 +179,7 @@ define(["dojo/_base/declare",
 						}
 						var propName = 'background-image';
 						var o = xref[propName];
-						var a = davinci.ve.utils.CssUtils.buildBackgroundImage(background.bgddata);
+						var a = CssUtils.buildBackgroundImage(background.bgddata);
 						var newValue;
 						if(a.length == 0){
 							newValue = '';
@@ -221,7 +223,7 @@ define(["dojo/_base/declare",
 					}
 					return true;
 				}, background);
-				var xref = BackgroundWidgets;
+				var xref = davinci.ve._BackgroundWidgets;
 				for(var propName in xref){
 					var o = xref[propName];
 					var cascade = o.propPaletteWidget._cascade;

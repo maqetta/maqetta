@@ -3,9 +3,7 @@
 <plugin>
       
      <extension id="maqetta.core.client" point="org.eclipse.equinox.http.registry.resources">
-        <resource alias="/maqetta/app/system" 
-        		  base-name="/WebContent/system" 
-        		   />      
+        <resource alias="/maqetta/app/orion" base-name="/WebContent/orion" />      
      </extension>
     
 	<extension point="maqetta.core.server.welcomePage"><welcomePage path="WebContent/welcome.html" priority="2"/></extension>

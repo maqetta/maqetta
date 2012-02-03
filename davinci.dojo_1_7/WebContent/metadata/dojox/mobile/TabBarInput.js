@@ -6,7 +6,7 @@ define([
 	ContainerInput
 ) {
 
-return declare("davinci.libraries.dojo.dojox.mobile.TabBarInput", ContainerInput, {
+return declare(ContainerInput, {
 
 	propertyName: "label"
 	

@@ -20,7 +20,7 @@ define([
 	dojoNls
 ) {
 
-return declare("davinci.libraries.dojo.dojo.data.ItemFileReadStoreInput", SmartInput, {
+return declare(SmartInput, {
 
 	propertyName: null,
 

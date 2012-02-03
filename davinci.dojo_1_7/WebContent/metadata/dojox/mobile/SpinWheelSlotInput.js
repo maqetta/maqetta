@@ -16,7 +16,7 @@ define([
 	dojoxNls
 ) {
 
-return declare("davinci.libraries.dojo.dojox.mobile.SpinWheelSlotInput", SmartInput, {
+return declare(SmartInput, {
 
 	property: "value",
 	supportsHTML: "false",

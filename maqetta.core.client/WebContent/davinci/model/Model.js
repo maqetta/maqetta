@@ -1,14 +1,6 @@
 define([
-	"dojo/_base/declare",
-	"davinci/model/Model"
-], function(declare, Model) {
-
-if ( typeof davinci === "undefined" ) { davinci={}; }
-
-davinci.Inherits = function(clazz, parent) {
-	clazz.prototype = new parent();
-	clazz.prototype.constructor = clazz;
-};
+	"dojo/_base/declare"
+], function(declare) {
 
 return declare("davinci.model.Model", null, {
 	/**

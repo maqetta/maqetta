@@ -8,7 +8,7 @@ define([
 	dijitNls
 ) {
 
-return declare("davinci.libraries.dojo.dijit.layout.AccordionContainerInput", StackContainerInput, {
+return declare(StackContainerInput, {
 	multiLine: "true",
 	format: "rows",
 	supportsHTML: "true",

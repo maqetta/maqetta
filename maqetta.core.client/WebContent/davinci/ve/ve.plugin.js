@@ -1,4 +1,9 @@
-({
+define([
+    "require"
+//  "../Workbench"
+], function(require) {
+
+return {
     id: "davinci.ve",
     "davinci.view": [
         {
@@ -27,7 +32,6 @@
             title: "Properties",
             viewClass: "davinci.ve.views.SwitchingStyleView"
         }
-
     ],
 
     "davinci.perspective": [
@@ -54,7 +58,7 @@
                 {
                     viewID: "davinci.ve.states",
                     position: "right"
-                },
+                }
             /*
              * { viewID: "davinci.ve.datastores", position: "right" }, { viewID: "davinci.ui.problems", position: "right-bottom" }
              */
@@ -296,11 +300,6 @@
                         label: "Source",
                         toolbarPath: "displayMode"
                     }
-                /*
-                 * DOM VIEW NOT YET IMPLEMENT , { id: "dom", iconClass: 'sourceModeIcon editActionIcon', method : "switchDisplayMode", radioGroup : "displayMode", label: "Page DOM", toolbarPath:
-                 * "domMode" }
-                 */
-
                 ]
             }
         },
@@ -336,14 +335,7 @@
             parts: [
                 "davinci.ve.visualEditor", "davinci.ve.VisualEditorOutline"
             ]
-
-        },
-    /*
-     * { targetID: "davinci.ve.datastoreActions", parts: [ "davinci.ve.datastores" ] }
-     */
-    /*
-     * , { targetID: "davinci.ve.stateActions", parts : [ "davinci.ve.VisualEditorOutline"] }
-     */
+        }
     ],
     "davinci.editorActions": {
         editorContribution: {
@@ -399,12 +391,14 @@
                     id: "openBrowser",
                     iconClass: 'openBrowserIcon',
                     run: function() {
-                        var editor = davinci.Workbench.getOpenEditor();
-                        if (editor && editor.resourceFile) {
-                            editor.previewInBrowser();
-                        } else {
-                            console.log("ERROR. Cannot launch browser window. No editor info.");
-                        }
+                        require(['../Workbench'], function(workbench) {
+                            var editor = workbench.getOpenEditor();
+                            if (editor && editor.resourceFile) {
+                                editor.previewInBrowser();
+                            } else {
+                                console.error("ERROR. Cannot launch browser window. No editor info.");
+                            }
+                        });
                     },
                     label: "Preview in Browser",
                     toolbarPath: "preview"
@@ -413,12 +407,12 @@
                     id: "save",
                     iconClass: 'saveIcon',
                     run: function() {
-                        davinci.Workbench.getOpenEditor().save();
+                        require(['../Workbench'], function(workbench) {
+                            workbench.getOpenEditor().save();
+                        });
                     },
                     isEnabled: function(context) {
-                        var isEnabled = davinci.Workbench.getOpenEditor();
-                        return isEnabled;
-
+                        return require('../Workbench').getOpenEditor();
                     },
                     label: "Save",
                     toolbarPath: "save"
@@ -428,9 +422,7 @@
                     iconClass: 'saveAsIcon',
                     run: "davinci.ui.Resource.saveAs('html')",
                     isEnabled: function(context) {
-                        var isEnabled = davinci.Workbench.getOpenEditor();
-                        return isEnabled;
-
+                        return require('../Workbench').getOpenEditor();
                     },
                     label: "Save As",
                     toolbarPath: "save"
@@ -528,7 +520,6 @@
                     label: "Split Horizontally",
                     toolbarPath: "displayMode"
                 }
-
             ]
         }
     },
@@ -545,7 +536,6 @@
                 "cssOverrideWarn": true
             }
         }
-
     ],
     "davinci.dnd": [
         {
@@ -554,7 +544,7 @@
             ],
             dragSource: function(object) {
                 if (object.elementType == 'File') {
-                    return /gif|jpeg|jpg|png|svg|json/i.test(object.getExtension());
+                    return (/gif|jpeg|jpg|png|svg|json/i).test(object.getExtension());
                 }
             },
             dragHandler: "davinci.ve.palette.ImageDragSource"
@@ -567,4 +557,6 @@
             type: "text"
         }
     ]
-})
+};
+
+});

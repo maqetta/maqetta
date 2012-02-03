@@ -1,15 +1,20 @@
-({
+define([
+    "require",
+//    "./ui/Resource",
+//    "./Workbench",
+//    "./ui/Download",
+//    "./ui/DownloadSelected",
+//    "./ui/UserLibraries",
+    "./css!./ui.css"    // load css; no return
+], function(require) {
+
+return {
     id: "davinci.ui",
-    css: "ui.css",
     "davinci.view": [
         {
             id: "navigator",
             title: "Files",
             viewClass: "davinci.workbench.Explorer"
-        // startup : function(){
-        // dojo.require("dijit.Tree");
-        // dojo.require("dojo.data.ItemFileReadStore");
-        // }
         },
         {
             id: "hierarchy",
@@ -20,7 +25,6 @@
             title: "Outline",
             viewClass: "davinci.workbench.OutlineView"
         },
-
         {
             id: "scope",
             title: "Scope"
@@ -47,7 +51,6 @@
             id: "search",
             title: "Search"
         }
-
     ],
     "davinci.preferences": [
         {
@@ -56,8 +59,6 @@
             category: "",
             pageContent: "Project Settings here"
         },
-        
-        
         {
             name: "Project Settings",
             id: "ProjectPrefs",
@@ -68,10 +69,8 @@
                 "webContentFolder": "",
                 "themeFolder": "themes",
                 "widgetFolder": "lib/widgets"
-            },
-            
+            }
         }
-
     ],
     "davinci.perspective": {
         id: "main",
@@ -81,11 +80,6 @@
                 viewID: "davinci.ui.navigator",
                 position: "left"
             },
-
-            // {
-            // viewID: "davinci.ui.problems",
-            // position: "bottom"
-            // },
             {
                 viewID: "davinci.ui.outline",
                 position: "right"
@@ -140,66 +134,32 @@
                         "help", true, "about", false, "additions", false
                     ]
                 }
-/*
-				,
-				{
-                    // label : "Window",
-                    label: "",
-                    path: "window",
-                    id: "davinci.window",
-                    separator: [
-                        "open.perspective", true, "show.view", true, "group", true,
-                        "open.preferences", true
-                    ]
-                },
-                {
-                    label: "Open Perspective",
-                    path: "davinci.window/open.perspective",
-                    id: "open.perspective",
-                    populate: function() {
-                        return davinci.Workbench._populatePerspectivesMenu();
-                    },
-                    separator: [
-                        "additions", true
-                    ]
-                },
-                {
-                    label: "Show View",
-                    path: "davinci.window/show.view",
-                    id: "show.view",
-                    populate: function() {
-                        return davinci.Workbench._populateShowViewsMenu();
-                    },
-                    separator: [
-                        "additions", true
-                    ]
-                }
-*/
             ],
             actions: [
                 {
                     id: "newHTML",
                     // icon: 'davinci/img/add.gif',
-                    run: davinci.ui.Resource.newHTML,
+                    run: function() {
+                        require(['./ui/Resource'], function(r) {
+                            r.newHTML();
+                        });
+                    },
                     label: "HTML File...",
                     // toolbarPath: "davinci.toolbar.main/edit",
                     menubarPath: "davinci.new/new"
                 },
-
                 {
                     id: "newCSS",
                     run: "davinci.ui.Resource.newCSS()",
                     label: "CSS File...",
                     menubarPath: "davinci.new/new"
                 },
-
                 {
                     id: "newJS",
                     run: "davinci.ui.Resource.newJS()",
                     label: "JavaScript File...",
                     menubarPath: "davinci.new/new"
                 },
-
                 {
                     id: "newProject",
                     run: "davinci.ui.Resource.newProject()",
@@ -212,7 +172,6 @@
                     label: "Folder...",
                     menubarPath: "davinci.new/new2"
                 },
-
                 {
                     id: "openFile",
                     run: "davinci.ui.Resource.openFile()",
@@ -220,14 +179,12 @@
                     toolbarPath: "davinci.toolbar.main/edit",
                     menubarPath: "davinci.open/open"
                 },
-
                 {
                     id: "openThemeEditor",
                     run: "require(['davinci/Workbench', 'davinci/ui/OpenThemeDialog'], function(Workbench, OpenThemeDialog){Workbench.showModal(new OpenThemeDialog(), 'Open Theme', 'width: 200px');})",
                     label: "Theme Editor...",
                     menubarPath: "davinci.open/open2"
                 },
-
                 {
                     id: "editPreferences",
                     run: "davinci.workbench.Preferences.showPreferencePage()",
@@ -275,36 +232,37 @@
                     id: "davinci.ui.newfile",
                     label: "New folder...",
                     run: "davinci.ui.Resource.newFolder()",
-                  
-                    isEnabled: davinci.ui.Resource.canModify,
+                    isEnabled: function(item) {
+                        return require('./ui/Resource').canModify(item);
+                    },
                     menubarPath: "newfolder"
-
                 },
                 {
                     id: "davinci.ui.addFiles",
                     label: "Upload files...",
                     run: "davinci.ui.Resource.addFiles()",
-                    
-                    isEnabled: davinci.ui.Resource.canModify,
+                    isEnabled: function(item) {
+                        return require('./ui/Resource').canModify(item);
+                    },
                     menubarPath: "addFiles"
-
                 },
                 {
                     id: "davinci.ui.rename",
                     label: "Rename...",
                     iconClass:"renameIcon",
                     run: "davinci.ui.Resource.renameAction()",
-                   
-                    isEnabled: davinci.ui.Resource.canModify,
+                    isEnabled: function(item) {
+                        return require('./ui/Resource').canModify(item);
+                    },
                     menubarPath: "addFiles"
-
                 },
                 {
                     id: "davinci.ui.delete",
                     label: "Delete",
                     iconClass: "editActionIcon editDeleteIcon",
-                    
-                    isEnabled: davinci.ui.Resource.canModify,
+                    isEnabled: function(item) {
+                        return require('./ui/Resource').canModify(item);
+                    },
                     run: "davinci.ui.Resource.deleteAction()",
                     menubarPath: "delete"
 
@@ -314,10 +272,10 @@
                     label: "Download",
                     iconClass: "downloadSomeIcon",
                     action: "davinci.actions.DownloadAction",
-                    
-                        isEnabled: davinci.ui.Resource.canModify,
+                    isEnabled: function(item) {
+                        return require('./ui/Resource').canModify(item);
+                    },
                     menubarPath: "delete"
-
                 }
             ]
         }
@@ -328,7 +286,6 @@
             parts: [
                 "davinci.ui.navigator"
             ]
-
         }
     ],
     "davinci.viewActions": [
@@ -347,7 +304,6 @@
                         menubarPath: "davinci.edit/cut"
                     }
                 ]
-
             }
         },
 
@@ -356,13 +312,15 @@
             viewContribution: {
                 targetID: "workbench.Explorer",
                 actions: [
-
                     {
                         id: "download",
                         iconClass: 'downloadAllIcon',
                         run: function() {
-                            davinci.Workbench.showModal(new davinci.ui.Download(), "Download",
-                                    "width: 400px");
+                            require(['./Workbench', './ui/Download'],
+                                function(workbench, Download) {
+                                    workbench.showModal(new Download(), "Download", "width: 400px");
+                                }
+                            );
                         },
                         radioGroup: "displayMode",
                         label: "Download Entire Workspace",
@@ -372,8 +330,11 @@
                         id: "download",
                         iconClass: 'downloadSomeIcon',
                         run: function() {
-                            davinci.Workbench.showModal(new davinci.ui.DownloadSelected(),
-                                    "Download", "width: 400px");
+                            require(['./Workbench', './ul/DownloadSelected'],
+                                function(workbench, DownloadSelected) {
+                                    workbench.showModal(new DownloadSelected(), "Download", "width: 400px");
+                                }
+                            );
                         },
                         radioGroup: "displayMode",
                         label: "Download Selected Files",
@@ -383,18 +344,20 @@
                         id: "userlibs",
                         iconClass: 'userLibIcon',
                         run: function() {
-                            davinci.Workbench.showModal(new davinci.ui.UserLibraries(),
-                                    "User Libraries", "width: 400px");
+                            require(['./Workbench', './ui/UserLibraries'],
+                                function(workbench, UserLibraries) {
+                                    workbench.showModal(new UserLibraries(), "User Libraries", "width: 400px");
+                                }
+                            );
                         },
                         radioGroup: "displayMode",
                         label: "Modify Libraries",
                         toolbarPath: "download"
                     }
-
                 ]
-
             }
         }
-
     ]
-})
+};
+
+});

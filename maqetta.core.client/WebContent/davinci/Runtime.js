@@ -378,7 +378,7 @@ var Runtime = {
 		var loading = dojo.create("div",null, dojo.body(), "first");
 		loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Logging off...</td></tr></table>'; // FIXME: i18n
 		dojo.addClass(loading, 'loading');
-		Runtime.unload(); //FIXME: needs to call Workbench.  use pub/sub?
+		Workbench.unload();
 		Runtime.serverJSONRequest({
 			url:"cmd/logoff", handleAs:"text", sync:true
 		});

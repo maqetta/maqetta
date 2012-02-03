@@ -102,6 +102,7 @@ var Workbench = {
 	_DEFAULT_PROJECT: "project1",
 	
 	run: function() {
+		Runtime.run();
 		Workbench._initKeys();
 		davinci.ve.metadata.init(); //FIXME: shouldn't need 'davinci' reference
 		

@@ -15,7 +15,6 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
     constructor: function(newTheme, context){
         this._newTheme = newTheme;
         this._context = context;
-        this.resetDojoxMobileNeed = false;
         this._oldTheme  = Theme.getThemeSet(this._context);
         if (!this._oldTheme){ 
             this._oldTheme = Theme.dojoThemeSets.themeSets[0]; // default;
@@ -42,11 +41,18 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
         } else {
             this.addThemeSet(newThemeInfo);
         }
-        if(this.resetDojoxMobileNeed){
-            // this is here due to timing if deleting and then adding themeMap
-            this._resetDojoxMobileTheme(this._context);
-            this.resetDojoxMobileNeed = false;
+        var text = this._context.getModel().getText();
+        this._context._editor.setContent(this._context._editor.fileName, text);
+        this._context._configDojoxMobile();
+        var device = this._context.getMobileDevice() || 'none';
+        if (device != 'none'){
+            device = preview.silhouetteiframe.themeMap[device+'.svg'];
         }
+        var dm = this._context.getDojo().getObject("dojox.mobile", true);
+        if (dm && dm.loadDeviceTheme){
+        	dm.loadDeviceTheme(device);
+        }
+        
     },
     
         
@@ -210,25 +216,17 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
                 scriptTag.parent.removeChild(scriptTag);
              }
         }, this);
-        this.resetDojoxMobileNeed = true;
-        
-    },
-    
-    _resetDojoxMobileTheme: function(context){
-        var device = context.getMobileDevice() || 'none';
-        if (device != 'none'){
-            device = preview.silhouetteiframe.themeMap[device+'.svg'];
-        }
         var dm = context.getDojo().getObject("dojox.mobile", true);
         if (dm){
             var dj = context.getDojo();
             var url = dj.moduleUrl('dojox.mobile', 'themes/iphone/ipad.css');
             dm.themeMap=[["Android","android",[]],["BlackBerry","blackberry",[]],["iPad","iphone",[url]],["Custom","custom",[]],[".*","iphone",[]]]; // reset themeMap to default
             delete dm.themeFiles;
-            dm.loadDeviceTheme(device);
         } 
+        
     },
     
+   
     _dojoxMobileAddTheme: function(context, theme, newFile){
         
         var htmlElement = context._srcDocument.getDocumentElement();
@@ -285,27 +283,14 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
                             newScriptText.setText(themeMap); 
                             script.addChild(newScriptText); 
                             scriptTag.parent.removeChild(scriptTag);
-                            if (!newFile) {
-                                var device = context.getMobileDevice() || 'none';
-                                if (device != 'none'){
-                                    device = preview.silhouetteiframe.themeMap[device+'.svg'];
-                                }
-                                var dm = context.getDojo().getObject("dojox.mobile", true);
-                                dm.themeMap= Theme.getDojoxMobileThemeMap(context, theme);
-                                dm.themeFiles = [];
-                                dm.loadDeviceTheme(device);
-                                this.resetDojoxMobileNeed = false;
-                            }
                         }
                         
                     }
                 }
              }
         }, this);
-            
-            
 
-    },
+    }
     
   
 

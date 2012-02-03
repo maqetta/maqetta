@@ -5,7 +5,7 @@ define([
 //    "./ui/Download",
 //    "./ui/DownloadSelected",
 //    "./ui/UserLibraries",
-    "./css!./ui.css"    // load css; no return
+    "davinci/css!./ui.css"    // load css; no return
 ], function(require) {
 
 return {

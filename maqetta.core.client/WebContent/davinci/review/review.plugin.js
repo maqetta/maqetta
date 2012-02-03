@@ -1,5 +1,5 @@
 define([
-	"../css!./resources/Comment.css"
+	"davinci/css!./resources/Comment.css"
 ], function() {
 
 return {

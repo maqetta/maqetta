@@ -4,10 +4,9 @@ define([
 	"davinci/Workbench",
 	"davinci/workbench/Preferences"
 ], function(declare, Runtime, Workbench, Preferences) {
- 
-if (typeof davinci.js === "undefined") { davinci.js = {}; }
 
-var Format =  davinci.js.format = function(model, opt) {
+// XXX This most likely does not work.
+var Format = function(model, opt) {
 
 	var options = opt || Preferences.getPreferences("davinci.js.format", Workbench.getProject());
 	var indentLevel = 0;
@@ -470,6 +469,9 @@ var Format =  davinci.js.format = function(model, opt) {
 
 	return output.join("");
 };
-});
 
- 
+return {
+	format: Format
+};
+
+});

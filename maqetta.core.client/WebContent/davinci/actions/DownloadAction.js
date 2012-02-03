@@ -2,17 +2,20 @@ define([
         "dojo/_base/declare",
     	"./Action",
     	"system/resource",
+    	"davinci/ui/Resource",
+    	"dijit/Dialog",
     	"dojo/i18n!./nls/actions"
-], function(declare, Action, resource, langObj){
+], function(declare, Action, resource, uiResource, Dialog, langObj){
 
 return declare("davinci.actions.DownloadAction", Action, {
 
 	run: function() {
-		var files = davinci.ui.Resource.getSelectedResources();
+		var files = uiResource.getSelectedResources();
 		this._files = files;
 		var filesDiv = "";
-		for ( var i = 0; i < files.length; i++)
+		for ( var i = 0; i < files.length; i++) {
 			filesDiv += "<div>" + files[i].getPath() + "</div>";
+		}
 		var proposedFileName = "download";
 		var formHtml =
 			"<div >" +
@@ -24,7 +27,7 @@ return declare("davinci.actions.DownloadAction", Action, {
 		    '	</div>'+
 		    '<div><button dojoType="dijit.form.Button" type="submit" >'+ langObj.downloadNow +'</button></div>' +
 		    "</div>" ;
-		this.dialog = new dijit.Dialog({
+		this.dialog = new Dialog({
 			id: "downloadDialog",
 			title: langObj.titleDownload,
 			onCancel: function() {
@@ -39,7 +42,7 @@ return declare("davinci.actions.DownloadAction", Action, {
 	},
 	
 	isEnabled: function(selection){
-		var files=davinci.ui.Resource.getSelectedResources();
+		var files = uiResource.getSelectedResources();
 		return files && files.length>0;
 	},
 	

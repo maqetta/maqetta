@@ -1,7 +1,8 @@
 define([
 	"dojo/_base/declare",
-	"./Action"
-], function(declare, Action){
+	"./Action",
+	"../Runtime"
+], function(declare, Action, Runtime){
 
 return declare("davinci.actions.PasteAction", Action, {
 	
@@ -9,7 +10,7 @@ return declare("davinci.actions.PasteAction", Action, {
 	},
 
 	isEnabled: function(selection){
-		return davinci.Runtime.clipboard;
+		return Runtime.clipboard;
 	}
 });
 });

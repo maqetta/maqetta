@@ -14,7 +14,6 @@ davinci/davinci = {
 =====*/
 	"./davinci-common",
 	"./Workbench",
-	"./review/Review",
 	"./workbench/Explorer",
 	"./workbench/OutlineView",
 	"./workbench/ProblemsView",
@@ -40,6 +39,13 @@ davinci/davinci = {
 	"./html/ui/ImageViewer",
 	"./js/ui/JavaScriptEditor",
 	"./ve/prefs/HTMLEditPreferences",
+
+	"./review/Review",
+	"./review/view/CommentExplorerView",
+	"./review/actions/ViewFileAction",
+	"./review/actions/DeleteVersionAction",
+	"./review/actions/RestartVersionAction",
+
 	"dijit/layout/LayoutContainer", // dependency of ./ve/input/BorderContainerInput
 	// after HTML editor loads
 	

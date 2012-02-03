@@ -273,7 +273,8 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						compoundCommand = new davinci.commands.CompoundCommand();
 					}
 					var first_c = new davinci.ve.commands.MoveCommand(widget, left, top);
-					var proposedParent = cp.getProposedParentWidget();
+					var ppw = cp.getProposedParentWidget();
+					var proposedParent = ppw.parent;
 					compoundCommand.add(first_c);
 					var currentParent = widget.getParent();
 					if(proposedParent && proposedParent != currentParent){

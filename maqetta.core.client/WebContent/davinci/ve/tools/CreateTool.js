@@ -240,9 +240,9 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		}
 
 		var ppw = cp.getProposedParentWidget();
-		if(ppw){
+		if(ppw && ppw.parent){
 			// Use last computed parent from onMouseMove handler
-			target = ppw;
+			target = ppw.parent;
 		}else{
 			// Otherwise, find the appropriate parent that is located under the pointer
 			var widgetUnderMouse = this._getTarget() || Widget.getEnclosingWidget(event.target);

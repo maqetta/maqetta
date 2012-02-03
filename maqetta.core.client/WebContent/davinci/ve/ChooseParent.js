@@ -302,8 +302,15 @@ return declare("davinci.ve.ChooseParent", null, {
 	 * when the drag operation ends (assuming nothing changes in mean time).
 	 * @return {object|null}   Widget that is the new proposed parent widget
 	 */
-	getProposedParentWidget: function(widget){
-		return this._proposedParentWidget;
+	getProposedParentWidget: function(){
+		var ppw = {};
+		var idx = this._XYParent.indexOf(this._proposedParentWidget);
+		if(idx >= 0){
+			ppw.parent = this._XYParent[idx];
+			ppw.refChild = this._XYRefChild[idx];
+			ppw.refAfter = this._XYRefAfter[idx];
+		}
+		return ppw;
 	},
 
 	/**

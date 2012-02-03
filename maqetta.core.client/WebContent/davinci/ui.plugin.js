@@ -187,7 +187,7 @@ return {
                 },
                 {
                     id: "editPreferences",
-                    run: "davinci.workbench.Preferences.showPreferencePage()",
+                    run: "require(['davinci/workbench/Preferences'], function(Preferences) { Preferences.showPreferencePage(); })",
                     label: "Preferences...",
                     menubarPath: "davinci.settings/settings"
                 },

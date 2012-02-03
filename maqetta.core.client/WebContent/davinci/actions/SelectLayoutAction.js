@@ -1,29 +1,25 @@
 define([
-	"dojo/_base/declare",
-	"./Action",
-	"../Workbench",
-	"dojo/i18n!./nls/actions"
-], function(declare, Action, Workbench, actionsStrings) {
-
-davinci.preference_layout_ATTRIBUTE = 'dvFlowLayout';
+        "dojo/_base/declare",
+    	"./Action",
+    	"../Workbench",
+    	"dojo/i18n!./nls/actions"
+], function(declare, Action, Workbench, langObj){
 
 return declare("davinci.actions.SelectLayoutAction", Action, {
 	
 	run: function(selection){
-		if (!this.isEnabled(null)) return;
+		if (!this.isEnabled(null)) {
+			return;
+		}
 		this.showLayouts(); 
 	},
 
 	isEnabled: function(selection){
-		var e = Workbench.getOpenEditor();
-
-		if (e.declaredClass == 'davinci.ve.PageEditor') // this is a hack to only support undo for theme editor for 0.5
-			return true;
-		else return false;
+		// this is a hack to only support undo for theme editor for 0.5
+		return Workbench.getOpenEditor().declaredClass == 'davinci.ve.PageEditor';
 	},
 
 	_changeLayoutCommand: function(newLayout){
-		
 		var d = dijit.byId('selectLayout');
 		if (d){
 			d.destroyRecursive(false);
@@ -39,9 +35,8 @@ return declare("davinci.actions.SelectLayoutAction", Action, {
 			e._visualChanged();
 		}
 	},
-
-	showLayouts : function(){
-
+	
+	showLayouts: function(){
 		var e = Workbench.getOpenEditor();
 		var c = e.getContext();
 		var flowLayout = c.getFlowLayout();
@@ -55,8 +50,9 @@ return declare("davinci.actions.SelectLayoutAction", Action, {
 			formHtml += '<option selected>Absolute positioning</option>';
 			formHtml += '<option>Flow positioning</option>';
 		}
+			
 		formHtml = formHtml + '</select><br/>';
-		var	dialog = new dijit.Dialog({id: "selectLayout", title:actionsStrings.newWidgetsShouldUse,
+		var	dialog = new dijit.Dialog({id: "selectLayout", title:langObj.newWidgetsShouldUse,
 			onCancel:function(){this.destroyRecursive(false);}});	
 		dialog._selectLayout = this;
 		dojo.connect(dialog, 'onLoad', function(){
@@ -72,8 +68,8 @@ return declare("davinci.actions.SelectLayoutAction", Action, {
 		});
 		dialog.setContent(formHtml);
 		
-		
 		dialog.show();
 	}
 });
 });
+davinci.preference_layout_ATTRIBUTE = 'dvFlowLayout';

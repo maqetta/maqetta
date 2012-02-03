@@ -1,20 +1,19 @@
 define([
-	"dojo/_base/declare",
-	"./Action",
-	"../Workbench",
-	"dijit/Dialog",
-	"../ui/SaveAsWidgetForm",
-	"dojo/i18n!davinci/ui/nls/common"
-], function(declare, Action, Workbench, Dialog, SaveAsWidgetForm, commonStrings){
+        "dojo/_base/declare",
+    	"./Action",
+    	"../Workbench",
+    	"dijit/Dialog",
+    	"../ui/SaveAsWidgetForm",
+    	"dojo/i18n!../ui/nls/common"
+], function(declare, Action, Workbench, Dialog, SaveAsWidgetForm, langObj){
+
+return declare("davinci.actions.SaveAsWidget", Action, {
 
 // XXX How do we handle the properties from the individual widgets?  Doesn't make sense to put them
 //  all as properties of the composite widget.  Maybe present user with a dialog showing all the
 //  properties from the widgets and allow user to select which properties to expose in composite
 //  widget, or allow to add new ones.
 
-
-return declare("davinci.actions.SaveAsWidget", Action, {
-    
     run: function(context) {
         if (context.declaredClass !== "davinci.ve.Context") {
             if (typeof context.getContext === "function") {
@@ -122,7 +121,7 @@ return declare("davinci.actions.SaveAsWidget", Action, {
     
     _showDialog: function(metadata) {
         var formDialog = new Dialog({
-            title: commonStrings.sawdTitle,
+            title: langObj.sawdTitle,
             "class": "dvSaveAsWidgetDialog",
             execute: dojo.hitch(this, function() {
                 this._saveMetadata(arguments[0].metadata);

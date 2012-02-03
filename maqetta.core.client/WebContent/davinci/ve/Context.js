@@ -2747,6 +2747,7 @@ return declare("davinci.ve.Context", null, {
 		var differentXY = cp.findParentsXYBeforeTraversal(params);
 		// Traverse all widgets, which will result in updates to snap lines and to 
 		// the visual popup showing possible parent widgets 
+		_updateThisWidget.apply(context, [this.rootWidget]);
 		dojo.forEach(this.getTopWidgets(), function(w){
 			_updateThisWidget.apply(context, [w]);
 		});
@@ -2754,7 +2755,11 @@ return declare("davinci.ve.Context", null, {
 			Snap.updateSnapLinesAfterTraversal(this);
 		}
 		if(differentXY){
-			cp.dragUpdateCandidateParents(widgetType, doFindParentsXY, absolute, currentParent);
+			cp.dragUpdateCandidateParents({widgetType:widgetType,
+					showCandidateParents:doFindParentsXY, 
+					doCursor:!absolute, 
+					absolute:absolute, 
+					currentParent:currentParent});
 			cp.findParentsXYAfterTraversal();
 		}
 

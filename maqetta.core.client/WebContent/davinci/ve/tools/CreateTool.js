@@ -385,7 +385,12 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		var cp = context._chooseParent;
 		var absolute = !context.getFlowLayout();
 		var currentParent = null;
-		cp.dragUpdateCandidateParents(widgetType, showCandidateParents, absolute, currentParent);
+		cp.dragUpdateCandidateParents({widgetType:widgetType,
+				showCandidateParents:showCandidateParents, 
+				doCursor:!absolute, 
+				absolute:absolute, 
+				currentParent:currentParent});
+
 	},
 	
 	/**
@@ -424,7 +429,11 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		var cp = context._chooseParent;
 		var absolute = !context.getFlowLayout();
 		var currentParent = null;
-		cp.dragUpdateCandidateParents(widgetType, showCandidateParents, absolute, currentParent);
+		cp.dragUpdateCandidateParents({widgetType:widgetType,
+				showCandidateParents:showCandidateParents, 
+				doCursor:!absolute, 
+				absolute:absolute, 
+				currentParent:currentParent});
 	},
 
 	create: function(args){

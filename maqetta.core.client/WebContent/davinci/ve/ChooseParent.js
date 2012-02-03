@@ -103,12 +103,25 @@ return declare("davinci.ve.ChooseParent", null, {
 	 * on the screen to show the list of possible parent widgets.
 	 * If false, clear any existing list of possible parent widgets.
 	 * 
-	 * @param {string} widgetType  For example, 'dijit.form.Button'
-	 * @param {boolean} showCandidateParents  Whether the DIV being dragged around should show possible parents
-	 * @param {boolean} absolute  true if current widget will be positioned absolutely
-	 * @param {object} currentParent  if provided, then current parent widget for thing being dragged
+	 * @param {object} params  object with following properties:
+	 *    {string} widgetType  For example, 'dijit.form.Button'
+	 *    {boolean} showCandidateParents  Whether the DIV being dragged around should show possible parents
+	 *    {boolean} doCursor  Whether to show drop point cursor (for flow layouts)
+	 *    {boolean} absolute  true if current widget will be positioned absolutely
+	 *    {object} currentParent  if provided, then current parent widget for thing being dragged
 	 */
-	dragUpdateCandidateParents: function(widgetType, showCandidateParents, absolute, currentParent){
+	dragUpdateCandidateParents: function(params){
+		var widgetType = params.widgetType,
+			showCandidateParents = params.showCandidateParents,
+			doCursor = params.doCursor, 
+			absolute = params.absolute, 
+			currentParent = params.currentParent;
+		var allowedParentList = this._XYParent;
+		if(!this._proposedParentWidget){
+			this._proposedParentWidget = this._getDefaultParent(widgetType, allowedParentList, absolute, currentParent);
+		}
+		this.highlightNewWidgetParent(this._proposedParentWidget);
+
 		var context = this._context;
 		// NOTE: For CreateTool, the activeDragDiv is a DIV attached to dragClone
 		// For SelectTool, the activeDragDiv is created by calling parentListDivCreate() (in this JS file)
@@ -123,14 +136,6 @@ return declare("davinci.ve.ChooseParent", null, {
 		}
 		if(parentListDiv){
 			if(showCandidateParents){
-				var allowedParentList = this._findParentsXYList;
-				
-				if(!this._proposedParentWidget){
-					this._proposedParentWidget = this._getDefaultParent(widgetType, allowedParentList, absolute, currentParent);
-				}
-
-				this.highlightNewWidgetParent(this._proposedParentWidget);
-
 				// Don't recreate DIV with every mousemove if parent list is the same
 				var same = true;
 				if(this._lastProposedParentWidget != this._proposedParentWidget){
@@ -193,6 +198,38 @@ return declare("davinci.ve.ChooseParent", null, {
 			}else{
 				parentListDiv.innerHTML = '';
 				this._lastAllowedParentList = null;
+			}
+		}
+
+		if(params.doCursor){
+			var idx;
+			for(var i=0; i<this._XYParent.length; i++){
+				if(this._XYParent[i] === this._proposedParentWidget){
+					idx = i;
+					break;
+				}
+			}
+			if(idx !== undefined){
+				if(!this._cursorSpan){
+					this._cursorSpan = dojo.create('span', {className:'editCursor', style:'background:red'});
+				}
+				var parentNode = this._XYParent[idx].domNode;
+				var refChild = this._XYRefChild[idx];
+				var refChildNode = refChild ? refChild.domNode : null;
+				var refAfter = this._XYRefAfter[idx];
+				if(refChildNode){
+					if(refAfter){
+						if(refChildNode.nextSibling){
+							parentNode.insertBefore(this._cursorSpan, refChildNode.nextSibling);
+						}else{
+							parentNode.appendChild(this._cursorSpan);
+						}
+					}else{
+						parentNode.insertBefore(this._cursorSpan, refChildNode);
+					}
+				}else{
+					parentNode.appendChild(this._cursorSpan);
+				}
 			}
 		}
 	
@@ -285,13 +322,14 @@ return declare("davinci.ve.ChooseParent", null, {
 	 * @return {array[object]}   Array of possible parent widgets at current (x,y)
 	 */
 	getProposedParentsList: function(){
-		return this._findParentsXYList;
+		return this._XYParent;
 	},
 	
 	/**
 	 * Preparatory work before searching widget tree for possible parent
 	 * widgets at a given (x,y) location
 	 * @param {object} params  object with following properties:
+	 * 		[array{object}] widgets  Array of widgets being dragged (can be empty array)
 	 *      {object|array{object}} data  For widget being dragged, either {type:<widgettype>} or array of similar objects
 	 *      {object} eventTarget  Node (usually, Element) that is current event.target (ie, node under mouse)
 	 *      {object} position x,y properties hold current mouse location
@@ -303,6 +341,7 @@ return declare("davinci.ve.ChooseParent", null, {
 	 * @return {boolean} true if current (x,y) is different than last (x,y), false if the same.
 	 */
 	findParentsXYBeforeTraversal: function(params) {
+		var widgets = params.widgets;
 		var data = params.data;
 		var eventTarget = params.eventTarget;
 		var position = params.position;
@@ -310,16 +349,15 @@ return declare("davinci.ve.ChooseParent", null, {
 		var currentParent = params.currentParent;
 		var rect = params.rect;
 		var doFindParentsXY = params.doFindParentsXY;
-		this._findParentsXYList = [];
+		this._XYParent = [];
+		this._XYRefChild = [];
+		this._XYRefAfter = [];
 		var bodyWidget = eventTarget.ownerDocument.body._dvWidget;
 		if(absolute && currentParent && currentParent != bodyWidget){
-			this._findParentsXYList.push(currentParent);
-		}
-		var allowedParents = this.getAllowedTargetWidget(bodyWidget, data, false);
-		if(allowedParents.length === 1){
-			this._findParentsXYList.push(bodyWidget);
-		}
-		
+			this._XYParent.push(currentParent);
+			this._XYRefChild.push(widgets[0]);
+			this._XYRefAfter.push(true);
+		}		
 		if(typeof this.findParentsXYLastPosition == 'undefined'){
 			this.findParentsXYLastPosition = {};
 		}
@@ -365,7 +403,7 @@ return declare("davinci.ve.ChooseParent", null, {
 		if(x >= l && x <= r && y >= t && y <= b){
 			var allowedParents = this.getAllowedTargetWidget(widget, data, false);
 			if(allowedParents.length === 1){
-console.log('x='+x+',y='+y);
+console.log('widget.type='+widget.type+',x='+x+',y='+y);
 console.log('children');
 var children = widget.getChildren();
 var childData = [];
@@ -396,7 +434,7 @@ for(var i=0; i<children.length; i++){
 	console.log('l='+l+',t='+t+',r='+r+',b='+b+',c='+c);
 	childData.push({l:l, t:t, r:r, b:b, c:c});
 }
-var refChild, refRight, biggestY;
+var refChild, refAfter, biggestY;
 for(var i=0; i<childData.length; i++){
 	var cd = childData[i];
 	var child = children[i];
@@ -434,13 +472,9 @@ if(refChild){
 }else{
 	console.log('refChild is undefined');
 }
-				this._findParentsXYList.push(widget);
-				if(doCursor){
-					if(this._cursorSpan){
-						this._cursorSpan.parentNode.removeChild(this._cursorSpan);
-					}
-					this._cursorSpan = dojo.create('span', {className:'editCursor'}, widget.domNode);
-				}
+				this._XYParent.push(widget);
+				this._XYRefChild.push(refChild);
+				this._XYRefAfter.push(refAfter);
 			}
 		}
 	},
@@ -527,7 +561,11 @@ if(refChild){
 		// Under certain conditions, show list of possible parent widgets
 		var showParentsPref = this._context.getPreference('showPossibleParents');
 		var showCandidateParents = (!showParentsPref && this._spaceKeyDown) || (showParentsPref && !this._spaceKeyDown);
-		this.dragUpdateCandidateParents(widgetType, showCandidateParents, absolute, currentParent);
+		this.dragUpdateCandidateParents({widgetType:widgetType,
+			showCandidateParents:showCandidateParents, 
+			doCursor:!absolute, 
+			absolute:absolute, 
+			currentParent:currentParent});
     },
     
 	onKeyDown: function(event, widgetType, absolute, currentParent){

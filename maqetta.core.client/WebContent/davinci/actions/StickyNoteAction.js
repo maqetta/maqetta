@@ -1,11 +1,12 @@
-dojo.provide("davinci.actions.StickyNoteAction");
-dojo.require("davinci.actions.Action");
-dojo.require("system.resource");
-dojo.require("davinci.ve.commands.AddCommand");
+define([
+        "dojo/_base/declare",
+    	"./Action",
+    	"system/resource",
+    	"davinci/ve/commands/AddCommand"
+], function(declare, Action, resource, AddCommand){
 
+return declare("davinci.actions.StickyNoteAction", Action, {
 
-dojo.declare("davinci.actions.StickyNoteAction", davinci.actions.Action, {
-	
 	run: function(selection){
 
 		var e = davinci.Workbench.getOpenEditor();
@@ -46,8 +47,8 @@ dojo.declare("davinci.actions.StickyNoteAction", davinci.actions.Action, {
 				command.add(new davinci.ve.commands.ResizeCommand(widget, w, h));
 			}
 			e.getContext().getCommandStack().execute(command);
-			var inlineEdit = davinci.ve.VisualEditor.getSmartInput(widget.type);
-			if (inlineEdit && inlineEdit.displayOnCreate && inlineEdit.displayOnCreate.toLowerCase() == 'true') {
+			var inLineEdit = davinci.ve.metadata.queryDescriptor(widget.type, "inlineEdit");
+			if (inLineEdit && inLineEdit.displayOnCreate && inLineEdit.displayOnCreate.toLowerCase() == 'true') {
 				e.getContext().select(widget,null,true); // display inline
 			} else {
 				e.getContext().select(widget); // no inline on create
@@ -64,5 +65,5 @@ dojo.declare("davinci.actions.StickyNoteAction", davinci.actions.Action, {
 		else return false;
 		//	return davinci.Runtime.commandStack.canRedo();
 	}
-}
-);
+});
+});

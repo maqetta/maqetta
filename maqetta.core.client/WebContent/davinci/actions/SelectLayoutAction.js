@@ -1,25 +1,22 @@
 define([
         "dojo/_base/declare",
     	"./Action",
-    	"system/resource",
+    	"../Workbench",
     	"dojo/i18n!./nls/actions"
-], function(declare, Action, resource, langObj){
+], function(declare, Action, Workbench, langObj){
 
 return declare("davinci.actions.SelectLayoutAction", Action, {
 	
 	run: function(selection){
-		if (!this.isEnabled(null)) return;
+		if (!this.isEnabled(null)) {
+			return;
+		}
 		this.showLayouts(); 
-
 	},
 
 	isEnabled: function(selection){
-		var e = davinci.Workbench.getOpenEditor();
-
-		if (e.declaredClass == 'davinci.ve.PageEditor') // this is a hack to only support undo for theme editor for 0.5
-			return true;
-		else return false;
-
+		// this is a hack to only support undo for theme editor for 0.5
+		return Workbench.getOpenEditor().declaredClass == 'davinci.ve.PageEditor';
 	},
 
 	_changeLayoutCommand: function(newLayout){
@@ -27,7 +24,7 @@ return declare("davinci.actions.SelectLayoutAction", Action, {
 		if (d){
 			d.destroyRecursive(false);
 		}
-		var e = davinci.Workbench.getOpenEditor();
+		var e = Workbench.getOpenEditor();
 		if (e && e.getContext){
 			var flowLayout = true;
 			if (newLayout === 'Absolute positioning'){
@@ -39,20 +36,19 @@ return declare("davinci.actions.SelectLayoutAction", Action, {
 		}
 	},
 	
-	showLayouts : function(){
-
-		var e = davinci.Workbench.getOpenEditor();
+	showLayouts: function(){
+		var e = Workbench.getOpenEditor();
 		var c = e.getContext();
 		var flowLayout = c.getFlowLayout();
 		e._visualChanged();
 		var formHtml = 
         '<select dojoType="dijit.form.ComboBox" id="layout" name="layout" >';
 		if (flowLayout){
-			formHtml = formHtml + '<option>Absolute positioning</option>';
-			formHtml = formHtml + '<option selected>Flow positioning</option>';
+			formHtml += '<option>Absolute positioning</option>';
+			formHtml += '<option selected>Flow positioning</option>';
 		} else {
-			formHtml = formHtml + '<option selected>Absolute positioning</option>';
-			formHtml = formHtml + '<option>Flow positioning</option>';
+			formHtml += '<option selected>Absolute positioning</option>';
+			formHtml += '<option>Flow positioning</option>';
 		}
 			
 		formHtml = formHtml + '</select><br/>';

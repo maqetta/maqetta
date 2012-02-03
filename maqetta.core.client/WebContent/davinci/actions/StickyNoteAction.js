@@ -1,15 +1,20 @@
 define([
         "dojo/_base/declare",
     	"./Action",
-    	"system/resource",
-    	"davinci/ve/commands/AddCommand"
-], function(declare, Action, resource, AddCommand){
+    	"../Workbench",
+    	"davinci/commands/CompoundCommand",
+    	"../ve/commands/AddCommand",
+    	"../ve/commands/MoveCommand",
+    	"../ve/commands/ResizeCommand",
+    	"../ve/widget",
+    	"../ve/metadata"
+], function(declare, Action, Workbench, CompoundCommand, AddCommand, MoveCommand, ResizeCommand, widgetUtils){
 
 return declare("davinci.actions.StickyNoteAction", Action, {
 
 	run: function(selection){
 
-		var e = davinci.Workbench.getOpenEditor();
+		var e = Workbench.getOpenEditor();
 		var descriptor = davinci.ve.metadata.queryDescriptor("html.stickynote");
 		if (!descriptor) {
 			return;
@@ -20,23 +25,23 @@ return declare("davinci.actions.StickyNoteAction", Action, {
 	
 			var widget = undefined;
 			dojo.withDoc(e.getContext().getDocument(), function(){
-				widget = davinci.ve.widget.createWidget(data);
+				widget = widgetUtils.createWidget(data);
 			}/*, this*/);
 			if(!widget){
 				return;
 			}
 	
-			var command = new davinci.commands.CompoundCommand();
+			var command = new CompoundCommand();
 			var doc = e.getContext().getDocument();
 			var parent = doc.body;
 			var container = e.getContext().getContainerNode();
-			command.add(new davinci.ve.commands.AddCommand(widget,
+			command.add(new AddCommand(widget,
 					/* args.parent ||*/ e.getContext().getContainerNode()/*,*/
 				 /*args.index*/));
 	
 //			if(args.position){
-//				command.add(new davinci.ve.commands.MoveCommand(widget, args.position.x, args.position.y));
-			command.add(new davinci.ve.commands.MoveCommand(widget, 50, 50));
+//				command.add(new MoveCommand(widget, args.position.x, args.position.y));
+			command.add(new MoveCommand(widget, 50, 50));
 //			}
 			if(/*args.size || */widget.isLayoutContainer){
 				// For containers, issue a resize regardless of whether an explicit size was set.
@@ -44,7 +49,7 @@ return declare("davinci.actions.StickyNoteAction", Action, {
 				// resize()+layout() will not get called during create. 
 				var w = args.size && args.size.w,
 					h = args.size && args.size.h;
-				command.add(new davinci.ve.commands.ResizeCommand(widget, w, h));
+				command.add(new ResizeCommand(widget, w, h));
 			}
 			e.getContext().getCommandStack().execute(command);
 			var inLineEdit = davinci.ve.metadata.queryDescriptor(widget.type, "inlineEdit");
@@ -58,11 +63,13 @@ return declare("davinci.actions.StickyNoteAction", Action, {
 	},
 	
 	isEnabled: function(selection){
-		var e = davinci.Workbench.getOpenEditor();
-		if (e && e.getContext)
+		var e = Workbench.getOpenEditor();
+		if (e && e.getContext) {
 	//	if (e.declaredClass == 'davinci.themeEditor.ThemeEditor') // this is a hack to only support undo for theme editor for 0.5
-			return (e.getContext().getCommandStack().canRedo());
-		else return false;
+			return e.getContext().getCommandStack().canRedo();
+		} else {
+			return false;
+		}
 		//	return davinci.Runtime.commandStack.canRedo();
 	}
 });

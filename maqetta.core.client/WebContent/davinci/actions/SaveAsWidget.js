@@ -1,10 +1,11 @@
 define([
         "dojo/_base/declare",
     	"./Action",
+    	"../Workbench",
     	"dijit/Dialog",
-    	"davinci/ui/SaveAsWidgetForm",
-    	"dojo/i18n!davinci/ui/nls/common"
-], function(declare, Action, Dialog, SaveAsWidgetForm, langObj){
+    	"../ui/SaveAsWidgetForm",
+    	"dojo/i18n!../ui/nls/common"
+], function(declare, Action, Workbench, Dialog, SaveAsWidgetForm, langObj){
 
 return declare("davinci.actions.SaveAsWidget", Action, {
 
@@ -18,7 +19,7 @@ return declare("davinci.actions.SaveAsWidget", Action, {
             if (typeof context.getContext === "function") {
                 context = context.getContext();
             } else {
-                context = davinci.Workbench.getOpenEditor().getContext();
+                context = Workbench.getOpenEditor().getContext();
             }
         }
         
@@ -119,7 +120,7 @@ return declare("davinci.actions.SaveAsWidget", Action, {
     },
     
     _showDialog: function(metadata) {
-        var formDialog = new dijit.Dialog({
+        var formDialog = new Dialog({
             title: langObj.sawdTitle,
             "class": "dvSaveAsWidgetDialog",
             execute: dojo.hitch(this, function() {
@@ -132,9 +133,9 @@ return declare("davinci.actions.SaveAsWidget", Action, {
             }
         });
         
-        var form = new davinci.ui.SaveAsWidgetForm({
-            'parentId': formDialog.id,
-            'metadata': metadata
+        var form = new SaveAsWidgetForm({
+            parentId: formDialog.id,
+            metadata: metadata
         });
         
         formDialog.set("content", form);

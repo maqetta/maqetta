@@ -115,7 +115,7 @@ public class DavinciPageServlet extends HttpServlet {
             writeWelcomePage(req, resp);
         }else if (user==null) {
                     resp.sendRedirect("./welcome");
-        }else if(pathInfo==null || pathInfo.equals("") || pathInfo.equalsIgnoreCase("/index.html")){
+        }else if(pathInfo==null || pathInfo.equals("index.html") || pathInfo.equals("index.html")  || pathInfo.equalsIgnoreCase("/index.html")){
         	 writeMainPage(req, resp);
        
         } else if (req.getParameter(IDavinciServerConstants.PREVIEW_PARAM)!=null) {

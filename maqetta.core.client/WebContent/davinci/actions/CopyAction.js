@@ -1,12 +1,13 @@
 define([
 	"dojo/_base/declare",
-	"./Action"
-], function(declare, Action){
+	"./Action",
+	"../Runtime"
+], function(declare, Action, Runtime){
 
 return declare("davinci.actions.CopyAction", Action, {
 	
 	run: function(selection){
-		  davinci.Runtime.clipboard=selection;
+		  Runtime.clipboard=selection;
 	},
 	
 	isEnabled: function(selection){

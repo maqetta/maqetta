@@ -2,10 +2,11 @@ define([
     "require",
     "dojo/_base/declare",
 	"dijit/_WidgetBase",
-	"dojo/dnd/Mover"
+	"dojo/dnd/Mover",
+	"./metadata"
     //"./VisualEditor"
 ],
-function(require, declare, _WidgetBase, Mover) {
+function(require, declare, _WidgetBase, Mover, Metadata) {
     
 var LEFT = 0,
     RIGHT = 1,
@@ -135,9 +136,21 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         	currentParent = this._selectedWidget.getParent();
         }
         if(this._selectedWidget && event){
+        	var widgetType = this._selectedWidget.type;
+        	var dropCursor = Metadata.queryDescriptor(widgetType, "dropCursor");
+    		var doCursor = !absolute;
+    		if (typeof this._dropCursor == 'object' && this._dropCursor.show === false){
+    			doCursor = false;
+    		}
+    		var beforeAfter = this._dropCursor && this._dropCursor.beforeAfter;
     		var parentListDiv = cp.parentListDivGet();
     		if(!parentListDiv){// Make sure there is a DIV into which list of parents should be displayed
-    			parentListDiv = cp.parentListDivCreate(this._selectedWidget.type, absolute, currentParent);
+    			parentListDiv = cp.parentListDivCreate({
+    				widgetType:widgetType, 
+    				absolute:absolute, 
+    				doCursor:doCursor, 
+    				beforeAfter:beforeAfter, 
+    				currentParent:currentParent });
      		}
     		var parentIframe = context.getParentIframe();
     		if(parentIframe){

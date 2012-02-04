@@ -111,7 +111,6 @@ return declare("davinci.ve.ChooseParent", null, {
 	 *    {object} currentParent  if provided, then current parent widget for thing being dragged
 	 */
 	dragUpdateCandidateParents: function(params){
-console.log('dragUpdateCandidateParents. params.doCursor:'+params.doCursor+', params.beforeAfter='+params.beforeAfter);
 		var widgetType = params.widgetType,
 			showCandidateParents = params.showCandidateParents,
 			doCursor = params.doCursor, 
@@ -399,6 +398,8 @@ console.log('dragUpdateCandidateParents. params.doCursor:'+params.doCursor+', pa
 	 *    {object|array{object}} data  For widget being dragged, either {type:<widgettype>} or array of similar objects
 	 *    {object} widget  widget to check (dvWidget)
 	 *    {object} position  object with properties x,y (in page-relative coords)
+	 *    {boolean} doCursor  whether to show drop cursor (when dropping using flow layout)
+	 *    {string|undefined} beforeAfter  either 'before' or 'after' or undefined (which means default behavior)
 	 */
 	findParentsXY: function(params) {
 		var data = params.data,
@@ -500,11 +501,19 @@ console.log('dragUpdateCandidateParents. params.doCursor:'+params.doCursor+', pa
     /**
      * Create a floating DIV that will hold the list of proposed parent widgets
 	 * {string} widgetType  Type of widget (e.g., 'dijit.form.Button')
-	 * @param {boolean} absolute  true if current widget will be positioned absolutely
-	 * @param {object} currentParent  if provided, then current parent widget for thing being dragged
-     * @returns {object}  DIV's domNode
+	 * @param {object} params  object with following properties:
+	 *    {string} widgetType  widget type (e.g., 'dijit.form.Button')
+	 *    {boolean} absolute  true if current widget will be positioned absolutely
+	 *    {boolean} doCursor  whether to show drop cursor (when dropping using flow layout)
+	 *    {string|undefined} beforeAfter  either 'before' or 'after' or undefined (which means default behavior)
+	 *    {object} currentParent  if provided, then current parent widget for thing being dragged
      */
-    parentListDivCreate: function(widgetType, absolute, currentParent){
+    parentListDivCreate: function(params){
+    	var widgetType = params.widgetType, 
+			absolute = params.absolute, 
+			doCursor = params.doCursor, 
+			beforeAfter = params.beforeAfter, 
+    		currentParent = params.currentParent;
 		var context = this._context;
     	if(!widgetType){
     		return;
@@ -518,15 +527,19 @@ console.log('dragUpdateCandidateParents. params.doCursor:'+params.doCursor+', pa
         this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(args, evt){
         	var widgetType = args[0];
         	var absolute = args[1];
-        	var currentParent = args[2];
-        	this.onKeyDown(evt, widgetType, absolute, currentParent);
-        }, [widgetType, absolute, currentParent]));
+        	var doCursor = args[2];
+        	var beforeAfter = args[3];
+        	var currentParent = args[4];
+        	this.onKeyDown(evt, widgetType, absolute, doCursor, beforeAfter, currentParent);
+        }, [widgetType, absolute, doCursor, beforeAfter, currentParent]));
         this._keyUpHandler = dojo.connect(userdoc, "onkeyup", dojo.hitch(this, function(args, evt){
         	var widgetType = args[0];
         	var absolute = args[1];
-        	var currentParent = args[2];
-        	this.onKeyUp(evt, widgetType, absolute, currentParent);
-        }, [widgetType, absolute, currentParent]));
+        	var doCursor = args[2];
+        	var beforeAfter = args[3];
+        	var currentParent = args[4];
+        	this.onKeyUp(evt, widgetType, absolute, doCursor, beforeAfter, currentParent);
+        }, [widgetType, absolute, doCursor, beforeAfter, currentParent]));
  		var body = document.body;	// outer document = Maqetta app
 		var parentListDiv = this._parentListDiv = dojo.create('div', {
 			className:'maqParentListDiv', 
@@ -567,33 +580,34 @@ console.log('dragUpdateCandidateParents. params.doCursor:'+params.doCursor+', pa
 	   }
     },
     
-    _keyEventDoUpdate: function(widgetType, absolute, currentParent){
+    _keyEventDoUpdate: function(widgetType, absolute, doCursor, beforeAfter, currentParent){
 		// Under certain conditions, show list of possible parent widgets
 		var showParentsPref = this._context.getPreference('showPossibleParents');
 		var showCandidateParents = (!showParentsPref && this._spaceKeyDown) || (showParentsPref && !this._spaceKeyDown);
 		this.dragUpdateCandidateParents({widgetType:widgetType,
 			showCandidateParents:showCandidateParents, 
-			doCursor:!absolute, 
+			doCursor:doCursor, 
+			beforeAfter:beforeAfter, 
 			absolute:absolute, 
 			currentParent:currentParent});
     },
     
-	onKeyDown: function(event, widgetType, absolute, currentParent){
+	onKeyDown: function(event, widgetType, absolute, doCursor, beforeAfter, currentParent){
 		dojo.stopEvent(event);
 		if(event.keyCode==32){	// 32=space key
 			this._spaceKeyDown = true;
 		}else{
 			this._processKeyDown(event.keyCode);
 		}
-		this._keyEventDoUpdate(widgetType, absolute, currentParent);
+		this._keyEventDoUpdate(widgetType, absolute, doCursor, beforeAfter, currentParent);
 	},
 
-	onKeyUp: function(event, widgetType, absolute, currentParent){
+	onKeyUp: function(event, widgetType, absolute, doCursor, beforeAfter, currentParent){
 		dojo.stopEvent(event);
 		if(event.keyCode==32){	// 32=space key
 			this._spaceKeyDown = false;
 		}
-		this._keyEventDoUpdate(widgetType, absolute, currentParent);
+		this._keyEventDoUpdate(widgetType, absolute, doCursor, beforeAfter, currentParent);
 	},
 	
 	/**

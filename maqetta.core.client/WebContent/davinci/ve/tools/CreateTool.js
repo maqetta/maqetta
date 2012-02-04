@@ -159,7 +159,6 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				doCursor = false;
 			}
 			var beforeAfter = this._dropCursor && this._dropCursor.beforeAfter;
-console.log('doCursor:'+doCursor+',beforeAfter:'+beforeAfter);
 			context.dragMoveUpdate({
 				data:this._data,
 				position:position,

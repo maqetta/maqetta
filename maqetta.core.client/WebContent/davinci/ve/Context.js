@@ -2702,9 +2702,11 @@ return declare("davinci.ve.Context", null, {
 	 * 		{object} rect  l,t,w,h properties define rectangle being dragged around
 	 * 		{boolean} doSnapLines  whether to show dynamic snap lines
 	 * 		{boolean} doFindParentsXY  whether to show candidate parent widgets
+	 * 		{boolean} doCursor  whether to show drop cursor (when dropping using flow layout)
+	 * 		{string|undefined} beforeAfter  either 'before' or 'after' or undefined (which means default behavior)
+	 * 		{string|array} widgetType  widget type (e.g., 'dijit.form.Button')
 	 */
 	dragMoveUpdate: function(params) {
-console.log('dragMoveUpdate. params.doCursor:'+params.doCursor);
 		var context = this,
 			cp = this._chooseParent,
 			widgets = params.widgets,

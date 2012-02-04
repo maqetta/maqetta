@@ -1,11 +1,12 @@
 define([
         "dojo/_base/declare",
     	"./Action",
+    	"../Workbench",
     	"system/resource",
     	"davinci/ui/Resource",
     	"dijit/Dialog",
     	"dojo/i18n!./nls/actions"
-], function(declare, Action, resource, uiResource, Dialog, langObj){
+], function(declare, Action, Workbench, resource, uiResource, Dialog, langObj){
 
 return declare("davinci.actions.DownloadAction", Action, {
 
@@ -46,12 +47,12 @@ return declare("davinci.actions.DownloadAction", Action, {
 		return files && files.length>0;
 	},
 	
-	download : function(value){
+	download: function(value){
 		var resources=dojo.map(this._files,function(item){return item.getPath();});
 		this.dialog.destroyRecursive(false);
 		var path=value.zipFileName;
 			
-		system.resource.download(resources, path + ".zip", davinci.Runtime.getProject());
+		resource.download(resources, path + ".zip", Workbench.getProject());
 	}
 });
 });

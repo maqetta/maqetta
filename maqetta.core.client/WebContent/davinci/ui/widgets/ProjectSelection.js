@@ -10,11 +10,18 @@ define(["dojo/_base/declare",
 
 		postCreate: function(){
 			this._store = new ProjectDataStore({});
-			this.combo = new ComboBox({store:this._store, required: false, style:"width:100%"});
-			dojo.connect(this.combo,"onChange",this,"_onChange");
-			
+
+			Resource.listProjects(dojo.hitch(this, function(projects){
+				this._store.setValues(projects);
+				this.value = Workbench.getProject();
+				this._allProjects = projects.map(function(project){ return project.name; });
+			}));
+
+			this.domNode.removeAttribute("dojoType");
+			this.combo = new ComboBox({store: this._store, required: false, style: "width:100%"});
 			this.domNode.appendChild(this.combo.domNode);
-			this._populateProjects();
+			this.combo.set('value', this.value);
+			dojo.connect(this.combo, "onChange", this, "_onChange");
 		},
 		
 		onChange: function(){
@@ -39,27 +46,6 @@ define(["dojo/_base/declare",
 		
 		_getProjectsAttr: function(){
 			return this._allProjects;
-		},
-		
-		_populateProjects: function(){
-			var workspace = Resource.getWorkspace();
-			var store = this._store;
-			var combo = this.combo;
-
-			Resource.listProjects(dojo.hitch(this, function(projects){
-				store.setValues(projects);
-				var activeProject = Workbench.getProject();
-				this.value = activeProject;
-				this._allProjects = projects.map(function(project){ return project.name; });
-				combo.set('value', activeProject);
-			}));
-			/*
-			workspace.getChildren(function(projects){
-				store.setValues(projects);
-				var activeProject = Workbench.getProject();
-				combo.attr('value', activeProject);
-			});
-			*/
 		}
 	});
 });

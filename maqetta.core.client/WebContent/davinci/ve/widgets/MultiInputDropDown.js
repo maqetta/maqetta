@@ -1,20 +1,21 @@
 define(["dojo/_base/declare",
-        "dijit/_Widget",
+        "dijit/_WidgetBase",
         "davinci/ve/widgets/MutableStore",
         "dijit/form/ComboBox",
         "dojo/i18n!davinci/ve/nls/ve",
         "dojo/i18n!dijit/nls/common"
         
        
-],function(declare,  _Widget, MutableStore, ComboBox, veNLS,commonNLS){
-	var MultiInpputDropDown = declare("davinci.ve.widgets.MultiInputDropDown",  [_Widget], {
+],function(declare,  _WidgetBase, MutableStore, ComboBox, veNLS,commonNLS){
+	var MultiInputDropDown = declare("davinci.ve.widgets.MultiInputDropDown",  [_WidgetBase], {
 		
 		/* change increment for spinners */
-		numberDelta : 1,
-		insertPosition : 1,
-		data : null,
-		
-		postCreate : function(){
+		numberDelta: 1,
+		insertPosition: 1,
+		data: null,
+
+		postCreate: function(){
+			this.domNode.removeAttribute("dojoType");
 			var topSpan = dojo.doc.createElement("div");
 			this._run = {};
 			if(!this.data ){
@@ -22,14 +23,14 @@ define(["dojo/_base/declare",
 				           {value:""}, 
 				           {value:"auto"}, 
 				           {value:"0px"},
-			               {value:davinci.ve.widgets.MultiInputDropDown.divider}, 
-			               {value:"Remove Value",run:function(){this.attr('value','')}}, 
-			               {value:davinci.ve.widgets.MultiInputDropDown.divider}, 
+			               {value:MultiInputDropDown.divider}, 
+			               {value:"Remove Value",run:function(){this.set('value','')}}, 
+			               {value:MultiInputDropDown.divider}, 
 			               {value:"Help", run:function(){alert("help!")}}
 			               ];
 			}else{
-				this.data.push({value:davinci.ve.widgets.MultiInputDropDown.divider});
-				this.data.push({value:"Remove Value",run:function(){this.attr('value','')}});
+				this.data.push({value:MultiInputDropDown.divider});
+				this.data.push({value:"Remove Value",run:function(){this.set('value','')}});
 			}
 			var displayValues = [];
 			for(var i = 0;i<this.data.length;i++){
@@ -38,7 +39,7 @@ define(["dojo/_base/declare",
 					this._run[this.data[i].value] = this.data[i].run;
 				}
 			}
-			this._store = new MutableStore({values:displayValues, divider:davinci.ve.widgets.MultiInputDropDown.divider});
+			this._store = new MutableStore({values:displayValues, divider: MultiInputDropDown.divider});
 			this._dropDown = new ComboBox({store:this._store, required: false, style:"width:100%"});
 			var buttonDiv = dojo.doc.createElement("div");
 			dojo.style(buttonDiv, "float", "right");
@@ -76,25 +77,25 @@ define(["dojo/_base/declare",
 		_setReadOnlyAttr: function(isReadOnly){
 			
 			this._isReadOnly = isReadOnly;
-			this._dropDown.attr("disabled", isReadOnly);
+			this._dropDown.set("disabled", isReadOnly);
 			dojo.attr(this._plus, "disabled", isReadOnly);
 			dojo.attr(this._minus, "disabled", isReadOnly);
 		},
 		
 		
-		onChange : function(event){
+		onChange: function(event){
 			
 			
 		},
-		_getValueAttr : function(){
+		_getValueAttr: function(){
 			
-			return this._dropDown.attr("value");
+			return this._dropDown.get("value");
 			
 		},
 		
-		_setValueAttr : function(value,priority){
-			this._dropDown.attr("value", value, true);
-			this._currentValue = this._dropDown.attr("value");
+		_setValueAttr: function(value,priority){
+			this._dropDown.set("value", value, true);
+			this._currentValue = this._dropDown.get("value");
 			
 			this._onChange(this._currentValue);
 			
@@ -103,9 +104,9 @@ define(["dojo/_base/declare",
 			
 		}, 
 		
-		_plusButton : function (){
+		_plusButton: function (){
 			
-			var oldValue = this._dropDown.attr("value");
+			var oldValue = this._dropDown.get("value");
 			
 			var split = oldValue.split(/(\d+)/);
 			var newString = ""
@@ -118,16 +119,16 @@ define(["dojo/_base/declare",
 			}
 			
 			this._store.modifyItem(oldValue, newString);
-			this._dropDown.attr("value", newString);
+			this._dropDown.set("value", newString);
 			
 		},
-		_updateSpinner : function(){
+		_updateSpinner: function(){
 			
-			var value = this._dropDown.attr("value");
+			var value = this._dropDown.get("value");
 			
-			var	numbersOnlyRegExp = new RegExp(/(-?)(\d+)/);
+			var	numbersOnlyRegExp = /(-?)(\d+)/;
 			var numberOnly = numbersOnlyRegExp.exec(value);
-			if(numberOnly && numberOnly.length>0){
+			if(numberOnly && numberOnly.length){
 				this._minus.disabled = this._plus.disabled = false;
 				//dojo.removeClass(this._minus, "dijitHidden");
 				//dojo.removeClass(this._plus, "dijitHidden");
@@ -140,8 +141,8 @@ define(["dojo/_base/declare",
 			return true;
 		},
 		
-		_minusButton : function(){
-			var oldValue = this._dropDown.attr("value");
+		_minusButton: function(){
+			var oldValue = this._dropDown.get("value");
 			
 			var split = oldValue.split(/(\d+)/);
 			var newString = ""
@@ -154,27 +155,27 @@ define(["dojo/_base/declare",
 			}
 			
 			this._store.modifyItem(oldValue, newString);
-			this._dropDown.attr("value", newString);
+			this._dropDown.set("value", newString);
 			
 		},
 		
-		_onChange : function(event){
+		_onChange: function(event){
 			
-			var similar = null;
+			var similar;
 			
 			if(event in this._run){
-				this._dropDown.attr("value", this._store.getItemNumber(0));
+				this._dropDown.get("value", this._store.getItemNumber(0));
 				dojo.hitch(this,this._run[event])();
-			}else if (event == davinci.ve.widgets.MultiInputDropDown.divider){
-				this._dropDown.attr("value", this._store.getItemNumber(0));
+			}else if (event == MultiInputDropDown.divider){
+				this._dropDown.get("value", this._store.getItemNumber(0));
 			}else if(similar = this._store.findSimilar(event)){
 				this._store.modifyItem(similar, event);
 			}else if(!this._store.contains(event)){
 				this._store.insert(this.insertPosition, event);
 			}
 			
-			if(this._currentValue!=this._dropDown.attr("value")){
-				this._currentValue=this._dropDown.attr("value");
+			if(this._currentValue!=this._dropDown.get("value")){
+				this._currentValue=this._dropDown.get("value");
 				this.onChange(event);
 			}
 			this._updateSpinner();
@@ -182,5 +183,5 @@ define(["dojo/_base/declare",
 
 	});
 
-	return dojo.mixin(MultiInpputDropDown, {divider: "---"});
+	return dojo.mixin(MultiInputDropDown, {divider: "---"});
 });

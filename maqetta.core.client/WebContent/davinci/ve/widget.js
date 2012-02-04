@@ -114,69 +114,6 @@ allWidgets: function(containerNode) {
 	return result;
 },
 
-//recursively search for widget closest to target under root
-//FIXME: Used by SelectTool.  Move code there?
-findClosest: function(containerNode, dim, context, target, hLock, allowedFilter) {
-	var result = {distance: Infinity, widget: target},
-		t = dim,
-		isContainer = function(type) { return metadata.getAllowedChild(type)[0] !== 'NONE'; };
-
-	if(containerNode){
-		var list = widgetObject.allWidgets(containerNode);
-		if (allowedFilter) {
-			// remove anything that wouldn't be a valid sibling.  Would be much more efficient to do during list construction.
-			list = list.filter(function(w){
-				var parent = w.getParent();
-				return parent.type && allowedFilter(parent);
-			});
-		}
-		if (isContainer(target.type)) {
-			// filter out child widgets of target so we don't try to drop a widget within itself
-			list = list.filter(function(widget) {
-			    var w = widget;
-				for (w = w.getParent && w.getParent(); w && w.getParent && w != containerNode; w = w.getParent()) {
-					if (w === target) {
-						return false;
-					}
-				}
-				return true;
-			});
-		}
-		list.forEach(function(w){
-			var n = w.domNode;
-			if(n==containerNode){
-				return;
-			}if(!w.isSplitter){
-				var c = dojo.position(n),
-					p = context.getContentPosition(c),
-					dx = [t.l-p.x, t.l+c.w-p.x],
-					dy = [t.t-p.y, t.t+c.h-p.x];
-				dojo.forEach(dx, function(x){
-					dojo.forEach(dy, function(y){
-						var dis = x*x + y*y;
-						if(dis < result.distance){
-							if(!hLock || (t.t > p.y && t.t < p.y + c.w)){
-								result = {distance: dis, widget: w, hpos: t.l-p.x > c.w / 2, vpos: t.t-p.y > c.h / 2};
-							}
-						}
-					});
-				});
-			}
-		});
-	}
-
-	// Eligible for inserting as a child of result rather than a sibling?
-	if (allowedFilter ? allowedFilter(result.widget) : isContainer(result.widget.type)) {
-		c = dojo.position(result.widget.domNode);
-		p = context.getContentPosition(c);
-		if (t.l > p.x && t.l < p.x + c.w && t.t > p.y && t.t < p.y + c.h) {
-			result.insert = true;
-		}
-	}
-
-	return result;
-},
-
 parseStyleValues: function(text) {
 	var values = {};
 	if(text){

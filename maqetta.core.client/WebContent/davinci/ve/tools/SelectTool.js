@@ -106,25 +106,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		}
 	},
 
-	_resetCursor: function(){
-		if(!this._cursor){
-			this._cursor = this._context.getDocument().createElement("span");
-			this._cursor.className = "editCursor";
-			this._cursor.style.zIndex = "99"; // below Focus (zIndex = "100")
-//			dojo.style(this._feedback, "opacity", 0.1);
-			this._timer = this._context.getGlobal().setInterval(
-				function(node, context){
-					if(context._blinkCursor){
-						dojo.toggleClass(node, "editCursorBlink");
-					}
-				}, 400, this._cursor, this._context);
-		}else if(this._cursor.parentNode){
-			this._cursor.parentNode.removeChild(this._cursor);
-			delete this._context._blinkCursor;
-		}
-	},
-
-	onExtentChange: function(index, box, cursorOnly){
+	onExtentChange: function(index, box){
 		
 		function adjustLTOffsetParent(left, top){
 			var parentNode = widget.domNode.offsetParent;
@@ -146,7 +128,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		var widget = selection[index];
 
 		var compoundCommand = undefined;
-		if(!cursorOnly && ("w" in box || "h" in box)){
+		if("w" in box || "h" in box){
 			var resizable = davinci.ve.metadata.queryDescriptor(widget.type, "resizable"),
 				w, h;
 			// Adjust dimensions from border-box to content-box
@@ -182,158 +164,108 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				var moveCommand = new davinci.ve.commands.MoveCommand(widget, left, top);
 				compoundCommand.add(moveCommand);
 			}
+			
 		}else{
 
 			var _node = widget.getStyleNode();
-			//FIXME: should use computed style instead of inline style
-			if(cursorOnly && _node.style.position != "absolute"){
-				// use mouse position for dropping in relative mode
-				box.l = box.x;
-				box.t = box.y;
-			}
-
-			//FIXME: Needs cleanup. This code is really hacky.
-			//We fall into next IF block only if box.l and box.t have a value
-			//which code just above makes true if position!=absolute.
-			//Instead, probably should just check of position!=absolute
-			if("l" in box && "t" in box) {
-				if (_node.style.position != "absolute") {
-
-					var close = widgetUtils.findClosest(context.getContainerNode(), box, context, widget, true,
-							dojo.hitch(this, function(w){
-								return context._chooseParent.getAllowedTargetWidget(w, widget.getData()).length;
-							}));
-					this._resetCursor();
-					if (close && close.widget && (close.widget != widget)) {
-						
-						if(!cursorOnly && !compoundCommand){
-							compoundCommand = new davinci.commands.CompoundCommand();
-						}
-						var child = close.widget,
-							parent = child.getParent(),
-							index = parent.indexOf(child);
-						var lastIdx = -1;
-						
-						//get the data	
-						dojo.forEach(selection, function(w){
-							if(cursorOnly){
-								var containerNode =  parent.domNode;
-								if(close.insert){
-									close.widget.domNode.appendChild(this._cursor);
-								}else if(index === undefined || index === -1){
-									containerNode.appendChild(this._cursor);
-								}else{
-									var children = parent.getChildren();
-									if(index < children.length && !close.hpos){
-										containerNode.insertBefore(this._cursor, children[index].domNode);
-									}else{
-										containerNode.appendChild(this._cursor);
-									}
-								}
-								context._blinkCursor = true;
-								return;
-							}
-							var newwidget,
-								d = w.getData( {identify:false});
-							d.context=context;
-							dojo.withDoc(context.getDocument(), function(){
-								newwidget = widgetUtils.createWidget(d);
-							}, this);		
-							if (!newwidget) {
-								console.debug("Widget is null!!");
-								return;
-							}
-							var ppw = cp.getProposedParentWidget();
-							var idx;
-							if(ppw.refChild){
-								if(lastIdx >= 0){
-									idx = lastIdx + 1;
-								}else{
-									idx = ppw.parent.indexOf(ppw.refChild);
-									if(ppw.refAfter){
-										idx++;
-									}
-								}
-							}
-							compoundCommand.add(new davinci.ve.commands.AddCommand(newwidget, ppw.parent, idx));
-							lastIdx = idx;
-/*
-							if(close.insert){
-								compoundCommand.add(new davinci.ve.commands.AddCommand(newwidget, close.widget, 0)); // 0==last?
-							}else{
-								compoundCommand.add(new davinci.ve.commands.AddCommand(newwidget, parent, index + (close.hpos ? 1 : 0)));
-							}
-*/
-							index++;
-							newselection.push(newwidget);
-						}, this);
-
-						// remove widget
-						if(!cursorOnly){
-							dojo.forEach(selection, function(w){
-								compoundCommand.add(new davinci.ve.commands.RemoveCommand(w));
-							}, this);
-
-							context.select(null);
-						}
-					}				
-				}else if(!cursorOnly){
-					var left = box.l,
-						top = box.t;
-					var p = adjustLTOffsetParent(left, top);
-					left = p.left;
-					top = p.top;
-					var position = {x: left, y: top};
-					left = position.x;
-					top = position.y;
-					if(!compoundCommand){
-						compoundCommand = new davinci.commands.CompoundCommand();
-					}
-					var first_c = new davinci.ve.commands.MoveCommand(widget, left, top);
-					var ppw = cp.getProposedParentWidget();
-					var proposedParent = ppw.parent;
-					compoundCommand.add(first_c);
-					var currentParent = widget.getParent();
-					if(proposedParent && proposedParent != currentParent){
-						compoundCommand.add(new davinci.ve.commands.ReparentCommand(widget, proposedParent, 'last'));
-						var newPos = this._reparentDelta(left, top, widget.getParent(), proposedParent);
-						compoundCommand.add(new davinci.ve.commands.MoveCommand(widget, newPos.l, newPos.t));
-					}
-					var b = widget.getMarginBox(),
-						dx = left - b.l,
-						dy = top - b.t;
-					dojo.forEach(selection, dojo.hitch(this, function(w){
-						if(w != widget){
-							var mb = w.getMarginBox();
-							var newLeft = mb.l + dx;
-							var newTop = mb.t + dy;
-							if(w.getStyleNode().style.position == "absolute"){
-								// Because snapping will shift the first widget in a hard-to-predict
-								// way, MoveCommand will store the actual shift amount on the
-								// command object (first_c). MoveCommand will use the shift amount
-								// for first_c for the other move commands.
-								var c = new davinci.ve.commands.MoveCommand(w, newLeft, newTop, first_c);
-								compoundCommand.add(c);
-							}
-							var currentParent = w.getParent();
-							if(proposedParent && proposedParent != currentParent){
-								compoundCommand.add(new davinci.ve.commands.ReparentCommand(w, proposedParent, 'last'));
-								var newPos = this._reparentDelta(newLeft, newTop, w.getParent(), proposedParent);
-								compoundCommand.add(new davinci.ve.commands.MoveCommand(w, newPos.l, newPos.t));
-							}
-						}
-					}));
+			var absolute = (dojo.style(_node, 'position') == 'absolute');
+			if(!absolute) {
+				if(!compoundCommand){
+					compoundCommand = new davinci.commands.CompoundCommand();
 				}
+				var lastIdx = -1;
+				
+				//get the data	
+				dojo.forEach(selection, function(w){
+					var newwidget,
+						d = w.getData( {identify:false});
+					d.context=context;
+					dojo.withDoc(context.getDocument(), function(){
+						newwidget = widgetUtils.createWidget(d);
+					}, this);		
+					if (!newwidget) {
+						console.debug("Widget is null!!");
+						return;
+					}
+					var ppw = cp.getProposedParentWidget();
+					var idx;
+					if(ppw.refChild){
+						if(lastIdx >= 0){
+							idx = lastIdx + 1;
+						}else{
+							idx = ppw.parent.indexOf(ppw.refChild);
+							if(ppw.refAfter){
+								idx++;
+							}
+						}
+					}
+					compoundCommand.add(new davinci.ve.commands.AddCommand(newwidget, ppw.parent, idx));
+					index++;
+					newselection.push(newwidget);
+				}, this);
+
+				// remove widget
+				dojo.forEach(selection, function(w){
+					compoundCommand.add(new davinci.ve.commands.RemoveCommand(w));
+				}, this);
+
+				context.select(null);
+				
+			}else{
+				var left = box.l,
+					top = box.t;
+				var p = adjustLTOffsetParent(left, top);
+				left = p.left;
+				top = p.top;
+				var position = {x: left, y: top};
+				left = position.x;
+				top = position.y;
+				if(!compoundCommand){
+					compoundCommand = new davinci.commands.CompoundCommand();
+				}
+				var first_c = new davinci.ve.commands.MoveCommand(widget, left, top);
+				var ppw = cp.getProposedParentWidget();
+				var proposedParent = ppw.parent;
+				compoundCommand.add(first_c);
+				var currentParent = widget.getParent();
+				if(proposedParent && proposedParent != currentParent){
+					compoundCommand.add(new davinci.ve.commands.ReparentCommand(widget, proposedParent, 'last'));
+					var newPos = this._reparentDelta(left, top, widget.getParent(), proposedParent);
+					compoundCommand.add(new davinci.ve.commands.MoveCommand(widget, newPos.l, newPos.t));
+				}
+				var b = widget.getMarginBox(),
+					dx = left - b.l,
+					dy = top - b.t;
+				dojo.forEach(selection, dojo.hitch(this, function(w){
+					if(w != widget){
+						var mb = w.getMarginBox();
+						var newLeft = mb.l + dx;
+						var newTop = mb.t + dy;
+						if(w.getStyleNode().style.position == "absolute"){
+							// Because snapping will shift the first widget in a hard-to-predict
+							// way, MoveCommand will store the actual shift amount on the
+							// command object (first_c). MoveCommand will use the shift amount
+							// for first_c for the other move commands.
+							var c = new davinci.ve.commands.MoveCommand(w, newLeft, newTop, first_c);
+							compoundCommand.add(c);
+						}
+						var currentParent = w.getParent();
+						if(proposedParent && proposedParent != currentParent){
+							compoundCommand.add(new davinci.ve.commands.ReparentCommand(w, proposedParent, 'last'));
+							var newPos = this._reparentDelta(newLeft, newTop, w.getParent(), proposedParent);
+							compoundCommand.add(new davinci.ve.commands.MoveCommand(w, newPos.l, newPos.t));
+						}
+					}
+				}));
 			}
 		}
-
 
 		if(compoundCommand){
 			context.getCommandStack().execute(compoundCommand);
 			dojo.forEach(newselection, function(w, i) {
 				context.select(w, i > 0);
 			}, this);			
-		}else if(!cursorOnly){
+		}else{
 			context.select(widget); // update selection
 		}
 	},

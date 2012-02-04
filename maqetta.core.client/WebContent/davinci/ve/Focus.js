@@ -467,13 +467,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
             this.move(box, event);
             this._client = {x: event.clientX, y: event.clientY};
-            if(!this._updateTarget){
-
-                this._updateTarget = setTimeout(dojo.hitch(this, function(){
-                    this.onExtentChange(this, this._client, true);
-                    delete this._updateTarget;
-                }), 200);
-            }
         }else{
 			var b = dojo.mixin({}, this._box);
             var d = 0;

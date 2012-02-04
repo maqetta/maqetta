@@ -34,6 +34,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			if (resizable !== "none") {
 				this._resizable = resizable;
 			}
+			this._dropCursor = Metadata.queryDescriptor(data.type, "dropCursor");
 		}
 	},
 
@@ -153,6 +154,12 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
 					Workbench.getProject());
 			var doSnapLines = editorPrefs.snap && absolute;
+			var doCursor = !absolute;
+			if (typeof this._dropCursor == 'object' && this._dropCursor.show === false){
+				doCursor = false;
+			}
+			var beforeAfter = this._dropCursor && this._dropCursor.beforeAfter;
+console.log('doCursor:'+doCursor+',beforeAfter:'+beforeAfter);
 			context.dragMoveUpdate({
 				data:this._data,
 				position:position,
@@ -162,7 +169,8 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				rect:box, 
 				doSnapLines:doSnapLines, 
 				doFindParentsXY:showCandidateParents,
-				doCursor:!absolute});
+				doCursor:doCursor,
+				beforeAfter:beforeAfter });
 		}
 	},
 

@@ -111,6 +111,7 @@ return declare("davinci.ve.ChooseParent", null, {
 	 *    {object} currentParent  if provided, then current parent widget for thing being dragged
 	 */
 	dragUpdateCandidateParents: function(params){
+console.log('dragUpdateCandidateParents. params.doCursor:'+params.doCursor+', params.beforeAfter='+params.beforeAfter);
 		var widgetType = params.widgetType,
 			showCandidateParents = params.showCandidateParents,
 			doCursor = params.doCursor, 
@@ -403,7 +404,8 @@ return declare("davinci.ve.ChooseParent", null, {
 		var data = params.data,
 			widget = params.widget,
 			position = params.position,
-			doCursor = params.doCursor;
+			doCursor = params.doCursor,
+			beforeAfter = params.beforeAfter;
 		var domNode = widget.domNode;
 		var x = position.x;
 		var y = position.y;
@@ -481,6 +483,7 @@ return declare("davinci.ve.ChooseParent", null, {
 				}
 				this._XYParent.push(widget);
 				this._XYRefChild.push(refChild);
+				refAfter = beforeAfter === 'after' ? true : (beforeAfter === 'before' ? false : refAfter);
 				this._XYRefAfter.push(refAfter);
 			}
 		}

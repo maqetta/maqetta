@@ -2704,6 +2704,7 @@ return declare("davinci.ve.Context", null, {
 	 * 		{boolean} doFindParentsXY  whether to show candidate parent widgets
 	 */
 	dragMoveUpdate: function(params) {
+console.log('dragMoveUpdate. params.doCursor:'+params.doCursor);
 		var context = this,
 			cp = this._chooseParent,
 			widgets = params.widgets,
@@ -2716,6 +2717,7 @@ return declare("davinci.ve.Context", null, {
 			doSnapLines = params.doSnapLines,
 			doFindParentsXY = params.doFindParentsXY,
 			doCursor = params.doCursor,
+			beforeAfter = params.beforeAfter,
 			widgetType = dojo.isArray(data) ? data[0].type : data.type;
 
 		// inner function that gets called recurively for each widget in document
@@ -2735,7 +2737,7 @@ return declare("davinci.ve.Context", null, {
 			if(doSnapLines){
 				Snap.findSnapOpportunities(this, widget, computed_style);
 			}
-			cp.findParentsXY({data:data, widget:widget, position:position, doCursor:doCursor});
+			cp.findParentsXY({data:data, widget:widget, position:position, doCursor:doCursor, beforeAfter:beforeAfter});
 			dojo.forEach(widget.getChildren(), function(w){
 				_updateThisWidget.apply(context, [w]);
 			});
@@ -2757,7 +2759,8 @@ return declare("davinci.ve.Context", null, {
 		if(differentXY){
 			cp.dragUpdateCandidateParents({widgetType:widgetType,
 					showCandidateParents:doFindParentsXY, 
-					doCursor:!absolute, 
+					doCursor:doCursor, 
+					beforeAfter:beforeAfter, 
 					absolute:absolute, 
 					currentParent:currentParent});
 			cp.findParentsXYAfterTraversal();

@@ -1848,7 +1848,11 @@
             },
             "allowedChild": "ANY",
             "helper": "./dojox/mobile/ViewHelper",
-            "requiresId":true
+            "requiresId":true,
+            "dropCursor":{	// flow drag/drop cursor controls
+            	"show":false,	// show cursor during drag/drop if undefined or true 
+            	"beforeAfter":"after"	// add new widget after. (undefined means check mouse versus sibling center point)
+            }
         },
         {
             "name": "ScrollableView",
@@ -1859,7 +1863,11 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFOiPj6/jJRijRTjTRUjTdXkTdXkLrH3+Hp+OHp9zdakzZYkDdYkDlbkzlck97o+ODp+N/o9ztflj5km/L2/Pj6/T5mnD9mnT5lm0FqoENupENuo0Ruo0ZxpvL2+0l3rEl4rEh2qkl3q0l2qk6BtE1+sU+BtFCDtVCFt1CEtlSLvVOJulOHuVaOv7nW78/t+////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADIALAAAAAAQABAAAAaAQJlwSCwKXcikcilzxZ5QaApGVclWMUAWMFhgYiRYACGStaJoDKzyuchQr7hc3jAwGAeZCR1lKRIRLDIjWVtdXyUSEhAnMh58UCCKECEyGnOYHRsbHBwyFJBPGVQwFDIThQBcXjEOYggOMg+hMQUwFgIEsg+8vb0BwMBGw8TFQkEAOw==",
             "allowedChild": "ANY",
             "helper": "./dojox/mobile/ScrollableViewHelper",
-            "requiresId":true
+            "requiresId":true,
+            "dropCursor":{	// flow drag/drop cursor controls
+            	"show":false,	// show cursor during drag/drop if undefined or true 
+            	"beforeAfter":"after"	// add new widget after. (undefined means check mouse versus sibling center point)
+            }
         },
         {
             "name": "SwapView",
@@ -1870,7 +1878,11 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADlck77J2+nt87/M3r7L3EVyp8DO4MPS40x9sU+CtU1+sWKf28bX6MTU5ejx+lKHuWKf2WKh2VWLvVaOv7nW78jg84C/64DB6ZfX9v///7q6urOzs7KysqmpqaioqHBwcG5ubmxsbGpqamdnZ////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACQALAAAAAAQABAAAAaFQNJkOCQZj0gSZrmcGD/Q6IeUyVwsFslTw+2SIpEFZPEwgjaZDWezISne74Qx5PF0OnVSZb9vGEUjgYJUVVUARgqFhSQFCg8MAIckBxkIioQZkZoAilUkFBQODpFGBqCnFJiGJAADnRmMjgwZBKycDZeKm5GdtgABAgG2AQGbSUeSx8rLQQA7",
             "allowedChild": "ANY",
             "helper": "./dojox/mobile/ViewHelper",
-            "requiresId":true
+            "requiresId":true,
+            "dropCursor":{
+            	"show":false,
+            	"beforeAfter":"after"
+            }
         },
         {
             "name": "Heading",

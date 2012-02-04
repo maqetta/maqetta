@@ -10,7 +10,7 @@ define(["dojo/_base/declare",
         "dijit/form/ComboBox",
         "dojo/i18n!davinci/ui/nls/ui",
         "dojo/i18n!dijit/nls/common",
-        "davinci/Runtime",
+        "davinci/Workbench",
         "davinci/model/Path",
         "system/resource",
         "davinci/ve/RebuildPage",
@@ -18,7 +18,7 @@ define(["dojo/_base/declare",
         "davinci/Theme"
         
 ], function(declare, _Templated, _Widget, Button, TextBox, RadioButton,MenuItem,Menu,Library, 
-			ComboBox, uiNLS, commonNLS, Runtime, Path, Resource, RebuildPage, templateString, Theme
+			ComboBox, uiNLS, commonNLS, Workbench, Path, Resource, RebuildPage, templateString, Theme
 			){
 	
 	return declare("davinci.ui.UserLibraries",   [_Widget, _Templated], {
@@ -52,18 +52,18 @@ define(["dojo/_base/declare",
 			this.libraries = {};
 			/* build UI table */
 			for(var i =0;i<this._allLibs.length;i++){
-				this._allLibs[i].initRoot = this._getLibRoot(this._allLibs[i]['id'],this._allLibs[i]['version']);
-				var name = this._allLibs[i]['id']; // may want to use a better name here eventually
+				this._allLibs[i].initRoot = this._getLibRoot(this._allLibs[i].id,this._allLibs[i].version);
+				var name = this._allLibs[i].id; // may want to use a better name here eventually
 				this._allLibs[i].checked = false;
 				
-				if(this._getUserLib(this._allLibs[i]['id'],this._allLibs[i]['version'])!=null){
+				if(this._getUserLib(this._allLibs[i].id,this._allLibs[i].version)!=null){
 					this._allLibs[i].checked = true;
 				}
 				var checkedString = this._allLibs[i].checked?"checked":"";
 				uiArray.push("<tr>");
 				uiArray.push("<td class='columna'><input type='checkbox' libItemCheck='"+ i +"'"+ checkedString +"></input></td>");
 				uiArray.push("<td class='columnb'>" + name + "</td>");
-				uiArray.push("<td class='columnc'>" + this._allLibs[i]['version'] + "</td>");
+				uiArray.push("<td class='columnc'>" + this._allLibs[i].version + "</td>");
 				
 				if(this._allLibs[i].initRoot!=null){
 					uiArray.push("<td class='columnd'><input type='text' value='" + this._allLibs[i].initRoot + "' libItemPath='"+i+ "'></input></td>");
@@ -95,7 +95,7 @@ define(["dojo/_base/declare",
 			
 			for(var i=0;i<this._allLibs.length;i++){
 				if(this._allLibs[i].id==id && this._allLibs[i].version==version)
-					return this._allLibs[i]['root'];
+					return this._allLibs[i].root;
 			}
 			return null;
 		},
@@ -116,7 +116,7 @@ define(["dojo/_base/declare",
 		_getLibRoot:function(id,version){
 			for(var i=0;i<this._userLibs.length;i++){
 				if(this._userLibs[i].id==id && this._userLibs[i].version==version)
-					return this._userLibs[i]['root'];
+					return this._userLibs[i].root;
 			}
 			return this._getGlobalLib(id,version);
 		},
@@ -195,12 +195,12 @@ define(["dojo/_base/declare",
 			for(var i =0;i<nodeList.length;i++){
 				var element = parseInt(dojo.attr(nodeList[i], "libItemCheck"));
 				var value = dojo.attr(nodeList[i], "checked");
-				if(this._allLibs[element]['checked']!= value){
+				if(this._allLibs[element].checked != value){
 					//this._updateInstall(this._allLibs[element], value);
 					
-					var item = searchM(this._allLibs[element]['id'],this._allLibs[element]['version'])
+					var item = searchM(this._allLibs[element].id,this._allLibs[element].version)
 					if(!item){
-						item = {id:this._allLibs[element]['id'], version:this._allLibs[element]['version']};
+						item = {id:this._allLibs[element].id, version:this._allLibs[element].version};
 						changes.push(item);
 					}
 					item.installed = value;
@@ -213,16 +213,16 @@ define(["dojo/_base/declare",
 				
 				var element = parseInt(dojo.attr(nodeList[i], "libItemPath"));
 				var value = dojo.attr(nodeList[i], "value");
-				if(this._allLibs[element]['initRoot']!= value){
+				if(this._allLibs[element].initRoot != value){
 					//this._updateInstall(this._allLibs[element], value);
 					
-					var item = searchM(this._allLibs[element]['id'],this._allLibs[element]['version'])
+					var item = searchM(this._allLibs[element].id,this._allLibs[element].version)
 					if(!item){
-						item = {id:this._allLibs[element]['id'], version:this._allLibs[element]['version']};
+						item = {id:this._allLibs[element].id, version:this._allLibs[element].version};
 						changes.push(item);
 					}
 					item.path = value;
-					item.oldPath = this._allLibs[element]['initRoot'];
+					item.oldPath = this._allLibs[element].initRoot;
 					item.base = this.getResourceBase();
 				}
 			

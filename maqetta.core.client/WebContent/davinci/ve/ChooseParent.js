@@ -213,7 +213,10 @@ return declare("davinci.ve.ChooseParent", null, {
 			}
 			if(idx !== undefined){
 				if(!this._cursorSpan){
-					this._cursorSpan = dojo.create('span', {className:'editCursor', style:'background:red'});
+					this._cursorSpan = dojo.create('span', {className:'editCursor'});
+					this._timer = context.getGlobal().setInterval(function(node, context){
+						dojo.toggleClass(node, 'editCursorBlink');
+					}, 400, this._cursorSpan, context);
 				}
 				var parentNode = this._XYParent[idx].domNode;
 				var refChild = this._XYRefChild[idx];
@@ -275,6 +278,10 @@ return declare("davinci.ve.ChooseParent", null, {
 		if(this._cursorSpan){
 			this._cursorSpan.parentNode.removeChild(this._cursorSpan);
 			this._cursorSpan = null;
+		}
+		if(this._timer){
+			clearInterval(this._timer);
+			this._timer = null;
 		}
 		var context = this._context;
 		this.highlightNewWidgetParent(null);

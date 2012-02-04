@@ -23,7 +23,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	deactivate: function(){
 	
 		this._setTarget(null);
-		if(this._timer){ clearInterval(this._timer); }
 	},
 
 	onMouseDown: function(event){

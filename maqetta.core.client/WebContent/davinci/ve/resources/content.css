@@ -59,6 +59,7 @@
 	display: inline-block;
 	border: 1px solid black;
 	height: 1.5em;
+	z-index:99;	/* Below focus, which is at z-index:100 */
 }
 
 .editCursorBlink {

@@ -259,7 +259,6 @@ return declare("davinci.ve.ChooseParent", null, {
 					proposedParentWidget = currentParent;
 				}else{
 					var last = allowedParentList.length - 1;
-					console.log('allowedParentList.length='+allowedParentList.length+',last='+last);
 					proposedParentWidget = allowedParentList[last];
 				}
 			}
@@ -410,75 +409,63 @@ return declare("davinci.ve.ChooseParent", null, {
 		if(x >= l && x <= r && y >= t && y <= b){
 			var allowedParents = this.getAllowedTargetWidget(widget, data, false);
 			if(allowedParents.length === 1){
-console.log('widget.type='+widget.type+',x='+x+',y='+y);
-console.log('children');
-var children = widget.getChildren();
-var childData = [];
-for(var i=0; i<children.length; i++){
-	var child = children[i];
-	var node = child.domNode;
-	if(xOffset === undefined){
-		console.log('undefined');
-		var xOffset = 0,
-			yOffset = 0;
-		var offsetParent = node.offsetParent;
-		while(offsetParent && offsetParent.tagName != 'BODY'){
-			xOffset += offsetParent.offsetLeft;
-			yOffset += offsetParent.offsetTop;
-			offsetParent = offsetParent.offsetParent;
-		}
-	}else{
-		console.log('!undefined');
-	}
-	console.log('child['+i+']='+children[i].type);
-	var w = node.offsetWidth;
-	var h = node.offsetHeight;
-	var l = node.offsetLeft + xOffset;
-	var t = node.offsetTop + yOffset;
-	var r = l + w;
-	var b = t + h;
-	var c = l + w/2;
-	console.log('l='+l+',t='+t+',r='+r+',b='+b+',c='+c);
-	childData.push({l:l, t:t, r:r, b:b, c:c});
-}
-var refChild, refAfter, biggestY;
-for(var i=0; i<childData.length; i++){
-	var cd = childData[i];
-	var child = children[i];
-	if(x >= cd.l && x <= cd.r && y >= cd.t && y <= cd.b){
-		// If mouse is over one of the children, then
-		// insert either before or after that child (and jump out of loop)
-		refChild = child;
-		refAfter = x >= cd.c ? true : false;
-		break;
-	}
-	if(i === 0){
-		// If there is at least one child, set default solution
-		// to being either before or after that first child
-		refChild = child;
-		refAfter = (y > cd.b || x >= cd.c) ? true : false;
-		biggestY = cd.b;
-	}else if((y >= cd.t || y >= biggestY) && x >= cd.l){
-		// Else if mouse is below top of this child or further down page than any previous child
-		// and mouse isn't to left of this child,
-		// then this child is a candidate refChild
-		refChild = child;
-		refAfter = (y > cd.b || x >= cd.c) ? true : false;
-	}else if(y >= biggestY && y >= cd.b){
-		// Else if mouse is below bottom of this child and all previous childs
-		// then this child is candidate refChild
-		refChild = child;
-		refAfter = true;
-	}
-	if(cd.b > biggestY) {
-		biggestY = cd.b;
-	}
-}
-if(refChild){
-	console.log('refChild='+refChild.type+',refAfter='+refAfter);
-}else{
-	console.log('refChild is undefined');
-}
+				var children = widget.getChildren();
+				var childData = [];
+				for(var i=0; i<children.length; i++){
+					var child = children[i];
+					var node = child.domNode;
+					if(xOffset === undefined){
+						var xOffset = 0,
+							yOffset = 0;
+						var offsetParent = node.offsetParent;
+						while(offsetParent && offsetParent.tagName != 'BODY'){
+							xOffset += offsetParent.offsetLeft;
+							yOffset += offsetParent.offsetTop;
+							offsetParent = offsetParent.offsetParent;
+						}
+					}
+					var w = node.offsetWidth;
+					var h = node.offsetHeight;
+					var l = node.offsetLeft + xOffset;
+					var t = node.offsetTop + yOffset;
+					var r = l + w;
+					var b = t + h;
+					var c = l + w/2;
+					childData.push({l:l, t:t, r:r, b:b, c:c});
+				}
+				var refChild, refAfter, biggestY;
+				for(var i=0; i<childData.length; i++){
+					var cd = childData[i];
+					var child = children[i];
+					if(x >= cd.l && x <= cd.r && y >= cd.t && y <= cd.b){
+						// If mouse is over one of the children, then
+						// insert either before or after that child (and jump out of loop)
+						refChild = child;
+						refAfter = x >= cd.c ? true : false;
+						break;
+					}
+					if(i === 0){
+						// If there is at least one child, set default solution
+						// to being either before or after that first child
+						refChild = child;
+						refAfter = (y > cd.b || x >= cd.c) ? true : false;
+						biggestY = cd.b;
+					}else if((y >= cd.t || y >= biggestY) && x >= cd.l){
+						// Else if mouse is below top of this child or further down page than any previous child
+						// and mouse isn't to left of this child,
+						// then this child is a candidate refChild
+						refChild = child;
+						refAfter = (y > cd.b || x >= cd.c) ? true : false;
+					}else if(y >= biggestY && y >= cd.b){
+						// Else if mouse is below bottom of this child and all previous childs
+						// then this child is candidate refChild
+						refChild = child;
+						refAfter = true;
+					}
+					if(cd.b > biggestY) {
+						biggestY = cd.b;
+					}
+				}
 				this._XYParent.push(widget);
 				this._XYRefChild.push(refChild);
 				this._XYRefAfter.push(refAfter);

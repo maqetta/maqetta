@@ -433,6 +433,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var cp = context._chooseParent;
 		this._lastEventTarget = null;
 		this._removeKeyHandlers();
+		context.dragMoveCleanup();
+     	cp.parentListDivDelete();
         this._nobs[DRAG_NOB].style.display = 'none';
         if(this._mover){
         	var box;
@@ -452,8 +454,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         }
         this._nobIndex = -1;
         this._nobBox = null;
-		context.dragMoveCleanup();
-     	cp.parentListDivDelete();
     },
     
     onDblClick: function(event) {

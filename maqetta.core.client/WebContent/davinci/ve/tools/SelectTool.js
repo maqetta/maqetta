@@ -212,7 +212,8 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						var child = close.widget,
 							parent = child.getParent(),
 							index = parent.indexOf(child);
-
+						var lastIdx = -1;
+						
 						//get the data	
 						dojo.forEach(selection, function(w){
 							if(cursorOnly){
@@ -242,11 +243,27 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 								console.debug("Widget is null!!");
 								return;
 							}
+							var ppw = cp.getProposedParentWidget();
+							var idx;
+							if(ppw.refChild){
+								if(lastIdx >= 0){
+									idx = lastIdx + 1;
+								}else{
+									idx = ppw.parent.indexOf(ppw.refChild);
+									if(ppw.refAfter){
+										idx++;
+									}
+								}
+							}
+							compoundCommand.add(new davinci.ve.commands.AddCommand(newwidget, ppw.parent, idx));
+							lastIdx = idx;
+/*
 							if(close.insert){
-								compoundCommand.add(new davinci.ve.commands.AddCommand(newwidget, close.widget, 0/*last?*/));
+								compoundCommand.add(new davinci.ve.commands.AddCommand(newwidget, close.widget, 0)); // 0==last?
 							}else{
 								compoundCommand.add(new davinci.ve.commands.AddCommand(newwidget, parent, index + (close.hpos ? 1 : 0)));
 							}
+*/
 							index++;
 							newselection.push(newwidget);
 						}, this);

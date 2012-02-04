@@ -243,9 +243,9 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		if(ppw && ppw.parent){
 			// Use last computed parent from onMouseMove handler
 			target = ppw.parent;
-			var idx;
 			if(ppw.refChild){
-				idx = ppw.parent.indexOf(ppw.refChild);
+				var ppwChildren = ppw.parent.getChildren();
+				var idx = ppwChildren.indexOf(ppw.refChild);
 				if(idx >= 0){
 					if(ppw.refAfter){
 						idx++;

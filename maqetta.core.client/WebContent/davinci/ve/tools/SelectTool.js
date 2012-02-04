@@ -172,7 +172,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				if(!compoundCommand){
 					compoundCommand = new davinci.commands.CompoundCommand();
 				}
-				var lastIdx = -1;
+				var lastIdx = null;
 				
 				//get the data	
 				dojo.forEach(selection, function(w){
@@ -187,16 +187,21 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						return;
 					}
 					var ppw = cp.getProposedParentWidget();
-					var idx;
 					if(ppw.refChild){
-						if(lastIdx >= 0){
+						if(lastIdx !== null){
 							idx = lastIdx + 1;
 						}else{
-							idx = ppw.parent.indexOf(ppw.refChild);
-							if(ppw.refAfter){
-								idx++;
+							var ppwChildren = ppw.parent.getChildren();
+							var idx = ppwChildren.indexOf(ppw.refChild);
+							if(idx >= 0){
+								if(ppw.refAfter){
+									idx++;
+								}
+							}else{
+								idx = null;
 							}
 						}
+						lastIdx = idx;
 					}
 					compoundCommand.add(new davinci.ve.commands.AddCommand(newwidget, ppw.parent, idx));
 					index++;

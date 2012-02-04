@@ -120,7 +120,9 @@ return declare("davinci.ve.ChooseParent", null, {
 		if(!this._proposedParentWidget){
 			this._proposedParentWidget = this._getDefaultParent(widgetType, allowedParentList, absolute, currentParent);
 		}
-		this.highlightNewWidgetParent(this._proposedParentWidget);
+		if(showCandidateParents){
+			this.highlightNewWidgetParent(this._proposedParentWidget);
+		}
 
 		var context = this._context;
 		// NOTE: For CreateTool, the activeDragDiv is a DIV attached to dragClone
@@ -270,6 +272,10 @@ return declare("davinci.ve.ChooseParent", null, {
 	 * Cleanup operations after drag operation is complete
 	 */
 	cleanup: function(){
+		if(this._cursorSpan){
+			this._cursorSpan.parentNode.removeChild(this._cursorSpan);
+			this._cursorSpan = null;
+		}
 		var context = this._context;
 		this.highlightNewWidgetParent(null);
 		this._lastAllowedParentList = null;

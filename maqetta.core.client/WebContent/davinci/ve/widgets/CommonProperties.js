@@ -1,13 +1,10 @@
 define(["dojo/_base/declare",
-        
         "davinci/workbench/ViewLite",
-        "dojo/i18n!davinci/ve/nls/ve",
-        "dojo/i18n!dijit/nls/common",
         "davinci/ve/commands/ModifyCommand"
-],function(declare,  ViewLite, ModifyCommand){
+],function(declare, ViewLite, ModifyCommand){
 	return declare("davinci.ve.widgets.CommonProperties", [ViewLite], {
 		
-		buildRendering : function(){
+		buildRendering: function(){
 			var props = ["title"];
 			var template = "<table width='100%' class='property_table_stretchable' border='0' cellspacing='0' cellpadding='0'>";
 			template += "<colgroup>"; 
@@ -24,14 +21,14 @@ define(["dojo/_base/declare",
 			for(var i = 0;i<props.length;i++){
 				this._boxes[props[i]] = {value:""};
 				
-				this._boxes[props[i]]['id'] = ("davinci_properties_event_"+ id++ +"_combo");
+				this._boxes[props[i]].id = "davinci_properties_event_"+ id++ +"_combo";
 				template+="<tr>";
 				template+="<td/>";
 				template+="<td class='propertyDisplayName'>";
 				template+=props[i] + ":";
 				template+="</td>";
 				template+="<td>";
-				template+="<input type='text' id='" + this._boxes[props[i]]['id'] + "'></input>";
+				template+="<input type='text' id='" + this._boxes[props[i]].id + "'></input>";
 				template+="</td>";
 				template+="<td/>";
 				template+="</tr>";
@@ -55,11 +52,11 @@ define(["dojo/_base/declare",
 				this._widget = this._subwidget = null;
 				this.context = null;
 				this._clearValues();
-				}
+			}
 			this._clearValues();
 		},	
 		
-		startup : function(){
+		startup: function(){
 			this.inherited(arguments);
 			function makeOnChange(target){
 				return function(){
@@ -67,39 +64,38 @@ define(["dojo/_base/declare",
 				};
 			}
 			for(var name in this._boxes){
-				this._boxes[name]['domNode'] = dojo.byId(this._boxes[name]['id']);
-				dojo.connect(this._boxes[name]['domNode'], "onchange", this, makeOnChange(name));
-				dojo.connect(this._boxes[name]['domNode'], "onfocus", this, "_onFocus");
-				dojo.connect(this._boxes[name]['domNode'], "onblur", this, "_onBlur");
+				this._boxes[name].domNode = dojo.byId(this._boxes[name]['id']);
+				dojo.connect(this._boxes[name].domNode, "onchange", this, makeOnChange(name));
+				dojo.connect(this._boxes[name].domNode, "onfocus", this, "_onFocus");
+				dojo.connect(this._boxes[name].domNode, "onblur", this, "_onBlur");
 				
 			}
 		},
 		
-		_onFocus : function(){
+		_onFocus: function(){
 			
-			if(this.context)
+			if(this.context) {
 				this.context.blockChange(true);
-			
-			
+			}
 		},
-		_onBlur : function(){
-			
-			if(this.context)
+
+		_onBlur: function(){
+			if(this.context) {
 				this.context.blockChange(false);
-			
-			
+			}
 		},
 		
-		_onChange : function(a){
+		_onChange: function(a){
 			
 			var targetProperty = a.target;
 			
-			var	value = dojo.attr(this._boxes[targetProperty]['domNode'], 'value');
-			if(this.context)
+			var	value = dojo.attr(this._boxes[targetProperty].domNode, 'value');
+			if(this.context) {
 				this.context.blockChange(false);
+			}
 			
-			if(this._boxes[targetProperty]['value'] != value ){
-				this._boxes[targetProperty]['value'] = value;
+			if(this._boxes[targetProperty].value != value ){
+				this._boxes[targetProperty].value = value;
 				var valuesObject = {};
 				valuesObject[targetProperty] = value;
 				var command = new ModifyCommand(this._widget, valuesObject, null);
@@ -107,14 +103,12 @@ define(["dojo/_base/declare",
 			}	
 		},
 		
-		_widgetReplaced : function(newWidget){
+		_widgetReplaced: function(newWidget){
 			this._widget = newWidget;
 			this.onWidgetSelectionChange();
-			
-			
 		},
 		
-		onWidgetSelectionChange : function(){
+		onWidgetSelectionChange: function(){
 			if(!this._widget){
 				this.set("readOnly", true);
 				this._clearValues();
@@ -125,19 +119,21 @@ define(["dojo/_base/declare",
 			}
 		},
 		
-		_clearValues : function(){
+		_clearValues: function(){
 			for(name in this._boxes){
-				dojo.attr(this._boxes[name]['domNode'],'value',"")
-				this._boxes[name]['value'] = null;
+				dojo.attr(this._boxes[name].domNode,'value',"")
+				this._boxes[name].value = null;
 			}
 		},
 		_setValues: function(){
-			if(!this._widget) return;
+			if(!this._widget) {
+				return;
+			}
 			
 			for(var name in this._boxes){
 				var widget = this._widget,
 					box = this._boxes[name];
-			if(widget.getPropertyValue){
+				if(widget.getPropertyValue){
 					var value = widget.getPropertyValue(name);
 					if(box.value != value){
 						box.value = value;

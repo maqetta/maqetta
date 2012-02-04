@@ -420,10 +420,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var cp = context._chooseParent;
 		this._lastEventTarget = null;
 		this._removeKeyHandlers();
-        if(this._updateTarget){
-            clearTimeout(this._updateTarget);
-            delete this._updateTarget;
-        }
         this._nobs[DRAG_NOB].style.display = 'none';
         if(this._mover){
         	var box;

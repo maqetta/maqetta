@@ -402,11 +402,17 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		var context = this._context;
 		var cp = context._chooseParent;
 		var absolute = !context.getFlowLayout();
+		var doCursor = !absolute;
+		if (typeof this._dropCursor == 'object' && this._dropCursor.show === false){
+			doCursor = false;
+		}
+		var beforeAfter = this._dropCursor && this._dropCursor.beforeAfter;
 		var currentParent = null;
 		cp.dragUpdateCandidateParents({widgetType:widgetType,
 				showCandidateParents:showCandidateParents, 
-				doCursor:!absolute, 
 				absolute:absolute, 
+				doCursor:doCursor, 
+				beforeAfter:beforeAfter, 
 				currentParent:currentParent});
 
 	},
@@ -446,11 +452,17 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		var context = this._context;
 		var cp = context._chooseParent;
 		var absolute = !context.getFlowLayout();
+		var doCursor = !absolute;
+		if (typeof this._dropCursor == 'object' && this._dropCursor.show === false){
+			doCursor = false;
+		}
+		var beforeAfter = this._dropCursor && this._dropCursor.beforeAfter;
 		var currentParent = null;
 		cp.dragUpdateCandidateParents({widgetType:widgetType,
 				showCandidateParents:showCandidateParents, 
-				doCursor:!absolute, 
 				absolute:absolute, 
+				doCursor:doCursor, 
+				beforeAfter:beforeAfter, 
 				currentParent:currentParent});
 	},
 

@@ -447,7 +447,6 @@ return declare("davinci.ve.ChooseParent", null, {
 			position = params.position,
 			doCursor = params.doCursor,
 			beforeAfter = params.beforeAfter;
-console.log('findParentsXY. widget.type='+widget.type);
 		var domNode = widget.domNode;
 		var x = position.x;
 		var y = position.y;
@@ -464,13 +463,10 @@ console.log('findParentsXY. widget.type='+widget.type);
 		var r = l + w;
 		var b = t + h;
 		if(x >= l && x <= r && y >= t && y <= b){
-console.log('findParentsXY. x='+x+',y='+y+',l='+l+',r='+r+',t='+t+',b='+b);
 			var allowedParents = this.getAllowedTargetWidget(widget, data, false);
-console.log('allowedParents.length='+allowedParents.length);
 			if(allowedParents.length === 1){
 				var children = widget.getChildren();
 				var childData = [];
-console.log('children.length='+children.length);
 				for(var i=0; i<children.length; i++){
 					var child = children[i];
 					var node = child.domNode;
@@ -497,9 +493,7 @@ console.log('children.length='+children.length);
 				for(var i=0; i<childData.length; i++){
 					var cd = childData[i];
 					var child = children[i];
-console.log('childData i='+i+',child.type='+child.type);
 					if(x >= cd.l && x <= cd.r && y >= cd.t && y <= cd.b){
-console.log('over child');
 						// If mouse is over one of the children, then
 						// insert either before or after that child (and jump out of loop)
 						refChild = child;
@@ -507,28 +501,24 @@ console.log('over child');
 						break;
 					}
 					if(i === 0){
-console.log('i === 0');
 						// If there is at least one child, set default solution
 						// to being either before or after that first child
 						refChild = child;
 						refAfter = (y > cd.b || x >= cd.c) ? true : false;
 						biggestY = cd.b;
 					}else if((y >= cd.t || y >= biggestY) && x >= cd.l){
-console.log('(y >= cd.t || y >= biggestY) && x >= cd.l');
 						// Else if mouse is below top of this child or further down page than any previous child
 						// and mouse isn't to left of this child,
 						// then this child is a candidate refChild
 						refChild = child;
 						refAfter = (y > cd.b || x >= cd.c) ? true : false;
 					}else if(y >= biggestY && y >= cd.b){
-console.log('else');
 						// Else if mouse is below bottom of this child and all previous childs
 						// then this child is candidate refChild
 						refChild = child;
 						refAfter = true;
 					}
 					if(cd.b > biggestY) {
-console.log('cd.b > biggestY');
 						biggestY = cd.b;
 					}
 				}

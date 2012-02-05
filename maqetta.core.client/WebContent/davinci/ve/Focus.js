@@ -2,10 +2,11 @@ define([
     "require",
     "dojo/_base/declare",
 	"dijit/_WidgetBase",
-	"dojo/dnd/Mover"
+	"dojo/dnd/Mover",
+	"./metadata"
     //"./VisualEditor"
 ],
-function(require, declare, _WidgetBase, Mover) {
+function(require, declare, _WidgetBase, Mover, Metadata) {
     
 var LEFT = 0,
     RIGHT = 1,
@@ -135,9 +136,21 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         	currentParent = this._selectedWidget.getParent();
         }
         if(this._selectedWidget && event){
+        	var widgetType = this._selectedWidget.type;
+        	var dropCursor = Metadata.queryDescriptor(widgetType, "dropCursor");
+    		var doCursor = !absolute;
+    		if (typeof this._dropCursor == 'object' && this._dropCursor.show === false){
+    			doCursor = false;
+    		}
+    		var beforeAfter = this._dropCursor && this._dropCursor.beforeAfter;
     		var parentListDiv = cp.parentListDivGet();
     		if(!parentListDiv){// Make sure there is a DIV into which list of parents should be displayed
-    			parentListDiv = cp.parentListDivCreate(this._selectedWidget.type, absolute, currentParent);
+    			parentListDiv = cp.parentListDivCreate({
+    				widgetType:widgetType, 
+    				absolute:absolute, 
+    				doCursor:doCursor, 
+    				beforeAfter:beforeAfter, 
+    				currentParent:currentParent });
      		}
     		var parentIframe = context.getParentIframe();
     		if(parentIframe){
@@ -158,7 +171,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         var showParentsPref = this._context.getPreference('showPossibleParents');
         var spaceKeyDown = cp.isSpaceKeyDown();
         var showCandidateParents = (!showParentsPref && spaceKeyDown) || (showParentsPref && !spaceKeyDown);
-        if(this._mover && (doSnapLines || showCandidateParents) && event && this._selectedWidget){
+        if(this._mover && event && this._selectedWidget){
             var data = {type:this._selectedWidget.type};
             var position = { x:event.pageX, y:event.pageY};
             var snapBox = {l:b.l, t:b.t, w:0, h:0};
@@ -177,7 +190,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             		currentParent:currentParent,
              		rect:snapBox, 
             		doSnapLines:doSnapLines, 
-            		doFindParentsXY:showCandidateParents});
+            		doFindParentsXY:showCandidateParents,
+            		doCursor:!absolute});
         }else{
         	// If not showing snap lines or parents, then make sure they aren't showing
 			context.dragMoveCleanup();
@@ -419,10 +433,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var cp = context._chooseParent;
 		this._lastEventTarget = null;
 		this._removeKeyHandlers();
-        if(this._updateTarget){
-            clearTimeout(this._updateTarget);
-            delete this._updateTarget;
-        }
+		context.dragMoveCleanup();
+     	cp.parentListDivDelete();
         this._nobs[DRAG_NOB].style.display = 'none';
         if(this._mover){
         	var box;
@@ -442,8 +454,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         }
         this._nobIndex = -1;
         this._nobBox = null;
-		context.dragMoveCleanup();
-     	cp.parentListDivDelete();
     },
     
     onDblClick: function(event) {
@@ -466,13 +476,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
             this.move(box, event);
             this._client = {x: event.clientX, y: event.clientY};
-            if(!this._updateTarget){
-
-                this._updateTarget = setTimeout(dojo.hitch(this, function(){
-                    this.onExtentChange(this, this._client, true);
-                    delete this._updateTarget;
-                }), 200);
-            }
         }else{
 			var b = dojo.mixin({}, this._box);
             var d = 0;

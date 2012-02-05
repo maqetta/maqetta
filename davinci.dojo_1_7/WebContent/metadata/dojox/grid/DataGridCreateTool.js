@@ -103,7 +103,7 @@ return declare(CreateTool, {
 		//command.add(new davinci.ve.commands.AddCommand(store, bodyWidget, 0));
 		command.add(new AddCommand(store, args.parent, index));
 		index = (index !== undefined && index >= 0 ? index + 1 : undefined);
-		command.add(new AddCommand(dataGrid, args.parent, index+1));
+		command.add(new AddCommand(dataGrid, args.parent, index));
 		
 		if(args.position){
 			command.add(new MoveCommand(dataGrid, args.position.x, args.position.y));

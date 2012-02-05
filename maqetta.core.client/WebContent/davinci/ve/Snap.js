@@ -41,10 +41,13 @@ define([
 		 * 		(passed in by higher-level routine so that computed style isn't called multiple times on same widget)
 		 */
 		findSnapOpportunities: function(context, widget, computed_style){
-			var distCheck = 50;	// CLoseness distance in pixels - only snap if snapBox is sufficiently close to widget
+			var distCheck = 75;	// CLoseness distance in pixels - only snap if snapBox is sufficiently close to widget
 			var snapBox = context._lastSnapBox;
 			
 			var node = widget.domNode;
+			if(node.tagName == 'BODY'){
+				return;
+			}
 			var dj = context.getDojo();
 			var dj_coords = dj.coords(node, true);
 			
@@ -93,7 +96,7 @@ define([
 			if(rect){
 				var distTT = Math.abs(rect.t-snapBox.t);
 				var distTB = Math.abs(rect.t-snapBox.b);
-				var distBT = Math.abs(rect.b-snapBox.b);
+				var distBT = Math.abs(rect.b-snapBox.t);
 				var distBB = Math.abs(rect.b-snapBox.b);
 				// Only snap if snapBox is sufficiently close to widget
 				if(distTT <= distCheck || distTB <= distCheck ||distBT <= distCheck || distBB <= distCheck){
@@ -195,7 +198,8 @@ define([
 				//FIXME: Put into stylesheet
 				widgetDiv.style.backgroundColor='rgba(255,0,255,.05)';
 			}
-			var style = context._snapLinesDivAlignX.style;
+			var styleAlign = context._snapLinesDivAlignX.style;
+			var styleWidget = context._snapLinesDivWidgetX.style;
 			if(context._snapX){
 				var snapX = context._snapX;
 				snapSetup(context, snapX.widget, context._snapLinesDivWidgetX, context._snapLinesDivAlignX);
@@ -208,23 +212,25 @@ define([
 					h = box.y - snapBox.t;
 				}
 				if(snapX.typeCurrObj=="point"){
-					style.left = context._snapX.x+'px';
+					styleAlign.left = context._snapX.x+'px';
 				}else if(snapX.typeCurrObj=="left"){
-					style.left = box.x+'px';
+					styleAlign.left = box.x+'px';
 				}else if(snapX.typeCurrObj=="center"){
-					style.left = box.c+'px';
+					styleAlign.left = box.c+'px';
 				}else{	// "right"
-					style.left = box.r+'px';
+					styleAlign.left = box.r+'px';
 				}
-				style.top = t+'px';
-				style.width = '1px';
-				style.height = h+'px';
+				styleAlign.top = t+'px';
+				styleAlign.width = '1px';
+				styleAlign.height = h+'px';
 				//FIXME: Put into stylesheet
-				style.backgroundColor='rgba(255,0,255,.75)';
+				styleAlign.backgroundColor='rgba(255,0,255,.75)';
 			}else{
-				style.display='none';
+				styleAlign.display='none';
+				styleWidget.display='none';
 			}
-			var style = context._snapLinesDivAlignY.style;
+			var styleAlign = context._snapLinesDivAlignY.style;
+			var styleWidget = context._snapLinesDivWidgetY.style;
 			if(context._snapY){
 				var snapY = context._snapY;
 				snapSetup(context, snapY.widget, context._snapLinesDivWidgetY, context._snapLinesDivAlignY);
@@ -237,22 +243,22 @@ define([
 					w = box.x - snapBox.l;
 				}
 				if(snapY.type=="point"){
-					style.top = snapY.y+'px';
+					styleAlign.top = snapY.y+'px';
 				}else if(snapY.typeCurrObj=="top"){
-					style.top = box.y+'px';
+					styleAlign.top = box.y+'px';
 				}else if(snapY.typeCurrObj=="middle"){
-					style.top = box.m+'px';
+					styleAlign.top = box.m+'px';
 				}else{	// "bottom"
-					style.top = box.b+'px';
+					styleAlign.top = box.b+'px';
 				}
-				style.left = l+'px';
-				style.height = '1px';
-				style.width = w+'px';
+				styleAlign.left = l+'px';
+				styleAlign.height = '1px';
+				styleAlign.width = w+'px';
 				//FIXME: Put into stylesheet
-				style.backgroundColor='rgba(255,0,255,.75)';
+				styleAlign.backgroundColor='rgba(255,0,255,.75)';
 			}else{
-				style.display='none';
-				style.display='none';
+				styleAlign.display='none';
+				styleWidget.display='none';
 			}
 		},
 		

@@ -7,6 +7,8 @@ define([
 		buildRendering: function() {
 			this.inherited(arguments);
 			// -0 to force conversion to number
+			this._x = 0;
+			this._y = 0;
 			this._width = (this.width ? this.width : this.defaultWidth) - 0;
 			this._height = (this.height ? this.height : this.defaultHeight) - 0;
 			this._cornerRadius = this.cornerRadius - 0;
@@ -18,6 +20,8 @@ define([
 		
 		createGraphics: function(){
 			var s_shape = '<rect'+
+				' x="'+this._x+'"'+
+				' y="'+this._y+'"'+
 				' width="'+this._width+'"'+
 				' height="'+this._height+'"'+
 				' rx="'+this._cornerRadius+'"/>';

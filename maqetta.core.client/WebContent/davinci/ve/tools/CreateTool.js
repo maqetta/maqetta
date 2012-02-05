@@ -34,6 +34,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			if (resizable !== "none") {
 				this._resizable = resizable;
 			}
+			this._dropCursor = Metadata.queryDescriptor(data.type, "dropCursor");
 		}
 	},
 
@@ -153,6 +154,11 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
 					Workbench.getProject());
 			var doSnapLines = editorPrefs.snap && absolute;
+			var doCursor = !absolute;
+			if (typeof this._dropCursor == 'object' && this._dropCursor.show === false){
+				doCursor = false;
+			}
+			var beforeAfter = this._dropCursor && this._dropCursor.beforeAfter;
 			context.dragMoveUpdate({
 				data:this._data,
 				position:position,
@@ -161,7 +167,9 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				eventTarget:event.target, 
 				rect:box, 
 				doSnapLines:doSnapLines, 
-				doFindParentsXY:showCandidateParents});
+				doFindParentsXY:showCandidateParents,
+				doCursor:doCursor,
+				beforeAfter:beforeAfter });
 		}
 	},
 
@@ -239,9 +247,20 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		}
 
 		var ppw = cp.getProposedParentWidget();
-		if(ppw){
+		if(ppw && ppw.parent){
 			// Use last computed parent from onMouseMove handler
-			target = ppw;
+			target = ppw.parent;
+			if(ppw.refChild){
+				var ppwChildren = ppw.parent.getChildren();
+				var idx = ppwChildren.indexOf(ppw.refChild);
+				if(idx >= 0){
+					if(ppw.refAfter){
+						idx++;
+					}
+				}else{
+					idx = null;
+				}
+			}
 		}else{
 			// Otherwise, find the appropriate parent that is located under the pointer
 			var widgetUnderMouse = this._getTarget() || Widget.getEnclosingWidget(event.target);
@@ -340,7 +359,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
     	        // Always invoke the 'onAdd' callback.
     	        Metadata.invokeCallback(type, 'onAdd', args);
 	        }
-			this.create({target: target, directTarget: this._getTarget(), size: size});
+			this.create({target: target, index:idx, directTarget: this._getTarget(), size: size});
 		} catch(e) {
 			var content,
 				title;
@@ -383,8 +402,19 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		var context = this._context;
 		var cp = context._chooseParent;
 		var absolute = !context.getFlowLayout();
+		var doCursor = !absolute;
+		if (typeof this._dropCursor == 'object' && this._dropCursor.show === false){
+			doCursor = false;
+		}
+		var beforeAfter = this._dropCursor && this._dropCursor.beforeAfter;
 		var currentParent = null;
-		cp.dragUpdateCandidateParents(widgetType, showCandidateParents, absolute, currentParent);
+		cp.dragUpdateCandidateParents({widgetType:widgetType,
+				showCandidateParents:showCandidateParents, 
+				absolute:absolute, 
+				doCursor:doCursor, 
+				beforeAfter:beforeAfter, 
+				currentParent:currentParent});
+
 	},
 	
 	/**
@@ -422,8 +452,18 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		var context = this._context;
 		var cp = context._chooseParent;
 		var absolute = !context.getFlowLayout();
+		var doCursor = !absolute;
+		if (typeof this._dropCursor == 'object' && this._dropCursor.show === false){
+			doCursor = false;
+		}
+		var beforeAfter = this._dropCursor && this._dropCursor.beforeAfter;
 		var currentParent = null;
-		cp.dragUpdateCandidateParents(widgetType, showCandidateParents, absolute, currentParent);
+		cp.dragUpdateCandidateParents({widgetType:widgetType,
+				showCandidateParents:showCandidateParents, 
+				absolute:absolute, 
+				doCursor:doCursor, 
+				beforeAfter:beforeAfter, 
+				currentParent:currentParent});
 	},
 
 	create: function(args){

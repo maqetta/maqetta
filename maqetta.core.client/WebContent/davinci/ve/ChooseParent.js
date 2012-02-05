@@ -203,7 +203,7 @@ return declare("davinci.ve.ChooseParent", null, {
 			}
 		}
 
-		if(params.doCursor){
+		if(doCursor){
 			var idx;
 			for(var i=0; i<this._XYParent.length; i++){
 				if(this._XYParent[i] === this._proposedParentWidget){
@@ -222,19 +222,44 @@ return declare("davinci.ve.ChooseParent", null, {
 				var refChild = this._XYRefChild[idx];
 				var refChildNode = refChild ? refChild.domNode : null;
 				var refAfter = this._XYRefAfter[idx];
+				var cursorL, cursorT, cursorH;
 				if(refChildNode){
 					if(refAfter){
-						if(refChildNode.nextSibling){
-							parentNode.insertBefore(this._cursorSpan, refChildNode.nextSibling);
+						if(refChildNode.nextSibling && refChildNode.nextSibling._dvWidget){
+							var nextSibling = refChildNode.nextSibling;
+							parentNode.insertBefore(this._cursorSpan, nextSibling);
+							var compStyle = dojo.style(nextSibling);
+							cursorL = nextSibling.offsetLeft + parseInt(compStyle.borderLeftWidth) + parseInt(compStyle.paddingLeft);
+							cursorT = nextSibling.offsetTop + parseInt(compStyle.borderTopWidth) + parseInt(compStyle.paddingTop);
 						}else{
 							parentNode.appendChild(this._cursorSpan);
+							var compStyle = dojo.style(refChildNode);
+							cursorL = refChildNode.offsetLeft + refChildNode.offsetWidth + parseInt(compStyle.marginRight);
+							cursorT = refChildNode.offsetTop + parseInt(compStyle.borderTopWidth) + parseInt(compStyle.paddingTop);
 						}
 					}else{
 						parentNode.insertBefore(this._cursorSpan, refChildNode);
+						var compStyle = dojo.style(refChildNode);
+						cursorL = refChildNode.offsetLeft + parseInt(compStyle.borderLeftWidth) + parseInt(compStyle.paddingLeft);
+						cursorT = refChildNode.offsetTop + parseInt(compStyle.borderTopWidth) + parseInt(compStyle.paddingTop);
 					}
+					cursorH = compStyle.height;
 				}else{
 					parentNode.appendChild(this._cursorSpan);
+					var compStyle = dojo.style(parentNode);
+					if(this._cursorSpan.offsetParent == parentNode){
+						cursorL = parseInt(compStyle.borderLeftWidth) + parseInt(compStyle.paddingLeft);
+						cursorT = parseInt(compStyle.borderTopWidth) + parseInt(compStyle.paddingTop);
+					}else{
+						cursorL = parentNode.offsetLeft + parseInt(compStyle.borderLeftWidth) + parseInt(compStyle.paddingLeft);
+						cursorT = parentNode.offsetTop + parseInt(compStyle.borderTopWidth) + parseInt(compStyle.paddingTop);
+					}
+					cursorH = '16px';
 				}
+				var style = this._cursorSpan.style;
+				style.height = cursorH;
+				style.left = cursorL+'px';
+				style.top = cursorT+'px';
 			}
 		}
 	
@@ -407,6 +432,7 @@ return declare("davinci.ve.ChooseParent", null, {
 			position = params.position,
 			doCursor = params.doCursor,
 			beforeAfter = params.beforeAfter;
+console.log('findParentsXY. widget.type='+widget.type);
 		var domNode = widget.domNode;
 		var x = position.x;
 		var y = position.y;
@@ -423,10 +449,13 @@ return declare("davinci.ve.ChooseParent", null, {
 		var r = l + w;
 		var b = t + h;
 		if(x >= l && x <= r && y >= t && y <= b){
+console.log('findParentsXY. x='+x+',y='+y+',l='+l+',r='+r+',t='+t+',b='+b);
 			var allowedParents = this.getAllowedTargetWidget(widget, data, false);
+console.log('allowedParents.length='+allowedParents.length);
 			if(allowedParents.length === 1){
 				var children = widget.getChildren();
 				var childData = [];
+console.log('children.length='+children.length);
 				for(var i=0; i<children.length; i++){
 					var child = children[i];
 					var node = child.domNode;
@@ -453,7 +482,9 @@ return declare("davinci.ve.ChooseParent", null, {
 				for(var i=0; i<childData.length; i++){
 					var cd = childData[i];
 					var child = children[i];
+console.log('childData i='+i+',child.type='+child.type);
 					if(x >= cd.l && x <= cd.r && y >= cd.t && y <= cd.b){
+console.log('over child');
 						// If mouse is over one of the children, then
 						// insert either before or after that child (and jump out of loop)
 						refChild = child;
@@ -461,24 +492,28 @@ return declare("davinci.ve.ChooseParent", null, {
 						break;
 					}
 					if(i === 0){
+console.log('i === 0');
 						// If there is at least one child, set default solution
 						// to being either before or after that first child
 						refChild = child;
 						refAfter = (y > cd.b || x >= cd.c) ? true : false;
 						biggestY = cd.b;
 					}else if((y >= cd.t || y >= biggestY) && x >= cd.l){
+console.log('(y >= cd.t || y >= biggestY) && x >= cd.l');
 						// Else if mouse is below top of this child or further down page than any previous child
 						// and mouse isn't to left of this child,
 						// then this child is a candidate refChild
 						refChild = child;
 						refAfter = (y > cd.b || x >= cd.c) ? true : false;
 					}else if(y >= biggestY && y >= cd.b){
+console.log('else');
 						// Else if mouse is below bottom of this child and all previous childs
 						// then this child is candidate refChild
 						refChild = child;
 						refAfter = true;
 					}
 					if(cd.b > biggestY) {
+console.log('cd.b > biggestY');
 						biggestY = cd.b;
 					}
 				}

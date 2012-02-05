@@ -19,8 +19,6 @@ define([
 			var rx = (typeof this._rx != "undefined") ? this._rx : this._r;
 			var ry = (typeof this._ry != "undefined") ? this._ry : this._r;
 			var s_shape = '<ellipse'+
-				' cx="'+this._cx+'"'+
-				' cy="'+this._cy+'"'+
 				' rx="'+rx+'"'+
 				' ry="'+ry+'"/>';
 		    this.domNode.innerHTML = this._header + s_shape + this._footer;

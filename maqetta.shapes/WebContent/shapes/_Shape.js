@@ -49,8 +49,11 @@ define([
 			//with loading of the shapes.css file, which might not be available
 			//for the first shapes widget added to a document.
 			setTimeout(function(){
-				that.resize();
-				that._bboxStartup = that._bbox;
+				// In case shape has been deleted before timeout gets triggered
+				if(that.domNode && that.domNode.ownerDocument){
+					that.resize();
+					that._bboxStartup = that._bbox;
+				}
 			}, 1000);
 		},
 		

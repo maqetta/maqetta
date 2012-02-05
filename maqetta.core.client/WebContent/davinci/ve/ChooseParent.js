@@ -120,7 +120,7 @@ return declare("davinci.ve.ChooseParent", null, {
 		if(!this._proposedParentWidget){
 			this._proposedParentWidget = this._getDefaultParent(widgetType, allowedParentList, absolute, currentParent);
 		}
-		if(showCandidateParents){
+		if(showCandidateParents || doCursor){
 			this.highlightNewWidgetParent(this._proposedParentWidget);
 		}
 
@@ -222,44 +222,59 @@ return declare("davinci.ve.ChooseParent", null, {
 				var refChild = this._XYRefChild[idx];
 				var refChildNode = refChild ? refChild.domNode : null;
 				var refAfter = this._XYRefAfter[idx];
-				var cursorL, cursorT, cursorH;
+				var cursorL, cursorT, cursorH, offsetParent;
 				if(refChildNode){
 					if(refAfter){
 						if(refChildNode.nextSibling && refChildNode.nextSibling._dvWidget){
 							var nextSibling = refChildNode.nextSibling;
-							parentNode.insertBefore(this._cursorSpan, nextSibling);
+							offsetParent = nextSibling.offsetParent;
+							//parentNode.insertBefore(this._cursorSpan, nextSibling);
 							var compStyle = dojo.style(nextSibling);
 							cursorL = nextSibling.offsetLeft + parseInt(compStyle.borderLeftWidth) + parseInt(compStyle.paddingLeft);
 							cursorT = nextSibling.offsetTop + parseInt(compStyle.borderTopWidth) + parseInt(compStyle.paddingTop);
 						}else{
-							parentNode.appendChild(this._cursorSpan);
+							offsetParent = refChildNode.offsetParent;
+							//parentNode.appendChild(this._cursorSpan);
 							var compStyle = dojo.style(refChildNode);
 							cursorL = refChildNode.offsetLeft + refChildNode.offsetWidth + parseInt(compStyle.marginRight);
 							cursorT = refChildNode.offsetTop + parseInt(compStyle.borderTopWidth) + parseInt(compStyle.paddingTop);
 						}
 					}else{
-						parentNode.insertBefore(this._cursorSpan, refChildNode);
+						offsetParent = refChildNode.offsetParent;
+						//parentNode.insertBefore(this._cursorSpan, refChildNode);
 						var compStyle = dojo.style(refChildNode);
 						cursorL = refChildNode.offsetLeft + parseInt(compStyle.borderLeftWidth) + parseInt(compStyle.paddingLeft);
 						cursorT = refChildNode.offsetTop + parseInt(compStyle.borderTopWidth) + parseInt(compStyle.paddingTop);
 					}
 					cursorH = compStyle.height;
 				}else{
-					parentNode.appendChild(this._cursorSpan);
+					offsetParent = parentNode.offsetParent;
+					//parentNode.appendChild(this._cursorSpan);
 					var compStyle = dojo.style(parentNode);
+/*
 					if(this._cursorSpan.offsetParent == parentNode){
 						cursorL = parseInt(compStyle.borderLeftWidth) + parseInt(compStyle.paddingLeft);
 						cursorT = parseInt(compStyle.borderTopWidth) + parseInt(compStyle.paddingTop);
 					}else{
+*/
 						cursorL = parentNode.offsetLeft + parseInt(compStyle.borderLeftWidth) + parseInt(compStyle.paddingLeft);
 						cursorT = parentNode.offsetTop + parseInt(compStyle.borderTopWidth) + parseInt(compStyle.paddingTop);
+/*
 					}
+*/
 					cursorH = '16px';
+				}
+				while(offsetParent && offsetParent.tagName != 'BODY'){
+					cursorL += offsetParent.offsetLeft;
+					cursorT += offsetParent.offsetTop;
+					offsetParent = offsetParent.offsetParent;
 				}
 				var style = this._cursorSpan.style;
 				style.height = cursorH;
 				style.left = cursorL+'px';
 				style.top = cursorT+'px';
+				var body = parentNode.ownerDocument.body;
+				body.appendChild(this._cursorSpan);
 			}
 		}
 	
@@ -329,7 +344,7 @@ return declare("davinci.ve.ChooseParent", null, {
 				//FIXME: This quick hack using 'outline' property is problematic:
 				//(1) User won't see the brown outline on BODY
 				//(2) If widget actually uses 'outline' property, it will get clobbered
-				newWidgetParent.domNode.style.outline = '1px solid brown';
+				newWidgetParent.domNode.style.outline = '1px solid rgba(165,42,42,.7)'; // brown at .7 opacity
 			}
 		}
 	},

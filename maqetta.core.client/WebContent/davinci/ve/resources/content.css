@@ -56,10 +56,10 @@
 }
 
 .editCursor {
-	display: inline-block;
+	display: block;
 	position:absolute;
 	border: 1px solid black;
-	z-index:99;	/* Below focus, which is at z-index:100 */
+	z-index:1001;	/* Above focus, which is at z-index:1000 */
 }
 
 .editCursorBlink {

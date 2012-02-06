@@ -27,7 +27,7 @@ define(["dojo/_base/declare",
 			for(var i = 0;i<this.pageTemplate.length;i++){
 				var widget = this.pageTemplate[i]['widget'];
 				if(widget)
-					widget.attr("readOnly", isReadOnly);
+					widget.set("readOnly", isReadOnly);
 				else{
 					var node = this.pageTemplate[i].domNode;
 					if(node)
@@ -66,7 +66,7 @@ define(["dojo/_base/declare",
 			
 			var index = a.target;
 			var widget = dijit.byId(this.pageTemplate[index]['id']);
-			var	value = widget.attr('value');
+			var	value = widget.get('value');
 			
 			value.replace(/'/,"\\'");
 			value.replace(/"/,'\\"');
@@ -111,7 +111,7 @@ define(["dojo/_base/declare",
 		_clearValues : function(){
 			for(var i = 0;i<this.pageTemplate.length;i++){
 				var box = dijit.byId(this.pageTemplate[i]['id']);
-					box.attr("value","", false );
+					box.set("value","", false );
 			}
 		},
 		
@@ -148,7 +148,7 @@ define(["dojo/_base/declare",
 					value = widget._srcElement.getAttribute(name);
 				}
 				var box = dijit.byId(this.pageTemplate[i]['id']);
-				box.attr('value', value, false);
+				box.set('value', value, false);
 			}
 		}
 	});

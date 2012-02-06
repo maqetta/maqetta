@@ -155,7 +155,8 @@ _CircleHelperMixin.prototype = {
                     currentParent:null,
                     rect:snapBox, 
                     doSnapLines:doSnapLines, 
-                    doFindParentsXY:false});
+                    doFindParentsXY:false,
+            		doCursor:!absolute});
         }else if(context){
             // If not showing snap lines or parents, then make sure they aren't showing
             context.dragMoveCleanup();

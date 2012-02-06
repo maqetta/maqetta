@@ -2702,6 +2702,9 @@ return declare("davinci.ve.Context", null, {
 	 * 		{object} rect  l,t,w,h properties define rectangle being dragged around
 	 * 		{boolean} doSnapLines  whether to show dynamic snap lines
 	 * 		{boolean} doFindParentsXY  whether to show candidate parent widgets
+	 * 		{boolean} doCursor  whether to show drop cursor (when dropping using flow layout)
+	 * 		{string|undefined} beforeAfter  either 'before' or 'after' or undefined (which means default behavior)
+	 * 		{string|array} widgetType  widget type (e.g., 'dijit.form.Button')
 	 */
 	dragMoveUpdate: function(params) {
 		var context = this,
@@ -2715,6 +2718,8 @@ return declare("davinci.ve.Context", null, {
 			rect = params.rect,
 			doSnapLines = params.doSnapLines,
 			doFindParentsXY = params.doFindParentsXY,
+			doCursor = params.doCursor,
+			beforeAfter = params.beforeAfter,
 			widgetType = dojo.isArray(data) ? data[0].type : data.type;
 
 		// inner function that gets called recurively for each widget in document
@@ -2734,7 +2739,7 @@ return declare("davinci.ve.Context", null, {
 			if(doSnapLines){
 				Snap.findSnapOpportunities(this, widget, computed_style);
 			}
-			cp.findParentsXY(data, widget, position);
+			cp.findParentsXY({data:data, widget:widget, position:position, doCursor:doCursor, beforeAfter:beforeAfter});
 			dojo.forEach(widget.getChildren(), function(w){
 				_updateThisWidget.apply(context, [w]);
 			});
@@ -2746,6 +2751,7 @@ return declare("davinci.ve.Context", null, {
 		var differentXY = cp.findParentsXYBeforeTraversal(params);
 		// Traverse all widgets, which will result in updates to snap lines and to 
 		// the visual popup showing possible parent widgets 
+		_updateThisWidget.apply(context, [this.rootWidget]);
 		dojo.forEach(this.getTopWidgets(), function(w){
 			_updateThisWidget.apply(context, [w]);
 		});
@@ -2753,7 +2759,12 @@ return declare("davinci.ve.Context", null, {
 			Snap.updateSnapLinesAfterTraversal(this);
 		}
 		if(differentXY){
-			cp.dragUpdateCandidateParents(widgetType, doFindParentsXY, absolute, currentParent);
+			cp.dragUpdateCandidateParents({widgetType:widgetType,
+					showCandidateParents:doFindParentsXY, 
+					doCursor:doCursor, 
+					beforeAfter:beforeAfter, 
+					absolute:absolute, 
+					currentParent:currentParent});
 			cp.findParentsXYAfterTraversal();
 		}
 

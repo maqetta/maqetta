@@ -108,9 +108,9 @@ return declare(CreateTool, {
        // var bodyWidget = Widget.getWidget(this._context.rootNode);
 		command.add(new AddCommand(store, args.parent, index));
 		index = (index !== undefined && index >= 0 ? index + 1 : undefined);
-		command.add(new AddCommand(model, args.parent, index+1));
+		command.add(new AddCommand(model, args.parent, index));
 		index = (index !== undefined && index >= 0 ? index + 1 : undefined);
-		command.add(new AddCommand(tree, args.parent, index+2));
+		command.add(new AddCommand(tree, args.parent, index));
 		
 		if(args.position){
 			command.add(new MoveCommand(tree, args.position.x, args.position.y));

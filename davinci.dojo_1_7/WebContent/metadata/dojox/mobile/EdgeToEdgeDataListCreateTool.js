@@ -42,6 +42,10 @@ return declare(CreateTool, {
 			!this._context.loadRequires(edge2EdgeData.type,true)){
 			return;
 		}
+		// Get handle to refChild (child before which to insert new widget
+		// because logic below might cause args.index to be incorrect
+		var children = args.parent ? args.parent.getChildren() : [];
+		var refChild = (typeof args.index == 'number' && children[args.index]) ? children[args.index] : null;
 	
 		var storeId = Widget.getUniqueObjectId(storeData.type, this._context.getDocument());
 		if(!storeData.properties){
@@ -93,11 +97,13 @@ return declare(CreateTool, {
 		}
 	
 		var command = new CompoundCommand();
-		var index = args.index;
 		// always put store and model as first element under body, to ensure they are constructed by dojo before they are used
         var bodyWidget = Widget.getWidget(this._context.rootNode);
 		command.add(new AddCommand(store, bodyWidget, 0));
-		index = (index !== undefined && index >= 0 ? index + 1 : undefined);
+		var index = children.indexOf(refChild);
+		if(index === -1){
+			index = undefined;
+		}
 		command.add(new AddCommand(edge2Edge, args.parent, index));
 		
 		if(args.position){

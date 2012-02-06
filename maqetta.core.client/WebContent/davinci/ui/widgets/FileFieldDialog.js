@@ -4,22 +4,15 @@ define(["dojo/_base/declare",
         "dijit/layout/ContentPane",
         "dijit/Dialog",
         "davinci/model/Path",
-       
         "dojo/i18n!davinci/ui/nls/ui",
-        "dojo/i18n!dijit/nls/common",
-        "dijit/TooltipDialog",
-        "dijit/form/TextBox",
-        "dijit/layout/ContentPane",
-       
-
+        "dojo/i18n!dijit/nls/common"
    ],function(declare, WidgetLite, Panel, ContentPane, Dialog, Path,  uiNLS, commonNLS){
-		var idPrefix = "davinci_ve_widgets_properties_border_generated"
+		var idPrefix = "davinci_ui_widgets_filefielddialog_generated";
 		var	__id=0;
-		function getId(){
-			return  (idPrefix + (__id++));
-		}
-		
-		
+		var getId = function (){
+			return idPrefix + (__id++);
+		};
+
 		return declare("davinci.ui.widgets.FileFieldDialog", WidgetLite, {
 			buildRendering: function(){
 				this.domNode =   dojo.doc.createElement("div",{style:"width:100%"});

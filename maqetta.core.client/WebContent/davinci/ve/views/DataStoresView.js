@@ -288,7 +288,7 @@ return declare("davinci.ve.views.DataStoresView", [ViewPart], {
             } else {
                 // this is a workaround to a bug where the id isn't properly set by the
                 // masterdetail operation
-                properties = { id: widget.attr('id') };
+                properties = { id: widget.get('id') };
             }
             if (children) {
                 that.loadType({type: widget.type, children: children});

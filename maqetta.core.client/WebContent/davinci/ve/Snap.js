@@ -41,9 +41,13 @@ define([
 		 * 		(passed in by higher-level routine so that computed style isn't called multiple times on same widget)
 		 */
 		findSnapOpportunities: function(context, widget, computed_style){
+			var distCheck = 75;	// CLoseness distance in pixels - only snap if snapBox is sufficiently close to widget
 			var snapBox = context._lastSnapBox;
 			
 			var node = widget.domNode;
+			if(node.tagName == 'BODY'){
+				return;
+			}
 			var dj = context.getDojo();
 			var dj_coords = dj.coords(node, true);
 			
@@ -90,33 +94,47 @@ define([
 			var rect = widgetSnapInfo.snapRect;
 			var deltaLeft, deltaCenter, deltaRight, deltaTop, deltaMiddle, deltaBottom, delta;
 			if(rect){
-				deltaLeft = Math.abs(rect.l-snapBox.l);
-				deltaCenter = Math.abs(rect.c-snapBox.c);
-				deltaRight = Math.abs(rect.r-snapBox.r);
-				snapX("left", "left", rect.l,deltaLeft);
-				snapX("center", "center", rect.c, deltaCenter);
-				snapX("right", "right", rect.r, deltaRight);
-				
-				snapX("left", "center", rect.c, Math.abs(rect.c-snapBox.l));
-				snapX("left", "right", rect.r, Math.abs(rect.r-snapBox.l));
-				snapX("right", "left", rect.l, Math.abs(rect.l-snapBox.r));
-				snapX("right", "center", rect.c, Math.abs(rect.c-snapBox.r));
-				snapX("center", "left", rect.l, Math.abs(rect.l-snapBox.c));
-				snapX("center", "right", rect.r, Math.abs(rect.r-snapBox.c));
+				var distTT = Math.abs(rect.t-snapBox.t);
+				var distTB = Math.abs(rect.t-snapBox.b);
+				var distBT = Math.abs(rect.b-snapBox.t);
+				var distBB = Math.abs(rect.b-snapBox.b);
+				// Only snap if snapBox is sufficiently close to widget
+				if(distTT <= distCheck || distTB <= distCheck ||distBT <= distCheck || distBB <= distCheck){
+					deltaLeft = Math.abs(rect.l-snapBox.l);
+					deltaCenter = Math.abs(rect.c-snapBox.c);
+					deltaRight = Math.abs(rect.r-snapBox.r);
+					snapX("left", "left", rect.l,deltaLeft);
+					snapX("center", "center", rect.c, deltaCenter);
+					snapX("right", "right", rect.r, deltaRight);
+					
+					snapX("left", "center", rect.c, Math.abs(rect.c-snapBox.l));
+					snapX("left", "right", rect.r, Math.abs(rect.r-snapBox.l));
+					snapX("right", "left", rect.l, Math.abs(rect.l-snapBox.r));
+					snapX("right", "center", rect.c, Math.abs(rect.c-snapBox.r));
+					snapX("center", "left", rect.l, Math.abs(rect.l-snapBox.c));
+					snapX("center", "right", rect.r, Math.abs(rect.r-snapBox.c));
+				}
 
-				deltaTop = Math.abs(rect.t-snapBox.t);
-				deltaMiddle = Math.abs(rect.m-snapBox.m);
-				deltaBottom = Math.abs(rect.b-snapBox.b);
-				snapY("top", "top", rect.t,deltaTop);
-				snapY("middle", "middle", rect.m, deltaMiddle);
-				snapY("bottom", "bottom", rect.b, deltaBottom);
-				
-				snapY("top", "middle", rect.m, Math.abs(rect.m-snapBox.t));
-				snapY("top", "bottom", rect.b, Math.abs(rect.b-snapBox.t));
-				snapY("bottom", "top", rect.t, Math.abs(rect.t-snapBox.b));
-				snapY("bottom", "middle", rect.m, Math.abs(rect.m-snapBox.b));
-				snapY("middle", "top", rect.t, Math.abs(rect.t-snapBox.m));
-				snapY("middle", "bottom", rect.b, Math.abs(rect.b-snapBox.m));
+				var distLL = Math.abs(rect.l-snapBox.l);
+				var distLR = Math.abs(rect.l-snapBox.r);
+				var distRL = Math.abs(rect.r-snapBox.l);
+				var distRR = Math.abs(rect.r-snapBox.r);
+				// Only snap if snapBox is sufficiently close to widget
+				if(distLL <= distCheck || distLR <= distCheck ||distRL <= distCheck || distRR <= distCheck){
+					deltaTop = Math.abs(rect.t-snapBox.t);
+					deltaMiddle = Math.abs(rect.m-snapBox.m);
+					deltaBottom = Math.abs(rect.b-snapBox.b);
+					snapY("top", "top", rect.t,deltaTop);
+					snapY("middle", "middle", rect.m, deltaMiddle);
+					snapY("bottom", "bottom", rect.b, deltaBottom);
+					
+					snapY("top", "middle", rect.m, Math.abs(rect.m-snapBox.t));
+					snapY("top", "bottom", rect.b, Math.abs(rect.b-snapBox.t));
+					snapY("bottom", "top", rect.t, Math.abs(rect.t-snapBox.b));
+					snapY("bottom", "middle", rect.m, Math.abs(rect.m-snapBox.b));
+					snapY("middle", "top", rect.t, Math.abs(rect.t-snapBox.m));
+					snapY("middle", "bottom", rect.b, Math.abs(rect.b-snapBox.m));
+				}
 			}
 			var points = widgetSnapInfo.snapPoints;
 			if(points){
@@ -180,7 +198,8 @@ define([
 				//FIXME: Put into stylesheet
 				widgetDiv.style.backgroundColor='rgba(255,0,255,.05)';
 			}
-			var style = context._snapLinesDivAlignX.style;
+			var styleAlign = context._snapLinesDivAlignX.style;
+			var styleWidget = context._snapLinesDivWidgetX.style;
 			if(context._snapX){
 				var snapX = context._snapX;
 				snapSetup(context, snapX.widget, context._snapLinesDivWidgetX, context._snapLinesDivAlignX);
@@ -193,23 +212,25 @@ define([
 					h = box.y - snapBox.t;
 				}
 				if(snapX.typeCurrObj=="point"){
-					style.left = context._snapX.x+'px';
+					styleAlign.left = context._snapX.x+'px';
 				}else if(snapX.typeCurrObj=="left"){
-					style.left = box.x+'px';
+					styleAlign.left = box.x+'px';
 				}else if(snapX.typeCurrObj=="center"){
-					style.left = box.c+'px';
+					styleAlign.left = box.c+'px';
 				}else{	// "right"
-					style.left = box.r+'px';
+					styleAlign.left = box.r+'px';
 				}
-				style.top = t+'px';
-				style.width = '1px';
-				style.height = h+'px';
+				styleAlign.top = t+'px';
+				styleAlign.width = '1px';
+				styleAlign.height = h+'px';
 				//FIXME: Put into stylesheet
-				style.backgroundColor='rgba(255,0,255,.75)';
+				styleAlign.backgroundColor='rgba(255,0,255,.75)';
 			}else{
-				style.display='none';
+				styleAlign.display='none';
+				styleWidget.display='none';
 			}
-			var style = context._snapLinesDivAlignY.style;
+			var styleAlign = context._snapLinesDivAlignY.style;
+			var styleWidget = context._snapLinesDivWidgetY.style;
 			if(context._snapY){
 				var snapY = context._snapY;
 				snapSetup(context, snapY.widget, context._snapLinesDivWidgetY, context._snapLinesDivAlignY);
@@ -222,22 +243,22 @@ define([
 					w = box.x - snapBox.l;
 				}
 				if(snapY.type=="point"){
-					style.top = snapY.y+'px';
+					styleAlign.top = snapY.y+'px';
 				}else if(snapY.typeCurrObj=="top"){
-					style.top = box.y+'px';
+					styleAlign.top = box.y+'px';
 				}else if(snapY.typeCurrObj=="middle"){
-					style.top = box.m+'px';
+					styleAlign.top = box.m+'px';
 				}else{	// "bottom"
-					style.top = box.b+'px';
+					styleAlign.top = box.b+'px';
 				}
-				style.left = l+'px';
-				style.height = '1px';
-				style.width = w+'px';
+				styleAlign.left = l+'px';
+				styleAlign.height = '1px';
+				styleAlign.width = w+'px';
 				//FIXME: Put into stylesheet
-				style.backgroundColor='rgba(255,0,255,.75)';
+				styleAlign.backgroundColor='rgba(255,0,255,.75)';
 			}else{
-				style.display='none';
-				style.display='none';
+				styleAlign.display='none';
+				styleWidget.display='none';
 			}
 		},
 		

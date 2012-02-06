@@ -56,9 +56,10 @@
 }
 
 .editCursor {
-	display: inline-block;
+	display: block;
+	position:absolute;
 	border: 1px solid black;
-	height: 1.5em;
+	z-index:1001;	/* Above focus, which is at z-index:1000 */
 }
 
 .editCursorBlink {

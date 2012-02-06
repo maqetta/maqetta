@@ -1,85 +1,72 @@
 define(["dojo/_base/declare",
-        "dijit/_Templated",
-        "dijit/_Widget",
-        "davinci/Workbench",
-        "davinci/library",
+        "dijit/_WidgetBase",
+        "dijit/_TemplatedMixin",
+        "dijit/_WidgetsInTemplateMixin",
         "system/resource",
         "davinci/Workbench",
-        "davinci/workbench/Preferences",
-        "davinci/Runtime",
-        "dijit/Menu",
-        "dijit/MenuItem",
-        "davinci/model/Path",
-        "davinci/ui/Rename",
-        "dijit/form/DropDownButton",
-        "dojo/i18n!davinci/ui/nls/ui",
-        "dojo/i18n!dijit/nls/common",
+        "../Rename",
         "dojo/text!./templates/projectToolbar.html",
         "dijit/form/Button",
         "dijit/form/TextBox",
         "dijit/form/RadioButton",
         "dijit/layout/ContentPane",
-        "davinci/ui/widgets/ProjectSelection",
-        "dijit/Tree"
-
-],function(declare, _Templated, _Widget,  Workbench, Library, Resource, Workbench, Preferences, Runtime,  Menu, MenuItem, Path, Rename, DropDownButton, uiNLS, commonNLS, templateString){
+        "./ProjectSelection"
+],function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, systemResource, Workbench, Rename, templateString){
 	
-	return declare("davinci.ui.widgets.ProjectToolbar",   [_Widget, _Templated], {
+	return declare("davinci.ui.widgets.ProjectToolbar",   [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 
 		templateString: templateString,
-		widgetsInTemplate: true,
-		_projectSelection : null,
-		invalid : [],
-		
-		postCreate : function(){
+
+		postCreate: function(){
 			this.connect(this._projectSelection, "onChange", this._projectSelectionChanged);
-			this._currentProject = this._projectSelection.attr("value");
-			
+			this._currentProject = this._projectSelection.get("value");
 		},
 		
-		onChange : function(){
-			
+		onChange: function(){
 		},
-		
-		_projectSelectionChanged : function(){
-			
-			var newProject = this._projectSelection.attr("value");
-			if(newProject==this._currentProject) return;
+
+		_projectSelectionChanged: function(){
+			var newProject = this._projectSelection.get("value");
+			if(newProject==this._currentProject) {
+				return;
+			}
 			Workbench.loadProject(newProject);
-			
 		},
 		
 		_delete : function(){
-			var allProjects = this._projectSelection.attr("projects");
+			var allProjects = this._projectSelection.get("projects");
 			if(allProjects.length < 2){
 				alert("You can't delete the only project in your workspace!");
 				return;
 			}
 			var changeToProject = null;
-			var project = this._projectSelection.attr("value");
+			var project = this._projectSelection.get("value");
 			for(var i=0;!changeToProject && i<allProjects.length;i++){
-				if(allProjects[i]!=project)
+				if(allProjects[i]!=project) {
 					changeToProject = allProjects[i];
+				}
 			}
-			var resource = system.resource.findResource(project);
+			var resource = systemResource.findResource(project);
 			resource.deleteResource();
-			davinci.Runtime.loadProject(changeToProject);
+			Workbench.loadProject(changeToProject);
 		},
 		
 		_rename : function(){
 			var oldProject = Workbench.getProject();
-			var renameDialog = new Rename({value:oldProject, invalid: this._projectSelection.attr("projects")});
+			var renameDialog = new Rename({value:oldProject, invalid: this._projectSelection.get("projects")});
 			
-			Workbench.showModal(renameDialog, 'Rename Project To....', 'height:110px;width: 200px',function(){
+			Workbench.showModal(renameDialog, 'Rename Project To....', 'height:110px;width: 200px',function(){ //FIXME: i18n
 				
-				var cancel = renameDialog.attr("cancel");
+				var cancel = renameDialog.get("cancel");
 				if(!cancel){
-					var newName = renameDialog.attr("value");
-					if(newName==oldProject) return;
-					
-					var resource = Resource.findResource(oldProject);
+					var newName = renameDialog.get("value");
+					if(newName==oldProject) {
+						return;
+					}
+
+					var resource = systemResource.findResource(oldProject);
 					resource.rename(newName);
-					Runtime.loadProject(newName);
+					Workbench.loadProject(newName);
 				}
 			});
 			

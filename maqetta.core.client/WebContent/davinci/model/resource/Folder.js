@@ -82,6 +82,7 @@ var Folder = declare("davinci.model.resource.Folder", Resource, {
 	 * 
 	 */
 	_addFiles: function(responseObject) {
+		
 		this.children = [];
 		this._appendFiles(responseObject);
 	},
@@ -106,6 +107,7 @@ var Folder = declare("davinci.model.resource.Folder", Resource, {
 			child.link=responseObject[i].link;
 			child.isNew = responseObject[i].isNew;
 			child._readOnly = responseObject[i].readOnly;
+			child.setDirty(responseObject[i].isDirty);
 			if(responseObject[i].libraryId){
 				child.libraryId = responseObject[i].libraryId;
 				child.libVersion = responseObject[i].libVersion;

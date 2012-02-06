@@ -1,46 +1,44 @@
 define(["dojo/_base/declare",
      
-        "dijit/_Widget",
+        "dijit/_WidgetBase",
         "dijit/form/ComboBox",
         "davinci/ve/widgets/ColorStore",
         "davinci/ve/widgets/ColorPickerFlat",
         "dijit/TooltipDialog",
         
         "dojo/i18n!davinci/ve/nls/ve",
-        "dojo/i18n!dijit/nls/common",
         "dijit/popup"
        
-],function(declare,  _Widget, ComboBox, ColorStore, ColorPickerFlat, TooltipDialog, veNLS,commonNLS){
- var colorPicker = declare("davinci.ve.widgets.ColorPicker", [_Widget], {
+],function(declare,  _WidgetBase, ComboBox, ColorStore, ColorPickerFlat, TooltipDialog, veNLS){
+ var colorPicker = declare("davinci.ve.widgets.ColorPicker", [_WidgetBase], {
 		
 		/* change increment for spinners */
-		numberDelta : 1,
-		insertPosition : 9,
-		data : null,
+		numberDelta: 1,
+		insertPosition: 9,
+		data: null,
 		
-		postCreate : function(){
+		postCreate: function(){
 			
 			this.inherited(arguments);
-			
-			var langObj = veNLS;
-			this._statics = ["", davinci.ve.widgets.ColorPicker.divider, langObj.colorPicker, langObj.removeValue];
+
+			this.domNode.removeAttribute("dojoType");
+
+			this._statics = ["", davinci.ve.widgets.ColorPicker.divider, veNLS.colorPicker, veNLS.removeValue];
 			this._run = {};
 			if(!this.data ){
-				this.data=[{value:this._statics[0]}];
-				this.data.push({value:this._statics[2],run:this._chooseColorValue});
-				this.data.push({value:this._statics[3],run:function(){this.attr('value','');}});
-				this.data.push({value:this._statics[1]});   
-				this.data.push({value:'transparent'});
-				this.data.push({value:'black'});
-				this.data.push({value:'white'});
-				this.data.push({value:'red'});
-				this.data.push({value:'green'});
-				this.data.push({value:'blue'});
-				
-			              
+				this.data=[{value:this._statics[0]},
+					{value:this._statics[2], run:this._chooseColorValue},
+					{value:this._statics[3], run:function(){this.set('value','')}},
+					{value:this._statics[1]},   
+					{value:'transparent'},
+					{value:'black'},
+					{value:'white'},
+					{value:'red'},
+					{value:'green'},
+					{value:'blue'}];
 			}else{
 				this.data.push({value:davinci.ve.widgets.ColorPicker.divider});
-				this.data.push({value:langObj.removeValue,run:function(){this.attr('value','');}});
+				this.data.push({value:veNLS.removeValue,run:function(){this.set('value','');}});
 			}
 			var displayValues = [];
 			for(var i = 0;i<this.data.length;i++){
@@ -71,16 +69,13 @@ define(["dojo/_base/declare",
 			
 			this.domNode.appendChild(top);
 		},
-		_chooseColorValue : function(){
+		_chooseColorValue: function(){
 			/* make the color value its original */
 			
-			this._dropDown.attr("value", this._value, true);
-			
-			
-			
-			var langObj = veNLS;
+			this._dropDown.set("value", this._value, true);
+
 			var content = this._colorPickerFlat;
-			var	dialog = new TooltipDialog({title: langObj.selectColor, content: content});
+			var	dialog = new TooltipDialog({title: veNLS.selectColor, content: content});
 			dijit.popup.moveOffScreen(dialog.domNode);
 			var opened = false;
 			var closePopup = function(target){ return function(){
@@ -118,13 +113,13 @@ define(["dojo/_base/declare",
 							: {'BR':'TR', 'BL':'TL', 'TR':'BR', 'TL':'BL'},
 						onClose: function(){
 							if(!colorpicker.canceled){
-								var oldValue = target._dropDown.attr("value");
-								target._dropDown.attr("value", colorpicker.attr("value"));
+								var oldValue = target._dropDown.get("value");
+								target._dropDown.set("value", colorpicker.get("value"));
 							}
 							
 							closePopup();
 							/*
-							if(!colorpicker.canceled && oldValue!=colorpicker.attr("value")) 
+							if(!colorpicker.canceled && oldValue!=colorpicker.get("value")) 
 								target.onChange();
 						    */
 						}
@@ -138,9 +133,9 @@ define(["dojo/_base/declare",
 			if(this._value in dojo.Color.named){
 				
 				var value = dojo.colorFromString(this._value);
-				content.attr('value', value.toHex());
+				content.set('value', value.toHex());
 			}else{
-				content.attr('value', this._value || "", true);
+				content.set('value', this._value || "", true);
 			}
 			popup(this)();
 	
@@ -148,40 +143,40 @@ define(["dojo/_base/declare",
 		},
 		_setReadOnlyAttr: function(isReadOnly){
 			this._isReadOnly = isReadOnly;
-			this._dropDown.attr("disabled", isReadOnly);
+			this._dropDown.set("disabled", isReadOnly);
 		},
 		
 		
-		onChange : function(event){
-			//this._value = this._dropDown.attr("value");
+		onChange: function(event){
+			//this._value = this._dropDown.get("value");
 			
 		},
-		_getValueAttr : function(){
-			return this._dropDown.attr("value");
+		_getValueAttr: function(){
+			return this._dropDown.get("value");
 		},
 		
-		_setValueAttr : function(value,priority){
+		_setValueAttr: function(value,priority){
 			
-			this._dropDown.attr("value", value, true);
+			this._dropDown.set("value", value, true);
 			dojo.style(this._selectedColor, "backgroundColor", value);
 			
 			if(value in dojo.Color.named){
 				var v = dojo.colorFromString(value);
-				this._colorPickerFlat.attr('value', v.toHex(), priority);
+				this._colorPickerFlat.set('value', v.toHex(), priority);
 			}else {
-				this._colorPickerFlat.attr('value', value, priority);
+				this._colorPickerFlat.set('value', value, priority);
 			}
 			this._onChange(value, priority);
 	
 		}, 
 		
-		_onChange : function(event, priority){
+		_onChange: function(event, priority){
 			
 			if(event in this._run){
-				//this._dropDown.attr("value", this._store.getItemNumber(0));
+				//this._dropDown.set("value", this._store.getItemNumber(0));
 				dojo.hitch(this,this._run[event])();
 			}else if (event == davinci.ve.widgets.ColorPicker.divider){
-				this._dropDown.attr("value", this._store.getItemNumber(0));
+				this._dropDown.set("value", this._store.getItemNumber(0));
 			}else if(!this._store.contains(event)){
 				this._store.insert(this.insertPosition, event);
 				dojo.style(this._selectedColor, "backgroundColor", event);
@@ -194,11 +189,7 @@ define(["dojo/_base/declare",
 				if(!priority)
 					this.onChange(event);
 			}
-			
-			
-			
 		}	
-		
 	});
  	return dojo.mixin(colorPicker, {divider:"---"});
 });

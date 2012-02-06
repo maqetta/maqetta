@@ -91,7 +91,7 @@ return {
 					id: "save",
 					iconClass: 'saveIcon',
 					run: function() {
-						require('../Workbench').workbench.getOpenEditor().save();
+						require('../Workbench').getOpenEditor().save();
 					},
 					isEnabled: function(context) {
 						return true;
@@ -104,7 +104,7 @@ return {
 					iconClass: 'saveAsIcon',
 					run: "davinci.ui.Resource.saveAs('js')",
 					isEnabled: function(context) {
-						return require('../Workbench').workbench.getOpenEditor();
+						return require('../Workbench').getOpenEditor();
 					},
 					label: "Save As",
 					toolbarPath: "save"
@@ -114,7 +114,7 @@ return {
 					id: "format",
 					iconClass: 'formatIcon',
 					run: function() {
-						var editor = require('../Workbench').workbench.getOpenEditor();
+						var editor = require('../Workbench').getOpenEditor();
 						if (editor) {
 							var jsFile = new JSFile();
 							var text = Format.format(editor.jsFile);

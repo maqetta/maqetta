@@ -313,7 +313,7 @@ return declare("davinci.ve.input.SmartInput", null, {
 			                  ["\u00A0","nbsp"]*/
 		                     ]; 
 			value = entities.decode(value, customMap);
-			this._inline.eb.attr('value', String(value));
+			this._inline.eb.set('value', String(value));
 			this.updateFormats();
 			this.help(false);  // first time, don't display help but resize as needed
 			dijit.selectInputText(this._inline.eb.textbox);
@@ -352,11 +352,11 @@ return declare("davinci.ve.input.SmartInput", null, {
 		if (this.multiLine && this.multiLine != "false"){
 			this._loading(115, 200 /*, 'auto', 'auto'*/);
 			var t = this._getTemplate();
-			this._inline.attr("content",t);
+			this._inline.set("content",t);
 		}else {
 			this._loading(85, 200);
 			var t = this._getTemplate();
-			this._inline.attr("content",t);
+			this._inline.set("content",t);
 		}
 
 		this._inline.eb = dijit.byId("davinciIleb");
@@ -638,7 +638,7 @@ return declare("davinci.ve.input.SmartInput", null, {
 			}
 			contentPaneAncestor.removeChild(this._loadingDiv);
 			if(this._inline.style.display != "none" && this._inline.eb){
-				value = this._inline.eb.attr('value');
+				value = this._inline.eb.get('value');
 				this._value = value;
 				this._format = this.getFormat();
 				this._inline.style.display = "none";
@@ -736,7 +736,7 @@ return declare("davinci.ve.input.SmartInput", null, {
 		
 		updateFormats: function(){
 			
-			var value = this._inline.eb.attr('value');
+			var value = this._inline.eb.get('value');
 			var disabled = true;
 			if (this.containsHtmlMarkUp(value)) {
 				disabled = false;

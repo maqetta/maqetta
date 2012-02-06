@@ -62,7 +62,7 @@ define(["dojo/_base/declare",
 				for(var i = 0;i<this.pageTemplate.length;i++){
 					var widget = this.pageTemplate[i]['widget'];
 					if(widget)
-						widget.attr("readOnly", isReadOnly);
+						widget.set("readOnly", isReadOnly);
 					else{
 						var node = this.pageTemplate[i].domNode;
 						if(node)
@@ -76,7 +76,7 @@ define(["dojo/_base/declare",
 				var box = this.pageTemplate[index]['widget'];
 				var value = null;
 				if(box){
-					value = box.attr('value');
+					value = box.get('value');
 				}else{
 					box = this.pageTemplate[index]['domNode'];
 					value = dojo.attr(box,'value');	
@@ -92,7 +92,7 @@ define(["dojo/_base/declare",
 				var box = this.pageTemplate[index]['widget'];
 				
 				if(box){
-					box.attr('value',value,true);
+					box.set('value',value,true);
 				}else{
 					box = this.pageTemplate[index]['domNode'];
 					dojo.attr(box,'value',value);	

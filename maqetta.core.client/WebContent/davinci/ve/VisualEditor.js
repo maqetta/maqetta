@@ -46,7 +46,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		var content = '<div class="silhouette_div_container">'+
 			'<span class="silhouetteiframe_object_container"></span>'+
 			'</div>';
-		this.contentPane.attr('content', content);
+		this.contentPane.set('content', content);
 		var silhouette_div_container=dojo.query('.silhouette_div_container',this.contentPane.domNode)[0];
 		this.silhouetteiframe = new SilhouetteIframe({
 			rootNode:silhouette_div_container,

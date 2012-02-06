@@ -89,7 +89,7 @@ define(["dojo/_base/declare",
 			
 			// First off, need to parse background-image property		
 			var ppImageCB = bgProps['background-image'].comboBox;
-			ppValue = ppImageCB.attr('value');
+			ppValue = ppImageCB.get('value');
 			var bgddata, type;
 			if(typeof ppValue == 'string' && ppValue.length>0){
 				bgddata = CSSUtils.parseBackgroundImage(ppValue);
@@ -100,7 +100,7 @@ define(["dojo/_base/declare",
 			this.bgddata = bgddata;
 			
 			// Stuff value into "other" textarea
-			this.bgdOtherTA.attr('value', ppValue);
+			this.bgdOtherTA.set('value', ppValue);
 	
 			// Initialize dialog, getting some of initial values from properties palette fields
 			// and other initial values from bgddata object
@@ -111,18 +111,18 @@ define(["dojo/_base/declare",
 	   		this.bgdTypeSelect.addOption(optsType);
 			this._updateBackgroundImageType(type);
 			this.connect(this.bgdTypeSelect, 'onChange', dojo.hitch(this,function(){
-				var val = this.bgdTypeSelect.attr('value');
+				var val = this.bgdTypeSelect.get('value');
 				this._updateBackgroundImageType(val);
 				this._onFieldChanged();
 			}));
 			
 			var ppColorCB = bgProps['background-color'].comboBox;
-			ppValue = ppColorCB.attr('value');
+			ppValue = ppColorCB.get('value');
 			var bgdColorCB = this.bgdColorCB;
-			bgdColorCB.attr('store', this._bgcolor_store);
+			bgdColorCB.set('store', this._bgcolor_store);
 	//FIXME: Add regexp for color
-	//bgdColorCB.attr('regExp', 'repeat|repeat-x|repeat-y|no-repeat');
-			bgdColorCB.attr('value', ppValue);
+	//bgdColorCB.set('regExp', 'repeat|repeat-x|repeat-y|no-repeat');
+			bgdColorCB.set('value', ppValue);
 			bgddata.backgroundColor = ppValue;
 			this.connect(this.bgdColorCB, "onChange", dojo.hitch(this, function(event){
 				this._onChangeColor(event, this.bgdColorCB, this._bgcolor_action);
@@ -132,104 +132,104 @@ define(["dojo/_base/declare",
 		
 	
 			var ppRepeatCB = bgProps['background-repeat'].comboBox;
-			ppValue = ppRepeatCB.attr('value');
+			ppValue = ppRepeatCB.get('value');
 			var bgdRepeatCB = this.bgdRepeatCB;
-			bgdRepeatCB.attr('store', ppRepeatCB.store);
-			bgdRepeatCB.attr('regExp', 'repeat|repeat-x|repeat-y|no-repeat');
-			bgdRepeatCB.attr('value', ppValue);
+			bgdRepeatCB.set('store', ppRepeatCB.store);
+			bgdRepeatCB.set('regExp', 'repeat|repeat-x|repeat-y|no-repeat');
+			bgdRepeatCB.set('value', ppValue);
 			bgddata.backgroundRepeat = ppValue;
 			this.connect(this.bgdRepeatCB, 'onChange', dojo.hitch(this,function(){
-				bgddata.backgroundRepeat = this.bgdRepeatCB.attr('value');
+				bgddata.backgroundRepeat = this.bgdRepeatCB.get('value');
 				this._onFieldChanged();
 			}));
 			bgProps['background-repeat'].bgdWidget = this.bgdRepeatCB;
 	
 			var ppPositionCB = bgProps['background-position'].comboBox;
-			ppValue = ppPositionCB.attr('value');
+			ppValue = ppPositionCB.get('value');
 			var bgdPositionCB = this.bgdPositionCB;
-			bgdPositionCB.attr('store', ppPositionCB.store);
+			bgdPositionCB.set('store', ppPositionCB.store);
 	//FIXME: regexp is wrong
-			bgdPositionCB.attr('regExp', 'auto|contain|cover|'+CSSUtils.regstr_posn);
-			bgdPositionCB.attr('value', ppValue);
+			bgdPositionCB.set('regExp', 'auto|contain|cover|'+CSSUtils.regstr_posn);
+			bgdPositionCB.set('value', ppValue);
 			bgddata.backgroundPosition = ppValue;
 			this.connect(this.bgdPositionCB, 'onChange', dojo.hitch(this,function(){
-				bgddata.backgroundPosition = this.bgdPositionCB.attr('value');
+				bgddata.backgroundPosition = this.bgdPositionCB.get('value');
 				this._onFieldChanged();
 			}));
 			bgProps['background-position'].bgdWidget = this.bgdPositionCB;
 	
 			var ppSizeCB = bgProps['background-size'].comboBox;
-			ppValue = ppSizeCB.attr('value');
+			ppValue = ppSizeCB.get('value');
 			var bgdSizeCB = this.bgdSizeCB;
-			bgdSizeCB.attr('store', ppSizeCB.store);
-			bgdSizeCB.attr('regExp', 'auto|contain|cover|'+CSSUtils.regstr_len_or_pct);
-			bgdSizeCB.attr('value', ppValue);
+			bgdSizeCB.set('store', ppSizeCB.store);
+			bgdSizeCB.set('regExp', 'auto|contain|cover|'+CSSUtils.regstr_len_or_pct);
+			bgdSizeCB.set('value', ppValue);
 			bgddata.backgroundSize = ppValue;
 			this.connect(this.bgdSizeCB, 'onChange', dojo.hitch(this,function(){
-				bgddata.backgroundSize = this.bgdSizeCB.attr('value');
+				bgddata.backgroundSize = this.bgdSizeCB.get('value');
 				this._onFieldChanged();
 			}));
 			bgProps['background-size'].bgdWidget = this.bgdSizeCB;
 	
 			var ppOriginCB = bgProps['background-origin'].comboBox;
-			ppValue = ppOriginCB.attr('value');
+			ppValue = ppOriginCB.get('value');
 			var bgdOriginCB = this.bgdOriginCB;
-			bgdOriginCB.attr('store', ppOriginCB.store);
-			bgdOriginCB.attr('regExp', 'border-box|padding-box|content-box');
-			bgdOriginCB.attr('value', ppValue);
+			bgdOriginCB.set('store', ppOriginCB.store);
+			bgdOriginCB.set('regExp', 'border-box|padding-box|content-box');
+			bgdOriginCB.set('value', ppValue);
 			bgddata.backgroundOrigin = ppValue;
 			this.connect(this.bgdOriginCB, 'onChange', dojo.hitch(this,function(){
-				bgddata.backgroundOrigin = this.bgdOriginCB.attr('value');
+				bgddata.backgroundOrigin = this.bgdOriginCB.get('value');
 				this._onFieldChanged();
 			}));
 			bgProps['background-origin'].bgdWidget = this.bgdOriginCB;
 	
 			var ppClipCB = bgProps['background-clip'].comboBox;
-			ppValue = ppClipCB.attr('value');
+			ppValue = ppClipCB.get('value');
 			var bgdClipCB = this.bgdClipCB;
-			bgdClipCB.attr('store', ppClipCB.store);
-			bgdClipCB.attr('regExp', 'border-box|padding-box|content-box');
-			bgdClipCB.attr('value', ppValue);
+			bgdClipCB.set('store', ppClipCB.store);
+			bgdClipCB.set('regExp', 'border-box|padding-box|content-box');
+			bgdClipCB.set('value', ppValue);
 			bgddata.backgroundClip = ppValue;
 			this.connect(this.bgdClipCB, 'onChange', dojo.hitch(this,function(){
-				bgddata.backgroundClip = this.bgdClipCB.attr('value');
+				bgddata.backgroundClip = this.bgdClipCB.get('value');
 				this._onFieldChanged();
 			}));
 			bgProps['background-clip'].bgdWidget = this.bgdClipCB;
 	
 			var store = new MutableStore({values:['to bottom','to top','to right','to left','45deg','-45deg']});
-	   		this.bgdLinearAngleCB.attr('store', store);
-	   		this.bgdLinearAngleCB.attr('regExp', CSSUtils.regstr_angle);
-	   		this.bgdLinearAngleCB.attr('value', (bgddata && bgddata.angle) ? bgddata.angle : 'to bottom');
+	   		this.bgdLinearAngleCB.set('store', store);
+	   		this.bgdLinearAngleCB.set('regExp', CSSUtils.regstr_angle);
+	   		this.bgdLinearAngleCB.set('value', (bgddata && bgddata.angle) ? bgddata.angle : 'to bottom');
 			this.connect(this.bgdLinearAngleCB, 'onChange', dojo.hitch(this,function(){
-				bgddata.angle = this.bgdLinearAngleCB.attr('value');
+				bgddata.angle = this.bgdLinearAngleCB.get('value');
 				this._onFieldChanged();
 			}));
 	
 			var store = new MutableStore({values:['center','left top','center center','right bottom','0% 0%','0px 0px']});
-	   		this.bgdRadialPosCB.attr('store', store);
-	   		this.bgdRadialPosCB.attr('regExp', CSSUtils.regstr_posn);
-	   		this.bgdRadialPosCB.attr('value', (bgddata && bgddata.posn) ? bgddata.posn : 'center');
+	   		this.bgdRadialPosCB.set('store', store);
+	   		this.bgdRadialPosCB.set('regExp', CSSUtils.regstr_posn);
+	   		this.bgdRadialPosCB.set('value', (bgddata && bgddata.posn) ? bgddata.posn : 'center');
 			this.connect(this.bgdRadialPosCB, 'onChange', dojo.hitch(this,function(){
-				bgddata.posn = this.bgdRadialPosCB.attr('value');
+				bgddata.posn = this.bgdRadialPosCB.get('value');
 				this._onFieldChanged();
 			}));
 	
 			var store = new MutableStore({values:['circle','ellipse']});
-	   		this.bgdRadialShapeCB.attr('store', store);
-	   		this.bgdRadialShapeCB.attr('regExp', CSSUtils.regstr_shape);
-	   		this.bgdRadialShapeCB.attr('value', (bgddata && bgddata.shape) ? bgddata.shape : 'circle');
+	   		this.bgdRadialShapeCB.set('store', store);
+	   		this.bgdRadialShapeCB.set('regExp', CSSUtils.regstr_shape);
+	   		this.bgdRadialShapeCB.set('value', (bgddata && bgddata.shape) ? bgddata.shape : 'circle');
 			this.connect(this.bgdRadialShapeCB, 'onChange', dojo.hitch(this,function(){
-				bgddata.shape = this.bgdRadialShapeCB.attr('value');
+				bgddata.shape = this.bgdRadialShapeCB.get('value');
 				this._onFieldChanged();
 			}));
 	
 			var store = new MutableStore({values:['farthest-corner','farthest-side','closest-corner','closest-side']});
-	   		this.bgdRadialExtentCB.attr('store', store);
-	   		this.bgdRadialExtentCB.attr('regExp', CSSUtils.regstr_extent);
-	   		this.bgdRadialExtentCB.attr('value', (bgddata && bgddata.extent) ? bgddata.extent : 'farthest-corner');
+	   		this.bgdRadialExtentCB.set('store', store);
+	   		this.bgdRadialExtentCB.set('regExp', CSSUtils.regstr_extent);
+	   		this.bgdRadialExtentCB.set('value', (bgddata && bgddata.extent) ? bgddata.extent : 'farthest-corner');
 			this.connect(this.bgdRadialExtentCB, 'onChange', dojo.hitch(this,function(){
-				bgddata.extent = this.bgdRadialExtentCB.attr('value');
+				bgddata.extent = this.bgdRadialExtentCB.get('value');
 				this._onFieldChanged();
 			}));
 			
@@ -265,7 +265,7 @@ define(["dojo/_base/declare",
 				type = 'emptystring';
 			}
 			this.bgddata.type = type;
-			this.bgdTypeSelect.attr('value', type);
+			this.bgdTypeSelect.set('value', type);
 			var bgdOptionsLabelRows = dojo.query('.bgdOptionsLabelRow', domNode);
 			var bgdImageOptRows = dojo.query('.bgdImageOptRow', domNode);
 			var bgdGradOptRows = dojo.query('.bgdGradOptRow', domNode);
@@ -314,7 +314,7 @@ define(["dojo/_base/declare",
 				stops = this.bgddata.stops;
 			}
 	
-			var bgdType = this.bgdTypeSelect.attr('value');
+			var bgdType = this.bgdTypeSelect.get('value');
 			var stopRows = dojo.query('.bgdStopRow', this.domNode);
 			// Destroy all existing stop rows except for the heading row (#0)
 			for(var i=stopRows.length-1; i>0; i--){
@@ -344,25 +344,25 @@ define(["dojo/_base/declare",
 				labelNodes[0].innerHTML = this.langObj.bgdStop + ' #' + (i+1) + ':';
 				var colorSelectNodes = dojo.query('.bgdColor', newStopRow);
 				var colorSelect = dijit.byNode(colorSelectNodes[0]);
-				colorSelect.attr('store', this._stops_store);
-				colorSelect.attr('regExp', CSSUtils.regstr_stop_color);
-				colorSelect.attr('value', stop.color);
+				colorSelect.set('store', this._stops_store);
+				colorSelect.set('regExp', CSSUtils.regstr_stop_color);
+				colorSelect.set('value', stop.color);
 				this.connect(colorSelect, "onChange", dojo.hitch(this, function(colorSelect, event){
 					this._onChangeColor(event, colorSelect, this._stops_action);
 				}, colorSelect));
 				var posSelectNodes = dojo.query('.bgdPosition', newStopRow);
 				var posSelect = dijit.byNode(posSelectNodes[0]);
-				posSelect.attr('store', this.stoppos_store);
+				posSelect.set('store', this.stoppos_store);
 				var pos = (typeof stop.pos == 'string' && stop.pos.length > 0) ? stop.pos : (i==0) ? '0%' : '100%';
-				posSelect.attr('regExp', CSSUtils.regstr_stop_pos);
-				posSelect.attr('value', pos);
+				posSelect.set('regExp', CSSUtils.regstr_stop_pos);
+				posSelect.set('value', pos);
 				this.connect(posSelect, 'onChange', dojo.hitch(this,function(){
 					this._updateDataStructureStops();
 					this._onFieldChanged();
 				}));
 				var plusNode = dojo.query('.bgdPlusButton', newStopRow)[0];
 				var plusButton = dijit.byNode(plusNode);
-				plusButton.attr('title', langObj.bgdAddStop);
+				plusButton.set('title', langObj.bgdAddStop);
 				this.connect(plusButton, 'onClick', dojo.hitch(this, function(rownum){
 					var stop = this.bgddata.stops[rownum];
 					// Duplicate row <rownum>
@@ -371,7 +371,7 @@ define(["dojo/_base/declare",
 				}, i));
 				var minusNode = dojo.query('.bgdMinusButton', newStopRow)[0];
 				var minusButton = dijit.byNode(minusNode);
-				minusButton.attr('title', langObj.bgdRemoveStop);
+				minusButton.set('title', langObj.bgdRemoveStop);
 				this.connect(minusButton, 'onClick', dojo.hitch(this, function(rownum){
 					var stop = this.bgddata.stops[rownum];
 					// Remove row <rownum>
@@ -384,9 +384,9 @@ define(["dojo/_base/declare",
 					var minusNode = minusNodes[j];
 					var minusButton = dijit.byNode(minusNode);
 					if(stops.length <= 2){
-						minusButton.attr('disabled', true);
+						minusButton.set('disabled', true);
 					}else{
-						minusButton.attr('disabled', false);
+						minusButton.set('disabled', false);
 					}
 				}
 			}
@@ -424,7 +424,7 @@ define(["dojo/_base/declare",
 				});
 			});
 			this.bdgValid = valid;
-			this._okButton.attr('disabled', !valid);
+			this._okButton.set('disabled', !valid);
 		},
 	
 		_updateBackgroundPreview: function(){
@@ -448,7 +448,7 @@ define(["dojo/_base/declare",
 			//FIXME: Refactor code so that we don't have to rely on updating background preview
 			// to update this field
 			// Stuff latest into "other" textarea
-			this.bgdOtherTA.attr('value', a[a.length-1]);
+			this.bgdOtherTA.set('value', a[a.length-1]);
 	
 		},
 	
@@ -468,7 +468,7 @@ define(["dojo/_base/declare",
 				var colorSelect = dijit.byNode(colorSelectNodes[0]);
 				var posSelectNodes = dojo.query('.bgdPosition', rowNode);
 				var posSelect = dijit.byNode(posSelectNodes[0]);
-				bgddata.stops.push({ color:colorSelect.attr('value'), pos:posSelect.attr('value') });
+				bgddata.stops.push({ color:colorSelect.get('value'), pos:posSelect.get('value') });
 			}
 		},
 	
@@ -480,7 +480,7 @@ define(["dojo/_base/declare",
 		_setValueAttr : function(value){
 			if(value){
 				// This will trigger _onChangeColor
-				this._colorPickerTargetWidget.attr('value', value);
+				this._colorPickerTargetWidget.set('value', value);
 			}
 		},
 	
@@ -488,10 +488,10 @@ define(["dojo/_base/declare",
 			var action = actions[event];
 			if(action){
 				if(action == '_removevalue'){
-					targetComboBox.attr('value', '');
+					targetComboBox.set('value', '');
 				}else{
 					// restore old value
-					targetComboBox.attr('value', targetComboBox._currentcolorvalue);
+					targetComboBox.set('value', targetComboBox._currentcolorvalue);
 				}
 				if(action == '_colorpicker'){
 					var colorPickerFlat = new davinci.ve.widgets.ColorPickerFlat({});
@@ -501,10 +501,10 @@ define(["dojo/_base/declare",
 					davinci.ve.widgets.ColorPickerFlat.show(colorPickerFlat, initialValue, this, isLeftToRight);
 				}
 			}
-			targetComboBox._currentcolorvalue = targetComboBox.attr('value');
+			targetComboBox._currentcolorvalue = targetComboBox.get('value');
 			
 			// Update bgddata for all color fields even though only one of them has changed
-			this.bgddata.backgroundColor = this.bgdColorCB.attr('value');
+			this.bgddata.backgroundColor = this.bgdColorCB.get('value');
 			this._updateDataStructureStops();
 			this._onFieldChanged();	
 		},

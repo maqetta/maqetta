@@ -31,7 +31,7 @@ return declare("davinci.ve.input.RichTextInput", [SmartInput], {
 		var height = 265;
 		this._loading(height, width);
 		var content = this._getTemplate();
-		this._inline.attr("content",  content); 
+		this._inline.set("content",  content); 
 		var children = this._inline.getChildren();
 		for (var i=0; i < children.length; i++){
 			if (children[i].id === 'davinciIleb'){
@@ -40,7 +40,7 @@ return declare("davinci.ve.input.RichTextInput", [SmartInput], {
 			}		
 		}
 		var text = this._widget._srcElement.getElementText(this._context); // just the inside text
-		this._inline.eb.setValue(text);
+		this._inline.eb.set('value',text);
 		this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk"));  
 		this._connection.push(dojo.connect(this._inline.eb, "onMouseDown", this, "stopEvent")); 
 		this._connection.push(dojo.connect(this._inline.eb, "onClick", this, "updateSimStyle"));

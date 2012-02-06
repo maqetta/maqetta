@@ -176,21 +176,16 @@ DataGridHelper.prototype = {
 				items.push(item);
 			}
 			
-			store.clearOnClose = true;
-			store.data = data;
-			delete store.url; // wdr remove old url if switching
-			store.close();
-			store.fetch({
-				query: this.query, // XXX there is no `query` func in this obj
-				queryOptions:{deep:true}, 
-				onComplete: function(items){
-					for (var i = 0; i < items.length; i++) {
-						var item = items[i];
-						console.warn("i=", i, "item=", item);
-					}
-					widget.dijitWidget.setStore(store);
-				}
-			});
+			setTimeout(dojo.hitch(this, function(){
+				// #1691 this bit of code is to give up control of the thread so FF can draw the grid
+				// then we can update the store..
+				store.clearOnClose = true;
+				store.data = data;
+				delete store.url; // wdr remove old url if switching
+				store.close();
+				widget.dijitWidget.setStore(store);
+			}), 0);
+
 		}else{ // must be url data store
 			store.clearOnClose = true;
 			store.url = url; 

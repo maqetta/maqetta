@@ -31,16 +31,26 @@
         "count": {
             "datatype": "number",
             "defaultValue": 3,
-            "title": "Count"
-        },
-        "ruleStyle": {
-            "datatype": "string",
-            "title": "Rule Style"
+            "title": "Count",
+            "description": "Number of hash marks to generate"
         },
         "container": {
             "datatype": "string",
             "description": "This is either \"leftDecoration\" or \"rightDecoration\",\nto indicate whether this rule goes to the left or to the right of the slider.\nNote that on RTL system, \"leftDecoration\" would actually go to the right, and vice-versa.",
+            "option": [
+				{
+					"value": "leftDecoration"
+				},
+				{
+					"value": "rightDecoration"
+				}
+           ],
             "hidden": false
+        },
+        "ruleStyle": {
+            "datatype": "string",
+            "title": "Rule Style",
+            "description": "CSS style to apply to individual hash marks"
         }
     },
     "content": "<div></div>"

@@ -602,6 +602,82 @@
             "inlineEdit": "./dijit/form/SelectInput"
         },
         {
+			"name": "HorizontalSlider",
+			"description": "Slider (Horizontal)",
+			"type": "dijit.form.HorizontalSlider",
+			"category": "controls",
+			"icon": "resources/images/horizontalslider.gif",
+			"iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAM7W5DdYkDteljpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+EZzp9Xk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZZwJNwSCwaj8ikcjkMOZ/J0KJBbSxCyMtnwulMPpdiKcSIUDZoiSfCCJWEERIB8RhpMppHglCBCA0mJgoHFiIYDgYKgQVCAAGPAQIgIAOQAQBIj0ybnJ2eJ0EAOw==",
+			"properties": {
+				"style": "width: 200px;"
+			},
+			"children": [
+				{
+					"type": "dijit.form.HorizontalRule",
+					"properties": {
+						"style": "height:5px;",
+						"container":"bottomDecoration"
+					}
+				},
+				{
+					"type": "dijit.form.HorizontalRuleLabels",
+					"properties": {
+						"container":"bottomDecoration",
+						"style": "height:20px;"
+					}
+				}
+			],
+			"resizable": "width",
+			"allowedChild": "dijit.form.HorizontalRuleLabels, dijit.form.HorizontalRule",
+			"helper": "./dijit/form/HorizontalSliderHelper",
+			"inlineEdit": "./dijit/form/HorizontalSliderInput"
+		},
+		{
+			"name": "HorizontalRuleLabels",
+			"description": "Labels for Horizontal Slider",
+			"type": "dijit.form.HorizontalRuleLabels",
+			"category": "controls",
+			"icon": "resources/images/horizontalslider.gif",
+			"iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAM7W5DdYkDteljpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+EZzp9Xk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZZwJNwSCwaj8ikcjkMOZ/J0KJBbSxCyMtnwulMPpdiKcSIUDZoiSfCCJWEERIB8RhpMppHglCBCA0mJgoHFiIYDgYKgQVCAAGPAQIgIAOQAQBIj0ybnJ2eJ0EAOw==",
+			"metadata": {
+				"property": {
+					"container": {
+						"refreshFromSource": true
+					}
+				}
+			},
+			"properties": {
+				"container":"bottomDecoration"
+			},
+			"helper": "./dijit/form/HorizontalRuleLabelsHelper",
+			"allowedParent": "dijit.form.HorizontalSlider",
+			"hidden": true
+		},
+		{
+			"name": "HorizontalRule",
+			"description": "Hash marks for Horizontal Slider",
+			"type": "dijit.form.HorizontalRule",
+			"category": "controls",
+			"icon": "resources/images/horizontalslider.gif",
+			"iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAM7W5DdYkDteljpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+EZzp9Xk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZZwJNwSCwaj8ikcjkMOZ/J0KJBbSxCyMtnwulMPpdiKcSIUDZoiSfCCJWEERIB8RhpMppHglCBCA0mJgoHFiIYDgYKgQVCAAGPAQIgIAOQAQBIj0ybnJ2eJ0EAOw==",
+			"metadata": {
+				"property": {
+					"container": {
+						"refreshFromSource": true
+					},
+					"count": {
+						"refreshFromSource": true
+					}
+				}
+			},
+			"properties": {
+				"style": "height:5px;",
+				"container":"bottomDecoration"
+			},
+			"allowedParent": "dijit.form.HorizontalSlider",
+			"hidden": true
+		},
+        {
             "name": "Menu",
             "type": "dijit.Menu",
             "category": "untested",
@@ -982,87 +1058,82 @@
             "resizable": "width"
         },
         {
-            "name": "HorizontalSlider",
-            "description": "Slider (Horizontal)",
-            "type": "dijit.form.HorizontalSlider",
-            "category": "untested",
-            "icon": "resources/images/horizontalslider.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAM7W5DdYkDteljpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+EZzp9Xk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZZwJNwSCwaj8ikcjkMOZ/J0KJBbSxCyMtnwulMPpdiKcSIUDZoiSfCCJWEERIB8RhpMppHglCBCA0mJgoHFiIYDgYKgQVCAAGPAQIgIAOQAQBIj0ybnJ2eJ0EAOw==",
-            "properties": {
-                "style": "width: 200px;"
-            },
-            "resizable": "width",
-            "allowedChild": "dijit.form.HorizontalRuleLabels, dijit.form.HorizontalRule"
-        },
-        {
-            "name": "HorizontalRuleLabels",
-            "description": "Labels for Horizontal Slider",
-            "type": "dijit.form.HorizontalRuleLabels",
-            "category": "untested",
-            "icon": "resources/images/horizontalslider.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAM7W5DdYkDteljpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+EZzp9Xk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZZwJNwSCwaj8ikcjkMOZ/J0KJBbSxCyMtnwulMPpdiKcSIUDZoiSfCCJWEERIB8RhpMppHglCBCA0mJgoHFiIYDgYKgQVCAAGPAQIgIAOQAQBIj0ybnJ2eJ0EAOw==",
-            "properties": {
-            	"style": "height:20px;",
-                "container":"bottomDecoration",
-                "count": "3"
-            },
-            "helper": "./dijit/form/HorizontalRuleLabelsHelper",
-            "allowedParent": "dijit.form.HorizontalSlider"
-        },
-        {
-            "name": "HorizontalRule",
-            "description": "Hash marks for Horizontal Slider",
-            "type": "dijit.form.HorizontalRule",
-            "category": "untested",
-            "icon": "resources/images/horizontalslider.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAM7W5DdYkDteljpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+EZzp9Xk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZZwJNwSCwaj8ikcjkMOZ/J0KJBbSxCyMtnwulMPpdiKcSIUDZoiSfCCJWEERIB8RhpMppHglCBCA0mJgoHFiIYDgYKgQVCAAGPAQIgIAOQAQBIj0ybnJ2eJ0EAOw==",
-            "properties": {
-            	"style": "height:5px;",
-                "container":"bottomDecoration"
-            },
-            "allowedParent": "dijit.form.HorizontalSlider"
-        },
-        {
-            "name": "VerticalSlider",
-            "description": "Slider (Vertical)",
-            "type": "dijit.form.VerticalSlider",
-            "category": "untested",
-            "icon": "resources/images/verticalslider.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAJurxzdYkDtelpusyDpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+NXk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6qvH36nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZWwJNwSCwaTyWIYXAshiqmQJMYKiyk01PoElFgmyHGx/M4AKahxkSicRDQjc4mgwF9nQ3ORiOyg9UbIxYCaGIUDwhnaFwJd2BWjkchJFFZQiURB0yWWUEAOw==",
-            "properties": {
-                "style": "height: 200px;"
-            },
-            "resizable": "height",
-            "allowedChild": "dijit.form.VerticalRuleLabels, dijit.form.VerticalRule"
-        },
-         {
-            "name": "VerticalRuleLabels",
-            "description": "Labels for Vertical Slider",
-            "type": "dijit.form.VerticalRuleLabels",
-            "category": "untested",
-            "icon": "resources/images/verticalslider.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAJurxzdYkDtelpusyDpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+NXk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6qvH36nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZWwJNwSCwaTyWIYXAshiqmQJMYKiyk01PoElFgmyHGx/M4AKahxkSicRDQjc4mgwF9nQ3ORiOyg9UbIxYCaGIUDwhnaFwJd2BWjkchJFFZQiURB0yWWUEAOw==",
-            "properties": {
-            	"style": "width:20px;",
-                "container":"rightDecoration",
-                "count": "3"
-            },
-            "helper": "./dijit/form/HorizontalRuleLabelsHelper",
-            "allowedParent": "dijit.form.VerticalSlider"
-        },
-        {
-            "name": "VerticalRule",
-            "description": "Hash marks for Vertical Slider",
-            "type": "dijit.form.VerticalRule",
-            "category": "untested",
-            "icon": "resources/images/verticalslider.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAJurxzdYkDtelpusyDpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+NXk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6qvH36nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZWwJNwSCwaTyWIYXAshiqmQJMYKiyk01PoElFgmyHGx/M4AKahxkSicRDQjc4mgwF9nQ3ORiOyg9UbIxYCaGIUDwhnaFwJd2BWjkchJFFZQiURB0yWWUEAOw==",
-            "properties": {
-            	"style": "width:5px;",
-                "container":"rightDecoration"
-            },
-            "allowedParent": "dijit.form.VerticalSlider"
-        },
+			"name": "VerticalSlider",
+			"description": "Slider (Vertical)",
+			"type": "dijit.form.VerticalSlider",
+			"category": "controls",
+			"icon": "resources/images/verticalslider.gif",
+			"iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAJurxzdYkDtelpusyDpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+NXk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6qvH36nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZWwJNwSCwaTyWIYXAshiqmQJMYKiyk01PoElFgmyHGx/M4AKahxkSicRDQjc4mgwF9nQ3ORiOyg9UbIxYCaGIUDwhnaFwJd2BWjkchJFFZQiURB0yWWUEAOw==",
+			"properties": {
+				"style": "height: 200px;"
+			},
+			"children": [
+				{
+					"type": "dijit.form.VerticalRule",
+					"properties": {
+						"style": "width:5px;",
+						"container":"rightDecoration"
+					}
+				},
+				{
+					"type": "dijit.form.VerticalRuleLabels",
+					"properties": {
+						"style": "width:3em;",
+						"container":"rightDecoration"
+					}
+				}
+			],
+			"resizable": "height",
+			"allowedChild": "dijit.form.VerticalRuleLabels, dijit.form.VerticalRule",
+			"helper": "./dijit/form/VerticalSliderHelper",
+			"inlineEdit": "./dijit/form/VerticalSliderInput"
+		},
+		 {
+			"name": "VerticalRuleLabels",
+			"description": "Labels for Vertical Slider",
+			"type": "dijit.form.VerticalRuleLabels",
+			"category": "controls",
+			"icon": "resources/images/verticalslider.gif",
+			"iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAJurxzdYkDtelpusyDpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+NXk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6qvH36nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZWwJNwSCwaTyWIYXAshiqmQJMYKiyk01PoElFgmyHGx/M4AKahxkSicRDQjc4mgwF9nQ3ORiOyg9UbIxYCaGIUDwhnaFwJd2BWjkchJFFZQiURB0yWWUEAOw==",
+			"metadata": {
+				"property": {
+					"container": {
+						"refreshFromSource": true
+					}
+				}
+			},
+			"properties": {
+				"style": "width:3em;",
+				"container":"rightDecoration"
+			},
+			"helper": "./dijit/form/HorizontalRuleLabelsHelper",
+			"allowedParent": "dijit.form.VerticalSlider",
+			"hidden": true
+		},
+		{
+			"name": "VerticalRule",
+			"description": "Hash marks for Vertical Slider",
+			"type": "dijit.form.VerticalRule",
+			"category": "controls",
+			"icon": "resources/images/verticalslider.gif",
+			"iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAJurxzdYkDtelpusyDpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+NXk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6qvH36nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZWwJNwSCwaTyWIYXAshiqmQJMYKiyk01PoElFgmyHGx/M4AKahxkSicRDQjc4mgwF9nQ3ORiOyg9UbIxYCaGIUDwhnaFwJd2BWjkchJFFZQiURB0yWWUEAOw==",
+			"metadata": {
+				"property": {
+					"container": {
+						"refreshFromSource": true
+					},
+					"count": {
+						"refreshFromSource": true
+					}
+				}
+			},
+			"properties": {
+				"style": "width:5px;",
+				"container":"rightDecoration"
+			},
+			"allowedParent": "dijit.form.VerticalSlider",
+			"hidden": true
+		},
         {
             "name": "PopupMenuBarItem",
             "description": "Popup Menu Bar Item",

@@ -1,6 +1,7 @@
 define(["dojo/_base/declare",
         "dijit/_Templated",
         "dijit/_Widget",
+        "davinci/Workbench",
         "dijit/form/Button",
         "dijit/form/TextBox",
         "dijit/form/RadioButton",
@@ -17,8 +18,8 @@ define(["dojo/_base/declare",
         "dojo/text!./templates/UserLibraries.html",
         "davinci/Theme"
         
-], function(declare, _Templated, _Widget, Button, TextBox, RadioButton,MenuItem,Menu,Library, 
-			ComboBox, uiNLS, commonNLS, Workbench, Path, Resource, RebuildPage, templateString, Theme
+], function(declare, _Templated, _Widget, Workbench, Button, TextBox, RadioButton, MenuItem, Menu, Library, 
+			ComboBox, uiNLS, commonNLS, Runtime, Path, Resource, RebuildPage, templateString, Theme
 			){
 	
 	return declare("davinci.ui.UserLibraries",   [_Widget, _Templated], {

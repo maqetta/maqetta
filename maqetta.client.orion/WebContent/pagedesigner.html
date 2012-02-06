@@ -22,18 +22,25 @@
 	<script>
 	
 		var dojoConfig = {parseOnLoad: true,  
-						  paths:{'orion': '../../../orion', 
+						  paths:{'orion': '../../../orion',
+							     'orion/auth':'../orion/auth',
+							     'profile': '../../../profile',
+							     'git': '../../../git',
+							     'text': '../../../requirejs/text',
+							     'plugins':'../../../plugins',							     
+
+							     'orion/editor': '../orion/editor',
+							     'orion/textview': '../orion/textview',
 							     'preview':'../preview', 
 							     'system':'../orion', 
-							     'text': '../../../requirejs/text',
-							     'orion/auth':'../orion/auth',
-							     'plugins':'../../../plugins'}, 
+							     'i18n':'../dojo/i18n',
+							     '_base':'../dojo/_base'}, 
 						  cacheBust: '@revision@'}
 		
 			
 	</script>
 	
-	<script type="text/javascript" src="/maqetta/app/dojo/dojo.js?@revision@" ></script>
+	<script type="text/javascript" src="app/dojo/dojo.js?@revision@" ></script>
 	<script>
 	
 	
@@ -79,7 +86,7 @@
  			davinci.Runtime.run(userInfo);
  			Workbench.run();
 		}
-		debugger;
+		
 		dojo.byId("davinci_user_welcome").innerHTML = webContent.welcome;
 		dojo.byId("load_screen").innerHTML = webContent.loadingMaqetta;
 		dojo.byId("davinci_logoff").innerHTML = webContent.logOff;

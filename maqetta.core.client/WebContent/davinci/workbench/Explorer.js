@@ -96,7 +96,7 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 			topDiv.appendChild(projectSelection.domNode);
 
 			dojo.connect(projectSelection, "onChange", function(){
-				Runtime.loadProject(this.value);
+				Workbench.loadProject(this.value);
 			});
 		}
 

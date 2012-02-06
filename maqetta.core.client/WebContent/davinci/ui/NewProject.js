@@ -64,7 +64,7 @@ define(["dojo/_base/declare",
 			}
 			
 			if(Workbench.singleProjectMode())
-				Runtime.loadProject(newProjectName);
+				Workbench.loadProject(newProjectName);
 			
 			this.onClose();
 		},

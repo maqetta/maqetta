@@ -258,11 +258,8 @@ var resource = {
 		if (!isWildcard){
 			found=doFind();
 		}
-		if (!found && (serverFind || isWildcard))
-		{			
-				var response = Runtime.serverJSONRequest({
-				  url:"cmd/findResource", 
-			          content:{path: name, ignoreCase: ignoreCase, workspaceOnly: workspaceOnly, inFolder: inFolder!=null?inFolder.getPath():null}, sync:true  });
+		if (!found && (serverFind || isWildcard)){			
+				Orion.findResource(name, ignoreCase, inFolder);
 			
 			if (response && response.length>0)
 			{

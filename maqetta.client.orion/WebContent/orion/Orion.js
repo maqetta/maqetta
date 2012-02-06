@@ -8,14 +8,15 @@ define([
 	var serviceRegistry;
 	var preferences;
 	var pluginRegistry;
+	var fileClient;
 	
 		mBootstrap.startup().then(function(core) {
-			debugger;
+			
 			serviceRegistry = core.serviceRegistry;
 			preferences = core.preferences;
 			pluginRegistry = core.pluginRegistry;
 			var root = [];
-			var fileClient = new mFileClient.FileClient(serviceRegistry);
+			fileClient = new mFileClient.FileClient(serviceRegistry);
 			fileClient.loadWorkspaces("");
 			
 			fileClient.loadWorkspace("").then(
@@ -61,6 +62,15 @@ define([
 	
 		listFiles : function(location, onComplete){
 			this.fileClient.fetchChildren(location).then( 
+					dojo.hitch(this, function(children) {
+						onComplete(children);
+					})
+				);
+		},
+		
+		findResource : function(name, ignoreCase, inFolder){
+			debugger;
+			fileClient.search(inFolder || "", "?q=" + location).then( 
 					dojo.hitch(this, function(children) {
 						onComplete(children);
 					})

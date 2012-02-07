@@ -955,6 +955,7 @@
                 }
             ],
             "tool": "./dijit/TreeCreateTool",
+            "helper": "./dijit/TreeHelper",
             "inlineEdit": "./dijit/TreeInput"
         },
         {

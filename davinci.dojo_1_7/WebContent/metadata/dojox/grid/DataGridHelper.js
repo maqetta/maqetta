@@ -3,6 +3,8 @@ define([
 	"dojo/dom-form",
 	"davinci/ve/widget",
 	"davinci/ve/commands/ReparentCommand",
+	"davinci/commands/CompoundCommand",
+	"davinci/ve/commands/RemoveCommand",
 	"davinci/html/HTMLElement",
 	"davinci/html/HTMLText"
 ], function(
@@ -10,6 +12,8 @@ define([
 	form,
 	Widget,
 	ReparentCommand,
+	CompoundCommand,
+	RemoveCommand,
 	HTMLElement,
 	HTMLText
 ) {
@@ -227,7 +231,27 @@ DataGridHelper.prototype = {
 		scriptTag.addChild(text);
 		var head =  widget._edit_context._srcDocument.find({elementType: 'HTMLElement', tag: 'head'}, true);
 		head.addChild(scriptTag);
+	}, 
+	
+	/*
+	 * Called by DeleteAction when widget is deleted.
+	 * @param {davinci.ve._Widget} widget  Widget that is being deleted
+	 * @return {davinci.commands.CompoundCommand}  command that is to be added to the command stack.
+	 * 
+	 * This widget has a data store widget that is associated with it and must be deleted also.
+	 */
+	getRemoveCommand: function(widget) {
+		
+		var command = new CompoundCommand();
+		var storeId = widget._srcElement.getAttribute("store");
+		var storeWidget = Widget.byId(storeId);
+		// order is important for undo... 
+		command.add(new RemoveCommand(widget));
+		command.add(new RemoveCommand(storeWidget));
+		return command;
+		
 	}
+	
 
 };
 

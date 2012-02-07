@@ -15,11 +15,26 @@ return declare("davinci.ve.actions.DeleteAction", [ContextAction], {
 			if(selection.length > 0){
 				var command = undefined;
 				if(selection.length === 1){
-					command = new RemoveCommand(selection[0]);
+					var w = selection[0];
+					var helper = w.getHelper();
+					if(helper && helper.getRemoveCommand) {
+						command = helper.getRemoveCommand(w);
+						
+					} else {
+						command = new RemoveCommand(w/*selection[0]*/);
+					}
 				}else{
 					command = new CompoundCommand();
 					dojo.forEach(selection, function(w){
-						command.add(new RemoveCommand(w));
+						var c;
+						var helper = w.getHelper();
+						if(helper && helper.getRemoveCommand) {
+							c = helper.getRemoveCommand(w);
+							
+						} else {
+							c = new RemoveCommand(w);
+						}
+						command.add(c /*new RemoveCommand(w)*/);
 					});
 				}
 				context.select(null);

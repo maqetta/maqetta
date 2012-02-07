@@ -1,9 +1,13 @@
 define([
 	"dojo/query",
-	"davinci/ve/widget"
+	"davinci/ve/widget",
+	"davinci/commands/CompoundCommand",
+	"davinci/ve/commands/RemoveCommand"
 ], function (
 	query,
-	Widget
+	Widget,
+	CompoundCommand,
+	RemoveCommand
 ) {
 
 var EdgeToEdgeDataListHelper = function() {};
@@ -101,6 +105,25 @@ EdgeToEdgeDataListHelper.prototype = {
 				}, true);
 			});
 		}
+	}, 
+	
+	/*
+	 * Called by DeleteAction when widget is deleted.
+	 * @param {davinci.ve._Widget} widget  Widget that is being deleted
+	 * @return {davinci.commands.CompoundCommand}  command that is to be added to the command stack.
+	 * 
+	 * This widget has a data store widget that is associated with it and must be deleted also.
+	 */
+	getRemoveCommand: function(widget) {
+		
+		var command = new CompoundCommand();
+		var storeId = widget._srcElement.getAttribute("store");
+		var storeWidget = Widget.byId(storeId);
+		// order is important for undo... 
+		command.add(new RemoveCommand(widget));
+		command.add(new RemoveCommand(storeWidget));
+		return command;
+		
 	}
 
 };

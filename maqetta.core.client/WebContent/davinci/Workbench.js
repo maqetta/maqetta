@@ -351,7 +351,7 @@ var Workbench = {
 			Workbench.editorTabs=mainBody.tabs.editors =
 				new (Workbench.hideEditorTabs ? StackContainer : TabContainer)({
 					id: "editors_tabcontainer",
-					controllerWidget: "dijit.layout.TabController"
+					controllerWidget: "dijit.layout.ScrollingTabController"
 				});
 			Workbench.editorTabs.setTitle = function(tab, title){ 
 				tab.attr('title', title);
@@ -881,7 +881,7 @@ var Workbench = {
 	},
 
 	showView: function(viewId, shouldFocus){
-		
+debugger;		
 	  try {
 			
 		var mainBodyContainer = dijit.byId('mainBody'),
@@ -943,7 +943,7 @@ var Workbench = {
 				'class': clazz,
 				style: style,
 				splitter: region != "center",
-				controllerWidget: "dijit.layout.TabController"
+				controllerWidget: "dijit.layout.ScrollingTabController"
 			});
 			parent.addChild(cp1);
 		} else {

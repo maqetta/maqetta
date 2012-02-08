@@ -110,7 +110,7 @@ var Review = davinci.review.Review = lang.mixin(davinci.Workbench, {
 					'class': clazz,
 					style: style,
 					splitter: region != "center",
-					controllerWidget: "dijit.layout.TabController"
+					controllerWidget: "dijit.layout.ScrollingTabController"
 				});
 				parent.addChild(cp1);
 			} else {

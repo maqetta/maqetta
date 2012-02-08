@@ -45,19 +45,19 @@ return {
                 },
                 {
                     viewID: "davinci.ui.navigator",
-                    position: "left-bottom"
+                    position: "left"
                 },
                 {
                     viewID: "davinci.ve.style",
-                    position: "right"
+                    position: "left"
                 },
                 {
                     viewID: "davinci.ui.outline",
-                    position: "right-bottom"
+                    position: "left"
                 },
                 {
                     viewID: "davinci.ve.states",
-                    position: "right"
+                    position: "left"
                 }
             /*
              * { viewID: "davinci.ve.datastores", position: "right" }, { viewID: "davinci.ui.problems", position: "right-bottom" }

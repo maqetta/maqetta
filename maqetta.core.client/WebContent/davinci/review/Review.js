@@ -63,26 +63,27 @@ var Review = davinci.review.Review = lang.mixin(davinci.Workbench, {
 			if (position == 'right' && !mainBody.tabs.perspective.right) {
 				mainBodyContainer.addChild(mainBody.tabs.perspective.right = new BorderContainer({
 					'class':'davinciPaletteContainer', 
-					style: 'width: 275px;', 
+					style: 'width: 235px;', 
 					id:"right_mainBody", 
 					region:'right', 
 					gutters: false, 
 					splitter:true
 				}));
 				mainBody.tabs.perspective.right.startup();
-				mainBody.tabs.perspective.right.set("minSize", 325);
+				mainBody.tabs.perspective.right.set("minSize", 200);
 			}
 
 			if (position == 'left' && !mainBody.tabs.perspective.left) {
 				mainBodyContainer.addChild(mainBody.tabs.perspective.left = new BorderContainer({
 					'class':'davinciPaletteContainer', 
-					style: 'width: 200px;', 
+					style: 'width: 235px;', 
 					id:"left_mainBody", 
 					region:'left', 
 					gutters: false, 
 					splitter:true
 				}));
 				mainBody.tabs.perspective.left.startup();
+				mainBody.tabs.perspective.left.set("minSize", 235);
 			}
 
 			if (position == 'left' || position == 'right') { position += "-center"; }

@@ -840,6 +840,19 @@ davinci.States.prototype = {
 			var convertedName = this._convertStyleName(name);
 			davinci.dojo.style(node, convertedName, style[name]);
 		}
+		
+		var dijitWidget, parent;
+		if(node.id && node.ownerDocument && node.ownerDocument.defaultView && node.ownerDocument.defaultView.dijit){
+			dijitWidget = node.ownerDocument.defaultView.dijit.byId(node.id);
+		}
+		if(dijitWidget && dijitWidget.getParent){
+			parent = dijitWidget.getParent();
+		}
+		if(parent && parent.resize){
+			parent.resize();
+		}else if(dijitWidget && dijitWidget.resize){
+			dijitWidget.resize();
+		}
 	},
 		
 	isContainer: function(widget) {

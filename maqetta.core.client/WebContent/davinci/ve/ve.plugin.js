@@ -48,16 +48,16 @@ return {
                     position: "left"
                 },
                 {
+                    viewID: "davinci.ve.states",
+                    position: "right"
+                },
+                {
                     viewID: "davinci.ve.style",
-                    position: "left"
+                    position: "right-bottom"
                 },
                 {
                     viewID: "davinci.ui.outline",
-                    position: "left"
-                },
-                {
-                    viewID: "davinci.ve.states",
-                    position: "left"
+                    position: "left-bottom"
                 }
             /*
              * { viewID: "davinci.ve.datastores", position: "right" }, { viewID: "davinci.ui.problems", position: "right-bottom" }

@@ -14,7 +14,9 @@ define([
 	"davinci/workbench/Preferences",
 	"./widget",
 	"./metadata",
-	"./input/SmartInput"
+	"./input/SmartInput",
+	"dijit/layout/BorderContainer",
+	"dijit/layout/ContentPane"
 ], function(
 	require,
 	declare,
@@ -31,7 +33,9 @@ define([
 	Preferences,
 	widgetUtils,
 	metadataUtils,
-	SmartInput
+	SmartInput,
+	BorderContainer,
+	ContentPane
 ){
 
 var VisualEditor = declare("davinci.ve.VisualEditor", null, {
@@ -43,10 +47,20 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		this._pageEditor = pageEditor;
 		this.contentPane = dijit.getEnclosingWidget(element);
 		dojo.addClass(this.contentPane.domNode, "fullPane");
+		var bcdiv = dojo.create('div', {}, this.contentPane.domNode);
+		
+        this._bc = new BorderContainer({className:'DesignCanvas', style:'padding:0px;'}, bcdiv);
+        this._canvasCP = new ContentPane({region:'center'});
+        this._bc.addChild(this._canvasCP);
+        this._scenesCP = new ContentPane({region:'bottom', dim:'200', style:'height:20px'});
+        this._bc.addChild(this._scenesCP);
+        dojo.create('div',{innerHTML:'| Default | Add Task | Task Added |'}, this._scenesCP.domNode);
+
 		var content = '<div class="silhouette_div_container">'+
 			'<span class="silhouetteiframe_object_container"></span>'+
 			'</div>';
-		this.contentPane.set('content', content);
+		this._canvasCP.set('content', content);
+		//this.contentPane.set('content', content);
 		var silhouette_div_container=dojo.query('.silhouette_div_container',this.contentPane.domNode)[0];
 		this.silhouetteiframe = new SilhouetteIframe({
 			rootNode:silhouette_div_container,

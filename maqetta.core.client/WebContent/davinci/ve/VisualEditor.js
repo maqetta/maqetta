@@ -52,9 +52,9 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
         this._bc = new BorderContainer({className:'DesignCanvas', style:'padding:0px;'}, bcdiv);
         this._canvasCP = new ContentPane({region:'center'});
         this._bc.addChild(this._canvasCP);
-        this._scenesCP = new ContentPane({region:'bottom', dim:'200', style:'height:20px'});
+        this._scenesCP = new ContentPane({region:'right', splitter:true, style:'height:100px'});
         this._bc.addChild(this._scenesCP);
-        dojo.create('div',{innerHTML:'| Default | Add Task | Task Added |'}, this._scenesCP.domNode);
+        dojo.create('div',{innerHTML:'<div>- Dojo Mobile Views</div><div>&nbsp;&nbsp;root_view</div><div>&nbsp;&nbsp;alerts_view</div>'}, this._scenesCP.domNode);
 
 		var content = '<div class="silhouette_div_container">'+
 			'<span class="silhouetteiframe_object_container"></span>'+

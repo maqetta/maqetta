@@ -53,11 +53,13 @@ return {
                 },
                 {
                     viewID: "davinci.ve.style",
-                    position: "right-bottom"
+                    position: "right-top",
+                    style: "height:80%"
                 },
                 {
                     viewID: "davinci.ui.outline",
-                    position: "left-bottom"
+                    position: "left-bottom",
+                    style: "height:20%"
                 }
             /*
              * { viewID: "davinci.ve.datastores", position: "right" }, { viewID: "davinci.ui.problems", position: "right-bottom" }

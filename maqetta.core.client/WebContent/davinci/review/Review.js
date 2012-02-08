@@ -44,11 +44,15 @@ var Review = davinci.review.Review = lang.mixin(davinci.Workbench, {
 			perspectiveId = davinci.Workbench.getActivePerspective(),
 			perspective = Runtime.getExtension("davinci.perspective",	perspectiveId),
 			position = 'left',
+			style = '',
 			cp1 = null;
 
 			dojo.some(perspective.views, function(view) {
 				if (view.viewID ==  viewId) {
 					position = view.position;
+					if(view.style){
+						style = view.style;
+					}
 					return true;
 				}	
 			});
@@ -81,7 +85,7 @@ var Review = davinci.review.Review = lang.mixin(davinci.Workbench, {
 				mainBody.tabs.perspective.left.startup();
 			}
 
-			if (position == 'left' || position == 'right') { position += "-top"; }
+			if (position == 'left' || position == 'right') { position += "-center"; }
 			var positionSplit = position;
 
 			if (!mainBody.tabs.perspective[position]) {
@@ -89,20 +93,25 @@ var Review = davinci.review.Review = lang.mixin(davinci.Workbench, {
 
 				var region = positionSplit[0],
 				parent = mainBodyContainer,
-				clazz = '',
-				style = '';
+				clazz = '';
 				if (positionSplit[1] && (region == 'left' || region == 'right')) {
 					parent = mainBody.tabs.perspective[region];
 					region = positionSplit[1];
 					if (positionSplit[1] == "top") {
-						region = "center";
-						clazz = "davinciTopPalette";
+						region = "top";
+						//style = 'height:33%;';
+						//clazz = "davinciTopPalette";
+					}else if (positionSplit[1] == "bottom") {
+						region = "bottom";
+						//style = 'height:33%;';
+						//clazz = "davinciTopPalette";
 					} else {
-						style = 'height:35%;';
-						clazz = "davinciBottomPalette";
+						region = "center";
+						//style = 'height:33%;';
+						//clazz = "davinciBottomPalette";
 					}
 				} else if(region == 'bottom') {
-					style = 'height:80px;';
+					//style = 'height:80px;';
 					clazz = "davinciBottomPalette";
 				}
 				cp1 = mainBody.tabs.perspective[position] = new TabContainer({

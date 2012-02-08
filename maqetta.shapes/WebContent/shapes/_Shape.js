@@ -42,8 +42,10 @@ define([
 		},
 		
 		startup: function(){
-			this.resize();
-			this._bboxStartup = this._bbox;
+			if(this.domNode){
+				this.resize();
+				this._bboxStartup = this._bbox;
+			}
 			var that = this;
 			//FIXME: setTimeout hack to address possible timing problem
 			//with loading of the shapes.css file, which might not be available
@@ -62,6 +64,9 @@ define([
 		},
 
 		_resize: function(){
+			if(!this.domNode){
+				return;
+			}
 			dojo.addClass(this.domNode,'shape');
 			this.createGraphics();
 			var gbbox = this._g.getBBox();

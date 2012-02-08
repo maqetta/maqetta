@@ -83,23 +83,26 @@ define([
 				if(delta<currentDeltaX){
 					context._snapX = {type:typeRefObj, typeRefObj:typeRefObj, typeCurrObj:typeCurrObj, x:x, widget:widget, delta:delta};
 					currentDeltaX = delta;
+					context._snapXLast = context._snapX;
 				}
 			}
 			function snapY(typeRefObj, typeCurrObj, y, delta){
 				if(delta<currentDeltaY){
 					context._snapY = {type:typeRefObj, typeRefObj:typeRefObj, typeCurrObj:typeCurrObj, y:y, widget:widget, delta:delta};
 					currentDeltaY = delta;
+					context._snapYLast = context._snapY;
 				}
 			}
 			var rect = widgetSnapInfo.snapRect;
 			var deltaLeft, deltaCenter, deltaRight, deltaTop, deltaMiddle, deltaBottom, delta;
 			if(rect){
+				var distCheckY = (context._snapXLast && context._snapXLast.widget === widget) ? Infinity : distCheck;
 				var distTT = Math.abs(rect.t-snapBox.t);
 				var distTB = Math.abs(rect.t-snapBox.b);
 				var distBT = Math.abs(rect.b-snapBox.t);
 				var distBB = Math.abs(rect.b-snapBox.b);
 				// Only snap if snapBox is sufficiently close to widget
-				if(distTT <= distCheck || distTB <= distCheck ||distBT <= distCheck || distBB <= distCheck){
+				if(distTT <= distCheckY || distTB <= distCheckY ||distBT <= distCheckY || distBB <= distCheckY){
 					deltaLeft = Math.abs(rect.l-snapBox.l);
 					deltaCenter = Math.abs(rect.c-snapBox.c);
 					deltaRight = Math.abs(rect.r-snapBox.r);
@@ -115,12 +118,13 @@ define([
 					snapX("center", "right", rect.r, Math.abs(rect.r-snapBox.c));
 				}
 
+				var distCheckX = (context._snapYLast && context._snapYLast.widget === widget) ? Infinity : distCheck;
 				var distLL = Math.abs(rect.l-snapBox.l);
 				var distLR = Math.abs(rect.l-snapBox.r);
 				var distRL = Math.abs(rect.r-snapBox.l);
 				var distRR = Math.abs(rect.r-snapBox.r);
 				// Only snap if snapBox is sufficiently close to widget
-				if(distLL <= distCheck || distLR <= distCheck ||distRL <= distCheck || distRR <= distCheck){
+				if(distLL <= distCheckX || distLR <= distCheckX ||distRL <= distCheckX || distRR <= distCheckX){
 					deltaTop = Math.abs(rect.t-snapBox.t);
 					deltaMiddle = Math.abs(rect.m-snapBox.m);
 					deltaBottom = Math.abs(rect.b-snapBox.b);

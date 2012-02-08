@@ -6,8 +6,9 @@
  define([
 	"dojo/_base/declare",
 	"davinci/Runtime",
-	"davinci/model/resource/Resource"
-], function(declare, Runtime, Resource) {
+	"davinci/model/resource/Resource",
+	"davinci/model/resource/Marker"
+], function(declare, Runtime, Resource, Marker) {
 
 return declare("davinci.model.resource.File", Resource, {
 
@@ -17,7 +18,6 @@ return declare("davinci.model.resource.File", Resource, {
 		this.parent = parent;
 		this.markers = [];
 		this.extension = name.substr(name.lastIndexOf('.') + 1);
-
 	},
 
 	getExtension: function() {
@@ -29,7 +29,7 @@ return declare("davinci.model.resource.File", Resource, {
 	},
 
 	addMarker: function(type,line,text) {
-		var marker = new davinci.model.resource.Marker(this, type, line, text);
+		var marker = new Marker(this, type, line, text);
 		this.markers.push(marker);
 	},
 
@@ -46,7 +46,11 @@ return declare("davinci.model.resource.File", Resource, {
 						result.push(marker);
 					}
 				} else {
-					dojo.forEach(markerTypes,function (type) { if (type == marker.type) result.push(marker); });
+					dojo.forEach(markerTypes,function (type) {
+						if (type == marker.type) {
+							result.push(marker);
+						}
+					});
 				}
 			}
 		return result;
@@ -57,8 +61,8 @@ return declare("davinci.model.resource.File", Resource, {
 		if (this.isNew && !isWorkingCopy) {
 			this.isNew = false;
 		}
-		var workingCopyExtension = isWorkingCopy?".workingcopy":"";
-		var path=encodeURIComponent(this.getPath() + workingCopyExtension);
+		var workingCopyExtension = isWorkingCopy ? ".workingcopy" : "";
+		var path = encodeURI(this.getPath() + workingCopyExtension);
 		var defered = dojo.xhrPut({
 			url: path,
 			putData: content,
@@ -84,7 +88,7 @@ return declare("davinci.model.resource.File", Resource, {
 
 	removeWorkingCopy: function() {
 		Runtime.serverJSONRequest({
-			url:"./cmd/removeWorkingCopy", handleAs:"text",
+			url:"cmd/removeWorkingCopy", handleAs:"text",
 			content:{'path':this.getPath()}, sync:true
 		});
 		if (this.isNew) {

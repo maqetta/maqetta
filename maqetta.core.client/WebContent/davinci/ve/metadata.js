@@ -57,17 +57,21 @@ define([
 		delete pkg.overlays;
 
 		if (dojo.exists("scripts.widget_metadata", pkg)) {
-			var widgetsJsonPath = path.append(pkg.scripts.widget_metadata);
-			dojo.xhrGet({
-				url : widgetsJsonPath.toString(),
-				handleAs : "json",
-				sync: true // XXX should be async
-			}).then(function(data) {
-				if (data) {
-					parseLibraryDescriptor(pkg.name, data,
-							widgetsJsonPath.getParentPath()); // lop off "*.json"
-	            }
-	        });
+			if (typeof pkg.scripts.widget_metadata == "string") {
+				var widgetsJsonPath = path.append(pkg.scripts.widget_metadata);
+				dojo.xhrGet({
+					url : widgetsJsonPath.toString(),
+					handleAs : "json",
+					sync: true // XXX should be async
+				}).then(function(data) {
+					if (data) {
+						parseLibraryDescriptor(pkg.name, data,
+								widgetsJsonPath.getParentPath()); // lop off "*.json"
+		            }
+		        });
+			} else {
+				parseLibraryDescriptor(pkg.name, pkg.scripts.widget_metadata, path);				
+			}
 	    }
     }
 

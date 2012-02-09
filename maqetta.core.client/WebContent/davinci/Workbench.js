@@ -104,7 +104,7 @@ var Workbench = {
 	run: function() {
 		Runtime.run();
 		Workbench._initKeys();
-		davinci.ve.metadata.init(); //FIXME: shouldn't need 'davinci' reference
+		metadata.init();
 		
 		Workbench._baseTitle = dojo.doc.title;
 

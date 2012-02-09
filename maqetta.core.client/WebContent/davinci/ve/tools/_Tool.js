@@ -94,9 +94,9 @@ return declare("davinci.ve.tools._Tool", null, {
 	_getMaxZIndex: function(startNode) {
 		//We want to look at the computed zIndex of the startNode and all
 		//descendant's of startNode to find the maximum zIndex value
-		var max_zIndexStr = dojo.getStyle(startNode, "zIndex");
-		dojo.query("div", startNode).forEach(function(node){
-			var node_zIndexStr = dojo.getStyle(node, "zIndex");
+		var max_zIndexStr = dojo.style(startNode, "zIndex");
+		dojo.query("*", startNode).forEach(function(node){
+			var node_zIndexStr = dojo.style(node, "zIndex");
 			var node_zIndexNumber = Number(node_zIndexStr);
 			var max_zIndexNumber = Number(max_zIndexStr);
 			if (!isNaN(node_zIndexNumber)) {

@@ -72,9 +72,15 @@ define(["dojo/_base/declare",
 					
 					this._value = value || "";
 					this._loc = loc;
+					if(loc!=null && widget._setBaseLocationAttr){
+						loc.then(function(resource){
+							widget.set('baseLocation', resource?resource.getPath():null);
+						});
+					}else if( widget._setBaseLocationAttr){
+						widget.set('baseLocation', null);
+					}
 					
-					if(widget._setBaseLocationAttr)
-						widget.set('baseLocation', loc?loc.getPath():null);
+						
 					widget.set('value', this._value, true);
 				};
 				dojo.connect(widget, "onChange", this, "_onFieldChange");
@@ -100,17 +106,24 @@ define(["dojo/_base/declare",
 		
 		
 		_canModifyRule : function(modifiedRule){
-			
+			var def = new dojo.Deferred();
 			// not all "rules" passed in are rules, and sometimes they are null (in case of element.style).
-			if(!modifiedRule || !modifiedRule.getCSSFile) // empty object, in cases like element.style there is no rule
-				return true; 
+			if(!modifiedRule || !modifiedRule.getCSSFile){ // empty object, in cases like element.style there is no rule
+				def.resolve(true);
+				return def;
+			}
 			
 			var cssFile = modifiedRule.getCSSFile();
-			if(cssFile==null) return true;
+			if(cssFile==null){ 
+				def.resolve(true); 
+				return def;
+			}
 			
 			
-			var resource = cssFile.getResource();
-			return !resource.readOnly();
+			return cssFile.getResource().then(function(resource){
+				return !resource.readOnly();	
+			});
+			
 			
 		},
 		
@@ -430,7 +443,6 @@ define(["dojo/_base/declare",
 		
 		_buildCssRuleset : function(){
 			
-			//if(this._isTarget("color")) debugger;
 			
 			var allRules = this._getAllRules();
 			this._values = [];
@@ -469,8 +481,11 @@ define(["dojo/_base/declare",
 			allRules  = this._sortRules(allRules);
 			
 			/* add any extra classes to the rules for display */
-			this._addClasses(allRules);
-			this._values = allRules;
+			return this._addClasses(allRules).then(dojo.hitch(this,function(){
+				this._values = allRules;
+				
+			}));
+			
 			
 		},
 		
@@ -498,6 +513,8 @@ define(["dojo/_base/declare",
 		
 		/* add classes to the values, effects display */
 		_addClasses : function(rules){
+			
+			
 			var value = null;
 			/*
 			 * classes:
@@ -506,6 +523,7 @@ define(["dojo/_base/declare",
 			 * cssShorthandOverRidden = over ridden node
 			 */
 			var foundValue = false;
+			var defList = [];
 			for(var i = 0;i<rules.length;i++){
 				rules[i].extraClass = [];
 				if(this._hasOverride)
@@ -522,12 +540,14 @@ define(["dojo/_base/declare",
 				if(rules[i].type=="element.style" && !rules[i].value)
 					rules[i].extraClass.push("elementStyleNode");
 				
-				if(!this._canModifyRule(rules[i].rule)){
-					rules[i].extraClass.push("readOnlyRule");
-					rules[i].readOnly = true;
-				}
-				
+				defList.push(this._canModifyRule(rules[i].rule).then(function(canModify){
+					if(!canModify){
+						rules[i].extraClass.push("readOnlyRule");
+						rules[i].readOnly = true;
+					}
+				}));
 			}
+			return new dojo.DeferredList(defList);
 		
 		},
 	
@@ -538,119 +558,122 @@ define(["dojo/_base/declare",
 				dojo.addClass(this.container,"dijitHidden");
 				return;
 			}
-			dojo.removeClass(this.container,"dijitHidden");
-			this._buildCssRuleset();
+			
+		
 			function makeOnChange(target){return function(){return this._onChange({target:target});};}
 			function makeRemoveOnChange(target){
 				return function(){
 					return this._onChangeRemove({target:target});
 				};
 			}
-			this._destroy();
-			var table = dojo.doc.createElement("table");
-			dojo.addClass(table, "cascadeTable");
-			var row = null;
-			var column = null;
-			row = dojo.doc.createElement("tr");
-			row.className = "propApplyToLabelRow";
-			column = dojo.doc.createElement("td");
-			column.colSpan = '3';
-			column.innerHTML = veNLS.applyToWhich;
-			column.className = "propApplyToLabelCell";
-			row.appendChild(column);
-			table.appendChild(row);
-	
-			this._radio = [];
-		
-		
-			
-			for(var i = 0;i<this._values.length;i++){
-				
-				var valueString = this._formatRuleString(this._values[i]);
-				
-				// uncomment the disabled bit to make read only options unselectable 
-				this._radio.push( dojo.create("input", {type:'radio', name:this._radioGroupName /*, disabled: this._values[i].readOnly*/}) );
-				
-				
+			this._buildCssRuleset().then(dojo.hitch(this,function(){
+				dojo.removeClass(this.container,"dijitHidden");
+				this._destroy();
+				var table = dojo.doc.createElement("table");
+				dojo.addClass(table, "cascadeTable");
+				var row = null;
+				var column = null;
 				row = dojo.doc.createElement("tr");
-				for(var j=0;j<this._values[i].extraClass.length;j++)
-					dojo.addClass(row,this._values[i].extraClass[j]);
-				
-				column = dojo.doc.createElement("td");
-				row.appendChild(column);
-				
-				dojo.addClass(column, "cascadeSpacer");
-				column = dojo.doc.createElement("td");
-				
-				dojo.addClass(column,  "cascadeButton");
-				column.appendChild(this._radio[this._radio.length-1]);
-				row.appendChild(column);
-				
-				column = dojo.doc.createElement("td");
-				dojo.addClass(column, "cascadText");
-				column.innerHTML = "<div class='cascadeRuleText'>" + valueString + "</div>";
-				
-				if(!this._values[i].shorthand)
-					this._handles.push(dojo.connect(this._radio[this._radio.length-1], "onclick", this, makeOnChange(i)));
-				else
-					this._handles.push(dojo.connect(this._radio[this._radio.length-1], "onclick", this, "_onChangeOverride"));
-				
-				if(this._values[i].shorthand){
-					column.innerHTML += "<div>" + this._values[i].shorthand + ":" + this._values[i].value + ";" + "</div>";
-				}else if(this._values[i].value){
-					var typeString = "";
-					for(var j = 0;j<this.target.length;j++)
-						typeString += this.target[j] + (j-1==this.target.length?",":"");
-					column.innerHTML += "<div class='ruleValue'>" + this.target[0] + ":" + this._values[i].value + ";" + "</div>";
-				}
-				
-				row.appendChild(column);
-				column = dojo.doc.createElement("td");
-				dojo.addClass(column, "cascadRemove");
-				
-				var button = dojo.doc.createElement("button");
-				if(this._values[i].readOnly){
-					dojo.attr(button, "disabled", "true");
-				}
-				dojo.addClass(button,"cascadeRemoveButton");
-				column.appendChild(button);
-				this._handles.push(dojo.connect(button, "onclick", this, makeRemoveOnChange(i)));
-				row.appendChild(column);
-				column = dojo.doc.createElement("td");
-				column.className = "cascadeSpacer";
-				row.appendChild(column);
-				table.appendChild(row);
-			}
-	
-			// Checkbox to allow user to control whether the current style settings
-			// should apply to the "Normal" style or the current interactive state.
-			// FIXME: This feature just has to have bugs. For example, I don't see
-			// logic for displaying the current property value when the state != "Normal"
-			// FIXME: Ultimately, we will want to allow the user to select any number
-			// of interactive states, not just "Normal" or the current state
-			// FIXME: The default value of this checkbox should be true if there
-			// is a custom value for the property for the current state, else false.
-			var langObj = veNLS;
-			var state=States.getState();
-			var isNormalState = States.isNormalState(state);
-			if(!isNormalState){
-				row = dojo.doc.createElement("tr");
-				row.className = "propWhichStateRow";
+				row.className = "propApplyToLabelRow";
 				column = dojo.doc.createElement("td");
 				column.colSpan = '3';
-				var whichStateInputElement = dojo.create("input", {type:'checkbox',checked:false,className:'propWhichStateInput'});
-				this._whichStateInputElement = whichStateInputElement;
-				column.appendChild(whichStateInputElement);
-				var whichStateLabelElement = dojo.create("label", {className:'propWhichStateLabel'});
-				whichStateLabelElement.innerHTML = dojo.string.substitute(langObj.onlyApplyToState,[state]);
-				column.appendChild(whichStateLabelElement);
-				column.className = "propWhichStateCell";
+				column.innerHTML = veNLS.applyToWhich;
+				column.className = "propApplyToLabelCell";
 				row.appendChild(column);
 				table.appendChild(row);
-			}
+		
+				this._radio = [];
 			
-			this.topDiv.appendChild(table);
-			this._updateFieldValue();
+			
+				
+				for(var i = 0;i<this._values.length;i++){
+					
+					var valueString = this._formatRuleString(this._values[i]);
+					
+					// uncomment the disabled bit to make read only options unselectable 
+					this._radio.push( dojo.create("input", {type:'radio', name:this._radioGroupName /*, disabled: this._values[i].readOnly*/}) );
+					
+					
+					row = dojo.doc.createElement("tr");
+					for(var j=0;j<this._values[i].extraClass.length;j++)
+						dojo.addClass(row,this._values[i].extraClass[j]);
+					
+					column = dojo.doc.createElement("td");
+					row.appendChild(column);
+					
+					dojo.addClass(column, "cascadeSpacer");
+					column = dojo.doc.createElement("td");
+					
+					dojo.addClass(column,  "cascadeButton");
+					column.appendChild(this._radio[this._radio.length-1]);
+					row.appendChild(column);
+					
+					column = dojo.doc.createElement("td");
+					dojo.addClass(column, "cascadText");
+					column.innerHTML = "<div class='cascadeRuleText'>" + valueString + "</div>";
+					
+					if(!this._values[i].shorthand)
+						this._handles.push(dojo.connect(this._radio[this._radio.length-1], "onclick", this, makeOnChange(i)));
+					else
+						this._handles.push(dojo.connect(this._radio[this._radio.length-1], "onclick", this, "_onChangeOverride"));
+					
+					if(this._values[i].shorthand){
+						column.innerHTML += "<div>" + this._values[i].shorthand + ":" + this._values[i].value + ";" + "</div>";
+					}else if(this._values[i].value){
+						var typeString = "";
+						for(var j = 0;j<this.target.length;j++)
+							typeString += this.target[j] + (j-1==this.target.length?",":"");
+						column.innerHTML += "<div class='ruleValue'>" + this.target[0] + ":" + this._values[i].value + ";" + "</div>";
+					}
+					
+					row.appendChild(column);
+					column = dojo.doc.createElement("td");
+					dojo.addClass(column, "cascadRemove");
+					
+					var button = dojo.doc.createElement("button");
+					if(this._values[i].readOnly){
+						dojo.attr(button, "disabled", "true");
+					}
+					dojo.addClass(button,"cascadeRemoveButton");
+					column.appendChild(button);
+					this._handles.push(dojo.connect(button, "onclick", this, makeRemoveOnChange(i)));
+					row.appendChild(column);
+					column = dojo.doc.createElement("td");
+					column.className = "cascadeSpacer";
+					row.appendChild(column);
+					table.appendChild(row);
+				}
+		
+				// Checkbox to allow user to control whether the current style settings
+				// should apply to the "Normal" style or the current interactive state.
+				// FIXME: This feature just has to have bugs. For example, I don't see
+				// logic for displaying the current property value when the state != "Normal"
+				// FIXME: Ultimately, we will want to allow the user to select any number
+				// of interactive states, not just "Normal" or the current state
+				// FIXME: The default value of this checkbox should be true if there
+				// is a custom value for the property for the current state, else false.
+				var langObj = veNLS;
+				var state=States.getState();
+				var isNormalState = States.isNormalState(state);
+				if(!isNormalState){
+					row = dojo.doc.createElement("tr");
+					row.className = "propWhichStateRow";
+					column = dojo.doc.createElement("td");
+					column.colSpan = '3';
+					var whichStateInputElement = dojo.create("input", {type:'checkbox',checked:false,className:'propWhichStateInput'});
+					this._whichStateInputElement = whichStateInputElement;
+					column.appendChild(whichStateInputElement);
+					var whichStateLabelElement = dojo.create("label", {className:'propWhichStateLabel'});
+					whichStateLabelElement.innerHTML = dojo.string.substitute(langObj.onlyApplyToState,[state]);
+					column.appendChild(whichStateLabelElement);
+					column.className = "propWhichStateCell";
+					row.appendChild(column);
+					table.appendChild(row);
+				}
+				
+				this.topDiv.appendChild(table);
+				this._updateFieldValue();
+			}));;
 		},
 			
 		selectRule : function(rule){
@@ -702,16 +725,6 @@ define(["dojo/_base/declare",
 			
 		},
 		_updateFieldValue : function(){
-			
-			function isReadOnly(value){	
-				if(value && value.rule && value.rule.getCSSFile){
-					var file = value.rule.getCSSFile();
-					var resource = file.getResource();
-					return resource.readOnly();
-				}else{
-					return false;
-				}
-			}
 			
 			if(this._widget==null)
 				this._setFieldValue("",this._getBaseLocation());

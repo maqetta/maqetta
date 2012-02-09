@@ -340,6 +340,9 @@ return declare("davinci.ve.Context", null, {
 	getDocumentLocation: function(options){
 		return this._srcDocument.fileName;
 	},
+	getBaseResource: function(options){
+		return system.resource.findResource(this.getDocumentLocation());
+	},
 
 	getLibraryBase: function(id, version){
 		return Library.getLibRoot(id,version, this.getBase()) || "";

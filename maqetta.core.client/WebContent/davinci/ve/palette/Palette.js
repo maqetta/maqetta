@@ -123,7 +123,7 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	},
 	
 	setContext: function(context){
-		debugger;
+		
 		this._context = context;
 		this._loadPalette();
 		this.startupKeyNavChildren();

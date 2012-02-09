@@ -35,13 +35,13 @@ return declare("davinci.ve.tools._Tool", null, {
 			if(w && !w.getContext()){
 				target = w.domNode.parentNode;
 				w = null;
-			}else if (widget && davinci.ve.metadata.queryDescriptor(widget.type, "enablePointerEvents")) {
+			}else if (w && davinci.ve.metadata.queryDescriptor(w.type, "enablePointerEvents")) {
 				// By default, this function posts an overlay DIV over primitive widgets to mask/capture 
 				// mouse/touch/pointer events  that might otherwise trigger a widget's own interactive logic, 
 				// such as bringing up popup menus or onhover styling.
 				// The "enablePointerEvents" descriptor property says don't mask/capture these events
 				// and let those events go right through into the underlying widget.
-				widget = null;
+				w = null;
 				break;
 			}else{
 				// Flow typically comes to here. The following check determines if

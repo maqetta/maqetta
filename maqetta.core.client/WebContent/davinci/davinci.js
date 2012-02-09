@@ -33,7 +33,16 @@ davinci/davinci = {
 	"./actions/SaveAsWidget",
 	
 //	"./ve/commands/ModifyAttributeCommand",
-	
+
+	"./ve/actions/AddColumnAction",
+	"./ve/actions/AddColumnBeforeAction",
+	"./ve/actions/RemoveColumnAction",
+	"./ve/actions/AddRowAction",
+	"./ve/actions/AddRowBeforeAction",
+	"./ve/actions/RemoveRowAction",
+	"./ve/actions/AddState",
+	"./ve/actions/RemoveState",
+
 	"./html/ui/CSSEditor",
 	"./html/ui/HTMLEditor",
 	"./html/ui/ImageViewer",

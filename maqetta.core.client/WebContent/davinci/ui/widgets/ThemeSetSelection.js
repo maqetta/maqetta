@@ -172,16 +172,20 @@ define(["dojo/_base/declare",
 	        }
 	        var mblSelect = dijit.byId('theme_select_mobile_theme_select');
 	        var dtSelect = dijit.byId('theme_select_desktop_theme_select');
-	        if (e === Theme.none_themeset_name) {
+            var androidSelect = dijit.byId('theme_select_android_select');
+            var blackberrySelect = dijit.byId('theme_select_blackberry_select');
+            var ipadSelect = dijit.byId('theme_select_ipad_select');
+            var iphoneSelect = dijit.byId('theme_select_iphone_select');
+            var otherSelect = dijit.byId('theme_select_other_select');
+	        if (e === Theme.none_themeset_name) { // none
 	            mblSelect.set('disabled', false);
 	            dtSelect.set('disabled', false);
+	            androidSelect.set('disabled', false);
+	            blackberrySelect.set('disabled', false);
+	            ipadSelect.set('disabled', false);
+	            iphoneSelect.set('disabled', false);
+	            otherSelect.set('disabled', false);
 	        } else {
-	            var androidSelect = dijit.byId('theme_select_android_select');
-	            var blackberrySelect = dijit.byId('theme_select_blackberry_select');
-	            var ipadSelect = dijit.byId('theme_select_ipad_select');
-	            var iphoneSelect = dijit.byId('theme_select_iphone_select');
-	            var otherSelect = dijit.byId('theme_select_other_select');
-	            
 	            mblSelect.set('disabled', true);
 	            dtSelect.set('disabled', true);
 	            androidSelect.set('disabled', true);
@@ -232,6 +236,10 @@ define(["dojo/_base/declare",
 	    
 	    onMobileChange : function(e){
 	        
+	    	if (this._selectedThemeSet.name != Theme.none_themeset_name){
+	    		// mobiles can not be change when theme is none
+	    		return;
+	    	}
 	        var androidSelect = dijit.byId('theme_select_android_select');
 	        var blackberrySelect = dijit.byId('theme_select_blackberry_select');
 	        var ipadSelect = dijit.byId('theme_select_ipad_select');

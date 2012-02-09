@@ -658,7 +658,8 @@
 					"resizable": "width",
 					"allowedChild": "dijit.form.HorizontalRuleLabels, dijit.form.HorizontalRule",
 					"helper": "./dijit/form/HorizontalSliderHelper",
-					"inlineEdit": "./dijit/form/HorizontalSliderInput"
+					"inlineEdit": "./dijit/form/HorizontalSliderInput",
+					"isControl": true
 				},
 				{
 					"name": "HorizontalRuleLabels",
@@ -1115,7 +1116,8 @@
 					"resizable": "height",
 					"allowedChild": "dijit.form.VerticalRuleLabels, dijit.form.VerticalRule",
 					"helper": "./dijit/form/VerticalSliderHelper",
-					"inlineEdit": "./dijit/form/VerticalSliderInput"
+					"inlineEdit": "./dijit/form/VerticalSliderInput",
+					"isControl": true
 				},
 				 {
 					"name": "VerticalRuleLabels",

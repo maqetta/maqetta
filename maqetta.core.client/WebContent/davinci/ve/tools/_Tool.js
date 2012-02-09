@@ -72,8 +72,14 @@ return declare("davinci.ve.tools._Tool", null, {
 			var parentNode = domNode.parentNode;
 			this._updateTarget();
 			
-			/*FIXME: Need to get z-index from computed style instead */
-			this._feedback.style.zIndex = domNode.style.zIndex;
+			//Calculate zIndex -- we want a zIndex at least equal to the maximum
+			//zIndex of domNode and it's descendants. This comes into play
+			//with HorizontalSlider/VerticalSlider where the progress bar and the 
+			//knob on the progress bar have higher zIndex values than the slider
+			//itself.
+			this._feedback.style.zIndex = this._getMaxZIndex(domNode);
+			
+			//Insert element
 			parentNode.insertBefore(this._feedback,domNode.nextSibling);
 			
 			this._target = w;
@@ -83,6 +89,31 @@ return declare("davinci.ve.tools._Tool", null, {
 			}
 			this._target = null;
 		}
+	},
+	
+	_getMaxZIndex: function(startNode) {
+		//We want to look at the computed zIndex of the startNode and all
+		//descendant's of startNode to find the maximum zIndex value
+		var max_zIndexStr = dojo.style(startNode, "zIndex");
+		dojo.query("*", startNode).forEach(function(node){
+			var node_zIndexStr = dojo.style(node, "zIndex");
+			var node_zIndexNumber = Number(node_zIndexStr);
+			var max_zIndexNumber = Number(max_zIndexStr);
+			if (!isNaN(node_zIndexNumber)) {
+				//Our node's zIndex maps to a valid number
+				if (isNaN(max_zIndexNumber)) {
+					//Our max is not a valid number, so replace it
+					max_zIndexStr = node_zIndexStr;
+				} else if (node_zIndexNumber > max_zIndexNumber) {
+					//Both our node and max zIndices map to valid numbers,
+					//so replace max with node zIndex if greater
+					max_zIndexStr = node_zIndexStr;
+				}
+			}
+			//We don't care about the else case (where node's zIndex does not represent a number)
+		});
+
+		return max_zIndexStr;
 	},
 	
 	// Calculate bounds for "target" overlay rectangle

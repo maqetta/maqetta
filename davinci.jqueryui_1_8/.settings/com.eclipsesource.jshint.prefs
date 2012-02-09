@@ -1,0 +1,6 @@
+#Tue Jan 31 22:42:17 CST 2012
+eclipse.preferences.version=1
+enabled=true
+excluded=WebContent/jquery-ui-1
+globals=define\: false, require\: false, StopIteration\: false\n
+options=browser\: true, curly\: true, devel\: true, forin\: true, latedef\: true, newcap\: true, noarg\: true, nonew\: true, smarttabs\: true, trailing\: false, undef\: true

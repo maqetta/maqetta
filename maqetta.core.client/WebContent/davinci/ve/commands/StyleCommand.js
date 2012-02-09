@@ -70,6 +70,8 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 			
 			// Recompute styling properties in case we aren't in Normal state
 			veStates.resetState(widget);
+		}else{
+			this._refresh(widget);
 		}
 		
 		//FIXME: Various widget changed events (/davinci/ui/widget*Changed) need to be cleaned up.

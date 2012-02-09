@@ -341,10 +341,6 @@ return declare("davinci.ve.Context", null, {
 		return this._srcDocument.fileName;
 	},
 
-	getBaseResource: function(options){
-		return system.resource.findResource(this.getDocumentLocation());
-	},
-
 	getLibraryBase: function(id, version){
 		return Library.getLibRoot(id,version, this.getBase()) || "";
 	},
@@ -582,16 +578,22 @@ return declare("davinci.ve.Context", null, {
 			this._themeMetaCache = null;
 		}
 	},
-	
+	_initThemeMeta : function(){
+		if (! this.theme) {
+			
+            var themePromise = this.loadThemeMeta(this._srcDocument);
+            themePromise.then(function(theme){
+         	if (theme) { // wdr #1024
+                 this._themeUrl = theme.themeUrl;
+                 this._themeMetaCache = theme.themeMetaCache;
+                 this.theme = theme.theme;
+             }	
+         });
+         
+     }
+	},
 	getTheme: function(){
-        if (! this.theme) {
-            var theme = this.loadThemeMeta(this._srcDocument);
-            if (theme) { // wdr #1024
-                this._themeUrl = theme.themeUrl;
-                this._themeMetaCache = theme.themeMetaCache;
-                this.theme = theme.theme;
-            }
-        }
+        
         return this.theme;
     }, 
 
@@ -654,6 +656,7 @@ return declare("davinci.ve.Context", null, {
 
     /* ensures the file has a valid theme.  Adds the users default if its not there alread */
     loadTheme: function(newHtmlParms){
+    	this._initThemeMeta();
     	/* 
     	 * Ensure the model has a default theme.  Defaulting to Claro for now, should
     	 * should load from prefs 
@@ -674,50 +677,53 @@ return declare("davinci.ve.Context", null, {
 		
 		
 		/* remove the .theme file, and find themes in the given base location */
-		var allThemes = Library.getThemes(Workbench.getProject()),
+		var allThemesPromise = Library.getThemes(Workbench.getProject()),
 			themeHash = {},
 			defaultTheme;
 		
-		allThemes.forEach(function(theme){
-			if(theme.name==defaultThemeName) {
-				defaultTheme = theme;
-			}
-			
-			if (theme.files){ // #1024 some themes may not contain files, themeMaps
-				theme.files.forEach(function(file){
-   			        themeHash[file] = theme;
-				});
-			}
-		});
-			
-		/* check the header file for a themes CSS.  
-		 * 
-		 * TODO: This is a first level check, a good second level check
-		 * would be to grep the body classes for the themes className. this would be a bit safer.
-		 */
-		
-		if(imports.some(function(imp){
-			/* trim off any relative prefix */
-			for(var themeUrl in themeHash){
-				if(imp.url.indexOf(themeUrl)  > -1){
-					// theme already exists
-					return true;
+		allThemesPromise.then(function(allThemes){
+			allThemes.forEach(function(theme){
+				if(theme.name==defaultThemeName) {
+					defaultTheme = theme;
 				}
-			}
-		})){
-			return true;
-		};
-
-
-		this._loadThemeDojoxMobile(this);
-		var body = model.find({elementType:'HTMLElement', tag:'body'},true);
-		body.setAttribute("class", defaultTheme.className);
-		/* add the css */
-		var filePath = defaultTheme.file.getPath();
-		defaultTheme.files.forEach(function(file) {
-			var url = new Path(filePath).removeLastSegments(1).append(file).relativeTo(this.getPath(), true);
-			this.addModeledStyleSheet(url.toString(), null, true);
-		}, this);
+				
+				if (theme.files){ // #1024 some themes may not contain files, themeMaps
+					theme.files.forEach(function(file){
+	   			        themeHash[file] = theme;
+					});
+				}
+			});
+		}).then(dojo.hitch(this,function(){
+			
+			/* check the header file for a themes CSS.  
+			 * 
+			 * TODO: This is a first level check, a good second level check
+			 * would be to grep the body classes for the themes className. this would be a bit safer.
+			 */
+			
+			if(imports.some(function(imp){
+				/* trim off any relative prefix */
+				for(var themeUrl in themeHash){
+					if(imp.url.indexOf(themeUrl)  > -1){
+						// theme already exists
+						return true;
+					}
+				}
+			})){
+				return true;
+			};
+	
+	
+			this._loadThemeDojoxMobile(this);
+			var body = model.find({elementType:'HTMLElement', tag:'body'},true);
+			body.setAttribute("class", defaultTheme.className);
+			/* add the css */
+			var filePath = defaultTheme.file.getPath();
+			defaultTheme.files.forEach(function(file) {
+				var url = new Path(filePath).removeLastSegments(1).append(file).relativeTo(this.getPath(), true);
+				this.addModeledStyleSheet(url.toString(), null, true);
+			}, this);
+		}));
     },
     
 // FIXME this bit of code should be moved to toolkit specific //////////////////////////////   

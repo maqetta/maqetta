@@ -344,7 +344,11 @@ var Runtime = {
 			}
 		}
 		args.error=onError;
-			    
+		
+		if(!args.sync){
+			return dojo.xhrGet(args);
+		}
+		
 		do {
 			dojo.xhrGet(args).then(function(result) {
 				if (result) {

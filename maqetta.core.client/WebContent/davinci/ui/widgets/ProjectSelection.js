@@ -11,16 +11,17 @@ define(["dojo/_base/declare",
 		postCreate: function(){
 			this._store = new ProjectDataStore({});
 
-			Resource.listProjects(dojo.hitch(this, function(projects){
+			Resource.listProjects().then(dojo.hitch(this, function(projects){
 				this._store.setValues(projects);
 				this.value = Workbench.getProject();
 				this._allProjects = projects.map(function(project){ return project.name; });
+				this.combo.set('value', this.value);
 			}));
 
 			this.domNode.removeAttribute("dojoType");
 			this.combo = new ComboBox({store: this._store, required: false, style: "width:100%"});
 			this.domNode.appendChild(this.combo.domNode);
-			this.combo.set('value', this.value);
+		
 			dojo.connect(this.combo, "onChange", this, "_onChange");
 		},
 		

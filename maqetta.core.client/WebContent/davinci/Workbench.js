@@ -76,18 +76,21 @@ var initializeWorkbenchState = function(){
 				if(!path.startsWith(project)) continue;
 			}
 			
-			var resource= sysResource.findResource(state.editors[i]);
-			var noSelect=state.editors[i]!=state.activeEditor;
-			if (resource){
-				
-				Workbench.openEditor({
-					fileName: resource,
-					content: resource.getText(),
-					noSelect: noSelect,
-					isDirty: resource.isDirty(),
-					startup: false
-				});
-			}
+			
+			sysResource.findResource(state.editors[i]).then(function(resource){
+				var noSelect=resource.getPath()!=state.activeEditor;
+				if (resource){
+					
+					Workbench.openEditor({
+						fileName: resource,
+						content: resource.getText(),
+						noSelect: noSelect,
+						isDirty: resource.isDirty(),
+						startup: false
+					});
+				}
+			});
+			
 		}
 	}
 	if (!Workbench._state.hasOwnProperty("editors")) {
@@ -1000,6 +1003,7 @@ var Workbench = {
 	},
 
 	toggleView: function(viewId) {
+		
 		var found = dojo.byId(viewId);
 		if(found) {
 			Workbench.hideView(viewId);
@@ -1091,6 +1095,7 @@ var Workbench = {
 	},
 	
 	_createEditor: function(editorExtension, fileName, keywordArgs, newHtmlParams){
+		
 		var nodeName = fileName.split('/').pop()
 
 		var loading = dojo.query('.loading');
@@ -1427,8 +1432,8 @@ var Workbench = {
 		dijit.byNode(mainBodyContainer._center).resize();
 	},
 	
-	_switchEditor: function(newEditor, startup)
-	{
+	_switchEditor: function(newEditor, startup){
+		
 		var oldEditor = Runtime.currentEditor;
 		Runtime.currentEditor = newEditor;
 		try {

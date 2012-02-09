@@ -22,17 +22,23 @@ return declare("davinci.html.CSSFile", CSSElement, {
 					expandShorthand : false
 			};
 		}
-		var txt = null;
+		var txtPromise = null;
 
 		if (this.url && this.loader) {
-			txt = this.loader(this.url);
+			txtPromise = this.loader(this.url).then(function(res){
+				return res.getText();
+			});
 		} else if (this.url) {
-			var file = this.getResource();
-			if (file)
-				txt = file.getText();
+		
+			txtPromise = this.getResource().then(function(res){
+				return res.getText();
+			});
+			
 		}
-		if (txt) {
-			this.setText(txt);
+		if(txtPromise){
+			txtPromise.then(dojo.hitch(this,function(txt){
+				this.setText(txt);
+			}));
 		}
 	}, 
 

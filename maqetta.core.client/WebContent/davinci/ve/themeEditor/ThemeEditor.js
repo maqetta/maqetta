@@ -509,9 +509,10 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 //			this._URLResolver = new davinci.ve.utils.URLResolver(filename);
 			
 			this.theme = dojo.isString(content)? dojo.fromJson(content) : content;
-			this.theme.file = system.resource.findResource(filename);
+			
 			//dojo.connect(this.visualEditor, "onSelectionChange", this,"onSelectionChange");
 			this.themeCssfiles = [];
+	
 			for(var i = 0;i<this.theme.files.length;i++){
 				if(this.theme.files[i].indexOf(".css")>-1){
 					this.themeCssfiles.push(this.theme.files[i]);

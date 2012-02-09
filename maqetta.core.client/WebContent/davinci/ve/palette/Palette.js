@@ -123,6 +123,7 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	},
 	
 	setContext: function(context){
+		debugger;
 		this._context = context;
 		this._loadPalette();
 		this.startupKeyNavChildren();
@@ -142,7 +143,7 @@ declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 
 	_loadPalette: function(){
 		if (this._loaded) { return; }
-		//debugger;
+		
 		this._loaded = true; // call this only once
 		var allLibraries = Metadata.getLibrary();
 		var userLibs = Library.getUserLibs(Workbench.getProject());

@@ -21,7 +21,9 @@ return declare("davinci.ve.ThemeModifier", null, {
 				url: cssURL,
 			    includeImports: true,
 			    loader: function(url){
-					return system.resource.findResource(url).getText();
+					return system.resource.findResource(url).then(function(file){
+						return file.getText();
+					})
 				}
 			}));
 		}
@@ -31,8 +33,8 @@ return declare("davinci.ve.ThemeModifier", null, {
 
 	_getThemeResource: function (fileName) {
 		var absoluteLocation = this._themePath.getParentPath().append(fileName).toString();
-		var resource=  system.resource.findResource(absoluteLocation);
-		return resource;
+		return system.resource.findResource(absoluteLocation);
+		
 	},
 	
 	_hotModifyCssRule: function(rules){

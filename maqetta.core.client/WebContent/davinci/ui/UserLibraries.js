@@ -169,19 +169,25 @@ define(["dojo/_base/declare",
 				dojo.publish("/davinci/ui/libraryChanged");
 				
 			}
-			
-			var pages = Resource.findResource("*.html", true, this.getResourceBase(), true);
-			
-			var pageBuilder = new RebuildPage();
-			
-			for(var i=0;i<pages.length;i++){
-				/* dont process theme editor pages */
-				if(Theme.isThemeHTML(pages[i])) continue;
+			var pages = [];
+			var pagePromise = new dojo.DeferredList([ Resource.findResource("*.html", true, this.getResourceBase(), true).then(function(resource){
+				return resource;
+			})]);;
+			 
+			pages.then(function(page){
+				var pageBuilder = new RebuildPage();
 				
-				var newSource = pageBuilder.rebuildSource(pages[i].getText(), pages[i]);
-				pages[i].setContents(newSource, false);
-			}
-			this.onClose();
+					/* dont process theme editor pages */
+					if(Theme.isThemeHTML(page)) return;
+					
+					var newSource = pageBuilder.rebuildSource(page.getText(), page);
+					pages[i].setContents(newSource, false);
+			}).then(function(){
+				this.onClose();
+			});
+			
+			
+			
 		},
 		_processChanges : function(){
 			

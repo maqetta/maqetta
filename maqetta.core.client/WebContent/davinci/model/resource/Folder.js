@@ -31,9 +31,7 @@ var Folder = declare("davinci.model.resource.Folder", Resource, {
 			file = this;
 			isFolder = this.elementType == "Folder";
 		}
-		var response = !localOnly ? Runtime.serverJSONRequest({
-			url:"./cmd/createResource", handleAs:"text",
-			content:{'path':file.getPath(), 'isFolder': isFolder},sync:true  }): "OK";
+		return Runtime.serverJSONRequest({url:"./cmd/createResource", handleAs:"text",content:{'path':file.getPath(), 'isFolder': isFolder},sync:false  }).then(function(response){
 			if (response == "OK" && name != null) {
 				this.children.push(file);
 				delete file.libraryId;
@@ -49,31 +47,32 @@ var Folder = declare("davinci.model.resource.Folder", Resource, {
 				delete file._readOnly;
 				return this;
 			}
+
+		});
 	},
 
-	getChildren: function(onComplete, sync) {
+	getChildren: function() {
 		if (!this._isLoaded) {
 			if (this._loading) {
-				this._loading.push(onComplete);
-				return;
+				return this._loading;
 			}
-			this._loading=[];
-			this._loading.push(onComplete);
-			Runtime.serverJSONRequest({
+			this._loading=Runtime.serverJSONRequest({
 				url:"./cmd/listFiles",
-				content:{'path':this.getPath()},
-				sync:sync,
-				load : dojo.hitch(this, function(responseObject, ioArgs) {
+				content:{'path':this.getPath()}
+			}).then(
+				dojo.hitch(this, function(responseObject, ioArgs) {
 					this._addFiles(responseObject);
-					dojo.forEach(this._loading,function(item) {
-						(item)(this.children);
-					}, this);
 					delete this._loading;
-				})
-			});
-			return;
+					this._isLoaded = true;
+					return this.children
+					
+				
+			}));
+			return this._loading;
 		}
-		onComplete(this.children);
+		var childrenPromise = new dojo.Deferred();
+		childrenPromise.resolve(this.children);
+		return childrenPromise;
 	},
 
 	/*
@@ -133,16 +132,11 @@ var Folder = declare("davinci.model.resource.Folder", Resource, {
 		return result;
 	},
 
-	/* time to make this public */
-	getChild: function(name) {
-		if(!this._isLoaded) {
-			this.getChildren(function(item) { this.children=item; }, true);
-		}
-		return this._getChild(name);
-
+	isLoaded : function(){
+		return this._isLoaded;
 	},
-
-	_getChild: function(name){
+	/* time to make this public */
+	getChild: function(name){
 		if (!this.__CASE_SENSITIVE) {
 			name = name.toLowerCase();
 		}

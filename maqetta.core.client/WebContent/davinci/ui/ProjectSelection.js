@@ -17,7 +17,7 @@ define(["dojo/_base/declare",
 			var workspace = Resource.getWorkspace(),
 				store = this._store,
 				combo = this.combo;
-			workspace.getChildren(function(projects){
+			workspace.getChildren().then(function(projects){
 				store.setValues(projects);
 				var activeProject = Workbench.getProject();
 				combo.attr('value', activeProject);

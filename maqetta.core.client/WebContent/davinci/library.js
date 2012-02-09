@@ -23,6 +23,7 @@ var library,
 	_themesCache = {},
 	_themesMetaCache = {},
 	_userLibsCache = {},
+	themesPromise = null,
 	_libRootCache = {};
 
 // Cache library roots so we don't make multiple server calls for the same 'id' and 'version'.  But
@@ -44,11 +45,9 @@ themesChanged: function(base){
 
 getThemes: function(base, workspaceOnly, flushCache){
 
-	if (! base) {
-		debugger;
-	}
 	if (flushCache) {
 		_themesCache[base] = null;
+		themesPromise = null;
 	}
 	
 	function result(){
@@ -66,21 +65,35 @@ getThemes: function(base, workspaceOnly, flushCache){
 		return rlt;
 	}
 	
-	if(_themesCache[base]) return result();
+	if(themesPromise){
+		return themesPromise;
+	}
 	
 	var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 	var projectThemeBase = (new davinci.model.Path(base).append(prefs.themeFolder));
-	var allThemes = system.resource.findResource("*.theme", true, projectThemeBase.toString());
 	var results = [];
-	for (var i = 0; i < allThemes.length; i++){
-		var contents = allThemes[i].getText();
-		var t = eval(contents);
-		t.file = allThemes[i];
-		results.push(t);
-	}
-
-	_themesCache[base] = results;
-	return result();
+	themesPromise= system.resource.findResource("*.theme", true, projectThemeBase.toString()).then(function(allThemesPromises){
+		
+		var differedList = new dojo.DeferredList(allThemesPromises);
+		return differedList.then(dojo.hitch(this,function(allThemes){
+			
+			for (var i = 0; i < allThemes.length; i++){
+				/* HELP!!!!!! TODO!!!! FIXIT!!!! i'm not sure why the deferred are coming in as an array of arrays.  each individual deferred is
+				 * a single item before throwing them in the deferred list.  here each element comes in as [true, item]
+				 */
+				var contents = allThemes[i][1].getText();
+				var t = eval(contents);
+				t.file = allThemes[i][1];
+				results.push(t);
+			}
+			_themesCache[base] = results;
+			return result();
+		}));
+		
+	
+	});
+	return themesPromise;
+	
 },
 
 getThemeMetadata: function(theme) {
@@ -98,18 +111,29 @@ getThemeMetadata: function(theme) {
 			themeCssFiles.push(parent.append(theme.files[i]));
 		}
 	}
-	var metaResources = [];
+
+	var metaResourcesDefPromise = [];
 	for (var i = 0; i < theme.meta.length; i++) {
 		var absoluteLocation = parent.append(theme.meta[i]);
-		var resource=  system.resource.findResource(absoluteLocation.toString());
-		metaResources.push(resource);
+		metaResourcesDefPromise.push(system.resource.findResource(absoluteLocation.toString()));
+		
 	}
-			
-	var metaDataLoader = new Query(metaResources);
+	var defs = new dojo.DeferredList(metaResourcesDefPromise);
+	var metaResources = [];
+	defs.then(dojo.hitch(this,function(metaResource){
+		for(var i=0;i<metaResource.length;i++)
+			/* HELP! TODO: FIXME:Why are these things coming in as arrays of [true, resource] */
+			metaResources.push(metaResource[i][1]);
+	})).then(dojo.hitch(this,function(){
+		var metaDataLoader = new Query(metaResources);
+		
+		var metadata = new CSSThemeProvider(metaResources, theme.className);
+		_themesMetaCache[theme.name] =  {'loader':metaDataLoader, 'css':themeCssFiles, 'metadata':metadata};
+		return _themesMetaCache[theme.name];
+
+	}));
 	
-	var metadata = new CSSThemeProvider(metaResources, theme.className);
-	_themesMetaCache[theme.name] =  {'loader':metaDataLoader, 'css':themeCssFiles, 'metadata':metadata};
-	return _themesMetaCache[theme.name];
+	
 },
 
 addCustomWidgets: function(base, customWidgetJson) {

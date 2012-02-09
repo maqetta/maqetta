@@ -24,13 +24,15 @@ return declare("davinci.html.HTMLFile", HTMLItem, {
 	},
 
 	save: function (isWorkingCopy) {
-		var deferred;
-		var file = system.resource.findResource(this.fileName);
-		if (file) {
+		
+		var filePromise = system.resource.findResource(this.fileName);
+		if (filePromise) {
 			var text = this.getText();
-			deferred = file.setContents(text,isWorkingCopy);
+			return filePromise.then(function(resource){
+				resource.setContents(text,isWorkingCopy);
+			});
 		}
-		return deferred;
+		return null;
 	},
 
 	getText: function(context) {

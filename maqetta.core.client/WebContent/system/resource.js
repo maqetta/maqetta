@@ -1,10 +1,11 @@
 define(["require",
         "dojo/_base/declare",
+        "dojo/_base/Deferred",
         "davinci/model/Path",
         "davinci/Runtime",
 //        "davinci/Workbench",
         "davinci/model/resource/Folder"
-],function(require, declare, Path, Runtime, Folder){
+],function(require, declare,Deferred, Path, Runtime, Folder){
 var resource = {
 	root:null,
 	
@@ -12,35 +13,43 @@ var resource = {
 	
 	
 	resourceChanged: function(type,changedResource){
+		var parentPromise = null;
 		
-		if(changedResource == system.resource.getRoot()){
+		if(changedResource =!null && changedResource==resource.root){
 			changedResource.reload();
-			system.resource.getRoot().getChildren(dojo.hitch(system.resource,function(children){
-				system.resource.onChildrenChange(system.resource.getRoot(),children);
-			}));
-			return system.resource.getRoot();
+			resource.root.getChildren().then(function(children){
+				resource.onChildrenChange(root,children);
+			});
+			return resource.root;
 		}else if (type == 'created' || type == 'deleted' || type == 'renamed' || type == 'updated' || type=='reload'){
 			var parent, resourcePath;
 			
 			if(changedResource.parent){
 				/* already created model object */
-				parent = changedResource.parent;
+				parentPromise = new Deferred();
+				parentPromise.resolve(changedResource.parent);
 				resourcePath = changedResource.getPath();
 			}else{
 				/* find the resource parent */
-					var p1 = (new Path(changedResource)).removeLastSegments();
-				parent = system.resource.findResource(p1.toString()) || system.resource.getRoot();
+				var p1 = (new Path(changedResource)).removeLastSegments();
+				parentPromise = resource.findResource(p1.toString()) || resource.getRoot();
 				resourcePath = changedResource;
 			}
-			if(parent.elementType=="Folder" && type=='reload'){
-				/* 'reload' forces a full parent reload.  most model actions handle the server
-				 * command and the modeling commands, so forcing a client & server resource sync isn't usually neccisary.
-			     */
-				parent.reload();
-			}
 			
-			/* force the resource parent to update its children */
-			parent.getChildren(function(children){system.resource.onChildrenChange(parent,children);}, true);	
+			parentPromise.then(function(parent){
+				if(parent.elementType=="Folder" && type=='reload'){
+					/* 'reload' forces a full parent reload.  most model actions handle the server
+					 * command and the modeling commands, so forcing a client & server resource sync isn't usually neccisary.
+				     */
+					parent.reload();
+				}
+				
+				/* force the resource parent to update its children */
+				parent.getChildren().then(function(children){
+					resource.onChildrenChange(parent,children);
+				});
+			});
+			
 		}
 		
 		if(type=='deleted'){
@@ -67,39 +76,45 @@ var resource = {
 	
 	createResource : function(fullPath,  isFolder, parent){
 		var namesplit = fullPath.split("/");
-		parent = parent || system.resource.getWorkspace();
-		var length = !isFolder? namesplit.length-1 : namesplit.length;
+		var parentPromise = new Deferred();
+		
+		parentPromise.resolve(parent || resource.getWorkspace());
+		
+		parentPromise.then(function(parent){
+			var length = !isFolder? namesplit.length-1 : namesplit.length;
 			for(var i=0;i<length;i++){
 				if(namesplit[i]=="." || namesplit[i]=="") continue;
 				
 				var folder = parent.getChild(namesplit[i]);
 				if(folder!=null){
-					parent = folder;
+					parentPromise.resolve(folder);
 				}else{
-					parent = parent.createResource(namesplit[i],true);
+					parent.createResource(namesplit[i]).then(function(parent){
+						parentPromise.resolve(parent);
+					});
 				}
 			}
 			if(!isFolder){
-				parent = parent.createResource(namesplit[namesplit.length-1]);
+				parent = parent.createResource(namesplit[namesplit.length-1]).then(function(parent){
+					parentPromise.resolve(parent);
+				});
 			}
-		return parent;
+		});
+		
+		
+		return parentPromise;
 	},
 	
-	listProjects : function(callBack){
-		
+	listProjects : function(){
 		/*
 		 *  projects are the first folder children of the workspace.
 		 *  may turn this into its own command.   
 		 */
-		
-		if(callBack)
-			system.resource.getWorkspace().getChildren(callBack, false);
-		else
-			return system.resource.getWorkspace().getChildren();
+		return resource.getWorkspace().getChildren();
 	},
 	
 	createProject : function(projectName, initContent, eclipseSupport){
-			 Runtime.serverJSONRequest({url:"cmd/createProject", handleAs:"text", content:{"name": projectName, "initContent": initContent, 'eclipseSupport': eclipseSupport},sync:true  });
+			 return Runtime.serverJSONRequest({url:"cmd/createProject", handleAs:"text", content:{"name": projectName, "initContent": initContent, 'eclipseSupport': eclipseSupport}});
 	},
 	
 	/* Resource tree model methods */
@@ -131,31 +146,41 @@ var resource = {
 	},
 	
 	destroy: function(){
-		system.resource.subscriptions.forEach(dojo.unsubscribe);
+		resource.subscriptions.forEach(dojo.unsubscribe);
 	},
 		
 	mayHaveChildren: function(/*dojo.data.Item*/ item){
 	    return item.elementType=="Folder";
 	},
-	getRoot: function(onComplete){
-		//debugger;
-		if (!system.resource.root){
-			var workspace = system.resource.getWorkspace(),
+	
+	getRoot: function(onItem){
+		var rootPromise = null;
+		
+		if (!resource.root){
+			var workspace = resource.getWorkspace(),
 				Workbench = require("davinci/Workbench");
 			if(Workbench.singleProjectMode()){
 				var project = Workbench.getProject();
-				system.resource.root = system.resource.findResource(project,false, workspace);
+				rootPromise = resource.findResource(project,false, workspace);
 			}else{
-				system.resource.root = workspace;
+				rootPromise = new Deferred();
+				
+				rootPromise.resolve(workspace);
+				
 			}
-			system.resource.root._readOnly = false;
+			dojo.when(rootPromise, onItem); 
+			return rootPromise.then(function(rootResource){
+				resource.root = rootResource;
+				resource.root._readOnly = false;
+				return resource.root;
+			});
+			
 		}
+		dojo.when(rootPromise, onItem); 
+		rootPromise = new Deferred();
+		rootPromise.resolve(resource.root);
 		
-		if(onComplete){
-			onComplete(system.resource.root);
-		}else{
-			return system.resource.root;
-		}
+		return rootPromise;
 	},
 	
 	getWorkspace: function(){
@@ -165,8 +190,11 @@ var resource = {
 		return this.workspace;
 	},
 	
-	getChildren: function(/*dojo.data.Item*/ parentItem, /*function(items)*/ onComplete){
-		parentItem.getChildren(onComplete, true); // need to make the call sync, chrome is to fast for async (ALP: what does this mean?)
+	getChildren: function(/*dojo.data.Item*/ parentItem, onComplete, onError){
+	
+		var childrenPromise =  parentItem.getChildren(); // need to make the call sync, chrome is to fast for async (ALP: what does this mean?)
+		dojo.when(childrenPromise, onComplete); 
+		return childrenPromise;
 	},
 	
 	copy: function(sourceFile, destFile, recurse){
@@ -178,7 +206,7 @@ var resource = {
 			sync:true,
 			content:{source:path, dest: destPath, recurse: String(recurse)}  });
 		/* force a reload since we dont really know if this is a file or directory being copied */
-		system.resource.resourceChanged("reload", destFile);
+		resource.resourceChanged("reload", destFile);
 	},
 
 	download: function(files,archiveName, root, userLibs){
@@ -206,14 +234,18 @@ var resource = {
 	 * @returns  Resource
 	 */
 	findResource: function(name, ignoreCase, inFolder, workspaceOnly){
-		ignoreCase=ignoreCase || !system.resource.__CASE_SENSITIVE;
+		
+		ignoreCase=ignoreCase || !resource.__CASE_SENSITIVE;
 		var seg1=0,segments;
-		var resource=system.resource.getWorkspace();
+		var bResource=resource.getWorkspace();
+		
 		if (inFolder) {
 		    if (typeof inFolder == 'string') {
-		        inFolder = system.resource.findResource(inFolder, ignoreCase);
+		        return this.findResource(inFolder, ignoreCase).then(dojo.hitch(this,function(foundFolder){
+		        	return this.findResource(name,ignoreCase,foundFolder,workspaceOnly);
+		        }));
 		    }
-		    resource = inFolder;
+		  
 		}
 		var foundResources=[];
 		if (typeof name=='string') {
@@ -234,71 +266,78 @@ var resource = {
 		}
 		
 		var serverFind;
-		function doFind()
-		{
-			for (var i=seg1;i<segments.length;i++)
-			{
-				var found=null;
-				if (!resource._isLoaded )
-				{
+		var found=null;
+		
+		function doFind(){
+			
+			for (var i=seg1;i<segments.length;i++){
+				var deferred = new Deferred();
+				found=null;
+				if (!bResource.isLoaded() ){
 					serverFind=true;
 					break;
 				}
 //					resource.getChildren(function(){}, true);
-				found=resource=resource.getChild(segments[i]);
+				found=bResource=bResource.getChild(segments[i]);
 				if (!found) {
 				  return;
 				}
 			}
-			return found;			
+			if(found!=null){
+				deferred.resolve(found);
+				return deferred;
+			}
+			return null;			
 		}
 		
 		var found;
 		if (!isWildcard){
 			found=doFind();
 		}
-		if (!found && (serverFind || isWildcard))
-		{			
-				var response = Runtime.serverJSONRequest({
-				  url:"cmd/findResource", 
-			          content:{path: name, ignoreCase: ignoreCase, workspaceOnly: workspaceOnly, inFolder: inFolder!=null?inFolder.getPath():null}, sync:true  });
+		if (!found && (serverFind || isWildcard)){			
+				return Runtime.serverJSONRequest({
+								url:"cmd/findResource", 
+								content:{path: name, 
+										 ignoreCase: ignoreCase, 
+										 workspaceOnly: workspaceOnly, 
+										 inFolder: inFolder!=null?inFolder.getPath():null}, 
+										 sync:false  
+							    }).then(function(response){
+							    	
+							    	if (response && response.length>0){
+										for (var i=0;i<response.length;i++){
+											var foundFile=response[i];
+											var loadResource=resource.getWorkspace();
+
+											for (var j=0;j<foundFile.parents.length;j++){
+												if (!loadResource._isLoaded){
+													loadResource._addFiles(foundFile.parents[j].members);
+												}
+												if (j+1<foundFile.parents.length){
+													var name=foundFile.parents[j+1].name;
+													var newResource=loadResource.getChild(name);
+													if (!newResource) {
+														newResource= new Folder(name,loadResource);
+													}
+													loadResource=newResource;
+												}
+												
+											}
+											bResource=resource.getWorkspace();
+											seg1=0;
+											segments=foundFile.file.split('/');
+											if (segments[0]=='.') {
+												seg1=1;
+											}
+
+											foundResources[i]=doFind();
+										}
+									}
+							    	return isWildcard ? foundResources : foundResources[0];
+							    });
 			
-			if (response && response.length>0)
-			{
-				for (var i=0;i<response.length;i++)
-				{
-					var foundFile=response[i];
-					var loadResource=system.resource.getWorkspace();
-
-					for (var j=0;j<foundFile.parents.length;j++)
-					{
-						if (!loadResource._isLoaded)
-						{
-							loadResource._addFiles(foundFile.parents[j].members);
-						}
-						if (j+1<foundFile.parents.length)
-						{
-							var name=foundFile.parents[j+1].name;
-							var newResource=loadResource.getChild(name);
-							if (!newResource) {
-								newResource= new Folder(name,loadResource);
-							}
-							loadResource=newResource;
-						}
-						
-					}
-					var resource=system.resource.getWorkspace();
-					seg1=0;
-					segments=foundFile.file.split('/');
-					if (segments[0]=='.') {
-						seg1=1;
-					}
-
-					foundResources[i]=doFind();
-				}
-			}
-		}
-		else {
+			
+		}else {
 			foundResources[0]=found;
 		}
 		return isWildcard ? foundResources : foundResources[0];

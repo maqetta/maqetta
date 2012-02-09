@@ -212,7 +212,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					form.setTypeButtonLabel(editComment.type);
 					form.setSeverityButtonLabel(editComment.severity);
 					var comment;
-					if (editComment.replyTo != 0) {
+					if (editComment.replyTo !== 0) {
 						form.setReplyMode();
 						form.replyTo = editComment.replyTo;
 						comment = this.commentIndices[editComment.replyTo];
@@ -486,7 +486,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					dojo.connect(comment, "onCommentBlur", this, "_onCommentBlur")
 			);
 
-			if (i == 0) {
+			if (i === 0) {
 				dojo.style(comment.domNode, "borderTop", "none");
 			}
 
@@ -647,8 +647,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			davinci.Runtime.reviewers = reviewers;
 			dojo.forEach(reviewers, dojo.hitch(this, function(comment, index) { 
 				var check = new CheckedMenuItem({
-					label: "<div class='davinciReviewToolbarReviewersColor' style='background-color:"
-						+ davinci.Runtime.getColor(comment.name) +";'></div><span>"+comment.name+"</span>",
+					label: "<div class='davinciReviewToolbarReviewersColor' style='background-color:" + 
+					davinci.Runtime.getColor(comment.name) +";'></div><span>"+comment.name+"</span>",
 						onChange: dojo.hitch(this,this._reviewFilterChanged),
 						checked: true,
 						reviewer:comment,
@@ -824,7 +824,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 			if (shouldShow) {
 				dojo.addClass(comment,"davinciReviewShow");
-				while (widget.replyTo!=0) {
+				while (widget.replyTo !== 0) {
 					widget = this.commentIndices[widget.replyTo];
 					dojo.addClass(widget.domNode,"davinciReviewShow");
 					dojo.removeClass(widget.domNode,"davinciReviewHide");

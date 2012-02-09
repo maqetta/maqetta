@@ -16,8 +16,13 @@ define([
 	"davinci/ve/commands/ModifyCommand",
 	"davinci/commands/OrderedCompoundCommand",
 	"davinci/model/Path",
-	"davinci/ui/Panel",
+	"dijit/Dialog",
+	"dijit/layout/ContentPane",	
+	"dijit/form/Button",
+    "dijit/Tree",
 	"system/resource",
+	"dojo/i18n!dijit/nls/common",
+	"dojo/i18n!../../dojox/nls/dojox",
 	"dojox/form/DropDownSelect"	// used in template
 ], function(
 	declare,
@@ -33,8 +38,13 @@ define([
 	ModifyCommand,
 	OrderedCompoundCommand,
 	Path,
-	Panel,
-	resource
+	Dialog,
+	ContentPane,
+	Button,
+	Tree,
+	resource,
+	commonNls,
+	dojoxNls
 	/*DropDownSelect*/
 ) {
 
@@ -385,49 +395,64 @@ return declare(SmartInput, {
 	},
 	
 	fileSelection: function(e){
-		var definition = [
-      	    {  
-              type: "tree",
-      	      data: "file",
-      	      style: "height:10em;overflow:auto",
-      	      model: system.resource,
-      	      filters: "new system.resource.FileTypeFilter(parms.fileTypes || '*');"
-      	    }
-      	  ];
-      	  
-      	  var data={
-      			  file  : null
-            };
-      	
-      		this._fileSelectionDialog = Panel.openDialog( {
-      			definition: definition,
-      			data: data,
-      			style: "width:275px;height:225px;padding:0px;background-color:white;",
-      			title:"Select a source",
-      			contextObject: this,
-      			buttonStyle: 'padding:8px;',
-      			onOK : function ()
-      			{
-      				if(data.file){
-      					var path=new Path(data.file.getPath());
-      					var value=path.relativeTo(new Path(this._widget._edit_context._srcDocument.fileName), true).toString(); // ignore the filename to get the correct path to the image
-					var textArea = registry.byId("davinciIleb");
-      			    	textArea.setValue(value); 
-      			    	textArea.focus();
-      			    	this._url = data.file;
-      			    	delete this._fileSelectionDialog;
-      			    	this.updateFormats();
-      				}
-      			
-      			}
+		this._fileSelectionDialog = new Dialog({
+			title : dojoxNls.selectSource,
+			style : "width:275px;height:225px;padding:0px;background-color:white;"
+		});
 
-      		});
-		this._connection.push(connect.connect(this._fileSelectionDialog, "onCancel", this, "onCancelFileSelection"));
-	},
-	
-	onCancelFileSelection: function(e)
-	{
-		delete this._fileSelectionDialog;
+		var contentPane = new ContentPane();
+		this._fileSelectionDialog.set("content", contentPane);
+		dojo.style(contentPane.domNode, "overflow", "auto");
+
+		//Set-up file selection tree
+		var treeParms= {  
+			id: "dataGridInputFileSelectionTree",
+			style: "height:10em;overflow:auto",
+			model: system.resource,
+			filters: "new system.resource.FileTypeFilter(parms.fileTypes || '*');" //See #1725
+	    };
+		var tree = new Tree(treeParms);
+
+		contentPane.domNode.appendChild(tree.domNode);
+		
+		//Set-up button
+		var okClicked = function() {
+			var tree = dijit.byId("dataGridInputFileSelectionTree");
+			if (tree.selectedItem) {
+				var selectedItemPathStr = tree.selectedItem.getPath();
+				var path = new Path(selectedItemPathStr),
+				srcDocPath = new Path(this._widget._edit_context._srcDocument.fileName),
+				// ignore the filename to get the correct path to the image
+				value = path.relativeTo(srcDocPath, true).toString(),
+				textArea = dijit.byId("davinciIleb");
+		    	textArea.setValue(value); 
+		    	textArea.focus();
+		    	this._url = tree.selectedItem;
+		    	this._fileSelectionDialog.destroyRecursive();
+		    	delete this._fileSelectionDialog;
+		    	this.updateFormats();
+			}
+		};
+		var dijitLangObj = commonNls;
+		var okLabel = dijitLangObj.buttonOk;
+		var okStyle = 'padding:8px;';
+		var okBtn = new Button({
+			label : okLabel,
+			style : okStyle, /* type:"submit", */
+			onClick : dojo.hitch(this, okClicked)
+		});
+		this._fileSelectionDialog.containerNode.appendChild(okBtn.domNode);
+		
+		//Set up cancel handler
+		var onCancelFileSelection = function(e) {
+			this._fileSelectionDialog.destroyRecursive();
+			delete this._fileSelectionDialog;
+		};
+		this._connection.push(dojo.connect(this._fileSelectionDialog, "onCancel", this,
+			onCancelFileSelection));
+		
+		//Show dialog
+		this._fileSelectionDialog.show();
 	},
 	
 	updateFormats: function(){

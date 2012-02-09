@@ -362,7 +362,7 @@ define([
 			Library.getUserLibs(Workbench.getProject()).forEach(function(lib) {
 // XXX Shouldn't be dealing with 'package.json' here; that belongs in library.js
 // (or a combined object).  Putting it here for now, to quickly integrate.
-				var path = Library.getMetaRoot(lib.id, lib.version);
+				var path = lib.metaRoot;//Library.getMetaRoot(lib.id, lib.version);
 				if (path) {
 					dojo.xhrGet({
 // XXX For now, 'package.json' lives inside the 'metadata' dir.  Will need to

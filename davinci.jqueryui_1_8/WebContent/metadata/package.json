@@ -12,7 +12,61 @@
     },
     "maqetta": {
       "scripts": {
-        "widget_metadata": "./widgets.json"
+        "widget_metadata": {
+		    "categories": {
+		        "jquery-ui": {
+		            "name": "jQuery UI",
+		            "description": "jQuery UI",
+		            "widgetClass": "OpenAjax"
+		        }
+		    },
+		    "widgets": [
+		        {
+		            "name": "Button",
+		            "type": "jquery.ui.button",
+		            "category": "jquery-ui",
+		            "icon": "resources/images/jquery-button.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPDx+y5KhTFPijZXkDxhmUJsouHr90h2q7bQ7cLX79vo9k6AtKTH6bXR7bbR7NLj9FKJu1aNv5C85ZC95ZG95KTI6aTH6LXR7Mje8laOv36z4X604X+04X6z4H604JC95LnW77/a8Nzr9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACMALAAAAAAQABAAAAZuwJFwSCwaj8hkMcNkRppQIQRgqFqvBgBktDAkvuBwwrAYHRQIxKXhuDgal7TiMCo8Kox83qKvPAojBBgUExIfExMfHxITFBgEIwMhHB0eGx4aGpcdHCEDIwIiIKOkpSAiAkIBq6ytrEqwsbKzRUEAOw=="
+		        },
+		/* XXX not working for some reason
+		        {
+		            "name": "ButtonSet",
+		            "type": "jquery.ui.buttonset",
+		            "category": "jquery-ui",
+		            "icon": "resources/images/dx-mbl--tab-container.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAABw6dU5rpCZMiHyRr3uRsHuRrzFhnTt0r1aOv4fG74bG7ofF7ofG7pDQ85HQ85DQ8pHQ8pfX9v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVCoCSOZGmeaKqubFsGMAzMdBxHeAQIvADkEZgD8mgADEgDoNhowBgMxQJwqB4ACYWCASMQBgMAYowAEArogGvNbrtDADs="
+		        },
+		*/
+		        {
+		            "name": "Accordion",
+		            "type": "jquery.ui.accordion",
+		            "category": "jquery-ui",
+		            "icon": "resources/images/accordion.png",
+		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAPJJREFUeNpi/P//P8PCgzf/bzv3nIFU4GUkycACYoA01wYZkGxA87oLEAP+//vHsPvWa5IN+P/vP8QAbxNphi0nHzL8R5UGYkY4jxEqgizvay4HMWDj0QcMs4qcgUKMqKqg+hmBYv8ZkYyDmp3WvwdiwL+/f8HiohzMRDv/zY+/DP9+/2VgAhvw5y8DOQBkMdQF/xh+Ac14/u0P3AfIfmaEOvs/VJAR6lOQAYywdLBq5zWSXRDmroVIB53pjuSng98/fpKVDkD6wAb4WykAXfGUZANA+qiTlKnihVU7r4DjC2f0IaVIWFSGumlBopESABBgAGY0fipQlZCHAAAAAElFTkSuQmCC"
+		        },
+		        {
+		            "name": "Datepicker",
+		            "type": "jquery.ui.datepicker",
+		            "category": "jquery-ui",
+		            "icon": "resources/images/calendar.png",
+		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAcFJREFUeNqcUj1IQlEUPjfc+llqCEKwpaCgrJZqKOhnqiChsbQhF+f2moqgpaH2rDEqiiCwBB2sRbJArYa0hohSCLTQ93rvds95710VHaIDx/P5ne+ce869j3HOAW039MCPr9PwV5sddIBntJPZLAKLV+eHCDMpY2UlnP5bvyv7V9gA6qx04bMAmbwKmZwiXIWPvAI9bY0iFikSh7m8QhrUo9nKx8IknsTFGYyXcwDvohHDgbgxhWUVDbJfijE23osIO+Fnmnw79CKKzTJswEot5Aq+uV6Ix+6FJ8HewCESjJIjTtwmKWev5xAXOCEw6o2G4jR039Y5z+WK5H/FWCdX4HppLEykMtkqrJu4vaWZML2T9R2cRtP8LJygS5wa6QYDg8BdNbChmRlwMLmCd/NUjmfhu9Qr4enlALl384Q4S4N18hJ1XYeaWNMk1rRqTcUKR4Ebwq7JPiAsnss10Q9HFyY/YfKmpmKFpY0T/v2tkrvXDig+vWX54vohRXTUYMScR2gqXqGoFEqvYI7X2tQkxv6hSBq1IHHVCoHII/cHY/QJL4w7wX8ZI94t8J7gUYYYNcSPOWFyuIPJBv+1XwEGAJJgewSkj0bcAAAAAElFTkSuQmCC"
+		        },
+		        {
+		            "name": "Slider",
+		            "type": "jquery.ui.slider",
+		            "category": "jquery-ui",
+		            "icon": "resources/images/horizontalslider.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAM7W5DdYkDteljpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+EZzp9Xk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZZwJNwSCwaj8ikcjkMOZ/J0KJBbSxCyMtnwulMPpdiKcSIUDZoiSfCCJWEERIB8RhpMppHglCBCA0mJgoHFiIYDgYKgQVCAAGPAQIgIAOQAQBIj0ybnJ2eJ0EAOw=="
+		        },
+		        {
+		            "name": "Tabs",
+		            "type": "jquery.ui.tabs",
+		            "category": "jquery-ui",
+		            "icon": "resources/images/tab-container.png",
+		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASlJREFUeNpi/P//PwMlgAVEBHbuxGnKgbf/GS1+f8SQP8HKzwg3gOEHA8P6enesBngWrvxflOyGId43d9d/kCEsEP0/GFYevInTmUDFWMUduBn/w13gbaaMVREucRAI7doK88IPMLXt8ksGRqjk//9AFuN/ND6YBeZ76YqD9UG8ADXg1x+ksAJqZkAOOiAfFGGMDAjhHx+gBoD9ACL//gPrg1n7H2oO3BnIYlB9YAO+/mQCc3/++QexjAHNcphGNHGQPrAB/37/hngB6IL/MGVAPzOCnI3BRwCQPrABP3/8RHEBNPwQzmaEBQkkIGFyIH0syNHy8+9/JCcjHAzjMzJAXYhkOtgAli+/wJxiJ0WS8gHTt68M8JRoGtRKVmZipDQ3MjFQCAACDAAZhYTuU0wrQQAAAABJRU5ErkJggg=="
+		        }
+		    ]
+		}
       }
     }
   }

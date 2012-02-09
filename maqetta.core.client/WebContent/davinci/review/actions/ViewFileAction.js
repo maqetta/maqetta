@@ -22,8 +22,8 @@ var ViewFileAction = davinci.review.actions.ViewFileAction = declare("davinci.re
 				content: item.getText()
 			});
 		} else if (Runtime.getMode()=="designPage") {
-			window.open(davinci.Workbench.location()+"review/"+Runtime.userName+"/"+item.parent.timeStamp+"/"
-					+item.name+"/default");
+			window.open(davinci.Workbench.location()+"review/"+Runtime.userName+"/"+item.parent.timeStamp+"/"+
+					item.name+"/default");
 		}
 	},
 
@@ -33,12 +33,11 @@ var ViewFileAction = davinci.review.actions.ViewFileAction = declare("davinci.re
 
 	isEnabled: function(context) {
 		var selection = Runtime.getSelection();
-		if (!selection || selection.length == 0) {
+		if (!selection || selection.length === 0) {
 			return false;
 		}
 		var item = selection[0].resource;
 		return item.elementType=="ReviewFile";
-
 	}
 
 });

@@ -1,11 +1,10 @@
 define([
-    "../ui/Panel",
 //    "../Workbench",
     "../Runtime",
     "dijit/Dialog",
     "dojo/i18n!./nls/workbench",
     "dojo/i18n!dijit/nls/common"
-], function(Panel, /*Workbench,*/ Runtime, Dialog, workbenchStrings, commonStrings) {
+], function(/*Workbench,*/ Runtime, Dialog, workbenchStrings, commonStrings) {
 
 var Preferences = {
 	_allPrefs: {},
@@ -148,10 +147,6 @@ var Preferences = {
 			Preferences._currentPane._extension=extension;
 			Preferences._currentPane.setPreferences(prefs);
 			domNode=pane.domNode;
-		}
-		else if (extension.panel){
-			var widget = new Panel({definition:extension.panel, data:prefs});
-			domNode=widget.domNode;
 		}
 		else if (extension.pageContent){
 			domNode=document.createTextNode(extension.pageContent);

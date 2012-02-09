@@ -4,14 +4,71 @@ define([
 	"davinci/Workbench",
 	"davinci/js/JSFile",
 	"davinci/js/Format",
-	"davinci/workbench/PanelPreferencePane",
+	"dijit/layout/ContentPane",
+	"dijit/_TemplatedMixin",
 	"davinci/workbench/Preferences",
 	"dojo/i18n!../nls/js"
-], function(declare, Runtime, Workbench, JSFile, Format, PanelPreferencePane, Preferences, jsNls) {
+], function(declare, Runtime, Workbench, JSFile, Format, ContentPane, TemplatedMixin, Preferences, jsNls) {
  
-return declare("davinci.js.ui.FormatOptions", PanelPreferencePane, {
+return declare("davinci.js.ui.FormatOptions", [ContentPane, TemplatedMixin], {
+	templateString: "<div><div dojoAttachPoint='dynamicPanels' id=\"dynamicPanels\"></div></div>",
 
+	// NOTE: The goal of #1638 was to remove all dependencies on davinci/ui/Panel. To achieve that goal here, we 
+	// merged the now defunct davinci/workbench/PanelPreferencePane module with FormatOptions. In addition, we commented
+	// out any remaining references to Panel.
+	//
+	// Also, since our JS formatter support is broken and the plan is to leverage Orion for JS formatting at some point, 
+	// no attempt was made to re-create the UI in a template. Instead, a generic message has been added to convey
+	// that we don't have any JS formatting options.
+
+	postCreate: function(){
+		this.inherited(arguments);
+		/*
+	    var panel = this.getPanel();
+	    var data = {};
+
+		this.panel = new Panel({definition: panel, data: data, immediateSave: true}, this.dynamicPanels);
+
+		if(!this.containerNode){
+			this.containerNode = this.domNode;
+		}
+		*/
+		
+		// NOTE: Since all of this will eventually be going away, not pulling 
+		// message string from a resource bundle.
+		this.dynamicPanels.innerHTML = "No JavaScript formatting options are currently available.";
+	},
+
+	getDefaults: function () {
+	},
+	
+	setDefaults: function () {
+	},
+	
+	doApply: function () {
+	},
+	
 	getPanel: function() {
+	},
+
+	getPreferences: function(){
+		/*
+		this.panel.saveData();
+		return this.panel.data;
+		*/
+		return null;
+	},
+
+	setPreferences: function(preferences){
+		/*
+		if (preferences) {
+			this.panel.setData(preferences);
+		}
+		*/
+	},
+	
+	getPanel: function() {
+		/*
 		var panel1 =
 			[{
 				type:"layout",
@@ -118,8 +175,8 @@ return declare("davinci.js.ui.FormatOptions", PanelPreferencePane, {
 				}]
 			}];
 		return panel1;
+		*/
 	}
-
 });
 });
 

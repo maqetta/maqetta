@@ -11,8 +11,7 @@ define(["dojo/_base/declare",
         
     	"davinci/ve/widgets/ColorPicker",
 
-		"davinci/ve/widgets/Background",
-		"davinci/ui/widgets/FileFieldDialog"
+		"davinci/ve/widgets/Background"
        
         
 ],function(declare, Runtime, FontDataStore){
@@ -109,17 +108,12 @@ define(["dojo/_base/declare",
 					return text;
 					/*todo - write color chooser widget */
 				case "background":
-				
-						var valuesText = dojo.isArray(jsonString.values) ? " data='" + dojo.toJson(jsonString.values) + "'" : "";		
-						var propNameText = " propname='" + (dojo.isArray(jsonString.target) ? dojo.toJson(jsonString.target) : jsonString.target) + "'";
-						var swatchText = jsonString.colorswatch ? " colorswatch='true'" : '';
-						var text="<div dojoType='davinci.ve.widgets.Background' id='" + id + "'" + valuesText + propNameText + swatchText + "></div>";
-						return text;		
-					
-	
-				case "file":
-					var text="<div dojoType='davinci.ui.widgets.FileFieldDialog' id='" + id + "'></div>";
-					return text;
+					var valuesText = dojo.isArray(jsonString.values) ? " data='" + dojo.toJson(jsonString.values) + "'" : "";		
+					var propNameText = " propname='" + (dojo.isArray(jsonString.target) ? dojo.toJson(jsonString.target) : jsonString.target) + "'";
+					var swatchText = jsonString.colorswatch ? " colorswatch='true'" : '';
+					var text="<div dojoType='davinci.ve.widgets.Background' id='" + id + "'" + valuesText + propNameText + swatchText + "></div>";
+					return text;		
+			
 				case "border":
 					/* todo - write border widget */
 				case "number":

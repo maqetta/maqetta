@@ -97,36 +97,43 @@ define(["dojo/_base/declare",
 			}else{
 			    var basePath = this.getBase();
 				var deferedList = Theme.CloneTheme(themeName,  version, selector, newBase, oldTheme, true);
-				deferedList.then(function(results){
+				deferedList.then(dojo.hitch(this,function(results){
+					
 				    function findTheme(basePath, theme){
 			            /* flush the theme cache after creating so new themes show up */
-			            var themes = Library.getThemes(basePath, false, true);
-			            var found = null;
-			            for(var i=0;i<themes.length && ! found;i++){
-			                if(themes[i].name==theme)
-			                    found = themes[i];
-			            }
-			            return found;
+			           return Library.getThemes(basePath, false, true).then(function(themes){
+			             var found = null;
+			             for(var i=0;i<themes.length && ! found;i++){
+			                 if(themes[i].name==theme)
+			                     found = themes[i];
+			             }
+			             return found;
+			           });
 			        }
+				    
 			        var error = false;
+			        /*
 			        for (var x=0; x < results.length; x++){
 			            if(!results[x][0] ){
 			                error = true;
 			            }  
 			        }
+			        */
 			        if (!error){
-			            var found = findTheme(basePath, base);
-			            if (found){
-			                Workbench.openEditor({
-			                       fileName: found.file,
-			                       content: found.file.getText()});
-			            } else {
-			                // error message
-			                alert(langObj.errorCreatingTheme + base);
-			            }
+			            findTheme(basePath, base).then(function(found){
+			            	 if (found){
+					                Workbench.openEditor({
+					                       fileName: found.file,
+					                       content: found.file.getText()});
+					            } else {
+					                // error message
+					                alert(langObj.errorCreatingTheme + base);
+					            }
+			            });
+			           
 			        }
-
-			    });
+			        this.onClose();
+			    }));
 			
 			}
 			
@@ -171,7 +178,7 @@ define(["dojo/_base/declare",
 		
 		okButton : function(){
 			this._createTheme();
-			this.onClose();
+			
 		},
 		
 		cancelButton: function(){

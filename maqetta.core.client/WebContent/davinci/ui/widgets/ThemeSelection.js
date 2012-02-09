@@ -28,18 +28,25 @@ define(["dojo/_base/declare",
 	    /* populate the theme selection, depends on the "workspaceOnly" attribute being set post create */
 	    postCreate : function(){
 	    	
-	        this._themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly);
-	        this._themeCount = this._themeData.length;
-	        for (var i = 0; i < this._themeData.length; i++){
-	            if(this._hasValue(this._themeData[i].className)) continue;
-	            var op = dojo.doc.createElement("option");
-	            op.value =this._themeData[i].className;
-	            op.text = this._themeData[i].className;
-	            this._select.appendChild(op);
-	            
-	        }
-	        if(this._selection)
-	            this._selectValue(this._selection);
+	        this._themeData = [];
+	        var themeDataPromoise = Library.getThemes(Workbench.getProject(), this.workspaceOnly);
+	        themeDataPromoise.then(dojo.hitch(this,function(_themeData){
+	        	this._themeCount = this._themeData.length;
+	        	this._themeData = _themeData;
+	        	
+	 	        for (var i = 0; i < this._themeData.length; i++){
+	 	            if(this._hasValue(this._themeData[i].className)) continue;
+	 	            var op = dojo.doc.createElement("option");
+	 	            op.value =this._themeData[i].className;
+	 	            op.text = this._themeData[i].className;
+	 	            this._select.appendChild(op);
+	 	            
+	 	        }
+	 	        if(this._selection)
+	 	            this._selectValue(this._selection);
+	        }));
+	        
+	       
 	    },
 	    
 	    _setBaseAttr : function(base){

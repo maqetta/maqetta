@@ -24,6 +24,7 @@ var Folder = declare("davinci.model.resource.Folder", Resource, {
 	},
 
 	createResource: function(name, isFolder, localOnly) {
+		
 		var file;
 		if (name != null) {
 			file = isFolder ? new Folder(name, this) : new File(name, this);
@@ -31,7 +32,10 @@ var Folder = declare("davinci.model.resource.Folder", Resource, {
 			file = this;
 			isFolder = this.elementType == "Folder";
 		}
-		return Runtime.serverJSONRequest({url:"./cmd/createResource", handleAs:"text",content:{'path':file.getPath(), 'isFolder': isFolder},sync:false  }).then(function(response){
+		return Runtime.serverJSONRequest({url:"./cmd/createResource", 
+										 handleAs:"text",
+										 content:{'path':file.getPath(), 
+									    'isFolder': isFolder}}).then(dojo.hitch(this,function(response){
 			if (response == "OK" && name != null) {
 				this.children.push(file);
 				delete file.libraryId;
@@ -48,7 +52,7 @@ var Folder = declare("davinci.model.resource.Folder", Resource, {
 				return this;
 			}
 
-		});
+		}));
 	},
 
 	getChildren: function() {

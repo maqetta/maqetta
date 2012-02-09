@@ -14,6 +14,9 @@ return declare("davinci.html.CSSFile", CSSElement, {
 
 	constructor: function(args) {
 		this.elementType = "CSSFile";
+		/* semaphore to notify that the file has finished loading */
+		this.loaded = new dojo.Deferred();
+		
 		dojo.mixin(this, args);
 		if (!this.options) { 
 			this.options = {
@@ -25,9 +28,7 @@ return declare("davinci.html.CSSFile", CSSElement, {
 		var txtPromise = null;
 
 		if (this.url && this.loader) {
-			txtPromise = this.loader(this.url).then(function(res){
-				return res.getText();
-			});
+			txtPromise = this.loader(this.url);
 		} else if (this.url) {
 		
 			txtPromise = this.getResource().then(function(res){
@@ -38,16 +39,19 @@ return declare("davinci.html.CSSFile", CSSElement, {
 		if(txtPromise){
 			txtPromise.then(dojo.hitch(this,function(txt){
 				this.setText(txt);
+				this.loaded.resolve(this);
 			}));
 		}
 	}, 
 
 	save: function(isWorkingCopy) {
-		var deferred;
+		var deferred = new dojo.Deferred();
 		var file = this.getResource();
 		if (file) {
 			var text = this.getText();
-			deferred = file.setContents(text, isWorkingCopy);
+			deferred = file.then(function(resource){
+				resource.setContents(text, isWorkingCopy);
+			});
 		}
 		return deferred;
 	},

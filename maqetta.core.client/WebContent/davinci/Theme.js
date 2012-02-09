@@ -65,12 +65,13 @@ define([
 		var deferreds = [];
 		var fileBase = originalTheme.file.parent;
 		var themeRootPath = new Path(directory).removeLastSegments(0);
-		systemResource.findResource(themeRootPath.toString()).then(function(resource){
+		return systemResource.findResource(themeRootPath.toString()).then(function(resource){
+			
 			if (resource.readOnly()) {
 				resource.createResource();
 			}
-			systemResource.copy(fileBase, directory, true).then(function(){
-				systemResource.findResource(directory).then(function(themeRoot){
+			return systemResource.copy(fileBase, directory, true).then(function(){
+				return systemResource.findResource(directory).then(function(themeRoot){
 					var fileName = originalTheme.file.getName();
 					/* remove the copied theme */
 					var sameName = (name==originalTheme.name);
@@ -89,7 +90,7 @@ define([
 					} else{
 						themeFilePromise = systemResource.findResource(directory + "/" + fileName);
 					}
-					themeFilePromise.then(function(themFile){
+					return themeFilePromise.then(function(themeFile){
 						var themeJson = {
 								className: selector,
 								name: name,
@@ -111,10 +112,11 @@ define([
 						    }
 							var oldClass = originalTheme.className;
 							var toSave = {};
+							var cssDefs = [];
 							/* re-write CSS Selectors */
 							for (var i = 0, len = themeJson.files.length; i < len; i++) {
 								var fileUrl = directoryPath.append(themeJson.files[i]);
-								systemResource.findResource(fileUrl).then(function(resource){
+								cssDefs.push(systemResource.findResource(fileUrl).then(function(resource){
 									if(!sameName && renameFiles && resource.getName().indexOf(oldClass) > -1){
 										var newName = resource.getName().replace(oldClass, selector);
 										resource.rename(newName);
@@ -123,60 +125,77 @@ define([
 									var cssModel = Factory.getModel({url:resource.getPath(),
 										includeImports: true,
 										loader:function(url){
-											systemResource.findResource(url).then(function(r1){
+											return systemResource.findResource(url).then(function(r1){
 												return r1.getText();
 											});
 											
 										}
 									});
-									var elements = cssModel.find({elementType: 'CSSSelector', cls: oldClass});
-									for(var i=0;i<elements.length;i++){
-										elements[i].cls = selector;
-										var file = elements[i].getCSSFile();
-										toSave[file.url] = file;
+									
+									return cssModel.loaded.then(function(){
+										var elements = cssModel.find({elementType: 'CSSSelector', cls: oldClass});
+										for(var i=0;i<elements.length;i++){
+											elements[i].cls = selector;
+											var file = elements[i].getCSSFile();
+											toSave[file.url] = file;
+											
+										}
+									});
+									
+									
+								}));
+								
+							}
+							
+							var cssPromise = new dojo.DeferredList(cssDefs);
+							return cssPromise.then(function(){
+								
+								deferreds.push(themeFile.setContents("(" + dojo.toJson(themeJson)+")"));
+								for(var name in toSave){
+								    deferreds.push(toSave[name].save());
+								}
+								/* re-write metadata */
+								for (var i = 0, len = themeJson.meta.length; i < len; i++) {
+									var fileUrl = directoryPath.append(themeJson.meta[i]);
+									deferreds.push(systemResource.findResource(fileUrl.toString()).then(function(file){
+										var contents = file.getText();
+										var newContents = contents.replace(new RegExp(oldClass, "g"), selector);
+										return file.setContents(newContents);
+									}));
+									
+									
+								}
+								/* rewrite theme editor HTML */
+								for (var i = 0, len = themeJson.themeEditorHtmls.length; i < len; i++) {
+									
+									var fileUrl = directoryPath.append(themeJson.themeEditorHtmls[i]);
+									 deferreds.push(systemResource.findResource(fileUrl.toString()).then(function(file){
 										
-									}
-								});
+										var contents = file.getText();
+										var htmlFile = new HTMLFile(fileUrl);
+										htmlFile.setText(contents,true);
+										return htmlFile.loaded.then(function(loadedModel){
+											
+											var element =  loadedModel.find({elementType: 'HTMLElement', tag: 'body'}, true);
+											// #1024 leave other classes on the body only replace the target
+											var modelAttribute = element.getAttribute('class');
+									        if (!modelAttribute){
+									             modelAttribute = selector; 
+									        } else {
+									             modelAttribute = modelAttribute.replace(oldClass, selector);
+									        }
+									        element.setAttribute('class',modelAttribute); //#1024
+									        return loadedModel.save();
+
+										});
+									 }));
+									
+								}
 								
-							}
-							deferreds.push(themeFile.setContents("(" + dojo.toJson(themeJson)+")"));
-							for(var name in toSave){
-							    deferreds.push(toSave[name].save());
-							}
-							/* re-write metadata */
-							for (var i = 0, len = themeJson.meta.length; i < len; i++) {
-								var fileUrl = directoryPath.append(themeJson.meta[i]);
-								deferreds.push(systemResource.findResource(fileUrl.toString()).then(function(file){
-									var contents = file.getText();
-									var newContents = contents.replace(new RegExp(oldClass, "g"), selector);
-									return file.setContents(newContents);
-								}));
-								
-								
-							}
-							/* rewrite theme editor HTML */
-							for (var i = 0, len = themeJson.themeEditorHtmls.length; i < len; i++) {
-								var fileUrl = directoryPath.append(themeJson.themeEditorHtmls[i]);
-								 deferreds.push(systemResource.findResource(fileUrl.toString()).then(function(file){
-									var contents = file.getText();
-									var htmlFile = new HTMLFile(fileUrl);
-									htmlFile.setText(contents,true);
-									var element = htmlFile.find({elementType: 'HTMLElement', tag: 'body'}, true);
-									// #1024 leave other classes on the body only replace the target
-									var modelAttribute = element.getAttribute('class');
-							        if (!modelAttribute){
-							             modelAttribute = selector; 
-							        } else {
-							             modelAttribute = modelAttribute.replace(oldClass, selector);
-							        }
-							        element.setAttribute('class',modelAttribute); //#1024
-							        return htmlFile.save();
-								}));
-								
-							}
-						    var defs = new DeferredList(deferreds);
-							Library.themesChanged();
-							return defs;
+							    var defs = new DeferredList(deferreds);
+								defs.then(Library.themesChanged());
+								return defs;
+							});
 					});
 					
 				});

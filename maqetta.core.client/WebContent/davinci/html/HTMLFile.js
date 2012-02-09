@@ -24,15 +24,10 @@ return declare("davinci.html.HTMLFile", HTMLItem, {
 	},
 
 	save: function (isWorkingCopy) {
-		
-		var filePromise = system.resource.findResource(this.fileName);
-		if (filePromise) {
 			var text = this.getText();
-			return filePromise.then(function(resource){
-				resource.setContents(text,isWorkingCopy);
+			return system.resource.findResource(this.fileName).then(function(res){
+				return res.setContents(text,isWorkingCopy);
 			});
-		}
-		return null;
 	},
 
 	getText: function(context) {
@@ -127,7 +122,9 @@ return declare("davinci.html.HTMLFile", HTMLItem, {
 		// clear cached values
 		this.children = [];
 		this._styleElem = null;
-
+		/* set/reset the finished loading semaphore */
+		this.loaded = new dojo.Deferred();
+		
 		var result = HTMLParser.parse(text || "", this);
 		var formattedHTML = "";
 		if (!noImport && result.errors.length == 0) {
@@ -156,6 +153,7 @@ return declare("davinci.html.HTMLFile", HTMLItem, {
 				}
 			});
 		}
+		this.loaded.resolve(this);
 		this.onChange();
 	},  
 

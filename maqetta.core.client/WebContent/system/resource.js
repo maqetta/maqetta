@@ -14,13 +14,15 @@ var resource = {
 	
 	resourceChanged: function(type,changedResource){
 		var parentPromise = null;
+		var deferred = new dojo.Deferred();
 		
-		if(changedResource =!null && changedResource==resource.root){
+		if(changedResource!=null && changedResource==resource.root){
 			changedResource.reload();
 			resource.root.getChildren().then(function(children){
 				resource.onChildrenChange(root,children);
 			});
-			return resource.root;
+			deferred.resolve(resource.root);
+			return deferred;
 		}else if (type == 'created' || type == 'deleted' || type == 'renamed' || type == 'updated' || type=='reload'){
 			var parent, resourcePath;
 			
@@ -36,7 +38,7 @@ var resource = {
 				resourcePath = changedResource;
 			}
 			
-			parentPromise.then(function(parent){
+			return parentPromise.then(function(parent){
 				if(parent.elementType=="Folder" && type=='reload'){
 					/* 'reload' forces a full parent reload.  most model actions handle the server
 					 * command and the modeling commands, so forcing a client & server resource sync isn't usually neccisary.
@@ -45,8 +47,9 @@ var resource = {
 				}
 				
 				/* force the resource parent to update its children */
-				parent.getChildren().then(function(children){
+				return parent.getChildren().then(function(children){
 					resource.onChildrenChange(parent,children);
+					return children;
 				});
 			});
 			
@@ -200,13 +203,16 @@ var resource = {
 	copy: function(sourceFile, destFile, recurse){
 		var path = sourceFile.getPath? sourceFile.getPath() : sourceFile;
 		var destPath = destFile.getPath? destFile.getPath() : destFile;
-			var response = Runtime.serverJSONRequest({
+		var copy = Runtime.serverJSONRequest({
 			url:"cmd/copy", 
 			handleAs:"text", 
-			sync:true,
+			sync:false,
 			content:{source:path, dest: destPath, recurse: String(recurse)}  });
 		/* force a reload since we dont really know if this is a file or directory being copied */
-		resource.resourceChanged("reload", destFile);
+		return copy.then(function(){
+			return resource.resourceChanged("reload", destFile);
+		});
+		
 	},
 
 	download: function(files,archiveName, root, userLibs){

@@ -1,12 +1,12 @@
 define([
 	"require",
-    "dojo/_base/Deferred",
+    "dojo/DeferredList",
    // "davinci/Workbench",
 	"../util",
 	"../library",
 	"../model/Path"
 	
-], function(require, Deferred, Util, Library, Path) {
+], function(require, DeferredList, Util, Library, Path) {
 
 	var Metadata,
 		Workbench,
@@ -132,8 +132,7 @@ define([
         if (descriptor.callbacks) {
             dojo.xhrGet({
                 url: path.append(descriptor.callbacks).toString(),
-				handleAs: 'javascript',
-				sync: true // XXX should be async
+				handleAs: 'javascript'
 			}).then(function(data) {
                 pkg.$callbacks = data;
             });
@@ -248,7 +247,7 @@ define([
         var metadata = null;
         var metadataUrl = [ descriptorPath, "/", type.replace(/\./g, "/"), "_oam.json" ].join('');
 
-        if (! wm.localPath){
+        if (!wm.localPath){
 	        dojo.xhrGet({
 	            url: metadataUrl,
 	            handleAs: "json",
@@ -356,6 +355,7 @@ define([
          * Read the library metadata for all the libraries linked in the user's workspace
          */
 		init: function() {
+			var deferreds = [];
 			// lazy-load Runtime in order to prevent circular dependency
 			Workbench = require('../Workbench');
 
@@ -364,17 +364,14 @@ define([
 // (or a combined object).  Putting it here for now, to quickly integrate.
 				var path = lib.metaRoot;//Library.getMetaRoot(lib.id, lib.version);
 				if (path) {
-					dojo.xhrGet({
+					deferreds.push(dojo.xhrGet({
 // XXX For now, 'package.json' lives inside the 'metadata' dir.  Will need to
 // move it up to the top level of library.
 						url : path + "/package.json",
-						handleAs : "json",
-						sync: true // XXX should be async
+						handleAs : "json"
 					}).then(function(data) {
-				if (data) {
-							parsePackage(data, path);
-						}
-					});
+						parsePackage(data, path);
+					}));
 				}
 			});
 
@@ -384,6 +381,7 @@ define([
 			var descriptor = Library.getCustomWidgets(base);
 			//if(descriptor.custom) parseLibraryDescriptor(descriptor.custom, descriptor.custom.metaPath);
 */
+			return new DeferredList(deferreds);
 		},
         
 		// used to update a library descriptor after the fact

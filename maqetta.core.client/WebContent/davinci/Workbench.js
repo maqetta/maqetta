@@ -110,13 +110,8 @@ var Workbench = {
 	run: function() {
 		Runtime.run();
 		Workbench._initKeys();
-		metadata.init();
-		
 		Workbench._baseTitle = dojo.doc.title;
 
-		var perspective= Runtime.initialPerspective || "davinci.ui.main";
-		Workbench.showPerspective(perspective);
-		Workbench._updateTitle();
 		Runtime.subscribe("/davinci/ui/selectionChanged", updateMainToolBar);
 		Runtime.subscribe("/davinci/ui/editorSelected", updateMainToolBar);
 		Runtime.subscribe("/davinci/resource/resourceChanged", Workbench._resourceChanged);
@@ -168,7 +163,12 @@ var Workbench = {
 		top.setContent(dijit.byId("mainBody"));
 		top.startup();
 */
-		initializeWorkbenchState();
+		metadata.init().then(function(){
+			var perspective= Runtime.initialPerspective || "davinci.ui.main";
+			Workbench.showPerspective(perspective);
+			Workbench._updateTitle();
+			initializeWorkbenchState();			
+		});
 	
 		var loading = dojo.query('.loading');
 		if (loading[0]){ // remove the loading div

@@ -12,6 +12,7 @@ define(["dojo/_base/declare",
         "davinci/ve/widgets/ColorPicker",
         "davinci/ve/widgets/ColorPickerFlat",
         "dijit/form/Textarea",
+        "davinci/ui/widgets/FileFieldDialog"
        
 ],function(declare, _Templated, _Widget, MutableStore, ColorStore, templateString, CSSUtils, veNLS,commonNLS){
 

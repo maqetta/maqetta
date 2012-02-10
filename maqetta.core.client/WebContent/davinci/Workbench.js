@@ -47,21 +47,23 @@ var getSelectedResource = function(){
 
 var initializeWorkbenchState = function(){
 	
-	if(Workbench._state==null || !Workbench._state.hasOwnProperty("editors")) 
-		(Workbench._state=Runtime.serverJSONRequest({url:"cmd/getWorkbenchState", handleAs:"json", sync:true  }));
+	if(Workbench._state == null || !Workbench._state.hasOwnProperty("editors")) {
+		Workbench._state = Runtime.serverJSONRequest({
+			url: "cmd/getWorkbenchState",
+			handleAs: "json", 
+			sync: true
+		});
+	}
 	
 	var state = Workbench._state;
-	
-	
 	if(state && state.project){
 		Workbench.setActiveProject(state.project);
 	}
 	
-	if (state&&state.editors){
+	if (state && state.editors){
 		state.version = davinci.version;
 		
 		var project = null;
-	
 		var singleProject = Workbench.singleProjectMode();
 	
 		if(singleProject){
@@ -73,13 +75,14 @@ var initializeWorkbenchState = function(){
 			if(singleProject){
 				// if running in single user mode, only load editors open for specific projects
 				var path = new Path(state.editors[i]);
-				if(!path.startsWith(project)) continue;
+				if(!path.startsWith(project)) {
+					continue;
+				}
 			}
 			
 			var resource= sysResource.findResource(state.editors[i]);
-			var noSelect=state.editors[i]!=state.activeEditor;
+			var noSelect=state.editors[i] != state.activeEditor;
 			if (resource){
-				
 				Workbench.openEditor({
 					fileName: resource,
 					content: resource.getText(),
@@ -91,9 +94,12 @@ var initializeWorkbenchState = function(){
 		}
 	}
 	if (!Workbench._state.hasOwnProperty("editors")) {
-		Workbench._state = {editors:[], version:davinci.version, project:Runtime._DEFAULT_PROJECT};
+		Workbench._state = {
+			editors: [], 
+			version: davinci.version,
+			project: Runtime._DEFAULT_PROJECT
+		};
 	}
-	
 };
 
 var Workbench = {
@@ -398,7 +404,9 @@ var Workbench = {
 		/* close all of the old views */
 		for(position in mainBody.tabs.perspective){
 			var view = mainBody.tabs.perspective[position];
-			if(!view) continue;
+			if(!view) {
+				continue;
+			}
 			dojo.forEach(view.getChildren(), function (child) {
 				view.removeChild(child);
 				if (position != 'left' && position != 'right') {

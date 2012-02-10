@@ -6,8 +6,11 @@
 define([
 	"dojo/_base/declare",
 	"davinci/ve/tools/CreateTool",
-	"davinci/ui/dnd/DragSource"
-], function(declare, CreateTool, DragSource){
+	"davinci/ui/dnd/DragManager",
+	"davinci/Workbench",
+	"davinci/ve/widgets",
+	"davinci/ve/views/DataStoresView"
+], function(declare, CreateTool, dragManager, Workbench, widgetUtils, DataStoresView){
 
 return declare("davinci.ve.palette.DataStoreDragSource", null, {
 	
@@ -19,17 +22,17 @@ return declare("davinci.ve.palette.DataStoreDragSource", null, {
     },
         
     initDrag: function() {
-        var editor = this.editor = davinci.Workbench.getOpenEditor();
+        var editor = this.editor = Workbench.getOpenEditor();
         if (editor && editor.currentEditor && editor.currentEditor.context)
         {
             this.context = editor.currentEditor.context;
-            davinci.ui.dnd.dragManager.document = this.context.getDocument();
+            dragManager.document = this.context.getDocument();
             var frameNode = this.context.frameNode;
             if(frameNode){
                 var coords = dojo.coords(frameNode);
                 var containerNode = this.context.getContainerNode();
-                davinci.ui.dnd.dragManager.documentX = coords.x - containerNode.scrollLeft;
-                davinci.ui.dnd.dragManager.documentY = coords.y - containerNode.scrollTop
+                dragManager.documentX = coords.x - containerNode.scrollLeft;
+                dragManager.documentY = coords.y - containerNode.scrollTop
             }
         }
         else 
@@ -48,12 +51,12 @@ return declare("davinci.ve.palette.DataStoreDragSource", null, {
             if (dropTarget === this.context.rootNode) {
                 return;
             }
-            dropTarget = davinci.ve.widget.getWidget(dropTarget);
+            dropTarget = widgetUtils.getWidget(dropTarget);
             this._setTargetAttributes(dropTarget);
         }
     },
     _setTargetAttributes: function(dropTarget) {
-        davinci.ve.views.DataStoresView.bindDS(dropTarget, this.data.dsId, this.data.attrId);
+        DataStoresView.bindDS(dropTarget, this.data.dsId, this.data.attrId);
     }
 });
 });

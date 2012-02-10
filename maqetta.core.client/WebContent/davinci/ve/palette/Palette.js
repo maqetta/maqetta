@@ -23,10 +23,9 @@ define([
 	PaletteFolder,
 	PaletteItem,
 	commonNls,
-	CreateTool)
-{
+	CreateTool) {
 
-declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
+return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 
 	descriptors: "", // "fooDescriptor,barDescriptor"
 //	_resource: null,

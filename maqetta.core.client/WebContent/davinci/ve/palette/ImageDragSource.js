@@ -2,8 +2,7 @@ define([
 	"dojo/_base/declare",
 	"davinci/ve/tools/CreateTool",
 	"davinci/ui/dnd/DragManager",
-	"davinci/ui/dnd/DragSource"
-], function(declare, CreateTool, dragManager, DragSource){
+], function(declare, CreateTool, dragManager){
 
 return declare("davinci.ve.palette.ImageDragSource", null, {
 	

@@ -4,7 +4,7 @@ define([
 	"davinci/ve/palette/Palette"
 ], function(declare, ViewPart, Palette){
 
-return declare("davinci.ve.palette.HtmlWidgets", davinci.workbench.ViewPart, {
+return declare("davinci.ve.palette.HtmlWidgets", ViewPart, {
 
 	constructor: function(params, srcNodeRef){
 		dojo.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, this._editorSelected));
@@ -21,7 +21,7 @@ return declare("davinci.ve.palette.HtmlWidgets", davinci.workbench.ViewPart, {
 	},
 	postCreate: function(){
 		this.inherited(arguments);
-		this.palette = new davinci.ve.palette.Palette();
+		this.palette = new Palette();
 		this.palette.descriptors = "dijit,dojox,html,OpenAjax"; // FIXME: parameterize this in plugin data?
 		this.setContent(this.palette);
 		

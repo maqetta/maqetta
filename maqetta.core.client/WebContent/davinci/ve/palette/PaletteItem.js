@@ -37,7 +37,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		dojo.create('span',
 		        {
 		            className: 'maqWidgetsCategory',
-		            innerHTML: this.category
+		            innerText: this.category
 		        },
 		        a
 		);

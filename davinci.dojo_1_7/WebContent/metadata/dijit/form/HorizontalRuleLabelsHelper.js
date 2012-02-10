@@ -2,7 +2,9 @@ define([
 "dojo/_base/declare"
 ], function(declare){
 
-return declare("davinci.libraries.dojo.dijit.form.HorizontalRuleLabelsHelper", null, {
+var HorizontalRuleLabelsHelper = function() {};
+
+HorizontalRuleLabelsHelper.prototype = {
 
 	preProcessData: function(data) {
 		// process labels if user makes changes and adjust Count
@@ -14,17 +16,19 @@ return declare("davinci.libraries.dojo.dijit.form.HorizontalRuleLabelsHelper", n
 				data.properties.count = strArray.length;
 				// numericMargin > 0 only if labels aren't specified
 				data.properties.numericMargin = 0; 
-			} else if (data.properties.count && data.properties.labels.length != parseInt(data.properties.count)
-					|| data.properties.numericMargin) {
+			} else if (data.properties.count &&
+					data.properties.labels.length != parseInt(data.properties.count, 10) ||
+					data.properties.numericMargin) {
 				// remove labels if user changes Count so that it can calculate the percentages for the Labels
-				if (parseInt(data.properties.count) > 1)
+				if (parseInt(data.properties.count, 10) > 1) {
 					delete data.properties.labels;
-				else {// Dojo doesn't handle a count of just 1
+				} else { // Dojo doesn't handle a count of just 1
 					data.properties.labels = new Array("50%");
 				}
 			}
 		}
 		return data;
 	}
-});
+};
+
 });

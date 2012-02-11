@@ -1,11 +1,11 @@
 define(
 [
 	"dojo/_base/declare", 
-	"./HorizontalSliderHelper", 
+	"./HorizontalSliderHelper"
 ],
 function(declare, HorizontalSliderHelper) {
 
-return declare("davinci.libraries.dojo.dijit.form.VerticalSliderHelper", HorizontalSliderHelper, {	
+return declare(HorizontalSliderHelper, {	
 	
 	_getDecoration: function(dijitWidget) {
 		return dijitWidget.leftDecoration;

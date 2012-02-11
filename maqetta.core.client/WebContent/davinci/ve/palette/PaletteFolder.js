@@ -1,11 +1,10 @@
 define([
 	"dojo/_base/declare",
-	"dijit/_Widget",
+	"dijit/_WidgetBase",
 	"dojo/fx",
-	"davinci/ve/palette/PaletteItem"
-], function(declare, _Widget, fx, PaletteItem){
+], function(declare, _WidgetBase, fx){
 
-return declare("davinci.ve.palette.PaletteFolder", dijit._Widget, {
+return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 
 	icon: "",
 	displayName: "",
@@ -54,9 +53,9 @@ return declare("davinci.ve.palette.PaletteFolder", dijit._Widget, {
 					break;
 				}
 				if(dojo.style(child.domNode, "display") == "none"){
-					dojo.fx.wipeIn({node: child.id, duration: 200}).play();
+					fx.wipeIn({node: child.id, duration: 200}).play();
 				}else{
-					dojo.fx.wipeOut({node: child.id, duration: 200}).play();
+					fx.wipeOut({node: child.id, duration: 200}).play();
 				}
 			}
 			break;

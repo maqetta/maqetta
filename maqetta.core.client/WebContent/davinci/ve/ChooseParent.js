@@ -368,10 +368,10 @@ return declare("davinci.ve.ChooseParent", null, {
 	/**
 	 * During drag operation, sets the widget that will become the parent widget
 	 * when the drag operation ends assuming nothing changes in mean time.
-	 * @param {object|null} widget  Widget that is the new proposed parent widget
+	 * @param {object|null} wdgt  Widget that is the new proposed parent widget
 	 */
-	setProposedParentWidget: function(widget){
-		this._proposedParentWidget = widget;
+	setProposedParentWidget: function(wdgt){
+		this._proposedParentWidget = wdgt;
 	},
 
 
@@ -443,11 +443,11 @@ return declare("davinci.ve.ChooseParent", null, {
 	 */
 	findParentsXY: function(params) {
 		var data = params.data,
-			widget = params.widget,
+			wdgt = params.widget,
 			position = params.position,
 			doCursor = params.doCursor,
 			beforeAfter = params.beforeAfter;
-		var domNode = widget.domNode;
+		var domNode = wdgt.domNode;
 		var x = position.x;
 		var y = position.y;
 		var w = domNode.offsetWidth;
@@ -463,9 +463,9 @@ return declare("davinci.ve.ChooseParent", null, {
 		var r = l + w;
 		var b = t + h;
 		if(x >= l && x <= r && y >= t && y <= b){
-			var allowedParents = this.getAllowedTargetWidget(widget, data, false);
+			var allowedParents = this.getAllowedTargetWidget(wdgt, data, false);
 			if(allowedParents.length === 1){
-				var children = widget.getChildren();
+				var children = wdgt.getChildren();
 				var childData = [];
 				for(var i=0; i<children.length; i++){
 					var child = children[i];
@@ -522,7 +522,7 @@ return declare("davinci.ve.ChooseParent", null, {
 						biggestY = cd.b;
 					}
 				}
-				this._XYParent.push(widget);
+				this._XYParent.push(wdgt);
 				this._XYRefChild.push(refChild);
 				refAfter = beforeAfter === 'after' ? true : (beforeAfter === 'before' ? false : refAfter);
 				this._XYRefAfter.push(refAfter);

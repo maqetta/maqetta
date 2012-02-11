@@ -9,7 +9,7 @@ define(
 ],
 function(declare, HorizontalSliderInput, VerticalSlider, VerticalRule, VerticalRuleLabels, langObj) {
 
-return declare("davinci.libraries.dojo.dijit.form.VerticalSliderInput", HorizontalSliderInput, {	
+return declare(HorizontalSliderInput, {	
 	
 	_getDialogTitle: function() {
 		return langObj.verticalSliderDialog;
@@ -48,7 +48,7 @@ return declare("davinci.libraries.dojo.dijit.form.VerticalSliderInput", Horizont
 		} else {
 			props = {
 				"container": "rightDecoration",
-				"style": "width:3em;",
+				"style": "width:3em;"
 			};
 		}
 		return props;

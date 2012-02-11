@@ -1,22 +1,18 @@
 define([
 	"dojo/_base/declare",
-	"dijit/_Widget",
-	"dijit/Tooltip",
-	"dojo/fx",
+	"dijit/_WidgetBase",
 	"davinci/ve/tools/CreateTool",
 	"davinci/ui/dnd/DragManager",
 	"davinci/ve/metadata"
 ], function(
 	declare,
-	_Widget,
-	Tooltip,
-	fx,
+	_WidgetBase,
 	CreateTool,
 	DragManager,
 	Metadata
 ){
 
-return declare("davinci.ve.palette.PaletteItem", _Widget,{
+return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 
 	icon: "",
 	displayName: "",
@@ -41,7 +37,7 @@ return declare("davinci.ve.palette.PaletteItem", _Widget,{
 		dojo.create('span',
 		        {
 		            className: 'maqWidgetsCategory',
-		            innerHTML: this.category
+		            innerText: this.category
 		        },
 		        a
 		);

@@ -2,7 +2,9 @@ define([
 "dojo/_base/declare"
 ], function(declare){
 
-return declare("davinci.libraries.dojo.dijit.form.HorizontalSliderHelper", null, {
+var HorizontalSliderHelper = function() {};
+
+HorizontalSliderHelper.prototype = {
 
 	/**
 	 * HorizontalSlider, due to its support for placing rules and labels in the
@@ -48,5 +50,6 @@ return declare("davinci.libraries.dojo.dijit.form.HorizontalSliderHelper", null,
 	_getDecoration: function(dijitWidget) {
 		return dijitWidget.topDecoration;
 	}
-});
+};
+
 });

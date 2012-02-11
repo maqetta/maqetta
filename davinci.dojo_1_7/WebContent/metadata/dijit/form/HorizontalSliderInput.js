@@ -14,7 +14,7 @@ define(
 function(declare, ContainerInput, ContentPane, BorderContainer, LayoutContainer,
 		HorizontalSlider, HorizontalRule, HorizontalRuleLabels, langObj, dijitLangObj) {
 
-return declare("davinci.libraries.dojo.dijit.form.HorizontalSliderInput", ContainerInput, {
+return declare(ContainerInput, {
 
 	//Data structure to hold entries for (potentially) new children of the slider
 	_sliderChildrenEntries: null,
@@ -84,6 +84,7 @@ return declare("davinci.libraries.dojo.dijit.form.HorizontalSliderInput", Contai
 	hide: function(cancel) {
 		if (this._inline) {
 			//Clean up connections
+			var connection;
 			while (connection = this._connection.pop()){
 				dojo.disconnect(connection);
 			}
@@ -231,9 +232,8 @@ return declare("davinci.libraries.dojo.dijit.form.HorizontalSliderInput", Contai
 	
 	_getPreviewContent: function(){
 		//Construct template for slider based on dialog settings
-		var s =
-				'<div dojoType="' + this._getWidgetTypeForSlider()
-						+ '" style="' + this._getWidgetStyleForSlider() + '">'; 
+		var s = '<div dojoType="' + this._getWidgetTypeForSlider() + '" style="' +
+				this._getWidgetStyleForSlider() + '">'; 
 		
 		//Add child rules and labels
 		for(var i=0; i<this._sliderChildrenEntries.length; i++){
@@ -321,7 +321,7 @@ return declare("davinci.libraries.dojo.dijit.form.HorizontalSliderInput", Contai
 		var value = null;
 		if (selectVal === "rules") {
 			value = this._getWidgetTypeForRule();
-		} else if (value = "labels") {
+		} else if (value === "labels") {
 			value = this._getWidgetTypeForRuleLabels();
 		} else {
 			console.log('WARNING. HorizontalSliderInput.js _getTypeFromSelectValue(). Invalid combo box value: val = ' + selectVal);
@@ -583,7 +583,7 @@ return declare("davinci.libraries.dojo.dijit.form.HorizontalSliderInput", Contai
 		} else {
 			props = {
 				"container": "bottomDecoration",
-				"style": "height:20px;",
+				"style": "height:20px;"
 			};
 		}
 		return props;

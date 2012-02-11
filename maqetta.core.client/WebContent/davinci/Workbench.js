@@ -47,21 +47,23 @@ var getSelectedResource = function(){
 
 var initializeWorkbenchState = function(){
 	
-	if(Workbench._state==null || !Workbench._state.hasOwnProperty("editors")) 
-		(Workbench._state=Runtime.serverJSONRequest({url:"cmd/getWorkbenchState", handleAs:"json", sync:true  }));
+	if(Workbench._state == null || !Workbench._state.hasOwnProperty("editors")) {
+		Workbench._state = Runtime.serverJSONRequest({
+			url: "cmd/getWorkbenchState",
+			handleAs: "json", 
+			sync: true
+		});
+	}
 	
 	var state = Workbench._state;
-	
-	
 	if(state && state.project){
 		Workbench.setActiveProject(state.project);
 	}
 	
-	if (state&&state.editors){
+	if (state && state.editors){
 		state.version = davinci.version;
 		
 		var project = null;
-	
 		var singleProject = Workbench.singleProjectMode();
 	
 		if(singleProject){
@@ -73,10 +75,12 @@ var initializeWorkbenchState = function(){
 			if(singleProject){
 				// if running in single user mode, only load editors open for specific projects
 				var path = new Path(state.editors[i]);
-				if(!path.startsWith(project)) continue;
+				if(!path.startsWith(project)) {
+					continue;
+				}
 			}
 			
-			
+
 			sysResource.findResource(state.editors[i]).then(function(resource){
 				var noSelect=resource.getPath()!=state.activeEditor;
 				if (resource){
@@ -91,12 +95,16 @@ var initializeWorkbenchState = function(){
 				}
 			});
 			
+
 		}
 	}
 	if (!Workbench._state.hasOwnProperty("editors")) {
-		Workbench._state = {editors:[], version:davinci.version, project:Runtime._DEFAULT_PROJECT};
+		Workbench._state = {
+			editors: [], 
+			version: davinci.version,
+			project: Runtime._DEFAULT_PROJECT
+		};
 	}
-	
 };
 
 var Workbench = {
@@ -107,13 +115,8 @@ var Workbench = {
 	run: function() {
 		Runtime.run();
 		Workbench._initKeys();
-		metadata.init();
-		
 		Workbench._baseTitle = dojo.doc.title;
 
-		var perspective= Runtime.initialPerspective || "davinci.ui.main";
-		Workbench.showPerspective(perspective);
-		Workbench._updateTitle();
 		Runtime.subscribe("/davinci/ui/selectionChanged", updateMainToolBar);
 		Runtime.subscribe("/davinci/ui/editorSelected", updateMainToolBar);
 		Runtime.subscribe("/davinci/resource/resourceChanged", Workbench._resourceChanged);
@@ -165,7 +168,12 @@ var Workbench = {
 		top.setContent(dijit.byId("mainBody"));
 		top.startup();
 */
-		initializeWorkbenchState();
+		metadata.init().then(function(){
+			var perspective= Runtime.initialPerspective || "davinci.ui.main";
+			Workbench.showPerspective(perspective);
+			Workbench._updateTitle();
+			initializeWorkbenchState();			
+		});
 	
 		var loading = dojo.query('.loading');
 		if (loading[0]){ // remove the loading div
@@ -401,7 +409,9 @@ var Workbench = {
 		/* close all of the old views */
 		for(position in mainBody.tabs.perspective){
 			var view = mainBody.tabs.perspective[position];
-			if(!view) continue;
+			if(!view) {
+				continue;
+			}
 			dojo.forEach(view.getChildren(), function (child) {
 				view.removeChild(child);
 				if (position != 'left' && position != 'right') {

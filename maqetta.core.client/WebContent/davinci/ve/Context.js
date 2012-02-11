@@ -601,9 +601,7 @@ return declare("davinci.ve.Context", null, {
     }, 
 
 	getThemeMeta: function(){
-		if(!this._themeMetaCache ){
-			this.getTheme();
-		}
+		
 		return this._themeMetaCache;
 	},
 	
@@ -1471,6 +1469,9 @@ return declare("davinci.ve.Context", null, {
 				}
 			}
 			var index;
+			
+			/* why is beforeChild never defined */
+			var beforeChild = null; 
 			if(!isContentCss){
 				if(isAppCss && contentCssLink){
 					beforeChild = contentCssLink;

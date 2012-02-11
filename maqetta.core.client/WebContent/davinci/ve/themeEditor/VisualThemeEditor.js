@@ -21,18 +21,35 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 		this.theme = theme;
 		var resource= themeEditorHtmls[0]; 
 
-		this.basePath=new Path(resource.getPath());
+		resource.then(dojo.hitch(this,function(res){
+			this.basePath=new Path(res.getPath());
+			this.context = new Context({
+				editor: this._themeEditor,
+				visualEditor: this,
+				containerNode: this.domNode,
+				baseURL: res.getURL(),
+				theme: theme
+			});
+
+			dojo.xhrGet({
+					url: res.getURL(),
+					handleAs: "text",
+					sync: true,
+					content:{} 
+				}).addCallback(dojo.hitch(this, function(result){
+					this.setContent("DEFAULT_PAGE", 
+									result,
+									themeCssfiles);
+				}));
+			
+		}))
+		
+		
 
 		
 
 		this._handles=[];
-		this.context = new Context({
-			editor: this._themeEditor,
-			visualEditor: this,
-			containerNode: this.domNode,
-			baseURL: resource.getURL(),
-			theme: theme
-		});
+		
 
 		dojo.connect(this.context, "onSelectionChange",this, "onSelectionChange");
 
@@ -42,16 +59,6 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 		}
 		// have the server insert the dojo URL dynamically 
 		
-		dojo.xhrGet({
-				url: resource.getURL(),
-				handleAs: "text",
-				sync: true,
-				content:{} 
-			}).addCallback(dojo.hitch(this, function(result){
-				this.setContent("DEFAULT_PAGE", 
-								result,
-								themeCssfiles);
-			}));
     },
     
     onSelectionChange : function (){

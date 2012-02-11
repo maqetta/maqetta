@@ -29,6 +29,7 @@ define(["dojo/_base/declare",
 	    postCreate : function(){
 	    	
 	        this._themeData = [];
+	       
 	        var themeDataPromoise = Library.getThemes(Workbench.getProject(), this.workspaceOnly);
 	        themeDataPromoise.then(dojo.hitch(this,function(_themeData){
 	        	this._themeCount = this._themeData.length;

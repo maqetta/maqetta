@@ -52,24 +52,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 		context.select(widget, false); // at least for V0.6 theme editor does not support multi select .select(widget, false); // at least for V0.6 theme editor does not support multi select 
 	},
 	
-	getSelectionProperties: function(updateContext){
-		if(!this._selectedWidget) {
-			return [{editor:this, widget:null, subwidget:null, cssValues: null, computedCssValues:null, appliesTo:['theme'], context:this.context }];
-		}
-		
-		 var v = this._getSelectionStyleValues(); 
-		 var domNode;
-			var rules = this._getCssRules();
-			this._rebaseCssRuleImagesForStylePalette(rules, v);
-		 
-		 
-		 var widgetType = this._selectedWidget.type;
-		 var domNode = this._theme.getDomNode(this._selectedWidget.domNode, widgetType, this._selectedSubWidget);
-		 var allStyle = dojo.getComputedStyle(domNode);
-		 
-		 return {editor:this, widget:this._selectedWidget, subwidget:this._selectedSubWidget, cssValues: v, computedCssValues:allStyle, appliesTo:['theme'], context:this.context};
-		
-	}, 
+	
 
 
 	_widgetStateChanged : function (e){
@@ -168,21 +151,23 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 	_getSelectionStyleValues: function (){
 		//debugger;;
 		
-		var rules=this._getCssRules();
-		if(rules.length==0) {
-			return null;
-		}
-		var allProps = {};
-		for(var s = 0; s < rules.length; s++){
-			var rule=rules[s];
-			for(var p = 0;p<rule.properties.length;p++){
-				//if(!allProps[rule.properties[p].name]){ // set to first found
-					allProps[rule.properties[p].name] = rule.properties[p].value;
-				//}
+		return this._getCssRules().then(dojo.hitch(this,function(rules){
+			if(rules.length==0) {
+				return null;
 			}
-		}
-		allProps = this.convertShortHandProps(allProps);
-		return allProps;
+			var allProps = {};
+			for(var s = 0; s < rules.length; s++){
+				var rule=rules[s];
+				for(var p = 0;p<rule.properties.length;p++){
+					//if(!allProps[rule.properties[p].name]){ // set to first found
+						allProps[rule.properties[p].name] = rule.properties[p].value;
+					//}
+				}
+			}
+			allProps = this.convertShortHandProps(allProps);
+			return allProps;
+		}));
+		
 	},
 	
 	addShortHandProps: function (values){
@@ -266,27 +251,34 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 			return null;
 		}
 		var allProps = {};
+		var ruleDeferreds = [];
 		for(var s = 0; s < selectors.length; s++){
-			var cssFiles = this._getCssFiles();
-			if (cssFiles){
-				for(var i = 0;i<cssFiles.length;i++){
-					var selectorNodes = cssFiles[i].getRules(selectors[s]);
-					for (sn = 0; sn < selectorNodes.length; sn++){
-						var selectorNode = selectorNodes[sn];
-						if(selectorNode){
-							var rule = selectorNode.searchUp( "CSSRule");
-							if(rule){
-								rules.push(rule);
+			ruleDeferreds.push(this._getCssFiles().then(function(cssFiles){
+				if (cssFiles){
+					for(var i = 0;i<cssFiles.length;i++){
+						var selectorNodes = cssFiles[i].getRules(selectors[s]);
+						for (sn = 0; sn < selectorNodes.length; sn++){
+							var selectorNode = selectorNodes[sn];
+							if(selectorNode){
+								var rule = selectorNode.searchUp( "CSSRule");
+								if(rule){
+									rules.push(rule);
+								}
 							}
 						}
 					}
 				}
+				return;
+			}));
+		}
+		var ruleDeferred = new dojo.DeferredList(ruleDeferreds);
+		return ruleDeferred.then(function(){
+			if (rules.length > 0) {
+				this._currentSelectionRules = rules;
 			}
-		}
-		if (rules.length > 0) {
-			this._currentSelectionRules = rules;
-		}
-		return rules;
+			return rules;
+		});
+		
 	},
 	
 	focus : function (){
@@ -510,6 +502,11 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 			
 			this.theme = dojo.isString(content)? dojo.fromJson(content) : content;
 			
+			system.resource.findResource(filename).then(dojo.hitch(this,function(file){
+				this.theme.file = file;
+			}));
+			
+			
 			//dojo.connect(this.visualEditor, "onSelectionChange", this,"onSelectionChange");
 			this.themeCssfiles = [];
 	
@@ -548,12 +545,14 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 			this.metaDataLoader = new query(metaResources);
 			this._theme = new CSSThemeProvider(metaResources, this.theme);
 			// connect to the css files, so we can update the canvas when the model changes
-			var cssFiles = this._getCssFiles();	
-			var context = this.getContext();
-			for (var i = 0; i < cssFiles.length; i++) {
-                dojo.connect(cssFiles[i], 'onChange', context,
-                        '_themeChange');
-            }
+			this._getCssFiles().then(this,function(cssFiles){
+				var context = this.getContext();
+				for (var i = 0; i < cssFiles.length; i++) {
+	                dojo.connect(cssFiles[i], 'onChange', context,
+	                        '_themeChange');
+	            }
+			});	
+			
 			this._themeFileContent = this.resourceFile.getText(); // get the content for use later when setting dirty. Timing issue
 
 			var subs = this._subscriptions;
@@ -611,13 +610,15 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 			
 		};
 		var results = [];
-		var cssFiles = this._getCssFiles();
-		var visitor = getVisitor(this._dirtyResource, this._URLResolver, results);
-		if (cssFiles){
-			for(var i=0;i<cssFiles.length;i++){
-				cssFiles[i].visit(visitor);
+		this._getCssFiles().then(dojo.hitch(this,function(cssFiles){
+			var visitor = getVisitor(this._dirtyResource, this._URLResolver, results);
+			if (cssFiles){
+				for(var i=0;i<cssFiles.length;i++){
+					cssFiles[i].visit(visitor);
+				}
 			}
-		}
+		}));
+		
 		
 		/* add the .theme file to the workingCopy resources so that its removed */
 		
@@ -647,13 +648,15 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 			};
 		}
 
-		var cssFiles = this._getCssFiles();
-		var visitor = getVisitor(this._dirtyResource, this._URLResolver, isWorkingCopy);
-		if (cssFiles){
-			for(var i=0;i<cssFiles.length;i++){
-				cssFiles[i].visit(visitor);
+		this._getCssFiles().then(dojo.hitch(this,function(cssFiles){
+			var visitor = getVisitor(this._dirtyResource, this._URLResolver, isWorkingCopy);
+			if (cssFiles){
+				for(var i=0;i<cssFiles.length;i++){
+					cssFiles[i].visit(visitor);
+				}
 			}
-		}
+		}));
+		
 		if(!isWorkingCopy) {
 			this.isDirty=false;
 		}

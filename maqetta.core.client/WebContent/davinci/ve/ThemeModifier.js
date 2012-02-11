@@ -9,15 +9,15 @@ return declare("davinci.ve.ThemeModifier", null, {
 
 	_getCssFiles: function(){
 		
-		if(this.cssFiles) {
-			return this.cssFiles;
+		if(this.cssFilePromise) {
+			return this.cssFilePromise;
 		}
 		
-		this.cssFiles = [];
 		
+		var cssFileLoaded = [];
 		for(var i = 0;i<this.themeCssfiles.length;i++){
 			var cssURL = this._themePath.getParentPath().append(this.themeCssfiles[i]).toString();
-			this.cssFiles.push(Factory.getModel({
+			var cssFile = Factory.getModel({
 				url: cssURL,
 			    includeImports: true,
 			    loader: function(url){
@@ -25,9 +25,12 @@ return declare("davinci.ve.ThemeModifier", null, {
 						return file.getText();
 					})
 				}
-			}));
+			});
+		
+			cssFileLoaded.push(cssFile.loaded);
 		}
-		return this.cssFiles;
+		this.cssFilePromise = new dojo.Deferred(cssFileLoaded);
+		return this.cssFilePromise;
 	},
 	
 

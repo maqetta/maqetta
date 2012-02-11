@@ -50,19 +50,22 @@ getThemes: function(base, workspaceOnly, flushCache){
 		themesPromise = null;
 	}
 	
-	function result(){
+	function filter(cache){
 		/* filters out workspace/non workspace values  before returning them.  always caches ALL themes */
 		var rlt = [];
-		if(_themesCache[base]){
-			
-			var cache= _themesCache[base];
-			for(var i=0;i<cache.length;i++){
-				if(!workspaceOnly || !cache[i].file.isVirtual()){
-					rlt.push(cache[i]);
-				}
+		for(var i=0;i<cache.length;i++){
+			if(!workspaceOnly || !cache[i].file.isVirtual()){
+				rlt.push(cache[i]);
 			}
 		}
+		
 		return rlt;
+	}
+	
+	if(workspaceOnly && themesPromise){
+		return themesPromise.then(function(allThemes){
+			return filter(allThemes);
+		});
 	}
 	
 	if(themesPromise){
@@ -87,11 +90,18 @@ getThemes: function(base, workspaceOnly, flushCache){
 				results.push(t);
 			}
 			_themesCache[base] = results;
-			return result();
+			return results;
 		}));
 		
 	
 	});
+	
+	if(workspaceOnly){
+		return themesPromise.then(function(allThemes){
+			return filter(allThemes);
+		});
+	}
+	
 	return themesPromise;
 	
 },
@@ -120,7 +130,7 @@ getThemeMetadata: function(theme) {
 	}
 	var defs = new dojo.DeferredList(metaResourcesDefPromise);
 	var metaResources = [];
-	defs.then(dojo.hitch(this,function(metaResource){
+	return defs.then(dojo.hitch(this,function(metaResource){
 		for(var i=0;i<metaResource.length;i++)
 			/* HELP! TODO: FIXME:Why are these things coming in as arrays of [true, resource] */
 			metaResources.push(metaResource[i][1]);

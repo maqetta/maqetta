@@ -1,4 +1,4 @@
-define(["dojo/_base/declare"], function(declare) {
+define(["dojo/_base/declare", "dojo/_base/Deferred"], function(declare, Deferred) {
 
 //TODO: Create custom HTML metadata provider similar to CSS
 
@@ -9,8 +9,11 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 	
 	constructor: function(resources, theme){
 		this._theme = theme;
-		this.url = resources[0].getURL();
-		this.getWidgets();
+		Deferred.when(resources[0],dojo.hitch(this,function(res){
+			this.url = res.getURL();
+			this.getWidgets();
+		}));
+		
 		
 	},
 

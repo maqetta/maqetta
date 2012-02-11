@@ -123,9 +123,17 @@ return declare("davinci.ve.themeEditor.Context", [Context], {
 		dojo.query('.dvThemeWidget').forEach(this.theme.removeWidgetStyleValues);
 			// set the style on all widgets and subwidgets that support the state
 			//this._themeEditor._theme.setWidgetStyleValues(widgets[i],this._currentState);
+		
+		this._initThemeMeta();
 		return promise;
 	},
-	
+	getThemeMeta: function(){
+		if(!this._themeMetaCache) {
+			this._themeMetaCache = Library.getThemeMetadata(this.theme);
+		}
+
+		return this._themeMetaCache;
+	},
 	attach: function(widget){
 		this.inherited(arguments);
 		if(!widget || widget.internal){
@@ -145,14 +153,6 @@ return declare("davinci.ve.themeEditor.Context", [Context], {
 		}
 	},
 	
-	getThemeMeta: function(){
-		if(!this._themeMetaCache) {
-			this._themeMetaCache = Library.getThemeMetadata(this.theme);
-		}
-
-		return this._themeMetaCache;
-	},
-
 	select: function(widget, add){
 	
 		if(!widget  || widget==this.rootWidget){

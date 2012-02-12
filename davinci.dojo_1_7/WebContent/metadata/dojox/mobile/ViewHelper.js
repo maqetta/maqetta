@@ -202,8 +202,41 @@ ViewHelper.prototype = {
 			}
 		}
 		this._updateVisibility(selectedNode);
-	}
+	},
 	
+	/**
+	 * Called by RemoveCommand before removal actions take place.
+	 * @param {davinci.ve._Widget} widget  A View widget
+	 * @return {function}  Optional function to call after removal actions take place
+	 */
+	onRemove: function(widget){
+		if(!widget || !widget.domNode || !domClass.contains(widget.domNode,"mblView")){
+			return;
+		}
+		var domNode = widget.domNode;
+		var context = widget.getContext();
+		var parentNode = domNode.parentNode;
+		var node;
+		var changesNeeded = false;
+		// If deleting the currently selected View, then we need a find a new selected view
+		if(domNode.style.display !== "none" || domNode.getAttribute("selected") === "true"){
+			for(var i=0;i<parentNode.children.length;i++){
+				node=parentNode.children[i];
+				if(domClass.contains(node,"mblView")){
+					if(node!=domNode){
+						changesNeeded = true;
+						break;
+					}
+				}
+			}
+		}
+		if(changesNeeded){
+			return function(){
+				context.select(node._dvWidget);
+			};
+		}
+	}
+
 };
 
 return ViewHelper;

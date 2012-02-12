@@ -194,27 +194,31 @@ define(["dojo/_base/declare",
 		_setValues: function() {
 			
 			for(var i=0;i< this._pageLayout.length;i++){
-				var widget = this._widget;
-				var targetProp = this._pageLayout[i].target;
-				var propValue = null;
-				
-				if(targetProp=="_children"){
-					propValue =   this._widget.getChildrenData();
-					if(propValue && propValue.length == 1){
-						propValue = propValue[0];
+				// Verify that DOM element actually exists
+				var propNode = dojo.byId(this._pageLayout[i].id);
+				if(propNode){
+					var widget = this._widget;
+					var targetProp = this._pageLayout[i].target;
+					var propValue = null;
+					
+					if(targetProp=="_children"){
+						propValue =   this._widget.getChildrenData();
+						if(propValue && propValue.length == 1){
+							propValue = propValue[0];
+						}else{
+							// need to account for this case?
+							propValue = this._widget.getPropertyValue(targetProp);
+						}
 					}else{
-						// need to account for this case?
 						propValue = this._widget.getPropertyValue(targetProp);
 					}
-				}else{
-					propValue = this._widget.getPropertyValue(targetProp);
-				}
-				if(this._pageLayout[i].value != propValue){
-					this._pageLayout[i].value = propValue;
-					if(this._pageLayout[i].type=='boolean')
-						dojo.attr( this._pageLayout[i].id, "checked",  this._pageLayout[i].value);
-					else
-						dojo.attr( this._pageLayout[i].id, "value",  this._pageLayout[i].value);
+					if(this._pageLayout[i].value != propValue){
+						this._pageLayout[i].value = propValue;
+						if(this._pageLayout[i].type=='boolean')
+							dojo.attr( propNode, "checked",  this._pageLayout[i].value);
+						else
+							dojo.attr( propNode, "value",  this._pageLayout[i].value);
+					}
 				}
 			}
 		}

@@ -23,6 +23,13 @@ return declare("davinci.ve.commands.RemoveCommand", null, {
 		}
 		var context = widget.getContext(),
 			parent = widget.getParent() || context.getContainerNode();
+		var onRemoveCallback;
+		var helper = widget.getHelper();
+		if(helper && helper.onRemove){
+			// onRemove helper optionally returns a function to call after delete remove command
+			// has finished the removal.
+			onRemoveCallback = helper.onRemove(widget);
+		}
 
 		if(!this._data){
 			this._index = dojo.indexOf(parent.getChildren(), widget);
@@ -42,6 +49,10 @@ return declare("davinci.ve.commands.RemoveCommand", null, {
 		
 		// Recompute styling properties in case we aren't in Normal state
 		States.resetState(widget);
+		
+		if(onRemoveCallback){
+			onRemoveCallback();
+		}
 	},
 
 	undo: function(){

@@ -46,7 +46,7 @@ define({ root:
 		"noFilesSelected":"No files selected yet",
 		"dueDateIncorrect":"Due Date incorrect",
 		"titleRequired":"Title required",
-		"inviteSucessful":"You have successfully invited the reviewers!",
+		"inviteSuccessful":"You have successfully invited the reviewers!",
 		"draftSaved":"Saved as draft successfully!",
 		"inviteFailed":"Failed to send out the invitation",
 		"warning":"Warning",

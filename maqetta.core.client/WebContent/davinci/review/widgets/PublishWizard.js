@@ -1,7 +1,7 @@
 define([
 	"dojo/_base/declare",
-	"dijit/_Widget",
-	"dijit/_Templated",
+	"dijit/_WidgetBase",
+	"dijit/_TemplatedMixin",
 	"dijit/layout/StackContainer",
 	"dijit/layout/ContentPane",
 	"dijit/form/SimpleTextarea",
@@ -26,19 +26,23 @@ define([
 	"davinci/review/model/resource/Empty",
 	"dijit/tree/TreeStoreModel",
 	"davinci/review/model/store/GeneralReviewReadStore",
-	"dojo/i18n!../widgets/nls/widgets",
+	"dojo/i18n!./nls/widgets",
 	"dojo/i18n!dijit/nls/common",
 	"dojo/text!./templates/PublishWizard.html",
 	"dojo/text!./templates/MailFailureDialogContent.html"
-], function(declare, _Widget, _Templated, StackContainer, ContentPane, SimpleTextarea, NumberTextBox, ValidationTextBox, DateTextBox, 
+], function(declare, _WidgetBase, _TemplatedMixin, StackContainer, ContentPane, SimpleTextarea, NumberTextBox, ValidationTextBox, DateTextBox, 
 		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojostring, Dialog, dijitTree, reviewTree,  
 		Runtime, Workbench, Folder, File, Empty, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls, 
 		templateString, warningString) {
 	
-return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
+return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedMixin], {
+
+	templateString: templateString,
 
 	postMixInProperties: function() {
 		this.inherited(arguments);
+		dojo.mixin(this, widgetsNls);
+		dojo.mixin(this, dijitNls);
 	},
 
 	postCreate: function() {
@@ -519,9 +523,7 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 		if (files) {
 			selections = files;
 		}
-		dojo.forEach(selections, dojo.hitch(this, function(item) {
-			this.getChildrenFiles(item);
-		}));
+		dojo.forEach(selections, this.getChildrenFiles);
 		this.update();
 		dojo.publish('/davinci/review/publish/valueChanged');
 	},
@@ -668,90 +670,87 @@ return declare("davinci.review.widgets.PublishWizard", [_Widget, _Templated], {
 		var versionTitle = this.versionTitle.value;
 		var dueDate = this.dueDate.get('value');
 		var dueDateString = dueDate?dojo.date.locale.format(dueDate, {
-			selector:'date', 
-			datePattern:'MM/dd/yyyy', 
-			timePattern:'HH:mm:ss'}).toLowerCase():"infinite";
-			var desireWidth = this.desireWidth.value || 0;
-			var desireHeight = this.desireHeight.value || 0;
-			var	resources = dojo.map(this.reviewFiles, function(item) {
-				return item.getPath();
-			});
-			var receiveEmail = this.receiveEmail.get("value") == "on" ? "true" : "false";
-			var warningString = this.warningString;
+				selector:'date', 
+				formatLength:'short'
+			}).toLowerCase() : "infinite";
+		var desireWidth = this.desireWidth.value || 0;
+		var desireHeight = this.desireHeight.value || 0;
+		var	resources = dojo.map(this.reviewFiles, function(item) {
+			return item.getPath();
+		});
+		var receiveEmail = this.receiveEmail.get("value") == "on" ? "true" : "false";
 
-			var location = Workbench.location().match(/http:\/\/.*:\d+\//);
-			dojo.xhrPost({
-				url: location + "maqetta/cmd/publish",
-				sync:false,
-				handleAs:"text",
-				content:{
-					'isUpdate': this.node && !this.isRestart ? true : false,
-					'isRestart' : this.isRestart ? true : false,
-					'vTime': this.node ? this.node.timeStamp : null,
-					'reviewers':reviewers,
-					'emails':emails,
-					'message':message,
-					'versionTitle':versionTitle,
-					'resources' :resources,
-					'desireWidth':desireWidth,
-					'desireHeight':desireHeight,
-					'savingDraft':value,
-					'dueDate':dueDateString,
-					'receiveEmail':receiveEmail
-				},
-				error: function(response) {
-					var msg = response.responseText;
-					msg = msg.substring(msg.indexOf("<title>")+7, msg.indexOf("</title>"));
-					Runtime.handleError(dojostring.substitute(widgetsNls.errorPublish, [response, msg]));
-				}
-			}).then(function(result) {
-				if (typeof hasToaster == "undefined") {
-					new dojox.widget.Toaster({
-						position: "br-left",
-						duration: 4000,
-						messageTopic: "/davinci/review/resourceChanged"
+		var location = Workbench.location().match(/http:\/\/.*:\d+\//);
+		dojo.xhrPost({
+			url: location + "maqetta/cmd/publish",
+			sync:false,
+			handleAs:"text",
+			content:{
+				isUpdate: this.node && !this.isRestart,
+				isRestart: this.isRestart,
+				vTime: this.node ? this.node.timeStamp : null,
+				reviewers:reviewers,
+				emails:emails,
+				message:message,
+				versionTitle:versionTitle,
+				resources :resources,
+				desireWidth:desireWidth,
+				desireHeight:desireHeight,
+				savingDraft:value,
+				dueDate:dueDateString,
+				receiveEmail:receiveEmail
+			},
+			error: function(response) {
+				var msg = response.responseText;
+				msg = msg.substring(msg.indexOf("<title>")+7, msg.indexOf("</title>"));
+				Runtime.handleError(dojostring.substitute(widgetsNls.errorPublish, [response, msg]));
+			}
+		}).then(function(result) {
+			if (typeof hasToaster == "undefined") {
+				new Toaster({
+					position: "br-left",
+					duration: 4000,
+					messageTopic: "/davinci/review/resourceChanged"
+				});
+				hasToaster = true;
+			}
+			if (result=="OK") {
+				var key = value ? "draftSaved" : "inviteSuccessful";
+				dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls[key], type:"message"}, "create"]);
+			} else {
+				var dialogContent = dojostring.substitute(warningString, {
+						htmlContent: result, 
+						inviteNotSent: widgetsNls.inviteNotSent, 
+						mailFailureMsg: widgetsNls.mailFailureMsg, 
+						buttonOk: dijitNls.buttonOk
 					});
-					hasToaster = true;
-				}
-				if (result=="OK") {
-					if (!value) {
-						dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls.inviteSucessful, type:"message"}, "create"]);
-					} else {
-						dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls.draftSaved, type:"message"}, "create"]);
-					}
+				dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls.inviteFailed, type:"warning"}, "create"]);
+				if (!this.invitationDialog) {
+					this.invitationDialog = new Dialog({
+						title: widgetsNls.warning,
+						content: dialogContent
+					});
+					this.invitationDialog.connect(dijit.byId("_mailFailureDialogButton"), "onClick", function() {
+						this.hide();
+					});
 				} else {
-					var dialogContent = dojostring.substitute(warningString, {htmlContent: result, inviteNotSent: widgetsNls.inviteNotSent, 
-						mailFailureMsg: widgetsNls.mailFailureMsg, buttonOk: dijitNls.buttonOk});
-					dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls.inviteFailed, type:"warning"}, "create"]);
-					if (!this.invitationDialog) {
-						this.invitationDialog = new dijit.Dialog({
-							title: widgetsNls.warning,
-							content: dialogContent
-						});
-						this.invitationDialog.connect(dijit.byId("_mailFailureDialogButton"), "onClick", function() {
-							this.hide();
-						});
-					} else {
-						this.invitationDialog.content = dialogContent;
-					}
-					this.invitationDialog.show();
+					this.invitationDialog.content = dialogContent;
 				}
-			});
-			this.onClose();
+				this.invitationDialog.show();
+			}
+		});
+		this.onClose();
 	},
 
-	onClose:function() {
+	onClose: function() {
 	},
 
 	destroy: function() {
 		this.inherited(arguments);
-		dojo.forEach(this._subs, function(sub) {
-			dojo.unsubscribe(sub);
-		});
+		this._subs.forEach(dojo.unsubscribe);
 		delete this._subs;
 		this.sourceTree.destroyRecursive();
 		this.targetTree.destroyRecursive();
 	}	
-
 });
 });

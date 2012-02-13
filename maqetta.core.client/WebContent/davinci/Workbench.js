@@ -523,6 +523,23 @@ var Workbench = {
 	getAllOpenEditorIds: function (){
 	},
 	
+	_showModal: function(content, title, style, callBack){
+
+		
+		 var myDialog = new dijit.Dialog({
+		      title: title,
+		      content: content,
+		      style: style || "width: 300px"
+		  });
+		var handle = dojo.connect(content,"onClose",this,function(){
+									myDialog.hide();
+									dojo.disconnect(handle);
+									if(callBack) callBack();
+								  });
+		myDialog.show();
+		
+		
+	},
 	
 	showModal: function(content, title, style, callback){
 		var myDialog = new Dialog({
@@ -532,6 +549,7 @@ var Workbench = {
 		});
 		var handle = dojo.connect(content, "onClose", content, function(){
 			var teardown = true;
+			
 			if (callback) {
 				var teardown = callback();
 				if (!teardown) {
@@ -542,12 +560,13 @@ var Workbench = {
 					};
 				}
 			}
+			myDialog.hide();
 			if (teardown) {
 				dojo.disconnect(handle);
 			}
-			if (Workbench.cancel) {
-				myDialog.hide();
-			}
+		
+			
+			
 		});
 		myDialog.show();
 	},

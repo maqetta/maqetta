@@ -132,15 +132,24 @@ define(["dojo/_base/declare",
 				return;
 			}
 			this._value = value;
-			var path = [];
-			for(var i=value; i.parent; i = i.parent) {
-				path.unshift(i);
-			}
-			return this.fileTree.set("path", path);
+			
+			this._value.then(dojo.hitch(this,function(v){
+				var path = [];
+				for(var i=value; i.parent; i = i.parent) {
+					path.unshift(i);
+				}
+				return this.fileTree.set("path", path);
+			}));
+			
 		},
 		
 		_setNewFileNameAttr: function(name){
-			this.fileDialogFileName.set('value', name);
+			
+			
+			name.then(dojo.hitch(this,function(value){
+				this.fileDialogFileName.set('value',value);	
+			}));
+			
 		},
 		
 		_getForcedRootAttr: function(){
@@ -169,49 +178,57 @@ define(["dojo/_base/declare",
 			
 			var resources = this.fileTree.get('selectedItems');
 			var resource = (resources!=null && resources.length > 0)? resources[0] : null;
-			var folderResource;
+			var folderResource = new dojo.Deferred();
 			var projectNameLength = ("./" + Workbench.getProject()).length + 1;
 			if(resource==null){
 				folderResource = this._getForcedRootAttr();
 			}else if(resource.elementType=="Folder"){
-				folderResource = resource;
+				folderResource .resolve( resource);
 			}else{
-				this.fileDialogFileName.set( 'value', resource.getName());
-				folderResource = resource.parent;
+				var def1 = new dojo.Deferred();
+				def1.resolve(resource);
+				
+				this.fileDialogFileName.set( 'value', def1);
+				folderResource .resolve( resource.parent);
 			}
-			if(this._whereDropDownButton && this._whereMenu){
-				var folderPathString = folderResource.getPath().substring(projectNameLength);
-				var folderNameString = folderResource.getName();
-				var trimmed = dojo.trim(folderPathString);
-				var whereValue = trimmed.length==0 ? this.langObj.root : folderNameString;
-		        this._whereDropDownButton.attr( 'label', whereValue);
-		        this._whereMenu.attr( 'value', folderPathString);
-				this._whereMenu.destroyDescendants();
-				var menuItem;
-				var done = false;
-				var infiniteLoopCheck = 0;	// Just being paranoid about some weird case where done is never true
-				do{
+			
+			
+			folderResource.then(dojo.hitch(this,function(fResource){
+				if(this._whereDropDownButton && this._whereMenu){
+					var folderPathString = fResource.getPath().substring(projectNameLength);
+					var folderNameString = fResource.getName();
 					var trimmed = dojo.trim(folderPathString);
-					if(trimmed.length == 0){
-						done = true;
-						folderNameString = this.langObj.root;
-					}
-					menuItem = new MenuItem({label: folderNameString, value: folderPathString, onClick:dojo.hitch(this, function(label, value, e){
-						this._whereMenu.attr('value', value);
-						this._whereDropDownButton.attr( 'label', label);
-						var folderPath = new Path(Workbench.getProject()).append(value);
-						var folder = Resource.findResource(folderPath.toString());
-						this.fileTree.set("selectedItems", [folder]);
-					}, folderNameString, folderPathString)});
-					this._whereMenu.addChild(menuItem);
-					if(!done){
-						folderResource = folderResource.parent;
-						folderPathString = folderResource.getPath().substring(projectNameLength);
-						folderNameString = folderResource.getName();
-					}
-					infiniteLoopCheck++;
-				} while(!done && infiniteLoopCheck < 100);
-			}
+					var whereValue = trimmed.length==0 ? this.langObj.root : folderNameString;
+			        this._whereDropDownButton.attr( 'label', whereValue);
+			        this._whereMenu.attr( 'value', folderPathString);
+					this._whereMenu.destroyDescendants();
+					var menuItem;
+					var done = false;
+					var infiniteLoopCheck = 0;	// Just being paranoid about some weird case where done is never true
+					do{
+						var trimmed = dojo.trim(folderPathString);
+						if(trimmed.length == 0){
+							done = true;
+							folderNameString = this.langObj.root;
+						}
+						menuItem = new MenuItem({label: folderNameString, value: folderPathString, onClick:dojo.hitch(this, function(label, value, e){
+							this._whereMenu.attr('value', value);
+							this._whereDropDownButton.attr( 'label', label);
+							var folderPath = new Path(Workbench.getProject()).append(value);
+							var folder = Resource.findResource(folderPath.toString());
+							this.fileTree.set("selectedItems", [folder]);
+						}, folderNameString, folderPathString)});
+						this._whereMenu.addChild(menuItem);
+						if(!done){
+							fResource = fResource.parent;
+							folderPathString = fResource.getPath().substring(projectNameLength);
+							folderNameString = fResource.getName();
+						}
+						infiniteLoopCheck++;
+					} while(!done && infiniteLoopCheck < 100);
+				}
+			}));
+			
 		},
 		
 		_checkValid: function() {
@@ -266,10 +283,15 @@ define(["dojo/_base/declare",
 		_createResource : function(){
 			var folderName = this._whereMenu.attr('value');
 			var fileName = this.fileDialogFileName.get( 'value');
-			var resource = Resource.findResource(folderName + "/" + fileName);
-			if(resource) return resource;
-			var folder = Resource.findResource(folderName);
-			return folder.createResource(fileName);
+			return Resource.findResource(folderName + "/" + fileName).then(function(resource){
+				if(resource) return resource;
+				return Resource.findResource(folder).then(function(folder){
+					return folder.createResource(fileName);	
+				});
+					
+			});
+			
+			
 		},
 		
 		onClose : function(){}

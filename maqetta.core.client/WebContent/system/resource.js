@@ -77,35 +77,55 @@ var resource = {
 //		}
 	},
 	
+	
+	
 	createResource : function(fullPath,  isFolder, parent){
+		var namesplit = fullPath.split("/");
+		parent = parent || system.resource.getWorkspace();
+		var length = !isFolder? namesplit.length-1 : namesplit.length;
+			for(var i=0;i<length;i++){
+				if(namesplit[i]=="." || namesplit[i]=="") continue;
+				
+				var folder = parent.getChild(namesplit[i]);
+				if(folder!=null){
+					parent = folder;
+				}else{
+					parent = parent.createResource(namesplit[i],true);
+				}
+			}
+			if(!isFolder){
+				parent = parent.createResource(namesplit[namesplit.length-1]);
+			}
+		return parent;
+	},
+	
+	_createResource : function(fullPath,  isFolder, parent){
 		var namesplit = fullPath.split("/");
 		var parentPromise = new Deferred();
 		
-		parentPromise.resolve(parent || resource.getWorkspace());
 		
-		parentPromise.then(function(parent){
+		
+		parent = parent || resource.getWorkspace();
+		
+		
 			var length = !isFolder? namesplit.length-1 : namesplit.length;
 			for(var i=0;i<length;i++){
 				if(namesplit[i]=="." || namesplit[i]=="") continue;
 				
 				var folder = parent.getChild(namesplit[i]);
 				if(folder!=null){
-					parentPromise.resolve(folder);
+					parent = folder;
 				}else{
-					parent.createResource(namesplit[i]).then(function(parent){
-						parentPromise.resolve(parent);
-					});
+					return parent.createResource(namesplit[i]);
 				}
 			}
 			if(!isFolder){
-				parent = parent.createResource(namesplit[namesplit.length-1]).then(function(parent){
-					parentPromise.resolve(parent);
-				});
+				return parent.createResource(namesplit[namesplit.length-1]);
 			}
-		});
 		
 		
-		return parentPromise;
+		
+		return parent;
 	},
 	
 	listProjects : function(){
@@ -179,9 +199,10 @@ var resource = {
 			});
 			
 		}
-		dojo.when(rootPromise, onItem); 
+		
 		rootPromise = new Deferred();
 		rootPromise.resolve(resource.root);
+		dojo.when(rootPromise, onItem); 
 		
 		return rootPromise;
 	},
@@ -279,7 +300,7 @@ var resource = {
 			for (var i=seg1;i<segments.length;i++){
 				var deferred = new Deferred();
 				found=null;
-				if (!bResource.isLoaded() ){
+				if (bResource.elementType=="Folder" && !bResource.isLoaded() ){
 					serverFind=true;
 					break;
 				}
@@ -346,7 +367,15 @@ var resource = {
 		}else {
 			foundResources[0]=found;
 		}
-		return isWildcard ? foundResources : foundResources[0];
+		var f1 = isWildcard ? foundResources : foundResources[0];
+		
+		if(f1==null){
+			var def = new dojo.Deferred();
+			def.resolve(null);
+			return def;
+		}
+		return f1;
+		
 	},
 	alphabeticalSort: function(items){
 		return items.sort(function(a,b) {

@@ -43,8 +43,16 @@ var createNewDialog = function(fileNameLabel, createLabel, type, dialogSpecificC
 			folder= Resource.findResource(Workbench.getProject());
 		}
 	}
+	var proposedFileName = null;
 	
-	var proposedFileName = fileName || uiResource.getNewFileName('file',folder,"." + type);
+	if(fileName){
+		proposedFileName = new dojo.Deferred();
+		proposedFileName.resolve(fileName);
+	} else{
+		proposedFileName =  uiResource.getNewFileName('file',folder,"." + type);
+		
+	}
+	
 	var dialogOptions = {newFileName:proposedFileName,
 						fileFieldLabel:fileNameLabel, 
 						folderFieldLabel:"Where:", // FIXME: i18n
@@ -56,12 +64,14 @@ var createNewDialog = function(fileNameLabel, createLabel, type, dialogSpecificC
 
 
 var checkFileName = function(fullPath) {
-	var resource = Resource.findResource(fullPath);
-	if(resource){
-		alert("File already exists!");
-	}
+	return Resource.findResource(fullPath).then(function(resource){
+		if(resource){
+			alert("File already exists!");
+		}
 
-	return !resource;
+		return !resource;	
+	});
+	
 };
 
 var getSelectedResource = function(){
@@ -70,6 +80,7 @@ var getSelectedResource = function(){
 
 var uiResource = {
 		newHTML: function(){
+			
 				var langObj = uiNLS;
 				var dialogSpecificClass = "davinci/ui/widgets/NewHTMLFileOptions";
 				var newDialog = createNewDialog(langObj.fileName, langObj.create, "html", dialogSpecificClass);
@@ -79,29 +90,33 @@ var uiResource = {
 						var optionsWidget = newDialog.dialogSpecificWidget;
 						var options = optionsWidget.getOptions();
 						var resourcePath = newDialog.get('value');
-						var check = checkFileName(resourcePath);
-						if(check){
-							var resource = Resource.createResource(resourcePath);
-							resource.isNew = true;
-							var text = Resource.createText("HTML", {resource:resource});
-							if(text){
-								resource.setText(text);
+						
+						checkFileName(resourcePath).then(dojo.hitch(this,function(check){
+							
+							if(check){
+								Resource.createResource(resourcePath).then(function(resource){
+									resource.isNew = true;
+									var text = Resource.createText("HTML", {resource:resource});
+									if(text){
+										resource.setText(text);
+									}
+									var device = options.device;
+									if(device === 'desktop'){
+										device = 'none';
+									}
+									var newHtmlParams = {
+										device:device,
+										flowlayout:(options.layout=='flow')+'',	// value need to be strings 'true' or 'false'
+										theme: options.theme,
+										themeSet:newDialog.dialogSpecificWidget._selectedThemeSet
+									};
+									uiResource.openResource(resource, newHtmlParams);
+									Workbench.workbenchStateCustomPropSet('nhfo',options);
+								});
+							} else {
+								teardown = false;
 							}
-							var device = options.device;
-							if(device === 'desktop'){
-								device = 'none';
-							}
-							var newHtmlParams = {
-								device:device,
-								flowlayout:(options.layout=='flow')+'',	// value need to be strings 'true' or 'false'
-								theme: options.theme,
-								themeSet:newDialog.dialogSpecificWidget._selectedThemeSet
-							};
-							uiResource.openResource(resource, newHtmlParams);
-							Workbench.workbenchStateCustomPropSet('nhfo',options);
-						} else {
-							teardown = false;
-						}
+						}));
 					}
 					return teardown;
 				};
@@ -115,17 +130,20 @@ var uiResource = {
 				var teardown = true;
 				if(!newDialog.cancel){
 					var resourcePath = newDialog.get('value');
-					var check = checkFileName(resourcePath);
-					if (check) {
-						var resource = Resource.createResource(resourcePath);
-						resource.isNew = true;
-						var text = Resource.createText("CSS", {resource:resource});
-						if(text)
-							resource.setText(text);
-						uiResource.openResource(resource);
-					} else {
-						teardown = false;
-					}
+					checkFileName(resourcePath).then(dojo.hitch(this,function(check){
+						if (check) {
+							Resource.createResource(resourcePath).then(function(resource){
+								resource.isNew = true;
+								var text = Resource.createText("CSS", {resource:resource});
+								if(text)
+									resource.setText(text);
+								uiResource.openResource(resource);
+							})
+					
+						} else {
+							teardown = false;
+						}
+					}));
 				}
 				return teardown;
 			};
@@ -172,16 +190,18 @@ var uiResource = {
 				var teardown = true;
 				if(!newFolderDialog.cancel){
 					var resourcePath = newFolderDialog.get('value');
-					var check = checkFileName(resourcePath);
-					if (check) {
-						newFolder= Resource.createResource(resourcePath,true);
-					} else {
-						teardown = false;
-					}
+					checkFileName(resourcePath).then(function(check){
+						if (check) {
+							newFolder= Resource.createResource(resourcePath,true);
+							if(callback) {
+								dojo.when(newFolder, callback);
+							}
+						} else {
+							teardown = false;
+						}
+					});
 				}
-				if(callback) {
-					callback(newFolder);
-				}
+				
 				return teardown;
 			};
 			
@@ -202,28 +222,35 @@ var uiResource = {
 				var teardown = true;
 				if(!newDialog.cancel){
 					var resourcePath = newDialog.get('value');
-					var check = checkFileName(resourcePath);
-					if (check) {
-						var oldResource = Resource.findResource(oldFileName);
-				        var oldContent = oldEditor.editorID == "davinci.html.CSSEditor" ? oldEditor.getText() : oldEditor.model.getText();
-						var existing=Resource.findResource(resourcePath);
-						oldEditor.editorContainer.forceClose(oldEditor);
-						if(existing){
-							existing.removeWorkingCopy();
-							existing.deleteResource();
+					checkFileName(resourcePath).then(dojo.hitch(this,function(check){
+						if (check) {
+							Resource.findResource(oldFileName).then(function(oldResource){
+								var oldContent = oldEditor.editorID == "davinci.html.CSSEditor" ? oldEditor.getText() : oldEditor.model.getText();
+								Resource.findResource(resourcePath).then(function(existing){
+									if(existing){
+										existing.removeWorkingCopy();
+										existing.deleteResource();
+									}
+								})
+								oldEditor.editorContainer.forceClose(oldEditor);
+								
+								// Do various cleanups around currently open file
+								oldResource.removeWorkingCopy();
+								oldEditor.isDirty = false;
+								// Create a new editor for the new filename
+								Resource.createResource(resourcePath).then(function(file){
+									var pageBuilder =new RebuildPage();
+									var newText = pageBuilder.rebuildSource(oldContent, file);
+									file.setContents(newText);
+									Workbench.openEditor({fileName: file, content: newText});
+								});
+								
+							});
+					        
+						} else {
+							teardown = false;
 						}
-						// Do various cleanups around currently open file
-						oldResource.removeWorkingCopy();
-						oldEditor.isDirty = false;
-						// Create a new editor for the new filename
-						var file = Resource.createResource(resourcePath);
-						var pageBuilder =new RebuildPage();
-						var newText = pageBuilder.rebuildSource(oldContent, file);
-						file.setContents(newText);
-						Workbench.openEditor({fileName: file, content: newText});
-					} else {
-						teardown = false;
-					}
+					}));
 				}
 				return teardown;
 			};
@@ -237,18 +264,19 @@ var uiResource = {
 				var teardown = true;
 				if(!newDialog.cancel){
 					var resourcePath = newDialog.get('value');
-					var check = checkFileName(resourcePath);
-					if (check) {
-						var resource = Resource.createResource(resourcePath);
-						resource.isNew = true;
-						var text = Resource.createText("CSS", {resource:resource});
-						if(text) {
-							resource.setText(text);
-						}
-						uiResource.openResource(resource);
-					} else {
-						teardown = false;
+					checkFileName(resourcePath).then(dojo.hitch(this,function(check){
+						if (check) {
+							var resource = Resource.createResource(resourcePath);
+							resource.isNew = true;
+							var text = Resource.createText("CSS", {resource:resource});
+							if(text) {
+								resource.setText(text);
+							}
+							uiResource.openResource(resource);
+						} else {
+							teardown = false;
 					}
+					}));
 				}
 				return teardown;
 			};
@@ -361,21 +389,40 @@ var uiResource = {
 		getNewFileName:function (fileOrFolder, fileDialogParentFolder, extension){
 			
 			var existing, proposedName;
-			var count=0;
+			var count=1;
 			if(!extension){
 				extension="";
 			}
-			do{
-				count++;
+			
+			function newName(){
 				if(fileOrFolder==='folder'){
-					proposedName='folder'+count;
+					return 'folder'+count;
 				}else{
-					proposedName='file'+count+extension;
-				}
-				var fullname=fileDialogParentFolder.getPath()+'/'+proposedName;
-				existing=Resource.findResource(fullname);
-			}while(existing);
-			return proposedName;
+					return 'file'+count+extension;
+				}	
+			}
+			
+			function checkResource(resourcePath, name){
+				var fullName = resourcePath + "/" + name;
+					return Resource.findResource(fullName).then(function(res){
+						if(!res){
+							return true;
+						}else{
+							count++;
+							return checkResource(resourcePath, newName());
+						}
+					})
+
+			
+			}
+			
+			return fileDialogParentFolder.then(function(res){
+				
+				return checkResource(res.getPath(),newName()).then(function(){
+					return newName();
+				});
+			})
+			
 		},
 
 		canModify: function(item){

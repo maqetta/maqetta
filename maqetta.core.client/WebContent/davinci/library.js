@@ -74,7 +74,7 @@ getThemes: function(base, workspaceOnly, flushCache){
 	var results = [];
 	for (var i = 0; i < allThemes.length; i++){
 		var contents = allThemes[i].getText();
-		var t = eval(contents);
+		var t = JSON.parse(contents);
 		t.file = allThemes[i];
 		results.push(t);
 	}

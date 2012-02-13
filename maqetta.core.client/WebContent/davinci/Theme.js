@@ -132,7 +132,7 @@ define([
 				
 			}
 		}
-		deferreds.push(themeFile.setContents("(" + dojo.toJson(themeJson)+")"));
+		deferreds.push(themeFile.setContents(JSON.stringify(themeJson)));
 		for(var name in toSave){
 		    deferreds.push(toSave[name].save());
 		}

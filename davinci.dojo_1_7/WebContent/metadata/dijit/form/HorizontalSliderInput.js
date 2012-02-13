@@ -321,7 +321,7 @@ return declare(ContainerInput, {
 		var value = null;
 		if (selectVal === "rules") {
 			value = this._getWidgetTypeForRule();
-		} else if (value === "labels") {
+		} else if (selectVal === "labels") {
 			value = this._getWidgetTypeForRuleLabels();
 		} else {
 			console.log('WARNING. HorizontalSliderInput.js _getTypeFromSelectValue(). Invalid combo box value: val = ' + selectVal);

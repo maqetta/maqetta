@@ -60,7 +60,6 @@ var Folder = declare("davinci.model.resource.Folder", Resource, {
 			if (this._loading) {
 				return this._loading;
 			}
-			debugger;
 			this._loading=Runtime.serverJSONRequest({
 				url:"./cmd/listFiles",
 				content:{'path':this.getPath()}

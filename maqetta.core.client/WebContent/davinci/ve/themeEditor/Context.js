@@ -124,14 +124,19 @@ return declare("davinci.ve.themeEditor.Context", [Context], {
 			// set the style on all widgets and subwidgets that support the state
 			//this._themeEditor._theme.setWidgetStyleValues(widgets[i],this._currentState);
 		
-		this._initThemeMeta();
+		this.initThemeMeta();
 		return promise;
 	},
+	initThemeMeta: function(){
+		
+		Library.getThemeMetadata(this.theme).then(dojo.hitch(this,function(themeMeta){
+			this._themeMetaCache = themeMeta;
+		}));
+		
+	},
+	
 	getThemeMeta: function(){
-		if(!this._themeMetaCache) {
-			this._themeMetaCache = Library.getThemeMetadata(this.theme);
-		}
-
+	
 		return this._themeMetaCache;
 	},
 	attach: function(widget){

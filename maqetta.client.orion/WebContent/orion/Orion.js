@@ -21,6 +21,8 @@ define([
 		return dojo.xhrGet( {
 			url:"/maqetta/cmd/listLibs",
 			handleAs:"json"
+		}).then(function(results){
+			return results[0].userLibs;
 		});
 	}
 	

@@ -75,6 +75,7 @@ getThemes: function(base, workspaceOnly, flushCache){
 	var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 	var projectThemeBase = (new davinci.model.Path(base).append(prefs.themeFolder));
 	var results = [];
+
 	themesPromise= system.resource.findResource("*.theme", true, projectThemeBase.toString()).then(function(allThemesPromises){
 		
 		var differedList = new dojo.DeferredList(allThemesPromises);
@@ -100,6 +101,7 @@ getThemes: function(base, workspaceOnly, flushCache){
 		return themesPromise.then(function(allThemes){
 			return filter(allThemes);
 		});
+
 	}
 	
 	return themesPromise;

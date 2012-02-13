@@ -200,10 +200,47 @@ define([
 					
 				});
 				
+
 			})
 			
 		});
 		
+
+		
+		deferreds.push(themeFile.setContents(JSON.stringify(themeJson)));
+		for(var name in toSave){
+		    deferreds.push(toSave[name].save());
+		}
+		/* re-write metadata */
+		for (var i = 0, len = themeJson.meta.length; i < len; i++) {
+			var fileUrl = directoryPath.append(themeJson.meta[i]);
+			var file = systemResource.findResource(fileUrl.toString());
+			var contents = file.getText();
+			var newContents = contents.replace(new RegExp(oldClass, "g"), selector);
+			deferreds.push(file.setContents(newContents));
+		}
+		/* rewrite theme editor HTML */
+		for (var i = 0, len = themeJson.themeEditorHtmls.length; i < len; i++) {
+			var fileUrl = directoryPath.append(themeJson.themeEditorHtmls[i]);
+			var file = systemResource.findResource(fileUrl.toString());
+			var contents = file.getText();
+			var htmlFile = new HTMLFile(fileUrl);
+			htmlFile.setText(contents,true);
+			var element = htmlFile.find({elementType: 'HTMLElement', tag: 'body'}, true);
+			// #1024 leave other classes on the body only replace the target
+			var modelAttribute = element.getAttribute('class');
+	        if (!modelAttribute){
+	             modelAttribute = selector; 
+	        } else {
+	             modelAttribute = modelAttribute.replace(oldClass, selector);
+	        }
+	        element.setAttribute('class',modelAttribute); //#1024
+	        deferreds.push(htmlFile.save());
+		}
+	    var defs = new DeferredList(deferreds);
+		Library.themesChanged();
+		return defs;
+
 	},
 
 	getHelper: function(theme){

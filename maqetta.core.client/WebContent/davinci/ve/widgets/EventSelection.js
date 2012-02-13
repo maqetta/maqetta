@@ -148,7 +148,9 @@ define(["dojo/_base/declare",
 					value = widget._srcElement.getAttribute(name);
 				}
 				var box = dijit.byId(this.pageTemplate[i]['id']);
-				box.set('value', value, false);
+				if(box){
+					box.set('value', value, false);
+				}
 			}
 		}
 	});

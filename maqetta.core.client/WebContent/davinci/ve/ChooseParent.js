@@ -355,12 +355,15 @@ return declare("davinci.ve.ChooseParent", null, {
 	 * @return {object|null}   Widget that is the new proposed parent widget
 	 */
 	getProposedParentWidget: function(){
-		var ppw = {};
-		var idx = this._XYParent.indexOf(this._proposedParentWidget);
-		if(idx >= 0){
-			ppw.parent = this._XYParent[idx];
-			ppw.refChild = this._XYRefChild[idx];
-			ppw.refAfter = this._XYRefAfter[idx];
+		var ppw = null;
+		if(this._XYParent){
+			var idx = this._XYParent.indexOf(this._proposedParentWidget);
+			if(idx >= 0){
+				ppw = {};
+				ppw.parent = this._XYParent[idx];
+				ppw.refChild = this._XYRefChild[idx];
+				ppw.refAfter = this._XYRefAfter[idx];
+			}
 		}
 		return ppw;
 	},

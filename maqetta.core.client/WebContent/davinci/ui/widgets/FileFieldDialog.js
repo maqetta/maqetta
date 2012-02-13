@@ -1,14 +1,12 @@
 define(["dojo/_base/declare",
         "davinci/workbench/WidgetLite",
-        "dijit/layout/ContentPane",
         "dijit/Dialog",
         "dijit/Tree",
         "dijit/form/Button",
-        "davinci/ui/widgets/FileFieldDialog",
         "davinci/model/Path",
         "dojo/i18n!davinci/ui/nls/ui",
         "dojo/i18n!dijit/nls/common"
-   ],function(declare, WidgetLite, ContentPane, Dialog, Tree, Button, FileFieldDialog, Path,  uiNLS, commonNLS){
+   ],function(declare, WidgetLite, Dialog, Tree, Button, Path,  uiNLS, commonNLS){
 	
 var idPrefix = "davinci_ui_widgets_filefielddialog_generated";
 var	__id=0;
@@ -47,23 +45,19 @@ return declare("davinci.ui.widgets.FileFieldDialog", WidgetLite, {
 	_showFileSelectionDialog: function() {
 		this._fileSelectionDialog = new Dialog({
 			title : uiNLS.selectFile,
-			style : "width:275px;height:225px;padding:0px;background-color:white;"
+			style : "width:275px;height:220px;background-color:white;"
 		});
-
-		var contentPane = new ContentPane();
-		this._fileSelectionDialog.set("content", contentPane);
-		dojo.style(contentPane.domNode, "overflow", "auto");
 
 		//Set-up file selection tree
 		var treeParms= {  
 			id: "fileFieldDialogFileSelectionTree",
-			style: "height:10em;overflow:auto",
+			style: "height:10em;overflow:auto;margin-bottom:10px;",
 			model: system.resource,
 			filters: "new system.resource.FileTypeFilter(parms.fileTypes || '*');" //See #1725
 	    };
 		var tree = new Tree(treeParms);
 
-		contentPane.domNode.appendChild(tree.domNode);
+		this._fileSelectionDialog.containerNode.appendChild(tree.domNode);
 		
 		//Set-up button
 		var okClicked = function() {

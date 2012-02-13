@@ -247,7 +247,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		}
 
 		var ppw = cp.getProposedParentWidget();
-		if(ppw && ppw.parent){
+		if(ppw){
 			// Use last computed parent from onMouseMove handler
 			target = ppw.parent;
 			if(ppw.refChild){

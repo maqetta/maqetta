@@ -133,15 +133,17 @@ define(["dojo/_base/declare",
 			for(var name in this._boxes){
 				var widget = this._widget,
 					box = this._boxes[name];
-				if(widget.getPropertyValue){
-					var value = widget.getPropertyValue(name);
-					if(box.value != value){
-						box.value = value;
-						dojo.attr(box.domNode, "value", box.value);
+				if(box.domNode && box.domNode.ownerDocument){
+					if(widget.getPropertyValue){
+						var value = widget.getPropertyValue(name);
+						if(box.value != value){
+							box.value = value;
+							dojo.attr(box.domNode, "value", box.value);
+						}
+					}else{
+						box.value = "";
+						dojo.attr(box.domNode, "value", "");
 					}
-				}else{
-					box.value = "";
-					dojo.attr(box.domNode, "value", "");
 				}
 			}
 		}

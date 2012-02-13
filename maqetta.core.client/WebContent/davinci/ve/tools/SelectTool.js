@@ -187,7 +187,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						return;
 					}
 					var ppw = cp.getProposedParentWidget();
-					if(ppw.refChild){
+					if(ppw && ppw.refChild){
 						if(lastIdx !== null){
 							idx = lastIdx + 1;
 						}else{
@@ -203,9 +203,12 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						}
 						lastIdx = idx;
 					}
-					compoundCommand.add(new davinci.ve.commands.AddCommand(newwidget, ppw.parent, idx));
-					index++;
-					newselection.push(newwidget);
+					if(ppw){
+						compoundCommand.add(new davinci.ve.commands.AddCommand(newwidget, ppw.parent, idx));
+						newselection.push(newwidget);
+					}else{
+						console.error('SelectTool: ppw is null');
+					}
 				}, this);
 
 				// remove widget
@@ -229,7 +232,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				}
 				var first_c = new davinci.ve.commands.MoveCommand(widget, left, top);
 				var ppw = cp.getProposedParentWidget();
-				var proposedParent = ppw.parent;
+				var proposedParent = ppw ? ppw.parent : null;
 				compoundCommand.add(first_c);
 				var currentParent = widget.getParent();
 				if(proposedParent && proposedParent != currentParent){

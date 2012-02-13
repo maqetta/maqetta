@@ -5,7 +5,6 @@ define([
 	"davinci/ve/widget",
 	"davinci/ve/commands/ModifyCommand",
 	"dijit/Dialog",
-	"dijit/layout/ContentPane",	
 	"dijit/form/Button",
     "dijit/Tree",
     "dojo/text!./templates/srcAttributeInputFields.html",
@@ -18,7 +17,6 @@ define([
 	Widget,
 	ModifyCommand,
 	Dialog,
-	ContentPane,
 	Button,
 	Tree,
 	templateString,
@@ -36,22 +34,18 @@ return declare(SmartInput, {
 		if (!this._inline) {
 			this._inline = new Dialog({
 				title : htmlNls.selectSource,
-				style : "width:275px;height:275px;padding:0px;background-color:white;"
+				style : "width:275px;height:270px;background-color:white;"
 			});
-	
-			var contentPane = new ContentPane();
-			this._inline.set("content", contentPane);
-			dojo.style(contentPane.domNode, "overflow", "auto");
 	
 			//Set-up file selection tree
 			var treeParms= {  
 				id: "htmlSrcAttributeInputSelectionTree",
-				style: "height:10em;overflow:auto",
+				style: "height:10em;margin-bottom:12px;;overflow:auto;",
 				model: system.resource,
 				filters: "new system.resource.FileTypeFilter(parms.fileTypes || '*');" //See #1725
 		    };
 			var tree = new Tree(treeParms);
-			contentPane.domNode.appendChild(tree.domNode);
+			this._inline.containerNode.appendChild(tree.domNode);
 			
 			var onTreeClick = function(selection) {
 				var inputPath = new Path(selection.getPath());
@@ -66,9 +60,10 @@ return declare(SmartInput, {
 			this._connection.push(dojo.connect(tree, "onClick", this, onTreeClick));
 
 			//Set up input field area
-			var textInputcontentPane = new ContentPane({style: "padding:0;margin-top:8px;"});
-			contentPane.domNode.appendChild(textInputcontentPane.domNode);
-			textInputcontentPane.set("content", templateString);
+			var textInputDiv = dojo.create('div');
+			this._inline.containerNode.appendChild(textInputDiv);
+			textInputDiv.innerHTML = templateString;
+			dojo.parser.parse(textInputDiv);
 
 			//Set-up src text box
 			var srcLabel = dojo.byId("srcAttributeInputSrcLabel");

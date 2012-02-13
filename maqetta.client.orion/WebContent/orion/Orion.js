@@ -9,32 +9,76 @@ define([
 	var preferences;
 	var pluginRegistry;
 	var fileClient;
+	var loaded = new dojo.Deferred();
 	
-		mBootstrap.startup().then(function(core) {
+	
+	function getWorkspace(){
+		
+		return "workspace";
+	}
+	
+	function getLibrarys(){
+		return dojo.xhrGet( {
+			url:"/maqetta/cmd/listLibs",
+			handleAs:"json"
+		});
+	}
+	
+	
+	function getUser(){
+		/* needs to be Workbench.getUser(); */
+		
+		return "A";
+	}
+	
+	function getRootURL(){
+		return "/" + getWorkspace() + "/" + getUser();
+	}
+	
+	function _createMaqettaProject(projectName){
+		return getLibrarys().then(function(librarys){
+			debugger;
+			fileClient.createProject(getRootURL(), projectName).then(function(){
+			/* setup maqetta project */
+				debugger;
+				/*
+				var projectPath = getRootURL() + "/" + projectName;
+				
+				for(var i=0;i<librarys.length;i++){
+					fileClient.createFolder(projectPath + "/" + librarys[i].root)
+					
+				}
+				fileClient.createFolder(projectPath + "/" + ".settings").then(function(){
+					fileClient.write(projectPath + "/" + ".settings", dojo.toJson(librarys));
+				})
+				*/
 			
+		})})
+	}
+	
+	mBootstrap.startup().then(function(core) {
 			serviceRegistry = core.serviceRegistry;
 			preferences = core.preferences;
 			pluginRegistry = core.pluginRegistry;
 			var root = [];
 			fileClient = new mFileClient.FileClient(serviceRegistry);
-			fileClient.loadWorkspaces("");
+			//fileClient.loadWorkspaces("");
 			
-			fileClient.loadWorkspace("").then(
+			fileClient.loadWorkspace("").then(dojo.hitch(this,
+					function(){
 					
-					//do we really need hitch - could just refer to self rather than this
-					dojo.hitch(self, function(loadedWorkspace) {
-						debugger;
+						_createMaqettaProject("project1").then(function(){
+								loaded.resolve(this)
+							}
+						);						
 						
-						//copy fields of resulting object into the tree root
-						for (var i in loadedWorkspace) {
-							root[i] = loadedWorkspace[i];
-						}
+						
 					}
 						
 			));
 		});
 		
-		
+	
 	
 	
 	function setPreference(name, value){
@@ -45,9 +89,7 @@ define([
 		
 	}
 	
-	function createMaqettaProject(name){
-		
-	}
+
 					
 //		var fileServices = serviceRegistry.getServiceReferences("orion.core.file");
 
@@ -56,25 +98,33 @@ define([
 	return {
 		
 		
-		createProject : function(projectName){
-			
+		createMaqettaProject : function(name){
+			return loading.then(dojo.hitch(this,function(){
+				return _createMaqettaProject(name)
+			}));
 		},
 	
 		listFiles : function(location, onComplete){
-			this.fileClient.fetchChildren(location).then( 
-					dojo.hitch(this, function(children) {
-						onComplete(children);
-					})
-				);
+			
+			return loaded.then(dojo.hitch(this,function(){
+				
+					return fileClient.fetchChildren(location).then(function(results){ 
+					debugger;
+						return children;
+					});
+			}));
 		},
 		
+		getRootURL : getRootURL,
+		
 		findResource : function(name, ignoreCase, inFolder){
-			debugger;
-			fileClient.search(inFolder || "", "?q=" + location).then( 
-					dojo.hitch(this, function(children) {
-						onComplete(children);
-					})
-				);
+			
+			return loaded.then(dojo.hitch(this,function(){
+				return fileClient.search( "", "?q=" + name).then(function(results){ 
+					debugger;
+					return results;
+				});
+			}));
 		},
 		
 		setPreference : function(name, value){

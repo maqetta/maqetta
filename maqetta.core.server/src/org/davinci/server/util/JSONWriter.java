@@ -159,12 +159,12 @@ public class JSONWriter {
 
     public JSONWriter addField(String name, String[] array) {
         this.addFieldName(name);
-
+        sb.append("[");
         for (int ll = 0; ll < array.length; ll++) {
             if (ll > 0) {
                 sb.append(",");
             }
-            sb.append("[");
+           
             String value = array[ll];
             sb.append('"');
             char[] chars = null;
@@ -249,8 +249,9 @@ public class JSONWriter {
             }
 
             sb.append('"');
-            sb.append("]");
+          
         }
+        sb.append("]");
         return this;
     }
 

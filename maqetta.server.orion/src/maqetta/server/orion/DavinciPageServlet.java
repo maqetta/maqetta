@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import maqetta.server.orion.Command;
+
 import maqetta.server.orion.internal.Activator;
 
 import org.davinci.ajaxLibrary.ILibraryManager;
@@ -27,6 +27,7 @@ import org.davinci.server.user.IUserManager;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.maqetta.server.Command;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IServerManager;
 import org.maqetta.server.IVResource;
@@ -51,41 +52,7 @@ public class DavinciPageServlet extends HttpServlet {
         userManager = serverManager.getUserManager();
         libraryManager = serverManager.getLibraryManager();
     }
-    /*
-     * Save file request from user.  Saves files to workspace.
-     * (non-Javadoc)
-     * @see javax.servlet.http.HttpServlet#doPut(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-     */
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    	
-    	
-        IUser user = (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
-        String path = req.getPathInfo();
-        boolean isWorkingCopy = (path.indexOf(IDavinciServerConstants.WORKING_COPY_EXTENSION) > -1);
-        if(isWorkingCopy){
-        	path = path.substring(0,path.indexOf(IDavinciServerConstants.WORKING_COPY_EXTENSION));
-        }
-        IVResource file = user.getResource(path);
-        /* user is trying to save over a library path */
-        if(file.isVirtual()){
-        	file = user.createResource(path);
-        	file.createNewInstance();
-        	
-        }
-        if (file.exists()) {
-            OutputStream os = file.getOutputStreem();
-            Command.transferStreams(req.getInputStream(), os, false);
-            if (!isWorkingCopy) {
-                // flush the working copy
-                file.flushWorkingCopy();
-            }
 
-        } else {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-        }
-        resp.getOutputStream().close();
-    }
-    
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if(serverManager==null)
@@ -120,8 +87,6 @@ public class DavinciPageServlet extends HttpServlet {
        
         } else if (req.getParameter(IDavinciServerConstants.PREVIEW_PARAM)!=null) {
             handlePreview(req,resp);
-        }else if (pathInfo.startsWith(IDavinciServerConstants.USER_URL)) {
-           // handleWSRequest(req, resp, user);
         }else {
             /* resource not found */
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -179,85 +144,7 @@ public class DavinciPageServlet extends HttpServlet {
         this.writePage(req, resp, resourceURL, false);
     }
 
-    private void handleWSRequest(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException, ServletException {
-
-        // System.out.println("enter ws request");
-        String pathInfo = req.getPathInfo();
-        // Code further down expects pathInfo==null if user goes to root of
-        // daVinci server
-        IPath path = new Path(pathInfo);
-        // FIXME: what's this doing? If it's trying to remove trailing slash, it
-        // needs to subtract 1
-        if (path.hasTrailingSeparator()) {
-            path = path.removeTrailingSeparator();
-        }
-
-        // Path path = new Path()
-        path = path.removeFirstSegments(1);
-        String userName = path.segment(0);
-        if (path.segmentCount() < 4 || !path.segment(1).equals("ws") || !path.segment(2).equals("workspace")) {
-            if (ServerManager.DEBUG_IO_TO_CONSOLE) {
-                System.out.println("incorrectly formed workspace url");
-            }
-
-           resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-           return;
-           // String s=null;
-            // s.toString();
-
-        }
-        path = path.removeFirstSegments(3);
-
-        /* unlocking user directory to un-authenticated users */
-        if (user == null) {
-            user = ServerManager.getServerManger().getUserManager().getUser(userName);
-        }
-
-        if (handleLibraryRequest(req, resp, path, user)) {
-            // System.out.println("was library");
-            return;
-        }
-
-        if (user == null) {
-            user = ServerManager.getServerManger().getUserManager().getUser(userName);
-            if (user == null) {
-                if (ServerManager.DEBUG_IO_TO_CONSOLE) {
-                    System.out.println("user not found: " + userName);
-                }
-                resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-                return;
-            }
-        }
-
-        IVResource userFile = user.getResource(path.toString());
-
-        if (userFile != null && !userFile.exists()) {
-            if (path.getFileExtension() == null) {
-                userFile = user.getResource(path.addFileExtension("html").toString());
-            }
-            if (!userFile.exists()) {
-                if (ServerManager.DEBUG_IO_TO_CONSOLE) {
-                    System.out.println("user file not found: " + path);
-                }
-                resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-                return;
-            }
-        } else {
-            resp.resetBuffer();
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-            // writePage(req, resp, userFile, true);
-        }
-
-    }
-
-    protected boolean handleLibraryRequest(HttpServletRequest req, HttpServletResponse resp, IPath path, IUser user) throws ServletException, IOException {
-        IVResource libraryURL = user.getResource(path.toString());
-        if (libraryURL != null) {
-            writePage(req, resp, libraryURL, false);
-            return true;
-        }
-        return false;
-    }
+    
 
     protected void writePage(HttpServletRequest req, HttpServletResponse resp, IVResource resourceURL, boolean cacheExpires) throws ServletException,
             IOException {

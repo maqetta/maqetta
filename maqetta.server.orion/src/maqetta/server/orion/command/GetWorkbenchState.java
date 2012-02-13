@@ -17,16 +17,10 @@ public class GetWorkbenchState extends Command {
 
     @Override
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
-        File userSettings = user.getWorkbenchSettings();
-        File settingsFile = new File(userSettings, IDavinciServerConstants.WORKBENCH_STATE_FILE);
-        InputStream inputStream;
-        if (settingsFile.exists()) {
-            inputStream = new FileInputStream(settingsFile);
 
-        } else {
-            inputStream = new ByteArrayInputStream("{}".getBytes());
-        }
-        Command.transferStreams(inputStream, resp.getOutputStream(), true);
+            
+  
+        Command.transferStreams(new ByteArrayInputStream("{}".getBytes()), resp.getOutputStream(), true);
 
     }
 

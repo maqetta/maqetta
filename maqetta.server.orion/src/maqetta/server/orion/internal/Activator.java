@@ -3,12 +3,13 @@ package maqetta.server.orion.internal;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import maqetta.server.orion.internal.Activator;
-import maqetta.server.orion.internal.IRegistryListener;
+import org.davinci.ajaxLibrary.Library;
+import org.davinci.server.internal.IRegistryListener;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IRegistryChangeEvent;
 import org.eclipse.core.runtime.IRegistryChangeListener;
 import org.maqetta.server.IDavinciServerConstants;
+import org.maqetta.server.ServerManager;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -16,6 +17,7 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
+import org.eclipse.equinox.http.jetty.JettyConfigurator;
 
 public class Activator implements BundleActivator, ServiceTrackerCustomizer, IRegistryChangeListener {
 
@@ -52,8 +54,10 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer, IRe
 
         registryTracker = new ServiceTracker(context, IExtensionRegistry.class.getName(), this);
         registryTracker.open();
+        
     }
 
+    
     /*
      * (non-Javadoc)
      *

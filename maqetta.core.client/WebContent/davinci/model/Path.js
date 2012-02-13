@@ -2,8 +2,8 @@ define([
 	"dojo/_base/declare"
 ], function(declare) {
 
-if ( typeof davinci.model === "undefined" ) { davinci.model = {}; }
-if ( typeof davinci.model.Path === "undefined" ) { davinci.model.Path = {}; }
+//if ( typeof davinci.model === "undefined" ) { davinci.model = {}; }
+//if ( typeof davinci.model.Path === "undefined" ) { davinci.model.Path = {}; }
 
 var Path = declare("davinci.model.Path", null, {
 

@@ -46,105 +46,108 @@
 	
 	define("text", ["dojo/text"], function(t){return t;}); 
 	
-	
-	   
-	
-	require(["davinci/Workbench", 
-	         "dojo/i18n!davinci/nls/webContent", 
-	         "dijit/dijit", 
-	         "davinci/davinci-common", 
-	         "davinci/davinci", 
-	         "dojo/domReady!"], function (Workbench, webContent) {
-		function run() {
-            var userInfo;
-            var result=davinci.Runtime.getUser();
-            if (result) {
-               dojo.byId('davinci_user').innerHTML=result;
-               davinci.Runtime.userName=result;
-            } else {
- 				//FIXME: temporary fix for running via file: URLs
-               dojo.byId('davinci_user').innerHTML=webContent.maqettaUser;
-            }
-            if (!result) {
-                 dojo.byId('davinci_user').innerHTML=webContent.localhostUser;
-                 dojo.byId('davinci_logoff').href="";
-                 davinci.Runtime.isLocalInstall=true;
-             }
-             if (davinci.Runtime.plugins.joomlaplugin) {
-                 dojo.byId('davinci_logoff').href="http://" + window.location.hostname + "/index.php?option=com_user&task=logout&return=Lw";
- 		 	}
- 		 	// Hide logoff if single-user mode
- 			var singleUser = davinci.Runtime.singleUserMode();
- 			if(singleUser){
- 				var logoff = dojo.byId('davinci_logoff');
- 				var main_menu = dojo.byId('davinci_main_menu');
- 				if(logoff && main_menu){
- 					logoff.style.display = 'none';
- 					main_menu.style.marginRight = '3em';
- 				}
- 			}
- 			davinci.Runtime.run(userInfo);
- 			Workbench.run();
-		}
+	require(["dijit/dijit", "davinci/davinci-common", "davinci/davinci"], function () {
+		require(["dojo/i18n!davinci/nls/webContent", "dojo/domReady!"], function (webContent) {
+		      dojo.byId("davinci_user_welcome").innerHTML = webContent.welcome;
+		      dojo.byId("load_screen").innerHTML = webContent.loadingMaqetta;
+		      dojo.byId("davinci_logoff").innerHTML = webContent.logOff;
+		      dojo.byId("maqetta_designer").innerHTML = webContent.designer;
+		      dojo.byId("maqetta_version").innerHTML = davinci.version;
+		      dojo.byId("title_id").text = webContent.pageDesignerTitle;
+		});
+
+		//var Orion = require("system/Orion ");
 		
-		dojo.byId("davinci_user_welcome").innerHTML = webContent.welcome;
-		dojo.byId("load_screen").innerHTML = webContent.loadingMaqetta;
-		dojo.byId("davinci_logoff").innerHTML = webContent.logOff;
-		dojo.byId("maqetta_designer").innerHTML = webContent.designer;
-		dojo.byId("maqetta_version").innerHTML = davinci.version;
-		dojo.byId("title_id").text = webContent.pageDesignerTitle;
-		davinci.Runtime.loadPlugins();
-		davinci.Runtime.initialPerspective="davinci.ve.pageDesign";
-		    // Display a warning dialog for unsupported browsers
-		if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5.1)) {
-            var unsupportedDialog = new dijit.Dialog({
-                id: "unsupportedBrowserDialog",
-                title: webContent.unsupportedBrowser,
-                content: ["<p>"+ webContent.unsupportedNote +"</p>",
-                            "<div class='maqButtonArea'>",
-                            "   <button dojoType='dijit.form.Button' type='submit'>",
-                            webContent.buttonContinue,
-                            "   </button>",
-                            "</div>"
-                           ].join(" "),
-                  execute: function() { run(); }
-              });
+		
+		/* init orion with maqettas default project */
+		//Orion.createMaqettaProject("project1");
+		
+		var Workbench = require("davinci/Workbench"),
+			Runtime = require("davinci/Runtime");
+
+		Runtime.loadPlugins();
+ 		Runtime.initialPerspective="davinci.ve.pageDesign";
+
+		require(["dojo/i18n!davinci/nls/webContent", "dojo/domReady!"], function (webContent) {
+			var run = function() {
+                var userInfo;
+                var result=Runtime.getUser();
+
+                if (result) {
+                   dojo.byId('davinci_user').innerHTML=result;
+                   Runtime.userName=result;
+                } else {
+    				//FIXME: temporary fix for running via file: URLs
+                   dojo.byId('davinci_user').innerHTML=webContent.maqettaUser;
+                }
+                if (!result) {
+                    dojo.byId('davinci_user').innerHTML=webContent.localhostUser;
+                    dojo.byId('davinci_logoff').href="";
+                    Runtime.isLocalInstall=true;
+                }
+                if (Runtime.plugins.joomlaplugin) {
+                    dojo.byId('davinci_logoff').href="http://" + window.location.hostname + "/index.php?option=com_user&task=logout&return=Lw";
+    		 	}
+    		 	// Hide logoff if single-user mode
+    			var singleUser = Runtime.singleUserMode();
+    			if(singleUser){
+    				var logoff = dojo.byId('davinci_logoff');
+    				var main_menu = dojo.byId('davinci_main_menu');
+    				if(logoff && main_menu){
+    					logoff.style.display = 'none';
+    					main_menu.style.marginRight = '3em';
+    				}
+    			}
+    			Workbench.run();
+			}
+
+			// Display a warning dialog for unsupported browsers
+			if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5.1)) {
+                var unsupportedDialog = new require("dijit/Dialog")({
+                    id: "unsupportedBrowserDialog",
+                    title: webContent.unsupportedBrowser,
+                    content: ["<p>"+ webContent.unsupportedNote +"</p>",
+                              "<div class='maqButtonArea'>",
+                              "   <button dojoType='dijit.form.Button' type='submit'>",
+                              webContent.buttonContinue,
+                              "   </button>",
+                              "</div>"
+                             ].join(" "),
+                    execute: function() { run(); }
+                });
 			    unsupportedDialog.show();
-		} else {
-		    run();
-		}
+			} else {
+			    run();
+			}
+		});
 
-
-		
-
-		dojo.addOnUnload(davinci.Runtime.unload);
 		dojo.addOnUnload(Workbench.unload);
 	});
-	</script>
-  </head>
+</script>
+</head>
 
-	<body class="claro">
-		<div class="loading"><table><tr><td id="load_screen"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;</td></tr></table></div>
-		<div id="davinci_app">
-			<div id="davinci_top_bar">
-					<div id="davinci_user_container">
-						<span id="davinci_user_welcome"></span>
-						<span id="davinci_user"></span>
-						<span id="davinci_main_menu"> </span>
-						<a id="davinci_logoff" href='javascript:davinci.Runtime.logoff()'> </a>
-					</div>
-					<span class="maq_banner_name_box">
-						<span class="maq_banner_name">Maqetta</span>
-						<span id="maqetta_designer" class="maq_banner_component"></span>
-						<span id="maqetta_version" class="maq_banner_version"></span>
-					</span>
+<body class="claro">
+	<div class="loading"><table><tr><td id="load_screen"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;</td></tr></table></div>
+	<div id="davinci_app">
+		<div id="davinci_top_bar">
+				<div id="davinci_user_container">
+					<span id="davinci_user_welcome"></span>
+					<span id="davinci_user"></span>
+					<span id="davinci_main_menu"> </span>
+					<a id="davinci_logoff" href='javascript:davinci.Runtime.logoff()'> </a>
+				</div>
+				<span class="maq_banner_name_box">
+					<span class="maq_banner_name">Maqetta</span>
+					<span id="maqetta_designer" class="maq_banner_component"></span>
+					<span id="maqetta_version" class="maq_banner_version"></span>
+				</span>
 <!-- no toolbar for now, uncomment and put in desired location, and toolbar will be generated based on actions
-					<div id="toolbar_container">
-						<span id="davinci_toolbar_main"></span>
-					</div>
+				<div id="toolbar_container">
+					<span id="davinci_toolbar_main"></span>
+				</div>
 -->
-			</div>
-			<div id="mainBody"></div>
 		</div>
-	</body>
+		<div id="mainBody"></div>
+	</div>
+</body>
 </html>

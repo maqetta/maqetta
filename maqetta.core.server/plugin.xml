@@ -22,7 +22,7 @@
    
    <extension point="org.eclipse.equinox.http.registry.servlets">
       <servlet
-      		
+      		httpcontextId="maqetta.core.server.httpcontext"
             alias="/maqetta/cmd"
             class="org.maqetta.server.DavinciCommandServlet"
             load-on-startup="true">

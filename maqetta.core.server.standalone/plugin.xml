@@ -18,6 +18,7 @@
      <extension
          point="org.eclipse.equinox.http.registry.servlets">
       <servlet
+             httpcontextId="maqetta.core.server.httpcontext"
             alias="/maqetta"
          
             class="maqetta.core.server.standalone.DavinciPageServlet"
@@ -25,6 +26,7 @@
            </servlet>
 
      <servlet
+            httpcontextId="maqetta.core.server.httpcontext"
             alias="/review"
             class="maqetta.core.server.standalone.DavinciReviewServlet"
             load-on-startup="true">

@@ -19,14 +19,16 @@ public class GetUserLibs extends Command {
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
         // Library[] libs =
         // ServerManager.getServerManger().getLibraryManager().getAllLibraries();
-        String base = req.getParameter("base");
-        ILibInfo[] installedLibs = user.getLibs(base);
+     
+        Library[] installedLibs = ServerManager.getServerManger().getLibraryManager().getAllLibraries();
+        
+      
 
         JSONWriter jsonWriter = new JSONWriter(true);
         jsonWriter.startObject().addFieldName("userLibs").startArray();
         ILibraryManager libMan = ServerManager.getServerManger().getLibraryManager();
         for (int i = 0; i < installedLibs.length; i++) {
-            String id = installedLibs[i].getId();
+            String id = installedLibs[i].getID();
             String version = installedLibs[i].getVersion();
             Library lib = libMan.getLibrary(id, version);
             /* if library doesn't exist continue */
@@ -36,8 +38,8 @@ public class GetUserLibs extends Command {
             jsonWriter.startObject().addField("id", id);
             jsonWriter.addField("version", version);
             jsonWriter.addField("metaRoot", lib.getMetadataPath());
-            if( installedLibs[i].getVirtualRoot()!=null)
-            	jsonWriter.addField("root", installedLibs[i].getVirtualRoot());
+            if( installedLibs[i].getDefaultRoot()!=null)
+            	jsonWriter.addField("root", installedLibs[i].getDefaultRoot());
             jsonWriter.endObject();
         }
         jsonWriter.endArray().endObject();

@@ -6,7 +6,7 @@ import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import maqetta.server.orion.VResourceUtils;
+
 import maqetta.server.orion.user.User;
 import org.davinci.server.user.UserException;
 
@@ -121,7 +121,7 @@ public class UserManagerImpl implements IUserManager {
          * would call this.personManager.removePerson(userName) here
          */
         File userDir = new File(this.baseDirectory, userName);
-        VResourceUtils.deleteDir(userDir);
+     
         users.remove(userName);
         this.usersCount--;
     }

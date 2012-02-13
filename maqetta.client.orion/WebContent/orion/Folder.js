@@ -7,8 +7,9 @@ define([
 	"dojo/_base/declare",
 	"davinci/Runtime",
 	"davinci/model/resource/Resource",
-	"davinci/model/resource/File"
-], function(declare, Runtime, Resource, File) {
+	"davinci/model/resource/File",
+	"system/Orion"
+], function(declare, Runtime, Resource, File, Orion) {
 
 var Folder = declare("davinci.model.resource.Folder", Resource, {
 
@@ -60,16 +61,12 @@ var Folder = declare("davinci.model.resource.Folder", Resource, {
 			if (this._loading) {
 				return this._loading;
 			}
-			debugger;
-			this._loading=Runtime.serverJSONRequest({
-				url:"./cmd/listFiles",
-				content:{'path':this.getPath()}
-			}).then(
+			this._loading=Orion.listFiles(this.getPath()).then(
 				dojo.hitch(this, function(responseObject, ioArgs) {
 					this._addFiles(responseObject);
 					delete this._loading;
 					this._isLoaded = true;
-					return this.children
+					return this.children;
 					
 				
 			}));

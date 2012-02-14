@@ -88,48 +88,48 @@ return {
 				{
 					id: "davinci.review.view",
 					label: "View Page",
-					action: "davinci.review.actions.ViewFileAction",
+					action: "davinci/review/actions/ViewFileAction",
 					//iconClass: "viewActionIcon reviewFileIcon",
 					menubarPath: "newfile"
 				},
 				{
 					id: "davinci.review.edit",
 					label: "Edit...",
-					action: "davinci.review.actions.EditVersionAction",
+					action: "davinci/review/actions/EditVersionAction",
 					//iconClass: "viewActionIcon editVersionIcon",
 					menubarPath: "newfile"
 				},
 		/*{
 								    id: "davinci.review.submitDraft",
 								    label: "Submit the draft",
-									action: "davinci.review.actions.SubmitDraftAction",
+									action: "davinci/review/actions/SubmitDraftAction",
 									menubarPath: "newfile"
 								},*/
 				{
 					id: "davinci.review.close",
 					label: "Terminate",
-					action: "davinci.review.actions.CloseVersionAction",
+					action: "davinci/review/actions/CloseVersionAction",
 					//iconClass: "viewActionIcon closeVersionIcon",
 					menubarPath: "newfile"
 				},
 				{
 					id: "davinci.review.open",
 					label: "Start",
-					action: "davinci.review.actions.OpenVersionAction",
+					action: "davinci/review/actions/OpenVersionAction",
 					//iconClass: "viewActionIcon openVersionIcon",
 					menubarPath: "newfile"
 				},
 				{
 					id: "davinci.review.delete",
 					label: "Delete",
-					action: "davinci.review.actions.DeleteVersionAction",
+					action: "davinci/review/actions/DeleteVersionAction",
 					//iconClass: "viewActionIcon deleteVersionIcon",
 					menubarPath: "newfile"
 				},
 				{
 					id: "davinci.review.restart",
 					label: "Renew",
-					action: "davinci.review.actions.RestartVersionAction",
+					action: "davinci/review/actions/RestartVersionAction",
 					menubarPath: "newfile"
 				}
 			]
@@ -149,28 +149,28 @@ return {
 					id: "arrow",
 					label: "Draw arrow",
 					iconClass: "davinciAnnotationIcon davinciAnnotationIconArrow",
-					action: "davinci.review.actions.ArrowAction",
+					action: "davinci/review/actions/ArrowAction",
 					toolbarPath: "annotationtools"
 				},
 				{
 					id: "rect",
 					label: "Draw rectangle",
 					iconClass: "davinciAnnotationIcon davinciAnnotationIconRect",
-					action: "davinci.review.actions.RectAction",
+					action: "davinci/review/actions/RectAction",
 					toolbarPath: "annotationtools"
 				},
 				{
 					id: "ellipse",
 					label: "Draw ellipse",
 					iconClass: "davinciAnnotationIcon davinciAnnotationIconEllipse",
-					action: "davinci.review.actions.EllipseAction",
+					action: "davinci/review/actions/EllipseAction",
 					toolbarPath: "annotationtools"
 				},
 				{
 					id: "textAnnotation",
 					label: "Draw text",
 					iconClass: "davinciAnnotationIcon davinciAnnotationIconText",
-					action: "davinci.review.actions.TextAction",
+					action: "davinci/review/actions/TextAction",
 					toolbarPath: "annotationtools"
 				}
 			]

@@ -19,7 +19,7 @@ return {
 		{
 			id: "state",
 			title: "States",
-			viewClass: "davinci.review.view.StatesView"
+			viewClass: "davinci.ve.views.StatesView"
 		}
 	],
 	"davinci.perspectiveExtension": [

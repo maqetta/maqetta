@@ -16,6 +16,7 @@ define([
 	"dojox/data/QueryReadStore",
 	"dojox/widget/Toaster",
 	"dojo/string",
+	"dojo/fx",
 	"dijit/Dialog",
 	"dijit/Tree",
 	"davinci/review/widgets/Tree",
@@ -31,7 +32,7 @@ define([
 	"dojo/text!./templates/PublishWizard.html",
 	"dojo/text!./templates/MailFailureDialogContent.html"
 ], function(declare, _WidgetBase, _TemplatedMixin, StackContainer, ContentPane, SimpleTextarea, NumberTextBox, ValidationTextBox, DateTextBox, 
-		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojostring, Dialog, dijitTree, reviewTree,  
+		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojostring, dojofx, Dialog, dijitTree, reviewTree,  
 		Runtime, Workbench, Folder, File, Empty, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls, 
 		templateString, warningString) {
 	
@@ -381,19 +382,12 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 			grid.scrollToRow(index);
 			//grid.get("selection").select(index);
 			var node = grid.getRowNode(index);
-			_flash=  function(elem) {
-				if (!elem) {
-					return;
-				}
-
-				dojo.fx.chain([
-					dojo.fadeOut({ node: elem, duration: 300 }),
-					dojo.fadeIn({ node: elem, duration:700 }),
-					dojo.fadeOut({ node: elem, duration: 300 }),
-					dojo.fadeIn({ node: elem, duration:700 })
-				]).play();
-			};
-			_flash(node);
+			dojo.fx.chain([
+				dojo.fadeOut({ node: node, duration: 300 }),
+				dojo.fadeIn({ node: node, duration:700 }),
+				dojo.fadeOut({ node: node, duration: 300 }),
+				dojo.fadeIn({ node: node, duration:700 })
+			]).play();
 			node.removeAttribute("style");
 		} else {
 			this.jsonStore.newItem({name: name, email: email, displayName: displayName});
@@ -529,8 +523,8 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 	},
 
 	delFiles: function(item) {
-		var reviewFiles = this.reviewFiles;
-		selections = this.targetTree.getSelectedItems();
+		var reviewFiles = this.reviewFiles,
+			selections = this.targetTree.getSelectedItems();
 		if(item) {
 			selections = [item];
 		}

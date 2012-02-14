@@ -1,16 +1,16 @@
 define(["dojo/_base/declare",
-        "davinci/ui/Download",
-        "davinci/ui/Resource",
-        "dojo/i18n!davinci/ui/nls/ui",
+        "./Download",
+        "./Resource",
+        "dojo/i18n!./nls/ui",
         "dojo/i18n!dijit/nls/common"
    ],function(declare,  Download, ResourceUI, uiNLS, commonNLS){
-	dojo.declare("davinci.ui.DownloadSelected",   [Download], {
-		buildRendering : function(){
+return declare("davinci.ui.DownloadSelected", [Download], {
+		buildRendering: function(){
 			var langObj = uiNLS;
 			this.inherited(arguments);
-			this._files=ResourceUI.getSelectedResources();
-			var uiArray = ["<div class='downloadSelectedHeader'>"+langObj.selectedFiles+"</div>"];
-			uiArray.push("<div class='downloadSelectedList'>");
+			this._files = ResourceUI.getSelectedResources();
+			var uiArray = ["<div class='downloadSelectedHeader'>"+langObj.selectedFiles+"</div>",
+			               "<div class='downloadSelectedList'>"];
 			if(!this._files){
 				uiArray.push("<b>"+langObj.noFilesSelected+"</b>");
 				this._files = [];
@@ -21,15 +21,15 @@ define(["dojo/_base/declare",
 				uiArray.push(this._files[i].getPath() + "<br>");
 			}
 			uiArray.push("</div><br><br>");
-			var html =  uiArray.join("");
+			var html = uiArray.join("");
 			dojo.place(html, this._selectionDiv);
 		},
-		_getResources : function(){
+		_getResources: function(){
 			var list = [];
 			for(var i=0;i<this._files.length;i++){
 				list.push(this._files[i].getPath());
 			}
-			return {'userFiles':list, 'userLibs': this._getLibs()};
+			return {userFiles: list, userLibs: this._getLibs()};
 		}
 	});
 });

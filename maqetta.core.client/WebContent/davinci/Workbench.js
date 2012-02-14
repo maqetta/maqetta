@@ -528,7 +528,7 @@ var Workbench = {
 		var handle = dojo.connect(content, "onClose", content, function(){
 			var teardown = true;
 			if (callback) {
-				var teardown = callback();
+				teardown = callback();
 				if (!teardown) {
 					// prevent the dialog from being torn down by temporarily overriding _onSubmit() with a call-once, no-op function
 					var oldHandler = myDialog._onSubmit;
@@ -540,7 +540,7 @@ var Workbench = {
 			if (teardown) {
 				dojo.disconnect(handle);
 			}
-			if (Workbench.cancel) {
+			if (this.cancel) {
 				myDialog.hide();
 			}
 		});

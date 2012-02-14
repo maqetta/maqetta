@@ -6,7 +6,7 @@ define(["dojo/_base/declare",
         "davinci/Runtime",
         "davinci/Workbench",
         "davinci/ve/RebaseDownload",
-        "dojo/i18n!davinci/ui/nls/ui",
+        "dojo/i18n!./nls/ui",
         "dojo/i18n!dijit/nls/common",
         "dojo/text!./templates/download.html",
         "davinci/Theme",
@@ -14,10 +14,10 @@ define(["dojo/_base/declare",
 
 ],function(declare, _Templated, _Widget,  Library, Resource,  Runtime, Workbench, RebaseDownload, uiNLS, commonNLS, templateString, Theme){
 	return declare("davinci.ui.Download",   [_Widget, _Templated], {
-		templateString: dojo.cache("davinci.ui", "templates/download.html"),
+		templateString: templateString,
 		widgetsInTemplate: true,
 		
-		postMixInProperties : function() {
+		postMixInProperties: function() {
 			var langObj = uiNLS;
 			var dijitLangObj = commonNLS;
 			dojo.mixin(this, langObj);
@@ -48,15 +48,15 @@ define(["dojo/_base/declare",
 			/* build UI table */
 			for(var i =0;i<this._userLibs.length;i++){
 				
-				this._userLibs[i].initRoot = this._getLibRoot(this._userLibs[i]['id'],this._userLibs[i]['version']);
-				var name = this._userLibs[i]['id']; // may want to use a better name here eventually
+				this._userLibs[i].initRoot = this._getLibRoot(this._userLibs[i].id,this._userLibs[i].version);
+				var name = this._userLibs[i].id; // may want to use a better name here eventually
 				
 				if(this._userLibs[i].initRoot==null) continue;
 				
 				
 				uiArray.push("<tr>");
 				uiArray.push("<td class='columna'>" + name + "</td>");
-				uiArray.push("<td class='columnb'>" + this._userLibs[i]['version'] + "</td>");
+				uiArray.push("<td class='columnb'>" + this._userLibs[i].version + "</td>");
 				uiArray.push("<td class='columnc'><input type='checkbox' libItemCheck='"+ i +"' checked></input></td>");
 				
 				
@@ -72,39 +72,39 @@ define(["dojo/_base/declare",
 		
 		},
 	
-		_getLibRoot:function(id,version){
+		_getLibRoot: function(id,version){
 			for(var i=0;i<this._userLibs.length;i++){
 				if(this._userLibs[i].id==id && this._userLibs[i].version==version)
-					return this._userLibs[i]['root'];
+					return this._userLibs[i].root;
 			}
 			
 		},
 		
-		_getLibs : function(){
-			var nodeValues = dojo.query("[libItemPath]", this.domNode );
-			var nodeList = dojo.query("[libItemCheck]", this.domNode );
+		_getLibs: function(){
+			var nodeValues = dojo.query("[libItemPath]", this.domNode);
+			var nodeList = dojo.query("[libItemCheck]", this.domNode);
 			var userLibs = [];
 			for(var i =0;i<nodeList.length;i++){
 				var element = parseInt(dojo.attr(nodeList[i], "libItemCheck"));
 				var value = dojo.attr(nodeList[i], "checked");
-				var libLocation = dojo.attr(nodeValues[i], "value") || this._userLibs[element]['root']
-				userLibs.push({'id':this._userLibs[element]['id'],
-							   'version':this._userLibs[element]['version'] ,
-							   'root': libLocation,
-							   'includeSrc':value});
+				var libLocation = dojo.attr(nodeValues[i], "value") || this._userLibs[element].root
+				userLibs.push({id: this._userLibs[element].id,
+							   version: this._userLibs[element].version,
+							   root: libLocation,
+							   includeSrc: value});
 				
 			}
 			
 			return userLibs;
 		},
 		
-		getRoot : function(){
+		getRoot: function(){
 			if(Workbench.singleProjectMode()){
 				return Workbench.getProject();
 			}
 		},
 		
-		_getResources : function(){
+		_getResources: function(){
 		
 			var project=Workbench.getProject();
 			var folder = Resource.findResource(project);
@@ -115,21 +115,21 @@ define(["dojo/_base/declare",
 			for(var i = 0;i<folder.children.length;i++){
 				list.push(folder.children[i].getPath());
 			}
-			return {'userFiles':[project], 'userLibs': this._getLibs()};
+			return {userFiles: [project], userLibs: this._getLibs()};
 		},
 		
-		_rewriteUrls : function(){
+		_rewriteUrls: function(){
 		
 			var resources = this._getResources();
 	
 			
 			//this._pages = Resource.findResource("*.html", true, null, true);
 			
-			var pageBuilder = new RebaseDownload(resources['userLibs']);
+			var pageBuilder = new RebaseDownload(resources.userLibs);
 			var allResources = [];
-			for(var i=0;i<resources['userFiles'].length;i++){
+			for(var i=0;i<resources.userFiles.length;i++){
 				
-				var resource = Resource.findResource(resources['userFiles'][i]);
+				var resource = Resource.findResource(resources.userFiles[i]);
 				if(resource.elementType=="Folder"){
 					allResources = Resource.findResource("*.html", true, resource, true);
 				}else if(resource.extension=="html"){
@@ -137,18 +137,20 @@ define(["dojo/_base/declare",
 				}
 				
 				for(var k=0;k<allResources.length;k++){
-					if(Theme.isThemeHTML(allResources[k])) continue;
+					if(Theme.isThemeHTML(allResources[k])) {
+						continue;
+					}
 					var newSource = pageBuilder.rebuildSource(allResources[k].getText(), allResources[k]);
 					allResources[k].setContents(newSource, true);
 				}
 			}
 		},
 		
-		okButton : function(){
+		okButton: function(){
 			function makeTimeoutFunction(downloadFiles, fileName, root, libs){
 				return function(){
 					var files = downloadFiles;
-					var fn = fileName
+					var fn = fileName;
 				
 					
 					Resource.download(files, fn, root, libs);		
@@ -160,26 +162,22 @@ define(["dojo/_base/declare",
 					
 				}
 			}
-			var fileName =dojo.attr( this.__fileName, "value");
+			var fileName = dojo.attr( this.__fileName, "value");
 			this._rewriteUrls();
 		
 			var allFiles = this._getResources();
 			var pages = this._noRewrite ? [] : this._pages;
 			/* have to close the dialog before the download call starts */
-			var actualLibs = [];
-			for(var k=0;k<allFiles['userLibs'].length;k++){
-				if(allFiles['userLibs'][k]['includeSrc'])
-					actualLibs.push(allFiles['userLibs'][k]);
-			}
-			
-			setTimeout(makeTimeoutFunction(allFiles['userFiles'], fileName, this.getRoot(), actualLibs), 300);
+			var actualLibs = allFiles.userLibs.filter(function(lib){
+				return lib.includeSrc;
+			});
+
+			setTimeout(makeTimeoutFunction(allFiles.userFiles, fileName, this.getRoot(), actualLibs), 300);
 			this.onClose();
 		},
-		cancelButton : function(){
+		cancelButton: function(){
 			this.cancel = true;
 			this.onClose();
 		}
-		
-	
 	});
 });

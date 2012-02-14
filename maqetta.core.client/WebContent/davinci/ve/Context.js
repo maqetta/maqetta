@@ -40,11 +40,14 @@ define([
 	CSSModel,
 	CSSRule,
 	HTMLElement,
-	HTMLText
+	HTMLText,
+	Preferences,
+	Silhouette
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
-var MOBILE_DEV_ATTR = 'data-maqetta-device';
+var MOBILE_DEV_ATTR = 'data-maqetta-device',
+	PREF_LAYOUT_ATTR = 'dvFlowLayout';
 
 return declare("davinci.ve.Context", null, {
 
@@ -519,7 +522,7 @@ return declare("davinci.ve.Context", null, {
     setMobileDevice: function(device) {
     	this.getDojo().config.mblUserAgent = /* remove this line for Dojo 1.7 final */
     	this.getGlobal()["require"](["dojo/_base/config"]).mblUserAgent =
-    			preview.silhouetteiframe.getMobileTheme(device + '.svg');
+    			Silhouette.getMobileTheme(device + '.svg');
     	var bodyElement = this.getDocumentElement().getChildElement("body");
         if (! device || device === 'none') {
             bodyElement.removeAttribute(MOBILE_DEV_ATTR, device);
@@ -547,7 +550,7 @@ return declare("davinci.ve.Context", null, {
 
         var dm = this.getDojo().getObject("dojox.mobile");
         if(dm && dm.loadDeviceTheme) {
-        	dm.loadDeviceTheme(preview.silhouetteiframe.getMobileTheme(device + '.svg'));
+        	dm.loadDeviceTheme(Silhouette.getMobileTheme(device + '.svg'));
         }
 	},
 	
@@ -761,7 +764,7 @@ return declare("davinci.ve.Context", null, {
 		if(newHtmlParams){
 			var modelBodyElement = source.getDocumentElement().getChildElement("body");
 			modelBodyElement.setAttribute(MOBILE_DEV_ATTR, newHtmlParams.device);
-			modelBodyElement.setAttribute(davinci.preference_layout_ATTRIBUTE, newHtmlParams.flowlayout);
+			modelBodyElement.setAttribute(PREF_LAYOUT_ATTR, newHtmlParams.flowlayout);
 			if (newHtmlParams.themeSet){
     			var cmd = new ChangeThemeCommand(newHtmlParams.themeSet, this);
     			cmd._dojoxMobileAddTheme(this, newHtmlParams.themeSet.mobileTheme, true); // new file
@@ -1940,7 +1943,7 @@ return declare("davinci.ve.Context", null, {
 	getFlowLayout: function() {
 		var htmlElement = this.getDocumentElement(),
 			bodyElement = htmlElement.getChildElement("body"),
-			flowLayout = bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE);
+			flowLayout = bodyElement.getAttribute(PREF_LAYOUT_ATTR);
 		if (!flowLayout){ // if flowLayout has not been set in the context check the edit prefs
 			//var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', Workbench.getProject());
 			//flowLayout = editorPrefs.flowLayout;
@@ -1955,7 +1958,7 @@ return declare("davinci.ve.Context", null, {
 	setFlowLayout: function(flowLayout){
 		var htmlElement=this.getDocumentElement();
 		var bodyElement=htmlElement.getChildElement("body");
-		bodyElement.addAttribute(davinci.preference_layout_ATTRIBUTE,''+flowLayout);
+		bodyElement.addAttribute(PREF_LAYOUT_ATTR,''+flowLayout);
 		return flowLayout;
 	},
 
@@ -2066,7 +2069,7 @@ return declare("davinci.ve.Context", null, {
 			davinci.ve.states.store(data, states);
 
 			/*this.setPreference("flowLayout", 
-					bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE) !== 'false');*/
+					bodyElement.getAttribute(PREF_LAYOUT_ATTR) !== 'false');*/
 		}
 		
 		var titleElement=head.getChildElement("title");

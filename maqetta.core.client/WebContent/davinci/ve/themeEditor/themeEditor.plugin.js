@@ -58,14 +58,14 @@ return {
 				{
 					id: "undo",
 					iconClass: 'undoIcon',
-					action: "davinci.actions.UndoAction",
+					action: "davinci/actions/UndoAction",
 					label: "Undo",
 					toolbarPath: "undoredo"
 				},
 				{
 					id: "redo",
 					iconClass: 'redoIcon',
-					action: "davinci.actions.RedoAction",
+					action: "davinci/actions/RedoAction",
 					label: "Redo",
 					toolbarPath: "undoredo"
 				},

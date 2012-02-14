@@ -26,6 +26,12 @@
 			}
 		</style>
 
+		<script>
+			// Stub AMD loader for silhouetteiframe.js
+			define = function(deps, body){
+				window.SilhouetteIframe = body();
+			};
+		</script>
 		<script src="../silhouetteiframe.js" type="text/javascript"></script>
 		<script>
 			var iframefilename = '../test/pages/page1.html';
@@ -57,7 +63,7 @@
 				var orientation=getOrientation();
 				var scalefactor=getScaleFactor();
 
-				window.currentSilouetteWidget = new preview.silhouetteiframe({
+				window.currentSilouetteWidget = new SilhouetteIframe({
 					rootNode:rootNode,
 					svgfilename:svgfilename,
 					orientation:orientation,

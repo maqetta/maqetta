@@ -151,7 +151,8 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 	_getSelectionStyleValues: function (){
 		//debugger;;
 		
-		return this._getCssRules().then(dojo.hitch(this,function(rules){
+		//return this._getCssRules().then(dojo.hitch(this,function(rules){
+		var rules = this._getCssRules()
 			if(rules.length==0) {
 				return null;
 			}
@@ -166,7 +167,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 			}
 			allProps = this.convertShortHandProps(allProps);
 			return allProps;
-		}));
+		//}));
 		
 	},
 	
@@ -253,32 +254,36 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 		var allProps = {};
 		var ruleDeferreds = [];
 		for(var s = 0; s < selectors.length; s++){
-			ruleDeferreds.push(this._getCssFiles().then(function(cssFiles){
-				if (cssFiles){
-					for(var i = 0;i<cssFiles.length;i++){
-						var selectorNodes = cssFiles[i].getRules(selectors[s]);
-						for (sn = 0; sn < selectorNodes.length; sn++){
-							var selectorNode = selectorNodes[sn];
-							if(selectorNode){
-								var rule = selectorNode.searchUp( "CSSRule");
-								if(rule){
-									rules.push(rule);
+			ruleDeferreds.push(this._getCssFiles().then(function(deferredResults){
+				deferredResults.forEach(function(result){  
+					if (result[0]){
+						var cssFile = result[1];
+/*						cssFiles = result[1];
+						for(var i = 0;i<cssFiles.length;i++){*/
+							var selectorNodes = cssFile/*s[i]*/.getRules(selectors[s]);
+							for (sn = 0; sn < selectorNodes.length; sn++){
+								var selectorNode = selectorNodes[sn];
+								if(selectorNode){
+									var rule = selectorNode.searchUp( "CSSRule");
+									if(rule){
+										rules.push(rule);
+									}
 								}
 							}
-						}
+						//}
 					}
-				}
+                }); 
 				return;
 			}));
 		}
-		var ruleDeferred = new dojo.DeferredList(ruleDeferreds);
-		return ruleDeferred.then(function(){
+		/*var ruleDeferred = new dojo.DeferredList(ruleDeferreds);
+		var ret =  ruleDeferred.then(function(){*/
 			if (rules.length > 0) {
 				this._currentSelectionRules = rules;
 			}
 			return rules;
-		});
-		
+		/*});
+		return ret;*/
 	},
 	
 	focus : function (){

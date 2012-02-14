@@ -29,7 +29,7 @@ return declare("davinci.ve.ThemeModifier", null, {
 		
 			cssFileLoaded.push(cssFile.loaded);
 		}
-		this.cssFilePromise = new dojo.Deferred(cssFileLoaded);
+		this.cssFilePromise = new dojo.DeferredList(cssFileLoaded);
 		return this.cssFilePromise;
 	},
 	

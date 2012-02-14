@@ -586,7 +586,7 @@ return declare("davinci.ve.Context", null, {
 		if (! this.theme) {
 			
             var themePromise = this.loadThemeMeta(this._srcDocument);
-            themePromise.then(function(theme){
+            return themePromise.then(function(theme){
          	if (theme) { // wdr #1024
                  this._themeUrl = theme.themeUrl;
                  this._themeMetaCache = theme.themeMetaCache;
@@ -595,6 +595,9 @@ return declare("davinci.ve.Context", null, {
          });
          
      }
+		var def = new dojo.Deferred();
+		def.resolve(true);
+		return def;
 	},
 	getTheme: function(){
         
@@ -658,74 +661,76 @@ return declare("davinci.ve.Context", null, {
 
     /* ensures the file has a valid theme.  Adds the users default if its not there alread */
     loadTheme: function(newHtmlParms){
-    	this._initThemeMeta();
-    	/* 
-    	 * Ensure the model has a default theme.  Defaulting to Claro for now, should
-    	 * should load from prefs 
-    	 * 
-    	 * */
-    	var model = this.getModel();
-       	var defaultThemeName="claro";
-       	if (newHtmlParms && newHtmlParms.themeSet) {
-       	    defaultThemeName = newHtmlParms.themeSet.desktopTheme;
-       	} else if (newHtmlParms && newHtmlParms.theme){
-       	    if (newHtmlParms.theme == 'deviceSpecific') {
-       	     defaultThemeName = "claro"; 
-       	    } else {
-       	        defaultThemeName = newHtmlParms.theme;
-       	    }
-       	}
-    	var imports = model.find({elementType:'CSSImport'});
-		
-		
-		/* remove the .theme file, and find themes in the given base location */
-		var allThemesPromise = Library.getThemes(Workbench.getProject()),
-			themeHash = {},
-			defaultTheme;
-		
-		allThemesPromise.then(function(allThemes){
-			allThemes.forEach(function(theme){
-				if(theme.name==defaultThemeName) {
-					defaultTheme = theme;
-				}
-				
-				if (theme.files){ // #1024 some themes may not contain files, themeMaps
-					theme.files.forEach(function(file){
-	   			        themeHash[file] = theme;
-					});
-				}
-			});
-		}).then(dojo.hitch(this,function(){
-			
-			/* check the header file for a themes CSS.  
-			 * 
-			 * TODO: This is a first level check, a good second level check
-			 * would be to grep the body classes for the themes className. this would be a bit safer.
-			 */
-			
-			if(imports.some(function(imp){
-				/* trim off any relative prefix */
-				for(var themeUrl in themeHash){
-					if(imp.url.indexOf(themeUrl)  > -1){
-						// theme already exists
-						return true;
-					}
-				}
-			})){
-				return true;
-			};
-	
-	
-			this._loadThemeDojoxMobile(this);
-			var body = model.find({elementType:'HTMLElement', tag:'body'},true);
-			body.setAttribute("class", defaultTheme.className);
-			/* add the css */
-			var filePath = defaultTheme.file.getPath();
-			defaultTheme.files.forEach(function(file) {
-				var url = new Path(filePath).removeLastSegments(1).append(file).relativeTo(this.getPath(), true);
-				this.addModeledStyleSheet(url.toString(), null, true);
-			}, this);
-		}));
+    	return this._initThemeMeta().then(dojo.hitch(this,function(){
+    		/* 
+        	 * Ensure the model has a default theme.  Defaulting to Claro for now, should
+        	 * should load from prefs 
+        	 * 
+        	 * */
+        	var model = this.getModel();
+           	var defaultThemeName="claro";
+           	if (newHtmlParms && newHtmlParms.themeSet) {
+           	    defaultThemeName = newHtmlParms.themeSet.desktopTheme;
+           	} else if (newHtmlParms && newHtmlParms.theme){
+           	    if (newHtmlParms.theme == 'deviceSpecific') {
+           	     defaultThemeName = "claro"; 
+           	    } else {
+           	        defaultThemeName = newHtmlParms.theme;
+           	    }
+           	}
+        	var imports = model.find({elementType:'CSSImport'});
+    		
+    		
+    		/* remove the .theme file, and find themes in the given base location */
+    		var allThemesPromise = Library.getThemes(Workbench.getProject()),
+    			themeHash = {},
+    			defaultTheme;
+    		
+    		return allThemesPromise.then(function(allThemes){
+    			allThemes.forEach(function(theme){
+    				if(theme.name==defaultThemeName) {
+    					defaultTheme = theme;
+    				}
+    				
+    				if (theme.files){ // #1024 some themes may not contain files, themeMaps
+    					theme.files.forEach(function(file){
+    	   			        themeHash[file] = theme;
+    					});
+    				}
+    			});
+    		}).then(dojo.hitch(this,function(){
+    			
+    			/* check the header file for a themes CSS.  
+    			 * 
+    			 * TODO: This is a first level check, a good second level check
+    			 * would be to grep the body classes for the themes className. this would be a bit safer.
+    			 */
+    			
+    			if(imports.some(function(imp){
+    				/* trim off any relative prefix */
+    				for(var themeUrl in themeHash){
+    					if(imp.url.indexOf(themeUrl)  > -1){
+    						// theme already exists
+    						return true;
+    					}
+    				}
+    			})){
+    				return true;
+    			};
+    	
+    	
+    			this._loadThemeDojoxMobile(this);
+    			var body = model.find({elementType:'HTMLElement', tag:'body'},true);
+    			body.setAttribute("class", defaultTheme.className);
+    			/* add the css */
+    			var filePath = defaultTheme.file.getPath();
+    			defaultTheme.files.forEach(function(file) {
+    				var url = new Path(filePath).removeLastSegments(1).append(file).relativeTo(this.getPath(), true);
+    				this.addModeledStyleSheet(url.toString(), null, true);
+    			}, this);
+    		}));
+    	}));
+    	
     },
     
 // FIXME this bit of code should be moved to toolkit specific //////////////////////////////   
@@ -750,17 +755,21 @@ return declare("davinci.ve.Context", null, {
 
 		this._srcDocument=source;
 		
+		
+		var loading = new dojo.Deferred();
 		/* determinte if its the theme editor loading */
 		if(!source.themeCssfiles){ // css files need to be added to doc before body content
 			//this.loadTheme(newHtmlParams);
 			this.loadRequires("html.body", true/*doUpdateModel*/, false, true /* skip UI load */ );
-			this.loadTheme(newHtmlParams);
+			loading = this.loadTheme(newHtmlParams);
+		}else{
+			loading.resolve(true);
 		}
 		/* ensure the top level body deps are met (ie. maqetta.js, states.js and app.css) */
 		/* make sure this file has a valid/good theme */
 		
-		
-		if (this.rootWidget){
+		loading.then(dojo.hitch(this,function(){
+			if (this.rootWidget){
 			this.rootWidget._srcElement=this._srcDocument.getDocumentElement().getChildElement("body");
 			this.rootWidget._srcElement.setAttribute("id", "myapp");
 		}
@@ -998,6 +1007,8 @@ return declare("davinci.ve.Context", null, {
 			// frame has already been initialized, changing content (such as changes from the source editor)
 			this._continueLoading(data, callback, this, scope);
 		}
+		}))
+		
 	},
 
 	_continueLoading: function(data, callback, callbackData, scope) {

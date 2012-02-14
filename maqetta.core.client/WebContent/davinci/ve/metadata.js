@@ -20,7 +20,7 @@ define([
     	helperCache = {},
     // Localization strings
     	l10n = null,
-    
+
     	defaultProperties = {
 	        id: {datatype: "string", hidden: true},
 	        lang: {datatype: "string", hidden: true},
@@ -76,7 +76,6 @@ define([
     }
 
 	function parseLibraryDescriptor(libName, descriptor, path) {
-		
 		if (! libName) {
 			console.error("parseLibraryDescriptor: missing 'libName' arg");
 		}
@@ -247,42 +246,39 @@ define([
         
         var metadata = null;
         var metadataUrl = [ descriptorPath, "/", type.replace(/\./g, "/"), "_oam.json" ].join('');
-        var metadataPromise = null;
-        
-        if (! wm.localPath){
-        	metadataPromise = dojo.xhrGet({
 
+        if (!wm.localPath){
+	        dojo.xhrGet({
 	            url: metadataUrl,
 	            handleAs: "json",
-	            
+	            sync: true // XXX should be async
 		    }).then(function(data) {
-               return data;
+                metadata = data;
 	        });
-        }else{
-			var base = Workbench.getProject();
-			metadataPromise = system.resource.findResource("./"+ base + "/" + metadataUrl).then(function(resource){
-        		return dojo.fromJson(resource.getText());
-        	});
-        	
         }
-        return metadataPromise.then(function(metadata){
-        	if (!metadata) {
-                console.error("ERROR: Could not load metadata for type: " + type);
-                return null;
-            }
-            
-            metadata.property = dojo.mixin({}, defaultProperties, metadata.property);
-            // store location of this metadata file, since some resources are relative to it
-            metadata.$src = metadataUrl;
-            // XXX localize(metadata);
-            mdCache[type] = metadata;
-
-            // OAM may be overridden by metadata in widgets.json
-            Util.mixin(metadata, wm.$providedTypes[type].metadata);
-            
-            return metadata;
-        });
+        /* removing loading metadata from workspace */
+        /*
+        else{
+			var base = Workbench.getProject();
+        	var resource = system.resource.findResource("./"+ base + "/" + metadataUrl);
+        	metadata = dojo.fromJson(resource.getText());
+        }
+        */
+        if (!metadata) {
+            console.error("ERROR: Could not load metadata for type: " + type);
+            return null;
+        }
         
+        metadata.property = dojo.mixin({}, defaultProperties, metadata.property);
+        // store location of this metadata file, since some resources are relative to it
+        metadata.$src = metadataUrl;
+        // XXX localize(metadata);
+        mdCache[type] = metadata;
+
+        // OAM may be overridden by metadata in widgets.json
+        Util.mixin(metadata, wm.$providedTypes[type].metadata);
+        
+        return metadata;
     }
     
 //     function localize(metadata) {
@@ -409,8 +405,6 @@ define([
         },
         
     	loadThemeMeta: function(model) {
-    		
-    		var deferredThemeMeta = new dojo.Deferred();
     		// try to find the theme using path magic
     		var style = model.find({elementType:'HTMLElement', tag:'style'});
     		var imports = [];
@@ -426,18 +420,15 @@ define([
     		
 			var themePath = new Path(model.fileName);
     		/* remove the .theme file, and find themes in the given base location */
-    		var allThemesPromise = Library.getThemes(themePath.firstSegment());
+    		var allThemes = Library.getThemes(themePath.firstSegment());
     		var themeHash = {};
-    		
-    		
-    		allThemesPromise.then(function(allThemes){
-	    		for(var i=0;i<allThemes.length;i++){
-	    		    if (allThemes[i]['files']){ // #1024 theme maps do not have files
-	        			for(var k=0;k<allThemes[i]['files'].length;k++){
-	        				themeHash[allThemes[i]['files'][k]] = allThemes[i];
-	        			}
-	    		    }
-	    		}
+    		for(var i=0;i<allThemes.length;i++){
+    		    if (allThemes[i]['files']){ // #1024 theme maps do not have files
+        			for(var k=0;k<allThemes[i]['files'].length;k++){
+        				themeHash[allThemes[i]['files'][k]] = allThemes[i];
+        			}
+    		    }
+    		}
     		
     		
     		/* check the header file for a themes CSS.  
@@ -446,88 +437,86 @@ define([
     		 * would be to grep the body classes for the themes className. this would be a bit safer.
     		 */
     		
-	    		for(var i=0;i<imports.length;i++){
-	    			var url = imports[i].url;
-	    			/* trim off any relative prefix */
-	    			for(var themeUrl in themeHash){
-	    				if(themeUrl.indexOf(claroThemeName) > -1){
-	    					claroThemeUrl = themeUrl;
-	    				}
-	    				if(url.indexOf(themeUrl)  > -1){
-	    					deferredThemeMeta.resolve( {
-	    						themeUrl: url,
-	    						themeMetaCache: Library.getThemeMetadata(themeHash[themeUrl]),
-	    						theme: themeHash[themeUrl]
-	    					});
-	    					return deferredThemeMeta;
-	    				}
-	    			}
-	    		}
+    		for(var i=0;i<imports.length;i++){
+    			var url = imports[i].url;
+    			/* trim off any relative prefix */
+    			for(var themeUrl in themeHash){
+    				if(themeUrl.indexOf(claroThemeName) > -1){
+    					claroThemeUrl = themeUrl;
+    				}
+    				if(url.indexOf(themeUrl)  > -1){
+    					return {
+    						themeUrl: url,
+    						themeMetaCache: Library.getThemeMetadata(themeHash[themeUrl]),
+    						theme: themeHash[themeUrl]
+    					};
+    				}
+    			}
+    		}
     		
-				var ro = Metadata._loadThemeMetaDojoxMobile(model, themeHash);
-				if (ro) {
-					deferredThemeMeta.resolve(ro);
-					return deferredThemeMeta;
-	    		}
-    		
-    			
+    		// check for single mobile theme's
+			var ro = Metadata._loadThemeMetaDojoxMobile(model, themeHash);
+			if (ro) {
+    		    return ro;
+    		}
+
+   		
     		// If we are here, we didn't find a cross-reference match between 
     		// CSS files listed among the @import commands and the themes in
     		// themes/ folder of the user's workspace. So, see if there is an @import
     		// that looks like a theme reference and see if claro/ is in
     		// the list of themes, if so, use claro instead of old theme
-    			if(claroThemeUrl){
-	    			var newThemeName = claroThemeName;
-	    			var oldThemeName;
-	    			for(var i=0;i<imports.length;i++){
-	    				var cssfilenamematch=imports[i].url.match(/\/([^\/]*)\.css$/);
-	    				if(cssfilenamematch && cssfilenamematch.length==2){
-	    					var cssfilename = cssfilenamematch[1];
-	    					var themematch = imports[i].url.match(new RegExp("themes/"+cssfilename+"/"+cssfilename+".css$"));
-	    					if(themematch){
-	    						oldThemeName = cssfilename;
-	    						break;
-	    					}
-	    				}
-	    			}
-	    			if(oldThemeName){
-	    				// Update model
-	    				var htmlElement=model.getDocumentElement();
-	    				var head=htmlElement.getChildElement("head");
-	    				var bodyElement=htmlElement.getChildElement("body");
-	    				var classAttr=bodyElement.getAttribute("class");
-	    				if (classAttr){
-	    					bodyElement.setAttribute("class",classAttr.replace(new RegExp("\\b"+oldThemeName+"\\b","g"),newThemeName));
-	    				}
-	    				var styleTags=head.getChildElements("style");
-	    				dojo.forEach(styleTags, function (styleTag){
-	    					dojo.forEach(styleTag.children,function(styleRule){
-	    						if (styleRule.elementType=="CSSImport"){
-	    							styleRule.url = styleRule.url.replace(new RegExp("/"+oldThemeName,"g"),"/"+newThemeName);
-	    						}
-	    					}); 
-	    				});
-	    				// Update data in returnObject
-	    				var url = imports[i].url.replace(new RegExp("/"+oldThemeName,"g"),"/"+newThemeName);
-	    				var returnObject = {
-	    					themeUrl: url,
-	    					// Pull claro theme data
-	    					themeMetaCache: Library.getThemeMetadata(themeHash[claroThemeUrl]),
-	    					theme: themeHash[claroThemeUrl]
-	    				};
-	    				returnObject.themeMetaCache.usingSubstituteTheme = {
-							oldThemeName:oldThemeName,
-							newThemeName:newThemeName
-	    				};
-	    				// Make sure source pane updates text from model
-	    				deferredThemeMeta.resolve(returnObject);
-	    				return deferredThemeMeta;	
-	    			}
-	    		}
-	    		     
-    		});
-    		
-    		return deferredThemeMeta;
+    		if(claroThemeUrl){
+    			var newThemeName = claroThemeName;
+    			var oldThemeName;
+    			for(var i=0;i<imports.length;i++){
+    				var cssfilenamematch=imports[i].url.match(/\/([^\/]*)\.css$/);
+    				if(cssfilenamematch && cssfilenamematch.length==2){
+    					var cssfilename = cssfilenamematch[1];
+    					var themematch = imports[i].url.match(new RegExp("themes/"+cssfilename+"/"+cssfilename+".css$"));
+    					if(themematch){
+    						oldThemeName = cssfilename;
+    						break;
+    					}
+    				}
+    			}
+    			if(oldThemeName){
+    				// Update model
+    				var htmlElement=model.getDocumentElement();
+    				var head=htmlElement.getChildElement("head");
+    				var bodyElement=htmlElement.getChildElement("body");
+    				var classAttr=bodyElement.getAttribute("class");
+    				if (classAttr){
+    					bodyElement.setAttribute("class",classAttr.replace(new RegExp("\\b"+oldThemeName+"\\b","g"),newThemeName));
+    				}
+    				var styleTags=head.getChildElements("style");
+    				dojo.forEach(styleTags, function (styleTag){
+    					dojo.forEach(styleTag.children,function(styleRule){
+    						if (styleRule.elementType=="CSSImport"){
+    							styleRule.url = styleRule.url.replace(new RegExp("/"+oldThemeName,"g"),"/"+newThemeName);
+    						}
+    					}); 
+    				});
+    				// Update data in returnObject
+    				var url = imports[i].url.replace(new RegExp("/"+oldThemeName,"g"),"/"+newThemeName);
+    				var returnObject = {
+    					themeUrl: url,
+    					// Pull claro theme data
+    					themeMetaCache: Library.getThemeMetadata(themeHash[claroThemeUrl]),
+    					theme: themeHash[claroThemeUrl]
+    				};
+    				returnObject.themeMetaCache.usingSubstituteTheme = {
+						oldThemeName:oldThemeName,
+						newThemeName:newThemeName
+    				};
+    				// Make sure source pane updates text from model
+
+    				return returnObject;	
+    			}
+    		}
+    		var def = new dojo.Deferred();
+    		def.resolve("");
+    		return def;
     	},
  
 // FIXME this bit of code should be moved to toolkit specific ////////////////////////////////////////////////////////////

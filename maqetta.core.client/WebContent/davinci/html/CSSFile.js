@@ -32,13 +32,14 @@ return declare("davinci.html.CSSFile", CSSElement, {
 		} else if (this.url) {
 		
 			txtPromise = this.getResource().then(function(res){
-				return res.getText();
+				return res && res.getText();
 			});
 			
 		}
 		if(txtPromise){
 			txtPromise.then(dojo.hitch(this,function(txt){
-				this.setText(txt);
+				if(txt)
+					this.setText(txt);
 				this.loaded.resolve(this);
 			}));
 		}

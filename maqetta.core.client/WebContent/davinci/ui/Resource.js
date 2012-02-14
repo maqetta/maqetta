@@ -27,9 +27,11 @@ var createNewDialog = function(fileNameLabel, createLabel, type, dialogSpecificC
 	var folder;
 	if (resource) {
 		if(resource.elementType=="Folder"){
-			folder = resource;
+			folder = new dojo.Deferred();
+			folder.resolve(resource);
 		}else{
-			folder = resource.parent;
+			folder = new dojo.Deferred();
+			folder.resolve(resource.parent);
 		}
 	}else{
 		var base = Workbench.getProject();

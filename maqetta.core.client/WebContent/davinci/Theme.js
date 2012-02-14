@@ -150,7 +150,7 @@ define([
 							var cssPromise = new dojo.DeferredList(cssDefs);
 							return cssPromise.then(function(){
 								
-								deferreds.push(themeFile.setContents("(" + dojo.toJson(themeJson)+")"));
+								deferreds.push(themeFile.setContents(dojo.toJson(themeJson)));
 								for(var name in toSave){
 								    deferreds.push(toSave[name].save());
 								}

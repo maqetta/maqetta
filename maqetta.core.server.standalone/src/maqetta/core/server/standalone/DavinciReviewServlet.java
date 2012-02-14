@@ -28,6 +28,7 @@ import org.maqetta.server.ServerManager;
 public class DavinciReviewServlet extends DavinciPageServlet {
 	private ReviewManager reviewManager;
 	protected String revieweeName;
+	protected String noView;
 
 	@Override
 	public void initialize() {
@@ -62,12 +63,13 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 			initialize();
 		}
 		revieweeName = req.getParameter("revieweeuser");
+		noView = req.getParameter("noview");
 		String contextString = req.getContextPath();
 
 		String pathInfo = req.getPathInfo();
 		IUser user = (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
 		if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
-			System.out.println("Review Servlet request: " + pathInfo + ", logged in=" + (user != null));
+			System.out.println("Review Servlet request: " + pathInfo + ", logged in= " + (user != null ? user.getUserName() : "guest"));
 		}
 
 		if ( user == null ) {
@@ -141,9 +143,9 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 	@Override
 	protected boolean handleLibraryRequest(HttpServletRequest req, HttpServletResponse resp,
 			IPath path, IUser user) throws ServletException, IOException {
-		// Remove the follow URL prefix
+		// Remove the following URL prefix
 		// /user/heguyi/ws/workspace/.review/snapshot/20100101/project1/lib/dojo/dojo.js
-		// to
+		// 		to
 		// project1/lib/dojo/dojo.js
 		String version = null;
 		String ownerId = null;
@@ -163,9 +165,9 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 	protected boolean handleReviewRequest(HttpServletRequest req, HttpServletResponse resp,
 			IPath path) throws ServletException, IOException {
 		// Get the requested resources from the designer's folder
-		// Remove the follow URL prefix
+		// Remove the following URL prefix
 		// /user/heguyi/ws/workspace/.review/snapshot/20100101/project1/folder1/sample1.html
-		// to
+		// 		to
 		// /.review/snapshot/20100101/project1/folder1/sample1.html
 		if ( isValidReviewPath(path) ) {
 			String designerName = path.segment(1);
@@ -195,7 +197,7 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 		}
 		IUser user = userManager.getUser(designerName);
 
-		return null != user && path.segmentCount() > 8 && path.segment(4).equals(".review")
+		return user != null && path.segmentCount() > 8 && path.segment(4).equals(".review")
 				&& path.segment(5).equals("snapshot") && path.segment(0).equals("user")
 				&& path.segment(2).equals("ws") && path.segment(3).equals("workspace");
 	}

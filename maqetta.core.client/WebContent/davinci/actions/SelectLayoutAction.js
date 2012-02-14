@@ -2,8 +2,9 @@ define([
         "dojo/_base/declare",
     	"./Action",
     	"../Workbench",
+    	"dijit/Dialog",
     	"dojo/i18n!./nls/actions"
-], function(declare, Action, Workbench, langObj){
+], function(declare, Action, Workbench, Dialog, langObj){
 
 return declare("davinci.actions.SelectLayoutAction", Action, {
 	
@@ -51,8 +52,8 @@ return declare("davinci.actions.SelectLayoutAction", Action, {
 			formHtml += '<option>Flow positioning</option>';
 		}
 			
-		formHtml = formHtml + '</select><br/>';
-		var	dialog = new dijit.Dialog({id: "selectLayout", title:langObj.newWidgetsShouldUse,
+		formHtml += '</select><br/>';
+		var	dialog = new Dialog({id: "selectLayout", title:langObj.newWidgetsShouldUse,
 			onCancel:function(){this.destroyRecursive(false);}});	
 		dialog._selectLayout = this;
 		dojo.connect(dialog, 'onLoad', function(){
@@ -72,4 +73,4 @@ return declare("davinci.actions.SelectLayoutAction", Action, {
 	}
 });
 });
-davinci.preference_layout_ATTRIBUTE = 'dvFlowLayout';
+

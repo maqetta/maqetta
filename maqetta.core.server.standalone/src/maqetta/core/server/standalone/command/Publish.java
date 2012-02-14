@@ -32,16 +32,16 @@ import org.maqetta.server.ServerManager;
 public class Publish extends Command {
 	SmtpPop3Mailer mailer = SmtpPop3Mailer.getDefault();
 
-    public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
+    @Override
+	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
 			IUser user) throws IOException {
 
 		Version version = null;
-		Boolean isUpdate = req.getParameter("isUpdate").equals("true") ? true
-				: false;
+		Boolean isUpdate = req.getParameter("isUpdate") != null ? 
+				(req.getParameter("isUpdate").equals("true") ? true : false) : false;
 		String vTime = req.getParameter("vTime");
-		Boolean isRestart = req.getParameter("isRestart").equals("true") ? true
-				: false;
-
+		Boolean isRestart = req.getParameter("isRestart") != null ? 
+				(req.getParameter("isRestart").equals("true") ? true : false) : false;
 		String reviewersStr = req.getParameter("reviewers");
 		String emailsStr = req.getParameter("emails");
 		String message = req.getParameter("message");
@@ -49,11 +49,10 @@ public class Publish extends Command {
 		String[] resources = req.getParameterValues("resources");
 		String desireWidth = req.getParameter("desireWidth");
 		String desireHeight = req.getParameter("desireHeight");
-		Boolean savingDraft = req.getParameter("savingDraft") == null ? false
-				: true;
+		Boolean savingDraft = req.getParameter("savingDraft") == null ? false : true;
 		String dueDate = req.getParameter("dueDate");
-		Boolean receiveEmail = req.getParameter("receiveEmail").equals("true") ? true
-				: false;
+		Boolean receiveEmail = req.getParameter("receiveEmail") != null ? 
+				(req.getParameter("receiveEmail").equals("true") ? true : false) : false;
 
 		String[] names = reviewersStr.split(",");
 		String[] emails = emailsStr.split(",");
@@ -131,8 +130,7 @@ public class Publish extends Command {
 			return;
 		}
 
-		ReviewManager.getReviewManager()
-				.publish(user.getUserName(), version);
+		ReviewManager.getReviewManager().publish(user.getUserName(), version);
 
 		String requestUrl = req.getRequestURL().toString();
 		// set is used to filter duplicate email. Only send mail to one email
@@ -147,8 +145,8 @@ public class Publish extends Command {
 						Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION_SUBJECT_PREFIX) + " " + versionTitle, htmlContent);
 			}
 		}
-		if(this.responseString==null)
-		this.responseString = "OK";
+		if ( this.responseString == null )
+			this.responseString = "OK";
 	}
 
 	private void notifyRelatedPersons(String from, String to, String subject,
@@ -178,13 +176,6 @@ public class Publish extends Command {
 
 	private String getUrl(IUser user, String version, String requestUrl, String reviewer) {
 		String host = requestUrl.substring(0, requestUrl.indexOf('/', "http://".length()));
-		//String prefix =  System.getProperty("org.eclipse.equinox.http.jetty.context.path");
-		String prefix =  "/maqetta";
-		
-//		if(prefix != null){
-//			return host + prefix + "/review/" + user.getUserName() + "?revieweeuser=" + user.getUserName();
-//		} else {
-			return host + "/review/" + user.getUserName() + "?revieweeuser=" + user.getUserName();
-//		}
+		return host + "/review/" + user.getUserName() + "?revieweeuser=" + user.getUserName();
 	}
 }

@@ -271,7 +271,7 @@ return {
                     id: "davinci.ui.download",
                     label: "Download",
                     iconClass: "downloadSomeIcon",
-                    action: "davinci.actions.DownloadAction",
+                    action: "davinci/actions/DownloadAction",
                     isEnabled: function(item) {
                         return require('./ui/Resource').canModify(item);
                     },

@@ -224,7 +224,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 				label : 'name',
 				items : []
 		};
-		this.userData=emptyData.items;
+		this.userData = emptyData.items;
 		var jsonStore = new ItemFileWriteStore( 
 				{data : emptyData}
 		);
@@ -380,7 +380,6 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		if (item) {
 			var index = grid.getItemIndex(item);
 			grid.scrollToRow(index);
-			//grid.get("selection").select(index);
 			var node = grid.getRowNode(index);
 			dojo.fx.chain([
 				dojo.fadeOut({ node: node, duration: 300 }),
@@ -449,7 +448,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		this.reviewMsg.innerHTML = errMsg;
 	},
 
-	select:function(evt) {
+	select: function (evt) {
 		var target = evt.target;
 		var stackContainer = this.reviewerStackContainer;
 		if (target == this.navPage1) {
@@ -461,13 +460,13 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		}
 	},
 
-	update:function() {
+	update: function() {
 		var targetTreeModel = this.targetTreeModel;
 		targetTreeModel.onChildrenChange(targetTreeModel.root, targetTreeModel.root.children);
 	},
 
 	containReviewFile: function(index) {
-		var reviewFiles = this.reviewFiles;
+		var reviewFiles = this.reviewFiles || [];
 		var i;
 		if (!isNaN(index)) {
 			for (i=0; i<reviewFiles.length; i++) {
@@ -486,7 +485,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 	},
 
 	getChildrenFiles: function(item) {
-		var reviewFiles = this.reviewFiles;
+		var reviewFiles = this.reviewFiles || [];
 		var targetTreeModel = this.targetTreeModel;
 		if (item.elementType == "File") {
 			if (!this.containReviewFile(item)) {
@@ -498,7 +497,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 			}
 		}else if (item.elementType == "Folder") {
 			var children;
-			item.getChildren(function(c) { children=c; }, true);
+			item.getChildren(function(c) { children = c; }, true);
 			dojo.forEach(children, dojo.hitch(this, function(item) {
 				if (item.elementType == "File") {
 					this.getChildrenFiles(item);
@@ -517,7 +516,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		if (files) {
 			selections = files;
 		}
-		dojo.forEach(selections, this.getChildrenFiles);
+		dojo.forEach(selections, this.getChildrenFiles, this);
 		this.update();
 		dojo.publish('/davinci/review/publish/valueChanged');
 	},

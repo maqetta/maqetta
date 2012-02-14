@@ -125,6 +125,20 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 		
 		// Recompute styling properties in case we aren't in Normal state
 		States.resetState(newWidget);
+		
+		// Some properties (such as HorizontalSliderRule's 'container' property) require that
+		// we redraw the parent widget (e.g., HorizontalSlider) so that it can properly take 
+		// the new value in to account. Here, we execute a ModifyCommand (with no actual
+		// modifications) to cause the parent to refresh itself.
+		if (this._doRefreshParent(widget)) {
+			// Note we're executing the ModifyCommand directly as opposed to adding to it to the 
+			// command stack since we're not really changing anything on the parent and don't
+			// need to allow user to undo it.
+			var command =
+					new davinci.ve.commands.ModifyCommand(parentWidget,
+							null, null, parentWidget._edit_context);
+			command.execute(command);
+		}
 	},
 
 	/**
@@ -145,6 +159,32 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 			if (props.hasOwnProperty(name)) {
 				p = widget.metadata.property[name];
 				if (p && p.refreshFromSource) {
+					refresh = true;
+					break;
+				}
+			}
+		}
+		return refresh;
+	},
+
+	/**
+	 * Check if any of the modified properties has 'refreshParent' set.
+	 * 
+	 * @param  {davinci.ve._Widget} widget
+	 * 				The widget instance whose properties are being modified.
+	 * @return {boolean} 'true'
+	 * 				if one of the modified properties has the 'refreshParent'
+	 * 				attribute set.
+	 */
+	_doRefreshParent: function(widget) {
+		var props = this._properties,
+			name,
+			p,
+			refresh = false;
+		for (name in props) {
+			if (props.hasOwnProperty(name)) {
+				p = widget.metadata.property[name];
+				if (p && p.refreshParent) {
 					refresh = true;
 					break;
 				}
@@ -199,6 +239,20 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 		
 		// Recompute styling properties in case we aren't in Normal state
 		States.resetState(newWidget);
+		
+		// Some properties (such as HorizontalSliderRule's 'container' property) require that
+		// we redraw the parent widget (e.g., HorizontalSlider) so that it can properly take 
+		// the new value in to account. Here, we execute a ModifyCommand (with no actual
+		// modifications) to cause the parent to refresh itself.
+		if (this._doRefreshParent(widget)) {
+			// Note we're executing the ModifyCommand directly as opposed to adding to it to the 
+			// command stack since we're not really changing anything on the parent and don't
+			// need to allow user to undo it.
+			var command =
+					new davinci.ve.commands.ModifyCommand(parent,
+							null, null, parent._edit_context);
+			command.execute(command);
+		}
 	}
 
 });

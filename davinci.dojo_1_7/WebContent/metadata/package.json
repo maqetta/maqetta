@@ -671,7 +671,31 @@
 					"metadata": {
 						"property": {
 							"container": {
-								"refreshFromSource": true
+								"refreshParent": true
+							},
+							"count": {
+								"refreshParent": true
+							},
+							"ruleStyle": {
+								"refreshParent": true
+							},
+							"labelStyle": {
+								"refreshParent": true
+							},
+							"labels": {
+								"refreshParent": true
+							},
+							"numericMargin": {
+								"refreshParent": true
+							},
+							"minimum": {
+								"refreshParent": true
+							},
+							"maximum": {
+								"refreshParent": true
+							},
+							"constraints": {
+								"refreshParent": true
 							}
 						}
 					},
@@ -692,10 +716,13 @@
 					"metadata": {
 						"property": {
 							"container": {
-								"refreshFromSource": true
+								"refreshParent": true
 							},
 							"count": {
-								"refreshFromSource": true
+								"refreshParent": true
+							},
+							"ruleStyle": {
+								"refreshParent": true
 							}
 						}
 					},
@@ -1129,7 +1156,31 @@
 					"metadata": {
 						"property": {
 							"container": {
-								"refreshFromSource": true
+								"refreshParent": true
+							},
+							"count": {
+								"refreshParent": true
+							},
+							"ruleStyle": {
+								"refreshParent": true
+							},
+							"labelStyle": {
+								"refreshParent": true
+							},
+							"labels": {
+								"refreshParent": true
+							},
+							"numericMargin": {
+								"refreshParent": true
+							},
+							"minimum": {
+								"refreshParent": true
+							},
+							"maximum": {
+								"refreshParent": true
+							},
+							"constraints": {
+								"refreshParent": true
 							}
 						}
 					},
@@ -1151,10 +1202,13 @@
 					"metadata": {
 						"property": {
 							"container": {
-								"refreshFromSource": true
+								"refreshParent": true
 							},
 							"count": {
-								"refreshFromSource": true
+								"refreshParent": true
+							},
+							"ruleStyle": {
+								"refreshParent": true
 							}
 						}
 					},

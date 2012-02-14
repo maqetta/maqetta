@@ -124,7 +124,7 @@ public class DavinciPageServlet extends HttpServlet {
 		} else if ( pathInfo.equals("/welcome") ) {
 			/* write the welcome page (may come from extension point) */
 			writeWelcomePage(req, resp);
-		} else if ( req.getParameter(IDavinciServerConstants.PREVIEW_PARAM) != null ) {
+		} else if ( previewParam != null ) {
 			handlePreview(req, resp);
 		} else if ( pathInfo.startsWith(IDavinciServerConstants.USER_URL) ) {
 			handleWSRequest(req, resp, user);
@@ -196,8 +196,6 @@ public class DavinciPageServlet extends HttpServlet {
 		String pathInfo = req.getPathInfo();
 		// Code further down expects pathInfo==null if user goes to root of daVinci server
 		IPath path = new Path(pathInfo);
-		// FIXME: what's this doing? If it's trying to remove trailing slash, it
-		// needs to subtract 1
 		if ( path.hasTrailingSeparator() ) {
 			path = path.removeTrailingSeparator();
 		}

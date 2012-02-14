@@ -29,8 +29,7 @@
 		<script src="../../dojo/dojo.js" djConfig="modulePaths:{'preview':'../preview'}"></script>
 		<link rel="stylesheet" type="text/css" href="../../dijit/themes/claro/claro.css"/>
 		<script>
-			dojo.require('preview.singlepreview');
-
+		require(['preview/singlepreview', 'dojo/domReady!'], function(singlepreview){
 			var devicelist=[
 							{value:"0", label:'android_340x480', file:'../images/android_340x480.svg'},
 							{value:"1", label:'android_480x800', file:'../images/android_480x800.svg'},
@@ -51,7 +50,7 @@
 			function initSinglePreview(){
 
 				var singlepreview_container = document.querySelectorAll(".singlepreview_container")[0];
-				window.singlepreview = new preview.singlepreview({
+				window.singlepreview = new singlepreview({
 					devicelist:devicelist,
 					currentDevice:currentDevice,
 					svgfilename:svgfilename,
@@ -69,9 +68,8 @@
 				initSinglePreview();
 			}
 
-			dojo.addOnLoad(function() {
-				initSinglePreview();
-			});
+			initSinglePreview();
+		});
 		</script>
 	</head>
     

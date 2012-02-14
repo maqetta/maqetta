@@ -40,7 +40,9 @@ define([
 	CSSModel,
 	CSSRule,
 	HTMLElement,
-	HTMLText
+	HTMLText,
+	Preferences,
+	Silhouette
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -519,7 +521,7 @@ return declare("davinci.ve.Context", null, {
     setMobileDevice: function(device) {
     	this.getDojo().config.mblUserAgent = /* remove this line for Dojo 1.7 final */
     	this.getGlobal()["require"](["dojo/_base/config"]).mblUserAgent =
-    			preview.silhouetteiframe.getMobileTheme(device + '.svg');
+    			Silhouette.getMobileTheme(device + '.svg');
     	var bodyElement = this.getDocumentElement().getChildElement("body");
         if (! device || device === 'none') {
             bodyElement.removeAttribute(MOBILE_DEV_ATTR, device);
@@ -547,7 +549,7 @@ return declare("davinci.ve.Context", null, {
 
         var dm = this.getDojo().getObject("dojox.mobile");
         if(dm && dm.loadDeviceTheme) {
-        	dm.loadDeviceTheme(preview.silhouetteiframe.getMobileTheme(device + '.svg'));
+        	dm.loadDeviceTheme(Silhouette.getMobileTheme(device + '.svg'));
         }
 	},
 	

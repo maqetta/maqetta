@@ -719,12 +719,12 @@ var Workbench = {
 		if (typeof item.action == "string"/* && item.action instanceof String*/)
 		{
 			if (!item.actionLoaded){
-				var actionContainerClassName = item.actionsContainer?item.actionsContainer:item.action;
-				dojo["require"](actionContainerClassName);
+				require([item.actionsContainer || item.action], function(){/*TODO: set flag?*/});
 			}
-			var actionClass= eval(item.action);
-			item.action=new actionClass;
-			item.action.item=item;
+			require([item.action.replace(/\./g,"/")], function(actionClass){
+				item.action=new actionClass;
+				item.action.item=item;				
+			});
 		}
 
 	},

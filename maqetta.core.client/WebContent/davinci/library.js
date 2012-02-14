@@ -86,7 +86,7 @@ getThemes: function(base, workspaceOnly, flushCache){
 				 * a single item before throwing them in the deferred list.  here each element comes in as [true, item]
 				 */
 				var contents = allThemes[i][1].getText();
-				var t = eval(contents);
+				var t = JSON.parse(contents);
 				t.file = allThemes[i][1];
 				results.push(t);
 			}

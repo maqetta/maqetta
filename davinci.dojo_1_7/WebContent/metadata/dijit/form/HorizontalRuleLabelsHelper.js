@@ -31,4 +31,6 @@ HorizontalRuleLabelsHelper.prototype = {
 	}
 };
 
+return HorizontalRuleLabelsHelper;
+
 });

@@ -52,4 +52,6 @@ HorizontalSliderHelper.prototype = {
 	}
 };
 
+return HorizontalSliderHelper;
+
 });

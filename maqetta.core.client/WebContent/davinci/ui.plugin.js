@@ -330,7 +330,7 @@ return {
                         id: "download",
                         iconClass: 'downloadSomeIcon',
                         run: function() {
-                            require(['./Workbench', './ul/DownloadSelected'],
+                            require(['./Workbench', './ui/DownloadSelected'],
                                 function(workbench, DownloadSelected) {
                                     workbench.showModal(new DownloadSelected(), "Download", "width: 400px");
                                 }

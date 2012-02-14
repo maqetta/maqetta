@@ -137,8 +137,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 				}, 100);
 			}
-			// Repsonse to the state change event in the review editor
-			if (global&&global.davinci&&global.davinci.states) {
+			// Response to the state change event in the review editor
+			if (global && global.davinci && global.davinci.states) {
 				this.states = global.davinci.states;
 				global.davinci.states.subscribe("/davinci/states/state/changed", this, function(args) {
 					var state = args.newState || "Normal";

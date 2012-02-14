@@ -24,19 +24,13 @@
 
 */
 
-if(window.dojo){
-    dojo.provide('preview.silhouetteiframe');
-}
-if (!window.preview) {
-    preview = {};
-}
-
-// Class constructor
-preview.silhouetteiframe = function(args){
+define(/*"SilhouetteIframe", */[], function(){
+		
+var SilhouetteIframe = function(args){
 	
 	var rootNode = this.rootNode = args.rootNode;
 	if(!rootNode){
-		console.log('preview.silhouetteiframe.buildRendering(): Missing required parameter rootNode');
+		console.log('silhouetteiframe.buildRendering(): Missing required parameter rootNode');
 		return;
 	}
 	if(!this.verifyDOMTree(false)){
@@ -72,10 +66,10 @@ preview.silhouetteiframe = function(args){
 	rootNode._silhouetteiframe = this; // Attach "this" object to rootNode
 	this.addStyleDeclarations();
 	this.updateObjectElement();
-}
+};
 
 // Class prototype
-preview.silhouetteiframe.prototype = {
+SilhouetteIframe.prototype = {
 
 	rootNode:null,
 	svgfilename:undefined,
@@ -105,12 +99,12 @@ preview.silhouetteiframe.prototype = {
 			} 
 			
 		}else{
-			console.error('preview.silhouetteiframe.verifyDOMTree(): no children on rootNode');
+			console.error('silhouetteiframe.verifyDOMTree(): no children on rootNode');
 			return false;
 		}
 		if(iframeElementMustBePresent){
 			if(rootNode.children.length<2){
-				console.error('preview.silhouetteiframe.verifyDOMTree(): iframe child not present');
+				console.error('silhouetteiframe.verifyDOMTree(): iframe child not present');
 				return false;
 			}
 			var iframeNode;
@@ -126,7 +120,7 @@ preview.silhouetteiframe.prototype = {
 				!spanNode || spanNode.nodeName != 'SPAN' || spanNode.className.indexOf('silhouetteiframe_object_container')==-1 ||
 				(iframeElementMustBePresent &&
 					(!iframeNode || iframeNode.nodeName != 'IFRAME' || iframeNode.className.indexOf('silhouetteiframe_iframe')==-1))){
-			console.error('preview.silhouetteiframe.preview.silhouetteiframe.verifyDOMTree(): incorrect DOM tree on rootNode');
+			console.error('silhouetteiframe.verifyDOMTree(): incorrect DOM tree on rootNode');
 			return false;
 		}
 		return true;
@@ -501,33 +495,35 @@ preview.silhouetteiframe.prototype = {
 			a2_elem.beginElement();
 		}
 	}
-	
 };
 
-preview.silhouetteiframe.themeMap = {}; // map silhouette files to dojo mobile theme names
-preview.silhouetteiframe.themeMap['android_340x480.svg'] = 'Android';
-preview.silhouetteiframe.themeMap['android_480x800.svg'] = 'Android';
-preview.silhouetteiframe.themeMap['androidtablet.svg'] = 'Android';
-preview.silhouetteiframe.themeMap['bbplaybook.svg'] = 'BlackBerry';
-preview.silhouetteiframe.themeMap['blackberry.svg'] = 'BlackBerry';
-preview.silhouetteiframe.themeMap['ipad.svg'] = 'iPad';
-preview.silhouetteiframe.themeMap['iphone.svg'] = 'iPhone';
+//TODO: consider moving the maps to a separate module
 
-preview.silhouetteiframe.themeCssMap = {}; // map silhouette files to dojo mobile theme names, for pagedesigner
-preview.silhouetteiframe.themeCssMap['Android'] = ['android/android.css'];
-preview.silhouetteiframe.themeCssMap['BlackBerry'] = ['blackberry/blackberry.css'];
-preview.silhouetteiframe.themeCssMap['iPad'] = ['iphone/iphone.css', 'iphone/ipad.css'];
-preview.silhouetteiframe.themeCssMap['iPhone'] = ['iphone/iphone.css'];
-
-preview.silhouetteiframe.getMobileTheme = function(svgFile){
-	
-	var path = svgFile.split('/');// just get the first part of the file name android_340... or ipad
-	var file = path[path.length-1]; // pop
-	return preview.silhouetteiframe.themeMap[file];
-	
+//map silhouette files to dojo mobile theme names
+SilhouetteIframe.themeMap = {
+	'android_340x480.svg': 'Android',
+	'android_480x800.svg': 'Android',
+	'androidtablet.svg': 'Android',
+	'bbplaybook.svg': 'BlackBerry',
+	'blackberry.svg': 'BlackBerry',
+	'ipad.svg': 'iPad',
+	'iphone.svg': 'iPhone'
 };
 
-preview.silhouetteiframe.getMobileCss = function(theme){
-	return preview.silhouetteiframe.themeCssMap[theme || 'iPhone'];
-
+//map silhouette files to dojo mobile theme names, for pagedesigner
+SilhouetteIframe.themeCssMap = {
+	'Android': ['android/android.css'],
+	'BlackBerry': ['blackberry/blackberry.css'],
+	'iPad': ['iphone/iphone.css', 'iphone/ipad.css'],
+	'iPhone': ['iphone/iphone.css']
 };
+
+SilhouetteIframe.getMobileTheme = function(svgFile){
+	return SilhouetteIframe.themeMap[svgFile.split('/').pop()];
+};
+
+SilhouetteIframe.getMobileCss = function(theme){
+	return SilhouetteIframe.themeCssMap[theme || 'iPhone'];
+};
+return SilhouetteIframe;
+});

@@ -9,6 +9,10 @@ return declare(HorizontalSliderHelper, {
 	
 	_getDecoration: function(dijitWidget) {
 		return dijitWidget.leftDecoration;
+	},
+	
+	_getDecorationLabel: function() {
+		return "leftDecoration";
 	}
 });
 });

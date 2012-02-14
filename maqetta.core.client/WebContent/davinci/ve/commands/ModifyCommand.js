@@ -137,7 +137,7 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 			var command =
 					new davinci.ve.commands.ModifyCommand(parentWidget,
 							null, null, parentWidget._edit_context);
-			command.execute(command);
+			command.execute();
 		}
 	},
 
@@ -251,7 +251,7 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 			var command =
 					new davinci.ve.commands.ModifyCommand(parent,
 							null, null, parent._edit_context);
-			command.execute(command);
+			command.execute();
 		}
 	}
 

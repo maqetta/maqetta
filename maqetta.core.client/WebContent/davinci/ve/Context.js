@@ -581,6 +581,7 @@ return declare("davinci.ve.Context", null, {
 			this.theme = null;
 			this._themeMetaCache = null;
 		}
+		return this._initThemeMeta();
 	},
 	_initThemeMeta : function(){
 		if (! this.theme) {
@@ -768,250 +769,252 @@ return declare("davinci.ve.Context", null, {
 		/* ensure the top level body deps are met (ie. maqetta.js, states.js and app.css) */
 		/* make sure this file has a valid/good theme */
 		
-		loading.then(dojo.hitch(this,function(){
+		return loading.then(dojo.hitch(this,function(){
 			if (this.rootWidget){
-			this.rootWidget._srcElement=this._srcDocument.getDocumentElement().getChildElement("body");
-			this.rootWidget._srcElement.setAttribute("id", "myapp");
-		}
-
-		//FIXME: Need to add logic for initial themes and device size.
-		if(newHtmlParams){
-			var modelBodyElement = source.getDocumentElement().getChildElement("body");
-			modelBodyElement.setAttribute(MOBILE_DEV_ATTR, newHtmlParams.device);
-			modelBodyElement.setAttribute(PREF_LAYOUT_ATTR, newHtmlParams.flowlayout);
-			if (newHtmlParams.themeSet){
-    			var cmd = new ChangeThemeCommand(newHtmlParams.themeSet, this);
-    			cmd._dojoxMobileAddTheme(this, newHtmlParams.themeSet.mobileTheme, true); // new file
+				this.rootWidget._srcElement=this._srcDocument.getDocumentElement().getChildElement("body");
+				this.rootWidget._srcElement.setAttribute("id", "myapp");
 			}
-		}
-		
-		// Remove any SCRIPT elements from model that include dojo.require() syntax
-		// With Preview 4, user files must use AMD loader
-		var scriptTags=source.find({elementType:'HTMLElement', tag:'script'}); 
-		for (var i=0; i<scriptTags.length; i++){
-			var scriptTag = scriptTags[i];
-			for (var j=0; j<scriptTag.children.length; j++){
-				var text = scriptTag.children[j].getText();
-				if(text.indexOf('dojo.require')>=0){
-					scriptTag.parent.removeChild(scriptTag);
-					break;
+	
+			//FIXME: Need to add logic for initial themes and device size.
+			if(newHtmlParams){
+				var modelBodyElement = source.getDocumentElement().getChildElement("body");
+				modelBodyElement.setAttribute(MOBILE_DEV_ATTR, newHtmlParams.device);
+				modelBodyElement.setAttribute(PREF_LAYOUT_ATTR, newHtmlParams.flowlayout);
+				if (newHtmlParams.themeSet){
+	    			var cmd = new ChangeThemeCommand(newHtmlParams.themeSet, this);
+	    			cmd._dojoxMobileAddTheme(this, newHtmlParams.themeSet.mobileTheme, true); // new file
 				}
 			}
-		}
-
-		var data = this._parse(source);
-		if(!this.frameNode){
-			// initialize frame
-			var dojoUrl;
 			
-			dojo.some(data.scripts, function(url){
-				if(url.indexOf("/dojo.js") != -1){
-					dojoUrl = url;
-					return true;
+			// Remove any SCRIPT elements from model that include dojo.require() syntax
+			// With Preview 4, user files must use AMD loader
+			var scriptTags=source.find({elementType:'HTMLElement', tag:'script'}); 
+			for (var i=0; i<scriptTags.length; i++){
+				var scriptTag = scriptTags[i];
+				for (var j=0; j<scriptTag.children.length; j++){
+					var text = scriptTag.children[j].getText();
+					if(text.indexOf('dojo.require')>=0){
+						scriptTag.parent.removeChild(scriptTag);
+						break;
+					}
 				}
-			});
-			
-			/* get the base path, removing the file extension.  the base is used in the library call below
-			 * 
-			 */
-			var resourceBase = this.getBase();
-			if (!dojoUrl) {
-				// pull Dojo path from installed libs, if available
-				dojo.some(Library.getUserLibs(resourceBase.toString()), function(lib) {
-					if (lib.id === "dojo") {
-						var fullDojoPath = new Path(this.getBase()).append(lib.root).append("dojo/dojo.js");
-						dojoUrl = fullDojoPath.relativeTo(this.getPath(),true).toString();
-						//dojoUrl = new Path(this.relativePrefix).append(lib.root).append("dojo/dojo.js").toString();
+			}
+	
+			var data = this._parse(source);
+			if(!this.frameNode){
+				// initialize frame
+				var dojoUrl;
+				
+				dojo.some(data.scripts, function(url){
+					if(url.indexOf("/dojo.js") != -1){
+						dojoUrl = url;
 						return true;
 					}
-					return false;
-				}, this);
-				// if still not defined, use app's Dojo (which may cause other issues!)
+				});
+				
+				/* get the base path, removing the file extension.  the base is used in the library call below
+				 * 
+				 */
+				var resourceBase = this.getBase();
 				if (!dojoUrl) {
-					dojoUrl = this.getDojoUrl();
-					console.warn("WARNING: Falling back to use workbench's Dojo in the editor iframe");
-				}
-			}
-			
-			var containerNode = this.containerNode;
-			containerNode.style.overflow = "hidden";
-			var frame = dojo.create("iframe", this.iframeattrs, containerNode);
-			frame.dvContext = this;
-			this.frameNode = frame;
-			/* this defaults to the base page */
-			var realUrl = Workbench.location() + "/" ;
-			
-			/* change the base if needed */
-			
-			if(this.baseURL){
-				realUrl = this.baseURL;
-			}
-
-// TODO: This needs to be more flexible to allow things like HTML5 DOCTYPE's
-// (should be based on a preference)
-			var doc = frame.contentDocument || frame.contentWindow.document,
-				win = windowUtils.get(doc),
-				head = "<!DOCTYPE html>";
-// TODO: margin:0 is a temporary hack. In previous releases, we always included dojo.css
-// which set margin:0, but we now only include dojo.css with the first Dojo widget
-// added to the page. That causes scrollbars when page was loaded initially,
-// which went want when first Dojo widget was added.
-// Need to rethink this whole business of width:100%;height:100%;margin:0
-			head += "<html style=\"height: 100%; width: 100%; margin:0;\"><head><base href=\""
-				+ realUrl
-				+ "\"/>";
-
-			// XXX Must load dojo.js here;  we cannot wait to add it when first Dojo/Dijit widget
-			//   is dropped on page.  The reason is that dojo.js from the SDK (which is what we use
-			//   when developing) cannot be dynamically inserted into a page -- only built versions
-			//   of Dojo can do so.  For that reason, we load it here.  Also, Phil says that Dojo
-			//   may be required for doing some things in the editor iframe, such as the focus
-			//   rectangles.  This means that Dojo will always have to be available in the iframe
-			//   (even if user hasn't selected the Dojo lib) until those dependencies are removed.
-			//   See bug 7585.
-			if (dojoUrl) {
-				// XXX Invoking callback when dojo is loaded.  This should be refactored to not
-				//  depend on dojo any more.  Once issue, though, is that the callback function
-				//  makes use of dojo and thusly must be invoked only after dojo has loaded.  Need
-				//  to remove Dojo dependencies from callback function first.
-				var config = {
-					packages: this._getLoaderPackages() // XXX need to add dynamically
-				};
-				dojo.mixin(config, this._configProps);
-
-				var requires = this._bootstrapModules.split(","),
-					dependencies = ['dojo/parser', 'dojox/html/_base', 'dojo/domReady!'];
-
-				// to bootstrap references to base dijit methods in container
-				dependencies = dependencies.concat(requires); 
-
-				head += "<script type=\"text/javascript\" src=\"" + dojoUrl
-					+ "\" data-dojo-config=\""
-					+ JSON.stringify(config).slice(1, -1).replace(/"/g, "'")
-					+ "\"></script>"
-					+ "<script type=\"text/javascript\">require("
-					+ JSON.stringify(dependencies)
-					+ ", top.loading" + this._id + ");</script>";
-			}
-			if (helper && helper.getHeadImports){
-			    head += helper.getHeadImports(this._visualEditor.theme);
-			} else if(source.themeCssfiles) { // css files need to be added to doc before body content
-				head += '<style type="text/css">'
-					+ source.themeCssfiles.map(function(file) { return '@import "' + file + '";'; }).join()
-					+ '</style>';
-			}
-			/*
-			else{
-				this.loadTheme();
-			}
-			*/
-			head += "</head><body></body></html>";
-
-			var context = this;
-			window["loading" + context._id] = function(parser, htmlUtil) {
-				var callbackData = context;
-			try {
-					var win = windowUtils.get(doc),
-					 	body = (context.rootNode = doc.body);
-
-					if (!body) {
-						// Should never get here if domReady! fired?  Try again.
-						context._waiting = context._waiting || 0;
-						if(context._waiting++ < 10) {
-							setTimeout(window["loading" + context._id], 500);
-							console.log("waiting for doc.body");
-							return;
+					// pull Dojo path from installed libs, if available
+					dojo.some(Library.getUserLibs(resourceBase.toString()), function(lib) {
+						if (lib.id === "dojo") {
+							var fullDojoPath = new Path(this.getBase()).append(lib.root).append("dojo/dojo.js");
+							dojoUrl = fullDojoPath.relativeTo(this.getPath(),true).toString();
+							//dojoUrl = new Path(this.relativePrefix).append(lib.root).append("dojo/dojo.js").toString();
+							return true;
 						}
-						throw "doc.body is null";
+						return false;
+					}, this);
+					// if still not defined, use app's Dojo (which may cause other issues!)
+					if (!dojoUrl) {
+						dojoUrl = this.getDojoUrl();
+						console.warn("WARNING: Falling back to use workbench's Dojo in the editor iframe");
 					}
-
-					delete window["loading" + context._id];
-
-					body.id = "myapp";
-
-					// Kludge to enable full-screen layout widgets, like BorderContainer.
-					// What possible side-effects could there be setting 100%x100% on every document?
-					// See note above about margin:0 temporary hack
-					body.style.width = "100%";
-					body.style.height = "100%";
-					// Force visibility:visible because CSS stylesheets in dojox.mobile
-					// have BODY { visibility:hidden;} only to set visibility:visible within JS code. 
-					// Maybe done to minimize flickering. Will follow up with dojox.mobile
-					// folks to find out what's up. See #712
-					body.style.visibility = "visible";
-					body.style.margin = "0";
-
-					body._edit_context = context; // TODO: find a better place to stash the root context
-					context._configDojoxMobile();
-
-					var requires = context._bootstrapModules.split(",");
-					if (requires.indexOf('dijit/dijit-all') != -1){
-						// this is needed for FF4 to keep dijit._editor.RichText from throwing at line 32 dojo 1.5						
-						win.dojo._postLoad = true;
-					}
-
-					// see Dojo ticket #5334
-					// If you do not have this particular dojo.isArray code, DataGrid will not render in the tool.
-					// Also, any array value will be converted to {0: val0, 1: val1, ...}
-					// after swapping back and forth between the design and code views twice. This is not an array!
-					win.require("dojo/_base/lang").isArray = win.dojo.isArray=function(it){
-						return it && Object.prototype.toString.call(it)=="[object Array]";
+				}
+				
+				var containerNode = this.containerNode;
+				containerNode.style.overflow = "hidden";
+				var frame = dojo.create("iframe", this.iframeattrs, containerNode);
+				frame.dvContext = this;
+				this.frameNode = frame;
+				/* this defaults to the base page */
+				var realUrl = Workbench.location() + "/" ;
+				
+				/* change the base if needed */
+				
+				if(this.baseURL){
+					realUrl = this.baseURL;
+				}
+	
+	// TODO: This needs to be more flexible to allow things like HTML5 DOCTYPE's
+	// (should be based on a preference)
+				var doc = frame.contentDocument || frame.contentWindow.document,
+					win = windowUtils.get(doc),
+					head = "<!DOCTYPE html>";
+	// TODO: margin:0 is a temporary hack. In previous releases, we always included dojo.css
+	// which set margin:0, but we now only include dojo.css with the first Dojo widget
+	// added to the page. That causes scrollbars when page was loaded initially,
+	// which went want when first Dojo widget was added.
+	// Need to rethink this whole business of width:100%;height:100%;margin:0
+				head += "<html style=\"height: 100%; width: 100%; margin:0;\"><head><base href=\""
+					+ realUrl
+					+ "\"/>";
+	
+				// XXX Must load dojo.js here;  we cannot wait to add it when first Dojo/Dijit widget
+				//   is dropped on page.  The reason is that dojo.js from the SDK (which is what we use
+				//   when developing) cannot be dynamically inserted into a page -- only built versions
+				//   of Dojo can do so.  For that reason, we load it here.  Also, Phil says that Dojo
+				//   may be required for doing some things in the editor iframe, such as the focus
+				//   rectangles.  This means that Dojo will always have to be available in the iframe
+				//   (even if user hasn't selected the Dojo lib) until those dependencies are removed.
+				//   See bug 7585.
+				if (dojoUrl) {
+					// XXX Invoking callback when dojo is loaded.  This should be refactored to not
+					//  depend on dojo any more.  Once issue, though, is that the callback function
+					//  makes use of dojo and thusly must be invoked only after dojo has loaded.  Need
+					//  to remove Dojo dependencies from callback function first.
+					var config = {
+						packages: this._getLoaderPackages() // XXX need to add dynamically
 					};
-				} catch(e) {
-					console.error(e.stack || e);
-					// recreate the Error since we crossed frames
-					callbackData = new Error(e.message, e.fileName, e.lineNumber);
-					dojo.mixin(callbackData, e);
+					dojo.mixin(config, this._configProps);
+	
+					var requires = this._bootstrapModules.split(","),
+						dependencies = ['dojo/parser', 'dojox/html/_base', 'dojo/domReady!'];
+	
+					// to bootstrap references to base dijit methods in container
+					dependencies = dependencies.concat(requires); 
+	
+					head += "<script type=\"text/javascript\" src=\"" + dojoUrl
+						+ "\" data-dojo-config=\""
+						+ JSON.stringify(config).slice(1, -1).replace(/"/g, "'")
+						+ "\"></script>"
+						+ "<script type=\"text/javascript\">require("
+						+ JSON.stringify(dependencies)
+						+ ", top.loading" + this._id + ");</script>";
 				}
-
-				context._continueLoading(data, callback, callbackData, scope);
-			};
-
-			doc.open();
-			doc.write(head);
-			doc.close();
-
-			// intercept BS key - prompt user before navigating backwards
-			dojo.connect(doc.documentElement, "onkeypress", function(e){
-				if(e.charOrCode==8){
-					window.davinciBackspaceKeyTime = win.davinciBackspaceKeyTime = Date.now();
+				if (helper && helper.getHeadImports){
+				    head += helper.getHeadImports(this._visualEditor.theme);
+				} else if(source.themeCssfiles) { // css files need to be added to doc before body content
+					head += '<style type="text/css">'
+						+ source.themeCssfiles.map(function(file) { return '@import "' + file + '";'; }).join()
+						+ '</style>';
 				}
-			});	
-			/*win.onbeforeunload = function (e) {//The call in Runtime.js seems to take precedence over this one
-				var time = new Date().getTime();
-				var shouldDisplay = time - win.davinciBackspaceKeyTime < 100;
-				if (shouldDisplay) {
-					var message = "Careful! You are about to leave Maqetta.";
-					// Mozilla/IE
-					// Are you sure you want to navigate away from this page?
-					// Careful! You will lose any unsaved work if you leave this page now.
-					// Press OK to continue, or Cancel to stay on the current page.
-					if (e = e || win.event) {
-						e.returnValue = message;
+				/*
+				else{
+					this.loadTheme();
+				}
+				*/
+				head += "</head><body></body></html>";
+	
+				var context = this;
+				window["loading" + context._id] = function(parser, htmlUtil) {
+					var callbackData = context;
+				try {
+						var win = windowUtils.get(doc),
+						 	body = (context.rootNode = doc.body);
+	
+						if (!body) {
+							// Should never get here if domReady! fired?  Try again.
+							context._waiting = context._waiting || 0;
+							if(context._waiting++ < 10) {
+								setTimeout(window["loading" + context._id], 500);
+								
+								console.log("waiting for doc.body");
+								return;
+							}
+							throw "doc.body is null";
+						}
+	
+						delete window["loading" + context._id];
+	
+						body.id = "myapp";
+	
+						// Kludge to enable full-screen layout widgets, like BorderContainer.
+						// What possible side-effects could there be setting 100%x100% on every document?
+						// See note above about margin:0 temporary hack
+						body.style.width = "100%";
+						body.style.height = "100%";
+						// Force visibility:visible because CSS stylesheets in dojox.mobile
+						// have BODY { visibility:hidden;} only to set visibility:visible within JS code. 
+						// Maybe done to minimize flickering. Will follow up with dojox.mobile
+						// folks to find out what's up. See #712
+						body.style.visibility = "visible";
+						body.style.margin = "0";
+	
+						body._edit_context = context; // TODO: find a better place to stash the root context
+						context._configDojoxMobile();
+	
+						var requires = context._bootstrapModules.split(",");
+						if (requires.indexOf('dijit/dijit-all') != -1){
+							// this is needed for FF4 to keep dijit._editor.RichText from throwing at line 32 dojo 1.5						
+							win.dojo._postLoad = true;
+						}
+	
+						// see Dojo ticket #5334
+						// If you do not have this particular dojo.isArray code, DataGrid will not render in the tool.
+						// Also, any array value will be converted to {0: val0, 1: val1, ...}
+						// after swapping back and forth between the design and code views twice. This is not an array!
+						win.require("dojo/_base/lang").isArray = win.dojo.isArray=function(it){
+							return it && Object.prototype.toString.call(it)=="[object Array]";
+						};
+					} catch(e) {
+						console.error(e.stack || e);
+						// recreate the Error since we crossed frames
+						callbackData = new Error(e.message, e.fileName, e.lineNumber);
+						dojo.mixin(callbackData, e);
 					}
-					// Webkit
-					// Careful! You will lose any unsaved work if you leave this page now.
-					// [Leave this Page] [Stay on this Page]
-					return message;
+	
+					context._continueLoading(data, callback, callbackData, scope);
+				};
+	
+				doc.open();
+				doc.write(head);
+				doc.close();
+	
+				// intercept BS key - prompt user before navigating backwards
+				dojo.connect(doc.documentElement, "onkeypress", function(e){
+					if(e.charOrCode==8){
+						window.davinciBackspaceKeyTime = win.davinciBackspaceKeyTime = Date.now();
+					}
+				});	
+				/*win.onbeforeunload = function (e) {//The call in Runtime.js seems to take precedence over this one
+					var time = new Date().getTime();
+					var shouldDisplay = time - win.davinciBackspaceKeyTime < 100;
+					if (shouldDisplay) {
+						var message = "Careful! You are about to leave Maqetta.";
+						// Mozilla/IE
+						// Are you sure you want to navigate away from this page?
+						// Careful! You will lose any unsaved work if you leave this page now.
+						// Press OK to continue, or Cancel to stay on the current page.
+						if (e = e || win.event) {
+							e.returnValue = message;
+						}
+						// Webkit
+						// Careful! You will lose any unsaved work if you leave this page now.
+						// [Leave this Page] [Stay on this Page]
+						return message;
+					}
+				};*/
+	
+			}else{
+				if(!this.getGlobal()){
+					console.warn("Context._setContent called during initialization");
 				}
-			};*/
-
-		}else{
-			if(!this.getGlobal()){
-				console.warn("Context._setContent called during initialization");
+	
+				// tear down old error message, if any
+				dojo.query(".loading", this.frameNode.parentNode).orphan();
+	
+				// frame has already been initialized, changing content (such as changes from the source editor)
+				this._continueLoading(data, callback, this, scope);
 			}
-
-			// tear down old error message, if any
-			dojo.query(".loading", this.frameNode.parentNode).orphan();
-
-			// frame has already been initialized, changing content (such as changes from the source editor)
-			this._continueLoading(data, callback, this, scope);
-		}
 		}))
 		
 	},
 
 	_continueLoading: function(data, callback, callbackData, scope) {
+		
 		var loading;
 		try {
 			loading = dojo.create("div",
@@ -1092,121 +1095,123 @@ return declare("davinci.ve.Context", null, {
 	_setSourceData: function(data){
 		
 		/* cache the theme metadata */	
-		this.themeChanged();
-		var theme = this.getThemeMeta();
-		if(theme && theme.usingSubstituteTheme){
-			var oldThemeName = theme.usingSubstituteTheme.oldThemeName;
-			var newThemeName = theme.usingSubstituteTheme.newThemeName;
-			for(var ss=0;ss<data.styleSheets.length; ss++){
-				var sheet=data.styleSheets[ss];
-				data.styleSheets[ss] = sheet.replace(new RegExp("/"+oldThemeName,"g"),"/"+newThemeName);
+		return this.themeChanged().then(dojo.hitch(this,function(){
+			var theme = this.getThemeMeta();
+			if(theme && theme.usingSubstituteTheme){
+				var oldThemeName = theme.usingSubstituteTheme.oldThemeName;
+				var newThemeName = theme.usingSubstituteTheme.newThemeName;
+				for(var ss=0;ss<data.styleSheets.length; ss++){
+					var sheet=data.styleSheets[ss];
+					data.styleSheets[ss] = sheet.replace(new RegExp("/"+oldThemeName,"g"),"/"+newThemeName);
+				}
+				data.bodyClasses = data.bodyClasses.replace(new RegExp("\\b"+oldThemeName+"\\b","g"),newThemeName);
+
+				if(this._editor && this._editor.visualEditor && this._editor.visualEditor._onloadMessages){
+					this._editor.visualEditor._onloadMessages.push(dojo.replace(
+						"Warning. File refers to CSS theme '{0}' which is not in your workspace. Using CSS theme '{1}' instead.", //FIXME: Needs to be globalized
+						[oldThemeName, newThemeName]));
+				}
 			}
-			data.bodyClasses = data.bodyClasses.replace(new RegExp("\\b"+oldThemeName+"\\b","g"),newThemeName);
 
-			if(this._editor && this._editor.visualEditor && this._editor.visualEditor._onloadMessages){
-				this._editor.visualEditor._onloadMessages.push(dojo.replace(
-					"Warning. File refers to CSS theme '{0}' which is not in your workspace. Using CSS theme '{1}' instead.", //FIXME: Needs to be globalized
-					[oldThemeName, newThemeName]));
-			}
-		}
+	        dojo.connect(this.getGlobal(), 'onload', this, function() {
+	            this.onload();
+	        });
 
-        dojo.connect(this.getGlobal(), 'onload', this, function() {
-            this.onload();
-        });
+			this.setHeader({
+				title: data.title,
+				scripts: data.scripts,
+				modules: data.modules,
+				styleSheets: data.styleSheets,
+				//className: data.className,
+				
+				bodyClasses: data.bodyClasses,
+				states: data.states,
+				style: data.style
+			});
 
-		this.setHeader({
-			title: data.title,
-			scripts: data.scripts,
-			modules: data.modules,
-			styleSheets: data.styleSheets,
-			//className: data.className,
+			var content = data.content || "";
 			
-			bodyClasses: data.bodyClasses,
-			states: data.states,
-			style: data.style
-		});
-
-		var content = data.content || "";
+			var active = this.isActive();
+			if(active){
+				this.select(null);
+				dojo.forEach(this.getTopWidgets(), this.detach, this);
+			}
+			var states = {},
+			    containerNode = this.getContainerNode();
 		
-		var active = this.isActive();
-		if(active){
-			this.select(null);
-			dojo.forEach(this.getTopWidgets(), this.detach, this);
-		}
-		var states = {},
-		    containerNode = this.getContainerNode();
-	
-		if (data.states) {
-			states.body = data.states;
-		}
-		dojo.forEach(this.getTopWidgets(), function(w){
-			if(w.getContext()){
-				w.destroyWidget();
+			if (data.states) {
+				states.body = data.states;
 			}
-		});
-
-		// remove all registered widgets
-        this.getDijit().registry.forEach(function(w) {
-              w.destroy();           
-        });
-
-        // Set content
-		//  Content may contain inline scripts. We use dojox.html.set() to pull
-		// out those scripts and execute them later, after _processWidgets()
-		// has loaded any required resources (i.e. <head> scripts)
-		var scripts;
-        // It is necessary to run the dojox.html.set utility from the context
-	    // of inner frame.  Might be a Dojo bug in _toDom().
-	    this.getGlobal()['require']('dojox/html/_base').set(containerNode, content, {
-	        executeScripts: true,
-	        onEnd: function() {
-	            // save any scripts for later execution
-	            scripts = this._code;
-	            this.executeScripts = false;
-                this.inherited('onEnd', arguments);
-	        }
-	    });
-
-		// Remove "on*" event attributes from editor DOM.
-		// They are already in the model. So, they will not be lost.
-
-		var removeEventAttributes = function(node) {
-			if(node){
-				dojo.filter(node.attributes, function(attribute) {
-					return attribute.nodeName.substr(0,2).toLowerCase() == "on";
-				}).forEach(function(attribute) {
-					node.removeAttribute(attribute.nodeName);
-				});
-			}
-		};
-
-		removeEventAttributes(containerNode);
-		dojo.query("*",containerNode).forEach(removeEventAttributes);
-
-		// Convert all text nodes that only contain white space to empty strings
-		containerNode.setAttribute('data-davinci-ws','collapse');
-		var model_bodyElement = this._srcDocument.getDocumentElement().getChildElement("body");
-		model_bodyElement.addAttribute('data-davinci-ws','collapse');
-
-		// Collapses all text nodes that only contain white space characters into empty string.
-		// Skips certain nodes where whitespace does not impact layout and would cause unnecessary processing.
-		// Similar to features that hopefully will appear in CSS3 via white-space-collapse.
-		// Code is also injected into the page via workbench/davinci/davinci.js to do this at runtime.
-		var skip = {SCRIPT:1, STYLE:1},
-			collapse = function(element) {
-			dojo.forEach(element.childNodes, function(cn){
-				if (cn.nodeType == 3){	// Text node
-					//FIXME: exclusion for SCRIPT, CSS content?
-					cn.nodeValue = cn.data.replace(/^[\f\n\r\t\v\ ]+$/g,"");
-				}else if (cn.nodeType == 1 && !skip[cn.nodeName]){ // Element node
-					collapse(cn);
+			dojo.forEach(this.getTopWidgets(), function(w){
+				if(w.getContext()){
+					w.destroyWidget();
 				}
 			});
-		};
-		collapse(containerNode);
 
-		this._loadFileStatesCache = states;
-		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts);
+			// remove all registered widgets
+	        this.getDijit().registry.forEach(function(w) {
+	              w.destroy();           
+	        });
+
+	        // Set content
+			//  Content may contain inline scripts. We use dojox.html.set() to pull
+			// out those scripts and execute them later, after _processWidgets()
+			// has loaded any required resources (i.e. <head> scripts)
+			var scripts;
+	        // It is necessary to run the dojox.html.set utility from the context
+		    // of inner frame.  Might be a Dojo bug in _toDom().
+		    this.getGlobal()['require']('dojox/html/_base').set(containerNode, content, {
+		        executeScripts: true,
+		        onEnd: function() {
+		            // save any scripts for later execution
+		            scripts = this._code;
+		            this.executeScripts = false;
+	                this.inherited('onEnd', arguments);
+		        }
+		    });
+
+			// Remove "on*" event attributes from editor DOM.
+			// They are already in the model. So, they will not be lost.
+
+			var removeEventAttributes = function(node) {
+				if(node){
+					dojo.filter(node.attributes, function(attribute) {
+						return attribute.nodeName.substr(0,2).toLowerCase() == "on";
+					}).forEach(function(attribute) {
+						node.removeAttribute(attribute.nodeName);
+					});
+				}
+			};
+
+			removeEventAttributes(containerNode);
+			dojo.query("*",containerNode).forEach(removeEventAttributes);
+
+			// Convert all text nodes that only contain white space to empty strings
+			containerNode.setAttribute('data-davinci-ws','collapse');
+			var model_bodyElement = this._srcDocument.getDocumentElement().getChildElement("body");
+			model_bodyElement.addAttribute('data-davinci-ws','collapse');
+
+			// Collapses all text nodes that only contain white space characters into empty string.
+			// Skips certain nodes where whitespace does not impact layout and would cause unnecessary processing.
+			// Similar to features that hopefully will appear in CSS3 via white-space-collapse.
+			// Code is also injected into the page via workbench/davinci/davinci.js to do this at runtime.
+			var skip = {SCRIPT:1, STYLE:1},
+				collapse = function(element) {
+				dojo.forEach(element.childNodes, function(cn){
+					if (cn.nodeType == 3){	// Text node
+						//FIXME: exclusion for SCRIPT, CSS content?
+						cn.nodeValue = cn.data.replace(/^[\f\n\r\t\v\ ]+$/g,"");
+					}else if (cn.nodeType == 1 && !skip[cn.nodeName]){ // Element node
+						collapse(cn);
+					}
+				});
+			};
+			collapse(containerNode);
+
+			this._loadFileStatesCache = states;
+			return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts);
+		}));
+		
 	},
 
 	/**

@@ -51,9 +51,9 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	
 	setEditor: function(editorExtension, fileName, content, file, rootElement, newHtmlParams){
 		
-		this.editorExtension=editorExtension;
-		var constr=require(editorExtension.editorClass.replace(/\./g,'/'));
-		var editor = this.editor=new constr(this.containerNode);
+		this.editorExtension = editorExtension;
+		var constr = require(editorExtension.editorClass);
+		var editor = this.editor = new constr(this.containerNode);
 		if(editor.setRootElement){
 			editor.setRootElement(rootElement);
 		}

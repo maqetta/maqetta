@@ -57,8 +57,7 @@ return {
 			name: "Preview",
 			extensions: "rev",
 			isDefault: true,
-			requires: "davinci.review.editor.ReviewEditor",
-			editorClass: "davinci.review.editor.ReviewEditor"
+			editorClass: "davinci/review/editor/ReviewEditor"
 		}
 	],
 	"davinci.fileType": [

@@ -48,8 +48,7 @@ return {
 		defaultContent : "./defaultContent.css",
 		isDefault : true,
 		//TODO implement		 icon : "",
-		requires : "davinci.ve.themeEditor.ThemeEditor",
-		editorClass : "davinci.ve.themeEditor.ThemeEditor"
+		editorClass: "davinci/ve/themeEditor/ThemeEditor"
 	},
 	"davinci.editorActions": {
 		editorContribution: {

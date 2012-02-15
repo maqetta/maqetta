@@ -11,8 +11,7 @@ return {
 		extensions: "js",
 		isDefault: true,
 		//TODO implement		 icon : "",
-		requires: "davinci.js.ui.JavaScriptEditor",
-		editorClass: "davinci.js.ui.JavaScriptEditor"
+		editorClass: "davinci/js/ui/JavaScriptEditor"
 	},
 	"davinci.actionSets": [
 /*		{

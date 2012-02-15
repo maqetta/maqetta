@@ -4,12 +4,12 @@ define(["dojo/_base/declare",
 		"davinci/workbench/Preferences",
 		"../metadata",
 		"../widget",
-		"../VisualEditor",
 		"davinci/ui/ErrorDialog",
 		"davinci/commands/CompoundCommand",
 		"../commands/AddCommand",
 		"../commands/MoveCommand",
 		"../commands/ResizeCommand",
+		"../commands/StyleCommand",
 		"../Snap",
 		"../ChooseParent"
 ], function(
@@ -19,7 +19,7 @@ define(["dojo/_base/declare",
 		Preferences,
 		Metadata,
 		Widget,
-		VisualEditor
+		ErrorDialog
 ) {
 
 return declare("davinci.ve.tools.CreateTool", _Tool, {
@@ -29,7 +29,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		if (data && data.type) {
 			// Use resizableOnCreate property if present, else use resizable
 			var resizableOnCreate = Metadata.queryDescriptor(data.type, "resizableOnCreate");
-			var resizable = resizableOnCreate ? resizableOnCreate :
+			var resizable = resizableOnCreate ||
 					Metadata.queryDescriptor(data.type, "resizable");
 			if (resizable !== "none") {
 				this._resizable = resizable;
@@ -371,7 +371,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				title = 'Error';
 				console.error(e);
 			}
-            var errorDialog = new davinci.ui.ErrorDialog({errorText: content});
+            var errorDialog = new ErrorDialog({errorText: content});
             Workbench.showModal(errorDialog, title);
 		} finally {
 			// Make sure that if calls above fail due to invalid target or some
@@ -581,13 +581,14 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 	},
 	
 	_select: function(w) {
-		var inlineEdit = VisualEditor.getSmartInput(w.type);
-		if (!this._data.fileDragCreate && inlineEdit && inlineEdit.displayOnCreate) {
-			w.inLineEdit_displayOnCreate = inlineEdit.displayOnCreate;
-			this._context.select(w, null, true); // display inline
-		} else {
-			this._context.select(w); // no inline on create
-		}
+		Metadata.getSmartInput(w.type).then(function(inlineEdit){			
+			if (!this._data.fileDragCreate && inlineEdit && inlineEdit.displayOnCreate) {
+				w.inLineEdit_displayOnCreate = inlineEdit.displayOnCreate;
+				this._context.select(w, null, true); // display inline
+			} else {
+				this._context.select(w); // no inline on create
+			}
+		});
 	},
 
 	_loadType: function(data){

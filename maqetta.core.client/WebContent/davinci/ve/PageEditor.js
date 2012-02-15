@@ -266,6 +266,10 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 			this.editorContainer.setDirty(isAutoSave);
 		}
 	},
+	
+	removeWorkingCopy: function(){ //wdr
+		this.visualEditor.removeWorkingCopy();
+	},
 
 	previewInBrowser: function () {
 		this.visualEditor.previewInBrowser();

@@ -1,6 +1,7 @@
 define([
     "dojo/_base/declare",
     "davinci/Theme",
+    "davinci/ve/ThemeModifier",
 	"../commands/CommandStack",
 	"./commands/ChangeThemeCommand",
 	"./tools/SelectTool",
@@ -24,6 +25,7 @@ define([
 ], function(
 	declare,
 	Theme,
+	ThemeModifier,
 	CommandStack,
 	ChangeThemeCommand,
 	SelectTool,
@@ -46,7 +48,7 @@ define([
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
 var MOBILE_DEV_ATTR = 'data-maqetta-device';
 
-return declare("davinci.ve.Context", null, {
+return declare("davinci.ve.Context", [ThemeModifier], {
 
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit/dijit",
@@ -95,9 +97,24 @@ return declare("davinci.ve.Context", null, {
             var loadDeviceTheme = dm.loadDeviceTheme;
 
             dm.loadDeviceTheme = dojo.hitch(this, function(device) {
-                var htmlElement = this._srcDocument.getDocumentElement();
+            	
+            	function addCssForDevice(localDevice, themeMap, context){
+            		for (var i = 0; i < themeMap.length; i++) {
+                    	if (themeMap[i][0] === localDevice || themeMap[i][0] === '.*'){
+                    		var cssFiles = themeMap[i][2];
+                    		cssFiles.forEach(function(cssFile){
+                    			context.addDynamicCss(cssFile);	
+                    		});
+                    		break;
+                    	}
+                    }
+            	}
+            	var mblUserAgent = this.getDojo().config.mblUserAgent;
+            	var ua = device || mblUserAgent|| 'none';
+            	var htmlElement = this._srcDocument.getDocumentElement();
                 var head = htmlElement.getChildElement("head");
                 var scriptTags=head.getChildElements("script");
+                this.clearDynamicCss(); 
                 dojo.forEach(scriptTags, function (scriptTag){
                     var text=scriptTag.getElementText();
                     if (text.length) {
@@ -109,7 +126,22 @@ return declare("davinci.ve.Context", null, {
                             if (stop > start){
                                 var themeMap = dojo.fromJson(text.substring(start+1,stop));
                                 dm.themeMap = themeMap;
+                                addCssForDevice(ua, themeMap, this);
+                                /*for (var i = 0; i < themeMap.length; i++) {
+                                	if (themeMap[i][0] === localDevice || themeMap[i][0] === '.*'){
+                                		var cssFiles = themeMap[i][2];
+                                		var self = this;
+                                		cssFiles.forEach(function(cssFile){
+                                			self.addDynamicCss(cssFile);	
+                                		});
+                                		break;
+                                	}
+                                }*/
                             }
+                        } else if (text.indexOf('dojox/mobile') > -1){
+                        	// use the default themes
+                        	var themeMap = Theme.getDojoxMobileThemeMap(this, dojo.clone(Theme.dojoMobileDefault));
+                        	addCssForDevice(ua, themeMap, this);
                         }
                         //Look for a dojox.mobile.themeFiles in the document, if found set the themeFiles 
                         var start = text.indexOf('dojoxMobile.themeFiles');
@@ -119,10 +151,14 @@ return declare("davinci.ve.Context", null, {
                             if (stop > start){
                                 var themeFiles = dojo.fromJson(text.substring(start+1,stop));
                                 dm.themeFiles = themeFiles;
+                               
                             }
                         }
                      }
                 }, this);
+                if (this._selection) {
+                	this.onSelectionChange(this._selection); // forces style palette to update cascade rules
+                }
                 loadDeviceTheme(device);
             });
 
@@ -136,6 +172,37 @@ return declare("davinci.ve.Context", null, {
             this.setMobileDevice(mobileDevice);
             this._visualEditor.setDevice(mobileDevice, true);
         }
+    },
+    
+    clearDynamicCss: function(){
+    	delete this.themeCssfiles;
+    	delete this.cssFiles;
+    },
+    
+    addDynamicCss: function(cssFile){
+    	//**************************
+    	debugger;
+    	if (!this.themeCssfiles){
+    		this.themeCssfiles = [];
+    	}
+		try{
+			this._themePath=new davinci.model.Path(this.visualEditor.fileName);
+			this.themeCssfiles.push(cssFile);
+		
+			// connect to the css files, so we can update the canvas when the model changes
+			var cssFiles = this._getCssFiles();	
+			//var context = this.getContext();
+			for (var i = 0; i < cssFiles.length; i++) {
+                dojo.connect(cssFiles[i], 'onChange', this,
+                        '_themeChange');
+            }
+
+		}catch(e){
+			alert("error loading:" + filename + e);
+			//delete this.tabs;
+		}
+    	
+    	//*******************************8
     },
 
 	isActive: function(){
@@ -1525,6 +1592,7 @@ return declare("davinci.ve.Context", null, {
 		if (e && e.elementType === 'CSSRule'){
 			this.hotModifyCssRule(e);
 		}
+		e.parent.save(true); //wdr
 	},
 
 // XXX no 'getRealUrl()' exists in this class
@@ -2381,6 +2449,7 @@ return declare("davinci.ve.Context", null, {
 		
 		if(selection.length){
 			var match = this._cssCache[domHash] = this.model.getMatchingRules(targetDom, true);
+			this.cssFiles[0].getMatchingRules(targetDom, match.rules, match.matchLevels); // adds the dynamic rules to the match
 			match.rules.forEach(function(rule) {
 				/* remove stale elements from the cache if they change */
 				var handle = dojo.hitch(rule, "onChange", this, function(){

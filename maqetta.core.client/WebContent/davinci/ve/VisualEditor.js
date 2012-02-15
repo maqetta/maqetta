@@ -14,7 +14,8 @@ define([
 	"davinci/workbench/Preferences",
 	"./widget",
 	"./metadata",
-	"./input/SmartInput"
+	"./input/SmartInput",
+	"system/resource"
 ], function(
 	require,
 	declare,
@@ -31,7 +32,8 @@ define([
 	Preferences,
 	widgetUtils,
 	metadataUtils,
-	SmartInput
+	SmartInput,
+	systemResource
 ){
 
 var VisualEditor = declare("davinci.ve.VisualEditor", null, {
@@ -387,7 +389,19 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 	},
 	
 	save: function (isAutoSave){
+		debugger;
 		var model = this.context.getModel();
+		var cssFiles = this.context.cssFiles;
+		if (cssFiles) {
+			// if we have dynamic css files we need to save them for saving and removing working copies
+			if (!this._dirtyCssFiles) {
+				this._dirtyCssFiles = [];
+			} 
+			var self = this;
+			cssFiles.forEach(function(file){
+				self._dirtyCssFiles[file.url] = file;
+			});
+		}
 		model.setDirty(true);
 		var visitor = {
 			visit: function(node){
@@ -399,7 +413,37 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		};
 		
 		model.visit(visitor);
+		// wdr
+		if (this._dirtyCssFiles) {
+			//this._dirtyCssFiles.forEach(function(file){
+			for (var f in this._dirtyCssFiles) {
+				if (this._dirtyCssFiles[f].dirtyResource){
+					this._dirtyCssFiles[f].save(isAutoSave);
+					if (!isAutoSave){
+						systemResource.findResource(this._dirtyCssFiles[f].url).removeWorkingCopy();
+					}
+					this._dirtyCssFiles[f].dirtyResource = isAutoSave;
+				}
+			}//);
+		}
+		//wdr
 		this.isDirty=isAutoSave;
+	},
+	
+	removeWorkingCopy: function(){ //wdr
+debugger;
+		//var cssFiles = this.context.cssFiles;
+		var cssFiles = this._dirtyCssFiles;
+		this._pageEditor.resourceFile.removeWorkingCopy();
+		if (cssFiles) {
+			//cssFiles.forEach(function(file){
+			for (var f in this._dirtyCssFiles) {
+				if (this._dirtyCssFiles[f].dirtyResource) {
+					systemResource.findResource(this._dirtyCssFiles[f].url).removeWorkingCopy();
+				}
+			}//);
+		}
+		this.isDirty=false;
 	},
 	
 	getDefaultContent: function (){

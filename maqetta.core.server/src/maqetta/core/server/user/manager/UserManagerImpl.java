@@ -160,7 +160,7 @@ public class UserManagerImpl implements IUserManager {
         return null;
     }
 
-    private boolean checkUserExists(String userName) {
+    protected boolean checkUserExists(String userName) {
         IStorage userDir = this.baseDirectory.newInstance(this.baseDirectory, userName);
         return userDir.exists();
     }

@@ -231,8 +231,7 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer,
 				IExtensionRegistry.class.getName(), this);
 		registryTracker.open();
 		initializeFileSystem();
-		ServerManager.getServerManger().setBaseDirectory(
-				new File(rootStore.toURI()));
+		
 
 	}
 

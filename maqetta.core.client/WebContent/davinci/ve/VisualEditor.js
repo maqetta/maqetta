@@ -13,8 +13,6 @@ define([
 	"./utils/URLRewrite",
 	"davinci/workbench/Preferences",
 	"./widget",
-	//"./metadata",
-	//"./input/SmartInput", 
 	"system/resource"
 ], function(
 	require,
@@ -31,8 +29,6 @@ define([
 	URLRewrite,
 	Preferences,
 	widgetUtils,
-	//metadataUtils,
-	//SmartInput,
 	systemResource
 ){
 

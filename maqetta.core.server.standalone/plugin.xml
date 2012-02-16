@@ -2,17 +2,17 @@
 <?eclipse version="3.4"?>
 <plugin>
       <extension point="maqetta.core.server.personManager">
-    	<personManager class="maqetta.core.server.standalone.user.manager.PersonManagerImpl" priority="0"/>
+    	<personManager class="maqetta.core.server.user.manager.PersonManagerImpl" priority="0"/>
    	  </extension>
 
      <extension point="maqetta.core.server.userManager">
-    	<userManager class="maqetta.core.server.standalone.user.manager.UserManagerImpl"/>
+    	<userManager class="maqetta.core.server.user.manager.UserManagerImpl"/>
    	 </extension>
 	
 	
 	<!-- this probably should eventually be moved to a dojo or RAD specific plugin -->
 	<extension point="maqetta.core.server.libraryFinder">
-    	<libraryFinder class="maqetta.core.server.standalone.DojoLibraryFinder"/>
+    	<libraryFinder class="maqetta.core.server.DojoLibraryFinder"/>
    	 </extension>
 
      <extension
@@ -20,13 +20,13 @@
       <servlet
             alias="/maqetta"
          
-            class="maqetta.core.server.standalone.DavinciPageServlet"
+            class="maqetta.core.server.DavinciPageServlet"
             load-on-startup="true">
            </servlet>
 
      <servlet
             alias="/review"
-            class="maqetta.core.server.standalone.DavinciReviewServlet"
+            class="maqetta.core.server.DavinciReviewServlet"
             load-on-startup="true">
       </servlet>
 
@@ -98,25 +98,25 @@
                 
           <!-- Review and Commenting Commands -->        
           <command path="listVersions"
-               class="maqetta.core.server.standalone.command.ListVersions" />
+               class="maqetta.core.server.command.ListVersions" />
          <command path="addComment"
-               class="maqetta.core.server.standalone.command.AddComment" />
+               class="maqetta.core.server.command.AddComment" />
          <command path="updateComment"
-               class="maqetta.core.server.standalone.command.UpdateComment" />
+               class="maqetta.core.server.command.UpdateComment" />
          <command path="getComments"
-               class="maqetta.core.server.standalone.command.GetComments" />
+               class="maqetta.core.server.command.GetComments" />
          <command path="publish"
-         	   class="maqetta.core.server.standalone.command.Publish" />
+         	   class="maqetta.core.server.command.Publish" />
 	     <command path="getBluePageInfo"
          	   class="maqetta.core.server.command.GetBluePageInfo" />         	   
          <command path="listReviewFiles"
-         	   class="maqetta.core.server.standalone.command.ListReviewFiles" />
+         	   class="maqetta.core.server.command.ListReviewFiles" />
          <command path="getLatestVersionId"
-         	   class="maqetta.core.server.standalone.command.GetLatestVersionId" />
+         	   class="maqetta.core.server.command.GetLatestVersionId" />
          <command path="managerVersion"
-         	   class="maqetta.core.server.standalone.command.ManagerVersion" />
+         	   class="maqetta.core.server.command.ManagerVersion" />
          <command path="getReviewUserInfo"
-         	   class="maqetta.core.server.standalone.command.GetReviewUserInfo" />   
+         	   class="maqetta.core.server.command.GetReviewUserInfo" />   
                
       </extension>
 

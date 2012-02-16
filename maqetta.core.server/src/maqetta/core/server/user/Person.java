@@ -1,4 +1,4 @@
-package maqetta.core.server.standalone.user;
+package maqetta.core.server.user;
 
 public interface Person {
     public String getEmail();

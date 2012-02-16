@@ -1,4 +1,4 @@
-package maqetta.core.server.standalone.command;
+package maqetta.core.server.command;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -14,8 +14,8 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import maqetta.core.server.standalone.user.DavinciProject;
-import maqetta.core.server.standalone.user.ReviewManager;
+import maqetta.core.server.user.DavinciProject;
+import maqetta.core.server.user.ReviewManager;
 
 import org.maqetta.server.mail.SimpleMessage;
 import org.maqetta.server.mail.SmtpPop3Mailer;

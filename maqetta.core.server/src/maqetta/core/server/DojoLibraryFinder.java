@@ -1,4 +1,4 @@
-package maqetta.core.server.standalone;
+package maqetta.core.server;
 
 import java.io.BufferedReader;
 import java.io.File;

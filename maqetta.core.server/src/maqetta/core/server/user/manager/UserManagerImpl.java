@@ -1,11 +1,11 @@
-package maqetta.core.server.standalone.user.manager;
+package maqetta.core.server.user.manager;
 
 
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
-import maqetta.core.server.standalone.user.User;
+import maqetta.core.server.user.User;
 import maqetta.core.server.util.VResourceUtils;
 
 import org.davinci.server.user.IPerson;

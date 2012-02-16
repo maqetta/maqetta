@@ -1,4 +1,4 @@
-package maqetta.core.server.standalone.user;
+package maqetta.core.server.user;
 
 import java.io.File;
 import java.io.Serializable;

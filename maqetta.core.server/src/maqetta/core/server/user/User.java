@@ -1,4 +1,4 @@
-package maqetta.core.server.standalone.user;
+package maqetta.core.server.user;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -11,8 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import maqetta.core.server.standalone.internal.Activator;
-import maqetta.core.server.standalone.internal.Links;
+import maqetta.core.server.internal.Links;
 import maqetta.core.server.util.VResourceUtils;
 
 import org.apache.commons.io.FileUtils;
@@ -24,6 +23,7 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.ajaxLibrary.ILibraryFinder;
 import org.davinci.ajaxLibrary.Library;
+import org.davinci.server.internal.Activator;
 import org.davinci.server.review.Constants;
 import org.davinci.server.user.IPerson;
 import org.davinci.server.user.IUser;

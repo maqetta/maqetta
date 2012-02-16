@@ -26,7 +26,14 @@ return declare("davinci.ve.commands.ModifyRuleCommand", null, {
 		for(var i=0;i<this.values.length;i++){
 			
 			for(var name in this.values[i]){
-				this._oldValues.concat( this.cssRule.getProperties(name));
+				var v = this.cssRule.getProperties(name);
+				var oldValues = [];
+				v.forEach(function(prop){
+					var o = {};
+					o[prop.name] = prop.value;
+					oldValues.push(o); 
+				});
+				this._oldValues = this._oldValues.concat( oldValues /*this.cssRule.getProperties(name)*/);
 			}
 		}
 		

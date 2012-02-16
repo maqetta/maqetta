@@ -2,17 +2,17 @@
 <?eclipse version="3.4"?>
 <plugin>
       <extension point="maqetta.core.server.personManager">
-    	<personManager class="maqetta.core.server.standalone.servlets.PersonManagerImpl" priority="0"/>
+    	<personManager class="maqetta.core.server.user.manager.PersonManagerImpl" priority="0"/>
    	  </extension>
 
      <extension point="maqetta.core.server.userManager">
-    	<userManager class="maqetta.core.server.standalone.servlets.UserManagerImpl"/>
+    	<userManager class="maqetta.core.server.user.manager.UserManagerImpl"/>
    	 </extension>
 	
 	
 	<!-- this probably should eventually be moved to a dojo or RAD specific plugin -->
 	<extension point="maqetta.core.server.libraryFinder">
-    	<libraryFinder class="maqetta.core.server.standalone.DojoLibraryFinder"/>
+    	<libraryFinder class="maqetta.core.server.DojoLibraryFinder"/>
    	 </extension>
 
      <extension
@@ -20,13 +20,13 @@
       <servlet
             alias="/maqetta"
          
-            class="maqetta.core.server.standalone.DavinciPageServlet"
+            class="maqetta.core.server.DavinciPageServlet"
             load-on-startup="true">
            </servlet>
 
      <servlet
             alias="/review"
-            class="maqetta.core.server.standalone.DavinciReviewServlet"
+            class="maqetta.core.server.DavinciReviewServlet"
             load-on-startup="true">
       </servlet>
 
@@ -44,79 +44,79 @@
       <extension
             point="maqetta.core.server.command">
          <command path="login" noLogin="true" 
-               class="maqetta.core.server.standalone.command.Login" />
+               class="maqetta.core.server.command.Login" />
          <command path="register" noLogin="true" 
-               class="maqetta.core.server.standalone.command.Register" />
+               class="maqetta.core.server.command.Register" />
          <command path="listFiles" 
-               class="maqetta.core.server.standalone.command.ListFiles" />
+               class="maqetta.core.server.command.ListFiles" />
          <command path="addFiles" 
-               class="maqetta.core.server.standalone.command.AddFiles" />
+               class="maqetta.core.server.command.AddFiles" />
          <command path="deleteResource" 
-               class="maqetta.core.server.standalone.command.DeleteResource" />
+               class="maqetta.core.server.command.DeleteResource" />
          <command path="createResource" 
-               class="maqetta.core.server.standalone.command.CreateResource" />
+               class="maqetta.core.server.command.CreateResource" />
          <command path="getPreferences" 
-               class="maqetta.core.server.standalone.command.GetPreferences" />
+               class="maqetta.core.server.command.GetPreferences" />
          <command path="setPreferences"  isPut="true"
-               class="maqetta.core.server.standalone.command.SetPreferences" />
+               class="maqetta.core.server.command.SetPreferences" />
          <command path="getWorkbenchState" 
-               class="maqetta.core.server.standalone.command.GetWorkbenchState" />
+               class="maqetta.core.server.command.GetWorkbenchState" />
          <command path="setWorkbenchState"  isPut="true"
-               class="maqetta.core.server.standalone.command.SetWorkbenchState" />
+               class="maqetta.core.server.command.SetWorkbenchState" />
          <command path="removeWorkingCopy" 
-               class="maqetta.core.server.standalone.command.RemoveWorkingCopy" />
+               class="maqetta.core.server.command.RemoveWorkingCopy" />
          <command path="logoff" 
-               class="maqetta.core.server.standalone.command.LogOff" />
+               class="maqetta.core.server.command.LogOff" />
          <command path="download" 
-               class="maqetta.core.server.standalone.command.Download" />
+               class="maqetta.core.server.command.Download" />
          <command path="findResource" 
-               class="maqetta.core.server.standalone.command.FindResource" />
+               class="maqetta.core.server.command.FindResource" />
          <command path="getPlugins" 
-               class="maqetta.core.server.standalone.command.GetPlugins" />
+               class="maqetta.core.server.command.GetPlugins" />
           <command path="getLibRoots" 
-               class="maqetta.core.server.standalone.command.GetLibRoots" /> 
+               class="maqetta.core.server.command.GetLibRoots" /> 
           <command path="listLibs" 
-               class="maqetta.core.server.standalone.command.ListLibs" />   
+               class="maqetta.core.server.command.ListLibs" />   
           <command path="getUserLibs" 
-               class="maqetta.core.server.standalone.command.GetUserLibs" />   
+               class="maqetta.core.server.command.GetUserLibs" />   
           <command path="getLibMetadata" 
-               class="maqetta.core.server.standalone.command.GetLibMetadata" />  
+               class="maqetta.core.server.command.GetLibMetadata" />  
           <command path="modifyLib" 
-               class="maqetta.core.server.standalone.command.ModifyLib" /> 
+               class="maqetta.core.server.command.ModifyLib" /> 
           <command path="getMetaRoot" 
-               class="maqetta.core.server.standalone.command.GetMetaRoot" />   
+               class="maqetta.core.server.command.GetMetaRoot" />   
            <command path="copy" 
-               class="maqetta.core.server.standalone.command.Copy" /> 
+               class="maqetta.core.server.command.Copy" /> 
            <command path="createProject" 
-               class="maqetta.core.server.standalone.command.CreateProject" />         
+               class="maqetta.core.server.command.CreateProject" />         
            <command path="rename" 
-               class="maqetta.core.server.standalone.command.Rename" />         
+               class="maqetta.core.server.command.Rename" />         
            <command path="tryIt" noLogin="true"
-               class="maqetta.core.server.standalone.command.TryIt" />         
+               class="maqetta.core.server.command.TryIt" />         
            <command path="removeUser" noLogin="true"
-               class="maqetta.core.server.standalone.command.RemoveUser" />
+               class="maqetta.core.server.command.RemoveUser" />
                 
           <!-- Review and Commenting Commands -->        
           <command path="listVersions"
-               class="maqetta.core.server.standalone.command.ListVersions" />
+               class="maqetta.core.server.command.ListVersions" />
          <command path="addComment"
-               class="maqetta.core.server.standalone.command.AddComment" />
+               class="maqetta.core.server.command.AddComment" />
          <command path="updateComment"
-               class="maqetta.core.server.standalone.command.UpdateComment" />
+               class="maqetta.core.server.command.UpdateComment" />
          <command path="getComments"
-               class="maqetta.core.server.standalone.command.GetComments" />
+               class="maqetta.core.server.command.GetComments" />
          <command path="publish"
-         	   class="maqetta.core.server.standalone.command.Publish" />
+         	   class="maqetta.core.server.command.Publish" />
 	     <command path="getBluePageInfo"
-         	   class="maqetta.core.server.standalone.command.GetBluePageInfo" />         	   
+         	   class="maqetta.core.server.command.GetBluePageInfo" />         	   
          <command path="listReviewFiles"
-         	   class="maqetta.core.server.standalone.command.ListReviewFiles" />
+         	   class="maqetta.core.server.command.ListReviewFiles" />
          <command path="getLatestVersionId"
-         	   class="maqetta.core.server.standalone.command.GetLatestVersionId" />
+         	   class="maqetta.core.server.command.GetLatestVersionId" />
          <command path="managerVersion"
-         	   class="maqetta.core.server.standalone.command.ManagerVersion" />
+         	   class="maqetta.core.server.command.ManagerVersion" />
          <command path="getReviewUserInfo"
-         	   class="maqetta.core.server.standalone.command.GetReviewUserInfo" />   
+         	   class="maqetta.core.server.command.GetReviewUserInfo" />   
                
       </extension>
 

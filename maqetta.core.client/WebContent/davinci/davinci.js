@@ -31,8 +31,14 @@ davinci/davinci = {
 	"./actions/DownloadAction",
 	"./actions/StickyNoteAction",
 	"./actions/SaveAsWidget",
-	
-//	"./ve/commands/ModifyAttributeCommand",
+
+	"./ve/actions/CopyAction",
+	"./ve/actions/CutAction",
+	"./ve/actions/DeleteAction",
+	"./ve/actions/PasteAction",
+	"./ve/actions/ChooseDeviceAction",
+	"./ve/actions/RotateDeviceAction",
+	"./ve/actions/SurroundAction",
 
 	"./ve/actions/AddColumnAction",
 	"./ve/actions/AddColumnBeforeAction",

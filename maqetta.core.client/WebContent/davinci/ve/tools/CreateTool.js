@@ -588,7 +588,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			} else {
 				this._context.select(w); // no inline on create
 			}
-		});
+		}.bind(this));
 	},
 
 	_loadType: function(data){

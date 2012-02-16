@@ -379,7 +379,7 @@ var Workbench = {
 			if (child.editor) {
 				Workbench._switchEditor(child.editor);
 			}
-		});		
+		});
 		mainBodyContainer.startup();
 
 
@@ -388,8 +388,8 @@ var Workbench = {
 		if (!appBorderContainer) {
 			appBorderContainer = new BorderContainer({       
 				design: "headline",
-	            gutters: false,
-	            liveSplitters: false
+				gutters: false,
+				liveSplitters: false
 			}, "davinci_app");
 			
 			var topBarPane = new ContentPane({
@@ -831,8 +831,7 @@ var Workbench = {
 		return dojoMenu;
 	},
 	
-	_toggleButton: function (button,context,group,arg)
-	{
+	_toggleButton: function(button, context, group, arg) {
 		if (!button.checked) {
 			return;
 		}
@@ -844,27 +843,9 @@ var Workbench = {
 		Workbench._runAction(button.item,context,button.item.id);
 	},
 
-	_runAction: function (item,context,arg) {
+	_runAction: function(item, context, arg) {
 		if (item.run) {
-			if (item.run instanceof Function) {
-				item.run();
-			} else {
-				if (item.scope) {
-					var scope = Workbench.actionScope[item.scope];
-					if (!scope) {
-						Runtime.handleError(dojo.string.substitute(webContent.scopeNotDefined, [item.id]));
-					} else {
-						var func = scope[item.run];
-						if (!func){
-							Runtime.handleError(dojo.string.substitute(webContent.funcNotDefined, [item.id]));
-						} else {
-							func.apply(this);
-						}
-					}
-				} else {
-					eval(item.run); //FIXME: remove eval
-				}
-			}
+			item.run();
 		} else if (item.action) {
 			item.action.run(context);
 		} else if (item.method && context && context[item.method] instanceof Function) {
@@ -875,9 +856,7 @@ var Workbench = {
 	},
 
 	showView: function(viewId, shouldFocus){
-		
 	  try {
-			
 		var mainBodyContainer = dijit.byId('mainBody'),
 			view = Runtime.getExtension("davinci.view", viewId),
 			mainBody = dojo.byId('mainBody'),

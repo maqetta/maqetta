@@ -297,7 +297,8 @@ var uiResource = {
 	//			dijit.byId('fileDialogParentFolder').set('value',folder.getPath());
 				dojo.byId('fileDialogParentFolder').innerText=folder.getPath();
 
-				var f0 = new Uploader({
+				// Uploader plugin code is not AMD compliant.  Use global reference.  See http://bugs.dojotoolkit.org/ticket/14811
+				var f0 = new dojox.form.Uploader({
 					label: "Select Files...", // shouldn't need to localize this after Dojo 1.6
 					url: 'cmd/addFiles?path=' + folder.getPath(), 
 					multiple: true

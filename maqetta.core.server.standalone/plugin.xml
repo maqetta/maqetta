@@ -2,11 +2,11 @@
 <?eclipse version="3.4"?>
 <plugin>
       <extension point="maqetta.core.server.personManager">
-    	<personManager class="maqetta.core.server.standalone.servlets.PersonManagerImpl" priority="0"/>
+    	<personManager class="maqetta.core.server.standalone.user.manager.PersonManagerImpl" priority="0"/>
    	  </extension>
 
      <extension point="maqetta.core.server.userManager">
-    	<userManager class="maqetta.core.server.standalone.servlets.UserManagerImpl"/>
+    	<userManager class="maqetta.core.server.standalone.user.manager.UserManagerImpl"/>
    	 </extension>
 	
 	

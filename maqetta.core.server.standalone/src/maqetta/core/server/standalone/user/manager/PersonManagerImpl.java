@@ -1,4 +1,4 @@
-package maqetta.core.server.standalone.servlets;
+package maqetta.core.server.standalone.user.manager;
 
 
 import java.util.HashMap;

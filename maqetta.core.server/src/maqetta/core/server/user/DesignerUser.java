@@ -1,4 +1,4 @@
-package maqetta.core.server.standalone.user;
+package maqetta.core.server.user;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
-import maqetta.core.server.standalone.internal.Links;
+import maqetta.core.server.internal.Links;
 
 import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.ajaxLibrary.Library;
@@ -131,7 +131,7 @@ public class DesignerUser implements IDesignerUser {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * maqetta.core.server.standalone.user.IDesignerUser#getVersion(java.lang
+	 * maqetta.core.server.user.IDesignerUser#getVersion(java.lang
 	 * .String)
 	 */
 	public Version getVersion(String time) {
@@ -145,7 +145,7 @@ public class DesignerUser implements IDesignerUser {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see maqetta.core.server.standalone.user.IDesignerUser#getName()
+	 * @see maqetta.core.server.user.IDesignerUser#getName()
 	 */
 	public String getName() {
 		return this.name;
@@ -154,7 +154,7 @@ public class DesignerUser implements IDesignerUser {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see maqetta.core.server.standalone.user.IDesignerUser#getLatestVersion()
+	 * @see maqetta.core.server.user.IDesignerUser#getLatestVersion()
 	 */
 	public Version getLatestVersion() {
 		return latestVersion;
@@ -164,7 +164,7 @@ public class DesignerUser implements IDesignerUser {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * maqetta.core.server.standalone.user.IDesignerUser#setLatestVersion(org
+	 * maqetta.core.server.user.IDesignerUser#setLatestVersion(org
 	 * .davinci.server.review.Version)
 	 */
 	public void setLatestVersion(Version latestVersion) {
@@ -175,7 +175,7 @@ public class DesignerUser implements IDesignerUser {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * maqetta.core.server.standalone.user.IDesignerUser#addVersion(org.davinci
+	 * maqetta.core.server.user.IDesignerUser#addVersion(org.davinci
 	 * .server.review.Version)
 	 */
 	public void addVersion(Version version) {
@@ -185,7 +185,7 @@ public class DesignerUser implements IDesignerUser {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see maqetta.core.server.standalone.user.IDesignerUser#getVersions()
+	 * @see maqetta.core.server.user.IDesignerUser#getVersions()
 	 */
 	public List<Version> getVersions() {
 		return versions;
@@ -195,7 +195,7 @@ public class DesignerUser implements IDesignerUser {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * maqetta.core.server.standalone.user.IDesignerUser#deleteVersion(java.
+	 * maqetta.core.server.user.IDesignerUser#deleteVersion(java.
 	 * lang.String)
 	 */
 	public void deleteVersion(String versionTime) {
@@ -227,7 +227,7 @@ public class DesignerUser implements IDesignerUser {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * maqetta.core.server.standalone.user.IDesignerUser#getCommentingDirectory
+	 * maqetta.core.server.user.IDesignerUser#getCommentingDirectory
 	 * ()
 	 */
 	public IStorage getCommentingDirectory() {
@@ -252,7 +252,7 @@ public class DesignerUser implements IDesignerUser {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see maqetta.core.server.standalone.user.IDesignerUser#getUserDirectory()
+	 * @see maqetta.core.server.user.IDesignerUser#getUserDirectory()
 	 */
 	public IStorage getUserDirectory() {
 		if (this.userDirectory == null) {
@@ -276,7 +276,7 @@ public class DesignerUser implements IDesignerUser {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * maqetta.core.server.standalone.user.IDesignerUser#getResource(org.eclipse
+	 * maqetta.core.server.user.IDesignerUser#getResource(org.eclipse
 	 * .core.runtime.IPath)
 	 */
 	public IVResource getResource(IPath path) {

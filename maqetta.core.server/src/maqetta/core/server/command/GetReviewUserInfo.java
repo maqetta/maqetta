@@ -1,4 +1,4 @@
-package maqetta.core.server.standalone.command;
+package maqetta.core.server.command;
 
 import java.io.IOException;
 

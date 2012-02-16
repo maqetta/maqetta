@@ -1,4 +1,4 @@
-package maqetta.core.server.standalone;
+package maqetta.core.server;
 
 import java.io.IOException;
 import java.net.URL;
@@ -8,8 +8,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import maqetta.core.server.standalone.DavinciPageServlet;
-import maqetta.core.server.standalone.user.ReviewManager;
+import maqetta.core.server.DavinciPageServlet;
+import maqetta.core.server.user.ReviewManager;
 
 import org.davinci.server.internal.Activator;
 

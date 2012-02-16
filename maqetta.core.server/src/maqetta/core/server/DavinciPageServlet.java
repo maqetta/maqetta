@@ -1,4 +1,4 @@
-package maqetta.core.server.standalone;
+package maqetta.core.server;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,9 +18,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import maqetta.core.server.standalone.internal.Activator;
-
 import org.davinci.ajaxLibrary.ILibraryManager;
+import org.davinci.server.internal.Activator;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.IUserManager;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -144,7 +143,7 @@ public class DavinciPageServlet extends HttpServlet {
 	 * 
 	 * @return Bundle
 	 */
-	private URL getPageExtensionPath(String extensionPoint, String extensionName) {
+	protected URL getPageExtensionPath(String extensionPoint, String extensionName) {
 
 		List extensions = serverManager.getExtensions(extensionPoint, extensionName);
 		IConfigurationElement winner = null;
@@ -164,7 +163,7 @@ public class DavinciPageServlet extends HttpServlet {
 		return bundle.getResource(path);
 	}
 
-	private void writeWelcomePage(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+	protected void writeWelcomePage(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
 			IOException {
 		URL welcomePage = getPageExtensionPath(IDavinciServerConstants.EXTENSION_POINT_WELCOME_PAGE,
 				IDavinciServerConstants.EP_TAG_WELCOME_PAGE);
@@ -172,7 +171,7 @@ public class DavinciPageServlet extends HttpServlet {
 		this.writePage(req, resp, resourceURL, false);
 	}
 
-	private void writeMainPage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void writeMainPage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		URL welcomePage = getPageExtensionPath(IDavinciServerConstants.EXTENSION_POINT_MAIN_PAGE,
 				IDavinciServerConstants.EP_TAG_MAIN_PAGE);
@@ -180,7 +179,7 @@ public class DavinciPageServlet extends HttpServlet {
 		this.writePage(req, resp, resourceURL, false);
 	}
 
-	private void handlePreview(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+	protected void handlePreview(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		String preview = req.getParameter(IDavinciServerConstants.PREVIEW_PARAM);
 		Cookie k = new Cookie("preview", preview);
 		resp.addCookie(k);
@@ -190,7 +189,7 @@ public class DavinciPageServlet extends HttpServlet {
 		this.writePage(req, resp, resourceURL, false);
 	}
 
-	private void handleWSRequest(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException,
+	protected void handleWSRequest(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException,
 			ServletException {
 
 		// System.out.println("enter ws request");
@@ -379,7 +378,7 @@ public class DavinciPageServlet extends HttpServlet {
 		writePage(req, resp, resourceURL, false);
 	}
 
-	private static int writeResource(InputStream is, OutputStream os) throws IOException {
+	protected static int writeResource(InputStream is, OutputStream os) throws IOException {
 		byte[] buffer = new byte[8192];
 		int bytesRead = is.read(buffer);
 		int writtenContentLength = 0;
@@ -391,7 +390,7 @@ public class DavinciPageServlet extends HttpServlet {
 		return writtenContentLength;
 	}
 
-	private static void writeResource(InputStream is, Writer writer) throws IOException {
+	protected static void writeResource(InputStream is, Writer writer) throws IOException {
 		Reader reader = new InputStreamReader(is);
 		try {
 			char[] buffer = new char[8192];

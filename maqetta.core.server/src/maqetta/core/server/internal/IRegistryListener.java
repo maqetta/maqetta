@@ -1,4 +1,4 @@
-package maqetta.core.server.standalone.internal;
+package maqetta.core.server.internal;
 
 public interface IRegistryListener {
 

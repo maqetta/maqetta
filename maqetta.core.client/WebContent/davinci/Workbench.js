@@ -1116,7 +1116,7 @@ var Workbench = {
 			tab = dijit.byId(filename2id(fileName)),
 			tabContainer = dijit.byId("editors_tabcontainer"),
 			tabCreated=false;
-		if(tab==null){
+		if(!tab){
 			tabCreated=true;
 
 			tab = new EditorContainer( {
@@ -1130,14 +1130,9 @@ var Workbench = {
 		
 		if (!editorExtension) {
 			editorExtension = {
-				requires: 'davinci.ui.TextEditor',
-				editorClass: 'davinci.ui.TextEditor',
+				editorClass: 'davinci/ui/TextEditor',
 				id: 'davinci.ui.TextEditor'
 			};
-		}
-		
-		if (editorExtension.requires) {
-			dojo["require"](editorExtension.requires);
 		}
 
 		if (tabCreated) {
@@ -1203,36 +1198,27 @@ var Workbench = {
 		});
 	},
 
-	createPopup: function(args)
-	{
+	createPopup: function(args) {
 		var partID = args.partID, domNode=args.domNode, 
 			context=args.context,
 			widgetCallback=args.openCallback;
 //			
 		var actionSetIDs=[];
 		var editorExtensions=Runtime.getExtension("davinci.actionSetPartAssociations",
-				function (extension)
-				{
-				   for (var i=0;i<extension.parts.length;i++)
-					   if (extension.parts[i]==partID)
-					   {
+				function (extension) {
+				   for (var i=0;i<extension.parts.length;i++) {
+					   if (extension.parts[i]==partID) {
 						   actionSetIDs.push(extension.targetID);
 						   return true;
 					   }
+				   }
 				});
-		if (actionSetIDs.length>0)
-		{
+		if (actionSetIDs.length) {
 		   var actionSets=Runtime.getExtensions("davinci.actionSets",
-				function (extension)
-				{
-				   for (var i=0;i<actionSetIDs.length;i++)
-					   if (actionSetIDs[i]==extension.id)
-					   {
-						   return true;
-					   }
+				function (extension) {
+			   		return actionSetIDs.some(function(setID) { return setID == extension.id; });
 				});
-		   if (actionSets.length>0)
-		   {
+		   if (actionSets.length) {
 			   var menuTree=Workbench._createMenuTree(actionSets,true);
 			   Workbench._initActionsKeys(actionSets, args);
 			   var popup=Workbench._createMenu(menuTree,context);

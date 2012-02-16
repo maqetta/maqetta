@@ -493,7 +493,7 @@ return declare("davinci.ve._Widget", null, {
 	},
 
 	_getPropertyValue: function(name) {
-		return this.domNode[name];
+		return this.domNode.getAttribute(name);
 	},
 
 	getTagName: function()

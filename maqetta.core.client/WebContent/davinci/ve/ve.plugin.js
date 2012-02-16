@@ -78,10 +78,7 @@ return {
             extensions: "html",
             isDefault: true,
             // TODO implement icon : "",
-            // requires : "davinci.ve.HTMLVisualEditor",
-            // editorClass : "davinci.ve.HTMLVisualEditor"
-            requires: "davinci.ve.PageEditor",
-            editorClass: "davinci.ve.PageEditor"
+            editorClass: "davinci/ve/PageEditor"
         },
         {
             id: "ThemeEditor",
@@ -91,8 +88,7 @@ return {
             defaultContent: "./defaultContent.css",
             isDefault: true,
             // TODO implement icon : "",
-            requires: "davinci.ve.themeEditor.ThemeEditor",
-            editorClass: "davinci.ve.themeEditor.ThemeEditor"
+            editorClass: "davinci/ve/themeEditor/ThemeEditor"
         }
     ],
     "davinci.actionSets": [

@@ -1,12 +1,15 @@
 define([
 	"require",
+	"dojo/_base/Deferred",
     "dojo/DeferredList",
+    "dojo/_base/lang",
+    "dojo/_base/connect",
    // "davinci/Workbench",
 	"../util",
 	"../library",
 	"../model/Path"
 	
-], function(require, DeferredList, Util, Library, Path) {
+], function(require, Deferred, DeferredList, lang, connect, Util, Library, Path) {
 
 	var Metadata,
 		Workbench,
@@ -167,10 +170,10 @@ define([
              */
             _maqGetString: getDescriptorString
         });
-        
         // Register a module identifier for the metadata path; necessary for
         // loading of helper and creation tool classes.
         pkg.$moduleId = 'maq-metadata-' + pkg.name + '-' + pkg.version;
+
         require = require({
             packages: [{
                 name: pkg.$moduleId,
@@ -420,9 +423,9 @@ define([
     		var allThemes = Library.getThemes(themePath.firstSegment());
     		var themeHash = {};
     		for(var i=0;i<allThemes.length;i++){
-    		    if (allThemes[i]['files']){ // #1024 theme maps do not have files
-        			for(var k=0;k<allThemes[i]['files'].length;k++){
-        				themeHash[allThemes[i]['files'][k]] = allThemes[i];
+    		    if (allThemes[i].files){ // #1024 theme maps do not have files
+        			for(var k=0;k<allThemes[i].files.length;k++){
+        				themeHash[allThemes[i].files[k]] = allThemes[i];
         			}
     		    }
     		}
@@ -737,8 +740,47 @@ define([
             });
 
             return helper;
+        },
+
+        /**
+         * Returns the SmartInput instance for the given `type`.
+         * @param  {String} type Widget type (i.e. "dijit.form.Button")
+         * @return {Object}
+         */
+        getSmartInput: function(type) {
+        	var d = new Deferred();
+        	if (type in smartInputCache) {
+        		d.resolve(smartInputCache[type]);
+        	} else {
+	        	var moduleId = Metadata.getHelper(type, 'inlineEdit', false);
+	        	if (!moduleId) {
+	        		d.resolve(null);
+	        	}else if (typeof moduleId === 'string') {
+	        		require([moduleId], function(Module) {
+	        			d.resolve(smartInputCache[type] = new Module());
+	        		});
+	        	} else {
+	        		// `moduleId` is an object
+	        		require(["davinci/ve/input/SmartInput"], function(SmartInput) {
+	        			var si = new SmartInput();
+	            		lang.mixin(si, moduleId);
+	        			d.resolve(smartInputCache[type] = si);
+	        		});
+	        	}
+        	}
+
+        	return d;
         }
     };
+
+	var smartInputCache = {};
+
+	connect.subscribe("/davinci/ui/libraryChanged", function() {
+		// XXX We should be smart about this and only reload data for libraries whose path has
+		//  changed.  This code currently nukes everything, reloading all libs, even those that
+		//  haven't changed.
+		smartInputCache = {};
+	});
 
 return dojo.setObject('davinci.ve.metadata', Metadata);
 

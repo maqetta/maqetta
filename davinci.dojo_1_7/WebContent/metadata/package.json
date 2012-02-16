@@ -668,43 +668,13 @@
 					"category": "controls",
 					"icon": "resources/images/horizontalslider.gif",
 					"iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAM7W5DdYkDteljpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+EZzp9Xk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZZwJNwSCwaj8ikcjkMOZ/J0KJBbSxCyMtnwulMPpdiKcSIUDZoiSfCCJWEERIB8RhpMppHglCBCA0mJgoHFiIYDgYKgQVCAAGPAQIgIAOQAQBIj0ybnJ2eJ0EAOw==",
-					"metadata": {
-						"property": {
-							"container": {
-								"refreshParent": true
-							},
-							"count": {
-								"refreshParent": true
-							},
-							"ruleStyle": {
-								"refreshParent": true
-							},
-							"labelStyle": {
-								"refreshParent": true
-							},
-							"labels": {
-								"refreshParent": true
-							},
-							"numericMargin": {
-								"refreshParent": true
-							},
-							"minimum": {
-								"refreshParent": true
-							},
-							"maximum": {
-								"refreshParent": true
-							},
-							"constraints": {
-								"refreshParent": true
-							}
-						}
-					},
 					"properties": {
 						"container":"bottomDecoration"
 					},
 					"helper": "./dijit/form/HorizontalRuleLabelsHelper",
 					"allowedParent": "dijit.form.HorizontalSlider",
-					"hidden": true
+					"hidden": true,
+					"refreshParentOnPropChange": true
 				},
 				{
 					"name": "HorizontalRule",
@@ -713,25 +683,13 @@
 					"category": "controls",
 					"icon": "resources/images/horizontalslider.gif",
 					"iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAM7W5DdYkDteljpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+EZzp9Xk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZZwJNwSCwaj8ikcjkMOZ/J0KJBbSxCyMtnwulMPpdiKcSIUDZoiSfCCJWEERIB8RhpMppHglCBCA0mJgoHFiIYDgYKgQVCAAGPAQIgIAOQAQBIj0ybnJ2eJ0EAOw==",
-					"metadata": {
-						"property": {
-							"container": {
-								"refreshParent": true
-							},
-							"count": {
-								"refreshParent": true
-							},
-							"ruleStyle": {
-								"refreshParent": true
-							}
-						}
-					},
 					"properties": {
 						"style": "height:5px;",
 						"container":"bottomDecoration"
 					},
 					"allowedParent": "dijit.form.HorizontalSlider",
-					"hidden": true
+					"hidden": true,
+					"refreshParentOnPropChange": true
 				},
 		        {
 		            "name": "Menu",
@@ -1153,44 +1111,14 @@
 					"category": "controls",
 					"icon": "resources/images/verticalslider.gif",
 					"iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAJurxzdYkDtelpusyDpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+NXk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6qvH36nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZWwJNwSCwaTyWIYXAshiqmQJMYKiyk01PoElFgmyHGx/M4AKahxkSicRDQjc4mgwF9nQ3ORiOyg9UbIxYCaGIUDwhnaFwJd2BWjkchJFFZQiURB0yWWUEAOw==",
-					"metadata": {
-						"property": {
-							"container": {
-								"refreshParent": true
-							},
-							"count": {
-								"refreshParent": true
-							},
-							"ruleStyle": {
-								"refreshParent": true
-							},
-							"labelStyle": {
-								"refreshParent": true
-							},
-							"labels": {
-								"refreshParent": true
-							},
-							"numericMargin": {
-								"refreshParent": true
-							},
-							"minimum": {
-								"refreshParent": true
-							},
-							"maximum": {
-								"refreshParent": true
-							},
-							"constraints": {
-								"refreshParent": true
-							}
-						}
-					},
 					"properties": {
 						"style": "width:3em;",
 						"container":"rightDecoration"
 					},
 					"helper": "./dijit/form/HorizontalRuleLabelsHelper",
 					"allowedParent": "dijit.form.VerticalSlider",
-					"hidden": true
+					"hidden": true,
+					"refreshParentOnPropChange": true
 				},
 				{
 					"name": "VerticalRule",
@@ -1199,25 +1127,13 @@
 					"category": "controls",
 					"icon": "resources/images/verticalslider.gif",
 					"iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAJurxzdYkDtelpusyDpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+NXk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6qvH36nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZWwJNwSCwaTyWIYXAshiqmQJMYKiyk01PoElFgmyHGx/M4AKahxkSicRDQjc4mgwF9nQ3ORiOyg9UbIxYCaGIUDwhnaFwJd2BWjkchJFFZQiURB0yWWUEAOw==",
-					"metadata": {
-						"property": {
-							"container": {
-								"refreshParent": true
-							},
-							"count": {
-								"refreshParent": true
-							},
-							"ruleStyle": {
-								"refreshParent": true
-							}
-						}
-					},
 					"properties": {
 						"style": "width:5px;",
 						"container":"rightDecoration"
 					},
 					"allowedParent": "dijit.form.VerticalSlider",
-					"hidden": true
+					"hidden": true,
+					"refreshParentOnPropChange": true
 				},
 		        {
 		            "name": "PopupMenuBarItem",

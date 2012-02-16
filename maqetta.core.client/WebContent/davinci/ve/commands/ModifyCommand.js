@@ -3,7 +3,7 @@ define([
     	"davinci/ve/widget",
     	"davinci/ve/utils/ImageUtils",
     	"davinci/ve/States"
-], function(declare, Widget,  ImageUtils, States){
+], function(declare, Widget, ImageUtils, States){
 
 
 return declare("davinci.ve.commands.ModifyCommand", null, {
@@ -130,7 +130,7 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 		// we redraw the parent widget (e.g., HorizontalSlider) so that it can properly take 
 		// the new value in to account. Here, we execute a ModifyCommand (with no actual
 		// modifications) to cause the parent to refresh itself.
-		if (this._doRefreshParent(widget)) {
+		if (this._isRefreshParentOnPropChange(widget)) {
 			// Note we're executing the ModifyCommand directly as opposed to adding to it to the 
 			// command stack since we're not really changing anything on the parent and don't
 			// need to allow user to undo it.
@@ -166,31 +166,19 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 		}
 		return refresh;
 	},
-
+	
 	/**
-	 * Check if any of the modified properties has 'refreshParent' set.
+	 * Check if the parent widget needs to be refreshed after a property 
+	 * has changed.
 	 * 
 	 * @param  {davinci.ve._Widget} widget
 	 * 				The widget instance whose properties are being modified.
 	 * @return {boolean} 'true'
-	 * 				if one of the modified properties has the 'refreshParent'
-	 * 				attribute set.
+	 * 				if parent widget has the 'refreshParentOnPropChange' attribute set
+	 * 				in its metadata
 	 */
-	_doRefreshParent: function(widget) {
-		var props = this._properties,
-			name,
-			p,
-			refresh = false;
-		for (name in props) {
-			if (props.hasOwnProperty(name)) {
-				p = widget.metadata.property[name];
-				if (p && p.refreshParent) {
-					refresh = true;
-					break;
-				}
-			}
-		}
-		return refresh;
+	_isRefreshParentOnPropChange: function(widget) {
+		return davinci.ve.metadata.queryDescriptor(widget.type, "refreshParentOnPropChange");
 	},
 
 	undo: function(){
@@ -244,7 +232,7 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 		// we redraw the parent widget (e.g., HorizontalSlider) so that it can properly take 
 		// the new value in to account. Here, we execute a ModifyCommand (with no actual
 		// modifications) to cause the parent to refresh itself.
-		if (this._doRefreshParent(widget)) {
+		if (this._isRefreshParentOnPropChange(widget)) {
 			// Note we're executing the ModifyCommand directly as opposed to adding to it to the 
 			// command stack since we're not really changing anything on the parent and don't
 			// need to allow user to undo it.

@@ -1,5 +1,6 @@
 package org.maqetta.server;
 
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class ServerManager implements IServerManager {
 
     public ServletConfig  servletConfig;
 
-	private File userDir;
+	private IStorage userDir;
 
     public static boolean DEBUG_IO_TO_CONSOLE;
     public static boolean LOCAL_INSTALL;
@@ -227,13 +228,17 @@ public class ServerManager implements IServerManager {
     	return this.personManager;
     }
 
-    public File getBaseDirectory(){
+    public void setBaseDirectory(IStorage baseDirectory){
+    	this.userDir = baseDirectory;
+    }
+    
+    public IStorage getBaseDirectory(){
     	if(this.userDir ==null){
     	
 	    	 String basePath = getDavinciProperty(IDavinciServerConstants.BASE_DIRECTORY_PROPERTY);
 	         
 	         if (basePath != null && basePath.length() > 0) {
-	             File dir = new File(basePath);
+	             IStorage dir = new StorageFileSystem(basePath);
 	             if (dir.exists()) {
 	                 userDir = dir;
 	             } else {
@@ -241,10 +246,11 @@ public class ServerManager implements IServerManager {
 	             }
 	         }
 	         if (userDir == null) {
-	             userDir = (File) servletConfig.getServletContext().getAttribute("javax.servlet.context.tempdir");
+	             File tempDir = (File) servletConfig.getServletContext().getAttribute("javax.servlet.context.tempdir");
+	             userDir = new StorageFileSystem(tempDir);
 	         }
 	         if (userDir == null) {
-	             userDir = new File(".");
+	             userDir =new StorageFileSystem(".");
 	         }
     	}
          return this.userDir;

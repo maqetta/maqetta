@@ -1,11 +1,13 @@
 define("davinci/ve/_Widget", [
 	"dojo/_base/declare",
 	"./metadata",
-	"../html/CSSModel"
+	"../html/CSSModel",
+	"dojox/html/entities"
 ], function(
 	declare,
 	metadata,
-	CSSModel
+	CSSModel,
+	htmlEntities
 ) {
 var arrayEquals = function(array1, array2, func){
 	if(array1 == array2){
@@ -493,7 +495,7 @@ return declare("davinci.ve._Widget", null, {
 	},
 
 	_getPropertyValue: function(name) {
-		return this.domNode[name];
+		return this.domNode.getAttribute(name);
 	},
 
 	getTagName: function()
@@ -721,7 +723,7 @@ return declare("davinci.ve._Widget", null, {
 		        	}*/
 		            break;
 		        default:
-		        	 value = dojox.html.entities.encode(value); //When placing data in an HTML attribute, we should probably just encode it to be safe.
+		        	 value = htmlEntities.encode(value); //When placing data in an HTML attribute, we should probably just encode it to be safe.
 
 		    }
 // XXX is this used?

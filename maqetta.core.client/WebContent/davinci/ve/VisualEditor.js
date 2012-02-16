@@ -13,8 +13,8 @@ define([
 	"./utils/URLRewrite",
 	"davinci/workbench/Preferences",
 	"./widget",
-	"./metadata",
-	"./input/SmartInput",
+	//"./metadata",
+	//"./input/SmartInput", 
 	"system/resource"
 ], function(
 	require,
@@ -31,8 +31,8 @@ define([
 	URLRewrite,
 	Preferences,
 	widgetUtils,
-	metadataUtils,
-	SmartInput,
+	//metadataUtils,
+	//SmartInput,
 	systemResource
 ){
 
@@ -90,7 +90,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 				resizeBody(bodyElem, newPos);
 				setTimeout(function() { visualEditor.getContext().select(visualEditor.getSelectedWidget()); }, 100); //FIXME: should call updateFocus
 				if(!visualEditor._scrollHandler){
-					visualEditor._scrollHandler = dojo.connect(iframe.contentDocument, 'onscroll', this, function(e){
+					visualEditor._scrollHandler = connect.connect(iframe.contentDocument, 'onscroll', this, function(e){
 						resizeBody(bodyElem, {
 							w: dojo.style(this.domNode, 'width'),
 							h: dojo.style(this.domNode, 'height')
@@ -385,11 +385,10 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 
 	//FIXME
 	getFileEditors: function(){
-
+		debugger;
 	},
 	
 	save: function (isAutoSave){
-
 		var model = this.context.getModel();
 		var cssFiles = this.context.cssFiles;
 		if (cssFiles) {
@@ -461,47 +460,6 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		window.open(fileURL);
 	}
 });
-
-var smartInputCache = {};
-
-connect.subscribe("/davinci/ui/libraryChanged", function() {
-	// XXX We should be smart about this and only reload data for libraries whose path has
-	//  changed.  This code currently nukes everything, reloading all libs, even those that
-	//  haven't changed.
-	smartInputCache = {};
-});
-
-/**
- * Returns the SmartInput instance for the given `type`.
- * @param  {String} type Widget type (i.e. "dijit.form.Button")
- * @return {Object}
- */
-VisualEditor.getSmartInput = function(type) {
-	if (type in smartInputCache) {
-		return smartInputCache[type];
-	}
-
-	var moduleId = metadataUtils.getHelper(type, 'inlineEdit', false),
-		si;
-
-	if (! moduleId) {
-		return null;
-	}
-
-	if (typeof moduleId === 'string') {
-		// XXX TODO this assumes synchronous flow. Need to make async.
-		require([moduleId], function(Module) {
-			si = new Module();
-		});
-	} else {
-		// `moduleId` is an object
-		si = new SmartInput();
-		lang.mixin(si, moduleId);
-	}
-
-	smartInputCache[type] = si;
-	return si;
-};
 
 return VisualEditor;
 

@@ -88,9 +88,9 @@ return declare("davinci.ve.GenericWidget", _Widget, {
 
 	_attr: function(name,value) {
 		if (arguments.length>1) {
-			this.domNode[name]=value;
+			this.domNode.setAttribute(name, value);
 		} else {
-			return this.domNode[name];
+			return this.domNode.getAttribute(name);
 		}
 	},
 

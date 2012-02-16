@@ -13,10 +13,12 @@ define(['dojo/_base/declare',
        './widgets/NewFile', 
        './NewProject',
        'dojox/form/uploader/FileList', 
-       'dojox/form/Uploader','dijit/Dialog',
+       'dojox/form/Uploader',
+       'dijit/Dialog',
        'dojo/i18n!./nls/ui',
        'dojo/i18n!dijit/nls/common',
-       'dijit/form/Button','dijit/Tree',
+       'dijit/form/Button',
+       'dijit/Tree',
        'dijit/form/TextBox',
        'dojox/form/uploader/plugins/HTML5'
        
@@ -70,9 +72,8 @@ var getSelectedResource = function(){
 
 var uiResource = {
 		newHTML: function(){
-				var langObj = uiNLS;
 				var dialogSpecificClass = "davinci/ui/widgets/NewHTMLFileOptions";
-				var newDialog = createNewDialog(langObj.fileName, langObj.create, "html", dialogSpecificClass);
+				var newDialog = createNewDialog(uiNLS.fileName, uiNLS.create, "html", dialogSpecificClass);
 				var executor = function(){
 					var teardown = true;
 					if(!newDialog.cancel){
@@ -105,12 +106,11 @@ var uiResource = {
 					}
 					return teardown;
 				};
-				Workbench.showModal(newDialog, langObj.createNewHTMLFile, '', executor);
+				Workbench.showModal(newDialog, uiNLS.createNewHTMLFile, '', executor);
 		},
 	
 		newCSS: function(){
-			var langObj = uiNLS;
-			var newDialog = createNewDialog(langObj.fileName, langObj.create, "css");
+			var newDialog = createNewDialog(uiNLS.fileName, uiNLS.create, "css");
 			var executor = function(){
 				var teardown = true;
 				if(!newDialog.cancel){
@@ -129,23 +129,19 @@ var uiResource = {
 				}
 				return teardown;
 			};
-			Workbench.showModal(newDialog, langObj.createNewCSSFile, '', executor);
+			Workbench.showModal(newDialog, uiNLS.createNewCSSFile, '', executor);
 		},
 	
 		newFolder: function(parentFolder, callback){
-			
-			var langObj = uiNLS;
 			var resource=parentFolder || getSelectedResource();
-			var folder = null;
-			if(resource!=null){
+			var folder;
+			if(resource){
 				if(resource.elementType=="Folder"){
 					folder = resource;
 				}else{
 					folder = resource.parent;
 				}
-					
 			}else{
-				
 				var base = Workbench.getProject();
 				var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 				
@@ -153,14 +149,14 @@ var uiResource = {
 					var fullPath = new Path(Workbench.getProject()).append(prefs.webContentFolder);
 					folder = Resource.findResource(fullPath.toString());
 				}
-				if(folder==null) {
+				if(!folder) {
 					folder = Resource.findResource(Workbench.getProject());
 				}
 			}
 			
 			var proposedFileName = uiResource.getNewFileName('folder',folder);
 			var dialogOptions = {newFileName:proposedFileName,
-								fileFieldLabel:langObj.folderName, 
+								fileFieldLabel:uiNLS.folderName, 
 								folderFieldLabel:"Parent Folder:", // FIXME: i18n
 								root:folder,
 								finishButtonLabel:"Create Folder" }; // FIXME: i18n
@@ -185,19 +181,17 @@ var uiResource = {
 				return teardown;
 			};
 			
-			Workbench.showModal(newFolderDialog, langObj.createNewFolder, '', executor);
+			Workbench.showModal(newFolderDialog, uiNLS.createNewFolder, '', executor);
 		},
 	
 		saveAs: function(extension){
-			var langObj = uiNLS
-			
 			var oldEditor = Workbench.getOpenEditor();
 			var oldFileName = oldEditor.fileName;
 			
 			var newFileName = (new Path(oldFileName)).lastSegment();
 			var oldResource = Resource.findResource(oldFileName);
 			
-			var newDialog = createNewDialog(langObj.fileName, langObj.save, extension, null, newFileName, oldResource);
+			var newDialog = createNewDialog(uiNLS.fileName, uiNLS.save, extension, null, newFileName, oldResource);
 			var executor = function(){
 				var teardown = true;
 				if(!newDialog.cancel){
@@ -227,12 +221,11 @@ var uiResource = {
 				}
 				return teardown;
 			};
-			Workbench.showModal(newDialog, langObj.saveFileAs, '', executor);
+			Workbench.showModal(newDialog, uiNLS.saveFileAs, '', executor);
 		},
 	
 		newJS: function(){
-			var langObj = uiNLS
-			var newDialog = createNewDialog(langObj.fileName, langObj.create, "js");
+			var newDialog = createNewDialog(uiNLS.fileName, uiNLS.create, "js");
 			var executor = function(){
 				var teardown = true;
 				if(!newDialog.cancel){
@@ -252,14 +245,12 @@ var uiResource = {
 				}
 				return teardown;
 			};
-			Workbench.showModal(newDialog, langObj.createNewJSFile, '', executor);
+			Workbench.showModal(newDialog, uiNLS.createNewJSFile, '', executor);
 		},
-	
+
 		openFile: function(){
-			var langObj = uiNLS
-			var resource=getSelectedResource();
-			var folder = null;
-			if(resource!=null){
+			var folder, resource = getSelectedResource()
+			if(resource){
 				if(resource.elementType=="Folder"){
 					folder = resource;
 				}else{
@@ -270,7 +261,7 @@ var uiResource = {
 				folder = Resource.findResource(Workbench.getProject());
 			}
 			
-			var dialogOptions = {finishButtonLabel:langObj.open };
+			var dialogOptions = {finishButtonLabel: uiNLS.open};
 			var openDialog = new OpenFile(dialogOptions);
 			
 			var executor = function(){
@@ -279,36 +270,38 @@ var uiResource = {
 				}
 				return true;
 			};
-			Workbench.showModal(openDialog, langObj.openFile, '', executor);
+			Workbench.showModal(openDialog, uiNLS.openFile, '', executor);
 		},
 	
 	
 		addFiles: function(){
-			var langObj = uiNLS;
-			var formHtml = 
-			'<label for=\"fileDialogParentFolder\">'+ langObj.parentFolder +' </label><div id="fileDialogParentFolder" ></div>'+
+			var formHtml = dojo.replace(
+			'<label for=\"fileDialogParentFolder\">{parentFolder} </label><div id="fileDialogParentFolder" ></div>'+
 	        '<div id="btn0"></div><br/>'+
 	        '<div id="filelist"></div>'+
-	        '<div id="uploadBtn" class="uploadBtn" dojoType="dijit.form.Button">'+ langObj.upload +'</div><br/>';
+	        '<div id="uploadBtn" class="uploadBtn" dojoType="dijit.form.Button">{upload}</div><br/>',
+	        uiNLS);
 	
-			var	dialog = new Dialog({id: "addFiles", title:langObj.addFiles,
-				onCancel:function() { /*dialog.reset();*/ this.destroyRecursive(false); }
+			var	dialog = new Dialog({
+				id: "addFiles",
+				title: uiNLS.addFiles,
+				onCancel: function() { /*dialog.reset();*/ this.destroyRecursive(false); }
 			});	
 			
 			dialog.connect(dialog, 'onLoad', function(){
 				var folder=Resource.getRoot();
 				var resource=getSelectedResource();
-				if (resource)
-				{
+				if (resource) {
 					folder = resource.elementType == 'Folder' ? resource : resource.parent;
 				}
 	//			dijit.byId('fileDialogParentFolder').set('value',folder.getPath());
 				dojo.byId('fileDialogParentFolder').innerText=folder.getPath();
-	
-				var f0 = new Uploader({
+
+				// Uploader plugin code is not AMD compliant.  Use global reference.  See http://bugs.dojotoolkit.org/ticket/14811
+				var f0 = new dojox.form.Uploader({
 					label: "Select Files...", // shouldn't need to localize this after Dojo 1.6
-					url:'cmd/addFiles?path='+folder.getPath(), 
-					multiple:true
+					url: 'cmd/addFiles?path=' + folder.getPath(), 
+					multiple: true
 				});
 	
 				dojo.byId("btn0").appendChild(f0.domNode); // tried passing this into the constructor, but there's a bug that sizes the button wrong
@@ -318,8 +311,13 @@ var uiResource = {
 				var uploadHandler, uploadBtn = dijit.byId("uploadBtn");
 				uploadBtn.set("disabled", true);
 				dojo.connect(f0, 'onChange', function (files) {
-					if (uploadHandler) { dojo.disconnect(uploadHandler); }
-					uploadHandler = dojo.connect(uploadBtn, "onClick", null, function(){ f0.set("disabled", true); f0.upload(); });
+					if (uploadHandler) {
+						dojo.disconnect(uploadHandler);
+					}
+					uploadHandler = dojo.connect(uploadBtn, "onClick", null, function(){
+						f0.set("disabled", true);
+						f0.upload();
+					});
 					if (uploadBtn.oldText) {
 						uploadBtn.containerNode.innerText = uploadBtn.oldText;
 					}
@@ -331,7 +329,7 @@ var uiResource = {
 					dojo.disconnect(uploadHandler);
 					uploadHandler = dojo.connect(uploadBtn, "onClick", null, function(){ dialog.destroyRecursive(false); });
 					uploadBtn.oldText = uploadBtn.containerNode.innerText;
-					uploadBtn.containerNode.innerText = langObj.done;
+					uploadBtn.containerNode.innerText = uiNLS.done;
 				};
 	
 				dojo.connect(f0, "onComplete", function(dataArray){
@@ -355,7 +353,7 @@ var uiResource = {
 					setDone();
 				});
 			});
-			dialog.setContent(formHtml);
+			dialog.set("content", formHtml);
 			dialog.show();
 		},
 		getNewFileName:function (fileOrFolder, fileDialogParentFolder, extension){
@@ -383,15 +381,16 @@ var uiResource = {
 		},
 	
 		newProject: function(){
-			var projectDialog = new NewProject({}),
-				langObj = uiNLS;
-		    Workbench.showModal(projectDialog, langObj.newProject, '');
+			var projectDialog = new NewProject({});
+		    Workbench.showModal(projectDialog, uiNLS.newProject, '');
 		},
 	
 		renameAction: function(){
 		
 			var selection = uiResource.getSelectedResources();
-		    if( selection.length!=1) return;
+		    if( selection.length!=1) {
+		    	return;
+		    }
 		    var resource = selection[0];
 		    resource.parent.getChildren(function(parentChildren){
 			    var invalid = parentChildren.map(function(child) {
@@ -436,10 +435,9 @@ var uiResource = {
 	
 		deleteAction: function(){
 			var selection = uiResource.getSelectedResources(),
-			    paths = selection.map(function(resource){ return resource.getPath(); }).join("\n\t"),
-	
-			    langObj = uiNLS
-			if(!confirm(dojo.string.substitute(langObj.areYouSureDelete,[paths]))){
+			    paths = selection.map(function(resource){ return resource.getPath(); }).join("\n\t");
+
+			if(!confirm(dojo.string.substitute(uiNLS.areYouSureDelete, [paths]))){
 		    	return;
 		    }
 	

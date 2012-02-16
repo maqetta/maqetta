@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title id="title_id"></title>
+	<head>
+	<title id="title_id"></title>
 	<meta charset="utf-8" />
 	<meta http-equiv="Cache-Control" CONTENT="no-store, no-cache, must-revalidate">
 	<meta http-equiv="Cache-Control" CONTENT="post-check=0, pre-check=0">
 	<meta http-equiv="Pragma" CONTENT="no-cache">
-    <style type="text/css">
+	<style type="text/css">
 		@import url("app/davinci/workbench.css?@revision@");
 		html, body {
 			width: 100%;
 			height: 100%;
 		}
-    </style>
-    <!-- propvieweffects.css needs to be separate and not built -->
-    <!-- FIXME: This LINK element should be added by the properties palette plugin -->
-    <link href="app/davinci/propvieweffects.css?@revision@" rel="stylesheet" type="text/css"></link>
-    <script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="parseOnLoad: true, modulePaths:{'preview':'../preview', 'system':'../system'}, cacheBust: '@revision@'"></script>
+	</style>
+	<!-- propvieweffects.css needs to be separate and not built -->
+	<!-- FIXME: This LINK element should be added by the properties palette plugin -->
+	<link href="app/davinci/propvieweffects.css?@revision@" rel="stylesheet" type="text/css"></link>
+	<script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="async: true, parseOnLoad: true, modulePaths:{'preview':'../preview', 'system':'../system'}, cacheBust: '@revision@'"></script>
 	<script type="text/javascript">
 		require(["dijit/dijit", "davinci/davinci-common", "davinci/davinci", ], function () {
 			require(["dojo/i18n!davinci/nls/webContent", "dojo/domReady!"], function (webContent) {
-			      dojo.byId("davinci_user_welcome").innerHTML = webContent.welcome;
-			      dojo.byId("load_screen").innerHTML = webContent.loadingMaqetta;
-			      dojo.byId("davinci_logoff").innerHTML = webContent.logOff;
-			      dojo.byId("maqetta_designer").innerHTML = webContent.designer;
-			      dojo.byId("maqetta_version").innerHTML = davinci.version;
-			      dojo.byId("title_id").text = webContent.pageDesignerTitle;
+				  dojo.byId("davinci_user_welcome").innerHTML = webContent.welcome;
+				  dojo.byId("load_screen").innerHTML = webContent.loadingMaqetta;
+				  dojo.byId("davinci_logoff").innerHTML = webContent.logOff;
+				  dojo.byId("maqetta_designer").innerHTML = webContent.designer;
+				  dojo.byId("maqetta_version").innerHTML = davinci.version;
+				  dojo.byId("title_id").text = webContent.pageDesignerTitle;
 			});
 
 			var Workbench = require("davinci/Workbench"),
@@ -36,61 +36,75 @@
 
 			require(["dojo/i18n!davinci/nls/webContent", "dojo/domReady!"], function (webContent) {
 				var run = function() {
-                    var userInfo;
-                    var result=Runtime.getUser();
+					var userInfo;
+					var result = Runtime.getUser();
 
-                    if (result) {
-                       dojo.byId('davinci_user').innerHTML=result;
-                       Runtime.userName=result;
-                    } else {
-	    				//FIXME: temporary fix for running via file: URLs
-                       dojo.byId('davinci_user').innerHTML=webContent.maqettaUser;
-                    }
-                    if (!result) {
-                        dojo.byId('davinci_user').innerHTML=webContent.localhostUser;
-                        dojo.byId('davinci_logoff').href="";
-                        Runtime.isLocalInstall=true;
-                    }
-                    if (Runtime.plugins.joomlaplugin) {
-	                    dojo.byId('davinci_logoff').href="http://" + window.location.hostname + "/index.php?option=com_user&task=logout&return=Lw";
-	    		 	}
-	    		 	// Hide logoff if single-user mode
-	    			var singleUser = Runtime.singleUserMode();
-	    			if(singleUser){
-	    				var logoff = dojo.byId('davinci_logoff');
-	    				var main_menu = dojo.byId('davinci_main_menu');
-	    				if(logoff && main_menu){
-	    					logoff.style.display = 'none';
-	    					main_menu.style.marginRight = '3em';
-	    				}
-	    			}
-	    			Workbench.run();
-				}
+					if (result) {
+					   dojo.byId('davinci_user').innerHTML = result;
+					   Runtime.userName = result;
+					} else {
+						//FIXME: temporary fix for running via file: URLs
+					   dojo.byId('davinci_user').innerHTML=webContent.maqettaUser;
+					}
+					if (!result) {
+						dojo.byId('davinci_user').innerHTML=webContent.localhostUser;
+						dojo.byId('davinci_logoff').href="";
+						Runtime.isLocalInstall=true;
+					}
+					if (Runtime.plugins.joomlaplugin) {
+						dojo.byId('davinci_logoff').href = "http://" + window.location.hostname + 
+							"/index.php?option=com_user&task=logout&return=Lw";
+				 	}
+				 	// Hide logoff if single-user mode
+					var singleUser = Runtime.singleUserMode();
+					if(singleUser){
+						var logoff = dojo.byId('davinci_logoff');
+						var main_menu = dojo.byId('davinci_main_menu');
+						if (logoff && main_menu) {
+							logoff.style.display = 'none';
+							main_menu.style.marginRight = '3em';
+						}
+					}
+					if (Runtime.commenting_openFile) {
+						var page = Runtime.commenting_openFile;
+						var path = new davinci.model.Path(page);
+						var version = path.getSegments()[0];
+						path.removeFirstSegments(1);
+						var node = davinci.review.model.resource.root.findFile(version, path.toString());
+						if (node) {
+							davinci.Workbench.openEditor({
+								fileName: node,
+								content: node.getText()
+							});
+						}
+					}
+					Workbench.run();
+				};
 
 				// Display a warning dialog for unsupported browsers
 				if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5.1)) {
-	                var unsupportedDialog = new require("dijit/Dialog")({
-	                    id: "unsupportedBrowserDialog",
-	                    title: webContent.unsupportedBrowser,
-	                    content: ["<p>"+ webContent.unsupportedNote +"</p>",
-	                              "<div class='maqButtonArea'>",
-	                              "   <button dojoType='dijit.form.Button' type='submit'>",
-	                              webContent.buttonContinue,
-	                              "   </button>",
-	                              "</div>"
-	                             ].join(" "),
-	                    execute: function() { run(); }
-	                });
-				    unsupportedDialog.show();
+					var unsupportedDialog = new require("dijit/Dialog")({
+						id: "unsupportedBrowserDialog",
+						title: webContent.unsupportedBrowser,
+						content: ["<p>"+ webContent.unsupportedNote +"</p>",
+								"<div class='maqButtonArea'>",
+								"   <button dojoType='dijit.form.Button' type='submit'>",
+								webContent.buttonContinue,
+								"   </button>",
+								"</div>"
+								].join(" "),
+						execute: function() { run(); }
+					});
+					unsupportedDialog.show();
 				} else {
-				    run();
+					run();
 				}
 			});
 
 			dojo.addOnUnload(Workbench.unload);
 		});
 	</script>
-  </head>
+	</head>
 
 	<body class="claro">
 		<div class="loading"><table><tr><td id="load_screen"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;</td></tr></table></div>

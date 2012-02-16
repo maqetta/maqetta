@@ -1,102 +1,41 @@
 define([
     "dojo/_base/declare",
-    "dojo/window",
 	"../drawing/Surface",
 	"../drawing/tools/CreateTool",
 	"../drawing/tools/ExchangeTool",
 	"../drawing/tools/HighlightTool",
 	"../drawing/tools/SelectTool",
-	"davinci/Runtime"
-], function(declare, windowUtils, Surface, CreateTool, ExchangeTool, HighlightTool, SelectTool, Runtime) {
+	"davinci/Runtime",
+	"davinci/ve/Context"
+], function(declare, Surface, CreateTool, ExchangeTool, HighlightTool, SelectTool, Runtime, Context) {
 	
-return declare("davinci.review.editor.Context", null, {
+return declare("davinci.review.editor.Context", [Context], {
 
-	_contentStyleSheet: "" + dojo.moduleUrl("davinci.ve", "resources/content.css"),
-	// comma-separated list of modules to load in the iframe
-	_bootstrapModules: "dijit.dijit",
-
-	constructor: function(args) {
-		this._id = "_edit_context_" + davinci.ve._contextCount++;
-
-		dojo.mixin(this, args);
-
-		if (dojo.isString(this.containerNode)) {
-			this.containerNode = dijit.byId(this.containerNode);
+	/*
+	 * Invoked when the page associated with this Context has finished its
+	 * initial loading.
+	 * 
+	 * Overridden here to add _initDrawing behavior and CommentView notification
+	 */
+	onload: function() {
+		this._initDrawing();
+		
+		dojo.publish('/davinci/ui/context/loaded', [this]);
+		// CommentView subscribes to this to synchronize comment loading with page loading
+		if (!this.fileName) {
+			this.fileName = this.getModel().fileName;
 		}
-
+		dojo.publish("/davinci/review/context/loaded", [this, this.fileName]);
 	},
 
-	setSource: function() {
-		var containerNode = this.containerNode;
-		var versionInfo = this.resourceFile.parent;
-		if (!versionInfo.width) {
-			containerNode.style.overflowX = "hidden";
-		}
-		if (!versionInfo.height) {
-			containerNode.style.overflowY = "hidden";
-		}
-		if (!this.frame) {
-			this.frame = dojo.create("iframe", {
-				style: {
-					border: "0",
-					width: versionInfo.width&&versionInfo.height?versionInfo.width+"px":"100%",
-							height: versionInfo.width&&versionInfo.height?versionInfo.height+"px":"100%"
-				},
-				src: this.baseURL,
-				onload: dojo.hitch(this, function() {
-					this._initDrawing();
-					dojo.publish("/davinci/review/context/loaded", [
-					    this,
-                        this.fileName,
-                        Runtime.commenting_commentId
-                    ]);
-				})
-			}, containerNode);
-		}
-	},
-
+	// TODO: looks like nobody calls this. remove?
 	setURL:function(URL) {
 		this.baseURL = URL;
-		this.frame.src=URL;
+		this.frameNode.src = URL;
 	},
 
-	getDocument: function() {
-		var container = this.getContainerNode();
-		return container && container.ownerDocument;
-	},
-
-	getGlobal: function() {
-		if (!this.getDocument()) {
-			return null;
-		}
-		return windowUtils.get(this.getDocument());
-	},
-
-	getDojo: function() {
-		var win = this.getGlobal();
-		return win.dojo || dojo;
-	},
-
-	getDijit: function() {
-		var win = this.getGlobal();
-		return win && win.dijit || dijit;
-	},
-
-	getFrameNode: function() {
-		return this._frameNode;
-	},
-
-	getContainerNode: function() {
-		if (this.frame.contentDocument) {
-			return this.frame.contentDocument.body;
-		} else if(this.frame.contentWindow) {
-			return this.frame.contentWindow.document.body;
-		}
-		return null;
-	},
-	
 	getSelection: function() {
-		return null;
+		return []; // Overridden for NOOP behavior
 	},
 
 	_initDrawing: function() {
@@ -210,11 +149,11 @@ return declare("davinci.review.editor.Context", null, {
 					}
 					return false;
 				}
-			})){
+			})) {
 				if (surface.filterComments && surface.filterComments.length > 0) {
 					if (dojo.some(surface.filterComments, function(commentId) { 
 						return shape.commentId == commentId;
-						})){
+					})){
 						result = "visible";
 						surface.highlightTool && (surface.highlightTool.shape = shape);
 					} else {
@@ -250,9 +189,6 @@ return declare("davinci.review.editor.Context", null, {
         dojo.forEach(this._cxtSubs, dojo.unsubscribe);
         doc && delete doc.annotationSureface;
     }
-});
 
-davinci.ve._contextCount = 0;
-davinci.ve._preferences = {};
-davinci.ve.Context.MOBILE_DEV_ATTR = 'data-maqetta-device';
+});
 });

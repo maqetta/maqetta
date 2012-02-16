@@ -150,75 +150,119 @@ return {
                 },
                 {
                     id: "newCSS",
-                    run: "davinci.ui.Resource.newCSS()",
+                    run: function() {
+                    	require(['./ui/Resource'], function(r) {
+                    		r.newCSS();
+                    	});
+                    },
                     label: "CSS File...",
                     menubarPath: "davinci.new/new"
                 },
                 {
                     id: "newJS",
-                    run: "davinci.ui.Resource.newJS()",
+                    run: function() {
+                    	require(['./ui/Resource'], function(r) {
+                    		r.newJS();
+                    	});
+                    },
                     label: "JavaScript File...",
                     menubarPath: "davinci.new/new"
                 },
                 {
                     id: "newProject",
-                    run: "davinci.ui.Resource.newProject()",
+                    run: function() {
+                    	require(['./ui/Resource'], function(r) {
+                    		r.newProject();
+                    	});
+                    },
                     label: "Project...",
                     menubarPath: "davinci.new/new"
                 },
                 {
                     id: "newFolder",
-                    run: "davinci.ui.Resource.newFolder()",
+                    run: function() {
+                    	require(['./ui/Resource'], function(r) {
+                    		r.newFolder();
+                    	});
+                    },
                     label: "Folder...",
                     menubarPath: "davinci.new/new2"
                 },
                 {
                     id: "openFile",
-                    run: "davinci.ui.Resource.openFile()",
+                    run: function() {
+                    	require(['./ui/Resource'], function(r) {
+                    		r.openFile();
+                    	});
+                    },
                     label: "File...",
                     toolbarPath: "davinci.toolbar.main/edit",
                     menubarPath: "davinci.open/open"
                 },
                 {
                     id: "openThemeEditor",
-                    run: "require(['davinci/Workbench', 'davinci/ui/OpenThemeDialog'], function(Workbench, OpenThemeDialog){Workbench.showModal(new OpenThemeDialog(), 'Open Theme', 'width: 200px');})",
+                    run: function() {
+                    	require(['davinci/Workbench', 'davinci/ui/OpenThemeDialog'], function(Workbench, OpenThemeDialog){
+                    		Workbench.showModal(new OpenThemeDialog(), 'Open Theme', 'width: 200px');
+                    	});
+                    },
                     label: "Theme Editor...",
                     menubarPath: "davinci.open/open2"
                 },
                 {
                     id: "editPreferences",
-                    run: "require(['davinci/workbench/Preferences'], function(Preferences) { Preferences.showPreferencePage(); })",
+                    run: function() {
+                    	require(['davinci/workbench/Preferences'], function(Preferences) {
+                    		Preferences.showPreferencePage();
+                    	});
+                    },
                     label: "Preferences...",
                     menubarPath: "davinci.settings/settings"
                 },
                 {
                     id: "editThemeSets",
-                    run: "require(['davinci/ui/ThemeSetsDialog'], function(ThemeSetsDialog){ThemeSetsDialog();})",
+                    run: function() {
+                    	require(['davinci/ui/ThemeSetsDialog'], function(ThemeSetsDialog){
+                    		ThemeSetsDialog();
+                    	});
+                    },
                     label: "Theme sets...",
                     menubarPath: "davinci.settings/settings"
                 },
                 {
                     id: "newTheme",
-                    run: "require(['davinci/Workbench', 'davinci/ui/NewTheme'], function(Workbench, NewTheme){Workbench.showModal(new NewTheme(), 'New Theme', 'width: 300px');})",
+                    run: function() {
+                    	require(['davinci/Workbench', 'davinci/ui/NewTheme'], function(Workbench, NewTheme){
+                    		Workbench.showModal(new NewTheme(), 'New Theme', 'width: 300px');
+                    	});
+                    },
                     label: "Theme...",
                     menubarPath: "davinci.new/new"
                 },
                 {
                     id: "showHelp",
-                    run: "window.open('app/docs/index.html')",
+                    run: function() {
+                    	window.open('app/docs/index.html');
+                    },
                     label: "Documentation",
                     menubarPath: "davinci.help/help"
                 },
                 {
                     id: "showTutotials",
-                    run: "window.open('app/docs/index.html#tutorials/tutorials')",
+                    run: function() {
+                    	window.open('app/docs/index.html#tutorials/tutorials');
+                    },
                     label: "Tutorials",
                     menubarPath: "davinci.help/help"
                 },
 
                 {
                     id: "about",
-                    run: "require(['davinci/ui/about'], function(about) {about.show();})",
+                    run: function() {
+                    	require(['davinci/ui/about'], function(about) {
+                    		about.show();
+                    	});
+                    },
                     label: "About Maqetta",
                     menubarPath: "davinci.help/about"
                 }
@@ -231,7 +275,11 @@ return {
                 {
                     id: "davinci.ui.newfile",
                     label: "New folder...",
-                    run: "davinci.ui.Resource.newFolder()",
+                    run: function() {
+                    	require(['./ui/Resource'], function(r) {
+                    		r.newFolder();
+                    	});
+                    },
                     isEnabled: function(item) {
                         return require('./ui/Resource').canModify(item);
                     },
@@ -240,7 +288,11 @@ return {
                 {
                     id: "davinci.ui.addFiles",
                     label: "Upload files...",
-                    run: "davinci.ui.Resource.addFiles()",
+                    run: function() {
+                    	require(['./ui/Resource'], function(r) {
+                    		r.addFiles();
+                    	});
+                    },
                     isEnabled: function(item) {
                         return require('./ui/Resource').canModify(item);
                     },
@@ -250,7 +302,11 @@ return {
                     id: "davinci.ui.rename",
                     label: "Rename...",
                     iconClass:"renameIcon",
-                    run: "davinci.ui.Resource.renameAction()",
+                    run: function() {
+                    	require(['./ui/Resource'], function(r) {
+                    		r.renameActions();
+                    	});
+                    },
                     isEnabled: function(item) {
                         return require('./ui/Resource').canModify(item);
                     },
@@ -263,7 +319,11 @@ return {
                     isEnabled: function(item) {
                         return require('./ui/Resource').canModify(item);
                     },
-                    run: "davinci.ui.Resource.deleteAction()",
+                    run: function() {
+                    	require(['./ui/Resource'], function(r) {
+                    		r.deleteAction();
+                    	});
+                    },
                     menubarPath: "delete"
 
                 },
@@ -271,7 +331,7 @@ return {
                     id: "davinci.ui.download",
                     label: "Download",
                     iconClass: "downloadSomeIcon",
-                    action: "davinci.actions.DownloadAction",
+                    action: "davinci/actions/DownloadAction",
                     isEnabled: function(item) {
                         return require('./ui/Resource').canModify(item);
                     },

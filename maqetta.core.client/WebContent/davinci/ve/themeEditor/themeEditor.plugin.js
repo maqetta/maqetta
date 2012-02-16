@@ -48,8 +48,7 @@ return {
 		defaultContent : "./defaultContent.css",
 		isDefault : true,
 		//TODO implement		 icon : "",
-		requires : "davinci.ve.themeEditor.ThemeEditor",
-		editorClass : "davinci.ve.themeEditor.ThemeEditor"
+		editorClass: "davinci/ve/themeEditor/ThemeEditor"
 	},
 	"davinci.editorActions": {
 		editorContribution: {
@@ -58,14 +57,14 @@ return {
 				{
 					id: "undo",
 					iconClass: 'undoIcon',
-					action: "davinci.actions.UndoAction",
+					action: "davinci/actions/UndoAction",
 					label: "Undo",
 					toolbarPath: "undoredo"
 				},
 				{
 					id: "redo",
 					iconClass: 'redoIcon',
-					action: "davinci.actions.RedoAction",
+					action: "davinci/actions/RedoAction",
 					label: "Redo",
 					toolbarPath: "undoredo"
 				},
@@ -85,7 +84,9 @@ return {
 					{
 						id: "saveas",
 						iconClass: 'saveAsIcon',
-						run: "davinci.ui.Resource.saveAs()",
+						run: function() {
+							require("../../ui/Resource").saveAs();
+						},
 						isEnabled : function(context){
 							var isEnabled =  davinci.Workbench.getOpenEditor();
 							return isEnabled;

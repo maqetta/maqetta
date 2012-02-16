@@ -1,6 +1,5 @@
 package org.davinci.server.user;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -9,16 +8,17 @@ import org.davinci.ajaxLibrary.LibInfo;
 import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.util.XMLFile;
 import org.maqetta.server.IDavinciServerConstants;
+import org.maqetta.server.IStorage;
 import org.maqetta.server.ServerManager;
 import org.w3c.dom.Element;
 
 public class LibrarySettings extends XMLFile {
 
-    File      libFile;
+    IStorage      libFile;
     ILibInfo[] libs;
 
-    public LibrarySettings(File dir) {
-        libFile = new File(dir, IDavinciServerConstants.LIBS_FILE);
+    public LibrarySettings(IStorage dir) {
+        libFile = dir.newInstance(dir, IDavinciServerConstants.LIBS_FILE);
 
         if (!libFile.exists()) {
             libs = getAllDefaultLibs();

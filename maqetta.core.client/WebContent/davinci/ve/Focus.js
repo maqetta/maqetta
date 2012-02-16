@@ -4,7 +4,6 @@ define([
 	"dijit/_WidgetBase",
 	"dojo/dnd/Mover",
 	"./metadata"
-    //"./VisualEditor"
 ],
 function(require, declare, _WidgetBase, Mover, Metadata) {
     
@@ -311,8 +310,10 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     showInline: function(widget) {
         this._selectedWidget = widget;
         var context = this._context;
-        var inline = require('./VisualEditor').getSmartInput(widget.type);
-        if (inline) {
+        Metadata.getSmartInput(widget.type).then(function(inline) {
+        	if (!inline) {
+        		return;
+        	}
             this._inline = inline;
             if (inline.useParent) {
                 var parentWidget = widget.getParent();
@@ -325,8 +326,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             } else if (inline.show) {
                 inline.show(widget.id);
             }
-        }
-        return;
+        });
     },
 
 

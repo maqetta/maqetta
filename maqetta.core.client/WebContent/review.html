@@ -1,148 +1,148 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title id="title_id"></title>
-        
-        <meta charset="utf-8" />
-        <meta http-equiv="Cache-Control" CONTENT="no-store, no-cache, must-revalidate">
-        <meta http-equiv="Cache-Control" CONTENT="post-check=0, pre-check=0",  FALSE">
-        <meta http-equiv="Pragma" CONTENT="no-cache">
-        <style type="text/css">
-            @import url("maqetta/app/davinci/workbench.css");
+	<head>
+		<title id="title_id"></title>
+		
+		<meta charset="utf-8" />
+		<meta http-equiv="Cache-Control" CONTENT="no-store, no-cache, must-revalidate">
+		<meta http-equiv="Cache-Control" CONTENT="post-check=0, pre-check=0",  FALSE">
+		<meta http-equiv="Pragma" CONTENT="no-cache">
+		<style type="text/css">
+			@import url("maqetta/app/davinci/workbench.css");
 
-            html, body {
-                width: 100%;
-                height: 100%;
-            }
-        </style>
-        <!--
-        <script type="text/javascript" src="app/OpenAjax/hub20/OpenAjaxManagedHub-core.js"></script>
-        <script type="text/javascript" src="app/OpenAjax/widget/openajax_metadata.js"></script>
-        -->
-        <script type="text/javascript" src="maqetta/app/dojo/dojo.js" djConfig="parseOnLoad: false"></script>
-        <script type="text/javascript">
-            dojo.require("dijit.dijit");
-            dojo.require("davinci.davinci-common");
-            dojo.require("davinci.davinci");
-            dojo.require("davinci.review.Review");
+			html, body {
+				width: 100%;
+				height: 100%;
+			}
+		</style>
+		<!--
+		<script type="text/javascript" src="app/OpenAjax/hub20/OpenAjaxManagedHub-core.js"></script>
+		<script type="text/javascript" src="app/OpenAjax/widget/openajax_metadata.js"></script>
+		-->
+		<script type="text/javascript" src="maqetta/app/dojo/dojo.js" djConfig="parseOnLoad: false"></script>
+		<script type="text/javascript">
+			dojo.require("dijit.dijit");
+			dojo.require("davinci.davinci-common");
+			dojo.require("davinci.davinci");
+			dojo.require("davinci.review.Review");
 
-            davinci.Runtime.addPlugin("maqetta/app/davinci/ui");
-            davinci.Runtime.addPlugin("maqetta/app/davinci/js/js");
+			davinci.Runtime.addPlugin("maqetta/app/davinci/ui");
+			davinci.Runtime.addPlugin("maqetta/app/davinci/js/js");
 
-            davinci.Runtime.addPlugin("maqetta/app/davinci/html/html");
-            davinci.Runtime.addPlugin("maqetta/app/davinci/review/review");
-            davinci.Runtime.addPlugin("maqetta/app/davinci/ve/ve");
-            davinci.Runtime.addPlugin("maqetta/app/davinci/html/html" );
-            davinci.Runtime.addPlugin("maqetta/app/davinci/ve/themeEditor/themeEditor" );
+			davinci.Runtime.addPlugin("maqetta/app/davinci/html/html");
+			davinci.Runtime.addPlugin("maqetta/app/davinci/review/review");
+			davinci.Runtime.addPlugin("maqetta/app/davinci/ve/ve");
+			davinci.Runtime.addPlugin("maqetta/app/davinci/html/html" );
+			davinci.Runtime.addPlugin("maqetta/app/davinci/ve/themeEditor/themeEditor" );
 
-            davinci.Runtime.initialPerspective = "davinci.review.comment";
-            
-            function globalize() {
-              var langObj = dojo.i18n.getLocalization("davinci","webContent");
-              dojo.byId("davinci_user_welcome").innerHTML = langObj.welcome;
-              dojo.byId("davinci_logoff").innerHTML = langObj.logOff;
-              dojo.byId("maqetta_review").innerHTML = langObj.review;
-              dojo.byId("maqetta_version").innerHTML = davinci.version;
-              dojo.byId("help_drop_down").innerHTML = langObj.help;
-              dojo.byId("menu_help").innerHTML = langObj.help;
-              dojo.byId("menu_tutorials").innerHTML = langObj.tutorials;
-              dojo.byId("menu_about").innerHTML = langObj.aboutMaqetta;
-              dojo.byId("title_id").text = langObj.reviewPageTitle;
-              dojo.parser.parse();
-            }
-            dojo.addOnLoad(globalize); 
-           
-            function run(){
-                davinci.Runtime.commenting_designerName = dojo.cookie("davinci_designer");
-                davinci.Runtime.commenting_designerEmail = dojo.cookie("davinci_designer_email");
-                davinci.Runtime.commenting_openFile = dojo.cookie("davinci_file");
-                davinci.Runtime.commenting_commentId = dojo.cookie("davinci_commentId");
-                dojo.cookie("davinci_designer", null, {expires: -1});
-                dojo.cookie("davinci_designer_email", null, {expires: -1});
-                dojo.cookie("davinci_file", null, {expires: -1});
-                dojo.cookie("davinci_commentId", null, {expires: -1});
+			davinci.Runtime.initialPerspective = "davinci.review.comment";
+			
+			function globalize() {
+				var langObj = dojo.i18n.getLocalization("davinci","webContent");
+				dojo.byId("davinci_user_welcome").innerHTML = langObj.welcome;
+				dojo.byId("davinci_logoff").innerHTML = langObj.logOff;
+				dojo.byId("maqetta_review").innerHTML = langObj.review;
+				dojo.byId("maqetta_version").innerHTML = davinci.version;
+				dojo.byId("help_drop_down").innerHTML = langObj.help;
+				dojo.byId("menu_help").innerHTML = langObj.help;
+				dojo.byId("menu_tutorials").innerHTML = langObj.tutorials;
+				dojo.byId("menu_about").innerHTML = langObj.aboutMaqetta;
+				dojo.byId("title_id").text = langObj.reviewPageTitle;
+				dojo.parser.parse();
+			}
+			dojo.addOnLoad(globalize); 
+		   
+			function run(){
+				davinci.Runtime.commenting_designerName = dojo.cookie("davinci_designer");
+				davinci.Runtime.commenting_designerEmail = dojo.cookie("davinci_designer_email");
+				davinci.Runtime.commenting_openFile = dojo.cookie("davinci_file");
+				davinci.Runtime.commenting_commentId = dojo.cookie("davinci_commentId");
+				dojo.cookie("davinci_designer", null, {expires: -1});
+				dojo.cookie("davinci_designer_email", null, {expires: -1});
+				dojo.cookie("davinci_file", null, {expires: -1});
+				dojo.cookie("davinci_commentId", null, {expires: -1});
 
-//                dojo.byId('davinci_review_title').innerHTML = davinci.Runtime.commenting_designerName+"'s Review Board";
-                var userInfo;
-                var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
-                var result = davinci.Runtime.serverJSONRequest({
-                    url: location + "maqetta/cmd/getReviewUserInfo",
-                    sync: true
-                });
+//				dojo.byId('davinci_review_title').innerHTML = davinci.Runtime.commenting_designerName+"'s Review Board";
+				var userInfo;
+				var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+				var result = davinci.Runtime.serverJSONRequest({
+					url: location + "maqetta/cmd/getReviewUserInfo",
+					sync: true
+				});
 
-                if(!result) return;
-                if (result && result.userName) {
-                    dojo.byId('davinci_user').innerHTML = result.userName;
-                } else {
-                    //FIXME: temporary fix for running via file: URLs
-                    dojo.byId('davinci_user').innerHTML = "Davinci User";
-                }
-                davinci.Runtime.commenting_reviewerName = result;
-                if (result && result.isLocalInstall) {
-                    //dojo.style(dojo.byId('davinci_user_container'), "visibility", "hidden");
-                    davinci.Runtime.isLocalInstall = true;
-                }
+				if(!result) return;
+				if (result && result.userName) {
+					dojo.byId('davinci_user').innerHTML = result.userName;
+				} else {
+					//FIXME: temporary fix for running via file: URLs
+					dojo.byId('davinci_user').innerHTML = "Davinci User";
+				}
+				davinci.Runtime.commenting_reviewerName = result;
+				if (result && result.isLocalInstall) {
+					//dojo.style(dojo.byId('davinci_user_container'), "visibility", "hidden");
+					davinci.Runtime.isLocalInstall = true;
+				}
 
-//                Did not see any usage
-//                davinci.ve.metadata.initMetadataProviders();
-                davinci.Runtime.subscribe("/davinci/ui/selectionChanged",davinci.Runtime._selectionChanged);
-                davinci.Workbench.runComment();
-                // intercept BS key - prevent browser from navigating backwards
-                dojo.connect(dojo.doc.documentElement, "onkeypress", function(e){
-                    // If explicitOriginalTarget is <html> element, then no elements have focus
-                    var target=e.target;
-                    if(target && (target.nodeName=="HTML"||target.nodeName=="BODY") && e.charOrCode==8){
-                        dojo.stopEvent(e);
-                    }
-                });
+//				Did not see any usage
+//				davinci.ve.metadata.initMetadataProviders();
+				davinci.Runtime.subscribe("/davinci/ui/selectionChanged",davinci.Runtime._selectionChanged);
+				davinci.Workbench.runComment();
+				// intercept BS key - prevent browser from navigating backwards
+				dojo.connect(dojo.doc.documentElement, "onkeypress", function(e){
+					// If explicitOriginalTarget is <html> element, then no elements have focus
+					var target=e.target;
+					if(target && (target.nodeName=="HTML"||target.nodeName=="BODY") && e.charOrCode==8){
+						dojo.stopEvent(e);
+					}
+				});
 
 
-                if(davinci.Runtime.commenting_openFile){
-                    var page = davinci.Runtime.commenting_openFile;
-                    var path = new davinci.model.Path(page);
-                    var version = path.getSegments()[0];
-                    path.removeFirstSegments(1);
-                    var node = davinci.review.model.resource.root.findFile(version, path.toString());
-                    if(node) {
-                        davinci.Workbench.openEditor({
-                            fileName: node,
-                            content: node.getText()
-                        });
-                    }
-                }
-            }
-        </script>
-    </head>
-    <body class="claro" onload="run()">
-        <div id="davinci_app">
-            <div id="davinci_top_bar">
-                    <div id="davinci_user_container">
-                        <span id="davinci_user_welcome"></span>
-                        <span id="davinci_user"></span>
-                        <div dojoType="dijit.form.DropDownButton">
-                            <span id="help_drop_down"></span>
-                            <div dojoType="dijit.Menu">
-                                <div id="menu_help" dojoType="dijit.MenuItem" onClick="window.open('maqetta/app/docs/index.html')"></div>
-                                <div id="menu_tutorials" dojoType="dijit.MenuItem" onClick="window.open('maqetta/app/docs/index.html#tutorials/tutorials')"></div>
-                                <div id="menu_about" dojoType="dijit.MenuItem" onClick="davinci.ui.about.show()"></div>
-                            </div>
-                        </div>
-                        <a id="davinci_logoff" href='javascript:davinci.Runtime.logoff()'> </a>
-                    </div>                
-                    <span class="maq_banner_name_box">
-                        <span class="maq_banner_name">Maqetta</span>
-                        <span id="maqetta_review" class="maq_banner_component"></span>
-                        <span id="maqetta_version" class="maq_banner_version"></span>
+				if(davinci.Runtime.commenting_openFile){
+					var page = davinci.Runtime.commenting_openFile;
+					var path = new davinci.model.Path(page);
+					var version = path.getSegments()[0];
+					path.removeFirstSegments(1);
+					var node = davinci.review.model.resource.root.findFile(version, path.toString());
+					if(node) {
+						davinci.Workbench.openEditor({
+							fileName: node,
+							content: node.getText()
+						});
+					}
+				}
+			}
+		</script>
+	</head>
+	<body class="claro" onload="run()">
+		<div id="davinci_app">
+			<div id="davinci_top_bar">
+					<div id="davinci_user_container">
+						<span id="davinci_user_welcome"></span>
+						<span id="davinci_user"></span>
+						<div dojoType="dijit.form.DropDownButton">
+							<span id="help_drop_down"></span>
+							<div dojoType="dijit.Menu">
+								<div id="menu_help" dojoType="dijit.MenuItem" onClick="window.open('maqetta/app/docs/index.html')"></div>
+								<div id="menu_tutorials" dojoType="dijit.MenuItem" onClick="window.open('maqetta/app/docs/index.html#tutorials/tutorials')"></div>
+								<div id="menu_about" dojoType="dijit.MenuItem" onClick="davinci.ui.about.show()"></div>
+							</div>
+						</div>
+						<a id="davinci_logoff" href='javascript:davinci.Runtime.logoff()'> </a>
+					</div>				
+					<span class="maq_banner_name_box">
+						<span class="maq_banner_name">Maqetta</span>
+						<span id="maqetta_review" class="maq_banner_component"></span>
+						<span id="maqetta_version" class="maq_banner_version"></span>
 
-                    </span>
+					</span>
 <!--
-                    <div id="davinci_review_title"></div>
-                    <div id="toolbar_container">
-                        <span id="davinci_toolbar_main"></span><span id="menu_container" class="commandsIcon dijitInline"><span id="menu"></span></span>
-                    </div>
+					<div id="davinci_review_title"></div>
+					<div id="toolbar_container">
+						<span id="davinci_toolbar_main"></span><span id="menu_container" class="commandsIcon dijitInline"><span id="menu"></span></span>
+					</div>
 -->
-            </div>
-            <div id="mainBody"></div>
-        </div>
-    </body>
+			</div>
+			<div id="mainBody"></div>
+		</div>
+	</body>
 </html>

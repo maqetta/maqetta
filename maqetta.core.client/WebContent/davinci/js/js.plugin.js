@@ -11,8 +11,7 @@ return {
 		extensions: "js",
 		isDefault: true,
 		//TODO implement		 icon : "",
-		requires: "davinci.js.ui.JavaScriptEditor",
-		editorClass: "davinci.js.ui.JavaScriptEditor"
+		editorClass: "davinci/js/ui/JavaScriptEditor"
 	},
 	"davinci.actionSets": [
 /*		{
@@ -102,7 +101,9 @@ return {
 				{
 					id: "saveas",
 					iconClass: 'saveAsIcon',
-					run: "davinci.ui.Resource.saveAs('js')",
+					run: function() {
+						require("../ui/Resource").saveAs('js');
+					},
 					isEnabled: function(context) {
 						return require('../Workbench').getOpenEditor();
 					},

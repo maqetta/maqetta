@@ -78,10 +78,7 @@ return {
             extensions: "html",
             isDefault: true,
             // TODO implement icon : "",
-            // requires : "davinci.ve.HTMLVisualEditor",
-            // editorClass : "davinci.ve.HTMLVisualEditor"
-            requires: "davinci.ve.PageEditor",
-            editorClass: "davinci.ve.PageEditor"
+            editorClass: "davinci/ve/PageEditor"
         },
         {
             id: "ThemeEditor",
@@ -91,8 +88,7 @@ return {
             defaultContent: "./defaultContent.css",
             isDefault: true,
             // TODO implement icon : "",
-            requires: "davinci.ve.themeEditor.ThemeEditor",
-            editorClass: "davinci.ve.themeEditor.ThemeEditor"
+            editorClass: "davinci/ve/themeEditor/ThemeEditor"
         }
     ],
     "davinci.actionSets": [
@@ -105,7 +101,7 @@ return {
                     label: "Cut",
                     keySequence: "M1+X",
                     iconClass: "editActionIcon editCutIcon",
-                    action: "davinci.ve.actions.CutAction",
+                    action: "davinci/ve/actions/CutAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
@@ -113,7 +109,7 @@ return {
                     label: "Copy",
                     keySequence: "M1+C",
                     iconClass: "editActionIcon editCopyIcon",
-                    action: "davinci.ve.actions.CopyAction",
+                    action: "davinci/ve/actions/CopyAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
@@ -121,7 +117,7 @@ return {
                     keySequence: "M1+V",
                     iconClass: "editActionIcon editPasteIcon",
                     label: "Paste",
-                    action: "davinci.ve.actions.PasteAction",
+                    action: "davinci/ve/actions/PasteAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
@@ -129,70 +125,70 @@ return {
                     keySequence: "DEL",
                     iconClass: "editActionIcon editDeleteIcon",
                     label: "Delete",
-                    action: "davinci.ve.actions.DeleteAction",
+                    action: "davinci/ve/actions/DeleteAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
                     id: "davinci.ve.surround.a",
                     iconClass: "editActionIcon",
                     label: "Surround with &lt;A&gt;",
-                    action: "davinci.ve.actions.SurroundAction",
+                    action: "davinci/ve/actions/SurroundAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
                     id: "davinci.ve.surround.div",
                     iconClass: "editActionIcon",
                     label: "Surround with &lt;DIV&gt;",
-                    action: "davinci.ve.actions.SurroundAction",
+                    action: "davinci/ve/actions/SurroundAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
                     id: "davinci.ve.surround.span",
                     iconClass: "editActionIcon",
                     label: "Surround with &lt;SPAN&gt;",
-                    action: "davinci.ve.actions.SurroundAction",
+                    action: "davinci/ve/actions/SurroundAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
                     id: "davinci.ve.addTableColumn",
                     iconClass: "editActionIcon",
                     label: "Insert column after",
-                    action: "davinci.ve.actions.AddColumnAction",
+                    action: "davinci/ve/actions/AddColumnAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
                     id: "davinci.ve.addTableColumnBefore",
                     iconClass: "editActionIcon",
                     label: "Insert column before",
-                    action: "davinci.ve.actions.AddColumnBeforeAction",
+                    action: "davinci/ve/actions/AddColumnBeforeAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
                     id: "davinci.ve.removeTableColumn",
                     iconClass: "editActionIcon",
                     label: "Remove column",
-                    action: "davinci.ve.actions.RemoveColumnAction",
+                    action: "davinci/ve/actions/RemoveColumnAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
                     id: "davinci.ve.addTableRow",
                     iconClass: "editActionIcon",
                     label: "Insert row after",
-                    action: "davinci.ve.actions.AddRowAction",
+                    action: "davinci/ve/actions/AddRowAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
                     id: "davinci.ve.addTableRowBefore",
                     iconClass: "editActionIcon",
                     label: "Insert row before",
-                    action: "davinci.ve.actions.AddRowBeforeAction",
+                    action: "davinci/ve/actions/AddRowBeforeAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
                     id: "davinci.ve.removeTableRow",
                     iconClass: "editActionIcon",
                     label: "Remove row",
-                    action: "davinci.ve.actions.RemoveRowAction",
+                    action: "davinci/ve/actions/RemoveRowAction",
                     menubarPath: "davinci.edit/cut"
                 }
             ]
@@ -204,13 +200,17 @@ return {
                 {
                     id: "davinci.ui.generateform",
                     label: "Generate Form",
-                    run: "davinci.ve.views.DataStoresView.generateForm()",
+                    run: function(){
+                    	require("davinci/ve/views/DataStoresView").generateForm();
+                    },
                     menubarPath: "newfile"
                 },
                 {
                     id: "davinci.ui.generateform",
                     label: "Generate Table",
-                    run: "davinci.ve.views.DataStoresView.generateTable()",
+                    run: function(){
+                    	require("davinci/ve/views/DataStoresView").generateTable();
+                    },
                     menubarPath: "newfile"
                 }
             ]
@@ -223,56 +223,56 @@ return {
                     id: "davinci.ve.addTableColumn",
                     iconClass: "editActionIcon",
                     label: "Insert column after",
-                    action: "davinci.ve.actions.AddColumnAction",
+                    action: "davinci/ve/actions/AddColumnAction",
                     menubarPath: "state"
                 },
                 {
                     id: "davinci.ve.addTableColumnBefore",
                     iconClass: "editActionIcon",
                     label: "Insert column before",
-                    action: "davinci.ve.actions.AddColumnBeforeAction",
+                    action: "davinci/ve/actions/AddColumnBeforeAction",
                     menubarPath: "state"
                 },
                 {
                     id: "davinci.ve.removeTableColumn",
                     iconClass: "editActionIcon",
                     label: "Remove column",
-                    action: "davinci.ve.actions.RemoveColumnAction",
+                    action: "davinci/ve/actions/RemoveColumnAction",
                     menubarPath: "state"
                 },
                 {
                     id: "davinci.ve.addTableRow",
                     iconClass: "editActionIcon",
                     label: "Insert row after",
-                    action: "davinci.ve.actions.AddRowAction",
+                    action: "davinci/ve/actions/AddRowAction",
                     menubarPath: "state"
                 },
                 {
                     id: "davinci.ve.addTableRowBefore",
                     iconClass: "editActionIcon",
                     label: "Insert row before",
-                    action: "davinci.ve.actions.AddRowBeforeAction",
+                    action: "davinci/ve/actions/AddRowBeforeAction",
                     menubarPath: "state"
                 },
                 {
                     id: "davinci.ve.removeTableRow",
                     iconClass: "editActionIcon",
                     label: "Remove row",
-                    action: "davinci.ve.actions.RemoveRowAction",
+                    action: "davinci/ve/actions/RemoveRowAction",
                     menubarPath: "state"
                 },
                 {
                     id: "davinci.ve.addstate",
                     icon: null,
                     label: "Add state",
-                    action: "davinci.ve.actions.AddState",
+                    action: "davinci/ve/actions/AddState",
                     menubarPath: "state"
                 },
                 {
                     id: "davinci.ve.removestate",
                     icon: null,
                     label: "Remove state",
-                    action: "davinci.ve.actions.RemoveState",
+                    action: "davinci/ve/actions/RemoveState",
                     menubarPath: "state"
                 }
             ]
@@ -310,7 +310,7 @@ return {
                     {
                         id: "addState",
                         iconClass: 'viewActionIcon addStateIcon',
-                        action: "davinci.ve.actions.AddState",
+                        action: "davinci/ve/actions/AddState",
                         label: "Add State",
                         // menubarPath: "davinci.edit/cut",
                         toolbarPath: "add"
@@ -318,7 +318,7 @@ return {
                     {
                         id: "removeState",
                         iconClass: 'viewActionIcon removeStateIcon',
-                        action: "davinci.ve.actions.RemoveState",
+                        action: "davinci/ve/actions/RemoveState",
                         label: "Remove State",
                         // menubarPath: "davinci.edit/cut",
                         toolbarPath: "remove"
@@ -346,7 +346,7 @@ return {
                     label: "Cut",
                     keySequence: "M1+X",
                     iconClass: "editActionIcon editCutIcon",
-                    action: "davinci.ve.actions.CutAction",
+                    action: "davinci/ve/actions/CutAction",
                     toolbarPath: "cutcopypaste"
                 },
                 {
@@ -354,7 +354,7 @@ return {
                     label: "Copy",
                     keySequence: "M1+C",
                     iconClass: "editActionIcon editCopyIcon",
-                    action: "davinci.ve.actions.CopyAction",
+                    action: "davinci/ve/actions/CopyAction",
                     toolbarPath: "cutcopypaste"
                 },
                 {
@@ -362,20 +362,20 @@ return {
                     keySequence: "M1+V",
                     iconClass: "editActionIcon editPasteIcon",
                     label: "Paste",
-                    action: "davinci.ve.actions.PasteAction",
+                    action: "davinci/ve/actions/PasteAction",
                     toolbarPath: "cutcopypaste"
                 },
                 {
                     id: "undo",
                     iconClass: 'undoIcon',
-                    action: "davinci.actions.UndoAction",
+                    action: "davinci/actions/UndoAction",
                     label: "Undo",
                     toolbarPath: "undoredo"
                 },
                 {
                     id: "redo",
                     iconClass: 'redoIcon',
-                    action: "davinci.actions.RedoAction",
+                    action: "davinci/actions/RedoAction",
                     label: "Redo",
                     toolbarPath: "undoredo"
                 },
@@ -384,7 +384,7 @@ return {
                     keySequence: "DEL",
                     iconClass: "editActionIcon editDeleteIcon",
                     label: "Delete",
-                    action: "davinci.ve.actions.DeleteAction",
+                    action: "davinci/ve/actions/DeleteAction",
                     toolbarPath: "delete"
                 },
                 {
@@ -420,7 +420,9 @@ return {
                 {
                     id: "saveas",
                     iconClass: 'saveAsIcon',
-                    run: "davinci.ui.Resource.saveAs('html')",
+                    run: function() {
+                    	require("../ui/Resource").saveAs('html');
+                    },
                     isEnabled: function(context) {
                         return require('../Workbench').getOpenEditor();
                     },
@@ -431,7 +433,9 @@ return {
                 //{
                 //   id: "saveasdijit",
                 //    iconClass: 'saveAsWidgetIcon',
-                //    run: "davinci.de.resource.createDijiFromNewDialog()",
+                //    run: function(){
+                //        davinci.de.resource.createDijiFromNewDialog();
+                //    }
                 //    isEnabled: function(context) {
                 //        var isEnabled = davinci.Workbench.getOpenEditor();
                 //        return isEnabled;
@@ -443,7 +447,7 @@ return {
                 // {
                 // id: "saveaswidget",
                 // iconClass: 'saveAsIcon', // XXX
-                // action: "davinci.actions.SaveAsWidget",
+                // action: "davinci/actions/SaveAsWidget",
                 // isEnabled : function(context){
                 // var isEnabled = davinci.Workbench.getOpenEditor();
                 // return isEnabled;
@@ -455,35 +459,35 @@ return {
                 {
                     id: "theme",
                     iconClass: 'selectThemeIcon',
-                    action: "davinci.actions.SelectThemeAction",
+                    action: "davinci/actions/SelectThemeAction",
                     label: "Switch theme",
                     toolbarPath: "theme"
                 },
                 {
                     id: "layout",
                     iconClass: 'selectLayoutIcon',
-                    action: "davinci.actions.SelectLayoutAction",
+                    action: "davinci/actions/SelectLayoutAction",
                     label: "Switch layout",
                     toolbarPath: "layout"
                 },
                 {
                     id: "stickynote",
                     iconClass: 'stickynoteIcon',
-                    action: "davinci.actions.StickyNoteAction",
+                    action: "davinci/actions/StickyNoteAction",
                     label: "Add note",
                     toolbarPath: "stickynote"
                 },
                 {
                     id: "chooseDevice",
                     iconClass: 'deviceIcon',
-                    action: "davinci.ve.actions.ChooseDeviceAction",
+                    action: "davinci/ve/actions/ChooseDeviceAction",
                     label: "Choose device",
                     toolbarPath: "chooseDevice"
                 },
                 {
                     id: "rotateDevice",
                     iconClass: 'rotateIcon',
-                    action: "davinci.ve.actions.RotateDeviceAction",
+                    action: "davinci/ve/actions/RotateDeviceAction",
                     label: "Rotate device",
                     toolbarPath: "rotateDevice"
                 },

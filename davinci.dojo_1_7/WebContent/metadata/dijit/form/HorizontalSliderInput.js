@@ -31,7 +31,7 @@ return declare(ContainerInput, {
 				style: "width: " + width + "px; height: + " + height + "px",
 				"class": "sliderDialog"
 			});
-			this._inline.onCancel = dojo.hitch(this, "_cancel");
+			this._inline.onCancel = dojo.hitch(this, "onCancel");
 			this._inline.callBackObj = this;
 			
 			//Get template for dialog contents
@@ -67,10 +67,15 @@ return declare(ContainerInput, {
 			}
 			
 			//Configure listeners for OK/Cancel buttons
-			var obj = dijit.byId('okButton');
-			obj.onClick = dojo.hitch(this, "updateWidget");
-			obj = dijit.byId('cancelButton');
-			obj.onClick = dojo.hitch(this, "_cancel");
+			var okButton = dijit.byId('okButton');
+			this._connection.push(dojo.connect(okButton, 'onClick', dojo.hitch(this,function(){
+				this.updateWidget();
+				this.onOk();
+			})));
+			var cancelButton = dijit.byId('cancelButton');
+			this._connection.push(dojo.connect(cancelButton, 'onClick', dojo.hitch(this,function(){
+				this.onCancel();
+			})));
 			if (this._widget.inLineEdit_displayOnCreate){
 				// hide cancel on widget creation #120
 				delete this._widget.inLineEdit_displayOnCreate;
@@ -115,10 +120,6 @@ return declare(ContainerInput, {
 		var context = this._widget.getContext();
 		// redraw the box around the widget
 		context.select(this._widget, null, false); 
-	},
-	
-	_cancel: function(){
-		this.hide(true);
 	},
 	
 	_updateDialog: function() {

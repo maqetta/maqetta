@@ -202,20 +202,19 @@ var Workbench = {
 		if (!actionSets) {
 		   actionSets = Runtime.getExtensions('davinci.actionSets');
 		}
-		for(var i = 0;i<actionSets.length;i++){
-			Workbench._loadActionSetContainer(actionSets[i]);
+		for (var i = 0, len = actionSets.length; i < len; i++) {
 			var actions = actionSets[i].actions;
-			for(var k = 0;k<actions.length;k++){
-			  var toolBarPath = actions[k].toolbarPath;
-			  if(toolBarPath){
-				  if(!_toolbarcache[toolBarPath]){
-					  _toolbarcache[toolBarPath] = [];
-				  }
-				  _toolbarcache[toolBarPath].push(actions[k]);
-			  }
-			}		
+			for (var k = 0, len2 = actions.length; k < len2; k++) {
+				var action = actions[k],
+					toolBarPath = action.toolbarPath;
+				if (toolBarPath) {
+					if (!_toolbarcache[toolBarPath]) {
+						_toolbarcache[toolBarPath] = [];
+					}
+					_toolbarcache[toolBarPath].push(action);
+				}
+			}
 		}
-		
 	
 		var toolbar1 = new Toolbar({'class':"davinciToolbar"}, targetDiv);   
 		var radioGroups={};
@@ -641,7 +640,6 @@ var Workbench = {
 		for ( var actionSetN = 0, len = actionSets.length; actionSetN < len; actionSetN++) {
 			var actionSet = actionSets[actionSetN];
 			if (actionSet.visible) {
-				Workbench._loadActionSetContainer(actionSet);
 				if (actionSet.menu) {
 					for ( var menuN = 0, menuLen = actionSet.menu.length; menuN < menuLen; menuN++) {
 						var menu = actionSet.menu[menuN];
@@ -683,34 +681,16 @@ var Workbench = {
 		return menuTree;
 	},
 
-	_loadActionSetContainer: function(actionSet)
-	{
-		if (actionSet.actionsContainer)
-		{
-			if (typeof actionSet.actionsContainer == "string"/* && item.action instanceof String*/)
-			{
-				actionSet.actionsContainer=dojo["require"](actionSet.actionsContainer);
-			}
-			actionSet.actions.forEach(function(action) { action.actionLoaded = true; });
-		}
-
-	},
-	_loadActionClass: function(item)
-	{
-		if (typeof item.action == "string"/* && item.action instanceof String*/)
-		{
-			if (!item.actionLoaded){
-				require([item.actionsContainer || item.action], function(){/*TODO: set flag?*/});
-			}
-			require([item.action.replace(/\./g,"/")], function(actionClass){
-				item.action = new actionClass();
-				item.action.item=item;				
+	_loadActionClass: function(item) {
+		if (typeof item.action == "string") {
+			require([item.action], function(ActionClass){
+				item.action = new ActionClass();
+				item.action.item = item;
 			});
 		}
-
 	},
-	_createMenu: function (menu,context) {
-		
+
+	_createMenu: function(menu, context) {
 		var dojoMenu,menus,connectFunction;
 		if (menu.menus)  // creating dropdown
 		{

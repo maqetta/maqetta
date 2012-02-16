@@ -385,11 +385,11 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 
 	//FIXME
 	getFileEditors: function(){
-		debugger;
+
 	},
 	
 	save: function (isAutoSave){
-		debugger;
+
 		var model = this.context.getModel();
 		var cssFiles = this.context.cssFiles;
 		if (cssFiles) {
@@ -413,9 +413,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		};
 		
 		model.visit(visitor);
-		// wdr
 		if (this._dirtyCssFiles) {
-			//this._dirtyCssFiles.forEach(function(file){
 			for (var f in this._dirtyCssFiles) {
 				if (this._dirtyCssFiles[f].dirtyResource){
 					this._dirtyCssFiles[f].save(isAutoSave);
@@ -424,24 +422,21 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 					}
 					this._dirtyCssFiles[f].dirtyResource = isAutoSave;
 				}
-			}//);
+			}
 		}
-		//wdr
 		this.isDirty=isAutoSave;
 	},
 	
-	removeWorkingCopy: function(){ //wdr
-debugger;
-		//var cssFiles = this.context.cssFiles;
+	removeWorkingCopy: function(){ 
+
 		var cssFiles = this._dirtyCssFiles;
 		this._pageEditor.resourceFile.removeWorkingCopy();
 		if (cssFiles) {
-			//cssFiles.forEach(function(file){
 			for (var f in this._dirtyCssFiles) {
 				if (this._dirtyCssFiles[f].dirtyResource) {
 					systemResource.findResource(this._dirtyCssFiles[f].url).removeWorkingCopy();
 				}
-			}//);
+			}
 		}
 		this.isDirty=false;
 	},

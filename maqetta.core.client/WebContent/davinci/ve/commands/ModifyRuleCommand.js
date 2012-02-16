@@ -43,7 +43,10 @@ return declare("davinci.ve.commands.ModifyRuleCommand", null, {
 		
 		// Recompute styling properties in case we aren't in Normal state
 		States.resetState(this.context.rootWidget);
-		
+		if (this.context._selection) {
+			// force the style palette to update for redo
+			this.context.onSelectionChange(this.context._selection); // force the style palette to update.
+		}
 	},
 
 	undo: function(){
@@ -57,6 +60,9 @@ return declare("davinci.ve.commands.ModifyRuleCommand", null, {
 		
 		// Recompute styling properties in case we aren't in Normal state
 		States.resetState(this.context.rootWidget);
+		if (this.context._selection) {
+			this.context.onSelectionChange(this.context._selection); // force the style palette to update.
+		}
 
 	}
 

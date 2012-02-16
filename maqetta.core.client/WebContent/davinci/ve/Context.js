@@ -180,8 +180,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
     },
     
     addDynamicCss: function(cssFile){
-    	//**************************
-    	debugger;
+    
     	if (!this.themeCssfiles){
     		this.themeCssfiles = [];
     	}
@@ -191,7 +190,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		
 			// connect to the css files, so we can update the canvas when the model changes
 			var cssFiles = this._getCssFiles();	
-			//var context = this.getContext();
 			for (var i = 0; i < cssFiles.length; i++) {
                 dojo.connect(cssFiles[i], 'onChange', this,
                         '_themeChange');
@@ -199,10 +197,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 		}catch(e){
 			alert("error loading:" + filename + e);
-			//delete this.tabs;
 		}
     	
-    	//*******************************8
     },
 
 	isActive: function(){
@@ -2449,7 +2445,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		
 		if(selection.length){
 			var match = this._cssCache[domHash] = this.model.getMatchingRules(targetDom, true);
-			this.cssFiles[0].getMatchingRules(targetDom, match.rules, match.matchLevels); // adds the dynamic rules to the match
+			if (this.cssFiles) {
+				this.cssFiles.forEach(function(file){
+					file.getMatchingRules(targetDom, match.rules, match.matchLevels); // adds the dynamic rules to the match
+				});
+				//this.cssFiles[0].getMatchingRules(targetDom, match.rules, match.matchLevels); // adds the dynamic rules to the match
+			}
 			match.rules.forEach(function(rule) {
 				/* remove stale elements from the cache if they change */
 				var handle = dojo.hitch(rule, "onChange", this, function(){
@@ -2842,6 +2843,32 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	dragMoveCleanup: function() {
 		Snap.clearSnapLines(this);
 		this._chooseParent.cleanup(this);
+	},
+	
+	getThemeMetaDataByWidget: function(widget){
+		
+		var theme = this.getThemeMeta();
+		if(!theme)
+			return null;
+		
+		var widgetType = theme.loader.getType(widget);
+		var meta = theme.loader.getMetaData(widgetType);
+		if (!meta && this.cssFiles){
+			// chack the dynamiclly added files
+			for (var i = 0; i < this.cssFiles.length; i++){
+				var dTheme = Theme.getThemeByCssFile(this.cssFiles[i]);
+				if (dTheme) {
+					var themeMeta = Library.getThemeMetadata(dTheme);
+					// found a theme for this css file, check for widget meta data
+					meta = themeMeta.loader.getMetaData(widgetType);
+					if (meta){
+						break;
+					}
+				}
+			}
+			
+		}
+		return meta;
 	}
 });
 

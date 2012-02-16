@@ -144,17 +144,29 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 					this._srcElement.addChild(child._srcElement);
 				}
                 if (! this.acceptsHTMLChildren) {
-				this.dijitWidget.addChild(child.dijitWidget, index);
+            		//AWE TODO this.dijitWidget.addChild(child.dijitWidget, index);
+            		this._addChildHelper(child.dijitWidget, index);
                 } else {
                     // See comment for _addChildHooked() for more info.
                     this._addChildHooked(child.dijitWidget, index);
-			}
-		} else {
+                }
+	        } else {
                 this._srcElement.addChild(child._srcElement);
-                this.dijitWidget.addChild(child.dijitWidget);
+                //AWE TODOthis.dijitWidget.addChild(child.dijitWidget);
+                this._addChildHelper(child.dijitWidget);
             }
         } else {
 			this.inherited(arguments);
+		}
+	},
+	
+	_addChildHelper: function(dijitWidget, index) {
+		//AWE TODO
+		var helper = this.getHelper();
+		if (helper && helper.addChild) {
+			helper.addChild(this, dijitWidget, index);
+		} else {
+			this.dijitWidget.addChild(dijitWidget, index);
 		}
 	},
 

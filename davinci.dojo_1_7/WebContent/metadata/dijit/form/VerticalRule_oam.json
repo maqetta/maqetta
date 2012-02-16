@@ -36,6 +36,7 @@
         },
         "container": {
             "datatype": "string",
+            "title": "Container",
             "description": "This is either \"leftDecoration\" or \"rightDecoration\",\nto indicate whether this rule goes to the left or to the right of the slider.\nNote that on RTL system, \"leftDecoration\" would actually go to the right, and vice-versa.",
             "option": [
 				{

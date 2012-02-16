@@ -27,6 +27,8 @@ import javax.xml.xpath.XPathFactory;
 
 
 
+import maqetta.server.orion.internal.Activator;
+
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -96,7 +98,7 @@ public class EclipseProjectUtil {
 	}
 	
 	private static String readFile(String name){
-		   Bundle bundle = maqetta.server.orion.internal.Activator.getActivator().getBundle();
+		   Bundle bundle = Activator.getActivator().getBundle();
 		   URL file = bundle.getEntry("/WebContent/project/eclipse/" + name);
 		   String result = "";
 		   try {

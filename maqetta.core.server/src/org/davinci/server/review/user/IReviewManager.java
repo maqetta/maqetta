@@ -7,6 +7,7 @@ import org.davinci.server.review.user.IDesignerUser;
 import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.server.review.Version;
 import org.davinci.server.user.IDavinciProject;
+import org.maqetta.server.IStorage;
 
 public interface IReviewManager {
 
@@ -20,7 +21,7 @@ public interface IReviewManager {
 
     public abstract Reviewer isVaild(String name, String id, String versionTime);
 
-    public abstract File getBaseDirectory();
+    public abstract IStorage getBaseDirectory();
 
     public abstract ILibInfo[] getSystemLibs(IDavinciProject project);
 

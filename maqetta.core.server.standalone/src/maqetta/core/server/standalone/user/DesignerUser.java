@@ -6,10 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
-import maqetta.core.server.standalone.VDirectory;
-import maqetta.core.server.standalone.VFile;
-import maqetta.core.server.standalone.VLibraryResource;
-import maqetta.core.server.standalone.VWorkspaceRoot;
 import maqetta.core.server.standalone.internal.Links;
 
 import org.davinci.ajaxLibrary.ILibInfo;
@@ -29,6 +25,10 @@ import org.maqetta.server.ILinks;
 import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
+import org.maqetta.server.VDirectory;
+import org.maqetta.server.VFile;
+import org.maqetta.server.VLibraryResource;
+import org.maqetta.server.VWorkspaceRoot;
 
 public class DesignerUser implements IDesignerUser {
 	private final String name;

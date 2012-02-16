@@ -8,11 +8,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import  maqetta.server.orion.DavinciPageServlet;
-import  maqetta.server.orion.VURL;
 import maqetta.server.orion.internal.Activator;
-import  maqetta.server.orion.user.ReviewManager;
-
+import maqetta.server.orion.user.ReviewManager;
 
 import org.davinci.server.review.Constants;
 import org.davinci.server.review.ReviewObject;
@@ -23,6 +20,7 @@ import org.eclipse.core.runtime.Path;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
+import org.maqetta.server.VURL;
 
 @SuppressWarnings("serial")
 public class DavinciReviewServlet extends DavinciPageServlet {

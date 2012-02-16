@@ -5,16 +5,14 @@ import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
-import maqetta.core.server.standalone.VResourceUtils;
 import maqetta.core.server.standalone.user.User;
-import org.davinci.server.user.UserException;
+import maqetta.core.server.util.VResourceUtils;
 
-import org.davinci.server.user.IUser;
-import org.davinci.server.user.IPersonManager;
-import org.davinci.server.user.IUserManager;
 import org.davinci.server.user.IPerson;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
+import org.davinci.server.user.IPersonManager;
+import org.davinci.server.user.IUser;
+import org.davinci.server.user.IUserManager;
+import org.davinci.server.user.UserException;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;

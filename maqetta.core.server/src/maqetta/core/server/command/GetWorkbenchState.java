@@ -1,4 +1,4 @@
-package maqetta.server.orion.command;
+package maqetta.core.server.command;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

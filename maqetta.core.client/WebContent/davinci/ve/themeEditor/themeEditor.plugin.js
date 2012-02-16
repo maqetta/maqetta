@@ -84,7 +84,9 @@ return {
 					{
 						id: "saveas",
 						iconClass: 'saveAsIcon',
-						run: "davinci.ui.Resource.saveAs()",
+						run: function() {
+							require("../../ui/Resource").saveAs();
+						},
 						isEnabled : function(context){
 							var isEnabled =  davinci.Workbench.getOpenEditor();
 							return isEnabled;

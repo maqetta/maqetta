@@ -51,7 +51,9 @@ return {
 				{
 					id: "saveas",
 					iconClass: 'saveAsIcon',
-					run: "davinci.ui.Resource.saveAs('css')",
+					run: function() {
+						require("../ui/Resource").saveAs('css');
+					},
 					isEnabled: function(context) {
 						return require('../Workbench').getOpenEditor();
 					},

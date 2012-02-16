@@ -5,6 +5,7 @@ import java.io.File;
 import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.server.internal.Links;
 import org.maqetta.server.ILinks;
+import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
 
 public interface IUser {
@@ -27,7 +28,7 @@ public interface IUser {
 
 	public void deleteBaseSettings(String base);
 
-	public File getUserDirectory();
+	public IStorage getUserDirectory();
 
 	public void modifyLibrary(String id, String version, String base,
 			boolean installed);
@@ -41,9 +42,9 @@ public interface IUser {
 
 	public IVResource createResource(String path);
 
-	public File getWorkbenchSettings();
+	public IStorage getWorkbenchSettings();
 
-	public File getWorkbenchSettings(String base);
+	public IStorage getWorkbenchSettings(String base);
 
 	public ILinks getLinks();
 

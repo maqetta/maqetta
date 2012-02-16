@@ -1,4 +1,4 @@
-package org.davinci.server.util;
+package org.maqetta.project.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -23,7 +23,10 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.maqetta.server.IStorage;
+import org.davinci.server.util.XMLElement;
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileStore;
+import org.eclipse.core.runtime.CoreException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -32,13 +35,18 @@ public abstract class XMLFile extends XMLElement {
 
     protected abstract String getRootTag();
 
-    public ArrayList load(IStorage file) { //FIXME should throw?
+    public ArrayList load(IFileStore file) { //FIXME should throw?
         ArrayList objects = null;
         InputStream input = null;
-        if (file.exists()) {
+        if (file.fetchInfo().exists()) {
             try {
                 DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-                input = new BufferedInputStream(file.getInputStream());
+                try {
+					input = new BufferedInputStream(file.openInputStream(EFS.NONE, null));
+				} catch (CoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
                 Document document = parser.parse(input);
                 Element rootElement = document.getDocumentElement();
                 objects = this.load(rootElement);
@@ -68,24 +76,21 @@ public abstract class XMLFile extends XMLElement {
         return objects;
     }
 
-    public void save(IStorage file, Collection values) { //FIXME should throw?
+    public void save(IFileStore file, Collection values) { //FIXME should throw?
         OutputStream out = null;
         try {
-            if (!file.exists()) {
-                file.mkdirs();
+        	/*
+            if (!file.fetchInfo().exists()) {
+                file.;
                 file.delete();
-                try {
-					file.createNewFile();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+                file.createNewFile();
 
             }
+            */
             String rootName = this.getRootTag();
             try {
-				out = new BufferedOutputStream(file.getOutputStream());
-			} catch (IOException e) {
+				out = new BufferedOutputStream(file.openOutputStream(EFS.NONE, null));
+			} catch (CoreException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -106,7 +111,6 @@ public abstract class XMLFile extends XMLElement {
             StreamResult result = new StreamResult(out);
 
             transformer.transform(source, result);
-        
         } catch (TransformerFactoryConfigurationError e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

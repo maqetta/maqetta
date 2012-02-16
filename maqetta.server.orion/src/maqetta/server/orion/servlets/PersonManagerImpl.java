@@ -1,19 +1,24 @@
 package maqetta.server.orion.servlets;
 
+//import java.io.File;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
 
 
+import maqetta.server.orion.internal.Activator;
+import maqetta.server.orion.internal.EFStoreFile;
 import maqetta.server.orion.internal.Links;
 
 import org.davinci.server.user.IPersonManager;
 import org.davinci.server.user.IPerson;
-import org.davinci.server.user.IUser;
 import org.davinci.server.user.UserException;
 import org.davinci.server.util.XMLFile;
+
+import org.eclipse.core.filesystem.IFileStore;
+import org.eclipse.core.runtime.Path;
+
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
 import org.w3c.dom.Element;
@@ -65,8 +70,10 @@ public class PersonManagerImpl implements IPersonManager {
         }
 
         protected Object createObject(Element element, String[] attributeNames, String[] attributes) {
-            String userName = attributes[0];
-            PersonImpl user = new PersonImpl(userName, attributes[1], attributes[2]);
+            String name = element.getAttribute(PersonManagerImpl.NAME_TAG);
+            String email = element.getAttribute(PersonManagerImpl.EMAIL_TAG );
+            String password = element.getAttribute(PersonManagerImpl.PASSWORD_TAG);
+            PersonImpl user = new PersonImpl(name,  password, email);
             PersonManagerImpl.this.persons.put(user.getUserName(), user);
             return user;
         }
@@ -205,9 +212,4 @@ public class PersonManagerImpl implements IPersonManager {
     public String getPhotoRepositoryPath() {
         return "not-implemented";
     }
-
-	public IUser getUser(HttpServletRequest req) {
-		// TODO Auto-generated method stub
-		 return (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
-	}
 }

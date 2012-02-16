@@ -12,16 +12,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.davinci.server.user.IUser;
 import org.maqetta.server.Command;
 import org.maqetta.server.IDavinciServerConstants;
+import org.maqetta.server.IStorage;
 
 public class GetWorkbenchState extends Command {
 
     @Override
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
-        File userSettings = user.getWorkbenchSettings();
-        File settingsFile = new File(userSettings, IDavinciServerConstants.WORKBENCH_STATE_FILE);
+        IStorage userSettings = user.getWorkbenchSettings();
+        IStorage settingsFile = userSettings.newInstance(userSettings, IDavinciServerConstants.WORKBENCH_STATE_FILE);
         InputStream inputStream;
         if (settingsFile.exists()) {
-            inputStream = new FileInputStream(settingsFile);
+            inputStream = settingsFile.getInputStream();
 
         } else {
             inputStream = new ByteArrayInputStream("{}".getBytes());

@@ -1,6 +1,6 @@
 package maqetta.core.server.standalone.servlets;
 
-import java.io.File;
+
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +16,7 @@ import org.davinci.server.user.IPerson;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.maqetta.server.IDavinciServerConstants;
+import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
 
@@ -23,7 +24,7 @@ public class UserManagerImpl implements IUserManager {
 
     static UserManagerImpl theUserManager;
     HashMap                users    = new HashMap();
-    public File            baseDirectory;
+    public IStorage            baseDirectory;
 
     IPersonManager          personManager;
     int                    maxUsers = 0;
@@ -73,7 +74,7 @@ public class UserManagerImpl implements IUserManager {
      * @see org.davinci.server.user.impl.UserManager#getUser(java.lang.String)
      * 
      */
-    public IUser newUser(IPerson person, File baseDirectory) {
+    public IUser newUser(IPerson person, IStorage baseDirectory) {
     	 return new User(person, baseDirectory);
     }
     
@@ -85,7 +86,7 @@ public class UserManagerImpl implements IUserManager {
         }
         if (user == null && this.checkUserExists(userName)) {
             IPerson person = this.personManager.getPerson(userName);
-            user = newUser(person, new File(this.baseDirectory, userName));
+            user = newUser(person, this.baseDirectory.newInstance(this.baseDirectory, userName));
         }
         return user;
 
@@ -109,7 +110,7 @@ public class UserManagerImpl implements IUserManager {
         IPerson person = this.personManager.addPerson(userName, password, email);
         if (person != null) {
 
-            IUser user = new User(person, new File(this.baseDirectory, userName));
+            IUser user = new User(person, this.baseDirectory.newInstance(this.baseDirectory, userName));
             users.put(userName, user);
             //File userDir = user.getUserDirectory();
             //userDir.mkdir();
@@ -137,7 +138,7 @@ public class UserManagerImpl implements IUserManager {
         /*
          * would call this.personManager.removePerson(userName) here
          */
-        File userDir = new File(this.baseDirectory, userName);
+        IStorage userDir = this.baseDirectory.newInstance(this.baseDirectory, userName);
         VResourceUtils.deleteDir(userDir);
         users.remove(userName);
         this.usersCount--;
@@ -156,13 +157,13 @@ public class UserManagerImpl implements IUserManager {
         }
         IPerson person = this.personManager.login(userName, password);
         if (person != null) {
-            return new User(person, new File(this.baseDirectory, userName));
+            return new User(person, this.baseDirectory.newInstance(this.baseDirectory, userName));
         }
         return null;
     }
 
     private boolean checkUserExists(String userName) {
-        File userDir = new File(this.baseDirectory, userName);
+        IStorage userDir = this.baseDirectory.newInstance(this.baseDirectory, userName);
         return userDir.exists();
     }
 
@@ -190,11 +191,11 @@ public class UserManagerImpl implements IUserManager {
                 return IDavinciServerConstants.LOCAL_INSTALL_USER;
             }
         }
-        File userDir = this.baseDirectory;
+        IStorage userDir = this.baseDirectory;
 
         userDir.mkdir();
         IUser user =  new User(new LocalPerson(), userDir);
-        File settingsDir = new File(userDir, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
+        IStorage settingsDir = this.baseDirectory.newInstance(userDir, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
         if (!settingsDir.exists()) {
             settingsDir.mkdir();
             IVResource project = user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);

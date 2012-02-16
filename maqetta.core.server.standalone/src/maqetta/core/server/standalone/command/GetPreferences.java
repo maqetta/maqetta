@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.davinci.server.user.IUser;
 import org.maqetta.server.Command;
 import org.maqetta.server.IDavinciServerConstants;
+import org.maqetta.server.IStorage;
 
 public class GetPreferences extends Command {
 
@@ -21,14 +22,14 @@ public class GetPreferences extends Command {
         String path = req.getParameter("id");
         String base = req.getParameter("base");
         
-        File userSettings = user.getWorkbenchSettings(base);
-        File settingsFile = new File(userSettings, path + IDavinciServerConstants.SETTINGS_EXTENSION);
+        IStorage userSettings = user.getWorkbenchSettings(base);
+        IStorage settingsFile = userSettings.newInstance(userSettings, path + IDavinciServerConstants.SETTINGS_EXTENSION);
         if(!user.isValid(settingsFile.getAbsolutePath()) ) return;
         
         
         InputStream inputStream;
         if (settingsFile.exists()) {
-            inputStream = new BufferedInputStream(new FileInputStream(settingsFile));
+            inputStream = new BufferedInputStream(settingsFile.getInputStream());
 
         } else {
             inputStream = new ByteArrayInputStream("".getBytes());

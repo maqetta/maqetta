@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.davinci.server.user.IUser;
 import org.maqetta.server.Command;
 import org.maqetta.server.IDavinciServerConstants;
+import org.maqetta.server.IStorage;
 
 public class SetPreferences extends Command {
 
@@ -20,15 +21,15 @@ public class SetPreferences extends Command {
         String id = req.getParameter("id");
         String base = req.getParameter("base");
         
-        File settingsDir = user.getWorkbenchSettings(base);
-        File settingsFile = new File(settingsDir, id + IDavinciServerConstants.SETTINGS_EXTENSION);
+        IStorage settingsDir = user.getWorkbenchSettings(base);
+        IStorage settingsFile = settingsDir.newInstance(settingsDir, id + IDavinciServerConstants.SETTINGS_EXTENSION);
         
         if(! user.isValid(settingsFile.getAbsolutePath()) ) return;
         
         if (!settingsFile.exists()) {
             settingsFile.createNewFile();
         }
-        OutputStream os = new BufferedOutputStream(new FileOutputStream(settingsFile));
+        OutputStream os = new BufferedOutputStream(settingsFile.getOutputStream());
         Command.transferStreams(req.getInputStream(), os, false);
     }
 

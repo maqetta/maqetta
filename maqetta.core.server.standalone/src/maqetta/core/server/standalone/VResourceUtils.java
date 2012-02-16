@@ -12,7 +12,9 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
+import org.maqetta.server.StorageFileSystem;
 import org.osgi.framework.Bundle;
 
 public class VResourceUtils {
@@ -60,7 +62,7 @@ public class VResourceUtils {
 	    }
 	    return (IVResource[])all.toArray(new IVResource[all.size()]);
 	}
-	public static void copyDirectory(File userDir, String bundleDirName, Bundle bundle) {
+	public static void copyDirectory(IStorage userDir, String bundleDirName, Bundle bundle) {
 
         Enumeration files = bundle.findEntries(bundleDirName, "*", true);
         Vector elements = new Vector();
@@ -80,7 +82,7 @@ public class VResourceUtils {
                 String tail = path.substring(bundleDirName.length() + 1);
                 File path1 = new File("/tmp");
               //  File destination = new File("/Users/childsb/dev/workspaces/maqetta-workspace/childsb@us.ibm.com/project1/WebContent/app.css");
-                File destination = new File(userDir, tail);
+                IStorage destination = new StorageFileSystem(userDir, tail);
                 
                 if (tail.indexOf(".svn") > -1) {
                     continue;
@@ -90,7 +92,7 @@ public class VResourceUtils {
                 OutputStream out = null;
                 try {
 	                in = connection.getInputStream();
-	                out = new BufferedOutputStream(new FileOutputStream(destination));
+	                out = new BufferedOutputStream(destination.getOutputStream());
 	                byte[] buf = new byte[1024];
 	                int len;
 	                while ((len = in.read(buf)) > 0) {
@@ -107,13 +109,13 @@ public class VResourceUtils {
             }
         }
     }
-    public static void deleteDir(File directory) {
+    public static void deleteDir(IStorage directory) {
         deleteContents(directory);
         directory.delete();
     }
 
-    public static void deleteContents(File directory) {
-        File[] theFiles = directory.listFiles();
+    public static void deleteContents(IStorage directory) {
+        IStorage[] theFiles = directory.listFiles();
         for (int i = 0; i < theFiles.length; i++) {
             if (theFiles[i].isDirectory()) {
                 deleteContents(theFiles[i]);

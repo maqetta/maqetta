@@ -2,7 +2,7 @@ package maqetta.core.server.standalone;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.File;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,22 +19,23 @@ import java.util.Hashtable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.maqetta.server.IDavinciServerConstants;
+import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
 
 public class VFile implements IVResource {
     // abstracted file/resource class
-    File       file = null;
+    IStorage       file = null;
     private boolean    isWorkingCopy;
     private String     virtualPath;
-    private File       workingCopy;
+    private IStorage       workingCopy;
     private IVResource parent;
 
-    public VFile(File file, IVResource parent, String virtualPath) {
+    public VFile(IStorage file, IVResource parent, String virtualPath) {
 
         if (virtualPath != null && virtualPath.indexOf(IDavinciServerConstants.WORKING_COPY_EXTENSION) > 0) {
             this.workingCopy = file;
             IPath path = new Path(file.getPath());
-            this.file = new File(path.removeFileExtension().toString());
+            this.file =  file.newInstance(path.removeFileExtension().toString());
             this.virtualPath = virtualPath.replace(IDavinciServerConstants.WORKING_COPY_EXTENSION, "");
         } else {
             this.file = file;
@@ -45,7 +46,7 @@ public class VFile implements IVResource {
         this.parent = parent;
     }
 
-    public VFile(File file, IVResource parent) {
+    public VFile(IStorage file, IVResource parent) {
         this(file, parent, "");
         /*
          * String parentPath = parent.getFullPath(); String me =
@@ -54,11 +55,11 @@ public class VFile implements IVResource {
          */
     }
 
-    public VFile(File file) {
+    public VFile(IStorage file) {
         this(file, null, file.getPath());
     }
 
-    public File getFile() {
+    public IStorage getFile() {
         if (this.workingCopy.exists()) {
             return this.workingCopy;
         }
@@ -67,9 +68,9 @@ public class VFile implements IVResource {
 
     }
 
-    private File getWorkingCopy(File original) {
-        File parent = original.getParentFile();
-        File workingCopy = new File(parent, original.getName() + IDavinciServerConstants.WORKING_COPY_EXTENSION);
+    private IStorage getWorkingCopy(IStorage original) {
+    	IStorage parent = original.getParentFile();
+    	IStorage workingCopy = original.newInstance(parent, original.getName() + IDavinciServerConstants.WORKING_COPY_EXTENSION);
         return workingCopy;
     }
 
@@ -123,9 +124,9 @@ public class VFile implements IVResource {
 
     }
 
-    private boolean deleteDirectory(File path) {
+    private boolean deleteDirectory(IStorage path) {
         if (path.exists()) {
-            File[] files = path.listFiles();
+            IStorage[] files = path.listFiles();
             for (int i = 0; i < files.length; i++) {
                 if (files[i].isDirectory()) {
                     deleteDirectory(files[i]);
@@ -139,7 +140,7 @@ public class VFile implements IVResource {
     }
 
     public boolean delete() {
-        File target = null;
+        IStorage target = null;
 
         if (this.workingCopy.exists()) {
             target = this.workingCopy;
@@ -159,15 +160,15 @@ public class VFile implements IVResource {
             this.workingCopy.createNewFile();
         }
 
-        return new BufferedOutputStream(new FileOutputStream(this.workingCopy));
+        return new BufferedOutputStream(this.workingCopy.getOutputStream());
     }
 
     public InputStream getInputStreem() throws IOException {
-        return new BufferedInputStream(new FileInputStream(this.getFile()));
+        return new BufferedInputStream(this.getFile().getInputStream());
     }
 
     public IVResource[] listFiles() {
-        File[] list = this.file.listFiles();
+        IStorage[] list = this.file.listFiles();
 
         Hashtable results = new Hashtable();
         for (int i = 0; i < list.length; i++) {
@@ -223,7 +224,7 @@ public class VFile implements IVResource {
         }
 
         IPath a = new Path(this.file.getAbsolutePath()).append(path);
-        File f1 = new File(a.toOSString());
+        IStorage f1 = this.file.newInstance(a.toOSString());
 
         if (!f1.exists()) {
             return null;
@@ -234,7 +235,7 @@ public class VFile implements IVResource {
         for (int i = me.matchingFirstSegments(a); i < segments.length; i++) {
             int segsToEnd = segments.length - i - 1;
             String s = a.removeLastSegments(segsToEnd).toOSString();
-            File f = new File(s);
+            IStorage f = file.newInstance(s);
             parent = new VFile(f, parent, segments[i]);
         }
         return new IVResource[] { parent };
@@ -254,7 +255,7 @@ public class VFile implements IVResource {
         IVResource parent = this;
         for (int i = me.matchingFirstSegments(a); i < segments.length; i++) {
             int segsToEnd = segments.length - i - 1;
-            File f = a.removeLastSegments(segsToEnd).toFile();
+            IStorage f = file.newInstance(a.removeLastSegments(segsToEnd).toString());
             
             if((i+1==segments.length) && directory)
             	f.mkdir();

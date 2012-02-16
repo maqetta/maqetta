@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import maqetta.server.orion.internal.Links;
+import org.davinci.server.internal.Links.Link;
 import org.davinci.server.util.XMLFile;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ILink;
@@ -50,7 +50,7 @@ public class Links extends XMLFile implements ILinks {
     }
 
     /* (non-Javadoc)
-	 * @see maqetta.server.orion.internal.ILinks#findLinks(java.lang.String)
+	 * @see maqetta.core.server.standalone.internal.ILinks#findLinks(java.lang.String)
 	 */
     public List findLinks(String path) {
         if (path.startsWith("./")) {
@@ -68,7 +68,7 @@ public class Links extends XMLFile implements ILinks {
     }
 
     /* (non-Javadoc)
-	 * @see maqetta.server.orion.internal.ILinks#isLinkTarget(java.lang.String)
+	 * @see maqetta.core.server.standalone.internal.ILinks#isLinkTarget(java.lang.String)
 	 */
     public ILink isLinkTarget(String path) {
         for (int i = 0; i < this.links.length; i++) {
@@ -80,7 +80,7 @@ public class Links extends XMLFile implements ILinks {
     }
 
     /* (non-Javadoc)
-	 * @see maqetta.server.orion.internal.ILinks#findPath(java.lang.String)
+	 * @see maqetta.core.server.standalone.internal.ILinks#findPath(java.lang.String)
 	 */
     public String findPath(String path) {
         for (int i = 0; i < this.links.length; i++) {
@@ -92,7 +92,7 @@ public class Links extends XMLFile implements ILinks {
     }
 
     /* (non-Javadoc)
-	 * @see maqetta.server.orion.internal.ILinks#hasLink(java.lang.String)
+	 * @see maqetta.core.server.standalone.internal.ILinks#hasLink(java.lang.String)
 	 */
     public ILink hasLink(String path) {
         for (int i = 0; i < this.links.length; i++) {
@@ -104,7 +104,7 @@ public class Links extends XMLFile implements ILinks {
     }
 
     /* (non-Javadoc)
-	 * @see maqetta.server.orion.internal.ILinks#addLink(java.lang.String, java.lang.String, int)
+	 * @see maqetta.core.server.standalone.internal.ILinks#addLink(java.lang.String, java.lang.String, int)
 	 */
     public boolean addLink(String path, String location, int type) {
         String loc = findPath(path);
@@ -124,14 +124,14 @@ public class Links extends XMLFile implements ILinks {
     }
 
     /* (non-Javadoc)
-	 * @see maqetta.server.orion.internal.ILinks#allLinks()
+	 * @see maqetta.core.server.standalone.internal.ILinks#allLinks()
 	 */
     public ILink[] allLinks() {
         return this.links;
     }
 
     /* (non-Javadoc)
-	 * @see maqetta.server.orion.internal.ILinks#removeLink(java.lang.String)
+	 * @see maqetta.core.server.standalone.internal.ILinks#removeLink(java.lang.String)
 	 */
     public boolean removeLink(String path) {
         for (int i = 0; i < this.links.length; i++) {

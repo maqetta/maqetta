@@ -40,15 +40,15 @@ import org.maqetta.project.util.EclipseProjectUtil;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ILink;
 import org.maqetta.server.ILinks;
+import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
+import org.maqetta.server.StorageFileSystem;
 import org.osgi.framework.Bundle;
 
 public class User implements IUser {
 
-	private static final boolean CASCADE_SETTINGS = false;
-	private File userDirectory;
-	private File settingsDirectory;
+	private IStorage userDirectory;
 	private Links links;
 	private IPerson person;
 	private IVResource workspace;
@@ -67,7 +67,7 @@ public class User implements IUser {
     }	
 
 
-	public User(IPerson person, File userDirectory) {
+	public User(IPerson person, IStorage userDirectory) {
 		this.person = person;
 		this.userDirectory = userDirectory;
 		userDirectory.mkdirs();
@@ -85,7 +85,7 @@ public class User implements IUser {
 	 */
 	public void rebuildWorkspace() {
 		this.workspace = new VWorkspaceRoot();
-		File[] userFiles = this.userDirectory.listFiles();
+		IStorage[] userFiles = this.userDirectory.listFiles();
 		
 		for(int j=0;j<userFiles.length;j++){
 			if(!userFiles[j].isDirectory()) continue;
@@ -145,7 +145,7 @@ public class User implements IUser {
 	
 	public ILibraryFinder[] getFinders(String base){
 		ILibraryFinder[] finders = ServerManager.getServerManger().getLibraryManager().getLibraryFinders();
-		File baseFile = new File(this.userDirectory, base);
+		StorageFileSystem baseFile = new StorageFileSystem(this.userDirectory, base);
 		Vector<ILibraryFinder> allLibs = new Vector();
 		for(int i=0;i<finders.length;i++){
 			ILibraryFinder finder = finders[i].getInstance(baseFile.toURI());
@@ -157,7 +157,7 @@ public class User implements IUser {
 	public ILibInfo[] getExtendedSettings(String base){
 		
 		ILibraryFinder[] finders = ServerManager.getServerManger().getLibraryManager().getLibraryFinders();
-		File baseFile = new File(this.userDirectory, base);
+		IStorage baseFile = new StorageFileSystem(this.userDirectory, base);
 		Vector<ILibInfo> allLibs = new Vector();
 		for(int i=0;i<finders.length;i++){
 			ILibraryFinder finder = finders[i].getInstance(baseFile.toURI());
@@ -243,10 +243,10 @@ public class User implements IUser {
 	            String path = libraryElement.getAttribute(IDavinciServerConstants.EP_ATTR_INITIAL_USER_FILE_PATH);
 	            String name = libraryElement.getDeclaringExtension().getContributor().getName();
 	            Bundle bundle = Activator.getActivator().getOtherBundle(name);
-	            File file = null;
+	            IStorage file = null;
 				try {
 					
-					file = new File(project.getURI().getPath()+ "/" + basePath);
+					file = new StorageFileSystem(project.getURI().getPath()+ "/" + basePath);
 					if(!isValid(file.getAbsolutePath())) return null;
 				} catch (URISyntaxException e) {
 					// TODO Auto-generated catch block
@@ -268,9 +268,9 @@ public class User implements IUser {
 	 * @see org.davinci.server.user.IUser#addBaseSettings(java.lang.String)
 	 */
 	public void addBaseSettings(String base){
-		File baseFile = new File(this.userDirectory, base);
+		IStorage baseFile = userDirectory.newInstance(this.userDirectory, base);
 		if(!isValid(baseFile.getAbsolutePath())) return;
-		File settings = new File(baseFile, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
+		IStorage settings = userDirectory.newInstance(baseFile, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
 		settings.mkdirs();
 		
 		LibrarySettings ls = this.getLibSettings(base);
@@ -291,23 +291,17 @@ public class User implements IUser {
 		
 	}
 	private LibrarySettings getLibSettings(String base) {
-		File baseFile = new File(this.userDirectory, base);
+		return getLibSettings(this.userDirectory.newInstance(this.userDirectory, base));
+		
+	}
+	private LibrarySettings getLibSettings(IStorage baseFile) {
 		if(!isValid(baseFile.getAbsolutePath())) return null;
-		return getLibSettings(baseFile);
+		return new LibrarySettings(this.userDirectory.newInstance(baseFile, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME));
 	}
-
-	private LibrarySettings getLibSettings(File base) {
-		
-		File settings = new File(base, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
-		return new LibrarySettings(settings);
-		
-		
-	}
-
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#getUserDirectory()
 	 */
-	public File getUserDirectory() {
+	public IStorage getUserDirectory() {
 		return this.userDirectory;
 	}
 
@@ -444,7 +438,7 @@ public class User implements IUser {
         if (link != null) {
             path = link.location + "/" + path1.substring(link.path.length());
             path = path.replace('/', File.separatorChar);
-            VFile linkFile = new VFile(new File(path));
+            VFile linkFile = new VFile(this.userDirectory.newInstance(path));
             return linkFile;
         }
         return null;
@@ -492,7 +486,7 @@ public class User implements IUser {
 	        for (int i = me.matchingFirstSegments(a); i < segments.length; i++) {
 	            int segsToEnd = segments.length - i - 1;
 	            String s = a.removeLastSegments(segsToEnd).toOSString();
-	            File f = new File(s);
+	            IStorage f = this.userDirectory.newInstance(s);
 	            parent = new VFile(f, parent, segments[i]);
 	        }
 	        
@@ -522,7 +516,7 @@ public class User implements IUser {
 		if (link != null) {
 			path = link.location + "/" + path1.substring(link.path.length());
 			path = path.replace('/', File.separatorChar);
-			VFile linkFile = new VFile(new File(path));
+			VFile linkFile = new VFile(this.userDirectory.newInstance(path));
 			return linkFile;
 		}
 
@@ -537,18 +531,18 @@ public class User implements IUser {
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#getWorkbenchSettings()
 	 */
-	public File getWorkbenchSettings() {
+	public IStorage getWorkbenchSettings() {
 		return getWorkbenchSettings("");
 	}
 
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#getWorkbenchSettings(java.lang.String)
 	 */
-	public File getWorkbenchSettings(String base) {
+	public IStorage getWorkbenchSettings(String base) {
 	
 		
-		File baseFile = new File(this.userDirectory,base);
-		File settingsDirectory = new File(baseFile,IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
+		IStorage baseFile = userDirectory.newInstance(this.userDirectory,base);
+		IStorage settingsDirectory = userDirectory.newInstance(baseFile,IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
 		if(!isValid(settingsDirectory.getAbsolutePath())) return null;
 		
 		if(!settingsDirectory.exists())
@@ -599,23 +593,23 @@ public class User implements IUser {
 			}
 			// big todo here, have to remove the file filter
 			
-			File f1 = null; 
+			IStorage f1 = null; 
 		    if (startFolder == null || startFolder.equals(".")) {
 		          f1 = this.userDirectory;
 		     } else {
 		         IVResource start = this.getUserFile(startFolder);
 		         if(start!=null)
     		         try {
-    		            f1 = new File(start.getURI());
+    		            f1 = this.userDirectory.newInstance(start.getURI());
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
                     }
 		     }
 		    if(f1!=null){
-    			Collection c = FileUtils.listFiles(f1, filter, TrueFileFilter.INSTANCE);
+    			Collection c = this.userDirectory.listFiles(f1, filter, TrueFileFilter.INSTANCE);
     			File[] found = (File[]) c.toArray(new File[c.size()]);
     			for (int i = 0; i < found.length; i++) {
-    					File workspaceFile = null;
+    					IStorage workspaceFile = null;
     					workspaceFile = this.userDirectory;
     
     					IPath workspacePath = new Path(workspaceFile.getPath());

@@ -10,6 +10,7 @@ import org.davinci.server.util.XMLFile;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ILink;
 import org.maqetta.server.ILinks;
+import org.maqetta.server.IStorage;
 import org.w3c.dom.Element;
 
 public class Links extends XMLFile implements ILinks {
@@ -18,7 +19,7 @@ public class Links extends XMLFile implements ILinks {
     static final String     STR_SYSTEM_PATH = "systemPath";
 
     ILink[]                  links;
-    File                    linksFile;
+    IStorage                    linksFile;
 
     public static class Link implements ILink {
         public String path;
@@ -43,8 +44,8 @@ public class Links extends XMLFile implements ILinks {
         }
     }
 
-    public Links(File dir) {
-        linksFile = new File(dir, IDavinciServerConstants.LINKS_FILE);
+    public Links(IStorage dir) {
+        linksFile = dir.newInstance(dir, IDavinciServerConstants.LINKS_FILE);
         ArrayList list = this.load(linksFile);
         links = (ILink[]) list.toArray(new ILink[list.size()]);
     }

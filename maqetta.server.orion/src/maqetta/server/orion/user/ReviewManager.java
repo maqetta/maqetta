@@ -1,6 +1,6 @@
-package maqetta.core.server.standalone.user;
+package maqetta.server.orion.user;
 
-
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -37,9 +37,7 @@ import org.davinci.server.user.LibrarySettings;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.maqetta.server.IDavinciServerConstants;
-import org.maqetta.server.IStorage;
 import org.maqetta.server.ServerManager;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -49,10 +47,9 @@ public class ReviewManager implements IReviewManager {
 //	private static final String LS = System.getProperty("line.separator");
 	private static ReviewManager theReviewManager;
 	private HashMap<IDavinciProject, HashMap<String, ILibInfo[]>> snapshotLibs;
-	public IStorage baseDirectory;
+	public File baseDirectory;
 
 
-	
 	public static ReviewManager getReviewManager()
 	{
 		if (theReviewManager==null)
@@ -63,9 +60,9 @@ public class ReviewManager implements IReviewManager {
 	Map<String, IDesignerUser> users = Collections.synchronizedMap(new HashMap<String, IDesignerUser>());
 	public ReviewManager() {
 		String basePath = ServerManager.getServerManger().getDavinciProperty(IDavinciServerConstants.BASE_DIRECTORY_PROPERTY);
-		baseDirectory = ServerManager.getServerManger().getBaseDirectory().newInstance(".");
+		baseDirectory = new File(".");
 		if (basePath != null) {
-			IStorage dir = baseDirectory.newInstance(basePath);
+			File dir = new File(basePath);
 			if (dir.exists())
 				baseDirectory = dir;
 		}
@@ -75,22 +72,22 @@ public class ReviewManager implements IReviewManager {
 
 	public void saveDraft(String name,Version version) {
 		IDesignerUser user = getDesignerUser(name);
-		IStorage commentingDir = user.getCommentingDirectory();
+		File commentingDir = user.getCommentingDirectory();
 		if (!commentingDir.exists()) {
 			commentingDir.mkdir();
-			(baseDirectory.newInstance(commentingDir, "snapshot")).mkdir();
-			(baseDirectory.newInstance(commentingDir, "livedoc")).mkdir();
+			(new File(commentingDir, "snapshot")).mkdir();
+			(new File(commentingDir, "livedoc")).mkdir();
 		}
 		saveVersionFile(user);
 	}
 
 	public void publish(String name, Version version) {
 		IDesignerUser user = getDesignerUser(name);
-		IStorage commentingDir = user.getCommentingDirectory();
+		File commentingDir = user.getCommentingDirectory();
 		if (!commentingDir.exists()) {
 			commentingDir.mkdir();
-			(baseDirectory.newInstance(commentingDir, "snapshot")).mkdir();
-			(baseDirectory.newInstance(commentingDir, "livedoc")).mkdir();
+			(new File(commentingDir, "snapshot")).mkdir();
+			(new File(commentingDir, "livedoc")).mkdir();
 		}
 
 		initVersionDir(user, version.getTime());
@@ -99,23 +96,23 @@ public class ReviewManager implements IReviewManager {
 	}
 
 	public void saveVersionFile(IDesignerUser user) {
-		IStorage versionFile = baseDirectory.newInstance(user.getCommentingDirectory(), "snapshot/versions.xml");
+		File versionFile = new File(user.getCommentingDirectory(), "snapshot/versions.xml");
 		VersionFile file = new VersionFile();
 		file.save(versionFile, user);
 	}
 
 	private void initVersionDir(IDesignerUser user, String timeStamp) {
-		IStorage versionDir = baseDirectory.newInstance(user.getCommentingDirectory(), "snapshot/" + timeStamp);
+		File versionDir = new File(user.getCommentingDirectory(), "snapshot/" + timeStamp);
 		if(versionDir.exists()) return;
 		versionDir.mkdir();
-		IStorage userDir = user.getUserDirectory();
+		File userDir = user.getUserDirectory();
 
-		IStorage[] files = userDir.listFiles();
+		File[] files = userDir.listFiles();
 		for (int i = 0; i < files.length; i++) {
 			String path = files[i].getAbsolutePath();
 			if (files[i].isFile()
 					&& path.indexOf(IDavinciServerConstants.WORKING_COPY_EXTENSION) < 0) {
-				IStorage destination = baseDirectory.newInstance(versionDir, files[i].getName());
+				File destination = new File(versionDir, files[i].getName());
 				copyFile(files[i], destination);
 			} else if (files[i].isDirectory()
 //					&& path.indexOf(IDavinciServerConstants.SETTINGS_DIRECTORY_NAME) < 0  // Need to copy the settings
@@ -123,35 +120,35 @@ public class ReviewManager implements IReviewManager {
 					&& path.indexOf(Constants.REVIEW_DIRECTORY_NAME) < 0
 					&& path.indexOf(".svn") < 0
 					&& containsPublishedFiles(files[i], user, timeStamp)) {
-				IStorage destination = baseDirectory.newInstance(versionDir, files[i].getName());
+				File destination = new File(versionDir, files[i].getName());
 				copyDirectory(files[i], destination);
 			}
 		}
 	}
 
-	private void copyDirectory(IStorage sourceDir, IStorage destinationDir) {
+	private void copyDirectory(File sourceDir, File destinationDir) {
 		destinationDir.mkdirs();
-		IStorage[] file = sourceDir.listFiles();
+		File[] file = sourceDir.listFiles();
 		for (int i = 0; i < file.length; i++) {
 			if (file[i].isFile()) {
 
-				IStorage sourceFile = file[i];
+				File sourceFile = file[i];
 
-				IStorage targetFile = baseDirectory.newInstance(destinationDir, file[i].getName());
+				File targetFile = new File(destinationDir, file[i].getName());
 				copyFile(sourceFile, targetFile);
 			}
 			if (file[i].isDirectory()) {
-				IStorage destination = baseDirectory.newInstance(destinationDir, file[i].getName());
+				File destination = new File(destinationDir, file[i].getName());
 				copyDirectory(file[i], destination);
 			}
 		}
 	}
 
-	private void copyFile(IStorage source, IStorage destination) {
+	private void copyFile(File source, File destination) {
 		try {
 			destination.getParentFile().mkdirs();
-			InputStream in = source.getInputStream();
-			OutputStream out = destination.getOutputStream();
+			InputStream in = new FileInputStream(source);
+			OutputStream out = new FileOutputStream(destination);
 			byte[] buf = new byte[1024];
 			int len;
 			while ((len = in.read(buf)) > 0) {
@@ -201,11 +198,11 @@ public class ReviewManager implements IReviewManager {
 	}
 
 	private void loadUser(String name) {
-		IStorage versionFile;
+		File versionFile;
 		if (ServerManager.LOCAL_INSTALL || Constants.LOCAL_INSTALL_USER_NAME.equals(name)) {
-			versionFile = this.baseDirectory.newInstance(this.baseDirectory, "/.review/snapshot/versions.xml");
+			versionFile = new File(this.baseDirectory, "/.review/snapshot/versions.xml");
 		} else {
-			versionFile = this.baseDirectory.newInstance(this.baseDirectory, "/" + name
+			versionFile = new File(this.baseDirectory, "/" + name
 					+ "/.review/snapshot/versions.xml");
 		}
 		IDesignerUser user = new DesignerUser(name);
@@ -224,7 +221,7 @@ public class ReviewManager implements IReviewManager {
 		users.put(name, user);
 	}
 
-	private boolean containsPublishedFiles(IStorage dir, IDesignerUser user, String timeStamp){
+	private boolean containsPublishedFiles(File dir, IDesignerUser user, String timeStamp){
 		for(Version version : user.getVersions()){
 			if(!version.getTime().equals(timeStamp)) continue;
 			for(String res : version.resources){
@@ -241,23 +238,13 @@ public class ReviewManager implements IReviewManager {
 	class VersionFile {
 		public String latestVersionID;
 
-		public void save(IStorage file, org.davinci.server.review.user.IDesignerUser user) {
+		public void save(File file, org.davinci.server.review.user.IDesignerUser user) {
 			OutputStream out = null;
 			try {
 				if (!file.exists())
-					try {
-						file.createNewFile();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					file.createNewFile();
 
-				try {
-					out = file.getOutputStream();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				out = new FileOutputStream(file);
 				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 				DocumentBuilder builder = factory.newDocumentBuilder();
 				Document document = builder.newDocument();
@@ -310,7 +297,9 @@ public class ReviewManager implements IReviewManager {
 				StreamResult result = new StreamResult(out);
 
 				transformer.transform(source, result);
-			
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			} catch (TransformerFactoryConfigurationError e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -335,14 +324,14 @@ public class ReviewManager implements IReviewManager {
 			}
 		}
 
-		public List<Version> load(IStorage file) {
+		public List<Version> load(File file) {
 			ArrayList<Version> objects = new ArrayList<Version>();
 			InputStream input = null;
 			if (file.exists()) {
 				try {
 					DocumentBuilder parser = DocumentBuilderFactory.newInstance()
 							.newDocumentBuilder();
-					input = file.getInputStream();
+					input = new FileInputStream(file);
 					Document document = parser.parse(input);
 					Element rootElement = document.getDocumentElement();
 					NodeList latestVersion = rootElement.getElementsByTagName("latestVersion");
@@ -420,7 +409,7 @@ public class ReviewManager implements IReviewManager {
 		}
 	}
 
-	public IStorage getBaseDirectory() {
+	public File getBaseDirectory() {
 		return baseDirectory;
 	}
 
@@ -433,7 +422,7 @@ public class ReviewManager implements IReviewManager {
 		path.append(project.getProjectName());
 		path.append("/");
 		path.append(IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
-		return new LibrarySettings(this.baseDirectory.newInstance(path.toString())).allLibs();
+		return new LibrarySettings(new File(path.toString())).allLibs();
 	}
 
 	public ILibInfo[] getVersionLib(IDavinciProject project, String version){
@@ -460,7 +449,7 @@ public class ReviewManager implements IReviewManager {
 			path.append("/");
 			path.append(IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
 
-			libInfos = new LibrarySettings(this.baseDirectory.newInstance(path.toString())).allLibs();
+			libInfos = new LibrarySettings(new File(path.toString())).allLibs();
 			if(libInfos != null)
 				versions.put(version, libInfos);
 		}

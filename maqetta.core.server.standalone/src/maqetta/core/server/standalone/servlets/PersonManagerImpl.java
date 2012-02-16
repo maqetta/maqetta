@@ -1,6 +1,6 @@
 package maqetta.core.server.standalone.servlets;
 
-import java.io.File;
+
 import java.util.HashMap;
 import java.util.Set;
 
@@ -12,6 +12,7 @@ import org.davinci.server.user.IPerson;
 import org.davinci.server.user.UserException;
 import org.davinci.server.util.XMLFile;
 import org.maqetta.server.IDavinciServerConstants;
+import org.maqetta.server.IStorage;
 import org.maqetta.server.ServerManager;
 import org.w3c.dom.Element;
 
@@ -25,7 +26,7 @@ public class PersonManagerImpl implements IPersonManager {
     static final String PASSWORD_TAG = "password";
     static final String EMAIL_TAG    = "email";
 
-    File                baseDirectory;
+    IStorage                baseDirectory;
 
     static class PersonImpl implements IPerson {
         String email;
@@ -166,7 +167,7 @@ public class PersonManagerImpl implements IPersonManager {
     }
 
     private void loadUsers() {
-        File userFile = new File(this.baseDirectory, IDavinciServerConstants.USER_LIST_FILE);
+        IStorage userFile =this.baseDirectory.newInstance(this.baseDirectory, IDavinciServerConstants.USER_LIST_FILE);
         if (userFile.exists()) {
             new UsersFile().load(userFile);
 
@@ -174,7 +175,7 @@ public class PersonManagerImpl implements IPersonManager {
     }
 
     private void savePersons() {
-        File userFile = new File(this.baseDirectory, IDavinciServerConstants.USER_LIST_FILE);
+        IStorage userFile = this.baseDirectory.newInstance(this.baseDirectory, IDavinciServerConstants.USER_LIST_FILE);
         new UsersFile().save(userFile, this.persons.values());
     }
 

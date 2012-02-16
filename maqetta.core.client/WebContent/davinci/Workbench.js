@@ -379,7 +379,7 @@ var Workbench = {
 			if (child.editor) {
 				Workbench._switchEditor(child.editor);
 			}
-		});		
+		});
 		mainBodyContainer.startup();
 
 
@@ -388,8 +388,8 @@ var Workbench = {
 		if (!appBorderContainer) {
 			appBorderContainer = new BorderContainer({       
 				design: "headline",
-	            gutters: false,
-	            liveSplitters: false
+				gutters: false,
+				liveSplitters: false
 			}, "davinci_app");
 			
 			var topBarPane = new ContentPane({

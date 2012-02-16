@@ -1,13 +1,15 @@
 package maqetta.server.orion.servlets;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
-import maqetta.server.orion.VResourceUtils;
-import maqetta.server.orion.user.User;
+import  maqetta.server.orion.VResourceUtils;
+import  maqetta.server.orion.user.User;
 import org.davinci.server.user.UserException;
 
 import org.davinci.server.user.IUser;
@@ -16,6 +18,10 @@ import org.davinci.server.user.IUserManager;
 import org.davinci.server.user.IPerson;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.orion.server.configurator.ConfiguratorActivator;
+import org.eclipse.orion.server.core.authentication.IAuthenticationService;
+import org.eclipse.orion.server.core.users.OrionScope;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
@@ -30,10 +36,31 @@ public class UserManagerImpl implements IUserManager {
     int                    maxUsers = 0;
     private int            usersCount;
 
+    private IAuthenticationService authenticationService;
+	private Properties authProperties;
+
 
     public UserManagerImpl() {
-    
-       
+    	ServerManager serverManger = ServerManager.getServerManger();
+    	try{
+        	this.baseDirectory= ServerManager.getServerManger().getBaseDirectory();
+        	this.usersCount = this.baseDirectory.list().length;
+    	}catch(Exception ex){
+    		System.out.println("FATAL ERROR Starting maqetta: " + ex);
+    		
+    	}
+        if (ServerManager.DEBUG_IO_TO_CONSOLE) {
+            System.out.println("\nSetting [user space] to: " + baseDirectory.getAbsolutePath());
+        }
+        System.out.println("\nSetting [user space] to: " + baseDirectory.getAbsolutePath());
+
+        String maxUsersStr = serverManger.getDavinciProperty(IDavinciServerConstants.MAX_USERS);
+        if (maxUsersStr != null && maxUsersStr.length() > 0) {
+            this.maxUsers = Integer.valueOf(maxUsersStr).intValue();
+        }
+
+        personManager = ServerManager.getServerManger().getPersonManager();
+        authenticationService = ConfiguratorActivator.getDefault().getAuthService();
     }
 
     /*
@@ -57,14 +84,14 @@ public class UserManagerImpl implements IUserManager {
      * 
      */
     public IUser newUser(IPerson person, File baseDirectory) {
-    	 return new User(person);
+    	 return new User(person, baseDirectory);
     }
     
     public IUser getUser(String userName) {
 
         IUser user = (IUser) users.get(userName);
-        if (user == null ) {
-        	 return this.getSingleUser();
+        if (user == null && ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equals(userName)) {
+            return this.getSingleUser();
         }
         if (user == null && this.checkUserExists(userName)) {
             IPerson person = this.personManager.getPerson(userName);
@@ -92,7 +119,7 @@ public class UserManagerImpl implements IUserManager {
         IPerson person = this.personManager.addPerson(userName, password, email);
         if (person != null) {
 
-            IUser user = new User(person);
+            IUser user = new User(person, new File(this.baseDirectory, userName));
             users.put(userName, user);
             //File userDir = user.getUserDirectory();
             //userDir.mkdir();
@@ -139,14 +166,15 @@ public class UserManagerImpl implements IUserManager {
         }
         IPerson person = this.personManager.login(userName, password);
         if (person != null) {
-            return new User(person);
+            return new User(person, new File(this.baseDirectory, userName));
         }
         return null;
     }
 
     private boolean checkUserExists(String userName) {
-        File userDir = new File(this.baseDirectory, userName);
-        return userDir.exists();
+    	IEclipsePreferences users = new OrionScope().getNode("Users"); //$NON-NLS-1$
+		IEclipsePreferences result = (IEclipsePreferences) users.node(userName);
+		return result!=null;
     }
 
     /*
@@ -173,17 +201,31 @@ public class UserManagerImpl implements IUserManager {
                 return IDavinciServerConstants.LOCAL_INSTALL_USER;
             }
         }
+        File userDir = this.baseDirectory;
 
-        IUser user =  new User(new LocalPerson());
-        
+        userDir.mkdir();
+        IUser user =  new User(new LocalPerson(), userDir);
+        File settingsDir = new File(userDir, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
+        if (!settingsDir.exists()) {
+            settingsDir.mkdir();
+            IVResource project = user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
+        }
        return user;
 
     }
 
 	public IUser getUser(HttpServletRequest req) {
 		// TODO Auto-generated method stub
-		String user = (String) req.getRemoteUser();
+		String user = null;
+		try {
+			user = authenticationService.getAuthenticatedUser(req, null, authProperties);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return getUser(user);
+		
+		//return (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
 	}
 
 

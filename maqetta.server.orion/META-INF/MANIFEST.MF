@@ -15,7 +15,11 @@ Require-Bundle: org.apache.commons.fileupload;bundle-version="1.2.0",
  org.eclipse.osgi;bundle-version="3.5.0",
  org.apache.commons.io;bundle-version="1.3.2",
  maqetta.core.client;bundle-version="1.0.0",
- maqetta.core.server;bundle-version="1.0.0"
+ maqetta.core.server;bundle-version="1.0.0",
+ org.eclipse.core.filesystem;bundle-version="1.3.200",
+ org.eclipse.orion.server.configurator;bundle-version="0.4.0",
+ org.eclipse.orion.server.core;bundle-version="0.3.0",
+ org.eclipse.core.runtime;bundle-version="3.8.0"
 Export-Package: maqetta.server.orion;
   uses:="org.eclipse.core.runtime,
    org.davinci.ajaxLibrary,

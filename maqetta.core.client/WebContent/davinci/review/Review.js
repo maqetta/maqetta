@@ -16,11 +16,10 @@ var Review = davinci.review.Review = lang.mixin(davinci.Workbench, {
 		this._baseTitle = dojo.doc.title;
 		var perspective = Runtime.initialPerspective || "davinci.review.comment";
 		var mainBody = dojo.byId('mainBody');
-		var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
 		mainBody.editorsWelcomePage =
 			new ContentPane({
 				id : "editorsWelcomePage",
-				href: location + "maqetta/app/davinci/review/resources/welcome_to_maqetta.html"
+				href: "app/davinci/ve/resources/welcome_to_maqetta.html"
 			});
 		this.showPerspective(perspective);
 		Runtime.subscribe("/davinci/ui/editorSelected", davinci.Workbench._updateMainToolBar );

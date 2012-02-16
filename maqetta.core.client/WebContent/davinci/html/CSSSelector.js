@@ -97,7 +97,7 @@ var CSSSelector = declare("davinci.html.CSSSelector", CSSElement, {
 			} else {
 				var found = false;
 				for ( var i = 0; i < classes.length; i++ )
-					if (found = (classes[i] == this.cls))
+					if (found = ((classes[i] == this.cls) && (!this.pseudoRule))) // FIXME need to do something better with pseudoRule issue #1760
 						break;
 				if (!found)
 					return -1;

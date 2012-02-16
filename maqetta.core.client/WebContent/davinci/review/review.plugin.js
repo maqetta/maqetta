@@ -74,7 +74,9 @@ return {
 			actions: [
 				{
 					id: "newReview",
-					run: "davinci.Runtime.publish()",
+					run: function(){
+						require("davinci/Runtime").publish();
+					},
 					label: "Review...",
 					menubarPath: "davinci.new/additions"
 				}

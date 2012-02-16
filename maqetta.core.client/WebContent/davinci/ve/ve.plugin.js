@@ -200,13 +200,17 @@ return {
                 {
                     id: "davinci.ui.generateform",
                     label: "Generate Form",
-                    run: "davinci.ve.views.DataStoresView.generateForm()",
+                    run: function(){
+                    	require("davinci/ve/views/DataStoresView").generateForm();
+                    },
                     menubarPath: "newfile"
                 },
                 {
                     id: "davinci.ui.generateform",
                     label: "Generate Table",
-                    run: "davinci.ve.views.DataStoresView.generateTable()",
+                    run: function(){
+                    	require("davinci/ve/views/DataStoresView").generateTable();
+                    },
                     menubarPath: "newfile"
                 }
             ]
@@ -416,7 +420,9 @@ return {
                 {
                     id: "saveas",
                     iconClass: 'saveAsIcon',
-                    run: "davinci.ui.Resource.saveAs('html')",
+                    run: function() {
+                    	require("../ui/Resource").saveAs('html');
+                    },
                     isEnabled: function(context) {
                         return require('../Workbench').getOpenEditor();
                     },
@@ -427,7 +433,9 @@ return {
                 //{
                 //   id: "saveasdijit",
                 //    iconClass: 'saveAsWidgetIcon',
-                //    run: "davinci.de.resource.createDijiFromNewDialog()",
+                //    run: function(){
+                //        davinci.de.resource.createDijiFromNewDialog();
+                //    }
                 //    isEnabled: function(context) {
                 //        var isEnabled = davinci.Workbench.getOpenEditor();
                 //        return isEnabled;

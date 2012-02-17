@@ -12,18 +12,21 @@ davinci/davinci = {
 	//
 };
 =====*/
-	"./davinci-common",
+	"dijit/dijit",
 	"./Workbench",
+
+	// viewClasses
 	"./workbench/Explorer",
 	"./workbench/OutlineView",
 	"./workbench/ProblemsView",
 	"./ve/palette/HtmlWidgets",
 	"./ve/views/StatesView",
-	
 	"./ve/views/SwitchingStyleView",
-	
-	"./ve/PageEditor",
+
+	// dragHandler
 	"./ve/palette/ImageDragSource",
+
+	// actions
 	"./actions/UndoAction",
 	"./actions/SelectThemeAction",
 	"./actions/SelectLayoutAction",
@@ -49,12 +52,15 @@ davinci/davinci = {
 	"./ve/actions/AddState",
 	"./ve/actions/RemoveState",
 
+	// editorClasses
+	"./ve/PageEditor",
 	"./html/ui/CSSEditor",
 	"./html/ui/HTMLEditor",
 	"./html/ui/ImageViewer",
 	"./js/ui/JavaScriptEditor",
 	"./ve/prefs/HTMLEditPreferences",
 
+	// R&C
 	"./review/view/CommentExplorerView",
 	"./review/actions/ViewFileAction",
 	"./review/actions/DeleteVersionAction",

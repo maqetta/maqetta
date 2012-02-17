@@ -286,14 +286,8 @@ var Workbench = {
 		return toolbar1;
 	},
 
-	getActivePerspective: function() {
-		return Workbench.activePerspective;
-	},
-
 	showPerspective: function(perspectiveID) {
-		
 		Workbench.activePerspective = perspectiveID;
-
 		Workbench._updateMainMenubar();
 
 		var mainBody = dojo.byId('mainBody');
@@ -864,7 +858,7 @@ var Workbench = {
 		var mainBodyContainer = dijit.byId('mainBody'),
 			view = Runtime.getExtension("davinci.view", viewId),
 			mainBody = dojo.byId('mainBody'),
-			perspectiveId = Workbench.getActivePerspective(),
+			perspectiveId = Workbench.activePerspective,
 			perspective = Runtime.getExtension("davinci.perspective", perspectiveId),
 			position = 'left',
 			cp1 = null,
@@ -991,17 +985,13 @@ var Workbench = {
 	},
 
 	openEditor: function (keywordArgs, newHtmlParams) {
-		
 		var fileName=keywordArgs.fileName,
 			content=keywordArgs.content,
 			fileExtension,
 			file;
-		if (typeof fileName=='string')
-		{
+		if (typeof fileName=='string') {
 			 fileExtension=fileName.substr(fileName.lastIndexOf('.')+1);
-		}
-		else
-		{
+		} else {
 			file=fileName;
 			fileExtension=fileName.getExtension();
 			fileName=fileName.getPath();
@@ -1010,8 +1000,7 @@ var Workbench = {
 		var tab = dijit.byId(filename2id(fileName)),
 			tabContainer = dijit.byId("editors_tabcontainer");
 
-		if (tab)
-		{
+		if (tab) {
 			// already open
 			tabContainer.selectChild(tab);
 			var editor=tab.editor;
@@ -1038,30 +1027,7 @@ var Workbench = {
 				return extension.isDefault;
 			});
 		}
-		/*{
-			var data={
-					listData:editorExtensions
-			};
-			davinci.ui.Panel.openDialog( {
-					definition: [
-								  {
-									type: "list",
-									label: "Editors",
-									data: "listData",
-									itemLabel: "name",
-									selectedItem: "selectedItem"
-								  }
-								],
-					data: data,
-					onOK: function ()
-					{
-					  if (data.selectedItem)
-						  Runtime.currentEditor = Workbench._createEditor(data.selectedItem, fileName, keywordArgs);
-					},
-					title:"Select Editor"
-			});
-			return;
-		}*/
+
 		Workbench._createEditor(editorExtension, fileName, keywordArgs, newHtmlParams).then(function(editor) {
 			if(editorCreateCallback){
 				editorCreateCallback.call(window, editor);
@@ -1147,36 +1113,6 @@ var Workbench = {
 		return d;
 	},
 
-	_populateShowViewsMenu: function()
-	{
-		return dojo.map(Runtime.getExtensions("davinci.view"), function(view){
-			return {
-				icon: null,
-				id: view.id,
-				label: view.title,
-				menubarPath: "davinci.window/show.view/additions",
-				run: function() {
-					Workbench.toggleView(view.id);
-				}
-			};
-		});
-	},
-	
-	_populatePerspectivesMenu: function()
-	{
-		return dojo.map(Runtime.getExtensions("davinci.perspective"), function(perspective){
-			return {
-				icon: null,
-				id: perspective.id,
-				label: perspective.title,
-				menubarPath: "davinci.window/open.perspective/additions",
-				run: function() {
-					Workbench.showPerspective(perspective.id);
-				}
-			};
-		});
-	},
-
 	createPopup: function(args) {
 		var partID = args.partID, domNode=args.domNode, 
 			context=args.context,
@@ -1184,14 +1120,14 @@ var Workbench = {
 //			
 		var actionSetIDs=[];
 		var editorExtensions=Runtime.getExtension("davinci.actionSetPartAssociations",
-				function (extension) {
-				   for (var i=0;i<extension.parts.length;i++) {
-					   if (extension.parts[i]==partID) {
-						   actionSetIDs.push(extension.targetID);
-						   return true;
-					   }
+			function (extension) {
+			   for (var i=0;i<extension.parts.length;i++) {
+				   if (extension.parts[i]==partID) {
+					   actionSetIDs.push(extension.targetID);
+					   return true;
 				   }
-				});
+			   }
+			});
 		if (actionSetIDs.length) {
 		   var actionSets=Runtime.getExtensions("davinci.actionSets",
 				function (extension) {
@@ -1263,19 +1199,16 @@ var Workbench = {
 		}
 		var seq=Workbench._keySequence(e);
 		var cmd;
-		if (Workbench.currentContext && Workbench.keyBindings[Workbench.currentContext])
-		{
+		if (Workbench.currentContext && Workbench.keyBindings[Workbench.currentContext]) {
 			cmd=Workbench.keyBindings[Workbench.currentContext][seq];
 		}
 		if (!cmd) {
 			cmd=Workbench.keyBindings.all[seq];
 		}
-		if (cmd)
-		{
+		if (cmd) {
 			Runtime.executeCommand(cmd);
 			return true;
 		}
-		
 	},
 	
 	_keySequence: function (e)
@@ -1301,14 +1234,12 @@ var Workbench = {
 			if (e.shiftKey || (e.modifiers>3)) {
 				seq.push("M2");
 			}
-			if(e.modifiers)
-			{
+			if(e.modifiers) {
 				if (e.altKey || (e.modifiers % 2)) {
 					seq.push("M3");
 				}
 			}
-			else
-			{
+			else {
 				if (e.altKey) {
 					seq.push("M3");
 				}
@@ -1316,12 +1247,9 @@ var Workbench = {
 		}
 		
 		var letter=String.fromCharCode(e.keyCode);
-		if (/[A-Z0-9]/.test(letter))
-		{
+		if (/[A-Z0-9]/.test(letter)) {
 			//letter=e.keyChar;
-		}
-		else
-		{
+		} else {
 			var keyTable = {
 				46: "del",
 				114: "f3"
@@ -1353,7 +1281,6 @@ var Workbench = {
 
 	toggleFullScreen: function()
 	{
-
 		var mainBodyContainer = dijit.byId('mainBody');
 		if (mainBodyContainer.origLayout) {
 			mainBodyContainer.layout = mainBodyContainer.origLayout;
@@ -1400,8 +1327,7 @@ var Workbench = {
 		dijit.byNode(mainBodyContainer._center).resize();
 	},
 	
-	_switchEditor: function(newEditor, startup)
-	{
+	_switchEditor: function(newEditor, startup) {
 		var oldEditor = Runtime.currentEditor;
 		Runtime.currentEditor = newEditor;
 		try {
@@ -1429,8 +1355,7 @@ var Workbench = {
 		}
 	},
 
-	_updateTitle: function(currentEditor)
-	{
+	_updateTitle: function(currentEditor) {
 		var newTitle=Workbench._baseTitle;
 		if (currentEditor) {
 			newTitle = newTitle + " - ";
@@ -1442,8 +1367,7 @@ var Workbench = {
 		dojo.doc.title=newTitle;
 	},
 
-	_editorTabClosed: function(page)
-	{
+	_editorTabClosed: function(page) {
 		if (page && page.editor && page.editor.fileName) {
 			util.arrayRemove(Workbench._state.editors, page.editor.fileName);
 			Workbench._updateWorkbenchState();
@@ -1514,14 +1438,13 @@ var Workbench = {
 	},
 
 	_autoSave: function(){
-		
-		var lastSave=Workbench._lastAutoSave;
+		var lastSave = Workbench._lastAutoSave;
 		function saveDirty(editor){
 			if (editor.isReadOnly || !editor.isDirty) {
 				return;
 			}
 			
-			var modified=editor.lastModifiedTime;
+			var modified = editor.lastModifiedTime;
 			if (modified && modified>lastSave){
 				try {
 					editor.save(true);

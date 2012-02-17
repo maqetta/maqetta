@@ -55,7 +55,6 @@ davinci/davinci = {
 	"./js/ui/JavaScriptEditor",
 	"./ve/prefs/HTMLEditPreferences",
 
-	"./review/Review",
 	"./review/view/CommentExplorerView",
 	"./review/actions/ViewFileAction",
 	"./review/actions/DeleteVersionAction",

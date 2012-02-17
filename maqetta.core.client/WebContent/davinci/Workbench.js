@@ -21,8 +21,9 @@ define([
 	"dojo/i18n!./nls/webContent",
 	"./ve/metadata",
 	"dojo/_base/Deferred",
+	"dojo/_base/declare"
 ], function(Runtime, Path,  util, ViewPart, EditorContainer, Dialog, Toolbar, ToolbarSeparator, Menu, MenuBar, PopupMenuBarItem,
-		Button, BorderContainer, StackContainer, ContentPane, TabContainer, sysResource, webContent, metadata, Deferred) {
+		Button, BorderContainer, StackContainer, ContentPane, TabContainer, sysResource, webContent, metadata, Deferred, declare) {
 
 // Cheap polyfill to approximate bind(), make Safari happy
 Function.prototype.bind = Function.prototype.bind || function(that){ return dojo.hitch(that, this);};
@@ -690,28 +691,22 @@ var Workbench = {
 
 	_createMenu: function(menu, context) {
 		var dojoMenu,menus,connectFunction;
-		if (menu.menus)  // creating dropdown
-		{
-		  dojoMenu = new Menu( {
-			parentMenu: menu
-		  });
-		  menus=menu.menus;
+		if (menu.menus) {  // creating dropdown
+		  dojoMenu = new Menu({parentMenu: menu });
+		  menus = menu.menus;
 		  connectFunction="onOpen";
 //					  this._openMenu(dojoMenu, menus);
 //					  return dojoMenu;
-		  
-		}
-		else	// creating popup
-		{
-			dojoMenu = new davinci.workbench._PopupMenu({});
-			menus=menu;
+		} else {	// creating popup
+			dojoMenu = new PopupMenu({});
+			menus = menu;
 			connectFunction="menuOpened";
 		}
 
 		dojoMenu.domNode.style.display = "none";
 		dojoMenu.actionContext = context;
 		dojo.connect(dojoMenu, connectFunction, this, function(evt){
-		   this._openMenu(dojoMenu, menus,evt).focus(); // call focus again, now that we messed with the widget contents
+		   this._openMenu(dojoMenu, menus, evt).focus(); // call focus again, now that we messed with the widget contents
 		});
 		return dojoMenu;
 	},
@@ -1463,7 +1458,7 @@ var Workbench = {
 	_XX_last_member: true	// dummy with no trailing ','
 };
 
-dojo.declare("davinci.workbench._PopupMenu", Menu, {
+var PopupMenu = declare(Menu, {
 
 	menuOpened: function (event) {},
 	

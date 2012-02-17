@@ -300,16 +300,14 @@ return declare("davinci.ve._Widget", null, {
 		var lastSplice = 0;
 		/* re-order the elements putting short hands first */
 		
-		for(var j=0;j<shorthands.length;j++) {
-			for(var i=0;i<shorthands[j].length;i++) {
-				var index = indexWithProperty(shorthands[j][i]);
-				if(index>-1) {
-					var element = cleaned[index];
-					cleaned.splice(index,1);
-					cleaned.splice(lastSplice,0, element);
-					
-					lastSplice++;
-				}
+		for(var i=0;i<shorthands.length;i++) {
+			var index = indexWithProperty(shorthands[i][0]);
+			if(index>-1) {
+				var element = cleaned[index];
+				cleaned.splice(index,1);
+				cleaned.splice(lastSplice,0, element);
+				
+				lastSplice++;
 			}
 		}
 		return cleaned;

@@ -2299,44 +2299,52 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	modifyRule: function(rule, values){
-		var cleaned = dojo.clone(values);
-		function indexOf(value){
-			for(var i=0;i<cleaned.length;i++){
-				if(cleaned[i].hasOwnProperty(value)) return i;
-			}
-			return -1;
-		}
-		
-		// return a sorted array of sorted style values.
-		var shorthands = CSSModel.shorthand;
-		var lastSplice = 0;
-		/* re-order the elements putting short hands first */
-		
-		for(var j=0;j<shorthands.length;j++) {
-			for(var i=0;i<shorthands[j].length;i++) {
-				var index = indexOf(shorthands[j][i]);
-				if(index>-1) {
-					var element = cleaned[index];
-					cleaned.splice(index,1);
-					cleaned.splice(lastSplice,0, element);
-					lastSplice++;
-
-					var prop = rule.getProperty(shorthands[j][i]);
-    				if(prop){
-    					rule.removeProperty(shorthands[j][i]);
-    				}
-                }
-			}
-		}
-		
-		
-		for(var i = 0;i<cleaned.length;i++){
-			for(var name in cleaned[i]){
+		// Remove any properties within rule that are listed in the "values" parameter 
+		for(i = 0;i<values.length;i++){
+			for(var name in values[i]){
 				rule.removeProperty(name);
 			}
 		}
-		
-		for(var i = 0;i<cleaned.length;i++){
+		// Create a merged list of properties from existing rule and "values" parameter
+		var existingProps = [];
+		var i, p;
+		for(p=0; p<rule.properties.length; p++){
+			var prop = rule.properties[p];
+			var o = {};
+			o[prop.name] = prop.value;
+			existingProps.push(o);
+		}
+		var cleaned = existingProps.concat(dojo.clone(values));
+		// return a sorted array of sorted style values.
+		function indexOf(value){
+			for(var i=0;i<cleaned.length;i++){
+				if(cleaned[i].hasOwnProperty(value)){
+					return i;
+				}
+			}
+			return -1;
+		}
+		var shorthands = CSSModel.shorthand;
+		var lastSplice = 0;
+		/* re-order the elements putting short hands first */
+		for(i=0;i<shorthands.length;i++) {
+			var index = indexOf(shorthands[i][0]);
+			if(index>-1) {
+				var element = cleaned[index];
+				cleaned.splice(index,1);
+				cleaned.splice(lastSplice,0, element);
+				lastSplice++;
+			}
+		}
+		// Clear out all remaining prop declarations in the rule
+		for(p=rule.properties.length-1; p>=0; p--){
+			var prop = rule.properties[p];
+			if(prop){
+				rule.removeProperty(prop.name);
+			}
+		}
+		// Add all prop declarations back in, in proper order
+		for(i = 0;i<cleaned.length;i++){
 			for(var name in cleaned[i]){
 				if(cleaned[i][name]==null ||cleaned[i][name]=="" ){
 					continue;

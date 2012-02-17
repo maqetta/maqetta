@@ -6,7 +6,7 @@ define(["dojo/_base/declare",
        
         "davinci/Runtime",
         
-        "davinci/ve/utils/CssShortHand",
+        "davinci/html/CSSModel",
         "davinci/ui/widgets/DocileDialog",
         "davinci/ve/States",
         "davinci/ui/ErrorDialog",
@@ -15,7 +15,7 @@ define(["dojo/_base/declare",
         
         
        
-],function(declare,WidgetLite,Preferences,Workbench, Runtime, CSSShortHand, DocileDialog, States, ErrorDialog, veNLS,commonNLS){
+],function(declare,WidgetLite,Preferences,Workbench, Runtime, CSSModel, DocileDialog, States, ErrorDialog, veNLS,commonNLS){
 	var cascade =  declare("davinci.ve.widgets.Cascade",  [WidgetLite], {
 	
 		target : null,
@@ -309,8 +309,15 @@ define(["dojo/_base/declare",
 		},
 		
 		_buildShortHands : function(target){
-			if(target in CSSShortHand.map){
-				var expanded = CSSShortHand.map[target];
+			var isShorthand = false;
+			for(var j=0; j<CSSModel.shorthand.length; j++){
+				if(target == CSSModel.shorthand[j][0]){
+					isShorthand = true;
+					break;
+				}
+			}
+			if(isShorthand){
+				var expanded = CSSModel.shorthand[j][1];
 				for(var i = 0;i<expanded.length;i++){
 					var found = false;
 					for(var j=0;j<this._shorthands.length && !found;j++){

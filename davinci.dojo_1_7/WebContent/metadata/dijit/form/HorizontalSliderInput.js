@@ -8,16 +8,34 @@ define(
 	"dijit/form/HorizontalSlider", 
 	"dijit/form/HorizontalRule", 
 	"dijit/form/HorizontalRuleLabels",  
+	"dojo/text!./templates/horizontalSliderInput.html",
+	"dojo/text!./templates/horizontalSliderInputRowTemplate.html",
+	"davinci/css!./templates/horizontalSliderInput.css",
 	"dojo/i18n!../nls/dijit", 
 	"dojo/i18n!dijit/nls/common"
 ],
-function(declare, ContainerInput, ContentPane, BorderContainer, LayoutContainer,
-		HorizontalSlider, HorizontalRule, HorizontalRuleLabels, langObj, dijitLangObj) {
+function(declare, 
+		ContainerInput, 
+		ContentPane, 
+		BorderContainer, 
+		LayoutContainer,
+		HorizontalSlider, 
+		HorizontalRule, 
+		HorizontalRuleLabels, 
+		mainTemplateString,
+		rowTemplate,
+		cssForTemplate,
+		langObj, 
+		dijitLangObj) {
 
 return declare(ContainerInput, {
 
 	//Data structure to hold entries for (potentially) new children of the slider
 	_sliderChildrenEntries: null,
+	
+	_substitutedRowTemplate: null,
+	
+	_substitutedMainTemplate: null,
 	
 	show: function(widgetId) {
 		this._widget = davinci.ve.widget.byId(widgetId);
@@ -377,171 +395,36 @@ return declare(ContainerInput, {
 	},
 	
 	_getTemplate: function(width, height) {
-		//Start of main div
-		var s = '<div dojoType="dijit.layout.BorderContainer" design="headline" gutters="false" ';
-		s += '		style="width: ' + width + 'px; height:' + (height - 20) + 'px" liveSplitters="false" id="borderContainer">';
-		
-		//Start styles
-		s += '	<style type="text/css">';
-		s += '		.sliderDialog .dijitDialogPaneContent {';
-		s += '			padding:0px;';
-		s += '		}';
-		s += '		.sliderInputChildRow {';
-		s += '			margin:0.3em 0em 1em 1em;';
-		s += '		}';
-		s += '		.sliderInputChildRow > table {';
-		s += '			width:27em;';
-		s += '		}';
-		s += '		.sliderInputChildRow th {';
-		s += '			text-align:center;';
-		s += '			font-style:italic;';
-		s += '		}';
-		s += '		.sliderInputChildRow .dijitSelect {';
-		s += '			margin:2;';
-		s += '		}';
-		s += '		.sliderInputDiv {';
-		s += '			background-color:#d8d8d8;';
-		s += '		}';
-		s += '		div.sliderInputDiv, .sliderInputDiv td, .sliderInputDiv.sliderInputUrlSectionLabel {';
-		s += '			padding:2px 5px;';
-		s += '		}';
-		s += '		.sliderInputCol1 {';
-		s += '			width:10px;';
-		s += '		}';
-		s += '		.sliderInputPlusMinusButtons {';
-		s += '			white-space:nowrap;';
-		s += '			width:50px;';
-		s += '		}';
-		s += '		.sliderInputOptsLabel {';
-		s += '			text-align:right;';
-		s += '			padding-right: 6px;';
-		s += '			white-space:nowrap;';
-		s += '			width:1.4em';
-		s += '		}';
-		s += '		.sliderTypeSelect .dijitButtonText{';
-		s += '			width:3em;';
-		s += '			text-align:left;';
-		s += '		}';
-		s += '		.sliderContainerSelect .dijitButtonText{';
-		s += '			width:9em;';
-		s += '			text-align:left;';
-		s += '		}';
-		s += '		.sliderTypeSelect .dijitButtonText{';
-		s += '			width:3em;';
-		s += '			text-align:left;';
-		s += '		}';
-		
-		//Make a style to facilite putting a transparent div over the preview to prevent user input
-		s += '		.sliderPreviewDisablingDiv';
-		s += '			{';
-		// Do not display it on entry 
-		s += '				display: block;';
-		 
-		//Display it on the layer with index 1001.
-		//Make sure this is the highest z-index value
-		//used by layers on that page.
-		s += '			    z-index:1001;';
-		     
-		//make it cover the whole screen
-		s += '				position: absolute;';
-		s += ' 				top: 0%;';
-		s += '				left: 0%;'; 
-		s += '    			width: 100%;';
-		s += '    			height: 100%;';
-		 
-		//make it white but fully transparent
-		s += '    			background-color: white;';
-		s += '    			opacity:.00;';
-		s += '    			filter: alpha(opacity=00);'; 
-		s += '}';
-		
-		//End of styles
-		s += '	</style>';
-		
-		//Center region
-		s += '	<div dojoType="dijit.layout.ContentPane" region="center">';
-
-		s += '		<table width="100%">';
-		s += '			<tr class="sliderInputDiv sliderInputChildrenLabel">';
-		s += '				<td colspan="5">' + langObj.ruleAndLabelsHeader + '</td>';
-		s += '			</tr>';
-		s += '			<tr class="sliderInputChildRow">';
-		s += '				<th></th>';
-		s += '				<th></th>';
-		s += '				<th>' + langObj.typeColHeader + '</th>';
-		s += '				<th>' + langObj.containerColHeader + '</th>';
-		s += '				<th></th>';
-		s += '			</tr>';
-		s += '			<!--  child rows for rules and rule labels added dynamically -->';
-		s += '			<tr class="sliderInputBeforeOptionsLabel sliderInputOptionsLabelRow"></tr>';
-		s += '		</table>';
-        
-        //end center region
-        s += '	</div>';
-		
-        //Preview area -- "trailing" region
-		s += '		<div dojoType="dijit.layout.ContentPane" style="width: 40%;" region="trailing" >';
-		s += '			<table width="100%">';
-		s += '				<tr class="sliderInputDiv sliderInputChildrenLabel">';
-		s += '					<td>' + langObj.preview + '</td>';
-		s += '				</tr>';
-		s += '				<!--  child rows for rules and rule labels added dynamically -->';
-		s += '				<tr>';
-		s += '					<td>';
-		s += '						<div class="sliderPreviewDisablingDiv" ></div>';
-		s += '						<div dojoType="dijit.layout.ContentPane" id="previewArea">'; 
-		s += '						</div>';
-		s += '					</td>';
-		s += '				</tr>';
-		s += '			</table>';
-        s += '		</div>';
-        
-        //OK/Cancel button area on bottom
-		s += '	<div dojoType="dijit.layout.LayoutContainer" style="height: 4em;" region="bottom">';
-		s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="left" style="width: 40%"></div>';
-		s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="client" style="width: 100px">';
-		s += '			<button dojoType="dijit.form.Button" type="button" id="okButton" > '+dijitLangObj.buttonOk+' </button>';
-		s += '			<button dojoType="dijit.form.Button" type="button" id="cancelButton"> '+dijitLangObj.buttonCancel+' </button>';
-		s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="right" style="width: 40%"></div>';
-		s += '		</div>';
-		s += '	</div>';
-
-		//End outer div
-		s += '</div>';
-		
-		//Return template
-		return s;
+		if (!this._substitutedMainTemplate) {
+			this._substitutedMainTemplate = 
+				dojo.replace(mainTemplateString, {
+					width: width + "px",
+					height: (height - 20) + "px",
+					ruleAndLabelsHeader: langObj.ruleAndLabelsHeader,
+					typeColHeader: langObj.typeColHeader,
+					containerColHeader: langObj.containerColHeader,
+					preview: langObj.preview,
+					buttonOk: dijitLangObj.buttonOk,
+					buttonCancel: dijitLangObj.buttonCancel
+				});
+		}
+			
+		return this._substitutedMainTemplate;
 	},
 	
 	_getRowTemplate: function() {
-		//Data entry row template
-		var rowTemplate 
-					= "<tr class='sliderInputChildRow' style='display:none;'>";
-		rowTemplate += "	<td class='sliderInputCol1'></td>";
-		rowTemplate += "	<td class='sliderInputOptsLabel sliderInputChildLabel'>Template:</td>";
-		rowTemplate += "	<td>";
-		rowTemplate += "		<select class='sliderTypeSelect' dojoType='dijit.form.Select'>";
-		rowTemplate += "			<option value=\"rules\">"+ langObj.rulesSelectEntry + "</option>";
-		rowTemplate += "			<option value=\"labels\">"+ langObj.labelsSelectEntry + "</option>";
-		rowTemplate += "		</select>";
-		rowTemplate += "	</td>";
-		rowTemplate += "	<td>";
-		rowTemplate += "		<select class='sliderContainerSelect' dojoType='dijit.form.Select'>";
-		
-		var containerOptions = this._getContainerOptions();
-		for(var i=0; i<containerOptions.length; i++){
-			rowTemplate += "		<option value=\"" + containerOptions[i] + "\">" + containerOptions[i] + "</option>";
+		if (!this._substitutedRowTemplate) {
+			var containerOptions = this._getContainerOptions();
+			this._substitutedRowTemplate = 
+				dojo.replace(rowTemplate, {
+					containerOptions0: containerOptions[0],
+					containerOptions1: containerOptions[1],
+					rulesSelectEntry: langObj.rulesSelectEntry,
+					labelsSelectEntry: langObj.labelsSelectEntry
+				});
 		}
-		
-		rowTemplate += "		</select>";
-		rowTemplate += "	</td>";
-		rowTemplate += "	<td class='sliderInputPlusMinusButtons'>";
-		rowTemplate += "		<span class='sliderInputPlusButton' dojoType='dijit.form.Button'>+</span>";
-		rowTemplate += "		<span class='sliderInputMinusButton' dojoType='dijit.form.Button'>-</span>";
-		rowTemplate += "	</td>";
-		rowTemplate += "</tr>";
 			
-		return rowTemplate;
+		return this._substitutedRowTemplate;
 	},
 	
 	/*************************************************************

@@ -5,9 +5,9 @@ define([
 	"davinci/Runtime",
 	
 	"dijit/Tree",
+	"davinci/ui/dnd/DragSource",
 	"davinci/ui/Resource",
 	"davinci/ui/widgets/TransformTreeMixin",
-	"davinci/ui/dnd/DragSource",
 	"system/resource",
 	"davinci/ui/widgets/ProjectToolbar",
 	
@@ -15,7 +15,7 @@ define([
 	"davinci/ui/Download",
 	"davinci/ui/DownloadSelected",
 	"davinci/ui/UserLibraries",
-], function(declare, ViewPart, Workbench, Runtime, Tree) {
+], function(declare, ViewPart, Workbench, Runtime, Tree, DragSource) {
 	
 return declare("davinci.workbench.Explorer", ViewPart, {
 	
@@ -36,7 +36,7 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 		
 		var model= system.resource;
 
-		// Patch Tree to allow for image drag-and-drop.  code moved from davinci.ui.widget.Tree.
+		// Patch Tree to allow for image drag-and-drop
 		// TODO: Would be better and more efficient to make use of the dijit.Tree drag-and-drop with dojo.dnd,
 		// but it does not seem to perform well over an IFRAME and would require some reworking of the drag source and target.
 		var imageDragTree = declare("", Tree, { //FIXME: why won't null work as first arg to dojo.declare?
@@ -45,15 +45,15 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 		 		if (dragSources && args.item){
 					dragSources.forEach(function(source){
 						if (source.dragSource(args.item)){
-							var ds = new davinci.ui.dnd.DragSource(treeNode.domNode, "component", treeNode);
+							var ds = new DragSource(treeNode.domNode, "component", treeNode);
 							ds.targetShouldShowCaret = true;
 							ds.returnCloneOnFailure = false;
-							dojo["require"](source.dragHandler);
-							var dragHandlerClass = dojo.getObject(source.dragHandler); 
-							ds.dragHandler = new dragHandlerClass(args.item);
-			                this.connect(ds, "initDrag", function(e){if (ds.dragHandler.initDrag) ds.dragHandler.initDrag(e);}); // move start
-							this.connect(ds, "onDragStart", function(e){ds.dragHandler.dragStart(e);}); // move start
-							this.connect(ds, "onDragEnd", function(e){ds.dragHandler.dragEnd(e);}); // move end
+							require([source.dragHandler], function(dragHandlerClass) {
+								ds.dragHandler = new dragHandlerClass(args.item);
+				                this.connect(ds, "initDrag", function(e){if (ds.dragHandler.initDrag) ds.dragHandler.initDrag(e);}); // move start
+								this.connect(ds, "onDragStart", function(e){ds.dragHandler.dragStart(e);}); // move start
+								this.connect(ds, "onDragEnd", function(e){ds.dragHandler.dragEnd(e);}); // move end								
+							}.bind(this));
 						}
 			 		}, this);
 		 		}

@@ -1,84 +1,78 @@
 define([
-        "dojo/_base/declare",
-        "./_Widget",
-        "./metadata"
-//        "./widget"
-], function(declare, _Widget, metadata) {
+	"dojo/_base/declare",
+	"dojo/_base/window",
+	"dojo/_base/lang",
+	"dojo/dom-attr",
+	"dojo/parser",
+	"./_Widget",
+	"./metadata"
+//	"./widget"
+], function(
+	declare,
+	dwindow,
+	dlang,
+	domAttr,
+	parser,
+	_Widget,
+	metadata
+) {
+
+var SCRATCHSPACE = '__DijitWidgetScratchSpace';
 
 return declare("davinci.ve.DijitWidget", _Widget, {
 
 	isDijitWidget: true,
 
 	constructor: function(mixin, node, dijitWidget, metadata, srcElement) {
-	
-		if (dojo.isString(dijitWidget)) {
-			var c = require("davinci/ve/widget")._dojo(node).getObject(dijitWidget);
-			// create the instance (follow parser.js)
-			// XXX Bug 7674 - This whole code should be replaced with call to dojo.parser.parse()
-			dojo.attr(node, "dojoType", dijitWidget);
-			if(srcElement) {
-				srcElement.addAttribute("dojoType", dijitWidget);
+		if (typeof dijitWidget === 'string') {
+			// XXX we should just add dojo type in metadata and remove this code
+			// add dojo type to node
+			var type = domAttr.get(node, 'data-dojo-type') || domAttr.get(node, 'dojoType');
+			if (!type) {
+				domAttr.set(node, 'data-dojo-type', dijitWidget);
 			}
-			
-            // carry over node attributes to params that are passed in to constructor
-            var proto = c.prototype, params = {};
-            for (var prop in proto) {
-                var val = node.hasAttribute(prop) ? node.getAttribute(prop) : null;
-                if (!val) {
-                    continue;
-                }
-                switch(typeof proto[prop]) {
-                case "string":
-                    params[prop] = val;
-                    break;
-                case "number":
-                    params[prop] = +val;
-                    break;
-                case "boolean":
-                    params[prop] = !!val;
-                    break;
-                case "object":
-                    params[prop] = dojo.fromJson(val);
-                }
-            }
-            params["class"] = node.className;
-            params["style"] = node.style && node.style.cssText;
-
-            // mixin other properties into params; 'mixin' takes precedence
-            dojo.mixin(params, mixin);
-
-            // Bug 7675 - Some widgets (i.e. dojox.mobile.IconItem) require a parent node.
-            var parentNode = node.parentNode, didCreateParent = false;
-            if (!parentNode) {
-                parentNode = node.ownerDocument.createElement("div");
-                parentNode.appendChild(node);
-                didCreateParent = true;
-            }
-
-            var markupFactory = c["markupFactory"];
-			if(!markupFactory && c["prototype"]) {
-				markupFactory = c.prototype["markupFactory"];
+			if (srcElement) {
+				srcElement.addAttribute('data-dojo-type', dijitWidget);
 			}
-			try {
-				var dijitWidget = markupFactory ? markupFactory(params, node, c) : new c(params, node);
-				this.domNode=dijitWidget.domNode;
-				dijitWidget.domNode._dvWidget=this;
-				if (dijitWidget.containerNode) {
-					dijitWidget.containerNode._dvWidget=this;
+
+			var doc = node.ownerDocument,
+				win = doc.defaultView,
+				ss = doc[SCRATCHSPACE];
+			if (!ss) {
+				// Since node is sometimes completely replaced by the Dojo parser,
+				// it needs a parent. Create (and cache) a DIV to use as the
+				// temporary parent.
+				ss = doc[SCRATCHSPACE] = doc.createElement('div');
+			}
+			ss.appendChild(node);
+
+			// instantiate widget, in context of editor iframe
+			var instances = win.require('dojo/parser').instantiate(
+				[{
+					type: dijitWidget,
+					node: node
+				}],
+				mixin,
+				// Don't allow `instantiate()` to call the widget's `startup()`;
+				// it's called later by Maqetta.
+				{
+					noStart: true
 				}
-				this.isLayoutContainer=dijitWidget.isLayoutContainer;
+			);
+			dijitWidget = instances[0];
 
-                // clean up -- "unwrap" incoming node from created DIV (bug 7675)
-                if (didCreateParent && parentNode.firstChild) {
-                    node = parentNode.removeChild(parentNode.firstChild);
-                }
-			} catch (e) {
-				console.error(e);
-				throw e;
-				//debugger;
+			// remove from scratch space
+			node = ss.removeChild(ss.firstChild);
+
+			// XXX move this block after `if`?
+			this.domNode = dijitWidget.domNode;
+			dijitWidget.domNode._dvWidget = this;
+			if (dijitWidget.containerNode) {
+				dijitWidget.containerNode._dvWidget = this;
 			}
-		}else{
-			this.type=dijitWidget.declaredClass;
+			this.isLayoutContainer = dijitWidget.isLayoutContainer;
+		} else {
+			this.type = dijitWidget.declaredClass;
 		}
 
 		var allowedChild = davinci.ve.metadata.getAllowedChild(this.type);

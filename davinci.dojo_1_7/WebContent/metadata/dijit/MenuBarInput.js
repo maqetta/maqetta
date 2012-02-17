@@ -2,12 +2,14 @@ define([
 	"dojo/_base/declare",
 	"./layout/ContainerInput",
 	"davinci/ve/commands/ModifyCommand",
-	"dojo/i18n!./nls/dijit"
+	"dojo/i18n!./nls/dijit",
+	"dojox/html/entities"
 ], function(
 	declare,
 	ContainerInput,
 	ModifyCommand,
-	dijitNls
+	dijitNls,
+	entities
 ) {
 
 return declare(ContainerInput, {
@@ -150,11 +152,11 @@ return declare(ContainerInput, {
 	},
 	
 	parse: function(input) {
-		var result = this.parseItems(dojox.html.entities.decode(input));
+		var result = this.parseItems(entities.decode(input));
 		// i think we need to re-encode the result.text here
 		if (this._format === 'text'){
 			for (var i=0; i < result.length; i++){
-				result[i].text = dojox.html.entities.encode(result[i].text );
+				result[i].text = entities.encode(result[i].text );
 			}
 		}
 		return result;

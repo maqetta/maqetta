@@ -10,7 +10,8 @@
 		},
 		"label": {
 			"datatype": "string",
-			"description": "Specifies a shorter label for an option"
+			"description": "Specifies a shorter label for an option",
+			"hidden": "true"
 		},
 		"selected": {
 			"datatype": "boolean",

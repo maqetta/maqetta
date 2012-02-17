@@ -1969,9 +1969,6 @@
 		                    }
 		                }
 		            },
-		            "properties": {
-		                "style": "z-index:0;"
-		            },
 		            "helper": "./dojox/mobile/HeadingHelper",
 		            "inlineEdit": {
 		                "property": "label",

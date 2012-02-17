@@ -1,8 +1,9 @@
-define([	"require",
+define(["require",
 	"dojo/_base/declare",
 	"davinci/workbench/_ToolbaredContainer",
+	"dojo/_base/Deferred",
 	"dojo/i18n!davinci/workbench/nls/workbench"  
-], function(require, declare, ToolbaredContainer, workbenchStrings) {
+], function(require, declare, ToolbaredContainer, Deferred, workbenchStrings) {
 
 return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 
@@ -50,47 +51,50 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 	
 	setEditor: function(editorExtension, fileName, content, file, rootElement, newHtmlParams){
-		
+		var d = new Deferred();
 		this.editorExtension = editorExtension;
-		var constr = require(editorExtension.editorClass);
-		var editor = this.editor = new constr(this.containerNode);
-		if(editor.setRootElement){
-			editor.setRootElement(rootElement);
-		}
-		this.containerNode = editor.domNode || this.containerNode;
-		editor.editorID=editorExtension.id;
-		editor.isDirty= !editor.isReadOnly && this.isDirty;
-		this._createToolbar();
-		if (!content) {
-			content=editor.getDefaultContent();
-			editor.isDirty=!editor.isReadOnly;
-			editor.lastModifiedTime=Date.now();
-		}
-		if (!content) {
-			content="";
-		}
-		editor.resourceFile=file;
-		editor.fileName=fileName;
-
-		// Don't populate the editor until the tab is selected.  Defer processing,
-		// but also avoid problems with display:none on hidden tabs making it impossible
-		// to do geometry measurements in editor initialization
-		var tabContainer = "editors_tabcontainer";
-		if(dijit.byId(tabContainer).selectedChildWidget.domNode == this.domNode){
-			// Tab is visible.  Go ahead
-			editor.setContent(fileName, content, newHtmlParams);	
-		}else{
-			// When tab is selected, set up the editor
-			var handle = dojo.subscribe(tabContainer + "-selectChild", null, function(args){
-				if(editor==args.editor){
-					dojo.unsubscribe(handle);
-					editor.setContent(fileName,content);		
-				}
-			});
-		}
-		editor.editorContainer=this;
-		this.setDirty(editor.isDirty);
-		//dojo.publish("/davinci/ui/EditorOpening", [this.editor]);
+		require([editorExtension.editorClass], function(EditorCtor) {	
+			var editor = this.editor = new EditorCtor(this.containerNode);
+			if(editor.setRootElement){
+				editor.setRootElement(rootElement);
+			}
+			this.containerNode = editor.domNode || this.containerNode;
+			editor.editorID=editorExtension.id;
+			editor.isDirty= !editor.isReadOnly && this.isDirty;
+			this._createToolbar();
+			if (!content) {
+				content=editor.getDefaultContent();
+				editor.isDirty=!editor.isReadOnly;
+				editor.lastModifiedTime=Date.now();
+			}
+			if (!content) {
+				content="";
+			}
+			editor.resourceFile=file;
+			editor.fileName=fileName;
+	
+			// Don't populate the editor until the tab is selected.  Defer processing,
+			// but also avoid problems with display:none on hidden tabs making it impossible
+			// to do geometry measurements in editor initialization
+			var tabContainer = "editors_tabcontainer";
+			if(dijit.byId(tabContainer).selectedChildWidget.domNode == this.domNode){
+				// Tab is visible.  Go ahead
+				editor.setContent(fileName, content, newHtmlParams);	
+			}else{
+				// When tab is selected, set up the editor
+				var handle = dojo.subscribe(tabContainer + "-selectChild", null, function(args){
+					if(editor==args.editor){
+						dojo.unsubscribe(handle);
+						editor.setContent(fileName,content);		
+					}
+				});
+			}
+			editor.editorContainer=this;
+			this.setDirty(editor.isDirty);
+			//dojo.publish("/davinci/ui/EditorOpening", [this.editor]);
+			d.resolve(editor);
+		}.bind(this));
+		return d;
 	},
 
 	setDirty: function (isDirty) {

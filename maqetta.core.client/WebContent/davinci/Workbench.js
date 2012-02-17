@@ -19,9 +19,10 @@ define([
 	"dijit/layout/TabContainer",
 	"system/resource",
 	"dojo/i18n!./nls/webContent",
-	"./ve/metadata"
+	"./ve/metadata",
+	"dojo/_base/Deferred",
 ], function(Runtime, Path,  util, ViewPart, EditorContainer, Dialog, Toolbar, ToolbarSeparator, Menu, MenuBar, PopupMenuBarItem,
-		Button, BorderContainer, StackContainer, ContentPane, TabContainer, sysResource, webContent, metadata) {
+		Button, BorderContainer, StackContainer, ContentPane, TabContainer, sysResource, webContent, metadata, Deferred) {
 
 var filename2id = function(fileName) {
 	return "editor-" + encodeURIComponent(fileName.replace(/[\/| |\t]/g, "_")).replace(/%/g, ":");
@@ -1058,17 +1059,19 @@ var Workbench = {
 			});
 			return;
 		}*/
-		var ee = Workbench._createEditor(editorExtension, fileName, keywordArgs, newHtmlParams);
-		if(editorCreateCallback){
-			editorCreateCallback.call(window, ee);
-		}
+		Workbench._createEditor(editorExtension, fileName, keywordArgs, newHtmlParams).then(function(editor) {
+			if(editorCreateCallback){
+				editorCreateCallback.call(window, editor);
+			}
 
-		if(!keywordArgs.noSelect) {
-			 Runtime.currentEditor = ee;
-		}
+			if(!keywordArgs.noSelect) {
+				 Runtime.currentEditor = editor;
+			}			
+		});
 	},
 	
 	_createEditor: function(editorExtension, fileName, keywordArgs, newHtmlParams){
+		var d = new Deferred();
 		var nodeName = fileName.split('/').pop();
 
 		var loading = dojo.query('.loading');
@@ -1117,25 +1120,28 @@ var Workbench = {
 		if (!keywordArgs.noSelect) {
 			tabContainer.selectChild(tab);
 		}
-		tab.setEditor(editorExtension, fileName, content, keywordArgs.fileName, tab.domNode, newHtmlParams);
-		
-		if (keywordArgs.startLine) {
-			tab.editor.select(keywordArgs);
-		}
-		
-		if (!keywordArgs.noSelect)
-		{
-			util.arrayAddOnce(Workbench._state.editors, fileName);
-			Workbench._switchEditor(tab.editor, keywordArgs.startup);
-		}
+		tab.setEditor(editorExtension, fileName, content, keywordArgs.fileName, tab.domNode, newHtmlParams).then(function(editor) {
+			if (keywordArgs.startLine) {
+				tab.editor.select(keywordArgs);
+			}
+			
+			if (!keywordArgs.noSelect)
+			{
+				util.arrayAddOnce(Workbench._state.editors, fileName);
+				Workbench._switchEditor(tab.editor, keywordArgs.startup);
+			}
 
-		setTimeout(function(){
-			var loadIcon = dojo.query('.dijitTabButtonIcon',tab.controlButton.domNode);
-			dojo.removeClass(loadIcon[0],'tabButtonLoadingIcon');
-			dojo.addClass(loadIcon[0],'dijitNoIcon');
-			tab.resize(); //kludge, forces editor to correct size, delayed to force contents to redraw
-		}, 100);
-		return tab.editor;
+			setTimeout(function(){
+				var loadIcon = dojo.query('.dijitTabButtonIcon',tab.controlButton.domNode);
+				dojo.removeClass(loadIcon[0],'tabButtonLoadingIcon');
+				dojo.addClass(loadIcon[0],'dijitNoIcon');
+				tab.resize(); //kludge, forces editor to correct size, delayed to force contents to redraw
+			}, 100);
+			
+			d.resolve(tab.editor);
+		});
+		
+		return d;
 	},
 
 	_populateShowViewsMenu: function()

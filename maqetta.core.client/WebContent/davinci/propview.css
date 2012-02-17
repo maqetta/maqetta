@@ -1,3 +1,18 @@
+/* Animation effects at top of file because code searches for these rules */
+.propRootDetailsContainer {
+	/* This style rule is updated by code to achieve animation effects */
+	-webkit-transition: margin-left .6s ease;
+	-moz-transition: margin-left .6s ease;
+	margin-left:0px;
+}
+
+.property_table_stretchable {
+	/* This style rule is updated by code to achieve animation effects */
+	-webkit-transition: margin-top .6s ease;
+	-moz-transition: margin-top .6s ease;
+	margin-top:0px;
+}
+
 .colorPicker {
 }
 .colorPicker .colorPickerSelected{
@@ -434,3 +449,4 @@ button.showCss::-moz-focus-inner {
 	text-align:center;
 	background-color:#E6E6E7;
 }
+

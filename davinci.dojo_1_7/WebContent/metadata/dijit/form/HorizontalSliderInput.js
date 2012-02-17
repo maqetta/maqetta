@@ -79,7 +79,7 @@ return declare(ContainerInput, {
 			if (this._widget.inLineEdit_displayOnCreate){
 				// hide cancel on widget creation #120
 				delete this._widget.inLineEdit_displayOnCreate;
-				dojo.style(obj.domNode, "display", "none");
+				dojo.style(cancelButton.domNode, "display", "none");
 			}
 			
 			this._updateDialog();

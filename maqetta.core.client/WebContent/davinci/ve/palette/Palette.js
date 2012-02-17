@@ -429,12 +429,12 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	},
 	
 	onDragStart: function(e){	
-		var data = e.dragSource.data,
+		var data = e.dragSource.data;
+		Metadata.getHelper(data.type, 'tool').then(function(ToolCtor) {
 			// Copy the data in case something modifies it downstream -- what types can data.data be?
-			dataCopy = dojo.clone(data.data),
-			ToolCtor = Metadata.getHelper(data.type, 'tool') || CreateTool,
-			tool = new ToolCtor(dataCopy);
-		this._context.setActiveTool(tool);
+			var tool = new (ToolCtor || CreateTool)(dojo.clone(data.data));
+			this._context.setActiveTool(tool);
+		}.bind(this));
 
 		// Sometimes blockChange doesn't get cleared, force a clear upon starting a widget drag operation
 		this._context.blockChange(false);
@@ -443,7 +443,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		// posting a list of possible parent widgets for the new widget
 		// and register the dragClongDiv with Context
 		if(e._dragClone){
-			dojo.create('div',{className:'maqCandidateParents'},e._dragClone);
+			dojo.create('div',{className:'maqCandidateParents'}, e._dragClone);
 		}
 		//FIXME: Attach dragClone and event listeners to tool instead of context?
 		this._context.setActiveDragDiv(e._dragClone);

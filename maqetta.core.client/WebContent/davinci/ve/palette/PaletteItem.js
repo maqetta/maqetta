@@ -132,11 +132,11 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		this.palette.selectedItem = this;
 		this.palette.pushedItem = null;
 
-		var dataCopy = dojo.clone(this.data),
-			ToolCtor = Metadata.getHelper(this.type, 'tool') || CreateTool,
-			tool = new ToolCtor(dataCopy);
+		Metadata.getHelper(this.type, 'tool').then(function(ToolCtor) {
+			var tool = new (ToolCtor || CreateTool)(dojo.clone(this.data));
+			this.palette._context.setActiveTool(tool);
+		}.bind(this));
 
-		this.palette._context.setActiveTool(tool);
 		this.connect(this.palette._context, "onMouseUp", function(e){
 			this.palette.selectedItem = null;
 			this.flat(this.domNode);
@@ -153,15 +153,14 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			this.flat(this.palette.selectedItem.domNode);
 			this.palette.selectedItem = null;
 		}
-		var context = this.palette._context,
-			dataCopy = dojo.clone(this.data),
-			ToolCtor = Metadata.getHelper(this.type, 'tool') || CreateTool,
-			tool = new ToolCtor(dataCopy);
-
-		context.setActiveTool(tool);
-		tool.create({target: context.getSelection()[0], position: {x:50, y:50}});
-		context.setActiveTool(null);
-		context.getContainerNode().focus();  // to enable moving with arrow keys immediately
+		Metadata.getHelper(this.type, 'tool').then(function(ToolCtor) {
+			var tool = new (ToolCtor || CreateTool)(dojo.clone(this.data)),
+				context = this.palette._context;
+			context.setActiveTool(tool);
+			tool.create({target: context.getSelection()[0], position: {x:50, y:50}});
+			context.setActiveTool(null);			
+			context.getContainerNode().focus();  // to enable moving with arrow keys immediately
+		});
 	},
 
 	flat: function(div){

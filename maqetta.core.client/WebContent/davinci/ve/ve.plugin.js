@@ -532,7 +532,7 @@ return {
             name: "Visual Editor",
             id: "editorPrefs",
             category: "davinci.html.general",
-            pane: "davinci.ve.prefs.HTMLEditPreferences",
+            pane: "davinci/ve/prefs/HTMLEditPreferences",
             defaultValues: {
                 "flowLayout": true,
                 "snap": true,
@@ -551,7 +551,7 @@ return {
                     return (/gif|jpeg|jpg|png|svg|json/i).test(object.getExtension());
                 }
             },
-            dragHandler: "davinci.ve.palette.ImageDragSource"
+            dragHandler: "davinci/ve/palette/ImageDragSource"
         }
     ],
     "davinci.fileType": [

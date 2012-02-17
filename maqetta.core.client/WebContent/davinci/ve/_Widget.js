@@ -150,8 +150,7 @@ return declare("davinci.ve._Widget", null, {
         }
         return (typeof this._edit_helper === "boolean") ? null : this._edit_helper;
     },
-    
-   
+
 	attr: function(name,value)
 	{
 		var attrValue = this._attr.apply(this, arguments);

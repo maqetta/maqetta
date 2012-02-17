@@ -243,7 +243,8 @@
 		            "inlineEdit": {
 		                "property": "textContent",
 		                "displayOnCreate": true
-		            }
+		            },
+		            "hidden": "true"
 		        },
 		        {
 		            "name": "<optgroup>",
@@ -257,7 +258,8 @@
 		            },
 		            "resizable": "none",
 		            "allowedParent": "html.select",
-		            "allowedChild": "html.option"
+		            "allowedChild": "html.option",
+		            "hidden": "true"
 		        },
 		        {
 		            "name": "<option>",
@@ -271,7 +273,8 @@
 		                "value": "Item X"
 		            },
 		            "resizable": "none",
-		            "allowedParent": "html.select, html.datalist, html.optgroup"
+		            "allowedParent": "html.select, html.datalist, html.optgroup",
+		            "hidden": "true"
 		        },
 		        {
 		            "name": "<p>",
@@ -326,6 +329,8 @@
 		                }
 		            ],
 		            "allowedChild": "html.optgroup, html.option",
+		            "isControl": true,
+		            "inlineEdit": "./html/SelectInput"
 		        },
 		        {
 		            "name": "<span>",

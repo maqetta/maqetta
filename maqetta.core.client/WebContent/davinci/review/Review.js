@@ -2,10 +2,8 @@ define([
 	"dojo/_base/lang",
 	"davinci/Runtime",
 //	"davinci/Workbench",
-	"dijit/layout/BorderContainer",
 	"dijit/layout/ContentPane",
-	"dijit/layout/TabContainer"
-], function(lang, Runtime, /*Workbench,*/ BorderContainer, ContentPane, TabContainer) {
+], function(lang, Runtime, /*Workbench,*/ ContentPane) {
 
 davinci.review = {};
 

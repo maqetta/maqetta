@@ -8,7 +8,7 @@ return {
 	"davinci.editor": {
 		id: "JSEditor",
 		name: "JavaScript Editor",
-		extensions: "js",
+		extensions: "js,json",
 		isDefault: true,
 		//TODO implement		 icon : "",
 		editorClass: "davinci/js/ui/JavaScriptEditor"
@@ -175,7 +175,7 @@ return {
 			name: "Formatting",
 			id: "format",
 			category: "davinci.js.general",
-			pane: "davinci.js.ui.FormatOptions",
+			pane: "davinci/js/ui/FormatOptions",
 			defaultValues: {
 				blockNewLine: false,
 				blockIndent: 3,

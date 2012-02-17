@@ -250,6 +250,25 @@ define([
 	        }
 	    }
 	},
+	
+	getThemeByCssFile:  function(cssFile){
+
+		var themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly);
+    	var targetFile = cssFile.getResource().getPath(); // target
+	    for (var i = 0; i < themeData.length; i++){
+	    	var themeFile = themeData[i].file;
+	    	var path = themeFile.getParentFolder().getPath();// theme path
+	    	for (var x = 0; x < themeData[i].files.length; x++){
+	    		var checkFile = path + "/" + themeData[i].files[x];
+	    		if(checkFile === targetFile){
+	    			// this cssFile belongs to this theme
+		            return themeData[i];
+		        }
+	    	}
+	        
+	    }
+	    return null; // not found
+	},
 
 	getDojoxMobileThemeMap: function(context, mobileTheme){
 	    

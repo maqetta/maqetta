@@ -702,6 +702,11 @@ define(["dojo/_base/declare",
 		},
 		
 		_isTarget : function(t){
+			if (t === '$std_10') {
+				// this means all values are vaild for this selctor
+				// FIXME: at some point in the future we will define $std_10 but for now it means all
+				return true;
+			}
 			for(var i = 0;i<this.target.length;i++)
 				if(this.target[i]== t) return true;
 			
@@ -776,11 +781,11 @@ define(["dojo/_base/declare",
 		},
 		_getDefaultSelection : function(){
 			
-			var theme = this.context.getThemeMeta();
+			/*var theme = this.context.getThemeMeta();
 			if(!theme)
 				return null;
 			
-			var widgetType = theme.loader.getType(this._widget);
+			var widgetType = theme.loader.getType(this._widget);*/
 			
 			// Note: Let's be careful to not get confused between the states in theme metadata
 			// and the user-defined interactive states that are part of a user-created HTML page
@@ -791,7 +796,8 @@ define(["dojo/_base/declare",
 				state = States.getState();
 			}
 	
-			var meta = theme.loader.getMetaData(widgetType);
+			//var meta = theme.loader.getMetaData(widgetType);
+			var meta = this.context.getThemeMetaDataByWidget(this._widget);
 			if(!meta || !meta.states){
 				
 			//	console.log("error loading metadata:\nwidgetType:" + widgetType + "\nfound:\n" + meta);

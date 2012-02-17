@@ -12,7 +12,8 @@ define([
 	"preview/silhouetteiframe",
 	"./utils/URLRewrite",
 	"davinci/workbench/Preferences",
-	"./widget"
+	"./widget",
+	"system/resource"
 ], function(
 	require,
 	declare,
@@ -27,7 +28,8 @@ define([
 	SilhouetteIframe,
 	URLRewrite,
 	Preferences,
-	widgetUtils
+	widgetUtils,
+	systemResource
 ){
 
 var VisualEditor = declare("davinci.ve.VisualEditor", null, {
@@ -384,6 +386,17 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 	
 	save: function (isAutoSave){
 		var model = this.context.getModel();
+		var cssFiles = this.context.cssFiles;
+		if (cssFiles) {
+			// if we have dynamic css files we need to save them for saving and removing working copies
+			if (!this._dirtyCssFiles) {
+				this._dirtyCssFiles = [];
+			} 
+			var self = this;
+			cssFiles.forEach(function(file){
+				self._dirtyCssFiles[file.url] = file;
+			});
+		}
 		model.setDirty(true);
 		var visitor = {
 			visit: function(node){
@@ -395,7 +408,32 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		};
 		
 		model.visit(visitor);
+		if (this._dirtyCssFiles) {
+			for (var f in this._dirtyCssFiles) {
+				if (this._dirtyCssFiles[f].dirtyResource){
+					this._dirtyCssFiles[f].save(isAutoSave);
+					if (!isAutoSave){
+						systemResource.findResource(this._dirtyCssFiles[f].url).removeWorkingCopy();
+					}
+					this._dirtyCssFiles[f].dirtyResource = isAutoSave;
+				}
+			}
+		}
 		this.isDirty=isAutoSave;
+	},
+	
+	removeWorkingCopy: function(){ 
+
+		var cssFiles = this._dirtyCssFiles;
+		this._pageEditor.resourceFile.removeWorkingCopy();
+		if (cssFiles) {
+			for (var f in this._dirtyCssFiles) {
+				if (this._dirtyCssFiles[f].dirtyResource) {
+					systemResource.findResource(this._dirtyCssFiles[f].url).removeWorkingCopy();
+				}
+			}
+		}
+		this.isDirty=false;
 	},
 	
 	getDefaultContent: function (){

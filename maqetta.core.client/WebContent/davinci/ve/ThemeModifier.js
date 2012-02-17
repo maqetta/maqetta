@@ -7,6 +7,7 @@ define([
 
 return declare("davinci.ve.ThemeModifier", null, {
 
+	
 	_getCssFiles: function(){
 		
 		if(this.cssFiles) {

@@ -125,7 +125,9 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	    	this._isClosing = true;
 	    	
 			//this.editor.resourceFile.removeWorkingCopy();
-			if(editor.getFileEditors){
+	    	if(editor.removeWorkingCopy){ // wdr
+	    		editor.removeWorkingCopy();
+	    	} else if(editor.getFileEditors){
 				editor.getFileEditors().forEach(function(editor) {
 					if (editor.isReadOnly) {
 						return;

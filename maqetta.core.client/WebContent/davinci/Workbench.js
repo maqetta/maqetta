@@ -24,6 +24,9 @@ define([
 ], function(Runtime, Path,  util, ViewPart, EditorContainer, Dialog, Toolbar, ToolbarSeparator, Menu, MenuBar, PopupMenuBarItem,
 		Button, BorderContainer, StackContainer, ContentPane, TabContainer, sysResource, webContent, metadata, Deferred) {
 
+// Cheap polyfill to approximate bind(), make Safari happy
+Function.prototype.bind = Function.prototype.bind || function(that){ return dojo.hitch(that, this);};
+
 var filename2id = function(fileName) {
 	return "editor-" + encodeURIComponent(fileName.replace(/[\/| |\t]/g, "_")).replace(/%/g, ":");
 };

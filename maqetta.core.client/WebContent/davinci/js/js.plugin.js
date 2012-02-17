@@ -8,7 +8,7 @@ return {
 	"davinci.editor": {
 		id: "JSEditor",
 		name: "JavaScript Editor",
-		extensions: "js",
+		extensions: "js,json",
 		isDefault: true,
 		//TODO implement		 icon : "",
 		editorClass: "davinci/js/ui/JavaScriptEditor"

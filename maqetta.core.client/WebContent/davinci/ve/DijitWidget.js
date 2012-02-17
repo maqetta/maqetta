@@ -17,6 +17,8 @@ define([
 	metadata
 ) {
 
+var SCRATCHSPACE = '__DijitWidgetScratchSpace';
+
 return declare("davinci.ve.DijitWidget", _Widget, {
 
 	isDijitWidget: true,
@@ -33,10 +35,16 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 				srcElement.addAttribute('data-dojo-type', dijitWidget);
 			}
 
-			// Since node is sometimes completely replaced, it needs a parent.
-			var win = node.ownerDocument.defaultView,
-				frag = node.ownerDocument.createDocumentFragment();	// XXX cache per doc; use DIV like dojo.toDom()
-			frag.appendChild(node);
+			var doc = node.ownerDocument,
+				win = doc.defaultView,
+				ss = doc[SCRATCHSPACE];
+			if (!ss) {
+				// Since node is sometimes completely replaced by the Dojo parser,
+				// it needs a parent. Create (and cache) a DIV to use as the
+				// temporary parent.
+				ss = doc[SCRATCHSPACE] = doc.createElement('div');
+			}
+			ss.appendChild(node);
 
 			// instantiate widget, in context of editor iframe
 			var instances = win.require('dojo/parser').instantiate(
@@ -53,8 +61,8 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 			);
 			dijitWidget = instances[0];
 
-			// remove from doc fragment
-			node = frag.removeChild(frag.firstChild);
+			// remove from scratch space
+			node = ss.removeChild(ss.firstChild);
 
 			// XXX move this block after `if`?
 			this.domNode = dijitWidget.domNode;

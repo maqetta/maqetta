@@ -551,7 +551,7 @@ return {
                     return (/gif|jpeg|jpg|png|svg|json/i).test(object.getExtension());
                 }
             },
-            dragHandler: "davinci.ve.palette.ImageDragSource"
+            dragHandler: "davinci/ve/palette/ImageDragSource"
         }
     ],
     "davinci.fileType": [

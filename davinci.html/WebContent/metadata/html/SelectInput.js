@@ -78,8 +78,7 @@ return declare(SmartInput, {
 	//NOTE: OPTGROUP's cannot be nested inside of other OPTGROUP's, so
 	//there's no recursion here
 	update: function(widget, values) {
-		var data = widget.getData();
-		var children = []; //data.children;
+		var children = [];
 		
 		var currentOptGroup = null;
 		for (var i = 0; i < values.length; i++) {

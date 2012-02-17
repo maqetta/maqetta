@@ -310,11 +310,12 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     showInline: function(widget) {
         this._selectedWidget = widget;
         var context = this._context;
+        var self = this;
         Metadata.getSmartInput(widget.type).then(function(inline) {
         	if (!inline) {
         		return;
         	}
-            this._inline = inline;
+            self._inline = inline;
             if (inline.useParent) {
                 var parentWidget = widget.getParent();
                 if (parentWidget) {

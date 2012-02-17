@@ -318,6 +318,7 @@ return declare("davinci.ve.input.SmartInput", null, {
 			this.help(false);  // first time, don't display help but resize as needed
 			dijit.selectInputText(this._inline.eb.textbox);
 			this.updateSimStyle();
+			this._inline.eb.textbox.focus();
 		});
 
 		var node = this._node(this._widget);

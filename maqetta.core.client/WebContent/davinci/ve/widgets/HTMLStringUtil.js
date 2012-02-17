@@ -22,6 +22,10 @@ define(["dojo/_base/declare",
 			__id : 0,
 			idPrefix : "davinci_ve_widgets_properties_generated",
 			_currentPropSection : null,
+			
+			animSS:null,	// Cache of style sheet that contains animation effects
+			animRuleIndex:{}, 	// Cache of style rules that contains animation effects, indexed by selector
+			
 			getCurrentPropSection : function(){
 				return this._currentPropSection;
 			},
@@ -292,7 +296,7 @@ define(["dojo/_base/declare",
 			}
 			return htmlText;
 		},
-		stylesheetHref : "propvieweffects.css",
+		stylesheetHref : "propview.css",
 		
 		animShowSectionClass: "propRootDetailsContainer",
 		animShowSectionClassSelector : ".propRootDetailsContainer",
@@ -557,11 +561,34 @@ define(["dojo/_base/declare",
 			if(ss){
 				return ss;
 			}
+			function searchImports(ss, stylesheetHref){
+				for(var ruleIndex=0; ruleIndex<ss.cssRules.length; ruleIndex++){
+					var rule=ss.cssRules[ruleIndex];
+					if(rule.type === 3){		// 3=@import
+						var importSS = rule.styleSheet;
+						var foundSS = findSS(importSS, stylesheetHref);
+						if(foundSS){
+							return foundSS;
+						}
+					}
+				}
+			}
+			function findSS(ss, stylesheetHref){
+				if(ss.href && ss.href.indexOf(stylesheetHref)>=0){
+					return ss;
+				}else{
+					var foundSS = searchImports(ss, stylesheetHref);
+					if(foundSS){
+						return foundSS;
+					}
+				}
+			}
 			for(var i=0; i<document.styleSheets.length; i++){
 				var ss=document.styleSheets[i];
-				if(ss.href && ss.href.indexOf(this.stylesheetHref)>=0){
-					this.animSS = ss;
-					return ss;
+				var foundSS = findSS(ss, this.stylesheetHref);
+				if(foundSS){
+					this.animSS = foundSS;
+					return foundSS;
 				}
 			}
 			return null;
@@ -570,11 +597,17 @@ define(["dojo/_base/declare",
 		// Search animSS (property palette's animation stylesheet) to find the style rule
 		// with given the selectorText. Returns index for the rule.
 		_findRule : function(selectorText){
-			//FIXME: when integrated, maybe this.animSS?
+			if(this.animSS && typeof this.animRuleIndex[selectorText] == 'number'){
+				var idx = this.animRuleIndex[selectorText];
+				if(this.animSS.cssRules[idx].selectorText == selectorText){
+					return idx;
+				}
+			}
 			var ss = this._findAnimSS();
 			for(var ruleIndex=0; ruleIndex<ss.cssRules.length; ruleIndex++){
 				var rule=ss.cssRules[ruleIndex];
 				if(rule.selectorText == selectorText){
+					this.animRuleIndex[selectorText] = ruleIndex;
 					return ruleIndex;
 				}
 			}

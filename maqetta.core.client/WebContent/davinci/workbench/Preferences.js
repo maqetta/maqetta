@@ -140,13 +140,13 @@ var Preferences = {
 		var extension= Preferences._extensions[node.index[0]];
 		var prefs=Preferences.getPreferences(extension.id, davinci.Workbench.getProject());
 		if (extension.pane){
-			dojo["require"](extension.pane); //FIXME: use require
-			var cls=eval(extension.pane); // FIXME: avoid eval?
-			var pane=new cls();
-			Preferences._currentPane=pane;
-			Preferences._currentPane._extension=extension;
-			Preferences._currentPane.setPreferences(prefs);
-			domNode=pane.domNode;
+			require([extension.pane], function(cls) {
+				var pane=new cls();
+				Preferences._currentPane=pane;
+				Preferences._currentPane._extension=extension;
+				Preferences._currentPane.setPreferences(prefs);
+				dijit.byId("pref.RightPane").setContent(pane.domNode);
+			});
 		}
 		else if (extension.pageContent){
 			domNode=document.createTextNode(extension.pageContent);

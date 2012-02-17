@@ -532,7 +532,7 @@ return {
             name: "Visual Editor",
             id: "editorPrefs",
             category: "davinci.html.general",
-            pane: "davinci.ve.prefs.HTMLEditPreferences",
+            pane: "davinci/ve/prefs/HTMLEditPreferences",
             defaultValues: {
                 "flowLayout": true,
                 "snap": true,

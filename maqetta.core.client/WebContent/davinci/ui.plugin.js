@@ -64,7 +64,7 @@ return {
             id: "ProjectPrefs",
             category: "davinci.ui.project",
 
-            pane: "davinci.ui.ProjectPreferences",
+            pane: "davinci/ui/ProjectPreferences",
             defaultValues: {
                 "webContentFolder": "",
                 "themeFolder": "themes",

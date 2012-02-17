@@ -2,7 +2,10 @@ define([
 	"dojo/_base/declare",
 	"davinci/ve/tools/CreateTool",
 	"davinci/ui/dnd/DragManager",
-], function(declare, CreateTool, dragManager){
+	"davinci/ve/metadata",
+	"davinci/model/Path",
+	"davinci/Workbench",
+], function(declare, CreateTool, dragManager, metadata, Path, Workbench){
 
 return declare("davinci.ve.palette.ImageDragSource", null, {
 	
@@ -11,7 +14,7 @@ return declare("davinci.ve.palette.ImageDragSource", null, {
 	},
 	
 	initDrag: function(){
-		var editor=davinci.Workbench.getOpenEditor();
+		var editor = Workbench.getOpenEditor();
 		if (editor && editor.currentEditor && editor.currentEditor.context)	{
 			this.context=editor.currentEditor.context;
 			dragManager.document = this.context.getDocument();
@@ -29,10 +32,10 @@ return declare("davinci.ve.palette.ImageDragSource", null, {
 	dragStart: function(){
 		
 		if (this.context){
-			var createData;
-			var targetPath = this.context.getPath();
-			var imagePath = new davinci.model.Path(this.data.getPath());
-			var relativepath = (imagePath.relativeTo(targetPath, true)).toString();
+			var createData,
+				targetPath = this.context.getPath(),
+				imagePath = new Path(this.data.getPath()),
+				relativepath = imagePath.relativeTo(targetPath, true).toString();
 			
 			if (this.data.getExtension() === "json"){
 				createData={
@@ -53,10 +56,10 @@ return declare("davinci.ve.palette.ImageDragSource", null, {
 			}
             createData.fileDragCreate = true; 
 
-			var ToolCtor = davinci.ve.metadata.getHelper(createData.type, 'tool') ||
-						   davinci.ve.tools.CreateTool,
-				tool = new ToolCtor(createData);
-			this.context.setActiveTool(tool);
+            metadata.getHelper(createData.type, 'tool').then(function(ToolCtor) {
+				var tool = new (ToolCtor || CreateTool)(createData);
+				this.context.setActiveTool(tool);
+            }.bind(this));
 		}
 	},
 

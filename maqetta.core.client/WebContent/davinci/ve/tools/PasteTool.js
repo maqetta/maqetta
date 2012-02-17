@@ -1,19 +1,23 @@
 define(["dojo/_base/declare",
     	"davinci/ve/tools/CreateTool",
     	"davinci/ve/widget",
+    	"davinci/ve/metadata",
     	"davinci/commands/CompoundCommand",
     	"davinci/ve/commands/AddCommand",
-    	"davinci/ve/commands/MoveCommand",
-    	"davinci/ve/commands/ResizeCommand"], function(
+    	"davinci/ve/commands/MoveCommand"], function(
     		declare,
 			CreateTool,
-			widget
+			widget,
+			metadata,
+			CompoundCommand,
+			AddCommand,
+			MoveCommand
 			){
 
 return declare("davinci.ve.tools.PasteTool", CreateTool, {
 
 	_create: function(args){
-		var command = new davinci.commands.CompoundCommand(),
+		var command = new CompoundCommand(),
 			index = args.index,
 			baseline,
 			selection = [];
@@ -53,39 +57,39 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 
 			var w;
 			dojo.withDoc(this._context.getDocument(), function(){
-				d.context=this._context;
-				var ToolCtor = davinci.ve.metadata.getHelper(d.type, "tool"),
-					myTool;
-			    if (ToolCtor) {
-			    	myTool = new ToolCtor(d);
-		        }
-		        if(myTool && myTool.addPasteCreateCommand){
-		        	var myArgs = {};
-		        	myArgs.parent = args.parent || this._context.getContainerNode();
-		        	myArgs.position = position;
-		        	myArgs.index = index;
-		        	w = myTool.addPasteCreateCommand(command,myArgs);
-		        	if(!w){
-						return;
-					}
-		        } else {
-		        	w = widget.createWidget(d);
-		        	if(!w){
-						return;
-					}
-		        	command.add(new davinci.ve.commands.AddCommand(w, args.parent || this._context.getContainerNode(), index));
-		        }
-		    					
-				if(index !== undefined && index >= 0){
-					index++;
-				}
-				if(position){
-					command.add(new davinci.ve.commands.MoveCommand(w, position.x, position.y));
-				}
+				d.context = this._context;
+				metadata.getHelper(d.type, "tool").then(function(ToolCtor) {
+					var myTool;
+				    if (ToolCtor) {
+				    	myTool = new ToolCtor(d);
+			        }
+			        if (myTool && myTool.addPasteCreateCommand) {
+			        	var myArgs = {
+			        		parent: args.parent || this._context.getContainerNode(),
+			        		position: position,
+			        		index: index
+			        	};
+			        	w = myTool.addPasteCreateCommand(command,myArgs);
+			        	if (!w) {
+							return;
+						}
+			        } else {
+			        	w = widget.createWidget(d);
+			        	if (!w) {
+							return;
+						}
+			        	command.add(new AddCommand(w, args.parent || this._context.getContainerNode(), index));
+			        }
 
-				
+			        if (index !== undefined && index >= 0) {
+						index++;
+					}
+					if (position) {
+						command.add(new MoveCommand(w, position.x, position.y));
+					}
+				});
 			}, this);
-			if(!w){
+			if (!w) {
 				return;
 			}
 

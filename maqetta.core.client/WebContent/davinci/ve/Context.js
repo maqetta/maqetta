@@ -20,6 +20,8 @@ define([
 	"../html/HTMLText",
 	"../workbench/Preferences",
 	"preview/silhouetteiframe",
+	"dojo/_base/Deferred",
+	"dojo/DeferredList",
 	"dojox/html/_base"
 ], function(
 	declare,
@@ -42,7 +44,9 @@ define([
 	HTMLElement,
 	HTMLText,
 	Preferences,
-	Silhouette
+	Silhouette,
+	Deferred,
+	DeferredList
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -1205,6 +1209,7 @@ return declare("davinci.ve.Context", null, {
 	 * Process dojoType, oawidget and dvwidget attributes on text content for containerNode
 	 */
 	_processWidgets: function(containerNode, attachWidgets, states, scripts) {
+		var prereqs = [];
 		dojo.forEach(dojo.query("*", containerNode), function(n){
 			var type = n.getAttribute("dojoType") || /*n.getAttribute("oawidget") ||*/ n.getAttribute("dvwidget");
 			//doUpdateModelDojoRequires=true forces the SCRIPT tag with dojo.require() elements
@@ -1212,59 +1217,61 @@ return declare("davinci.ve.Context", null, {
 			//Cleans up after a bug we had (7714) where model wasn't getting updated, so
 			//we had old files that were missing some of their dojo.require() statements.
 			this.loadRequires(type, false/*doUpdateModel*/, true/*doUpdateModelDojoRequires*/);
-			this.preProcess(n);
+			prereqs.push(this._preProcess(n));
 //			this.resolveUrl(n);
 			this._preserveStates(n, states);
-
 		}, this);
-		var promise = new dojo.Deferred();
-		this.getGlobal()["require"]("dojo/ready")(function(){
-			try {
-				this.getGlobal()["require"]("dojo/parser").parse(containerNode);
-				promise.callback();
-			} catch(e) {
-				// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
-				// the dojo parser will throw an exception trying to compute style on hidden containers
-				// so to fix this we catch the exception here and add a subscription to be notified when this editor is seleected by the user
-				// then we will reprocess the content when we have focus -- wdr
-
-				console.error(e);
-				// remove all registered widgets, some may be partly constructed.
-				this.getDijit().registry.forEach(function(w){
-					  w.destroy();			 
-				});
+		var promise = new Deferred();
+		new DeferredList(prereqs).then(function() {
+			this.getGlobal()["require"]("dojo/ready")(function(){
+				try {
+					this.getGlobal()["require"]("dojo/parser").parse(containerNode);
+					promise.resolve();
+				} catch(e) {
+					// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
+					// the dojo parser will throw an exception trying to compute style on hidden containers
+					// so to fix this we catch the exception here and add a subscription to be notified when this editor is seleected by the user
+					// then we will reprocess the content when we have focus -- wdr
 	
-				this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",
-						this, '_editorSelectionChange');
-
-				promise.errback();
-				throw e;
-			}
+					console.error(e);
+					// remove all registered widgets, some may be partly constructed.
+					this.getDijit().registry.forEach(function(w){
+						  w.destroy();			 
+					});
 		
-			if(attachWidgets){
-				this._attachAll();
-			}
-
-	        if (scripts) {
-	            try {
-	                dojox.html.evalInGlobal(scripts, containerNode);
-	            } catch(e) {
-	                console.error('Error eval script in Context._setSourceData, ' + e);
-	            }
-	        }
+					this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",
+							this, '_editorSelectionChange');
+	
+					promise.reject();
+					throw e;
+				}
+			
+				if(attachWidgets){
+					this._attachAll();
+				}
+	
+		        if (scripts) {
+		            try {
+		                dojox.html.evalInGlobal(scripts, containerNode);
+		            } catch(e) {
+		                console.error('Error eval script in Context._setSourceData, ' + e);
+		            }
+		        }
+			}.bind(this));
 		}.bind(this));
 
 		return promise;
 	},
 	
-   preProcess: function (node){
-         //need a helper to pre process widget
+	_preProcess: function (node){
+		//need a helper to pre process widget
+		// also, prime the helper cache
         var type = node.getAttribute("dojoType");
-        var helper = Widget.getWidgetHelper(type);
-        if(helper && helper.preProcess){
-            helper.preProcess(node, this);
-        }
-        
+        return Widget.requireWidgetHelper(type).then(function(helper) {        	
+	        if(helper && helper.preProcess){
+	            helper.preProcess(node, this);
+	        }
+        });
     },
 	    
 	_editorSelectionChange: function(event){

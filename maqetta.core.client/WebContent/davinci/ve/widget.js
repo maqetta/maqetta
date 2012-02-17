@@ -1,6 +1,7 @@
 define([
 	"davinci/html/HTMLElement", //HTMLElement
 	"davinci/ve/metadata",
+	"dojo/_base/Deferred",
 	"davinci/ve/DijitWidget",
 	"davinci/ve/GenericWidget",
 	"davinci/ve/HTMLWidget",
@@ -8,8 +9,11 @@ define([
 	"dojo/window"
 ], function(
 	HTMLElement,
-	metadata
+	metadata,
+	Deferred
 ) {
+
+var helperCache = {};
 
 var getUniqueId = function() {
     var dj = dojo.window.get(dojo.doc).dojo,
@@ -592,16 +596,24 @@ _createSrcElement: function(node) {
 	return srcElement;
 },
 
+// assumes the caller has already primed the cache by calling requireWidgetHelper
 getWidgetHelper: function(type) {
-	var HelperCtor = metadata.getHelper(type, 'helper');
-	if (HelperCtor) {
-		// XXX need to cache
-		return new HelperCtor();
-	}
+	return helperCache[type];
+},
+
+requireWidgetHelper: function(type) {
+	var d = new Deferred();
+	metadata.getHelper(type, 'helper').then(function(HelperCtor) {
+		if (HelperCtor) {
+			d.resolve(helperCache[type] = new HelperCtor());
+		} else {
+			d.resolve();
+		}
+	});
+	return d;
 },
 
 getWidget: function(node){
-
 	if(!node || node.nodeType != 1){
 		return undefined;
 	}

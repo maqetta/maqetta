@@ -352,6 +352,23 @@ define([
     	return prop.split(/\s*,\s*/);
     }
 
+    function getHelperId(type, helperType){
+        var value = Metadata.queryDescriptor(type, helperType);
+        if (!value) {
+            return null;
+        }
+
+        var lib,
+        	moduleId;
+        if (typeof value === 'string' && value.substr(0, 2) === './') {
+        	// if path is relative...
+            lib = getLibraryForType(type);
+            moduleId = new Path(lib.$moduleId).append(value).toString();
+        } else {
+        	moduleId = value;
+        }
+        return moduleId;
+    }
     
 	Metadata = {
         /**
@@ -698,48 +715,28 @@ define([
          *             Widget type (i.e. "dijit.form.Button")
          * @param  {String} helperType
          *             One of the accepted 'helper' types (see description)
-         * @param {Boolean} doInstantiate
-         *             If true, the requested module is instantiated and returned.
-         *             Otherwise, returns module ID.  Defaults to true.
-         * @return {Object}
+         * @return {Deferred}
          */
-        getHelper: function(type, helperType, doInstantiate) {
-        	var idx = type + ':' + helperType;
+        getHelper: function(type, helperType) {
+        	var d = new Deferred(),
+        		idx = type + ':' + helperType;
+
         	if (idx in helperCache) {
-        		return helperCache[idx];
+        		d.resolve(helperCache[idx]);
+        		return d;
         	}
 
-        	if (typeof doInstantiate === 'undefined') {
-        		doInstantiate = true;
-        	}
-
-            var value = Metadata.queryDescriptor(type, helperType);
-            if (!value) {
-                return null;
-            }
-
-            var lib,
-            	moduleId,
-            	helper;
-            if (typeof value === 'string' && value.substr(0, 2) === './') {
-            	// if path is relative...
-	            lib = getLibraryForType(type);
-                moduleId = new Path(lib.$moduleId).append(value).toString();
+            var moduleId = getHelperId(type, helperType);
+            if (!moduleId) {
+            	d.resolve();
             } else {
-            	moduleId = value;
+	            require([moduleId], function(module) {
+	                d.resolve(module);
+	                helperCache[idx] = module;
+	            });
             }
 
-            if (! doInstantiate) {
-            	return moduleId;
-            }
-
-            // XXX TODO This assumes synchronous flow.  Need to make async.
-            require([moduleId], function(module) {
-                helper = module;
-                helperCache[idx] = module;
-            });
-
-            return helper;
+            return d;
         },
 
         /**
@@ -752,7 +749,7 @@ define([
         	if (type in smartInputCache) {
         		d.resolve(smartInputCache[type]);
         	} else {
-	        	var moduleId = Metadata.getHelper(type, 'inlineEdit', false);
+	        	var moduleId = getHelperId(type, 'inlineEdit');
 	        	if (!moduleId) {
 	        		d.resolve(null);
 	        	}else if (typeof moduleId === 'string') {

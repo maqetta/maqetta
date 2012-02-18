@@ -510,7 +510,8 @@ return declare("davinci.ve._Widget", null, {
 		if(style) {
 			if(style.position == "absolute" || style.position == "relative") {
 				var parent = this.getParent();
-				if(parent && parent.dijitWidget && parent.dijitWidget.addChild) {
+				//FIXME: This is Dojo-specific logic within a toolkit-independent file
+				if(parent && parent.dijitWidget && parent.dijitWidget.addChild && !parent.acceptsHTMLChildren) {
 					values.position = undefined;
 					values.left = undefined;
 					values.top = undefined;

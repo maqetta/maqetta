@@ -138,7 +138,6 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 					this._srcElement.addChild(child._srcElement);
 				}
                 if (! this.acceptsHTMLChildren) {
-            		//AWE TODO this.dijitWidget.addChild(child.dijitWidget, index);
             		this._addChildHelper(child.dijitWidget, index);
                 } else {
                     // See comment for _addChildHooked() for more info.
@@ -146,7 +145,6 @@ return declare("davinci.ve.DijitWidget", _Widget, {
                 }
 	        } else {
                 this._srcElement.addChild(child._srcElement);
-                //AWE TODOthis.dijitWidget.addChild(child.dijitWidget);
                 this._addChildHelper(child.dijitWidget);
             }
         } else {
@@ -155,7 +153,6 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 	},
 	
 	_addChildHelper: function(dijitWidget, index) {
-		//AWE TODO
 		var helper = this.getHelper();
 		if (helper && helper.addChild) {
 			helper.addChild(this, dijitWidget, index);

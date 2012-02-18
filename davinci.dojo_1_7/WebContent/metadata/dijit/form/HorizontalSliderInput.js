@@ -172,7 +172,7 @@ return declare(ContainerInput, {
 				
 				var typeSelectNodes = dojo.query('.sliderTypeSelect', newRuleOrLabel);
 				var typeSelect = dijit.byNode(typeSelectNodes[0]);
-				typeSelect.setValue(this._getSelectValueAssociatedWithType(child.type));
+				typeSelect.set('value', this._getSelectValueAssociatedWithType(child.type));
 				this._connection.push(dojo.connect(typeSelect, 'onChange', dojo.hitch(this,function(){
 					this._updateDataStructureChildren();
 					this._updatePreview();
@@ -180,7 +180,7 @@ return declare(ContainerInput, {
 				
 				var containerSelectNodes = dojo.query('.sliderContainerSelect', newRuleOrLabel);
 				var containerSelect = dijit.byNode(containerSelectNodes[0]);
-				containerSelect.setValue(this._getRuleOrLabelContainer(child));
+				containerSelect.set('value', this._getRuleOrLabelContainer(child));
 				this._connection.push(dojo.connect(containerSelect, 'onChange', dojo.hitch(this,function(){
 					this._updateDataStructureChildren();
 					this._updatePreview();
@@ -216,7 +216,7 @@ return declare(ContainerInput, {
 			
 			var typeSelectNodes = dojo.query('.sliderTypeSelect', newNoChildrenRow);
 			var typeSelect = dijit.byNode(typeSelectNodes[0]);
-			typeSelect.setValue(this._getSelectValueAssociatedWithType(this._getWidgetTypeForRuleLabels()));
+			typeSelect.set('value', this._getSelectValueAssociatedWithType(this._getWidgetTypeForRuleLabels()));
 			typeSelect.set('disabled', 'disabled');
 			
 			var containerSelectNodes = dojo.query('.sliderContainerSelect', newNoChildrenRow);
@@ -335,7 +335,7 @@ return declare(ContainerInput, {
 			var containerSelect = dijit.byNode(containerSelectNodes[0]);
 			
 			//Get values from dijits on the row and put back into data structure
-			var newType = this._getTypeFromSelectValue(typeSelect.getValue());
+			var newType = this._getTypeFromSelectValue(typeSelect.get('value'));
 			if (newType != ruleOrLabelData.type) {
 				//We've had a type change, so we need to update the style prop so dimensions are appropriate
 				//for the child type. We'll do this by creating a dummy child of the 
@@ -355,7 +355,7 @@ return declare(ContainerInput, {
 				}
 			}
 			ruleOrLabelData.type = newType;
-			ruleOrLabelData.properties.container = containerSelect.getValue();
+			ruleOrLabelData.properties.container = containerSelect.get('value');
 		}
 	},
 	

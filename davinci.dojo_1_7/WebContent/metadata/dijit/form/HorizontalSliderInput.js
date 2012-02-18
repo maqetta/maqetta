@@ -56,7 +56,7 @@ return declare(ContainerInput, {
 			var s = this._getTemplate(width, height);
 		
 			//Set content
-			this._inline.attr("content", s);
+			this._inline.set("content", s);
 			this._inline.show();
 
 			//Loop through slider children to find Rule and RuleLabel elements
@@ -75,7 +75,7 @@ return declare(ContainerInput, {
 					if (childData.properties.isTempID) {
 						// delete temp id so it does not make its way out to the source
 						// when we recreate the children
-						delete data.properties.id; 
+						delete childData.properties.id; 
 					}
 					
 					this._sliderChildrenEntries.push(childData);
@@ -172,7 +172,7 @@ return declare(ContainerInput, {
 				
 				var typeSelectNodes = dojo.query('.sliderTypeSelect', newRuleOrLabel);
 				var typeSelect = dijit.byNode(typeSelectNodes[0]);
-				typeSelect.attr('value', this._getSelectValueAssociatedWithType(child.type));
+				typeSelect.setValue(this._getSelectValueAssociatedWithType(child.type));
 				this._connection.push(dojo.connect(typeSelect, 'onChange', dojo.hitch(this,function(){
 					this._updateDataStructureChildren();
 					this._updatePreview();
@@ -180,7 +180,7 @@ return declare(ContainerInput, {
 				
 				var containerSelectNodes = dojo.query('.sliderContainerSelect', newRuleOrLabel);
 				var containerSelect = dijit.byNode(containerSelectNodes[0]);
-				containerSelect.attr('value', this._getRuleOrLabelContainer(child));
+				containerSelect.setValue(this._getRuleOrLabelContainer(child));
 				this._connection.push(dojo.connect(containerSelect, 'onChange', dojo.hitch(this,function(){
 					this._updateDataStructureChildren();
 					this._updatePreview();
@@ -188,7 +188,7 @@ return declare(ContainerInput, {
 				
 				var plusNode = dojo.query('.sliderInputPlusButton', newRuleOrLabel)[0];
 				var plusButton = dijit.byNode(plusNode);
-				plusButton.attr('title', langObj.bgdAddStop);
+				plusButton.set('title', langObj.bgdAddStop);
 				this._connection.push(dojo.connect(plusButton, 'onClick', dojo.hitch(this, function(rownum){
 					var newRowData = this._createNewChildData(this._getWidgetTypeForRuleLabels());
 					this._sliderChildrenEntries.splice(rownum+1, 0, newRowData);
@@ -197,7 +197,7 @@ return declare(ContainerInput, {
 				
 				var minusNode = dojo.query('.sliderInputMinusButton', newRuleOrLabel)[0];
 				var minusButton = dijit.byNode(minusNode);
-				minusButton.attr('title', langObj.bgdRemoveStop);
+				minusButton.set('title', langObj.bgdRemoveStop);
 				this._connection.push(dojo.connect(minusButton, 'onClick', dojo.hitch(this, function(rownum){
 					// Remove row <rownum>
 					this._sliderChildrenEntries.splice(rownum, 1);
@@ -216,16 +216,16 @@ return declare(ContainerInput, {
 			
 			var typeSelectNodes = dojo.query('.sliderTypeSelect', newNoChildrenRow);
 			var typeSelect = dijit.byNode(typeSelectNodes[0]);
-			typeSelect.attr('value', this._getSelectValueAssociatedWithType(this._getWidgetTypeForRuleLabels()));
-			typeSelect.attr('disabled', 'disabled');
+			typeSelect.setValue(this._getSelectValueAssociatedWithType(this._getWidgetTypeForRuleLabels()));
+			typeSelect.set('disabled', 'disabled');
 			
 			var containerSelectNodes = dojo.query('.sliderContainerSelect', newNoChildrenRow);
 			var containerSelect = dijit.byNode(containerSelectNodes[0]);
-			containerSelect.attr('disabled', 'disabled');
+			containerSelect.set('disabled', 'disabled');
 			
 			var plusNode = dojo.query('.sliderInputPlusButton', newNoChildrenRow)[0];
 			var plusButton = dijit.byNode(plusNode);
-			plusButton.attr('title', langObj.bgdAddStop);
+			plusButton.set('title', langObj.bgdAddStop);
 			this._connection.push(dojo.connect(plusButton, 'onClick', dojo.hitch(this, function(rownum){
 				var newRowData = this._createNewChildData(this._getWidgetTypeForRuleLabels());
 				this._sliderChildrenEntries.splice(rownum+1, 0, newRowData);
@@ -234,7 +234,7 @@ return declare(ContainerInput, {
 			
 			var minusNode = dojo.query('.sliderInputMinusButton', newNoChildrenRow)[0];
 			var minusButton = dijit.byNode(minusNode);
-			minusButton.attr('disabled', 'disabled');
+			minusButton.set('disabled', 'disabled');
 		}
 		
 		//Update the preview of the slider
@@ -246,7 +246,7 @@ return declare(ContainerInput, {
 		
         //Set the content
         var obj = dijit.byId('previewArea');
-        obj.attr("content", s);		
+        obj.set("content", s);		
 	},
 	
 	_getPreviewContent: function(){
@@ -260,50 +260,23 @@ return declare(ContainerInput, {
 			
 			if (sliderChild.type === this._getWidgetTypeForRule()) {
 				s += '   <div dojoType="' + this._getWidgetTypeForRule() + '"'; 
-				if (sliderChild.properties.container) {
-					s += '	container="' + sliderChild.properties.container + '"';
-				}
-				if (sliderChild.properties.count) {
-					s += '	count="' + sliderChild.properties.count + '"';
-				}
-				if (sliderChild.properties.ruleStyle) {
-					s += '	ruleStyle="' + sliderChild.properties.ruleStyle + '"';
-				}
-				if (sliderChild.properties.style) {
-					s += '	style="' + sliderChild.properties.style + '"';
+				
+				var sliderChildProps = sliderChild.properties;
+				var name = null;
+				for (name in sliderChildProps) {
+					if (sliderChildProps.hasOwnProperty(name)) {
+						s += '	' + name + '="' + sliderChild.properties[name] + '"'; 
+					}
 				}
 				s += '	 ></div>';
 			} else if (sliderChild.type === this._getWidgetTypeForRuleLabels()) {
 				s += '  <ol dojoType="' + this._getWidgetTypeForRuleLabels() + '"';
-				if (sliderChild.properties.container) {
-					s += '	container="' + sliderChild.properties.container + '"';
-				}
-				if (sliderChild.properties.count) {
-					s += '	count="' + sliderChild.properties.count + '"';
-				}
-				if (sliderChild.properties.ruleStyle) {
-					s += '	ruleStyle="' + sliderChild.properties.ruleStyle + '"';
-				}
-				if (sliderChild.properties.labelStyle) {
-					s += '	labelStyle="' + sliderChild.properties.labelStyle + '"';
-				}
-				if (sliderChild.properties.labels) {
-					s += '	labels="' + sliderChild.properties.labels + '"';
-				}
-				if (sliderChild.properties.numericMargin) {
-					s += '	numericMargin="' + sliderChild.properties.numericMargin + '"';
-				}
-				if (sliderChild.properties.minimum) {
-					s += '	minimum="' + sliderChild.properties.minimum + '"';
-				}
-				if (sliderChild.properties.maximum) {
-					s += '	maximum="' + sliderChild.properties.maximum + '"';
-				}
-				if (sliderChild.properties.constraints) {
-					s += '	constraints="' + sliderChild.properties.constraints + '"';
-				}
-				if (sliderChild.properties.style) {
-					s += '	style="' + sliderChild.properties.style + '"';
+				var sliderChildProps = sliderChild.properties;
+				var name = null;
+				for (name in sliderChildProps) {
+					if (sliderChildProps.hasOwnProperty(name)) {
+						s += '	' + name + '="' + sliderChild.properties[name] + '"'; 
+					}
 				}
 				s += '	></ol>';
 			}	
@@ -362,7 +335,7 @@ return declare(ContainerInput, {
 			var containerSelect = dijit.byNode(containerSelectNodes[0]);
 			
 			//Get values from dijits on the row and put back into data structure
-			var newType = this._getTypeFromSelectValue(typeSelect.attr('value'));
+			var newType = this._getTypeFromSelectValue(typeSelect.getValue());
 			if (newType != ruleOrLabelData.type) {
 				//We've had a type change, so we need to update the style prop so dimensions are appropriate
 				//for the child type. We'll do this by creating a dummy child of the 
@@ -382,7 +355,7 @@ return declare(ContainerInput, {
 				}
 			}
 			ruleOrLabelData.type = newType;
-			ruleOrLabelData.properties.container = containerSelect.attr('value');
+			ruleOrLabelData.properties.container = containerSelect.getValue();
 		}
 	},
 	

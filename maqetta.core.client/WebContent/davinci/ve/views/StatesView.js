@@ -60,6 +60,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this.setContent(this.container);
 		this.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, this._editorSelected));
 		this.subscribe("/davinci/ui/context/loaded", dojo.hitch(this, this._contextLoaded));
+		this.subscribe("/davinci/ui/context/statesLoaded", dojo.hitch(this, this._statesLoaded));
 		this.subscribe("/davinci/states/state/added", dojo.hitch(this, this._addState));
 		this.subscribe("/davinci/states/state/removed", dojo.hitch(this, this._removeState));
 		this.subscribe("/davinci/states/state/renamed", dojo.hitch(this, this._renameState));
@@ -71,6 +72,10 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	_contextLoaded: function() {
 		if (this._editor && this._editor.declaredClass != 'davinci.ve.themeEditor.ThemeEditor')
 			this._updateView();
+	},
+	
+	_statesLoaded: function() {
+		this._contextLoaded();
 	},
 
 	_addState: function() {

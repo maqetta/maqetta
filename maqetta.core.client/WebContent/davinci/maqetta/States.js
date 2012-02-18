@@ -5,6 +5,7 @@
 // Code below is looking for dojo at davinci.dojo. Don't ask why.
 
 if ( typeof davinci === "undefined" ) { davinci = {}; }
+require(["dojo/_base/connect"], function(connect){
 davinci.dojo = dojo;
 
 davinci.maqetta = davinci.maqetta || {};
@@ -438,18 +439,18 @@ davinci.maqetta.States.prototype = {
 
 	publish: function(/*String*/ topic, /*Array*/ args) {
 		try {
-			return davinci.dojo.publish(topic, args);
+			return connect.publish(topic, args);
 		} catch(e) {
 			console.error(e);
 		}
 	},
 	
 	subscribe: function(/*String*/ topic, /*Object|null*/ context, /*String|Function*/ method){
-		return davinci.dojo.subscribe(topic, context, method);
+		return connect.subscribe(topic, context, method);
 	},
 	
 	unsubscribe: function(handle){
-		return davinci.dojo.unsubscribe(handle);
+		return connect.unsubscribe(handle);
 	}, 
 
 	_getChildrenOfNode: function(node) {
@@ -595,3 +596,4 @@ if (!davinci.Workbench && typeof dijit != "undefined"){
 		}
 	});
 }
+});

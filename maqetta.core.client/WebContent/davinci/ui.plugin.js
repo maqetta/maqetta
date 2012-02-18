@@ -14,7 +14,7 @@ return {
         {
             id: "navigator",
             title: "Files",
-            viewClass: "davinci.workbench.Explorer"
+            viewClass: "davinci/workbench/Explorer"
         },
         {
             id: "hierarchy",
@@ -23,7 +23,7 @@ return {
         {
             id: "outline",
             title: "Outline",
-            viewClass: "davinci.workbench.OutlineView"
+            viewClass: "davinci/workbench/OutlineView"
         },
         {
             id: "scope",
@@ -32,12 +32,12 @@ return {
         {
             id: "properties",
             title: "Properties",
-            viewClass: "davinci.workbench.PropertyEditor"
+            viewClass: "davinci/workbench/PropertyEditor"
         },
         {
             id: "problems",
             title: "Problems",
-            viewClass: "davinci.workbench.ProblemsView"
+            viewClass: "davinci/workbench/ProblemsView"
         },
         {
             id: "console",

@@ -9,20 +9,20 @@ return {
         {
             id: "Palette",
             title: "Widgets",
-            viewClass: "davinci.ve.palette.HtmlWidgets"
+            viewClass: "davinci/ve/palette/HtmlWidgets"
         },
         {
             id: "states",
             title: "States",
-            viewClass: "davinci.ve.views.StatesView"
+            viewClass: "davinci/ve/views/StatesView"
         },
         /*
-         * { id:"datastores", title:"DataStores", viewClass: "davinci.ve.views.DataStoresView" },
+         * { id:"datastores", title:"DataStores", viewClass: "davinci/ve/views/DataStoresView" },
          */
         {
             id: "object",
             title: "Object",
-            viewClass: "davinci.ve.views.ObjectView"
+            viewClass: "davinci/ve/views/ObjectView"
         },
 
         /* a style view that allows switching between other style views via the toolbar */
@@ -30,7 +30,7 @@ return {
         {
             id: "style",
             title: "Properties",
-            viewClass: "davinci.ve.views.SwitchingStyleView"
+            viewClass: "davinci/ve/views/SwitchingStyleView"
         }
     ],
 

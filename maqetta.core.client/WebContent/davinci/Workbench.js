@@ -922,33 +922,37 @@ var Workbench = {
 			return;
 		}
 
-		var tab = dijit.byId(view.id);
-		if (!tab) {
-				var viewClass;
-				if (view.viewClass){
-					dojo["require"](view.viewClass);
-					viewClass = dojo.getObject(view.viewClass);
-				} else {
-					viewClass = ViewPart;
-				}
-				tab = new viewClass( {
-					position: positionSplit[1] || positionSplit[0],
-					title: view.title,
-					id: view.id,
-					closable: true,
-					view: view
+		var getTab = function(view) {
+			var d = new Deferred(),
+				tab = dijit.byId(view.id);
+
+			if (tab) {
+				d.resolve(tab);
+			} else {
+				require([view.viewClass], function(viewCtor){
+					d.resolve(new (viewCtor || ViewPart)({
+						position: positionSplit[1] || positionSplit[0],
+						title: view.title,
+						id: view.id,
+						closable: true,
+						view: view
+					}));
 				});
-		}
-			
-		cp1.addChild(tab);
+			}
+			return d;
+		};
+
+		getTab(view).then(function(tab) {
+			cp1.addChild(tab);
 //		if(tab.startup){
 //			debugger;
 //			tab.startup();
 //		
 //		}
-		if(shouldFocus) {
-			cp1.selectChild(tab);
-		}
+			if(shouldFocus) {
+				cp1.selectChild(tab);
+			}
+		});
 	  } catch (ex) {
 		  console.error("Error loading view: "+view.id);
 		  console.error(ex);
@@ -957,11 +961,15 @@ var Workbench = {
 	
 	hideView: function(viewId){
 		for (var position in mainBody.tabs.perspective) {
-			if(position=='left' || position == 'right'){ position+='-top'; }
-			if(!mainBody.tabs.perspective[position]){ continue; }
+			if(position=='left' || position == 'right'){
+				position+='-top';
+			}
+			if(!mainBody.tabs.perspective[position]){
+				continue;
+			}
 			var children = mainBody.tabs.perspective[position].getChildren();
 			var found = false;
-			for ( var i = 0; i < children.length && !found; i++) {
+			for (var i = 0; i < children.length && !found; i++) {
 				if (children[i].id == viewId) {
 					mainBody.tabs.perspective[position].removeChild(children[i]);
 					children[i].destroyRecursive(false);
@@ -1187,8 +1195,7 @@ var Workbench = {
 		Workbench.keyBindings=keys;
 	},
 
-	handleKey: function (e)
-	{
+	handleKey: function (e) {
 		if (!Workbench.keyBindings) {
 			return;
 		}
@@ -1206,8 +1213,7 @@ var Workbench = {
 		}
 	},
 	
-	_keySequence: function (e)
-	{
+	_keySequence: function (e) {
 		var seq=[];
 		if (window.event) 
 		{
@@ -1261,21 +1267,18 @@ var Workbench = {
 		return seq.join("+");
 	},
 
-	setActionScope: function(scopeID,scope)
-	{
+	setActionScope: function(scopeID,scope) {
 		Workbench.actionScope[scopeID]=scope;
 	},
 	
-	findView: function (viewID)
-	{
+	findView: function (viewID) {
 		var domNode=dijit.byId(viewID);
 		if (domNode) {
 			return domNode;
 		}
 	},
 
-	toggleFullScreen: function()
-	{
+	toggleFullScreen: function() {
 		var mainBodyContainer = dijit.byId('mainBody');
 		if (mainBodyContainer.origLayout) {
 			mainBodyContainer.layout = mainBodyContainer.origLayout;

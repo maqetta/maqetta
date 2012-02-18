@@ -1,12 +1,13 @@
 define([
-    	"dojo/_base/declare",
-    	"davinci/Theme",
-    	"davinci/Workbench",
-    	"davinci/library",
-    	"davinci/html/CSSImport",
-    	"davinci/html/HTMLElement",
-    	"davinci/html/HTMLText",
-], function(declare, Theme, Workbench, Library, CSSImport, HTMLElement, HTMLText){
+		"dojo/_base/declare",
+		"davinci/Theme",
+		"davinci/Workbench",
+		"davinci/library",
+		"davinci/html/CSSImport",
+		"davinci/html/HTMLElement",
+		"davinci/html/HTMLText",
+		"preview/silhouetteiframe"
+], function(declare, Theme, Workbench, Library, CSSImport, HTMLElement, HTMLText, silhouetteiframe){
 
 
 return declare("davinci.ve.commands.ChangeThemeCommand", null, {
@@ -46,7 +47,7 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
         this._context._configDojoxMobile();
         var device = this._context.getMobileDevice() || 'none';
         if (device != 'none'){
-            device = preview.silhouetteiframe.themeMap[device+'.svg'];
+            device = silhouetteiframe.themeMap[device+'.svg'];
         }
         var dm = this._context.getDojo().getObject("dojox.mobile", true);
         if (dm && dm.loadDeviceTheme){

@@ -8,14 +8,22 @@ define([
     	"davinci/ve/States",
     	"dojo/data/ItemFileReadStore",
     	"dojo/data/ItemFileWriteStore",
+    	"dijit/Tree/ForestStoreModel",
+    	"dijit/Tree",
     	"davinci/Runtime"
 ], function(declare, ViewPart, BorderContainer,  ContentPane, ComboBox, 
-			DataGrid, States, ItemFileReadStore, ItemFileWriteStore, Runtime
+			DataGrid, States, ItemFileReadStore, ItemFileWriteStore, ForestStoreModel, Tree, Runtime
 		    ){
 
 
 return declare("davinci.ve.views.StatesView", [ViewPart], {
-
+	
+	nextId: 0,
+    PlainTextTreeNode: declare(Tree._TreeNode, {
+    }),
+    RichHTMLTreeNode: declare(Tree._TreeNode, {
+        _setLabelAttr: {node: "labelNode", type: "innerHTML"}
+    }),
 
 	toolbarMenuActionSets:[
 		{
@@ -172,10 +180,60 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	
 
 	_createStateList: function() {
+	    var dummyData2 = {
+				identifier: 'id',
+				label: 'name',
+				items: [
+					{ id:this.nextId++, name:'Application States <b>abc</b>', type:'category', category:'AppStates',
+						children:[{_reference:1}]},
+						{ id:this.nextId++, name:'Bogus', parent:0, type:'AppState' },
+					{ id:this.nextId++, name:'Dojo Mobile Views <b>abc</b>', type:'category', category:'DojoMobileViews',
+						children:[{_reference:3}, {_reference:4}]},
+						{ id:this.nextId++, name:'root_view <b>abc</b>', parent:2, type:'DojoMobileView' },
+						{ id:this.nextId++, name:'alerts_view', parent:2, type:'DojoMobileView' }
+				]
+		};
+		var dummyStore = new ItemFileWriteStore({ data: dummyData2 });
+		var dummyForest = new ForestStoreModel({ store:dummyStore, query:{type:'category'},
+			  rootId:'categoryRoot', rootLabel:'All', childrenAttrs:['children']});
+		var that = this;
+		this._tree = new Tree({model:dummyForest, showRoot:false, style:'height:100px', _createTreeNode:function(args){
+			var item = args.item;
+			if(item.type && item.category && item.category[0] === 'AppStates'){
+				// Custom TreeNode class (based on dijit.TreeNode) that allows rich text labels
+				return new that.RichHTMLTreeNode(args);
+			}else{
+				// Custom TreeNode class (based on dijit.TreeNode) that uses default plain text labels
+				return new that.PlainTextTreeNode(args);
+			}
+		}});
+		this.centerPane.domNode.appendChild(this._tree.domNode);	
+		this._sceneStore = dummyStore;
+		dojo.connect(this._tree, "onClick", this, function(item){
+			if (item && item.type && item.type[0] == 'AppState') {
+				if (this.isThemeEditor()){
+					if (!this._silent) {
+						this.publish("/davinci/states/state/changed", [{widget:'$all', newState:item.name[0], oldState:this._themeState, context: this._editor.context}]);
+					}
+					this._themeState = item.name[0];
+					this._silent = false;
+				} else {
+					var currentEditor = Runtime.currentEditor;
+					var context = currentEditor.getContext();
+					var bodyWidget = context.rootWidget;
+					if(context && bodyWidget){
+						var state = item.name[0];
+						States.setState(bodyWidget, state);
+						context.deselectInvisible();
+					}
+				}
+			}
+		});
+
 		// Setup our data store:
 		var statesData = {
 			identifier: "id",
-			"items": [{ name: "Normal", id: "Normal"}]
+			"items": []
 		};
 		this._store = new ItemFileWriteStore({ data: statesData });
 		dojo.connect(this._store, "onSet", function(item, attribute, oldValue, newValue){
@@ -199,6 +257,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				structure: layout,
 				selectionMode: "single",
 				updateDelay: 0,
+				autoHeight:true,
+				style:'min-height:60px',
 				canEdit: function(cell, rowIndex) {
 					return rowIndex !== 0;
 				}
@@ -226,8 +286,13 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			}
 		});
 
+		var div1 = dojo.create('div', {style:'height:30px; background:pink'});
+		var div2 = dojo.create('div', {style:'height:30px; background:lightgreen'});
+		
 		// Append the new grid to the div container:
+		this.centerPane.domNode.appendChild(div1);	
 		this.centerPane.domNode.appendChild(this._grid.domNode);	
+		this.centerPane.domNode.appendChild(div2);	
 
 		// Call startup, in order to render the grid:
 		this._grid.startup();
@@ -276,15 +341,18 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		for (var name in latestStates) {
 			var storedState = storedStates[name];
 			if (!storedState) {
-				var newState = { name: name, id: name };
+				var newState = { name: name, id: this.nextId++ };
 				this._store.newItem(newState);
 			}
 		}
 		this._store.save();
+		
+		//FIXME: Need to update theme editor, too, with Grid->Tree changes
 	},
 	
 	_updateList: function() {
 		var latestStates = States.getStates(this._getWidget(), true), 
+			storedScenes = this._getScenes(),
 			storedStates = this._getStates();
 		
 		// Remove all stored states not in latestStates
@@ -304,6 +372,44 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			}
 		}
 		this._store.save();
+		
+		// Remove all stored states not in latestStates
+		for(var id in storedScenes) {
+			// Need to generalize to other types
+			if(storedScenes[id].type[0] === 'AppState'){
+				var state = storedScenes[id];
+				var name = state.name[0];
+				if (!latestStates[name]) {
+					this._sceneStore.deleteItem(state);
+				}
+			}
+		}
+		
+		// Add states from latestStates not yet in stored states
+		var AppStatesItem;
+		for(var id in storedScenes){
+			var scene = storedScenes[id];
+			if(scene.category[0] === 'AppStates'){
+				AppStatesItem = scene;
+				break;
+			}
+		};
+		for (var name in latestStates) {
+			var storedState = null;
+			for(var id in storedScenes){
+				var scene = storedScenes[id];
+				if(scene.type[0] == 'AppState' && scene.name[0] == name){
+					storedState = scene;
+					break;
+				}
+			}
+			if (!storedState) {
+				// Need to make ID auto-computed
+				var newState = { name: name, id: this.nextId++, parent:AppStatesItem.id, type:'AppState' };
+				this._sceneStore.newItem(newState, {parent:AppStatesItem, attribute:'children'});
+			}
+		}
+		this._sceneStore.save();
 	},
 	
 	_updateSelection: function() {
@@ -360,7 +466,20 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		});
 		return names;		
 	},
-	
+
+	_getScenes: function() {
+		var ids = {};
+		this._sceneStore.fetch({query:{}, queryOptions:{deep:true}, onComplete:dojo.hitch(this, function(items, request){
+				for (var i = 0; i < items.length; i++){
+					var item = items[i];
+					var id = item.id[0];
+					ids[id] = item;
+				}
+			})
+		});
+		return ids;		
+	},
+
 	_clearList: function() {
 		this._getStateList().selection.clear();
 

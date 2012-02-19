@@ -570,7 +570,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			if(!data || !data.type){
 				return false;
 			}
-			if(!data._context.loadRequires(data.type,true)){
+			if(!data.context.loadRequires(data.type,true)){
 				return false;
 			}
 			if(data.children && !dojo.isString(data.children)){

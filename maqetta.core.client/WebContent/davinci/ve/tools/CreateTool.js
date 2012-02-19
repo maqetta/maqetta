@@ -4,6 +4,7 @@ define(["dojo/_base/declare",
 		"davinci/workbench/Preferences",
 		"../metadata",
 		"../widget",
+		"dojo/DeferredList",
 		"davinci/ui/ErrorDialog",
 		"davinci/commands/CompoundCommand",
 		"../commands/AddCommand",
@@ -19,6 +20,7 @@ define(["dojo/_base/declare",
 		Preferences,
 		Metadata,
 		Widget,
+		DeferredList,
 		ErrorDialog
 ) {
 
@@ -40,10 +42,10 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 
 	activate: function(context){
 		this._context = context;
-		if(this._context && this._context.rootNode){
-			this._oldCursor = this._context.rootNode.style.cursor;
+		if(context && context.rootNode){
+			this._oldCursor = context.rootNode.style.cursor;
 		}
-		this._context.rootNode.style.cursor = "crosshair";
+		context.rootNode.style.cursor = "crosshair";
 	},
 
 	deactivate: function(){
@@ -350,7 +352,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
     	        var library = Metadata.getLibraryForType(type),
     	            libId = library.name,
     	            args = [type, context];
-    	        if (! context._widgets.hasOwnProperty(libId)) {
+    	        if (!context._widgets.hasOwnProperty(libId)) {
     	            context._widgets[libId] = 0;
     	        }
     	        if (++context._widgets[libId] == 1) {
@@ -534,11 +536,54 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 //			}
 //		}
 		this._data.context=this._context;
-		this._create({parent: parent, index: index, position: position, size: args.size});
+
+		var requireHelpers = function(data){
+			var promises = [];
+			if(!data || !data.type){
+				if (data instanceof Array) {
+					data.forEach(function(d) {
+						promises.concat(requireHelpers(d));
+					});
+				}
+				return promises;
+			}
+
+			promises.push(Widget.requireWidgetHelper(data.type));
+
+			if(data.children && !dojo.isString(data.children)){
+				if(!dojo.every(data.children, function(c){
+					return promises.concat(requireHelpers(c));
+				})){
+					return promises;
+				}
+			}
+			return promises;
+		};
+
+		new DeferredList(requireHelpers(this._data)).then(function() {
+			this._create({parent: parent, index: index, position: position, size: args.size});			
+		}.bind(this));
 	},
 
 	_create: function(args){
-		if(!this._loadType(this._data)){
+		var loadType = function(data){
+			if(!data || !data.type){
+				return false;
+			}
+			if(!data._context.loadRequires(data.type,true)){
+				return false;
+			}
+			if(data.children && !dojo.isString(data.children)){
+				if(!dojo.every(data.children, function(c){
+					return loadType(c);
+				})){
+					return false;
+				}
+			}
+			return true;
+		}
+
+		if(!loadType(this._data)){
 			return;
 		}
 
@@ -589,24 +634,6 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				this._context.select(w); // no inline on create
 			}
 		}.bind(this));
-	},
-
-	_loadType: function(data){
-		
-		if(!data || !data.type){
-			return false;
-		}
-		if( !this._context.loadRequires(data.type,true)){
-			return false;
-		}
-		if(data.children && !dojo.isString(data.children)){
-			if(!dojo.every(data.children, function(c){
-				return this._loadType(c);
-			}, this)){
-				return false;
-			}
-		}
-		return true;
 	}
 });
 

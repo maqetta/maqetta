@@ -65,6 +65,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this.subscribe("/davinci/states/state/removed", dojo.hitch(this, this._removeState));
 		this.subscribe("/davinci/states/state/renamed", dojo.hitch(this, this._renameState));
 		dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._changeState));
+		dojo.subscribe("/davinci/ui/context/registerSceneManager", dojo.hitch(this, this._registerSceneManager));
 
 		this._createStateList();	
 	},
@@ -129,6 +130,10 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			this._clearList();
 			dojo.style(this.container.domNode, "display", "none");
 		}
+	},
+	
+	_registerSceneManager: function(sceneManagerId, sceneManager) {
+		debugger;
 	},
 	
 	_getWidget: function() {

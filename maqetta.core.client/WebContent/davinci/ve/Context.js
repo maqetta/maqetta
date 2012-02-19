@@ -92,7 +92,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this._objectIds = [];
 		this._widgets = [];
 		this._chooseParent = new ChooseParent({context:this});
-
+		this.sceneManagers = {};
 	},
 
 	_configDojoxMobile: function() {
@@ -2891,6 +2891,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			
 		}
 		return meta;
+	},
+	
+	registerSceneManager: function(sceneManagerId, sceneManager){
+		debugger;
+		if(!this.sceneManagers[sceneManagerId]){
+			this.sceneManagers[sceneManagerId] = sceneManager;
+			dojo.publish('/davinci/ui/context/registerSceneManager', [sceneManagerId, sceneManager]);
+		}
 	}
 });
 

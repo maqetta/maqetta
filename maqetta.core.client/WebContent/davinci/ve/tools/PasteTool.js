@@ -17,10 +17,8 @@ define(["dojo/_base/declare",
 return declare("davinci.ve.tools.PasteTool", CreateTool, {
 
 	_create: function(args){
-		var command = new CompoundCommand(),
-			index = args.index,
-			baseline,
-			selection = [];
+		var index = args.index,
+			baseline;
 		dojo.forEach(this._data, function(d){
 			var loadRequiresForTree = dojo.hitch(this, function(d){
 				if(d.type){ // structure has plain 'string' nodes which don't have type or children
@@ -55,12 +53,15 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 				}
 			}
 
-			var w;
 			dojo.withDoc(this._context.getDocument(), function(){
 				d.context = this._context;
 				metadata.getHelper(d.type, "tool").then(function(ToolCtor) {
-					var myTool;
-				    if (ToolCtor) {
+					var w,
+						myTool,
+						selection = [],
+						command = new CompoundCommand();
+
+					if (ToolCtor) {
 				    	myTool = new ToolCtor(d);
 			        }
 			        if (myTool && myTool.addPasteCreateCommand) {
@@ -87,22 +88,18 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 					if (position) {
 						command.add(new MoveCommand(w, position.x, position.y));
 					}
-				});
-			}, this);
-			if (!w) {
-				return;
-			}
 
-			selection.push(w);
+					selection.push(w);
+
+					if(!command.isEmpty()){
+						this._context.getCommandStack().execute(command);
+						dojo.forEach(selection, function(w, i){
+							this._context.select(w, i > 0);
+						}, this);
+					}
+				}.bind(this));
+			}, this);
 		}, this);
-
-		if(!command.isEmpty()){
-			this._context.getCommandStack().execute(command);
-			dojo.forEach(selection, function(w, i){
-				this._context.select(w, i > 0);
-			}, this);
-		}
 	}
-
 });
 });

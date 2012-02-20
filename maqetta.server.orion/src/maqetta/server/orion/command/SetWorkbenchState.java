@@ -1,34 +1,40 @@
 package maqetta.server.orion.command;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.davinci.server.user.IUser;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.orion.server.core.users.OrionScope;
 import org.maqetta.server.Command;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IStorage;
 
 public class SetWorkbenchState extends Command {
 
-    @Override
+    
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
-        IStorage settingsDir = user.getWorkbenchSettings();
-        IStorage settingsFile = settingsDir.newInstance(settingsDir, IDavinciServerConstants.WORKBENCH_STATE_FILE);
-        if(! user.isValid(settingsFile.getAbsolutePath()) ) return;
-        if (!settingsFile.exists()) {
-            settingsFile.createNewFile();
-        }else{
-        	settingsFile.delete();
-        	settingsFile.createNewFile();
-        }
-        OutputStream os = new BufferedOutputStream(settingsFile.getOutputStream());
-        Command.transferStreams(req.getInputStream(), os, false);
-    }
+    	IEclipsePreferences users = new OrionScope().getNode("Users"); //$NON-NLS-1$
+		IEclipsePreferences result = (IEclipsePreferences) users.node(user.getUserName());
+        	// read it with BufferedReader
+    	BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
+     
+    	String line;
+    	String value = "";
+    	while ((line = br.readLine()) != null) {
+    		value+=line;
+    	}
+     
+    	br.close();
+    	result.put("workbenchSettings", value);
+   }
 
 }

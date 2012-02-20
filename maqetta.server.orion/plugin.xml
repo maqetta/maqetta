@@ -15,8 +15,93 @@
    	  </extension>
 
      <extension point="maqetta.core.server.userManager">
-    	<userManager class="maqetta.core.server.user.manager.UserManagerImpl"/>
+    	<userManager class="maqetta.server.orion.user.OrionUserManager"/>
    	 </extension>
+	 <extension point="org.eclipse.core.runtime.products">
+      <product
+          application="maqetta.orion.product"
+          description="Maqetta Orion Server"
+          name="MaqMuffin">
+      </product>
+   </extension>
+      <extension
+            point="maqetta.core.server.command">
+         <command path="login" noLogin="true" 
+               class="maqetta.core.server.command.Login" />
+         <command path="register" noLogin="true" 
+               class="maqetta.core.server.command.Register" />
+         <command path="listFiles" 
+               class="maqetta.core.server.command.ListFiles" />
+         <command path="addFiles" 
+               class="maqetta.core.server.command.AddFiles" />
+         <command path="deleteResource" 
+               class="maqetta.core.server.command.DeleteResource" />
+         <command path="createResource" 
+               class="maqetta.core.server.command.CreateResource" />
+         <command path="getPreferences" 
+               class="maqetta.core.server.command.GetPreferences" />
+         <command path="setPreferences"  isPut="true"
+               class="maqetta.core.server.command.SetPreferences" />
+         <command path="getWorkbenchState" 
+               class="maqetta.server.orion.command.GetWorkbenchState" />
+         <command path="setWorkbenchState"  isPut="true"
+               class="maqetta.server.orion.command.SetWorkbenchState" />
+         <command path="removeWorkingCopy" 
+               class="maqetta.core.server.command.RemoveWorkingCopy" />
+         <command path="logoff" 
+               class="maqetta.core.server.command.LogOff" />
+         <command path="download" 
+               class="maqetta.core.server.command.Download" />
+         <command path="findResource" 
+               class="maqetta.core.server.command.FindResource" />
+         <command path="getPlugins" 
+               class="maqetta.core.server.command.GetPlugins" />
+          <command path="getLibRoots" 
+               class="maqetta.core.server.command.GetLibRoots" /> 
+          <command path="listLibs" 
+               class="maqetta.core.server.command.ListLibs" />   
+          <command path="getUserLibs" 
+               class="maqetta.core.server.command.GetUserLibs" />   
+          <command path="getLibMetadata" 
+               class="maqetta.core.server.command.GetLibMetadata" />  
+          <command path="modifyLib" 
+               class="maqetta.core.server.command.ModifyLib" /> 
+          <command path="getMetaRoot" 
+               class="maqetta.core.server.command.GetMetaRoot" />   
+           <command path="copy" 
+               class="maqetta.core.server.command.Copy" /> 
+           <command path="createProject" 
+               class="maqetta.core.server.command.CreateProject" />         
+           <command path="rename" 
+               class="maqetta.core.server.command.Rename" />         
+           <command path="tryIt" noLogin="true"
+               class="maqetta.core.server.command.TryIt" />         
+           <command path="removeUser" noLogin="true"
+               class="maqetta.core.server.command.RemoveUser" />
+                
+          <!-- Review and Commenting Commands -->        
+          <command path="listVersions"
+               class="maqetta.core.server.command.ListVersions" />
+         <command path="addComment"
+               class="maqetta.core.server.command.AddComment" />
+         <command path="updateComment"
+               class="maqetta.core.server.command.UpdateComment" />
+         <command path="getComments"
+               class="maqetta.core.server.command.GetComments" />
+         <command path="publish"
+         	   class="maqetta.core.server.command.Publish" />
+	     <command path="getBluePageInfo"
+         	   class="maqetta.core.server.command.GetBluePageInfo" />         	   
+         <command path="listReviewFiles"
+         	   class="maqetta.core.server.command.ListReviewFiles" />
+         <command path="getLatestVersionId"
+         	   class="maqetta.core.server.command.GetLatestVersionId" />
+         <command path="managerVersion"
+         	   class="maqetta.core.server.command.ManagerVersion" />
+         <command path="getReviewUserInfo"
+         	   class="maqetta.core.server.command.GetReviewUserInfo" />   
+               
+      </extension>
 	
 
 </plugin>

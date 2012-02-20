@@ -1,8 +1,6 @@
 package maqetta.core.server.util;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,7 +12,6 @@ import java.util.Vector;
 
 import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
-import org.maqetta.server.StorageFileSystem;
 import org.osgi.framework.Bundle;
 
 public class VResourceUtils {
@@ -80,9 +77,9 @@ public class VResourceUtils {
                 URLConnection connection = source.openConnection();
                 String path = source.getPath();
                 String tail = path.substring(bundleDirName.length() + 1);
-                File path1 = new File("/tmp");
+               
               //  File destination = new File("/Users/childsb/dev/workspaces/maqetta-workspace/childsb@us.ibm.com/project1/WebContent/app.css");
-                IStorage destination = new StorageFileSystem(userDir, tail);
+                IStorage destination = userDir.newInstance(userDir, tail);
                 
                 if (tail.indexOf(".svn") > -1) {
                     continue;

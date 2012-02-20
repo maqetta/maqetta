@@ -20,13 +20,13 @@ import org.maqetta.server.ServerManager;
 
 public class UserManagerImpl implements IUserManager {
 
-    static UserManagerImpl theUserManager;
-    HashMap                users    = new HashMap();
-    public IStorage            baseDirectory;
+    protected static UserManagerImpl theUserManager;
+    protected HashMap                users    = new HashMap();
+    protected IStorage            baseDirectory;
 
-    IPersonManager          personManager;
-    int                    maxUsers = 0;
-    private int            usersCount;
+    protected IPersonManager          personManager;
+    protected int                    maxUsers = 0;
+    protected int            usersCount;
 
 
     public UserManagerImpl() {
@@ -85,6 +85,7 @@ public class UserManagerImpl implements IUserManager {
         if (user == null && this.checkUserExists(userName)) {
             IPerson person = this.personManager.getPerson(userName);
             user = newUser(person, this.baseDirectory.newInstance(this.baseDirectory, userName));
+            users.put(userName, user);
         }
         return user;
 
@@ -108,7 +109,7 @@ public class UserManagerImpl implements IUserManager {
         IPerson person = this.personManager.addPerson(userName, password, email);
         if (person != null) {
 
-            IUser user = new User(person, this.baseDirectory.newInstance(this.baseDirectory, userName));
+            IUser user = newUser(person, this.baseDirectory.newInstance(this.baseDirectory, userName));
             users.put(userName, user);
             //File userDir = user.getUserDirectory();
             //userDir.mkdir();
@@ -155,7 +156,7 @@ public class UserManagerImpl implements IUserManager {
         }
         IPerson person = this.personManager.login(userName, password);
         if (person != null) {
-            return new User(person, this.baseDirectory.newInstance(this.baseDirectory, userName));
+            return newUser(person, this.baseDirectory.newInstance(this.baseDirectory, userName));
         }
         return null;
     }

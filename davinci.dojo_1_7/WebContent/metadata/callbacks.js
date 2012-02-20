@@ -1,17 +1,28 @@
 (function() {
 	
-	function ViewSceneManager() {}
-	
-	ViewSceneManager.prototype._stub = function(a, b, c){
+	function DojoMobileViewSceneManager(context) {
 		debugger;
-	};
+		this.context = context;
+	}
 	
-	ViewSceneManager.prototype.addScene = function(parent, child){ this._stub(parent, child); }
-	ViewSceneManager.prototype.deleteScene = function(parent, child){ this._stub(child); }
-	ViewSceneManager.prototype.selectScene = function(parent, child){ this._stub(parent, child); }
-	ViewSceneManager.prototype.getSelectedScene = function(parent, child){ this._stub(parent); }
-	ViewSceneManager.prototype.getSceneParent = function(parent, child){ this._stub(child); }
-	ViewSceneManager.prototype.getSceneChildren = function(parent, child){ this._stub(parent); }
+	DojoMobileViewSceneManager.prototype.id = 'DojoMobileViews';
+	DojoMobileViewSceneManager.prototype.title = 'Dojo Mobile Views';	//FIXME: Need to be globalized
+		
+	DojoMobileViewSceneManager.prototype.viewAdded = function(parent, child){
+		dojo.publish("/davinci/scene/added", [DojoMobileViewSceneManager, parent, child]);
+	};
+	// View has been deleted from the given parent
+	DojoMobileViewSceneManager.prototype.viewDeleted = function(parent){
+		dojo.publish("/davinci/scene/removed", [DojoMobileViewSceneManager, parent, child]);
+	};
+	DojoMobileViewSceneManager.prototype.viewSelectionChanged = function(parent, child){
+		dojo.publish("/davinci/scene/selectionChanged", [DojoMobileViewSceneManager, parent, child]);
+	};
+	DojoMobileViewSceneManager.prototype.getAllScenes = function(){
+		debugger;
+		var dj = this.context.getDojo();
+		var views = dj.query('.mblView');
+	};
 
     return {
 //        init: function(args) {
@@ -19,7 +30,8 @@
         
         onFirstAdd: function(type, context) {
         	debugger;
-        	context.registerSceneManager('DojoMobileViews', new ViewSceneManager);
+        	//FIXME: How to do nls? Maybe need to convert callback.js to AMD and leverage AMD's I18N?
+        	context.registerSceneManager(new DojoMobileViewSceneManager(context));
             return;
 //        },
 //        

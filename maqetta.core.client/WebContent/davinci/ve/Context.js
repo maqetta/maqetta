@@ -2893,11 +2893,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return meta;
 	},
 	
-	registerSceneManager: function(sceneManagerId, sceneManager){
+	registerSceneManager: function(sceneManager){
 		debugger;
-		if(!this.sceneManagers[sceneManagerId]){
-			this.sceneManagers[sceneManagerId] = sceneManager;
-			dojo.publish('/davinci/ui/context/registerSceneManager', [sceneManagerId, sceneManager]);
+		if(!sceneManager || !sceneManager.id){
+			return;
+		}
+		var id = sceneManager.id;
+		if(!this.sceneManagers[id]){
+			this.sceneManagers[id] = sceneManager;
+			dojo.publish('/davinci/ui/context/registerSceneManager', [sceneManager]);
 		}
 	}
 });

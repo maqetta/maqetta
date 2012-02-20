@@ -38,7 +38,9 @@ ViewHelper.prototype = {
 	 */
 	create: function(widget, srcElement) {
 		var view = widget.dijitWidget,
-			node = widget.domNode;
+			node = widget.domNode,
+			parentNode = node.parentNode,
+			context = widget.getContext();
 		connect.connect(view, 'startup', function() {
 			// Since this may get called twice, check that we haven't already
 			// created this interval.
@@ -51,6 +53,8 @@ ViewHelper.prototype = {
 						clearInterval(widget._dvDisplayInterval);
 						delete widget._dvDisplayInterval;
 					}
+					var sceneManager = context.sceneManagers.DojoMobileViews;
+					sceneManager.viewAdded(parentNode._dvWidget, widget);
 				}, 100);
 			}
 		});
@@ -62,6 +66,7 @@ ViewHelper.prototype = {
 	 * @param {davinci.ve._Widget} widget  Widget that needs it visibility turned on
 	 */
 	_updateVisibility: function(domNode){
+		debugger;
 		if(!domNode || !domNode._dvWidget || !domClass.contains(domNode,"mblView")){
 			return;
 		}
@@ -102,6 +107,8 @@ ViewHelper.prototype = {
 			}
 			context.getCommandStack().execute(command);
 		}
+		var sceneManager = context.sceneManagers.DojoMobileViews;
+		sceneManager.viewSelectionChanged(parentNode._dvWidget, widget);		
 	},
 	
 	/*
@@ -214,6 +221,7 @@ ViewHelper.prototype = {
 			return;
 		}
 		var domNode = widget.domNode;
+		var id = domNode.id;
 		var context = widget.getContext();
 		var parentNode = domNode.parentNode;
 		var node;
@@ -230,11 +238,13 @@ ViewHelper.prototype = {
 				}
 			}
 		}
-		if(changesNeeded){
-			return function(){
+		return function(){
+			var sceneManager = context.sceneManagers.DojoMobileViews;
+			sceneManager.viewDeleted(parentNode._dvWidget);
+			if(changesNeeded){
 				context.select(node._dvWidget);
-			};
-		}
+			}
+		};
 	}
 
 };

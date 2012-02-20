@@ -74,6 +74,11 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this.subscribe("/davinci/states/state/renamed", dojo.hitch(this, this._renameState));
 		dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._changeState));
 		dojo.subscribe("/davinci/ui/context/registerSceneManager", dojo.hitch(this, this._registerSceneManager));
+		this.subscribe("/davinci/scene/scenesLoaded", dojo.hitch(this, this._scenesLoaded));
+		this.subscribe("/davinci/scene/added", dojo.hitch(this, this._addScene));
+		this.subscribe("/davinci/scene/removed", dojo.hitch(this, this._removeScene));
+		this.subscribe("/davinci/scene/renamed", dojo.hitch(this, this._renameScene));
+		dojo.subscribe("/davinci/scene/selectionChanged", dojo.hitch(this, this._sceneSelectionChanged));
 
 		this._createStateList();	
 	},
@@ -107,6 +112,35 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		}
 	},
 	
+	_registerSceneManager: function(sceneManager) {
+		debugger;
+	},
+
+	_scenesLoaded: function(sceneManager) {
+		debugger;
+		this._updateView();
+	},
+
+	_addScene: function(sceneManager, parent, child) {
+		debugger;
+		this._updateView();
+	},
+	
+	_removeScene: function(sceneManager, parent, child) {
+		debugger;
+		this._updateView();
+	},
+	
+	_renameScene: function(sceneManager, parent, child) {
+		debugger;
+		this._updateView();
+	},
+	
+	_sceneSelectionChanged: function(sceneManager, parent, child) {
+		debugger;
+		this._updateSelection();
+	},
+
 	_editorSelected : function (event){	
 		var editor = event.editor;
 
@@ -138,10 +172,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			this._clearList();
 			dojo.style(this.container.domNode, "display", "none");
 		}
-	},
-	
-	_registerSceneManager: function(sceneManagerId, sceneManager) {
-		debugger;
 	},
 	
 	_getWidget: function() {
@@ -372,7 +402,16 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			}
 		}
 		this._store.save();
+
+		var context = Runtime.currentEditor.getContext();
+		var sceneManagers = context.sceneManagers;
 		
+		//FIXME: Temporary
+		if(sceneManagers.DojoMobileViews){
+			var allViews = sceneManagers.DojoMobileViews.getAllScenes();
+			debugger;
+		}
+
 		// Remove all stored states not in latestStates
 		for(var id in storedScenes) {
 			// Need to generalize to other types

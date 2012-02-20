@@ -33,7 +33,7 @@ define([
 	        title: {datatype: "string", hidden: true}
     	};
 
-    dojo.subscribe("/davinci/ui/libraryChanged", function() {
+    dojo.subscribe("/davinci/ui/libraryChanged/start", function() {
         // XXX We should be smart about this and only reload data for libraries whose path has
         //  changed.  This code currently nukes everything, reloading all libs, even those that
         //  haven't changed.
@@ -41,7 +41,9 @@ define([
         mdCache = {};
         helperCache = {};
         l10n = null;
-        Metadata.init();
+        Metadata.init().then(function() {
+        	dojo.publish("/davinci/ui/libraryChanged");
+        });
     });
     
 	function parsePackage(pkg, path) {
@@ -772,7 +774,7 @@ define([
 
 	var smartInputCache = {};
 
-	connect.subscribe("/davinci/ui/libraryChanged", function() {
+	connect.subscribe("/davinci/ui/libraryChanged/start", function() {
 		// XXX We should be smart about this and only reload data for libraries whose path has
 		//  changed.  This code currently nukes everything, reloading all libs, even those that
 		//  haven't changed.

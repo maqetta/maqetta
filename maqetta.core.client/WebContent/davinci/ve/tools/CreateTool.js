@@ -566,11 +566,12 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 	},
 
 	_create: function(args){
+		var context = this._context;
 		var loadType = function(data){
 			if(!data || !data.type){
 				return false;
 			}
-			if(!data.context.loadRequires(data.type,true)){
+			if(!context.loadRequires(data.type,true)){
 				return false;
 			}
 			if(data.children && !dojo.isString(data.children)){

@@ -3,7 +3,9 @@ define([
 	"davinci/model/Model",
 ], function(declare, Model) {
 
-var _shorthands = [
+var CSSModel = declare("davinci.html.CSSModel", Model, {});
+
+CSSModel.shorthand = [
 	['border',['border-width', 'border-style','border-color', 'border-top', 'border-left', 'border-right', 'border-bottom']],
 	['border-width',['border-top-width','border-right-width','border-bottom-width','border-left-width']],
 	['border-style',['border-top-style','border-right-style','border-bottom-style','border-left-style']],
@@ -20,13 +22,6 @@ var _shorthands = [
 	['background',['background-color', 'background-image', 'background-repeat', 'background-position', 'background-attachment']]
 ];	
 
-var CSSModel = declare("davinci.html.CSSModel", Model, {});
-
-var _array = [];
-for(var i = 0; i < _shorthands.length; i++){
-	_array.push(_shorthands[i]);
-}
-CSSModel.shorthand = _array;
 return CSSModel;
 
 });

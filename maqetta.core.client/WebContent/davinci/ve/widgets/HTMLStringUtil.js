@@ -327,7 +327,14 @@ define(["dojo/_base/declare",
 				dojo.disconnect(webkitConnection);
 				dojo.disconnect(connection);
 				Util._hideRootShowSection();			
-				var ruleIndex = Util._findRule(Util.animShowSectionClassSelector);
+				var returnObj = Util._findRule(Util.animShowSectionClassSelector);
+				if(!returnObj){
+					console.error('HTMLStringUtil transEnd: rule not found');
+					return;
+				}else{
+					var ss = returnObj.ss;
+					var ruleIndex = returnObj.ruleIndex;
+				}
 				ss.deleteRule(ruleIndex);
 				ss.insertRule(Util.animShowSectionClassSelector + " { margin-left:0px; }",ruleIndex);
 				dojo.removeClass(rootTD, "propDetailsTransparent");
@@ -341,7 +348,6 @@ define(["dojo/_base/declare",
 			
 			
 			var Util = this;
-			var ss = Util._findAnimSS();
 			
 			var rootDetailsContainer = Util._getRootDetailsContainer();
 			var rootTD = Util._getRootTD();
@@ -368,7 +374,14 @@ define(["dojo/_base/declare",
 				var firstMetrics = dojo.marginBox(rootTD);
 				var thisMetrics = dojo.marginBox(detailsTD);
 				var leftDiff = thisMetrics.l - firstMetrics.l;
-				var ruleIndex = Util._findRule(Util.animShowSectionClassSelector);		
+				var returnObj = Util._findRule(Util.animShowSectionClassSelector);		
+				if(!returnObj){
+					console.error('HTMLStringUtil transitionRootToSection: rule not found');
+					return;
+				}else{
+					var ss = returnObj.ss;
+					var ruleIndex = returnObj.ruleIndex;
+				}
 				var webkitConnection = dojo.connect(rootDetailsContainer,'webkitTransitionEnd', transEnd);
 				var connection = dojo.connect(rootDetailsContainer,'transitionend', transEnd);
 				ss.deleteRule(ruleIndex);
@@ -416,7 +429,14 @@ define(["dojo/_base/declare",
 				dojo.disconnect(webkitConnection);
 				dojo.disconnect(connection);
 				hideAllButThisRow();			
-				var ruleIndex = Util._findRule(Util.animShowDetailsClassSelector);
+				var returnObj = Util._findRule(Util.animShowDetailsClassSelector);
+				if(!returnObj){
+					console.error('HTMLStringUtil showProperty: transEnd: rule not found');
+					return;
+				}else{
+					var ss = returnObj.ss;
+					var ruleIndex = returnObj.ruleIndex;
+				}
 				ss.deleteRule(ruleIndex);
 				ss.insertRule(Util.animShowDetailsClassSelector + " { margin-top:0px; }",ruleIndex);
 				fadeInCascade();
@@ -424,7 +444,6 @@ define(["dojo/_base/declare",
 			
 			
 			var Util = this;
-			var ss = Util._findAnimSS();
 			var allTRAnimClasses = this.showPropAnimClasses;
 			
 			// Find various elements
@@ -452,7 +471,14 @@ define(["dojo/_base/declare",
 				var firstMetrics = dojo.marginBox(firstPropertyRowTR);
 				var thisMetrics = dojo.marginBox(thisPropertyRowTR);
 				var topDiff = thisMetrics.t - firstMetrics.t;
-				var ruleIndex = Util._findRule(Util.animShowDetailsClassSelector);
+				var returnObj = Util._findRule(Util.animShowDetailsClassSelector);
+				if(!returnObj){
+					console.error('HTMLStringUtil showProperty: transEnd: rule not found');
+					return;
+				}else{
+					var ss = returnObj.ss;
+					var ruleIndex = returnObj.ruleIndex;
+				}
 				
 				var webkitConnection = dojo.connect(propertySectionTABLE,'webkitTransitionEnd', transEnd);
 				var connection = dojo.connect(propertySectionTABLE,'transitionend', transEnd);
@@ -554,61 +580,37 @@ define(["dojo/_base/declare",
 			dojo.removeClass(detailsTD,"dijitHidden");
 		},
 		
-		// Sets davinci.ve.widgets.HTMLStringUtil.animSS to stylesheet object
-		// that holds all of the properties palette animation style rules
-		_findAnimSS : function(){
-			var ss = this.animSS;
-			if(ss){
-				return ss;
-			}
-			function searchImports(ss, stylesheetHref){
-				for(var ruleIndex=0; ruleIndex<ss.cssRules.length; ruleIndex++){
-					var rule=ss.cssRules[ruleIndex];
-					if(rule.type === 3){		// 3=@import
-						var importSS = rule.styleSheet;
-						var foundSS = findSS(importSS, stylesheetHref);
-						if(foundSS){
-							return foundSS;
-						}
-					}
-				}
-			}
-			function findSS(ss, stylesheetHref){
-				if(ss.href && ss.href.indexOf(stylesheetHref)>=0){
-					return ss;
-				}else{
-					var foundSS = searchImports(ss, stylesheetHref);
-					if(foundSS){
-						return foundSS;
-					}
-				}
-			}
-			for(var i=0; i<document.styleSheets.length; i++){
-				var ss=document.styleSheets[i];
-				var foundSS = findSS(ss, this.stylesheetHref);
-				if(foundSS){
-					this.animSS = foundSS;
-					return foundSS;
-				}
-			}
-			return null;
-		},
-		
 		// Search animSS (property palette's animation stylesheet) to find the style rule
 		// with given the selectorText. Returns index for the rule.
 		_findRule : function(selectorText){
 			if(this.animSS && typeof this.animRuleIndex[selectorText] == 'number'){
 				var idx = this.animRuleIndex[selectorText];
 				if(this.animSS.cssRules[idx].selectorText == selectorText){
-					return idx;
+					return {ss:this.animSS, ruleIndex:idx};
 				}
 			}
-			var ss = this._findAnimSS();
-			for(var ruleIndex=0; ruleIndex<ss.cssRules.length; ruleIndex++){
-				var rule=ss.cssRules[ruleIndex];
-				if(rule.selectorText == selectorText){
-					this.animRuleIndex[selectorText] = ruleIndex;
-					return ruleIndex;
+			function searchRules(ss, selectorText){
+				for(var ruleIndex=0; ruleIndex<ss.cssRules.length; ruleIndex++){
+					var rule=ss.cssRules[ruleIndex];
+					if(rule.type === 3){		// 3=@import
+						var importSS = rule.styleSheet;
+						var retObj = searchRules(importSS, selectorText);
+						if(retObj){
+							return retObj;
+						}
+					}else if(rule.selectorText == selectorText){
+						return {ss:ss, ruleIndex:ruleIndex};
+					}
+				}
+			}
+			for(var i=0; i<document.styleSheets.length; i++){
+				var ss=document.styleSheets[i];
+				var returnObj = searchRules(ss, selectorText);
+				if(returnObj){
+					// Cache the results so hopefully we only have to search stylesheets once per session
+					this.animSS = returnObj.ss;
+					this.animRuleIndex[selectorText] = returnObj.ruleIndex;
+					return returnObj;
 				}
 			}
 			return null;

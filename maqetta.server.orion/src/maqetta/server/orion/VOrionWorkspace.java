@@ -24,10 +24,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
+import org.maqetta.server.VWorkspaceRoot;
 import org.osgi.service.prefs.BackingStoreException;
 
 
-public class VOrionWorkspace implements IVResource{
+public class VOrionWorkspace extends VWorkspaceRoot{
 
 	VOrionWorkspaceStorage store;
 	
@@ -35,92 +36,24 @@ public class VOrionWorkspace implements IVResource{
     	this.store=storage;
 	}
 
-	public URLConnection openConnection() throws MalformedURLException,
-			IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	public boolean exists() {
-		return true;
-	}
-
-	public boolean isVirtual() {
-		return false;
-	}
-
-	public String getPath() {
-		return ".";
-	}
-
-	public void setParent(IVResource parent) {}
-
-	public boolean readOnly() {
-		return false;
-	}
-
-	public void createNewInstance() throws IOException {}
-
-	public boolean delete() {
-		return false;
-	}
-
-	public OutputStream getOutputStreem() throws FileNotFoundException, IOException {
-		return null;
-	}
-
-	public InputStream getInputStreem() throws IOException {
-		return null;
-	}
 
 	public IVResource[] listFiles() {
+		IVResource[] addedFiles = super.listFiles();
+		
 		IStorage[] files = this.store.listFiles();
-		IVResource[] returns = new IVResource[files.length];
+		IVResource[] returns = new IVResource[files.length + addedFiles.length];
 		for(int i=0;i<files.length;i++){
 			returns[i] = new VOrionResource(files[i], this, files[i].getName());
 		}
+		
+		for(int i=0;i<addedFiles.length;i++){
+			int index = files.length + i;
+			returns[index] = addedFiles[i];
+		}
+		
 		return returns;
 	}
 
-	public String getName() {
-		return ".";
-	}
-
-	public boolean isDirectory() {
-		return true;
-	}
-
-	public boolean isNew() {
-		return false;
-	}
-
-	public void removeWorkingCopy() {}
-
-	public void flushWorkingCopy() {}
-
-	public URI getURI() throws URISyntaxException {
-		return null;
-	}
-
-	public IVResource[] find(String path) {
-		return null;
-	}
-
-	public boolean mkdir() {
-		return false;
-	}
-
-	public boolean isDirty() {
-		return false;
-	}
-
-	public IVResource[] getParents() {
-		return null;
-	}
-
-	public IVResource getParent() {
-		return null;
-	}
 
 	public IVResource get(String childName) {
 		IStorage[] files = this.store.listFiles();
@@ -131,20 +64,9 @@ public class VOrionWorkspace implements IVResource{
 		}
 		return null;
 	}
-
+	
 	public IVResource[] findChildren(String childName) {
-		// TODO Auto-generated method stub
 		return null;
-	}
-
-	public void add(IVResource v) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public IVResource create(String path) {
-		IStorage file = this.store.create(path);
-		return new VOrionResource(file, this, path);
 	}
 	
 }

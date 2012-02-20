@@ -75,7 +75,7 @@ public class OrionUser extends User {
 		String workspaceId = webWorkspace.getId();
 		this.userDirectory = new VOrionWorkspaceStorage(webWorkspace, this.getUserName());
 		this.workspace = new VOrionWorkspace((VOrionWorkspaceStorage)this.userDirectory);
-		
+		rebuildWorkspace();
 		
 	}
 	
@@ -215,7 +215,7 @@ public class OrionUser extends User {
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#rebuildWorkspace()
 	 */
-	public void rebuildWorkspace() {
+	public void rebuildWorkspaceOld() {
 		
 		IStorage[] userFiles = this.userDirectory.listFiles();
 		

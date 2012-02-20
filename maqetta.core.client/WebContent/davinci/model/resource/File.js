@@ -70,13 +70,12 @@ return declare("davinci.model.resource.File", Resource, {
 			contentType:"text/html"
 		});	
 		defered.then(function(res){
-			// do nothing on success
+			dojo.publish("/davinci/resource/resourceChanged",["modified",this]);
 		}, function(err){
 			// This shouldn't occur, but it's defined just in case
 			// more meaningful error message should be reported to user higher up the food chain...
 			console.error("An error occurred: davinci.model.resource.File.prototype.setContents " + err + " : " + path);
 		});
-		dojo.publish("/davinci/resource/resourceChanged",["modified",this]);
 		return defered;
 	},
 

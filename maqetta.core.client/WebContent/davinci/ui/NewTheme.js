@@ -96,36 +96,48 @@ define(["dojo/_base/declare",
 				alert(langObj.themeAlreadyExists);
 			}else{
 			    var basePath = this.getBase();
+			    // first we clone the theme which creates temp css files
 				var deferedList = Theme.CloneTheme(themeName,  version, selector, newBase, oldTheme, true);
 				deferedList.then(function(results){
-				    function findTheme(basePath, theme){
-			            /* flush the theme cache after creating so new themes show up */
-			            var themes = Library.getThemes(basePath, false, true);
-			            var found = null;
-			            for(var i=0;i<themes.length && ! found;i++){
-			                if(themes[i].name==theme)
-			                    found = themes[i];
-			            }
-			            return found;
-			        }
-			        var error = false;
+				    var error = false;
 			        for (var x=0; x < results.length; x++){
 			            if(!results[x][0] ){
 			                error = true;
 			            }  
 			        }
 			        if (!error){
-			            var found = findTheme(basePath, base);
-			            if (found){
-			                Workbench.openEditor({
-			                       fileName: found.file,
-			                       content: found.file.getText()});
-			            } else {
-			                // error message
-			                alert(langObj.errorCreatingTheme + base);
-			            }
-			        }
+			        	var renameDefs = Theme.postClone(deferedList.toRename); // after the clone has completed rename the temp css files to the permanent name
+			        	renameDefs.then(function(results){
+							    function findTheme(basePath, theme){
+						            // flush the theme cache after creating so new themes show up 
+						            var themes = Library.getThemes(basePath, false, true);
+						            var found = null;
+						            for(var i=0;i<themes.length && ! found;i++){
+						                if(themes[i].name==theme)
+						                    found = themes[i];
+						            }
+						            return found;
+						        }
+						        var error = false;
+						        for (var x=0; x < results.length; x++){
+						            if(!results[x][0] ){
+						                error = true;
+						            }  
+						        }
+						        if(!error){
+					        		var found = findTheme(basePath, base);
+						            if (found){
+						                Workbench.openEditor({
+						                       fileName: found.file,
+						                       content: found.file.getText()});
+						            } else {
+						                // error message
+						                alert(langObj.errorCreatingTheme + base);
+						            }
+						        }
 
+			        	});
+			        }
 			    });
 			
 			}

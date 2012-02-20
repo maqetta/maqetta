@@ -11,7 +11,6 @@ define(["dojo/_base/declare",
         "dijit/form/ComboBox",
         "dojo/i18n!davinci/ui/nls/ui",
         "dojo/i18n!dijit/nls/common",
-        "davinci/Workbench",
         "davinci/model/Path",
         "system/resource",
         "davinci/ve/RebuildPage",
@@ -19,15 +18,14 @@ define(["dojo/_base/declare",
         "davinci/Theme"
         
 ], function(declare, _Templated, _Widget, Workbench, Button, TextBox, RadioButton, MenuItem, Menu, Library, 
-			ComboBox, uiNLS, commonNLS, Runtime, Path, Resource, RebuildPage, templateString, Theme
+			ComboBox, uiNLS, commonNLS, Path, Resource, RebuildPage, templateString, Theme
 			){
 	
-	return declare("davinci.ui.UserLibraries",   [_Widget, _Templated], {
+	return declare("davinci.ui.UserLibraries", [_Widget, _Templated], {
 		
 		widgetsInTemplate: true,
 		
-		postMixInProperties : function() {
-			
+		postMixInProperties: function() {
 			dojo.mixin(this, commonNLS);
 			this.inherited(arguments);
 		},
@@ -35,21 +33,19 @@ define(["dojo/_base/declare",
 		/* templated attach points, custom input section */
 		
 		/* check box for rewrite dojo */
-		_tableDiv : null,
+		_tableDiv: null,
 
-		templateString : templateString,
+		templateString: templateString,
 		
-		buildRendering : function(){
-			
+		buildRendering: function(){
 			this.inherited(arguments);
 			this._handles = [];
 			this._allLibs = Library.getInstalledLibs();
 			this._userLibs = Library.getUserLibs(this.getResourceBase());
-			var uiArray = [];
-			
-			uiArray.push("<table cellspacing='0' cellpadding='0' width='100%'><tr><td class='header'></td><td class='header'>"+uiNLS.library+"</td><td class='header'>"+uiNLS.version+"</td><td class='header'>"+uiNLS.workspaceLocation+"</td></tr>");
-
-			uiArray.push("<tr></tr>");
+			var uiArray = [
+			    "<table cellspacing='0' cellpadding='0' width='100%'><tr><td class='header'></td><td class='header'>"+uiNLS.library+"</td><td class='header'>"+uiNLS.version+"</td><td class='header'>"+uiNLS.workspaceLocation+"</td></tr>",
+				"<tr></tr>"
+			];
 			this.libraries = {};
 			/* build UI table */
 			for(var i =0;i<this._allLibs.length;i++){
@@ -85,18 +81,19 @@ define(["dojo/_base/declare",
 		 * 
 		 *  
 		 */
-		getResourceBase : function(){
+		getResourceBase: function(){
 			// returns the base folder for this change.
 			
-			if(Workbench.singleProjectMode())
+			if(Workbench.singleProjectMode()) {
 				return Resource.getRoot().getName();
+			}
 		},
 
 		_getGlobalLib: function( id, version){
-			
 			for(var i=0;i<this._allLibs.length;i++){
-				if(this._allLibs[i].id==id && this._allLibs[i].version==version)
+				if(this._allLibs[i].id==id && this._allLibs[i].version==version) {
 					return this._allLibs[i].root;
+				}
 			}
 			return null;
 		},
@@ -114,7 +111,7 @@ define(["dojo/_base/declare",
 			this._handles = [];
 		},
 		
-		_getLibRoot:function(id,version){
+		_getLibRoot: function(id,version){
 			for(var i=0;i<this._userLibs.length;i++){
 				if(this._userLibs[i].id==id && this._userLibs[i].version==version)
 					return this._userLibs[i].root;
@@ -122,20 +119,19 @@ define(["dojo/_base/declare",
 			return this._getGlobalLib(id,version);
 		},
 		
-		_getUserLib:function(id,version){
+		_getUserLib: function(id,version){
 			for(var i=0;i<this._userLibs.length;i++){
 				if(this._userLibs[i].id==id && this._userLibs[i].version==version)
 					return true;
 			}
 			
 		},
-		_makeChange : function(values){
-		
+		_makeChange: function(values){
 			if(values.length){
 				var isOk = Library.modifyLib(values);
 				
 				var resourceChanges = [];
-				/* compile a list of parent diretories that may have changed from the library change 
+				/* compile a list of parent directories that may have changed from the library change 
 				 * 
 				 * Need to scan for 3 areas for resource notification
 				 * 1) parent directory of change
@@ -144,47 +140,47 @@ define(["dojo/_base/declare",
 				 * 
 				 * */
 				for(var i=0;i<values.length;i++){
-					
-					
 					/* check parent */
 					var baseDirectory = (new Path(values[i].base).append(values[i].oldPath)).removeLastSegments(1);
 					var found = false
 					var basePath = new Path(values[i].base);
 					for(var j=0;j<resourceChanges.length && !found;j++){
-						if(resourceChanges[j].equals(basePath))
+						if(resourceChanges[j].equals(basePath)) {
 							found = true;
+						}
 					}
-					if(!found)
+					if(!found) {
 						resourceChanges.push(basePath);
-					
+					}
 				}
-				
-				for(var i=0;i<resourceChanges.length;i++){
+
+				dojo.subscribe("/davinci/ui/libraryChanged", this, function(){			
+					var pages = Resource.findResource("*.html", true, this.getResourceBase(), true);
+					var pageBuilder = new RebuildPage();
 					
+					for(var i=0;i<pages.length;i++){
+						/* dont process theme editor pages */
+						if(Theme.isThemeHTML(pages[i])) {
+							continue;
+						}
+						
+						var newSource = pageBuilder.rebuildSource(pages[i].getText(), pages[i]);
+						pages[i].setContents(newSource, false);
+					}
+					this.onClose();
+				});
+
+				for(var i=0;i<resourceChanges.length;i++){
 					Resource.resourceChanged("reload", resourceChanges[i].toString());
 					Library.themesChanged(resourceChanges[i].toString());
 				}
 				
-			//	Resource.resourceChanged("reload", this.getResourceBase());
-				dojo.publish("/davinci/ui/libraryChanged");
-				
+				// this event will trigger a "/davinci/ui/libraryChanged" event and run the code above
+				dojo.publish("/davinci/ui/libraryChanged/start");
 			}
-			
-			var pages = Resource.findResource("*.html", true, this.getResourceBase(), true);
-			
-			var pageBuilder = new RebuildPage();
-			
-			for(var i=0;i<pages.length;i++){
-				/* dont process theme editor pages */
-				if(Theme.isThemeHTML(pages[i])) continue;
-				
-				var newSource = pageBuilder.rebuildSource(pages[i].getText(), pages[i]);
-				pages[i].setContents(newSource, false);
-			}
-			this.onClose();
 		},
-		_processChanges : function(){
-			
+
+		_processChanges: function(){
 			var changes = [];
 			function searchM (id,version){
 				for(var i=0;i<changes.length;i++){
@@ -226,29 +222,23 @@ define(["dojo/_base/declare",
 					item.oldPath = this._allLibs[element].initRoot;
 					item.base = this.getResourceBase();
 				}
-			
 			}
 			this._makeChange(changes);
 		},
 
-		okButton : function(){
+		okButton: function(){
 			this._processChanges();
 			this.onClose();
 		},
-		cancelButton : function(){
+		cancelButton: function(){
 			this.cancel = true;		
 			this.onClose();
 		},
-		_rewriteDojo : function(){
-			
+		_rewriteDojo: function(){
 			var checked = dojo.attr(this.__rewriteDojo, "checked");
 			dojo.attr(this.__rewriteDojoURL, "disabled", !checked);
-			
 		}
-		
-
 	});
-	
 });
 
 

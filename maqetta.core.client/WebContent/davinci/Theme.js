@@ -12,6 +12,7 @@ define([
 ], function(declare, DeferredList, Workbench, Library, Preferences, Path, HTMLFile, Factory, systemResource) {
 
 	var Theme = {
+		TEMP_CLONE_PRE: "clone_",
 		desktop_default : 'desktop_default',
 		mobile_default : 'custom_default',
 		default_theme : '(device-specific)', //'default';
@@ -114,7 +115,7 @@ define([
 			var resource = systemResource.findResource(fileUrl);
 			if(!sameName && renameFiles && resource.getName().indexOf(oldClass) > -1){
 				var newName = resource.getName().replace(oldClass, selector);
-				resource.rename(newName);
+				resource.rename(this.TEMP_CLONE_PRE+newName); // for caching reasons rename to temp file name, will rename later
 				themeJson.files[i] =newName;
 			}
 			var cssModel = Factory.getModel({url:resource.getPath(),
@@ -124,15 +125,15 @@ define([
 					return r1.getText();
 				}
 			});
+			toSave[cssModel.url] = cssModel;
 			var elements = cssModel.find({elementType: 'CSSSelector', cls: oldClass});
 			for(var i=0;i<elements.length;i++){
 				elements[i].cls = selector;
-				var file = elements[i].getCSSFile();
-				toSave[file.url] = file;
 				
 			}
 		}
 		deferreds.push(themeFile.setContents(JSON.stringify(themeJson)));
+		
 		for(var name in toSave){
 		    deferreds.push(toSave[name].save());
 		}
@@ -164,7 +165,29 @@ define([
 		}
 	    var defs = new DeferredList(deferreds);
 		Library.themesChanged();
+		defs.toRename = toSave; // need to save the cssFiles to rename from temp name after saves are done, in postClone
 		return defs;
+	},
+	
+	postClone: function(files){
+		// We have to rename the css files to the correct name, this is to trick the browser cache
+		var deferreds = [];
+		for(var name in files){
+			var r = files[name];
+			var f = r.getResource();
+			var name = f.name.replace(this.TEMP_CLONE_PRE, "");
+			f.rename(name);
+			var cssModel = Factory.getModel({url:f.getPath(),
+				includeImports: true,
+				loader:function(url){
+					var r1=  systemResource.findResource(url);
+					return r1.getText();
+				}
+			});
+			var def = cssModel.save();
+			deferreds.push(def);
+		}
+		return  new DeferredList(deferreds);
 	},
 
 	getHelper: function(theme){

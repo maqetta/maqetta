@@ -22,6 +22,7 @@
 		debugger;
 		var dj = this.context.getDojo();
 		var views = dj.query('.mblView');
+		return views;
 	};
 
     return {

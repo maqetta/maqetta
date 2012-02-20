@@ -304,7 +304,7 @@ return {
                     iconClass:"renameIcon",
                     run: function() {
                     	require(['./ui/Resource'], function(r) {
-                    		r.renameActions();
+                    		r.renameAction();
                     	});
                     },
                     isEnabled: function(item) {

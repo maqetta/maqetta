@@ -15,13 +15,13 @@
 	</style>
 	<script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="async: true, parseOnLoad: true, modulePaths:{'preview':'../preview', 'system':'../system'}, cacheBust: '@revision@'"></script>
 	<script type="text/javascript">
-		require(["dijit/dijit", "davinci/davinci-common", "davinci/davinci", ], function () {
-			require(["dojo/i18n!davinci/nls/webContent", "davinci/version", "dojo/domReady!"], function (webContent) {
+		require(["dijit/dijit", "davinci/davinci", ], function () {
+			require(["dojo/i18n!davinci/nls/webContent", "davinci/version", "dojo/domReady!"], function (webContent, version) {
 				  dojo.byId("davinci_user_welcome").innerHTML = webContent.welcome;
 				  dojo.byId("load_screen").innerHTML = webContent.loadingMaqetta;
 				  dojo.byId("davinci_logoff").innerHTML = webContent.logOff;
 				  dojo.byId("maqetta_designer").innerHTML = webContent.designer;
-				  dojo.byId("maqetta_version").innerHTML = require("davinci/version");
+				  dojo.byId("maqetta_version").innerHTML = version;
 				  dojo.byId("title_id").text = webContent.pageDesignerTitle;
 			});
 

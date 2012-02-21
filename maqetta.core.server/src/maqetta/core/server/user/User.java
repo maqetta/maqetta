@@ -47,10 +47,10 @@ import org.osgi.framework.Bundle;
 
 public class User implements IUser {
 
-	private IStorage userDirectory;
-	private Links links;
-	private IPerson person;
-	private IVResource workspace;
+	protected IStorage userDirectory;
+	protected Links links;
+	protected IPerson person;
+	protected IVResource workspace;
     static {
         Constants.LOCAL_INSTALL_USER_OBJ = 
              new User(new IPerson() {
@@ -64,10 +64,12 @@ public class User implements IUser {
             ,ReviewManager.getReviewManager().getBaseDirectory());
         
     }	
-
+    public User(IPerson person) {
+		this.person = person;
+	}
 
 	public User(IPerson person, IStorage userDirectory) {
-		this.person = person;
+		this(person);
 		this.userDirectory = userDirectory;
 		userDirectory.mkdirs();
 		rebuildWorkspace();
@@ -144,7 +146,7 @@ public class User implements IUser {
 	
 	public ILibraryFinder[] getFinders(String base){
 		ILibraryFinder[] finders = ServerManager.getServerManger().getLibraryManager().getLibraryFinders();
-		StorageFileSystem baseFile = new StorageFileSystem(this.userDirectory, base);
+		IStorage baseFile = this.userDirectory.newInstance(this.userDirectory, base);
 		Vector<ILibraryFinder> allLibs = new Vector();
 		for(int i=0;i<finders.length;i++){
 			ILibraryFinder finder = finders[i].getInstance(baseFile.toURI());
@@ -156,7 +158,7 @@ public class User implements IUser {
 	public ILibInfo[] getExtendedSettings(String base){
 		
 		ILibraryFinder[] finders = ServerManager.getServerManger().getLibraryManager().getLibraryFinders();
-		IStorage baseFile = new StorageFileSystem(this.userDirectory, base);
+		IStorage baseFile = this.userDirectory.newInstance(this.userDirectory, base);
 		Vector<ILibInfo> allLibs = new Vector();
 		for(int i=0;i<finders.length;i++){
 			ILibraryFinder finder = finders[i].getInstance(baseFile.toURI());
@@ -293,7 +295,7 @@ public class User implements IUser {
 		return getLibSettings(this.userDirectory.newInstance(this.userDirectory, base));
 		
 	}
-	private LibrarySettings getLibSettings(IStorage baseFile) {
+	protected LibrarySettings getLibSettings(IStorage baseFile) {
 		if(!isValid(baseFile.getAbsolutePath())) return null;
 		return new LibrarySettings(this.userDirectory.newInstance(baseFile, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME));
 	}
@@ -408,14 +410,14 @@ public class User implements IUser {
         return getLibFile(path);
     }
 
-	private Library getLibrary(ILibInfo li) {
+	protected Library getLibrary(ILibInfo li) {
 		String id = li.getId();
 		String version = li.getVersion();
 		return ServerManager.getServerManger().getLibraryManager().getLibrary(id, version);
 
 	}
 
-	private IVResource getLibFile(String p1) {
+	protected IVResource getLibFile(String p1) {
 		IPath path = new Path(p1);
 		IVResource root = this.workspace;
 		for (int i = 0; i < path.segmentCount() && root != null; i++) {
@@ -426,7 +428,7 @@ public class User implements IUser {
 		return root;
 	}
 
-	private IVResource getLinkedResource(String path){
+	protected IVResource getLinkedResource(String path){
 	    String path1 = path;
         if (path1.startsWith("./")) {
             path1 = path.substring(2);
@@ -605,7 +607,7 @@ public class User implements IUser {
                     }
 		     }
 		    if(f1!=null){
-    			Collection c = this.userDirectory.listFiles(f1, filter, TrueFileFilter.INSTANCE);
+    			Collection c = this.userDirectory.findFiles(f1, pathStr,ignoreCase);
     			File[] found = (File[]) c.toArray(new File[c.size()]);
     			for (int i = 0; i < found.length; i++) {
     					IStorage workspaceFile = null;

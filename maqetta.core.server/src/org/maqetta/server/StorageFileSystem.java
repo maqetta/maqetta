@@ -10,8 +10,16 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.util.Collection;
 
+
+
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.NameFileFilter;
+import org.apache.commons.io.filefilter.SuffixFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 public class StorageFileSystem implements IStorage {
 	
@@ -94,9 +102,22 @@ public class StorageFileSystem implements IStorage {
 	public IStorage newInstance(URI uri) {
 		return new StorageFileSystem(new File(uri));
 	}
-	public Collection listFiles(IStorage f1, IOFileFilter filter, IOFileFilter instance) {
-		
-		return FileUtils.listFiles(((StorageFileSystem)f1).file, filter, instance);
+	public Collection findFiles(IStorage f1, String pathStr, boolean ignoreCase) {
+		IOFileFilter filter;
+		IPath path = new Path(pathStr);
+		if (path.segment(0).equals("*")) {
+			IOCase ioCase = ignoreCase ? IOCase.INSENSITIVE		: IOCase.SENSITIVE;
+			filter = new NameFileFilter(path.lastSegment(), ioCase);
+		} else {
+			String lastSegment = path.lastSegment();
+			if (lastSegment.startsWith("*")) {
+				filter = new SuffixFileFilter(lastSegment.substring(1));
+			} else {
+				filter = null;
+			}
+		}
+	
+		return FileUtils.listFiles(((StorageFileSystem)f1).file, filter, TrueFileFilter.INSTANCE);
 	}
 
 	public boolean isFile() {

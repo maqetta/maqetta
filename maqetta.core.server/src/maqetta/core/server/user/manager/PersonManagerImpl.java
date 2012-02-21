@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
 
 public class PersonManagerImpl implements IPersonManager {
 
-    HashMap             persons      = new HashMap();
+    protected HashMap             persons      = new HashMap();
 
     static final String USERS_TAG    = "users";
     static final String USER_TAG     = "user";

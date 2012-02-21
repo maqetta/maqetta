@@ -1278,7 +1278,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	_processWidgets: function(containerNode, attachWidgets, states, scripts) {
 		var prereqs = [];
 		dojo.forEach(dojo.query("*", containerNode), function(n){
-			var type = n.getAttribute("dojoType") || /*n.getAttribute("oawidget") ||*/ n.getAttribute("dvwidget");
+			var type =  n.getAttribute("data-dojo-type") || n.getAttribute("dojoType") || /*n.getAttribute("oawidget") ||*/ n.getAttribute("dvwidget");
 			//doUpdateModelDojoRequires=true forces the SCRIPT tag with dojo.require() elements
 			//to always check that scriptAdditions includes the dojo.require() for this widget.
 			//Cleans up after a bug we had (7714) where model wasn't getting updated, so
@@ -1333,7 +1333,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	_preProcess: function (node){
 		//need a helper to pre process widget
 		// also, prime the helper cache
-        var type = node.getAttribute("dojoType");
+        var type = node.getAttribute("dojoType") || node.getAttribute("data-dojo-type");
         return Widget.requireWidgetHelper(type).then(function(helper) {        	
 	        if(helper && helper.preProcess){
 	            helper.preProcess(node, this);

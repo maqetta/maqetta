@@ -21,11 +21,11 @@ import org.eclipse.core.runtime.Path;
 
 public class VFile implements IVResource {
     // abstracted file/resource class
-    IStorage       file = null;
-    private boolean    isWorkingCopy;
-    private String     virtualPath;
-    private IStorage       workingCopy;
-    private IVResource parent;
+    protected IStorage       file = null;
+    protected boolean    isWorkingCopy;
+    protected String     virtualPath;
+    protected IStorage       workingCopy;
+    protected IVResource parent;
 
     public VFile(IStorage file, IVResource parent, String virtualPath) {
 
@@ -65,10 +65,14 @@ public class VFile implements IVResource {
 
     }
 
-    private IStorage getWorkingCopy(IStorage original) {
+    protected IStorage getWorkingCopy(IStorage original) {
     	IStorage parent = original.getParentFile();
-    	IStorage workingCopy = original.newInstance(parent, original.getName() + IDavinciServerConstants.WORKING_COPY_EXTENSION);
-        return workingCopy;
+    	IStorage workingCopy;
+    	if(parent!=null)
+    		workingCopy = original.newInstance(parent, original.getName() + IDavinciServerConstants.WORKING_COPY_EXTENSION);
+    	else
+    		workingCopy = original.newInstance(original.getName() + IDavinciServerConstants.WORKING_COPY_EXTENSION);
+    	return workingCopy;
     }
 
     /*

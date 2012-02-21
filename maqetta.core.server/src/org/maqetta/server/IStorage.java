@@ -51,8 +51,7 @@ public interface IStorage {
 	public IStorage newInstance(URI uri);
 	
 	
-	public Collection listFiles(IStorage f1, IOFileFilter filter,
-			IOFileFilter instance);
+	public Collection findFiles(IStorage parentFolder, String pathStr, boolean ignoreCase) ;
 	public boolean isFile();
 	public String[] list();
 	

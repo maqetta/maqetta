@@ -72,7 +72,6 @@ define(["dojo/_base/declare",
 			value.replace(/"/,'\\"');
 			
 			if (value && value.match(/.*:State$/)) {
-				console.warn(value, value.substring(0, value.length - ":State".length));
 				value = "davinci.states.setState('" + value.substring(0, value.length - ":State".length) + "')";
 			}
 			var properties = {};

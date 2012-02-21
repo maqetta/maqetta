@@ -27,7 +27,7 @@ var library,
 
 // Cache library roots so we don't make multiple server calls for the same 'id' and 'version'.  But
 // clear the cache when any of the libraries change.
-dojo.subscribe("/davinci/ui/libraryChanged", this, function() {
+dojo.subscribe("/davinci/ui/libraryChanged/start", this, function() {
     _libRootCache = {};
     _userLibsCache = {};
 });

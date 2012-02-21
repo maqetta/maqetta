@@ -22,8 +22,12 @@ var ViewFileAction = davinci.review.actions.ViewFileAction = declare("davinci.re
 				content: item.getText()
 			});
 		} else if (Runtime.getMode()=="designPage") {
-			window.open(davinci.Workbench.location()+"review/"+Runtime.userName+"/"+item.parent.timeStamp+"/"+
-					item.name+"/default");
+//			window.open(davinci.Workbench.location()+"review/"+Runtime.userName+"/"+item.parent.timeStamp+"/"+
+//					item.name+"/default");
+			davinci.Workbench.openEditor({
+				fileName: item,
+				content: item.getText()
+			});
 		}
 	},
 

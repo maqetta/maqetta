@@ -109,6 +109,9 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			DragManager.documentX = coords.x - containerNode.scrollLeft;
 			DragManager.documentY = coords.y - containerNode.scrollTop
 		}
+
+		// pre-fetch helper to warm the cache
+		Metadata.getHelper(this.type, 'helper');
 	},
 
 	/**
@@ -161,6 +164,9 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			context.setActiveTool(null);			
 			context.getContainerNode().focus();  // to enable moving with arrow keys immediately
 		});
+
+		// pre-fetch helper
+		Metadata.getHelper(this.type, 'helper');
 	},
 
 	flat: function(div){

@@ -220,6 +220,7 @@ define(["dijit/Dialog",
 	        this._renameDialog._themesetConnections = [];
 	        this._renameDialog._themesetConnections.push(dojo.connect(dijit.byId('theme_set_rename_ok_button'), "onClick", this, "onOkRename"));
 	        this._renameDialog._themesetConnections.push(dojo.connect(dijit.byId('theme_set_rename_cancel_button'), "onClick", this, "onCloseRename"));
+	        this._renameDialog._themesetConnections.push(dojo.connect(this._renameDialog, "onCancel", this, "onCloseRename"));
 	        this._renameDialog.show();
 	        var editBox = dijit.byId('theme_select_themeset_rename_textbox');
 	        editBox.attr('value', this._selectedThemeSet.name);
@@ -250,6 +251,7 @@ define(["dijit/Dialog",
 	    },
 	    
 	    onCloseRename: function(e) {
+	    	
 	        while (connection = this._renameDialog._themesetConnections.pop()){
 	            dojo.disconnect(connection);
 	        }

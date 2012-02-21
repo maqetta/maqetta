@@ -178,6 +178,23 @@ define(["dijit/Dialog",
 	        this._selectedThemeSet = null;
 	        select.removeChild(node);
 	        dijit.byId('theme_select_themeset_theme_select_textbox').attr('value','');
+	        var renameButton = dijit.byId('theme_select_rename_button');
+	        var desktopSelect = dijit.byId('theme_select_desktop_theme_select');
+	        var mobileSelect = dijit.byId('theme_select_mobile_theme_select');
+	        var androidSelect = dijit.byId('theme_select_android_select');
+	        var blackberrySelect = dijit.byId('theme_select_blackberry_select');
+	        var ipadSelect = dijit.byId('theme_select_ipad_select');
+	        var iphoneSelect = dijit.byId('theme_select_iphone_select');
+	        var otherSelect = dijit.byId('theme_select_other_select');
+	        renameButton.set('disabled', true);
+	        desktopSelect.set('disabled', true);
+	        mobileSelect.set('disabled', true);
+	        androidSelect.set('disabled', true);
+            blackberrySelect.set('disabled', true);
+            ipadSelect.set('disabled', true);
+            iphoneSelect.set('disabled', true);
+            otherSelect.set('disabled', true);
+	        
 	        
 	    },
 	    
@@ -255,6 +272,12 @@ define(["dijit/Dialog",
 	                this.addThemes(this._dojoThemeSets.themeSets[i]);
 	                this._selectedThemeSet = this._dojoThemeSets.themeSets[i];
 	                dijit.byId('theme_select_themeset_theme_select_textbox').attr('value',this._selectedThemeSet.name);
+	                var renameButton = dijit.byId('theme_select_rename_button');
+	    	        var desktopSelect = dijit.byId('theme_select_desktop_theme_select');
+	    	        var mobileSelect = dijit.byId('theme_select_mobile_theme_select');
+	                renameButton.set('disabled', false);
+	                desktopSelect.set('disabled', false);
+	                mobileSelect.set('disabled', false);
 	                break;
 	            }
 	         

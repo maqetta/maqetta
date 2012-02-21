@@ -1,10 +1,10 @@
 define([
 	"dojo/_base/declare",
 	"davinci/model/resource/Resource",
-	"davinci/model/resource/Folder",
+	"davinci/review/model/resource/Folder",
 	"davinci/Runtime",
 	"davinci/Workbench"
-], function(declare, Resource, Folder, Runtime, Workbench) {
+], function(declare, Resource, reviewFolder, Runtime, Workbench) {
 
 var root = declare(Resource, {
 
@@ -62,7 +62,7 @@ var root = declare(Resource, {
 				load : dojo.hitch(this, function(responseObject, ioArgs) {
 					this.children=[];
 					for (var i=0; i<responseObject.length; i++) {
-						var child = new Folder(dojo.mixin({
+						var child = new reviewFolder(dojo.mixin({
 							name:responseObject[i].versionTitle,
 							parent:this
 						},responseObject[i]));

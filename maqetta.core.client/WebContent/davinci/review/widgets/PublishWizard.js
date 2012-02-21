@@ -15,6 +15,7 @@ define([
 	"dojox/grid/DataGrid",
 	"dojox/data/QueryReadStore",
 	"dojox/widget/Toaster",
+	"dojox/validate/regexp",
 	"dojo/string",
 	"dojo/fx",
 	"dijit/Dialog",
@@ -32,8 +33,8 @@ define([
 	"dojo/text!./templates/PublishWizard.html",
 	"dojo/text!./templates/MailFailureDialogContent.html"
 ], function(declare, _WidgetBase, _TemplatedMixin, StackContainer, ContentPane, SimpleTextarea, NumberTextBox, ValidationTextBox, DateTextBox, 
-		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojostring, dojofx, Dialog, dijitTree, reviewTree,  
-		Runtime, Workbench, Folder, File, Empty, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls, 
+		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojoxRegexp, dojostring, dojofx, Dialog, dijitTree, 
+		reviewTree, Runtime, Workbench, Folder, File, Empty, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls, 
 		templateString, warningString) {
 	
 return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedMixin], {
@@ -310,7 +311,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		var usernameRE = "([!#-'*+\\-\\/-9=?A-Z^-~]+[.])*[!#-'*+\\-\\/-9=?A-Z^-~]+";
 
 		// build emailAddress RE
-		var emailAddressRE = usernameRE + "@" + dojox.validate.regexp.host(flags);
+		var emailAddressRE = usernameRE + "@" + dojoxRegexp.host(flags);
 
 		// Allow email addresses with cruft
 		if ( flags.allowCruft ) {

@@ -215,8 +215,14 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 				return;
 			}
 			if (node.elementType == "ReviewFile") {
-				window.open(this._location()+"review/"+Runtime.userName+"/"+node.parent.timeStamp+"/"
-						+node.name+"/default");
+//				window.open(this._location()+"review/"+Runtime.userName+"/"+node.parent.timeStamp+"/"
+//						+node.name+"/default");
+				console.debug("CommentExplorerView: review/"+Runtime.userName+"/"+node.parent.timeStamp+"/"+
+						node.name+"/default");
+				WorkBench.openEditor({
+					fileName: node,
+					content: node.getText()
+				});
 			}
 		}
 	},

@@ -42,7 +42,7 @@ return declare("davinci.review.model.ReviewTreeModel", null, {
 
 	getLabel: function(/*dojo.data.Item*/ item) {
 		var label=item.getName();
-		if (item.elementType == "ReviewVersion"&&item.isDraft) {
+		if (item.elementType == "ReviewVersion" && item.isDraft) {
 			label+=" (Draft)";
 		}
 		if (item.elementType == "ReviewFile") {

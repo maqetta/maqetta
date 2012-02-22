@@ -61,7 +61,7 @@ public class DavinciPageServlet extends HttpServlet {
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		IUser user = (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
-		String path = req.getPathInfo();
+		String path = getPathInfo(req);
 		boolean isWorkingCopy = (path.indexOf(IDavinciServerConstants.WORKING_COPY_EXTENSION) > -1);
 		if ( isWorkingCopy ) {
 			path = path.substring(0, path.indexOf(IDavinciServerConstants.WORKING_COPY_EXTENSION));
@@ -87,6 +87,10 @@ public class DavinciPageServlet extends HttpServlet {
 		resp.getOutputStream().close();
 	}
 
+	public String getPathInfo(HttpServletRequest req){
+		return req.getPathInfo();
+	}
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		if ( serverManager == null ) {
@@ -95,7 +99,7 @@ public class DavinciPageServlet extends HttpServlet {
 		String previewParam = req.getParameter(IDavinciServerConstants.PREVIEW_PARAM);
 
 		IUser user = (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
-		String pathInfo = req.getPathInfo();
+		String pathInfo = getPathInfo(req);
 		if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
 			System.out.println("Page Servlet request: " + pathInfo + ", logged in=" + (user != null));
 		}
@@ -193,7 +197,7 @@ public class DavinciPageServlet extends HttpServlet {
 			ServletException {
 
 		// System.out.println("enter ws request");
-		String pathInfo = req.getPathInfo();
+		String pathInfo =getPathInfo(req);
 		// Code further down expects pathInfo==null if user goes to root of daVinci server
 		IPath path = new Path(pathInfo);
 		if ( path.hasTrailingSeparator() ) {

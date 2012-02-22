@@ -12,7 +12,9 @@ public interface IUser {
 	public IVResource createEclipseProject(String projectName);
 
 	public IVResource createProject(String projectName);
-
+	
+	public IVResource newWorkspaceRoot();
+	
 	public IVResource createProject(String projectName, String basePath,
 			boolean initFiles);
 
@@ -43,7 +45,7 @@ public interface IUser {
 
 	public IStorage getWorkbenchSettings(String base);
 
-	public ILinks getLinks();
+	//public ILinks getLinks();
 
 	public IVResource[] findFiles(String pathStr, boolean ignoreCase,
 			boolean workspaceOnly);

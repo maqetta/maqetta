@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IRegistryChangeEvent;
 import org.eclipse.core.runtime.IRegistryChangeListener;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.equinox.http.jetty.JettyCustomizer;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
@@ -231,6 +232,7 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer,
 				IExtensionRegistry.class.getName(), this);
 		registryTracker.open();
 		initializeFileSystem();
+		
 		
 
 	}

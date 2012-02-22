@@ -43,18 +43,18 @@ return {
 			},
 			{
 				viewID: "davinci.review.comment",
-				position: "right"
+				position: "left"
 			},
 			{
 				viewID: "davinci.review.state",
-				position: "right-bottom"
+				position: "right"
 			}
 		]
 	},
 	"davinci.editor": [
 		{
 			id: "CommentReviewEditor",
-			name: "Preview",
+			name: "Review Editor",
 			extensions: "rev",
 			isDefault: true,
 			editorClass: "davinci/review/editor/ReviewEditor"

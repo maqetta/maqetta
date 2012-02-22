@@ -11,6 +11,8 @@ import java.io.OutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import maqetta.server.orion.MaqettaOrionServerConstants;
+
 import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.orion.server.core.users.OrionScope;
@@ -34,7 +36,7 @@ public class SetWorkbenchState extends Command {
     	}
      
     	br.close();
-    	result.put("workbenchSettings", value);
+    	result.put(MaqettaOrionServerConstants.WORKBENCH_PREF, value);
    }
 
 }

@@ -34,7 +34,7 @@ public class DesignerUser implements IDesignerUser {
 	private final String name;
 	private IStorage commentingDirectory;
 	private IVResource workspace;
-	private Links links;
+	//private Links links;
 	private final List<Version> versions = new ArrayList<Version>();
 	private Version latestVersion;
 	private IStorage userDirectory;
@@ -285,9 +285,11 @@ public class DesignerUser implements IDesignerUser {
 		if (path.segment(0).equals(Constants.REVIEW_DIRECTORY_NAME)) {
 			vr = getUserFile(path.removeFirstSegments(1).toString());
 		}
+		/*
 		if (vr == null) {
 			vr = getLinkedResource(path.toString());
 		}
+		*/
 		if (vr == null) {
 			vr = getLibFile(path.toString());
 		}
@@ -327,7 +329,7 @@ public class DesignerUser implements IDesignerUser {
 				IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
 		return new LibrarySettings(settings);
 	}
-
+	/*
 	private IVResource getLinkedResource(String path) {
 		String path1 = path;
 		if (path1.startsWith("./")) {
@@ -343,14 +345,14 @@ public class DesignerUser implements IDesignerUser {
 		return null;
 
 	}
-
+	
 	synchronized public ILinks getLinks() {
 		if (this.links == null) {
 			this.links = new Links(this.getWorkbenchSettings());
 		}
 		return this.links;
 	}
-
+	*/
 	public IStorage getWorkbenchSettings() {
 		return getWorkbenchSettings("");
 	}

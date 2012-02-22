@@ -11,8 +11,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import maqetta.core.server.internal.Links;
+//import maqetta.core.server.internal.Links;
 import maqetta.core.server.util.VResourceUtils;
+
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOCase;
@@ -48,7 +49,7 @@ import org.osgi.framework.Bundle;
 public class User implements IUser {
 
 	protected IStorage userDirectory;
-	protected Links links;
+	//protected Links links;
 	protected IPerson person;
 	protected IVResource workspace;
     static {
@@ -74,7 +75,9 @@ public class User implements IUser {
 		userDirectory.mkdirs();
 		rebuildWorkspace();
 	}
-
+	public IVResource newWorkspaceRoot(){
+		return   new VWorkspaceRoot();
+	}
 	/* rebuilds the virtual part of the workspace.
 	 * 
 	 * any real files are NOT included in this data structure for 
@@ -85,7 +88,7 @@ public class User implements IUser {
 	 * @see org.davinci.server.user.IUser#rebuildWorkspace()
 	 */
 	public void rebuildWorkspace() {
-		this.workspace = new VWorkspaceRoot();
+		this.workspace = newWorkspaceRoot();
 		IStorage[] userFiles = this.userDirectory.listFiles();
 		
 		for(int j=0;j<userFiles.length;j++){
@@ -362,6 +365,7 @@ public class User implements IUser {
 			}
 		}
 		/* add links */
+		/*
 		r1 = getLinkedResource(path);
 		if (r1 != null) {
             if (r1.isDirectory()) {
@@ -369,7 +373,7 @@ public class User implements IUser {
                 found = VResourceUtils.merge(found, list);
             }
         }
-		
+		*/
 		
 		r1 = getLibFile(path);
         if (r1 != null) {
@@ -402,11 +406,12 @@ public class User implements IUser {
             return r1;
         }
         /* add links */
+        /*
         r1 = getLinkedResource(path);
         if (r1 != null) {
            return r1;
         }
-        
+        */
         return getLibFile(path);
     }
 
@@ -427,7 +432,7 @@ public class User implements IUser {
 
 		return root;
 	}
-
+	/*
 	protected IVResource getLinkedResource(String path){
 	    String path1 = path;
         if (path1.startsWith("./")) {
@@ -445,7 +450,7 @@ public class User implements IUser {
         return null;
         
 	}
-	
+	*/
 	public boolean isValid(String path){
 		 IPath workspaceRoot = new Path(this.userDirectory.getAbsolutePath());
 		 IPath a = new Path(path);
@@ -455,7 +460,7 @@ public class User implements IUser {
 	     return true;
 	}
 	
-	 private IVResource getUserFile(String p1) {
+	 protected IVResource getUserFile(String p1) {
 	       
 	        String path = p1;
 	        while(path.length()>0 && (path.charAt(0)=='.' || path.charAt(0)=='/' || path.charAt(0)=='\\'))
@@ -512,7 +517,7 @@ public class User implements IUser {
 		}
 		if(!this.isValid(this.userDirectory.getAbsolutePath() + "/" + path1)) return null;
 		
-		
+		/*
 		ILink link = this.getLinks().hasLink(path1);
 		if (link != null) {
 			path = link.location + "/" + path1.substring(link.path.length());
@@ -520,7 +525,7 @@ public class User implements IUser {
 			VFile linkFile = new VFile(this.userDirectory.newInstance(path));
 			return linkFile;
 		}
-
+		*/
 		IVResource directory = new VFile(this.userDirectory, this.workspace);
 		/* make sure the new resoruce is within the user directory */
 		
@@ -556,13 +561,14 @@ public class User implements IUser {
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#getLinks()
 	 */
+	/*
 	synchronized public ILinks getLinks() {
 		if (this.links == null) {
 			this.links = new Links(this.getWorkbenchSettings());
 		}
 		return this.links;
 	}
-
+	*/
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#findFiles(java.lang.String, boolean, boolean)
 	 */
@@ -623,7 +629,7 @@ public class User implements IUser {
     
     			}
 		    }
-			
+			/*
 			ILink[] allLinks = links.allLinks();
 			for (int i = 0; i < allLinks.length; i++) {
 				File file = new File(allLinks[i].location);
@@ -643,7 +649,7 @@ public class User implements IUser {
 				}
 
 			}
-
+			*/
 			if (!workspaceOnly) {
 				this.findLibFiles(path, results);
 

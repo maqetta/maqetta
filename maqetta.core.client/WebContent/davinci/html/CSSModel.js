@@ -1,11 +1,9 @@
 define([
-	"dojo/_base/declare",
-	"davinci/model/Model",
-], function(declare, Model) {
+], function() {
+	dojo.getObject("davinci.html.CSSModel", true); 
+	return davinci.html.CSSModel = /** @scope davinci.html.CSSModel */ {
 
-var CSSModel = declare("davinci.html.CSSModel", Model, {});
-
-CSSModel.shorthand = [
+shorthand : [
 	['border',['border-width', 'border-style','border-color', 'border-top', 'border-left', 'border-right', 'border-bottom']],
 	['border-width',['border-top-width','border-right-width','border-bottom-width','border-left-width']],
 	['border-style',['border-top-style','border-right-style','border-bottom-style','border-left-style']],
@@ -20,8 +18,7 @@ CSSModel.shorthand = [
 	['margin',['margin-top', 'margin-right', 'margin-bottom', 'margin-left']],
 	['padding',['padding-top', 'padding-right', 'padding-bottom', 'padding-left']],
 	['background',['background-color', 'background-image', 'background-repeat', 'background-position', 'background-attachment']]
-];	
+]
 
-return CSSModel;
-
+    };
 });

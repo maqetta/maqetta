@@ -260,7 +260,10 @@ var Runtime = {
 			redirectUrl = ".";
 		}
 		
-		window.document.body.innerHTML = "<div><h1>Problem connecting to the Maqetta Server...</h1></div><div><center><h1><a href='"+ redirectUrl + "'>Return to Maqetta Login</a></h1></center></div><br><br><div><h2>Error description:</h2>" + error + "</div>" // TODO: i18n
+		window.document.body.innerHTML = 
+			"<div><h1>Problem connecting to the Maqetta Server...</h1></div><div><center><h1><a href='"+ redirectUrl +
+			"'>Return to Maqetta Login</a></h1></center></div><br><br><div><h2>Error description:</h2>" + error + 
+			"</div>"; // TODO: i18n
 	},
 
 	executeCommand: function(cmdID) {

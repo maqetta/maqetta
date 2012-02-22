@@ -36,7 +36,7 @@ public class VOrionWorkspace extends VWorkspaceRoot{
     	this.store=storage;
 	}
 
-
+    /*
 	public IVResource[] listFiles() {
 		IVResource[] addedFiles = super.listFiles();
 		
@@ -62,11 +62,17 @@ public class VOrionWorkspace extends VWorkspaceRoot{
 			if(files[i].getName().compareTo(childName)==0)
 			return new VOrionResource(files[i], this, files[i].getName());
 		}
-		return null;
+		
+		return super.get(childName);
 	}
 	
 	public IVResource[] findChildren(String childName) {
 		return null;
 	}
-	
+	*/
+	public IVResource create(String path) {
+		IStorage file = this.store.create(path);
+		return new VOrionResource(file, this, path);
+	}
+
 }

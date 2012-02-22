@@ -95,7 +95,8 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 				if ( reviewObject.getFile() != null ) {
 					resp.addCookie(new Cookie(Constants.REVIEW_COOKIE_FILE, reviewObject.getFile()));
 				}
-				writeReviewPage(req, resp, "review.html");
+//				writeReviewPage(req, resp, "review.html");
+				writeReviewPage(req, resp, "pagedesigner.html");
 			}
 		} else {
 			IPath path = new Path(pathInfo);

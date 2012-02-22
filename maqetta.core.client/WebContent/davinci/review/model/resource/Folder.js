@@ -1,10 +1,10 @@
 define([
 	"dojo/_base/declare",
 	"davinci/model/resource/Resource",
-	"davinci/model/resource/File",
+	"davinci/review/model/resource/File",
 	"davinci/Runtime",
 	"davinci/Workbench"
-], function(declare, Resource, File, Runtime, Workbench) {
+], function(declare, Resource, reviewFile, Runtime, Workbench) {
 
 return declare("davinci.review.model.resource.Folder", Resource, {
 
@@ -14,8 +14,8 @@ return declare("davinci.review.model.resource.Folder", Resource, {
 	height:0,
 
 	constructor: function(proc) {
-		this.elementType = "ReviewVersion";
 		dojo.mixin(this, proc);
+		this.elementType = "ReviewVersion";
 		this.dueDate = this.dueDate == "infinite" ? this.dueDate : dojo.date.locale.parse(this.dueDate,{
 			selector:'date',
 			formatLength:'long',
@@ -44,7 +44,7 @@ return declare("davinci.review.model.resource.Folder", Resource, {
 				load : dojo.hitch(this, function(responseObject, ioArgs) {
 					this.children=[];
 					for (var i=0; i<responseObject.length; i++) {
-						var child = new File(responseObject[i].path, this);
+						var child = new reviewFile(responseObject[i].path, this);
 						this.children.push(child);
 					}
 					this._isLoaded=true;

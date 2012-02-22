@@ -5,10 +5,10 @@
  */
 define([
 	"dojo/_base/declare",
-	"davinci/html/CSSModel"
-], function(declare, CSSModel) {
+	"davinci/model/Model"
+], function(declare, Model) {
 
-return declare("davinci.html.CSSElement", CSSModel, {
+return declare("davinci.html.CSSElement", Model, {
 
 	constructor: function() {
 		if (typeof pushComment != 'undefined' && pushComment !== null) {

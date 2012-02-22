@@ -43,6 +43,20 @@ public class VResourceUtils {
 		}
 	}
 
+	public static boolean matches(String text, String pattern){
+        String [] pieces = pattern.split("\\*");
+
+        for (int i=0;i<pieces.length;i++){
+            String chunk = pieces[i];
+        	int idx = text.indexOf(chunk);
+            if(idx == -1)
+                return false;
+            text = text.substring(idx + chunk.length());
+        }
+        
+        return true;
+    }
+	
 	/* adds second array to first dropping dupes */
 	public static IVResource[] merge(IVResource first[], IVResource[] second){
 	    Vector all = new Vector();

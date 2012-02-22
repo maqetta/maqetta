@@ -1,11 +1,16 @@
 package maqetta.server.orion.user;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import maqetta.core.server.user.User;
 import maqetta.core.server.util.VResourceUtils;
@@ -28,6 +33,7 @@ import org.eclipse.orion.internal.server.servlets.workspace.WebProject;
 import org.eclipse.orion.internal.server.servlets.workspace.WebUser;
 import org.eclipse.orion.internal.server.servlets.workspace.WebWorkspace;
 import org.eclipse.orion.internal.server.servlets.workspace.WorkspaceResourceHandler;
+import org.eclipse.orion.internal.server.servlets.workspace.authorization.AuthorizationService;
 import org.eclipse.orion.server.core.users.OrionScope;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +45,7 @@ import org.maqetta.server.ServerManager;
 import org.maqetta.server.StorageFileSystem;
 import org.maqetta.server.VDirectory;
 import org.maqetta.server.VLibraryResource;
+import org.maqetta.server.VWorkspaceRoot;
 import org.osgi.framework.Bundle;
 
 
@@ -63,8 +70,17 @@ public class OrionUser extends User {
 				/* may need to default to other workspace here via the URL or a cookie, but taking first one found for now */
 				break;
 			}
-			if(workspaceJson.length()==0)
+			if(workspaceJson.length()==0){
 				webWorkspace = webuser.createWorkspace(DEFAULT_WORKSPACE);
+				try {
+					addOrionUserRight("/workspace/" + webWorkspace.getId());
+					addOrionUserRight("/workspace/" + webWorkspace.getId() + "/*");
+				} catch (ServletException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -74,9 +90,12 @@ public class OrionUser extends User {
 		}
 		String workspaceId = webWorkspace.getId();
 		this.userDirectory = new VOrionWorkspaceStorage(webWorkspace, this.getUserName());
-		this.workspace = new VOrionWorkspace((VOrionWorkspaceStorage)this.userDirectory);
+		
 		rebuildWorkspace();
 		
+	}
+	public IVResource newWorkspaceRoot(){
+		return  new VOrionWorkspace((VOrionWorkspaceStorage)this.userDirectory);
 	}
 	
 	public VOrionResource createOrionProject(String name){
@@ -86,10 +105,35 @@ public class OrionUser extends User {
 		if(existing!=null)
 			return (VOrionResource)existing;
 		
-		return (VOrionResource)this.workspace.create(name);		
+		VOrionResource res =  (VOrionResource)this.workspace.create(name);
+		
+		try {
+			addOrionUserRight(res.getOrionLocation());
+		} catch (ServletException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return res;
 			
 	}
-	
+	private void addOrionUserRight(String location) throws ServletException {
+		if (location == null)
+			return;
+		try {
+			String locationPath = URI.create(location).getPath();
+			//right to access the location
+			AuthorizationService.addUserRight(this.getUserName(), locationPath);
+			//right to access all children of the location
+			if (locationPath.endsWith("/")) //$NON-NLS-1$
+				locationPath += "*"; //$NON-NLS-1$
+			else
+				locationPath += "/*"; //$NON-NLS-1$
+			AuthorizationService.addUserRight(this.getUserName(), locationPath);
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	
 	public IVResource createProject(String projectName, String basePath, boolean initFiles){
@@ -127,7 +171,9 @@ public class OrionUser extends User {
 	public boolean isValid(String path){
 	     return true;
 	}
-	public IVResource getResource(String p1){
+	
+	
+	public IVResource getUserFile(String p1){
 	      
 		if(p1==null || p1.equals(""))
 			return this.workspace;
@@ -168,14 +214,17 @@ public class OrionUser extends User {
         return parent;
 
 	}
-	protected IVResource getLinkedResource(String path){
-	    return null;
-        
-	}
+
 	public WebWorkspace createWorkspace(String workspaceName){
 		try {
-			return webuser.createWorkspace(workspaceName);
+			WebWorkspace ws =  webuser.createWorkspace(workspaceName);
+			addOrionUserRight("/workspace/" + ws.getId());
+			addOrionUserRight("/workspace/" + ws.getId() + "/*");
+			return ws;
 		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ServletException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -203,74 +252,6 @@ public class OrionUser extends User {
             }
         }
  		return found;
- 		
+ 	}
 
-	}
-	/* rebuilds the virtual part of the workspace.
-	 * 
-	 * any real files are NOT included in this data structure for 
-	 * performance reasons. 
-	 */
-	
-	/* (non-Javadoc)
-	 * @see org.davinci.server.user.IUser#rebuildWorkspace()
-	 */
-	public void rebuildWorkspaceOld() {
-		
-		IStorage[] userFiles = this.userDirectory.listFiles();
-		
-		for(int j=0;j<userFiles.length;j++){
-			if(!userFiles[j].isDirectory()) continue;
-			LibrarySettings settings = this.getLibSettings(userFiles[j]);
-			if(!settings.exists()) continue;
-			Vector<ILibInfo> libs = new Vector();
-			libs.addAll(Arrays.asList( settings.allLibs()));
-			
-			
-			IVResource workspace = this.workspace;
-			IVResource firstFolder = new VDirectory(workspace, userFiles[j].getName());
-			this.workspace.add(firstFolder);
-			for (int i = 0; i < libs.size(); i++) {
-				IVResource root = firstFolder;
-				String defaultRoot = libs.get(i).getVirtualRoot();
-				
-				if(defaultRoot==null) continue;
-				
-				Library b = this.getLibrary(libs.get(i));
-				/* library not found on server so avoid adding it to the workspace */
-				if (b == null) {
-					continue;
-				}
-				URL file = b.getURL("");
-				// TODO temp fix to avoid adding virtual library entries that don't
-				// exist to the workspace.
-				if (file == null) {
-					continue;
-				}
-				IPath path = new Path(defaultRoot);
-				for (int k = 0; k < path.segmentCount(); k++) {
-					String segment = path.segment(k);
-					IVResource v = root.get(segment);
-					if (v == null) {
-						/* creating virtual directory structure, so READ ONLY */
-						v = new VDirectory(root, segment,true);
-						root.add(v);
-					}
-					root = v;
-				}
-	
-				
-				IVResource libResource = new VLibraryResource(b, file,"", "");
-				/* need a special case for library items whos root is the project roots */
-				//if(path.segmentCount()==0){
-					
-				IVResource[] children = libResource.listFiles();
-				for(int p=0;p<children.length;p++)
-					root.add(children[p]);
-				//}else{
-				//	root.add(libResource);
-				//}
-			}
-		}
-	}
 }

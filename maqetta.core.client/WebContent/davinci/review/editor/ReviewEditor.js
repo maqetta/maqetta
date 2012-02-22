@@ -51,14 +51,15 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 		this.basePath = new davinci.model.Path(filename);
 		// URL will always be http://localhost:8080/davinci/review without / at the end at present
 		var locationPath = new davinci.model.Path(davinci.Workbench.location());
+		locationPath = locationPath.removeLastSegments().append("review"); // delete /maqetta
 		var baseUrl;
 
-		var designerName = Runtime.commenting_designerName||dojo.byId('davinci_user').innerHTML;
+		var designerName = Runtime.commenting_designerName || dojo.byId('davinci_user').innerHTML;
 		// Compose a URL like http://localhost:8080/davinci/review/user/heguyi/ws/workspace/.review/snapshot/20100101/folder1/sample1.html
 		baseUrl = locationPath.append("user").append(designerName)
 		.append("ws").append("workspace").append(filename).toString();
 
-		this.context = new davinci.review.editor.Context({
+		this.context = new Context({
 			containerNode: this._designCP.domNode,
 			baseURL : baseUrl,
 			fileName : this.fileName,

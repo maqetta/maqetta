@@ -1,9 +1,7 @@
 define([
 	"./Runtime",
 	"./model/Path",
-	//"davinci/ui/Panel",
 	"./util",
-	//"./workbench/_ToolbaredContainer",
 	"./workbench/ViewPart",
 	"./workbench/EditorContainer",
 	"dijit/Dialog",
@@ -158,16 +156,6 @@ var Workbench = {
 			}
 		});
 
-		/* NO MORE MAIN TOOLBAR WITH NEW UI
-		Workbench._createToolBar('init',dojo.byId('davinci_toolbar_main'));
-*/
-/*
-		var top = new davinci.workbench._ToolbaredContainer({}, "davinci_top");
-		dojo.place(dojo.byId("davinci_top_bar"), top.toolbarDiv, "replace");
-		top.toolbarNode = dojo.byId("_toolbar_main");
-		top.setContent(dijit.byId("mainBody"));
-		top.startup();
-*/
 		metadata.init().then(function(){
 			var perspective= Runtime.initialPerspective || "davinci.ui.main";
 			Workbench.showPerspective(perspective);
@@ -183,14 +171,11 @@ var Workbench = {
 		setInterval(dojo.hitch(this,"_autoSave"),30000);
 	},
 
-	_resourceChanged: function (type,changedResource)
-	{
-		if (type=='deleted')
-		{
+	_resourceChanged: function (type,changedResource) {
+		if (type=='deleted') {
 			fileName=changedResource.getPath();
 			var tab = dijit.byId(filename2id(fileName));
-			if (tab && !tab._isClosing)
-			{
+			if (tab && !tab._isClosing) {
 				var tabContainer = dijit.byId("editors_tabcontainer");
 				tabContainer.removeChild(tab);
 				tab.destroyRecursive();

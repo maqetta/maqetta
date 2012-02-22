@@ -50,7 +50,7 @@
 						".claro .dijitAccordionContainer .dijitAccordionContainer-child": [
 							"border-color" 
 						], 
-						".claro .dijitTitlePane": [
+						".dijitTitlePane": [
 							"border-color"
 						],
 						".claro .dijitTitlePaneTitle": [
@@ -1597,7 +1597,7 @@
             "states": {
                 "Normal": {
 					"selectors": {
-						".claro .dijitTitlePane": [
+						".dijitTitlePane": [
 							"background-color",
 							"border-width",
 							"border-style",

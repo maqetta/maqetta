@@ -24,8 +24,9 @@ return declare("davinci.review.model.ReviewTreeModel", null, {
 		return item.elementType=="ReviewVersion"&&!item.isDraft;
 
 	},
+	
 	getChildren: function(/*dojo.data.Item*/ parentItem, /*function(items)*/ onComplete) {
-		parentItem.getChildren(onComplete, true); // need to make the call sync, chrome is to fast for async
+		parentItem.getChildren(onComplete, true); // need to make the call sync, chrome is too fast for async
 	},
 	
 	getIdentity: function(/* item */ item) {
@@ -33,17 +34,17 @@ return declare("davinci.review.model.ReviewTreeModel", null, {
 	},
 
 	resourceChanged : function() {
-		var parent=this.root;
+		var parent = this.root;
 		var newChildren;
-		parent._isLoaded=false;
-		parent.getChildren(function(children) { newChildren=children; }, true);
+		parent._isLoaded = false;
+		parent.getChildren(function(children) { newChildren = children; }, true);
 		this.onChildrenChange(parent,newChildren);
 	},
 
 	getLabel: function(/*dojo.data.Item*/ item) {
-		var label=item.getName();
-		if (item.elementType == "ReviewVersion"&&item.isDraft) {
-			label+=" (Draft)";
+		var label = item.getName();
+		if (item.elementType == "ReviewVersion" && item.isDraft) {
+			label += " (Draft)";
 		}
 		if (item.elementType == "ReviewFile") {
 			var path = new davinci.model.Path(label);

@@ -3,6 +3,9 @@
 	function DojoMobileViewSceneManager(context) {
 		debugger;
 		this.context = context;
+		//FIXME: How to do nls? Maybe need to convert callback.js to AMD and leverage AMD's I18N?
+		this.name = 'Dojo Mobile Views'; //FIXME: Needs to be localized
+		this.category = 'DojoMobileView';
 	}
 	
 	DojoMobileViewSceneManager.prototype.id = 'DojoMobileViews';
@@ -21,8 +24,14 @@
 	DojoMobileViewSceneManager.prototype.getAllScenes = function(){
 		debugger;
 		var dj = this.context.getDojo();
+		var scenes = [];
 		var views = dj.query('.mblView');
-		return views;
+		views.forEach(function(view){
+			if(view.id){
+				scenes.push({ name:view.id, type:'DojoMobileView'});
+			}
+		});
+		return scenes;
 	};
 
     return {

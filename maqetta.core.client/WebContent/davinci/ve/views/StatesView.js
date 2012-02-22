@@ -354,14 +354,29 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		}
 		this._store.save();
 
-		var context = Runtime.currentEditor.getContext();
-		var sceneManagers = context.sceneManagers;
 		
 		var that = this;
+		debugger;
+		
+		// Build an object structure that contains the latest list of states/scenes/views
+		// We will then build a similar object structure by extracting the list from the ItemFileWriteStore
+		// and then compare the two to see if there are any changes
 		var AppStatesObj = {name:'Application States', type:'category', category:'AppStates', children:[]};
 		var latestData = [AppStatesObj];
 		for(var state in latestStates){
 			AppStatesObj.children.push({ name:state, type:'AppState' });
+		}
+		var context = Runtime.currentEditor.getContext();
+		var sceneManagers = context.sceneManagers;
+		// Loop through plugin scene managers, eg Dojo Mobile Views
+		for(var smIndex in sceneManagers){
+			var sm = sceneManagers[smIndex];
+			if(sm.getAllScenes && sm.name && sm.category){
+				var scenes = sm.getAllScenes();
+				if(scenes.length > 0){
+					latestData.push({ name:sm.name, type:'category', category:sm.category, children:scenes});
+				}
+			}
 		}
 		
 		// The following inner functions are used to see if we need

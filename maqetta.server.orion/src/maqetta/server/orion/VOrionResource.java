@@ -16,6 +16,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.orion.internal.server.servlets.Activator;
+import org.eclipse.orion.internal.server.servlets.workspace.WebProject;
+import org.eclipse.orion.server.core.PreferenceHelper;
+import org.eclipse.orion.server.core.ServerConstants;
 import org.eclipse.orion.server.core.users.OrionScope;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IStorage;
@@ -24,7 +28,7 @@ import org.maqetta.server.VFile;
 
 public class VOrionResource extends VFile {
 
-	IFileStore store;
+	
 	protected static final IScopeContext scope = new OrionScope();
 	protected IEclipsePreferences prefStore;
 
@@ -35,6 +39,11 @@ public class VOrionResource extends VFile {
 		this.virtualPath = name;
 	}
 
+	public String getOrionLocation(){
+		VOrionStorage storage = (VOrionStorage)this.file;
+		return storage.getOrionLocation();
+	}
+	
     protected IStorage getWorkingCopy(IStorage original) {
     	
     	if(this.file.isDirectory()){
@@ -54,4 +63,20 @@ public class VOrionResource extends VFile {
     public IStorage getStorage(){
     	return this.file;
     }
+
+	public String getLocation() {
+		
+		String fileURI =  this.file.toURI().toString();
+		URI platformLocationURI = Activator.getDefault().getRootLocationURI();
+		IFileStore root=null;
+		try {
+			root = EFS.getStore(platformLocationURI);
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String rootURI = root.toURI().toString();
+		
+		return fileURI.substring(rootURI.length());
+	}
 }

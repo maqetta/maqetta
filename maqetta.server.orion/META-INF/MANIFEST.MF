@@ -15,7 +15,8 @@ Require-Bundle: maqetta.core.server;bundle-version="1.0.0",
  org.eclipse.orion.server.configurator;bundle-version="0.4.0",
  org.eclipse.orion.server.core;bundle-version="0.3.0",
  org.eclipse.core.runtime;bundle-version="3.8.0",
- org.eclipse.orion.server.servlets;bundle-version="0.3.0"
+ org.eclipse.orion.server.servlets;bundle-version="0.3.0",
+ org.eclipse.equinox.http.jetty;bundle-version="3.0.0"
 Export-Package: maqetta.server.orion;
   uses:="org.davinci.server.util,
    org.davinci.server.user,

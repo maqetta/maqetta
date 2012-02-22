@@ -101,6 +101,8 @@ public class OrionUserManager extends UserManagerImpl {
 		}catch (UserException e) {
 			e.printStackTrace();
 		}
+		if(user==null) return null;
+		
 		return getUser(user);
 	
 	}

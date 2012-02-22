@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Vector;
 
+import maqetta.core.server.util.VResourceUtils;
+
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.runtime.CoreException;
@@ -49,6 +51,7 @@ public class VOrionStorage implements IStorage{
 		return this.store.fetchInfo().getAttribute(EFS.ATTRIBUTE_READ_ONLY);
 	}
 
+	
 	public boolean delete() {
 		try {
 			store.delete(EFS.NONE, null);
@@ -218,8 +221,19 @@ public class VOrionStorage implements IStorage{
 
 
 	public Collection findFiles(IStorage parentFolder, String pathStr,	boolean ignoreCase) {
-		// TODO Auto-generated method stub
-		return null;
+		IStorage[] children = parentFolder.listFiles();
+		Collection found = new Vector();
+		for(int i=0;i<children.length;i++){
+			
+			if(VResourceUtils.matches(children[i].getName(), pathStr)){
+				found.add(children[i]);
+			}
+			if(children[i].isDirectory()){
+				found.addAll(this.findFiles(children[i], pathStr, ignoreCase));
+				
+			}
+		}
+		return found;
 	}
 
 
@@ -241,5 +255,9 @@ public class VOrionStorage implements IStorage{
 		return this.getPath();
 	}
 	
+	public String getOrionLocation(){
+		VOrionStorage parent = this.getParentFile();
+		return parent.getOrionLocation() + "/" + name;
+	}
 
 }

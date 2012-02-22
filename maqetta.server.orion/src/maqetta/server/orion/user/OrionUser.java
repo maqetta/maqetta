@@ -1,11 +1,16 @@
 package maqetta.server.orion.user;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import maqetta.core.server.user.User;
 import maqetta.core.server.util.VResourceUtils;
@@ -28,6 +33,7 @@ import org.eclipse.orion.internal.server.servlets.workspace.WebProject;
 import org.eclipse.orion.internal.server.servlets.workspace.WebUser;
 import org.eclipse.orion.internal.server.servlets.workspace.WebWorkspace;
 import org.eclipse.orion.internal.server.servlets.workspace.WorkspaceResourceHandler;
+import org.eclipse.orion.internal.server.servlets.workspace.authorization.AuthorizationService;
 import org.eclipse.orion.server.core.users.OrionScope;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +45,7 @@ import org.maqetta.server.ServerManager;
 import org.maqetta.server.StorageFileSystem;
 import org.maqetta.server.VDirectory;
 import org.maqetta.server.VLibraryResource;
+import org.maqetta.server.VWorkspaceRoot;
 import org.osgi.framework.Bundle;
 
 
@@ -63,8 +70,17 @@ public class OrionUser extends User {
 				/* may need to default to other workspace here via the URL or a cookie, but taking first one found for now */
 				break;
 			}
-			if(workspaceJson.length()==0)
+			if(workspaceJson.length()==0){
 				webWorkspace = webuser.createWorkspace(DEFAULT_WORKSPACE);
+				try {
+					addOrionUserRight("/workspace/" + webWorkspace.getId());
+					addOrionUserRight("/workspace/" + webWorkspace.getId() + "/*");
+				} catch (ServletException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -74,9 +90,12 @@ public class OrionUser extends User {
 		}
 		String workspaceId = webWorkspace.getId();
 		this.userDirectory = new VOrionWorkspaceStorage(webWorkspace, this.getUserName());
-		this.workspace = new VOrionWorkspace((VOrionWorkspaceStorage)this.userDirectory);
+		
 		rebuildWorkspace();
 		
+	}
+	public IVResource newWorkspaceRoot(){
+		return  new VOrionWorkspace((VOrionWorkspaceStorage)this.userDirectory);
 	}
 	
 	public VOrionResource createOrionProject(String name){
@@ -86,10 +105,35 @@ public class OrionUser extends User {
 		if(existing!=null)
 			return (VOrionResource)existing;
 		
-		return (VOrionResource)this.workspace.create(name);		
+		VOrionResource res =  (VOrionResource)this.workspace.create(name);
+		
+		try {
+			addOrionUserRight(res.getOrionLocation());
+		} catch (ServletException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return res;
 			
 	}
-	
+	private void addOrionUserRight(String location) throws ServletException {
+		if (location == null)
+			return;
+		try {
+			String locationPath = URI.create(location).getPath();
+			//right to access the location
+			AuthorizationService.addUserRight(this.getUserName(), locationPath);
+			//right to access all children of the location
+			if (locationPath.endsWith("/")) //$NON-NLS-1$
+				locationPath += "*"; //$NON-NLS-1$
+			else
+				locationPath += "/*"; //$NON-NLS-1$
+			AuthorizationService.addUserRight(this.getUserName(), locationPath);
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	
 	public IVResource createProject(String projectName, String basePath, boolean initFiles){
@@ -127,7 +171,9 @@ public class OrionUser extends User {
 	public boolean isValid(String path){
 	     return true;
 	}
-	public IVResource getResource(String p1){
+	
+	
+	public IVResource getUserFile(String p1){
 	      
 		if(p1==null || p1.equals(""))
 			return this.workspace;
@@ -168,14 +214,17 @@ public class OrionUser extends User {
         return parent;
 
 	}
-	protected IVResource getLinkedResource(String path){
-	    return null;
-        
-	}
+
 	public WebWorkspace createWorkspace(String workspaceName){
 		try {
-			return webuser.createWorkspace(workspaceName);
+			WebWorkspace ws =  webuser.createWorkspace(workspaceName);
+			addOrionUserRight("/workspace/" + ws.getId());
+			addOrionUserRight("/workspace/" + ws.getId() + "/*");
+			return ws;
 		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ServletException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -204,4 +253,5 @@ public class OrionUser extends User {
         }
  		return found;
  	}
+
 }

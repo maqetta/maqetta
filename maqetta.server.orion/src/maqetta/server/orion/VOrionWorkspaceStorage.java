@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.orion.internal.server.servlets.Activator;
 import org.eclipse.orion.internal.server.servlets.ProtocolConstants;
 import org.eclipse.orion.internal.server.servlets.workspace.WebProject;
 import org.eclipse.orion.internal.server.servlets.workspace.WebWorkspace;
@@ -24,7 +25,7 @@ public class VOrionWorkspaceStorage extends VOrionProjectStorage{
 	String PROJECT_NODE_NAME = "Project";
 	String userName = null;
 	public VOrionWorkspaceStorage(WebWorkspace webWorkspace, String userName) {
-		super(".", null);
+		super(".", null, null);
 		this.webWorkspace = webWorkspace;
 	}
 	
@@ -72,10 +73,10 @@ public class VOrionWorkspaceStorage extends VOrionProjectStorage{
 			e.printStackTrace();				
 		}
 		
-		
+		Activator.getDefault().registerProjectLocation(project);
 		
 		try {
-			return new VOrionProjectStorage(name, project.getProjectStore().getChild(name));
+			return new VOrionProjectStorage(name, project.getProjectStore().getChild(name),project);
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

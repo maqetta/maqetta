@@ -1,7 +1,6 @@
 define([
 ], function() {
-	dojo.getObject("davinci.html.CSSModel", true); 
-	return davinci.html.CSSModel = /** @scope davinci.html.CSSModel */ {
+	return {
 
 shorthand : [
 	['border',['border-width', 'border-style','border-color', 'border-top', 'border-left', 'border-right', 'border-bottom']],

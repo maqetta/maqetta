@@ -386,7 +386,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			return true;
 		}
 		function compareObjectRecursive(o1, o2){
-			['name','type','category'].forEach(function(p){
+			['sceneId','name','type','category'].forEach(function(p){
 				if(!compareProperty(o1, o2, p)){
 					return false;
 				}
@@ -439,6 +439,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		}});
 		this.centerPane.domNode.appendChild(this._tree.domNode);	
 		dojo.connect(this._tree, "onClick", this, function(item){
+			var currentEditor = Runtime.currentEditor;
+			var context = currentEditor ? currentEditor.getContext() : null;
+			var bodyWidget = context ? context.rootWidget : null;
 			if (item && item.type && item.type[0] == 'AppState') {
 				if (this.isThemeEditor()){
 					if (!this._silent) {
@@ -447,13 +450,25 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					this._themeState = item.name[0];
 					this._silent = false;
 				} else {
-					var currentEditor = Runtime.currentEditor;
-					var context = currentEditor.getContext();
-					var bodyWidget = context.rootWidget;
 					if(context && bodyWidget){
 						var state = item.name[0];
 						States.setState(bodyWidget, state);
 						context.deselectInvisible();
+					}
+				}
+			}else{
+				if(bodyWidget){
+					States.setState(bodyWidget, null);
+				}
+				if(item.sceneId){
+					// Loop through plugin scene managers, eg Dojo Mobile Views
+					for(var smIndex in sceneManagers){
+						var sm = sceneManagers[smIndex];
+						if(sm.selectScene){
+							if(sm.selectScene({ sceneId:item.sceneId[0]})){
+								break;
+							}
+						}
 					}
 				}
 			}
@@ -541,6 +556,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			this._sceneStore.fetch({query:{}, queryOptions:{}, onComplete:dojo.hitch(this, function(items, request){
 				function recurse(storeItem, retArray){
 					var o = { name:storeItem.name[0], type:storeItem.type[0] };
+					if(storeItem.sceneId){
+						o.sceneId = storeItem.sceneId[0];
+					}
 					if(storeItem.category){
 						o.category = storeItem.category[0];
 					}

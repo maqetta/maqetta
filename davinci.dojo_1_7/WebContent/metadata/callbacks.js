@@ -20,21 +20,34 @@
 	DojoMobileViewSceneManager.prototype.viewSelectionChanged = function(parent, child){
 		dojo.publish("/davinci/scene/selectionChanged", [DojoMobileViewSceneManager, parent, child]);
 	};
+	DojoMobileViewSceneManager.prototype.selectScene = function(params){
+		var sceneId = params.sceneId;
+		var dj = this.context.getDojo();
+		var node = dj.byId(sceneId);
+		if(node){
+			var widget = node._dvWidget;
+			if(widget){
+				var helper = widget.getHelper();
+				if(helper && helper._updateVisibility){
+					helper._updateVisibility(node);
+				}
+			}
+		}
+	};
 	DojoMobileViewSceneManager.prototype.getAllScenes = function(){
 		var dj = this.context.getDojo();
 		var scenes = [];
 		var flattenedScenes = [];
 		var views = dj.query('.mblView');
-		views.forEach(function(view){
-			if(view.id){
-				var o = { name:view.id, type:'DojoMobileView'};
-				if(dojo.hasClass(view.parentNode, 'mblView')){
-					o.parentNodeId = view.parentNode.id;		// temporary property, removed below
-				}
-				scenes.push(o);
-				flattenedScenes.push(o);
+		for(var i=0; i<views.length; i++){
+			var view = views[i];
+			var o = { sceneId:view.id, name:view.id, type:this.category };
+			if(dojo.hasClass(view.parentNode, 'mblView')){
+				o.parentNodeId = view.parentNode.id;		// temporary property, removed below
 			}
-		});
+			scenes.push(o);
+			flattenedScenes.push(o);
+		}
 		// The fetch operation above delivers a simple array of Views.
 		// We need to return a data structure that reflects the hierarchy of Views,
 		// so massage the scenes array so that nested Views are moved under the correct parent View.

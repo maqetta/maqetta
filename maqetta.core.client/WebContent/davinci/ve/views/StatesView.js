@@ -210,55 +210,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	
 
 	_createStateList: function() {
-	    var dummyData2 = {
-				identifier: 'id',
-				label: 'name',
-				items: [
-					{ id:this.nextId++, name:'Application States <b>abc</b>', type:'category', category:'AppStates',
-						children:[{_reference:1}]},
-						{ id:this.nextId++, name:'Bogus', parent:0, type:'AppState' },
-					{ id:this.nextId++, name:'Dojo Mobile Views <b>abc</b>', type:'category', category:'DojoMobileViews',
-						children:[{_reference:3}, {_reference:4}]},
-						{ id:this.nextId++, name:'root_view <b>abc</b>', parent:2, type:'DojoMobileView' },
-						{ id:this.nextId++, name:'alerts_view', parent:2, type:'DojoMobileView' }
-				]
-		};
-		var dummyStore = new ItemFileWriteStore({ data: dummyData2 });
-		var dummyForest = new ForestStoreModel({ store:dummyStore, query:{type:'category'},
-			  rootId:'categoryRoot', rootLabel:'All', childrenAttrs:['children']});
-		var that = this;
-		this._tree = new Tree({model:dummyForest, showRoot:false, style:'height:100px', _createTreeNode:function(args){
-			var item = args.item;
-			if(item.type && item.category && item.category[0] === 'AppStates'){
-				// Custom TreeNode class (based on dijit.TreeNode) that allows rich text labels
-				return new that.RichHTMLTreeNode(args);
-			}else{
-				// Custom TreeNode class (based on dijit.TreeNode) that uses default plain text labels
-				return new that.PlainTextTreeNode(args);
-			}
-		}});
-		this.centerPane.domNode.appendChild(this._tree.domNode);	
-		this._sceneStore = dummyStore;
-		dojo.connect(this._tree, "onClick", this, function(item){
-			if (item && item.type && item.type[0] == 'AppState') {
-				if (this.isThemeEditor()){
-					if (!this._silent) {
-						this.publish("/davinci/states/state/changed", [{widget:'$all', newState:item.name[0], oldState:this._themeState, context: this._editor.context}]);
-					}
-					this._themeState = item.name[0];
-					this._silent = false;
-				} else {
-					var currentEditor = Runtime.currentEditor;
-					var context = currentEditor.getContext();
-					var bodyWidget = context.rootWidget;
-					if(context && bodyWidget){
-						var state = item.name[0];
-						States.setState(bodyWidget, state);
-						context.deselectInvisible();
-					}
-				}
-			}
-		});
 
 		// Setup our data store:
 		var statesData = {
@@ -406,48 +357,118 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		var context = Runtime.currentEditor.getContext();
 		var sceneManagers = context.sceneManagers;
 		
-		//FIXME: Temporary
-		if(sceneManagers.DojoMobileViews){
-			var allViews = sceneManagers.DojoMobileViews.getAllScenes();
-			debugger;
-		}
-
-		// Remove all stored states not in latestStates
-		for(var id in storedScenes) {
-			// Need to generalize to other types
-			if(storedScenes[id].type[0] === 'AppState'){
-				var state = storedScenes[id];
-				var name = state.name[0];
-				if (!latestStates[name]) {
-					this._sceneStore.deleteItem(state);
-				}
-			}
+		var that = this;
+		var AppStatesObj = {name:'Application States', type:'category', category:'AppStates', children:[]};
+		var latestData = [AppStatesObj];
+		for(var state in latestStates){
+			AppStatesObj.children.push({ name:state, type:'AppState' });
 		}
 		
-		// Add states from latestStates not yet in stored states
-		var AppStatesItem;
-		for(var id in storedScenes){
-			var scene = storedScenes[id];
-			if(scene.category[0] === 'AppStates'){
-				AppStatesItem = scene;
-				break;
+		// The following inner functions are used to see if we need
+		// to recreate the tree widget because the list of states or 
+		// the plugin scene managers has different data.
+		function compareProperty(o1, o2, prop){
+			if((o1[prop] && !o2[prop]) || (!o1[prop] && o2[prop])){
+				return false;	// return false if objects don't match
 			}
-		};
-		for (var name in latestStates) {
-			var storedState = null;
-			for(var id in storedScenes){
-				var scene = storedScenes[id];
-				if(scene.type[0] == 'AppState' && scene.name[0] == name){
-					storedState = scene;
-					break;
+			// Dojo's datastores puts values as first elements of array, hence [0]
+			if(o1[prop] && o1[prop][0] !== o2[prop][0]){
+				return false;	// return false if objects don't match
+			}
+			return true;
+		}
+		function compareObjectRecursive(o1, o2){
+			['name','type','category'].forEach(function(p){
+				if(!compareProperty(o1, o2, p)){
+					return false;
+				}
+			});
+			if((o1.children && !o2.children) || (!o1.children && o2.children)){
+				return false;	// return false if objects don't match
+			}
+			if(o1.children){
+				if(!compareArray(o1.children, o2.children)){
+					return false;	// return false if objects don't match
 				}
 			}
-			if (!storedState) {
-				// Need to make ID auto-computed
-				var newState = { name: name, id: this.nextId++, parent:AppStatesItem.id, type:'AppState' };
-				this._sceneStore.newItem(newState, {parent:AppStatesItem, attribute:'children'});
+			return true;
+		}
+		function compareArray(a1, a2){
+			if(a1.length != a2.length){
+				return false; 	// return false if objects don't match
+			}
+			for(var i=0; i<a1.length; i++){
+				if(!compareObjectRecursive(a1[i], a2[i])){
+					return false;	// return false if objects don't match
+				}
+			}
+			return true;
+		}
+		
+		// If data in Tree widget is same as latest data, then just return
+		if(compareArray(latestData, storedScenes)){
+			return;
+		}
+		
+		// The following logic recreates the data stores and the Tree
+		if(this._tree){
+			this._tree.destroyRecursive();
+			this._forest.destroy();
+		}
+	    var skeletonData = { identifier: 'id', label: 'name', items: []};
+		this._sceneStore = new ItemFileWriteStore({ data: skeletonData, clearOnClose:true });
+		this._forest = new ForestStoreModel({ store:this._sceneStore, query:{type:'category'},
+			  rootId:'categoryRoot', rootLabel:'All', childrenAttrs:['children']});
+		this._tree = new Tree({model:this._forest, showRoot:false, style:'height:100px', _createTreeNode:function(args){
+			var item = args.item;
+			if(item.type && item.category && item.category[0] === 'AppStates'){
+				// Custom TreeNode class (based on dijit.TreeNode) that allows rich text labels
+				return new that.RichHTMLTreeNode(args);
+			}else{
+				// Custom TreeNode class (based on dijit.TreeNode) that uses default plain text labels
+				return new that.PlainTextTreeNode(args);
+			}
+		}});
+		this.centerPane.domNode.appendChild(this._tree.domNode);	
+		dojo.connect(this._tree, "onClick", this, function(item){
+			if (item && item.type && item.type[0] == 'AppState') {
+				if (this.isThemeEditor()){
+					if (!this._silent) {
+						this.publish("/davinci/states/state/changed", [{widget:'$all', newState:item.name[0], oldState:this._themeState, context: this._editor.context}]);
+					}
+					this._themeState = item.name[0];
+					this._silent = false;
+				} else {
+					var currentEditor = Runtime.currentEditor;
+					var context = currentEditor.getContext();
+					var bodyWidget = context.rootWidget;
+					if(context && bodyWidget){
+						var state = item.name[0];
+						States.setState(bodyWidget, state);
+						context.deselectInvisible();
+					}
+				}
+			}
+		});
+		function newItemRecursive(obj, parentItem){
+			var o = dojo.mixin({}, obj);
+			o.id = that.nextId++;		// ensure unique ID
+			delete o.children;	// remove children property before calling newItem
+			var thisItem;
+			if(parentItem){
+				thisItem = that._sceneStore.newItem(o, {parent:parentItem, attribute:'children'});
+			}else{
+				thisItem = that._sceneStore.newItem(o);
+			}
+			if(obj.children){
+				obj.children.forEach(function(child){
+					newItemRecursive(child, thisItem);
+				});
 			}
 		}
+		latestData.forEach(function(obj){
+			newItemRecursive(obj);
+		});
 		this._sceneStore.save();
 	},
 	
@@ -507,16 +528,41 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 
 	_getScenes: function() {
+		var scenes = [];
+		if(this._sceneStore){
+			this._sceneStore.fetch({query:{}, queryOptions:{}, onComplete:dojo.hitch(this, function(items, request){
+				function recurse(storeItem, retArray){
+					var o = { name:storeItem.name[0], type:storeItem.type[0] };
+					if(storeItem.category){
+						o.category = storeItem.category[0];
+					}
+					retArray.push(o);
+					if(storeItem.children && storeItem.children.length > 0){
+						o.children = [];
+						storeItem.children.forEach(function(child){
+							recurse(child, o.children);
+						});
+					}
+				}
+				items.forEach(function(storeItem){
+					recurse(storeItem, scenes);
+				});
+			})});
+		}
+		return scenes;		
+		/*
 		var ids = {};
-		this._sceneStore.fetch({query:{}, queryOptions:{deep:true}, onComplete:dojo.hitch(this, function(items, request){
+		if(this._sceneStore){
+			this._sceneStore.fetch({query:{}, queryOptions:{deep:true}, onComplete:dojo.hitch(this, function(items, request){
 				for (var i = 0; i < items.length; i++){
 					var item = items[i];
 					var id = item.id[0];
 					ids[id] = item;
 				}
-			})
-		});
+			})});
+		}
 		return ids;		
+		*/
 	},
 
 	_clearList: function() {

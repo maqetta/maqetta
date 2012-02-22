@@ -60,7 +60,7 @@ public class DavinciPageServlet extends HttpServlet {
 	 */
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		IUser user = (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
+		IUser user = ServerManager.getServerManger().getUserManager().getUser(req);
 		String path = getPathInfo(req);
 		boolean isWorkingCopy = (path.indexOf(IDavinciServerConstants.WORKING_COPY_EXTENSION) > -1);
 		if ( isWorkingCopy ) {

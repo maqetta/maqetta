@@ -1,9 +1,8 @@
 define([
-	"dojo/_base/declare",
-	"davinci/model/Model",
-], function(declare, Model) {
+	"dojo/_base/declare"
+], function(declare) {
 
-var CSSModel = declare("davinci.html.CSSModel", Model, {});
+var CSSModel = declare("davinci.html.CSSModel", null, {});
 
 CSSModel.shorthand = [
 	['border',['border-width', 'border-style','border-color', 'border-top', 'border-left', 'border-right', 'border-bottom']],

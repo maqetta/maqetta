@@ -2894,7 +2894,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	registerSceneManager: function(sceneManager){
-		debugger;
 		if(!sceneManager || !sceneManager.id){
 			return;
 		}

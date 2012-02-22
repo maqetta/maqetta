@@ -42,8 +42,9 @@ ViewHelper.prototype = {
 			parentNode = node.parentNode,
 			context = widget.getContext();
 		connect.connect(view, 'startup', function() {
-			var sceneManager = context.sceneManagers.DojoMobileViews;
-			sceneManager.viewAdded(parentNode._dvWidget, widget);
+			if(context.sceneManagers && context.sceneManagers.DojoMobileViews){
+				context.sceneManagers.DojoMobileViews.viewAdded(parentNode._dvWidget, widget);
+			}
 			// Since this may get called twice, check that we haven't already
 			// created this interval.
 			if (! widget._dvDisplayInterval) {
@@ -66,7 +67,6 @@ ViewHelper.prototype = {
 	 * @param {davinci.ve._Widget} widget  Widget that needs it visibility turned on
 	 */
 	_updateVisibility: function(domNode){
-		debugger;
 		if(!domNode || !domNode._dvWidget || !domClass.contains(domNode,"mblView")){
 			return;
 		}
@@ -107,8 +107,9 @@ ViewHelper.prototype = {
 			}
 			context.getCommandStack().execute(command);
 		}
-		var sceneManager = context.sceneManagers.DojoMobileViews;
-		sceneManager.viewSelectionChanged(parentNode._dvWidget, widget);		
+		if(context.sceneManagers && context.sceneManagers.DojoMobileViews){
+			context.sceneManagers.DojoMobileViews.viewSelectionChanged(parentNode._dvWidget, widget);
+		}
 	},
 	
 	/*
@@ -239,8 +240,9 @@ ViewHelper.prototype = {
 			}
 		}
 		return function(){
-			var sceneManager = context.sceneManagers.DojoMobileViews;
-			sceneManager.viewDeleted(parentNode._dvWidget);
+			if(context.sceneManagers && context.sceneManagers.DojoMobileViews){
+				context.sceneManagers.DojoMobileViews.viewDeleted(parentNode._dvWidget);
+			}
 			if(changesNeeded){
 				context.select(node._dvWidget);
 			}

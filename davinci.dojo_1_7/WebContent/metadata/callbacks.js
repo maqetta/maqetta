@@ -1,7 +1,6 @@
 (function() {
 	
 	function DojoMobileViewSceneManager(context) {
-		debugger;
 		this.context = context;
 		//FIXME: How to do nls? Maybe need to convert callback.js to AMD and leverage AMD's I18N?
 		this.name = 'Dojo Mobile Views'; //FIXME: Needs to be localized
@@ -22,7 +21,6 @@
 		dojo.publish("/davinci/scene/selectionChanged", [DojoMobileViewSceneManager, parent, child]);
 	};
 	DojoMobileViewSceneManager.prototype.getAllScenes = function(){
-		debugger;
 		var dj = this.context.getDojo();
 		var scenes = [];
 		var flattenedScenes = [];
@@ -74,7 +72,6 @@
 //        },
         
         onFirstAdd: function(type, context) {
-        	debugger;
         	//FIXME: How to do nls? Maybe need to convert callback.js to AMD and leverage AMD's I18N?
         	context.registerSceneManager(new DojoMobileViewSceneManager(context));
             return;

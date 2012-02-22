@@ -113,31 +113,25 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_registerSceneManager: function(sceneManager) {
-		debugger;
 	},
 
 	_scenesLoaded: function(sceneManager) {
-		debugger;
 		this._updateView();
 	},
 
 	_addScene: function(sceneManager, parent, child) {
-		debugger;
 		this._updateView();
 	},
 	
 	_removeScene: function(sceneManager, parent, child) {
-		debugger;
 		this._updateView();
 	},
 	
 	_renameScene: function(sceneManager, parent, child) {
-		debugger;
 		this._updateView();
 	},
 	
 	_sceneSelectionChanged: function(sceneManager, parent, child) {
-		debugger;
 		this._updateSelection();
 	},
 
@@ -356,7 +350,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 
 		
 		var that = this;
-		debugger;
 		
 		// Build an object structure that contains the latest list of states/scenes/views
 		// We will then build a similar object structure by extracting the list from the ItemFileWriteStore

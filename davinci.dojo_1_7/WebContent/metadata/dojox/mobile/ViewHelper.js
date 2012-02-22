@@ -42,6 +42,8 @@ ViewHelper.prototype = {
 			parentNode = node.parentNode,
 			context = widget.getContext();
 		connect.connect(view, 'startup', function() {
+			var sceneManager = context.sceneManagers.DojoMobileViews;
+			sceneManager.viewAdded(parentNode._dvWidget, widget);
 			// Since this may get called twice, check that we haven't already
 			// created this interval.
 			if (! widget._dvDisplayInterval) {
@@ -53,8 +55,6 @@ ViewHelper.prototype = {
 						clearInterval(widget._dvDisplayInterval);
 						delete widget._dvDisplayInterval;
 					}
-					var sceneManager = context.sceneManagers.DojoMobileViews;
-					sceneManager.viewAdded(parentNode._dvWidget, widget);
 				}, 100);
 			}
 		});

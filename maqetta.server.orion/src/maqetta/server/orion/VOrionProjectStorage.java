@@ -16,8 +16,6 @@ public class VOrionProjectStorage extends VOrionStorage {
 		this.proj = proj;
 		if(store!=null){
 			try {
-			
-				
 				this.store.mkdir(EFS.NONE, null);
 			} catch (CoreException e) {
 				// TODO Auto-generated catch block

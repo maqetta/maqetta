@@ -18,6 +18,8 @@ public class MaqettaOrionPageServlet extends DavinciPageServlet {
 	public String getPathInfo(HttpServletRequest req){
 		String pathInfo = req.getPathInfo();
         String bPage = "/index.html";
+        if(pathInfo==null)
+        	return null;
         int idx = pathInfo.indexOf(bPage);
         if(idx > -1){
         	pathInfo = pathInfo.substring(idx + bPage.length() );
@@ -35,13 +37,13 @@ public class MaqettaOrionPageServlet extends DavinciPageServlet {
         /* orion adds an index.html to the path.  remove that and redirect if we encounter */
         String pathInfo =getPathInfo(req);
         
-        /*
+        
         if(pathInfo==null)   {
         	resp.sendRedirect("./maqetta/");
         	resp.getOutputStream().close();
         	return;
         }
-        */
+        
         if (ServerManager.DEBUG_IO_TO_CONSOLE) {
             System.out.println("request: " + pathInfo + ", logged in=" + (user != null));
         }

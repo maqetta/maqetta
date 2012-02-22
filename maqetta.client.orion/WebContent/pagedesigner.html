@@ -13,10 +13,16 @@
 			height: 100%;
 		}
     </style>
+    
+    <style type="text/css">
+		@import url("app/orionbase/orion.css?@revision@");
+    </style>
+    
     <script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="async:true, parseOnLoad: true, modulePaths:{'preview':'../preview', 'system':'../system'}, cacheBust: '@revision@'"></script>
 	<script type="text/javascript">
 		require(["dijit/dijit", "davinci/davinci-common", "davinci/davinci", ], function () {
 			require(["dojo/i18n!davinci/nls/webContent", "dojo/domReady!"], function (webContent) {
+				
 			      dojo.byId("davinci_user_welcome").innerHTML = webContent.welcome;
 			      dojo.byId("load_screen").innerHTML = webContent.loadingMaqetta;
 			      dojo.byId("davinci_logoff").innerHTML = webContent.logOff;
@@ -100,10 +106,19 @@
 						<a id="davinci_logoff" href='javascript:davinci.Runtime.logoff()'> </a>
 					</div>
 					<span class="maq_banner_name_box">
-						<span class="maq_banner_name">Maqetta</span>
-						<span id="maqetta_designer" class="maq_banner_component"></span>
-						<span id="maqetta_version" class="maq_banner_version"></span>
+						<span>
+							<a href='/index.html'>
+								<img title="Launch Orion" src="/images/orion-small-lightondark.gif">
+							</a>
+							<span class='OrionTitlePad'></span>
+							<span class="maq_banner_name">Maqetta</span>
+							<span id="maqetta_designer" class="maq_banner_component"></span>
+							<span id="maqetta_version" class="maq_banner_version"></span>
+						</span>
 					</span>
+					
+					
+					
 <!-- no toolbar for now, uncomment and put in desired location, and toolbar will be generated based on actions
 					<div id="toolbar_container">
 						<span id="davinci_toolbar_main"></span>

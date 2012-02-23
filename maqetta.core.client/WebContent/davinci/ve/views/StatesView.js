@@ -131,8 +131,37 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this._updateView();
 	},
 	
-	_sceneSelectionChanged: function(sceneManager, parent, child) {
-		this._updateSelection();
+	_sceneSelectionChanged: function(sceneManager, sceneId) {
+		var currentPaths = this._tree.get('paths');
+		var currentSceneId = sceneId;
+		var path = [];
+		while(currentSceneId){
+			this._sceneStore.fetch({query: {type:sceneManager.category, sceneId:currentSceneId}, queryOptions:{deep:true}, 
+				onComplete: dojo.hitch(this, function(items, request){
+					if(items.length !== 1){
+						console.error('_sceneSelectionChanged error. currentSceneId='+currentSceneId+',items.length='+items.length);
+						currentSceneId = null;
+					}else{
+						var item = items[0];
+						path.splice(0, 0, item.id[0]);
+						currentSceneId = item.parentSceneId ? item.parentSceneId[0] : null;
+					}
+				})
+			});
+		}
+		this._sceneStore.fetch({query: {type:'category', category:sceneManager.category}, queryOptions:{}, 
+			onComplete: dojo.hitch(this, function(items, request){
+				if(items.length !== 1){
+					console.error('_sceneSelectionChanged error. sceneManager.category='+sceneManager.category);
+					return;
+				}else{
+					var item = items[0];
+					path.splice(0, 0, item.id[0]);
+				}
+			})
+		});
+		path.splice(0, 0, 'categoryRoot');
+		this._tree.set('paths', [path]);
 	},
 
 	_editorSelected : function (event){	
@@ -316,7 +345,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		for (var name in latestStates) {
 			var storedState = storedStates[name];
 			if (!storedState) {
-				var newState = { name: name, id: this.nextId++ };
+				var id = this.nextId+'';
+				this.nextId++
+				var newState = { name: name, id: id };
 				this._store.newItem(newState);
 			}
 		}
@@ -475,7 +506,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		});
 		function newItemRecursive(obj, parentItem){
 			var o = dojo.mixin({}, obj);
-			o.id = that.nextId++;		// ensure unique ID
+			var id = that.nextId+'';
+			that.nextId++
+			o.id = id;		// ensure unique ID
 			delete o.children;	// remove children property before calling newItem
 			var thisItem;
 			if(parentItem){

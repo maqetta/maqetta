@@ -11,14 +11,16 @@
 	DojoMobileViewSceneManager.prototype.title = 'Dojo Mobile Views';	//FIXME: Need to be globalized
 		
 	DojoMobileViewSceneManager.prototype.viewAdded = function(parent, child){
-		dojo.publish("/davinci/scene/added", [DojoMobileViewSceneManager, parent, child]);
+		dojo.publish("/davinci/scene/added", [this, parent, child]);
 	};
 	// View has been deleted from the given parent
 	DojoMobileViewSceneManager.prototype.viewDeleted = function(parent){
-		dojo.publish("/davinci/scene/removed", [DojoMobileViewSceneManager, parent, child]);
+		dojo.publish("/davinci/scene/removed", [this, parent, child]);
 	};
 	DojoMobileViewSceneManager.prototype.viewSelectionChanged = function(parent, child){
-		dojo.publish("/davinci/scene/selectionChanged", [DojoMobileViewSceneManager, parent, child]);
+		if(child && child.id){
+			dojo.publish("/davinci/scene/selectionChanged", [this, child.id]);
+		}
 	};
 	DojoMobileViewSceneManager.prototype.selectScene = function(params){
 		var sceneId = params.sceneId;
@@ -63,6 +65,7 @@
 						if(!flattenedScenes[j].children){
 							flattenedScenes[j].children = [];
 						}
+						scene.parentSceneId = flattenedScenes[j].sceneId;
 						flattenedScenes[j].children.push(scene);
 						scenes.splice(idx, 1);
 						spliced = true;

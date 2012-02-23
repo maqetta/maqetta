@@ -414,6 +414,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			if(sm.getAllScenes && sm.name && sm.category){
 				var scenes = sm.getAllScenes();
 				if(scenes.length > 0){
+					//FIXME: Better to make this into a SceneManager function call
+					//so it can check to see if silhouette is showing
 					// Don't show application states if SceneManager has hideAppStates flag set to true
 					// and if there is only one application state (i.e., Normal)
 					if(!statesAddedAlready && (appStatesCount > 1 || !sm.hideAppStates)){
@@ -480,16 +482,21 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this._sceneStore = new ItemFileWriteStore({ data: skeletonData, clearOnClose:true });
 		this._forest = new ForestStoreModel({ store:this._sceneStore, query:{type:'file'},
 			  rootId:'StoryRoot', rootLabel:'All', childrenAttrs:['children']});
-		this._tree = new Tree({model:this._forest, showRoot:false, autoExpand:true, style:'height:150px', _createTreeNode:function(args){
-			var item = args.item;
-			if(item.type && item.category && item.category[0] === 'AppStates'){
-				// Custom TreeNode class (based on dijit.TreeNode) that allows rich text labels
-				return new that.RichHTMLTreeNode(args);
-			}else{
-				// Custom TreeNode class (based on dijit.TreeNode) that uses default plain text labels
-				return new that.PlainTextTreeNode(args);
+		this._tree = new Tree({model:this._forest, showRoot:false, autoExpand:true, class:'StatesViewTree', style:'height:150px', 
+			_createTreeNode:function(args){
+				var item = args.item;
+				if(item.type && item.category && item.category[0] === 'AppStates'){
+					// Custom TreeNode class (based on dijit.TreeNode) that allows rich text labels
+					return new that.RichHTMLTreeNode(args);
+				}else{
+					// Custom TreeNode class (based on dijit.TreeNode) that uses default plain text labels
+					return new that.PlainTextTreeNode(args);
+				}
+			},
+			getIconClass: function(/*dojo.data.Item*/ item, /*Boolean*/ opened){
+				return "dijitLeaf";
 			}
-		}});
+		});
 		this.centerPane.domNode.appendChild(this._tree.domNode);	
 		dojo.connect(this._tree, "onClick", this, function(item){
 			var currentEditor = Runtime.currentEditor;

@@ -1,6 +1,5 @@
 package maqetta.server.orion.internal;
 
-import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import maqetta.server.orion.internal.IRegistryListener;
+import maqetta.server.orion.MaqettaProjectDecorator;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
@@ -20,10 +19,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IRegistryChangeEvent;
 import org.eclipse.core.runtime.IRegistryChangeListener;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.equinox.http.jetty.JettyCustomizer;
+import org.eclipse.orion.internal.server.core.IWebResourceDecorator;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.maqetta.server.IDavinciServerConstants;
-import org.maqetta.server.ServerManager;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -224,6 +222,10 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer,
 		bundle = context.getBundle();
 		singleton = this;
 		bundleContext = context;
+	
+		context.registerService(IWebResourceDecorator.class, new MaqettaProjectDecorator(), null);
+		
+		
 		packageAdminTracker = new ServiceTracker(context,
 				PackageAdmin.class.getName(), this);
 		packageAdminTracker.open();

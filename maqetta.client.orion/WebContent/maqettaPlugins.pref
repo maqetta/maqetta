@@ -1,0 +1,19 @@
+{
+	"/plugins":{
+		"authenticationPlugin.html": true,
+		"plugins/fileClientPlugin.html":true,
+		"maqetta/app/orionplugin/maqettaPlugin.html": true,
+		"plugins/jslintPlugin.html":true,
+		"git/plugins/gitPlugin.html":true,
+		"profile/userservicePlugin.html":true,
+		"plugins/user/userProfilePlugin.html":true,
+		"plugins/git/userProfilePlugin.html":true,
+		"plugins/webEditingPlugin.html":true,
+		"plugins/landingPageTasksPlugin.html":true,
+		"plugins/pageLinksPlugin.html":true,
+		"plugins/preferencesPlugin.html":true,
+		"plugins/taskPlugin.html": true,
+		"plugins/csslintPlugin.html": true
+		
+	}
+}

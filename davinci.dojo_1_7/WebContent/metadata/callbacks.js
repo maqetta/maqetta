@@ -1,23 +1,56 @@
 (function() {
 	
+	/**
+	 * API for SceneManager plugins to Maqetta plug
+	 * 
+	 * A SceneManager is a JavaScript class that can be instanced by a "new" command.
+	 *
+	 * This class must provide the following methods:
+	 * 
+	 * constructor(context)
+	 *		Class constructor. Must set this.name to a localized string.
+ 	 *		This 'name' string appears in the Scenes palette.
+	 *		@param {davinci.ve.Context} context  Maqetta context object corresponding to davinci.ve.VisualEditor
+	 * 
+	 * selectScene(params)
+	 *		A particular scene has been selected in the Scenes palette.
+	 *		@param {object} params  Has following properties
+	 *			params.sceneId - Unique ID for the selected scene. (Unique ID created by this SceneManager)
+	 * 
+	 * getAllScenes()
+	 *		Returns a potentially nested array of all current scenes managed by this SceneManager.
+	 *		@returns {[object]} retArray  Array of top-level scenes, where each scene is described
+	 *					by an object with these properties
+	 *			sceneId {string} - a document-unique ID for this scene
+	 *			name {string} - the string for this scene that will appear in Scenes palette
+	 *			type {string} - must be set to the "category" property for this SceneManager (see properties below)
+	 *			parentSceneId {string}- if this scene is not top-level, then this must be the sceneId of its parent scene
+	 *			children {[object]} - array of children scenes
+	 *
+	 * This class must provide the following properties on the SceneManager instance object:
+	 * 
+	 * id {string} - A unique ID for this SceneManager. Used as the index into Maqetta's list of SceneManagers
+	 * name {string} - Localized string that is name of this SceneManager. This string appears in Scenes palette.
+	 * category {string} - A string unique to this SceneManager that must be used as the 'type' property on each scene
+	 * 
+	 */
 	function DojoMobileViewSceneManager(context) {
 		this.context = context;
 		//FIXME: How to do nls? Maybe need to convert callback.js to AMD and leverage AMD's I18N?
 		this.name = 'Dojo Mobile Views'; //FIXME: Needs to be localized
-		this.category = 'DojoMobileView';
 	}
 	
 	DojoMobileViewSceneManager.prototype.id = 'DojoMobileViews';
-	DojoMobileViewSceneManager.prototype.title = 'Dojo Mobile Views';	//FIXME: Need to be globalized
+	DojoMobileViewSceneManager.prototype.category = 'DojoMobileView';
 		
-	DojoMobileViewSceneManager.prototype.viewAdded = function(parent, child){
+	DojoMobileViewSceneManager.prototype._viewAdded = function(parent, child){
 		dojo.publish("/davinci/scene/added", [this, parent, child]);
 	};
 	// View has been deleted from the given parent
-	DojoMobileViewSceneManager.prototype.viewDeleted = function(parent){
-		dojo.publish("/davinci/scene/removed", [this, parent, child]);
+	DojoMobileViewSceneManager.prototype._viewDeleted = function(parent){
+		dojo.publish("/davinci/scene/removed", [this, parent]);
 	};
-	DojoMobileViewSceneManager.prototype.viewSelectionChanged = function(parent, child){
+	DojoMobileViewSceneManager.prototype._viewSelectionChanged = function(parent, child){
 		if(child && child.id){
 			dojo.publish("/davinci/scene/selectionChanged", [this, child.id]);
 		}

@@ -43,7 +43,7 @@ ViewHelper.prototype = {
 			context = widget.getContext();
 		connect.connect(view, 'startup', function() {
 			if(context.sceneManagers && context.sceneManagers.DojoMobileViews){
-				context.sceneManagers.DojoMobileViews.viewAdded(parentNode._dvWidget, widget);
+				context.sceneManagers.DojoMobileViews._viewAdded(parentNode._dvWidget, widget);
 			}
 			// Since this may get called twice, check that we haven't already
 			// created this interval.
@@ -108,7 +108,7 @@ ViewHelper.prototype = {
 			context.getCommandStack().execute(command);
 		}
 		if(context.sceneManagers && context.sceneManagers.DojoMobileViews){
-			context.sceneManagers.DojoMobileViews.viewSelectionChanged(parentNode._dvWidget, widget);
+			context.sceneManagers.DojoMobileViews._viewSelectionChanged(parentNode._dvWidget, widget);
 		}
 	},
 	
@@ -241,7 +241,7 @@ ViewHelper.prototype = {
 		}
 		return function(){
 			if(context.sceneManagers && context.sceneManagers.DojoMobileViews){
-				context.sceneManagers.DojoMobileViews.viewDeleted(parentNode._dvWidget);
+				context.sceneManagers.DojoMobileViews._viewDeleted(parentNode._dvWidget);
 			}
 			if(changesNeeded){
 				context.select(node._dvWidget);

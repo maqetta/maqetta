@@ -538,19 +538,17 @@ createWidget: function(widgetData, initialCreationArgs) {
         	data.properties.style = tempElem.style.cssText;
         }
 	}
-		
-    // Strip out event attributes. We want them in the model
-    // but not in the DOM within page canvas.
-    var props = {};
-    for(var p in data.properties){
-    	// The "if(propval" check will be false for empty strings.
-    	// We are therefore stripping out properties with empty string values
-    	// to match similar check in widget.setProperties
-    	var propval = data.properties[p];
-    	if((propval || typeof propval == "boolean") && p.substr(0,2).toLowerCase()!="on"){
-    		props[p] = propval;
-    	}
-    }
+
+	// Strip out event attributes. We want them in the model
+	// but not in the DOM within page canvas.
+	var props = {};
+	for (var p in data.properties) {
+		var propval = data.properties[p];
+		if (propval != null /*"!=" checks for null/undefined*/ &&
+				p.substr(0,2).toLowerCase()!="on") {
+			props[p] = propval;
+		}
+	}
 	var widget = new c(props, node, type, md, srcElement);
 	widget._srcElement=srcElement;
 

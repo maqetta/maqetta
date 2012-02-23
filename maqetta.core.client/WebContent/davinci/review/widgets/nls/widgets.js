@@ -28,6 +28,7 @@ define({ root:
 		"high":"High",
 		"comment":"Comment",
 		"commentReply":"Comment reply",
+		"buttonCancel":"Cancel",
 		
 		//CommentForm.html
 		//Comment, Type, Severity defined above

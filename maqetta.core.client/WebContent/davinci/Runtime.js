@@ -9,7 +9,8 @@ define([
 	"./js/js.plugin",
 	"./ve/ve.plugin",
 	"./ve/themeEditor/themeEditor.plugin",
-	"./review/review.plugin"
+	"./review/review.plugin",
+	"./review/Color"
 ], function(
 	webContent,
 	Dialog,
@@ -21,7 +22,8 @@ define([
 	js_plugin,
 	ve_plugin,
 	themeEditor_plugin,
-	review_plugin
+	review_plugin,
+	Color
 ) {
 
 // list of plugins to load
@@ -170,7 +172,7 @@ var Runtime = {
 			}
 			return false;
 		});
-		return davinci.review.colors.colors[index];
+		return Color.colors[index];
 	},
 	
 	run: function() {

@@ -3,7 +3,7 @@ define([
 	"dojo/date/locale",
 ], function(declare, locale) {
 
-return declare("davinci.review.util", null, {
+var util = declare("davinci.review.util", null, {
 	/*
 	 * Transform the date passed to a relative time against current time on server.
 	 * E.g. current time is 2010-12-28 4:24:00, time passed: 2010-12-28 4:20:00, then
@@ -69,4 +69,7 @@ return declare("davinci.review.util", null, {
 		return guid;    
 	}
 });
+
+return dojo.setObject("davinci.review.util", new util());
+
 });

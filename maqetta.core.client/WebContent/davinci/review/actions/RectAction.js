@@ -12,7 +12,7 @@ var RectAction = davinci.review.actions.RectAction = declare("davinci.review.act
 
 	run: function(context) {
 		this.inherited(arguments);
-		var commentPalette = dijit.byId("davinci.review.comment");
+		var commentPalette = dijit.byId("davinci.ui.comment");
 		if (!commentPalette._commentForm.isShowing) { 
 			return;
 		}

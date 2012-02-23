@@ -12,7 +12,7 @@ var ArrowAction = davinci.review.actions.ArrowAction = declare("davinci.review.a
 
 	run: function(context) {
 		this.inherited(arguments);
-		var commentPalette = dijit.byId("davinci.review.comment");
+		var commentPalette = dijit.byId("davinci.ui.comment");
 		if (!commentPalette._commentForm.isShowing) { 
 			return; 
 		}

@@ -25,6 +25,11 @@ return {
             title: "Outline",
             viewClass: "davinci/workbench/OutlineView"
         },
+		{
+			id: "comment",
+			title: "Comments",
+			viewClass: "davinci/review/view/CommentView"
+		},
         {
             id: "scope",
             title: "Scope"

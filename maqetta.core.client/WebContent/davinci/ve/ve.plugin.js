@@ -13,7 +13,7 @@ return {
         },
         {
             id: "states",
-            title: "States",
+            title: "Scenes",
             viewClass: "davinci/ve/views/StatesView"
         },
         /*

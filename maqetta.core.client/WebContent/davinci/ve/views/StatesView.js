@@ -457,7 +457,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this._sceneStore = new ItemFileWriteStore({ data: skeletonData, clearOnClose:true });
 		this._forest = new ForestStoreModel({ store:this._sceneStore, query:{type:'category'},
 			  rootId:'categoryRoot', rootLabel:'All', childrenAttrs:['children']});
-		this._tree = new Tree({model:this._forest, showRoot:false, style:'height:100px', _createTreeNode:function(args){
+		this._tree = new Tree({model:this._forest, showRoot:false, autoExpand:true, style:'height:150px', _createTreeNode:function(args){
 			var item = args.item;
 			if(item.type && item.category && item.category[0] === 'AppStates'){
 				// Custom TreeNode class (based on dijit.TreeNode) that allows rich text labels

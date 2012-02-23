@@ -32,8 +32,8 @@ var filename2id = function(fileName) {
 
 var updateMainToolBar = function (change, toolbarID) {
 	var toolbar1 = dijit.byId("davinci_toolbar_main");
-	if(toolbar1){
-		dojo.forEach(toolbar1.getChildren(), function(child){
+	if (toolbar1) {
+		dojo.forEach(toolbar1.getChildren(), function(child) {
 			if (child.isEnabled) {
 				child.set('disabled', !child.isEnabled(change.targetObjectId));
 			}
@@ -41,7 +41,7 @@ var updateMainToolBar = function (change, toolbarID) {
 	}
 };
 
-var getSelectedResource = function(){
+var getSelectedResource = function() {
 	var selection=Runtime.getSelection();
 	if (selection[0]&&selection[0].resource) {
 		return selection[0].resource;
@@ -59,33 +59,33 @@ var initializeWorkbenchState = function(){
 	}
 	
 	var state = Workbench._state;
-	if(state && state.project){
+	if (state && state.project) {
 		Workbench.setActiveProject(state.project);
 	}
 	
-	if (state && state.editors){
+	if (state && state.editors) {
 		state.version = davinci.version;
 		
 		var project = null;
 		var singleProject = Workbench.singleProjectMode();
 	
-		if(singleProject){
+		if (singleProject) {
 			var p = Workbench.getProject();
 			project = new Path(p);
 		}
 	
-		for (var i=0;i<state.editors.length;i++){
+		for (var i=0;i<state.editors.length;i++) {
 			if(singleProject){
 				// if running in single user mode, only load editors open for specific projects
 				var path = new Path(state.editors[i]);
-				if(!path.startsWith(project)) {
+				if (!path.startsWith(project)) {
 					continue;
 				}
 			}
 			
 			var resource= sysResource.findResource(state.editors[i]);
 			var noSelect=state.editors[i] != state.activeEditor;
-			if (resource){
+			if (resource) {
 				Workbench.openEditor({
 					fileName: resource,
 					content: resource.getText(),
@@ -136,20 +136,18 @@ var Workbench = {
 		);
 
 		// bind overlay widgets to corresponding davinci states. singleton; no need to unsubscribe
-		davinci.states.subscribe("/davinci/states/state/changed", function(args){
+		davinci.states.subscribe("/davinci/states/state/changed", function(args) {
 			var prefix = "_show:", widget, dvWidget, helper,
 				thisDijit = Runtime.currentEditor.visualEditor.context.getDijit(),
 				widgetUtils = require("davinci/ve/widget");
-			if(args.newState && !args.newState.indexOf(prefix)){
+			if (args.newState && !args.newState.indexOf(prefix)) {
 				widget = thisDijit.byId(args.newState.substring(6));
-//    				widget && widget.show();
 				dvWidget = widgetUtils.getWidget(widget.domNode);
 				helper = dvWidget.getHelper();
 				helper && helper.popup && helper.popup(dvWidget);
 			}
-			if(args.oldState && !args.oldState.indexOf(prefix)){
+			if (args.oldState && !args.oldState.indexOf(prefix)) {
 				widget = thisDijit.byId(args.oldState.substring(6));
-//    				widget && widget.hide();
 				dvWidget = widgetUtils.getWidget(widget.domNode);
 				helper = dvWidget.getHelper();
 				helper && helper.tearDown && helper.tearDown(dvWidget);
@@ -157,7 +155,7 @@ var Workbench = {
 		});
 
 		metadata.init().then(function(){
-			var perspective= Runtime.initialPerspective || "davinci.ui.main";
+			var perspective = Runtime.initialPerspective || "davinci.ui.main";
 			Workbench.showPerspective(perspective);
 			Workbench._updateTitle();
 			initializeWorkbenchState();			
@@ -172,8 +170,8 @@ var Workbench = {
 	},
 
 	_resourceChanged: function (type,changedResource) {
-		if (type=='deleted') {
-			fileName=changedResource.getPath();
+		if (type == 'deleted') {
+			fileName = changedResource.getPath();
 			var tab = dijit.byId(filename2id(fileName));
 			if (tab && !tab._isClosing) {
 				var tabContainer = dijit.byId("editors_tabcontainer");
@@ -207,13 +205,13 @@ var Workbench = {
 		}
 	
 		var toolbar1 = new Toolbar({'class':"davinciToolbar"}, targetDiv);   
-		var radioGroups={};
+		var radioGroups = {};
 		var firstgroup = true;
 		for (var value in _toolbarcache) {
-			if(!firstgroup){
+			if (!firstgroup) {
 				var separator = new ToolbarSeparator();
 				toolbar1.addChild(separator);
-			}else{
+			} else {
 				firstgroup = false;
 			}
 			var children;
@@ -409,7 +407,6 @@ var Workbench = {
 	},
 
 	onResize: function(e){
-
 		var target = e.explicitOriginalTarget ? e.explicitOriginalTarget : e.srcElement;
 		if (e.type == 'resize' || ((target.id && (target.id.indexOf('dijit_layout__Splitter_')>-1) || 
 			(target.nextSibling && target.nextSibling.id && target.nextSibling.id.indexOf('dijit_layout__Splitter_')>-1)))) {
@@ -460,7 +457,6 @@ var Workbench = {
 	},
 
 	_addItemsToMenubar: function(menuTree, menuTop) {
-
 		dojo.forEach(menuTree, function(m) {
 			var menus = m.menus,
 				menuLen = menus.length;
@@ -489,7 +485,6 @@ var Workbench = {
 		}
 		return null;
 	},
-
 
 	getAllOpenEditorIds: function() {
 	},
@@ -565,8 +560,7 @@ var Workbench = {
 				if (m[i].id == sep) {
 					var menus = m[i].menus;
 					menus.push(item);
-					if (item.separator) // if menu
-					{
+					if (item.separator) { // if menu
 						var wasAdditions = false;
 						menus = item.menus = [];
 						for ( var j = 0; j < item.separator.length; j += 2) {
@@ -665,7 +659,7 @@ var Workbench = {
 
 		dojoMenu.domNode.style.display = "none";
 		dojoMenu.actionContext = context;
-		dojo.connect(dojoMenu, connectFunction, this, function(evt){
+		dojo.connect(dojoMenu, connectFunction, this, function(evt) {
 		   this._openMenu(dojoMenu, menus, evt).focus(); // call focus again, now that we messed with the widget contents
 		});
 		return dojoMenu;
@@ -687,11 +681,11 @@ var Workbench = {
 		location.reload(true);
 	},
 	
-	location: function(){
+	location: function() {
 		return Runtime.location();
 	},
 	
-	queryParams: function(){
+	queryParams: function() {
 		// reloads the browser with the current project.
 		var fullPath = document.location.href;
 		var split = fullPath.split("?");
@@ -718,8 +712,7 @@ var Workbench = {
 					addSeparator=true;
 				}
 				for ( var menuN = 0, menuLen = menus[i].menus.length; menuN < menuLen; menuN++) {
-					if (addSeparator && menuAdded)
-					{
+					if (addSeparator && menuAdded) {
 						dojoMenu.addChild(new dijit.MenuSeparator({}));
 						addSeparator=false;
 					}
@@ -732,33 +725,32 @@ var Workbench = {
 							popup: subMenu,
 							id: subMenu.id + "item"
 						});
-						popupParent.actionContext=dojoMenu.actionContext;
+						popupParent.actionContext = dojoMenu.actionContext;
 						dojoMenu.addChild(popupParent);
 					} else {
-						var enabled=true;
-						if(item.isEnabled){
+						var enabled = true;
+						if (item.isEnabled) {
 							var resource = getSelectedResource();
 							enabled = item.isEnabled(resource);
 						}
 
-						var label=item.label;
-						if (item.action)
-						{
+						var label = item.label;
+						if (item.action) {
 							if (item.action.shouldShow && !item.action.shouldShow(dojoMenu.actionContext)) {
 								continue;
 							}
-							enabled= item.action.isEnabled(dojoMenu.actionContext);
+							enabled = item.action.isEnabled(dojoMenu.actionContext);
 							if (item.action.getName) {
-								label=item.action.getName();
+								label = item.action.getName();
 							}
 						}
-						var menuArgs= {
+						var menuArgs = {
 								label: label,
 								disabled: !enabled,
 								onClick: dojo.hitch(this,"_runAction",item,dojoMenu.actionContext)
-							};
+						};
 						if (item.iconClass) {
-							menuArgs.iconClass=item.iconClass;
+							menuArgs.iconClass = item.iconClass;
 						}
 						var menuItem1 = new dijit.MenuItem(menuArgs);
 						dojoMenu.addChild(menuItem1);
@@ -775,7 +767,7 @@ var Workbench = {
 		if (!button.checked) {
 			return;
 		}
-		group.forEach(function(item){
+		group.forEach(function(item) {
 			if (item != button) {
 				item.set('checked', false);
 			}
@@ -1009,7 +1001,7 @@ var Workbench = {
 			tab = dijit.byId(filename2id(fileName)),
 			tabContainer = dijit.byId("editors_tabcontainer"),
 			tabCreated = false;
-		if(!tab) {
+		if (!tab) {
 			tabCreated = true;
 
 			tab = new EditorContainer({
@@ -1045,22 +1037,19 @@ var Workbench = {
 				tab.editor.select(keywordArgs);
 			}
 			
-			if (!keywordArgs.noSelect)
-			{
+			if (!keywordArgs.noSelect) {
 				util.arrayAddOnce(Workbench._state.editors, fileName);
 				Workbench._switchEditor(tab.editor, keywordArgs.startup);
 			}
 
-			setTimeout(function(){
+			setTimeout(function() {
 				var loadIcon = dojo.query('.dijitTabButtonIcon',tab.controlButton.domNode);
 				dojo.removeClass(loadIcon[0],'tabButtonLoadingIcon');
 				dojo.addClass(loadIcon[0],'dijitNoIcon');
 				tab.resize(); //kludge, forces editor to correct size, delayed to force contents to redraw
 			}, 100);
-			
 			d.resolve(tab.editor);
 		});
-		
 		return d;
 	},
 

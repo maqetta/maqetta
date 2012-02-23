@@ -400,7 +400,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		for(var s in latestStates){
 			appStatesCount++;
 		}
-		var statesAddedAlready = false;
 		var AppStatesObj = {name:'Application States', type:'SceneManagerRoot', category:'AppStates', children:[]};
 		var latestData = [CurrentFileObj];
 		for(var state in latestStates){
@@ -409,6 +408,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		var context = Runtime.currentEditor.getContext();
 		var sceneManagers = context.sceneManagers;
 		// Loop through plugin scene managers, eg Dojo Mobile Views
+		var AppStatesAddedAlready = false;
+		var hideAppStates = false;
 		for(var smIndex in sceneManagers){
 			var sm = sceneManagers[smIndex];
 			if(sm.getAllScenes && sm.name && sm.category){
@@ -418,13 +419,22 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					//so it can check to see if silhouette is showing
 					// Don't show application states if SceneManager has hideAppStates flag set to true
 					// and if there is only one application state (i.e., Normal)
-					if(!statesAddedAlready && (appStatesCount > 1 || !sm.hideAppStates)){
-						CurrentFileObj.children.push(AppStatesObj);
-						statesAddedAlready = true;
+					if(!AppStatesAddedAlready){
+						if(appStatesCount <= 1 && sm.hideAppStates){
+							hideAppStates = true;
+						}else{
+							CurrentFileObj.children.push(AppStatesObj);
+							AppStatesAddedAlready = true;
+						}
 					}
 					CurrentFileObj.children.push({ name:sm.name, type:'SceneManagerRoot', category:sm.category, children:scenes});
 				}
 			}
+		}
+		// If AppStates hasn't been added to store yet and wasn't rejected
+		// by one of the SceneManagers, then add in the AppStates list
+		if(!AppStatesAddedAlready && !hideAppStates){
+			CurrentFileObj.children.push(AppStatesObj);
 		}
 		
 		// The following inner functions are used to see if we need

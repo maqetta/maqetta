@@ -66,19 +66,19 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this.container.layout();	
 		this.container.startup();
 		this.setContent(this.container);
-		this.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, this._editorSelected));
-		this.subscribe("/davinci/ui/context/loaded", dojo.hitch(this, this._contextLoaded));
-		this.subscribe("/davinci/ui/context/statesLoaded", dojo.hitch(this, this._statesLoaded));
-		this.subscribe("/davinci/states/state/added", dojo.hitch(this, this._addState));
-		this.subscribe("/davinci/states/state/removed", dojo.hitch(this, this._removeState));
-		this.subscribe("/davinci/states/state/renamed", dojo.hitch(this, this._renameState));
-		dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._changeState));
-		dojo.subscribe("/davinci/ui/context/registerSceneManager", dojo.hitch(this, this._registerSceneManager));
-		this.subscribe("/davinci/scene/scenesLoaded", dojo.hitch(this, this._scenesLoaded));
-		this.subscribe("/davinci/scene/added", dojo.hitch(this, this._addScene));
-		this.subscribe("/davinci/scene/removed", dojo.hitch(this, this._removeScene));
-		this.subscribe("/davinci/scene/renamed", dojo.hitch(this, this._renameScene));
-		dojo.subscribe("/davinci/scene/selectionChanged", dojo.hitch(this, this._sceneSelectionChanged));
+		this.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this));
+		this.subscribe("/davinci/ui/context/loaded", this._contextLoaded.bind(this));
+		this.subscribe("/davinci/ui/context/statesLoaded", this._statesLoaded.bind(this));
+		this.subscribe("/davinci/states/state/added", this._addState.bind(this));
+		this.subscribe("/davinci/states/state/removed", this._removeState.bind(this));
+		this.subscribe("/davinci/states/state/renamed", this._renameState.bind(this));
+		this.subscribe("/davinci/states/state/changed", this._changeState.bind(this));
+		this.subscribe("/davinci/ui/context/registerSceneManager", this._registerSceneManager.bind(this));
+		this.subscribe("/davinci/scene/scenesLoaded", this._scenesLoaded.bind(this));
+		this.subscribe("/davinci/scene/added", this._addScene.bind(this));
+		this.subscribe("/davinci/scene/removed", this._removeScene.bind(this));
+		this.subscribe("/davinci/scene/renamed", this._renameScene.bind(this));
+		this.subscribe("/davinci/scene/selectionChanged", this._sceneSelectionChanged.bind(this));
 
 		this._createStateList();	
 	},
@@ -132,7 +132,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_sceneSelectionChanged: function(sceneManager, sceneId) {
-		var currentPaths = this._tree.get('paths');
 		var currentSceneId = sceneId;
 		var path = [];
 		while(currentSceneId){

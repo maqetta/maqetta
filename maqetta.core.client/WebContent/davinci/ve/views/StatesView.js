@@ -148,7 +148,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				})
 			});
 		}
-		this._sceneStore.fetch({query: {type:'category', category:sceneManager.category}, queryOptions:{}, 
+		this._sceneStore.fetch({query: {type:'SceneManagerRoot', category:sceneManager.category}, queryOptions:{deep:true}, 
 			onComplete: dojo.hitch(this, function(items, request){
 				if(items.length !== 1){
 					console.error('_sceneSelectionChanged error. sceneManager.category='+sceneManager.category);
@@ -159,7 +159,18 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				}
 			})
 		});
-		path.splice(0, 0, 'categoryRoot');
+		this._sceneStore.fetch({query: {type:'file'}, queryOptions:{}, 
+			onComplete: dojo.hitch(this, function(items, request){
+				if(items.length !== 1){
+					console.error('_sceneSelectionChanged error. file not found');
+					return;
+				}else{
+					var item = items[0];
+					path.splice(0, 0, item.id[0]);
+				}
+			})
+		});
+		path.splice(0, 0, 'StoryRoot');
 		this._tree.set('paths', [path]);
 	},
 
@@ -378,14 +389,16 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		}
 		this._store.save();
 
-		
 		var that = this;
 		
 		// Build an object structure that contains the latest list of states/scenes/views
 		// We will then build a similar object structure by extracting the list from the ItemFileWriteStore
 		// and then compare the two to see if there are any changes
-		var AppStatesObj = {name:'Application States', type:'category', category:'AppStates', children:[]};
-		var latestData = [AppStatesObj];
+		var fileName = (this._editor && this._editor.fileName) ? this._editor.fileName : 'file';
+		var CurrentFileObj = {name:fileName, type:'file', category:'file', children:[]};
+		var AppStatesObj = {name:'Application States', type:'SceneManagerRoot', category:'AppStates', children:[]};
+		CurrentFileObj.children.push(AppStatesObj);
+		var latestData = [CurrentFileObj];
 		for(var state in latestStates){
 			AppStatesObj.children.push({ name:state, type:'AppState' });
 		}
@@ -397,7 +410,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			if(sm.getAllScenes && sm.name && sm.category){
 				var scenes = sm.getAllScenes();
 				if(scenes.length > 0){
-					latestData.push({ name:sm.name, type:'category', category:sm.category, children:scenes});
+					CurrentFileObj.children.push({ name:sm.name, type:'SceneManagerRoot', category:sm.category, children:scenes});
 				}
 			}
 		}
@@ -455,8 +468,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		}
 	    var skeletonData = { identifier: 'id', label: 'name', items: []};
 		this._sceneStore = new ItemFileWriteStore({ data: skeletonData, clearOnClose:true });
-		this._forest = new ForestStoreModel({ store:this._sceneStore, query:{type:'category'},
-			  rootId:'categoryRoot', rootLabel:'All', childrenAttrs:['children']});
+		this._forest = new ForestStoreModel({ store:this._sceneStore, query:{type:'file'},
+			  rootId:'StoryRoot', rootLabel:'All', childrenAttrs:['children']});
 		this._tree = new Tree({model:this._forest, showRoot:false, autoExpand:true, style:'height:150px', _createTreeNode:function(args){
 			var item = args.item;
 			if(item.type && item.category && item.category[0] === 'AppStates'){

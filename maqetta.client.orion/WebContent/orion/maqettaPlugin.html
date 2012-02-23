@@ -41,7 +41,7 @@ http://localhost:8081/plugin/install.html#http://localhost:8081/maqetta/app/orio
 			}
 		}, {
 			image: "/maqetta/app/davinci/img/maqetta.png",
-			name: "Open Maqetta",
+			name: "Open in Maqetta",
 			id: "open.maqetta.project",
 			forceSingleItem: true,
 			href: true,
@@ -49,6 +49,19 @@ http://localhost:8081/plugin/install.html#http://localhost:8081/maqetta/app/orio
 			tooltip: "Open this project in Maqetta Designer"
 		});	
 		
+		provider.registerServiceProvider("orion.navigate.command", {
+			run : function(item) {
+				return "/maqetta/?project=" + item.Name;
+			}
+		}, {
+			image: "/maqetta/app/davinci/img/maqetta.png",
+			name: "Add Maqetta Settings and Open",
+			id: "open.maqetta.project",
+			forceSingleItem: true,
+			href: true,
+			validationProperties: {"rootFolder":'true'},
+			tooltip: "Open this project in Maqetta Designer"
+		});	
 		
 		provider.connect();
 

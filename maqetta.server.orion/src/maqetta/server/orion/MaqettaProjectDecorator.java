@@ -28,8 +28,7 @@ public class MaqettaProjectDecorator implements IWebResourceDecorator {
 	 * augmented.  This data can be checked in the plugin for conditional functionality.
 	 * 	
 	 */
-	public void addAtributesFor(HttpServletRequest request, URI resource,
-			JSONObject representation) {
+	public void addAtributesFor(HttpServletRequest request, URI resource,JSONObject representation) {
 		IPath resourcePath = new Path(resource.getPath());
 		
 		if (!"/workspace".equals(request.getServletPath())) //$NON-NLS-1$
@@ -52,12 +51,16 @@ public class MaqettaProjectDecorator implements IWebResourceDecorator {
 				if (libFile != null && libFile.fetchInfo().exists()){
 					projectObject.put(IDavinciServerConstants.MAQETTA_PROJECT, true);
 				}else{
-					projectObject.put("potentialMaqettaProject", true);
+					projectObject.put("rootFolder", true);
 				}
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				representation.put("rootFolder", true);
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -23,4 +23,5 @@ Export-Package: maqetta.server.orion;
    org.w3c.dom,
    javax.servlet.http",
  maqetta.server.orion.command,
+ maqetta.server.orion.internal,
  maqetta.server.orion.user;uses:="org.maqetta.server,org.davinci.server.user"

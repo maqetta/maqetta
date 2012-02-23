@@ -32,6 +32,7 @@
 	 * id {string} - A unique ID for this SceneManager. Used as the index into Maqetta's list of SceneManagers
 	 * name {string} - Localized string that is name of this SceneManager. This string appears in Scenes palette.
 	 * category {string} - A string unique to this SceneManager that must be used as the 'type' property on each scene
+	 * hideAppStates {string} - (Optional) If true, then hide application states from States View if at least one scene and only one app state
 	 * 
 	 */
 	function DojoMobileViewSceneManager(context) {
@@ -42,6 +43,7 @@
 	
 	DojoMobileViewSceneManager.prototype.id = 'DojoMobileViews';
 	DojoMobileViewSceneManager.prototype.category = 'DojoMobileView';
+	DojoMobileViewSceneManager.prototype.hideAppStates = true;
 		
 	DojoMobileViewSceneManager.prototype._viewAdded = function(parent, child){
 		dojo.publish("/davinci/scene/added", [this, parent, child]);

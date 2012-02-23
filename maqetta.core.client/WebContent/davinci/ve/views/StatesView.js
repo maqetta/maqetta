@@ -396,8 +396,12 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		// and then compare the two to see if there are any changes
 		var fileName = (this._editor && this._editor.fileName) ? this._editor.fileName : 'file';
 		var CurrentFileObj = {name:fileName, type:'file', category:'file', children:[]};
+		var appStatesCount = 0;
+		for(var s in latestStates){
+			appStatesCount++;
+		}
+		var statesAddedAlready = false;
 		var AppStatesObj = {name:'Application States', type:'SceneManagerRoot', category:'AppStates', children:[]};
-		CurrentFileObj.children.push(AppStatesObj);
 		var latestData = [CurrentFileObj];
 		for(var state in latestStates){
 			AppStatesObj.children.push({ name:state, type:'AppState' });
@@ -410,6 +414,12 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			if(sm.getAllScenes && sm.name && sm.category){
 				var scenes = sm.getAllScenes();
 				if(scenes.length > 0){
+					// Don't show application states if SceneManager has hideAppStates flag set to true
+					// and if there is only one application state (i.e., Normal)
+					if(!statesAddedAlready && (appStatesCount > 1 || !sm.hideAppStates)){
+						CurrentFileObj.children.push(AppStatesObj);
+						statesAddedAlready = true;
+					}
 					CurrentFileObj.children.push({ name:sm.name, type:'SceneManagerRoot', category:sm.category, children:scenes});
 				}
 			}

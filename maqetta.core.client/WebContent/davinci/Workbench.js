@@ -57,7 +57,7 @@ var initializeWorkbenchState = function(){
 			sync: true
 		});
 	}
-	
+		
 	var state = Workbench._state;
 	if (state && state.project) {
 		Workbench.setActiveProject(state.project);
@@ -677,10 +677,10 @@ var Workbench = {
 	
 	
 	loadProject: function(projectName) {
+		
 		Workbench.setActiveProject(projectName);
 		
 		// if the project was set via URL parameter, clear it off.  
-		window.location.href=Workbench.location();
 		
 		location.reload(true);
 	},
@@ -1312,15 +1312,13 @@ var Workbench = {
 		/* need to check if there is a project in the URL.  if so, it takes precidence
 		 * to the workbench setting
 		 */
-		
-		
 		if (!Workbench._state) {
 			Workbench._state=Runtime.serverJSONRequest({url:"cmd/getWorkbenchState", handleAs:"json", sync:true});
 		}
 		var urlProject = dojo.queryToObject(dojo.doc.location.search.substr((dojo.doc.location.search[0] === "?" ? 1 : 0))).project;
 		
 		if(urlProject){
-			Workbench.setActiveProject(urlProject);
+			Workbench.loadProject(urlProject);
 		}
 		
 		if (Workbench._state.hasOwnProperty("project")) {
@@ -1331,6 +1329,9 @@ var Workbench = {
 	},
 	
 	setActiveProject: function(project){
+		if(!Workbench._state){
+			Workbench._state = {};
+		}
 		Workbench._state.project = project;
 		Workbench._updateWorkbenchState();
 	},

@@ -58,7 +58,10 @@ public class MaqettaOrionPageServlet extends DavinciPageServlet {
         }else if (user==null) {
                     resp.sendRedirect("./welcome");
         }else if(pathInfo==null || pathInfo.equals("") || pathInfo.equals("/") ){
-        	 writeMainPage(req, resp);
+        	
+        	/* rebuild the users workspace before launching main page.  this is in case Orion changed the files under the covers */
+        	user.rebuildWorkspace();
+        	writeMainPage(req, resp);
        
         } else if (req.getParameter(IDavinciServerConstants.PREVIEW_PARAM)!=null) {
             handlePreview(req,resp);

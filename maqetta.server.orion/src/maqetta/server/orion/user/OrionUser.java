@@ -91,6 +91,7 @@ public class OrionUser extends User {
 		String workspaceId = webWorkspace.getId();
 		this.userDirectory = new VOrionWorkspaceStorage(webWorkspace, this.getUserName());
 		
+
 		rebuildWorkspace();
 		
 	}

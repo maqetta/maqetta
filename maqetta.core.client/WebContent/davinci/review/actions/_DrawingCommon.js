@@ -11,7 +11,7 @@ return declare("davinci.review.actions._DrawingCommon", Action, {
 
 		if (e && e.getContext) {
 			ctx = e.getContext();
-			var doc = this.doc = ctx.getDocument();
+			var doc = this.doc = ctx.containerNode.ownerDocument;
 			if (!doc.annotationSurface) {
 				dojo.publish("/davinci/review/drawing/getsurface", [doc]);
 			}

@@ -3,6 +3,7 @@ define([
 	"davinci/workbench/ViewPart",
 	"davinci/review/widgets/Comment",
 	"davinci/review/widgets/CommentForm",
+	"davinci/review/util",
 	"dijit/form/Button",
 	"dijit/form/TextBox",
 	"dijit/form/DropDownButton",
@@ -14,7 +15,7 @@ define([
 	"dijit/Menu",
     "dojo/i18n!./nls/view",
     "dojo/i18n!davinci/workbench/nls/workbench"
-], function(declare, ViewPart, Comment, CommentForm, Button, Textbox, DropDownButton, Toolbar,
+], function(declare, ViewPart, Comment, CommentForm, util, Button, TextBox, DropDownButton, Toolbar,
 		ToolbarSeparator, CheckedMenuItem, MenuSeparator, Dialog, Menu, viewNls, workbenchNls) {
 
 return declare("davinci.review.view.CommentView", ViewPart, {
@@ -116,7 +117,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			//		Load the comments when the page is loaded
 			//		Collapse all the comments
 			//		Enable the action icon on the toolbar
-			var global = context.getGlobal();
+			var global = dojo.window.get(context.containerNode.ownerDocument);
 
 			this._loadCommentData(pageName);
 			if (davinci.Workbench.getOpenEditor() === context.containerEditor) {
@@ -336,8 +337,9 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			content: args.content,
 			pageName: this._currentPage,
 			pageState: this._cached[this._currentPage].pageState,
-			ownerId: davinci.Runtime.commenting_reviewerName.userName,
-			email:davinci.Runtime.commenting_reviewerName.email,
+			//ownerId: davinci.Runtime.commenting_reviewerName.userName,
+			ownerId: davinci.Runtime.userName,
+			email: davinci.Runtime.getDesignerEmail(),
 			replyTo: form.replyTo,
 			drawingJson: this.drawingJson,
 			type: args.type,
@@ -427,7 +429,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			url: location + "maqetta/cmd/getComments",
 			sync: true,
 			content:{
-				ownerId: davinci.Runtime.commenting_designerName,
+				ownerId: davinci.Runtime.commenting_designerName || davinci.Runtime.userName,
 				pageName: pageName
 			}
 		}).sort(function(c1,c2){
@@ -550,7 +552,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		}
 
 		form.reset(); // Ensure that the form is restored
-		form.commentId = davinci.review.util.getNewGuid();
+		form.commentId = util.getNewGuid();
 		form.setReplyMode();
 		form.replyTo = args.replyTo;
 		form.subject.set("value", args.subject);
@@ -800,13 +802,14 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			this._onCommentFormCancel();
 		}
 		form.reset(); // Ensure that the form is restored
-		form.commentId = davinci.review.util.getNewGuid();
+		form.commentId = util.getNewGuid();
 		form.show();
 
 		// Notify the drawing tool to be in edit mode
 		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", 
 				[
-				 davinci.Runtime.commenting_reviewerName.userName,
+				 //davinci.Runtime.commenting_reviewerName.userName,
+				 davinci.Runtime.userName,
 				 form.commentId,
 				 this._cached[this._currentPage].pageState
 				 ]);

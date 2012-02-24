@@ -48,8 +48,8 @@ return declare("davinci.review.editor.Context", [Context], {
 		//        Create the canvas for annotations, and wait for the shape definition
 		//        to add a shape. The shapes will be created one by one.
 		//        Shapes with commentId, state and colorAlias(reviewer)
-		var doc = this.getDocument(), 
-			surface = doc.annotationSurface;
+		var doc = this.containerNode.ownerDocument, 
+			surface;
 		if (!doc.annotationSurface) {
 			surface = doc.annotationSurface = new Surface(doc.body, doc);
 			new CreateTool(surface, ["commentId"]);

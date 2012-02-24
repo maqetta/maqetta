@@ -356,7 +356,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
     	            context._widgets[libId] = 0;
     	        }
     	        if (++context._widgets[libId] == 1) {
-    	            Metadata.invokeCallback(type, 'onFirstAdd', args);
+    	            Metadata.invokeCallback(library, 'onFirstAdd', args);
     	        }
     	        // Always invoke the 'onAdd' callback.
     	        Metadata.invokeCallback(type, 'onAdd', args);

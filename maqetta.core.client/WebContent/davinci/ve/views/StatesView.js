@@ -262,7 +262,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					this._themeState = item.name[0];
 					this._silent = false;
 				} else {
-					var currentEditor = Runtime.currentEditor;
+					var currentEditor = this._editor;
 					var context = currentEditor.getContext();
 					var bodyWidget = context.rootWidget;
 					if(context && bodyWidget){
@@ -374,7 +374,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		for(var state in latestStates){
 			AppStatesObj.children.push({ name:state, type:'AppState' });
 		}
-		var context = Runtime.currentEditor.getContext();
+		var context = this._editor.getContext();
 		var sceneManagers = context.sceneManagers;
 		// Loop through plugin scene managers, eg Dojo Mobile Views
 		var AppStatesAddedAlready = false;
@@ -420,11 +420,13 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			return true;
 		}
 		function compareObjectRecursive(o1, o2){
-			['sceneId','name','type','category'].forEach(function(p){
+			var props = ['sceneId','name','type','category'];
+			for(var pidx = 0; pidx < props.length; pidx++){
+				var p = props[pidx];
 				if(!compareProperty(o1, o2, p)){
 					return false;
 				}
-			});
+			}
 			if((o1.children && !o2.children) || (!o1.children && o2.children)){
 				return false;	// return false if objects don't match
 			}
@@ -478,7 +480,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		});
 		this.centerPane.domNode.appendChild(this._tree.domNode);	
 		dojo.connect(this._tree, "onClick", this, function(item){
-			var currentEditor = Runtime.currentEditor;
+			var currentEditor = this._editor;
 			var context = currentEditor ? currentEditor.getContext() : null;
 			var bodyWidget = context ? context.rootWidget : null;
 			if (item && item.type && item.type[0] == 'AppState') {

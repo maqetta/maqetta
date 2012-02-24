@@ -121,11 +121,11 @@
     return {
 //        init: function(args) {
 //        },
+		onDocInit: function(context){
+			context.registerSceneManager(new DojoMobileViewSceneManager(context));
+//		},
         
-        onFirstAdd: function(type, context) {
-        	//FIXME: How to do nls? Maybe need to convert callback.js to AMD and leverage AMD's I18N?
-        	context.registerSceneManager(new DojoMobileViewSceneManager(context));
-            return;
+//        onFirstAdd: function(type, context) {
 //        },
 //        
 //        onAdd: function(type, context) {

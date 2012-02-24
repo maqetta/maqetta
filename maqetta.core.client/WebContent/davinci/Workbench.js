@@ -32,8 +32,8 @@ var filename2id = function(fileName) {
 
 var updateMainToolBar = function (change, toolbarID) {
 	var toolbar1 = dijit.byId("davinci_toolbar_main");
-	if(toolbar1){
-		dojo.forEach(toolbar1.getChildren(), function(child){
+	if (toolbar1) {
+		dojo.forEach(toolbar1.getChildren(), function(child) {
 			if (child.isEnabled) {
 				child.set('disabled', !child.isEnabled(change.targetObjectId));
 			}
@@ -41,7 +41,7 @@ var updateMainToolBar = function (change, toolbarID) {
 	}
 };
 
-var getSelectedResource = function(){
+var getSelectedResource = function() {
 	var selection=Runtime.getSelection();
 	if (selection[0]&&selection[0].resource) {
 		return selection[0].resource;
@@ -59,33 +59,33 @@ var initializeWorkbenchState = function(){
 	}
 	
 	var state = Workbench._state;
-	if(state && state.project){
+	if (state && state.project) {
 		Workbench.setActiveProject(state.project);
 	}
 	
-	if (state && state.editors){
+	if (state && state.editors) {
 		state.version = davinci.version;
 		
 		var project = null;
 		var singleProject = Workbench.singleProjectMode();
 	
-		if(singleProject){
+		if (singleProject) {
 			var p = Workbench.getProject();
 			project = new Path(p);
 		}
 	
-		for (var i=0;i<state.editors.length;i++){
+		for (var i=0;i<state.editors.length;i++) {
 			if(singleProject){
 				// if running in single user mode, only load editors open for specific projects
 				var path = new Path(state.editors[i]);
-				if(!path.startsWith(project)) {
+				if (!path.startsWith(project)) {
 					continue;
 				}
 			}
 			
 			var resource= sysResource.findResource(state.editors[i]);
 			var noSelect=state.editors[i] != state.activeEditor;
-			if (resource){
+			if (resource) {
 				Workbench.openEditor({
 					fileName: resource,
 					content: resource.getText(),
@@ -136,20 +136,18 @@ var Workbench = {
 		);
 
 		// bind overlay widgets to corresponding davinci states. singleton; no need to unsubscribe
-		davinci.states.subscribe("/davinci/states/state/changed", function(args){
+		davinci.states.subscribe("/davinci/states/state/changed", function(args) {
 			var prefix = "_show:", widget, dvWidget, helper,
 				thisDijit = Runtime.currentEditor.visualEditor.context.getDijit(),
 				widgetUtils = require("davinci/ve/widget");
-			if(args.newState && !args.newState.indexOf(prefix)){
+			if (args.newState && !args.newState.indexOf(prefix)) {
 				widget = thisDijit.byId(args.newState.substring(6));
-//    				widget && widget.show();
 				dvWidget = widgetUtils.getWidget(widget.domNode);
 				helper = dvWidget.getHelper();
 				helper && helper.popup && helper.popup(dvWidget);
 			}
-			if(args.oldState && !args.oldState.indexOf(prefix)){
+			if (args.oldState && !args.oldState.indexOf(prefix)) {
 				widget = thisDijit.byId(args.oldState.substring(6));
-//    				widget && widget.hide();
 				dvWidget = widgetUtils.getWidget(widget.domNode);
 				helper = dvWidget.getHelper();
 				helper && helper.tearDown && helper.tearDown(dvWidget);
@@ -157,7 +155,7 @@ var Workbench = {
 		});
 
 		metadata.init().then(function(){
-			var perspective= Runtime.initialPerspective || "davinci.ui.main";
+			var perspective = Runtime.initialPerspective || "davinci.ui.main";
 			Workbench.showPerspective(perspective);
 			Workbench._updateTitle();
 			initializeWorkbenchState();			
@@ -172,8 +170,8 @@ var Workbench = {
 	},
 
 	_resourceChanged: function (type,changedResource) {
-		if (type=='deleted') {
-			fileName=changedResource.getPath();
+		if (type == 'deleted') {
+			fileName = changedResource.getPath();
 			var tab = dijit.byId(filename2id(fileName));
 			if (tab && !tab._isClosing) {
 				var tabContainer = dijit.byId("editors_tabcontainer");
@@ -207,64 +205,61 @@ var Workbench = {
 		}
 	
 		var toolbar1 = new Toolbar({'class':"davinciToolbar"}, targetDiv);   
-		var radioGroups={};
+		var radioGroups = {};
 		var firstgroup = true;
 		for (var value in _toolbarcache) {
-			if(!firstgroup){
+			if (!firstgroup) {
 				var separator = new ToolbarSeparator();
 				toolbar1.addChild(separator);
-			}else{
+			} else {
 				firstgroup = false;
 			}
 			var children;
 				var actions = _toolbarcache[value];
-				  for(var p = 0;p<actions.length;p++){
-					    var action=actions[p];
+				  for (var p = 0; p<actions.length; p++) {
+					    var action = actions[p];
 			 			var id = action.id;
 			 			// dont add dupes
 			 	
 			 			Workbench._loadActionClass(action);
-						var parms={showLabel:false/*, id:(id + "_toolbar")*/};
+						var parms = {showLabel:false/*, id:(id + "_toolbar")*/};
 						if (action.label) {
-							parms.label=action.label;
+							parms.label = action.label;
 						}
 						if (action.iconClass) {
-							parms.iconClass=action.iconClass;
+							parms.iconClass = action.iconClass;
 						}
 						var dojoAction;
-						if (action.toggle || action.radioGroup)
-						{
+						if (action.toggle || action.radioGroup) {
 							dojoAction = new dijit.form.ToggleButton(parms);
 							dojoAction.item = action;
 							dojoAction.set('checked', action.initialValue);
-							if (action.radioGroup)
-							{
-								var group=radioGroups[action.radioGroup];
+							if (action.radioGroup) {
+								var group = radioGroups[action.radioGroup];
 								if (!group) {
-									group=radioGroups[action.radioGroup]=[];
+									group = radioGroups[action.radioGroup]=[];
 								}
 								group.push(dojoAction);
-								dojoAction.onChange=dojo.hitch(this,"_toggleButton",dojoAction,context,group);
+								dojoAction.onChange = dojo.hitch(this, "_toggleButton", dojoAction, context, group);
 							} else {
-								dojoAction.onChange=dojo.hitch(this,"_runAction",action,context);
+								dojoAction.onChange = dojo.hitch(this,"_runAction", action, context);
 							}
 						} else {
 							dojoAction = new Button(parms);
-							dojoAction.onClick=dojo.hitch(this,"_runAction",action,context);
+							dojoAction.onClick = dojo.hitch(this, "_runAction", action, context);
 						}
-						if (action.icon)
-						{
+						if (action.icon) {
 							var imageNode = document.createElement('img');
-							imageNode.src=action.icon;
+							imageNode.src = action.icon;
 							imageNode.height = imageNode.width = 18;
 							dojoAction.domNode.appendChild(imageNode);
 						}
 
 						toolbar1.addChild(dojoAction);
-						if(action.isEnabled && !action.isEnabled(targetObjectId) ){ 
+						if (action.isEnabled && !action.isEnabled(targetObjectId)) { 
 							dojoAction.isEnabled = action.isEnabled;
 							dojoAction.set('disabled', true);
-						}else{
+						} else {
 							dojoAction.set('disabled', false);
 						}
 				}
@@ -277,7 +272,7 @@ var Workbench = {
 		Workbench._updateMainMenubar();
 
 		var mainBody = dojo.byId('mainBody');
-		if (! mainBody.tabs) {
+		if (!mainBody.tabs) {
 			mainBody.tabs = [];
 		}
 		
@@ -293,26 +288,24 @@ var Workbench = {
 		}
 		var perspective = Runtime.getExtension("davinci.perspective",perspectiveID);
 
-
-		if (!perspective){
+		if (!perspective) {
 			Runtime.handleError(dojo.string.substitute(webContent.perspectiveNotFound,[perspectiveID]));
 		}
 
-		perspective=dojo.clone(perspective);	// clone so views aren't added to original definition
+		perspective = dojo.clone(perspective);	// clone so views aren't added to original definition
 
 		var extensions = Runtime.getExtensions("davinci.perspectiveExtension",
 				function (extension) {
 					return extension.targetID === perspectiveID;
 				});
-		dojo.forEach(extensions, function (extension){
-//TODO: should check if view is already in perspective			
-			dojo.forEach(extension.views, function (view){ perspective.views.push(view);});	
+		dojo.forEach(extensions, function (extension) {
+			// TODO: should check if view is already in perspective
+			dojo.forEach(extension.views, function (view){ perspective.views.push(view); });
 		});
-		
-		if (!mainBody.editorsStackContainer){
-			Workbench.editorsStackContainer=mainBody.editorsStackContainer =
-				new StackContainer(
-				{
+
+		if (!mainBody.editorsStackContainer) {
+			Workbench.editorsStackContainer = mainBody.editorsStackContainer =
+				new StackContainer({
 					region:'center',
 					id: "editorsStackContainer",
 					controllerWidget: "dijit.layout.StackController"
@@ -322,10 +315,9 @@ var Workbench = {
 		// Hardcoding this for now. Need to work with Phil on how to turn change
 		// welcome page logic into something that is defined by ve_plugin.js.
 		mainBodyContainer.addChild(mainBody.editorsStackContainer);
-		if (!mainBody.editorsWelcomePage){
-			Workbench.editorsWelcomePage=mainBody.editorsWelcomePage =
-				new ContentPane(
-				{
+		if (!mainBody.editorsWelcomePage) {
+			Workbench.editorsWelcomePage = mainBody.editorsWelcomePage =
+				new ContentPane({
 					id: "editorsWelcomePage",
 					href: "app/davinci/ve/resources/welcome_to_maqetta.html"
 					/*
@@ -344,14 +336,13 @@ var Workbench = {
 		}
 		mainBody.editorsStackContainer.addChild(mainBody.editorsWelcomePage);
 		if (!mainBody.tabs.editors) {
-			Workbench.editorTabs=mainBody.tabs.editors =
+			Workbench.editorTabs = mainBody.tabs.editors =
 				new (Workbench.hideEditorTabs ? StackContainer : TabContainer)({
 					id: "editors_tabcontainer",
 					controllerWidget: "dijit.layout.TabController"
 				});
-			Workbench.editorTabs.setTitle = function(tab, title){ 
+			Workbench.editorTabs.setTitle = function(tab, title) { 
 				tab.attr('title', title);
-				//this = TabContainer
 				this.tablist.pane2button[tab.id].attr('label', title);
 			};
 			
@@ -359,13 +350,12 @@ var Workbench = {
 		}
 		mainBody.editorsStackContainer.addChild(mainBody.tabs.editors);
 		mainBody.editorsStackContainer.selectChild(mainBody.editorsWelcomePage);
-		dojo.connect(dijit.byId("editors_tabcontainer"),"selectChild",function(child){
+		dojo.connect(dijit.byId("editors_tabcontainer"), "selectChild", function(child) {
 			if (child.editor) {
 				Workbench._switchEditor(child.editor);
 			}
 		});
 		mainBodyContainer.startup();
-
 
 		// Put the toolbar and the main window in a border container
 		var appBorderContainer = dijit.byId('davinci_app');
@@ -387,9 +377,7 @@ var Workbench = {
 			Workbench._orginalOnResize = window.onresize;
 			window.onresize = Workbench.onResize; //alert("All done");}
 			dojo.connect(mainBodyContainer, 'onMouseUp', this, 'onResize');
-
 		}
-		
 		
 		/* close all of the old views */
 		for (var position in mainBody.tabs.perspective) {
@@ -397,7 +385,7 @@ var Workbench = {
 			if(!view) {
 				continue;
 			}
-			dojo.forEach(view.getChildren(), function (child) {
+			dojo.forEach(view.getChildren(), function(child) {
 				view.removeChild(child);
 				if (position != 'left' && position != 'right') {
 					child.destroyRecursive(false);
@@ -407,27 +395,27 @@ var Workbench = {
 			delete mainBody.tabs.perspective[position];
 		}
 
-		dojo.forEach(perspective.views, function(view){
+		dojo.forEach(perspective.views, function(view) {
 			Workbench.showView(view.viewID, false);
 		}, this);
 
 		// kludge to workaround problem where tabs are sometimes cutoff/shifted to the left in Chrome for Mac
 		// would be nice if we had a workbench onload event that we could attach this to instead of relying on a timeout
-		setTimeout(function(){
+		setTimeout(function() {
 			appBorderContainer.resize();
 		}, 3000);
 	},
 
 	onResize: function(e){
-
 		var target = e.explicitOriginalTarget ? e.explicitOriginalTarget : e.srcElement;
-		if (e.type == 'resize' || ( (target.id && (target.id.indexOf('dijit_layout__Splitter_')>-1) || (target.nextSibling && target.nextSibling.id && target.nextSibling.id.indexOf('dijit_layout__Splitter_')>-1))  )  ){
+		if (e.type == 'resize' || ((target.id && (target.id.indexOf('dijit_layout__Splitter_')>-1) || 
+			(target.nextSibling && target.nextSibling.id && target.nextSibling.id.indexOf('dijit_layout__Splitter_')>-1)))) {
 			var ed = davinci && Runtime.currentEditor;
 			if (davinci && Runtime.currentEditor && Runtime.currentEditor.onResize) {
 				Runtime.currentEditor.onResize();
 			}
 		}
-		if(Workbench._orginalOnResize) {
+		if (Workbench._orginalOnResize) {
 			Workbench._orginalOnResize();
 		}
 	},
@@ -449,14 +437,12 @@ var Workbench = {
 		 }
 		var menuTree = Workbench._createMenuTree();
 
-	   for (var i=0;i<menuTree.length; i++)
-	   {
-		   var menuTreeItem=menuTree[i];
-		   for (var j=0;j<menuTreeItem.menus.length;j++)
-		   {
-			   var menu=menuTreeItem.menus[j];
-			   var dojoMenu = Workbench._createMenu(menu);
-			   menu.id = menu.id.replace(".", "-"); // kludge to work around the fact that '.' is being used for ids, and that's not compatible with CSS
+		for (var i=0; i<menuTree.length; i++) {
+			var menuTreeItem = menuTree[i];
+			for (var j=0;j<menuTreeItem.menus.length;j++) {
+				var menu = menuTreeItem.menus[j];
+				var dojoMenu = Workbench._createMenu(menu);
+				menu.id = menu.id.replace(".", "-"); // kludge to work around the fact that '.' is being used for ids, and that's not compatible with CSS
 				var widget =  dijit.byId(menu.id + "-dropdown");
 				if(!widget) {
 					widget = new dijit.form.DropDownButton({
@@ -466,15 +452,11 @@ var Workbench = {
 					});
 					menuDiv.appendChild(widget.domNode);
 				}
-			   
-		   }
-		   
-	   }
-
+			}
+		}
 	},
-	 
-	_addItemsToMenubar: function(menuTree, menuTop) {
 
+	_addItemsToMenubar: function(menuTree, menuTop) {
 		dojo.forEach(menuTree, function(m) {
 			var menus = m.menus,
 				menuLen = menus.length;
@@ -483,7 +465,7 @@ var Workbench = {
 					menu.id = menu.id.replace(/\./g, "-"); // kludge to work around the fact that '.' is being used for ids, and that's not compatible with CSS
 					var dojoMenu = Workbench._createMenu(menu),
 						widget =  dijit.byId(menu.id + "-dropdown");
-					if(!widget) {
+					if (!widget) {
 						widget = new PopupMenuBarItem({
 							label: menu.label,
 							popup: dojoMenu,
@@ -496,26 +478,25 @@ var Workbench = {
 		}, this);
 	},
 
-	getOpenEditor: function (){
+	getOpenEditor: function() {
 		var tabContainer = dijit.byId("editors_tabcontainer");
-		if(tabContainer && tabContainer.selectedChildWidget && tabContainer.selectedChildWidget.editor){
+		if (tabContainer && tabContainer.selectedChildWidget && tabContainer.selectedChildWidget.editor) {
 			return tabContainer.selectedChildWidget.editor;
 		}
 		return null;
 	},
 
-
-	getAllOpenEditorIds: function (){
+	getAllOpenEditorIds: function() {
 	},
 	
 	
-	showModal: function(content, title, style, callback){
+	showModal: function(content, title, style, callback) {
 		var myDialog = new Dialog({
 			title: title,
 			content: content,
 			style: style
 		});
-		var handle = dojo.connect(content, "onClose", content, function(){
+		var handle = dojo.connect(content, "onClose", content, function() {
 			var teardown = true;
 			if (callback) {
 				teardown = callback();
@@ -537,19 +518,16 @@ var Workbench = {
 		myDialog.show();
 	},
 	
-	_createMenuTree: function(actionSets,pathsOptional) {
-		if (!actionSets)
-		{  // only get action sets not associated with part
-			actionSets =  Runtime.getExtensions("davinci.actionSets", function (actionSet)
-			{
-				var associations=Runtime.getExtensions("davinci.actionSetPartAssociations",function (actionSetPartAssociation){
-					if (actionSetPartAssociation.targetID==actionSet.id) {
+	_createMenuTree: function(actionSets, pathsOptional) {
+		if (!actionSets) {  // only get action sets not associated with part
+			actionSets =  Runtime.getExtensions("davinci.actionSets", function (actionSet) {
+				var associations = Runtime.getExtensions("davinci.actionSetPartAssociations", function(actionSetPartAssociation) {
+					if (actionSetPartAssociation.targetID == actionSet.id) {
 						return true;
 					}
 				});	
 				return associations.length === 0;
 			});
-
 		}
 		var menuTree = [];
 		function findID(m, id) { //ALP: dijit.byId?
@@ -566,29 +544,23 @@ var Workbench = {
 			path = path || "additions";
 			path = path.split('/');
 			var m = menuTree;
-			
 
 			Workbench._loadActionClass(item);
-			
 			
 			var sep = path[path.length - 1];
 			if (path.length > 1) {
 				for ( var i = 0, len = path.length - 1; i < len; i++) {
 					var k = findID(m, path[i]);
 					if (k) {
-						// Runtime.handleError("menu item not
-						// found: "+path);
 						m = k;
 					}
-	
 				}
 			}
 			for ( var i = 0, len = m.length; i < len; i++) {
 				if (m[i].id == sep) {
 					var menus = m[i].menus;
 					menus.push(item);
-					if (item.separator) // if menu
-					{
+					if (item.separator) { // if menu
 						var wasAdditions = false;
 						menus = item.menus = [];
 						for ( var j = 0; j < item.separator.length; j += 2) {
@@ -629,17 +601,16 @@ var Workbench = {
 						var menu = actionSet.menu[menuN];
 						if (menu.__mainMenu) {
 							for ( var j = 0; j < menu.separator.length; j += 2) {
-								menuTree.push( {
-										id: menu.separator[j],
-										isSeparator: menu.separator[j + 1],
-										menus: []
+								menuTree.push({
+									id: menu.separator[j],
+									isSeparator: menu.separator[j + 1],
+									menus: []
 								});
 							}
 						} else {
 							addItem(menu, menu.path,pathsOptional);
-							if (menu.populate instanceof Function)
-							{
-								var menuItems=menu.populate();
+							if (menu.populate instanceof Function) {
+								var menuItems = menu.populate();
 								for (var item in menuItems) {
 									addItem(menuItems[item], menuItems[item].menubarPath);
 								}
@@ -679,9 +650,7 @@ var Workbench = {
 		if (menu.menus) {  // creating dropdown
 		  dojoMenu = new Menu({parentMenu: menu });
 		  menus = menu.menus;
-		  connectFunction="onOpen";
-//					  this._openMenu(dojoMenu, menus);
-//					  return dojoMenu;
+		  connectFunction = "onOpen";
 		} else {	// creating popup
 			dojoMenu = new PopupMenu({});
 			menus = menu;
@@ -690,7 +659,7 @@ var Workbench = {
 
 		dojoMenu.domNode.style.display = "none";
 		dojoMenu.actionContext = context;
-		dojo.connect(dojoMenu, connectFunction, this, function(evt){
+		dojo.connect(dojoMenu, connectFunction, this, function(evt) {
 		   this._openMenu(dojoMenu, menus, evt).focus(); // call focus again, now that we messed with the widget contents
 		});
 		return dojoMenu;
@@ -703,33 +672,24 @@ var Workbench = {
 	},
 	
 	getProject: function() {
-		/*
-		var params = davinci.Workbench.queryParams();
-		if(params.project) {
-			return decodeURI(params.project);
-		}
-		*/
 		return Workbench.getActiveProject() || Workbench._DEFAULT_PROJECT;
 	},
 	
 	
 	loadProject: function(projectName) {
-		/*
-		var params = davinci.Workbench.queryParams();
-		params.project = encodeURI(projectName);
-		
-		
-		window.location.href=davinci.Workbench.location() + "?" + dojo.objectToQuery(params);
-		*/
 		Workbench.setActiveProject(projectName);
+		
+		// if the project was set via URL parameter, clear it off.  
+		window.location.href=Workbench.location();
+		
 		location.reload(true);
 	},
 	
-	location: function(){
+	location: function() {
 		return Runtime.location();
 	},
 	
-	queryParams: function(){
+	queryParams: function() {
 		// reloads the browser with the current project.
 		var fullPath = document.location.href;
 		var split = fullPath.split("?");
@@ -756,8 +716,7 @@ var Workbench = {
 					addSeparator=true;
 				}
 				for ( var menuN = 0, menuLen = menus[i].menus.length; menuN < menuLen; menuN++) {
-					if (addSeparator && menuAdded)
-					{
+					if (addSeparator && menuAdded) {
 						dojoMenu.addChild(new dijit.MenuSeparator({}));
 						addSeparator=false;
 					}
@@ -770,33 +729,32 @@ var Workbench = {
 							popup: subMenu,
 							id: subMenu.id + "item"
 						});
-						popupParent.actionContext=dojoMenu.actionContext;
+						popupParent.actionContext = dojoMenu.actionContext;
 						dojoMenu.addChild(popupParent);
 					} else {
-						var enabled=true;
-						if(item.isEnabled){
+						var enabled = true;
+						if (item.isEnabled) {
 							var resource = getSelectedResource();
 							enabled = item.isEnabled(resource);
 						}
 
-						var label=item.label;
-						if (item.action)
-						{
+						var label = item.label;
+						if (item.action) {
 							if (item.action.shouldShow && !item.action.shouldShow(dojoMenu.actionContext)) {
 								continue;
 							}
-							enabled= item.action.isEnabled(dojoMenu.actionContext);
+							enabled = item.action.isEnabled(dojoMenu.actionContext);
 							if (item.action.getName) {
-								label=item.action.getName();
+								label = item.action.getName();
 							}
 						}
-						var menuArgs= {
+						var menuArgs = {
 								label: label,
 								disabled: !enabled,
 								onClick: dojo.hitch(this,"_runAction",item,dojoMenu.actionContext)
-							};
+						};
 						if (item.iconClass) {
-							menuArgs.iconClass=item.iconClass;
+							menuArgs.iconClass = item.iconClass;
 						}
 						var menuItem1 = new dijit.MenuItem(menuArgs);
 						dojoMenu.addChild(menuItem1);
@@ -813,7 +771,7 @@ var Workbench = {
 		if (!button.checked) {
 			return;
 		}
-		group.forEach(function(item){
+		group.forEach(function(item) {
 			if (item != button) {
 				item.set('checked', false);
 			}
@@ -855,13 +813,19 @@ var Workbench = {
 		mainBody.tabs = mainBody.tabs || {};				
 		mainBody.tabs.perspective = mainBody.tabs.perspective || {};
 
-		if(position == 'right' && !mainBody.tabs.perspective.right){
-			mainBodyContainer.addChild(mainBody.tabs.perspective.right = new BorderContainer({'class':'davinciPaletteContainer', style: 'width: 275px;', id:"right_mainBody", region:'right', gutters: false, splitter:true}));
+		if (position == 'right' && !mainBody.tabs.perspective.right) {
+			mainBodyContainer.addChild(mainBody.tabs.perspective.right = 
+				new BorderContainer({'class':'davinciPaletteContainer', 
+					style: 'width: 275px;', id:"right_mainBody", 
+					region:'right', gutters: false, splitter:true}));
 			mainBody.tabs.perspective.right.startup();
 		}
 
-		if(position == 'left' && !mainBody.tabs.perspective.left){
-			mainBodyContainer.addChild(mainBody.tabs.perspective.left = new BorderContainer({'class':'davinciPaletteContainer', style: 'width: 200px;', id:"left_mainBody", region:'left', gutters: false, splitter:true}));
+		if (position == 'left' && !mainBody.tabs.perspective.left) {
+			mainBodyContainer.addChild(mainBody.tabs.perspective.left = 
+				new BorderContainer({'class':'davinciPaletteContainer', 
+					style: 'width: 200px;', id:"left_mainBody", 
+					region:'left', gutters: false, splitter:true}));
 			mainBody.tabs.perspective.left.startup();
 		}
 
@@ -929,11 +893,6 @@ var Workbench = {
 
 		getTab(view).then(function(tab) {
 			cp1.addChild(tab);
-//		if(tab.startup){
-//			debugger;
-//			tab.startup();
-//		
-//		}
 			if(shouldFocus) {
 				cp1.selectChild(tab);
 			}
@@ -1027,29 +986,29 @@ var Workbench = {
 		});
 	},
 	
-	_createEditor: function(editorExtension, fileName, keywordArgs, newHtmlParams){
+	_createEditor: function(editorExtension, fileName, keywordArgs, newHtmlParams) {
 		var d = new Deferred();
 		var nodeName = fileName.split('/').pop();
 
 		var loading = dojo.query('.loading');
-		if (loading[0]){
+		if (loading[0]) {
 			loading[0].parentNode.removeChild(loading[0]);
 		}
 
 		var editorsStackContainer = dijit.byId('editorsStackContainer'),
 			editors_tabcontainer = dijit.byId('editors_tabcontainer');
-		if (editorsStackContainer && editors_tabcontainer){
+		if (editorsStackContainer && editors_tabcontainer) {
 			editorsStackContainer.selectChild(editors_tabcontainer);
 		}
 
 		var content = keywordArgs.content,
 			tab = dijit.byId(filename2id(fileName)),
 			tabContainer = dijit.byId("editors_tabcontainer"),
-			tabCreated=false;
-		if(!tab){
-			tabCreated=true;
+			tabCreated = false;
+		if (!tab) {
+			tabCreated = true;
 
-			tab = new EditorContainer( {
+			tab = new EditorContainer({
 				title: nodeName,
 				id: filename2id(fileName), 
 				'class': "EditorContainer",
@@ -1082,22 +1041,19 @@ var Workbench = {
 				tab.editor.select(keywordArgs);
 			}
 			
-			if (!keywordArgs.noSelect)
-			{
+			if (!keywordArgs.noSelect) {
 				util.arrayAddOnce(Workbench._state.editors, fileName);
 				Workbench._switchEditor(tab.editor, keywordArgs.startup);
 			}
 
-			setTimeout(function(){
+			setTimeout(function() {
 				var loadIcon = dojo.query('.dijitTabButtonIcon',tab.controlButton.domNode);
 				dojo.removeClass(loadIcon[0],'tabButtonLoadingIcon');
 				dojo.addClass(loadIcon[0],'dijitNoIcon');
 				tab.resize(); //kludge, forces editor to correct size, delayed to force contents to redraw
 			}, 100);
-			
 			d.resolve(tab.editor);
 		});
-		
 		return d;
 	},
 
@@ -1282,20 +1238,6 @@ var Workbench = {
 					bottom: gutter,
 					zIndex: "500"
 				});
-/*
-				dojo.animateProperty({
-					node: mainBodyContainer._right,
-					duration: 1000,
-					properties: {
-						width: {end: 0}
-					}
-				});
-
-				var anim = dojo.anim(mainBodyContainer._right, {width: 0}, 1000);
-				dojo.connect(anim, "onAnimate", function(){
-					mainBodyContainer.layout();
-				});
-*/
 			};
 		}
 
@@ -1367,8 +1309,18 @@ var Workbench = {
 	},
 
 	getActiveProject: function() {
+		/* need to check if there is a project in the URL.  if so, it takes precidence
+		 * to the workbench setting
+		 */
+		
+		
 		if (!Workbench._state) {
 			Workbench._state=Runtime.serverJSONRequest({url:"cmd/getWorkbenchState", handleAs:"json", sync:true});
+		}
+		var urlProject = dojo.queryToObject(dojo.doc.location.search.substr((dojo.doc.location.search[0] === "?" ? 1 : 0))).project;
+		
+		if(urlProject){
+			Workbench.setActiveProject(urlProject);
 		}
 		
 		if (Workbench._state.hasOwnProperty("project")) {

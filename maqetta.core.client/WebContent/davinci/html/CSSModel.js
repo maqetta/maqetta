@@ -1,8 +1,5 @@
-define([
-], function() {
-	return {
-
-shorthand : [
+define({
+shorthand: [
 	['border',['border-width', 'border-style','border-color', 'border-top', 'border-left', 'border-right', 'border-bottom']],
 	['border-width',['border-top-width','border-right-width','border-bottom-width','border-left-width']],
 	['border-style',['border-top-style','border-right-style','border-bottom-style','border-left-style']],
@@ -17,7 +14,4 @@ shorthand : [
 	['margin',['margin-top', 'margin-right', 'margin-bottom', 'margin-left']],
 	['padding',['padding-top', 'padding-right', 'padding-bottom', 'padding-left']],
 	['background',['background-color', 'background-image', 'background-repeat', 'background-position', 'background-attachment']]
-]
-
-    };
-});
+]});

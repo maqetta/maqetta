@@ -15,6 +15,17 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 
 	postMixInProperties : function() {
 		this.inherited(arguments);
+		/*
+		 * HACK: dijit pulls template substitutions from 'this'. copy values out of NLS
+		 * lang object into properties on this object. hope they don't collide.
+		 */
+		this.by = widgetsNls.by;
+		this.edit = widgetsNls.edit;
+		this.reply = widgetsNls.reply;
+		this.typeLabel = widgetsNls.typeLabel;
+		this.severityLevel = widgetsNls.severityLevel;
+		this.statusLabel = widgetsNls.statusLabel;
+
 	},
 
 	VISIBLE_PART_LENGTH: 80, // By default, how many leading characters of the comment will be shown.
@@ -90,6 +101,8 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 			dojo.style(this.editButton, "display", "none");
 			dojo.style(this.replyButton, "display", "none");
 		}
+		davinci.Runtime.commenting_reviewerName = davinci.Runtime.commenting_reviewerName || {};
+		davinci.Runtime.commenting_reviewerName.userName = davinci.Runtime.commenting_reviewerName.userName || davinci.Runtime.userName;
 		if (davinci.Runtime.commenting_reviewerName.userName != this.ownerId) {
 			dojo.style(this.editButton,"display","none");
 		}
@@ -229,7 +242,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 	isPageOwner: function() {
 		// summary:
 		//		Indicate if the reviewer is the page author
-		return davinci.Runtime.commenting_designerName == davinci.Runtime.commenting_reviewerName.userName;
+		return davinci.Runtime.commenting_designerName == davinci.Runtime.userName;
 	},
 
 	appendReply: function(/*davinci.review.widgets.Comment*/ reply) {

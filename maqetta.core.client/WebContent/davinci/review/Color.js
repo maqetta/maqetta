@@ -2,7 +2,7 @@ define([
 	    "dojo/_base/declare"
 ], function(declare){
 	
-return declare("davinci.review.Color", null, {
+var Color = declare("davinci.review.Color", null, {
 	colors:[
 	        "red",
 	        "blue",
@@ -16,6 +16,6 @@ return declare("davinci.review.Color", null, {
 	        ]
 });
 
-davinci.review.colors = new davinci.review.Color();
+return dojo.setObject("davinci.review.colors", new Color());
 
 });

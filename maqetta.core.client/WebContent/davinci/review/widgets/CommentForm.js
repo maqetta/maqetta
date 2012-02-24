@@ -18,6 +18,14 @@ return declare("davinci.review.widgets.CommentForm", [_Widget, _Templated], {
 
 	postMixInProperties : function() {
 		this.inherited(arguments);
+		/*
+		 * HACK: dijit pulls template substitutions from 'this'. copy values out of NLS
+		 * lang object into properties on this object. hope they don't collide.
+		 */
+		this.comment = widgetsNls.comment;
+		this.typeLabel = widgetsNls.typeLabel;
+		this.severityLevel = widgetsNls.severityLevel;
+		this.buttonCancel = widgetsNls.buttonCancel;
 	},
 
 	postCreate: function() {

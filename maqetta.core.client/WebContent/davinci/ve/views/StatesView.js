@@ -25,32 +25,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
         _setLabelAttr: {node: "labelNode", type: "innerHTML"}
     }),
 
-	toolbarMenuActionSets:[
-		{
-			 id: "statesDropdownMenu",
-			 visible:true,
-			 menu: [
-				{ 
-					__mainMenu : true,
-					separator :
-					[
-					 	"dropdown",false
-					]
-				},
-				{ 
-					 label : "",
-					 path : "dropdown",
-					 id : "davinci.statesDropdownMenu",
-					 separator :
-						  [ "statesDropdownMenu.action1",true,
-						   "statesDropdownMenu.action2",true
-						  ]
-				 }
-			],
-			actions:[]
-		}
-	],
-
 	postCreate: function(){
 		this.inherited(arguments);
 		this._themeState = null;

@@ -308,22 +308,6 @@ return {
                 targetID: "davinci.ve.states",
                 actions: [
 					{
-						id: "prevScene",
-						iconClass: 'viewActionIcon prevSceneIcon',
-						action: "davinci/ve/actions/PrevScene",
-						label: "Previous Scene",
-						// menubarPath: "davinci.edit/cut",
-						toolbarPath: "prevScene"
-					},
-					{
-						id: "nextScene",
-						iconClass: 'viewActionIcon nextSceneIcon',
-						action: "davinci/ve/actions/NextScene",
-						label: "Next Scene",
-						// menubarPath: "davinci.edit/cut",
-						toolbarPath: "nextScene"
-					},
-					{
 						id: "addState",
 						iconClass: 'viewActionIcon addStateIcon',
 						action: "davinci/ve/actions/AddState",

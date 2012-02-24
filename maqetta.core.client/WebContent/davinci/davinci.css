@@ -681,12 +681,6 @@ davinci_top_bar .dijitButtonNode {
 .editDeleteIcon {
 	background-position: 0 -648px;
 }
-.prevSceneIcon {
-	background-position: -37px -24px;
-}
-.nextSceneIcon {
-	background-position: -55px -24px;
-}
 .addStateIcon {
 	background-position: -82px -466px;
 }

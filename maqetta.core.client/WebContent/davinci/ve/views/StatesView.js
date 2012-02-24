@@ -299,14 +299,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				}
 			}
 		});
-
-		var div1 = dojo.create('div', {style:'height:30px; background:pink'});
-		var div2 = dojo.create('div', {style:'height:30px; background:lightgreen'});
 		
 		// Append the new grid to the div container:
-		this.centerPane.domNode.appendChild(div1);	
-		this.centerPane.domNode.appendChild(this._grid.domNode);	
-		this.centerPane.domNode.appendChild(div2);	
+		//this.centerPane.domNode.appendChild(this._grid.domNode);	
 
 		// Call startup, in order to render the grid:
 		this._grid.startup();

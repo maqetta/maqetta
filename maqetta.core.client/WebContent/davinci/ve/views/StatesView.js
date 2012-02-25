@@ -86,7 +86,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if (this.isThemeEditor()){
 			this._updateThemeSelection(event.newState);
 		}else{
-			this._updateSelectedAppState();
+			this._updateSceneSelection();
 		}
 	},
 	
@@ -113,7 +113,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if(!sceneManager || !sceneManager.category || !sceneId){
 			return;
 		}
-		this._updateSelectedScene(sceneManager.category, sceneId);
+		this._updateSelection(sceneManager.category, sceneId);
 	},
 
 	_editorSelected : function (event){	
@@ -194,7 +194,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			return;
 		}
 		this._updateList();
-		this._updateSelectedAppState();
+		this._updateSelection();
 	},
 	
 	isThemeEditor: function() {
@@ -306,11 +306,14 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		
 	},
 	
-	_updateSelectedAppState: function() {
+	_updateSelection: function() {
 		if(!this._sceneStore){
 			return;
 		}
 		var sceneId;
+		
+		// First see if the current Tree is showing the current AppState.
+		// If so, update the Tree to select that AppState
 		var currentState = States.getState(this._getWidget());
 		if(!currentState){
 			currentState = 'Normal';
@@ -324,6 +327,32 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		});
 		if(sceneId){
 			this._updateSelectedScene('AppState', sceneId);
+		}else{
+			var context = this._editor.getContext();
+			var sceneManagers = context.sceneManagers;
+			
+			// Otherwise, current AppState isn't in Tree, so search through SceneManagers
+			// to look for a current scene. If one is found, select that scene in the Tree.
+			for(var smIndex in sceneManagers){
+				var sm = sceneManagers[smIndex];
+				if(sm.getCurrentScene){
+					var sceneId;
+					var candidateSceneId = sm.getCurrentScene();
+					if(candidateSceneId){
+						this._sceneStore.fetch({query: {type:sm.category, sceneId:candidateSceneId}, queryOptions:{deep:true}, 
+							onComplete: dojo.hitch(this, function(items, request){
+								if(items.length === 1){
+									sceneId = items[0].sceneId[0];
+								}
+							})
+						});
+						if(sceneId){
+							this._updateSelectedScene(sm.category, sceneId);
+							break;
+						}
+					}
+				}
+			}
 		}
 	},
 

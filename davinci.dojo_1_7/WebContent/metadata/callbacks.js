@@ -17,6 +17,10 @@
 	 *		@param {object} params  Has following properties
 	 *			params.sceneId - Unique ID for the selected scene. (Unique ID created by this SceneManager)
 	 * 
+	 * getCurrentScene()
+	 *		If there is a currently active scene, return its sceneId, else return null.
+	 *		@returns {string} Unique ID for the selected active scene. (Unique ID created by this SceneManager)
+	 * 
 	 * getAllScenes()
 	 *		Returns a potentially nested array of all current scenes managed by this SceneManager.
 	 *		@returns {[object]} retArray  Array of top-level scenes, where each scene is described
@@ -74,6 +78,21 @@
 			}
 		}
 		var dj = this.context.select(widget);
+	};
+	DojoMobileViewSceneManager.prototype.getCurrentScene = function(){
+		var doc = this.context.getDocument();
+		var elems = doc.querySelectorAll('.mblView');
+		for(var i=0; i<elems.length; i++){
+			var elem = elems[i];
+			var viewDijit = (elem._dvWidget && elem._dvWidget.dijitWidget);
+			if(viewDijit && viewDijit.getShowingView){
+				var showingView = viewDijit.getShowingView();
+				if(showingView && showingView.domNode && showingView.domNode.id){
+					return showingView.domNode.id;
+				}
+			}
+		}
+		return null;
 	};
 	DojoMobileViewSceneManager.prototype.getAllScenes = function(){
 		var dj = this.context.getDojo();

@@ -55,8 +55,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this.subscribe("/davinci/scene/removed", this._removeScene.bind(this));
 		this.subscribe("/davinci/scene/renamed", this._renameScene.bind(this));
 		this.subscribe("/davinci/scene/selectionChanged", this._sceneSelectionChanged.bind(this));
-
-		this._createStateList();	
+/*
+		this._createStateList();
+*/
 	},
 	
 	_contextLoaded: function() {
@@ -88,7 +89,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if (this.isThemeEditor()){
 			this._updateThemeSelection(event.newState);
 		}else{
-			this._updateSelection();
+			this._updateSelectedAppState();
 		}
 	},
 	
@@ -112,55 +113,10 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_sceneSelectionChanged: function(sceneManager, sceneId) {
-		// This routine might be called before data structures are set up for first time
-		if(!this._sceneStore){
+		if(!sceneManager || !sceneManager.category || !sceneId){
 			return;
 		}
-		var currentSceneId = sceneId;
-		var path = [];
-		while(currentSceneId){
-			this._sceneStore.fetch({query: {type:sceneManager.category, sceneId:currentSceneId}, queryOptions:{deep:true}, 
-				onComplete: dojo.hitch(this, function(items, request){
-					if(items.length !== 1){
-						console.error('_sceneSelectionChanged error. currentSceneId='+currentSceneId+',items.length='+items.length);
-						currentSceneId = null;
-					}else{
-						var item = items[0];
-						path.splice(0, 0, item.id[0]);
-						currentSceneId = item.parentSceneId ? item.parentSceneId[0] : null;
-					}
-				})
-			});
-		}
-/*
-		//This block of logic is necessary if we include an extra nesting level in the tree
-		//where that extra nesting level shows a container node for each different SceneManager.
-		//Not deleting this code quite yet in case we decide sometimes we need to show that extra nesting level
-		this._sceneStore.fetch({query: {type:'SceneManagerRoot', category:sceneManager.category}, queryOptions:{deep:true}, 
-			onComplete: dojo.hitch(this, function(items, request){
-				if(items.length !== 1){
-					console.error('_sceneSelectionChanged error. sceneManager.category='+sceneManager.category);
-					return;
-				}else{
-					var item = items[0];
-					path.splice(0, 0, item.id[0]);
-				}
-			})
-		});
-*/
-		this._sceneStore.fetch({query: {type:'file'}, queryOptions:{}, 
-			onComplete: dojo.hitch(this, function(items, request){
-				if(items.length !== 1){
-					console.error('_sceneSelectionChanged error. file not found');
-					return;
-				}else{
-					var item = items[0];
-					path.splice(0, 0, item.id[0]);
-				}
-			})
-		});
-		path.splice(0, 0, 'StoryRoot');
-		this._tree.set('paths', [path]);
+		this._updateSelectedScene(sceneManager.category, sceneId);
 	},
 
 	_editorSelected : function (event){	
@@ -207,7 +163,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		}
 		return doc;
 	},
-		
+
+/* This routine is forward-looking to when we might offer animation fade-in/out when changing states
 	_createComboBox: function() {
 		var timingData = {
 			identifier: "duration",
@@ -232,8 +189,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		);
 		return comboBox.domNode;
 	},
-	
+*/
 
+/*
 	_createStateList: function() {
 
 		// Setup our data store:
@@ -242,6 +200,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			"items": []
 		};
 		this._store = new ItemFileWriteStore({ data: statesData });
+		
 		dojo.connect(this._store, "onSet", function(item, attribute, oldValue, newValue){
 			if (oldValue !== newValue) {
 				States.rename(oldValue, newValue);
@@ -298,13 +257,14 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		// Call startup, in order to render the grid:
 		this._grid.startup();
 	},
-	
+
 	_getStateList: function() {
 		if (!this._grid) {
 			this._createStateList();
 		}
 		return this._grid;
 	},
+*/
 
 	_updateView: function() {
 		var context = this._editor.getContext();
@@ -312,7 +272,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			return;
 		}
 		this._updateList();
-		this._updateSelection();
+		this._updateSelectedAppState();
 	},
 	
 	isThemeEditor: function() {
@@ -332,6 +292,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			}
 		}
 		latestStates = names;
+/*
 		storedStates = this._getStates();
 		
 		// Remove all stored states not in latestStates
@@ -353,7 +314,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			}
 		}
 		this._store.save();
-
+*/
 		var storedScenes = this._getScenes();
 
 		// Build an object structure that contains the latest list of states/scenes/views
@@ -364,7 +325,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		var AppStatesObj = {name:'Widget States', type:'SceneManagerRoot', category:'AppStates', children:[]};
 		var latestData = [CurrentFileObj];
 		for(var state in latestStates){
-			AppStatesObj.children.push({ name:state, type:'AppState' });
+			AppStatesObj.children.push({ name:state, sceneId:state, type:'AppState' });
 		}
 		//Commented out line below is what we would do if we decided that sometimes
 		//we needed to show an extra nesting level in the Tree which showed
@@ -381,9 +342,14 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	
 	_updateList: function() {
 		var latestStates = States.getStates(this._getWidget(), true), 
-			storedScenes = this._getScenes(),
-			storedStates = this._getStates();
-		
+			storedScenes = this._getScenes()
+/*
+			,
+			storedStates = this._getStates()
+*/
+			;
+
+/*
 		// Remove all stored states not in latestStates
 		for (var name in storedStates) {
 			var state = storedStates[name];
@@ -401,6 +367,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			}
 		}
 		this._store.save();
+*/
 		
 		// Build an object structure that contains the latest list of states/scenes/views
 		// We will then build a similar object structure by extracting the list from the ItemFileWriteStore
@@ -414,7 +381,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		var AppStatesObj = {name:'Application States', type:'SceneManagerRoot', category:'AppStates', children:[]};
 		var latestData = [CurrentFileObj];
 		for(var state in latestStates){
-			AppStatesObj.children.push({ name:state, type:'AppState' });
+			AppStatesObj.children.push({ name:state, sceneId:state, type:'AppState' });
 		}
 		var context = this._editor.getContext();
 		var sceneManagers = context.sceneManagers;
@@ -465,10 +432,27 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		
 	},
 	
-	_updateSelection: function() {
-		var selectionIndex = 0;
+	_updateSelectedAppState: function() {
+		if(!this._sceneStore){
+			return;
+		}
+		var sceneId;
 		var currentState = States.getState(this._getWidget());
+		if(!currentState){
+			currentState = 'Normal';
+		}
+		this._sceneStore.fetch({query: {type:'AppState', sceneId:currentState}, queryOptions:{deep:true}, 
+			onComplete: dojo.hitch(this, function(items, request){
+				if(items.length === 1){
+					sceneId = items[0].sceneId[0];
+				}
+			})
+		});
+		if(sceneId){
+			this._updateSelectedScene('AppState', sceneId);
+		}
 
+/*
 		this._store.fetch({query: {name:"*"}, onComplete: dojo.hitch(this, function(items, request){
 				for (var i = 0; i < items.length; i++){
 					var item = items[i];
@@ -479,13 +463,36 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				}
 			})
 		});
-
 		this._getStateList().selection.clear();
 		this._getStateList().selection.addToSelection(selectionIndex);
+*/
 	},
 
 	_updateThemeSelection: function(currentState, silent) {
-		
+		if(!this._sceneStore){
+			return;
+		}
+		var sceneId;
+		if(!currentState){
+			currentState = 'Normal';
+		}
+		this._sceneStore.fetch({query: {type:'AppState', sceneId:currentState}, queryOptions:{deep:true}, 
+			onComplete: dojo.hitch(this, function(items, request){
+				if(items.length === 1){
+					sceneId = items[0].sceneId[0];
+				}
+			})
+		});
+		if(sceneId){
+			if (silent == undefined){
+				this._silent = true;
+			} else {
+				this._silent = silent;
+			}
+			this._updateSelectedScene('AppState', sceneId);
+		}
+
+/*Comment out temporarily - need to get this working again
 		var selectionIndex = 0;
 		if (!currentState) return;
 		var items = this._grid._by_idx;
@@ -505,8 +512,10 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			this._silent = silent;
 		}
 		this._grid.selection.addToSelection(selectionIndex);
+*/
 	},
-	
+
+/*
 	_getStates: function() {
 		var names = {};
 		this._store.fetch({query: {name:"*"}, onComplete: dojo.hitch(this, function(items, request){
@@ -519,6 +528,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		});
 		return names;		
 	},
+*/
 
 	_getScenes: function() {
 		var scenes = [];
@@ -561,6 +571,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		*/
 	},
 
+/*
 	_clearList: function() {
 		this._getStateList().selection.clear();
 
@@ -574,6 +585,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		});
 		this._store.save();
 	},
+*/
 	
 	/**
 	 * Compare two hierarchical lists to see if they have the same set of nested
@@ -714,6 +726,58 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			newItemRecursive(obj);
 		});
 		this._sceneStore.save();
+	},
+	
+	_updateSelectedScene: function(type, sceneId){
+		// This routine might be called before data structures are set up for first time
+		if(!this._sceneStore){
+			return;
+		}
+		var currentSceneId = sceneId;
+		var path = [];
+		while(currentSceneId){
+			this._sceneStore.fetch({query: {type:type, sceneId:currentSceneId}, queryOptions:{deep:true}, 
+				onComplete: dojo.hitch(this, function(items, request){
+					if(items.length !== 1){
+						console.error('_sceneSelectionChanged error. currentSceneId='+currentSceneId+',items.length='+items.length);
+						currentSceneId = null;
+					}else{
+						var item = items[0];
+						path.splice(0, 0, item.id[0]);
+						currentSceneId = item.parentSceneId ? item.parentSceneId[0] : null;
+					}
+				})
+			});
+		}
+/*
+		//This block of logic is necessary if we include an extra nesting level in the tree
+		//where that extra nesting level shows a container node for each different SceneManager.
+		//Not deleting this code quite yet in case we decide sometimes we need to show that extra nesting level
+		this._sceneStore.fetch({query: {type:'SceneManagerRoot', category:sceneManager.category}, queryOptions:{deep:true}, 
+			onComplete: dojo.hitch(this, function(items, request){
+				if(items.length !== 1){
+					console.error('_sceneSelectionChanged error. type='+type);
+					return;
+				}else{
+					var item = items[0];
+					path.splice(0, 0, item.id[0]);
+				}
+			})
+		});
+*/
+		this._sceneStore.fetch({query: {type:'file'}, queryOptions:{}, 
+			onComplete: dojo.hitch(this, function(items, request){
+				if(items.length !== 1){
+					console.error('_sceneSelectionChanged error. file not found');
+					return;
+				}else{
+					var item = items[0];
+					path.splice(0, 0, item.id[0]);
+				}
+			})
+		});
+		path.splice(0, 0, 'StoryRoot');
+		this._tree.set('paths', [path]);
 	}
 
 });

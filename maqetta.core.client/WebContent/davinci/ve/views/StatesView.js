@@ -362,7 +362,11 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		for(var state in latestStates){
 			AppStatesObj.children.push({ name:state, type:'AppState' });
 		}
-		CurrentFileObj.children.push(AppStatesObj);
+		//Commented out line below is what we would do if we decided that sometimes
+		//we needed to show an extra nesting level in the Tree which showed
+		//the SceneManager containers.
+		//	CurrentFileObj.children.push(AppStatesObj);
+		CurrentFileObj.children = CurrentFileObj.children.concat(AppStatesObj.children);
 
 		// If data in Tree widget is same as latest data, then just return
 		if(!this._compareStructures(latestData, storedScenes)){

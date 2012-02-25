@@ -43,6 +43,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this));
 		this.subscribe("/davinci/ui/context/loaded", this._contextLoaded.bind(this));
 		this.subscribe("/davinci/ui/context/statesLoaded", this._statesLoaded.bind(this));
+		this.subscribe("/davinci/ui/deviceChanged", this._deviceChanged.bind(this));
 		this.subscribe("/davinci/states/state/added", this._addState.bind(this));
 		this.subscribe("/davinci/states/state/removed", this._removeState.bind(this));
 		this.subscribe("/davinci/states/state/renamed", this._renameState.bind(this));
@@ -61,10 +62,13 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_statesLoaded: function() {
-		this._statesLoadedAlready = true;
 		if (this._editor && this._editor.declaredClass != 'davinci.ve.themeEditor.ThemeEditor'){
 			this._updateView();
 		}
+	},
+	
+	_deviceChanged: function() {
+		this._updateView();
 	},
 
 	_addState: function() {
@@ -294,7 +298,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 
 	_updateView: function() {
-		if(!this._statesLoadedAlready){
+		var context = this._editor.getContext();
+		if(!context._statesLoaded){
 			return;
 		}
 		this._updateList();
@@ -391,21 +396,18 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			var sm = sceneManagers[smIndex];
 			if(sm.getAllScenes && sm.name && sm.category){
 				var scenes = sm.getAllScenes();
-				if(scenes.length > 0){
-					//FIXME: Better to make this into a SceneManager function call
-					//so it can check to see if silhouette is showing
-					// Don't show application states if SceneManager has hideAppStates flag set to true
-					// and if there is only one application state (i.e., Normal)
-					if(!AppStatesAddedAlready){
-						if(appStatesCount <= 1 && sm.hideAppStates){
-							hideAppStates = true;
-						}else{
-							CurrentFileObj.children.push(AppStatesObj);
-							AppStatesAddedAlready = true;
-						}
+				var hide = sm.hideAppStates ? sm.hideAppStates() : false;
+				// Don't show application states if SceneManager has hide flag set to true
+				// and if there is only one application state (i.e., Normal)
+				if(!AppStatesAddedAlready){
+					if(appStatesCount <= 1 && hide){
+						hideAppStates = true;
+					}else{
+						CurrentFileObj.children.push(AppStatesObj);
+						AppStatesAddedAlready = true;
 					}
-					CurrentFileObj.children.push({ name:sm.name, type:'SceneManagerRoot', category:sm.category, children:scenes});
 				}
+				CurrentFileObj.children.push({ name:sm.name, type:'SceneManagerRoot', category:sm.category, children:scenes});
 			}
 		}
 		// If AppStates hasn't been added to store yet and wasn't rejected

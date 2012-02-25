@@ -102,6 +102,10 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		this._pageEditor.deferreds = new DeferredList(Metadata.getDeferreds());
 	},
 	
+	getDevice: function() {
+		return this.deviceName;
+	},
+	
 	setDevice: function(deviceName) {
 	    this.deviceName = deviceName;
 		//FIXME: Path shouldn't be hard-coded
@@ -112,6 +116,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		// #683 - When using mobile silhouette, add mobile <meta> tags to
 		// document.
 		this.getContext().setMobileMeta(deviceName);
+		dojo.publish("/davinci/ui/deviceChanged", [deviceName]);
 	},
 	
 	toggleOrientation: function() {

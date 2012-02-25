@@ -26,13 +26,17 @@
 	 *			type {string} - must be set to the "category" property for this SceneManager (see properties below)
 	 *			parentSceneId {string}- if this scene is not top-level, then this must be the sceneId of its parent scene
 	 *			children {[object]} - array of children scenes
+	 * 
+	 * hideAppStates()
+	 *		Returns true if the app should not show "application states". 
+	 *		Usually, library returns true only if it offers an alternate notion of scenes.
+	 *		@returns {boolean} 
 	 *
 	 * This class must provide the following properties on the SceneManager instance object:
 	 * 
 	 * id {string} - A unique ID for this SceneManager. Used as the index into Maqetta's list of SceneManagers
 	 * name {string} - Localized string that is name of this SceneManager. This string appears in Scenes palette.
 	 * category {string} - A string unique to this SceneManager that must be used as the 'type' property on each scene
-	 * hideAppStates {string} - (Optional) If true, then hide application states from States View if at least one scene and only one app state
 	 * 
 	 */
 	function DojoMobileViewSceneManager(context) {
@@ -43,7 +47,6 @@
 	
 	DojoMobileViewSceneManager.prototype.id = 'DojoMobileViews';
 	DojoMobileViewSceneManager.prototype.category = 'DojoMobileView';
-	DojoMobileViewSceneManager.prototype.hideAppStates = true;
 		
 	DojoMobileViewSceneManager.prototype._viewAdded = function(parent, child){
 		dojo.publish("/davinci/scene/added", [this, parent, child]);
@@ -116,6 +119,11 @@
 			}
 		}
 		return scenes;
+	};
+	DojoMobileViewSceneManager.prototype.hideAppStates = function(){
+		var device = (this.context && this.context._visualEditor && this.context._visualEditor.getDevice) ?
+				this.context._visualEditor.getDevice() : "";
+		return (!device || device === '' || device === 'none') ? false : true;
 	};
 
     return {

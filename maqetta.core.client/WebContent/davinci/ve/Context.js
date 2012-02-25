@@ -256,6 +256,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// The value of widget.states for BODY happens as part of user document onload process,
 		// which sometimes happens after context loaded event. So, not good enough for StatesView
 		// to listen to context/loaded event - has to also listen for context/statesLoaded.
+		this._statesLoaded = true;
 		dojo.publish('/davinci/ui/context/statesLoaded', [this]);
 		this._onLoadHelpers();
 

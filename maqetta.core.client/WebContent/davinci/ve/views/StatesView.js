@@ -1,17 +1,18 @@
 define([
-    	"dojo/_base/declare",
-    	"davinci/workbench/ViewPart",
-    	"dijit/layout/BorderContainer",
-    	"dijit/layout/ContentPane",
-    	"dijit/form/ComboBox",
-    	"dojox/grid/DataGrid",
-    	"davinci/ve/States",
-    	"dojo/data/ItemFileReadStore",
-    	"dojo/data/ItemFileWriteStore",
-    	"dijit/Tree/ForestStoreModel",
-    	"dijit/Tree",
-    	"davinci/Runtime"
-], function(declare, ViewPart, BorderContainer,  ContentPane, ComboBox, 
+		"dojo/_base/declare",
+		"dojo/i18n!davinci/ve/nls/ve",
+		"davinci/workbench/ViewPart",
+		"dijit/layout/BorderContainer",
+		"dijit/layout/ContentPane",
+		"dijit/form/ComboBox",
+		"dojox/grid/DataGrid",
+		"davinci/ve/States",
+		"dojo/data/ItemFileReadStore",
+		"dojo/data/ItemFileWriteStore",
+		"dijit/Tree/ForestStoreModel",
+		"dijit/Tree",
+		"davinci/Runtime"
+], function(declare, veNls, ViewPart, BorderContainer,  ContentPane, ComboBox, 
 			DataGrid, States, ItemFileReadStore, ItemFileWriteStore, ForestStoreModel, Tree, Runtime
 		    ){
 
@@ -164,12 +165,14 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 
 	_editorSelected : function (event){	
 		var editor = event.editor;
+		var langObj = veNls; 
 
 		if(editor && editor.supports("states")) {
 			this._editor = editor;
 
 			dojo.style(this.container.domNode, "display", "block");
 			if (editor.declaredClass === 'davinci.ve.themeEditor.ThemeEditor'){
+				this.set('title', langObj.States);
 				dojo.style(this.toolbarDiv, "display", "none");
 				var d = dijit.byId(this.toolbarDiv.parentNode.id);
 				d.resize();
@@ -182,6 +185,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					this._updateThemeSelection(this._themeState);
 				}
 			} else {
+				this.set('title', langObj.Scenes);
 				this._updateView();
 				dojo.style(this.toolbarDiv, "display", "block");
 				var d = dijit.byId(this.toolbarDiv.parentNode.id);

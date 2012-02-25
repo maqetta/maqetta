@@ -23,6 +23,9 @@ define([
     	helperCache = {},
     // Localization strings
     	l10n = null,
+    // Each callbacks.js file gets its own deferred.
+    // Ensures page editors don't start processing until all callback.js files are ready
+    	deferredGets = [],
 
     	defaultProperties = {
 	        id: {datatype: "string", hidden: true},
@@ -135,12 +138,13 @@ define([
 		var wm = pkg.$wm;
     
         if (descriptor.callbacks) {
-            dojo.xhrGet({
+            var d = dojo.xhrGet({
                 url: path.append(descriptor.callbacks).toString(),
 				handleAs: 'javascript'
 			}).then(function(data) {
                 pkg.$callbacks = data;
             });
+            deferredGets.push(d);
         }
         
 		wm.$providedTypes = wm.$providedTypes || {};
@@ -767,6 +771,14 @@ define([
         	}
 
         	return d;
+        },
+        
+        /**
+         * Returns any deferred objects that need to be completed before
+         * a visual editor should begin processing.
+         */
+        getDeferreds: function(){
+        	return deferredGets;
         }
     };
 

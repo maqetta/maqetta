@@ -58,12 +58,13 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_contextLoaded: function() {
-		if (this._editor && this._editor.declaredClass != 'davinci.ve.themeEditor.ThemeEditor')
-			this._updateView();
 	},
 	
 	_statesLoaded: function() {
-		this._contextLoaded();
+		this._statesLoadedAlready = true;
+		if (this._editor && this._editor.declaredClass != 'davinci.ve.themeEditor.ThemeEditor'){
+			this._updateView();
+		}
 	},
 
 	_addState: function() {
@@ -106,6 +107,10 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_sceneSelectionChanged: function(sceneManager, sceneId) {
+		// This routine might be called before data structures are set up for first time
+		if(!this._sceneStore){
+			return;
+		}
 		var currentSceneId = sceneId;
 		var path = [];
 		while(currentSceneId){
@@ -289,6 +294,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 
 	_updateView: function() {
+		if(!this._statesLoadedAlready){
+			return;
+		}
 		this._updateList();
 		this._updateSelection();
 	},

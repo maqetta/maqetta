@@ -1,12 +1,14 @@
 define([
 	"require",
-    "dojo/_base/declare",
-    "dojo/_base/lang",
-    "dojo/_base/connect",
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/connect",
+	"dojo/DeferredList",
 	"dojo/text!davinci/ve/template.html",
 	"../Runtime",
 	"../Workbench",
 	"../model/Path",
+	"./metadata",
 	"./Context",
 	"./commands/ModifyRuleCommand",
 	"preview/silhouetteiframe",
@@ -19,10 +21,12 @@ define([
 	declare,
 	lang,
 	connect,
+	DeferredList,
 	template,
 	Runtime,
 	Workbench,
 	Path,
+	Metadata,
 	Context,
 	ModifyRuleCommand,
 	SilhouetteIframe,
@@ -95,6 +99,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 				}
 			}
 		});
+		this._pageEditor.deferreds = new DeferredList(Metadata.getDeferreds());
 	},
 	
 	setDevice: function(deviceName) {
@@ -385,6 +390,9 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 	},
 	
 	save: function (isAutoSave){
+		if(!this.context){	// Sometimes we do lazy initialization of Context
+			return;
+		}
 		var model = this.context.getModel();
 		var cssFiles = this.context.cssFiles;
 		if (cssFiles) {

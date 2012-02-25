@@ -131,6 +131,10 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				})
 			});
 		}
+/*
+		//This block of logic is necessary if we include an extra nesting level in the tree
+		//where that extra nesting level shows a container node for each different SceneManager.
+		//Not deleting this code quite yet in case we decide sometimes we need to show that extra nesting level
 		this._sceneStore.fetch({query: {type:'SceneManagerRoot', category:sceneManager.category}, queryOptions:{deep:true}, 
 			onComplete: dojo.hitch(this, function(items, request){
 				if(items.length !== 1){
@@ -142,6 +146,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				}
 			})
 		});
+*/
 		this._sceneStore.fetch({query: {type:'file'}, queryOptions:{}, 
 			onComplete: dojo.hitch(this, function(items, request){
 				if(items.length !== 1){
@@ -419,17 +424,29 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					if(appStatesCount <= 1 && hide){
 						hideAppStates = true;
 					}else{
-						CurrentFileObj.children.push(AppStatesObj);
+						//Commented out line below is what we would do if we decided that sometimes
+						//we needed to show an extra nesting level in the Tree which showed
+						//the SceneManager containers.
+						//	CurrentFileObj.children.push(AppStatesObj);
+						CurrentFileObj.children = CurrentFileObj.children.concat(AppStatesObj.children);
 						AppStatesAddedAlready = true;
 					}
 				}
-				CurrentFileObj.children.push({ name:sm.name, type:'SceneManagerRoot', category:sm.category, children:scenes});
+				//Commented out line below is what we would do if we decided that sometimes
+				//we needed to show an extra nesting level in the Tree which showed
+				//the SceneManager containers.
+				//	CurrentFileObj.children.push({ name:sm.name, type:'SceneManagerRoot', category:sm.category, children:scenes});
+				CurrentFileObj.children = CurrentFileObj.children.concat(scenes);
 			}
 		}
 		// If AppStates hasn't been added to store yet and wasn't rejected
 		// by one of the SceneManagers, then add in the AppStates list
 		if(!AppStatesAddedAlready && !hideAppStates){
-			CurrentFileObj.children.push(AppStatesObj);
+			//Commented out line below is what we would do if we decided that sometimes
+			//we needed to show an extra nesting level in the Tree which showed
+			//the SceneManager containers.
+			//	CurrentFileObj.children.push(AppStatesObj);
+			CurrentFileObj.children = CurrentFileObj.children.concat(AppStatesObj.children);
 		}
 		
 		// If data in Tree widget is same as latest data, then just return
@@ -604,13 +621,15 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	
 	_destroyCreateTree: function(latestData){
 		var that = this;
+		var context = this._editor.getContext();
+		var sceneManagers = context.sceneManagers;
 		
 		// The following logic recreates the data stores and the Tree
 		if(this._tree){
 			this._tree.destroyRecursive();
 			this._forest.destroy();
 		}
-	    var skeletonData = { identifier: 'id', label: 'name', items: []};
+		var skeletonData = { identifier: 'id', label: 'name', items: []};
 		this._sceneStore = new ItemFileWriteStore({ data: skeletonData, clearOnClose:true });
 		this._forest = new ForestStoreModel({ store:this._sceneStore, query:{type:'file'},
 			  rootId:'StoryRoot', rootLabel:'All', childrenAttrs:['children']});

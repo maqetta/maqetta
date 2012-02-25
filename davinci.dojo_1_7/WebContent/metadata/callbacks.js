@@ -73,6 +73,7 @@
 				}
 			}
 		}
+		var dj = this.context.select(widget);
 	};
 	DojoMobileViewSceneManager.prototype.getAllScenes = function(){
 		var dj = this.context.getDojo();

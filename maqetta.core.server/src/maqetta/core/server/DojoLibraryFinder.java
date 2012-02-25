@@ -25,7 +25,7 @@ import org.osgi.framework.Bundle;
 public class DojoLibraryFinder implements ILibraryFinder{
 
 	private URI projectBase;
-	private final String DOJO_CONFIG_FILE = "org.ibm.etools.webtools.dojo.core.prefs";
+	private final String DOJO_CONFIG_FILE = "com.ibm.etools.webtools.dojo.core.prefs";
 	private final String[] simpleVersion = {"1,4","1.5", "1.6", "1.7"};
 	Properties dojoProps;
 	

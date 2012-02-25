@@ -861,7 +861,7 @@ var Workbench = {
 		}
 
 		if(position == 'left' && !mainBody.tabs.perspective.left){
-			mainBodyContainer.addChild(mainBody.tabs.perspective.left = new BorderContainer({'class':'davinciPaletteContainer', style: 'width: 200px;', id:"left_mainBody", region:'left', gutters: false, splitter:true}));
+			mainBodyContainer.addChild(mainBody.tabs.perspective.left = new BorderContainer({'class':'davinciPaletteContainer', style: 'width: 230px;', id:"left_mainBody", region:'left', gutters: false, splitter:true}));
 			mainBody.tabs.perspective.left.startup();
 		}
 
@@ -884,7 +884,7 @@ var Workbench = {
 					region = "center";
 					clazz = "davinciTopPalette";
 				} else {
-					style = 'height:35%;';
+					style = 'height:25%;';
 					clazz = "davinciBottomPalette";
 				}
 			} else if(region == 'bottom') {

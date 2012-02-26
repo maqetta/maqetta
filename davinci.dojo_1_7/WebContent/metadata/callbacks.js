@@ -80,19 +80,30 @@
 		var dj = this.context.select(widget);
 	};
 	DojoMobileViewSceneManager.prototype.getCurrentScene = function(){
-		var doc = this.context.getDocument();
-		var elems = doc.querySelectorAll('.mblView');
-		for(var i=0; i<elems.length; i++){
-			var elem = elems[i];
-			var viewDijit = (elem._dvWidget && elem._dvWidget.dijitWidget);
-			if(viewDijit && viewDijit.getShowingView){
-				var showingView = viewDijit.getShowingView();
-				if(showingView && showingView.domNode && showingView.domNode.id){
-					return showingView.domNode.id;
+		var currentScene;
+		var refNode = this.context.getDocument();
+		var searchForNested = true;
+		while(searchForNested){
+			var elems = refNode.querySelectorAll('.mblView');
+			if(elems.length === 0){
+				break;
+			}
+			searchForNested = false;
+			for(var i=0; i<elems.length; i++){
+				var elem = elems[i];
+				var viewDijit = (elem._dvWidget && elem._dvWidget.dijitWidget);
+				if(viewDijit && viewDijit.getShowingView){
+					var showingView = viewDijit.getShowingView();
+					if(showingView && showingView.domNode && showingView.domNode.id){
+						currentScene = showingView.domNode.id;
+						refNode = showingView.domNode;
+						searchForNested = true;
+						break;
+					}
 				}
 			}
 		}
-		return null;
+		return currentScene;
 	};
 	DojoMobileViewSceneManager.prototype.getAllScenes = function(){
 		var dj = this.context.getDojo();

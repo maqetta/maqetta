@@ -60,6 +60,29 @@ ViewHelper.prototype = {
 			}
 		});
 	},
+
+	/*
+	 * Internal function to update visibility of a particular View's domNode
+	 * and its siblings. 
+	 */
+	_makeVisible: function(domNode, command){
+		var parentNode = domNode.parentNode;
+		for(var i=0;i<parentNode.children.length;i++){
+			node=parentNode.children[i];
+			if(domClass.contains(node,"mblView")){
+				var display, selected;
+				if(node==domNode){
+					display = "";
+					selected = "true";
+				}else{
+					display = "none";
+					selected = null;
+				}	
+				command.add(new StyleCommand(node._dvWidget, [{display: display}]));	
+				command.add(new ModifyAttributeCommand(node._dvWidget, {selected: selected}));	
+			}
+		}
+	},
 	
 	/*
 	 * Ensures that the given View widget has its visibility turned on and
@@ -70,40 +93,36 @@ ViewHelper.prototype = {
 		if(!domNode || !domNode._dvWidget || !domClass.contains(domNode,"mblView")){
 			return;
 		}
+		var parentNode = domNode.parentNode;
 		var widget = domNode._dvWidget;
 		var context = widget.getContext();
-		var parentNode = domNode.parentNode;
-		var node;
-		var changesNeeded = false;
-		if(domNode.style.display == "none" || domNode.getAttribute("selected") != "true"){
-			changesNeeded = true;
-		}else{
-			for(var i=0;i<parentNode.children.length;i++){
-				node=parentNode.children[i];
-				if(domClass.contains(node,"mblView")){
-					if(node!=domNode && (node.style.display != "none" || domNode.getAttribute("selected") == "true")){
-						changesNeeded = true;
-						break;
+		var viewsToUpdate = [];
+		var node = domNode;
+		var pnode = parentNode;
+		// See if this View or any ancestor View is not currently visible
+		while (node.tagName != 'BODY'){
+			if(node.style.display == "none" || node.getAttribute("selected") != "true"){
+				viewsToUpdate.splice(0, 0, node);
+			}else{
+				for(var i=0;i<pnode.children.length;i++){
+					n=pnode.children[i];
+					if(domClass.contains(n,"mblView")){
+						if(n!=node && (n.style.display != "none" || n.getAttribute("selected") == "true")){
+							viewsToUpdate.splice(0, 0, node);
+							break;
+						}
 					}
 				}
 			}
+			node = pnode;
+			pnode = node.parentNode;
 		}
-		if(changesNeeded){
+		// Update visibility of any Views that need adjusting
+		if(viewsToUpdate.length > 0){
 			var command = new CompoundCommand();
-			for(var i=0;i<parentNode.children.length;i++){
-				node=parentNode.children[i];
-				if(domClass.contains(node,"mblView")){
-					var display, selected;
-					if(node==domNode){
-						display = "";
-						selected = "true";
-					}else{
-						display = "none";
-						selected = null;
-					}	
-					command.add(new StyleCommand(node._dvWidget, [{display: display}]));	
-					command.add(new ModifyAttributeCommand(node._dvWidget, {selected: selected}));	
-				}
+			for(var v=0;v<viewsToUpdate.length;v++){
+				var viewNode = viewsToUpdate[v];
+				this._makeVisible(viewNode, command);
 			}
 			context.getCommandStack().execute(command);
 		}

@@ -86,7 +86,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if (this.isThemeEditor()){
 			this._updateThemeSelection(event.newState);
 		}else{
-			this._updateSceneSelection();
+			this._updateSelection();
 		}
 	},
 	

@@ -14,6 +14,10 @@ define({ root:
 		"fontsAndText":"Fonts and Text",
 		"shapesSVG":"Graphics/SVG",
 		
+		//StatesView.js
+		"Scenes":"Scenes",
+		"States":"States",
+		
 		//DeviceActions.js
 		"chooseDeviceSilhouette":"Choose a device silhouette: ",
 		

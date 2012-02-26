@@ -23,6 +23,9 @@ define([
     	helperCache = {},
     // Localization strings
     	l10n = null,
+    // Each callbacks.js file gets its own deferred.
+    // Ensures page editors don't start processing until all callback.js files are ready
+    	deferredGets = [],
 
     	defaultProperties = {
 	        id: {datatype: "string", hidden: true},
@@ -135,12 +138,13 @@ define([
 		var wm = pkg.$wm;
     
         if (descriptor.callbacks) {
-            dojo.xhrGet({
+            var d = dojo.xhrGet({
                 url: path.append(descriptor.callbacks).toString() + "?" + info.revision,
 				handleAs: 'javascript'
 			}).then(function(data) {
                 pkg.$callbacks = data; // FIXME: no callback to tell when this is ready
             });
+            deferredGets.push(d);
         }
         
 		wm.$providedTypes = wm.$providedTypes || {};
@@ -600,18 +604,16 @@ define([
 
         /**
          * Invoke the callback function, if implemented by the widget library.
-         * @param type {string} widget type
+         * @param library {object} widget library object
          * @param fnName {string} callback function name
          * @param args {?Array} arguments array to pass to callback function
          */
         // XXX make this part of a mixin for the library metadata obj
-        invokeCallback: function(type, fnName, args) {
-            var lib = getLibraryForType(type),
-                fn;
-            if (lib && lib.$callbacks) {
-                fn = lib.$callbacks[fnName];
+        invokeCallback: function(library, fnName, args) {
+            if (library && library.$callbacks) {
+                var fn = library.$callbacks[fnName];
                 if (fn) {
-                    fn.apply(lib.$callbacks, args);
+                    fn.apply(library.$callbacks, args);
                 }
             }
             // XXX handle/report errors?
@@ -772,6 +774,14 @@ define([
         	}
 
         	return d;
+        },
+        
+        /**
+         * Returns any deferred objects that need to be completed before
+         * a visual editor should begin processing.
+         */
+        getDeferreds: function(){
+        	return deferredGets;
         }
     };
 

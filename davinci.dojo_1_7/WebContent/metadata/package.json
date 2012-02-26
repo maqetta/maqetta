@@ -27,6 +27,7 @@
     "maqetta": {
       "scripts": {
         "widget_metadata": {
+			"callbacks": "callbacks.js",
 		    "categories": {
 		        "containers": {
 		            "name": "Dojo Containers",

@@ -1,8 +1,10 @@
 (function() {
 
     return {
-//        init: function(args) {
-//        },
+//      init: function(args) {
+//      },
+//      onDocInit: function(args) {
+//      },
         
         onFirstAdd: function(type, context) {
             // XXX Might be able to replace this with some use of package.json's

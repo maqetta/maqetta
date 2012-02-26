@@ -9,7 +9,7 @@ define([
 		"davinci/ve/States",
 		"dojo/data/ItemFileReadStore",
 		"dojo/data/ItemFileWriteStore",
-		"dijit/Tree/ForestStoreModel",
+		"dijit/tree/ForestStoreModel",
 		"dijit/Tree",
 		"davinci/Runtime"
 ], function(declare, veNls, ViewPart, BorderContainer,  ContentPane, ComboBox, 
@@ -474,7 +474,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this._sceneStore = new ItemFileWriteStore({ data: skeletonData, clearOnClose:true });
 		this._forest = new ForestStoreModel({ store:this._sceneStore, query:{type:'file'},
 			  rootId:'StoryRoot', rootLabel:'All', childrenAttrs:['children']});
-		this._tree = new Tree({model:this._forest, showRoot:false, autoExpand:true, class:'StatesViewTree', style:'height:150px', 
+		this._tree = new Tree({model:this._forest, showRoot:false, autoExpand:true, className:'StatesViewTree', style:'height:150px', 
 			_createTreeNode:function(args){
 				var item = args.item;
 				if(item.type && item.category && item.category[0] === 'AppStates'){

@@ -46,9 +46,10 @@ public class GetPlugins extends Command {
             if (bundle != null) {
                 URL resourceURL = bundle.getEntry(resourcePath + ".plugin");
                 if (resourceURL != null) {
+                	InputStreamReader reader = null;
                     try {
                         InputStream inputStream = resourceURL.openConnection().getInputStream();
-                        InputStreamReader reader = new InputStreamReader(inputStream);
+                        reader = new InputStreamReader(inputStream);
                         int firstChar = reader.read();
                         boolean isParen = false;
                         if (firstChar == '(') {
@@ -65,17 +66,15 @@ public class GetPlugins extends Command {
                         if (isParen) {
                             sb.deleteCharAt(sb.length() - 1);
                         }
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                    } finally {
+                    	if (reader != null) {
+                    		reader.close();
+                    	}
                     }
                 }
-
             }
-
         }
         sb.append("]");
         responseString = sb.toString();
     }
-
 }

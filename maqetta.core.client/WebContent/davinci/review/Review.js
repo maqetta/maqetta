@@ -12,7 +12,7 @@ var Review = davinci.review.Review = lang.mixin(davinci.Workbench, {
 	runComment: function() {
 		this._initKeys();
 		this._baseTitle = dojo.doc.title;
-		var perspective = Runtime.initialPerspective || "davinci.review.comment";
+		var perspective = Runtime.initialPerspective || "davinci.ui.comment";
 		var mainBody = dojo.byId('mainBody');
 		mainBody.editorsWelcomePage =
 			new ContentPane({

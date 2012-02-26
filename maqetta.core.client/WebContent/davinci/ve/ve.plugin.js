@@ -44,6 +44,10 @@ return {
                     position: "left"
                 },
                 {
+                    viewID: "davinci.ui.comment",
+                    position: "right"
+                },
+                {
                     viewID: "davinci.ui.navigator",
                     position: "left"
                 },

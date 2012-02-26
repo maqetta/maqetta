@@ -7,9 +7,9 @@ define([
    // "davinci/Workbench",
 	"../util",
 	"../library",
-	"../model/Path"
-	
-], function(require, Deferred, DeferredList, lang, connect, Util, Library, Path) {
+	"../model/Path",
+	"../repositoryinfo"
+], function(require, Deferred, DeferredList, lang, connect, Util, Library, Path, info) {
 
 	var Metadata,
 		Workbench,
@@ -68,7 +68,7 @@ define([
 			if (typeof pkg.scripts.widget_metadata == "string") {
 				var widgetsJsonPath = path.append(pkg.scripts.widget_metadata);
 				dojo.xhrGet({
-					url : widgetsJsonPath.toString(),
+					url : widgetsJsonPath.toString() + "?" + info.revision,
 					handleAs : "json",
 					sync: true // XXX should be async
 				}).then(function(data) {
@@ -139,10 +139,10 @@ define([
     
         if (descriptor.callbacks) {
             var d = dojo.xhrGet({
-                url: path.append(descriptor.callbacks).toString(),
+                url: path.append(descriptor.callbacks).toString() + "?" + info.revision,
 				handleAs: 'javascript'
 			}).then(function(data) {
-                pkg.$callbacks = data;
+                pkg.$callbacks = data; // FIXME: no callback to tell when this is ready
             });
             deferredGets.push(d);
         }
@@ -212,13 +212,14 @@ define([
         }
         return null;
         // XXX XXX
-        
+        /*
         if (!key) {
             return null;
         }
         key = key.replace(/\./g, "_");
         value = l10n[key];
         return value;
+        */
     }
     
     // XXX What to do about localization (this._loc)?
@@ -258,7 +259,7 @@ define([
 
         if (!wm.localPath){
 	        dojo.xhrGet({
-	            url: metadataUrl,
+	            url: metadataUrl + "?" + info.revision,
 	            handleAs: "json",
 	            sync: true // XXX should be async
 		    }).then(function(data) {
@@ -390,10 +391,12 @@ define([
 // (or a combined object).  Putting it here for now, to quickly integrate.
 				var path = lib.metaRoot;//Library.getMetaRoot(lib.id, lib.version);
 				if (path) {
+					// use cache-busting to assure that any development changes
+					// get picked up between library releases
 					deferreds.push(dojo.xhrGet({
 // XXX For now, 'package.json' lives inside the 'metadata' dir.  Will need to
 // move it up to the top level of library.
-						url : path + "/package.json",
+						url : path + "/package.json" + "?" + info.revision,
 						handleAs : "json"
 					}).then(function(data) {
 						parsePackage(data, path);

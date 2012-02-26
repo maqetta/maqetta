@@ -62,6 +62,16 @@
 							main_menu.style.marginRight = '3em';
 						}
 					}
+					// set up for review and commenting...
+					davinci.Runtime.commenting_designerName  = dojo.cookie("davinci_designer");
+					davinci.Runtime.commenting_designerEmail = dojo.cookie("davinci_designer_email");
+					davinci.Runtime.commenting_openFile      = dojo.cookie("davinci_file");
+					davinci.Runtime.commenting_commentId     = dojo.cookie("davinci_commentId");
+					dojo.cookie("davinci_designer",       null, {expires: -1});
+					dojo.cookie("davinci_designer_email", null, {expires: -1});
+					dojo.cookie("davinci_file",           null, {expires: -1});
+					dojo.cookie("davinci_commentId",      null, {expires: -1});
+					
 					if (Runtime.commenting_openFile) {
 						var page = Runtime.commenting_openFile;
 						var path = new davinci.model.Path(page);

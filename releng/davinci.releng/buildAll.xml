@@ -25,6 +25,7 @@
         <antcall target="zips"/>
         <antcall target="war"/>
 		<antcall target="ear"/>
+		<antcall target="MaqettaOrion"/>
     </target>
 
     <target name="init">
@@ -53,7 +54,7 @@
         <initEnvVar varName="myWS"/>
         <initEnvVar varName="myArch"/>
         <initEnvVar varName="equinoxRepo"/>
-    	
+    	 <initEnvVar varName="orionRepo"/>
     	
         <property file="build.properties"/>
         

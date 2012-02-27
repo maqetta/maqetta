@@ -193,12 +193,24 @@ git checkout -f -B ${equinoxBranch} remotes/origin/${equinoxBranch}
 
 
 ######################################## Start ORION ##################################################
-echo "Checking out Orion Server
-export orionRepo=${MAQETTA_BUILD_DIR}/repository/orion
-cd ${orionRepo}
-git clone git://git.eclipse.org/gitroot/orion/org.eclipse.orion.client.git
-git clone git://git.eclipse.org/gitroot/orion/org.eclipse.orion.server.git
+echo "Checking out Orion Server"
 
+export orionRepo=${MAQETTA_BUILD_DIR}/repository/orion
+if [ ! -f ${orionRepo}/.git ]
+then
+	mkdir ${orionRepo}
+	cd ${orionRepo}
+	git clone git://git.eclipse.org/gitroot/orion/org.eclipse.orion.client.git
+	git clone git://git.eclipse.org/gitroot/orion/org.eclipse.orion.server.git
+else
+cd ${orionRepo}/org.eclipse.orion.client
+git pull
+cd ${orionRepo}/org.eclipse.orion.server
+git pull
+
+
+
+fi
 
 ######################################## End ORION ####################################################
 #

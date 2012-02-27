@@ -31,8 +31,8 @@
         <!-- LIST OF MAQETTA Internal PROJECTS GOES HERE -->
         <!-- -->
         <populateDir project="maqetta.core.server"/>
-    	 <populateDir project="maqetta.orion.server"/>
-    	 <populateDir project="maqetta.orion.client"/>
+    	 <populateDir project="maqetta.server.orion"/>
+    	 <populateDir project="maqetta.client.orion"/>
     	 <populateDir project="maqetta.orion.feature" isFeature="true"/>
     	<populateDir project="maqetta.clipart"/>
     	<populateDir project="maqetta.drawing"/>

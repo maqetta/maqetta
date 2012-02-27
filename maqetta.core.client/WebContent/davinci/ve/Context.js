@@ -23,6 +23,8 @@ define([
 	"preview/silhouetteiframe",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
+	"davinci/XPathUtils",
+	"../html/HtmlFileXPathAdapter",
 	"dojox/html/_base"
 ], function(
 	declare,
@@ -48,7 +50,9 @@ define([
 	Preferences,
 	Silhouette,
 	Deferred,
-	DeferredList
+	DeferredList,
+	XPathUtils,
+	HtmlFileXPathAdapter
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -695,6 +699,24 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	
 	setSource: function(source, callback, scope, initParams){
 		dojo.withDoc(this.getDocument(), "_setSource", this, [source, callback, scope, initParams]);
+	},
+
+	refresh: function() {
+		// save widget selection
+		var xpath = XPathUtils.getXPath(this.getSelection()[0]._srcElement, HtmlFileXPathAdapter);
+
+		// re-establish widget selection
+		var handle = dojo.connect(this, 'setSource', this, function() {
+			dojo.disconnect(handle);
+			dojo.publish('/davinci/ui/selectionChanged', [
+				[{ model: this.model.evaluate(xpath) }],
+				this._editor
+			]);
+		});
+
+		// set new content in Visual Editor (eventually kicks `connect` above)
+		var ve = this._visualEditor;
+		ve.setContent(ve.fileName, this.model);
 	},
 
 	getDojoUrl: function(){

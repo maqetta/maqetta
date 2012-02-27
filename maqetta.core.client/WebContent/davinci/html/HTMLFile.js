@@ -264,7 +264,42 @@ return declare("davinci.html.HTMLFile", HTMLItem, {
 				}
 			}
 		});
-	}
+	},
+
+	/**
+	 * Mimics `document.evaluate`, which takes an XPath string and returns the
+	 * specified element(s).  This is a simplified version, implementing a
+	 * simple case and only returning a single element.
+	 * 
+	 * @param  {string} xpath
+	 * @return {HTMLElement}
+	 */
+	evaluate: function(xpath) {
+		if (xpath.charAt(0) !== '/') {
+			console.error('invalid XPath string');
+			return;
+		}
+
+		var elem = this;
+		xpath.substr(1).split('/').forEach(function(path) {
+			var m = path.match(this._RE_XPATH),
+				tag = m[1],
+				idx = m[2],
+				elems;
+			elems = elem.children.filter(function(child) {
+				return child.tag === tag;
+			});
+			if (!idx && elems.length > 1) {
+				console.error('invalid XPath string; no index specified for multiple elements');
+				return;
+			}
+			elem = idx ? elems[idx - 1] : elems[0];
+		}, this);
+
+		return elem;
+	},
+
+	_RE_XPATH: /(\w+)(?:\[(\d+)\])?/
 
 });
 });

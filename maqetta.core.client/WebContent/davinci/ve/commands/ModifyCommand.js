@@ -74,10 +74,8 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 		if (this._doRefreshFromSource(widget)) {
 			// update model
 			widget.setProperties(this._newData.properties, true);
-
-			// set new content in Visual Editor
-			var ve = this._context.visualEditor;
-			ve.setContent(ve.fileName, this._context.model);
+			// refresh VE iframe
+			this._context.refresh();
 			return;
 		}
 

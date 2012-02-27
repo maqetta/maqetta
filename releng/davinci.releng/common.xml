@@ -31,6 +31,11 @@
         <!-- LIST OF MAQETTA Internal PROJECTS GOES HERE -->
         <!-- -->
         <populateDir project="maqetta.core.server"/>
+    	 <populateDir project="maqetta.orion.server"/>
+    	 <populateDir project="maqetta.orion.client"/>
+    	 <populateDir project="maqetta.orion.feature" isFeature="true"/>
+    	<populateDir project="maqetta.clipart"/>
+    	<populateDir project="maqetta.drawing"/>
     	<populateDir project="maqetta.core.server.standalone"/>
     	<populateDir project="maqetta.core.client"/>
         <populateDir project="davinci.product" extPath="/releng/" isFeature="true"/>
@@ -73,16 +78,16 @@
 	        <defaultexcludes remove="**/.git/**"/>
 	        <defaultexcludes remove="**/.svn"/>
 	        <defaultexcludes remove="**/.svn/**"/>
-	        <copy todir="${buildDirectory}/${pluginDir}">
+	        <copy todir="${buildDirectory}/plugins">
 	            <fileset dir="${orionRepo}/org.eclipse.orion.client/bundles/">
 	            	<include name="**/"/>
 	            </fileset>
 	            
 	        </copy>
 	 		<copy todir="${buildDirectory}/${pluginDir}">
-	 			            <fileset dir="${orionRepo}/org.eclipse.orion.server/bundles/">
-	 			            	<include name="**/"/>
-	 			            </fileset>
+	 			  <fileset dir="${orionRepo}/org.eclipse.orion.server/bundles/">
+	 			     	<include name="**/"/>
+	 			   </fileset>
 	 			            
 	 	     </copy>
 	        <defaultexcludes default="true"/>

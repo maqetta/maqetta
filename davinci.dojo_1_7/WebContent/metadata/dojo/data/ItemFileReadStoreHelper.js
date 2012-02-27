@@ -19,8 +19,7 @@ ItemFileReadStoreHelper.prototype = {
 		var widgetData = widget._getData( options);
 		var value = widget._srcElement.getAttribute('data');
 		if (value){
-			value = eval('newdata=' +value);
-			widgetData.properties.data = value;
+			widgetData.properties.data = JSON.parse(value);;
 		} else {
 			if (widget._srcElement.getAttribute('url')) {
 				widgetData.properties.url = widget._srcElement.getAttribute('url'); 
@@ -29,6 +28,24 @@ ItemFileReadStoreHelper.prototype = {
 			} 
 		}
 		return widgetData;
+	},
+	
+	preProcessData: function(data){
+		// clean up the store items so that the store can be recreated if undo or redo
+		if (data.properties.data){
+			if (data.properties.data.items) {
+				data.properties.data.items.forEach(function(item){
+					delete item._0;
+					delete item._RI;
+					delete item._S;
+					delete item._widgetId;
+				});
+			} else {
+				var d = JSON.parse(data.properties.data);
+				data.properties.data = d;
+			}
+		}
+		return data;
 	},
 	
     preProcess: function(node, context){

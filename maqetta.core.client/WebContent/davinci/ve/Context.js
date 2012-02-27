@@ -96,7 +96,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this._objectIds = [];
 		this._widgets = [];
 		this._chooseParent = new ChooseParent({context:this});
+		this.sceneManagers = {};
 
+	    // Invoke each library's onDocInit function, if library has such a function.
+		var libraries = metadata.getLibrary();	// No argument => return all libraries
+		for(var libId in libraries){
+			var library = metadata.getLibrary(libId),
+			args = [this];
+			metadata.invokeCallback(library, 'onDocInit', args);
+		}
 	},
 
 	_configDojoxMobile: function() {
@@ -252,6 +260,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// The value of widget.states for BODY happens as part of user document onload process,
 		// which sometimes happens after context loaded event. So, not good enough for StatesView
 		// to listen to context/loaded event - has to also listen for context/statesLoaded.
+		this._statesLoaded = true;
 		dojo.publish('/davinci/ui/context/statesLoaded', [this]);
 		this._onLoadHelpers();
 
@@ -2913,6 +2922,17 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			
 		}
 		return meta;
+	},
+	
+	registerSceneManager: function(sceneManager){
+		if(!sceneManager || !sceneManager.id){
+			return;
+		}
+		var id = sceneManager.id;
+		if(!this.sceneManagers[id]){
+			this.sceneManagers[id] = sceneManager;
+			dojo.publish('/davinci/ui/context/registerSceneManager', [sceneManager]);
+		}
 	}
 });
 

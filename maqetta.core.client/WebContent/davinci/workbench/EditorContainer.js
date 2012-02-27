@@ -55,44 +55,53 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 		this.editorExtension = editorExtension;
 		require([editorExtension.editorClass], function(EditorCtor) {	
 			var editor = this.editor = new EditorCtor(this.containerNode);
-			if(editor.setRootElement){
-				editor.setRootElement(rootElement);
-			}
-			this.containerNode = editor.domNode || this.containerNode;
-			editor.editorID=editorExtension.id;
-			editor.isDirty= !editor.isReadOnly && this.isDirty;
-			this._createToolbar();
-			if (!content) {
-				content=editor.getDefaultContent();
-				editor.isDirty=!editor.isReadOnly;
-				editor.lastModifiedTime=Date.now();
-			}
-			if (!content) {
-				content="";
-			}
-			editor.resourceFile=file;
-			editor.fileName=fileName;
-	
-			// Don't populate the editor until the tab is selected.  Defer processing,
-			// but also avoid problems with display:none on hidden tabs making it impossible
-			// to do geometry measurements in editor initialization
-			var tabContainer = "editors_tabcontainer";
-			if(dijit.byId(tabContainer).selectedChildWidget.domNode == this.domNode){
-				// Tab is visible.  Go ahead
-				editor.setContent(fileName, content, newHtmlParams);	
+			var setupEditor = function(){
+				if(editor.setRootElement){
+					editor.setRootElement(rootElement);
+				}
+				this.containerNode = editor.domNode || this.containerNode;
+				editor.editorID=editorExtension.id;
+				editor.isDirty= !editor.isReadOnly && this.isDirty;
+				this._createToolbar();
+				if (!content) {
+					content=editor.getDefaultContent();
+					editor.isDirty=!editor.isReadOnly;
+					editor.lastModifiedTime=Date.now();
+				}
+				if (!content) {
+					content="";
+				}
+				editor.resourceFile=file;
+				editor.fileName=fileName;
+		
+				// Don't populate the editor until the tab is selected.  Defer processing,
+				// but also avoid problems with display:none on hidden tabs making it impossible
+				// to do geometry measurements in editor initialization
+				var tabContainer = "editors_tabcontainer";
+				if(dijit.byId(tabContainer).selectedChildWidget.domNode == this.domNode){
+					// Tab is visible.  Go ahead
+					editor.setContent(fileName, content, newHtmlParams);	
+				}else{
+					// When tab is selected, set up the editor
+					var handle = dojo.subscribe(tabContainer + "-selectChild", null, function(args){
+						if(editor==args.editor){
+							dojo.unsubscribe(handle);
+							editor.setContent(fileName,content);		
+						}
+					});
+				}
+				editor.editorContainer=this;
+				this.setDirty(editor.isDirty);
+			}.bind(this);
+			if(editor.deferreds){
+				editor.deferreds.then(function(){
+					setupEditor();
+					d.resolve(editor);
+				}.bind(this));
 			}else{
-				// When tab is selected, set up the editor
-				var handle = dojo.subscribe(tabContainer + "-selectChild", null, function(args){
-					if(editor==args.editor){
-						dojo.unsubscribe(handle);
-						editor.setContent(fileName,content);		
-					}
-				});
-			}
-			editor.editorContainer=this;
-			this.setDirty(editor.isDirty);
-			//dojo.publish("/davinci/ui/EditorOpening", [this.editor]);
-			d.resolve(editor);
+				//setupEditor.bind(this);
+				setupEditor();
+				d.resolve(editor);			}
 		}.bind(this));
 		return d;
 	},

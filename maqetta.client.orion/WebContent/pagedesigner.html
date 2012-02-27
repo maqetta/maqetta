@@ -33,7 +33,16 @@
 			dojo.setObject("davinci.dojo",dojo);
 			var Workbench = require("davinci/Workbench"),
 				Runtime = require("davinci/Runtime");
-
+			
+			/* before the project loads, we want to get a project query paramater, sync it, then reload */
+			var urlProject = dojo.queryToObject(dojo.doc.location.search.substr((dojo.doc.location.search[0] === "?" ? 1 : 0))).project;
+			if(urlProject){
+				Workbench.setActiveProject(urlProject);
+				window.location.search="";
+			}
+			
+			
+			
 			Runtime.loadPlugins();
 	 		Runtime.initialPerspective="davinci.ve.pageDesign";
 

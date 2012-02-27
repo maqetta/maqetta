@@ -1206,4 +1206,6 @@ davinci_top_bar .dijitButtonNode {
 	white-space:nowrap;
 	overflow:hidden;
 }
-
+.StatesViewTree .dijitTreeExpando {
+	display:none;
+}

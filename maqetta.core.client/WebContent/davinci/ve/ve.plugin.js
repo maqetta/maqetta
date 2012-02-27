@@ -13,7 +13,7 @@ return {
         },
         {
             id: "states",
-            title: "States",
+            title: "Scenes",
             viewClass: "davinci/ve/views/StatesView"
         },
         /*
@@ -45,11 +45,11 @@ return {
                 },
                 {
                     viewID: "davinci.ui.comment",
-                    position: "left"
+                    position: "right"
                 },
                 {
                     viewID: "davinci.ui.navigator",
-                    position: "left-bottom"
+                    position: "left"
                 },
                 {
                     viewID: "davinci.ve.style",
@@ -57,11 +57,11 @@ return {
                 },
                 {
                     viewID: "davinci.ui.outline",
-                    position: "right-bottom"
+                    position: "left-bottom"
                 },
                 {
                     viewID: "davinci.ve.states",
-                    position: "right"
+                    position: "right-bottom"
                 }
             /*
              * { viewID: "davinci.ve.datastores", position: "right" }, { viewID: "davinci.ui.problems", position: "right-bottom" }
@@ -311,22 +311,22 @@ return {
             viewContribution: {
                 targetID: "davinci.ve.states",
                 actions: [
-                    {
-                        id: "addState",
-                        iconClass: 'viewActionIcon addStateIcon',
-                        action: "davinci/ve/actions/AddState",
-                        label: "Add State",
-                        // menubarPath: "davinci.edit/cut",
-                        toolbarPath: "add"
-                    },
-                    {
-                        id: "removeState",
-                        iconClass: 'viewActionIcon removeStateIcon',
-                        action: "davinci/ve/actions/RemoveState",
-                        label: "Remove State",
-                        // menubarPath: "davinci.edit/cut",
-                        toolbarPath: "remove"
-                    }
+					{
+						id: "addState",
+						iconClass: 'viewActionIcon addStateIcon',
+						action: "davinci/ve/actions/AddState",
+						label: "Add State",
+						// menubarPath: "davinci.edit/cut",
+						toolbarPath: "add"
+					},
+					{
+						id: "removeState",
+						iconClass: 'viewActionIcon removeStateIcon',
+						action: "davinci/ve/actions/RemoveState",
+						label: "Remove State",
+						// menubarPath: "davinci.edit/cut",
+						toolbarPath: "remove"
+					}
 
                 ]
 

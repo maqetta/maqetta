@@ -3,7 +3,7 @@
 <project name="MaqettaDeps" default="populateBaseMaqetta">
 	
 	<!-- top level call to populate the build directory with any external dependancies. -->
-	<target name="populateBaseMaqetta" depends="populateMaqettaDeps, populateEquinoxBridge"/>
+	<target name="populateBaseMaqetta" depends="populateMaqettaDeps, populateEquinoxBridge, populateOrion"/>
 
 	<!--  global maqetta deps -->
     <target name="populateMaqettaDeps">
@@ -66,7 +66,30 @@
 	        <populateEDir project="org.eclipse.equinox.servletbridge"/>
 	        <populateEDir project="org.eclipse.equinox.servletbridge.extensionbundle"/>
 	</target>
+	
+	 <!--  orion deps to copy in -->
+	 	<target name="populateOrion">
+		    <defaultexcludes remove="**/.git"/>
+	        <defaultexcludes remove="**/.git/**"/>
+	        <defaultexcludes remove="**/.svn"/>
+	        <defaultexcludes remove="**/.svn/**"/>
+	        <copy todir="${buildDirectory}/${pluginDir}/${project}">
+	            <fileset dir="${orionRepo}/org.eclipse.orion.client/bundles/">
+	            	<include name="*"/>
+	            </fileset>
+	        </copy>
+	        <copy todir="${buildDirectory}/${pluginDir}/${project}">
+	            <fileset dir="${orionRepo}/org.eclipse.orion.server/bundles/">
+	            	<include name="*"/>
+	            </fileset>
+	        </copy>
+	        <defaultexcludes default="true"/>
+	    </target>	
 
+
+	
+	
+	
 	<!--  copies files from the equinox repository link in the build directory -->	
    <target name="fromEquinox">
         <condition property="pluginDir" value="features" else="plugins">

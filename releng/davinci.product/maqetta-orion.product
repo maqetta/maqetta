@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product name="Eclipse Orion" uid="maqetta.orion.product" id="org.eclipse.orion.product" application="org.eclipse.orion.application" version="0.5.0.qualifier" useFeatures="true" includeLaunchers="true">
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <programArgs>-consoleLog -console -data serverworkspace -nosplash</programArgs>
+      <programArgsMac>-product org.eclipse.orion.server.ui.console
+-application org.eclipse.orion.server.ui.consoleApp</programArgsMac>
+      <vmArgs>-Dorg.eclipse.equinox.http.jetty.http.port=8080
+-Dorg.eclipse.equinox.http.jetty.autostart=false
+-Xms40m
+-Xmx384m
+-DloginUrl=&quot;/maqetta/welcome&quot;  
+-Dmaqetta.serverDebug=true 
+-Dmaqetta.cacheLevel=100</vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <windowImages/>
+
+   <launcher name="orion">
+      <macosx icon="html/appicon.icns"/>
+      <solaris/>
+      <win useIco="true">
+         <ico path="html/orion.ico"/>
+         <bmp/>
+      </win>
+   </launcher>
+
+   <vm>
+   </vm>
+
+   <plugins>
+   </plugins>
+
+   <features>
+      <feature id="org.eclipse.orion"/>
+      <feature id="maqetta.orion.feature"/>
+   </features>
+
+   <configurations>
+      <plugin id="davinci.dojo_1_7" autoStart="true" startLevel="0" />
+      <plugin id="davinci.html" autoStart="true" startLevel="0" />
+      <plugin id="davinci.jqueryui_1_8" autoStart="true" startLevel="0" />
+      <plugin id="davinci.yui_2_6_0" autoStart="true" startLevel="0" />
+      <plugin id="maqetta.client.orion" autoStart="true" startLevel="0" />
+      <plugin id="maqetta.clipart" autoStart="true" startLevel="0" />
+      <plugin id="maqetta.core.client" autoStart="true" startLevel="0" />
+      <plugin id="maqetta.core.server" autoStart="true" startLevel="0" />
+      <plugin id="maqetta.server.orion" autoStart="true" startLevel="0" />
+      <plugin id="maqetta.shapes" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.app" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.orion.server.configurator" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.orion.server.git" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.orion.server.search" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.orion.server.servlets" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.orion.server.user.securestorage" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.orion.server.useradmin.xml" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
+      <property name="org.eclipse.update.reconcile" value="false" />
+   </configurations>
+
+</product>

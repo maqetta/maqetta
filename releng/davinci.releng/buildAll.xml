@@ -125,6 +125,16 @@
         	<property name="dojo.cache.directory" value="${dojo.cache.directory}"/>
         </ant>
     </target>
+    <target name="MaqettaOrion" if="run.external.targets">
+        <ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
+            <property name="builder" value="${basedir}/zipFile"/>
+        	<property name="product" value="davinci.product/maqetta-orion.product"/>
+        	<property name="maqettaArchiveName" value="maqettaOrion.zip"/>
+        	<property name="run.dojo.build" value="${run.dojo.build}"/>
+        	<property name="dojo.cache.directory" value="${dojo.cache.directory}"/>
+        </ant>
+    </target>
+	
 	
 	
 	<!-- build the internal and external EAR -->

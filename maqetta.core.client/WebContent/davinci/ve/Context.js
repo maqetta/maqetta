@@ -1633,7 +1633,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if (e && e.elementType === 'CSSRule'){
 			this.hotModifyCssRule(e);
 		}
-		e.parent.save(true); //wdr
+
 	},
 
 // XXX no 'getRealUrl()' exists in this class

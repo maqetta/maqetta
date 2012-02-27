@@ -82,7 +82,7 @@
 	            </fileset>
 	            
 	        </copy>
-	 		<copy todir="${buildDirectory}/${pluginDir}">
+	 		<copy todir="${buildDirectory}/plugins">
 	 			  <fileset dir="${orionRepo}/org.eclipse.orion.server/bundles/">
 	 			     	<include name="**/"/>
 	 			   </fileset>

@@ -34,8 +34,6 @@
     	 <populateDir project="maqetta.server.orion"/>
     	 <populateDir project="maqetta.client.orion"/>
     	 <populateDir project="maqetta.orion.feature" isFeature="true"/>
-    	<populateDir project="maqetta.clipart"/>
-    	<populateDir project="maqetta.drawing"/>
     	<populateDir project="maqetta.core.server.standalone"/>
     	<populateDir project="maqetta.core.client"/>
         <populateDir project="davinci.product" extPath="/releng/" isFeature="true"/>

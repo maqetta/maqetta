@@ -202,7 +202,7 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 				return;
 			}
 			if (node.elementType == "ReviewFile") {
-				WorkBench.openEditor({
+				Workbench.openEditor({
 					fileName: node,
 					content: node.getText()
 				});
@@ -219,7 +219,7 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 //						+node.name+"/default");
 				console.debug("CommentExplorerView: review/"+Runtime.userName+"/"+node.parent.timeStamp+"/"+
 						node.name+"/default");
-				WorkBench.openEditor({
+				Workbench.openEditor({
 					fileName: node,
 					content: node.getText()
 				});

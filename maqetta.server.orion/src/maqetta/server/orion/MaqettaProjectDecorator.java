@@ -38,17 +38,8 @@ public class MaqettaProjectDecorator implements IWebResourceDecorator {
 		try {
 			JSONArray projObjects = representation.getJSONArray("Children");
 			for (int i = 0; i < projObjects.length(); i++) {
-
 				JSONObject projectObject = (JSONObject) projObjects.get(i);
-				WebProject project = WebProject.fromId(projectObject.getString("Id"));
-				IFileStore settings;
-
-				settings = project.getProjectStore().getChild(IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
-				if (settings == null)
-					return;
-
-				IFileStore libFile = settings.getChild(IDavinciServerConstants.LIBS_FILE);
-				if (libFile != null && libFile.fetchInfo().exists()){
+				if (checkMaqettaProject(projectObject)){
 					projectObject.put(IDavinciServerConstants.MAQETTA_PROJECT, true);
 				}else{
 					projectObject.put("rootFolder", true);
@@ -56,17 +47,33 @@ public class MaqettaProjectDecorator implements IWebResourceDecorator {
 			}
 		} catch (JSONException e) {
 			try {
-				representation.put("rootFolder", true);
+				if(checkMaqettaProject(representation))
+					representation.put(IDavinciServerConstants.MAQETTA_PROJECT, true);
+				else
+					representation.put("rootFolder", true);
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+			} catch (CoreException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
 			}
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} 
 
 	}
-
+	private boolean checkMaqettaProject(JSONObject projectObject) throws JSONException, CoreException{
 	
+		WebProject project = WebProject.fromId(projectObject.getString("Id"));
+		IFileStore settings;
+		settings = project.getProjectStore().getChild(IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
+		if (settings == null)
+			return false;
+			IFileStore libFile = settings.getChild(IDavinciServerConstants.LIBS_FILE);
+		if (libFile != null && libFile.fetchInfo().exists())
+			return true;
+		return false;
+	}
 }

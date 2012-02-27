@@ -73,16 +73,18 @@
 	        <defaultexcludes remove="**/.git/**"/>
 	        <defaultexcludes remove="**/.svn"/>
 	        <defaultexcludes remove="**/.svn/**"/>
-	        <copy todir="${buildDirectory}/${pluginDir}/${project}">
+	        <copy todir="${buildDirectory}/${pluginDir}">
 	            <fileset dir="${orionRepo}/org.eclipse.orion.client/bundles/">
-	            	<include name="*"/>
+	            	<include name="**/"/>
 	            </fileset>
+	            
 	        </copy>
-	        <copy todir="${buildDirectory}/${pluginDir}/${project}">
-	            <fileset dir="${orionRepo}/org.eclipse.orion.server/bundles/">
-	            	<include name="*"/>
-	            </fileset>
-	        </copy>
+	 		<copy todir="${buildDirectory}/${pluginDir}">
+	 			            <fileset dir="${orionRepo}/org.eclipse.orion.server/bundles/">
+	 			            	<include name="**/"/>
+	 			            </fileset>
+	 			            
+	 	     </copy>
 	        <defaultexcludes default="true"/>
 	    </target>	
 

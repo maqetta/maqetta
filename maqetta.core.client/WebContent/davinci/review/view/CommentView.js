@@ -143,7 +143,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			if (global && global.davinci && global.davinci.states) {
 				this.states = global.davinci.states;
 				global.davinci.states.subscribe("/davinci/states/state/changed", this, function(args) {
-					if (Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
+					if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
 						return; 
 					}
 					var state = args.newState || "Normal";
@@ -156,7 +156,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		dojo.subscribe("/davinci/ui/editorSelected", this, function(args) {
 			// summary:
 			//		Remove the comment nodes of the previous page
-			if (Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
+			if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
 				return; 
 			}
 			var editor = args.editor;

@@ -141,6 +141,9 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			if (global && global.davinci && global.davinci.states) {
 				this.states = global.davinci.states;
 				global.davinci.states.subscribe("/davinci/states/state/changed", this, function(args) {
+					if (davinci.Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
+						return; 
+					}
 					var state = args.newState || "Normal";
 					this._cached[this._currentPage].pageState = state;
 					dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [state, []]);

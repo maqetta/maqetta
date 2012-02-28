@@ -1098,7 +1098,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	_continueLoading: function(data, callback, callbackData, scope) {
-		var loading;
+		var loading, promise;
 		try {
 			loading = dojo.create("div",
 				{
@@ -1114,9 +1114,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				throw callbackData;
 			}
 
-			var promise = this._setSourceData(data);
-
-			loading.parentNode.removeChild(loading); // need to remove loading for silhouette to display
+			promise = this._setSourceData(data).then(function() {
+				// need to remove loading for silhouette to display
+				loading.parentNode.removeChild(loading);
+			}, function(error) {
+				loading.innerHTML = "Unable to parse HTML source.  See console for error.  Please switch to \"Display Source\" mode and correct the error."; // FIXME: i18n
+				console.error(error.stack || error.message);
+			});
 		} catch(e) {
 			// recreate the Error since we crossed frames
 			callbackData = new Error(e.message, e.fileName, e.lineNumber);
@@ -1340,7 +1344,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",
 							this, '_editorSelectionChange');
 	
-					promise.reject();
+					promise.reject(e);
 					throw e;
 				}
 			

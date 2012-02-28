@@ -29,7 +29,6 @@ return declare("davinci.ve.RebuildPage", Context, {
 	
 	
 	rebuildSource: function(source, resource){
-		
 		if ( !( resource && resource.extension && resource.extension == "html")) return source;
 		
 		this.model = this._srcDocument = Factory.getNewFromResource(resource);
@@ -54,9 +53,7 @@ return declare("davinci.ve.RebuildPage", Context, {
         
         for ( var i = 0; i < elements.length; i++ ) {
             var n = elements[i];
-            var type = n.getAttribute("dojoType")
-                    || /* n.getAttribute("oawidget") || */n
-                            .getAttribute("dvwidget");
+            var type = n.getAttribute("dojoType") || n.getAttribute("dvwidget") || n.getAttribute("data-dojo-type");
             if (type != null){
             	this.loadRequires(type, true, true, true);
             }

@@ -24,6 +24,7 @@ public class Login extends Command {
             this.responseString = (redirect != null) ? redirect : "OK";
             HttpSession session = req.getSession(true);
             session.setAttribute(IDavinciServerConstants.SESSION_USER, user);
+            session.setMaxInactiveInterval(IDavinciServerConstants.SESSION_TIMEOUT);
         } else {
             user = ServerManager.getServerManger().getUserManager().getUser(name);
             if (user == null) {

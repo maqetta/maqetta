@@ -132,9 +132,9 @@
 		<property name="timestamp" value="${DSTAMP}${TSTAMP}" />
     	<property name="base" value="${buildDirectory}/plugins/org.eclipse.orion.releng" />
 		<property name="cvsuser" value=":ext:aniefer" />		
-		<property name="builder" value="${basedir}/builder" />
+		<property name="builder" value="${basedir}/repository/orion/org.eclipse.orion.server/releng/org.eclipse.orion.releng/builder" />
 		
-		<property name="allElementsFile" value="${basedir}/builder/allElements.xml" />
+		<property name="allElementsFile" value="${builder}/allElements.xml" />
 		<ant antfile="${eclipse.pdebuild.scripts}/productBuild/productBuild.xml" >
 			<property name="product" value="davinci.product/maqetta-orion.product"/>
 			<property name="run.dojo.build" value="${run.dojo.build}"/>

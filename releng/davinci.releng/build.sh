@@ -56,6 +56,7 @@ fi
 # usually, but not always, named 'eclipse'. It has sub-directories
 # /configuration, /features, /plugins, etc. No trailing slash.
 #
+# Eclipse Home needs to be last good build of Orion
 
 if [ -z ${ECLIPSE_HOME} ]
 then

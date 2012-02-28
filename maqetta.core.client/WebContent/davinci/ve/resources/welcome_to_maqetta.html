@@ -41,7 +41,7 @@
 				</tr>
 				<tr>
 					<td class="welcome_section_cell">
-						<div class="welcome_section welcome_section_active" onclick="davinci.ui.Resource.newHTML()">
+						<div class="welcome_section welcome_section_active" onclick="require(['davinci/ui/Resource'], function(resource) { resource.newHTML(); });">
 							<div class="welcome_section_header">
 								New HTML Page
 							</div>
@@ -57,7 +57,7 @@
 				</tr>
 				<tr>
 					<td class="welcome_section_cell">
-						<div class="welcome_section welcome_section_active" onclick="davinci.Workbench.showModal(new davinci.ui.NewTheme(), 'New Theme', 'height:135px;width: 300px')">
+						<div class="welcome_section welcome_section_active" onclick="require(['davinci/Workbench', 'davinci/ui/NewTheme'], function(Workbench, NewTheme) { Workbench.showModal(new NewTheme(), 'New Theme', 'height:135px;width: 300px'); });">
 							<div class="welcome_section_header">
 								New CSS Theme
 							</div>
@@ -81,11 +81,11 @@
 								<span class="welcome_section_content">
 									<table>
 										<tr>
-											<td class="welcome_action_cell" onclick="davinci.ui.Resource.addFiles()">
+											<td class="welcome_action_cell" onclick="require(['davinci/ui/Resource'], function(Resource) { Resource.addFiles(); });">
 												<span class="welcome_action_icon welcome_upload_icon"></span>
 												<span class="welcome_action">Upload a file</span>
 											</td>
-											<td class="welcome_action_cell" onclick="davinci.Workbench.showModal(new davinci.ui.OpenThemeDialog(), 'Open Theme', 'height:100px;width: 200px')">
+											<td class="welcome_action_cell" onclick="require(['davinci/Workbench', 'davinci/ui/OpenThemeDialog'], function(Workbench, OpenThemeDialog) { Workbench.showModal(new OpenThemeDialog(), 'Open Theme', 'height:100px;width: 200px'); });">
 												<span class="welcome_action_icon welcome_themeeditor_icon"></span>
 												<span class="welcome_action">Open theme editor</span>
 											</td>
@@ -107,7 +107,7 @@
 				</tr>
 				<tr>
 					<td class="welcome_section_cell">
-						<div class="welcome_section welcome_section_active" onclick="davinci.Runtime.publish()">
+						<div class="welcome_section welcome_section_active" onclick="require(['davinci/Runtime'], function(Runtime) { Runtime.publish(); });">
 							<div class="welcome_section_header">
 								New Review
 							</div>

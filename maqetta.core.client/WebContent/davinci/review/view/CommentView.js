@@ -154,6 +154,9 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		dojo.subscribe("/davinci/ui/editorSelected", this, function(args) {
 			// summary:
 			//		Remove the comment nodes of the previous page
+			if (davinci.Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
+				return; 
+			}
 			var editor = args.editor;
 			if (!editor) {
 				this._resetCommentView();

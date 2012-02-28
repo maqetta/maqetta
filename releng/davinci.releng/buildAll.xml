@@ -22,10 +22,12 @@
 		
 		<!-- populate function out of internal.xml or external.xml -->
         <antcall target="populate"/>
-        <antcall target="zips"/>
-        <antcall target="war"/>
-		<antcall target="ear"/>
 		<antcall target="MaqettaOrion"/>
+		<antcall target="zips"/>
+		<!--
+		<antcall target="war"/>
+		<antcall target="ear"/>
+		-->
     </target>
 
     <target name="init">

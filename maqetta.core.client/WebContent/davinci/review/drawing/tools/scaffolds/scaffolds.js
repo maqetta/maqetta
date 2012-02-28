@@ -4,7 +4,8 @@ define([
 	"./RectangleScaffold",
 	"./EllipseScaffold",
 	"./TextScaffold"
-], function(declare, ArrowScaffold, RectangleScaffold, EllipseScaffold, TextScaffold){
+], function(declare, ArrowScaffold, RectangleScaffold, EllipseScaffold, TextScaffold) {
+
 	var scaffolds = {};
 	
 	scaffolds.ArrowScaffold = ArrowScaffold;

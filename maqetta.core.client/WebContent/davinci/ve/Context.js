@@ -23,6 +23,8 @@ define([
 	"preview/silhouetteiframe",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
+	"davinci/XPathUtils",
+	"../html/HtmlFileXPathAdapter",
 	"dojox/html/_base"
 ], function(
 	declare,
@@ -48,7 +50,9 @@ define([
 	Preferences,
 	Silhouette,
 	Deferred,
-	DeferredList
+	DeferredList,
+	XPathUtils,
+	HtmlFileXPathAdapter
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -92,7 +96,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this._objectIds = [];
 		this._widgets = [];
 		this._chooseParent = new ChooseParent({context:this});
+		this.sceneManagers = {};
 
+	    // Invoke each library's onDocInit function, if library has such a function.
+		var libraries = metadata.getLibrary();	// No argument => return all libraries
+		for(var libId in libraries){
+			var library = metadata.getLibrary(libId),
+			args = [this];
+			metadata.invokeCallback(library, 'onDocInit', args);
+		}
 	},
 
 	_configDojoxMobile: function() {
@@ -152,7 +164,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
                         }
                         //Look for a dojox.mobile.themeFiles in the document, if found set the themeFiles 
                         var start = text.indexOf('dojoxMobile.themeFiles');
-                        if (start != -1) {
+                        if (start > -1) {
                             start = text.indexOf('=', start);
                             var stop = text.indexOf(';', start);
                             if (stop > start){
@@ -248,6 +260,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// The value of widget.states for BODY happens as part of user document onload process,
 		// which sometimes happens after context loaded event. So, not good enough for StatesView
 		// to listen to context/loaded event - has to also listen for context/statesLoaded.
+		this._statesLoaded = true;
 		dojo.publish('/davinci/ui/context/statesLoaded', [this]);
 		this._onLoadHelpers();
 
@@ -688,6 +701,24 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		dojo.withDoc(this.getDocument(), "_setSource", this, [source, callback, scope, initParams]);
 	},
 
+	refresh: function() {
+		// save widget selection
+		var xpath = XPathUtils.getXPath(this.getSelection()[0]._srcElement, HtmlFileXPathAdapter);
+
+		// re-establish widget selection
+		var handle = dojo.connect(this, 'setSource', this, function() {
+			dojo.disconnect(handle);
+			dojo.publish('/davinci/ui/selectionChanged', [
+				[{ model: this.model.evaluate(xpath) }],
+				this._editor
+			]);
+		});
+
+		// set new content in Visual Editor (eventually kicks `connect` above)
+		var ve = this._visualEditor;
+		ve.setContent(ve.fileName, this.model);
+	},
+
 	getDojoUrl: function(){
 		var loc=Workbench.location();
 		if (loc.charAt(loc.length-1)=='/') {
@@ -1067,7 +1098,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	_continueLoading: function(data, callback, callbackData, scope) {
-		var loading;
+		var loading, promise;
 		try {
 			loading = dojo.create("div",
 				{
@@ -1083,9 +1114,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				throw callbackData;
 			}
 
-			var promise = this._setSourceData(data);
-
-			loading.parentNode.removeChild(loading); // need to remove loading for silhouette to display
+			promise = this._setSourceData(data).then(function() {
+				// need to remove loading for silhouette to display
+				loading.parentNode.removeChild(loading);
+			}, function(error) {
+				loading.innerHTML = "Unable to parse HTML source.  See console for error.  Please switch to \"Display Source\" mode and correct the error."; // FIXME: i18n
+				console.error(error.stack || error.message);
+			});
 		} catch(e) {
 			// recreate the Error since we crossed frames
 			callbackData = new Error(e.message, e.fileName, e.lineNumber);
@@ -1309,7 +1344,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",
 							this, '_editorSelectionChange');
 	
-					promise.reject();
+					promise.reject(e);
 					throw e;
 				}
 			
@@ -1602,7 +1637,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if (e && e.elementType === 'CSSRule'){
 			this.hotModifyCssRule(e);
 		}
-		e.parent.save(true); //wdr
+
 	},
 
 // XXX no 'getRealUrl()' exists in this class
@@ -2891,6 +2926,17 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			
 		}
 		return meta;
+	},
+	
+	registerSceneManager: function(sceneManager){
+		if(!sceneManager || !sceneManager.id){
+			return;
+		}
+		var id = sceneManager.id;
+		if(!this.sceneManagers[id]){
+			this.sceneManagers[id] = sceneManager;
+			dojo.publish('/davinci/ui/context/registerSceneManager', [sceneManager]);
+		}
 	}
 });
 

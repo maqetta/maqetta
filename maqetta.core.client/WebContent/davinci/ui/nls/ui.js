@@ -115,7 +115,11 @@ define({ root:
 		//OpenThemeDialog.html
 		"selectTheme":"Select a Theme",
 
+		//ProjectToolbar.js
 		"newProject":"New Project",
+		"renameProjectDialogTitle": "Rename Project To...",
+		"deleteProjectButtonTitle": "Delete Project",
+		"renameProjectButtonTitle": "Rename Project...",
 		
 		//NewFile.html
 		"newFileShowFiles":"Show file picker",

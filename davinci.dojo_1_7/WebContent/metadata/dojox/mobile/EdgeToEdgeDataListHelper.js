@@ -28,63 +28,18 @@ EdgeToEdgeDataListHelper.prototype = {
 		return data;
 	},
 
-	create: function(widget, srcElement) {
-		var storeId = srcElement.getAttribute("store");
-		if(storeId){
-			var storeWidget = Widget.byId(storeId);
+	preProcessData: function(data){
+
+		var store = data.context.getDojo().getObject(data.properties.store._edit_object_id);
+		data.properties.store = store;
+		return data;
+	},
 	
-			if (storeWidget && widget.dijitWidget && widget.dijitWidget.store) {
-				this.updateStore(widget.dijitWidget.store, storeWidget, widget);
-			}
-		}
+	create: function(widget, srcElement) {
+
 		this.stopOnClickListItems(widget);
 	},
 
-	updateStore: function(store, /*properties*/ storeWidget, widget) { 
-		var data = storeWidget._srcElement.getAttribute('data'); 
-		var url = storeWidget._srcElement.getAttribute('url'); 
-		if (data){ 
-			var value = data; 
-			var storeData = eval('storeData = '+value);
-			data = {
-				identifier: storeData.identifier,
-				items: []
-			};
-		
-			var items = data.items;
-			var storeDataItems = storeData.items;
-			for (var r = 0; r < storeDataItems.length; r++){
-				var item = {};
-				var dataStoreItem = storeDataItems[r];
-				for (var name in dataStoreItem){
-					item[name] = dataStoreItem[name];
-				}
-				items.push(item);
-			}
-			
-			// Kludge to force reload of store data
-			store.clearOnClose = true;
-			store.data = data;
-			delete store.url; // wdr remove old url if switching
-		}else{ // must be url data store
-			// Kludge to force reload of store data
-			store.clearOnClose = true;
-			store.url = url; 
-			delete store.data; // wdr remove old url if switching
-		}
-		store.close();
-		store.fetch({
-			query: this.query, // XXX No `query` func on this obj
-			queryOptions:{deep:true}, 
-			onComplete: function(items) {
-				for (var i = 0; i < items.length; i++) {
-					var item = items[i];
-					console.warn("label=", i, "moveTo=", item);
-				}
-				widget.dijitWidget.refresh(); 
-			}
-		});
-	}, 
 	
 	stopOnClickListItems: function(widget){
 		var dijitWidget = widget.dijitWidget;

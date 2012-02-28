@@ -42,7 +42,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		this._initCommentForm();
 
 		this.connect(this.commentReplies, "keydown", function(evt) {
-			var loopBody = function(comment){
+			var loopBody = function(comment) {
 				if (comment.pageState == pageState) {
 					comment.enable();
 				} else {
@@ -135,13 +135,15 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					// Show annotations
 					that._reviewFilterChanged(); // Set reviewer list to be shown
 					dojo.publish(that._currentPage+"/davinci/review/drawing/filter", ["Normal", []]);
-
 				}, 100);
 			}
 			// Response to the state change event in the review editor
 			if (global && global.davinci && global.davinci.states) {
 				this.states = global.davinci.states;
 				global.davinci.states.subscribe("/davinci/states/state/changed", this, function(args) {
+					if (davinci.Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
+						return; 
+					}
 					var state = args.newState || "Normal";
 					this._cached[this._currentPage].pageState = state;
 					dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [state, []]);
@@ -152,6 +154,9 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		dojo.subscribe("/davinci/ui/editorSelected", this, function(args) {
 			// summary:
 			//		Remove the comment nodes of the previous page
+			if (davinci.Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
+				return; 
+			}
 			var editor = args.editor;
 			if (!editor) {
 				this._resetCommentView();

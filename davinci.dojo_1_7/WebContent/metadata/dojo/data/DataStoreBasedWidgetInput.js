@@ -61,44 +61,7 @@ return declare(SmartInput, {
 	helpText:  'If the CSV data format is selected enter text in the format: first line is column headers separated by commas all following lines are data for those columns.'+
     		   ' If data file from workspace is selected chose a json item file using the file explore folder.',
 
-/*	parse: function(input) {
-		debugger;
-		var values = this.parseGrid(input);
-        if (values.length < 2) {
-            alert('invalid input (1)');
-            return input;
-        }
-        var fields = values[0];
-        var names = values[1];
-        if (fields.length < names.length) {
-            alert('invalid input (2)');
-            return input;
-        }
-        var structure = [];
-        for (var i=0; i<fields.length; ++i) {
-            var field = fields[i].text;
-            var name = names[i].text;
-            var width = 'auto';
-            var editor = 'dojox.grid.editors.Input';
-            structure.push({field: field, name: name, width: width, editor: editor});
-        }
-        return structure;
-	},*/
-	
-    // in this case, the first row is the Fields
-    // the second row is the Display Names (column headers)
-	/*update: function(widget, structure) {
-		debugger;
-	    if (structure.length > 0) {
-	       // var properties = {structure: structure};
-	        var command = new ModifyCommand(widget, properties, null, this._getContext());
-	        this._getContext().getCommandStack().execute(command);
-	        return command.newWidget;
-	    }
-	    return widget;
-	    
-	},*/
-	
+
 	_getContainer: function(widget){
 		while(widget){
 			if ((widget.isContainer || widget.isLayoutContainer) && widget.declaredClass != "dojox.layout.ScrollPane"){
@@ -122,31 +85,22 @@ return declare(SmartInput, {
 	refreshStoreView: function(){
 		var textArea = registry.byId("davinciIleb"),
 			value ='';
-		for (var i = 0; i <  this._widget.dijitWidget.store._arrayOfAllItems.length; i++){
-			var item = this._widget.dijitWidget.store._arrayOfAllItems[i];
-				value +=  item.label[0];
-				if (item.moveTo){
-					value +=  ', ' + item.moveTo[0];
-				}
-			value += '\n';
-		}
-		this._data = value;
-		textArea.attr('value', String(value));
+		this._widget.dijitWidget.store.fetch({
+			query: this.query, // XXX No `query` func on this obj
+			queryOptions:{deep:true}, 
+			onComplete: function(items) {
+				items.forEach(function(item){
+					value +=  item.label[0];
+					if (item.moveTo){
+						value +=  ', ' + item.moveTo[0];
+					}
+					value += '\n';
+				});
+				this._data = value;
+				textArea.attr('value', String(value));
+			}.bind(this)
+		});
 	},
-	
-	
-/*
-    addOne: function() {
-        this._gridColDS.newItem({rowid: this._rowid++, width: "auto", editable: true, hidden: false});
-    },
-    
-    removeOne: function() {
-        var gridColDS = this._gridColDS;
-        dojo.forEach(this._gridColumns.selection.getSelected(), function(item) {
-            gridColDS.deleteItem(item);
-        });
-    },
-    */
 	
 	onOk: function(e){
 		
@@ -180,7 +134,7 @@ return declare(SmartInput, {
         var compoundCommand = new OrderedCompoundCommand();
         compoundCommand.add(storeCmd);
         compoundCommand.add(command);
-        context.getCommandStack().execute(compoundCommand);  
+        context.getCommandStack().execute(compoundCommand);
         context.select(command.newWidget);
 
     },
@@ -209,24 +163,6 @@ return declare(SmartInput, {
 		
 		return this.replaceStoreData(data);
 	},
-	
-	/*replaceStoreData: function(store, data) {
-		debugger;
-		// Kludge to force reload of store data
-		store.clearOnClose = true;
-		store.data = data;
-		store.close();
-		store.fetch({
-			query: this.query,
-			queryOptions:{deep:true}, 
-			onComplete: lang.hitch(this, function(items){
-				for (var i = 0; i < items.length; i++) {
-					var item = items[i];
-					console.warn("i=", i, "item=", item);
-				}
-			})
-		});
-	},*/
 
 	replaceStoreData: function(data) {
 
@@ -244,24 +180,7 @@ return declare(SmartInput, {
 		return command;
 	},
 		
-/*	_attr: function(widget, name, value) {
-		debugger;
-		var properties = {};
-		properties[name] = value;
-		
-		var command = new ModifyCommand(widget, properties);
-		this._addOrExecCommand(command);
-	},*/
-	
-/*	_addOrExecCommand: function(command) {
-		debugger;
-		if (this.command && command) {
-			this.command.add(command);
-		} else {
-			this._getContext().getCommandStack().execute(this.command || command);
-		}	
-	},*/
-	
+
 	updateWidgetForUrlStore: function(){
 		
 		var textArea = registry.byId("davinciIleb");
@@ -279,8 +198,6 @@ return declare(SmartInput, {
             }
             url = file.getURL();
     	}
-    	//this._widget._edit_context.baseURL = http://localhost:8080/davinci/user/user5/ws/workspace/file1.html
-    	//url = 'http://localhost:8080/davinci/user/user5/ws/workspace/' + url;
 		var store = new ItemFileReadStore({url: url});
     	store.fetch({
     		query: this.query,
@@ -300,11 +217,6 @@ return declare(SmartInput, {
 			console.error('Data store empty');
 			return;
 		}
-
-		for (var i = 0; i < items.length; i++) {
-			var item = items[i];
-			console.warn("i=", i, "item=", item);
-		}
 		var storeId = this._widget.domNode._dvWidget._srcElement.getAttribute("store");
 		var storeWidget = Widget.byId(storeId);
 		var properties = {};
@@ -318,7 +230,7 @@ return declare(SmartInput, {
         var compoundCommand = new OrderedCompoundCommand();
         compoundCommand.add(storeCmd);
         compoundCommand.add(command);
-        context.getCommandStack().execute(compoundCommand);  
+        context.getCommandStack().execute(compoundCommand); 
         context.select(command.newWidget);
 
 	},

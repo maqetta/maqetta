@@ -1,5 +1,6 @@
 define([
 	"dojo/_base/declare",
+	"davinci/Runtime",
 	"davinci/workbench/ViewPart",
 	"davinci/review/widgets/Comment",
 	"davinci/review/widgets/CommentForm",
@@ -15,7 +16,7 @@ define([
 	"dijit/Menu",
     "dojo/i18n!./nls/view",
     "dojo/i18n!davinci/workbench/nls/workbench"
-], function(declare, ViewPart, Comment, CommentForm, util, Button, TextBox, DropDownButton, Toolbar,
+], function(declare, Runtime, ViewPart, Comment, CommentForm, util, Button, TextBox, DropDownButton, Toolbar,
 		ToolbarSeparator, CheckedMenuItem, MenuSeparator, Dialog, Menu, viewNls, workbenchNls) {
 
 return declare("davinci.review.view.CommentView", ViewPart, {
@@ -141,7 +142,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			if (global && global.davinci && global.davinci.states) {
 				this.states = global.davinci.states;
 				global.davinci.states.subscribe("/davinci/states/state/changed", this, function(args) {
-					if (davinci.Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
+					if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
 						return; 
 					}
 					var state = args.newState || "Normal";
@@ -154,7 +155,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		dojo.subscribe("/davinci/ui/editorSelected", this, function(args) {
 			// summary:
 			//		Remove the comment nodes of the previous page
-			if (davinci.Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
+			if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
 				return; 
 			}
 			var editor = args.editor;

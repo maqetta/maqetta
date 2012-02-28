@@ -56,6 +56,8 @@ return declare("davinci.review.editor.Context", [Context], {
 			new SelectTool(surface, ["commentId"]).activate();
 			new ExchangeTool(surface, ["commentId"]);
 			new HighlightTool(surface).activate();
+		} else {
+			surface = doc.annotationSurface;
 		}
 		this._cxtConns = [
 			 dojo.connect(surface.highlightTool, "onShapeMouseDown", function(shape) {

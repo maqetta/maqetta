@@ -42,7 +42,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		this._initCommentForm();
 
 		this.connect(this.commentReplies, "keydown", function(evt) {
-			var loopBody = function(comment){
+			var loopBody = function(comment) {
 				if (comment.pageState == pageState) {
 					comment.enable();
 				} else {
@@ -135,7 +135,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					// Show annotations
 					that._reviewFilterChanged(); // Set reviewer list to be shown
 					dojo.publish(that._currentPage+"/davinci/review/drawing/filter", ["Normal", []]);
-
 				}, 100);
 			}
 			// Response to the state change event in the review editor

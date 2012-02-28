@@ -70,6 +70,11 @@ ViewHelper.prototype = {
 		for(var i=0;i<parentNode.children.length;i++){
 			node=parentNode.children[i];
 			if(domClass.contains(node,"mblView")){
+				//NOTE: setting internal property 'disableTouchScroll', not using official APIs
+				//because official API (dijitWidget.disableTouch(true)) would need to be
+				//called after the 'display:block' operation occurred, and we don't
+				//have a mechanism for triggering additional logic after command stack has completed
+				node._dvWidget.dijitWidget.disableTouchScroll = true;
 				var display, selected;
 				if(node==domNode){
 					display = "";

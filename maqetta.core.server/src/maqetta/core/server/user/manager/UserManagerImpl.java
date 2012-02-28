@@ -21,7 +21,7 @@ import org.maqetta.server.ServerManager;
 public class UserManagerImpl implements IUserManager {
 
     protected static UserManagerImpl theUserManager;
-    protected HashMap                users    = new HashMap();
+  //  protected HashMap                users    = new HashMap();
     protected IStorage            baseDirectory;
 
     protected IPersonManager          personManager;
@@ -78,16 +78,16 @@ public class UserManagerImpl implements IUserManager {
     
     public IUser getUser(String userName) {
 
-        IUser user = (IUser) users.get(userName);
-        if (user == null && ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equals(userName)) {
+       // IUser user = (IUser) users.get(userName);
+        if (ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equals(userName)) {
             return this.getSingleUser();
         }
-        if (user == null && this.checkUserExists(userName)) {
+        if (this.checkUserExists(userName)) {
             IPerson person = this.personManager.getPerson(userName);
-            user = newUser(person, this.baseDirectory.newInstance(this.baseDirectory, userName));
-            users.put(userName, user);
+            return newUser(person, this.baseDirectory.newInstance(this.baseDirectory, userName));
+            
         }
-        return user;
+        return null;
 
     }
 
@@ -110,7 +110,7 @@ public class UserManagerImpl implements IUserManager {
         if (person != null) {
 
             IUser user = newUser(person, this.baseDirectory.newInstance(this.baseDirectory, userName));
-            users.put(userName, user);
+          //  users.put(userName, user);
             //File userDir = user.getUserDirectory();
             //userDir.mkdir();
             //File settingsDir = user.getSettingsDirectory();
@@ -139,7 +139,7 @@ public class UserManagerImpl implements IUserManager {
          */
         IStorage userDir = this.baseDirectory.newInstance(this.baseDirectory, userName);
         VResourceUtils.deleteDir(userDir);
-        users.remove(userName);
+     
         this.usersCount--;
     }
 
@@ -204,7 +204,6 @@ public class UserManagerImpl implements IUserManager {
     }
 
 	public IUser getUser(HttpServletRequest req) {
-		// TODO Auto-generated method stub
 		return (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
 	}
 

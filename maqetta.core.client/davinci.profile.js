@@ -41,7 +41,7 @@ dependencies = {
 		{
 			name: "../davinci/davinci.js",
 			layerDependencies: [
-				"../davinci/davinci-common.js"
+				"../dijit/dijit.js"
 			],
 			dependencies: [
 				"davinci.davinci"

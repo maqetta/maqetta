@@ -217,8 +217,6 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 			if (node.elementType == "ReviewFile") {
 //				window.open(this._location()+"review/"+Runtime.userName+"/"+node.parent.timeStamp+"/"
 //						+node.name+"/default");
-				console.debug("CommentExplorerView: review/"+Runtime.userName+"/"+node.parent.timeStamp+"/"+
-						node.name+"/default");
 				Workbench.openEditor({
 					fileName: node,
 					content: node.getText()

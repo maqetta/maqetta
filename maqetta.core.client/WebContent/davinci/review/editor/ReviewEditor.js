@@ -4,8 +4,9 @@ define([
     "dijit/layout/BorderContainer",
     "dijit/layout/ContentPane",
     "davinci/review/editor/Context",
-	"davinci/Runtime"
-], function(declare, ModelEditor, BorderContainer, ContentPane, Context, Runtime) {
+	"davinci/Runtime",
+	"preview/silhouetteiframe"
+], function(declare, ModelEditor, BorderContainer, ContentPane, Context, Runtime, SilhouetteIframe) {
 	
 return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 
@@ -16,6 +17,15 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 		this.domNode = this._bc.domNode;
 		this._designCP = new dijit.layout.ContentPane({region:'center'});
 		this._bc.addChild(this._designCP);
+		var content = '<div class="silhouette_div_container">'+
+			'<span class="silhouetteiframe_object_container"></span>'+
+			'</div>';
+		this._designCP.set('content', content);
+		var silhouette_div_container=dojo.query('.silhouette_div_container',this._designCP.domNode)[0];
+		this.silhouetteiframe = new SilhouetteIframe({
+			rootNode:silhouette_div_container,
+			margin:20
+		});
 
 		this._bc.startup();
 		this._bc.resize();
@@ -59,12 +69,14 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 		baseUrl = locationPath.append("user").append(designerName)
 		.append("ws").append("workspace").append(filename).toString();
 
+		var containerNode = dojo.query('.silhouette_div_container',this._designCP.domNode)[0];
 		this.context = new Context({
-			containerNode: this._designCP.domNode,
+			containerNode: containerNode,
 			baseURL : baseUrl,
 			fileName : this.fileName,
 			resourceFile: this.resourceFile,
-			containerEditor:this
+			containerEditor:this,
+			iframeattrs:{'class':'silhouetteiframe_iframe'}
 		});
 
 		this.title = dojo.doc.title;

@@ -119,6 +119,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	_editorSelected : function (event){	
 		var editor = event.editor;
 		var langObj = veNls; 
+		this._destroyTree();
 
 		if(editor && editor.supports("states")) {
 			this._editor = editor;
@@ -188,8 +189,11 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 */
 
 	_updateView: function() {
+		if(!this._editor || !this._editor.getContext){
+			return;
+		}
 		var context = this._editor.getContext();
-		if(!context._statesLoaded){
+		if(!context || !context._statesLoaded){
 			return;
 		}
 		this._updateList();
@@ -234,7 +238,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		// If data in Tree widget is same as latest data, then just return
 		if(!this._compareStructures(latestData, storedScenes)){
 			// Destroy the old Tree widget and create a new Tree widget
-			this._destroyCreateTree(latestData);
+			this._destroyTree();
+			this._createTree(latestData);
 		}
 	},
 	
@@ -300,7 +305,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		// If data in Tree widget is same as latest data, then just return
 		if(!this._compareStructures(latestData, storedScenes)){
 			// Destroy the old Tree widget and create a new Tree widget
-			this._destroyCreateTree(latestData);
+			this._destroyTree();
+			this._createTree(latestData);
 		}
 		
 	},
@@ -460,16 +466,21 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		return compareArray(a1, a2);
 	},
 	
-	_destroyCreateTree: function(latestData){
-		var that = this;
-		var context = this._editor.getContext();
-		var sceneManagers = context.sceneManagers;
-		
-		// The following logic recreates the data stores and the Tree
+	
+	_destroyTree: function(){
 		if(this._tree){
 			this._tree.destroyRecursive();
 			this._forest.destroy();
+			this._sceneStore = null;
+			this._forest = null;
+			this._tree = null;
 		}
+	},
+	
+	_createTree: function(latestData){
+		var that = this;
+		var context = this._editor.getContext();
+		var sceneManagers = context.sceneManagers;
 		var skeletonData = { identifier: 'id', label: 'name', items: []};
 		this._sceneStore = new ItemFileWriteStore({ data: skeletonData, clearOnClose:true });
 		this._forest = new ForestStoreModel({ store:this._sceneStore, query:{type:'file'},

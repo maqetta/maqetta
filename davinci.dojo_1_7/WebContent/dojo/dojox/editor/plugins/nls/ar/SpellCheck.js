@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/ar/SpellCheck", //begin v1.x content
 ({
 	widgetLabel: "فحص هجاء دفعي",
 	unfound: "غير موجودة",

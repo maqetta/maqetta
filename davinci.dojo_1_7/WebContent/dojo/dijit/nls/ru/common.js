@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/nls/ru/common", //begin v1.x content
 ({
 	buttonOk: "ОК",
 	buttonCancel: "Отмена",

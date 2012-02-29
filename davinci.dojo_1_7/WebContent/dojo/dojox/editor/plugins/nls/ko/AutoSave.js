@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/ko/AutoSave", //begin v1.x content
 ({
 	"saveLabel": "저장",
 	"saveSettingLabelOn": "자동 저장 간격 설정...",

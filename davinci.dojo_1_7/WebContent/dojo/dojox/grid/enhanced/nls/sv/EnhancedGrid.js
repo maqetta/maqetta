@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/grid/enhanced/nls/sv/EnhancedGrid", //begin v1.x content
 ({
 	singleSort: "Enkel sortering",
 	nestedSort: "Nästlad sortering",

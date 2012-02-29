@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/da/FindReplace", //begin v1.x content
 ({
 	"findLabel": "Søg efter:",
 	"findTooltip": "Indtast tekst, der skal søges efter",
@@ -11,7 +11,6 @@ define(
 	"matchCaseTooltip": "Store/små bogstaver",
 	"backwards": "Tilbage",
 	"backwardsTooltip": "Søg baglæns efter tekst",
-	"replaceAll": "Alle forekomster",
 	"replaceAllButton": "Erstat alle",
 	"replaceAllButtonTooltip": "Erstat alle forekomster i teksten",
 	"findButton": "Søg",

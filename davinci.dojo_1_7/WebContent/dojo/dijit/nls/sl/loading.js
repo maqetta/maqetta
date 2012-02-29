@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/nls/sl/loading", //begin v1.x content
 ({
 	loadingState: "Nalaganje ...",
 	errorState: "Oprostite, prišlo je do napake."

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/nls/kk/loading", //begin v1.x content
 ({
 	loadingState: "Жүктелуде...",
 	errorState: "Кешіріңіз, қате орын алды"

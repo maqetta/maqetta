@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/_editor/nls/da/commands", //begin v1.x content
 ({
 	'bold': 'Fed',
 	'copy': 'Kopiér',

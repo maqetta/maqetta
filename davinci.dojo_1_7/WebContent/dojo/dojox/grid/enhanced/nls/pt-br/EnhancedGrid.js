@@ -1,6 +1,6 @@
 //>>built
 define(
-({
+"dojox/grid/enhanced/nls/pt-br/EnhancedGrid", ({
 	singleSort: "Classificação Única",
 	nestedSort: "Classificação Aninhada",
 	ascending: "Crescente",

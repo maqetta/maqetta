@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/he/FindReplace", //begin v1.x content
 ({
 	"findLabel": "חיפוש: ",
 	"findTooltip": "ציינו תמליל לחיפוש",
@@ -11,7 +11,6 @@ define(
 	"matchCaseTooltip": "התאמת רישיות",
 	"backwards": "אחורה ",
 	"backwardsTooltip": "חיפוש תמליל אחורה ",
-	"replaceAll": "כל המופעים ",
 	"replaceAllButton": "החלפת הכל ",
 	"replaceAllButtonTooltip": "החלפת כל התמליל ",
 	"findButton": "חיפוש",

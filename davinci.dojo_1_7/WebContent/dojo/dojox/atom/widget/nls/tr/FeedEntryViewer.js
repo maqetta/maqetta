@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/atom/widget/nls/tr/FeedEntryViewer", //begin v1.x content
 ({
 	displayOptions: "[görüntüleme seçenekleri]",
 	title: "Başlık",

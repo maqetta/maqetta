@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/form/nls/fr/Textarea", //begin v1.x content
 ({
 	iframeEditTitle: "zone d'édition",  // primary title for editable IFRAME, for screen readers when focus is in the editing area
 	iframeFocusTitle: "cadre de la zone d'édition"  // secondary title for editable IFRAME when focus is on outer container

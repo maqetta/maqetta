@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/ja/InsertAnchor", //begin v1.x content
 ({
 	insertAnchor: "アンカーの挿入",
 	title: "アンカー・プロパティー",

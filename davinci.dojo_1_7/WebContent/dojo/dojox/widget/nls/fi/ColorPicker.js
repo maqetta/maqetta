@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/widget/nls/fi/ColorPicker", //begin v1.x content
 ({
 huePickerTitle: "Sävyn valitsin",
 saturationPickerTitle: "Kylläisyyden valitsin"

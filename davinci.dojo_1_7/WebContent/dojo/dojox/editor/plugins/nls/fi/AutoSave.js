@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/fi/AutoSave", //begin v1.x content
 ({
 	"saveLabel": "Tallenna",
 	"saveSettingLabelOn": "Aseta automaattisen tallennuksen väli...",

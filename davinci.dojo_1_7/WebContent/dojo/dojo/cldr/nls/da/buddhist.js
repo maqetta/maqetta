@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/cldr/nls/da/buddhist", //begin v1.x content
 {
 	"dateFormatItem-yM": "M/y G",
 	"dateFormatItem-yQ": "Q y G",

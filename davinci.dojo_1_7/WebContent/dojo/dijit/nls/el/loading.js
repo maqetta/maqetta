@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/nls/el/loading", //begin v1.x content
 ({
 	loadingState: "Φόρτωση...",
 	errorState: "Σας ζητούμε συγνώμη, παρουσιάστηκε σφάλμα"

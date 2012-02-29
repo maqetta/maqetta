@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/nls/fi/common", //begin v1.x content
 ({
 	buttonOk: "OK",
 	buttonCancel: "Peruuta",

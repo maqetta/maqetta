@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/form/nls/ru/Textarea", //begin v1.x content
 ({
 	iframeEditTitle: 'область редактирования',  // primary title for editable IFRAME, for screen readers when focus is in the editing area
 	iframeFocusTitle: 'фрейм области редактирования'  // secondary title for editable IFRAME when focus is on outer container

@@ -19,7 +19,7 @@ define({ root: {
 		"calendarInputHelp":"Enter a date string for the date you want the widget to display as the current day. For example: \"October 13, 1975\" or an empty string for the current date \"\".",
 		
 		//form/DropDownButtonInput.js
-		"dropDownButtonInputHelp":"Enter multiple lines of data. The first line is the button text and each addtional line is a drop down option. Optionally indicate option items by putting one \">\" character at the start of a line.",
+		"dropDownButtonInputHelp":"Enter multiple lines of data. The first line is the button text and each addtional line is a drop down option. Optionally indicate option items by putting one \">\" character at the start of a line.  Use \"^\" instead to indicate a popup TooltipDialog.",
 		"plainText":"Plain text ({0})",
 
 		//MenuBarInput.js

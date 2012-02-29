@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/es/SpellCheck", //begin v1.x content
 ({
 	widgetLabel: "Corrector ortográfico por lotes",
 	unfound: "No encontrado",

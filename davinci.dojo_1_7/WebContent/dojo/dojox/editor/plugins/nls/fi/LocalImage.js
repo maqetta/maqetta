@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/fi/LocalImage", //begin v1.x content
 ({
 	insertImageTitle: "Lisää kuva",
 	url: "Kuva",

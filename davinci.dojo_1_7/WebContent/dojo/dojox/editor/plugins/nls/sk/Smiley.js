@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/sk/Smiley", //begin v1.x content
 ({
 	smiley: "Vložiť emotikon",
 	emoticonSmile: "úsmev",
@@ -20,7 +20,8 @@ define(
 	emoticonYes: "áno",
 	emoticonNo: "nie",
 	emoticonAngel: "anjel",
-	emoticonCrying: "plač"
+	emoticonCrying: "plač",
+	emoticonHappy: "šťastný"
 })
 
 //end v1.x content

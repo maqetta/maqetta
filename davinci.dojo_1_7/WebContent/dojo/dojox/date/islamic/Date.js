@@ -2,7 +2,6 @@
 define("dojox/date/islamic/Date",["dojo/_base/kernel","dojo/_base/declare","dojo/date"],function(_1,_2,dd){
 _1.getObject("date.buddhist.Date",true,dojox);
 _1.experimental("dojox.date.buddhist.Date");
-_1.requireLocalization("dojo.cldr","islamic");
 _1.declare("dojox.date.islamic.Date",null,{_date:0,_month:0,_year:0,_hours:0,_minutes:0,_seconds:0,_milliseconds:0,_day:0,_GREGORIAN_EPOCH:1721425.5,_ISLAMIC_EPOCH:1948439.5,constructor:function(){
 var _3=arguments.length;
 if(!_3){

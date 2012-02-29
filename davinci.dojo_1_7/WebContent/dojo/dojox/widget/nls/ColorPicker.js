@@ -1,5 +1,5 @@
 //>>built
-define({ root:
+define("dojox/widget/nls/ColorPicker", { root:
 //begin v1.x content
 ({
 redLabel: "r",
@@ -34,6 +34,7 @@ saturationPickerTitle: "Saturation Selector"
 "ja": true,
 "it": true,
 "hu": true,
+"hr": true,
 "he": true,
 "fr": true,
 "fi": true,

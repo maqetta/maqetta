@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/ja/SpellCheck", //begin v1.x content
 ({
 	widgetLabel: "一括スペル・チェック",
 	unfound: "見つかりません",

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/el/PasteFromWord", //begin v1.x content
 ({
 	"pasteFromWord": "Επικόλληση από το Word",
 	"paste": "Επικόλληση",

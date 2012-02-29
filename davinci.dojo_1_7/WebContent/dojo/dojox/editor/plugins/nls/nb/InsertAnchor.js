@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/nb/InsertAnchor", //begin v1.x content
 ({
 	insertAnchor: "Sett inn anker",
 	title: "Ankeregenskaper",

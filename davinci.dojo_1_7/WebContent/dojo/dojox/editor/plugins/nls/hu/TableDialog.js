@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/hu/TableDialog", //begin v1.x content
 ({
 	insertTableTitle: "Táblázat beszúrása",
 	modifyTableTitle: "Táblázat módosítása",

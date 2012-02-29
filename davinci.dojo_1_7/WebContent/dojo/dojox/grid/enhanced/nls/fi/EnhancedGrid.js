@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/grid/enhanced/nls/fi/EnhancedGrid", //begin v1.x content
 ({
 	singleSort: "Yksinkertainen lajittelu",
 	nestedSort: "Sisäkkäinen lajittelu",

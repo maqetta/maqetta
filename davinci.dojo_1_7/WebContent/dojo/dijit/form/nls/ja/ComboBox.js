@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/form/nls/ja/ComboBox", //begin v1.x content
 ({
 		previousMessage: "以前の選択項目",
 		nextMessage: "追加の選択項目"

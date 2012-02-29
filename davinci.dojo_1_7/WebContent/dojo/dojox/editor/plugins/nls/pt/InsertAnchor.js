@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/pt/InsertAnchor", //begin v1.x content
 ({
 	insertAnchor: "Inserir Âncora",
 	title: "Propriedades de Âncora",

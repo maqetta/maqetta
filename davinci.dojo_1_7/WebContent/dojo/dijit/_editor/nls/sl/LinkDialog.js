@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/_editor/nls/sl/LinkDialog", //begin v1.x content
 ({
 	createLinkTitle: "Lastnosti povezave",
 	insertImageTitle: "Lastnosti slike",

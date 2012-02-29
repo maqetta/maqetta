@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/cldr/nls/da/islamic", //begin v1.x content
 {
 	"dateFormatItem-yM": "M/y",
 	"dateFormatItem-yyyyMMMEd": "EEE. d. MMM y G",

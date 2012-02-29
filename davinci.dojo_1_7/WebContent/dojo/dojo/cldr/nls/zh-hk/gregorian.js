@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/cldr/nls/zh-hk/gregorian", //begin v1.x content
 {
 	"dateFormatItem-yM": "yyyy/M",
 	"field-minute": "分鐘",

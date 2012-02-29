@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/widget/nls/ja/Wizard", //begin v1.x content
 ({
 next: "次へ",
 previous: "前へ",

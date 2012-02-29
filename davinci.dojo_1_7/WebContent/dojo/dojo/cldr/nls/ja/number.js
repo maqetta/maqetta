@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/cldr/nls/ja/number", //begin v1.x content
 {
 	"decimalFormat": "#,##0.###",
 	"group": ",",

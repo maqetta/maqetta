@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/tr/InsertEntity", //begin v1.x content
 ({
 	insertEntity: "Simge Ekle"
 })

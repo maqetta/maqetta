@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/fi/InsertAnchor", //begin v1.x content
 ({
 	insertAnchor: "Lisää ankkuri",
 	title: "Ankkurin ominaisuudet",

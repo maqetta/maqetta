@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/ru/FindReplace", //begin v1.x content
 ({
 	"findLabel": "Найти:",
 	"findTooltip": "Введите текст для поиска",
@@ -11,7 +11,6 @@ define(
 	"matchCaseTooltip": "С учетом регистра",
 	"backwards": "Назад",
 	"backwardsTooltip": "Поиск текста в обратном направлении",
-	"replaceAll": "Все вхождения",
 	"replaceAllButton": "Заменить все",
 	"replaceAllButtonTooltip": "Заменить весь текст",
 	"findButton": "Найти",

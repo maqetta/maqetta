@@ -1,6 +1,6 @@
 //>>built
-define("dojox/charting/Element", ["dojo/_base/lang", "dojo/_base/array", "dojo/dom-construct","dojo/_base/declare", "dojox/gfx"], 
-	function(lang, arr, domConstruct, declare, gfx){ 
+define("dojox/charting/Element", ["dojo/_base/lang", "dojo/_base/array", "dojo/dom-construct","dojo/_base/declare", "dojox/gfx", "dojox/gfx/utils", "dojox/gfx/shape"],
+	function(lang, arr, domConstruct, declare, gfx, utils, shape){
 	
 	return declare("dojox.charting.Element", null, {
 		//	summary:
@@ -52,6 +52,10 @@ define("dojox/charting/Element", ["dojo/_base/lang", "dojo/_base/array", "dojo/d
 			//		A reference to this object for functional chaining.
 			this.destroyHtmlElements();
 			if(this.group){
+				// since 1.7.x we need dispose shape otherwise there is a memoryleak
+				utils.forEach(this.group, function(child){
+					shape.dispose(child);
+				});
 				this.group.clear();
 				this.group.removeShape();
 				this.group = null;

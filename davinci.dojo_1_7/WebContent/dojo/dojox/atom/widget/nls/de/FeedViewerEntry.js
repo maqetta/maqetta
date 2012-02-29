@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/atom/widget/nls/de/FeedViewerEntry", //begin v1.x content
 ({
 	deleteButton: "[Löschen]"
 })

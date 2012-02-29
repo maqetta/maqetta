@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/sv/PasteFromWord", //begin v1.x content
 ({
 	"pasteFromWord": "Klistra in från Word",
 	"paste": "Klistra in",

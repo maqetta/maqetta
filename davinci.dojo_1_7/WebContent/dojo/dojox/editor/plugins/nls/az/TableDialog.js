@@ -1,7 +1,6 @@
 //>>built
 define(
-//begin v1.x content
-({
+"dojox/editor/plugins/nls/az/TableDialog", ({
 	"buttonSet" : "Yönəlt",
 	"insertTableTitle" : "Cədvəl əlavə et",
 	"insertTableRowAfterLabel" : "Sətirin sonuna əlavə et",
@@ -11,6 +10,7 @@ define(
 	"insertTableColumnBeforeLabel" : "Sütunu əvvəlinə əlavə et",
 	"tableWidth" : "Cədvəl Genişliyi",
 	"buttonInsert" : "Əlavə et",
+	"buttonCancel" : "Ləğv et",
 	"default" : "varsayılan",
 	"align" : "Doğrult:",
 	"insertTableRowBeforeLabel" : "Sətiri əvvəlinə əlavə et",
@@ -29,5 +29,4 @@ define(
 	"percent" : "faiz",
 	"borderColor" : "Çərçivə Rəngi: "
 })
-//end v1.x content
 );

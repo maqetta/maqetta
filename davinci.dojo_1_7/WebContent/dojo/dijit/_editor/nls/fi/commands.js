@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/_editor/nls/fi/commands", //begin v1.x content
 ({
 	'bold': 'Lihavointi',
 	'copy': 'Kopioi',

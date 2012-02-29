@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/fi/TableDialog", //begin v1.x content
 ({
 	insertTableTitle: "Lisää taulukko",
 	modifyTableTitle: "Muokkaa taulukkoa",

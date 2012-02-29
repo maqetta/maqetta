@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/form/nls/cs/ComboBox", //begin v1.x content
 ({
 		previousMessage: "Předchozí volby",
 		nextMessage: "Další volby"

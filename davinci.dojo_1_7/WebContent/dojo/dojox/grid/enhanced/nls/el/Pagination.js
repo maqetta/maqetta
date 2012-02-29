@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/grid/enhanced/nls/el/Pagination", //begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} από ${1} ${0}",
 	"firstTip": "Πρώτη σελίδα",
@@ -8,6 +8,7 @@ define(
 	"nextTip": "Επόμενη σελίδα",
 	"prevTip": "Προηγούμενη σελίδα",
 	"itemTitle": "στοιχεία",
+	"singularItemTitle": "στοιχείο",
 	"pageStepLabelTemplate": "Σελίδα ${0}",
 	"pageSizeLabelTemplate": "${0} στοιχεία ανά σελίδα",
 	"allItemsLabelTemplate": "Όλα τα στοιχεία",
@@ -21,4 +22,3 @@ define(
 })
 //end v1.x content
 );
-

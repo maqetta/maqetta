@@ -63,6 +63,9 @@ _17=new this.dateClassObj(_17);
 }
 }
 this.inherited(arguments);
+if(this.value instanceof Date){
+this.filterString="";
+}
 if(this.dropDown){
 this.dropDown.set("value",_17,false);
 }
@@ -82,7 +85,7 @@ this.dropDown.destroy();
 }
 var _1d=_5.isString(this.popupClass)?_5.getObject(this.popupClass,false):this.popupClass,_1e=this,_1f=this.get("value");
 this.dropDown=new _1d({onChange:function(_20){
-_9.superclass._setValueAttr.call(_1e,_20,true);
+_1e.set("value",_20,true);
 },id:this.id+"_popup",dir:_1e.dir,lang:_1e.lang,value:_1f,currentFocus:!this._isInvalidDate(_1f)?_1f:this.dropDownDefaultValue,constraints:_1e.constraints,filterString:_1e.filterString,datePackage:_1e.datePackage,isDisabledDate:function(_21){
 return !_1e.rangeCheck(_21,_1e.constraints);
 }});

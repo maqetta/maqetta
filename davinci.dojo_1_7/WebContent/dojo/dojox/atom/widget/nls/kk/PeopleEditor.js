@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/atom/widget/nls/kk/PeopleEditor", //begin v1.x content
 ({
 	add: "Қосу",
 	addAuthor: "Авторды қосу",

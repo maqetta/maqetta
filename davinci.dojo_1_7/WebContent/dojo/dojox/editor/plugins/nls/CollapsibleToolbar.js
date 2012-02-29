@@ -1,9 +1,11 @@
 //>>built
-define({ root:
+define("dojox/editor/plugins/nls/CollapsibleToolbar", { root:
+//begin v1.x content
 ({
 	"collapse": "Collapse Editor Toolbar",
 	"expand": "Expand Editor Toolbar"
-}),
+})
+,
 //end v1.x content
 "zh": true,
 "zh-tw": true,
@@ -24,6 +26,7 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
+"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -35,4 +38,3 @@ define({ root:
 "ca": true,
 "ar": true
 });
-

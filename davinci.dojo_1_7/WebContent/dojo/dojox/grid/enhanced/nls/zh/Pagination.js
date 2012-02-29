@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/grid/enhanced/nls/zh/Pagination", //begin v1.x content
 ({
 	"descTemplate": "${1} 个${0}中的  ${2} - ${3}",
 	"firstTip": "第一页",

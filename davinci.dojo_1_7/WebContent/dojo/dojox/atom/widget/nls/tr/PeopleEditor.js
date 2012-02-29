@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/atom/widget/nls/tr/PeopleEditor", //begin v1.x content
 ({
 	add: "Ekle",
 	addAuthor: "Yazar Ekle",

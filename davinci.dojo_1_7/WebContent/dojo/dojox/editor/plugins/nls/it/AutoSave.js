@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/it/AutoSave", //begin v1.x content
 ({
 	"saveLabel": "Salva",
 	"saveSettingLabelOn": "Imposta intervallo di salvataggio automatico...",

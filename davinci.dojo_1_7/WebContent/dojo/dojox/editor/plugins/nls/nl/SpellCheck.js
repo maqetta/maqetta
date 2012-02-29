@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/nl/SpellCheck", //begin v1.x content
 ({
 	widgetLabel: "Groepsgewijze spellingcontrole",
 	unfound: "Niet gevonden",

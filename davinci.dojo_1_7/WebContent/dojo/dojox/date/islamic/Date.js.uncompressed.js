@@ -4,8 +4,6 @@ define("dojox/date/islamic/Date", ["dojo/_base/kernel", "dojo/_base/declare", "d
 dojo.getObject("date.buddhist.Date", true, dojox);
 dojo.experimental("dojox.date.buddhist.Date");
 
-dojo.requireLocalization("dojo.cldr", "islamic");
-
 dojo.declare("dojox.date.islamic.Date", null, {
 	// summary: The component defines the Islamic (Hijri) Calendar Object
 	//

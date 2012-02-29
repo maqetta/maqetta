@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/grid/enhanced/nls/fi/Pagination", //begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} / ${1} ${0}",
 	"firstTip": "Ensimmäinen sivu",
@@ -8,6 +8,7 @@ define(
 	"nextTip": "Seuraava sivu",
 	"prevTip": "Edellinen sivu",
 	"itemTitle": "nimikkeet",
+	"singularItemTitle": "kohde",
 	"pageStepLabelTemplate": "Sivu ${0}",
 	"pageSizeLabelTemplate": "${0} nimikettä sivua kohti",
 	"allItemsLabelTemplate": "Kaikki nimikkeet",
@@ -21,4 +22,3 @@ define(
 })
 //end v1.x content
 );
-

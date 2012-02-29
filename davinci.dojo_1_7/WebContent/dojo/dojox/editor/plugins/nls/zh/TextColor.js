@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/zh/TextColor", //begin v1.x content
 ({
 	"setButtonText": "设置",
 	"cancelButtonText": "取消"

@@ -8,9 +8,8 @@ _FixedElemMixin.prototype = {
 			// instead, pull value from the model.
 			if (prop === 'fixed') {
 				var attr = widget._srcElement._getAttribute(prop);
-				if (attr) {
-					return attr.value;
-				}
+				// default value is empty string
+				return attr && attr.value || '';
 			}
 			return widget._getPropertyValue(prop);
 		}

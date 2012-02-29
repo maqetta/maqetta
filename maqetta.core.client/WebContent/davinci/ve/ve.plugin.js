@@ -49,7 +49,11 @@ return {
                 },
                 {
                     viewID: "davinci.ui.navigator",
-                    position: "left"
+                    position: "left-bottom"
+                },
+                {
+                    viewID: "davinci.review.reviewNavigator",
+                    position: "left-bottom"
                 },
                 {
                     viewID: "davinci.ve.style",
@@ -57,7 +61,7 @@ return {
                 },
                 {
                     viewID: "davinci.ui.outline",
-                    position: "left-bottom"
+                    position: "left"
                 },
                 {
                     viewID: "davinci.ve.states",

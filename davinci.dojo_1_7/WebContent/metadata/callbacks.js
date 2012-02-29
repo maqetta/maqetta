@@ -35,6 +35,7 @@
 	 * hideAppStates()
 	 *		Returns true if the app should not show "application states". 
 	 *		Usually, library returns true only if it offers an alternate notion of scenes.
+	 *		NOTE: Called from both page editor (widget helpers available) and review editor (widget helpers not available).
 	 *		@returns {boolean} 
 	 *
 	 * This class must provide the following properties on the SceneManager instance object:
@@ -189,9 +190,17 @@
 			return scenes;
 		},
 		hideAppStates: function(){
-			var device = (this.context && this.context._visualEditor && this.context._visualEditor.getDevice) ?
-					this.context._visualEditor.getDevice() : "";
-			return (!device || device === '' || device === 'none') ? false : true;
+			if(this.context.declaredClass == 'davinci.ve.Context'){
+				var device = (this.context && this.context._visualEditor && this.context._visualEditor.getDevice) ?
+						this.context._visualEditor.getDevice() : "";
+				return (!device || device === '' || device === 'none') ? false : true;
+			}else if(this.context.declaredClass == 'davinci.review.editor.Context'){
+				var body = this.context.rootNode;
+				if(body){
+					var statesAttr = body.getAttribute('data-maqetta-device');
+					return (statesAttr !== null && statesAttr !== '' && statesAttr !== 'none' && statesAttr !== 'desktop');
+				}
+			}
 		}
 	};
 

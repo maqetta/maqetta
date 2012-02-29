@@ -1842,6 +1842,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	select: function(widget, add, inline){
+		if(this.declaredClass == 'davinci.review.editor.Context'){
+			return;
+		}
 		if(!widget || widget==this.rootWidget){
 			if(!add){
 				this.deselect(); // deselect all

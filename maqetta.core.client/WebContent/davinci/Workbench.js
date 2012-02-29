@@ -992,7 +992,7 @@ var Workbench = {
 		var nodeName = fileName.split('/').pop();
 		var extension = keywordArgs && keywordArgs.fileName && keywordArgs.fileName.extension ? 
 				"." + keywordArgs.fileName.extension : "";
-		nodeName = nodeName + extension;
+		nodeName = nodeName + (extension == ".rev" ? extension : "");
 
 		var loading = dojo.query('.loading');
 		if (loading[0]) {

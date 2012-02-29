@@ -1373,7 +1373,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	        if(helper && helper.preProcess){
 	            helper.preProcess(node, this);
 	        }
-        });
+        }.bind(this));
     },
 	    
 	_editorSelectionChange: function(event){

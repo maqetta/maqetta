@@ -89,6 +89,17 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 
 	onResize: function() {
 
+	},
+	
+	getFileNameToDisplay: function() {
+		var newFileName = this.fileName;
+		var parts = newFileName.split('/');
+		if(parts.length > 3){
+			// Remove leading .review/snapshots/NNNNN/
+			parts.splice(0, 3);
+			newFileName = parts.join('/');
+		}
+		return newFileName;
 	}
 
 });

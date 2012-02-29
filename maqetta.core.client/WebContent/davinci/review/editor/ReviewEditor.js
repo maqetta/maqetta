@@ -99,7 +99,8 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 			parts.splice(0, 3);
 			newFileName = parts.join('/');
 		}
-		return newFileName;
+		//FIXME: Shouldn't hard-code, instead should pull from plugin file
+		return newFileName+'.rev';
 	}
 
 });

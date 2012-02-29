@@ -19,7 +19,7 @@ return declare("davinci.review.editor.Context", [Context], {
 		if (!versionInfo.height)
 			containerNode.style.overflowY = "hidden";
 		if (!this.frame) {
-			this.frame = dojo.create("iframe", {
+			this.frame = dojo.create("iframe", dojo.mixin(this.iframeattrs, {
 				style: {
 					border: "0",
 					width: versionInfo.width&&versionInfo.height?versionInfo.width+"px":"100%",
@@ -35,10 +35,14 @@ return declare("davinci.review.editor.Context", [Context], {
 							 davinci.Runtime.commenting_commentId
 							 ]);
 					this.rootNode = this.rootWidget = this.frame.contentDocument.body;
+					var deviceName = this.rootNode.getAttribute('data-maqetta-device');
+					var svgfilename = (!deviceName || deviceName == 'none' || deviceName == 'desktop') 
+							? null : "app/preview/images/" + deviceName + ".svg";
+					this.containerEditor.silhouetteiframe.setSVGFilename(svgfilename);
 					this._statesLoaded = true;
 					dojo.publish('/davinci/ui/context/statesLoaded', [this]);
 				})
-			}, containerNode);
+			}), containerNode);
 		}
 	},
 

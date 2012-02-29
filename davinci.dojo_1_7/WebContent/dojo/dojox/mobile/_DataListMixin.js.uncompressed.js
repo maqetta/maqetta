@@ -35,13 +35,7 @@ define("dojox/mobile/_DataListMixin", [
 		// queryOptions: Object
 		//		An optional parameter for the query.
 		queryOptions: null,
-		
-		// itemMap: Object 
-		//              An optional parameter mapping field names from the store to ItemList name. 
-	 	// example: 
-	 	// |    itemMap:{text:'label', profile_image_url:'icon' } 
-	 	itemMap: null, 
-	 	
+
 		buildRendering: function(){
 			this.inherited(arguments);
 			if(!this.store){ return; }
@@ -90,7 +84,7 @@ define("dojox/mobile/_DataListMixin", [
 				if(name === labelAttr){
 					attr["label"] = this.store.getLabel(item);
 				}else{
-					attr[(this.itemMap && this.itemMap[name]) || name] = this.store.getValue(item, name); 
+					attr[name] = this.store.getValue(item, name);
 				}
 			}, this);
 			var w = new ListItem(attr);

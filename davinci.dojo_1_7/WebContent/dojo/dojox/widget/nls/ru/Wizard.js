@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/widget/nls/ru/Wizard", //begin v1.x content
 ({
 next: "Далее",
 previous: "Назад",

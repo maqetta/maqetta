@@ -11,7 +11,7 @@ var _2=_1.has||function(){
 if(!1){
 var _3=typeof window!="undefined"&&typeof location!="undefined"&&typeof document!="undefined"&&window.location==location&&window.document==document,_4=this,_5=_3&&document,_6=_5&&_5.createElement("DiV"),_7={};
 _2=function(_8){
-return _7[_8]=typeof _7[_8]=="function"?_7[_8](_4,_5,_6):_7[_8];
+return typeof _7[_8]=="function"?(_7[_8]=_7[_8](_4,_5,_6)):_7[_8];
 };
 _2.cache=_7;
 _2.add=function(_9,_a,_b,_c){

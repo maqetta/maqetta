@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/it/PageBreak", //begin v1.x content
 ({
 	"pageBreak": "Interruzione di pagina"
 })

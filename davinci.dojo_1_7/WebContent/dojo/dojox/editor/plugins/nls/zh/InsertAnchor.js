@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/zh/InsertAnchor", //begin v1.x content
 ({
 	insertAnchor: "插入锚点",
 	title: "锚点属性",

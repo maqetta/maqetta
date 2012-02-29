@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/widget/nls/az/ColorPicker", //begin v1.x content
 ({
 	"redLabel" : "q",
 	"valueLabel" : "d",

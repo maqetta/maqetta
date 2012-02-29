@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/form/nls/ru/PasswordValidator", //begin v1.x content
 ({
         nomatchMessage: "Пароли не совпадают.",
 		badPasswordMessage: "Неправильный пароль."

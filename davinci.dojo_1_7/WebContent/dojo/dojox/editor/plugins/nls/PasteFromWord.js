@@ -1,7 +1,8 @@
 //>>built
-define({ root:
+define("dojox/editor/plugins/nls/PasteFromWord", { root:
+//begin v1.x content
 ({
-	"pasteFromWord": "Paste From  Word",
+	"pasteFromWord": "Paste From Word",
 	"paste": "Paste",
 	"cancel": "Cancel",
 	"instructions": "Paste the content from Word into the text box below.  Once you are satisfied with the content to insert, press the paste button.  To abort inserting text, press the cancel button."
@@ -26,6 +27,7 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
+"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -37,4 +39,3 @@ define({ root:
 "ca": true,
 "ar": true
 });
-

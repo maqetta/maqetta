@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/form/nls/ru/validate", //begin v1.x content
 ({
 	invalidMessage: "Указано недопустимое значение.",
 	missingMessage: "Это обязательное значение.",

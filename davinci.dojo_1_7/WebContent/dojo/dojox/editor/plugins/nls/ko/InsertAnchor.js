@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/ko/InsertAnchor", //begin v1.x content
 ({
 	insertAnchor: "기준 위치 삽입",
 	title: "기준 위치 특성",

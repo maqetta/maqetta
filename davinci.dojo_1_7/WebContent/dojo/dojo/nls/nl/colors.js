@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/nls/nl/colors", //begin v1.x content
 ({
 // local representation of all CSS3 named colors, companion to dojo.colors.  To be used where descriptive information
 // is required for each color, such as a palette widget, and not for specifying color programatically.
@@ -147,6 +147,7 @@ tan: "geelbruin",
 teal: "grijsblauw",
 thistle: "distel",
 tomato: "tomaat",
+transparent: "transparant",
 turquoise: "turquoise",
 violet: "violet",
 wheat: "tarwebruin",

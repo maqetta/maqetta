@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/cldr/nls/zh-hk/number", //begin v1.x content
 {
 	"currencyFormat": "¤#,##0.00"
 }

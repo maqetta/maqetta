@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/cldr/nls/zh-hk/currency", //begin v1.x content
 {
 	"HKD_displayName": "港幣",
 	"HKD_symbol": "HK$",

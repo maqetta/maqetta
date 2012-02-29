@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/_editor/nls/el/LinkDialog", //begin v1.x content
 ({
 	createLinkTitle: "Ιδιότητες σύνδεσης",
 	insertImageTitle: "Ιδιότητες εικόνας",

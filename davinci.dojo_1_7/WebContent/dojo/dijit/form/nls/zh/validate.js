@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/form/nls/zh/validate", //begin v1.x content
 ({
 	invalidMessage: "输入的值无效。",
 	missingMessage: "此值是必需值。",

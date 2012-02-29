@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/fi/FindReplace", //begin v1.x content
 ({
 	"findLabel": "Etsi:",
 	"findTooltip": "Anna etsittävä teksti",
@@ -11,7 +11,6 @@ define(
 	"matchCaseTooltip": "Sama kirjainkoko",
 	"backwards": "Taaksepäin",
 	"backwardsTooltip": "Etsi tekstiä taaksepäin",
-	"replaceAll": "Kaikki esiintymät",
 	"replaceAllButton": "Korvaa kaikki",
 	"replaceAllButtonTooltip": "Korvaa kaikki teksti",
 	"findButton": "Etsi",

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/widget/nls/el/Wizard", //begin v1.x content
 ({
 next: "Επόμενο",
 previous: "Προηγούμενο",

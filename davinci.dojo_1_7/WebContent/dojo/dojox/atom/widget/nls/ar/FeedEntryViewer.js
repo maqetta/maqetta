@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/atom/widget/nls/ar/FeedEntryViewer", //begin v1.x content
 ({
 	displayOptions: "[اختيارات العرض]",
 	title: "العنوان",

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/de/InsertAnchor", //begin v1.x content
 ({
 	insertAnchor: "Anker einfügen",
 	title: "Eigenschaften des Ankers",

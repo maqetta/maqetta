@@ -1,6 +1,6 @@
 //>>built
 define(
-({
+"dojox/grid/enhanced/nls/pt-br/Pagination", ({
 	// ${0}: string
 	//		unit of item, identified by "itemTitle"
 	// ${2}: number

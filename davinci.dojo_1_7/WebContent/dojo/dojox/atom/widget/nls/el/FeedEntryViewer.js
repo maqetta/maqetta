@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/atom/widget/nls/el/FeedEntryViewer", //begin v1.x content
 ({
 	displayOptions: "[επιλογές παρουσίασης]",
 	title: "Τίτλος",

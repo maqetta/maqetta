@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/_editor/nls/ro/LinkDialog", //begin v1.x content
 ({
 	createLinkTitle: "Proprietăţi legătură",
 	insertImageTitle: "Proprietăţi imagine",

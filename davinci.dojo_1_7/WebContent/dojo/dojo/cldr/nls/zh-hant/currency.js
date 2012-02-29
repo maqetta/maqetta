@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/cldr/nls/zh-hant/currency", //begin v1.x content
 {
 	"HKD_displayName": "港幣",
 	"CHF_displayName": "瑞士法郎",

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/widget/nls/zh/ColorPicker", //begin v1.x content
 ({
 hexLabel: "十六进制",
 huePickerTitle: "色彩选择器",

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/grid/enhanced/nls/ro/Pagination", //begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} din ${1} ${0}",
 	"firstTip": "Prima pagină",
@@ -8,6 +8,7 @@ define(
 	"nextTip": "Următoarea pagină",
 	"prevTip": "Pagina anterioarp",
 	"itemTitle": "articole",
+	"singularItemTitle": "articol",
 	"pageStepLabelTemplate": "Pagina ${0}",
 	"pageSizeLabelTemplate": "${0} articole pe pagină",
 	"allItemsLabelTemplate": "Toate articolele",
@@ -21,4 +22,3 @@ define(
 })
 //end v1.x content
 );
-

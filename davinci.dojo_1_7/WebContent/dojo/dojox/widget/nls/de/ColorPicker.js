@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/widget/nls/de/ColorPicker", //begin v1.x content
 ({
 huePickerTitle: "Farbtonauswahl",
 saturationPickerTitle: "Sättigungsauswahl"

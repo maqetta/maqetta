@@ -1,5 +1,5 @@
 //>>built
-define({ root:
+define("dojo/cldr/nls/buddhist", { root:
 
 //begin v1.x content
 {

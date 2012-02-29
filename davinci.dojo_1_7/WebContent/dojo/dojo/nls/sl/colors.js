@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/nls/sl/colors", //begin v1.x content
 ({
 // local representation of all CSS3 named colors, companion to dojo.colors.  To be used where descriptive information
 // is required for each color, such as a palette widget, and not for specifying color programatically.
@@ -147,6 +147,7 @@ tan: "rumeno-rjava",
 teal: "modrozelena",
 thistle: "osatna",
 tomato: "paradižnikova",
+transparent: "prosojno",
 turquoise: "turkizna",
 violet: "vijolična",
 wheat: "pšenična",

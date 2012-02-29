@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/form/nls/th/validate", //begin v1.x content
 ({
 	invalidMessage: "ค่าที่ป้อนไม่ถูกต้อง",
 	missingMessage: "จำเป็นต้องมีค่านี้",

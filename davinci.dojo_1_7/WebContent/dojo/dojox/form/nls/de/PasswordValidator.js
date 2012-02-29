@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/form/nls/de/PasswordValidator", //begin v1.x content
 ({
         nomatchMessage: "Die Kennwörter stimmen nicht überein.",
 		badPasswordMessage: "Ungültiges Kennwort."

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/hu/FindReplace", //begin v1.x content
 ({
 	"findLabel": "Keresés:",
 	"findTooltip": "Adja meg a keresett szöveget",
@@ -11,7 +11,6 @@ define(
 	"matchCaseTooltip": "Kis-nagybetűk egyeznek",
 	"backwards": "Visszafelé",
 	"backwardsTooltip": "Szöveg keresése visszafelé",
-	"replaceAll": "Minden előfordulás",
 	"replaceAllButton": "Mindent lecserél",
 	"replaceAllButtonTooltip": "Minden szöveg cseréje",
 	"findButton": "Keresés",

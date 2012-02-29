@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/pt-pt/SpellCheck", //begin v1.x content
 ({
 	widgetLabel: "Verificação ortográfica por grupo",
 	unfound: "Não localizado",

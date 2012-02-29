@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/ja/ShowBlockNodes", //begin v1.x content
 ({
 	"showBlockNodes": "HTML ブロック要素の表示"
 })

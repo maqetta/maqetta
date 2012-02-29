@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/form/nls/ro/validate", //begin v1.x content
 ({
 	invalidMessage: "Valoarea introdusă nu este validă.",
 	missingMessage: "Această valoare este necesară.",

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/ro/SpellCheck", //begin v1.x content
 ({
 	widgetLabel: "Verificare ortografică lot",
 	unfound: "Nu a fost găsit",

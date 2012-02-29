@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/tr/LocalImage", //begin v1.x content
 ({
 	insertImageTitle: "Resim Ekle",
 	url: "Resim",

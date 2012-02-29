@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/form/nls/nl/ComboBox", //begin v1.x content
 ({
 		previousMessage: "Eerdere opties",
 		nextMessage: "Meer opties"

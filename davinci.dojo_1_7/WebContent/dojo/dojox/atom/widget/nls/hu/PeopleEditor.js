@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/atom/widget/nls/hu/PeopleEditor", //begin v1.x content
 ({
 	add: "Hozzáadás",
 	addAuthor: "Szerző hozzáadása",

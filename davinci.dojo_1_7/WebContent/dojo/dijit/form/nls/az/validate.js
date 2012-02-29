@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/form/nls/az/validate", //begin v1.x content
 ({
 	"rangeMessage" : "Bu dəyər aralıq xaricində.",
 	"invalidMessage" : "Girilən dəyər keçərli deyil.",

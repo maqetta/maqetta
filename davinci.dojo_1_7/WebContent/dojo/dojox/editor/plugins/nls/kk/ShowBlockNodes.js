@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/kk/ShowBlockNodes", //begin v1.x content
 ({
 	"showBlockNodes": "HTML блогы элементтерін көрсету"
 })

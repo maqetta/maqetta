@@ -108,6 +108,7 @@ public class DavinciPageServlet extends HttpServlet {
 		 * wasn't persisting the cookie properly
 		 */
 		Cookie k = new Cookie(IDavinciServerConstants.SESSION_USER, user != null ? user.getUserName() : null);
+		k.setPath("/maqetta");
 		resp.addCookie(k);
 
 		if ( pathInfo == null ) {

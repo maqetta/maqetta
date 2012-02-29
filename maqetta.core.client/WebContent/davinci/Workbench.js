@@ -990,6 +990,9 @@ var Workbench = {
 	_createEditor: function(editorExtension, fileName, keywordArgs, newHtmlParams) {
 		var d = new Deferred();
 		var nodeName = fileName.split('/').pop();
+		var extension = keywordArgs && keywordArgs.fileName && keywordArgs.fileName.extension ? 
+				"." + keywordArgs.fileName.extension : "";
+		nodeName = nodeName + extension;
 
 		var loading = dojo.query('.loading');
 		if (loading[0]) {

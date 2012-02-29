@@ -20,6 +20,7 @@ import maqetta.core.server.user.ReviewManager;
 import org.maqetta.server.mail.SimpleMessage;
 import org.maqetta.server.mail.SmtpPop3Mailer;
 import org.davinci.server.review.Constants;
+import org.davinci.server.review.ReviewObject;
 import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.cache.ReviewCacheManager;
@@ -72,28 +73,26 @@ public class Publish extends Command {
 		reviewers.add(new Reviewer(user.getUserName(), user.getPerson().getEmail()));
 
 		String fakeReviewer = ServerManager.getServerManger().getDavinciProperty(Constants.FAKE_REVIEWER);
-		if(fakeReviewer != null)
+		if (fakeReviewer != null) {
 			reviewers.add(new Reviewer("fakeReviewer", fakeReviewer));
+		}
 
-		IDesignerUser du = ReviewManager.getReviewManager()
-				.getDesignerUser(user.getUserName());
+		IDesignerUser du = ReviewManager.getReviewManager().getDesignerUser(user.getUserName());
 
 		if (!isUpdate) {
 			String id = null;
 			int latestVersionID = 1;
-			if(du.getLatestVersion() == null||du.getVersion(du.getLatestVersion().getTime())==null){
+			if (du.getLatestVersion() == null|| du.getVersion(du.getLatestVersion().getTime()) == null) {
 				List<Version> versions = du.getVersions();
 				for(Version temp: versions){
 					int i = Integer.parseInt(temp.getVersionID());
-					if(i>latestVersionID){
+					if (i > latestVersionID) {
 						latestVersionID = i;
 					}
 				}
 				id=latestVersionID+"";
-			}
-			else {
-				int latestID = Integer.parseInt(du.getLatestVersion()
-						.getVersionID());
+			} else {
+				int latestID = Integer.parseInt(du.getLatestVersion().getVersionID());
 				id = latestID + 1 + "";
 			}
 			version = new Version(id, timeVersion, savingDraft, dueDate,
@@ -110,11 +109,24 @@ public class Publish extends Command {
 		version.setDesireHeight(desireHeight);
 		version.setReviewers(reviewers);
 		version.setVersionTitle(versionTitle);
-		if (resources != null)
+		if (resources != null) {
 			version.setResource(resources);
+		}
 		version.setHasClosedManually(false);
 		version.setDescription(message);
 		version.setReceiveEmail(receiveEmail);
+		/*
+ 		* create a review object so we can comment immediately by opening 
+ 		* a review editor via "View File..." from the Review palette.
+		*/
+		ReviewObject reviewObject = new ReviewObject(user.getUserName());
+		reviewObject.setDesignerEmail(user.getPerson().getEmail());
+		if ( resources != null ) {
+			String fileName = resources[0]; // TODO fix this hardcoded value
+			reviewObject.setFile(fileName);
+			reviewObject.setCommentId("default");
+		}
+		req.getSession().setAttribute(Constants.REVIEW_INFO, reviewObject);
 
 		if (isRestart) {
 			version.setRestartFrom(vTime);
@@ -124,8 +136,7 @@ public class Publish extends Command {
 			ReviewCacheManager.$.republish(project,vTime, version);
 		}
 		if (savingDraft) {
-			ReviewManager.getReviewManager()
-					.saveDraft(user.getUserName(), version);
+			ReviewManager.getReviewManager().saveDraft(user.getUserName(), version);
 			this.responseString = "OK";
 			return;
 		}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.pde.ui.EquinoxLauncher">
 <booleanAttribute key="append.args" value="true"/>
-<booleanAttribute key="automaticAdd" value="true"/>
+<booleanAttribute key="automaticAdd" value="false"/>
 <booleanAttribute key="automaticValidate" value="false"/>
 <stringAttribute key="bootstrap" value=""/>
 <stringAttribute key="checked" value="[NONE]"/>
@@ -10,7 +10,6 @@
 <booleanAttribute key="default" value="true"/>
 <booleanAttribute key="default_auto_start" value="true"/>
 <intAttribute key="default_start_level" value="4"/>
-<stringAttribute key="deselected_workspace_plugins" value="davinci.joomla,davinci.oneui_2010_08_02,davinci.w3ibm,maqetta.client.orion,maqetta.server.orion"/>
 <booleanAttribute key="includeOptional" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console"/>
@@ -22,5 +21,5 @@
 <booleanAttribute key="tracing" value="false"/>
 <booleanAttribute key="useCustomFeatures" value="false"/>
 <booleanAttribute key="useDefaultConfigArea" value="true"/>
-<stringAttribute key="workspace_bundles" value="davinci.dojo_1_7@default:true,davinci.html@default:true,davinci.jqueryui_1_8@default:true,davinci.product@default:true,davinci.server.gzip@default:true,davinci.yui_2_6_0@default:true,maqetta.clipart@default:true,maqetta.core.client@default:default,maqetta.core.server@default:true,maqetta.core.server@default:default,maqetta.shapes@default:true,org.apache.commons.fileupload@default:true,org.apache.commons.io@default:true"/>
+<stringAttribute key="workspace_bundles" value="davinci.dojo_1_7@default:true,davinci.html@default:true,davinci.jqueryui_1_8@default:true,davinci.product@default:true,davinci.server.gzip@default:true,davinci.svgweb_2009_11_23@default:default,davinci.yui_2_6_0@default:true,maqetta.clipart@default:true,maqetta.core.client@default:default,maqetta.core.server.standalone@default:default,maqetta.core.server@default:default,maqetta.shapes@default:true,org.apache.commons.fileupload@default:true,org.apache.commons.io@default:true"/>
 </launchConfiguration>

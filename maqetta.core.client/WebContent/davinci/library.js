@@ -44,9 +44,6 @@ themesChanged: function(base){
 
 getThemes: function(base, workspaceOnly, flushCache){
 
-	if (! base) {
-		debugger;
-	}
 	if (flushCache) {
 		_themesCache[base] = null;
 	}
@@ -196,9 +193,6 @@ getInstalledLibs: function() {
 getUserLibs: function(base) {
 	// not sure if we want to only allow the logged in user to view his/her
 	// installed libs, or to include user name in request of targe user.
-	if(! base || base === "") {
-		debugger;
-	}
 	
 	if(_userLibsCache.base)
 		return _userLibsCache.base;
@@ -210,9 +204,6 @@ getUserLibs: function(base) {
 
 getLibRoot: function(id, version, base) {
     // check cache
-	
-	if(! base)
-		debugger;
 	
     var cache = _libRootCache;
     if ( cache[base] && cache[base][id] && cache[base][id][version]) {

@@ -61,6 +61,11 @@ public class DavinciPageServlet extends HttpServlet {
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		IUser user = ServerManager.getServerManger().getUserManager().getUser(req);
+		if(user==null){
+			resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+			resp.getOutputStream().close();
+			return;
+		}
 		String path = getPathInfo(req);
 		boolean isWorkingCopy = (path.indexOf(IDavinciServerConstants.WORKING_COPY_EXTENSION) > -1);
 		if ( isWorkingCopy ) {
@@ -103,13 +108,7 @@ public class DavinciPageServlet extends HttpServlet {
 		if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
 			System.out.println("Page Servlet request: " + pathInfo + ", logged in=" + (user != null));
 		}
-		/*
-		 * add the user name to a cookie, prob should move to login but login
-		 * wasn't persisting the cookie properly
-		 */
-		Cookie k = new Cookie(IDavinciServerConstants.SESSION_USER, user != null ? user.getUserName() : null);
-		k.setPath("/maqetta");
-		resp.addCookie(k);
+		
 
 		if ( pathInfo == null ) {
 			resp.sendRedirect("./maqetta/");
@@ -124,7 +123,10 @@ public class DavinciPageServlet extends HttpServlet {
 				/* local install, set user to single user */
 				user = this.userManager.getSingleUser();
 				req.getSession().setAttribute(IDavinciServerConstants.SESSION_USER, user);
-				writeMainPage(req, resp);
+				Cookie k = new Cookie(IDavinciServerConstants.SESSION_USER, user.getUserName() );
+		  		k.setPath("/maqetta");
+		  		resp.addCookie(k);
+		  		writeMainPage(req, resp);
 			}
 		} else if ( pathInfo.equals("/welcome") ) {
 			/* write the welcome page (may come from extension point) */
@@ -221,6 +223,10 @@ public class DavinciPageServlet extends HttpServlet {
 			user = ServerManager.getServerManger().getUserManager().getUser(userName);
 		}
 
+		if(user!=null && user.getUserName().compareTo(userName)!=0){
+			user =  ServerManager.getServerManger().getUserManager().getUser(userName);
+		}
+		
 		if ( handleLibraryRequest(req, resp, path, user) ) {
 			// System.out.println("was library");
 			return;

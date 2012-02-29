@@ -134,7 +134,6 @@ DataGridHelper.prototype = {
 			var storeWidget = Widget.byId(storeId);
 			if (storeWidget && widget.dijitWidget && widget.dijitWidget.store){
 				this._reparentTheStore(widget, storeWidget);
-				this.addScripts(widget);
 				this.updateStore(widget, storeWidget);
 			}
 		}
@@ -202,41 +201,6 @@ DataGridHelper.prototype = {
 			store.close();
 		}
 	},
-	
-	addScripts: function(widget){
-		var dj = widget.getContext().getDojo();
-		var o = dojo.getObject("io.xhrScriptPlugin", true, dojox);
-		try{
-			dj["require"]('dojo.data.ItemFileReadStore');
-			dj["require"]('dojox.io.xhrScriptPlugin');
-		}catch(e){
-			console.warn("FAILED: failure for module=dojo.data.ItemFileReadStore");
-		}
-		
-		if (!widget.scripts) {
-			return;
-		}
-		for (var x in widget.scripts){
-			this.addScript(widget, widget.scripts[x]);
-		}
-	},
-	
-	addScript: function(widget, script){
-		var script = widget.scripts[x];
-		var elements = widget._edit_context._srcDocument.find({'elementType':"HTMLElement", 'tag': 'script'});
-		for(var i=0;i<elements.length;i++){
-			var n = elements[i];
-			if (n.script && n.script.indexOf(script.value) > -1){
-				return; // found it
-			}
-		}
-		var scriptTag = new HTMLElement('script');
-		scriptTag.addAttribute('type', 'text/javascript');
-		var text = new HTMLText(script.value);
-		scriptTag.addChild(text);
-		var head =  widget._edit_context._srcDocument.find({elementType: 'HTMLElement', tag: 'head'}, true);
-		head.addChild(scriptTag);
-	}, 
 	
 	/*
 	 * Called by DeleteAction when widget is deleted.

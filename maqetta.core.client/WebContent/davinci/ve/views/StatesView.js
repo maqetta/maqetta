@@ -188,8 +188,11 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 */
 
 	_updateView: function() {
+		if(!this._editor || !this._editor.getContext){
+			return;
+		}
 		var context = this._editor.getContext();
-		if(!context._statesLoaded){
+		if(!context || !context._statesLoaded){
 			return;
 		}
 		this._updateList();

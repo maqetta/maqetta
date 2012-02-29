@@ -14,6 +14,7 @@
 	 * 
 	 * selectScene(params)
 	 *		A particular scene has been selected in the Scenes palette.
+	 *		NOTE: Called from both page editor (widget helpers available) and review editor (widget helpers not available).
 	 *		@param {object} params  Has following properties
 	 *			params.sceneId - Unique ID for the selected scene. (Unique ID created by this SceneManager)
 	 * 
@@ -69,17 +70,51 @@
 		selectScene: function(params){
 			var sceneId = params.sceneId;
 			var dj = this.context.getDojo();
-			var node = dj.byId(sceneId);
-			if(node){
-				var widget = node._dvWidget;
-				if(widget){
-					var helper = widget.getHelper();
-					if(helper && helper._updateVisibility){
-						helper._updateVisibility(node);
+			var domNode = dj.byId(sceneId);
+			if(this.context.declaredClass == 'davinci.ve.Context'){
+				if(domNode){
+					var widget = domNode._dvWidget;
+					if(widget){
+						var helper = widget.getHelper();
+						if(helper && helper._updateVisibility){
+							helper._updateVisibility(domNode);
+						}
+					}
+				}
+				var dj = this.context.select(widget);
+			}else if(this.context.declaredClass == 'davinci.review.editor.Context'){
+				var _dijit = dj.dijit;
+				var node = domNode;
+				var pnode = node.parentNode;
+				var viewsToUpdate = [];
+				// See if this View or any ancestor View is not currently visible
+				while (node.tagName != 'BODY'){
+					if(node.style.display == "none" || node.getAttribute("selected") != "true"){
+						viewsToUpdate.splice(0, 0, node);
+					}else{
+						for(var i=0;i<pnode.children.length;i++){
+							n=pnode.children[i];
+							if(domClass.contains(n,"mblView")){
+								if(n!=node && (n.style.display != "none" || n.getAttribute("selected") == "true")){
+									viewsToUpdate.splice(0, 0, node);
+									break;
+								}
+							}
+						}
+					}
+					node = pnode;
+					pnode = node.parentNode;
+				}
+				for(var v=0;v<viewsToUpdate.length;v++){
+					var viewNode = viewsToUpdate[v];
+					if(viewNode && viewNode.id){
+						var viewDijit = _dijit.byId(viewNode.id);
+						if(viewDijit && viewDijit.show){
+							viewDijit.show();
+						}
 					}
 				}
 			}
-			var dj = this.context.select(widget);
 		},
 		getCurrentScene: function(){
 			var currentScene;

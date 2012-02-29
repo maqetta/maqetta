@@ -28,14 +28,15 @@
    <plugins>
       <plugin id="davinci.dojo_1_7"/>
       <plugin id="davinci.html"/>
-      <plugin id="maqetta.clipart"/>
-      <plugin id="maqetta.shapes"/>
       <plugin id="davinci.jqueryui_1_8"/>
+      <plugin id="davinci.server.gzip"/>
       <plugin id="davinci.yui_2_6_0"/>
       <plugin id="javax.servlet"/>
+      <plugin id="maqetta.clipart"/>
       <plugin id="maqetta.core.client"/>
       <plugin id="maqetta.core.server"/>
       <plugin id="maqetta.core.server.standalone"/>
+      <plugin id="maqetta.shapes"/>
       <plugin id="org.apache.commons.fileupload"/>
       <plugin id="org.apache.commons.io"/>
       <plugin id="org.eclipse.core.contenttype"/>

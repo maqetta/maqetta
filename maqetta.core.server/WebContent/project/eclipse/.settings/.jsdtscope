@@ -10,9 +10,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.baseBrowserLibrary"/>
-	<!--
 	<classpathentry kind="con" path="com.ibm.etools.webtools.dojo.jscontainer"/>
-	-->
-	
 	<classpathentry kind="output" path=""/>
 </classpath>

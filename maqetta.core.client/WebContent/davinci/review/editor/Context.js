@@ -34,6 +34,9 @@ return declare("davinci.review.editor.Context", [Context], {
 							 this.fileName,
 							 davinci.Runtime.commenting_commentId
 							 ]);
+					this.rootNode = this.rootWidget = this.frame.contentDocument.body;
+					this._statesLoaded = true;
+					dojo.publish('/davinci/ui/context/statesLoaded', [this]);
 				})
 			}, containerNode);
 		}

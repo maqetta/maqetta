@@ -1726,7 +1726,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	getGlobal: function(){
-		return windowUtils.get(this.getDocument());
+		var doc = this.getDocument();
+		return doc ? windowUtils.get(doc) : null;
 	},
 
 	getDojo: function(){

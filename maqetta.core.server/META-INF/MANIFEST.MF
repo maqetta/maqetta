@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Server
+Bundle-Name: maqetta.core.server
 Bundle-SymbolicName: maqetta.core.server;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.davinci.server.internal.Activator

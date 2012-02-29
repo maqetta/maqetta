@@ -108,10 +108,6 @@ public class DavinciPageServlet extends HttpServlet {
 		if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
 			System.out.println("Page Servlet request: " + pathInfo + ", logged in=" + (user != null));
 		}
-		/*
-		 * add the user name to a cookie, prob should move to login but login
-		 * wasn't persisting the cookie properly
-		 */
 		
 
 		if ( pathInfo == null ) {
@@ -127,7 +123,10 @@ public class DavinciPageServlet extends HttpServlet {
 				/* local install, set user to single user */
 				user = this.userManager.getSingleUser();
 				req.getSession().setAttribute(IDavinciServerConstants.SESSION_USER, user);
-				writeMainPage(req, resp);
+				Cookie k = new Cookie(IDavinciServerConstants.SESSION_USER, user.getUserName() );
+		  		k.setPath("/maqetta");
+		  		resp.addCookie(k);
+		  		writeMainPage(req, resp);
 			}
 		} else if ( pathInfo.equals("/welcome") ) {
 			/* write the welcome page (may come from extension point) */

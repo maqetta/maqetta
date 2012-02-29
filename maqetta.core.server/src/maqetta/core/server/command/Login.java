@@ -2,6 +2,7 @@ package maqetta.core.server.command;
 
 import java.io.IOException;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -25,6 +26,11 @@ public class Login extends Command {
             HttpSession session = req.getSession(true);
             session.setAttribute(IDavinciServerConstants.SESSION_USER, user);
             session.setMaxInactiveInterval(IDavinciServerConstants.SESSION_TIMEOUT);
+            Cookie k = new Cookie(IDavinciServerConstants.SESSION_USER, user != null ? user.getUserName() : null);
+    		k.setPath("/maqetta");
+    		resp.addCookie(k);
+    	    
+            
         } else {
             user = ServerManager.getServerManger().getUserManager().getUser(name);
             if (user == null) {

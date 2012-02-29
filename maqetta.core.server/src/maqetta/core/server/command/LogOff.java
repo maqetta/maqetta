@@ -2,6 +2,7 @@ package maqetta.core.server.command;
 
 import java.io.IOException;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,6 +26,11 @@ public class LogOff extends Command {
                 e.printStackTrace();
             }
         }
+        
+        Cookie k = new Cookie(IDavinciServerConstants.SESSION_USER,  null);
+		k.setPath("/maqetta");
+		resp.addCookie(k);
+		
         req.getSession().invalidate();
         responseString = "OK";
     }

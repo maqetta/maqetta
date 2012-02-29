@@ -61,7 +61,7 @@ define([
 			this._destroyProperties();
 	
 			this.propDom.innerHTML = this._createWidgetRows(metadata.property);
-			if(this.propDom.innerHTML.indexOf('dojoType')) {
+			if (this.propDom.innerHTML.indexOf('dojoType') !== -1) {
 				dojo.parser.parse(this.propDom);
 			}
 			this._setValues();

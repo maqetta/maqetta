@@ -48,8 +48,9 @@ public class EclipseProjectUtil {
 		config.put(".settings/org.eclipse.wst.common.project.facet.core.xml", EclipseProjectUtil.getCommonProjectFacetCore());
 		config.put(".settings/org.eclipse.wst.jsdt.ui.superType.container", EclipseProjectUtil.getJsdtSuperTypeContainer());
 		config.put(".settings/org.eclipse.wst.jsdt.ui.superType.name", EclipseProjectUtil.getJsdtSuperTypeName());
-		config.put(".settings/org.ibm.etools.webtools.dojo.core.prefs", EclipseProjectUtil.readFile(".settings/com.ibm.etools.webtools.dojo.core.prefs"));
-	
+		config.put(".settings/com.ibm.etools.webtools.dojo.core.prefs", EclipseProjectUtil.readFile(".settings/com.ibm.etools.webtools.dojo.core.prefs"));
+		config.put(".settings/org.eclipse.wst.validation.prefs", EclipseProjectUtil.readFile(".settings/org.eclipse.wst.validation.prefs"));
+		
 		}catch(Exception ex){
 			System.out.println(ex);
 		}

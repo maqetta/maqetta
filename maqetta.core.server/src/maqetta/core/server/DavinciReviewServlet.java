@@ -96,7 +96,8 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 					resp.addCookie(new Cookie(Constants.REVIEW_COOKIE_FILE, reviewObject.getFile()));
 				}
 //				writeReviewPage(req, resp, "review.html");
-				writeReviewPage(req, resp, "pagedesigner.html");
+//				writeMainPage(req, resp);
+				resp.sendRedirect("/maqetta");
 			}
 		} else {
 			IPath path = new Path(pathInfo);
@@ -184,7 +185,7 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 
 	protected void writeReviewPage(HttpServletRequest req, HttpServletResponse resp, String path)
 			throws ServletException, IOException {
-		URL resourceURL = Activator.getActivator().getBundle().getEntry("/WebContent/" + path);
+		URL resourceURL = Activator.getActivator().getOtherBundle("maqetta.core.client").getEntry("/WebContent/" + path);
 		VURL v = new VURL(resourceURL);
 		writePage(req, resp, v, false);
 	}

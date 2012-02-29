@@ -222,7 +222,12 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		// Build an object structure that contains the latest list of states/scenes/views
 		// We will then build a similar object structure by extracting the list from the ItemFileWriteStore
 		// and then compare the two to see if there are any changes
-		var fileName = (this._editor && this._editor.fileName) ? this._editor.fileName : 'file';
+		var fileName;
+		if(this._editor && this._editor.getFileNameToDisplay){
+			fileName = this._editor.getFileNameToDisplay();
+		}else{
+			fileName = (this._editor && this._editor.fileName) ? this._editor.fileName : 'file';
+		}
 		var CurrentFileObj = {name:fileName, type:'file', category:'file', children:[]};
 		var AppStatesObj = {name:'Widget States', type:'SceneManagerRoot', category:'AppStates', children:[]};
 		var latestData = [CurrentFileObj];
@@ -250,7 +255,12 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		// Build an object structure that contains the latest list of states/scenes/views
 		// We will then build a similar object structure by extracting the list from the ItemFileWriteStore
 		// and then compare the two to see if there are any changes
-		var fileName = (this._editor && this._editor.fileName) ? this._editor.fileName : 'file';
+		var fileName;
+		if(this._editor && this._editor.getFileNameToDisplay){
+			fileName = this._editor.getFileNameToDisplay();
+		}else{
+			fileName = (this._editor && this._editor.fileName) ? this._editor.fileName : 'file';
+		}
 		var CurrentFileObj = {name:fileName, type:'file', category:'file', children:[]};
 		var appStatesCount = 0;
 		for(var s in latestStates){

@@ -29,12 +29,15 @@ return declare(ContainerInput, {
 		var menu = data.children[0];
 
 		result.push(data.properties[this.propertyName]);
-
 		if (menu) {
-			var menuItems = menu.children;
-			for (var j = 0; j < menuItems.length; j++) {
-				var menuItem = menuItems[j];
-				result.push("> " + menuItem.properties[this.propertyName]);
+			if (menu.type == "dijit.Menu") {
+				var menuItems = menu.children;
+				for (var j = 0; j < menuItems.length; j++) {
+					var menuItem = menuItems[j];
+					result.push("> " + menuItem.properties[this.propertyName]);
+				}
+			} else if (menu.type == "dijit.TooltipDialog") {
+				result.push("^");
 			}
 		}
 		

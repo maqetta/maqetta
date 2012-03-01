@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/grid/enhanced/nls/ro/EnhancedGrid", //begin v1.x content
 ({
 	singleSort: "Sortare singulară",
 	nestedSort: "Sortare imbricată",

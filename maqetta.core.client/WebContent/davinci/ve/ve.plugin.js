@@ -44,6 +44,10 @@ return {
                     position: "left"
                 },
                 {
+                    viewID: "davinci.ve.style",
+                    position: "right"
+                },
+                {
                     viewID: "davinci.ui.comment",
                     position: "right"
                 },
@@ -54,10 +58,6 @@ return {
                 {
                     viewID: "davinci.review.reviewNavigator",
                     position: "left-bottom"
-                },
-                {
-                    viewID: "davinci.ve.style",
-                    position: "right"
                 },
                 {
                     viewID: "davinci.ui.outline",

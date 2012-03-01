@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/grid/enhanced/nls/hr/Filter", //begin v1.x content
 ({
 	"clearFilterDialogTitle": "Brisanje filtera",
 	"filterDefDialogTitle": "Filter",
@@ -65,6 +65,8 @@ define(
 	"anycolumn": "bilo koji stupac",
 	"statusTipTitleNoFilter": "Traka filtera",
 	"statusTipTitleHasFilter": "Filter",
+	"statusTipRelAny": "Usporedi bilo koja pravila.",
+	"statusTipRelAll": "Usporedi sva pravila.",
 	
 	"defaultItemsName": "stavke",
 	"filterBarMsgHasFilterTemplate": "${0} od ${1} ${2} prikazano.",
@@ -85,6 +87,3 @@ define(
 })
 //end v1.x content
 );
-
-
-

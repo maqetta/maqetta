@@ -1,6 +1,6 @@
 //>>built
 define(
-({
+"dojox/grid/enhanced/nls/pt-br/Filter", ({
 	"clearFilterDialogTitle": "Limpar Filtro",
 	"filterDefDialogTitle": "Filtrar",
 	"ruleTitleTemplate": "Regra ${0}",

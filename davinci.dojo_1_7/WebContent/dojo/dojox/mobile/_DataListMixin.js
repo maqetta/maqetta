@@ -33,7 +33,7 @@ _1.forEach(this.store.getAttributes(_b),function(_f){
 if(_f===_e){
 _c["label"]=this.store.getLabel(_b);
 }else{
-_c[(this.itemMap && this.itemMap[_f]) || _f] = this.store.getValue(_b, _f); 
+_c[(this.itemMap && this.itemMap[_f]) || _f]=this.store.getValue(_b,_f);
 }
 },this);
 var w=new _6(_c);

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/form/nls/da/PasswordValidator", //begin v1.x content
 ({
         nomatchMessage: "Adgangskoderne stemmer ikke overens.",
 		badPasswordMessage: "Ugyldig adgangskode."

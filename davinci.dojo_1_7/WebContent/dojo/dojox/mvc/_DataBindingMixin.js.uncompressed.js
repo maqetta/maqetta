@@ -3,8 +3,9 @@ define("dojox/mvc/_DataBindingMixin", [
 	"dojo/_base/lang",
 	"dojo/_base/array",
 	"dojo/_base/declare",
+	"dojo/Stateful",
 	"dijit/registry"
-], function(lang, array, declare, registry){
+], function(lang, array, declare, Stateful, registry){
 	/*=====
 	registry = dijit.registry;
 	=====*/
@@ -205,7 +206,9 @@ define("dojox/mvc/_DataBindingMixin", [
 					binding = lang.getObject("" + ref, false, parentBinding);
 				}else{
 					try{
-						binding = lang.getObject(ref);
+						if(lang.getObject(ref) instanceof Stateful){
+							binding = lang.getObject(ref);
+						}						
 					}catch(err){
 						if(ref.indexOf("${") == -1){ // Ignore templated refs such as in repeat body
 							throw new Error("dojox.mvc._DataBindingMixin: '" + this.domNode +
@@ -328,19 +331,25 @@ define("dojox/mvc/_DataBindingMixin", [
 				this.set(setPropName, setPropValue);
 			}
 		},
-
-		_updateChildBindings: function(){
+		_updateChildBindings: function(parentBind){
 			// summary:
 			//		Update this widget's value based on the current binding and
 			//		set up the bindings of all contained widgets so as to refresh
-			//		any relative binding references.
+			//		any relative binding references. 
+			// 		findWidgets does not return children of widgets so need to also
+			//		update children of widgets which are not bound but may hold widgets which are.
+			//	parentBind:
+			//		The binding on the parent of a widget whose children may have bindings 
+			//		which need to be updated.
 			// tags:
 			//		private
-			var binding = this.get("binding");
+			var binding = this.get("binding") || parentBind;
 			if(binding && !this._beingBound){
 				array.forEach(registry.findWidgets(this.domNode), function(widget){
-					if(widget._setupBinding){
+					if(widget.ref && widget._setupBinding){
 						widget._setupBinding(binding);
+					}else{	
+						widget._updateChildBindings(binding);
 					}
 				});
 			}

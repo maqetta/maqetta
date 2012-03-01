@@ -9186,14 +9186,22 @@ define("dijit/place", [
 			//
 			// positions:
 			//		Ordered list of positions to try matching up.
-			//			* before: places drop down to the left of the anchor node/widget, or to the right in
-			//				the case of RTL scripts like Hebrew and Arabic
-			//			* after: places drop down to the right of the anchor node/widget, or to the left in
-			//				the case of RTL scripts like Hebrew and Arabic
-			//			* above: drop down goes above anchor node
-			//			* above-alt: same as above except right sides aligned instead of left
+			//			* before: places drop down to the left of the anchor node/widget, or to the right in the case
+			//				of RTL scripts like Hebrew and Arabic; aligns either the top of the drop down
+			//				with the top of the anchor, or the bottom of the drop down with bottom of the anchor.
+			//			* after: places drop down to the right of the anchor node/widget, or to the left in the case
+			//				of RTL scripts like Hebrew and Arabic; aligns either the top of the drop down
+			//				with the top of the anchor, or the bottom of the drop down with bottom of the anchor.
+			//			* before-centered: centers drop down to the left of the anchor node/widget, or to the right
+			//				 in the case of RTL scripts like Hebrew and Arabic
+			//			* after-centered: centers drop down to the right of the anchor node/widget, or to the left
+			//				 in the case of RTL scripts like Hebrew and Arabic
+			//			* above-centered: drop down is centered above anchor node
+			//			* above: drop down goes above anchor node, left sides aligned
+			//			* above-alt: drop down goes above anchor node, right sides aligned
+			//			* below-centered: drop down is centered above anchor node
 			//			* below: drop down goes below anchor node
-			//			* below-alt: same as below except right sides aligned instead of left
+			//			* below-alt: drop down goes below anchor node, right sides aligned
 			//
 			// layoutNode: Function(node, aroundNodeCorner, nodeCorner)
 			//		For things like tooltip, they are displayed differently (and have different dimensions)
@@ -9269,11 +9277,18 @@ define("dijit/place", [
 					case "below-centered":
 						push("BM", "TM");
 						break;
+					case "after-centered":
+						ltr = !ltr;
+						// fall through
+					case "before-centered":
+						push(ltr ? "ML" : "MR", ltr ? "MR" : "ML");
+						break;
 					case "after":
 						ltr = !ltr;
 						// fall through
 					case "before":
-						push(ltr ? "ML" : "MR", ltr ? "MR" : "ML");
+						push(ltr ? "TL" : "TR", ltr ? "TR" : "TL");
+						push(ltr ? "BL" : "BR", ltr ? "BR" : "BL");
 						break;
 					case "below-alt":
 						ltr = !ltr;
@@ -10623,34 +10638,54 @@ define("dijit/_base/wai", [
 
 },
 'dojo/window':function(){
-define(["./_base/kernel", "./_base/lang", "./_base/sniff", "./_base/window", "./dom", "./dom-geometry", "./dom-style"], function(dojo, lang, has, baseWindow, dom, geom, style) {
-	// module:
-	//		dojo/window
+define(["./_base/lang", "./_base/sniff", "./_base/window", "./dom", "./dom-geometry", "./dom-style"],
+	function(lang, has, baseWindow, dom, geom, style) {
+
+// module:
+//		dojo/window
+// summary:
+//		TODOC
+
+var window = lang.getObject("dojo.window", true);
+
+/*=====
+dojo.window = {
 	// summary:
-	//		TODOC
+	//		TODO
+};
+window = dojo.window;
+=====*/
 
-lang.getObject("window", true, dojo);
-
-dojo.window.getBox = function(){
+window.getBox = function(){
 	// summary:
 	//		Returns the dimensions and scroll position of the viewable area of a browser window
 
-	var scrollRoot = (baseWindow.doc.compatMode == 'BackCompat') ? baseWindow.body() : baseWindow.doc.documentElement;
+	var
+		scrollRoot = (baseWindow.doc.compatMode == 'BackCompat') ? baseWindow.body() : baseWindow.doc.documentElement,
+		// get scroll position
+		scroll = geom.docScroll(), // scrollRoot.scrollTop/Left should work
+		w, h;
 
-	// get scroll position
-	var scroll = geom.docScroll(); // scrollRoot.scrollTop/Left should work
-
-	var uiWindow = baseWindow.doc.parentWindow || baseWindow.doc.defaultView;   // use UI window, not dojo.global window
-	// dojo.global.innerWidth||dojo.global.innerHeight is for mobile
+	if(has("touch")){ // if(scrollbars not supported)
+		var uiWindow = baseWindow.doc.parentWindow || baseWindow.doc.defaultView;   // use UI window, not dojo.global window. baseWindow.doc.parentWindow probably not needed since it's not defined for webkit
+		// on mobile, scrollRoot.clientHeight <= uiWindow.innerHeight <= scrollRoot.offsetHeight, return uiWindow.innerHeight
+		w = uiWindow.innerWidth || scrollRoot.clientWidth; // || scrollRoot.clientXXX probably never evaluated
+		h = uiWindow.innerHeight || scrollRoot.clientHeight;
+	}else{
+		// on desktops, scrollRoot.clientHeight <= scrollRoot.offsetHeight <= uiWindow.innerHeight, return scrollRoot.clientHeight
+		// uiWindow.innerWidth/Height includes the scrollbar and cannot be used
+		w = scrollRoot.clientWidth;
+		h = scrollRoot.clientHeight;
+	}
 	return {
 		l: scroll.x,
 		t: scroll.y,
-		w: uiWindow.innerWidth || scrollRoot.clientWidth,
-		h: uiWindow.innerHeight || scrollRoot.clientHeight
+		w: w,
+		h: h
 	};
 };
 
-dojo.window.get = function(doc){
+window.get = function(doc){
 	// summary:
 	// 		Get window object associated with document doc
 
@@ -10674,7 +10709,7 @@ dojo.window.get = function(doc){
 	return doc.parentWindow || doc.defaultView;	//	Window
 };
 
-dojo.window.scrollIntoView = function(/*DomNode*/ node, /*Object?*/ pos){
+window.scrollIntoView = function(/*DomNode*/ node, /*Object?*/ pos){
 	// summary:
 	//		Scroll the passed node into view, if it is not already.
 
@@ -10770,7 +10805,7 @@ dojo.window.scrollIntoView = function(/*DomNode*/ node, /*Object?*/ pos){
 	}
 };
 
-return dojo.window;
+return window;
 });
 
 },
@@ -12404,6 +12439,9 @@ dojo.declare("dojox.mobile.app.AlertDialog", dijit._WidgetBase, {
 
 }}});
 
+require(["dojo/i18n"], function(i18n){
+i18n._preloadLocalizations("dojox/mobile/nls/app", []);
+});
 define("dojox/mobile/app", [
 	"./app/_base"
 ], function(appBase){

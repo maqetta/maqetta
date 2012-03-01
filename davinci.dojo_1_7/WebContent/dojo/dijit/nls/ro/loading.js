@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/nls/ro/loading", //begin v1.x content
 ({
 	loadingState: "Încărcare...",
 	errorState: "Ne pare rău, a apărut o eroare "

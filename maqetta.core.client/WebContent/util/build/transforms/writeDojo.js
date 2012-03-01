@@ -18,8 +18,9 @@ define([
 	"../stringify",
 	"./writeAmd",
 	"../process",
+	"dojo/json",
 	"dojo/text!./dojoBoot.js"
-], function(bc, fileUtils, fs, stringify, writeAmd, process, dojoBootText) {
+], function(bc, fileUtils, fs, stringify, writeAmd, process, json, dojoBootText) {
 	return function(resource, callback) {
 		var
 			getUserConfig= function() {
@@ -135,7 +136,7 @@ define([
 			doWrite= function(filename, text) {
 				fileUtils.ensureDirectoryByFilename(filename);
 				waitCount++;
-				fs.writeFile(filename, text, "utf8", onWriteComplete);
+				fs.writeFile(filename, bc.newlineFilter(text, resource, "writeDojo"), "utf8", onWriteComplete);
 			};
 
 		// the writeDojo transform...
@@ -148,17 +149,22 @@ define([
 				configText= "(" + getUserConfig() + ", " + getDefaultConfig() + ");",
 
 				// the construction of the layer is slightly different than standard, so don't pass a module to getLayerText
-				layerText= writeAmd.getLayerText(0, resource.layer.include, resource.layer.exclude);
+				layerText= writeAmd.getLayerText(0, resource.layer.include, resource.layer.exclude, resource.layer.noref),
+
+				// 1.6 compat chunk
+				compat = (resource.layer.compat=="1.6" && resource.layer.include.length) ? "require(" + json.stringify(resource.layer.include) + ");" + bc.newline : "";
 
 			// assemble and write the dojo layer
-			resource.layerText= resource.getText() + configText + stampVersion(layerText) + (bc.dojoBootText || dojoBootText);
+			resource.layerText= resource.getText() + configText + stampVersion(layerText) + (bc.dojoBootText || dojoBootText) + compat;
 			doWrite(writeAmd.getDestFilename(resource), resource.layer.copyright + resource.layerText);
 
 			//write any bootstraps; boots is a vector of resources that have been marked as bootable by the discovery process
 			resource.boots.forEach(function(item) {
+				// don't process the dojo layer, which is === resource
 				if(item!==resource){
 					// each item is a hash of include, exclude, boot, bootText
-					item.layerText= resource.layerText + writeAmd.getLayerText(item, item.layer.include, item.layer.exclude) + (item.bootText || "");
+					var compat = (item.layer.compat=="1.6" && item.layer.include.length) ? "require(" + json.stringify(item.layer.include) + ");" + bc.newline : "";
+					item.layerText= resource.layerText + writeAmd.getLayerText(item, item.layer.include, item.layer.exclude, true) + (item.bootText || "") + compat;
 					doWrite(writeAmd.getDestFilename(item), resource.layer.copyright + item.layerText);
 				}
 			});

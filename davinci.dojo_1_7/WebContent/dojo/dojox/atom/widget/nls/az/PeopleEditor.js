@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/atom/widget/nls/az/PeopleEditor", //begin v1.x content
 ({
 	"add" : "Əlavə Et",
 	"addAuthor" : "Yazıçı Əlavə Et",

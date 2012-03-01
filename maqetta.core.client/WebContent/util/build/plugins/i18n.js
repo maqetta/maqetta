@@ -48,7 +48,17 @@ define(["../buildControl"], function(bc) {
 			if (!i18nResource) {
 				throw new Error("i18n resource (" + i18nResourceMid + ") missing");
 			}
-			return [i18nPlugin, i18nResource];
+	return [i18nPlugin, i18nResource];
+
+			var result = [i18nPlugin, i18nResource];
+			(bc.extraLocales||[]).forEach(function(locale){
+				i18nResourceMid= bundlePath + locale + "/" + bundleName,
+				i18nResource= bc.amdResources[i18nResourceMid];
+				if(i18nResource){
+					result.push(i18nResource);
+				}
+			});
+			return result;
 		};
 
 	return {

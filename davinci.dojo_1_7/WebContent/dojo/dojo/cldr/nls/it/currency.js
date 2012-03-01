@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/cldr/nls/it/currency", //begin v1.x content
 {
 	"HKD_displayName": "Dollaro di Hong Kong",
 	"CHF_displayName": "Franco Svizzero",

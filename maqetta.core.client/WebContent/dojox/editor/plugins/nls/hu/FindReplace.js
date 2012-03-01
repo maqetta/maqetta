@@ -10,7 +10,6 @@ define(
 	"matchCaseTooltip": "Kis-nagybetűk egyeznek",
 	"backwards": "Visszafelé",
 	"backwardsTooltip": "Szöveg keresése visszafelé",
-	"replaceAll": "Minden előfordulás",
 	"replaceAllButton": "Mindent lecserél",
 	"replaceAllButtonTooltip": "Minden szöveg cseréje",
 	"findButton": "Keresés",

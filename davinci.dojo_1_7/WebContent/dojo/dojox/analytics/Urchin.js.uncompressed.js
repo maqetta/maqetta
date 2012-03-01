@@ -127,7 +127,7 @@ define("dojox/analytics/Urchin", ["dojo/_base/lang", "dojo/_base/declare", "dojo
 			//	|		pane.attr("href", ref);
 			//	|	});
 			
-			this.tracker._trackPageview.apply(this, arguments);
+			this.tracker._trackPageview.apply(this.tracker, arguments);
 		}
 
 	});

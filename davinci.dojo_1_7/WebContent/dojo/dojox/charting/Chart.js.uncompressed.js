@@ -181,10 +181,7 @@ define("dojox/charting/Chart", ["dojo/_base/lang", "dojo/_base/array","dojo/_bas
 			//		returned by dojo.coords.
 			//	returns: Object
 			//		The resulting coordinates of the chart.  See dojo.coords for details.
-			if(!this.coords){
-				this.coords = html.coords(this.node, true);
-			}
-			return this.coords;	//	Object
+			return html.coords(this.node, true); // Object
 		},
 		setTheme: function(theme){
 			//	summary:
@@ -617,8 +614,7 @@ define("dojox/charting/Chart", ["dojo/_base/lang", "dojo/_base/array","dojo/_bas
 				// and set it on the surface
 				this.surface.setDimensions(box.w, box.h);
 				this.dirty = true;
-				this.coords = null;
-				return this.render();	//	dojox.charting.Chart				
+				return this.render();	//	dojox.charting.Chart
 			}else{
 				return this;
 			}

@@ -7,6 +7,7 @@ define(
 	"nextTip": "หน้าถัดไป",
 	"prevTip": "หน้าก่อนหน้านี้",
 	"itemTitle": "ไอเท็ม",
+	"singularItemTitle": "ไอเท็ม",
 	"pageStepLabelTemplate": "หน้า ${0}",
 	"pageSizeLabelTemplate": "${0} ไอเท็มต่อหน้า",
 	"allItemsLabelTemplate": "รายการ ทั้งหมด",
@@ -20,4 +21,3 @@ define(
 })
 //end v1.x content
 );
-

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/_editor/nls/ca/commands", //begin v1.x content
 ({
 	'bold': 'Negreta',
 	'copy': 'Copia',

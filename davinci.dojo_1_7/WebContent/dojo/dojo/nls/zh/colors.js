@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/nls/zh/colors", //begin v1.x content
 ({
 // local representation of all CSS3 named colors, companion to dojo.colors.  To be used where descriptive information
 // is required for each color, such as a palette widget, and not for specifying color programatically.
@@ -147,6 +147,7 @@ tan: "茶色",
 teal: "青色",
 thistle: "蓟色",
 tomato: "番茄色",
+transparent: "透明的",
 turquoise: "青绿色",
 violet: "紫罗兰色",
 wheat: "淡黄色",

@@ -7,6 +7,7 @@ define(
 	"nextTip": "Neste side",
 	"prevTip": "Forrige side",
 	"itemTitle": "elementer",
+	"singularItemTitle": "element",
 	"pageStepLabelTemplate": "Side ${0}",
 	"pageSizeLabelTemplate": "${0} elementer per side",
 	"allItemsLabelTemplate": "Alle elementer",
@@ -20,4 +21,3 @@ define(
 })
 //end v1.x content
 );
-

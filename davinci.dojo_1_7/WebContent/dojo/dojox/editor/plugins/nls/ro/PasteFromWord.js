@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/ro/PasteFromWord", //begin v1.x content
 ({
 	"pasteFromWord": "Lipire din Word",
 	"paste": "Lipire",

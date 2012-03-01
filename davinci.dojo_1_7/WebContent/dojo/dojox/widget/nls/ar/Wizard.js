@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/widget/nls/ar/Wizard", //begin v1.x content
 ({
 next: "تالي",
 previous: "‏سابق‏",

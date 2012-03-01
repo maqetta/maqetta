@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/widget/nls/ru/ColorPicker", //begin v1.x content
 ({
 redLabel: "к",
 greenLabel: "з",

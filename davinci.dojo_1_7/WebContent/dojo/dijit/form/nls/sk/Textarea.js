@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/form/nls/sk/Textarea", //begin v1.x content
 /* used by both the editor and textarea widgets to provide information to screen reader users */
 ({
 	iframeEditTitle: 'upraviť oblasť',  // primary title for editable IFRAME, for screen readers when focus is in the editing area

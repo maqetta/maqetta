@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/ru/TableDialog", //begin v1.x content
 ({
 	insertTableTitle: "Вставить таблицу",
 	modifyTableTitle: "Изменить таблицу",

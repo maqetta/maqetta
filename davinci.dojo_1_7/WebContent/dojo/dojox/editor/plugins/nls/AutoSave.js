@@ -1,5 +1,6 @@
 //>>built
-define({ root:
+define("dojox/editor/plugins/nls/AutoSave", { root:
+//begin v1.x content
 ({
 	"saveLabel": "Save",
 	"saveSettingLabelOn": "Set Auto-Save Interval...",
@@ -34,6 +35,7 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
+"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -45,4 +47,3 @@ define({ root:
 "ca": true,
 "ar": true
 });
-

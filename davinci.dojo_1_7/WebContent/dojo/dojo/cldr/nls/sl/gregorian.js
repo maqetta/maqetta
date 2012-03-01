@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/cldr/nls/sl/gregorian", //begin v1.x content
 {
 	"field-dayperiod": "Čas dneva",
 	"dayPeriods-format-wide-pm": "pop.",

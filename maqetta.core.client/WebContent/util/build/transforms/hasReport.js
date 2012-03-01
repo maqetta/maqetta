@@ -18,9 +18,10 @@ define(["../buildControl", "../stringify"], function(bc, stringify) {
 				return sorted.sort();
 			};
 
+			var newline = bc.newline;
 			bc.log("hasReport", sorted.map(function(item) {
-				return "	// " + sort(item[1]).join(", ") + "\n	 '" + item[0] + "':1";
-			}).join(",\n\n"));
+				return "	// " + sort(item[1]).join(", ") + newline + "	 '" + item[0] + "':1";
+			}).join("," + newline + newline));
 		}
 		return 0;
 	};

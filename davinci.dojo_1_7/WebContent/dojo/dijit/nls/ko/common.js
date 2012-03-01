@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/nls/ko/common", //begin v1.x content
 ({
 	buttonOk: "확인",
 	buttonCancel: "취소",

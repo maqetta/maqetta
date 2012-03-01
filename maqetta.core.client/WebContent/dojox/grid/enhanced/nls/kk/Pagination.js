@@ -7,6 +7,7 @@ define(
 	"nextTip": "Келесі бет",
 	"prevTip": "Алдыңғы бет",
 	"itemTitle": "элементтер",
+	"singularItemTitle": "элемент",
 	"pageStepLabelTemplate": "Бет ${0}",
 	"pageSizeLabelTemplate": "Бетіне ${0} элемент",
 	"allItemsLabelTemplate": "Барлық элементтер",
@@ -20,4 +21,3 @@ define(
 })
 //end v1.x content
 );
-

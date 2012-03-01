@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/atom/widget/nls/kk/FeedEntryViewer", //begin v1.x content
 ({
 	displayOptions: "[көрсету параметрлері]",
 	title: "Тақырып",

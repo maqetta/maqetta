@@ -60,7 +60,7 @@ define([
 				result[p] = defaultBuildProps[p];
 			}
 			for(p in profile){
-				if(/^(loader|xdDojoPath|scopeDjConfig|xdScopeArgs|xdDojoScopeName|expandProvide|buildLayers|query|removeDefaultNameSpaces|addGuards|localeList)$/.test(p)){
+				if(/^(loader|xdDojoPath|scopeDjConfig|xdScopeArgs|xdDojoScopeName|expandProvide|buildLayers|query|removeDefaultNameSpaces|addGuards)$/.test(p)){
 					bc.log("inputDeprecated", ["switch", p]);
 				}else if(p=="staticHasFeatures"){
 					mix(result.staticHasFeatures, profile.staticHasFeatures);
@@ -333,6 +333,7 @@ define([
 			};
 
 			if(bc.writeProfile){
+				// FIXME: cann't use bc.newlineFilter here because profile has not been fully initialized; move this to buildControl.js
 				fs.writeFileSync(bc.writeProfile, "dependencies = " + dojo.toJson(profileProperties, true), "utf8");
 			}
 			return processProfile(profileProperties, dojoPath, utilBuildscriptsPath);

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/cs/Preview", //begin v1.x content
 ({
 	"preview": "Náhled"
 })

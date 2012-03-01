@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/atom/widget/nls/he/FeedEntryViewer", //begin v1.x content
 ({
 	displayOptions: "[אפשרויות הצגה]",
 	title: "כותרת",

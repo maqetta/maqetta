@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/atom/widget/nls/nl/FeedEntryViewer", //begin v1.x content
 ({
 	displayOptions: "[weergaveopties]",
 	title: "Titel",

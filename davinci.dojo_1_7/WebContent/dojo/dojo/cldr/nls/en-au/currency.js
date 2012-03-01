@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/cldr/nls/en-au/currency", //begin v1.x content
 {
 	"AUD_symbol": "$",
 	"USD_symbol": "US$"

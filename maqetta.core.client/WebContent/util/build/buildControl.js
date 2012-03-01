@@ -1,5 +1,6 @@
 define([
 	"require",
+	"dojo/_base/lang",
 	"./argv",
 	"./fs",
 	"./fileUtils",
@@ -9,7 +10,7 @@ define([
 	"./process",
 	"./messages",
 	"dojo/text!./help.txt"
-], function(require, argv, fs, fileUtils, bc, v1xProfiles, stringify, process, messages, helpText) {
+], function(require, lang, argv, fs, fileUtils, bc, v1xProfiles, stringify, process, messages, helpText) {
 	//
 	// Process the arguments given on the command line to build up a profile object that is used to instruct and control
 	// the build process.
@@ -187,6 +188,11 @@ define([
 		bc.copyTests = !!bc.copyTests;
 	}
 
+	if(isString(bc.localeList)){
+		bc.localeList = bc.localeList.split(",");
+	}
+	bc.localeList = bc.localeList ? bc.localeList.map(lang.trim) : [];
+
 	// clean up bc.packageMap and bc.paths so they can be used just as in dojo loader/bdLoad
 	(function() {
 		// so far, we've been using bc.packageMap to accumulate package info as it is provided by packagePaths and/or packages
@@ -356,6 +362,8 @@ define([
 			layer.include= layer.include || [];
 			layer.boot = !!layer.boot;
 			layer.discard = !!layer.discard;
+			layer.noref = !!(layer.noref!==undefined ? layer.noref : bc.noref);
+			layer.compat = layer.compat!==undefined ? layer.compat : (bc.layerCompat ||"");
 
 			var tlm = mid.split("/")[0],
 				pack = bc.packages[tlm],
@@ -408,9 +416,6 @@ define([
 
 	})();
 
-
-
-	bc.locales= bc.locales || [];
 
 	// for the static has flags, -1 means its not static; this gives a way of combining several static has flag sets
 	// and still allows later sets to delete flags set in earlier sets
@@ -533,7 +538,7 @@ define([
 				files:1,
 				internStringsSkipList:1,
 				layers:1,
-				locales:1,
+				localeList:1,
 				maxOptimizationProcesses:1,
 				mini:1,
 				"package":1,

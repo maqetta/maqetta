@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/grid/enhanced/nls/el/EnhancedGrid", //begin v1.x content
 ({
 	singleSort: "Απλή ταξινόμηση",
 	nestedSort: "Ένθετη ταξινόμηση",

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/widget/nls/nb/ColorPicker", //begin v1.x content
 ({
 huePickerTitle: "Nyansevelger",
 saturationPickerTitle: "Metningsvelger"

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/form/nls/fi/validate", //begin v1.x content
 ({
 	invalidMessage: "Annettu arvo ei kelpaa.",
 	missingMessage: "Tämä arvo on pakollinen.",

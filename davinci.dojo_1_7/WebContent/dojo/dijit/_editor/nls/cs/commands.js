@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/_editor/nls/cs/commands", //begin v1.x content
 ({
 	'bold': 'Tučné',
 	'copy': 'Kopírovat',

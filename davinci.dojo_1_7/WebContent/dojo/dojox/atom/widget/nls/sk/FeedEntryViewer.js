@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/atom/widget/nls/sk/FeedEntryViewer", //begin v1.x content
 ({
 	displayOptions: "[zobraziť voľby]",
 	title: "Nadpis",

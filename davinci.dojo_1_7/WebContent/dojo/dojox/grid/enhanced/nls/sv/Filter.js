@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/grid/enhanced/nls/sv/Filter", //begin v1.x content
 ({
 	"clearFilterDialogTitle": "Rensa filter",
 	"filterDefDialogTitle": "Filter",
@@ -65,6 +65,8 @@ define(
 	"anycolumn": "alla kolumner",
 	"statusTipTitleNoFilter": "Filterfält",
 	"statusTipTitleHasFilter": "Filter",
+	"statusTipRelAny": "Matcha någon regel.",
+	"statusTipRelAll": "Matcha alla regler.",
 	
 	"defaultItemsName": "objekt",
 	"filterBarMsgHasFilterTemplate": "${0} av ${1} ${2} visas.",
@@ -85,6 +87,3 @@ define(
 })
 //end v1.x content
 );
-
-
-

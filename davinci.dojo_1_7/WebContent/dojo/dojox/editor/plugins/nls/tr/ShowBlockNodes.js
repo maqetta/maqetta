@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/tr/ShowBlockNodes", //begin v1.x content
 ({
 	"showBlockNodes": "HTML Bloğu Öğelerini Göster"
 })

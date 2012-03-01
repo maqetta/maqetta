@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/atom/widget/nls/ko/FeedEntryViewer", //begin v1.x content
 ({
 	displayOptions: "[옵션 표시]",
 	title: "제목",

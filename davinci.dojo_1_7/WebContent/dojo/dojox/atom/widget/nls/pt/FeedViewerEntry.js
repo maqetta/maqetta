@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/atom/widget/nls/pt/FeedViewerEntry", //begin v1.x content
 ({
 	deleteButton: "[Excluir]"
 })

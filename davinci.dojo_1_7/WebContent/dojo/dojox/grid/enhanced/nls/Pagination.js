@@ -1,5 +1,5 @@
 //>>built
-define({ root:
+define("dojox/grid/enhanced/nls/Pagination", { root:
 //begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} of ${1} ${0}",
@@ -34,6 +34,7 @@ define({ root:
 "he": true,
 "hr": true,
 "hu": true,
+"hr": true,
 "it": true,
 "ja": true,
 "kk": true,

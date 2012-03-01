@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/cs/AutoSave", //begin v1.x content
 ({
 	"saveLabel": "Uložit",
 	"saveSettingLabelOn": "Nastavit interval pro automatické uložení",

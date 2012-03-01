@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/cldr/nls/hu/gregorian", //begin v1.x content
 {
 	"field-dayperiod": "napszak",
 	"dayPeriods-format-wide-pm": "du.",

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/cldr/nls/ja/gregorian", //begin v1.x content
 {
 	"field-weekday": "曜日",
 	"dateFormatItem-yQQQ": "yQQQ",

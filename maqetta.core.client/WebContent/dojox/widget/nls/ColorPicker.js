@@ -33,6 +33,7 @@ saturationPickerTitle: "Saturation Selector"
 "ja": true,
 "it": true,
 "hu": true,
+"hr": true,
 "he": true,
 "fr": true,
 "fi": true,

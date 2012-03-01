@@ -193,6 +193,9 @@ define("dijit/form/_DateTimeTextBox", [
 				}
 			}
 			this.inherited(arguments);
+			if(this.value instanceof Date){
+				this.filterString = "";
+			}
 			if(this.dropDown){
 				this.dropDown.set('value', value, false);
 			}
@@ -209,8 +212,8 @@ define("dijit/form/_DateTimeTextBox", [
 		_setDropDownDefaultValueAttr: function(/*Date*/ val){
 			if(this._isInvalidDate(val)){
 				// convert null setting into today's date, since there needs to be *some* default at all times.
-				 val = new this.dateClassObj()
-						}
+				 val = new this.dateClassObj();
+			}
 			this.dropDownDefaultValue = val;
 		},
 
@@ -225,7 +228,7 @@ define("dijit/form/_DateTimeTextBox", [
 			this.dropDown = new PopupProto({
 				onChange: function(value){
 					// this will cause InlineEditBox and other handlers to do stuff so make sure it's last
-					_DateTimeTextBox.superclass._setValueAttr.call(textBox, value, true);
+					textBox.set('value', value, true);
 				},
 				id: this.id + "_popup",
 				dir: textBox.dir,

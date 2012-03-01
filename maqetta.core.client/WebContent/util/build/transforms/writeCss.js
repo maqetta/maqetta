@@ -23,7 +23,7 @@ define(["../buildControl", "../fileUtils", "../fs"], function(bc, fileUtils, fs)
 			doWrite= function(filename, text, encoding) {
 				fileUtils.ensureDirectoryByFilename(filename);
 				waitCount++;
-				fs.writeFile(filename, text, encoding || "utf8", onWriteComplete);
+				fs.writeFile(filename, bc.newlineFilter(text, resource, "writeCss"), encoding || "utf8", onWriteComplete);
 				// this must go *after* the async call
 			},
 

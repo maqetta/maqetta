@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/nls/pt/colors", //begin v1.x content
 ({
 // local representation of all CSS3 named colors, companion to dojo.colors.  To be used where descriptive information
 // is required for each color, such as a palette widget, and not for specifying color programatically.
@@ -147,6 +147,7 @@ tan: "tan",
 teal: "azul esverdeado",
 thistle: "thistle",
 tomato: "tomate",
+transparent: "transparente",
 turquoise: "turquesa",
 violet: "violeta",
 wheat: "trigo",

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/zh/AutoSave", //begin v1.x content
 ({
 	"saveLabel": "保存",
 	"saveSettingLabelOn": "设置自动保存时间间隔...",

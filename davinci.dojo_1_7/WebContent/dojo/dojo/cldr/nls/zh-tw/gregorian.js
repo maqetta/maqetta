@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/cldr/nls/zh-tw/gregorian", //begin v1.x content
 {
 	"quarters-standAlone-wide": [
 		"第1季",

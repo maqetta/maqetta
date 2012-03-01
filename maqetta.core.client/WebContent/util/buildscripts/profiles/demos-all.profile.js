@@ -189,6 +189,120 @@ dependencies = {
 			dependencies:[
 				"demos.css3.src"
 			]
+		},
+		{
+			name: "../demos/bezier/src.js",
+			dependencies:[
+				"demos.bezier.src"
+			]
+		},
+		{
+			name: "../demos/butterfly/src.js",
+			dependencies:[
+				"demos.butterfly.src"
+			]
+		},
+		{
+			name: "../demos/chartTypes/src.js",
+			dependencies:[
+				"demos.chartTypes.src"
+			]
+		},
+		{
+			name: "../demos/clock/src.js",
+			dependencies:[
+				"demos.clock.src"
+			]
+		},
+		{
+			name: "../demos/drillDownChart/src.js",
+			dependencies:[
+				"demos.drillDownChart.src"
+			]
+		},
+		{
+			name: "../demos/dynamicChart/src.js",
+			dependencies:[
+				"demos.dynamicChart.src"
+			]
+		},
+		{
+			name: "../demos/gauges/src.js",
+			dependencies:[
+				"demos.gauges.src"
+			]
+		},
+		{
+			name: "../demos/gfxserialization/src.js",
+			dependencies:[
+				"demos.gfxserialization.src"
+			]
+		},
+		{
+			name: "../demos/grid/src.js",
+			dependencies:[
+				"demos.grid.src"
+			]
+		},
+		{
+			name: "../demos/mapTileProviders/src.js",
+			dependencies:[
+				"demos.mapTileProviders.src"
+			]
+		},
+		{
+			name: "../demos/mobileCatalog/src.js",
+			dependencies:[
+				"demos.mobileCatalog.src"
+			]
+		},
+		{
+			name: "../demos/mobileScrollableView/src.js",
+			dependencies:[
+				"demos.mobileScrollableView.src"
+			]
+		},
+		{
+			name: "../demos/mobileSlideShow/src.js",
+			dependencies:[
+				"demos.mobileSlideShow.src"
+			]
+		},
+		{
+			name: "../demos/mobileStockPortfolio/src.js",
+			dependencies:[
+				"demos.mobileStockPortfolio.src"
+			]
+		},
+		{
+			name: "../demos/pieChart/src.js",
+			dependencies:[
+				"demos.pieChart.src"
+			]
+		},
+		{
+			name: "../demos/shippingRoutes/src.js",
+			dependencies:[
+				"demos.shippingRoutes.src"
+			]
+		},
+		{
+			name: "../demos/spiderChart/src.js",
+			dependencies:[
+				"demos.spiderChart.src"
+			]
+		},
+		{
+			name: "../demos/sunMap/src.js",
+			dependencies:[
+				"demos.sunMap.src"
+			]
+		},
+		{
+			name: "../demos/themePreviewer/src.js",
+			dependencies:[
+				"demos.themePreviewer.src"
+			]
 		}
 	],
 

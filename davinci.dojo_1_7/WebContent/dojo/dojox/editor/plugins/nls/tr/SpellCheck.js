@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/tr/SpellCheck", //begin v1.x content
 ({
 	widgetLabel: "Toplu Yazım Denetimi",
 	unfound: "Bulunamadı",

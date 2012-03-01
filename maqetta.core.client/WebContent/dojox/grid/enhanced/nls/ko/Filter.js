@@ -64,6 +64,8 @@ define(
 	"anycolumn": "임의의 컬럼",
 	"statusTipTitleNoFilter": "필터 표시줄",
 	"statusTipTitleHasFilter": "필터",
+	"statusTipRelAny": "임의 규칙과 일치.",
+	"statusTipRelAll": "모든 규칙과 일치.",
 	
 	"defaultItemsName": "항목",
 	"filterBarMsgHasFilterTemplate": "${0}/${1} ${2} 표시됨",
@@ -84,6 +86,3 @@ define(
 })
 //end v1.x content
 );
-
-
-

@@ -113,7 +113,7 @@ define(["../buildControl", "../fileUtils"], function(bc, fileUtils) {
 			if(/keepLines/i.test(bc.cssOptimize)){
 				//Remove multiple empty lines.
 				text = text.replace(/(\r\n)+/g, "\r\n");
-				text = text.replace(/(\n)+/g, "\n");
+				text = text.replace(/\n+/g, "\n");
 			}else{
 				text = text.replace(/[\r\n]/g, "");
 				text = text.replace(/\s+/g, " ");

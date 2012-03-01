@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/form/nls/ar/PasswordValidator", //begin v1.x content
 ({
         nomatchMessage: "كلمات السرية غير مطابقة.",
 		badPasswordMessage: "كلمة سرية غير صحيحة."

@@ -464,26 +464,25 @@ define([
 
 	// dijit.Tooltip.defaultPosition: String[]
 	//		This variable controls the position of tooltips, if the position is not specified to
-	//		the Tooltip widget or *TextBox widget itself.  It's an array of strings with the following values:
+	//		the Tooltip widget or *TextBox widget itself.  It's an array of strings with the values
+	//		possible for `dijit/place::around()`.   The recommended values are:
 	//
-	//			* before: places tooltip to the left of the target node/widget, or to the right in
-	//			  the case of RTL scripts like Hebrew and Arabic
-	//			* after: places tooltip to the right of the target node/widget, or to the left in
-	//			  the case of RTL scripts like Hebrew and Arabic
-	//			* above: tooltip goes above target node
-	//			* below: tooltip goes below target node
-	//			* top: tooltip goes above target node but centered connector
-	//			* bottom: tooltip goes below target node but centered connector
+	//			* before-centered: centers tooltip to the left of the anchor node/widget, or to the right
+	//				 in the case of RTL scripts like Hebrew and Arabic
+	//			* after-centered: centers tooltip to the right of the anchor node/widget, or to the left
+	//				 in the case of RTL scripts like Hebrew and Arabic
+	//			* above-centered: tooltip is centered above anchor node
+	//			* below-centered: tooltip is centered above anchor node
 	//
 	//		The list is positions is tried, in order, until a position is found where the tooltip fits
 	//		within the viewport.
 	//
-	//		Be careful setting this parameter.  A value of "above" may work fine until the user scrolls
+	//		Be careful setting this parameter.  A value of "above-centered" may work fine until the user scrolls
 	//		the screen so that there's no room above the target node.   Nodes with drop downs, like
 	//		DropDownButton or FilteringSelect, are especially problematic, in that you need to be sure
 	//		that the drop down and tooltip don't overlap, even when the viewport is scrolled so that there
 	//		is only room below (or above) the target node, but not both.
-	Tooltip.defaultPosition = ["after", "before"];
+	Tooltip.defaultPosition = ["after-centered", "before-centered"];
 
 
 	return Tooltip;

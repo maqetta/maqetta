@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/th/InsertAnchor", //begin v1.x content
 ({
 	insertAnchor: "แทรกจุดยึด",
 	title: "คุณสมบัติจุดยึด",

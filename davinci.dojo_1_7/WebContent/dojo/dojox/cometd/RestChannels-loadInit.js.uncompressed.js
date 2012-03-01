@@ -7,7 +7,5 @@ dojo.provide("dojox.cometd.RestChannels");
 dojo.require("dojox.rpc.Client");
 dojo.require("dojo._base.url");
 dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener");
-
 }
 });
-

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/atom/widget/nls/th/FeedEntryViewer", //begin v1.x content
 ({
 	displayOptions: "[อ็อพชันการแสดงผล]",
 	title: "ชื่อเรื่อง",

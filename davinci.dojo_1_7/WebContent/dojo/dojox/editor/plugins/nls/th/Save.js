@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/th/Save", //begin v1.x content
 ({
 	"save": "บันทึก"
 })

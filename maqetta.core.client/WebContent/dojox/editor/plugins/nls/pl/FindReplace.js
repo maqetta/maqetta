@@ -10,7 +10,6 @@ define(
 	"matchCaseTooltip": "Uwzględnij wielkość liter",
 	"backwards": "Do tyłu",
 	"backwardsTooltip": "Wyszukaj tekst wstecz",
-	"replaceAll": "Wszystkie wystąpienia",
 	"replaceAllButton": "Zastąp wszystkie",
 	"replaceAllButtonTooltip": "Zastąp cały tekst",
 	"findButton": "Znajdź",

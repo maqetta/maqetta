@@ -184,6 +184,6 @@ this.inherited(arguments);
 _16._MasterTooltip=_11;
 _16.show=_10.showTooltip;
 _16.hide=_10.hideTooltip;
-_16.defaultPosition=["after","before"];
+_16.defaultPosition=["after-centered","before-centered"];
 return _16;
 });

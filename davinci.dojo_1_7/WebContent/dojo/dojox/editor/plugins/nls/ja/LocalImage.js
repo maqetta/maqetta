@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/ja/LocalImage", //begin v1.x content
 ({
 	insertImageTitle: "イメージの挿入",
 	url: "イメージ",

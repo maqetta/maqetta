@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/widget/nls/sk/Wizard", //begin v1.x content
 ({
 next: "Ďalej",
 previous: "Späť",

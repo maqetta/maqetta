@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/_editor/nls/az/LinkDialog", //begin v1.x content
 ({
 	"text" : "Yazı:",
 	"insertImageTitle" : "Şəkil başlığı əlavə et",

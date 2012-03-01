@@ -1,5 +1,5 @@
 //>>built
-define({ root:
+define("dojo/cldr/nls/islamic", { root:
 
 //begin v1.x content
 {

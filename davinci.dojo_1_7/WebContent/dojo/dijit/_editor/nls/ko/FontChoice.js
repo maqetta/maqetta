@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/_editor/nls/ko/FontChoice", //begin v1.x content
 ({
 	fontSize: "크기",
 	fontName: "글꼴",

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/form/nls/pl/PasswordValidator", //begin v1.x content
 ({
         nomatchMessage: "Hasła nie są zgodne.",
 		badPasswordMessage: "Niepoprawne hasło."

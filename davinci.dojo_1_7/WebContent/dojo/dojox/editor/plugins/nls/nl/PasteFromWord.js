@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/nl/PasteFromWord", //begin v1.x content
 ({
 	"pasteFromWord": "Plakken vanuit Word",
 	"paste": "Plakken",

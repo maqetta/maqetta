@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/_editor/nls/sv/LinkDialog", //begin v1.x content
 ({
 	createLinkTitle: "Länkegenskaper",
 	insertImageTitle: "Bildegenskaper",

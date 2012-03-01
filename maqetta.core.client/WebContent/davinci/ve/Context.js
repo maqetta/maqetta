@@ -25,6 +25,7 @@ define([
 	"dojo/DeferredList",
 	"davinci/XPathUtils",
 	"../html/HtmlFileXPathAdapter",
+	"davinci/util",
 	"dojox/html/_base"
 ], function(
 	declare,
@@ -52,7 +53,8 @@ define([
 	Deferred,
 	DeferredList,
 	XPathUtils,
-	HtmlFileXPathAdapter
+	HtmlFileXPathAdapter,
+	maqUtil
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -340,20 +342,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			return;
 		}
 
-		var addToArray = function(array, value){
-			var index = dojo.indexOf(array, value);
-			if(index < 0){
-				array.push(value);
-			}
-		};
-
 		var id = widget.getId();
 		if(id){
-			addToArray(this._widgetIds, id);
+			maqUtil.arrayAddOnce(this._widgetIds, id);
 		}
 		var objectId = widget.getObjectId(widget);
 		if(objectId){
-			addToArray(this._objectIds, objectId);
+			maqUtil.arrayAddOnce(this._objectIds, objectId);
 		}
 
 		// Recurse down widget hierarchy

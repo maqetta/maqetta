@@ -1,26 +1,39 @@
+define([
+	"dojo/_base/declare",
+	"dojo/_base/connect",
+    "davinci/workbench/ViewLite",
+    "davinci/ve/metadata",
+    "davinci/ve/commands/ModifyCommand",
+    "dojo/i18n!davinci/ve/nls/ve",
+    "dojo/i18n!dijit/nls/common",
+    "davinci/ve/widgets/HTMLStringUtil"
+], function(
+	declare,
+	connect,
+	ViewLite,
+	Metadata,
+	ModifyCommand,
+	veNLS,
+	commonNLS,
+	HTMLStringUtil
+) {
 
-define(["dojo/_base/declare",
-        "davinci/workbench/ViewLite",
-        "davinci/ve/metadata",
-        "davinci/ve/commands/ModifyCommand",
-        "dojo/i18n!davinci/ve/nls/ve",
-        "dojo/i18n!dijit/nls/common",
-        "davinci/ve/widgets/HTMLStringUtil"
-],function(declare,   ViewLite, Metadata, ModifyCommand, veNLS,commonNLS, HTMLStringUtil){
 	return declare("davinci.ve.widgets.WidgetProperties", [ViewLite], {
 		
-		displayName:"Widget-specific", // FIXME: This string is hard-coded in two different places
+		displayName: "Widget-specific", // FIXME: This string is hard-coded in two different places
+
+		_connects: null,
 	
 		buildRendering: function(){
 			this.domNode = this.propDom = dojo.doc.createElement("div");
 			dojo.addClass(this.domNode, "propGroup");
 			dojo.attr(this.domNode, "propGroup", this.displayName);
+			this._connects = [];
 			this.inherited(arguments);
 		},
 
-		onWidgetSelectionChange: function(){
-			
-			if(!this._widget){
+		onWidgetSelectionChange: function() {
+			if (!this._widget) {
 				this._disconnectAll();
 				this._destroyProperties();
 				return;
@@ -35,7 +48,7 @@ define(["dojo/_base/declare",
 					if (!metadata.property) {
 						metadata.property = parentMetadata.childProperties;
 					} else {
-						for (prop in parentMetadata.childProperties){
+						for (var prop in parentMetadata.childProperties) {
 							metadata.property[prop] = parentMetadata.childProperties[prop];
 						}
 					}
@@ -48,19 +61,18 @@ define(["dojo/_base/declare",
 			this._destroyProperties();
 	
 			this.propDom.innerHTML = this._createWidgetRows(metadata.property);
-			if(this.propDom.innerHTML.indexOf('dojoType')) {
+			if (this.propDom.innerHTML.indexOf('dojoType') !== -1) {
 				dojo.parser.parse(this.propDom);
 			}
 			this._setValues();
 			this._connectAll();
 		},
 		
-		onEditorSelected : function(editorChange){
-			if(editorChange==null){
+		onEditorSelected: function(editorChange) {
+			if (!editorChange) {
 				this._widget = null;
 				this.context = null;
-			}else{
-			
+			} else {
 				if(editorChange.editorID == "davinci.ve.HTMLPageEditor"){ // not all editors have a context
 					this.context = editorChange.getContext();
 					this._widget = this.context.getSelection()[0];
@@ -68,7 +80,6 @@ define(["dojo/_base/declare",
 					this.context = null;
 					this._widget = null;
 				}
-				
 			}
 			this.onWidgetSelectionChange();
 		 },	
@@ -98,7 +109,6 @@ define(["dojo/_base/declare",
 			return HTMLStringUtil.generateTable(this._pageLayout);
 		},
 		
-		
 		_destroyProperties: function(){
 			var containerNode = (this.propDom);
 			dojo.forEach(dojo.query("[widgetId]", containerNode).map(dijit.byNode), function(w){
@@ -109,14 +119,14 @@ define(["dojo/_base/declare",
 			}
 		},
 		
-		_connectAll: function(){
-			
+		_connectAll: function() {
 			function makeOnChange(target){
 				return function(){
 					return this._onChange({target:target});
 				};
 			}
-			for(var i in this._pageLayout){
+
+			for (var i = 0, len = this._pageLayout.length; i < len; i++) {
 			    //NOTE: This comment was present here and the "var widget..." and "if(!widget){" lines 
 			    //were commented out:
 			    //
@@ -127,98 +137,102 @@ define(["dojo/_base/declare",
 			    //HOWEVER, I found a case where the assumption widget would always be null is _wrong_. The
 			    //case is when the property is unconstrained and a comboEdit is in place. So, I've uncommented the 
 			    //aforementioned lines.
-				var widget = dijit.byId(this._pageLayout[i].id); 
-				if(!widget){
-					/* onchange is lowercase for DOM/non dijit */
-					var box = dojo.byId(this._pageLayout[i].id);
-					this._connect(box, "onchange", this, makeOnChange(i));
-					this._connect(box, "onfocus", this, "_onFieldFocus");
-					this._connect(box, "onblur", this, "_onFieldBlur");
-					//dojo.connect(widget, "onfocus", this, "_onFieldFocus");
-					//dojo.connect(widget, "onblur", this, "_onFieldBlur");
-				}else{
-					dojo.connect(widget, "onFocus", this, "_onFieldFocus");
-					dojo.connect(widget, "onBlur", this, "_onFieldBlur");
-					this._connect(widget, "onChange", this, makeOnChange(i));
-				}
+				var row = this._pageLayout[i],
+					widget = dijit.byId(row.id),
+					obj = widget || dojo.byId(row.id),
+					// onchange, et al, are lowercase for DOM/non dijit
+					onchange = widget ? 'onChange' : 'change',
+					onfocus = widget ? 'onFocus' : 'focus',
+					onblur = widget ? 'onBlur' : 'blur';
+				this._connect(obj, onchange, this, makeOnChange(i));
+				this._connect(obj, onfocus, this, "_onFieldFocus");
+				this._connect(obj, onblur, this, "_onFieldBlur");
 			}
 		},
-		
-		_connect: function(target,method,scope,targetFunction,dontFix){
-			if(!this._connects)
-				this._connects = [];
-			
-			this._connects.push(dojo.connect(target,method,scope,targetFunction,dontFix));
+
+		_connect: function(target, method, scope, targetFunction, dontFix) {
+			this._connects.push(connect.connect.apply(null, arguments));
 		},
-		_disconnectAll: function(){
-			if(!this._connects){ return; }
-			this._connects.forEach(dojo.disconnect);
+
+		_disconnectAll: function() {
+			this._connects.forEach(connect.disconnect);
+			this._connects = [];
 		},
-		_onChange: function(a){
-			var index = a.target;
-			var box = dojo.byId(this._pageLayout[index].id);
-			var value = null;
+
+		_onChange: function(a) {
+			var index = a.target,
+				row = this._pageLayout[index],
+				box = dojo.byId(row.id),
+				value;
 			
-			if(this.context)
+			if (this.context) {
 				this.context.blockChange(false);
+			}
 			
-			if(box){
-				if(box.type=='checkbox'){
-					value = dojo.attr(box, 'checked');
-				}else{
-					value = dojo.attr(box, 'value');	
+			if (box) {
+				var attr = box.type === 'checkbox' ? 'checked' : 'value';
+				value = dojo.attr(box, attr);
+			} else {
+				box = dijit.byId(row.id);
+				if (box) {
+					value = box.get('value');
 				}
-			}else{
-				 box = dijit.byId(this._pageLayout[index]['id']);
-				 if(box) {
-					 value = box.get('value');
-				 }
 			}
 	
-			if(this._pageLayout[index].value != value ){
-				this._pageLayout[index].value = value;
+			if (row.value != value) { // keep '!=', we want type coersion from strings
+				row.value = value;
 				var valuesObject = {};
-				valuesObject[this._pageLayout[index].target] = value;
+				valuesObject[row.target] = value;
 				var command = new ModifyCommand(this._widget, valuesObject, null);
-				dojo.publish("/davinci/ui/widgetPropertiesChanges",[{source:this._editor.editor_id, command:command}]);
+				dojo.publish("/davinci/ui/widgetPropertiesChanges", [
+					{
+						source: this._editor.editor_id,
+						command: command
+					}
+				]);
 			}	
 		},
-		_onFieldFocus : function(){
-			if(this.context)
+
+		_onFieldFocus: function() {
+			if (this.context) {
 				this.context.blockChange(true);
+			}
 		},
-		_onFieldBlur : function(){
-			if(this.context)
-				this.context.blockChange(false);		
+
+		_onFieldBlur: function() {
+			if (this.context) {
+				this.context.blockChange(false);
+			}
 		},
+
 		_setValues: function() {
-			
-			for(var i=0;i< this._pageLayout.length;i++){
+			for (var i = 0, len = this._pageLayout.length; i < len; i++) {
+				var row = this._pageLayout[i],
+					propNode = dojo.byId(row.id);
 				// Verify that DOM element actually exists
-				var propNode = dojo.byId(this._pageLayout[i].id);
-				if(propNode){
-					var widget = this._widget;
-					var targetProp = this._pageLayout[i].target;
-					var propValue = null;
-					
-					if(targetProp=="_children"){
-						propValue =   this._widget.getChildrenData();
-						if(propValue && propValue.length == 1){
-							propValue = propValue[0];
-						}else{
-							// need to account for this case?
-							propValue = this._widget.getPropertyValue(targetProp);
-						}
-					}else{
-						propValue = this._widget.getPropertyValue(targetProp);
+				if (!propNode) {
+					continue;
+				}
+
+				var widget = this._widget,
+					targetProp = row.target,
+					propValue;
+
+				if (targetProp === "_children") {
+					propValue = widget.getChildrenData();
+					if (propValue && propValue.length === 1) {
+						propValue = propValue[0];
+					} else {
+						// need to account for this case?
+						propValue = widget.getPropertyValue(targetProp);
 					}
-					if(this._pageLayout[i].value != propValue){
-						this._pageLayout[i].value = propValue;
-						if(this._pageLayout[i].type=='boolean')
-							dojo.attr( propNode, "checked",  this._pageLayout[i].value);
-						else
-							dojo.attr( propNode, "value",  this._pageLayout[i].value);
-					}
+				} else {
+					propValue = widget.getPropertyValue(targetProp);
+				}
+				if (row.value != propValue) { // keep '!=', we want type coersion from strings
+					row.value = propValue;
+					var attr = row.type === 'boolean' ? 'checked' : 'value';
+					dojo.attr(propNode, attr, row.value);
 				}
 			}
 		}

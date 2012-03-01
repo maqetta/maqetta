@@ -364,6 +364,7 @@ SilhouetteIframe.prototype = {
 				at_elem.setAttribute('attributeName','transform');
 				at_elem.setAttribute('begin','indefinite');
 				at_elem.setAttribute('end','indefinite');
+				at_elem.setAttribute('fill','freeze');
 				at_elem.setAttribute('dur','1s');
 				svg_elem.appendChild(at_elem);
 				return at_elem;

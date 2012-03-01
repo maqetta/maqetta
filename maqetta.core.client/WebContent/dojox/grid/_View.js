@@ -287,7 +287,7 @@ define([
 								this.grid.headerMenu.onCancel(true);
 							}
 							// IE reports a left click as 1, where everything else reports 0
-							if(e.button === (has('ie') ? 1 : 0)){
+							if(e.button === (has('ie') < 9 ? 1 : 0)){
 								Source.prototype.onMouseDown.call(this.source, e);
 							}
 						}

@@ -92,6 +92,8 @@ define(["dojo/_base/kernel", "dijit/Tooltip","dojo/_base/lang", "dojo/_base/html
 					// intentional fall down
 				case "bar":
 					aroundRect = lang.clone(o.shape.getShape());
+					aroundRect.w = aroundRect.width;
+					aroundRect.h = aroundRect.height;
 					break;
 				case "candlestick":
 					aroundRect.x = o.x;

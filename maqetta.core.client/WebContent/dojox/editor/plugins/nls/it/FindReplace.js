@@ -10,7 +10,6 @@ define(
 	"matchCaseTooltip": "Maiuscole/minuscole",
 	"backwards": "Indietro",
 	"backwardsTooltip": "Cerca testo indietro",
-	"replaceAll": "Tutte le ricorrenze",
 	"replaceAllButton": "Sostituisci tutto",
 	"replaceAllButtonTooltip": "Sostituisci tutto il testo",
 	"findButton": "Trova",

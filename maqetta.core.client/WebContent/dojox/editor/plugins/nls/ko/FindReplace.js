@@ -10,7 +10,6 @@ define(
 	"matchCaseTooltip": "대소문자 구분",
 	"backwards": "뒤로",
 	"backwardsTooltip": "텍스트 역방향 검색",
-	"replaceAll": "모든 발생",
 	"replaceAllButton": "모두 바꾸기",
 	"replaceAllButtonTooltip": "텍스트 모두 바꾸기",
 	"findButton": "찾기",

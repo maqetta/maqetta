@@ -81,7 +81,7 @@ define(["./fs", "./buildControlBase", "dojo/has"], function(fs, bc, has) {
 
 		getAbsolutePath= function(src, base) {
 			src= cleanupPath(src);
-			if (src.charAt(0)!="/") {
+			if (!isAbsolutePath(src)) {
 				src= catPath(base, src);
 			}
 			return compactPath(src);

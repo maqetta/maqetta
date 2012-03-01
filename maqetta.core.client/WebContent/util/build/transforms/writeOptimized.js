@@ -1,5 +1,5 @@
 define(["../buildControl", "../process", "../fs", "../fileUtils", "dojo/has", "dojo"], function(bc, process, fs, fileUtils, has, dojo) {
-	var built = "//>>built\n";
+	var built = "//>>built" + bc.newline;
 
 	// default to a no-op
 	var compile = function(){};
@@ -273,7 +273,7 @@ define(["../buildControl", "../process", "../fs", "../fileUtils", "dojo/has", "d
 				var tempFilename = resource.dest + ".consoleStripped.js";
 				text= text.replace(stripConsoleRe, "0 && $&");
 				tempFileDirs[fileUtils.getFilepath(tempFilename)]= 1;
-				fs.writeFile(tempFilename, text, resource.encoding, function(err){
+				fs.writeFile(tempFilename, bc.newlineFilter(text, resource, "closureStripConsole"), resource.encoding, function(err){
 					if(!err){
 						sendJob(tempFilename, resource.dest, optimizeSwitch, copyright);
 					}

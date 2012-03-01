@@ -10,7 +10,6 @@ define(
 	"matchCaseTooltip": "匹配大小写",
 	"backwards": "向后",
 	"backwardsTooltip": "向后搜索文本",
-	"replaceAll": "所有匹配项",
 	"replaceAllButton": "全部替换",
 	"replaceAllButtonTooltip": "替换所有文本",
 	"findButton": "查找",

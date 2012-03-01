@@ -19,7 +19,8 @@ define(
 	emoticonYes: "igen",
 	emoticonNo: "nem",
 	emoticonAngel: "angyal",
-	emoticonCrying: "sírás"
+	emoticonCrying: "sírás",
+	emoticonHappy: "boldog"
 })
 
 //end v1.x content

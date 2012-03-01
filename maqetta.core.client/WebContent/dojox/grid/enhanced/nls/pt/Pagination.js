@@ -7,6 +7,7 @@ define(
 	"nextTip": "Próxima página",
 	"prevTip": "Página anterior",
 	"itemTitle": "itens",
+	"singularItemTitle": "item",
 	"pageStepLabelTemplate": "Página ${0}",
 	"pageSizeLabelTemplate": "${0} itens por página",
 	"allItemsLabelTemplate": "Todos os itens",

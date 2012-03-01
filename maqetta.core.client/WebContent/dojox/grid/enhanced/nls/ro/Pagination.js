@@ -7,6 +7,7 @@ define(
 	"nextTip": "Următoarea pagină",
 	"prevTip": "Pagina anterioarp",
 	"itemTitle": "articole",
+	"singularItemTitle": "articol",
 	"pageStepLabelTemplate": "Pagina ${0}",
 	"pageSizeLabelTemplate": "${0} articole pe pagină",
 	"allItemsLabelTemplate": "Toate articolele",
@@ -20,4 +21,3 @@ define(
 })
 //end v1.x content
 );
-

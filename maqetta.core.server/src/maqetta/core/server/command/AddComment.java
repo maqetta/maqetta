@@ -29,13 +29,20 @@ import org.maqetta.server.ServerManager;
 
 public class AddComment extends Command {
 
+	@Override
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user)
 			throws IOException {
 		try {
 			IUserManager userManager = ServerManager.getServerManger().getUserManager();
 			ReviewObject reviewInfo = (ReviewObject) req.getSession().getAttribute(Constants.REVIEW_INFO);
-			if(null == reviewInfo){
-				throw new Exception("Session timed out! Please login again.");
+			if (null == reviewInfo) {
+//				throw new Exception("Session timed out! Please login again.");
+				/*
+		 		* create a review object so we can comment immediately.
+				*/
+				reviewInfo = new ReviewObject(user.getUserName());
+				reviewInfo.setDesignerEmail(user.getPerson().getEmail());
+				req.getSession().setAttribute(Constants.REVIEW_INFO, reviewInfo);
 			}
 			String designerName = reviewInfo.getDesignerName();
 			IUser designer = null;

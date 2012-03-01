@@ -7,11 +7,7 @@ define([
 	"dojo/i18n!./nls/actions"
 ], function(declare, Action, PublishWizard, Runtime, Toaster, actionsNls) {
 
-if (typeof davinci.review.actions === "undefined") {
-	davinci.review.actions = {};
-}
-
-var PublishAction = davinci.review.actions.PublishAction = declare("davinci.review.actions.PublishAction", davinci.actions.Action, {
+var PublishAction = declare("davinci.review.actions.PublishAction", [Action], {
 
 	constructor: function(node, isRestart) {
 		this.node =  node;

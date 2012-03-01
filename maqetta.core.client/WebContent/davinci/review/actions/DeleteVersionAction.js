@@ -6,11 +6,7 @@ define([
 	"dojo/i18n!./nls/actions"
 ], function(declare, Action, Runtime, Toaster, nls) {
 
-if (typeof davinci.review.actions === "undefined") {
-	davinci.review.actions = {};
-}
-
-var DeleteVersionAction = davinci.review.actions.DeleteVersionAction = declare("davinci.review.actions.DeleteVersionAction", Action, {
+var DeleteVersionAction = declare("davinci.review.actions.DeleteVersionAction", [Action], {
 
 	run: function(context) {
 		var selection = Runtime.getSelection();

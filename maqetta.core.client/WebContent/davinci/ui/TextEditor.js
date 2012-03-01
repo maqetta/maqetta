@@ -47,7 +47,7 @@ return declare("davinci.ui.TextEditor", Editor, {
 		return [];
 	},
 	
-	save: function () {
+	save: function (isWorkingCopy) {
 		var text = this.getText();
 		if (this.resourceFile) {
 			this.resourceFile.clearMarkers();
@@ -63,9 +63,9 @@ return declare("davinci.ui.TextEditor", Editor, {
 					this.resourceFile.addMarker(markerType,errors[i].line+1,errors[i].reason);
 				}
 			}
-			this.resourceFile.setContents(text);
+			this.resourceFile.setContents(text,isWorkingCopy);
 			if (this.editorContainer) {
-				this.editorContainer.setDirty(false);
+				this.editorContainer.setDirty(isWorkingCopy);
 			}
 			this.isDirty = false;
 			this.lastModifiedTime = 0;

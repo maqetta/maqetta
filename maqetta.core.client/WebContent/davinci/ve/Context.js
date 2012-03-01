@@ -103,7 +103,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	    // Invoke each library's onDocInit function, if library has such a function.
 		var libraries = metadata.getLibrary();	// No argument => return all libraries
 		for(var libId in libraries){
-			var library = metadata.getLibrary(libId),
+			var library = metadata.getLibrary(libId);
 			args = [this];
 			metadata.invokeCallback(library, 'onDocInit', args);
 		}
@@ -130,45 +130,38 @@ return declare("davinci.ve.Context", [ThemeModifier], {
                     	}
                     }
             	}
-            	var mblUserAgent = this.getDojo().config.mblUserAgent;
-            	var ua = device || mblUserAgent|| 'none';
-            	var htmlElement = this._srcDocument.getDocumentElement();
-                var head = htmlElement.getChildElement("head");
-                var scriptTags=head.getChildElements("script");
+                var mblUserAgent = this.getDojo().config.mblUserAgent,
+                    ua = device || mblUserAgent || 'none',
+                    htmlElement = this._srcDocument.getDocumentElement(),
+                    head = htmlElement.getChildElement("head"),
+                    scriptTags = head.getChildElements("script"),
+                    themeMap,
+                    start,
+                    stop;
                 this.clearDynamicCss(); 
                 dojo.forEach(scriptTags, function (scriptTag){
                     var text=scriptTag.getElementText();
                     if (text.length) {
                         // Look for a dojox.mobile.themeMap in the document, if found set the themeMap 
-                        var start = text.indexOf('dojoxMobile.themeMap');
+                        start = text.indexOf('dojoxMobile.themeMap');
                         if (start != -1) {
                             start = text.indexOf('=', start);
-                            var stop = text.indexOf(';', start);
+                            stop = text.indexOf(';', start);
                             if (stop > start){
-                                var themeMap = dojo.fromJson(text.substring(start+1,stop));
+                                themeMap = dojo.fromJson(text.substring(start+1, stop));
                                 dm.themeMap = themeMap;
                                 addCssForDevice(ua, themeMap, this);
-                                /*for (var i = 0; i < themeMap.length; i++) {
-                                	if (themeMap[i][0] === localDevice || themeMap[i][0] === '.*'){
-                                		var cssFiles = themeMap[i][2];
-                                		var self = this;
-                                		cssFiles.forEach(function(cssFile){
-                                			self.addDynamicCss(cssFile);	
-                                		});
-                                		break;
-                                	}
-                                }*/
                             }
                         } else if (text.indexOf('dojox/mobile') > -1){
                         	// use the default themes
-                        	var themeMap = Theme.getDojoxMobileThemeMap(this, dojo.clone(Theme.dojoMobileDefault));
+                        	themeMap = Theme.getDojoxMobileThemeMap(this, dojo.clone(Theme.dojoMobileDefault));
                         	addCssForDevice(ua, themeMap, this);
                         }
                         //Look for a dojox.mobile.themeFiles in the document, if found set the themeFiles 
-                        var start = text.indexOf('dojoxMobile.themeFiles');
+                        start = text.indexOf('dojoxMobile.themeFiles');
                         if (start > -1) {
                             start = text.indexOf('=', start);
-                            var stop = text.indexOf(';', start);
+                            stop = text.indexOf(';', start);
                             if (stop > start){
                                 var themeFiles = dojo.fromJson(text.substring(start+1,stop));
                                 dm.themeFiles = themeFiles;
@@ -806,7 +799,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		})){
 			return true;
-		};
+		}
 
 
 		this._loadThemeDojoxMobile(this);
@@ -940,9 +933,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 // added to the page. That causes scrollbars when page was loaded initially,
 // which went want when first Dojo widget was added.
 // Need to rethink this whole business of width:100%;height:100%;margin:0
-			head += "<html style=\"height: 100%; width: 100%; margin:0;\"><head><base href=\""
-				+ realUrl
-				+ "\"/>";
+			head += "<html style=\"height: 100%; width: 100%; margin:0;\"><head><base href=\"" +
+					realUrl + "\"/>";
 
 			// XXX Must load dojo.js here;  we cannot wait to add it when first Dojo/Dijit widget
 			//   is dropped on page.  The reason is that dojo.js from the SDK (which is what we use
@@ -968,26 +960,23 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				// to bootstrap references to base dijit methods in container
 				dependencies = dependencies.concat(requires); 
 
-				head += "<script type=\"text/javascript\" src=\"" + dojoUrl
-					+ "\" data-dojo-config=\""
-					+ JSON.stringify(config).slice(1, -1).replace(/"/g, "'")
-					+ "\"></script>"
-					+ "<script type=\"text/javascript\">require("
-					+ JSON.stringify(dependencies)
-					+ ", top.loading" + this._id + ");</script>";
+				head += "<script type=\"text/javascript\" src=\"" + dojoUrl +
+						"\" data-dojo-config=\"" +
+						JSON.stringify(config).slice(1, -1).replace(/"/g, "'") +
+						"\"></script>" +
+						"<script type=\"text/javascript\">require(" +
+						JSON.stringify(dependencies) +
+						", top.loading" + this._id + ");</script>";
 			}
 			if (helper && helper.getHeadImports){
 			    head += helper.getHeadImports(this._visualEditor.theme);
 			} else if(source.themeCssfiles) { // css files need to be added to doc before body content
-				head += '<style type="text/css">'
-					+ source.themeCssfiles.map(function(file) { return '@import "' + file + '";'; }).join()
-					+ '</style>';
+				head += '<style type="text/css">' +
+						source.themeCssfiles.map(function(file) {
+								return '@import "' + file + '";';
+							}).join() +
+						'</style>';
 			}
-			/*
-			else{
-				this.loadTheme();
-			}
-			*/
 			head += "</head><body></body></html>";
 
 			var context = this;
@@ -1604,7 +1593,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
     },
 
 	addModeledStyleSheet: function(url, libBasePath, skipDomUpdate) {
-		if(!skipDomUpdate) this.loadStyleSheet(url);
+		if (!skipDomUpdate) {
+			this.loadStyleSheet(url);
+		}
 		if (!this.model.hasStyleSheet(url)) {
 			// Make sure app.css is the last CSS file within the list of @import statements
 	        // FIXME: Shouldn't hardcode this sort of thing
@@ -2216,8 +2207,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var styleTags=head.getChildElements("style");
 		dojo.forEach(styleTags, function (styleTag){
 			dojo.forEach(styleTag.children,function(styleRule){
-				if (styleRule.elementType=="CSSImport")
+				if (styleRule.elementType === "CSSImport") {
 					data.styleSheets.push(styleRule.url);
+				}
 			}); 
 		});
 		
@@ -2337,6 +2329,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	modifyRule: function(rule, values){
+		var i,
+			p,
+			prop,
+			existingProps = [];
 		// Remove any properties within rule that are listed in the "values" parameter 
 		for(i = 0;i<values.length;i++){
 			for(var name in values[i]){
@@ -2344,10 +2340,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		}
 		// Create a merged list of properties from existing rule and "values" parameter
-		var existingProps = [];
-		var i, p;
 		for(p=0; p<rule.properties.length; p++){
-			var prop = rule.properties[p];
+			prop = rule.properties[p];
 			var o = {};
 			o[prop.name] = prop.value;
 			existingProps.push(o);
@@ -2376,7 +2370,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		// Clear out all remaining prop declarations in the rule
 		for(p=rule.properties.length-1; p>=0; p--){
-			var prop = rule.properties[p];
+			prop = rule.properties[p];
 			if(prop){
 				rule.removeProperty(prop.name);
 			}
@@ -2384,7 +2378,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// Add all prop declarations back in, in proper order
 		for(i = 0;i<cleaned.length;i++){
 			for(var name in cleaned[i]){
-				if(cleaned[i][name]==null ||cleaned[i][name]=="" ){
+				if (!cleaned[i][name] || cleaned[i][name] === '') {
 					continue;
 				}else{
 					rule.addProperty(name, cleaned[i][name]);
@@ -2580,15 +2574,18 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		if (doUpdateModel) {				
 			/* update the script if found */
-			if (this._srcDocument.find({elementType:'HTMLElement', tag: 'script'}).some(function (element) {
+			var found = this._srcDocument.find({
+				elementType:'HTMLElement', tag: 'script'
+			}).some(function (element) {
 				var elementUrl = element.getAttribute("src");
 				if (elementUrl && elementUrl.indexOf(baseSrcPath) > -1) {
 					element.setAttribute("src", url);
 					return true;
 				}					
-			})) {
+			});
+			if (found) {
 				return;
-			};
+			}
 
 			if (isDojoJS) {
 				// special case for dojo.js to provide config attribute
@@ -2904,8 +2901,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	getThemeMetaDataByWidget: function(widget){
 		
 		var theme = this.getThemeMeta();
-		if(!theme)
+		if (!theme) {
 			return null;
+		}
 		
 		var widgetType = theme.loader.getType(widget);
 		var meta = theme.loader.getMetaData(widgetType);

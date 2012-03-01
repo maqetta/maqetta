@@ -28,6 +28,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	constructor: function(params, srcNodeRef){
     	dojo.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, this._editorSelected));
 		dojo.subscribe("/davinci/ui/widgetSelected", dojo.hitch(this, this._widgetSelectionChanged));
+		dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._stateChanged));
 	},
 
 	pageTemplate : [
@@ -359,6 +360,11 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	
 	_widgetSelectionChanged: function(changeEvent){
 		this._updatePaletteValues(changeEvent);
+	},
+	
+	_stateChanged: function(){
+		var widgets = this._widget ? [this._widget] : [];
+		this._updatePaletteValues(widgets);
 	},
 	
 	_widgetPropertiesChanged: function(widgets){

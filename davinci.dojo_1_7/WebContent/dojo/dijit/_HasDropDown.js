@@ -4,7 +4,7 @@ return _1("dijit._HasDropDown",_12,{_buttonNode:null,_arrowWrapperNode:null,_pop
 if(this.disabled||this.readOnly){
 return;
 }
-_3.stop(e);
+e.preventDefault();
 this._docHandler=this.connect(_d.doc,_c.release,"_onDropDownMouseUp");
 this.toggleDropDown();
 },_onDropDownMouseUp:function(e){

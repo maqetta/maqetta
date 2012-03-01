@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/sk/PasteFromWord", //begin v1.x content
 ({
 	"pasteFromWord": "Prilepiť z aplikácie Word",
 	"paste": "Prilepiť",

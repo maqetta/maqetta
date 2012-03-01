@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/tr/Breadcrumb", //begin v1.x content
 ({
 	"nodeActions": "${nodeName} Eylemleri",
 	"selectContents": "İçindekileri seç",

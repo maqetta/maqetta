@@ -2,7 +2,7 @@ define({ root:
 //begin v1.x content
 ({
         nomatchMessage: "Passwords do not match.",
-		badPasswordMessage: "Invalid Password."
+	badPasswordMessage: "Invalid Password."
 })
 //end v1.x content
 ,
@@ -18,6 +18,7 @@ define({ root:
 "fr": true,
 "he": true,
 "hu": true,
+"hr": true,
 "it": true,
 "ja": true,
 "kk": true,

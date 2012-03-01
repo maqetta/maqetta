@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/grid/enhanced/nls/pt-pt/EnhancedGrid", //begin v1.x content
 ({
 	singleSort: "Ordenação única",
 	nestedSort: "Ordenação imbricada",

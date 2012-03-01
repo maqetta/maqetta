@@ -36,6 +36,13 @@ define(["../buildControl", "../fileUtils", "../fs", "../replace"], function(bc, 
 			return this.text;
 		};
 
+		resource.setText = function(text){
+			resource.text = text;
+			resource.getText = function(){ return this.text; };
+			return text;
+		};
+
+
 		var filetype= getFiletype(resource.src, 1);
 		// the expression is a little odd since undefined is a legitimate encodingMap value
 		resource.encoding= resource.encoding || (!(filetype in encodingMap) && "utf8") || encodingMap[filetype];

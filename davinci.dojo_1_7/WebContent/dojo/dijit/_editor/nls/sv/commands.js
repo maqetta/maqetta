@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/_editor/nls/sv/commands", //begin v1.x content
 ({
 	'bold': 'Fetstil',
 	'copy': 'Kopiera',

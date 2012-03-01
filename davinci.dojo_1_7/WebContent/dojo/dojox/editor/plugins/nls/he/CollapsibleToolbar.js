@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/he/CollapsibleToolbar", //begin v1.x content
 ({
 	"collapse": "כיווץ סרגל הכלים של העורך ",
 	"expand": "הרחבת סרגל הכלים של העורך"

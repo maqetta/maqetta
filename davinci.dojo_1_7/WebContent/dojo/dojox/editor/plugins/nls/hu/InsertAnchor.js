@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/hu/InsertAnchor", //begin v1.x content
 ({
 	insertAnchor: "Horgony beszúrása",
 	title: "Horgony tulajdonságai",

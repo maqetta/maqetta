@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/nls/ca/loading", //begin v1.x content
 ({
 	loadingState: "S'està carregant...",
 	errorState: "Ens sap greu. S'ha produït un error."

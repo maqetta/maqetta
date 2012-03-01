@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/nls/ko/colors", //begin v1.x content
 ({
 // local representation of all CSS3 named colors, companion to dojo.colors.  To be used where descriptive information
 // is required for each color, such as a palette widget, and not for specifying color programatically.
@@ -147,6 +147,7 @@ tan: "탠(tan)",
 teal: "틸(teal)",
 thistle: "시슬(thistle)",
 tomato: "토마토(tomato)",
+transparent: "투명(transparent)",
 turquoise: "터콰즈(turquoise)",
 violet: "바이올렛(violet)",
 wheat: "휘트(wheat)",

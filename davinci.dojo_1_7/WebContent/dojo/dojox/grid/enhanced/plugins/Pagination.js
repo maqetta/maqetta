@@ -201,11 +201,11 @@ this.grid=this.plugin.grid;
 this.inherited(arguments);
 var _3b=this,g=this.grid;
 this.plugin.connect(g,"_resize",_5.hitch(this,"_resetGridHeight"));
-this._originalResize=_5.hitch(g,"resize");
+this._originalResize=g.resize;
 g.resize=function(_3c,_3d){
 _3b._changeSize=_3c;
 _3b._resultSize=_3d;
-_3b._originalResize();
+_3b._originalResize.apply(g,arguments);
 };
 this.focus=_27(this);
 this._placeSelf();
@@ -619,7 +619,7 @@ g._onNew=_5.hitch(this,this._onNew);
 this.connect(g,"_onDelete",_5.hitch(this,this._onDelete));
 },_onNew:function(_7f,_80){
 var _81=this.getTotalPageNum();
-if(((this._currentPage===_81||_81===0)&&this.grid.rowCount<this._currentPageSize)||this._showAll){
+if(((this._currentPage===_81||_81===0)&&this.grid.get("rowCount")<this._currentPageSize)||this._showAll){
 _5.hitch(this.grid,this._gridOriginalfuncs[1])(_7f,_80);
 this.forcePageStoreLayer.endIdx++;
 }
@@ -630,7 +630,7 @@ this._currentPageSize++;
 if(this._showAll&&this.grid.autoHeight){
 this.grid._refresh();
 }else{
-this._paginator.update();
+this._paginator._update();
 }
 },_onDelete:function(){
 if(!this._multiRemoving){

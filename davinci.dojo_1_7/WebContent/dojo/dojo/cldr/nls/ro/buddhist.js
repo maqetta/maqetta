@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/cldr/nls/ro/buddhist", //begin v1.x content
 {
 	"quarters-format-abbr": [
 		"trim. I",

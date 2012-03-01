@@ -176,7 +176,7 @@ this.header.beginColumnResize(e);
 if(this.grid.headerMenu){
 this.grid.headerMenu.onCancel(true);
 }
-if(e.button===(_8("ie")?1:0)){
+if(e.button===(_8("ie")<9?1:0)){
 _c.prototype.onMouseDown.call(this.source,e);
 }
 }

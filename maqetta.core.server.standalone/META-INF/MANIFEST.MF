@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Server
+Bundle-Name: maqetta.core.server.standalone
 Bundle-SymbolicName: maqetta.core.server.standalone;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: maqetta.core.server.standalone.Activator

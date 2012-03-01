@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/nls/cs/loading", //begin v1.x content
 ({
 	loadingState: "Probíhá načítání...",
 	errorState: "Omlouváme se, došlo k chybě"

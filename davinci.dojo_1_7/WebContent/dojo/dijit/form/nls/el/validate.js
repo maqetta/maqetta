@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/form/nls/el/validate", //begin v1.x content
 ({
 	invalidMessage: "Η τιμή που καταχωρήσατε δεν είναι έγκυρη.",
 	missingMessage: "Η τιμή αυτή πρέπει απαραίτητα να καθοριστεί.",

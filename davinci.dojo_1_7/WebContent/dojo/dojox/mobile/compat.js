@@ -12,4 +12,4 @@
 */
 
 //>>built
-define("dojox/mobile/compat",["dojo/_base/lang","dojo/_base/sniff"],function(_1,_2){var dm=_1.getObject("dojox.mobile",true);if(!_2("webkit")){var s="dojox/mobile/_compat";require([s]);}return dm;});
+require(["dojo/i18n"],function(_1){_1._preloadLocalizations("dojox/mobile/nls/compat",[]);});define("dojox/mobile/compat",["dojo/_base/lang","dojo/_base/sniff"],function(_2,_3){var dm=_2.getObject("dojox.mobile",true);if(!_3("webkit")){var s="dojox/mobile/_compat";require([s]);}return dm;});

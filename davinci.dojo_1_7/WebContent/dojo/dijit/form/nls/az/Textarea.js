@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/form/nls/az/Textarea", //begin v1.x content
 ({
 	"iframeEditTitle" : "Redaktə sahəsi",
 	"iframeFocusTitle" : "Redaktə sahəsi çərçivəsi"

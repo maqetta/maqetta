@@ -82,221 +82,6 @@ define(["./dom-geometry", "./_base/lang", "./ready", "./_base/sniff", "./_base/w
 });
 
 },
-'dojo/text':function(){
-define(["./_base/kernel", "require", "./has", "./_base/xhr"], function(dojo, require, has, xhr){
-	// module:
-	//		dojo/text
-	// summary:
-	//		This module implements the !dojo/text plugin and the dojo.cache API.
-	// description:
-	//		We choose to include our own plugin to leverage functionality already contained in dojo
-	//		and thereby reduce the size of the plugin compared to various foreign loader implementations.
-	//		Also, this allows foreign AMD loaders to be used without their plugins.
-	//
-	//		CAUTION: this module is designed to optionally function synchronously to support the dojo v1.x synchronous
-	//		loader. This feature is outside the scope of the CommonJS plugins specification.
-
-	var getText;
-	if(1){
-		getText= function(url, sync, load){
-			xhr("GET", {url:url, sync:!!sync, load:load});
-		};
-	}else{
-		// TODOC: only works for dojo AMD loader
-		if(require.getText){
-			getText= require.getText;
-		}else{
-			console.error("dojo/text plugin failed to load because loader does not support getText");
-		}
-	}
-
-	var
-		theCache= {},
-
-		strip= function(text){
-			//Strips <?xml ...?> declarations so that external SVG and XML
-			//documents can be added to a document without worry. Also, if the string
-			//is an HTML document, only the part inside the body tag is returned.
-			if(text){
-				text= text.replace(/^\s*<\?xml(\s)+version=[\'\"](\d)*.(\d)*[\'\"](\s)*\?>/im, "");
-				var matches= text.match(/<body[^>]*>\s*([\s\S]+)\s*<\/body>/im);
-				if(matches){
-					text= matches[1];
-				}
-			}else{
-				text = "";
-			}
-			return text;
-		},
-
-		notFound = {},
-
-		pending = {},
-
-		result= {
-			dynamic:
-				// the dojo/text caches it's own resources because of dojo.cache
-				true,
-
-			normalize:function(id, toAbsMid){
-				// id is something like (path may be relative):
-				//
-				//	 "path/to/text.html"
-				//	 "path/to/text.html!strip"
-				var parts= id.split("!"),
-					url= parts[0];
-				return (/^\./.test(url) ? toAbsMid(url) : url) + (parts[1] ? "!" + parts[1] : "");
-			},
-
-			load:function(id, require, load){
-				// id is something like (path is always absolute):
-				//
-				//	 "path/to/text.html"
-				//	 "path/to/text.html!strip"
-				var
-					parts= id.split("!"),
-					stripFlag= parts.length>1,
-					absMid= parts[0],
-					url = require.toUrl(parts[0]),
-					text = notFound,
-					finish = function(text){
-						load(stripFlag ? strip(text) : text);
-					};
-				if(absMid in theCache){
-					text = theCache[absMid];
-				}else if(url in require.cache){
-					text = require.cache[url];
-				}else if(url in theCache){
-					text = theCache[url];
-				}
-				if(text===notFound){
-					if(pending[url]){
-						pending[url].push(finish);
-					}else{
-						var pendingList = pending[url] = [finish];
-						getText(url, !require.async, function(text){
-							theCache[absMid]= theCache[url]= text;
-							for(var i = 0; i<pendingList.length;){
-								pendingList[i++](text);
-							}
-							delete pending[url];
-						});
-					}
-				}else{
-					finish(text);
-				}
-			}
-		};
-
-	dojo.cache= function(/*String||Object*/module, /*String*/url, /*String||Object?*/value){
-		//	 * (string string [value]) => (module, url, value)
-		//	 * (object [value])        => (module, value), url defaults to ""
-		//
-		//	 * if module is an object, then it must be convertable to a string
-		//	 * (module, url) module + (url ? ("/" + url) : "") must be a legal argument to require.toUrl
-		//	 * value may be a string or an object; if an object then may have the properties "value" and/or "sanitize"
-		var key;
-		if(typeof module=="string"){
-			if(/\//.test(module)){
-				// module is a version 1.7+ resolved path
-				key = module;
-				value = url;
-			}else{
-				// module is a version 1.6- argument to dojo.moduleUrl
-				key = require.toUrl(module.replace(/\./g, "/") + (url ? ("/" + url) : ""));
-			}
-		}else{
-			key = module + "";
-			value = url;
-		}
-		var
-			val = (value != undefined && typeof value != "string") ? value.value : value,
-			sanitize = value && value.sanitize;
-
-		if(typeof val == "string"){
-			//We have a string, set cache value
-			theCache[key] = val;
-			return sanitize ? strip(val) : val;
-		}else if(val === null){
-			//Remove cached value
-			delete theCache[key];
-			return null;
-		}else{
-			//Allow cache values to be empty strings. If key property does
-			//not exist, fetch it.
-			if(!(key in theCache)){
-				getText(key, true, function(text){
-					theCache[key]= text;
-				});
-			}
-			return sanitize ? strip(theCache[key]) : theCache[key];
-		}
-	};
-
-	return result;
-
-/*=====
-dojo.cache = function(module, url, value){
-	// summary:
-	//		A getter and setter for storing the string content associated with the
-	//		module and url arguments.
-	// description:
-	//		If module is a string that contains slashes, then it is interpretted as a fully
-	//		resolved path (typically a result returned by require.toUrl), and url should not be
-	//		provided. This is the preferred signature. If module is a string that does not
-	//		contain slashes, then url must also be provided and module and url are used to
-	//		call `dojo.moduleUrl()` to generate a module URL. This signature is deprecated.
-	//		If value is specified, the cache value for the moduleUrl will be set to
-	//		that value. Otherwise, dojo.cache will fetch the moduleUrl and store it
-	//		in its internal cache and return that cached value for the URL. To clear
-	//		a cache value pass null for value. Since XMLHttpRequest (XHR) is used to fetch the
-	//		the URL contents, only modules on the same domain of the page can use this capability.
-	//		The build system can inline the cache values though, to allow for xdomain hosting.
-	// module: String||Object
-	//		If a String with slashes, a fully resolved path; if a String without slashes, the
-	//		module name to use for the base part of the URL, similar to module argument
-	//		to `dojo.moduleUrl`. If an Object, something that has a .toString() method that
-	//		generates a valid path for the cache item. For example, a dojo._Url object.
-	// url: String
-	//		The rest of the path to append to the path derived from the module argument. If
-	//		module is an object, then this second argument should be the "value" argument instead.
-	// value: String||Object?
-	//		If a String, the value to use in the cache for the module/url combination.
-	//		If an Object, it can have two properties: value and sanitize. The value property
-	//		should be the value to use in the cache, and sanitize can be set to true or false,
-	//		to indicate if XML declarations should be removed from the value and if the HTML
-	//		inside a body tag in the value should be extracted as the real value. The value argument
-	//		or the value property on the value argument are usually only used by the build system
-	//		as it inlines cache content.
-	//	example:
-	//		To ask dojo.cache to fetch content and store it in the cache (the dojo["cache"] style
-	//		of call is used to avoid an issue with the build system erroneously trying to intern
-	//		this example. To get the build system to intern your dojo.cache calls, use the
-	//		"dojo.cache" style of call):
-	//		| //If template.html contains "<h1>Hello</h1>" that will be
-	//		| //the value for the text variable.
-	//		| var text = dojo["cache"]("my.module", "template.html");
-	//	example:
-	//		To ask dojo.cache to fetch content and store it in the cache, and sanitize the input
-	//		 (the dojo["cache"] style of call is used to avoid an issue with the build system
-	//		erroneously trying to intern this example. To get the build system to intern your
-	//		dojo.cache calls, use the "dojo.cache" style of call):
-	//		| //If template.html contains "<html><body><h1>Hello</h1></body></html>", the
-	//		| //text variable will contain just "<h1>Hello</h1>".
-	//		| var text = dojo["cache"]("my.module", "template.html", {sanitize: true});
-	//	example:
-	//		Same example as previous, but demostrates how an object can be passed in as
-	//		the first argument, then the value argument can then be the second argument.
-	//		| //If template.html contains "<html><body><h1>Hello</h1></body></html>", the
-	//		| //text variable will contain just "<h1>Hello</h1>".
-	//		| var text = dojo["cache"](new dojo._Url("my/module/template.html"), {sanitize: true});
-	return val; //String
-};
-=====*/
-});
-
-
-},
 'dijit/hccss':function(){
 define("dijit/hccss", [
 	"require",			// require.toUrl
@@ -644,7 +429,7 @@ define("dojox/grid/_View", [
 								this.grid.headerMenu.onCancel(true);
 							}
 							// IE reports a left click as 1, where everything else reports 0
-							if(e.button === (has("ie") ? 1 : 0)){
+							if(e.button === (has("ie") < 9 ? 1 : 0)){
 								Source.prototype.onMouseDown.call(this.source, e);
 							}
 						}
@@ -2833,204 +2618,6 @@ return declare("dojox.grid._Layout", null, {
 });
 });
 },
-'dojo/i18n':function(){
-define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/lang", "./_base/xhr"], function(dojo, require, has, array, lang) {
-	// module:
-	//		dojo/i18n
-	// summary:
-	//		This module implements the !dojo/i18n plugin and the v1.6- i18n API
-	// description:
-	//		We choose to include our own plugin to leverage functionality already contained in dojo
-	//		and thereby reduce the size of the plugin compared to various loader implementations. Also, this
-	//		allows foreign AMD loaders to be used without their plugins.
-	var
-		thisModule= dojo.i18n=
-			// the dojo.i18n module
-			{},
-
-		nlsRe=
-			// regexp for reconstructing the master bundle name from parts of the regexp match
-			// nlsRe.exec("foo/bar/baz/nls/en-ca/foo") gives:
-			// ["foo/bar/baz/nls/en-ca/foo", "foo/bar/baz/nls/", "/", "/", "en-ca", "foo"]
-			// nlsRe.exec("foo/bar/baz/nls/foo") gives:
-			// ["foo/bar/baz/nls/foo", "foo/bar/baz/nls/", "/", "/", "foo", ""]
-			// so, if match[5] is blank, it means this is the top bundle definition.
-			// courtesy of http://requirejs.org
-			/(^.*(^|\/)nls)(\/|$)([^\/]*)\/?([^\/]*)/,
-
-		getAvailableLocales= function(
-			root,
-			locale,
-			bundlePath,
-			bundleName
-		){
-			// return a vector of module ids containing all available locales with respect to the target locale
-			// For example, assuming:
-			//	 * the root bundle indicates specific bundles for "fr" and "fr-ca",
-			//	 * bundlePath is "myPackage/nls"
-			//	 * bundleName is "myBundle"
-			// Then a locale argument of "fr-ca" would return
-			//	 ["myPackage/nls/myBundle", "myPackage/nls/fr/myBundle", "myPackage/nls/fr-ca/myBundle"]
-			// Notice that bundles are returned least-specific to most-specific, starting with the root.
-			//
-			// If root===false indicates we're working with a pre-AMD i18n bundle that doesn't tell about the available locales;
-			// therefore, assume everything is available and get 404 errors that indicate a particular localization is not available
-			//
-
-			for(var result= [bundlePath + bundleName], localeParts= locale.split("-"), current= "", i= 0; i<localeParts.length; i++){
-				current+= (current ? "-" : "") + localeParts[i];
-				if(!root || root[current]){
-					result.push(bundlePath + current + "/" + bundleName);
-				}
-			}
-			return result;
-		},
-
-		cache= {},
-
-		getL10nName= dojo.getL10nName = function(moduleName, bundleName, locale){
-			locale = locale ? locale.toLowerCase() : dojo.locale;
-			moduleName = "dojo/i18n!" + moduleName.replace(/\./g, "/");
-			bundleName = bundleName.replace(/\./g, "/");
-			return (/root/i.test(locale)) ?
-				(moduleName + "/nls/" + bundleName) :
-				(moduleName + "/nls/" + locale + "/" + bundleName);
-		},
-
-		doLoad = function(require, bundlePathAndName, bundlePath, bundleName, locale, load){
-			// get the root bundle which instructs which other bundles are required to contruct the localized bundle
-			require([bundlePathAndName], function(root){
-				var
-					current= cache[bundlePathAndName + "/"]= lang.clone(root.root),
-					availableLocales= getAvailableLocales(!root._v1x && root, locale, bundlePath, bundleName);
-				require(availableLocales, function(){
-					for (var i= 1; i<availableLocales.length; i++){
-						cache[availableLocales[i]]= current= lang.mixin(lang.clone(current), arguments[i]);
-					}
-					// target may not have been resolve (e.g., maybe only "fr" exists when "fr-ca" was requested)
-					var target= bundlePathAndName + "/" + locale;
-					cache[target]= current;
-					load && load(lang.delegate(current));
-				});
-			});
-		},
-
-		normalize = function(id, toAbsMid){
-			// note: id may be relative
-			var match= nlsRe.exec(id),
-				bundlePath= match[1];
-			return /^\./.test(bundlePath) ? toAbsMid(bundlePath) + "/" +  id.substring(bundlePath.length) : id;
-		};
-
-		load = function(id, require, load){
-			// note: id is always absolute
-			var
-				match= nlsRe.exec(id),
-				bundlePath= match[1] + "/",
-				bundleName= match[5] || match[4],
-				bundlePathAndName= bundlePath + bundleName,
-				localeSpecified = (match[5] && match[4]),
-				targetLocale=  localeSpecified || dojo.locale,
-				target= bundlePathAndName + "/" + targetLocale;
-
-			if(localeSpecified){
-				if(cache[target]){
-					// a request for a specific local that has already been loaded; just return it
-					load(cache[target]);
-				}else{
-					// a request for a specific local that has not been loaded; load and return just that locale
-					doLoad(require, bundlePathAndName, bundlePath, bundleName, targetLocale, load);
-				}
-				return;
-			}// else a non-locale-specific request; therefore always load dojo.locale + dojo.config.extraLocale
-
-			// notice the subtle algorithm that loads targeLocal last, which is the only doLoad application that passes a value for the load callback
-			// this makes the sync loader follow a clean code path that loads extras first and then proceeds with tracing the current deps graph
-			var extra = dojo.config.extraLocale || [];
-			extra = lang.isArray(extra) ? extra : [extra];
-			extra.push(targetLocale);
-			array.forEach(extra, function(locale){
-				doLoad(require, bundlePathAndName, bundlePath, bundleName, locale, locale==targetLocale && load);
-			});
-		};
-
-
-	true || has.add("dojo-v1x-i18n-Api",
-		// if true, define the v1.x i18n functions
-		1
-	);
-
-	if(1){
-		var
-			evalBundle=
-				// keep the minifiers off our define!
-				// if bundle is an AMD bundle, then __amdResult will be defined; otherwise it's a pre-amd bundle and the bundle value is returned by eval
-				new Function("bundle", "var __preAmdResult, __amdResult; function define(bundle){__amdResult= bundle;} __preAmdResult= eval(bundle); return [__preAmdResult, __amdResult];"),
-
-			fixup= function(url, preAmdResult, amdResult){
-				// nls/<locale>/<bundle-name> indicates not the root.
-				return preAmdResult ? (/nls\/[^\/]+\/[^\/]+$/.test(url) ? preAmdResult : {root:preAmdResult, _v1x:1}) : amdResult;
-			},
-
-			syncRequire= function(deps, callback){
-				var results= [];
-				dojo.forEach(deps, function(mid){
-					var url= require.toUrl(mid + ".js");
-					if(cache[url]){
-						results.push(cache[url]);
-					}else{
-
-						try {
-							var bundle= require(mid);
-							if(bundle){
-								results.push(bundle);
-								return;
-							}
-						}catch(e){}
-
-						dojo.xhrGet({
-							url:url,
-							sync:true,
-							load:function(text){
-								var result = evalBundle(text);
-								results.push(cache[url]= fixup(url, result[0], result[1]));
-							},
-							error:function(){
-								results.push(cache[url]= {});
-							}
-						});
-					}
-				});
-				callback.apply(null, results);
-			};
-
-		thisModule.getLocalization= function(moduleName, bundleName, locale){
-			var result,
-				l10nName= getL10nName(moduleName, bundleName, locale).substring(10);
-			load(l10nName, (1 && !require.isXdUrl(require.toUrl(l10nName + ".js")) ? syncRequire : require), function(result_){ result= result_; });
-			return result;
-		};
-
-		thisModule.normalizeLocale= function(locale){
-			var result = locale ? locale.toLowerCase() : dojo.locale;
-			if(result == "root"){
-				result = "ROOT";
-			}
-			return result;
-		};
-	}
-
-	return lang.mixin(thisModule, {
-		dynamic:true,
-		normalize:normalize,
-		load:load,
-		cache:function(mid, value){
-			cache[mid] = value;
-		}
-	});
-});
-
-},
 'dojox/grid/_Grid':function(){
 require({cache:{
 'url:dojox/grid/resources/_Grid.html':"<div hidefocus=\"hidefocus\" role=\"grid\" dojoAttachEvent=\"onmouseout:_mouseOut\">\n\t<div class=\"dojoxGridMasterHeader\" dojoAttachPoint=\"viewsHeaderNode\" role=\"presentation\"></div>\n\t<div class=\"dojoxGridMasterView\" dojoAttachPoint=\"viewsNode\" role=\"presentation\"></div>\n\t<div class=\"dojoxGridMasterMessages\" style=\"display: none;\" dojoAttachPoint=\"messagesNode\"></div>\n\t<span dojoAttachPoint=\"lastFocusNode\" tabindex=\"0\"></span>\n</div>\n"}});
@@ -4435,7 +4022,7 @@ define("dojox/grid/_Grid", [
 });
 },
 'dijit/nls/loading':function(){
-define({ root:
+define("dijit/nls/loading", { root:
 //begin v1.x content
 ({
 	loadingState: "Loading...",
@@ -4462,6 +4049,7 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
+"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -4471,6 +4059,7 @@ define({ root:
 "da": true,
 "cs": true,
 "ca": true,
+"az": true,
 "ar": true
 });
 
@@ -11136,34 +10725,54 @@ return declare("dojox.grid._SelectionPreserver", null, {
 });
 },
 'dojo/window':function(){
-define(["./_base/kernel", "./_base/lang", "./_base/sniff", "./_base/window", "./dom", "./dom-geometry", "./dom-style"], function(dojo, lang, has, baseWindow, dom, geom, style) {
-	// module:
-	//		dojo/window
+define(["./_base/lang", "./_base/sniff", "./_base/window", "./dom", "./dom-geometry", "./dom-style"],
+	function(lang, has, baseWindow, dom, geom, style) {
+
+// module:
+//		dojo/window
+// summary:
+//		TODOC
+
+var window = lang.getObject("dojo.window", true);
+
+/*=====
+dojo.window = {
 	// summary:
-	//		TODOC
+	//		TODO
+};
+window = dojo.window;
+=====*/
 
-lang.getObject("window", true, dojo);
-
-dojo.window.getBox = function(){
+window.getBox = function(){
 	// summary:
 	//		Returns the dimensions and scroll position of the viewable area of a browser window
 
-	var scrollRoot = (baseWindow.doc.compatMode == 'BackCompat') ? baseWindow.body() : baseWindow.doc.documentElement;
+	var
+		scrollRoot = (baseWindow.doc.compatMode == 'BackCompat') ? baseWindow.body() : baseWindow.doc.documentElement,
+		// get scroll position
+		scroll = geom.docScroll(), // scrollRoot.scrollTop/Left should work
+		w, h;
 
-	// get scroll position
-	var scroll = geom.docScroll(); // scrollRoot.scrollTop/Left should work
-
-	var uiWindow = baseWindow.doc.parentWindow || baseWindow.doc.defaultView;   // use UI window, not dojo.global window
-	// dojo.global.innerWidth||dojo.global.innerHeight is for mobile
+	if(has("touch")){ // if(scrollbars not supported)
+		var uiWindow = baseWindow.doc.parentWindow || baseWindow.doc.defaultView;   // use UI window, not dojo.global window. baseWindow.doc.parentWindow probably not needed since it's not defined for webkit
+		// on mobile, scrollRoot.clientHeight <= uiWindow.innerHeight <= scrollRoot.offsetHeight, return uiWindow.innerHeight
+		w = uiWindow.innerWidth || scrollRoot.clientWidth; // || scrollRoot.clientXXX probably never evaluated
+		h = uiWindow.innerHeight || scrollRoot.clientHeight;
+	}else{
+		// on desktops, scrollRoot.clientHeight <= scrollRoot.offsetHeight <= uiWindow.innerHeight, return scrollRoot.clientHeight
+		// uiWindow.innerWidth/Height includes the scrollbar and cannot be used
+		w = scrollRoot.clientWidth;
+		h = scrollRoot.clientHeight;
+	}
 	return {
 		l: scroll.x,
 		t: scroll.y,
-		w: uiWindow.innerWidth || scrollRoot.clientWidth,
-		h: uiWindow.innerHeight || scrollRoot.clientHeight
+		w: w,
+		h: h
 	};
 };
 
-dojo.window.get = function(doc){
+window.get = function(doc){
 	// summary:
 	// 		Get window object associated with document doc
 
@@ -11187,7 +10796,7 @@ dojo.window.get = function(doc){
 	return doc.parentWindow || doc.defaultView;	//	Window
 };
 
-dojo.window.scrollIntoView = function(/*DomNode*/ node, /*Object?*/ pos){
+window.scrollIntoView = function(/*DomNode*/ node, /*Object?*/ pos){
 	// summary:
 	//		Scroll the passed node into view, if it is not already.
 
@@ -11283,7 +10892,7 @@ dojo.window.scrollIntoView = function(/*DomNode*/ node, /*Object?*/ pos){
 	}
 };
 
-return dojo.window;
+return window;
 });
 
 },
@@ -14213,6 +13822,9 @@ return dojo.dnd.Moveable;
 
 }}});
 
+require(["dojo/i18n"], function(i18n){
+i18n._preloadLocalizations("dojox/grid/nls/DataGrid", ["nl-nl","en-us","da","fi-fi","pt-pt","hu","sk","sl","pl","ca","sv","zh-tw","ar","en-gb","he-il","de-de","ko-kr","ja-jp","nb","ru","es-es","th","cs","it-it","pt-br","fr-fr","el","tr","zh-cn"]);
+});
 define("dojox/grid/DataGrid", [
 	"../main",
 	"dojo/_base/array",

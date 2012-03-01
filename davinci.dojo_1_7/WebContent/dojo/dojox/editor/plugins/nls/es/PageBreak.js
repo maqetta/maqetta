@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/es/PageBreak", //begin v1.x content
 ({
 	"pageBreak": "Salto de página"
 })

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/ja/InsertEntity", //begin v1.x content
 ({
 	insertEntity: "記号の挿入"
 })

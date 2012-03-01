@@ -166,7 +166,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
                         }
                         //Look for a dojox.mobile.themeFiles in the document, if found set the themeFiles 
                         var start = text.indexOf('dojoxMobile.themeFiles');
-                        if (start != -1) {
+                        if (start > -1) {
                             start = text.indexOf('=', start);
                             var stop = text.indexOf(';', start);
                             if (stop > start){
@@ -1093,7 +1093,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	_continueLoading: function(data, callback, callbackData, scope) {
-		var loading;
+		var loading, promise;
 		try {
 			loading = dojo.create("div",
 				{
@@ -1109,9 +1109,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				throw callbackData;
 			}
 
-			var promise = this._setSourceData(data);
-
-			loading.parentNode.removeChild(loading); // need to remove loading for silhouette to display
+			promise = this._setSourceData(data).then(function() {
+				// need to remove loading for silhouette to display
+				loading.parentNode.removeChild(loading);
+			}, function(error) {
+				loading.innerHTML = "Unable to parse HTML source.  See console for error.  Please switch to \"Display Source\" mode and correct the error."; // FIXME: i18n
+				console.error(error.stack || error.message);
+			});
 		} catch(e) {
 			// recreate the Error since we crossed frames
 			callbackData = new Error(e.message, e.fileName, e.lineNumber);
@@ -1335,7 +1339,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",
 							this, '_editorSelectionChange');
 	
-					promise.reject();
+					promise.reject(e);
 					throw e;
 				}
 			
@@ -1364,7 +1368,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	        if(helper && helper.preProcess){
 	            helper.preProcess(node, this);
 	        }
-        });
+        }.bind(this));
     },
 	    
 	_editorSelectionChange: function(event){
@@ -1628,7 +1632,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if (e && e.elementType === 'CSSRule'){
 			this.hotModifyCssRule(e);
 		}
-		e.parent.save(true); //wdr
+
 	},
 
 // XXX no 'getRealUrl()' exists in this class
@@ -1717,7 +1721,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	getGlobal: function(){
-		return windowUtils.get(this.getDocument());
+		var doc = this.getDocument();
+		return doc ? windowUtils.get(doc) : null;
 	},
 
 	getDojo: function(){
@@ -1832,6 +1837,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	select: function(widget, add, inline){
+		if(this.declaredClass == 'davinci.review.editor.Context'){
+			return;
+		}
 		if(!widget || widget==this.rootWidget){
 			if(!add){
 				this.deselect(); // deselect all

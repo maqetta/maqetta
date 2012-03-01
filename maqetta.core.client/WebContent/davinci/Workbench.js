@@ -123,7 +123,8 @@ var Workbench = {
 			function(containerWidget, newState, oldState) {
 				var currentEditor = Runtime.currentEditor;
 				// ignore updates in theme editor
-				if (currentEditor.declaredClass != "davinci.ve.themeEditor.ThemeEditor" /*"davinci.ve.VisualEditor"*/) {
+				if ((!currentEditor.declaredClass == "davinci.ve.themeEditor.ThemeEditor" ||
+						currentEditor.declaredClass == "davinci.review.CommentReviewEditor") /*"davinci.ve.VisualEditor"*/) {
 					currentEditor.visualEditor.onContentChange.apply(currentEditor.visualEditor, arguments);
 				}
 			}
@@ -989,6 +990,9 @@ var Workbench = {
 	_createEditor: function(editorExtension, fileName, keywordArgs, newHtmlParams) {
 		var d = new Deferred();
 		var nodeName = fileName.split('/').pop();
+		var extension = keywordArgs && keywordArgs.fileName && keywordArgs.fileName.extension ? 
+				"." + keywordArgs.fileName.extension : "";
+		nodeName = nodeName + (extension == ".rev" ? extension : "");
 
 		var loading = dojo.query('.loading');
 		if (loading[0]) {

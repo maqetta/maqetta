@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/atom/widget/nls/ru/PeopleEditor", //begin v1.x content
 ({
 	add: "Добавить",
 	addAuthor: "Добавить автора",

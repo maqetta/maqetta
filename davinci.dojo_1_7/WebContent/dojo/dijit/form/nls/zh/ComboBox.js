@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/form/nls/zh/ComboBox", //begin v1.x content
 ({
 		previousMessage: "先前选项",
 		nextMessage: "更多选项"

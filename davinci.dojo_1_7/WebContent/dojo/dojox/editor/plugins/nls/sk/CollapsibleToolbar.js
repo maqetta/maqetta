@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/sk/CollapsibleToolbar", //begin v1.x content
 ({
 	"collapse": "Zvinúť lištu nástrojov editora",
 	"expand": "Rozvinúť lištu nástrojov editora"

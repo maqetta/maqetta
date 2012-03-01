@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/form/nls/sv/validate", //begin v1.x content
 ({
 	invalidMessage: "Det angivna värdet är ogiltigt.",
 	missingMessage: "Värdet är obligatoriskt.",

@@ -10,7 +10,6 @@ define(
 	"matchCaseTooltip": "Hoofdlettergevoelig",
 	"backwards": "Terug",
 	"backwardsTooltip": "Terugwaarts naar tekst zoeken",
-	"replaceAll": "Alle posities",
 	"replaceAllButton": "Alle vervangen",
 	"replaceAllButtonTooltip": "Gehele tekst vervangen",
 	"findButton": "Zoeken:",

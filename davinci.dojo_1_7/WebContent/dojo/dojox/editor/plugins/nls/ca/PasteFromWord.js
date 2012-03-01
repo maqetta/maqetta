@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/ca/PasteFromWord", //begin v1.x content
 ({
 	"pasteFromWord": "Enganxa des de Word",
 	"paste": "Enganxa",

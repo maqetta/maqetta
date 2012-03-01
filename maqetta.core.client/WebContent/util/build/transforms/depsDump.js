@@ -93,7 +93,7 @@ define([
 
 			filename = fileUtils.computePath(bc.depsDumpFilename, bc.destBasePath);
 			fileUtils.ensureDirectory(fileUtils.getFilepath(filename));
-			fs.writeFileSync(filename, json.stringify({depsTree:depsTree, idTree:idTree}), "utf8");
+			fs.writeFileSync(filename, json.stringify({depsTree:depsTree, idTree:idTree}), "ascii");
 		}
 
 		return 0;

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/th/InsertEntity", //begin v1.x content
 ({
 	insertEntity: "แทรกสัญลักษณ์"
 })

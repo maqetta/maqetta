@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/ar/TableDialog", //begin v1.x content
 ({
 	insertTableTitle: "‏ادراج جدول‏",
 	modifyTableTitle: "تعديل جدول",

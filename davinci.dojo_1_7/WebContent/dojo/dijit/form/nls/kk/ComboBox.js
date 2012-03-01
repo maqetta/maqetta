@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/form/nls/kk/ComboBox", //begin v1.x content
 ({
 		previousMessage: "Алдыңғы нұсқалар",
 		nextMessage: "Басқа нұсқалар"

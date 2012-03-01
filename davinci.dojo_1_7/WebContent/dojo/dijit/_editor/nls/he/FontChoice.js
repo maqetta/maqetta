@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/_editor/nls/he/FontChoice", //begin v1.x content
 ({
 	fontSize: "גודל",
 	fontName: "גופן",

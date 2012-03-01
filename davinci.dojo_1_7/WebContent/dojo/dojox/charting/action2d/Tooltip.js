@@ -42,6 +42,8 @@ case "column":
 _10=["above","below"];
 case "bar":
 _f=_3.clone(o.shape.getShape());
+_f.w=_f.width;
+_f.h=_f.height;
 break;
 case "candlestick":
 _f.x=o.x;

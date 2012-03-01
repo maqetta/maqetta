@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/form/nls/ja/validate", //begin v1.x content
 ({
 	invalidMessage: "入力した値は無効です。",
 	missingMessage: "この値は必須です。",

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/hu/SpellCheck", //begin v1.x content
 ({
 	widgetLabel: "Kötegelt helyesírás-ellenőrzés",
 	unfound: "Nem található",

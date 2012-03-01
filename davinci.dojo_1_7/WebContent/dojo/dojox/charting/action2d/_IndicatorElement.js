@@ -152,6 +152,9 @@ cd1=_19.toData(cp1);
 }
 }
 var c1=this._getData(cd1,_1c,v),c2;
+if(c1.y==null){
+return;
+}
 if(cp2){
 if(cd2[n]<_1d.from){
 cp2[_1c]=min[_1c];
@@ -163,6 +166,9 @@ cd2=_19.toData(cp2);
 }
 }
 c2=this._getData(cd2,_1c,v);
+if(c2.y==null){
+cp2=null;
+}
 }
 var t1=this._renderIndicator(c1,cp2?1:0,hn,vn,min,max);
 if(cp2){
@@ -238,6 +244,8 @@ var _2c=this.chart.getSeries(this.inter.opt.series).data;
 var i,r,l=_2c.length;
 for(i=0;i<l;++i){
 r=_2c[i];
+if(r==null){
+}else{
 if(typeof r=="number"){
 if(i+1>cd[_2b]){
 break;
@@ -245,6 +253,7 @@ break;
 }else{
 if(r[_2b]>cd[_2b]){
 break;
+}
 }
 }
 }

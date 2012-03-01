@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/el/FindReplace", //begin v1.x content
 ({
 	"findLabel": "Εύρεση:",
 	"findTooltip": "Καταχωρήστε το κείμενο που θέλετε να εντοπίσετε",
@@ -11,7 +11,6 @@ define(
 	"matchCaseTooltip": "Διάκριση πεζών/κεφαλαίων",
 	"backwards": "Προς τα πίσω",
 	"backwardsTooltip": "Αναζήτηση κειμένου προς τα πίσω",
-	"replaceAll": "Όλες οι εμφανίσεις",
 	"replaceAllButton": "Αντικατάσταση όλων",
 	"replaceAllButtonTooltip": "Αντικατάσταση όλου του κειμένου",
 	"findButton": "Εύρεση",

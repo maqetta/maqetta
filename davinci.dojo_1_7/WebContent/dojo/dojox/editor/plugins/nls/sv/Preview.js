@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/sv/Preview", //begin v1.x content
 ({
 	"preview": "Förhandsgranska"
 })

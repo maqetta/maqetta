@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/_editor/nls/ar/FontChoice", //begin v1.x content
 ({
 	fontSize: "الحجم",
 	fontName: "طاقم طباعة",

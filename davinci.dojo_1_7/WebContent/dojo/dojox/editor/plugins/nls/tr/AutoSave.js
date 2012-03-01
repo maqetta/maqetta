@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/tr/AutoSave", //begin v1.x content
 ({
 	"saveLabel": "Kaydet",
 	"saveSettingLabelOn": "Otomatik Kaydetme Aralığını Ayarla...",

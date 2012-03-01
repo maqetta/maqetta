@@ -178,8 +178,13 @@ define("dojox/charting/action2d/_IndicatorElement", ["dojo/_base/lang", "dojo/_b
 				cd1 = plot.toData(cp1);
 			}	
 			
-			var c1 = this._getData(cd1, attr, v), c2; 
-			
+			var c1 = this._getData(cd1, attr, v), c2;
+
+			if(c1.y == null){
+				// we have no data for that point let's just return
+				return;
+			}
+
 			if(cp2){
 				if(cd2[n] < bounds.from){
 					cp2[attr] = min[attr];
@@ -189,6 +194,10 @@ define("dojox/charting/action2d/_IndicatorElement", ["dojo/_base/lang", "dojo/_b
 					cd2 = plot.toData(cp2);	
 				}
 				c2 = this._getData(cd2, attr, v);
+				if(c2.y == null){
+					// we have no data for that point let's pretend we have a single touch point
+					cp2 = null;
+				}
 			}
 			
 			var t1 = this._renderIndicator(c1, cp2?1:0, hn, vn, min, max);
@@ -284,7 +293,9 @@ define("dojox/charting/action2d/_IndicatorElement", ["dojo/_base/lang", "dojo/_b
 			var i, r, l = data.length;
 			for (i = 0; i < l; ++i){
 				r = data[i];
-				if(typeof r == "number"){
+				if(r == null){
+					// move to next item
+				}else if(typeof r == "number"){
 					if(i + 1 > cd[attr]){
 						break;
 					}

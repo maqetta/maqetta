@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/sv/Blockquote", //begin v1.x content
 ({
 	"blockquote": "Blockcitat"
 })

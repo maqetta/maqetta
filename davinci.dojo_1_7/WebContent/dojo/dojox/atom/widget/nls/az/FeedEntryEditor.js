@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/atom/widget/nls/az/FeedEntryEditor", //begin v1.x content
 ({
 	"edit" : "[tərtib et]",
 	"save" : "[saxla]",

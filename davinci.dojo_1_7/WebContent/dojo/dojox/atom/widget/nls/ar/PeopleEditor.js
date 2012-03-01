@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/atom/widget/nls/ar/PeopleEditor", //begin v1.x content
 ({
 	add: "اضافة",
 	addAuthor: "اضافة مؤلف",

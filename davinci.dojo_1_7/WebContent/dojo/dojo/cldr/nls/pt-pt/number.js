@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/cldr/nls/pt-pt/number", //begin v1.x content
 {
 	"currencyFormat": "#,##0.00 ¤",
 	"group": " "

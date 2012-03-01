@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/nls/sk/loading", //begin v1.x content
 ({
 	loadingState: "Zavádzanie...",
 	errorState: "Nastala chyba"

@@ -1,5 +1,5 @@
 //>>built
-define({ root:
+define("dijit/_editor/nls/LinkDialog", { root:
 //begin v1.x content
 ({
 	createLinkTitle: "Link Properties",
@@ -34,6 +34,7 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
+"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -43,5 +44,6 @@ define({ root:
 "da": true,
 "cs": true,
 "ca": true,
+"az": true,
 "ar": true
 });

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/atom/widget/nls/ca/FeedEntryEditor", //begin v1.x content
 ({
 	doNew: "[nou]",
 	edit: "[edita]",

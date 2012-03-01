@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/zh-tw/InsertEntity", //begin v1.x content
 ({
 	insertEntity: "插入符號"
 })

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/grid/enhanced/nls/th/EnhancedGrid", //begin v1.x content
 ({
 	singleSort: "เรียงลำดับแบบเดี่ยว",
 	nestedSort: "เรียงลำดับที่ซับซ้อน",

@@ -1,5 +1,7 @@
 define([
 	"dojo/_base/declare",
+	"davinci/Workbench",
+	"davinci/Runtime",
 	"davinci/workbench/ViewPart",
 	"davinci/review/widgets/Comment",
 	"davinci/review/widgets/CommentForm",
@@ -15,7 +17,7 @@ define([
 	"dijit/Menu",
     "dojo/i18n!./nls/view",
     "dojo/i18n!davinci/workbench/nls/workbench"
-], function(declare, ViewPart, Comment, CommentForm, util, Button, TextBox, DropDownButton, Toolbar,
+], function(declare, Workbench, Runtime, ViewPart, Comment, CommentForm, util, Button, TextBox, DropDownButton, Toolbar,
 		ToolbarSeparator, CheckedMenuItem, MenuSeparator, Dialog, Menu, viewNls, workbenchNls) {
 
 return declare("davinci.review.view.CommentView", ViewPart, {
@@ -42,7 +44,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		this._initCommentForm();
 
 		this.connect(this.commentReplies, "keydown", function(evt) {
-			var loopBody = function(comment){
+			var loopBody = function(comment) {
 				if (comment.pageState == pageState) {
 					comment.enable();
 				} else {
@@ -120,7 +122,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			var global = dojo.window.get(context.containerNode.ownerDocument);
 
 			this._loadCommentData(pageName);
-			if (davinci.Workbench.getOpenEditor() === context.containerEditor) {
+			if (Workbench.getOpenEditor() === context.containerEditor) {
 				// Only need rendering when it is the current editor
 				// No need to render when the editor is opened in the background
 				this._currentPage = pageName;
@@ -135,13 +137,15 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					// Show annotations
 					that._reviewFilterChanged(); // Set reviewer list to be shown
 					dojo.publish(that._currentPage+"/davinci/review/drawing/filter", ["Normal", []]);
-
 				}, 100);
 			}
 			// Response to the state change event in the review editor
 			if (global && global.davinci && global.davinci.states) {
 				this.states = global.davinci.states;
 				global.davinci.states.subscribe("/davinci/states/state/changed", this, function(args) {
+					if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
+						return; 
+					}
 					var state = args.newState || "Normal";
 					this._cached[this._currentPage].pageState = state;
 					dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [state, []]);
@@ -152,6 +156,9 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		dojo.subscribe("/davinci/ui/editorSelected", this, function(args) {
 			// summary:
 			//		Remove the comment nodes of the previous page
+			if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
+				return; 
+			}
 			var editor = args.editor;
 			if (!editor) {
 				this._resetCommentView();
@@ -337,9 +344,9 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			content: args.content,
 			pageName: this._currentPage,
 			pageState: this._cached[this._currentPage].pageState,
-			//ownerId: davinci.Runtime.commenting_reviewerName.userName,
-			ownerId: davinci.Runtime.userName,
-			email: davinci.Runtime.getDesignerEmail(),
+			//ownerId: Runtime.commenting_reviewerName.userName,
+			ownerId: Runtime.userName,
+			email: Runtime.getDesignerEmail(),
 			replyTo: form.replyTo,
 			drawingJson: this.drawingJson,
 			type: args.type,
@@ -424,12 +431,12 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		// summary:
 		//		Load the comments attached to the opened page
 		//		and sort them by time order
-		var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
-		this._cached[pageName] = davinci.Runtime.serverJSONRequest({
+		var location = Workbench.location().match(/http:\/\/.*:\d+\//);
+		this._cached[pageName] = Runtime.serverJSONRequest({
 			url: location + "maqetta/cmd/getComments",
 			sync: true,
 			content:{
-				ownerId: davinci.Runtime.commenting_designerName || davinci.Runtime.userName,
+				ownerId: Runtime.commenting_designerName || Runtime.userName,
 				pageName: pageName
 			}
 		}).sort(function(c1,c2){
@@ -508,8 +515,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		var form = this._commentForm,
 		comment = this.commentIndices[args.commentId];
 
-		if (comment.ownerId != davinci.Runtime.commenting_reviewerName.userName ||
-				comment.email != davinci.Runtime.commenting_reviewerName.email) { 
+		if (comment.ownerId != Runtime.commenting_reviewerName.userName ||
+				comment.email != Runtime.commenting_reviewerName.email) { 
 			return;
 		}
 
@@ -538,7 +545,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		// Notify the drawing tool to be in edit mode
 		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", 
 				[
-				 davinci.Runtime.commenting_reviewerName.userName,
+				 Runtime.commenting_reviewerName.userName,
 				 form.commentId,
 				 comment.pageState
 		]);
@@ -563,7 +570,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		// Notify the drawing tool to be in edit mode
 		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", 
 				[
-				 davinci.Runtime.commenting_reviewerName.userName,
+				 Runtime.commenting_reviewerName.userName,
 				 form.commentId,
 				 this._cached[this._currentPage].pageState
 		]);
@@ -634,7 +641,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					} else {
 						return false;
 					}
-				}) && davinci.Runtime.commenting_designerName != item.name)
+				}) && Runtime.commenting_designerName != item.name)
 					reviewers.push({
 						name: comment.ownerId,
 						email: comment.email
@@ -646,11 +653,11 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				children[i].destroy();
 			}
 
-			davinci.Runtime.reviewers = reviewers;
+			Runtime.reviewers = reviewers;
 			dojo.forEach(reviewers, dojo.hitch(this, function(comment, index) { 
 				var check = new CheckedMenuItem({
 					label: "<div class='davinciReviewToolbarReviewersColor' style='background-color:" + 
-					davinci.Runtime.getColor(comment.name) +";'></div><span>"+comment.name+"</span>",
+					Runtime.getColor(comment.name) +";'></div><span>"+comment.name+"</span>",
 						onChange: dojo.hitch(this,this._reviewFilterChanged),
 						checked: true,
 						reviewer:comment,
@@ -808,8 +815,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		// Notify the drawing tool to be in edit mode
 		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", 
 				[
-				 //davinci.Runtime.commenting_reviewerName.userName,
-				 davinci.Runtime.userName,
+				 //Runtime.commenting_reviewerName.userName,
+				 Runtime.userName,
 				 form.commentId,
 				 this._cached[this._currentPage].pageState
 				 ]);
@@ -844,7 +851,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 	},
 
 	isPageOwner: function() {
-		return davinci.Runtime.commenting_designerName == davinci.Runtime.commenting_reviewerName.userName;
+		return Runtime.commenting_designerName == Runtime.commenting_reviewerName.userName;
 	},
 
 	popupWarning: function(description) {

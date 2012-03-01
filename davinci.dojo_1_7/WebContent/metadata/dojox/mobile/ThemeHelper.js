@@ -19,11 +19,8 @@ return {
 	},
 	
 	preThemeConfig: function(context) {
-	    context.getDojo()["require"]("dojox.mobile");
+		
         var dm = context.getDojo().getObject("dojox.mobile", true);
-
-        // Pull in _compat.js immediately, since it redefines methods like loadCssFile which we wish to add advice to now
-        context.getDojo()["require"]("dojox.mobile.compat");
         var base = context._visualEditor.theme.base;
         dm.themeFiles = [];
         dm.themeMap=[[".*",base,[context._visualEditor.theme.files[0]]]];

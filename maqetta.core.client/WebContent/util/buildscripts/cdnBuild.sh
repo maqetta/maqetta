@@ -12,7 +12,7 @@ if [ -z $version ]; then
 fi
 
 dobuild() {
-	java -classpath ../shrinksafe/js.jar:../shrinksafe/shrinksafe.jar org.mozilla.javascript.tools.shell.Main ../../dojo/dojo.js baseUrl=../../dojo load=build profile=standard releaseName=$1 cssOptimize=comments.keepLines optimize=shrinksafe stripConsole=normal version=$1 copyTests=false mini=true action=release
+	java -classpath ../shrinksafe/js.jar:../shrinksafe/shrinksafe.jar org.mozilla.javascript.tools.shell.Main ../../dojo/dojo.js baseUrl=../../dojo load=build profile=standard profile=cdn releaseName=$1 cssOptimize=comments.keepLines optimize=shrinksafe stripConsole=normal version=$1 copyTests=false mini=true action=release
 	mv ../../release/$1 ../../release/$1-cdn
 	cd ../../release/$1-cdn
 	zip -rq $1.zip $1/*

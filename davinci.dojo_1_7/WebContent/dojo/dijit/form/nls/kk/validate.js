@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/form/nls/kk/validate", //begin v1.x content
 ({
 	invalidMessage: "Енгізілген мән жарамды емес.",
 	missingMessage: "Бұл мән міндетті.",

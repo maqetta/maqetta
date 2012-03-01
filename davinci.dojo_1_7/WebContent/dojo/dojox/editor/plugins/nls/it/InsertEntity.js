@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/it/InsertEntity", //begin v1.x content
 ({
 	insertEntity: "Inserisci simbolo"
 })

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojo/cldr/nls/zh-hant/gregorian", //begin v1.x content
 {
 	"field-weekday": "週天",
 	"dateFormatItem-yQQQ": "y年QQQ",

@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/nb/CollapsibleToolbar", //begin v1.x content
 ({
 	"collapse": "Komprimer verktøylinje for redigeringsprogram",
 	"expand": "Utvid verktøylinje for redigeringsprogram"

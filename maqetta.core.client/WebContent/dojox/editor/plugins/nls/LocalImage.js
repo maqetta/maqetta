@@ -1,4 +1,5 @@
 define({ root:
+//begin v1.x content
 ({
 	insertImageTitle: "Insert Image",
 	url: "Image",
@@ -30,6 +31,7 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
+"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -41,4 +43,3 @@ define({ root:
 "ca": true,
 "ar": true
 });
-

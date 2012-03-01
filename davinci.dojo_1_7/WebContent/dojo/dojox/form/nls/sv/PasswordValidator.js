@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/form/nls/sv/PasswordValidator", //begin v1.x content
 ({
         nomatchMessage: "Lösenorden stämmer inte överens.",
 		badPasswordMessage: "Ogiltigt lösenord."

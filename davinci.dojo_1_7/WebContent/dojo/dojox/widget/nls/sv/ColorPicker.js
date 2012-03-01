@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/widget/nls/sv/ColorPicker", //begin v1.x content
 ({
 hueLabel: "n",
 saturationLabel: "m",

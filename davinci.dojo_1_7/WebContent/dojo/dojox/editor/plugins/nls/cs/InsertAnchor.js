@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/cs/InsertAnchor", //begin v1.x content
 ({
 	insertAnchor: "Vložit kotvu",
 	title: "Vlastnosti kotvy",

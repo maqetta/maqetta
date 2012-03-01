@@ -7,6 +7,7 @@ define(
 	"nextTip": "Pàgina següent",
 	"prevTip": "Pàgina anterior",
 	"itemTitle": "elements",
+	"singularItemTitle": "element",
 	"pageStepLabelTemplate": "Pàgina ${0}",
 	"pageSizeLabelTemplate": "${0} elements per pàgina",
 	"allItemsLabelTemplate": "Tots els elements",
@@ -20,4 +21,3 @@ define(
 })
 //end v1.x content
 );
-

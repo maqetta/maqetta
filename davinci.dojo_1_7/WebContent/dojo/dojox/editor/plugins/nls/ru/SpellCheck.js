@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/editor/plugins/nls/ru/SpellCheck", //begin v1.x content
 ({
 	widgetLabel: "Проверка орфографии",
 	unfound: "Не найдено",

@@ -751,6 +751,9 @@ define(["./_base","dojo/_base/lang", "dojo/_base/sniff", "dojo/_base/window", "d
 
 }}});
 
+require(["dojo/i18n"], function(i18n){
+i18n._preloadLocalizations("dojox/nls/gfx", []);
+});
 define("dojox/gfx", ["dojo/_base/lang", "./gfx/_base", "./gfx/renderer!"], 
   function(lang, gfxBase, renderer){
 	// module:

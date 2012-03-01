@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/_editor/nls/pl/LinkDialog", //begin v1.x content
 ({
 	createLinkTitle: "Właściwości odsyłacza",
 	insertImageTitle: "Właściwości obrazu",

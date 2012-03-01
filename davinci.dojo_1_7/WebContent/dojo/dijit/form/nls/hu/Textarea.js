@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/form/nls/hu/Textarea", //begin v1.x content
 ({
 	iframeEditTitle: 'szerkesztési terület',  // primary title for editable IFRAME, for screen readers when focus is in the editing area
 	iframeFocusTitle: 'szerkesztési terület keret'  // secondary title for editable IFRAME when focus is on outer container

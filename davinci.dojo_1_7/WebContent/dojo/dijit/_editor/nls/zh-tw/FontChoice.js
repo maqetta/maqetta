@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dijit/_editor/nls/zh-tw/FontChoice", //begin v1.x content
 ({
 	fontSize: "大小",
 	fontName: "字型",

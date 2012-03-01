@@ -1,5 +1,6 @@
 //>>built
-define({ root:
+define("dojox/editor/plugins/nls/ShowBlockNodes", { root:
+//begin v1.x content
 ({
 	"showBlockNodes": "Show HTML Block Elements"
 })
@@ -24,6 +25,7 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
+"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -35,4 +37,3 @@ define({ root:
 "ca": true,
 "ar": true
 });
-

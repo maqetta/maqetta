@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/grid/enhanced/nls/ko/EnhancedGrid", //begin v1.x content
 ({
 	singleSort: "단일 정렬",
 	nestedSort: "중첩된 정렬",

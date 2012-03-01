@@ -1,6 +1,6 @@
 //>>built
 define(
-//begin v1.x content
+"dojox/form/nls/fi/PasswordValidator", //begin v1.x content
 ({
         nomatchMessage: "Salasanat eivät täsmää.",
 		badPasswordMessage: "Salasana ei kelpaa."

@@ -118,8 +118,10 @@
 			}
 		},
 		getCurrentScene: function(){
-			var currentScene;
-			var refNode = this.context.getDocument();
+			var currentScene, viewDijit;
+			var userDoc = this.context.getDocument();
+			var _dijit = (userDoc && userDoc.defaultView && userDoc.defaultView.dijit);
+			var refNode = userDoc;
 			var searchForNested = true;
 			while(searchForNested){
 				var elems = refNode.querySelectorAll('.mblView');
@@ -129,7 +131,12 @@
 				searchForNested = false;
 				for(var i=0; i<elems.length; i++){
 					var elem = elems[i];
-					var viewDijit = (elem._dvWidget && elem._dvWidget.dijitWidget);
+					viewDijit = null;
+					if(this.context.declaredClass == 'davinci.ve.Context'){
+						viewDijit = (elem._dvWidget && elem._dvWidget.dijitWidget);
+					}else if(this.context.declaredClass == 'davinci.review.editor.Context'){
+						viewDijit = (_dijit && _dijit.byId && elem.id) ? _dijit.byId(elem.id) : null;
+					}
 					if(viewDijit && viewDijit.getShowingView){
 						var showingView = viewDijit.getShowingView();
 						if(showingView && showingView.domNode && showingView.domNode.id){

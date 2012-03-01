@@ -6,11 +6,7 @@ define([
 	"dojo/i18n!./nls/actions"
 ], function(declare, Action, Runtime, Toaster, nls) {
 
-if (typeof davinci.review.actions === "undefined") {
-	davinci.review.actions = {};
-}
-
-var OpenVersionAction = davinci.review.actions.OpenVersionAction = declare("davinci.review.actions.OpenVersionAction", Action, {
+var OpenVersionAction = declare("davinci.review.actions.OpenVersionAction", [Action], {
 
 	run: function(context) {
 		var selection = Runtime.getSelection();

@@ -22,8 +22,8 @@ return declare("davinci.review.editor.Context", [Context], {
 			this.frame = dojo.create("iframe", dojo.mixin(this.iframeattrs, {
 				style: {
 					border: "0",
-					width: versionInfo.width&&versionInfo.height?versionInfo.width+"px":"100%",
-					height: versionInfo.width&&versionInfo.height?versionInfo.height+"px":"100%"
+					width: versionInfo.width && versionInfo.height ? versionInfo.width + "px" : "100%",
+					height: versionInfo.width && versionInfo.height ? versionInfo.height + "px" : "100%"
 				},
 				src: this.baseURL,
 				onload: dojo.hitch(this,function(){
@@ -55,7 +55,7 @@ return declare("davinci.review.editor.Context", [Context], {
 		//        Create the canvas for annotations, and wait for the shape definition
 		//        to add a shape. The shapes will be created one by one.
 		//        Shapes with commentId, state and colorAlias(reviewer)
-		var doc = this.containerNode.ownerDocument, 
+		var doc = this.frame.contentDocument, 
 			surface;
 		if (!doc.annotationSurface) {
 			surface = doc.annotationSurface = new Surface(doc.body, doc);

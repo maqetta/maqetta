@@ -4,11 +4,7 @@ define([
 	"davinci/Runtime"
 ], function(declare, _DrawingCommon, Runtime) {
 
-if (typeof davinci.review.actions === "undefined") {
-	davinci.review.actions = {};
-}
-
-var RectAction = davinci.review.actions.RectAction = declare("davinci.review.actions.RectAction", davinci.review.actions._DrawingCommon, {
+var RectAction = declare("davinci.review.actions.RectAction", [_DrawingCommon], {
 
 	run: function(context) {
 		this.inherited(arguments);

@@ -19,7 +19,8 @@ define(
 	emoticonYes: "예",
 	emoticonNo: "아니오",
 	emoticonAngel: "천사",
-	emoticonCrying: "울음"
+	emoticonCrying: "울음",
+	emoticonHappy: "기쁜"
 })
 //end v1.x content
 );

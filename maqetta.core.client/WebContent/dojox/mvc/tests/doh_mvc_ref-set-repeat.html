@@ -195,10 +195,12 @@
 						<button type="button" data-dojo-type="dijit.form.Button" data-dojo-props="onClick: function(){dijit.byId('outergroupId').set('ref',model3);}">Swap Model3</button>
 					</div>
 					<div id="outergroupId"	 data-dojo-type="dojox.mvc.Group" data-dojo-props="ref: 'model1'">
-						<div id="repeatId" data-dojo-type="dojox.mvc.Repeat" data-dojo-props="ref: 'Results'">
-							<div class="row" data-dojo-type="dojox.mvc.Group" data-dojo-props="ref: '${this.index}'">
-								<label class="cell" for="nameInput${this.index}">Name:</label>
-								<input class="cell" data-dojo-type="dijit.form.TextBox" id="nameInput${this.index}" data-dojo-props="ref: 'First'"/>
+						<div id="innergroupId"	 data-dojo-type="dojox.mvc.Group">
+							<div id="repeatId" data-dojo-type="dojox.mvc.Repeat" data-dojo-props="ref: 'Results'">
+								<div class="row" data-dojo-type="dojox.mvc.Group" data-dojo-props="ref: '${this.index}'">
+									<label class="cell" for="nameInput${this.index}">Name:</label>
+									<input class="cell" data-dojo-type="dijit.form.TextBox" id="nameInput${this.index}" data-dojo-props="ref: 'First'"/>
+								</div>
 							</div>
 						</div>
 					</div>

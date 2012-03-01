@@ -233,14 +233,22 @@ define([
 			//
 			// positions:
 			//		Ordered list of positions to try matching up.
-			//			* before: places drop down to the left of the anchor node/widget, or to the right in
-			//				the case of RTL scripts like Hebrew and Arabic
-			//			* after: places drop down to the right of the anchor node/widget, or to the left in
-			//				the case of RTL scripts like Hebrew and Arabic
-			//			* above: drop down goes above anchor node
-			//			* above-alt: same as above except right sides aligned instead of left
+			//			* before: places drop down to the left of the anchor node/widget, or to the right in the case
+			//				of RTL scripts like Hebrew and Arabic; aligns either the top of the drop down
+			//				with the top of the anchor, or the bottom of the drop down with bottom of the anchor.
+			//			* after: places drop down to the right of the anchor node/widget, or to the left in the case
+			//				of RTL scripts like Hebrew and Arabic; aligns either the top of the drop down
+			//				with the top of the anchor, or the bottom of the drop down with bottom of the anchor.
+			//			* before-centered: centers drop down to the left of the anchor node/widget, or to the right
+			//				 in the case of RTL scripts like Hebrew and Arabic
+			//			* after-centered: centers drop down to the right of the anchor node/widget, or to the left
+			//				 in the case of RTL scripts like Hebrew and Arabic
+			//			* above-centered: drop down is centered above anchor node
+			//			* above: drop down goes above anchor node, left sides aligned
+			//			* above-alt: drop down goes above anchor node, right sides aligned
+			//			* below-centered: drop down is centered above anchor node
 			//			* below: drop down goes below anchor node
-			//			* below-alt: same as below except right sides aligned instead of left
+			//			* below-alt: drop down goes below anchor node, right sides aligned
 			//
 			// layoutNode: Function(node, aroundNodeCorner, nodeCorner)
 			//		For things like tooltip, they are displayed differently (and have different dimensions)
@@ -316,11 +324,18 @@ define([
 					case "below-centered":
 						push("BM", "TM");
 						break;
+					case "after-centered":
+						ltr = !ltr;
+						// fall through
+					case "before-centered":
+						push(ltr ? "ML" : "MR", ltr ? "MR" : "ML");
+						break;
 					case "after":
 						ltr = !ltr;
 						// fall through
 					case "before":
-						push(ltr ? "ML" : "MR", ltr ? "MR" : "ML");
+						push(ltr ? "TL" : "TR", ltr ? "TR" : "TL");
+						push(ltr ? "BL" : "BR", ltr ? "BR" : "BL");
 						break;
 					case "below-alt":
 						ltr = !ltr;

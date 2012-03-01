@@ -1,4 +1,5 @@
 define({ root:
+//begin v1.x content
 ({
 	"setButtonText": "Set",
 	"cancelButtonText": "Cancel"
@@ -24,6 +25,7 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
+"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -35,4 +37,3 @@ define({ root:
 "ca": true,
 "ar": true
 });
-

@@ -10,7 +10,6 @@ define(
 	"matchCaseTooltip": "大/小文字を区別",
 	"backwards": "後方",
 	"backwardsTooltip": "テキストを後方検索",
-	"replaceAll": "すべてのオカレンス",
 	"replaceAllButton": "すべてを置換",
 	"replaceAllButtonTooltip": "テキストすべてを置換",
 	"findButton": "検索",

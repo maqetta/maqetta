@@ -184,7 +184,7 @@ define([
 				dec = before ? 1 : 0,
 				inc = 1 - dec;
 			do{
-				i = i - dec;
+				i -= dec;
 				n = this._createOption(i);
 				if(n){
 					if((before && n.date > lastValue) || (!before && n.date < lastValue)){
@@ -193,7 +193,7 @@ define([
 					nodes[before ? "unshift" : "push"](n);
 					lastValue = n.date;
 				}
-				i = i + inc;
+				i += inc;
 			}while(nodes.length < maxNum && (i*chk) < max);
 			return nodes;
 		},
@@ -211,16 +211,15 @@ define([
 			// get the value of the increments and the range in seconds (since 00:00:00) to find out how many divs to create
 			var
 				sinceMidnight = function(/*Date*/ date){
-				return date.getHours() * 60 * 60 + date.getMinutes() * 60 + date.getSeconds();
+					return date.getHours() * 60 * 60 + date.getMinutes() * 60 + date.getSeconds();
 				},
 				clickableIncrementSeconds = sinceMidnight(this._clickableIncrementDate),
 				visibleIncrementSeconds = sinceMidnight(this._visibleIncrementDate),
 				visibleRangeSeconds = sinceMidnight(this._visibleRangeDate),
-
-			// round reference date to previous visible increment
+				// round reference date to previous visible increment
 				time = (this.value || this.currentFocus).getTime();
 
-			this._refDate = new Date(time - time % (visibleIncrementSeconds*1000));
+			this._refDate = new Date(time - time % (clickableIncrementSeconds*1000));
 			this._refDate.setFullYear(1970,0,1); // match parse defaults
 
 			// assume clickable increment is the smallest unit
@@ -238,9 +237,15 @@ define([
 			var
 				// Find the nodes we should display based on our filter.
 				// Limit to 10 nodes displayed as a half-hearted attempt to stop drop down from overlapping <input>.
-				after = this._getFilteredNodes(0, Math.min(this._totalIncrements >> 1, 10) - 1),
-				before = this._getFilteredNodes(0, Math.min(this._totalIncrements, 10) - after.length, true, after[0]);
-			array.forEach(before.concat(after), function(n){this.timeMenu.appendChild(n);}, this);
+				count = Math.min(this._totalIncrements, 10),
+				after = this._getFilteredNodes(0, (count >> 1) + 1, false),
+				moreAfter = [],
+				estBeforeLength = count - after.length,
+				before = this._getFilteredNodes(0, estBeforeLength, true, after[0]);
+				if(before.length < estBeforeLength && after.length > 0){
+					moreAfter = this._getFilteredNodes(after.length, estBeforeLength - before.length, false, after[after.length-1]);
+				}
+			array.forEach(before.concat(after, moreAfter), function(n){ this.timeMenu.appendChild(n); }, this);
 		},
 
 		constructor: function(){
@@ -248,7 +253,7 @@ define([
 		},
 
 		postMixInProperties: function(){
-		        this.inherited(arguments);
+			this.inherited(arguments);
 			this._setConstraintsAttr(this.constraints); // this needs to happen now (and later) due to codependency on _set*Attr calls
 		},
 
@@ -486,13 +491,14 @@ define([
 
 				// Accept the currently-highlighted option as the value
 				if(this._highlighted_option){
-				this._onOptionSelected({target: this._highlighted_option});
-			}
+					this._onOptionSelected({target: this._highlighted_option});
+				}
 
 				// Call stopEvent() for ENTER key so that form doesn't submit,
 				// but not for TAB, so that TAB does switch focus
 				return e.charOrCode === keys.TAB;
 			}
+			return undefined;
 		}
 	});
 });

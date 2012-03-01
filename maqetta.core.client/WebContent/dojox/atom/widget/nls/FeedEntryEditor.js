@@ -20,6 +20,7 @@ define({ root:
 "fr": true,
 "he": true,
 "hu": true,
+"hr": true,
 "it": true,
 "ja": true,
 "kk": true,

@@ -126,7 +126,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window",
 			//	|		pane.attr("href", ref);
 			//	|	});
 			
-			this.tracker._trackPageview.apply(this, arguments);
+			this.tracker._trackPageview.apply(this.tracker, arguments);
 		}
 
 	});

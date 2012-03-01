@@ -64,6 +64,8 @@ define(
 	"anycolumn": "orice coloană",
 	"statusTipTitleNoFilter": "Bară de filtru",
 	"statusTipTitleHasFilter": "Filtru",
+	"statusTipRelAny": "Potrivire orice regulă.",
+	"statusTipRelAll": "Potrivire toate regulile.",
 	
 	"defaultItemsName": "articole",
 	"filterBarMsgHasFilterTemplate": "${0} din ${1} ${2} afişate.",
@@ -84,6 +86,3 @@ define(
 })
 //end v1.x content
 );
-
-
-

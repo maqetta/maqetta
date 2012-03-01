@@ -273,7 +273,7 @@ define(["./buildControl", "./fileUtils", "./fs", "./stringify", "dojo/has", "./p
 					mid:moduleInfo.mid,
 					pack:moduleInfo.pack,
 					deps:[],
-					text:"define([], 1);\n",
+					text:"define([], 1);" + bc.newline,
 					getText:function(){
 						return this.text;
 					},

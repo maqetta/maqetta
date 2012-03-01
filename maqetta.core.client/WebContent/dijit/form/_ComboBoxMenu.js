@@ -39,6 +39,14 @@ define([
 
 		baseClass: "dijitComboBoxMenu",
 
+		postCreate: function(){
+			this.inherited(arguments);
+			if(!this.isLeftToRight()){
+				domClass.add(this.previousButton, "dijitMenuItemRtl");
+				domClass.add(this.nextButton, "dijitMenuItemRtl");
+			}
+		},
+
 		_createMenuItem: function(){
 			return domConstruct.create("div", {
 				"class": "dijitReset dijitMenuItem" +(this.isLeftToRight() ? "" : " dijitMenuItemRtl"),
@@ -82,25 +90,26 @@ define([
 				this.selectNextNode();
 			}
 			while(scrollamount<height){
+				var highlighted_option = this.getHighlightedOption();
 				if(up){
 					// stop at option 1
-					if(!this.getHighlightedOption().previousSibling ||
-						this._highlighted_option.previousSibling.style.display == "none"){
+					if(!highlighted_option.previousSibling ||
+						highlighted_option.previousSibling.style.display == "none"){
 						break;
 					}
 					this.selectPreviousNode();
 				}else{
 					// stop at last option
-					if(!this.getHighlightedOption().nextSibling ||
-						this._highlighted_option.nextSibling.style.display == "none"){
+					if(!highlighted_option.nextSibling ||
+						highlighted_option.nextSibling.style.display == "none"){
 						break;
 					}
 					this.selectNextNode();
 				}
 				// going backwards
-				var newscroll=this.domNode.scrollTop;
-				scrollamount+=(newscroll-oldscroll)*(up ? -1:1);
-				oldscroll=newscroll;
+				var newscroll = this.domNode.scrollTop;
+				scrollamount += (newscroll-oldscroll)*(up ? -1:1);
+				oldscroll = newscroll;
 			}
 		},
 

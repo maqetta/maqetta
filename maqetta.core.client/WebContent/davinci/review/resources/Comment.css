@@ -5,26 +5,22 @@
 	height: 18px;
 	width: 18px;
 }
+
 .dijitButtonDisabled .davinciReviewToolbarAdd{
 	background-image: url("img/add_comment_disable.gif") !important;
-	background-position: center center;
-	background-repeat: no-repeat;
-	height: 18px;
-	width: 18px;
 }
-.davinciReviewToolbarReply, .replyButtonIcon{
+
+.davinciReviewToolbarReply,
+.replyButtonIcon{
 	background-image: url("img/reply.gif") !important;
 	background-position: center center;
 	background-repeat: no-repeat;
 	height: 18px;
 	width: 18px;
 }
+
 .dijitButtonDisabled .davinciReviewToolbarReply{
 	background-image: url("img/reply_disable.gif") !important;
-	background-position: center center;
-	background-repeat: no-repeat;
-	height: 18px;
-	width: 18px;
 }
 
 .davinciReviewToolbarReviewers{
@@ -34,13 +30,11 @@
 	height: 18px;
 	width: 18px;
 }
+
 .dijitDropDownButtonDisabled .davinciReviewToolbarReviewers{
 	background-image: url("img/filter_reviewers_disable.gif") !important;
-	background-position: center center;
-	background-repeat: no-repeat;
-	height: 18px;
-	width: 18px;
 }
+
 .davinciReviewToolbarReviewersColor{
 	background: url("img/color_bg.png") no-repeat;
 	height: 14px;
@@ -260,7 +254,7 @@
 */
 
 .emptyIcon {
-	background: no-repeat url("../../../../dojo/resources/blank.gif");
+	background: no-repeat url("../../../dojo/resources/blank.gif");
 	display: none;
 }
 
@@ -370,24 +364,12 @@
 	padding-left:18px;
 }
 
-.dijitTreeRowHover .deleteImg{
-	background: url("img/del.gif") no-repeat 0px -2px;
-	margin-right: 20px;
-	width:14px;
-	height:14px;
-	cursor: pointer;
-	display: inline;
-	float:right;
-}
-
+.dijitTreeRowHover .deleteImg,
 .dijitTreeRowActive .deleteImg{
 	background: url("img/del.gif") no-repeat 0px -2px;
 	margin-right: 20px;
 	width:14px;
 	height:14px;
-	cursor: pointer;
-	display: inline;
-	float:right;
 }
 
 .delImg{
@@ -399,15 +381,15 @@
 }
 
 .deleteImg{
-	background: url("../../../../dojo/resources/blank.gif") no-repeat ;
+	background: url("../../../dojo/resources/blank.gif") no-repeat;
 	width:25px;
 	height:14px;
 	cursor: pointer;
 	float:right;
 	display: inline;
 }
+
 .reviewTooltipRight .dijitTooltipConnector {
-    
     left: 0px;
     top: 3px;
     background-position:-48px 0%;
@@ -576,7 +558,7 @@
 }
 
 .severityLow {
-	background: no-repeat url( "img/severity_low.gif" );
+	background: no-repeat url( "img/severity_low.gif");
 }
 .severityMedium {
 	background: no-repeat url("img/severity_mid.gif");

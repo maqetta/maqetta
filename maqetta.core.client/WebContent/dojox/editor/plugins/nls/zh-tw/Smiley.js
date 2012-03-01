@@ -19,7 +19,8 @@ define(
 	emoticonYes: "對",
 	emoticonNo: "不對",
 	emoticonAngel: "守護神",
-	emoticonCrying: "哭泣"
+	emoticonCrying: "哭泣",
+	emoticonHappy: "歡樂派對"
 })
 
 //end v1.x content

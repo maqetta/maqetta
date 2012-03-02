@@ -354,7 +354,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 		// Get drawing JSON string
 		dojo.publish(this._currentPage+"/davinci/review/drawing/getShapesInEditing", 
-				[this, this._cached[this._currentPage].pageState]);
+				[this, this._cached[this._currentPage].pageState, this._cached[this._currentPage].viewScene]);
 
 		var comment = new Comment({
 			commentId: form.commentId,
@@ -422,7 +422,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 		// Get drawing JSON string
 		dojo.publish(this._currentPage+"/davinci/review/drawing/getShapesInEditing", 
-				[this, this._cached[this._currentPage].pageState]);
+				[this, this._cached[this._currentPage].pageState, this._cached[this._currentPage].viewScene]);
 
 		comment.subject = args.subject;
 		comment.content = args.content;
@@ -957,7 +957,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 	},
 	
 	setCurrentScene: function(SceneManager, sceneId){
-		this._cached[this._currentPage].pageSceneId = sceneId;
+		this._cached[this._currentPage].viewScene = sceneId;
 		var focusedComments = this._cached[this._currentPage].focusedComments;
 		dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{viewScene: sceneId}, focusedComments]);
 	}

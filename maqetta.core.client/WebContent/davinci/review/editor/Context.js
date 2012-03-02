@@ -102,12 +102,13 @@ return declare("davinci.review.editor.Context", [Context], {
 				 surface.filterComments = [commentId];
 				 this._refreshSurface(surface);
 			 }),
-			 dojo.subscribe(this.fileName+"/davinci/review/drawing/getShapesInEditing", dojo.hitch(this,function(obj, state) {
+			 dojo.subscribe(this.fileName+"/davinci/review/drawing/getShapesInEditing", dojo.hitch(this,function(obj, state, scene) {
 				 if (obj._currentPage != this.fileName) {
 					 return;
 				 }
 				 surface.selectTool.deselectShape();
 				 surface.setValueByAttribute("commentId", surface.commentId, "state", state);
+				 surface.setValueByAttribute("commentId", surface.commentId, "scene", scene);
 				 obj.drawingJson = surface.exchangeTool.exportShapesByAttribute("commentId", [surface.commentId]);
 				 surface.deactivate();
 				 surface.commentId = "";

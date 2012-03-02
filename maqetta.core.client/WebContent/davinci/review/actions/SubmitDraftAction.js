@@ -5,11 +5,7 @@ define([
 	"davinci/Runtime",
 ], function(declare, Action, PublishAction, Runtime) {
 
-if (typeof davinci.review.actions === "undefined") {
-	davinci.review.actions = {};
-}
-
-var SubmitDraftAction = davinci.review.actions.SubmitDraftAction = declare("davinci.review.actions.SubmitDraftAction", Action, {
+var SubmitDraftAction = declare("davinci.review.actions.SubmitDraftAction", [Action], {
 
 	run: function(context) {
 		var selection = davinci.Runtime.getSelection();

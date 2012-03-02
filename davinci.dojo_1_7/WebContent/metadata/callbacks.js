@@ -1,5 +1,4 @@
 (function() {
-	
 	/**
 	 * API for SceneManager plugins to Maqetta plug
 	 * 
@@ -17,6 +16,7 @@
 	 *		NOTE: Called from both page editor (widget helpers available) and review editor (widget helpers not available).
 	 *		@param {object} params  Has following properties
 	 *			params.sceneId - Unique ID for the selected scene. (Unique ID created by this SceneManager)
+	 *		@returns {boolean}	Return true is a scene was selected
 	 * 
 	 * getCurrentScene()
 	 *		If there is a currently active scene, return its sceneId, else return null.
@@ -72,6 +72,7 @@
 			var sceneId = params.sceneId;
 			var dj = this.context.getDojo();
 			var domNode = dj.byId(sceneId);
+			var sceneSelected = null;
 			if(this.context.declaredClass == 'davinci.ve.Context'){
 				if(domNode){
 					var widget = domNode._dvWidget;
@@ -79,6 +80,7 @@
 						var helper = widget.getHelper();
 						if(helper && helper._updateVisibility){
 							helper._updateVisibility(domNode);
+							sceneSelected = sceneId;
 						}
 					}
 				}
@@ -115,11 +117,18 @@
 						}
 					}
 				}
+				sceneSelected = (viewsToUpdate.length>0) ? sceneId : null;
 			}
+			if(sceneSelected){
+				dojo.publish("/davinci/scene/selectionChanged", [this, sceneSelected]);
+			}
+			return sceneSelected;
 		},
 		getCurrentScene: function(){
-			var currentScene;
-			var refNode = this.context.getDocument();
+			var currentScene, viewDijit;
+			var userDoc = this.context.getDocument();
+			var _dijit = (userDoc && userDoc.defaultView && userDoc.defaultView.dijit);
+			var refNode = userDoc;
 			var searchForNested = true;
 			while(searchForNested){
 				var elems = refNode.querySelectorAll('.mblView');
@@ -129,7 +138,12 @@
 				searchForNested = false;
 				for(var i=0; i<elems.length; i++){
 					var elem = elems[i];
-					var viewDijit = (elem._dvWidget && elem._dvWidget.dijitWidget);
+					viewDijit = null;
+					if(this.context.declaredClass == 'davinci.ve.Context'){
+						viewDijit = (elem._dvWidget && elem._dvWidget.dijitWidget);
+					}else if(this.context.declaredClass == 'davinci.review.editor.Context'){
+						viewDijit = (_dijit && _dijit.byId && elem.id) ? _dijit.byId(elem.id) : null;
+					}
 					if(viewDijit && viewDijit.getShowingView){
 						var showingView = viewDijit.getShowingView();
 						if(showingView && showingView.domNode && showingView.domNode.id){
@@ -191,8 +205,8 @@
 		},
 		hideAppStates: function(){
 			if(this.context.declaredClass == 'davinci.ve.Context'){
-				var device = (this.context && this.context._visualEditor && this.context._visualEditor.getDevice) ?
-						this.context._visualEditor.getDevice() : "";
+				var ve = this.context && this.context.visualEditor,
+					device = (ve && ve.getDevice) ? ve.getDevice() : "";
 				return (!device || device === '' || device === 'none') ? false : true;
 			}else if(this.context.declaredClass == 'davinci.review.editor.Context'){
 				var body = this.context.rootNode;

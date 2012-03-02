@@ -4,11 +4,7 @@ define([
 	"davinci/Runtime"
 ], function(declare, _DrawingCommon, Runtime) {
 
-if (typeof davinci.review.actions === "undefined") {
-	davinci.review.actions = {};
-}
-
-var EllipseAction = davinci.review.actions.EllipseAction = declare("davinci.review.actions.EllipseAction", _DrawingCommon, {
+var EllipseAction = declare("davinci.review.actions.EllipseAction", [_DrawingCommon], {
 
 	run: function(context) {
 		this.inherited(arguments);

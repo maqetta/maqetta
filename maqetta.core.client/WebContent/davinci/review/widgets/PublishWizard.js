@@ -185,12 +185,13 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		var formatPic = function(result) {
 			if (!this.photoRepositoryUrl) {
 				var location = Workbench.location().match(/http:\/\/.*:\d+\//);
-				this.photoRepositoryUrl = Runtime.serverJSONRequest({
-					url: location + "maqetta/cmd/getBluePageInfo",
-					handleAs: "text",
-					content:{'type': "photo"},
-					sync: true
-				});
+				this.photoRepositoryUrl = "";
+//				this.photoRepositoryUrl = Runtime.serverJSONRequest({
+//					url: location + "maqetta/cmd/getBluePageInfo",
+//					handleAs: "text",
+//					content:{'type': "photo"},
+//					sync: true
+//				});
 			}
 			if (this.photoRepositoryUrl === "" || this.photoRepositoryUrl == "not-implemented") {
 				this.photoRepositoryUrl =  "app/davinci/review/resources/img/profileNoPhoto.gif?";
@@ -263,12 +264,16 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		var stateStore = new QueryReadStore({
 			url: location + "maqetta/cmd/getBluePageInfo",
 			fetch: function(request) {
-				var searchQuery = request.query.displayName;
-				searchQuery = searchQuery.substring(0, searchQuery.length - 1);
-				request.serverQuery = {searchname: searchQuery};
+//				var searchQuery = request.query.displayName;
+				var searchQuery = "";
 				if (searchQuery === "") {
 					return;
 				}
+				searchQuery = searchQuery.substring(0, searchQuery.length - 1);
+				request.serverQuery = {searchname: searchQuery};
+//				if (searchQuery === "") {
+//					return;
+//				}
 				return this.inherited("fetch", arguments);
 			}
 		});
@@ -285,7 +290,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 			onChange: dojo.hitch(this, this._reviewerComboxValueChanged),
 			onKeyUp: dojo.hitch(this, this._updateAddButton),
 			pageSize: 10,
-			searchDelay: 500,
+			searchDelay: 60000,
 			placeHolder: widgetsNls.enterNameOrEmail
 		}, this.addReviewerCombox);
 	},

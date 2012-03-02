@@ -43,19 +43,20 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 
 	execute: function(){
 		
-		if(!this._oldId || !this._properties){
+		if (!this._oldId || !this._properties) {
 			return;
 		}
 		
-		var widget = Widget.byId(this._oldId);
-		if(!widget){
+		var widget = Widget.byId(this._oldId),
+			context = this._context;
+		if (!widget) {
 			return;
 		}
 
 		// after creating the widget we need to refresh the data, the createWidget function removes the id's of the widgets and 
 		// children. We need the id's to be consistent for undo/redo to work -- wdr
 		this._oldData = widget.getData();
-		this._oldData.context = this._context;
+		this._oldData.context = context;
 		
 		this._newData = {
 			type: this._oldData.type,
@@ -63,7 +64,7 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 			children: this._children || this._oldData.children,
 			scripts: dojo.mixin({}, this._oldData.scripts, this._scripts),
 			states: this._oldData.states,
-			context: this._context
+			context: context
 		};
 		
 		// Some properties (such as Dojox Mobile's 'fixed' property) require that
@@ -75,12 +76,21 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 			// update model
 			widget.setProperties(this._newData.properties, true);
 			// refresh VE iframe
-			this._context.refresh();
+			// XXX ModifyCommand is called from CommandStack from within a
+			//    `dojo.withDoc`, which means that Dojo calls are working within
+			//    the context of the VE iframe. This causes issues when calling
+			//    refresh(), which expects to run within the app context. For
+			//    now, using a setTimeout, which will allow the stack to unroll
+			//    and finish the `withDoc` (restoring the document used by dojo).
+			//    See issue #1821 for more details.
+			setTimeout(function() {
+				context.visualEditor.refresh();
+			}, 0);
 			return;
 		}
 
-		if(this._context){
-			this._context.detach(widget);
+		if (context) {
+			context.detach(widget);
 		}	
 		
 		if(!this._oldData.properties.isTempID || this._properties.id){ // most likely are  permanent id
@@ -104,7 +114,7 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 		// so selection/focus box will be wrong upon creation.
 		// To fix, register an onload handler which calls updateFocus()
 		if(newWidget.domNode.tagName === 'IMG'){
-			ImageUtils.ImageUpdateFocus(newWidget, this._context);
+			ImageUtils.ImageUpdateFocus(newWidget, context);
 		}
 
 		parentWidget.addChild(newWidget,index);
@@ -113,8 +123,8 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 		this._newId = newWidget.id;
 
 		//davinci.ve.widget.addChild(parent, widget, index);
-		if(this._context){
-			this._context.attach(newWidget);
+		if (context) {
+			context.attach(newWidget);
 			newWidget.startup();
 			newWidget.renderWidget();
 		}

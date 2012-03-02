@@ -60,8 +60,8 @@ define([
 			this._disconnectAll();
 			this._destroyProperties();
 	
-			this.propDom.innerHTML = this._createWidgetRows(metadata.property);
-			if (this.propDom.innerHTML.indexOf('dojoType') !== -1) {
+			var rows = this.propDom.innerHTML = this._createWidgetRows(metadata.property);
+			if (rows.indexOf('dojoType') !== -1) {
 				dojo.parser.parse(this.propDom);
 			}
 			this._setValues();
@@ -69,17 +69,14 @@ define([
 		},
 		
 		onEditorSelected: function(editorChange) {
-			if (!editorChange) {
-				this._widget = null;
-				this.context = null;
+			if (editorChange && editorChange.editorID == "davinci.ve.HTMLPageEditor") {
+				// not all editors have a context
+				//FIXME: test for context instead?
+				this.context = editorChange.getContext();
+				this._widget = this.context.getSelection()[0];
 			} else {
-				if(editorChange.editorID == "davinci.ve.HTMLPageEditor"){ // not all editors have a context
-					this.context = editorChange.getContext();
-					this._widget = this.context.getSelection()[0];
-				}else{
-					this.context = null;
-					this._widget = null;
-				}
+				this.context = null;
+				this._widget = null;
 			}
 			this.onWidgetSelectionChange();
 		 },	
@@ -98,12 +95,7 @@ define([
 			
 				if(property.option){
 					this._pageLayout[this._pageLayout.length-1].values = dojo.map(property.option, function(option){ return option.value; });
-					
-					if(property.unconstrained){
-						this._pageLayout[this._pageLayout.length-1].type = "comboEdit";
-					}else{
-						this._pageLayout[this._pageLayout.length-1].type = "combo";
-					}
+					this._pageLayout[this._pageLayout.length-1].type = property.unconstrained ? "comboEdit" : "combo";
 				}
 			}
 			return HTMLStringUtil.generateTable(this._pageLayout);

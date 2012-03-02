@@ -11,9 +11,11 @@ define([
 		"dojo/data/ItemFileWriteStore",
 		"dijit/tree/ForestStoreModel",
 		"dijit/Tree",
-		"davinci/Runtime"
+		"davinci/Runtime",
+		 "dojo/_base/window"
 ], function(declare, veNls, ViewPart, BorderContainer,  ContentPane, ComboBox, 
-			DataGrid, States, ItemFileReadStore, ItemFileWriteStore, ForestStoreModel, Tree, Runtime
+			DataGrid, States, ItemFileReadStore, ItemFileWriteStore, ForestStoreModel, 
+			Tree, Runtime, win
 		    ){
 
 
@@ -193,11 +195,17 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			return;
 		}
 		var context = this._editor.getContext();
+		var iframe = context.getParentIframe();
 		if(!context || !context._statesLoaded){
 			return;
 		}
-		this._updateList();
-		this._updateSelection();
+		  // Call a callback with different 'global' values and context.
+		// FIXME this may not be needed after we fix issue #1821
+		 win.withDoc(document, function(){
+			  this._updateList();
+			  this._updateSelection();
+		 }, this);
+
 	},
 	
 	isThemeEditor: function() {

@@ -22,11 +22,25 @@ return declare("davinci.review.editor.Context", [Context], {
 			this.frame = dojo.create("iframe", dojo.mixin(this.iframeattrs, {
 				style: {
 					border: "0",
-					width: versionInfo.width&&versionInfo.height?versionInfo.width+"px":"100%",
-					height: versionInfo.width&&versionInfo.height?versionInfo.height+"px":"100%"
+					width: versionInfo.width && versionInfo.height ? versionInfo.width + "px" : "100%",
+					height: versionInfo.width && versionInfo.height ? versionInfo.height + "px" : "100%"
 				},
 				src: this.baseURL,
-				onload: dojo.hitch(this,function(){
+				onload: dojo.hitch(this,function(event){
+					var userDoc = (event && event.target && event.target.ownerDocument);
+					var dj = (userDoc && userDoc.defaultView && userDoc.defaultView.dojo);
+					if(dj && dj.subscribe){
+						dj.subscribe("/davinci/scene/selectionChanged", this, function(SceneManager, sceneId) {
+							if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
+								return; 
+							}
+							if(this._CommentView){
+								// WAYNE: Please review this logic, then remove this comment
+								this._CommentView.setCurrentScene(SceneManager, sceneId);
+							}							
+						});
+					}
+					this.rootNode = this.rootWidget = this.frame.contentDocument.body;
 					this._initDrawing();
 					dojo.publish("/davinci/review/context/loaded", 
 							[
@@ -34,7 +48,6 @@ return declare("davinci.review.editor.Context", [Context], {
 							 this.fileName,
 							 davinci.Runtime.commenting_commentId
 							 ]);
-					this.rootNode = this.rootWidget = this.frame.contentDocument.body;
 					var deviceName = this.rootNode.getAttribute('data-maqetta-device');
 					var svgfilename = (!deviceName || deviceName == 'none' || deviceName == 'desktop') 
 							? null : "app/preview/images/" + deviceName + ".svg";
@@ -55,7 +68,7 @@ return declare("davinci.review.editor.Context", [Context], {
 		//        Create the canvas for annotations, and wait for the shape definition
 		//        to add a shape. The shapes will be created one by one.
 		//        Shapes with commentId, state and colorAlias(reviewer)
-		var doc = this.containerNode.ownerDocument, 
+		var doc = this.frame.contentDocument, 
 			surface;
 		if (!doc.annotationSurface) {
 			surface = doc.annotationSurface = new Surface(doc.body, doc);

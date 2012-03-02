@@ -5,11 +5,7 @@ define([
 	"davinci/Runtime",
 ], function(declare, Action, PublishAction, Runtime) {
 
-if (typeof davinci.review.actions === "undefined") {
-	davinci.review.actions = {};
-}
-
-var RestartVersionAction = davinci.review.actions.RestartVersionAction = declare("davinci.review.actions.RestartVersionAction", Action, {
+var RestartVersionAction = declare("davinci.review.actions.RestartVersionAction", [Action], {
 
 	run: function(context) {
 		var selection = Runtime.getSelection();

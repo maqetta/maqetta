@@ -4,11 +4,7 @@ define([
 	"davinci/Runtime",
 ], function(declare, Action, Runtime) {
 
-if (typeof davinci.review.actions === "undefined") {
-	davinci.review.actions = {};
-}
-
-var ViewFileAction = davinci.review.actions.ViewFileAction = declare("davinci.review.actions.ViewFileAction", Action, {
+var ViewFileAction = declare("davinci.review.actions.ViewFileAction", [Action], {
 
 	run: function(context) {
 		var selection = Runtime.getSelection();

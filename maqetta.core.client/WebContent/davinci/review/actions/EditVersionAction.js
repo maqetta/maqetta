@@ -7,12 +7,12 @@ define([
 	"dojo/i18n!./nls/actions"
 ], function(declare, Action, PublishAction, Runtime, Toaster, nls) {
 
-return declare("davinci.review.actions.EditVersionAction", Action, {
+return declare("davinci.review.actions.EditVersionAction", [Action], {
 
 	run: function(context) {
 		var selection = Runtime.getSelection();
 		if(!selection) return;
-		var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
+		var item = selection[0].resource.elementType == "ReviewFile" ? selection[0].resource.parent : selection[0].resource;
 		var action = new PublishAction(item);
 		action.run();
 	},
@@ -22,7 +22,7 @@ return declare("davinci.review.actions.EditVersionAction", Action, {
 	},
 
 	isEnabled: function(context) {
-		if(davinci.Runtime.getRole()!="Designer") {
+		if (davinci.Runtime.getRole() != "Designer") {
 			return false;
 		}
 		var selection = Runtime.getSelection();

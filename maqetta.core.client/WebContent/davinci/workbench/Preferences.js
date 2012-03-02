@@ -2,9 +2,10 @@ define([
 //    "../Workbench",
     "../Runtime",
     "dijit/Dialog",
+    "dijit/Tree",
     "dojo/i18n!./nls/workbench",
     "dojo/i18n!dijit/nls/common"
-], function(/*Workbench,*/ Runtime, Dialog, workbenchStrings, commonStrings) {
+], function(/*Workbench,*/ Runtime, Dialog, Tree, workbenchStrings, commonStrings) {
 
 var Preferences = {
 	_allPrefs: {},
@@ -67,14 +68,15 @@ var Preferences = {
 		
 		var dojoTree = dijit.byId("prefTree");
 		if(!dojoTree) {
-			dojoTree = new dijit.Tree({
+			dojoTree = new Tree({
 				model: forestModel, 
-				id:'prefTree',
-				query:"{type:'directory'}",
-				label:"Preferences", 
+				id: 'prefTree',
+				persist: false,
+				query: "{type:'directory'}",
+				label: "Preferences", 
 				labelAttr: "name", 
 				showRoot: false,
-				childrenAttrs:"children"
+				childrenAttrs: "children"
 			});
 		}
 		dojoTree.onClick = function(node) { Preferences.setPaneContent(node); };

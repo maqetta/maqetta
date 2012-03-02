@@ -43,6 +43,7 @@ define(["dojo/_base/declare",
 		
 		buildRendering: function(){
 			this.domNode =   dojo.doc.createElement("div");
+			this.domNode
 			this.container =   dojo.doc.createElement("div");
 			dojo.addClass(this.container,"showCascade");
 			this.domNode.appendChild(this.container);
@@ -332,7 +333,7 @@ define(["dojo/_base/declare",
 			return this._shorthands;
 		},
 		
-		_onChangeOverride : function(){
+		_onChangeOverride : function(e){
 			alert(veNLS.valueIsOverriden);
 			return false;
 		},
@@ -449,16 +450,16 @@ define(["dojo/_base/declare",
 				var rule = allRules[i].rule;
 				if(rule){
 					for(var k=0;k<shorthands.length;k++){
-						if(allRules[i].type!="element.style" && allRules[i].rule.getProperty(shorthands[i])!=null){
-							allRules[i].shorthand = shorthands[i];
-							var prop = rule.getProperty(shorthands[i]);
+						if(allRules[i].type!="element.style" && allRules[i].rule.getProperty(shorthands[k])!=null){
+							allRules[i].shorthand = shorthands[k];
+							var prop = rule.getProperty(shorthands[k]);
 							allRules[i].value = prop && prop.value;
 							
 							this._hasOverride = true;
 							
-						}else if(allRules[i].type=="element.style" && dojo.indexOf(allRules[i].rule, shorthands[i])>-1){
-							allRules[i].shorthand = shorthands[i];
-							var index = dojo.indexOf(allRules[i].rule, shorthands[i]);
+						}else if(allRules[i].type=="element.style" && dojo.indexOf(allRules[i].rule, shorthands[k])>-1){
+							allRules[i].shorthand = shorthands[k];
+							var index = dojo.indexOf(allRules[i].rule, shorthands[k]);
 							allRules[i].value = rule[index];
 							this._hasOverride = true;
 						}
@@ -735,7 +736,9 @@ define(["dojo/_base/declare",
 					this._handles.push(dojo.connect(widget, "onClick", this, "_onChangeOverride"));
 				}else{
 					var node = dojo.byId(this.targetField);
-					this._handles.push(dojo.connect(node, "onclick", this, "_onChangeOverride"));
+					if (node){
+						this._handles.push(dojo.connect(node, "onclick", this, "_onChangeOverride"));
+					}
 				}
 				
 				return;
@@ -822,7 +825,18 @@ define(["dojo/_base/declare",
 				var md = meta.states[state].selectors;
 				for(var name in md){
 					for(var c=0;c<md[name].length;c++){
-						if(this._isTarget(md[name][c])) return name;
+						if(this._isTarget(md[name][c])){
+							if (meta.rootSelectors) {
+								for (var i = 0; i < meta.rootSelectors.length; i++){
+									if (name == meta.rootSelectors[i]){
+										// if the selector is in the rootSelectors array then apply this
+										// prop to the node element by default
+										return "element.style";
+									}
+								}
+							}
+							return name;
+						}
 					}
 				}
 			}

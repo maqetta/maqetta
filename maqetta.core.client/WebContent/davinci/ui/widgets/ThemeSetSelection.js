@@ -7,25 +7,17 @@ define(["dojo/_base/declare",
         "davinci/Runtime",
         "davinci/Workbench",
         "davinci/ve/commands/ChangeThemeCommand",
-        "dijit/Menu",
-        "dijit/MenuItem",
-        "davinci/model/Path",
-        "dijit/form/DropDownButton",
         "dijit/Dialog",
         "dojo/i18n!davinci/ui/nls/ui",
         "dojo/i18n!dijit/nls/common",
         "dijit/Dialog",
         "dijit/form/Button",
-        "dijit/form/TextBox",
-        "dijit/form/RadioButton",
-        "dijit/layout/ContentPane",
-        "dijit/Tree",
         "dijit/form/Select",
         "davinci/Theme"
     	
 ],function(declare, _Templated, _Widget,  Library, Resource,  Preferences, Runtime, Workbench,
-			ChangeThemeCommand, Menu, MenuItem, Path, DropDownButton, Dialog, uiNLS, commonNLS,
-			Dialog, Button, TextBox, RadioButton, ContentPane, Tree, Select, Theme){
+			ChangeThemeCommand, Dialog, uiNLS, commonNLS,
+			Dialog, Button, Select, Theme){
 	return declare("davinci.ui.widgets.ThemeSetSelection", null, {
 
 	    workspaceOnly : false,

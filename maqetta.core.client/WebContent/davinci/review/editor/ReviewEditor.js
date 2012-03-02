@@ -49,6 +49,8 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 	},
 
 	focus : function() {
+		var cv = dijit.byId("davinci.ui.comment");
+		cv && cv.getParent().selectChild(cv);
 	},
 
 

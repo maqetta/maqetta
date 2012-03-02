@@ -30,15 +30,15 @@ return declare("davinci.ve.themeEditor.SelectTool", [SelectTool], {
 		 * widgets with attribute dvThemeWidget="true" are selectable.
 		 * 
 		 */
-		if(!widget) { //#1024
-		    this._context._editor._selectedWidget
-		    var cmd = new StateChangeCommand({
-		        _themeEditor: this._context._editor,
-	            _widget: this._context._editor._selectedWidget, 
-	            _newState: this._context._editor._currentState,
-	            _oldState: this._context._editor._oldState,
-	            _firstRun: true
-	        });
+		if (!widget) { //#1024
+			var editor = this._context.editor,
+				cmd = new StateChangeCommand({
+			        _themeEditor: editor,
+		            _widget: editor._selectedWidget, 
+		            _newState: editor._currentState,
+		            _oldState: editor._oldState,
+		            _firstRun: true
+		        });
 		    setTimeout(function (){cmd.execute();},500);
 		    
 			return;

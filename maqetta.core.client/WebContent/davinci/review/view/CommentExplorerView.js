@@ -29,6 +29,7 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 		//FIXME: try using dijit.Tree and davinci.ui.widgets.TransformTreeMixin instead of ToggleTree
 		this.tree = new ToggleTree({
 			id: "reviewCommentExplorerViewTree",
+			persist: false,
 			showRoot: false,
 			model: model,
 			labelAttr: "name", 

@@ -42,18 +42,19 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
         } else {
             this.addThemeSet(newThemeInfo);
         }
-        var text = this._context.getModel().getText();
-        this._context._editor.setContent(this._context._editor.fileName, text);
-        this._context._configDojoxMobile();
-        var device = this._context.getMobileDevice() || 'none';
+        var context = this._context,
+            editor = context.editor,
+            text = context.getModel().getText();
+        editor.setContent(editor.fileName, text);
+        context._configDojoxMobile();
+        var device = context.getMobileDevice() || 'none';
         if (device != 'none'){
             device = silhouetteiframe.themeMap[device+'.svg'];
         }
-        var dm = this._context.getDojo().getObject("dojox.mobile", true);
+        var dm = context.getDojo().getObject("dojox.mobile", true);
         if (dm && dm.loadDeviceTheme){
         	dm.loadDeviceTheme(device);
         }
-        
     },
     
         

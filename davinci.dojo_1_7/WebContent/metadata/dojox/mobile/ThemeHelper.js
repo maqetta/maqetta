@@ -19,12 +19,10 @@ return {
 	},
 	
 	preThemeConfig: function(context) {
-		
         var dm = context.getDojo().getObject("dojox.mobile", true);
-        var base = context._visualEditor.theme.base;
+        var base = context.visualEditor.theme.base;
         dm.themeFiles = [];
-        dm.themeMap=[[".*",base,[context._visualEditor.theme.files[0]]]];
-
+        dm.themeMap=[[".*",base,[context.visualEditor.theme.files[0]]]];
 	},
 	
 	getHeadImports: function(theme){

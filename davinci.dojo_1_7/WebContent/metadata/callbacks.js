@@ -191,8 +191,8 @@
 		},
 		hideAppStates: function(){
 			if(this.context.declaredClass == 'davinci.ve.Context'){
-				var device = (this.context && this.context._visualEditor && this.context._visualEditor.getDevice) ?
-						this.context._visualEditor.getDevice() : "";
+				var ve = this.context && this.context.visualEditor,
+					device = (ve && ve.getDevice) ? ve.getDevice() : "";
 				return (!device || device === '' || device === 'none') ? false : true;
 			}else if(this.context.declaredClass == 'davinci.review.editor.Context'){
 				var body = this.context.rootNode;

@@ -79,8 +79,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		this._contentStyleSheet = Workbench.location() + require.toUrl("davinci/ve/resources/content.css");
 		this._id = "_edit_context_" + this._contextCount++;
-		this._editor = args.editor;
-		this._visualEditor = args.visualEditor;
 		this.widgetHash = {};
 		
 		dojo.mixin(this, args);
@@ -184,7 +182,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
         var mobileDevice = this.getMobileDevice();
         if (mobileDevice) {
             this.setMobileDevice(mobileDevice);
-            this._visualEditor.setDevice(mobileDevice, true);
+            this.visualEditor.setDevice(mobileDevice, true);
         }
     },
     
@@ -681,7 +679,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// try to find the theme using path magic
 
 		var ro = metadata.loadThemeMeta(model);
-		//this._editor._visualChanged(); // do not know why we are calling this handler method inline
+		//this.editor._visualChanged(); // do not know why we are calling this handler method inline
 		return ro;
 	},
 	
@@ -698,12 +696,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			dojo.disconnect(handle);
 			dojo.publish('/davinci/ui/selectionChanged', [
 				[{ model: this.model.evaluate(xpath) }],
-				this._editor
+				this.editor
 			]);
 		});
 
 		// set new content in Visual Editor (eventually kicks `connect` above)
-		var ve = this._visualEditor;
+		var ve = this.visualEditor;
 		ve.setContent(ve.fileName, this.model);
 	},
 
@@ -831,7 +829,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
     
 	_setSource: function(source, callback, scope, newHtmlParams){
 		// Get the helper before creating the IFRAME, or bad things happen in FF
-		var helper = Theme.getHelper(this._visualEditor.theme);
+		var helper = Theme.getHelper(this.visualEditor.theme);
 
 		this._srcDocument=source;
 		
@@ -969,7 +967,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 						", top.loading" + this._id + ");</script>";
 			}
 			if (helper && helper.getHeadImports){
-			    head += helper.getHeadImports(this._visualEditor.theme);
+			    head += helper.getHeadImports(this.visualEditor.theme);
 			} else if(source.themeCssfiles) { // css files need to be added to doc before body content
 				head += '<style type="text/css">' +
 						source.themeCssfiles.map(function(file) {
@@ -1018,7 +1016,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 					var requires = context._bootstrapModules.split(",");
 					if (requires.indexOf('dijit/dijit-all') != -1){
-						// this is needed for FF4 to keep dijit._editor.RichText from throwing at line 32 dojo 1.5						
+						// this is needed for FF4 to keep dijit.editor.RichText from throwing at line 32 dojo 1.5
 						win.dojo._postLoad = true;
 					}
 
@@ -1177,8 +1175,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 			data.bodyClasses = data.bodyClasses.replace(new RegExp("\\b"+oldThemeName+"\\b","g"),newThemeName);
 
-			if(this._editor && this._editor.visualEditor && this._editor.visualEditor._onloadMessages){
-				this._editor.visualEditor._onloadMessages.push(dojo.replace(
+			if(this.editor && this.editor.visualEditor && this.editor.visualEditor._onloadMessages){
+				this.editor.visualEditor._onloadMessages.push(dojo.replace(
 					"Warning. File refers to CSS theme '{0}' which is not in your workspace. Using CSS theme '{1}' instead.", //FIXME: Needs to be globalized
 					[oldThemeName, newThemeName]));
 			}
@@ -1363,7 +1361,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	_editorSelectionChange: function(event){
 		// we should only be here do to a dojo.parse exception the first time we tried to process the page
 		// Now the editor tab container should have focus becouse the user selected it. So the dojo.processing should work this time
-		if (event.editor.fileName === this._editor.fileName){
+		if (event.editor.fileName === this.editor.fileName){
 			dojo.unsubscribe(this._editorSelectConnection);
 			delete this._editorSelectConnection;
 			this._setSource(this._srcDocument, null, null, null);
@@ -2243,10 +2241,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				this.select(w, true); // add
 			}
 		}, this);
-		if (this._editor.editorID == 'davinci.ve.ThemeEditor'){
-			var helper = Theme.getHelper(this._visualEditor.theme);
+		if (this.editor.editorID == 'davinci.ve.ThemeEditor'){
+			var helper = Theme.getHelper(this.visualEditor.theme);
 			if(helper && helper.onContentChange){
-				helper.onContentChange(this, this._visualEditor.theme);
+				helper.onContentChange(this, this.visualEditor.theme);
 			}
 		}
 		setTimeout(function(){
@@ -2426,7 +2424,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// For theme editor, we need to use whatever state is selected in States palette
 		// For page editor, always use "Normal"
 		var state = "Normal";
-		if (this._editor.editorID == 'davinci.ve.ThemeEditor'){
+		if (this.editor.editorID == 'davinci.ve.ThemeEditor'){
 			state = davinci.ve.states.getState();
 		}
 		

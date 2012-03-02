@@ -126,9 +126,10 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 			//But easier said than done because of the way the Workbench works.
 			//Current Workbench doesn't support icons that can toggle based on
 			//product state.
-			var editorRootElement;
-			if(this.context && this.context._visualEditor && this.context._visualEditor._pageEditor){
-				editorRootElement = this.context._visualEditor._pageEditor._rootElement;
+			var editorRootElement,
+				ve = this.context && this.context.visualEditor;
+			if (ve && ve._pageEditor) {
+				editorRootElement = ve._pageEditor._rootElement;
 			}
 			var rotateIconNode = dojo.query('.rotateIcon',editorRootElement)[0];
 			var ccwClass = 'rotateIconCCW';

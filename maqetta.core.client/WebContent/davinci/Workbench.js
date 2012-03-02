@@ -515,6 +515,7 @@ var Workbench = {
 			if (this.cancel) {
 				myDialog.hide();
 			}
+			myDialog.destroy();
 		});
 		myDialog.show();
 	},

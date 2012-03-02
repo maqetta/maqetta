@@ -68,6 +68,26 @@
 				dojo.publish("/davinci/scene/selectionChanged", [this, child.id]);
 			}
 		},
+		_reviewEditorSceneChange: function(docContext){
+			if(docContext == this.context && docContext.declaredClass == 'davinci.review.editor.Context'){
+				var dj = docContext.getDojo();
+				var _dijit = dj ? dj.dijit : null;
+				if(_dijit){
+					var views = dj.query('.mblView');
+					for(var i=0; i<views.length; i++){
+						var view = views[i];
+						if(view.id){
+							var viewDijit = _dijit.byId(view.id);
+							if(viewDijit){
+								viewDijit.onAfterTransitionIn = function(sm, viewId, moveTo, dir, transition, context, method){
+									dojo.publish("/davinci/scene/selectionChanged", [sm, viewId]);
+								}.bind(this, this, view.id);
+							}
+						}
+					}
+				}
+			}
+		},
 		selectScene: function(params){
 			var sceneId = params.sceneId;
 			var dj = this.context.getDojo();
@@ -222,7 +242,11 @@
 //        init: function(args) {
 //        },
 		onDocInit: function(context){
-			context.registerSceneManager(new DojoMobileViewSceneManager(context));
+			var sm = new DojoMobileViewSceneManager(context);
+			context.registerSceneManager(sm);
+			dojo.subscribe('/davinci/ui/context/statesLoaded', function(docContext){
+				sm._reviewEditorSceneChange(docContext);
+			});
 //		},
         
 //        onFirstAdd: function(type, context) {

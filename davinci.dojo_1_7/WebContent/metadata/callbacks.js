@@ -1,5 +1,4 @@
 (function() {
-	
 	/**
 	 * API for SceneManager plugins to Maqetta plug
 	 * 
@@ -17,6 +16,7 @@
 	 *		NOTE: Called from both page editor (widget helpers available) and review editor (widget helpers not available).
 	 *		@param {object} params  Has following properties
 	 *			params.sceneId - Unique ID for the selected scene. (Unique ID created by this SceneManager)
+	 *		@returns {boolean}	Return true is a scene was selected
 	 * 
 	 * getCurrentScene()
 	 *		If there is a currently active scene, return its sceneId, else return null.
@@ -72,6 +72,7 @@
 			var sceneId = params.sceneId;
 			var dj = this.context.getDojo();
 			var domNode = dj.byId(sceneId);
+			var sceneSelected = null;
 			if(this.context.declaredClass == 'davinci.ve.Context'){
 				if(domNode){
 					var widget = domNode._dvWidget;
@@ -79,6 +80,7 @@
 						var helper = widget.getHelper();
 						if(helper && helper._updateVisibility){
 							helper._updateVisibility(domNode);
+							sceneSelected = sceneId;
 						}
 					}
 				}
@@ -115,7 +117,12 @@
 						}
 					}
 				}
+				sceneSelected = (viewsToUpdate.length>0) ? sceneId : null;
 			}
+			if(sceneSelected){
+				dojo.publish("/davinci/scene/selectionChanged", [this, sceneSelected]);
+			}
+			return sceneSelected;
 		},
 		getCurrentScene: function(){
 			var currentScene, viewDijit;

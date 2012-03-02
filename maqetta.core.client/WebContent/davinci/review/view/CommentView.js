@@ -115,6 +115,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		});
 
 		dojo.subscribe("/davinci/review/context/loaded", this, function(context, pageName){
+			context._CommentView = this;
+			
 			// summary:
 			//		Load the comments when the page is loaded
 			//		Collapse all the comments
@@ -150,6 +152,23 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					this._cached[this._currentPage].pageState = state;
 					dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [state, []]);
 				});
+			}
+			
+			// If any plugin SceneManagers, get the current scene
+			var sceneManagers = context.sceneManagers;
+			var sceneId;
+			for(var smIndex in sceneManagers){
+				var sm = sceneManagers[smIndex];
+				if(sm.getCurrentScene){
+					var sceneId = sm.getCurrentScene();
+					if(sceneId){
+						break;
+					}
+				}
+			}
+			if(sceneId){
+				// WAYNE: Please review this logic, then remove this comment
+				this.setCurrentScene(sm, sceneId);
 			}
 		});
 
@@ -930,7 +949,14 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				}
 			}
 		})]).play();
+	},
+	
+	setCurrentScene: function(SceneManager, sceneId){
+		//WAYNE: This needs implementation. Probably need to stuff into _cached and call dojo.publish
+		//this._cached[this._currentPage].pageSceneId = sceneId;
+		//dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [state, []]);
 	}
+	
 
 });
 });

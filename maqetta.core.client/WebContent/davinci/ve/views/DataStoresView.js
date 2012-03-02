@@ -160,11 +160,12 @@ return declare("davinci.ve.views.DataStoresView", [ViewPart], {
         };
 
 
-        var tree = new dijit.Tree({model: treeModel,
-                                                getIconClass: getIconClass,
-                                                dragSources: dragSources
-                                               }
-                                               , "dataSourcesTree");
+        var tree = new Tree({
+	        	model: treeModel,
+	        	persist: false,
+	        	getIconClass: getIconClass,
+	        	dragSources: dragSources
+	        }, "dataSourcesTree");
         var popup = Workbench.createPopup({ partID: 'davinci.ve.datastores',
             domNode: tree.domNode, openCallback: tree.getMenuOpenCallback()});
         

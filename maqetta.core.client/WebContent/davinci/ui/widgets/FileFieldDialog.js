@@ -21,7 +21,7 @@ return declare("davinci.ui.widgets.FileFieldDialog", WidgetLite, {
 	_fileSelectionDialog: null,
 	
 	buildRendering: function(){
-		this.domNode =   dojo.doc.createElement("div",{style:"width:100%"});
+		this.domNode = dojo.doc.createElement("div",{style:"width:100%"});
 		this._textField = getId();
 		this._button = getId();
 		var template="<div style='float:right;'><button type='button' style='font-size:1em;' id='" + this._button + "'>...</button></div>";
@@ -30,9 +30,8 @@ return declare("davinci.ui.widgets.FileFieldDialog", WidgetLite, {
 		this.inherited(arguments);
 	},
 
-	startup : function(){
+	startup: function(){
 		this.inherited(arguments);
-		var data={file  : null};
 		this._button = dojo.byId(this._button);
 		dojo.connect(this._button, "onclick", this, function() {
 			this._showFileSelectionDialog();
@@ -44,13 +43,14 @@ return declare("davinci.ui.widgets.FileFieldDialog", WidgetLite, {
 	
 	_showFileSelectionDialog: function() {
 		this._fileSelectionDialog = new Dialog({
-			title : uiNLS.selectFile,
-			style : "width:275px;height:220px;background-color:white;"
+			title: uiNLS.selectFile,
+			style: "width:275px;height:220px;background-color:white;"
 		});
 
 		//Set-up file selection tree
 		var treeParms= {  
 			id: "fileFieldDialogFileSelectionTree",
+			persist: false,
 			style: "height:10em;overflow:auto;margin-bottom:10px;",
 			model: system.resource,
 			filters: "new system.resource.FileTypeFilter(parms.fileTypes || '*');" //See #1725
@@ -76,9 +76,9 @@ return declare("davinci.ui.widgets.FileFieldDialog", WidgetLite, {
 		var okLabel = dijitLangObj.buttonOk;
 		var okStyle = 'padding:8px;';
 		var okBtn = new Button({
-			label : okLabel,
-			style : okStyle, /* type:"submit", */
-			onClick : dojo.hitch(this, okClicked)
+			label: okLabel,
+			style: okStyle, /* type:"submit", */
+			onClick: dojo.hitch(this, okClicked)
 		});
 		this._fileSelectionDialog.containerNode.appendChild(okBtn.domNode);
 		
@@ -94,12 +94,12 @@ return declare("davinci.ui.widgets.FileFieldDialog", WidgetLite, {
 		this._fileSelectionDialog.show();
 	},
 	
-	_setBaseLocationAttr : function(baseLocation){
+	_setBaseLocationAttr: function(baseLocation){
 		// this is the directory to make everything relative to. also the first directory to show
 		this._baseLocation = baseLocation;
 	},
 	
-	_setValueAttr : function(value){
+	_setValueAttr: function(value){
 		 if(this.value!= value ){
 			this.value = value;
 			var _textField = dojo.byId(this._textField);
@@ -107,7 +107,7 @@ return declare("davinci.ui.widgets.FileFieldDialog", WidgetLite, {
 		 }
 	},
 	
-	_onChange : function(){
+	_onChange: function(){
 		var _textField = dojo.byId(this._textField);
 		var v1 = dojo.attr(_textField, "value");
 		
@@ -116,15 +116,15 @@ return declare("davinci.ui.widgets.FileFieldDialog", WidgetLite, {
 		
 		if(this.value!=value){			
 			this.value = value;
-			var _textField = dojo.byId(this._textField);
-			dojo.attr(_textField, 'value', this.value);
+			var textField = dojo.byId(this._textField);
+			dojo.attr(textField, 'value', this.value);
 			this.onChange(value);
 		}
 	},
 	
-	onChange : function(event){},
+	onChange: function(event){},
 	
-	_getValueAttr : function(){
+	_getValueAttr: function(){
 		return  dojo.attr(this._textField, "value");	
 	},
 	

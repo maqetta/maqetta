@@ -140,7 +140,8 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		};
 		var sourceTree = this.sourceTree = new dijitTree({
 			id: "reviewWizardSourceTree",
-			showRoot:false,
+			persist: false,
+			showRoot: false,
 			model: sourceTreeModel, 
 			labelAttr: "name", 
 			getIconClass: dojo.hitch(this, this._getIconClass),

@@ -110,12 +110,12 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			dojo.publish(this._currentPage+"/davinci/review/drawing/addShape", ["[]", true]);
 			this._destroyCommentWidgets();
 			this._render();
-			dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [this._cached[this._currentPage].pageState, []]);
+			dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: this._cached[this._currentPage].pageState}, []]);
 
 		});
 
 		dojo.subscribe("/davinci/review/context/loaded", this, function(context, pageName){
-			context._CommentView = this;
+			context._commentView = this;
 			
 			// summary:
 			//		Load the comments when the page is loaded
@@ -138,7 +138,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					that._updateToolbar({editor:context});
 					// Show annotations
 					that._reviewFilterChanged(); // Set reviewer list to be shown
-					dojo.publish(that._currentPage+"/davinci/review/drawing/filter", ["Normal", []]);
+					dojo.publish(that._currentPage+"/davinci/review/drawing/filter", [{pageState: "Normal"}, []]);
 				}, 100);
 			}
 			// Response to the state change event in the review editor
@@ -150,24 +150,23 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					}
 					var state = args.newState || "Normal";
 					this._cached[this._currentPage].pageState = state;
-					dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [state, []]);
+					dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: state}, []]);
 				});
 			}
 			
 			// If any plugin SceneManagers, get the current scene
 			var sceneManagers = context.sceneManagers;
 			var sceneId;
-			for(var smIndex in sceneManagers){
+			for (var smIndex in sceneManagers) {
 				var sm = sceneManagers[smIndex];
-				if(sm.getCurrentScene){
-					var sceneId = sm.getCurrentScene();
-					if(sceneId){
+				if (sm.getCurrentScene) {
+					sceneId = sm.getCurrentScene();
+					if (sceneId) {
 						break;
 					}
 				}
 			}
-			if(sceneId){
-				// WAYNE: Please review this logic, then remove this comment
+			if (sceneId) {
 				this.setCurrentScene(sm, sceneId);
 			}
 		});
@@ -566,7 +565,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				[
 				 Runtime.commenting_reviewerName.userName,
 				 form.commentId,
-				 comment.pageState
+				 comment.pageState,
+				 comment.viewScene
 		]);
 	},
 
@@ -591,7 +591,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				[
 				 Runtime.commenting_reviewerName.userName,
 				 form.commentId,
-				 this._cached[this._currentPage].pageState
+				 this._cached[this._currentPage].pageState,
+				 this._cached[this._currentPage].viewScene
 		]);
 	},
 
@@ -613,7 +614,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			if (this.states) { 
 				this.states.setState(widget.pageState);
 			}
-			this.publish(this._currentPage + "/davinci/review/drawing/filter", [widget.pageState, focusedComments]);
+			this.publish(this._currentPage + "/davinci/review/drawing/filter", [{pageState: widget.pageState}, focusedComments]);
 		}
 	},
 
@@ -630,7 +631,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			}
 		}
 
-		this.publish(this._currentPage+"/davinci/review/drawing/filter", [widget.pageState, focusedComments]);
+		this.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: widget.pageState}, focusedComments]);
 	},
 
 	_onCommentFormCancel: function() {
@@ -641,7 +642,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		if (focusedComments.length > 0) {
 			this.commentIndices[focusedComments[0]].show();
 		}
-		dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [pageState, focusedComments]);
+		dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: pageState}, focusedComments]);
 	},
 
 	_updateToolbar: function(args) {
@@ -837,7 +838,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				 //Runtime.commenting_reviewerName.userName,
 				 Runtime.userName,
 				 form.commentId,
-				 this._cached[this._currentPage].pageState
+				 this._cached[this._currentPage].pageState,
+				 this._cached[this._currentPage].viewScene
 				 ]);
 	},
 
@@ -952,9 +954,9 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 	},
 	
 	setCurrentScene: function(SceneManager, sceneId){
-		//WAYNE: This needs implementation. Probably need to stuff into _cached and call dojo.publish
-		//this._cached[this._currentPage].pageSceneId = sceneId;
-		//dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [state, []]);
+		this._cached[this._currentPage].pageSceneId = sceneId;
+		var focusedComments = this._cached[this._currentPage].focusedComments;
+		dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{viewScene: sceneId}, focusedComments]);
 	}
 	
 

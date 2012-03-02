@@ -23,6 +23,7 @@ import org.maqetta.server.Command;
 public class UpdateComment extends Command {
 	boolean isUpdateStatus;
 	
+	@Override
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user)
 			throws IOException {
 		String designerName = ((ReviewObject) req.getSession().getAttribute(
@@ -65,6 +66,9 @@ public class UpdateComment extends Command {
 		paramValue = req.getParameter(Comment.PAGE_STATE);
 		comment.setPageState(paramValue);
 
+		paramValue = req.getParameter(Comment.VIEW_SCENE);
+		comment.setViewScene(paramValue);
+
 		paramValue = req.getParameter(Comment.SUBJECT);
 		comment.setSubject(paramValue);
 
@@ -100,6 +104,8 @@ public class UpdateComment extends Command {
 					existingComment.setContent(comment.getContent());
 				if (comment.getPageState() != null)
 					existingComment.setPageState(comment.getPageState());
+				if (comment.getViewScene() != null)
+					existingComment.setViewScene(comment.getViewScene());
 				if (comment.getSubject() != null)
 					existingComment.setSubject(comment.getSubject());
 				if (comment.getDrawingJson() != null)

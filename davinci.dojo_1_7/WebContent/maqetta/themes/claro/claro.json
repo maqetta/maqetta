@@ -349,6 +349,7 @@
         "AccordionContainer": {
             "displayName": "AccordionContainer" ,
 			"startState": "Selected",
+			"rootSelectors":[".claro .dijitAccordionContainer"],
             "states": {
                 "Normal": {
 					"selectors": {
@@ -519,6 +520,7 @@
         },
 		"BorderContainer": {
             "displayName": "BorderContainer",
+            "rootSelectors":[".claro .dijitBorderContainer"],
             "states": {
                 "Normal": {
 					"selectors": {
@@ -793,6 +795,7 @@
         
         "Calendar": {
             "displayName": "Calendar" ,
+            "rootSelectors":[".claro .dijitCalendar"],
             "states": {
                 "Normal": { 
                 	"elements":{ 
@@ -1011,6 +1014,7 @@
         
         "CheckBox": {
             "displayName": "CheckBox" ,
+            "rootSelectors":[".claro .dijitCheckBox"],
             "states": {
                 "Normal": {  },
                 "Disabled": {},
@@ -1047,6 +1051,7 @@
          
         "ComboBox": {
             "displayName": "ComboBox" ,
+            "rootSelectors":[".claro .dijitComboBox .dijitButtonNode"],
             "states": {
                 "Normal": {
                  	"selectors": {
@@ -1094,6 +1099,7 @@
         
         "ContentPane": {
             "displayName": "ContentPane" ,
+            "rootSelectors":[".claro .dijitContentPane"],
             "states": {
                 "Normal": {  }
              } 
@@ -1101,6 +1107,7 @@
 		
 		"Menu": {
             "displayName": "Menu" ,
+            "rootSelectors":[".claro .dijitMenu"],
             "states": {
                 "Normal": {
 					"selectors": {
@@ -1282,6 +1289,7 @@
         /* This only applies to Tab Container with tab at top of container. */
         "TabContainer": { 
             "displayName": "TabContainer" ,
+            "rootSelectors":[".claro .dijitTabContainer"],
             "states": {
                 "Normal": {
                             "selectors": {
@@ -1489,6 +1497,7 @@
         
         "TextBox": {
             "displayName": "TextBox" ,
+            "rootSelectors":[".claro .dijitTextBox"],
             "states": {
                 "Normal": {
                     "selectors": {
@@ -1524,6 +1533,7 @@
         
         "ValidationTextBox": {
             "displayName": "ValidationTextBox" ,
+            "rootSelectors":[".claro .dijitTextBox"],
             "states": {
                 "Normal": {
                     "selectors": {
@@ -1559,6 +1569,7 @@
         
         "NumberTextBox": {
             "displayName": "NumberTextBox" ,
+            "rootSelectors":[".claro .dijitTextBox"],
             "states": {
                 "Normal": {
                     "selectors": {
@@ -1594,6 +1605,7 @@
          
         "TitlePane": {
             "displayName": "TitlePane" ,
+            "rootSelectors":[".claro .dijitTitlePane"],
             "states": {
                 "Normal": {
 					"selectors": {
@@ -1759,6 +1771,7 @@
 		
         "Toolbar": {
             "displayName": "Toolbar",
+            "rootSelectors":[".claro .dijitToolbar"],
             "states": {
                 "Normal": {
                 }
@@ -1800,6 +1813,7 @@
         },
         "Dialog": {
             "displayName": "Dialog",
+            "rootSelectors":[".claro .dijitDialog"],
             "states": {
                 "Normal": {
                 }
@@ -1889,6 +1903,7 @@
         },
         "Tooltip": {
             "displayName": "Tooltip",
+            "rootSelectors":[".claro .dijitTooltipContainer"],
             "states": {
                 "Normal": {
 					"selectors": {

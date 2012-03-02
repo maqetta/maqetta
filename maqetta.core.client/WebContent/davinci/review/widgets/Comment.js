@@ -45,6 +45,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 					previous: this.previous,
 					next: this.next,
 					pageState: this.pageState,
+					viewScene: this.viewScene,
 					pageName: this.pageName,
 					replyTo: this.replyTo || 0,
 					drawingJson: this.drawingJson,
@@ -101,8 +102,10 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 			dojo.style(this.editButton, "display", "none");
 			dojo.style(this.replyButton, "display", "none");
 		}
-		davinci.Runtime.commenting_reviewerName = davinci.Runtime.commenting_reviewerName || {};
-		davinci.Runtime.commenting_reviewerName.userName = davinci.Runtime.commenting_reviewerName.userName || davinci.Runtime.userName;
+		davinci.Runtime.commenting_reviewerName = {};
+		davinci.Runtime.commenting_reviewerName.userName = davinci.Runtime.getDesigner();
+		davinci.Runtime.commenting_reviewerName.email = davinci.Runtime.getDesignerEmail();
+
 		if (davinci.Runtime.commenting_reviewerName.userName != this.ownerId) {
 			dojo.style(this.editButton,"display","none");
 		}
@@ -187,6 +190,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 				subject:  this.subject,
 				content:  this.content,
 				pageState:  this.pageState,
+				viewScene: this.viewScene,
 				drawingJson: this.drawingJson,
 				type: this.type,
 				severity: this.severity,

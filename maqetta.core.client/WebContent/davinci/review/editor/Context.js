@@ -29,14 +29,13 @@ return declare("davinci.review.editor.Context", [Context], {
 				onload: dojo.hitch(this,function(event){
 					var userDoc = (event && event.target && event.target.ownerDocument);
 					var dj = (userDoc && userDoc.defaultView && userDoc.defaultView.dojo);
-					if(dj && dj.subscribe){
+					if (dj && dj.subscribe) {
 						dj.subscribe("/davinci/scene/selectionChanged", this, function(SceneManager, sceneId) {
 							if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
 								return; 
 							}
-							if(this._CommentView){
-								// WAYNE: Please review this logic, then remove this comment
-								this._CommentView.setCurrentScene(SceneManager, sceneId);
+							if (this._commentView) {
+								this._commentView.setCurrentScene(SceneManager, sceneId);
 							}							
 						});
 					}
@@ -93,13 +92,14 @@ return declare("davinci.review.editor.Context", [Context], {
 			 dojo.subscribe(this.fileName+"/davinci/review/drawing/addShape", function(shapeDef, clear, editor) {
 				 surface.exchangeTool.importShapes(shapeDef, clear, dojo.hitch(Runtime, Runtime.getColor)); // FIXME: Unique surface is required
 			 }),
-			 dojo.subscribe(this.fileName+"/davinci/review/drawing/enableEditing", this, function(reviewer, commentId, pageState) {
+			 dojo.subscribe(this.fileName+"/davinci/review/drawing/enableEditing", this, function(reviewer, commentId, pageState, viewScene) {
 				 surface.activate();
 				 surface.cached = surface.exchangeTool.exportShapesByAttribute();
 				 surface.currentReviewer = reviewer;
 				 surface.commentId = commentId;
 				 surface.filterState = pageState;
-				 surface.filterComments = [commentId];                
+				 surface.filterScene = viewScene;
+				 surface.filterComments = [commentId];
 				 this._refreshSurface(surface);
 			 }),
 			 dojo.subscribe(this.fileName+"/davinci/review/drawing/getShapesInEditing", dojo.hitch(this,function(obj, state) {
@@ -119,9 +119,10 @@ return declare("davinci.review.editor.Context", [Context], {
 				 this._refreshSurface(surface);
 				 surface.commentId = ""; // Clear the filter so that no shapes can be selected
 			 })),
-			 dojo.subscribe(this.fileName+"/davinci/review/drawing/filter", dojo.hitch(this,function(pageState, /*Array*/commentIds) {
-				 surface.filterState = pageState;
-				 surface.filterComments = commentIds;                
+			 dojo.subscribe(this.fileName+"/davinci/review/drawing/filter", dojo.hitch(this,function(/*Object*/ stateinfo, /*Array*/ commentIds) {
+				 surface.filterScene = stateinfo.viewScene;
+				 surface.filterState = stateinfo.pageState;
+				 surface.filterComments = commentIds;
 				 this._refreshSurface(surface);
 			 })),
 			 dojo.subscribe(this.fileName+"/davinci/review/drawing/setShownColorAliases", dojo.hitch(this,function(colorAliases) {
@@ -159,7 +160,7 @@ return declare("davinci.review.editor.Context", [Context], {
 				// Old code - quick check - covers case where server uses same string for username and email
 				if (shape.colorAlias == colorAlias) {
 					return true;
-				} else if(davinci && davinci.review && dojo.isArray(Runtime.reviewers)) {
+				} else if (davinci && davinci.review && dojo.isArray(Runtime.reviewers)) {
 					// New code hack - see if colorAlias matches either username or email corresponding to shape.colorAlias
 					var reviewers = Runtime.reviewers;
 					var found = false;
@@ -186,11 +187,11 @@ return declare("davinci.review.editor.Context", [Context], {
 					} else {
 						result = "partial";
 					}
-					if (shape.state != surface.filterState) {
+					if (shape.state != surface.filterState && shape.scene != surface.filterScene) {
 						result = "hidden";
 					}
 				} else {
-					if (shape.state == surface.filterState) {
+					if (shape.state == surface.filterState || shape.scene == surface.filterScene) {
 						result = "visible";
 					} else {
 						result = "hidden";

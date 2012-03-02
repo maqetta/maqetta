@@ -68,6 +68,9 @@ var SilhouetteIframe = function(args){
 	this.updateObjectElement();
 };
 
+// duration of rotation animation, in seconds
+var ANIMATION_DURATION = 1;
+
 // Class prototype
 SilhouetteIframe.prototype = {
 
@@ -303,12 +306,12 @@ SilhouetteIframe.prototype = {
 		}
 		
 		// Make sure the 3 reference rectangles are invisible
-		device_elem.setAttribute('display', 'none');
-		screen_elem.setAttribute('display', 'none');
-		if(resolution_elem){
-			resolution_elem.setAttribute('display', 'none');
+		device_elem.style.display = 'none';
+		screen_elem.style.display = 'none';
+		if (resolution_elem) {
+			resolution_elem.style.display = 'none';
 		}
-		
+
 		obj_style = object_elem.style;
 		obj_style.overflow = 'hidden';
 
@@ -365,10 +368,10 @@ SilhouetteIframe.prototype = {
 				at_elem.setAttribute('begin','indefinite');
 				at_elem.setAttribute('end','indefinite');
 				at_elem.setAttribute('fill','freeze');
-				at_elem.setAttribute('dur','1s');
+				at_elem.setAttribute('dur', ANIMATION_DURATION + 's');
 				svg_elem.appendChild(at_elem);
 				return at_elem;
-			}
+			};
 			// First <animateTransform> is a translate with additive='replace' to set a new 'transform' value
 			a1_elem = setupAnimateTransform(a1_id);
 			a1_elem.setAttribute('type','translate');
@@ -378,7 +381,15 @@ SilhouetteIframe.prototype = {
 			a2_elem.setAttribute('type','rotate');
 			a2_elem.setAttribute('additive','sum');
 		}
-		
+
+		// Hide the content iframe, so content doesn't show during animation.
+		// Is made visible at end of rotation animation.
+		var reshowIframe;
+		if (doAnimations) {
+			iframe_elem.style.display = 'none';
+			reshowIframe = true;
+		}
+
 		// Add a lightgray rectangle 1px inside of ScreenRect.
 		// The 1px inset is to deal with browser off-by-one errors when attempting
 		// to superimpose the iframe on top of SVG silhouette
@@ -494,6 +505,14 @@ SilhouetteIframe.prototype = {
 		if(a1_elem && a2_elem && a1_elem.beginElement){
 			a1_elem.beginElement();
 			a2_elem.beginElement();
+
+			// The `onend` event attribute only seems to work on Firefox. So
+			// default to using a setTimeout for the duration of the animation.
+			if (reshowIframe) {
+				setTimeout(function() {
+					iframe_elem.style.display = '';
+				}, ANIMATION_DURATION * 1000);
+			}
 		}
 	}
 };

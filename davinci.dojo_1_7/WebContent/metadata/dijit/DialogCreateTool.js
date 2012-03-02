@@ -2,7 +2,7 @@ define([
 	"dojo/_base/declare",
 	"davinci/ve/tools/CreateTool",
 	"davinci/ve/widget",
-	"davinci/ve/states"
+	"davinci/ve/States"
 ], function(
 	declare,
 	CreateTool,

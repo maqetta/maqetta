@@ -61,8 +61,11 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 			}
 		});
 		var tree = this.tree = new imageDragTree({
-			showRoot:false,
-			model: model, id:'resourceTree',
+			showRoot: false,
+			persist: true,
+			cookieName: 'maqExplorer',
+			model: model,
+			id:'resourceTree',
 			labelAttr: "name", childrenAttrs:"children",
 			getIconClass: davinci.ui.Resource.getResourceIcon,
 			getRowClass: davinci.ui.Resource.getResourceClass,

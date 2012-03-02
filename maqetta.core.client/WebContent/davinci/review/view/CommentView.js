@@ -362,6 +362,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			content: args.content,
 			pageName: this._currentPage,
 			pageState: this._cached[this._currentPage].pageState,
+			viewScene: this._cached[this._currentPage].viewScene,
 			//ownerId: Runtime.commenting_reviewerName.userName,
 			ownerId: Runtime.userName,
 			email: Runtime.getDesignerEmail(),
@@ -461,6 +462,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			return parseFloat(c1.created) - parseFloat(c2.created);
 		});
 		this._cached[pageName].pageState = "Normal";
+		this._cached[pageName].viewScene = "";
 		this._cached[pageName].focusedComments = [];
 	},
 
@@ -485,6 +487,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				content: _comment.content,
 				pageName: this._currentPage,
 				pageState: _comment.pageState,
+				viewScene: _comment.viewScene,
 				ownerId: _comment.ownerId,
 				email: _comment.email,
 //				depth: parseInt(_comment.depth),

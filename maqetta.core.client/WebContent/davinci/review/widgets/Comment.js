@@ -102,8 +102,10 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 			dojo.style(this.editButton, "display", "none");
 			dojo.style(this.replyButton, "display", "none");
 		}
-		davinci.Runtime.commenting_reviewerName = davinci.Runtime.commenting_reviewerName || {};
-		davinci.Runtime.commenting_reviewerName.userName = davinci.Runtime.commenting_reviewerName.userName || davinci.Runtime.userName;
+		davinci.Runtime.commenting_reviewerName = {};
+		davinci.Runtime.commenting_reviewerName.userName = davinci.Runtime.getDesigner();
+		davinci.Runtime.commenting_reviewerName.email = davinci.Runtime.getDesignerEmail();
+
 		if (davinci.Runtime.commenting_reviewerName.userName != this.ownerId) {
 			dojo.style(this.editButton,"display","none");
 		}

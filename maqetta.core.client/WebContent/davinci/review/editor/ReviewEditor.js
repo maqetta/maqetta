@@ -48,12 +48,6 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 		return something=="states";
 	},
 
-	focus : function() {
-		var cv = dijit.byId("davinci.ui.comment");
-		cv && cv.getParent().selectChild(cv);
-	},
-
-
 	getContext : function() {
 		return this.context;
 	},

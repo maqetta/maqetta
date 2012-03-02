@@ -1269,8 +1269,15 @@ var Workbench = {
 		Workbench._updateTitle(newEditor);
 		Workbench._state.activeEditor=newEditor ? newEditor.fileName : null;
 	
-		if(newEditor && newEditor.focus) { newEditor.focus(); }
+		if(newEditor) {
+			if (newEditor.focus) { 
+				newEditor.focus(); 
+			}
 
+			//Bring palettes specified for the editor to the top
+			this._bringPalettesToTop(newEditor);
+		}
+		
 		setTimeout(function(){
 			// kludge: if there is a visualeditor and it is already populated, resize to make Dijit visualEditor contents resize
 			// If editor is still starting up, there is code on completion to do a resize
@@ -1282,6 +1289,35 @@ var Workbench = {
 
 		if(!startup) {
 			Workbench._updateWorkbenchState();
+		}
+	},
+	
+	_bringPalettesToTop: function(newEditor) {
+		// First, we will get the metadata for the extension and get its list of 
+		// palettes to bring to the top
+		var editorExtensions=Runtime.getExtensions("davinci.editor", function (extension){
+			return extension.id === newEditor.editorID;
+		});
+		if (editorExtensions && editorExtensions.length > 0) {
+			var editorPalettesToTop = editorExtensions[0].palettesToTop;
+			if (editorPalettesToTop) {
+				// Loop through palette ids and select appropriate palettes
+				for (var i = 0; i < editorPalettesToTop.length; i++) { 
+					var paletteId = editorPalettesToTop[i];
+					
+					// Look up the tab for the palette and get its 
+					// parent to find the right TabContainer
+					var tab = dijit.byId(paletteId);
+					if (tab) {
+						var tabContainer = tab.getParent();
+	
+						// Select tab
+						if (tabContainer) {
+							tabContainer.selectChild(tab);
+						}
+					}
+				}
+			}
 		}
 	},
 

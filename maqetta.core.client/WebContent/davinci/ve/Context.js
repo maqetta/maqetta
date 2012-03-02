@@ -351,29 +351,22 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	
-	detach: function(widget){
-		var removeFromArray = function(array, value){
-			var index = dojo.indexOf(array, value);
-			if(index >= 0){
-				array.splice(index, 1);
-			}
-		};
-
+	detach: function(widget) {
 		// FIXME: detaching context prevent destroyWidget from working
 		//widget._edit_context = undefined;
 		var id = widget.getId();
 		if(id){
-			removeFromArray(this._widgetIds, id);
+			maqUtil.arrayRemove(this._widgetIds, id);
 		}
 		var objectId = widget.getObjectId();
 		if(objectId){
-			removeFromArray(this._objectIds, objectId);
+			maqUtil.arrayRemove(this._objectIds, objectId);
 		}
 		if (this._selection){
 			for(var i=0; i<this._selection.length; i++){
 				if(this._selection[i] == widget){
 					this.focus(null, i);
-					removeFromArray(this._selection,widget);
+					maqUtil.arrayRemove(this._selection,widget);
 				}
 			}
 		}

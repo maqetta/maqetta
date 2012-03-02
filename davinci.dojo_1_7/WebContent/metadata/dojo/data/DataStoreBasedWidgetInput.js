@@ -23,6 +23,7 @@ define([
 	"system/resource",
 	"dojo/i18n!dijit/nls/common",
 	"dojo/i18n!../../dojox/nls/dojox",
+	"dojo/text!./templates/dojoStoreBasedWidgetInput.html",
 	"dojox/form/DropDownSelect"	// used in template
 ], function(
 	declare,
@@ -44,7 +45,8 @@ define([
 	Tree,
 	resource,
 	commonNls,
-	dojoxNls
+	dojoxNls,
+	mainTemplateString
 	/*DropDownSelect*/
 ) {
 
@@ -61,6 +63,7 @@ return declare(SmartInput, {
 	helpText:  'If the CSV data format is selected enter text in the format: first line is column headers separated by commas all following lines are data for those columns.'+
     		   ' If data file from workspace is selected chose a json item file using the file explore folder.',
 
+  _substitutedMainTemplate: null,
 
 	_getContainer: function(widget){
 		while(widget){
@@ -80,7 +83,6 @@ return declare(SmartInput, {
 		var editor = this._getEditor();
 		return editor && (editor.getContext && editor.getContext() || editor.context);
 	},
-
 	
 	refreshStoreView: function(){
 		var textArea = registry.byId("davinciIleb"),
@@ -112,10 +114,10 @@ return declare(SmartInput, {
 			this.updateWidget();
 		} else if (this._dataStoreType === 'file'){
 			this._format = this.getFormat();
-	    	this.updateWidgetForUrlStore();
+			this.updateWidgetForUrlStore();
 		} else if (this._dataStoreType === 'url'){
 			this._format = this.getFormat();
-	    	this.updateWidgetForUrlStore(); 
+			this.updateWidgetForUrlStore(true); 
 		}
 	    this.hide(); 
 	},
@@ -165,7 +167,6 @@ return declare(SmartInput, {
 	},
 
 	replaceStoreData: function(data) {
-
 		var store = this._widget.dijitWidget.store;
 
 		var storeId = this._widget.domNode._dvWidget._srcElement.getAttribute("store");
@@ -452,71 +453,24 @@ return declare(SmartInput, {
 			style.set("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + "px");
 		}
 	},
-	
-	_getTemplate: function(){
-		// XXX TODO THis should be moved to an HTML file.
-		var template = ''+
-		'<div id="davinciDataGridSmartInputFolderDiv" class="smartInputDataGridFolderDiv" style="background-color: #F7FCFF;	margin: 0 0 0 -1px;"> ' +
-		'<table id="davinci.ve.input.DataGridInput_table" > ' +
-			'<tbody>' + 
-				'<tr>' +
-					'<td></td>' + 
-					'<td>' +
-						'<select id="davinci.ve.input.DataGridInput.dataStoreType" name="davinci.ve.input.DataGridInput.dataStoreType" dojoType="dojox.form.DropDownSelect" style="width:15em;"> ' +
-							'<option value="dummyData">Comma separated data</option> ' +
-							'<option value="file">Data file from workspace</option> ' +
-// hide for M2							'<option value="url">URL (JSONP)</option> ' +
-						'</select>' +
-					'<td>' +
-					'<td></td>' + 
-				'</tr>' +	
-	
-			'</tbody>'+ 
-		'</table> '+
-		'</div>' +
-		'<div id="iedResizeDiv"  class="iedResizeDiv" style="width: 240px; height: 60px; border: 1px solid #769DC0; margin: 0 5px 0 5px;" >' + 
-        '	<textarea  dojoType="dijit.form.SimpleTextarea" name="davinciIleb"  trim="true" id="davinciIleb" style="width:240px; height:60px;" class="smartInputTextArea" ></textarea>' +
-			'<div id="smartInputSim" class="smartInputSim" style="display:none;" ></div>'+
-			'<span id="davinci.ve.input.DataGridInput_img_folder"  title="Folder" class="inlineEditFolder" > </span>'+
-			'<div id="iedResizeHandle" dojoType="dojox.layout.ResizeHandle" targetId="iedResizeDiv" constrainMin="true" maxWidth="200" maxHeight="600" minWidth="240" minHeight="40"  activeResize="true" intermediateChanges="true" ></div>' +
-		'</div>'+
-		'<div  id="davinci.ve.input.SmartInput_div"  class="davinciVeInputSmartInputDiv" >' + 
-			'<div id="davinci.ve.input.SmartInput_radio_div" class="smartInputRadioDiv" >' + 
-				'<table id="davinci.ve.input.SmartInput_table"> ' +
-					'<tbody>' + 
-						'<tr> ' +
-							'<td class="smartInputTd1" > ' +
-								'<input id="davinci.ve.input.SmartInput_radio_text" showlabel="true" type="radio" dojoType="dijit.form.RadioButton" disabled="false" readOnly="false" intermediateChanges="false" checked="true"> </input> '+
-	             			'</td> ' +
-	             			'<td class="smartInputTd2" >'+ 
-	             				'<div id="davinci.ve.input.SmartInput_radio_text_width_div" class="smartInputRadioTextDiv">'+
-	             				'</div>'+
-             				'</td> ' +
-         				'</tr>'+
-         				'<tr> '+
-         					'<td class="smartInputTd1"> <input id="davinci.ve.input.SmartInput_radio_html" showlabel="true" type="radio" dojoType="dijit.form.RadioButton"> </input>  </td> '+
-         					'<td class="smartInputTd2">'+
-         						'<div id="davinci.ve.input.SmartInput_radio_html_width_div" class="smartInputRadioTextDiv">'+
-         						'</div>'+
-             				'</td> '+
-     					'</tr> '+
- 					'</tbody>'+ 
-					'</table> '+
-				'<div class="smartInputHelpDiv" > '+
-	        		'<span id="davinci.ve.input.SmartInput_img_help"  title="Help" class="inlineEditHelp" > </span>'+
-		        	'<span class="smartInputSpacerSpan" >'+
-		        	'<button id="davinci.ve.input.SmartInput_ok"  dojoType="dijit.form.Button" type="button" class="inlineEditHelpOk" >OK</button> <button id=davinci.ve.input.SmartInput_cancel dojoType="dijit.form.Button" class="inlineEditHelpCancel"> Cancel</button>  '+
-		        	'</span>   '+
-		        '</div> '+
-		        '<div id="davinci.ve.input.SmartInput_div_help" style="display:none;" class="smartInputHelpTextDiv" > '+
-		        	'<div dojoType="dijit.layout.ContentPane" style="text-align: left; padding:0; " >'+this.getHelpText()+ '</div> '+
-		        	'<div style="text-align: left; padding:0; height:2px;" ></div> '+
-		        '</div> '+
-	        '</div>' + 
-        '</div> '+
-        '';
-			return template;
+
+	_getTemplate: function() {
+	  if (!this._substitutedMainTemplate) {
+			this._substitutedMainTemplate = 
+				dojo.replace(mainTemplateString, {
+				    commaSeparatedData: dojoxNls.commaSeparatedData,
+				    dataFromWorkspace: dojoxNls.dataFromWorkspace,
+				    dataFromJsonpURL: dojoxNls.dataFromJsonpURL,
+				    callbackParameter: dojoxNls.callbackParameter,
+				    buttonOk: commonNls.buttonOk,
+				    buttonCancel: commonNls.buttonCancel,
+				    helpText: this.getHelpText()
+				});
+		}
+
+		return this._substitutedMainTemplate;
 	}
+
 
 });
 

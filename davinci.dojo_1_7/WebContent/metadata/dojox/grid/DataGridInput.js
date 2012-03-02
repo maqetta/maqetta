@@ -8,10 +8,11 @@ define([
 	"dijit/Dialog",
 	"dijit/layout/ContentPane",	
 	"dijit/form/Button",
-    "dijit/Tree",
+  "dijit/Tree",
+	"../../dojo/data/DataStoreBasedWidgetInput",
 	"dojo/i18n!dijit/nls/common",
 	"dojo/i18n!../nls/dojox",
-	"dojox/form/DropDownSelect"		// used in template
+	"dojox/form/DropDownSelect",		// used in template
 ], function(
 	declare,
 	SmartInput,
@@ -23,12 +24,13 @@ define([
 	ContentPane,
 	Button,
 	Tree,
+	DataStoreBasedWidgetInput,
 	commonNls,
 	dojoxNls
 	/*DropDownSelect*/
 ) {
 
-return declare(SmartInput, {
+return declare(DataStoreBasedWidgetInput, {
 
 	propertyName: "structure",
 
@@ -98,26 +100,6 @@ return declare(SmartInput, {
 	    return widget;
 	    
 	},
-	
-	_getContainer: function(widget){
-		while(widget){
-			if ((widget.isContainer || widget.isLayoutContainer) &&
-					widget.declaredClass != "dojox.layout.ScrollPane") {
-				return widget;
-			}
-			widget = Widget.getParent(widget); 
-		}
-		return undefined;
-	},
-	
-	_getEditor: function() {
-		return top.davinci && top.davinci.Runtime && top.davinci.Runtime.currentEditor;
-	},
-	
-	_getContext: function() {
-		var editor = this._getEditor();
-		return editor && (editor.getContext && editor.getContext() || editor.context);
-	},
 
 	refreshStoreView: function(){
 		var textArea = dijit.byId("davinciIleb");
@@ -151,28 +133,6 @@ return declare(SmartInput, {
         });
     },
 	
-	onOk: function(e){
-		
-		if (this._fileSelectionDialog){
-			// file selection dialog is active so don't close inline edit
-			return;
-		}
-		if (this._dataStoreType === 'dummyData'){
-			this.updateWidget();
-		} else if (this._dataStoreType === 'file'){
-			this._format = this.getFormat();
-	    	this.updateWidgetForUrlStore();
-		} else if (this._dataStoreType === 'url'){
-			this._format = this.getFormat();
-	    	this.updateWidgetForUrlStore(true); 
-		}
-	    this.hide(); 
-	},
-	
-	hide: function(){
-		// we already updated the widget so just do a hide like cancel
-	    this.inherited(arguments, [ true ]);
-	},
 	
     updateWidget: function() {
         var structure = [];
@@ -235,40 +195,7 @@ return declare(SmartInput, {
 			items.push(item);
 		}
 
-		return this.replaceDataGridStoreData(data);
-	},
-	
-	replaceStoreData: function(store, data) {
-		// Kludge to force reload of store data
-		store.clearOnClose = true;
-		store.data = data;
-		store.close();
-		store.fetch({
-			query: this.query,
-			queryOptions:{deep:true}, 
-			onComplete: dojo.hitch(this, function(items){
-				for (var i = 0; i < items.length; i++) {
-					var item = items[i];
-					console.warn("i=", i, "item=", item);
-				}
-			})
-		});
-	},
-
-	replaceDataGridStoreData: function(data) {
-		var store = this._widget.dijitWidget.store;
-
-		var storeId = this._widget.domNode._dvWidget._srcElement.getAttribute("store");
-		var storeWidget = Widget.byId(storeId);
-		var properties = {};
-		properties.data = data;
-		storeWidget._srcElement.setAttribute('url', ''); 
-		// this is needed to prevent ModifyCommmand mixin from puttting it back
-		properties.url = '';
-		var command = new ModifyCommand(storeWidget, properties);
-		store.data = data;
-
-		return command;
+		return this.replaceStoreData(data);
 	},
 		
 	_attr: function(widget, name, value) {
@@ -321,7 +248,8 @@ return declare(SmartInput, {
 		}catch(e){
 			console.warn("FAILED: failure for module=dojo.data.ItemFileReadStore");
 		}
-		dj.dojox.io.xhrScriptPlugin(url,this._callback);
+
+		dj.dojox.io.xhrScriptPlugin(url,"callback");
 		store = new dj.data.ItemFileReadStore({url: url });
     	store.fetch({
     		query: this.query,
@@ -631,79 +559,7 @@ return declare(SmartInput, {
         if(helper && helper.setXhrScriptPluginParameters){
            helper.setXhrScriptPluginParameters(url, this._widget._edit_context);
         }
-	},
-	
-	// XXX TODO Move this code to an HTML template file
-	_getTemplate: function() {
-		var template = ''+
-		'<div id="davinciDataGridSmartInputFolderDiv" class="smartInputDataGridFolderDiv" style="background-color: #F7FCFF;	margin: 0 0 0 -1px;"> ' +
-		'<table id="davinci.ve.input.DataGridInput_table" > ' +
-			'<tbody>' + 
-				'<tr>' +
-					'<td></td>' + 
-					'<td>' +
-						'<select id="davinci.ve.input.DataGridInput.dataStoreType" name="davinci.ve.input.DataGridInput.dataStoreType" dojoType="dojox.form.DropDownSelect" style="width:15em;"> ' +
-							'<option value="dummyData">'+dojoxNls.commaSeparatedData+'</option> ' +
-							'<option value="file">'+dojoxNls.dataFromWorkspace+'</option> ' +
-							'<option value="url">'+dojoxNls.dataFromJsonpURL+'</option> ' +
-						'</select>' +
-					'<td>' +
-					'<td></td>' + 
-				'</tr>' +	
-	
-			'</tbody>'+ 
-		'</table> '+
-		'</div>' +
-		'<div id="iedResizeDiv"  class="iedResizeDiv" style="width: 240px; height: 60px; border: 1px solid #769DC0; margin: 0 5px 0 5px;" >' + 
-        '	<textarea  dojoType="dijit.form.SimpleTextarea" name="davinciIleb"  trim="true" id="davinciIleb" style="width:240px; height:60px;" class="smartInputTextArea" ></textarea>' +
-			'<div id="smartInputSim" class="smartInputSim" style="display:none;" ></div>'+
-			'<span id="davinci.ve.input.DataGridInput_img_folder"  title="Folder" class="inlineEditFolder" > </span>'+
-			'<div id="iedResizeHandle" dojoType="dojox.layout.ResizeHandle" targetId="iedResizeDiv" constrainMin="true" maxWidth="200" maxHeight="600" minWidth="240" minHeight="40"  activeResize="true" intermediateChanges="true" ></div>' +
-		'</div>'+
-		'<div  id="davinci.ve.input.SmartInput_div"  class="davinciVeInputSmartInputDiv" >' + 
-			'<div id="davinci.ve.input.SmartInput_radio_div" class="smartInputRadioDiv" >' + 
-				'<table id="davinci.ve.input.SmartInput_table"> ' +
-					'<tbody>' + 
-						'<tr> ' +
-							'<td class="smartInputTd1" > ' +
-								'<input id="davinci.ve.input.SmartInput_radio_text" showlabel="true" type="radio" dojoType="dijit.form.RadioButton" disabled="false" readOnly="false" intermediateChanges="false" checked="true"> </input> '+
-	             			'</td> ' +
-	             			'<td class="smartInputTd2" >'+ 
-	             				'<div id="davinci.ve.input.SmartInput_radio_text_width_div" class="smartInputRadioTextDiv">'+
-	             				'</div>'+
-             				'</td> ' +
-         				'</tr>'+
-         				'<tr> '+
-         					'<td class="smartInputTd1"> <input id="davinci.ve.input.SmartInput_radio_html" showlabel="true" type="radio" dojoType="dijit.form.RadioButton"> </input>  </td> '+
-         					'<td class="smartInputTd2">'+
-         						'<div id="davinci.ve.input.SmartInput_radio_html_width_div" class="smartInputRadioTextDiv">'+
-         						'</div>'+
-             				'</td> '+
-     					'</tr> '+
-     					'<tr id="davinci.ve.input.SmartInput_callback"> '+
-     					'<td class="smartInputTd1">'+dojoxNls.callbackParameter+'</td> '+
-     					'<td class="smartInputTd2">'+
-   							'<input type="text" name="davinci.ve.input.SmartInput_callback_editbox" value="callback" data-dojo-type="dijit.form.TextBox" data-dojo-props="trim:true" id="davinci.ve.input.SmartInput_callback_editbox">' +
-         				'</td> '+
- 					'</tr> '+
- 					'</tbody>'+ 
-					'</table> '+
-				'<div class="smartInputHelpDiv" > '+
-	        		'<span id="davinci.ve.input.SmartInput_img_help"  title="Help" class="inlineEditHelp" > </span>'+
-		        	'<span class="smartInputSpacerSpan" >'+
-		        	'<button id="davinci.ve.input.SmartInput_ok"  dojoType="dijit.form.Button" type="button" class="inlineEditHelpOk" >'+commonNls.buttonOk+'</button> <button id=davinci.ve.input.SmartInput_cancel dojoType="dijit.form.Button" class="inlineEditHelpCancel"> '+commonNls.buttonCancel+'</button>  '+
-		        	'</span>   '+
-		        '</div> '+
-		        '<div id="davinci.ve.input.SmartInput_div_help" style="display:none;" class="smartInputHelpTextDiv" > '+
-		        	'<div dojoType="dijit.layout.ContentPane" style="text-align: left; padding:0; " >'+this.getHelpText()+ '</div> '+
-		        	'<div style="text-align: left; padding:0; height:2px;" ></div> '+
-		        '</div> '+
-	        '</div>' + 
-        '</div> '+
-        '';
-		return template;
 	}
-
 });
 
 });

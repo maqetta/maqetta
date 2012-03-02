@@ -84,7 +84,7 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 			//    and finish the `withDoc` (restoring the document used by dojo).
 			//    See issue #1821 for more details.
 			setTimeout(function() {
-				context.refresh();
+				context.visualEditor.refresh();
 			}, 0);
 			return;
 		}

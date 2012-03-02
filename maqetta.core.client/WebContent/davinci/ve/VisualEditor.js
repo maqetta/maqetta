@@ -15,7 +15,9 @@ define([
 	"./utils/URLRewrite",
 	"davinci/workbench/Preferences",
 	"./widget",
-	"system/resource"
+	"system/resource",
+	"davinci/XPathUtils",
+	"../html/HtmlFileXPathAdapter"
 ], function(
 	require,
 	declare,
@@ -33,7 +35,9 @@ define([
 	URLRewrite,
 	Preferences,
 	widgetUtils,
-	systemResource
+	systemResource,
+	XPathUtils,
+	HtmlFileXPathAdapter
 ){
 
 var VisualEditor = declare("davinci.ve.VisualEditor", null, {
@@ -325,30 +329,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		
 			this.title = dojo.doc.title;
 
-			this.context._setSource(content, lang.hitch(this, function(){
-				this.savePoint = 0;
-				this.context.activate();
-				var popup = Workbench.createPopup({partID:'davinci.ve.visualEditor',
-					domNode: this.context.getContainerNode(), 
-					keysDomNode: this.context.getDocument(), context:this.context});
-				var context = this.context;
-				popup.adjustPosition=function (event) {
-					// Adjust for the x/y position of the visual editor's IFRAME relative to the workbench
-					// Adjust for the scrolled position of the document in the visual editor, since the popup menu callback assumes (0, 0)
-					var coords = dojo.position(context.frameNode);
-					dojo.withDoc(context.getDocument(), function(){
-						var scroll = dojo.docScroll();
-						coords.x -= scroll.x;
-						coords.y -= scroll.y;
-					});
-
-					return coords;
-				};
-
-				// resize kludge to make Dijit visualEditor contents resize
-				// seems necessary due to combination of 100%x100% layouts and extraneous width/height measurements serialized in markup
-				context.getTopWidgets().forEach(function (widget) { if (widget.resize) { widget.resize(); } });
-			}), null, newHtmlParams);
+			this.context._setSource(content, this._connectCallback, this, newHtmlParams);
 	   		// set flow layout on user prefs
 			var flow = this.context.getFlowLayout(); // gets the current layout, but also sets to default if missing..
 			this.initialSet=true;
@@ -357,6 +338,42 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		}
 		// auto save file
 		this.save(true);
+	},
+
+	_connectCallback: function() {
+		var context = this.context,
+			popup;
+
+		this.savePoint = 0;
+		context.activate();
+
+		popup = Workbench.createPopup({
+			partID: 'davinci.ve.visualEditor',
+			domNode: context.getContainerNode(), 
+			keysDomNode: context.getDocument(),
+			context: context
+		});
+
+		popup.adjustPosition = function(event) {
+			// Adjust for the x/y position of the visual editor's IFRAME relative to the workbench
+			// Adjust for the scrolled position of the document in the visual editor, since the popup menu callback assumes (0, 0)
+			var coords = dojo.position(context.frameNode);
+			dojo.withDoc(context.getDocument(), function(){
+				var scroll = dojo.docScroll();
+				coords.x -= scroll.x;
+				coords.y -= scroll.y;
+			});
+
+			return coords;
+		};
+
+		// resize kludge to make Dijit visualEditor contents resize
+		// seems necessary due to combination of 100%x100% layouts and extraneous width/height measurements serialized in markup
+		context.getTopWidgets().forEach(function (widget) {
+			if (widget.resize) {
+				widget.resize();
+			}
+		});
 	},
 
 	supports: function (something){
@@ -468,7 +485,32 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 			fileURL = Workbench.location()+'?preview=1&device='+encodeURI(deviceName)+'&file='+encodeURI(fileURL)+orientation_param;
 		}
 		window.open(fileURL);
+	},
+
+	/**
+	 * Refresh the Visual Editor while keeping widget selection intact.
+	 */
+	refresh: function() {
+		// save widget selection
+		var context = this.context,
+			xpath = XPathUtils.getXPath(context.getSelection()[0]._srcElement,
+						HtmlFileXPathAdapter);
+
+		// set new content
+		context.setSource(context.model);
+
+		// re-establish widget selection in VE
+		var id = context.model.evaluate(xpath).getAttribute('id'),
+			widget = widgetUtils.byId(id, context.getDocument());
+		setTimeout(function() {
+			// XXX Sometimes, after resetting the source, the DOM takes some time
+			// to get set (#1102).  Unfortunately, I still haven't found an
+			// event that I can attach/listen to to see if the DOM is ready.
+			// Instead, just use a setTimeout.
+			context.select(widget);
+		},0);
 	}
+
 });
 
 return VisualEditor;

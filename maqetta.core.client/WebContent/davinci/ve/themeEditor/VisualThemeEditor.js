@@ -80,7 +80,7 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 			this.context._themeName = this.theme.name;
 			if(!this.initialSet){
 				this.context.deactivate();
-				this.context._setSource(htmlFile, dojo.hitch(this, function(){
+				this.context._setSource(htmlFile, function() {
 					this.savePoint = 0;
 					this.context.activate();
 //		css files need to be added to doc before body content wdr 4/6/11
@@ -110,7 +110,7 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 							this.themeVersionWarn();
 						}
 					}
-				}));
+				}, this);
 				
 			}
 		}

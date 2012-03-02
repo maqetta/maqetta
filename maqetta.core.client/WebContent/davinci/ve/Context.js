@@ -23,8 +23,6 @@ define([
 	"preview/silhouetteiframe",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
-	"davinci/XPathUtils",
-	"../html/HtmlFileXPathAdapter",
 	"davinci/util",
 	"dojox/html/_base"
 ], function(
@@ -52,8 +50,6 @@ define([
 	Silhouette,
 	Deferred,
 	DeferredList,
-	XPathUtils,
-	HtmlFileXPathAdapter,
 	maqUtil
 ) {
 
@@ -684,25 +680,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	setSource: function(source, callback, scope, initParams){
-		dojo.withDoc(this.getDocument(), "_setSource", this, [source, callback, scope, initParams]);
-	},
-
-	refresh: function() {
-		// save widget selection
-		var xpath = XPathUtils.getXPath(this.getSelection()[0]._srcElement, HtmlFileXPathAdapter);
-
-		// re-establish widget selection
-		var handle = dojo.connect(this, 'setSource', this, function() {
-			dojo.disconnect(handle);
-			dojo.publish('/davinci/ui/selectionChanged', [
-				[{ model: this.model.evaluate(xpath) }],
-				this.editor
-			]);
-		});
-
-		// set new content in Visual Editor (eventually kicks `connect` above)
-		var ve = this.visualEditor;
-		ve.setContent(ve.fileName, this.model);
+		dojo.withDoc(this.getDocument(), "_setSource", this, arguments);
 	},
 
 	getDojoUrl: function(){
@@ -1364,7 +1342,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if (event.editor.fileName === this.editor.fileName){
 			dojo.unsubscribe(this._editorSelectConnection);
 			delete this._editorSelectConnection;
-			this._setSource(this._srcDocument, null, null, null);
+			this._setSource(this._srcDocument);
 		}
 	},
 
@@ -2134,15 +2112,19 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this.blockChange(false);
 	},
 
-	_parse: function(source){
+	/**
+	 * Parse the given model.
+	 * @param  {davinci/html/HTMLFile} source
+	 * @return {Object} a data structure containing information on parsed source
+	 */
+	_parse: function(source) {
 		var data = {metas: [], scripts: [], modules: [], styleSheets: []},
 		 	htmlElement = source.getDocumentElement(),
 		 	head = htmlElement.getChildElement("head"),
 		 	bodyElement = htmlElement.getChildElement("body");
 
 		this._uniqueIDs = {};
-		if (bodyElement)
-		{
+		if (bodyElement) {
 			bodyElement.visit({ visit: dojo.hitch(this, function(element) {
 				if (element.elementType == "HTMLElement" && element != bodyElement) {
 					this.getUniqueID(element);
@@ -2212,7 +2194,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		});
 		
 		return data;
-
 	},
 
 	onKeyDown: function(event){

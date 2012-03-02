@@ -51,7 +51,6 @@ return {
 		editorClass: "davinci/ve/themeEditor/ThemeEditor",
         palettesToTop: [
             "davinci.ve.style", //Properties
-            "davinci.ui.navigator", //Files
             "davinci.ve.states" //States(Scenes)
         ]
 	},

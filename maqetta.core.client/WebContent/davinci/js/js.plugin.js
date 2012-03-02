@@ -11,10 +11,7 @@ return {
 		extensions: "js,json",
 		isDefault: true,
 		//TODO implement		 icon : "",
-		editorClass: "davinci/js/ui/JavaScriptEditor",
-        palettesToTop: [
-            "davinci.ui.navigator", //Files
-        ]
+		editorClass: "davinci/js/ui/JavaScriptEditor"
 	},
 	"davinci.actionSets": [
 /*		{

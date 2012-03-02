@@ -89,7 +89,6 @@ return {
             editorClass: "davinci/ve/PageEditor",
             palettesToTop: [
                 "davinci.ve.Palette", //Widgets
-                "davinci.ui.navigator", //Files
                 "davinci.ve.style", //Properties
                 "davinci.ve.states" //States(Scenes)
             ]
@@ -105,7 +104,6 @@ return {
             editorClass: "davinci/ve/themeEditor/ThemeEditor",
             palettesToTop: [
                 "davinci.ve.style", //Properties
-                "davinci.ui.navigator", //Files
                 "davinci.ve.states" //States(Scenes)
             ]
         }

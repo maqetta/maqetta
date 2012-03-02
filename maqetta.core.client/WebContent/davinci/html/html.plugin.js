@@ -12,10 +12,7 @@ return {
 			extensions: "html",
 			isDefault: false,
 			//TODO implement		 icon: "",
-			editorClass: "davinci/html/ui/HTMLEditor",
-            palettesToTop: [
-                "davinci.ui.navigator", //Files
-            ]
+			editorClass: "davinci/html/ui/HTMLEditor"
 		},
 		{
 			id: "CSSEditor",
@@ -23,10 +20,7 @@ return {
 			extensions: "css",
 			isDefault: true,
 			//TODO implement		 icon: "",
-			editorClass: "davinci/html/ui/CSSEditor",
-            palettesToTop: [
-                "davinci.ui.navigator", //Files
-            ]
+			editorClass: "davinci/html/ui/CSSEditor"
 		},
 		{
 			id: "ImageViewer",
@@ -34,10 +28,7 @@ return {
 			extensions: "jpg,gif,jpeg,png",
 			isDefault: true,
 			//TODO implement		 icon: "",
-			editorClass: "davinci/html/ui/ImageViewer",
-            palettesToTop: [
-                "davinci.ui.navigator", //Files
-            ]
+			editorClass: "davinci/html/ui/ImageViewer"
 		}
 	],
 	"davinci.editorActions": {

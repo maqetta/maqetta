@@ -57,6 +57,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this.subscribe("/davinci/scene/removed", this._removeScene.bind(this));
 		this.subscribe("/davinci/scene/renamed", this._renameScene.bind(this));
 		this.subscribe("/davinci/scene/selectionChanged", this._sceneSelectionChanged.bind(this));
+		
+		dojo.style(this.toolbarDiv, "display", "none");
 	},
 	
 	_contextLoaded: function() {
@@ -143,7 +145,12 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			} else {
 				this.set('title', langObj.Scenes);
 				this._updateView();
-				dojo.style(this.toolbarDiv, "display", "block");
+				if (editor.declaredClass === "davinci.ve.PageEditor"){
+					dojo.style(this.toolbarDiv, "display", "block");
+				}else{
+					// review editor
+					dojo.style(this.toolbarDiv, "display", "none");
+				}
 				var d = dijit.byId(this.toolbarDiv.parentNode.id);
 				d.resize();
 			}
@@ -151,6 +158,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		}else{
 			delete this._editor;
 			dojo.style(this.container.domNode, "display", "none");
+			dojo.style(this.toolbarDiv, "display", "none");
 		}
 	},
 	

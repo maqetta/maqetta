@@ -30,6 +30,16 @@ return declare("davinci.review.editor.Context", [Context], {
 					var userDoc = (event && event.target && event.target.ownerDocument);
 					var dj = (userDoc && userDoc.defaultView && userDoc.defaultView.dojo);
 					if (dj && dj.subscribe) {
+						dj.subscribe("/davinci/states/state/changed", dj.hitch(this, function(args) { 
+							if (!args || !Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
+								return; 
+							}
+							var state = args.newState || "Normal";
+							var dv = (dj.global && dj.global.davinci);
+							if(dv && dv.states && dv.states.setState){
+								dv.states.setState(undefined, state);
+							}
+						}));
 						dj.subscribe("/davinci/scene/selectionChanged", this, function(SceneManager, sceneId) {
 							if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
 								return; 

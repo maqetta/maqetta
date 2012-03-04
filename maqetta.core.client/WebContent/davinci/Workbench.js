@@ -138,9 +138,15 @@ var Workbench = {
 
 		// bind overlay widgets to corresponding davinci states. singleton; no need to unsubscribe
 		davinci.states.subscribe("/davinci/states/state/changed", function(args) {
-			var prefix = "_show:", widget, dvWidget, helper,
-				thisDijit = Runtime.currentEditor.visualEditor.context.getDijit(),
-				widgetUtils = require("davinci/ve/widget");
+			//FIXME: This is page editor-specific logic within Workbench.
+			var context = (Runtime.currentEditor && Runtime.currentEditor.declaredClass == "davinci.ve.PageEditor" && 
+					Runtime.currentEditor.visualEditor && Runtime.currentEditor.visualEditor.context);
+			if(!context){
+				return;
+			}
+			var prefix = "_show:", widget, dvWidget, helper;
+			var thisDijit = context ? context.getDijit() : null;
+			var widgetUtils = require("davinci/ve/widget");
 			if (args.newState && !args.newState.indexOf(prefix)) {
 				widget = thisDijit.byId(args.newState.substring(6));
 				dvWidget = widgetUtils.getWidget(widget.domNode);

@@ -153,7 +153,7 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 		
 			this.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(e) { 
 				var editor = this.getEditor();
-				if (!dojo.isObject(e.widget) || !editor || editor.declaredClass == "davinci.ve.themeEditor.ThemeEditor"){
+				if (!dojo.isObject(e.widget) || !editor || editor.declaredClass != "davinci.ve.PageEditor"){
 					return;
 				} // ignore if e.widget is not an object (eg '$all') and ignore updates in theme editor
 

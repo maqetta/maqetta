@@ -467,27 +467,31 @@ davinci.maqetta.States.prototype = {
 					return $1 ? "'" : '"';
 			});
 			states = JSON.parse(states);
-			// We changed the states structure for Preview5 release. It used to be
-			// a JSON representation of an associative array: {'display':'none', 'color':'red'}
-			// But with Preview5 it is now an array of single property declarations such as:
-			// [{'display':'none'}, {'color':'red';}]. The array approach was necessary to
-			// deal with complexities of background-image, where there might be multiple values
-			// for a single property.
-			for (var s in states){
-				var state = states[s];
-				var style = state.style;
-				if(style && !style.length){	// if style exists but isn't an array
-					var statesArray = [];
-					for(var prop in style){
-						var o = {};
-						o[prop] = style[prop];
-						statesArray.push(o);
-					}
-					state.style = statesArray;
-				}
-			}
+			this._upgrate_p4_p5(states);	// Upgrade old files
 		}
 		return states;
+	},
+	
+	_upgrate_p4_p5: function(states){
+		// We changed the states structure for Preview5 release. It used to be
+		// a JSON representation of an associative array: {'display':'none', 'color':'red'}
+		// But with Preview5 it is now an array of single property declarations such as:
+		// [{'display':'none'}, {'color':'red';}]. The array approach was necessary to
+		// deal with complexities of background-image, where there might be multiple values
+		// for a single property.
+		for (var s in states){
+			var state = states[s];
+			var style = state.style;
+			if(style && !style.length){	// if style exists but isn't an array
+				var statesArray = [];
+				for(var prop in style){
+					var o = {};
+					o[prop] = style[prop];
+					statesArray.push(o);
+				}
+				state.style = statesArray;
+			}
+		}
 	},
 	
 	store: function(widget, states) {
@@ -624,6 +628,7 @@ davinci.states = new davinci.maqetta.States();
 					// Preserve the body states directly on the dom node
 					var states = davinci.states.retrieve(doc.body);
 					if (states) {
+						davinci.states._upgrate_p4_p5(states);	// upgrade older files
 						cache.body = states;
 					}
 	
@@ -635,6 +640,7 @@ davinci.states = new davinci.maqetta.States();
 								node.id = _getTemporaryId(node);
 							}
 							if (node.tagName != "BODY") {
+								davinci.states._upgrate_p4_p5(states);	// upgrade older files
 								cache[node.id] = states;
 							}
 						}

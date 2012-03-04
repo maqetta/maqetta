@@ -8,6 +8,7 @@ define(["require",
 return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 
 	constructor: function(args){
+		/*
 		// Menu routines in Dojo and Workbench require unique names
 		var unique= "m" + Date.now();
 		this.toolbarMenuActionSets = [
@@ -31,7 +32,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
       						unique+"-DropdownMenu.action1",true,
       						unique+"-DropdownMenu.action2",true
       					]
-      				 }/*, 
+      				 }, 
       				 { 
       					 label : "Do Something",
       					 path : unique+"-DropdownMenu/"+unique+"-DropdownMenu.action1",
@@ -43,11 +44,12 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
       					 path : unique+"-DropdownMenu/"+unique+"-DropdownMenu.action2",
       					 id : unique+"-DropdownMenu.action2",
       					 run: "alert('something else works')"
-      				 }*/
+      				 }
       			],
       			actions: []
       		}
       	];
+      	*/
 	},
 	
 	setEditor: function(editorExtension, fileName, content, file, rootElement, newHtmlParams){

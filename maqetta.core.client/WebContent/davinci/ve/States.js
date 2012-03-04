@@ -13,10 +13,10 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 		widget = this._getWidget(widget);
 		if (!widget) return;
 
-		var style = this.getStyle(widget, newState);
+		var styleArray = this.getStyle(widget, newState);
 
 		if (this.isNormalState(newState)) {
-			this._styleChange(widget, style);
+			this._styleChange(widget, styleArray);
 		}
 	},
 		
@@ -43,28 +43,63 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 		}
 	},
 	
-	_styleChange: function (widget, style){
+	_styleChange: function (widget, styleArray){
 		var currentEditor = top.davinci.Runtime.currentEditor; //TODO: use require?
 		var context = currentEditor.getContext();
 
-		var command = new StyleCommand(widget, [style]);	
+		var command = new StyleCommand(widget, styleArray);	
 		
 		context.getCommandStack().execute(command);
 	},
 	
 	normalize: function(type, widget, name, value) {
         switch(type) {
-	    case "style":
-            var state = davinci.ve.states.getState();
-            if (state) {
-                var normalValue = this.getStyle(widget, undefined, name);
-                if (normalValue) {
-                    value = normalValue;
-                }
-            }
-            break;
+		    case "style":
+	            var state = davinci.ve.states.getState();
+	            if (state) {
+	                var normalValueArray = this.getStyle(widget, undefined, name);
+	                if (normalValueArray) {
+		                for(var i=0; i<normalValueArray.length; i++){
+		                	if(normalValueArray[i][name]){
+		                		value = normalValueArray[i][name];
+		                	}
+		                }
+	                }
+	            }
+	            break;
         }
         return value;
+	},
+	
+	normalizeArray: function(type, widget, name, valueArray) {
+        switch(type) {
+		    case "style":
+	            var state = davinci.ve.states.getState();
+	            if (state) {
+	                var normalValueArray = this.getStyle(widget, undefined, name);
+	                if (normalValueArray) {
+	                	// Remove all entries from valueArray that are in normalValueArray
+		                for(var i=0; i<normalValueArray.length; i++){
+		                	var nItem = normalValueArray[i];
+		                	for(var nProp in nItem){	// should be only one property 
+		                		for(var j=valueArray.length-1; j>=0; j--){
+		                			var vItem = valueArray[j];
+		                			for(var vProp in vItem){	// should be only one property
+		                				if(vProp == nProp){
+		                					valueArray.splice(j, 1);
+		                					break;
+		                				}
+		                			}
+		                		}
+		                	}
+		                }
+		                // Append values from normalValueArray
+		                valueArray = valueArray.concat(normalValueArray);
+	                }
+	            }
+	            break;
+        }
+        return valueArray;
 	},
 	
 	getEditor: function() {

@@ -2488,15 +2488,33 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	getStyleAttributeValues: function(widget){
-		var v = widget ? widget.getStyleValues() : {};
+		//FIXME: This totally seems to have missed the array logic
+		var vArray = widget ? widget.getStyleValues() : [];
 		
 		var isNormalState = davinci.ve.states.isNormalState();
 		if (!isNormalState) {
-			var stateStyleValues = davinci.ve.states.getStyle(widget);
-			dojo.mixin(v, stateStyleValues);
+			var stateStyleValuesArray = davinci.ve.states.getStyle(widget);
+			if(stateStyleValuesArray){
+				// Remove entries from vArray that are in stateStyleValuesArray
+				for(var i=0; i<stateStyleValuesArray.length; i++){
+					var sItem = stateStyleValuesArray[i];
+					for(var sProp in sItem){	// should be only object in each array item
+						for(var j=vArray.length-1; j>=0; j--){
+							var vItem = vArray[j];
+							for(var vProp in vItem){	// should be only object in each array item
+								if(sProp == vProp){
+									vArray.splice(j, 1);
+									break;
+								}
+							}
+						}
+					}
+				}
+				// Concat entries from stateStyleValuesArray to end of vArray
+				vArray = vArray.concat(stateStyleValuesArray);
+			}
 		}
-		
-		return v;
+		return vArray;
 	},
 	
 	 getUniqueID: function(node, persist, idRoot) {

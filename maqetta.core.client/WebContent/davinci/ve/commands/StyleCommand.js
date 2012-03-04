@@ -52,16 +52,17 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		if (isNormalState) {
 			//FIXME: what about oldValue when not normal state?
 			if(!this._oldValues){
-				this._oldValues = (widget.getStyleValues() || {});
+				this._oldValues = (widget.getStyleValues() || []);
 				if(!this._oldValues){
 					return;
 				}
 			}
 		}
-		/* may need to trickle down duplicate background properties for a state into the state code. */
-		for(var i=0;i<cleanValues.length;i++){
-			veStates.setStyle(widget, this._state, cleanValues[i], undefined, isNormalState);			
-		}
+		// /* may need to trickle down duplicate background properties for a state into the state code. */
+		//for(var i=0;i<cleanValues.length;i++){
+			//veStates.setStyle(widget, this._state, cleanValues[i], isNormalState);			
+		//}
+		veStates.setStyle(widget, this._state, cleanValues, isNormalState);			
 
 		if (isNormalState) {
 			cleanValues = this._mergeProperties(cleanValues, this._oldValues);			
@@ -85,21 +86,21 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 	
 	_mergeProperties: function(set1, set2) {
 		var oldValues = dojo.clone(set2);
+		// Remove properties from oldValues that are in set1
 		for(var i=0;i<set1.length;i++){
-			for(var name1 in set1[i]){
-					for(var name2 in oldValues){
-						if(name1==name2)
-							delete oldValues[name2];
+			for(var name1 in set1[i]){	// should only have one property
+				for(j=oldValues.length-1; j>=0; j--){
+					var oldItem = oldValues[j];
+					for(var name2 in oldItem){	// should only have one property
+						if(name1==name2){
+							oldValues.splice(j, 1);
+							break;
+						}
 					}
-				
+				}
 			}
 		}
-		var newValues = dojo.clone(set1);
-		for(var name in oldValues){
-			var a = {};
-			a[name]=oldValues[name];
-			newValues.push(a);
-		}
+		var newValues = set1.concat(oldValues);
 		return newValues;
 	},
 

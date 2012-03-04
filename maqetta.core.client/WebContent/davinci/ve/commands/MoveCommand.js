@@ -85,12 +85,15 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		// Adjust for parent border width
         var parentBorderLeft = parseInt(dojo.style(widget.domNode.offsetParent, 'borderLeftWidth'));
         var parentBorderTop = parseInt(dojo.style(widget.domNode.offsetParent, 'borderTopWidth'));
-		var cleanValues = { left: this._newBox.l - parentBorderLeft, top: this._newBox.t - parentBorderTop};
-		States.setStyle(widget, this._state, cleanValues, undefined, isNormalState);	
+		//var cleanValues = { left: this._newBox.l - parentBorderLeft, top: this._newBox.t - parentBorderTop};
+        var newLeft = this._newBox.l - parentBorderLeft;
+        var newTop = this._newBox.t - parentBorderTop;
+		var cleanValues = [{ left: newLeft}, {top: newTop}];
+		States.setStyle(widget, this._state, cleanValues, isNormalState);	
 		
 		if (isNormalState) {
 			node.style.position = "absolute";
-			var size = { l: cleanValues.left, t: cleanValues.top };
+			var size = { l: newLeft, t: newTop };
 			widget.setMarginBox( size);
 		}
 		

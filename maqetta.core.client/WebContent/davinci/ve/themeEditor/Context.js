@@ -203,7 +203,7 @@ return declare("davinci.ve.themeEditor.Context", [Context], {
 	
 	getStyleAttributeValues: function(widget){
 		/* no style attributes for theme editor */
-		return {};
+		return [];
 	},
 	
 	_restoreStates: function(){

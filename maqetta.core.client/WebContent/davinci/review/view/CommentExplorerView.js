@@ -48,17 +48,17 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 		dojo.connect(this.tree,'_onNodeMouseLeave', dojo.hitch(this, this._leave));
 		this.tree.notifySelect = dojo.hitch(this, function (item) {
 			var items = dojo.map(this.tree.getSelectedItems(), function(item) { return {resource:item};});
-			this.publish("/davinci/ui/selectionChanged", [items, this]);
+			this.publish("/davinci/review/selectionChanged", [items, this]);
 		});
 
-		this.subscribe("/davinci/ui/selectionChanged", "_updateActionBar");
+		this.subscribe("/davinci/review/selectionChanged", "_updateActionBar");
 		this.subscribe("/davinci/review/resourceChanged", function(arg1, arg2, arg3) {
 			if (arg3 && arg3.timeStamp) {
 				var node = davinci.review.model.resource.root.findVersion(arg3.timeStamp);
 				if (node) { 
 					this.tree.set("selectedItem", node);
 				} else {
-					this.publish("/davinci/ui/selectionChanged", [{}, this]);
+					this.publish("/davinci/review/selectionChanged", [{}, this]);
 				}
 			}
 		});

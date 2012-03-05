@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/grid/enhanced/nls/kk/Filter", //begin v1.x content
+//begin v1.x content
 ({
 	"clearFilterDialogTitle": "Сүзгіні тазалау",
 	"filterDefDialogTitle": "Сүзгі",
@@ -65,8 +65,6 @@ define(
 	"anycolumn": "кез келген баған",
 	"statusTipTitleNoFilter": "Сүзгі тақтасы",
 	"statusTipTitleHasFilter": "Сүзгі",
-	"statusTipRelAny": "Кез келген ережелерді сәйкестендіріңіз.",
-	"statusTipRelAll": "Барлық ережелерді сәйкестендіріңіз.",
 	
 	"defaultItemsName": "элементтер",
 	"filterBarMsgHasFilterTemplate": "${1} ${2} ішінен ${0} көрсетілді.",
@@ -87,3 +85,6 @@ define(
 })
 //end v1.x content
 );
+
+
+

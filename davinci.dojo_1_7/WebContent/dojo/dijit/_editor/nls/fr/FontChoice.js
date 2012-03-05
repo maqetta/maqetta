@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/_editor/nls/fr/FontChoice", //begin v1.x content
+//begin v1.x content
 ({
 	fontSize: "Taille",
 	fontName: "Police",

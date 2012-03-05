@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/grid/enhanced/nls/nl/Pagination", //begin v1.x content
+//begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} van ${1} ${0}",
 	"firstTip": "Eerste pagina",

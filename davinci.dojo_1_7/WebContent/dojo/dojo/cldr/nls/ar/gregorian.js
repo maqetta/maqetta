@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojo/cldr/nls/ar/gregorian", //begin v1.x content
+//begin v1.x content
 {
 	"dateFormatItem-yM": "M‏/yyyy",
 	"field-dayperiod": "ص/م",

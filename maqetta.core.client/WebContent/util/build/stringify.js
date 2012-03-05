@@ -1,7 +1,7 @@
 ///
-// \amd-mid build/stringify
+// \amd-mid uild/stringify
 //
-define(["dojo", "./buildControlBase"], function(dojo, bc) {
+define(["dojo"], function(dojo) {
 var
 	spaces= "					 ",
 	indentFactor= 2,
@@ -48,7 +48,7 @@ var
 		} else {
 			level++;
 		}
-		var temp, space, p, i, newline = bc.newline;
+		var temp, space, p, i;
 		switch (typeof it) {
 			case "undefined":
 				text+= "undefined";
@@ -73,15 +73,15 @@ var
 					text+= RegExp.toString();
 				} else if (it instanceof Array) {
 					if (it.length>1) {
-						text+= "[" + newline;
+						text+= "[\n";
 						for (i= 0; i<it.length-1; i++) {
 							text+= indent(level);
 							stringify(it[i], level);
-							text+= "," + newline;
+							text+= ",\n";
 						}
 						text+= indent(level);
 						stringify(it[i], level);
-						text+= newline + indent(level-1) + "]";
+						text+= "\n" + indent(level-1) + "]";
 					} else if (it.length) {
 						text+= "[";
 						stringify(it[0], level);
@@ -94,15 +94,15 @@ var
 					for (p in it) temp.push(p);
 					temp.sort();
 					if (temp.length>1) {
-						text+= "{" + newline;
+						text+= "{\n";
 						for (i= 0; i<temp.length-1; i++) {
 							text+= indent(level) + propName(temp[i]);
 							stringify(it[temp[i]], level);
-							text+= "," + newline;
+							text+= ",\n";
 						}
 						text+= indent(level) + propName(temp[i]);
 						stringify(it[temp[i]], level);
-						text+= newline;
+						text+= "\n";
 						text+= indent(level-1) + "}";
 					} else if (temp.length) {
 						text+= "{" + propName(temp[0]);
@@ -132,7 +132,7 @@ var
 				}
 				functionText.unshift(indent(minSpaces, 1) + firstLine);
 				//every line has at least minSpaces indentation...
-				text+= newline + functionText.map(function(line) { return space + line.substring(minSpaces); }).join(newline);
+				text+= "\n" + functionText.map(function(line) { return space + line.substring(minSpaces); }).join("\n");
 				break;
 
 			default:

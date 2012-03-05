@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/_editor/nls/ko/commands", //begin v1.x content
+//begin v1.x content
 ({
 	'bold': '굵게',
 	'copy': '복사',

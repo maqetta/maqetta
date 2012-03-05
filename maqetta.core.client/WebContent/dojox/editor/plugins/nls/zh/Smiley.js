@@ -19,8 +19,7 @@ define(
 	emoticonYes: "点头",
 	emoticonNo: "摇头",
 	emoticonAngel: "天使",
-	emoticonCrying: "哭泣",
-	emoticonHappy: "高兴"
+	emoticonCrying: "哭泣"
 })
 
 //end v1.x content

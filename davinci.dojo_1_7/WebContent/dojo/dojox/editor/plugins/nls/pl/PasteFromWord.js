@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/pl/PasteFromWord", //begin v1.x content
+//begin v1.x content
 ({
 	"pasteFromWord": "Wklej z programu Word",
 	"paste": "Wklej",

@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/ca/CollapsibleToolbar", //begin v1.x content
+//begin v1.x content
 ({
 	"collapse": "Redueix la barra d'eines de l'editor",
 	"expand": "Expandeix la barra d'eines de l'editor"

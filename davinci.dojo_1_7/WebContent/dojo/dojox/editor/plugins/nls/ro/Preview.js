@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/ro/Preview", //begin v1.x content
+//begin v1.x content
 ({
 	"preview": "Previzualizare"
 })

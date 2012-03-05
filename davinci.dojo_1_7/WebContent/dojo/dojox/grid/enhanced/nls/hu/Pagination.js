@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/grid/enhanced/nls/hu/Pagination", //begin v1.x content
+//begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} / ${1} ${0}",
 	"firstTip": "Első oldal",

@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/nls/sl/common", //begin v1.x content
+//begin v1.x content
 ({
 	buttonOk: "V redu",
 	buttonCancel: "Prekliči",

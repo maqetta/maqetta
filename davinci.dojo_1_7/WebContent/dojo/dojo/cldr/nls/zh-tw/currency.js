@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojo/cldr/nls/zh-tw/currency", //begin v1.x content
+//begin v1.x content
 {
 	"USD_symbol": "$",
 	"EUR_displayName": "歐元",

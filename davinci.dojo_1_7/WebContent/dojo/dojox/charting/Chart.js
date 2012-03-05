@@ -35,7 +35,10 @@ _7.destroy(this.chartTitle);
 }
 this.surface.destroy();
 },getCoords:function(){
-return _4.coords(this.node,true);
+if(!this.coords){
+this.coords=_4.coords(this.node,true);
+}
+return this.coords;
 },setTheme:function(_19){
 this.theme=_19.clone();
 this.dirty=true;
@@ -284,6 +287,7 @@ var d=this.surface.getDimensions();
 if(d.width!=box.w||d.height!=box.h){
 this.surface.setDimensions(box.w,box.h);
 this.dirty=true;
+this.coords=null;
 return this.render();
 }else{
 return this;

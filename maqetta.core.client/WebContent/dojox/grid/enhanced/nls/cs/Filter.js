@@ -64,8 +64,6 @@ define(
 	"anycolumn": "jakýkoli sloupec",
 	"statusTipTitleNoFilter": "Panel filtrování",
 	"statusTipTitleHasFilter": "Filtr",
-	"statusTipRelAny": "Vyhovovat libovolnému pravidlu",
-	"statusTipRelAll": "Vyhovovat všem pravidlům",
 	
 	"defaultItemsName": "položek",
 	"filterBarMsgHasFilterTemplate": "${0} z ${1} ${2} zobrazeno.",
@@ -86,3 +84,6 @@ define(
 })
 //end v1.x content
 );
+
+
+

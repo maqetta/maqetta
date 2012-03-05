@@ -64,8 +64,6 @@ define(
 	"anycolumn": "enhver kolonne",
 	"statusTipTitleNoFilter": "Filterlinje",
 	"statusTipTitleHasFilter": "Filter",
-	"statusTipRelAny": "Samsvar med minst en regel.",
-	"statusTipRelAll": "Samsvar med alle regler.",
 	
 	"defaultItemsName": "elementer",
 	"filterBarMsgHasFilterTemplate": "${0} av ${1} ${2} vist.",
@@ -86,3 +84,6 @@ define(
 })
 //end v1.x content
 );
+
+
+

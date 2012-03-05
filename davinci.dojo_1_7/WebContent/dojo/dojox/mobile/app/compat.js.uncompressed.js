@@ -51,9 +51,6 @@ define("dijit/main", [
 
 }}});
 
-require(["dojo/i18n"], function(i18n){
-i18n._preloadLocalizations("dojox/mobile/app/nls/compat", []);
-});
 // wrapped by build app
 define("dojox/mobile/app/compat", ["dijit","dojo","dojox","dojo/require!dojox/mobile/compat"], function(dijit,dojo,dojox){
 dojo.provide("dojox.mobile.app.compat");

@@ -1,5 +1,5 @@
 //>>built
-define("dojox/widget/nls/Wizard", { root:
+define({ root:
 //begin v1.x content
 ({
 next: "Next",
@@ -27,7 +27,6 @@ done: "Done"
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,

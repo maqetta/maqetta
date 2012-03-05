@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/grid/enhanced/nls/ar/Filter", //begin v1.x content
+//begin v1.x content
 ({
 	"clearFilterDialogTitle": "محو ترشيح البيانات",
 	"filterDefDialogTitle": "ترشيح البيانات",

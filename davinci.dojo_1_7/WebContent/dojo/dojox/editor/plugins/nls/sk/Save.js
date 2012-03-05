@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/sk/Save", //begin v1.x content
+//begin v1.x content
 ({
 	"save": "Uložiť"
 })

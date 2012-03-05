@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/form/nls/nl/validate", //begin v1.x content
+//begin v1.x content
 ({
 	invalidMessage: "De opgegeven waarde is ongeldig.",
 	missingMessage: "Deze waarde is verplicht.",

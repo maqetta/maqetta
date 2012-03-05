@@ -280,11 +280,11 @@ var _Paginator = declare("dojox.grid.enhanced.plugins._Paginator", [_Widget, _Te
 		this.inherited(arguments);
 		var _this = this, g = this.grid;
 		this.plugin.connect(g, "_resize", lang.hitch(this, "_resetGridHeight"));
-		this._originalResize = g.resize;
+		this._originalResize = lang.hitch(g, "resize");
 		g.resize = function(changeSize, resultSize){
 			_this._changeSize = changeSize;
 			_this._resultSize = resultSize;
-			_this._originalResize.apply(g, arguments);
+			_this._originalResize();
 		};
 		this.focus = _Focus(this);
 		this._placeSelf();
@@ -937,7 +937,7 @@ var Pagination = declare("dojox.grid.enhanced.plugins.Pagination", _Plugin, {
 	},
 	_onNew: function(item, parentInfo){
 		var totalPages = this.getTotalPageNum();
-		if(((this._currentPage === totalPages || totalPages === 0) && this.grid.get('rowCount') < this._currentPageSize) || this._showAll){
+		if(((this._currentPage === totalPages || totalPages === 0) && this.grid.rowCount < this._currentPageSize) || this._showAll){
 			lang.hitch(this.grid, this._gridOriginalfuncs[1])(item, parentInfo);
 			this.forcePageStoreLayer.endIdx++;
 		}
@@ -948,7 +948,7 @@ var Pagination = declare("dojox.grid.enhanced.plugins.Pagination", _Plugin, {
 		if(this._showAll && this.grid.autoHeight){
 			this.grid._refresh();
 		}else{
-			this._paginator._update();
+			this._paginator.update();
 		}
 	},
 	_onDelete: function(){

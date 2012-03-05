@@ -2966,9 +2966,6 @@ define("dojox/dtl/tag/date", [
 
 }}});
 
-require(["dojo/i18n"], function(i18n){
-i18n._preloadLocalizations("dojox/nls/dtl", []);
-});
 define("dojox/dtl", ["./dtl/_base"], function(dxdtl){
 	return dxdtl;
 });

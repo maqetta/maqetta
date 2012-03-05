@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/form/nls/ca/validate", //begin v1.x content
+//begin v1.x content
 ({
 	invalidMessage: "El valor introduït no és vàlid",
 	missingMessage: "Aquest valor és necessari",

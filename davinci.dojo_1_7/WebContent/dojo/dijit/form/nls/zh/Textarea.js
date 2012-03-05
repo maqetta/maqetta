@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/form/nls/zh/Textarea", //begin v1.x content
+//begin v1.x content
 ({
 	iframeEditTitle: '编辑区',  // primary title for editable IFRAME, for screen readers when focus is in the editing area
 	iframeFocusTitle: '编辑区框架'  // secondary title for editable IFRAME when focus is on outer container

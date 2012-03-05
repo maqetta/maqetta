@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/form/nls/cs/validate", //begin v1.x content
+//begin v1.x content
 ({
 	invalidMessage: "Zadaná hodnota není platná.",
 	missingMessage: "Tato hodnota je vyžadována.",

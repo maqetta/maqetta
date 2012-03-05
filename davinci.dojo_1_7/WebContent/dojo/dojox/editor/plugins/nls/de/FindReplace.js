@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/de/FindReplace", //begin v1.x content
+//begin v1.x content
 ({
 	"findLabel": "Suchbegriff:",
 	"findTooltip": "Text zum Suchen eingeben",
@@ -11,6 +11,7 @@ define(
 	"matchCaseTooltip": "Groß- und Kleinschreibung abgleichen",
 	"backwards": "Zurück",
 	"backwardsTooltip": "Rückwärts nach Text suchen",
+	"replaceAll": "Alle Vorkommen",
 	"replaceAllButton": "Global ersetzen",
 	"replaceAllButtonTooltip": "Gesamten Text ersetzen",
 	"findButton": "Suchen",

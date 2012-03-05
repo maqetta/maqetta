@@ -19,8 +19,7 @@ define(
 	emoticonYes: "ja",
 	emoticonNo: "nej",
 	emoticonAngel: "ängel",
-	emoticonCrying: "gråter",
-	emoticonHappy: "glad"
+	emoticonCrying: "gråter"
 })
 
 //end v1.x content

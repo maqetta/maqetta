@@ -429,6 +429,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		comment.type = args.type;
 		comment.severity = args.severity;
 		comment.pageState = this._cached[this._currentPage].pageState;
+		comment.viewScene = this._cached[this._currentPage].viewScene;
 		comment.drawingJson = this.drawingJson;
 		form.hide();
 		comment.update();
@@ -442,6 +443,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		_comment.type = comment.type;
 		_comment.severity = comment.severity;
 		_comment.pageState = comment.pageState;
+		_comment.viewScene = comment.viewScene;
 		_comment.drawingJson = comment.drawingJson;
 		_comment.status = comment.status;
 	},

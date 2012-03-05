@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/nb/SpellCheck", //begin v1.x content
+//begin v1.x content
 ({
 	widgetLabel: "Satsvis stavekontroll",
 	unfound: "Ikke funnet",

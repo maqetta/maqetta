@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/grid/enhanced/nls/sk/EnhancedGrid", //begin v1.x content
+//begin v1.x content
 ({
 	singleSort: "Jednoduché triedenie",
 	nestedSort: "Vnorené triedenie",

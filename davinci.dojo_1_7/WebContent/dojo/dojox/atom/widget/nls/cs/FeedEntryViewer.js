@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/atom/widget/nls/cs/FeedEntryViewer", //begin v1.x content
+//begin v1.x content
 ({
 	displayOptions: "[volby zobrazení]",
 	title: "Název",

@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/grid/enhanced/nls/kk/EnhancedGrid", //begin v1.x content
+//begin v1.x content
 ({
 	singleSort: "Бір рет сұрыптау",
 	nestedSort: "Кірістірілген сұрыптау",

@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/widget/nls/pt/Wizard", //begin v1.x content
+//begin v1.x content
 ({
 next: "Próximo",
 previous: "Anterior",

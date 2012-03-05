@@ -19,8 +19,7 @@ define(
 	emoticonYes: "ano",
 	emoticonNo: "ne",
 	emoticonAngel: "anděl",
-	emoticonCrying: "pláč",
-	emoticonHappy: "veselý"
+	emoticonCrying: "pláč"
 })
 
 //end v1.x content

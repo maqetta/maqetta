@@ -1,5 +1,5 @@
 //>>built
-define("dijit/_editor/nls/FontChoice", { root:
+define({ root:
 //begin v1.x content
 ({
 	fontSize: "Size",
@@ -48,7 +48,6 @@ define("dijit/_editor/nls/FontChoice", { root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -58,6 +57,5 @@ define("dijit/_editor/nls/FontChoice", { root:
 "da": true,
 "cs": true,
 "ca": true,
-"az": true,
 "ar": true
 });

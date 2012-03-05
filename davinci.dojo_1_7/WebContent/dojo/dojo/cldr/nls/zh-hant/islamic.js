@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojo/cldr/nls/zh-hant/islamic", //begin v1.x content
+//begin v1.x content
 {
 	"dateFormatItem-yM": "yyyy/M",
 	"dateFormatItem-yQ": "y年QQQ",

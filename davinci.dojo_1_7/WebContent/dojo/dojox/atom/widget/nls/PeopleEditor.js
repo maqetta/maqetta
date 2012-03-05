@@ -1,5 +1,5 @@
 //>>built
-define("dojox/atom/widget/nls/PeopleEditor", { root:
+define({ root:
 //begin v1.x content
 ({
 	add: "Add",
@@ -20,7 +20,6 @@ define("dojox/atom/widget/nls/PeopleEditor", { root:
 "fr": true,
 "he": true,
 "hu": true,
-"hr": true,
 "it": true,
 "ja": true,
 "kk": true,

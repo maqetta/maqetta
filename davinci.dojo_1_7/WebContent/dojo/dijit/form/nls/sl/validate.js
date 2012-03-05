@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/form/nls/sl/validate", //begin v1.x content
+//begin v1.x content
 ({
 	invalidMessage: "Vnesena vrednost ni veljavna.",
 	missingMessage: "Ta vrednost je zahtevana.",

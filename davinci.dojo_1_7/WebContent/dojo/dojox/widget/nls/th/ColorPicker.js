@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/widget/nls/th/ColorPicker", //begin v1.x content
+//begin v1.x content
 ({
 redLabel: "อาร์",
 greenLabel: "จี",

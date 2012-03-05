@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/ja/PasteFromWord", //begin v1.x content
+//begin v1.x content
 ({
 	"pasteFromWord": "Word からの貼り付け",
 	"paste": "貼り付け",

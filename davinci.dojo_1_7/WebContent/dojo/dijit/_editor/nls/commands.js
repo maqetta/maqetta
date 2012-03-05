@@ -1,5 +1,5 @@
 //>>built
-define("dijit/_editor/nls/commands", { root:
+define({ root:
 //begin v1.x content
 ({
 	'bold': 'Bold',
@@ -71,7 +71,6 @@ define("dijit/_editor/nls/commands", { root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -81,6 +80,5 @@ define("dijit/_editor/nls/commands", { root:
 "da": true,
 "cs": true,
 "ca": true,
-"az": true,
 "ar": true
 });

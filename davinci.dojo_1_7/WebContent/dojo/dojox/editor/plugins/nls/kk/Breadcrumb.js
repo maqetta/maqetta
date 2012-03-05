@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/kk/Breadcrumb", //begin v1.x content
+//begin v1.x content
 ({
 	"nodeActions": "${nodeName} Әрекеттер",
 	"selectContents": "Мазмұнын таңдау",

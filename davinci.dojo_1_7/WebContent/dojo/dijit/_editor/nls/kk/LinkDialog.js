@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/_editor/nls/kk/LinkDialog", //begin v1.x content
+//begin v1.x content
 ({
 	createLinkTitle: "Сілтеме сипаттары",
 	insertImageTitle: "Сурет сипаттары",

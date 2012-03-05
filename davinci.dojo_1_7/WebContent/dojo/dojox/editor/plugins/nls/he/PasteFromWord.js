@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/he/PasteFromWord", //begin v1.x content
+//begin v1.x content
 ({
 	"pasteFromWord": "הדבקה מתוך Word",
 	"paste": "הדבקה",

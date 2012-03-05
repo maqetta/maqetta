@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/pt/SpellCheck", //begin v1.x content
+//begin v1.x content
 ({
 	widgetLabel: "Verificação Ortográfica em Lote",
 	unfound: "Não localizado",

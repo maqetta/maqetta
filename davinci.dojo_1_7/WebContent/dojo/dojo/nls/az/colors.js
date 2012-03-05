@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojo/nls/az/colors", //begin v1.x content
+//begin v1.x content
 ({
 	"lightsteelblue":"açıq metal mavi",
 	"orangered" :"narıncı qırmızı",

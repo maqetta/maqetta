@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/sv/TableDialog", //begin v1.x content
+//begin v1.x content
 ({
 	insertTableTitle: "Infoga tabell",
 	modifyTableTitle: "Ändra tabell",

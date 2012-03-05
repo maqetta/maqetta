@@ -19,8 +19,7 @@ define(
 	emoticonYes: "да",
 	emoticonNo: "нет",
 	emoticonAngel: "ангел",
-	emoticonCrying: "плачь",
-	emoticonHappy: "счастлив"
+	emoticonCrying: "плачь"
 })
 
 //end v1.x content

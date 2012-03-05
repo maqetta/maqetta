@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/sv/PageBreak", //begin v1.x content
+//begin v1.x content
 ({
 	"pageBreak": "Sidbrytning"
 })

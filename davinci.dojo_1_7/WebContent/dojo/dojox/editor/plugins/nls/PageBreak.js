@@ -1,10 +1,8 @@
 //>>built
-define("dojox/editor/plugins/nls/PageBreak", { root:
-//begin v1.x content
+define({ root:
 ({
 	"pageBreak": "Page Break"
-})
-,
+}),
 //end v1.x content
 "zh": true,
 "zh-tw": true,
@@ -25,7 +23,6 @@ define("dojox/editor/plugins/nls/PageBreak", { root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -37,3 +34,4 @@ define("dojox/editor/plugins/nls/PageBreak", { root:
 "ca": true,
 "ar": true
 });
+

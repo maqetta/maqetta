@@ -1,5 +1,5 @@
 //>>built
-define("dojo/nls/colors", { root:
+define({ root:
 //begin v1.x content
 ({
 // local representation of all CSS3 named colors, companion to dojo.colors.  To be used where descriptive information
@@ -177,7 +177,6 @@ yellowgreen: "yellow green"
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -187,6 +186,5 @@ yellowgreen: "yellow green"
 "da": true,
 "cs": true,
 "ca": true,
-"az": true,
 "ar": true
 });

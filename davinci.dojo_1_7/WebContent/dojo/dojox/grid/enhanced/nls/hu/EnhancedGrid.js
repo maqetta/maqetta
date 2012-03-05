@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/grid/enhanced/nls/hu/EnhancedGrid", //begin v1.x content
+//begin v1.x content
 ({
 	singleSort: "Egyszerű rendezés",
 	nestedSort: "Beágyazott rendezés",

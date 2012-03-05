@@ -19,8 +19,7 @@ define(
 	emoticonYes: "Ναι",
 	emoticonNo: "Όχι",
 	emoticonAngel: "Αγγελούδι",
-	emoticonCrying: "Κλάμα",
-	emoticonHappy: "Ευτυχία"
+	emoticonCrying: "Κλάμα"
 })
 
 //end v1.x content

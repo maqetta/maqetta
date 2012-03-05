@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/_editor/nls/zh/commands", //begin v1.x content
+//begin v1.x content
 ({
 	'bold': '粗体',
 	'copy': '复制',

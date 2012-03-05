@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/atom/widget/nls/th/FeedEntryEditor", //begin v1.x content
+//begin v1.x content
 ({
 	doNew: "[สร้าง]",
 	edit: "[แก้ไข]",

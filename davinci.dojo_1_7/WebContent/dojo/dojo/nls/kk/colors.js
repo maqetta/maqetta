@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojo/nls/kk/colors", //begin v1.x content
+//begin v1.x content
 ({
 // local representation of all CSS3 named colors, companion to dojo.colors.  To be used where descriptive information
 // is required for each color, such as a palette widget, and not for specifying color programatically.
@@ -147,7 +147,6 @@ tan: "сарғыш қоңыр",
 teal: "шүрегей",
 thistle: "артишок",
 tomato: "қызанақ",
-transparent: "мөлдір",
 turquoise: "көгілдір",
 violet: "күлгін",
 wheat: "бидай",
@@ -158,3 +157,4 @@ yellowgreen: "сарғыш жасыл"
 })
 //end v1.x content
 );
+

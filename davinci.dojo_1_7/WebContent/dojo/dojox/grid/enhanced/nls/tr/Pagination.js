@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/grid/enhanced/nls/tr/Pagination", //begin v1.x content
+//begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} / ${1} ${0}",
 	"firstTip": "İlk Sayfa",
@@ -8,7 +8,6 @@ define(
 	"nextTip": "Sonraki Sayfa",
 	"prevTip": "Önceki Sayfa",
 	"itemTitle": "öğe",
-	"singularItemTitle": "öğe",
 	"pageStepLabelTemplate": "Sayfa ${0}",
 	"pageSizeLabelTemplate": "Sayfa başına ${0} öğe",
 	"allItemsLabelTemplate": "Tüm öğeler",
@@ -22,3 +21,4 @@ define(
 })
 //end v1.x content
 );
+

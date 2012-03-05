@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/nls/el/common", //begin v1.x content
+//begin v1.x content
 ({
 	buttonOk: "ΟΚ",
 	buttonCancel: "Ακύρωση",

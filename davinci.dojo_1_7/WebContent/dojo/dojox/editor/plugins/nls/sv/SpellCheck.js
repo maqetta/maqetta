@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/sv/SpellCheck", //begin v1.x content
+//begin v1.x content
 ({
 	widgetLabel: "Kontrollera stavning",
 	unfound: "Hittades inte",

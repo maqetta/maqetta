@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/_editor/nls/fi/LinkDialog", //begin v1.x content
+//begin v1.x content
 ({
 	createLinkTitle: "Linkin ominaisuudet",
 	insertImageTitle: "Kuvan ominaisuudet",

@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/widget/nls/ko/ColorPicker", //begin v1.x content
+//begin v1.x content
 ({
 redLabel: "R",
 greenLabel: "G",

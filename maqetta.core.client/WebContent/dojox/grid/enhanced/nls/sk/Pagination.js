@@ -7,7 +7,6 @@ define(
 	"nextTip": "Ďalšia strana",
 	"prevTip": "Predošlá strana",
 	"itemTitle": "položiek",
-	"singularItemTitle": "položka",
 	"pageStepLabelTemplate": "Strana ${0}",
 	"pageSizeLabelTemplate": "${0} položiek na strane",
 	"allItemsLabelTemplate": "Všetky položky",
@@ -21,3 +20,4 @@ define(
 })
 //end v1.x content
 );
+

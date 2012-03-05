@@ -19,8 +19,7 @@ define(
 	emoticonYes: "иә",
 	emoticonNo: "ешбір",
 	emoticonAngel: "періште",
-	emoticonCrying: "жылау",
-	emoticonHappy: "бақыт"
+	emoticonCrying: "жылау"
 })
 
 //end v1.x content

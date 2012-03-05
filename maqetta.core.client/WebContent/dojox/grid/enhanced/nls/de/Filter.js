@@ -64,8 +64,6 @@ define(
 	"anycolumn": "beliebige Spalte",
 	"statusTipTitleNoFilter": "Filterleiste",
 	"statusTipTitleHasFilter": "Filter",
-	"statusTipRelAny": "Übereinstimmung mit einer oder mehreren beliebigen Regeln.",
-	"statusTipRelAll": "Übereinstimmung mit allen Regeln.",
 	
 	"defaultItemsName": "Elemente",
 	"filterBarMsgHasFilterTemplate": "${0} von ${1} ${2} angezeigt.",
@@ -86,3 +84,6 @@ define(
 })
 //end v1.x content
 );
+
+
+

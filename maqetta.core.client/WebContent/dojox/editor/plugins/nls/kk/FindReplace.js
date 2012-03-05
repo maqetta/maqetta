@@ -10,6 +10,7 @@ define(
 	"matchCaseTooltip": "Үлкен-кішілігін ескеріп",
 	"backwards": "Артқа қарай",
 	"backwardsTooltip": "Мәтінді табу үшін артқа қарай іздеу",
+	"replaceAll": "Барлық оқиғалар",
 	"replaceAllButton": "Барлығын ауыстыру",
 	"replaceAllButtonTooltip": "Барлық мәтінді ауыстыру",
 	"findButton": "Табу",

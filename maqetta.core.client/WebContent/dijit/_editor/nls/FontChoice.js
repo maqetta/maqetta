@@ -47,7 +47,6 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -57,6 +56,5 @@ define({ root:
 "da": true,
 "cs": true,
 "ca": true,
-"az": true,
 "ar": true
 });

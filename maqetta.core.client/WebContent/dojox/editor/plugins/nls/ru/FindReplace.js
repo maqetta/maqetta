@@ -10,6 +10,7 @@ define(
 	"matchCaseTooltip": "С учетом регистра",
 	"backwards": "Назад",
 	"backwardsTooltip": "Поиск текста в обратном направлении",
+	"replaceAll": "Все вхождения",
 	"replaceAllButton": "Заменить все",
 	"replaceAllButtonTooltip": "Заменить весь текст",
 	"findButton": "Найти",

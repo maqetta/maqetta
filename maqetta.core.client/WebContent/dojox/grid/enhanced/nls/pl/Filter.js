@@ -64,8 +64,6 @@ define(
 	"anycolumn": "dowolna kolumna",
 	"statusTipTitleNoFilter": "Pasek filtru",
 	"statusTipTitleHasFilter": "Filtr",
-	"statusTipRelAny": "Dopasuj do dowolnej z reguł.",
-	"statusTipRelAll": "Dopasuj do wszystkich reguł.",
 	
 	"defaultItemsName": "elementy",
 	"filterBarMsgHasFilterTemplate": "Wyświetlane ${0} z ${1} ${2}.",
@@ -86,3 +84,6 @@ define(
 })
 //end v1.x content
 );
+
+
+

@@ -10,6 +10,7 @@ define(
 	"matchCaseTooltip": "Sama kirjainkoko",
 	"backwards": "Taaksepäin",
 	"backwardsTooltip": "Etsi tekstiä taaksepäin",
+	"replaceAll": "Kaikki esiintymät",
 	"replaceAllButton": "Korvaa kaikki",
 	"replaceAllButtonTooltip": "Korvaa kaikki teksti",
 	"findButton": "Etsi",

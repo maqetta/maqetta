@@ -10,6 +10,7 @@ define(["../fileHandleThrottle", "../messages"], function(fht, messages) {
 			process.stdout.on('close', function(){
 				process.exit(code);
 			});
+			process.stdout.end();
 		},
 
 		exec:function() {

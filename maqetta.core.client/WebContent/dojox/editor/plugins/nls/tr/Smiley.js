@@ -19,8 +19,7 @@ define(
 	emoticonYes: "evet",
 	emoticonNo: "hayır",
 	emoticonAngel: "melek",
-	emoticonCrying: "ağlayan ifade",
-	emoticonHappy: "mutlu ifade"
+	emoticonCrying: "ağlayan ifade"
 })
 
 //end v1.x content

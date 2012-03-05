@@ -122,9 +122,9 @@ var Workbench = {
 		Runtime.subscribe("/davinci/states/state/changed",
 			function(containerWidget, newState, oldState) {
 				var currentEditor = Runtime.currentEditor;
-				// ignore updates in theme editor
-				if ((!currentEditor.declaredClass == "davinci.ve.themeEditor.ThemeEditor" ||
-						currentEditor.declaredClass == "davinci.review.CommentReviewEditor") /*"davinci.ve.VisualEditor"*/) {
+				// ignore updates in theme editor and review editor
+				if ((currentEditor.declaredClass != "davinci.ve.themeEditor.ThemeEditor" &&
+						currentEditor.declaredClass != "davinci.review.editor.ReviewEditor") /*"davinci.ve.VisualEditor"*/) {
 					currentEditor.visualEditor.onContentChange.apply(currentEditor.visualEditor, arguments);
 				}
 			}
@@ -138,9 +138,15 @@ var Workbench = {
 
 		// bind overlay widgets to corresponding davinci states. singleton; no need to unsubscribe
 		davinci.states.subscribe("/davinci/states/state/changed", function(args) {
-			var prefix = "_show:", widget, dvWidget, helper,
-				thisDijit = Runtime.currentEditor.visualEditor.context.getDijit(),
-				widgetUtils = require("davinci/ve/widget");
+			//FIXME: This is page editor-specific logic within Workbench.
+			var context = (Runtime.currentEditor && Runtime.currentEditor.declaredClass == "davinci.ve.PageEditor" && 
+					Runtime.currentEditor.visualEditor && Runtime.currentEditor.visualEditor.context);
+			if(!context){
+				return;
+			}
+			var prefix = "_show:", widget, dvWidget, helper;
+			var thisDijit = context ? context.getDijit() : null;
+			var widgetUtils = require("davinci/ve/widget");
 			if (args.newState && !args.newState.indexOf(prefix)) {
 				widget = thisDijit.byId(args.newState.substring(6));
 				dvWidget = widgetUtils.getWidget(widget.domNode);
@@ -1269,8 +1275,15 @@ var Workbench = {
 		Workbench._updateTitle(newEditor);
 		Workbench._state.activeEditor=newEditor ? newEditor.fileName : null;
 	
-		if(newEditor && newEditor.focus) { newEditor.focus(); }
+		if(newEditor) {
+			if (newEditor.focus) { 
+				newEditor.focus(); 
+			}
 
+			//Bring palettes specified for the editor to the top
+			this._bringPalettesToTop(newEditor);
+		}
+		
 		setTimeout(function(){
 			// kludge: if there is a visualeditor and it is already populated, resize to make Dijit visualEditor contents resize
 			// If editor is still starting up, there is code on completion to do a resize
@@ -1282,6 +1295,35 @@ var Workbench = {
 
 		if(!startup) {
 			Workbench._updateWorkbenchState();
+		}
+	},
+	
+	_bringPalettesToTop: function(newEditor) {
+		// First, we will get the metadata for the extension and get its list of 
+		// palettes to bring to the top
+		var editorExtensions=Runtime.getExtensions("davinci.editor", function (extension){
+			return extension.id === newEditor.editorID;
+		});
+		if (editorExtensions && editorExtensions.length > 0) {
+			var editorPalettesToTop = editorExtensions[0].palettesToTop;
+			if (editorPalettesToTop) {
+				// Loop through palette ids and select appropriate palettes
+				for (var i = 0; i < editorPalettesToTop.length; i++) { 
+					var paletteId = editorPalettesToTop[i];
+					
+					// Look up the tab for the palette and get its 
+					// parent to find the right TabContainer
+					var tab = dijit.byId(paletteId);
+					if (tab) {
+						var tabContainer = tab.getParent();
+	
+						// Select tab
+						if (tabContainer) {
+							tabContainer.selectChild(tab);
+						}
+					}
+				}
+			}
 		}
 	},
 

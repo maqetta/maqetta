@@ -163,6 +163,10 @@ public class Marshaller extends DefaultHandler {
 		setValue(elem, doc, comm.getPageState());
 		commentElem.appendChild(elem);
 
+		elem = doc.createElement(Comment.VIEW_SCENE);
+		setValue(elem, doc, comm.getViewScene());
+		commentElem.appendChild(elem);
+
 		elem = doc.createElement(Comment.SUBJECT);
 		setValue(elem, doc, comm.getSubject());
 		commentElem.appendChild(elem);

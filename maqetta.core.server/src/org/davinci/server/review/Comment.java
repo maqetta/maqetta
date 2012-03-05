@@ -29,6 +29,8 @@ public class Comment implements Serializable {
 
 	public static final String PAGE_STATE = "pageState";
 
+	public static final String VIEW_SCENE = "viewScene";
+
 	public static final String OWNER_ID = "ownerId";
 
 	public static final String SUBJECT = "subject";
@@ -90,6 +92,8 @@ public class Comment implements Serializable {
 
 	private String pageState;
 
+	private String viewScene;
+
 	private String drawingJson;
 
 	private String ownerId;
@@ -128,6 +132,7 @@ public class Comment implements Serializable {
 	static {
 		fieldInclusionMap.put(Comment.ID, Boolean.TRUE);
 		fieldInclusionMap.put(Comment.PAGE_STATE, Boolean.TRUE);
+		fieldInclusionMap.put(Comment.VIEW_SCENE, Boolean.TRUE);
 		fieldInclusionMap.put(Comment.PAGE_NAME, Boolean.TRUE);
 		fieldInclusionMap.put(Comment.OWNER_ID, Boolean.TRUE);
 		fieldInclusionMap.put(Comment.REPLY_TO, Boolean.TRUE);
@@ -220,6 +225,14 @@ public class Comment implements Serializable {
 		this.pageState = pageState;
 	}
 
+	public String getViewScene() {
+		return viewScene;
+	}
+
+	public void setViewScene(String viewScene) {
+		this.viewScene = viewScene;
+	}
+
 	public IDavinciProject getProject() {
 		return project;
 	}
@@ -294,6 +307,7 @@ public class Comment implements Serializable {
 	 * 
 	 * @return
 	 */
+	@Override
 	public String toString() {
 		JSONWriter writer = new JSONWriter(false);
 		
@@ -304,7 +318,7 @@ public class Comment implements Serializable {
 		String fieldName;
 		Object returnValue;
 		for (int i = 0; i < fields.length; i++) {
-			fieldName = (String) fields[i].getName();
+			fieldName = fields[i].getName();
 			inclusive = Comment.fieldInclusionMap.get(fieldName);
 			if (Boolean.TRUE.equals(inclusive)) {
 				try {

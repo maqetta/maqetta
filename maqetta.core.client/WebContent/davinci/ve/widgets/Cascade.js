@@ -361,13 +361,18 @@ define(["dojo/_base/declare",
 			
 			if(this._editor.supports("inline-style") && 
 			  (this._topWidgetDom==this._widget.domNode || defaultSelection=="element.style")){
-				var v = this._getAttribStyleValue();
+				var vArray = this._getAttribStyleValue();
 				var value = null;
-				for(var name in this.target)
-					if(name in v)
-						value = v[name];
-				
-				values.push({rule:v, value:value, matchLevel:'element.style', type:'element.style'});
+				for(var vIndex=0; vIndex<vArray.length; vIndex++){
+					var vItem = vArray[vIndex];
+					for(var t=0; t<this.target.length; t++){// should be only one property in this.target
+						var name = this.target[t];
+						if(vItem[name] !== undefined){
+							value = vItem[name];
+						}
+					}
+				}
+				values.push({rule:vArray, value:value, matchLevel:'element.style', type:'element.style'});				
 			}
 			
 			/* selection (queried) rules */
@@ -442,32 +447,38 @@ define(["dojo/_base/declare",
 			
 			var allRules = this._getAllRules();
 			this._values = [];
-			this._hasOverride = false;
+			//Disabled hasOverride logic - had bugs, causes problems with logic and not sure it helps user
+			//this._hasOverride = false;
+			var propName = this.target[0];
 	
 			/* figure out the properties values */
 			var shorthands = this._getShortHands();
 			for(var i = 0;i<allRules.length;i++){
 				var rule = allRules[i].rule;
 				if(rule){
-					for(var k=0;k<shorthands.length;k++){
-						if(allRules[i].type!="element.style" && allRules[i].rule.getProperty(shorthands[k])!=null){
-							allRules[i].shorthand = shorthands[k];
-							var prop = rule.getProperty(shorthands[k]);
-							allRules[i].value = prop && prop.value;
-							
-							this._hasOverride = true;
-							
-						}else if(allRules[i].type=="element.style" && dojo.indexOf(allRules[i].rule, shorthands[k])>-1){
-							allRules[i].shorthand = shorthands[k];
-							var index = dojo.indexOf(allRules[i].rule, shorthands[k]);
-							allRules[i].value = rule[index];
-							this._hasOverride = true;
+					for(var j=0; j<rule.length; j++){
+						if(rule[i][propName] !== undefined){
+							/*Disabled hasOverride logic - had bugs, causes problems with logic and not sure it helps user
+							if(allRules[i].type!="element.style" && allRules[i].rule.getProperty(shorthands[k])!=null){
+								allRules[i].shorthand = shorthands[k];
+								var prop = rule.getProperty(shorthands[k]);
+								allRules[i].value = prop && prop.value;
+								
+								this._hasOverride = true;
+								
+							}else if(allRules[i].type=="element.style" && dojo.indexOf(allRules[i].rule, shorthands[k])>-1){
+								allRules[i].shorthand = shorthands[k];
+								var index = dojo.indexOf(allRules[i].rule, shorthands[k]);
+								allRules[i].value = rule[index];
+								this._hasOverride = true;
+							}
+							*/
+							if(!allRules[i].shorthand && allRules[i].type!="element.style")
+								allRules[i].value = this._getRuleTargetValue(rule);
+							else if(!allRules[i].shorthand && allRules[i].type=="element.style")
+									allRules[i].value = rule[i][propName];
 						}
 					}
-					if(!allRules[i].shorthand && allRules[i].type!="element.style")
-						allRules[i].value = this._getRuleTargetValue(rule);
-					else if(!allRules[i].shorthand && allRules[i].type=="element.style")
-							allRules[i].value = rule[this.target[0]];
 				}else{
 					// rule is null when type=='proposal'
 					allRules[i].value=null;
@@ -516,9 +527,11 @@ define(["dojo/_base/declare",
 			var foundValue = false;
 			for(var i = 0;i<rules.length;i++){
 				rules[i].extraClass = [];
+				/*NOTE: Disabled hasOverride logic - had bugs, causes problems with logic and not sure it helps user
 				if(this._hasOverride)
 					rules[i].extraClass.push("shorthandOverrideCascadeNode");
-				else if(foundValue)
+				else */
+				if(foundValue)
 					rules[i].extraClass.push("cssShorthandOverRidden");
 				
 				if( rules[i].value || (rules[i].type!="element.style" && this._getRuleTargetValue(rules[i].rule))){
@@ -729,6 +742,7 @@ define(["dojo/_base/declare",
 			if(this._widget==null)
 				this._setFieldValue("",this._getBaseLocation());
 		
+			/*Disabled hasOverride logic - had bugs, causes problems with logic and not sure it helps user
 			if(this._hasOverride){
 				this._setFieldValue("(overrides)",null);
 				var widget = dijit.byId(this.targetField);
@@ -743,6 +757,7 @@ define(["dojo/_base/declare",
 				
 				return;
 			}
+			*/
 		//if(this._isTarget("width")) debugger;
 			var defaultSelection = this._getDefaultSelection();
 			this._targetValueIndex = 0;

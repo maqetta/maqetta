@@ -57,6 +57,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this.subscribe("/davinci/scene/removed", this._removeScene.bind(this));
 		this.subscribe("/davinci/scene/renamed", this._renameScene.bind(this));
 		this.subscribe("/davinci/scene/selectionChanged", this._sceneSelectionChanged.bind(this));
+		
+		dojo.style(this.toolbarDiv, "display", "none");
 	},
 	
 	_contextLoaded: function() {
@@ -143,7 +145,12 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			} else {
 				this.set('title', langObj.Scenes);
 				this._updateView();
-				dojo.style(this.toolbarDiv, "display", "block");
+				if (editor.declaredClass === "davinci.ve.PageEditor"){
+					dojo.style(this.toolbarDiv, "display", "block");
+				}else{
+					// review editor
+					dojo.style(this.toolbarDiv, "display", "none");
+				}
 				var d = dijit.byId(this.toolbarDiv.parentNode.id);
 				d.resize();
 			}
@@ -151,6 +158,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		}else{
 			delete this._editor;
 			dojo.style(this.container.domNode, "display", "none");
+			dojo.style(this.toolbarDiv, "display", "none");
 		}
 	},
 	
@@ -532,10 +540,16 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			if (item && item.type && item.type[0] == 'AppState') {
 				if (this.isThemeEditor()){
 					if (!this._silent) {
-						this.publish("/davinci/states/state/changed", [{widget:'$all', newState:item.name[0], oldState:this._themeState, context: this._editor.context}]);
+						this.publish("/davinci/states/state/changed", 
+								[{editorClass:currentEditor.declaredClass, widget:'$all', 
+								newState:item.name[0], oldState:this._themeState, context: this._editor.context}]);
 					}
 					this._themeState = item.name[0];
 					this._silent = false;
+				} else if(currentEditor.declaredClass == 'davinci.review.editor.ReviewEditor') {
+					this.publish("/davinci/states/state/changed", 
+							[{editorClass:currentEditor.declaredClass, widget:context ? context.rootWidget : null, 
+							newState:item.name[0]}]);
 				} else {
 					if(context && bodyWidget){
 						var state = item.name[0];

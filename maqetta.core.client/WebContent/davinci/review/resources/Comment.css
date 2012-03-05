@@ -1,16 +1,23 @@
+.toolbaredContainer_toolbarDiv #davinciReviewToolbar .dijitIcon,
+.toolbaredContainer_toolbarDiv .davinciCommentExplorer .dijitIcon,
+#davinciReviewToolbar .dijitMenuPopup .dijitIcon{
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+}
+
 .davinciReviewToolbarAdd{
-	background-image: url("img/add_comment.gif") !important;
-	background-position: center center;
-	background-repeat: no-repeat;
-	height: 18px;
-	width: 18px;
+  background-position: 0 0; 
+  width: 16px;
+  height: 16px;
 }
 
 .dijitButtonDisabled .davinciReviewToolbarAdd{
-	background-image: url("img/add_comment_disable.gif") !important;
+  background-position: 0 -66px; 
+  width: 16px;
+  height: 16px;
 }
 
-.davinciReviewToolbarReply,
+/*.davinciReviewToolbarReply,
 .replyButtonIcon{
 	background-image: url("img/reply.gif") !important;
 	background-position: center center;
@@ -21,37 +28,39 @@
 
 .dijitButtonDisabled .davinciReviewToolbarReply{
 	background-image: url("img/reply_disable.gif") !important;
-}
+}*/
 
 .davinciReviewToolbarReviewers{
-	background-image: url("img/filter_reviewers.gif") !important;
-	background-position: center center;
-	background-repeat: no-repeat;
-	height: 18px;
-	width: 18px;
+  background-position: 0 -1131px; 
+  width: 16px;
+  height: 16px;
 }
 
 .dijitDropDownButtonDisabled .davinciReviewToolbarReviewers{
-	background-image: url("img/filter_reviewers_disable.gif") !important;
+  background-position: 0 -1197px; 
+  width: 16px;
+  height: 16px;
 }
 
 .davinciReviewToolbarReviewersColor{
-	background: url("img/color_bg.png") no-repeat;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -404px; 
 	height: 14px;
 	width: 14px;
 	margin:0 5px 0 0;
 	float: left;
 }
 
-.editButtonIcon {
+/*.editButtonIcon {
 	background-image: url("img/edit_comment.gif") !important;
 	background-position: center center;
 	background-repeat: no-repeat;
 	height: 18px;
 	width: 18px;
-}
+}*/
 
-.collapseViewActive {
+/*.collapseViewActive {
 	background-image: url("img/collapse_active.gif") !important;
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -60,8 +69,9 @@
 }
 .collapseView.deactive {
 	background:url("img/collapse_deactive.gif") no-repeat;
-}
-.expandViewActive {
+}*/
+
+/*.expandViewActive {
 	background-image: url("img/expand_active.gif") !important;
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -70,7 +80,8 @@
 }
 .expandView.deactive {
 	background:url("img/expand_deactive.gif") no-repeat;
-}
+}*/
+
 .dialogContent .dijitTextBox {
 	width: 100%;
 }
@@ -110,11 +121,11 @@
 	float: right;
 	height:16px;
 	width:16px;
-	background: url("img/reopen-disable.gif");
+	/*background: url("img/reopen-disable.gif");*/
 }
-.davinciReview .mark.enable{
+/*.davinciReview .mark.enable{
 	background: url("img/reopen-enable.gif");
-}
+}*/
 
 .davinciReview .summary {
 	float: left;
@@ -228,8 +239,9 @@
 	/*background-color: #ddd;*/
 }
 .firstReply {
-	background-image: url("img/commentIndent.png");	
-	background-repeat: no-repeat;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -468px;
 }
 .davinciLink {
 	color: #105CB6;
@@ -275,68 +287,133 @@
 }
 
 .reviewFileIcon {
-	background-image: url(img/review.gif) !important;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: -85px 0;;
 }
 
 .disabledReviewFileIcon {
-	background-image: url(img/review_disabled.gif) !important;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: -85px -66px;
 }
 
 .reviewFolder-open-disabled {
-	background-image: url(img/published_disabled.gif) !important;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -1744px;
 }
 
 .reviewFolder-open {
-	background-image: url(img/published.gif) !important;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -1546px;
+  width: 16px; height: 16px;
 }
 
 .reviewFolder-closed-disabled{
-	background-image: url(img/published_closed_disabled.gif) !important;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -1678px;
+  width: 16px;
+  height: 16px;
 }
+
 .reviewFolder-closed{
-	background-image: url(img/published_closed.gif) !important;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -1612px;
+  width: 16px;
+  height: 16px;
 }
 
 .draft-open{
-	background-image: url(img/draft.gif) !important;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -793px;
+  width: 16px;
+  height: 16px;
 }
 
 .editVersionIcon{
-	background-image: url(img/edit_review.gif) !important;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -859px;
+  width: 16px;
+  height: 16px;
 }
+
 .dijitButtonDisabled .editVersionIcon{
-	background-image: url("img/edit_review_disabled.gif") !important;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -925px;
+  width: 16px;
+  height: 16px;
 }
 
 .closeVersionIcon{
-	background-image: url(img/close_review.gif) !important;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+	background-position: 0 -272px;
+	width: 16px;
+	height: 16px;
 }
 .dijitButtonDisabled .closeVersionIcon{
-	background-image: url("img/close_review_disabled.gif") !important;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -338px;
+  width: 16px;
+  height: 16px;
 }
 
 .openVersionIcon{
-	background-image: url(img/open_review.gif) !important;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -1329px;
+  width: 16px;
+  height: 16px; 
 }
 
 .dijitButtonDisabled .openVersionIcon{
-	background-image: url(img/open_review_disabled.gif) !important;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -1395px;
+  width: 16px;
+  height: 16px; 
 }
 
 .deleteVersionIcon{
-	background-image: url(img/del_review.gif) !important;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -591px;
+  width: 16px;
+  height: 16px;
 }
 
 .dijitButtonDisabled .deleteVersionIcon{
-	background-image: url(img/del_review_disabled.gif) !important;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -657px;
+  width: 16px;
+  height: 16px;
 }
 
 .todo{
-	background:url("img/todo.gif") no-repeat;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: -85px -866px;
+  width: 20px;
+  height: 20px;
 }
+
 .done{
-	background:url("img/done.gif") no-repeat;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -723px;
+  width: 20px;
+  height: 20px;
 }
+
 .crumbs{
 	margin-right:8px;
 	width:165px;
@@ -357,16 +434,22 @@
 }
 
 .reviewMsg{
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
 	margin:7px 0 0 0;
 	color:red;
 	float:left;
-	background:url('img/time_warning_obj.gif') no-repeat;
+	background-position: -85px -800px;
+	width: 16px; 
+	height: 16px; 
 	padding-left:18px;
 }
 
 .dijitTreeRowHover .deleteImg,
 .dijitTreeRowActive .deleteImg{
-	background: url("img/del.gif") no-repeat 0px -2px;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -525px;
 	margin-right: 20px;
 	width:14px;
 	height:14px;
@@ -398,16 +481,23 @@
 }
 
 .detail_title {
-	background: url('img/review.gif') no-repeat 0% 50%;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: -85px 0;
+  height: 16px;
 	margin: 0 0 10px 0;
 	padding: 0 0 0 20px;
 	font-size: 18px;
 	font-weight: bold;
-	color:	#4b7c9c;
+	color: #4b7c9c;
 }
 
 .detail_role {
-	background: url('img/user_obj.gif') no-repeat;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: -85px -936px;
+  width: 16px;
+  height: 16px;
 	margin: 0 20px 0 10px;
 	padding: 0 0 0 16px;
 }
@@ -419,15 +509,23 @@
 }
 
 .notClosed{
-	background: url('img/time_warning_obj.gif') no-repeat;
-	color: green !important;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: -85px -800px;
+  width: 16px;
+  height: 16px;
+  color: green !important;
 	margin: 0 0 0 10px;
 	padding: 0 0 0 16px;
 }
 
 .closed{
-	background: url('img/time_warning_obj.gif') no-repeat;
-	color: red;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: -85px -800px;
+  width: 16px;
+  height: 16px;
+  color: red;
 	margin: 0 0 0 10px;
 	padding: 0 0 0 16px;
 }
@@ -447,29 +545,66 @@
 	height: 16px;
 	width: 16px;
 }
+
+
 .davinciAnnotationIconArrow{
-	background-image: url("img/arrow.gif");
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -132px;
+  width: 20px;
+  height: 20px;
 }
 .dijitButtonDisabled .davinciAnnotationIconArrow{
-	background-image: url("img/arrow_disabled.gif");
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -202px;
+  width: 20px;
+  height: 20px;
 }
+
 .davinciAnnotationIconRect{
-	background-image: url("img/rect.gif");
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -1810px;
+  width: 20px;
+  height: 20px;
 }
 .dijitButtonDisabled .davinciAnnotationIconRect{
-	background-image: url("img/rect_disabled.gif");
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -1880px;
+  width: 20px;
+  height: 20px;
 }
+
 .davinciAnnotationIconEllipse{
-	background-image: url("img/ellipse.gif");
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -991px;
+  width: 20px;
+  height: 20px;
 }
 .dijitButtonDisabled .davinciAnnotationIconEllipse{
-	background-image: url("img/ellipse_disabled.gif");
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -1061px;
+  width: 20px;
+  height: 20px;
 }
+
 .davinciAnnotationIconText{
-	background-image: url("img/text.gif");
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: -85px -660px;
+  width: 20px;
+  height: 20px;
 }
 .dijitButtonDisabled .davinciAnnotationIconText{
-	background-image: url("img/text_disabled.gif");
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: -85px -730px;
+  width: 20px;
+  height: 20px;
 }
 
 .davinciComment{
@@ -523,11 +658,14 @@
 	height: 16px;
 	vertical-align: middle;
 }
+
 .davinciComment .commentReplies{
-	background-image: url("img/commentIndent.png");	
-	background-repeat: no-repeat;
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -468px; 
 	padding-left: 10px;
 	margin-left: 8px;
+	height: 7px;
 }
 .davinciComment .commentFocused{
 	border: 2px solid #0000FF;
@@ -558,31 +696,47 @@
 }
 
 .severityLow {
-	background: no-repeat url( "img/severity_low.gif");
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: -85px -264px; 
+  width: 16px;
+  height: 16px;
 }
 .severityMedium {
-	background: no-repeat url("img/severity_mid.gif");
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: -85px -396px; 
+  width: 16px;
+  height: 16px;
 }
 .severityHigh {
-	background: no-repeat url("img/severity_high.gif");
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: -85px -132px;
+  width: 16px;
+  height: 16px;
 }
 
 .severityUnassigned {
-	background: no-repeat url("img/severity_unassigned.gif");
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: -85px -528px;
+  width: 16px;
+  height: 16px;
 }
 
 .disabled .commentFooter .severityLow {
-	background: no-repeat url( "img/severity_low_disabled.gif" );
+  background-position: -85px -330px; 
 }
 .disabled .commentFooter .severityMedium {
-	background: no-repeat url("img/severity_mid_disabled.gif");
+  background-position: -85px -462px;
 }
 .disabled .commentFooter .severityHigh {
-	background: no-repeat url("img/severity_high_disabled.gif");
+  background-position: -85px -594px;
 }
 
 .disabled .commentFooter .severityUnassigned {
-	background: no-repeat url("img/severity_unassigned_disabled.gif");
+  background-position: -85px -594px;
 }
 
 .davinciComment .commentTheme .dijitButtonText {
@@ -723,3 +877,4 @@
 	width: 16px;
 	height: 16px;
 }
+

@@ -147,6 +147,7 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 
 		dojo.place(dojo.create("br"), toolbar.domNode);
 		toolbar.addChild(input);
+		dojo.addClass(toolbar.domNode, "davinciCommentExplorer");
 		return toolbar.domNode;
 	},
 

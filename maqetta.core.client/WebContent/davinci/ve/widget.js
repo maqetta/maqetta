@@ -119,14 +119,16 @@ allWidgets: function(containerNode) {
 },
 
 parseStyleValues: function(text) {
-	var values = {};
+	var values = [];
 	if(text){
 		dojo.forEach(text.split(";"), function(s){
 			var i = s.indexOf(":");
 			if(i > 0){
 				var n = s.substring(0, i).trim();
 				var v = s.substring(i + 1).trim();
-				values[n] = v;
+				var o = {};
+				o[n] = v;
+				values.push(o);
 			}
 		});
 	}

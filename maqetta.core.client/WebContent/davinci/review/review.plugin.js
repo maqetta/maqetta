@@ -57,7 +57,12 @@ return {
 			name: "Review Editor",
 			extensions: "rev",
 			isDefault: true,
-			editorClass: "davinci/review/editor/ReviewEditor"
+			editorClass: "davinci/review/editor/ReviewEditor",
+            palettesToTop: [
+                "davinci.review.reviewNavigator", //Reviews
+                "davinci.ui.comment", //Comments
+                "davinci.ve.states" //States(Scenes)
+            ]
 		}
 	],
 	"davinci.fileType": [

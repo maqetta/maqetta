@@ -351,29 +351,22 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	
-	detach: function(widget){
-		var removeFromArray = function(array, value){
-			var index = dojo.indexOf(array, value);
-			if(index >= 0){
-				array.splice(index, 1);
-			}
-		};
-
+	detach: function(widget) {
 		// FIXME: detaching context prevent destroyWidget from working
 		//widget._edit_context = undefined;
 		var id = widget.getId();
 		if(id){
-			removeFromArray(this._widgetIds, id);
+			maqUtil.arrayRemove(this._widgetIds, id);
 		}
 		var objectId = widget.getObjectId();
 		if(objectId){
-			removeFromArray(this._objectIds, objectId);
+			maqUtil.arrayRemove(this._objectIds, objectId);
 		}
 		if (this._selection){
 			for(var i=0; i<this._selection.length; i++){
 				if(this._selection[i] == widget){
 					this.focus(null, i);
-					removeFromArray(this._selection,widget);
+					maqUtil.arrayRemove(this._selection,widget);
 				}
 			}
 		}
@@ -2495,15 +2488,33 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	getStyleAttributeValues: function(widget){
-		var v = widget ? widget.getStyleValues() : {};
+		//FIXME: This totally seems to have missed the array logic
+		var vArray = widget ? widget.getStyleValues() : [];
 		
 		var isNormalState = davinci.ve.states.isNormalState();
 		if (!isNormalState) {
-			var stateStyleValues = davinci.ve.states.getStyle(widget);
-			dojo.mixin(v, stateStyleValues);
+			var stateStyleValuesArray = davinci.ve.states.getStyle(widget);
+			if(stateStyleValuesArray){
+				// Remove entries from vArray that are in stateStyleValuesArray
+				for(var i=0; i<stateStyleValuesArray.length; i++){
+					var sItem = stateStyleValuesArray[i];
+					for(var sProp in sItem){	// should be only object in each array item
+						for(var j=vArray.length-1; j>=0; j--){
+							var vItem = vArray[j];
+							for(var vProp in vItem){	// should be only object in each array item
+								if(sProp == vProp){
+									vArray.splice(j, 1);
+									break;
+								}
+							}
+						}
+					}
+				}
+				// Concat entries from stateStyleValuesArray to end of vArray
+				vArray = vArray.concat(stateStyleValuesArray);
+			}
 		}
-		
-		return v;
+		return vArray;
 	},
 	
 	 getUniqueID: function(node, persist, idRoot) {

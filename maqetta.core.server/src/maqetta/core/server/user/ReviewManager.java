@@ -492,6 +492,9 @@ public class ReviewManager implements IReviewManager {
 		cp = cp.removeFirstSegments(c);
 		
 		for(ILibInfo info : versionLibs){
+			if (info.getVirtualRoot() == null) {
+				continue;
+			}
 			IPath versionVirtualRoot = new Path(info.getVirtualRoot());
 			if(cp.matchingFirstSegments(versionVirtualRoot) == versionVirtualRoot.segmentCount()){
 				String virtualRoot = null;

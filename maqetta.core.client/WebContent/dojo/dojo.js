@@ -307,7 +307,7 @@
 	//
 	var eval_ =
 		// use the function constructor so our eval is scoped close to (but not in) in the global space with minimal pollution
-		new Function("__text", 'var __result = eval(__text); __text = null; return __result;');
+		new Function("__text", 'return eval(__text);');
 
 	req.eval =
 		function(text, hint){

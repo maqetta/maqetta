@@ -540,10 +540,16 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			if (item && item.type && item.type[0] == 'AppState') {
 				if (this.isThemeEditor()){
 					if (!this._silent) {
-						this.publish("/davinci/states/state/changed", [{widget:'$all', newState:item.name[0], oldState:this._themeState, context: this._editor.context}]);
+						this.publish("/davinci/states/state/changed", 
+								[{editorClass:currentEditor.declaredClass, widget:'$all', 
+								newState:item.name[0], oldState:this._themeState, context: this._editor.context}]);
 					}
 					this._themeState = item.name[0];
 					this._silent = false;
+				} else if(currentEditor.declaredClass == 'davinci.review.editor.ReviewEditor') {
+					this.publish("/davinci/states/state/changed", 
+							[{editorClass:currentEditor.declaredClass, widget:context ? context.rootWidget : null, 
+							newState:item.name[0]}]);
 				} else {
 					if(context && bodyWidget){
 						var state = item.name[0];

@@ -1170,8 +1170,8 @@ davinci.States.prototype = {
 		if (!this.subscribed && this._shouldInitialize()) {
 		
 			this.subscribe("/davinci/states/state/changed", function(e) { 
-				if(e.widget && e.widget.domNode){
-					// We are in Maqetta page editor - other page editor logic handles this event
+				if(e.editorClass){
+					// Event targets one of Maqetta's editors, not from runtime events
 					return;
 				}
 				var children = davinci.states._getChildrenOfNode(e.widget.domNode || e.widget);

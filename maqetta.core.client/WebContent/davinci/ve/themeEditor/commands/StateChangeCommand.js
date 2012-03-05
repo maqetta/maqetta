@@ -43,7 +43,9 @@ return declare("davinci.ve.themeEditor.commands.StateChangeCommand", [ThemeEdito
 
 		if (!this._firstRun){
 			this._widget.processingUndoRedo = true;
-			dojo.publish("/davinci/states/state/changed", [{widget:'$all', newState:this._newState, oldState:this._oldState, origin: this.declaredClass, context: this._themeEditor.context}]); 
+			dojo.publish("/davinci/states/state/changed", 
+					[{editorClass:'davinci.themeEditor.ThemeEditor', widget:'$all', 
+					newState:this._newState, oldState:this._oldState, origin: this.declaredClass, context: this._themeEditor.context}]); 
 		}
 		this._firstRun = false;
 		this.updatePropertiesView();
@@ -78,7 +80,9 @@ return declare("davinci.ve.themeEditor.commands.StateChangeCommand", [ThemeEdito
 		//davinci.ve.states.setState(this._widget, this._oldState); 
 		this.updatePropertiesView();
 
-		dojo.publish("/davinci/states/state/changed", [{widget:'$all', newState:this._oldState, oldState:this._newState, origin: this.declaredClass, context: this._themeEditor.context}]); 
+		dojo.publish("/davinci/states/state/changed", 
+				[{editorClass:'davinci.themeEditor.ThemeEditor', widget:'$all', 
+				newState:this._oldState, oldState:this._newState, origin: this.declaredClass, context: this._themeEditor.context}]); 
 	}
 });
 });

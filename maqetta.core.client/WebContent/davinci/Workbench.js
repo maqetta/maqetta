@@ -122,9 +122,9 @@ var Workbench = {
 		Runtime.subscribe("/davinci/states/state/changed",
 			function(containerWidget, newState, oldState) {
 				var currentEditor = Runtime.currentEditor;
-				// ignore updates in theme editor
-				if ((!currentEditor.declaredClass == "davinci.ve.themeEditor.ThemeEditor" ||
-						currentEditor.declaredClass == "davinci.review.CommentReviewEditor") /*"davinci.ve.VisualEditor"*/) {
+				// ignore updates in theme editor and review editor
+				if ((currentEditor.declaredClass != "davinci.ve.themeEditor.ThemeEditor" &&
+						currentEditor.declaredClass != "davinci.review.editor.ReviewEditor") /*"davinci.ve.VisualEditor"*/) {
 					currentEditor.visualEditor.onContentChange.apply(currentEditor.visualEditor, arguments);
 				}
 			}

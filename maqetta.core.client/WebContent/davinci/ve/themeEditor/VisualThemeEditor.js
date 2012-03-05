@@ -97,7 +97,9 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 						this.context.getDijit().registry.forEach(function(widget){
 							if(widget.resize){ widget.resize({}); }
 						});
-						dojo.publish("/davinci/states/state/changed", [{widget:'$all', newState:"Normal", context: this.context}]); // send state message to get Theme and StatesView in same init state
+						dojo.publish("/davinci/states/state/changed", 
+								[{editorClass:'davinci.themeEditor.ThemeEditor', widget:'$all', 
+								newState:"Normal", context: this.context}]); // send state message to get Theme and StatesView in same init state
 					}), 1500);
 					this.initialSet=true;
 

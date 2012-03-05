@@ -27,19 +27,9 @@ return declare("davinci.review.editor.Context", [Context], {
 				},
 				src: this.baseURL,
 				onload: dojo.hitch(this,function(event){
-					var userDoc = (event && event.target && event.target.ownerDocument);
+					var userDoc = (event && event.target && event.target.contentDocument);
 					var dj = (userDoc && userDoc.defaultView && userDoc.defaultView.dojo);
 					if (dj && dj.subscribe) {
-						dj.subscribe("/davinci/states/state/changed", dj.hitch(this, function(args) { 
-							if (!args || !Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
-								return; 
-							}
-							var state = args.newState || "Normal";
-							var dv = (dj.global && dj.global.davinci);
-							if(dv && dv.states && dv.states.setState){
-								dv.states.setState(undefined, state);
-							}
-						}));
 						dj.subscribe("/davinci/scene/selectionChanged", this, function(SceneManager, sceneId) {
 							if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
 								return; 
@@ -47,6 +37,26 @@ return declare("davinci.review.editor.Context", [Context], {
 							if (this._commentView) {
 								this._commentView.setCurrentScene(SceneManager, sceneId);
 							}							
+						});
+					}
+					//FIXME: Have to subscribe to the runtime States.js version of dojo pubsub
+					//instead of using the real runtime version of dojo pubsub because States.js is
+					//using its own mini copy of Dojo
+					var statesDojo = (userDoc && userDoc.defaultView && userDoc.defaultView.davinci && userDoc.defaultView.davinci.dojo);
+					if (statesDojo && statesDojo.subscribe) {
+						statesDojo.subscribe("/davinci/states/state/changed", function(args) { 
+							if (!args || !Runtime.currentEditor || Runtime.currentEditor.declaredClass != "davinci.review.editor.ReviewEditor") { 
+								return; 
+							}
+							var state = args.newState || "Normal";
+							var dv = (statesDojo.global && statesDojo.global.davinci);
+							if(dv && dv.states && dv.states.setState){
+								dv.states.setState(undefined, state);
+								// Re-publish at the application level
+								var newArgs = dojo.clone(args);
+								newArgs.editorClass = "davinci.review.CommentReviewEditor";
+								dojo.publish("/davinci/states/state/changed", [newArgs]);
+							}
 						});
 					}
 					this.rootNode = this.rootWidget = this.frame.contentDocument.body;
@@ -65,6 +75,17 @@ return declare("davinci.review.editor.Context", [Context], {
 					dojo.publish('/davinci/ui/context/statesLoaded', [this]);
 				})
 			}), containerNode);
+			dojo.subscribe("/davinci/states/state/changed", function(args) { 
+				if (!args || !Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor" ||
+						!this.containerEditor || this.containerEditor != Runtime.currentEditor) { 
+					return; 
+				}
+				// Push the state change down into the review document
+				var userWin = (this.frame && this.frame.contentDocument && this.frame.contentDocument.defaultView);
+				if(userWin && userWin.davinci && userWin.davinci.states && userWin.davinci.states.setState){
+					userWin.davinci.states.setState(undefined, args.newState);
+				}
+			}.bind(this));
 		}
 	},
 

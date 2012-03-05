@@ -32,6 +32,12 @@ var resource = {
 				parent = system.resource.findResource(p1.toString()) || system.resource.getRoot();
 				resourcePath = changedResource;
 			}
+			/* if deleting a folder, delete it's children first.  this is for the dijit tree 
+			 * (which seems to cache the object) issue #1780 */
+			if(type=='deleted' && changedResource.elementType=='Folder'){
+				system.resource.onChildrenChange(changedResource,[]);
+			}
+			
 			if(parent.elementType=="Folder" && type=='reload'){
 				/* 'reload' forces a full parent reload.  most model actions handle the server
 				 * command and the modeling commands, so forcing a client & server resource sync isn't usually neccisary.

@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/ko/SpellCheck", //begin v1.x content
+//begin v1.x content
 ({
 	widgetLabel: "맞춤법 검사 일괄처리",
 	unfound: "찾을 수 없음",

@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/atom/widget/nls/zh/FeedEntryViewer", //begin v1.x content
+//begin v1.x content
 ({
 	displayOptions: "[显示选项]",
 	title: "标题",

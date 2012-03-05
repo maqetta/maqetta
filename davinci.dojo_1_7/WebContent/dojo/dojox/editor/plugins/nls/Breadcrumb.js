@@ -1,6 +1,5 @@
 //>>built
-define("dojox/editor/plugins/nls/Breadcrumb", { root:
-//begin v1.x content
+define({ root:
 ({
 	"nodeActions": "${nodeName} Actions",
 	"selectContents": "Select contents",
@@ -31,7 +30,6 @@ define("dojox/editor/plugins/nls/Breadcrumb", { root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -43,3 +41,4 @@ define("dojox/editor/plugins/nls/Breadcrumb", { root:
 "ca": true,
 "ar": true
 });
+

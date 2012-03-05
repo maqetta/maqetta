@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/grid/enhanced/nls/cs/Filter", //begin v1.x content
+//begin v1.x content
 ({
 	"clearFilterDialogTitle": "Vymazat filtr",
 	"filterDefDialogTitle": "Filtr",
@@ -65,8 +65,6 @@ define(
 	"anycolumn": "jakýkoli sloupec",
 	"statusTipTitleNoFilter": "Panel filtrování",
 	"statusTipTitleHasFilter": "Filtr",
-	"statusTipRelAny": "Vyhovovat libovolnému pravidlu",
-	"statusTipRelAll": "Vyhovovat všem pravidlům",
 	
 	"defaultItemsName": "položek",
 	"filterBarMsgHasFilterTemplate": "${0} z ${1} ${2} zobrazeno.",
@@ -87,3 +85,6 @@ define(
 })
 //end v1.x content
 );
+
+
+

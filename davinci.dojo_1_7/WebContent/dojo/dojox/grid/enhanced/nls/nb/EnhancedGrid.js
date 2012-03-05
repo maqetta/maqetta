@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/grid/enhanced/nls/nb/EnhancedGrid", //begin v1.x content
+//begin v1.x content
 ({
 	singleSort: "Enkeltsortering",
 	nestedSort: "Nestet sortering",

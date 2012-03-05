@@ -1,10 +1,8 @@
 //>>built
-define("dojox/editor/plugins/nls/Save", { root:
-//begin v1.x content
+define({ root:
 ({
 	"save": "Save"
-})
-,
+}),
 //end v1.x content
 "zh": true,
 "zh-tw": true,
@@ -25,7 +23,6 @@ define("dojox/editor/plugins/nls/Save", { root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -37,3 +34,4 @@ define("dojox/editor/plugins/nls/Save", { root:
 "ca": true,
 "ar": true
 });
+

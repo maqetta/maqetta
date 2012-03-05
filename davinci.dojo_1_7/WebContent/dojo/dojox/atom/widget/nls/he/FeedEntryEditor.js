@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/atom/widget/nls/he/FeedEntryEditor", //begin v1.x content
+//begin v1.x content
 ({
 	doNew: "[חדש]",
 	edit: "[עריכה]",

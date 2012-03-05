@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/hu/PasteFromWord", //begin v1.x content
+//begin v1.x content
 ({
 	"pasteFromWord": "Beillesztés Word alkalmazásból",
 	"paste": "Beillesztés",

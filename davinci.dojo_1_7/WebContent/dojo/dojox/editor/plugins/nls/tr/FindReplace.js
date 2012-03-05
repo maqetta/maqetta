@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/tr/FindReplace", //begin v1.x content
+//begin v1.x content
 ({
 	"findLabel": "Bul:",
 	"findTooltip": "Bulunacak metni girin",
@@ -11,6 +11,7 @@ define(
 	"matchCaseTooltip": "Büyük/küçük harf eşleştir",
 	"backwards": "Geri",
 	"backwardsTooltip": "Metni geriye doğru ara",
+	"replaceAll": "Tüm Tekrarlar",
 	"replaceAllButton": "Tümünü Değiştir",
 	"replaceAllButtonTooltip": "Tüm metni değiştir",
 	"findButton": "Bul",

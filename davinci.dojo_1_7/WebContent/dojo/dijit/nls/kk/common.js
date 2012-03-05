@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/nls/kk/common", //begin v1.x content
+//begin v1.x content
 ({
 	buttonOk: "OK",
 	buttonCancel: "Болдырмау",

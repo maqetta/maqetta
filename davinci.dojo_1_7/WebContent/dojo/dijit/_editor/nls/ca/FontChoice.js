@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/_editor/nls/ca/FontChoice", //begin v1.x content
+//begin v1.x content
 ({
 	fontSize: "Mida",
 	fontName: "Tipus de lletra",

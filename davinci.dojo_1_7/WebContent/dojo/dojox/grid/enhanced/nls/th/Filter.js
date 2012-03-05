@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/grid/enhanced/nls/th/Filter", //begin v1.x content
+//begin v1.x content
 ({
 	"clearFilterDialogTitle": "ลบตัวกรอง",
 	"filterDefDialogTitle": "ตัวกรอง",
@@ -65,8 +65,6 @@ define(
 	"anycolumn": "คอลัมน์ใดๆ",
 	"statusTipTitleNoFilter": "แถบตัวกรอง",
 	"statusTipTitleHasFilter": "ตัวกรอง",
-	"statusTipRelAny": "ตรงกับกฏใดๆ",
-	"statusTipRelAll": "ตรงกับทุกกฏ",
 	
 	"defaultItemsName": "ไอเท็ม",
 	"filterBarMsgHasFilterTemplate": "${0} ของ ${1} ${2} จะถูกแสดง",
@@ -87,3 +85,6 @@ define(
 })
 //end v1.x content
 );
+
+
+

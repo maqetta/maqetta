@@ -1,6 +1,5 @@
 //>>built
-define("dojox/editor/plugins/nls/latinEntities", { root:
-//begin v1.x content
+define({ root:
 ({
 	/* These are already handled in the default RTE
 		amp:"ampersand",lt:"less-than sign",
@@ -256,8 +255,7 @@ define("dojox/editor/plugins/nls/latinEntities", { root:
 	lsaquo:"single left-pointing angle quotation mark",
 	rsaquo:"single right-pointing angle quotation mark",
 	euro:"euro sign"
-})
-,
+}),
 //end v1.x content
 "zh": true,
 "zh-tw": true,
@@ -278,7 +276,6 @@ define("dojox/editor/plugins/nls/latinEntities", { root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -290,3 +287,4 @@ define("dojox/editor/plugins/nls/latinEntities", { root:
 "ca": true,
 "ar": true
 });
+

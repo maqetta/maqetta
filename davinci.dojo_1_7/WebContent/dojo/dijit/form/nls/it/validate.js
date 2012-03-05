@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/form/nls/it/validate", //begin v1.x content
+//begin v1.x content
 ({
 	invalidMessage: "Il valore immesso non è valido.",
 	missingMessage: "Questo valore è obbligatorio.",

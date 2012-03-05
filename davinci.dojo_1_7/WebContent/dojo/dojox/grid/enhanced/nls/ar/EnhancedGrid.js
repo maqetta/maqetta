@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/grid/enhanced/nls/ar/EnhancedGrid", //begin v1.x content
+//begin v1.x content
 ({
 	singleSort: "فرز منفرد",
 	nestedSort: "فرز متداخل",

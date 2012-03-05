@@ -1,5 +1,5 @@
 //>>built
-define("dojox/atom/widget/nls/FeedViewerEntry", { root:
+define({ root:
 //begin v1.x content
 ({
 	deleteButton: "[Delete]"
@@ -18,7 +18,6 @@ define("dojox/atom/widget/nls/FeedViewerEntry", { root:
 "fr": true,
 "he": true,
 "hu": true,
-"hr": true,
 "it": true,
 "ja": true,
 "kk": true,

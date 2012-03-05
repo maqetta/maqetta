@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/grid/enhanced/nls/cs/EnhancedGrid", //begin v1.x content
+//begin v1.x content
 ({
 	singleSort: "Jednotlivé řazení",
 	nestedSort: "Vnořené řazení",

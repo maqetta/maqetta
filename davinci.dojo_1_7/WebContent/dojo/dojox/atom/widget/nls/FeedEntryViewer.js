@@ -1,5 +1,5 @@
 //>>built
-define("dojox/atom/widget/nls/FeedEntryViewer", { root:
+define({ root:
 //begin v1.x content
 ({
 	displayOptions: "[display options]",
@@ -26,7 +26,6 @@ define("dojox/atom/widget/nls/FeedEntryViewer", { root:
 "fr": true,
 "he": true,
 "hu": true,
-"hr": true,
 "it": true,
 "ja": true,
 "kk": true,

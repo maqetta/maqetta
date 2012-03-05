@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/ko/PasteFromWord", //begin v1.x content
+//begin v1.x content
 ({
 	"pasteFromWord": "단어에서 붙여넣기",
 	"paste": "붙여넣기",

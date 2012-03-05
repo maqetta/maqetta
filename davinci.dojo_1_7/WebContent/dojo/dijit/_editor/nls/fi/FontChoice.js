@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/_editor/nls/fi/FontChoice", //begin v1.x content
+//begin v1.x content
 ({
 	fontSize: "Koko",
 	fontName: "Fontti",

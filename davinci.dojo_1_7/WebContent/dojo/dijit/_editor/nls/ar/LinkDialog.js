@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/_editor/nls/ar/LinkDialog", //begin v1.x content
+//begin v1.x content
 ({
 	createLinkTitle: "خصائص الوصلة",
 	insertImageTitle: "خصائص الصورة",

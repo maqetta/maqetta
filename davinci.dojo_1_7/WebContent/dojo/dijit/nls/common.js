@@ -1,5 +1,5 @@
 //>>built
-define("dijit/nls/common", { root:
+define({ root:
 //begin v1.x content
 ({
 	buttonOk: "OK",
@@ -28,7 +28,6 @@ define("dijit/nls/common", { root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -38,6 +37,5 @@ define("dijit/nls/common", { root:
 "da": true,
 "cs": true,
 "ca": true,
-"az": true,
 "ar": true
 });

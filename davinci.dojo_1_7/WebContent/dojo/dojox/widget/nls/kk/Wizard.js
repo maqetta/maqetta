@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/widget/nls/kk/Wizard", //begin v1.x content
+//begin v1.x content
 ({
 next: "Келесі",
 previous: "Алдыңғы",

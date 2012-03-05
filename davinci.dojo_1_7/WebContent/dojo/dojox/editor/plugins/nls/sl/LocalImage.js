@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/sl/LocalImage", //begin v1.x content
+//begin v1.x content
 ({
 	insertImageTitle: "Vstavi sliko",
 	url: "Slika ",

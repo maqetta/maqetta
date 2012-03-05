@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/fi/SpellCheck", //begin v1.x content
+//begin v1.x content
 ({
 	widgetLabel: "Eräoikoluku",
 	unfound: "Ei löydy",

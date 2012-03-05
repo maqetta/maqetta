@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/grid/enhanced/nls/zh/EnhancedGrid", //begin v1.x content
+//begin v1.x content
 ({
 	singleSort: "单层排序",
 	nestedSort: "嵌套排序",

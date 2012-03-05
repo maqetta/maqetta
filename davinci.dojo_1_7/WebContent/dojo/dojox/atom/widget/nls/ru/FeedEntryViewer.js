@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/atom/widget/nls/ru/FeedEntryViewer", //begin v1.x content
+//begin v1.x content
 ({
 	displayOptions: "[показать опции]",
 	title: "Название",

@@ -1,6 +1,5 @@
 //>>built
-define("dojox/editor/plugins/nls/SpellCheck", { root:
-//begin v1.x content
+define({ root:
 ({
 	widgetLabel: "Batch Spell Check",
 	unfound: "Not found",
@@ -38,7 +37,6 @@ define("dojox/editor/plugins/nls/SpellCheck", { root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -50,3 +48,4 @@ define("dojox/editor/plugins/nls/SpellCheck", { root:
 "ca": true,
 "ar": true
 });
+

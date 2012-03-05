@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/fr/SpellCheck", //begin v1.x content
+//begin v1.x content
 ({
 	widgetLabel: "Vérification orthographique par lots",
 	unfound: "Introuvable",

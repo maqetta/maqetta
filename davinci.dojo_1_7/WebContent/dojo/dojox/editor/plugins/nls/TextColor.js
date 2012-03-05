@@ -1,6 +1,5 @@
 //>>built
-define("dojox/editor/plugins/nls/TextColor", { root:
-//begin v1.x content
+define({ root:
 ({
 	"setButtonText": "Set",
 	"cancelButtonText": "Cancel"
@@ -26,7 +25,6 @@ define("dojox/editor/plugins/nls/TextColor", { root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -38,3 +36,4 @@ define("dojox/editor/plugins/nls/TextColor", { root:
 "ca": true,
 "ar": true
 });
+

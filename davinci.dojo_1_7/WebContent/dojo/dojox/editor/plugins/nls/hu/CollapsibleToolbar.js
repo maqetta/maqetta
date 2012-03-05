@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/hu/CollapsibleToolbar", //begin v1.x content
+//begin v1.x content
 ({
 	"collapse": "Szerkesztő eszköztár összezárása",
 	"expand": "Szerkesztő eszköztár kibontása"

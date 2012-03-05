@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/_editor/nls/ar/commands", //begin v1.x content
+//begin v1.x content
 ({
 	'bold': 'عري~ض',
 	'copy': 'نسخ',

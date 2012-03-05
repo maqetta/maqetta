@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/fi/Smiley", //begin v1.x content
+//begin v1.x content
 ({
 	smiley: "Lisää hymiö",
 	emoticonSmile: "hymyillä",
@@ -20,8 +20,7 @@ define(
 	emoticonYes: "kyllä",
 	emoticonNo: "ei",
 	emoticonAngel: "enkeli",
-	emoticonCrying: "itkeä",
-	emoticonHappy: "iloinen"
+	emoticonCrying: "itkeä"
 })
 
 //end v1.x content

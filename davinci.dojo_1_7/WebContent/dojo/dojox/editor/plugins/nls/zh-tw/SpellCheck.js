@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/zh-tw/SpellCheck", //begin v1.x content
+//begin v1.x content
 ({
 	widgetLabel: "批次拼字檢查",
 	unfound: "找不到",

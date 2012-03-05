@@ -1,10 +1,8 @@
 //>>built
-define("dojox/editor/plugins/nls/Blockquote", { root:
-//begin v1.x content
+define({ root:
 ({
 	"blockquote": "Blockquote"
-})
-,
+}),
 //end v1.x content
 "zh": true,
 "zh-tw": true,
@@ -25,7 +23,6 @@ define("dojox/editor/plugins/nls/Blockquote", { root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -37,3 +34,4 @@ define("dojox/editor/plugins/nls/Blockquote", { root:
 "ca": true,
 "ar": true
 });
+

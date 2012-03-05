@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/nb/PasteFromWord", //begin v1.x content
+//begin v1.x content
 ({
 	"pasteFromWord": "Lim inn fra Word",
 	"paste": "Lim inn",

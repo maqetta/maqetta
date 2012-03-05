@@ -636,7 +636,6 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -646,7 +645,6 @@ define({ root:
 "da": true,
 "cs": true,
 "ca": true,
-"az": true,
 "ar": true
 });
 
@@ -1861,7 +1859,6 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -1871,7 +1868,6 @@ define({ root:
 "da": true,
 "cs": true,
 "ca": true,
-"az": true,
 "ar": true
 });
 
@@ -1985,11 +1981,7 @@ define([
 			//		Callback when the user mousedown's on the arrow icon
 			if(this.disabled || this.readOnly){ return; }
 
-			// Prevent default to stop things like text selection, but don't stop propogation, so that:
-			//		1. TimeTextBox etc. can focusthe <input> on mousedown
-			//		2. dropDownButtonActive class applied by _CssStateMixin (on button depress)
-			//		3. user defined onMouseDown handler fires
-			e.preventDefault();
+			event.stop(e);
 
 			this._docHandler = this.connect(win.doc, touch.release, "_onDropDownMouseUp");
 
@@ -3786,6 +3778,204 @@ return declare("dijit._MenuBase",
 	}
 });
 
+});
+
+},
+'dojo/i18n':function(){
+define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/lang", "./_base/xhr"], function(dojo, require, has, array, lang) {
+	// module:
+	//		dojo/i18n
+	// summary:
+	//		This module implements the !dojo/i18n plugin and the v1.6- i18n API
+	// description:
+	//		We choose to include our own plugin to leverage functionality already contained in dojo
+	//		and thereby reduce the size of the plugin compared to various loader implementations. Also, this
+	//		allows foreign AMD loaders to be used without their plugins.
+	var
+		thisModule= dojo.i18n=
+			// the dojo.i18n module
+			{},
+
+		nlsRe=
+			// regexp for reconstructing the master bundle name from parts of the regexp match
+			// nlsRe.exec("foo/bar/baz/nls/en-ca/foo") gives:
+			// ["foo/bar/baz/nls/en-ca/foo", "foo/bar/baz/nls/", "/", "/", "en-ca", "foo"]
+			// nlsRe.exec("foo/bar/baz/nls/foo") gives:
+			// ["foo/bar/baz/nls/foo", "foo/bar/baz/nls/", "/", "/", "foo", ""]
+			// so, if match[5] is blank, it means this is the top bundle definition.
+			// courtesy of http://requirejs.org
+			/(^.*(^|\/)nls)(\/|$)([^\/]*)\/?([^\/]*)/,
+
+		getAvailableLocales= function(
+			root,
+			locale,
+			bundlePath,
+			bundleName
+		){
+			// return a vector of module ids containing all available locales with respect to the target locale
+			// For example, assuming:
+			//	 * the root bundle indicates specific bundles for "fr" and "fr-ca",
+			//	 * bundlePath is "myPackage/nls"
+			//	 * bundleName is "myBundle"
+			// Then a locale argument of "fr-ca" would return
+			//	 ["myPackage/nls/myBundle", "myPackage/nls/fr/myBundle", "myPackage/nls/fr-ca/myBundle"]
+			// Notice that bundles are returned least-specific to most-specific, starting with the root.
+			//
+			// If root===false indicates we're working with a pre-AMD i18n bundle that doesn't tell about the available locales;
+			// therefore, assume everything is available and get 404 errors that indicate a particular localization is not available
+			//
+
+			for(var result= [bundlePath + bundleName], localeParts= locale.split("-"), current= "", i= 0; i<localeParts.length; i++){
+				current+= (current ? "-" : "") + localeParts[i];
+				if(!root || root[current]){
+					result.push(bundlePath + current + "/" + bundleName);
+				}
+			}
+			return result;
+		},
+
+		cache= {},
+
+		getL10nName= dojo.getL10nName = function(moduleName, bundleName, locale){
+			locale = locale ? locale.toLowerCase() : dojo.locale;
+			moduleName = "dojo/i18n!" + moduleName.replace(/\./g, "/");
+			bundleName = bundleName.replace(/\./g, "/");
+			return (/root/i.test(locale)) ?
+				(moduleName + "/nls/" + bundleName) :
+				(moduleName + "/nls/" + locale + "/" + bundleName);
+		},
+
+		doLoad = function(require, bundlePathAndName, bundlePath, bundleName, locale, load){
+			// get the root bundle which instructs which other bundles are required to contruct the localized bundle
+			require([bundlePathAndName], function(root){
+				var
+					current= cache[bundlePathAndName + "/"]= lang.clone(root.root),
+					availableLocales= getAvailableLocales(!root._v1x && root, locale, bundlePath, bundleName);
+				require(availableLocales, function(){
+					for (var i= 1; i<availableLocales.length; i++){
+						cache[availableLocales[i]]= current= lang.mixin(lang.clone(current), arguments[i]);
+					}
+					// target may not have been resolve (e.g., maybe only "fr" exists when "fr-ca" was requested)
+					var target= bundlePathAndName + "/" + locale;
+					cache[target]= current;
+					load && load(lang.delegate(current));
+				});
+			});
+		},
+
+		normalize = function(id, toAbsMid){
+			// note: id may be relative
+			var match= nlsRe.exec(id),
+				bundlePath= match[1];
+			return /^\./.test(bundlePath) ? toAbsMid(bundlePath) + "/" +  id.substring(bundlePath.length) : id;
+		};
+
+		load = function(id, require, load){
+			// note: id is always absolute
+			var
+				match= nlsRe.exec(id),
+				bundlePath= match[1] + "/",
+				bundleName= match[5] || match[4],
+				bundlePathAndName= bundlePath + bundleName,
+				localeSpecified = (match[5] && match[4]),
+				targetLocale=  localeSpecified || dojo.locale,
+				target= bundlePathAndName + "/" + targetLocale;
+
+			if(localeSpecified){
+				if(cache[target]){
+					// a request for a specific local that has already been loaded; just return it
+					load(cache[target]);
+				}else{
+					// a request for a specific local that has not been loaded; load and return just that locale
+					doLoad(require, bundlePathAndName, bundlePath, bundleName, targetLocale, load);
+				}
+				return;
+			}// else a non-locale-specific request; therefore always load dojo.locale + dojo.config.extraLocale
+
+			// notice the subtle algorithm that loads targeLocal last, which is the only doLoad application that passes a value for the load callback
+			// this makes the sync loader follow a clean code path that loads extras first and then proceeds with tracing the current deps graph
+			var extra = dojo.config.extraLocale || [];
+			extra = lang.isArray(extra) ? extra : [extra];
+			extra.push(targetLocale);
+			array.forEach(extra, function(locale){
+				doLoad(require, bundlePathAndName, bundlePath, bundleName, locale, locale==targetLocale && load);
+			});
+		};
+
+
+	true || has.add("dojo-v1x-i18n-Api",
+		// if true, define the v1.x i18n functions
+		1
+	);
+
+	if(1){
+		var
+			evalBundle=
+				// keep the minifiers off our define!
+				// if bundle is an AMD bundle, then __amdResult will be defined; otherwise it's a pre-amd bundle and the bundle value is returned by eval
+				new Function("bundle", "var __preAmdResult, __amdResult; function define(bundle){__amdResult= bundle;} __preAmdResult= eval(bundle); return [__preAmdResult, __amdResult];"),
+
+			fixup= function(url, preAmdResult, amdResult){
+				// nls/<locale>/<bundle-name> indicates not the root.
+				return preAmdResult ? (/nls\/[^\/]+\/[^\/]+$/.test(url) ? preAmdResult : {root:preAmdResult, _v1x:1}) : amdResult;
+			},
+
+			syncRequire= function(deps, callback){
+				var results= [];
+				dojo.forEach(deps, function(mid){
+					var url= require.toUrl(mid + ".js");
+					if(cache[url]){
+						results.push(cache[url]);
+					}else{
+
+						try {
+							var bundle= require(mid);
+							if(bundle){
+								results.push(bundle);
+								return;
+							}
+						}catch(e){}
+
+						dojo.xhrGet({
+							url:url,
+							sync:true,
+							load:function(text){
+								var result = evalBundle(text);
+								results.push(cache[url]= fixup(url, result[0], result[1]));
+							},
+							error:function(){
+								results.push(cache[url]= {});
+							}
+						});
+					}
+				});
+				callback.apply(null, results);
+			};
+
+		thisModule.getLocalization= function(moduleName, bundleName, locale){
+			var result,
+				l10nName= getL10nName(moduleName, bundleName, locale).substring(10);
+			load(l10nName, (1 && !require.isXdUrl(require.toUrl(l10nName + ".js")) ? syncRequire : require), function(result_){ result= result_; });
+			return result;
+		};
+
+		thisModule.normalizeLocale= function(locale){
+			var result = locale ? locale.toLowerCase() : dojo.locale;
+			if(result == "root"){
+				result = "ROOT";
+			}
+			return result;
+		};
+	}
+
+	return lang.mixin(thisModule, {
+		dynamic:true,
+		normalize:normalize,
+		load:load,
+		cache:function(mid, value){
+			cache[mid] = value;
+		}
+	});
 });
 
 },
@@ -7843,7 +8033,7 @@ define([
 				dec = before ? 1 : 0,
 				inc = 1 - dec;
 			do{
-				i -= dec;
+				i = i - dec;
 				n = this._createOption(i);
 				if(n){
 					if((before && n.date > lastValue) || (!before && n.date < lastValue)){
@@ -7852,7 +8042,7 @@ define([
 					nodes[before ? "unshift" : "push"](n);
 					lastValue = n.date;
 				}
-				i += inc;
+				i = i + inc;
 			}while(nodes.length < maxNum && (i*chk) < max);
 			return nodes;
 		},
@@ -7870,15 +8060,16 @@ define([
 			// get the value of the increments and the range in seconds (since 00:00:00) to find out how many divs to create
 			var
 				sinceMidnight = function(/*Date*/ date){
-					return date.getHours() * 60 * 60 + date.getMinutes() * 60 + date.getSeconds();
+				return date.getHours() * 60 * 60 + date.getMinutes() * 60 + date.getSeconds();
 				},
 				clickableIncrementSeconds = sinceMidnight(this._clickableIncrementDate),
 				visibleIncrementSeconds = sinceMidnight(this._visibleIncrementDate),
 				visibleRangeSeconds = sinceMidnight(this._visibleRangeDate),
-				// round reference date to previous visible increment
+
+			// round reference date to previous visible increment
 				time = (this.value || this.currentFocus).getTime();
 
-			this._refDate = new Date(time - time % (clickableIncrementSeconds*1000));
+			this._refDate = new Date(time - time % (visibleIncrementSeconds*1000));
 			this._refDate.setFullYear(1970,0,1); // match parse defaults
 
 			// assume clickable increment is the smallest unit
@@ -7896,15 +8087,9 @@ define([
 			var
 				// Find the nodes we should display based on our filter.
 				// Limit to 10 nodes displayed as a half-hearted attempt to stop drop down from overlapping <input>.
-				count = Math.min(this._totalIncrements, 10),
-				after = this._getFilteredNodes(0, (count >> 1) + 1, false),
-				moreAfter = [],
-				estBeforeLength = count - after.length,
-				before = this._getFilteredNodes(0, estBeforeLength, true, after[0]);
-				if(before.length < estBeforeLength && after.length > 0){
-					moreAfter = this._getFilteredNodes(after.length, estBeforeLength - before.length, false, after[after.length-1]);
-				}
-			array.forEach(before.concat(after, moreAfter), function(n){ this.timeMenu.appendChild(n); }, this);
+				after = this._getFilteredNodes(0, Math.min(this._totalIncrements >> 1, 10) - 1),
+				before = this._getFilteredNodes(0, Math.min(this._totalIncrements, 10) - after.length, true, after[0]);
+			array.forEach(before.concat(after), function(n){this.timeMenu.appendChild(n);}, this);
 		},
 
 		constructor: function(){
@@ -7912,7 +8097,7 @@ define([
 		},
 
 		postMixInProperties: function(){
-			this.inherited(arguments);
+		        this.inherited(arguments);
 			this._setConstraintsAttr(this.constraints); // this needs to happen now (and later) due to codependency on _set*Attr calls
 		},
 
@@ -8150,14 +8335,13 @@ define([
 
 				// Accept the currently-highlighted option as the value
 				if(this._highlighted_option){
-					this._onOptionSelected({target: this._highlighted_option});
-				}
+				this._onOptionSelected({target: this._highlighted_option});
+			}
 
 				// Call stopEvent() for ENTER key so that form doesn't submit,
 				// but not for TAB, so that TAB does switch focus
 				return e.charOrCode === keys.TAB;
 			}
-			return undefined;
 		}
 	});
 });
@@ -11057,25 +11241,26 @@ define([
 
 	// dijit.Tooltip.defaultPosition: String[]
 	//		This variable controls the position of tooltips, if the position is not specified to
-	//		the Tooltip widget or *TextBox widget itself.  It's an array of strings with the values
-	//		possible for `dijit/place::around()`.   The recommended values are:
+	//		the Tooltip widget or *TextBox widget itself.  It's an array of strings with the following values:
 	//
-	//			* before-centered: centers tooltip to the left of the anchor node/widget, or to the right
-	//				 in the case of RTL scripts like Hebrew and Arabic
-	//			* after-centered: centers tooltip to the right of the anchor node/widget, or to the left
-	//				 in the case of RTL scripts like Hebrew and Arabic
-	//			* above-centered: tooltip is centered above anchor node
-	//			* below-centered: tooltip is centered above anchor node
+	//			* before: places tooltip to the left of the target node/widget, or to the right in
+	//			  the case of RTL scripts like Hebrew and Arabic
+	//			* after: places tooltip to the right of the target node/widget, or to the left in
+	//			  the case of RTL scripts like Hebrew and Arabic
+	//			* above: tooltip goes above target node
+	//			* below: tooltip goes below target node
+	//			* top: tooltip goes above target node but centered connector
+	//			* bottom: tooltip goes below target node but centered connector
 	//
 	//		The list is positions is tried, in order, until a position is found where the tooltip fits
 	//		within the viewport.
 	//
-	//		Be careful setting this parameter.  A value of "above-centered" may work fine until the user scrolls
+	//		Be careful setting this parameter.  A value of "above" may work fine until the user scrolls
 	//		the screen so that there's no room above the target node.   Nodes with drop downs, like
 	//		DropDownButton or FilteringSelect, are especially problematic, in that you need to be sure
 	//		that the drop down and tooltip don't overlap, even when the viewport is scrolled so that there
 	//		is only room below (or above) the target node, but not both.
-	Tooltip.defaultPosition = ["after-centered", "before-centered"];
+	Tooltip.defaultPosition = ["after", "before"];
 
 
 	return Tooltip;
@@ -14911,7 +15096,6 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -14921,7 +15105,6 @@ define({ root:
 "da": true,
 "cs": true,
 "ca": true,
-"az": true,
 "ar": true
 });
 
@@ -15438,7 +15621,6 @@ yellowgreen: "yellow green"
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -15448,7 +15630,6 @@ yellowgreen: "yellow green"
 "da": true,
 "cs": true,
 "ca": true,
-"az": true,
 "ar": true
 });
 
@@ -17027,7 +17208,7 @@ define([
 },
 'url:dijit/templates/Menu.html':"<table class=\"dijit dijitMenu dijitMenuPassive dijitReset dijitMenuTable\" role=\"menu\" tabIndex=\"${tabIndex}\" data-dojo-attach-event=\"onkeypress:_onKeyPress\" cellspacing=\"0\">\n\t<tbody class=\"dijitReset\" data-dojo-attach-point=\"containerNode\"></tbody>\n</table>\n",
 'dijit/_editor/nls/FontChoice':function(){
-define("dijit/_editor/nls/FontChoice", { root:
+define({ root:
 //begin v1.x content
 ({
 	fontSize: "Size",
@@ -17076,7 +17257,6 @@ define("dijit/_editor/nls/FontChoice", { root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -17086,7 +17266,6 @@ define("dijit/_editor/nls/FontChoice", { root:
 "da": true,
 "cs": true,
 "ca": true,
-"az": true,
 "ar": true
 });
 
@@ -29313,14 +29492,6 @@ define([
 
 		baseClass: "dijitComboBoxMenu",
 
-		postCreate: function(){
-			this.inherited(arguments);
-			if(!this.isLeftToRight()){
-				domClass.add(this.previousButton, "dijitMenuItemRtl");
-				domClass.add(this.nextButton, "dijitMenuItemRtl");
-			}
-		},
-
 		_createMenuItem: function(){
 			return domConstruct.create("div", {
 				"class": "dijitReset dijitMenuItem" +(this.isLeftToRight() ? "" : " dijitMenuItemRtl"),
@@ -29364,26 +29535,25 @@ define([
 				this.selectNextNode();
 			}
 			while(scrollamount<height){
-				var highlighted_option = this.getHighlightedOption();
 				if(up){
 					// stop at option 1
-					if(!highlighted_option.previousSibling ||
-						highlighted_option.previousSibling.style.display == "none"){
+					if(!this.getHighlightedOption().previousSibling ||
+						this._highlighted_option.previousSibling.style.display == "none"){
 						break;
 					}
 					this.selectPreviousNode();
 				}else{
 					// stop at last option
-					if(!highlighted_option.nextSibling ||
-						highlighted_option.nextSibling.style.display == "none"){
+					if(!this.getHighlightedOption().nextSibling ||
+						this._highlighted_option.nextSibling.style.display == "none"){
 						break;
 					}
 					this.selectNextNode();
 				}
 				// going backwards
-				var newscroll = this.domNode.scrollTop;
-				scrollamount += (newscroll-oldscroll)*(up ? -1:1);
-				oldscroll = newscroll;
+				var newscroll=this.domNode.scrollTop;
+				scrollamount+=(newscroll-oldscroll)*(up ? -1:1);
+				oldscroll=newscroll;
 			}
 		},
 
@@ -30368,9 +30538,6 @@ define([
 				}
 			}
 			this.inherited(arguments);
-			if(this.value instanceof Date){
-				this.filterString = "";
-			}
 			if(this.dropDown){
 				this.dropDown.set('value', value, false);
 			}
@@ -30387,8 +30554,8 @@ define([
 		_setDropDownDefaultValueAttr: function(/*Date*/ val){
 			if(this._isInvalidDate(val)){
 				// convert null setting into today's date, since there needs to be *some* default at all times.
-				 val = new this.dateClassObj();
-			}
+				 val = new this.dateClassObj()
+						}
 			this.dropDownDefaultValue = val;
 		},
 
@@ -30403,7 +30570,7 @@ define([
 			this.dropDown = new PopupProto({
 				onChange: function(value){
 					// this will cause InlineEditBox and other handlers to do stuff so make sure it's last
-					textBox.set('value', value, true);
+					_DateTimeTextBox.superclass._setValueAttr.call(textBox, value, true);
 				},
 				id: this.id + "_popup",
 				dir: textBox.dir,
@@ -31216,7 +31383,6 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -31226,7 +31392,6 @@ define({ root:
 "da": true,
 "cs": true,
 "ca": true,
-"az": true,
 "ar": true
 });
 
@@ -31765,7 +31930,6 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -31775,7 +31939,6 @@ define({ root:
 "da": true,
 "cs": true,
 "ca": true,
-"az": true,
 "ar": true
 });
 
@@ -33833,9 +33996,6 @@ return HorizontalSlider;
 
 }}});
 
-require(["dojo/i18n"], function(i18n){
-i18n._preloadLocalizations("dijit/nls/dijit-all", ["nl-nl","en-us","da","fi-fi","pt-pt","hu","sk","sl","pl","ca","sv","zh-tw","ar","en-gb","he-il","de-de","ko-kr","ja-jp","nb","ru","es-es","th","cs","it-it","pt-br","fr-fr","el","tr","zh-cn"]);
-});
 define("dijit/dijit-all", [
 	".",
 	"./dijit",

@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/atom/widget/nls/zh-tw/FeedEntryEditor", //begin v1.x content
+//begin v1.x content
 ({
 	doNew: "[新建]",
 	edit: "[編輯]",

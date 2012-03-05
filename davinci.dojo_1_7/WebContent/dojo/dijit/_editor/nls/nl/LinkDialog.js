@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/_editor/nls/nl/LinkDialog", //begin v1.x content
+//begin v1.x content
 ({
 	createLinkTitle: "Linkeigenschappen",
 	insertImageTitle: "Afbeeldingseigenschappen",

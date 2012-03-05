@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/kk/Smiley", //begin v1.x content
+//begin v1.x content
 ({
 	smiley: "Эмограмма енгізу",
 	emoticonSmile: "күлімсіреу",
@@ -20,8 +20,7 @@ define(
 	emoticonYes: "иә",
 	emoticonNo: "ешбір",
 	emoticonAngel: "періште",
-	emoticonCrying: "жылау",
-	emoticonHappy: "бақыт"
+	emoticonCrying: "жылау"
 })
 
 //end v1.x content

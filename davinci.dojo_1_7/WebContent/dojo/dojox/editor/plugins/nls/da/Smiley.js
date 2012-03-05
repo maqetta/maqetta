@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/da/Smiley", //begin v1.x content
+//begin v1.x content
 ({
 	smiley: "Indsæt humørikon",
 	emoticonSmile: "smil",
@@ -20,8 +20,7 @@ define(
 	emoticonYes: "ja",
 	emoticonNo: "nej",
 	emoticonAngel: "engel",
-	emoticonCrying: "græder",
-	emoticonHappy: "glad"
+	emoticonCrying: "græder"
 })
 
 //end v1.x content

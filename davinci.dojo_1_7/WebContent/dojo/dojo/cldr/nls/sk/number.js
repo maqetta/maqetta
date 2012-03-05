@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojo/cldr/nls/sk/number", //begin v1.x content
+//begin v1.x content
 {
 	"currencyFormat": "#,##0.00 ¤",
 	"group": " ",

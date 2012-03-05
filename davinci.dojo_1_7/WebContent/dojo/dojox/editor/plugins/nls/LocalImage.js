@@ -1,6 +1,5 @@
 //>>built
-define("dojox/editor/plugins/nls/LocalImage", { root:
-//begin v1.x content
+define({ root:
 ({
 	insertImageTitle: "Insert Image",
 	url: "Image",
@@ -32,7 +31,6 @@ define("dojox/editor/plugins/nls/LocalImage", { root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -44,3 +42,4 @@ define("dojox/editor/plugins/nls/LocalImage", { root:
 "ca": true,
 "ar": true
 });
+

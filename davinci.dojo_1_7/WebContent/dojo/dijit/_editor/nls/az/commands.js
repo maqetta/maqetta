@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/_editor/nls/az/commands", //begin v1.x content
+//begin v1.x content
 ({
 	"removeFormat" : "Formatı Sil",
 	"copy" :"Köçür",

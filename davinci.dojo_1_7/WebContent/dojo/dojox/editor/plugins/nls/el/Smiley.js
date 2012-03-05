@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/el/Smiley", //begin v1.x content
+//begin v1.x content
 ({
 	smiley: "Εισαγωγή εικονιδίου συναισθήματος",
 	emoticonSmile: "Χαμόγελο",
@@ -20,8 +20,7 @@ define(
 	emoticonYes: "Ναι",
 	emoticonNo: "Όχι",
 	emoticonAngel: "Αγγελούδι",
-	emoticonCrying: "Κλάμα",
-	emoticonHappy: "Ευτυχία"
+	emoticonCrying: "Κλάμα"
 })
 
 //end v1.x content

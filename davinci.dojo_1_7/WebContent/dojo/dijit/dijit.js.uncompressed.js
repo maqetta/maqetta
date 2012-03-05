@@ -82,6 +82,221 @@ define(["./dom-geometry", "./_base/lang", "./ready", "./_base/sniff", "./_base/w
 });
 
 },
+'dojo/text':function(){
+define(["./_base/kernel", "require", "./has", "./_base/xhr"], function(dojo, require, has, xhr){
+	// module:
+	//		dojo/text
+	// summary:
+	//		This module implements the !dojo/text plugin and the dojo.cache API.
+	// description:
+	//		We choose to include our own plugin to leverage functionality already contained in dojo
+	//		and thereby reduce the size of the plugin compared to various foreign loader implementations.
+	//		Also, this allows foreign AMD loaders to be used without their plugins.
+	//
+	//		CAUTION: this module is designed to optionally function synchronously to support the dojo v1.x synchronous
+	//		loader. This feature is outside the scope of the CommonJS plugins specification.
+
+	var getText;
+	if(1){
+		getText= function(url, sync, load){
+			xhr("GET", {url:url, sync:!!sync, load:load});
+		};
+	}else{
+		// TODOC: only works for dojo AMD loader
+		if(require.getText){
+			getText= require.getText;
+		}else{
+			console.error("dojo/text plugin failed to load because loader does not support getText");
+		}
+	}
+
+	var
+		theCache= {},
+
+		strip= function(text){
+			//Strips <?xml ...?> declarations so that external SVG and XML
+			//documents can be added to a document without worry. Also, if the string
+			//is an HTML document, only the part inside the body tag is returned.
+			if(text){
+				text= text.replace(/^\s*<\?xml(\s)+version=[\'\"](\d)*.(\d)*[\'\"](\s)*\?>/im, "");
+				var matches= text.match(/<body[^>]*>\s*([\s\S]+)\s*<\/body>/im);
+				if(matches){
+					text= matches[1];
+				}
+			}else{
+				text = "";
+			}
+			return text;
+		},
+
+		notFound = {},
+
+		pending = {},
+
+		result= {
+			dynamic:
+				// the dojo/text caches it's own resources because of dojo.cache
+				true,
+
+			normalize:function(id, toAbsMid){
+				// id is something like (path may be relative):
+				//
+				//	 "path/to/text.html"
+				//	 "path/to/text.html!strip"
+				var parts= id.split("!"),
+					url= parts[0];
+				return (/^\./.test(url) ? toAbsMid(url) : url) + (parts[1] ? "!" + parts[1] : "");
+			},
+
+			load:function(id, require, load){
+				// id is something like (path is always absolute):
+				//
+				//	 "path/to/text.html"
+				//	 "path/to/text.html!strip"
+				var
+					parts= id.split("!"),
+					stripFlag= parts.length>1,
+					absMid= parts[0],
+					url = require.toUrl(parts[0]),
+					text = notFound,
+					finish = function(text){
+						load(stripFlag ? strip(text) : text);
+					};
+				if(absMid in theCache){
+					text = theCache[absMid];
+				}else if(url in require.cache){
+					text = require.cache[url];
+				}else if(url in theCache){
+					text = theCache[url];
+				}
+				if(text===notFound){
+					if(pending[url]){
+						pending[url].push(finish);
+					}else{
+						var pendingList = pending[url] = [finish];
+						getText(url, !require.async, function(text){
+							theCache[absMid]= theCache[url]= text;
+							for(var i = 0; i<pendingList.length;){
+								pendingList[i++](text);
+							}
+							delete pending[url];
+						});
+					}
+				}else{
+					finish(text);
+				}
+			}
+		};
+
+	dojo.cache= function(/*String||Object*/module, /*String*/url, /*String||Object?*/value){
+		//	 * (string string [value]) => (module, url, value)
+		//	 * (object [value])        => (module, value), url defaults to ""
+		//
+		//	 * if module is an object, then it must be convertable to a string
+		//	 * (module, url) module + (url ? ("/" + url) : "") must be a legal argument to require.toUrl
+		//	 * value may be a string or an object; if an object then may have the properties "value" and/or "sanitize"
+		var key;
+		if(typeof module=="string"){
+			if(/\//.test(module)){
+				// module is a version 1.7+ resolved path
+				key = module;
+				value = url;
+			}else{
+				// module is a version 1.6- argument to dojo.moduleUrl
+				key = require.toUrl(module.replace(/\./g, "/") + (url ? ("/" + url) : ""));
+			}
+		}else{
+			key = module + "";
+			value = url;
+		}
+		var
+			val = (value != undefined && typeof value != "string") ? value.value : value,
+			sanitize = value && value.sanitize;
+
+		if(typeof val == "string"){
+			//We have a string, set cache value
+			theCache[key] = val;
+			return sanitize ? strip(val) : val;
+		}else if(val === null){
+			//Remove cached value
+			delete theCache[key];
+			return null;
+		}else{
+			//Allow cache values to be empty strings. If key property does
+			//not exist, fetch it.
+			if(!(key in theCache)){
+				getText(key, true, function(text){
+					theCache[key]= text;
+				});
+			}
+			return sanitize ? strip(theCache[key]) : theCache[key];
+		}
+	};
+
+	return result;
+
+/*=====
+dojo.cache = function(module, url, value){
+	// summary:
+	//		A getter and setter for storing the string content associated with the
+	//		module and url arguments.
+	// description:
+	//		If module is a string that contains slashes, then it is interpretted as a fully
+	//		resolved path (typically a result returned by require.toUrl), and url should not be
+	//		provided. This is the preferred signature. If module is a string that does not
+	//		contain slashes, then url must also be provided and module and url are used to
+	//		call `dojo.moduleUrl()` to generate a module URL. This signature is deprecated.
+	//		If value is specified, the cache value for the moduleUrl will be set to
+	//		that value. Otherwise, dojo.cache will fetch the moduleUrl and store it
+	//		in its internal cache and return that cached value for the URL. To clear
+	//		a cache value pass null for value. Since XMLHttpRequest (XHR) is used to fetch the
+	//		the URL contents, only modules on the same domain of the page can use this capability.
+	//		The build system can inline the cache values though, to allow for xdomain hosting.
+	// module: String||Object
+	//		If a String with slashes, a fully resolved path; if a String without slashes, the
+	//		module name to use for the base part of the URL, similar to module argument
+	//		to `dojo.moduleUrl`. If an Object, something that has a .toString() method that
+	//		generates a valid path for the cache item. For example, a dojo._Url object.
+	// url: String
+	//		The rest of the path to append to the path derived from the module argument. If
+	//		module is an object, then this second argument should be the "value" argument instead.
+	// value: String||Object?
+	//		If a String, the value to use in the cache for the module/url combination.
+	//		If an Object, it can have two properties: value and sanitize. The value property
+	//		should be the value to use in the cache, and sanitize can be set to true or false,
+	//		to indicate if XML declarations should be removed from the value and if the HTML
+	//		inside a body tag in the value should be extracted as the real value. The value argument
+	//		or the value property on the value argument are usually only used by the build system
+	//		as it inlines cache content.
+	//	example:
+	//		To ask dojo.cache to fetch content and store it in the cache (the dojo["cache"] style
+	//		of call is used to avoid an issue with the build system erroneously trying to intern
+	//		this example. To get the build system to intern your dojo.cache calls, use the
+	//		"dojo.cache" style of call):
+	//		| //If template.html contains "<h1>Hello</h1>" that will be
+	//		| //the value for the text variable.
+	//		| var text = dojo["cache"]("my.module", "template.html");
+	//	example:
+	//		To ask dojo.cache to fetch content and store it in the cache, and sanitize the input
+	//		 (the dojo["cache"] style of call is used to avoid an issue with the build system
+	//		erroneously trying to intern this example. To get the build system to intern your
+	//		dojo.cache calls, use the "dojo.cache" style of call):
+	//		| //If template.html contains "<html><body><h1>Hello</h1></body></html>", the
+	//		| //text variable will contain just "<h1>Hello</h1>".
+	//		| var text = dojo["cache"]("my.module", "template.html", {sanitize: true});
+	//	example:
+	//		Same example as previous, but demostrates how an object can be passed in as
+	//		the first argument, then the value argument can then be the second argument.
+	//		| //If template.html contains "<html><body><h1>Hello</h1></body></html>", the
+	//		| //text variable will contain just "<h1>Hello</h1>".
+	//		| var text = dojo["cache"](new dojo._Url("my/module/template.html"), {sanitize: true});
+	return val; //String
+};
+=====*/
+});
+
+
+},
 'dijit/hccss':function(){
 define("dijit/hccss", [
 	"require",			// require.toUrl
@@ -4021,22 +4236,14 @@ define("dijit/place", [
 			//
 			// positions:
 			//		Ordered list of positions to try matching up.
-			//			* before: places drop down to the left of the anchor node/widget, or to the right in the case
-			//				of RTL scripts like Hebrew and Arabic; aligns either the top of the drop down
-			//				with the top of the anchor, or the bottom of the drop down with bottom of the anchor.
-			//			* after: places drop down to the right of the anchor node/widget, or to the left in the case
-			//				of RTL scripts like Hebrew and Arabic; aligns either the top of the drop down
-			//				with the top of the anchor, or the bottom of the drop down with bottom of the anchor.
-			//			* before-centered: centers drop down to the left of the anchor node/widget, or to the right
-			//				 in the case of RTL scripts like Hebrew and Arabic
-			//			* after-centered: centers drop down to the right of the anchor node/widget, or to the left
-			//				 in the case of RTL scripts like Hebrew and Arabic
-			//			* above-centered: drop down is centered above anchor node
-			//			* above: drop down goes above anchor node, left sides aligned
-			//			* above-alt: drop down goes above anchor node, right sides aligned
-			//			* below-centered: drop down is centered above anchor node
+			//			* before: places drop down to the left of the anchor node/widget, or to the right in
+			//				the case of RTL scripts like Hebrew and Arabic
+			//			* after: places drop down to the right of the anchor node/widget, or to the left in
+			//				the case of RTL scripts like Hebrew and Arabic
+			//			* above: drop down goes above anchor node
+			//			* above-alt: same as above except right sides aligned instead of left
 			//			* below: drop down goes below anchor node
-			//			* below-alt: drop down goes below anchor node, right sides aligned
+			//			* below-alt: same as below except right sides aligned instead of left
 			//
 			// layoutNode: Function(node, aroundNodeCorner, nodeCorner)
 			//		For things like tooltip, they are displayed differently (and have different dimensions)
@@ -4112,18 +4319,11 @@ define("dijit/place", [
 					case "below-centered":
 						push("BM", "TM");
 						break;
-					case "after-centered":
-						ltr = !ltr;
-						// fall through
-					case "before-centered":
-						push(ltr ? "ML" : "MR", ltr ? "MR" : "ML");
-						break;
 					case "after":
 						ltr = !ltr;
 						// fall through
 					case "before":
-						push(ltr ? "TL" : "TR", ltr ? "TR" : "TL");
-						push(ltr ? "BL" : "BR", ltr ? "BR" : "BL");
+						push(ltr ? "ML" : "MR", ltr ? "MR" : "ML");
 						break;
 					case "below-alt":
 						ltr = !ltr;
@@ -5847,54 +6047,34 @@ define("dijit/_base/wai", [
 
 },
 'dojo/window':function(){
-define(["./_base/lang", "./_base/sniff", "./_base/window", "./dom", "./dom-geometry", "./dom-style"],
-	function(lang, has, baseWindow, dom, geom, style) {
-
-// module:
-//		dojo/window
-// summary:
-//		TODOC
-
-var window = lang.getObject("dojo.window", true);
-
-/*=====
-dojo.window = {
+define(["./_base/kernel", "./_base/lang", "./_base/sniff", "./_base/window", "./dom", "./dom-geometry", "./dom-style"], function(dojo, lang, has, baseWindow, dom, geom, style) {
+	// module:
+	//		dojo/window
 	// summary:
-	//		TODO
-};
-window = dojo.window;
-=====*/
+	//		TODOC
 
-window.getBox = function(){
+lang.getObject("window", true, dojo);
+
+dojo.window.getBox = function(){
 	// summary:
 	//		Returns the dimensions and scroll position of the viewable area of a browser window
 
-	var
-		scrollRoot = (baseWindow.doc.compatMode == 'BackCompat') ? baseWindow.body() : baseWindow.doc.documentElement,
-		// get scroll position
-		scroll = geom.docScroll(), // scrollRoot.scrollTop/Left should work
-		w, h;
+	var scrollRoot = (baseWindow.doc.compatMode == 'BackCompat') ? baseWindow.body() : baseWindow.doc.documentElement;
 
-	if(has("touch")){ // if(scrollbars not supported)
-		var uiWindow = baseWindow.doc.parentWindow || baseWindow.doc.defaultView;   // use UI window, not dojo.global window. baseWindow.doc.parentWindow probably not needed since it's not defined for webkit
-		// on mobile, scrollRoot.clientHeight <= uiWindow.innerHeight <= scrollRoot.offsetHeight, return uiWindow.innerHeight
-		w = uiWindow.innerWidth || scrollRoot.clientWidth; // || scrollRoot.clientXXX probably never evaluated
-		h = uiWindow.innerHeight || scrollRoot.clientHeight;
-	}else{
-		// on desktops, scrollRoot.clientHeight <= scrollRoot.offsetHeight <= uiWindow.innerHeight, return scrollRoot.clientHeight
-		// uiWindow.innerWidth/Height includes the scrollbar and cannot be used
-		w = scrollRoot.clientWidth;
-		h = scrollRoot.clientHeight;
-	}
+	// get scroll position
+	var scroll = geom.docScroll(); // scrollRoot.scrollTop/Left should work
+
+	var uiWindow = baseWindow.doc.parentWindow || baseWindow.doc.defaultView;   // use UI window, not dojo.global window
+	// dojo.global.innerWidth||dojo.global.innerHeight is for mobile
 	return {
 		l: scroll.x,
 		t: scroll.y,
-		w: w,
-		h: h
+		w: uiWindow.innerWidth || scrollRoot.clientWidth,
+		h: uiWindow.innerHeight || scrollRoot.clientHeight
 	};
 };
 
-window.get = function(doc){
+dojo.window.get = function(doc){
 	// summary:
 	// 		Get window object associated with document doc
 
@@ -5918,7 +6098,7 @@ window.get = function(doc){
 	return doc.parentWindow || doc.defaultView;	//	Window
 };
 
-window.scrollIntoView = function(/*DomNode*/ node, /*Object?*/ pos){
+dojo.window.scrollIntoView = function(/*DomNode*/ node, /*Object?*/ pos){
 	// summary:
 	//		Scroll the passed node into view, if it is not already.
 
@@ -6014,7 +6194,7 @@ window.scrollIntoView = function(/*DomNode*/ node, /*Object?*/ pos){
 	}
 };
 
-return window;
+return dojo.window;
 });
 
 },
@@ -7411,9 +7591,6 @@ return declare("dijit._WidgetBase", Stateful, {
 
 }}});
 
-require(["dojo/i18n"], function(i18n){
-i18n._preloadLocalizations("dijit/nls/dijit", []);
-});
 define("dijit/dijit", [
 	".",
 	"./_base",

@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/kk/AutoSave", //begin v1.x content
+//begin v1.x content
 ({
 	"saveLabel": "Сақтау",
 	"saveSettingLabelOn": "Автосақтау аралығын орнату...",

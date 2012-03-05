@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/_editor/nls/zh/LinkDialog", //begin v1.x content
+//begin v1.x content
 ({
 	createLinkTitle: "链接属性",
 	insertImageTitle: "图像属性",

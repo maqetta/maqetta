@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/widget/nls/az/Wizard", //begin v1.x content
+//begin v1.x content
 ({
 	"next" : "Irəli",
 	"done" : "Qurtardı",

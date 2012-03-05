@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/grid/enhanced/nls/kk/Pagination", //begin v1.x content
+//begin v1.x content
 ({
 	"descTemplate": "${1} ${0} элементтің ${2} - ${3} элементі",
 	"firstTip": "Бірінші бет",
@@ -8,7 +8,6 @@ define(
 	"nextTip": "Келесі бет",
 	"prevTip": "Алдыңғы бет",
 	"itemTitle": "элементтер",
-	"singularItemTitle": "элемент",
 	"pageStepLabelTemplate": "Бет ${0}",
 	"pageSizeLabelTemplate": "Бетіне ${0} элемент",
 	"allItemsLabelTemplate": "Барлық элементтер",
@@ -22,3 +21,4 @@ define(
 })
 //end v1.x content
 );
+

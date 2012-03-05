@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/nls/az/common", //begin v1.x content
+//begin v1.x content
 ({
 	"buttonOk" : "Ok",
 	"buttonCancel" : "Ləğv et",

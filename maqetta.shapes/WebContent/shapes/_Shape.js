@@ -68,6 +68,8 @@ define([
 				return;
 			}
 			dojo.addClass(this.domNode,'shape');
+			this.domNode.style.pointerEvents="none";
+			this.domNode.style.lineHeight='0px';
 			this.createGraphics();
 			var gbbox = this._g.getBBox();
 			

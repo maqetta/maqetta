@@ -198,8 +198,8 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 			
 			for(var i=0;i<value.values.length;i++){
 				for(var name in value.values[i]){
-				
-					if(URLRewrite.containsUrl(value.values[i][name])){
+					debugger;
+					if(URLRewrite.containsUrl(value.values[i][name]) && !URLRewrite.isAbsolute(value.values[i][name])){
 						
 						var oldUrl = new Path(URLRewrite.getUrl(value.values[i][name]));
 						if(!oldUrl.isAbsolute){

@@ -65,10 +65,12 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		dijit.focus(this.domNode);
 	},
 
+/*FIXME: Doesn't seem to be ever used. Commenting out for now. Probably should just delete this.
 	deselect: function(){
 		this.flat(this.domNode);
 		this.palette.selectedItem = null;
 	},
+*/
 
 	itemMouseOverHandler: function(e){
 		var div = this.domNode;
@@ -99,6 +101,9 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			this.flat(this.palette.selectedItem.domNode);
 			this.palette.selectedItem = null;
 		}
+		// Sole apparent purpose for pushedItem is to remember the item which
+		// received the mousedown event so that CSS styling can be adjusted
+		// if mouseup on same item as received the mousedown
 		this.palette.pushedItem = this;
 			
 		DragManager.document = this.palette._context.getDocument();
@@ -169,6 +174,9 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		Metadata.getHelper(this.type, 'helper');
 	},
 
+	// sunken => styling for selected items
+	// raised => styling for items under mouse but not selected
+	// flat => items which are both not selected and not under mouse
 	flat: function(div){
 		dojo.removeClass(div, "dojoyPaletteItemRaised");
 		dojo.removeClass(div, "dojoyPaletteItemSunken");

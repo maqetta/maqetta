@@ -3,8 +3,9 @@ define([
     "davinci/ve/tools/CreateTool",
 	"davinci/ve/widget",
 	"davinci/ve/commands/ModifyCommand",
-	"davinci/ve/States"
-], function(declare, CreateTool, widget, ModifyCommand, States) {
+	"davinci/ve/States",
+	"dojo/DeferredList"
+], function(declare, CreateTool, widget, ModifyCommand, States, DeferredList) {
 
 	return declare(CreateTool, {
 
@@ -30,9 +31,12 @@ define([
 		}
 
 		this._data.context = this._context;
-		var w = this._create({parent: bodyWidget});
-		var body = States.getContainer();
-		States.add(body, "_show:" + w.getId());
+
+		new DeferredList(this._requireHelpers(this._data)).then(function() {
+			var widget = this._create({parent: bodyWidget}),
+				body = States.getContainer();
+			States.add(body, "_show:" + widget.getId());
+		}.bind(this));
 	}
 });
 });

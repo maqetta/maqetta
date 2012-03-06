@@ -137,7 +137,7 @@ return declare("davinci.html.HTMLElement", HTMLItem, {
 					var child = elem.children[i];
 					switch (child.elementType) {
 					case "HTMLElement":
-						if (lastChild && lastChild.elementType1 != "HTMLText" && !davinci.html._noFormatElements[child.tag]) {
+						if (lastChild && lastChild.elementType != "HTMLText" && !davinci.html._noFormatElements[child.tag]) {
 							addIndent(context.indent,null, lastChild);
 						}
 						formatElem(child,context);

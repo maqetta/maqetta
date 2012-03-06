@@ -29,23 +29,26 @@ return declare(DataStoreBasedWidgetInput, {
 		this.helpText = String.substitute(dojoxNls.edgeToEdgeDataListHelp, [helpInfo]);
 	},
 
-    updateStore: function() {
-		var textArea = Registry.byId("davinciIleb"),
-			value = textArea.attr('value'),
-			rows = value.split('\n'),
-			data = { identifier: 'label', items:[] },
+  updateStore: function() {
+		var textArea = dijit.byId("davinciIleb"),
+    		value = textArea.attr('value'),
+    		nodes = value,
+    		rows = value.split('\n'),
+			data = { identifier: 'label', items:[]},
 			items = data.items;
-
-		for (var r = 0; r < rows.length; r++) { 
+		for (var r = 0; r < rows.length; r++){ 
 			var cols = rows[r].split(',');
 			var item = {};
 			item.label = cols[0];
 			if (cols[1]){
-				item.moveTo = cols[1].trim(); // strip leading trailing white space
+				item.moveTo = cols[1];
+			} else {
+				item.moveTo = 'dummy';
 			}
+
 			items.push(item);
 		}
-		
+
 		return this.replaceStoreData(data);
 	}
 

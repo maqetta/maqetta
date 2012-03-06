@@ -53,13 +53,14 @@ return declare(DataStoreBasedWidgetInput, {
 	},
 
 	serialize: function(widget, callback, value) {
-        var structure = value || widget.attr('structure');
-        var names = [];
-        var fields = [];
-        for (var i=0; i<structure.length; ++i) {
-            fields.push(structure[i].field);
-            names.push(structure[i].name);
-        }
+	  var structure = value || widget.attr('structure');
+    var names = [];
+    var fields = [];
+    for (var i=0; i<structure.length; ++i) {
+      fields.push(structure[i].field);
+      names.push(structure[i].name);
+    }
+
 		callback(fields.join(", ") + '\n' + names.join(", ")); 
 	},
 	
@@ -67,38 +68,38 @@ return declare(DataStoreBasedWidgetInput, {
 	// see @update() for format
 	parse: function(input) {
 		var values = this.parseGrid(input);
-        if (values.length < 2) {
-            alert(dojoxNls.invalidInput1);
-            return input;
-        }
-        var fields = values[0];
-        var names = values[1];
-        if (fields.length < names.length) {
-            alert(dojoxNls.invalidInput2);
-            return input;
-        }
-        var structure = [];
-        for (var i=0; i<fields.length; ++i) {
-            var field = fields[i].text;
-            var name = names[i].text;
-            var width = 'auto';
-            var editor = 'dojox.grid.editors.Input';
-            structure.push({field: field, name: name, width: width, editor: editor});
-        }
-        return structure;
+    if (values.length < 2) {
+        alert(dojoxNls.invalidInput1);
+        return input;
+    }
+    var fields = values[0];
+    var names = values[1];
+    if (fields.length < names.length) {
+        alert(dojoxNls.invalidInput2);
+        return input;
+    }
+    var structure = [];
+    for (var i=0; i<fields.length; ++i) {
+        var field = fields[i].text;
+        var name = names[i].text;
+        var width = 'auto';
+        var editor = 'dojox.grid.editors.Input';
+        structure.push({field: field, name: name, width: width, editor: editor});
+    }
+    return structure;
 	},
 	
-    // in this case, the first row is the Fields
-    // the second row is the Display Names (column headers)
+	// in this case, the first row is the Fields
+  // the second row is the Display Names (column headers)
 	update: function(widget, structure) {
-	    if (structure.length > 0) {
-	        var properties = {structure: structure};
-	        var command = new ModifyCommand(widget, properties, null, this._getContext());
-	        this._getContext().getCommandStack().execute(command);
-	        return command.newWidget;
-	    }
-	    return widget;
-	    
+    if (structure.length > 0) {
+      var properties = {structure: structure};
+      var command = new ModifyCommand(widget, properties, null, this._getContext());
+      this._getContext().getCommandStack().execute(command);
+      return command.newWidget;
+    }
+
+    return widget;	    
 	},
 
 	refreshStoreView: function(){
@@ -122,44 +123,43 @@ return declare(DataStoreBasedWidgetInput, {
 		textArea.attr('value', String(value));
 	},
 	
-    addOne: function() {
-        this._gridColDS.newItem({rowid: this._rowid++, width: "auto", editable: true, hidden: false});
-    },
+	addOne: function() {
+	  this._gridColDS.newItem({rowid: this._rowid++, width: "auto", editable: true, hidden: false});
+	},
     
-    removeOne: function() {
-        var gridColDS = this._gridColDS;
-        dojo.forEach(this._gridColumns.selection.getSelected(), function(item) {
-            gridColDS.deleteItem(item);
-        });
-    },
+  removeOne: function() {
+    var gridColDS = this._gridColDS;
+    dojo.forEach(this._gridColumns.selection.getSelected(), function(item) {
+        gridColDS.deleteItem(item);
+    });
+  },
 	
-	
-    updateWidget: function() {
-        var structure = [];
+  updateWidget: function() {
+    var structure = [];
+    
+    var context = this._getContext();
+    var widget = this._widget;
         
-        var context = this._getContext();
-        var widget = this._widget;
-        	
-    	var storeCmd = this.updateStore(structure);
-    	structure = this._structure;
-    	var escapeHTML = (this.getFormat() === 'text');
-        var command = new ModifyCommand(widget,
-	        	{
-		        	structure: structure,
-		        	escapeHTMLInData: escapeHTML
-		        },
-		        null,
-		        context
-		    );
-        var compoundCommand = new OrderedCompoundCommand();
-        compoundCommand.add(storeCmd);
-        compoundCommand.add(command);
-        context.getCommandStack().execute(compoundCommand);  
-        context.select(command.newWidget);
-    },
+    var storeCmd = this.updateStore(structure);
+    structure = this._structure;
+    var escapeHTML = (this.getFormat() === 'text');
+    var command = new ModifyCommand(widget,
+        {
+          structure: structure,
+          escapeHTMLInData: escapeHTML
+        },
+        null,
+        context
+    );
+    var compoundCommand = new OrderedCompoundCommand();
+    compoundCommand.add(storeCmd);
+    compoundCommand.add(command);
+    context.getCommandStack().execute(compoundCommand);  
+    context.select(command.newWidget);
+  },
     
-    updateStore: function(structure, value) {
-    	var oldStructure = structure, // we are defining the structure by row one of text area
+  updateStore: function(structure, value) {
+    var oldStructure = structure, // we are defining the structure by row one of text area
     		structure = [],
     		textArea = dijit.byId("davinciIleb"),
     		value = textArea.attr('value'),
@@ -167,7 +167,7 @@ return declare(DataStoreBasedWidgetInput, {
     		rows = value.split('\n'),
     		cols = rows[0].split(',');
 
-    	for (var c = 0; c < cols.length; c++){
+    for (var c = 0; c < cols.length; c++){
 			structure[c] = {
 				cellType: dojox.grid.cells.Cell,
 				width: 'auto',
@@ -176,7 +176,7 @@ return declare(DataStoreBasedWidgetInput, {
 			};
 		}
 
-    	this._structure = structure;
+    this._structure = structure;
 		var data = { identifier: 'uniqe_id', items:[]},
 			rows = value.split('\n'),
 			items = data.items;
@@ -213,60 +213,10 @@ return declare(DataStoreBasedWidgetInput, {
 			this._getContext().getCommandStack().execute(this.command || command);
 		}	
 	},
-	
-	updateWidgetForUrlStore: function(jsonP) {
-		var structure = [];
-    	var textArea = dijit.byId("davinciIleb");
-    	var callbackTextBox = dijit.byId("davinci.ve.input.SmartInput_callback_editbox");
-    	this._url = textArea.value;
-    	var url;
-    	var patt=/http:\/\//i;
-    	if (patt.test(this._url)){ // absolute url
-    		url = this._url;
-    	} else {
-    		var parentFolder = new Path(this._widget._edit_context._srcDocument.fileName)
-    				.getParentPath().toString();
-    		// relative so we have to get the absolute for the update of the store
-    		var file = system.resource.findResource(this._url, null, parentFolder);
-    		if (!file){
-    			alert('File: ' + this._url + ' does not exsist.');
-    			return;
-    		}
-    		url = file.getURL();
-    	}
-    	if (jsonP){
-    		this._callback = callbackTextBox.value;
-    	} else {
-    		this._callback = '';
-    	}
-    	var store;
-    	// need to use the same toolkit that the page is using, not the one maqetta is using
-		var dj = this._widget.getContext().getDojo();
-		try{
-			dj["require"]('dojo.data.ItemFileReadStore');
-			dj["require"]('dojox.io.xhrScriptPlugin');
-		}catch(e){
-			console.warn("FAILED: failure for module=dojo.data.ItemFileReadStore");
-		}
 
-		dj.dojox.io.xhrScriptPlugin(url,"callback");
-		store = new dj.data.ItemFileReadStore({url: url });
-    	store.fetch({
-    		query: this.query,
-    		queryOptions:{deep:true}, 
-    		onComplete: dojo.hitch(this, this._urlDataStoreLoaded),
-    		onError: function(e){ alert('File ' + e  );}
-    	});
-    	this._urlDataStore = store;
-	},
-	
-	_urlDataStoreLoaded : function(items) {
-		if (items.length < 1){
-			console.error("Data store empty");
-			return;
-		}
-		var structure = [],
-			item = items[0];
+	_getModifyCommandForUrlDataStore: function(widget, context, items) {
+		var structure = [];
+		var item = items[0];
 		for (var name in item){
 			if (name !== '_0' && name !== '_RI' && name !== '_S'){
 				structure.push({
@@ -277,118 +227,25 @@ return declare(DataStoreBasedWidgetInput, {
 				});
 			}
 		}
+
 		for (var i = 0; i < items.length; i++) {
 			var item = items[i];
 			console.warn("i=", i, "item=", item);
 		}
-		var store = this._widget.dijitWidget.store;
-		var storeId = this._widget.domNode._dvWidget._srcElement.getAttribute("store");
-		var storeWidget = Widget.byId(storeId);
-		var properties = {};
-		var context = this._getContext();
-        var widget = this._widget;
-		properties.url = this._url;
+
 		var scripts;
-		if (this._callback){
-			this.setCallback('"' + this._url + '","' + this._callback + '"');
-		} 
-		storeWidget._srcElement.setAttribute('data', ''); 
-		properties.data = ''; // to prevent ModifyCommand mixin from putting it back
-		var storeCmd = new ModifyCommand(storeWidget, properties);
 		var escapeHTML = (this._format === 'text');
-        var command = new ModifyCommand(widget,
-	        	{
-					structure: structure,
-		        	escapeHTMLInData: escapeHTML
-		        },
-		        null, 
-		        context,
-		        scripts
-		    );
-        var compoundCommand = new OrderedCompoundCommand();
-        compoundCommand.add(storeCmd);
-        compoundCommand.add(command);
-        context.getCommandStack().execute(compoundCommand);  
-        context.select(command.newWidget);
-	},
-	
-	show: function(widgetId) {
-        this._widget = Widget.byId(widgetId);
-	    
-	    var width = 200;
-		var height = 155;
-		this._loading(height, width);
-	    
-		dojo.style('ieb', 'background-color', '#F7FDFF');
-        var content = this._getTemplate();
-        this._inline.attr("content", content);
-        this._inline.eb = dijit.byId("davinciIleb");
-        this._inline.callBackObj = this;
- 
-        this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk")); 
-        this._connection.push(dojo.connect(this._inline.eb, "onKeyUp", this, "handleEvent"));
-		var folder = dojo.byId('davinci.ve.input.DataGridInput_img_folder');
-		this._connection.push(dojo.connect(folder, "onclick", this, "fileSelection"));
-		this._connectHelpDiv();
-		this._connectResizeHandle();
-		this._connectSimDiv();
-		this._loadingDiv.style.backgroundImage = 'none'; // turn off spinner
-        var dataStoreType = dijit.byId("davinci.ve.input.DataGridInput.dataStoreType");
-        this._connection.push(dojo.connect(dataStoreType, "onChange", this, "changeDataStoreType"));
-        var storeId = this._widget._srcElement.getAttribute("store"); 
-   		var storeWidget = Widget.byId(storeId);
-        this._data = storeWidget._srcElement.getAttribute('data'); 
-        this._url = storeWidget._srcElement.getAttribute('url'); 
-        this._callback = this.getCallback(this._url);
-        this._inline.eb = dijit.byId("davinciIleb");
-        this._connection.push(dojo.connect(this._inline.eb, "onMouseDown", this, "stopEvent"));
-        if(this._data){ 
-        	dataStoreType.setValue('dummyData');
-        	this._dataStoreType = 'dummyData';
-        	this._url = ' ';
-        	this._callback = '';
-        	this.refreshStoreView();
-        }else if(this._callback){
-        	dataStoreType.setValue('url');
-        	this._dataStoreType = 'url';
-        	this._inline.eb.setValue( this._url); 
-        	var tb =  dijit.byId("davinci.ve.input.SmartInput_callback_editbox");
-            tb.setValue(this._callback);
-        	this._data = ' ';
-        }else{
-        	dataStoreType.setValue('file');
-        	this._dataStoreType = 'file';
-        	this._inline.eb.setValue( this._url); 
-        	this._data = ' ';
-        	this._callback = '';
-        }
-        this.changeDataStoreType(this._dataStoreType);
-        dojo.style('iedResizeDiv', 'background-color', 'white');
-        var html = this._widget.getPropertyValue('escapeHTMLInData');
-        var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
-		var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
-        if(html){
-        	htmlRadio.set("checked", false);
-			textRadio.set("checked", true);
-        }else{
-        	htmlRadio.set("checked", true);
-			textRadio.set("checked", false);        	
-        }
-        this.updateFormats();
-        this._inline.eb.focus();
-	},
-	
-	handleEvent: function(event) {
-		if (event.keyCode == 13) {
-			var multiLine = this.multiLine;
-			if (!multiLine || multiLine == "false" || this._lastKeyCode == 13){ // back to back CR
-				this.onOk();
-			}
-		} else {
-			this.updateFormats();
-		}
-		this._lastKeyCode = event.keyCode;
-		this.updateSimStyle();
+    var command = new ModifyCommand(widget,
+      {
+        structure: structure,
+		    escapeHTMLInData: escapeHTML
+		  },
+		  null, 
+		  context,
+		  scripts
+		);
+
+		return command;
 	},
 	
 	fileSelection: function(e){
@@ -446,119 +303,6 @@ return declare(DataStoreBasedWidgetInput, {
 		
 		//Show dialog
 		this._fileSelectionDialog.show();
-	},
-	
-	updateFormats: function() {
-		// NOTE: if you put a break point in here while debugging it will break the dojoEllipsis
-		var callbackTr = dojo.byId("davinci.ve.input.SmartInput_callback");
-		dojo.style(callbackTr, 'display', 'none');
-		if (this._dataStoreType === 'file' || this._dataStoreType === 'url'){
-			var textObj = dojo.byId("davinci.ve.input.SmartInput_radio_text_width_div");
-			var htmlObj = dojo.byId("davinci.ve.input.SmartInput_radio_html_width_div");
-			var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
-			var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
-			var table = dojo.byId('davinci.ve.input.SmartInput_table');
-			
-			textObj.innerHTML = '<div class="dojoxEllipsis">' + dojoxNls.plainText + '  </div>';
-			htmlObj.innerHTML = '<div id="davinci.ve.input.SmartInput_radio_html_div" class="dojoxEllipsis">'+dojoxNls.htmlMarkup+'</div>';
-			htmlRadio.setDisabled(false);
-			textRadio.setDisabled(false);
-			dojo.removeClass(textObj,'inlineEditDisabled');
-			dojo.removeClass(htmlObj,'inlineEditDisabled');
-			dojo.style(textRadio.domNode, 'display', '');
-			dojo.style(htmlRadio.domNode, 'display', '');
-			dojo.style(htmlObj, 'display', '');
-			dojo.style(textObj, 'display', '');
-			dojo.style(table, 'display', '');
-			if (this._dataStoreType === 'url'){
-				dojo.style(callbackTr, 'display', '');
-			}
-		} else {
-			this.inherited(arguments);
-			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', 'none');
-		}
-	},
-	
-	changeDataStoreType: function (e){
-		this._dataStoreType = e;
-	    var textArea = dijit.byId("davinciIleb");
-	    var tagetObj = dojo.byId("iedResizeDiv");
-		var callbackTextBox = dijit.byId("davinci.ve.input.SmartInput_callback_editbox");
-	    var resizeWidth = dojo.style('iedResizeDiv', 'width');
-		if (e === 'dummyData'){
-			textArea.setValue( this._data);
-	    	tagetObj.style.height = '85px';
-	    	dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', 'none');
-			dojo.style('ieb', 'width', resizeWidth + 15 + 'px' );
-			
-		}else if ( e=== 'file'){
-			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', '');
-			textArea.setValue( this._url);
-	    	tagetObj.style.height = '40px';
-			
-		}else if (e === 'url'){
-			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', 'none');
-			textArea.setValue( this._url);
-			if (this._callback){
-				callbackTextBox.setValue( this._callback);
-			} else {
-				callbackTextBox.setValue('callback'); // provide a default
-			}
-			tagetObj.style.height = '40px';
-	    	dojo.style('ieb', 'width', resizeWidth + 15 + 'px' );
-			
-		} else {
-			// we should not ever get here.
-			console.error('DataGridInput:changeDataStoreType error');
-		}
-		this.updateFormats();
-    	this.resize(null);
-	},
-	
-	resize: function(e) {
-		this.inherited(arguments);	
-		var tagetObj = dojo.byId("iedResizeDiv");
-		var targetEditBoxDijit = dijit.byId("davinciIleb");
-		var boxWidth = tagetObj.clientWidth  - 5;
-		var boxheight = tagetObj.clientHeight -6;
-		boxWidth = tagetObj.clientWidth  /*+2*/ -8;
-		boxheight = tagetObj.clientHeight  -20; // new for text area
-		dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + 15 + "px");
-		
-	
-		if (targetEditBoxDijit) {
-			targetEditBoxDijit._setStyleAttr({width: boxWidth + "px", height: boxheight + "px", maxHeight: boxheight + "px"}); // needed for multi line
-		}
-		targetEditBoxDijit._setStyleAttr({width: tagetObj.clientWidth - 20 + "px"});
-				
-		if (this._dataStoreType === 'file') {
-			var ieb = dojo.byId("ieb");
-			var iebWidth = dojo.style('ieb', 'width', tagetObj.clientWidth + 30 + "px");
-			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', '');
-			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'left', tagetObj.clientWidth + 1  + 'px');
-			dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + 15 + "px");
-		} else {
-			var ieb = dojo.byId("ieb");
-			var iebWidth = dojo.style('ieb', 'width', tagetObj.clientWidth + 15 + "px");
-			dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + "px");
-		}
-	},
-	
-	 getCallback: function(url) {
-	    var helper = Widget.getWidgetHelper('dojo.data.ItemFileReadStore');
-        if(helper && helper.getXhrScriptPluginParameters){
-		   var xhrParams = helper.getXhrScriptPluginParameters(url, this._widget._edit_context);
-            if ( xhrParams){ // must be the one we were looking for.
-                return xhrParams.callback;
-            }
-        }
-    },
-	
-	setCallback: function(url){
-		var helper = Widget.getWidgetHelper('dojo.data.ItemFileReadStore');
-        if(helper && helper.setXhrScriptPluginParameters){
-           helper.setXhrScriptPluginParameters(url, this._widget._edit_context);
-        }
 	}
 });
 

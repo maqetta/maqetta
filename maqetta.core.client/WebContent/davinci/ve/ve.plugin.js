@@ -556,7 +556,8 @@ return {
                 "flowLayout": true,
                 "snap": true,
 				"showPossibleParents": false,
-                "cssOverrideWarn": true
+                "cssOverrideWarn": true,
+                "absoluteWidgetsZindex": 9999
             }
         }
     ],

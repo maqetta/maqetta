@@ -10,7 +10,7 @@
 }
 
 .maqFocus {
-	z-index: 1000;
+	z-index: 1000000;
 }
 
 .editFocusFrame {
@@ -29,24 +29,24 @@
 	outline-style: dotted;
 	outline-color: red;
 	outline-width: 3px;
-	z-index: 100;
+	z-index: 1000002;
 	
 }
 .disableWidgetFocusFrame{
-	z-index: 100;
+	z-index: 1000002;
 	opacity:0.75;
 	background-color: white;
 	
 }
 
 .enableWidgetFocusFrame{
-	z-index: 99;
+	z-index: 1000001;
 
 
 }
 
 .themeSubwidgetMenu{
-	z-index: 115;
+	z-index: 1000115;
 	font-family:Verdana,Arial,Helvetica,sans-serif;
 	font-style:normal;
 	/*font-size: .688em;*/
@@ -59,7 +59,7 @@
 	display: block;
 	position:absolute;
 	border: 1px solid black;
-	z-index:1001;	/* Above focus, which is at z-index:1000 */
+	z-index:1000001;	/* Above focus, which is at z-index:100000 */
 }
 
 .editCursorBlink {

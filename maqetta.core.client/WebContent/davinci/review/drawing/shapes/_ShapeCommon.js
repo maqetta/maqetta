@@ -57,7 +57,7 @@ return declare("davinci.review.drawing.shapes._ShapeCommon", null, {
 
 	render: function() {
 		this.surface.appendChild(this.shapeNode);
-		this.style({"zIndex": "255"});
+		this.style({"zIndex": "1000255"});
 	},
 
 	destroy: function() {

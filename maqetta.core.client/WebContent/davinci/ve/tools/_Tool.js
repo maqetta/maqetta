@@ -15,7 +15,7 @@ return declare("davinci.ve.tools._Tool", null, {
 			this._feedback.className = "editFeedback";
 			this._feedback.style.position = "absolute";
 			/* ORIGINAL CODE
-			this._feedback.style.zIndex = "99"; // below Focus (zIndex = "100")
+			this._feedback.style.zIndex = "999999"; // below Focus (zIndex = "1000000")
 			*/
 			dojo.style(this._feedback, "opacity", 0.1);
 		}

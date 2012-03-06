@@ -169,7 +169,7 @@ define([
 
 			if(!context._snapLinesDiv){
 				context._snapLinesDiv = dojo.create('div',
-						{'class':'snaplines',style:'position:absolute;top:0px;left:0px;z-index:1001;pointer-events:none;'}, 
+						{'class':'snaplines',style:'position:absolute;top:0px;left:0px;z-index:1000001;pointer-events:none;'}, 
 						containerNode);
 				context._snapLinesDivWidgetX = dojo.create('div',
 						{'class':'snaplinesWidgetX',style:'position:absolute;pointer-events:none;'}, 

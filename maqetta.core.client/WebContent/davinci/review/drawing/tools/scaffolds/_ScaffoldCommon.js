@@ -141,7 +141,7 @@ return declare("davinci.review.drawing.tools.scaffolds._ScaffoldCommon", null, {
 			"WebkitBorderRadius": this.handlerRadius + "px",
 			"borderRadius": this.handlerRadius + "px",
 			"cursor": position + "-resize",
-			"zIndex": 256
+			"zIndex": 1000256
 		});
 		handler.position = position;
 		return handler;

@@ -120,7 +120,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				if(!this._dragSizeRect){
 					var body = context.getDocument().body;
 					this._dragSizeRect = dojo.create('div',
-							{style:'border:1px dashed black;z-index:1000;position:absolute;'},
+							{style:'border:1px dashed black;z-index:1000001;position:absolute;'},
 							body
 						);
 				}
@@ -603,7 +603,8 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			args.index));
 
 		if(args.position){
-			command.add(new davinci.ve.commands.StyleCommand(w, [{position:'absolute'}]));
+			var absoluteWidgetsZindex = context.getPreference('absoluteWidgetsZindex');
+			command.add(new davinci.ve.commands.StyleCommand(w, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
 			command.add(new davinci.ve.commands.MoveCommand(w, args.position.x, args.position.y));
 		}
 		if(args.size || w.isLayoutContainer){

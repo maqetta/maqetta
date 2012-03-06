@@ -289,6 +289,16 @@ define(["dojo/_base/declare",
 			// Flag that the cascade list for this property needs to be recalculated/refreshed
 			this._dirtyCascadeList = true;
 			if(targetRule.type=="element.style"){
+				// If user is changing a widget to position:absolute, also force a z-index change
+				// If user is changing a widget away from position:absolute, remove existing z-index
+				if(this.target[0] == 'position' && valueObject.length == 1){
+					if(valueObject[0]['position'] == 'absolute'){
+						var absoluteWidgetsZindex = this.context.getPreference('absoluteWidgetsZindex');
+						valueObject.push({'z-index':absoluteWidgetsZindex});
+					}else{
+						valueObject.push({'z-index':''});
+					}
+				}
 				dojo.publish("/davinci/ui/styleValuesChange",[{values:valueObject, appliesTo:'inline', applyToWhichStates:applyToWhichStates }]);
 			}else{
 				dojo.publish("/davinci/ui/styleValuesChange",[{values:valueObject, appliesTo:targetRule, applyToWhichStates:applyToWhichStates }]);

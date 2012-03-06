@@ -1230,6 +1230,7 @@ var Workbench = {
 		}
 	},
 
+/*FIXME: Probably can delete this code. Doesn't seem to be used. Commenting out for now.
 	toggleFullScreen: function() {
 		var mainBodyContainer = dijit.byId('mainBody');
 		if (mainBodyContainer.origLayout) {
@@ -1262,7 +1263,8 @@ var Workbench = {
 		mainBodyContainer.resize();
 		dijit.byNode(mainBodyContainer._center).resize();
 	},
-	
+*/
+
 	_switchEditor: function(newEditor, startup) {
 		var oldEditor = Runtime.currentEditor;
 		Runtime.currentEditor = newEditor;

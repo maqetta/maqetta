@@ -15,7 +15,7 @@ return {
 	
 	
 	getUrlStartOffset: function(url){
-		if(url==null)
+		if(typeof url != 'string')
 			return -1;
 		var foundAt = url.search(_START_REG_EX);
 		
@@ -42,7 +42,7 @@ return {
 	},
 	
 	containsUrl: function(url){
-		if(url==null)
+		if(typeof url != 'string')
 			return false;
 		
 		return url.search(_START_REG_EX) >-1 ;
@@ -50,7 +50,7 @@ return {
 	},
 	
 	replaceUrl: function(oldUrl, newUrl){
-		if(url==null)
+		if(typeof url != 'string')
 			return false;
 		
 		return oldUrl.replace(_REWRITE_REG_EX, "url('"+ newUrl + "')")  ;
@@ -59,7 +59,7 @@ return {
 	
 	getUrl: function(url){
 		
-		if(url==null)
+		if(typeof url != 'string')
 			return null;
 		
 		

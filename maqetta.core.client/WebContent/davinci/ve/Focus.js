@@ -115,18 +115,24 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         // Constrained movement in x or y if shift key is down
         var domNode = this._selectedWidget ? this._selectedWidget.domNode : null;
         if(absolute && domNode && event && event.shiftKey){
-            var widgetLeft = domNode.offsetLeft;
-            var widgetTop = domNode.offsetTop;
+            // Need to subtract off margins
+            var marginLeft = Number(dojo.style(domNode, 'marginLeft'));
+            var marginTop = Number(dojo.style(domNode, 'marginTop'));
+            var widgetLeft = domNode.offsetLeft - marginLeft;
+            var widgetTop = domNode.offsetTop - marginTop;
             var node = domNode.offsetParent;
             while(node && node.tagName != 'BODY'){
             	widgetLeft += node.offsetLeft;
             	widgetTop += node.offsetTop;
             	node = node.offsetParent;
             }
-            if(Math.abs(b.l - widgetLeft) >= Math.abs(b.t - widgetTop)){
+            var deltaX = Math.abs(b.l - widgetLeft);
+            var deltaY = Math.abs(b.t - widgetTop);
+            var CONSTRAIN_MIN_DIST = 3;	// constrained dragging only active if user moves object non-trivial amount
+            if(deltaX >= deltaY && deltaX > CONSTRAIN_MIN_DIST){
             	b.t = widgetTop;
             	doSnapLinesY = false;
-            }else{
+            }else if(deltaY >= deltaX && deltaY > CONSTRAIN_MIN_DIST){
             	b.l = widgetLeft;
             	doSnapLinesX = false;
             }
@@ -444,8 +450,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var cp = context._chooseParent;
 		this._lastEventTarget = null;
 		this._removeKeyHandlers();
-		context.dragMoveCleanup();
-     	cp.parentListDivDelete();
         this._nobs[DRAG_NOB].style.display = 'none';
         if(this._mover){
         	var box;
@@ -463,6 +467,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             	this.onExtentChange(this, box);
             }
         }
+		context.dragMoveCleanup();
+     	cp.parentListDivDelete();
         this._nobIndex = -1;
         this._nobBox = null;
     },

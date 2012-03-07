@@ -109,6 +109,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             var position_prop = dojo.style(this._selectedWidget.domNode,"position");
         }
         var absolute = (position_prop=="absolute");
+        var doSnapLinesX = absolute;
+        var doSnapLinesY = absolute;
 
         // Constrained movement in x or y if shift key is down
         var domNode = this._selectedWidget ? this._selectedWidget.domNode : null;
@@ -123,8 +125,10 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             }
             if(Math.abs(b.l - widgetLeft) >= Math.abs(b.t - widgetTop)){
             	b.t = widgetTop;
+            	doSnapLinesY = false;
             }else{
             	b.l = widgetLeft;
+            	doSnapLinesX = false;
             }
         }
 
@@ -166,7 +170,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     			parentListDiv.style.top = (offsetTop + event.pageY) + 'px';
             }
         }
-        var doSnapLines = absolute;
         var showParentsPref = this._context.getPreference('showPossibleParents');
         var spaceKeyDown = cp.isSpaceKeyDown();
         var showCandidateParents = (!showParentsPref && spaceKeyDown) || (showParentsPref && !spaceKeyDown);
@@ -188,7 +191,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             		absolute:absolute,
             		currentParent:currentParent,
              		rect:snapBox, 
-            		doSnapLines:doSnapLines, 
+            		doSnapLinesX:doSnapLinesX, 
+            		doSnapLinesY:doSnapLinesY, 
             		doFindParentsXY:showCandidateParents,
             		doCursor:!absolute});
         }else{

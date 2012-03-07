@@ -8,8 +8,9 @@ define([
  * url('/something/something/1.jpg') will re
  */
 
-var _START_REG_EX = /url{1}\s*\(('|"){1}/i;
-var _REWRITE_REG_EX = /url{1}\s*\(('|"){1}(.*)['"]\)/i;
+var _START_REG_EX = /url{1}\s*\(('|")?/i;
+var _REWRITE_REG_EX = /url{1}\s*\(('|")?(.*)('|")?\)/i;
+var _ABSOLUTE_REG_EX = /(http|ftp){1,}/i
 
 return {
 	
@@ -20,12 +21,16 @@ return {
 		var foundAt = url.search(_START_REG_EX);
 		
 		for(var i = foundAt;i<url.length;i++){
-			if(url.charAt(i)=="'" || url.charAt(i)=="\"")
+			if(url.charAt(i)=="'" || url.charAt(i)=="\"" || url.charAt(i)=="(")
 				return i+1;
 			
 		}
 		
 		return ;
+	},
+	
+	isAbsolute : function(url){
+		return url.search(_ABSOLUTE_REG_EX);
 	},
 	
 	getUrlEndOffset: function(url){
@@ -35,7 +40,7 @@ return {
 		var found = 0;
 		
 		for(var i = start+1;i<url.length;i++){
-			if(url.charAt(i)=="'" || url.charAt(i)=="\"")
+			if(url.charAt(i)=="'" || url.charAt(i)=="\"" || url.charAt(i)==")")
 				return i;
 			
 		}
@@ -50,6 +55,7 @@ return {
 	},
 	
 	replaceUrl: function(oldUrl, newUrl){
+		debugger;
 		if(typeof url != 'string')
 			return false;
 		
@@ -58,7 +64,7 @@ return {
 	},
 	
 	getUrl: function(url){
-		
+		debugger;
 		if(typeof url != 'string')
 			return null;
 		

@@ -64,7 +64,7 @@ define([
 		},
 
 		_resize: function(){
-			if(!this.domNode){
+			if(!this.domNode || !this._isDisplayed(this._g)){
 				return;
 			}
 			dojo.addClass(this.domNode,'shape');
@@ -110,6 +110,23 @@ define([
 				// force inline-block instead of just inline
 				this.domNode.style.display = 'inline-block';
 			}
+		},
+		
+		_isDisplayed: function(node){
+			if(!node || !node.ownerDocument || !node.ownerDocument.defaultView){
+				// Shouldn't be here
+				return false;
+			}
+			var win = node.ownerDocument.defaultView;
+			var n = node;
+			while(n && n.tagName != 'BODY'){
+				var style = win.getComputedStyle(n, '');
+				if(style.display == 'none'){
+					return false;
+				}
+				n = n.parentNode;
+			}
+			return true;
 		}
 	});
 });

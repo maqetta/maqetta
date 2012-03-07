@@ -2813,7 +2813,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 *      {boolean} absolute  true if current widget will be positioned absolutely
 	 *      {object} currentParent  if provided, then current parent widget for thing being dragged
 	 * 		{object} rect  l,t,w,h properties define rectangle being dragged around
-	 * 		{boolean} doSnapLines  whether to show dynamic snap lines
+	 * 		{boolean} doSnapLinesX  whether to show dynamic snap lines (x-axis)
+	 * 		{boolean} doSnapLinesY  whether to show dynamic snap lines (y-axis)
 	 * 		{boolean} doFindParentsXY  whether to show candidate parent widgets
 	 * 		{boolean} doCursor  whether to show drop cursor (when dropping using flow layout)
 	 * 		{string|undefined} beforeAfter  either 'before' or 'after' or undefined (which means default behavior)
@@ -2829,7 +2830,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			absolute = params.absolute,
 			currentParent = params.currentParent,
 			rect = params.rect,
-			doSnapLines = params.doSnapLines,
+			doSnapLinesX = params.doSnapLinesX,
+			doSnapLinesY = params.doSnapLinesY,
 			doFindParentsXY = params.doFindParentsXY,
 			doCursor = params.doCursor,
 			beforeAfter = params.beforeAfter,
@@ -2849,8 +2851,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				dj = this.getDojo(),
 				computed_style = dj.style(node);
 
-			if(doSnapLines){
-				Snap.findSnapOpportunities(this, widget, computed_style);
+			if(doSnapLinesX || doSnapLinesY){
+				Snap.findSnapOpportunities(this, widget, computed_style, doSnapLinesX, doSnapLinesY);
 			}
 			cp.findParentsXY({data:data, widget:widget, position:position, doCursor:doCursor, beforeAfter:beforeAfter});
 			dojo.forEach(widget.getChildren(), function(w){
@@ -2858,14 +2860,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			});
 		};
 		
-		if(doSnapLines){
+		if(doSnapLinesX || doSnapLinesY){
 			doSnapLines = Snap.updateSnapLinesBeforeTraversal(this, rect);
 		}
 		var differentXY = cp.findParentsXYBeforeTraversal(params);
 		// Traverse all widgets, which will result in updates to snap lines and to 
 		// the visual popup showing possible parent widgets 
 		_updateThisWidget.apply(context, [this.rootWidget]);
-		if(doSnapLines){
+		if(doSnapLinesX || doSnapLinesY){
 			Snap.updateSnapLinesAfterTraversal(this);
 		}
 		if(differentXY){

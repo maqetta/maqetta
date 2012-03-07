@@ -155,7 +155,8 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			var box = {l:event.pageX,t:event.pageY,w:0,h:0};
 			var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
 					Workbench.getProject());
-			var doSnapLines = editorPrefs.snap && absolute;
+			var doSnapLinesX = editorPrefs.snap && absolute;
+			var doSnapLinesY = doSnapLinesX;
 			var doCursor = !absolute;
 			if (typeof this._dropCursor == 'object' && this._dropCursor.show === false){
 				doCursor = false;
@@ -168,7 +169,8 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				currentParent:null,
 				eventTarget:event.target, 
 				rect:box, 
-				doSnapLines:doSnapLines, 
+				doSnapLinesX:doSnapLinesX, 
+				doSnapLinesY:doSnapLinesY, 
 				doFindParentsXY:showCandidateParents,
 				doCursor:doCursor,
 				beforeAfter:beforeAfter });
@@ -468,6 +470,29 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				currentParent:currentParent});
 	},
 
+	_requireHelpers: function(data){
+		var promises = [];
+		if(!data || !data.type){
+			if (data instanceof Array) {
+				data.forEach(function(d) {
+					promises.concat(this._requireHelpers(d));
+				}, this);
+			}
+			return promises;
+		}
+
+		promises.push(Widget.requireWidgetHelper(data.type));
+
+		if(data.children && !dojo.isString(data.children)){
+			if(!dojo.every(data.children, function(c){
+				return promises.concat(this._requireHelpers(c));
+			}, this)){
+				return promises;
+			}
+		}
+		return promises;
+	},
+
 	create: function(args){
 	
 		if(!args || !this._data){
@@ -537,30 +562,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 //		}
 		this._data.context=this._context;
 
-		var requireHelpers = function(data){
-			var promises = [];
-			if(!data || !data.type){
-				if (data instanceof Array) {
-					data.forEach(function(d) {
-						promises.concat(requireHelpers(d));
-					});
-				}
-				return promises;
-			}
-
-			promises.push(Widget.requireWidgetHelper(data.type));
-
-			if(data.children && !dojo.isString(data.children)){
-				if(!dojo.every(data.children, function(c){
-					return promises.concat(requireHelpers(c));
-				})){
-					return promises;
-				}
-			}
-			return promises;
-		};
-
-		new DeferredList(requireHelpers(this._data)).then(function() {
+		new DeferredList(this._requireHelpers(this._data)).then(function() {
 			this._create({parent: parent, index: index, position: position, size: args.size});			
 		}.bind(this));
 	},

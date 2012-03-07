@@ -6,7 +6,8 @@ define([
 var HorizontalSliderHelper = function() {};
 
 HorizontalSliderHelper.prototype = {
-
+	_MIDDLE_OVERLAY_HEIGHT: 5,
+		
 	/**
 	 * HorizontalSlider, due to its support for placing rules and labels in the
 	 * 'topDecoration' container, keeps its children in two locations 
@@ -36,7 +37,7 @@ HorizontalSliderHelper.prototype = {
 		// Second, look at the children in the slider's topDecoration section. Go in reverse order 
 		// since we'll be adding the widgets (if they exist) to the front of children 
 		// to have proper order in Visual Editor
-		var decoration = this._getDecoration(dijitWidget);
+		var decoration = this._getSecondaryDecoration(dijitWidget);
 		for(var node = decoration.lastChild; node; node = node.previousSibling){
 			var childWidget = getWidget(node);
 			
@@ -48,12 +49,20 @@ HorizontalSliderHelper.prototype = {
 		return children;
 	},
 
-	_getDecoration: function(dijitWidget) {
+	_getSecondaryDecoration: function(dijitWidget) {
 		return dijitWidget.topDecoration;
 	},
 	
-	_getDecorationLabel: function() {
+	_getSecondaryDecorationLabel: function() {
 		return "topDecoration";
+	},
+	
+	_getMainDecoration: function(dijitWidget) {
+		return dijitWidget.bottomDecoration;
+	},
+	
+	_getMainDecorationLabel: function() {
+		return "bottomDecoration";
 	},
 	
 	/**
@@ -70,8 +79,8 @@ HorizontalSliderHelper.prototype = {
 	addChild: function(widget, childWidget, insertIndex){
 		
 		var refNode = widget.dijitWidget.containerNode;
-		var decorationNode = this._getDecoration(widget.dijitWidget);
-		if (childWidget.container && childWidget.container === this._getDecorationLabel()) { 
+		var decorationNode = this._getSecondaryDecoration(widget.dijitWidget);
+		if (childWidget.container && childWidget.container === this._getSecondaryDecorationLabel()) { 
 			// We want to add the new child to the decoration container rather than the containerNode
 			refNode = decorationNode; 
 		} else {
@@ -79,7 +88,7 @@ HorizontalSliderHelper.prototype = {
 			// than number of children in the containerNode), so let's take a shot at adjusting the index
 			if (insertIndex && typeof insertIndex == "number") {
 				//Use Max.math to make sure this doesn't go negative 
-				insertIndex = Math.max(insertIndex - this._getDecoration(widget.dijitWidget).childElementCount, 0);
+				insertIndex = Math.max(insertIndex - this._getSecondaryDecoration(widget.dijitWidget).childElementCount, 0);
 			}
 		}
 		
@@ -90,7 +99,7 @@ HorizontalSliderHelper.prototype = {
 			}
 			
 			//Adjust the ref node within the container based on index
-			if(refNode.childElementCount >= insertIndex){
+			if(refNode.childElementCount >= insertIndex && insertIndex > 0){
 				refNode = refNode.childNodes[insertIndex-1];
 				insertIndex = "after";
 			}
@@ -106,6 +115,104 @@ HorizontalSliderHelper.prototype = {
 		if(this._started && !childWidget._started){
 			childWidget.startup();
 		}
+	},
+	
+	/**
+	 * HorizontalSlider is treated as a single control in the Visual Editor. But, the user 
+	 * also needs to be able to individually select its children (e.g., HorizontalRule and 
+	 * HorizontalRuleLabels) to further customize. So, we'll let the Visual Editor know
+	 * the regions within the HorizontalSlider container that should be covered up by target
+	 * overlays. Basically, all of the rectangles within the container except for the top/bottom
+	 * decorations are overlayed. This allows the user to select children within the decorations
+	 * (since the decorations are left uncovered).
+	 * 
+	 * @param  {davinci.ve._Widget} widget
+	 * @return {Array}
+	 */
+	getTargetOverlays: function(/*Widget*/ widget) {
+		//Create an array to hold rectangles representing the area
+		//we want user to see an overlay when mousing over the widget
+		var overlays = [];
+		
+		//Of course, also have to deal with other orientation
+		var dijitWidget = widget.dijitWidget;
+		var mainDomNode = dijitWidget.domNode;
+		var topDecoration = this._getSecondaryDecoration(dijitWidget);
+		var bottomDecoration = this._getMainDecoration(dijitWidget);
+		
+		//upper overlays
+		var overlayRectangle;
+		if (topDecoration.offsetHeight > 0) {
+			//upper left
+			overlayRectangle = {
+				x: mainDomNode.offsetLeft,
+				y: mainDomNode.offsetTop,
+				width: topDecoration.offsetLeft,
+				height: topDecoration.offsetHeight
+			};
+			overlays.push(overlayRectangle);
+			
+			//upper middle
+			overlayRectangle = {
+				x: mainDomNode.offsetLeft + topDecoration.offsetLeft,
+				y: mainDomNode.offsetTop + topDecoration.offsetTop,
+				width: topDecoration.offsetWidth,
+				height: this._MIDDLE_OVERLAY_HEIGHT
+			};
+			overlays.push(overlayRectangle);
+			
+		
+			//upper right
+			overlayRectangle = {
+				x: mainDomNode.offsetLeft + topDecoration.offsetLeft + topDecoration.offsetWidth,
+				y: mainDomNode.offsetTop,
+				width: topDecoration.offsetLeft,
+				height: topDecoration.offsetHeight
+			};
+			overlays.push(overlayRectangle);
+		}
+		
+		//main overlay
+		overlayRectangle = {
+			x: mainDomNode.offsetLeft,
+			y: mainDomNode.offsetTop + topDecoration.offsetHeight,
+			width: mainDomNode.offsetWidth,
+			height: bottomDecoration.offsetTop - topDecoration.offsetHeight
+		};
+		overlays.push(overlayRectangle);
+		
+		//lower overlays
+		if (bottomDecoration.offsetHeight > 0) {
+			//lower left
+			overlayRectangle = {
+				x: mainDomNode.offsetLeft,
+				y: mainDomNode.offsetTop + bottomDecoration.offsetTop,
+				width: bottomDecoration.offsetLeft,
+				height: bottomDecoration.offsetHeight
+			};
+			overlays.push(overlayRectangle);
+			
+			//lower middle
+			overlayRectangle = {
+				x: mainDomNode.offsetLeft + bottomDecoration.offsetLeft,
+				y: mainDomNode.offsetTop + bottomDecoration.offsetTop + bottomDecoration.offsetHeight - this._MIDDLE_OVERLAY_HEIGHT,
+				width: bottomDecoration.offsetWidth,
+				height: this._MIDDLE_OVERLAY_HEIGHT
+			};
+			overlays.push(overlayRectangle);
+		
+			//lower right
+			overlayRectangle = {
+				x: mainDomNode.offsetLeft + bottomDecoration.offsetLeft + bottomDecoration.offsetWidth,
+				y: mainDomNode.offsetTop + bottomDecoration.offsetTop,
+				width: bottomDecoration.offsetLeft,
+				height: bottomDecoration.offsetHeight
+			};
+			overlays.push(overlayRectangle);
+		}
+
+		//Return calculated overlays
+		return overlays;
 	}
 };
 

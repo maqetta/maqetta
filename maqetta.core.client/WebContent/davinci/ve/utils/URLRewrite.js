@@ -55,7 +55,6 @@ return {
 	},
 	
 	replaceUrl: function(oldUrl, newUrl){
-		debugger;
 		if(typeof url != 'string')
 			return false;
 		
@@ -64,7 +63,7 @@ return {
 	},
 	
 	getUrl: function(url){
-		debugger;
+		
 		if(typeof url != 'string')
 			return null;
 		

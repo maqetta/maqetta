@@ -398,7 +398,8 @@ return declare("davinci.ve.ChooseParent", null, {
 	 *      {boolean} absolute  true if current widget will be positioned absolutely
 	 *      {object} currentParent  if provided, then current parent widget for thing being dragged
 	 * 		{object} rect  l,t,w,h properties define rectangle being dragged around
-	 * 		{boolean} doSnapLines  whether to show dynamic snap lines
+	 * 		{boolean} doSnapLinesX  whether to show dynamic snap lines (x-axis)
+	 * 		{boolean} doSnapLinesY  whether to show dynamic snap lines (y-axis)
 	 * 		{boolean} doFindParentsXY  whether to show candidate parent widgets
 	 * @return {boolean} true if current (x,y) is different than last (x,y), false if the same.
 	 */

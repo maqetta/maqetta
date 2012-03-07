@@ -109,22 +109,32 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             var position_prop = dojo.style(this._selectedWidget.domNode,"position");
         }
         var absolute = (position_prop=="absolute");
+        var doSnapLinesX = absolute;
+        var doSnapLinesY = absolute;
 
         // Constrained movement in x or y if shift key is down
         var domNode = this._selectedWidget ? this._selectedWidget.domNode : null;
         if(absolute && domNode && event && event.shiftKey){
-            var widgetLeft = domNode.offsetLeft;
-            var widgetTop = domNode.offsetTop;
+            // Need to subtract off margins
+            var marginLeft = Number(dojo.style(domNode, 'marginLeft'));
+            var marginTop = Number(dojo.style(domNode, 'marginTop'));
+            var widgetLeft = domNode.offsetLeft - marginLeft;
+            var widgetTop = domNode.offsetTop - marginTop;
             var node = domNode.offsetParent;
             while(node && node.tagName != 'BODY'){
             	widgetLeft += node.offsetLeft;
             	widgetTop += node.offsetTop;
             	node = node.offsetParent;
             }
-            if(Math.abs(b.l - widgetLeft) >= Math.abs(b.t - widgetTop)){
+            var deltaX = Math.abs(b.l - widgetLeft);
+            var deltaY = Math.abs(b.t - widgetTop);
+            var CONSTRAIN_MIN_DIST = 3;	// constrained dragging only active if user moves object non-trivial amount
+            if(deltaX >= deltaY && deltaX > CONSTRAIN_MIN_DIST){
             	b.t = widgetTop;
-            }else{
+            	doSnapLinesY = false;
+            }else if(deltaY >= deltaX && deltaY > CONSTRAIN_MIN_DIST){
             	b.l = widgetLeft;
+            	doSnapLinesX = false;
             }
         }
 
@@ -166,7 +176,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     			parentListDiv.style.top = (offsetTop + event.pageY) + 'px';
             }
         }
-        var doSnapLines = absolute;
         var showParentsPref = this._context.getPreference('showPossibleParents');
         var spaceKeyDown = cp.isSpaceKeyDown();
         var showCandidateParents = (!showParentsPref && spaceKeyDown) || (showParentsPref && !spaceKeyDown);
@@ -188,7 +197,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             		absolute:absolute,
             		currentParent:currentParent,
              		rect:snapBox, 
-            		doSnapLines:doSnapLines, 
+            		doSnapLinesX:doSnapLinesX, 
+            		doSnapLinesY:doSnapLinesY, 
             		doFindParentsXY:showCandidateParents,
             		doCursor:!absolute});
         }else{
@@ -389,6 +399,12 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         if(event.button === 2 || event.ctrlKey){
             return;
         }
+        // Only process mousedown events when SelectTool is active
+        // Mostly to allow CreateTool to drag out widget initial size even
+        // when mouse is over focus nodes
+        if(this._context._activeTool.declaredClass != 'davinci.ve.tools.SelectTool'){
+        	return;
+        }
         this._shiftKey = false;
 
         if(dojo.indexOf(this._frames, event.target) >= 0){
@@ -434,8 +450,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var cp = context._chooseParent;
 		this._lastEventTarget = null;
 		this._removeKeyHandlers();
-		context.dragMoveCleanup();
-     	cp.parentListDivDelete();
         this._nobs[DRAG_NOB].style.display = 'none';
         if(this._mover){
         	var box;
@@ -453,6 +467,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             	this.onExtentChange(this, box);
             }
         }
+		context.dragMoveCleanup();
+     	cp.parentListDivDelete();
         this._nobIndex = -1;
         this._nobBox = null;
     },

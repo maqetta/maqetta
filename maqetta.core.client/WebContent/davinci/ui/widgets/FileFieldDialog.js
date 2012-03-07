@@ -65,7 +65,10 @@ return declare("davinci.ui.widgets.FileFieldDialog", WidgetLite, {
 			if (tree.selectedItem) {
 				var selectedItemPathStr = tree.selectedItem.getPath();
 				var _textField = dojo.byId(this._textField);
-				dojo.attr(_textField, "value", selectedItemPathStr);
+				/* only relativize the path if the user used the file chooser */
+				var path=new Path(selectedItemPathStr);
+				var value=path.relativeTo(new Path(this._baseLocation), true).toString(); // ignore the filename to get the correct path to the image
+				dojo.attr(_textField, "value", value);
 				this._fileSelectionDialog.hide();
 				this._fileSelectionDialog.destroyRecursive();
 		    	delete this._fileSelectionDialog;
@@ -108,11 +111,9 @@ return declare("davinci.ui.widgets.FileFieldDialog", WidgetLite, {
 	},
 	
 	_onChange: function(){
-		var _textField = dojo.byId(this._textField);
-		var v1 = dojo.attr(_textField, "value");
 		
-		var path=new Path(v1);
-		var value=path.relativeTo(new Path(this._baseLocation), true).toString(); // ignore the filename to get the correct path to the image
+		var _textField = dojo.byId(this._textField);
+		var value =  dojo.attr(_textField, "value");
 		
 		if(this.value!=value){			
 			this.value = value;

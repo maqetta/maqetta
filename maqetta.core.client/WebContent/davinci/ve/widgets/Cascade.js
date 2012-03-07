@@ -364,7 +364,7 @@ define(["dojo/_base/declare",
 				}
 				
 			}
-	
+			
 			var values =  [];
 			/* element rules */
 			var defaultSelection=this._getDefaultSelection();
@@ -452,9 +452,7 @@ define(["dojo/_base/declare",
 		},
 		
 		_buildCssRuleset : function(){
-			
 			//if(this._isTarget("color")) debugger;
-			
 			var allRules = this._getAllRules();
 			this._values = [];
 			//Disabled hasOverride logic - had bugs, causes problems with logic and not sure it helps user
@@ -462,33 +460,30 @@ define(["dojo/_base/declare",
 			var propName = this.target[0];
 	
 			/* figure out the properties values */
+		
 			var shorthands = this._getShortHands();
 			for(var i = 0;i<allRules.length;i++){
 				var rule = allRules[i].rule;
 				if(rule){
-					for(var j=0; j<rule.length; j++){
-						if(rule[i][propName] !== undefined){
-							/*Disabled hasOverride logic - had bugs, causes problems with logic and not sure it helps user
-							if(allRules[i].type!="element.style" && allRules[i].rule.getProperty(shorthands[k])!=null){
-								allRules[i].shorthand = shorthands[k];
-								var prop = rule.getProperty(shorthands[k]);
-								allRules[i].value = prop && prop.value;
-								
-								this._hasOverride = true;
-								
-							}else if(allRules[i].type=="element.style" && dojo.indexOf(allRules[i].rule, shorthands[k])>-1){
-								allRules[i].shorthand = shorthands[k];
-								var index = dojo.indexOf(allRules[i].rule, shorthands[k]);
-								allRules[i].value = rule[index];
-								this._hasOverride = true;
-							}
-							*/
-							if(!allRules[i].shorthand && allRules[i].type!="element.style")
-								allRules[i].value = this._getRuleTargetValue(rule);
-							else if(!allRules[i].shorthand && allRules[i].type=="element.style")
-									allRules[i].value = rule[i][propName];
+					for(var k=0;k<shorthands.length;k++){
+						if(allRules[i].type!="element.style" && allRules[i].rule.getProperty(shorthands[k])!=null){
+							allRules[i].shorthand = shorthands[k];
+							var prop = rule.getProperty(shorthands[k]);
+							allRules[i].value = prop && prop.value;
+							
+							this._hasOverride = true;
+							
+						}else if(allRules[i].type=="element.style" && dojo.indexOf(allRules[i].rule, shorthands[k])>-1){
+							allRules[i].shorthand = shorthands[k];
+							var index = dojo.indexOf(allRules[i].rule, shorthands[k]);
+							allRules[i].value = rule[index];
+							this._hasOverride = true;
 						}
 					}
+					if(!allRules[i].shorthand && allRules[i].type!="element.style")
+						allRules[i].value = this._getRuleTargetValue(rule);
+					else if(!allRules[i].shorthand && allRules[i].type=="element.style")
+							allRules[i].value = rule[this.target[0]];
 				}else{
 					// rule is null when type=='proposal'
 					allRules[i].value=null;
@@ -821,7 +816,7 @@ define(["dojo/_base/declare",
 			// For page editor, always use "Normal"
 			var state = "Normal";
 			if (this._editor.editorID == 'davinci.ve.ThemeEditor'){
-				state = States.getState();
+				state = state || States.getState();
 			}
 	
 			//var meta = theme.loader.getMetaData(widgetType);

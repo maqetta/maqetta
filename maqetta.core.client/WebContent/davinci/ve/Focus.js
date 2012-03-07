@@ -389,6 +389,12 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         if(event.button === 2 || event.ctrlKey){
             return;
         }
+        // Only process mousedown events when SelectTool is active
+        // Mostly to allow CreateTool to drag out widget initial size even
+        // when mouse is over focus nodes
+        if(this._context._activeTool.declaredClass != 'davinci.ve.tools.SelectTool'){
+        	return;
+        }
         this._shiftKey = false;
 
         if(dojo.indexOf(this._frames, event.target) >= 0){

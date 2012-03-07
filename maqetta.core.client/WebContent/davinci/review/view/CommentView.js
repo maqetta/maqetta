@@ -88,11 +88,25 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			this._blurAllComments();
 		});
 
-		this.connect(dojo.global, "beforeunload", function(evt) {
+		dojo.addOnUnload(function(e) {
 			if (this._commentForm.isShowing == true) {
-				return workbenchNls.fileHasUnsavedChanges;
+				// We want to warn the user they run the risk of losing data because
+				// they're trying to leave the page while editing a comment.
+				var message = workbenchNls.fileHasUnsavedChanges;
+				
+				// For Mozilla/IE, we need to see the return value directly on the 
+				// event. But, note in FF 4 and later that the browser ignores our
+				// message and uses a default message of its own.
+				if (e = e || window.event) {
+					e.returnValue = message;
+				}
+				
+				// For other browsers (like Chrome), the message returned by the
+				// handler is honored. Note: If multiple unload handlers are present,
+				// the last value returned is used.
+				return message;
 			}
-		});
+		}.bind(this));
 
 		dojo.subscribe("/davinci/review/view/canvasFocused", this, function() {
 			this._blurAllComments();
@@ -174,6 +188,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		dojo.subscribe("/davinci/ui/editorSelected", this, function(args) {
 			// summary:
 			//		Remove the comment nodes of the previous page
+			
 			if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
 				return; 
 			}

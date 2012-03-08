@@ -452,7 +452,7 @@ define(["dojo/_base/declare",
 		},
 		
 		_buildCssRuleset : function(){
-			//if(this._isTarget("color")) debugger;
+			//if(this._isTarget("left")) debugger;
 			var allRules = this._getAllRules();
 			this._values = [];
 			//Disabled hasOverride logic - had bugs, causes problems with logic and not sure it helps user
@@ -482,11 +482,16 @@ define(["dojo/_base/declare",
 					}
 					if(!allRules[i].shorthand && allRules[i].type!="element.style")
 						allRules[i].value = this._getRuleTargetValue(rule);
-					else if(!allRules[i].shorthand && allRules[i].type=="element.style")
-							allRules[i].value = rule[this.target[0]];
+					else if(!allRules[i].shorthand && allRules[i].type=="element.style"){
+						for(var i=0;i<rule.length;i++){
+							if(rule[i].hasOwnProperty(this.target[0])){
+								allRules[i].value = rule[i][this.target[0]];
+							}
+						}
+					}
 				}else{
 					// rule is null when type=='proposal'
-					allRules[i].value=null;
+					//allRules[i].value=null;
 				}
 			}
 			/* sort rules basaed on priority */

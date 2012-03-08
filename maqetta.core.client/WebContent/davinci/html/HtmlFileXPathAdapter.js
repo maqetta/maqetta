@@ -41,7 +41,7 @@ HtmlFileXPathAdapter.prototype = {
 					idx = index + 1;
 					return true;
 				}
-			});
+			}, this);
 		}
 		return idx;
 	}

@@ -199,12 +199,47 @@ var Runtime = {
 				window.davinciBackspaceKeyTime = Date.now();
 			}
 		});	
+		
 		dojo.addOnUnload(function (e) {
-			var shouldDisplay = Date.now() - window.davinciBackspaceKeyTime < 100;
-			if (shouldDisplay) {
-				// We want to warn the user they run the risk of losing data because
-				// they're trying to leave the page.
-				var message = webContent.careful;
+			//This will hold a warning message (if any) that we'll want to display to the
+			//user.
+			var message = null;
+			
+			//Loop through all of the editor containers and give them a chance to tell us
+			//the user should be warned before leaving the page.
+			var editorContainers = davinci.Workbench.editorTabs.getChildren();
+			var editorsWithWarningsCount = 0;
+			for (var i = 0; i < editorContainers.length; i++) {
+				var editorContainer = editorContainers[i];
+				if (editorContainer.editor) {
+					var editorResponse = editorContainer.editor.getOnUnloadWarningMessage();
+
+					if (editorResponse) {
+						//Let's keep track of the first message. If we end up finding multiple messages, we'll
+						//augment what the user will see shortly.
+						if (!message) {
+							message = editorResponse;
+						}
+						editorsWithWarningsCount++;
+					}
+				}
+			}
+			//If multiple warnings, augment message user will see
+			if (editorsWithWarningsCount > 1) {
+				message = dojo.string.substitute(webContent.multipleFilesUnsaved, [message, editorsWithWarningsCount]);
+			}
+			
+			if (!message) {
+				//No warnings so far, let's see if use maybe accidentally hit backspace
+				var shouldDisplayForBackspace = Date.now() - window.davinciBackspaceKeyTime < 100;
+				if (shouldDisplayForBackspace) {
+					message = webContent.careful;
+				}
+			}
+			
+			if (message) {
+				// We've found warnings, so we want to warn the user they run the risk of 
+				// losing data if they leave the page.
 				
 				// For Mozilla/IE, we need to see the return value directly on the 
 				// event. But, note in FF 4 and later that the browser ignores our
@@ -214,8 +249,7 @@ var Runtime = {
 				}
 				
 				// For other browsers (like Chrome), the message returned by the
-				// handler is honored. Note: If multiple unload handlers are present,
-				// the last value returned is used.
+				// handler is honored.
 				return message;
 			}
 		});

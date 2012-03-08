@@ -87,27 +87,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			}
 			this._blurAllComments();
 		});
-
-		dojo.addOnUnload(function(e) {
-			if (this._commentForm.isShowing == true) {
-				// We want to warn the user they run the risk of losing data because
-				// they're trying to leave the page while editing a comment.
-				var message = workbenchNls.fileHasUnsavedChanges;
-				
-				// For Mozilla/IE, we need to see the return value directly on the 
-				// event. But, note in FF 4 and later that the browser ignores our
-				// message and uses a default message of its own.
-				if (e = e || window.event) {
-					e.returnValue = message;
-				}
-				
-				// For other browsers (like Chrome), the message returned by the
-				// handler is honored. Note: If multiple unload handlers are present,
-				// the last value returned is used.
-				return message;
-			}
-		}.bind(this));
-
+		
 		dojo.subscribe("/davinci/review/view/canvasFocused", this, function() {
 			this._blurAllComments();
 		});
@@ -189,17 +169,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			// summary:
 			//		Remove the comment nodes of the previous page
 			
-			if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
-				return; 
-			}
 			var editor = args.editor;
-			if (!editor) {
-				this._resetCommentView();
-				this._currentPage = null;
-				this.states = null;
-			} else {
-				this._versionClosed = editor.resourceFile.parent.closed;
-			}
+
 			//save the editing comment form
 			if (args.oldEditor && args.oldEditor.basePath) {
 				if (this._commentForm.isShowing) {
@@ -212,10 +183,10 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 							type: dojo.byId(this._commentForm.type.id + "_label" ).innerHTML,
 							editFrom: this._commentForm.editFrom
 					};
-					this._cached[args.oldEditor.basePath.path].editComment = editingComment;
+					this._setPendingEditComment(args.oldEditor, editingComment);
 				} else {
-					if(this._cached[args.oldEditor.basePath.path])
-						this._cached[args.oldEditor.basePath.path].editComment = null;
+					//Clear out editing comment
+					this._setPendingEditComment(args.oldEditor, null);
 				}
 			}
 			if (editor && editor.basePath) {
@@ -277,9 +248,17 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 					form.show();
 				}
+			} 
+			
+			if (!editor || editor.editorID != "davinci.review.CommentReviewEditor") {
+				// If there's no new editor (indicating all editors have been closed and 
+				// user accepted the close tab warning if applicable) OR if the new editor 
+				// isn't a review editor, let's clear out the comment view
+				this._resetCommentView();
+				this._currentPage = null;
+				this.states = null;
 			} else {
-				// The content of the editor hasn't been loaded yet
-				return;
+				this._versionClosed = editor.resourceFile.parent.closed;
 			}
 		});
 
@@ -318,6 +297,25 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		});
 
 		dojo.subscribe("/davinci/review/commentAddedError",this,this._onErrorCreateNewComment);
+	},
+	
+	_setPendingEditComment: function(editor, editingComment) {
+		//Determine the cache key based on type of "editor" arg
+		var key = null;
+		if (typeof editor === "string") {
+			key = editor;
+		} else if (editor.basePath && editor.basePath.path) {
+			key = editor.basePath.path;
+		}
+		
+		//Look up any pending comment based on the key and
+		//set the comment
+		if (key) {
+			var cachedVal = this._cached[key];
+			if (cachedVal) {
+				cachedVal.editComment = editingComment;
+			}
+		}
 	},
 
 	_resetCommentView: function() {
@@ -425,8 +423,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		};
 		_comments.push(_comment);
 		this._cached.indices[_comment.id] = _comment;
-
-
 	},
 
 	_onUpdateComment: function(args) {

@@ -9,8 +9,12 @@ define([
 	"dijit/ToolbarSeparator",
 	"dijit/Menu",
 	"dijit/MenuBar",
+	"dijit/MenuItem",
+	"dijit/MenuSeparator",
 	"dijit/PopupMenuBarItem",
 	"dijit/form/Button",
+	"dijit/form/DropDownButton",
+	"dijit/form/ToggleButton",
 	"dijit/layout/BorderContainer",
 	"dijit/layout/StackContainer",
 	"dijit/layout/ContentPane",
@@ -20,8 +24,33 @@ define([
 	"./ve/metadata",
 	"dojo/_base/Deferred",
 	"dojo/_base/declare"
-], function(Runtime, Path,  util, ViewPart, EditorContainer, Dialog, Toolbar, ToolbarSeparator, Menu, MenuBar, PopupMenuBarItem,
-		Button, BorderContainer, StackContainer, ContentPane, TabContainer, sysResource, webContent, metadata, Deferred, declare) {
+], function(
+		Runtime,
+		Path,
+		util,
+		ViewPart,
+		EditorContainer,
+		Dialog,
+		Toolbar,
+		ToolbarSeparator,
+		Menu,
+		MenuBar,
+		MenuItem,
+		MenuSeparator,
+		PopupMenuBarItem,
+		Button,
+		DropDownButton,
+		ToggleButton,
+		BorderContainer,
+		StackContainer,
+		ContentPane,
+		TabContainer,
+		sysResource,
+		webContent,
+		metadata,
+		Deferred,
+		declare
+) {
 
 // Cheap polyfill to approximate bind(), make Safari happy
 Function.prototype.bind = Function.prototype.bind || function(that){ return dojo.hitch(that, this);};
@@ -237,8 +266,9 @@ var Workbench = {
 							parms.iconClass = action.iconClass;
 						}
 						var dojoAction;
+						var dojoActionDeferred = new Deferred();
 						if (action.toggle || action.radioGroup) {
-							dojoAction = new dijit.form.ToggleButton(parms);
+							dojoAction = new ToggleButton(parms);
 							dojoAction.item = action;
 							dojoAction.set('checked', action.initialValue);
 							if (action.radioGroup) {
@@ -251,9 +281,16 @@ var Workbench = {
 							} else {
 								dojoAction.onChange = dojo.hitch(this,"_runAction", action, context);
 							}
-						} else {
+							dojoActionDeferred.resolve();
+						}else if(action.type){
+							require([action.type], function(ReviewToolBarText) {
+								dojoAction = new ReviewToolBarText();
+								dojoActionDeferred.resolve();
+							});
+						}else{
 							dojoAction = new Button(parms);
 							dojoAction.onClick = dojo.hitch(this, "_runAction", action, context);
+							dojoActionDeferred.resolve();
 						}
 						if (action.icon) {
 							var imageNode = document.createElement('img');
@@ -261,14 +298,15 @@ var Workbench = {
 							imageNode.height = imageNode.width = 18;
 							dojoAction.domNode.appendChild(imageNode);
 						}
-
-						toolbar1.addChild(dojoAction);
-						if (action.isEnabled && !action.isEnabled(targetObjectId)) { 
-							dojoAction.isEnabled = action.isEnabled;
-							dojoAction.set('disabled', true);
-						} else {
-							dojoAction.set('disabled', false);
-						}
+						dojoActionDeferred.then(function(){
+							toolbar1.addChild(dojoAction);
+							if (action.isEnabled && !action.isEnabled(targetObjectId)) { 
+								dojoAction.isEnabled = action.isEnabled;
+								dojoAction.set('disabled', true);
+							} else {
+								dojoAction.set('disabled', false);
+							}
+						});
 				}
 		}
 		return toolbar1;
@@ -452,7 +490,7 @@ var Workbench = {
 				menu.id = menu.id.replace(".", "-"); // kludge to work around the fact that '.' is being used for ids, and that's not compatible with CSS
 				var widget =  dijit.byId(menu.id + "-dropdown");
 				if(!widget) {
-					widget = new dijit.form.DropDownButton({
+					widget = new DropDownButton({
 						label: menu.label,
 						dropDown: dojoMenu,
 						id: menu.id + "-dropdown"
@@ -725,14 +763,14 @@ var Workbench = {
 				}
 				for ( var menuN = 0, menuLen = menus[i].menus.length; menuN < menuLen; menuN++) {
 					if (addSeparator && menuAdded) {
-						dojoMenu.addChild(new dijit.MenuSeparator({}));
+						dojoMenu.addChild(new MenuSeparator({}));
 						addSeparator=false;
 					}
 					menuAdded=true;
 					var item = menus[i].menus[menuN];
 					if (item.separator) {
 						var subMenu = Workbench._createMenu(item);
-						var popupParent = new dijit.MenuItem({
+						var popupParent = new MenuItem({
 							label: item.label,
 							popup: subMenu,
 							id: subMenu.id + "item"
@@ -764,7 +802,7 @@ var Workbench = {
 						if (item.iconClass) {
 							menuArgs.iconClass = item.iconClass;
 						}
-						var menuItem1 = new dijit.MenuItem(menuArgs);
+						var menuItem1 = new MenuItem(menuArgs);
 						dojoMenu.addChild(menuItem1);
 					}
 				}

@@ -72,21 +72,34 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 		if(fileName.toLowerCase().indexOf(".css")>0){
 			// add the style sheet to the theme editor
 		}else if(fileName == "DEFAULT_PAGE"){
+			
 			var htmlFile = Factory.newHTML();
 			htmlFile.fileName = fileName;
 			htmlFile.setText(content);
 			htmlFile.themeCssfiles = themeCssfiles; // css files need to be added to doc before body content
+			/* load the theme css files into the model so that they are visited fully */
+			var bp = this.basePath.removeLastSegments(1);
+			 
+			htmlFile.loader = function(url){
+					var cssResource = system.resource.findResource(url);
+					return cssResource.getText();
+			}
+			
+			for(var i = 0;i < themeCssfiles.length;i++){
+				var cssPath = bp.append(themeCssfiles[i]);
+				htmlFile.addStyleSheet(cssPath.toString(), null, false, null, htmlFile.loader);
+			}
 			this.context.model = htmlFile;
 			this.context._themeName = this.theme.name;
 			if(!this.initialSet){
 				this.context.deactivate();
-				this.context._setSource(htmlFile, function() {
+				this.context._setSource(htmlFile, dojo.hitch(this,function() {
 					this.savePoint = 0;
+					
 					this.context.activate();
 //		css files need to be added to doc before body content wdr 4/6/11
-//					for(var i = 0;i < themeCssfiles.length;i++){
-//						this.insertCssFile(themeCssfiles[i]);	
-//					}
+					
+					
 					// Because widget sizing css rules were not included in the HEAD at page load,
 					// we must resize all of the widgets manually after the browser has had a chance
 					// to repaint.  To avoid this workaround, we should either move the CSS rules
@@ -112,7 +125,7 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 							this.themeVersionWarn();
 						}
 					}
-				}, this);
+				}, this));
 				
 			}
 		}

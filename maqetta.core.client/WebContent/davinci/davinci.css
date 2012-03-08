@@ -1209,3 +1209,13 @@ davinci_top_bar .dijitButtonNode {
 .StatesViewTree .dijitTreeExpando {
 	display:none;
 }
+.ReviewToolBarText {
+	background-color: #EFEFEF;
+	background-image: url("images/commonHighlight.png");
+	padding: 8px 1em 5px;
+	font: 12px Myriad,Helvetica,Tahoma,Arial,clean,sans-serif;
+	margin: 0px -4px -4px;	/* Undo the standard padding on toolbars */
+}
+.EditorContainer.ReviewEditor .toolbaredContainer_toolbarDiv {
+	height:auto;
+}

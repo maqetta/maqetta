@@ -104,7 +104,9 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			dojo.publish(this._currentPage+"/davinci/review/drawing/addShape", ["[]", true]);
 			this._destroyCommentWidgets();
 			this._render();
-			dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: this._cached[this._currentPage].pageState}, []]);
+			var state = this._cached[this._currentPage].pageState,
+				scene = this._cached[this._currentPage].viewScene;
+			dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: state, viewScene: scene}, []]);
 
 		});
 
@@ -144,7 +146,10 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					}
 					var state = args.newState || "Normal";
 					this._cached[this._currentPage].pageState = state;
-					dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: state}, []]);
+					// FIXME there will be multiple SceneManagers in the future. Need to fix this hardcoded reference.
+					var scene = this._cached[this._currentPage].viewScene = 
+						(context.sceneManagers && context.sceneManagers[0] && context.sceneManagers[0].getCurrentScene()) || "";
+					dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: state, viewScene: scene}, []]);
 				});
 			}
 			
@@ -412,6 +417,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				content: comment.content,
 				pageName: comment.pageName,
 				pageState: comment.pageState,
+				viewScene: comment.viewScene,
 				ownerId: comment.ownerId,
 				email: comment.email,
 				depth: comment.depth,
@@ -475,7 +481,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			return parseFloat(c1.created) - parseFloat(c2.created);
 		});
 		this._cached[pageName].pageState = "Normal";
-		this._cached[pageName].viewScene = "";
+//		this._cached[pageName].viewScene = "";
 		this._cached[pageName].focusedComments = [];
 	},
 
@@ -630,7 +636,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			if (this.states) { 
 				this.states.setState(widget.pageState);
 			}
-			this.publish(this._currentPage + "/davinci/review/drawing/filter", [{pageState: widget.pageState}, focusedComments]);
+			var viewScene = this._cached[this._currentPage].viewScene;
+			this.publish(this._currentPage + "/davinci/review/drawing/filter", [{pageState: widget.pageState, viewScene: viewScene}, focusedComments]);
 		}
 	},
 
@@ -646,19 +653,20 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				}
 			}
 		}
-
-		this.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: widget.pageState}, focusedComments]);
+		var viewScene = this._cached[this._currentPage].viewScene;
+		this.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: widget.pageState, viewScene: viewScene}, focusedComments]);
 	},
 
 	_onCommentFormCancel: function() {
 		dojo.publish(this._currentPage+"/davinci/review/drawing/cancelEditing", []);
 		var dim = this._cached[this._currentPage],
 		pageState = dim.pageState,
+		viewScene = dim.viewScene,
 		focusedComments = dim.focusedComments;
 		if (focusedComments.length > 0) {
 			this.commentIndices[focusedComments[0]].show();
 		}
-		dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: pageState}, focusedComments]);
+		dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: pageState, viewScene: viewScene}, focusedComments]);
 	},
 
 	_updateToolbar: function(args) {
@@ -971,8 +979,9 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 	
 	setCurrentScene: function(SceneManager, sceneId){
 		this._cached[this._currentPage].viewScene = sceneId;
+		var pageState = this._cached[this._currentPage].pageState;
 		var focusedComments = this._cached[this._currentPage].focusedComments;
-		dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{viewScene: sceneId}, focusedComments]);
+		dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: pageState, viewScene: sceneId}, focusedComments]);
 	}
 	
 

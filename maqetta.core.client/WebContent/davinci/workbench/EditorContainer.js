@@ -62,6 +62,9 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 					editor.setRootElement(rootElement);
 				}
 				this.containerNode = editor.domNode || this.containerNode;
+				if(typeof editorExtension.editorClassName == 'string'){
+					dojo.addClass(this.domNode, editorExtension.editorClassName);
+				}
 				editor.editorID=editorExtension.id;
 				editor.isDirty= !editor.isReadOnly && this.isDirty;
 				this._createToolbar();

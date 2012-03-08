@@ -77,6 +77,9 @@ define({ root:
 		
 		//MailFailurDialogContent.html
 		"inviteNotSent":"Invitation was not sent",
-		"mailFailureMsg":"It seems that the mail service is down or not configured. Please copy the invitation below and send it manually."
+		"mailFailureMsg":"It seems that the mail service is down or not configured. Please copy the invitation below and send it manually.",
+		
+		//ReviewToolBarText.js
+		'ReviewToolBarText':'Note: The page below is a "live" web application (e.g., may respond to mouse clicks or touches).The page might consist of different "scenes"; if so, then you can change the currently active scene in the Scenes palette.'
 }
 });

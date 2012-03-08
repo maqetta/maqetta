@@ -68,6 +68,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if (this._editor && this._editor.declaredClass != 'davinci.ve.themeEditor.ThemeEditor'){
 			this._updateView();
 		}
+		this._hideShowToolBar();
 	},
 	
 	_deviceChanged: function() {
@@ -131,9 +132,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			dojo.style(this.container.domNode, "display", "block");
 			if (editor.declaredClass === 'davinci.ve.themeEditor.ThemeEditor'){
 				this.set('title', langObj.States);
-				dojo.style(this.toolbarDiv, "display", "none");
-				var d = dijit.byId(this.toolbarDiv.parentNode.id);
-				d.resize();
 				this._updateViewForThemeEditor();
 				if(!this._themeState){
 					this._silent = false;
@@ -145,21 +143,13 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			} else {
 				this.set('title', langObj.Scenes);
 				this._updateView();
-				if (editor.declaredClass === "davinci.ve.PageEditor"){
-					dojo.style(this.toolbarDiv, "display", "block");
-				}else{
-					// review editor
-					dojo.style(this.toolbarDiv, "display", "none");
-				}
-				var d = dijit.byId(this.toolbarDiv.parentNode.id);
-				d.resize();
 			}
 			this.container.layout();	
 		}else{
 			delete this._editor;
 			dojo.style(this.container.domNode, "display", "none");
-			dojo.style(this.toolbarDiv, "display", "none");
 		}
+		this._hideShowToolBar();
 	},
 	
 	_getWidget: function() {
@@ -267,6 +257,13 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	_updateList: function() {
 		var latestStates = States.getStates(this._getWidget(), true), 
 			storedScenes = this._getScenes();
+		if(!this._editor || !latestStates || !storedScenes){
+			return;
+		}
+		var context = this._editor.getContext();
+		if(!context || !context._statesLoaded){
+			return;
+		}
 		
 		// Build an object structure that contains the latest list of states/scenes/views
 		// We will then build a similar object structure by extracting the list from the ItemFileWriteStore
@@ -287,7 +284,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		for(var state in latestStates){
 			AppStatesObj.children.push({ name:state, sceneId:state, type:'AppState' });
 		}
-		var context = this._editor.getContext();
 		var sceneManagers = context.sceneManagers;
 		// Loop through plugin scene managers, eg Dojo Mobile Views
 		var AppStatesAddedAlready = false;
@@ -328,6 +324,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			CurrentFileObj.children = CurrentFileObj.children.concat(AppStatesObj.children);
 		}
 		
+		this._hideShowToolBar();
+
 		// If data in Tree widget is same as latest data, then just return
 		if(!this._compareStructures(latestData, storedScenes)){
 			// Destroy the old Tree widget and create a new Tree widget
@@ -648,6 +646,54 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		});
 		path.splice(0, 0, 'StoryRoot');
 		this._tree.set('paths', [path]);
+	},
+	
+	// This code prevents +/- icons from appearing in theme and review editors
+	// and in page editor when authoring Dojo Mobile UIs
+	_hideShowToolBar: function(){
+		if(!this._editor){
+			return;
+		}
+		var showAppStates;	
+		if (this._editor.declaredClass !== "davinci.ve.PageEditor"){
+			showAppStates = false;
+		}else{
+			var context = this._editor.getContext();
+			if(!context || !context._statesLoaded){
+				return;
+			}
+			var latestStates = States.getStates(this._getWidget(), true);
+			if(!latestStates){
+				return;
+			}
+			var appStatesCount = 0;
+			for(var s in latestStates){
+				appStatesCount++;
+			}
+			// Loop through plugin scene managers, eg Dojo Mobile Views
+			var sceneManagers = context.sceneManagers;
+			showAppStates = (appStatesCount > 1);	// >1 means not just Normal
+			if(!showAppStates){
+				showAppStates = true;
+				for(var smIndex in sceneManagers){
+					var sm = sceneManagers[smIndex];
+					var hide = sm.hideAppStates ? sm.hideAppStates() : false;
+					if(hide){
+						showAppStates = false;
+						break;
+					}
+				}
+			}
+		}
+
+		// This code prevents +/- icons from appearing when authoring Dojo Mobile UIs
+		if (showAppStates){
+			dojo.style(this.toolbarDiv, "display", "block");
+		}else{
+			dojo.style(this.toolbarDiv, "display", "none");
+		}
+		var d = dijit.byId(this.toolbarDiv.parentNode.id);
+		d.resize();
 	}
 
 });

@@ -20,7 +20,8 @@ var EllipseAction = declare("davinci.review.actions.EllipseAction", [_DrawingCom
 			colorAlias: surface.currentReviewer,
 			a2c: dojo.hitch(Runtime, Runtime.getColor),
 			commentId: surface.commentId,
-			state: ""
+			state: "",
+			scene: ""
 		});
 		createTool.activate();
 	}

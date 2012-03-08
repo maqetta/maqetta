@@ -20,7 +20,8 @@ var RectAction = declare("davinci.review.actions.RectAction", [_DrawingCommon], 
 			colorAlias: surface.currentReviewer,
 			a2c: dojo.hitch(Runtime, Runtime.getColor),
 			commentId: surface.commentId,
-			state: ""
+			state: "",
+			scene: ""
 		});
 		createTool.activate();
 	}

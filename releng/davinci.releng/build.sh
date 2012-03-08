@@ -180,7 +180,7 @@ equinoxBranch="R3_6_maintenance"
 #
 export equinoxRepo=${MAQETTA_BUILD_DIR}/repository/rt.equinox.bundles
 #
-if [ ! -f ${equinoxRepo}/.git ]
+if [ ! -e ${equinoxRepo}/.git ]
 then
       echo "Cloning Equinox repository. This may take a few moments..."
       cd ${MAQETTA_BUILD_DIR}/repository

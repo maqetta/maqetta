@@ -199,23 +199,60 @@ var Runtime = {
 				window.davinciBackspaceKeyTime = Date.now();
 			}
 		});	
-		window.onbeforeunload = function (e) {
-			var shouldDisplay = Date.now() - window.davinciBackspaceKeyTime < 100;
-			if (shouldDisplay) {
-				var message = webContent.careful;
-				// Mozilla/IE
-				// Are you sure you want to navigate away from this page?
-				// Careful! You will lose any unsaved work if you leave this page now.
-				// Press OK to continue, or Cancel to stay on the current page.
+		
+		dojo.addOnUnload(function (e) {
+			//This will hold a warning message (if any) that we'll want to display to the
+			//user.
+			var message = null;
+			
+			//Loop through all of the editor containers and give them a chance to tell us
+			//the user should be warned before leaving the page.
+			var editorContainers = davinci.Workbench.editorTabs.getChildren();
+			var editorsWithWarningsCount = 0;
+			for (var i = 0; i < editorContainers.length; i++) {
+				var editorContainer = editorContainers[i];
+				if (editorContainer.editor) {
+					var editorResponse = editorContainer.editor.getOnUnloadWarningMessage();
+
+					if (editorResponse) {
+						//Let's keep track of the first message. If we end up finding multiple messages, we'll
+						//augment what the user will see shortly.
+						if (!message) {
+							message = editorResponse;
+						}
+						editorsWithWarningsCount++;
+					}
+				}
+			}
+			//If multiple warnings, augment message user will see
+			if (editorsWithWarningsCount > 1) {
+				message = dojo.string.substitute(webContent.multipleFilesUnsaved, [message, editorsWithWarningsCount]);
+			}
+			
+			if (!message) {
+				//No warnings so far, let's see if use maybe accidentally hit backspace
+				var shouldDisplayForBackspace = Date.now() - window.davinciBackspaceKeyTime < 100;
+				if (shouldDisplayForBackspace) {
+					message = webContent.careful;
+				}
+			}
+			
+			if (message) {
+				// We've found warnings, so we want to warn the user they run the risk of 
+				// losing data if they leave the page.
+				
+				// For Mozilla/IE, we need to see the return value directly on the 
+				// event. But, note in FF 4 and later that the browser ignores our
+				// message and uses a default message of its own.
 				if (e = e || window.event) {
 					e.returnValue = message;
 				}
-				// Webkit
-				// Careful! You will lose any unsaved work if you leave this page now.
-				// [Leave this Page] [Stay on this Page]
+				
+				// For other browsers (like Chrome), the message returned by the
+				// handler is honored.
 				return message;
 			}
-		};
+		});
 	},
 	
 	subscribe: function(topic,func) {

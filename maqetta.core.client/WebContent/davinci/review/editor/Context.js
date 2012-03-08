@@ -162,10 +162,22 @@ return declare("davinci.review.editor.Context", [Context], {
 				 this._refreshSurface(surface);
 			 })),
 			 dojo.subscribe("/davinci/review/view/openComment", dojo.hitch(this, function() {
-				 this.containerEditor.isDirty = true;
+	            if (Runtime.currentEditor === this.containerEditor) {
+	            	this.containerEditor.isDirty = true;
+	            	//Also, tell our container we're dirty
+	            	if (this.containerEditor.editorContainer) {
+	            		this.containerEditor.editorContainer.setDirty(true);
+	    			}
+	            }
 			 })),
 			 dojo.subscribe("/davinci/review/view/closeComment", dojo.hitch(this, function() {
-				 this.containerEditor.isDirty = false;
+				 if (Runtime.currentEditor === this.containerEditor) {
+					 this.containerEditor.isDirty = false;
+					 //Also, tell our container we're no longer dirty
+		            	if (this.containerEditor.editorContainer) {
+		            		this.containerEditor.editorContainer.setDirty(false);
+		    			}
+				 }
 			 })),
 			 dojo.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, function(obj){
 				 if (obj.oldEditor!=null && this === obj.oldEditor.getContext()) {

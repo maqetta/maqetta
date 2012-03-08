@@ -58,6 +58,7 @@ return {
 			extensions: "rev",
 			isDefault: true,
 			editorClass: "davinci/review/editor/ReviewEditor",
+			editorClassName: "ReviewEditor",
             palettesToTop: [
                 "davinci.review.reviewNavigator", //Reviews
                 "davinci.ui.comment", //Comments
@@ -181,7 +182,20 @@ return {
 				}
 			]
 		}
-	}
+	},
+    "davinci.editorActions": {
+        editorContribution: {
+            targetID: "davinci.review.CommentReviewEditor",
+            actions: [
+                {
+                    id: "ReviewToolBarText",
+                    type: "davinci/review/widgets/ReviewToolBarText",
+                    toolbarPath: "ReviewToolBarText"
+                }
+            ]
+        }
+    }
+
 };
 
 });

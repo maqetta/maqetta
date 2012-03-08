@@ -237,6 +237,7 @@ var Workbench = {
 							parms.iconClass = action.iconClass;
 						}
 						var dojoAction;
+						var dojoActionDeferred = new Deferred();
 						if (action.toggle || action.radioGroup) {
 							dojoAction = new dijit.form.ToggleButton(parms);
 							dojoAction.item = action;
@@ -251,9 +252,16 @@ var Workbench = {
 							} else {
 								dojoAction.onChange = dojo.hitch(this,"_runAction", action, context);
 							}
-						} else {
+							dojoActionDeferred.resolve();
+						}else if(action.type){
+							require([action.type], function(ReviewToolBarText) {
+								dojoAction = new ReviewToolBarText();
+								dojoActionDeferred.resolve();
+							});
+						}else{
 							dojoAction = new Button(parms);
 							dojoAction.onClick = dojo.hitch(this, "_runAction", action, context);
+							dojoActionDeferred.resolve();
 						}
 						if (action.icon) {
 							var imageNode = document.createElement('img');
@@ -261,14 +269,15 @@ var Workbench = {
 							imageNode.height = imageNode.width = 18;
 							dojoAction.domNode.appendChild(imageNode);
 						}
-
-						toolbar1.addChild(dojoAction);
-						if (action.isEnabled && !action.isEnabled(targetObjectId)) { 
-							dojoAction.isEnabled = action.isEnabled;
-							dojoAction.set('disabled', true);
-						} else {
-							dojoAction.set('disabled', false);
-						}
+						dojoActionDeferred.then(function(){
+							toolbar1.addChild(dojoAction);
+							if (action.isEnabled && !action.isEnabled(targetObjectId)) { 
+								dojoAction.isEnabled = action.isEnabled;
+								dojoAction.set('disabled', true);
+							} else {
+								dojoAction.set('disabled', false);
+							}
+						});
 				}
 		}
 		return toolbar1;

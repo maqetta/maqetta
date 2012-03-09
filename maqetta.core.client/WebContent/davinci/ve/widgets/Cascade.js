@@ -456,7 +456,7 @@ define(["dojo/_base/declare",
 			var allRules = this._getAllRules();
 			this._values = [];
 			//Disabled hasOverride logic - had bugs, causes problems with logic and not sure it helps user
-			//this._hasOverride = false;
+			this._hasOverride = false;
 			var propName = this.target[0];
 	
 			/* figure out the properties values */
@@ -483,9 +483,9 @@ define(["dojo/_base/declare",
 					if(!allRules[i].shorthand && allRules[i].type!="element.style")
 						allRules[i].value = this._getRuleTargetValue(rule);
 					else if(!allRules[i].shorthand && allRules[i].type=="element.style"){
-						for(var i=0;i<rule.length;i++){
-							if(rule[i].hasOwnProperty(this.target[0])){
-								allRules[i].value = rule[i][this.target[0]];
+						for(var kk=0;kk<rule.length;kk++){
+							if(rule[kk].hasOwnProperty(this.target[0])){
+								allRules[i].value = rule[kk][this.target[0]];
 							}
 						}
 					}

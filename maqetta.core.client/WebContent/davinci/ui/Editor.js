@@ -56,9 +56,11 @@ define([
 				// keep re-executing the following closure until the doLater condition is satisfied
 				this.waiter = true;
 				(function(that){
-					if (doLater(Date.now() - that.lastChangeStamp > 200, that)) { return; }
+					if (doLater(Date.now() - that.lastChangeStamp > 1000, that)) { return; }
 					delete that.waiter;
+					that.isTyping = true; // defer saving the buffer
 					that.handleChange(that._textModel.getText());
+					delete that.isTyping;
 				})(this);
 			} catch (e){console.error(e);}
 		}

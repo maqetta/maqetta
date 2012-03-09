@@ -34,13 +34,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 
 		img.src = this.icon;
 		a.appendChild(dojo.doc.createTextNode(this.displayName));
-		dojo.create('span',
-		        {
-		            className: 'maqWidgetsCategory',
-		            innerText: this.category
-		        },
-		        a
-		);
+		dojo.create('span', { className: 'maqWidgetsCategory' }, a).textContent = this.category;
 
 		this.domNode.componentClassName = this.name; // ex. "davinci.ve.widget.Hello"
 		dojo.setSelectable(this.domNode, false);

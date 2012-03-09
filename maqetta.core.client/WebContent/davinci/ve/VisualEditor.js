@@ -283,7 +283,6 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 	},
 	
 	_setContent: function(filename,content, newHtmlParams){
-		
 		this._setContentRaw(filename, content, newHtmlParams);
 	},
 	
@@ -292,13 +291,12 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		this.basePath = new Path(filename);
 	   
 		if (!this.initialSet){
-			
 			var loc = Workbench.location();
 			//FIXME: replace this stuff with a regexp
 			if (loc.charAt(loc.length-1)=='/'){
 				loc=loc.substring(0,loc.length-1);
 			}
-		   	while(filename.indexOf(".")==0 || filename.indexOf("/")==0){
+		   	while(filename.charAt(0) == "." || filename.charAt(0) == "/"){
 		   		filename = filename.substring(1,filename.length);
 			}				
 			var baseUrl=loc+'/user/'+Runtime.userName+'/ws/workspace/'+filename;
@@ -335,8 +333,11 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		}else{
 			this.context.setSource(content);
 		}
-		// auto save file
-		this.save(true);
+
+		if(!this.skipSave) {
+			// auto save file
+			this.save(true);			
+		}
 	},
 
 	_connectCallback: function() {

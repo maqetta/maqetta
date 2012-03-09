@@ -2380,9 +2380,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		
 		var widgetType = theme.loader.getType(widget);
-		return target.map(function(){
-			return theme.metadata.getRelativeStyleSelectorsText(widgetType, state, null, target);
-		});
+	
+		return theme.metadata.getRelativeStyleSelectorsText(widgetType, state, null, target);
+		
 	},
 		
 	getSelector: function(widget, target){

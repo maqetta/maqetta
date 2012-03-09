@@ -3,12 +3,16 @@ define([
 	"davinci/ve/input/SmartInput",
 	"davinci/ve/commands/ModifyCommand",
 	"davinci/commands/OrderedCompoundCommand",
+	"davinci/ve/commands/ModifyAttributeCommand",
+	"davinci/ve/commands/AddCommand",
+	"davinci/ve/commands/RemoveCommand",
 	"davinci/ve/widget",
 	"davinci/model/Path",
 	"dijit/Dialog",
 	"dijit/layout/ContentPane",	
 	"dijit/form/Button",
   "dijit/Tree",
+	"dojo/data/ItemFileReadStore",
 	"../../dojo/data/DataStoreBasedWidgetInput",
 	"dojo/i18n!dijit/nls/common",
 	"dojo/i18n!../nls/dojox",
@@ -18,12 +22,16 @@ define([
 	SmartInput,
 	ModifyCommand,
 	OrderedCompoundCommand,
+	ModifyAttributeCommand,
+	AddCommand,
+	RemoveCommand,
 	Widget,
 	Path,
 	Dialog,
 	ContentPane,
 	Button,
 	Tree,
+	ItemFileReadStore,
 	DataStoreBasedWidgetInput,
 	commonNls,
 	dojoxNls
@@ -139,26 +147,79 @@ return declare(DataStoreBasedWidgetInput, {
     
     var context = this._getContext();
     var widget = this._widget;
-        
-    var storeCmd = this.updateStore(structure);
+
+    var storeId = widget.domNode._dvWidget._srcElement.getAttribute("store");
+    var storeWidget = Widget.byId(storeId);
+
+    var compoundCommand = new OrderedCompoundCommand();
+
+    var newStore;
+    var newStoreId = "";
+    
+    var structureData = this.buildStructure(structure);
+debugger
+    if (storeWidget.type != "dojo.data.ItemFileReadStore") {
+      // remove the old store (csv)
+      var removeCmd = new RemoveCommand(storeWidget);
+      compoundCommand.add(removeCmd);
+    
+      // id for the new store
+      var newStoreId = Widget.getUniqueObjectId("dojo.data.ItemFileReadStore", context.getDocument());
+
+      // create the item store
+      newStore = new ItemFileReadStore({items: []});
+      // hack: pass id around for now, as we are passing an object but string may be expected
+      newStore.id = newStoreId;
+    
+      var data = {
+        "type": "dojo.data.ItemFileReadStore",
+        "properties": {
+          id: newStoreId,
+          jsId: newStoreId,
+          url: '',
+          data: structureData
+        },
+        context: context,
+      }
+
+      // add the new store
+      var addCmd = new AddCommand(data, widget.getParent(), 0);
+      compoundCommand.add(addCmd);
+    } else {
+      var storeCmd = this.replaceStoreData(structureData);
+      compoundCommand.add(storeCmd);
+    }
+
     structure = this._structure;
     var escapeHTML = (this.getFormat() === 'text');
+
+    var props = {
+      structure: structure,
+      escapeHTMLInData: escapeHTML
+    };
+
+    if (storeWidget.type != "dojo.data.ItemFileReadStore") {
+      props.store = newStore;
+    }
+
     var command = new ModifyCommand(widget,
-        {
-          structure: structure,
-          escapeHTMLInData: escapeHTML
-        },
-        null,
-        context
+      props,
+      null,
+      context
     );
-    var compoundCommand = new OrderedCompoundCommand();
-    compoundCommand.add(storeCmd);
+
     compoundCommand.add(command);
+
+    if (storeWidget.type != "dojo.data.ItemFileReadStore") {
+      var mcmd = new ModifyAttributeCommand(widget, {store: newStoreId});
+      compoundCommand.add(mcmd);
+    }
+
     context.getCommandStack().execute(compoundCommand);  
     context.select(command.newWidget);
   },
     
-  updateStore: function(structure, value) {
+  buildStructure: function(structure, value) {
     var oldStructure = structure, // we are defining the structure by row one of text area
     		structure = [],
     		textArea = dijit.byId("davinciIleb"),
@@ -195,7 +256,7 @@ return declare(DataStoreBasedWidgetInput, {
 			items.push(item);
 		}
 
-		return this.replaceStoreData(data);
+		return data;
 	},
 		
 	_attr: function(widget, name, value) {
@@ -214,18 +275,17 @@ return declare(DataStoreBasedWidgetInput, {
 		}	
 	},
 
-	_getModifyCommandForUrlDataStore: function(widget, context, items) {
+	_getModifyCommandForUrlDataStore: function(widget, context, items, datastore) {
 		var structure = [];
-		var item = items[0];
-		for (var name in item){
-			if (name !== '_0' && name !== '_RI' && name !== '_S'){
-				structure.push({
-					cellType: dojox.grid.cells.Cell,
-					width: 'auto',
-					name: name,
-					field: name					
-				});
-			}
+		var attributes = this._urlDataStore.getAttributes(items[0]);
+		for (var i = 0; i < attributes.length; i++) {
+		  var name = attributes[i];
+      structure.push({
+        cellType: dojox.grid.cells.Cell,
+        width: 'auto',
+        name: name,
+        field: name					
+      });
 		}
 
 		for (var i = 0; i < items.length; i++) {
@@ -235,74 +295,24 @@ return declare(DataStoreBasedWidgetInput, {
 
 		var scripts;
 		var escapeHTML = (this._format === 'text');
-    var command = new ModifyCommand(widget,
-      {
+
+		var props = {
         structure: structure,
 		    escapeHTMLInData: escapeHTML
-		  },
+		};
+
+		if (datastore) {
+		  props.store = datastore;
+		}
+
+    var command = new ModifyCommand(widget,
+      props,
 		  null, 
 		  context,
 		  scripts
 		);
 
 		return command;
-	},
-	
-	fileSelection: function(e){
-		this._fileSelectionDialog = new Dialog({
-			title : dojoxNls.selectSource,
-			style : "width:275px;height:220px;padding:0px;background-color:white;"
-		});
-
-		//Set-up file selection tree
-		var treeParms= {  
-			id: "dataGridInputFileSelectionTree",
-			style: "height:10em;margin-top:10px;overflow:auto",
-			model: system.resource,
-			filters: "new system.resource.FileTypeFilter(parms.fileTypes || '*');" //See #1725
-	    };
-		var tree = new Tree(treeParms);
-
-		this._fileSelectionDialog.containerNode.appendChild(tree.domNode);
-		
-		//Set-up button
-		var okClicked = function() {
-			var tree = dijit.byId("dataGridInputFileSelectionTree");
-			if (tree.selectedItem) {
-				var selectedItemPathStr = tree.selectedItem.getPath();
-				var path = new Path(selectedItemPathStr),
-				srcDocPath = new Path(this._widget._edit_context._srcDocument.fileName),
-				// ignore the filename to get the correct path to the image
-				value = path.relativeTo(srcDocPath, true).toString(),
-				textArea = dijit.byId("davinciIleb");
-		    	textArea.setValue(value); 
-		    	textArea.focus();
-		    	this._url = tree.selectedItem;
-		    	this._fileSelectionDialog.destroyRecursive();
-		    	delete this._fileSelectionDialog;
-		    	this.updateFormats();
-			}
-		};
-		var dijitLangObj = commonNls;
-		var okLabel = dijitLangObj.buttonOk;
-		var okStyle = 'padding:8px;';
-		var okBtn = new Button({
-			label : okLabel,
-			style : okStyle, /* type:"submit", */
-			onClick : dojo.hitch(this, okClicked)
-		});
-		this._fileSelectionDialog.containerNode.appendChild(okBtn.domNode);
-		
-		//Set up cancel handler
-		var onCancelFileSelection = function(e) {
-			this._fileSelectionDialog.destroyRecursive();
-			delete this._fileSelectionDialog;
-		};
-		this._connection.push(dojo.connect(this._fileSelectionDialog, "onCancel", this,
-			onCancelFileSelection));
-		
-		//Show dialog
-		this._fileSelectionDialog.show();
 	}
 });
 

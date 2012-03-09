@@ -1861,6 +1861,19 @@
 		            "inlineEdit": "./dojo/data/ItemFileReadStoreInput"
 		        },
 		        {
+		            "name": "CsvStore",
+		            "description": "CsvStore",
+		            "type": "dojox.data.CsvStore",
+		            "category": "untested-obj",
+		            "icon": "resources/images/DataPanel.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAAAAP////P2/Pf5/WZ9pmd9pmd+pmZ9pWd9pWt/opmpxevw+fD0+2Z+pmd+pWp/oW+BnoaYto2fvKS0zeXs+Obt+OXs9+3y+m+Bnau70+Pr9+jv+fL2/Pn7/nSEmXSDmOTs9+vx+fX4/Obu+Ojv+PP3/Obu93qHlO/1+/f6/fn7/XqHk/j7/YCJjs/t+3+KjoWMiIuPgoyPgpGSfZGRfZeUd5yXc6CZbpyWc6ecaKWba6Sba6GZb////wAAAAAAACH5BAEAAD0ALAAAAAAQABAAAAaZwJ5wSCz2csikctnTuZ7QKHTXu2mu2CyW17NZMhEQKDNRSL4RCq5XM1XeFfdbPqr1aBswiUQ25yMkMz0xCyGGIYWGiQsyPTAXYBeQZRKQERcwPS0oDJ0MnJ2gDC89JxxgAgJ9EqcRJSs9HiKztLW0Hz0QKWApu5S7EQMYPQ8sHccdxsfKKgk9BAgNBwUICA4H1gYODgVG3kRBADs=",
+		            "tool": "./dojo/data/DataStoreCreateTool",
+		            "resizable": "none",
+		            "invisible": false,
+		            "helper": "./dojox/data/CsvStoreHelper",
+		            "inlineEdit": "./dojox/data/CsvStoreInput"
+		        },
+		        {
 		            "name": "ForestStoreModel",
 		            "type": "dijit.tree.ForestStoreModel",
 		            "category": "untested-obj",

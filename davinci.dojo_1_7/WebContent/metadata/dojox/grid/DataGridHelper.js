@@ -131,7 +131,8 @@ DataGridHelper.prototype = {
 	create: function(widget, srcElement){
 		var storeId = srcElement.getAttribute("store");
 		if(storeId){
-			var storeWidget = Widget.byId(storeId);
+		  // we may have the store as an object
+			var storeWidget = storeId.declaredClass ?  Widget.byId(storeId.id) : Widget.byId(storeId);
 			if (storeWidget && widget.dijitWidget && widget.dijitWidget.store){
 				this._reparentTheStore(widget, storeWidget);
 				this.updateStore(widget, storeWidget);
@@ -165,6 +166,7 @@ DataGridHelper.prototype = {
 	},
 	
 	updateStore: function(widget,  storeWidget, w) { 
+	  console.log("updatestore");
 		var store = widget.dijitWidget.store;
 		var data = storeWidget._srcElement.getAttribute('data'); 
 		var url = storeWidget._srcElement.getAttribute('url'); 

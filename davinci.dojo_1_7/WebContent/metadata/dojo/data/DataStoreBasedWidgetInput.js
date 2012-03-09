@@ -10,17 +10,22 @@ define([
 	"dojo/dom",
 	"dojo/dom-class",
 	"dojo/data/ItemFileReadStore",
+	"dojox/data/CsvStore",
 	"dijit/registry",
 	"davinci/ve/input/SmartInput",
 	"davinci/ve/widget",
 	"davinci/ve/commands/ModifyCommand",
+	"davinci/ve/commands/ModifyAttributeCommand",
+	"davinci/ve/commands/AddCommand",
+	"davinci/ve/commands/RemoveCommand",
 	"davinci/commands/OrderedCompoundCommand",
 	"davinci/model/Path",
 	"dijit/Dialog",
 	"dijit/layout/ContentPane",	
 	"dijit/form/Button",
-    "dijit/Tree",
+	"dijit/Tree",
 	"system/resource",
+	"dojo/dom-attr",
 	"dojo/i18n!dijit/nls/common",
 	"dojo/i18n!../../dojox/nls/dojox",
 	"dojo/text!./templates/dojoStoreBasedWidgetInput.html",
@@ -33,10 +38,14 @@ define([
 	dom,
 	domClass,
 	ItemFileReadStore,
+	CsvStore,
 	registry,
 	SmartInput,
 	Widget,
 	ModifyCommand,
+	ModifyAttributeCommand,
+	AddCommand,
+	RemoveCommand,
 	OrderedCompoundCommand,
 	Path,
 	Dialog,
@@ -44,6 +53,7 @@ define([
 	Button,
 	Tree,
 	resource,
+	domAttr,
 	commonNls,
 	dojoxNls,
 	mainTemplateString
@@ -64,6 +74,7 @@ return declare(SmartInput, {
     		   ' If data file from workspace is selected chose a json item file using the file explore folder.',
 
   _substitutedMainTemplate: null,
+  _dataType: null,
 
 	_getContainer: function(widget){
 		while(widget){
@@ -110,6 +121,9 @@ return declare(SmartInput, {
 			return;
 		}
 
+		// clear data type
+		this._dataType = null;
+
 		if (this._dataStoreType === 'dummyData'){
 			this.updateWidget();
 		} else if (this._dataStoreType === 'file'){
@@ -130,10 +144,11 @@ return declare(SmartInput, {
   updateWidget: function() {
     var context = this._getContext();
     var widget = this._widget;
-        	
+
+    var compoundCommand = new OrderedCompoundCommand();
+
     var storeCmd = this.updateStore();
     var command = new ModifyCommand(widget, null, null, context);
-    var compoundCommand = new OrderedCompoundCommand();
     compoundCommand.add(storeCmd);
     compoundCommand.add(command);
     context.getCommandStack().execute(compoundCommand);
@@ -179,16 +194,33 @@ return declare(SmartInput, {
     // clear any callbacks
     this._callback = '';
 
+    // data can be json or csv, so interogate the url
+
     var store = new ItemFileReadStore({url: url});
+    this._urlDataStore = store;
     store.fetch({
         query: this.query,
     		queryOptions:{deep:true}, 
     		onComplete: lang.hitch(this, this._urlDataStoreLoaded),
-    		onError: function(e){ alert('File ' + e  );}
+    		onError: lang.hitch(this, this._getCsvStore, url, this.query)
     });
-
-    this._urlDataStore = store;
 	},
+
+	_getCsvStore: function(url, query) {
+    var store = new CsvStore({url: url});
+    this._urlDataStore = store;
+
+    this._dataType = "csv";
+
+    store.fetch({
+        query: query,
+        queryOptions:{deep:true}, 
+        onComplete: lang.hitch(this, this._urlDataStoreLoaded),
+        onError: function(e){
+          alert('File ' + e  );
+        }
+    });
+  },
 
 	updateWidgetForUrlStoreJSONP: function() {
     var textArea = dijit.byId("davinciIleb");
@@ -254,11 +286,65 @@ return declare(SmartInput, {
 		storeWidget._srcElement.setAttribute('data', ''); 
 		properties.data = ''; // to prevent ModifyCommand mixin from putting it back
 
-		var storeCmd = new ModifyCommand(storeWidget, properties);
-    var compoundCommand = new OrderedCompoundCommand();
-    compoundCommand.add(storeCmd);
-    var command = this._getModifyCommandForUrlDataStore(widget, context, items);
-    compoundCommand.add(command);
+		var compoundCommand = new OrderedCompoundCommand();
+
+		if ((this._dataType == "csv" && storeWidget.type == "dojo.data.ItemFileReadStore") ||
+		   (this._dataType != "csv" && storeWidget.type == "dojox.data.CsvStore")) {
+
+		  var sid;
+
+		  var removeCmd = new RemoveCommand(storeWidget);
+		  compoundCommand.add(removeCmd);
+
+		  // we need to change the store type
+		  if (this._dataType == "csv") {
+		    // replace store with csv
+        sid = Widget.getUniqueObjectId("dojox.data.CsvStore", context.getDocument());
+		    var data = {
+		      "type": "dojox.data.CsvStore",
+		      "properties": {
+		        id: sid,
+		        jsId: sid,
+		        url: this._url,
+		        data: ''
+		      },
+		      context: context,
+		    }
+
+		    this._urlDataStore.id = sid;
+		    var addCmd = new AddCommand(data, widget.getParent(), 0);
+		    compoundCommand.add(addCmd);
+		  } else {
+        sid = Widget.getUniqueObjectId("dojo.data.ItemFileReadStore", context.getDocument());
+		    var data = {
+		      "type": "dojo.data.ItemFileReadStore",
+		      "properties": {
+		        id: sid,
+		        jsId: sid,
+		        url: this._url,
+		        data: ''
+		      },
+		      context: context,
+		    }
+
+		    this._urlDataStore.id = sid;
+		    var addCmd = new AddCommand(data, widget.getParent(), 0);
+		    compoundCommand.add(addCmd);
+		  }
+		 
+		  var command = this._getModifyCommandForUrlDataStore(widget, context, items, this._urlDataStore);
+		  compoundCommand.add(command);
+
+	    var mcmd = new ModifyAttributeCommand(widget, {store: sid});
+	    compoundCommand.add(mcmd);
+		} else {
+		  var storeCmd = new ModifyCommand(storeWidget, properties);
+		  compoundCommand.add(storeCmd);
+
+		  var command = this._getModifyCommandForUrlDataStore(widget, context, items);
+		  compoundCommand.add(command);
+		}
+
     context.getCommandStack().execute(compoundCommand); 
     context.select(command.newWidget);
 	},
@@ -467,14 +553,12 @@ return declare(SmartInput, {
 		}else if ( e=== 'file'){
 			style.set('davinci.ve.input.DataGridInput_img_folder', 'display', '');
 			textArea.setValue( this._url);
-	    	tagetObj.style.height = '40px';
-			
+			tagetObj.style.height = '40px';
 		}else if (e === 'url'){
 			style.set('davinci.ve.input.DataGridInput_img_folder', 'display', 'none');
 			textArea.setValue( this._url);
-	    	tagetObj.style.height = '40px';
+			tagetObj.style.height = '40px';
 			style.set('ieb', 'width', resizeWidth + 15 + 'px' );
-			
 		} else {
 			// we should not ever get here.
 			console.error('DataGridInput:changeDataStoreType error');

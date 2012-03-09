@@ -19,7 +19,7 @@ ItemFileReadStoreHelper.prototype = {
 		var widgetData = widget._getData( options);
 		var value = widget._srcElement.getAttribute('data');
 		if (value){
-			widgetData.properties.data = JSON.parse(value);;
+			widgetData.properties.data = JSON.parse(value);
 		} else {
 			if (widget._srcElement.getAttribute('url')) {
 				widgetData.properties.url = widget._srcElement.getAttribute('url'); 

@@ -929,7 +929,7 @@ var Workbench = {
 						position: positionSplit[1] || positionSplit[0],
 						title: view.title,
 						id: view.id,
-						closable: true,
+						closable: false,
 						view: view
 					}));
 				});

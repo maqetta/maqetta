@@ -165,16 +165,20 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	},
 	
 	_srcChanged: function() {
-		if (!this._updateDesignTimer) {
-			var self=this;
-			this._updateDesignTimer=setTimeout(function (){
-				self.visualEditor.setContent(self.fileName,self.htmlEditor.model);
-				self._setDirty();
-				delete self._updateDesignTimer;
-			},700);
+		var wasTyping = this.htmlEditor.isTyping;
+		if (this._updateDesignTimer) {
+			clearTimeout(this._updateDesignTimer);
 		}
-		this.isDirty=true;
-		this.lastModifiedTime=Date.now();
+
+		this._updateDesignTimer = setTimeout(function(){
+			delete this._updateDesignTimer;
+			if(wasTyping) {
+				this.visualEditor.skipSave = true;
+			}
+			this.visualEditor.setContent(this.fileName, this.htmlEditor.model);
+			delete this.visualEditor.skipSave;
+			this._setDirty();
+		}.bind(this), 1000);
 	},
 	
 	getContext: function() {

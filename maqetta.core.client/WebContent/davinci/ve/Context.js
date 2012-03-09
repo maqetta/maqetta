@@ -2380,10 +2380,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		
 		var widgetType = theme.loader.getType(widget);
-		return target.map(function(){
-			//FIXME: Brad, is it intentional to add the same thing to the selector array for each element in target?
-			return theme.metadata.getRelativeStyleSelectorsText(widgetType, state, null, target);
-		});
+	
+		return theme.metadata.getRelativeStyleSelectorsText(widgetType, state, null, target);
+		
 	},
 		
 	getSelector: function(widget, target){

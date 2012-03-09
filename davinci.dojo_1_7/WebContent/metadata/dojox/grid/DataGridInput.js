@@ -157,7 +157,7 @@ return declare(DataStoreBasedWidgetInput, {
     var newStoreId = "";
     
     var structureData = this.buildStructure(structure);
-debugger
+
     if (storeWidget.type != "dojo.data.ItemFileReadStore") {
       // remove the old store (csv)
       var removeCmd = new RemoveCommand(storeWidget);
@@ -233,7 +233,7 @@ debugger
 				cellType: dojox.grid.cells.Cell,
 				width: 'auto',
 				name: cols[c],
-				field: cols[c].replace(/\s+/g, '_').toLowerCase()				
+				field: cols[c].replace(/\s+/g, '_'d).toLowerCase()				
 			};
 		}
 

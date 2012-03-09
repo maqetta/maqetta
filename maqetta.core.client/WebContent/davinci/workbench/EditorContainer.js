@@ -112,16 +112,21 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 
 	setDirty: function (isDirty) {
-		var title=this.get("title");
-		if (title[0]=="*"){
-			title=title.substring(1);
-		}
+		title = this._getTitle();
 		if (isDirty){
 			title="*"+title;
 		}
 		davinci.Workbench.editorTabs.setTitle(this,title);
 		this.lastModifiedTime=Date.now();
 		this.isDirty = isDirty;
+	},
+	
+	_getTitle: function() {
+		var title=this.attr("title");
+		if (title[0]=="*"){
+			title=title.substring(1);
+		}
+		return title;
 	},
 	
 	save: function(isWorkingCopy){
@@ -133,7 +138,13 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 		dojo.publish("/davinci/ui/EditorClosing", [editor]);
 		var okToClose = true;
 		if (dirtycheck && editor && editor.isDirty){
-		     okToClose=confirm(workbenchStrings.fileHasUnsavedChanges);
+			//Give editor a chance to give us a more specific message
+			var message = editor.getOnUnloadWarningMessage();
+			if (!message) {
+				//No editor-specific message, so use our canned one
+				message = dojo.string.substitute(workbenchStrings.fileHasUnsavedChanges, [this._getTitle()]);
+			}
+		    okToClose=confirm(message);
 		}
 		if (okToClose){
 	    	this._isClosing = true;

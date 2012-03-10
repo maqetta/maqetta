@@ -133,4 +133,7 @@ body {
 	-o-user-select: none;
 	user-select: none;
 }
-	
+
+.dijitDialogUnderlayWrapper {
+	display: none !important;
+}

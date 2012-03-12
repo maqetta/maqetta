@@ -324,7 +324,7 @@ return declare("davinci.ve.input.SmartInput", null, {
 		var node = this._node(this._widget);
 		
 		var property = this.property;
-		var djprop = (property==="textContent") ? "innerHTML" : property;
+		var djprop = (property==="maq_innerText") ? "innerHTML" : property;
 		var value;
 		if (property) {
 			if (node) {
@@ -579,9 +579,9 @@ return declare("davinci.ve.input.SmartInput", null, {
 			}
 
 			var node = this._node(this._widget);
-            var context=this._widget.getContext();
+			var context=this._widget.getContext();
 			var inlineEditProp = this.property;
-			var djprop = (inlineEditProp==="textContent") ? "innerHTML" : inlineEditProp;
+			var djprop = (inlineEditProp==="maq_innerText") ? "innerHTML" : inlineEditProp;
 			if (this.update) {
 					
 				var updatedWidget = this.update(node || this._widget, value, inlineEditProp);
@@ -610,8 +610,8 @@ return declare("davinci.ve.input.SmartInput", null, {
 					var command;
 
 					if (djprop === 'innerHTML'){
-						values.richText = values.textContent;
-						delete values.textContent;
+						values.richText = values[inlineEditProp];
+						delete values[inlineEditProp];
 						command = new ModifyRichTextCommand(this._widget, values, null, context);
 					}else{
 						command = new davinci.ve.commands.ModifyCommand(this._widget, values, null, context);

@@ -224,12 +224,16 @@
 			return scenes;
 		},
 		hideAppStates: function(){
-			if(this.context.declaredClass == 'davinci.ve.Context'){
-				var ve = this.context && this.context.visualEditor,
+			var context = this.context;
+			if(!context){
+				return false;
+			}
+			if(context.declaredClass == 'davinci.ve.Context'){
+				var ve = context.visualEditor,
 					device = (ve && ve.getDevice) ? ve.getDevice() : "";
 				return (!device || device === '' || device === 'none') ? false : true;
-			}else if(this.context.declaredClass == 'davinci.review.editor.Context'){
-				var body = this.context.rootNode;
+			}else if(context.declaredClass == 'davinci.review.editor.Context'){
+				var body = context.rootNode;
 				if(body){
 					var statesAttr = body.getAttribute('data-maqetta-device');
 					return (statesAttr !== null && statesAttr !== '' && statesAttr !== 'none' && statesAttr !== 'desktop');

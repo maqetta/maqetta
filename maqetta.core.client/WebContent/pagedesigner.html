@@ -65,27 +65,39 @@
 					// set up for review and commenting...
 					davinci.Runtime.commenting_designerName  = dojo.cookie("davinci_designer");
 					davinci.Runtime.commenting_designerEmail = dojo.cookie("davinci_designer_email");
-					davinci.Runtime.commenting_openFile      = dojo.cookie("davinci_file");
+					davinci.Runtime.commenting_reviewVersion      = dojo.cookie("review_version");
 					davinci.Runtime.commenting_commentId     = dojo.cookie("davinci_commentId");
 					dojo.cookie("davinci_designer",       null, {expires: -1});
 					dojo.cookie("davinci_designer_email", null, {expires: -1});
 					dojo.cookie("davinci_file",           null, {expires: -1});
 					dojo.cookie("davinci_commentId",      null, {expires: -1});
 					
-					if (Runtime.commenting_openFile) {
-						var page = Runtime.commenting_openFile;
-						var path = new davinci.model.Path(page);
-						var version = path.getSegments()[0];
-						path.removeFirstSegments(1);
-						var node = davinci.review.model.resource.root.findFile(version, path.toString());
-						if (node) {
-							davinci.Workbench.openEditor({
-								fileName: node,
-								content: node.getText()
+					Workbench.run();
+				
+					var node = davinci.review.model.resource.root.findVersion(davinci.Runtime.commenting_reviewVersion);
+					if (node) {
+						node.getChildren(function(childs){
+							dojo.forEach(childs, function(child){
+								davinci.Workbench.openEditor({
+									fileName: child,
+									content: node.getText()
+								});
+							})
+							
+						}, false);
+					}
+					var openResource = dojo.queryToObject(dojo.doc.location.search.substr((dojo.doc.location.search[0] === "?" ? 1 : 0))).openResource;
+					if(false && openResource){
+						var resources = dojo.fromJson(openResource);
+						for(var zz=0;zz<openResource.length;zz++){
+							Workbench.openEditor({
+								'fileName':openResource[zz]
 							});
 						}
+						
 					}
-					Workbench.run();
+		
+					
 				};
 
 				// Display a warning dialog for unsupported browsers

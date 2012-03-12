@@ -1,7 +1,10 @@
 package maqetta.core.server;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -15,8 +18,11 @@ import org.davinci.server.internal.Activator;
 
 import org.davinci.server.review.Constants;
 import org.davinci.server.review.ReviewObject;
+import org.davinci.server.review.Version;
 import org.davinci.server.review.cache.ReviewCacheManager;
+import org.davinci.server.review.user.IDesignerUser;
 import org.davinci.server.user.IUser;
+import org.davinci.server.util.JSONWriter;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.maqetta.server.IDavinciServerConstants;
@@ -92,12 +98,13 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 				if ( reviewObject.getCommentId() != null ) {
 					resp.addCookie(new Cookie(Constants.REVIEW_COOKIE_CMTID, reviewObject.getCommentId()));
 				}
-				if ( reviewObject.getFile() != null ) {
-					resp.addCookie(new Cookie(Constants.REVIEW_COOKIE_FILE, reviewObject.getFile()));
+				if ( reviewObject.getVersion() != null ) {
+					resp.addCookie(new Cookie(Constants.REVIEW_VERSION, reviewObject.getVersion()));
 				}
 //				writeReviewPage(req, resp, "review.html");
 //				writeMainPage(req, resp);
-				resp.sendRedirect("/maqetta");
+			
+				resp.sendRedirect("/maqetta/");
 			}
 		} else {
 			IPath path = new Path(pathInfo);
@@ -132,9 +139,9 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 					// Token = 20100101/project1/folder1/sample1.html/default
 					String commentId = path.segment(path.segmentCount() - 1);
 					String fileName = path.removeLastSegments(1).removeFirstSegments(1).toPortableString();
-					reviewObject.setFile(fileName);
 					reviewObject.setCommentId(commentId);
 				}
+				reviewObject.setVersion(req.getParameter("version"));
 				req.getSession().setAttribute(Constants.REVIEW_INFO, reviewObject);
 				resp.sendRedirect(contextString + "/review");
 				return;

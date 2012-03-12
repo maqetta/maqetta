@@ -37,7 +37,11 @@ var root = declare(Resource, {
 
 	findVersion: function(version) {
 		var node;
-		dojo.forEach(this.children, function(item) {
+		var children;
+		var result = null;
+		this.getChildren(function(c) { children= c; }, true);
+		
+		dojo.forEach(children, function(item) {
 			if (item.timeStamp == version) {
 				node =item;
 			}

@@ -224,7 +224,7 @@ define(["dojo/_base/declare",
 		},
 		// Returns array of currently selected items.
 		getSelectedItems: function() {
-			return selectedNodes.map(function(node){
+			return this.selectedNodes.map(function(node){
 				return node.item;
 			});
 		},

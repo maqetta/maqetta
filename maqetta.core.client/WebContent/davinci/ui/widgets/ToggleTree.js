@@ -175,7 +175,7 @@ define(["dojo/_base/declare",
 			}
 			this._selectNode(node);
 			var path = [];
-			for(var i=nodeItem.domNode; i && i.parentNode; i = i.parentNode) {
+			for(var i=node.domNode; i && i.parentNode; i = i.parentNode) {
 				if(i._dvWidget){
 					path.unshift(i._dvWidget);
 				}
@@ -224,12 +224,9 @@ define(["dojo/_base/declare",
 		},
 		// Returns array of currently selected items.
 		getSelectedItems: function() {
-			var selectedItems = [];
-			for(i=0;i < this.selectedNodes.length; i++) {
-				var iNode = this.selectedNodes[i];
-				selectedItems.push(iNode.item);
-			}
-			return selectedItems;
+			return selectedNodes.map(function(node){
+				return node.item;
+			});
 		},
 		_createTreeNode: function(/*Object*/ args){
 	 		return new ToggleTreeNode(args);
@@ -268,7 +265,7 @@ define(["dojo/_base/declare",
 			}
 			this._selectNode(w);
 			var path = [];
-			for(var i=nodeItem.domNode; i && i.parentNode; i = i.parentNode) {
+			for(var i=w.domNode; i && i.parentNode; i = i.parentNode) {
 				if(i._dvWidget){
 					path.unshift(i._dvWidget);
 				}

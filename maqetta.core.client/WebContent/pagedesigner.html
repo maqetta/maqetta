@@ -86,19 +86,6 @@
 							
 						}, false);
 					}
-					var openResource = dojo.queryToObject(dojo.doc.location.search.substr((dojo.doc.location.search[0] === "?" ? 1 : 0))).openResource;
-					if(false && openResource){
-						var resources = dojo.fromJson(openResource);
-						for(var zz=0;zz<openResource.length;zz++){
-							Workbench.openEditor({
-								'fileName':openResource[zz]
-							});
-						}
-						
-					}
-		
-					
-				};
 
 				// Display a warning dialog for unsupported browsers
 				if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5.1)) {

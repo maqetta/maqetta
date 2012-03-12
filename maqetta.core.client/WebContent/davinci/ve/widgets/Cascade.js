@@ -366,67 +366,68 @@ define(["dojo/_base/declare",
 			}
 			
 			var values =  [];
-			/* element rules */
-			var defaultSelection=this._getDefaultSelection();
-			
-			if(this._editor.supports("inline-style") && 
-			  (this._topWidgetDom==this._widget.domNode || defaultSelection=="element.style")){
-				var vArray = this._getAttribStyleValue();
-				var value = null;
-				for(var vIndex=0; vIndex<vArray.length; vIndex++){
-					var vItem = vArray[vIndex];
-					for(var t=0; t<this.target.length; t++){// should be only one property in this.target
-						var name = this.target[t];
-						if(vItem[name] !== undefined){
-							value = vItem[name];
+			if (this._editor.editorID != 'davinci.ve.ThemeEditor'){
+				/* element rules */
+				var defaultSelection=this._getDefaultSelection();
+				
+				if(this._editor.supports("inline-style") && 
+				  (this._topWidgetDom==this._widget.domNode || defaultSelection=="element.style")){
+					var vArray = this._getAttribStyleValue();
+					var value = null;
+					for(var vIndex=0; vIndex<vArray.length; vIndex++){
+						var vItem = vArray[vIndex];
+						for(var t=0; t<this.target.length; t++){// should be only one property in this.target
+							var name = this.target[t];
+							if(vItem[name] !== undefined){
+								value = vItem[name];
+							}
+						}
+					}
+					values.push({rule:vArray, value:value, matchLevel:'element.style', type:'element.style'});				
+				}
+				
+				/* selection (queried) rules */
+				var v = this.context.getSelectionCssRules(this._topWidgetDom);
+				if(v && v.rules){
+					for(var i=0;i<v.rules.length;i++){
+						var s="";
+						var rule = v.rules[i];
+						for(var j = 0;j<rule.selectors.length;j++){
+							if(j!=0) s+=", ";
+							s+=rule.selectors[j].getLabel();
+						}
+						var ruletype = getRuleType(rule);
+						values.push({rule:v.rules[i], ruleString:s,
+									matchLevel:v.matchLevels[i], type:ruletype});
+					}
+				}
+				
+				/* create list of proposals for new rules (using classes defined on this widget) */
+				var allCssClasses = this._getClasses(this._widget);
+				var nProposals = 0;
+				for(var i=0;i<allCssClasses.length;i++){
+					var thisClass=allCssClasses[i];
+					if(typeof thisClass=="string" && thisClass.length>0){
+						var proposedNewRule=this._getClassSelector(thisClass);
+						// See if there is an existing rule for thisClass
+						var existingRule=false;
+						for(var j=0; j<values.length; j++){
+							if(this._compareSelectors(values[j].ruleString,proposedNewRule)){
+								values[j].className = thisClass;
+								existingRule=true;
+								break;
+							}
+						}
+						if(!existingRule){
+							var matchLevel = this._computeMatchLevelSelector(proposedNewRule);
+							values.splice(nProposals,0,{rule:null, ruleString:proposedNewRule, 
+										targetFile:this.targetFile, className:thisClass,
+										value:null, matchLevel:matchLevel, type:'proposal'});
+							nProposals++;
 						}
 					}
 				}
-				values.push({rule:vArray, value:value, matchLevel:'element.style', type:'element.style'});				
 			}
-			
-			/* selection (queried) rules */
-			var v = this.context.getSelectionCssRules(this._topWidgetDom);
-			if(v && v.rules){
-				for(var i=0;i<v.rules.length;i++){
-					var s="";
-					var rule = v.rules[i];
-					for(var j = 0;j<rule.selectors.length;j++){
-						if(j!=0) s+=", ";
-						s+=rule.selectors[j].getLabel();
-					}
-					var ruletype = getRuleType(rule);
-					values.push({rule:v.rules[i], ruleString:s,
-								matchLevel:v.matchLevels[i], type:ruletype});
-				}
-			}
-			
-			/* create list of proposals for new rules (using classes defined on this widget) */
-			var allCssClasses = this._getClasses(this._widget);
-			var nProposals = 0;
-			for(var i=0;i<allCssClasses.length;i++){
-				var thisClass=allCssClasses[i];
-				if(typeof thisClass=="string" && thisClass.length>0){
-					var proposedNewRule=this._getClassSelector(thisClass);
-					// See if there is an existing rule for thisClass
-					var existingRule=false;
-					for(var j=0; j<values.length; j++){
-						if(this._compareSelectors(values[j].ruleString,proposedNewRule)){
-							values[j].className = thisClass;
-							existingRule=true;
-							break;
-						}
-					}
-					if(!existingRule){
-						var matchLevel = this._computeMatchLevelSelector(proposedNewRule);
-						values.splice(nProposals,0,{rule:null, ruleString:proposedNewRule, 
-									targetFile:this.targetFile, className:thisClass,
-									value:null, matchLevel:matchLevel, type:'proposal'});
-						nProposals++;
-					}
-				}
-			}
-	
 			/* theme/meta rules */
 			if (this._editor.editorID == 'davinci.ve.ThemeEditor'){
 				v = this._editor._getCssRules(this._widget, null, this._editor._currentState);
@@ -802,7 +803,7 @@ define(["dojo/_base/declare",
 				}
 			
 			}
-			if(!foundValue && !defaultValue){
+			if(!foundValue && !defaultValue && (this._editor.editorID != 'davinci.ve.ThemeEditor')){
 				this.selectRuleBySelector("element.style");
 			}
 			

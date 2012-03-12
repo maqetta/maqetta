@@ -93,6 +93,10 @@ return declare("davinci.review.editor.Context", [Context], {
 		return []; // Overridden for NOOP behavior
 	},
 
+	select: function(){
+		// Overridden for NOOP behavior
+	},
+
 	_initDrawing: function() {
 		// summary:
 		//        Create the canvas for annotations, and wait for the shape definition

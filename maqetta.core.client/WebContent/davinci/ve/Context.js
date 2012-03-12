@@ -1,7 +1,7 @@
 define([
     "dojo/_base/declare",
-    "davinci/Theme",
-    "davinci/ve/ThemeModifier",
+    "../Theme",
+    "./ThemeModifier",
 	"../commands/CommandStack",
 	"./commands/ChangeThemeCommand",
 	"./tools/SelectTool",
@@ -23,7 +23,7 @@ define([
 	"preview/silhouetteiframe",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
-	"davinci/util",
+	"../util",
 	"dojox/html/_base"
 ], function(
 	declare,
@@ -635,7 +635,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var model = this.getModel();
 		if(this._themeUrl){
 			var style = model.find({elementType:'CSSImport', url:this._themeUrl},true);
-			if (style && style.length > 0) {
+			if (style) {
 				changed = false;
 			}
 		}
@@ -646,7 +646,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	getTheme: function(){
-        if (! this.theme) {
+        if (!this.theme) {
             var theme = this.loadThemeMeta(this._srcDocument);
             if (theme) { // wdr #1024
                 this._themeUrl = theme.themeUrl;
@@ -1140,11 +1140,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if(theme && theme.usingSubstituteTheme){
 			var oldThemeName = theme.usingSubstituteTheme.oldThemeName;
 			var newThemeName = theme.usingSubstituteTheme.newThemeName;
-			for(var ss=0;ss<data.styleSheets.length; ss++){
-				var sheet=data.styleSheets[ss];
-				data.styleSheets[ss] = sheet.replace(new RegExp("/"+oldThemeName,"g"),"/"+newThemeName);
-			}
-			data.bodyClasses = data.bodyClasses.replace(new RegExp("\\b"+oldThemeName+"\\b","g"),newThemeName);
+			data.styleSheets = data.styleSheets.map(function(sheet){
+				return sheet.replace(new RegExp("/"+oldThemeName,"g"), "/"+newThemeName);				
+			});
+			data.bodyClasses = data.bodyClasses.replace(new RegExp("\\b"+oldThemeName+"\\b","g"), newThemeName);
 
 			if(this.editor && this.editor.visualEditor && this.editor.visualEditor._onloadMessages){
 				this.editor.visualEditor._onloadMessages.push(dojo.replace(
@@ -1797,9 +1796,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	select: function(widget, add, inline){
-		if(this.declaredClass == 'davinci.review.editor.Context'){
-			return;
-		}
 		if(!widget || widget==this.rootWidget){
 			if(!add){
 				this.deselect(); // deselect all
@@ -2350,9 +2346,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// Add all prop declarations back in, in proper order
 		for(i = 0;i<cleaned.length;i++){
 			for(var name in cleaned[i]){
-				if (!cleaned[i][name] || cleaned[i][name] === '') {
-					continue;
-				}else{
+				if (cleaned[i][name] && cleaned[i][name] !== '') {
 					rule.addProperty(name, cleaned[i][name]);
 				}
 			}

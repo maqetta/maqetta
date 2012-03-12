@@ -95,13 +95,12 @@ return declare("davinci.ve.tools._Tool", null, {
 					dojo.forEach(customTargetOverlays, function(customOverlay) {
 						//Create a new overlay div and set up according to dimensions
 						//from the helper
-						var overlay = this._getNewTargetOverlay();
-						overlay.style.left = customOverlay.x + "px";
-						overlay.style.top = customOverlay.y + "px";
-						overlay.style.width = customOverlay.width + "px";
-						overlay.style.height = customOverlay.height + "px";	
-						overlay.style.zIndex = maxZIndex;
-						
+						var overlay =
+								this._getNewTargetOverlay(customOverlay,
+										customOverlay.x, customOverlay.y,
+										customOverlay.width, customOverlay.height,
+										maxZIndex);
+	
 						//Add new overlay div to our overall list
 						this._targetOverlays.push(overlay);
 		            }, this);
@@ -114,13 +113,11 @@ return declare("davinci.ve.tools._Tool", null, {
 			
 			//No special overlay regions, so let's just do the normal thing and calculate
 			//overlay region dimensions ourselves
-			var overlay = this._getNewTargetOverlay();
-			overlay.style.left = domNode.offsetLeft+"px";
-			overlay.style.top = domNode.offsetTop+"px";
-			overlay.style.width = domNode.offsetWidth+"px";
-			overlay.style.height = domNode.offsetHeight+"px";	
-			overlay.style.zIndex = maxZIndex;
-			
+			var overlay =
+					this._getNewTargetOverlay(domNode, domNode.offsetLeft,
+							domNode.offsetTop, domNode.offsetWidth,
+							domNode.offsetHeight, maxZIndex);	
+
 			//Add new overlay div to our overall list
 			this._targetOverlays.push(overlay);
 		}
@@ -156,12 +153,19 @@ return declare("davinci.ve.tools._Tool", null, {
 		return max_zIndexStr;
 	},
 	
-	_getNewTargetOverlay: function() {
-		var overlay = this._context.getDocument().createElement("div");
-		overlay.className = "editFeedback";
-		overlay.style.position = "absolute";
-		dojo.style(overlay, "opacity", 0.1);
-		
+	_getNewTargetOverlay: function(domNode, x, y, width, height, zIndex) {
+		var overlay = this._context.getDojo().create("div", {
+			className: "editFeedback",
+			style: {
+				position: "absolute",
+				opacity: 0.1,
+				left: x + "px",
+				top: y + "px",
+				width: width + "px",
+				height: height + "px",
+				zIndex: zIndex
+			}
+		});
 		return overlay;
 	},
 	
@@ -186,15 +190,11 @@ return declare("davinci.ve.tools._Tool", null, {
 		}
 	},
 	
+
 	_matchesTargetOverlay: function(target) {
-		var match = false;
-		for (var i = 0; i < this._targetOverlays.length; i++) {
-			if(target == this._targetOverlays[i]){ 
-				match = true;
-				break;
-			}
-		}
-		return match;
+		return dojo.some(this._targetOverlays, function(entry) {
+			return target == entry;
+		}, this);
 	}
 });
 });

@@ -44,7 +44,9 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 
 		});
 	},
-
+	save : function(){
+		// nooop.  editor not saved, comments are submited
+	},
 	supports : function(something) {
 		return something=="states";
 	},

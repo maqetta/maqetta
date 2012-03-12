@@ -64,13 +64,16 @@ define([
 		},
 
 		_resize: function(){
-			if(!this.domNode || !this._isDisplayed(this._g)){
+			if(!this.domNode){
 				return;
 			}
 			dojo.addClass(this.domNode,'shape');
 			this.domNode.style.pointerEvents="none";
 			this.domNode.style.lineHeight='0px';
 			this.createGraphics();
+			if(!this._isDisplayed(this._g)){
+				return;
+			}
 			var gbbox = this._g.getBBox();
 			
 			// In some cases, bbox has zero size in both dimensions

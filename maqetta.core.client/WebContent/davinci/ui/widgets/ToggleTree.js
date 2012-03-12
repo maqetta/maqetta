@@ -36,7 +36,7 @@ define(["dojo/_base/declare",
 			return node;
 		},
 	
-		// called from VisualOutlineEditor.  Replace with set("selectedNodes")?
+		// called from VisualOutlineEditor.  Replace with set("selectedNodes") or set("paths")?
 		selectNode: function (nodeItems, add) 
 		{
 			this.isSelecting=true;
@@ -51,6 +51,16 @@ define(["dojo/_base/declare",
 				this._selectNode(node);
 				//this.ctrlKeyPressed = false; 
 			}
+			var paths = nodeItems.map(function(nodeItem){
+				var path = [];
+				for(var i=nodeItem.domNode; i && i.parentNode; i = i.parentNode) {
+					if(i._dvWidget){
+						path.unshift(i._dvWidget);
+					}
+				}
+				return path;
+			});
+			this.set('paths', paths);
 			this.isSelecting=false;
 		},
 	
@@ -164,6 +174,13 @@ define(["dojo/_base/declare",
 				this.allFocusedNodes.push(node);
 			}
 			this._selectNode(node);
+			var path = [];
+			for(var i=nodeItem.domNode; i && i.parentNode; i = i.parentNode) {
+				if(i._dvWidget){
+					path.unshift(i._dvWidget);
+				}
+			}
+			this.set('path', path);
 		},
 	
 		
@@ -179,7 +196,6 @@ define(["dojo/_base/declare",
 			}
 			if(node){
 				node.setSelected(true);
-				this.selectedNodes.push(node); 
 			}
 			this.selectedNode = node;
 			
@@ -251,6 +267,13 @@ define(["dojo/_base/declare",
 				return;
 			}
 			this._selectNode(w);
+			var path = [];
+			for(var i=nodeItem.domNode; i && i.parentNode; i = i.parentNode) {
+				if(i._dvWidget){
+					path.unshift(i._dvWidget);
+				}
+			}
+			this.set('path', path);
 	 	}
 	});
 });

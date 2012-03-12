@@ -540,11 +540,18 @@ return declare("davinci.ve.ChooseParent", null, {
 	 */
 	findParentsXYAfterTraversal: function() {
 		this.findParentsXYLastPosition = {};
+		// For a more intuitive result, force refAfter=true for all candidate parents except the deepest one.
+		// To explain more fully, the refAfter logic in findParentsXY() sets refAFter=true if pointer is on right side
+		// of a primitive widget and refAfter=false if point is on left-side. But this left/right logic only makes
+		// sense for the deepest widget under the mouse, not for the ancestors of that deepest widget.
+		// Note loop goes through every item in array except the last one.
+		for(var i=0; i<this._XYRefAfter.length-1; i++){
+			this._XYRefAfter[i] = true;
+		}
 	},
 	
     /**
      * Create a floating DIV that will hold the list of proposed parent widgets
-	 * {string} widgetType  Type of widget (e.g., 'dijit.form.Button')
 	 * @param {object} params  object with following properties:
 	 *    {string} widgetType  widget type (e.g., 'dijit.form.Button')
 	 *    {boolean} absolute  true if current widget will be positioned absolutely

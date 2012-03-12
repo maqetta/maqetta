@@ -198,7 +198,7 @@ return declare("davinci.ve.themeEditor.Context", [Context], {
 	},
 	
 	onSelectionChange: function(selection){
-
+		this.inherited(arguments);
 	},
 	
 	getStyleAttributeValues: function(widget){

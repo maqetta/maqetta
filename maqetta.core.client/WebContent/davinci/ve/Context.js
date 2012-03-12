@@ -635,7 +635,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var model = this.getModel();
 		if(this._themeUrl){
 			var style = model.find({elementType:'CSSImport', url:this._themeUrl},true);
-			if (style && style.length > 0) {
+			if (style) {
 				changed = false;
 			}
 		}

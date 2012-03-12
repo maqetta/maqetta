@@ -663,6 +663,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     _createSubwidgetList: function() {
         //if(this._cm)return;
         var widget = this._context._selectedWidget;
+        if (!widget) {
+        	return;
+        }
         var themeMetadata = this._context.getThemeMeta().metadata;
         var widgetType = themeMetadata.getWidgetType(widget);
         var widgetMetadata = themeMetadata.getMetadata(widgetType);
@@ -785,7 +788,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     
     
     _updateSubwidgetListForState: function() {
-        if (this._displayedWidget === this._context._selectedWidget) {
+        if (this._context._selectedWidget && this._displayedWidget === this._context._selectedWidget) {
             var editor = davinci.Runtime.currentEditor,
                 themeMetadata = editor._theme;
             this._cm.getChildren().forEach(function(child) {

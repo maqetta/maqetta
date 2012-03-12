@@ -480,6 +480,9 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 
 	
 	onEditorSelected : function(){
+		//we should clear selected widget from the old editor
+		this._widget = null;
+		this._subWidget = null;
 		
 		if (this._editor && this._editor.supports("style")) {
 			dojo.removeClass('davinci_style_prop_top', "dijitHidden");

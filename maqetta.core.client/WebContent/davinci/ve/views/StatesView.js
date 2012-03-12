@@ -134,10 +134,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				this.set('title', langObj.States);
 				this._updateViewForThemeEditor();
 				if(!this._themeState){
-					this._silent = false;
-					this._updateThemeSelection("Normal", true);
+					this._updateThemeSelection("Normal");
 				}else {
-					this._silent = true;
 					this._updateThemeSelection(this._themeState);
 				}
 			} else {
@@ -385,7 +383,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		}
 	},
 
-	_updateThemeSelection: function(currentState, silent) {
+	_updateThemeSelection: function(currentState) {
 		if(!this._sceneStore){
 			return;
 		}
@@ -401,11 +399,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			})
 		});
 		if(sceneId){
-			if (silent == undefined){
-				this._silent = true;
-			} else {
-				this._silent = silent;
-			}
 			this._updateSelectedScene('AppState', sceneId);
 		}
 	},
@@ -537,13 +530,10 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			var bodyWidget = context ? context.rootWidget : null;
 			if (item && item.type && item.type[0] == 'AppState') {
 				if (this.isThemeEditor()){
-					if (!this._silent) {
-						this.publish("/davinci/states/state/changed", 
-								[{editorClass:currentEditor.declaredClass, widget:'$all', 
-								newState:item.name[0], oldState:this._themeState, context: this._editor.context}]);
-					}
+					this.publish("/davinci/states/state/changed", 
+							[{editorClass:currentEditor.declaredClass, widget:'$all', 
+							newState:item.name[0], oldState:this._themeState, context: this._editor.context}]);
 					this._themeState = item.name[0];
-					this._silent = false;
 				} else if(currentEditor.declaredClass == 'davinci.review.editor.ReviewEditor') {
 					this.publish("/davinci/states/state/changed", 
 							[{editorClass:currentEditor.declaredClass, widget:context ? context.rootWidget : null, 

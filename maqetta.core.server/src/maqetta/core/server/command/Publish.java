@@ -187,6 +187,6 @@ public class Publish extends Command {
 
 	private String getUrl(IUser user, String version, String requestUrl, String reviewer) {
 		String host = requestUrl.substring(0, requestUrl.indexOf('/', "http://".length()));
-		return host + "/review/" + user.getUserName() + "?revieweeuser=" + user.getUserName();
+		return host + "/review/" + user.getUserName() + "?revieweeuser=" + user.getUserName()+ "&version=" + version;
 	}
 }

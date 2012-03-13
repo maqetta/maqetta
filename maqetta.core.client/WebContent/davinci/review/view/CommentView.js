@@ -105,13 +105,14 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			this._destroyCommentWidgets();
 			this._render();
 			var state = this._cached[this._currentPage].pageState,
-				scene = this._cached[this._currentPage].viewScene;
+				scene = this._cached[this._currentPage].viewScene || this._getCurrentScene().s;
 			dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: state, viewScene: scene}, []]);
 
 		});
 
 		dojo.subscribe("/davinci/review/context/loaded", this, function(context, pageName){
 			context._commentView = this;
+			this._context = context;
 			
 			// summary:
 			//		Load the comments when the page is loaded
@@ -134,7 +135,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					that._updateToolbar({editor:context});
 					// Show annotations
 					that._reviewFilterChanged(); // Set reviewer list to be shown
-					dojo.publish(that._currentPage+"/davinci/review/drawing/filter", [{pageState: "Normal"}, []]);
+					dojo.publish(that._currentPage+"/davinci/review/drawing/filter", [{pageState: "Normal", viewScene: that._getCurrentScene().s}, []]);
 				}, 100);
 			}
 			// Response to the state change event in the review editor
@@ -146,27 +147,14 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					}
 					var state = args.newState || "Normal";
 					this._cached[this._currentPage].pageState = state;
-					// FIXME there will be multiple SceneManagers in the future. Need to fix this hardcoded reference.
-					var scene = this._cached[this._currentPage].viewScene = 
-						(context.sceneManagers && context.sceneManagers[0] && context.sceneManagers[0].getCurrentScene()) || "";
+					var scene = this._cached[this._currentPage].viewScene = this._getCurrentScene().s;
 					dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: state, viewScene: scene}, []]);
 				});
 			}
 			
-			// If any plugin SceneManagers, get the current scene
-			var sceneManagers = context.sceneManagers;
-			var sceneId;
-			for (var smIndex in sceneManagers) {
-				var sm = sceneManagers[smIndex];
-				if (sm.getCurrentScene) {
-					sceneId = sm.getCurrentScene();
-					if (sceneId) {
-						break;
-					}
-				}
-			}
-			if (sceneId) {
-				this.setCurrentScene(sm, sceneId);
+			var sceneObj = this._getCurrentScene();
+			if (sceneObj.s) { // if there is a sceneId in the scene object
+				this.setCurrentScene(sceneObj.sm, sceneObj.s);
 			}
 		});
 
@@ -303,7 +291,26 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 		dojo.subscribe("/davinci/review/commentAddedError",this,this._onErrorCreateNewComment);
 	},
-	
+
+	_getCurrentScene: function() {
+		// summary:
+		//		Return a scene object with sm (SceneManager) and s (current scene) values
+		
+		// If any plugin SceneManagers, get the current scene
+		var sceneManagers = this._context.sceneManagers;
+		var sceneId;
+		for (var smIndex in sceneManagers) {
+			var sm = sceneManagers[smIndex];
+			if (sm.getCurrentScene) {
+				sceneId = sm.getCurrentScene();
+				if (sceneId) {
+					break;
+				}
+			}
+		}
+		return {sm: sm, s: sceneId};
+	},
+
 	_setPendingEditComment: function(editor, editingComment) {
 		//Determine the cache key based on type of "editor" arg
 		var key = null;
@@ -372,7 +379,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 		// Get drawing JSON string
 		dojo.publish(this._currentPage+"/davinci/review/drawing/getShapesInEditing", 
-				[this, this._cached[this._currentPage].pageState, this._cached[this._currentPage].viewScene]);
+				[this, this._cached[this._currentPage].pageState, (this._cached[this._currentPage].viewScene || this._getCurrentScene().s)]);
 
 		var comment = new Comment({
 			commentId: form.commentId,
@@ -380,7 +387,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			content: args.content,
 			pageName: this._currentPage,
 			pageState: this._cached[this._currentPage].pageState,
-			viewScene: this._cached[this._currentPage].viewScene,
+			viewScene: this._cached[this._currentPage].viewScene || this._getCurrentScene().s,
 			//ownerId: Runtime.commenting_reviewerName.userName,
 			ownerId: Runtime.userName,
 			email: Runtime.getDesignerEmail(),
@@ -439,14 +446,14 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 		// Get drawing JSON string
 		dojo.publish(this._currentPage+"/davinci/review/drawing/getShapesInEditing", 
-				[this, this._cached[this._currentPage].pageState, this._cached[this._currentPage].viewScene]);
+				[this, this._cached[this._currentPage].pageState, (this._cached[this._currentPage].viewScene || this._getCurrentScene().s)]);
 
 		comment.subject = args.subject;
 		comment.content = args.content;
 		comment.type = args.type;
 		comment.severity = args.severity;
 		comment.pageState = this._cached[this._currentPage].pageState;
-		comment.viewScene = this._cached[this._currentPage].viewScene;
+		comment.viewScene = this._cached[this._currentPage].viewScene  || this._getCurrentScene().s;
 		comment.drawingJson = this.drawingJson;
 		form.hide();
 		comment.update();
@@ -636,7 +643,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			if (this.states) { 
 				this.states.setState(widget.pageState);
 			}
-			var viewScene = this._cached[this._currentPage].viewScene;
+			var viewScene = this._cached[this._currentPage].viewScene || this._getCurrentScene().s;
 			this.publish(this._currentPage + "/davinci/review/drawing/filter", [{pageState: widget.pageState, viewScene: viewScene}, focusedComments]);
 		}
 	},
@@ -653,7 +660,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				}
 			}
 		}
-		var viewScene = this._cached[this._currentPage].viewScene;
+		var viewScene = this._cached[this._currentPage].viewScene || this._getCurrentScene().s;
 		this.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: widget.pageState, viewScene: viewScene}, focusedComments]);
 	},
 

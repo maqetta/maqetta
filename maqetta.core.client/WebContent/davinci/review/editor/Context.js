@@ -66,7 +66,7 @@ return declare("davinci.review.editor.Context", [Context], {
 								dv.states.setState(undefined, state);
 								// Re-publish at the application level
 								var newArgs = dojo.clone(args);
-								newArgs.editorClass = "davinci.review.CommentReviewEditor";
+								newArgs.editorClass = "davinci.review.editor.ReviewEditor";
 								dojo.publish("/davinci/states/state/changed", [newArgs]);
 							}
 						});
@@ -244,14 +244,14 @@ return declare("davinci.review.editor.Context", [Context], {
 					} else {
 						result = "partial";
 					}
-					if (shape.state != surface.filterState && shape.scene != surface.filterScene) {
+					if (shape.state != surface.filterState || shape.scene != surface.filterScene) {
 						result = "hidden";
 					}
 				} else {
-					if (shape.state == surface.filterState || shape.scene == surface.filterScene) {
-						result = "visible";
-					} else {
+					if (shape.state != surface.filterState || shape.scene != surface.filterScene) {
 						result = "hidden";
+					} else {
+						result = "visible";
 					}
 				}
 			}

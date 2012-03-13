@@ -62,30 +62,40 @@
 							main_menu.style.marginRight = '3em';
 						}
 					}
+					
 					// set up for review and commenting...
 					davinci.Runtime.commenting_designerName  = dojo.cookie("davinci_designer");
 					davinci.Runtime.commenting_designerEmail = dojo.cookie("davinci_designer_email");
-					davinci.Runtime.commenting_openFile      = dojo.cookie("davinci_file");
+					davinci.Runtime.commenting_reviewVersion      = dojo.cookie("review_version");
 					davinci.Runtime.commenting_commentId     = dojo.cookie("davinci_commentId");
-					dojo.cookie("davinci_designer",       null, {expires: -1});
+					dojo.cookie("davinci_designer", null, {expires: -1});
 					dojo.cookie("davinci_designer_email", null, {expires: -1});
-					dojo.cookie("davinci_file",           null, {expires: -1});
-					dojo.cookie("davinci_commentId",      null, {expires: -1});
+					dojo.cookie("review_version",null, {expires: -1});
+					dojo.cookie("davinci_commentId",null, {expires: -1});
 					
-					if (Runtime.commenting_openFile) {
-						var page = Runtime.commenting_openFile;
-						var path = new davinci.model.Path(page);
-						var version = path.getSegments()[0];
-						path.removeFirstSegments(1);
-						var node = davinci.review.model.resource.root.findFile(version, path.toString());
+					var loadReviews = function(){
+						var node = davinci.review.model.resource.root.findVersion(davinci.Runtime.commenting_reviewVersion);
+						
 						if (node) {
-							davinci.Workbench.openEditor({
-								fileName: node,
-								content: node.getText()
-							});
+							/* if we found a node, then the user clicked a review link to get here, 
+							 * TODO: bring the R&C view forward
+							 */
+							 
+							node.getChildren(function(childs){
+								if(childs.length>1) return;
+								dojo.forEach(childs, function(child){
+									davinci.Workbench.openEditor({
+										fileName: child,
+										content: node.getText()
+									});
+								})
+								
+							}, false);
 						}
 					}
-					Workbench.run();
+					
+					Workbench.run(loadReviews);
+							
 				};
 
 				// Display a warning dialog for unsupported browsers

@@ -5,18 +5,33 @@ public class ReviewObject {
 	private String designerEmail;
 	private String file;
 	private String commentId;
+	private String version;
 	
-	public ReviewObject(String designerName)
-	{
+	public ReviewObject(String designerName){
 		this.designerName = designerName;
 	}
 	
-	public ReviewObject(String designerName,String file, String commentId)
-	{
+	public ReviewObject(String designerName,String file, String commentId){
 		this.designerName = designerName;
 		
 		this.file = file;
 		this.commentId = commentId;
+	}
+	public ReviewObject(String designerName,String file, String commentId, String version){
+		this.designerName = designerName;
+		
+		this.file = file;
+		this.commentId = commentId;
+		this.version = version;
+	}
+	
+	
+	public String getVersion(){
+		return this.version;
+	}
+	
+	public void setVersion(String version){
+		this.version = version;
 	}
 	
 	public String getDesignerName() {

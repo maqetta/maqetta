@@ -801,6 +801,7 @@
 	width:245px;
 	height:170px;
 	border:1px solid #DBDBDB;
+	overflow:auto;
 }
 
 .publishWizard .reviewers {

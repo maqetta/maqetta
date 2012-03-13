@@ -173,7 +173,7 @@ var Workbench = {
 	actionScope: [],
 	_DEFAULT_PROJECT: "project1",
 	
-	run: function() {
+	run: function(onFinish) {
 		Runtime.run();
 		Workbench._initKeys();
 		Workbench._baseTitle = dojo.doc.title;
@@ -237,6 +237,8 @@ var Workbench = {
 		}
 		Workbench._lastAutoSave = Date.now();
 		setInterval(dojo.hitch(this,"_autoSave"),30000);
+		if(onFinish)
+			onFinish();
 	},
 
 	_resourceChanged: function (type,changedResource) {

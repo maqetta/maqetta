@@ -147,7 +147,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					}
 					var state = args.newState || "Normal";
 					this._cached[this._currentPage].pageState = state;
-					// FIXME there will be multiple SceneManagers in the future. Need to fix this hardcoded reference.
 					var scene = this._cached[this._currentPage].viewScene = this.getCurrentScene().s;
 					dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: state, viewScene: scene}, []]);
 				});

@@ -147,7 +147,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					}
 					var state = args.newState || "Normal";
 					this._cached[this._currentPage].pageState = state;
-					var scene = this._cached[this._currentPage].viewScene = this.getCurrentScene().s;
+					var scene = this._cached[this._currentPage].viewScene = this._getCurrentScene().s;
 					dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: state, viewScene: scene}, []]);
 				});
 			}
@@ -387,7 +387,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			content: args.content,
 			pageName: this._currentPage,
 			pageState: this._cached[this._currentPage].pageState,
-			viewScene: this._cached[this._currentPage].viewScene || this.getCurrentScene().s,
+			viewScene: this._cached[this._currentPage].viewScene || this._getCurrentScene().s,
 			//ownerId: Runtime.commenting_reviewerName.userName,
 			ownerId: Runtime.userName,
 			email: Runtime.getDesignerEmail(),

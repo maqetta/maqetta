@@ -388,7 +388,7 @@ return declare("davinci.ve.ChooseParent", null, {
 	},
 	
 	/**
-	 * Preparatory work before searching widget tree for possible parent
+	 * Preparatory work before traversing widget tree for possible parent
 	 * widgets at a given (x,y) location
 	 * @param {object} params  object with following properties:
 	 * 		[array{object}] widgets  Array of widgets being dragged (can be empty array)
@@ -404,23 +404,10 @@ return declare("davinci.ve.ChooseParent", null, {
 	 * @return {boolean} true if current (x,y) is different than last (x,y), false if the same.
 	 */
 	findParentsXYBeforeTraversal: function(params) {
-		var widgets = params.widgets;
-		var data = params.data;
-		var eventTarget = params.eventTarget;
 		var position = params.position;
-		var absolute = params.absolute;
-		var currentParent = params.currentParent;
-		var rect = params.rect;
-		var doFindParentsXY = params.doFindParentsXY;
 		this._XYParent = [];
 		this._XYRefChild = [];
 		this._XYRefAfter = [];
-		var bodyWidget = eventTarget.ownerDocument.body._dvWidget;
-		if(absolute && currentParent && currentParent != bodyWidget){
-			this._XYParent.push(currentParent);
-			this._XYRefChild.push(widgets[0]);
-			this._XYRefAfter.push(true);
-		}		
 		if(typeof this.findParentsXYLastPosition == 'undefined'){
 			this.findParentsXYLastPosition = {};
 		}
@@ -535,10 +522,29 @@ return declare("davinci.ve.ChooseParent", null, {
 	},
 	
 	/**
-	 * Wrap-up work after searching widget tree for possible parent
+	 * Wrap-up work after traversing widget tree for possible parent
 	 * widgets at a given (x,y) location
+	 * @param {object} params  see params description for findParentsXYBeforeTraversal
 	 */
-	findParentsXYAfterTraversal: function() {
+	findParentsXYAfterTraversal: function(params) {
+		var widgets = params.widgets;
+		var eventTarget = params.eventTarget;
+		var currentParent = params.currentParent;
+		var absolute = params.absolute;
+		var bodyWidget = eventTarget.ownerDocument.body._dvWidget;
+		if(absolute && currentParent && currentParent != bodyWidget){
+			var found = false;
+			this._XYParent.forEach(function(w){
+				if(w == currentParent){
+					found = true;
+				}
+			});
+			if(!found){
+				this._XYParent.push(currentParent);
+				this._XYRefChild.push(widgets[0]);
+				this._XYRefAfter.push(true);
+			}
+		}		
 		this.findParentsXYLastPosition = {};
 		// For a more intuitive result, force refAfter=true for all candidate parents except the deepest one.
 		// To explain more fully, the refAfter logic in findParentsXY() sets refAFter=true if pointer is on right side
@@ -548,6 +554,14 @@ return declare("davinci.ve.ChooseParent", null, {
 		for(var i=0; i<this._XYRefAfter.length-1; i++){
 			this._XYRefAfter[i] = true;
 		}
+	},
+	
+	/**
+	 * Cleanup work after updating the displayed list of candidate parents
+	 * @param {object} params  see params description for findParentsXYBeforeTraversal
+	 */
+	findParentsXYCleanup: function(params) {
+		this.findParentsXYLastPosition = {};
 	},
 	
     /**

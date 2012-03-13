@@ -3,7 +3,7 @@ define([
 	"davinci/ui/widgets/_ToggleTreeNode",
 ], function(declare, _ToggleTreeNode) {
 
-return declare("davinci.review.widgets._TreeNode", _ToggleTreeNode, {
+return declare(_ToggleTreeNode, {
 
 	postCreate: function() {
 		this.inherited(arguments);

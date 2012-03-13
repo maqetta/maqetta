@@ -20,7 +20,7 @@ define([
 	"dojo/fx",
 	"dijit/Dialog",
 	"dijit/Tree",
-	"davinci/review/widgets/Tree",
+	"./_TreeNode",
 	"davinci/Runtime",
 	"davinci/Workbench",
 	"davinci/model/resource/Folder",
@@ -33,10 +33,16 @@ define([
 	"dojo/text!./templates/PublishWizard.html",
 	"dojo/text!./templates/MailFailureDialogContent.html"
 ], function(declare, _WidgetBase, _TemplatedMixin, StackContainer, ContentPane, SimpleTextarea, NumberTextBox, ValidationTextBox, DateTextBox, 
-		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojoxRegexp, dojostring, dojofx, Dialog, dijitTree, 
-		reviewTree, Runtime, Workbench, Folder, File, Empty, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls, 
+		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojoxRegexp, dojostring, dojofx, Dialog, Tree, 
+		reviewTreeNode, Runtime, Workbench, Folder, File, Empty, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls, 
 		templateString, warningString) {
-	
+
+var reviewTree = declare(Tree, {
+	_createTreeNode: function(args) {
+		return new reviewTreeNode(args);
+	}
+});
+
 return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedMixin], {
 
 	templateString: templateString,
@@ -138,7 +144,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		var doubleClick = function(item) {
 			this.addFiles([item]);
 		};
-		var sourceTree = this.sourceTree = new dijitTree({
+		var sourceTree = this.sourceTree = new Tree({
 			id: "reviewWizardSourceTree",
 			persist: false,
 			showRoot: false,
@@ -530,7 +536,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 
 	delFiles: function(item) {
 		var reviewFiles = this.reviewFiles,
-			selections = this.targetTree.getSelectedItems();
+			selections = this.targetTree.get('selectedItems');
 		if(item) {
 			selections = [item];
 		}

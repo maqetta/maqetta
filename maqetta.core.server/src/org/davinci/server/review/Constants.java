@@ -15,7 +15,7 @@ public class Constants {
 	public static final String REVIEW_COOKIE_DESIGNER = "davinci_designer";
 	public static final String REVIEW_COOKIE_DESIGNER_EMAIL = "davinci_designer_email";
 	public static final String REVIEW_COOKIE_VERSION = "davinci_version";
-	public static final String REVIEW_COOKIE_FILE = "davinci_file";
+	public static final String REVIEW_VERSION = "review_version";
 	public static final String REVIEW_COOKIE_CMTID = "davinci_commentId";
 	
 	public static final String FAKE_REVIEWER = "davinci.review.fakeReviewer";

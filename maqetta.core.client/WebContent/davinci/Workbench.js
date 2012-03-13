@@ -86,7 +86,26 @@ var initializeWorkbenchState = function(){
 			sync: true
 		});
 	}
-		
+	
+	function isReview(resPath){
+		return resPath.indexOf(".review") > -1;
+	}
+	
+	function getReviewProject(resPath){
+		var path = new Path(resPath);
+		return path.segment(3);
+	}
+	
+	function getReviewVersion(resPath){
+		var path = new Path(resPath);
+		return path.segment(2);
+	}
+	
+	function getReviewResource(resPath){
+		var path = new Path(resPath);
+		return path.removeFirstSegments(3);
+	}
+	
 	var state = Workbench._state;
 	if (state && state.project) {
 		Workbench.setActiveProject(state.project);
@@ -104,7 +123,12 @@ var initializeWorkbenchState = function(){
 		}
 	
 		for (var i=0;i<state.editors.length;i++) {
-			if(singleProject){
+			var isReviewRes = isReview(state.editors[i]);
+			if(isReviewRes){
+				var reviewProject = getReviewProject(state.editors[i]);
+				if(reviewProject!=project) continue;
+				
+			}else if(singleProject){
 				// if running in single user mode, only load editors open for specific projects
 				var path = new Path(state.editors[i]);
 				if (!path.startsWith(project)) {
@@ -112,7 +136,17 @@ var initializeWorkbenchState = function(){
 				}
 			}
 			
-			var resource= sysResource.findResource(state.editors[i]);
+			var resource= null;
+			
+			if(isReviewRes){
+				var version = getReviewVersion(state.editors[i]);
+				var resPath = getReviewResource(state.editors[i]).toString();
+				resource = davinci.review.model.resource.root.findFile(version, "./" + resPath);
+			}else{
+				resource = sysResource.findResource(state.editors[i]);
+			}
+			
+			
 			var noSelect=state.editors[i] != state.activeEditor;
 			if (resource) {
 				Workbench.openEditor({
@@ -139,7 +173,7 @@ var Workbench = {
 	actionScope: [],
 	_DEFAULT_PROJECT: "project1",
 	
-	run: function() {
+	run: function(onFinish) {
 		Runtime.run();
 		Workbench._initKeys();
 		Workbench._baseTitle = dojo.doc.title;
@@ -203,6 +237,8 @@ var Workbench = {
 		}
 		Workbench._lastAutoSave = Date.now();
 		setInterval(dojo.hitch(this,"_autoSave"),30000);
+		if(onFinish)
+			onFinish();
 	},
 
 	_resourceChanged: function (type,changedResource) {
@@ -1033,6 +1069,7 @@ var Workbench = {
 	},
 	
 	_createEditor: function(editorExtension, fileName, keywordArgs, newHtmlParams) {
+		
 		var d = new Deferred();
 		var nodeName = fileName.split('/').pop();
 		var extension = keywordArgs && keywordArgs.fileName && keywordArgs.fileName.extension ? 

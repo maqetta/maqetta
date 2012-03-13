@@ -41,6 +41,12 @@ var Path = declare("davinci.model.Path", null, {
 		return this.extension;
 	},
 
+	segment : function(index){
+		var segs = this.getSegments();
+		if(segs.length < index) return null;
+		return segs[index];
+	},
+	
 	getSegments: function() {
 		if (!this.segments) {
 			var path = this.path;
@@ -164,8 +170,7 @@ var Path = declare("davinci.model.Path", null, {
 	},
 
 	removeFirstSegments: function(count) {
-		this.segments = this.segments.slice(count, this.segments.length);
-		return this;
+		return new Path(this.segments.slice(count, this.segments.length), this.hasLeading, this.hasTrailing);
 	},
 
 	removeMatchingLastSegments: function(anotherPath) {
@@ -206,6 +211,7 @@ var Path = declare("davinci.model.Path", null, {
 	},
 
 	_canonicalize: function() {
+		
 		var doIt;
 		var segments = this.segments;
 		for (var i=0; i<segments.length; i++) {

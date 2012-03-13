@@ -1210,8 +1210,13 @@ davinci_top_bar .dijitButtonNode {
 	display:none;
 }
 .ReviewToolBarText {
-	background-color: #EFEFEF;
-	background-image: url("images/commonHighlight.png");
+	background-color: ##ffffe0;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#f8f8e8), to(#ffffcc)); 
+	background-image: -o-linear-gradient(#f8f8e8, #ffffcc); 
+	background-image: -ms-linear-gradient(#f8f8e8, #ffffcc); 
+	background-image: -moz-linear-gradient(#f8f8e8, #ffffcc); 
+	background-image: -webkit-linear-gradient(#f8f8e8, #ffffcc); 
+	background-image: linear-gradient(#f8f8e8, #ffffcc);
 	padding: 8px 1em 5px;
 	font: 12px Myriad,Helvetica,Tahoma,Arial,clean,sans-serif;
 	margin: 0px -4px -4px;	/* Undo the standard padding on toolbars */
@@ -1219,3 +1224,5 @@ davinci_top_bar .dijitButtonNode {
 .EditorContainer.ReviewEditor .toolbaredContainer_toolbarDiv {
 	height:auto;
 }
+
+background-image: -webkit-gradient(linear, left top, left bottom, from(white), to(#ffffcc)); background-image: -o-linear-gradient(white, #ffffcc); background-image: -ms-linear-gradient(white, #ffffcc); background-image: -moz-linear-gradient(white, #ffffcc); background-image: -webkit-linear-gradient(white, #ffffcc); background-image: linear-gradient(white, #ffffcc); width: 219px; height: 104px;"></div>

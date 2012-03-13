@@ -62,18 +62,19 @@
 							main_menu.style.marginRight = '3em';
 						}
 					}
+					
 					// set up for review and commenting...
 					davinci.Runtime.commenting_designerName  = dojo.cookie("davinci_designer");
 					davinci.Runtime.commenting_designerEmail = dojo.cookie("davinci_designer_email");
 					davinci.Runtime.commenting_reviewVersion      = dojo.cookie("review_version");
 					davinci.Runtime.commenting_commentId     = dojo.cookie("davinci_commentId");
-					dojo.cookie("davinci_designer",       null, {expires: -1});
+					dojo.cookie("davinci_designer", null, {expires: -1});
 					dojo.cookie("davinci_designer_email", null, {expires: -1});
-					dojo.cookie("davinci_file",           null, {expires: -1});
-					dojo.cookie("davinci_commentId",      null, {expires: -1});
-					
+					dojo.cookie("review_version",null, {expires: -1});
+					dojo.cookie("davinci_commentId",null, {expires: -1});
+					console.log("Version Cookie:" + dojo.cookie("review_version"));
 					Workbench.run();
-				
+					
 					var node = davinci.review.model.resource.root.findVersion(davinci.Runtime.commenting_reviewVersion);
 					if (node) {
 						node.getChildren(function(childs){

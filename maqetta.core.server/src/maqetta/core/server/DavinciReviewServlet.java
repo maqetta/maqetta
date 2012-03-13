@@ -99,7 +99,10 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 					resp.addCookie(new Cookie(Constants.REVIEW_COOKIE_CMTID, reviewObject.getCommentId()));
 				}
 				if ( reviewObject.getVersion() != null ) {
-					resp.addCookie(new Cookie(Constants.REVIEW_VERSION, reviewObject.getVersion()));
+					Cookie versionCookie = new Cookie(Constants.REVIEW_VERSION, reviewObject.getVersion());
+					/* have to set the path to delete it later from the client */
+					versionCookie.setPath("/maqetta/");
+					resp.addCookie(versionCookie);
 				}
 //				writeReviewPage(req, resp, "review.html");
 //				writeMainPage(req, resp);

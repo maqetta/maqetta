@@ -1,10 +1,10 @@
 define([
 	"dojo/_base/declare",
-	"davinci/ui/widgets/_ToggleTreeNode",
-], function(declare, _ToggleTreeNode) {
+	"dijit/Tree",
+], function(declare, Tree) {
 
-return declare(_ToggleTreeNode, {
-
+//WARNING: extends private dijit API
+return declare(dijit._TreeNode, {
 	postCreate: function() {
 		this.inherited(arguments);
 
@@ -17,6 +17,7 @@ return declare(_ToggleTreeNode, {
 		}));
 		dojo.place(divDom, this.rowNode, "first");
 		dojo.style(this.rowNode, {width:"99%"});
+		dojo.style(this.containerNode, {display:"block"});
 	}
 
 });

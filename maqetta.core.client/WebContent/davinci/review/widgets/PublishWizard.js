@@ -120,11 +120,6 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 	},
 
 	_initPage2: function() {
-		var sourceTreeCP = new ContentPane({style:"height:170px;padding:0"});
-		var targetTreeCP = new ContentPane({style:"height:170px;padding:0"});
-		this.sourceTreeCP.appendChild(sourceTreeCP.domNode);
-		this.targetTreeCP.appendChild(targetTreeCP.domNode);
-
 		var reviewFiles = [];
 		var fileIndex = this.fileIndex = 1;
 		this.reviewFiles = reviewFiles;
@@ -161,7 +156,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 				});
 			}]
 		});
-		sourceTreeCP.domNode.appendChild(sourceTree.domNode);
+		this.sourceTreeNode.appendChild(sourceTree.domNode);
 		sourceTree.startup();
 
 		var targetTreeModel = this.targetTreeModel = new TreeStoreModel({
@@ -183,7 +178,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 			getIconClass: dojo.hitch(this,this._getIconClass),
 			isMultiSelect: true
 		});
-		targetTreeCP.domNode.appendChild(targetTree.domNode);
+		this.targetTreeNode.appendChild(targetTree.domNode);
 		targetTree.startup();
 	},
 

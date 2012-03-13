@@ -6,12 +6,14 @@ define([
 	"../drawing/tools/HighlightTool",
 	"../drawing/tools/SelectTool",
 	"davinci/Runtime",
-	"davinci/ve/Context"
-], function(declare, Surface, CreateTool, ExchangeTool, HighlightTool, SelectTool, Runtime, Context) {
+	"davinci/ve/Context",
+	'preview/silhouetteiframe'
+], function(declare, Surface, CreateTool, ExchangeTool, HighlightTool, SelectTool, Runtime, Context, Silhouette) {
 	
 return declare("davinci.review.editor.Context", [Context], {
 
 	setSource: function(){
+				
 		var containerNode = this.containerNode;
 		var versionInfo = this.resourceFile.parent;
 		if (!versionInfo.width)
@@ -29,6 +31,16 @@ return declare("davinci.review.editor.Context", [Context], {
 				onload: dojo.hitch(this,function(event){
 					var userDoc = (event && event.target && event.target.contentDocument);
 					var dj = (userDoc && userDoc.defaultView && userDoc.defaultView.dojo);
+					var deviceName = this.frame.contentDocument.body.getAttribute('data-maqetta-device');
+					var svgfilename = (!deviceName || deviceName == 'none' || deviceName == 'desktop') 
+							? null : "app/preview/images/" + deviceName + ".svg";
+					if (svgfilename) {
+						var theme = Silhouette.getMobileTheme(svgfilename);
+						dj.ready(function(){
+							var dm = dj.getObject("dojox.mobile", true);
+							dm.loadDeviceTheme(theme);
+						});
+					}
 					if (dj && dj.subscribe) {
 						dj.subscribe("/davinci/scene/selectionChanged", this, function(SceneManager, sceneId) {
 							if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
@@ -67,9 +79,6 @@ return declare("davinci.review.editor.Context", [Context], {
 							 this.fileName,
 							 davinci.Runtime.commenting_commentId
 							 ]);
-					var deviceName = this.rootNode.getAttribute('data-maqetta-device');
-					var svgfilename = (!deviceName || deviceName == 'none' || deviceName == 'desktop') 
-							? null : "app/preview/images/" + deviceName + ".svg";
 					this.containerEditor.silhouetteiframe.setSVGFilename(svgfilename);
 					this._statesLoaded = true;
 					dojo.publish('/davinci/ui/context/statesLoaded', [this]);

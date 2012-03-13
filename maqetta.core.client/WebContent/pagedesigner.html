@@ -72,12 +72,21 @@
 					dojo.cookie("davinci_designer_email", null, {expires: -1});
 					dojo.cookie("review_version",null, {expires: -1});
 					dojo.cookie("davinci_commentId",null, {expires: -1});
-					console.log("Version Cookie:" + dojo.cookie("review_version"));
+					
 					Workbench.run();
 					
+					
 					var node = davinci.review.model.resource.root.findVersion(davinci.Runtime.commenting_reviewVersion);
+					
 					if (node) {
+						/* if we found a node, then the user clicked a review link to get here, 
+						 * TODO: bring the R&C view forward
+						 */
+						 
 						node.getChildren(function(childs){
+							
+							if(childs.length>1) return;
+							
 							dojo.forEach(childs, function(child){
 								davinci.Workbench.openEditor({
 									fileName: child,

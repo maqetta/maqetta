@@ -82,6 +82,9 @@ public class StorageFileSystem implements IStorage {
 		return this.file.delete();
 	}
 	public void createNewFile() throws IOException {
+		this.file.mkdirs();
+		this.file.delete();
+		
 		this.file.createNewFile();
 		
 	}

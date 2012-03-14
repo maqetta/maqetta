@@ -2,27 +2,20 @@
 // used in Maqetta to implement the eyeball visibility switch.  In order to do this, a custom
 // TreeNode class and template are required, and some other methods are pulled in, with fragile
 // dependencies on dijit.Tree implementations which may break from one release to the next.
-// Other customizations were added, such as focus and UI-level filtering.  Where possible, dijit.Tree
-// should be used directly with mixins to alter behavior.
+// Where possible, dijit.Tree should be used directly with mixins to alter behavior.
 
-//NOTE: davinci.review still uses this widget for UI-level filtering
 //FIXME: review any code not related to toggle to determine if it's still necessary
 define(["dojo/_base/declare",
         "dijit/Tree",
         "davinci/ui/widgets/_ToggleTreeNode",
 ],function(declare, Tree, ToggleTreeNode){
 	return declare("davinci.ui.widgets.ToggleTree", Tree, {
-		
-		
-		filters: [], //FIXME: shared array on prototype
+
 		ctrlKeyPressed: false,
 		
 		constructor: function()
 		{
-		    var model= this.model || arguments[0].model;
 		    this._isMultiSelect=arguments[0].isMultiSelect;
-			this._orgModelGetChildren=model.getChildren;
-			model.getChildren=dojo.hitch(this, this._getChildrenIntercept);
 			this.selectedNodes = [];
 			//this.watch("selectedItem", this._selectNode);
 		},
@@ -60,7 +53,12 @@ define(["dojo/_base/declare",
 				}
 				return path;
 			});
-			this.set('paths', paths);
+			try{
+				this.set('paths', paths);
+			}catch(e){
+				console.warn(e);
+				// consume error
+			}
 			this.isSelecting=false;
 		},
 	
@@ -72,12 +70,6 @@ define(["dojo/_base/declare",
 			this.onClick = this.onClickDummy;  
 			this.allFocusedNodes = [];  
 			this.lastFocusedNode = null;  
-			this.connect(this.model, "onRefresh", "_load");
-			dojo.forEach(this.filters, function (filter){
-				if (filter.onFilterChange){
-					this.connect(filter,"onFilterChange",filterChanged);
-				}
-			}, this);
 		},
 		onClickDummy: function(item, node) {
 		},
@@ -89,67 +81,7 @@ define(["dojo/_base/declare",
 			//this.ctrlKeyPressed = false;
 			//dojo.stopEvent(event);
 		},
-		filterChanged: function (filter)
-		{
-	//TODO: implement me		
-		},
-		_getChildrenIntercept: function(item,onComplete,onErr)
-		{
-			var completeHandler=onComplete;
-			if (this.filters.length>0)
-			{
-				var self=this;
-				completeHandler=function (items)
-				{
-					var filteredItems=self._filterItems(items);
-					onComplete( filteredItems);
-				}
-			}
-			this._orgModelGetChildren.apply(this.model,[item,completeHandler,onErr]);
-		},
-		
-		_filterItems: function(items)
-		{
-					if (items.length==0){
-						return items;
-					}
-					for (var i=0;i<this.filters.length;i++)
-					{
-						var filter=this.filters[i];
-						if (filter.filterList){
-							items=filter.filterList(items);
-						} else if (filter.filterItem){
-							var filteredItems=[];
-							for (var j=0;j<items.length;j++)
-							{
-								if (!filter.filterItem(items[j])){
-									filteredItems.push(items[j]);
-								}
-							}
-							items=filteredItems;
-						}
-					}
-					return items;
-		},
-		
-	//	
-	//OVERRIDE 	_onItemChildrenChange from tree to add call to filterItems
-	//
-		_onItemChildrenChange: function(/*dojo.data.Item*/ parent, /*dojo.data.Item[]*/ newChildrenList){
-			// added
-			newChildrenList=this._filterItems(newChildrenList);
-	
-			var model = this.model,
-				identity = model.getIdentity(parent),
-				parentNodes = this._itemNodesMap[identity];
-	
-			if(parentNodes){
-				dojo.forEach(parentNodes,function(parentNode){
-					parentNode.setChildItems(newChildrenList);
-				});
-			}
-		},
-	
+
 		focusNode: function(/* _tree.Node */ node){
 			this.lastFocusedNode = node;
 			var id=this.model.getIdentity(node.item);
@@ -222,12 +154,7 @@ define(["dojo/_base/declare",
 		blurNode: function(){
 			// Not using, we've our own custom made blur method. See _customBlurNode
 		},
-		// Returns array of currently selected items.
-		getSelectedItems: function() {
-			return this.selectedNodes.map(function(node){
-				return node.item;
-			});
-		},
+
 		_createTreeNode: function(/*Object*/ args){
 	 		return new ToggleTreeNode(args);
 		},

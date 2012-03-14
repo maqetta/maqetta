@@ -41,8 +41,8 @@ return declare("davinci.review.editor.Context", [Context], {
 							dm.loadDeviceTheme(theme);
 						});
 					}
-					if (dj && dj.subscribe) {
-						dj.subscribe("/davinci/scene/selectionChanged", this, function(SceneManager, sceneId) {
+//					if (dj && dj.subscribe) {
+						dojo.subscribe("/davinci/scene/selectionChanged", this, function(SceneManager, sceneId) {
 							if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
 								return; 
 							}
@@ -50,7 +50,7 @@ return declare("davinci.review.editor.Context", [Context], {
 								this._commentView.setCurrentScene(SceneManager, sceneId);
 							}							
 						});
-					}
+//					}
 					//FIXME: Have to subscribe to the runtime States.js version of dojo pubsub
 					//instead of using the real runtime version of dojo pubsub because States.js is
 					//using its own mini copy of Dojo

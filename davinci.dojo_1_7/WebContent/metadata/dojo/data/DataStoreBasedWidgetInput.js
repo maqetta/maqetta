@@ -195,7 +195,6 @@ return declare(SmartInput, {
     this._callback = '';
 
     // data can be json or csv, so interogate the url
-
     var store = new ItemFileReadStore({url: url});
     this._urlDataStore = store;
     store.fetch({
@@ -226,21 +225,7 @@ return declare(SmartInput, {
     var textArea = dijit.byId("davinciIleb");
     var callbackTextBox = dijit.byId("davinci.ve.input.SmartInput_callback_editbox");
     this._url = textArea.value;
-    var url;
-    var patt=/http:\/\//i;
-    if (patt.test(this._url)){ // absolute url
-      url = this._url;
-    } else {
-      var parentFolder = new Path(this._widget._edit_context._srcDocument.fileName)
-    	   .getParentPath().toString();
-    	// relative so we have to get the absolute for the update of the store
-    	var file = system.resource.findResource(this._url, null, parentFolder);
-    	if (!file){
-    	  alert('File: ' + this._url + ' does not exsist.');
-    		return;
-    	}
-    	url = file.getURL();
-    }
+    var url = this._getFullUrl(this._url);
 
     this._callback = callbackTextBox.value;
 
@@ -264,8 +249,29 @@ return declare(SmartInput, {
     });
     this._urlDataStore = store;
 	},
-	
-	_urlDataStoreLoaded : function(items){
+
+	_getFullUrl: function(url) {
+	  var fullUrl;
+
+    var patt=/http:\/\//i;
+    if (patt.test(url)){ // absolute url
+      fullUrl = url;
+    } else {
+      var parentFolder = new Path(this._widget._edit_context._srcDocument.fileName)
+    	   .getParentPath().toString();
+    	// relative so we have to get the absolute for the update of the store
+    	var file = system.resource.findResource(url, null, parentFolder);
+    	if (!file){
+    	  alert('File: ' + this._url + ' does not exsist.');
+    		return;
+    	}
+    	fullUrl = file.getURL();
+    }
+
+    return fullUrl;
+	},
+
+	_urlDataStoreLoaded: function(items){
 		if (items.length < 1){
 			console.error('Data store empty');
 			return;
@@ -305,7 +311,7 @@ return declare(SmartInput, {
 		      "properties": {
 		        id: sid,
 		        jsId: sid,
-		        url: this._url,
+		        url: this._getFullUrl(this._url),
 		        data: ''
 		      },
 		      context: context,
@@ -321,7 +327,7 @@ return declare(SmartInput, {
 		      "properties": {
 		        id: sid,
 		        jsId: sid,
-		        url: this._url,
+		        url: this._getFullUrl(this._url),
 		        data: ''
 		      },
 		      context: context,

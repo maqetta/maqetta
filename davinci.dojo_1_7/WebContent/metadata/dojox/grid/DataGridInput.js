@@ -233,7 +233,7 @@ return declare(DataStoreBasedWidgetInput, {
 				cellType: dojox.grid.cells.Cell,
 				width: 'auto',
 				name: cols[c],
-				field: cols[c].replace(/\s+/g, '_'d).toLowerCase()				
+				field: cols[c].replace(/\s+/g, '_').toLowerCase()
 			};
 		}
 

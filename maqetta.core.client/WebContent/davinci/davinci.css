@@ -669,6 +669,22 @@ davinci_top_bar .dijitButtonNode {
 	background-image: url(img/sprite.png);
 }
 
+.themeSetDialogAdd {
+	background-image: url(img/sprite.png);
+	background-position: -82px -466px;
+	height: 20px;
+	width: 20px;
+	display: table-cell;
+}
+
+.themeSetDialogDelete {
+	background-image: url(img/sprite.png);
+	background-position: -82px -466px;
+	height: 20px;
+	width: 20px;
+	display: table-cell;
+}
+
 .editCutIcon {
 	background-position: 0 -516px;
 }
@@ -681,10 +697,10 @@ davinci_top_bar .dijitButtonNode {
 .editDeleteIcon {
 	background-position: 0 -648px;
 }
-.addStateIcon {
+.addStateIcon, .addThemeSetIcon {
 	background-position: -82px -466px;
 }
-.removeStateIcon {
+.removeStateIcon, .removeThemeSetIcon {
 	background-position: 0 -1778px;
 }
 

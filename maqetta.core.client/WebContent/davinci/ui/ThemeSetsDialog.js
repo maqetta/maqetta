@@ -169,7 +169,9 @@ define(["dijit/Dialog",
 	    deleteThemeSet: function(e) {
 	        var select = dojo.byId('theme_select_themeset_theme_select');
 	        var node = select[select.selectedIndex];
-	        
+	        if (!node) {
+	        	return;
+	        }
 	        for (var n = 0; n < this._dojoThemeSets.themeSets.length; n++){
 	            if (this._dojoThemeSets.themeSets[n].name == node.value){
 	                this._dojoThemeSets.themeSets.splice(n, 1);

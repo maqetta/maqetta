@@ -16,9 +16,7 @@ return declare("davinci.ve.commands.EventCommand", null, {
 		this._context = context;
 	},
 	
-
 	execute: function(){
-	
 		if(!this._oldId || !this._properties){
 			return;
 		}
@@ -43,18 +41,31 @@ return declare("davinci.ve.commands.EventCommand", null, {
 			}
 		}
 		
-		
 		this._newId = this._oldId;
+
+		dojo.publish("/davinci/ui/widgetPropertiesChanged",[[widget]]);
 	},
 
 	undo: function(){
 		if(!this._newId ){
 			return;
 		}
+
 		var widget = Widget.byId(this._newId);
+		var domNode = widget.domNode;
+		var srcElement = widget._srcElement;
+
+		// remove attributes that no longer exist
+		for (var attrName in this._properties) {
+		  if (!this._oldProps[attrName]) {
+		    domNode.removeAttribute(attrName);
+		    srcElement.removeAttribute(attrName);
+		  }
+		}
 	
 		widget.setProperties(this._oldProps);
-		
+
+		dojo.publish("/davinci/ui/widgetPropertiesChanged",[[widget]]);
 	}
 
 });

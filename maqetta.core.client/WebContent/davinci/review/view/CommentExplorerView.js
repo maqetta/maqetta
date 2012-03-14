@@ -115,7 +115,6 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 			this._lastAnchorNode && this._leave();
 		});
 		
-		//AWE TODO
 		//Keep track of editor selection so that we can expand tree appropriately
 		dojo.subscribe("/davinci/ui/editorSelected", function(obj){
 			var editor = obj.editor;
@@ -140,11 +139,8 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 					}
 				}.bind(this));
 				
-				//AWE TODO: For some reason, if I say collapse a version node, it's still selected after doing the set path below
-				this.tree.set("path", [this.model.root, versionNodeItem, fileNodeItem]); //AWE TODO
-				
-				//AWE TODO
-				this.tree.setFocusNode(this.tree.getNodesByItem(fileNodeItem)[0]);
+				//Set the path (which expands tree as necessary)
+				this.tree.set("path", [this.model.root, versionNodeItem, fileNodeItem]);
 			}
 		 }.bind(this));
 	},

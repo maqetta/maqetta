@@ -37,7 +37,7 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 
 		var node = widget.getStyleNode();
 		if(!this._oldBox){
-			var box = dojo.contentBox(widget);
+			var box = dojo.getMarginBox(widget.domNode);
 			this._oldBox = {w: box.w, h: box.h};
 		}
 		

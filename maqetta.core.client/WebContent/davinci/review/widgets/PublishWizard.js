@@ -144,7 +144,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		var sourceTreeModel = this.sourceTreeModel = new TreeStoreModel({
 			deferItemLoadingUntilExpand: true,
 			store: new GeneralReviewReadStore({
-				root: new Folder(".", null),
+				root: new Folder(Workbench.getProject(), null),
 				getLabel: function(item) {
 					var label = item.getName();
 					if (item.link) { label=label + "  [" + item.link + "]"; }

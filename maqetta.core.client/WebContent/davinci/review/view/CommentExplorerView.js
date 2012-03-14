@@ -4,8 +4,7 @@ define([
 	"davinci/review/model/ReviewTreeModel",
 	"davinci/Workbench",
 	"davinci/workbench/ViewPart",
-	"davinci/ui/widgets/ToggleTree",
-	"davinci/review/model/Resource",
+	"dijit/Tree",
 	"dojo/date/locale",
 	"davinci/review/actions/CloseVersionAction",
 	"davinci/review/actions/EditVersionAction",
@@ -15,8 +14,9 @@ define([
 	"dijit/form/Button",
 	"dijit/form/TextBox",
     "dojo/i18n!./nls/view",
-    "dojo/i18n!../widgets/nls/widgets"
-], function(declare, Runtime, ReviewTreeModel, Workbench, ViewPart, ToggleTree, Resource, locale, CloseVersionAction,
+    "dojo/i18n!../widgets/nls/widgets",
+    "davinci/ui/widgets/TransformTreeMixin"
+], function(declare, Runtime, ReviewTreeModel, Workbench, ViewPart, Tree, locale, CloseVersionAction,
 		EditVersionAction, OpenVersionAction, Toolbar, ToolbarSeparator, Button, TextBox, viewNls, widgetsNls) {
 
 return declare("davinci.review.view.CommentExplorerView", ViewPart, {
@@ -26,8 +26,7 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 
 		var model= new ReviewTreeModel();
 		this.model = model;
-		//FIXME: try using dijit.Tree and davinci.ui.widgets.TransformTreeMixin instead of ToggleTree
-		this.tree = new ToggleTree({
+		this.tree = new Tree({
 			id: "reviewCommentExplorerViewTree",
 			persist: false,
 			showRoot: false,
@@ -35,7 +34,16 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 			labelAttr: "name", 
 			childrenAttrs: "children",
 			getIconClass: dojo.hitch(this, this._getIconClass),
-			filters: [Resource.dateSortFilter, this.commentingFilter],
+			transforms: [
+			    function(items) {
+			    	return items.sort(function (file1,file2) {
+			    		return file1.timeStamp > file2.timeStamp ? -1 : file1.timeStamp < file2.timeStamp ? 1 : 0;
+			    	});
+			    },
+			    function(items) {
+			    	return items.filter(this.commentingFilter.filterItem, this);
+			    }.bind(this)
+			],
 			isMultiSelect: true
 		});
 
@@ -47,7 +55,7 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 		dojo.connect(this.tree,'_onNodeMouseEnter', dojo.hitch(this, this._over));
 		dojo.connect(this.tree,'_onNodeMouseLeave', dojo.hitch(this, this._leave));
 		this.tree.notifySelect = dojo.hitch(this, function (item) {
-			var items = dojo.map(this.tree.getSelectedItems(), function(item) { return {resource:item};});
+			var items = dojo.map(this.tree.get('selectedItems'), function(item) { return {resource:item};});
 			this.publish("/davinci/review/selectionChanged", [items, this]);
 		});
 
@@ -66,7 +74,26 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 		var popup = Workbench.createPopup({ 
 			partID: 'davinci.review.reviewNavigator',
 			domNode: this.tree.domNode, 
-			openCallback:this.tree.getMenuOpenCallback()
+			openCallback: function (event) {
+				var ctrlKey = dojo.isMac ? event.metaKey : event.ctrlKey;
+				this.ctrlKeyPressed = this._isMultiSelect && event && ctrlKey;
+				var w = dijit.getEnclosingWidget(event.target);
+				if(!w || !w.item){
+		//			dojo.style(this._menu.domNode, "display", "none");
+					return;
+				}
+				if (dojo.indexOf(this.selectedNodes,w) >= 0) {
+					return;
+				}
+//				this._selectNode(w);
+				var path = [];
+				for(var i=w.domNode; i && i.parentNode; i = i.parentNode) {
+					if(i._dvWidget){
+						path.unshift(i._dvWidget);
+					}
+				}
+				this.set('path', path);
+		 	}.bind(this.tree)
 		});
 
 		this.infoCardContent = dojo.cache("davinci" ,"review/widgets/templates/InfoCard.html");
@@ -207,19 +234,17 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 		}));
 	},
 
-	commentingFilter : {
-		filterString:"",
-		filterItem : function(item) {
-			if (!this.filterString) { 
-				return false;
+	commentingFilter: {
+		filterString: "",
+		filterItem: function(item) {
+			var filterString = this.commentingFilter.filterString;
+			if (!filterString) { 
+				return true;
 			} else {
 				if (item.elementType == "ReviewFile") {
-					if (item.name.toLowerCase().indexOf(this.filterString.toLowerCase()) >= 0) {
-						return false;
-					} else {} 
-					return true;
+					return item.name.toLowerCase().indexOf(filterString.toLowerCase()) >= 0;
 				}
-				return false;
+				return true;
 			}
 		}
 	},
@@ -291,12 +316,10 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 			template.detail_role = Runtime.getRole();
 			template.detail_dueDate = item.dueDate == "infinite" ? "Infinite" : locale.format(item.dueDate, {
 				selector:'date',
-				formatLength:'long',
-				datePattern:'MMM dd, yyyy', //FIXME: use of pattern prevents globalization
-				timePattern:'HH:mm:ss' //FIXME: not used if selector is 'date'
+				formatLength:'long'
 			});
 			template.detail_creator = Runtime.getDesigner()
-			+ "&nbsp;&lt" + Runtime.getDesignerEmail() + "&gt";
+				+ "&nbsp;&lt" + Runtime.getDesignerEmail() + "&gt";
 			template.detail_files = "";
 			item.getChildren(function(children) { c = children; }, true);
 			dojo.forEach(c, function(i) {

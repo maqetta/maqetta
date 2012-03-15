@@ -91,6 +91,9 @@
 		selectScene: function(params){
 			var sceneId = params.sceneId;
 			var dj = this.context.getDojo();
+			if(!dj){
+				return;
+			}
 			var domNode = dj.byId(sceneId);
 			var sceneSelected = null;
 			if(this.context.declaredClass == 'davinci.ve.Context'){
@@ -178,7 +181,13 @@
 			return currentScene;
 		},
 		getAllScenes: function(){
+			if(!this.context){
+				return [];
+			}
 			var dj = this.context.getDojo();
+			if(!dj){
+				return [];
+			}
 			var scenes = [];
 			var flattenedScenes = [];
 			var views = dj.query('.mblView');

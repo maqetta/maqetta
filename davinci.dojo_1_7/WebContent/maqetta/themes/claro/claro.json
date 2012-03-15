@@ -604,7 +604,6 @@
                 	"elements":{ 
                      	"$root": [ 
                      		"color",
-							"font-family",
 							"font-size",
 							"font-weight" 
                  		]

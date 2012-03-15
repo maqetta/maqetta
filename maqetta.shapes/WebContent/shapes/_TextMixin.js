@@ -14,6 +14,7 @@ define([
 			this._svgroot = dojo.query('svg',this.domNode)[0];
 			this._svgroot.style.verticalAlign = "top";
 			this._svgroot.style.overflow = "visible";
+			this._svgroot.style.fill = "currentColor";
 		},
 		
 		resize: function(){

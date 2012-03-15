@@ -54,7 +54,9 @@ define(["dojo/_base/declare",
 				return path;
 			});
 			try{
-				this.set('paths', paths);
+				if (paths[0].length) {
+					this.set('paths', paths);					
+				}
 			}catch(e){
 				console.warn(e);
 				// consume error

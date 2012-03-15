@@ -23,7 +23,8 @@ define([
 	"dojo/i18n!./nls/webContent",
 	"./ve/metadata",
 	"dojo/_base/Deferred",
-	"dojo/_base/declare"
+	"dojo/_base/declare",
+	"davinci/ve/widgets/FontComboBox"
 ], function(
 		Runtime,
 		Path,

@@ -2847,7 +2847,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			if(doSnapLinesX || doSnapLinesY){
 				Snap.findSnapOpportunities(this, widget, computed_style, doSnapLinesX, doSnapLinesY);
 			}
-			cp.findParentsXY({data:data, widget:widget, position:position, doCursor:doCursor, beforeAfter:beforeAfter});
+			cp.findParentsXY({data:data, widget:widget, absolute:absolute, position:position, doCursor:doCursor, beforeAfter:beforeAfter});
 			dojo.forEach(widget.getChildren(), function(w){
 				_updateThisWidget.apply(context, [w]);
 			});

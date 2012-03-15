@@ -1686,7 +1686,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 	getDojo: function(){
 		var win = this.getGlobal();
-		return win.dojo || dojo;
+		//FIXME: Aren't we asking for downstream bugs if we return "dojo", which is Maqetta's dojo
+		//instead of the user document's dojo?
+		return (win && win.dojo) || dojo;
 	},
 
 	getDijit: function(){

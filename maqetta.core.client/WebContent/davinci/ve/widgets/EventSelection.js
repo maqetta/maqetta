@@ -54,6 +54,7 @@ define(["dojo/_base/declare",
 			davinci.states.subscribe("/davinci/states/state/added", dojo.hitch(this, this._buildSelectionValues));
 			davinci.states.subscribe("/davinci/states/state/removed", dojo.hitch(this, this._updateValues));
 			davinci.states.subscribe("/davinci/states/state/renamed", dojo.hitch(this, this._updateValues));
+			dojo.subscribe("/davinci/ui/widgetPropertiesChanged", dojo.hitch(this, this._widgetPropertiesChanged));
 			this.setReadOnly(true);
 		},
 		onEditorSelected : function(){
@@ -97,6 +98,7 @@ define(["dojo/_base/declare",
 				this._setValues();
 			}
 		},
+
 		onWidgetSelectionChange : function(){
 			if(!this._widget){
 				this.setReadOnly(true);
@@ -129,8 +131,8 @@ define(["dojo/_base/declare",
 				box.store.setValues(items);
 			}
 		},
+
 		_setValues: function() {
-			
 			for(var i=0;i<this.pageTemplate.length;i++){
 				var name = this.pageTemplate[i]['target'];
 				var widget = this._widget;
@@ -151,6 +153,11 @@ define(["dojo/_base/declare",
 					box.set('value', value, false);
 				}
 			}
+		},
+
+		_widgetPropertiesChanged: function(data) {
+		  // data is array of widgets
+		  this._updateValues({widget: data[0]});
 		}
 	});
 });

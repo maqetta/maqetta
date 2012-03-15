@@ -1686,7 +1686,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 	getDojo: function(){
 		var win = this.getGlobal();
-		return win.dojo || dojo;
+		//FIXME: Aren't we asking for downstream bugs if we return "dojo", which is Maqetta's dojo
+		//instead of the user document's dojo?
+		return (win && win.dojo) || dojo;
 	},
 
 	getDijit: function(){
@@ -2847,7 +2849,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			if(doSnapLinesX || doSnapLinesY){
 				Snap.findSnapOpportunities(this, widget, computed_style, doSnapLinesX, doSnapLinesY);
 			}
-			cp.findParentsXY({data:data, widget:widget, position:position, doCursor:doCursor, beforeAfter:beforeAfter});
+			cp.findParentsXY({data:data, widget:widget, absolute:absolute, position:position, doCursor:doCursor, beforeAfter:beforeAfter});
 			dojo.forEach(widget.getChildren(), function(w){
 				_updateThisWidget.apply(context, [w]);
 			});

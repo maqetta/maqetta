@@ -114,6 +114,35 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 		this.connect(dijit._masterTT.domNode, "mouseleave", function() {
 			this._lastAnchorNode && this._leave();
 		});
+		
+		//Keep track of editor selection so that we can expand tree appropriately
+		dojo.subscribe("/davinci/ui/editorSelected", function(obj){
+			var editor = obj.editor;
+			if (editor && editor.editorID === "davinci.review.CommentReviewEditor") {
+				var fileNodeItem = editor.resourceFile;
+				var versionNodeItem = fileNodeItem.parent;
+				
+				//We want to collapse everything but the version folder of the review held in the editor
+				dojo.forEach(this.model.root.children, function(nodeItem) {
+					if (nodeItem != versionNodeItem) {
+						var treeNodes = this.tree.getNodesByItem(nodeItem);
+						
+						if (treeNodes.length > 0) {
+							var treeNode = treeNodes[0];
+							if (treeNode.isExpanded) {
+								// NOTE: Hate to use private function of dijit.Tree, but if I
+								// use treeNode.collapse, the node can no longer be re-expanded
+								// by the user
+								this.tree._collapseNode(treeNode);
+							}
+						}
+					}
+				}.bind(this));
+				
+				//Set the path (which expands tree as necessary)
+				this.tree.set("path", [this.model.root, versionNodeItem, fileNodeItem]);
+			}
+		 }.bind(this));
 	},
 
 	_updateActionBar: function(item, context) {

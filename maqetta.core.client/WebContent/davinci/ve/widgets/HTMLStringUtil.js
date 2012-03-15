@@ -100,7 +100,7 @@ define(["dojo/_base/declare",
 					return text;
 				case "font":
 					var text = "<div dojoType='davinci.ve.widgets.FontDataStore' jsId='"+ id + ('_fontStore') + "'>";
-						text+= "<div dojoType='dijit.form.ComboBox' value='" + FontDataStore.fonts[0].value + "' store='"+ id + ('_fontStore') + "'  id='"+ id +"' class='propertyPaneEditablevalue' style='display:inline-block; width:100%;'></div>";
+						text+= "<div dojoType='davinci.ve.widgets.FontComboBox' value='" + FontDataStore.fonts[0].value + "' store='"+ id + ('_fontStore') + "'  id='"+ id +"' class='propertyPaneEditablevalue' style='display:inline-block; width:100%;'></div>";
 					return text;
 				case "state":
 					var text="<div dojoType='davinci.ve.widgets.MetaDataStore' jsId='davinci.properties.event"+ (id) + ('_Store') + "'>";

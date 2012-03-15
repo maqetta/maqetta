@@ -1,6 +1,8 @@
 package maqetta.core.server.command;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +20,16 @@ public class Register extends Command {
     @Override
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
         String name = req.getParameter("userName");
+        
+        /* ensure the user name is word characters only to prevent user names like "..\..\xsers.xml" */
+        
+        Pattern validUserPattern = Pattern.compile("^\\w*");
+        Matcher matcher = validUserPattern.matcher(name);
+		if(!matcher.matches()){
+			this.responseString = "INVALID USER NAME";
+			return;
+		}
+        
         String password = req.getParameter("password");
         String email = req.getParameter("email");
 

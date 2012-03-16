@@ -190,18 +190,22 @@
 		<li>Widgets and Outline palettes should be empty</li>
 	</ol>
 
-	<h2 class="test_section">Settings Menu: Edit Preferences</h2>
+	<h2 class="test_section">Settings Menu: Preferences</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>From the Settings menu on the banner, choose Edit Preferences...</li>
+		<li>From the Settings menu on the banner, choose Preferences...</li>
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
-		<li>As of now, there should be only one menu item on the Settings menu, Edit Preferences....</li>
+		<li>As of now, there should be two menu items on the Settings menu, Preferences... and Theme sets...</li>
 		<li>Preferences dialog should appear. There should be a tree widget on the left with
-			two major sections, JavaScript and HTML. Inside of the HTML, there should be a
+			three  major sections, Project, HTML and JavaScript. Inside of the HTML, there should be a
 			single entry, Visual Editor. The Visual Editor section should show various options,
-			including Snap to nearest widget / When dragging, show possible parents / Warn on CSS Override.</li>
+			including Snap to nearest widget (default:on) / 
+			When dragging, show possible parents (default:off) / 
+			Warn on CSS Override (default:on) / 
+			z-index for sketch mode (default:9999).</li>
+			<li>(Note that there is a separate test plan for Theme sets...)</li>
 	</ol>
 
 	<h2 class="test_section">Help Menu</h2>

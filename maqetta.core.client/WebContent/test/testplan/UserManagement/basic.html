@@ -22,12 +22,13 @@
 	<ol class="steps">
 		<li>Clear your browser cache.</li>
 		<li>Launch the Maqetta server such that the server requires a user login (i.e., do not run server with localInstall=true option).</li>
-		<li>Browse to the Maqetta root URL <em>without the user name</em> 
-				(e.g., <a href="http://localhost:8080/maqetta">http://localhost:8080/maqetta</a>, not http://localhost:8080/maqetta/JohnSmith).</li>
+		<li>Browse to the Maqetta root URL <em>without the /welcome</em> 
+				(e.g., <a href="http://localhost:8080/maqetta">http://localhost:8080/maqetta</a>, not http://localhost:8080/maqetta/welcome).</li>
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
-		<li>You should see the login page, with two parts:
+		<li>You should be redirected to the /maqetta/welcome page, where you should see the login page.
+			If running the default build from maqetta.org/download, you should see a login screen that looks something like this:
 			<ul>
 				<li>"Please sign in", followed by Login and Password entry boxes</li>
 				<li>New users - please sign up</li>

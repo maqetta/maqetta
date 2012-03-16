@@ -18,7 +18,7 @@ public class RemoveUser extends Command {
         
       
         /* this command can only be called from 127.0.0.1, sorry hackers */
-        if(req.getRemoteAddr().compareTo("127.0.0.1")!=0) return;
+//        if(req.getRemoteAddr().compareTo("127.0.0.1")!=0) return; // FIXME: this test is not working as intended.
 
         try {
             ServerManager.getServerManger().getUserManager().removeUser(name);

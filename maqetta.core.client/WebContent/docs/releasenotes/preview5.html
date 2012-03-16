@@ -112,6 +112,15 @@
 				&lt;form&gt;, &lt;hr&gt;, &lt;input&gt;, &lt;p&gt;, &lt;select&gt;, &lt;textarea&gt;, &lt;video&gt;</li>
 		</ul>
 	</li>
+	<li><p><span class='majortopic'>Improved drag/drop with flowable content</span> - 
+		The drag/drop cursor logic that appears when dragging a widget in "flow" mode (i.e., the widget is
+		not positioned at an absolute (x,y) location)
+		has been rewritten. The blinking vertical bar type-in cursor that appears during dragging
+		now allows dropping widgets either before or after other widgets: if the mouse is over the
+		left half of another widget, the dragged widget will be added before the other widget, otherwise
+		after. Along the way, various flow-mode dragging bugs have been fixed. In particular,
+		the "show candidate parents" feature works now in flow mode.</p>
+	</li>
 	<li><p><span class='majortopic'>Instructions for deploying Maqetta applications to PhoneGap</span> - 
 		The Maqetta wiki at GitHub now includes a page that provides instructions for 
 		<a href='https://github.com/maqetta/maqetta/wiki/Deploying-Maqetta-projects-to-PhoneGap'>Deploying Maqetta projects to PhoneGap</a>.</p>

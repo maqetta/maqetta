@@ -23,7 +23,7 @@ public class Register extends Command {
         
         /* ensure the user name is word characters only to prevent user names like "..\..\xsers.xml" */
         
-        Pattern validUserPattern = Pattern.compile("^\\w*");
+        Pattern validUserPattern = Pattern.compile("^[\\w\\-]([\\.\\w@])+", Pattern.CASE_INSENSITIVE);
         Matcher matcher = validUserPattern.matcher(name);
 		if(!matcher.matches()){
 			this.responseString = "INVALID USER NAME";

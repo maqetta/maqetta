@@ -350,7 +350,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		}, this);
 		if(!command.isEmpty()){
 			this._context.getCommandStack().execute(command);
-			this._updateTarget();	// Recalculate bounds for "target" overlay rectangle
+			this._updateTargetOverlays();	// Recalculate bounds for "target" overlay rectangle
 		}
 	},
 	

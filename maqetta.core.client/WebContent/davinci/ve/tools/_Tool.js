@@ -82,10 +82,13 @@ return declare("davinci.ve.tools._Tool", null, {
 	_updateTargetOverlays: function(){
 		//Let's clear out overlay regions array
 		this._removeTargetOverlays();
+		if(!this._target){
+			return;
+		}
 		
 		var domNode = this._target.domNode;
 		var maxZIndex = this._getMaxZIndex(domNode);
-		if(this._targetOverlays && this._target){
+		if(this._targetOverlays){
 			
 			//See if helper wants to tell us what to use for target overlays
 			var helper = this._target.getHelper();

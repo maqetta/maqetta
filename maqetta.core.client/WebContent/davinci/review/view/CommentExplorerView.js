@@ -54,46 +54,42 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 		dojo.connect(this.tree, 'onClick', dojo.hitch(this, this._click));
 		dojo.connect(this.tree,'_onNodeMouseEnter', dojo.hitch(this, this._over));
 		dojo.connect(this.tree,'_onNodeMouseLeave', dojo.hitch(this, this._leave));
-		this.tree.notifySelect = dojo.hitch(this, function (item) {
-			var items = dojo.map(this.tree.get('selectedItems'), function(item) { return {resource:item};});
-			this.publish("/davinci/review/selectionChanged", [items, this]);
-		});
+		dojo.connect(this.tree,'_setSelectedNodesAttr', function () {
+			this._publishSelectionChanges();
+		}.bind(this));
 
 		this.subscribe("/davinci/review/selectionChanged", "_updateActionBar");
-		this.subscribe("/davinci/review/resourceChanged", function(arg1, arg2, arg3) {
-			if (arg3 && arg3.timeStamp) {
-				var node = davinci.review.model.resource.root.findVersion(arg3.timeStamp);
+		this.subscribe("/davinci/review/resourceChanged", function(result, type, changedResource) {
+			if (changedResource && changedResource.timeStamp) {
+				var node = davinci.review.model.resource.root.findVersion(changedResource.timeStamp);
 				if (node) { 
 					this.tree.set("selectedItem", node);
 				} else {
-					this.publish("/davinci/review/selectionChanged", [{}, this]);
+					this.tree.set("selectedItems", []);
 				}
+				this._publishSelectionChanges();
+				
+				// NOTE: This feels like a hack, but if all children of the root are deleted (making the
+				// root empty), then the tree will collapse the root node. And, then when we add a node back in,
+				// that node is invisible because the tree thinks the root node is collapsed.  So, 
+				// we'll circumvent that by telling it the root node to expand. If already expanded, this 
+				// has no effect.
+				this.tree.rootNode.expand();
 			}
 		});
 
 		var popup = Workbench.createPopup({ 
 			partID: 'davinci.review.reviewNavigator',
+			context: this,
 			domNode: this.tree.domNode, 
 			openCallback: function (event) {
-				var ctrlKey = dojo.isMac ? event.metaKey : event.ctrlKey;
-				this.ctrlKeyPressed = this._isMultiSelect && event && ctrlKey;
+				//Select the item in the tree user right-clicked on
 				var w = dijit.getEnclosingWidget(event.target);
 				if(!w || !w.item){
-		//			dojo.style(this._menu.domNode, "display", "none");
 					return;
 				}
-				if (dojo.indexOf(this.selectedNodes,w) >= 0) {
-					return;
-				}
-//				this._selectNode(w);
-				var path = [];
-				for(var i=w.domNode; i && i.parentNode; i = i.parentNode) {
-					if(i._dvWidget){
-						path.unshift(i._dvWidget);
-					}
-				}
-				this.set('path', path);
-		 	}.bind(this.tree)
+				this.tree.set("path", this._buildTreePath(w.item));
+		 	}.bind(this)
 		});
 
 		this.infoCardContent = dojo.cache("davinci" ,"review/widgets/templates/InfoCard.html");
@@ -140,9 +136,17 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 				}.bind(this));
 				
 				//Set the path (which expands tree as necessary)
-				this.tree.set("path", [this.model.root, versionNodeItem, fileNodeItem]);
+				this.tree.set("path", this._buildTreePath(fileNodeItem));
 			}
 		 }.bind(this));
+	},
+	
+	_buildTreePath: function(item) {
+		var path = [];
+		for(var loopItem=item; loopItem; loopItem = loopItem.parent) {
+			path.unshift(loopItem);
+		}
+		return path;
 	},
 
 	_updateActionBar: function(item, context) {
@@ -154,7 +158,7 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 		var selectedVersion = item[0].resource.elementType == "ReviewFile" ? item[0].resource.parent : item[0].resource;
 		var isVersion = selectedVersion.elementType == "ReviewVersion";
 		var isDraft = selectedVersion.isDraft;
-		this.closeBtn.set("disabled", !isVersion || selectedVersion.closed || isDraft);
+		this.closeBtn.set("disabled", !isVersion || selectedVersion.closed || isDraft); 
 		this.openBtn.set("disabled", !isVersion || !selectedVersion.closedManual || isDraft);
 		this.editBtn.set("disabled", !isVersion);
 	},
@@ -290,7 +294,17 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 	},
 
 	_click: function(node) {
-		this.select = node;
+		this._publishSelectionChanges();
+	},
+	
+	_publishSelectionChanges: function() {
+		var items = this.getSelection();
+		this.publish("/davinci/review/selectionChanged", [items, this]);
+	},
+	
+	getSelection: function() {
+		var items = dojo.map(this.tree.get('selectedItems'), function(item) { return {resource:item};});
+		return items;
 	},
 
 	_over: function(node) {

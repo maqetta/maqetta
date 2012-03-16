@@ -9,8 +9,8 @@ define([
 var CloseVersionAction = declare("davinci.review.actions.CloseVersionAction", [Action], {
 
 	run: function(context) {
-		var selection = Runtime.getSelection();
-		if (!selection) { return; }
+		var selection = context.getSelection ? context.getSelection() : null;
+		if (!selection || !selection.length) { return; }
 		okToClose=confirm(nls.areYouSureClose);
 		if (!okToClose) { 
 			return;
@@ -48,7 +48,7 @@ var CloseVersionAction = declare("davinci.review.actions.CloseVersionAction", [A
 		if (davinci.Runtime.getRole()!="Designer") { 
 			return false;
 		}
-		var selection = davinci.Runtime.getSelection();
+		var selection = context.getSelection ? context.getSelection() : null;
 		if (!selection || selection.length == 0) { 
 			return false;
 		}

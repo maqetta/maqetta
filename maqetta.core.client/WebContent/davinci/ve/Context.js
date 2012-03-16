@@ -2083,7 +2083,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this._activeTool.onMouseUp(event);
 		}
 		this.blockChange(false);
-		this.getContainerNode().focus();
 	},
 
 	onMouseOut: function(event){

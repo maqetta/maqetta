@@ -9,8 +9,8 @@ define([
 var OpenVersionAction = declare("davinci.review.actions.OpenVersionAction", [Action], {
 
 	run: function(context) {
-		var selection = Runtime.getSelection();
-		if (!selection)  { 
+		var selection = context.getSelection ? context.getSelection() : null;
+		if (!selection || !selection.length)  { 
 			return;
 		}
 		var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
@@ -45,7 +45,7 @@ var OpenVersionAction = declare("davinci.review.actions.OpenVersionAction", [Act
 		if (davinci.Runtime.getRole()!="Designer") { 
 			return false;
 		}
-		var selection = davinci.Runtime.getSelection();
+		var selection = context.getSelection ? context.getSelection() : null;
 		if (!selection || selection.length == 0) { 
 			return false;
 		}
@@ -55,7 +55,6 @@ var OpenVersionAction = declare("davinci.review.actions.OpenVersionAction", [Act
 		}
 		return false;
 	}
-
 });
 
 return OpenVersionAction;

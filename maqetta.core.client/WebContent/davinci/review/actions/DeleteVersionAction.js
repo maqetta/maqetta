@@ -9,8 +9,8 @@ define([
 var DeleteVersionAction = declare("davinci.review.actions.DeleteVersionAction", [Action], {
 
 	run: function(context) {
-		var selection = Runtime.getSelection();
-		if(!selection) return;
+		var selection = context.getSelection ? context.getSelection() : null;
+		if (!selection || !selection.length) { return; }
 
 		okToClose=confirm(nls.areYouSureDelete);
 		if(!okToClose)
@@ -49,7 +49,7 @@ var DeleteVersionAction = declare("davinci.review.actions.DeleteVersionAction", 
 
 	isEnabled: function(context) {
 		if (davinci.Runtime.getRole()!="Designer") { return false; }
-		var selection = davinci.Runtime.getSelection();
+		var selection = context.getSelection ? context.getSelection() : null;
 		return selection && selection.length > 0 ? true : false;
 	}
 

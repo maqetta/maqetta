@@ -7,10 +7,8 @@ define([
 var ViewFileAction = declare("davinci.review.actions.ViewFileAction", [Action], {
 
 	run: function(context) {
-		var selection = Runtime.getSelection();
-		if (!selection) {
-			return;
-		}
+		var selection = context.getSelection ? context.getSelection() : null;
+		if (!selection || !selection.length) { return; }
 		var item = selection[0].resource;
 		if (Runtime.getMode()=="reviewPage") {
 			davinci.Workbench.openEditor({
@@ -32,7 +30,7 @@ var ViewFileAction = declare("davinci.review.actions.ViewFileAction", [Action], 
 	},
 
 	isEnabled: function(context) {
-		var selection = Runtime.getSelection();
+		var selection = context.getSelection ? context.getSelection() : null;
 		if (!selection || selection.length === 0) {
 			return false;
 		}

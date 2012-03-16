@@ -734,7 +734,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 			}
 			if (result=="OK") {
 				var key = value ? "draftSaved" : "inviteSuccessful";
-				dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls[key], type:"message"}, "create"]);
+				dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls[key], type:"message"}, "create", this.node]);
 			} else {
 				var dialogContent = dojostring.substitute(warningString, {
 						htmlContent: result, 
@@ -742,21 +742,22 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 						mailFailureMsg: widgetsNls.mailFailureMsg, 
 						buttonOk: dijitNls.buttonOk
 					});
-				dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls.inviteFailed, type:"warning"}, "create"]);
+				dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls.inviteFailed, type:"warning"}, "create", this.node]);
 				if (!this.invitationDialog) {
 					this.invitationDialog = new Dialog({
 						title: widgetsNls.warning,
 						content: dialogContent
 					});
 					this.invitationDialog.connect(dijit.byId("_mailFailureDialogButton"), "onClick", function() {
-						this.hide();
-					});
+						this.invitationDialog.hide();
+						this.invitationDialog.destroyRecursive();
+					}.bind(this));
 				} else {
 					this.invitationDialog.content = dialogContent;
 				}
 				this.invitationDialog.show();
 			}
-		});
+		}.bind(this));
 		this.onClose();
 	},
 

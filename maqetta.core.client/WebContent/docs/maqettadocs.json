@@ -48,11 +48,10 @@
 				{ id: '5.2.6', name:'Properties Palette', url: 'pePropertiesPalette.html' }, 
 				{ id: '5.2.5', name:'Creating Style Rules with app.css', url: 'peAppCss.html' }, 
 				{ id: '5.2.7', name:'Outline Palette', url: 'peOutlinePalette.html' }, 
-				{ id: '5.2.8', name:'States Palette', url: 'peStatesPalette.html' }, 
+				{ id: '5.2.8', name:'Scenes Palette', url: 'peScenesPalette.html' }, 
 				{ id: '5.2.9', name:'Switching Themes', url: 'peSwitchThemes.html' }, 
 				{ id: '5.2.10', name:'Source Editing', url: 'peSourceEditing.html' },
-				{ id: '5.2.11', name:'About the User HTML File', url: 'peUserHTML.html' },
-				{ id: '5.2.12', name:'Creating a Basic Layout', url: 'tutorials/tutorial5.html' }
+				{ id: '5.2.11', name:'About the User HTML File', url: 'peUserHTML.html' }
 			] },
 			{ id: '5.3', name:'Application States', url: 'applicationStates.html', children:[
 				{ id: '5.3.1', name:'About Application States', url: 'applicationStatesAbout.html' }

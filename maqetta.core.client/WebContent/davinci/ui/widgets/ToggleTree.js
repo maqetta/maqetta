@@ -54,7 +54,7 @@ define(["dojo/_base/declare",
 				return path;
 			});
 			try{
-				if (paths && paths[0].length) {
+				if (paths.length && paths[0].length) {
 					this.set('paths', paths);					
 				}
 			}catch(e){

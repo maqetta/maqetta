@@ -588,6 +588,7 @@ var Workbench = {
 					myDialog._onSubmit = function() {
 						myDialog._onSubmit = oldHandler;
 					};
+					return;
 				}
 			}
 			if (teardown) {

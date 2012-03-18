@@ -799,7 +799,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 //////////////////////////////////////////////////////////////////////////////////////////////     
     
 	_setSource: function(source, callback, scope, newHtmlParams){
-console.log('Context _setSource entered');
+console.warn('Context _setSource entered');
 		// Get the helper before creating the IFRAME, or bad things happen in FF
 		var helper = Theme.getHelper(this.visualEditor.theme);
 
@@ -845,9 +845,9 @@ console.log('Context _setSource entered');
 			}
 		}
 
-console.log('Context _setSource before _parse');
+console.warn('Context _setSource before _parse');
 		var data = this._parse(source);
-console.log('Context _setSource after _parse');
+console.warn('Context _setSource after _parse');
 		if(!this.frameNode){
 			// initialize frame
 			var dojoUrl;
@@ -894,7 +894,7 @@ console.log('Context _setSource after _parse');
 			if(this.baseURL){
 				realUrl = this.baseURL;
 			}
-console.log('Context _setSource after creating iframe, before created head');
+console.warn('Context _setSource after creating iframe, before created head');
 
 // TODO: This needs to be more flexible to allow things like HTML5 DOCTYPE's
 // (should be based on a preference)
@@ -956,7 +956,7 @@ console.log('Context _setSource after creating iframe, before created head');
 			window["loading" + context._id] = function(parser, htmlUtil) {
 				var callbackData = context;
 			try {
-console.log('Context _setSource window.loading begin');
+console.warn('Context _setSource window.loading begin');
 					var win = windowUtils.get(doc),
 					 	body = (context.rootNode = doc.body);
 
@@ -1003,7 +1003,7 @@ console.log('Context _setSource window.loading begin');
 					win.require("dojo/_base/lang").isArray = win.dojo.isArray=function(it){
 						return it && Object.prototype.toString.call(it)=="[object Array]";
 					};
-console.log('Context _setSource window.loading end');
+console.warn('Context _setSource window.loading end');
 				} catch(e) {
 					console.error(e.stack || e);
 					// recreate the Error since we crossed frames
@@ -1011,9 +1011,9 @@ console.log('Context _setSource window.loading end');
 					dojo.mixin(callbackData, e);
 				}
 
-console.log('Context _setSource before calling _continueLoading 1');
+console.warn('Context _setSource before calling _continueLoading 1');
 				context._continueLoading(data, callback, callbackData, scope);
-console.log('Context _setSource after calling _continueLoading 1');
+console.warn('Context _setSource after calling _continueLoading 1');
 			};
 
 			doc.open();
@@ -1054,15 +1054,15 @@ console.log('Context _setSource after calling _continueLoading 1');
 			dojo.query(".loading", this.frameNode.parentNode).orphan();
 
 			// frame has already been initialized, changing content (such as changes from the source editor)
-console.log('Context _setSource before calling _continueLoading 2');
+console.warn('Context _setSource before calling _continueLoading 2');
 			this._continueLoading(data, callback, this, scope);
-console.log('Context _setSource after calling _continueLoading 2');
+console.warn('Context _setSource after calling _continueLoading 2');
 		}
-console.log('Context _setSource exit');
+console.warn('Context _setSource exit');
 	},
 
 	_continueLoading: function(data, callback, callbackData, scope) {
-console.log('Context.js _continueLoading entered');
+console.warn('Context.js _continueLoading entered');
 		var loading, promise;
 		try {
 			loading = dojo.create("div",
@@ -1079,17 +1079,17 @@ console.log('Context.js _continueLoading entered');
 				throw callbackData;
 			}
 
-console.log('Context.js _continueLoading before calling _setSourceData');
+console.warn('Context.js _continueLoading before calling _setSourceData');
 			promise = this._setSourceData(data).then(function() {
 				// need to remove loading for silhouette to display
-console.log('Context.js _continueLoading _setSourceData then processing start');
+console.warn('Context.js _continueLoading _setSourceData then processing start');
 				loading.parentNode.removeChild(loading);
-console.log('Context.js _continueLoading _setSourceData then processing end');
+console.warn('Context.js _continueLoading _setSourceData then processing end');
 			}, function(error) {
 				loading.innerHTML = "Unable to parse HTML source.  See console for error.  Please switch to \"Display Source\" mode and correct the error."; // FIXME: i18n
 				console.error(error.stack || error.message);
 			});
-console.log('Context.js _continueLoading after calling _setSourceData');
+console.warn('Context.js _continueLoading after calling _setSourceData');
 		} catch(e) {
 			// recreate the Error since we crossed frames
 			callbackData = new Error(e.message, e.fileName, e.lineNumber);
@@ -1104,26 +1104,26 @@ console.log('Context.js _continueLoading after calling _setSourceData');
 			loading.innerHTML = message;
 			dojo.addClass(loading, 'error');
 		} finally {
-console.log('Context.js _continueLoading begin finally');
+console.warn('Context.js _continueLoading begin finally');
 			if (callback) {
 				if (promise) {
-console.log('Context.js _continueLoading before promise.then');
+console.warn('Context.js _continueLoading before promise.then');
 					promise.then(function(){
-console.log('Context.js _continueLoading promise.then start');
+console.warn('Context.js _continueLoading promise.then start');
 						callback.call((scope || this), callbackData);
-console.log('Context.js _continueLoading promise.then end');
+console.warn('Context.js _continueLoading promise.then end');
 					}.bind(this));
-console.log('Context.js _continueLoading after promise.then');
+console.warn('Context.js _continueLoading after promise.then');
 				} else {
 					// FIXME: caller doesn't handle error data?
-console.log('Context.js _continueLoading no promise before callback');
+console.warn('Context.js _continueLoading no promise before callback');
 					callback.call((scope || this), callbackData);
-console.log('Context.js _continueLoading no promise after callback');
+console.warn('Context.js _continueLoading no promise after callback');
 				}
 			}
-console.log('Context.js _continueLoading end finally');
+console.warn('Context.js _continueLoading end finally');
 		}
-console.log('Context.js _continueLoading exit');
+console.warn('Context.js _continueLoading exit');
 	},
 
 	_getLoaderPackages: function() {
@@ -1158,7 +1158,7 @@ console.log('Context.js _continueLoading exit');
 	},
 
 	_setSourceData: function(data){
-console.log('Context.js _setSourceData entered');
+console.warn('Context.js _setSourceData entered');
 		
 		/* cache the theme metadata */	
 		this.themeChanged();
@@ -1274,7 +1274,7 @@ console.log('Context.js _setSourceData entered');
 		collapse(containerNode);
 
 		this._loadFileStatesCache = states;
-console.log('Context.js before _processWdigets and _setSourceData exit');
+console.warn('Context.js before _processWdigets and _setSourceData exit');
 		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts);
 	},
 
@@ -1290,7 +1290,7 @@ console.log('Context.js before _processWdigets and _setSourceData exit');
 	 * Process dojoType, oawidget and dvwidget attributes on text content for containerNode
 	 */
 	_processWidgets: function(containerNode, attachWidgets, states, scripts) {
-console.log('Context.js _processWidgets entered');
+console.warn('Context.js _processWidgets entered');
 		var prereqs = [];
 		dojo.forEach(dojo.query("*", containerNode), function(n){
 			var type =  n.getAttribute("data-dojo-type") || n.getAttribute("dojoType") || /*n.getAttribute("oawidget") ||*/ n.getAttribute("dvwidget");
@@ -1304,17 +1304,17 @@ console.log('Context.js _processWidgets entered');
 			this._preserveStates(n, states);
 		}, this);
 		var promise = new Deferred();
-console.log('Context.js _processWidgets before new DeferredList');
+console.warn('Context.js _processWidgets before new DeferredList');
 		new DeferredList(prereqs).then(function() {
-console.log('Context.js _processWidgets new DeferredList begin then');
+console.warn('Context.js _processWidgets new DeferredList begin then');
 			this.getGlobal()["require"]("dojo/ready")(function(){
-console.log('Context.js _processWidgets begin dojo.ready');
+console.warn('Context.js _processWidgets begin dojo.ready');
 				try {
-console.log('Context.js _processWidgets dojo.ready before parse');
+console.warn('Context.js _processWidgets dojo.ready before parse');
 					this.getGlobal()["require"]("dojo/parser").parse(containerNode);
-console.log('Context.js _processWidgets dojo.ready before promise.resolve');
+console.warn('Context.js _processWidgets dojo.ready before promise.resolve');
 					promise.resolve();
-console.log('Context.js _processWidgets dojo.ready after promise.resolve');
+console.warn('Context.js _processWidgets dojo.ready after promise.resolve');
 				} catch(e) {
 					// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
 					// the dojo parser will throw an exception trying to compute style on hidden containers
@@ -1335,9 +1335,9 @@ console.log('Context.js _processWidgets dojo.ready after promise.resolve');
 				}
 
 				if(attachWidgets){
-console.log('before calling _attachAll');
+console.warn('before calling _attachAll');
 					this._attachAll();
-console.log('after calling _attachAll');
+console.warn('after calling _attachAll');
 				}
 	
 		        if (scripts) {
@@ -1347,12 +1347,12 @@ console.log('after calling _attachAll');
 		                console.error('Error eval script in Context._setSourceData, ' + e);
 		            }
 		        }
-console.log('Context.js _processWidgets end dojo.ready');
+console.warn('Context.js _processWidgets end dojo.ready');
 			}.bind(this));
-console.log('Context.js _processWidgets new DeferredList end then');
+console.warn('Context.js _processWidgets new DeferredList end then');
 		}.bind(this));
 
-console.log('Context.js _processWidgets exit');
+console.warn('Context.js _processWidgets exit');
 		return promise;
 	},
 	
@@ -1368,7 +1368,7 @@ console.log('Context.js _processWidgets exit');
     },
 	    
 	_editorSelectionChange: function(event){
-console.log('Context.js _editorSelectionChange entered');
+console.warn('Context.js _editorSelectionChange entered');
 		// we should only be here do to a dojo.parse exception the first time we tried to process the page
 		// Now the editor tab container should have focus becouse the user selected it. So the dojo.processing should work this time
 		if (event.editor.fileName === this.editor.fileName){
@@ -1376,7 +1376,7 @@ console.log('Context.js _editorSelectionChange entered');
 			delete this._editorSelectConnection;
 			this._setSource(this._srcDocument);
 		}
-console.log('Context.js _editorSelectionChange exit');
+console.warn('Context.js _editorSelectionChange exit');
 	},
 
 	_attachAll: function()

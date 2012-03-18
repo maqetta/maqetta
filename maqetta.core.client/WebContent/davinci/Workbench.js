@@ -1378,6 +1378,13 @@ console.warn('_switchEditor after _bringPalettesToTop()');
 		}
 		
 		setTimeout(function(){
+console.warn('_switchEditor (setTimeout) entered. newEditor='+newEditor);
+if(newEditor)
+console.warn('_switchEditor (setTimeout) entered. newEditor.visualEditor='+newEditor.visualEditor);
+if(newEditor && newEditor.visualEditor)
+	console.warn('_switchEditor (setTimeout) newEditor.visualEditor.context='+newEditor.visualEditor.context);
+if(newEditor && newEditor.visualEditor && newEditor.visualEditor.context)
+	console.warn('_switchEditor (setTimeout) newEditor.visualEditor.context.isActive='+newEditor.visualEditor.context.isActive);
 			// kludge: if there is a visualeditor and it is already populated, resize to make Dijit visualEditor contents resize
 			// If editor is still starting up, there is code on completion to do a resize
 			// seems necessary due to combination of 100%x100% layouts and extraneous width/height measurements serialized in markup
@@ -1386,6 +1393,7 @@ console.warn('_switchEditor (setTimeout) before resize');
 				newEditor.visualEditor.context.getTopWidgets().forEach(function (widget) { if (widget.resize) { widget.resize(); } });
 console.warn('_switchEditor (setTimeout) after resize');
 			}
+console.warn('_switchEditor (setTimeout) exit');
 		}, 1000);
 
 		if(!startup) {

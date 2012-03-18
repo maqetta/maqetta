@@ -441,7 +441,7 @@ return declare("davinci.ve._Widget", null, {
 			data = this._getData( options);
 		}
 
-		data.states=this.states;
+		data.states=dojo.clone(this.states);
 		if(!data.properties)
 			data.properties = {};
 

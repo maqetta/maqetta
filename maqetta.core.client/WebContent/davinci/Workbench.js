@@ -1016,6 +1016,7 @@ var Workbench = {
 	},
 
 	openEditor: function (keywordArgs, newHtmlParams) {
+console.log('openEditor entered');
 		var fileName=keywordArgs.fileName,
 			content=keywordArgs.content,
 			fileExtension,
@@ -1032,12 +1033,14 @@ var Workbench = {
 			tabContainer = dijit.byId("editors_tabcontainer");
 
 		if (tab) {
+console.log('openEditor before selectChild');
 			// already open
 			tabContainer.selectChild(tab);
 			var editor=tab.editor;
 			if (keywordArgs.startOffset) {
 				editor.select(keywordArgs);
 			}
+console.log('openEditor after selectChild and return');
 			return;
 		}
 		var editorCreateCallback=keywordArgs.editorCreateCallback;
@@ -1059,15 +1062,19 @@ var Workbench = {
 			});
 		}
 
+console.log('openEditor before _createEditor');
 		Workbench._createEditor(editorExtension, fileName, keywordArgs, newHtmlParams).then(function(editor) {
 			if(editorCreateCallback){
+console.log('openEditor before editorCreateCallback');
 				editorCreateCallback.call(window, editor);
+console.log('openEditor after editorCreateCallback');
 			}
 
 			if(!keywordArgs.noSelect) {
 				 Runtime.currentEditor = editor;
 			}			
 		});
+console.log('openEditor exit');
 	},
 	
 	_createEditor: function(editorExtension, fileName, keywordArgs, newHtmlParams) {
@@ -1343,24 +1350,31 @@ var Workbench = {
 */
 
 	_switchEditor: function(newEditor, startup) {
+console.log('_switchEditor entered');
 		var oldEditor = Runtime.currentEditor;
 		Runtime.currentEditor = newEditor;
 		try {
+console.log('_switchEditor before publish /davinci/ui/editorSelected');
 			dojo.publish("/davinci/ui/editorSelected", [{
 				editor: newEditor,
 				oldEditor: oldEditor
 			}]);
+console.log('_switchEditor after publish /davinci/ui/editorSelected');
 		} catch (ex) {console.error(ex);}
 		Workbench._updateTitle(newEditor);
 		Workbench._state.activeEditor=newEditor ? newEditor.fileName : null;
 	
 		if(newEditor) {
 			if (newEditor.focus) { 
+console.log('_switchEditor before focus()');
 				newEditor.focus(); 
+console.log('_switchEditor after focus()');
 			}
 
 			//Bring palettes specified for the editor to the top
+console.log('_switchEditor before _bringPalettesToTop()');
 			this._bringPalettesToTop(newEditor);
+console.log('_switchEditor after _bringPalettesToTop()');
 		}
 		
 		setTimeout(function(){
@@ -1368,13 +1382,18 @@ var Workbench = {
 			// If editor is still starting up, there is code on completion to do a resize
 			// seems necessary due to combination of 100%x100% layouts and extraneous width/height measurements serialized in markup
 			if (newEditor && newEditor.visualEditor && newEditor.visualEditor.context.isActive()) {
+console.log('_switchEditor (setTimeout) before resize');
 				newEditor.visualEditor.context.getTopWidgets().forEach(function (widget) { if (widget.resize) { widget.resize(); } });
+console.log('_switchEditor (setTimeout) after resize');
 			}
 		}, 1000);
 
 		if(!startup) {
+console.log('_switchEditor before _updateWorkbenchState');
 			Workbench._updateWorkbenchState();
+console.log('_switchEditor after _updateWorkbenchState');
 		}
+console.log('_switchEditor exit');
 	},
 	
 	_bringPalettesToTop: function(newEditor) {

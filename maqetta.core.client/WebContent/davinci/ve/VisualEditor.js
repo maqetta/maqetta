@@ -46,6 +46,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 	_orientation: 'portrait',
 	
 	constructor: function(element, pageEditor)	{
+console.log('VisualEditor constructor entered');
 		this._pageEditor = pageEditor;
 		this.contentPane = dijit.getEnclosingWidget(element);
 		dojo.addClass(this.contentPane.domNode, "fullPane");
@@ -104,6 +105,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 			}
 		});
 		this._pageEditor.deferreds = new DeferredList(Metadata.getDeferreds());
+console.log('VisualEditor constructor exit');
 	},
 	
 	getDevice: function() {
@@ -287,6 +289,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 	},
 	
 	_setContentRaw: function(filename, content, newHtmlParams){
+console.log('VisualEditor _setContentRaw entered');
 		this.fileName = filename;
 		this.basePath = new Path(filename);
 	   
@@ -338,6 +341,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 			// auto save file
 			this.save(true);			
 		}
+console.log('VisualEditor _setContentRaw exit');
 	},
 
 	_connectCallback: function() {

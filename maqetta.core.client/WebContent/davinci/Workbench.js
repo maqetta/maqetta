@@ -71,6 +71,26 @@ var updateMainToolBar = function (change, toolbarID) {
 	}
 };
 
+var handleIoError = function (deferred, reason) {
+	/*
+	 *  Called by the subscription to /dojo/io/error , "
+	 *  /dojo/io/error" is sent whenever an IO request has errored.
+     *	It passes the error and the dojo.Deferred
+     *	for the request with the topic.
+	 */
+	switch(reason.status)
+	{
+		case 401: // Unauthorized
+			window.location.href= 'welcome';
+			break;
+		case 403: // forbidden, could be a season timeout
+			Runtime.handleError(reason.message);
+			break;
+		default:
+			console.warn(reason.message + ' :' + reason.status);
+	}
+};
+
 var getSelectedResource = function() {
 	var selection=Runtime.getSelection();
 	if (selection[0]&&selection[0].resource) {
@@ -182,6 +202,8 @@ var Workbench = {
 		Runtime.subscribe("/davinci/ui/selectionChanged", updateMainToolBar);
 		Runtime.subscribe("/davinci/ui/editorSelected", updateMainToolBar);
 		Runtime.subscribe("/davinci/resource/resourceChanged", Workbench._resourceChanged);
+		Runtime.subscribe('/dojo/io/error',handleIoError); // /dojo/io/error" is sent whenever an IO request has errored. 
+		                                                   // requires djConfig.ioPublish be set to true in pagedesigner.html
 
 		Runtime.subscribe("/davinci/states/state/changed",
 			function(containerWidget, newState, oldState) {

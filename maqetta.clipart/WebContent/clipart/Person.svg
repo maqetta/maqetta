@@ -12,7 +12,7 @@
 ]>
 <svg version="1.1" id="Layer_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
 	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px"
-	 viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+	 viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve" preserveAspectRatio="none">
 	<g>
 		
 			<circle fill-rule="evenodd" clip-rule="evenodd" fill="none" stroke="#333333" stroke-miterlimit="10" cx="8" cy="1.917" r="1.417"/>

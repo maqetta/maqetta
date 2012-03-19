@@ -12,7 +12,7 @@
 ]>
 <svg version="1.1" id="Layer_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
 	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px"
-	 viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+	 viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve" preserveAspectRatio="none">
 	<polygon fill="none" stroke="#333333" stroke-miterlimit="10" points="15.5,6.652 13.416,5.106 13.416,0.822 10.916,0.822 
 		10.916,3.251 8,1.086 0.5,6.652 0.5,10.033 2.168,8.797 2.168,15.178 5.917,15.178 10.084,15.178 13.834,15.178 13.834,8.797 
 		15.5,10.033 		"/>

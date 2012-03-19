@@ -28,7 +28,8 @@ define(["dojo/_base/declare",
 			}
 			return node;
 		},
-	
+
+		//FIXME: deprecated method?  should get rid of this
 		// called from VisualOutlineEditor.  Replace with set("selectedNodes") or set("paths")?
 		selectNode: function (nodeItems, add) 
 		{
@@ -107,7 +108,6 @@ define(["dojo/_base/declare",
 			if(!isExists){
 				this.allFocusedNodes.push(node);
 			}
-			this._selectNode(node);
 			var path = [];
 			for(var i=node.domNode; i && i.parentNode; i = i.parentNode) {
 				if(i._dvWidget){
@@ -115,6 +115,7 @@ define(["dojo/_base/declare",
 				}
 			}
 			this.set('path', path);
+			this._selectNode(node);
 		},
 	
 		
@@ -139,6 +140,9 @@ define(["dojo/_base/declare",
 			}
 			
 		},
+
+		//FIXME: deprecated method?  should get rid of this
+		notifySelect: function() {},
 		
 		deselectAll: function(){
 			while (n = this.selectedNodes.pop()){
@@ -192,7 +196,6 @@ define(["dojo/_base/declare",
 			if (dojo.indexOf(this.selectedNodes,w) >= 0) {
 				return;
 			}
-			this._selectNode(w);
 			var path = [];
 			for(var i=w.domNode; i && i.parentNode; i = i.parentNode) {
 				if(i._dvWidget){
@@ -200,6 +203,7 @@ define(["dojo/_base/declare",
 				}
 			}
 			this.set('path', path);
+			this._selectNode(w);
 	 	}
 	});
 });

@@ -80,6 +80,13 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 
 		if ( user == null ) {
 			req.getSession().setAttribute(IDavinciServerConstants.REDIRECT_TO, req.getRequestURL().toString());
+			String requestVersion = req.getParameter("version");
+			if(requestVersion!=null && !requestVersion.equals("")){
+				Cookie versionCookie = new Cookie(Constants.REVIEW_VERSION, requestVersion);
+				/* have to set the path to delete it later from the client */
+				versionCookie.setPath("/");
+				resp.addCookie(versionCookie);
+			}
 			resp.sendRedirect(this.getLoginUrl(req));
 			return;
 		}

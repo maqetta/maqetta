@@ -99,7 +99,7 @@ var getSelectedResource = function() {
 };
 
 var initializeWorkbenchState = function(){
-	
+
 	if (!Workbench._state || !Workbench._state.hasOwnProperty("editors")) {
 		Workbench._state = Runtime.serverJSONRequest({
 			url: "cmd/getWorkbenchState",
@@ -144,6 +144,7 @@ var initializeWorkbenchState = function(){
 		}
 	
 		for (var i=0;i<state.editors.length;i++) {
+		
 			var isReviewRes = isReview(state.editors[i]);
 			if(isReviewRes){
 				var reviewProject = getReviewProject(state.editors[i]);
@@ -162,7 +163,7 @@ var initializeWorkbenchState = function(){
 			if(isReviewRes){
 				var version = getReviewVersion(state.editors[i]);
 				var resPath = getReviewResource(state.editors[i]).toString();
-				resource = davinci.review.model.resource.root.findFile(version, "./" + resPath);
+				resource = davinci.review.model.resource.root.findFile(version, resPath);
 			}else{
 				resource = sysResource.findResource(state.editors[i]);
 			}
@@ -1384,6 +1385,7 @@ console.warn('_switchEditor before publish /davinci/ui/editorSelected');
 console.warn('_switchEditor after publish /davinci/ui/editorSelected');
 		} catch (ex) {console.error(ex);}
 		Workbench._updateTitle(newEditor);
+	
 		Workbench._state.activeEditor=newEditor ? newEditor.fileName : null;
 	
 		if(newEditor) {
@@ -1469,6 +1471,7 @@ console.warn('_switchEditor exit');
 
 	_editorTabClosed: function(page) {
 		if (page && page.editor && page.editor.fileName) {
+		
 			util.arrayRemove(Workbench._state.editors, page.editor.fileName);
 			Workbench._updateWorkbenchState();
 		}

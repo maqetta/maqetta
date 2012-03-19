@@ -24,7 +24,8 @@ Homepage: <http://maqetta.org>
 Code: <http://github.com/maqetta/maqetta>  
 User Group: <http://groups.google.com/group/maqetta-users>  
 Dev Group: <http://groups.google.com/group/maqetta-devs>  
-IRC: #maqetta on irc.freenode.net
+IRC: #maqetta on irc.freenode.net  
+Reporting security issues: send email to maqetta-security@googlegroups.com
 
 Getting Started
 ===============

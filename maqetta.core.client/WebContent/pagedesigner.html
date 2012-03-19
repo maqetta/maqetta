@@ -43,7 +43,7 @@
 						//FIXME: temporary fix for running via file: URLs
 					   dojo.byId('davinci_user').innerHTML=webContent.maqettaUser;
 					}
-					if (!result) {
+					if (!result || result=='maqettaUser') {
 						dojo.byId('davinci_user').innerHTML=webContent.localhostUser;
 						dojo.byId('davinci_logoff').href="";
 						Runtime.isLocalInstall=true;
@@ -70,7 +70,7 @@
 					davinci.Runtime.commenting_commentId     = dojo.cookie("davinci_commentId");
 					dojo.cookie("davinci_designer", null, {expires: -1});
 					dojo.cookie("davinci_designer_email", null, {expires: -1});
-					dojo.cookie("review_version",null, {expires: -1});
+					dojo.cookie("review_version",null, {expires: -1, path:"/"});
 					dojo.cookie("davinci_commentId",null, {expires: -1});
 					
 					var loadReviews = function(){

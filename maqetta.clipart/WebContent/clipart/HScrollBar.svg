@@ -12,7 +12,7 @@
 ]>
 <svg version="1.1" id="Layer_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
 	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="355px" height="16px"
-	 viewBox="0 0 355 16" enable-background="new 0 0 355 16" xml:space="preserve">
+	 viewBox="0 0 355 16" enable-background="new 0 0 355 16" xml:space="preserve" preserveAspectRatio="none">
 	<g>
 		<path fill="#FFFFFF" stroke="#222222" stroke-width="1.225" d="M0.739,2.248C0.739,1.56,1.298,1,1.988,1h351.003
 			c0.691,0,1.25,0.56,1.25,1.248v11.505c0,0.69-0.559,1.248-1.25,1.248H1.988c-0.69,0-1.249-0.558-1.249-1.248V2.248z"/>

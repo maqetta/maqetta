@@ -85,6 +85,7 @@ define(["dojo/_base/declare",
 			//dojo.stopEvent(event);
 		},
 
+		//FIXME: why do we need any of this custom logic?
 		focusNode: function(/* _tree.Node */ node){
 			this.lastFocusedNode = node;
 			var id=this.model.getIdentity(node.item);
@@ -108,14 +109,8 @@ define(["dojo/_base/declare",
 			if(!isExists){
 				this.allFocusedNodes.push(node);
 			}
-			var path = [];
-			for(var i=node.domNode; i && i.parentNode; i = i.parentNode) {
-				if(i._dvWidget){
-					path.unshift(i._dvWidget);
-				}
-			}
-			this.set('path', path);
 			this._selectNode(node);
+			this.inherited(arguments);
 		},
 	
 		
@@ -196,13 +191,6 @@ define(["dojo/_base/declare",
 			if (dojo.indexOf(this.selectedNodes,w) >= 0) {
 				return;
 			}
-			var path = [];
-			for(var i=w.domNode; i && i.parentNode; i = i.parentNode) {
-				if(i._dvWidget){
-					path.unshift(i._dvWidget);
-				}
-			}
-			this.set('path', path);
 			this._selectNode(w);
 	 	}
 	});

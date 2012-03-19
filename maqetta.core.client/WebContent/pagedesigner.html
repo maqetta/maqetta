@@ -43,7 +43,7 @@
 						//FIXME: temporary fix for running via file: URLs
 					   dojo.byId('davinci_user').innerHTML=webContent.maqettaUser;
 					}
-					if (!result) {
+					if (!result || result=='maqettaUser') {
 						dojo.byId('davinci_user').innerHTML=webContent.localhostUser;
 						dojo.byId('davinci_logoff').href="";
 						Runtime.isLocalInstall=true;

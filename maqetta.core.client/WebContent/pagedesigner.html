@@ -13,7 +13,7 @@
 			height: 100%;
 		}
 	</style>
-	<script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="async: true, parseOnLoad: true, modulePaths:{'preview':'../preview', 'system':'../system'}, cacheBust: '@revision@'"></script>
+	<script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="async: true, parseOnLoad: true, modulePaths:{'preview':'../preview', 'system':'../system'}, cacheBust: '@revision@', ioPublish:true"></script>
 	<script type="text/javascript">
 		require(["dijit/dijit", "davinci/davinci", ], function () {
 			require(["dojo/i18n!davinci/nls/webContent", "davinci/version", "dojo/domReady!"], function (webContent, version) {
@@ -70,7 +70,7 @@
 					davinci.Runtime.commenting_commentId     = dojo.cookie("davinci_commentId");
 					dojo.cookie("davinci_designer", null, {expires: -1});
 					dojo.cookie("davinci_designer_email", null, {expires: -1});
-					dojo.cookie("review_version",null, {expires: -1});
+					dojo.cookie("review_version",null, {expires: -1, path:"/"});
 					dojo.cookie("davinci_commentId",null, {expires: -1});
 					
 					var loadReviews = function(){

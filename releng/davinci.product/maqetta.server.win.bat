@@ -23,5 +23,5 @@ mkdir "%usersdir%" 2>nul
 echo Using directory : %usersdir%
 
 echo start your browser at http://localhost:%port%/maqetta
-FOR /F "tokens=*" %%R IN ('dir /b plugins\org.eclipse.equinox.launcher*.jar') DO SET EQUINOX=%%R
-java -Dorg.eclipse.equinox.http.jetty.http.port=%port%  "-Dmaqetta.baseDirectory=%usersdir%" -DloginUrl="/maqetta/welcome" -jar "%scriptdir%plugins\%EQUINOX%" -console -noExit
+FOR /R plugins %%R IN (org.eclipse.equinox.launcher*.jar) DO SET EQUINOX=%%R
+java -Dorg.eclipse.equinox.http.jetty.http.port=%port%  "-Dmaqetta.baseDirectory=%usersdir%" -DloginUrl="/maqetta/welcome" -jar "%EQUINOX%" -console -noExit

@@ -132,7 +132,7 @@
 			<tr>
 				<td><label for="name">User Name: </label></td>
 				<td><input dojoType="dijit.form.ValidationTextBox" type="text" name="name" id="name"
-					regexp="^\w{5,21}$" trim="true" required="true" invalidMessage="Must be between 5 and 21 characters, using only letters, numbers or '_'"/></td>
+					regexp="^\w(\w|[.@]){4,20}$" trim="true" required="true" invalidMessage="Must be between 5 and 21 characters, using only letters, numbers or '_'"/></td>
 			</tr>
 			<tr>
 				<td><label for="email">Email: </label></td>

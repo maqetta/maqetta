@@ -562,8 +562,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		var form = this._commentForm,
 		comment = this.commentIndices[args.commentId];
 
-		if (comment.ownerId != Runtime.commenting_reviewerName.userName ||
-				comment.email != Runtime.commenting_reviewerName.email) { 
+		if (comment.ownerId != Runtime.commenting_reviewerName) { 
 			return;
 		}
 

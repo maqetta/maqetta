@@ -78,16 +78,12 @@ var handleIoError = function (deferred, reason) {
      *	It passes the error and the dojo.Deferred
      *	for the request with the topic.
 	 */
-	switch(reason.status)
-	{
-		case 401: // Unauthorized
-			window.location.href= 'welcome';
-			break;
-		case 403: // forbidden, could be a season timeout
-			Runtime.handleError(reason.message);
-			break;
-		default:
-			console.warn(reason.message + ' :' + reason.status);
+	if(reason.status == 401 || reason.status == 403){
+		//FIXME: Is there a variable that holds /maqetta?
+		//Shouldn't /welcome also become a variable?
+		window.location.href= '/maqetta/welcome';
+	}else{
+		console.warn(reason.message + ' :' + reason.status);
 	}
 };
 

@@ -53,13 +53,6 @@ var Runtime = {
 			sync:true,
 			load: function(responseObject, ioArgs) {
 				Runtime._loadPlugin(responseObject,url);
-			},
-			error: function(response, ioArgs) {
-				if (response.status==401) {
-					window.location.reload();
-				} else {
-					Runtime.handleError(dojo.string.substitute(webContent.errorLoadingPlugin, [pluginName, response]));
-				}
 			}
 		});
 	},
@@ -373,27 +366,12 @@ var Runtime = {
 		dojo.mixin(args, ioArgs);
 		var userOnError=ioArgs.error;
 		var retry = false;
-		function onError(response, ioArgs) {
-			if (response.status==401) {
-				window.location.href= 'welcome';
-			} else if (response.status==400) {
-				Runtime.handleError("unknown error: status="+ response.status);
-			} else if (userOnError) {
-				userOnError(response, ioArgs);
-			} else {
-				Runtime.handleError("unknown error: status="+ response.status);
-				//console.warn("unknown error: status="+response.status);
-			}
-		}
-		args.error=onError;
-			    
+		
 		do {
 			dojo.xhrGet(args).then(function(result) {
 				if (result) {
 					resultObj=result;
 				}
-			}, function(error) {
-		 		Runtime.handleError(error);
 			});
 		} while (retry);	
 

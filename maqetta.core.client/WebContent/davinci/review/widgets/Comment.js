@@ -79,6 +79,11 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 		this._ajustLengthOfCommentContent(true);
 		this.commentType.innerHTML = this.type;
 		dojo.addClass(this.commentSeverity, "severity" + this.severity);
+
+		davinci.Runtime.commenting_reviewerName = davinci.Runtime.getUser() || {};
+//		davinci.Runtime.commenting_reviewerName.userName = davinci.Runtime.getDesigner();
+//		davinci.Runtime.commenting_reviewerName.email = davinci.Runtime.getDesignerEmail();
+
 		// Rendering that has something to do with a reply comment
 		if (!this.isReply()) {
 			if (this.isPageOwner()) {
@@ -102,11 +107,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 			dojo.style(this.editButton, "display", "none");
 			dojo.style(this.replyButton, "display", "none");
 		}
-		davinci.Runtime.commenting_reviewerName = {};
-		davinci.Runtime.commenting_reviewerName.userName = davinci.Runtime.getDesigner();
-		davinci.Runtime.commenting_reviewerName.email = davinci.Runtime.getDesignerEmail();
-
-		if (davinci.Runtime.commenting_reviewerName.userName != this.ownerId) {
+		if (davinci.Runtime.commenting_reviewerName != this.ownerId) {
 			dojo.style(this.editButton,"display","none");
 		}
 		if (this.status == "Close") {
@@ -122,7 +123,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 			dojo.style(this.editButton, "display", "none");
 			dojo.style(this.replyButton, "display", "none");
 		}
-		if (davinci.Runtime.commenting_reviewerName.userName != this.ownerId) {
+		if (davinci.Runtime.commenting_reviewerName != this.ownerId) {
 			dojo.style(this.editButton, "display", "none");
 		}
 		if (this.status == "Close") {

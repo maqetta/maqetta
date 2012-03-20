@@ -105,7 +105,7 @@ var Runtime = {
 				});
 				Runtime.userInfo = result;
 			}
-			if(Runtime.userInfo.userName==Runtime.commenting_designerName)
+			if (Runtime.userInfo.userName == Runtime.commenting_designerName)
 				return "Designer";
 		}
 		return "Reviewer";
@@ -129,7 +129,7 @@ var Runtime = {
 	
 	getDesignerEmail: function() {
 		if (Runtime.commenting_designerEmail) {
-			return davinci.Runtime.commenting_designerEmail;
+			return Runtime.commenting_designerEmail;
 		} else {
 			if (!Runtime.userInfo) {
 		        var location = Runtime.location().match(/http:\/\/.*:\d+\//);
@@ -152,7 +152,9 @@ var Runtime = {
 	getMode: function() {
 		if (Runtime.commenting_designerName) {
 			return "reviewPage";
-		} else { return "designPage"; }
+		} else { 
+			return "designPage"; 
+		}
 	},
 	
 	

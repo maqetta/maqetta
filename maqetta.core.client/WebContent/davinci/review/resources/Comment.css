@@ -660,12 +660,8 @@
 }
 
 .davinciComment .commentReplies{
-  background-image: url("img/sprite.png");
-  background-repeat: no-repeat;
-  background-position: 0 -468px; 
 	padding-left: 10px;
 	margin-left: 8px;
-	height: 7px;
 }
 .davinciComment .commentFocused{
 	border: 2px solid #0000FF;

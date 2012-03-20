@@ -1096,6 +1096,8 @@ console.warn('openEditor after editorCreateCallback');
 			if(!keywordArgs.noSelect) {
 				 Runtime.currentEditor = editor;
 			}			
+		}, function(error) {
+			console.error("Error opening editor for filename: " + fileName, error);
 		});
 console.warn('openEditor exit');
 	},
@@ -1164,13 +1166,18 @@ console.warn('openEditor exit');
 				Workbench._switchEditor(tab.editor, keywordArgs.startup);
 			}
 
+			dojo.removeClass(loadIcon[0],'tabButtonLoadingIcon');
+			dojo.addClass(loadIcon[0],'dijitNoIcon');
+
 			setTimeout(function() {
-				var loadIcon = dojo.query('.dijitTabButtonIcon',tab.controlButton.domNode);
-				dojo.removeClass(loadIcon[0],'tabButtonLoadingIcon');
-				dojo.addClass(loadIcon[0],'dijitNoIcon');
 				tab.resize(); //kludge, forces editor to correct size, delayed to force contents to redraw
 			}, 100);
 			d.resolve(tab.editor);
+		}, function(error) {
+			dojo.removeClass(loadIcon[0],'tabButtonLoadingIcon');
+			dojo.addClass(loadIcon[0],'tabButtonErrorIcon');
+
+			d.reject(error);
 		});
 		return d;
 	},

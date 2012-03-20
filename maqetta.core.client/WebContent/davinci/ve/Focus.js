@@ -106,7 +106,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
         var position_prop;
         if(this._selectedWidget){
-            var position_prop = dojo.style(this._selectedWidget.domNode,"position");
+            // Short-term hack just before M5 to prevent reference through null
+            // error in case current widget's domNode doesn't have a computed style
+            var position_prop = this.dojoStyle(this._selectedWidget.domNode,"position");
         }
         var absolute = (position_prop=="absolute");
         var doSnapLinesX = absolute;
@@ -138,7 +140,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             }
         }
 
-        dojo.style(this.domNode, {left: b.l + "px", top: b.t + "px"});
+        // Short-term hack just before M5 to prevent reference through null
+        // error in case current widget's domNode doesn't have a computed style
+        this.dojoStyle(this.domNode, {left: b.l + "px", top: b.t + "px"});
 
         var currentParent = null;
         if(this._selectedWidget){
@@ -823,6 +827,18 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             }
         }
         this._currentItem = null;
+    },
+    
+    // FIXME: Temporary hack just before M5 release
+    // Front-end to dojo.style that prevents possible reference through undefined
+    dojoStyle: function(node, name, value){
+    	if(node && node.ownerDocument && node.ownerDocument.defaultView){
+    		var win = node.ownerDocument.defaultView;
+    		var cs = win.getComputedStyle(node);
+    		if(cs){
+    			return dojo.style.apply(dojo, arguments);
+    		}
+    	}
     }
 });
 

@@ -79,13 +79,24 @@ var handleIoError = function (deferred, reason) {
      *	for the request with the topic.
 	 */
 	if(reason.status == 401 || reason.status == 403){
-		//FIXME: Is there a variable that holds /maqetta?
-		//Shouldn't /welcome also become a variable?
-		window.location.href= '/maqetta/welcome';
+		seasonTimedout();
 	}else{
 		console.warn(reason.message + ' :' + reason.status);
 	}
 };
+
+var seasonTimedout = function(){
+	var loginHref = '/maqetta/welcome';
+	var dialog = new Dialog({
+        title: webContent.seasonTimedout,
+      //  style: "width: 300px"
+    });
+	var message =  dojo.string.substitute(webContent.seasonTimedOutMsg, { hrefLoc: loginHref}	);
+	dialog.set("content", message);
+	dojo.connect(dialog, "onCancel", null, function(){window.location.href=loginHref;});
+	setTimeout(function(){window.location.href=loginHref;},10000); // redirect to login in 10 sec
+	dialog.show();
+}
 
 var getSelectedResource = function() {
 	var selection=Runtime.getSelection();

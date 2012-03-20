@@ -12,8 +12,8 @@ define({ root:
 		"pageDesignerTitle":"Maqetta Designer",
 		"maqettaUser":"Maqetta User",
 		"localhostUser":"localhost user",
-		"seasonTimedout":"Season timed out",
-		"seasonTimedOutMsg": "The season has timed out, <a href='${hrefLoc}'>click here</a> to log in.",
+		"sessionTimedOut":"Session timed out",
+		"sessionTimedOutMsg": "The session has timed out, <a href='${hrefLoc}'>Click here</a> to log in. (Auto-redirect within 10 seconds)",
 		
 		//preview.html
 		"devicePreviewError":"Maqetta device previewer error. Must supply URL parameter 'file='",

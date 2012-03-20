@@ -55,58 +55,66 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	setEditor: function(editorExtension, fileName, content, file, rootElement, newHtmlParams){
 		var d = new Deferred();
 		this.editorExtension = editorExtension;
-		require([editorExtension.editorClass], function(EditorCtor) {	
-			var editor = this.editor = new EditorCtor(this.containerNode);
-			var setupEditor = function(){
-				if(editor.setRootElement){
-					editor.setRootElement(rootElement);
-				}
-				this.containerNode = editor.domNode || this.containerNode;
-				if(typeof editorExtension.editorClassName == 'string'){
-					dojo.addClass(this.domNode, editorExtension.editorClassName);
-				}
-				editor.editorID=editorExtension.id;
-				editor.isDirty= !editor.isReadOnly && this.isDirty;
-				this._createToolbar();
-				if (!content) {
-					content=editor.getDefaultContent();
-					editor.isDirty=!editor.isReadOnly;
-					editor.lastModifiedTime=Date.now();
-				}
-				if (!content) {
-					content="";
-				}
-				editor.resourceFile=file;
-				editor.fileName=fileName;
-		
-				// Don't populate the editor until the tab is selected.  Defer processing,
-				// but also avoid problems with display:none on hidden tabs making it impossible
-				// to do geometry measurements in editor initialization
-				var tabContainer = "editors_tabcontainer";
-				if(dijit.byId(tabContainer).selectedChildWidget.domNode == this.domNode){
-					// Tab is visible.  Go ahead
-					editor.setContent(fileName, content, newHtmlParams);	
-				}else{
-					// When tab is selected, set up the editor
-					var handle = dojo.subscribe(tabContainer + "-selectChild", null, function(args){
-						if(editor==args.editor){
-							dojo.unsubscribe(handle);
-							editor.setContent(fileName,content);		
+		require([editorExtension.editorClass], function(EditorCtor) {
+			try {
+				var editor = this.editor = new EditorCtor(this.containerNode);
+				var setupEditor = function(){
+					if(editor.setRootElement){
+						editor.setRootElement(rootElement);
+					}
+					this.containerNode = editor.domNode || this.containerNode;
+					if(typeof editorExtension.editorClassName == 'string'){
+						dojo.addClass(this.domNode, editorExtension.editorClassName);
+					}
+					editor.editorID=editorExtension.id;
+					editor.isDirty= !editor.isReadOnly && this.isDirty;
+					this._createToolbar();
+					if (!content) {
+						content=editor.getDefaultContent();
+						editor.isDirty=!editor.isReadOnly;
+						editor.lastModifiedTime=Date.now();
+					}
+					if (!content) {
+						content="";
+					}
+					editor.resourceFile=file;
+					editor.fileName=fileName;
+			
+					// Don't populate the editor until the tab is selected.  Defer processing,
+					// but also avoid problems with display:none on hidden tabs making it impossible
+					// to do geometry measurements in editor initialization
+					var tabContainer = "editors_tabcontainer";
+					if(dijit.byId(tabContainer).selectedChildWidget.domNode == this.domNode){
+						// Tab is visible.  Go ahead
+						editor.setContent(fileName, content, newHtmlParams);	
+					}else{
+						// When tab is selected, set up the editor
+						var handle = dojo.subscribe(tabContainer + "-selectChild", null, function(args){
+							if(editor==args.editor){
+								dojo.unsubscribe(handle);
+								editor.setContent(fileName,content);		
+							}
+						});
+					}
+					editor.editorContainer=this;
+					this.setDirty(editor.isDirty);
+				}.bind(this);
+				if(editor.deferreds){
+					editor.deferreds.then(function(){
+						try {
+							setupEditor();
+							d.resolve(editor);
+						} catch (e2) {
+							d.reject(e);
 						}
-					});
-				}
-				editor.editorContainer=this;
-				this.setDirty(editor.isDirty);
-			}.bind(this);
-			if(editor.deferreds){
-				editor.deferreds.then(function(){
+					}.bind(this));
+				}else{
+					//setupEditor.bind(this);
 					setupEditor();
-					d.resolve(editor);
-				}.bind(this));
-			}else{
-				//setupEditor.bind(this);
-				setupEditor();
-				d.resolve(editor);			}
+					d.resolve(editor);			}
+			} catch (e) {
+				d.reject(e);
+			}
 		}.bind(this));
 		return d;
 	},

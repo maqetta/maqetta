@@ -88,8 +88,8 @@ var handleIoError = function (deferred, reason) {
 var sessionTimedOut = function(){
 	var loginHref = '/maqetta/welcome';
 	var dialog = new Dialog({
-        title: webContent.sessionTimedOut,
-      //  style: "width: 300px"
+        title: webContent.sessionTimedOut
+      //,  style: "width: 300px"
     });
 	var message =  dojo.string.substitute(webContent.sessionTimedOutMsg, { hrefLoc: loginHref}	);
 	dialog.set("content", message);
@@ -210,7 +210,7 @@ var Workbench = {
 		Runtime.subscribe("/davinci/ui/selectionChanged", updateMainToolBar);
 		Runtime.subscribe("/davinci/ui/editorSelected", updateMainToolBar);
 		Runtime.subscribe("/davinci/resource/resourceChanged", Workbench._resourceChanged);
-		Runtime.subscribe('/dojo/io/error',handleIoError); // /dojo/io/error" is sent whenever an IO request has errored. 
+		Runtime.subscribe('/dojo/io/error', handleIoError); // /dojo/io/error" is sent whenever an IO request has errored. 
 		                                                   // requires djConfig.ioPublish be set to true in pagedesigner.html
 
 		Runtime.subscribe("/davinci/states/state/changed",
@@ -1046,7 +1046,6 @@ var Workbench = {
 	},
 
 	openEditor: function (keywordArgs, newHtmlParams) {
-console.warn('openEditor entered');
 		var fileName=keywordArgs.fileName,
 			content=keywordArgs.content,
 			fileExtension,
@@ -1063,14 +1062,12 @@ console.warn('openEditor entered');
 			tabContainer = dijit.byId("editors_tabcontainer");
 
 		if (tab) {
-console.warn('openEditor before selectChild');
 			// already open
 			tabContainer.selectChild(tab);
 			var editor=tab.editor;
 			if (keywordArgs.startOffset) {
 				editor.select(keywordArgs);
 			}
-console.warn('openEditor after selectChild and return');
 			return;
 		}
 		var editorCreateCallback=keywordArgs.editorCreateCallback;
@@ -1092,12 +1089,9 @@ console.warn('openEditor after selectChild and return');
 			});
 		}
 
-console.warn('openEditor before _createEditor');
 		Workbench._createEditor(editorExtension, fileName, keywordArgs, newHtmlParams).then(function(editor) {
 			if(editorCreateCallback){
-console.warn('openEditor before editorCreateCallback');
 				editorCreateCallback.call(window, editor);
-console.warn('openEditor after editorCreateCallback');
 			}
 
 			if(!keywordArgs.noSelect) {
@@ -1106,7 +1100,6 @@ console.warn('openEditor after editorCreateCallback');
 		}, function(error) {
 			console.error("Error opening editor for filename: " + fileName, error);
 		});
-console.warn('openEditor exit');
 	},
 	
 	_createEditor: function(editorExtension, fileName, keywordArgs, newHtmlParams) {
@@ -1387,16 +1380,13 @@ console.warn('openEditor exit');
 */
 
 	_switchEditor: function(newEditor, startup) {
-console.warn('_switchEditor entered');
 		var oldEditor = Runtime.currentEditor;
 		Runtime.currentEditor = newEditor;
 		try {
-console.warn('_switchEditor before publish /davinci/ui/editorSelected');
 			dojo.publish("/davinci/ui/editorSelected", [{
 				editor: newEditor,
 				oldEditor: oldEditor
 			}]);
-console.warn('_switchEditor after publish /davinci/ui/editorSelected');
 		} catch (ex) {console.error(ex);}
 		Workbench._updateTitle(newEditor);
 	
@@ -1404,42 +1394,25 @@ console.warn('_switchEditor after publish /davinci/ui/editorSelected');
 	
 		if(newEditor) {
 			if (newEditor.focus) { 
-console.warn('_switchEditor before focus()');
 				newEditor.focus(); 
-console.warn('_switchEditor after focus()');
 			}
 
 			//Bring palettes specified for the editor to the top
-console.warn('_switchEditor before _bringPalettesToTop()');
 			this._bringPalettesToTop(newEditor);
-console.warn('_switchEditor after _bringPalettesToTop()');
 		}
 		
 		setTimeout(function(){
-console.warn('_switchEditor (setTimeout) entered. newEditor='+newEditor);
-if(newEditor)
-console.warn('_switchEditor (setTimeout) entered. newEditor.visualEditor='+newEditor.visualEditor);
-if(newEditor && newEditor.visualEditor)
-	console.warn('_switchEditor (setTimeout) newEditor.visualEditor.context='+newEditor.visualEditor.context);
-if(newEditor && newEditor.visualEditor && newEditor.visualEditor.context)
-	console.warn('_switchEditor (setTimeout) newEditor.visualEditor.context.isActive='+newEditor.visualEditor.context.isActive);
 			// kludge: if there is a visualeditor and it is already populated, resize to make Dijit visualEditor contents resize
 			// If editor is still starting up, there is code on completion to do a resize
 			// seems necessary due to combination of 100%x100% layouts and extraneous width/height measurements serialized in markup
 			if (newEditor && newEditor.visualEditor && newEditor.visualEditor.context.isActive()) {
-console.warn('_switchEditor (setTimeout) before resize');
 				newEditor.visualEditor.context.getTopWidgets().forEach(function (widget) { if (widget.resize) { widget.resize(); } });
-console.warn('_switchEditor (setTimeout) after resize');
 			}
-console.warn('_switchEditor (setTimeout) exit');
 		}, 1000);
 
 		if(!startup) {
-console.warn('_switchEditor before _updateWorkbenchState');
 			Workbench._updateWorkbenchState();
-console.warn('_switchEditor after _updateWorkbenchState');
 		}
-console.warn('_switchEditor exit');
 	},
 	
 	_bringPalettesToTop: function(newEditor) {

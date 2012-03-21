@@ -81,7 +81,7 @@ var handleIoError = function (deferred, reason) {
 	if(reason.status == 401 || reason.status == 403){
 		sessionTimedOut();
 	}else{
-		console.warn(reason.message + ' :' + reason.status);
+		console.warn('Failed to load url=' + deferred.ioArgs.url + ' message=' + reason.message + ' status=' + reason.status);
 	}
 };
 
@@ -91,12 +91,12 @@ var sessionTimedOut = function(){
         title: webContent.sessionTimedOut
       //,  style: "width: 300px"
     });
-	var message =  dojo.string.substitute(webContent.sessionTimedOutMsg, { hrefLoc: loginHref}	);
+	var message =  dojo.string.substitute(webContent.sessionTimedOutMsg, {hrefLoc: loginHref});
 	dialog.set("content", message);
-	dojo.connect(dialog, "onCancel", null, function(){window.location.href=loginHref;});
-	setTimeout(function(){window.location.href=loginHref;},10000); // redirect to login in 10 sec
+	dojo.connect(dialog, "onCancel", null, function(){window.location.href = loginHref;});
+	setTimeout(function(){window.location.href=loginHref;}, 10000); // redirect to login in 10 sec
 	dialog.show();
-}
+};
 
 var getSelectedResource = function() {
 	var selection=Runtime.getSelection();
@@ -1531,7 +1531,7 @@ var Workbench = {
 	_updateWorkbenchState: function()
 	{
 		dojo.xhrPut({
-			url: "./cmd/setWorkbenchState",
+			url: "cmd/setWorkbenchState",
 			putData: dojo.toJson(Workbench._state),
 			handleAs:"text",
 			sync:true

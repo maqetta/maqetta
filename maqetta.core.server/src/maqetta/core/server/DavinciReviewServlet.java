@@ -84,7 +84,7 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 			if(requestVersion!=null && !requestVersion.equals("")){
 				Cookie versionCookie = new Cookie(Constants.REVIEW_VERSION, requestVersion);
 				/* have to set the path to delete it later from the client */
-				versionCookie.setPath("/");
+				versionCookie.setPath("/maqetta/");
 				resp.addCookie(versionCookie);
 			}
 			resp.sendRedirect(this.getLoginUrl(req));

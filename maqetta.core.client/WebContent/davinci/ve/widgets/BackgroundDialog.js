@@ -7,14 +7,17 @@ define(["dojo/_base/declare",
         "davinci/ve/utils/CssUtils",
         "dojo/i18n!davinci/ve/nls/ve",
         "dojo/i18n!dijit/nls/common",
+        "davinci/ve/utils/URLRewrite",
+        "davinci/model/Path",
         "dijit/form/Button",
         
         "davinci/ve/widgets/ColorPicker",
         "davinci/ve/widgets/ColorPickerFlat",
         "dijit/form/Textarea",
-        "davinci/ui/widgets/FileFieldDialog"
+        "davinci/ui/widgets/FileFieldDialog",
+        
        
-],function(declare, _Templated, _Widget, MutableStore, ColorStore, templateString, CSSUtils, veNLS,commonNLS){
+],function(declare, _Templated, _Widget, MutableStore, ColorStore, templateString, CSSUtils, veNLS,commonNLS, URLRewrite, Path){
 
 	return declare("davinci.ve.widgets.BackgroundDialog",   [_Widget, _Templated], {
 		
@@ -248,7 +251,12 @@ define(["dojo/_base/declare",
 			
 			this._filePicker.set('value', (this.bgddata && this.bgddata.url) ? this.bgddata.url : '');
 			this.connect(this._filePicker, 'onChange', dojo.hitch(this,function(){
-				this.bgddata.url = this._filePicker.get('value');
+				var fpValue = this._filePicker.get('value');;
+				var oldUrl = new Path(fpValue);
+				var base = new Path(this._baseLocation).removeRelative();
+				oldUrl = oldUrl.removeRelative();
+				var newUrl = oldUrl.relativeTo(base.toString(), true).toString();
+				this.bgddata.url = newUrl;
 				this._onFieldChanged();
 			}));
 			
@@ -398,7 +406,10 @@ define(["dojo/_base/declare",
 			this._updateDialogValidity();
 			this._updateBackgroundPreview();
 		},
-		
+		_setBaseLocationAttr : function(baseLocation){
+			this._baseLocation = baseLocation;
+			
+		},
 		_updateDialogValidity: function() {
 			var bgddata = this.bgddata;
 			if(!bgddata || !bgddata.type){
@@ -441,7 +452,23 @@ define(["dojo/_base/declare",
 			if(typeof backgroundColor == 'string' && backgroundColor.length>0){
 				styleText += ';background-color:' + backgroundColor;
 			}
+			
 			for (var i=0; i<a.length; i++){
+			
+				/* skip URLs for the preview. */
+				
+				if(URLRewrite.containsUrl(a[i]) && !URLRewrite.isAbsolute(a[i])){
+					continue;
+					/*
+					var oldUrl = new Path(URLRewrite.getUrl(a[i]));
+					
+					var newUrl = oldUrl.relativeTo(this._baseLocation).toString();
+					var newValue = URLRewrite.replaceUrl(a[i], newUrl);
+					a[i] = newValue
+					*/
+					
+				}
+				
 				styleText += ';background-image:' + a[i];
 			}
 			previewSpan.setAttribute('style', styleText);

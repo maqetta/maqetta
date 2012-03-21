@@ -72,9 +72,6 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 			// XXX move this block after `if`?
 			this.domNode = dijitWidget.domNode;
 			dijitWidget.domNode._dvWidget = this;
-			if (dijitWidget.containerNode) {
-				dijitWidget.containerNode._dvWidget = this;
-			}
 			this.isLayoutContainer = dijitWidget.isLayoutContainer;
 		} else {
 			this.type = dijitWidget.declaredClass;

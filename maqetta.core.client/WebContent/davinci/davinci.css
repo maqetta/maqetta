@@ -664,11 +664,6 @@ davinci_top_bar .dijitButtonNode {
 	background-color:#aaa;
 }
 
-.toolbaredContainer_toolbarDiv .dijitIcon,
-.dijitMenuPopup .dijitIcon {
-	background-image: url(img/sprite.png);
-}
-
 .themeSetDialogAdd {
 	background-image: url(img/sprite.png);
 	background-position: -82px -466px;
@@ -686,37 +681,47 @@ davinci_top_bar .dijitButtonNode {
 }
 
 .editCutIcon {
+	background-image: url(img/sprite.png);
 	background-position: 0 -516px;
 }
 .editCopyIcon {
+	background-image: url(img/sprite.png);
 	background-position: 0 -450px;
 }
 .editPasteIcon {
+	background-image: url(img/sprite.png);
 	background-position: -82px -400px;
 }
 .editDeleteIcon {
+	background-image: url(img/sprite.png);
 	background-position: 0 -648px;
 }
 .addStateIcon, .addThemeSetIcon {
+	background-image: url(img/sprite.png);
 	background-position: -82px -466px;
 }
 .removeStateIcon, .removeThemeSetIcon {
+	background-image: url(img/sprite.png);
 	background-position: 0 -1778px;
 }
 
 .designModeIcon {
+	background-image: url(img/sprite.png);
 	background-position: 0 -1842px;
 }
 
 .sourceModeIcon {
+	background-image: url(img/sprite.png);
 	background-position: 0 -1908px;
 }
 
 .splitVerticalIcon {
+	background-image: url(img/sprite.png);
 	background-position: -82px 0;
 }
 
 .splitHorizontalIcon {
+	background-image: url(img/sprite.png);
 	background-position: -82px -66px;
 }
 

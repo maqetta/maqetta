@@ -562,8 +562,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		var form = this._commentForm,
 		comment = this.commentIndices[args.commentId];
 
-		if (comment.ownerId != Runtime.commenting_reviewerName.userName ||
-				comment.email != Runtime.commenting_reviewerName.email) { 
+		if (comment.ownerId != Runtime.commenting_reviewerName) { 
 			return;
 		}
 
@@ -643,8 +642,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			if (this.states) { 
 				this.states.setState(widget.pageState);
 			}
-			var viewScene = this._cached[this._currentPage].viewScene || this._getCurrentScene().s;
-			this.publish(this._currentPage + "/davinci/review/drawing/filter", [{pageState: widget.pageState, viewScene: viewScene}, focusedComments]);
+			var viewScene = null; //this._cached[this._currentPage].viewScene || this._getCurrentScene().s;
+			this.publish(this._currentPage + "/davinci/review/drawing/filter", [{pageState: this._cached[this._currentPage].pageState, viewScene: viewScene}, focusedComments]);
 		}
 	},
 
@@ -660,8 +659,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				}
 			}
 		}
-		var viewScene = this._cached[this._currentPage].viewScene || this._getCurrentScene().s;
-		this.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: widget.pageState, viewScene: viewScene}, focusedComments]);
+		var viewScene = null; //this._cached[this._currentPage].viewScene || this._getCurrentScene().s;
+		this.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: this._cached[this._currentPage].pageState, viewScene: viewScene}, focusedComments]);
 	},
 
 	_onCommentFormCancel: function() {

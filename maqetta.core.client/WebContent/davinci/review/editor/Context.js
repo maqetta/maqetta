@@ -244,11 +244,11 @@ return declare("davinci.review.editor.Context", [Context], {
 					} else {
 						result = "partial";
 					}
-					if (shape.state != surface.filterState || shape.scene != surface.filterScene) {
+					if (shape.state != surface.filterState) { // || shape.scene != surface.filterScene) {
 						result = "hidden";
 					}
 				} else {
-					if (shape.state != surface.filterState || shape.scene != surface.filterScene) {
+					if (shape.state != surface.filterState) { // || shape.scene != surface.filterScene) {
 						result = "hidden";
 					} else {
 						result = "visible";

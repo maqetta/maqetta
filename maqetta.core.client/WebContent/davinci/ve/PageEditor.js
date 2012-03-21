@@ -16,7 +16,6 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	   
     constructor: function (element) {
 
-console.warn('PageEditor constructor entered');
         this._bc = new BorderContainer({}, element);
 
         this.domNode = this._bc.domNode;
@@ -60,7 +59,6 @@ console.warn('PageEditor constructor entered');
         this.subscribe("/davinci/ui/widgetSelected",   this._widgetSelectionChange);
         this.subscribe("/davinci/ui/selectionChanged",  this._modelSelectionChange);
 //      this._connect(this.visualEditor.context, "onSelectionChange","_widgetSelectionChange");
-console.warn('PageEditor constructor exit');
     },
 	
 	setRootElement: function(rootElement){

@@ -177,19 +177,7 @@ return declare(SmartInput, {
 	updateWidgetForUrlStore: function(){
 		var textArea = registry.byId("davinciIleb");
     this._url = textArea.value;
-    var url;
-    var patt=/http:\/\//i;
-    if (patt.test(this._url)){ // absolute url
-      url = this._url;
-    } else {
-      var parentFolder = new Path(this._widget._edit_context._srcDocument.fileName).getParentPath().toString();
-      var file = resource.findResource(this._url, null, parentFolder); // relative so we have to get the absolute for the update of the store
-      if (!file){
-        alert('File: ' + this._url + ' does not exsist.');
-        return;
-      }
-      url = file.getURL();
-    }
+    var url = this._getFullUrl(this._url);
 
     // clear any callbacks
     this._callback = '';
@@ -240,7 +228,7 @@ return declare(SmartInput, {
 		}
 
 		dj.dojox.io.xhrScriptPlugin(url,"callback");
-		store = new dj.data.ItemFileReadStore({url: url });
+		store = new dj.data.ItemFileReadStore({url: url});
     store.fetch({
     	query: this.query,
     	queryOptions:{deep:true}, 
@@ -305,13 +293,13 @@ return declare(SmartInput, {
 		  // we need to change the store type
 		  if (this._dataType == "csv") {
 		    // replace store with csv
-        sid = Widget.getUniqueObjectId("dojox.data.CsvStore", context.getDocument());
+		    sid = Widget.getUniqueObjectId("dojox.data.CsvStore", context.getDocument());
 		    var data = {
 		      "type": "dojox.data.CsvStore",
 		      "properties": {
 		        id: sid,
 		        jsId: sid,
-		        url: this._getFullUrl(this._url),
+		        url: this._url,
 		        data: ''
 		      },
 		      context: context,
@@ -321,13 +309,13 @@ return declare(SmartInput, {
 		    var addCmd = new AddCommand(data, widget.getParent(), 0);
 		    compoundCommand.add(addCmd);
 		  } else {
-        sid = Widget.getUniqueObjectId("dojo.data.ItemFileReadStore", context.getDocument());
+		    sid = Widget.getUniqueObjectId("dojo.data.ItemFileReadStore", context.getDocument());
 		    var data = {
 		      "type": "dojo.data.ItemFileReadStore",
 		      "properties": {
 		        id: sid,
 		        jsId: sid,
-		        url: this._getFullUrl(this._url),
+		        url: this._url,
 		        data: ''
 		      },
 		      context: context,
@@ -337,7 +325,8 @@ return declare(SmartInput, {
 		    var addCmd = new AddCommand(data, widget.getParent(), 0);
 		    compoundCommand.add(addCmd);
 		  }
-		 
+
+		  // allow subclasses to inject their own data
 		  var command = this._getModifyCommandForUrlDataStore(widget, context, items, this._urlDataStore);
 		  compoundCommand.add(command);
 
@@ -355,8 +344,14 @@ return declare(SmartInput, {
     context.select(command.newWidget);
 	},
 
-	_getModifyCommandForUrlDataStore: function(widget, context, items) {
-	  return new ModifyCommand(widget, null, null, context);
+	_getModifyCommandForUrlDataStore: function(widget, context, items, datastore) {
+	  var props = {};
+
+	  if (datastore) {
+	    props.store = datastore;
+	  }
+
+	  return new ModifyCommand(widget, props, null, context);
 	},
 	
 	show: function(widgetId) {

@@ -166,10 +166,9 @@ DataGridHelper.prototype = {
 	},
 	
 	updateStore: function(widget,  storeWidget, w) { 
-	  console.log("updatestore");
 		var store = widget.dijitWidget.store;
 		var data = storeWidget._srcElement.getAttribute('data'); 
-		var url = storeWidget._srcElement.getAttribute('url'); 
+		var url = storeWidget._srcElement.getAttribute('url');
 		if (data){ 
 			var value = data; 
 			var storeData = eval('storeData = '+value);

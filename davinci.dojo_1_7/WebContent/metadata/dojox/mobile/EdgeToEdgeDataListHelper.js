@@ -30,8 +30,13 @@ EdgeToEdgeDataListHelper.prototype = {
 
 	preProcessData: function(data){
 
-		var store = data.context.getDojo().getObject(data.properties.store._edit_object_id);
-		data.properties.store = store;
+	  if (data.properties.store._edit_object_id) {
+	    var store = data.context.getDojo().getObject(data.properties.store._edit_object_id);
+	    if (store) {
+	      data.properties.store = store;
+	    }
+	  }
+
 		return data;
 	},
 	

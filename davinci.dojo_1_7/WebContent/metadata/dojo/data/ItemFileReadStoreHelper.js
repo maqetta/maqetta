@@ -58,6 +58,8 @@ ItemFileReadStoreHelper.prototype = {
         if (xhrParams){
            var dj = context.getDojo();
            try{
+        	   dj.require('dojo/data/ItemFileReadStore'); // needed for first loading of html file
+        	   dj.require('dojox/io/xhrScriptPlugin');	  // needed for first loading of html file
                dj.dojox.io.xhrScriptPlugin(xhrParams.url,xhrParams.callback);
            }catch(e){
                console.warn("FAILED: failure for loading dojox.io.xhrScriptPlugin("+xhrParams.url+","+xhrParams.callback+");");

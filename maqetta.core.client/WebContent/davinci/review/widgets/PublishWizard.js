@@ -450,12 +450,12 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		var valid = this.versionTitle.isValid() && this.dueDate.isValid();
 		var valid2 = this.reviewFiles && this.reviewFiles.length > 0;
 		var valid3 = this.userData.length > 0;
-		dojo.removeClass(this.navPage1, valid ? "todo" : "done");
-		dojo.addClass(this.navPage1, valid ? "done" : "todo");
-		dojo.removeClass(this.navPage2, valid2 ? "todo" : "done");
-		dojo.addClass(this.navPage2, valid2 ? "done" : "todo");
-		dojo.removeClass(this.navPage3, valid3 ? "todo" : "done");
-		dojo.addClass(this.navPage3, valid3 ? "done" : "todo");
+		dojo.removeClass(this.navPage1Icon, valid ? "todo" : "done");
+		dojo.addClass(this.navPage1Icon, valid ? "done" : "todo");
+		dojo.removeClass(this.navPage2Icon, valid2 ? "todo" : "done");
+		dojo.addClass(this.navPage2Icon, valid2 ? "done" : "todo");
+		dojo.removeClass(this.navPage3Icon, valid3 ? "todo" : "done");
+		dojo.addClass(this.navPage3Icon, valid3 ? "done" : "todo");
 		this.invite.set("disabled", !(valid && valid2 && valid3));
 		var errMsg="";
 		if (!valid3) {
@@ -476,11 +476,11 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 	select: function (evt) {
 		var target = evt.target;
 		var stackContainer = this.reviewerStackContainer;
-		if (target == this.navPage1) {
+		if (target == this.navPage1 || target == this.navPage1Icon) {
 			stackContainer.selectChild(this.page1, true);
-		} else if (target == this.navPage2) {
+		} else if (target == this.navPage2 || target == this.navPage2Icon) {
 			stackContainer.selectChild(this.page2, true);
-		} else if (target == this.navPage3) {
+		} else if (target == this.navPage3 || target == this.navPage3Icon) {
 			stackContainer.selectChild(this.page3, true);
 		}
 	},

@@ -13,7 +13,7 @@ define({ root:
 		"maqettaUser":"Maqetta User",
 		"localhostUser":"localhost user",
 		"sessionTimedOut":"Session timed out",
-		"sessionTimedOutMsg": "The session has timed out, <a href='${hrefLoc}'>Click here</a> to log in. (Auto-redirect within 10 seconds)",
+		"sessionTimedOutMsg": "The session has timed out, please <a href='${hrefLoc}'>log in</a> again. (Auto-redirect within 10 seconds)",
 		
 		//preview.html
 		"devicePreviewError":"Maqetta device previewer error. Must supply URL parameter 'file='",

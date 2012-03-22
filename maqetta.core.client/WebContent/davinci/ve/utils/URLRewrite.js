@@ -30,7 +30,7 @@ return {
 	},
 	
 	isAbsolute : function(url){
-		return url.search(_ABSOLUTE_REG_EX);
+		return url.search(_ABSOLUTE_REG_EX) > -1;
 	},
 	
 	getUrlEndOffset: function(url){

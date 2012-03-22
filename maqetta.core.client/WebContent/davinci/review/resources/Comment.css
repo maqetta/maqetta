@@ -404,6 +404,7 @@
   background-position: -85px -866px;
   width: 20px;
   height: 20px;
+  float: left;
 }
 
 .done{
@@ -412,12 +413,12 @@
   background-position: 0 -723px;
   width: 20px;
   height: 20px;
+  float: left;
 }
 
 .crumbs{
 	margin-right:8px;
-	width:165px;
-	padding-left:20px;
+	width:185px;
 	color:#005CE5;
 	cursor:pointer;
 	float:left;
@@ -443,6 +444,7 @@
 	width: 16px; 
 	height: 16px; 
 	padding-left:18px;
+	white-space: nowrap;
 }
 
 .dijitTreeRowHover .deleteImg,

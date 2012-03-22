@@ -117,6 +117,13 @@ var Path = declare("davinci.model.Path", null, {
 		return result.join("");
 	},
 
+	removeRelative : function(){
+		var segs = this.getSegments();
+		if(segs.length > 0 && segs[1]==".")
+			return this.removeFirstSegments(1);
+		return this;
+	},
+	
 	relativeTo: function(base, ignoreFilename) {
 		if (typeof base == 'string') {
 			base = new Path(base);

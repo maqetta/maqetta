@@ -207,7 +207,7 @@ cd ${MAQETTA_BUILD_DIR}
 export buildDirectory=${MAQETTA_BUILD_DIR}
 echo "Starting ${MAQETTA_DEPLOYMENT:=external} build...."
 launcher="`ls ${baseLocation}/plugins/org.eclipse.equinox.launcher_*.jar`"
-java -Ddeployment-type=${MAQETTA_DEPLOYMENT} -DdojoBuild=${MAQETTA_DOJO_BUILD} -jar ${launcher} -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml -consoleLog
+java -g -Ddeployment-type=${MAQETTA_DEPLOYMENT} -DdojoBuild=${MAQETTA_DOJO_BUILD} -jar ${launcher} -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml -consoleLog
 
 #
 # save exit code for later

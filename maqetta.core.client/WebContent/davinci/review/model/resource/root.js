@@ -57,11 +57,9 @@ var root = declare(Resource, {
 			}
 			this._loading = [];
 			this._loading.push(onComplete);
-			var designerName = Runtime.commenting_designerName || "";
 			var location = Workbench.location().match(/http:\/\/.*:\d+\//);
 			Runtime.serverJSONRequest({
 				url:  location + "maqetta/cmd/listVersions",
-				content:{'designer':designerName},
 				sync:sync,
 				load : dojo.hitch(this, function(responseObject, ioArgs) {
 					this.children=[];

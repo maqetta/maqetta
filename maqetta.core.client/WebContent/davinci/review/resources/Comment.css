@@ -286,6 +286,16 @@
 	border: 0px;
 }
 
+.reviewOwnedByUserLabel {
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+.reviewOwnedByOtherLabel {
+  font-style: italic;
+  vertical-align: middle;
+}
+
 .reviewFileIcon {
   background-image: url("img/sprite.png");
   background-repeat: no-repeat;

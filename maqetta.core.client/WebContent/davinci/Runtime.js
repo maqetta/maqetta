@@ -93,6 +93,11 @@ var Runtime = {
 		return document.location.href.split("?")[0];
 	},
 	
+	//AWE TODO: I don't believe getRole, getDesigner, not getDesignerEmail really
+	//belong in Runtime... especially in the "new" world
+	
+	//AWE TODO: Deal with commenting_designerName -- e.g., need to compare designerId
+	//of the specific review to the current user and not rely on this global setting
 	getRole: function() {
 		if (!Runtime.commenting_designerName) { 
 			return "Designer";
@@ -111,6 +116,8 @@ var Runtime = {
 		return "Reviewer";
 	},
 	
+	//AWE TODO: Deal with commenting_designerName... e.g., need to get the designerId from
+	//the review, and not rely on a global setting
 	getDesigner: function() {
 		if (Runtime.commenting_designerName) {
 			return Runtime.commenting_designerName;
@@ -127,6 +134,8 @@ var Runtime = {
 		}
 	},
 	
+	//AWE TODO: Deal with commenting_designerName... e.g., need to get the designerId from
+	//the review, and not rely on a global setting
 	getDesignerEmail: function() {
 		if (Runtime.commenting_designerEmail) {
 			return Runtime.commenting_designerEmail;
@@ -143,12 +152,15 @@ var Runtime = {
 		}
 	},
 	
+	//AWE TODO: Not sure review function like this belongs in Runtime??
 	publish: function(node) {
 		var publish = new davinci.review.actions.PublishAction();
 		publish.run(node);
 	},
 	
 	//two modes in design page and in review page
+	//AWE TODO: Deal with commenting_designerName... e.g., need to get the designerId from
+	//the review, and not rely on a global setting
 	getMode: function() {
 		if (Runtime.commenting_designerName) {
 			return "reviewPage";
@@ -157,7 +169,7 @@ var Runtime = {
 		}
 	},
 	
-	
+	//AWE TODO: Not sure review function like this belongs in Runtime??
 	getColor: function(/*string*/ name) {
 		var index;
 		dojo.some(Runtime.reviewers,function(item,n){

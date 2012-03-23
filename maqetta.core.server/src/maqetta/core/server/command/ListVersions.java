@@ -1,12 +1,14 @@
 package maqetta.core.server.command;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import maqetta.core.server.user.ReviewManager;
 
+import org.davinci.server.review.ReviewerVersion;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.user.IDesignerUser;
 import org.davinci.server.review.user.Reviewer;
@@ -19,80 +21,87 @@ public class ListVersions extends Command {
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user)
 			throws IOException {
 
-		String designer = (String) req.getParameter("designer");
-		if(designer==null||designer.equals(""))
-			designer = user.getUserName();
+		String designerIDParm = (String) req.getParameter("designer");
+		
 		ReviewManager commentingManager = ReviewManager.getReviewManager();
 
-		/*String file = req.getParameter("fileName");
-		IPath path = new Path(file);
-		path = path.removeFirstSegments(3);
-		String filePath = path.toString();
-		filePath = "./" + filePath;
-*/
-		IDesignerUser reviewUser = commentingManager.getDesignerUser(designer);
-
-		// this.responseString = reviewUser.getVersionsJSON();
+		String userEmail = user.getPerson().getEmail();
+		Reviewer reviewerUser = commentingManager.getReviewer(userEmail);
 
 		JSONWriter writer = new JSONWriter(true);
-		for (Version version : reviewUser.getVersions()) {
-			if (version.containsUser(user.getPerson().getEmail())) {
-				writer.startObject();
-				writer.addField("versionTitle", version.getVersionTitle());
-				writer.addField("versionId", version.getVersionID());
-				writer.addField("dueDate", version.dueDateString());
-				writer.addField("timeStamp", version.getTime());
-				writer.addField("closed", version.isClosed());
-				writer.addField("closedManual",version.isHasClosedManually());
-				writer.addField("isDraft", version.isDraft());
-				writer.addField("width", version.getDesireWidth());
-				writer.addField("height", version.getDesireHeight());
-				writer.addField("restartFrom",version.getRestartFrom());
-				writer.addField("receiveEmail", version.isReceiveEmail());
-				writer.addField("hasRestarted", version.isHasRestarted());
-				if(version.getDescription()!="")
-					writer.addField("description", version.getDescription());
-				StringBuffer buf = new StringBuffer("[");
-				for(Reviewer reviewer:version.getReviewers()){
-					buf.append("{");
-					buf.append("'");
-					buf.append("name");
-					buf.append("'");
-					buf.append(":");
-					buf.append("'");
-					buf.append(reviewer.getUserName());
-					buf.append("'");
-					buf.append(",");
-					buf.append("'");
-					buf.append("email");
-					buf.append("'");
-					buf.append(":");
-					buf.append("'");
-					buf.append(reviewer.getEmail());
-					buf.append("'");
-					buf.append(",");
-					buf.append("}");
-					buf.append(",");
+		Iterator<ReviewerVersion> iterator = reviewerUser.getReviewerVersions();
+		while (iterator.hasNext()) {
+			ReviewerVersion reviewerVersion = iterator.next();
+
+			String reviewDesignerID = reviewerVersion.getDesignerID();
+			String reviewTime = reviewerVersion.getTimeVersion();
+			if (designerIDParm == null || designerIDParm.equals("") || designerIDParm.equals(reviewDesignerID)) {
+				IDesignerUser designerUser = commentingManager.getDesignerUser(reviewDesignerID);
+				Version version = designerUser.getVersion(reviewTime);
+
+				if (version != null) {
+					if (version.containsUser(userEmail)) {
+						writer.startObject();
+						writer.addField("designerId", reviewDesignerID);
+						writer.addField("versionTitle", version.getVersionTitle());
+						writer.addField("versionId", version.getVersionID());
+						writer.addField("dueDate", version.dueDateString());
+						writer.addField("timeStamp", version.getTime());
+						writer.addField("closed", version.isClosed());
+						writer.addField("closedManual",version.isHasClosedManually());
+						writer.addField("isDraft", version.isDraft());
+						writer.addField("width", version.getDesireWidth());
+						writer.addField("height", version.getDesireHeight());
+						writer.addField("restartFrom",version.getRestartFrom());
+						writer.addField("receiveEmail", version.isReceiveEmail());
+						writer.addField("hasRestarted", version.isHasRestarted());
+						if(version.getDescription()!="")
+							writer.addField("description", version.getDescription());
+						StringBuffer buf = new StringBuffer("[");
+						for(Reviewer reviewer:version.getReviewers()){
+							buf.append("{");
+							buf.append("'");
+							buf.append("name");
+							buf.append("'");
+							buf.append(":");
+							buf.append("'");
+							buf.append(reviewer.getUserName());
+							buf.append("'");
+							buf.append(",");
+							buf.append("'");
+							buf.append("email");
+							buf.append("'");
+							buf.append(":");
+							buf.append("'");
+							buf.append(reviewer.getEmail());
+							buf.append("'");
+							buf.append(",");
+							buf.append("}");
+							buf.append(",");
+						}
+		
+						if(!version.getReviewers().isEmpty())
+						buf=buf.delete(buf.length()-1, buf.length());
+						buf.append("]");
+		
+						writer.addFieldName("reviewers");
+						writer.startArray();
+		
+						for(Reviewer reviewer:version.getReviewers()){
+							writer.startObject();
+							writer.addField("name", reviewer.getUserName());
+							writer.addField("email", reviewer.getEmail());
+							writer.endObject();
+						}
+						writer.endArray();
+						writer.endObject();
+					}
+				} else {
+					//AWE TODO: Could not find version created by given designer... this could happen if a review has been deleted, but not
+					//removed from the given reviewer's xml file
 				}
-
-				if(!version.getReviewers().isEmpty())
-				buf=buf.delete(buf.length()-1, buf.length());
-				buf.append("]");
-
-				writer.addFieldName("reviewers");
-				writer.startArray();
-
-				for(Reviewer reviewer:version.getReviewers()){
-					writer.startObject();
-					writer.addField("name", reviewer.getUserName());
-					writer.addField("email", reviewer.getEmail());
-					writer.endObject();
-				}
-				writer.endArray();
-				writer.endObject();
 			}
 		}
 		this.responseString = writer.getJSON();
 	}
-
 }

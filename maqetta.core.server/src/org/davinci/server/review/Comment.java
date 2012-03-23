@@ -32,6 +32,8 @@ public class Comment implements Serializable {
 	public static final String VIEW_SCENE = "viewScene";
 
 	public static final String OWNER_ID = "ownerId";
+	
+	public static final String DESIGNER_ID = "designerId";
 
 	public static final String SUBJECT = "subject";
 
@@ -97,6 +99,8 @@ public class Comment implements Serializable {
 	private String drawingJson;
 
 	private String ownerId;
+	
+	private String designerId;
 
 	private String subject;
 
@@ -133,6 +137,7 @@ public class Comment implements Serializable {
 		fieldInclusionMap.put(Comment.ID, Boolean.TRUE);
 		fieldInclusionMap.put(Comment.PAGE_STATE, Boolean.TRUE);
 		fieldInclusionMap.put(Comment.VIEW_SCENE, Boolean.TRUE);
+		fieldInclusionMap.put(Comment.DESIGNER_ID, Boolean.TRUE);
 		fieldInclusionMap.put(Comment.PAGE_NAME, Boolean.TRUE);
 		fieldInclusionMap.put(Comment.OWNER_ID, Boolean.TRUE);
 		fieldInclusionMap.put(Comment.REPLY_TO, Boolean.TRUE);
@@ -175,6 +180,14 @@ public class Comment implements Serializable {
 
 	public void setOwnerId(String ownerId) {
 		this.ownerId = ownerId;
+	}
+	
+	public String getDesignerId() {
+		return designerId;
+	}
+
+	public void setDesignerId(String designerId) {
+		this.designerId = designerId;
 	}
 
 	public String getSubject() {

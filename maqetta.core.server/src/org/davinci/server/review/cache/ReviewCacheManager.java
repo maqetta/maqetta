@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -237,7 +238,12 @@ public class ReviewCacheManager extends Thread {
 			synchronized(project){
 				persistReviewFile(project);
 				reviewHash.clear();
-				reviewFilePool.remove(project);
+				/*
+				 * This is usually called by an iterator so modifying the underlying
+				 * hash store here breaks that iterator (and causes concurrent access exceptions 
+				 * 
+				 */
+				//reviewFilePool.remove(project);
 			}
 			return true;
 		}
@@ -251,8 +257,10 @@ public class ReviewCacheManager extends Thread {
 	 */
 	public boolean destroyAllReview() {
 		Set<IDavinciProject> keys = reviewFilePool.keySet();
-		for (IDavinciProject project : keys) {
+		for (Iterator<IDavinciProject> it=keys.iterator();it.hasNext();) {
+			IDavinciProject project = it.next();
 			destroyReviewFile(project, true);
+			it.remove();
 		}
 		return true;
 	}
@@ -270,9 +278,13 @@ public class ReviewCacheManager extends Thread {
 
 	public void recycle() {
 		Set<IDavinciProject> keySet = reviewFilePool.keySet();
-		for (IDavinciProject prj : keySet) {
+		for (Iterator<IDavinciProject> it=keySet.iterator();it.hasNext();) {
+			IDavinciProject prj = it.next();
 			if (!this.destroyReviewFile(prj, false)) { // Destroy will persist the project.
 				this.persistReviewFile(prj);
+				/* this removes the project from the file hash */
+				it.remove();
+				
 			}
 		}
 	}

@@ -3,25 +3,21 @@ define([
 	"davinci/model/resource/Resource",
 	"davinci/review/model/resource/File",
 	"davinci/Runtime",
-	"davinci/Workbench"
-], function(declare, Resource, reviewFile, Runtime, Workbench) {
+	"davinci/Workbench",
+	"dojo/date/stamp"
+], function(declare, Resource, reviewFile, Runtime, Workbench, stamp) {
 
 return declare("davinci.review.model.resource.Folder", Resource, {
 
-	isDraft:false,
+	isDraft: false,
 	closed: false,
-	width:0,
-	height:0,
+	width: 0,
+	height: 0,
 
 	constructor: function(proc) {
 		dojo.mixin(this, proc);
 		this.elementType = "ReviewVersion";
-		this.dueDate = this.dueDate == "infinite" ? this.dueDate : dojo.date.locale.parse(this.dueDate,{
-			selector:'date',
-			formatLength:'long',
-			datePattern:'MM/dd/yyyy', 
-			timePattern:'HH:mm:ss'
-		});
+		this.dueDate == "infinite" ? this.dueDate : stamp.fromISOString(this.dueDate);
 	},
 
 	getChildren: function(onComplete, sync) {
@@ -30,20 +26,19 @@ return declare("davinci.review.model.resource.Folder", Resource, {
 				this._loading.push(onComplete);
 				return;
 			}
-			this._loading=[];
-			this._loading.push(onComplete);
+			this._loading=[onComplete];
 			var designerName = Runtime.commenting_designerName || "";
 			var location = Workbench.location().match(/http:\/\/.*:\d+\//);
 			Runtime.serverJSONRequest({
 				url: location + "maqetta/cmd/listReviewFiles",
-				content:{
-					'designer':designerName,
-					'version':this.timeStamp
+				content: {
+					designer: designerName,
+					version: this.timeStamp
 				},
-				sync:sync,
-				load : dojo.hitch(this, function(responseObject, ioArgs) {
+				sync: sync,
+				load: dojo.hitch(this, function(responseObject, ioArgs) {
 					this.children=[];
-					for (var i=0; i<responseObject.length; i++) {
+					for (var i=0; i<responseObject.length; i++) { //FIXME: map
 						var child = new reviewFile(responseObject[i].path, this);
 						this.children.push(child);
 					}

@@ -80,7 +80,9 @@
 							 * TODO: bring the R&C view forward
 							 */
 							node.getChildren(function(childs){
-								if(childs.length>1) return;
+								if(childs.length > 1) {
+									return;
+								}
 								dojo.forEach(childs, function(child){
 									davinci.Workbench.openEditor({
 										fileName: child,
@@ -92,8 +94,7 @@
 						}
 					}
 					
-					Workbench.run(loadReviews);
-							
+					Workbench.run().then(loadReviews);
 				};
 
 				// Display a warning dialog for unsupported browsers

@@ -8,8 +8,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.SimpleTimeZone;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -77,6 +80,8 @@ public class Unmarshaller {
 			return null;
 
 		SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_PATTERN);
+		sdf.setCalendar(Calendar.getInstance(new SimpleTimeZone(0, "GMT")));
+
 		Comment comment = new Comment();
 		Node node;
 

@@ -17,7 +17,7 @@ return declare("davinci.review.model.resource.Folder", Resource, {
 	constructor: function(proc) {
 		dojo.mixin(this, proc);
 		this.elementType = "ReviewVersion";
-		this.dueDate == "infinite" ? this.dueDate : stamp.fromISOString(this.dueDate);
+		this.dueDate = this.dueDate == "infinite" ? this.dueDate : stamp.fromISOString(this.dueDate);
 	},
 
 	getChildren: function(onComplete, sync) {

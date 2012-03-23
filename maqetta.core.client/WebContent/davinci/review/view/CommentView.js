@@ -120,7 +120,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			//		Enable the action icon on the toolbar
 			var global = dojo.window.get(context.containerNode.ownerDocument);
 
-			this._loadCommentData(pageName);
+			var designerId = this._getDesignerId();
+			this._loadCommentData(designerId, pageName);
 			if (Workbench.getOpenEditor() === context.containerEditor) {
 				// Only need rendering when it is the current editor
 				// No need to render when the editor is opened in the background
@@ -275,7 +276,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 		dojo.subscribe("/davinci/review/commentStatusChanged", this, function(comment, status) {
 			var focusedComments = this._cached[this._currentPage].focusedComments;
-			this._loadCommentData(this._currentPage);
+			var designerId = this._getDesignerId();
+			this._loadCommentData(designerId, this._currentPage);
 			var loopBody = function(comment){
 				comment.status = status;
 				var replies = comment.getReplies();
@@ -385,6 +387,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			commentId: form.commentId,
 			subject: args.subject,
 			content: args.content,
+			designerId: this._getDesignerId(),
 			pageName: this._currentPage,
 			pageState: this._cached[this._currentPage].pageState,
 			viewScene: this._cached[this._currentPage].viewScene || this._getCurrentScene().s,
@@ -472,7 +475,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		_comment.status = comment.status;
 	},
 
-	_loadCommentData: function(/*String*/ pageName) {
+	_loadCommentData: function(/*String*/ ownerId, /*String*/ pageName) {
 		// summary:
 		//		Load the comments attached to the opened page
 		//		and sort them by time order
@@ -481,7 +484,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			url: location + "maqetta/cmd/getComments",
 			sync: true,
 			content:{
-				ownerId: Runtime.commenting_designerName || Runtime.userName,
+				ownerId: ownerId,
 				pageName: pageName
 			}
 		}).sort(function(c1,c2){
@@ -511,6 +514,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				commentId: _comment.id,
 				subject: _comment.subject,
 				content: _comment.content,
+				designerId: _comment.designerId,
 				pageName: this._currentPage,
 				pageState: _comment.pageState,
 				viewScene: _comment.viewScene,
@@ -903,6 +907,11 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 	isPageOwner: function() {
 		return Runtime.commenting_designerName == Runtime.commenting_reviewerName.userName;
+	},
+	
+	_getDesignerId: function() {
+		var designerId = this._context.resourceFile.parent.designerId;
+		return designerId;
 	},
 
 	popupWarning: function(description) {

@@ -32,7 +32,7 @@ return declare("davinci.review.model.resource.Folder", Resource, {
 			}
 			this._loading=[];
 			this._loading.push(onComplete);
-			var designerName = Runtime.commenting_designerName || "";
+			var designerName = this.designerId || "";
 			var location = Workbench.location().match(/http:\/\/.*:\d+\//);
 			Runtime.serverJSONRequest({
 				url: location + "maqetta/cmd/listReviewFiles",

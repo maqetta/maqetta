@@ -31,14 +31,18 @@ public class UpdateComment extends Command {
 			/*
 	 		* create a review object so we can comment immediately.
 			*/
-			reviewInfo = new ReviewObject(user.getUserName());
-			reviewInfo.setDesignerEmail(user.getPerson().getEmail());
+			String designerId = req.getParameter(Comment.DESIGNER_ID);
+			reviewInfo = new ReviewObject(designerId);
 			req.getSession().setAttribute(Constants.REVIEW_INFO, reviewInfo);
 		}
 		String designerName = reviewInfo.getDesignerName();
 		IDesignerUser du = ReviewManager.getReviewManager().getDesignerUser(designerName);
 		DavinciProject project = new DavinciProject();
 		project.setOwnerId(du.getName());
+		
+		//Now that we have the designer, we can fill in the designer e-mail for the ReviewObject (didn't have when
+		//created ReviewObject and put into session)
+		reviewInfo.setDesignerEmail(du.getRawUser().getPerson().getEmail());
 
 		Comment comment = extractComment(req, project);
 		Comment existingComm = ReviewCacheManager.$.getComment(project, comment.getId());
@@ -67,6 +71,9 @@ public class UpdateComment extends Command {
 
 		paramValue = req.getParameter(Comment.ID);
 		comment.setId(paramValue);
+		
+		paramValue = req.getParameter(Comment.DESIGNER_ID);
+		comment.setDesignerId(paramValue);
 
 		paramValue = req.getParameter(Comment.CONTENT);
 		comment.setContent(paramValue);

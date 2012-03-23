@@ -17,10 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 import maqetta.core.server.user.DavinciProject;
 import maqetta.core.server.user.ReviewManager;
 
-import org.maqetta.server.mail.SimpleMessage;
-import org.maqetta.server.mail.SmtpPop3Mailer;
 import org.davinci.server.review.Constants;
 import org.davinci.server.review.ReviewObject;
+import org.davinci.server.review.ReviewerVersion;
 import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.cache.ReviewCacheManager;
@@ -29,6 +28,8 @@ import org.davinci.server.review.user.Reviewer;
 import org.davinci.server.user.IUser;
 import org.maqetta.server.Command;
 import org.maqetta.server.ServerManager;
+import org.maqetta.server.mail.SimpleMessage;
+import org.maqetta.server.mail.SmtpPop3Mailer;
 
 public class Publish extends Command {
 	SmtpPop3Mailer mailer = SmtpPop3Mailer.getDefault();
@@ -59,27 +60,13 @@ public class Publish extends Command {
 		String[] emails = emailsStr.split(",");
 		List<Reviewer> reviewers = new ArrayList<Reviewer>();
 
-		Date currentTime = new Date();
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-		String timeVersion = formatter.format(currentTime);
-
-		for (int i = 0; i < names.length; i++) {
-			String name = names[i];
-			String email = emails[i];
-			if (name != null && name != "" && !email.equals(user.getPerson().getEmail()))
-				reviewers.add(new Reviewer(name, email));
-		}
-
-		reviewers.add(new Reviewer(user.getUserName(), user.getPerson().getEmail()));
-
-		String fakeReviewer = ServerManager.getServerManger().getDavinciProperty(Constants.FAKE_REVIEWER);
-		if (fakeReviewer != null) {
-			reviewers.add(new Reviewer("fakeReviewer", fakeReviewer));
-		}
-
 		IDesignerUser du = ReviewManager.getReviewManager().getDesignerUser(user.getUserName());
 
 		if (!isUpdate) {
+			Date currentTime = new Date();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+			String timeVersion = formatter.format(currentTime);
+			
 			String id = null;
 			int latestVersionID = 1;
 			if (du.getLatestVersion() == null|| du.getVersion(du.getLatestVersion().getTime()) == null) {
@@ -101,6 +88,36 @@ public class Publish extends Command {
 			du.setLatestVersion(version);
 		} else {
 			version = du.getVersion(vTime);
+			
+			//AWE TODO: In theory, it would probably be good to remove the review version
+			//from any reviewers no longer part of the review... a rub here is that I'd also want to
+			//persist the new reviewer state
+		}
+		
+		//Deal with reviewers the designer has added to the review
+		ReviewerVersion reviewerVersion = new ReviewerVersion(user.getUserName(), version.getTime());
+		Reviewer tmpReviewer = null;
+		for (int i = 0; i < names.length; i++) {
+			String name = names[i];
+			String email = emails[i];
+			if (name != null && name != "" && !email.equals(user.getPerson().getEmail())) {
+				tmpReviewer = ReviewManager.getReviewManager().getReviewer(name, email);
+				tmpReviewer.addReviewerVersion(reviewerVersion);
+				reviewers.add(tmpReviewer);
+			}
+		}
+
+		//Add the designer as a reviewer
+		tmpReviewer = ReviewManager.getReviewManager().getReviewer(user.getUserName(), user.getPerson().getEmail());
+		tmpReviewer.addReviewerVersion(reviewerVersion);
+		reviewers.add(tmpReviewer);
+
+		//Handle fake reviewer (if necessary)
+		String fakeReviewer = ServerManager.getServerManger().getDavinciProperty(Constants.FAKE_REVIEWER);
+		if (fakeReviewer != null) {
+			tmpReviewer = ReviewManager.getReviewManager().getReviewer("fakeReviewer", fakeReviewer);
+			tmpReviewer.addReviewerVersion(reviewerVersion);
+			reviewers.add(tmpReviewer);
 		}
 
 		version.setDraft(savingDraft);
@@ -150,7 +167,7 @@ public class Publish extends Command {
 		for (Reviewer reviewer : reviewers) {
 			String mail = reviewer.getEmail();
 			if (mail != null && !mail.equals("") && set.add(mail)) {
-				String url = getUrl(user, timeVersion, requestUrl, mail);
+				String url = getUrl(user, version.getTime(), requestUrl, mail);
 				String htmlContent = getHtmlContent(user, message, url);
 				notifyRelatedPersons(Utils.getCommonNotificationId(), mail,
 						Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION_SUBJECT_PREFIX) + " " + versionTitle, htmlContent);
@@ -185,6 +202,7 @@ public class Publish extends Command {
 		return Utils.substitude(Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION), props);
 	}
 
+	//AWE TODO: Need to revisit what this URL should be and what the processing of it should be in the "new" world
 	private String getUrl(IUser user, String version, String requestUrl, String reviewer) {
 		String host = requestUrl.substring(0, requestUrl.indexOf('/', "http://".length()));
 		return host + "/review/" + user.getUserName() + "?revieweeuser=" + user.getUserName()+ "&version=" + version;

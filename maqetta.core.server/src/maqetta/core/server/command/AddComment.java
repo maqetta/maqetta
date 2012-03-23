@@ -33,6 +33,12 @@ public class AddComment extends Command {
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user)
 			throws IOException {
 		try {
+			Comment comment = extractComment(req);
+			
+			//AWE TODO: Going with the flow on relying on ReviewObject being in the session, but falls apart in "new"
+			//world if user is adding/editing comments to more than one designer's review in same session. Not exactly sure
+			//I understand why this was being put in the session even in the "old" world... be sure to address in
+			//all classes that use ReviewObject in this way
 			IUserManager userManager = ServerManager.getServerManger().getUserManager();
 			ReviewObject reviewInfo = (ReviewObject) req.getSession().getAttribute(Constants.REVIEW_INFO);
 			if (null == reviewInfo) {
@@ -40,8 +46,7 @@ public class AddComment extends Command {
 				/*
 		 		* create a review object so we can comment immediately.
 				*/
-				reviewInfo = new ReviewObject(user.getUserName());
-				reviewInfo.setDesignerEmail(user.getPerson().getEmail());
+				reviewInfo = new ReviewObject(comment.getDesignerId());
 				req.getSession().setAttribute(Constants.REVIEW_INFO, reviewInfo);
 			}
 			String designerName = reviewInfo.getDesignerName();
@@ -51,7 +56,11 @@ public class AddComment extends Command {
 			else
 				designer = userManager.getUser(designerName);
 
-			Comment comment = extractComment(req);
+			//Now that we have the designer, we can fill in the designer e-mail for the ReviewObject (didn't have when
+			//created ReviewObject and put into session)
+			reviewInfo.setDesignerEmail(designer.getPerson().getEmail());
+			
+			//et up project based on designer
 			DavinciProject project = new DavinciProject();
 			project.setOwnerId(designer.getUserName());
 			comment.setProject(project);
@@ -180,6 +189,9 @@ public class AddComment extends Command {
 		paramValue = req.getParameter(Comment.OWNER_ID);
 		comment.setOwnerId(paramValue);
 
+		paramValue = req.getParameter(Comment.DESIGNER_ID);
+		comment.setDesignerId(paramValue);
+		
 		paramValue = req.getParameter(Comment.PAGE_NAME);
 		comment.setPageName(paramValue);
 

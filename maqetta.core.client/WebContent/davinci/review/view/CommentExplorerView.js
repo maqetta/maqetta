@@ -34,6 +34,7 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 			labelAttr: "name", 
 			childrenAttrs: "children",
 			getIconClass: dojo.hitch(this, this._getIconClass),
+			getLabelClass: dojo.hitch(this, this._getLabelClass),
 			transforms: [
 			    function(items) {
 			    	return items.sort(function (file1,file2) {
@@ -405,6 +406,26 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 			return icon ||	"dijitLeaf";
 		}
 		return "dijitLeaf";
+	},
+	
+	_getLabelClass: function(item, opened) {
+		// summary:
+		//		Return the label class of the tree nodes
+		
+		var labelClass = "dijitTreeLabel";
+		if (item.elementType == "ReviewVersion") {
+			
+			//AWE TODO: Will need to discuss styling with group... right now just bolding 
+			//reviews owned by me and italicing reviews owned by others. Will want to consider 
+			//organizing the tree differently rather than relying on styling.
+			if (item.designerId == Runtime.userName) {
+				labelClass = "reviewOwnedByUserLabel";
+			} else {
+				labelClass = "reviewOwnedByOtherLabel";
+			}
+		}
+		
+		return labelClass;
 	}
 
 });

@@ -164,9 +164,9 @@ public class Version{
 		this.resources.add(path);
 	}
 
-	public void addReviewer(String userName,String email)
+	public void addReviewer(Reviewer reviewer)
 	{
-		this.reviewers.add(new Reviewer(userName,email));
+		this.reviewers.add(reviewer);
 	}
 
 	public void setReviewers(List<Reviewer> reviewers)

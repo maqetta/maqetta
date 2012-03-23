@@ -46,6 +46,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 					next: this.next,
 					pageState: this.pageState,
 					viewScene: this.viewScene,
+					designerId: this.designerId,
 					pageName: this.pageName,
 					replyTo: this.replyTo || 0,
 					drawingJson: this.drawingJson,
@@ -187,6 +188,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 			handleAs: "json",
 			content: {
 				id: this.commentId,
+				designerId: this.designerId,
 				status: this.status,
 				subject:  this.subject,
 				content:  this.content,

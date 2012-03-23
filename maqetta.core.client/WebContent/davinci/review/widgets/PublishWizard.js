@@ -18,6 +18,7 @@ define([
 	"dojox/validate/regexp",
 	"dojo/string",
 	"dojo/fx",
+	"dojo/date/stamp",
 	"dijit/Dialog",
 	"dijit/Tree",
 	"davinci/Runtime",
@@ -32,7 +33,7 @@ define([
 	"dojo/text!./templates/PublishWizard.html",
 	"dojo/text!./templates/MailFailureDialogContent.html"
 ], function(declare, _WidgetBase, _TemplatedMixin, StackContainer, ContentPane, SimpleTextarea, NumberTextBox, ValidationTextBox, DateTextBox, 
-		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojoxRegexp, dojostring, dojofx, Dialog, Tree, 
+		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojoxRegexp, dojostring, dojofx, stamp, Dialog, Tree, 
 		Runtime, Workbench, Folder, File, Empty, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls, 
 		templateString, warningString) {
 
@@ -687,10 +688,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		var message = messageTextarea.value;
 		var versionTitle = this.versionTitle.value;
 		var dueDate = this.dueDate.get('value');
-		var dueDateString = dueDate?dojo.date.locale.format(dueDate, {
-				selector:'date', 
-				formatLength:'short'
-			}).toLowerCase() : "infinite";
+		var dueDateString = dueDate ? stamp.toISOString(dueDate, {zulu: true}) : "infinite";
 		var desireWidth = this.desireWidth.value || 0;
 		var desireHeight = this.desireHeight.value || 0;
 		var	resources = dojo.map(this.reviewFiles, function(item) {

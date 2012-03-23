@@ -6,11 +6,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SimpleTimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,10 +30,9 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.davinci.server.user.IDavinciProject;
-
 import org.davinci.server.review.Comment;
 import org.davinci.server.review.Constants;
+import org.davinci.server.user.IDavinciProject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -128,7 +129,9 @@ public class Marshaller extends DefaultHandler {
 	protected static Element createCommentElem(Comment comm, Document doc) {
 		Element commentElem;
 		Element elem;
+		
 		SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_PATTERN);
+		sdf.setCalendar(Calendar.getInstance(new SimpleTimeZone(0, "GMT")));
 
 		commentElem = doc.createElement("Comment");
 		elem = doc.createElement(Comment.ID);

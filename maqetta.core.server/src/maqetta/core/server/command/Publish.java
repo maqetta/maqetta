@@ -3,12 +3,14 @@ package maqetta.core.server.command;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SimpleTimeZone;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -60,7 +62,8 @@ public class Publish extends Command {
 		List<Reviewer> reviewers = new ArrayList<Reviewer>();
 
 		Date currentTime = new Date();
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		formatter.setCalendar(Calendar.getInstance(new SimpleTimeZone(0, "GMT")));
 		String timeVersion = formatter.format(currentTime);
 
 		for (int i = 0; i < names.length; i++) {

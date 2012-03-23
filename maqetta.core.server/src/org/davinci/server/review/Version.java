@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.SimpleTimeZone;
 
 import org.davinci.server.review.user.Reviewer;
 
@@ -13,7 +14,7 @@ public class Version{
 
 	private boolean hasClosedManually = false;
 
-	private static final SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+	private static final SimpleDateFormat formatter;
 
 	private String versionID;
 
@@ -37,6 +38,11 @@ public class Version{
 
 	private boolean hasRestarted = false;
 
+	static {
+		formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		formatter.setCalendar(Calendar.getInstance(new SimpleTimeZone(0, "GMT")));	
+	}
+
 	public List<String> resources= Collections.synchronizedList(new ArrayList<String>());
 
 	List<Reviewer> reviewers = Collections.synchronizedList(new ArrayList<Reviewer>());
@@ -48,7 +54,6 @@ public class Version{
 		this.dueDate = s2Date(dueDate);
 		this.desireWidth = width==null?0:Integer.parseInt(width);
 		this.desireHeight = height==null?0:Integer.parseInt(height);
-
 	}
 
 	private Calendar s2Date(String time){

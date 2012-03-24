@@ -646,7 +646,17 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			if (this.states) { 
 				this.states.setState(widget.pageState);
 			}
-			var viewScene = null; //this._cached[this._currentPage].viewScene || this._getCurrentScene().s;
+			//FIXME: R/C is stashing away pageState and viewScene on a DOM node
+			//This is worrisome - at a minimum, the properties should use a Maqetta prefix of some sort
+			//to prevent future collisions.
+			//But more important is that we really need to add a SceneManager pointer, too
+			//For time being, assume SceneManager from getCurrentScene is same as SceneManager for domNode.viewScene
+			var viewScene;
+			var currentScene = this._getCurrentScene();
+			if(currentScene && currentScene.sm && currentScene.sm.selectScene && widget.viewScene){
+				currentScene.sm.selectScene({sceneId:widget.viewScene});
+				viewScene = widget.viewScene;
+			}
 			this.publish(this._currentPage + "/davinci/review/drawing/filter", [{pageState: this._cached[this._currentPage].pageState, viewScene: viewScene}, focusedComments]);
 		}
 	},
@@ -663,7 +673,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				}
 			}
 		}
-		var viewScene = null; //this._cached[this._currentPage].viewScene || this._getCurrentScene().s;
+		var viewScene = this._cached[this._currentPage].viewScene || this._getCurrentScene().s;
 		this.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: this._cached[this._currentPage].pageState, viewScene: viewScene}, focusedComments]);
 	},
 

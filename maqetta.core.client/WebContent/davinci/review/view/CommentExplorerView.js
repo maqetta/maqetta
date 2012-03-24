@@ -397,10 +397,6 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 		
 		var labelClass = "dijitTreeLabel";
 		if (item.elementType == "ReviewVersion") {
-			
-			//AWE TODO: Will need to discuss styling with group... right now just bolding 
-			//reviews owned by me and italicing reviews owned by others. Will want to consider 
-			//organizing the tree differently rather than relying on styling.
 			if (item.designerId == Runtime.userName) {
 				labelClass = "reviewOwnedByUserLabel";
 			} else {

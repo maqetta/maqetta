@@ -73,8 +73,8 @@ public class ListVersions extends Command {
 						writer.endObject();
 					}
 				} else {
-					//AWE TODO: Could not find version created by given designer... this could happen if a review has been deleted, but not
-					//removed from the given reviewer's xml file
+					//NOTE: Could not find version created by given designer... this could happen if a review has been deleted, but not
+					//removed from the given reviewer's xml file. This could be an opportunity to prune the reviewer's index file.
 				}
 			}
 		}

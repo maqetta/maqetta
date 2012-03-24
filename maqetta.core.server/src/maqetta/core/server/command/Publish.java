@@ -86,9 +86,8 @@ public class Publish extends Command {
 		} else {
 			version = du.getVersion(vTime);
 			
-			//AWE TODO: In theory, it would probably be good to remove the review version
-			//from any reviewers no longer part of the review... a rub here is that I'd also want to
-			//persist the new reviewer state
+			//NOTE: In theory, it would be good to remove the review any reviewers 
+			//no longer part of the review and persist the changes
 		}
 		
 		//Deal with reviewers the designer has added to the review

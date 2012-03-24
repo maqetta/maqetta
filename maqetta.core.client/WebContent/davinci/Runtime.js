@@ -100,7 +100,7 @@ var Runtime = {
 		publish.run(node);
 	},
 	
-	//AWE TODO: Review-specific... This should really be removed from Runtime
+	//Review-specific... This should really be removed from Runtime
 	getColor: function(/*string*/ name) {
 		var index;
 		dojo.some(Runtime.reviewers,function(item,n){

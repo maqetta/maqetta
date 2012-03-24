@@ -61,4 +61,8 @@ public class JoomlaPersonManager implements IPersonManager {
 	public String getPhotoRepositoryPath() {
 		return "not-implemented";
 	}
+
+	public IPerson getPersonByEmail(String email) {
+		return getPerson(email);
+	}
 }

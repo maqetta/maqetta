@@ -121,7 +121,6 @@ public class ReviewManager implements IReviewManager {
 	}
 	
 	private String buildBaseFileForFromReviewer(Reviewer reviewer) {
-		//AWE TODO: Works in windows, but can I safely use e-mail as basis for a file name in all environments?
 		String fileName = reviewer.getEmail() + ".xml";
 		return fileName;
 	}

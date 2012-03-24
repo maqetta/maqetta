@@ -22,11 +22,15 @@ return declare("davinci.review.actions.EditVersionAction", [Action], {
 	},
 
 	isEnabled: function(context) {
-		if (davinci.Runtime.getRole() != "Designer") {
-			return false;
-		}
 		var selection = context.getSelection ? context.getSelection() : null;
-		return selection && selection.length;
+		if (selection && selection.length > 0) {
+			var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
+			if (item.designerId == davinci.Runtime.userName) { 
+				//Only enable if the current user is also the review's designer
+				return true;
+			}
+		} 
+		return false;
 	}
 });
 });

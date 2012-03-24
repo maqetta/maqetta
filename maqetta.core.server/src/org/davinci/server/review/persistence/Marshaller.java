@@ -149,6 +149,10 @@ public class Marshaller extends DefaultHandler {
 		elem = doc.createElement(Comment.OWNER_ID);
 		setValue(elem, doc, comm.getOwnerId());
 		commentElem.appendChild(elem);
+		
+		elem = doc.createElement(Comment.DESIGNER_ID);
+		setValue(elem, doc, comm.getDesignerId());
+		commentElem.appendChild(elem);
 
 //		elem = doc.createElement(Comment.ORDER);
 //		setValue(elem, doc, Float.toString(comm.getOrder()));

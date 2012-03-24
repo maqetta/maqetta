@@ -120,12 +120,13 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			//		Enable the action icon on the toolbar
 			var global = dojo.window.get(context.containerNode.ownerDocument);
 
-			var designerId = this._getDesignerId();
+			var designerId = context.resourceFile.parent.designerId;
 			this._loadCommentData(designerId, pageName);
 			if (Workbench.getOpenEditor() === context.containerEditor) {
 				// Only need rendering when it is the current editor
 				// No need to render when the editor is opened in the background
 				this._currentPage = pageName;
+				this._cached[this._currentPage].context = context;
 				this._destroyCommentWidgets();
 				//FIXME: Hack
 				//Postpone updating shapes with setTimeout. Something happened
@@ -391,9 +392,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			pageName: this._currentPage,
 			pageState: this._cached[this._currentPage].pageState,
 			viewScene: this._cached[this._currentPage].viewScene || this._getCurrentScene().s,
-			//ownerId: Runtime.commenting_reviewerName.userName,
 			ownerId: Runtime.userName,
-			email: Runtime.getDesignerEmail(),
+			//email: Runtime.getDesignerEmail(),
 			replyTo: form.replyTo,
 			drawingJson: this.drawingJson,
 			type: args.type,
@@ -566,7 +566,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		var form = this._commentForm,
 		comment = this.commentIndices[args.commentId];
 
-		if (comment.ownerId != Runtime.commenting_reviewerName) { 
+		if (comment.ownerId != Runtime.userName) { 
 			return;
 		}
 
@@ -595,7 +595,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		// Notify the drawing tool to be in edit mode
 		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", 
 				[
-				 Runtime.commenting_reviewerName.userName,
+				 Runtime.userName,
 				 form.commentId,
 				 comment.pageState,
 				 comment.viewScene
@@ -621,7 +621,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		// Notify the drawing tool to be in edit mode
 		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", 
 				[
-				 Runtime.commenting_reviewerName.userName,
+				 Runtime.userName,
 				 form.commentId,
 				 this._cached[this._currentPage].pageState,
 				 this._cached[this._currentPage].viewScene
@@ -695,7 +695,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					} else {
 						return false;
 					}
-				}) && Runtime.commenting_designerName != item.name)
+				}) && Runtime.userName != item.name)
 					reviewers.push({
 						name: comment.ownerId,
 						email: comment.email
@@ -708,22 +708,25 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			}
 
 			Runtime.reviewers = reviewers;
-			dojo.forEach(reviewers, dojo.hitch(this, function(comment, index) { 
-				var check = new CheckedMenuItem({
-					label: "<div class='davinciReviewToolbarReviewersColor' style='background-color:" + 
-					Runtime.getColor(comment.name) +";'></div><span>"+comment.name+"</span>",
-						onChange: dojo.hitch(this,this._reviewFilterChanged),
-						checked: true,
-						reviewer:comment,
-						title: comment.email
-				});
-				this.reviewerList.addChild(check);
-				if (this._cached[this._currentPage] && this._cached[this._currentPage].shownColors) {
-					var checked = dojo.some(this._cached[this._currentPage].shownColors,function(name) {
-						if (name == comment.name) return true;
-						return false;
+			dojo.forEach(reviewers, dojo.hitch(this, function(reviewer, index) { 
+				//If no name, probably not a Maqetta user and no way they could have comments yet (so color irrelevant)
+				if (reviewer.name) { 
+					var check = new CheckedMenuItem({
+						label: "<div class='davinciReviewToolbarReviewersColor' style='background-color:" + 
+						Runtime.getColor(reviewer.name) +";'></div><span>"+reviewer.name+"</span>",
+							onChange: dojo.hitch(this,this._reviewFilterChanged),
+							checked: true,
+							reviewer:reviewer,
+							title: reviewer.email
 					});
-					check.set("checked",checked);
+					this.reviewerList.addChild(check);
+					if (this._cached[this._currentPage] && this._cached[this._currentPage].shownColors) {
+						var checked = dojo.some(this._cached[this._currentPage].shownColors,function(name) {
+							if (name == reviewer.name) return true;
+							return false;
+						});
+						check.set("checked",checked);
+					}
 				}
 			}));
 			this._reviewFilterChanged();
@@ -869,7 +872,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		// Notify the drawing tool to be in edit mode
 		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", 
 				[
-				 //Runtime.commenting_reviewerName.userName,
 				 Runtime.userName,
 				 form.commentId,
 				 this._cached[this._currentPage].pageState,
@@ -906,11 +908,15 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 	},
 
 	isPageOwner: function() {
-		return Runtime.commenting_designerName == Runtime.commenting_reviewerName.userName;
+		return this._getDesignerId() == Runtime.userName;
 	},
 	
 	_getDesignerId: function() {
-		var designerId = this._context.resourceFile.parent.designerId;
+		var designerId = null;
+		var context = this._cached[this._currentPage].context;
+		if (context) {
+			designerId = context.resourceFile.parent.designerId;
+		}
 		return designerId;
 	},
 

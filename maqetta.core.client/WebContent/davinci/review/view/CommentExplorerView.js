@@ -94,9 +94,6 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 		});
 
 		this.infoCardContent = dojo.cache("davinci" ,"review/widgets/templates/InfoCard.html");
-		if (Runtime.getRole() != "Designer") { 
-			dojo.style(this.toolbarDiv, "display", "none");
-		}
 
 		// Customize dijit._masterTT so that it will not be closed when the cursor is hovering on it
 		if (!dijit._masterTT) { 
@@ -157,11 +154,12 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 			return;
 		}
 		var selectedVersion = item[0].resource.elementType == "ReviewFile" ? item[0].resource.parent : item[0].resource;
+		var isDesigner = selectedVersion.designerId == Runtime.userName;
 		var isVersion = selectedVersion.elementType == "ReviewVersion";
 		var isDraft = selectedVersion.isDraft;
-		this.closeBtn.set("disabled", !isVersion || selectedVersion.closed || isDraft); 
-		this.openBtn.set("disabled", !isVersion || !selectedVersion.closedManual || isDraft);
-		this.editBtn.set("disabled", !isVersion);
+		this.closeBtn.set("disabled", !isDesigner || !isVersion || selectedVersion.closed || isDraft); 
+		this.openBtn.set("disabled", !isDesigner || !isVersion || !selectedVersion.closedManual || isDraft);
+		this.editBtn.set("disabled", !isDesigner || !isVersion);
 	},
 
 	getTopAdditions: function() {
@@ -255,34 +253,17 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 	},
 
 	_dblClick: function(node) {
-		if (Runtime.getMode() == "reviewPage") {
-			if (node.isDraft || node.parent.isDraft) {
-				if (Runtime.getRole() == "Designer") {
-					this._openPublishWizard(node.isDraft ? node : node.parent);
-				}
-				return;
+		if (node.isDraft || node.parent.isDraft) {
+			if (node.designerId == Runtime.userName || node.parent.designerId == Runtime.userName) {
+				this._openPublishWizard(node.isDraft ? node : node.parent);
 			}
-			if (node.elementType == "ReviewFile") {
-				Workbench.openEditor({
-					fileName: node,
-					content: node.getText()
-				});
-			}
-		} else if (Runtime.getMode() == "designPage") {
-			if (node.isDraft || node.parent.isDraft) {
-				if (Runtime.getRole()=="Designer") {
-					this._openPublishWizard(node.isDraft?node:node.parent);
-				}
-				return;
-			}
-			if (node.elementType == "ReviewFile") {
-//				window.open(this._location()+"review/"+Runtime.userName+"/"+node.parent.timeStamp+"/"
-//						+node.name+"/default");
-				Workbench.openEditor({
-					fileName: node,
-					content: node.getText()
-				});
-			}
+			return;
+		}
+		if (node.elementType == "ReviewFile") {
+			Workbench.openEditor({
+				fileName: node,
+				content: node.getText()
+			});
 		}
 	},
 
@@ -324,13 +305,13 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 			template.artifacts_in_rev = widgetsNls.artifactsInRev;
 			template.reviewers = widgetsNls.reviewers;
 
-			template.detail_role = Runtime.getRole();
-			template.detail_dueDate = item.dueDate == "infinite" ? "Infinite" : locale.format(item.dueDate, {
+			template.detail_role = (item.designerId == davinci.Runtime.userName) ? viewNls.designer : viewNls.reviewer;
+			template.detail_dueDate = item.dueDate == "infinite" ? viewNls.infinite : locale.format(item.dueDate, {
 				selector:'date',
 				formatLength:'long'
 			});
-			template.detail_creator = Runtime.getDesigner()
-				+ "&nbsp;&lt" + Runtime.getDesignerEmail() + "&gt";
+			template.detail_creator = item.designerId
+				+ (item.designerEmail ? "&nbsp;&lt" + item.designerEmail + "&gt": "");
 			template.detail_files = "";
 			item.getChildren(function(children) { c = children; }, true);
 			dojo.forEach(c, function(i) {
@@ -341,7 +322,9 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 			});
 			template.detail_reviewers = "";
 			dojo.forEach(item.reviewers, function(i) {
-				template.detail_reviewers += "<div>" + i.name + "</div>";
+				if (i.email != item.designerEmail) {
+					template.detail_reviewers += "<div>" + i.email + "</div>";
+				}
 			});
 			item.closed ? template.detail_dueDate_class = "closed" : template.detail_dueDate_class = "notClosed";
 

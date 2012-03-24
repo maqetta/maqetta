@@ -5,6 +5,8 @@ public interface IPersonManager {
     public abstract boolean hasPermisions(IPerson owner, IPerson requester, String resource);
 
     public abstract IPerson getPerson(String userName);
+    
+    public IPerson getPersonByEmail(String email);
 
     public abstract IPerson addPerson(String userName, String password, String email) throws UserException;
 

@@ -45,16 +45,16 @@ var CloseVersionAction = declare("davinci.review.actions.CloseVersionAction", [A
 	},
 
 	isEnabled: function(context) {
-		if (davinci.Runtime.getRole()!="Designer") { 
-			return false;
-		}
 		var selection = context.getSelection ? context.getSelection() : null;
 		if (!selection || selection.length == 0) { 
 			return false;
 		}
 		var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
-		if (!item.closed&&!item.isDraft) { 
-			return true; 
+		if (item.designerId == davinci.Runtime.userName) { 
+			//Only enable if the current user is also the review's designer
+			if (!item.closed&&!item.isDraft) { 
+				return true; 
+			}
 		}
 		return false;
 	}

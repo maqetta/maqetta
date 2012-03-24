@@ -11,8 +11,6 @@ import maqetta.core.server.user.DavinciProject;
 import maqetta.core.server.user.ReviewManager;
 
 import org.davinci.server.review.Comment;
-import org.davinci.server.review.Constants;
-import org.davinci.server.review.ReviewObject;
 import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.cache.ReviewCacheManager;
@@ -26,25 +24,15 @@ public class UpdateComment extends Command {
 	@Override
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user)
 			throws IOException {
-		ReviewObject reviewInfo = (ReviewObject) req.getSession().getAttribute(Constants.REVIEW_INFO);
-		if (null == reviewInfo) {
-			/*
-	 		* create a review object so we can comment immediately.
-			*/
-			String designerId = req.getParameter(Comment.DESIGNER_ID);
-			reviewInfo = new ReviewObject(designerId);
-			req.getSession().setAttribute(Constants.REVIEW_INFO, reviewInfo);
-		}
-		String designerName = reviewInfo.getDesignerName();
+
+		Comment comment = extractComment(req);
+		
+		String designerName = comment.getDesignerId();
 		IDesignerUser du = ReviewManager.getReviewManager().getDesignerUser(designerName);
 		DavinciProject project = new DavinciProject();
 		project.setOwnerId(du.getName());
 		
-		//Now that we have the designer, we can fill in the designer e-mail for the ReviewObject (didn't have when
-		//created ReviewObject and put into session)
-		reviewInfo.setDesignerEmail(du.getRawUser().getPerson().getEmail());
-
-		Comment comment = extractComment(req, project);
+		comment.setProject(project);
 		Comment existingComm = ReviewCacheManager.$.getComment(project, comment.getId());
 		Version version = du.getVersion(existingComm.getPageVersion());
 		isUpdateStatus = Boolean.parseBoolean(req.getParameter("isUpdateStatus"));
@@ -63,11 +51,9 @@ public class UpdateComment extends Command {
 		}
 	}
 
-	private Comment extractComment(HttpServletRequest req, DavinciProject project) {
+	private Comment extractComment(HttpServletRequest req) {
 		Comment comment = new Comment();
 		String paramValue;
-
-		comment.setProject(project);
 
 		paramValue = req.getParameter(Comment.ID);
 		comment.setId(paramValue);

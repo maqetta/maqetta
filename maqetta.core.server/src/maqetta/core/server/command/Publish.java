@@ -3,14 +3,12 @@ package maqetta.core.server.command;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SimpleTimeZone;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +18,6 @@ import maqetta.core.server.user.DavinciProject;
 import maqetta.core.server.user.ReviewManager;
 
 import org.davinci.server.review.Constants;
-import org.davinci.server.review.ReviewObject;
 import org.davinci.server.review.ReviewerVersion;
 import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
@@ -46,7 +43,6 @@ public class Publish extends Command {
 		String vTime = req.getParameter("vTime");
 		Boolean isRestart = req.getParameter("isRestart") != null ? 
 				(req.getParameter("isRestart").equals("true") ? true : false) : false;
-		String reviewersStr = req.getParameter("reviewers");
 		String emailsStr = req.getParameter("emails");
 		String message = req.getParameter("message");
 		String versionTitle = req.getParameter("versionTitle");
@@ -58,7 +54,6 @@ public class Publish extends Command {
 		Boolean receiveEmail = req.getParameter("receiveEmail") != null ? 
 				(req.getParameter("receiveEmail").equals("true") ? true : false) : false;
 
-		String[] names = reviewersStr.split(",");
 		String[] emails = emailsStr.split(",");
 		List<Reviewer> reviewers = new ArrayList<Reviewer>();
 
@@ -99,11 +94,10 @@ public class Publish extends Command {
 		//Deal with reviewers the designer has added to the review
 		ReviewerVersion reviewerVersion = new ReviewerVersion(user.getUserName(), version.getTime());
 		Reviewer tmpReviewer = null;
-		for (int i = 0; i < names.length; i++) {
-			String name = names[i];
+		for (int i = 0; i < emails.length; i++) {
 			String email = emails[i];
-			if (name != null && name != "" && !email.equals(user.getPerson().getEmail())) {
-				tmpReviewer = ReviewManager.getReviewManager().getReviewer(name, email);
+			if (!email.equals(user.getPerson().getEmail())) {
+				tmpReviewer = ReviewManager.getReviewManager().getReviewer("", email);
 				tmpReviewer.addReviewerVersion(reviewerVersion);
 				reviewers.add(tmpReviewer);
 			}
@@ -134,18 +128,6 @@ public class Publish extends Command {
 		version.setHasClosedManually(false);
 		version.setDescription(message);
 		version.setReceiveEmail(receiveEmail);
-		/*
- 		* create a review object so we can comment immediately by opening 
- 		* a review editor via "View File..." from the Review palette.
-		*/
-		ReviewObject reviewObject = new ReviewObject(user.getUserName());
-		reviewObject.setDesignerEmail(user.getPerson().getEmail());
-		if ( resources != null ) {
-			String fileName = resources[0]; // TODO fix this hardcoded value
-			reviewObject.setFile(fileName);
-			reviewObject.setCommentId("default");
-		}
-		req.getSession().setAttribute(Constants.REVIEW_INFO, reviewObject);
 
 		if (isRestart) {
 			version.setRestartFrom(vTime);
@@ -204,7 +186,6 @@ public class Publish extends Command {
 		return Utils.substitude(Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION), props);
 	}
 
-	//AWE TODO: Need to revisit what this URL should be and what the processing of it should be in the "new" world
 	private String getUrl(IUser user, String version, String requestUrl, String reviewer) {
 		String host = requestUrl.substring(0, requestUrl.indexOf('/', "http://".length()));
 		return host + "/review/" + user.getUserName() + "?revieweeuser=" + user.getUserName()+ "&version=" + version;

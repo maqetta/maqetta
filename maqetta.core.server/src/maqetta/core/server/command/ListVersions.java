@@ -43,6 +43,7 @@ public class ListVersions extends Command {
 					if (version.containsUser(userEmail)) {
 						writer.startObject();
 						writer.addField("designerId", reviewDesignerID);
+						writer.addField("designerEmail", designerUser.getRawUser().getPerson().getEmail());
 						writer.addField("versionTitle", version.getVersionTitle());
 						writer.addField("versionId", version.getVersionID());
 						writer.addField("dueDate", version.dueDateString());
@@ -55,35 +56,10 @@ public class ListVersions extends Command {
 						writer.addField("restartFrom",version.getRestartFrom());
 						writer.addField("receiveEmail", version.isReceiveEmail());
 						writer.addField("hasRestarted", version.isHasRestarted());
-						if(version.getDescription()!="")
+						if(version.getDescription()!="") {
 							writer.addField("description", version.getDescription());
-						StringBuffer buf = new StringBuffer("[");
-						for(Reviewer reviewer:version.getReviewers()){
-							buf.append("{");
-							buf.append("'");
-							buf.append("name");
-							buf.append("'");
-							buf.append(":");
-							buf.append("'");
-							buf.append(reviewer.getUserName());
-							buf.append("'");
-							buf.append(",");
-							buf.append("'");
-							buf.append("email");
-							buf.append("'");
-							buf.append(":");
-							buf.append("'");
-							buf.append(reviewer.getEmail());
-							buf.append("'");
-							buf.append(",");
-							buf.append("}");
-							buf.append(",");
 						}
-		
-						if(!version.getReviewers().isEmpty())
-						buf=buf.delete(buf.length()-1, buf.length());
-						buf.append("]");
-		
+						
 						writer.addFieldName("reviewers");
 						writer.startArray();
 		

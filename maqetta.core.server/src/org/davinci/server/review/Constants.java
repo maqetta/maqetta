@@ -17,6 +17,7 @@ public class Constants {
 	public static final String REVIEW_COOKIE_VERSION = "davinci_version";
 	public static final String REVIEW_VERSION = "review_version";
 	public static final String REVIEW_COOKIE_CMTID = "davinci_commentId";
+	public static final String REVIEW_COOKIE_FILENAME = "davinci_commentFileName";
 	
 	public static final String FAKE_REVIEWER = "davinci.review.fakeReviewer";
 	

@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.davinci.server.review.ReviewerVersion;
 import org.davinci.server.user.IPerson;
+import org.davinci.server.user.IPersonManager;
+import org.maqetta.server.ServerManager;
 
 public class Reviewer implements IPerson{
 	private String name;
@@ -23,6 +25,15 @@ public class Reviewer implements IPerson{
 	}
 	
 	public String getUserName() {
+		if (name.equals("")) {
+			//Try and look it up... this is necessary because reviewer doesn't necessarily have
+			//a user name at the time they are invited to a review
+			IPersonManager personManager = ServerManager.getServerManger().getPersonManager();
+			IPerson person = personManager.getPersonByEmail(email);
+			if (person != null) {
+				name = person.getUserName();
+			}
+		}
 		return name;
 	}
 	
@@ -47,16 +58,4 @@ public class Reviewer implements IPerson{
 	public Iterator<ReviewerVersion> getReviewerVersions() {
 		return versions.values().iterator();
 	}
-
-	/*AWE TODO
-	public void deleteVersion(String versionTime) {
-		Version version = this.getVersion(versionTime);
-		versions.remove(version);
-		IStorage versionDir = this.userDirectory.newInstance(
-				this.getCommentingDirectory(), "snapshot/" + versionTime);
-		if (versionDir.exists()) {
-			deleteDir(versionDir);
-		}
-	}
-	*/
 }

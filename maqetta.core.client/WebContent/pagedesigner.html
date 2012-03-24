@@ -64,33 +64,31 @@
 					}
 					
 					// set up for review and commenting...
-					davinci.Runtime.commenting_designerName  = dojo.cookie("davinci_designer");
-					davinci.Runtime.commenting_designerEmail = dojo.cookie("davinci_designer_email");
-					davinci.Runtime.commenting_reviewVersion      = dojo.cookie("review_version");
-					davinci.Runtime.commenting_commentId     = dojo.cookie("davinci_commentId");
-					dojo.cookie("davinci_designer", null, {expires: -1});
-					dojo.cookie("davinci_designer_email", null, {expires: -1});
-					dojo.cookie("review_version",null, {expires: -1, path:"/maqetta/"});
-					dojo.cookie("davinci_commentId",null, {expires: -1});
+					var designerName  = dojo.cookie("davinci_designer");
+					var reviewVersion = dojo.cookie("review_version");
+					dojo.cookie("davinci_designer", null, {expires: -1, path:"/maqetta/"});
+					dojo.cookie("review_version", null, {expires: -1, path:"/maqetta/"});
 					
 					var loadReviews = function(){
-						var node = davinci.review.model.resource.root.findVersion(davinci.Runtime.commenting_reviewVersion);
-						if (node) {
-							/* if we found a node, then the user clicked a review link to get here, 
-							 * TODO: bring the R&C view forward
-							 */
-							node.getChildren(function(childs){
-								if(childs.length > 1) {
-									return;
-								}
-								dojo.forEach(childs, function(child){
-									davinci.Workbench.openEditor({
-										fileName: child,
-										content: node.getText()
-									});
-								})
-								
-							}, false);
+						if (reviewVersion && designerName) {
+							var node = davinci.review.model.resource.root.findVersion(designerName, reviewVersion);
+							if (node) {
+								/* if we found a node, then the user clicked a review link to get here, 
+								 * TODO: bring the R&C view forward
+								 */
+								node.getChildren(function(childs){
+									if(childs.length > 1) {
+										return;
+									}
+									dojo.forEach(childs, function(child){
+										davinci.Workbench.openEditor({
+											fileName: child,
+											content: node.getText()
+										});
+									})
+									
+								}, false);
+							}
 						}
 					}
 					

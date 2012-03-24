@@ -51,12 +51,11 @@ public class DesignerUser implements IDesignerUser {
 
 	public DesignerUser(String name) {
 		this.name = name;
-		this.rawUser = ServerManager.getServerManger().getUserManager()
-				.newUser(new Reviewer(name, ""), this.getUserDirectory());
-		userDirectory.mkdirs(); // userDirectory is set as a side-effect of the
-								// getUserDirectory getter method
+		this.rawUser = ServerManager.getServerManger().getUserManager().getUser(name);
+		this.getUserDirectory();
+		// userDirectory is set as a side-effect of the getUserDirectory getter method
+		userDirectory.mkdirs(); 
 		rebuildWorkspace();
-
 	}
 
 	public void rebuildWorkspace() {

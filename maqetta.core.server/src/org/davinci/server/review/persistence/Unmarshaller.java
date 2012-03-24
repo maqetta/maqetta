@@ -115,6 +115,8 @@ public class Unmarshaller {
 					comment.setId(getValue(node));
 				else if (Comment.OWNER_ID.equalsIgnoreCase(node.getNodeName()))
 					comment.setOwnerId(getValue(node));
+				else if (Comment.DESIGNER_ID.equalsIgnoreCase(node.getNodeName()))
+					comment.setDesignerId(getValue(node));
 //				else if (Comment.DEPTH.equalsIgnoreCase(node.getNodeName()))
 //					comment.setDepth(Short.parseShort(getValue(node)));
 //				else if (Comment.ORDER.equalsIgnoreCase(node.getNodeName()))

@@ -76,8 +76,7 @@ return declare("davinci.review.editor.Context", [Context], {
 					dojo.publish("/davinci/review/context/loaded", 
 							[
 							 this,
-							 this.fileName,
-							 davinci.Runtime.commenting_commentId
+							 this.fileName
 							 ]);
 					this.containerEditor.silhouetteiframe.setSVGFilename(svgfilename);
 					this._statesLoaded = true;

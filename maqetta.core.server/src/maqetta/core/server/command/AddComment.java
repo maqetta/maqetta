@@ -12,11 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import maqetta.core.server.user.DavinciProject;
 import maqetta.core.server.user.ReviewManager;
 
-import org.maqetta.server.mail.SimpleMessage;
-import org.maqetta.server.mail.SmtpPop3Mailer;
 import org.davinci.server.review.Comment;
 import org.davinci.server.review.Constants;
-import org.davinci.server.review.ReviewObject;
 import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.cache.ReviewCacheManager;
@@ -26,6 +23,8 @@ import org.davinci.server.user.IUserManager;
 import org.maqetta.server.Command;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
+import org.maqetta.server.mail.SimpleMessage;
+import org.maqetta.server.mail.SmtpPop3Mailer;
 
 public class AddComment extends Command {
 
@@ -35,32 +34,16 @@ public class AddComment extends Command {
 		try {
 			Comment comment = extractComment(req);
 			
-			//AWE TODO: Going with the flow on relying on ReviewObject being in the session, but falls apart in "new"
-			//world if user is adding/editing comments to more than one designer's review in same session. Not exactly sure
-			//I understand why this was being put in the session even in the "old" world... be sure to address in
-			//all classes that use ReviewObject in this way
 			IUserManager userManager = ServerManager.getServerManger().getUserManager();
-			ReviewObject reviewInfo = (ReviewObject) req.getSession().getAttribute(Constants.REVIEW_INFO);
-			if (null == reviewInfo) {
-//				throw new Exception("Session timed out! Please login again.");
-				/*
-		 		* create a review object so we can comment immediately.
-				*/
-				reviewInfo = new ReviewObject(comment.getDesignerId());
-				req.getSession().setAttribute(Constants.REVIEW_INFO, reviewInfo);
-			}
-			String designerName = reviewInfo.getDesignerName();
+			String designerName = comment.getDesignerId();
 			IUser designer = null;
-			if(ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equalsIgnoreCase(designerName))
+			if(ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equalsIgnoreCase(designerName)) {
 				designer = userManager.getUser(IDavinciServerConstants.LOCAL_INSTALL_USER);
-			else
+			} else {
 				designer = userManager.getUser(designerName);
-
-			//Now that we have the designer, we can fill in the designer e-mail for the ReviewObject (didn't have when
-			//created ReviewObject and put into session)
-			reviewInfo.setDesignerEmail(designer.getPerson().getEmail());
+			}
 			
-			//et up project based on designer
+			//Set up project based on designer
 			DavinciProject project = new DavinciProject();
 			project.setOwnerId(designer.getUserName());
 			comment.setProject(project);

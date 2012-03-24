@@ -10,19 +10,12 @@ var ViewFileAction = declare("davinci.review.actions.ViewFileAction", [Action], 
 		var selection = context.getSelection ? context.getSelection() : null;
 		if (!selection || !selection.length) { return; }
 		var item = selection[0].resource;
-		if (Runtime.getMode()=="reviewPage") {
-			davinci.Workbench.openEditor({
-				fileName: item,
-				content: item.getText()
-			});
-		} else if (Runtime.getMode()=="designPage") {
-//			window.open(davinci.Workbench.location()+"review/"+Runtime.userName+"/"+item.parent.timeStamp+"/"+
-//					item.name+"/default");
-			davinci.Workbench.openEditor({
-				fileName: item,
-				content: item.getText()
-			});
-		}
+		
+		//Open editor
+		davinci.Workbench.openEditor({
+			fileName: item,
+			content: item.getText()
+		});
 	},
 
 	shouldShow: function(context) {

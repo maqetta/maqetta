@@ -87,6 +87,9 @@ console.log('createMover block');
 					var parent = widget.getParent();
 					if(!(parent && parent.isLayout())){
 						this._moverWidget = widget;
+						this._moverLastEventTarget = null;
+						var cp = this._context._chooseParent;
+						cp.setProposedParentWidget(null);
 						selection = this._context.getSelection();
 						this._moverStartLocations = [];
 						for(var i=0; i<selection.length; i++){
@@ -416,6 +419,13 @@ console.log('onMove');
 			console.error('SelectTool.js onMove error. move widget is not selected');
 			return;
 		}
+		if(event.target != this._moverLastEventTarget){
+			// If mouse has moved over a different widget, then null out the current
+			// proposed parent widget, which will force recalculation of the list of possible parents
+			var cp = this._context._chooseParent;
+			cp.setProposedParentWidget(null);
+		}
+		this._moverLastEventTarget = event.target;
 		this._moverBox = box;
 		this._moverWidget.domNode.style.left = box.l + 'px';
 		this._moverWidget.domNode.style.top = box.t + 'px';
@@ -452,6 +462,7 @@ console.log('onMoveStop');
 		var moverBox = this._adjustLTOffsetParent(this._context, this._moverWidget, this._moverBox.l, this._moverBox.t);
 		this._mover = null;
 		this._moverBox = null;
+		this._moverLastEventTarget = null;
 		var selection = this._context.getSelection();
 		var index = selection.indexOf(this._moverWidget);
 		if(index < 0){

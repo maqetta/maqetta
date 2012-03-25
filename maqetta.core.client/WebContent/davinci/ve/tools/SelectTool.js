@@ -34,7 +34,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 
 	onMouseDown: function(event){
 
-console.log('SelectTool. onMouseDown entered');
 		var createMover = false;
 		if((dojo.isMac && event.ctrlKey) || event.button == 2){
 			// this is a context menu ("right" click)  Don't change the selection.
@@ -80,7 +79,6 @@ console.log('SelectTool. onMouseDown entered');
 			}
 		}
 		if(createMover){
-console.log('createMover block');
 			var position_prop;
 			var userDojo = (widget.domNode && widget.domNode.ownerDocument && 
 					widget.domNode && widget.domNode.ownerDocument.defaultView && 
@@ -102,7 +100,6 @@ console.log('createMover block');
 							this._moverStartLocations.push({l:l, t:t});
 						}
 						this._mover = new Mover(widget.domNode, event, this);
-console.log('Mover created');
 					}
 				}
 			}
@@ -414,11 +411,9 @@ console.log('Mover created');
 	},
 	
 	onMove: function(mover, box, event){
-console.log('onMove');
-//console.dir(mover);
-//console.dir(box);
-		var cp = this._context._chooseParent;
-		var selection = this._context.getSelection();
+		var context = this._context;
+		var cp = context._chooseParent;
+		var selection = context.getSelection();
 		var index = selection.indexOf(this._moverWidget);
 		if(index < 0){
 			console.error('SelectTool.js onMove error. move widget is not selected');
@@ -444,25 +439,52 @@ console.log('onMove');
 				w.domNode.style.top = (t + dy) + 'px';
 			}
 		}
+		var widgetType = this._moverWidget.type;
+		var currentParent = this._moverWidget.getParent();
+		
+		var parentListDiv = cp.parentListDivGet();
+		if(!parentListDiv){// Make sure there is a DIV into which list of parents should be displayed
+			parentListDiv = cp.parentListDivCreate({
+				widgetType:widgetType, 
+				absolute:true, 
+				doCursor:false, 
+				beforeAfter:null, 
+				currentParent:currentParent });
+ 		}
+		var parentIframe = context.getParentIframe();
+		if(parentIframe){
+			// Ascend iframe's ancestors to calculate page-relative x,y for iframe
+			var offsetLeft = 0;
+			var offsetTop = 0;
+			var offsetNode = parentIframe;
+			while(offsetNode && offsetNode.tagName != 'BODY'){
+                offsetLeft += offsetNode.offsetLeft;
+                offsetTop += offsetNode.offsetTop;
+                offsetNode = offsetNode.offsetParent;
+    		}
+			parentListDiv.style.left = (offsetLeft + event.pageX) + 'px';
+			parentListDiv.style.top = (offsetTop + event.pageY) + 'px';
+        }
+		
 		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
 				Workbench.getProject());
 		var doSnapLinesX = editorPrefs.snap;
 		var doSnapLinesY = doSnapLinesX;
-		var showParentsPref = this._context.getPreference('showPossibleParents');
+		var showParentsPref = context.getPreference('showPossibleParents');
 		var spaceKeyDown = cp.isSpaceKeyDown();
 		var showCandidateParents = (!showParentsPref && spaceKeyDown) || (showParentsPref && !spaceKeyDown);
-		var data = {type:this._moverWidget.type};
+		var data = {type:widgetType};
 		var position = { x:event.pageX, y:event.pageY};
 		var snapBox = {l:box.l, t:box.t, w:this._moverWidget.domNode.offsetWidth, h:this._moverWidget.domNode.offsetHeight};
 		// Call the dispatcher routine that updates snap lines and
 		// list of possible parents at current (x,y) location
-		this._context.dragMoveUpdate({
+		context.dragMoveUpdate({
 				widgets:[this._moverWidget],
 				data:data,
 				eventTarget:event.target,
 				position:position,
 				absolute:true,
-				currentParent:this._moverWidget.getParent(),
+				currentParent:currentParent,
 				rect:snapBox, 
 				doSnapLinesX:doSnapLinesX, 
 				doSnapLinesY:doSnapLinesY, 
@@ -471,25 +493,24 @@ console.log('onMove');
 	},
 
 	onFirstMove: function(mover){
-console.log('onFirstMove');
 		return;
 	},
 
 	//Required for Moveable interface 
 	onMoveStart: function(mover){
-console.log('onMoveStart');
 		return;
 	},
 
     //Required for Moveable interface
 	onMoveStop: function(mover){
-console.log('onMoveStop');
+		var context = this._context;
+		var cp = this._context._chooseParent;
 		var doMove = true;
 		if(!this._moverBox || !this._moverWidget){
 			doMove = false;
 		}else{
-			var moverBox = this._adjustLTOffsetParent(this._context, this._moverWidget, this._moverBox.l, this._moverBox.t);
-			var selection = this._context.getSelection();
+			var moverBox = this._adjustLTOffsetParent(context, this._moverWidget, this._moverBox.l, this._moverBox.t);
+			var selection = context.getSelection();
 			var index = selection.indexOf(this._moverWidget);
 			if(index < 0){
 				doMove = false;
@@ -501,7 +522,8 @@ console.log('onMoveStop');
 		this._mover = null;
 		this._moverBox = null;
 		this._moverLastEventTarget = null;
-		this._context.dragMoveCleanup();
+		context.dragMoveCleanup();
+		cp.parentListDivDelete();
 	}
 
 });

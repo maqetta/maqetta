@@ -2,6 +2,7 @@ define(["dojo/_base/declare",
 		"davinci/ve/tools/_Tool",
 		"davinci/ve/widget",
 		"davinci/ve/metadata",
+		"dojo/dnd/Mover",
 		"davinci/commands/CompoundCommand",
 		"davinci/ve/commands/AddCommand",
 		"davinci/ve/commands/RemoveCommand",
@@ -10,7 +11,9 @@ define(["dojo/_base/declare",
 		"davinci/ve/commands/ResizeCommand"], function(
 				declare,
 				tool,
-				widgetUtils
+				widgetUtils,
+				Metadata,
+				Mover
 		){
 
 
@@ -27,6 +30,8 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 
 	onMouseDown: function(event){
 
+console.log('SelectTool. onMouseDown entered');
+		var createMover = false;
 		if((dojo.isMac && event.ctrlKey) || event.button == 2){
 			// this is a context menu ("right" click)  Don't change the selection.
 			return;
@@ -57,13 +62,38 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		if(dojo.indexOf(selection, widget) >= 0){
 			if(ctrlKey){ // CTRL to toggle
 				this._context.deselect(widget);
-			}if(event.shiftKey){
+			}
+			if(event.shiftKey){
 				//TODO: multiple select
 			}else{
 				this._context.select(widget, null, false);
+				createMover = true;
 			}
 		}else{
 			this._context.select(widget, ctrlKey); // CTRL to add
+			if(!ctrlKey){
+				createMover = true;
+			}
+		}
+		if(createMover){
+console.log('createMover block');
+			var position_prop;
+			var userDojo = (widget.domNode && widget.domNode.ownerDocument && 
+					widget.domNode && widget.domNode.ownerDocument.defaultView && 
+					widget.domNode && widget.domNode.ownerDocument.defaultView.dojo);
+			if(userDojo){
+				position_prop = userDojo.style(widget.domNode, 'position');
+				if(position_prop == 'absolute'){
+					var parent = widget.getParent();
+					if(!(parent && parent.isLayout())){
+						this._moverWidget = widget;
+						this._moverStartLeft = userDojo.style(widget.domNode, 'left');
+						this._moverStartTop = userDojo.style(widget.domNode, 'top');
+						this._mover = new Mover(widget.domNode, event, this);
+console.log('Mover created');
+					}
+				}
+			}
 		}
 	},
 	
@@ -369,6 +399,45 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			this._context.select(next);
 		}
 		return next;
+	},
+	
+	onMove: function(mover, box, event){
+console.log('onMove');
+//console.dir(mover);
+//console.dir(box);
+		this._moverBox = box;
+		this._moverCurrentLeft = box.l + 'px';
+		this._moverCurrentTop = box.t + 'px';
+		this._moverWidget.domNode.style.left = this._moverCurrentLeft;
+		this._moverWidget.domNode.style.top = this._moverCurrentTop;
+    },
+
+	onFirstMove: function(mover){
+		console.log('onFirstMove');
+		return;
+	},
+
+	//Required for Moveable interface 
+	onMoveStart: function(mover){
+		console.log('onMoveStart');
+		return;
+	},
+
+    //Required for Moveable interface
+	onMoveStop: function(mover){
+	console.log('onMoveStop');
+		if(!this._moverBox){
+			return;
+		}
+		var selection = this._context.getSelection();
+		var index = selection.indexOf(this._moverWidget);
+		if(index < 0){
+			return;
+		}
+		this.onExtentChange(index, this._moverBox);
+		this._mover = null;
+		return;
 	}
+
 });
 });

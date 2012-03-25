@@ -484,20 +484,24 @@ console.log('onMoveStart');
     //Required for Moveable interface
 	onMoveStop: function(mover){
 console.log('onMoveStop');
-		this._context.dragMoveCleanup();
+		var doMove = true;
 		if(!this._moverBox || !this._moverWidget){
-			return;
+			doMove = false;
+		}else{
+			var moverBox = this._adjustLTOffsetParent(this._context, this._moverWidget, this._moverBox.l, this._moverBox.t);
+			var selection = this._context.getSelection();
+			var index = selection.indexOf(this._moverWidget);
+			if(index < 0){
+				doMove = false;
+			}
 		}
-		var moverBox = this._adjustLTOffsetParent(this._context, this._moverWidget, this._moverBox.l, this._moverBox.t);
+		if(doMove){
+			this.onExtentChange(index, moverBox);
+		}
 		this._mover = null;
 		this._moverBox = null;
 		this._moverLastEventTarget = null;
-		var selection = this._context.getSelection();
-		var index = selection.indexOf(this._moverWidget);
-		if(index < 0){
-			return;
-		}
-		this.onExtentChange(index, moverBox);
+		this._context.dragMoveCleanup();
 	}
 
 });

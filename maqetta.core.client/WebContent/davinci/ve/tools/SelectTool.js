@@ -1,4 +1,6 @@
 define(["dojo/_base/declare",        
+		"davinci/Workbench",
+		"davinci/workbench/Preferences",
 		"davinci/ve/tools/_Tool",
 		"davinci/ve/widget",
 		"davinci/ve/metadata",
@@ -10,6 +12,8 @@ define(["dojo/_base/declare",
 		"davinci/ve/commands/MoveCommand",
 		"davinci/ve/commands/ResizeCommand"], function(
 				declare,
+				Workbench,
+				Preferences,
 				tool,
 				widgetUtils,
 				Metadata,
@@ -413,6 +417,7 @@ console.log('Mover created');
 console.log('onMove');
 //console.dir(mover);
 //console.dir(box);
+		var cp = this._context._chooseParent;
 		var selection = this._context.getSelection();
 		var index = selection.indexOf(this._moverWidget);
 		if(index < 0){
@@ -422,7 +427,6 @@ console.log('onMove');
 		if(event.target != this._moverLastEventTarget){
 			// If mouse has moved over a different widget, then null out the current
 			// proposed parent widget, which will force recalculation of the list of possible parents
-			var cp = this._context._chooseParent;
 			cp.setProposedParentWidget(null);
 		}
 		this._moverLastEventTarget = event.target;
@@ -440,7 +444,31 @@ console.log('onMove');
 				w.domNode.style.top = (t + dy) + 'px';
 			}
 		}
-    },
+		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
+				Workbench.getProject());
+		var doSnapLinesX = editorPrefs.snap;
+		var doSnapLinesY = doSnapLinesX;
+		var showParentsPref = this._context.getPreference('showPossibleParents');
+		var spaceKeyDown = cp.isSpaceKeyDown();
+		var showCandidateParents = (!showParentsPref && spaceKeyDown) || (showParentsPref && !spaceKeyDown);
+		var data = {type:this._moverWidget.type};
+		var position = { x:event.pageX, y:event.pageY};
+		var snapBox = {l:box.l, t:box.t, w:this._moverWidget.domNode.offsetWidth, h:this._moverWidget.domNode.offsetHeight};
+		// Call the dispatcher routine that updates snap lines and
+		// list of possible parents at current (x,y) location
+		this._context.dragMoveUpdate({
+				widgets:[this._moverWidget],
+				data:data,
+				eventTarget:event.target,
+				position:position,
+				absolute:true,
+				currentParent:this._moverWidget.getParent(),
+				rect:snapBox, 
+				doSnapLinesX:doSnapLinesX, 
+				doSnapLinesY:doSnapLinesY, 
+				doFindParentsXY:showCandidateParents,
+				doCursor:false});
+	},
 
 	onFirstMove: function(mover){
 console.log('onFirstMove');
@@ -456,6 +484,7 @@ console.log('onMoveStart');
     //Required for Moveable interface
 	onMoveStop: function(mover){
 console.log('onMoveStop');
+		this._context.dragMoveCleanup();
 		if(!this._moverBox || !this._moverWidget){
 			return;
 		}

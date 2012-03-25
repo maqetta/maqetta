@@ -414,6 +414,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         if(dojo.indexOf(this._frames, event.target) >= 0){
             this._nobIndex = -1;
             if(this._op && this._op.move){
+console.log('Focus.js new Mover');
                 new Mover(this.domNode, event, this);
             }
             dojo.stopEvent(event);
@@ -421,6 +422,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         }else{
             this._nobIndex = dojo.indexOf(this._nobs, event.target);
             if(this._nobIndex >= 0){
+console.log('Focus.js new Mover');
                 new Mover(event.target, event, this);
                 switch(this._nobIndex){
                 case LEFT:
@@ -588,6 +590,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     },
 
     onFirstMove: function(mover){
+console.log('Focus.js onFirstMove');
         this._mover = mover;
     },
 
@@ -597,6 +600,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
     //Required for Moveable interface
     onMoveStop: function(mover){
+console.log('Focus.js onMoveStop');
     },
     
     onKeyDown: function(event){

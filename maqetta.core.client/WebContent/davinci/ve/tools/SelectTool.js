@@ -87,8 +87,13 @@ console.log('createMover block');
 					var parent = widget.getParent();
 					if(!(parent && parent.isLayout())){
 						this._moverWidget = widget;
-						this._moverStartLeft = userDojo.style(widget.domNode, 'left');
-						this._moverStartTop = userDojo.style(widget.domNode, 'top');
+						selection = this._context.getSelection();
+						this._moverStartLocations = [];
+						for(var i=0; i<selection.length; i++){
+							var l = parseInt(userDojo.style(selection[i].domNode, 'left'), 10);
+							var t = parseInt(userDojo.style(selection[i].domNode, 'top'), 10);
+							this._moverStartLocations.push({l:l, t:t});
+						}
 						this._mover = new Mover(widget.domNode, event, this);
 console.log('Mover created');
 					}
@@ -405,38 +410,55 @@ console.log('Mover created');
 console.log('onMove');
 //console.dir(mover);
 //console.dir(box);
+		var selection = this._context.getSelection();
+		var index = selection.indexOf(this._moverWidget);
+		if(index < 0){
+			console.error('SelectTool.js onMove error. move widget is not selected');
+			return;
+		}
 		this._moverBox = box;
-		this._moverCurrentLeft = box.l + 'px';
-		this._moverCurrentTop = box.t + 'px';
-		this._moverWidget.domNode.style.left = this._moverCurrentLeft;
-		this._moverWidget.domNode.style.top = this._moverCurrentTop;
+		this._moverWidget.domNode.style.left = box.l + 'px';
+		this._moverWidget.domNode.style.top = box.t + 'px';
+		var dx = box.l - this._moverStartLocations[index].l;
+		var dy = box.t - this._moverStartLocations[index].t;
+		for(var i=0; i<selection.length; i++){
+			if(i !== index){
+				var w = selection[i];
+				var l = this._moverStartLocations[i].l;
+				var t = this._moverStartLocations[i].t;
+				w.domNode.style.left = (l + dx) + 'px';
+				w.domNode.style.top = (t + dy) + 'px';
+			}
+		}
     },
 
 	onFirstMove: function(mover){
-		console.log('onFirstMove');
+console.log('onFirstMove');
 		return;
 	},
 
 	//Required for Moveable interface 
 	onMoveStart: function(mover){
-		console.log('onMoveStart');
+console.log('onMoveStart');
 		return;
 	},
 
     //Required for Moveable interface
 	onMoveStop: function(mover){
-	console.log('onMoveStop');
+console.log('onMoveStop');
+debugger;
 		if(!this._moverBox){
 			return;
 		}
+		var moverBox = this._moverBox;
+		this._mover = null;
+		this._moverBox = null;
 		var selection = this._context.getSelection();
 		var index = selection.indexOf(this._moverWidget);
 		if(index < 0){
 			return;
 		}
-		this.onExtentChange(index, this._moverBox);
-		this._mover = null;
-		return;
+		this.onExtentChange(index, moverBox);
 	}
 
 });

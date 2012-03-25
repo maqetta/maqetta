@@ -139,19 +139,19 @@ console.log('Mover created');
 		}catch(e){
 		}
 	},
+	
+	_adjustLTOffsetParent: function(context, widget, left, top){
+		var parentNode = widget.domNode.offsetParent;
+		if(parentNode && parentNode != context.getContainerNode()){
+			var p = context.getContentPosition(context.getDojo().position(parentNode, true));
+			left -= (p.x - parentNode.scrollLeft);
+			top -= (p.y - parentNode.scrollTop);
+		}
+		return {left:left, top:top};
+	},
 
 	onExtentChange: function(index, box){
-		
-		function adjustLTOffsetParent(left, top){
-			var parentNode = widget.domNode.offsetParent;
-			if(parentNode && parentNode != context.getContainerNode()){
-				var p = context.getContentPosition(context.getDojo().position(parentNode, true));
-				left -= (p.x - parentNode.scrollLeft);
-				top -= (p.y - parentNode.scrollTop);
-			}
-			return {left:left, top:top};
-		}
-		
+				
 		var context = this._context;
 		var cp = context._chooseParent;
 		var selection = context.getSelection();
@@ -192,7 +192,7 @@ console.log('Mover created');
 			compoundCommand.add(resizeCommand);
 			var position_prop = dojo.style(widget.domNode, 'position');
 			if("l" in box && "t" in box && position_prop == 'absolute'){
-				var p = adjustLTOffsetParent(box.l, box.t);
+				var p = this._adjustLTOffsetParent(context, widget, box.l, box.t);
 				var left = p.left;
 				var top = p.top;
 				var moveCommand = new davinci.ve.commands.MoveCommand(widget, left, top);
@@ -256,7 +256,7 @@ console.log('Mover created');
 			}else{
 				var left = box.l,
 					top = box.t;
-				var p = adjustLTOffsetParent(left, top);
+				var p = this._adjustLTOffsetParent(context, widget, left, top);
 				left = p.left;
 				top = p.top;
 				var position = {x: left, y: top};
@@ -446,11 +446,10 @@ console.log('onMoveStart');
     //Required for Moveable interface
 	onMoveStop: function(mover){
 console.log('onMoveStop');
-debugger;
-		if(!this._moverBox){
+		if(!this._moverBox || !this._moverWidget){
 			return;
 		}
-		var moverBox = this._moverBox;
+		var moverBox = this._adjustLTOffsetParent(this._context, this._moverWidget, this._moverBox.l, this._moverBox.t);
 		this._mover = null;
 		this._moverBox = null;
 		var selection = this._context.getSelection();

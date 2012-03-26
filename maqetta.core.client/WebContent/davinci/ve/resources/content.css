@@ -14,7 +14,42 @@
 }
 
 .editFocusFrame {
-	background-image: url('images/slant.gif'); 
+	position:absolute;
+	opacity:0.5;
+	overflow:hidden;
+	border:none;
+	background:#6a94dc;
+	background-clip:content-box;
+	left:-11px;
+	top:-11px;
+}
+.editFocusFrameLEFT {
+	width:3px;
+	border-left:4px solid rgba(255,255,255,.5);
+	border-right:4px solid #d3e1ee;
+	cursor:w-resize;
+	top:-5px;
+}
+.editFocusFrameRIGHT {
+	width:3px;
+	border-left:4px solid #d3e1ee;
+	border-right:4px solid rgba(255,255,255,.5);
+	cursor:e-resize;
+	top:-5px;
+}
+.editFocusFrameTOP {
+	height:3px;
+	border-top:4px solid rgba(255,255,255,.5);
+	border-bottom:4px solid #d3e1ee;
+	cursor:n-resize;
+	left:-5px;
+}
+.editFocusFrameBOTTOM {
+	height:3px;
+	border-top:4px solid #d3e1ee;
+	border-bottom:4px solid rgba(255,255,255,.5);
+	cursor:s-resize;
+	left:-5px;
 }
 .editFocusNob {
 	background-color: #FFFFFF;

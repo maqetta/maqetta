@@ -33,22 +33,16 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
         this._frames = [];
         for(var i = 0; i < 4; i++){
-            var style = {position: "absolute", opacity: 0.5, overflow: "hidden"}; // move to CSS
-            dojo.mixin(style, i < 2 ? {width: this.size + "px", height: this.size * 2 + "px"} : {height: this.size + "px"});
-            var frame = dojo.create("div", {"class": "editFocusFrame", style: style}, this.domNode);
+            var frame = dojo.create("div", {"class": "editFocusFrame"}, this.domNode);
             this._frames.push(frame);
             this.connect(frame, "onmousedown", "onMouseDown");
             this.connect(frame, "onmouseup", "onMouseUp");
             this.connect(frame, "ondblclick", "onDblClick");
         }
-        this._frames[LEFT].style.left =
-            this._frames[LEFT].style.top =
-            this._frames[RIGHT].style.top =
-            this._frames[TOP].style.top = -this.size + "px";
-        this._frames[LEFT].style.cursor = "w-resize";
-        this._frames[RIGHT].style.cursor = "e-resize";
-        this._frames[TOP].style.cursor = "n-resize";
-        this._frames[BOTTOM].style.cursor = "s-resize";
+        dojo.addClass(this._frames[LEFT], "editFocusFrameLEFT");
+        dojo.addClass(this._frames[RIGHT], "editFocusFrameRIGHT");
+        dojo.addClass(this._frames[TOP], "editFocusFrameTOP");
+        dojo.addClass(this._frames[BOTTOM], "editFocusFrameBOTTOM");
         
         this._nobs = [];
         var cursors = ["nw-resize", "sw-resize", "ne-resize", "se-resize"];
@@ -276,13 +270,14 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         	}
         }
         
+        var w = b.w + this.size * 2;
         var h = b.h + this.size * 2;
         this._frames[LEFT].style.height = h + "px";
         this._frames[RIGHT].style.height = h + "px";
         this._frames[RIGHT].style.left = b.w + "px";
-        this._frames[TOP].style.width = b.w + "px";
+        this._frames[TOP].style.width = w + "px";
         this._frames[BOTTOM].style.top = b.h + "px";
-        this._frames[BOTTOM].style.width = b.w + "px";
+        this._frames[BOTTOM].style.width = w + "px";
 
         var l = Math.round(b.w / 2 - this.size / 2);
         var t = Math.round(b.h / 2 - this.size / 2);

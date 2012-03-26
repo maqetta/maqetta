@@ -49,10 +49,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         var border = (dojo.isIE ? 0 : 2);
         for(var i = 0; i < 5; i++){
             var nob = dojo.create("div", {"class": "editFocusNob", style: {
-                position: "absolute",
-                width: this.size - border + "px",
-                height: this.size - border + "px",
-                overflow: "hidden",
                 cursor: cursors[i]
             }}, this.domNode);
             this._nobs.push(nob);
@@ -63,10 +59,11 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         this._nobs[DRAG_NOB].style.background = 'transparent';
         this._nobs[DRAG_NOB].style.border = 'none';
         
+        var offset = -11;
         this._nobs[LEFT_TOP].style.left =
             this._nobs[LEFT_TOP].style.top =
             this._nobs[LEFT_BOTTOM].style.left =
-            this._nobs[RIGHT_TOP].style.top = -this.size + "px";
+            this._nobs[RIGHT_TOP].style.top = offset + "px";
         this._nobIndex = -1;
         this._frameIndex = -1;
 		

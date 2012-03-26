@@ -411,6 +411,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 	
 	onMove: function(mover, box, event){
+		var offsetLeft, offsetTop, offsetNode;
 		var context = this._context;
 		var cp = context._chooseParent;
 		var selection = context.getSelection();
@@ -454,9 +455,9 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		var parentIframe = context.getParentIframe();
 		if(parentIframe){
 			// Ascend iframe's ancestors to calculate page-relative x,y for iframe
-			var offsetLeft = 0;
-			var offsetTop = 0;
-			var offsetNode = parentIframe;
+			offsetLeft = 0;
+			offsetTop = 0;
+			offsetNode = parentIframe;
 			while(offsetNode && offsetNode.tagName != 'BODY'){
                 offsetLeft += offsetNode.offsetLeft;
                 offsetTop += offsetNode.offsetTop;
@@ -475,7 +476,16 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		var showCandidateParents = (!showParentsPref && spaceKeyDown) || (showParentsPref && !spaceKeyDown);
 		var data = {type:widgetType};
 		var position = { x:event.pageX, y:event.pageY};
-		var snapBox = {l:box.l, t:box.t, w:this._moverWidget.domNode.offsetWidth, h:this._moverWidget.domNode.offsetHeight};
+		// Ascend widget's ancestors to calculate page-relative coordinates
+		offsetLeft = 0;
+		offsetTop = 0;
+		offsetNode = this._moverWidget.domNode.offsetParent;
+		while(offsetNode && offsetNode.tagName != 'BODY'){
+            offsetLeft += offsetNode.offsetLeft;
+            offsetTop += offsetNode.offsetTop;
+            offsetNode = offsetNode.offsetParent;
+		}
+		var snapBox = {l:box.l+offsetLeft, t:box.t+offsetTop, w:this._moverWidget.domNode.offsetWidth, h:this._moverWidget.domNode.offsetHeight};
 		// Call the dispatcher routine that updates snap lines and
 		// list of possible parents at current (x,y) location
 		context.dragMoveUpdate({

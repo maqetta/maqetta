@@ -7,15 +7,17 @@ define([
 ],
 function(require, declare, _WidgetBase, Mover, Metadata) {
     
+// Nobs
+var LEFT_TOP = 0,
+    LEFT_BOTTOM = 1,
+    RIGHT_TOP = 2,
+    RIGHT_BOTTOM = 3,
+	DRAG_NOB = 4;	// Overlay nob that follows mouse during drag operation
+// Sides
 var LEFT = 0,
     RIGHT = 1,
     TOP = 2,
-    BOTTOM = 3,
-    LEFT_TOP = 4,
-    LEFT_BOTTOM = 5,
-    RIGHT_TOP = 6,
-    RIGHT_BOTTOM = 7,
-	DRAG_NOB = 8;	// Overlay nob that follows mouse during drag operation
+    BOTTOM = 3;
 
 return declare("davinci.ve.Focus", _WidgetBase, {
 
@@ -31,7 +33,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
         this._frames = [];
         for(var i = 0; i < 4; i++){
-            var style = {position: "absolute", opacity: 0.5, overflow: "hidden", cursor: "move"}; // move to CSS
+            var style = {position: "absolute", opacity: 0.5, overflow: "hidden"}; // move to CSS
             dojo.mixin(style, i < 2 ? {width: this.size + "px", height: this.size * 2 + "px"} : {height: this.size + "px"});
             var frame = dojo.create("div", {"class": "editFocusFrame", style: style}, this.domNode);
             this._frames.push(frame);
@@ -43,12 +45,15 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             this._frames[LEFT].style.top =
             this._frames[RIGHT].style.top =
             this._frames[TOP].style.top = -this.size + "px";
-
+        this._frames[LEFT].style.cursor = "w-resize";
+        this._frames[RIGHT].style.cursor = "e-resize";
+        this._frames[TOP].style.cursor = "n-resize";
+        this._frames[BOTTOM].style.cursor = "s-resize";
+        
         this._nobs = [];
-        var cursors = ["w-resize", "e-resize", "n-resize", "s-resize",
-            "nw-resize", "sw-resize", "ne-resize", "se-resize"];
+        var cursors = ["nw-resize", "sw-resize", "ne-resize", "se-resize"];
         var border = (dojo.isIE ? 0 : 2);
-        for(var i = 0; i < 9; i++){
+        for(var i = 0; i < 5; i++){
             var nob = dojo.create("div", {"class": "editFocusNob", style: {
                 position: "absolute",
                 width: this.size - border + "px",
@@ -64,13 +69,12 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         this._nobs[DRAG_NOB].style.background = 'transparent';
         this._nobs[DRAG_NOB].style.border = 'none';
         
-        this._nobs[LEFT].style.left =
-            this._nobs[TOP].style.top =
-            this._nobs[LEFT_TOP].style.left =
+        this._nobs[LEFT_TOP].style.left =
             this._nobs[LEFT_TOP].style.top =
             this._nobs[LEFT_BOTTOM].style.left =
             this._nobs[RIGHT_TOP].style.top = -this.size + "px";
         this._nobIndex = -1;
+        this._frameIndex = -1;
 		
 		this._custom = dojo.create("div", {"class": "editFocusCustom"}, this.domNode);
 
@@ -282,12 +286,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
         var l = Math.round(b.w / 2 - this.size / 2);
         var t = Math.round(b.h / 2 - this.size / 2);
-        this._nobs[LEFT].style.top = t + "px";
-        this._nobs[RIGHT].style.left = b.w + "px";
-        this._nobs[RIGHT].style.top = t + "px";
-        this._nobs[TOP].style.left = l + "px";
-        this._nobs[BOTTOM].style.left = l + "px";
-        this._nobs[BOTTOM].style.top = b.h + "px";
         this._nobs[LEFT_BOTTOM].style.top = b.h + "px";
         this._nobs[RIGHT_TOP].style.left = b.w + "px";
         this._nobs[RIGHT_BOTTOM].style.left = b.w + "px";
@@ -378,39 +376,31 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         }
         this._op = op;
 
-        var cursor = (op.move ? "move" : "auto");
-        dojo.forEach(this._frames, function(f){
-            f.style.cursor = cursor;
-        });
-
-        var horizontal = (op.resizeWidth ? "block" : "none");
-        var vertical = (op.resizeHeight ? "block" : "none");
         var corner = (op.resizeWidth && op.resizeHeight ? "block" : "none");
-        this._nobs[LEFT].style.display = horizontal;
-        this._nobs[RIGHT].style.display = horizontal;
-        this._nobs[TOP].style.display = vertical;
-        this._nobs[BOTTOM].style.display = vertical;
         this._nobs[LEFT_TOP].style.display = corner;
         this._nobs[LEFT_BOTTOM].style.display = corner;
         this._nobs[RIGHT_TOP].style.display = corner;
         this._nobs[RIGHT_BOTTOM].style.display = corner;
     },
 	
-    onMouseDown: function(event){
+	onMouseDown: function(event){
 		this._removeKeyHandlers();
 
-        // not to start Mover on the context menu
-        if(event.button === 2 || event.ctrlKey){
-            return;
-        }
-        // Only process mousedown events when SelectTool is active
-        // Mostly to allow CreateTool to drag out widget initial size even
-        // when mouse is over focus nodes
-        if(this._context._activeTool.declaredClass != 'davinci.ve.tools.SelectTool'){
-        	return;
-        }
-        this._shiftKey = false;
+		// not to start Mover on the context menu
+		if(event.button === 2 || event.ctrlKey){
+			return;
+			}
+		// Only process mousedown events when SelectTool is active
+		// Mostly to allow CreateTool to drag out widget initial size even
+		// when mouse is over focus nodes
+		if(this._context._activeTool.declaredClass != 'davinci.ve.tools.SelectTool'){
+			return;
+		}
+		this._shiftKey = false;
 
+		this._nobIndex = dojo.indexOf(this._nobs, event.target);
+		this._frameIndex = dojo.indexOf(this._frames, event.target);
+        /*
         if(dojo.indexOf(this._frames, event.target) >= 0){
             this._nobIndex = -1;
             if(this._op && this._op.move){
@@ -419,34 +409,30 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             dojo.stopEvent(event);
             
         }else{
-            this._nobIndex = dojo.indexOf(this._nobs, event.target);
             if(this._nobIndex >= 0){
-                new Mover(event.target, event, this);
-                switch(this._nobIndex){
-                case LEFT:
-                case LEFT_BOTTOM:
-                    this._nobBox = {l: -this.size};
-                    break;
-                case TOP:
-                case RIGHT_TOP:
-                    this._nobBox = {t: -this.size};
-                    break;
-                case LEFT_TOP:
-                    this._nobBox = {l: -this.size, t: -this.size};
-                    break;
-                }
-                dojo.stopEvent(event);
-                
-                var userdoc = this._context.getDocument();	// inner document = user's document
-                userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
-                this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(e){
-                	this.onKeyDown(e);
-                }));
-                this._keyUpHandler = dojo.connect(userdoc, "onkeyup", dojo.hitch(this, function(e){
-                	this.onKeyUp(e);
-                }));
+        */
+		new Mover(event.target, event, this);
+		if(this._frameIndex === LEFT || this._nobIndex === LEFT_BOTTOM){
+			this._nobBox = {l: -this.size};
+		}else if(this._frameIndex === TOP || this._nobIndex === RIGHT_TOP){
+			this._nobBox = {t: -this.size};
+		}else if(this._nobIndex === LEFT_TOP){
+			this._nobBox = {l: -this.size, t: -this.size};
+		}
+		dojo.stopEvent(event);
+
+		var userdoc = this._context.getDocument();	// inner document = user's document
+		userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
+		this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(e){
+			this.onKeyDown(e);
+		}));
+		this._keyUpHandler = dojo.connect(userdoc, "onkeyup", dojo.hitch(this, function(e){
+			this.onKeyUp(e);
+		}));
+/*
             }
          }
+*/
      },
 
     onMouseUp: function(event){
@@ -463,17 +449,22 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         		box = dojo.mixin({}, this._box);
         	}
             this._mover = undefined;
+            /*
             switch(this._nobIndex){
             case -1: // frame
                 this.onExtentChange(this, dojo.mixin({l: this._box.l, t: this._box.t}, this._client));
                 break;
             default:
+            */
             	this.onExtentChange(this, box);
+            /*
             }
+            */
         }
 		context.dragMoveCleanup();
      	cp.parentListDivDelete();
         this._nobIndex = -1;
+        this._frameIndex = -1;
         this._nobBox = null;
     },
     
@@ -483,8 +474,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     },
 
     onMove: function(mover, box, event){
+/*FIXME: Does any of this logic need to move to SelectTool.js?
         if(this._nobIndex < 0){ // frame
-   
             // Turn on visibility of DRAG_NOB and set its position
             // at the current mouse position. The DRAG_NOB will always track the
             // current mouse location, whereas the current frame DIVs might
@@ -497,94 +488,91 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
             this.move(box, event);
             this._client = {x: event.clientX, y: event.clientY};
-        }else{
-			var b = dojo.mixin({}, this._box);
-            var d = 0;
-            switch(this._nobIndex){
-            case LEFT:
-                d = box.l - this._nobBox.l;
-                this._nobBox.l = box.l;
-                b.l += d;
-                b.w -= d;
-                break;
-            case RIGHT:
-                b.w = box.l;
-                break;
-            case TOP:
-                d = box.t - this._nobBox.t;
-                this._nobBox.t = box.t;
-                b.t += d;
-                b.h -= d;
-                break;
-            case BOTTOM:
-                b.h = box.t;
-                break;
-            case LEFT_TOP:
-                d = box.l - this._nobBox.l;
-                this._nobBox.l = box.l;
-                b.l += d;
-                b.w -= d;
-                d = box.t - this._nobBox.t;
-                this._nobBox.t = box.t;
-                b.t += d;
-                b.h -= d;
-                break;
-            case LEFT_BOTTOM:
-                d = box.l - this._nobBox.l;
-                this._nobBox.l = box.l;
-                b.l += d;
-                b.w -= d;
-                b.h = box.t;
-                break;
-            case RIGHT_TOP:
-                b.w = box.l;
-                d = box.t - this._nobBox.t;
-                this._nobBox.t = box.t;
-                b.t += d;
-                b.h -= d;
-                break;
-            case RIGHT_BOTTOM:
-                b.w = box.l;
-                b.h = box.t;
-                break;
-            }
-            dojo.mixin(this._box, b);
-            dojo.mixin(this._constrained, b);
-            if(this._selectedWidget && this._selectedWidget.domNode.nodeName === 'IMG'){
-                var domNode = this._selectedWidget.domNode;
-                var naturalWidth = domNode.naturalWidth;
-                var naturalHeight = domNode.naturalHeight;
-                if(typeof naturalHeight == 'number' && naturalHeight > 0 && typeof naturalWidth == 'number' && naturalWidth > 0){
-                    var aspectRatio = naturalWidth / naturalHeight;
-                    if(b.w < aspectRatio * b.h){
-                        this._constrained.w = b.h * aspectRatio;
-                    }else{
-                        this._constrained.h = b.w / aspectRatio;
-                    }
-                }
-            }else{
-            	switch(this._nobIndex){
-	                case LEFT:
-	                case RIGHT:
-		                this._constrained.h = b.w;
-		                break;
-	                case TOP:
-	                case BOTTOM:
-		                this._constrained.w = b.h;
-		                break;
-	                default:
-	                	// If dragging corner, use max
-		                if(b.w > b.h){
-		                	this._constrained.h = b.w;
-		                }else{
-		                	this._constrained.w = b.h;
-		                }
-		                break;
-            	}
-            }
-            this._resize(event.shiftKey ? this._constrained : this._box);
-        }
 
+        }else{
+*/
+		var b = dojo.mixin({}, this._box);
+		var d = 0;
+console.log('onMove: this._nobIndex='+this._nobIndex+',this._frameIndex='+this._frameIndex);
+		if(this._frameIndex === LEFT){
+console.log('onMove: LEFT');
+			d = box.l - this._nobBox.l;
+			this._nobBox.l = box.l;
+			b.l += d;
+			b.w -= d;
+		}else if(this._frameIndex === RIGHT){
+console.log('onMove: RIGHT');
+			b.w = box.l;
+		}else if(this._frameIndex === TOP){
+console.log('onMove: TOP');
+			d = box.t - this._nobBox.t;
+			this._nobBox.t = box.t;
+			b.t += d;
+			b.h -= d;
+		}else if(this._frameIndex === BOTTOM){
+console.log('onMove: BOTTOM');
+			b.h = box.t;
+		}else if(this._nobIndex === LEFT_TOP){
+console.log('onMove: LEFT_TOP');
+			d = box.l - this._nobBox.l;
+			this._nobBox.l = box.l;
+			b.l += d;
+			b.w -= d;
+			d = box.t - this._nobBox.t;
+			this._nobBox.t = box.t;
+			b.t += d;
+			b.h -= d;
+		}else if(this._nobIndex === LEFT_BOTTOM){
+console.log('onMove: LEFT_BOTTOM');
+			d = box.l - this._nobBox.l;
+			this._nobBox.l = box.l;
+			b.l += d;
+			b.w -= d;
+			b.h = box.t;
+		}else if(this._nobIndex === RIGHT_TOP){
+console.log('onMove: RIGHT_TOP');
+			b.w = box.l;
+			d = box.t - this._nobBox.t;
+			this._nobBox.t = box.t;
+			b.t += d;
+			b.h -= d;
+		}else if(this._nobIndex === RIGHT_BOTTOM){
+console.log('onMove: RIGHT_BOTTOM');
+			b.w = box.l;
+			b.h = box.t;
+		}
+		dojo.mixin(this._box, b);
+		dojo.mixin(this._constrained, b);
+		if(this._selectedWidget && this._selectedWidget.domNode.nodeName === 'IMG'){
+			var domNode = this._selectedWidget.domNode;
+			var naturalWidth = domNode.naturalWidth;
+			var naturalHeight = domNode.naturalHeight;
+			if(typeof naturalHeight == 'number' && naturalHeight > 0 && typeof naturalWidth == 'number' && naturalWidth > 0){
+				var aspectRatio = naturalWidth / naturalHeight;
+				if(b.w < aspectRatio * b.h){
+					this._constrained.w = b.h * aspectRatio;
+				}else{
+					this._constrained.h = b.w / aspectRatio;
+				}
+			}
+		}else{
+			if(this._frameIndex === LEFT || this._frameIndex === RIGHT){
+				this._constrained.h = b.w;
+			}else if(this._frameIndex === TOP || this._frameIndex === BOTTOM){
+				this._constrained.w = b.h;
+			}else{
+				// If dragging corner, use max
+				if(b.w > b.h){
+					this._constrained.h = b.w;
+				}else{
+					this._constrained.w = b.h;
+				}
+			}
+		}
+		this._resize(event.shiftKey ? this._constrained : this._box);
+/*
+        }
+*/
     },
 
     onFirstMove: function(mover){

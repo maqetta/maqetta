@@ -18,6 +18,7 @@ define([
 	"dojox/validate/regexp",
 	"dojo/string",
 	"dojo/fx",
+	"dojo/date/stamp",
 	"dijit/Dialog",
 	"dijit/Tree",
 	"davinci/Runtime",
@@ -32,7 +33,7 @@ define([
 	"dojo/text!./templates/PublishWizard.html",
 	"dojo/text!./templates/MailFailureDialogContent.html"
 ], function(declare, _WidgetBase, _TemplatedMixin, StackContainer, ContentPane, SimpleTextarea, NumberTextBox, ValidationTextBox, DateTextBox, 
-		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojoxRegexp, dojostring, dojofx, Dialog, Tree, 
+		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojoxRegexp, dojostring, dojofx, stamp, Dialog, Tree, 
 		Runtime, Workbench, Folder, File, Empty, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls, 
 		templateString, warningString) {
 
@@ -659,11 +660,15 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 			// init reviewers
 			var i;
 			for (i = 0; i < node.reviewers.length; i++) {
-				if (node.reviewers[i].name != Runtime.getDesigner()) {
+				if (node.reviewers[i].email != node.designerEmail) {
+					var displayName = node.reviewers[i].email;
+					if (node.reviewers[i].name) {
+						displayName = node.reviewers[i].name + ' (' + displayName + ')';
+					}
 					this.jsonStore.newItem({
 						name: node.reviewers[i].name,
 						email: node.reviewers[i].email,
-						displayName: node.reviewers[i].name + ' (' + node.reviewers[i].email + ')'
+						displayName: displayName
 					});
 				}
 			}
@@ -672,25 +677,16 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 	},
 
 	publish : function(value) {
-		var reviewers = "";
 		var emails = "";
 		var i;
 		for (i=0;i<this.userData.length;i++) {
-			if (this.userData[i].name && this.userData[i].name !== "") { 
-				reviewers = reviewers + this.userData[i].name+",";
-			} else {
-				reviewers = reviewers + this.userData[i].email+",";
-			}
 			emails = emails+ this.userData[i].email+",";
 		}
 		var messageTextarea = this.descriptions;
 		var message = messageTextarea.value;
 		var versionTitle = this.versionTitle.value;
 		var dueDate = this.dueDate.get('value');
-		var dueDateString = dueDate?dojo.date.locale.format(dueDate, {
-				selector:'date', 
-				formatLength:'short'
-			}).toLowerCase() : "infinite";
+		var dueDateString = dueDate ? stamp.toISOString(dueDate, {zulu: true}) : "infinite";
 		var desireWidth = this.desireWidth.value || 0;
 		var desireHeight = this.desireHeight.value || 0;
 		var	resources = dojo.map(this.reviewFiles, function(item) {
@@ -707,7 +703,6 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 				isUpdate: this.node && !this.isRestart,
 				isRestart: this.isRestart,
 				vTime: this.node ? this.node.timeStamp : null,
-				reviewers:reviewers,
 				emails:emails,
 				message:message,
 				versionTitle:versionTitle,

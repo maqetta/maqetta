@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -23,21 +24,20 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.davinci.server.user.IDavinciProject;
-
 import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.server.review.Constants;
+import org.davinci.server.review.ReviewerVersion;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.user.IDesignerUser;
 import org.davinci.server.review.user.IReviewManager;
 import org.davinci.server.review.user.Reviewer;
+import org.davinci.server.user.IDavinciProject;
 import org.davinci.server.user.LibrarySettings;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IStorage;
 import org.maqetta.server.ServerManager;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -59,6 +59,8 @@ public class ReviewManager implements IReviewManager {
 	}
 
 	Map<String, IDesignerUser> users = Collections.synchronizedMap(new HashMap<String, IDesignerUser>());
+	Map<String, Reviewer> reviewers = Collections.synchronizedMap(new HashMap<String, Reviewer>());
+	
 	public ReviewManager() {
 		String basePath = ServerManager.getServerManger().getDavinciProperty(IDavinciServerConstants.BASE_DIRECTORY_PROPERTY);
 		baseDirectory = ServerManager.getServerManger().getBaseDirectory().newInstance(".");
@@ -93,8 +95,46 @@ public class ReviewManager implements IReviewManager {
 
 		initVersionDir(user, version.getTime());
 		saveVersionFile(user);
-
+		
+		//Persist review information
+		this.saveReviewerVersionFiles(version);
 	}
+	
+	/****************************************************/
+	
+	private void saveReviewerVersionFiles(Version version) {
+		List<Reviewer> reviewers = version.getReviewers();
+		for (Reviewer reviewer : reviewers) {
+			this.saveReviewerVersionFile(reviewer);
+		}
+	}
+	
+	private void saveReviewerVersionFile(Reviewer reviewer) {
+		IStorage versionFile = getReviewerVersionFile(reviewer);
+		ReviewerVersionFile file = new ReviewerVersionFile();
+		file.save(versionFile, reviewer);
+	}
+	
+	private IStorage getReviewerVersionFile(Reviewer reviewer) {
+		IStorage versionFile = baseDirectory.newInstance(getReviewerVersionDirectory(), this.buildBaseFileForFromReviewer(reviewer)); 
+		return versionFile;
+	}
+	
+	private String buildBaseFileForFromReviewer(Reviewer reviewer) {
+		String fileName = reviewer.getEmail() + ".xml";
+		return fileName;
+	}
+	
+	private IStorage getReviewerVersionDirectory() {
+		//Init the directory to hold version info for all of the reviewers and return it
+		IStorage reviewerVersionsDirectory = baseDirectory.newInstance(baseDirectory, Constants.REVIEW_DIRECTORY_NAME);
+		if (!reviewerVersionsDirectory.exists()) {
+			reviewerVersionsDirectory.mkdir();
+		}
+		return reviewerVersionsDirectory;
+	}
+	/**************************************************/
+	
 
 	public void saveVersionFile(IDesignerUser user) {
 		IStorage versionFile = baseDirectory.newInstance(user.getCommentingDirectory(), "snapshot/versions.xml");
@@ -175,6 +215,18 @@ public class ReviewManager implements IReviewManager {
 		}
 		return users.get(name);
 	}
+	
+	public Reviewer getReviewer(String email) {
+		return getReviewer(null, email);
+	}
+	
+	public Reviewer getReviewer(String name, String email) {
+		Reviewer reviewer = reviewers.get(email);
+		if (null == reviewer) {
+			reviewer = loadReviewer(name, email);
+		}
+		return reviewer;
+	}
 
 	public Reviewer isVaild(String name, String id, String versionTime) {
 		IDesignerUser user = getDesignerUser(name);
@@ -220,6 +272,20 @@ public class ReviewManager implements IReviewManager {
 			}
 		}
 		users.put(name, user);
+	}
+	
+	private Reviewer loadReviewer(String name, String email) {
+		Reviewer reviewer = new Reviewer(name, email);
+		IStorage versionFile = getReviewerVersionFile(reviewer);
+		if (versionFile.exists()) {
+			ReviewerVersionFile file = new ReviewerVersionFile();
+			List<ReviewerVersion> versions = file.load(versionFile);
+			for (ReviewerVersion version : versions) {
+				reviewer.addReviewerVersion(version);
+			}
+		}
+		reviewers.put(email, reviewer);
+		return reviewer;
 	}
 
 	private boolean containsPublishedFiles(IStorage dir, IDesignerUser user, String timeStamp){
@@ -378,8 +444,7 @@ public class ReviewManager implements IReviewManager {
 
 							String reviewerName = reviewer.getAttribute("name");
 							String reviewerEmail = reviewer.getAttribute("email");
-							String id = reviewer.getAttribute("id");
-							version.addReviewer(reviewerName, reviewerEmail);
+							version.addReviewer(ReviewManager.getReviewManager().getReviewer(reviewerName, reviewerEmail));
 						}
 
 						NodeList resources = versionElement.getElementsByTagName("resource");
@@ -389,6 +454,121 @@ public class ReviewManager implements IReviewManager {
 							String path = resource.getAttribute("path");
 							version.addResource(path);
 						}
+						objects.add(version);
+
+					}
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParserConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} finally {
+					try {
+						if (input != null)
+							input.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			return objects;
+		}
+	}
+	
+	class ReviewerVersionFile {
+		
+		public void save(IStorage file, org.davinci.server.review.user.Reviewer reviewer) {
+			OutputStream out = null;
+			try {
+				if (!file.exists())
+					try {
+						file.createNewFile();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				try {
+					out = file.getOutputStream();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder builder = factory.newDocumentBuilder();
+				Document document = builder.newDocument();
+
+				Element rootElement = document.createElement("reviewer");
+				document.appendChild(rootElement);
+				
+				Iterator<ReviewerVersion> iterator = reviewer.getReviewerVersions();
+				while (iterator.hasNext()) {
+					ReviewerVersion version = iterator.next();
+					Element element = document.createElement("version");
+					element.setAttribute("designerID", version.getDesignerID());
+					element.setAttribute("time", version.getTimeVersion());
+					rootElement.appendChild(element);
+				}
+
+				Transformer transformer = TransformerFactory.newInstance().newTransformer();
+				transformer.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
+				transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8"); //$NON-NLS-1$
+				transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
+				DOMSource source = new DOMSource(document);
+				StreamResult result = new StreamResult(out);
+
+				transformer.transform(source, result);
+			
+			} catch (TransformerFactoryConfigurationError e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TransformerConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TransformerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				try {
+					if (out != null) {
+						out.close();
+					}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
+		public List<ReviewerVersion> load(IStorage file) {
+			ArrayList<ReviewerVersion> objects = new ArrayList<ReviewerVersion>();
+			InputStream input = null;
+			if (file.exists()) {
+				try {
+					DocumentBuilder parser = DocumentBuilderFactory.newInstance()
+							.newDocumentBuilder();
+					input = file.getInputStream();
+					Document document = parser.parse(input);
+					Element rootElement = document.getDocumentElement();
+					NodeList versionElements = rootElement.getElementsByTagName("version");
+					for (int i = 0; i < versionElements.getLength(); i++) {
+						Element versionElement = (Element) versionElements.item(i);
+						
+						String designerID = versionElement.getAttribute("designerID");
+						String time = versionElement.getAttribute("time");
+						ReviewerVersion version = new ReviewerVersion(designerID, time);
+
 						objects.add(version);
 
 					}

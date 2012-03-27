@@ -17,10 +17,11 @@ public class Constants {
 	public static final String REVIEW_COOKIE_VERSION = "davinci_version";
 	public static final String REVIEW_VERSION = "review_version";
 	public static final String REVIEW_COOKIE_CMTID = "davinci_commentId";
+	public static final String REVIEW_COOKIE_FILENAME = "davinci_commentFileName";
 	
 	public static final String FAKE_REVIEWER = "davinci.review.fakeReviewer";
 	
-	public static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
+	public static final String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
 	public static final String EXTENSION_POINT_MAIL_CONFIG = "mailConfig";
 	public static final String EP_TAG_MAIL_CONFIG = "mailConfig";

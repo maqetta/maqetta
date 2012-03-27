@@ -35,18 +35,21 @@ var root = declare(Resource, {
 		return result;
 	},
 
-	findVersion: function(version) {
-		var node;
+	findVersion: function(designerId, version) {
+		//Get the top-level nodes of the tree (e.g., the children)
 		var children;
-		var result = null;
 		this.getChildren(function(c) { children= c; }, true);
-		
-		dojo.forEach(children, function(item) {
-			if (item.timeStamp == version) {
-				node =item;
+
+		//Look amongst the children for a match
+		var foundVersion = null;
+		dojo.some(children,function(item){
+			if (item.designerId == designerId && item.timeStamp == version) {
+				foundVersion = item;
+				return true;
 			}
+			return false;
 		});
-		return node;
+		return foundVersion;
 	},
 
 	getChildren: function(onComplete,sync) {
@@ -57,11 +60,9 @@ var root = declare(Resource, {
 			}
 			this._loading = [];
 			this._loading.push(onComplete);
-			var designerName = Runtime.commenting_designerName || "";
 			var location = Workbench.location().match(/http:\/\/.*:\d+\//);
 			Runtime.serverJSONRequest({
 				url:  location + "maqetta/cmd/listVersions",
-				content:{'designer':designerName},
 				sync:sync,
 				load : dojo.hitch(this, function(responseObject, ioArgs) {
 					this.children=[];

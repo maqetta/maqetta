@@ -93,71 +93,14 @@ var Runtime = {
 		return document.location.href.split("?")[0];
 	},
 	
-	getRole: function() {
-		if (!Runtime.commenting_designerName) { 
-			return "Designer";
-		} else {
-			if (!davinci.Runtime.userInfo) {
-		        var location = Runtime.location().match(/http:\/\/.*:\d+\//);
-				var result = Runtime.serverJSONRequest({
-					url: location + "maqetta/cmd/getReviewUserInfo",
-					sync: true
-				});
-				Runtime.userInfo = result;
-			}
-			if (Runtime.userInfo.userName == Runtime.commenting_designerName)
-				return "Designer";
-		}
-		return "Reviewer";
-	},
-	
-	getDesigner: function() {
-		if (Runtime.commenting_designerName) {
-			return Runtime.commenting_designerName;
-		} else {
-			if (!Runtime.userInfo) {
-		        var location = Runtime.location().match(/http:\/\/.*:\d+\//);
-				var result = Runtime.serverJSONRequest({
-					url: location + "maqetta/cmd/getReviewUserInfo",
-					sync: true
-				});
-					Runtime.userInfo = result;
-			}
-			return Runtime.userInfo.userName;
-		}
-	},
-	
-	getDesignerEmail: function() {
-		if (Runtime.commenting_designerEmail) {
-			return Runtime.commenting_designerEmail;
-		} else {
-			if (!Runtime.userInfo) {
-		        var location = Runtime.location().match(/http:\/\/.*:\d+\//);
-				var result = Runtime.serverJSONRequest({
-					url: location + "maqetta/cmd/getReviewUserInfo",
-					sync: true
-				});
-				Runtime.userInfo = result;
-			}
-			return Runtime.userInfo.email;
-		}
-	},
-	
+	//Not sure review-specific function like this belongs in Runtime, but 
+	//called from welcome_to_maqetta.html
 	publish: function(node) {
 		var publish = new davinci.review.actions.PublishAction();
 		publish.run(node);
 	},
 	
-	//two modes in design page and in review page
-	getMode: function() {
-		if (Runtime.commenting_designerName) {
-			return "reviewPage";
-		} else { 
-			return "designPage"; 
-		}
-	},
-	
-	
+	//Review-specific... This should really be removed from Runtime
 	getColor: function(/*string*/ name) {
 		var index;
 		dojo.some(Runtime.reviewers,function(item,n){

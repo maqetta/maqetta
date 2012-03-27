@@ -12,11 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import maqetta.core.server.user.DavinciProject;
 import maqetta.core.server.user.ReviewManager;
 
-import org.maqetta.server.mail.SimpleMessage;
-import org.maqetta.server.mail.SmtpPop3Mailer;
 import org.davinci.server.review.Comment;
 import org.davinci.server.review.Constants;
-import org.davinci.server.review.ReviewObject;
 import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.cache.ReviewCacheManager;
@@ -26,6 +23,8 @@ import org.davinci.server.user.IUserManager;
 import org.maqetta.server.Command;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
+import org.maqetta.server.mail.SimpleMessage;
+import org.maqetta.server.mail.SmtpPop3Mailer;
 
 public class AddComment extends Command {
 
@@ -33,25 +32,18 @@ public class AddComment extends Command {
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user)
 			throws IOException {
 		try {
-			IUserManager userManager = ServerManager.getServerManger().getUserManager();
-			ReviewObject reviewInfo = (ReviewObject) req.getSession().getAttribute(Constants.REVIEW_INFO);
-			if (null == reviewInfo) {
-//				throw new Exception("Session timed out! Please login again.");
-				/*
-		 		* create a review object so we can comment immediately.
-				*/
-				reviewInfo = new ReviewObject(user.getUserName());
-				reviewInfo.setDesignerEmail(user.getPerson().getEmail());
-				req.getSession().setAttribute(Constants.REVIEW_INFO, reviewInfo);
-			}
-			String designerName = reviewInfo.getDesignerName();
-			IUser designer = null;
-			if(ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equalsIgnoreCase(designerName))
-				designer = userManager.getUser(IDavinciServerConstants.LOCAL_INSTALL_USER);
-			else
-				designer = userManager.getUser(designerName);
-
 			Comment comment = extractComment(req);
+			
+			IUserManager userManager = ServerManager.getServerManger().getUserManager();
+			String designerName = comment.getDesignerId();
+			IUser designer = null;
+			if(ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equalsIgnoreCase(designerName)) {
+				designer = userManager.getUser(IDavinciServerConstants.LOCAL_INSTALL_USER);
+			} else {
+				designer = userManager.getUser(designerName);
+			}
+			
+			//Set up project based on designer
 			DavinciProject project = new DavinciProject();
 			project.setOwnerId(designer.getUserName());
 			comment.setProject(project);
@@ -180,6 +172,9 @@ public class AddComment extends Command {
 		paramValue = req.getParameter(Comment.OWNER_ID);
 		comment.setOwnerId(paramValue);
 
+		paramValue = req.getParameter(Comment.DESIGNER_ID);
+		comment.setDesignerId(paramValue);
+		
 		paramValue = req.getParameter(Comment.PAGE_NAME);
 		comment.setPageName(paramValue);
 

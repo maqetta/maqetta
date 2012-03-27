@@ -11,8 +11,6 @@ import maqetta.core.server.user.DavinciProject;
 import maqetta.core.server.user.ReviewManager;
 
 import org.davinci.server.review.Comment;
-import org.davinci.server.review.Constants;
-import org.davinci.server.review.ReviewObject;
 import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.cache.ReviewCacheManager;
@@ -26,21 +24,15 @@ public class UpdateComment extends Command {
 	@Override
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user)
 			throws IOException {
-		ReviewObject reviewInfo = (ReviewObject) req.getSession().getAttribute(Constants.REVIEW_INFO);
-		if (null == reviewInfo) {
-			/*
-	 		* create a review object so we can comment immediately.
-			*/
-			reviewInfo = new ReviewObject(user.getUserName());
-			reviewInfo.setDesignerEmail(user.getPerson().getEmail());
-			req.getSession().setAttribute(Constants.REVIEW_INFO, reviewInfo);
-		}
-		String designerName = reviewInfo.getDesignerName();
+
+		Comment comment = extractComment(req);
+		
+		String designerName = comment.getDesignerId();
 		IDesignerUser du = ReviewManager.getReviewManager().getDesignerUser(designerName);
 		DavinciProject project = new DavinciProject();
 		project.setOwnerId(du.getName());
-
-		Comment comment = extractComment(req, project);
+		
+		comment.setProject(project);
 		Comment existingComm = ReviewCacheManager.$.getComment(project, comment.getId());
 		Version version = du.getVersion(existingComm.getPageVersion());
 		isUpdateStatus = Boolean.parseBoolean(req.getParameter("isUpdateStatus"));
@@ -59,14 +51,15 @@ public class UpdateComment extends Command {
 		}
 	}
 
-	private Comment extractComment(HttpServletRequest req, DavinciProject project) {
+	private Comment extractComment(HttpServletRequest req) {
 		Comment comment = new Comment();
 		String paramValue;
 
-		comment.setProject(project);
-
 		paramValue = req.getParameter(Comment.ID);
 		comment.setId(paramValue);
+		
+		paramValue = req.getParameter(Comment.DESIGNER_ID);
+		comment.setDesignerId(paramValue);
 
 		paramValue = req.getParameter(Comment.CONTENT);
 		comment.setContent(paramValue);

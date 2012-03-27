@@ -201,8 +201,8 @@ var Workbench = {
 	activePerspective: "",
 	actionScope: [],
 	_DEFAULT_PROJECT: "project1",
-	
-	run: function(onFinish) {
+
+	run: function() {
 		Runtime.run();
 		Workbench._initKeys();
 		Workbench._baseTitle = dojo.doc.title;
@@ -255,7 +255,7 @@ var Workbench = {
 			}
 		});
 
-		metadata.init().then(function(){
+		var d = metadata.init().then(function(){
 			var perspective = Runtime.initialPerspective || "davinci.ui.main";
 			Workbench.showPerspective(perspective);
 			Workbench._updateTitle();
@@ -268,8 +268,7 @@ var Workbench = {
 		}
 		Workbench._lastAutoSave = Date.now();
 		setInterval(dojo.hitch(this,"_autoSave"),30000);
-		if(onFinish)
-			onFinish();
+		return d;
 	},
 
 	_resourceChanged: function (type,changedResource) {

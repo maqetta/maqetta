@@ -76,8 +76,7 @@ return declare("davinci.review.editor.Context", [Context], {
 					dojo.publish("/davinci/review/context/loaded", 
 							[
 							 this,
-							 this.fileName,
-							 davinci.Runtime.commenting_commentId
+							 this.fileName
 							 ]);
 					this.containerEditor.silhouetteiframe.setSVGFilename(svgfilename);
 					this._statesLoaded = true;
@@ -208,6 +207,21 @@ return declare("davinci.review.editor.Context", [Context], {
 	},
 
 	_refreshSurface: function(surface) {
+		
+		// Return true if shape and surface have different values for state or scene
+		function differentStateScene(Shape, Surface){
+			if(!Shape || !Surface){
+				return false;
+			}
+			if(Shape.state && Surface.filterState && Shape.state != Surface.filterState){
+				return true;	// there is a difference
+			}
+			if(Shape.scene && Surface.filterScene && Shape.scene != Surface.filterScene){
+				return true;	// there is a difference
+			}
+			return false;
+		}
+
 		var shapes = surface.shapes, result;
 
 		dojo.forEach(shapes, function(shape) {
@@ -244,11 +258,11 @@ return declare("davinci.review.editor.Context", [Context], {
 					} else {
 						result = "partial";
 					}
-					if (shape.state != surface.filterState) { // || shape.scene != surface.filterScene) {
+					if (differentStateScene(shape, surface)) {
 						result = "hidden";
 					}
 				} else {
-					if (shape.state != surface.filterState) { // || shape.scene != surface.filterScene) {
+					if (differentStateScene(shape, surface)){
 						result = "hidden";
 					} else {
 						result = "visible";

@@ -63,7 +63,7 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 		locationPath = locationPath.removeLastSegments().append("review"); // delete /maqetta
 		var baseUrl;
 
-		var designerName = Runtime.commenting_designerName || dojo.byId('davinci_user').innerHTML;
+		var designerName = this.resourceFile.parent.designerId;
 		// Compose a URL like http://localhost:8080/davinci/review/user/heguyi/ws/workspace/.review/snapshot/20100101/folder1/sample1.html
 		baseUrl = locationPath.append("user").append(designerName)
 		.append("ws").append("workspace").append(filename).toString();

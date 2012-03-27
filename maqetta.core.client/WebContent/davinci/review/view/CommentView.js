@@ -120,11 +120,13 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			//		Enable the action icon on the toolbar
 			var global = dojo.window.get(context.containerNode.ownerDocument);
 
-			this._loadCommentData(pageName);
+			var designerId = context.resourceFile.parent.designerId;
+			this._loadCommentData(designerId, pageName);
 			if (Workbench.getOpenEditor() === context.containerEditor) {
 				// Only need rendering when it is the current editor
 				// No need to render when the editor is opened in the background
 				this._currentPage = pageName;
+				this._cached[this._currentPage].context = context;
 				this._destroyCommentWidgets();
 				//FIXME: Hack
 				//Postpone updating shapes with setTimeout. Something happened
@@ -140,7 +142,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			}
 			// Response to the state change event in the review editor
 			if (global && global.davinci && global.davinci.states) {
-				this.states = global.davinci.states;
 				global.davinci.states.subscribe("/davinci/states/state/changed", this, function(args) {
 					if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
 						return; 
@@ -162,7 +163,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			// summary:
 			//		Remove the comment nodes of the previous page
 			
-			var editor = args.editor;
+			var editor = this._editor = args.editor;
 
 			//save the editing comment form
 			if (args.oldEditor && args.oldEditor.basePath) {
@@ -184,14 +185,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			}
 			if (editor && editor.basePath) {
 				this._currentPage = editor.basePath.path;
-				//dojo.publish(this._currentPage+"/davinci/review/drawing/addShape", ["[]", true]);
-				var context = editor.getContext(),
-				global;
-				if(context)
-					global = context.getGlobal();
-				if (global && global.davinci && global.davinci.states) {
-					this.states = global.davinci.states;
-				}
 				this._commentForm.hide();
 				this._destroyCommentWidgets();
 				this._updateToolbar(args);
@@ -249,7 +242,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				// isn't a review editor, let's clear out the comment view
 				this._resetCommentView();
 				this._currentPage = null;
-				this.states = null;
 			} else {
 				this._versionClosed = editor.resourceFile.parent.closed;
 			}
@@ -275,7 +267,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 		dojo.subscribe("/davinci/review/commentStatusChanged", this, function(comment, status) {
 			var focusedComments = this._cached[this._currentPage].focusedComments;
-			this._loadCommentData(this._currentPage);
+			var designerId = this._getDesignerId();
+			this._loadCommentData(designerId, this._currentPage);
 			var loopBody = function(comment){
 				comment.status = status;
 				var replies = comment.getReplies();
@@ -385,12 +378,12 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			commentId: form.commentId,
 			subject: args.subject,
 			content: args.content,
+			designerId: this._getDesignerId(),
 			pageName: this._currentPage,
 			pageState: this._cached[this._currentPage].pageState,
 			viewScene: this._cached[this._currentPage].viewScene || this._getCurrentScene().s,
-			//ownerId: Runtime.commenting_reviewerName.userName,
 			ownerId: Runtime.userName,
-			email: Runtime.getDesignerEmail(),
+			//email: Runtime.getDesignerEmail(),
 			replyTo: form.replyTo,
 			drawingJson: this.drawingJson,
 			type: args.type,
@@ -472,7 +465,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		_comment.status = comment.status;
 	},
 
-	_loadCommentData: function(/*String*/ pageName) {
+	_loadCommentData: function(/*String*/ ownerId, /*String*/ pageName) {
 		// summary:
 		//		Load the comments attached to the opened page
 		//		and sort them by time order
@@ -481,7 +474,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			url: location + "maqetta/cmd/getComments",
 			sync: true,
 			content:{
-				ownerId: Runtime.commenting_designerName || Runtime.userName,
+				ownerId: ownerId,
 				pageName: pageName
 			}
 		}).sort(function(c1,c2){
@@ -511,6 +504,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				commentId: _comment.id,
 				subject: _comment.subject,
 				content: _comment.content,
+				designerId: _comment.designerId,
 				pageName: this._currentPage,
 				pageState: _comment.pageState,
 				viewScene: _comment.viewScene,
@@ -562,7 +556,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		var form = this._commentForm,
 		comment = this.commentIndices[args.commentId];
 
-		if (comment.ownerId != Runtime.commenting_reviewerName) { 
+		if (comment.ownerId != Runtime.userName) { 
 			return;
 		}
 
@@ -591,7 +585,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		// Notify the drawing tool to be in edit mode
 		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", 
 				[
-				 Runtime.commenting_reviewerName.userName,
+				 Runtime.userName,
 				 form.commentId,
 				 comment.pageState,
 				 comment.viewScene
@@ -617,7 +611,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		// Notify the drawing tool to be in edit mode
 		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", 
 				[
-				 Runtime.commenting_reviewerName.userName,
+				 Runtime.userName,
 				 form.commentId,
 				 this._cached[this._currentPage].pageState,
 				 this._cached[this._currentPage].viewScene
@@ -639,10 +633,27 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		}
 
 		if (!evt || !evt.silent) {
-			if (this.states) { 
-				this.states.setState(widget.pageState);
+			if(this._editor){
+				var context = this._editor.getContext();
+				var states = (context && context.rootNode && context.rootNode.ownerDocument && 
+						context.rootNode.ownerDocument.defaultView &&
+						context.rootNode.ownerDocument.defaultView.davinci &&
+						context.rootNode.ownerDocument.defaultView.davinci.states);
+				if(states){
+					states.setState(widget.pageState);
+				}
 			}
-			var viewScene = null; //this._cached[this._currentPage].viewScene || this._getCurrentScene().s;
+			//FIXME: R/C is stashing away pageState and viewScene on a DOM node
+			//This is worrisome - at a minimum, the properties should use a Maqetta prefix of some sort
+			//to prevent future collisions.
+			//But more important is that we really need to add a SceneManager pointer, too
+			//For time being, assume SceneManager from getCurrentScene is same as SceneManager for domNode.viewScene
+			var viewScene;
+			var currentScene = this._getCurrentScene();
+			if(currentScene && currentScene.sm && currentScene.sm.selectScene && widget.viewScene){
+				currentScene.sm.selectScene({sceneId:widget.viewScene});
+				viewScene = widget.viewScene;
+			}
 			this.publish(this._currentPage + "/davinci/review/drawing/filter", [{pageState: this._cached[this._currentPage].pageState, viewScene: viewScene}, focusedComments]);
 		}
 	},
@@ -659,7 +670,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				}
 			}
 		}
-		var viewScene = null; //this._cached[this._currentPage].viewScene || this._getCurrentScene().s;
+		var viewScene = this._cached[this._currentPage].viewScene || this._getCurrentScene().s;
 		this.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: this._cached[this._currentPage].pageState, viewScene: viewScene}, focusedComments]);
 	},
 
@@ -691,7 +702,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					} else {
 						return false;
 					}
-				}) && Runtime.commenting_designerName != item.name)
+				}) && Runtime.userName != item.name)
 					reviewers.push({
 						name: comment.ownerId,
 						email: comment.email
@@ -704,22 +715,25 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			}
 
 			Runtime.reviewers = reviewers;
-			dojo.forEach(reviewers, dojo.hitch(this, function(comment, index) { 
-				var check = new CheckedMenuItem({
-					label: "<div class='davinciReviewToolbarReviewersColor' style='background-color:" + 
-					Runtime.getColor(comment.name) +";'></div><span>"+comment.name+"</span>",
-						onChange: dojo.hitch(this,this._reviewFilterChanged),
-						checked: true,
-						reviewer:comment,
-						title: comment.email
-				});
-				this.reviewerList.addChild(check);
-				if (this._cached[this._currentPage] && this._cached[this._currentPage].shownColors) {
-					var checked = dojo.some(this._cached[this._currentPage].shownColors,function(name) {
-						if (name == comment.name) return true;
-						return false;
+			dojo.forEach(reviewers, dojo.hitch(this, function(reviewer, index) { 
+				//If no name, probably not a Maqetta user and no way they could have comments yet (so color irrelevant)
+				if (reviewer.name) { 
+					var check = new CheckedMenuItem({
+						label: "<div class='davinciReviewToolbarReviewersColor' style='background-color:" + 
+						Runtime.getColor(reviewer.name) +";'></div><span>"+reviewer.name+"</span>",
+							onChange: dojo.hitch(this,this._reviewFilterChanged),
+							checked: true,
+							reviewer:reviewer,
+							title: reviewer.email
 					});
-					check.set("checked",checked);
+					this.reviewerList.addChild(check);
+					if (this._cached[this._currentPage] && this._cached[this._currentPage].shownColors) {
+						var checked = dojo.some(this._cached[this._currentPage].shownColors,function(name) {
+							if (name == reviewer.name) return true;
+							return false;
+						});
+						check.set("checked",checked);
+					}
 				}
 			}));
 			this._reviewFilterChanged();
@@ -865,7 +879,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		// Notify the drawing tool to be in edit mode
 		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", 
 				[
-				 //Runtime.commenting_reviewerName.userName,
 				 Runtime.userName,
 				 form.commentId,
 				 this._cached[this._currentPage].pageState,
@@ -902,7 +915,16 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 	},
 
 	isPageOwner: function() {
-		return Runtime.commenting_designerName == Runtime.commenting_reviewerName.userName;
+		return this._getDesignerId() == Runtime.userName;
+	},
+	
+	_getDesignerId: function() {
+		var designerId = null;
+		var context = this._cached[this._currentPage].context;
+		if (context) {
+			designerId = context.resourceFile.parent.designerId;
+		}
+		return designerId;
 	},
 
 	popupWarning: function(description) {

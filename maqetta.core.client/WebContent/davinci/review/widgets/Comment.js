@@ -46,6 +46,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 					next: this.next,
 					pageState: this.pageState,
 					viewScene: this.viewScene,
+					designerId: this.designerId,
 					pageName: this.pageName,
 					replyTo: this.replyTo || 0,
 					drawingJson: this.drawingJson,
@@ -80,10 +81,6 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 		this.commentType.innerHTML = this.type;
 		dojo.addClass(this.commentSeverity, "severity" + this.severity);
 
-		davinci.Runtime.commenting_reviewerName = davinci.Runtime.getUser() || {};
-//		davinci.Runtime.commenting_reviewerName.userName = davinci.Runtime.getDesigner();
-//		davinci.Runtime.commenting_reviewerName.email = davinci.Runtime.getDesignerEmail();
-
 		// Rendering that has something to do with a reply comment
 		if (!this.isReply()) {
 			if (this.isPageOwner()) {
@@ -107,7 +104,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 			dojo.style(this.editButton, "display", "none");
 			dojo.style(this.replyButton, "display", "none");
 		}
-		if (davinci.Runtime.commenting_reviewerName != this.ownerId) {
+		if (davinci.Runtime.userName != this.ownerId) {
 			dojo.style(this.editButton,"display","none");
 		}
 		if (this.status == "Close") {
@@ -123,7 +120,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 			dojo.style(this.editButton, "display", "none");
 			dojo.style(this.replyButton, "display", "none");
 		}
-		if (davinci.Runtime.commenting_reviewerName != this.ownerId) {
+		if (davinci.Runtime.userName != this.ownerId) {
 			dojo.style(this.editButton, "display", "none");
 		}
 		if (this.status == "Close") {
@@ -187,6 +184,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 			handleAs: "json",
 			content: {
 				id: this.commentId,
+				designerId: this.designerId,
 				status: this.status,
 				subject:  this.subject,
 				content:  this.content,
@@ -247,7 +245,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 	isPageOwner: function() {
 		// summary:
 		//		Indicate if the reviewer is the page author
-		return davinci.Runtime.commenting_designerName == davinci.Runtime.userName;
+		return this.designerId == davinci.Runtime.userName;
 	},
 
 	appendReply: function(/*davinci.review.widgets.Comment*/ reply) {

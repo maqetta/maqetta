@@ -1014,10 +1014,13 @@ define(["dojo/_base/declare",
 		
 		_editorSelected : function(editorChange){
 			this._editor = editorChange.editor;
+			var context;
 			if(this._editor && this._editor.getContext){
-				
-				this.context = this._editor.getContext();
-				var v = this.context.getSelection();
+				context = this._editor.getContext();
+			}
+			if(context){	
+				this.context = context;
+				var v = context.getSelection();
 				if(v.length>0){
 					this._widgetSelectionChanged(v);
 				}else{

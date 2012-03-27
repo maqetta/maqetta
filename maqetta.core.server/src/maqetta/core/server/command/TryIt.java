@@ -2,6 +2,7 @@ package maqetta.core.server.command;
 
 import java.io.IOException;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -32,6 +33,10 @@ public class TryIt extends Command {
             // this effectively logs the guest into the session
             HttpSession session = req.getSession(true);
             session.setAttribute(IDavinciServerConstants.SESSION_USER, user);
+            session.setMaxInactiveInterval(IDavinciServerConstants.SESSION_TIMEOUT);
+            Cookie k = new Cookie(IDavinciServerConstants.SESSION_USER, user != null ? user.getUserName() : null);
+    		k.setPath("/maqetta");
+    		resp.addCookie(k);
 
             // redirect to designer
             String portSpec = req.getServerPort() == 80 ? "" : ':' + String.valueOf(req.getServerPort());

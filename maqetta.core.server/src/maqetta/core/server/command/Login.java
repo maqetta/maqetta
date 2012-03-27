@@ -27,7 +27,7 @@ public class Login extends Command {
             session.setAttribute(IDavinciServerConstants.SESSION_USER, user);
             session.setMaxInactiveInterval(IDavinciServerConstants.SESSION_TIMEOUT);
             Cookie k = new Cookie(IDavinciServerConstants.SESSION_USER, user != null ? user.getUserName() : null);
-    		k.setPath("/maqetta");
+    		k.setPath("/");
     		resp.addCookie(k);
     	    
             

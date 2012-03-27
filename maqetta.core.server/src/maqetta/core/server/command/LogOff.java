@@ -29,7 +29,7 @@ public class LogOff extends Command {
         
         Cookie k = new Cookie(IDavinciServerConstants.SESSION_USER,  null);
         k.setMaxAge(0);
-		k.setPath("/maqetta");
+		k.setPath("/");
 		resp.addCookie(k);
 		
         req.getSession().invalidate();

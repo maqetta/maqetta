@@ -58,7 +58,7 @@ var Runtime = {
 	},
 
 	getUser: function() {
-		return dojo.cookie("DAVINCI.USER");
+		return dojo.cookie("MAQETTA.USER");
 	},
 	
 	loadPlugins: function() {

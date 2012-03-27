@@ -11,7 +11,7 @@ public interface IDavinciServerConstants {
 
 	public static final String USER_LIST_FILE = "users.xml";
 
-	public static final String SESSION_USER = "DAVINCI.USER";
+	public static final String SESSION_USER = "MAQETTA.USER";
 	public static final String LOGGING_IN_USER = "DAVINCI.LOGGIN.IN.USER";
 	public static final String REDIRECT_TO = "DAVINCI.REDIRECT_TO";
 

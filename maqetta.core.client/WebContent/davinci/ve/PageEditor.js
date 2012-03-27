@@ -200,34 +200,8 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	setContent: function (filename, content, newHtmlParams) {
 	    this.fileName = filename;
 	    this.htmlEditor.setContent(filename,content);
-	    if (this._isNewFile && this.resourceFile.parent!=system.resource.getRoot()) {
-	        var rootPath = new Path([]),
-	        	newPath = new Path(this.resourceFile.getPath()).getParentPath(),
-	        	updatePath = function (src) {
-		            var fullPath=rootPath.append(src);
-		            var newSrc=fullPath.relativeTo(newPath);
-		            return newSrc.toString();
-		        };
-	        var visitor = {visit: function (element) {
-	            if (element.elementType=="HTMLElement") {
-	                if (element.tag=="script") {
-	                    var src=element.getAttribute("src");
-	                    if (src) {
-	                        element.addAttribute("src",updatePath(src));
-	                    }
-	                }
-	            } else if (element.elementType=="CSSImport") {
-	                var newPath=updatePath(element.url);
-	                element.url=newPath;
-	            }
-	        }
-	        };
-	        this.htmlEditor.model.visit(visitor);
-	    }
-//		console.log(this.htmlEditor.model.getText());
 		this.visualEditor.setContent(filename, this.htmlEditor.model, newHtmlParams);
 		dojo.connect(this.htmlEditor.model, "onChange", this, '_themeChange');
-//		this._visualChanged();
 		// update the source with changes which may have been made during initialization without setting dirty bit
 		this.htmlEditor.setValue(this.model.getText(), true);
 

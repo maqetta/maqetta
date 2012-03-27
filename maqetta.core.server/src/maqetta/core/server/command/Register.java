@@ -39,7 +39,7 @@ public class Register extends Command {
             HttpSession session = req.getSession(true);
             session.setAttribute(IDavinciServerConstants.SESSION_USER, user);
             Cookie k = new Cookie(IDavinciServerConstants.SESSION_USER, user != null ? user.getUserName() : null);
-    		k.setPath("/maqetta");
+    		k.setPath("/");
     		resp.addCookie(k);
         } catch (UserException e) {
             this.responseString = e.getReason();

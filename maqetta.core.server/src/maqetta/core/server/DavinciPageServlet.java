@@ -124,7 +124,7 @@ public class DavinciPageServlet extends HttpServlet {
 				user = this.userManager.getSingleUser();
 				req.getSession().setAttribute(IDavinciServerConstants.SESSION_USER, user);
 				Cookie k = new Cookie(IDavinciServerConstants.SESSION_USER, user.getUserName() );
-		  		k.setPath("/maqetta");
+		  		k.setPath("/");
 		  		resp.addCookie(k);
 		  		writeMainPage(req, resp);
 			}

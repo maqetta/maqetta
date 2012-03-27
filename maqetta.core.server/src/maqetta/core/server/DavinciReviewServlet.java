@@ -169,16 +169,17 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 		String version = null;
 		String ownerId = null;
 		String projectName = null;
-
+		IUser reviewUser = user;
 		if ( isValidReviewPath(path) ) {
 			ownerId = path.segment(1);
 			version = path.segment(6);
 			projectName = path.segment(7);
 			path = path.removeFirstSegments(7);
 			// So that each snapshot can be mapped to its virtual lib path correctly.
-			path = ReviewManager.adjustPath(path, ownerId, version, projectName); 
+			path = ReviewManager.adjustPath(path, ownerId, version, projectName);
+			reviewUser = ServerManager.getServerManger().getUserManager().getUser(ownerId);
 		}
-		return super.handleLibraryRequest(req, resp, path, user);
+		return super.handleLibraryRequest(req, resp, path, reviewUser);
 	}
 
 	protected boolean handleReviewRequest(HttpServletRequest req, HttpServletResponse resp,

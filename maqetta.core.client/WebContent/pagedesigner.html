@@ -66,8 +66,8 @@
 					// set up for review and commenting...
 					var designerName  = dojo.cookie("davinci_designer");
 					var reviewVersion = dojo.cookie("review_version");
-					dojo.cookie("davinci_designer", null, {expires: -1, path:"/maqetta/"});
-					dojo.cookie("review_version", null, {expires: -1, path:"/maqetta/"});
+					dojo.cookie("davinci_designer", null, {expires: -1, path:"/"});
+					dojo.cookie("review_version", null, {expires: -1, path:"/"});
 					
 					var loadReviews = function(){
 						if (reviewVersion && designerName) {

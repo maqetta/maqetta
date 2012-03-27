@@ -331,16 +331,12 @@ var Runtime = {
 		Runtime.serverJSONRequest({
 			url:"cmd/logoff", handleAs:"text", sync:true
 		});
-		if (Runtime.plugins.joomlaplugin) {
-			location.href = "http://" + window.location.hostname + "/index.php?option=com_user&task=logout&return=Lw";
-		} else { // non-Joomla plugins use the default welcome page
-			var newLocation = Runtime.location();
-			var lastChar=newLocation.length-1;
-			if (newLocation.charAt(lastChar)=='/') {
-				newLocation=newLocation.substr(0,lastChar);
-			}
-			location.href = newLocation+"/welcome";
+		var newLocation = Runtime.location(); //
+		var lastChar=newLocation.length-1;
+		if (newLocation.charAt(lastChar)=='/') {
+			newLocation=newLocation.substr(0,lastChar);
 		}
+		location.href = newLocation+"/welcome";
 	}
 };
 

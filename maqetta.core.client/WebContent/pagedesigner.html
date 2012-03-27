@@ -48,6 +48,10 @@
 						dojo.byId('davinci_logoff').href="";
 						Runtime.isLocalInstall=true;
 					}
+					if (Runtime.plugins.joomlaplugin) {
+						dojo.byId('davinci_logoff').href = "http://" + window.location.hostname + 
+							"/index.php?option=com_user&task=logout&return=Lw";
+				 	}
 				 	// Hide logoff if single-user mode
 					var singleUser = Runtime.singleUserMode();
 					if(singleUser){

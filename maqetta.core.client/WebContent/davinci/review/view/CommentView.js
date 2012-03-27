@@ -142,7 +142,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			}
 			// Response to the state change event in the review editor
 			if (global && global.davinci && global.davinci.states) {
-				this.states = global.davinci.states;
 				global.davinci.states.subscribe("/davinci/states/state/changed", this, function(args) {
 					if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
 						return; 
@@ -164,7 +163,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			// summary:
 			//		Remove the comment nodes of the previous page
 			
-			var editor = args.editor;
+			var editor = this._editor = args.editor;
 
 			//save the editing comment form
 			if (args.oldEditor && args.oldEditor.basePath) {
@@ -186,14 +185,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			}
 			if (editor && editor.basePath) {
 				this._currentPage = editor.basePath.path;
-				//dojo.publish(this._currentPage+"/davinci/review/drawing/addShape", ["[]", true]);
-				var context = editor.getContext(),
-				global;
-				if(context)
-					global = context.getGlobal();
-				if (global && global.davinci && global.davinci.states) {
-					this.states = global.davinci.states;
-				}
 				this._commentForm.hide();
 				this._destroyCommentWidgets();
 				this._updateToolbar(args);
@@ -251,7 +242,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				// isn't a review editor, let's clear out the comment view
 				this._resetCommentView();
 				this._currentPage = null;
-				this.states = null;
 			} else {
 				this._versionClosed = editor.resourceFile.parent.closed;
 			}
@@ -643,8 +633,15 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		}
 
 		if (!evt || !evt.silent) {
-			if (this.states) { 
-				this.states.setState(widget.pageState);
+			if(this._editor){
+				var context = this._editor.getContext();
+				var states = (context && context.rootNode && context.rootNode.ownerDocument && 
+						context.rootNode.ownerDocument.defaultView &&
+						context.rootNode.ownerDocument.defaultView.davinci &&
+						context.rootNode.ownerDocument.defaultView.davinci.states);
+				if(states){
+					states.setState(widget.pageState);
+				}
 			}
 			//FIXME: R/C is stashing away pageState and viewScene on a DOM node
 			//This is worrisome - at a minimum, the properties should use a Maqetta prefix of some sort

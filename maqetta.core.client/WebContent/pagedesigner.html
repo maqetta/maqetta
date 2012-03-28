@@ -48,7 +48,8 @@
 						dojo.byId('davinci_logoff').href="";
 						Runtime.isLocalInstall=true;
 					}
-					if (Runtime.plugins.joomlaplugin) {
+					var isRunningJoomla  = dojo.cookie("DAVINCI.JOOMLA");
+					if (isRunningJoomla) {
 						dojo.byId('davinci_logoff').href = "http://" + window.location.hostname + 
 							"/index.php?option=com_user&task=logout&return=Lw";
 				 	}

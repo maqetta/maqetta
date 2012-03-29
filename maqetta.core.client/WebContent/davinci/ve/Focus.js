@@ -267,8 +267,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         	}
         }
         
-        // Hardcoded adjustment factor requiring inside knowledge of CSS rules
-        // on editFocusFrame
+        // Adjustment factor requiring inside knowledge of CSS rules on editFocusFrame
         var adjust = 8;	
         var w = b.w + adjust;
         var h = b.h + adjust;
@@ -281,10 +280,13 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
         var l = Math.round(b.w / 2 - this.size / 2);
         var t = Math.round(b.h / 2 - this.size / 2);
-        this._nobs[LEFT_BOTTOM].style.top = b.h + "px";
-        this._nobs[RIGHT_TOP].style.left = b.w + "px";
-        this._nobs[RIGHT_BOTTOM].style.left = b.w + "px";
-        this._nobs[RIGHT_BOTTOM].style.top = b.h + "px";
+        
+        // Adjustment factor requiring inside knowledge of CSS rules on editFocusNob
+        adjust = 1;
+        this._nobs[LEFT_BOTTOM].style.top = (b.h - adjust) + "px";
+        this._nobs[RIGHT_TOP].style.left = (b.w - adjust) + "px";
+        this._nobs[RIGHT_BOTTOM].style.left = (b.w - adjust) + "px";
+        this._nobs[RIGHT_BOTTOM].style.top = (b.h - adjust) + "px";
 		
 		this._bboxAdjusted = b;
     },

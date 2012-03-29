@@ -16,20 +16,17 @@ define(["dojo/_base/declare",
 
 return declare("davinci.ve.tools.PasteTool", CreateTool, {
 
-	_create: function(args){
-		
-		// Looks for a particular property within styleArray
-		function retrieveProperty(styleArray, propName, defaultValue){
-			var propValue = defaultValue;
-			if(styleArray && styleArray.length>0){
-				styleArray.forEach(function(o){	// Should be only one property per object
-					if(o.hasOwnProperty(propName)){
-						propValue = o[propName];
-					}
-				});
-			}
-			return propValue;
+	constructor: function(data) {
+		this.inherited(arguments);
+		this._position_prop = null;
+		var d = data[0];
+		if(d && d.properties){
+			var styleArray = widget.parseStyleValues(d.properties.style);
+			this._position_prop = this._retrieveProperty(styleArray, 'position', '');
 		}
+	},
+	
+	_create: function(args){
 		
 		var index = args.index,
 			baseline,
@@ -48,25 +45,23 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 			
 			loadRequiresForTree(d);
 
-			var position, styleArray = widget.parseStyleValues((d.properties && d.properties.style));
-			var position_prop = retrieveProperty(styleArray, 'position', '');
-			if(position_prop == "absolute"){
-				if(args.position){
-					var left = parseInt(retrieveProperty(styleArray, 'left', '0px'));
-					var top = parseInt(retrieveProperty(styleArray, 'top', '0px'));
-					if(delta){
-						position = {x: left + delta.x,
-							y: top + delta.y};
-					}else{
+			var styleArray = widget.parseStyleValues((d.properties && d.properties.style));
+			if(this._position_prop == "absolute"){
+				var left = parseInt(this._retrieveProperty(styleArray, 'left', '0px'));
+				var top = parseInt(this._retrieveProperty(styleArray, 'top', '0px'));
+				if(delta){
+					position = {x: left + delta.x,
+						y: top + delta.y};
+				}else{
+					if(args.position){
 						position = args.position;
 						delta = {x:args.position.x - left, y:args.position.y - top};
+					}else{
+						// Shouldn't be here ever
+						console.warn('PasteTool.js _create - no value for args.position');
+						position = {x:left, y:top};
+						delta = {x:0, y:0};
 					}
-				}else{
-					// FIXME: these aren't used?
-					// unset position style values
-					style.position = undefined;
-					style.left = undefined;
-					style.top = undefined;
 				}
 			}
 
@@ -117,6 +112,29 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 				}.bind(this));
 			}, this);
 		}, this);
+	},
+
+	
+	// Looks for a particular property within styleArray
+	 _retrieveProperty: function(styleArray, propName, defaultValue){
+		var propValue = defaultValue;
+		if(styleArray && styleArray.length>0){
+			styleArray.forEach(function(o){	// Should be only one property per object
+				if(o.hasOwnProperty(propName)){
+					propValue = o[propName];
+				}
+			});
+		}
+		return propValue;
+	},
+
+	/**
+	 * whether new widgets should be created using "flow" or "absolute" layout
+	 * NOTE: overridden by PasteTool
+	 * @return {boolean}
+	 */ 
+	createWithFlowLayout: function(){
+		return this._position_prop != 'absolute';
 	}
 });
 });

@@ -1917,6 +1917,22 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return i == -1 ? null : this._focuses[i];
 	},
 	
+	// Hide all focus objects associated with current selection
+	selectionHideFocus: function(){
+		var selection = this.getSelection();
+		for(var i=0; i<selection.length; i++){
+			this._focuses[i].hide();
+		}
+	},
+	
+	// Show all focus objects associated with current selection
+	selectionShowFocus: function(){
+		var selection = this.getSelection();
+		for(var i=0; i<selection.length; i++){
+			this._focuses[i].show(selection[i]);
+		}
+	},
+	
 	focus: function(state, index, inline){
 		this._focuses = this._focuses || [];
 		var clear = false;

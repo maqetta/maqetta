@@ -420,6 +420,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			console.error('SelectTool.js onMove error. move widget is not selected');
 			return;
 		}
+		this._context.selectionHideFocus();
 		if(event.target != this._moverLastEventTarget){
 			// If mouse has moved over a different widget, then null out the current
 			// proposed parent widget, which will force recalculation of the list of possible parents
@@ -534,6 +535,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		this._moverLastEventTarget = null;
 		context.dragMoveCleanup();
 		cp.parentListDivDelete();
+		context.selectionShowFocus();
 	}
 
 });

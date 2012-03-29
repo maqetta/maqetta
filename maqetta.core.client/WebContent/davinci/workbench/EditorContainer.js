@@ -105,7 +105,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 							setupEditor();
 							d.resolve(editor);
 						} catch (e2) {
-							d.reject(e);
+							d.reject(e2);
 						}
 					}.bind(this));
 				}else{

@@ -863,6 +863,7 @@ var Workbench = {
 						}
 						var menuArgs = {
 								label: label,
+								id: item.id,
 								disabled: !enabled,
 								onClick: dojo.hitch(this,"_runAction",item,dojoMenu.actionContext)
 						};

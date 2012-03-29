@@ -247,7 +247,7 @@ return {
                 {
                     id: "showHelp",
                     run: function() {
-                    	window.open('app/docs/index.html');
+                    	window.open('app/docs/index.html', 'MaqettaDocumentation');
                     },
                     label: "Documentation",
                     menubarPath: "davinci.help/help"
@@ -255,7 +255,7 @@ return {
                 {
                     id: "showTutotials",
                     run: function() {
-                    	window.open('app/docs/index.html#tutorials/tutorials');
+                    	window.open('app/docs/index.html#tutorials/tutorials', 'MaqettaTutotials');
                     },
                     label: "Tutorials",
                     menubarPath: "davinci.help/help"

@@ -3,10 +3,10 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/connect",
 	"dojo/dom-style",
-	// XXX TODO This file (and others) makes too much use of style.set().  Need
-	//   to refactor this and create one (or more) CSS classes that can be set
-	//   on the outermost element of this widget -- setting/unsetting this class
-	//   then sets the proper CSS on interior elements.
+	// XXX TODO This file (and others) makes too much use of style.set().	Need
+	//	 to refactor this and create one (or more) CSS classes that can be set
+	//	 on the outermost element of this widget -- setting/unsetting this class
+	//	 then sets the proper CSS on interior elements.
 	"dojo/dom",
 	"dojo/dom-class",
 	"dojo/data/ItemFileReadStore",
@@ -68,13 +68,13 @@ return declare(SmartInput, {
 	
 	multiLine: "true",
 	supportsHTML: "false", 
-	//helpText:  'First line is column headers separated by commons all following lines are data for those columns.',
+	//helpText:	'First line is column headers separated by commons all following lines are data for those columns.',
 
-	helpText:  'If the CSV data format is selected enter text in the format: first line is column headers separated by commas all following lines are data for those columns.'+
-    		   ' If data file from workspace is selected chose a json item file using the file explore folder.',
+	helpText:	'If the CSV data format is selected enter text in the format: first line is column headers separated by commas all following lines are data for those columns.'+
+					 ' If data file from workspace is selected chose a json item file using the file explore folder.',
 
-  _substitutedMainTemplate: null,
-  _dataType: null,
+	_substitutedMainTemplate: null,
+	_dataType: null,
 
 	_getContainer: function(widget){
 		while(widget){
@@ -103,9 +103,9 @@ return declare(SmartInput, {
 			queryOptions:{deep:true}, 
 			onComplete: function(items) {
 				items.forEach(function(item){
-					value +=  item.label[0];
+					value +=	item.label[0];
 					if (item.moveTo){
-						value +=  ', ' + item.moveTo[0];
+						value +=	', ' + item.moveTo[0];
 					}
 					value += '\n';
 				});
@@ -138,25 +138,25 @@ return declare(SmartInput, {
 	},
 	
 	hide: function(){
-	  this.inherited(arguments, [ true ]); // we already updated the widget so just do a hide like cancel
+		this.inherited(arguments, [ true ]); // we already updated the widget so just do a hide like cancel
 	},
 	
-  updateWidget: function() {
-    var context = this._getContext();
-    var widget = this._widget;
+	updateWidget: function() {
+		var context = this._getContext();
+		var widget = this._widget;
 
-    var compoundCommand = new OrderedCompoundCommand();
+		var compoundCommand = new OrderedCompoundCommand();
 
-    var storeCmd = this.updateStore();
-    var command = new ModifyCommand(widget, null, null, context);
-    compoundCommand.add(storeCmd);
-    compoundCommand.add(command);
-    context.getCommandStack().execute(compoundCommand);
-    context.select(command.newWidget);
-  },
-    
-  updateStore: function() {
-    // widget specific code here 
+		var storeCmd = this.updateStore();
+		var command = new ModifyCommand(widget, null, null, context);
+		compoundCommand.add(storeCmd);
+		compoundCommand.add(command);
+		context.getCommandStack().execute(compoundCommand);
+		context.select(command.newWidget);
+	},
+		
+	updateStore: function() {
+		// widget specific code here 
 	},
 
 	replaceStoreData: function(data) {
@@ -176,50 +176,50 @@ return declare(SmartInput, {
 		
 	updateWidgetForUrlStore: function(){
 		var textArea = registry.byId("davinciIleb");
-    this._url = textArea.value;
-    var url = this._getFullUrl(this._url);
+		this._url = textArea.value;
+		var url = this._getFullUrl(this._url);
 
-    // clear any callbacks
-    this._callback = '';
+		// clear any callbacks
+		this._callback = '';
 
-    // data can be json or csv, so interogate the url
-    var store = new ItemFileReadStore({url: url});
-    this._urlDataStore = store;
-    store.fetch({
-        query: this.query,
-    		queryOptions:{deep:true}, 
-    		onComplete: lang.hitch(this, this._urlDataStoreLoaded),
-    		onError: lang.hitch(this, this._getCsvStore, url, this.query)
-    });
+		// data can be json or csv, so interogate the url
+		var store = new ItemFileReadStore({url: url});
+		this._urlDataStore = store;
+		store.fetch({
+				query: this.query,
+				queryOptions:{deep:true}, 
+				onComplete: lang.hitch(this, this._urlDataStoreLoaded),
+				onError: lang.hitch(this, this._getCsvStore, url, this.query)
+		});
 	},
 
 	_getCsvStore: function(url, query) {
-    var store = new CsvStore({url: url});
-    this._urlDataStore = store;
+		var store = new CsvStore({url: url});
+		this._urlDataStore = store;
 
-    this._dataType = "csv";
+		this._dataType = "csv";
 
-    store.fetch({
-        query: query,
-        queryOptions:{deep:true}, 
-        onComplete: lang.hitch(this, this._urlDataStoreLoaded),
-        onError: function(e){
-          alert('File ' + e  );
-        }
-    });
-  },
+		store.fetch({
+				query: query,
+				queryOptions:{deep:true}, 
+				onComplete: lang.hitch(this, this._urlDataStoreLoaded),
+				onError: function(e){
+					alert('File ' + e	);
+				}
+		});
+	},
 
 	updateWidgetForUrlStoreJSONP: function() {
-    var textArea = dijit.byId("davinciIleb");
-    var callbackTextBox = dijit.byId("davinci.ve.input.SmartInput_callback_editbox");
-    this._url = textArea.value;
-    var url = this._getFullUrl(this._url);
+		var textArea = dijit.byId("davinciIleb");
+		var callbackTextBox = dijit.byId("davinci.ve.input.SmartInput_callback_editbox");
+		this._url = textArea.value;
+		var url = this._getFullUrl(this._url);
 
-    this._callback = callbackTextBox.value;
+		this._callback = callbackTextBox.value;
 
-    var store;
-    // need to use the same toolkit that the page is using, not the one maqetta is using
-    var dj = this._widget.getContext().getDojo();
+		var store;
+		// need to use the same toolkit that the page is using, not the one maqetta is using
+		var dj = this._widget.getContext().getDojo();
 		try{
 			dj["require"]('dojo.data.ItemFileReadStore');
 			dj["require"]('dojox.io.xhrScriptPlugin');
@@ -229,34 +229,34 @@ return declare(SmartInput, {
 
 		dj.dojox.io.xhrScriptPlugin(url,"callback");
 		store = new dj.data.ItemFileReadStore({url: url});
-    store.fetch({
-    	query: this.query,
-    	queryOptions:{deep:true}, 
-    	onComplete: dojo.hitch(this, this._urlDataStoreLoaded),
-    	onError: function(e){ alert('File ' + e  );}
-    });
-    this._urlDataStore = store;
+		store.fetch({
+			query: this.query,
+			queryOptions:{deep:true}, 
+			onComplete: dojo.hitch(this, this._urlDataStoreLoaded),
+			onError: function(e){ alert('File ' + e	);}
+		});
+		this._urlDataStore = store;
 	},
 
 	_getFullUrl: function(url) {
-	  var fullUrl;
+		var fullUrl;
 
-    var patt=/http:\/\//i;
-    if (patt.test(url)){ // absolute url
-      fullUrl = url;
-    } else {
-      var parentFolder = new Path(this._widget._edit_context._srcDocument.fileName)
-    	   .getParentPath().toString();
-    	// relative so we have to get the absolute for the update of the store
-    	var file = system.resource.findResource(url, null, parentFolder);
-    	if (!file){
-    	  alert('File: ' + this._url + ' does not exsist.');
-    		return;
-    	}
-    	fullUrl = file.getURL();
-    }
+		var patt=/http:\/\//i;
+		if (patt.test(url)){ // absolute url
+			fullUrl = url;
+		} else {
+			var parentFolder = new Path(this._widget._edit_context._srcDocument.fileName)
+				 .getParentPath().toString();
+			// relative so we have to get the absolute for the update of the store
+			var file = system.resource.findResource(url, null, parentFolder);
+			if (!file){
+				alert('File: ' + this._url + ' does not exsist.');
+				return;
+			}
+			fullUrl = file.getURL();
+		}
 
-    return fullUrl;
+		return fullUrl;
 	},
 
 	_urlDataStoreLoaded: function(items){
@@ -283,160 +283,160 @@ return declare(SmartInput, {
 		var compoundCommand = new OrderedCompoundCommand();
 
 		if ((this._dataType == "csv" && storeWidget.type == "dojo.data.ItemFileReadStore") ||
-		   (this._dataType != "csv" && storeWidget.type == "dojox.data.CsvStore")) {
+			 (this._dataType != "csv" && storeWidget.type == "dojox.data.CsvStore")) {
 
-		  var sid;
+			var sid;
 
-		  var removeCmd = new RemoveCommand(storeWidget);
-		  compoundCommand.add(removeCmd);
+			var removeCmd = new RemoveCommand(storeWidget);
+			compoundCommand.add(removeCmd);
 
-		  // we need to change the store type
-		  if (this._dataType == "csv") {
-		    // replace store with csv
-		    sid = Widget.getUniqueObjectId("dojox.data.CsvStore", context.getDocument());
-		    var data = {
-		      "type": "dojox.data.CsvStore",
-		      "properties": {
-		        id: sid,
-		        jsId: sid,
-		        url: this._url,
-		        data: ''
-		      },
-		      context: context,
-		    }
+			// we need to change the store type
+			if (this._dataType == "csv") {
+				// replace store with csv
+				sid = Widget.getUniqueObjectId("dojox.data.CsvStore", context.getDocument());
+				var data = {
+					"type": "dojox.data.CsvStore",
+					"properties": {
+						id: sid,
+						jsId: sid,
+						url: this._url,
+						data: ''
+					},
+					context: context,
+				}
 
-		    this._urlDataStore.id = sid;
-		    var addCmd = new AddCommand(data, widget.getParent(), 0);
-		    compoundCommand.add(addCmd);
-		  } else {
-		    sid = Widget.getUniqueObjectId("dojo.data.ItemFileReadStore", context.getDocument());
-		    var data = {
-		      "type": "dojo.data.ItemFileReadStore",
-		      "properties": {
-		        id: sid,
-		        jsId: sid,
-		        url: this._url,
-		        data: ''
-		      },
-		      context: context,
-		    }
+				this._urlDataStore.id = sid;
+				var addCmd = new AddCommand(data, widget.getParent(), 0);
+				compoundCommand.add(addCmd);
+			} else {
+				sid = Widget.getUniqueObjectId("dojo.data.ItemFileReadStore", context.getDocument());
+				var data = {
+					"type": "dojo.data.ItemFileReadStore",
+					"properties": {
+						id: sid,
+						jsId: sid,
+						url: this._url,
+						data: ''
+					},
+					context: context,
+				}
 
-		    this._urlDataStore.id = sid;
-		    var addCmd = new AddCommand(data, widget.getParent(), 0);
-		    compoundCommand.add(addCmd);
-		  }
+				this._urlDataStore.id = sid;
+				var addCmd = new AddCommand(data, widget.getParent(), 0);
+				compoundCommand.add(addCmd);
+			}
 
-		  // allow subclasses to inject their own data
-		  var command = this._getModifyCommandForUrlDataStore(widget, context, items, this._urlDataStore);
-		  compoundCommand.add(command);
+			// allow subclasses to inject their own data
+			var command = this._getModifyCommandForUrlDataStore(widget, context, items, this._urlDataStore);
+			compoundCommand.add(command);
 
-	    var mcmd = new ModifyAttributeCommand(widget, {store: sid});
-	    compoundCommand.add(mcmd);
+			var mcmd = new ModifyAttributeCommand(widget, {store: sid});
+			compoundCommand.add(mcmd);
 		} else {
-		  var storeCmd = new ModifyCommand(storeWidget, properties);
-		  compoundCommand.add(storeCmd);
+			var storeCmd = new ModifyCommand(storeWidget, properties);
+			compoundCommand.add(storeCmd);
 
-		  var command = this._getModifyCommandForUrlDataStore(widget, context, items);
-		  compoundCommand.add(command);
+			var command = this._getModifyCommandForUrlDataStore(widget, context, items);
+			compoundCommand.add(command);
 		}
 
-    context.getCommandStack().execute(compoundCommand); 
-    context.select(command.newWidget);
+		context.getCommandStack().execute(compoundCommand); 
+		context.select(command.newWidget);
 	},
 
 	_getModifyCommandForUrlDataStore: function(widget, context, items, datastore) {
-	  var props = {};
+		var props = {};
 
-	  if (datastore) {
-	    props.store = datastore;
-	  }
+		if (datastore) {
+			props.store = datastore;
+		}
 
-	  return new ModifyCommand(widget, props, null, context);
+		return new ModifyCommand(widget, props, null, context);
 	},
 	
 	show: function(widgetId) {
-	  this._widget = Widget.byId(widgetId);
-	    
-	  var width = 200;
+		this._widget = Widget.byId(widgetId);
+			
+		var width = 200;
 		var height = 155;
 		this._loading(height, width);
-	    
+			
 		dojo.style('ieb', 'background-color', '#F7FDFF');
-    var content = this._getTemplate();
-    this._inline.attr("content", content);
-    this._inline.eb = dijit.byId("davinciIleb");
-    this._inline.callBackObj = this;
+		var content = this._getTemplate();
+		this._inline.attr("content", content);
+		this._inline.eb = dijit.byId("davinciIleb");
+		this._inline.callBackObj = this;
 
-    this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk")); 
-    this._connection.push(dojo.connect(this._inline.eb, "onKeyUp", this, "handleEvent"));
+		this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk")); 
+		this._connection.push(dojo.connect(this._inline.eb, "onKeyUp", this, "handleEvent"));
 		var folder = dojo.byId('davinci.ve.input.DataGridInput_img_folder');
 		this._connection.push(dojo.connect(folder, "onclick", this, "fileSelection"));
 		this._connectHelpDiv();
 		this._connectResizeHandle();
 		this._connectSimDiv();
 		this._loadingDiv.style.backgroundImage = 'none'; // turn off spinner
-    var dataStoreType = dijit.byId("davinci.ve.input.DataGridInput.dataStoreType");
-    this._connection.push(dojo.connect(dataStoreType, "onChange", this, "changeDataStoreType"));
+		var dataStoreType = dijit.byId("davinci.ve.input.DataGridInput.dataStoreType");
+		this._connection.push(dojo.connect(dataStoreType, "onChange", this, "changeDataStoreType"));
 
-    var storeId = this._widget._srcElement.getAttribute("store"); 
+		var storeId = this._widget._srcElement.getAttribute("store"); 
  		var storeWidget = Widget.byId(storeId);
-    this._data = storeWidget._srcElement.getAttribute('data'); 
-    this._url = storeWidget._srcElement.getAttribute('url');
-    this._callback = this.getCallback(this._url);
-    this._inline.eb = dijit.byId("davinciIleb");
-    this._connection.push(dojo.connect(this._inline.eb, "onMouseDown", this, "stopEvent"));
-    if(this._data){ 
-      dataStoreType.setValue('dummyData');
-      this._dataStoreType = 'dummyData';
-      this._url = ' ';
-      this._callback = '';
-      this.refreshStoreView();
-    }else if(this._callback){
-      dataStoreType.setValue('url');
-      this._dataStoreType = 'url';
-      this._inline.eb.setValue( this._url); 
-      var tb =  dijit.byId("davinci.ve.input.SmartInput_callback_editbox");
-        tb.setValue(this._callback);
-      this._data = ' ';
-    }else{
-      dataStoreType.setValue('file');
-      this._dataStoreType = 'file';
-      this._inline.eb.setValue( this._url); 
-      this._data = ' ';
-      this._callback = '';
-    }
-    this.changeDataStoreType(this._dataStoreType);
-    dojo.style('iedResizeDiv', 'background-color', 'white');
-    var html = this._widget.getPropertyValue('escapeHTMLInData');
-    var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
+		this._data = storeWidget._srcElement.getAttribute('data'); 
+		this._url = storeWidget._srcElement.getAttribute('url');
+		this._callback = this.getCallback(this._url);
+		this._inline.eb = dijit.byId("davinciIleb");
+		this._connection.push(dojo.connect(this._inline.eb, "onMouseDown", this, "stopEvent"));
+		if(this._data){ 
+			dataStoreType.setValue('dummyData');
+			this._dataStoreType = 'dummyData';
+			this._url = ' ';
+			this._callback = '';
+			this.refreshStoreView();
+		}else if(this._callback){
+			dataStoreType.setValue('url');
+			this._dataStoreType = 'url';
+			this._inline.eb.setValue( this._url); 
+			var tb =	dijit.byId("davinci.ve.input.SmartInput_callback_editbox");
+				tb.setValue(this._callback);
+			this._data = ' ';
+		}else{
+			dataStoreType.setValue('file');
+			this._dataStoreType = 'file';
+			this._inline.eb.setValue( this._url); 
+			this._data = ' ';
+			this._callback = '';
+		}
+		this.changeDataStoreType(this._dataStoreType);
+		dojo.style('iedResizeDiv', 'background-color', 'white');
+		var html = this._widget.getPropertyValue('escapeHTMLInData');
+		var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
 		var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
 
-    if(html){
-      htmlRadio.set("checked", false);
+		if(html){
+			htmlRadio.set("checked", false);
 			textRadio.set("checked", true);
 		}else{
-		  htmlRadio.set("checked", true);
-			textRadio.set("checked", false);        	
+			htmlRadio.set("checked", true);
+			textRadio.set("checked", false);					
 		}
 
 		this.updateFormats();
-    this._inline.eb.focus();
+		this._inline.eb.focus();
 	},
 
 	getCallback: function(url) {
-    var helper = Widget.getWidgetHelper('dojo.data.ItemFileReadStore');
-    if(helper && helper.getXhrScriptPluginParameters){
-      var xhrParams = helper.getXhrScriptPluginParameters(url, this._widget._edit_context);
-      if ( xhrParams){ // must be the one we were looking for.
-        return xhrParams.callback;
-      }
-    }
-  },
+		var helper = Widget.getWidgetHelper('dojo.data.ItemFileReadStore');
+		if(helper && helper.getXhrScriptPluginParameters){
+			var xhrParams = helper.getXhrScriptPluginParameters(url, this._widget._edit_context);
+			if ( xhrParams){ // must be the one we were looking for.
+				return xhrParams.callback;
+			}
+		}
+	},
 
 	setCallback: function(url){
 		var helper = Widget.getWidgetHelper('dojo.data.ItemFileReadStore');
 		if(helper && helper.setXhrScriptPluginParameters){
-		  helper.setXhrScriptPluginParameters(url, this._widget._edit_context);
+			helper.setXhrScriptPluginParameters(url, this._widget._edit_context);
 		}
 	},
 	
@@ -460,13 +460,13 @@ return declare(SmartInput, {
 		});
 
 		//Set-up file selection tree
-		var treeParms= {  
+		var treeParms= {	
 			id: "dataGridInputFileSelectionTree",
 			persist: false,
 			style: "height:10em;margin-top:10px;overflow:auto",
 			model: system.resource,
 			filters: "new system.resource.FileTypeFilter(parms.fileTypes || '*');" //See #1725
-	    };
+			};
 		var tree = new Tree(treeParms);
 
 		this._fileSelectionDialog.containerNode.appendChild(tree.domNode);
@@ -481,12 +481,12 @@ return declare(SmartInput, {
 				// ignore the filename to get the correct path to the image
 				value = path.relativeTo(srcDocPath, true).toString(),
 				textArea = dijit.byId("davinciIleb");
-		    	textArea.setValue(value); 
-		    	textArea.focus();
-		    	this._url = tree.selectedItem;
-		    	this._fileSelectionDialog.destroyRecursive();
-		    	delete this._fileSelectionDialog;
-		    	this.updateFormats();
+					textArea.setValue(value); 
+					textArea.focus();
+					this._url = tree.selectedItem;
+					this._fileSelectionDialog.destroyRecursive();
+					delete this._fileSelectionDialog;
+					this.updateFormats();
 			}
 		};
 		var dijitLangObj = commonNls;
@@ -522,7 +522,7 @@ return declare(SmartInput, {
 			var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
 			var table = dojo.byId('davinci.ve.input.SmartInput_table');
 			
-			textObj.innerHTML = '<div class="dojoxEllipsis">' + dojoxNls.plainText + '  </div>';
+			textObj.innerHTML = '<div class="dojoxEllipsis">' + dojoxNls.plainText + '	</div>';
 			htmlObj.innerHTML = '<div id="davinci.ve.input.SmartInput_radio_html_div" class="dojoxEllipsis">'+dojoxNls.htmlMarkup+'</div>';
 			htmlRadio.setDisabled(false);
 			textRadio.setDisabled(false);
@@ -573,10 +573,10 @@ return declare(SmartInput, {
 		this.inherited(arguments);	
 		var tagetObj = dojo.byId("iedResizeDiv");
 		var targetEditBoxDijit = dijit.byId("davinciIleb");
-		var boxWidth = tagetObj.clientWidth  - 5;
+		var boxWidth = tagetObj.clientWidth	- 5;
 		var boxheight = tagetObj.clientHeight -6;
-		boxWidth = tagetObj.clientWidth  /*+2*/ -8;
-		boxheight = tagetObj.clientHeight  -20; // new for text area
+		boxWidth = tagetObj.clientWidth	/*+2*/ -8;
+		boxheight = tagetObj.clientHeight	-20; // new for text area
 		dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + 15 + "px");
 
 		if (targetEditBoxDijit) {
@@ -588,7 +588,7 @@ return declare(SmartInput, {
 			var ieb = dojo.byId("ieb");
 			var iebWidth = dojo.style('ieb', 'width', tagetObj.clientWidth + 30 + "px");
 			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', '');
-			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'left', tagetObj.clientWidth + 1  + 'px');
+			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'left', tagetObj.clientWidth + 1	+ 'px');
 			dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + 15 + "px");
 		} else {
 			var ieb = dojo.byId("ieb");
@@ -598,16 +598,16 @@ return declare(SmartInput, {
 	},
 
 	_getTemplate: function() {
-	  if (!this._substitutedMainTemplate) {
+		if (!this._substitutedMainTemplate) {
 			this._substitutedMainTemplate = 
 				dojo.replace(mainTemplateString, {
-				    commaSeparatedData: dojoxNls.commaSeparatedData,
-				    dataFromWorkspace: dojoxNls.dataFromWorkspace,
-				    dataFromJsonpURL: dojoxNls.dataFromJsonpURL,
-				    callbackParameter: dojoxNls.callbackParameter,
-				    buttonOk: commonNls.buttonOk,
-				    buttonCancel: commonNls.buttonCancel,
-				    helpText: this.getHelpText()
+						commaSeparatedData: dojoxNls.commaSeparatedData,
+						dataFromWorkspace: dojoxNls.dataFromWorkspace,
+						dataFromJsonpURL: dojoxNls.dataFromJsonpURL,
+						callbackParameter: dojoxNls.callbackParameter,
+						buttonOk: commonNls.buttonOk,
+						buttonCancel: commonNls.buttonCancel,
+						helpText: this.getHelpText()
 				});
 		}
 

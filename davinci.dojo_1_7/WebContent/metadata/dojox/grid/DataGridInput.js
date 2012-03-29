@@ -11,7 +11,7 @@ define([
 	"dijit/Dialog",
 	"dijit/layout/ContentPane",	
 	"dijit/form/Button",
-  "dijit/Tree",
+	"dijit/Tree",
 	"dojo/data/ItemFileReadStore",
 	"../../dojo/data/DataStoreBasedWidgetInput",
 	"dojo/i18n!dijit/nls/common",
@@ -54,20 +54,20 @@ return declare(DataStoreBasedWidgetInput, {
 
 	//helpText:  'First line is column headers separated by commons all following lines are data for those columns.',
 
-	helpText:  "",
+	helpText:	"",
 	
 	constructor : function() {
 		this.helpText = dojoxNls.dataGridInputHelp;
 	},
 
 	serialize: function(widget, callback, value) {
-	  var structure = value || widget.attr('structure');
-    var names = [];
-    var fields = [];
-    for (var i=0; i<structure.length; ++i) {
-      fields.push(structure[i].field);
-      names.push(structure[i].name);
-    }
+		var structure = value || widget.attr('structure');
+		var names = [];
+		var fields = [];
+		for (var i=0; i<structure.length; ++i) {
+			fields.push(structure[i].field);
+			names.push(structure[i].name);
+		}
 
 		callback(fields.join(", ") + '\n' + names.join(", ")); 
 	},
@@ -76,38 +76,38 @@ return declare(DataStoreBasedWidgetInput, {
 	// see @update() for format
 	parse: function(input) {
 		var values = this.parseGrid(input);
-    if (values.length < 2) {
-        alert(dojoxNls.invalidInput1);
-        return input;
-    }
-    var fields = values[0];
-    var names = values[1];
-    if (fields.length < names.length) {
-        alert(dojoxNls.invalidInput2);
-        return input;
-    }
-    var structure = [];
-    for (var i=0; i<fields.length; ++i) {
-        var field = fields[i].text;
-        var name = names[i].text;
-        var width = 'auto';
-        var editor = 'dojox.grid.editors.Input';
-        structure.push({field: field, name: name, width: width, editor: editor});
-    }
-    return structure;
+		if (values.length < 2) {
+				alert(dojoxNls.invalidInput1);
+				return input;
+		}
+		var fields = values[0];
+		var names = values[1];
+		if (fields.length < names.length) {
+				alert(dojoxNls.invalidInput2);
+				return input;
+		}
+		var structure = [];
+		for (var i=0; i<fields.length; ++i) {
+				var field = fields[i].text;
+				var name = names[i].text;
+				var width = 'auto';
+				var editor = 'dojox.grid.editors.Input';
+				structure.push({field: field, name: name, width: width, editor: editor});
+		}
+		return structure;
 	},
 	
 	// in this case, the first row is the Fields
-  // the second row is the Display Names (column headers)
+	// the second row is the Display Names (column headers)
 	update: function(widget, structure) {
-    if (structure.length > 0) {
-      var properties = {structure: structure};
-      var command = new ModifyCommand(widget, properties, null, this._getContext());
-      this._getContext().getCommandStack().execute(command);
-      return command.newWidget;
-    }
+		if (structure.length > 0) {
+			var properties = {structure: structure};
+			var command = new ModifyCommand(widget, properties, null, this._getContext());
+			this._getContext().getCommandStack().execute(command);
+			return command.newWidget;
+		}
 
-    return widget;	    
+		return widget;			
 	},
 
 	refreshStoreView: function(){
@@ -119,7 +119,7 @@ return declare(DataStoreBasedWidgetInput, {
 			value += pre + structure[x].name;
 		}
 		value += '\n';
-		for (var i = 0; i <  this._widget.dijitWidget.store._arrayOfAllItems.length; i++){
+		for (var i = 0; i <	this._widget.dijitWidget.store._arrayOfAllItems.length; i++){
 			var item = this._widget.dijitWidget.store._arrayOfAllItems[i];
 			for (var s = 0; s < structure.length; s++){
 				var pre = (s > 0) ? ',' : '';
@@ -132,103 +132,103 @@ return declare(DataStoreBasedWidgetInput, {
 	},
 	
 	addOne: function() {
-	  this._gridColDS.newItem({rowid: this._rowid++, width: "auto", editable: true, hidden: false});
+		this._gridColDS.newItem({rowid: this._rowid++, width: "auto", editable: true, hidden: false});
 	},
-    
-  removeOne: function() {
-    var gridColDS = this._gridColDS;
-    dojo.forEach(this._gridColumns.selection.getSelected(), function(item) {
-        gridColDS.deleteItem(item);
-    });
-  },
+		
+	removeOne: function() {
+		var gridColDS = this._gridColDS;
+		dojo.forEach(this._gridColumns.selection.getSelected(), function(item) {
+				gridColDS.deleteItem(item);
+		});
+	},
 	
-  updateWidget: function() {
-    var structure = [];
-    
-    var context = this._getContext();
-    var widget = this._widget;
+	updateWidget: function() {
+		var structure = [];
+		
+		var context = this._getContext();
+		var widget = this._widget;
 
-    var storeId = widget.domNode._dvWidget._srcElement.getAttribute("store");
-    var storeWidget = Widget.byId(storeId);
+		var storeId = widget.domNode._dvWidget._srcElement.getAttribute("store");
+		var storeWidget = Widget.byId(storeId);
 
-    var compoundCommand = new OrderedCompoundCommand();
+		var compoundCommand = new OrderedCompoundCommand();
 
-    var newStore;
-    var newStoreId = "";
-    
-    var structureData = this.buildStructure(structure);
+		var newStore;
+		var newStoreId = "";
+		
+		var structureData = this.buildStructure(structure);
 
-    if (storeWidget.type != "dojo.data.ItemFileReadStore") {
-      // remove the old store (csv)
-      var removeCmd = new RemoveCommand(storeWidget);
-      compoundCommand.add(removeCmd);
-    
-      // id for the new store
-      var newStoreId = Widget.getUniqueObjectId("dojo.data.ItemFileReadStore", context.getDocument());
+		if (storeWidget.type != "dojo.data.ItemFileReadStore") {
+			// remove the old store (csv)
+			var removeCmd = new RemoveCommand(storeWidget);
+			compoundCommand.add(removeCmd);
+		
+			// id for the new store
+			var newStoreId = Widget.getUniqueObjectId("dojo.data.ItemFileReadStore", context.getDocument());
 
-      // create the item store
-      newStore = new ItemFileReadStore({items: []});
-      // hack: pass id around for now, as we are passing an object but string may be expected
-      newStore.id = newStoreId;
-    
-      var data = {
-        "type": "dojo.data.ItemFileReadStore",
-        "properties": {
-          id: newStoreId,
-          jsId: newStoreId,
-          url: '',
-          data: structureData
-        },
-        context: context,
-      }
+			// create the item store
+			newStore = new ItemFileReadStore({items: []});
+			// hack: pass id around for now, as we are passing an object but string may be expected
+			newStore.id = newStoreId;
+		
+			var data = {
+				"type": "dojo.data.ItemFileReadStore",
+				"properties": {
+					id: newStoreId,
+					jsId: newStoreId,
+					url: '',
+					data: structureData
+				},
+				context: context,
+			}
 
-      // add the new store
-      var addCmd = new AddCommand(data, widget.getParent(), 0);
-      compoundCommand.add(addCmd);
-    } else {
-      var storeCmd = this.replaceStoreData(structureData);
-      compoundCommand.add(storeCmd);
-    }
+			// add the new store
+			var addCmd = new AddCommand(data, widget.getParent(), 0);
+			compoundCommand.add(addCmd);
+		} else {
+			var storeCmd = this.replaceStoreData(structureData);
+			compoundCommand.add(storeCmd);
+		}
 
-    structure = this._structure;
-    var escapeHTML = (this.getFormat() === 'text');
+		structure = this._structure;
+		var escapeHTML = (this.getFormat() === 'text');
 
-    var props = {
-      structure: structure,
-      escapeHTMLInData: escapeHTML
-    };
+		var props = {
+			structure: structure,
+			escapeHTMLInData: escapeHTML
+		};
 
-    if (storeWidget.type != "dojo.data.ItemFileReadStore") {
-      props.store = newStore;
-    }
+		if (storeWidget.type != "dojo.data.ItemFileReadStore") {
+			props.store = newStore;
+		}
 
-    var command = new ModifyCommand(widget,
-      props,
-      null,
-      context
-    );
+		var command = new ModifyCommand(widget,
+			props,
+			null,
+			context
+		);
 
-    compoundCommand.add(command);
+		compoundCommand.add(command);
 
-    if (storeWidget.type != "dojo.data.ItemFileReadStore") {
-      var mcmd = new ModifyAttributeCommand(widget, {store: newStoreId});
-      compoundCommand.add(mcmd);
-    }
+		if (storeWidget.type != "dojo.data.ItemFileReadStore") {
+			var mcmd = new ModifyAttributeCommand(widget, {store: newStoreId});
+			compoundCommand.add(mcmd);
+		}
 
-    context.getCommandStack().execute(compoundCommand);  
-    context.select(command.newWidget);
-  },
-    
-  buildStructure: function(structure, value) {
-    var oldStructure = structure, // we are defining the structure by row one of text area
-    		structure = [],
-    		textArea = dijit.byId("davinciIleb"),
-    		value = textArea.attr('value'),
-    		nodes = value,
-    		rows = value.split('\n'),
-    		cols = rows[0].split(',');
+		context.getCommandStack().execute(compoundCommand);	
+		context.select(command.newWidget);
+	},
+		
+	buildStructure: function(structure, value) {
+		var oldStructure = structure, // we are defining the structure by row one of text area
+				structure = [],
+				textArea = dijit.byId("davinciIleb"),
+				value = textArea.attr('value'),
+				nodes = value,
+				rows = value.split('\n'),
+				cols = rows[0].split(',');
 
-    for (var c = 0; c < cols.length; c++){
+		for (var c = 0; c < cols.length; c++){
 			structure[c] = {
 				cellType: dojox.grid.cells.Cell,
 				width: 'auto',
@@ -237,7 +237,7 @@ return declare(DataStoreBasedWidgetInput, {
 			};
 		}
 
-    this._structure = structure;
+		this._structure = structure;
 		var data = { identifier: 'uniqe_id', items:[]},
 			rows = value.split('\n'),
 			items = data.items;
@@ -279,13 +279,13 @@ return declare(DataStoreBasedWidgetInput, {
 		var structure = [];
 		var attributes = this._urlDataStore.getAttributes(items[0]);
 		for (var i = 0; i < attributes.length; i++) {
-		  var name = attributes[i];
-      structure.push({
-        cellType: dojox.grid.cells.Cell,
-        width: 'auto',
-        name: name,
-        field: name					
-      });
+			var name = attributes[i];
+			structure.push({
+				cellType: dojox.grid.cells.Cell,
+				width: 'auto',
+				name: name,
+				field: name					
+			});
 		}
 
 		for (var i = 0; i < items.length; i++) {
@@ -297,19 +297,19 @@ return declare(DataStoreBasedWidgetInput, {
 		var escapeHTML = (this._format === 'text');
 
 		var props = {
-        structure: structure,
-		    escapeHTMLInData: escapeHTML
+				structure: structure,
+				escapeHTMLInData: escapeHTML
 		};
 
 		if (datastore) {
-		  props.store = datastore;
+			props.store = datastore;
 		}
 
-    var command = new ModifyCommand(widget,
-      props,
-		  null, 
-		  context,
-		  scripts
+		var command = new ModifyCommand(widget,
+			props,
+			null, 
+			context,
+			scripts
 		);
 
 		return command;

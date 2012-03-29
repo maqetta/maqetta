@@ -22,10 +22,10 @@ var DataGridHelper = function() {};
 DataGridHelper.prototype = {
 
 	getData: function(/*Widget*/ widget, /*Object*/ options){
-	// summary:
-	//		Serialize the passed DataGrid.
-	//		Writes a dojo/method script tag as a child to the DataGrid to set the structure, if one doesn't already exist.
-	//
+		// summary:
+		//		Serialize the passed DataGrid.
+		//		Writes a dojo/method script tag as a child to the DataGrid to set the structure, if one doesn't already exist.
+		//
 		if(!widget){
 			return undefined;
 		}
@@ -86,7 +86,7 @@ DataGridHelper.prototype = {
 			// parameters to serialize: field, name, width, editor
 			var field = c.field;
 			if(field || field === 0){
-				cs += "field: " + ((typeof field === 'string') ? "\"" + field + "\"" : field);  
+				cs += "field: " + ((typeof field === 'string') ? "\"" + field + "\"" : field);	
 			}
 			var name = c.name;
 			if(name){
@@ -131,8 +131,8 @@ DataGridHelper.prototype = {
 	create: function(widget, srcElement){
 		var storeId = srcElement.getAttribute("store");
 		if(storeId){
-		  // we may have the store as an object
-			var storeWidget = storeId.declaredClass ?  Widget.byId(storeId.id) : Widget.byId(storeId);
+			// we may have the store as an object
+			var storeWidget = storeId.declaredClass ?	Widget.byId(storeId.id) : Widget.byId(storeId);
 			if (storeWidget && widget.dijitWidget && widget.dijitWidget.store){
 				this._reparentTheStore(widget, storeWidget);
 				this.updateStore(widget, storeWidget);
@@ -165,14 +165,14 @@ DataGridHelper.prototype = {
 		command.execute();
 	},
 	
-	updateStore: function(widget,  storeWidget, w) { 
+	updateStore: function(widget,	storeWidget, w) { 
 		var store = widget.dijitWidget.store;
 		var data = storeWidget._srcElement.getAttribute('data'); 
 		var url = storeWidget._srcElement.getAttribute('url');
 		if (data){ 
 			var value = data; 
 			var storeData = eval('storeData = '+value);
-			data = { identifier: storeData.identifier,  items:[] };
+			data = { identifier: storeData.identifier,	items:[] };
 		
 			var items = data.items;
 			var storeDataItems = storeData.items;
@@ -205,13 +205,12 @@ DataGridHelper.prototype = {
 	
 	/*
 	 * Called by DeleteAction when widget is deleted.
-	 * @param {davinci.ve._Widget} widget  Widget that is being deleted
-	 * @return {davinci.commands.CompoundCommand}  command that is to be added to the command stack.
+	 * @param {davinci.ve._Widget} widget	Widget that is being deleted
+	 * @return {davinci.commands.CompoundCommand}	command that is to be added to the command stack.
 	 * 
 	 * This widget has a data store widget that is associated with it and must be deleted also.
 	 */
 	getRemoveCommand: function(widget) {
-		
 		var command = new CompoundCommand();
 		var storeId = widget._srcElement.getAttribute("store");
 		var storeWidget = Widget.byId(storeId);
@@ -219,10 +218,7 @@ DataGridHelper.prototype = {
 		command.add(new RemoveCommand(widget));
 		command.add(new RemoveCommand(storeWidget));
 		return command;
-		
 	}
-	
-
 };
 
 return DataGridHelper;

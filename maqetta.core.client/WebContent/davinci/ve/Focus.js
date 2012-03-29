@@ -267,8 +267,11 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         	}
         }
         
-        var w = b.w + this.size * 2;
-        var h = b.h + this.size * 2;
+        // Hardcoded adjustment factor requiring inside knowledge of CSS rules
+        // on editFocusFrame
+        var adjust = 8;	
+        var w = b.w + adjust;
+        var h = b.h + adjust;
         this._frames[LEFT].style.height = h + "px";
         this._frames[RIGHT].style.height = h + "px";
         this._frames[RIGHT].style.left = b.w + "px";

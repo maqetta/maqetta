@@ -15,57 +15,51 @@
 
 .editFocusFrame {
 	position:absolute;
-	opacity:0.5;
 	overflow:hidden;
 	border:none;
-	background:#6a94dc;
-	background-clip:content-box;
-	left:-11px;
-	top:-11px;
+	/*background:#6a94dc;*/
+	background:#d3e1ee;
+	border:2px solid #6a94dc;
+	/*background-clip:content-box;*/
+	left:-6px;
+	top:-6px;
 }
 .editFocusFrameLEFT {
-	width:3px;
-	border-left:4px solid rgba(255,255,255,.5);
-	border-right:4px solid #d3e1ee;
+	width:4px;
+	border-right:none;
 	cursor:w-resize;
-	top:-5px;
 }
 .editFocusFrameRIGHT {
-	width:3px;
-	border-left:4px solid #d3e1ee;
-	border-right:4px solid rgba(255,255,255,.5);
+	width:4px;
+	border-left:none;
 	cursor:e-resize;
-	top:-5px;
 }
 .editFocusFrameTOP {
-	height:3px;
-	border-top:4px solid rgba(255,255,255,.5);
-	border-bottom:4px solid #d3e1ee;
+	height:4px;
+	border-bottom:none;
 	cursor:n-resize;
-	left:-5px;
 }
 .editFocusFrameBOTTOM {
-	height:3px;
-	border-top:4px solid #d3e1ee;
-	border-bottom:4px solid rgba(255,255,255,.5);
+	height:4px;
+	border-top:none;
 	cursor:s-resize;
-	left:-5px;
 }
 .editFocusNob {
-	background-color:#043793;
-	background-image:-webkit-linear-gradient(#2872eb,#043793);
-	background-image:-moz-linear-gradient(#2872eb,#043793);
-	background-image:-ms-linear-gradient(#2872eb,#043793);
-	background-image:linear-gradient(#2872eb,#043793);
-	-webkit-border-radius:11px;
-	-moz-border-radius:11px;
-	-ms-border-radius:11px;
-	border-radius:11px;
+	
+	background-color:#246ce4;
+	background-image:-webkit-linear-gradient(#2b7bfc,#246ce4,#042378);
+	background-image:-moz-linear-gradient(#2b7bfc,#246ce4,#042378);
+	background-image:-ms-linear-gradient(#2b7bfc,#246ce4,#042378);
+	background-image:-linear-gradient(#2b7bfc,#246ce4,#042378);
+	-webkit-border-radius:10px;
+	-moz-border-radius:10px;
+	-ms-border-radius:10px;
+	border-radius:10px;
 	border:1px solid white; 
-	box-shadow:0px 1px 1px #888888;
+	box-shadow:0px 2px 2px #888;
 	position:absolute;
-	width:11px;
-	height:11px;
+	width:10px;
+	height:10px;
 	overflow:hidden;
 }
 

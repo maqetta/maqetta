@@ -57,7 +57,13 @@ return {
 			name: "Review Editor",
 			extensions: "rev",
 			isDefault: true,
-			editorClass: "davinci/review/editor/ReviewEditor"
+			editorClass: "davinci/review/editor/ReviewEditor",
+			editorClassName: "ReviewEditor",
+            palettesToTop: [
+                "davinci.review.reviewNavigator", //Reviews
+                "davinci.ui.comment", //Comments
+                "davinci.ve.states" //States(Scenes)
+            ]
 		}
 	],
 	"davinci.fileType": [
@@ -176,7 +182,20 @@ return {
 				}
 			]
 		}
-	}
+	},
+    "davinci.editorActions": {
+        editorContribution: {
+            targetID: "davinci.review.CommentReviewEditor",
+            actions: [
+                {
+                    id: "ReviewToolBarText",
+                    type: "davinci/review/widgets/ReviewToolBarText",
+                    toolbarPath: "ReviewToolBarText"
+                }
+            ]
+        }
+    }
+
 };
 
 });

@@ -8,7 +8,7 @@ echo NOTE: CLOSING THIS WINDOW WILL
 echo       STOP THE MAQETTA SERVER PROCESS
 echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 echo.
-set port=8080
+set port=50000
 set scriptdir=%~dp0
 
 rem #########################
@@ -22,5 +22,6 @@ set usersdir=%scriptdir%users
 mkdir "%usersdir%" 2>nul
 echo Using directory : %usersdir%
 
-FOR /F "tokens=*" %%R IN ('dir /b plugins\org.eclipse.equinox.launcher*.jar') DO SET EQUINOX=%%R
-java -Dorg.eclipse.equinox.http.jetty.http.port=%port%  "-Dmaqetta.baseDirectory=%usersdir%" -DloginUrl="/maqetta/welcome" -jar "%scriptdir%plugins\%EQUINOX%" -console -noExit
+echo start your browser at http://localhost:%port%/maqetta
+FOR /R plugins %%R IN (org.eclipse.equinox.launcher*.jar) DO SET EQUINOX=%%R
+java -Dorg.eclipse.equinox.http.jetty.http.port=%port%  "-Dmaqetta.baseDirectory=%usersdir%" -DloginUrl="/maqetta/welcome" -jar "%EQUINOX%" -console -noExit

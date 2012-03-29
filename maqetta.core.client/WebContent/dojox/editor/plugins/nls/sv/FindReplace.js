@@ -10,6 +10,7 @@ define(
 	"matchCaseTooltip": "Matcha skiftläge",
 	"backwards": "Bakåt",
 	"backwardsTooltip": "Sök bakåt efter text",
+	"replaceAll": "Alla förekomster",
 	"replaceAllButton": "Ersätt alla",
 	"replaceAllButtonTooltip": "Ersätt all text",
 	"findButton": "Sök",

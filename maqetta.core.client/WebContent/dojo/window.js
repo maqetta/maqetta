@@ -1,51 +1,31 @@
-define(["./_base/lang", "./_base/sniff", "./_base/window", "./dom", "./dom-geometry", "./dom-style"],
-	function(lang, has, baseWindow, dom, geom, style) {
-
-// module:
-//		dojo/window
-// summary:
-//		TODOC
-
-var window = lang.getObject("dojo.window", true);
-
-/*=====
-dojo.window = {
+define(["./_base/kernel", "./_base/lang", "./_base/sniff", "./_base/window", "./dom", "./dom-geometry", "./dom-style"], function(dojo, lang, has, baseWindow, dom, geom, style) {
+	// module:
+	//		dojo/window
 	// summary:
-	//		TODO
-};
-window = dojo.window;
-=====*/
+	//		TODOC
 
-window.getBox = function(){
+lang.getObject("window", true, dojo);
+
+dojo.window.getBox = function(){
 	// summary:
 	//		Returns the dimensions and scroll position of the viewable area of a browser window
 
-	var
-		scrollRoot = (baseWindow.doc.compatMode == 'BackCompat') ? baseWindow.body() : baseWindow.doc.documentElement,
-		// get scroll position
-		scroll = geom.docScroll(), // scrollRoot.scrollTop/Left should work
-		w, h;
+	var scrollRoot = (baseWindow.doc.compatMode == 'BackCompat') ? baseWindow.body() : baseWindow.doc.documentElement;
 
-	if(has("touch")){ // if(scrollbars not supported)
-		var uiWindow = baseWindow.doc.parentWindow || baseWindow.doc.defaultView;   // use UI window, not dojo.global window. baseWindow.doc.parentWindow probably not needed since it's not defined for webkit
-		// on mobile, scrollRoot.clientHeight <= uiWindow.innerHeight <= scrollRoot.offsetHeight, return uiWindow.innerHeight
-		w = uiWindow.innerWidth || scrollRoot.clientWidth; // || scrollRoot.clientXXX probably never evaluated
-		h = uiWindow.innerHeight || scrollRoot.clientHeight;
-	}else{
-		// on desktops, scrollRoot.clientHeight <= scrollRoot.offsetHeight <= uiWindow.innerHeight, return scrollRoot.clientHeight
-		// uiWindow.innerWidth/Height includes the scrollbar and cannot be used
-		w = scrollRoot.clientWidth;
-		h = scrollRoot.clientHeight;
-	}
+	// get scroll position
+	var scroll = geom.docScroll(); // scrollRoot.scrollTop/Left should work
+
+	var uiWindow = baseWindow.doc.parentWindow || baseWindow.doc.defaultView;   // use UI window, not dojo.global window
+	// dojo.global.innerWidth||dojo.global.innerHeight is for mobile
 	return {
 		l: scroll.x,
 		t: scroll.y,
-		w: w,
-		h: h
+		w: uiWindow.innerWidth || scrollRoot.clientWidth,
+		h: uiWindow.innerHeight || scrollRoot.clientHeight
 	};
 };
 
-window.get = function(doc){
+dojo.window.get = function(doc){
 	// summary:
 	// 		Get window object associated with document doc
 
@@ -69,7 +49,7 @@ window.get = function(doc){
 	return doc.parentWindow || doc.defaultView;	//	Window
 };
 
-window.scrollIntoView = function(/*DomNode*/ node, /*Object?*/ pos){
+dojo.window.scrollIntoView = function(/*DomNode*/ node, /*Object?*/ pos){
 	// summary:
 	//		Scroll the passed node into view, if it is not already.
 
@@ -165,5 +145,5 @@ window.scrollIntoView = function(/*DomNode*/ node, /*Object?*/ pos){
 	}
 };
 
-return window;
+return dojo.window;
 });

@@ -93,8 +93,6 @@ define("dojox/charting/action2d/Tooltip", ["dojo/_base/kernel", "dijit/Tooltip",
 					// intentional fall down
 				case "bar":
 					aroundRect = lang.clone(o.shape.getShape());
-					aroundRect.w = aroundRect.width;
-					aroundRect.h = aroundRect.height;
 					break;
 				case "candlestick":
 					aroundRect.x = o.x;

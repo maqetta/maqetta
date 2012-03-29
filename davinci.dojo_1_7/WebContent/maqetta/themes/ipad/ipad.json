@@ -2,6 +2,7 @@
 	"html": {
         "div": {
             "displayName": "Combobox" ,
+            "rootSelectors":[".mblComboBoxMenu"],
             "states": {
                 "Normal": {
                     "selectors": {
@@ -631,6 +632,7 @@
 		
         "Button": {
             "displayName": "Button",
+            "rootSelectors":[".mblButton"],
             "states": {
                 "Normal": {
                     "selectors": {
@@ -662,6 +664,7 @@
         },
 		"CheckBox": {
 			"displayName": "CheckBox",
+			"rootSelectors":[".mblCheckBox"],
 			"states": {
 				"Normal": {
 					"selectors": {
@@ -684,6 +687,7 @@
 		},
 		"EdgeToEdgeCategory": {
 			"displayName": "EdgeToEdgeCategory",
+			"rootSelectors":[".mblEdgeToEdgeCategory"],
 			"states": {
 				"Normal": {
 					"selectors": {
@@ -697,6 +701,7 @@
 		},
 		"Heading": {
 			"displayName": "Heading",
+			"rootSelectors":[".dj_tablet .mblHeading"],
 			"states": {
 				"Normal": {
 					"selectors": {
@@ -836,6 +841,7 @@
 		},
 		"ToolBarButton": {
 			"displayName": "ToolBarButton",
+			"rootSelectors":[".dj_tablet .mblToolBarButton"],
 			"states": {
 				"Normal": {
 					"selectors": {
@@ -900,6 +906,7 @@
 		},
 		"RadioButton": {
 			"displayName": "RadioButton",
+			"rootSelectors":[".mblRadioButton"],
 			"states": {
 				"Normal": {
 					"selectors": {
@@ -922,6 +929,7 @@
 		},
 		"RoundRect": {
 			"displayName": "RoundRect",
+			"rootSelectors":[".dj_tablet .mblRoundRect"],
 			"states": {
 				"Normal": {
 					"selectors": {
@@ -935,6 +943,7 @@
 		},
 		"RoundRectCategory": {
 			"displayName": "RoundRectCategory",
+			"rootSelectors":[".dj_tablet .mblRoundRectCategory"],
 			"states": {
 				"Normal": {
 					"selectors": {
@@ -948,6 +957,7 @@
 		},
         "RoundRectList": {
             "displayName": "RoundRectList",
+            "rootSelectors":[".dj_tablet .mblRoundRectList"],
             "states": {
                 "Normal": {
                     "selectors": {
@@ -1070,6 +1080,7 @@
 		},
 		"Switch": {
 			"displayName": "Switch",
+			"rootSelectors":[".mblSwitch"],
 			"states": {
 				"Normal": {
 					"selectors": {
@@ -1207,6 +1218,7 @@
 		},
 		"TabBar": {
 			"displayName": "TabBar",
+			"rootSelectors":[".dj_tablet .mblTabPanelHeader"],
 			"states": {
 				"Normal": {
 					"selectors": {
@@ -1289,6 +1301,7 @@
 		},
 		"TextArea": {
 			"displayName": "TextArea",
+			"rootSelectors":[".mblTextArea"],
 			"states": {
 				"Normal": {
 					"selectors": {
@@ -1302,6 +1315,7 @@
 		},
 		"TextBox": {
 			"displayName": "TextBox",
+			"rootSelectors":[".mblTextBox"],
 			"states": {
 				"Normal": {
 					"selectors": {
@@ -1315,6 +1329,7 @@
 		},
 		"ToggleButton": {
 			"displayName": "ToggleButton",
+			"rootSelectors":[".mblToggleButton"],
 			"states": {
 				"Normal": {
 					"selectors": {
@@ -1346,6 +1361,7 @@
 		},
 		"View": {
 			"displayName": "View",
+			"rootSelectors":[".mblView"],
 			"states": {
 				"Normal": {
 					"selectors": {

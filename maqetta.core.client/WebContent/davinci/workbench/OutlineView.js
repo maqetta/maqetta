@@ -98,7 +98,8 @@ return declare("davinci.workbench.OutlineView", ViewPart, {
 			checkItemAcceptance: this.outlineModel.checkItemAcceptance, 
 			model: this.outlineModel,
 			getIconClass: iconFunction || ToggleTree.prototype.getIconClass,
-			isMultiSelect: true 
+			isMultiSelect: true,
+			persist: false
 		});
 		
 		this.outlineTree.notifySelect=dojo.hitch(this, function (item, ctrlKeyPressed) {

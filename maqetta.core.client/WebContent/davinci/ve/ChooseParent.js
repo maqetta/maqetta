@@ -398,7 +398,8 @@ return declare("davinci.ve.ChooseParent", null, {
 	 *      {boolean} absolute  true if current widget will be positioned absolutely
 	 *      {object} currentParent  if provided, then current parent widget for thing being dragged
 	 * 		{object} rect  l,t,w,h properties define rectangle being dragged around
-	 * 		{boolean} doSnapLines  whether to show dynamic snap lines
+	 * 		{boolean} doSnapLinesX  whether to show dynamic snap lines (x-axis)
+	 * 		{boolean} doSnapLinesY  whether to show dynamic snap lines (y-axis)
 	 * 		{boolean} doFindParentsXY  whether to show candidate parent widgets
 	 * @return {boolean} true if current (x,y) is different than last (x,y), false if the same.
 	 */
@@ -440,6 +441,7 @@ return declare("davinci.ve.ChooseParent", null, {
 	 * @param {object} params  object with following properties:
 	 *    {object|array{object}} data  For widget being dragged, either {type:<widgettype>} or array of similar objects
 	 *    {object} widget  widget to check (dvWidget)
+	 *    {boolean} absolute  true if current widget will be positioned absolutely
 	 *    {object} position  object with properties x,y (in page-relative coords)
 	 *    {boolean} doCursor  whether to show drop cursor (when dropping using flow layout)
 	 *    {string|undefined} beforeAfter  either 'before' or 'after' or undefined (which means default behavior)
@@ -447,6 +449,7 @@ return declare("davinci.ve.ChooseParent", null, {
 	findParentsXY: function(params) {
 		var data = params.data,
 			wdgt = params.widget,
+			absolute = params.absolute,
 			position = params.position,
 			doCursor = params.doCursor,
 			beforeAfter = params.beforeAfter;
@@ -468,67 +471,74 @@ return declare("davinci.ve.ChooseParent", null, {
 		if(x >= l && x <= r && y >= t && y <= b){
 			var allowedParents = this.getAllowedTargetWidget(wdgt, data, false);
 			if(allowedParents.length === 1){
-				var children = wdgt.getChildren();
-				var childData = [];
-				for(var i=0; i<children.length; i++){
-					var child = children[i];
-					var node = child.domNode;
-					if(xOffset === undefined){
-						var xOffset = 0,
-							yOffset = 0;
-						var offsetParent = node.offsetParent;
-						while(offsetParent && offsetParent.tagName != 'BODY'){
-							xOffset += offsetParent.offsetLeft;
-							yOffset += offsetParent.offsetTop;
-							offsetParent = offsetParent.offsetParent;
+				if(absolute == true){
+					// Absolutely positioned widgets get added as last child
+					this._XYParent.push(wdgt);
+					this._XYRefChild.push(null);
+					this._XYRefAfter.push(true);
+				}else{
+					var children = wdgt.getChildren();
+					var childData = [];
+					for(var i=0; i<children.length; i++){
+						var child = children[i];
+						var node = child.domNode;
+						if(xOffset === undefined){
+							var xOffset = 0,
+								yOffset = 0;
+							var offsetParent = node.offsetParent;
+							while(offsetParent && offsetParent.tagName != 'BODY'){
+								xOffset += offsetParent.offsetLeft;
+								yOffset += offsetParent.offsetTop;
+								offsetParent = offsetParent.offsetParent;
+							}
+						}
+						var w = node.offsetWidth;
+						var h = node.offsetHeight;
+						var l = node.offsetLeft + xOffset;
+						var t = node.offsetTop + yOffset;
+						var r = l + w;
+						var b = t + h;
+						var c = l + w/2;
+						childData.push({l:l, t:t, r:r, b:b, c:c});
+					}
+					var refChild, refAfter, biggestY;
+					for(var i=0; i<childData.length; i++){
+						var cd = childData[i];
+						var child = children[i];
+						if(x >= cd.l && x <= cd.r && y >= cd.t && y <= cd.b){
+							// If mouse is over one of the children, then
+							// insert either before or after that child (and jump out of loop)
+							refChild = child;
+							refAfter = x >= cd.c ? true : false;
+							break;
+						}
+						if(i === 0){
+							// If there is at least one child, set default solution
+							// to being either before or after that first child
+							refChild = child;
+							refAfter = (y > cd.b || x >= cd.c) ? true : false;
+							biggestY = cd.b;
+						}else if((y >= cd.t || y >= biggestY) && x >= cd.l){
+							// Else if mouse is below top of this child or further down page than any previous child
+							// and mouse isn't to left of this child,
+							// then this child is a candidate refChild
+							refChild = child;
+							refAfter = (y > cd.b || x >= cd.c) ? true : false;
+						}else if(y >= biggestY && y >= cd.b){
+							// Else if mouse is below bottom of this child and all previous childs
+							// then this child is candidate refChild
+							refChild = child;
+							refAfter = true;
+						}
+						if(cd.b > biggestY) {
+							biggestY = cd.b;
 						}
 					}
-					var w = node.offsetWidth;
-					var h = node.offsetHeight;
-					var l = node.offsetLeft + xOffset;
-					var t = node.offsetTop + yOffset;
-					var r = l + w;
-					var b = t + h;
-					var c = l + w/2;
-					childData.push({l:l, t:t, r:r, b:b, c:c});
+					this._XYParent.push(wdgt);
+					this._XYRefChild.push(refChild);
+					refAfter = beforeAfter === 'after' ? true : (beforeAfter === 'before' ? false : refAfter);
+					this._XYRefAfter.push(refAfter);
 				}
-				var refChild, refAfter, biggestY;
-				for(var i=0; i<childData.length; i++){
-					var cd = childData[i];
-					var child = children[i];
-					if(x >= cd.l && x <= cd.r && y >= cd.t && y <= cd.b){
-						// If mouse is over one of the children, then
-						// insert either before or after that child (and jump out of loop)
-						refChild = child;
-						refAfter = x >= cd.c ? true : false;
-						break;
-					}
-					if(i === 0){
-						// If there is at least one child, set default solution
-						// to being either before or after that first child
-						refChild = child;
-						refAfter = (y > cd.b || x >= cd.c) ? true : false;
-						biggestY = cd.b;
-					}else if((y >= cd.t || y >= biggestY) && x >= cd.l){
-						// Else if mouse is below top of this child or further down page than any previous child
-						// and mouse isn't to left of this child,
-						// then this child is a candidate refChild
-						refChild = child;
-						refAfter = (y > cd.b || x >= cd.c) ? true : false;
-					}else if(y >= biggestY && y >= cd.b){
-						// Else if mouse is below bottom of this child and all previous childs
-						// then this child is candidate refChild
-						refChild = child;
-						refAfter = true;
-					}
-					if(cd.b > biggestY) {
-						biggestY = cd.b;
-					}
-				}
-				this._XYParent.push(wdgt);
-				this._XYRefChild.push(refChild);
-				refAfter = beforeAfter === 'after' ? true : (beforeAfter === 'before' ? false : refAfter);
-				this._XYRefAfter.push(refAfter);
 			}
 		}
 	},
@@ -539,11 +549,18 @@ return declare("davinci.ve.ChooseParent", null, {
 	 */
 	findParentsXYAfterTraversal: function() {
 		this.findParentsXYLastPosition = {};
+		// For a more intuitive result, force refAfter=true for all candidate parents except the deepest one.
+		// To explain more fully, the refAfter logic in findParentsXY() sets refAFter=true if pointer is on right side
+		// of a primitive widget and refAfter=false if point is on left-side. But this left/right logic only makes
+		// sense for the deepest widget under the mouse, not for the ancestors of that deepest widget.
+		// Note loop goes through every item in array except the last one.
+		for(var i=0; i<this._XYRefAfter.length-1; i++){
+			this._XYRefAfter[i] = true;
+		}
 	},
 	
     /**
      * Create a floating DIV that will hold the list of proposed parent widgets
-	 * {string} widgetType  Type of widget (e.g., 'dijit.form.Button')
 	 * @param {object} params  object with following properties:
 	 *    {string} widgetType  widget type (e.g., 'dijit.form.Button')
 	 *    {boolean} absolute  true if current widget will be positioned absolutely
@@ -586,7 +603,7 @@ return declare("davinci.ve.ChooseParent", null, {
  		var body = document.body;	// outer document = Maqetta app
 		var parentListDiv = this._parentListDiv = dojo.create('div', {
 			className:'maqParentListDiv', 
-			style:'position:absolute;z-index:1000; opacity:.7;pointer-events:none;'}, 
+			style:'position:absolute;z-index:1000000; opacity:.7;pointer-events:none;'}, 
 			body);
 		context.setActiveDragDiv(parentListDiv);
 		// Downstream logic stuffs the list of candidate parents into DIV with class 'maqCandidateParents'

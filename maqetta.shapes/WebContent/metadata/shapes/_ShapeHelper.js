@@ -164,7 +164,7 @@ _ShapeHelper.prototype = {
 		
 		//FIXME: This has side effect of flushing command stack. Ugly coding. See #1057
 		dojo.publish("/davinci/ui/widgetPropertiesChanges",
-				[{source: context._editor.editor_id, command: command}]);
+				[{source: context.editor.editor_id, command: command}]);
 
 	}
 

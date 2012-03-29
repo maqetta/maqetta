@@ -18,9 +18,9 @@ define([
 	"dojox/validate/regexp",
 	"dojo/string",
 	"dojo/fx",
+	"dojo/date/stamp",
 	"dijit/Dialog",
 	"dijit/Tree",
-	"davinci/review/widgets/Tree",
 	"davinci/Runtime",
 	"davinci/Workbench",
 	"davinci/model/resource/Folder",
@@ -33,10 +33,34 @@ define([
 	"dojo/text!./templates/PublishWizard.html",
 	"dojo/text!./templates/MailFailureDialogContent.html"
 ], function(declare, _WidgetBase, _TemplatedMixin, StackContainer, ContentPane, SimpleTextarea, NumberTextBox, ValidationTextBox, DateTextBox, 
-		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojoxRegexp, dojostring, dojofx, Dialog, dijitTree, 
-		reviewTree, Runtime, Workbench, Folder, File, Empty, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls, 
+		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojoxRegexp, dojostring, dojofx, stamp, Dialog, Tree, 
+		Runtime, Workbench, Folder, File, Empty, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls, 
 		templateString, warningString) {
-	
+
+//WARNING: extends private dijit API
+var reviewTreeNode = declare(dijit._TreeNode, {
+	postCreate: function() {
+		this.inherited(arguments);
+
+		var divDom = dojo.create("img", { 
+			src: "app/dojo/resources/blank.gif",
+			"class": "deleteImg"
+		});
+		dojo.connect(divDom, "onclick", this, dojo.hitch(this, function() {
+			dojo.publish("/davinci/review/deleteReviewFile", [this.item]);
+		}));
+		dojo.place(divDom, this.rowNode, "first");
+		dojo.style(this.rowNode, {width:"99%"});
+		dojo.style(this.containerNode, {display:"block"});
+	}
+});
+
+var reviewTree = declare(Tree, {
+	_createTreeNode: function(args) {
+		return new reviewTreeNode(args);
+	}
+});
+
 return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedMixin], {
 
 	templateString: templateString,
@@ -114,11 +138,6 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 	},
 
 	_initPage2: function() {
-		var sourceTreeCP = new ContentPane({style:"height:170px;padding:0"});
-		var targetTreeCP = new ContentPane({style:"height:170px;padding:0"});
-		this.sourceTreeCP.appendChild(sourceTreeCP.domNode);
-		this.targetTreeCP.appendChild(targetTreeCP.domNode);
-
 		var reviewFiles = [];
 		var fileIndex = this.fileIndex = 1;
 		this.reviewFiles = reviewFiles;
@@ -126,7 +145,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		var sourceTreeModel = this.sourceTreeModel = new TreeStoreModel({
 			deferItemLoadingUntilExpand: true,
 			store: new GeneralReviewReadStore({
-				root: new Folder(".", null),
+				root: new Folder(Workbench.getProject(), null),
 				getLabel: function(item) {
 					var label = item.getName();
 					if (item.link) { label=label + "  [" + item.link + "]"; }
@@ -138,9 +157,10 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		var doubleClick = function(item) {
 			this.addFiles([item]);
 		};
-		var sourceTree = this.sourceTree = new dijitTree({
+		var sourceTree = this.sourceTree = new Tree({
 			id: "reviewWizardSourceTree",
-			showRoot:false,
+			persist: false,
+			showRoot: false,
 			model: sourceTreeModel, 
 			labelAttr: "name", 
 			getIconClass: dojo.hitch(this, this._getIconClass),
@@ -154,7 +174,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 				});
 			}]
 		});
-		sourceTreeCP.domNode.appendChild(sourceTree.domNode);
+		this.sourceTreeNode.appendChild(sourceTree.domNode);
 		sourceTree.startup();
 
 		var targetTreeModel = this.targetTreeModel = new TreeStoreModel({
@@ -176,7 +196,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 			getIconClass: dojo.hitch(this,this._getIconClass),
 			isMultiSelect: true
 		});
-		targetTreeCP.domNode.appendChild(targetTree.domNode);
+		this.targetTreeNode.appendChild(targetTree.domNode);
 		targetTree.startup();
 	},
 
@@ -184,12 +204,13 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		var formatPic = function(result) {
 			if (!this.photoRepositoryUrl) {
 				var location = Workbench.location().match(/http:\/\/.*:\d+\//);
-				this.photoRepositoryUrl = Runtime.serverJSONRequest({
-					url: location + "maqetta/cmd/getBluePageInfo",
-					handleAs: "text",
-					content:{'type': "photo"},
-					sync: true
-				});
+				this.photoRepositoryUrl = "";
+//				this.photoRepositoryUrl = Runtime.serverJSONRequest({
+//					url: location + "maqetta/cmd/getBluePageInfo",
+//					handleAs: "text",
+//					content:{'type': "photo"},
+//					sync: true
+//				});
 			}
 			if (this.photoRepositoryUrl === "" || this.photoRepositoryUrl == "not-implemented") {
 				this.photoRepositoryUrl =  "app/davinci/review/resources/img/profileNoPhoto.gif?";
@@ -262,12 +283,16 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		var stateStore = new QueryReadStore({
 			url: location + "maqetta/cmd/getBluePageInfo",
 			fetch: function(request) {
-				var searchQuery = request.query.displayName;
-				searchQuery = searchQuery.substring(0, searchQuery.length - 1);
-				request.serverQuery = {searchname: searchQuery};
+//				var searchQuery = request.query.displayName;
+				var searchQuery = "";
 				if (searchQuery === "") {
 					return;
 				}
+				searchQuery = searchQuery.substring(0, searchQuery.length - 1);
+				request.serverQuery = {searchname: searchQuery};
+//				if (searchQuery === "") {
+//					return;
+//				}
 				return this.inherited("fetch", arguments);
 			}
 		});
@@ -284,7 +309,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 			onChange: dojo.hitch(this, this._reviewerComboxValueChanged),
 			onKeyUp: dojo.hitch(this, this._updateAddButton),
 			pageSize: 10,
-			searchDelay: 500,
+			searchDelay: 60000,
 			placeHolder: widgetsNls.enterNameOrEmail
 		}, this.addReviewerCombox);
 	},
@@ -426,12 +451,12 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		var valid = this.versionTitle.isValid() && this.dueDate.isValid();
 		var valid2 = this.reviewFiles && this.reviewFiles.length > 0;
 		var valid3 = this.userData.length > 0;
-		dojo.removeClass(this.navPage1, valid ? "todo" : "done");
-		dojo.addClass(this.navPage1, valid ? "done" : "todo");
-		dojo.removeClass(this.navPage2, valid2 ? "todo" : "done");
-		dojo.addClass(this.navPage2, valid2 ? "done" : "todo");
-		dojo.removeClass(this.navPage3, valid3 ? "todo" : "done");
-		dojo.addClass(this.navPage3, valid3 ? "done" : "todo");
+		dojo.removeClass(this.navPage1Icon, valid ? "todo" : "done");
+		dojo.addClass(this.navPage1Icon, valid ? "done" : "todo");
+		dojo.removeClass(this.navPage2Icon, valid2 ? "todo" : "done");
+		dojo.addClass(this.navPage2Icon, valid2 ? "done" : "todo");
+		dojo.removeClass(this.navPage3Icon, valid3 ? "todo" : "done");
+		dojo.addClass(this.navPage3Icon, valid3 ? "done" : "todo");
 		this.invite.set("disabled", !(valid && valid2 && valid3));
 		var errMsg="";
 		if (!valid3) {
@@ -452,11 +477,11 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 	select: function (evt) {
 		var target = evt.target;
 		var stackContainer = this.reviewerStackContainer;
-		if (target == this.navPage1) {
+		if (target == this.navPage1 || target == this.navPage1Icon) {
 			stackContainer.selectChild(this.page1, true);
-		} else if (target == this.navPage2) {
+		} else if (target == this.navPage2 || target == this.navPage2Icon) {
 			stackContainer.selectChild(this.page2, true);
-		} else if (target == this.navPage3) {
+		} else if (target == this.navPage3 || target == this.navPage3Icon) {
 			stackContainer.selectChild(this.page3, true);
 		}
 	},
@@ -524,7 +549,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 
 	delFiles: function(item) {
 		var reviewFiles = this.reviewFiles,
-			selections = this.targetTree.getSelectedItems();
+			selections = this.targetTree.get('selectedItems');
 		if(item) {
 			selections = [item];
 		}
@@ -635,11 +660,15 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 			// init reviewers
 			var i;
 			for (i = 0; i < node.reviewers.length; i++) {
-				if (node.reviewers[i].name != Runtime.getDesigner()) {
+				if (node.reviewers[i].email != node.designerEmail) {
+					var displayName = node.reviewers[i].email;
+					if (node.reviewers[i].name) {
+						displayName = node.reviewers[i].name + ' (' + displayName + ')';
+					}
 					this.jsonStore.newItem({
 						name: node.reviewers[i].name,
 						email: node.reviewers[i].email,
-						displayName: node.reviewers[i].name + ' (' + node.reviewers[i].email + ')'
+						displayName: displayName
 					});
 				}
 			}
@@ -648,25 +677,16 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 	},
 
 	publish : function(value) {
-		var reviewers = "";
 		var emails = "";
 		var i;
 		for (i=0;i<this.userData.length;i++) {
-			if (this.userData[i].name && this.userData[i].name !== "") { 
-				reviewers = reviewers + this.userData[i].name+",";
-			} else {
-				reviewers = reviewers + this.userData[i].email+",";
-			}
 			emails = emails+ this.userData[i].email+",";
 		}
 		var messageTextarea = this.descriptions;
 		var message = messageTextarea.value;
 		var versionTitle = this.versionTitle.value;
 		var dueDate = this.dueDate.get('value');
-		var dueDateString = dueDate?dojo.date.locale.format(dueDate, {
-				selector:'date', 
-				formatLength:'short'
-			}).toLowerCase() : "infinite";
+		var dueDateString = dueDate ? stamp.toISOString(dueDate, {zulu: true}) : "infinite";
 		var desireWidth = this.desireWidth.value || 0;
 		var desireHeight = this.desireHeight.value || 0;
 		var	resources = dojo.map(this.reviewFiles, function(item) {
@@ -683,7 +703,6 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 				isUpdate: this.node && !this.isRestart,
 				isRestart: this.isRestart,
 				vTime: this.node ? this.node.timeStamp : null,
-				reviewers:reviewers,
 				emails:emails,
 				message:message,
 				versionTitle:versionTitle,
@@ -710,7 +729,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 			}
 			if (result=="OK") {
 				var key = value ? "draftSaved" : "inviteSuccessful";
-				dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls[key], type:"message"}, "create"]);
+				dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls[key], type:"message"}, "create", this.node]);
 			} else {
 				var dialogContent = dojostring.substitute(warningString, {
 						htmlContent: result, 
@@ -718,21 +737,22 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 						mailFailureMsg: widgetsNls.mailFailureMsg, 
 						buttonOk: dijitNls.buttonOk
 					});
-				dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls.inviteFailed, type:"warning"}, "create"]);
+				dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls.inviteFailed, type:"warning"}, "create", this.node]);
 				if (!this.invitationDialog) {
 					this.invitationDialog = new Dialog({
 						title: widgetsNls.warning,
 						content: dialogContent
 					});
 					this.invitationDialog.connect(dijit.byId("_mailFailureDialogButton"), "onClick", function() {
-						this.hide();
-					});
+						this.invitationDialog.hide();
+						this.invitationDialog.destroyRecursive();
+					}.bind(this));
 				} else {
 					this.invitationDialog.content = dialogContent;
 				}
 				this.invitationDialog.show();
 			}
-		});
+		}.bind(this));
 		this.onClose();
 	},
 

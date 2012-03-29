@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/_editor/nls/nb/LinkDialog", //begin v1.x content
+//begin v1.x content
 ({
 	createLinkTitle: "Koblingsegenskaper",
 	insertImageTitle: "Bildeegenskaper",

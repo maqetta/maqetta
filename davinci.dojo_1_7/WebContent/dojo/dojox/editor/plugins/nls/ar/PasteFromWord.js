@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/ar/PasteFromWord", //begin v1.x content
+//begin v1.x content
 ({
 	"pasteFromWord": "لصق من Word",
 	"paste": "لصق",

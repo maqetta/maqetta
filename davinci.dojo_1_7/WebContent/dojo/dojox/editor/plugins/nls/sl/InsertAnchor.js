@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/sl/InsertAnchor", //begin v1.x content
+//begin v1.x content
 ({
 	insertAnchor: "Vstavi sidro",
 	title: "Lastnosti sidra",

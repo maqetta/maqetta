@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/nls/zh/common", //begin v1.x content
+//begin v1.x content
 ({
 	buttonOk: "确定",
 	buttonCancel: "取消",

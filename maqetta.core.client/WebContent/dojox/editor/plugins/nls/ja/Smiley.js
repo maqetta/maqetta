@@ -19,8 +19,7 @@ define(
 	emoticonYes: "はい",
 	emoticonNo: "いいえ",
 	emoticonAngel: "エンジェル",
-	emoticonCrying: "泣く",
-	emoticonHappy: "幸せ"
+	emoticonCrying: "泣く"
 })
 
 //end v1.x content

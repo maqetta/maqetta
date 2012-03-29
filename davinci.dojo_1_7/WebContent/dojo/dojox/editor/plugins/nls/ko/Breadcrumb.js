@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/ko/Breadcrumb", //begin v1.x content
+//begin v1.x content
 ({
 	"nodeActions": "${nodeName} 조치",
 	"selectContents": "컨텐츠 선택",

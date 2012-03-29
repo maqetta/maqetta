@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/form/nls/da/validate", //begin v1.x content
+//begin v1.x content
 ({
 	invalidMessage: "Den angivne værdi er ikke gyldig.",
 	missingMessage: "Værdien er påkrævet.",

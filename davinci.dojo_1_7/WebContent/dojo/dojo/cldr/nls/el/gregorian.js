@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojo/cldr/nls/el/gregorian", //begin v1.x content
+//begin v1.x content
 {
 	"months-format-narrow": [
 		"Ι",

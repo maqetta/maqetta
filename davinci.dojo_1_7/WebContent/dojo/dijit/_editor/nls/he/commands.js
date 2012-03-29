@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/_editor/nls/he/commands", //begin v1.x content
+//begin v1.x content
 ({
 	'bold': 'מודגש',
 	'copy': 'עותק',

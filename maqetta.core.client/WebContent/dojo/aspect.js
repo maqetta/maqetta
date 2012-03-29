@@ -95,7 +95,6 @@ define([], function(){
 =====*/
 
 	"use strict";
-	var nextId = 0;
 	function advise(dispatcher, type, advice, receiveArguments){
 		var previous = dispatcher[type];
 		var around = type == "around";
@@ -133,7 +132,6 @@ define([], function(){
 						}
 					}
 				},
-				id: nextId++,
 				advice: advice,
 				receiveArguments: receiveArguments
 			};
@@ -165,8 +163,7 @@ define([], function(){
 			var existing = target[methodName], dispatcher;
 			if(!existing || existing.target != target){
 				// no dispatcher in place
-				target[methodName] = dispatcher = function(){
-					var executionId = nextId;
+				dispatcher = target[methodName] = function(){
 					// before advice
 					var args = arguments;
 					var before = dispatcher.before;
@@ -180,7 +177,7 @@ define([], function(){
 					}
 					// after advice
 					var after = dispatcher.after;
-					while(after && after.id < executionId){
+					while(after){
 						results = after.receiveArguments ? after.advice.apply(this, args) || results :
 								after.advice.call(this, results);
 						after = after.next;

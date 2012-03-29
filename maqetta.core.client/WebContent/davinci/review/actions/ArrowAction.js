@@ -4,11 +4,7 @@ define([
 	"davinci/Runtime"
 ], function(declare, _DrawingCommon, Runtime) {
 
-if (typeof davinci.review.actions === "undefined") {
-	davinci.review.actions = {};
-}
-
-var ArrowAction = davinci.review.actions.ArrowAction = declare("davinci.review.actions.ArrowAction", _DrawingCommon, {
+var ArrowAction = declare("davinci.review.actions.ArrowAction", [_DrawingCommon], {
 
 	run: function(context) {
 		this.inherited(arguments);
@@ -24,7 +20,8 @@ var ArrowAction = davinci.review.actions.ArrowAction = declare("davinci.review.a
 			colorAlias: surface.currentReviewer,
 			a2c: dojo.hitch(Runtime, Runtime.getColor),
 			commentId: surface.commentId,
-			state: ""
+			state: "",
+			scene: ""
 		});
 		createTool.activate();
 	}

@@ -146,8 +146,9 @@ _RectHelperMixin.prototype = {
             var position_prop = dojo.style(this._widget.domNode,"position");
         }
         var absolute = (position_prop=="absolute");
-        var doSnapLines = absolute;
-        if(doSnapLines && event && this._widget && context){
+        var doSnapLinesX = absolute;
+        var doSnapLinesY = absolute;
+        if((doSnapLinesX || doSnapLinesY) && event && this._widget && context){
             var data = {type:this._widget.type};
             var position = { x:event.pageX, y:event.pageY};
             var snapBox = {l:pageX,t:pageY,w:0,h:0};
@@ -161,7 +162,8 @@ _RectHelperMixin.prototype = {
                     absolute:absolute,
                     currentParent:null,
                     rect:snapBox, 
-                    doSnapLines:doSnapLines, 
+                    doSnapLinesX:doSnapLinesX, 
+                    doSnapLinesY:doSnapLinesY, 
                     doFindParentsXY:false,
             		doCursor:!absolute});
         }else if(context){

@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/pl/LocalImage", //begin v1.x content
+//begin v1.x content
 ({
 	insertImageTitle: "Wstaw obraz",
 	url: "Obraz",

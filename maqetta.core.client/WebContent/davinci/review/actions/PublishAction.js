@@ -7,11 +7,7 @@ define([
 	"dojo/i18n!./nls/actions"
 ], function(declare, Action, PublishWizard, Runtime, Toaster, actionsNls) {
 
-if (typeof davinci.review.actions === "undefined") {
-	davinci.review.actions = {};
-}
-
-var PublishAction = davinci.review.actions.PublishAction = declare("davinci.review.actions.PublishAction", davinci.actions.Action, {
+var PublishAction = declare("davinci.review.actions.PublishAction", [Action], {
 
 	constructor: function(node, isRestart) {
 		this.node =  node;
@@ -25,7 +21,7 @@ var PublishAction = davinci.review.actions.PublishAction = declare("davinci.revi
 		var publishWizard = this.publishWizard = new PublishWizard();
 		this.dialog = new dijit.Dialog( {
 			title : actionsNls.newReview,
-			onCancle: dojo.hitch(this, this.close),
+			onCancel: dojo.hitch(this, this.close),
 			onHide: dojo.hitch(this, this.hide)
 		});
 		this.dialog.setContent(publishWizard);

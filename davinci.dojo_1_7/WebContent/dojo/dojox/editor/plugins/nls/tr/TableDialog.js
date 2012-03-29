@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/tr/TableDialog", //begin v1.x content
+//begin v1.x content
 ({
 	insertTableTitle: "Tablo Ekle",
 	modifyTableTitle: "Tabloyu Değiştir",

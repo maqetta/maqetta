@@ -80,7 +80,7 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 			this.context._themeName = this.theme.name;
 			if(!this.initialSet){
 				this.context.deactivate();
-				this.context._setSource(htmlFile, dojo.hitch(this, function(){
+				this.context._setSource(htmlFile, function() {
 					this.savePoint = 0;
 					this.context.activate();
 //		css files need to be added to doc before body content wdr 4/6/11
@@ -97,7 +97,9 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 						this.context.getDijit().registry.forEach(function(widget){
 							if(widget.resize){ widget.resize({}); }
 						});
-						dojo.publish("/davinci/states/state/changed", [{widget:'$all', newState:"Normal", context: this.context}]); // send state message to get Theme and StatesView in same init state
+						dojo.publish("/davinci/states/state/changed", 
+								[{editorClass:'davinci.themeEditor.ThemeEditor', widget:'$all', 
+								newState:"Normal", context: this.context}]); // send state message to get Theme and StatesView in same init state
 					}), 1500);
 					this.initialSet=true;
 
@@ -110,7 +112,7 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 							this.themeVersionWarn();
 						}
 					}
-				}));
+				}, this);
 				
 			}
 		}
@@ -162,4 +164,3 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 
 });
 });
-

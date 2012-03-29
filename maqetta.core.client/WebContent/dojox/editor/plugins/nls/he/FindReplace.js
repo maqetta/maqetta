@@ -10,6 +10,7 @@ define(
 	"matchCaseTooltip": "התאמת רישיות",
 	"backwards": "אחורה ",
 	"backwardsTooltip": "חיפוש תמליל אחורה ",
+	"replaceAll": "כל המופעים ",
 	"replaceAllButton": "החלפת הכל ",
 	"replaceAllButtonTooltip": "החלפת כל התמליל ",
 	"findButton": "חיפוש",

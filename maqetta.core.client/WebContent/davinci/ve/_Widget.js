@@ -315,12 +315,12 @@ return declare("davinci.ve._Widget", null, {
 		/* if ordering is given, respect it */
 		
 		if(dojo.isArray(v)){
-		for(var i = 0;i<v.length;i++) {
-				for(var name in v[i]){
-				
-					value = davinci.ve.states.normalize("style", this, name, v[i][name]);
+			var vArray = davinci.ve.states.normalizeArray("style", this, name, v);
+			for(var i = 0;i<vArray.length;i++) {
+				for(var name in vArray[i]){	// Should be only one property in each array item
+					value = vArray[i][name];
 					if(value !== undefined && value != "" && value!=null) {
-						s += name + ": " + v[i][name] + "; ";
+						s += name + ": " + vArray[i][name] + "; ";
 					}
 				}
 			}
@@ -441,7 +441,7 @@ return declare("davinci.ve._Widget", null, {
 			data = this._getData( options);
 		}
 
-		data.states=this.states;
+		data.states=dojo.clone(this.states);
 		if(!data.properties)
 			data.properties = {};
 
@@ -499,34 +499,46 @@ return declare("davinci.ve._Widget", null, {
 
 	getStyleValues: function( options) {
 
+		function removeProperty(propName){
+			for(var j=values.length-1; j>=0; j--){
+				var item = values[j];
+				if(item[propName] !== undefined){
+					values.splice(j, 1);
+				}
+			}
+		}
 		var style = this.getStyleNode().style;
 		var text = this._srcElement.getAttribute("style");
 
 		var values = require("davinci/ve/widget").parseStyleValues(text);
 
+		var o;
 		if(style) {
 			if(style.position == "absolute" || style.position == "relative") {
 				var parent = this.getParent();
+				removeProperty('position');
+				removeProperty('left');
+				removeProperty('top');
 				//FIXME: This is Dojo-specific logic within a toolkit-independent file
 				if(parent && parent.dijitWidget && parent.dijitWidget.addChild && !parent.acceptsHTMLChildren) {
-					values.position = undefined;
-					values.left = undefined;
-					values.top = undefined;
+					// Do nothing - logic above removed position/left/top
 				}else{
-					values.position = style.position;
-					values.left = style.left;
-					values.top = style.top;
+					values.push({position:style.position});
+					values.push({left:style.left});
+					values.push({top:style.top});
 				}
 			}
 			var resizable = metadata.queryDescriptor(this.type, "resizable");
 			if(style.width) {
 				if(resizable == "both" || resizable == "width") {
-					values.width = style.width;
+					removeProperty('width');
+					values.push({width:style.width});
 				}
 			}
 			if(style.height) {
 				if(resizable == "both" || resizable == "height") {
-					values.height = style.height;
+					removeProperty('height');
+					values.push({height:style.height});
 				}
 			}
 		}

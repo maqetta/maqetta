@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/pt/FindReplace", //begin v1.x content
+//begin v1.x content
 ({
 	"findLabel": "Localizar:",
 	"findTooltip": "Inserir texto a ser localizado",
@@ -11,6 +11,7 @@ define(
 	"matchCaseTooltip": "Coincidir maiúscula/minúscula",
 	"backwards": "Retroceder",
 	"backwardsTooltip": "Procurar texto para trás",
+	"replaceAll": "Todas as Ocorrências",
 	"replaceAllButton": "Substituir Todos",
 	"replaceAllButtonTooltip": "Substituir todo o texto",
 	"findButton": "Localizar",

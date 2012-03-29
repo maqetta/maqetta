@@ -8,24 +8,29 @@ define([
  * url('/something/something/1.jpg') will re
  */
 
-var _START_REG_EX = /url{1}\s*\(('|"){1}/i;
-var _REWRITE_REG_EX = /url{1}\s*\(('|"){1}(.*)['"]\)/i;
+var _START_REG_EX = /url{1}\s*\(('|")?/i;
+var _REWRITE_REG_EX = /url{1}\s*\(('|")?(.*)('|")?\)/i;
+var _ABSOLUTE_REG_EX = /(http|ftp){1,}/i
 
 return {
 	
 	
 	getUrlStartOffset: function(url){
-		if(url==null)
+		if(typeof url != 'string')
 			return -1;
 		var foundAt = url.search(_START_REG_EX);
 		
 		for(var i = foundAt;i<url.length;i++){
-			if(url.charAt(i)=="'" || url.charAt(i)=="\"")
+			if(url.charAt(i)=="'" || url.charAt(i)=="\"" || url.charAt(i)=="(")
 				return i+1;
 			
 		}
 		
 		return ;
+	},
+	
+	isAbsolute : function(url){
+		return url.search(_ABSOLUTE_REG_EX) > -1;
 	},
 	
 	getUrlEndOffset: function(url){
@@ -35,14 +40,14 @@ return {
 		var found = 0;
 		
 		for(var i = start+1;i<url.length;i++){
-			if(url.charAt(i)=="'" || url.charAt(i)=="\"")
+			if(url.charAt(i)=="'" || url.charAt(i)=="\"" || url.charAt(i)==")")
 				return i;
 			
 		}
 	},
 	
 	containsUrl: function(url){
-		if(url==null)
+		if(typeof url != 'string')
 			return false;
 		
 		return url.search(_START_REG_EX) >-1 ;
@@ -50,7 +55,7 @@ return {
 	},
 	
 	replaceUrl: function(oldUrl, newUrl){
-		if(url==null)
+		if(typeof url != 'string')
 			return false;
 		
 		return oldUrl.replace(_REWRITE_REG_EX, "url('"+ newUrl + "')")  ;
@@ -59,7 +64,7 @@ return {
 	
 	getUrl: function(url){
 		
-		if(url==null)
+		if(typeof url != 'string')
 			return null;
 		
 		

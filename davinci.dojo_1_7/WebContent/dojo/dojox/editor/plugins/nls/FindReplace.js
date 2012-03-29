@@ -1,6 +1,5 @@
 //>>built
-define("dojox/editor/plugins/nls/FindReplace", { root:
-//begin v1.x content
+define({ root:
 ({
 	"findLabel": "Find:",
 	"findTooltip": "Enter text to find",
@@ -43,7 +42,6 @@ define("dojox/editor/plugins/nls/FindReplace", { root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -55,3 +53,4 @@ define("dojox/editor/plugins/nls/FindReplace", { root:
 "ca": true,
 "ar": true
 });
+

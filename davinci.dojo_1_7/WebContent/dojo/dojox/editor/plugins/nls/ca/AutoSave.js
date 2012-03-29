@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/ca/AutoSave", //begin v1.x content
+//begin v1.x content
 ({
 	"saveLabel": "Desa",
 	"saveSettingLabelOn": "Estableix l'interval per desar automàticament...",

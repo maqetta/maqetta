@@ -64,8 +64,6 @@ define(
 	"anycolumn": "любой столбец",
 	"statusTipTitleNoFilter": "Панель фильтра",
 	"statusTipTitleHasFilter": "Фильтр",
-	"statusTipRelAny": "Соответствует любому из правил.",
-	"statusTipRelAll": "Соответствует всем правилам.",
 	
 	"defaultItemsName": "элементов",
 	"filterBarMsgHasFilterTemplate": "Показано ${0} из ${1} ${2}.",
@@ -86,3 +84,6 @@ define(
 })
 //end v1.x content
 );
+
+
+

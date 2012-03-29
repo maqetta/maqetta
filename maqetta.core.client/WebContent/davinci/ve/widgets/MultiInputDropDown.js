@@ -104,29 +104,49 @@ define(["dojo/_base/declare",
 			
 		}, 
 		
-		_plusButton: function (){
-			
-			var oldValue = this._dropDown.get("value");
-			
-			var split = oldValue.split(/(\d+)/);
-			var newString = ""
-			for(var i = 0;i<split.length;i++){
-				if(!isNaN(split[i]) && split[i]!=""){
-					newString+= parseFloat(split[i]) + this.numberDelta;
+		_changeValue: function(value, delta){
+			var split = value.split(" ");
+			var result="";
+			for(var i=0;i<split.length;i++){
+				if(i>0)
+					result+=" ";
+				var bits = split[i].match(/([-\d\.]+)([a-zA-Z%]*)/);
+				if(bits.length == 1){
+					result+=bits[0]; 
 				}else{
-					newString +=split[i];
+					for(var z=1;z<bits.length;z++){
+						if(!isNaN(bits[z]) && bits[z]!=""){
+							result+= parseFloat(bits[z]) + delta;
+						}else{
+							result +=bits[z];
+						}
+					}
 				}
 			}
-			
+			return result;
+		},
+		
+		_plusButton: function (){
+			var oldValue = this._dropDown.get("value");
+			var newString = this._changeValue(oldValue, this.numberDelta);
 			this._store.modifyItem(oldValue, newString);
 			this._dropDown.set("value", newString);
 			
 		},
+		
+		_minusButton: function(){
+			var oldValue = this._dropDown.get("value");
+			var newString = this._changeValue(oldValue, -1* this.numberDelta);
+			this._store.modifyItem(oldValue, newString);
+			this._dropDown.set("value", newString);
+			
+		},
+		
 		_updateSpinner: function(){
 			
 			var value = this._dropDown.get("value");
 			
-			var	numbersOnlyRegExp = /(-?)(\d+)/;
+			var	numbersOnlyRegExp = /(-?)(\d+){1}/;
 			var numberOnly = numbersOnlyRegExp.exec(value);
 			if(numberOnly && numberOnly.length){
 				this._minus.disabled = this._plus.disabled = false;
@@ -141,23 +161,7 @@ define(["dojo/_base/declare",
 			return true;
 		},
 		
-		_minusButton: function(){
-			var oldValue = this._dropDown.get("value");
-			
-			var split = oldValue.split(/(\d+)/);
-			var newString = ""
-			for(var i = 0;i<split.length;i++){
-				if(!isNaN(split[i]) && split[i]!=""){
-					newString+= parseFloat(split[i]) - this.numberDelta;
-				}else{
-					newString +=split[i];
-				}
-			}
-			
-			this._store.modifyItem(oldValue, newString);
-			this._dropDown.set("value", newString);
-			
-		},
+
 		
 		_onChange: function(event){
 			

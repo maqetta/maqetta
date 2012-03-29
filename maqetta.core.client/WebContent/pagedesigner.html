@@ -13,7 +13,7 @@
 			height: 100%;
 		}
 	</style>
-	<script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="async: true, parseOnLoad: true, modulePaths:{'preview':'../preview', 'system':'../system'}, cacheBust: '@revision@'"></script>
+	<script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="async: true, parseOnLoad: true, modulePaths:{'preview':'../preview', 'system':'../system'}, cacheBust: '@revision@', ioPublish:true"></script>
 	<script type="text/javascript">
 		require(["dijit/dijit", "davinci/davinci", ], function () {
 			require(["dojo/i18n!davinci/nls/webContent", "davinci/version", "dojo/domReady!"], function (webContent, version) {
@@ -43,12 +43,13 @@
 						//FIXME: temporary fix for running via file: URLs
 					   dojo.byId('davinci_user').innerHTML=webContent.maqettaUser;
 					}
-					if (!result) {
+					if (!result || result=='maqettaUser') {
 						dojo.byId('davinci_user').innerHTML=webContent.localhostUser;
 						dojo.byId('davinci_logoff').href="";
 						Runtime.isLocalInstall=true;
 					}
-					if (Runtime.plugins.joomlaplugin) {
+					var isRunningJoomla  = dojo.cookie("DAVINCI.JOOMLA");
+					if (isRunningJoomla) {
 						dojo.byId('davinci_logoff').href = "http://" + window.location.hostname + 
 							"/index.php?option=com_user&task=logout&return=Lw";
 				 	}
@@ -62,30 +63,37 @@
 							main_menu.style.marginRight = '3em';
 						}
 					}
-					// set up for review and commenting...
-					davinci.Runtime.commenting_designerName  = dojo.cookie("davinci_designer");
-					davinci.Runtime.commenting_designerEmail = dojo.cookie("davinci_designer_email");
-					davinci.Runtime.commenting_openFile      = dojo.cookie("davinci_file");
-					davinci.Runtime.commenting_commentId     = dojo.cookie("davinci_commentId");
-					dojo.cookie("davinci_designer",       null, {expires: -1});
-					dojo.cookie("davinci_designer_email", null, {expires: -1});
-					dojo.cookie("davinci_file",           null, {expires: -1});
-					dojo.cookie("davinci_commentId",      null, {expires: -1});
 					
-					if (Runtime.commenting_openFile) {
-						var page = Runtime.commenting_openFile;
-						var path = new davinci.model.Path(page);
-						var version = path.getSegments()[0];
-						path.removeFirstSegments(1);
-						var node = davinci.review.model.resource.root.findFile(version, path.toString());
-						if (node) {
-							davinci.Workbench.openEditor({
-								fileName: node,
-								content: node.getText()
-							});
+					// set up for review and commenting...
+					var designerName  = dojo.cookie("davinci_designer");
+					var reviewVersion = dojo.cookie("review_version");
+					dojo.cookie("davinci_designer", null, {expires: -1, path:"/"});
+					dojo.cookie("review_version", null, {expires: -1, path:"/"});
+					
+					var loadReviews = function(){
+						if (reviewVersion && designerName) {
+							var node = davinci.review.model.resource.root.findVersion(designerName, reviewVersion);
+							if (node) {
+								/* if we found a node, then the user clicked a review link to get here, 
+								 * TODO: bring the R&C view forward
+								 */
+								node.getChildren(function(childs){
+									if(childs.length > 1) {
+										return;
+									}
+									dojo.forEach(childs, function(child){
+										davinci.Workbench.openEditor({
+											fileName: child,
+											content: node.getText()
+										});
+									})
+									
+								}, false);
+							}
 						}
 					}
-					Workbench.run();
+					
+					Workbench.run().then(loadReviews);
 				};
 
 				// Display a warning dialog for unsupported browsers

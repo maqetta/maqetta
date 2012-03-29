@@ -141,7 +141,7 @@ define(["dojo/_base/declare",
 			}
 			this.dragClone = dragClone;
 			dojo.style(dragClone, 'opacity', 0.5);
-			dragClone.style.zIndex = 1000;
+			dragClone.style.zIndex = 1001000;
 	
 			var box = dojo.contentBox(this.dragObject);
 		    dragClone.style.width = box.w + "px";

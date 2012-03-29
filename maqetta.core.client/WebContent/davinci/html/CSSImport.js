@@ -70,7 +70,7 @@ return declare("davinci.html.CSSImport", CSSElement, {
 		var myUrl = path.toString();
 		this.cssFile = new CSSFile({
 			url : myUrl,
-			loader : this.parent.loader,
+			loader : this.loader || p.loader,
 			includeImports : this.parent.includeImports || includeImports
 		});
 		this.cssFile.relativeURL = this.url;

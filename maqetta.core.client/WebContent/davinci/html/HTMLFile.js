@@ -66,6 +66,7 @@ return declare("davinci.html.HTMLFile", HTMLItem, {
 		var visitor = {
 				visit: function(node) {
 					if (node.elementType == "CSSFile") {
+						
 						var m = [];
 						var newRules = node.getMatchingRules(domElement, [], m);
 
@@ -165,13 +166,19 @@ return declare("davinci.html.HTMLFile", HTMLItem, {
 		return false;
 	},
 
-	addStyleSheet: function(url, content, dontLoad, beforeChild) {
+	addStyleSheet: function(url, content, dontLoad, beforeChild, loader) {
 		// create CSS File model
-
+		
+		/* 
+		 * this is redundant, sort of.  the file is loaded once, then cached.. then the import loads the file again.  
+		 * theres got to be a better way of doing this...  all the loading should happen in the CSSImport class.
+		 * 
+		 */
 		if (!dontLoad) {
 			this._loadedCSS[url] = new CSSFile({
 				url : url,
-				includeImports : true
+				includeImports : true,
+				loader : loader
 			});
 		}
 		if (content) {
@@ -198,6 +205,7 @@ return declare("davinci.html.HTMLFile", HTMLItem, {
 			this._styleElem = style;
 		}
 		var css = new CSSImport();
+		css.parent = this;
 		css.url = url;
 		if(beforeChild){
 			this._styleElem.insertBefore(css, beforeChild);

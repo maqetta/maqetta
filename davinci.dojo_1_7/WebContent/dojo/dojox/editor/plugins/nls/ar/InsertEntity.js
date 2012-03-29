@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/ar/InsertEntity", //begin v1.x content
+//begin v1.x content
 ({
 	insertEntity: "ادراج رمز"
 })

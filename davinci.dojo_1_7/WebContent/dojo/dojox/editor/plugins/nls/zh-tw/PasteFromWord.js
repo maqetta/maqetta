@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/zh-tw/PasteFromWord", //begin v1.x content
+//begin v1.x content
 ({
 	"pasteFromWord": "從 Word 貼上",
 	"paste": "貼上",

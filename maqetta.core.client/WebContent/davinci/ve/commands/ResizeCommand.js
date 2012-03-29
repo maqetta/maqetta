@@ -37,15 +37,16 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 
 		var node = widget.getStyleNode();
 		if(!this._oldBox){
-			var box = dojo.contentBox(widget);
+			var box = dojo.getMarginBox(widget.domNode);
 			this._oldBox = {w: box.w, h: box.h};
 		}
 		
 		this._state = States.getState();
 		var isNormalState = States.isNormalState(this._state);
 
-		var cleanValues = { width: this._newBox.w, height: this._newBox.h };
-		States.setStyle(widget, this._state, cleanValues, undefined, isNormalState);
+		//var cleanValues = { width: this._newBox.w, height: this._newBox.h };
+		var cleanValues = [{ width: this._newBox.w}, {height: this._newBox.h }];
+		States.setStyle(widget, this._state, cleanValues, isNormalState);
 
 		if (isNormalState) {
 			dojo.contentBox(node, this._newBox);

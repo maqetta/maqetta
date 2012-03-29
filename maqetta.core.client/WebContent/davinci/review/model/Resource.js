@@ -12,17 +12,7 @@ return {
 			_root = root;
 		}
 		return _root;
-	},
-
-	dateSortFilter : {
-		filterList : function(list) {
-			return list.sort(function (file1,file2) {
-				return file1.timeStamp > file2.timeStamp ? -1 : file1.timeStamp < file2.timeStamp ? 1 : 0;
-			});
-		}
-	}
-
-};
+	}};
 });
 
  

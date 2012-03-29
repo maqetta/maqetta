@@ -1,8 +1,17 @@
 <div class='publishWizard'>
 		<div class='steps'>
-			<div dojoAttachPoint="navPage1" dojoAttachEvent="onclick:select" class="crumbs done current sep">1.${generalInfo}</div>
-			<div dojoAttachPoint="navPage2" dojoAttachEvent="onclick:select" class="crumbs todo sep">2.${selectRevFiles}</div>
-			<div dojoAttachPoint="navPage3" dojoAttachEvent="onclick:select" class="crumbs todo ">3.${addReviewers}</div>
+			<div dojoAttachPoint="navPage1" dojoAttachEvent="onclick:select" class="crumbs current sep">
+				<div dojoAttachPoint="navPage1Icon" class="done"></div>
+				1.${generalInfo}
+			</div>
+			<div dojoAttachPoint="navPage2" dojoAttachEvent="onclick:select" class="crumbs sep">
+				<div dojoAttachPoint="navPage2Icon" class="todo"></div>
+				2.${selectRevFiles}
+			</div>
+			<div dojoAttachPoint="navPage3" dojoAttachEvent="onclick:select" class="crumbs">
+				<div dojoAttachPoint="navPage3Icon" class="todo"></div>
+				3.${addReviewers}
+			</div>
 		</div>
 		<div dojoAttachPoint="reviewerStackContainer" class='mainSection'>
 		</div>
@@ -35,7 +44,7 @@
 			</tr>
 			<tr>
 				<td>
-					<div dojoAttachPoint="sourceTreeCP" class='sourceTree'>
+					<div dojoAttachPoint="sourceTreeNode" class='sourceTree'>
 						
 					</div>
 				</td>
@@ -43,7 +52,7 @@
 					<a href="javascript:void(0);" dojoAttachEvent="onclick:addSelectFiles"><img src="app/davinci/review/resources/img/forward_nav.gif"/></a>
 				</td>
 				<td>
-					<div dojoAttachPoint="targetTreeCP" class='sourceTree'>
+					<div dojoAttachPoint="targetTreeNode" class='sourceTree'>
 					
 					</div>
 				</td>

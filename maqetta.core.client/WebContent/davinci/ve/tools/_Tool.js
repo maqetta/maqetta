@@ -10,17 +10,11 @@ return declare("davinci.ve.tools._Tool", null, {
 
 	_setTarget: function(target){
 		
-		if(!this._feedback){
-			this._feedback = this._context.getDocument().createElement("div");
-			this._feedback.className = "editFeedback";
-			this._feedback.style.position = "absolute";
-			/* ORIGINAL CODE
-			this._feedback.style.zIndex = "99"; // below Focus (zIndex = "100")
-			*/
-			dojo.style(this._feedback, "opacity", 0.1);
+		if(!this._targetOverlays){
+			this._targetOverlays = [];
 		}
 
-		if(target == this._feedback){
+		if(this._matchesTargetOverlay(target)){
 			return;
 		}
 
@@ -63,34 +57,80 @@ return declare("davinci.ve.tools._Tool", null, {
 		}
 
 		if(w){
+			//target is what we calculated for "w"
+			this._target = w;
+			
+			//Deal with the style node
 			var node = w.getStyleNode();
 			var box = this._context.getDojo().position(node, true);
 			box.l = box.x;
 			box.t = box.y;
+			
+			//Change the dimensions of the overlay region based on the target
+			this._updateTargetOverlays();
 
-			var domNode = w.domNode;
-			var parentNode = domNode.parentNode;
-			this._updateTarget();
-			
-			//Calculate zIndex -- we want a zIndex at least equal to the maximum
-			//zIndex of domNode and it's descendants. This comes into play
-			//with HorizontalSlider/VerticalSlider where the progress bar and the 
-			//knob on the progress bar have higher zIndex values than the slider
-			//itself.
-			this._feedback.style.zIndex = this._getMaxZIndex(domNode);
-			
-			//Insert element
-			parentNode.insertBefore(this._feedback,domNode.nextSibling);
-			
-			this._target = w;
+			//Insert overlay element(s)
+			this._insertTargetOverlays();
 		}else{
-			if(this._feedback.parentNode){
-				this._feedback.parentNode.removeChild(this._feedback);
-			}
+			//No target, so remove the overlay region(s)
+			this._removeTargetOverlays();
 			this._target = null;
 		}
 	},
 	
+	// Calculate bounds for "target" overlay rectangle(s)
+	_updateTargetOverlays: function(){
+		//Let's clear out overlay regions array
+		this._removeTargetOverlays();
+		if(!this._target){
+			return;
+		}
+		
+		var domNode = this._target.domNode;
+		var maxZIndex = this._getMaxZIndex(domNode);
+		if(this._targetOverlays){
+			
+			//See if helper wants to tell us what to use for target overlays
+			var helper = this._target.getHelper();
+			if(helper && helper.getTargetOverlays) {
+				var customTargetOverlays = helper.getTargetOverlays(this._target);
+				if (customTargetOverlays && customTargetOverlays.length > 0) {
+					dojo.forEach(customTargetOverlays, function(customOverlay) {
+						//Create a new overlay div and set up according to dimensions
+						//from the helper
+						var overlay =
+								this._getNewTargetOverlay(customOverlay,
+										customOverlay.x, customOverlay.y,
+										customOverlay.width, customOverlay.height,
+										maxZIndex);
+	
+						//Add new overlay div to our overall list
+						this._targetOverlays.push(overlay);
+		            }, this);
+					
+					
+					//We're done here
+					return;
+				}
+			} 
+			
+			//No special overlay regions, so let's just do the normal thing and calculate
+			//overlay region dimensions ourselves
+			var overlay =
+					this._getNewTargetOverlay(domNode, domNode.offsetLeft,
+							domNode.offsetTop, domNode.offsetWidth,
+							domNode.offsetHeight, maxZIndex);	
+
+			//Add new overlay div to our overall list
+			this._targetOverlays.push(overlay);
+		}
+	},
+
+	//Calculate zIndex -- we want a zIndex at least equal to the maximum
+	//zIndex of domNode and it's descendants. This comes into play
+	//with HorizontalSlider/VerticalSlider where the progress bar and the 
+	//knob on the progress bar have higher zIndex values than the slider
+	//itself.
 	_getMaxZIndex: function(startNode) {
 		//We want to look at the computed zIndex of the startNode and all
 		//descendant's of startNode to find the maximum zIndex value
@@ -116,16 +156,48 @@ return declare("davinci.ve.tools._Tool", null, {
 		return max_zIndexStr;
 	},
 	
-	// Calculate bounds for "target" overlay rectangle
-	_updateTarget: function(){
-		if(this._feedback && this._target){
+	_getNewTargetOverlay: function(domNode, x, y, width, height, zIndex) {
+		var overlay = this._context.getDojo().create("div", {
+			className: "editFeedback",
+			style: {
+				position: "absolute",
+				opacity: 0.1,
+				left: x + "px",
+				top: y + "px",
+				width: width + "px",
+				height: height + "px",
+				zIndex: zIndex
+			}
+		});
+		return overlay;
+	},
+	
+	_insertTargetOverlays: function() {
+		if (this._targetOverlays && this._target) {
 			var domNode = this._target.domNode;
-			this._feedback.style.left = domNode.offsetLeft+"px";
-			this._feedback.style.top = domNode.offsetTop+"px";
-			this._feedback.style.width = domNode.offsetWidth+"px";
-			this._feedback.style.height = domNode.offsetHeight+"px";			
+			var parentNode = domNode.parentNode;
+			dojo.forEach(this._targetOverlays, function(overlay) {
+				parentNode.insertBefore(overlay, domNode.nextSibling);
+            }, this);
 		}
-	}
+	},
+	
+	_removeTargetOverlays: function() {
+		if (this._targetOverlays && this._target) {
+			//Need to go in reverse order so pop removes right item from array
+			for (var i = this._targetOverlays.length - 1; i >= 0; i--) {
+				var overlay = this._targetOverlays[i];
+				dojo.destroy(overlay);
+				this._targetOverlays.pop();
+            }
+		}
+	},
+	
 
+	_matchesTargetOverlay: function(target) {
+		return dojo.some(this._targetOverlays, function(entry) {
+			return target == entry;
+		}, this);
+	}
 });
 });

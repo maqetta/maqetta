@@ -43,6 +43,7 @@ define(["dojo/_base/declare",
 		
 		buildRendering: function(){
 			this.domNode =   dojo.doc.createElement("div");
+			this.domNode
 			this.container =   dojo.doc.createElement("div");
 			dojo.addClass(this.container,"showCascade");
 			this.domNode.appendChild(this.container);
@@ -288,6 +289,16 @@ define(["dojo/_base/declare",
 			// Flag that the cascade list for this property needs to be recalculated/refreshed
 			this._dirtyCascadeList = true;
 			if(targetRule.type=="element.style"){
+				// If user is changing a widget to position:absolute, also force a z-index change
+				// If user is changing a widget away from position:absolute, remove existing z-index
+				if(this.target[0] == 'position' && valueObject.length == 1){
+					if(valueObject[0]['position'] == 'absolute'){
+						var absoluteWidgetsZindex = this.context.getPreference('absoluteWidgetsZindex');
+						valueObject.push({'z-index':absoluteWidgetsZindex});
+					}else{
+						valueObject.push({'z-index':''});
+					}
+				}
 				dojo.publish("/davinci/ui/styleValuesChange",[{values:valueObject, appliesTo:'inline', applyToWhichStates:applyToWhichStates }]);
 			}else{
 				dojo.publish("/davinci/ui/styleValuesChange",[{values:valueObject, appliesTo:targetRule, applyToWhichStates:applyToWhichStates }]);
@@ -332,7 +343,7 @@ define(["dojo/_base/declare",
 			return this._shorthands;
 		},
 		
-		_onChangeOverride : function(){
+		_onChangeOverride : function(e){
 			alert(veNLS.valueIsOverriden);
 			return false;
 		},
@@ -353,64 +364,70 @@ define(["dojo/_base/declare",
 				}
 				
 			}
-	
+			
 			var values =  [];
-			/* element rules */
-			var defaultSelection=this._getDefaultSelection();
-			
-			if(this._editor.supports("inline-style") && 
-			  (this._topWidgetDom==this._widget.domNode || defaultSelection=="element.style")){
-				var v = this._getAttribStyleValue();
-				var value = null;
-				for(var name in this.target)
-					if(name in v)
-						value = v[name];
+			if (this._editor.editorID != 'davinci.ve.ThemeEditor'){
+				/* element rules */
+				var defaultSelection=this._getDefaultSelection();
 				
-				values.push({rule:v, value:value, matchLevel:'element.style', type:'element.style'});
-			}
-			
-			/* selection (queried) rules */
-			var v = this.context.getSelectionCssRules(this._topWidgetDom);
-			if(v && v.rules){
-				for(var i=0;i<v.rules.length;i++){
-					var s="";
-					var rule = v.rules[i];
-					for(var j = 0;j<rule.selectors.length;j++){
-						if(j!=0) s+=", ";
-						s+=rule.selectors[j].getLabel();
-					}
-					var ruletype = getRuleType(rule);
-					values.push({rule:v.rules[i], ruleString:s,
-								matchLevel:v.matchLevels[i], type:ruletype});
-				}
-			}
-			
-			/* create list of proposals for new rules (using classes defined on this widget) */
-			var allCssClasses = this._getClasses(this._widget);
-			var nProposals = 0;
-			for(var i=0;i<allCssClasses.length;i++){
-				var thisClass=allCssClasses[i];
-				if(typeof thisClass=="string" && thisClass.length>0){
-					var proposedNewRule=this._getClassSelector(thisClass);
-					// See if there is an existing rule for thisClass
-					var existingRule=false;
-					for(var j=0; j<values.length; j++){
-						if(this._compareSelectors(values[j].ruleString,proposedNewRule)){
-							values[j].className = thisClass;
-							existingRule=true;
-							break;
+				if(this._editor.supports("inline-style") && 
+				  (this._topWidgetDom==this._widget.domNode || defaultSelection=="element.style")){
+					var vArray = this._getAttribStyleValue();
+					var value = null;
+					for(var vIndex=0; vIndex<vArray.length; vIndex++){
+						var vItem = vArray[vIndex];
+						for(var t=0; t<this.target.length; t++){// should be only one property in this.target
+							var name = this.target[t];
+							if(vItem[name] !== undefined){
+								value = vItem[name];
+							}
 						}
 					}
-					if(!existingRule){
-						var matchLevel = this._computeMatchLevelSelector(proposedNewRule);
-						values.splice(nProposals,0,{rule:null, ruleString:proposedNewRule, 
-									targetFile:this.targetFile, className:thisClass,
-									value:null, matchLevel:matchLevel, type:'proposal'});
-						nProposals++;
+					values.push({rule:vArray, value:value, matchLevel:'element.style', type:'element.style'});				
+				}
+				
+				/* selection (queried) rules */
+				var v = this.context.getSelectionCssRules(this._topWidgetDom);
+				if(v && v.rules){
+					for(var i=0;i<v.rules.length;i++){
+						var s="";
+						var rule = v.rules[i];
+						for(var j = 0;j<rule.selectors.length;j++){
+							if(j!=0) s+=", ";
+							s+=rule.selectors[j].getLabel();
+						}
+						var ruletype = getRuleType(rule);
+						values.push({rule:v.rules[i], ruleString:s,
+									matchLevel:v.matchLevels[i], type:ruletype});
+					}
+				}
+				
+				/* create list of proposals for new rules (using classes defined on this widget) */
+				var allCssClasses = this._getClasses(this._widget);
+				var nProposals = 0;
+				for(var i=0;i<allCssClasses.length;i++){
+					var thisClass=allCssClasses[i];
+					if(typeof thisClass=="string" && thisClass.length>0){
+						var proposedNewRule=this._getClassSelector(thisClass);
+						// See if there is an existing rule for thisClass
+						var existingRule=false;
+						for(var j=0; j<values.length; j++){
+							if(this._compareSelectors(values[j].ruleString,proposedNewRule)){
+								values[j].className = thisClass;
+								existingRule=true;
+								break;
+							}
+						}
+						if(!existingRule){
+							var matchLevel = this._computeMatchLevelSelector(proposedNewRule);
+							values.splice(nProposals,0,{rule:null, ruleString:proposedNewRule, 
+										targetFile:this.targetFile, className:thisClass,
+										value:null, matchLevel:matchLevel, type:'proposal'});
+							nProposals++;
+						}
 					}
 				}
 			}
-	
 			/* theme/meta rules */
 			if (this._editor.editorID == 'davinci.ve.ThemeEditor'){
 				v = this._editor._getCssRules(this._widget, null, this._editor._currentState);
@@ -436,40 +453,46 @@ define(["dojo/_base/declare",
 		},
 		
 		_buildCssRuleset : function(){
-			
-			//if(this._isTarget("color")) debugger;
-			
+			//if(this._isTarget("left")) debugger;
 			var allRules = this._getAllRules();
 			this._values = [];
+			//Disabled hasOverride logic - had bugs, causes problems with logic and not sure it helps user
 			this._hasOverride = false;
+			var propName = this.target[0];
 	
 			/* figure out the properties values */
+		
 			var shorthands = this._getShortHands();
 			for(var i = 0;i<allRules.length;i++){
 				var rule = allRules[i].rule;
 				if(rule){
 					for(var k=0;k<shorthands.length;k++){
-						if(allRules[i].type!="element.style" && allRules[i].rule.getProperty(shorthands[i])!=null){
-							allRules[i].shorthand = shorthands[i];
-							var prop = rule.getProperty(shorthands[i]);
+						if(allRules[i].type!="element.style" && allRules[i].rule.getProperty(shorthands[k])!=null){
+							allRules[i].shorthand = shorthands[k];
+							var prop = rule.getProperty(shorthands[k]);
 							allRules[i].value = prop && prop.value;
 							
 							this._hasOverride = true;
 							
-						}else if(allRules[i].type=="element.style" && dojo.indexOf(allRules[i].rule, shorthands[i])>-1){
-							allRules[i].shorthand = shorthands[i];
-							var index = dojo.indexOf(allRules[i].rule, shorthands[i]);
+						}else if(allRules[i].type=="element.style" && dojo.indexOf(allRules[i].rule, shorthands[k])>-1){
+							allRules[i].shorthand = shorthands[k];
+							var index = dojo.indexOf(allRules[i].rule, shorthands[k]);
 							allRules[i].value = rule[index];
 							this._hasOverride = true;
 						}
 					}
 					if(!allRules[i].shorthand && allRules[i].type!="element.style")
 						allRules[i].value = this._getRuleTargetValue(rule);
-					else if(!allRules[i].shorthand && allRules[i].type=="element.style")
-							allRules[i].value = rule[this.target[0]];
+					else if(!allRules[i].shorthand && allRules[i].type=="element.style"){
+						for(var kk=0;kk<rule.length;kk++){
+							if(rule[kk].hasOwnProperty(this.target[0])){
+								allRules[i].value = rule[kk][this.target[0]];
+							}
+						}
+					}
 				}else{
 					// rule is null when type=='proposal'
-					allRules[i].value=null;
+					//allRules[i].value=null;
 				}
 			}
 			/* sort rules basaed on priority */
@@ -515,9 +538,11 @@ define(["dojo/_base/declare",
 			var foundValue = false;
 			for(var i = 0;i<rules.length;i++){
 				rules[i].extraClass = [];
+				/*NOTE: Disabled hasOverride logic - had bugs, causes problems with logic and not sure it helps user
 				if(this._hasOverride)
 					rules[i].extraClass.push("shorthandOverrideCascadeNode");
-				else if(foundValue)
+				else */
+				if(foundValue)
 					rules[i].extraClass.push("cssShorthandOverRidden");
 				
 				if( rules[i].value || (rules[i].type!="element.style" && this._getRuleTargetValue(rules[i].rule))){
@@ -728,6 +753,7 @@ define(["dojo/_base/declare",
 			if(this._widget==null)
 				this._setFieldValue("",this._getBaseLocation());
 		
+			/*Disabled hasOverride logic - had bugs, causes problems with logic and not sure it helps user
 			if(this._hasOverride){
 				this._setFieldValue("(overrides)",null);
 				var widget = dijit.byId(this.targetField);
@@ -735,11 +761,14 @@ define(["dojo/_base/declare",
 					this._handles.push(dojo.connect(widget, "onClick", this, "_onChangeOverride"));
 				}else{
 					var node = dojo.byId(this.targetField);
-					this._handles.push(dojo.connect(node, "onclick", this, "_onChangeOverride"));
+					if (node){
+						this._handles.push(dojo.connect(node, "onclick", this, "_onChangeOverride"));
+					}
 				}
 				
 				return;
 			}
+			*/
 		//if(this._isTarget("width")) debugger;
 			var defaultSelection = this._getDefaultSelection();
 			this._targetValueIndex = 0;
@@ -774,7 +803,7 @@ define(["dojo/_base/declare",
 				}
 			
 			}
-			if(!foundValue && !defaultValue){
+			if(!foundValue && !defaultValue && (this._editor.editorID != 'davinci.ve.ThemeEditor')){
 				this.selectRuleBySelector("element.style");
 			}
 			
@@ -793,7 +822,7 @@ define(["dojo/_base/declare",
 			// For page editor, always use "Normal"
 			var state = "Normal";
 			if (this._editor.editorID == 'davinci.ve.ThemeEditor'){
-				state = States.getState();
+				state = state || States.getState();
 			}
 	
 			//var meta = theme.loader.getMetaData(widgetType);
@@ -822,7 +851,18 @@ define(["dojo/_base/declare",
 				var md = meta.states[state].selectors;
 				for(var name in md){
 					for(var c=0;c<md[name].length;c++){
-						if(this._isTarget(md[name][c])) return name;
+						if(this._isTarget(md[name][c])){
+							if (meta.rootSelectors) {
+								for (var i = 0; i < meta.rootSelectors.length; i++){
+									if (name == meta.rootSelectors[i]){
+										// if the selector is in the rootSelectors array then apply this
+										// prop to the node element by default
+										return "element.style";
+									}
+								}
+							}
+							return name;
+						}
 					}
 				}
 			}
@@ -974,10 +1014,13 @@ define(["dojo/_base/declare",
 		
 		_editorSelected : function(editorChange){
 			this._editor = editorChange.editor;
+			var context;
 			if(this._editor && this._editor.getContext){
-				
-				this.context = this._editor.getContext();
-				var v = this.context.getSelection();
+				context = this._editor.getContext();
+			}
+			if(context){	
+				this.context = context;
+				var v = context.getSelection();
 				if(v.length>0){
 					this._widgetSelectionChanged(v);
 				}else{

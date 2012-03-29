@@ -19,7 +19,7 @@ public class CreateResource extends Command {
         IVResource newFile = user.createResource(path);
         if (isFolder) {
             if (newFile.exists()) {
-                responseString = "Folder already exists";
+                responseString = "EXISTS";
             } else {
                 if (newFile.mkdir()) {
                     responseString = "OK";
@@ -28,7 +28,7 @@ public class CreateResource extends Command {
 
         } else {
             if (newFile.exists()) {
-                responseString = "File already exists";
+                responseString = "EXISTS";
             } else {
                 newFile.createNewInstance();
                 

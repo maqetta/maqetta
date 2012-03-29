@@ -12,6 +12,8 @@ define({ root:
 		"pageDesignerTitle":"Maqetta Designer",
 		"maqettaUser":"Maqetta User",
 		"localhostUser":"localhost user",
+		"sessionTimedOut":"Session timed out",
+		"sessionTimedOutMsg": "The session has timed out, please <a href='${hrefLoc}'>log in</a> again. (Auto-redirect within 10 seconds)",
 		
 		//preview.html
 		"devicePreviewError":"Maqetta device previewer error. Must supply URL parameter 'file='",
@@ -27,6 +29,7 @@ define({ root:
 		"careful":"Careful! You are about to leave daVinci.",
 		"errorLoadingPlugin":"error loading plugin ${0}, response=${1}",
 		"errorLoadingPlugins":"error loading plugins",
+		"multipleFilesUnsaved":"${0} (NOTE: This is one of ${1} files with unsaved changes.)",
 		
 		//davinci/Workbench.js
 		"perspectiveNotFound":"perspective not found: ${0}",

@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/ro/FindReplace", //begin v1.x content
+//begin v1.x content
 ({
 	"findLabel": "Găsire:",
 	"findTooltip": "Introduceţi textul de găsit",

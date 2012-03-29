@@ -2,13 +2,11 @@ package maqetta.core.server.user.manager;
 
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
 
-
-import maqetta.core.server.internal.Links;
-
-import org.davinci.server.user.IPersonManager;
 import org.davinci.server.user.IPerson;
+import org.davinci.server.user.IPersonManager;
 import org.davinci.server.user.UserException;
 import org.davinci.server.util.XMLFile;
 import org.maqetta.server.IDavinciServerConstants;
@@ -184,6 +182,18 @@ public class PersonManagerImpl implements IPersonManager {
         PersonImpl person = (PersonImpl) persons.get(userName);
         return person;
 
+    }
+    
+    public IPerson getPersonByEmail(String email) {
+    	PersonImpl match = null;
+        Iterator peopleIterator = persons.values().iterator();
+        while (peopleIterator.hasNext() && match == null) {
+        	PersonImpl person = (PersonImpl)peopleIterator.next();
+        	if (person.getEmail().equals(email)) {
+        		match = person;
+        	}
+        }
+        return match;
     }
 
     public IPerson[] getPersons(String userName, int resultNumber, int start) {

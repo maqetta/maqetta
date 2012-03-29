@@ -6,12 +6,14 @@ define([
 	"../drawing/tools/HighlightTool",
 	"../drawing/tools/SelectTool",
 	"davinci/Runtime",
-	"davinci/ve/Context"
-], function(declare, Surface, CreateTool, ExchangeTool, HighlightTool, SelectTool, Runtime, Context) {
+	"davinci/ve/Context",
+	'preview/silhouetteiframe'
+], function(declare, Surface, CreateTool, ExchangeTool, HighlightTool, SelectTool, Runtime, Context, Silhouette) {
 	
 return declare("davinci.review.editor.Context", [Context], {
 
 	setSource: function(){
+				
 		var containerNode = this.containerNode;
 		var versionInfo = this.resourceFile.parent;
 		if (!versionInfo.width)
@@ -22,27 +24,76 @@ return declare("davinci.review.editor.Context", [Context], {
 			this.frame = dojo.create("iframe", dojo.mixin(this.iframeattrs, {
 				style: {
 					border: "0",
-					width: versionInfo.width&&versionInfo.height?versionInfo.width+"px":"100%",
-					height: versionInfo.width&&versionInfo.height?versionInfo.height+"px":"100%"
+					width: versionInfo.width && versionInfo.height ? versionInfo.width + "px" : "100%",
+					height: versionInfo.width && versionInfo.height ? versionInfo.height + "px" : "100%"
 				},
 				src: this.baseURL,
-				onload: dojo.hitch(this,function(){
+				onload: dojo.hitch(this,function(event){
+					var userDoc = (event && event.target && event.target.contentDocument);
+					var dj = (userDoc && userDoc.defaultView && userDoc.defaultView.dojo);
+					var deviceName = this.frame.contentDocument.body.getAttribute('data-maqetta-device');
+					var svgfilename = (!deviceName || deviceName == 'none' || deviceName == 'desktop') 
+							? null : "app/preview/images/" + deviceName + ".svg";
+					if (svgfilename) {
+						var theme = Silhouette.getMobileTheme(svgfilename);
+						dj.ready(function(){
+							var dm = dj.getObject("dojox.mobile", true);
+							dm.loadDeviceTheme(theme);
+						});
+					}
+//					if (dj && dj.subscribe) {
+						dojo.subscribe("/davinci/scene/selectionChanged", this, function(SceneManager, sceneId) {
+							if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
+								return; 
+							}
+							if (this._commentView) {
+								this._commentView.setCurrentScene(SceneManager, sceneId);
+							}							
+						});
+//					}
+					//FIXME: Have to subscribe to the runtime States.js version of dojo pubsub
+					//instead of using the real runtime version of dojo pubsub because States.js is
+					//using its own mini copy of Dojo
+					var statesDojo = (userDoc && userDoc.defaultView && userDoc.defaultView.davinci && userDoc.defaultView.davinci.dojo);
+					if (statesDojo && statesDojo.subscribe) {
+						statesDojo.subscribe("/davinci/states/state/changed", function(args) { 
+							if (!args || !Runtime.currentEditor || Runtime.currentEditor.declaredClass != "davinci.review.editor.ReviewEditor") { 
+								return; 
+							}
+							var state = args.newState || "Normal";
+							var dv = (statesDojo.global && statesDojo.global.davinci);
+							if(dv && dv.states && dv.states.setState){
+								dv.states.setState(undefined, state);
+								// Re-publish at the application level
+								var newArgs = dojo.clone(args);
+								newArgs.editorClass = "davinci.review.editor.ReviewEditor";
+								dojo.publish("/davinci/states/state/changed", [newArgs]);
+							}
+						});
+					}
+					this.rootNode = this.rootWidget = this.frame.contentDocument.body;
 					this._initDrawing();
 					dojo.publish("/davinci/review/context/loaded", 
 							[
 							 this,
-							 this.fileName,
-							 davinci.Runtime.commenting_commentId
+							 this.fileName
 							 ]);
-					this.rootNode = this.rootWidget = this.frame.contentDocument.body;
-					var deviceName = this.rootNode.getAttribute('data-maqetta-device');
-					var svgfilename = (!deviceName || deviceName == 'none' || deviceName == 'desktop') 
-							? null : "app/preview/images/" + deviceName + ".svg";
 					this.containerEditor.silhouetteiframe.setSVGFilename(svgfilename);
 					this._statesLoaded = true;
 					dojo.publish('/davinci/ui/context/statesLoaded', [this]);
 				})
 			}), containerNode);
+			dojo.subscribe("/davinci/states/state/changed", function(args) { 
+				if (!args || !Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor" ||
+						!this.containerEditor || this.containerEditor != Runtime.currentEditor) { 
+					return; 
+				}
+				// Push the state change down into the review document
+				var userWin = (this.frame && this.frame.contentDocument && this.frame.contentDocument.defaultView);
+				if(userWin && userWin.davinci && userWin.davinci.states && userWin.davinci.states.setState){
+					userWin.davinci.states.setState(undefined, args.newState);
+				}
+			}.bind(this));
 		}
 	},
 
@@ -50,12 +101,16 @@ return declare("davinci.review.editor.Context", [Context], {
 		return []; // Overridden for NOOP behavior
 	},
 
+	select: function(){
+		// Overridden for NOOP behavior
+	},
+
 	_initDrawing: function() {
 		// summary:
 		//        Create the canvas for annotations, and wait for the shape definition
 		//        to add a shape. The shapes will be created one by one.
 		//        Shapes with commentId, state and colorAlias(reviewer)
-		var doc = this.containerNode.ownerDocument, 
+		var doc = this.frame.contentDocument, 
 			surface;
 		if (!doc.annotationSurface) {
 			surface = doc.annotationSurface = new Surface(doc.body, doc);
@@ -80,21 +135,23 @@ return declare("davinci.review.editor.Context", [Context], {
 			 dojo.subscribe(this.fileName+"/davinci/review/drawing/addShape", function(shapeDef, clear, editor) {
 				 surface.exchangeTool.importShapes(shapeDef, clear, dojo.hitch(Runtime, Runtime.getColor)); // FIXME: Unique surface is required
 			 }),
-			 dojo.subscribe(this.fileName+"/davinci/review/drawing/enableEditing", this, function(reviewer, commentId, pageState) {
+			 dojo.subscribe(this.fileName+"/davinci/review/drawing/enableEditing", this, function(reviewer, commentId, pageState, viewScene) {
 				 surface.activate();
 				 surface.cached = surface.exchangeTool.exportShapesByAttribute();
 				 surface.currentReviewer = reviewer;
 				 surface.commentId = commentId;
 				 surface.filterState = pageState;
-				 surface.filterComments = [commentId];                
+				 surface.filterScene = viewScene;
+				 surface.filterComments = [commentId];
 				 this._refreshSurface(surface);
 			 }),
-			 dojo.subscribe(this.fileName+"/davinci/review/drawing/getShapesInEditing", dojo.hitch(this,function(obj, state) {
+			 dojo.subscribe(this.fileName+"/davinci/review/drawing/getShapesInEditing", dojo.hitch(this,function(obj, state, scene) {
 				 if (obj._currentPage != this.fileName) {
 					 return;
 				 }
 				 surface.selectTool.deselectShape();
 				 surface.setValueByAttribute("commentId", surface.commentId, "state", state);
+				 surface.setValueByAttribute("commentId", surface.commentId, "scene", scene);
 				 obj.drawingJson = surface.exchangeTool.exportShapesByAttribute("commentId", [surface.commentId]);
 				 surface.deactivate();
 				 surface.commentId = "";
@@ -106,9 +163,10 @@ return declare("davinci.review.editor.Context", [Context], {
 				 this._refreshSurface(surface);
 				 surface.commentId = ""; // Clear the filter so that no shapes can be selected
 			 })),
-			 dojo.subscribe(this.fileName+"/davinci/review/drawing/filter", dojo.hitch(this,function(pageState, /*Array*/commentIds) {
-				 surface.filterState = pageState;
-				 surface.filterComments = commentIds;                
+			 dojo.subscribe(this.fileName+"/davinci/review/drawing/filter", dojo.hitch(this,function(/*Object*/ stateinfo, /*Array*/ commentIds) {
+				 surface.filterScene = stateinfo.viewScene;
+				 surface.filterState = stateinfo.pageState;
+				 surface.filterComments = commentIds;
 				 this._refreshSurface(surface);
 			 })),
 			 dojo.subscribe(this.fileName+"/davinci/review/drawing/setShownColorAliases", dojo.hitch(this,function(colorAliases) {
@@ -116,10 +174,22 @@ return declare("davinci.review.editor.Context", [Context], {
 				 this._refreshSurface(surface);
 			 })),
 			 dojo.subscribe("/davinci/review/view/openComment", dojo.hitch(this, function() {
-				 this.containerEditor.isDirty = true;
+	            if (Runtime.currentEditor === this.containerEditor) {
+	            	this.containerEditor.isDirty = true;
+	            	//Also, tell our container we're dirty
+	            	if (this.containerEditor.editorContainer) {
+	            		this.containerEditor.editorContainer.setDirty(true);
+	    			}
+	            }
 			 })),
 			 dojo.subscribe("/davinci/review/view/closeComment", dojo.hitch(this, function() {
-				 this.containerEditor.isDirty = false;
+				 if (Runtime.currentEditor === this.containerEditor) {
+					 this.containerEditor.isDirty = false;
+					 //Also, tell our container we're no longer dirty
+		            	if (this.containerEditor.editorContainer) {
+		            		this.containerEditor.editorContainer.setDirty(false);
+		    			}
+				 }
 			 })),
 			 dojo.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, function(obj){
 				 if (obj.oldEditor!=null && this === obj.oldEditor.getContext()) {
@@ -137,6 +207,21 @@ return declare("davinci.review.editor.Context", [Context], {
 	},
 
 	_refreshSurface: function(surface) {
+		
+		// Return true if shape and surface have different values for state or scene
+		function differentStateScene(Shape, Surface){
+			if(!Shape || !Surface){
+				return false;
+			}
+			if(Shape.state && Surface.filterState && Shape.state != Surface.filterState){
+				return true;	// there is a difference
+			}
+			if(Shape.scene && Surface.filterScene && Shape.scene != Surface.filterScene){
+				return true;	// there is a difference
+			}
+			return false;
+		}
+
 		var shapes = surface.shapes, result;
 
 		dojo.forEach(shapes, function(shape) {
@@ -146,7 +231,7 @@ return declare("davinci.review.editor.Context", [Context], {
 				// Old code - quick check - covers case where server uses same string for username and email
 				if (shape.colorAlias == colorAlias) {
 					return true;
-				} else if(davinci && davinci.review && dojo.isArray(Runtime.reviewers)) {
+				} else if (davinci && davinci.review && dojo.isArray(Runtime.reviewers)) {
 					// New code hack - see if colorAlias matches either username or email corresponding to shape.colorAlias
 					var reviewers = Runtime.reviewers;
 					var found = false;
@@ -173,14 +258,14 @@ return declare("davinci.review.editor.Context", [Context], {
 					} else {
 						result = "partial";
 					}
-					if (shape.state != surface.filterState) {
+					if (differentStateScene(shape, surface)) {
 						result = "hidden";
 					}
 				} else {
-					if (shape.state == surface.filterState) {
-						result = "visible";
-					} else {
+					if (differentStateScene(shape, surface)){
 						result = "hidden";
+					} else {
+						result = "visible";
 					}
 				}
 			}

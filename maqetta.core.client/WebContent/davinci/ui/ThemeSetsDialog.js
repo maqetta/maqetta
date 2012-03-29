@@ -6,7 +6,8 @@ define(["dijit/Dialog",
         "dojo/i18n!dijit/nls/common",
         "davinci/Theme",
         "dijit/form/ValidationTextBox",
-        "dijit/form/Button"
+        "dijit/form/Button",
+        "dijit/Toolbar"
         
 ],function(Dialog, Preferences,Workbench, Library, uiNLS, commonNLS, Theme){
 	
@@ -17,7 +18,7 @@ define(["dijit/Dialog",
 	        this._dialog = new Dialog({
 	            id: "manageThemeSets",
 	            title: uiNLS.themeSetsDialog,
-	            style:"width:510px; ",
+	            style:"width:580px; ",
 	            
 	        });
 	        dojo.connect(this._dialog, "onCancel", this, "onClose");
@@ -35,8 +36,8 @@ define(["dijit/Dialog",
 	        
 	        this._dialog.attr("content", this._getTemplate());
 	        this._connections.push(dojo.connect(dojo.byId('theme_select_themeset_theme_select'), "onchange", this, "onChange"));
-	        this._connections.push(dojo.connect(dojo.byId('theme_select_themeset_add'), "onclick", this, "addThemeSet"));
-	        this._connections.push(dojo.connect(dojo.byId('theme_select_themeset_delete'), "onclick", this, "deleteThemeSet"));
+	        this._connections.push(dojo.connect(dijit.byId('theme_select_themeset_add'), "onClick", this, "addThemeSet"));
+	        this._connections.push(dojo.connect(dijit.byId('theme_select_themeset_delete'), "onClick", this, "deleteThemeSet"));
 	        this._connections.push(dojo.connect(dijit.byId('theme_select_rename_button'), "onClick", this, "renameThemeSet"));
 	        this._connections.push(dojo.connect(dijit.byId('theme_select_desktop_theme_select'), "onChange", this, "onDesktopChange"));
 	        this._connections.push(dojo.connect(dijit.byId('theme_select_mobile_theme_select'), "onChange", this, "onMobileChange"));
@@ -168,7 +169,9 @@ define(["dijit/Dialog",
 	    deleteThemeSet: function(e) {
 	        var select = dojo.byId('theme_select_themeset_theme_select');
 	        var node = select[select.selectedIndex];
-	        
+	        if (!node) {
+	        	return;
+	        }
 	        for (var n = 0; n < this._dojoThemeSets.themeSets.length; n++){
 	            if (this._dojoThemeSets.themeSets[n].name == node.value){
 	                this._dojoThemeSets.themeSets.splice(n, 1);
@@ -414,24 +417,21 @@ define(["dijit/Dialog",
 	        
 	        var langObj = uiNLS;
 	        var loc = commonNLS;
-	        var size = 2;
-	        
-	        if (this._dojoThemeSets.themeSets.length > size) {
-	            size = this._dojoThemeSets.themeSets.length + 2; // add space at bottom
-	        } 
-	        if (size > 10) {
-	            size = 10;
-	        }
+	        var size = 10;
 
 	        var template = ''+
-	            '<table style="width:480px; " >' +
+	            '<table style="width:550px; " >' +
 	                '<tr>' +
-	                    '<td style="width:30%; vertical-align: top;">' +
+	                    '<td style="width:40%; vertical-align: top;">' +
 	                        '<table>' + 
 	                            '<tr>' +
 	                                '<td style=" vertical-align: top;" >' +
-	                                    '<label>'+langObj.themeSets+'</label><select  id="theme_select_themeset_theme_select" name="theme_select_themeset_theme_select" size="'+size+'" style="margin-bottom: 5px; width: 120px;" ></select>'+
-	                                    '<span id="theme_select_themeset_add" style="font-size:18px; margin:5px; border: 1px solid #ccc; border-radius: 2px; color: #ccc; padding: 0px 2px 0 2px;" >+</span><span id="theme_select_themeset_delete" style="font-size:18px; margin:5px; border: 1px solid #ccc; border-radius: 2px; color: #ccc; padding: 0px 2px 0 2px;">-</span>'+
+	                                    '<label>'+langObj.themeSets+'</label><select  id="theme_select_themeset_theme_select" name="theme_select_themeset_theme_select" size="'+size+'" style="margin-bottom: 5px; width: 190px;" ></select>'+
+	                                    '<div id="toolbar1" data-dojo-type="dijit.Toolbar" class="toolbaredContainer_toolbarDiv davinciToolbar">'+
+	                                    	'<div data-dojo-type="dijit.form.Button" id="theme_select_themeset_add" data-dojo-props="iconClass:\'viewActionIcon addThemeSetIcon\', showLabel:false ">Add theme set</div>' +
+	                                    	'<span data-dojo-type="dijit.ToolbarSeparator"></span>' +
+	                                    	'<div data-dojo-type="dijit.form.Button" id="theme_select_themeset_delete" data-dojo-props="iconClass:\'viewActionIcon removeThemeSetIcon\', showLabel:false ">Delete theme set</div>' +
+	                                     '</div>' +
 	                                    '</td>' +
 	                                '<td><div style="border-right: 1px solid #ccc; width: 1px; height: 250px; margin-left: 10px; margin-top: 10px;"></div></td>' +
 	                            '</tr>' +

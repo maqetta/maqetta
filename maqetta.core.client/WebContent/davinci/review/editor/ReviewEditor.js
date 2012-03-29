@@ -5,8 +5,9 @@ define([
     "dijit/layout/ContentPane",
     "davinci/review/editor/Context",
 	"davinci/Runtime",
-	"preview/silhouetteiframe"
-], function(declare, ModelEditor, BorderContainer, ContentPane, Context, Runtime, SilhouetteIframe) {
+	"preview/silhouetteiframe",
+	"dojo/i18n!./nls/review",
+], function(declare, ModelEditor, BorderContainer, ContentPane, Context, Runtime, SilhouetteIframe, reviewNls) {
 	
 return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 
@@ -43,14 +44,12 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 
 		});
 	},
-
+	save : function(){
+		// nooop.  editor not saved, comments are submited
+	},
 	supports : function(something) {
 		return something=="states";
 	},
-
-	focus : function() {
-	},
-
 
 	getContext : function() {
 		return this.context;
@@ -64,7 +63,7 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 		locationPath = locationPath.removeLastSegments().append("review"); // delete /maqetta
 		var baseUrl;
 
-		var designerName = Runtime.commenting_designerName || dojo.byId('davinci_user').innerHTML;
+		var designerName = this.resourceFile.parent.designerId;
 		// Compose a URL like http://localhost:8080/davinci/review/user/heguyi/ws/workspace/.review/snapshot/20100101/folder1/sample1.html
 		baseUrl = locationPath.append("user").append(designerName)
 		.append("ws").append("workspace").append(filename).toString();
@@ -84,6 +83,11 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 	},
 
 	destroy : function() {
+		 //Clear any pending comment from view cache
+		if (this.context && this.context._commentView) {
+			this.context._commentView._setPendingEditComment(this, null);
+		}
+		
 		this.inherited(arguments);
 	},
 
@@ -101,7 +105,25 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 		}
 		//FIXME: Shouldn't hard-code, instead should pull from plugin file
 		return newFileName+'.rev';
-	}
+	},
 
+	/* Gets called before browser page is unloaded to give 
+	 * editor a chance to warn the user they may lose data if
+	 * they continue. Should return a message to display to the user
+	 * if a warning is needed or null if there is no need to warn the
+	 * user of anything. In browsers such as FF 4, the message shown
+	 * will be the browser default rather than the returned value.
+	 * 
+	 * NOTE: With auto-save, _not_ typically needed by most editors.
+	 */
+	getOnUnloadWarningMessage: function() {
+		var message = null;
+		if (this.isDirty) {
+			message = dojo.string.substitute(reviewNls.unsavedComment, [
+				this.editorContainer._getTitle()
+			]);
+		}
+		return message;
+	}
 });
 });

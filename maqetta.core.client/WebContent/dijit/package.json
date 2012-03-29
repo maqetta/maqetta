@@ -1,6 +1,6 @@
 {
 	"name": "dijit",
-	"version":"1.7.2",
+	"version":"1.7.1",
 	"main":"main",
 	"dependencies": {
 		"dojo": "current"

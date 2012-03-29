@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/de/SpellCheck", //begin v1.x content
+//begin v1.x content
 ({
 	widgetLabel: "Batchrechtschreibprüfung",
 	unfound: "Nicht gefunden",

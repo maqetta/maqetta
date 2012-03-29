@@ -129,7 +129,7 @@ return declare("davinci.commands.CommandStack", null, {
 				}
 			}else{
 				while(n > 0){
-					this._undoStack.push(this._redoStack.push());
+					this._undoStack.push(this._redoStack.pop());
 					n--;
 				}
 			}

@@ -5,17 +5,11 @@ define([
 	"davinci/Runtime",
 ], function(declare, Action, PublishAction, Runtime) {
 
-if (typeof davinci.review.actions === "undefined") {
-	davinci.review.actions = {};
-}
-
-var RestartVersionAction = davinci.review.actions.RestartVersionAction = declare("davinci.review.actions.RestartVersionAction", Action, {
+var RestartVersionAction = declare("davinci.review.actions.RestartVersionAction", [Action], {
 
 	run: function(context) {
-		var selection = Runtime.getSelection();
-		if(!selection) { 
-			return;
-		}
+		var selection = context.getSelection ? context.getSelection() : null;
+		if (!selection || !selection.length) { return; }
 		var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
 		var action = new PublishAction(item,true);
 		action.run();
@@ -26,16 +20,16 @@ var RestartVersionAction = davinci.review.actions.RestartVersionAction = declare
 	},
 
 	isEnabled: function(context) {
-		if (Runtime.getRole()!="Designer") { 
-			return false;
-		}
-		var selection = Runtime.getSelection();
+		var selection = context.getSelection ? context.getSelection() : null;
 		if (!selection || selection.length == 0) {
 			return false;
 		}
 		var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
-		if (item.closed) {
-			return true;
+		if (item.designerId == davinci.Runtime.userName) { 
+			//Only enable if the current user is also the review's designer
+			if (item.closed) {
+				return true;
+			}
 		}
 		return false;
 	}

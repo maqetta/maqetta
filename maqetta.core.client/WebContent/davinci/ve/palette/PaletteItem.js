@@ -34,13 +34,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 
 		img.src = this.icon;
 		a.appendChild(dojo.doc.createTextNode(this.displayName));
-		dojo.create('span',
-		        {
-		            className: 'maqWidgetsCategory',
-		            innerText: this.category
-		        },
-		        a
-		);
+		dojo.create('span', { className: 'maqWidgetsCategory' }, a).textContent = this.category;
 
 		this.domNode.componentClassName = this.name; // ex. "davinci.ve.widget.Hello"
 		dojo.setSelectable(this.domNode, false);
@@ -65,10 +59,12 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		dijit.focus(this.domNode);
 	},
 
+/*FIXME: Doesn't seem to be ever used. Commenting out for now. Probably should just delete this.
 	deselect: function(){
 		this.flat(this.domNode);
 		this.palette.selectedItem = null;
 	},
+*/
 
 	itemMouseOverHandler: function(e){
 		var div = this.domNode;
@@ -98,7 +94,11 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		if(this.palette.selectedItem && this.palette.selectedItem != this){
 			this.flat(this.palette.selectedItem.domNode);
 			this.palette.selectedItem = null;
+			this.palette.currentItem = null;
 		}
+		// Sole apparent purpose for pushedItem is to remember the item which
+		// received the mousedown event so that CSS styling can be adjusted
+		// if mouseup on same item as received the mousedown
 		this.palette.pushedItem = this;
 			
 		DragManager.document = this.palette._context.getDocument();
@@ -129,21 +129,56 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			var div = this.domNode;
 			this.raised(div);
 			this.palette.selectedItem = null;
+			this.palette.currentItem = this;
 			this.palette._context.setActiveTool(null);
 			return;
 		}
 		this.palette.selectedItem = this;
 		this.palette.pushedItem = null;
+		
+		// currentItem holds which widget has been clicked on
+		// and which might be subsequently added to canvas by clicking on canvas
+		this.palette.currentItem = this;
 
 		Metadata.getHelper(this.type, 'tool').then(function(ToolCtor) {
 			var tool = new (ToolCtor || CreateTool)(dojo.clone(this.data));
 			this.palette._context.setActiveTool(tool);
 		}.bind(this));
 
-		this.connect(this.palette._context, "onMouseUp", function(e){
+		var clearItem = function(){
+			if(this.palette._contextMouseUpHandler){
+				this.disconnect(this.palette._contextMouseUpHandler);
+				this.palette._contextMouseUpHandler = null;
+			}
+			if(this.palette._docMouseUpHandler){
+				dojo.disconnect(this.palette._docMouseUpHandler);
+				this.palette._docMouseUpHandler = null;
+			}
 			this.palette.selectedItem = null;
+			this.palette.currentItem = null;
 			this.flat(this.domNode);
-		});
+			this.palette._context.dragMoveCleanup();
+		}.bind(this);
+		
+		// Register mouseup handler on user's doc
+		this.palette._contextMouseUpHandler = this.connect(this.palette._context, "onMouseUp", function(e){
+			clearItem();
+		}.bind(this));
+		
+		// Register mouseup handler on entire Maqetta application
+		// Put the doc-level mouseUp handler in setTimeout so that
+		// the current mouseup event (this routine) doesn't trigger
+		// the doc-level mouseup handler on the very same event.
+		setTimeout(function(){
+			// If currentItem has a value and user clicked anywhere in Maq app,
+			// then turn off everything registered to happen on currentItem.
+			this.palette._docMouseUpHandler = dojo.connect(document, "onmouseup", function(e){
+				if(this.palette.currentItem){
+					clearItem();
+					this.palette._context.setActiveTool(null);
+				}
+			}.bind(this));
+		}.bind(this), 0);
 	},
 	
 	/**
@@ -169,6 +204,9 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		Metadata.getHelper(this.type, 'helper');
 	},
 
+	// sunken => styling for selected items
+	// raised => styling for items under mouse but not selected
+	// flat => items which are both not selected and not under mouse
 	flat: function(div){
 		dojo.removeClass(div, "dojoyPaletteItemRaised");
 		dojo.removeClass(div, "dojoyPaletteItemSunken");

@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/ko/LocalImage", //begin v1.x content
+//begin v1.x content
 ({
 	insertImageTitle: "이미지 삽입",
 	url: "이미지",

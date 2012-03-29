@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/sl/AutoSave", //begin v1.x content
+//begin v1.x content
 ({
 	"saveLabel": "Shrani",
 	"saveSettingLabelOn": "Nastavi interval za samodejno shranjevanje ... ",

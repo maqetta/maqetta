@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/zh-tw/TableDialog", //begin v1.x content
+//begin v1.x content
 ({
 	insertTableTitle: "插入表格",
 	modifyTableTitle: "修改表格",

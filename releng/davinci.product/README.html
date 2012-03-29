@@ -11,7 +11,7 @@
 
 <h1>Installing and Launching Maqetta on Localhost</h1>
 
-<h2 id="supported_browsers">Supported browsers: Google Chrome (current release), Mozilla Firefox 4 and Mac Safari 5</h2>
+<h2 id="supported_browsers">Supported browsers: Google Chrome (current release), Mozilla Firefox 4 and Mac Safari 5.1</h2>
 <p>
 The current builds of Maqetta only run on Google Chrome, Firefox 4 and Safari 5.1 on the Mac. 
 </p>
@@ -19,14 +19,10 @@ The current builds of Maqetta only run on Google Chrome, Firefox 4 and Safari 5.
 <h2 id="prep_steps">Preparatory steps: restart browser and clear caches</h2>
 
 <p>Before opening up a new Maqetta Preview release in your browser, we
-recommend that you close and restart your browser and clear its caches.
-These steps are likely not necessary in most cases, but recommended nevertheless during 
-the "Preview" phase of the open source project because
-we aren't sure yet that we have dealt with Maqetta's caching logic completely.
-<em>These procedures are likely more important for people 
-who have used previous versions of Maqetta.</em></p>
-
-<p>There is a section below that provides <a href="#clearing_caches">Detailed instructions for clearing caches in various browsers</a>.</p>
+recommend that you close and restart your browser and clear its caches and any cookies associated with the Maqetta server.
+These steps are likely unnecessary in most cases, but recommended nevertheless during 
+the "Preview" phase of the open source project. 
+There is a section below that provides detailed instructions for clearing caches and cookies in various browsers.</p>
 
 <h2 id="run_off_cloud">Long-term vision: everyone runs a cloud version of Maqetta (i.e., run off server)</h2>
 <p> This README describes how to launch the locally installed version of Maqetta
@@ -205,15 +201,6 @@ and change 50000 to something else (any number in the 50000's is OK).
 </ul>
 
 <p> </p>
-
-<h2 id="offline_prompt">HTML5 offline prompt in Firefox - say yes to the "Allow" prompt</h2>
-<p>
-Maqetta now takes advantage of a recent HTML5 feature shipping in modern browsers - the HTML appcache.
-This allows the browser to save a cached version of large parts of Maqetta on your local computer,
-thereby significantly improving performance, particularly if the network is slow.
-The first time you launch Maqetta, you may see a prompt asking you to allow Maqetta
-to store offline data. Click "Allow" so that Maqetta performance will be optimized.
-</p>
 
 </div>  <!-- pagebody -->
 

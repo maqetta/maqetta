@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/kk/PasteFromWord", //begin v1.x content
+//begin v1.x content
 ({
 	"pasteFromWord": "Word бағдарламасынан қою",
 	"paste": "Қою",

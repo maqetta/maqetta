@@ -1,7 +1,7 @@
 //>>built
-define("dijit/form/nls/Textarea", { root:
+define({ root:
 //begin v1.x content
-// used by both the editor and textarea widgets to provide information to screen reader users
+/* used by both the editor and textarea widgets to provide information to screen reader users */
 ({
 	iframeEditTitle: 'edit area',  // primary title for editable IFRAME, for screen readers when focus is in the editing area
 	iframeFocusTitle: 'edit area frame'  // secondary title for editable IFRAME when focus is on outer container
@@ -29,7 +29,6 @@ define("dijit/form/nls/Textarea", { root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -39,6 +38,5 @@ define("dijit/form/nls/Textarea", { root:
 "da": true,
 "cs": true,
 "ca": true,
-"az": true,
 "ar": true
 });

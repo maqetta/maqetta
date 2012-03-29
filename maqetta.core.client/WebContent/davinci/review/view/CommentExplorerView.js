@@ -4,8 +4,7 @@ define([
 	"davinci/review/model/ReviewTreeModel",
 	"davinci/Workbench",
 	"davinci/workbench/ViewPart",
-	"davinci/ui/widgets/ToggleTree",
-	"davinci/review/model/Resource",
+	"dijit/Tree",
 	"dojo/date/locale",
 	"davinci/review/actions/CloseVersionAction",
 	"davinci/review/actions/EditVersionAction",
@@ -15,8 +14,9 @@ define([
 	"dijit/form/Button",
 	"dijit/form/TextBox",
     "dojo/i18n!./nls/view",
-    "dojo/i18n!../widgets/nls/widgets"
-], function(declare, Runtime, ReviewTreeModel, Workbench, ViewPart, ToggleTree, Resource, locale, CloseVersionAction,
+    "dojo/i18n!../widgets/nls/widgets",
+    "davinci/ui/widgets/TransformTreeMixin"
+], function(declare, Runtime, ReviewTreeModel, Workbench, ViewPart, Tree, locale, CloseVersionAction,
 		EditVersionAction, OpenVersionAction, Toolbar, ToolbarSeparator, Button, TextBox, viewNls, widgetsNls) {
 
 return declare("davinci.review.view.CommentExplorerView", ViewPart, {
@@ -26,15 +26,25 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 
 		var model= new ReviewTreeModel();
 		this.model = model;
-		//FIXME: try using dijit.Tree and davinci.ui.widgets.TransformTreeMixin instead of ToggleTree
-		this.tree = new ToggleTree({
+		this.tree = new Tree({
 			id: "reviewCommentExplorerViewTree",
+			persist: false,
 			showRoot: false,
 			model: model,
 			labelAttr: "name", 
 			childrenAttrs: "children",
 			getIconClass: dojo.hitch(this, this._getIconClass),
-			filters: [Resource.dateSortFilter, this.commentingFilter],
+			getLabelClass: dojo.hitch(this, this._getLabelClass),
+			transforms: [
+			    function(items) {
+			    	return items.sort(function (file1,file2) {
+			    		return file1.timeStamp > file2.timeStamp ? -1 : file1.timeStamp < file2.timeStamp ? 1 : 0;
+			    	});
+			    },
+			    function(items) {
+			    	return items.filter(this.commentingFilter.filterItem, this);
+			    }.bind(this)
+			],
 			isMultiSelect: true
 		});
 
@@ -45,33 +55,45 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 		dojo.connect(this.tree, 'onClick', dojo.hitch(this, this._click));
 		dojo.connect(this.tree,'_onNodeMouseEnter', dojo.hitch(this, this._over));
 		dojo.connect(this.tree,'_onNodeMouseLeave', dojo.hitch(this, this._leave));
-		this.tree.notifySelect = dojo.hitch(this, function (item) {
-			var items = dojo.map(this.tree.getSelectedItems(), function(item) { return {resource:item};});
-			this.publish("/davinci/ui/selectionChanged", [items, this]);
-		});
+		dojo.connect(this.tree,'_setSelectedNodesAttr', function () {
+			this._publishSelectionChanges();
+		}.bind(this));
 
-		this.subscribe("/davinci/ui/selectionChanged", "_updateActionBar");
-		this.subscribe("/davinci/review/resourceChanged", function(arg1, arg2, arg3) {
-			if (arg3 && arg3.timeStamp) {
-				var node = davinci.review.model.resource.root.findVersion(arg3.timeStamp);
+		this.subscribe("/davinci/review/selectionChanged", "_updateActionBar");
+		this.subscribe("/davinci/review/resourceChanged", function(result, type, changedResource) {
+			if (changedResource && changedResource.timeStamp) {
+				var node = davinci.review.model.resource.root.findVersion(changedResource.timeStamp);
 				if (node) { 
 					this.tree.set("selectedItem", node);
 				} else {
-					this.publish("/davinci/ui/selectionChanged", [{}, this]);
+					this.tree.set("selectedItems", []);
 				}
+				this._publishSelectionChanges();
+				
+				// NOTE: This feels like a hack, but if all children of the root are deleted (making the
+				// root empty), then the tree will collapse the root node. And, then when we add a node back in,
+				// that node is invisible because the tree thinks the root node is collapsed.  So, 
+				// we'll circumvent that by telling it the root node to expand. If already expanded, this 
+				// has no effect.
+				this.tree.rootNode.expand();
 			}
 		});
 
 		var popup = Workbench.createPopup({ 
 			partID: 'davinci.review.reviewNavigator',
+			context: this,
 			domNode: this.tree.domNode, 
-			openCallback:this.tree.getMenuOpenCallback()
+			openCallback: function (event) {
+				//Select the item in the tree user right-clicked on
+				var w = dijit.getEnclosingWidget(event.target);
+				if(!w || !w.item){
+					return;
+				}
+				this.tree.set("path", this._buildTreePath(w.item));
+		 	}.bind(this)
 		});
 
 		this.infoCardContent = dojo.cache("davinci" ,"review/widgets/templates/InfoCard.html");
-		if (Runtime.getRole() != "Designer") { 
-			dojo.style(this.toolbarDiv, "display", "none");
-		}
 
 		// Customize dijit._masterTT so that it will not be closed when the cursor is hovering on it
 		if (!dijit._masterTT) { 
@@ -86,6 +108,43 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 		this.connect(dijit._masterTT.domNode, "mouseleave", function() {
 			this._lastAnchorNode && this._leave();
 		});
+		
+		//Keep track of editor selection so that we can expand tree appropriately
+		dojo.subscribe("/davinci/ui/editorSelected", function(obj){
+			var editor = obj.editor;
+			if (editor && editor.editorID === "davinci.review.CommentReviewEditor") {
+				var fileNodeItem = editor.resourceFile;
+				var versionNodeItem = fileNodeItem.parent;
+				
+				//We want to collapse everything but the version folder of the review held in the editor
+				dojo.forEach(this.model.root.children, function(nodeItem) {
+					if (nodeItem != versionNodeItem) {
+						var treeNodes = this.tree.getNodesByItem(nodeItem);
+						
+						if (treeNodes.length > 0) {
+							var treeNode = treeNodes[0];
+							if (treeNode.isExpanded) {
+								// NOTE: Hate to use private function of dijit.Tree, but if I
+								// use treeNode.collapse, the node can no longer be re-expanded
+								// by the user
+								this.tree._collapseNode(treeNode);
+							}
+						}
+					}
+				}.bind(this));
+				
+				//Set the path (which expands tree as necessary)
+				this.tree.set("path", this._buildTreePath(fileNodeItem));
+			}
+		 }.bind(this));
+	},
+	
+	_buildTreePath: function(item) {
+		var path = [];
+		for(var loopItem=item; loopItem; loopItem = loopItem.parent) {
+			path.unshift(loopItem);
+		}
+		return path;
 	},
 
 	_updateActionBar: function(item, context) {
@@ -95,11 +154,12 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 			return;
 		}
 		var selectedVersion = item[0].resource.elementType == "ReviewFile" ? item[0].resource.parent : item[0].resource;
+		var isDesigner = selectedVersion.designerId == Runtime.userName;
 		var isVersion = selectedVersion.elementType == "ReviewVersion";
 		var isDraft = selectedVersion.isDraft;
-		this.closeBtn.set("disabled", !isVersion || selectedVersion.closed || isDraft);
-		this.openBtn.set("disabled", !isVersion || !selectedVersion.closedManual || isDraft);
-		this.editBtn.set("disabled", !isVersion);
+		this.closeBtn.set("disabled", !isDesigner || !isVersion || selectedVersion.closed || isDraft); 
+		this.openBtn.set("disabled", !isDesigner || !isVersion || !selectedVersion.closedManual || isDraft);
+		this.editBtn.set("disabled", !isDesigner || !isVersion);
 	},
 
 	getTopAdditions: function() {
@@ -146,6 +206,7 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 
 		dojo.place(dojo.create("br"), toolbar.domNode);
 		toolbar.addChild(input);
+		dojo.addClass(toolbar.domNode, "davinciCommentExplorer");
 		return toolbar.domNode;
 	},
 
@@ -172,19 +233,17 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 		}));
 	},
 
-	commentingFilter : {
-		filterString:"",
-		filterItem : function(item) {
-			if (!this.filterString) { 
-				return false;
+	commentingFilter: {
+		filterString: "",
+		filterItem: function(item) {
+			var filterString = this.commentingFilter.filterString;
+			if (!filterString) { 
+				return true;
 			} else {
 				if (item.elementType == "ReviewFile") {
-					if (item.name.toLowerCase().indexOf(this.filterString.toLowerCase()) >= 0) {
-						return false;
-					} else {} 
-					return true;
+					return item.name.toLowerCase().indexOf(filterString.toLowerCase()) >= 0;
 				}
-				return false;
+				return true;
 			}
 		}
 	},
@@ -194,34 +253,17 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 	},
 
 	_dblClick: function(node) {
-		if (Runtime.getMode() == "reviewPage") {
-			if (node.isDraft || node.parent.isDraft) {
-				if (Runtime.getRole() == "Designer") {
-					this._openPublishWizard(node.isDraft ? node : node.parent);
-				}
-				return;
+		if (node.isDraft || node.parent.isDraft) {
+			if (node.designerId == Runtime.userName || node.parent.designerId == Runtime.userName) {
+				this._openPublishWizard(node.isDraft ? node : node.parent);
 			}
-			if (node.elementType == "ReviewFile") {
-				Workbench.openEditor({
-					fileName: node,
-					content: node.getText()
-				});
-			}
-		} else if (Runtime.getMode() == "designPage") {
-			if (node.isDraft || node.parent.isDraft) {
-				if (Runtime.getRole()=="Designer") {
-					this._openPublishWizard(node.isDraft?node:node.parent);
-				}
-				return;
-			}
-			if (node.elementType == "ReviewFile") {
-//				window.open(this._location()+"review/"+Runtime.userName+"/"+node.parent.timeStamp+"/"
-//						+node.name+"/default");
-				Workbench.openEditor({
-					fileName: node,
-					content: node.getText()
-				});
-			}
+			return;
+		}
+		if (node.elementType == "ReviewFile") {
+			Workbench.openEditor({
+				fileName: node,
+				content: node.getText()
+			});
 		}
 	},
 
@@ -234,7 +276,17 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 	},
 
 	_click: function(node) {
-		this.select = node;
+		this._publishSelectionChanges();
+	},
+	
+	_publishSelectionChanges: function() {
+		var items = this.getSelection();
+		this.publish("/davinci/review/selectionChanged", [items, this]);
+	},
+	
+	getSelection: function() {
+		var items = dojo.map(this.tree.get('selectedItems'), function(item) { return {resource:item};});
+		return items;
 	},
 
 	_over: function(node) {
@@ -253,15 +305,13 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 			template.artifacts_in_rev = widgetsNls.artifactsInRev;
 			template.reviewers = widgetsNls.reviewers;
 
-			template.detail_role = Runtime.getRole();
-			template.detail_dueDate = item.dueDate == "infinite" ? "Infinite" : locale.format(item.dueDate, {
+			template.detail_role = (item.designerId == davinci.Runtime.userName) ? viewNls.designer : viewNls.reviewer;
+			template.detail_dueDate = item.dueDate == "infinite" ? viewNls.infinite : locale.format(item.dueDate, {
 				selector:'date',
-				formatLength:'long',
-				datePattern:'MMM dd, yyyy', //FIXME: use of pattern prevents globalization
-				timePattern:'HH:mm:ss' //FIXME: not used if selector is 'date'
+				formatLength:'long'
 			});
-			template.detail_creator = Runtime.getDesigner()
-			+ "&nbsp;&lt" + Runtime.getDesignerEmail() + "&gt";
+			template.detail_creator = item.designerId
+				+ (item.designerEmail ? "&nbsp;&lt" + item.designerEmail + "&gt": "");
 			template.detail_files = "";
 			item.getChildren(function(children) { c = children; }, true);
 			dojo.forEach(c, function(i) {
@@ -272,7 +322,9 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 			});
 			template.detail_reviewers = "";
 			dojo.forEach(item.reviewers, function(i) {
-				template.detail_reviewers += "<div>" + i.name + "</div>";
+				if (i.email != item.designerEmail) {
+					template.detail_reviewers += "<div>" + i.email + "</div>";
+				}
 			});
 			item.closed ? template.detail_dueDate_class = "closed" : template.detail_dueDate_class = "notClosed";
 
@@ -337,6 +389,22 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 			return icon ||	"dijitLeaf";
 		}
 		return "dijitLeaf";
+	},
+	
+	_getLabelClass: function(item, opened) {
+		// summary:
+		//		Return the label class of the tree nodes
+		
+		var labelClass = "dijitTreeLabel";
+		if (item.elementType == "ReviewVersion") {
+			if (item.designerId == Runtime.userName) {
+				labelClass = "reviewOwnedByUserLabel";
+			} else {
+				labelClass = "reviewOwnedByOtherLabel";
+			}
+		}
+		
+		return labelClass;
 	}
 
 });

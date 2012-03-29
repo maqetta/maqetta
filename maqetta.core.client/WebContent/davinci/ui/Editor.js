@@ -56,9 +56,11 @@ define([
 				// keep re-executing the following closure until the doLater condition is satisfied
 				this.waiter = true;
 				(function(that){
-					if (doLater(Date.now() - that.lastChangeStamp > 200, that)) { return; }
+					if (doLater(Date.now() - that.lastChangeStamp > 1000, that)) { return; }
 					delete that.waiter;
+					that.isTyping = true; // defer saving the buffer
 					that.handleChange(that._textModel.getText());
+					delete that.isTyping;
 				})(this);
 			} catch (e){console.error(e);}
 		}
@@ -210,6 +212,19 @@ return declare("davinci.ui.Editor", null, {
 
 	getText: function() {
 		return this._textModel.getText(0);
+	},
+	
+	/* Gets called before browser page is unloaded to give 
+	 * editor a chance to warn the user they may lose data if
+	 * they continue. Should return a message to display to the user
+	 * if a warning is needed or null if there is no need to warn the
+	 * user of anything. In browsers such as FF 4, the message shown
+	 * will be the browser default rather than the returned value.
+	 * 
+	 * NOTE: With auto-save, _not_ typically needed by most editors.
+	 */
+	getOnUnloadWarningMessage: function() {
+		return null;
 	}
 });
 });

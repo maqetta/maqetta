@@ -27,15 +27,13 @@ define(["dojo/_base/declare",
 		fileDialogFileName : null,
 		fileDialogParentFolder: null,
 		
-		postMixInProperties : function() {
-			var langObj = uiNLS;
-			var dijitLangObj = commonNLS;
-			dojo.mixin(this, langObj);
-			dojo.mixin(this, dijitLangObj);
-			this.cancel =true;
+		postMixInProperties: function() {
+			dojo.mixin(this, uiNLS);
+			dojo.mixin(this, commonNLS);
+			this.cancel = true;
 			this.inherited(arguments);
 		},
-		postCreate : function(){
+		postCreate: function(){
 			this.inherited(arguments);
 		
 			this.fileTree.watch("selectedItem", dojo.hitch(this, this._updateFields));
@@ -49,24 +47,24 @@ define(["dojo/_base/declare",
 			this.fileTree.startup();
 		},
 		
-		_setValueAttr : function(value){
+		_setValueAttr: function(value){
 			/* full resource expected */
-			if(value==this._value) return;
+			if(value==this._value) {
+				return;
+			}
 			this._value = value;
 			this.fileTree.set("selectedItems", [value]);
 		},
-		
-	
-		
-		_getForcedRootAttr : function(){
+
+		_getForcedRootAttr: function(){
 			return this._forcedRoot || Resource.findResource(Workbench.getProject());
 		},
 		
-		_setForcedRootAttr : function(value){
+		_setForcedRootAttr: function(value){
 			this._forcedRoot = value;
 		},
 		
-		_updateFields : function(){
+		_updateFields: function(){
 			var resources = this.fileTree.get('selectedItems');
 			var resource = (resources!=null && resources.length > 0)? resources[0] : null;
 			dojo.attr(this._okButton, "disabled", true);
@@ -74,17 +72,15 @@ define(["dojo/_base/declare",
 				dojo.attr(this._okButton, "disabled", false);
 			}	
 		},
-		
-	
-		_okButton : function(){
+
+		_okButton: function(){
 			var resources = this.fileTree.get('selectedItems');
 			this.value = resources[0];
 			this.cancel = false;
 			this.onClose();
-			
 		},
 		
-		_getValueAttr : function(){
+		_getValueAttr: function(){
 			return this.value;
 		},
 		
@@ -93,6 +89,6 @@ define(["dojo/_base/declare",
 			this.onClose();
 		},
 		
-		onClose : function(){}
+		onClose: function(){}
 	});
 });

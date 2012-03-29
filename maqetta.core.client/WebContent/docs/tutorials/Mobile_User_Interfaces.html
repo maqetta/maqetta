@@ -75,9 +75,9 @@
 	<li>View widgets - container widgets that represent switchable alternate views. Typically, one view appears at a time, and
 		when the running application switches to a different view, the old view slides out and the new view slides in:
 		<ul>
-			<li><strong>View</strong> - Usually, a View is used as a container for a (non-scrollable) full page of mobile content.</li>
 			<li><strong>ScrollableView</strong> - A container for a full page of mobile content, but which is scrollable (e.g., via a touch vertical-flick gesture).</li>
 			<li><strong>SwapView</strong> - A container for a full page of mobile content, but which is swappable with alternate views (e.g., via a touch horizontal-flick gesture).</li>
+			<li><strong>View</strong> - Usually, a View is used as a container for a (non-scrollable) full page of mobile content.</li>
 		</ul>
 	</li>
 	<li>Heading widgets - These are widgets typically used at the top of a mobile screen:
@@ -180,12 +180,10 @@
 	'<code>id</code>' attribute and then hit Return to complete the operation.
 	The top of the Properties palette should now show <code>for: View #root_view</code>:
 	<p><a href="img/Mobile_ID_root_view.png" target="_blank"><img alt="image" src="img/Mobile_ID_root_view.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>	
-	.
 	<div class="note">Make sure that you entered the exact string "root_view".
 		The tutorial won't work if the ID is not entered correctly.</div>
 	</li>
-<li>Look at the Outline palette. Right now the "root_view" View is visible because its
-	eyeball icon is open:
+<li>Look at the Scenes palette. Right now the "root_view" View is selected:
 	<p><a href="img/Mobile_root_view_visible.png" target="_blank"><img alt="image" src="img/Mobile_root_view_visible.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>		
 	</li>
 <li>Drag/drop a Heading widget into the middle of the View.
@@ -196,7 +194,7 @@
 	</li>
 <br/>
 <li>Drag/drop a second View widget onto the page canvas.
-	Look at the Outline palette and take note of the following:
+	Look at the Scenes palette and take note of the following:
 	<br /><br />
 	<ul>
 		<li>The second View widget has been added as a sibling to the first
@@ -204,22 +202,22 @@
 			widget a sibling to an existing View widget when the new View
 			is dropped onto the existing View.
 			<div class="note">If you actually want the new View widget to be
-			a child widget of the existing View widget, then in the Outline palette
-			you can drag/drop the new View widget onto the existing View widget.
+			a child widget of the existing View widget, then you can rearrange the
+			widget hierarchy in the Outline palette by dragging/dropping 
+			the new View widget onto the existing View widget.
 			</div>
 		</li>
 		<li>The second View becomes selected and visible (just like what happens whenever a new
 			widget is added), but additionally notice that the first View widget 
-			is now <em>invisible</em> (i.e., its eyeball icon is off).
+			is now <em>invisible</em> .
 			With the Dojo Mobile toolkit, sibling View widgets work such that one and only one
 			View widget is visible at any given time. Maqetta mimics this runtime behavior
 			at author time by managing the visibility of View widgets such that
 			whenever one View becomes visible, all sibling View widgets become invisible.</li>
 	</ul>
 <br/>
-<li>In the Outline palette, alternatively click on the 
-			first and second View widget, and then alternatively click on the eyeball
-			icons for the two View widgets. You will see that when one View widget
+<li>In the Scenes palette, alternatively click on the 
+			first and second View widget. You will see that when one View widget
 			is selected or made visible, the other View widget becomes invisible.
 			For the following steps, make sure the second View is visible.
 	</li>
@@ -275,9 +273,9 @@ News</pre>
 </p>
 
 <ul>
-<li>Use the Outline palette to select the second View (the "Alerts" View).
-	You should see the heading with the word "Alerts" on the page canvas.
+<li>Use the Scenes palette to select the second View (the "Alerts" View).
 	<p><a href="img/Mobile_second_view_visible.png" target="_blank"><img alt="image" src="img/Mobile_second_view_visible.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>
+	You should see the heading with the word "Alerts" on the page canvas.
 	</li>
 <li>In the Widgets palette, go to the HTML section. Drag/drop a <code>&lt;div&gt;</code> widget 
 	into the middle of the View. You will see a gray selection outline surrounding the empty DIV.
@@ -313,7 +311,7 @@ News</pre>
 	After hitting Return, a button labeled "Home" should appear on the left side of the Heading:
 	<p><a href="img/Mobile_MoveTo_Root_Arrow.png" target="_blank"><img alt="image" src="img/Mobile_MoveTo_Root_Arrow.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>
 	</li>
-<li>Use the Outline palette to make the first View visible. Click on the View with 'id' of <code>root_view</code> so that you will now
+<li>Use the Scenes palette to make the first View visible. Click on the View with 'id' of <code>root_view</code> so that you will now
 	see the "My Mobile App" heading on the top of the page canvas.
 	<p><a href="img/Mobile_first_view_visible.png" target="_blank"><img alt="image" src="img/Mobile_first_view_visible.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>
 	</li>
@@ -355,7 +353,6 @@ News</pre>
 
 <p>Now let's preview your mobile application and test its interactivity,
 	including slide-in animations.
-	.
 </p>
 
 <ul>

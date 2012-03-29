@@ -26,7 +26,7 @@
 		<li>Issue a "New HTML File" command.</li>
 		<li>Drag a Button, TextBox and Calendar onto the canvas.</li>
 		<li>Make the Properties palette visible.</li>
-		<li>Select the TextBox. Go to Properties palette, Widget-Specific section, and set Value to "abc".</li>
+		<li>Select the TextBox. Double-click and set value to "abc".</li>
 		<li>Select the Button. There should be no resize handles.
 		      Try to change the Width property on the Properties palette.
               You should get a prompt telling you that you cannot change a property that is defined on a read-only CSS theme.</li>
@@ -108,7 +108,7 @@
 				Login if necessary. 
 				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
 		<li>Issue a "New HTML File" command.</li>
-		<li>Drag a DIV onto canvas. Under widget-specific, set text to "abc". Set width to "3em".</li>
+		<li>Drag a DIV onto canvas. Double-click the DIV and set its text content to "abc". Set width to "3em".</li>
 		<li>Set box-shadow to "10px 10px 5px #888". A drop shadow should appear under the DIV.</li>
 		<li>Save, close, reopen.</li>
 	</ol>
@@ -126,10 +126,11 @@
 		<li>Issue a "New HTML File" command.</li>
 		<li>Make the Properties palette visible.</li>
 		<li>Click on the flow layout icon on the editor toolbar and switch to absolute layout.</li>
-		<li>Drag a Button and TextBox onto canvas such that they overlap.</li>
-		<li>Select Button. Set z-index to 1. The Button should now be above the TextBox.</li>
-		<li>Select TextBox. Set z-index to 2. The TextBox should now be above the Button.</li>
-		<li>Select Button. Click on + icon twice for z-index to change the z-index to 3. The Button should now be above the TextBox.</li>
+		<li>Drag a Button and TextBox onto canvas such that they overlap. (Notice that
+			each is given a default z-index of 9999.)</li>
+		<li>Select Button. Enter a value of 10001 as the value for z-index. The Button should now be above the TextBox.</li>
+		<li>Select TextBox. Click on "+" icon for z-index twice to set z-index to 10001. The TextBox should now be above the Button.</li>
+		<li>Select Button. Click on + icon once for z-index to change the z-index to 10002. The Button should now be above the TextBox.</li>
 		<li>Save, close, reopen.</li>
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>

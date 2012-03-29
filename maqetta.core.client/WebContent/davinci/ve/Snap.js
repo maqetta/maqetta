@@ -39,8 +39,10 @@ define([
 		 * @param {object} widget  Current dvWidget object
 		 * @param {object} computed_style  CSSStyleDeclaration holding computed style on widget's domNode
 		 * 		(passed in by higher-level routine so that computed style isn't called multiple times on same widget)
+		 * @param {boolean} doSnapLinesX  whether to show dynamic snap lines (x-axis)
+		 * @param {boolean} doSnapLinesY  whether to show dynamic snap lines (y-axis)
 		 */
-		findSnapOpportunities: function(context, widget, computed_style){
+		findSnapOpportunities: function(context, widget, computed_style, doSnapLinesX, doSnapLinesY){
 			var distCheck = 75;	// CLoseness distance in pixels - only snap if snapBox is sufficiently close to widget
 			var snapBox = context._lastSnapBox;
 			
@@ -96,48 +98,52 @@ define([
 			var rect = widgetSnapInfo.snapRect;
 			var deltaLeft, deltaCenter, deltaRight, deltaTop, deltaMiddle, deltaBottom, delta;
 			if(rect){
-				var distCheckY = (context._snapXLast && context._snapXLast.widget === widget) ? Infinity : distCheck;
-				var distTT = Math.abs(rect.t-snapBox.t);
-				var distTB = Math.abs(rect.t-snapBox.b);
-				var distBT = Math.abs(rect.b-snapBox.t);
-				var distBB = Math.abs(rect.b-snapBox.b);
-				// Only snap if snapBox is sufficiently close to widget
-				if(distTT <= distCheckY || distTB <= distCheckY ||distBT <= distCheckY || distBB <= distCheckY){
-					deltaLeft = Math.abs(rect.l-snapBox.l);
-					deltaCenter = Math.abs(rect.c-snapBox.c);
-					deltaRight = Math.abs(rect.r-snapBox.r);
-					snapX("left", "left", rect.l,deltaLeft);
-					snapX("center", "center", rect.c, deltaCenter);
-					snapX("right", "right", rect.r, deltaRight);
-					
-					snapX("left", "center", rect.c, Math.abs(rect.c-snapBox.l));
-					snapX("left", "right", rect.r, Math.abs(rect.r-snapBox.l));
-					snapX("right", "left", rect.l, Math.abs(rect.l-snapBox.r));
-					snapX("right", "center", rect.c, Math.abs(rect.c-snapBox.r));
-					snapX("center", "left", rect.l, Math.abs(rect.l-snapBox.c));
-					snapX("center", "right", rect.r, Math.abs(rect.r-snapBox.c));
+				if(doSnapLinesX){
+					var distCheckY = (context._snapXLast && context._snapXLast.widget === widget) ? Infinity : distCheck;
+					var distTT = Math.abs(rect.t-snapBox.t);
+					var distTB = Math.abs(rect.t-snapBox.b);
+					var distBT = Math.abs(rect.b-snapBox.t);
+					var distBB = Math.abs(rect.b-snapBox.b);
+					// Only snap if snapBox is sufficiently close to widget
+					if(distTT <= distCheckY || distTB <= distCheckY ||distBT <= distCheckY || distBB <= distCheckY){
+						deltaLeft = Math.abs(rect.l-snapBox.l);
+						deltaCenter = Math.abs(rect.c-snapBox.c);
+						deltaRight = Math.abs(rect.r-snapBox.r);
+						snapX("left", "left", rect.l,deltaLeft);
+						snapX("center", "center", rect.c, deltaCenter);
+						snapX("right", "right", rect.r, deltaRight);
+						
+						snapX("left", "center", rect.c, Math.abs(rect.c-snapBox.l));
+						snapX("left", "right", rect.r, Math.abs(rect.r-snapBox.l));
+						snapX("right", "left", rect.l, Math.abs(rect.l-snapBox.r));
+						snapX("right", "center", rect.c, Math.abs(rect.c-snapBox.r));
+						snapX("center", "left", rect.l, Math.abs(rect.l-snapBox.c));
+						snapX("center", "right", rect.r, Math.abs(rect.r-snapBox.c));
+					}
 				}
 
-				var distCheckX = (context._snapYLast && context._snapYLast.widget === widget) ? Infinity : distCheck;
-				var distLL = Math.abs(rect.l-snapBox.l);
-				var distLR = Math.abs(rect.l-snapBox.r);
-				var distRL = Math.abs(rect.r-snapBox.l);
-				var distRR = Math.abs(rect.r-snapBox.r);
-				// Only snap if snapBox is sufficiently close to widget
-				if(distLL <= distCheckX || distLR <= distCheckX ||distRL <= distCheckX || distRR <= distCheckX){
-					deltaTop = Math.abs(rect.t-snapBox.t);
-					deltaMiddle = Math.abs(rect.m-snapBox.m);
-					deltaBottom = Math.abs(rect.b-snapBox.b);
-					snapY("top", "top", rect.t,deltaTop);
-					snapY("middle", "middle", rect.m, deltaMiddle);
-					snapY("bottom", "bottom", rect.b, deltaBottom);
-					
-					snapY("top", "middle", rect.m, Math.abs(rect.m-snapBox.t));
-					snapY("top", "bottom", rect.b, Math.abs(rect.b-snapBox.t));
-					snapY("bottom", "top", rect.t, Math.abs(rect.t-snapBox.b));
-					snapY("bottom", "middle", rect.m, Math.abs(rect.m-snapBox.b));
-					snapY("middle", "top", rect.t, Math.abs(rect.t-snapBox.m));
-					snapY("middle", "bottom", rect.b, Math.abs(rect.b-snapBox.m));
+				if(doSnapLinesY){
+					var distCheckX = (context._snapYLast && context._snapYLast.widget === widget) ? Infinity : distCheck;
+					var distLL = Math.abs(rect.l-snapBox.l);
+					var distLR = Math.abs(rect.l-snapBox.r);
+					var distRL = Math.abs(rect.r-snapBox.l);
+					var distRR = Math.abs(rect.r-snapBox.r);
+					// Only snap if snapBox is sufficiently close to widget
+					if(distLL <= distCheckX || distLR <= distCheckX ||distRL <= distCheckX || distRR <= distCheckX){
+						deltaTop = Math.abs(rect.t-snapBox.t);
+						deltaMiddle = Math.abs(rect.m-snapBox.m);
+						deltaBottom = Math.abs(rect.b-snapBox.b);
+						snapY("top", "top", rect.t,deltaTop);
+						snapY("middle", "middle", rect.m, deltaMiddle);
+						snapY("bottom", "bottom", rect.b, deltaBottom);
+						
+						snapY("top", "middle", rect.m, Math.abs(rect.m-snapBox.t));
+						snapY("top", "bottom", rect.b, Math.abs(rect.b-snapBox.t));
+						snapY("bottom", "top", rect.t, Math.abs(rect.t-snapBox.b));
+						snapY("bottom", "middle", rect.m, Math.abs(rect.m-snapBox.b));
+						snapY("middle", "top", rect.t, Math.abs(rect.t-snapBox.m));
+						snapY("middle", "bottom", rect.b, Math.abs(rect.b-snapBox.m));
+					}
 				}
 			}
 			var points = widgetSnapInfo.snapPoints;
@@ -169,7 +175,7 @@ define([
 
 			if(!context._snapLinesDiv){
 				context._snapLinesDiv = dojo.create('div',
-						{'class':'snaplines',style:'position:absolute;top:0px;left:0px;z-index:1001;pointer-events:none;'}, 
+						{'class':'snaplines',style:'position:absolute;top:0px;left:0px;z-index:1000001;pointer-events:none;'}, 
 						containerNode);
 				context._snapLinesDivWidgetX = dojo.create('div',
 						{'class':'snaplinesWidgetX',style:'position:absolute;pointer-events:none;'}, 

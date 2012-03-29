@@ -87,13 +87,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			}
 			this._blurAllComments();
 		});
-
-		this.connect(dojo.global, "beforeunload", function(evt) {
-			if (this._commentForm.isShowing == true) {
-				return workbenchNls.fileHasUnsavedChanges;
-			}
-		});
-
+		
 		dojo.subscribe("/davinci/review/view/canvasFocused", this, function() {
 			this._blurAllComments();
 		});
@@ -110,22 +104,29 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			dojo.publish(this._currentPage+"/davinci/review/drawing/addShape", ["[]", true]);
 			this._destroyCommentWidgets();
 			this._render();
-			dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [this._cached[this._currentPage].pageState, []]);
+			var state = this._cached[this._currentPage].pageState,
+				scene = this._cached[this._currentPage].viewScene || this._getCurrentScene().s;
+			dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: state, viewScene: scene}, []]);
 
 		});
 
 		dojo.subscribe("/davinci/review/context/loaded", this, function(context, pageName){
+			context._commentView = this;
+			this._context = context;
+			
 			// summary:
 			//		Load the comments when the page is loaded
 			//		Collapse all the comments
 			//		Enable the action icon on the toolbar
 			var global = dojo.window.get(context.containerNode.ownerDocument);
 
-			this._loadCommentData(pageName);
+			var designerId = context.resourceFile.parent.designerId;
+			this._loadCommentData(designerId, pageName);
 			if (Workbench.getOpenEditor() === context.containerEditor) {
 				// Only need rendering when it is the current editor
 				// No need to render when the editor is opened in the background
 				this._currentPage = pageName;
+				this._cached[this._currentPage].context = context;
 				this._destroyCommentWidgets();
 				//FIXME: Hack
 				//Postpone updating shapes with setTimeout. Something happened
@@ -136,37 +137,34 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					that._updateToolbar({editor:context});
 					// Show annotations
 					that._reviewFilterChanged(); // Set reviewer list to be shown
-					dojo.publish(that._currentPage+"/davinci/review/drawing/filter", ["Normal", []]);
+					dojo.publish(that._currentPage+"/davinci/review/drawing/filter", [{pageState: "Normal", viewScene: that._getCurrentScene().s}, []]);
 				}, 100);
 			}
 			// Response to the state change event in the review editor
 			if (global && global.davinci && global.davinci.states) {
-				this.states = global.davinci.states;
 				global.davinci.states.subscribe("/davinci/states/state/changed", this, function(args) {
 					if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
 						return; 
 					}
 					var state = args.newState || "Normal";
 					this._cached[this._currentPage].pageState = state;
-					dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [state, []]);
+					var scene = this._cached[this._currentPage].viewScene = this._getCurrentScene().s;
+					dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: state, viewScene: scene}, []]);
 				});
+			}
+			
+			var sceneObj = this._getCurrentScene();
+			if (sceneObj.s) { // if there is a sceneId in the scene object
+				this.setCurrentScene(sceneObj.sm, sceneObj.s);
 			}
 		});
 
 		dojo.subscribe("/davinci/ui/editorSelected", this, function(args) {
 			// summary:
 			//		Remove the comment nodes of the previous page
-			if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
-				return; 
-			}
-			var editor = args.editor;
-			if (!editor) {
-				this._resetCommentView();
-				this._currentPage = null;
-				this.states = null;
-			} else {
-				this._versionClosed = editor.resourceFile.parent.closed;
-			}
+			
+			var editor = this._editor = args.editor;
+
 			//save the editing comment form
 			if (args.oldEditor && args.oldEditor.basePath) {
 				if (this._commentForm.isShowing) {
@@ -179,22 +177,14 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 							type: dojo.byId(this._commentForm.type.id + "_label" ).innerHTML,
 							editFrom: this._commentForm.editFrom
 					};
-					this._cached[args.oldEditor.basePath.path].editComment = editingComment;
+					this._setPendingEditComment(args.oldEditor, editingComment);
 				} else {
-					if(this._cached[args.oldEditor.basePath.path])
-						this._cached[args.oldEditor.basePath.path].editComment = null;
+					//Clear out editing comment
+					this._setPendingEditComment(args.oldEditor, null);
 				}
 			}
 			if (editor && editor.basePath) {
 				this._currentPage = editor.basePath.path;
-				//dojo.publish(this._currentPage+"/davinci/review/drawing/addShape", ["[]", true]);
-				var context = editor.getContext(),
-				global;
-				if(context)
-					global = context.getGlobal();
-				if (global && global.davinci && global.davinci.states) {
-					this.states = global.davinci.states;
-				}
 				this._commentForm.hide();
 				this._destroyCommentWidgets();
 				this._updateToolbar(args);
@@ -244,9 +234,16 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 					form.show();
 				}
+			} 
+			
+			if (!editor || editor.editorID != "davinci.review.CommentReviewEditor") {
+				// If there's no new editor (indicating all editors have been closed and 
+				// user accepted the close tab warning if applicable) OR if the new editor 
+				// isn't a review editor, let's clear out the comment view
+				this._resetCommentView();
+				this._currentPage = null;
 			} else {
-				// The content of the editor hasn't been loaded yet
-				return;
+				this._versionClosed = editor.resourceFile.parent.closed;
 			}
 		});
 
@@ -270,7 +267,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 		dojo.subscribe("/davinci/review/commentStatusChanged", this, function(comment, status) {
 			var focusedComments = this._cached[this._currentPage].focusedComments;
-			this._loadCommentData(this._currentPage);
+			var designerId = this._getDesignerId();
+			this._loadCommentData(designerId, this._currentPage);
 			var loopBody = function(comment){
 				comment.status = status;
 				var replies = comment.getReplies();
@@ -285,6 +283,44 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		});
 
 		dojo.subscribe("/davinci/review/commentAddedError",this,this._onErrorCreateNewComment);
+	},
+
+	_getCurrentScene: function() {
+		// summary:
+		//		Return a scene object with sm (SceneManager) and s (current scene) values
+		
+		// If any plugin SceneManagers, get the current scene
+		var sceneManagers = this._context.sceneManagers;
+		var sceneId;
+		for (var smIndex in sceneManagers) {
+			var sm = sceneManagers[smIndex];
+			if (sm.getCurrentScene) {
+				sceneId = sm.getCurrentScene();
+				if (sceneId) {
+					break;
+				}
+			}
+		}
+		return {sm: sm, s: sceneId};
+	},
+
+	_setPendingEditComment: function(editor, editingComment) {
+		//Determine the cache key based on type of "editor" arg
+		var key = null;
+		if (typeof editor === "string") {
+			key = editor;
+		} else if (editor.basePath && editor.basePath.path) {
+			key = editor.basePath.path;
+		}
+		
+		//Look up any pending comment based on the key and
+		//set the comment
+		if (key) {
+			var cachedVal = this._cached[key];
+			if (cachedVal) {
+				cachedVal.editComment = editingComment;
+			}
+		}
 	},
 
 	_resetCommentView: function() {
@@ -336,17 +372,18 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 		// Get drawing JSON string
 		dojo.publish(this._currentPage+"/davinci/review/drawing/getShapesInEditing", 
-				[this, this._cached[this._currentPage].pageState]);
+				[this, this._cached[this._currentPage].pageState, (this._cached[this._currentPage].viewScene || this._getCurrentScene().s)]);
 
 		var comment = new Comment({
 			commentId: form.commentId,
 			subject: args.subject,
 			content: args.content,
+			designerId: this._getDesignerId(),
 			pageName: this._currentPage,
 			pageState: this._cached[this._currentPage].pageState,
-			//ownerId: Runtime.commenting_reviewerName.userName,
+			viewScene: this._cached[this._currentPage].viewScene || this._getCurrentScene().s,
 			ownerId: Runtime.userName,
-			email: Runtime.getDesignerEmail(),
+			//email: Runtime.getDesignerEmail(),
 			replyTo: form.replyTo,
 			drawingJson: this.drawingJson,
 			type: args.type,
@@ -380,6 +417,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				content: comment.content,
 				pageName: comment.pageName,
 				pageState: comment.pageState,
+				viewScene: comment.viewScene,
 				ownerId: comment.ownerId,
 				email: comment.email,
 				depth: comment.depth,
@@ -391,8 +429,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		};
 		_comments.push(_comment);
 		this._cached.indices[_comment.id] = _comment;
-
-
 	},
 
 	_onUpdateComment: function(args) {
@@ -403,13 +439,14 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 		// Get drawing JSON string
 		dojo.publish(this._currentPage+"/davinci/review/drawing/getShapesInEditing", 
-				[this, this._cached[this._currentPage].pageState]);
+				[this, this._cached[this._currentPage].pageState, (this._cached[this._currentPage].viewScene || this._getCurrentScene().s)]);
 
 		comment.subject = args.subject;
 		comment.content = args.content;
 		comment.type = args.type;
 		comment.severity = args.severity;
 		comment.pageState = this._cached[this._currentPage].pageState;
+		comment.viewScene = this._cached[this._currentPage].viewScene  || this._getCurrentScene().s;
 		comment.drawingJson = this.drawingJson;
 		form.hide();
 		comment.update();
@@ -423,11 +460,12 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		_comment.type = comment.type;
 		_comment.severity = comment.severity;
 		_comment.pageState = comment.pageState;
+		_comment.viewScene = comment.viewScene;
 		_comment.drawingJson = comment.drawingJson;
 		_comment.status = comment.status;
 	},
 
-	_loadCommentData: function(/*String*/ pageName) {
+	_loadCommentData: function(/*String*/ ownerId, /*String*/ pageName) {
 		// summary:
 		//		Load the comments attached to the opened page
 		//		and sort them by time order
@@ -436,13 +474,14 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			url: location + "maqetta/cmd/getComments",
 			sync: true,
 			content:{
-				ownerId: Runtime.commenting_designerName || Runtime.userName,
+				ownerId: ownerId,
 				pageName: pageName
 			}
 		}).sort(function(c1,c2){
 			return parseFloat(c1.created) - parseFloat(c2.created);
 		});
 		this._cached[pageName].pageState = "Normal";
+//		this._cached[pageName].viewScene = "";
 		this._cached[pageName].focusedComments = [];
 	},
 
@@ -465,8 +504,10 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				commentId: _comment.id,
 				subject: _comment.subject,
 				content: _comment.content,
+				designerId: _comment.designerId,
 				pageName: this._currentPage,
 				pageState: _comment.pageState,
+				viewScene: _comment.viewScene,
 				ownerId: _comment.ownerId,
 				email: _comment.email,
 //				depth: parseInt(_comment.depth),
@@ -515,8 +556,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		var form = this._commentForm,
 		comment = this.commentIndices[args.commentId];
 
-		if (comment.ownerId != Runtime.commenting_reviewerName.userName ||
-				comment.email != Runtime.commenting_reviewerName.email) { 
+		if (comment.ownerId != Runtime.userName) { 
 			return;
 		}
 
@@ -545,9 +585,10 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		// Notify the drawing tool to be in edit mode
 		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", 
 				[
-				 Runtime.commenting_reviewerName.userName,
+				 Runtime.userName,
 				 form.commentId,
-				 comment.pageState
+				 comment.pageState,
+				 comment.viewScene
 		]);
 	},
 
@@ -570,9 +611,10 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		// Notify the drawing tool to be in edit mode
 		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", 
 				[
-				 Runtime.commenting_reviewerName.userName,
+				 Runtime.userName,
 				 form.commentId,
-				 this._cached[this._currentPage].pageState
+				 this._cached[this._currentPage].pageState,
+				 this._cached[this._currentPage].viewScene
 		]);
 	},
 
@@ -591,10 +633,28 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		}
 
 		if (!evt || !evt.silent) {
-			if (this.states) { 
-				this.states.setState(widget.pageState);
+			if(this._editor){
+				var context = this._editor.getContext();
+				var states = (context && context.rootNode && context.rootNode.ownerDocument && 
+						context.rootNode.ownerDocument.defaultView &&
+						context.rootNode.ownerDocument.defaultView.davinci &&
+						context.rootNode.ownerDocument.defaultView.davinci.states);
+				if(states){
+					states.setState(widget.pageState);
+				}
 			}
-			this.publish(this._currentPage + "/davinci/review/drawing/filter", [widget.pageState, focusedComments]);
+			//FIXME: R/C is stashing away pageState and viewScene on a DOM node
+			//This is worrisome - at a minimum, the properties should use a Maqetta prefix of some sort
+			//to prevent future collisions.
+			//But more important is that we really need to add a SceneManager pointer, too
+			//For time being, assume SceneManager from getCurrentScene is same as SceneManager for domNode.viewScene
+			var viewScene;
+			var currentScene = this._getCurrentScene();
+			if(currentScene && currentScene.sm && currentScene.sm.selectScene && widget.viewScene){
+				currentScene.sm.selectScene({sceneId:widget.viewScene});
+				viewScene = widget.viewScene;
+			}
+			this.publish(this._currentPage + "/davinci/review/drawing/filter", [{pageState: this._cached[this._currentPage].pageState, viewScene: viewScene}, focusedComments]);
 		}
 	},
 
@@ -610,19 +670,20 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				}
 			}
 		}
-
-		this.publish(this._currentPage+"/davinci/review/drawing/filter", [widget.pageState, focusedComments]);
+		var viewScene = this._cached[this._currentPage].viewScene || this._getCurrentScene().s;
+		this.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: this._cached[this._currentPage].pageState, viewScene: viewScene}, focusedComments]);
 	},
 
 	_onCommentFormCancel: function() {
 		dojo.publish(this._currentPage+"/davinci/review/drawing/cancelEditing", []);
 		var dim = this._cached[this._currentPage],
 		pageState = dim.pageState,
+		viewScene = dim.viewScene,
 		focusedComments = dim.focusedComments;
 		if (focusedComments.length > 0) {
 			this.commentIndices[focusedComments[0]].show();
 		}
-		dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [pageState, focusedComments]);
+		dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: pageState, viewScene: viewScene}, focusedComments]);
 	},
 
 	_updateToolbar: function(args) {
@@ -641,7 +702,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					} else {
 						return false;
 					}
-				}) && Runtime.commenting_designerName != item.name)
+				}) && Runtime.userName != item.name)
 					reviewers.push({
 						name: comment.ownerId,
 						email: comment.email
@@ -654,22 +715,25 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			}
 
 			Runtime.reviewers = reviewers;
-			dojo.forEach(reviewers, dojo.hitch(this, function(comment, index) { 
-				var check = new CheckedMenuItem({
-					label: "<div class='davinciReviewToolbarReviewersColor' style='background-color:" + 
-					Runtime.getColor(comment.name) +";'></div><span>"+comment.name+"</span>",
-						onChange: dojo.hitch(this,this._reviewFilterChanged),
-						checked: true,
-						reviewer:comment,
-						title: comment.email
-				});
-				this.reviewerList.addChild(check);
-				if (this._cached[this._currentPage] && this._cached[this._currentPage].shownColors) {
-					var checked = dojo.some(this._cached[this._currentPage].shownColors,function(name) {
-						if (name == comment.name) return true;
-						return false;
+			dojo.forEach(reviewers, dojo.hitch(this, function(reviewer, index) { 
+				//If no name, probably not a Maqetta user and no way they could have comments yet (so color irrelevant)
+				if (reviewer.name) { 
+					var check = new CheckedMenuItem({
+						label: "<div class='davinciReviewToolbarReviewersColor' style='background-color:" + 
+						Runtime.getColor(reviewer.name) +";'></div><span>"+reviewer.name+"</span>",
+							onChange: dojo.hitch(this,this._reviewFilterChanged),
+							checked: true,
+							reviewer:reviewer,
+							title: reviewer.email
 					});
-					check.set("checked",checked);
+					this.reviewerList.addChild(check);
+					if (this._cached[this._currentPage] && this._cached[this._currentPage].shownColors) {
+						var checked = dojo.some(this._cached[this._currentPage].shownColors,function(name) {
+							if (name == reviewer.name) return true;
+							return false;
+						});
+						check.set("checked",checked);
+					}
 				}
 			}));
 			this._reviewFilterChanged();
@@ -815,10 +879,10 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		// Notify the drawing tool to be in edit mode
 		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", 
 				[
-				 //Runtime.commenting_reviewerName.userName,
 				 Runtime.userName,
 				 form.commentId,
-				 this._cached[this._currentPage].pageState
+				 this._cached[this._currentPage].pageState,
+				 this._cached[this._currentPage].viewScene
 				 ]);
 	},
 
@@ -851,7 +915,16 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 	},
 
 	isPageOwner: function() {
-		return Runtime.commenting_designerName == Runtime.commenting_reviewerName.userName;
+		return this._getDesignerId() == Runtime.userName;
+	},
+	
+	_getDesignerId: function() {
+		var designerId = null;
+		var context = this._cached[this._currentPage].context;
+		if (context) {
+			designerId = context.resourceFile.parent.designerId;
+		}
+		return designerId;
 	},
 
 	popupWarning: function(description) {
@@ -930,7 +1003,15 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				}
 			}
 		})]).play();
+	},
+	
+	setCurrentScene: function(SceneManager, sceneId){
+		this._cached[this._currentPage].viewScene = sceneId;
+		var pageState = this._cached[this._currentPage].pageState;
+		var focusedComments = this._cached[this._currentPage].focusedComments;
+		dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: pageState, viewScene: sceneId}, focusedComments]);
 	}
+	
 
 });
 });

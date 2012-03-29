@@ -83,16 +83,10 @@ break;
 case "below-centered":
 _31("BM","TM");
 break;
-case "after-centered":
-ltr=!ltr;
-case "before-centered":
-_31(ltr?"ML":"MR",ltr?"MR":"ML");
-break;
 case "after":
 ltr=!ltr;
 case "before":
-_31(ltr?"TL":"TR",ltr?"TR":"TL");
-_31(ltr?"BL":"BR",ltr?"BR":"BL");
+_31(ltr?"ML":"MR",ltr?"MR":"ML");
 break;
 case "below-alt":
 ltr=!ltr;

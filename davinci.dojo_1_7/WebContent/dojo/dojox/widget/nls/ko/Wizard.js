@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/widget/nls/ko/Wizard", //begin v1.x content
+//begin v1.x content
 ({
 next: "다음",
 previous: "이전",

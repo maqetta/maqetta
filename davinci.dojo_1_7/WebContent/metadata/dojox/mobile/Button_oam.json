@@ -38,11 +38,7 @@
         "duration": {
             "datatype": "number",
             "defaultValue": 1000
-        },
-        "label": {
-            "datatype": "string",
-            "defaultValue": "Button"
         }
     },
-    "content": "<button label='Button'></button>"
+    "content": "<button></button>"
 }

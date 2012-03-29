@@ -2,12 +2,14 @@ define([
 	"dojo/_base/declare",
 	"davinci/ve/tools/CreateTool",
 	"davinci/ve/widget",
-	"davinci/ve/states"
+	"davinci/ve/States",
+	"dojo/DeferredList"
 ], function(
 	declare,
 	CreateTool,
 	Widget,
-	States
+	States,
+	DeferredList
 ) {
 
 return declare(CreateTool, {
@@ -21,9 +23,12 @@ return declare(CreateTool, {
 		// Name the widget so it can be referenced by a state name
 		this._data.properties.id = dijit.getUniqueId(this._data.type.replace(/\./g,"_"));
 		this._data.context = this._context;
-		var widget = this._create({parent: bodyWidget});
-		var body = States.getContainer();
-		States.add(body, "_show:" + widget.getId());
+
+		new DeferredList(this._requireHelpers(this._data)).then(function() {
+			var widget = this._create({parent: bodyWidget}),
+				body = States.getContainer();
+			States.add(body, "_show:" + widget.getId());
+		}.bind(this));
 	}
 
 });

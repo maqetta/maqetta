@@ -1,6 +1,5 @@
 //>>built
-define("dojox/editor/plugins/nls/Smiley", { root:
-//begin v1.x content
+define({ root:
 ({
 	smiley: "Insert Emoticon",
 	emoticonSmile: "smile",
@@ -44,7 +43,6 @@ define("dojox/editor/plugins/nls/Smiley", { root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -56,3 +54,4 @@ define("dojox/editor/plugins/nls/Smiley", { root:
 "ca": true,
 "ar": true
 });
+

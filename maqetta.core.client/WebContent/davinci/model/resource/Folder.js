@@ -41,7 +41,15 @@ var Folder = declare("davinci.model.resource.Folder", Resource, {
 				delete file._readOnly;
 				dojo.publish("/davinci/resource/resourceChanged",["created",file]);
 				return file;
-			} else if (response != "OK"){
+			}else if(response=="EXISTS"){
+				/* resource already exists on server, so just be gracefull about it. */
+				this.children.push(file);
+				delete file.libraryId;
+				delete file.libVersion;
+				delete file._readOnly;
+				dojo.publish("/davinci/resource/resourceChanged",["created",file]);
+				return file;
+			}else if (response != "OK"){
 				alert(response);
 			} else {
 				delete file.libraryId;

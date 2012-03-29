@@ -19,8 +19,7 @@ define(
 	emoticonYes: "ใช่",
 	emoticonNo: "ไม่ใช่",
 	emoticonAngel: "โมโห",
-	emoticonCrying: "ร้องไห้",
-	emoticonHappy: "มีความสุข"
+	emoticonCrying: "ร้องไห้"
 })
 
 //end v1.x content

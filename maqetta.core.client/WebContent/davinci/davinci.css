@@ -664,43 +664,64 @@ davinci_top_bar .dijitButtonNode {
 	background-color:#aaa;
 }
 
-.toolbaredContainer_toolbarDiv .dijitIcon,
-.dijitMenuPopup .dijitIcon {
+.themeSetDialogAdd {
 	background-image: url(img/sprite.png);
+	background-position: -82px -466px;
+	height: 20px;
+	width: 20px;
+	display: table-cell;
+}
+
+.themeSetDialogDelete {
+	background-image: url(img/sprite.png);
+	background-position: -82px -466px;
+	height: 20px;
+	width: 20px;
+	display: table-cell;
 }
 
 .editCutIcon {
+	background-image: url(img/sprite.png);
 	background-position: 0 -516px;
 }
 .editCopyIcon {
+	background-image: url(img/sprite.png);
 	background-position: 0 -450px;
 }
 .editPasteIcon {
+	background-image: url(img/sprite.png);
 	background-position: -82px -400px;
 }
 .editDeleteIcon {
+	background-image: url(img/sprite.png);
 	background-position: 0 -648px;
 }
-.addStateIcon {
+.addStateIcon, .addThemeSetIcon {
+	background-image: url(img/sprite.png);
 	background-position: -82px -466px;
 }
-.removeStateIcon {
+.removeStateIcon, .removeThemeSetIcon {
+	background-image: url(img/sprite.png);
 	background-position: 0 -1778px;
 }
 
 .designModeIcon {
+	background-image: url(img/sprite.png);
 	background-position: 0 -1842px;
 }
 
 .sourceModeIcon {
+	background-image: url(img/sprite.png);
 	background-position: 0 -1908px;
 }
 
 .splitVerticalIcon {
+	background-image: url(img/sprite.png);
 	background-position: -82px 0;
 }
 
 .splitHorizontalIcon {
+	background-image: url(img/sprite.png);
 	background-position: -82px -66px;
 }
 
@@ -777,7 +798,7 @@ davinci_top_bar .dijitButtonNode {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	z-index: 110;
+	z-index: 1000110;
 	display: block;
 	opacity: 0.5;
 	background-image: url('../dojox/image/resources/images/loading.gif');
@@ -793,7 +814,7 @@ davinci_top_bar .dijitButtonNode {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	z-index: 110;
+	z-index: 1000110;
 	display: block;
 	opacity: 1.0;
 	/*background-image: url('../dojox/image/resources/images/loading.gif');
@@ -830,7 +851,7 @@ davinci_top_bar .dijitButtonNode {
 	position: absolute;
 	/*width: 750px;*/
 	/*height: 380px;*/
-	z-index: 110;
+	z-index: 1000110;
 	display: none;
 }
 
@@ -843,7 +864,7 @@ davinci_top_bar .dijitButtonNode {
     left: 35px;
     top: 19px;
     width: 16px;
-    z-index: 112;
+    z-index: 1000112;
     position: absolute;
 }
 
@@ -1209,3 +1230,20 @@ davinci_top_bar .dijitButtonNode {
 .StatesViewTree .dijitTreeExpando {
 	display:none;
 }
+.ReviewToolBarText {
+	background-color: ##ffffe0;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#f8f8e8), to(#ffffcc)); 
+	background-image: -o-linear-gradient(#f8f8e8, #ffffcc); 
+	background-image: -ms-linear-gradient(#f8f8e8, #ffffcc); 
+	background-image: -moz-linear-gradient(#f8f8e8, #ffffcc); 
+	background-image: -webkit-linear-gradient(#f8f8e8, #ffffcc); 
+	background-image: linear-gradient(#f8f8e8, #ffffcc);
+	padding: 8px 1em 5px;
+	font: 12px Myriad,Helvetica,Tahoma,Arial,clean,sans-serif;
+	margin: 0px -4px -4px;	/* Undo the standard padding on toolbars */
+}
+.EditorContainer.ReviewEditor .toolbaredContainer_toolbarDiv {
+	height:auto;
+}
+
+background-image: -webkit-gradient(linear, left top, left bottom, from(white), to(#ffffcc)); background-image: -o-linear-gradient(white, #ffffcc); background-image: -ms-linear-gradient(white, #ffffcc); background-image: -moz-linear-gradient(white, #ffffcc); background-image: -webkit-linear-gradient(white, #ffffcc); background-image: linear-gradient(white, #ffffcc); width: 219px; height: 104px;"></div>

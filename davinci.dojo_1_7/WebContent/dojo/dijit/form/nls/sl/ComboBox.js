@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/form/nls/sl/ComboBox", //begin v1.x content
+//begin v1.x content
 ({
 		previousMessage: "Prejšnje izbire",
 		nextMessage: "Dodatne izbire"

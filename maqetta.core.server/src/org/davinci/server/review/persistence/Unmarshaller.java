@@ -8,8 +8,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.SimpleTimeZone;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -77,6 +80,8 @@ public class Unmarshaller {
 			return null;
 
 		SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_PATTERN);
+		sdf.setCalendar(Calendar.getInstance(new SimpleTimeZone(0, "GMT")));
+
 		Comment comment = new Comment();
 		Node node;
 
@@ -84,9 +89,10 @@ public class Unmarshaller {
 		for (int i = 0; i < children.getLength(); i++) {
 			node = children.item(i);
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
-				if (Comment.PAGE_STATE
-						.equalsIgnoreCase(node.getNodeName()))
+				if (Comment.PAGE_STATE.equalsIgnoreCase(node.getNodeName()))
 					comment.setPageState(getValue(node));
+				else if (Comment.VIEW_SCENE.equalsIgnoreCase(node.getNodeName()))
+					comment.setViewScene(getValue(node));
 				else if (Comment.PAGE_NAME.equalsIgnoreCase(node.getNodeName()))
 					comment.setPageName(getValue(node));
 				else if (Comment.SUBJECT.equalsIgnoreCase(node.getNodeName()))
@@ -109,6 +115,8 @@ public class Unmarshaller {
 					comment.setId(getValue(node));
 				else if (Comment.OWNER_ID.equalsIgnoreCase(node.getNodeName()))
 					comment.setOwnerId(getValue(node));
+				else if (Comment.DESIGNER_ID.equalsIgnoreCase(node.getNodeName()))
+					comment.setDesignerId(getValue(node));
 //				else if (Comment.DEPTH.equalsIgnoreCase(node.getNodeName()))
 //					comment.setDepth(Short.parseShort(getValue(node)));
 //				else if (Comment.ORDER.equalsIgnoreCase(node.getNodeName()))

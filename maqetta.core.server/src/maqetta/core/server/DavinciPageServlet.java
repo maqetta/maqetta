@@ -124,7 +124,7 @@ public class DavinciPageServlet extends HttpServlet {
 				user = this.userManager.getSingleUser();
 				req.getSession().setAttribute(IDavinciServerConstants.SESSION_USER, user);
 				Cookie k = new Cookie(IDavinciServerConstants.SESSION_USER, user.getUserName() );
-		  		k.setPath("/maqetta");
+		  		k.setPath("/");
 		  		resp.addCookie(k);
 		  		writeMainPage(req, resp);
 			}
@@ -340,47 +340,47 @@ public class DavinciPageServlet extends HttpServlet {
 			resp.setHeader("Pragma", "no-cache"); // HTTP 1.0
 		}
 
-		if ( contentLength != 0 ) {
-			// open the input stream
-			InputStream is = null;
+	
+		// open the input stream
+		InputStream is = null;
+		try {
+			is = connection.getInputStream();
+			// write the resource
 			try {
-				is = connection.getInputStream();
-				// write the resource
-				try {
-					OutputStream os = resp.getOutputStream();
-					int writtenContentLength = writeResource(is, os);
-					if ( contentLength == -1 || contentLength != writtenContentLength ) {
-						resp.setContentLength(writtenContentLength);
-					}
-				} catch ( IllegalStateException e ) { 
-					// can occur if the response output is already open as a Writer
-					Writer writer = resp.getWriter();
-					writeResource(is, writer);
-					// Since ContentLength is a measure of the number of bytes contained in the body
-					// of a message when we use a Writer we lose control of the exact byte count and
-					// defer the problem to the Servlet Engine's Writer implementation.
+				OutputStream os = resp.getOutputStream();
+				int writtenContentLength = writeResource(is, os);
+				if ( contentLength == -1 || contentLength != writtenContentLength ) {
+					resp.setContentLength(writtenContentLength);
 				}
-			} catch ( FileNotFoundException e ) {
-				// FileNotFoundException may indicate the following scenarios
-				// 		- url is a directory
-				// 		- url is not accessible
-				if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
-					System.out.println("file not found exception: " + e.toString());
-				}
-				resp.reset();
-				resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+			} catch ( IllegalStateException e ) { 
+				// can occur if the response output is already open as a Writer
+				Writer writer = resp.getWriter();
+				writeResource(is, writer);
+				// Since ContentLength is a measure of the number of bytes contained in the body
+				// of a message when we use a Writer we lose control of the exact byte count and
+				// defer the problem to the Servlet Engine's Writer implementation.
+			}
+		} catch ( FileNotFoundException e ) {
+			// FileNotFoundException may indicate the following scenarios
+			// 		- url is a directory
+			// 		- url is not accessible
+			if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
+				System.out.println("file not found exception: " + e.toString());
+			}
+			resp.reset();
+			resp.sendError(HttpServletResponse.SC_FORBIDDEN);
 
-			} catch ( SecurityException e ) {
-				// SecurityException may indicate the following scenarios
-				// 		- url is not accessible
-				resp.reset();
-				resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-			} finally {
-				if ( is != null ) {
-					is.close();
-				}
+		} catch ( SecurityException e ) {
+			// SecurityException may indicate the following scenarios
+			// 		- url is not accessible
+			resp.reset();
+			resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+		} finally {
+			if ( is != null ) {
+				is.close();
 			}
 		}
+		
 	}
 
 	protected void writeInternalPage(HttpServletRequest req, HttpServletResponse resp, Bundle bundle, String path)

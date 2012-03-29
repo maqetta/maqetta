@@ -719,17 +719,28 @@ davinci.States.prototype = {
 	},
 	
 	getStyle: function(widget, state, name) {
-		var style;
+		var styleArray;
 		widget = this._getWidget(widget);
 		if (arguments.length == 1) {
 			state = this.getState();
 		}
 		// return all styles specific to this state
-		style = widget && widget.states && widget.states[state] && widget.states[state].style;
-		if (arguments.length > 2) { 
-			style = style && widget.states[state].style[name];
+		styleArray = widget && widget.states && widget.states[state] && widget.states[state].style;
+		if (arguments.length > 2) {
+			// Remove any properties that don't match 'name'
+			if(styleArray){
+				for(var j=styleArray.length-1; j>=0; j--){
+					var item = styleArray[j];
+					for(var prop in item){		// should be only one prop per item
+						if(prop != name){
+							styleArray.splice(j, 1);
+							break;
+						}
+					}
+				}
+			}
 		}
-		return style;
+		return styleArray;
 	},
 
 	hasStyle: function(widget, state, name) {
@@ -737,34 +748,75 @@ davinci.States.prototype = {
 
 		if (!widget || !name) { return; }
 		
-		return widget.states && widget.states[state] && widget.states[state].style && widget.states[state].style.hasOwnProperty(name);
+		if(widget.states && widget.states[state] && widget.states[state].style){
+			var valueArray = widget.states[state].style;
+			for(var i=0; i<valueArray[i]; i++){
+				if(valueArray[i].hasProperty(name)){
+					return true;
+				}
+			}
+		}else{
+			return false;
+		}
 	},
 
-	setStyle: function(widget, state, style, value, silent) {
+	setStyle: function(widget, state, styleArray, silent) {
 		widget = this._getWidget(widget);
 
-		if (!widget || !style) { return; }
+		if (!widget || !styleArray) { return; }
 			
-		if (typeof style == "string") {
-			var name = style;
-			style = {};
-			style[name] = value;
-		}
 
 		widget.states = widget.states || {};
 		widget.states[state] = widget.states[state] || {};
-		widget.states[state].style = widget.states[state].style || {};
+		widget.states[state].style = widget.states[state].style || [];
 		
-		for (var name in style) {
-			value = style[name];
-			if (typeof value != "undefined" && value !== null) {
-				value = this._getFormattedValue(name, value);
-				widget.states[state].style[name] = value;
-			}		
+		// Remove existing entries that match any of entries in styleArray
+		var oldArray = widget.states[state].style;
+		if(styleArray){
+			for (var i=0; i<styleArray.length; i++){
+				var newItem = styleArray[i];
+				for (var newProp in newItem){	// There should be only one prop per item
+					for (var j=oldArray.length-1; j>=0; j--){
+						var oldItem = oldArray[j];
+						for (var oldProp in oldItem){	// There should be only one prop per item
+							if(newProp == oldProp){
+								oldArray.splice(j, 1);
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		//Make sure all new values are properly formatted (e.g, add 'px' to end of certain properties)
+		var newArray;
+		if(styleArray){
+			for(var j=0; j<styleArray.length; j++){
+				for(var p in styleArray[j]){	// should be only one prop per item
+					var value =  styleArray[j][p];
+					if (typeof value != "undefined" && value !== null) {
+						if(typeof newArray == 'undefined'){
+							newArray = [];
+						}
+						var o = {};
+						o[p] = this._getFormattedValue(p, value);
+						newArray.push(o)
+					}
+				}
+			}
+		}
+		if(oldArray && newArray){
+			widget.states[state].style = oldArray.concat(newArray);
+		}else if(oldArray){
+			widget.states[state].style = oldArray;
+		}else if(newArray){
+			widget.states[state].style = newArray;
+		}else{
+			widget.states[state].style = undefined;
 		}
 			
 		if (!silent) {
-			this.publish("/davinci/states/state/style/changed", [{widget:widget, state:state, style:style}]);
+			this.publish("/davinci/states/state/style/changed", [{widget:widget, state:state, style:styleArray}]);
 		}
 		this._updateSrcState (widget);
 	},
@@ -801,25 +853,34 @@ davinci.States.prototype = {
 		return value;			
 	},
 	
-	_resetAndCacheNormalStyle: function(widget, node, style, newState) {
-		var normalStyle = this.getStyle(widget, undefined);
+	_resetAndCacheNormalStyle: function(widget, node, styleArray, newState) {
+		var normalStyleArray = this.getStyle(widget, undefined);
 		
 		// Reset normal styles
-		for (var name in normalStyle) {
-			var convertedName = this._convertStyleName(name);
-			var previousValue = this._getFormattedValue(name, davinci.dojo.style(node, convertedName));
-			if (previousValue !== normalStyle[name]) {
-				davinci.dojo.style(node, convertedName, normalStyle[name]);
+		if(normalStyleArray){
+			for(var i=0; i<normalStyleArray.length; i++){
+				var nItem = normalStyleArray[i];
+				for(var nProp in nItem){	// Should only be one prop
+					var convertedName = this._convertStyleName(nProp);
+					node.style[convertedName] = this._getFormattedValue(nProp, nItem[nProp]);
+				}
 			}
 		}
 
 		// Remember style values from the normal state
 		if (!this.isNormalState(newState)) {
-			for (var name in style) {
-				if(!this.hasStyle(widget, undefined, name)) {
-					var convertedName = this._convertStyleName(name);
-					var value = this._getFormattedValue(name, davinci.dojo.style(node, convertedName));
-					this.setStyle(widget, undefined, name, value, true);
+			if(styleArray){
+				for(var i=0; i<styleArray.length; i++){
+					var style = styleArray[i];
+					for (var name in style) {	// should only be one prop in each normalStyle
+						if(!this.hasStyle(widget, undefined, name)) {
+							var convertedName = this._convertStyleName(name);
+							var value = this._getFormattedValue(name, davinci.dojo.style(node, convertedName));
+							var o = {};
+							o[name] = value;
+							this.setStyle(widget, undefined, [o], true);
+						}
+					}
 				}
 			}
 		}
@@ -831,16 +892,23 @@ davinci.States.prototype = {
 		
 		var node = widget.domNode || widget;
 
-		var style = this.getStyle(widget, newState);
+		var styleArray = this.getStyle(widget, newState);
 		
-		this._resetAndCacheNormalStyle(widget, node, style, newState);
+		this._resetAndCacheNormalStyle(widget, node, styleArray, newState);
 
 		// Apply new style
-		for (var name in style) {
-			var convertedName = this._convertStyleName(name);
-			davinci.dojo.style(node, convertedName, style[name]);
+		if(styleArray){
+			for(var i=0; i<styleArray.length; i++){
+				var style = styleArray[i];
+				for (var name in style) {	// should be only one prop in style
+					var convertedName = this._convertStyleName(name);
+					//FIXME: Probably doesn't work with arrays
+					davinci.dojo.style(node, convertedName, style[name]);
+				}
+			}
 		}
 		
+		//FIXME: This is Dojo-specific. Other libraries are likely to need a similar hook.
 		var dijitWidget, parent;
 		if(node.id && node.ownerDocument && node.ownerDocument.defaultView && node.ownerDocument.defaultView.dijit){
 			dijitWidget = node.ownerDocument.defaultView.dijit.byId(node.id);
@@ -1001,8 +1069,31 @@ davinci.States.prototype = {
 					return $1 ? "'" : '"';
 			});
 			states = JSON.parse(states);
+			this._upgrate_p4_p5(states);	// Upgrade old files
 		}
 		return states;
+	},
+	
+	_upgrate_p4_p5: function(states){
+		// We changed the states structure for Preview5 release. It used to be
+		// a JSON representation of an associative array: {'display':'none', 'color':'red'}
+		// But with Preview5 it is now an array of single property declarations such as:
+		// [{'display':'none'}, {'color':'red';}]. The array approach was necessary to
+		// deal with complexities of background-image, where there might be multiple values
+		// for a single property.
+		for (var s in states){
+			var state = states[s];
+			var style = state.style;
+			if(style && !style.length){	// if style exists but isn't an array
+				var statesArray = [];
+				for(var prop in style){
+					var o = {};
+					o[prop] = style[prop];
+					statesArray.push(o);
+				}
+				state.style = statesArray;
+			}
+		}
 	},
 	
 	store: function(widget, states) {
@@ -1079,6 +1170,10 @@ davinci.States.prototype = {
 		if (!this.subscribed && this._shouldInitialize()) {
 		
 			this.subscribe("/davinci/states/state/changed", function(e) { 
+				if(e.editorClass){
+					// Event targets one of Maqetta's editors, not from runtime events
+					return;
+				}
 				var children = davinci.states._getChildrenOfNode(e.widget.domNode || e.widget);
 				while (children.length) {
 					var child = children.shift();
@@ -1096,7 +1191,7 @@ davinci.States.prototype = {
 };
 
 if (typeof dojo != "undefined") {
-//	dojo.provide("workspace.maqetta.States");
+	//	dojo.provide("workspace.maqetta.States");
 	// only include the regular parser if the mobile parser isn't available
 	if (! dojo.getObject("dojox.mobile.parser.parse")) {
 		dojo.require("dojo.parser");
@@ -1143,6 +1238,7 @@ davinci.states = new davinci.States();
 					// Preserve the body states directly on the dom node
 					var states = davinci.states.retrieve(doc.body);
 					if (states) {
+						davinci.states._upgrate_p4_p5(states);	// upgrade older files
 						cache.body = states;
 					}
 	
@@ -1154,6 +1250,7 @@ davinci.states = new davinci.States();
 								node.id = _getTemporaryId(node);
 							}
 							if (node.tagName != "BODY") {
+								davinci.states._upgrate_p4_p5(states);	// upgrade older files
 								cache[node.id] = states;
 							}
 						}

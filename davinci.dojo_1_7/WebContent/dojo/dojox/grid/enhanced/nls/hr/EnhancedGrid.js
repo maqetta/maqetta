@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/grid/enhanced/nls/hr/EnhancedGrid", //begin v1.x content
+//begin v1.x content
 ({
 	singleSort: "Jedan sort",
 	nestedSort: "Ugniježđeni sort",

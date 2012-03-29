@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/th/Smiley", //begin v1.x content
+//begin v1.x content
 ({
 	smiley: "แทรกไอคอนแสดงอารมณ์",
 	emoticonSmile: "ยิ้ม",
@@ -20,8 +20,7 @@ define(
 	emoticonYes: "ใช่",
 	emoticonNo: "ไม่ใช่",
 	emoticonAngel: "โมโห",
-	emoticonCrying: "ร้องไห้",
-	emoticonHappy: "มีความสุข"
+	emoticonCrying: "ร้องไห้"
 })
 
 //end v1.x content

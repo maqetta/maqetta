@@ -180,7 +180,7 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 			var visible = !on;
 			var state = states.getState();
 			var value = visible ? "" : "none";
-			states.setStyle(widget, state, "display", value);
+			states.setStyle(widget, state, [{"display": value}]);
 		},
 		
 		isToggleOn: function(item) {

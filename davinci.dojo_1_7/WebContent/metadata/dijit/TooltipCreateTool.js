@@ -3,8 +3,9 @@ define([
     "davinci/ve/tools/CreateTool",
 	"davinci/ve/widget",
 	"davinci/ve/commands/ModifyCommand",
-	"davinci/ve/States"
-], function(declare, CreateTool, widget, ModifyCommand, States) {
+	"davinci/ve/States",
+	"dojo/DeferredList"
+], function(declare, CreateTool, widget, ModifyCommand, States, DeferredList) {
 
 	return declare(CreateTool, {
 
@@ -16,8 +17,7 @@ define([
 			this._data.properties = {};
 		}
 		// Name the widget so it can be referenced by a state name
-		//this._data.properties.id = dijit.getUniqueId(this._data.type.replace(/\./g,"_"));
-		this._data.properties.id = dijit.getUniqueId(this._type.replace(/\./g,"_"));
+		this._data.properties.id = dijit.getUniqueId(this._data.type.replace(/\./g,"_"));
 		this._data.properties.connectId = [];
 		if(target && target != this._context.container){
 			var connectId = target.getId();
@@ -31,9 +31,12 @@ define([
 		}
 
 		this._data.context = this._context;
-		var w = this._create({parent: bodyWidget});
-		var body = States.getContainer();
-		States.add(body, "_show:" + w.getId());
+
+		new DeferredList(this._requireHelpers(this._data)).then(function() {
+			var widget = this._create({parent: bodyWidget}),
+				body = States.getContainer();
+			States.add(body, "_show:" + widget.getId());
+		}.bind(this));
 	}
 });
 });

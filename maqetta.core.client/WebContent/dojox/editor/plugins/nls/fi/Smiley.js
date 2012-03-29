@@ -19,8 +19,7 @@ define(
 	emoticonYes: "kyllä",
 	emoticonNo: "ei",
 	emoticonAngel: "enkeli",
-	emoticonCrying: "itkeä",
-	emoticonHappy: "iloinen"
+	emoticonCrying: "itkeä"
 })
 
 //end v1.x content

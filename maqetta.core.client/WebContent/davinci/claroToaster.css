@@ -22,7 +22,7 @@
  
 .dijitToasterClip {
 	position: absolute;
-	z-index: 5000;
+	z-index: 1005000;
 	overflow: hidden;
 }
 

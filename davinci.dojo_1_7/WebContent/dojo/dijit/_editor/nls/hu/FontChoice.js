@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/_editor/nls/hu/FontChoice", //begin v1.x content
+//begin v1.x content
 ({
 	fontSize: "Méret",
 	fontName: "Betűtípus",

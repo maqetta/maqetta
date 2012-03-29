@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/ja/Smiley", //begin v1.x content
+//begin v1.x content
 ({
 	smiley: "顔文字の挿入",
 	emoticonSmile: "微笑",
@@ -20,8 +20,7 @@ define(
 	emoticonYes: "はい",
 	emoticonNo: "いいえ",
 	emoticonAngel: "エンジェル",
-	emoticonCrying: "泣く",
-	emoticonHappy: "幸せ"
+	emoticonCrying: "泣く"
 })
 
 //end v1.x content

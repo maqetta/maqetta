@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/grid/enhanced/nls/el/Filter", //begin v1.x content
+//begin v1.x content
 ({
 	"clearFilterDialogTitle": "Εκκαθάριση φίλτρου",
 	"filterDefDialogTitle": "Φίλτρο",
@@ -65,8 +65,6 @@ define(
 	"anycolumn": "οποιαδήποτε στήλη",
 	"statusTipTitleNoFilter": "Γραμμή φίλτρου",
 	"statusTipTitleHasFilter": "Φίλτρο",
-	"statusTipRelAny": "Αντιστοιχία με οποιουσδήποτε κανόνες.",
-	"statusTipRelAll": "Αντιστοιχία με όλους τους κανόνες.",
 	
 	"defaultItemsName": "στοιχεία",
 	"filterBarMsgHasFilterTemplate": "Εμφανίζονται ${0} από ${1} ${2}.",
@@ -87,3 +85,6 @@ define(
 })
 //end v1.x content
 );
+
+
+

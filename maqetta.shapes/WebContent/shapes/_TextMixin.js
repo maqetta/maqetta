@@ -14,6 +14,7 @@ define([
 			this._svgroot = dojo.query('svg',this.domNode)[0];
 			this._svgroot.style.verticalAlign = "top";
 			this._svgroot.style.overflow = "visible";
+			this._svgroot.style.fill = "currentColor";
 		},
 		
 		resize: function(){
@@ -51,11 +52,13 @@ define([
 			var domNodeStyle = this.domNode.style;
 			// First time through, there will be no width and height properties on the domNode
 			if(domNodeStyle.width.length == 0 || domNodeStyle.height.length == 0){
-				var svgNodeStyle = this._svgroot.style;
-				var w = this._bbox.width + 'px';
-				var h = this._bbox.height + 'px';
-				domNodeStyle.width = svgNodeStyle.width = w;
-				domNodeStyle.height = svgNodeStyle.height = h;
+				if(this._bbox){	// There are situations where this._bbox may not have a value yet
+					var svgNodeStyle = this._svgroot.style;
+					var w = this._bbox.width + 'px';
+					var h = this._bbox.height + 'px';
+					domNodeStyle.width = svgNodeStyle.width = w;
+					domNodeStyle.height = svgNodeStyle.height = h;
+				}
 			}
 		}
 	});

@@ -28,17 +28,17 @@
 <li>"Completed" state - the page after the dialog window is closed, causing something to change on the page</li>
 </ol>
 <p>Note that the state names can be any names defined by the designer, except for the "Normal" state which is provided by Maqetta for all pages.
-See <a href="peStatesPalette.html">Using the States Palette</a> for details.</p>
+See <i>Scenes Palette</i> for details.</p>
 
 <h3>Using Events To Change States</h3>
 
 <p>Once your application states are defined, you'll need some event triggers to change from one state to the next.</p>
 
-<p>A button can be presented in the "Normal" state which, when clicked, brings up the "Dialog" state (i.e. pops up the dialog window). To do this in Maqetta, simply edit the button's <b>onclick</b> event property and select "state:Dialog" from the drop-down list (assuming you have previously created a state called "Dialog"). See <b>Event Properties</b> in <a href="pePropertiesPalette.html">Using the Properties Palette</a> for details.</p> 
+<p>A button can be presented in the "Normal" state which, when clicked, brings up the "Dialog" state (i.e. pops up the dialog window). To do this in Maqetta, simply edit the button's <b>onclick</b> event property and select "state:Dialog" from the drop-down list (assuming you have previously created a state called "Dialog"). See <b>Event Properties</b> in <i>Properties Palette</i> for details.</p> 
 
 <p>Then in the dialog window you'll need a button who's <b>onclick</b> property is set to the "Completed" state. You could also have a Cancel button that is set to the "Normal" state.</p>
 
-<p>See tutorials <a href="tutorials/tutorial2.html">Task Manager (Scene Graph)</a> and <a href="tutorials/tutorial3.html">Task Manager (Application States)</a> to create a working example of this scenario.</p>
+<p>See tutorials <i>Task Manager (Scene Graph)</i> and <i>Task Manager (Application States)</i> to create a working example of this scenario.</p>
 
 
 

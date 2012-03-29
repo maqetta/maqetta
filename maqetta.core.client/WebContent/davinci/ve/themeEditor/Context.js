@@ -20,8 +20,6 @@ return declare("davinci.ve.themeEditor.Context", [Context], {
 
 	constructor: function(args){
 		this._id = "_edit_context_" + this._contextCount++;
-		this._editor = args.editor;
-		this._visualEditor = args.visualEditor;
 		dojo.mixin(this, args);
 		if(dojo.isString(this.containerNode)){
 			this.containerNode = dijit.byId(this.containerNode);
@@ -200,12 +198,12 @@ return declare("davinci.ve.themeEditor.Context", [Context], {
 	},
 	
 	onSelectionChange: function(selection){
-
+		this.inherited(arguments);
 	},
 	
 	getStyleAttributeValues: function(widget){
 		/* no style attributes for theme editor */
-		return {};
+		return [];
 	},
 	
 	_restoreStates: function(){
@@ -215,9 +213,10 @@ return declare("davinci.ve.themeEditor.Context", [Context], {
 	     // override base
 	     // FIXME Add helper here
 	
-	     var helper;
-         if (this._visualEditor.theme && this._visualEditor.theme.helper){
-             helper = Theme.getHelper(this._visualEditor.theme);
+	     var helper,
+	         ve = this.visualEditor;
+         if (ve.theme && ve.theme.helper){
+             helper = Theme.getHelper(ve.theme);
              if (helper && helper.preThemeConfig){
                  helper.preThemeConfig(this);
              } 

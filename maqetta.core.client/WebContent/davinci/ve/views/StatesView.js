@@ -11,9 +11,11 @@ define([
 		"dojo/data/ItemFileWriteStore",
 		"dijit/tree/ForestStoreModel",
 		"dijit/Tree",
-		"davinci/Runtime"
+		"davinci/Runtime",
+		 "dojo/_base/window"
 ], function(declare, veNls, ViewPart, BorderContainer,  ContentPane, ComboBox, 
-			DataGrid, States, ItemFileReadStore, ItemFileWriteStore, ForestStoreModel, Tree, Runtime
+			DataGrid, States, ItemFileReadStore, ItemFileWriteStore, ForestStoreModel, 
+			Tree, Runtime, win
 		    ){
 
 
@@ -55,6 +57,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this.subscribe("/davinci/scene/removed", this._removeScene.bind(this));
 		this.subscribe("/davinci/scene/renamed", this._renameScene.bind(this));
 		this.subscribe("/davinci/scene/selectionChanged", this._sceneSelectionChanged.bind(this));
+		
+		dojo.style(this.toolbarDiv, "display", "none");
 	},
 	
 	_contextLoaded: function() {
@@ -64,6 +68,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if (this._editor && this._editor.declaredClass != 'davinci.ve.themeEditor.ThemeEditor'){
 			this._updateView();
 		}
+		this._hideShowToolBar();
 	},
 	
 	_deviceChanged: function() {
@@ -127,29 +132,22 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			dojo.style(this.container.domNode, "display", "block");
 			if (editor.declaredClass === 'davinci.ve.themeEditor.ThemeEditor'){
 				this.set('title', langObj.States);
-				dojo.style(this.toolbarDiv, "display", "none");
-				var d = dijit.byId(this.toolbarDiv.parentNode.id);
-				d.resize();
 				this._updateViewForThemeEditor();
 				if(!this._themeState){
-					this._silent = false;
-					this._updateThemeSelection("Normal", true);
+					this._updateThemeSelection("Normal");
 				}else {
-					this._silent = true;
 					this._updateThemeSelection(this._themeState);
 				}
 			} else {
 				this.set('title', langObj.Scenes);
 				this._updateView();
-				dojo.style(this.toolbarDiv, "display", "block");
-				var d = dijit.byId(this.toolbarDiv.parentNode.id);
-				d.resize();
 			}
 			this.container.layout();	
 		}else{
 			delete this._editor;
 			dojo.style(this.container.domNode, "display", "none");
 		}
+		this._hideShowToolBar();
 	},
 	
 	_getWidget: function() {
@@ -193,11 +191,17 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			return;
 		}
 		var context = this._editor.getContext();
+		var iframe = context.getParentIframe();
 		if(!context || !context._statesLoaded){
 			return;
 		}
-		this._updateList();
-		this._updateSelection();
+		  // Call a callback with different 'global' values and context.
+		// FIXME this may not be needed after we fix issue #1821
+		 win.withDoc(document, function(){
+			  this._updateList();
+			  this._updateSelection();
+		 }, this);
+
 	},
 	
 	isThemeEditor: function() {
@@ -251,6 +255,13 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	_updateList: function() {
 		var latestStates = States.getStates(this._getWidget(), true), 
 			storedScenes = this._getScenes();
+		if(!this._editor || !latestStates || !storedScenes){
+			return;
+		}
+		var context = this._editor.getContext();
+		if(!context || !context._statesLoaded){
+			return;
+		}
 		
 		// Build an object structure that contains the latest list of states/scenes/views
 		// We will then build a similar object structure by extracting the list from the ItemFileWriteStore
@@ -271,7 +282,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		for(var state in latestStates){
 			AppStatesObj.children.push({ name:state, sceneId:state, type:'AppState' });
 		}
-		var context = this._editor.getContext();
 		var sceneManagers = context.sceneManagers;
 		// Loop through plugin scene managers, eg Dojo Mobile Views
 		var AppStatesAddedAlready = false;
@@ -312,6 +322,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			CurrentFileObj.children = CurrentFileObj.children.concat(AppStatesObj.children);
 		}
 		
+		this._hideShowToolBar();
+
 		// If data in Tree widget is same as latest data, then just return
 		if(!this._compareStructures(latestData, storedScenes)){
 			// Destroy the old Tree widget and create a new Tree widget
@@ -371,7 +383,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		}
 	},
 
-	_updateThemeSelection: function(currentState, silent) {
+	_updateThemeSelection: function(currentState) {
 		if(!this._sceneStore){
 			return;
 		}
@@ -387,11 +399,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			})
 		});
 		if(sceneId){
-			if (silent == undefined){
-				this._silent = true;
-			} else {
-				this._silent = silent;
-			}
 			this._updateSelectedScene('AppState', sceneId);
 		}
 	},
@@ -495,8 +502,14 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this._sceneStore = new ItemFileWriteStore({ data: skeletonData, clearOnClose:true });
 		this._forest = new ForestStoreModel({ store:this._sceneStore, query:{type:'file'},
 			  rootId:'StoryRoot', rootLabel:'All', childrenAttrs:['children']});
-		this._tree = new Tree({model:this._forest, showRoot:false, autoExpand:true, className:'StatesViewTree', style:'height:150px', 
-			_createTreeNode:function(args){
+		this._tree = new Tree({
+			model: this._forest,
+			persist: false,
+			showRoot: false,
+			autoExpand: true,
+			className: 'StatesViewTree',
+			style: 'height:150px', 
+			_createTreeNode: function(args) {
 				var item = args.item;
 				if(item.type && item.category && item.category[0] === 'AppStates'){
 					// Custom TreeNode class (based on dijit.TreeNode) that allows rich text labels
@@ -517,11 +530,14 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			var bodyWidget = context ? context.rootWidget : null;
 			if (item && item.type && item.type[0] == 'AppState') {
 				if (this.isThemeEditor()){
-					if (!this._silent) {
-						this.publish("/davinci/states/state/changed", [{widget:'$all', newState:item.name[0], oldState:this._themeState, context: this._editor.context}]);
-					}
+					this.publish("/davinci/states/state/changed", 
+							[{editorClass:currentEditor.declaredClass, widget:'$all', 
+							newState:item.name[0], oldState:this._themeState, context: this._editor.context}]);
 					this._themeState = item.name[0];
-					this._silent = false;
+				} else if(currentEditor.declaredClass == 'davinci.review.editor.ReviewEditor') {
+					this.publish("/davinci/states/state/changed", 
+							[{editorClass:currentEditor.declaredClass, widget:context ? context.rootWidget : null, 
+							newState:item.name[0]}]);
 				} else {
 					if(context && bodyWidget){
 						var state = item.name[0];
@@ -620,6 +636,54 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		});
 		path.splice(0, 0, 'StoryRoot');
 		this._tree.set('paths', [path]);
+	},
+	
+	// This code prevents +/- icons from appearing in theme and review editors
+	// and in page editor when authoring Dojo Mobile UIs
+	_hideShowToolBar: function(){
+		if(!this._editor){
+			return;
+		}
+		var showAppStates;	
+		if (this._editor.declaredClass !== "davinci.ve.PageEditor"){
+			showAppStates = false;
+		}else{
+			var context = this._editor.getContext();
+			if(!context || !context._statesLoaded){
+				return;
+			}
+			var latestStates = States.getStates(this._getWidget(), true);
+			if(!latestStates){
+				return;
+			}
+			var appStatesCount = 0;
+			for(var s in latestStates){
+				appStatesCount++;
+			}
+			// Loop through plugin scene managers, eg Dojo Mobile Views
+			var sceneManagers = context.sceneManagers;
+			showAppStates = (appStatesCount > 1);	// >1 means not just Normal
+			if(!showAppStates){
+				showAppStates = true;
+				for(var smIndex in sceneManagers){
+					var sm = sceneManagers[smIndex];
+					var hide = sm.hideAppStates ? sm.hideAppStates() : false;
+					if(hide){
+						showAppStates = false;
+						break;
+					}
+				}
+			}
+		}
+
+		// This code prevents +/- icons from appearing when authoring Dojo Mobile UIs
+		if (showAppStates){
+			dojo.style(this.toolbarDiv, "display", "block");
+		}else{
+			dojo.style(this.toolbarDiv, "display", "none");
+		}
+		var d = dijit.byId(this.toolbarDiv.parentNode.id);
+		d.resize();
 	}
 
 });

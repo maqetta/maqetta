@@ -5,17 +5,11 @@ define([
 	"davinci/Runtime",
 ], function(declare, Action, PublishAction, Runtime) {
 
-if (typeof davinci.review.actions === "undefined") {
-	davinci.review.actions = {};
-}
-
-var SubmitDraftAction = davinci.review.actions.SubmitDraftAction = declare("davinci.review.actions.SubmitDraftAction", Action, {
+var SubmitDraftAction = declare("davinci.review.actions.SubmitDraftAction", [Action], {
 
 	run: function(context) {
-		var selection = davinci.Runtime.getSelection();
-		if(!selection) { 
-			return;
-		}
+		var selection = context.getSelection ? context.getSelection() : null;
+		if (!selection || !selection.length) { return; }
 		var firstSelection = selection[0].resource;
 		var item = firstSelection.elementType=="ReviewFile"?firstSelection.parent:firstSelection;
 		var children;
@@ -61,16 +55,14 @@ var SubmitDraftAction = davinci.review.actions.SubmitDraftAction = declare("davi
 	},
 
 	isEnabled: function(context) {
-		if(davinci.Runtime.getRole()!="Designer") {
-			return false;
-		}
-		var selection = Runtime.getSelection();
-		if(!selection) {
-			return false;
-		}
+		var selection = context.getSelection ? context.getSelection() : null;
+		if (!selection || !selection.length) { return false; }
 		var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
-		if(item.isDraft) {
-			return true;
+		if (item.designerId == davinci.Runtime.userName) { 
+			//Only enable if the current user is also the review's designer
+			if(item.isDraft) {
+				return true;
+			}
 		}
 		return false;
 	}

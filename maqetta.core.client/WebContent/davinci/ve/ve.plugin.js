@@ -86,7 +86,13 @@ return {
             extensions: "html",
             isDefault: true,
             // TODO implement icon : "",
-            editorClass: "davinci/ve/PageEditor"
+            editorClass: "davinci/ve/PageEditor",
+            palettesToTop: [
+                "davinci.ve.Palette", //Widgets
+                "davinci.ui.navigator", //Files
+                "davinci.ve.style", //Properties
+                "davinci.ve.states" //States(Scenes)
+            ]
         },
         {
             id: "ThemeEditor",
@@ -96,7 +102,12 @@ return {
             defaultContent: "./defaultContent.css",
             isDefault: true,
             // TODO implement icon : "",
-            editorClass: "davinci/ve/themeEditor/ThemeEditor"
+            editorClass: "davinci/ve/themeEditor/ThemeEditor",
+            palettesToTop: [
+                "davinci.ve.style", //Properties
+                "davinci.ui.navigator", //Files
+                "davinci.ve.states" //States(Scenes)
+            ]
         }
     ],
     "davinci.actionSets": [
@@ -545,7 +556,8 @@ return {
                 "flowLayout": true,
                 "snap": true,
 				"showPossibleParents": false,
-                "cssOverrideWarn": true
+                "cssOverrideWarn": true,
+                "absoluteWidgetsZindex": 9999
             }
         }
     ],

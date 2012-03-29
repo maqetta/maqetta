@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/he/SpellCheck", //begin v1.x content
+//begin v1.x content
 ({
 	widgetLabel: "בדיקת איות באצווה ",
 	unfound: "לא נמצא ",

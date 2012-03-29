@@ -64,8 +64,6 @@ define(
 	"anycolumn": "een kolom",
 	"statusTipTitleNoFilter": "Filterbalk",
 	"statusTipTitleHasFilter": "Filter",
-	"statusTipRelAny": "Voldoen aan een van de regels.",
-	"statusTipRelAll": "Voldoen aan alle regels.",
 	
 	"defaultItemsName": "items",
 	"filterBarMsgHasFilterTemplate": "${0} van ${1} ${2} afgebeeld.",
@@ -86,3 +84,6 @@ define(
 })
 //end v1.x content
 );
+
+
+

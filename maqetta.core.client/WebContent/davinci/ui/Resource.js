@@ -18,8 +18,6 @@ define(['dojo/_base/declare',
        'dojo/i18n!./nls/ui',
        'dojo/i18n!dijit/nls/common',
        'dijit/form/Button',
-       'dijit/Tree',
-       'dijit/form/TextBox',
        'dojox/form/uploader/plugins/HTML5'
        
 ],function(declare, Resource, Path, Runtime,Workbench, Preferences, RebuildPage, Rename, NewHTMLFileOption, OpenFile, NewFolder, NewFile, NewProject, FileList, Uploader, Dialog, uiNLS, commonNLS){

@@ -17,8 +17,23 @@ define(["dojo/_base/declare",
 return declare("davinci.ve.tools.PasteTool", CreateTool, {
 
 	_create: function(args){
+		
+		// Looks for a particular property within styleArray
+		function retrieveProperty(styleArray, propName, defaultValue){
+			var propValue = defaultValue;
+			if(styleArray && styleArray.length>0){
+				styleArray.forEach(function(o){	// Should be only one property per object
+					if(o.hasOwnProperty(propName)){
+						propValue = o[propName];
+					}
+				});
+			}
+			return propValue;
+		}
+		
 		var index = args.index,
-			baseline;
+			baseline,
+			delta;
 		dojo.forEach(this._data, function(d){
 			var loadRequiresForTree = dojo.hitch(this, function(d){
 				if(d.type){ // structure has plain 'string' nodes which don't have type or children
@@ -33,16 +48,18 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 			
 			loadRequiresForTree(d);
 
-			var position, style = widget.parseStyleValues((d.properties && d.properties.style));
-			if(style && style.position == "absolute"){
+			var position, styleArray = widget.parseStyleValues((d.properties && d.properties.style));
+			var position_prop = retrieveProperty(styleArray, 'position', '');
+			if(position_prop == "absolute"){
 				if(args.position){
-					var p = {x: (parseInt(style.left) || 0), y: (parseInt(style.top) || 0)};
-					if(baseline){
-						position = {x: args.position.x + p.x - baseline.x,
-							y: args.position.y + p.y - baseline.y};
+					var left = parseInt(retrieveProperty(styleArray, 'left', '0px'));
+					var top = parseInt(retrieveProperty(styleArray, 'top', '0px'));
+					if(delta){
+						position = {x: left + delta.x,
+							y: top + delta.y};
 					}else{
 						position = args.position;
-						baseline = p;
+						delta = {x:args.position.x - left, y:args.position.y - top};
 					}
 				}else{
 					// FIXME: these aren't used?

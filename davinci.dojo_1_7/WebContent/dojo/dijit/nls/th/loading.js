@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/nls/th/loading", //begin v1.x content
+//begin v1.x content
 ({
 	loadingState: "กำลังโหลด...",
 	errorState: "ขออภัย เกิดข้อผิดพลาด"

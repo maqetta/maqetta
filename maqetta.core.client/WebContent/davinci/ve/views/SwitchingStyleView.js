@@ -28,6 +28,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	constructor: function(params, srcNodeRef){
     	dojo.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, this._editorSelected));
 		dojo.subscribe("/davinci/ui/widgetSelected", dojo.hitch(this, this._widgetSelectionChanged));
+		dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._stateChanged));
 	},
 
 	pageTemplate : [
@@ -361,6 +362,11 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		this._updatePaletteValues(changeEvent);
 	},
 	
+	_stateChanged: function(){
+		var widgets = this._widget ? [this._widget] : [];
+		this._updatePaletteValues(widgets);
+	},
+	
 	_widgetPropertiesChanged: function(widgets){
 		this._updatePaletteValues(widgets);
 	},
@@ -474,6 +480,9 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 
 	
 	onEditorSelected : function(){
+		//we should clear selected widget from the old editor
+		this._widget = null;
+		this._subWidget = null;
 		
 		if (this._editor && this._editor.supports("style")) {
 			dojo.removeClass('davinci_style_prop_top', "dijitHidden");

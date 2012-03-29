@@ -138,12 +138,16 @@ define([
 		    deferreds.push(toSave[name].save());
 		}
 		/* re-write metadata */
+		var metaToRename = {};
 		for (var i = 0, len = themeJson.meta.length; i < len; i++) {
 			var fileUrl = directoryPath.append(themeJson.meta[i]);
 			var file = systemResource.findResource(fileUrl.toString());
+			file.rename(this.TEMP_CLONE_PRE+file.name); // for caching reasons rename to temp file name, will rename later
+			metaToRename[file.getURL()] = file;
 			var contents = file.getText();
 			var newContents = contents.replace(new RegExp(oldClass, "g"), selector);
 			deferreds.push(file.setContents(newContents));
+			
 		}
 		/* rewrite theme editor HTML */
 		for (var i = 0, len = themeJson.themeEditorHtmls.length; i < len; i++) {
@@ -165,13 +169,14 @@ define([
 		}
 	    var defs = new DeferredList(deferreds);
 		Library.themesChanged();
-		defs.toRename = toSave; // need to save the cssFiles to rename from temp name after saves are done, in postClone
+		defs.toRename = { cssFiles: toSave, metaFile: metaToRename}; // need to save the cssFiles to rename from temp name after saves are done, in postClone
 		return defs;
 	},
 	
-	postClone: function(files){
+	postClone: function(filesToRename){
 		// We have to rename the css files to the correct name, this is to trick the browser cache
 		var deferreds = [];
+		var files = filesToRename.cssFiles;
 		for(var name in files){
 			var r = files[name];
 			var f = r.getResource();
@@ -186,6 +191,14 @@ define([
 			});
 			var def = cssModel.save();
 			deferreds.push(def);
+		}
+		files = filesToRename.metaFile;
+		for(var name in files){
+			var f = files[name];
+			var name = f.name.replace(this.TEMP_CLONE_PRE, "");
+			f.rename(name);
+			var contents = f.getText();
+			deferreds.push(f.setContents(contents));
 		}
 		return  new DeferredList(deferreds);
 	},

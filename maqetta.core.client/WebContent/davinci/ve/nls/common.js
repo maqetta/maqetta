@@ -115,6 +115,7 @@ flowLayout: "Flow Layout",
 snapToNearestWidget: "Snap to nearest widget",
 showPossibleParents: "When dragging, show possible parents",
 warnOnCSSOverride: "Warn on CSS Override",
+absoluteWidgetsZindex: "z-index for sketch mode",
 liveEdit: "Live Edit",
 
 /* WidgetSelectionPane*/

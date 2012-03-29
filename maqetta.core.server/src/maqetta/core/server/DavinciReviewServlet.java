@@ -8,13 +8,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import maqetta.core.server.DavinciPageServlet;
 import maqetta.core.server.user.ReviewManager;
 
 import org.davinci.server.internal.Activator;
-
 import org.davinci.server.review.Constants;
-import org.davinci.server.review.ReviewObject;
 import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.IPath;
@@ -27,8 +24,6 @@ import org.maqetta.server.VURL;
 @SuppressWarnings("serial")
 public class DavinciReviewServlet extends DavinciPageServlet {
 	private ReviewManager reviewManager;
-	protected String revieweeName;
-	protected String noView;
 
 	@Override
 	public void initialize() {
@@ -44,7 +39,7 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 			ReviewCacheManager.$.start();
 	}
 
-	public String getLoginUrl(HttpServletRequest req) {
+	public String getLoginUrl(HttpServletRequest req, String revieweeName) {
 		String loginUrl = serverManager.getDavinciProperty("loginUrl");
 		String params = "";
 		if ( null == loginUrl ) {
@@ -62,49 +57,36 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 		if ( serverManager == null ) {
 			initialize();
 		}
-		revieweeName = req.getParameter("revieweeuser");
-		noView = req.getParameter("noview");
-		String contextString = req.getContextPath();
+		String revieweeName = req.getParameter("revieweeuser");
+		String reviewVersion = req.getParameter("version");
 
 		String pathInfo = req.getPathInfo();
-		IUser user = (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
+		IUser sessionUser = ServerManager.getServerManger().getUserManager().getUser(req);
 		if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
-			System.out.println("Review Servlet request: " + pathInfo + ", logged in= " + (user != null ? user.getUserName() : "guest"));
-		}
-
-		if ( user == null ) {
-			req.getSession().setAttribute(IDavinciServerConstants.REDIRECT_TO, req.getRequestURL().toString());
-			resp.sendRedirect(this.getLoginUrl(req));
-			return;
+			System.out.println("Review Servlet request: " + pathInfo + ", logged in= " + (sessionUser != null ? sessionUser.getUserName() : "guest"));
 		}
 
 		if ( pathInfo == null || pathInfo.equals("") ) {
-			ReviewObject reviewObject = (ReviewObject) req.getSession().getAttribute(Constants.REVIEW_INFO);
-			if ( reviewObject == null ) {
-				// Because the requested URL is /review the empty review object
-				// means we do not have a designer name: Error.
-				resp.sendRedirect(this.getLoginUrl(req));
+			// Because the requested URL is /review with nothing after we do not have a designer
+			if (sessionUser == null) {
+				resp.sendRedirect(this.getLoginUrl(req, revieweeName));
 				return;
 			} else {
-				resp.addCookie(new Cookie(Constants.REVIEW_COOKIE_DESIGNER, reviewObject.getDesignerName()));
-				resp.addCookie(new Cookie(Constants.REVIEW_COOKIE_DESIGNER_EMAIL, reviewObject.getDesignerEmail()));
-
-				if ( reviewObject.getCommentId() != null ) {
-					resp.addCookie(new Cookie(Constants.REVIEW_COOKIE_CMTID, reviewObject.getCommentId()));
-				}
-				if ( reviewObject.getFile() != null ) {
-					resp.addCookie(new Cookie(Constants.REVIEW_COOKIE_FILE, reviewObject.getFile()));
-				}
-//				writeReviewPage(req, resp, "review.html");
-//				writeMainPage(req, resp);
-				resp.sendRedirect("/maqetta");
+				resp.sendRedirect("/maqetta/");
+				return;
 			}
 		} else {
 			IPath path = new Path(pathInfo);
 			String prefix = path.segment(0);
 			if ( prefix == null ) {
-				resp.sendRedirect(contextString + "/review");
-				return;
+				// Because the requested URL is /review with nothing after we do not have a designer
+				if (sessionUser == null) {
+					resp.sendRedirect(this.getLoginUrl(req, revieweeName));
+					return;
+				} else {
+					resp.sendRedirect("/maqetta/");
+					return;
+				}
 			}
 
 			if ( prefix.equals(IDavinciServerConstants.APP_URL.substring(1))
@@ -114,29 +96,46 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 				return;
 			}
 
-			if ( handleReviewRequest(req, resp, path) || handleLibraryRequest(req, resp, path, user) ) {
-				return;
+			if ( sessionUser != null) {
+				if (handleReviewRequest(req, resp, path) || handleLibraryRequest(req, resp, path, sessionUser) ) {
+					return;
+				}
 			}
 
-			// Check if it is a valid user name.
+			// Check if it is a valid user name for the designer.
 			// If it is a valid user name, do login
 			// Else, error.
-			IUser designer = userManager.getUser(prefix);
-			if ( designer == null ) {
-				resp.sendRedirect(this.getLoginUrl(req));
+			IUser designerOfReviewInQuestion = userManager.getUser(prefix);
+			if ( designerOfReviewInQuestion == null ) {
+				resp.sendRedirect(this.getLoginUrl(req, revieweeName));
 				return;
 			} else {
-				ReviewObject reviewObject = new ReviewObject(prefix);
-				reviewObject.setDesignerEmail(designer.getPerson().getEmail());
+				//Fill in designer cookie
+				String designerOfReviewInQuestionId = prefix;
+				Cookie designerCookie = new Cookie(Constants.REVIEW_COOKIE_DESIGNER, designerOfReviewInQuestionId);
+				/* have to set the path to delete it later from the client */
+				designerCookie.setPath("/");
+				resp.addCookie(designerCookie);
+
+				//Fill in review version cookie
+				if ( reviewVersion != null ) {
+					Cookie versionCookie = new Cookie(Constants.REVIEW_VERSION, reviewVersion);
+					/* have to set the path to delete it later from the client */
+					versionCookie.setPath("/");
+					resp.addCookie(versionCookie);
+				}
+				
+				/*
 				if ( path.segmentCount() > 2 ) {
 					// Token = 20100101/project1/folder1/sample1.html/default
 					String commentId = path.segment(path.segmentCount() - 1);
 					String fileName = path.removeLastSegments(1).removeFirstSegments(1).toPortableString();
-					reviewObject.setFile(fileName);
-					reviewObject.setCommentId(commentId);
+					resp.addCookie(new Cookie(Constants.REVIEW_COOKIE_CMTID, commentId));
+					resp.addCookie(new Cookie(Constants.REVIEW_COOKIE_FILENAME, fileName));
 				}
-				req.getSession().setAttribute(Constants.REVIEW_INFO, reviewObject);
-				resp.sendRedirect(contextString + "/review");
+				*/
+				
+				resp.sendRedirect("/maqetta/");
 				return;
 			}
 		}
@@ -152,16 +151,17 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 		String version = null;
 		String ownerId = null;
 		String projectName = null;
-
+		IUser reviewUser = user;
 		if ( isValidReviewPath(path) ) {
 			ownerId = path.segment(1);
 			version = path.segment(6);
 			projectName = path.segment(7);
 			path = path.removeFirstSegments(7);
 			// So that each snapshot can be mapped to its virtual lib path correctly.
-			path = ReviewManager.adjustPath(path, ownerId, version, projectName); 
+			path = ReviewManager.adjustPath(path, ownerId, version, projectName);
+			reviewUser = ServerManager.getServerManger().getUserManager().getUser(ownerId);
 		}
-		return super.handleLibraryRequest(req, resp, path, user);
+		return super.handleLibraryRequest(req, resp, path, reviewUser);
 	}
 
 	protected boolean handleReviewRequest(HttpServletRequest req, HttpServletResponse resp,

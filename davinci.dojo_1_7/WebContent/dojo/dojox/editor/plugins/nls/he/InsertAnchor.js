@@ -1,6 +1,6 @@
 //>>built
 define(
-"dojox/editor/plugins/nls/he/InsertAnchor", //begin v1.x content
+//begin v1.x content
 ({
 	insertAnchor: "הוספת עוגן ",
 	title: "תכונות עוגן ",

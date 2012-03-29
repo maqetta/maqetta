@@ -1,6 +1,6 @@
 //>>built
-define(
-"dojox/grid/enhanced/nls/fr/EnhancedGrid", //begin v1.x content
+﻿define(
+//begin v1.x content
 ({
 	singleSort: "Tri simple",
 	nestedSort: "Tri imbriqué",

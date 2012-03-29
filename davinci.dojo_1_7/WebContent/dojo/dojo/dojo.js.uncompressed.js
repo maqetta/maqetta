@@ -145,7 +145,7 @@
 		element = doc && doc.createElement("DiV"),
 
 		has = req.has = function(name){
-			return isFunction(hasCache[name]) ? (hasCache[name] = hasCache[name](global, doc, element)) : hasCache[name];
+			return hasCache[name] = isFunction(hasCache[name]) ? hasCache[name](global, doc, element) : hasCache[name];
 		},
 
 		hasCache = has.cache = defaultConfig.hasCache;
@@ -245,7 +245,10 @@
 		};
 
 		if(1){
-			// in legacy sync mode, the loader needs a minimal XHR library to load dojo/_base/loader and dojo/_base/xhr
+			// in legacy sync mode, the loader needs a minimal XHR library to load dojo/_base/loader and ojo/_base/xhr;
+			// when dojo/_base/loader pushes the sync loader machinery into the loader (via initSyncLoader), getText is
+			// replaced by dojo.getXhr() which allows for both sync and async op(and other features. It is not a problem
+			// depending on dojo for the sync loader since the sync loader will never be used without dojo.
 
 			var locationProtocol = location.protocol,
 				locationHost = location.host,
@@ -519,7 +522,6 @@
 						// "legacyAsync" => permanently in "xd" by choice
 						// "debugAtAllCosts" => trying to load everything via script injection (not implemented)
 						// otherwise, must be truthy => AMD
-						// legacyMode: sync | legacyAsync | xd | false
 						var mode = config[p];
 						req.legacyMode = legacyMode = (isString(mode) && /sync|legacyAsync/.test(mode) ? mode : (!mode ? "sync" : false));
 						req.async = !legacyMode;
@@ -587,11 +589,11 @@
 		// execute the various sniffs
 		//
 
-		if(has("dojo-cdn") || 1){
-			for(var dojoDir, src, match, scripts = doc.getElementsByTagName("script"), i = 0; i < scripts.length && !match; i++){
+		if(1){
+			for(var src, match, scripts = doc.getElementsByTagName("script"), i = 0; i < scripts.length && !match; i++){
 				if((src = scripts[i].getAttribute("src")) && (match = src.match(/(.*)\/?dojo\.js(\W|$)/i))){
 					// if baseUrl wasn't explicitly set, set it here to the dojo directory; this is the 1.6- behavior
-					userConfig.baseUrl = dojoDir = userConfig.baseUrl || defaultConfig.baseUrl || match[1];
+					userConfig.baseUrl = userConfig.baseUrl || defaultConfig.baseUrl || match[1];
 
 					// see if there's a dojo configuration stuffed into the node
 					src = (scripts[i].getAttribute("data-dojo-config") || scripts[i].getAttribute("djConfig"));
@@ -623,13 +625,6 @@
 		config(defaultConfig, 1);
 		config(userConfig, 1);
 		config(dojoSniffConfig, 1);
-
-		if(has("dojo-cdn")){
-			packs.dojo.location = dojoDir;
-			packs.dijit.location = dojoDir + "../dijit/";
-			packs.dojox.location = dojoDir + "../dojox/";
-		}
-
 	}else{
 		// no config API, assume defaultConfig has everything the loader needs...for the entire lifetime of the application
 		paths = defaultConfig.paths;
@@ -700,46 +695,43 @@
 			}
 			if(isArray(a1)){
 				// signature is (requestList [,callback])
-				if(!a1.length){
-					a2 && a2();
-				}else{
-					syntheticMid = "require*" + uid();
 
-					// resolve the request list with respect to the reference module
-					for(var mid, deps = [], i = 0; i < a1.length;){
-						mid = a1[i++];
-						if(mid in {exports:1, module:1}){
-							throw makeError("illegalModuleId", mid);
-						}
-						deps.push(getModule(mid, referenceModule));
+				syntheticMid = "require*" + uid();
+
+				// resolve the request list with respect to the reference module
+				for(var mid, deps = [], i = 0; i < a1.length;){
+					mid = a1[i++];
+					if(mid in {exports:1, module:1}){
+						throw makeError("illegalModuleId", mid);
 					}
-
-					// construct a synthetic module to control execution of the requestList, and, optionally, callback
-					module = mix(makeModuleInfo("", syntheticMid, 0, ""), {
-						injected: arrived,
-						deps: deps,
-						def: a2 || noop,
-						require: referenceModule ? referenceModule.require : req
-					});
-					modules[module.mid] = module;
-
-					// checkComplete!=0 holds the idle signal; we're not idle if we're injecting dependencies
-					injectDependencies(module);
-
-					// try to immediately execute
-					// if already traversing a factory tree, then strict causes circular dependency to abort the execution; maybe
-					// it's possible to execute this require later after the current traversal completes and avoid the circular dependency.
-					// ...but *always* insist on immediate in synch mode
-					var strict = checkCompleteGuard && req.async;
-					checkCompleteGuard++;
-					execModule(module, strict);
-					checkIdle();
-					if(!module.executed){
-						// some deps weren't on board or circular dependency detected and strict; therefore, push into the execQ
-						execQ.push(module);
-					}
-					checkComplete();
+					deps.push(getModule(mid, referenceModule));
 				}
+
+				// construct a synthetic module to control execution of the requestList, and, optionally, callback
+				module = mix(makeModuleInfo("", syntheticMid, 0, ""), {
+					injected: arrived,
+					deps: deps,
+					def: a2 || noop,
+					require: referenceModule ? referenceModule.require : req
+				});
+				modules[module.mid] = module;
+
+				// checkComplete!=0 holds the idle signal; we're not idle if we're injecting dependencies
+				injectDependencies(module);
+
+				// try to immediately execute
+				// if already traversing a factory tree, then strict causes circular dependency to abort the execution; maybe
+				// it's possible to execute this require later after the current traversal completes and avoid the circular dependency.
+				// ...but *always* insist on immediate in synch mode
+				var strict = checkCompleteGuard && req.async;
+				checkCompleteGuard++;
+				execModule(module, strict);
+				checkIdle();
+				if(!module.executed){
+					// some deps weren't on board or circular dependency detected and strict; therefore, push into the execQ
+					execQ.push(module);
+				}
+				checkComplete();
 			}
 			return contextRequire;
 		},
@@ -1197,10 +1189,6 @@
 	}
 
 	if(1){
-		if(has("dojo-loader-eval-hint-url")===undefined){
-			has.add("dojo-loader-eval-hint-url", 1);
-		}
-
 		var fixupUrl= function(url){
 				url += ""; // make sure url is a Javascript string (some paths may be a Java string)
 				return url + (cacheBust ? ((/\?/.test(url) ? "&" : "?") + cacheBust) : "");
@@ -1263,7 +1251,7 @@
 						if(text===cached){
 							cached.call(null);
 						}else{
-							req.eval(text, has("dojo-loader-eval-hint-url") ? module.url : module.mid);
+							req.eval(text, module.mid);
 						}
 					}catch(e){
 						signal(error, makeError("evalModuleThrew", module));
@@ -1272,7 +1260,7 @@
 					if(text===cached){
 						cached.call(null);
 					}else{
-						req.eval(text, has("dojo-loader-eval-hint-url") ? module.url : module.mid);
+						req.eval(text, module.mid);
 					}
 				}
 				injectingCachedModule = 0;
@@ -1345,13 +1333,13 @@
 				}
 				if(1 && legacyMode){
 					if(module.isXd){
-						// switch to async mode temporarily; if current legacyMode!=sync, then is must be one of {legacyAsync, xd, false}
+						// switch to async mode temporarily?
 						legacyMode==sync && (legacyMode = xd);
 						// fall through and load via script injection
 					}else if(module.isAmd && legacyMode!=sync){
 						// fall through and load via script injection
 					}else{
-						// mode may be sync, xd/legacyAsync, or async; module may be AMD or legacy; but module is always located on the same domain
+						// mode may be sync, xd, or async; module may be AMD or legacy; but module is always located on the same domain
 						var xhrCallback = function(text){
 							if(legacyMode==sync){
 								// the top of syncExecStack gives the current synchronously executing module; the loader needs
@@ -1509,8 +1497,8 @@
 		startTimer = function(){
 			clearTimer();
 			req.waitms && (timerId = setTimeout(function(){
-					clearTimer();
-					signal(error, makeError("timeout", waiting));
+				clearTimer();
+				signal(error, makeError("timeout", waiting));
 			}, req.waitms));
 		};
 	}
@@ -1696,7 +1684,7 @@
 				}
 			}
 			if(0 && isArray(targetModule)){
-				injectDependencies(defineModule(getModule(targetModule.shift()), args[1], args[2]));
+				injectDependencies(defineModule(targetModule.shift(), args[1], args[2]));
 				if(!targetModule.length){
 					combosPending.splice(i, 1);
 				}
@@ -1790,7 +1778,7 @@
 
 	if(1){
 		var bootDeps = defaultConfig.deps || userConfig.deps || dojoSniffConfig.deps,
-			bootCallback = defaultConfig.callback || userConfig.callback || dojoSniffConfig.callback;
+			bootCallback = defaultConfig.deps || userConfig.callback || dojoSniffConfig.callback;
 		req.boot = (bootDeps || bootCallback) ? [bootDeps || [], bootCallback] : 0;
 	}
 	if(!1){
@@ -1802,7 +1790,6 @@
 		async:0,
 		hasCache:{
 				'config-selectorEngine':"acme",
-				'config-tlmSiblingOfDojo':1,
 				'dojo-built':1,
 				'dojo-loader':1,
 				dom:1,
@@ -2661,310 +2648,6 @@ define("dojo/dom-form", ["./_base/lang", "./dom", "./io-query", "./json"], funct
 });
 
 },
-'dojo/i18n':function(){
-define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config", "./_base/lang", "./_base/xhr"],
-	function(dojo, require, has, array, config, lang, xhr) {
-	// module:
-	//		dojo/i18n
-	// summary:
-	//		This module implements the !dojo/i18n plugin and the v1.6- i18n API
-	// description:
-	//		We choose to include our own plugin to leverage functionality already contained in dojo
-	//		and thereby reduce the size of the plugin compared to various loader implementations. Also, this
-	//		allows foreign AMD loaders to be used without their plugins.
-	var
-		thisModule= dojo.i18n=
-			// the dojo.i18n module
-			{},
-
-		nlsRe=
-			// regexp for reconstructing the master bundle name from parts of the regexp match
-			// nlsRe.exec("foo/bar/baz/nls/en-ca/foo") gives:
-			// ["foo/bar/baz/nls/en-ca/foo", "foo/bar/baz/nls/", "/", "/", "en-ca", "foo"]
-			// nlsRe.exec("foo/bar/baz/nls/foo") gives:
-			// ["foo/bar/baz/nls/foo", "foo/bar/baz/nls/", "/", "/", "foo", ""]
-			// so, if match[5] is blank, it means this is the top bundle definition.
-			// courtesy of http://requirejs.org
-			/(^.*(^|\/)nls)(\/|$)([^\/]*)\/?([^\/]*)/,
-
-		getAvailableLocales= function(
-			root,
-			locale,
-			bundlePath,
-			bundleName
-		){
-			// return a vector of module ids containing all available locales with respect to the target locale
-			// For example, assuming:
-			//	 * the root bundle indicates specific bundles for "fr" and "fr-ca",
-			//	 * bundlePath is "myPackage/nls"
-			//	 * bundleName is "myBundle"
-			// Then a locale argument of "fr-ca" would return
-			//	 ["myPackage/nls/myBundle", "myPackage/nls/fr/myBundle", "myPackage/nls/fr-ca/myBundle"]
-			// Notice that bundles are returned least-specific to most-specific, starting with the root.
-			//
-			// If root===false indicates we're working with a pre-AMD i18n bundle that doesn't tell about the available locales;
-			// therefore, assume everything is available and get 404 errors that indicate a particular localization is not available
-			//
-
-			for(var result= [bundlePath + bundleName], localeParts= locale.split("-"), current= "", i= 0; i<localeParts.length; i++){
-				current+= (current ? "-" : "") + localeParts[i];
-				if(!root || root[current]){
-					result.push(bundlePath + current + "/" + bundleName);
-				}
-			}
-			return result;
-		},
-
-		cache= {},
-
-		getL10nName= dojo.getL10nName = function(moduleName, bundleName, locale){
-			locale = locale ? locale.toLowerCase() : dojo.locale;
-			moduleName = "dojo/i18n!" + moduleName.replace(/\./g, "/");
-			bundleName = bundleName.replace(/\./g, "/");
-			return (/root/i.test(locale)) ?
-				(moduleName + "/nls/" + bundleName) :
-				(moduleName + "/nls/" + locale + "/" + bundleName);
-		},
-
-		doLoad = function(require, bundlePathAndName, bundlePath, bundleName, locale, load){
-			// get the root bundle which instructs which other bundles are required to construct the localized bundle
-			require([bundlePathAndName], function(root){
-				var
-					current= cache[bundlePathAndName + "/"]= lang.clone(root.root),
-					availableLocales= getAvailableLocales(!root._v1x && root, locale, bundlePath, bundleName);
-				require(availableLocales, function(){
-					for (var i= 1; i<availableLocales.length; i++){
-						cache[availableLocales[i]]= current= lang.mixin(lang.clone(current), arguments[i]);
-					}
-					// target may not have been resolve (e.g., maybe only "fr" exists when "fr-ca" was requested)
-					var target= bundlePathAndName + "/" + locale;
-					cache[target]= current;
-					load && load(lang.delegate(current));
-				});
-			});
-		},
-
-		normalize = function(id, toAbsMid){
-			// note: id may be relative
-			var match= nlsRe.exec(id),
-				bundlePath= match[1];
-			return /^\./.test(bundlePath) ? toAbsMid(bundlePath) + "/" +  id.substring(bundlePath.length) : id;
-		},
-
-		checkForLegacyModules = function(){},
-
-		load = function(id, require, load){
-			// note: id is always absolute
-			var
-				match= nlsRe.exec(id),
-				bundlePath= match[1] + "/",
-				bundleName= match[5] || match[4],
-				bundlePathAndName= bundlePath + bundleName,
-				localeSpecified = (match[5] && match[4]),
-				targetLocale=  localeSpecified || dojo.locale,
-				target= bundlePathAndName + "/" + targetLocale;
-
-			if(localeSpecified){
-				checkForLegacyModules(target);
-				if(cache[target]){
-					// a request for a specific local that has already been loaded; just return it
-					load(cache[target]);
-				}else{
-					// a request for a specific local that has not been loaded; load and return just that locale
-					doLoad(require, bundlePathAndName, bundlePath, bundleName, targetLocale, load);
-				}
-				return;
-			}// else a non-locale-specific request; therefore always load dojo.locale + config.extraLocale
-
-			// notice the subtle algorithm that loads targetLocal last, which is the only doLoad application that passes a value for the load callback
-			// this makes the sync loader follow a clean code path that loads extras first and then proceeds with tracing the current deps graph
-			var extra = config.extraLocale || [];
-			extra = lang.isArray(extra) ? extra : [extra];
-			extra.push(targetLocale);
-			var remaining = extra.length,
-				targetBundle;
-			array.forEach(extra, function(locale){
-				doLoad(require, bundlePathAndName, bundlePath, bundleName, locale, function(bundle){
-					if(locale == targetLocale){
-						targetBundle = bundle;
-					}
-					if(!--remaining){
-						load(targetBundle);
-					}
-				});
-			});
-		};
-
-	if(has("dojo-unit-tests")){
-		var unitTests = thisModule.unitTests = [];
-	}
-
-	true || has.add("dojo-v1x-i18n-Api",
-		// if true, define the v1.x i18n functions
-		1
-	);
-
-	if(1){
-		var
-			__evalError = {},
-
-			evalBundle=
-				// use the function ctor to keep the minifiers away and come close to global scope
-				// if bundle is an AMD bundle, then __amdResult will be defined; otherwise it's a pre-amd bundle and the bundle value is returned by eval
-				new Function("bundle, __evalError",
-					"var __amdResult, define = function(x){__amdResult= x;};" +
-					"return [(function(){" +
-								"try{eval(arguments[0]);}catch(e){}" +
-								"if(__amdResult)return 0;" +
-								"try{return eval('('+arguments[0]+')');}" +
-								"catch(e){__evalError.e = e; return __evalError;}" +
-							"})(arguments[0]) , __amdResult];"
-				),
-
-			fixup= function(url, preAmdResult, amdResult){
-				// nls/<locale>/<bundle-name> indicates not the root.
-				if(preAmdResult===__evalError){
-					console.error("failed to evaluate i18n bundle; url=" + url, __evalError.e);
-					return {};
-				}
-				return preAmdResult ? (/nls\/[^\/]+\/[^\/]+$/.test(url) ? preAmdResult : {root:preAmdResult, _v1x:1}) : amdResult;
-			},
-
-			syncRequire= function(deps, callback){
-				var results= [];
-				array.forEach(deps, function(mid){
-					var url= require.toUrl(mid + ".js");
-					if(cache[url]){
-						results.push(cache[url]);
-					}else{
-
-						try {
-							var bundle= require(mid);
-							if(bundle){
-								results.push(bundle);
-								return;
-							}
-						}catch(e){}
-
-						xhr.get({
-							url:url,
-							sync:true,
-							load:function(text){
-								var result = evalBundle(text, __evalError);
-								results.push(cache[url]= fixup(url, result[0], result[1]));
-							},
-							error:function(){
-								results.push(cache[url]= {});
-							}
-						});
-					}
-				});
-				callback && callback.apply(null, results);
-			},
-
-			normalizeLocale = thisModule.normalizeLocale= function(locale){
-				var result = locale ? locale.toLowerCase() : dojo.locale;
-				if(result == "root"){
-					result = "ROOT";
-				}
-				return result;
-			},
-
-			forEachLocale = function(locale, func){
-				// this function is equivalent to v1.6 dojo.i18n._searchLocalePath with down===true
-				var parts = locale.split("-");
-				while(parts.length){
-					if(func(parts.join("-"))){
-						return true;
-					}
-					parts.pop();
-				}
-				return func("ROOT");
-			};
-
-		checkForLegacyModules = function(target){
-			// legacy code may have already loaded [e.g] the raw bundle x/y/z at x.y.z; when true, push into the cache
-			for(var names = target.split("/"), object = dojo.global[names[0]], i = 1; object && i<names.length; object = object[names[i++]]){}
-			if(object){
-				cache[target] = object;
-			}
-		};
-
-		thisModule.getLocalization= function(moduleName, bundleName, locale){
-			var result,
-				l10nName= getL10nName(moduleName, bundleName, locale).substring(10);
-			load(l10nName, (1 && !require.isXdUrl(require.toUrl(l10nName + ".js")) ? syncRequire : require), function(result_){ result= result_; });
-			return result;
-		};
-
-		thisModule._preloadLocalizations = function(/*String*/bundlePrefix, /*Array*/localesGenerated){
-			//	summary:
-			//		Load built, flattened resource bundles, if available for all
-			//		locales used in the page. Only called by built layer files.
-			//
-			//  note: this function a direct copy of v1.6 function of same name
-
-			function preload(locale){
-				locale = normalizeLocale(locale);
-				forEachLocale(locale, function(loc){
-					for(var i=0; i<localesGenerated.length;i++){
-						if(localesGenerated[i] == loc){
-							syncRequire([bundlePrefix.replace(/\./g, "/")+"_"+loc]);
-							return true; // Boolean
-						}
-					}
-					return false; // Boolean
-				});
-			}
-			preload();
-			var extra = dojo.config.extraLocale||[];
-			for(var i=0; i<extra.length; i++){
-				preload(extra[i]);
-			}
-		};
-
-		if(has("dojo-unit-tests")){
-			unitTests.push(function(doh){
-				doh.register("tests.i18n.unit", function(t){
-					var check;
-
-					check = evalBundle("{prop:1}", __evalError);
-					t.is({prop:1}, check[0]); t.is(undefined, check[1]);
-
-					check = evalBundle("({prop:1})", __evalError);
-					t.is({prop:1}, check[0]); t.is(undefined, check[1]);
-
-					check = evalBundle("{'prop-x':1}", __evalError);
-					t.is({'prop-x':1}, check[0]); t.is(undefined, check[1]);
-
-					check = evalBundle("({'prop-x':1})", __evalError);
-					t.is({'prop-x':1}, check[0]); t.is(undefined, check[1]);
-
-					check = evalBundle("define({'prop-x':1})", __evalError);
-					t.is(0, check[0]); t.is({'prop-x':1}, check[1]);
-
-					check = evalBundle("define({'prop-x':1});", __evalError);
-					t.is(0, check[0]); t.is({'prop-x':1}, check[1]);
-
-					check = evalBundle("this is total nonsense and should throw an error", __evalError);
-					t.is(__evalError, check[0]); t.is(undefined, check[1]);
-					t.is({}, fixup("some/url", check[0], check[1]));
-				});
-			});
-		}
-	}
-
-	return lang.mixin(thisModule, {
-		dynamic:true,
-		normalize:normalize,
-		load:load,
-		cache:function(mid, value){
-			cache[mid] = value;
-		}
-	});
-});
-
-},
 'dojo/_base/html':function(){
 define(["./kernel", "../dom", "../dom-style", "../dom-attr", "../dom-prop", "../dom-class", "../dom-construct", "../dom-geometry"], function(dojo, dom, style, attr, prop, cls, ctr, geom){
 	// module:
@@ -3453,9 +3136,9 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 			this.revision = 0;
 		}
 	=====*/
-	var rev = "$Rev: 27913 $".match(/\d+/);
+	var rev = "$Rev: 27407 $".match(/\d+/);
 	dojo.version = {
-		major: 1, minor: 7, patch: 2, flag: "",
+		major: 1, minor: 7, patch: 1, flag: "",
 		revision: rev ? +rev[0] : NaN,
 		toString: function(){
 			var v = dojo.version;
@@ -3470,34 +3153,18 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 	// is migrated. Absent specific advice otherwise, set extend-dojo to truthy.
 	true || has.add("extend-dojo", 1);
 
+	if(1){
+		dojo.eval = require.eval;
+	}else{
+		var eval_ =
+			// use the function constructor so our eval is scoped close to (but not in) in the global space with minimal pollution
+			new Function("__text", "return eval(__text);");
 
-	dojo.eval = function(scriptText){
-		//	summary:
-		//		A legacy method created for use exclusively by internal Dojo methods. Do not use this method
-		//		directly unless you understand its possibly-different implications on the platforms your are targeting.
-		//	description:
-		//		Makes an attempt to evaluate scriptText in the global scope. The function works correctly for browsers
-		//		that support indirect eval.
-		//
-		//		As usual, IE does not. On IE, the only way to implement global eval is to
-		//		use execScript. Unfortunately, execScript does not return a value and breaks some current usages of dojo.eval.
-		//		This implementation uses the technique of executing eval in the scope of a function that is a single scope
-		//		frame below the global scope; thereby coming close to the global scope. Note carefully that
-		//
-		//		dojo.eval("var pi = 3.14;");
-		//
-		//		will define global pi in non-IE environments, but define pi only in a temporary local scope for IE. If you want
-		//		to define a global variable using dojo.eval, write something like
-		//
-		//		dojo.eval("window.pi = 3.14;")
-		//	scriptText:
-		//		The text to evaluation.
-		//	returns:
-		//		The result of the evaluation. Often `undefined`
-	};
-
-	(Function("d", "d.eval = function(){return d.global.eval ? d.global.eval(arguments[0]) : eval(arguments[0]);}"))(dojo);
-
+		dojo.eval = function(text, hint){
+			// note: the four forward-slashes make the firebug hint work in ie9
+			return eval_(text + "\r\n////@ sourceURL=" + hint);
+		};
+	}
 
 	if(0){
 		dojo.exit = function(exitcode){
@@ -5351,7 +5018,7 @@ define(["require"], function(require) {
 			//		Returns the value of the feature named by name. The feature must have been
 			//		previously added to the cache by has.add.
 
-			return typeof cache[name] == "function" ? (cache[name] = cache[name](global, doc, element)) : cache[name]; // Boolean
+			return cache[name] = typeof cache[name] == "function" ? cache[name](global, doc, element) : cache[name]; // Boolean
 		};
 
 		has.cache = cache;
@@ -5523,34 +5190,9 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 			checkDojoRequirePlugin();
 		},
 
-		touched,
-
-		traverse = function(m){
-			if(touched[m.mid] || /loadInit\!/.test(m.mid)){
-				// loadInit plugin modules are dependencies of modules in dojoRequireModuleStack...
-				// which would cause a circular dependency chain that would never be resolved if checked here
-				// notice all dependencies of any particular loadInit plugin module will already
-				// be checked since those are pushed into dojoRequireModuleStack explicitly by the
-				// plugin...so if a particular loadInitPlugin module's dependencies are not really
-				// on board, that *will* be detected elsewhere in the traversal.
-				return true;
-			}
-		    touched[m.mid] = 1;
-			if(m.injected!==arrived && !m.executed){
-				return false;
-			}
-			for(var deps = m.deps || [], i= 0; i<deps.length; i++){
-				if(!traverse(deps[i])){
-					return false;
-				}
-			}
-			return true;
-		},
-
 		checkDojoRequirePlugin = function(){
-			touched = {};
 			dojoRequireModuleStack = array.filter(dojoRequireModuleStack, function(module){
-				return !traverse(module);
+				return module.injected!==arrived && !module.executed;
 			});
 			if(!dojoRequireModuleStack.length){
 				loaderVars.holdIdle();
@@ -10921,221 +10563,6 @@ define("dojo/dom-construct", ["exports", "./_base/kernel", "./_base/sniff", "./_
 });
 
 },
-'dojo/text':function(){
-define(["./_base/kernel", "require", "./has", "./_base/xhr"], function(dojo, require, has, xhr){
-	// module:
-	//		dojo/text
-	// summary:
-	//		This module implements the !dojo/text plugin and the dojo.cache API.
-	// description:
-	//		We choose to include our own plugin to leverage functionality already contained in dojo
-	//		and thereby reduce the size of the plugin compared to various foreign loader implementations.
-	//		Also, this allows foreign AMD loaders to be used without their plugins.
-	//
-	//		CAUTION: this module is designed to optionally function synchronously to support the dojo v1.x synchronous
-	//		loader. This feature is outside the scope of the CommonJS plugins specification.
-
-	var getText;
-	if(1){
-		getText= function(url, sync, load){
-			xhr("GET", {url:url, sync:!!sync, load:load});
-		};
-	}else{
-		// TODOC: only works for dojo AMD loader
-		if(require.getText){
-			getText= require.getText;
-		}else{
-			console.error("dojo/text plugin failed to load because loader does not support getText");
-		}
-	}
-
-	var
-		theCache= {},
-
-		strip= function(text){
-			//Strips <?xml ...?> declarations so that external SVG and XML
-			//documents can be added to a document without worry. Also, if the string
-			//is an HTML document, only the part inside the body tag is returned.
-			if(text){
-				text= text.replace(/^\s*<\?xml(\s)+version=[\'\"](\d)*.(\d)*[\'\"](\s)*\?>/im, "");
-				var matches= text.match(/<body[^>]*>\s*([\s\S]+)\s*<\/body>/im);
-				if(matches){
-					text= matches[1];
-				}
-			}else{
-				text = "";
-			}
-			return text;
-		},
-
-		notFound = {},
-
-		pending = {},
-
-		result= {
-			dynamic:
-				// the dojo/text caches it's own resources because of dojo.cache
-				true,
-
-			normalize:function(id, toAbsMid){
-				// id is something like (path may be relative):
-				//
-				//	 "path/to/text.html"
-				//	 "path/to/text.html!strip"
-				var parts= id.split("!"),
-					url= parts[0];
-				return (/^\./.test(url) ? toAbsMid(url) : url) + (parts[1] ? "!" + parts[1] : "");
-			},
-
-			load:function(id, require, load){
-				// id is something like (path is always absolute):
-				//
-				//	 "path/to/text.html"
-				//	 "path/to/text.html!strip"
-				var
-					parts= id.split("!"),
-					stripFlag= parts.length>1,
-					absMid= parts[0],
-					url = require.toUrl(parts[0]),
-					text = notFound,
-					finish = function(text){
-						load(stripFlag ? strip(text) : text);
-					};
-				if(absMid in theCache){
-					text = theCache[absMid];
-				}else if(url in require.cache){
-					text = require.cache[url];
-				}else if(url in theCache){
-					text = theCache[url];
-				}
-				if(text===notFound){
-					if(pending[url]){
-						pending[url].push(finish);
-					}else{
-						var pendingList = pending[url] = [finish];
-						getText(url, !require.async, function(text){
-							theCache[absMid]= theCache[url]= text;
-							for(var i = 0; i<pendingList.length;){
-								pendingList[i++](text);
-							}
-							delete pending[url];
-						});
-					}
-				}else{
-					finish(text);
-				}
-			}
-		};
-
-	dojo.cache= function(/*String||Object*/module, /*String*/url, /*String||Object?*/value){
-		//	 * (string string [value]) => (module, url, value)
-		//	 * (object [value])        => (module, value), url defaults to ""
-		//
-		//	 * if module is an object, then it must be convertable to a string
-		//	 * (module, url) module + (url ? ("/" + url) : "") must be a legal argument to require.toUrl
-		//	 * value may be a string or an object; if an object then may have the properties "value" and/or "sanitize"
-		var key;
-		if(typeof module=="string"){
-			if(/\//.test(module)){
-				// module is a version 1.7+ resolved path
-				key = module;
-				value = url;
-			}else{
-				// module is a version 1.6- argument to dojo.moduleUrl
-				key = require.toUrl(module.replace(/\./g, "/") + (url ? ("/" + url) : ""));
-			}
-		}else{
-			key = module + "";
-			value = url;
-		}
-		var
-			val = (value != undefined && typeof value != "string") ? value.value : value,
-			sanitize = value && value.sanitize;
-
-		if(typeof val == "string"){
-			//We have a string, set cache value
-			theCache[key] = val;
-			return sanitize ? strip(val) : val;
-		}else if(val === null){
-			//Remove cached value
-			delete theCache[key];
-			return null;
-		}else{
-			//Allow cache values to be empty strings. If key property does
-			//not exist, fetch it.
-			if(!(key in theCache)){
-				getText(key, true, function(text){
-					theCache[key]= text;
-				});
-			}
-			return sanitize ? strip(theCache[key]) : theCache[key];
-		}
-	};
-
-	return result;
-
-/*=====
-dojo.cache = function(module, url, value){
-	// summary:
-	//		A getter and setter for storing the string content associated with the
-	//		module and url arguments.
-	// description:
-	//		If module is a string that contains slashes, then it is interpretted as a fully
-	//		resolved path (typically a result returned by require.toUrl), and url should not be
-	//		provided. This is the preferred signature. If module is a string that does not
-	//		contain slashes, then url must also be provided and module and url are used to
-	//		call `dojo.moduleUrl()` to generate a module URL. This signature is deprecated.
-	//		If value is specified, the cache value for the moduleUrl will be set to
-	//		that value. Otherwise, dojo.cache will fetch the moduleUrl and store it
-	//		in its internal cache and return that cached value for the URL. To clear
-	//		a cache value pass null for value. Since XMLHttpRequest (XHR) is used to fetch the
-	//		the URL contents, only modules on the same domain of the page can use this capability.
-	//		The build system can inline the cache values though, to allow for xdomain hosting.
-	// module: String||Object
-	//		If a String with slashes, a fully resolved path; if a String without slashes, the
-	//		module name to use for the base part of the URL, similar to module argument
-	//		to `dojo.moduleUrl`. If an Object, something that has a .toString() method that
-	//		generates a valid path for the cache item. For example, a dojo._Url object.
-	// url: String
-	//		The rest of the path to append to the path derived from the module argument. If
-	//		module is an object, then this second argument should be the "value" argument instead.
-	// value: String||Object?
-	//		If a String, the value to use in the cache for the module/url combination.
-	//		If an Object, it can have two properties: value and sanitize. The value property
-	//		should be the value to use in the cache, and sanitize can be set to true or false,
-	//		to indicate if XML declarations should be removed from the value and if the HTML
-	//		inside a body tag in the value should be extracted as the real value. The value argument
-	//		or the value property on the value argument are usually only used by the build system
-	//		as it inlines cache content.
-	//	example:
-	//		To ask dojo.cache to fetch content and store it in the cache (the dojo["cache"] style
-	//		of call is used to avoid an issue with the build system erroneously trying to intern
-	//		this example. To get the build system to intern your dojo.cache calls, use the
-	//		"dojo.cache" style of call):
-	//		| //If template.html contains "<h1>Hello</h1>" that will be
-	//		| //the value for the text variable.
-	//		| var text = dojo["cache"]("my.module", "template.html");
-	//	example:
-	//		To ask dojo.cache to fetch content and store it in the cache, and sanitize the input
-	//		 (the dojo["cache"] style of call is used to avoid an issue with the build system
-	//		erroneously trying to intern this example. To get the build system to intern your
-	//		dojo.cache calls, use the "dojo.cache" style of call):
-	//		| //If template.html contains "<html><body><h1>Hello</h1></body></html>", the
-	//		| //text variable will contain just "<h1>Hello</h1>".
-	//		| var text = dojo["cache"]("my.module", "template.html", {sanitize: true});
-	//	example:
-	//		Same example as previous, but demostrates how an object can be passed in as
-	//		the first argument, then the value argument can then be the second argument.
-	//		| //If template.html contains "<html><body><h1>Hello</h1></body></html>", the
-	//		| //text variable will contain just "<h1>Hello</h1>".
-	//		| var text = dojo["cache"](new dojo._Url("my/module/template.html"), {sanitize: true});
-	return val; //String
-};
-=====*/
-});
-
-
-},
 'dojo/keys':function(){
 define("dojo/keys", ["./_base/kernel", "./_base/sniff"], function(dojo, has) {
 	// module:
@@ -13145,16 +12572,6 @@ define(["./kernel", "./connect"], function(dojo, connect) {
 });
 
 },
-'dojo/loadInit':function(){
-define(["./_base/loader"], function(loader){
-	return {
-		dynamic:0,
-		normalize:function(id){return id;},
-		load:loader.loadInit
-	};
-});
-
-},
 'dojo/_base/NodeList':function(){
 define(["./kernel", "../query", "./array", "./html", "../NodeList-dom"], function(dojo, query, array){
   //  module:
@@ -14630,135 +14047,6 @@ return dojo;
 });
 
 },
-'dojo/_base/window':function(){
-define(["./kernel", "../has", "./sniff"], function(dojo, has){
-	// module:
-	//		dojo/window
-	// summary:
-	//		This module provides an API to save/set/restore the global/document scope.
-
-/*=====
-dojo.doc = {
-	// summary:
-	//		Alias for the current document. 'dojo.doc' can be modified
-	//		for temporary context shifting. Also see dojo.withDoc().
-	// description:
-	//		Refer to dojo.doc rather
-	//		than referring to 'window.document' to ensure your code runs
-	//		correctly in managed contexts.
-	// example:
-	//	|	n.appendChild(dojo.doc.createElement('div'));
-}
-=====*/
-dojo.doc = this["document"] || null;
-
-dojo.body = function(){
-	// summary:
-	//		Return the body element of the document
-	//		return the body object associated with dojo.doc
-	// example:
-	//	|	dojo.body().appendChild(dojo.doc.createElement('div'));
-
-	// Note: document.body is not defined for a strict xhtml document
-	// Would like to memoize this, but dojo.doc can change vi dojo.withDoc().
-	return dojo.doc.body || dojo.doc.getElementsByTagName("body")[0]; // Node
-};
-
-dojo.setContext = function(/*Object*/globalObject, /*DocumentElement*/globalDocument){
-	// summary:
-	//		changes the behavior of many core Dojo functions that deal with
-	//		namespace and DOM lookup, changing them to work in a new global
-	//		context (e.g., an iframe). The varibles dojo.global and dojo.doc
-	//		are modified as a result of calling this function and the result of
-	//		`dojo.body()` likewise differs.
-	dojo.global = ret.global = globalObject;
-	dojo.doc = ret.doc = globalDocument;
-};
-
-dojo.withGlobal = function(	/*Object*/globalObject,
-							/*Function*/callback,
-							/*Object?*/thisObject,
-							/*Array?*/cbArguments){
-	// summary:
-	//		Invoke callback with globalObject as dojo.global and
-	//		globalObject.document as dojo.doc.
-	// description:
-	//		Invoke callback with globalObject as dojo.global and
-	//		globalObject.document as dojo.doc. If provided, globalObject
-	//		will be executed in the context of object thisObject
-	//		When callback() returns or throws an error, the dojo.global
-	//		and dojo.doc will be restored to its previous state.
-
-	var oldGlob = dojo.global;
-	try{
-		dojo.global = ret.global = globalObject;
-		return dojo.withDoc.call(null, globalObject.document, callback, thisObject, cbArguments);
-	}finally{
-		dojo.global = ret.global = oldGlob;
-	}
-};
-
-dojo.withDoc = function(	/*DocumentElement*/documentObject,
-							/*Function*/callback,
-							/*Object?*/thisObject,
-							/*Array?*/cbArguments){
-	// summary:
-	//		Invoke callback with documentObject as dojo.doc.
-	// description:
-	//		Invoke callback with documentObject as dojo.doc. If provided,
-	//		callback will be executed in the context of object thisObject
-	//		When callback() returns or throws an error, the dojo.doc will
-	//		be restored to its previous state.
-
-	var oldDoc = dojo.doc,
-		oldQ = dojo.isQuirks,
-		oldIE = dojo.isIE, isIE, mode, pwin;
-
-	try{
-		dojo.doc = ret.doc = documentObject;
-		// update dojo.isQuirks and the value of the has feature "quirks"
-		dojo.isQuirks = has.add("quirks", dojo.doc.compatMode == "BackCompat", true, true); // no need to check for QuirksMode which was Opera 7 only
-
-		if(has("ie")){
-			if((pwin = documentObject.parentWindow) && pwin.navigator){
-				// re-run IE detection logic and update dojo.isIE / has("ie")
-				// (the only time parentWindow/navigator wouldn't exist is if we were not
-				// passed an actual legitimate document object)
-				isIE = parseFloat(pwin.navigator.appVersion.split("MSIE ")[1]) || undefined;
-				mode = documentObject.documentMode;
-				if(mode && mode != 5 && Math.floor(isIE) != mode){
-					isIE = mode;
-				}
-				dojo.isIE = has.add("ie", isIE, true, true);
-			}
-		}
-
-		if(thisObject && typeof callback == "string"){
-			callback = thisObject[callback];
-		}
-
-		return callback.apply(thisObject, cbArguments || []);
-	}finally{
-		dojo.doc = ret.doc = oldDoc;
-		dojo.isQuirks = has.add("quirks", oldQ, true, true);
-		dojo.isIE = has.add("ie", oldIE, true, true);
-	}
-};
-
-var ret = {
-	global: dojo.global,
-	doc: dojo.doc,
-	body: dojo.body,
-	setContext: dojo.setContext,
-	withGlobal: dojo.withGlobal,
-	withDoc: dojo.withDoc
-};
-
-return ret;
-
-});
-
-},
 'dojo/dom-class':function(){
 define(["./_base/lang", "./_base/array", "./dom"], function(lang, array, dom){
 	// module:
@@ -15079,6 +14367,135 @@ define(["./_base/lang", "./_base/array", "./dom"], function(lang, array, dom){
 	};
 
 	return cls;
+});
+
+},
+'dojo/_base/window':function(){
+define(["./kernel", "../has", "./sniff"], function(dojo, has){
+	// module:
+	//		dojo/window
+	// summary:
+	//		This module provides an API to save/set/restore the global/document scope.
+
+/*=====
+dojo.doc = {
+	// summary:
+	//		Alias for the current document. 'dojo.doc' can be modified
+	//		for temporary context shifting. Also see dojo.withDoc().
+	// description:
+	//		Refer to dojo.doc rather
+	//		than referring to 'window.document' to ensure your code runs
+	//		correctly in managed contexts.
+	// example:
+	//	|	n.appendChild(dojo.doc.createElement('div'));
+}
+=====*/
+dojo.doc = this["document"] || null;
+
+dojo.body = function(){
+	// summary:
+	//		Return the body element of the document
+	//		return the body object associated with dojo.doc
+	// example:
+	//	|	dojo.body().appendChild(dojo.doc.createElement('div'));
+
+	// Note: document.body is not defined for a strict xhtml document
+	// Would like to memoize this, but dojo.doc can change vi dojo.withDoc().
+	return dojo.doc.body || dojo.doc.getElementsByTagName("body")[0]; // Node
+};
+
+dojo.setContext = function(/*Object*/globalObject, /*DocumentElement*/globalDocument){
+	// summary:
+	//		changes the behavior of many core Dojo functions that deal with
+	//		namespace and DOM lookup, changing them to work in a new global
+	//		context (e.g., an iframe). The varibles dojo.global and dojo.doc
+	//		are modified as a result of calling this function and the result of
+	//		`dojo.body()` likewise differs.
+	dojo.global = ret.global = globalObject;
+	dojo.doc = ret.doc = globalDocument;
+};
+
+dojo.withGlobal = function(	/*Object*/globalObject,
+							/*Function*/callback,
+							/*Object?*/thisObject,
+							/*Array?*/cbArguments){
+	// summary:
+	//		Invoke callback with globalObject as dojo.global and
+	//		globalObject.document as dojo.doc.
+	// description:
+	//		Invoke callback with globalObject as dojo.global and
+	//		globalObject.document as dojo.doc. If provided, globalObject
+	//		will be executed in the context of object thisObject
+	//		When callback() returns or throws an error, the dojo.global
+	//		and dojo.doc will be restored to its previous state.
+
+	var oldGlob = dojo.global;
+	try{
+		dojo.global = ret.global = globalObject;
+		return dojo.withDoc.call(null, globalObject.document, callback, thisObject, cbArguments);
+	}finally{
+		dojo.global = ret.global = oldGlob;
+	}
+};
+
+dojo.withDoc = function(	/*DocumentElement*/documentObject,
+							/*Function*/callback,
+							/*Object?*/thisObject,
+							/*Array?*/cbArguments){
+	// summary:
+	//		Invoke callback with documentObject as dojo.doc.
+	// description:
+	//		Invoke callback with documentObject as dojo.doc. If provided,
+	//		callback will be executed in the context of object thisObject
+	//		When callback() returns or throws an error, the dojo.doc will
+	//		be restored to its previous state.
+
+	var oldDoc = dojo.doc,
+		oldQ = dojo.isQuirks,
+		oldIE = dojo.isIE, isIE, mode, pwin;
+
+	try{
+		dojo.doc = ret.doc = documentObject;
+		// update dojo.isQuirks and the value of the has feature "quirks"
+		dojo.isQuirks = has.add("quirks", dojo.doc.compatMode == "BackCompat", true, true); // no need to check for QuirksMode which was Opera 7 only
+
+		if(has("ie")){
+			if((pwin = documentObject.parentWindow) && pwin.navigator){
+				// re-run IE detection logic and update dojo.isIE / has("ie")
+				// (the only time parentWindow/navigator wouldn't exist is if we were not
+				// passed an actual legitimate document object)
+				isIE = parseFloat(pwin.navigator.appVersion.split("MSIE ")[1]) || undefined;
+				mode = documentObject.documentMode;
+				if(mode && mode != 5 && Math.floor(isIE) != mode){
+					isIE = mode;
+				}
+				dojo.isIE = has.add("ie", isIE, true, true);
+			}
+		}
+
+		if(thisObject && typeof callback == "string"){
+			callback = thisObject[callback];
+		}
+
+		return callback.apply(thisObject, cbArguments || []);
+	}finally{
+		dojo.doc = ret.doc = oldDoc;
+		dojo.isQuirks = has.add("quirks", oldQ, true, true);
+		dojo.isIE = has.add("ie", oldIE, true, true);
+	}
+};
+
+var ret = {
+	global: dojo.global,
+	doc: dojo.doc,
+	body: dojo.body,
+	setContext: dojo.setContext,
+	withGlobal: dojo.withGlobal,
+	withDoc: dojo.withDoc
+};
+
+return ret;
+
 });
 
 },
@@ -15605,7 +15022,6 @@ define([], function(){
 =====*/
 
 	"use strict";
-	var nextId = 0;
 	function advise(dispatcher, type, advice, receiveArguments){
 		var previous = dispatcher[type];
 		var around = type == "around";
@@ -15643,7 +15059,6 @@ define([], function(){
 						}
 					}
 				},
-				id: nextId++,
 				advice: advice,
 				receiveArguments: receiveArguments
 			};
@@ -15675,8 +15090,7 @@ define([], function(){
 			var existing = target[methodName], dispatcher;
 			if(!existing || existing.target != target){
 				// no dispatcher in place
-				target[methodName] = dispatcher = function(){
-					var executionId = nextId;
+				dispatcher = target[methodName] = function(){
 					// before advice
 					var args = arguments;
 					var before = dispatcher.before;
@@ -15690,7 +15104,7 @@ define([], function(){
 					}
 					// after advice
 					var after = dispatcher.after;
-					while(after && after.id < executionId){
+					while(after){
 						results = after.receiveArguments ? after.advice.apply(this, args) || results :
 								after.advice.call(this, results);
 						after = after.next;

@@ -98,8 +98,13 @@ return declare("davinci.model.resource.Resource", Model, {
 			});
 		}
 		if (response == "OK") {
-			var i = this.parent.children.indexOf(this);
-			this.parent.children.splice(i, 1);
+			var found=-1;
+			for(var i=0;i<this.parent.children.length && found==-1;i++){
+				if(this.parent.children[i].getName()==this.getName())
+					found = i;
+			}
+			
+			this.parent.children.splice(found, 1);
 			dojo.publish("/davinci/resource/resourceChanged",["deleted",this]);
 		} else {
 			//TODO: refresh the resource in the tree if it is a dir -- delete may have been partial.

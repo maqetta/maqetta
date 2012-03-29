@@ -6,15 +6,11 @@ define([
 	"dojo/i18n!./nls/actions"
 ], function(declare, Action, Runtime, Toaster, nls) {
 
-if (typeof davinci.review.actions === "undefined") {
-	davinci.review.actions = {};
-}
-
-var DeleteVersionAction = davinci.review.actions.DeleteVersionAction = declare("davinci.review.actions.DeleteVersionAction", Action, {
+var DeleteVersionAction = declare("davinci.review.actions.DeleteVersionAction", [Action], {
 
 	run: function(context) {
-		var selection = Runtime.getSelection();
-		if(!selection) return;
+		var selection = context.getSelection ? context.getSelection() : null;
+		if (!selection || !selection.length) { return; }
 
 		okToClose=confirm(nls.areYouSureDelete);
 		if(!okToClose)
@@ -52,9 +48,15 @@ var DeleteVersionAction = davinci.review.actions.DeleteVersionAction = declare("
 	},
 
 	isEnabled: function(context) {
-		if (davinci.Runtime.getRole()!="Designer") { return false; }
-		var selection = davinci.Runtime.getSelection();
-		return selection && selection.length > 0 ? true : false;
+		var selection = context.getSelection ? context.getSelection() : null;
+		if (selection && selection.length > 0) {
+			var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
+			if (item.designerId == davinci.Runtime.userName) { 
+				//Only enable if the current user is also the review's designer
+				return true;
+			}
+		} 
+		return false;
 	}
 
 });

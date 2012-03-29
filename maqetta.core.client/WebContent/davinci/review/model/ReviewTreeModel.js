@@ -33,12 +33,32 @@ return declare("davinci.review.model.ReviewTreeModel", null, {
 		return item.getPath();
 	},
 
-	resourceChanged : function() {
+	resourceChanged : function(result, type, changedResource) {
+		// Remove the changed resource and its children from the tree. Shortly, we will
+		// tell the tree about it's new children. But, if a child's identity matches the 
+		// identity of an existing item in the model, it will not be replaced with the 
+		// new data. Hence, the need to delete the changed resource before adding it back
+		// in.
+		if (changedResource) {
+			if (changedResource._isLoaded) {
+				var changedResourceChildren = null;
+				changedResource.getChildren(function(children) { changedResourceChildren = children; }, true);
+				dojo.forEach(changedResourceChildren, function(child) {
+					this.onDelete(child);
+				}.bind(this));
+			}
+			
+			this.onDelete(changedResource);
+		}
+		
+		// Reload the children. 
 		var parent = this.root;
 		var newChildren;
 		parent._isLoaded = false;
 		parent.getChildren(function(children) { newChildren = children; }, true);
-		this.onChildrenChange(parent,newChildren);
+		
+		//Add new children
+		this.onChildrenChange(parent, newChildren);
 	},
 
 	getLabel: function(/*dojo.data.Item*/ item) {
@@ -61,6 +81,9 @@ return declare("davinci.review.model.ReviewTreeModel", null, {
 	},
 
 	onChange: function(/*dojo.data.Item*/ item) {
+	},
+	
+	onDelete: function(/*dojo.data.Item*/ item) {
 	},
 
 	onChildrenChange: function(/*dojo.data.Item*/ parent, /*dojo.data.Item[]*/ newChildrenList) {

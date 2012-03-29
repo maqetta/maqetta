@@ -10,7 +10,7 @@
 }
 
 .maqFocus {
-	z-index: 1000;
+	z-index: 1000000;
 }
 
 .editFocusFrame {
@@ -29,27 +29,26 @@
 	outline-style: dotted;
 	outline-color: red;
 	outline-width: 3px;
-	z-index: 100;
+	z-index: 1000002;
 	
 }
 .disableWidgetFocusFrame{
-	z-index: 100;
+	z-index: 1002;
 	opacity:0.75;
 	background-color: white;
 	
 }
 
 .enableWidgetFocusFrame{
-	z-index: 99;
+	z-index: 1001;
 
 
 }
 
 .themeSubwidgetMenu{
-	z-index: 115;
+	z-index: 1115;
 	font-family:Verdana,Arial,Helvetica,sans-serif;
 	font-style:normal;
-	/*font-size: .688em;*/
 	color:#131313;
 	background-color: #fff;
 	background-image:none;
@@ -59,7 +58,7 @@
 	display: block;
 	position:absolute;
 	border: 1px solid black;
-	z-index:1001;	/* Above focus, which is at z-index:1000 */
+	z-index:1000001;	/* Above focus, which is at z-index:100000 */
 }
 
 .editCursorBlink {
@@ -121,8 +120,6 @@ div.mblView,
 div[dojotype="dojox.mobile.ContentPane"] {
     min-width:1em;
     min-height:1em; 
-    margin-top: -10px;	/* These two lines prevent vertical scrollbar when View has RoundRectList as first child */
-	padding-top: 10px;
     outline: 1px dotted #AAA;
     outline-color:rgba(128,128,128,0.5);
     background-clip:content-box;
@@ -135,4 +132,7 @@ body {
 	-o-user-select: none;
 	user-select: none;
 }
-	
+
+.dijitDialogUnderlayWrapper {
+	display: none !important;
+}

@@ -11,8 +11,6 @@ import maqetta.core.server.user.DavinciProject;
 import maqetta.core.server.user.ReviewManager;
 
 import org.davinci.server.review.Comment;
-import org.davinci.server.review.Constants;
-import org.davinci.server.review.ReviewObject;
 import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.cache.ReviewCacheManager;
@@ -23,15 +21,18 @@ import org.maqetta.server.Command;
 public class UpdateComment extends Command {
 	boolean isUpdateStatus;
 	
+	@Override
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user)
 			throws IOException {
-		String designerName = ((ReviewObject) req.getSession().getAttribute(
-				Constants.REVIEW_INFO)).getDesignerName();
-		IDesignerUser du =ReviewManager.getReviewManager().getDesignerUser(designerName);
+
+		Comment comment = extractComment(req);
+		
+		String designerName = comment.getDesignerId();
+		IDesignerUser du = ReviewManager.getReviewManager().getDesignerUser(designerName);
 		DavinciProject project = new DavinciProject();
 		project.setOwnerId(du.getName());
-
-		Comment comment = extractComment(req, project);
+		
+		comment.setProject(project);
 		Comment existingComm = ReviewCacheManager.$.getComment(project, comment.getId());
 		Version version = du.getVersion(existingComm.getPageVersion());
 		isUpdateStatus = Boolean.parseBoolean(req.getParameter("isUpdateStatus"));
@@ -50,20 +51,24 @@ public class UpdateComment extends Command {
 		}
 	}
 
-	private Comment extractComment(HttpServletRequest req, DavinciProject project) {
+	private Comment extractComment(HttpServletRequest req) {
 		Comment comment = new Comment();
 		String paramValue;
 
-		comment.setProject(project);
-
 		paramValue = req.getParameter(Comment.ID);
 		comment.setId(paramValue);
+		
+		paramValue = req.getParameter(Comment.DESIGNER_ID);
+		comment.setDesignerId(paramValue);
 
 		paramValue = req.getParameter(Comment.CONTENT);
 		comment.setContent(paramValue);
 
 		paramValue = req.getParameter(Comment.PAGE_STATE);
 		comment.setPageState(paramValue);
+
+		paramValue = req.getParameter(Comment.VIEW_SCENE);
+		comment.setViewScene(paramValue);
 
 		paramValue = req.getParameter(Comment.SUBJECT);
 		comment.setSubject(paramValue);
@@ -100,6 +105,8 @@ public class UpdateComment extends Command {
 					existingComment.setContent(comment.getContent());
 				if (comment.getPageState() != null)
 					existingComment.setPageState(comment.getPageState());
+				if (comment.getViewScene() != null)
+					existingComment.setViewScene(comment.getViewScene());
 				if (comment.getSubject() != null)
 					existingComment.setSubject(comment.getSubject());
 				if (comment.getDrawingJson() != null)

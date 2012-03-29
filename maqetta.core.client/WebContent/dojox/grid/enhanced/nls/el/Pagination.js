@@ -7,7 +7,6 @@ define(
 	"nextTip": "Επόμενη σελίδα",
 	"prevTip": "Προηγούμενη σελίδα",
 	"itemTitle": "στοιχεία",
-	"singularItemTitle": "στοιχείο",
 	"pageStepLabelTemplate": "Σελίδα ${0}",
 	"pageSizeLabelTemplate": "${0} στοιχεία ανά σελίδα",
 	"allItemsLabelTemplate": "Όλα τα στοιχεία",
@@ -21,3 +20,4 @@ define(
 })
 //end v1.x content
 );
+

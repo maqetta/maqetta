@@ -34,13 +34,13 @@ return declare("davinci.workbench.ViewLite", [WidgetLite], {
 			return;
 		}
 		var widget=changeEvent[0];
-		if(this._widget == widget && this._subwidget==widget.subwidget) {
+		if(widget && this._widget == widget && this._subwidget==widget.subwidget) {
 			return false;
 		}
 		this._widget = widget;
 		this._subwidget = widget && widget.subwidget;
 		if(this.onWidgetSelectionChange) {
-				this.onWidgetSelectionChange();
+			this.onWidgetSelectionChange();
 		}
 	},
 

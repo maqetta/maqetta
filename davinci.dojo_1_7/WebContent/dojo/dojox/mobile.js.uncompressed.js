@@ -4541,9 +4541,6 @@ define("dijit/_Container", [
 
 }}});
 
-require(["dojo/i18n"], function(i18n){
-i18n._preloadLocalizations("dojox/nls/mobile", []);
-});
 define("dojox/mobile", [
 	".",
 	"dojo/_base/lang",

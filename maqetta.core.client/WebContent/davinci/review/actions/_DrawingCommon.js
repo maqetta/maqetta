@@ -3,7 +3,7 @@ define([
 	"davinci/actions/Action",
 ], function(declare, Action) {
 	
-return declare("davinci.review.actions._DrawingCommon", Action, {
+return declare("davinci.review.actions._DrawingCommon", [Action], {
 
 	run: function(context) {
 		var e = davinci.Workbench.getOpenEditor(), 
@@ -11,7 +11,7 @@ return declare("davinci.review.actions._DrawingCommon", Action, {
 
 		if (e && e.getContext) {
 			ctx = e.getContext();
-			var doc = this.doc = ctx.containerNode.ownerDocument;
+			var doc = this.doc = ctx.frame.contentDocument;
 			if (!doc.annotationSurface) {
 				dojo.publish("/davinci/review/drawing/getsurface", [doc]);
 			}

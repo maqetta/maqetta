@@ -41,6 +41,9 @@ ViewHelper.prototype = {
 			node = widget.domNode,
 			parentNode = node.parentNode,
 			context = widget.getContext();
+		// Set disableTouchScroll=true so that SwapView logic (actually scrollable.js)
+		// doesn't grab touch/mousedown events (for flick processing)
+		view.disableTouchScroll = true;
 		connect.connect(view, 'startup', function() {
 			if(context.sceneManagers && context.sceneManagers.DojoMobileViews){
 				context.sceneManagers.DojoMobileViews._viewAdded(parentNode._dvWidget, widget);
@@ -49,7 +52,13 @@ ViewHelper.prototype = {
 			// created this interval.
 			if (! widget._dvDisplayInterval) {
 				widget._dvDisplayInterval = setInterval(function() {
+					if(!node || !node.ownerDocument || !node.ownerDocument.defaultView){
+						return;
+					}
 					var win = windowUtils.get(node.ownerDocument);
+					if(!win || !win.dojox || !win.dojox.mobile){
+						return;
+					}
 					if (win.dojox.mobile.currentView === view ||
 							node.style.display === 'none') {
 						node.style.display = 'block';

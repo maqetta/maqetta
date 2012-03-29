@@ -87,7 +87,7 @@ define(["../buildControl", "../fileUtils", "../fs", "../replace"], function(bc, 
 						content: function(){
 							var symbolText = [], key, symtbl = bc.symbolTable;
 							for(key in symtbl){
-								symbolText.push(key + ": \"" + symtbl[key] + "\"" + bc.newline);
+								symbolText.push(key + ": \"" + symtbl[key] + "\"\n");
 							}
 							return symbolText.join('');
 						}

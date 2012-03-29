@@ -61,15 +61,17 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 			);
 			dijitWidget = instances[0];
 
-			// remove from scratch space
-			node = ss.removeChild(ss.firstChild);
+			if (ss.firstChild) {
+				// remove from scratch space
+				// - some widget (i.e. Dialog) get added to special locations,
+				//   not to the parent of the incoming `node`.  Therefore, we
+				//   need to check before removing child from `ss`.
+				ss.removeChild(ss.firstChild);
+			}
 
 			// XXX move this block after `if`?
 			this.domNode = dijitWidget.domNode;
 			dijitWidget.domNode._dvWidget = this;
-			if (dijitWidget.containerNode) {
-				dijitWidget.containerNode._dvWidget = this;
-			}
 			this.isLayoutContainer = dijitWidget.isLayoutContainer;
 		} else {
 			this.type = dijitWidget.declaredClass;

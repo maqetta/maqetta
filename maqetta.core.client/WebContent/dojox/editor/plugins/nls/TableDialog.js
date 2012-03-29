@@ -1,5 +1,4 @@
 define({ root:
-//begin v1.x content
 ({
 	insertTableTitle: "Insert Table",
 	modifyTableTitle: "Modify Table",
@@ -30,7 +29,7 @@ define({ root:
 	deleteTableRowLabel: "Delete Row",
 	deleteTableColumnLabel: "Delete Column"
 })
-,
+	,
 //end v1.x content
 "zh": true,
 "zh-tw": true,
@@ -51,7 +50,6 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
-"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -61,6 +59,6 @@ define({ root:
 "da": true,
 "cs": true,
 "ca": true,
-"az": true,
 "ar": true
 });
+

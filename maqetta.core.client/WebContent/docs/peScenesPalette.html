@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Using the Scenes Palette</title>
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+</head>
+<body class="maqettadocs">
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="userguide.html">Using Maqetta</a> 
+		 &gt; <a href="pageEditor.html">Page Editor</a>
+    </td>
+    <td class="prevnext">
+    <a href="peOutlinePalette.html">Previous</a> / <a href="peSwitchThemes.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Using the Scenes Palette</h1>
+
+<div style="clear:both;">
+
+<div class="image" style="float:right; padding:0 20px 10px;" >
+   <img alt="image" style="margin:0;" src="img/ScenesPalette.png" />
+   <div>The Scenes palette</div>
+</div>
+
+<p>The Scenes palette is for creating <a href="applicationStatesAbout.html">application states</a> for your page/application. Every page has a <b>Normal</b> state by default. This is the state that your page is first displayed in when it is brought up in the browser. You can add additional states to be used for interactive pages. Then you can configure a widget event property, such as the <b>onclick</b> event for a Button, to switch the page into the new state.  In the new state you can set the visibility of various widgets to provide an interactive experience for the user. For example, you may want to display a dialog box in the new state that was previously hidden in the Normal state.</p>
+
+</div>
+
+<p>Follow these instructions to create a new state:</p>
+<ol>
+<li>Click on the <b>plus</b> icon in the Scenes palette toolbar.</li>
+<li>Enter a name for the new state (the state name is for internal use only and is not displayed to the user).</li>
+<li>Click <b>Create</b>
+<li>The new state name will now be listed in the Outline palette, and will be included in the drop-down lists for the Event properties.</li>
+</ol>
+
+<p>To <b>delete</b> a state, select the state by clicking on it, then click on the <b>minus</b> icon in the Scenes palette toolbar.</p>
+
+<p>You <b>select</b> a state by clicking on it in the Scenes palette.</p>
+
+<div class="callout">IMPORTANT:
+<ul>
+<li><i>By default, all visibility changes made in the Outline palette while in the Normal state will apply to all states, 
+whereas visibility set while in any other state will apply to the currently selected state only.</b></i></li>
+<li><p><i>By default, all property changes made in the Properties palette will apply to all states.</b></i>
+If any state other than "Normal" is selected in the Scenes palette, an additional checkbox appears
+at the bottom of the Detailed CSS panes on the Properties palette that allows property changes
+to apply only to the currently selected state rather than all states:</p> 
+<p><img src="img/prop_palette_apply_to_current_state.png"></img></p>
+</li>
+</ul>
+</div>
+
+<p>See <a href="applicationStatesAbout.html">About Application States</a> for more information on working with states.</p>
+
+
+
+<p class="prevnext"><a href="peOutlinePalette.html">Previous</a> / <a href="peSwitchThemes.html">Next</a></p>
+
+</div>  <!-- pagebody -->
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 //>>built
 define(
-"dijit/form/nls/el/Textarea", //begin v1.x content
+//begin v1.x content
 ({
 	iframeEditTitle: 'περιοχή επεξεργασίας',  // primary title for editable IFRAME, for screen readers when focus is in the editing area
 	iframeFocusTitle: 'πλαίσιο περιοχής επεξεργασίας'  // secondary title for editable IFRAME when focus is on outer container

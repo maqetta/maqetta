@@ -462,6 +462,7 @@ return declare(SmartInput, {
 		//Set-up file selection tree
 		var treeParms= {  
 			id: "dataGridInputFileSelectionTree",
+			persist: false,
 			style: "height:10em;margin-top:10px;overflow:auto",
 			model: system.resource,
 			filters: "new system.resource.FileTypeFilter(parms.fileTypes || '*');" //See #1725

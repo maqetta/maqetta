@@ -29,6 +29,7 @@ public interface IDavinciServerConstants {
 	public static final String LIBS_FILE = "libs.settings";
 	public static final String DOWNLOAD_DIRECTORY_NAME = ".download";
 	public static final String SVN_DIRECTORY_NAME = ".svn";
+	public static final String REVIEW_DIRECTORY_NAME = ".review";
 
 	public static final String WORKING_COPY_EXTENSION = ".workingcopy";
 

@@ -16,7 +16,7 @@ public class Resource {
     static ArrayList resourceFilter = new ArrayList();
     static {
         DirectoryFilter df = new DirectoryFilter(new String[] { IDavinciServerConstants.SETTINGS_DIRECTORY_NAME,
-            IDavinciServerConstants.DOWNLOAD_DIRECTORY_NAME, IDavinciServerConstants.SVN_DIRECTORY_NAME});
+            IDavinciServerConstants.DOWNLOAD_DIRECTORY_NAME, IDavinciServerConstants.SVN_DIRECTORY_NAME, IDavinciServerConstants.REVIEW_DIRECTORY_NAME});
 
         Resource.addFilter(df);
         Resource.addFilter(new WorkingCopyFilter());

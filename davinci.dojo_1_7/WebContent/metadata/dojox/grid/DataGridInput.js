@@ -52,9 +52,9 @@ return declare(DataStoreBasedWidgetInput, {
 
 	supportsHTML: "true",
 
-	//helpText:  'First line is column headers separated by commons all following lines are data for those columns.',
+	//helpText: 'First line is column headers separated by commons all following lines are data for those columns.',
 
-	helpText:	"",
+	helpText: "",
 	
 	constructor : function() {
 		this.helpText = dojoxNls.dataGridInputHelp;

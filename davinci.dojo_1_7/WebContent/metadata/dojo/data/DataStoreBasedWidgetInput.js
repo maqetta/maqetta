@@ -3,10 +3,10 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/connect",
 	"dojo/dom-style",
-	// XXX TODO This file (and others) makes too much use of style.set().	Need
-	//	 to refactor this and create one (or more) CSS classes that can be set
-	//	 on the outermost element of this widget -- setting/unsetting this class
-	//	 then sets the proper CSS on interior elements.
+	// XXX TODO This file (and others) makes too much use of style.set().  Need
+	//   to refactor this and create one (or more) CSS classes that can be set
+	//   on the outermost element of this widget -- setting/unsetting this class
+	//   then sets the proper CSS on interior elements.
 	"dojo/dom",
 	"dojo/dom-class",
 	"dojo/data/ItemFileReadStore",
@@ -68,10 +68,10 @@ return declare(SmartInput, {
 	
 	multiLine: "true",
 	supportsHTML: "false", 
-	//helpText:	'First line is column headers separated by commons all following lines are data for those columns.',
+	//helpText: 'First line is column headers separated by commons all following lines are data for those columns.',
 
-	helpText:	'If the CSV data format is selected enter text in the format: first line is column headers separated by commas all following lines are data for those columns.'+
-					 ' If data file from workspace is selected chose a json item file using the file explore folder.',
+	helpText: 'If the CSV data format is selected enter text in the format: first line is column headers separated by commas all following lines are data for those columns.'+
+	          ' If data file from workspace is selected chose a json item file using the file explore folder.',
 
 	_substitutedMainTemplate: null,
 	_dataType: null,
@@ -103,9 +103,9 @@ return declare(SmartInput, {
 			queryOptions:{deep:true}, 
 			onComplete: function(items) {
 				items.forEach(function(item){
-					value +=	item.label[0];
+					value += item.label[0];
 					if (item.moveTo){
-						value +=	', ' + item.moveTo[0];
+						value += ', ' + item.moveTo[0];
 					}
 					value += '\n';
 				});

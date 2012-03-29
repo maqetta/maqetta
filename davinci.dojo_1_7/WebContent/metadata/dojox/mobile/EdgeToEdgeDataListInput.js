@@ -36,7 +36,7 @@ return declare(DataStoreBasedWidgetInput, {
 
 	supportsHTML: "false", 
 	
-	helpText:	"",
+	helpText: "",
 	
 	constructor : function() {
 		var helpInfo = "<i>" + dojoxNls.edgeToEdgeFormat + "</i>";

@@ -132,7 +132,7 @@ DataGridHelper.prototype = {
 		var storeId = srcElement.getAttribute("store");
 		if(storeId){
 			// we may have the store as an object
-			var storeWidget = storeId.declaredClass ?	Widget.byId(storeId.id) : Widget.byId(storeId);
+			var storeWidget = storeId.declaredClass ? Widget.byId(storeId.id) : Widget.byId(storeId);
 			if (storeWidget && widget.dijitWidget && widget.dijitWidget.store){
 				this._reparentTheStore(widget, storeWidget);
 				this.updateStore(widget, storeWidget);
@@ -165,14 +165,14 @@ DataGridHelper.prototype = {
 		command.execute();
 	},
 	
-	updateStore: function(widget,	storeWidget, w) { 
+	updateStore: function(widget, storeWidget, w) { 
 		var store = widget.dijitWidget.store;
 		var data = storeWidget._srcElement.getAttribute('data'); 
 		var url = storeWidget._srcElement.getAttribute('url');
 		if (data){ 
 			var value = data; 
 			var storeData = eval('storeData = '+value);
-			data = { identifier: storeData.identifier,	items:[] };
+			data = { identifier: storeData.identifier, items:[] };
 		
 			var items = data.items;
 			var storeDataItems = storeData.items;

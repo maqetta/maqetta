@@ -139,7 +139,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				}
 			}
 		}else{
-			var absolute = !context.getFlowLayout();
+			var absolute = !this.createWithFlowLayout();
 			
 			// For certain widgets, put an overlay DIV on top of the widget
 			// to intercept mouse events (to prevent normal widget mouse processing)
@@ -180,7 +180,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 	onMouseUp: function(event){
 		var context = this._context;
 		var cp = context._chooseParent; 
-		var absolute = !context.getFlowLayout();
+		var absolute = !this.createWithFlowLayout();
 
 		if(this._dragSizeRect){
 			var parentNode = this._dragSizeRect.parentNode;
@@ -405,7 +405,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		var widgetType = dojo.isArray(data) ? data[0].type : data.type;
 		var context = this._context;
 		var cp = context._chooseParent;
-		var absolute = !context.getFlowLayout();
+		var absolute = !this.createWithFlowLayout();
 		var doCursor = !absolute;
 		if (typeof this._dropCursor == 'object' && this._dropCursor.show === false){
 			doCursor = false;
@@ -455,7 +455,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		var widgetType = dojo.isArray(data) ? data[0].type : data.type;
 		var context = this._context;
 		var cp = context._chooseParent;
-		var absolute = !context.getFlowLayout();
+		var absolute = !this.createWithFlowLayout();
 		var doCursor = !absolute;
 		if (typeof this._dropCursor == 'object' && this._dropCursor.show === false){
 			doCursor = false;
@@ -520,7 +520,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				(this._data.properties.style.indexOf('absolute') > 0)) {
 			widgetAbsoluteLayout = true;
 		}
-		if (! widgetAbsoluteLayout && this._context.getFlowLayout()) {
+		if (! widgetAbsoluteLayout && this.createWithFlowLayout()) {
 			// do not position child under layout container... except for ContentPane
 			if (child) {
 				index = parent.indexOf(child);
@@ -638,6 +638,15 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				this._context.select(w); // no inline on create
 			}
 		}.bind(this));
+	},
+	
+	/**
+	 * whether new widgets should be created using "flow" or "absolute" layout
+	 * NOTE: overridden by PasteTool
+	 * @return {boolean}
+	 */ 
+	createWithFlowLayout: function(){
+		return this._context.getFlowLayout();
 	}
 });
 

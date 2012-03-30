@@ -85,7 +85,8 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 					widget.domNode && widget.domNode.ownerDocument.defaultView.dojo);
 			if(userDojo){
 				position_prop = userDojo.style(widget.domNode, 'position');
-				if(position_prop == 'absolute'){
+				this._moverAbsolute = (position_prop == 'absolute');
+				//if(position_prop == 'absolute'){
 					var parent = widget.getParent();
 					if(!(parent && parent.isLayout())){
 						this._moverWidget = widget;
@@ -99,9 +100,36 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 							var t = parseInt(userDojo.style(selection[i].domNode, 'top'), 10);
 							this._moverStartLocations.push({l:l, t:t});
 						}
-						this._mover = new Mover(widget.domNode, event, this);
+						if(this._moverAbsolute){
+							this._mover = new Mover(widget.domNode, event, this);
+						}else{
+							// width/height adjustment factors, using inside knowledge of CSS classes
+							var adjust1 = 10;
+							var adjust2 = 8;
+							var n = widget.domNode;
+							var w1 = n.offsetWidth + adjust1;
+							var h1 = n.offsetHeight + adjust1;
+							var w2 = w1 - adjust2;
+							var h2 = h1 - adjust2;
+							var l = n.offsetLeft - adjust1/2;
+							var t = n.offsetTop - adjust1/2;
+							var pn = n.offsetParent;
+							while(pn.tagName != 'BODY'){
+								l += pn.offsetLeft; 
+								t += pn.offsettop; 
+								pn = pn.offsetParent;
+							}
+							this._moverDragDiv = dojo.create('div', {className:'flowDragOuter', 
+									style:'left:'+l+'px;top:'+t+'px;width:'+w1+'px;height:'+h1+'px'},
+									this._context.rootNode);
+							dojo.create('div', {className:'flowDragInner', 
+									'style':'width:'+w2+'px;height:'+h2+'px'},
+									this._moverDragDiv);
+							this._mover = new Mover(this._moverDragDiv, event, this);
+						}
+						
 					}
-				}
+				//}
 			}
 		}
 	},
@@ -428,18 +456,23 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		}
 		this._moverLastEventTarget = event.target;
 		this._moverBox = box;
-		this._moverWidget.domNode.style.left = box.l + 'px';
-		this._moverWidget.domNode.style.top = box.t + 'px';
-		var dx = box.l - this._moverStartLocations[index].l;
-		var dy = box.t - this._moverStartLocations[index].t;
-		for(var i=0; i<selection.length; i++){
-			if(i !== index){
-				var w = selection[i];
-				var l = this._moverStartLocations[i].l;
-				var t = this._moverStartLocations[i].t;
-				w.domNode.style.left = (l + dx) + 'px';
-				w.domNode.style.top = (t + dy) + 'px';
+		if(this._moverAbsolute){
+			this._moverWidget.domNode.style.left = box.l + 'px';
+			this._moverWidget.domNode.style.top = box.t + 'px';
+			var dx = box.l - this._moverStartLocations[index].l;
+			var dy = box.t - this._moverStartLocations[index].t;
+			for(var i=0; i<selection.length; i++){
+				if(i !== index){
+					var w = selection[i];
+					var l = this._moverStartLocations[i].l;
+					var t = this._moverStartLocations[i].t;
+					w.domNode.style.left = (l + dx) + 'px';
+					w.domNode.style.top = (t + dy) + 'px';
+				}
 			}
+		}else{
+			this._moverDragDiv.style.left = box.l + 'px';
+			this._moverDragDiv.style.top = box.t + 'px';
 		}
 		var widgetType = this._moverWidget.type;
 		var currentParent = this._moverWidget.getParent();
@@ -448,8 +481,8 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		if(!parentListDiv){// Make sure there is a DIV into which list of parents should be displayed
 			parentListDiv = cp.parentListDivCreate({
 				widgetType:widgetType, 
-				absolute:true, 
-				doCursor:false, 
+				absolute:this._moverAbsolute, 
+				doCursor:!this._moverAbsolute, 
 				beforeAfter:null, 
 				currentParent:currentParent });
  		}
@@ -470,7 +503,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		
 		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
 				Workbench.getProject());
-		var doSnapLinesX = editorPrefs.snap;
+		var doSnapLinesX = (editorPrefs.snap && this._moverAbsolute);
 		var doSnapLinesY = doSnapLinesX;
 		var showParentsPref = context.getPreference('showPossibleParents');
 		var spaceKeyDown = cp.isSpaceKeyDown();
@@ -494,13 +527,13 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				data:data,
 				eventTarget:event.target,
 				position:position,
-				absolute:true,
+				absolute:this._moverAbsolute,
 				currentParent:currentParent,
 				rect:snapBox, 
 				doSnapLinesX:doSnapLinesX, 
 				doSnapLinesY:doSnapLinesY, 
 				doFindParentsXY:showCandidateParents,
-				doCursor:false});
+				doCursor:!this._moverAbsolute});
 	},
 
 	onFirstMove: function(mover){
@@ -529,6 +562,13 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		}
 		if(doMove){
 			this.onExtentChange(index, moverBox);
+		}
+		if(this._moverDragDiv){
+			var parentNode = this._moverDragDiv.parentNode;
+			if(parentNode){
+				parentNode.removeChild(this._moverDragDiv);
+			}
+			this._moverDragDiv = null;
 		}
 		this._mover = null;
 		this._moverBox = null;

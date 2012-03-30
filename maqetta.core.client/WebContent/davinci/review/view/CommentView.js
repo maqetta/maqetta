@@ -153,8 +153,9 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				}, 100);
 			}
 			// Response to the state change event in the review editor
-			if (global && global.davinci && global.davinci.states) {
-				global.davinci.states.subscribe("/davinci/states/state/changed", this, function(args) {
+			if (global && global.require) {
+				var userConnect = global.require("dojo/_base/connect");
+				userConnect.subscribe("/davinci/states/state/changed", this, function(args) {
 					if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
 						return; 
 					}

@@ -2167,7 +2167,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 			
 			// XXX Bug 7499 - (HACK) See comment in addHeaderScript()
-			if (/.*(\/)*maqetta\/States.js$/.test(value)) {
+			if (/.*(\/)*maqetta\/States.js$/.test(value)) { //remove?
 				this._statesJsScriptTag = scriptTag;
 			}
 		}, this);

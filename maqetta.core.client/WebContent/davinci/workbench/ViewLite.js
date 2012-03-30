@@ -52,9 +52,7 @@ return declare("davinci.workbench.ViewLite", [WidgetLite], {
 	 },	
 
 	subscribe: function(topic,func){
-		var isStatesSubscription = topic.indexOf("/davinci/states") == 0;
-		var subscription = isStatesSubscription ? davinci.states.subscribe(topic,this,func) : dojo.subscribe(topic,this,func);
-		this.subscriptions.push(subscription);
+		this.subscriptions.push(dojo.subscribe(topic,this,func));
 	},
 	
 	
@@ -70,15 +68,7 @@ return declare("davinci.workbench.ViewLite", [WidgetLite], {
 	},
 	
 	destroy: function(){
-		dojo.forEach(this.subscriptions, function(item) {
-			var topic = item[0];
-			var isStatesSubscription = topic.indexOf("/davinci/states") == 0;
-			if (isStatesSubscription) {
-				davinci.states.unsubscribe(item);
-			} else {
-				dojo.unsubscribe(item);
-			}
-		});
+		dojo.forEach(this.subscriptions, dojo.unsubscribe);
 		delete this.subscriptions;
 	}
 });

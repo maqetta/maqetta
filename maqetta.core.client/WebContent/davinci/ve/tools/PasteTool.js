@@ -27,10 +27,10 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 	},
 	
 	_create: function(args){
-		
 		var index = args.index,
 			baseline,
-			delta;
+			delta,
+			position;
 		dojo.forEach(this._data, function(d){
 			var loadRequiresForTree = dojo.hitch(this, function(d){
 				if(d.type){ // structure has plain 'string' nodes which don't have type or children

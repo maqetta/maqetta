@@ -5,7 +5,6 @@ define([
 	"davinci/workbench/ViewPart",
 	"davinci/review/widgets/Comment",
 	"davinci/review/widgets/CommentForm",
-	"davinci/review/util",
 	"dijit/form/Button",
 	"dijit/form/TextBox",
 	"dijit/form/DropDownButton",
@@ -15,10 +14,23 @@ define([
 	"dijit/MenuSeparator",
 	"dijit/Dialog",
 	"dijit/Menu",
+	"dojo/fx",
     "dojo/i18n!./nls/view",
     "dojo/i18n!davinci/workbench/nls/workbench"
-], function(declare, Workbench, Runtime, ViewPart, Comment, CommentForm, util, Button, TextBox, DropDownButton, Toolbar,
-		ToolbarSeparator, CheckedMenuItem, MenuSeparator, Dialog, Menu, viewNls, workbenchNls) {
+], function(declare, Workbench, Runtime, ViewPart, Comment, CommentForm, Button, TextBox, DropDownButton, Toolbar,
+		ToolbarSeparator, CheckedMenuItem, MenuSeparator, Dialog, Menu, coreFx, viewNls, workbenchNls) {
+
+var getNewGuid = function() {
+	var guid = "";
+	for (var i = 1; i <= 32; i++){
+		var n = Math.floor(Math.random()*16.0).toString(16);
+		guid += n;
+		if((i==8)||(i==12)||(i==16)||(i==20)){
+			guid += "-";
+		}
+	}
+	return guid;    
+};
 
 return declare("davinci.review.view.CommentView", ViewPart, {
 
@@ -478,7 +490,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				pageName: pageName
 			}
 		}).sort(function(c1,c2){
-			return parseFloat(c1.created) - parseFloat(c2.created);
+			return c1.created > c2.created ? 1 : c1.created < c2.created ? -1 : 0;
 		});
 		this._cached[pageName].pageState = "Normal";
 //		this._cached[pageName].viewScene = "";
@@ -600,7 +612,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		}
 
 		form.reset(); // Ensure that the form is restored
-		form.commentId = util.getNewGuid();
+		form.commentId = getNewGuid();
 		form.setReplyMode();
 		form.replyTo = args.replyTo;
 		form.subject.set("value", args.subject);
@@ -697,11 +709,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			var comments = this._cached[this._currentPage];
 			dojo.forEach(comments, function(comment) {
 				if (!dojo.some(reviewers, function(item) {
-					if (item.email == comment.email) {
-						return true;
-					} else {
-						return false;
-					}
+					return item.email == comment.email;
 				}) && Runtime.userName != item.name)
 					reviewers.push({
 						name: comment.ownerId,
@@ -783,8 +791,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			checked: true,
 			onChange: dojo.hitch(this, function(check) {
 				var children = reviewerList.getChildren();
-				var i;
-				for (i = 2; i<children.length; i++) {
+				for (var i = 2; i<children.length; i++) {
 					children[i].set("checked", check);
 				}
 				this._reviewFilterChanged();
@@ -823,11 +830,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			}
 		}
 		//set the select all button.
-		if (reviewers.length == children.length-2) {
-			children[0].set("checked", true);
-		} else {
-			children[0].set("checked", false);
-		}
+		children[0].set("checked", reviewers.length == children.length-2);
 		if (this._cached[this._currentPage]) {
 			this._cached[this._currentPage].shownColors = reviewers;
 		}
@@ -873,17 +876,16 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			this._onCommentFormCancel();
 		}
 		form.reset(); // Ensure that the form is restored
-		form.commentId = util.getNewGuid();
+		form.commentId = getNewGuid();
 		form.show();
 
 		// Notify the drawing tool to be in edit mode
-		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", 
-				[
-				 Runtime.userName,
-				 form.commentId,
-				 this._cached[this._currentPage].pageState,
-				 this._cached[this._currentPage].viewScene
-				 ]);
+		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", [
+			 Runtime.userName,
+			 form.commentId,
+			 this._cached[this._currentPage].pageState,
+			 this._cached[this._currentPage].viewScene
+		]);
 	},
 
 	_filter: function() {
@@ -984,7 +986,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			this._originalBkColor = dojo.style(elem, "backgroundColor");
 		}
 
-		dojo.fx.chain([dojo.animateProperty({
+		coreFx.chain([dojo.animateProperty({
 			node: elem,
 			duration: 250,
 			properties:{
@@ -1011,7 +1013,5 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		var focusedComments = this._cached[this._currentPage].focusedComments;
 		dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: pageState, viewScene: sceneId}, focusedComments]);
 	}
-	
-
 });
 });

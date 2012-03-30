@@ -14,9 +14,9 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 	isReadOnly: true,
 
 	constructor: function(element) {
-		this._bc = new dijit.layout.BorderContainer({}, element);
+		this._bc = new BorderContainer({}, element);
 		this.domNode = this._bc.domNode;
-		this._designCP = new dijit.layout.ContentPane({region:'center'});
+		this._designCP = new ContentPane({region:'center'});
 		this._bc.addChild(this._designCP);
 		var content = '<div class="silhouette_div_container">'+
 			'<span class="silhouetteiframe_object_container"></span>'+
@@ -44,18 +44,18 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 
 		});
 	},
-	save : function(){
+	save: function(){
 		// nooop.  editor not saved, comments are submited
 	},
-	supports : function(something) {
+	supports: function(something) {
 		return something=="states";
 	},
 
-	getContext : function() {
+	getContext: function() {
 		return this.context;
 	},
 
-	setContent : function(filename, content) {
+	setContent: function(filename, content) {
 		this.fileName = filename;
 		this.basePath = new davinci.model.Path(filename);
 		// URL will always be http://localhost:8080/davinci/review without / at the end at present
@@ -82,7 +82,7 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 		this.context.setSource();
 	},
 
-	destroy : function() {
+	destroy: function() {
 		 //Clear any pending comment from view cache
 		if (this.context && this.context._commentView) {
 			this.context._commentView._setPendingEditComment(this, null);

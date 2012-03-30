@@ -1,10 +1,14 @@
 package maqetta.core.server.command;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SimpleTimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -64,10 +68,13 @@ public class AddComment extends Command {
 			if (version != null && version.isReceiveEmail()) // Send the notification only the designer want receive it.
 				notifyRelatedPersons(user, designer, comment);
 
-			responseString = "{id:'" + comment.getId() + "',created:"
-					+ comment.getCreated().getTime() /*+ ",order:'" + comment.getOrder()
-					+ "'*/ + ",email:'" + user.getPerson().getEmail() + "',reviewer:'" + user.getUserName()
-					+ "'}";
+			//FIXME: use JSONWriter?
+			SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_PATTERN);
+			sdf.setCalendar(Calendar.getInstance(new SimpleTimeZone(0, "GMT")));
+			responseString = "{\"id\":\"" + comment.getId() + "\",\"created\":\""
+					+ sdf.format(comment.getCreated()) /*+ ",order:'" + comment.getOrder()
+					+ "'*/ + "\",\"email\":\"" + user.getPerson().getEmail() + "\",\"reviewer\":\"" + user.getUserName()
+					+ "\"}";
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorString = "The review is not added successfully. Reason: " + e.getMessage();
@@ -211,7 +218,7 @@ public class AddComment extends Command {
 		paramValue = req.getParameter(Comment.STATUS);
 		comment.setStatus(paramValue);
 
-		comment.setCreated(Utils.getCurrentDateInGmt0());
+		comment.setCreated(new Date());
 
 		return comment;
 	}

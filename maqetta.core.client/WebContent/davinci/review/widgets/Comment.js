@@ -1,31 +1,53 @@
 define([
 	"dojo/_base/declare",
-	"dijit/_Widget",
-	"dijit/_Templated",
-	"davinci/review/util",
+	"dijit/_WidgetBase",
+	"dijit/_TemplatedMixin",
 	"dijit/Menu",
 	"dijit/MenuItem",
 	"dijit/form/DropDownButton",
-	"dojo/i18n!./nls/widgets"
-], function(declare, _Widget, _Templated, util, Menu, MenuItem, DropDownButton, widgetsNls) {
-	
+	"dojo/date/locale",
+	"dojo/date/stamp",
+	"dojo/i18n!./nls/widgets",
+	"dojo/text!./templates/Comment.html"
+], function(declare, _Widget, _Templated, Menu, MenuItem, DropDownButton, locale, stamp, widgetsNls, commentTemplate) {
+
+/*
+ * Transform the date passed to a relative time against current time on server.
+ * E.g. current time is 2010-12-28 4:24:00, time passed: 2010-12-28 4:20:00, then
+ * the relative time is "4 mins ago".
+ */
+//TODO: i18n
+var toRelativeTime = function(date, baseDate, threshold) {
+	var diff = date.getTime() - baseDate.getTime();
+	var direction = diff < 0 ? "ago" : "later";
+	var day, hour, min, second;
+
+	diff = Math.floor( Math.abs( diff ) / 1000 );
+
+	if(diff <= 60) return "just now";
+
+	if ( threshold && diff > threshold )
+		return locale.format(date, {formatLength:'short',selector:'date'});
+
+	second = diff % 60;
+	diff = Math.floor( diff / 60 ); 
+	min = diff % 60;
+	diff = Math.floor( diff / 60 );
+	hour = diff % 24;
+	diff = Math.floor( diff / 24 );
+	day = diff;
+
+	var timeStr = day ? day + " days ": hour ? hour + " hours ":min ? min + " mins ":'';
+	return timeStr + direction;
+};
+
 return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 
-	templateString: dojo.cache("davinci", "review/widgets/templates/Comment.html"),
+	templateString: commentTemplate,
 
-	postMixInProperties : function() {
+	postMixInProperties: function() {
 		this.inherited(arguments);
-		/*
-		 * HACK: dijit pulls template substitutions from 'this'. copy values out of NLS
-		 * lang object into properties on this object. hope they don't collide.
-		 */
-		this.by = widgetsNls.by;
-		this.edit = widgetsNls.edit;
-		this.reply = widgetsNls.reply;
-		this.typeLabel = widgetsNls.typeLabel;
-		this.severityLevel = widgetsNls.severityLevel;
-		this.statusLabel = widgetsNls.statusLabel;
-
+		dojo.mixin(this, widgetsNls);
 	},
 
 	VISIBLE_PART_LENGTH: 80, // By default, how many leading characters of the comment will be shown.
@@ -132,8 +154,8 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 	_populate: function(result) {
 		// summary:
 		//		Fill the time, comment order. These info need to be retrieved from the server
-		this.created = parseInt(result.created);
-		this.createTime.innerHTML = util.toRelativeTime(util.toLocalTime(new Date(parseInt(result.created))), new Date(), 604800 );
+		this.created = stamp.fromISOString(result.created);
+		this.createTime.innerHTML = toRelativeTime(this.created, new Date(), 604800);
 	},
 
 	_constructStatus : function(defaultLabel) {

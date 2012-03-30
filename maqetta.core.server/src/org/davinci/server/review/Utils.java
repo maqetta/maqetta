@@ -27,13 +27,6 @@ public class Utils {
 		}
 	}
 
-	public static Date getCurrentDateInGmt0() {
-		Date date = new Date();
-		date.setTime(date.getTime() - TimeZone.getDefault().getOffset(date.getTime()));
-
-		return date;
-	}
-
 	public static String getCommonNotificationId() {
 		String notificationId = null;
 

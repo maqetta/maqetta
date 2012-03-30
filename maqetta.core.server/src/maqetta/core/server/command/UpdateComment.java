@@ -2,6 +2,7 @@ package maqetta.core.server.command;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -85,7 +86,7 @@ public class UpdateComment extends Command {
 		paramValue = req.getParameter(Comment.STATUS);
 		comment.setStatus(paramValue);
 
-		comment.setCreated(Utils.getCurrentDateInGmt0());
+		comment.setCreated(new Date());
 
 		return comment;
 	}

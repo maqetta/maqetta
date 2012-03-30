@@ -3,9 +3,12 @@ package org.davinci.server.review;
 import java.io.Serializable;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SimpleTimeZone;
 
 import org.davinci.server.user.IDavinciProject;
 
@@ -336,14 +339,16 @@ public class Comment implements Serializable {
 			if (Boolean.TRUE.equals(inclusive)) {
 				try {
 					returnValue = fields[i].get(this);
-					if ("created".equals(fieldName))
-						returnValue = ((Date) returnValue).getTime();
+					if ("created".equals(fieldName)) {
+						SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_PATTERN);
+						sdf.setCalendar(Calendar.getInstance(new SimpleTimeZone(0, "GMT")));
+						returnValue = sdf.format((Date) returnValue);
+					}
 				} catch (Exception e) {
 					returnValue = new Object();
 					e.printStackTrace();
 				}
 				writer.addField(fieldName, null == returnValue ? "" : returnValue.toString());
-				
 			}
 		}
 		return writer.getJSON();

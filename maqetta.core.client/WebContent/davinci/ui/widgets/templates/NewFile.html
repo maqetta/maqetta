@@ -30,7 +30,7 @@
 	<div class="folderContainer">
 		<div dojoType="dijit.layout.ContentPane">
 			<div class="fileDialogTreeWidget" dojoAttachPoint="fileTree" dojoType="dijit.Tree" showRoot="false" model="system.resource" getIconClass="davinci.ui.Resource.getResourceIcon"
-				getRowClass="davinci.ui.Resource.getResourceClass" labelAttr="name" childrenAttrs="children"></div>
+				getRowClass="davinci.ui.Resource.getResourceClass" labelAttr="name" childrenAttrs="children" persist="false"></div>
 		</div>
 		<div class='folderContainerButtonRow'><button dojoType="dijit.form.Button" dojoAttachPoint="__newFolderButton" dojoAttachEvent="onClick:_newFolder">${newFolderLabel}</button></div>
 	</div>

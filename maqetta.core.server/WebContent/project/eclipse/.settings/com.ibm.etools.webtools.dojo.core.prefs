@@ -1,17 +1,10 @@
-dojo-args-attribute-name=data-dojo-args,args
-dojo-attach-event-attribute-name=data-dojo-attach-event,dojoAttachEvent
-dojo-attach-point-attribute-name=data-dojo-attach-point,dojoAttachPoint
-dojo-bootstrap-js=dojo/dojo.js
-dojo-config-attribute-name=data-dojo-config,djConfig
-dojo-css=dojo/resources/dojo.css
-dojo-deploy-location-option=ProjectSetupProperties.deploy.as.part.of.this.project
-dojo-dijit-css=dijit/themes/dijit.css
-dojo-event-attribute-name=data-dojo-event,event
-dojo-id-attribute-name=data-dojo-id,jsId
-dojo-props-attribute-name=data-dojo-props,DOJO-SETTINGS-NO-VALUE
+#Fri Mar 30 10:57:02 EDT 2012
 dojo-root=/project1/WebContent/dojo
+dojo-bootstrap-js=dojo/dojo.js
+dojo-css=dojo/resources/dojo.css
+eclipse.preferences.version=1
+dojo-dijit-css=dijit/themes/dijit.css
+dojo-deploy-location-option=ProjectSetupProperties.deploy.as.part.of.this.project
 dojo-source-metadata-root=/project1/WebContent/dojo
 dojo-theme-css=dijit/themes/claro/claro.css
-dojo-type-attribute-name=data-dojo-type,dojoType
 dojo-version-attribute-name=1.7.1 (27407)
-eclipse.preferences.version=1

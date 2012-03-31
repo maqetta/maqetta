@@ -112,7 +112,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 					var pn = n.offsetParent;
 					while(pn && pn.tagName != 'BODY'){
 						l += pn.offsetLeft; 
-						t += pn.offsettop; 
+						t += pn.offsetTop; 
 						pn = pn.offsetParent;
 					}
 					if(this._moverAbsolute){

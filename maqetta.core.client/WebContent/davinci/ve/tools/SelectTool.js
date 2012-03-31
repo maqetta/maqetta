@@ -114,7 +114,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						var l = n.offsetLeft - adjust1/2;
 						var t = n.offsetTop - adjust1/2;
 						var pn = n.offsetParent;
-						while(pn.tagName != 'BODY'){
+						while(pn && pn.tagName != 'BODY'){
 							l += pn.offsetLeft; 
 							t += pn.offsettop; 
 							pn = pn.offsetParent;

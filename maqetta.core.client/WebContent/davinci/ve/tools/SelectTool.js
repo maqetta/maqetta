@@ -37,6 +37,8 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 
 	onMouseDown: function(event){
+		//FIXME: Don't allow both parent and child to be selected
+		
 		var context = this._context;
 		var createMover = false;
 		if((dojo.isMac && event.ctrlKey) || event.button == 2){
@@ -72,10 +74,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				break;
 			}
 		}
-console.log('selectedAncestor='+selectedAncestor);
-if(selectedAncestor){
-	console.log('selectedAncestor.domNode.outerHTML='+selectedAncestor.domNode.outerHTML);
-}
 		var moverWidget = null;
 		var ctrlKey = dojo.isMac ? event.metaKey: event.ctrlKey;
 		this._mouseDownInfo = null;
@@ -132,8 +130,10 @@ if(selectedAncestor){
 						pn = pn.offsetParent;
 					}
 					if(this._moverAbsolute){
-						this._moverDragDiv = dojo.create('div', {style:'position:absolute;z-index:2000000;background:transparent;left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px'},
-							context.rootNode);
+						//FIXME: move some of the style settings to content.css
+						this._moverDragDiv = dojo.create('div', 
+								{style:'position:absolute;z-index:2000000;background:transparent;left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px'},
+								context.rootNode);
 						this._mover = new Mover(this._moverDragDiv, event, this);
 					}else{
 						// width/height adjustment factors, using inside knowledge of CSS classes
@@ -536,10 +536,20 @@ if(selectedAncestor){
 		this._moverDragDiv.style.left = box.l + 'px';
 		this._moverDragDiv.style.top = box.t + 'px';
 		if(this._moverAbsolute){
-			this._moverWidget.domNode.style.left = box.l + 'px';
-			this._moverWidget.domNode.style.top = box.t + 'px';
-			var dx = box.l - this._moverStartLocations[index].l;
-			var dy = box.t - this._moverStartLocations[index].t;
+			var leftAdjust = 0;
+			var topAdjust = 0;
+			var pn = this._moverWidget.domNode.offsetParent;
+			while(pn && pn.tagName != 'BODY'){
+				leftAdjust += pn.offsetLeft;
+				topAdjust += pn.offsetTop;
+				pn = pn.offsetParent;
+			}
+			var newLeft =  (box.l - leftAdjust);
+			var newTop = (box.t - topAdjust);
+			this._moverWidget.domNode.style.left = newLeft + 'px';
+			this._moverWidget.domNode.style.top = newTop + 'px';
+			var dx = newLeft - this._moverStartLocations[index].l;
+			var dy = newTop - this._moverStartLocations[index].t;
 			for(var i=0; i<selection.length; i++){
 				if(i !== index){
 					var w = selection[i];

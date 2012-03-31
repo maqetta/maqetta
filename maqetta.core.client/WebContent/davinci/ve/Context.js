@@ -1771,7 +1771,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			box.t = box.y;
 
 			parent = widget.getParent();
-			op = {move: !(parent && parent.isLayout())};
+			op = {move: !(parent && parent.isLayout && parent.isLayout())};
 
 			//FIXME: need to consult metadata to see if layoutcontainer children are resizable, and if so on which axis
 			var resizable = (parent && parent.isLayout() ) ?

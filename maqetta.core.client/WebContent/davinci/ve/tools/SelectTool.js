@@ -86,50 +86,61 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			if(userDojo){
 				position_prop = userDojo.style(widget.domNode, 'position');
 				this._moverAbsolute = (position_prop == 'absolute');
-				//if(position_prop == 'absolute'){
-					var parent = widget.getParent();
-					if(!(parent && parent.isLayout())){
-						this._moverWidget = widget;
-						this._moverLastEventTarget = null;
-						var cp = this._context._chooseParent;
-						cp.setProposedParentWidget(null);
-						selection = this._context.getSelection();
-						this._moverStartLocations = [];
-						for(var i=0; i<selection.length; i++){
-							var l = parseInt(userDojo.style(selection[i].domNode, 'left'), 10);
-							var t = parseInt(userDojo.style(selection[i].domNode, 'top'), 10);
-							this._moverStartLocations.push({l:l, t:t});
-						}
-						if(this._moverAbsolute){
-							this._mover = new Mover(widget.domNode, event, this);
-						}else{
-							// width/height adjustment factors, using inside knowledge of CSS classes
-							var adjust1 = 10;
-							var adjust2 = 8;
-							var n = widget.domNode;
-							var w1 = n.offsetWidth + adjust1;
-							var h1 = n.offsetHeight + adjust1;
-							var w2 = w1 - adjust2;
-							var h2 = h1 - adjust2;
-							var l = n.offsetLeft - adjust1/2;
-							var t = n.offsetTop - adjust1/2;
-							var pn = n.offsetParent;
-							while(pn.tagName != 'BODY'){
-								l += pn.offsetLeft; 
-								t += pn.offsettop; 
-								pn = pn.offsetParent;
-							}
-							this._moverDragDiv = dojo.create('div', {className:'flowDragOuter', 
-									style:'left:'+l+'px;top:'+t+'px;width:'+w1+'px;height:'+h1+'px'},
-									this._context.rootNode);
-							dojo.create('div', {className:'flowDragInner', 
-									'style':'width:'+w2+'px;height:'+h2+'px'},
-									this._moverDragDiv);
-							this._mover = new Mover(this._moverDragDiv, event, this);
-						}
-						
+				var parent = widget.getParent();
+				if(!(parent && parent.isLayout && parent.isLayout())){
+					dojo.stopEvent(event);
+					this._moverWidget = widget;
+					this._moverLastEventTarget = null;
+					var cp = this._context._chooseParent;
+					cp.setProposedParentWidget(null);
+					selection = this._context.getSelection();
+					this._moverStartLocations = [];
+					for(var i=0; i<selection.length; i++){
+						var l = parseInt(userDojo.style(selection[i].domNode, 'left'), 10);
+						var t = parseInt(userDojo.style(selection[i].domNode, 'top'), 10);
+						this._moverStartLocations.push({l:l, t:t});
 					}
-				//}
+					if(this._moverAbsolute){
+						this._mover = new Mover(widget.domNode, event, this);
+					}else{
+						// width/height adjustment factors, using inside knowledge of CSS classes
+						var adjust1 = 10;
+						var adjust2 = 8;
+						var n = widget.domNode;
+						var w1 = n.offsetWidth + adjust1;
+						var h1 = n.offsetHeight + adjust1;
+						var w2 = w1 - adjust2;
+						var h2 = h1 - adjust2;
+						var l = n.offsetLeft - adjust1/2;
+						var t = n.offsetTop - adjust1/2;
+						var pn = n.offsetParent;
+						while(pn.tagName != 'BODY'){
+							l += pn.offsetLeft; 
+							t += pn.offsettop; 
+							pn = pn.offsetParent;
+						}
+						this._moverDragDiv = dojo.create('div', {className:'flowDragOuter', 
+								style:'left:'+l+'px;top:'+t+'px;width:'+w1+'px;height:'+h1+'px'},
+								this._context.rootNode);
+						dojo.create('div', {className:'flowDragInner', 
+								'style':'width:'+w2+'px;height:'+h2+'px'},
+								this._moverDragDiv);
+						this._mover = new Mover(this._moverDragDiv, event, this);
+						
+						//FIXME: Probably need to add this stuff
+						/*
+						var userdoc = this._context.getDocument();	// inner document = user's document
+						userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
+						this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(e){
+							this.onKeyDown(e);
+						}));
+						this._keyUpHandler = dojo.connect(userdoc, "onkeyup", dojo.hitch(this, function(e){
+							this.onKeyUp(e);
+						}));
+						*/
+					}
+					
+				}
 			}
 		}
 	},

@@ -68,11 +68,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		if(dojo.indexOf(selection, widget) >= 0){
 			if(ctrlKey){ // CTRL to toggle
 				this._context.deselect(widget);
-			}
-			if(event.shiftKey){
-				//TODO: multiple select
 			}else{
-				this._context.select(widget, null, false);
 				createMover = true;
 			}
 		}else{

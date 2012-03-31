@@ -85,12 +85,22 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			}
 		}else{
 			if(ctrlKey){
+				if(widget == context.rootWidget){
+					// Ignore mousedown over body if Ctrl key is down
+					return;
+				}
 				context.select(widget, ctrlKey); // CTRL to add
 			}else{
 				if(selectedAncestor){
 					moverWidget = selectedAncestor;
 					this._mouseDownInfo = { widget:widget, pageX:event.pageX, pageY:event.pageY, dateValue:(new Date()).valueOf() };
 				}else{
+					if(widget == context.rootWidget){
+						// Simple mousedown over body => deselect all (for now)
+						// FIXME: mousedown over body should initiate an area select operation
+						context.deselect();
+						return;
+					}
 					context.select(widget, ctrlKey);
 					moverWidget = widget;
 				}

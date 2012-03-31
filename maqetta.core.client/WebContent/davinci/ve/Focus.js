@@ -494,23 +494,18 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     },
 
     onMove: function(mover, box, event){
-/*FIXME: Does any of this logic need to move to SelectTool.js?
-        if(this._nobIndex < 0){ // frame
-            // Turn on visibility of DRAG_NOB and set its position
-            // at the current mouse position. The DRAG_NOB will always track the
-            // current mouse location, whereas the current frame DIVs might
-            // jump around due to constraint logic if shift key is down
-            // which would prevent it from noticing the mouseUp event.
-            var drag_nob_style = this._nobs[DRAG_NOB].style;
-            drag_nob_style.display = '';
-            drag_nob_style.left = (event.pageX - this.domNode.offsetLeft - this.size/2) + 'px';
-            drag_nob_style.top = (event.pageY - this.domNode.offsetTop - this.size/2) + 'px';
+    	
+        // Turn on visibility of DRAG_NOB and set its position
+        // at the current mouse position. The DRAG_NOB will always track the
+        // current mouse location, whereas the current frame DIVs might
+        // jump around due to constraint logic if shift key is down
+        // which would prevent it from noticing the mouseUp event.
+		var adjust = 5;	// Leveraging special knowledge about CSS rules on nobs
+        var drag_nob_style = this._nobs[DRAG_NOB].style;
+        drag_nob_style.display = '';
+        drag_nob_style.left = (event.pageX - this.domNode.offsetLeft - adjust) + 'px';
+        drag_nob_style.top = (event.pageY - this.domNode.offsetTop - adjust) + 'px';
 
-            this.move(box, event);
-            this._client = {x: event.clientX, y: event.clientY};
-
-        }else{
-*/
 		var b = dojo.mixin({}, this._box);
 		var d = 0;
 		if(this._frameIndex === LEFT || this._nobIndex === LEFT){
@@ -581,9 +576,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			}
 		}
 		this._resize(event.shiftKey ? this._constrained : this._box);
-/*
-        }
-*/
     },
 
     onFirstMove: function(mover){

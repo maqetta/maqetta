@@ -37,21 +37,12 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 
 	onMouseDown: function(event){
+		var context = this._context;
 		var createMover = false;
 		if((dojo.isMac && event.ctrlKey) || event.button == 2){
 			// this is a context menu ("right" click)  Don't change the selection.
 			return;
 		}
-
-		// If in inlineEdit mode, if we get here, the user has clicked outside of the
-		// inlineEdit box, in which case we should bring down inlineEdit, commit the
-		// inlineEdit changes, and leave the current selection as it was previously.
-/*		var focus = (this._context && this._context._focuses && this._context._focuses[0]) ? this._context._focuses[0] : null;
-		if(focus && focus._inline) {
-			dojo.stopEvent(event);
-			return;
-		}
-		*/
 		var widget = this._getTarget() || widgetUtils.getEnclosingWidget(event.target);
 		while(widget){
 			if(widget.getContext()){ // managed widget
@@ -63,43 +54,73 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			return;
 		}
 
-		var selection = this._context.getSelection();
-		var ctrlKey = dojo.isMac ? event.metaKey: event.ctrlKey;
-		if(dojo.indexOf(selection, widget) >= 0){
-			if(ctrlKey){ // CTRL to toggle
-				this._context.deselect(widget);
-			}else{
-				createMover = true;
+		var selection = context.getSelection();
+		
+		// See if widget is a descendant of any widgets in selection
+		var selectedAncestor = null;
+		for(var i=0; i<selection.length; i++){
+			var selWidget = selection[i];
+			var w = widget;
+			while(w && w != context.rootWidget){
+				if(w == selWidget){
+					selectedAncestor = selWidget;
+					break;
+				}
+				w = w.getParent();
 			}
-		}else{
-			this._context.select(widget, ctrlKey); // CTRL to add
-			if(!ctrlKey){
-				createMover = true;
+			if(selectedAncestor){
+				break;
 			}
 		}
-		if(createMover){
+console.log('selectedAncestor='+selectedAncestor);
+if(selectedAncestor){
+	console.log('selectedAncestor.domNode.outerHTML='+selectedAncestor.domNode.outerHTML);
+}
+		var moverWidget = null;
+		var ctrlKey = dojo.isMac ? event.metaKey: event.ctrlKey;
+		this._mouseDownInfo = null;
+		if(dojo.indexOf(selection, widget) >= 0){
+			if(ctrlKey){ // CTRL to toggle
+				context.deselect(widget);
+			}else{
+				moverWidget = widget;
+			}
+		}else{
+			if(ctrlKey){
+				context.select(widget, ctrlKey); // CTRL to add
+			}else{
+				if(selectedAncestor){
+					moverWidget = selectedAncestor;
+					this._mouseDownInfo = { widget:widget, pageX:event.pageX, pageY:event.pageY, dateValue:(new Date()).valueOf() };
+				}else{
+					context.select(widget, ctrlKey);
+					moverWidget = widget;
+				}
+			}
+		}
+		if(moverWidget){
 			var position_prop;
-			var userDojo = (widget.domNode && widget.domNode.ownerDocument && 
-					widget.domNode && widget.domNode.ownerDocument.defaultView && 
-					widget.domNode && widget.domNode.ownerDocument.defaultView.dojo);
+			//FIXME: use getObject
+			var userDojo = (moverWidget.domNode && moverWidget.domNode.ownerDocument && 
+					moverWidget.domNode && moverWidget.domNode.ownerDocument.defaultView && 
+					moverWidget.domNode && moverWidget.domNode.ownerDocument.defaultView.dojo);
 			if(userDojo){
-				position_prop = userDojo.style(widget.domNode, 'position');
+				position_prop = userDojo.style(moverWidget.domNode, 'position');
 				this._moverAbsolute = (position_prop == 'absolute');
-				var parent = widget.getParent();
+				var parent = moverWidget.getParent();
 				if(!(parent && parent.isLayout && parent.isLayout())){
-					//dojo.stopEvent(event);
-					this._moverWidget = widget;
+					this._moverWidget = moverWidget;
 					this._moverLastEventTarget = null;
-					var cp = this._context._chooseParent;
+					var cp = context._chooseParent;
 					cp.setProposedParentWidget(null);
-					selection = this._context.getSelection();
+					selection = context.getSelection();
 					this._moverStartLocations = [];
 					for(var i=0; i<selection.length; i++){
 						var l = parseInt(userDojo.style(selection[i].domNode, 'left'), 10);
 						var t = parseInt(userDojo.style(selection[i].domNode, 'top'), 10);
 						this._moverStartLocations.push({l:l, t:t});
 					}
-					var n = widget.domNode;
+					var n = moverWidget.domNode;
 					var w = n.offsetWidth;
 					var h = n.offsetHeight;
 					var l = n.offsetLeft;
@@ -112,7 +133,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 					}
 					if(this._moverAbsolute){
 						this._moverDragDiv = dojo.create('div', {style:'position:absolute;z-index:2000000;background:transparent;left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px'},
-							this._context.rootNode);
+							context.rootNode);
 						this._mover = new Mover(this._moverDragDiv, event, this);
 					}else{
 						// width/height adjustment factors, using inside knowledge of CSS classes
@@ -126,7 +147,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						var h2 = h1 - adjust2;
 						this._moverDragDiv = dojo.create('div', {className:'flowDragOuter', 
 								style:'left:'+l+'px;top:'+t+'px;width:'+w1+'px;height:'+h1+'px'},
-								this._context.rootNode);
+								context.rootNode);
 						dojo.create('div', {className:'flowDragInner', 
 								'style':'width:'+w2+'px;height:'+h2+'px'},
 								this._moverDragDiv);
@@ -134,7 +155,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						
 						//FIXME: Probably need to add this stuff
 						/*
-						var userdoc = this._context.getDocument();	// inner document = user's document
+						var userdoc = context.getDocument();	// inner document = user's document
 						userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
 						this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(e){
 							this.onKeyDown(e);
@@ -151,15 +172,27 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 
 	onMouseUp: function(event){
+		var clickInteral = 750;	// .75seconds: allow for leisurely click action
+		var dblClickInteral = 750;	// .75seconds: big time slot for tablets
+		var clickDistance = 10;	// within 10px: inexact for tablets
+		var dateValue = (new Date()).valueOf();
+
+		// Because we create a mover with mousedown, we need to include our own click
+		// logic in case there was no actual move and user simple just clicked
+		if(this._mouseDownInfo){
+			if(Math.abs(event.pageX - this._mouseDownInfo.pageX) <= clickDistance &&
+					Math.abs(event.pageY - this._mouseDownInfo.pageY) <= clickDistance &&
+					(dateValue - this._mouseDownInfo.dateValue) <= clickInteral){
+				this._context.select(this._mouseDownInfo.widget);
+			}
+			this._mouseDownInfo = null;
+		}
 		// onDblClick doesn't work because we are interjecting an overlay DIV with a mouseDown operation
 		// so the browser's rules about what is required to trigger an ondblclick are not satisfied.
 		// Therefore, we have to do our own double-click timer logic
-		var dblClickInteral = 750;	// .75seconds: big time slot for tablets
-		var dblClickDistance = 10;	// within 10px: inexact for tablets
-		var dateValue = (new Date()).valueOf();
 		if(this._lastMouseUp){
-			if(Math.abs(event.pageX - this._lastMouseUp.pageX) <= dblClickDistance &&
-					Math.abs(event.pageY - this._lastMouseUp.pageY) <= dblClickDistance &&
+			if(Math.abs(event.pageX - this._lastMouseUp.pageX) <= clickDistance &&
+					Math.abs(event.pageY - this._lastMouseUp.pageY) <= clickDistance &&
 					(dateValue - this._lastMouseUp.dateValue) <= dblClickInteral){
 				this.onDblClick(event);
 			}
@@ -479,6 +512,10 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 	
 	onMove: function(mover, box, event){
+		// If there was any dragging, prevent a mousedown/mouseup combination
+		// from triggering a select operation
+		this._mouseDownInfo = null;
+		
 		var offsetLeft, offsetTop, offsetNode;
 		var context = this._context;
 		var cp = context._chooseParent;

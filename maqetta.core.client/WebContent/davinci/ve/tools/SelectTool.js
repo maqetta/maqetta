@@ -37,7 +37,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 
 	onMouseDown: function(event){
-
 		var createMover = false;
 		if((dojo.isMac && event.ctrlKey) || event.button == 2){
 			// this is a context menu ("right" click)  Don't change the selection.
@@ -92,7 +91,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				this._moverAbsolute = (position_prop == 'absolute');
 				var parent = widget.getParent();
 				if(!(parent && parent.isLayout && parent.isLayout())){
-					dojo.stopEvent(event);
+					//dojo.stopEvent(event);
 					this._moverWidget = widget;
 					this._moverLastEventTarget = null;
 					var cp = this._context._chooseParent;
@@ -154,9 +153,25 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			}
 		}
 	},
-	
-	onDblClick: function(event){
 
+	onMouseUp: function(event){
+		// onDblClick doesn't work because we are interjecting an overlay DIV with a mouseDown operation
+		// so the browser's rules about what is required to trigger an ondblclick are not satisfied.
+		// Therefore, we have to do our own double-click timer logic
+		var dblClickInteral = 750;	// .75seconds: big time slot for tablets
+		var dblClickDistance = 10;	// within 10px: inexact for tablets
+		var dateValue = (new Date()).valueOf();
+		if(this._lastMouseUp){
+			if(Math.abs(event.pageX - this._lastMouseUp.pageX) <= dblClickDistance &&
+					Math.abs(event.pageY - this._lastMouseUp.pageY) <= dblClickDistance &&
+					(dateValue - this._lastMouseUp.dateValue) <= dblClickInteral){
+				this.onDblClick(event);
+			}
+		}
+		this._lastMouseUp = { pageX: event.pageX, pageY: event.pageY, dateValue:dateValue };
+	},
+
+	onDblClick: function(event){
 		var widget = (this._getTarget() || widgetUtils.getEnclosingWidget(event.target));
 		while(widget){
 			if(widget.getContext()){ // managed widget

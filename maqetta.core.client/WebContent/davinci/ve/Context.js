@@ -1774,7 +1774,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			op = {move: !(parent && parent.isLayout && parent.isLayout())};
 
 			//FIXME: need to consult metadata to see if layoutcontainer children are resizable, and if so on which axis
-			var resizable = (parent && parent.isLayout() ) ?
+			var resizable = (parent && parent.isLayout && parent.isLayout() ) ?
 					"none" : metadata.queryDescriptor(widget.type, "resizable");
 			switch(resizable){
 			case "width":
@@ -1791,8 +1791,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this.focus({
 			box: box,
 			op: op,
-			hasLayout: widget.isLayout(),
-			isChild: parent && parent.isLayout()
+			hasLayout: (widget.isLayout && widget.isLayout()),
+			isChild: parent && parent.isLayout && parent.isLayout()
 		}, index, inline);
 			
 	},

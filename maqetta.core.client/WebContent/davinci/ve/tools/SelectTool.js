@@ -5,6 +5,8 @@ define(["dojo/_base/declare",
 		"davinci/ve/widget",
 		"davinci/ve/metadata",
 		"dojo/dnd/Mover",
+		"davinci/XPathUtils",
+		"davinci/html/HtmlFileXPathAdapter",
 		"davinci/commands/CompoundCommand",
 		"davinci/ve/commands/AddCommand",
 		"davinci/ve/commands/RemoveCommand",
@@ -17,7 +19,9 @@ define(["dojo/_base/declare",
 				tool,
 				widgetUtils,
 				Metadata,
-				Mover
+				Mover,
+				XPathUtils,
+				HtmlFileXPathAdapter
 		){
 
 
@@ -100,25 +104,31 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						var t = parseInt(userDojo.style(selection[i].domNode, 'top'), 10);
 						this._moverStartLocations.push({l:l, t:t});
 					}
+					var n = widget.domNode;
+					var w = n.offsetWidth;
+					var h = n.offsetHeight;
+					var l = n.offsetLeft;
+					var t = n.offsetTop;
+					var pn = n.offsetParent;
+					while(pn && pn.tagName != 'BODY'){
+						l += pn.offsetLeft; 
+						t += pn.offsettop; 
+						pn = pn.offsetParent;
+					}
 					if(this._moverAbsolute){
-						this._mover = new Mover(widget.domNode, event, this);
+						this._moverDragDiv = dojo.create('div', {style:'position:absolute;z-index:2000000;background:transparent;left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px'},
+							this._context.rootNode);
+						this._mover = new Mover(this._moverDragDiv, event, this);
 					}else{
 						// width/height adjustment factors, using inside knowledge of CSS classes
 						var adjust1 = 10;
 						var adjust2 = 8;
-						var n = widget.domNode;
+						l -= adjust1/2;
+						t -= adjust1/2;
 						var w1 = n.offsetWidth + adjust1;
 						var h1 = n.offsetHeight + adjust1;
 						var w2 = w1 - adjust2;
 						var h2 = h1 - adjust2;
-						var l = n.offsetLeft - adjust1/2;
-						var t = n.offsetTop - adjust1/2;
-						var pn = n.offsetParent;
-						while(pn && pn.tagName != 'BODY'){
-							l += pn.offsetLeft; 
-							t += pn.offsettop; 
-							pn = pn.offsetParent;
-						}
 						this._moverDragDiv = dojo.create('div', {className:'flowDragOuter', 
 								style:'left:'+l+'px;top:'+t+'px;width:'+w1+'px;height:'+h1+'px'},
 								this._context.rootNode);
@@ -172,13 +182,21 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 
 	onMouseMove: function(event){
-		this._setTarget(event.target);
+		if(this._mover){
+			this._setTarget(null);
+		}else{
+			this._setTarget(event.target);
+		}
 	},
 
 	onMouseOut: function(event){
 		// FIXME: sometime an exception occurs...
 		try{
-			this._setTarget(event.relatedTarget);
+			if(this._mover){
+				this._setTarget(null);
+			}else{
+				this._setTarget(event.relatedTarget);
+			}
 		}catch(e){
 		}
 	},
@@ -467,6 +485,8 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		}
 		this._moverLastEventTarget = event.target;
 		this._moverBox = box;
+		this._moverDragDiv.style.left = box.l + 'px';
+		this._moverDragDiv.style.top = box.t + 'px';
 		if(this._moverAbsolute){
 			this._moverWidget.domNode.style.left = box.l + 'px';
 			this._moverWidget.domNode.style.top = box.t + 'px';
@@ -481,9 +501,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 					w.domNode.style.top = (t + dy) + 'px';
 				}
 			}
-		}else{
-			this._moverDragDiv.style.left = box.l + 'px';
-			this._moverDragDiv.style.top = box.t + 'px';
 		}
 		var widgetType = this._moverWidget.type;
 		var currentParent = this._moverWidget.getParent();
@@ -560,6 +577,14 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	onMoveStop: function(mover){
 		var context = this._context;
 		var cp = this._context._chooseParent;
+		
+		// Find xpath to the this_moverWidget's _srcElement and save that xpath
+		var xpath, oldId;
+		if(this._moverWidget && this._moverWidget._srcElement) {
+			xpath= XPathUtils.getXPath(this._moverWidget._srcElement, HtmlFileXPathAdapter);
+			oldId = this._moverWidget.id;
+		}
+
 		var doMove = true;
 		if(!this._moverBox || !this._moverWidget){
 			doMove = false;
@@ -587,6 +612,39 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		context.dragMoveCleanup();
 		cp.parentListDivDelete();
 		context.selectionShowFocus();
+		
+		// Attempt to restore editFeedback DIV via call to this._setTarget()
+		// Usually, we will find the right node by looking for the widget with given ID
+		// if that fails then try to restore via doing xpath into model
+		// FIXME: What we need to make this fully bulletproof and reliable is some way 
+		// to tag an original widget, have the tag preserved across widget modification,
+		// and then ability to find the widget with that tag.
+		var moverWidget, moverNode;
+		if(oldId){
+			moverNode = context.getDocument().getElementById(oldId);
+			if(moverNode){
+				moverWidget = widgetUtils.getEnclosingWidget(moverNode);
+			}
+		}
+		if(!moverWidget && xpath){
+			var elem = context.model.evaluate(xpath);
+			if(elem){
+				var id = elem.getAttribute('id');
+				if(id){
+					moverWidget = widgetUtils.byId(id, context.getDocument());
+				}
+			}
+		}
+		// Ensure that the widget is actually completely in the DOM.
+		// This prevents exceptions in this._setTarget, which assume DOM is fully baked
+		// and sometimes things are happening too fast and the revised widget is not 
+		// completely ready.
+		if(moverWidget && moverWidget.domNode && moverWidget.domNode.parentNode){
+			this._setTarget(moverWidget.domNode);
+		}else{
+			this._setTarget(null);
+		}
+
 	}
 
 });

@@ -43,16 +43,19 @@ _ShapeHelper.prototype = {
 		var draggables = this.getDraggables();
 		var points = draggables.points;
 		if(points){
+			this._dragNobs = [];
 			for (var i=0; i<points.length; i++){
 				l = points[i].x - centeringShift - xadjust;
 				t = points[i].y - centeringShift - yadjust;
-				var handle = dojo.create('span',{
+				this._dragNobs[i] =  handle = dojo.create('span',{
 					className:'editFocusNob',
 					style:{ position:'absolute', display:'block', left:l+'px', top:t+'px' }	
 				},div);
 				handle._shapeDraggable = {point:i};
 				handle.addEventListener('mousedown',dojo.hitch(this,this.onMouseDown),false);
 			}
+		}else{
+			this._dragNobs = null;
 		}
 		return false;
 	},
@@ -164,6 +167,15 @@ _ShapeHelper.prototype = {
 		dojo.publish("/davinci/ui/widgetPropertiesChanges",
 				[{source: context.editor.editor_id, command: command}]);
 
+	},
+	
+	hideAllDraggablesExcept: function(index){
+		if(this._dragNobs){
+			for(var i=0; i<this._dragNobs.length; i++){
+				var dragNob = this._dragNobs[i];
+				dragNob.style.display = (i == index) ? 'block' : 'none';
+			}
+		}
 	}
 
 };

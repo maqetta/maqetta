@@ -30,6 +30,7 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAJiYmJSUlJGRkYyMjIiIiIODg0lJSUZGRkFBQTw8PDc3NzIyMisrK////wAAAAAAACH5BAEAAA0ALAAAAAAQABAAAAQfsMlJq7046827x8aBJEppmgvTAIEwEHAsF19t33h+RQA7",
             "enablePointerEvents": true,
             "resizable": "none",
+            "showStandardSelectionChrome":false,
             "helper": "./shapes/LineHelper"
         },
         {
@@ -40,6 +41,7 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAJiYmJSUlJGRkYyMjIiIiIODg0lJSUZGRkFBQTw8PDc3NzIyMisrK////wAAAAAAACH5BAEAAA0ALAAAAAAQABAAAAQosMnZgKEYh5N7E4iXDYmIEYpJoerEts3byipt2iLu6R2xwI0CAyiKAAA7",
             "enablePointerEvents": true,
             "resizable": "none",
+            "showStandardSelectionChrome":false,
             "properties": {
                 "points": "0,100,0,0"
             },
@@ -53,6 +55,7 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAJiYmJSUlJGRkYyMjIiIiIODg0lJSUZGRkFBQTw8PDc3NzIyMisrK////wAAAAAAACH5BAEAAA0ALAAAAAAQABAAAAQfsMlJq7046827x8aBJEppmgvTAIEwEHAsF19t33h+RQA7",
             "enablePointerEvents": true,
             "resizable": "none",
+            "showStandardSelectionChrome":false,
             "properties": {
                 "points": "0,100,100,0"
             },
@@ -66,6 +69,7 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAAL+/v5aWlmNjYzMzMxwcHBYWFv///wAAACH5BAEAAAYALAAAAAAQABAAAAMgaLrc/jBKFsBcg9g7iuaFZwlhaZrD1Ikqq35Xdc10PScAOw==",
             "enablePointerEvents": true,
             "resizable": "none",
+            "showStandardSelectionChrome":false,
             "properties": {
                 "points": "0,100,100,0",
                 "endarrow": "forward"
@@ -81,6 +85,7 @@
             "enablePointerEvents": true,
             "resizable": "none",
             "resizableOnCreate": "both",
+            "showStandardSelectionChrome":false,
             "helper": "./shapes/CircleHelper"
         },
         {
@@ -92,6 +97,7 @@
             "enablePointerEvents": true,
             "resizable": "none",
             "resizableOnCreate": "both",
+            "showStandardSelectionChrome":false,
             "helper": "./shapes/RectangleHelper"
         },
         {
@@ -103,6 +109,7 @@
             "enablePointerEvents": true,
             "resizable": "none",
             "resizableOnCreate": "both",
+            "showStandardSelectionChrome":false,
             "properties": {
                 "cornerRadius": "10"
             },

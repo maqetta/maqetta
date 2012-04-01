@@ -34,10 +34,11 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         }
 
         dojo.style(this.domNode, {position: "absolute", display: "none"}); // FIXME: use CSS class to change display property
-
+        this._stdChrome = dojo.create("div", {"class": "editFocusStdChrome"}, this.domNode);
+        
         this._frames = [];
         for(var i = 0; i < 4; i++){
-            var frame = dojo.create("div", {"class": "editFocusFrame"}, this.domNode);
+            var frame = dojo.create("div", {"class": "editFocusFrame"}, this._stdChrome);
             this._frames.push(frame);
             this.connect(frame, "onmousedown", "onMouseDown");
             this.connect(frame, "onmouseup", "onMouseUp");
@@ -54,7 +55,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         for(var i = 0; i < 9; i++){
             var nob = dojo.create("div", {"class": "editFocusNob", style: {
                 cursor: cursors[i]
-            }}, this.domNode);
+            }}, this._stdChrome);
             this._nobs.push(nob);
             this.connect(nob, "onmousedown", "onMouseDown");
             this.connect(nob, "onmouseup", "onMouseUp");
@@ -316,6 +317,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             return; 
         }
 		this._custom.innerHTML = '';
+		var showStandardSelectionChrome = Metadata.queryDescriptor(widget.type, "showStandardSelectionChrome");
+		this._stdChrome.style.display = (showStandardSelectionChrome === false) ? 'none' : 'block';
         this.domNode.style.display = "block";
         this._selectedWidget = widget;
 		var helper = widget.getHelper();

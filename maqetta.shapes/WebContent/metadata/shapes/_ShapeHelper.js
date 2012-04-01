@@ -26,8 +26,7 @@ _ShapeHelper.prototype = {
 		// Need to pull back by 3 because total size is 6 (4px inside, plus 2*1px for border)
 		// FIXME: Note that this assumes onscreen selection boxes are a hardcoded size
 		// Somehow need to compute this dynamically at run-time
-		var centeringShift = 3;
-		var w = 4, h = 4;
+		var centeringShift = 6;
 		
 		this._widget = obj.widget;
 		var dijitWidget = obj.widget.dijitWidget;
@@ -48,9 +47,8 @@ _ShapeHelper.prototype = {
 				l = points[i].x - centeringShift - xadjust;
 				t = points[i].y - centeringShift - yadjust;
 				var handle = dojo.create('span',{
-					//FIXME: Move some of this to a stylesheet
-					style:{ position:'absolute', display:'block', left:l+'px', top:t+'px', width:w+'px', height:h+'px',
-							border:'1px solid black', background:'yellow' }	
+					className:'editFocusNob',
+					style:{ position:'absolute', display:'block', left:l+'px', top:t+'px' }	
 				},div);
 				handle._shapeDraggable = {point:i};
 				handle.addEventListener('mousedown',dojo.hitch(this,this.onMouseDown),false);

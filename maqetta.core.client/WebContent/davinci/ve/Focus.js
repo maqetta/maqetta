@@ -80,6 +80,11 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		this._moverCurrent = { focusLeft:box.l, focusTop:box.t, focusWidth:box.w, focusHeight:box.h };
 		var offScreenAdjust = true;
 		this._updateFromCurrent(offScreenAdjust);
+		if(this._contexDiv){
+			var x = box.w + 10;
+			this._contexDiv.style.left = x + 'px';
+			this._updateSubwidgetList();
+		}
 //console.log('resize. setting this._box = box');
     	this._box = box;
 //console.log('resize exit. this._box=');

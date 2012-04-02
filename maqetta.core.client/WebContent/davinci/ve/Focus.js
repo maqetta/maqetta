@@ -368,7 +368,6 @@ console.log('onMouseDown entered.');
 	},
 	
 	onFirstMove: function(mover){
-		this._mover = mover;
 	},
 	
 	//Required for Moveable interface 
@@ -376,7 +375,7 @@ console.log('onMouseDown entered.');
 	},
 	
 	onMoveStop: function(mover){
-	//console.log('onMoveStop');
+//console.log('onMoveStop');
 		if(this._moverDragDiv){
 			var parentNode = this._moverDragDiv.parentNode;
 			if(parentNode){

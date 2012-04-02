@@ -227,9 +227,11 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			var frameOffScreenAdjustedTop = farthestTop < 0 ? -farthestTop : 0;
 			frameLeftsideLeftAdjusted += frameOffScreenAdjustedLeft;
 			frameTopsideTopAdjusted += frameOffScreenAdjustedTop;
+			frameWidthAdjusted -= frameOffScreenAdjustedLeft;
+			frameHeightAdjusted -= frameOffScreenAdjustedTop;
 			
-			farthestRight = rect.w + frameOffScreenAdjusted;
-			farthestBottom = rect.h + frameOffScreenAdjusted;
+			farthestRight = rect.l + rect.w + frameOffScreenAdjusted;
+			farthestBottom = rect.t + rect.h + frameOffScreenAdjusted;
 			var frameRightAdjust = farthestRight > bodyWidth ? bodyWidth - farthestRight : 0;
 			var frameBottomAdjust = farthestBottom > bodyHeight ? bodyHeight - farthestBottom : 0;
 			frameRightsideAdjustedLeft += frameRightAdjust;	

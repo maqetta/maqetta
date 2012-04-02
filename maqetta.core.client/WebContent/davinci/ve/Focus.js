@@ -71,23 +71,21 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 	},
 
 	resize: function(box, widget){
-//console.log('resize. box=');
-//console.dir(box);
-//console.trace();
 		if(widget){
 		    this._selectedWidget = widget;
 		}
 		this._moverCurrent = { l:box.l, t:box.t, w:box.w, h:box.h };
-		this._updateFocusChrome(this._moverCurrent, true /*offScreenAdjust*/);
+		this._moverCurrentConstained = dojo.mixin({}, this._moverCurrent);
+		this._updateFocusChrome(
+				this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent, 
+				true /*offScreenAdjust*/
+		);
 		if(this._contexDiv){
 			var x = box.w + 10;
 			this._contexDiv.style.left = x + 'px';
 			this._updateSubwidgetList();
 		}
-//console.log('resize. setting this._box = box');
     	this._box = box;
-//console.log('resize exit. this._box=');
-//console.dir(this._box);
 	},
 
 	show: function(widget, inline){
@@ -293,8 +291,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 	},
 
 	onMouseDown: function(event){
-console.log('onMouseDown entered.');
-//console.dir(this._box);
 		this._removeKeyHandlers();
 
 		if(!this._selectedWidget || !this._selectedWidget.domNode){
@@ -310,7 +306,7 @@ console.log('onMouseDown entered.');
 		if(this._context._activeTool.declaredClass != 'davinci.ve.tools.SelectTool'){
 			return;
 		}
-		this._shiftKey = false;
+		this._shiftKey = event.shiftKey;
 
 		this._nobIndex = dojo.indexOf(this._nobs, event.target);
 		this._frameIndex = dojo.indexOf(this._frames, event.target);
@@ -341,13 +337,14 @@ console.log('onMouseDown entered.');
 	},
 
 	onMove: function(mover, box, event){
-//console.log('onMove. box.l='+box.l+',box.t='+box.t);
-//console.log('this._box=');
-//console.dir(this._box);
+		// Update the transparent overlay DIV that tracks mouse and
+		// intercepts mouse events from activating widgets under mouse
 		if(this._moverDragDiv){
 			this._moverDragDiv.style.left = box.l + 'px';
 			this._moverDragDiv.style.top = box.t + 'px';
 		}
+		
+		// Recompute focus chrome's bounds for normal/unconstrained resizing (via dragging nob or frame)
 		var start = this._moverStart;
 		var dx = box.l - start.moverLeft;
 		var dy = box.t - start.moverTop;
@@ -363,7 +360,52 @@ console.log('onMouseDown entered.');
 		}else if(this._frameIndex === BOTTOM || this._nobIndex === LEFT_BOTTOM || this._nobIndex === BOTTOM || this._nobIndex === RIGHT_BOTTOM){
 			this._moverCurrent.h = start.h + dy;
 		}
-		this._updateFocusChrome(this._moverCurrent, false /*offScreenAdjust*/);
+		
+		// Compute constrained width and height (in case shift key is held down)
+		var constrainedWidth = this._moverCurrent.w;
+		var constrainedHeight = this._moverCurrent.h;
+		var constraintSet = false;
+		if(this._selectedWidget && this._selectedWidget.domNode.nodeName === 'IMG'){
+		    var domNode = this._selectedWidget.domNode;
+		    //FIXME: Add natural width/height feature for clip art widgets
+		    var naturalWidth = domNode.naturalWidth;
+		    var naturalHeight = domNode.naturalHeight;
+		    if(typeof naturalHeight == 'number' && naturalHeight > 0 && typeof naturalWidth == 'number' && naturalWidth > 0){
+		        var aspectRatio = naturalWidth / naturalHeight;
+		        if(constrainedWidth < aspectRatio * constrainedHeight){
+		        	constrainedWidth = constrainedHeight * aspectRatio;
+		        }else{
+		        	constrainedHeight = constrainedWidth / aspectRatio;
+		        }
+		        constraintSet = true;
+		    }
+		}
+		if(!constraintSet){
+			if(this._frameIndex === LEFT || this._nobIndex === LEFT || this._frameIndex === RIGHT || this._nobIndex === RIGHT){
+				constrainedHeight = constrainedWidth;
+			}else if(this._frameIndex === TOP || this._nobIndex === TOP || this._frameIndex === BOTTOM || this._nobIndex === BOTTOM){
+				constrainedWidth = constrainedHeight;
+			}else{	// dragging corner - use max
+				if(constrainedWidth > constrainedHeight){
+					constrainedHeight = constrainedWidth;
+				}else{
+					constrainedWidth = constrainedHeight;
+				}
+			}
+		}
+		// Set this._moverCurrentConstrained to hold selection bounds if shift key is help down
+		this._moverCurrentConstrained = { l:this._moverCurrent.l, t:this._moverCurrent.t, w:constrainedWidth, h:constrainedHeight };
+		if(this._frameIndex === LEFT || this._nobIndex === LEFT || this._frameIndex === RIGHT || this._nobIndex === RIGHT){
+			this._moverCurrentConstrained.t -= (this._moverCurrentConstrained.h - this._moverCurrent.h)/2;
+		}
+		if(this._frameIndex === TOP || this._nobIndex === TOP || this._frameIndex === BOTTOM || this._nobIndex === BOTTOM){
+			this._moverCurrentConstrained.l -= (this._moverCurrentConstrained.w - this._moverCurrent.w)/2;
+		}
+
+		this._updateFocusChrome(
+				this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent, 
+				false /*offScreenAdjust*/
+		);
 
 	},
 	
@@ -374,41 +416,32 @@ console.log('onMouseDown entered.');
 	onMoveStart: function(mover){
 	},
 	
+	_moverDoneCleanup: function(){
+		var context = this._context;
+		var cp = context._chooseParent;
+		this._lastEventTarget = null;
+		this._removeKeyHandlers();
+		context.dragMoveCleanup();
+		cp.parentListDivDelete();
+		this._mover = undefined;
+		this._nobIndex = -1;
+		this._frameIndex = -1;
+	},
+	
 	onMoveStop: function(mover){
-//console.log('onMoveStop');
 		if(this._moverDragDiv){
 			var parentNode = this._moverDragDiv.parentNode;
 			if(parentNode){
 				parentNode.removeChild(this._moverDragDiv);
 			}
 			this._moverDragDiv = null;
-			this.onExtentChange(this, 
-					{l:this._moverCurrent.l, t:this._moverCurrent.t, 
-					w:this._moverCurrent.w, h:this._moverCurrent.h});
+			this.onExtentChange(this, this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent);
 		}
+		this._moverDoneCleanup();
 	},
 
 	onMouseUp: function(event){
-//console.log('onMouseUp entered');
-		var context = this._context;
-		var cp = context._chooseParent;
-		this._lastEventTarget = null;
-		this._removeKeyHandlers();
-		if(this._mover){
-			var box;
-			if(this._shiftKey){
-				box = dojo.mixin({}, this._constrained);
-			}else{
-		//console.log('onMouseUp. setting box mixin this._box');
-				box = dojo.mixin({}, this._box);
-			}
-			this._mover = undefined;
-			this.onExtentChange(this, box);
-		}
-		context.dragMoveCleanup();
-		cp.parentListDivDelete();
-		this._nobIndex = -1;
-		this._frameIndex = -1;
+		this._moverDoneCleanup();
 	},
 
     onDblClick: function(event) {
@@ -421,7 +454,10 @@ console.log('onMouseDown entered.');
 			dojo.stopEvent(event);
 			if(event.keyCode == 16){
 				this._shiftKey = true;
-				this._updateFocusChrome(this._moverCurrent, false /*offScreenAdjust*/);
+				this._updateFocusChrome(
+						this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent, 
+						false /*offScreenAdjust*/
+				);
 			}
 		}else{
 			// If event is undefined, something is wrong - remove the key handlers
@@ -434,7 +470,10 @@ console.log('onMouseDown entered.');
 			dojo.stopEvent(event);
 			if(event.keyCode == 16){
 				this._shiftKey = false;
-				this._updateFocusChrome(this._moverCurrent, false /*offScreenAdjust*/);
+				this._updateFocusChrome(
+						this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent, 
+						false /*offScreenAdjust*/
+				);
 			}
 		}else{
 			// If event is undefined, something is wrong - remove the key handlers

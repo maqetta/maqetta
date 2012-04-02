@@ -24,17 +24,11 @@ var LEFT = 0,
 
 return declare("davinci.ve.Focus", _WidgetBase, {
 
-    size: 6,
+	// Inside knowledge about CSS classes used to style editFocusNob and editFocusFrame DIVs
     nobSize:11,
     frameSize:6,
-    
-    baseClass: "maqFocus",
 
     postCreate: function(){
-        if(this.size < 2){
-            this.size = 2;
-        }
-
         dojo.style(this.domNode, {position: "absolute", display: "none"}); // FIXME: use CSS class to change display property
         this._stdChrome = dojo.create("div", {"class": "editFocusStdChrome"}, this.domNode);
         
@@ -226,109 +220,12 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		this._moverCurrent = { focusLeft:box.l, focusTop:box.t, focusWidth:box.w, focusHeight:box.h };
 		var offScreenAdjust = true;
 		this._updateFromCurrent(offScreenAdjust);
-/*
-    	this._resize(box);
-*/
 //console.log('resize. setting this._box = box');
     	this._box = box;
 //console.log('resize exit. this._box=');
 //console.dir(this._box);
     },
 
-    _resize: function(box){
-        if(!box){
-            return;
-        }
-//console.log('_resize entered. box=');
-//console.dir(box);
-//console.log('_resize entered. this._box=');
-//console.dir(this._box);
-
-        var b = dojo.mixin({}, box);
-		
-		// bboxActual is box before adjustments
-		this._bboxActual = {l:b.l, t:b.t};
-
-        // Adjust for size of border when near the top left corner of the screen
-        if(b.l < this.size){
-            b.w -= this.size - b.l;
-            b.l = this.size;
-        }
-        if(b.t < this.size){
-            b.h -= this.size - b.t;
-            b.t = this.size;
-        }
-
-        if("l" in box && "t" in box){
-//console.log('_resize before calling this.move. b.l='+b.l+',b.t='+b.t+',this._box=');
-//console.dir(this._box);
-            this.move({l: b.l, t: b.t});
-//console.log('_resize after calling this.move this._box=');
-//console.dir(this._box);
-        }
-
-        // Width/height must not be less than 0 
-        if(b.w < 0){
-            b.w = 0;
-        }
-        if(b.h < 0){
-            b.h = 0;
-        }
-		this._bboxActual.w = b.w;
-		this._bboxActual.h = b.h;
-
-        // Adjust for size of border when near the bottom/right corner of the screen
-        var box_r = b.l + b.w + this.size;
-        var box_b = b.t + b.h + this.size;
-        var widget = this._selectedWidget;
-        var htmlElem = widget ? widget.domNode.ownerDocument.body.parentNode : null;
-        if(htmlElem){
-        	if(box_r > htmlElem.scrollWidth){
-        		b.w -= (box_r - htmlElem.scrollWidth);
-        	}
-        	if(box_b > htmlElem.scrollHeight){
-        		b.h -= (box_b - htmlElem.scrollHeight);
-        	}
-        }
-        
-        // Adjustment factor requiring inside knowledge of CSS rules on editFocusFrame
-        var adjust = 8;	
-        var w = b.w + adjust;
-        var h = b.h + adjust;
-        this._frames[LEFT].style.height = h + "px";
-        this._frames[RIGHT].style.height = h + "px";
-        this._frames[RIGHT].style.left = b.w + "px";
-        this._frames[TOP].style.width = w + "px";
-        this._frames[BOTTOM].style.top = b.h + "px";
-        this._frames[BOTTOM].style.width = w + "px";
-
-        var l = Math.round(b.w / 2 - this.size / 2);
-        var t = Math.round(b.h / 2 - this.size / 2);
-        
-        // Adjustment factors requiring inside knowledge of CSS rules on editFocusNob
-        adjust1 = 1;
-        adjust2 = 13;
-        var adjW = (b.w - adjust1) + "px";
-        var adjH = (b.h - adjust1) + "px";
-        var l = Math.round(b.w / 2 - adjust2 / 2);
-        var t = Math.round(b.h / 2 - adjust2 / 2);
-        this._nobs[LEFT].style.top = t + "px";
-        this._nobs[RIGHT].style.left = adjW;
-        this._nobs[RIGHT].style.top = t + "px";
-        this._nobs[TOP].style.left = l + "px";
-        this._nobs[BOTTOM].style.left = l + "px";
-        this._nobs[BOTTOM].style.top = adjH;
-        this._nobs[LEFT_BOTTOM].style.top = adjH;
-        this._nobs[RIGHT_TOP].style.left = adjW;
-        this._nobs[RIGHT_BOTTOM].style.left = adjW;
-        this._nobs[RIGHT_BOTTOM].style.top = adjH;
-		
-		this._bboxAdjusted = b;
-//console.log('_resize exit. this._box=');
-//console.dir(this._box);
-    },
-    
-    
     show: function(widget, inline){
         //debugger;
         if (!widget){
@@ -377,7 +274,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             }
         });
     },
-
 
 	inlineEditActive: function(){
 		if(this._inline && this._inline.inlineEditActive){
@@ -461,13 +357,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 				{style:'position:absolute;z-index:2000000;background:transparent;left:'+l+'px;top:'+t+'px;width:'+moverDragDivSize+'px;height:'+moverDragDivSize+'px'},
 				this._context.rootNode);
 		this._mover = new Mover(this._moverDragDiv, event, this);
-		if(this._frameIndex === LEFT || this._nobIndex === LEFT || this._nobIndex === LEFT_BOTTOM){
-			this._nobBox = {l: -this.size};
-		}else if(this._frameIndex === TOP || this._nobIndex === TOP || this._nobIndex === RIGHT_TOP){
-			this._nobBox = {t: -this.size};
-		}else if(this._nobIndex === LEFT_TOP){
-			this._nobBox = {l: -this.size, t: -this.size};
-		}
 		dojo.stopEvent(event);
 
 		var userdoc = this._context.getDocument();	// inner document = user's document
@@ -478,10 +367,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		this._keyUpHandler = dojo.connect(userdoc, "onkeyup", dojo.hitch(this, function(e){
 			this.onKeyUp(e);
 		}));
-/*
-            }
-         }
-*/
      },
 
     onMouseUp: function(event){
@@ -499,23 +384,12 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         		box = dojo.mixin({}, this._box);
         	}
             this._mover = undefined;
-            /*
-            switch(this._nobIndex){
-            case -1: // frame
-                this.onExtentChange(this, dojo.mixin({l: this._box.l, t: this._box.t}, this._client));
-                break;
-            default:
-            */
-            	this.onExtentChange(this, box);
-            /*
-            }
-            */
+            this.onExtentChange(this, box);
         }
 		context.dragMoveCleanup();
      	cp.parentListDivDelete();
         this._nobIndex = -1;
         this._frameIndex = -1;
-        this._nobBox = null;
     },
     
     onDblClick: function(event) {
@@ -651,80 +525,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var offScreenAdjust = false;
 		this._updateFromCurrent(offScreenAdjust);
 
-/*
-		var b = dojo.mixin({}, this._box);
-		var d = 0;
-		if(this._frameIndex === LEFT || this._nobIndex === LEFT){
-			d = box.l - this._nobBox.l;
-			this._nobBox.l = box.l;
-			b.l += d;
-			b.w -= d;
-		}else if(this._frameIndex === RIGHT || this._nobIndex === RIGHT){
-			b.w = box.l;
-		}else if(this._frameIndex === TOP || this._nobIndex === TOP){
-			d = box.t - this._nobBox.t;
-			this._nobBox.t = box.t;
-			b.t += d;
-			b.h -= d;
-		}else if(this._frameIndex === BOTTOM || this._nobIndex === BOTTOM){
-			b.h = box.t;
-		}else if(this._nobIndex === LEFT_TOP){
-			d = box.l - this._nobBox.l;
-			this._nobBox.l = box.l;
-			b.l += d;
-			b.w -= d;
-			d = box.t - this._nobBox.t;
-			this._nobBox.t = box.t;
-			b.t += d;
-			b.h -= d;
-		}else if(this._nobIndex === LEFT_BOTTOM){
-			d = box.l - this._nobBox.l;
-			this._nobBox.l = box.l;
-			b.l += d;
-			b.w -= d;
-			b.h = box.t;
-		}else if(this._nobIndex === RIGHT_TOP){
-			b.w = box.l;
-			d = box.t - this._nobBox.t;
-			this._nobBox.t = box.t;
-			b.t += d;
-			b.h -= d;
-		}else if(this._nobIndex === RIGHT_BOTTOM){
-			b.w = box.l;
-			b.h = box.t;
-		}
-//console.log('dojo.mixin(this._box, b); b=');
-//console.dir(b);
-		dojo.mixin(this._box, b);
-		dojo.mixin(this._constrained, b);
-		if(this._selectedWidget && this._selectedWidget.domNode.nodeName === 'IMG'){
-			var domNode = this._selectedWidget.domNode;
-			var naturalWidth = domNode.naturalWidth;
-			var naturalHeight = domNode.naturalHeight;
-			if(typeof naturalHeight == 'number' && naturalHeight > 0 && typeof naturalWidth == 'number' && naturalWidth > 0){
-				var aspectRatio = naturalWidth / naturalHeight;
-				if(b.w < aspectRatio * b.h){
-					this._constrained.w = b.h * aspectRatio;
-				}else{
-					this._constrained.h = b.w / aspectRatio;
-				}
-			}
-		}else{
-			if(this._frameIndex === LEFT || this._frameIndex === RIGHT || this._nobIndex === LEFT || this._nobIndex === RIGHT){
-				this._constrained.h = b.w;
-			}else if(this._frameIndex === TOP || this._frameIndex === BOTTOM || this._nobIndex === TOP || this._nobIndex === BOTTOM){
-				this._constrained.w = b.h;
-			}else{
-				// If dragging corner, use max
-				if(b.w > b.h){
-					this._constrained.h = b.w;
-				}else{
-					this._constrained.w = b.h;
-				}
-			}
-		}
-		this._resize(event.shiftKey ? this._constrained : this._box);
-*/
     },
 
     onFirstMove: function(mover){

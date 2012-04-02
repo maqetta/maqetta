@@ -185,83 +185,14 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         this._nobs[RIGHT_TOP].style.display = corner;
         this._nobs[RIGHT_BOTTOM].style.display = corner;
     },
-	
-	onMouseDown: function(event){
-console.log('onMouseDown entered.');
-//console.dir(this._box);
-		this._removeKeyHandlers();
 
-		if(!this._selectedWidget || !this._selectedWidget.domNode){
-			return;
-		}
-		// not to start Mover on the context menu
-		if(event.button === 2 || event.ctrlKey){
-			return;
-		}
-		// Only process mousedown events when SelectTool is active
-		// Mostly to allow CreateTool to drag out widget initial size even
-		// when mouse is over focus nodes
-		if(this._context._activeTool.declaredClass != 'davinci.ve.tools.SelectTool'){
-			return;
-		}
-		this._shiftKey = false;
-
-		this._nobIndex = dojo.indexOf(this._nobs, event.target);
-		this._frameIndex = dojo.indexOf(this._frames, event.target);
-
-		var moverDragDivSize = 100;
-		var moverDragDivHalf = 50;
-		var l = event.pageX - moverDragDivHalf;
-		var t = event.pageY - moverDragDivHalf;
-		var node = this._selectedWidget.domNode;
-		this._moverStart = { moverLeft:l, moverTop:t,
-				focusLeft:parseInt(this.domNode.style.left), focusTop:parseInt(this.domNode.style.top),
-				focusWidth:node.offsetWidth, focusHeight:node.offsetHeight };
-		this._moverCurrent = dojo.mixin({}, this._moverStart);
-		this._moverDragDiv = dojo.create('div', 
-				{style:'position:absolute;z-index:2000000;background:transparent;left:'+l+'px;top:'+t+'px;width:'+moverDragDivSize+'px;height:'+moverDragDivSize+'px'},
-				this._context.rootNode);
-		this._mover = new Mover(this._moverDragDiv, event, this);
-		dojo.stopEvent(event);
-
-		var userdoc = this._context.getDocument();	// inner document = user's document
-		userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
-		this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(e){
-			this.onKeyDown(e);
-		}));
-		this._keyUpHandler = dojo.connect(userdoc, "onkeyup", dojo.hitch(this, function(e){
-			this.onKeyUp(e);
-		}));
-     },
-
-    onMouseUp: function(event){
-//console.log('onMouseUp entered');
-        var context = this._context;
-		var cp = context._chooseParent;
-		this._lastEventTarget = null;
-		this._removeKeyHandlers();
-        if(this._mover){
-        	var box;
-        	if(this._shiftKey){
-        		box = dojo.mixin({}, this._constrained);
-        	}else{
-//console.log('onMouseUp. setting box mixin this._box');
-        		box = dojo.mixin({}, this._box);
-        	}
-            this._mover = undefined;
-            this.onExtentChange(this, box);
-        }
-		context.dragMoveCleanup();
-     	cp.parentListDivDelete();
-        this._nobIndex = -1;
-        this._frameIndex = -1;
-    },
-    
-    onDblClick: function(event) {
-        this.showInline(this._selectedWidget);
-        event.stopPropagation();
-    },
-
+    /**
+     * Update the position of the various DIVs that make up the selection chrome
+     * Current selection size is stored in this._moverCurrent
+     * for both when a static click-select happens or when user is resizing
+     * by dragging on a nob or the selection frame.
+     * @param {boolean} offScreenAdjust - whether to pull selection in from off edge of canvas
+     */
 	_updateFromCurrent: function(offScreenAdjust){
 		var c = this._moverCurrent;
 		
@@ -366,14 +297,62 @@ console.log('onMouseDown entered.');
 		this._nobs[RIGHT_BOTTOM].style.top = nobBottomsideAdjustedTop + "px";
 	},
 
-    onMove: function(mover, box, event){
+	onMouseDown: function(event){
+console.log('onMouseDown entered.');
+//console.dir(this._box);
+		this._removeKeyHandlers();
+
+		if(!this._selectedWidget || !this._selectedWidget.domNode){
+			return;
+		}
+		// not to start Mover on the context menu
+		if(event.button === 2 || event.ctrlKey){
+			return;
+		}
+		// Only process mousedown events when SelectTool is active
+		// Mostly to allow CreateTool to drag out widget initial size even
+		// when mouse is over focus nodes
+		if(this._context._activeTool.declaredClass != 'davinci.ve.tools.SelectTool'){
+			return;
+		}
+		this._shiftKey = false;
+
+		this._nobIndex = dojo.indexOf(this._nobs, event.target);
+		this._frameIndex = dojo.indexOf(this._frames, event.target);
+
+		var moverDragDivSize = 100;
+		var moverDragDivHalf = 50;
+		var l = event.pageX - moverDragDivHalf;
+		var t = event.pageY - moverDragDivHalf;
+		var node = this._selectedWidget.domNode;
+		this._moverStart = { moverLeft:l, moverTop:t,
+				focusLeft:parseInt(this.domNode.style.left), focusTop:parseInt(this.domNode.style.top),
+				focusWidth:node.offsetWidth, focusHeight:node.offsetHeight };
+		this._moverCurrent = dojo.mixin({}, this._moverStart);
+		this._moverDragDiv = dojo.create('div', 
+				{style:'position:absolute;z-index:2000000;background:transparent;left:'+l+'px;top:'+t+'px;width:'+moverDragDivSize+'px;height:'+moverDragDivSize+'px'},
+				this._context.rootNode);
+		this._mover = new Mover(this._moverDragDiv, event, this);
+		dojo.stopEvent(event);
+
+		var userdoc = this._context.getDocument();	// inner document = user's document
+		userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
+		this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(e){
+			this.onKeyDown(e);
+		}));
+		this._keyUpHandler = dojo.connect(userdoc, "onkeyup", dojo.hitch(this, function(e){
+			this.onKeyUp(e);
+		}));
+	},
+
+	onMove: function(mover, box, event){
 //console.log('onMove. box.l='+box.l+',box.t='+box.t);
 //console.log('this._box=');
 //console.dir(this._box);
-    	if(this._moverDragDiv){
-    		this._moverDragDiv.style.left = box.l + 'px';
-    		this._moverDragDiv.style.top = box.t + 'px';
-    	}
+		if(this._moverDragDiv){
+			this._moverDragDiv.style.left = box.l + 'px';
+			this._moverDragDiv.style.top = box.t + 'px';
+		}
 		var start = this._moverStart;
 		var dx = box.l - start.moverLeft;
 		var dy = box.t - start.moverTop;
@@ -392,18 +371,18 @@ console.log('onMouseDown entered.');
 		var offScreenAdjust = false;
 		this._updateFromCurrent(offScreenAdjust);
 
-    },
-
-    onFirstMove: function(mover){
-        this._mover = mover;
-    },
-
-    //Required for Moveable interface 
-    onMoveStart: function(mover){
-    },
-
- 	onMoveStop: function(mover){
-//console.log('onMoveStop');
+	},
+	
+	onFirstMove: function(mover){
+		this._mover = mover;
+	},
+	
+	//Required for Moveable interface 
+	onMoveStart: function(mover){
+	},
+	
+	onMoveStop: function(mover){
+	//console.log('onMoveStop');
 		if(this._moverDragDiv){
 			var parentNode = this._moverDragDiv.parentNode;
 			if(parentNode){
@@ -414,35 +393,65 @@ console.log('onMouseDown entered.');
 					{l:this._moverCurrent.focusLeft, t:this._moverCurrent.focusTop, 
 					w:this._moverCurrent.focusWidth, h:this._moverCurrent.focusHeight});
 		}
- 	},
-    
-    onKeyDown: function(event){
+	},
+
+	onMouseUp: function(event){
+//console.log('onMouseUp entered');
+		var context = this._context;
+		var cp = context._chooseParent;
+		this._lastEventTarget = null;
+		this._removeKeyHandlers();
+		if(this._mover){
+			var box;
+			if(this._shiftKey){
+				box = dojo.mixin({}, this._constrained);
+			}else{
+		//console.log('onMouseUp. setting box mixin this._box');
+				box = dojo.mixin({}, this._box);
+			}
+			this._mover = undefined;
+			this.onExtentChange(this, box);
+		}
+		context.dragMoveCleanup();
+		cp.parentListDivDelete();
+		this._nobIndex = -1;
+		this._frameIndex = -1;
+	},
+
+    onDblClick: function(event) {
+        this.showInline(this._selectedWidget);
+        event.stopPropagation();
+    },
+
+	onKeyDown: function(event){
 		if(event){
-	    	dojo.stopEvent(event);
-	    	if(event.keyCode == 16){
-	        	this._shiftKey = true;
-	        	this._resize(this._constrained);   		
-	    	}
+			dojo.stopEvent(event);
+			if(event.keyCode == 16){
+				this._shiftKey = true;
+				var offScreenAdjust = false;
+				this._updateFromCurrent(offScreenAdjust);
+			}
 		}else{
 			// If event is undefined, something is wrong - remove the key handlers
 			this._removeKeyHandlers();
 		}
-    },
-    
-    onKeyUp: function(event){
+	},
+
+	onKeyUp: function(event){
 		if(event){
-	    	dojo.stopEvent(event);
-	    	if(event.keyCode == 16){
-		    	this._shiftKey = false;
-		       	this._resize(this._box);
-	    	}
+			dojo.stopEvent(event);
+			if(event.keyCode == 16){
+				this._shiftKey = false;
+				var offScreenAdjust = false;
+				this._updateFromCurrent(offScreenAdjust);
+			}
 		}else{
 			// If event is undefined, something is wrong - remove the key handlers
 			this._removeKeyHandlers();
 		}
-    },
-    
-    _removeKeyHandlers: function(){
+	},
+
+	_removeKeyHandlers: function(){
 		if(this._keyDownHandler){
 			dojo.disconnect(this._keyDownHandler);
 			this._keyDownHandler = null;
@@ -451,7 +460,7 @@ console.log('onMouseDown entered.');
 			dojo.disconnect(this._keyUpHandler);
 			this._keyUpHandler = null;
 		}
-    },
+	},
 
     onExtentChange: function(focus, box){
     },

@@ -7,20 +7,15 @@ define([
 ],
 function(require, declare, _WidgetBase, Mover, Metadata) {
 	
-// Nobs
-	var LEFT = 0,
+// Nobs and frame constants
+	var LEFT = 0,	// nob and frame
 	RIGHT = 1,
 	TOP = 2,
 	BOTTOM = 3,
-	LEFT_TOP = 4,
+	LEFT_TOP = 4,	// nob only
 	LEFT_BOTTOM = 5,
 	RIGHT_TOP = 6,
 	RIGHT_BOTTOM = 7;
-// Sides
-var LEFT = 0,
-	RIGHT = 1,
-	TOP = 2,
-	BOTTOM = 3;
 
 return declare("davinci.ve.Focus", _WidgetBase, {
 
@@ -61,13 +56,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		this._frameIndex = -1;
 		
 		this._custom = dojo.create("div", {"class": "editFocusCustom"}, this.domNode);
-		
-		// _box holds resize values during dragging assuming no shift-key constraints
-		// _constrained holds resize values after taking into account shift-key constraints
-		this._box = {l: 0, t: 0, w: 0, h: 0};
-		this._constrained = dojo.mixin({}, this._box);
-		
-		this._resizable = {width: true, height: true};
 	},
 
 	resize: function(box, widget){
@@ -82,7 +70,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			this._contexDiv.style.left = x + 'px';
 			this._updateSubwidgetList();
 		}
-    	this._box = box;
+		this._box = box;	// Only used by theme editor's subwidget logic
 	},
 
 	show: function(widget, inline){

@@ -69,7 +69,11 @@ return declare("davinci.review.model.ReviewTreeModel", null, {
 		if (item.elementType == "ReviewFile") {
 			var path = new davinci.model.Path(label);
 			var segments = path.getSegments();
-			label = segments[segments.length-1]+".rev";
+			var editorExtension = davinci.Runtime.getExtension("davinci.editor", function (extension){
+				return extension.id === "davinci.review.CommentReviewEditor";
+			});
+			var extension = "."+editorExtension.extensions;
+			label = segments[segments.length-1] + extension;
 		}
 		return label;
 	},

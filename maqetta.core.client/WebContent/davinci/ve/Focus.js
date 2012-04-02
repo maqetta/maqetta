@@ -262,83 +262,85 @@ console.log('onMouseDown entered.');
 		
 		// Various constants leveraging knowledge about selection chrome CSS style rules
 		var nobOffScreenAdjust = this.nobSize + 1;
-		var frameOffScreenAdjust = this.frameSize + 1;
+		var frameOffScreenAdjusted = this.frameSize + 1;
 		var normalFrameLeft = -6;
 		var normalFrameTop = -6;
 		var normalNobLeft = -11;
 		var normalNobTop = -11;
+		var frameSizeWidthAdjust = 4;
+		var frameSizeBorderAdjust = 4;
 		
 		this.domNode.style.left = c.focusLeft + 'px';
 		this.domNode.style.top = c.focusTop + 'px';
 		
-		var nobOffScreenAdjustLeft = 0, nobOffScreenAdjustTop = 0, nobOffScreenAdjustWidth = 0, nobOffScreenAdjustHeight = 0;
-		var frameOffScreenAdjustLeft = 0, frameOffScreenAdjustTop = 0, frameOffScreenAdjustWidth = 0, frameOffScreenAdjustHeight = 0;
 		var nobLeftsideAdjustedLeft = normalNobLeft;
 		var nobTopsideAdjustedTop = normalNobTop;
-		var nobWidthAdjusted = c.focusWidth;
-		var nobHeightAdjusted = c.focusHeight;
 		var nobRightsideAdjustedLeft = c.focusWidth;
 		var nobBottomsideAdjustedTop = c.focusHeight;
+		var nobWidthAdjusted = c.focusWidth;
+		var nobHeightAdjusted = c.focusHeight;
 		var frameLeftsideLeftAdjusted = normalFrameLeft;
 		var frameTopsideTopAdjusted = normalFrameTop;
-		var frameWidthAdjusted = c.focusWidth;
-		var frameHeightAdjusted = c.focusHeight;
 		var frameRightsideAdjustedLeft = c.focusWidth;
 		var frameBottomsideAdjustedTop = c.focusHeight;
+		var frameWidthAdjusted = c.focusWidth + frameSizeWidthAdjust + frameSizeBorderAdjust;
+		var frameHeightAdjusted = c.focusHeight + frameSizeWidthAdjust + frameSizeBorderAdjust;
+		
 		if(offScreenAdjust){
 			// Determine if parts of selection are off screen
-			// Shift selection to make it visible
+			// If so, shift selection DIVs to make it visible
 			var farthestLest, farthestTop, farthestRight, farthestBottom;
 			var bodyWidth = this.domNode.ownerDocument.body.offsetWidth;
 			var bodyHeight = this.domNode.ownerDocument.body.offsetHeight;
+			
 			farthestLeft = c.focusLeft - nobOffScreenAdjust;
 			farthestTop = c.focusTop - nobOffScreenAdjust;
-			nobOffScreenAdjustLeft = farthestLeft < 0 ? -farthestLeft : 0;
-			nobOffScreenAdjustTop = farthestTop < 0 ? -farthestTop : 0;
+			var nobOffScreenAdjustLeft = farthestLeft < 0 ? -farthestLeft : 0;
+			var nobOffScreenAdjustTop = farthestTop < 0 ? -farthestTop : 0;
 			nobLeftsideAdjustedLeft += nobOffScreenAdjustLeft;
 			nobTopsideAdjustedTop += nobOffScreenAdjustTop;
+			
 			farthestRight = c.focusLeft + c.focusWidth + nobOffScreenAdjust;
 			farthestBottom = c.focusTop + c.focusHeight + nobOffScreenAdjust;
-			nobRightsideAdjustedLeft += (farthestRight > bodyWidth ? bodyWidth - farthestRight : 0);	
-			nobBottomsideAdjustedTop += (farthestBottom > bodyHeight ? bodyHeight - farthestBottom : 0);
+			var nobRightAdjust = farthestRight > bodyWidth ? bodyWidth - farthestRight : 0;
+			var nobBottomAdjust = farthestBottom > bodyHeight ? bodyHeight - farthestBottom : 0;
+			nobRightsideAdjustedLeft += nobRightAdjust;	
+			nobBottomsideAdjustedTop += nobBottomAdjust;
 
-			farthestLeft = c.focusLeft - frameOffScreenAdjust;
-			farthestTop = c.focusTop - frameOffScreenAdjust;
-			frameOffScreenAdjustLeft = farthestLeft < 0 ? -farthestLeft : 0;
-			frameOffScreenAdjustTop = farthestTop < 0 ? -farthestTop : 0;
-			frameLeftsideLeftAdjusted += frameOffScreenAdjustLeft;
-			frameTopsideTopAdjusted += frameOffScreenAdjustLeft;
-			farthestRight = c.focusLeft + c.focusWidth + frameOffScreenAdjust;
-			farthestBottom = c.focusTop + c.focusHeight + frameOffScreenAdjust;
-			frameRightsideAdjustedLeft += (farthestRight > bodyWidth ? bodyWidth - farthestRight : 0);	
-			frameBottomsideAdjustedTop += (farthestBottom > bodyHeight ? bodyHeight - farthestBottom : 0);
-			frameOffScreenAdjustWidth = farthestRight > bodyWidth ? (bodyWidth - farthestRight) : 0;	// will be zero or negative
-			frameOffScreenAdjustHeight = farthestBottom > bodyHeight ? (bodyHeight - farthestBottom) : 0;	// will be zero or negative
+			farthestLeft = c.focusLeft - frameOffScreenAdjusted;
+			farthestTop = c.focusTop - frameOffScreenAdjusted;
+			var frameOffScreenAdjustedLeft = farthestLeft < 0 ? -farthestLeft : 0;
+			var frameOffScreenAdjustedTop = farthestTop < 0 ? -farthestTop : 0;
+			frameLeftsideLeftAdjusted += frameOffScreenAdjustedLeft;
+			frameTopsideTopAdjusted += frameOffScreenAdjustedLeft;
+			
+			farthestRight = c.focusWidth + frameOffScreenAdjusted;
+			farthestBottom = c.focusHeight + frameOffScreenAdjusted;
+			var frameRightAdjust = farthestRight > bodyWidth ? bodyWidth - farthestRight : 0;
+			var frameBottomAdjust = farthestBottom > bodyHeight ? bodyHeight - farthestBottom : 0;
+			frameRightsideAdjustedLeft += frameRightAdjust;	
+			frameBottomsideAdjustedTop += frameBottomAdjust;
+			farthestRight = frameOffScreenAdjustedLeft + frameWidthAdjusted;
+			farthestBottom = frameOffScreenAdjustedTop + frameHeightAdjusted;
+			var frameWAdjust = (farthestRight + frameSizeBorderAdjust) > bodyWidth ? bodyWidth - (farthestRight + frameSizeBorderAdjust) : 0;
+			var frameHAdjust = (farthestBottom + frameSizeBorderAdjust) > bodyHeight ? bodyHeight - (farthestBottom + frameSizeBorderAdjust) : 0;
+			frameWidthAdjusted += frameWAdjust;
+			frameHeightAdjusted += frameHAdjust;
 		}
-		var nobWidthAdjusted = c.focusWidth + nobOffScreenAdjustWidth - nobOffScreenAdjustLeft;
-		var nobHeightAdjusted = c.focusHeight + nobOffScreenAdjustHeight - nobOffScreenAdjustTop;
-		var frameWidthAdjusted = c.focusWidth + frameOffScreenAdjustWidth - frameOffScreenAdjustLeft;
-		var frameHeightAdjusted = c.focusHeight + frameOffScreenAdjustHeight - frameOffScreenAdjustTop;
 		
-		// Adjustment factors requiring inside knowledge of CSS rules on editFocusNob and editFocusFrame
-		var frameSizeAdjust = 8;
-		var frameWidth = frameWidthAdjusted + frameSizeAdjust;
-		var frameHeight = frameHeightAdjusted + frameSizeAdjust;
 		this._frames[LEFT].style.left =
 			this._frames[TOP].style.left =
 			this._frames[BOTTOM].style.left = frameLeftsideLeftAdjusted + "px";
 		this._frames[LEFT].style.top =
 			this._frames[TOP].style.top =
 			this._frames[RIGHT].style.top = frameTopsideTopAdjusted + "px";
-		this._frames[LEFT].style.height = frameHeight + "px";
-		this._frames[RIGHT].style.height = frameHeight + "px";
+		this._frames[LEFT].style.height = frameHeightAdjusted + "px";
+		this._frames[RIGHT].style.height = frameHeightAdjusted + "px";
 		this._frames[RIGHT].style.left = frameRightsideAdjustedLeft + "px";
-		this._frames[TOP].style.width = frameWidth + "px";
+		this._frames[TOP].style.width = frameWidthAdjusted + "px";
 		this._frames[BOTTOM].style.top = frameBottomsideAdjustedTop + "px";
-		this._frames[BOTTOM].style.width = frameWidth + "px";
+		this._frames[BOTTOM].style.width = frameWidthAdjusted + "px";
 
-		// Adjustment factors requiring inside knowledge of CSS rules on editFocusNob and editFocusFrame
-		var nobLocationAdjust = -1;
 		var l = Math.round(nobWidthAdjusted / 2 - this.nobSize / 2);
 		var t = Math.round(nobHeightAdjusted / 2 - this.nobSize / 2);
 		this._nobs[LEFT].style.left =

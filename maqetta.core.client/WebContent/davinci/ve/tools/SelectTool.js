@@ -37,8 +37,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 
 	onMouseDown: function(event){
-console.log('SelectTool.js onMouseDown. event.target='+event.target);
-console.log('event.target.outerHTML='+event.target.outerHTML);
 		//FIXME: Don't allow both parent and child to be selected
 		
 		var context = this._context;
@@ -57,10 +55,6 @@ console.log('event.target.outerHTML='+event.target.outerHTML);
 		if(!widget){
 			return;
 		}
-console.log('widget.domNode='+widget.domNode);
-if(widget.domNode){
-	console.log('widget.domNode.outerHTML='+widget.domNode.outerHTML);
-}
 		var selection = context.getSelection();
 		
 		// See if widget is a descendant of any widgets in selection
@@ -83,14 +77,12 @@ if(widget.domNode){
 		var ctrlKey = dojo.isMac ? event.metaKey: event.ctrlKey;
 		this._mouseDownInfo = null;
 		if(dojo.indexOf(selection, widget) >= 0){
-console.log('within dojo.indexOf. widget='+widget);
 			if(ctrlKey){ // CTRL to toggle
 				context.deselect(widget);
 			}else{
 				moverWidget = widget;
 			}
 		}else{
-console.log('else for dojo.indexOf. widget='+widget);
 			if(ctrlKey){
 				if(widget == context.rootWidget){
 					// Ignore mousedown over body if Ctrl key is down
@@ -98,27 +90,21 @@ console.log('else for dojo.indexOf. widget='+widget);
 				}
 				context.select(widget, ctrlKey); // CTRL to add
 			}else{
-console.log('before check of selectedAncestor. selectedAncestor='+selectedAncestor);
 				if(selectedAncestor){
-console.log('within if selectedAncestor');
 					moverWidget = selectedAncestor;
 					this._mouseDownInfo = { widget:widget, pageX:event.pageX, pageY:event.pageY, dateValue:(new Date()).valueOf() };
 				}else{
-console.log('within if selectedAncestor else');
 					if(widget == context.rootWidget){
-console.log('within widget == context.rootWidget');
 						// Simple mousedown over body => deselect all (for now)
 						// FIXME: mousedown over body should initiate an area select operation
 						context.deselect();
 						return;
 					}
-console.log('before calling context.select');
 					context.select(widget, ctrlKey);
 					moverWidget = widget;
 				}
 			}
 		}
-return;
 		if(moverWidget){
 			var position_prop;
 			//FIXME: use getObject

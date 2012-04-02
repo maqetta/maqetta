@@ -2073,7 +2073,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	onMouseDown: function(event){
-console.log('Context.js: onMouseDown');
 		if(this._activeTool && this._activeTool.onMouseDown && !this._blockChange){
 			this._activeTool.onMouseDown(event);
 		}

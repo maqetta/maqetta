@@ -77,9 +77,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		if(widget){
 		    this._selectedWidget = widget;
 		}
-		this._moverCurrent = { focusLeft:box.l, focusTop:box.t, focusWidth:box.w, focusHeight:box.h };
-		var offScreenAdjust = true;
-		this._updateFromCurrent(offScreenAdjust);
+		this._moverCurrent = { l:box.l, t:box.t, w:box.w, h:box.h };
+		this._updateFocusChrome(this._moverCurrent, true /*offScreenAdjust*/);
 		if(this._contexDiv){
 			var x = box.w + 10;
 			this._contexDiv.style.left = x + 'px';
@@ -186,16 +185,12 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         this._nobs[RIGHT_BOTTOM].style.display = corner;
     },
 
-    /**
-     * Update the position of the various DIVs that make up the selection chrome
-     * Current selection size is stored in this._moverCurrent
-     * for both when a static click-select happens or when user is resizing
-     * by dragging on a nob or the selection frame.
-     * @param {boolean} offScreenAdjust - whether to pull selection in from off edge of canvas
-     */
-	_updateFromCurrent: function(offScreenAdjust){
-		var c = this._moverCurrent;
-		
+	/**
+	 * Update the position of the various DIVs that make up the selection chrome
+	 * @param {object} rect - location/size for currently selected widget in form of {l:,t:,w:,h:}
+	 * @param {boolean} offScreenAdjust - whether to pull selection in from off edge of canvas
+	 */
+	_updateFocusChrome: function(rect, offScreenAdjust){
 		// Various constants leveraging knowledge about selection chrome CSS style rules
 		var nobOffScreenAdjust = this.nobSize + 1;
 		var frameOffScreenAdjusted = this.frameSize + 1;
@@ -206,21 +201,21 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var frameSizeWidthAdjust = 4;
 		var frameSizeBorderAdjust = 4;
 		
-		this.domNode.style.left = c.focusLeft + 'px';
-		this.domNode.style.top = c.focusTop + 'px';
+		this.domNode.style.left = rect.l + 'px';
+		this.domNode.style.top = rect.t + 'px';
 		
 		var nobLeftsideAdjustedLeft = normalNobLeft;
 		var nobTopsideAdjustedTop = normalNobTop;
-		var nobRightsideAdjustedLeft = c.focusWidth;
-		var nobBottomsideAdjustedTop = c.focusHeight;
-		var nobWidthAdjusted = c.focusWidth;
-		var nobHeightAdjusted = c.focusHeight;
+		var nobRightsideAdjustedLeft = rect.w;
+		var nobBottomsideAdjustedTop = rect.h;
+		var nobWidthAdjusted = rect.w;
+		var nobHeightAdjusted = rect.h;
 		var frameLeftsideLeftAdjusted = normalFrameLeft;
 		var frameTopsideTopAdjusted = normalFrameTop;
-		var frameRightsideAdjustedLeft = c.focusWidth;
-		var frameBottomsideAdjustedTop = c.focusHeight;
-		var frameWidthAdjusted = c.focusWidth + frameSizeWidthAdjust + frameSizeBorderAdjust;
-		var frameHeightAdjusted = c.focusHeight + frameSizeWidthAdjust + frameSizeBorderAdjust;
+		var frameRightsideAdjustedLeft = rect.w;
+		var frameBottomsideAdjustedTop = rect.h;
+		var frameWidthAdjusted = rect.w + frameSizeWidthAdjust + frameSizeBorderAdjust;
+		var frameHeightAdjusted = rect.h + frameSizeWidthAdjust + frameSizeBorderAdjust;
 		
 		if(offScreenAdjust){
 			// Determine if parts of selection are off screen
@@ -229,29 +224,29 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			var bodyWidth = this.domNode.ownerDocument.body.offsetWidth;
 			var bodyHeight = this.domNode.ownerDocument.body.offsetHeight;
 			
-			farthestLeft = c.focusLeft - nobOffScreenAdjust;
-			farthestTop = c.focusTop - nobOffScreenAdjust;
+			farthestLeft = rect.l - nobOffScreenAdjust;
+			farthestTop = rect.t - nobOffScreenAdjust;
 			var nobOffScreenAdjustLeft = farthestLeft < 0 ? -farthestLeft : 0;
 			var nobOffScreenAdjustTop = farthestTop < 0 ? -farthestTop : 0;
 			nobLeftsideAdjustedLeft += nobOffScreenAdjustLeft;
 			nobTopsideAdjustedTop += nobOffScreenAdjustTop;
 			
-			farthestRight = c.focusLeft + c.focusWidth + nobOffScreenAdjust;
-			farthestBottom = c.focusTop + c.focusHeight + nobOffScreenAdjust;
+			farthestRight = rect.l + rect.w + nobOffScreenAdjust;
+			farthestBottom = rect.t + rect.h + nobOffScreenAdjust;
 			var nobRightAdjust = farthestRight > bodyWidth ? bodyWidth - farthestRight : 0;
 			var nobBottomAdjust = farthestBottom > bodyHeight ? bodyHeight - farthestBottom : 0;
 			nobRightsideAdjustedLeft += nobRightAdjust;	
 			nobBottomsideAdjustedTop += nobBottomAdjust;
 
-			farthestLeft = c.focusLeft - frameOffScreenAdjusted;
-			farthestTop = c.focusTop - frameOffScreenAdjusted;
+			farthestLeft = rect.l - frameOffScreenAdjusted;
+			farthestTop = rect.t - frameOffScreenAdjusted;
 			var frameOffScreenAdjustedLeft = farthestLeft < 0 ? -farthestLeft : 0;
 			var frameOffScreenAdjustedTop = farthestTop < 0 ? -farthestTop : 0;
 			frameLeftsideLeftAdjusted += frameOffScreenAdjustedLeft;
 			frameTopsideTopAdjusted += frameOffScreenAdjustedLeft;
 			
-			farthestRight = c.focusWidth + frameOffScreenAdjusted;
-			farthestBottom = c.focusHeight + frameOffScreenAdjusted;
+			farthestRight = rect.w + frameOffScreenAdjusted;
+			farthestBottom = rect.h + frameOffScreenAdjusted;
 			var frameRightAdjust = farthestRight > bodyWidth ? bodyWidth - farthestRight : 0;
 			var frameBottomAdjust = farthestBottom > bodyHeight ? bodyHeight - farthestBottom : 0;
 			frameRightsideAdjustedLeft += frameRightAdjust;	
@@ -326,8 +321,8 @@ console.log('onMouseDown entered.');
 		var t = event.pageY - moverDragDivHalf;
 		var node = this._selectedWidget.domNode;
 		this._moverStart = { moverLeft:l, moverTop:t,
-				focusLeft:parseInt(this.domNode.style.left), focusTop:parseInt(this.domNode.style.top),
-				focusWidth:node.offsetWidth, focusHeight:node.offsetHeight };
+				l:parseInt(this.domNode.style.left), t:parseInt(this.domNode.style.top),
+				w:node.offsetWidth, h:node.offsetHeight };
 		this._moverCurrent = dojo.mixin({}, this._moverStart);
 		this._moverDragDiv = dojo.create('div', 
 				{style:'position:absolute;z-index:2000000;background:transparent;left:'+l+'px;top:'+t+'px;width:'+moverDragDivSize+'px;height:'+moverDragDivSize+'px'},
@@ -357,19 +352,18 @@ console.log('onMouseDown entered.');
 		var dx = box.l - start.moverLeft;
 		var dy = box.t - start.moverTop;
 		if(this._frameIndex === LEFT || this._nobIndex === LEFT_TOP || this._nobIndex === LEFT || this._nobIndex === LEFT_BOTTOM){
-			this._moverCurrent.focusLeft = start.focusLeft + dx;
-			this._moverCurrent.focusWidth = start.focusWidth - dx;
+			this._moverCurrent.l = start.l + dx;
+			this._moverCurrent.w = start.w - dx;
 		}else if(this._frameIndex === RIGHT || this._nobIndex === RIGHT_TOP || this._nobIndex === RIGHT || this._nobIndex === RIGHT_BOTTOM){
-			this._moverCurrent.focusWidth = start.focusWidth + dx;
+			this._moverCurrent.w = start.w + dx;
 		}
 		if(this._frameIndex === TOP || this._nobIndex === LEFT_TOP || this._nobIndex === TOP || this._nobIndex === RIGHT_TOP){
-			this._moverCurrent.focusTop = start.focusTop + dy;
-			this._moverCurrent.focusHeight = start.focusHeight - dy;
+			this._moverCurrent.t = start.t + dy;
+			this._moverCurrent.h = start.h - dy;
 		}else if(this._frameIndex === BOTTOM || this._nobIndex === LEFT_BOTTOM || this._nobIndex === BOTTOM || this._nobIndex === RIGHT_BOTTOM){
-			this._moverCurrent.focusHeight = start.focusHeight + dy;
+			this._moverCurrent.h = start.h + dy;
 		}
-		var offScreenAdjust = false;
-		this._updateFromCurrent(offScreenAdjust);
+		this._updateFocusChrome(this._moverCurrent, false /*offScreenAdjust*/);
 
 	},
 	
@@ -390,8 +384,8 @@ console.log('onMouseDown entered.');
 			}
 			this._moverDragDiv = null;
 			this.onExtentChange(this, 
-					{l:this._moverCurrent.focusLeft, t:this._moverCurrent.focusTop, 
-					w:this._moverCurrent.focusWidth, h:this._moverCurrent.focusHeight});
+					{l:this._moverCurrent.l, t:this._moverCurrent.t, 
+					w:this._moverCurrent.w, h:this._moverCurrent.h});
 		}
 	},
 
@@ -428,8 +422,7 @@ console.log('onMouseDown entered.');
 			dojo.stopEvent(event);
 			if(event.keyCode == 16){
 				this._shiftKey = true;
-				var offScreenAdjust = false;
-				this._updateFromCurrent(offScreenAdjust);
+				this._updateFocusChrome(this._moverCurrent, false /*offScreenAdjust*/);
 			}
 		}else{
 			// If event is undefined, something is wrong - remove the key handlers
@@ -442,8 +435,7 @@ console.log('onMouseDown entered.');
 			dojo.stopEvent(event);
 			if(event.keyCode == 16){
 				this._shiftKey = false;
-				var offScreenAdjust = false;
-				this._updateFromCurrent(offScreenAdjust);
+				this._updateFocusChrome(this._moverCurrent, false /*offScreenAdjust*/);
 			}
 		}else{
 			// If event is undefined, something is wrong - remove the key handlers

@@ -75,12 +75,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		    this._selectedWidget = widget;
 		}
 		this._moverCurrent = { l:box.l, t:box.t, w:box.w, h:box.h };
-		this._moverCurrentConstained = dojo.mixin({}, this._moverCurrent);
-		this._updateFocusChrome(
-				this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent, 
-				true /*offScreenAdjust*/
-		);
-		if(this._contexDiv){
+		this._moverCurrentConstrained = dojo.mixin({}, this._moverCurrent);
+		this._updateFocusChrome(this._moverCurrent, true /*offScreenAdjust*/);
+		if(this._contexDiv){	// Theme editor only
 			var x = box.w + 10;
 			this._contexDiv.style.left = x + 'px';
 			this._updateSubwidgetList();

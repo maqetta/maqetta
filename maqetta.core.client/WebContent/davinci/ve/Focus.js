@@ -15,8 +15,7 @@ function(require, declare, _WidgetBase, Mover, Metadata) {
     LEFT_TOP = 4,
     LEFT_BOTTOM = 5,
     RIGHT_TOP = 6,
-    RIGHT_BOTTOM = 7,
-	DRAG_NOB = 8;	// Overlay nob that follows mouse during drag operation
+    RIGHT_BOTTOM = 7;
 // Sides
 var LEFT = 0,
     RIGHT = 1,
@@ -26,6 +25,9 @@ var LEFT = 0,
 return declare("davinci.ve.Focus", _WidgetBase, {
 
     size: 6,
+    nobSize:11,
+    frameSize:6,
+    
     baseClass: "maqFocus",
 
     postCreate: function(){
@@ -52,25 +54,14 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         this._nobs = [];
         var cursors = ["w-resize","e-resize","n-resize","s-resize","nw-resize", "sw-resize", "ne-resize", "se-resize"];
         var border = (dojo.isIE ? 0 : 2);
-        for(var i = 0; i < 9; i++){
+        for(var i = 0; i < 8; i++){
             var nob = dojo.create("div", {"class": "editFocusNob", style: {
                 cursor: cursors[i]
             }}, this._stdChrome);
             this._nobs.push(nob);
             this.connect(nob, "onmousedown", "onMouseDown");
             this.connect(nob, "onmouseup", "onMouseUp");
-        }
-        this._nobs[DRAG_NOB].style.display = 'none';	// Becomes visible upon mousedown when dragging frame
-        this._nobs[DRAG_NOB].style.background = 'transparent';
-        this._nobs[DRAG_NOB].style.border = 'none';
-        
-        var offset = -11;
-        this._nobs[LEFT].style.left =
-            this._nobs[TOP].style.top =
-            this._nobs[LEFT_TOP].style.left =
-            this._nobs[LEFT_TOP].style.top =
-            this._nobs[LEFT_BOTTOM].style.left =
-            this._nobs[RIGHT_TOP].style.top = offset + "px";
+        }        
         this._nobIndex = -1;
         this._frameIndex = -1;
 		
@@ -85,6 +76,11 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     },
     
     move: function(box, event){
+//console.log('move entered. box=');
+//console.dir(box);
+//console.log('move entered. this._box=');
+//console.dir(this._box);
+//console.trace();
         if(!box){
             return;
         }
@@ -141,7 +137,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             	doSnapLinesX = false;
             }
         }
-
+//console.log('move: moving focus box this.domNode. b.l='+b.l+',b.t='+b.t);
         // Short-term hack just before M5 to prevent reference through null
         // error in case current widget's domNode doesn't have a computed style
         this.dojoStyle(this.domNode, {left: b.l + "px", top: b.t + "px"});
@@ -216,20 +212,37 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             this._contexDiv.style.left = x + 'px';
             this._updateSubwidgetList();
         }
+//console.log('move exit. this._box=');
+//console.dir(this._box);
     },
 
     resize: function(box, widget){
+//console.log('resize. box=');
+//console.dir(box);
+//console.trace();
 		if(widget){
 		    this._selectedWidget = widget;
 		}
+		this._moverCurrent = { focusLeft:box.l, focusTop:box.t, focusWidth:box.w, focusHeight:box.h };
+		var offScreenAdjust = true;
+		this._updateFromCurrent(offScreenAdjust);
+/*
     	this._resize(box);
+*/
+//console.log('resize. setting this._box = box');
     	this._box = box;
+//console.log('resize exit. this._box=');
+//console.dir(this._box);
     },
 
     _resize: function(box){
         if(!box){
             return;
         }
+//console.log('_resize entered. box=');
+//console.dir(box);
+//console.log('_resize entered. this._box=');
+//console.dir(this._box);
 
         var b = dojo.mixin({}, box);
 		
@@ -247,7 +260,11 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         }
 
         if("l" in box && "t" in box){
+//console.log('_resize before calling this.move. b.l='+b.l+',b.t='+b.t+',this._box=');
+//console.dir(this._box);
             this.move({l: b.l, t: b.t});
+//console.log('_resize after calling this.move this._box=');
+//console.dir(this._box);
         }
 
         // Width/height must not be less than 0 
@@ -307,6 +324,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         this._nobs[RIGHT_BOTTOM].style.top = adjH;
 		
 		this._bboxAdjusted = b;
+//console.log('_resize exit. this._box=');
+//console.dir(this._box);
     },
     
     
@@ -407,12 +426,17 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     },
 	
 	onMouseDown: function(event){
+//console.log('onMouseDown entered. this._box=');
+//console.dir(this._box);
 		this._removeKeyHandlers();
 
+		if(!this._selectedWidget || !this._selectedWidget.domNode){
+			return;
+		}
 		// not to start Mover on the context menu
 		if(event.button === 2 || event.ctrlKey){
 			return;
-			}
+		}
 		// Only process mousedown events when SelectTool is active
 		// Mostly to allow CreateTool to drag out widget initial size even
 		// when mouse is over focus nodes
@@ -423,18 +447,20 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
 		this._nobIndex = dojo.indexOf(this._nobs, event.target);
 		this._frameIndex = dojo.indexOf(this._frames, event.target);
-        /*
-        if(dojo.indexOf(this._frames, event.target) >= 0){
-            this._nobIndex = -1;
-            if(this._op && this._op.move){
-                new Mover(this.domNode, event, this);
-            }
-            dojo.stopEvent(event);
-            
-        }else{
-            if(this._nobIndex >= 0){
-        */
-		new Mover(event.target, event, this);
+
+		var moverDragDivSize = 100;
+		var moverDragDivHalf = 50;
+		var l = event.pageX - moverDragDivHalf;
+		var t = event.pageY - moverDragDivHalf;
+		var node = this._selectedWidget.domNode;
+		this._moverStart = { moverLeft:l, moverTop:t,
+				focusLeft:parseInt(this.domNode.style.left), focusTop:parseInt(this.domNode.style.top),
+				focusWidth:node.offsetWidth, focusHeight:node.offsetHeight };
+		this._moverCurrent = dojo.mixin({}, this._moverStart);
+		this._moverDragDiv = dojo.create('div', 
+				{style:'position:absolute;z-index:2000000;background:transparent;left:'+l+'px;top:'+t+'px;width:'+moverDragDivSize+'px;height:'+moverDragDivSize+'px'},
+				this._context.rootNode);
+		this._mover = new Mover(this._moverDragDiv, event, this);
 		if(this._frameIndex === LEFT || this._nobIndex === LEFT || this._nobIndex === LEFT_BOTTOM){
 			this._nobBox = {l: -this.size};
 		}else if(this._frameIndex === TOP || this._nobIndex === TOP || this._nobIndex === RIGHT_TOP){
@@ -459,16 +485,17 @@ return declare("davinci.ve.Focus", _WidgetBase, {
      },
 
     onMouseUp: function(event){
+//console.log('onMouseUp entered');
         var context = this._context;
 		var cp = context._chooseParent;
 		this._lastEventTarget = null;
 		this._removeKeyHandlers();
-        this._nobs[DRAG_NOB].style.display = 'none';
         if(this._mover){
         	var box;
         	if(this._shiftKey){
         		box = dojo.mixin({}, this._constrained);
         	}else{
+//console.log('onMouseUp. setting box mixin this._box');
         		box = dojo.mixin({}, this._box);
         	}
             this._mover = undefined;
@@ -496,19 +523,135 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         event.stopPropagation();
     },
 
-    onMove: function(mover, box, event){
-    	
-        // Turn on visibility of DRAG_NOB and set its position
-        // at the current mouse position. The DRAG_NOB will always track the
-        // current mouse location, whereas the current frame DIVs might
-        // jump around due to constraint logic if shift key is down
-        // which would prevent it from noticing the mouseUp event.
-		var adjust = 5;	// Leveraging special knowledge about CSS rules on nobs
-        var drag_nob_style = this._nobs[DRAG_NOB].style;
-        drag_nob_style.display = '';
-        drag_nob_style.left = (event.pageX - this.domNode.offsetLeft - adjust) + 'px';
-        drag_nob_style.top = (event.pageY - this.domNode.offsetTop - adjust) + 'px';
+	_updateFromCurrent: function(offScreenAdjust){
+		var c = this._moverCurrent;
+		
+		// Various constants leveraging knowledge about selection chrome CSS style rules
+		var nobOffScreenAdjust = this.nobSize + 1;
+		var frameOffScreenAdjust = this.frameSize + 1;
+		var normalFrameLeft = -6;
+		var normalFrameTop = -6;
+		var normalNobLeft = -11;
+		var normalNobTop = -11;
+		
+		this.domNode.style.left = c.focusLeft + 'px';
+		this.domNode.style.top = c.focusTop + 'px';
+		
+		var nobOffScreenAdjustLeft = 0, nobOffScreenAdjustTop = 0, nobOffScreenAdjustWidth = 0, nobOffScreenAdjustHeight = 0;
+		var frameOffScreenAdjustLeft = 0, frameOffScreenAdjustTop = 0, frameOffScreenAdjustWidth = 0, frameOffScreenAdjustHeight = 0;
+		var nobLeftsideAdjustedLeft = normalNobLeft;
+		var nobTopsideAdjustedTop = normalNobTop;
+		var nobWidthAdjusted = c.focusWidth;
+		var nobHeightAdjusted = c.focusHeight;
+		var nobRightsideAdjustedLeft = c.focusWidth;
+		var nobBottomsideAdjustedTop = c.focusHeight;
+		var frameLeftsideLeftAdjusted = normalFrameLeft;
+		var frameTopsideTopAdjusted = normalFrameTop;
+		var frameWidthAdjusted = c.focusWidth;
+		var frameHeightAdjusted = c.focusHeight;
+		var frameRightsideAdjustedLeft = c.focusWidth;
+		var frameBottomsideAdjustedTop = c.focusHeight;
+		if(offScreenAdjust){
+			// Determine if parts of selection are off screen
+			// Shift selection to make it visible
+			var farthestLest, farthestTop, farthestRight, farthestBottom;
+			var bodyWidth = this.domNode.ownerDocument.body.offsetWidth;
+			var bodyHeight = this.domNode.ownerDocument.body.offsetHeight;
+			farthestLeft = c.focusLeft - nobOffScreenAdjust;
+			farthestTop = c.focusTop - nobOffScreenAdjust;
+			nobOffScreenAdjustLeft = farthestLeft < 0 ? -farthestLeft : 0;
+			nobOffScreenAdjustTop = farthestTop < 0 ? -farthestTop : 0;
+			nobLeftsideAdjustedLeft += nobOffScreenAdjustLeft;
+			nobTopsideAdjustedTop += nobOffScreenAdjustTop;
+			farthestRight = c.focusLeft + c.focusWidth + nobOffScreenAdjust;
+			farthestBottom = c.focusTop + c.focusHeight + nobOffScreenAdjust;
+			nobRightsideAdjustedLeft += (farthestRight > bodyWidth ? bodyWidth - farthestRight : 0);	
+			nobBottomsideAdjustedTop += (farthestBottom > bodyHeight ? bodyHeight - farthestBottom : 0);
 
+			farthestLeft = c.focusLeft - frameOffScreenAdjust;
+			farthestTop = c.focusTop - frameOffScreenAdjust;
+			frameOffScreenAdjustLeft = farthestLeft < 0 ? -farthestLeft : 0;
+			frameOffScreenAdjustTop = farthestTop < 0 ? -farthestTop : 0;
+			frameLeftsideLeftAdjusted += frameOffScreenAdjustLeft;
+			frameTopsideTopAdjusted += frameOffScreenAdjustLeft;
+			farthestRight = c.focusLeft + c.focusWidth + frameOffScreenAdjust;
+			farthestBottom = c.focusTop + c.focusHeight + frameOffScreenAdjust;
+			frameRightsideAdjustedLeft += (farthestRight > bodyWidth ? bodyWidth - farthestRight : 0);	
+			frameBottomsideAdjustedTop += (farthestBottom > bodyHeight ? bodyHeight - farthestBottom : 0);
+			frameOffScreenAdjustWidth = farthestRight > bodyWidth ? (bodyWidth - farthestRight) : 0;	// will be zero or negative
+			frameOffScreenAdjustHeight = farthestBottom > bodyHeight ? (bodyHeight - farthestBottom) : 0;	// will be zero or negative
+		}
+		var nobWidthAdjusted = c.focusWidth + nobOffScreenAdjustWidth - nobOffScreenAdjustLeft;
+		var nobHeightAdjusted = c.focusHeight + nobOffScreenAdjustHeight - nobOffScreenAdjustTop;
+		var frameWidthAdjusted = c.focusWidth + frameOffScreenAdjustWidth - frameOffScreenAdjustLeft;
+		var frameHeightAdjusted = c.focusHeight + frameOffScreenAdjustHeight - frameOffScreenAdjustTop;
+		
+		// Adjustment factors requiring inside knowledge of CSS rules on editFocusNob and editFocusFrame
+		var frameSizeAdjust = 8;
+		var frameWidth = frameWidthAdjusted + frameSizeAdjust;
+		var frameHeight = frameHeightAdjusted + frameSizeAdjust;
+		this._frames[LEFT].style.left =
+			this._frames[TOP].style.left =
+			this._frames[BOTTOM].style.left = frameLeftsideLeftAdjusted + "px";
+		this._frames[LEFT].style.top =
+			this._frames[TOP].style.top =
+			this._frames[RIGHT].style.top = frameTopsideTopAdjusted + "px";
+		this._frames[LEFT].style.height = frameHeight + "px";
+		this._frames[RIGHT].style.height = frameHeight + "px";
+		this._frames[RIGHT].style.left = frameRightsideAdjustedLeft + "px";
+		this._frames[TOP].style.width = frameWidth + "px";
+		this._frames[BOTTOM].style.top = frameBottomsideAdjustedTop + "px";
+		this._frames[BOTTOM].style.width = frameWidth + "px";
+
+		// Adjustment factors requiring inside knowledge of CSS rules on editFocusNob and editFocusFrame
+		var nobLocationAdjust = -1;
+		var l = Math.round(nobWidthAdjusted / 2 - this.nobSize / 2);
+		var t = Math.round(nobHeightAdjusted / 2 - this.nobSize / 2);
+		this._nobs[LEFT].style.left =
+			this._nobs[LEFT_TOP].style.left =
+			this._nobs[LEFT_BOTTOM].style.left = nobLeftsideAdjustedLeft + "px";
+		this._nobs[TOP].style.top =
+			this._nobs[LEFT_TOP].style.top =
+			this._nobs[RIGHT_TOP].style.top = nobTopsideAdjustedTop + "px";
+		this._nobs[LEFT].style.top = t + "px";
+		this._nobs[RIGHT].style.left = nobRightsideAdjustedLeft + "px";
+		this._nobs[RIGHT].style.top = t + "px";
+		this._nobs[TOP].style.left = l + "px";
+		this._nobs[BOTTOM].style.left = l + "px";
+		this._nobs[BOTTOM].style.top = nobBottomsideAdjustedTop + "px";
+		this._nobs[LEFT_BOTTOM].style.top = nobBottomsideAdjustedTop + "px";
+		this._nobs[RIGHT_TOP].style.left = nobRightsideAdjustedLeft + "px";
+		this._nobs[RIGHT_BOTTOM].style.left = nobRightsideAdjustedLeft + "px";
+		this._nobs[RIGHT_BOTTOM].style.top = nobBottomsideAdjustedTop + "px";
+	},
+
+    onMove: function(mover, box, event){
+//console.log('onMove. box.l='+box.l+',box.t='+box.t);
+//console.log('this._box=');
+//console.dir(this._box);
+    	if(this._moverDragDiv){
+    		this._moverDragDiv.style.left = box.l + 'px';
+    		this._moverDragDiv.style.top = box.t + 'px';
+    	}
+		var start = this._moverStart;
+		var dx = box.l - start.moverLeft;
+		var dy = box.t - start.moverTop;
+		if(this._frameIndex === LEFT || this._nobIndex === LEFT_TOP || this._nobIndex === LEFT || this._nobIndex === LEFT_BOTTOM){
+			this._moverCurrent.focusLeft = start.focusLeft + dx;
+			this._moverCurrent.focusWidth = start.focusWidth - dx;
+		}else if(this._frameIndex === RIGHT || this._nobIndex === RIGHT_TOP || this._nobIndex === RIGHT || this._nobIndex === RIGHT_BOTTOM){
+			this._moverCurrent.focusWidth = start.focusWidth + dx;
+		}
+		if(this._frameIndex === TOP || this._nobIndex === LEFT_TOP || this._nobIndex === TOP || this._nobIndex === RIGHT_TOP){
+			this._moverCurrent.focusTop = start.focusTop + dy;
+			this._moverCurrent.focusHeight = start.focusHeight - dy;
+		}else if(this._frameIndex === BOTTOM || this._nobIndex === LEFT_BOTTOM || this._nobIndex === BOTTOM || this._nobIndex === RIGHT_BOTTOM){
+			this._moverCurrent.focusHeight = start.focusHeight + dy;
+		}
+		var offScreenAdjust = false;
+		this._updateFromCurrent(offScreenAdjust);
+
+/*
 		var b = dojo.mixin({}, this._box);
 		var d = 0;
 		if(this._frameIndex === LEFT || this._nobIndex === LEFT){
@@ -550,6 +693,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			b.w = box.l;
 			b.h = box.t;
 		}
+//console.log('dojo.mixin(this._box, b); b=');
+//console.dir(b);
 		dojo.mixin(this._box, b);
 		dojo.mixin(this._constrained, b);
 		if(this._selectedWidget && this._selectedWidget.domNode.nodeName === 'IMG'){
@@ -579,6 +724,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			}
 		}
 		this._resize(event.shiftKey ? this._constrained : this._box);
+*/
     },
 
     onFirstMove: function(mover){
@@ -589,9 +735,19 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     onMoveStart: function(mover){
     },
 
-    //Required for Moveable interface
-    onMoveStop: function(mover){
-    },
+ 	onMoveStop: function(mover){
+//console.log('onMoveStop');
+		if(this._moverDragDiv){
+			var parentNode = this._moverDragDiv.parentNode;
+			if(parentNode){
+				parentNode.removeChild(this._moverDragDiv);
+			}
+			this._moverDragDiv = null;
+			this.onExtentChange(this, 
+					{l:this._moverCurrent.focusLeft, t:this._moverCurrent.focusTop, 
+					w:this._moverCurrent.focusWidth, h:this._moverCurrent.focusHeight});
+		}
+ 	},
     
     onKeyDown: function(event){
 		if(event){

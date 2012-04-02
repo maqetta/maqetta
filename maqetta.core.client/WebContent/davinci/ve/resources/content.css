@@ -28,12 +28,8 @@
 	position:absolute;
 	overflow:hidden;
 	border:none;
-	/*background:#6a94dc;*/
 	background:#d3e1ee;
 	border:2px solid #6a94dc;
-	/*background-clip:content-box;*/
-	left:-6px;
-	top:-6px;
 }
 .editFocusFrameLEFT {
 	width:4px;

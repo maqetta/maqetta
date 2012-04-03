@@ -12,6 +12,7 @@ define([
 		 * @returns {boolean}  false=> no need to traverse, same as last time. true=>yes, do the traversal
 		 */
 		updateSnapLinesBeforeTraversal:function(context, rect){
+//console.log('updateSnapLinesBeforeTraversal');
 			context._snapX = null;
 			context._snapY = null;
 			if(context._lastSnapBox){
@@ -43,6 +44,7 @@ define([
 		 * @param {boolean} doSnapLinesY  whether to show dynamic snap lines (y-axis)
 		 */
 		findSnapOpportunities: function(context, widget, computed_style, doSnapLinesX, doSnapLinesY){
+//console.log('findSnapOpportunities. doSnapLinesX='+doSnapLinesX);
 			var distCheck = 75;	// CLoseness distance in pixels - only snap if snapBox is sufficiently close to widget
 			var snapBox = context._lastSnapBox;
 			

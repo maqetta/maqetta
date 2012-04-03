@@ -259,6 +259,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this._connects = [
 			dojo.connect(this._commandStack, "onExecute", this, "onContentChange"),
 			dojo.connect(this.getDocument(), "onkeydown", this, "onKeyDown"),
+			dojo.connect(this.getDocument(), "onkeyup", this, "onKeyUp"),
 			dojo.connect(containerNode, "ondblclick", this, "onDblClick"),
 			dojo.connect(containerNode, "onmousedown", this, "onMouseDown"),
 			dojo.connect(containerNode, "onmousemove", this, "onMouseMove"),
@@ -2209,13 +2210,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if(this._activeTool && this._activeTool.onKeyDown){
 			this._activeTool.onKeyDown(event);
 		}
-		if(this._actionGroups){
-			dojo.forEach(this._actionGroups, function(g){
-				var action = g.getAction(event, this);
-				if(action){
-					action.run(this);
-				}
-			}, this);
+	},
+
+	onKeyUp: function(event){
+		//FIXME: Research task. This routine doesn't get fired when using CreateTool and drag/drop from widget palette.
+		// Perhaps the drag operation created a DIV in application's DOM causes the application DOM
+		// to be the keyboard focus?
+		if(this._activeTool && this._activeTool.onKeyUp){
+			this._activeTool.onKeyUp(event);
 		}
 	},
 
@@ -2846,6 +2848,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			doCursor = params.doCursor,
 			beforeAfter = params.beforeAfter,
 			widgetType = dojo.isArray(data) ? data[0].type : data.type;
+//console.log('dragMoveUpdate. doSnapLinesX='+doSnapLinesX);
 
 		// inner function that gets called recurively for each widget in document
 		// The "this" object for this function is the Context object

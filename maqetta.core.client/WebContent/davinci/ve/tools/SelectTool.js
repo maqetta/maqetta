@@ -7,6 +7,7 @@ define(["dojo/_base/declare",
 		"dojo/dnd/Mover",
 		"davinci/XPathUtils",
 		"davinci/html/HtmlFileXPathAdapter",
+		"davinci/ve/Snap",
 		"davinci/commands/CompoundCommand",
 		"davinci/ve/commands/AddCommand",
 		"davinci/ve/commands/RemoveCommand",
@@ -21,7 +22,8 @@ define(["dojo/_base/declare",
 				Metadata,
 				Mover,
 				XPathUtils,
-				HtmlFileXPathAdapter
+				HtmlFileXPathAdapter,
+				Snap
 		){
 
 
@@ -39,6 +41,9 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	onMouseDown: function(event){
 		//FIXME: Don't allow both parent and child to be selected
 		
+		this._shiftKey = event.shiftKey;
+		this._spaceKey = false;
+		this._removeKeyHandlers();
 		var context = this._context;
 		var createMover = false;
 		if((dojo.isMac && event.ctrlKey) || event.button == 2){
@@ -161,26 +166,16 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 								'style':'width:'+w2+'px;height:'+h2+'px'},
 								this._moverDragDiv);
 						this._mover = new Mover(this._moverDragDiv, event, this);
-						
-						//FIXME: Probably need to add this stuff
-						/*
-						var userdoc = context.getDocument();	// inner document = user's document
-						userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
-						this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(e){
-							this.onKeyDown(e);
-						}));
-						this._keyUpHandler = dojo.connect(userdoc, "onkeyup", dojo.hitch(this, function(e){
-							this.onKeyUp(e);
-						}));
-						*/
 					}
-					
+					var userdoc = context.getDocument();	// inner document = user's document
+					userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
 				}
 			}
 		}
 	},
 
 	onMouseUp: function(event){
+		this._removeKeyHandlers();
 		var clickInteral = 750;	// .75seconds: allow for leisurely click action
 		var dblClickInteral = 750;	// .75seconds: big time slot for tablets
 		var clickDistance = 10;	// within 10px: inexact for tablets
@@ -451,21 +446,80 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 	
 	onKeyDown: function(event){
-		switch(event.keyCode){
-		case dojo.keys.TAB:
-			if(this._moveFocus(event)){
-				//focus should not break away from containerNode
-				dojo.stopEvent(event);
-			}else{
-				//nop: propagate event for next focus
-				//FIXME: focus may move to the focusable widgets on containerNode
+		if(event){
+			dojo.stopEvent(event);
+			switch(event.keyCode){
+			case 16:
+				this._shiftKey = true;
+				Snap.clearSnapLines(this._context);
+				break;
+			case 32:
+				this._spaceKey = true;
+				break;
+			case dojo.keys.TAB:
+				if(this._moveFocus(event)){
+					//focus should not break away from containerNode
+					dojo.stopEvent(event);
+				}else{
+					//nop: propagate event for next focus
+					//FIXME: focus may move to the focusable widgets on containerNode
+				}
+				break;
+			case dojo.keys.RIGHT_ARROW:
+			case dojo.keys.LEFT_ARROW:
+			case dojo.keys.DOWN_ARROW:
+			case dojo.keys.UP_ARROW:
+				this._move(event);
 			}
-			break;
-		case dojo.keys.RIGHT_ARROW:
-		case dojo.keys.LEFT_ARROW:
-		case dojo.keys.DOWN_ARROW:
-		case dojo.keys.UP_ARROW:
-			this._move(event);
+		}else{
+			// If event is undefined, something is wrong - remove the key handlers
+			this._removeKeyHandlers();
+		}
+	},
+	
+	onKeyUp: function(event){
+		if(event){
+			dojo.stopEvent(event);
+			switch(event.keyCode){
+			case 16:
+				this._shiftKey = false;
+				break;
+			case 32:
+				this._spaceKey = false;
+				break;
+			}
+			/* FIXME
+			switch(event.keyCode){
+			case dojo.keys.TAB:
+				if(this._moveFocus(event)){
+					//focus should not break away from containerNode
+					dojo.stopEvent(event);
+				}else{
+					//nop: propagate event for next focus
+					//FIXME: focus may move to the focusable widgets on containerNode
+				}
+				break;
+			case dojo.keys.RIGHT_ARROW:
+			case dojo.keys.LEFT_ARROW:
+			case dojo.keys.DOWN_ARROW:
+			case dojo.keys.UP_ARROW:
+				this._move(event);
+			}
+			*/
+		}else{
+			// If event is undefined, something is wrong - remove the key handlers
+			this._removeKeyHandlers();
+		}
+	},
+
+	_removeKeyHandlers: function(){
+		if(this._keyDownHandler){
+			dojo.disconnect(this._keyDownHandler);
+			this._keyDownHandler = null;
+		}
+		if(this._keyUpHandler){
+			dojo.disconnect(this._keyUpHandler);
+			this._keyUpHandler = null;
 		}
 	},
 	
@@ -525,7 +579,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		// from triggering a select operation
 		this._mouseDownInfo = null;
 		
-		var offsetLeft, offsetTop, offsetNode;
 		var context = this._context;
 		var cp = context._chooseParent;
 		var selection = context.getSelection();
@@ -555,18 +608,28 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			}
 			var newLeft =  (box.l - leftAdjust);
 			var newTop = (box.t - topAdjust);
-			this._moverWidget.domNode.style.left = newLeft + 'px';
-			this._moverWidget.domNode.style.top = newTop + 'px';
+			//this._moverWidget.domNode.style.left = newLeft + 'px';
+			//this._moverWidget.domNode.style.top = newTop + 'px';
 			var dx = newLeft - this._moverStartLocations[index].l;
 			var dy = newTop - this._moverStartLocations[index].t;
+			var absDx = Math.abs(dx);
+			var absDy = Math.abs(dy);
+			var CONSTRAIN_MIN_DIST = 3;	// constrained dragging only active if user moves object non-trivial amount
+			if(this._shiftKey && (absDx >= CONSTRAIN_MIN_DIST ||  absDy >= CONSTRAIN_MIN_DIST)){
+				if(absDx > absDy){
+					dy = 0;
+				}else{
+					dx = 0;
+				}
+			}
 			for(var i=0; i<selection.length; i++){
-				if(i !== index){
+				//if(i !== index){
 					var w = selection[i];
 					var l = this._moverStartLocations[i].l;
 					var t = this._moverStartLocations[i].t;
 					w.domNode.style.left = (l + dx) + 'px';
 					w.domNode.style.top = (t + dy) + 'px';
-				}
+				//}
 			}
 		}
 		var widgetType = this._moverWidget.type;
@@ -598,23 +661,23 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		
 		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
 				Workbench.getProject());
-		var doSnapLinesX = (editorPrefs.snap && this._moverAbsolute);
+		var doSnapLinesX = (!this._shiftKey && editorPrefs.snap && this._moverAbsolute);
 		var doSnapLinesY = doSnapLinesX;
 		var showParentsPref = context.getPreference('showPossibleParents');
-		var spaceKeyDown = cp.isSpaceKeyDown();
+		var spaceKeyDown = (cp.isSpaceKeyDown() || this._spaceKey);
 		var showCandidateParents = (!showParentsPref && spaceKeyDown) || (showParentsPref && !spaceKeyDown);
 		var data = {type:widgetType};
 		var position = { x:event.pageX, y:event.pageY};
 		// Ascend widget's ancestors to calculate page-relative coordinates
-		offsetLeft = 0;
-		offsetTop = 0;
-		offsetNode = this._moverWidget.domNode.offsetParent;
-		while(offsetNode && offsetNode.tagName != 'BODY'){
-            offsetLeft += offsetNode.offsetLeft;
-            offsetTop += offsetNode.offsetTop;
-            offsetNode = offsetNode.offsetParent;
+		var leftAdjust = 0;
+		var topAdjust = 0;
+		var pn = this._moverWidget.domNode.offsetParent;
+		while(pn && pn.tagName != 'BODY'){
+			leftAdjust += pn.offsetLeft;
+			topAdjust += pn.offsetTop;
+			pn = pn.offsetParent;
 		}
-		var snapBox = {l:box.l+offsetLeft, t:box.t+offsetTop, w:this._moverWidget.domNode.offsetWidth, h:this._moverWidget.domNode.offsetHeight};
+		var snapBox = {l:this._moverWidget.domNode.offsetLeft+leftAdjust, t:this._moverWidget.domNode.offsetTop+topAdjust, w:this._moverWidget.domNode.offsetWidth, h:this._moverWidget.domNode.offsetHeight};
 		// Call the dispatcher routine that updates snap lines and
 		// list of possible parents at current (x,y) location
 		context.dragMoveUpdate({
@@ -679,6 +742,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		context.dragMoveCleanup();
 		cp.parentListDivDelete();
 		context.selectionShowFocus();
+		this._removeKeyHandlers();
 		
 		// Attempt to restore editFeedback DIV via call to this._setTarget()
 		// Usually, we will find the right node by looking for the widget with given ID

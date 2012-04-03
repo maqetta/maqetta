@@ -644,6 +644,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             this._connections = [];
             this._connections.push(dojo.subscribe("/davinci/ui/subwidgetSelectionChanged",dojo.hitch(this,this._subwidgetSelectedChange)));
             this._connections.push(dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._updateSubwidgetListForState)));
+        }else{
+        	this._contexDiv.innerHTML = '';
         }
 
     },

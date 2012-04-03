@@ -53,7 +53,8 @@ define([
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
 var MOBILE_DEV_ATTR = 'data-maqetta-device',
-	PREF_LAYOUT_ATTR = 'dvFlowLayout';
+	PREF_LAYOUT_ATTR = 'dvFlowLayout',
+	MOBILE_ORIENT_ATTR = 'data-maqetta-deviceorientation';
 
 return declare("davinci.ve.Context", [ThemeModifier], {
 
@@ -177,6 +178,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
         if (mobileDevice) {
             this.setMobileDevice(mobileDevice);
             this.visualEditor.setDevice(mobileDevice, true);
+        }
+
+        // Check mobile orientation
+        var orientation = this.getMobileOrientation();
+        if (orientation) {
+        	this.visualEditor.setOrientation(orientation);
         }
     },
     
@@ -622,6 +629,28 @@ return declare("davinci.ve.Context", [ThemeModifier], {
         if(dm && dm.loadDeviceTheme) {
         	dm.loadDeviceTheme(Silhouette.getMobileTheme(device + '.svg'));
         }
+	},
+
+	/**
+  	* Retrieves the mobile orientation.
+  	* @returns {?string} orientation
+  	*/
+	getMobileOrientation: function() {
+		var bodyElement = this.getDocumentElement().getChildElement("body");
+		return bodyElement.getAttribute(MOBILE_ORIENT_ATTR);
+	},
+
+	/**
+  	* Sets mobile orientation in Model.
+  	* @param orientation {?string} orientation
+  	*/
+	setMobileOrientation: function(orientation) {
+		var bodyElement = this.getDocumentElement().getChildElement("body");
+		if (orientation) {
+			bodyElement.setAttribute(MOBILE_ORIENT_ATTR, orientation);
+		} else {
+			bodyElement.removeAttribute(MOBILE_ORIENT_ATTR);
+		}
 	},
 	
 	/**

@@ -25,6 +25,12 @@
         {
             "type": "javascript-module",
             "format": "amd",
+            "src": "dojo/hash",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
             "src": "dojox/mobile/ScrollableView",
             "$library": "dojo"
         }

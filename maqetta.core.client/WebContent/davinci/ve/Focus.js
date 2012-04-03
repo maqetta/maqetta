@@ -8,7 +8,7 @@ define([
 function(require, declare, _WidgetBase, Mover, Metadata) {
 	
 // Nobs and frame constants
-	var LEFT = 0,	// nob and frame
+var LEFT = 0,	// nob and frame
 	RIGHT = 1,
 	TOP = 2,
 	BOTTOM = 3,
@@ -24,6 +24,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 	frameSize:6,
 
 	postCreate: function(){
+		//FIXME: maybe listen for mouseout on doc, and if so, stop the dragging?
+
 		dojo.addClass(this.domNode, 'maqFocus');
 		dojo.style(this.domNode, {position: "absolute", display: "none"}); // FIXME: use CSS class to change display property
 		this._stdChrome = dojo.create("div", {"class": "editFocusStdChrome"}, this.domNode);
@@ -62,7 +64,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		if(widget){
 		    this._selectedWidget = widget;
 		}
-		this._moverCurrent = { l:box.l, t:box.t, w:box.w, h:box.h };
+		this._moverCurrent = dojo.mixin({}, box);
 		this._moverCurrentConstrained = dojo.mixin({}, this._moverCurrent);
 		this._updateFocusChrome(this._moverCurrent, true /*offScreenAdjust*/);
 		if(this._contexDiv){	// Theme editor only
@@ -74,7 +76,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 	},
 
 	show: function(widget, inline){
-		//debugger;
 		if (!widget){
 			// sometimes you get no widget when  DnD in split screen
 			return; 
@@ -87,8 +88,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var helper = widget.getHelper();
 		var delete_inline = true;
 		if(helper && helper.onShowSelection){
-			helper.onShowSelection({widget:widget, customDiv:this._custom,
-				bboxActual:this._bboxActual, bboxAdjusted:this._bboxAdjusted});
+			helper.onShowSelection({widget:widget, customDiv:this._custom});
 		}
 		if (inline) {
 			this.showInline(widget); // sometimes the widget changes from undo/redo som get the current widget
@@ -149,24 +149,24 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		}
 	},
 
-    allow: function(op){
-        if(!op){
-            return;
-        }
-        this._op = op;
-
-        var horizontal = (op.resizeWidth && !op.resizeHeight) ? "block" : "none";
-        var vertical = (op.resizeHeigh && !op.resizeWidth) ? "block" : "none";
-        var corner = (op.resizeWidth && op.resizeHeight) ? "block" : "none";
-        this._nobs[LEFT].style.display = horizontal;
-        this._nobs[RIGHT].style.display = horizontal;
-        this._nobs[TOP].style.display = vertical;
-        this._nobs[BOTTOM].style.display = vertical;
-        this._nobs[LEFT_TOP].style.display = corner;
-        this._nobs[LEFT_BOTTOM].style.display = corner;
-        this._nobs[RIGHT_TOP].style.display = corner;
-        this._nobs[RIGHT_BOTTOM].style.display = corner;
-    },
+	allow: function(op){
+		if(!op){
+			return;
+		}
+		this._op = op;
+		
+		var horizontal = (op.resizeWidth && !op.resizeHeight) ? "block" : "none";
+		var vertical = (op.resizeHeigh && !op.resizeWidth) ? "block" : "none";
+		var corner = (op.resizeWidth && op.resizeHeight) ? "block" : "none";
+		this._nobs[LEFT].style.display = horizontal;
+		this._nobs[RIGHT].style.display = horizontal;
+		this._nobs[TOP].style.display = vertical;
+		this._nobs[BOTTOM].style.display = vertical;
+		this._nobs[LEFT_TOP].style.display = corner;
+		this._nobs[LEFT_BOTTOM].style.display = corner;
+		this._nobs[RIGHT_TOP].style.display = corner;
+		this._nobs[RIGHT_BOTTOM].style.display = corner;
+	},
 
 	/**
 	 * Update the position of the various DIVs that make up the selection chrome
@@ -308,7 +308,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 				w:node.offsetWidth, h:node.offsetHeight };
 		this._moverCurrent = dojo.mixin({}, this._moverStart);
 		this._moverDragDiv = dojo.create('div', 
-				{style:'position:absolute;z-index:2000000;background:transparent;left:'+l+'px;top:'+t+'px;width:'+moverDragDivSize+'px;height:'+moverDragDivSize+'px'},
+				{className:'focusDragDiv',
+				style:'left:'+l+'px;top:'+t+'px;width:'+moverDragDivSize+'px;height:'+moverDragDivSize+'px'},
 				this._context.rootNode);
 		this._mover = new Mover(this._moverDragDiv, event, this);
 		dojo.stopEvent(event);
@@ -323,6 +324,13 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		}));
 	},
 
+	/**
+	 * Callback routine from dojo.dnd.Mover with every mouse move.
+	 * What that means here is dragging on selection nob or selection frame.
+	 * @param {object} mover - return object from dojo.dnd.Mover constructor
+	 * @param {object} box - {l:,t:} top/left corner of where drag DIV should go
+	 * @param {object} event - the mousemove event
+	 */
 	onMove: function(mover, box, event){
 		// Update the transparent overlay DIV that tracks mouse and
 		// intercepts mouse events from activating widgets under mouse
@@ -380,7 +388,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 				}
 			}
 		}
-		// Set this._moverCurrentConstrained to hold selection bounds if shift key is help down
+		// Set this._moverCurrentConstrained to hold selection bounds if shift key is held down
 		this._moverCurrentConstrained = { l:this._moverCurrent.l, t:this._moverCurrent.t, w:constrainedWidth, h:constrainedHeight };
 		if(this._frameIndex === LEFT || this._nobIndex === LEFT || this._frameIndex === RIGHT || this._nobIndex === RIGHT){
 			this._moverCurrentConstrained.t -= (this._moverCurrentConstrained.h - this._moverCurrent.h)/2;
@@ -396,10 +404,11 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
 	},
 	
+	//Part of Mover interface
 	onFirstMove: function(mover){
 	},
 	
-	//Required for Moveable interface 
+	//Part of Mover interface
 	onMoveStart: function(mover){
 	},
 	
@@ -431,13 +440,14 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		this._moverDoneCleanup();
 	},
 
-    onDblClick: function(event) {
-        this.showInline(this._selectedWidget);
-        event.stopPropagation();
-    },
+	onDblClick: function(event) {
+		debugger;
+		this.showInline(this._selectedWidget);
+		event.stopPropagation();
+	},
 
 	onKeyDown: function(event){
-		if(event){
+		if(event && this._moverDragDiv){
 			dojo.stopEvent(event);
 			if(event.keyCode == 16){
 				this._shiftKey = true;
@@ -453,7 +463,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 	},
 
 	onKeyUp: function(event){
-		if(event){
+		if(event && this._moverDragDiv){
 			dojo.stopEvent(event);
 			if(event.keyCode == 16){
 				this._shiftKey = false;
@@ -482,6 +492,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     onExtentChange: function(focus, box){
     },
     
+    /**************************************
+     * Theme editor selection routines
+     **************************************/
     showContext: function(context, widget){
         if(!this._contexDiv){
             this._context = context;

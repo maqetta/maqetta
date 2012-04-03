@@ -69,6 +69,11 @@
 	height:10px;
 	overflow:hidden;
 }
+.focusDragDiv {
+	position:absolute;
+	z-index:2000000;
+	background:transparent;
+}
 
 .editFeedback {
 	background-color: #AAA;

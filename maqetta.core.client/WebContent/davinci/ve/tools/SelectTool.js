@@ -40,10 +40,10 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 
 	onMouseDown: function(event){
 		//FIXME: Don't allow both parent and child to be selected
+		//FIXME: maybe listen for mouseout on doc, and if so, stop the dragging?
 		
 		this._shiftKey = event.shiftKey;
 		this._spaceKey = false;
-		this._removeKeyHandlers();
 		var context = this._context;
 		var createMover = false;
 		if((dojo.isMac && event.ctrlKey) || event.button == 2){
@@ -112,20 +112,19 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		}
 		if(moverWidget){
 			var position_prop;
-			//FIXME: use getObject
-			var userDojo = (moverWidget.domNode && moverWidget.domNode.ownerDocument && 
-					moverWidget.domNode && moverWidget.domNode.ownerDocument.defaultView && 
-					moverWidget.domNode && moverWidget.domNode.ownerDocument.defaultView.dojo);
+			var userdoc = context.getDocument();	// inner document = user's document
+			var userDojo = (userdoc.defaultView && userdoc.defaultView.dojo);
 			if(userDojo){
 				position_prop = userDojo.style(moverWidget.domNode, 'position');
 				this._moverAbsolute = (position_prop == 'absolute');
 				var parent = moverWidget.getParent();
-				if(!(parent && parent.isLayout && parent.isLayout())){
+				//FIXME: isLayout check is not working. See #2042
+				if(!parent || !parent.isLayout || !parent.isLayout()){
 					this._moverWidget = moverWidget;
 					this._moverLastEventTarget = null;
 					var cp = context._chooseParent;
 					cp.setProposedParentWidget(null);
-					selection = context.getSelection();
+					selection = context.getSelection();	// selection might have changed since start of this function
 					this._moverStartLocations = [];
 					for(var i=0; i<selection.length; i++){
 						var l = parseInt(userDojo.style(selection[i].domNode, 'left'), 10);
@@ -167,7 +166,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 								this._moverDragDiv);
 						this._mover = new Mover(this._moverDragDiv, event, this);
 					}
-					var userdoc = context.getDocument();	// inner document = user's document
 					userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
 				}
 			}
@@ -175,7 +173,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 
 	onMouseUp: function(event){
-		this._removeKeyHandlers();
 		var clickInteral = 750;	// .75seconds: allow for leisurely click action
 		var dblClickInteral = 750;	// .75seconds: big time slot for tablets
 		var clickDistance = 10;	// within 10px: inexact for tablets
@@ -206,6 +203,8 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 
 	onDblClick: function(event){
 		var widget = (this._getTarget() || widgetUtils.getEnclosingWidget(event.target));
+		//FIXME: I'm not sure this while() block make sense anymore. 
+		//Not sure what a "managed widget" is.
 		while(widget){
 			if(widget.getContext()){ // managed widget
 				break;
@@ -250,6 +249,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 	
 	_adjustLTOffsetParent: function(context, widget, left, top){
+		//FIXME: Might be better to use offset* instead of scroll*
 		var parentNode = widget.domNode.offsetParent;
 		if(parentNode && parentNode != context.getContainerNode()){
 			var p = context.getContentPosition(context.getDojo().position(parentNode, true));
@@ -446,7 +446,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 	
 	onKeyDown: function(event){
-		if(event){
+		if(event && this._moverWidget){
 			dojo.stopEvent(event);
 			switch(event.keyCode){
 			case 16:
@@ -471,14 +471,11 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			case dojo.keys.UP_ARROW:
 				this._move(event);
 			}
-		}else{
-			// If event is undefined, something is wrong - remove the key handlers
-			this._removeKeyHandlers();
 		}
 	},
 	
 	onKeyUp: function(event){
-		if(event){
+		if(event && this._moverWidget){
 			dojo.stopEvent(event);
 			switch(event.keyCode){
 			case 16:
@@ -488,38 +485,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				this._spaceKey = false;
 				break;
 			}
-			/* FIXME
-			switch(event.keyCode){
-			case dojo.keys.TAB:
-				if(this._moveFocus(event)){
-					//focus should not break away from containerNode
-					dojo.stopEvent(event);
-				}else{
-					//nop: propagate event for next focus
-					//FIXME: focus may move to the focusable widgets on containerNode
-				}
-				break;
-			case dojo.keys.RIGHT_ARROW:
-			case dojo.keys.LEFT_ARROW:
-			case dojo.keys.DOWN_ARROW:
-			case dojo.keys.UP_ARROW:
-				this._move(event);
-			}
-			*/
-		}else{
-			// If event is undefined, something is wrong - remove the key handlers
-			this._removeKeyHandlers();
-		}
-	},
-
-	_removeKeyHandlers: function(){
-		if(this._keyDownHandler){
-			dojo.disconnect(this._keyDownHandler);
-			this._keyDownHandler = null;
-		}
-		if(this._keyUpHandler){
-			dojo.disconnect(this._keyUpHandler);
-			this._keyUpHandler = null;
 		}
 	},
 	
@@ -557,6 +522,8 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		}
 	},
 	
+	//FIXME: tab is supposed to cycle through the widgets
+	//Doesn't really work at this point
 	_moveFocus: function(event){
 		var direction = event.shiftKey?-1: +1,
 			current = this._context.getSelection()[0],
@@ -574,7 +541,17 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		return next;
 	},
 	
+	/**
+	 * Callback routine from dojo.dnd.Mover with every mouse move.
+	 * What that means here is dragging currently selected widgets around.
+	 * @param {object} mover - return object from dojo.dnd.Mover constructor
+	 * @param {object} box - {l:,t:} top/left corner of where drag DIV should go
+	 * @param {object} event - the mousemove event
+	 */
 	onMove: function(mover, box, event){
+		//FIXME: For tablets, might want to add a check for minimum initial move
+		//distance to prevent accidental moves due to fat fingers.
+		
 		// If there was any dragging, prevent a mousedown/mouseup combination
 		// from triggering a select operation
 		this._mouseDownInfo = null;
@@ -608,8 +585,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			}
 			var newLeft =  (box.l - leftAdjust);
 			var newTop = (box.t - topAdjust);
-			//this._moverWidget.domNode.style.left = newLeft + 'px';
-			//this._moverWidget.domNode.style.top = newTop + 'px';
 			var dx = newLeft - this._moverStartLocations[index].l;
 			var dy = newTop - this._moverStartLocations[index].t;
 			var absDx = Math.abs(dx);
@@ -651,13 +626,13 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			offsetTop = 0;
 			offsetNode = parentIframe;
 			while(offsetNode && offsetNode.tagName != 'BODY'){
-                offsetLeft += offsetNode.offsetLeft;
-                offsetTop += offsetNode.offsetTop;
-                offsetNode = offsetNode.offsetParent;
-    		}
+				offsetLeft += offsetNode.offsetLeft;
+				offsetTop += offsetNode.offsetTop;
+				offsetNode = offsetNode.offsetParent;
+			}
 			parentListDiv.style.left = (offsetLeft + event.pageX) + 'px';
 			parentListDiv.style.top = (offsetTop + event.pageY) + 'px';
-        }
+		}
 		
 		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
 				Workbench.getProject());
@@ -693,17 +668,16 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				doFindParentsXY:showCandidateParents,
 				doCursor:!this._moverAbsolute});
 	},
-
+	
+	//Part of Mover interface
 	onFirstMove: function(mover){
-		return;
 	},
 
-	//Required for Moveable interface 
+	//Part of Mover interface
 	onMoveStart: function(mover){
-		return;
 	},
 
-    //Required for Moveable interface
+	//Part of Mover interface
 	onMoveStop: function(mover){
 		var context = this._context;
 		var cp = this._context._chooseParent;
@@ -742,7 +716,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		context.dragMoveCleanup();
 		cp.parentListDivDelete();
 		context.selectionShowFocus();
-		this._removeKeyHandlers();
 		
 		// Attempt to restore editFeedback DIV via call to this._setTarget()
 		// Usually, we will find the right node by looking for the widget with given ID

@@ -12,15 +12,11 @@ _ShapeHelper.prototype = {
 	 * @param {object} obj  Data passed into this routine is found on this object
 	 *    obj.widget: A davinci.ve._Widget which has just been selected
 	 *    obj.customDiv: DIV into which widget can inject its own selection chrome
-	 *    obj.bboxActual: Shape widgets actual bounding box in px units (as numbers, without "px" suffix)
-	 *           expressed as {l:<number>,t:<number>,w:<number>,h:<number>}
-	 *    obj.bboxAdjusted: Shape widgets adjusted bounding box in px units where the left/top
-	 *    		of the DIV containing the focus rectangle might have been shifted    
 	 * @return {boolean}  Return false if no problems.
 	 * FIXME: Better if helper had a class inheritance setup
 	 */
 	onShowSelection: function(obj){
-		if(!obj || !obj.widget || !obj.widget.dijitWidget || !obj.customDiv || !obj.bboxActual || !obj.bboxAdjusted){
+		if(!obj || !obj.widget || !obj.widget.dijitWidget || !obj.customDiv){
 			return true;
 		}
 		// Need to pull back by 3 because total size is 6 (4px inside, plus 2*1px for border)
@@ -36,8 +32,6 @@ _ShapeHelper.prototype = {
 
 		// The focus selection DIV is sometimes pulled in from left/top
 		// so that it won't get clipped off the screen. Need to unadjust the adjustments.
-		var xadjust = obj.bboxAdjusted.l - obj.bboxActual.l;
-		var yadjust = obj.bboxAdjusted.t - obj.bboxActual.t;
 		div.innerHTML = '';
 
 		var draggables = this.getDraggables();
@@ -45,8 +39,8 @@ _ShapeHelper.prototype = {
 		if(points){
 			this._dragNobs = [];
 			for (var i=0; i<points.length; i++){
-				l = points[i].x - centeringShift - xadjust;
-				t = points[i].y - centeringShift - yadjust;
+				l = points[i].x - centeringShift;
+				t = points[i].y - centeringShift;
 				this._dragNobs[i] =  handle = dojo.create('span',{
 					className:'editFocusNob',
 					style:{ position:'absolute', display:'block', left:l+'px', top:t+'px' }	

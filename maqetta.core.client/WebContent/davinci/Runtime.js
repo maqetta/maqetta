@@ -10,7 +10,6 @@ define([
 	"./ve/ve.plugin",
 	"./ve/themeEditor/themeEditor.plugin",
 	"./review/review.plugin",
-	"./review/Color"
 ], function(
 	webContent,
 	Dialog,
@@ -22,8 +21,7 @@ define([
 	js_plugin,
 	ve_plugin,
 	themeEditor_plugin,
-	review_plugin,
-	Color
+	review_plugin
 ) {
 
 // list of plugins to load
@@ -91,26 +89,6 @@ var Runtime = {
 	
 	location: function(){
 		return document.location.href.split("?")[0];
-	},
-	
-	//Not sure review-specific function like this belongs in Runtime, but 
-	//called from welcome_to_maqetta.html
-	publish: function(node) {
-		var publish = new davinci.review.actions.PublishAction();
-		publish.run(node);
-	},
-	
-	//Review-specific... This should really be removed from Runtime
-	getColor: function(/*string*/ name) {
-		var index;
-		dojo.some(Runtime.reviewers,function(item,n){
-			if (item.name==name) {
-				index = n;
-				return true;
-			}
-			return false;
-		});
-		return Color.colors[index];
 	},
 	
 	run: function() {

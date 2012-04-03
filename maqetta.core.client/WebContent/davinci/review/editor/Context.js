@@ -6,9 +6,10 @@ define([
 	"../drawing/tools/HighlightTool",
 	"../drawing/tools/SelectTool",
 	"davinci/Runtime",
+	"davinci/review/Review",
 	"davinci/ve/Context",
 	'preview/silhouetteiframe'
-], function(declare, Surface, CreateTool, ExchangeTool, HighlightTool, SelectTool, Runtime, Context, Silhouette) {
+], function(declare, Surface, CreateTool, ExchangeTool, HighlightTool, SelectTool, Runtime, Review, Context, Silhouette) {
 	
 return declare("davinci.review.editor.Context", [Context], {
 
@@ -133,7 +134,7 @@ return declare("davinci.review.editor.Context", [Context], {
 			];
 		this._cxtSubs = [
 			 dojo.subscribe(this.fileName+"/davinci/review/drawing/addShape", function(shapeDef, clear, editor) {
-				 surface.exchangeTool.importShapes(shapeDef, clear, dojo.hitch(Runtime, Runtime.getColor)); // FIXME: Unique surface is required
+				 surface.exchangeTool.importShapes(shapeDef, clear, dojo.hitch(Review, Review.getColor)); // FIXME: Unique surface is required
 			 }),
 			 dojo.subscribe(this.fileName+"/davinci/review/drawing/enableEditing", this, function(reviewer, commentId, pageState, viewScene) {
 				 surface.activate();
@@ -158,7 +159,7 @@ return declare("davinci.review.editor.Context", [Context], {
 			 })),
 			 dojo.subscribe(this.fileName+"/davinci/review/drawing/cancelEditing", dojo.hitch(this, function() {
 				 // Restore the previous status
-				 surface.exchangeTool.importShapes(surface.cached, true, dojo.hitch(Runtime, Runtime.getColor)); // FIXME: Unique surface is required
+				 surface.exchangeTool.importShapes(surface.cached, true, dojo.hitch(Review, Review.getColor)); // FIXME: Unique surface is required
 				 surface.deactivate();
 				 this._refreshSurface(surface);
 				 surface.commentId = ""; // Clear the filter so that no shapes can be selected

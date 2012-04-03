@@ -11,7 +11,7 @@ var Color = declare("davinci.review.Color", null, {
 	        "darkorange",
 	        "darkgoldenrod",
 	        "brown",
-	        "darkgreen",
+	        "darkgrey",
 	        "darkcyan",
 	        "deeppink"
 	        ]

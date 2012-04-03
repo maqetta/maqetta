@@ -1,8 +1,8 @@
 define([
 	"dojo/_base/declare",
 	"davinci/review/actions/_DrawingCommon",
-	"davinci/Runtime"
-], function(declare, _DrawingCommon, Runtime) {
+	"davinci/review/Review"
+], function(declare, _DrawingCommon, Review) {
 
 var ArrowAction = declare("davinci.review.actions.ArrowAction", [_DrawingCommon], {
 
@@ -18,7 +18,7 @@ var ArrowAction = declare("davinci.review.actions.ArrowAction", [_DrawingCommon]
 		createTool.deactivate();
 		createTool.setShape("Arrow", {
 			colorAlias: surface.currentReviewer,
-			a2c: dojo.hitch(Runtime, Runtime.getColor),
+			a2c: dojo.hitch(Review, Review.getColor),
 			commentId: surface.commentId,
 			state: "",
 			scene: ""

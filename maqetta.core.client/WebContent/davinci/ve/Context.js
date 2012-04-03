@@ -2076,7 +2076,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	/**
 	 * Returns true if the given node is part of the focus (ie selection) chrome
 	 */
-	_isFocusNode: function(node){
+	isFocusNode: function(node){
 		if(this._selection){
 			for(var i=0; i<this._selection.length; i++){
 				if(this._focuses[i].isFocusNode(node)){
@@ -2088,14 +2088,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	onMouseDown: function(event){
-		if(this._activeTool && this._activeTool.onMouseDown && !this._blockChange && !this._isFocusNode(event.target)){
+		if(this._activeTool && this._activeTool.onMouseDown && !this._blockChange){
 			this._activeTool.onMouseDown(event);
 		}
 		this.blockChange(false);
 	},
 	
 	onDblClick: function(event){
-		if(this._activeTool && this._activeTool.onDblClick && !this._blockChange && !this._isFocusNode(event.target)){
+		if(this._activeTool && this._activeTool.onDblClick && !this._blockChange){
 			this._activeTool.onDblClick(event);
 		}
 		this.blockChange(false);
@@ -2103,14 +2103,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	
 
 	onMouseMove: function(event){
-		if(this._activeTool && this._activeTool.onMouseMove && !this._blockChange && !this._isFocusNode(event.target)){
+		if(this._activeTool && this._activeTool.onMouseMove && !this._blockChange){
 			this._activeTool.onMouseMove(event);
 		}
 		
 	},
 
 	onMouseUp: function(event){
-		if(this._activeTool && this._activeTool.onMouseUp && !this._isFocusNode(event.target)){
+		if(this._activeTool && this._activeTool.onMouseUp){
 			this._activeTool.onMouseUp(event);
 		}
 		this.blockChange(false);

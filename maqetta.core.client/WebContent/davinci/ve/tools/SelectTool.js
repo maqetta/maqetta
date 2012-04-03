@@ -39,12 +39,16 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 
 	onMouseDown: function(event){
+		var context = this._context;
+		if(context.isFocusNode(event.target)){
+			// Don't process mouse events on focus nodes. Focus.js already takes care of those events.
+			return;
+		}
 		//FIXME: Don't allow both parent and child to be selected
 		//FIXME: maybe listen for mouseout on doc, and if so, stop the dragging?
 		
 		this._shiftKey = event.shiftKey;
 		this._spaceKey = false;
-		var context = this._context;
 		var createMover = false;
 		if((dojo.isMac && event.ctrlKey) || event.button == 2){
 			// this is a context menu ("right" click)  Don't change the selection.
@@ -173,6 +177,11 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 
 	onMouseUp: function(event){
+		var context = this._context;
+		if(context.isFocusNode(event.target)){
+			// Don't process mouse events on focus nodes. Focus.js already takes care of those events.
+			return;
+		}
 		var clickInteral = 750;	// .75seconds: allow for leisurely click action
 		var dblClickInteral = 750;	// .75seconds: big time slot for tablets
 		var clickDistance = 10;	// within 10px: inexact for tablets
@@ -203,6 +212,11 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 
 	onDblClick: function(event){
+		var context = this._context;
+		if(context.isFocusNode(event.target)){
+			// Don't process mouse events on focus nodes. Focus.js already takes care of those events.
+			return;
+		}
 		var widget = (this._getTarget() || widgetUtils.getEnclosingWidget(event.target));
 		//FIXME: I'm not sure this while() block make sense anymore. 
 		//Not sure what a "managed widget" is.
@@ -230,6 +244,11 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 
 	onMouseMove: function(event){
+		var context = this._context;
+		if(context.isFocusNode(event.target)){
+			// Don't process mouse events on focus nodes. Focus.js already takes care of those events.
+			return;
+		}
 		if(this._mover){
 			this._setTarget(null);
 		}else{

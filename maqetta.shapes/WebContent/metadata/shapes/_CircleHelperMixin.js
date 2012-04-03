@@ -80,6 +80,7 @@ _CircleHelperMixin.prototype = {
 			console.error('_RectShapeHelperMixin dragEndPointDelta(): index='+index);
 			return;
 		}
+		this.hideAllDraggablesExcept(index);
 		var s = this.dragPointsStrings[index];
 		
 		// Update the rectangle parameters for what the result should be

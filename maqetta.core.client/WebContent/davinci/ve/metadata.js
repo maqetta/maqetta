@@ -372,7 +372,7 @@ define([
             return obj;
         }
         dojo.every(queryString.split("."), function(name) {
-            if (!obj[name]) {
+            if(obj[name] === undefined){
                 obj = undefined;
                 return false;
             }

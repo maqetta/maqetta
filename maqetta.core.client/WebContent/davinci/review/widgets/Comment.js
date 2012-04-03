@@ -191,9 +191,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 		this.contentNode.innerHTML = this.content;
 		this.commentType.innerHTML = this.type;
 		this._ajustLengthOfCommentContent(true);
-		dojo.removeClass(this.commentSeverity, "severityLow");
-		dojo.removeClass(this.commentSeverity, "severityMedium");
-		dojo.removeClass(this.commentSeverity, "severityHigh");
+		dojo.removeClass(this.commentSeverity, "severityUnassigned severityLow severityMedium severityHigh" );
 		dojo.addClass(this.commentSeverity, "severity" + this.severity);
 		if (this.commentStatus.set) {
 			this.commentStatus.set("label", this.status);

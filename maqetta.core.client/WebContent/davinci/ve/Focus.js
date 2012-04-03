@@ -446,8 +446,11 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 				parentNode.removeChild(this._moverDragDiv);
 			}
 			this._moverDragDiv = null;
-			//FIXME: Only call onExtentChange if a change actually occurred?
-			this.onExtentChange(this, this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent);
+			// Change widget bounds if any dragging has occurred
+			if(this._moverCurrent.l != this._moverStart.l || this._moverCurrent.t != this._moverStart.t ||
+					this._moverCurrent.w != this._moverStart.w || this._moverCurrent.h != this._moverStart.h){
+				this.onExtentChange(this, this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent);
+			} 
 		}
 		this._moverDoneCleanup();
 		

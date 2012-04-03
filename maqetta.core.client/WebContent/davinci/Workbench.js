@@ -1,7 +1,6 @@
 define([
 	"./Runtime",
 	"./model/Path",
-	"./util",
 	"./workbench/ViewPart",
 	"./workbench/EditorContainer",
 	"dijit/Dialog",
@@ -28,7 +27,6 @@ define([
 ], function(
 		Runtime,
 		Path,
-		util,
 		ViewPart,
 		EditorContainer,
 		Dialog,
@@ -1108,11 +1106,7 @@ var Workbench = {
 		var nodeName = fileName.split('/').pop();
 		var extension = keywordArgs && keywordArgs.fileName && keywordArgs.fileName.extension ? 
 				"." + keywordArgs.fileName.extension : "";
-		var editorExtension = davinci.Runtime.getExtension("davinci.editor", function (extension){
-			return extension.id === "davinci.review.CommentReviewEditor";
-		});
-		var reviewExtension = "."+editorExtension.extensions;
-		nodeName = nodeName + (extension == reviewExtension ? extension : "");
+		nodeName = nodeName + (extension == ".rev" ? extension : "");
 
 		var loading = dojo.query('.loading');
 		if (loading[0]) {
@@ -1166,7 +1160,9 @@ var Workbench = {
 			}
 			
 			if (!keywordArgs.noSelect) {
-				util.arrayAddOnce(Workbench._state.editors, fileName);
+	            if (Workbench._state.editors.indexOf(fileName) === -1) {
+	            	Workbench._state.editors.push(fileName);
+	            }
 				Workbench._switchEditor(tab.editor, keywordArgs.startup);
 			}
 
@@ -1462,8 +1458,10 @@ var Workbench = {
 
 	_editorTabClosed: function(page) {
 		if (page && page.editor && page.editor.fileName) {
-		
-			util.arrayRemove(Workbench._state.editors, page.editor.fileName);
+            var i = Workbench._state.editors.indexOf(page.editor.fileName);
+            if (i != -1) {
+            	Workbench._state.editors.splice(i, 1);
+            }
 			Workbench._updateWorkbenchState();
 		}
 		var editors=dijit.byId("editors_tabcontainer").getChildren();

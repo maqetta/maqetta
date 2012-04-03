@@ -43,6 +43,7 @@ import org.maqetta.server.StorageFileSystem;
 import org.maqetta.server.VDirectory;
 import org.maqetta.server.VFile;
 import org.maqetta.server.VLibraryResource;
+import org.maqetta.server.VStorageDirectory;
 import org.maqetta.server.VWorkspaceRoot;
 import org.osgi.framework.Bundle;
 
@@ -90,62 +91,18 @@ public class User implements IUser {
 	public void rebuildWorkspace() {
 		this.workspace = newWorkspaceRoot();
 		IStorage[] userFiles = this.userDirectory.listFiles();
-		
 		for(int j=0;j<userFiles.length;j++){
-			if(!userFiles[j].isDirectory()) continue;
-			LibrarySettings settings = this.getLibSettings(userFiles[j]);
-			if(!settings.exists()) continue;
-			Vector<ILibInfo> libs = new Vector();
-			libs.addAll(Arrays.asList( settings.allLibs()));
-			
-			
+			if(isConfig(userFiles[j].getName()) || !userFiles[j].isDirectory()) continue;
 			IVResource workspace = this.workspace;
-			IVResource firstFolder = new VDirectory(workspace, userFiles[j].getName());
+			
+			IVResource firstFolder = new VStorageDirectory(userFiles[j], workspace, userFiles[j].getName());
 			this.workspace.add(firstFolder);
-			for (int i = 0; i < libs.size(); i++) {
-				IVResource root = firstFolder;
-				String defaultRoot = libs.get(i).getVirtualRoot();
-				
-				if(defaultRoot==null) continue;
-				
-				Library b = this.getLibrary(libs.get(i));
-				/* library not found on server so avoid adding it to the workspace */
-				if (b == null) {
-					continue;
-				}
-				URL file = b.getURL("");
-				// TODO temp fix to avoid adding virtual library entries that don't
-				// exist to the workspace.
-				if (file == null) {
-					continue;
-				}
-				IPath path = new Path(defaultRoot);
-				for (int k = 0; k < path.segmentCount(); k++) {
-					String segment = path.segment(k);
-					IVResource v = root.get(segment);
-					if (v == null) {
-						/* creating virtual directory structure, so READ ONLY */
-						v = new VDirectory(root, segment,true);
-						root.add(v);
-					}
-					root = v;
-				}
-	
-				
-				IVResource libResource = new VLibraryResource(b, file,"", "");
-				/* need a special case for library items whos root is the project roots */
-				//if(path.segmentCount()==0){
-					
-				IVResource[] children = libResource.listFiles();
-				for(int p=0;p<children.length;p++)
-					root.add(children[p]);
-				//}else{
-				//	root.add(libResource);
-				//}
-			}
 		}
 	}
-	
+	private boolean isConfig(String folderName){
+		if(folderName==null) return true;
+		return folderName.equals(IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
+	}
 	
 	public ILibraryFinder[] getFinders(String base){
 		ILibraryFinder[] finders = ServerManager.getServerManger().getLibraryManager().getLibraryFinders();
@@ -415,12 +372,6 @@ public class User implements IUser {
         return getLibFile(path);
     }
 
-	protected Library getLibrary(ILibInfo li) {
-		String id = li.getId();
-		String version = li.getVersion();
-		return ServerManager.getServerManger().getLibraryManager().getLibrary(id, version);
-
-	}
 
 	protected IVResource getLibFile(String p1) {
 		IPath path = new Path(p1);

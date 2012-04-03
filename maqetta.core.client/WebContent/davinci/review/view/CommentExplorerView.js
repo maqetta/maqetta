@@ -154,6 +154,7 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 			return;
 		}
 		var selectedVersion = item[0].resource.elementType == "ReviewFile" ? item[0].resource.parent : item[0].resource;
+		Runtime.reviewers = selectedVersion.reviewers || [];
 		var isDesigner = selectedVersion.designerId == Runtime.userName;
 		var isVersion = selectedVersion.elementType == "ReviewVersion";
 		var isDraft = selectedVersion.isDraft;

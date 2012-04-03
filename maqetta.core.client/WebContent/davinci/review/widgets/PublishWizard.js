@@ -621,7 +621,8 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 				this.descriptions.set('value', node.description);
 			}
 			this.receiveEmail.set('value', node.receiveEmail);
-			// init review files
+			
+			 // init review files
 			var children;
 			node.getChildren(function(c) {
 				children = c;
@@ -645,7 +646,10 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 					}
 					return null;
 				};
-				for (i = 0; i < segments.length; i++) {
+				/*
+				 * start at segment 1 to skip over root item segment. see issue #2006
+				 */
+				for (i = 1; i < segments.length; i++) {
 					item = search(item, segments[i]);
 					if (item === null) {
 						break;
@@ -657,6 +661,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 					]);
 				}
 			}));
+
 			// init reviewers
 			var i;
 			for (i = 0; i < node.reviewers.length; i++) {

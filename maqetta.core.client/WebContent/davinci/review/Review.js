@@ -1,31 +1,26 @@
 define([
-	"dojo/_base/lang",
+	"dojo/_base/declare",
 	"davinci/Runtime",
-//	"davinci/Workbench",
-	"dijit/layout/ContentPane",
-], function(lang, Runtime, /*Workbench,*/ ContentPane) {
+	"./Color"
+], function(declare, Runtime, Color) {
 
-davinci.review = {};
+return {
 
-var Review = davinci.review.Review = lang.mixin(davinci.Workbench, {
+	publish: function(node) {
+		var publish = new davinci.review.actions.PublishAction();
+		publish.run(node);
+	},
 
-	runComment: function() {
-		this._initKeys();
-		this._baseTitle = dojo.doc.title;
-		var perspective = Runtime.initialPerspective || "davinci.ui.comment";
-		var mainBody = dojo.byId('mainBody');
-		mainBody.editorsWelcomePage =
-			new ContentPane({
-				id : "editorsWelcomePage",
-				href: "app/davinci/ve/resources/welcome_to_maqetta.html"
-			});
-		this.showPerspective(perspective);
-		Runtime.subscribe("/davinci/ui/editorSelected", davinci.Workbench._updateMainToolBar );
-		Runtime.subscribe("/davinci/resource/resourceChanged", this._resourceChanged );
-		this._state={editors:[]};
+	getColor: function(/*string*/ name) {
+		var index;
+		dojo.some(Runtime.reviewers, function(item, n) {
+			if (item.name == name) {
+				index = n;
+				return true;
+			}
+			return false;
+		});
+		return Color.colors[index];
 	}
-});
-
-return Review;
-
+};
 });

@@ -152,6 +152,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		}
 		this._op = op;
 		
+		this._resizeWidth = op.resizeWidth;
+		this._resizeHeight = op.resizeHeight;
 		var horizontal = (op.resizeWidth && !op.resizeHeight) ? "block" : "none";
 		var vertical = (op.resizeHeigh && !op.resizeWidth) ? "block" : "none";
 		var corner = (op.resizeWidth && op.resizeHeight) ? "block" : "none";
@@ -343,6 +345,13 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		if(this._moverDragDiv){
 			this._moverDragDiv.style.left = box.l + 'px';
 			this._moverDragDiv.style.top = box.t + 'px';
+		}
+		
+		// Don't do move operation if dragging on an edge where that dimension of the widget
+		// is not resizable
+		if(((this._frameIndex === LEFT || this._frameIndex === RIGHT) && !this._resizeWidth) ||
+				((this._frameIndex === TOP || this._frameIndex === BOTTOM) && !this._resizeHeight)){
+			return;
 		}
 		
 		// Recompute focus chrome's bounds for normal/unconstrained resizing (via dragging nob or frame)

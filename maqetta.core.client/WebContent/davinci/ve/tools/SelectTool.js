@@ -143,9 +143,9 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						pn = pn.offsetParent;
 					}
 					if(this._moverAbsolute){
-						//FIXME: move some of the style settings to content.css
 						this._moverDragDiv = dojo.create('div', 
-								{style:'position:absolute;z-index:2000000;background:transparent;left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px'},
+								{className:'selectToolDragDiv',
+								style:'left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px'},
 								context.rootNode);
 						this._mover = new Mover(this._moverDragDiv, event, this);
 					}else{
@@ -188,8 +188,9 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			}
 			this._mouseDownInfo = null;
 		}
-		// onDblClick doesn't work because we are interjecting an overlay DIV with a mouseDown operation
-		// so the browser's rules about what is required to trigger an ondblclick are not satisfied.
+		// Normal browser onDblClick doesn't work because we are interjecting 
+		// an overlay DIV with a mouseDown operation. As a result,
+		// the browser's rules about what is required to trigger an ondblclick are not satisfied.
 		// Therefore, we have to do our own double-click timer logic
 		if(this._lastMouseUp){
 			if(Math.abs(event.pageX - this._lastMouseUp.pageX) <= clickDistance &&

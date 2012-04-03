@@ -2072,16 +2072,30 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	blockChange: function(shouldBlock){
 			this._blockChange = shouldBlock;
 	},
+	
+	/**
+	 * Returns true if the given node is part of the focus (ie selection) chrome
+	 */
+	_isFocusNode: function(node){
+		if(this._selection){
+			for(var i=0; i<this._selection.length; i++){
+				if(this._focuses[i].isFocusNode(node)){
+					return true;
+				}
+			}
+		}
+		return false;
+	},
 
 	onMouseDown: function(event){
-		if(this._activeTool && this._activeTool.onMouseDown && !this._blockChange){
+		if(this._activeTool && this._activeTool.onMouseDown && !this._blockChange && !this._isFocusNode(event.target)){
 			this._activeTool.onMouseDown(event);
 		}
 		this.blockChange(false);
 	},
 	
 	onDblClick: function(event){
-		if(this._activeTool && this._activeTool.onDblClick && !this._blockChange){
+		if(this._activeTool && this._activeTool.onDblClick && !this._blockChange && !this._isFocusNode(event.target)){
 			this._activeTool.onDblClick(event);
 		}
 		this.blockChange(false);
@@ -2089,14 +2103,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	
 
 	onMouseMove: function(event){
-		if(this._activeTool && this._activeTool.onMouseMove && !this._blockChange){
+		if(this._activeTool && this._activeTool.onMouseMove && !this._blockChange && !this._isFocusNode(event.target)){
 			this._activeTool.onMouseMove(event);
 		}
 		
 	},
 
 	onMouseUp: function(event){
-		if(this._activeTool && this._activeTool.onMouseUp){
+		if(this._activeTool && this._activeTool.onMouseUp && !this._isFocusNode(event.target)){
 			this._activeTool.onMouseUp(event);
 		}
 		this.blockChange(false);
@@ -2848,7 +2862,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			doCursor = params.doCursor,
 			beforeAfter = params.beforeAfter,
 			widgetType = dojo.isArray(data) ? data[0].type : data.type;
-//console.log('dragMoveUpdate. doSnapLinesX='+doSnapLinesX);
 
 		// inner function that gets called recurively for each widget in document
 		// The "this" object for this function is the Context object

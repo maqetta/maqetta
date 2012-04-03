@@ -35,8 +35,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			var frame = dojo.create("div", {"class": "editFocusFrame"}, this._stdChrome);
 			this._frames.push(frame);
 			this.connect(frame, "onmousedown", "onMouseDown");
-			this.connect(frame, "onmouseup", "onMouseUp");
-			this.connect(frame, "ondblclick", "onDblClick");
 		}
 		dojo.addClass(this._frames[LEFT], "editFocusFrameLEFT");
 		dojo.addClass(this._frames[RIGHT], "editFocusFrameRIGHT");
@@ -52,7 +50,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			}}, this._stdChrome);
 			this._nobs.push(nob);
 			this.connect(nob, "onmousedown", "onMouseDown");
-			this.connect(nob, "onmouseup", "onMouseUp");
 		}
 		this._nobIndex = -1;
 		this._frameIndex = -1;
@@ -314,6 +311,11 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		this._mover = new Mover(this._moverDragDiv, event, this);
 		dojo.stopEvent(event);
 
+		this._mouseDownInfo = { widget:this._selectedWidget, pageX:event.pageX, pageY:event.pageY, dateValue:(new Date()).valueOf() };
+		this._moverMouseUpEvent = null;
+		this._moverMouseUpHandler = dojo.connect(this._moverDragDiv, "onmouseup", dojo.hitch(this, function(e){
+			this.onMouseUp(e);
+		}));
 		var userdoc = this._context.getDocument();	// inner document = user's document
 		userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
 		this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(e){
@@ -332,6 +334,10 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 	 * @param {object} event - the mousemove event
 	 */
 	onMove: function(mover, box, event){
+		// If there was any dragging, prevent a mousedown/mouseup combination
+		// from triggering a select operation
+		this._mouseDownInfo = null;
+
 		// Update the transparent overlay DIV that tracks mouse and
 		// intercepts mouse events from activating widgets under mouse
 		if(this._moverDragDiv){
@@ -431,17 +437,45 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 				parentNode.removeChild(this._moverDragDiv);
 			}
 			this._moverDragDiv = null;
+			//FIXME: Only call onExtentChange if a change actually occurred?
 			this.onExtentChange(this, this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent);
 		}
 		this._moverDoneCleanup();
+		
+		var event = this._moverMouseUpEvent;
+		this._moverMouseUpEvent = null;
+		
+		if(event && event.target){
+			var clickInteral = 750;	// .75seconds: allow for leisurely click action
+			var dblClickInteral = 750;	// .75seconds: big time slot for tablets
+			var clickDistance = 10;	// within 10px: inexact for tablets
+			var dateValue = (new Date()).valueOf();
+
+			this._mouseDownInfo = null;
+			
+			// Normal browser onDblClick doesn't work because we are interjecting 
+			// an overlay DIV with a mouseDown operation. As a result,
+			// the browser's rules about what is required to trigger an ondblclick are not satisfied.
+			// Therefore, we have to do our own double-click timer logic
+			if(this._lastMouseUp){
+				if(Math.abs(event.pageX - this._lastMouseUp.pageX) <= clickDistance &&
+						Math.abs(event.pageY - this._lastMouseUp.pageY) <= clickDistance &&
+						(dateValue - this._lastMouseUp.dateValue) <= dblClickInteral){
+					this.onDblClick(event);
+				}
+			}
+			this._lastMouseUp = { pageX: event.pageX, pageY: event.pageY, dateValue:dateValue };
+			dojo.stopEvent(event);
+		}
 	},
 
 	onMouseUp: function(event){
-		this._moverDoneCleanup();
+		// Temporarily stash the mouseup event so that the upcoming
+		// onMoveStop handler can process that event.
+		this._moverMouseUpEvent = event;
 	},
 
 	onDblClick: function(event) {
-		debugger;
 		this.showInline(this._selectedWidget);
 		event.stopPropagation();
 	},
@@ -489,9 +523,22 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		}
 	},
 
-    onExtentChange: function(focus, box){
-    },
-    
+	onExtentChange: function(focus, box){
+	},
+
+	/**
+	 * Returns true if the given node is part of the focus (ie selection) chrome
+	 */
+	isFocusNode: function(node){
+		if(dojo.hasClass(node, 'focusDragDiv') || 
+				dojo.hasClass(node, 'editFocusNob') || dojo.hasClass(node, 'editFocusFrame') ||
+				dojo.hasClass(node, 'maqFocus') || dojo.hasClass(node, 'editFocusStdChrome')){
+			return true;
+		}else{
+			return false;
+		}
+	},
+
     /**************************************
      * Theme editor selection routines
      **************************************/

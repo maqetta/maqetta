@@ -69,7 +69,7 @@
 	height:10px;
 	overflow:hidden;
 }
-.focusDragDiv {
+.focusDragDiv, .selectToolDragDiv {
 	position:absolute;
 	z-index:2000000;
 	background:transparent;

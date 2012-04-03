@@ -63,7 +63,7 @@ public class OrionUserManager extends UserManagerImpl {
         if (person != null) {
 
             IUser user = newUser(person,null);
-            users.put(userName, user);
+          
             //File userDir = user.getUserDirectory();
             //userDir.mkdir();
             //File settingsDir = user.getSettingsDirectory();

@@ -23,7 +23,6 @@ define([
 	"preview/silhouetteiframe",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
-	"../util",
 	"dojox/html/_base"
 ], function(
 	declare,
@@ -49,8 +48,7 @@ define([
 	Preferences,
 	Silhouette,
 	Deferred,
-	DeferredList,
-	maqUtil
+	DeferredList
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -329,13 +327,18 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			return;
 		}
 
+        var addOnce = function(array, item) {
+            if (array.indexOf(item) === -1) {
+                array.push(item);
+            }
+        };
 		var id = widget.getId();
 		if(id){
-			maqUtil.arrayAddOnce(this._widgetIds, id);
+			addOnce(this._widgetIds, id);
 		}
 		var objectId = widget.getObjectId(widget);
 		if(objectId){
-			maqUtil.arrayAddOnce(this._objectIds, objectId);
+			addOnce(this._objectIds, objectId);
 		}
 
 		// Recurse down widget hierarchy
@@ -354,19 +357,26 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	detach: function(widget) {
 		// FIXME: detaching context prevent destroyWidget from working
 		//widget._edit_context = undefined;
+		var arrayRemove = function(array, item) {
+			var i = array.indexOf(item);
+	        if (i != -1) {
+	            array.splice(i, 1);
+	        }
+		};
+
 		var id = widget.getId();
 		if(id){
-			maqUtil.arrayRemove(this._widgetIds, id);
+			arrayRemove(this._widgetIds, id);
 		}
 		var objectId = widget.getObjectId();
 		if(objectId){
-			maqUtil.arrayRemove(this._objectIds, objectId);
+			arrayRemove(this._objectIds, objectId);
 		}
 		if (this._selection){
 			for(var i=0; i<this._selection.length; i++){
 				if(this._selection[i] == widget){
 					this.focus(null, i);
-					maqUtil.arrayRemove(this._selection,widget);
+					this._selection.splice(i, 1);
 				}
 			}
 		}

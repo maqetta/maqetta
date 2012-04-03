@@ -1108,7 +1108,11 @@ var Workbench = {
 		var nodeName = fileName.split('/').pop();
 		var extension = keywordArgs && keywordArgs.fileName && keywordArgs.fileName.extension ? 
 				"." + keywordArgs.fileName.extension : "";
-		nodeName = nodeName + (extension == ".rev" ? extension : "");
+		var editorExtension = davinci.Runtime.getExtension("davinci.editor", function (extension){
+			return extension.id === "davinci.review.CommentReviewEditor";
+		});
+		var reviewExtension = "."+editorExtension.extensions;
+		nodeName = nodeName + (extension == reviewExtension ? extension : "");
 
 		var loading = dojo.query('.loading');
 		if (loading[0]) {

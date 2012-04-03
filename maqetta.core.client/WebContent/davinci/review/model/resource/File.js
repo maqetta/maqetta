@@ -16,7 +16,11 @@ return declare("davinci.review.model.resource.File", File, {
 	getLabel: function() {
 		var path = new Path(this.name);
 		var segments = path.getSegments();
-		return label = segments[segments.length-1]+".rev";
+		var editorExtension = davinci.Runtime.getExtension("davinci.editor", function (extension){
+			return extension.id === "davinci.review.CommentReviewEditor";
+		});
+		var extension = "."+editorExtension.extensions;
+		return label = segments[segments.length-1] + extension;
 
 	},
 

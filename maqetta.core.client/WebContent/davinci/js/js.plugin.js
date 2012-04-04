@@ -170,7 +170,7 @@ return {
 		}
 	],
 	"davinci.preferences": [
-		{
+/*		{
 			name: "JavaScript",
 			id: "general",
 			category: ""
@@ -194,7 +194,8 @@ return {
 				switchSpacing: 3,
 				objectLitFieldSpace: 1
 			}
-		}
+		} 
+*/
 	],
 	"davinci.fileType": [
 		{

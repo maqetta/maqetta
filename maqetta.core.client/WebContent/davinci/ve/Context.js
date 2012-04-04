@@ -1572,7 +1572,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					contentCssIndex = i;
 				}
 			}
-			var index;
+			var index,
+				beforeChild;
 			if(!isContentCss){
 				if(isAppCss && contentCssLink){
 					beforeChild = contentCssLink;

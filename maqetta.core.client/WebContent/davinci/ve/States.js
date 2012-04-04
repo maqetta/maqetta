@@ -8,6 +8,7 @@ define([
 declare("davinci.ve.States", davinci.maqetta.States, {
 	
 	_update: function(widget, newState, oldState) {
+console.trace();
 		this.inherited(arguments);
 		
 		widget = this._getWidget(widget);
@@ -21,6 +22,7 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 	},
 		
 	_updateEvents: function(widget, state, name) {
+console.trace();
 		var events = ["onclick", "onmouseover", "onmouseout", "onfocus", "onblur"];
 		var properties;
 		for(var i in events){
@@ -44,6 +46,7 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 	},
 	
 	_styleChange: function (widget, styleArray){
+console.trace();
 		var currentEditor = top.davinci.Runtime.currentEditor; //TODO: use require?
 		var context = currentEditor.getContext();
 
@@ -53,6 +56,7 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 	},
 	
 	normalize: function(type, widget, name, value) {
+console.trace();
         switch(type) {
 		    case "style":
 	            var state = davinci.ve.states.getState();
@@ -72,7 +76,8 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 	},
 	
 	normalizeArray: function(type, widget, name, valueArray) {
-        switch(type) {
+console.trace();
+		switch(type) {
 		    case "style":
 	            var state = davinci.ve.states.getState();
 	            if (state) {
@@ -118,6 +123,7 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 
 	// returns a shallow copy of the children
 	getChildren: function(widget) {
+console.trace();
 		if (widget && widget.getChildren) {
 			return widget.getChildren().slice();
 		}
@@ -125,6 +131,7 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 	},
 	_updateSrcState: function (widget)
 	{
+console.trace();
 		if (widget._srcElement) {
 			var str=this.serialize(widget);
 			if (str.trim()) {
@@ -152,6 +159,7 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 		if (!this.subscribed) {
 		
 			this.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(e) { 
+console.trace();
 				var editor = this.getEditor();
 				if (!dojo.isObject(e.widget) || !editor || editor.declaredClass != "davinci.ve.PageEditor"){
 					return;

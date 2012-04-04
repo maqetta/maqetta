@@ -17,8 +17,16 @@ davinci.maqetta.States.prototype = {
 
 	/**
 	 * Returns the array of states declared by the widget, plus the implicit normal state. 
+	 * Called by:
+	 * 		EventSelection.js: _buildSelectionValues
+	 * 		Context.js: _attachChildren
+	 * 		Context.js: _restoreStates
+	 * 		StatesView.js: _updateList
+	 * 		StatesView.js: _hideShowToolBar
+	 * 		(this routine): isVisible (indirect for VisualEditorOutline.js: isToggleOn)
 	 */ 
-	getStates: function(widget, associative){ 
+	getStates: function(widget, associative){
+console.trace();
 		widget = this._getWidget(widget); 
 		var names = associative ? {"Normal": "Normal"} : ["Normal"];
 		var states = widget && widget.states;
@@ -37,6 +45,7 @@ davinci.maqetta.States.prototype = {
 	},
 	
 	_getWidget: function(widget) {
+console.trace();
 		if (!widget) {
 			var doc = this.getDocument();
 			widget = doc && doc.body;
@@ -46,13 +55,14 @@ davinci.maqetta.States.prototype = {
 	
 	_updateSrcState: function (widget)
 	{
-		
+console.trace();
 	},
 	
 	/**
 	 * Returns true if the widget declares the state, false otherwise.
 	 */
 	hasState: function(widget, state, property){ 
+console.trace();
 		if (arguments.length < 2) {
 			state = arguments[0];
 			widget = undefined;
@@ -63,8 +73,18 @@ davinci.maqetta.States.prototype = {
 
 	/**
 	 * Returns the current state of the widget.
+	 * Called by:
+	 * 		(this routine): normalizeArray
+	 * 		(this routine): resetState
+	 * 		(this routine): isVisible
+	 * 		(this routine): initialize.subscribed
+	 * 		StatesView.js: _updateSelection
+	 *		VisualEditorOutline.js: _toggle
+	 *		(anonymous function)States.js:208
+	 *		StyleCommand.js: execute
 	 */
 	getState: function(widget){ 
+console.trace();
 		widget = this._getWidget(widget);
 		return widget && widget.states && widget.states.current;
 	},
@@ -72,8 +92,13 @@ davinci.maqetta.States.prototype = {
 	/**
 	 * Sets the current state of the widget.  
 	 * Subscribe using davinci.states.subscribe("/davinci/states/state/changed", callback).
+	 * Called by:
+	 * 		(this routine): resetState
+	 * 		StatesView.js: (anonymous:81)
+	 * 		StatesView.js: (anonymous function)536 - many, many times
 	 */
 	setState: function(widget, newState, updateWhenCurrent, _silent){
+console.trace();
 		if (arguments.length < 2) {
 			newState = arguments[0];
 			widget = undefined;
@@ -103,6 +128,7 @@ davinci.maqetta.States.prototype = {
 	 * so that styling properties get reset for a subtree.
 	 */
 	resetState: function(widget){
+console.trace();
 		var currentState = this.getState(widget.getContext().rootWidget);
 		if(!this.isNormalState(currentState)){
 			this.setState(widget, currentState, true/*updateWhenCurrent*/, false /*silent*/);
@@ -116,7 +142,18 @@ davinci.maqetta.States.prototype = {
 		return !state || state == this.NORMAL;
 	},
 	
+	/**
+	 * Called by:
+	 * 		(this routine): normalizeArrayStates (indirectly from _Widget.js:_styleText)
+	 * 		(this routine): _update (indirectly/inherited from davinci.ve.States:_update)
+	 * 		(this routine): _resetAndCacheNormalStyleStates.js
+	 * @param widget
+	 * @param state
+	 * @param name
+	 * @returns
+	 */
 	getStyle: function(widget, state, name) {
+console.trace();
 		var styleArray;
 		widget = this._getWidget(widget);
 		if (arguments.length == 1) {
@@ -142,6 +179,7 @@ davinci.maqetta.States.prototype = {
 	},
 
 	hasStyle: function(widget, state, name) {
+console.trace();
 		widget = this._getWidget(widget);
 
 		if (!widget || !name) { return; }
@@ -158,7 +196,18 @@ davinci.maqetta.States.prototype = {
 		}
 	},
 
+	
+	/**
+	 * Called by:
+	 * 		VisualEditorOutline.js: _toggle
+	 * 		(this routine): _resetAndCacheNormalStyle
+	 * @param widget
+	 * @param state
+	 * @param name
+	 * @returns
+	 */
 	setStyle: function(widget, state, styleArray, silent) {
+console.trace();
 		widget = this._getWidget(widget);
 
 		if (!widget || !styleArray) { return; }
@@ -252,6 +301,7 @@ davinci.maqetta.States.prototype = {
 	},
 	
 	_resetAndCacheNormalStyle: function(widget, node, styleArray, newState) {
+console.trace();
 		var normalStyleArray = this.getStyle(widget, undefined);
 		
 		// Reset normal styles
@@ -285,6 +335,7 @@ davinci.maqetta.States.prototype = {
 	},
 	
 	_update: function(widget, newState, oldState) {
+console.trace();
 		widget = this._getWidget(widget);
 		if (!widget) return;
 		
@@ -341,6 +392,7 @@ davinci.maqetta.States.prototype = {
 	 * Subscribe using davinci.states.subscribe("/davinci/states/state/added", callback).
 	 */
 	add: function(widget, state){ 
+console.trace();
 		if (arguments.length < 2) {
 			state = arguments[0];
 			widget = undefined;
@@ -411,6 +463,7 @@ davinci.maqetta.States.prototype = {
 	 * Returns true if the widget is set to visible within the current state, false otherwise.
 	 */ 
 	isVisible: function(widget, state){ 
+console.trace();
 		if (arguments.length == 1) {
 			state = this.getState();
 		}
@@ -442,6 +495,7 @@ davinci.maqetta.States.prototype = {
 	},
 	
 	serialize: function(widget) {
+console.trace();
 		if (!widget) return;
 		var value = "";
 		if (widget.states) {
@@ -459,8 +513,20 @@ davinci.maqetta.States.prototype = {
 		}
 		return value;
 	},
-	
+
+	/**
+	 * Convert a string representation of widget-specific states information into a JavaScript object
+	 * using JSON.parse.
+	 * The string representation is typically the value of the this.ATTRIBUTE (dvStates)
+	 * Called by:
+	 * 		(this routine): store()
+	 * 		Context.js: _attachChildren()
+	 * 		(this routine): _restoreStates()
+	 * @param states  string representation of widget-specific states information
+	 * @return {object}  JavaScript result from JSON.parse
+	 */
 	deserialize: function(states) {
+console.trace();
 		if (typeof states == "string") {
 			// Replace unescaped single quotes with double quotes, unescape escaped single quotes
 			states = states.replace(/(\\)?'/g, function($0, $1){ 
@@ -493,24 +559,57 @@ davinci.maqetta.States.prototype = {
 			}
 		}
 	},
+
 	
+	/**
+	 * Stuffs a JavaScript property (the states object) onto the "widget",
+	 * which in page editor is a davinci.ve._Widget object, and when running directly in browser,
+	 * is an Element DOM node.
+	 * Called by:
+	 * 		Context.js: _parse() - why ????
+	 * 		Context.js: _restoreStates() - why ????
+	 * @param widget  Pointer to widget. For page editor, it's a davinci.ve._Widget object.
+	 * 		When actually running in browser outside of page editor, it's an Element DOM node.
+	 * @param states   the string value of the widget-specific states information.
+	 * 				This is the string that is stuffed into the attribute that 
+	 * 				holds widget-specific states information (dvStates)
+	 */
 	store: function(widget, states) {
+console.trace();
 		if (!widget || !states) return;
 		
 		this.clear(widget);
+		//FIXME: Shouldn't be stuffing a property with such a generic name ("states") onto DOM elements
 		widget.states = states = this.deserialize(states);
 		this.publish("/davinci/states/stored", [{widget:widget, states:states}]);
 	},
-		
+	
+	/**
+	 * Returns the string value of the attribute that holds widget-specific states information (dvStates)
+	 * Called by:
+	 * 		(this routine): _preserveStates
+	 * 		Context.js: _preserveStates
+	 * @param widget  Pointer to widget. For page editor, it's a davinci.ve._Widget object.
+	 * 		When actually running in browser outside of page editor, it's an Element DOM node.
+	 * @returns {string}  String value for the attribute, or unspecified|null if no such widget or attribute
+	 */
 	retrieve: function(widget) {
+console.trace();
 		if (!widget) return;
 		
+		// FIXME: Maybe this check between page editor and runtime should be factored out
 		var node = widget.domNode || widget;
 		var states = node.getAttribute(this.ATTRIBUTE);
 		return states;
 	},
 
+	/**
+	 * Removes the states property on the given widget
+	 * Called by store().
+	 * @param widget  A davinci.ve._Widget in page editor and an Element when running directly in browser
+	 */
 	clear: function(widget) {
+console.trace();
 		if (!widget || !widget.states) return;
 		var states = widget.states;
 		delete widget.states;
@@ -522,6 +621,7 @@ davinci.maqetta.States.prototype = {
 	},
 	
 	_shouldInitialize: function() {
+console.trace();
 		var windowFrameElement = window.frameElement;
 		var isDavinciEditor = top.davinci && top.davinci.Runtime && (!windowFrameElement || windowFrameElement.dvContext);
 		return !isDavinciEditor;
@@ -564,6 +664,7 @@ davinci.maqetta.States.prototype = {
 	},
 	
 	initialize: function() {
+console.trace();
 	
 		if (!this.subscribed && this._shouldInitialize()) {
 		
@@ -621,8 +722,13 @@ davinci.states = new davinci.maqetta.States();
 					hook.apply(parser);
 				}
 			
-				// preserve states specified on widgets
+				/**
+				 * Preserve states specified on widgets.
+				 * Invoked from code above that wraps the dojo parser such that
+				 * dojo parsing is sandwiched between calls to _preserveStates and _restoreStates.
+				 */
 				var _preserveStates = function (cache) {
+console.trace();
 					var doc = davinci.states.getDocument();
 	
 					// Preserve the body states directly on the dom node
@@ -633,6 +739,7 @@ davinci.states = new davinci.maqetta.States();
 					}
 	
 					// Preserve states of children of body in the cache
+					//FIXME: why can't we just query for nodes that have this.ATTRIBUTE?
 					query("*", doc).forEach(function(node){
 						var states = davinci.states.retrieve(node);
 						if (states) {
@@ -647,8 +754,13 @@ davinci.states = new davinci.maqetta.States();
 					});
 				};
 	
-				// restore widget states from cache
+				/**
+				 * Restore widget states from cache
+				 * Invoked from code below that wraps the dojo parser such that
+				 * dojo parsing is sandwiched between calls to _preserveStates and _restoreStates.
+				 */
 				var _restoreStates = function (cache) {
+console.trace();
 					var doc = davinci.states.getDocument(),
 						currentStateCache = [];
 					for(var id in cache){

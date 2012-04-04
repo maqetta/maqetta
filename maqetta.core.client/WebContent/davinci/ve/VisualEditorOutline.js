@@ -161,10 +161,13 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 			return true;
 		},
 		
+		//FIXME: This toggling logic needs to use the CommandStack so that it is
+		//properly undoable.
 		toggle: function(widget, on, node) {
 			var helper = widget.getHelper();
 			var continueProcessing = true;
 			if(helper && helper.onToggleVisibility){
+				//FIXME: Make sure that helper functions deals properly with CommandStack and undo
 				continueProcessing = helper.onToggleVisibility(widget, on);
 			}
 			if(continueProcessing){

@@ -319,6 +319,9 @@ var Runtime = {
 		location.href = newLocation+"/welcome";
 	},
 	
+	/*
+	 *  Sets up Maqetta to monitor interaction with the server and the workspace
+	 */
 	setUpInActivityMonitor: function() {
 		this._MaxInactiveInterval = 60; // defalt this will be changed when we get from server
 		this.keepAlive(); // get the timeout value
@@ -327,6 +330,9 @@ var Runtime = {
 		this.userActivity(); // prime the value
 	},
 	
+	/*
+	 *  Adds user activity monitoring for a document, that is most likly in an iframe (eg editors)
+	 */
 	addInActivityMonitor: function(doc) {
 
 		var connections = [
@@ -340,6 +346,12 @@ var Runtime = {
 		
 	},
 	
+	/*
+	 * This method is connected to the document and is called whenever the user interacts with
+	 * the document (eg mousedown, keydown...)
+	 * When this method is invoked we reset the user idle timer, if the user does not interact within 
+	 * the idle time, the timer will pop and we will warn the user of impending session time out
+	 */
 	userActivity: function(e){
 		//console.log('userActivity');
 		if (this.countdown) { 
@@ -356,6 +368,10 @@ var Runtime = {
 
 	},
 	
+	/* 
+	 *  This method quereis the server to find the seesion timeout value and also 
+	 *  let the user we are still working here so don't time us out
+	 */
 	keepAlive: function(){
 		dojo.xhrGet({
 			url: "cmd/keepalive",
@@ -373,7 +389,12 @@ var Runtime = {
 	
 	},
 	
-	
+	/*
+	 * this method is subscribed to /dojo/io/load and will be invoked whenever we have succesfull
+	 * io with the server. When ths method is invoked we will reset the server poll timer to 80%
+	 * of the server session timeout value. if the timer pop's we will call keepAlive to let the server 
+	 * know we are still working
+	 */
 	lastServerConnection: function(deferred, result) {
 		if (this._serverPollTimer){
 			window.clearTimeout(this._serverPollTimer);
@@ -386,6 +407,11 @@ var Runtime = {
 		
 	},
 	
+	/*
+	 * This method is invoked when the user idle timer pops. We will display a warning to the user 
+	 * that the session is bout to time out and give them a 30 second countdown. If the user clicks on 
+	 * the document idleRest is involed
+	 */
 	idle: function(){
 		var counter = 30;
 		var app = dojo.byId('davinci_app');
@@ -407,6 +433,9 @@ var Runtime = {
 		}.bind(this), 1000);
 	},
 	
+	/*
+	 * This method removes the session timeout message and calls userActivity 
+	 */
 	resetIdle: function(e){
 		window.clearInterval(this.countdown);
 		delete this.countdown;

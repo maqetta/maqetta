@@ -41,8 +41,9 @@ define([
 			
 			var metadata = davinci.ve.metadata.query(this._widget);
 			/* check to see if this widget is a child of a widget */
-			if (this._widget.parent && this._widget.parent.isWidget) {
-				var parentMetadata = Metadata.query(this._widget.parent);
+			var parentWidget = this._widget.getParent();
+			if (parentWidget && parentWidget.isWidget) {
+				var parentMetadata = Metadata.query(parentWidget);
 				/* check the parent widget for extra props to add if it is a child of that widget */
 				if (parentMetadata && parentMetadata.childProperties){
 					if (!metadata.property) {

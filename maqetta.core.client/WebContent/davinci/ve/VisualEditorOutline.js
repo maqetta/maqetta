@@ -88,7 +88,6 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 			dojo.forEach(widgets, function(widget) {
 				if ( widget.getContext && widget.getContext() && ! widget.internal ) {
 					// managed widget only
-					widget.parent = parentItem;
 					children.push(widget);
 				}
 			});

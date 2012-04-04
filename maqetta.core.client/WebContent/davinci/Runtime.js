@@ -379,7 +379,11 @@ var Runtime = {
 			handleAs: "json",
 		}).then(function(result) {
 			if (result.MaxInactiveInterval) {
-				this._MaxInactiveInterval = result.MaxInactiveInterval;
+				if (result.MaxInactiveInterval === -1) { // single usermode
+					this._MaxInactiveInterval = 60*60; //
+				} else {
+					this._MaxInactiveInterval = result.MaxInactiveInterval;
+				}
 			} else {
 			    console.warn("Unknown error: result="+result);
 			}

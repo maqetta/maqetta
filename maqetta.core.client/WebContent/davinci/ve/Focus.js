@@ -203,27 +203,30 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			// Determine if parts of selection are off screen
 			// If so, shift selection DIVs to make it visible
 			var farthestLest, farthestTop, farthestRight, farthestBottom;
-			var bodyWidth = this.domNode.ownerDocument.body.offsetWidth;
-			var bodyHeight = this.domNode.ownerDocument.body.offsetHeight;
+			var body = this.domNode.ownerDocument.body;
+			var canvasLeft = body.scrollLeft;
+			var canvasTop = body.scrollTop;
+			var canvasRight = canvasLeft + body.clientWidth;
+			var canvasBottom = canvasTop + body.clientHeight;
 			
 			farthestLeft = rect.l - nobOffScreenAdjust;
 			farthestTop = rect.t - nobOffScreenAdjust;
-			var nobOffScreenAdjustLeft = farthestLeft < 0 ? -farthestLeft : 0;
-			var nobOffScreenAdjustTop = farthestTop < 0 ? -farthestTop : 0;
+			var nobOffScreenAdjustLeft = farthestLeft < canvasLeft ? canvasLeft - farthestLeft : 0;
+			var nobOffScreenAdjustTop = farthestTop < canvasTop ? canvasTop - farthestTop : 0;
 			nobLeftsideAdjustedLeft += nobOffScreenAdjustLeft;
 			nobTopsideAdjustedTop += nobOffScreenAdjustTop;
 			
 			farthestRight = rect.l + rect.w + nobOffScreenAdjust;
 			farthestBottom = rect.t + rect.h + nobOffScreenAdjust;
-			var nobRightAdjust = farthestRight > bodyWidth ? bodyWidth - farthestRight : 0;
-			var nobBottomAdjust = farthestBottom > bodyHeight ? bodyHeight - farthestBottom : 0;
+			var nobRightAdjust = farthestRight > canvasRight ? canvasRight - farthestRight : 0;
+			var nobBottomAdjust = farthestBottom > canvasBottom ? canvasBottom - farthestBottom : 0;
 			nobRightsideAdjustedLeft += nobRightAdjust;	
 			nobBottomsideAdjustedTop += nobBottomAdjust;
 
 			farthestLeft = rect.l - frameOffScreenAdjusted;
 			farthestTop = rect.t - frameOffScreenAdjusted;
-			var frameOffScreenAdjustedLeft = farthestLeft < 0 ? -farthestLeft : 0;
-			var frameOffScreenAdjustedTop = farthestTop < 0 ? -farthestTop : 0;
+			var frameOffScreenAdjustedLeft = farthestLeft < canvasLeft ? canvasLeft - farthestLeft : 0;
+			var frameOffScreenAdjustedTop = farthestTop < canvasTop ? canvasTop - farthestTop : 0;
 			frameLeftsideLeftAdjusted += frameOffScreenAdjustedLeft;
 			frameTopsideTopAdjusted += frameOffScreenAdjustedTop;
 			frameWidthAdjusted -= frameOffScreenAdjustedLeft;
@@ -231,14 +234,14 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			
 			farthestRight = rect.l + rect.w + frameOffScreenAdjusted;
 			farthestBottom = rect.t + rect.h + frameOffScreenAdjusted;
-			var frameRightAdjust = farthestRight > bodyWidth ? bodyWidth - farthestRight : 0;
-			var frameBottomAdjust = farthestBottom > bodyHeight ? bodyHeight - farthestBottom : 0;
+			var frameRightAdjust = farthestRight > canvasRight ? canvasRight - farthestRight : 0;
+			var frameBottomAdjust = farthestBottom > canvasBottom ? canvasBottom - farthestBottom : 0;
 			frameRightsideAdjustedLeft += frameRightAdjust;	
 			frameBottomsideAdjustedTop += frameBottomAdjust;
 			farthestRight = frameOffScreenAdjustedLeft + frameWidthAdjusted;
 			farthestBottom = frameOffScreenAdjustedTop + frameHeightAdjusted;
-			var frameWAdjust = (farthestRight + frameSizeBorderAdjust) > bodyWidth ? bodyWidth - (farthestRight + frameSizeBorderAdjust) : 0;
-			var frameHAdjust = (farthestBottom + frameSizeBorderAdjust) > bodyHeight ? bodyHeight - (farthestBottom + frameSizeBorderAdjust) : 0;
+			var frameWAdjust = (farthestRight + frameSizeBorderAdjust) > canvasRight ? canvasRight - (farthestRight + frameSizeBorderAdjust) : 0;
+			var frameHAdjust = (farthestBottom + frameSizeBorderAdjust) > canvasBottom ? canvasBottom - (farthestBottom + frameSizeBorderAdjust) : 0;
 			frameWidthAdjusted += frameWAdjust;
 			frameHeightAdjusted += frameHAdjust;
 		}

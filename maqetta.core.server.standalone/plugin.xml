@@ -95,6 +95,8 @@
                class="maqetta.core.server.command.TryIt" />         
            <command path="removeUser" noLogin="true"
                class="maqetta.core.server.command.RemoveUser" />
+           <command path="keepalive" 
+               class="maqetta.core.server.command.KeepAlive" />
                 
           <!-- Review and Commenting Commands -->        
           <command path="listVersions"

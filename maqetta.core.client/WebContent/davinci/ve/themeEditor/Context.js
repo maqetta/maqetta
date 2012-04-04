@@ -61,6 +61,9 @@ return declare("davinci.ve.themeEditor.Context", [Context], {
 		this.getDojo().declare("dijit.davinci.themeEditor.Tooltip", mixins, {
 			templateString: dojo.cache("dijit", "templates/Tooltip.html")
 		});
+		dojo.connect(this.getGlobal(), 'onload', this, function() {
+            this.onload();
+        });
 		this.setHeader({
 			title: data.title,
 			metas: data.metas,

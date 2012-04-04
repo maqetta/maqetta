@@ -79,6 +79,12 @@ return declare("davinci.review.editor.Context", [Context], {
 							 this,
 							 this.fileName
 							 ]);
+					
+					var newCons = [];
+					// add the user activity monitoring to the document and add the connects to be 
+					// disconnected latter
+					newCons = newCons.concat(this._cxtConns, Runtime.addInActivityMonitor(this.frame.contentDocument));
+					this._cxtConns = newCons;
 					this.containerEditor.silhouetteiframe.setSVGFilename(svgfilename);
 					this._statesLoaded = true;
 					dojo.publish('/davinci/ui/context/statesLoaded', [this]);
@@ -193,7 +199,7 @@ return declare("davinci.review.editor.Context", [Context], {
 				 }
 			 })),
 			 dojo.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, function(obj){
-				 if (obj.oldEditor!=null && this === obj.oldEditor.getContext()) {
+				 if (obj.oldEditor!=null && this === obj.oldEditor.getContext && this === obj.oldEditor.getContext()) { // not all editors have a context eg textView
 					 // Determine if the editor is closed, if the editor is closed then
 					 // getDocument() will throw an exception
 					 try {

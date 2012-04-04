@@ -11,8 +11,9 @@ define([
 	"orion/editor/htmlGrammar",
 	"orion/editor/textMateStyler",
 	"orion/textview/textView",
-	"orion/textview/textModel"
-], function(CommandStack, doLater, declare, Action, TextStyler, mEditor, mEditorFeatures, mHtmlGrammar, mTextMateStyler, mTextView, mTextModel) {
+	"orion/textview/textModel",
+	"davinci/Runtime"
+], function(CommandStack, doLater, declare, Action, TextStyler, mEditor, mEditorFeatures, mHtmlGrammar, mTextMateStyler, mTextView, mTextModel, Runtime) {
 	declare("davinci.ui._EditorCutAction", Action, {
 		constructor: function (editor) {
 			this._editor=editor;
@@ -158,6 +159,9 @@ return declare("davinci.ui.Editor", null, {
 		};
 		this.editor = new mEditor.Editor(options);
 		this.editor.installTextView();
+		// add the user activity monitoring to the document and save the connects to be 
+		// disconnected latter
+		this._activiityConnections = Runtime.addInActivityMonitor(this.contentDiv.firstChild.contentDocument);
 		this.editor.getTextView().focus();
 
 		dojo.style(this.contentDiv, "overflow", "hidden");
@@ -197,6 +201,7 @@ return declare("davinci.ui.Editor", null, {
 	},
 
 	destroy: function () {
+		dojo.forEach(this._activiityConnections, dojo.disconnect);
 	},
 
 	select: function (selectionInfo) {

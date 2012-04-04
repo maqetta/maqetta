@@ -1,5 +1,6 @@
 define([
     "dojo/_base/declare",
+    "../Runtime",
     "../Theme",
     "./ThemeModifier",
 	"../commands/CommandStack",
@@ -26,6 +27,7 @@ define([
 	"dojox/html/_base"
 ], function(
 	declare,
+	Runtime,
 	Theme,
 	ThemeModifier,
 	CommandStack,
@@ -1296,6 +1298,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * initial loading.
 	 */
 	onload: function() {
+		// add the user activity monitoring to the document and add the connects to be 
+		// disconnected latter
+		var newCons = [];
+		newCons = newCons.concat(this._connects, Runtime.addInActivityMonitor(this.getDocument()));
+		this._connections = newCons;
 	    dojo.publish('/davinci/ui/context/loaded', [this]);
 	},
 

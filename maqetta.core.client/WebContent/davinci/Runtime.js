@@ -116,6 +116,8 @@ var Runtime = {
 			}
 		});	
 		
+		Runtime.setUpInActivityMonitor(dojo.doc);
+				
 		dojo.addOnUnload(function (e) {
 			//This will hold a warning message (if any) that we'll want to display to the
 			//user.
@@ -315,7 +317,104 @@ var Runtime = {
 			newLocation=newLocation.substr(0,lastChar);
 		}
 		location.href = newLocation+"/welcome";
+	},
+	
+	setUpInActivityMonitor: function() {
+		this._MaxInactiveInterval = 60; // defalt this will be changed when we get from server
+		this.keepAlive(); // get the timeout value
+		this.addInActivityMonitor(dojo.doc);
+		this.subscribe('/dojo/io/load', Runtime.lastServerConnection);
+		this.userActivity(); // prime the value
+	},
+	
+	addInActivityMonitor: function(doc) {
+
+		var connections = [
+		//dojo.connect(doc.documentElement, "mousemove", this, "userActivity"),
+		dojo.connect(doc.documentElement, "keydown",  this, "userActivity"),
+		//dojo.connect(doc.documentElement, "DOMMouseScroll", this, "userActivity"),
+		//dojo.connect(doc.documentElement, "mousewheel",  this, "userActivity"),
+		dojo.connect(doc.documentElement, "mousedown",  this, "userActivity")
+		];
+		return connections;
+		
+	},
+	
+	userActivity: function(e){
+		//console.log('userActivity');
+		if (this.countdown) { 
+			//user is about to time out so clear it
+			this.resetIdle();
+		}
+		if (this._idleTimer){
+			window.clearTimeout(this._idleTimer);
+		}
+		var t = (this._MaxInactiveInterval * 1000); 
+		this._idleTimer = window.setTimeout(function(){
+			this.idle();
+		}.bind(this), t); // make sure this happends before the server timesout
+
+	},
+	
+	keepAlive: function(){
+		dojo.xhrGet({
+			url: "cmd/keepalive",
+			sync: true,
+			handleAs: "json",
+		}).then(function(result) {
+			if (result.MaxInactiveInterval) {
+				this._MaxInactiveInterval = result.MaxInactiveInterval;
+			} else {
+			    console.warn("Unknown error: result="+result);
+			}
+		    }.bind(this), function(error) {
+		    	console.warn("MaxInactiveInterval error", error);
+		    });
+	
+	},
+	
+	
+	lastServerConnection: function(deferred, result) {
+		if (this._serverPollTimer){
+			window.clearTimeout(this._serverPollTimer);
+		}
+			t =  ((this._MaxInactiveInterval  * 1000) * .8);  // take 80 %
+		
+		this._serverPollTimer = window.setTimeout(function(){
+			this.keepAlive();
+		}.bind(this), t); // _MaxInactiveInterval is in seconds so poll 30 seconds early
+		
+	},
+	
+	idle: function(){
+		var counter = 30;
+		var app = dojo.byId('davinci_app');
+		var warnDiv = dojo.doc.createElement('div');
+		warnDiv.id = 'org.maqetta.idleWarning';
+		app.appendChild(warnDiv);
+		warnDiv.setAttribute("class","idleWarning");
+		warnDiv.innerHTML = dojo.string.substitute(webContent.idleSessionMessage, {seconds: counter});
+		this.countdown = window.setInterval(function(){
+			if(--counter === 0){
+				window.clearInterval(this.countdown);
+				delete this.countdown;
+				this.logoff();
+			} else {
+				var span = dojo.byId('org.maqetta.idleWarning');
+				span.innerHTML = dojo.string.substitute(webContent.idleSessionMessage, {seconds: counter});
+				
+			}
+		}.bind(this), 1000);
+	},
+	
+	resetIdle: function(e){
+		window.clearInterval(this.countdown);
+		delete this.countdown;
+		var warning = dojo.byId('org.maqetta.idleWarning');
+		warning.parentNode.removeChild(warning);
+		this.userActivity();
 	}
+	
 };
 
 davinci.Runtime = Runtime; //FIXME: shouldn't need this

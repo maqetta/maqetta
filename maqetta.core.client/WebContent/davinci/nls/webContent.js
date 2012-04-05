@@ -35,6 +35,8 @@ define({ root:
 		//davinci/Workbench.js
 		"perspectiveNotFound":"perspective not found: ${0}",
 		"scopeNotDefined":"scope not defined for action: ${0}",
-		"funcNotDefined":"function not defined for action: ${0}"
+		"funcNotDefined":"function not defined for action: ${0}",
+		"serverConnectError":"<div><h1>Problem connecting to the Maqetta Server...</h1></div><div><center><h1><a href='${redirectUrl}'>Return to Maqetta</a></h1></center></div><br><br><div><h2>Error description:</h2>${error}</div>"
+
 }
 });

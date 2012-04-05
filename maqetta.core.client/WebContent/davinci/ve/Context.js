@@ -399,12 +399,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
                 data = [widget.type, this];
 
             // Always invoke the 'onRemove' callback.
-            metadata.invokeCallback(widget.type, 'onRemove', data);
+            metadata.invokeCallback(library, 'onRemove', data);
             // If this is the last widget removed from page from a given library,
             // then invoke the 'onLastRemove' callback.
             this._widgets[libId] -= 1;
             if (this._widgets[libId] === 0) {
-                metadata.invokeCallback(widget.type, 'onLastRemove', data);
+                metadata.invokeCallback(library, 'onLastRemove', data);
             }
         }
 

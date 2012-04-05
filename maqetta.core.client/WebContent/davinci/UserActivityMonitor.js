@@ -32,7 +32,8 @@ var UserActivityMonitor = {
 		if (this._runtime.singleUserMode()) {
 			this._MaxInactiveInterval = -1; // no timeout
 		} else {
-			this._MaxInactiveInterval = 60; // defalt this will be changed when we get from server
+			this._firstPoll = true;
+			this._MaxInactiveInterval = 60 * 5; // defalt this will be changed when we get from server
 			this.keepAlive(); // get the timeout value
 			this.addInActivityMonitor(dojo.doc);
 			this.subscribe('/dojo/io/load', this.lastServerConnection);
@@ -98,6 +99,10 @@ var UserActivityMonitor = {
 		deferred.then(function(result) {
 			if (result.MaxInactiveInterval) {
 				this._MaxInactiveInterval = result.MaxInactiveInterval;
+				if (this._firstPoll) {
+					delete this._firstPoll;
+					this.userActivity(null); // reset to server timeout from defaults
+				}
 			} else {
 			    console.warn("Unknown error: result="+result);
 			}

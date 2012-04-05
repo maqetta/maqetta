@@ -361,7 +361,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
     	            Metadata.invokeCallback(library, 'onFirstAdd', args);
     	        }
     	        // Always invoke the 'onAdd' callback.
-    	        Metadata.invokeCallback(type, 'onAdd', args);
+    	        Metadata.invokeCallback(library, 'onAdd', args);
 	        }
 			this.create({target: target, index:idx, directTarget: this._getTarget(), size: size});
 		} catch(e) {

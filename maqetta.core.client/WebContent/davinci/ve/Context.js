@@ -264,7 +264,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		dojo.addClass(containerNode, "editContextContainer");
 		
 		this._connects = [
-			dojo.connect(this._commandStack, "onExecute", this, "onContentChange"),
+			// each time the command stack executes, onContentChange sets the focus, which has side-effects
+			// defer this until the stack unwinds in case a caller we don't control iterates on multiple commands
+			dojo.connect(this._commandStack, "onExecute", function(){setTimeout(this.onContentChange.bind(this), 0);}.bind(this)),
 			dojo.connect(this.getDocument(), "onkeydown", this, "onKeyDown"),
 			dojo.connect(this.getDocument(), "onkeyup", this, "onKeyUp"),
 			dojo.connect(containerNode, "ondblclick", this, "onDblClick"),
@@ -397,12 +399,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
                 data = [widget.type, this];
 
             // Always invoke the 'onRemove' callback.
-            metadata.invokeCallback(widget.type, 'onRemove', data);
+            metadata.invokeCallback(library, 'onRemove', data);
             // If this is the last widget removed from page from a given library,
             // then invoke the 'onLastRemove' callback.
             this._widgets[libId] -= 1;
             if (this._widgets[libId] === 0) {
-                metadata.invokeCallback(widget.type, 'onLastRemove', data);
+                metadata.invokeCallback(library, 'onLastRemove', data);
             }
         }
 
@@ -874,9 +876,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		
 		// Remove any SCRIPT elements from model that include dojo.require() syntax
 		// With Preview 4, user files must use AMD loader
-		var scriptTags=source.find({elementType:'HTMLElement', tag:'script'}); 
-		for (var i=0; i<scriptTags.length; i++){
-			var scriptTag = scriptTags[i];
+		source.find({elementType:'HTMLElement', tag:'script'}).forEach(function(scriptTag){
 			for (var j=0; j<scriptTag.children.length; j++){
 				var text = scriptTag.children[j].getText();
 				if(text.indexOf('dojo.require')>=0){
@@ -884,7 +884,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					break;
 				}
 			}
-		}
+		});
 
 		var data = this._parse(source);
 		if(!this.frameNode){
@@ -984,8 +984,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			} else if(source.themeCssfiles) { // css files need to be added to doc before body content
 				head += '<style type="text/css">' +
 						source.themeCssfiles.map(function(file) {
-								return '@import "' + file + '";';
-							}).join() +
+							return '@import "' + file + '";';
+						}).join() +
 						'</style>';
 			}
 			head += "</head><body></body></html>";
@@ -1095,14 +1095,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	_continueLoading: function(data, callback, callbackData, scope) {
 		var loading, promise;
 		try {
-			loading = dojo.create("div",
-				{
+			loading = dojo.create("div", {
 					innerHTML: dojo.replace(
 							'<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;{0}</td></tr></table>',
 							["Loading..."]) // FIXME: i18n
 				},
-					this.frameNode.parentNode,
-					"first");
+				this.frameNode.parentNode,
+				"first");
 			dojo.addClass(loading, 'loading');
 
 			if (callbackData instanceof Error) {
@@ -1572,7 +1571,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					contentCssIndex = i;
 				}
 			}
-			var index;
+			var index,
+				beforeChild;
 			if(!isContentCss){
 				if(isAppCss && contentCssLink){
 					beforeChild = contentCssLink;
@@ -2312,7 +2312,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	hotModifyCssRule: function(r){
 		
 		function updateSheet(sheet, rule){
-			
 			var fileName = rule.parent.getResource().getURL();
 			var selectorText = rule.getSelectorText();
 			selectorText = selectorText.replace(/^\s+|\s+$/g,""); // trim white space
@@ -2336,7 +2335,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				return true;
 			}
 			return false;
-			
 		}
 		
 		function findSheet(sheet, sheetName){
@@ -2363,16 +2361,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				}
 			}
 			return foundSheet;
-			
 		}
 		
-		var document = this.getDocument();
-		var sheets = document.styleSheets; 
-		for (var i=0; i < sheets.length; i++){
-			if (updateSheet(sheets[i],r)){
-				break;
-			}
-		}
+		dojo.some(this.getDocument().styleSheets, function(sheet) {
+			return updateSheet(sheet, r);
+		});
 	},
 
 	modifyRule: function(rule, values){
@@ -2494,7 +2487,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var name = this.getSelector(widget, target),
 			model = this.getModel();
 		return model.getRule(name);
-		
 	},
 	
 	/* returns the top/target dom node for a widget for a specific property */
@@ -2807,7 +2799,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	_addHeadElement: function(tag, attrs/*, refNode, pos*/, allowDup) {
 		var head = this._srcDocument.find({elementType: 'HTMLElement', tag: 'head'}, true);
 		
-		if (! allowDup) {
+		if (!allowDup) {
 			// Does <head> already have an element that matches the given
 			// element?  Only match based on significant attribute.  For
 			// example, a <script> element will match if its 'src' attr is the
@@ -2951,7 +2943,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					currentParent:currentParent});
 			cp.findParentsXYAfterTraversal();
 		}
-
 	},
 	
 	/**

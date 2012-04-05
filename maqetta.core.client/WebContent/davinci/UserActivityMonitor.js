@@ -169,6 +169,5 @@ var UserActivityMonitor = {
 	
 };
 
-davinci.UserActivityMonitor = UserActivityMonitor; 
 return UserActivityMonitor;
 });

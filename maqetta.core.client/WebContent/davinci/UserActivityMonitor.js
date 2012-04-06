@@ -6,7 +6,7 @@ define([
 
 var UserActivityMonitor = {
 	subscriptions: [],
-		
+	
 	subscribe: function(topic,func) {
 		this.subscriptions.push(dojo.subscribe(topic,this,func));
 	},
@@ -19,7 +19,7 @@ var UserActivityMonitor = {
 	/*
 	 *  Sets up Maqetta to monitor interaction with the server and the workspace
 	 */
-	setUpInActivityMonitor: function() {
+	setUpInActivityMonitor: function(doc) {
 		if (!this._runtime){
 			// we need to wait to add runtime to avoid chicken or egg
 			try{
@@ -35,7 +35,7 @@ var UserActivityMonitor = {
 			this._firstPoll = true;
 			this._MaxInactiveInterval = 60 * 5; // defalt this will be changed when we get from server
 			this.keepAlive(); // get the timeout value
-			this.addInActivityMonitor(dojo.doc);
+			this.addInActivityMonitor(doc);
 			this.subscribe('/dojo/io/load', this.lastServerConnection);
 			this.userActivity(); // prime the value
 		}

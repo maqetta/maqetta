@@ -1,6 +1,6 @@
 define([
     "dojo/_base/declare",
-    "../Runtime",
+    "../UserActivityMonitor",
     "../Theme",
     "./ThemeModifier",
 	"../commands/CommandStack",
@@ -27,7 +27,7 @@ define([
 	"dojox/html/_base"
 ], function(
 	declare,
-	Runtime,
+	UserActivityMonitor,
 	Theme,
 	ThemeModifier,
 	CommandStack,
@@ -399,12 +399,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
                 data = [widget.type, this];
 
             // Always invoke the 'onRemove' callback.
-            metadata.invokeCallback(widget.type, 'onRemove', data);
+            metadata.invokeCallback(library, 'onRemove', data);
             // If this is the last widget removed from page from a given library,
             // then invoke the 'onLastRemove' callback.
             this._widgets[libId] -= 1;
             if (this._widgets[libId] === 0) {
-                metadata.invokeCallback(widget.type, 'onLastRemove', data);
+                metadata.invokeCallback(library, 'onLastRemove', data);
             }
         }
 
@@ -1300,7 +1300,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// add the user activity monitoring to the document and add the connects to be 
 		// disconnected latter
 		var newCons = [];
-		newCons = newCons.concat(this._connects, Runtime.addInActivityMonitor(this.getDocument()));
+		newCons = newCons.concat(this._connects, UserActivityMonitor.addInActivityMonitor(this.getDocument()));
 		this._connections = newCons;
 	    dojo.publish('/davinci/ui/context/loaded', [this]);
 	},

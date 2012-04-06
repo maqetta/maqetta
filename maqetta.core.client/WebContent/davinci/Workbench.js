@@ -79,12 +79,17 @@ var handleIoError = function (deferred, reason) {
 	if(reason.status == 401 || reason.status == 403){
 		sessionTimedOut();
 	}else{
+		Runtime.handleError(reason.message);
 		console.warn('Failed to load url=' + deferred.ioArgs.url + ' message=' + reason.message + ' status=' + reason.status);
 	}
 };
 
 var sessionTimedOut = function(){
 	var loginHref = '/maqetta/welcome';
+	if(Runtime.singleUserMode()) {
+		loginHref = '/maqetta/';
+	}
+	
 	var dialog = new Dialog({
         title: webContent.sessionTimedOut
       //,  style: "width: 300px"

@@ -638,14 +638,19 @@ define([
 
         /**
          * Invoke the callback function, if implemented by the widget library.
-         * @param library {object} widget library object
+         * @param libOrType {object|string} widget library object or widget type
          * @param fnName {string} callback function name
          * @param args {?Array} arguments array to pass to callback function
          */
         // XXX make this part of a mixin for the library metadata obj
-        invokeCallback: function(library, fnName, args) {
+        invokeCallback: function(libOrType, fnName, args) {
+            var library = libOrType,
+                fn;
+            if (typeof libOrType === 'string') {
+                library = getLibraryForType(type);
+            }
             if (library && library.$callbacks) {
-                var fn = library.$callbacks[fnName];
+                fn = library.$callbacks[fnName];
                 if (fn) {
                     fn.apply(library.$callbacks, args);
                 }

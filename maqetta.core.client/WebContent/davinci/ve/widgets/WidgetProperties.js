@@ -20,14 +20,14 @@ define([
 
 	return declare("davinci.ve.widgets.WidgetProperties", [ViewLite], {
 		
-		displayName: "Widget-specific", // FIXME: This string is hard-coded in two different places
+		key: "widgetSpecific", // Must match section key in SwitchingStylingViews table
 
 		_connects: null,
 	
 		buildRendering: function(){
 			this.domNode = this.propDom = dojo.doc.createElement("div");
 			dojo.addClass(this.domNode, "propGroup");
-			dojo.attr(this.domNode, "propGroup", this.displayName);
+			dojo.attr(this.domNode, "propGroup", this.key);
 			this._connects = [];
 			this.inherited(arguments);
 		},

@@ -280,9 +280,9 @@ define(["dojo/_base/declare",
 			var htmlText = "";
 			
 			if(jsonString['pageTemplate']){
-				if( jsonString['title']){
+				if( jsonString.key){
 					jsonString['id'] = this.getId();
-					htmlText = "<div class='propGroup' id='" + jsonString['id'] +"' propGroup='"+jsonString['title']+"'>";
+					htmlText = "<div class='propGroup' id='" + jsonString['id'] +"' propGroup='"+jsonString.key+"'>";
 				}	
 					
 				htmlText+=this.generateTable(jsonString['pageTemplate']);

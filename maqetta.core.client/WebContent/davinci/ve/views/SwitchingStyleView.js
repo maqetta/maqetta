@@ -270,8 +270,8 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 				// dojo.hitch to make sure there are different function
 				// instances for each button with correct title/index values
 				dojo.hitch(this, 
-					function(title,index){
-						HTMLStringUtil.transitionRootToSection(title,
+					function(key,index){
+						HTMLStringUtil.transitionRootToSection(key,
 							// dojo.hitch necessary to provide "this" object
 							dojo.hitch(this,function(){
 								var visibleCascade = this._getVisibleCascade(index);
@@ -281,7 +281,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 							})
 						);
 					},
-					this.pageTemplate[i].title,i)
+					this.pageTemplate[i].key,i)
 			);
 			dojo.connect(sectionButton,"onmouseover",
 					function(event){
@@ -309,7 +309,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		if(currentPropSection){
 			var found=false;
 			for(var propSectionIndex = 0;propSectionIndex<this.pageTemplate.length;propSectionIndex++){
-				if(this.pageTemplate[propSectionIndex].title == currentPropSection){
+				if(this.pageTemplate[propSectionIndex].key == currentPropSection){
 					found=true;
 					break;
 				}
@@ -329,7 +329,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		var currentPropSection = HTMLStringUtil.getCurrentPropSection();
 		if(currentPropSection){
 			for(var i = 0;i<this.pageTemplate.length;i++){
-				if(this.pageTemplate[i].title == currentPropSection){
+				if(this.pageTemplate[i].key == currentPropSection){
 					visibleCascade = visibleCascade.concat( this.pageTemplate[i]['cascade']);
 					break;
 				}	

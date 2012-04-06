@@ -74,7 +74,12 @@
 	z-index:2000000;
 	background:transparent;
 }
-
+.selectToolDragMove {
+	cursor:move;
+}
+.selectToolDragCopy {
+	cursor:copy;
+}
 .editFeedback {
 	background-color: #AAA;
 }

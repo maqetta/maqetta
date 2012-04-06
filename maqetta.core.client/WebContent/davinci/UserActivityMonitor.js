@@ -23,7 +23,7 @@ var UserActivityMonitor = {
 		if (!this._runtime){
 			// we need to wait to add runtime to avoid chicken or egg
 			try{
-				this._runtime = dojo.require("davinci/Runtime");
+				this._runtime = require("davinci/Runtime");
 	       }catch(e){
 	            console.warn("FAILED: failure for loading davinci/Runtime");
 	            return;

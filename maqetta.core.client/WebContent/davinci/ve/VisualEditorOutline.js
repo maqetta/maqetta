@@ -26,8 +26,7 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 		
 		betweenThreshold: 4,
 
-		constructor: function(context)	
-		{
+		constructor: function(context) {
 			this._context=context;
 			this._handles=[];
 			this._connect("onContentChange", "refresh"); // yikes.  this refreshes the entire tree anytime there's a change.  really bad if we're traversing the tree setting styles.
@@ -47,8 +46,7 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 			);
 		},
 		
-		_connect: function(contextFunction, thisFunction)
-		{
+		_connect: function(contextFunction, thisFunction) {
 			this._handles.push(dojo.connect(this._context,contextFunction,this,thisFunction));
 		},
 
@@ -71,8 +69,7 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 			return this._childList(item).length;
 		},
 		
-		_childList: function(parentItem)
-		{
+		_childList: function(parentItem) {
 			var widgets, children=[];
 
 			if (!this._context.rootWidget || (parentItem.type == "state") || parentItem.type == 'html.stickynote' || parentItem.type == 'html.richtext') {
@@ -106,7 +103,7 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 		},
 		
 		getLabel: function(/*dojo.data.Item*/ item){
-			var type= item.type ;
+			var type= item.type;
 			var label;
 			
 			if(item.id == "myapp"){
@@ -120,8 +117,8 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 				return;
 			}
 			
-			var lt = (this.useRichTextLabel ? "&lt;" : "<");
-			var gt = (this.useRichTextLabel ? "&gt;" : ">");
+			var lt = this.useRichTextLabel ? "&lt;" : "<";
+			var gt = this.useRichTextLabel ? "&gt;" : ">";
 
 			if (type.indexOf("html.") === 0) {
 				label = lt + type.substring("html.".length) + gt;
@@ -222,8 +219,7 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 		onRefresh: function(){
 		},
 		
-		refresh: function()
-		{
+		refresh: function() {
 			if (this._skipRefresh) { return; }
 			var node = this._context.rootNode;
 			if (node){	// shouldn't be necessary, but sometime is null
@@ -238,8 +234,7 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 
 	_outlineMode: "design", 
 		
-	constructor: function (editor)
-	{
+	constructor: function (editor) {
 		this._editor = editor;
 		this._context=editor.visualEditor.context;
 		this._handles=[];

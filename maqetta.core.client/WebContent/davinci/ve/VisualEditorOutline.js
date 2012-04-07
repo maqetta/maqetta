@@ -1,5 +1,6 @@
 define([
     "dojo/_base/declare",
+    "dojo/_base/connect",
 	"./commands/ReparentCommand",
 	"./widget",
 	"./States",
@@ -7,6 +8,7 @@ define([
 	"../html/ui/HTMLOutlineModel"
 ], function(
 	declare,
+	connect,
 	ReparentCommand,
 	Widget,
 	states,
@@ -33,12 +35,12 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 			this._connect("activate", "refresh");
 			this._connect("setSource", "refresh");
 
-			dojo.subscribe("/davinci/states/state/changed/start", this,
+			connect.subscribe("/davinci/states/state/changed/start", this,
 				function(e) {
 					this._skipRefresh = true;
 				}
 			);
-			dojo.subscribe("/davinci/states/state/changed/end", this,
+			connect.subscribe("/davinci/states/state/changed/end", this,
 				function(e) {
 					delete this._skipRefresh;
 					this.refresh();
@@ -47,11 +49,11 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 		},
 		
 		_connect: function(contextFunction, thisFunction) {
-			this._handles.push(dojo.connect(this._context,contextFunction,this,thisFunction));
+			this._handles.push(connect.connect(this._context, contextFunction, this, thisFunction));
 		},
 
 		destroy: function(){
-			dojo.forEach(this._handles, dojo.disconnect);
+			this._handles.forEach(connect.disconnect);
 		},
 			
 		// =======================================================================
@@ -244,7 +246,7 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 		
 		this._widgetModel=new OutlineTreeModel(this._context);
 		this._srcModel=new HTMLOutlineModel(editor.model);
-		states.subscribe("/davinci/states/state/changed", this,
+		connect.subscribe("/davinci/states/state/changed", this,
 			function(e) {
 				var declaredClass = (typeof davinci !== "undefined") &&
 						davinci.Runtime.currentEditor &&
@@ -278,7 +280,7 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 	},
 
 	_connect: function(contextFunction, thisFunction) {
-		this._handles.push(dojo.connect(this._context,contextFunction,this,thisFunction));
+		this._handles.push(connect.connect(this._context, contextFunction, this, thisFunction));
 	},
 
 	switchDisplayMode: function (newMode) {

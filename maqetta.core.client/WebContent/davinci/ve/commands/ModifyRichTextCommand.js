@@ -52,7 +52,7 @@ return declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 		if(!widget){
 			return;
 		}
-		this._parentWidget = widget.getParent() || widget.parent; // maybe this
+		this._parentWidget = widget.getParent();
 		if (!this._oldText){
 			this._oldText = widget._srcElement.getElementText(this._context);
 			if (this._oldText && (typeof this._oldText == 'string')){

@@ -1,32 +1,26 @@
 define([
 		"dojo/_base/declare",
-		"dojo/i18n!davinci/ve/nls/ve",
+		"dojo/i18n!../nls/ve",
 		"davinci/workbench/ViewPart",
 		"dijit/layout/BorderContainer",
 		"dijit/layout/ContentPane",
-		"dijit/form/ComboBox",
-		"dojox/grid/DataGrid",
 		"davinci/ve/States",
-		"dojo/data/ItemFileReadStore",
 		"dojo/data/ItemFileWriteStore",
 		"dijit/tree/ForestStoreModel",
 		"dijit/Tree",
-		"davinci/Runtime",
-		 "dojo/_base/window"
-], function(declare, veNls, ViewPart, BorderContainer,  ContentPane, ComboBox, 
-			DataGrid, States, ItemFileReadStore, ItemFileWriteStore, ForestStoreModel, 
-			Tree, Runtime, win
-		    ){
+		"dojo/_base/window"
+], function(declare, veNls, ViewPart, BorderContainer, ContentPane, 
+	States, ItemFileWriteStore, ForestStoreModel, Tree, win
+){
 
+var PlainTextTreeNode = declare(Tree._TreeNode, {}),
+	RichHTMLTreeNode = declare(Tree._TreeNode, {
+        _setLabelAttr: {node: "labelNode", type: "innerHTML"}
+	});
 
 return declare("davinci.ve.views.StatesView", [ViewPart], {
 	
 	nextId: 0,
-    PlainTextTreeNode: declare(Tree._TreeNode, {
-    }),
-    RichHTMLTreeNode: declare(Tree._TreeNode, {
-        _setLabelAttr: {node: "labelNode", type: "innerHTML"}
-    }),
 
 	postCreate: function(){
 		this.inherited(arguments);
@@ -121,9 +115,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this._updateSelection(sceneManager.category, sceneId);
 	},
 
-	_editorSelected : function (event){	
+	_editorSelected: function (event){	
 		var editor = event.editor;
-		var langObj = veNls; 
 		this._destroyTree();
 
 		if(editor && editor.supports("states")) {
@@ -131,7 +124,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 
 			dojo.style(this.container.domNode, "display", "block");
 			if (editor.declaredClass === 'davinci.ve.themeEditor.ThemeEditor'){
-				this.set('title', langObj.States);
+				this.set('title', veNls.States);
 				this._updateViewForThemeEditor();
 				if(!this._themeState){
 					this._updateThemeSelection("Normal");
@@ -139,7 +132,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					this._updateThemeSelection(this._themeState);
 				}
 			} else {
-				this.set('title', langObj.Scenes);
+				this.set('title', veNls.Scenes);
 				this._updateView();
 			}
 			this.container.layout();	
@@ -195,13 +188,13 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if(!context || !context._statesLoaded){
 			return;
 		}
-		  // Call a callback with different 'global' values and context.
+
+		// Call a callback with different 'global' values and context.
 		// FIXME this may not be needed after we fix issue #1821
 		 win.withDoc(document, function(){
 			  this._updateList();
 			  this._updateSelection();
 		 }, this);
-
 	},
 	
 	isThemeEditor: function() {
@@ -495,7 +488,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_createTree: function(latestData){
-		var that = this;
 		var context = this._editor.getContext();
 		var sceneManagers = context.sceneManagers;
 		var skeletonData = { identifier: 'id', label: 'name', items: []};
@@ -513,10 +505,10 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				var item = args.item;
 				if(item.type && item.category && item.category[0] === 'AppStates'){
 					// Custom TreeNode class (based on dijit.TreeNode) that allows rich text labels
-					return new that.RichHTMLTreeNode(args);
+					return new RichHTMLTreeNode(args);
 				}else{
 					// Custom TreeNode class (based on dijit.TreeNode) that uses default plain text labels
-					return new that.PlainTextTreeNode(args);
+					return new PlainTextTreeNode(args);
 				}
 			},
 			getIconClass: function(/*dojo.data.Item*/ item, /*Boolean*/ opened){
@@ -562,24 +554,26 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				}
 			}
 		});
-		function newItemRecursive(obj, parentItem){
+
+		var newItemRecursive = function(obj, parentItem){
 			var o = dojo.mixin({}, obj);
-			var id = that.nextId+'';
-			that.nextId++
+			var id = this.nextId+'';
+			this.nextId++;
 			o.id = id;		// ensure unique ID
 			delete o.children;	// remove children property before calling newItem
 			var thisItem;
 			if(parentItem){
-				thisItem = that._sceneStore.newItem(o, {parent:parentItem, attribute:'children'});
+				thisItem = this._sceneStore.newItem(o, {parent:parentItem, attribute:'children'});
 			}else{
-				thisItem = that._sceneStore.newItem(o);
+				thisItem = this._sceneStore.newItem(o);
 			}
 			if(obj.children){
 				obj.children.forEach(function(child){
 					newItemRecursive(child, thisItem);
 				});
 			}
-		}
+		}.bind(this);
+
 		latestData.forEach(function(obj){
 			newItemRecursive(obj);
 		});
@@ -677,14 +671,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		}
 
 		// This code prevents +/- icons from appearing when authoring Dojo Mobile UIs
-		if (showAppStates){
-			dojo.style(this.toolbarDiv, "display", "block");
-		}else{
-			dojo.style(this.toolbarDiv, "display", "none");
-		}
+		dojo.style(this.toolbarDiv, "display", showAppStates ? "block" : "none");
 		var d = dijit.byId(this.toolbarDiv.parentNode.id);
 		d.resize();
 	}
-
 });
 });

@@ -1,5 +1,6 @@
 define([
     "dojo/_base/declare",
+    "../UserActivityMonitor",
     "../Theme",
     "./ThemeModifier",
 	"../commands/CommandStack",
@@ -23,10 +24,10 @@ define([
 	"preview/silhouetteiframe",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
-	"../util",
 	"dojox/html/_base"
 ], function(
 	declare,
+	UserActivityMonitor,
 	Theme,
 	ThemeModifier,
 	CommandStack,
@@ -49,13 +50,13 @@ define([
 	Preferences,
 	Silhouette,
 	Deferred,
-	DeferredList,
-	maqUtil
+	DeferredList
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
 var MOBILE_DEV_ATTR = 'data-maqetta-device',
-	PREF_LAYOUT_ATTR = 'dvFlowLayout';
+	PREF_LAYOUT_ATTR = 'dvFlowLayout',
+	MOBILE_ORIENT_ATTR = 'data-maqetta-deviceorientation';
 
 return declare("davinci.ve.Context", [ThemeModifier], {
 
@@ -180,6 +181,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
             this.setMobileDevice(mobileDevice);
             this.visualEditor.setDevice(mobileDevice, true);
         }
+
+        // Check mobile orientation
+        var orientation = this.getMobileOrientation();
+        if (orientation) {
+        	this.visualEditor.setOrientation(orientation);
+        }
     },
     
     clearDynamicCss: function(){
@@ -257,8 +264,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		dojo.addClass(containerNode, "editContextContainer");
 		
 		this._connects = [
-			dojo.connect(this._commandStack, "onExecute", this, "onContentChange"),
+			// each time the command stack executes, onContentChange sets the focus, which has side-effects
+			// defer this until the stack unwinds in case a caller we don't control iterates on multiple commands
+			dojo.connect(this._commandStack, "onExecute", function(){setTimeout(this.onContentChange.bind(this), 0);}.bind(this)),
 			dojo.connect(this.getDocument(), "onkeydown", this, "onKeyDown"),
+			dojo.connect(this.getDocument(), "onkeyup", this, "onKeyUp"),
 			dojo.connect(containerNode, "ondblclick", this, "onDblClick"),
 			dojo.connect(containerNode, "onmousedown", this, "onMouseDown"),
 			dojo.connect(containerNode, "onmousemove", this, "onMouseMove"),
@@ -329,13 +339,18 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			return;
 		}
 
+        var addOnce = function(array, item) {
+            if (array.indexOf(item) === -1) {
+                array.push(item);
+            }
+        };
 		var id = widget.getId();
 		if(id){
-			maqUtil.arrayAddOnce(this._widgetIds, id);
+			addOnce(this._widgetIds, id);
 		}
 		var objectId = widget.getObjectId(widget);
 		if(objectId){
-			maqUtil.arrayAddOnce(this._objectIds, objectId);
+			addOnce(this._objectIds, objectId);
 		}
 
 		// Recurse down widget hierarchy
@@ -354,19 +369,26 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	detach: function(widget) {
 		// FIXME: detaching context prevent destroyWidget from working
 		//widget._edit_context = undefined;
+		var arrayRemove = function(array, item) {
+			var i = array.indexOf(item);
+	        if (i != -1) {
+	            array.splice(i, 1);
+	        }
+		};
+
 		var id = widget.getId();
 		if(id){
-			maqUtil.arrayRemove(this._widgetIds, id);
+			arrayRemove(this._widgetIds, id);
 		}
 		var objectId = widget.getObjectId();
 		if(objectId){
-			maqUtil.arrayRemove(this._objectIds, objectId);
+			arrayRemove(this._objectIds, objectId);
 		}
 		if (this._selection){
 			for(var i=0; i<this._selection.length; i++){
 				if(this._selection[i] == widget){
 					this.focus(null, i);
-					maqUtil.arrayRemove(this._selection,widget);
+					this._selection.splice(i, 1);
 				}
 			}
 		}
@@ -377,12 +399,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
                 data = [widget.type, this];
 
             // Always invoke the 'onRemove' callback.
-            metadata.invokeCallback(widget.type, 'onRemove', data);
+            metadata.invokeCallback(library, 'onRemove', data);
             // If this is the last widget removed from page from a given library,
             // then invoke the 'onLastRemove' callback.
             this._widgets[libId] -= 1;
             if (this._widgets[libId] === 0) {
-                metadata.invokeCallback(widget.type, 'onLastRemove', data);
+                metadata.invokeCallback(library, 'onLastRemove', data);
             }
         }
 
@@ -612,6 +634,28 @@ return declare("davinci.ve.Context", [ThemeModifier], {
         	dm.loadDeviceTheme(Silhouette.getMobileTheme(device + '.svg'));
         }
 	},
+
+	/**
+  	* Retrieves the mobile orientation.
+  	* @returns {?string} orientation
+  	*/
+	getMobileOrientation: function() {
+		var bodyElement = this.getDocumentElement().getChildElement("body");
+		return bodyElement.getAttribute(MOBILE_ORIENT_ATTR);
+	},
+
+	/**
+  	* Sets mobile orientation in Model.
+  	* @param orientation {?string} orientation
+  	*/
+	setMobileOrientation: function(orientation) {
+		var bodyElement = this.getDocumentElement().getChildElement("body");
+		if (orientation) {
+			bodyElement.setAttribute(MOBILE_ORIENT_ATTR, orientation);
+		} else {
+			bodyElement.removeAttribute(MOBILE_ORIENT_ATTR);
+		}
+	},
 	
 	/**
 	 * @static
@@ -832,9 +876,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		
 		// Remove any SCRIPT elements from model that include dojo.require() syntax
 		// With Preview 4, user files must use AMD loader
-		var scriptTags=source.find({elementType:'HTMLElement', tag:'script'}); 
-		for (var i=0; i<scriptTags.length; i++){
-			var scriptTag = scriptTags[i];
+		source.find({elementType:'HTMLElement', tag:'script'}).forEach(function(scriptTag){
 			for (var j=0; j<scriptTag.children.length; j++){
 				var text = scriptTag.children[j].getText();
 				if(text.indexOf('dojo.require')>=0){
@@ -842,7 +884,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					break;
 				}
 			}
-		}
+		});
 
 		var data = this._parse(source);
 		if(!this.frameNode){
@@ -942,8 +984,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			} else if(source.themeCssfiles) { // css files need to be added to doc before body content
 				head += '<style type="text/css">' +
 						source.themeCssfiles.map(function(file) {
-								return '@import "' + file + '";';
-							}).join() +
+							return '@import "' + file + '";';
+						}).join() +
 						'</style>';
 			}
 			head += "</head><body></body></html>";
@@ -1053,14 +1095,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	_continueLoading: function(data, callback, callbackData, scope) {
 		var loading, promise;
 		try {
-			loading = dojo.create("div",
-				{
+			loading = dojo.create("div", {
 					innerHTML: dojo.replace(
 							'<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;{0}</td></tr></table>',
 							["Loading..."]) // FIXME: i18n
 				},
-					this.frameNode.parentNode,
-					"first");
+				this.frameNode.parentNode,
+				"first");
 			dojo.addClass(loading, 'loading');
 
 			if (callbackData instanceof Error) {
@@ -1256,6 +1297,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * initial loading.
 	 */
 	onload: function() {
+		// add the user activity monitoring to the document and add the connects to be 
+		// disconnected latter
+		var newCons = [];
+		newCons = newCons.concat(this._connects, UserActivityMonitor.addInActivityMonitor(this.getDocument()));
+		this._connections = newCons;
 	    dojo.publish('/davinci/ui/context/loaded', [this]);
 	},
 
@@ -1525,7 +1571,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					contentCssIndex = i;
 				}
 			}
-			var index;
+			var index,
+				beforeChild;
 			if(!isContentCss){
 				if(isAppCss && contentCssLink){
 					beforeChild = contentCssLink;
@@ -1771,10 +1818,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			box.t = box.y;
 
 			parent = widget.getParent();
-			op = {move: !(parent && parent.isLayout())};
+			op = {move: !(parent && parent.isLayout && parent.isLayout())};
 
 			//FIXME: need to consult metadata to see if layoutcontainer children are resizable, and if so on which axis
-			var resizable = (parent && parent.isLayout() ) ?
+			var resizable = (parent && parent.isLayout && parent.isLayout() ) ?
 					"none" : metadata.queryDescriptor(widget.type, "resizable");
 			switch(resizable){
 			case "width":
@@ -1791,8 +1838,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this.focus({
 			box: box,
 			op: op,
-			hasLayout: widget.isLayout(),
-			isChild: parent && parent.isLayout()
+			hasLayout: (widget.isLayout && widget.isLayout()),
+			isChild: parent && parent.isLayout && parent.isLayout()
 		}, index, inline);
 			
 	},
@@ -1915,6 +1962,22 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	getFocus: function(widget){
 		var i = this.getSelection().indexOf(widget);
 		return i == -1 ? null : this._focuses[i];
+	},
+	
+	// Hide all focus objects associated with current selection
+	selectionHideFocus: function(){
+		var selection = this.getSelection();
+		for(var i=0; i<selection.length; i++){
+			this._focuses[i].hide();
+		}
+	},
+	
+	// Show all focus objects associated with current selection
+	selectionShowFocus: function(){
+		var selection = this.getSelection();
+		for(var i=0; i<selection.length; i++){
+			this._focuses[i].show(selection[i]);
+		}
 	},
 	
 	focus: function(state, index, inline){
@@ -2055,6 +2118,20 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	blockChange: function(shouldBlock){
 			this._blockChange = shouldBlock;
 	},
+	
+	/**
+	 * Returns true if the given node is part of the focus (ie selection) chrome
+	 */
+	isFocusNode: function(node){
+		if(this._selection){
+			for(var i=0; i<this._selection.length; i++){
+				if(this._focuses[i].isFocusNode(node)){
+					return true;
+				}
+			}
+		}
+		return false;
+	},
 
 	onMouseDown: function(event){
 		if(this._activeTool && this._activeTool.onMouseDown && !this._blockChange){
@@ -2193,13 +2270,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if(this._activeTool && this._activeTool.onKeyDown){
 			this._activeTool.onKeyDown(event);
 		}
-		if(this._actionGroups){
-			dojo.forEach(this._actionGroups, function(g){
-				var action = g.getAction(event, this);
-				if(action){
-					action.run(this);
-				}
-			}, this);
+	},
+
+	onKeyUp: function(event){
+		//FIXME: Research task. This routine doesn't get fired when using CreateTool and drag/drop from widget palette.
+		// Perhaps the drag operation created a DIV in application's DOM causes the application DOM
+		// to be the keyboard focus?
+		if(this._activeTool && this._activeTool.onKeyUp){
+			this._activeTool.onKeyUp(event);
 		}
 	},
 
@@ -2234,7 +2312,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	hotModifyCssRule: function(r){
 		
 		function updateSheet(sheet, rule){
-			
 			var fileName = rule.parent.getResource().getURL();
 			var selectorText = rule.getSelectorText();
 			selectorText = selectorText.replace(/^\s+|\s+$/g,""); // trim white space
@@ -2258,7 +2335,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				return true;
 			}
 			return false;
-			
 		}
 		
 		function findSheet(sheet, sheetName){
@@ -2285,16 +2361,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				}
 			}
 			return foundSheet;
-			
 		}
 		
-		var document = this.getDocument();
-		var sheets = document.styleSheets; 
-		for (var i=0; i < sheets.length; i++){
-			if (updateSheet(sheets[i],r)){
-				break;
-			}
-		}
+		dojo.some(this.getDocument().styleSheets, function(sheet) {
+			return updateSheet(sheet, r);
+		});
 	},
 
 	modifyRule: function(rule, values){
@@ -2416,7 +2487,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var name = this.getSelector(widget, target),
 			model = this.getModel();
 		return model.getRule(name);
-		
 	},
 	
 	/* returns the top/target dom node for a widget for a specific property */
@@ -2729,7 +2799,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	_addHeadElement: function(tag, attrs/*, refNode, pos*/, allowDup) {
 		var head = this._srcDocument.find({elementType: 'HTMLElement', tag: 'head'}, true);
 		
-		if (! allowDup) {
+		if (!allowDup) {
 			// Does <head> already have an element that matches the given
 			// element?  Only match based on significant attribute.  For
 			// example, a <script> element will match if its 'src' attr is the
@@ -2873,7 +2943,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					currentParent:currentParent});
 			cp.findParentsXYAfterTraversal();
 		}
-
 	},
 	
 	/**

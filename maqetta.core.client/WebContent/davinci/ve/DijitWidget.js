@@ -202,7 +202,11 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 	},
 
 	isLayout: function() {
-		return this.dijitWidget.isInstanceOf(dijit.layout._LayoutWidget);
+		var context = this.getContext();
+		// make sure we are comparing against the same two classes within same two documents
+		var djit = context.getDijit();
+		var retval = this.dijitWidget.isInstanceOf(djit.layout._LayoutWidget);
+		return retval;
 	},
 
 	resize: function() {

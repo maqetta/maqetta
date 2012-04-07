@@ -186,12 +186,13 @@ public class DojoLibraryFinder implements ILibraryFinder{
 
 				Set<Object> keySet = dojoValidationProps.keySet();
 				Iterator<Object> itr = keySet.iterator(); 
-				String regex = "file121\\S+/dojoxF0204file120\\S+/dojoF0204file120\\S+/utilF0204file121\\S+/dijitF02";
+		
+				String regex = "file121\\S+/dojoxF0204file120\\S+/dojoF0204file120\\S+/utilF0204file124\\S+/ibm_soapF0204file121\\S+/dijitF02";
 				while(itr.hasNext()) {
 					String key = (String)itr.next();
 					if (key.endsWith("/groups")) {
 						String value = dojoValidationProps.getProperty(key);
-						value = value.replaceAll(regex, "file121" + path + "/dojoxF0204file120" + path + "/dojoF0204file120" + path + "/utilF0204file121" + path + "/dijitF02");
+						value = value.replaceAll(regex, "file121" + path + "/dojoxF0204file120" + path + "/dojoF0204file120" + path + "/utilF0204file124" + path + "/ibm_soapF0204file121" + path + "/dijitF02");
 						dojoValidationProps.setProperty(key, value);
 					}
 				}

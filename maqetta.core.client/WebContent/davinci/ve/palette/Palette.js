@@ -4,6 +4,7 @@ define([
 	"davinci/Workbench",
 	"dijit/_KeyNavContainer",
 	"dijit/Tooltip",
+	"dijit/form/TextBox",
 	"davinci/ui/dnd/DragSource",
 	"davinci/ve/metadata",
 	"davinci/library",
@@ -17,6 +18,7 @@ define([
 	Workbench,
 	_KeyNavContainer,
 	Tooltip,
+	TextBox,
 	DragSource,
 	Metadata,
 	Library,
@@ -125,6 +127,10 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		this._context = context;
 		this._loadPalette();
 		this.startupKeyNavChildren();
+
+		// setting context will reset
+		this.filterField.set("value", "");
+		this._filter();
 	},
 
 	refresh: function() {
@@ -368,39 +374,42 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	_createHeader: function(){
 		var div = dojo.doc.createElement("div");
 		div.className = "dojoyPaletteCommon";
-		var input = this.filterField = dojo.doc.createElement("input");
-		input.type = "text";
-//		input.size = "24";
-		input.className = "dojoyPaletteSearch";
-		var searchString = input.value = this._resource["filter"]+"...";
-		this.connect(input, "onblur", function(){ if(input.value=="") input.value = searchString;});
-		this.connect(input, "onfocus", function() { if(input.value == searchString) input.value = "";});
-		this.connect(input, "onkeyup", "_filter");
+
+		var input = dojo.doc.createElement("input");
 		div.appendChild(input);
 		this.domNode.appendChild(div);
+
+		var searchString =  this._resource["filter"]+"...";
+		this.filterField = new TextBox({style: "width: 99%", placeHolder: searchString}, input);
+		dojo.connect(this.filterField, "onKeyUp", this, "_filter");
+
 	},
 	
 	_filter: function(e) {
-        var value = this.filterField.value,
-            re = new RegExp(value, 'i'),
-            action;
+		var value = this.filterField.get("value"),
+    	re = new RegExp(value, 'i'),
+      action;
 
-        // reset to default state -- only show category headings
+      // reset to default state -- only show category headings
 	    function resetWidgets(child) {
-            var style = child.declaredClass === 'davinci.ve.palette.PaletteFolder' ?
-                    'block' : 'none';
-            dojo.style(child.domNode, 'display', style);
+	    	if (child.declaredClass != 'dijit.form.TextBox') {
+	    		var style = child.declaredClass === 'davinci.ve.palette.PaletteFolder' ?
+	    			'block' : 'none';
+	    		dojo.style(child.domNode, 'display', style);
+	    	}
 	    }
 
 	    // show widgets which match filter text
 	    function filterWidgets(child) {
-            if (child.declaredClass === 'davinci.ve.palette.PaletteFolder') {
-                dojo.style(child.domNode, 'display', 'none');
-            } else if (child.name && re.test(child.name)) {
-                dojo.style(child.domNode, 'display', 'block');
-            } else {
-                dojo.style(child.domNode, 'display', 'none');
-            }
+	    	if (child.declaredClass == 'dijit.form.TextBox') {
+	    		// do nothing
+	    	} else if (child.declaredClass === 'davinci.ve.palette.PaletteFolder') {
+	    		dojo.style(child.domNode, 'display', 'none');
+	    	} else if (child.name && re.test(child.name)) {
+	    		dojo.style(child.domNode, 'display', 'block');
+	    	} else {
+	    		dojo.style(child.domNode, 'display', 'none');
+	    	}
 	    }
 
 	    if (value === '') {

@@ -30,10 +30,13 @@ define({ root:
 		"errorLoadingPlugin":"error loading plugin ${0}, response=${1}",
 		"errorLoadingPlugins":"error loading plugins",
 		"multipleFilesUnsaved":"${0} (NOTE: This is one of ${1} files with unsaved changes.)",
+		"idleSessionMessage": "Your season will timeout in ${seconds} seconds, click anywhere in Maqetta continute using Maqetta.",
 		
 		//davinci/Workbench.js
 		"perspectiveNotFound":"perspective not found: ${0}",
 		"scopeNotDefined":"scope not defined for action: ${0}",
-		"funcNotDefined":"function not defined for action: ${0}"
+		"funcNotDefined":"function not defined for action: ${0}",
+		"serverConnectError":"<div><h1>Problem connecting to the Maqetta Server...</h1></div><div><center><h1><a href='${redirectUrl}'>Return to Maqetta</a></h1></center></div><br><br><div><h2>Error description:</h2>${error}</div>"
+
 }
 });

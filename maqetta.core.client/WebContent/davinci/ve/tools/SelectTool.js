@@ -1,7 +1,13 @@
 define(["dojo/_base/declare",        
+		"davinci/Workbench",
+		"davinci/workbench/Preferences",
 		"davinci/ve/tools/_Tool",
 		"davinci/ve/widget",
 		"davinci/ve/metadata",
+		"dojo/dnd/Mover",
+		"davinci/XPathUtils",
+		"davinci/html/HtmlFileXPathAdapter",
+		"davinci/ve/Snap",
 		"davinci/commands/CompoundCommand",
 		"davinci/ve/commands/AddCommand",
 		"davinci/ve/commands/RemoveCommand",
@@ -9,8 +15,15 @@ define(["dojo/_base/declare",
 		"davinci/ve/commands/MoveCommand",
 		"davinci/ve/commands/ResizeCommand"], function(
 				declare,
+				Workbench,
+				Preferences,
 				tool,
-				widgetUtils
+				widgetUtils,
+				Metadata,
+				Mover,
+				XPathUtils,
+				HtmlFileXPathAdapter,
+				Snap
 		){
 
 
@@ -26,21 +39,21 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 
 	onMouseDown: function(event){
-
+		var context = this._context;
+		if(context.isFocusNode(event.target)){
+			// Don't process mouse events on focus nodes. Focus.js already takes care of those events.
+			return;
+		}
+		//FIXME: Don't allow both parent and child to be selected
+		//FIXME: maybe listen for mouseout on doc, and if so, stop the dragging?
+		
+		this._shiftKey = event.shiftKey;
+		this._spaceKey = false;
+		var createMover = false;
 		if((dojo.isMac && event.ctrlKey) || event.button == 2){
 			// this is a context menu ("right" click)  Don't change the selection.
 			return;
 		}
-
-		// If in inlineEdit mode, if we get here, the user has clicked outside of the
-		// inlineEdit box, in which case we should bring down inlineEdit, commit the
-		// inlineEdit changes, and leave the current selection as it was previously.
-/*		var focus = (this._context && this._context._focuses && this._context._focuses[0]) ? this._context._focuses[0] : null;
-		if(focus && focus._inline) {
-			dojo.stopEvent(event);
-			return;
-		}
-		*/
 		var widget = this._getTarget() || widgetUtils.getEnclosingWidget(event.target);
 		while(widget){
 			if(widget.getContext()){ // managed widget
@@ -51,25 +64,164 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		if(!widget){
 			return;
 		}
-
-		var selection = this._context.getSelection();
+		var selection = context.getSelection();
+		
+		// See if widget is a descendant of any widgets in selection
+		var selectedAncestor = null;
+		for(var i=0; i<selection.length; i++){
+			var selWidget = selection[i];
+			var w = widget;
+			while(w && w != context.rootWidget){
+				if(w == selWidget){
+					selectedAncestor = selWidget;
+					break;
+				}
+				w = w.getParent();
+			}
+			if(selectedAncestor){
+				break;
+			}
+		}
+		var moverWidget = null;
 		var ctrlKey = dojo.isMac ? event.metaKey: event.ctrlKey;
+		this._mouseDownInfo = null;
 		if(dojo.indexOf(selection, widget) >= 0){
 			if(ctrlKey){ // CTRL to toggle
-				this._context.deselect(widget);
-			}if(event.shiftKey){
-				//TODO: multiple select
+				context.deselect(widget);
 			}else{
-				this._context.select(widget, null, false);
+				moverWidget = widget;
 			}
 		}else{
-			this._context.select(widget, ctrlKey); // CTRL to add
+			if(ctrlKey){
+				if(widget == context.rootWidget){
+					// Ignore mousedown over body if Ctrl key is down
+					return;
+				}
+				context.select(widget, ctrlKey); // CTRL to add
+			}else{
+				if(selectedAncestor){
+					moverWidget = selectedAncestor;
+					this._mouseDownInfo = { widget:widget, pageX:event.pageX, pageY:event.pageY, dateValue:(new Date()).valueOf() };
+				}else{
+					if(widget == context.rootWidget){
+						// Simple mousedown over body => deselect all (for now)
+						// FIXME: mousedown over body should initiate an area select operation
+						context.deselect();
+						return;
+					}
+					context.select(widget, ctrlKey);
+					moverWidget = widget;
+				}
+			}
+		}
+		if(moverWidget){
+			var position_prop;
+			var userdoc = context.getDocument();	// inner document = user's document
+			var userDojo = (userdoc.defaultView && userdoc.defaultView.dojo);
+			if(userDojo){
+				position_prop = userDojo.style(moverWidget.domNode, 'position');
+				this._moverAbsolute = (position_prop == 'absolute');
+				var parent = moverWidget.getParent();
+				//FIXME: isLayout check is not working. See #2042
+				if(!parent || !parent.isLayout || !parent.isLayout()){
+					this._moverWidget = moverWidget;
+					this._moverLastEventTarget = null;
+					var cp = context._chooseParent;
+					cp.setProposedParentWidget(null);
+					selection = context.getSelection();	// selection might have changed since start of this function
+					this._moverStartLocations = [];
+					for(var i=0; i<selection.length; i++){
+						var l = parseInt(userDojo.style(selection[i].domNode, 'left'), 10);
+						var t = parseInt(userDojo.style(selection[i].domNode, 'top'), 10);
+						this._moverStartLocations.push({l:l, t:t});
+					}
+					var n = moverWidget.domNode;
+					var w = n.offsetWidth;
+					var h = n.offsetHeight;
+					var l = n.offsetLeft;
+					var t = n.offsetTop;
+					var pn = n.offsetParent;
+					while(pn && pn.tagName != 'BODY'){
+						l += pn.offsetLeft; 
+						t += pn.offsetTop; 
+						pn = pn.offsetParent;
+					}
+					if(this._moverAbsolute){
+						this._moverDragDiv = dojo.create('div', 
+								{className:'selectToolDragDiv',
+								style:'left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px'},
+								context.rootNode);
+						this._mover = new Mover(this._moverDragDiv, event, this);
+					}else{
+						// width/height adjustment factors, using inside knowledge of CSS classes
+						var adjust1 = 10;
+						var adjust2 = 8;
+						l -= adjust1/2;
+						t -= adjust1/2;
+						var w1 = n.offsetWidth + adjust1;
+						var h1 = n.offsetHeight + adjust1;
+						var w2 = w1 - adjust2;
+						var h2 = h1 - adjust2;
+						this._moverDragDiv = dojo.create('div', {className:'flowDragOuter', 
+								style:'left:'+l+'px;top:'+t+'px;width:'+w1+'px;height:'+h1+'px'},
+								context.rootNode);
+						dojo.create('div', {className:'flowDragInner', 
+								'style':'width:'+w2+'px;height:'+h2+'px'},
+								this._moverDragDiv);
+						this._mover = new Mover(this._moverDragDiv, event, this);
+					}
+					this._altKey = event.altKey;
+					this._updateMoveCursor();
+					userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
+				}
+			}
 		}
 	},
-	
-	onDblClick: function(event){
 
+	onMouseUp: function(event){
+		var context = this._context;
+		if(context.isFocusNode(event.target)){
+			// Don't process mouse events on focus nodes. Focus.js already takes care of those events.
+			return;
+		}
+		var clickInteral = 750;	// .75seconds: allow for leisurely click action
+		var dblClickInteral = 750;	// .75seconds: big time slot for tablets
+		var clickDistance = 10;	// within 10px: inexact for tablets
+		var dateValue = (new Date()).valueOf();
+
+		// Because we create a mover with mousedown, we need to include our own click
+		// logic in case there was no actual move and user simple just clicked
+		if(this._mouseDownInfo){
+			if(Math.abs(event.pageX - this._mouseDownInfo.pageX) <= clickDistance &&
+					Math.abs(event.pageY - this._mouseDownInfo.pageY) <= clickDistance &&
+					(dateValue - this._mouseDownInfo.dateValue) <= clickInteral){
+				this._context.select(this._mouseDownInfo.widget);
+			}
+			this._mouseDownInfo = null;
+		}
+		// Normal browser onDblClick doesn't work because we are interjecting 
+		// an overlay DIV with a mouseDown operation. As a result,
+		// the browser's rules about what is required to trigger an ondblclick are not satisfied.
+		// Therefore, we have to do our own double-click timer logic
+		if(this._lastMouseUp){
+			if(Math.abs(event.pageX - this._lastMouseUp.pageX) <= clickDistance &&
+					Math.abs(event.pageY - this._lastMouseUp.pageY) <= clickDistance &&
+					(dateValue - this._lastMouseUp.dateValue) <= dblClickInteral){
+				this.onDblClick(event);
+			}
+		}
+		this._lastMouseUp = { pageX: event.pageX, pageY: event.pageY, dateValue:dateValue };
+	},
+
+	onDblClick: function(event){
+		var context = this._context;
+		if(context.isFocusNode(event.target)){
+			// Don't process mouse events on focus nodes. Focus.js already takes care of those events.
+			return;
+		}
 		var widget = (this._getTarget() || widgetUtils.getEnclosingWidget(event.target));
+		//FIXME: I'm not sure this while() block make sense anymore. 
+		//Not sure what a "managed widget" is.
 		while(widget){
 			if(widget.getContext()){ // managed widget
 				break;
@@ -94,6 +246,11 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 
 	onMouseMove: function(event){
+		var context = this._context;
+		if(context.isFocusNode(event.target)){
+			// Don't process mouse events on focus nodes. Focus.js already takes care of those events.
+			return;
+		}
 		this._setTarget(event.target);
 	},
 
@@ -104,19 +261,20 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		}catch(e){
 		}
 	},
-
-	onExtentChange: function(index, box){
-		
-		function adjustLTOffsetParent(left, top){
-			var parentNode = widget.domNode.offsetParent;
-			if(parentNode && parentNode != context.getContainerNode()){
-				var p = context.getContentPosition(context.getDojo().position(parentNode, true));
-				left -= (p.x - parentNode.scrollLeft);
-				top -= (p.y - parentNode.scrollTop);
-			}
-			return {left:left, top:top};
+	
+	_adjustLTOffsetParent: function(context, widget, left, top){
+		//FIXME: Might be better to use offset* instead of scroll*
+		var parentNode = widget.domNode.offsetParent;
+		if(parentNode && parentNode != context.getContainerNode()){
+			var p = context.getContentPosition(context.getDojo().position(parentNode, true));
+			left -= (p.x - parentNode.scrollLeft);
+			top -= (p.y - parentNode.scrollTop);
 		}
-		
+		return {left:left, top:top};
+	},
+
+	onExtentChange: function(index, box, copy){
+				
 		var context = this._context;
 		var cp = context._chooseParent;
 		var selection = context.getSelection();
@@ -157,7 +315,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			compoundCommand.add(resizeCommand);
 			var position_prop = dojo.style(widget.domNode, 'position');
 			if("l" in box && "t" in box && position_prop == 'absolute'){
-				var p = adjustLTOffsetParent(box.l, box.t);
+				var p = this._adjustLTOffsetParent(context, widget, box.l, box.t);
 				var left = p.left;
 				var top = p.top;
 				var moveCommand = new davinci.ve.commands.MoveCommand(widget, left, top);
@@ -212,16 +370,18 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				}, this);
 
 				// remove widget
-				dojo.forEach(selection, function(w){
-					compoundCommand.add(new davinci.ve.commands.RemoveCommand(w));
-				}, this);
+				if(!copy){
+					dojo.forEach(selection, function(w){
+						compoundCommand.add(new davinci.ve.commands.RemoveCommand(w));
+					}, this);
+				}
 
 				context.select(null);
 				
 			}else{
 				var left = box.l,
 					top = box.t;
-				var p = adjustLTOffsetParent(left, top);
+				var p = this._adjustLTOffsetParent(context, widget, left, top);
 				left = p.left;
 				top = p.top;
 				var position = {x: left, y: top};
@@ -301,22 +461,70 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		};
 	},
 	
-	onKeyDown: function(event){
-		switch(event.keyCode){
-		case dojo.keys.TAB:
-			if(this._moveFocus(event)){
-				//focus should not break away from containerNode
-				dojo.stopEvent(event);
+	_updateMoveCursor: function(){
+		var body = this._context.getDocument().body;
+		if(this._moverDragDiv){
+			if(this._altKey){
+				dojo.removeClass(body, 'selectToolDragMove');
+				dojo.addClass(body, 'selectToolDragCopy');
 			}else{
-				//nop: propagate event for next focus
-				//FIXME: focus may move to the focusable widgets on containerNode
+				dojo.removeClass(body, 'selectToolDragCopy');
+				dojo.addClass(body, 'selectToolDragMove');
 			}
-			break;
-		case dojo.keys.RIGHT_ARROW:
-		case dojo.keys.LEFT_ARROW:
-		case dojo.keys.DOWN_ARROW:
-		case dojo.keys.UP_ARROW:
-			this._move(event);
+		}else{
+			dojo.removeClass(body, 'selectToolDragMove');
+			dojo.removeClass(body, 'selectToolDragCopy');
+		}
+	},
+	
+	onKeyDown: function(event){
+		if(event && this._moverWidget){
+			dojo.stopEvent(event);
+			switch(event.keyCode){
+			case 16:
+				this._shiftKey = true;
+				Snap.clearSnapLines(this._context);
+				break;
+			case 18:
+				this._altKey = true;
+				this._updateMoveCursor();
+				break;
+			case 32:
+				this._spaceKey = true;
+				break;
+			case dojo.keys.TAB:
+				if(this._moveFocus(event)){
+					//focus should not break away from containerNode
+					dojo.stopEvent(event);
+				}else{
+					//nop: propagate event for next focus
+					//FIXME: focus may move to the focusable widgets on containerNode
+				}
+				break;
+			case dojo.keys.RIGHT_ARROW:
+			case dojo.keys.LEFT_ARROW:
+			case dojo.keys.DOWN_ARROW:
+			case dojo.keys.UP_ARROW:
+				this._move(event);
+			}
+		}
+	},
+	
+	onKeyUp: function(event){
+		if(event && this._moverWidget){
+			dojo.stopEvent(event);
+			switch(event.keyCode){
+			case 16:
+				this._shiftKey = false;
+				break;
+			case 18:
+				this._altKey = false;
+				this._updateMoveCursor();
+				break;
+			case 32:
+				this._spaceKey = false;
+				break;
+			}
 		}
 	},
 	
@@ -354,6 +562,8 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		}
 	},
 	
+	//FIXME: tab is supposed to cycle through the widgets
+	//Doesn't really work at this point
 	_moveFocus: function(event){
 		var direction = event.shiftKey?-1: +1,
 			current = this._context.getSelection()[0],
@@ -369,6 +579,218 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			this._context.select(next);
 		}
 		return next;
+	},
+	
+	/**
+	 * Callback routine from dojo.dnd.Mover with every mouse move.
+	 * What that means here is dragging currently selected widgets around.
+	 * @param {object} mover - return object from dojo.dnd.Mover constructor
+	 * @param {object} box - {l:,t:} top/left corner of where drag DIV should go
+	 * @param {object} event - the mousemove event
+	 */
+	onMove: function(mover, box, event){
+		//FIXME: For tablets, might want to add a check for minimum initial move
+		//distance to prevent accidental moves due to fat fingers.
+		
+		// If there was any dragging, prevent a mousedown/mouseup combination
+		// from triggering a select operation
+		this._mouseDownInfo = null;
+		
+		var context = this._context;
+		var cp = context._chooseParent;
+		var selection = context.getSelection();
+		var index = selection.indexOf(this._moverWidget);
+		if(index < 0){
+			console.error('SelectTool.js onMove error. move widget is not selected');
+			return;
+		}
+		this._context.selectionHideFocus();
+		if(event.target != this._moverLastEventTarget){
+			// If mouse has moved over a different widget, then null out the current
+			// proposed parent widget, which will force recalculation of the list of possible parents
+			cp.setProposedParentWidget(null);
+		}
+		this._moverLastEventTarget = event.target;
+		this._moverBox = box;
+		this._moverDragDiv.style.left = box.l + 'px';
+		this._moverDragDiv.style.top = box.t + 'px';
+		if(this._moverAbsolute){
+			var leftAdjust = 0;
+			var topAdjust = 0;
+			var pn = this._moverWidget.domNode.offsetParent;
+			while(pn && pn.tagName != 'BODY'){
+				leftAdjust += pn.offsetLeft;
+				topAdjust += pn.offsetTop;
+				pn = pn.offsetParent;
+			}
+			var newLeft =  (box.l - leftAdjust);
+			var newTop = (box.t - topAdjust);
+			var dx = newLeft - this._moverStartLocations[index].l;
+			var dy = newTop - this._moverStartLocations[index].t;
+			var absDx = Math.abs(dx);
+			var absDy = Math.abs(dy);
+			var CONSTRAIN_MIN_DIST = 3;	// constrained dragging only active if user moves object non-trivial amount
+			if(this._shiftKey && (absDx >= CONSTRAIN_MIN_DIST ||  absDy >= CONSTRAIN_MIN_DIST)){
+				if(absDx > absDy){
+					dy = 0;
+				}else{
+					dx = 0;
+				}
+			}
+			for(var i=0; i<selection.length; i++){
+				//if(i !== index){
+					var w = selection[i];
+					var l = this._moverStartLocations[i].l;
+					var t = this._moverStartLocations[i].t;
+					w.domNode.style.left = (l + dx) + 'px';
+					w.domNode.style.top = (t + dy) + 'px';
+				//}
+			}
+		}
+		var widgetType = this._moverWidget.type;
+		var currentParent = this._moverWidget.getParent();
+		
+		var parentListDiv = cp.parentListDivGet();
+		if(!parentListDiv){// Make sure there is a DIV into which list of parents should be displayed
+			parentListDiv = cp.parentListDivCreate({
+				widgetType:widgetType, 
+				absolute:this._moverAbsolute, 
+				doCursor:!this._moverAbsolute, 
+				beforeAfter:null, 
+				currentParent:currentParent });
+ 		}
+		var parentIframe = context.getParentIframe();
+		if(parentIframe){
+			// Ascend iframe's ancestors to calculate page-relative x,y for iframe
+			offsetLeft = 0;
+			offsetTop = 0;
+			offsetNode = parentIframe;
+			while(offsetNode && offsetNode.tagName != 'BODY'){
+				offsetLeft += offsetNode.offsetLeft;
+				offsetTop += offsetNode.offsetTop;
+				offsetNode = offsetNode.offsetParent;
+			}
+			parentListDiv.style.left = (offsetLeft + event.pageX) + 'px';
+			parentListDiv.style.top = (offsetTop + event.pageY) + 'px';
+		}
+		
+		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
+				Workbench.getProject());
+		var doSnapLinesX = (!this._shiftKey && editorPrefs.snap && this._moverAbsolute);
+		var doSnapLinesY = doSnapLinesX;
+		var showParentsPref = context.getPreference('showPossibleParents');
+		var spaceKeyDown = (cp.isSpaceKeyDown() || this._spaceKey);
+		var showCandidateParents = (!showParentsPref && spaceKeyDown) || (showParentsPref && !spaceKeyDown);
+		var data = {type:widgetType};
+		var position = { x:event.pageX, y:event.pageY};
+		// Ascend widget's ancestors to calculate page-relative coordinates
+		var leftAdjust = 0;
+		var topAdjust = 0;
+		var pn = this._moverWidget.domNode.offsetParent;
+		while(pn && pn.tagName != 'BODY'){
+			leftAdjust += pn.offsetLeft;
+			topAdjust += pn.offsetTop;
+			pn = pn.offsetParent;
+		}
+		var snapBox = {l:this._moverWidget.domNode.offsetLeft+leftAdjust, t:this._moverWidget.domNode.offsetTop+topAdjust, w:this._moverWidget.domNode.offsetWidth, h:this._moverWidget.domNode.offsetHeight};
+		// Call the dispatcher routine that updates snap lines and
+		// list of possible parents at current (x,y) location
+		context.dragMoveUpdate({
+				widgets:[this._moverWidget],
+				data:data,
+				eventTarget:event.target,
+				position:position,
+				absolute:this._moverAbsolute,
+				currentParent:currentParent,
+				rect:snapBox, 
+				doSnapLinesX:doSnapLinesX, 
+				doSnapLinesY:doSnapLinesY, 
+				doFindParentsXY:showCandidateParents,
+				doCursor:!this._moverAbsolute});
+	},
+	
+	//Part of Mover interface
+	onFirstMove: function(mover){
+	},
+
+	//Part of Mover interface
+	onMoveStart: function(mover){
+	},
+
+	//Part of Mover interface
+	onMoveStop: function(mover){
+		var context = this._context;
+		var cp = this._context._chooseParent;
+		
+		// Find xpath to the this_moverWidget's _srcElement and save that xpath
+		var xpath, oldId;
+		if(this._moverWidget && this._moverWidget._srcElement) {
+			xpath= XPathUtils.getXPath(this._moverWidget._srcElement, HtmlFileXPathAdapter);
+			oldId = this._moverWidget.id;
+		}
+
+		var doMove = true;
+		if(!this._moverBox || !this._moverWidget){
+			doMove = false;
+		}else{
+			var moverBox = this._adjustLTOffsetParent(context, this._moverWidget, this._moverBox.l, this._moverBox.t);
+			var selection = context.getSelection();
+			var index = selection.indexOf(this._moverWidget);
+			if(index < 0){
+				doMove = false;
+			}
+		}
+		if(doMove){
+			this.onExtentChange(index, moverBox, this._altKey);
+		}
+		if(this._moverDragDiv){
+			var parentNode = this._moverDragDiv.parentNode;
+			if(parentNode){
+				parentNode.removeChild(this._moverDragDiv);
+			}
+			this._moverDragDiv = null;
+		}
+		this._mover = null;
+		this._moverBox = null;
+		this._moverLastEventTarget = null;
+		this._updateMoveCursor();
+		context.dragMoveCleanup();
+		cp.parentListDivDelete();
+		context.selectionShowFocus();
+		
+		// Attempt to restore editFeedback DIV via call to this._setTarget()
+		// Usually, we will find the right node by looking for the widget with given ID
+		// if that fails then try to restore via doing xpath into model
+		// FIXME: What we need to make this fully bulletproof and reliable is some way 
+		// to tag an original widget, have the tag preserved across widget modification,
+		// and then ability to find the widget with that tag.
+		var moverWidget, moverNode;
+		if(oldId){
+			moverNode = context.getDocument().getElementById(oldId);
+			if(moverNode){
+				moverWidget = widgetUtils.getEnclosingWidget(moverNode);
+			}
+		}
+		if(!moverWidget && xpath){
+			var elem = context.model.evaluate(xpath);
+			if(elem){
+				var id = elem.getAttribute('id');
+				if(id){
+					moverWidget = widgetUtils.byId(id, context.getDocument());
+				}
+			}
+		}
+		// Ensure that the widget is actually completely in the DOM.
+		// This prevents exceptions in this._setTarget, which assume DOM is fully baked
+		// and sometimes things are happening too fast and the revised widget is not 
+		// completely ready.
+		if(moverWidget && moverWidget.domNode && moverWidget.domNode.parentNode){
+			this._setTarget(moverWidget.domNode);
+		}else{
+			this._setTarget(null);
+		}
+
 	}
+
 });
 });

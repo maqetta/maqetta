@@ -2,6 +2,7 @@ define([
 	"dojo/_base/declare",
 	"davinci/Workbench",
 	"davinci/Runtime",
+	"davinci/review/Review",
 	"davinci/workbench/ViewPart",
 	"davinci/review/widgets/Comment",
 	"davinci/review/widgets/CommentForm",
@@ -17,8 +18,8 @@ define([
 	"dojo/fx",
     "dojo/i18n!./nls/view",
     "dojo/i18n!davinci/workbench/nls/workbench"
-], function(declare, Workbench, Runtime, ViewPart, Comment, CommentForm, Button, TextBox, DropDownButton, Toolbar,
-		ToolbarSeparator, CheckedMenuItem, MenuSeparator, Dialog, Menu, coreFx, viewNls, workbenchNls) {
+], function(declare, Workbench, Runtime, Review, ViewPart, Comment, CommentForm, Button, TextBox, DropDownButton, 
+		Toolbar, ToolbarSeparator, CheckedMenuItem, MenuSeparator, Dialog, Menu, coreFx, viewNls, workbenchNls) {
 
 var getNewGuid = function() {
 	var guid = "";
@@ -729,7 +730,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				if (reviewer.name) { 
 					var check = new CheckedMenuItem({
 						label: "<div class='davinciReviewToolbarReviewersColor' style='background-color:" + 
-						Runtime.getColor(reviewer.name) +";'></div><span>"+reviewer.name+"</span>",
+						Review.getColor(reviewer.name) +";'></div><span>"+reviewer.name+"</span>",
 							onChange: dojo.hitch(this,this._reviewFilterChanged),
 							checked: true,
 							reviewer:reviewer,

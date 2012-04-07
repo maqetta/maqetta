@@ -1,5 +1,6 @@
 define([
 	"dojo/_base/declare",
+	"davinci/review/Review",
 	"dijit/_WidgetBase",
 	"dijit/_TemplatedMixin",
 	"dijit/Menu",
@@ -9,7 +10,7 @@ define([
 	"dojo/date/stamp",
 	"dojo/i18n!./nls/widgets",
 	"dojo/text!./templates/Comment.html"
-], function(declare, _Widget, _Templated, Menu, MenuItem, DropDownButton, locale, stamp, widgetsNls, commentTemplate) {
+], function(declare, Review, _Widget, _Templated, Menu, MenuItem, DropDownButton, locale, stamp, widgetsNls, commentTemplate) {
 
 /*
  * Transform the date passed to a relative time against current time on server.
@@ -93,7 +94,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 		this.focused = false;
 
 		// Populate the comment body
-		var color = this.color = davinci.Runtime.getColor(this.ownerId);
+		var color = this.color = Review.getColor(this.ownerId);
 		this.subjectNode.innerHTML = this.subject;
 		dojo.style(this.subjectNode, "color", color);
 		this.ownerName.innerHTML = this.ownerId;
@@ -191,9 +192,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 		this.contentNode.innerHTML = this.content;
 		this.commentType.innerHTML = this.type;
 		this._ajustLengthOfCommentContent(true);
-		dojo.removeClass(this.commentSeverity, "severityLow");
-		dojo.removeClass(this.commentSeverity, "severityMedium");
-		dojo.removeClass(this.commentSeverity, "severityHigh");
+		dojo.removeClass(this.commentSeverity, "severityUnassigned severityLow severityMedium severityHigh" );
 		dojo.addClass(this.commentSeverity, "severity" + this.severity);
 		if (this.commentStatus.set) {
 			this.commentStatus.set("label", this.status);

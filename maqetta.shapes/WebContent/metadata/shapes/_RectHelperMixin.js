@@ -10,8 +10,7 @@ _RectHelperMixin.prototype = {
 		compoundCommand.add(davinci.ve.commands.ModifyCommand(widget, valuesObject, null));
 	},
 
-	dragPointsStrings:['left_top','center_top','right_top','right_middle',
-	           'right_bottom','center_bottom','left_bottom','left_middle'],
+	dragPointsStrings:['left_top','right_top','right_bottom','left_bottom'],
 	
 	/*
 	 * Returns list of draggable end points for this shape in "px" units
@@ -34,13 +33,9 @@ _RectHelperMixin.prototype = {
 		var bottom = top + height;
 		var points=[
 		    {x:left, y:top},
-		    {x:center, y:top},
 		    {x:right, y:top},
-		    {x:right, y:middle},
 		    {x:right, y:bottom},
-		    {x:center, y:bottom},
-		    {x:left, y:bottom},
-		    {x:left, y:middle}
+		    {x:left, y:bottom}
 		];
 		return {points:points};
 	},
@@ -71,10 +66,11 @@ _RectHelperMixin.prototype = {
 			pageY = params.pageY,
 			event = params.e;
 		var dijitWidget = this._widget.dijitWidget;
-		if(index<0 || index>=8){
+		if(index<0 || index>=4){
 			console.error('_RectShapeHelperMixin dragEndPointDelta(): index='+index);
 			return;
 		}
+		this.hideAllDraggablesExcept(index);
 		var s = this.dragPointsStrings[index];
 		
 		// Update the rectangle parameters for what the result should be

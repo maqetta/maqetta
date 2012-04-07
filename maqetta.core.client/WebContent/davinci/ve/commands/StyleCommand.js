@@ -132,9 +132,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		/* if the widget is a child of a dijiContainer widget 
 		 * we may need to refresh the parent to make it all look correct in page editor
 		 * */ 
-		var parent = widget.parent; 
-		if (!parent && widget.getParent)
-			parent = widget.getParent();
+		var parent = widget.getParent();
 		if (parent.dijitWidget){
 			this._refresh(parent);
 		} else if (widget && widget.resize){

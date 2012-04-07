@@ -1,18 +1,19 @@
 define([
-	    "dojo/_base/declare"
+	"dojo/_base/declare"
 ], function(declare){
-	
+
 var Color = declare("davinci.review.Color", null, {
 	colors:[
-	        "red",
-	        "blue",
-	        "green",
-	        "purple",
-			"orange",
-	        "yellow",
-	        "brown",
+	        "firebrick",
+	        "darkblue",
 	        "darkgreen",
-	        "cyan"
+	        "purple",
+	        "darkorange",
+	        "darkgoldenrod",
+	        "brown",
+	        "darkgrey",
+	        "darkcyan",
+	        "deeppink"
 	        ]
 });
 

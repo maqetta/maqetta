@@ -7,9 +7,11 @@ define([
 	"../drawing/tools/HighlightTool",
 	"../drawing/tools/SelectTool",
 	"davinci/Runtime",
+	"davinci/UserActivityMonitor",
+	"davinci/review/Review",
 	"davinci/ve/Context",
 	'preview/silhouetteiframe'
-], function(declare, connect, Surface, CreateTool, ExchangeTool, HighlightTool, SelectTool, Runtime, Context, Silhouette) {
+], function(declare, connect, Surface, CreateTool, ExchangeTool, HighlightTool, SelectTool, Runtime, UserActivityMonitor, Review, Context, Silhouette) {
 	
 return declare("davinci.review.editor.Context", [Context], {
 
@@ -74,6 +76,12 @@ return declare("davinci.review.editor.Context", [Context], {
 					this.rootNode = this.rootWidget = this.frame.contentDocument.body;
 					this._initDrawing();
 					connect.publish("/davinci/review/context/loaded", [this, this.fileName]);
+					
+					var newCons = [];
+					// add the user activity monitoring to the document and add the connects to be 
+					// disconnected latter
+					newCons = newCons.concat(this._cxtConns, UserActivityMonitor.addInActivityMonitor(this.frame.contentDocument));
+					this._cxtConns = newCons;
 					this.containerEditor.silhouetteiframe.setSVGFilename(svgfilename);
 					this._statesLoaded = true;
 					connect.publish('/davinci/ui/context/statesLoaded', [this]);
@@ -129,7 +137,7 @@ return declare("davinci.review.editor.Context", [Context], {
 			];
 		this._cxtSubs = [
 			 connect.subscribe(this.fileName+"/davinci/review/drawing/addShape", function(shapeDef, clear, editor) {
-				 surface.exchangeTool.importShapes(shapeDef, clear, dojo.hitch(Runtime, Runtime.getColor)); // FIXME: Unique surface is required
+				 surface.exchangeTool.importShapes(shapeDef, clear, dojo.hitch(Review, Review.getColor)); // FIXME: Unique surface is required
 			 }),
 			 connect.subscribe(this.fileName+"/davinci/review/drawing/enableEditing", this, function(reviewer, commentId, pageState, viewScene) {
 				 surface.activate();
@@ -154,7 +162,7 @@ return declare("davinci.review.editor.Context", [Context], {
 			 })),
 			 connect.subscribe(this.fileName+"/davinci/review/drawing/cancelEditing", dojo.hitch(this, function() {
 				 // Restore the previous status
-				 surface.exchangeTool.importShapes(surface.cached, true, dojo.hitch(Runtime, Runtime.getColor)); // FIXME: Unique surface is required
+				 surface.exchangeTool.importShapes(surface.cached, true, dojo.hitch(Review, Review.getColor)); // FIXME: Unique surface is required
 				 surface.deactivate();
 				 this._refreshSurface(surface);
 				 surface.commentId = ""; // Clear the filter so that no shapes can be selected
@@ -188,7 +196,7 @@ return declare("davinci.review.editor.Context", [Context], {
 				 }
 			 })),
 			 connect.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, function(obj){
-				 if (obj.oldEditor!=null && this === obj.oldEditor.getContext()) {
+				 if (obj.oldEditor!=null && this === obj.oldEditor.getContext && this === obj.oldEditor.getContext()) { // not all editors have a context eg textView
 					 // Determine if the editor is closed, if the editor is closed then
 					 // getDocument() will throw an exception
 					 try {

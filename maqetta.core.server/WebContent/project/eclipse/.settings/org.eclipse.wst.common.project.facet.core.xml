@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <faceted-project>
   <runtime name="Web Preview Server Runtime"/>
-  <fixed facet="rad.dojo"/>
   <fixed facet="wst.jsdt.web"/>
+  <fixed facet="rad.dojo"/>
   <fixed facet="wst.web"/>
   <installed facet="wst.web" version="1.0"/>
   <installed facet="rad.dojo" version="1.0"/>

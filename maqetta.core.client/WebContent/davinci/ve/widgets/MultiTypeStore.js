@@ -1,35 +1,35 @@
 define(["dojo/_base/declare",
-        "dojo/data/ItemFileReadStore",
-        "dojo/i18n!davinci/ve/nls/ve",
-        "dojo/i18n!dijit/nls/common"
-        
-       
-],function(declare,   ItemFileReadStore, veNLS,commonNLS){
+        "dojo/data/ItemFileReadStore"
+],function(declare, ItemFileReadStore){
 	var MultiTypeStore = declare("davinci.ve.widgets.MultiTypeStore", ItemFileReadStore, {
 	
 		constructor: function(args){
 			this._allValues = [];
 			this.clearValues();
-			if(args.values && args.units)
+			if(args.values && args.units) {
 				this.setValues(args.values, args.units);
+			}
 		},
 	
 		setValues: function(values, unit){
-			for(var i=0;i<values.length;i++){
-				davinci.util.arrayAddOnce(this._allValues, values[i]);
-			}
+			values.forEach(function(item){
+	            if (this._allValues.indexOf(item) === -1) {
+	            	this._allValues.push(item);
+	            }
+			}, this);
 			
 			this._unit = unit;
 			
 			var items = [];
 			dojo.forEach(this._allValues, function(v){
-				var u = unit;
-				var asString = "" + v;
+				var u = unit,
+					asString = "" + v;
 				
 				/* check for spaces (no value) and do not add units character */
-				if((asString.replace(/^\s*/, '').replace(/\s*$/, ''))=="")
+				if((asString.replace(/^\s*/, '').replace(/\s*$/, ''))=="") {
 					u = "";
-				
+				}
+
 				items.push({name: ("" + v + u), value: ("" + v + u)});
 			});
 			this._jsonData = {identifier: "name", items: items};
@@ -37,24 +37,15 @@ define(["dojo/_base/declare",
 		},
 		
 		
-		contains : function(value){
-			for(var i = 0;i<this._allValues.length;i++){
-				
-				if(this._allValues[i]  == value)
-					return true;
-				
-			}
-			return false;
+		contains: function(value){
+			return this._allValues.indexOf(value) != -1;
 		},
 		
-		clearValues : function(){
+		clearValues: function(){
 			this._allValues = [davinci.ve.widgets.MultiTypeStore.BLANK_VALUE];
 			this._unit = null;
 			this._loadFinished = false;
-			
 		}
-		
 	});
 	return dojo.mixin(MultiTypeStore,{BLANK_VALUE:"     "});
-
 });

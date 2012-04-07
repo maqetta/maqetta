@@ -64,9 +64,11 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	setRootElement: function(rootElement){
     	this._rootElement = rootElement;
 	},
-	
+
 	supports: function (something){
-	    return /^\s*(palette|properties|style|states|inline-style|MultiPropTarget)\s*$/.test(something);
+		// Note: the propsect_* values need to match the keys in SwitchingStyleView.js
+		var regex =  /^palette|properties|style|states|inline-style|MultiPropTarget|propsect_common|propsect_widgetSpecific|propsect_events|propsect_layout|propsect_paddingMargins|propsect_background|propsect_border|propsect_fontsAndText|propsect_shapesSVG$/;
+		return something.match(regex) ? true : false;
 	},
 
 	focus: function() {

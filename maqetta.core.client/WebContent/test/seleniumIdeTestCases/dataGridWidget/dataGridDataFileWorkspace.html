@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8081/" />
+<title>New Test</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">New Test</td></tr>
+</thead><tbody>
+<tr>
+	<td>clickAt</td>
+	<td>//span[@id='davinci_main_menu']/span/span/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=newHTML</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//tr[@class='fileNameRow']/td[2]/div/div/input</td>
+	<td>dataGridCsdWorkspaceFileTestCase.html</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=input.dijitOffScreen</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//span[@class='fileDialogStdButtons']/span/span/span</td>
+	<td>2000</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//span[@class='fileDialogStdButtons']/span[2]/span/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementNotPresent</td>
+	<td>//span[@class='fileDialogStdButtons']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='editors_tabcontainer_tablist_editor-._project1_dataGridCsdWorkspaceFileTestCase.html']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Dojo Controls</td>
+	<td></td>
+</tr>
+<!--Drag and Drop dataDrig start-->
+<tr>
+	<td>mouseDownAt</td>
+	<td>link=DataGridDojo Controls</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseMoveAt</td>
+	<td>//body[@id='myapp']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseUpAt</td>
+	<td>//body[@id='myapp']</td>
+	<td></td>
+</tr>
+<!--Drag and Drop dataGrid Stop-->
+<tr>
+	<td>click</td>
+	<td>id=davinciIleb</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyNotVisible</td>
+	<td>id=davinci.ve.input.SmartInput_table</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>id=davinci.ve.input.DataGridInput.dataStoreType</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//td[.='Data file from workspace']</td>
+	<td></td>
+</tr>
+<!--should add test case for using tree to select sample file-->
+<tr>
+	<td>type</td>
+	<td>id=davinciIleb</td>
+	<td>sample_data/htmlSample.json</td>
+</tr>
+<!--Make the HTML table show by keyDown then keyUp-->
+<tr>
+	<td>verifyVisible</td>
+	<td>id=davinci.ve.input.SmartInput_table</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinci.ve.input.SmartInput_ok_label</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//div[@id='davinci.ve.style']/div/div/span/label[.='ID']/following-sibling::input</td>
+	<td>data_grid_testcase1</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='data_grid_testcase1']/div/div/div//div/table/tbody/tr/th[2]/div</td>
+	<td>name</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='data_grid_testcase1']/div[2]/div/div/div/div/div[2]/table/tbody/tr/td[2]</td>
+	<td>&lt;b&gt;Fruits&lt;/b&gt;</td>
+</tr>
+<!-- Save file and reopen -->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitReset dijitInline dijitIcon saveIcon']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='editors_tabcontainer_tablist_editor-._project1_dataGridCsdWorkspaceFileTestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>doubleClick</td>
+	<td>//span[@class='dijitTreeContent']/span[. ='dataGridCsdWorkspaceFileTestCase.html']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='editors_tabcontainer_tablist_editor-._project1_dataGridCsdWorkspaceFileTestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+<!-- Save file and reopen -->
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='data_grid_testcase1']/div/div/div//div/table/tbody/tr/th[2]/div</td>
+	<td>name</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='data_grid_testcase1']/div[2]/div/div/div/div/div[2]/table/tbody/tr/td[2]</td>
+	<td>&lt;b&gt;Fruits&lt;/b&gt;</td>
+</tr>
+<!--Open Preview-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitReset dijitInline dijitIcon openBrowserIcon']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectPopUp</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='data_grid_testcase1']/div/div/div//div/table/tbody/tr/th[2]/div</td>
+	<td>name</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='data_grid_testcase1']/div[2]/div/div/div/div/div[2]/table/tbody/tr/td[2]</td>
+	<td>&lt;b&gt;Fruits&lt;/b&gt;</td>
+</tr>
+<tr>
+	<td>close</td>
+	<td></td>
+	<td></td>
+</tr>
+<!-- now make HTML-->
+<tr>
+	<td>selectWindow</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='editors_tabcontainer_tablist_editor-._project1_dataGridCsdWorkspaceFileTestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>doubleClick</td>
+	<td>id=data_grid_testcase1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinciIleb</td>
+	<td></td>
+</tr>
+<!--Make the HTML table show by keyDown then keyUp-->
+<tr>
+	<td>verifyVisible</td>
+	<td>id=davinci.ve.input.SmartInput_table</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinci.ve.input.SmartInput_radio_html</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinci.ve.input.SmartInput_ok_label</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='data_grid_testcase1']/div/div/div//div/table/tbody/tr/th[2]/div</td>
+	<td>name</td>
+</tr>
+<!--verify the html bold is correct-->
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='data_grid_testcase1']/div[2]/div/div/div/div/div[2]/table/tbody/tr/td[2]/b</td>
+	<td>Fruits</td>
+</tr>
+<!-- Save file and reopen -->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitReset dijitInline dijitIcon saveIcon']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='editors_tabcontainer_tablist_editor-._project1_dataGridCsdWorkspaceFileTestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>doubleClick</td>
+	<td>//span[@class='dijitTreeContent']/span[. ='dataGridCsdWorkspaceFileTestCase.html']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='editors_tabcontainer_tablist_editor-._project1_dataGridCsdWorkspaceFileTestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+<!-- Save file and reopen -->
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='data_grid_testcase1']/div/div/div//div/table/tbody/tr/th[2]/div</td>
+	<td>name</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='data_grid_testcase1']/div[2]/div/div/div/div/div[2]/table/tbody/tr/td[2]/b</td>
+	<td>Fruits</td>
+</tr>
+<!--Open Preview-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitReset dijitInline dijitIcon openBrowserIcon']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectPopUp</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='data_grid_testcase1']/div/div/div//div/table/tbody/tr/th[2]/div</td>
+	<td>name</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='data_grid_testcase1']/div[2]/div/div/div/div/div[2]/table/tbody/tr/td[2]/b</td>
+	<td>Fruits</td>
+</tr>
+<tr>
+	<td>close</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='editors_tabcontainer_tablist_editor-._project1_dataGridCsdWorkspaceFileTestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

@@ -103,6 +103,10 @@
 .HtmlWidget  .themeSubwidgetMenu .dijitMenuItemDisabled .dijitMenuItemIconCell {
 	opacity:1;
 }
+.HtmlWidget  .themeSubwidgetMenu .dijitMenuItemDisabled * {
+    opacity : 0.5;
+    cursor : default;
+}
 .HtmlWidget  .themeSubwidgetMenu .dijitMenuSeparatorTop {
 	height: auto;
 	margin-top:1px; /* prevents spacing above/below separator */

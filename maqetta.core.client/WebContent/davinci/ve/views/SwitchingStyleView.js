@@ -32,7 +32,10 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	},
 
 	pageTemplate : [
-	         
+	                
+	          //Note: the keys here must match the propsect_* values in the supports() functions
+	          //in the various editors, such as PageEditor.js and ThemeEditor.js
+	          
 	          {key: "common", 
 	        	  pageTemplate:{html: "<div dojoType='davinci.ve.widgets.CommonProperties'></div>"}},
 	          {key: "widgetSpecific",
@@ -270,8 +273,8 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 				// dojo.hitch to make sure there are different function
 				// instances for each button with correct title/index values
 				dojo.hitch(this, 
-					function(title,index){
-						HTMLStringUtil.transitionRootToSection(title,
+					function(key,index){
+						HTMLStringUtil.transitionRootToSection(key,
 							// dojo.hitch necessary to provide "this" object
 							dojo.hitch(this,function(){
 								var visibleCascade = this._getVisibleCascade(index);
@@ -281,7 +284,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 							})
 						);
 					},
-					this.pageTemplate[i].title,i)
+					this.pageTemplate[i].key,i)
 			);
 			dojo.connect(sectionButton,"onmouseover",
 					function(event){
@@ -309,7 +312,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		if(currentPropSection){
 			var found=false;
 			for(var propSectionIndex = 0;propSectionIndex<this.pageTemplate.length;propSectionIndex++){
-				if(this.pageTemplate[propSectionIndex].title == currentPropSection){
+				if(this.pageTemplate[propSectionIndex].key == currentPropSection){
 					found=true;
 					break;
 				}
@@ -329,7 +332,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		var currentPropSection = HTMLStringUtil.getCurrentPropSection();
 		if(currentPropSection){
 			for(var i = 0;i<this.pageTemplate.length;i++){
-				if(this.pageTemplate[i].title == currentPropSection){
+				if(this.pageTemplate[i].key == currentPropSection){
 					visibleCascade = visibleCascade.concat( this.pageTemplate[i]['cascade']);
 					break;
 				}	
@@ -491,13 +494,28 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		}
 		
 		/* add the editors ID to the top of the properties pallete so you can target CSS rules based on editor */
-		//debugger;
 		if(this._oldClassName)
 			dojo.removeClass(this.domNode,this._oldClassName);
 		
 		if( this._editor){
 			this._oldClassName = this._editor.editorID.replace(/\./g, "_");
 			dojo.addClass(this.domNode,this._oldClassName);
+		}
+		// Hide or show the various section buttons on the root pane
+		var currentPropSection = HTMLStringUtil.getCurrentPropSection();
+		var sectionButtons=dojo.query(".propSectionButton",this.domNode);
+		for(var i=0;i<sectionButtons.length;i++){
+			var sectionButton = sectionButtons[i];
+			if(this._editor && this._editor.supports && this._editor.supports('propsect_'+this.pageTemplate[i].key)){
+				dojo.removeClass(sectionButton, 'dijitHidden');
+			}else{
+				dojo.addClass(sectionButton, 'dijitHidden');
+				if(currentPropSection == this.pageTemplate[i].key){
+					// If a hidden section is currently showing, then
+					// jump to Property palette's root view.
+					HTMLStringUtil.showRoot();
+				}
+			}
 		}
 		var visibleCascade = [];
 		for(var i = 0;i<this.pageTemplate.length;i++){

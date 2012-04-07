@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8081/" />
+<title>Main menu test 1</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Main menu test 1</td></tr>
+</thead><tbody>
+<!-- New menu: New CSS File - different filename in root directory, with save -->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@id='davinci_main_menu']/span/span/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=newCSS</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//span[@role='button']/span[. ='Create']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='editors_tabcontainer_tablist_editor-._project1_file1.css']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[@id='clientDiv']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>keyPress</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>.</td>
+</tr>
+<tr>
+	<td>keyPress</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>f</td>
+</tr>
+<tr>
+	<td>keyPress</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>o</td>
+</tr>
+<tr>
+	<td>keyPress</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>o</td>
+</tr>
+<tr>
+	<td>keyPress</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>{</td>
+</tr>
+<tr>
+	<td>keyDown</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>\13</td>
+</tr>
+<tr>
+	<td>keyUp</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>\13</td>
+</tr>
+<tr>
+	<td>keyDown</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>\9</td>
+</tr>
+<tr>
+	<td>keyUp</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>\9</td>
+</tr>
+<tr>
+	<td>keyPress</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>c</td>
+</tr>
+<tr>
+	<td>keyPress</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>o</td>
+</tr>
+<tr>
+	<td>keyPress</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>l</td>
+</tr>
+<tr>
+	<td>keyPress</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>o</td>
+</tr>
+<tr>
+	<td>keyPress</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>r</td>
+</tr>
+<tr>
+	<td>keyPress</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>:</td>
+</tr>
+<tr>
+	<td>keyPress</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>r</td>
+</tr>
+<tr>
+	<td>keyPress</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>e</td>
+</tr>
+<tr>
+	<td>keyPress</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>d</td>
+</tr>
+<tr>
+	<td>keyPress</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>;</td>
+</tr>
+<tr>
+	<td>keyDown</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>\13</td>
+</tr>
+<tr>
+	<td>keyUp</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>\13</td>
+</tr>
+<tr>
+	<td>keyPress</td>
+	<td>//div[@id='clientDiv']</td>
+	<td>}</td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitReset dijitInline dijitIcon saveIcon']</td>
+	<td></td>
+</tr>
+<!-- For some reason we have to do two saves -->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitReset dijitInline dijitIcon saveIcon']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='editors_tabcontainer_tablist_editor-._project1_file1.css']/span[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>doubleClick</td>
+	<td>//span[@class='dijitTreeContent']/span[. ='file1.css']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='editors_tabcontainer_tablist_editor-._project1_file1.css']/span[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='editors_tabcontainer_tablist_editor-._project1_file1.css']/span[2]</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

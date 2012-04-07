@@ -5,11 +5,10 @@ define([
     "dojo/_base/lang",
     "dojo/_base/connect",
    // "davinci/Workbench",
-	"../util",
 	"../library",
 	"../model/Path",
 	"../repositoryinfo"
-], function(require, Deferred, DeferredList, lang, connect, Util, Library, Path, info) {
+], function(require, Deferred, DeferredList, lang, connect, Library, Path, info) {
 
 	var Metadata,
 		Workbench,
@@ -48,7 +47,42 @@ define([
         	dojo.publish("/davinci/ui/libraryChanged");
         });
     });
-    
+
+    /**
+     * Copies/adds all properties of one or more sources to dest; returns dest.
+     * Similar to dojo.mixin(), except this function does a deep merge.
+     * 
+     * @param  {Object} dest
+     *          The object to which to copy/add all properties contained in source. If dest is
+     *          falsy, then a new object is manufactured before copying/adding properties
+     *          begins.
+     * @param  {Object} srcs
+     *          One of more objects from which to draw all properties to copy into dest. Srcs
+     *          are processed left-to-right and if more than one of these objects contain the
+     *          same property name, the right-most value "wins".
+     * @return {Object}
+     *          dest, as modified
+     */
+    function deepMixin(dest, srcs) {
+        dest = dest || {};
+        for (var i = 1, l = arguments.length; i < l; i++) {
+            var src = arguments[i],
+                name,
+                val;
+            for (name in src) {
+                if (src.hasOwnProperty(name)) {
+                    val = src[name];
+                    if (!(name in dest) || (typeof val !== 'object' && dest[name] !== val)) {
+                        dest[name] = val;
+                    } else {
+                        deepMixin(dest[name], val);
+                    }
+                }
+            }
+        }
+        return dest;
+    }
+
 	function parsePackage(pkg, path) {
 		libraries[pkg.name] = pkg;
 		path = new Path(path);
@@ -58,7 +92,7 @@ define([
 		for (var name in overlays) {
 			if (overlays.hasOwnProperty(name)) {
 				if (name === 'oam' || name === 'maqetta') {
-					Util.mixin(pkg, overlays[name]);
+					deepMixin(pkg, overlays[name]);
 				}
 			}
         }
@@ -84,7 +118,7 @@ define([
     }
 
 	function parseLibraryDescriptor(libName, descriptor, path) {
-		if (! libName) {
+		if (!libName) {
 			console.error("parseLibraryDescriptor: missing 'libName' arg");
 		}
 
@@ -249,13 +283,13 @@ define([
         if (lib) {
             descriptorPath = lib.$wm.$path;
         }
-        if (! descriptorPath) {
+        if (!descriptorPath) {
             return null;
         }
         wm = lib.$wm;
         
         var metadata = null;
-        var metadataUrl = [ descriptorPath, "/", type.replace(/\./g, "/"), "_oam.json" ].join('');
+        var metadataUrl = [descriptorPath, "/", type.replace(/\./g, "/"), "_oam.json" ].join('');
 
         if (!wm.localPath){
 	        dojo.xhrGet({
@@ -283,7 +317,7 @@ define([
         mdCache[type] = metadata;
 
         // OAM may be overridden by metadata in widgets.json
-        Util.mixin(metadata, wm.$providedTypes[type].metadata);
+        deepMixin(metadata, wm.$providedTypes[type].metadata);
         
         return metadata;
     }
@@ -338,7 +372,7 @@ define([
             return obj;
         }
         dojo.every(queryString.split("."), function(name) {
-            if (!obj[name]) {
+            if(obj[name] === undefined){
                 obj = undefined;
                 return false;
             }
@@ -604,14 +638,19 @@ define([
 
         /**
          * Invoke the callback function, if implemented by the widget library.
-         * @param library {object} widget library object
+         * @param libOrType {object|string} widget library object or widget type
          * @param fnName {string} callback function name
          * @param args {?Array} arguments array to pass to callback function
          */
         // XXX make this part of a mixin for the library metadata obj
-        invokeCallback: function(library, fnName, args) {
+        invokeCallback: function(libOrType, fnName, args) {
+            var library = libOrType,
+                fn;
+            if (typeof libOrType === 'string') {
+                library = getLibraryForType(type);
+            }
             if (library && library.$callbacks) {
-                var fn = library.$callbacks[fnName];
+                fn = library.$callbacks[fnName];
                 if (fn) {
                     fn.apply(library.$callbacks, args);
                 }

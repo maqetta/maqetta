@@ -1,7 +1,6 @@
 define([
 	"./Runtime",
 	"./model/Path",
-	"./util",
 	"./workbench/ViewPart",
 	"./workbench/EditorContainer",
 	"dijit/Dialog",
@@ -29,7 +28,6 @@ define([
 ], function(
 		Runtime,
 		Path,
-		util,
 		ViewPart,
 		EditorContainer,
 		Dialog,
@@ -83,12 +81,17 @@ var handleIoError = function (deferred, reason) {
 	if(reason.status == 401 || reason.status == 403){
 		sessionTimedOut();
 	}else{
+		Runtime.handleError(reason.message);
 		console.warn('Failed to load url=' + deferred.ioArgs.url + ' message=' + reason.message + ' status=' + reason.status);
 	}
 };
 
 var sessionTimedOut = function(){
 	var loginHref = '/maqetta/welcome';
+	if(Runtime.singleUserMode()) {
+		loginHref = '/maqetta/';
+	}
+	
 	var dialog = new Dialog({
         title: webContent.sessionTimedOut
       //,  style: "width: 300px"
@@ -1164,7 +1167,9 @@ var Workbench = {
 			}
 			
 			if (!keywordArgs.noSelect) {
-				util.arrayAddOnce(Workbench._state.editors, fileName);
+	            if (Workbench._state.editors.indexOf(fileName) === -1) {
+	            	Workbench._state.editors.push(fileName);
+	            }
 				Workbench._switchEditor(tab.editor, keywordArgs.startup);
 			}
 
@@ -1460,8 +1465,10 @@ var Workbench = {
 
 	_editorTabClosed: function(page) {
 		if (page && page.editor && page.editor.fileName) {
-		
-			util.arrayRemove(Workbench._state.editors, page.editor.fileName);
+            var i = Workbench._state.editors.indexOf(page.editor.fileName);
+            if (i != -1) {
+            	Workbench._state.editors.splice(i, 1);
+            }
 			Workbench._updateWorkbenchState();
 		}
 		var editors=dijit.byId("editors_tabcontainer").getChildren();

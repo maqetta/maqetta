@@ -125,6 +125,21 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 	
 	toggleOrientation: function() {
 		if(this.deviceName!='none'){
+			if(this._orientation == 'landscape'){
+				this._orientation = 'portrait';
+			}else{
+				this._orientation = 'landscape';			
+			}
+
+			this.setOrientation(this._orientation);
+		}
+	},
+	
+	setOrientation: function(orientation) {
+		if (this.deviceName!='none') {
+			// set orientation
+			this._orientation = orientation;
+
 			//FIXME: Would be better to publish an event about orientation changing
 			//and then have the toolbar widget subscribe to it and update the icon
 			//But easier said than done because of the way the Workbench works.
@@ -138,13 +153,13 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 			var rotateIconNode = dojo.query('.rotateIcon',editorRootElement)[0];
 			var ccwClass = 'rotateIconCCW';
 			if(this._orientation == 'landscape'){
-				this._orientation = 'portrait';
-				dojo.removeClass(rotateIconNode,ccwClass);
-			}else{
-				this._orientation = 'landscape';			
 				dojo.addClass(rotateIconNode,ccwClass);
+			}else{
+				dojo.removeClass(rotateIconNode,ccwClass);
 			}
-			this.silhouetteiframe.setOrientation(this._orientation)	;
+			this.getContext().setMobileOrientation(this._orientation);
+			this.silhouetteiframe.setOrientation(this._orientation);
+			davinci.Workbench.getOpenEditor()._visualChanged();
 		}
 	},
 
@@ -374,10 +389,6 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 				widget.resize();
 			}
 		});
-	},
-
-	supports: function (something){
-		return /^palette|properties|style|states|inline-style|MultiPropTarget$/.test(something);
 	},
 
 	//FIXME: pointless. unused? remove?

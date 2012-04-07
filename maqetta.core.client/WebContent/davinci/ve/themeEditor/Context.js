@@ -4,11 +4,10 @@ define([
     	"davinci/ve/widget",
     	"davinci/ve/themeEditor/SelectTool",
     	"davinci/ve/Context",
-    	"davinci/util",
     	"davinci/library",
     	"davinci/ve/metadata",
     	"davinci/Theme"
-], function(declare, CommandStack, Widget, SelectTool, Context, Util, Library, Metadata, Theme){
+], function(declare, CommandStack, Widget, SelectTool, Context, Library, Metadata, Theme){
 
 
 return declare("davinci.ve.themeEditor.Context", [Context], {
@@ -62,6 +61,9 @@ return declare("davinci.ve.themeEditor.Context", [Context], {
 		this.getDojo().declare("dijit.davinci.themeEditor.Tooltip", mixins, {
 			templateString: dojo.cache("dijit", "templates/Tooltip.html")
 		});
+		dojo.connect(this.getGlobal(), 'onload', this, function() {
+            this.onload();
+        });
 		this.setHeader({
 			title: data.title,
 			metas: data.metas,
@@ -136,10 +138,12 @@ return declare("davinci.ve.themeEditor.Context", [Context], {
 		}
 
 		widget.dvAttributes = {
-				isThemeWidget: isThemeWidget
+			isThemeWidget: isThemeWidget
 		};
 		if (isThemeWidget) {
-			Util.arrayAddOnce(this._widgets, widget);
+            if (this._widgets.indexOf(widget) === -1) {
+            	this._widgets.push(widget);
+            }
 		}
 	},
 	

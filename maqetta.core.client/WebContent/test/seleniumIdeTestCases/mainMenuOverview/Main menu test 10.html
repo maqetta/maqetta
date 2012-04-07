@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8081/" />
+<title>Main menu test 1</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Main menu test 1</td></tr>
+</thead><tbody>
+<!--Settings Menu: Preferences-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@id='davinci_main_menu']/span[3]/span/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=editPreferences</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[@role='dialog']/div/div/div/div/div/div/div[2]/div/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[@role='dialog']/div/div/div/div/div/div/div[2]/div/div/div/span/span[.='Visual Editor']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//td[.='When dragging, show possible parents:']/following-sibling::td/div/input</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//span[.='Save']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//span[@id='davinci_main_menu']/span[3]/span/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=editPreferences</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[@role='dialog']/div/div/div/div/div/div/div[2]/div/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[@role='dialog']/div/div/div/div/div/div/div[2]/div/div/div/span/span[.='Visual Editor']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyAttribute</td>
+	<td>//td[.='When dragging, show possible parents:']/following-sibling::td/div/input@aria-checked</td>
+	<td>true</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//span[.='Cancel']</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

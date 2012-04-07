@@ -1,4 +1,4 @@
-define(["dojo/_base/connect", "dojo/dom-style", "dojo/dom"], function(connect, style, dom){
+define(["dojo/_base/connect", "dojo/dom-style", "dojo/dom"], function(connect, domStyle, dom){
 
 var States = function(){};
 States.prototype = {
@@ -262,7 +262,7 @@ States.prototype = {
 					for (var name in style) {	// should only be one prop in each normalStyle
 						if(!this.hasStyle(widget, undefined, name)) {
 							var convertedName = this._convertStyleName(name);
-							var value = this._getFormattedValue(name, style.get(node, convertedName));
+							var value = this._getFormattedValue(name, domStyle.get(node, convertedName));
 							var o = {};
 							o[name] = value;
 							this.setStyle(widget, undefined, [o], true);
@@ -290,7 +290,7 @@ States.prototype = {
 				for (var name in style) {	// should be only one prop in style
 					var convertedName = this._convertStyleName(name);
 					//FIXME: Probably doesn't work with arrays
-					style.set(node, convertedName, style[name]);
+					domStyle.set(node, convertedName, style[name]);
 				}
 			}
 		}

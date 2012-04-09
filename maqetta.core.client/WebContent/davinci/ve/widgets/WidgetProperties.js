@@ -82,23 +82,62 @@ define([
 			this.onWidgetSelectionChange();
 		 },	
 	
-		 _createWidgetRows: function (properties){
+		_createWidgetRows: function (properties){
 			this._pageLayout = [];
 			for(var name in properties){
 				var property = properties[name];
 				if(property.hidden){
 					continue;
 				}
-				this._pageLayout.push({display:(property.title || name),
+
+				var prop = {display:(property.title || name),
 									   type: property.datatype,
 									   target:name,
-									   hideCascade:true});
+									   hideCascade:true
+										};
+
+				if (property.dropdownQueryValues && property.dropdownQueryAttribute) {
+					var values = [];
+
+					dojo.forEach(property.dropdownQueryValues, dojo.hitch(this, function(query) {
+						var results = dojo.query(query, this.context.rootNode);
+						dojo.forEach(results, function(node) {
+								values.push(node.getAttribute(property.dropdownQueryAttribute));
+						})
+					}));
+
+					// store the values into the prop
+					prop.values = values;
+
+					// we want a comboEdit here, so force it
+					prop.type = "comboEdit";
+				}
+
+				if (dojo.isArray(property.mustHaveAncestor)) {
+					var found = false;
+					var w = this._widget;
+
+					while (!found && w.getParent() != this.context.rootWidget) {
+						w = w.getParent();
+						if (dojo.indexOf(property.mustHaveAncestor, w.type) > -1) {
+							found = true;
+						}
+					}
+
+					if (found) {
+					} else {
+						prop.disabled = true;
+					}
+				}
+										
+				this._pageLayout.push(prop);
 			
 				if(property.option){
 					this._pageLayout[this._pageLayout.length-1].values = dojo.map(property.option, function(option){ return option.value; });
 					this._pageLayout[this._pageLayout.length-1].type = property.unconstrained ? "comboEdit" : "combo";
 				}
 			}
+
 			return HTMLStringUtil.generateTable(this._pageLayout);
 		},
 		

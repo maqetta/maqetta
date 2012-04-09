@@ -571,6 +571,8 @@ States.prototype = {
 	}
 };
 
+//FIXME: remove all references to davinci global and davinci.states
+if (typeof davinci === "undefined") { davinci = {}; }
 var singleton = davinci.states = new States();
 
 (function(){

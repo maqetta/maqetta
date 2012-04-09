@@ -404,10 +404,6 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		});
 	},
 
-	supports: function (something){
-		return /^palette|properties|style|states|inline-style|MultiPropTarget$/.test(something);
-	},
-
 	//FIXME: pointless. unused? remove?
 	getIsDirty: function(){
 		var dirty = (this.context.getCurrentPoint() != this.savePoint);

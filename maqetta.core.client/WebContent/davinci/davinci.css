@@ -1246,4 +1246,19 @@ davinci_top_bar .dijitButtonNode {
 	height:auto;
 }
 
+.idleWarning {
+	left: 0px;
+	top: 0px;
+	position: absolute;
+	 transition-property: height;  
+ 	 transition-duration: 4s;  
+ 	height:50px;
+  	overflow:hidden;
+  	background-color: #FAFAD2;
+  	padding-top: 25px;
+  	text-align: center;
+ 	width:100%;
+  	z-index: 1000;
+}
+
 background-image: -webkit-gradient(linear, left top, left bottom, from(white), to(#ffffcc)); background-image: -o-linear-gradient(white, #ffffcc); background-image: -ms-linear-gradient(white, #ffffcc); background-image: -moz-linear-gradient(white, #ffffcc); background-image: -webkit-linear-gradient(white, #ffffcc); background-image: linear-gradient(white, #ffffcc); width: 219px; height: 104px;"></div>

@@ -23,13 +23,13 @@
             class="maqetta.core.server.DavinciPageServlet"
             load-on-startup="true">
            </servlet>
-
+	<!--
      <servlet
             alias="/review"
             class="maqetta.core.server.DavinciReviewServlet"
             load-on-startup="true">
       </servlet>
-
+	-->
    </extension>
    
 
@@ -95,6 +95,8 @@
                class="maqetta.core.server.command.TryIt" />         
            <command path="removeUser" noLogin="true"
                class="maqetta.core.server.command.RemoveUser" />
+           <command path="keepalive" 
+               class="maqetta.core.server.command.KeepAlive" />
                 
           <!-- Review and Commenting Commands -->        
           <command path="listVersions"

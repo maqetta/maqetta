@@ -1,14 +1,14 @@
-html.mobile, .mobile body {
-  width: 100%;
-  margin: 0px;
-  padding: 0px;
-}
 .mobile body {
   overflow-x: hidden;
   -webkit-text-size-adjust: none;
   background-color: #eff1f3;
   font-family: Helvetica;
   font-size: 14px;
+}
+html.mobile, .mobile body {
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
 }
 .mblColorBlue {
   background-color: #366EDF;

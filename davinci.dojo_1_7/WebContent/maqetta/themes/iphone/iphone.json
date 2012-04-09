@@ -1365,11 +1365,20 @@
 			"states": {
 				"Normal": {
 					"selectors": {
-						".mobile body": [
-							"$std_10"
-						],
 						".mblView": [
-							"$std_10"
+							"position",
+							"left",
+							"width",
+							"color"
+						],
+						".mobile body": [
+							"margin",
+							"padding",
+							"overflow-x",
+							"-webkit-text-size-adjust",
+							"background-color",
+							"font-family",
+							"font-size"
 						]
 					},
 					"query": ""

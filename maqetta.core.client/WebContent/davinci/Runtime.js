@@ -10,6 +10,7 @@ define([
 	"./ve/ve.plugin",
 	"./ve/themeEditor/themeEditor.plugin",
 	"./review/review.plugin",
+	"./UserActivityMonitor"
 ], function(
 	webContent,
 	Dialog,
@@ -21,7 +22,8 @@ define([
 	js_plugin,
 	ve_plugin,
 	themeEditor_plugin,
-	review_plugin
+	review_plugin,
+	UserActivityMonitor
 ) {
 
 // list of plugins to load
@@ -77,7 +79,10 @@ var Runtime = {
 			}
 		});
 	},
-	
+	publish: function(node) {
+		var publish = new davinci.review.actions.PublishAction();
+		publish.run(node);
+	},
 	singleUserMode : function() {
 		return Runtime.isLocalInstall;
 	},
@@ -115,7 +120,8 @@ var Runtime = {
 				window.davinciBackspaceKeyTime = Date.now();
 			}
 		});	
-		
+		UserActivityMonitor.setUpInActivityMonitor(dojo.doc);
+				
 		dojo.addOnUnload(function (e) {
 			//This will hold a warning message (if any) that we'll want to display to the
 			//user.
@@ -177,6 +183,7 @@ var Runtime = {
 	
 	destroy: function() {
 		dojo.forEach(Runtime.subscriptions, dojo.unsubscribe);
+		UserActivityMonitor.destroy();
 	},
 	
 	_addExtension: function(id, extension, pluginID) {
@@ -215,10 +222,7 @@ var Runtime = {
 			redirectUrl = ".";
 		}
 		
-		window.document.body.innerHTML = 
-			"<div><h1>Problem connecting to the Maqetta Server...</h1></div><div><center><h1><a href='"+ redirectUrl +
-			"'>Return to Maqetta Login</a></h1></center></div><br><br><div><h2>Error description:</h2>" + error + 
-			"</div>"; // TODO: i18n
+		window.document.body.innerHTML = dojo.string.substitute(webContent.serverConnectError, {redirectUrl:redirectUrl, error: error});
 	},
 
 	executeCommand: function(cmdID) {
@@ -315,7 +319,9 @@ var Runtime = {
 			newLocation=newLocation.substr(0,lastChar);
 		}
 		location.href = newLocation+"/welcome";
-	}
+	},
+	
+	
 };
 
 davinci.Runtime = Runtime; //FIXME: shouldn't need this

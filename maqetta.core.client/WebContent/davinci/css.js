@@ -4,7 +4,8 @@
 
 define([
 	"dojo/_base/window",
-	"dojo/dom-construct"
+	"dojo/dom-construct",
+	"dojo/dom-attr" // sub-dependency, workaround for #2047
 ], function(baseWindow, construct) {
 
 var head = baseWindow.doc.getElementsByTagName('head')[0],

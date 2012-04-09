@@ -170,6 +170,8 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 								this._moverDragDiv);
 						this._mover = new Mover(this._moverDragDiv, event, this);
 					}
+					this._altKey = event.altKey;
+					this._updateMoveCursor();
 					userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
 				}
 			}
@@ -249,21 +251,13 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			// Don't process mouse events on focus nodes. Focus.js already takes care of those events.
 			return;
 		}
-		if(this._mover){
-			this._setTarget(null);
-		}else{
-			this._setTarget(event.target);
-		}
+		this._setTarget(event.target);
 	},
 
 	onMouseOut: function(event){
 		// FIXME: sometime an exception occurs...
 		try{
-			if(this._mover){
-				this._setTarget(null);
-			}else{
-				this._setTarget(event.relatedTarget);
-			}
+			this._setTarget(event.relatedTarget);
 		}catch(e){
 		}
 	},
@@ -279,7 +273,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		return {left:left, top:top};
 	},
 
-	onExtentChange: function(index, box){
+	onExtentChange: function(index, box, copy){
 				
 		var context = this._context;
 		var cp = context._chooseParent;
@@ -376,9 +370,11 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				}, this);
 
 				// remove widget
-				dojo.forEach(selection, function(w){
-					compoundCommand.add(new davinci.ve.commands.RemoveCommand(w));
-				}, this);
+				if(!copy){
+					dojo.forEach(selection, function(w){
+						compoundCommand.add(new davinci.ve.commands.RemoveCommand(w));
+					}, this);
+				}
 
 				context.select(null);
 				
@@ -465,6 +461,22 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		};
 	},
 	
+	_updateMoveCursor: function(){
+		var body = this._context.getDocument().body;
+		if(this._moverDragDiv){
+			if(this._altKey){
+				dojo.removeClass(body, 'selectToolDragMove');
+				dojo.addClass(body, 'selectToolDragCopy');
+			}else{
+				dojo.removeClass(body, 'selectToolDragCopy');
+				dojo.addClass(body, 'selectToolDragMove');
+			}
+		}else{
+			dojo.removeClass(body, 'selectToolDragMove');
+			dojo.removeClass(body, 'selectToolDragCopy');
+		}
+	},
+	
 	onKeyDown: function(event){
 		if(event && this._moverWidget){
 			dojo.stopEvent(event);
@@ -472,6 +484,10 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			case 16:
 				this._shiftKey = true;
 				Snap.clearSnapLines(this._context);
+				break;
+			case 18:
+				this._altKey = true;
+				this._updateMoveCursor();
 				break;
 			case 32:
 				this._spaceKey = true;
@@ -500,6 +516,10 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			switch(event.keyCode){
 			case 16:
 				this._shiftKey = false;
+				break;
+			case 18:
+				this._altKey = false;
+				this._updateMoveCursor();
 				break;
 			case 32:
 				this._spaceKey = false;
@@ -721,7 +741,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			}
 		}
 		if(doMove){
-			this.onExtentChange(index, moverBox);
+			this.onExtentChange(index, moverBox, this._altKey);
 		}
 		if(this._moverDragDiv){
 			var parentNode = this._moverDragDiv.parentNode;
@@ -733,6 +753,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		this._mover = null;
 		this._moverBox = null;
 		this._moverLastEventTarget = null;
+		this._updateMoveCursor();
 		context.dragMoveCleanup();
 		cp.parentListDivDelete();
 		context.selectionShowFocus();

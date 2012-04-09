@@ -1979,7 +1979,8 @@
 		            "metadata": {
 		                "property": {
 		                    "fixed": {
-		                        "refreshFromSource": true
+		                        "refreshFromSource": true,
+		                        "mustHaveAncestor": ["dojox.mobile.ScrollableView"]
 		                    },
 		                    "moveTo": {
 		                    	"dropdownQueryValues": ["[data-dojo-type='dojox.mobile.View']", "[data-dojo-type='dojox.mobile.SwapView']", "[data-dojo-type='dojox.mobile.ScrollableView']"],
@@ -2330,7 +2331,8 @@
 		            "metadata": {
 		                "property": {
 		                    "fixed": {
-		                        "refreshFromSource": true
+		                        "refreshFromSource": true,
+		                        "mustHaveAncestor": ["dojox.mobile.ScrollableView"]
 		                    }
 		                }
 		            },

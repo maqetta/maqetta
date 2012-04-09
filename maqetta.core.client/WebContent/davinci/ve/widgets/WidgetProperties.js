@@ -112,6 +112,23 @@ define([
 					// we want a comboEdit here, so force it
 					prop.type = "comboEdit";
 				}
+
+				if (dojo.isArray(property.mustHaveAncestor)) {
+					var found = false;
+					var w = this._widget;
+
+					while (!found && w.getParent() != this.context.rootWidget) {
+						w = w.getParent();
+						if (dojo.indexOf(property.mustHaveAncestor, w.type) > -1) {
+							found = true;
+						}
+					}
+
+					if (found) {
+					} else {
+						prop.disabled = true;
+					}
+				}
 										
 				this._pageLayout.push(prop);
 			

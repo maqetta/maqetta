@@ -414,7 +414,7 @@ public class User implements IUser {
 	 protected IVResource getUserFile(String p1) {
 	       
 	        String path = p1;
-	        while(path.length()>0 && (path.charAt(0)=='.' || path.charAt(0)=='/' || path.charAt(0)=='\\'))
+	        while(path.length()>0 && (path.indexOf(".//")==0 || path.charAt(0)=='/' || path.charAt(0)=='\\'))
             	path=path.substring(1);
 
 	        IPath a = new Path(this.userDirectory.getAbsolutePath()).append(path);

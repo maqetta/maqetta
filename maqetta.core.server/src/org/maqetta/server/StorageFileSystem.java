@@ -130,5 +130,7 @@ public class StorageFileSystem implements IStorage {
 	public String[] list() {
 		return this.file.list();
 	}
-
+	public String toString(){
+		return this.file.getAbsolutePath();
+	}
 }

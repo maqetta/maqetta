@@ -411,7 +411,7 @@ States.prototype = {
 		// within widget.states. That code seems somewhat accidental and needs
 		// to be studied and cleaned up.
 		var domNode = widget.domNode || widget;
-		var isNormalState = state === "undefined" || state == "undefined";
+		var isNormalState = state === undefined || state == "undefined";
 		if(isNormalState){
 			return domNode.style.display != "none";
 		}else{

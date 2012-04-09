@@ -51,17 +51,19 @@ http://localhost:8081/plugin/install.html#http://localhost:8081/maqetta/app/orio
 		
 		provider.registerServiceProvider("orion.navigate.command", {
 			run : function(item) {
-				return "/maqetta/?project=" + item.Name;
+				return "/maqetta/cmd/configProject?launch=true&project=" + item.Name;
 			}
 		}, {
 			image: "/maqetta/app/davinci/img/maqetta.png",
-			name: "Add Maqetta Settings and Open",
+			name: "Add Maqetta Settings & Open",
 			id: "setup.maqetta.project",
 			forceSingleItem: true,
 			href: true,
-			validationProperties: {"rootFolder":'true'},
+			validationProperties: {"maqettaProject":'false'},
 			tooltip: "Open this project in Maqetta Designer"
 		});	
+		
+		
 		
 		provider.connect();
 

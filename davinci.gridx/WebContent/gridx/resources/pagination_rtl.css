@@ -1,0 +1,54 @@
+/* Pagination RTL */
+
+.gridxRtl .gridxPagerDescriptionTD {
+	text-align: right;
+}
+
+.gridxRtl .gridxPagerSizeSwitchTD {
+	text-align: left;
+}
+
+.gridxRtl .gridxPager .gridxPagerGoto,
+.gridxRtl .gridxGotoPage .gridxGotoPageBtns {
+	text-align: left;
+}
+.gridxRtl .gridxPagerFirstPage {
+	background-position: -40px 4px;
+}
+.gridxRtl .gridxPagerFirstPageDisable {
+	background-position: -40px -16px;
+}
+
+.gridxRtl .gridxPagerPrevPage {
+	background-position: -19px 4px;
+}
+.gridxRtl .gridxPagerPrevPageDisable {
+	background-position: -19px -16px;
+}
+
+.gridxRtl .gridxPagerNextPage {
+	background-position: 1px 4px;
+}
+.gridxRtl .gridxPagerNextPageDisable {
+	background-position: 1px -16px;
+}
+
+.gridxRtl .gridxPagerLastPage {
+	background-position: -60px 4px;
+}
+.gridxRtl .gridxPagerLastPageDisable {
+	background-position: -60px -16px;
+}
+
+.dijitRtl .gridxGotoPage .gridxPageCountMsg {
+	padding-left: 0;
+	padding-right: 5px;
+}
+.dijitRtl .gridxGotoPage .gridxGotoPageBtns {
+	text-align: left;
+}
+
+/* PaginationBarDD */
+.gridxRtl .gridxPagerSizeSwitchDD {
+	text-align: left;
+}

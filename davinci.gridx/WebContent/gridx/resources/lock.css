@@ -1,0 +1,15 @@
+.gridxLockedCell {
+	position: absolute;
+	background-color: #ffffff;
+}
+
+/*Column Lock*/
+.gridxColumnLock .gridxRow {
+	overflow: hidden;
+}
+
+/*Row Lock*/
+.gridx .gridxBody .gridxLockedRow,
+.gridx .gridxBody .gridxLockedRow .gridxLockedCell {
+	background-color: #ffffe0 !important;
+}

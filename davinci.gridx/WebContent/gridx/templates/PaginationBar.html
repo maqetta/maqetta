@@ -1,0 +1,55 @@
+<div class='gridxPager'
+	><table class='gridxPagerInner' cellpadding="0" cellspacing="0" role="presentation"
+		><tr
+			><td class="gridxPagerDescriptionTD"
+				><div class="gridxPagerDescription"
+					data-dojo-attach-point="_descContainer"
+				></div
+			></td
+			><td class="gridxPagerStepperTD"
+				><div class="gridxPagerStepper"
+					data-dojo-attach-point="_pageStepperContainer"
+					><span class='gridxPagerStepperBtn gridxPagerPrevPage'
+						tabindex='${_tabIndex}'
+						title='${prevPageTitle}'
+						aria-label='${prevPageWai}'
+						pageindex='Prev',
+						data-dojo-attach-point='_prevPageBtn'
+						data-dojo-attach-event='onclick: _gotoPrevPage'
+						><span class='gridxPagerA11yInner'>&nbsp;&lt;</span
+					></span
+					><span class='gridxPagerPages'
+						data-dojo-attach-point='_pageBtnContainer'
+						data-dojo-attach-event='onclick: _gotoPage, onmouseover: _onHoverPageBtn, onmouseout: _onHoverPageBtn'
+					></span
+					><span class='gridxPagerStepperBtn gridxPagerNextPage'
+						tabindex='${_tabIndex}'
+						title='${nextPageTitle}'
+						aria-label='${nextPageWai}'
+						pageindex='Next',
+						data-dojo-attach-point='_nextPageBtn'
+						data-dojo-attach-event='onclick: _gotoNextPage'
+						><span class='gridxPagerA11yInner'>&nbsp;&gt;</span
+					></span
+				></div
+			></td
+			><td class="gridxPagerSizeSwitchTD"
+				><div class="gridxPagerSizeSwitch"
+					data-dojo-attach-point='_sizeSwitchContainer'
+					data-dojo-attach-event='onclick: _switchPageSize, onmouseover: _onHoverSizeBtn, onmouseout: _onHoverSizeBtn'
+				></div
+				><span></span
+			></td
+			><td class='gridxPagerGoto'
+				><span class='gridxPagerGotoBtn'
+					tabindex='${_tabIndex}'
+					title='${gotoBtnTitle}'
+					aria-label='${gotoBtnWai}'
+					data-dojo-attach-point='_gotoBtn'
+					data-dojo-attach-event='onclick: _showGotoDialog'
+					><span class='gridxPagerA11yInner'>&perp;</span
+				></span
+			></td
+		></tr
+	></table
+></div>

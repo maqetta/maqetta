@@ -1,0 +1,18 @@
+.claro .gridxRowOdd .gridxLockedCell {
+	background-color: #f1f8ff;
+}
+.claro .gridxRowOver .gridxLockedCell {
+	background:url("../images/row_back.png") #ABD6FF repeat-x;
+}
+
+.claro .gridxHeaderRow .gridxLockedCell {
+	background: #edf2f7; /* Old browsers */
+	background: -moz-linear-gradient(top,  #edf2f7 0%, #d0dfea 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#edf2f7), color-stop(100%,#d0dfea)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* IE10+ */
+	background: linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#edf2f7', endColorstr='#d0dfea',GradientType=0 ); /* IE6-9 */
+}
+

@@ -1,0 +1,27 @@
+<div class='gridxGotoPage'
+	><table><tbody
+		><tr><td class='gridxGotoPageMainMsg'>
+		${gotoDialogMainMsg}
+		</td></tr
+		><tr><td class='gridxGotoPageInput'
+			><input data-dojo-type='${numberTextBoxClass}'
+				class='gridxGotoPageInputBox'
+				data-dojo-attach-point='pageInputBox'
+				data-dojo-attach-event='onKeyUp: _updateStatus'></input
+			><span
+				class='gridxPageCountMsg'
+				data-dojo-attach-point='pageCountMsgNode'></span
+		></td></tr
+		><tr><td class='gridxGotoPageBtns'
+			><button data-dojo-type='${buttonClass}' 
+				data-dojo-attach-point='okBtn'
+				data-dojo-attach-event='onClick: _onOK'>
+				${gotoDialogOKBtn}
+			</button
+			><button data-dojo-type='${buttonClass}'
+				data-dojo-attach-event='onClick: _onCancel'>
+				${gotoDialogCancelBtn}
+			</button
+		></td></tr
+	></tbody></table
+></div>

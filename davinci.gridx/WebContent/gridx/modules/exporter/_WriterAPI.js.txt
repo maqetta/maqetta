@@ -1,0 +1,74 @@
+define([
+	'dojo/_base/declare'
+], function(declare){
+
+	//This is just an API file, similar to dojo.data.api.Read, should never be directly used
+
+/*=====
+	var __ExportContext = function(){
+		//columnIds: String[]
+		//		Available for header.
+		//column: Grid Column
+		//		Available for header cell or a body cell.
+		//row: Grid Row
+		//		Available for a row or a body cell.
+		//cell: Grid Cell
+		//		Available for a body cell
+	};
+=====*/
+
+	return declare(null, {
+
+		beforeHeader: function(/* __CSVExportArgs */ args, /* __ExportContext */ context){
+			//summary:
+			//		Triggered before exporting the header cells.
+			//return: Boolean|undefined
+			//		If return false, does not handle following header cells.
+		},
+
+		handleHeaderCell: function(/* __CSVExportArgs */ args, /* __ExportContext */ context){
+			//summary:
+			//		Triggered when exporting a header cell.
+		},
+
+		afterHeader: function(/* __CSVExportArgs */ args, /* __ExportContext */ context){
+			//summary:
+			//		Triggered when the header has been exported.
+		},
+
+		beforeBody: function(/* __CSVExportArgs */ args, /* __ExportContext */ context){
+			//summary:
+			//		Triggered before exporting the grid body.
+			//return: Boolean|undefined
+			//		If return false, does not handle any of the grid body content.
+		},
+
+		beforeRow: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
+			//summary:
+			//		Triggered before exporting a row.
+			//return: Boolean|undefined
+			//		If return false, does not handle the cells in this row.
+		},
+
+		handleCell: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
+			//summary:
+			//		Triggered when exporting a cell.
+		},
+
+		afterRow: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
+			//summary:
+			//		Triggered when a row has been exported.
+		},
+
+		afterBody: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
+			//summary:
+			//		Triggered when the grid body has been exported.
+		},
+
+		getResult: function(){
+			//summary:
+			//		This must be implemented.
+			return '';
+		}
+	});
+});

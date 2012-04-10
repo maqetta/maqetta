@@ -1,0 +1,45 @@
+.gridxTreeExpandoCell {
+	height: 100%;
+	position: relative;
+}
+
+.gridxTreeExpandoIcon {
+	background-image: url("images/treeExpandImages.png");
+	background-repeat:no-repeat;
+	background-position: 0 0;
+	height: 16px;
+	width: 16px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	cursor: pointer;
+}
+
+.gridx .gridxTreeExpandoLoading .gridxTreeExpandoIcon{
+	background-image: url('images/treeExpand_loading.gif');
+	background-position: 0 0;
+}
+
+.gridxTreeExpandoIcon:hover {
+	background-position: -18px 0;
+}
+
+.gridxTreeExpandoCellOpen .gridxTreeExpandoIcon {
+	background-position: -36px 0;
+}
+.gridxTreeExpandoCellOpen .gridxTreeExpandoIcon:hover {
+	background-position: -54px 0;
+}
+
+.gridxTreeExpandoIconNoChildren {
+	visibility: hidden;
+}
+
+.gridxTreeExpandoInner {
+	visibility: hidden;
+	text-align: center;
+}
+
+.dijit_a11y .gridxTreeExpandoInner {
+	visibility: visible;
+}

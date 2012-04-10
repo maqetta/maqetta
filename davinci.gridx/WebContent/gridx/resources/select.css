@@ -1,0 +1,28 @@
+/* row select */
+.gridxRowSelected .gridxRowTable {
+	background-color: #BFD6EB;
+}
+
+/* column select */
+.gridxRow .gridxColumnSelected {
+	background-color: #BFD6EB;
+}
+/* cell select */
+.gridxCellSelected {
+	background-color: #BFD6EB;
+}
+
+
+/*IndirectSelection*/
+th.gridxRowHeaderHeaderCell,
+.gridxRowHeaderCell {
+	text-align: center;
+}
+
+.gridxIndirectSelectionCheckBoxInner {
+	display: none;
+}
+
+.dijit_a11y .gridxIndirectSelectionCheckBoxInner {
+	display: inline;
+}

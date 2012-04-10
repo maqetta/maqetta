@@ -1,0 +1,60 @@
+<ul class="gridxFilterPaneForm">
+	<li><label>Column</label></li>
+	<li name="sltColumn">
+		<div data-dojo-type="dijit.form.Select" style="width:100%;"></div>
+	</li>
+	<li><label>Condition</label></li>
+	<li name="sltCondition">
+		<div data-dojo-type="dijit.form.Select"style="width:100%;"></div>
+	</li>
+	<li><label>Value</label></li>
+	
+	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneTextWrapper">
+		<input type="text" data-dojo-type="dijit.form.TextBox" intermediateChanges="true"
+		 style="width:100%;"/>
+	</li>
+	
+<!--            dropDownClass="gridx.modules.filter.DistinctComboBoxMenu"-->
+	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneComboWrapper">
+		<input type="text" data-dojo-type="dijit.form.ComboBox" 
+			intermediateChanges="true" autoComplete="false" queryExpr="*${0}*" 
+			style="width:100%;"/>
+	</li>
+	
+	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneNumberWrapper">
+		<input type="text" data-dojo-type="dijit.form.NumberTextBox" intermediateChanges="true" style="width:100%;"/>
+	</li>
+	
+	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneDateWrapper">
+		<div data-dojo-type="dijit.form.DateTextBox" intermediateChanges="true" style="width: 100%"></div>
+	</li>
+	
+	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneDateRangeWrapper">
+		<div data-dojo-type="dijit.form.DateTextBox" style="width:44%; float: left;" intermediateChanges="true"></div>
+		<div style="width:10%; text-align: center; float: left;">to</div>
+		<div data-dojo-type="dijit.form.DateTextBox" style="width:44%; float: right;" intermediateChanges="true"></div>
+	</li>
+	
+	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneTimeWrapper">
+		<div data-dojo-type="dijit.form.TimeTextBox" style="width: 100%" intermediateChanges="true"></div>
+	</li>
+	
+	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneTimeRangeWrapper">
+		<div data-dojo-type="dijit.form.TimeTextBox" style="width:44%; float: left;" intermediateChanges="true"></div>
+		<div style="text-align: center; float: left; width: 10%;">to</div>
+		<div data-dojo-type="dijit.form.TimeTextBox" style="width:44%; float: right;" intermediateChanges="true"></div>
+	</li>
+	
+	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneRadioWrapper">
+		<span style="width:49%; float:left;">
+			<div data-dojo-type="dijit.form.RadioButton" checked="true"></div><label for="">True</label>
+		</span>
+		<span style="width:49%; float: right;">
+			<div data-dojo-type="dijit.form.RadioButton"></div><label for="">False</label>
+		</span>
+	</li>
+	
+	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneSelectWrapper">
+		<div data-dojo-type="dijit.form.Select" style="width: 100%"></div>
+	</li>
+</ul>

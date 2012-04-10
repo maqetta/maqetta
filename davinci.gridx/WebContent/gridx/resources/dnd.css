@@ -1,0 +1,100 @@
+/* dnd */
+.gridxDnDReadyCursor {
+	cursor: move;
+}
+
+/*.gridxDnDCursor,*/
+.gridxCanNotDnD {
+	cursor: default;
+}
+.gridxDnDAnchor {
+	width:2px;
+	background-color: gray;
+	font-size:0em;
+	position:absolute;
+	z-index: 998;
+}
+.gridxDndAvatar {
+	background-color:white;
+	border: 1px solid #CCCCCC;
+	padding: 0px;
+	-moz-box-shadow: 5px 5px 7px #999;
+	-webkit-box-shadow: 5px 5px 7px #999;
+	box-shadow: 5px 5px 7px #999;
+	z-index: 999;
+}
+.gridxDndAvatar td {
+	padding: 3px;
+}
+.gridxDnDItemIcon {
+	background-image: url("images/sprite_icons.png");
+}
+.gridxDnDIcon,
+.gridxDnDItemIcon {
+	width: 16px;
+	height: 16px;
+}
+.dojoDndMove .gridxDnDIcon {
+	background: url(images/dndNoMove.png) no-repeat center center;
+}
+.dojoDndCopy .gridxDnDIcon {
+	background: url(images/dndNoCopy.png) no-repeat center center;
+}
+.dojoDndMove .dojoDndAvatarCanDrop .gridxDnDIcon {
+	background: url(images/dndMove.png) no-repeat center center;
+}
+.dojoDndCopy .dojoDndAvatarCanDrop .gridxDnDIcon {
+	background: url(images/dndCopy.png) no-repeat center center;
+}
+/* dnd row */
+.gridxDnDAnchorRow {
+	left: 0;
+	height: 2px;
+}
+.gridxDnDIconRowSingle {
+	background-position: -256px 7px;
+}
+.gridxDnDIconRowMulti {
+	background-position: -256px -13px;
+}
+/* dnd column */
+.gridxDnDAnchorColumn {
+	top: 0;
+	width: 2px;
+}
+.gridxDnDIconColumnSingle {
+	background-position: -277px 3px;
+}
+.gridxDnDIconColumnMulti {
+	background-position: -277px -17px;
+}
+/* dnd cell */
+.gridxDnDAnchorCell {
+	position: relative;
+	background-color: transparent;
+}
+.gridxDnDIconCellSingle {
+	background-position: -234px 6px;
+}
+.gridxDnDIconCellMulti {
+	background-position: -234px -15px;
+}
+.gridxCellBorderLeftTopDIV {
+	position: absolute;
+	left: 0;
+	top: 0;
+	border-style: solid;
+	border-width: 2px 0 0 2px;
+	border-color: gray transparent transparent gray;
+}
+.gridxCellBorderRightBottomDIV {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	border-style: solid;
+	border-width: 0 2px 2px 0;
+	border-color: transparent gray gray transparent;
+}
+.gridxDnDCellMask {
+	background-color: #ee5555;
+}

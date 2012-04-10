@@ -1,0 +1,67 @@
+/*common*/
+.claro .gridx {
+	background-color: #fff;
+	border: 1px solid #DBDBDB;
+	color: #131313;
+}
+
+/*Body*/
+.claro .gridxRow {
+/*    background:url("../images/row_back.png") #ffffff repeat-x;*/
+}
+
+.claro .gridxCell{
+	border-color: transparent #E5DAC8 #E5DAC8 transparent;
+}
+.claro .gridxRowOdd .gridxRowTable {
+	background-color: #f1f8ff;
+}
+.claro .gridx .gridxRowOver .gridxRowTable,
+.claro .gridx .gridxRowOver .gridxCell {
+	background:url("../images/row_back.png") #ABD6FF repeat-x;
+}
+
+/*Header*/
+.claro .gridxHeaderRow {
+	border-top: 1px solid #FFFFFF;
+	border-bottom: 1px solid #FFFFFF;
+	clear: both;
+}
+
+.claro .gridxHeaderRow table,
+.claro .gridxRowHeaderRow table,
+.claro .gridxRow .gridxRowTable {
+	border-collapse: separate;
+}
+
+.dj_ie7 .claro .gridxRowHeaderRow table {
+	border-collapse: collapse;
+}
+
+.claro .gridxHeaderRowInner {
+	background-image: url('../images/claro-grid-header-onepixel.bmp');
+	background-position: right;
+	background-repeat: repeat-y;
+	border-right: 1px solid #FFFFFF;
+}
+
+.claro .gridxHeaderRow .gridxCell {
+	border-color: #EDF2F7 #BCBCBC #D0DFEA #FFFFFF;
+}
+
+.claro .gridxHeaderRow {
+	background: #edf2f7; /* Old browsers */
+	background: -moz-linear-gradient(top,  #edf2f7 0%, #d0dfea 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#edf2f7), color-stop(100%,#d0dfea)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* IE10+ */
+	background: linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#edf2f7', endColorstr='#d0dfea',GradientType=0 ); /* IE6-9 */
+}
+
+.claro .gridxHeaderRow .gridxHeaderCellOver {
+	background-color: #9bcaf7;
+	border-top-color: #9BCAF7;
+/*    border-bottom-color: #9BCAF7;*/
+}

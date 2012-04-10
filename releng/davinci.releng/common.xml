@@ -36,6 +36,7 @@
         <populateDir project="davinci.product" extPath="/releng/" isFeature="true"/>
         <populateDir project="davinci.product" extPath="/releng/" />
         <populateDir project="davinci.dojo_1_7"/>
+        <populateDir project="davinci.gridx"/>
     	<populateDir project="davinci.server.gzip"/>
         <populateDir project="davinci.html"/>
         <populateDir project="maqetta.clipart"/>

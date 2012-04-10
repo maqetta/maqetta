@@ -1,0 +1,33 @@
+/* pagination bar */
+.claro .gridxPager {
+/*    background: url("images/header_shadow.png") repeat-x scroll center bottom #eaf1f6;*/
+	background-color: #eaf1f6;
+	padding: 3px 9px;
+	border-top: 1px solid #dbdbdb;
+}
+
+.claro .gridxPagerNodeFocus {
+	border: 1px dotted darkblue;
+}
+
+.claro .gridxPagerStepperBtn,	
+.claro .gridxPagerSizeSwitchBtn {
+	margin: 0 5px;
+	color: #5D88AF;
+}
+
+.claro .gridxPagerSizeSwitchBtn {
+	margin: 0 7px;
+}
+
+.claro .gridxPagerStepperBtnHover,
+.claro .gridxPagerSizeSwitchBtnHover {
+	text-decoration: underline;
+/*    font-weight: bold;*/
+}
+
+.claro .gridxPagerStepperBtnActive,
+.claro .gridxPagerSizeSwitchBtnActive {
+	color: black;
+	font-weight: bold;
+}

@@ -1,0 +1,20 @@
+/* Body */
+.gridxRtl .gridxRow .gridxCell {
+	border-color: transparent transparent #ccc #ccc;
+	text-align: right;
+}
+
+/* VScroller */
+.gridxRtl .gridxVScroller {
+	right: auto;
+	left: 0;
+}
+
+/* RowHeader */
+.gridxRtl .gridxRowHeaderHeader,
+.gridxRtl .gridxRowHeaderBody {
+	right: 0;
+	left: auto;
+	border-right: none;
+	border-left: 1px solid #E5DAC8;
+}

@@ -24,6 +24,17 @@ http://localhost:8081/plugin/install.html#http://localhost:8081/maqetta/app/orio
 			a.href = url; // set string url
 			return a.href;
 		}
+		
+		function fullPath(item){
+			var path = "";
+			var parent = item;
+			while(!parent.hasOwnProperty("Projects")){
+				path = path + "/" + parent.Name;
+				parent = parent.parent;
+			}
+			return path;
+		}
+		
 		/* register a link to the orion landing page */
 		provider.registerServiceProvider("orion.help.task",serviceImpl,	{
 							image : "/maqetta/app/davinci/img/maqetta-large-log.png",
@@ -37,7 +48,7 @@ http://localhost:8081/plugin/install.html#http://localhost:8081/maqetta/app/orio
 		});
 		provider.registerServiceProvider("orion.navigate.command", {
 			run : function(item) {
-				return "/maqetta/?project=" + item.Name;
+				return "/maqetta/?project=" + fullPath(item);
 			}
 		}, {
 			image: "/maqetta/app/davinci/img/maqetta.png",
@@ -51,7 +62,7 @@ http://localhost:8081/plugin/install.html#http://localhost:8081/maqetta/app/orio
 		
 		provider.registerServiceProvider("orion.navigate.command", {
 			run : function(item) {
-				return "/maqetta/cmd/configProject?launch=true&project=" + item.Name;
+				return "/maqetta/cmd/configProject?launch=true&project=" + fullPath(item);
 			}
 		}, {
 			image: "/maqetta/app/davinci/img/maqetta.png",

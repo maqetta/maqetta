@@ -15,6 +15,7 @@ import java.util.Vector;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
 public class VDirectory implements IVResource {
@@ -183,12 +184,15 @@ public class VDirectory implements IVResource {
         if (childName != null && childName.equals(".")) {
             return this;
         }
-
-        for (int i = 0; i < this.children.size(); i++) {
-            IVResource child = (IVResource) children.get(i);
-            if (child != null && child.getName().equals(childName)) {
-                return child;
-            }
+        IPath pathSplit = new Path(childName);
+        
+        for(int k=0;k<pathSplit.segmentCount();k++){
+	        for (int i = 0; i < this.children.size(); i++) {
+	            IVResource child = (IVResource) children.get(i);
+	            if (child != null && child.getName().equals(pathSplit.segment(k))) {
+	                return child.get(pathSplit.removeFirstSegments(k+1).toString());
+	            }
+	        }
         }
         return null;
     }

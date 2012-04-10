@@ -31,42 +31,77 @@ public class MaqettaProjectDecorator implements IWebResourceDecorator {
 	public void addAtributesFor(HttpServletRequest request, URI resource,JSONObject representation) {
 		IPath resourcePath = new Path(resource.getPath());
 		
-		if (!"/workspace".equals(request.getServletPath())) //$NON-NLS-1$
-			return;
-		if (resourcePath.segmentCount() != 2)
-			return;
-		try {
-			JSONArray projObjects = representation.getJSONArray("Children");
-			for (int i = 0; i < projObjects.length(); i++) {
-				JSONObject projectObject = (JSONObject) projObjects.get(i);
-				if (checkMaqettaProject(projectObject)){
-					projectObject.put(IDavinciServerConstants.MAQETTA_PROJECT, true);
-				}else{
-					projectObject.put("maqettaProject", false);
-				}
-			}
-		} catch (JSONException e) {
+		if ("/workspace".equals(request.getServletPath()) && resourcePath.segmentCount() == 2) {
 			try {
-				if(checkMaqettaProject(representation))
-					representation.put(IDavinciServerConstants.MAQETTA_PROJECT, true);
-				else
-					representation.put("rootFolder", true);
-			} catch (JSONException e1) {
+				JSONArray projObjects = representation.getJSONArray("Children");
+				for (int i = 0; i < projObjects.length(); i++) {
+					JSONObject projectObject = (JSONObject) projObjects.get(i);
+					if (checkMaqettaProject(projectObject)){
+						projectObject.put(IDavinciServerConstants.MAQETTA_PROJECT, true);
+					}else{
+						projectObject.put("maqettaProject", false);
+					}
+				}
+			} catch (JSONException e) {
+				try {
+					if(checkMaqettaProject(representation))
+						representation.put(IDavinciServerConstants.MAQETTA_PROJECT, true);
+					else
+						representation.put("rootFolder", true);
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (CoreException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+			} catch (CoreException e) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (CoreException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+				e.printStackTrace();
+			} 
+		}else if("/file".equals(request.getServletPath()) ){
+			try {
+				
+				/* if we get here, we're getting file contents from workspace. so need a way to check if its already a project
+				 * 
+				 */
+				
+			
+				JSONArray projObjects = representation.getJSONArray("Children");
+				for (int i = 0; i < projObjects.length(); i++) {
+					JSONObject projectObject = (JSONObject) projObjects.get(i);
+					if(projectObject.getBoolean("Directory"))
+						projectObject.put("maqettaProject", false);
+				
+				}
+				
+			} catch (JSONException e) {
+				try {
+					if(checkMaqettaProject(representation))
+						representation.put(IDavinciServerConstants.MAQETTA_PROJECT, true);
+					else
+						representation.put("rootFolder", true);
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (CoreException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+			} 
+		}
+			
+		
 
 	}
 	private boolean checkMaqettaProject(JSONObject projectObject) throws JSONException, CoreException{
-	
-		WebProject project = WebProject.fromId(projectObject.getString("Id"));
+		WebProject project = null;
+		try{
+			project = WebProject.fromId(projectObject.getString("Id"));
+		}catch(Exception ex){
+			System.out.println("I am error:" + ex);
+			
+		}
 		IFileStore settings;
 		settings = project.getProjectStore().getChild(IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
 		if (settings == null)

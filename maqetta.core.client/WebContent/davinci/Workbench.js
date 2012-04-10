@@ -217,7 +217,8 @@ var Workbench = {
 		                                                   // requires djConfig.ioPublish be set to true in pagedesigner.html
 
 		Runtime.subscribe("/davinci/states/state/changed",
-			function(node, newState, oldState) {
+			function(e) {
+				// e:{node:..., newState:..., oldState:...}
 				var currentEditor = Runtime.currentEditor;
 				// ignore updates in theme editor and review editor
 				if ((currentEditor.declaredClass != "davinci.ve.themeEditor.ThemeEditor" &&

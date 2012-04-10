@@ -27,7 +27,7 @@ davinci.maqetta.States.prototype = {
 	 */ 
 	getStates: function(node, associative){
 //console.trace();
-		node = this._getWidget(node); 
+		node = this._getWidgetNode(node); 
 		var names = associative ? {"Normal": "Normal"} : ["Normal"];
 		var states = node && node.states;
 		if (states) {
@@ -44,7 +44,7 @@ davinci.maqetta.States.prototype = {
 		return names;
 	},
 	
-	_getWidget: function(node) {
+	_getWidgetNode: function(node) {
 //console.trace();
 		if (!node) {
 			var doc = this.getDocument();
@@ -67,7 +67,7 @@ davinci.maqetta.States.prototype = {
 			state = arguments[0];
 			node = undefined;
 		}
-		node = this._getWidget(node);
+		node = this._getWidgetNode(node);
 		return !!(node && node.states && node.states[state] && (property || node.states[state].origin));
 	},
 
@@ -85,7 +85,7 @@ davinci.maqetta.States.prototype = {
 	 */
 	getState: function(node){ 
 //console.trace();
-		node = this._getWidget(node);
+		node = this._getWidgetNode(node);
 		return node && node.states && node.states.current;
 	},
 	
@@ -103,7 +103,7 @@ davinci.maqetta.States.prototype = {
 			newState = arguments[0];
 			node = undefined;
 		}
-		node = this._getWidget(node);
+		node = this._getWidgetNode(node);
 		if (!node || !node.states || (!updateWhenCurrent && node.states.current == newState)) {
 			return;
 		}
@@ -129,7 +129,11 @@ davinci.maqetta.States.prototype = {
 	 */
 	resetState: function(node){
 //console.trace();
-		var currentState = this.getState(node.getContext().rootWidget);
+		if(!node || !node.ownerDocument || !node.ownerDocument.body){
+			return;
+		}
+		var body = node.ownerDocument.body;
+		var currentState = this.getState(body);
 		if(!this.isNormalState(currentState)){
 			this.setState(node, currentState, true/*updateWhenCurrent*/, false /*silent*/);
 		}		
@@ -155,7 +159,7 @@ davinci.maqetta.States.prototype = {
 	getStyle: function(node, state, name) {
 //console.trace();
 		var styleArray;
-		node = this._getWidget(node);
+		node = this._getWidgetNode(node);
 		if (arguments.length == 1) {
 			state = this.getState();
 		}
@@ -180,7 +184,7 @@ davinci.maqetta.States.prototype = {
 
 	hasStyle: function(node, state, name) {
 //console.trace();
-		node = this._getWidget(node);
+		node = this._getWidgetNode(node);
 
 		if (!node || !name) { return; }
 		
@@ -208,7 +212,7 @@ davinci.maqetta.States.prototype = {
 	 */
 	setStyle: function(node, state, styleArray, silent) {
 //console.trace();
-		node = this._getWidget(node);
+		node = this._getWidgetNode(node);
 
 		if (!node || !styleArray) { return; }
 			
@@ -336,7 +340,7 @@ davinci.maqetta.States.prototype = {
 	
 	_update: function(node, newState, oldState) {
 //console.trace();
-		node = this._getWidget(node);
+		node = this._getWidgetNode(node);
 		if (!node){
 			return;
 		}
@@ -384,7 +388,7 @@ davinci.maqetta.States.prototype = {
 	},
 	
 	getContainer: function() {
-		return this._getWidget();
+		return this._getWidgetNode();
 	},
 	
 	/**
@@ -397,7 +401,7 @@ davinci.maqetta.States.prototype = {
 			state = arguments[0];
 			node = undefined;
 		}
-		node = this._getWidget(node);
+		node = this._getWidgetNode(node);
 		if (!node || this.hasState(node, state)) {
 			//FIXME: This should probably be an error of some sort
 			return;
@@ -418,7 +422,7 @@ davinci.maqetta.States.prototype = {
 			state = arguments[0];
 			node = undefined;
 		}
-		node = this._getWidget(node);
+		node = this._getWidgetNode(node);
 		if (!node || !this.hasState(node, state)) {
 			return;
 		}
@@ -446,7 +450,7 @@ davinci.maqetta.States.prototype = {
 			oldName = arguments[0];
 			node = undefined;
 		}
-		node = this._getWidget(node);
+		node = this._getWidgetNode(node);
 		if (!node || !this.hasState(node, oldName, property) || this.hasState(node, newName, property)) {
 			return false;
 		}
@@ -467,7 +471,7 @@ davinci.maqetta.States.prototype = {
 		if (arguments.length == 1) {
 			state = this.getState();
 		}
-		node = this._getWidget(node);
+		node = this._getWidgetNode(node);
 		if (!node){
 			return;
 		}

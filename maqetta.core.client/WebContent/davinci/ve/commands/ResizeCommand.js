@@ -46,7 +46,7 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 
 		//var cleanValues = { width: this._newBox.w, height: this._newBox.h };
 		var cleanValues = [{ width: this._newBox.w}, {height: this._newBox.h }];
-		States.setStyle(widget, this._state, cleanValues, isNormalState);
+		States.setStyle(widget.domNode, this._state, cleanValues, isNormalState);
 
 		if (isNormalState) {
 			dojo.contentBox(node, this._newBox);
@@ -54,7 +54,7 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 		}
 		
 		// Recompute styling properties in case we aren't in Normal state
-		States.resetState(widget);
+		States.resetState(widget.domNode);
 		
 		//FIXME: Various widget changed events (/davinci/ui/widget*Changed) need to be cleaned up.
 		// I defined yet another one here (widgetPropertiesChanged) just before Preview3
@@ -82,7 +82,7 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 		this._resize(widget);
 		
 		// Recompute styling properties in case we aren't in Normal state
-		States.resetState(widget);
+		States.resetState(widget.domNode);
 		
 		dojo.publish("/davinci/ui/widgetPropertiesChanged",[[widget]]);
 	},

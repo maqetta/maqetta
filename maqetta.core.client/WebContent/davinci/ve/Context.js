@@ -1418,7 +1418,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
 					
 					/*
-					var state = davinci.ve.states.getState(null);
+					var state = davinci.ve.states.getState();
 					if (state) { // remember which widgets have state other than normal so we can trigger a set later to update styles of their children
 						currentStateCache.push({ node: widget.domNode, state: state});
 					}

@@ -11,7 +11,7 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 //console.trace();
 		this.inherited(arguments);
 		
-		node = this._getWidget(node);
+		node = this._getWidgetNode(node);
 		if (!node){
 			return;
 		}
@@ -144,7 +144,7 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 		}
 	},
 
-	_getWidget: function(node) {
+	_getWidgetNode: function(node) {
 		if (!node) {
 			var doc = this.getDocument();
 			node = doc && doc.body;

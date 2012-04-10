@@ -143,7 +143,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this._hideShowToolBar();
 	},
 	
-	_getWidget: function() {
+	_getRootNode: function() {
 		var currentEditor = this._editor, doc;
 		if (currentEditor && currentEditor.getContext) {
 			var context = currentEditor.getContext();
@@ -246,7 +246,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_updateList: function() {
-		var latestStates = States.getStates(this._getWidget(), true), 
+		var latestStates = States.getStates(this._getRootNode(), true), 
 			storedScenes = this._getScenes();
 		if(!this._editor || !latestStates || !storedScenes){
 			return;
@@ -334,7 +334,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		
 		// First see if the current Tree is showing the current AppState.
 		// If so, update the Tree to select that AppState
-		var currentState = States.getState(this._getWidget());
+		var currentState = States.getState(this._getRootNode());
 		if(!currentState){
 			currentState = 'Normal';
 		}
@@ -646,7 +646,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			if(!context || !context._statesLoaded){
 				return;
 			}
-			var latestStates = States.getStates(this._getWidget(), true);
+			var latestStates = States.getStates(this._getRootNode(), true);
 			if(!latestStates){
 				return;
 			}

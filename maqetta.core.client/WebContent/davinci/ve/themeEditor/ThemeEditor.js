@@ -73,7 +73,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 
 
 	_widgetStateChanged : function (e){
-		if(!this.isActiveEditor() || !e || !e.node || !e.node._dvWidget) {
+		if(!this.isActiveEditor() || !e) {
 			return;
 		}
 		if (e.origin && e.origin.indexOf("davinci.ve.themeEditor.commands.")>-1){
@@ -83,13 +83,14 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 		if (this._currentSelectionRules) {
 			delete this._currentSelectionRules;
 		}
-		if (e.node._dvWidget.processingUndoRedo){
-			delete e.node._dvWidget.processingUndoRedo; // this is a hack to get around the event firing on a undo from the outline view
+		var widget = e.widget;
+		if (widget && widget.processingUndoRedo){
+			delete widget.processingUndoRedo; // this is a hack to get around the event firing on a undo from the outline view
 			return;
 		}
 
 		this.getContext().getCommandStack().execute(new StateChangeCommand({_themeEditor: this,
-			_widget: e.node._dvWidget, _newState: e.newState, _oldState: e.oldState, _firstRun: true
+			_widget: widget, _newState: e.newState, _oldState: e.oldState, _firstRun: true
 		}));
 		
 		

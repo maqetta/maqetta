@@ -62,7 +62,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		//for(var i=0;i<cleanValues.length;i++){
 			//veStates.setStyle(widget, this._state, cleanValues[i], isNormalState);			
 		//}
-		veStates.setStyle(widget, this._state, cleanValues, isNormalState);			
+		veStates.setStyle(widget.domNode, this._state, cleanValues, isNormalState);			
 
 		if (isNormalState) {
 			cleanValues = this._mergeProperties(cleanValues, this._oldValues);			
@@ -70,7 +70,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 			this._refresh(widget);
 			
 			// Recompute styling properties in case we aren't in Normal state
-			veStates.resetState(widget);
+			veStates.resetState(widget.domNode);
 		}else{
 			this._refresh(widget);
 		}
@@ -117,7 +117,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		this._refresh(widget);
 		
 		// Recompute styling properties in case we aren't in Normal state
-		require("davinci/ve/States").resetState(widget);
+		require("davinci/ve/States").resetState(widget.domNode);
 		
 		//FIXME: Various widget changed events (/davinci/ui/widget*Changed) need to be cleaned up.
 		// I defined yet another one here (widgetPropertiesChanged) just before Preview3

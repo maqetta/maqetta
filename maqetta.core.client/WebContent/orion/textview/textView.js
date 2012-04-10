@@ -9,10 +9,10 @@
  * Contributors: 
  *		Felipe Heidrich (IBM Corporation) - initial API and implementation
  *		Silenio Quarti (IBM Corporation) - initial API and implementation
- *		Mihai Sucan (Mozilla Foundation) - fix for Bug#334583 Bug#348471 Bug#349485 Bug#350595 Bug#360726 Bug#361180 Bug#362835 Bug#362428 Bug#362286 Bug#354270 Bug#361474 Bug#363945 Bug#366312
+ *		Mihai Sucan (Mozilla Foundation) - fix for Bug#334583 Bug#348471 Bug#349485 Bug#350595 Bug#360726 Bug#361180 Bug#362835 Bug#362428 Bug#362286 Bug#354270 Bug#361474 Bug#363945 Bug#366312 Bug#370584
  ******************************************************************************/
 
-/*global window document navigator setTimeout clearTimeout XMLHttpRequest define */
+/*global window document navigator setTimeout clearTimeout setInterval clearInterval define */
 
 define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/keyBinding', 'orion/textview/eventTarget'], function(mTextModel, mKeyBinding, mEventTarget) {
 
@@ -49,6 +49,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 	var isW3CEvents = typeof window.document.documentElement.addEventListener === "function";
 	var isRangeRects = (!isIE || isIE >= 9) && typeof window.document.createRange().getBoundingClientRect === "function";
 	var platformDelimiter = isWindows ? "\r\n" : "\n";
+	var scrollButtonHeight = isPad ? 0 : 17;
 	
 	/** 
 	 * Constructs a new Selection object.
@@ -136,9 +137,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 	 * @property {orion.textview.TextModel} [model] the text model for the view. If it is not set the view creates an empty {@link orion.textview.TextModel}.
 	 * @property {Boolean} [readonly=false] whether or not the view is read-only.
 	 * @property {Boolean} [fullSelection=true] whether or not the view is in full selection mode.
-	 * @property {Boolean} [sync=false] whether or not the view creation should be synchronous (if possible).
-	 * @property {Boolean} [expandTab=false] whether or not the tab key inserts white spaces
-	 * @property {String|String[]} [stylesheet] one or more stylesheet URIs for the view.
+	 * @property {Boolean} [expandTab=false] whether or not the tab key inserts white spaces.
 	 * @property {String} [themeClass] the CSS class for the view theming.
 	 * @property {Number} [tabSize] The number of spaces in a tab.
 	 */
@@ -159,14 +158,30 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 	
 	TextView.prototype = /** @lends orion.textview.TextView.prototype */ {
 		/**
-		 * Adds a ruler to the text view.
+		 * Adds a ruler to the text view at the specified position.
+		 * <p>
+		 * The position is relative to the ruler location.
+		 * </p>
 		 *
 		 * @param {orion.textview.Ruler} ruler the ruler.
+		 * @param {Number} [index=length] the ruler index.
 		 */
-		addRuler: function (ruler) {
-			this._rulers.push(ruler);
+		addRuler: function (ruler, index) {
 			ruler.setView(this);
-			this._createRuler(ruler);
+			var rulers = this._rulers;
+			if (index !== undefined) {
+				var i, sideIndex;
+				for (i = 0, sideIndex=0; i < rulers.length && sideIndex < index; i++) {
+					if (ruler.getLocation() === rulers[i].getLocation()) {
+						sideIndex++;
+					}
+				}
+				rulers.splice(sideIndex, 0, ruler);
+				index = sideIndex;
+			} else {
+				rulers.push(ruler);
+			}
+			this._createRuler(ruler, index);
 			this._updatePage();
 		},
 		computeSize: function() {
@@ -186,7 +201,6 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				clientDiv.style.width = (0x7FFFF).toString() + "px";
 			}
 			var lineCount = model.getLineCount();
-			var document = this._frameDocument;
 			for (var lineIndex=0; lineIndex<lineCount; lineIndex++) {
 				var child = this._getLineNode(lineIndex), dummy = null;
 				if (!child || child.lineChanged || child.lineRemoved) {
@@ -201,8 +215,8 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				clientDiv.style.width = clientWidth;
 			}
 			var viewPadding = this._getViewPadding();
-			w += viewPadding.right - viewPadding.left;
-			h += viewPadding.bottom - viewPadding.top;
+			w += viewPadding.right + viewPadding.left;
+			h += viewPadding.bottom + viewPadding.top;
 			return {width: w, height: h};
 		},
 		/**
@@ -211,7 +225,6 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 		 * <ul>
 		 *   <li>"document" - relative to document, the origin is the top-left corner of first line</li>
 		 *   <li>"page" - relative to html page that contains the text view</li>
-		 *   <li>"view" - relative to text view, the origin is the top-left corner of the view container</li>
 		 * </ul>
 		 * </p>
 		 * <p>All methods in the view that take or return a position are in the document coordinate space.</p>
@@ -233,44 +246,23 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			if (!this._clientDiv) { return; }
 			var scroll = this._getScroll();
 			var viewPad = this._getViewPadding();
-			var frame = this._frame.getBoundingClientRect();
 			var viewRect = this._viewDiv.getBoundingClientRect();
-			switch(from) {
-				case "document":
-					if (rect.x !== undefined) {
-						rect.x += - scroll.x + viewRect.left + viewPad.left;
-					}
-					if (rect.y !== undefined) {
-						rect.y += - scroll.y + viewRect.top + viewPad.top;
-					}
-					break;
-				case "page":
-					if (rect.x !== undefined) {
-						rect.x += - frame.left;
-					}
-					if (rect.y !== undefined) {
-						rect.y += - frame.top;
-					}
-					break;
+			if (from === "document") {
+				if (rect.x !== undefined) {
+					rect.x += - scroll.x + viewRect.left + viewPad.left;
+				}
+				if (rect.y !== undefined) {
+					rect.y += - scroll.y + viewRect.top + viewPad.top;
+				}
 			}
 			//At this point rect is in the widget coordinate space
-			switch (to) {
-				case "document":
-					if (rect.x !== undefined) {
-						rect.x += scroll.x - viewRect.left - viewPad.left;
-					}
-					if (rect.y !== undefined) {
-						rect.y += scroll.y - viewRect.top - viewPad.top;
-					}
-					break;
-				case "page":
-					if (rect.x !== undefined) {
-						rect.x += frame.left;
-					}
-					if (rect.y !== undefined) {
-						rect.y += frame.top;
-					}
-					break;
+			if (to === "document") {
+				if (rect.x !== undefined) {
+					rect.x += scroll.x - viewRect.left - viewPad.left;
+				}
+				if (rect.y !== undefined) {
+					rect.y += scroll.y - viewRect.top - viewPad.top;
+				}
 			}
 			return rect;
 		},
@@ -291,18 +283,12 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			}
 			this.rulers = null;
 			
-			/*
-			* Note that when the frame is removed, the unload event is trigged
-			* and the view contents and handlers is released properly by
-			* destroyView().
-			*/
-			this._destroyFrame();
+			this._destroyView();
 
 			var e = {type: "Destroy"};
 			this.onDestroy(e);
 
 			this._parent = null;
-			this._parentDocument = null;
 			this._model = null;
 			this._selection = null;
 			this._doubleClickSelection = null;
@@ -322,12 +308,8 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			* The fix is to call _updateDOMSelection() before calling focus().
 			*/
 			this._updateDOMSelection();
-			if (isPad) {
-				this._textArea.focus();
-			} else {
-				if (isOpera) { this._clientDiv.blur(); }
-				this._clientDiv.focus();
-			}
+			if (isOpera) { this._clientDiv.blur(); }
+			this._clientDiv.focus();
 			/*
 			* Feature in Safari. When focus is called the browser selects the clientDiv
 			* itself. The fix is to call _updateDOMSelection() after calling focus().
@@ -641,7 +623,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			var scroll = this._getScroll();
 			var viewRect = this._viewDiv.getBoundingClientRect();
 			var viewPad = this._getViewPadding();
-			var lineIndex = this._getYToLine(y - scroll.y);
+			var lineIndex = this._getYToLine(y - scroll.y + viewRect.top + viewPad.top);
 			x += -scroll.x + viewRect.left + viewPad.left;
 			var offset = this._getXToOffset(lineIndex, x);
 			return offset;
@@ -755,6 +737,13 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				}
 			}
 			return false;
+		},
+		/**
+		* Returns if the view is destroyed.
+		* @returns {Boolean} <code>true</code> if the view is destroyed.
+		*/
+		isDestroyed: function () {
+			return !this._clientDiv;
 		},
 		/** 
 		 * @class This is the event sent when the user right clicks or otherwise invokes the context menu of the view. 
@@ -872,24 +861,6 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 		 */
 		onLineStyle: function(lineStyleEvent) {
 			return this.dispatchEvent(lineStyleEvent);
-		},
-		/**
-		 * @class This is the event sent when the text view has loaded its contents.
-		 * <p>
-		 * <b>See:</b><br/>
-		 * {@link orion.textview.TextView}<br/>
-		 * {@link orion.textview.TextView#event:onLoad}
-		 * </p>		 
-		 * @name orion.textview.LoadEvent
-		 */
-		/**
-		 * This event is sent when the text view has loaded its contents.
-		 *
-		 * @event
-		 * @param {orion.textview.LoadEvent} loadEvent the event
-		 */
-		onLoad: function(loadEvent) {
-			return this.dispatchEvent(loadEvent);
 		},
 		/**
 		 * @class This is the event sent when the text in the model has changed.
@@ -1052,24 +1023,6 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			return this.dispatchEvent(verifyEvent);
 		},
 		/**
-		 * @class This is the event sent when the text view has unloaded its contents.
-		 * <p>
-		 * <b>See:</b><br/>
-		 * {@link orion.textview.TextView}<br/>
-		 * {@link orion.textview.TextView#event:onLoad}
-		 * </p>		 
-		 * @name orion.textview.UnloadEvent
-		 */
-		/**
-		 * This event is sent when the text view has unloaded its contents.
-		 *
-		 * @event
-		 * @param {orion.textview.UnloadEvent} unloadEvent the event
-		 */
-		onUnload: function(unloadEvent) {
-			return this.dispatchEvent(unloadEvent);
-		},
-		/**
 		 * @class This is the event sent when the text view is focused.
 		 * <p>
 		 * <b>See:</b><br/>
@@ -1212,6 +1165,10 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 					break;
 				}
 			}
+		},
+		resize: function() {
+			if (!this._clientDiv) { return; }
+			this._handleResize(null);
 		},
 		/**
 		 * Associates an application defined handler to an action name.
@@ -1395,38 +1352,16 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 		 */
 		setOptions: function (options) {
 			var defaultOptions = this._defaultOptions();
-			var recreate = false, option, created = this._clientDiv;
-			if (created) {
-				for (option in options) {
-					if (options.hasOwnProperty(option)) {
-						if (defaultOptions[option].recreate) {
-							recreate = true;
-							break;
-						}
-					}
-				}
-			}
-			var changed = false;
-			for (option in options) {
+			for (var option in options) {
 				if (options.hasOwnProperty(option)) {
 					var newValue = options[option], oldValue = this["_" + option];
 					if (this._compare(oldValue, newValue)) { continue; }
-					changed = true;
-					if (!recreate) {
-						var update = defaultOptions[option].update;
-						if (created && update) {
-							update.call(this, newValue);
-							continue;
-						}
+					var update = defaultOptions[option] ? defaultOptions[option].update : null;
+					if (update) {
+						update.call(this, newValue);
+						continue;
 					}
 					this["_" + option] = this._clone(newValue);
-				}
-			}
-			if (changed) {
-				if (recreate) {
-					var oldParent = this._frame.parentNode;
-					oldParent.removeChild(this._frame);
-					this._parent.appendChild(this._frame);
 				}
 			}
 		},
@@ -1562,25 +1497,31 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 		showSelection: function() {
 			return this._showCaret(true);
 		},
+		update: function(styleChanged, sync) {
+			if (!this._clientDiv) { return; }
+			if (styleChanged) {
+				this._updateStyle();
+			}
+			if (sync === undefined || sync) {
+				this._updatePage();
+			} else {
+				this._queueUpdatePage();
+			}
+		},
 		
 		/**************************************** Event handlers *********************************/
-		_handleBodyMouseDown: function (e) {
+		_handleRootMouseDown: function (e) {
 			if (!e) { e = window.event; }
-			if (isFirefox) {
+			if (isFirefox && e.which === 1) {
 				this._clientDiv.contentEditable = false;
 				(this._overlayDiv || this._clientDiv).draggable = true;
 				this._ignoreBlur = true;
 			}
 			
-			/*
-			 * Prevent clicks outside of the view from taking focus 
-			 * away the view. Note that in Firefox and Opera clicking on the 
-			 * scrollbar also take focus from the view. Other browsers
-			 * do not have this problem and stopping the click over the 
-			 * scrollbar for them causes mouse capture problems.
-			 */
-			var topNode = isOpera || (isFirefox && !this._overlayDiv) ? this._clientDiv : this._overlayDiv || this._viewDiv;
-			
+			/* Prevent clicks outside of the client div from taking focus away. */
+			var topNode = this._overlayDiv || this._clientDiv;
+			/* Use view div on IE 8 otherwise it is not possible to scroll. */
+			if (isIE < 9) { topNode = this._viewDiv; }
 			var temp = e.target ? e.target : e.srcElement;
 			while (temp) {
 				if (topNode === temp) {
@@ -1591,17 +1532,20 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			if (e.preventDefault) { e.preventDefault(); }
 			if (e.stopPropagation){ e.stopPropagation(); }
 			if (!isW3CEvents) {
-				/* In IE 8 is not possible to prevent the default handler from running
-				*  during mouse down event using usual API. The workaround is to use
-				*  setCapture/releaseCapture. 
+				/*
+				* In IE 8 is not possible to prevent the default handler from running
+				* during mouse down event using usual API. The workaround is to give
+				* focus back to the client div.
 				*/ 
-				topNode.setCapture();
-				setTimeout(function() { topNode.releaseCapture(); }, 0);
+				var self = this;
+				setTimeout(function() {
+					self._clientDiv.focus();
+				}, 0);
 			}
 		},
-		_handleBodyMouseUp: function (e) {
+		_handleRootMouseUp: function (e) {
 			if (!e) { e = window.event; }
-			if (isFirefox) {
+			if (isFirefox && e.which === 1) {
 				this._clientDiv.contentEditable = true;
 				(this._overlayDiv || this._clientDiv).draggable = false;
 				
@@ -1627,19 +1571,22 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			*/
 			if (isIE < 9) {
 				if (!this._getSelection().isEmpty()) {
-					var document = this._frameDocument;
 					var child = document.createElement("DIV");
-					var body = document.body;
-					body.appendChild(child);
-					body.removeChild(child);
+					var rootDiv = this._rootDiv;
+					rootDiv.appendChild(child);
+					rootDiv.removeChild(child);
 				}
 			}
 			if (isFirefox || isIE) {
 				if (this._selDiv1) {
-					var color = isIE ? "transparent" : "#AFAFAF";
+					var color = "transparent";
 					this._selDiv1.style.background = color;
 					this._selDiv2.style.background = color;
 					this._selDiv3.style.background = color;
+					if (window.getSelection) {
+						var sel = window.getSelection();
+						if (sel.rangeCount > 0) { sel.removeAllRanges(); }
+					}
 				}
 			}
 			if (!this._ignoreFocus) {
@@ -1679,25 +1626,6 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			if (this._doCut(e)) {
 				if (e.preventDefault) { e.preventDefault(); }
 				return false;
-			}
-		},
-		_handleDOMAttrModified: function (e) {
-			if (!e) { e = window.event; }
-			var ancestor = false;
-			var parent = this._parent;
-			while (parent) {
-				if (parent === e.target) {
-					ancestor = true;
-					break;
-				}
-				parent = parent.parentNode;
-			}
-			if (!ancestor) { return; }
-			var state = this._getVisible();
-			if (state === "visible") {
-				this._createView();
-			} else if (state === "hidden") {
-				this._destroyView();
 			}
 		},
 		_handleDataModified: function(e) {
@@ -1815,20 +1743,13 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			if (e.preventDefault) { e.preventDefault(); }
 			return false;
 		},
-		_handleDocFocus: function (e) {
-			if (!e) { e = window.event; }
-			this._clientDiv.focus();
-		},
 		_handleFocus: function (e) {
 			if (!e) { e = window.event; }
 			this._hasFocus = true;
-			/*
-			* Feature in IE.  The selection is not restored when the
-			* view gets focus and the caret is always placed at the
-			* beginning of the document.  The fix is to update the DOM
-			* selection during the focus event.
-			*/
-			if (isIE) {
+			if (isPad && this._lastTouchOffset !== undefined) {
+				this.setCaretOffset(this._lastTouchOffset, true);
+				this._lastTouchOffset = undefined;
+			} else {
 				this._updateDOMSelection();
 			}
 			if (isFirefox || isIE) {
@@ -1845,13 +1766,6 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 		},
 		_handleKeyDown: function (e) {
 			if (!e) { e = window.event; }
-			if (isPad) {
-				if (e.keyCode === 8) {
-					this._doBackspace({});
-					e.preventDefault();
-				}
-				return;
-			}
 			switch (e.keyCode) {
 				case 16: /* Shift */
 				case 17: /* Control */
@@ -1904,6 +1818,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			if (this._doAction(e)) {
 				if (e.preventDefault) {
 					e.preventDefault(); 
+					e.stopPropagation(); 
 				} else {
 					e.cancelBubble = true;
 					e.returnValue = false;
@@ -1987,15 +1902,9 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				return false;
 			}
 		},
-		_handleLoad: function (e) {
-			var state = this._getVisible();
-			if (state === "visible" || (state === "hidden" && isWebkit)) {
-				this._createView();
-			}
-		},
 		_handleMouse: function (e) {
 			var result = true;
-			var target = this._frameWindow;
+			var target = window;
 			if (isIE || (isFirefox && !this._overlayDiv)) { target = this._clientDiv; }
 			if (this._overlayDiv) {
 				if (this._hasFocus) {
@@ -2073,7 +1982,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				} else {
 					this._clickCount = 1;
 				}
-				if (this._handleMouse(e) && (isOpera || isChrome || (isFirefox && !this._overlayDiv))) {
+				if (this._handleMouse(e) && (isIE >= 9 || isOpera || isChrome || (isFirefox && !this._overlayDiv))) {
 					if (!this._hasFocus) {
 						this.focus();
 					}
@@ -2095,15 +2004,10 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 		},
 		_handleMouseMove: function (e) {
 			if (!e) { e = window.event; }
+			var inClient = this._isClientDiv(e);
 			if (this.isListening("MouseMove")) {
-				var topNode = this._overlayDiv || this._clientDiv;
-				var temp = e.target ? e.target : e.srcElement;
-				while (temp) {
-					if (topNode === temp) {
-						this.onMouseMove(this._createMouseEvent("MouseMove", e));
-						break;
-					}
-					temp = temp.parentNode;
+				if (inClient){
+					this.onMouseMove(this._createMouseEvent("MouseMove", e));
 				}
 			}
 			if (this._dropTarget) {
@@ -2120,9 +2024,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			this._lastMouseMoveX = e.clientX;
 			this._lastMouseMoveY = e.clientY;
 			this._setLinksVisible(changed && !this._isMouseDown && (isMac ? e.metaKey : e.ctrlKey));
-			if (!this._isMouseDown || this._dragOffset !== -1) {
-				return;
-			}
+
 			/*
 			* Feature in IE8 and older, the sequence of events in the IE8 event model
 			* for a doule-click is:
@@ -2145,21 +2047,17 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 					this._setGrab(null);
 					return true;
 				}
-				if (!this._isMouseDown && e.button === 1 && (this._clickCount & 1) !== 0) {
+				if (!this._isMouseDown && e.button === 1 && (this._clickCount & 1) !== 0 && inClient) {
 					this._clickCount = 2;
 					return this._handleMouse(e, this._clickCount);
 				}
 			}
+			if (!this._isMouseDown || this._dragOffset !== -1) {
+				return;
+			}
 			
 			var x = e.clientX;
 			var y = e.clientY;
-			if (isChrome) {
-				if (e.currentTarget !== this._frameWindow) {
-					var rect = this._frame.getBoundingClientRect();
-					x -= rect.left;
-					y -= rect.top;
-				}
-			}
 			var viewPad = this._getViewPadding();
 			var viewRect = this._viewDiv.getBoundingClientRect();
 			var width = this._getClientWidth (), height = this._getClientHeight();
@@ -2180,25 +2078,25 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			} else {
 				this._endAutoScroll();
 				this._setSelectionTo(x, y, true);
-				/*
-				* Feature in IE. IE does redraw the selection background right
-				* away after the selection changes because of mouse move events.
-				* The fix is to call getBoundingClientRect() on the
-				* body element to force the selection to be redraw. Some how
-				* calling this method forces a redraw.
-				*/
-				if (isIE) {
-					var body = this._frameDocument.body;
-					body.getBoundingClientRect();
-				}
 			}
+		},
+		_isClientDiv: function(e) {
+			var topNode = this._overlayDiv || this._clientDiv;
+			var temp = e.target ? e.target : e.srcElement;
+			while (temp) {
+				if (topNode === temp) {
+					return true;
+				}
+				temp = temp.parentNode;
+			}
+			return false;
 		},
 		_createMouseEvent: function(type, e) {
 			var scroll = this._getScroll();
 			var viewRect = this._viewDiv.getBoundingClientRect();
 			var viewPad = this._getViewPadding();
 			var x = e.clientX + scroll.x - viewRect.left - viewPad.left;
-			var y = e.clientY + scroll.y - viewRect.top;
+			var y = e.clientY + scroll.y - viewRect.top - viewPad.top;
 			return {
 				type: type,
 				event: e,
@@ -2208,14 +2106,16 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 		},
 		_handleMouseUp: function (e) {
 			if (!e) { e = window.event; }
+			var left = e.which ? e.button === 0 : e.button === 1;
 			if (this.isListening("MouseUp")) {
-				this.onMouseUp(this._createMouseEvent("MouseUp", e));
+				if (this._isClientDiv(e) || (left && this._isMouseDown)) {
+					this.onMouseUp(this._createMouseEvent("MouseUp", e));
+				}
 			}
 			if (this._linksVisible) {
 				return;
 			}
-			var left = e.which ? e.button === 0 : e.button === 1;
-			if (left) {
+			if (left && this._isMouseDown) {
 				if (this._dragOffset !== -1) {
 					var selection = this._getSelection();
 					selection.extend(this._dragOffset);
@@ -2258,7 +2158,9 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			var lineHeight = this._getLineHeight();
 			var pixelX = 0, pixelY = 0;
 			// Note: On the Mac the correct behaviour is to scroll by pixel.
-			if (isFirefox) {
+			if (isIE || isOpera) {
+				pixelY = (-e.wheelDelta / 40) * lineHeight;
+			} else if (isFirefox) {
 				var pixel;
 				if (isMac) {
 					pixel = e.detail * 3;
@@ -2347,13 +2249,21 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 		},
 		_handleResize: function (e) {
 			if (!e) { e = window.event; }
-			var element = this._frameDocument.documentElement;
-			var newWidth = element.clientWidth;
-			var newHeight = element.clientHeight;
-			if (this._frameWidth !== newWidth || this._frameHeight !== newHeight) {
-				this._frameWidth = newWidth;
-				this._frameHeight = newHeight;
-				this._updatePage();
+			var newWidth = this._parent.clientWidth;
+			var newHeight = this._parent.clientHeight;
+			if (this._parentWidth !== newWidth || this._parentHeight !== newHeight) {
+				this._parentWidth = newWidth;
+				this._parentHeight = newHeight;
+				/*
+				* Feature in IE7. For some reason, sometimes Internet Explorer 7 
+				* returns incorrect values for element.getBoundingClientRect() when 
+				* inside a resize handler. The fix is to queue the work.
+				*/
+				if (isIE < 9) {
+					this._queueUpdatePage();
+				} else {
+					this._updatePage();
+				}
 			}
 		},
 		_handleRulerEvent: function (e) {
@@ -2369,12 +2279,12 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			}
 			var ruler = element ? element._ruler : null;
 			if (lineIndex === undefined && ruler && ruler.getOverview() === "document") {
-				var buttonHeight = isPad ? 0 : 17;
 				var clientHeight = this._getClientHeight ();
 				var lineCount = this._model.getLineCount ();
 				var viewPad = this._getViewPadding();
-				var trackHeight = clientHeight + viewPad.top + viewPad.bottom - 2 * buttonHeight;
-				lineIndex = Math.floor((e.clientY - buttonHeight) * lineCount / trackHeight);
+				var viewRect = this._viewDiv.getBoundingClientRect();
+				var trackHeight = clientHeight + viewPad.top + viewPad.bottom - 2 * scrollButtonHeight;
+				lineIndex = Math.floor(((e.clientY - viewRect.top) - scrollButtonHeight) * lineCount / trackHeight);
 				if (!(0 <= lineIndex && lineIndex < lineCount)) {
 					lineIndex = undefined;
 				}
@@ -2423,182 +2333,105 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				return false;
 			}
 		},
-		_handleUnload: function (e) {
-			if (!e) { e = window.event; }
-			this._destroyView();
+		_getModelOffset: function(node, offset) {
+			if (!node) { return; }
+			var lineNode;
+			if (node.tagName === "DIV") {
+				lineNode = node;
+			} else {
+				lineNode = node.parentNode.parentNode;
+			}
+			var lineOffset = 0;
+			var lineIndex = lineNode.lineIndex;
+			if (node.tagName !== "DIV") {
+				var child = lineNode.firstChild;
+				while (child) {
+					var textNode = child.firstChild;
+					if (textNode === node) {
+						if (child.ignoreChars) { lineOffset -= child.ignoreChars; }
+						lineOffset += offset;
+						break;
+					}
+					if (child.ignoreChars) { lineOffset -= child.ignoreChars; }
+					lineOffset += textNode.data.length;
+					child = child.nextSibling;
+				}
+			}
+			return Math.max(0, lineOffset) + this._model.getLineStart(lineIndex);
 		},
-		_handleInput: function (e) {
-			var textArea = this._textArea;
-			this._doContent(textArea.value);
-			textArea.selectionStart = textArea.selectionEnd = 0;
-			textArea.value = "";
-			e.preventDefault();
-		},
-		_handleTextInput: function (e) {
-			this._doContent(e.data);
-			e.preventDefault();
-		},
-		_touchConvert: function (touch) {
-			var rect = this._frame.getBoundingClientRect();
-			var body = this._parentDocument.body;
-			return {left: touch.clientX - rect.left - body.scrollLeft, top: touch.clientY - rect.top - body.scrollTop};
-		},
-		_handleTextAreaClick: function (e) {
-			var pt = this._touchConvert(e);	
-			this._clickCount = 1;
-			this._ignoreDOMSelection = false;
-			this._setSelectionTo(pt.left, pt.top, false);
-			var textArea = this._textArea;
-			textArea.focus();
+		_handleSelectionChange: function (e) {
+			var selection = window.getSelection();
+			var start = this._getModelOffset(selection.anchorNode, selection.anchorOffset);
+			var end = this._getModelOffset(selection.focusNode, selection.focusOffset);
+			if (start === undefined || end === undefined) {
+			    return;
+			}
+			this._setSelection(new Selection(start, end), false, false, false);
 		},
 		_handleTouchStart: function (e) {
-			var touches = e.touches, touch, pt, sel;
-			this._touchMoved = false;
-			this._touchStartScroll = undefined;
-			if (touches.length === 1) {
-				touch = touches[0];
-				var pageX = touch.pageX;
-				var pageY = touch.pageY;
-				this._touchStartX = pageX;
-				this._touchStartY = pageY;
-				this._touchStartTime = e.timeStamp;
-				this._touchStartScroll = this._getScroll();
-				sel = this._getSelection();
-				pt = this._touchConvert(touches[0]);
-				this._touchGesture = "none";
-				if (!sel.isEmpty()) {
-					if (this._hitOffset(sel.end, pt.left, pt.top)) {
-						this._touchGesture = "extendEnd";
-					} else if (this._hitOffset(sel.start, pt.left, pt.top)) {
-						this._touchGesture = "extendStart";
-					}
-				}
-				if (this._touchGesture === "none") {
-					var textArea = this._textArea;
-					textArea.value = "";
-					textArea.style.left = "-1000px";
-					textArea.style.top = "-1000px";
-					textArea.style.width = "3000px";
-					textArea.style.height = "3000px";
-				}
-			} else if (touches.length === 2) {
-				this._touchGesture = "select";
-				if (this._touchTimeout) {
-					clearTimeout(this._touchTimeout);
-					this._touchTimeout = null;
-				}
-				pt = this._touchConvert(touches[0]);
-				var offset1 = this._getXToOffset(this._getYToLine(pt.top), pt.left);
-				pt = this._touchConvert(touches[1]);
-				var offset2 = this._getXToOffset(this._getYToLine(pt.top), pt.left);
-				sel = this._getSelection();
-				sel.setCaret(offset1);
-				sel.extend(offset2);
-				this._setSelection(sel, true, true);
+			if (this._touchScrollTimer) {
+				this._vScrollDiv.style.display = "none";
+				this._hScrollDiv.style.display = "none";
+				clearInterval(this._touchScrollTimer);
+				this._touchScrollTimer = null;
 			}
-			//Cannot prevent to show magnifier
-//			e.preventDefault();
-		},
-		_handleTouchMove: function (e) {
-			this._touchMoved = true;
-			var touches = e.touches, pt, sel;
+			var touches = e.touches;
 			if (touches.length === 1) {
 				var touch = touches[0];
-				var pageX = touch.pageX;
-				var pageY = touch.pageY;
-				var deltaX = this._touchStartX - pageX;
-				var deltaY = this._touchStartY - pageY;
-				pt = this._touchConvert(touch);
-				sel = this._getSelection();
-				if (this._touchGesture === "none") {
-					if ((e.timeStamp - this._touchStartTime) < 200 && (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5)) {
-						this._touchGesture = "scroll";
-					} else {
-						this._touchGesture = "caret";
-					}
-				}
-				if (this._touchGesture === "select") {
-					if (this._hitOffset(sel.end, pt.left, pt.top)) {
-						this._touchGesture = "extendEnd";
-					} else if (this._hitOffset(sel.start, pt.left, pt.top)) {
-						this._touchGesture = "extendStart";
-					} else {
-						this._touchGesture = "caret";
-					}
-				}
-				switch (this._touchGesture) {
-					case "scroll":
-						this._touchStartX = pageX;
-						this._touchStartY = pageY;
-						this._scrollView(deltaX, deltaY);
-						break;
-					case "extendStart":
-					case "extendEnd":
-						this._clickCount = 1;
-						var lineIndex = this._getYToLine(pt.top);
-						var offset = this._getXToOffset(lineIndex, pt.left);
-						sel.setCaret(this._touchGesture === "extendStart" ? sel.end : sel.start);
-						sel.extend(offset);
-						if (offset >= sel.end && this._touchGesture === "extendStart") {
-							this._touchGesture = "extendEnd";
-						}
-						if (offset <= sel.start && this._touchGesture === "extendEnd") {
-							this._touchGesture = "extendStart";
-						}
-						this._setSelection(sel, true, true);
-						break;
-					case "caret":
-						this._setSelectionTo(pt.left, pt.top, false);
-						break;
-				}
-			} else if (touches.length === 2) {
-				pt = this._touchConvert(touches[0]);
-				var offset1 = this._getXToOffset(this._getYToLine(pt.top), pt.left);
-				pt = this._touchConvert(touches[1]);
-				var offset2 = this._getXToOffset(this._getYToLine(pt.top), pt.left);
-				sel = this._getSelection();
-				sel.setCaret(offset1);
-				sel.extend(offset2);
-				this._setSelection(sel, true, true);
+				this._touchStartX = touch.clientX;
+				this._touchStartY = touch.clientY;
+				this._lastTouchOffset = this._getXToOffset(this._getYToLine(touch.clientY), touch.clientX);
+				this._touchStartTime = e.timeStamp;
+				this._touching = true;
 			}
-			e.preventDefault();
+		},
+		_handleTouchMove: function (e) {
+			var touches = e.touches;
+			if (touches.length === 1) {
+				var touch = touches[0];
+				this._touchCurrentX = touch.clientX;
+				this._touchCurrentY = touch.clientY;
+				var interval = 10;
+				if (!this._touchScrollTimer && (e.timeStamp - this._touchStartTime) < (interval*20)) {
+					this._vScrollDiv.style.display = "block";
+					this._hScrollDiv.style.display = "block";
+					var self = this;
+					this._touchScrollTimer = setInterval(function() {
+						var deltaX = 0, deltaY = 0;
+						if (self._touching) {
+							deltaX = self._touchStartX - self._touchCurrentX;
+							deltaY = self._touchStartY - self._touchCurrentY;
+							self._touchSpeedX = deltaX / interval;
+							self._touchSpeedY = deltaY / interval;
+							self._touchStartX = self._touchCurrentX;
+							self._touchStartY = self._touchCurrentY;
+						} else {
+							if (Math.abs(self._touchSpeedX) < 0.1 && Math.abs(self._touchSpeedY) < 0.1) {
+								self._vScrollDiv.style.display = "none";
+								self._hScrollDiv.style.display = "none";
+								clearInterval(self._touchScrollTimer);
+								self._touchScrollTimer = null;
+								return;
+							} else {
+								deltaX = self._touchSpeedX * interval;
+								deltaY = self._touchSpeedY * interval;
+								self._touchSpeedX *= 0.95;
+								self._touchSpeedY *= 0.95;
+							}
+						}
+						self._scrollView(deltaX, deltaY);
+					}, interval);
+				}
+				if (this._touchScrollTimer) {
+					e.preventDefault();
+				}
+			}
 		},
 		_handleTouchEnd: function (e) {
-			var self = this;
-			if (!this._touchMoved) {
-				if (e.touches.length === 0 && e.changedTouches.length === 1) {
-					var touch = e.changedTouches[0];
-					var pt = this._touchConvert(touch);
-					var textArea = this._textArea;
-					textArea.value = "";
-					textArea.style.left = "-1000px";
-					textArea.style.top = "-1000px";
-					textArea.style.width = "3000px";
-					textArea.style.height = "3000px";
-					setTimeout(function() {
-						self._clickCount = 1;
-						self._ignoreDOMSelection = false;
-						self._setSelectionTo(pt.left, pt.top, false);
-					}, 300);
-				}
+			var touches = e.touches;
+			if (touches.length === 0) {
+				this._touching = false;
 			}
-			if (e.touches.length === 0) {
-				setTimeout(function() {
-					var selection = self._getSelection();
-					var text = self._model.getText(selection.start, selection.end);
-					var textArea = self._textArea;
-					textArea.value = text;
-					textArea.selectionStart = 0;
-					textArea.selectionEnd = text.length;
-					if (!selection.isEmpty()) {
-						var touchRect = self._touchDiv.getBoundingClientRect();
-						var bounds = self._getOffsetBounds(selection.start);
-						textArea.style.left = (touchRect.width / 2) + "px";
-						textArea.style.top = ((bounds.top > 40 ? bounds.top - 30 : bounds.top + 30)) + "px";
-					}
-				}, 0);
-			}
-//				e.preventDefault();
 		},
 
 		/************************************ Actions ******************************************/
@@ -2776,18 +2609,23 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			var selection = this._getSelection();
 			var caret = selection.getCaret();
 			var lineIndex = model.getLineAtOffset(caret);
+			var x = this._columnX;
+			var scrollX = this._getScroll().x;
+			if (x === -1 || args.wholeLine || (args.select && isIE)) {
+				var offset = args.wholeLine ? model.getLineEnd(lineIndex + 1) : caret;
+				x = this._getOffsetToX(offset) + scrollX;
+			}
 			if (lineIndex + 1 < model.getLineCount()) {
-				var scrollX = this._getScroll().x;
-				var x = this._columnX;
-				if (x === -1 || args.wholeLine || (args.select && isIE)) {
-					var offset = args.wholeLine ? model.getLineEnd(lineIndex + 1) : caret;
-					x = this._getOffsetToX(offset) + scrollX;
-				}
 				selection.extend(this._getXToOffset(lineIndex + 1, x - scrollX));
 				if (!args.select) { selection.collapse(); }
 				this._setSelection(selection, true, true);
-				this._columnX = x;
+			} else {
+				if (args.select) {
+					selection.extend(model.getCharCount());
+					this._setSelection(selection, true, true);
+				}
 			}
+			this._columnX = x;
 			return true;
 		},
 		_doLineUp: function (args) {
@@ -2795,18 +2633,23 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			var selection = this._getSelection();
 			var caret = selection.getCaret();
 			var lineIndex = model.getLineAtOffset(caret);
+			var x = this._columnX;
+			var scrollX = this._getScroll().x;
+			if (x === -1 || args.wholeLine || (args.select && isIE)) {
+				var offset = args.wholeLine ? model.getLineStart(lineIndex - 1) : caret;
+				x = this._getOffsetToX(offset) + scrollX;
+			}
 			if (lineIndex > 0) {
-				var scrollX = this._getScroll().x;
-				var x = this._columnX;
-				if (x === -1 || args.wholeLine || (args.select && isIE)) {
-					var offset = args.wholeLine ? model.getLineStart(lineIndex - 1) : caret;
-					x = this._getOffsetToX(offset) + scrollX;
-				}
 				selection.extend(this._getXToOffset(lineIndex - 1, x - scrollX));
 				if (!args.select) { selection.collapse(); }
 				this._setSelection(selection, true, true);
-				this._columnX = x;
+			} else {
+				if (args.select) {
+					selection.extend(0);
+					this._setSelection(selection, true, true);
+				}
 			}
+			this._columnX = x;
 			return true;
 		},
 		_doPageDown: function (args) {
@@ -2928,9 +2771,12 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 		/************************************ Internals ******************************************/
 		_applyStyle: function(style, node, reset) {
 			if (reset) {
+				node.className = "";
 				var attrs = node.attributes;
 				for (var i= attrs.length; i-->0;) {
-					node.removeAttributeNode(attrs[i]); 
+					if (attrs[i].specified) {
+						node.removeAttributeNode(attrs[i]); 
+					}
 				}
 			}
 			if (!style) {
@@ -2977,11 +2823,16 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			var self = this;
 			this._autoScrollTimerID = setTimeout(function () {self._autoScrollTimer();}, this._AUTO_SCROLL_RATE);
 		},
-		_calculateLineHeight: function() {
+		_calculateMetrics: function() {
 			var parent = this._clientDiv;
-			var document = this._frameDocument;
 			var c = " ";
 			var line = document.createElement("DIV");
+			line.style.lineHeight = "normal";
+			var model = this._model;
+			var lineText = model.getLine(0);
+			var e = {type:"LineStyle", textView: this, 0: 0, lineText: lineText, lineStart: 0};
+			this.onLineStyle(e);
+			this._applyStyle(e.style, line);
 			line.style.position = "fixed";
 			line.style.left = "-1000px";
 			var span1 = document.createElement("SPAN");
@@ -3011,7 +2862,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			var h3 = spanRect3.bottom - spanRect3.top;
 			var h4 = spanRect4.bottom - spanRect4.top;
 			var fontStyle = 0;
-			var lineHeight = lineRect.bottom - lineRect.top;
+			var lineHeight = Math.max(1, lineRect.bottom - lineRect.top);
 			if (h2 > h1) {
 				fontStyle = 1;
 			}
@@ -3031,12 +2882,11 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 					style.style.fontWeight = "bold";
 				}
 			}
-			this._largestFontStyle = style;
+			var trim = this._getLineTrim(line);
 			parent.removeChild(line);
-			return lineHeight;
+			return {lineHeight: lineHeight, largestFontStyle: style, lineTrim: trim, viewPadding: this._calculatePadding()};
 		},
 		_calculatePadding: function() {
-			var document = this._frameDocument;
 			var parent = this._clientDiv;
 			var pad = this._getPadding(this._viewDiv);
 			var div1 = document.createElement("DIV");
@@ -3355,7 +3205,9 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			var lineDiv = div || document.createElement("DIV");
 			if (!div || !this._compare(div.viewStyle, e.style)) {
 				this._applyStyle(e.style, lineDiv, div);
+				if (div) { div._trim = null; }
 				lineDiv.viewStyle = e.style;
+				lineDiv.setAttribute("role", "presentation");
 			}
 			lineDiv.lineIndex = lineIndex;
 			var ranges = [];
@@ -3389,7 +3241,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				*/
 				c = "\u200C";
 			}
-			ranges.push({text: c, style: this._largestFontStyle, ignoreChars: 1});
+			ranges.push({text: c, style: this._metrics.largestFontStyle, ignoreChars: 1});
 			
 			var range, span, style, oldSpan, oldStyle, text, oldText, end = 0, oldEnd = 0, next;
 			var changeCount, changeStart;
@@ -3402,7 +3254,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 					} else {
 						changeStart = -1;
 					}
-					delete div.modelChangedEvent;
+					div.modelChangedEvent = undefined;
 				}
 				oldSpan = div.firstChild;
 			}
@@ -3416,7 +3268,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 					oldStyle = oldSpan.viewStyle;
 					if (oldText === text && this._compare(style, oldStyle)) {
 						oldEnd += oldText.length;
-						delete oldSpan._rectsCache;
+						oldSpan._rectsCache = undefined;
 						span = oldSpan = oldSpan.nextSibling;
 						continue;
 					} else {
@@ -3536,300 +3388,108 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			}
 			return child;
 		},
-		_createRuler: function(ruler) {
+		_createRuler: function(ruler, index) {
 			if (!this._clientDiv) { return; }
-			var document = this._frameDocument;
-			var body = document.body;
 			var side = ruler.getLocation();
 			var rulerParent = side === "left" ? this._leftDiv : this._rightDiv;
-			if (!rulerParent) {
-				rulerParent = document.createElement("DIV");
-				rulerParent.style.overflow = "hidden";
-				rulerParent.style.MozUserSelect = "none";
-				rulerParent.style.WebkitUserSelect = "none";
-				if (isIE) {
-					rulerParent.attachEvent("onselectstart", function() {return false;});
-				}
-				rulerParent.style.position = "absolute";
-				rulerParent.style.top = "0px";
-				rulerParent.style.cursor = "default";
-				body.appendChild(rulerParent);
-				if (side === "left") {
-					this._leftDiv = rulerParent;
-					rulerParent.className = "viewLeftRuler";
-				} else {
-					this._rightDiv = rulerParent;
-					rulerParent.className = "viewRightRuler";
-				}
-				var table = document.createElement("TABLE");
-				rulerParent.appendChild(table);
-				table.cellPadding = "0px";
-				table.cellSpacing = "0px";
-				table.border = "0px";
-				table.insertRow(0);
-				var self = this;
-				addHandler(rulerParent, "click", function(e) { self._handleRulerEvent(e); });
-				addHandler(rulerParent, "dblclick", function(e) { self._handleRulerEvent(e); });
-				addHandler(rulerParent, "mousemove", function(e) { self._handleRulerEvent(e); });
-				addHandler(rulerParent, "mouseover", function(e) { self._handleRulerEvent(e); });
-				addHandler(rulerParent, "mouseout", function(e) { self._handleRulerEvent(e); });
-			}
 			var div = document.createElement("DIV");
 			div._ruler = ruler;
 			div.rulerChanged = true;
 			div.style.position = "relative";
 			var row = rulerParent.firstChild.rows[0];
-			var index = row.cells.length;
+			var length = row.cells.length;
+			index = index === undefined || index < 0 || index > length ? length : index;
 			var cell = row.insertCell(index);
 			cell.vAlign = "top";
 			cell.appendChild(div);
 		},
-		_createFrame: function() {
-			if (this.frame) { return; }
-			var parent = this._parent;
-			while (parent.hasChildNodes()) { parent.removeChild(parent.lastChild); }
-			var parentDocument = parent.ownerDocument;
-			this._parentDocument = parentDocument;
-			var frame = parentDocument.createElement("IFRAME");
-			this._frame = frame;
-			frame.frameBorder = "0px";//for IE, needs to be set before the frame is added to the parent
-			frame.style.border = "0px";
-			frame.style.width = "100%";
-			frame.style.height = "100%";
-			frame.scrolling = "no";
-			var self = this;
-			/*
-			* Note that it is not possible to create the contents of the frame if the
-			* parent is not connected to the document.  Only create it when the load
-			* event is trigged.
-			*/
-			this._loadHandler = function(e) {
-				self._handleLoad(e);
-			};
-			addHandler(frame, "load", this._loadHandler, !!isFirefox);
-			if (!isWebkit) {
-				/*
-				* Feature in IE and Firefox.  It is not possible to get the style of an
-				* element if it is not layed out because one of the ancestor has
-				* style.display = none.  This means that the view cannot be created in this
-				* situations, since no measuring can be performed.  The fix is to listen
-				* for DOMAttrModified and create or destroy the view when the style.display
-				* attribute changes.
-				*/
-				addHandler(parentDocument, "DOMAttrModified", this._attrModifiedHandler = function(e) {
-					self._handleDOMAttrModified(e);
-				});
-			}
-			parent.appendChild(frame);
-			/* create synchronously if possible */
-			if (this._sync) {
-				this._handleLoad();
-			}
-		},
-		_getFrameHTML: function() {
-			var html = [];
-			html.push("<!DOCTYPE html>");
-			html.push("<html>");
-			html.push("<head>");
-			if (isIE < 9) {
-				html.push("<meta http-equiv='X-UA-Compatible' content='IE=EmulateIE7'/>");
-			}
-			html.push("<style>");
-			html.push(".viewContainer {font-family: monospace; font-size: 10pt;}");
-			html.push(".view {padding: 1px 2px;}");
-			html.push(".viewContent {}");
-			html.push("</style>");
-			if (this._stylesheet) {
-				var stylesheet = typeof(this._stylesheet) === "string" ? [this._stylesheet] : this._stylesheet;
-				for (var i = 0; i < stylesheet.length; i++) {
-					if (this._sync) {
-						try {
-							var objXml = new XMLHttpRequest();
-							if (objXml.overrideMimeType) {
-								objXml.overrideMimeType("text/css");
-							}
-							objXml.open("GET", stylesheet[i], false);
-							objXml.send(null);
-							html.push("<style>");
-							html.push(objXml.responseText);
-							html.push("</style>");
-							continue;
-						} catch (e) {}
-					}
-					html.push("<link rel='stylesheet' type='text/css' href='");
-					html.push(stylesheet[i]);
-					html.push("'></link>");
-				}
-			}
-			/*
-			* Feature in WebKit.  In WebKit, window load will not wait for the style sheets
-			* to be loaded unless there is script element after the style sheet link elements.
-			*/
-			html.push("<script>");
-			html.push("var waitForStyleSheets = true;");
-			html.push("</script>");
-			html.push("</head>");
-			html.push("<body spellcheck='false'></body>");
-			html.push("</html>");
-			return html.join("");
-		},
 		_createView: function() {
-			if (this._frameDocument) { return; }
-			var frameWindow = this._frameWindow = this._frame.contentWindow;
-			var frameDocument = this._frameDocument = frameWindow.document;
-			frameDocument.open();
-			frameDocument.write(this._getFrameHTML());
-			frameDocument.close();
-			if (this._sync) {
-				this._createContent();
-			} else {
-				var self = this;
-				this._windowLoadHandler = function(e) {
-					/*
-					* Bug in Safari.  Safari sends the window load event before the
-					* style sheets are loaded. The fix is to defer creation of the
-					* contents until the document readyState changes to complete.
-					*/
-					if (frameDocument.readyState === "complete") {
-						self._createContent();
-					}
-				};
-				/*
-				* Bug in Firefox. Firefox does not send any load events for the elements inside the iframe
-				* when document.write() is called during the load event for the iframe.
-				* Bug in Webkit. Webkit does not send the load event for the iframe window when the main page
-				* loads as a result of backward or forward navigation.
-				* The fix, for both cases, is to use a timer to create the content only when the document is ready.
-				*/
-				addHandler(frameWindow, "load", this._windowLoadHandler);
-				this._createViewTimer = function() {
-					if (self._clientDiv) { return; }
-					var loaded = false;
-					if (frameDocument.readyState === "complete") {
-						loaded = true;
-					} else if (frameDocument.readyState === "interactive" && isFirefox) {
-						/*
-						* Bug in Firefox. Firefox does not change the document ready state to complete 
-						* when document.write() is called during of the load event for the iframe.
-						* The fix is to wait for the ready state to be "interactive" and check that 
-						* all css rules are initialized.
-						*/
-						var styleSheets = frameDocument.styleSheets;
-						var styleSheetCount = 1;
-						if (self._stylesheet) {
-							styleSheetCount += typeof(self._stylesheet) === "string" ? 1 : self._stylesheet.length;
-						}
-						if (styleSheetCount === styleSheets.length) {
-							var index = 0;
-							while (index < styleSheets.length) {
-								var count = 0;
-								try {
-									count = styleSheets.item(index).cssRules.length;
-								} catch (ex) {}
-								if (count === 0) { break; }
-								index++;
-							}
-							loaded = index === styleSheets.length;
-						}	
-					}
-					if (loaded) {
-						self._createContent();
-					} else {
-						setTimeout(self._createViewTimer, 20);
-					}
-				};
-				setTimeout(this._createViewTimer, 5);
-			}
-		},
-		_createContent: function() {
 			if (this._clientDiv) { return; }
 			var parent = this._parent;
-			var parentDocument = this._parentDocument;
-			var frameDocument = this._frameDocument;
-			var body = frameDocument.body;
-			this._setThemeClass(this._themeClass, true);
-			body.style.margin = "0px";
-			body.style.borderWidth = "0px";
-			body.style.padding = "0px";
+			while (parent.hasChildNodes()) { parent.removeChild(parent.lastChild); }
+
+			var rootDiv = document.createElement("DIV");
+			this._rootDiv = rootDiv;
+			rootDiv.tabIndex = -1;
+			rootDiv.style.position = "absolute";
+			rootDiv.style.overflow = "hidden";
+			rootDiv.setAttribute("role", "application");
+			parent.appendChild(rootDiv);
 			
-			var textArea;
-			if (isPad) {
-				var touchDiv = parentDocument.createElement("DIV");
-				this._touchDiv = touchDiv;
-				touchDiv.style.position = "absolute";
-				touchDiv.style.border = "0px";
-				touchDiv.style.padding = "0px";
-				touchDiv.style.margin = "0px";
-				touchDiv.style.zIndex = "2";
-				touchDiv.style.overflow = "hidden";
-				touchDiv.style.background="transparent";
-				touchDiv.style.WebkitUserSelect = "none";
-				parent.appendChild(touchDiv);
+			var leftDiv = document.createElement("DIV");
+			leftDiv.className = "textviewLeftRuler";
+			this._leftDiv = leftDiv;
+			leftDiv.tabIndex = -1;
+			leftDiv.style.overflow = "hidden";
+			leftDiv.style.MozUserSelect = "none";
+			leftDiv.style.WebkitUserSelect = "none";
+			leftDiv.style.position = "absolute";
+			leftDiv.style.cursor = "default";
+			leftDiv.setAttribute("aria-hidden", "true");
+			var table = document.createElement("TABLE");
+			leftDiv.appendChild(table);
+			table.cellPadding = "0px";
+			table.cellSpacing = "0px";
+			table.border = "0px";
+			table.insertRow(0);
+			rootDiv.appendChild(leftDiv);
 
-				textArea = parentDocument.createElement("TEXTAREA");
-				this._textArea = textArea;
-				textArea.style.position = "absolute";
-				textArea.style.whiteSpace = "pre";
-				textArea.style.left = "-1000px";
-				textArea.tabIndex = 1;
-				textArea.autocapitalize = false;
-				textArea.autocorrect = false;
-				textArea.className = "viewContainer";
-				textArea.style.background = "transparent";
-				textArea.style.color = "transparent";
-				textArea.style.border = "0px";
-				textArea.style.padding = "0px";
-				textArea.style.margin = "0px";
-				textArea.style.borderRadius = "0px";
-				textArea.style.WebkitAppearance = "none";
-				textArea.style.WebkitTapHighlightColor = "transparent";
-				touchDiv.appendChild(textArea);
-			}
-			if (isFirefox) {
-				var clipboardDiv = frameDocument.createElement("DIV");
-				this._clipboardDiv = clipboardDiv;
-				clipboardDiv.style.position = "fixed";
-				clipboardDiv.style.whiteSpace = "pre";
-				clipboardDiv.style.left = "-1000px";
-				body.appendChild(clipboardDiv);
-			}
-
-			var viewDiv = frameDocument.createElement("DIV");
-			viewDiv.className = "view";
+			var viewDiv = document.createElement("DIV");
+			viewDiv.className = "textview";
 			this._viewDiv = viewDiv;
-			viewDiv.id = "viewDiv";
 			viewDiv.tabIndex = -1;
 			viewDiv.style.overflow = "auto";
 			viewDiv.style.position = "absolute";
 			viewDiv.style.top = "0px";
 			viewDiv.style.borderWidth = "0px";
 			viewDiv.style.margin = "0px";
-			viewDiv.style.MozOutline = "none";
 			viewDiv.style.outline = "none";
-			body.appendChild(viewDiv);
+			rootDiv.appendChild(viewDiv);
+			
+			var rightDiv = document.createElement("DIV");
+			rightDiv.className = "textviewRightRuler";
+			this._rightDiv = rightDiv;
+			rightDiv.tabIndex = -1;
+			rightDiv.style.overflow = "hidden";
+			rightDiv.style.MozUserSelect = "none";
+			rightDiv.style.WebkitUserSelect = "none";
+			rightDiv.style.position = "absolute";
+			rightDiv.style.cursor = "default";
+			rightDiv.setAttribute("aria-hidden", "true");
+			table = document.createElement("TABLE");
+			rightDiv.appendChild(table);
+			table.cellPadding = "0px";
+			table.cellSpacing = "0px";
+			table.border = "0px";
+			table.insertRow(0);
+			rootDiv.appendChild(rightDiv);
 				
-			var scrollDiv = frameDocument.createElement("DIV");
+			var scrollDiv = document.createElement("DIV");
 			this._scrollDiv = scrollDiv;
-			scrollDiv.id = "scrollDiv";
 			scrollDiv.style.margin = "0px";
 			scrollDiv.style.borderWidth = "0px";
 			scrollDiv.style.padding = "0px";
 			viewDiv.appendChild(scrollDiv);
 			
 			if (isFirefox) {
-				var clipDiv = frameDocument.createElement("DIV");
+				var clipboardDiv = document.createElement("DIV");
+				this._clipboardDiv = clipboardDiv;
+				clipboardDiv.style.position = "fixed";
+				clipboardDiv.style.whiteSpace = "pre";
+				clipboardDiv.style.left = "-1000px";
+				rootDiv.appendChild(clipboardDiv);
+			
+				var clipDiv = document.createElement("DIV");
 				this._clipDiv = clipDiv;
-				clipDiv.id = "clipDiv";
-				clipDiv.style.position = "fixed";
+				clipDiv.style.position = "absolute";
 				clipDiv.style.overflow = "hidden";
 				clipDiv.style.margin = "0px";
 				clipDiv.style.borderWidth = "0px";
 				clipDiv.style.padding = "0px";
-				scrollDiv.appendChild(clipDiv);
+				rootDiv.appendChild(clipDiv);
 				
-				var clipScrollDiv = frameDocument.createElement("DIV");
+				var clipScrollDiv = document.createElement("DIV");
 				this._clipScrollDiv = clipScrollDiv;
-				clipScrollDiv.id = "clipScrollDiv";
 				clipScrollDiv.style.position = "absolute";
 				clipScrollDiv.style.height = "1px";
 				clipScrollDiv.style.top = "-1000px";
@@ -3838,43 +3498,73 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			
 			this._setFullSelection(this._fullSelection, true);
 
-			var clientDiv = frameDocument.createElement("DIV");
-			clientDiv.className = "viewContent";
+			var clientDiv = document.createElement("DIV");
+			clientDiv.className = "textviewContent";
 			this._clientDiv = clientDiv;
-			clientDiv.id = "clientDiv";
 			clientDiv.style.whiteSpace = "pre";
-			clientDiv.style.position = this._clipDiv ? "absolute" : "fixed";
+			clientDiv.style.position = "absolute";
 			clientDiv.style.borderWidth = "0px";
 			clientDiv.style.margin = "0px";
 			clientDiv.style.padding = "0px";
-			clientDiv.style.MozOutline = "none";
 			clientDiv.style.outline = "none";
 			clientDiv.style.zIndex = "1";
+			clientDiv.style.WebkitUserSelect = "text";
+			clientDiv.setAttribute("spellcheck", "false");
 			if (isPad) {
 				clientDiv.style.WebkitTapHighlightColor = "transparent";
 			}
-			(this._clipDiv || scrollDiv).appendChild(clientDiv);
+			(this._clipDiv || rootDiv).appendChild(clientDiv);
+			
+			if (isPad) {
+				var vScrollDiv = document.createElement("DIV");
+				this._vScrollDiv = vScrollDiv;
+				vScrollDiv.style.position = "absolute";
+				vScrollDiv.style.borderWidth = "1px";
+				vScrollDiv.style.borderColor = "white";
+				vScrollDiv.style.borderStyle = "solid";
+				vScrollDiv.style.borderRadius = "4px";
+				vScrollDiv.style.backgroundColor = "black";
+				vScrollDiv.style.opacity = "0.5";
+				vScrollDiv.style.margin = "0px";
+				vScrollDiv.style.padding = "0px";
+				vScrollDiv.style.outline = "none";
+				vScrollDiv.style.zIndex = "3";
+				vScrollDiv.style.width = "8px";
+				vScrollDiv.style.display = "none";
+				rootDiv.appendChild(vScrollDiv);
+				var hScrollDiv = document.createElement("DIV");
+				this._hScrollDiv = hScrollDiv;
+				hScrollDiv.style.position = "absolute";
+				hScrollDiv.style.borderWidth = "1px";
+				hScrollDiv.style.borderColor = "white";
+				hScrollDiv.style.borderStyle = "solid";
+				hScrollDiv.style.borderRadius = "4px";
+				hScrollDiv.style.backgroundColor = "black";
+				hScrollDiv.style.opacity = "0.5";
+				hScrollDiv.style.margin = "0px";
+				hScrollDiv.style.padding = "0px";
+				hScrollDiv.style.outline = "none";
+				hScrollDiv.style.zIndex = "3";
+				hScrollDiv.style.height = "8px";
+				hScrollDiv.style.display = "none";
+				rootDiv.appendChild(hScrollDiv);
+			}
 
 			if (isFirefox && !clientDiv.setCapture) {
-				var overlayDiv = frameDocument.createElement("DIV");
+				var overlayDiv = document.createElement("DIV");
 				this._overlayDiv = overlayDiv;
-				overlayDiv.id = "overlayDiv";
 				overlayDiv.style.position = clientDiv.style.position;
 				overlayDiv.style.borderWidth = clientDiv.style.borderWidth;
 				overlayDiv.style.margin = clientDiv.style.margin;
 				overlayDiv.style.padding = clientDiv.style.padding;
 				overlayDiv.style.cursor = "text";
 				overlayDiv.style.zIndex = "2";
-				(this._clipDiv || scrollDiv).appendChild(overlayDiv);
+				(this._clipDiv || rootDiv).appendChild(overlayDiv);
 			}
-			if (!isPad) {
-				clientDiv.contentEditable = "true";
-			}
-			this._lineHeight = this._calculateLineHeight();
-			this._viewPadding = this._calculatePadding();
-			if (isIE) {
-				body.style.lineHeight = this._lineHeight + "px";
-			}
+			clientDiv.contentEditable = "true";
+			clientDiv.setAttribute("role", "textbox");
+			clientDiv.setAttribute("aria-multiline", "true");
+			this._setThemeClass(this._themeClass, true);
 			this._setTabSize(this._tabSize, true);
 			this._hookEvents();
 			var rulers = this._rulers;
@@ -3882,40 +3572,17 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				this._createRuler(rulers[i]);
 			}
 			this._updatePage();
-			var h = this._hScroll, v = this._vScroll;
-			this._vScroll = this._hScroll = 0;
-			if (h > 0 || v > 0) {
-				viewDiv.scrollLeft = h;
-				viewDiv.scrollTop = v;
-			}
-			this.onLoad({type: "Load"});
 		},
 		_defaultOptions: function() {
 			return {
-				parent: {value: undefined, recreate: true, update: null},
-				model: {value: undefined, recreate: false, update: this.setModel},
-				readonly: {value: false, recreate: false, update: null},
-				fullSelection: {value: true, recreate: false, update: this._setFullSelection},
-				tabSize: {value: 8, recreate: false, update: this._setTabSize},
-				expandTab: {value: false, recreate: false, update: null},
-				stylesheet: {value: [], recreate: true, update: null},
-				themeClass: {value: undefined, recreate: false, update: this._setThemeClass},
-				sync: {value: false, recreate: false, update: null}
+				parent: {value: undefined, update: null},
+				model: {value: undefined, update: this.setModel},
+				readonly: {value: false, update: null},
+				fullSelection: {value: true, update: this._setFullSelection},
+				tabSize: {value: 8, update: this._setTabSize},
+				expandTab: {value: false, update: null},
+				themeClass: {value: undefined, update: this._setThemeClass}
 			};
-		},
-		_destroyFrame: function() {
-			var frame = this._frame;
-			if (!frame) { return; }
-			if (this._loadHandler) {
-				removeHandler(frame, "load", this._loadHandler, !!isFirefox);
-				this._loadHandler = null;
-			}
-			if (this._attrModifiedHandler) {
-				removeHandler(this._parentDocument, "DOMAttrModified", this._attrModifiedHandler);
-				this._attrModifiedHandler = null;
-			}
-			frame.parentNode.removeChild(frame);
-			this._frame = null;
 		},
 		_destroyRuler: function(ruler) {
 			var side = ruler.getLocation();
@@ -3937,10 +3604,6 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			if (!clientDiv) { return; }
 			this._setGrab(null);
 			this._unhookEvents();
-			if (this._windowLoadHandler) {
-				removeHandler(this._frameWindow, "load", this._windowLoadHandler);
-				this._windowLoadHandler = null;
-			}
 
 			/* Destroy timers */
 			if (this._autoScrollTimerID) {
@@ -3951,20 +3614,16 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				clearTimeout(this._updateTimer);
 				this._updateTimer = null;
 			}
+			
+			var rootDiv = this._rootDiv;
+			rootDiv.parentNode.removeChild(rootDiv);
 
 			/* Destroy DOM */
-			var parent = this._frameDocument.body;
-			while (parent.hasChildNodes()) { parent.removeChild(parent.lastChild); }
-			if (this._touchDiv) {
-				this._parent.removeChild(this._touchDiv);
-				this._touchDiv = null;
-			}
 			this._selDiv1 = null;
 			this._selDiv2 = null;
 			this._selDiv3 = null;
-			this._insertedSelRule = false;
-			this._textArea = null;
 			this._clipboardDiv = null;
+			this._rootDiv = null;
 			this._scrollDiv = null;
 			this._viewDiv = null;
 			this._clipDiv = null;
@@ -3973,9 +3632,9 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			this._overlayDiv = null;
 			this._leftDiv = null;
 			this._rightDiv = null;
-			this._frameDocument = null;
-			this._frameWindow = null;
-			this.onUnload({type: "Unload"});
+			this._vScrollDiv = null;
+			this._hScrollDiv = null;
+			this._insertedSelRule = false;
 		},
 		_doAutoScroll: function (direction, x, y) {
 			this._autoScrollDir = direction;
@@ -4012,9 +3671,29 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			}
 			return model.getText(start, end);
 		},
+		_getBorder: function (node) {
+			var left,top,right,bottom;
+			if (window.getComputedStyle) {
+				var style = window.getComputedStyle(node, null);
+				left = style.getPropertyValue("border-left-width");
+				top = style.getPropertyValue("border-top-width");
+				right = style.getPropertyValue("border-right-width");
+				bottom = style.getPropertyValue("border-bottom-width");
+			} else if (node.currentStyle) {
+				left = node.currentStyle.borderLeftWidth;
+				top = node.currentStyle.borderTopWidth;
+				right = node.currentStyle.borderRightWidth;
+				bottom = node.currentStyle.borderBottomWidth;
+			}
+			return {
+				left: parseInt(left, 10) || 0,
+				top: parseInt(top, 10) || 0,
+				right: parseInt(right, 10) || 0,
+				bottom: parseInt(bottom, 10) || 0
+			};
+		},
 		_getBoundsAtOffset: function (offset) {
 			var model = this._model;
-			var document = this._frameDocument;
 			var clientDiv = this._clientDiv;
 			var lineIndex = model.getLineAtOffset(offset);
 			var dummy;
@@ -4100,12 +3779,6 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			}
 			return child.lineIndex;
 		},
-		_getFrameHeight: function() {
-			return this._frameDocument.documentElement.clientHeight;
-		},
-		_getFrameWidth: function() {
-			return this._frameDocument.documentElement.clientWidth;
-		},
 		_getClientHeight: function() {
 			var viewPad = this._getViewPadding();
 			return Math.max(0, this._viewDiv.clientHeight - viewPad.top - viewPad.bottom);
@@ -4117,10 +3790,10 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 		_getClipboardText: function (event, handler) {
 			var delimiter = this._model.getLineDelimiter();
 			var clipboadText, text;
-			if (this._frameWindow.clipboardData) {
+			if (window.clipboardData) {
 				//IE
 				clipboadText = [];
-				text = this._frameWindow.clipboardData.getData("Text");
+				text = window.clipboardData.getData("Text");
 				this._convertDelimiter(text, function(t) {clipboadText.push(t);}, function() {clipboadText.push(delimiter);});
 				text = clipboadText.join("");
 				if (handler) { handler(text); }
@@ -4128,7 +3801,6 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			}
 			if (isFirefox) {
 				this._ignoreFocus = true;
-				var document = this._frameDocument;
 				var clipboardDiv = this._clipboardDiv;
 				clipboardDiv.innerHTML = "<pre contenteditable=''></pre>";
 				clipboardDiv.firstChild.focus();
@@ -4255,23 +3927,42 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			return text;
 		},
 		_getViewPadding: function() {
-			return this._viewPadding;
+			return this._metrics.viewPadding;
 		},
-		_getLineBoundingClientRect: function (child) {
+		_getLineTrim: function(line) {
+			var trim = line._trim;
+			if (!trim) {
+				trim = this._getPadding(line);
+				var border = this._getBorder(line);
+				trim.left += border.left;
+				trim.top += border.top;
+				trim.right += border.right;
+				trim.bottom += border.bottom;
+				line._trim = trim;
+			}
+			return trim;
+		},
+		_getLineBoundingClientRect: function (child, noTrim) {
 			var rect = child.getBoundingClientRect();
+			rect = {left: rect.left, top: rect.top, right: rect.left, bottom: rect.bottom};
 			var lastChild = child.lastChild;
 			//Remove any artificial trailing whitespace in the line
 			while (lastChild && lastChild.ignoreChars === lastChild.firstChild.length) {
 				lastChild = lastChild.previousSibling;
 			}
-			if (!lastChild) {
-				return {left: rect.left, top: rect.top, right: rect.left, bottom: rect.bottom};
+			if (lastChild) {
+				var lastRect = lastChild.getBoundingClientRect();
+				rect.right = lastRect.right + this._getLineTrim(child).right;
 			}
-			var lastRect = lastChild.getBoundingClientRect();
-			return {left: rect.left, top: rect.top, right: lastRect.right, bottom: rect.bottom};
+			if (noTrim) {
+				var padding = this._getLineTrim(child);
+				rect.left = rect.left + padding.left;
+				rect.right = rect.right - padding.right;
+			}
+			return rect;
 		},
 		_getLineHeight: function() {
-			return this._lineHeight;
+			return this._metrics.lineHeight;
 		},
 		_getLineNode: function (lineIndex) {
 			var clientDiv = this._clientDiv;
@@ -4384,7 +4075,6 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			return offset + direction;
 		},
 		_getOffset_IE: function (offset, unit, direction) {
-			var document = this._frameDocument;
 			var model = this._model;
 			var lineIndex = model.getLineAtOffset(offset);
 			var clientDiv = this._clientDiv;
@@ -4437,23 +4127,23 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 		},
 		_getPadding: function (node) {
 			var left,top,right,bottom;
-			if (node.currentStyle) {
-				left = node.currentStyle.paddingLeft;
-				top = node.currentStyle.paddingTop;
-				right = node.currentStyle.paddingRight;
-				bottom = node.currentStyle.paddingBottom;
-			} else if (this._frameWindow.getComputedStyle) {
-				var style = this._frameWindow.getComputedStyle(node, null);
+			if (window.getComputedStyle) {
+				var style = window.getComputedStyle(node, null);
 				left = style.getPropertyValue("padding-left");
 				top = style.getPropertyValue("padding-top");
 				right = style.getPropertyValue("padding-right");
 				bottom = style.getPropertyValue("padding-bottom");
+			} else if (node.currentStyle) {
+				left = node.currentStyle.paddingLeft;
+				top = node.currentStyle.paddingTop;
+				right = node.currentStyle.paddingRight;
+				bottom = node.currentStyle.paddingBottom;
 			}
 			return {
-					left: parseInt(left, 10), 
-					top: parseInt(top, 10),
-					right: parseInt(right, 10),
-					bottom: parseInt(bottom, 10)
+				left: parseInt(left, 10) || 0, 
+				top: parseInt(top, 10) || 0,
+				right: parseInt(right, 10) || 0,
+				bottom: parseInt(bottom, 10) || 0
 			};
 		},
 		_getScroll: function() {
@@ -4482,14 +4172,13 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			if (lineStart === lineEnd) {
 				return lineStart;
 			}
-			var document = this._frameDocument;
 			var clientDiv = this._clientDiv;
 			var dummy;
 			var child = this._getLineNode(lineIndex);
 			if (!child) {
 				child = dummy = this._createLine(clientDiv, null, document, lineIndex, model);
 			}
-			var lineRect = this._getLineBoundingClientRect(child);
+			var lineRect = this._getLineBoundingClientRect(child, true);
 			if (x < lineRect.left) { x = lineRect.left; }
 			if (x > lineRect.right) { x = lineRect.right; }
 			/*
@@ -4503,7 +4192,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				for (var i=1; i<rects.length; i++) {
 					minLeft = Math.min(rects[i].left, minLeft);
 				}
-				deltaX = minLeft - lineRect.left;
+				deltaX = minLeft - lineRect.left - this._getLineTrim(child).left;
 			}
 			var scrollX = this._getScroll().x;
 			function _getClientRects(element) {
@@ -4647,50 +4336,6 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			var lineCount = this._model.getLineCount();
 			return Math.max(0, Math.min(lineCount - 1, lineIndex));
 		},
-		_getOffsetBounds: function(offset) {
-			var model = this._model;
-			var lineIndex = model.getLineAtOffset(offset);
-			var lineHeight = this._getLineHeight();
-			var scroll = this._getScroll();
-			var viewPad = this._getViewPadding();
-			var viewRect = this._viewDiv.getBoundingClientRect();
-			var bounds = this._getBoundsAtOffset(offset);
-			var left = bounds.left;
-			var right = bounds.right;
-			var top = (lineIndex * lineHeight) - scroll.y + viewRect.top + viewPad.top;
-			var bottom = top + lineHeight;
-			return {left: left, top: top, right: right, bottom: bottom};
-		},
-		_getVisible: function() {
-			var temp = this._parent;
-			var parentDocument = temp.ownerDocument;
-			while (temp !== parentDocument) {
-				var hidden;
-				if (isIE < 9) {
-					hidden = temp.currentStyle && temp.currentStyle.display === "none";
-				} else {
-					var tempStyle = parentDocument.defaultView.getComputedStyle(temp, null);
-					hidden = tempStyle && tempStyle.getPropertyValue("display") === "none";
-				}
-				if (hidden) { return "hidden"; }
-				temp =  temp.parentNode;
-				if (!temp) { return "disconnected"; }
-			}
-			return "visible";
-		},
-		_hitOffset: function (offset, x, y) {
-			var bounds = this._getOffsetBounds(offset);
-			var left = bounds.left;
-			var right = bounds.right;
-			var top = bounds.top;
-			var bottom = bounds.bottom;
-			var area = 20;
-			left -= area;
-			top -= area;
-			right += area;
-			bottom += area;
-			return (left <= x && x <= right && top <= y && y <= bottom);
-		},
 		_hookEvents: function() {
 			var self = this;
 			this._modelListener = {
@@ -4706,45 +4351,36 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			this._model.addEventListener("Changing", this._modelListener.onChanging);
 			this._model.addEventListener("Changed", this._modelListener.onChanged);
 			
-			var clientDiv = this._clientDiv;
-			var viewDiv = this._viewDiv;
-			var body = this._frameDocument.body; 
 			var handlers = this._handlers = [];
-			var resizeNode = isIE < 9 ? this._frame : this._frameWindow;
-			var focusNode = isPad ? this._textArea : (isIE ||  isFirefox ? this._clientDiv: this._frameWindow);
-			handlers.push({target: this._frameWindow, type: "unload", handler: function(e) { return self._handleUnload(e);}});
-			handlers.push({target: resizeNode, type: "resize", handler: function(e) { return self._handleResize(e);}});
-			handlers.push({target: focusNode, type: "blur", handler: function(e) { return self._handleBlur(e);}});
-			handlers.push({target: focusNode, type: "focus", handler: function(e) { return self._handleFocus(e);}});
+			var clientDiv = this._clientDiv, viewDiv = this._viewDiv, rootDiv = this._rootDiv;
+			var topNode = this._overlayDiv || clientDiv;
+			var grabNode = isIE ? document : window;
+			handlers.push({target: window, type: "resize", handler: function(e) { return self._handleResize(e);}});
+			handlers.push({target: clientDiv, type: "blur", handler: function(e) { return self._handleBlur(e);}});
+			handlers.push({target: clientDiv, type: "focus", handler: function(e) { return self._handleFocus(e);}});
+			handlers.push({target: viewDiv, type: "focus", handler: function(e) { clientDiv.focus(); }});
 			handlers.push({target: viewDiv, type: "scroll", handler: function(e) { return self._handleScroll(e);}});
+			handlers.push({target: clientDiv, type: "keydown", handler: function(e) { return self._handleKeyDown(e);}});
+			handlers.push({target: clientDiv, type: "keypress", handler: function(e) { return self._handleKeyPress(e);}});
+			handlers.push({target: clientDiv, type: "keyup", handler: function(e) { return self._handleKeyUp(e);}});
+			handlers.push({target: clientDiv, type: "selectstart", handler: function(e) { return self._handleSelectStart(e);}});
+			handlers.push({target: clientDiv, type: "contextmenu", handler: function(e) { return self._handleContextMenu(e);}});
+			handlers.push({target: clientDiv, type: "copy", handler: function(e) { return self._handleCopy(e);}});
+			handlers.push({target: clientDiv, type: "cut", handler: function(e) { return self._handleCut(e);}});
+			handlers.push({target: clientDiv, type: "paste", handler: function(e) { return self._handlePaste(e);}});
 			if (isPad) {
-				var touchDiv = this._touchDiv;
-				var textArea = this._textArea;
-				handlers.push({target: textArea, type: "keydown", handler: function(e) { return self._handleKeyDown(e);}});
-				handlers.push({target: textArea, type: "input", handler: function(e) { return self._handleInput(e); }});
-				handlers.push({target: textArea, type: "textInput", handler: function(e) { return self._handleTextInput(e); }});
-				handlers.push({target: textArea, type: "click", handler: function(e) { return self._handleTextAreaClick(e); }});
-				handlers.push({target: touchDiv, type: "touchstart", handler: function(e) { return self._handleTouchStart(e); }});
-				handlers.push({target: touchDiv, type: "touchmove", handler: function(e) { return self._handleTouchMove(e); }});
-				handlers.push({target: touchDiv, type: "touchend", handler: function(e) { return self._handleTouchEnd(e); }});
+				handlers.push({target: document, type: "selectionchange", handler: function(e) { return self._handleSelectionChange(e); }});
+				handlers.push({target: clientDiv, type: "touchstart", handler: function(e) { return self._handleTouchStart(e); }});
+				handlers.push({target: clientDiv, type: "touchmove", handler: function(e) { return self._handleTouchMove(e); }});
+				handlers.push({target: clientDiv, type: "touchend", handler: function(e) { return self._handleTouchEnd(e); }});
 			} else {
-				var topNode = this._overlayDiv || this._clientDiv;
-				var grabNode = isIE ? clientDiv : this._frameWindow;
-				handlers.push({target: clientDiv, type: "keydown", handler: function(e) { return self._handleKeyDown(e);}});
-				handlers.push({target: clientDiv, type: "keypress", handler: function(e) { return self._handleKeyPress(e);}});
-				handlers.push({target: clientDiv, type: "keyup", handler: function(e) { return self._handleKeyUp(e);}});
-				handlers.push({target: clientDiv, type: "selectstart", handler: function(e) { return self._handleSelectStart(e);}});
-				handlers.push({target: clientDiv, type: "contextmenu", handler: function(e) { return self._handleContextMenu(e);}});
-				handlers.push({target: clientDiv, type: "copy", handler: function(e) { return self._handleCopy(e);}});
-				handlers.push({target: clientDiv, type: "cut", handler: function(e) { return self._handleCut(e);}});
-				handlers.push({target: clientDiv, type: "paste", handler: function(e) { return self._handlePaste(e);}});
 				handlers.push({target: clientDiv, type: "mousedown", handler: function(e) { return self._handleMouseDown(e);}});
 				handlers.push({target: clientDiv, type: "mouseover", handler: function(e) { return self._handleMouseOver(e);}});
 				handlers.push({target: clientDiv, type: "mouseout", handler: function(e) { return self._handleMouseOut(e);}});
 				handlers.push({target: grabNode, type: "mouseup", handler: function(e) { return self._handleMouseUp(e);}});
 				handlers.push({target: grabNode, type: "mousemove", handler: function(e) { return self._handleMouseMove(e);}});
-				handlers.push({target: body, type: "mousedown", handler: function(e) { return self._handleBodyMouseDown(e);}});
-				handlers.push({target: body, type: "mouseup", handler: function(e) { return self._handleBodyMouseUp(e);}});
+				handlers.push({target: rootDiv, type: "mousedown", handler: function(e) { return self._handleRootMouseDown(e);}});
+				handlers.push({target: rootDiv, type: "mouseup", handler: function(e) { return self._handleRootMouseUp(e);}});
 				handlers.push({target: topNode, type: "dragstart", handler: function(e) { return self._handleDragStart(e);}});
 				handlers.push({target: topNode, type: "drag", handler: function(e) { return self._handleDrag(e);}});
 				handlers.push({target: topNode, type: "dragend", handler: function(e) { return self._handleDragEnd(e);}});
@@ -4752,20 +4388,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				handlers.push({target: topNode, type: "dragover", handler: function(e) { return self._handleDragOver(e);}});
 				handlers.push({target: topNode, type: "dragleave", handler: function(e) { return self._handleDragLeave(e);}});
 				handlers.push({target: topNode, type: "drop", handler: function(e) { return self._handleDrop(e);}});
-				if (isChrome) {
-					handlers.push({target: this._parentDocument, type: "mousemove", handler: function(e) { return self._handleMouseMove(e);}});
-					handlers.push({target: this._parentDocument, type: "mouseup", handler: function(e) { return self._handleMouseUp(e);}});
-				}
-				if (isIE) {
-					handlers.push({target: this._frameDocument, type: "activate", handler: function(e) { return self._handleDocFocus(e); }});
-				}
-				if (isFirefox) {
-					handlers.push({target: this._frameDocument, type: "focus", handler: function(e) { return self._handleDocFocus(e); }});
-				}
-				if (!isIE && !isOpera) {
-					var wheelEvent = isFirefox ? "DOMMouseScroll" : "mousewheel";
-					handlers.push({target: this._viewDiv, type: wheelEvent, handler: function(e) { return self._handleMouseWheel(e); }});
-				}
+				handlers.push({target: this._clientDiv, type: isFirefox ? "DOMMouseScroll" : "mousewheel", handler: function(e) { return self._handleMouseWheel(e); }});
 				if (isFirefox && !isWindows) {
 					handlers.push({target: this._clientDiv, type: "DOMCharacterDataModified", handler: function (e) { return self._handleDataModified(e); }});
 				}
@@ -4779,6 +4402,27 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 					handlers.push({target: this._clientDiv, type: "dblclick", handler: function(e) { return self._handleDblclick(e); }});
 				}
 			}
+
+			var leftDiv = this._leftDiv, rightDiv = this._rightDiv;
+			if (isIE) {
+				handlers.push({target: leftDiv, type: "selectstart", handler: function() {return false;}});
+			}
+			handlers.push({target: leftDiv, type: isFirefox ? "DOMMouseScroll" : "mousewheel", handler: function(e) { return self._handleMouseWheel(e); }});
+			handlers.push({target: leftDiv, type: "click", handler: function(e) { self._handleRulerEvent(e); }});
+			handlers.push({target: leftDiv, type: "dblclick", handler: function(e) { self._handleRulerEvent(e); }});
+			handlers.push({target: leftDiv, type: "mousemove", handler: function(e) { self._handleRulerEvent(e); }});
+			handlers.push({target: leftDiv, type: "mouseover", handler: function(e) { self._handleRulerEvent(e); }});
+			handlers.push({target: leftDiv, type: "mouseout", handler: function(e) { self._handleRulerEvent(e); }});
+			if (isIE) {
+				handlers.push({target: rightDiv, type: "selectstart", handler: function() {return false;}});
+			}
+			handlers.push({target: rightDiv, type: isFirefox ? "DOMMouseScroll" : "mousewheel", handler: function(e) { return self._handleMouseWheel(e); }});
+			handlers.push({target: rightDiv, type: "click", handler: function(e) { self._handleRulerEvent(e); }});
+			handlers.push({target: rightDiv, type: "dblclick", handler: function(e) { self._handleRulerEvent(e); }});
+			handlers.push({target: rightDiv, type: "mousemove", handler: function(e) { self._handleRulerEvent(e); }});
+			handlers.push({target: rightDiv, type: "mouseover", handler: function(e) { self._handleRulerEvent(e); }});
+			handlers.push({target: rightDiv, type: "mouseout", handler: function(e) { self._handleRulerEvent(e); }});
+			
 			for (var i=0; i<handlers.length; i++) {
 				var h = handlers[i];
 				addHandler(h.target, h.type, h.handler, h.capture);
@@ -4812,6 +4456,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			this._maxLineIndex = -1;
 			this._ignoreSelect = true;
 			this._ignoreFocus = false;
+			this._hasFocus = false;
 			this._columnX = -1;
 			this._dragOffset = -1;
 
@@ -4843,7 +4488,10 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			
 			/* Create elements */
 			this._createActions();
-			this._createFrame();
+			this._createView();
+		},
+		_isLinkURL: function(string) {
+			return string.toLowerCase().lastIndexOf(".css") === string.length - 4;
 		},
 		_modifyContent: function(e, updateCaret) {
 			if (this._readonly && !e._code) {
@@ -4931,6 +4579,16 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				self._updatePage();
 			}, 0);
 		},
+		_resetLineWidth: function() {
+			var clientDiv = this._clientDiv;
+			if (clientDiv) {
+				var child = clientDiv.firstChild;
+				while (child) {
+					child.lineWidth = undefined;
+					child = child.nextSibling;
+				}
+			}
+		},
 		_reset: function() {
 			this._maxLineIndex = -1;
 			this._maxLineWidth = 0;
@@ -4966,37 +4624,6 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				}
 			}
 		},
-		_resizeTouchDiv: function() {
-			var viewRect = this._viewDiv.getBoundingClientRect();
-			var parentRect = this._frame.getBoundingClientRect();
-			var temp = this._frame;
-			while (temp) {
-				if (temp.style && temp.style.top) { break; }
-				temp = temp.parentNode;
-			}
-			var parentTop = parentRect.top;
-			if (temp) {
-				parentTop -= temp.getBoundingClientRect().top;
-			} else {
-				parentTop += this._parentDocument.body.scrollTop;
-			}
-			temp = this._frame;
-			while (temp) {
-				if (temp.style && temp.style.left) { break; }
-				temp = temp.parentNode;
-			}
-			var parentLeft = parentRect.left;
-			if (temp) {
-				parentLeft -= temp.getBoundingClientRect().left;
-			} else {
-				parentLeft += this._parentDocument.body.scrollLeft;
-			}
-			var touchDiv = this._touchDiv;
-			touchDiv.style.left = (parentLeft + viewRect.left) + "px";
-			touchDiv.style.top = (parentTop + viewRect.top) + "px";
-			touchDiv.style.width = viewRect.width + "px";
-			touchDiv.style.height = viewRect.height + "px";
-		},
 		_scrollView: function (pixelX, pixelY) {
 			/*
 			* Always set _ensureCaretVisible to false so that the view does not scroll
@@ -5019,16 +4646,14 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 		},
 		_setClipboardText: function (text, event) {
 			var clipboardText;
-			if (this._frameWindow.clipboardData) {
+			if (window.clipboardData) {
 				//IE
 				clipboardText = [];
 				this._convertDelimiter(text, function(t) {clipboardText.push(t);}, function() {clipboardText.push(platformDelimiter);});
-				return this._frameWindow.clipboardData.setData("Text", clipboardText.join(""));
+				return window.clipboardData.setData("Text", clipboardText.join(""));
 			}
 			/* Feature in Chrome, clipboardData.setData is no-op on Chrome even though it returns true */
 			if (isChrome || isFirefox || !event) {
-				var window = this._frameWindow;
-				var document = this._frameDocument;
 				var child = document.createElement("PRE");
 				child.style.position = "fixed";
 				child.style.left = "-1000px";
@@ -5084,8 +4709,6 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			}
 		},
 		_setDOMSelection: function (startNode, startOffset, endNode, endOffset) {
-			var window = this._frameWindow;
-			var document = this._frameDocument;
 			var startLineNode, startLineOffset, endLineNode, endLineOffset;
 			var offset = 0;
 			var lineChild = startNode.firstChild;
@@ -5130,7 +4753,6 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			}
 			
 			this._setDOMFullSelection(startNode, startOffset, startLineEnd, endNode, endOffset, endLineEnd);
-			if (isPad) { return; }
 
 			var range;
 			if (window.getSelection) {
@@ -5169,118 +4791,89 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			}
 		},
 		_setDOMFullSelection: function(startNode, startOffset, startLineEnd, endNode, endOffset, endLineEnd) {
+			if (!this._selDiv1) { return; }
+			var selDiv = this._selDiv1;
+			selDiv.style.width = "0px";
+			selDiv.style.height = "0px";
+			selDiv = this._selDiv2;
+			selDiv.style.width = "0px";
+			selDiv.style.height = "0px";
+			selDiv = this._selDiv3;
+			selDiv.style.width = "0px";
+			selDiv.style.height = "0px";
+			if (startNode === endNode && startOffset === endOffset) { return; }
 			var model = this._model;
-			if (this._selDiv1) {
-				var startLineBounds, l;
-				startLineBounds = this._getLineBoundingClientRect(startNode);
-				if (startOffset === 0) {
-					l = startLineBounds.left;
+			var viewPad = this._getViewPadding();
+			var clientRect = this._clientDiv.getBoundingClientRect();
+			var viewRect = this._viewDiv.getBoundingClientRect();
+			var left = viewRect.left + viewPad.left;
+			var right = clientRect.right;
+			var top = viewRect.top + viewPad.top;
+			var bottom = clientRect.bottom;
+			var hd = 0, vd = 0;
+			if (this._clipDiv) {
+				var clipRect = this._clipDiv.getBoundingClientRect();
+				hd = clipRect.left - this._clipDiv.scrollLeft;
+				vd = clipRect.top;
+			} else {
+				var rootpRect = this._rootDiv.getBoundingClientRect();
+				hd = rootpRect.left;
+				vd = rootpRect.top;
+			}
+			var startLineBounds, l;
+			startLineBounds = this._getLineBoundingClientRect(startNode);
+			if (startOffset === 0) {
+				l = startLineBounds.left;
+			} else {
+				if (startOffset >= startLineEnd) {
+					l = startLineBounds.right;
 				} else {
-					if (startOffset >= startLineEnd) {
-						l = startLineBounds.right;
-					} else {
-						this._ignoreDOMSelection = true;
-						l = this._getBoundsAtOffset(model.getLineStart(startNode.lineIndex) + startOffset).left;
-						this._ignoreDOMSelection = false;
-					}
+					this._ignoreDOMSelection = true;
+					l = this._getBoundsAtOffset(model.getLineStart(startNode.lineIndex) + startOffset).left;
+					this._ignoreDOMSelection = false;
 				}
-				var textArea = this._textArea;
-				if (textArea && isPad) {
-					textArea.selectionStart = textArea.selectionEnd = 0;
-					var rect = this._frame.getBoundingClientRect();
-					var touchRect = this._touchDiv.getBoundingClientRect();
-					var viewBounds = this._viewDiv.getBoundingClientRect();
-					if (!(viewBounds.left <= l && l <= viewBounds.left + viewBounds.width &&
-						viewBounds.top <= startLineBounds.top && startLineBounds.top <= viewBounds.top + viewBounds.height) ||
-						!(startNode === endNode && startOffset === endOffset))
-					{
-						textArea.style.left = "-1000px";
-					} else {
-						textArea.style.left = (l - 4 + rect.left - touchRect.left) + "px";
-					}
-					textArea.style.top = (startLineBounds.top + rect.top - touchRect.top) + "px";
-					textArea.style.width = "6px";
-					textArea.style.height = (startLineBounds.bottom - startLineBounds.top) + "px";
+			}
+			var r;
+			var endLineBounds = this._getLineBoundingClientRect(endNode);
+			if (endOffset === 0) {
+				r = endLineBounds.left;
+			} else {
+				if (endOffset >= endLineEnd) {
+					r = endLineBounds.right;
+				} else {
+					this._ignoreDOMSelection = true;
+					r = this._getBoundsAtOffset(model.getLineStart(endNode.lineIndex) + endOffset).left;
+					this._ignoreDOMSelection = false;
 				}
-			
-				var selDiv = this._selDiv1;
-				selDiv.style.width = "0px";
-				selDiv.style.height = "0px";
-				selDiv = this._selDiv2;
-				selDiv.style.width = "0px";
-				selDiv.style.height = "0px";
-				selDiv = this._selDiv3;
-				selDiv.style.width = "0px";
-				selDiv.style.height = "0px";
-				if (!(startNode === endNode && startOffset === endOffset)) {
-					var handleWidth = isPad ? 2 : 0;
-					var handleBorder = handleWidth + "px blue solid";
-					var viewPad = this._getViewPadding();
-					var clientRect = this._clientDiv.getBoundingClientRect();
-					var viewRect = this._viewDiv.getBoundingClientRect();
-					var left = viewRect.left + viewPad.left;
-					var right = clientRect.right;
-					var top = viewRect.top + viewPad.top;
-					var bottom = clientRect.bottom;
-					var hd = 0, vd = 0;
-					if (this._clipDiv) {
-						var clipRect = this._clipDiv.getBoundingClientRect();
-						hd = clipRect.left - this._clipDiv.scrollLeft;
-						vd = clipRect.top;
-					}
-					var r;
-					var endLineBounds = this._getLineBoundingClientRect(endNode);
-					if (endOffset === 0) {
-						r = endLineBounds.left;
-					} else {
-						if (endOffset >= endLineEnd) {
-							r = endLineBounds.right;
-						} else {
-							this._ignoreDOMSelection = true;
-							r = this._getBoundsAtOffset(model.getLineStart(endNode.lineIndex) + endOffset).left;
-							this._ignoreDOMSelection = false;
-						}
-					}
-					var sel1Div = this._selDiv1;
-					var sel1Left = Math.min(right, Math.max(left, l));
-					var sel1Top = Math.min(bottom, Math.max(top, startLineBounds.top));
-					var sel1Right = right;
-					var sel1Bottom = Math.min(bottom, Math.max(top, startLineBounds.bottom));
-					sel1Div.style.left = (sel1Left - hd) + "px";
-					sel1Div.style.top = (sel1Top - vd) + "px";
-					sel1Div.style.width = Math.max(0, sel1Right - sel1Left) + "px";
-					sel1Div.style.height = Math.max(0, sel1Bottom - sel1Top) + (isPad ? 1 : 0) + "px";
-					if (isPad) {
-						sel1Div.style.borderLeft = handleBorder;
-						sel1Div.style.borderRight = "0px";
-					}
-					if (startNode === endNode) {
-						sel1Right = Math.min(r, right);
-						sel1Div.style.width = Math.max(0, sel1Right - sel1Left - handleWidth * 2) + "px";
-						if (isPad) {
-							sel1Div.style.borderRight = handleBorder;
-						}
-					} else {
-						var sel3Left = left;
-						var sel3Top = Math.min(bottom, Math.max(top, endLineBounds.top));
-						var sel3Right = Math.min(right, Math.max(left, r));
-						var sel3Bottom = Math.min(bottom, Math.max(top, endLineBounds.bottom));
-						var sel3Div = this._selDiv3;
-						sel3Div.style.left = (sel3Left - hd) + "px";
-						sel3Div.style.top = (sel3Top - vd) + "px";
-						sel3Div.style.width = Math.max(0, sel3Right - sel3Left - handleWidth) + "px";
-						sel3Div.style.height = Math.max(0, sel3Bottom - sel3Top) + "px";
-						if (isPad) {
-							sel3Div.style.borderRight = handleBorder;
-						}
-						if (sel3Top - sel1Bottom > 0) {
-							var sel2Div = this._selDiv2;
-							sel2Div.style.left = (left - hd)  + "px";
-							sel2Div.style.top = (sel1Bottom - vd) + "px";
-							sel2Div.style.width = Math.max(0, right - left) + "px";
-							sel2Div.style.height = Math.max(0, sel3Top - sel1Bottom) + (isPad ? 1 : 0) + "px";
-						}
-					}
+			}
+			var sel1Div = this._selDiv1;
+			var sel1Left = Math.min(right, Math.max(left, l));
+			var sel1Top = Math.min(bottom, Math.max(top, startLineBounds.top));
+			var sel1Right = right;
+			var sel1Bottom = Math.min(bottom, Math.max(top, startLineBounds.bottom));
+			sel1Div.style.left = (sel1Left - hd) + "px";
+			sel1Div.style.top = (sel1Top - vd) + "px";
+			sel1Div.style.width = Math.max(0, sel1Right - sel1Left) + "px";
+			sel1Div.style.height = Math.max(0, sel1Bottom - sel1Top) + "px";
+			if (startNode === endNode) {
+				sel1Right = Math.min(r, right);
+				sel1Div.style.width = Math.max(0, sel1Right - sel1Left) + "px";
+			} else {
+				var sel3Left = left;
+				var sel3Top = Math.min(bottom, Math.max(top, endLineBounds.top));
+				var sel3Right = Math.min(right, Math.max(left, r));
+				var sel3Bottom = Math.min(bottom, Math.max(top, endLineBounds.bottom));
+				var sel3Div = this._selDiv3;
+				sel3Div.style.left = (sel3Left - hd) + "px";
+				sel3Div.style.top = (sel3Top - vd) + "px";
+				sel3Div.style.width = Math.max(0, sel3Right - sel3Left) + "px";
+				sel3Div.style.height = Math.max(0, sel3Bottom - sel3Top) + "px";
+				if (sel3Top - sel1Bottom > 0) {
+					var sel2Div = this._selDiv2;
+					sel2Div.style.left = (left - hd)  + "px";
+					sel2Div.style.top = (sel1Bottom - vd) + "px";
+					sel2Div.style.width = Math.max(0, right - left) + "px";
+					sel2Div.style.height = Math.max(0, sel3Top - sel1Bottom) + "px";
 				}
 			}
 		},
@@ -5314,7 +4907,6 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			if (this._overlayDiv) {
 				this._overlayDiv.style.zIndex = visible ? "-1" : "1";
 			}
-			var document = this._frameDocument;
 			var line = this._getLineNext();
 			while (line) {
 				if (line.hasLink) {
@@ -5416,23 +5008,14 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 		},
 		_setFullSelection: function(fullSelection, init) {
 			this._fullSelection = fullSelection;
-			
-			/* 
-			* Bug in IE 8. For some reason, during scrolling IE does not reflow the elements
-			* that are used to compute the location for the selection divs. This causes the
-			* divs to be placed at the wrong location. The fix is to disabled full selection for IE8.
-			*/
-			if (isIE < 9) {
-				this._fullSelection = false;
-			}
 			if (isWebkit) {
 				this._fullSelection = true;
 			}
-			var parent = this._clipDiv || this._scrollDiv;
+			var parent = this._clipDiv || this._rootDiv;
 			if (!parent) {
 				return;
 			}
-			if (!isPad && !this._fullSelection) {
+			if (!this._fullSelection) {
 				if (this._selDiv1) {
 					parent.removeChild(this._selDiv1);
 					this._selDiv1 = null;
@@ -5448,45 +5031,38 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				return;
 			}
 			
-			if (!this._selDiv1 && (isPad || (this._fullSelection && !isWebkit))) {
-				var frameDocument = this._frameDocument;
+			if (!this._selDiv1 && (this._fullSelection && !isWebkit)) {
 				this._hightlightRGB = "Highlight";
-				var selDiv1 = frameDocument.createElement("DIV");
+				var selDiv1 = document.createElement("DIV");
 				this._selDiv1 = selDiv1;
-				selDiv1.id = "selDiv1";
-				selDiv1.style.position = this._clipDiv ? "absolute" : "fixed";
+				selDiv1.style.position = "absolute";
 				selDiv1.style.borderWidth = "0px";
 				selDiv1.style.margin = "0px";
 				selDiv1.style.padding = "0px";
-				selDiv1.style.MozOutline = "none";
 				selDiv1.style.outline = "none";
 				selDiv1.style.background = this._hightlightRGB;
 				selDiv1.style.width = "0px";
 				selDiv1.style.height = "0px";
 				selDiv1.style.zIndex = "0";
 				parent.appendChild(selDiv1);
-				var selDiv2 = frameDocument.createElement("DIV");
+				var selDiv2 = document.createElement("DIV");
 				this._selDiv2 = selDiv2;
-				selDiv2.id = "selDiv2";
-				selDiv2.style.position = this._clipDiv ? "absolute" : "fixed";
+				selDiv2.style.position = "absolute";
 				selDiv2.style.borderWidth = "0px";
 				selDiv2.style.margin = "0px";
 				selDiv2.style.padding = "0px";
-				selDiv2.style.MozOutline = "none";
 				selDiv2.style.outline = "none";
 				selDiv2.style.background = this._hightlightRGB;
 				selDiv2.style.width = "0px";
 				selDiv2.style.height = "0px";
 				selDiv2.style.zIndex = "0";
 				parent.appendChild(selDiv2);
-				var selDiv3 = frameDocument.createElement("DIV");
+				var selDiv3 = document.createElement("DIV");
 				this._selDiv3 = selDiv3;
-				selDiv3.id = "selDiv3";
-				selDiv3.style.position = this._clipDiv ? "absolute" : "fixed";
+				selDiv3.style.position = "absolute";
 				selDiv3.style.borderWidth = "0px";
 				selDiv3.style.margin = "0px";
 				selDiv3.style.padding = "0px";
-				selDiv3.style.MozOutline = "none";
 				selDiv3.style.outline = "none";
 				selDiv3.style.background = this._hightlightRGB;
 				selDiv3.style.width = "0px";
@@ -5500,7 +5076,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				* is to map known colors using a table or fallback to light blue.
 				*/
 				if (isFirefox && isMac) {
-					var style = this._frameWindow.getComputedStyle(selDiv3, null);
+					var style = window.getComputedStyle(selDiv3, null);
 					var rgb = style.getPropertyValue("background-color");
 					switch (rgb) {
 						case "rgb(119, 141, 168)": rgb = "rgb(199, 208, 218)"; break;
@@ -5517,8 +5093,10 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 					selDiv2.style.background = rgb;
 					selDiv3.style.background = rgb;
 					if (!this._insertedSelRule) {
-						var styleSheet = frameDocument.styleSheets[0];
-						styleSheet.insertRule("::-moz-selection {background: " + rgb + "; }", 0);
+						var stylesheet = document.createElement("STYLE");
+						var head = document.getElementsByTagName("HEAD")[0] || document.documentElement;
+						stylesheet.appendChild(document.createTextNode("::-moz-selection {background: " + rgb + "; }"));
+						head.insertBefore(stylesheet, head.firstChild);
 						this._insertedSelRule = true;
 					}
 				}
@@ -5537,30 +5115,18 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				if (clientDiv) {  clientDiv.style.MozTabSize = this._tabSize+""; }
 			} else if (this._tabSize !== 8) {
 				this._customTabSize = this._tabSize;
-				if (!init) {
-					this.redrawLines();
-				}
+			}
+			if (!init) {
+				this.redrawLines();
+				this._resetLineWidth();
 			}
 		},
 		_setThemeClass: function (themeClass, init) {
 			this._themeClass = themeClass;
-			var document = this._frameDocument;
-			if (document) {
-				var viewContainerClass = "viewContainer";
-				if (this._themeClass) { viewContainerClass += " " + this._themeClass; }
-				document.body.className = viewContainerClass;
-				if (!init) {
-					if (isIE) {
-						document.body.style.lineHeight = "normal";
-					}
-					this._lineHeight = this._calculateLineHeight();
-					this._viewPadding = this._calculatePadding();
-					if (isIE) {
-						document.body.style.lineHeight = this._lineHeight + "px";
-					}
-					this.redraw();
-				}
-			}
+			var viewContainerClass = "textviewContainer";
+			if (this._themeClass) { viewContainerClass += " " + this._themeClass; }
+			this._rootDiv.className = viewContainerClass;
+			this._updateStyle(init);
 		},
 		_showCaret: function (allSelection, pageScroll) {
 			if (!this._clientDiv) { return; }
@@ -5672,7 +5238,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 		},
 		_updateDOMSelection: function () {
 			if (this._ignoreDOMSelection) { return; }
-			if (!this._clientDiv) { return; }
+			if (!this._clientDiv || !this._hasFocus) { return; }
 			var selection = this._getSelection();
 			var model = this._model;
 			var startLine = model.getLineAtOffset(selection.start);
@@ -5736,15 +5302,16 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				leftWidth = this._leftDiv ? this._leftDiv.scrollWidth : 0;
 				scrollWidth = Math.max(this._maxLineWidth, clientWidth);
 			} else {
-				var document = this._frameDocument;
-				var frameWidth = this._getFrameWidth();
-				var frameHeight = this._getFrameHeight();
-				document.body.style.width = frameWidth + "px";
-				document.body.style.height = frameHeight + "px";
+				var parent = this._parent;
+				var rootDiv = this._rootDiv;
+				var parentWidth = parent.clientWidth;
+				var parentHeight = parent.clientHeight;
+				rootDiv.style.width = parentWidth + "px";
+				rootDiv.style.height = parentHeight + "px";
 
 				/* Update view height in order to have client height computed */
 				var viewDiv = this._viewDiv;
-				viewDiv.style.height = Math.max(0, (frameHeight - viewPad.top - viewPad.bottom)) + "px";
+				viewDiv.style.height = Math.max(0, (parentHeight - viewPad.top - viewPad.bottom)) + "px";
 				clientHeight = this._getClientHeight();
 				var linesPerPage = Math.floor((clientHeight + partialY) / lineHeight);
 				var bottomIndex = Math.min(topIndex + linesPerPage, lineCount - 1);
@@ -5803,7 +5370,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 					lineWidth = child.lineWidth;
 					if (lineWidth === undefined) {
 						rect = this._getLineBoundingClientRect(child);
-						lineWidth = child.lineWidth = rect.right - rect.left;
+						lineWidth = child.lineWidth = Math.ceil(rect.right - rect.left);
 					}
 					if (lineWidth >= this._maxLineWidth) {
 						this._maxLineWidth = lineWidth;
@@ -5836,9 +5403,9 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				leftWidth = this._leftDiv ? this._leftDiv.scrollWidth : 0;
 				var rightWidth = this._rightDiv ? this._rightDiv.scrollWidth : 0;
 				viewDiv.style.left = leftWidth + "px";
-				viewDiv.style.width = Math.max(0, frameWidth - leftWidth - rightWidth - viewPad.left - viewPad.right) + "px";
+				viewDiv.style.width = Math.max(0, parentWidth - leftWidth - rightWidth - viewPad.left - viewPad.right) + "px";
 				if (this._rightDiv) {
-					this._rightDiv.style.left = (frameWidth - rightWidth) + "px"; 
+					this._rightDiv.style.left = (parentWidth - rightWidth) + "px"; 
 				}
 				/* Need to set the height first in order for the width to consider the vertical scrollbar */
 				var scrollDiv = this._scrollDiv;
@@ -5865,6 +5432,20 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				var rulerHeight = clientHeight + viewPad.top + viewPad.bottom;
 				this._updateRulerSize(this._leftDiv, rulerHeight);
 				this._updateRulerSize(this._rightDiv, rulerHeight);
+			}
+			if (this._vScrollDiv) {
+				var trackHeight = clientHeight - 8;
+				var thumbHeight = Math.max(15, Math.ceil(Math.min(1, trackHeight / (scrollHeight + viewPad.top + viewPad.bottom)) * trackHeight));
+				this._vScrollDiv.style.left = (leftWidth + clientWidth - 8) + "px";
+				this._vScrollDiv.style.top = Math.floor(Math.max(0, (scroll.y * trackHeight / scrollHeight))) + "px";
+				this._vScrollDiv.style.height = thumbHeight + "px";
+			}
+			if (this._hScrollDiv) {
+				var trackWidth = clientWidth - 8;
+				var thumbWidth = Math.max(15, Math.ceil(Math.min(1, trackWidth / (this._maxLineWidth + viewPad.left + viewPad.right)) * trackWidth));
+				this._hScrollDiv.style.left = leftWidth + Math.floor(Math.max(0, Math.floor(scroll.x * trackWidth / this._maxLineWidth))) + "px";
+				this._hScrollDiv.style.top = (clientHeight - 9) + "px";
+				this._hScrollDiv.style.width = thumbWidth + "px";
 			}
 			var left = scroll.x;	
 			var clipDiv = this._clipDiv;
@@ -5950,10 +5531,6 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 					this._showCaret();
 				}
 			}
-			if (isPad) {
-				var self = this;
-				setTimeout(function() {self._resizeTouchDiv();}, 0);
-			}
 		},
 		_updateRulerSize: function (divRuler, rulerHeight) {
 			if (!divRuler) { return; }
@@ -5974,7 +5551,6 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			if (!divRuler) { return; }
 			var cells = divRuler.firstChild.rows[0].cells;
 			var lineHeight = this._getLineHeight();
-			var parentDocument = this._frameDocument;
 			var viewPad = this._getViewPadding();
 			for (var i = 0; i < cells.length; i++) {
 				var div = cells[i].firstChild;
@@ -5989,7 +5565,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 					widthDiv = child;
 					child = child.nextSibling;
 				} else {
-					widthDiv = parentDocument.createElement("DIV");
+					widthDiv = document.createElement("DIV");
 					widthDiv.style.visibility = "hidden";
 					div.appendChild(widthDiv);
 				}
@@ -6021,10 +5597,10 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 						child = nextChild;
 					}
 					child = div.firstChild.nextSibling;
-					frag = parentDocument.createDocumentFragment();
+					frag = document.createDocumentFragment();
 					for (lineIndex=topIndex; lineIndex<=bottomIndex; lineIndex++) {
 						if (!child || child.lineIndex > lineIndex) {
-							lineDiv = parentDocument.createElement("DIV");
+							lineDiv = document.createElement("DIV");
 							annotation = annotations[lineIndex];
 							if (annotation) {
 								this._applyStyle(annotation.style, lineDiv);
@@ -6039,7 +5615,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 						} else {
 							if (frag.firstChild) {
 								div.insertBefore(frag, child);
-								frag = parentDocument.createDocumentFragment();
+								frag = document.createDocumentFragment();
 							}
 							if (child) {
 								child = child.nextSibling;
@@ -6048,11 +5624,10 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 					}
 					if (frag.firstChild) { div.insertBefore(frag, child); }
 				} else {
-					var buttonHeight = isPad ? 0 : 17;
 					var clientHeight = this._getClientHeight ();
 					var lineCount = this._model.getLineCount ();
 					var contentHeight = lineHeight * lineCount;
-					var trackHeight = clientHeight + viewPad.top + viewPad.bottom - 2 * buttonHeight;
+					var trackHeight = clientHeight + viewPad.top + viewPad.bottom - 2 * scrollButtonHeight;
 					var divHeight;
 					if (contentHeight < trackHeight) {
 						divHeight = lineHeight;
@@ -6066,15 +5641,15 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 							count--;
 						}
 						annotations = ruler.getAnnotations(0, lineCount);
-						frag = parentDocument.createDocumentFragment();
+						frag = document.createDocumentFragment();
 						for (var prop in annotations) {
 							lineIndex = prop >>> 0;
 							if (lineIndex < 0) { continue; }
-							lineDiv = parentDocument.createElement("DIV");
+							lineDiv = document.createElement("DIV");
 							annotation = annotations[prop];
 							this._applyStyle(annotation.style, lineDiv);
 							lineDiv.style.position = "absolute";
-							lineDiv.style.top = buttonHeight + lineHeight + Math.floor(lineIndex * divHeight) + "px";
+							lineDiv.style.top = scrollButtonHeight + lineHeight + Math.floor(lineIndex * divHeight) + "px";
 							if (annotation.html) {
 								lineDiv.innerHTML = annotation.html;
 							}
@@ -6086,7 +5661,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 					} else if (div._oldTrackHeight !== trackHeight) {
 						lineDiv = div.firstChild ? div.firstChild.nextSibling : null;
 						while (lineDiv) {
-							lineDiv.style.top = buttonHeight + lineHeight + Math.floor(lineDiv.lineIndex * divHeight) + "px";
+							lineDiv.style.top = scrollButtonHeight + lineHeight + Math.floor(lineDiv.lineIndex * divHeight) + "px";
 							lineDiv = lineDiv.nextSibling;
 						}
 					}
@@ -6094,6 +5669,21 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				}
 				div.rulerChanged = false;
 				div = div.nextSibling;
+			}
+		},
+		_updateStyle: function (init) {
+			if (!init && isIE) {
+				this._rootDiv.style.lineHeight = "normal";
+			}
+			var metrics = this._metrics = this._calculateMetrics();
+			if (isIE) {
+				this._rootDiv.style.lineHeight = (metrics.lineHeight - (metrics.lineTrim.top + metrics.lineTrim.bottom)) + "px";
+			} else {
+				this._rootDiv.style.lineHeight = "normal";
+			}
+			if (!init) {
+				this.redraw();
+				this._resetLineWidth();
 			}
 		}
 	};//end prototype

@@ -11,13 +11,12 @@
 
 /*global define setTimeout clearTimeout setInterval clearInterval Node */
 
-define("orion/textview/tooltip", ['orion/textview/textView', 'orion/textview/textModel', 'orion/textview/projectionTextModel'], function(mTextView, mTextModel, mProjectionTextModel) {
+define("orion/textview/tooltip", ['i18n!orion/textview/nls/messages', 'orion/textview/textView', 'orion/textview/textModel', 'orion/textview/projectionTextModel'], function(messages, mTextView, mTextModel, mProjectionTextModel) {
 
 	/** @private */
 	function Tooltip (view) {
 		this._view = view;
-		//TODO add API to get the parent of the view
-		this._create(view._parent.ownerDocument);
+		this._create(view.getOptions("parent").ownerDocument);
 		view.addEventListener("Destroy", this, this.destroy);
 	}
 	Tooltip.getTooltip = function(view) {
@@ -28,45 +27,31 @@ define("orion/textview/tooltip", ['orion/textview/textView', 'orion/textview/tex
 	};
 	Tooltip.prototype = /** @lends orion.textview.Tooltip.prototype */ {
 		_create: function(document) {
-			if (this._domNode) { return; }
-			this._document = document;
-			var domNode = this._domNode = document.createElement("DIV");
-			domNode.className = "viewTooltip";
-			var viewParent = this._viewParent = document.createElement("DIV");
-			domNode.appendChild(viewParent);
-			var htmlParent = this._htmlParent = document.createElement("DIV");
-			domNode.appendChild(htmlParent);
-			document.body.appendChild(domNode);
+			if (this._tooltipDiv) { return; }
+			var tooltipDiv = this._tooltipDiv = document.createElement("DIV");
+			tooltipDiv.className = "textviewTooltip";
+			var tooltipContents = this._tooltipContents = document.createElement("DIV");
+			tooltipDiv.appendChild(tooltipContents);
+			document.body.appendChild(tooltipDiv);
 			this.hide();
 		},
 		destroy: function() {
-			if (!this._domNode) { return; }
-			if (this._contentsView) {
-				this._contentsView.destroy();
-				this._contentsView = null;
-				this._emptyModel = null;
-			}
-			var parent = this._domNode.parentNode;
-			if (parent) { parent.removeChild(this._domNode); }
-			this._domNode = null;
+			if (!this._tooltipDiv) { return; }
+			this.hide();
+			var parent = this._tooltipDiv.parentNode;
+			if (parent) { parent.removeChild(this._tooltipDiv); }
+			this._tooltipDiv = null;
 		},
 		hide: function() {
 			if (this._contentsView) {
-				this._contentsView.setModel(this._emptyModel);
+				this._contentsView.destroy();
+				this._contentsView = null;
 			}
-			if (this._viewParent) {
-				this._viewParent.style.left = "-10000px";
-				this._viewParent.style.position = "fixed";
-				this._viewParent.style.visibility = "hidden";
+			if (this._tooltipContents) {
+				this._tooltipContents.innerHTML = "";
 			}
-			if (this._htmlParent) {
-				this._htmlParent.style.left = "-10000px";
-				this._htmlParent.style.position = "fixed";
-				this._htmlParent.style.visibility = "hidden";
-				this._htmlParent.innerHTML = "";
-			}
-			if (this._domNode) {
-				this._domNode.style.visibility = "hidden";
+			if (this._tooltipDiv) {
+				this._tooltipDiv.style.visibility = "hidden";
 			}
 			if (this._showTimeout) {
 				clearTimeout(this._showTimeout);
@@ -82,7 +67,7 @@ define("orion/textview/tooltip", ['orion/textview/textView', 'orion/textview/tex
 			}
 		},
 		isVisible: function() {
-			return this._domNode && this._domNode.style.visibility === "visible";
+			return this._tooltipDiv && this._tooltipDiv.style.visibility === "visible";
 		},
 		setTarget: function(target) {
 			if (this.target === target) { return; }
@@ -92,83 +77,83 @@ define("orion/textview/tooltip", ['orion/textview/textView', 'orion/textview/tex
 				var self = this;
 				self._showTimeout = setTimeout(function() {
 					self.show(true);
-				}, 1000);
+				}, 500);
 			}
 		},
 		show: function(autoHide) {
 			if (!this._target) { return; }
 			var info = this._target.getTooltipInfo();
 			if (!info) { return; }
-			var domNode = this._domNode;
-			domNode.style.left = domNode.style.right = domNode.style.width = domNode.style.height = "auto";
-			var contents = info.contents, contentsDiv;
+			var tooltipDiv = this._tooltipDiv, tooltipContents = this._tooltipContents;
+			tooltipDiv.style.left = tooltipDiv.style.right = tooltipDiv.style.width = tooltipDiv.style.height = 
+				tooltipContents.style.width = tooltipContents.style.height = "auto";
+			var contents = info.contents;
 			if (contents instanceof Array) {
 				contents = this._getAnnotationContents(contents);
 			}
 			if (typeof contents === "string") {
-				(contentsDiv = this._htmlParent).innerHTML = contents;
-			} else if (contents instanceof Node) {
-				(contentsDiv = this._htmlParent).appendChild(contents);
+				tooltipContents.innerHTML = contents;
+			} else if (this._isNode(contents)) {
+				tooltipContents.appendChild(contents);
 			} else if (contents instanceof mProjectionTextModel.ProjectionTextModel) {
-				if (!this._contentsView) {
-					this._emptyModel = new mTextModel.TextModel("");
-					//TODO need hook into setup.js (or editor.js) to create a text view (and styler)
-					var newView = this._contentsView = new mTextView.TextView({
-						model: this._emptyModel,
-						parent: this._viewParent,
-						tabSize: 4,
-						sync: true,
-						stylesheet: ["/orion/textview/tooltip.css", "/orion/textview/rulers.css",
-							"/examples/textview/textstyler.css", "/css/default-theme.css"]
-					});
-					//TODO this is need to avoid IE from getting focus
-					newView._clientDiv.contentEditable = false;
-					//TODO need to find a better way of sharing the styler for multiple views
-					var view = this._view;
-					var listener = {
-						onLineStyle: function(e) {
-							view.onLineStyle(e);
-						}
-					};
-					newView.addEventListener("LineStyle", listener.onLineStyle);
+				var view = this._view;
+				var options = view.getOptions();
+				options.parent = tooltipContents;
+				var tooltipTheme = "tooltip";
+				var theme = options.themeClass;
+				if (theme) {
+					theme = theme.replace(tooltipTheme, "");
+					if (theme) { theme = " " + theme; }
+					theme = tooltipTheme + theme;
+				} else {
+					theme = tooltipTheme;
 				}
-				var contentsView = this._contentsView;
+				options.themeClass = theme;
+				var contentsView = this._contentsView = new mTextView.TextView(options);
+				//TODO this is need to avoid Firefox from getting focus
+				contentsView._clientDiv.contentEditable = false;
+				//TODO need to find a better way of sharing the styler for multiple views
+				var listener = {
+					onLineStyle: function(e) {
+						view.onLineStyle(e);
+					}
+				};
+				contentsView.addEventListener("LineStyle", listener.onLineStyle);
 				contentsView.setModel(contents);
 				var size = contentsView.computeSize();
-				contentsDiv = this._viewParent;
-				//TODO always make the width larger than the size of the scrollbar to avoid bug in updatePage
-				contentsDiv.style.width = (size.width + 20) + "px";
-				contentsDiv.style.height = size.height + "px";
+				tooltipContents.style.width = (size.width + 20) + "px";
+				tooltipContents.style.height = size.height + "px";
+				contentsView.resize();
 			} else {
 				return;
 			}
-			contentsDiv.style.left = "auto";
-			contentsDiv.style.position = "static";
-			contentsDiv.style.visibility = "visible";
-			var left = parseInt(this._getNodeStyle(domNode, "padding-left", "0"), 10);
-			left += parseInt(this._getNodeStyle(domNode, "border-left-width", "0"), 10);
+			var documentElement = tooltipDiv.ownerDocument.documentElement;
 			if (info.anchor === "right") {
-				var right = parseInt(this._getNodeStyle(domNode, "padding-right", "0"), 10);
-				right += parseInt(this._getNodeStyle(domNode, "border-right-width", "0"), 10);
-				domNode.style.right = (domNode.ownerDocument.body.getBoundingClientRect().right - info.x + left + right) + "px";
+				var right = documentElement.clientWidth - info.x;
+				tooltipDiv.style.right = right + "px";
+				tooltipDiv.style.maxWidth = (documentElement.clientWidth - right - 10) + "px";
 			} else {
-				domNode.style.left = (info.x - left) + "px";
+				var left = parseInt(this._getNodeStyle(tooltipDiv, "padding-left", "0"), 10);
+				left += parseInt(this._getNodeStyle(tooltipDiv, "border-left-width", "0"), 10);
+				left = info.x - left;
+				tooltipDiv.style.left = left + "px";
+				tooltipDiv.style.maxWidth = (documentElement.clientWidth - left - 10) + "px";
 			}
-			var top = parseInt(this._getNodeStyle(domNode, "padding-top", "0"), 10);
-			top += parseInt(this._getNodeStyle(domNode, "border-top-width", "0"), 10);
-			domNode.style.top = (info.y - top) + "px";
-			domNode.style.maxWidth = info.maxWidth + "px";
-			domNode.style.maxHeight = info.maxHeight + "px";
-			domNode.style.opacity = "1";
-			domNode.style.visibility = "visible";
+			var top = parseInt(this._getNodeStyle(tooltipDiv, "padding-top", "0"), 10);
+			top += parseInt(this._getNodeStyle(tooltipDiv, "border-top-width", "0"), 10);
+			top = info.y - top;
+			tooltipDiv.style.top = top + "px";
+			tooltipDiv.style.maxHeight = (documentElement.clientHeight - top - 10) + "px";
+			tooltipDiv.style.opacity = "1";
+			tooltipDiv.style.visibility = "visible";
 			if (autoHide) {
 				var self = this;
 				self._hideTimeout = setTimeout(function() {
-					var opacity = parseFloat(self._getNodeStyle(domNode, "opacity", "1"));
+					var opacity = parseFloat(self._getNodeStyle(tooltipDiv, "opacity", "1"));
 					self._fadeTimeout = setInterval(function() {
-						if (domNode.style.visibility === "visible" && opacity > 0) {
+						if (tooltipDiv.style.visibility === "visible" && opacity > 0) {
 							opacity -= 0.1;
-							domNode.style.opacity = opacity;
+							tooltipDiv.style.opacity = opacity;
 							return;
 						}
 						self.hide();
@@ -187,29 +172,44 @@ define("orion/textview/tooltip", ['orion/textview/textView', 'orion/textview/tex
 				var textEnd = baseModel.getLineEnd(baseModel.getLineAtOffset(end), true);
 				return baseModel.getText(textStart, textEnd);
 			}
-			var title;
+			function getAnnotationHTML(annotation) {
+				var title = annotation.title;
+				if (title === "") { return null; }
+				var result = "<div>";
+				if (annotation.html) {
+					result += annotation.html + "&nbsp;";
+				}
+				if (!title) {
+					title = getText(annotation.start, annotation.end);
+				}
+				title = title.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+				result += "<span style='vertical-align:middle;'>" + title + "</span><div>";
+				return result;
+			}
 			if (annotations.length === 1) {
 				annotation = annotations[0];
-				if (annotation.title) {
-					title = annotation.title.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-					return "<div>" + annotation.html + "&nbsp;<span style='vertical-align:mddle;'>" + title + "</span><div>";
+				if (annotation.title !== undefined) {
+					return getAnnotationHTML(annotation);
 				} else {
 					var newModel = new mProjectionTextModel.ProjectionTextModel(baseModel);
 					var lineStart = baseModel.getLineStart(baseModel.getLineAtOffset(annotation.start));
-					newModel.addProjection({start: annotation.end, end: newModel.getCharCount()});
-					newModel.addProjection({start: 0, end: lineStart});
+					var charCount = baseModel.getCharCount();
+					if (annotation.end !== charCount) {
+						newModel.addProjection({start: annotation.end, end: charCount});
+					}
+					if (lineStart > 0) {
+						newModel.addProjection({start: 0, end: lineStart});
+					}
 					return newModel;
 				}
 			} else {
-				var tooltipHTML = "<div><em>Multiple annotations:</em></div>";
+				var tooltipHTML = "<div><em>" + messages.multipleAnnotations + "</em></div>";
 				for (var i = 0; i < annotations.length; i++) {
 					annotation = annotations[i];
-					title = annotation.title;
-					if (!title) {
-						title = getText(annotation.start, annotation.end);
+					var html = getAnnotationHTML(annotation);
+					if (html) {
+						tooltipHTML += html;
 					}
-					title = title.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-					tooltipHTML += "<div>" + annotation.html + "&nbsp;<span style='vertical-align:mddle;'>" + title + "</span><div>";
 				}
 				return tooltipHTML;
 			}
@@ -232,6 +232,10 @@ define("orion/textview/tooltip", ['orion/textview/textView', 'orion/textview/tex
 				}
 			}
 			return value || defaultValue;
+		},
+		_isNode: function (obj) {
+			return typeof Node === "object" ? obj instanceof Node :
+				obj && typeof obj === "object" && typeof obj.nodeType === "number" && typeof obj.nodeName === "string";
 		}
 	};
 	return {Tooltip: Tooltip};

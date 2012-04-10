@@ -144,10 +144,7 @@ return declare("davinci.ui.Editor", null, {
 					return new mTextView.TextView({
 						parent: parent,
 						model: model,
-						tabSize: 4,
-						stylesheet: [
-						    "app/davinci/ui/editor/orionEditor.css"
-						]
+						tabSize: 4
 					});
 				},
 				undoStackFactory: new mEditorFeatures.UndoFactory(),
@@ -192,7 +189,7 @@ return declare("davinci.ui.Editor", null, {
 			this._styler = new TextStyler(view, lang, this.editor._annotationModel/*view.annotationModel*/);
 			break;
 		case "html":
-			this._styler = new mTextMateStyler.TextMateStyler(view, (new mHtmlGrammar.HtmlGrammar()).grammar);
+			this._styler = new mTextMateStyler.TextMateStyler(view, new mHtmlGrammar.HtmlGrammar());
 		}
 		view.setText(this.getText());
 	},

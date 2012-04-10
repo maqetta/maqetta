@@ -1,6 +1,6 @@
 /*******************************************************************************
  * @license
- * Copyright (c) 2009, 2011 IBM Corporation and others.
+ * Copyright (c) 2009, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
  * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
@@ -12,13 +12,15 @@
  /*global define window */
  /*jslint maxerr:150 browser:true devel:true laxbreak:true regexp:false*/
 
-define("orion/editor/editor", ['orion/textview/keyBinding', 'orion/textview/eventTarget', 'orion/textview/tooltip'], function(mKeyBinding, mEventTarget, mTooltip) {
+define("orion/editor/editor", ['i18n!orion/editor/nls/messages', 'orion/textview/keyBinding', 'orion/textview/eventTarget', 'orion/textview/tooltip', 'orion/textview/annotations', 'orion/textview/util'], function(messages, mKeyBinding, mEventTarget, mTooltip, mAnnotations, mUtil) {
 
 	/**
 	 * @name orion.editor.util
 	 * @class Basic helper functions used by <code>orion.editor</code>.
 	 */
 	var util;
+	
+	var HIGHLIGHT_ERROR_ANNOTATION = "orion.annotation.highlightError";
 
 	/**
 	 * @name orion.editor.Editor
@@ -39,8 +41,8 @@ define("orion/editor/editor", ['orion/textview/keyBinding', 'orion/textview/even
 	 * @param {Object} options.domNode
 	 * @param {Object} options.keyBindingFactory
 	 * @param {Object} options.lineNumberRulerFactory
+	 * @param {Object} options.foldingRulerFactory
 	 * @param {Object} options.statusReporter
-	 * @param {Object} options.syntaxHighlightProviders
 	 * @param {Object} options.textViewFactory
 	 * @param {Object} options.undoStackFactory
 	 * @param {Object} options.textDNDFactory
@@ -60,9 +62,11 @@ define("orion/editor/editor", ['orion/textview/keyBinding', 'orion/textview/even
 		this._keyBindingFactory = options.keyBindingFactory;
 		this._statusReporter = options.statusReporter;
 		this._domNode = options.domNode;
-		this._syntaxHighlightProviders = options.syntaxHighlightProviders;
 		
+		this._annotationStyler = null;
+		this._annotationModel = null;
 		this._annotationRuler = null;
+		this._lineNumberRuler = null;
 		this._overviewRuler = null;
 		this._foldingRuler = null;
 		this._dirty = false;
@@ -71,40 +75,164 @@ define("orion/editor/editor", ['orion/textview/keyBinding', 'orion/textview/even
 		this._keyModes = [];
 	}
 	Editor.prototype = /** @lends orion.editor.Editor.prototype */ {
-		errorType: "orion.annotation.error",
-		warningType: "orion.annotation.warning",
-		taskType: "orion.annotation.task",
-		foldingType: "orion.annotation.folding",
-		currentBracketType: "orion.annotation.currentBracket",
-		matchingBracketType: "orion.annotation.matchingBracket",
-		currentLineType: "orion.annotation.currentLine",
-		highlightErrorType: "orion.annotation.highlightError",
 		
 		/**
-		 * Returns the underlying <code>TextView</code> used by this editor. 
-		 * @returns orion.textview.TextView
+		 * Returns the annotation model of the editor. 
+		 *
+		 * @returns {orion.textview.AnnotationModel}
 		 */
-		getTextView: function() {
-			return this._textView;
+		getAnnotationModel: function() {
+			return this._annotationModel;
 		},
-		
 		/**
-		 * @private
+		 * Returns the annotation ruler of the editor. 
+		 *
+		 * @returns {orion.textview.AnnotationRuler}
 		 */
-		reportStatus: function(message, type) {
-			if (this._statusReporter) {
-				this._statusReporter(message, type);
-			} else {
-				window.alert(type === "error" ? "ERROR: " + message : message);
-			}
+		getAnnotationRuler: function() {
+			return this._annotationRuler;
 		},
-		
+		/**
+		 * Returns the annotation styler of the editor. 
+		 *
+		 * @returns {orion.textview.AnnotationStyler}
+		 */
+		getAnnotationStyler: function() {
+			return this._annotationStyler;
+		},
+		/**
+		 * Returns the folding ruler of the editor. 
+		 *
+		 * @returns {orion.textview.FoldingRuler}
+		 */
+		getFoldingRuler: function() {
+			return this._foldingRuler;
+		},
+		/**
+		 * Returns the line number ruler of the editor. 
+		 *
+		 * @returns {orion.textview.LineNumberRuler}
+		 */
+		getLineNumberRuler: function() {
+			return this._lineNumberRuler;
+		},
+		/**
+		 * Returns the base text model of this editor.
+		 *
+		 * @returns orion.textview.TextModel
+		 */
 		getModel: function() {
 			var model = this._textView.getModel();
 			if (model.getBaseModel) {
 				model = model.getBaseModel();
 			}
 			return model;
+		},
+		/**
+		 * Returns the overview ruler of the editor. 
+		 *
+		 * @returns {orion.textview.OverviewRuler}
+		 */
+		getOverviewRuler: function() {
+			return this._overviewRuler;
+		},
+		/**
+		 * Returns the underlying <code>TextView</code> used by this editor. 
+		 * @returns orion.textview.TextView the editor text view.
+		 */
+		getTextView: function() {
+			return this._textView;
+		},
+		/**
+		 * Returns the editor title. 
+		 *
+		 * @returns {String} the editor title.
+		 */
+		getTitle: function() {
+			return this._title;
+		},
+		
+		/**
+		 * Returns <code>true</code> if the editor is dirty; <code>false</code> otherwise.
+		 * @returns {Boolean} 
+		 */
+		isDirty: function() {
+			return this._dirty;
+		},
+		/**
+		 * Sets whether the annotation ruler is visible.
+		 *
+		 * @param {Boolean} visible <code>true</code> to show ruler, <code>false</code> otherwise
+		 */
+		setAnnotationRulerVisible: function(visible) {
+			if (this._annotationRulerVisible === visible) { return; }
+			this._annotationRulerVisible = visible;
+			if (!this._annotationRuler) { return; }
+			var textView = this._textView;
+			if (visible) {
+				textView.addRuler(this._annotationRuler, 0);
+			} else {
+				textView.removeRuler(this._annotationRuler);
+			}
+		},
+		/**
+		 * Sets whether the folding ruler is visible.
+		 *
+		 * @param {Boolean} visible <code>true</code> to show ruler, <code>false</code> otherwise
+		 */
+		setFoldingRulerVisible: function(visible) {
+			if (this._foldingRulerVisible === visible) { return; }
+			this._foldingRulerVisible = visible;
+			if (!this._foldingRuler) { return; }
+			var textView = this._textView;
+			if (!textView.getModel().getBaseModel) { return; }
+			if (visible) {
+				textView.addRuler(this._foldingRuler, 100);
+			} else {
+				textView.removeRuler(this._foldingRuler);
+			}
+		},
+		/**
+		 * Sets whether the editor is dirty.
+		 *
+		 * @param {Boollean} dirty
+		 */
+		setDirty: function(dirty) {
+			if (this._dirty === dirty) { return; }
+			this._dirty = dirty;
+			this.onDirtyChanged({type: "DirtyChanged"});
+		},
+		/**
+		 * Sets whether the line numbering ruler is visible.
+		 *
+		 * @param {Boolean} visible <code>true</code> to show ruler, <code>false</code> otherwise
+		 */
+		setLineNumberRulerVisible: function(visible) {
+			if (this._lineNumberRulerVisible === visible) { return; }
+			this._lineNumberRulerVisible = visible;
+			if (!this._lineNumberRuler) { return; }
+			var textView = this._textView;
+			if (visible) {
+				textView.addRuler(this._lineNumberRuler, 1);
+			} else {
+				textView.removeRuler(this._lineNumberRuler);
+			}
+		},
+		/**
+		 * Sets whether the overview ruler is visible.
+		 *
+		 * @param {Boolean} visible <code>true</code> to show ruler, <code>false</code> otherwise
+		 */
+		setOverviewRulerVisible: function(visible) {
+			if (this._overviewRulerVisible === visible) { return; }
+			this._overviewRulerVisible = visible;
+			if (!this._overviewRuler) { return; }
+			var textView = this._textView;
+			if (visible) {
+				textView.addRuler(this._overviewRuler);
+			} else {
+				textView.removeRuler(this._overviewRuler);
+			}
 		},
 		
 		mapOffset: function(offset, parent) {
@@ -147,7 +275,7 @@ define("orion/editor/editor", ['orion/textview/keyBinding', 'orion/textview/even
 			var annotations = annotationModel.getAnnotations(offset, offset + 1);
 			while (annotations.hasNext()) {
 				var annotation = annotations.next();
-				if (annotation.type === "orion.annotation.folding") {
+				if (annotation.type === mAnnotations.AnnotationType.ANNOTATION_FOLDING) {
 					if (annotation.expand) {
 						annotation.expand();
 						annotationModel.modifyAnnotation(annotation);
@@ -182,32 +310,11 @@ define("orion/editor/editor", ['orion/textview/keyBinding', 'orion/textview/even
 			textView.setText(text, start, end);
 		},
 		
+		/**
+		 * @deprecated use #setFoldingRulerVisible
+		 */
 		setFoldingEnabled: function(enabled) {
-			this._foldingEnabled = enabled;
-			this._updateFoldingRuler();
-		},
-		
-		_updateFoldingRuler: function() {
-			var textView = this._textView;
-			if (this._foldingEnabled) {
-				if (!this._foldingRuler && this._foldingRulerFactory && textView.getModel().getBaseModel && this._foldingEnabled) {
-					/*
-					* TODO - UndoStack relies on this line to ensure that collapsed regions are expanded 
-					* when the undo operation happens to those regions. This line needs to be remove when the
-					* UndoStack is fixed.
-					*/
-					textView.annotationModel = this._annotationModel;
-					
-					this._foldingRuler = this._foldingRulerFactory.createFoldingRuler(this._annotationModel);
-					this._foldingRuler.addAnnotationType(this.foldingType);
-					textView.addRuler(this._foldingRuler);
-				}
-			} else {
-				if (this._foldingRuler) { 
-					textView.removeRuler(this._foldingRuler);
-					this._foldingRuler = null;
-				}
-			}
+			this.setFoldingRulerVisible(enabled);
 		},
 		
 		setSelection: function(start, end, show) {
@@ -223,14 +330,13 @@ define("orion/editor/editor", ['orion/textview/keyBinding', 'orion/textview/even
 		},
 				
 		/**
-		 * @static
 		 * @param {orion.textview.TextView} textView
 		 * @param {Number} start
 		 * @param {Number} [end]
 		 * @param {function} callBack A call back function that is used after the move animation is done
 		 * @private
 		 */
-		moveSelection: function(start, end, callBack) {
+		moveSelection: function(start, end, callBack, focus) {
 			end = end || start;
 			var textView = this._textView;
 			this.setSelection(start, end, false);
@@ -251,7 +357,9 @@ define("orion/editor/editor", ['orion/textview/keyBinding', 'orion/textview/even
 					},
 					onEnd: function() {
 						textView.showSelection();
-						textView.focus();
+						if (focus === undefined || focus) {
+							textView.focus();
+						}
 						if(callBack) {
 							callBack();
 						}
@@ -260,32 +368,29 @@ define("orion/editor/editor", ['orion/textview/keyBinding', 'orion/textview/even
 				a.play();
 			} else {
 				textView.showSelection();
-				textView.focus();
+				if (focus === undefined || focus) {
+					textView.focus();
+				}
 				if(callBack) {
 					callBack();
 				}
 			}
 		},
-		/**
-		 * Returns <code>true</code> if the editor is dirty; <code>false</code> otherwise.
-		 * @returns {Boolean} 
-		 */
-		isDirty : function() {
-			return this._dirty;
-		},
-		/**
-		 * Sets whether the editor is dirty.
-		 *
-		 * @param {Boollean} dirty
-		 */
-		setDirty: function(dirty) {
-			if (this._dirty === dirty) { return; }
-			this._dirty = dirty;
-			this.onDirtyChanged({type: "DirtyChanged"});
-		},
+		
 		/** @private */
 		checkDirty : function() {
 			this.setDirty(!this._undoStack.isClean());
+		},
+		
+		/**
+		 * @private
+		 */
+		reportStatus: function(message, type, isAccessible) {
+			if (this._statusReporter) {
+				this._statusReporter(message, type, isAccessible);
+			} else {
+				window.alert(type === "error" ? "ERROR: " + message : message);
+			}
 		},
 		
 		/** @private */
@@ -297,104 +402,23 @@ define("orion/editor/editor", ['orion/textview/keyBinding', 'orion/textview/even
 			if (!annotationStyler) { return null; }
 			var offset = textView.getOffsetAtLocation(x, y);
 			if (offset === -1) { return null; }
-			var iter = annotationModel.getAnnotations(offset, offset + 1);
-			var annotation, annotations = [];
-			while (iter.hasNext()) {
-				annotation = iter.next();
-				if (!annotationStyler.isAnnotationTypeVisible(annotation.type) || !annotation.rangeStyle) { continue; }
-				annotations.push(annotation);
+			offset = this.mapOffset(offset);
+			var annotations = annotationStyler.getAnnotationsByType(annotationModel, offset, offset + 1);
+			var rangeAnnotations = [];
+			for (var i = 0; i < annotations.length; i++) {
+				if (annotations[i].rangeStyle) {
+					rangeAnnotations.push(annotations[i]);
+				}
 			}
-			if (annotations.length === 0) { return null; }
+			if (rangeAnnotations.length === 0) { return null; }
 			var pt = textView.convert({x: x, y: y}, "document", "page");
 			var info = {
-				contents: annotations,
+				contents: rangeAnnotations,
 				anchor: "left",
 				x: pt.x + 10,
 				y: pt.y + 20
 			};
 			return info;
-		}, 
-		
-		/**
-		 * 
-		 * @returns {orion.textview.AnnotationModel}
-		 */
-		getAnnotationModel : function() {
-			return this._annotationModel;
-		},
-
-		/**
-		 * Helper for finding occurrences of str in the editor contents.
-		 * @param {String} str
-		 * @param {Number} searchStart offset in the base model where the search should start
-		 * @param {Boolean} [ignoreCase=false] whether or not the search is case sensitive
-		 * @param {Boolean} [reverse=false] whether the search should be backwards
-		 * @return {Object} An object giving the match details, or <code>null</code> if no match found. The returned 
-		 * object will have the properties:<br />
-		 * {Number} index<br />
-		 * {Number} length 
-		 */
-		doFind: function(str, searchStart, ignoreCase, reverse) {
-			var text = this.getText();
-			if (ignoreCase) {
-				str = str.toLowerCase();
-				text = text.toLowerCase();
-			}
-			
-			var i;
-			if (reverse) {
-				text = text.split("").reverse().join("");
-				str = str.split("").reverse().join("");
-				searchStart = text.length - searchStart - 1;
-				i = text.indexOf(str, searchStart);
-				if (i !== -1) {
-					return {index: text.length - str.length - i, length: str.length};
-				}
-			} else {
-				i = text.indexOf(str, searchStart);
-				if (i !== -1) {
-					return {index: i, length: str.length};
-				}
-			}
-			return null;
-		},
-		
-		/**
-		 * Helper for finding regex matches in the editor contents. Use {@link #doFind} for simple string searches.
-		 * @param {String} pattern A valid regexp pattern.
-		 * @param {String} flags Valid regexp flags: [is]
-		 * @param {Number} searchStart offset in the base model where the search should start
-		 * @param {Boolean} [reverse=false] whether the search should be backwards
-		 * @return {Object} An object giving the match details, or <code>null</code> if no match found. The returned object
-		 * will have the properties:<br />
-		 * {Number} index<br />
-		 * {Number} length 
-		 */
-		doFindRegExp: function(pattern, flags, searchStart, reverse) {
-			if (!pattern) {
-				return null;
-			}
-			
-			flags = flags || "";
-			// 'g' makes exec() iterate all matches, 'm' makes ^$ work linewise
-			flags += (flags.indexOf("g") === -1 ? "g" : "") + (flags.indexOf("m") === -1 ? "m" : "");
-			var regexp = new RegExp(pattern, flags);
-			var text = this.getText();
-			var result = null,
-			    match = null;
-			if (reverse) {
-				while (true) {
-					result = regexp.exec(text);
-					if (result && result.index <= searchStart) {
-						match = {index: result.index, length: result[0].length};
-					} else {
-						return match;
-					}
-				}
-			} else {
-				result = regexp.exec(text.substring(searchStart));
-				return result && {index: result.index + searchStart, length: result[0].length};
-			}
 		},
 		
 		/** @private */
@@ -418,15 +442,8 @@ define("orion/editor/editor", ['orion/textview/keyBinding', 'orion/textview/even
 						start = model.mapOffset(start);
 						end = model.mapOffset(end);
 					}
-					this._currentLineAnnotation = {
-						start: start,
-						end: end,
-						type: this.currentLineType,
-						title: "Current Line",
-						html: "<div class='annotationHTML currentLine'></div>",
-						overviewStyle: {styleClass: "annotationOverview currentLine"},
-						lineStyle: {styleClass: "annotationLine currentLine"}
-					};
+					var type = mAnnotations.AnnotationType.ANNOTATION_CURRENT_LINE;
+					this._currentLineAnnotation = mAnnotations.AnnotationType.createAnnotation(type, start, end);
 					add = [this._currentLineAnnotation];
 				}
 				annotationModel.replaceAnnotations(remove, add);
@@ -440,12 +457,14 @@ define("orion/editor/editor", ['orion/textview/keyBinding', 'orion/textview/even
 			}
 			if (this._annotationFactory) {
 				this._annotationStyler = this._annotationFactory.createAnnotationStyler(this.getTextView(), this._annotationModel);
-				this._annotationStyler.addAnnotationType(this.errorType);
-				this._annotationStyler.addAnnotationType(this.warningType);
-				this._annotationStyler.addAnnotationType(this.matchingBracketType);
-				this._annotationStyler.addAnnotationType(this.currentBracketType);
-				this._annotationStyler.addAnnotationType(this.currentLineType);
-				this._annotationStyler.addAnnotationType(this.highlightErrorType);
+				this._annotationStyler.addAnnotationType(mAnnotations.AnnotationType.ANNOTATION_CURRENT_SEARCH);
+				this._annotationStyler.addAnnotationType(mAnnotations.AnnotationType.ANNOTATION_MATCHING_SEARCH);
+				this._annotationStyler.addAnnotationType(mAnnotations.AnnotationType.ANNOTATION_ERROR);
+				this._annotationStyler.addAnnotationType(mAnnotations.AnnotationType.ANNOTATION_WARNING);
+				this._annotationStyler.addAnnotationType(mAnnotations.AnnotationType.ANNOTATION_MATCHING_BRACKET);
+				this._annotationStyler.addAnnotationType(mAnnotations.AnnotationType.ANNOTATION_CURRENT_BRACKET);
+				this._annotationStyler.addAnnotationType(mAnnotations.AnnotationType.ANNOTATION_CURRENT_LINE);
+				this._annotationStyler.addAnnotationType(HIGHLIGHT_ERROR_ANNOTATION);
 			}
 		},
 		
@@ -462,8 +481,9 @@ define("orion/editor/editor", ['orion/textview/keyBinding', 'orion/textview/even
 				this._textDND = this._textDNDFactory.createTextDND(this, this._undoStack);
 			}
 			if (this._contentAssistFactory) {
-				this._contentAssist = this._contentAssistFactory(this);
-				this._keyModes.push(this._contentAssist);
+				var contentAssistMode = this._contentAssistFactory.createContentAssistMode(this);
+				this._keyModes.push(contentAssistMode);
+				this._contentAssist = contentAssistMode.getContentAssist();
 			}
 			
 			var editor = this, textView = this._textView;
@@ -546,57 +566,84 @@ define("orion/editor/editor", ['orion/textview/keyBinding', 'orion/textview/even
 				}
 				return false;
 			}.bind(this));
-						
+			
+			textView.setAction("tab", function() {	
+				for (var i=0; i<this._keyModes.length; i++) {
+					if (this._keyModes[i].isActive()) {
+						return this._keyModes[i].tab();
+					}
+				}
+				return false;
+			}.bind(this));
+			
 			// Create rulers
 			if (this._annotationFactory) {
 				var textModel = textView.getModel();
 				if (textModel.getBaseModel) { textModel = textModel.getBaseModel(); }
 				this._annotationModel = this._annotationFactory.createAnnotationModel(textModel);
-				var annotations = this._annotationFactory.createAnnotationRulers(this._annotationModel);
-				this._annotationRuler = annotations.annotationRuler;
-			
-				this._annotationRuler.onClick = function(lineIndex, e) {
-					if (lineIndex === undefined) { return; }
-					if (lineIndex === -1) { return; }
-					var viewModel = textView.getModel();
-					var annotationModel = this.getAnnotationModel();
-					var lineStart = editor.mapOffset(viewModel.getLineStart(lineIndex));
-					var lineEnd = editor.mapOffset(viewModel.getLineEnd(lineIndex));
-					var annotations = annotationModel.getAnnotations(lineStart, lineEnd);
-					var annotation = annotations.next();
-					if (annotation) {
-						var model = editor.getModel();
-						editor.onGotoLine(model.getLineAtOffset(lineStart), annotation.start - lineStart, annotation.end - lineStart);
-					}
-				};
 				
-				this._overviewRuler = annotations.overviewRuler;
-				this._overviewRuler.onClick = function(lineIndex, e) {
-					if (lineIndex === undefined) { return; }
-					var offset = textView.getModel().getLineStart(lineIndex);
-					editor.moveSelection(editor.mapOffset(offset));
-				};
-			
-				this._annotationRuler.setMultiAnnotationOverlay({html: "<div class='annotationHTML overlay'></div>"});
-				this._annotationRuler.addAnnotationType(this.errorType);
-				this._annotationRuler.addAnnotationType(this.warningType);
-				this._annotationRuler.addAnnotationType(this.taskType);
-				this._overviewRuler.addAnnotationType(this.errorType);
-				this._overviewRuler.addAnnotationType(this.warningType);
-				this._overviewRuler.addAnnotationType(this.taskType);
-				this._overviewRuler.addAnnotationType(this.matchingBracketType);
-				this._overviewRuler.addAnnotationType(this.currentBracketType);
-				this._overviewRuler.addAnnotationType(this.currentLineType);
-				textView.addRuler(this._annotationRuler);
-				textView.addRuler(this._overviewRuler);
+				/*
+				* TODO - UndoStack relies on this line to ensure that collapsed regions are expanded 
+				* when the undo operation happens to those regions. This line needs to be remove when the
+				* UndoStack is fixed.
+				*/
+				textView.annotationModel = this._annotationModel;
+					
+				var rulers = this._annotationFactory.createAnnotationRulers(this._annotationModel);
+				var ruler = this._annotationRuler = rulers.annotationRuler;
+				if (ruler) {
+					ruler.onClick = function(lineIndex, e) {
+						if (lineIndex === undefined) { return; }
+						if (lineIndex === -1) { return; }
+						var viewModel = textView.getModel();
+						var annotationModel = this.getAnnotationModel();
+						var lineStart = editor.mapOffset(viewModel.getLineStart(lineIndex));
+						var lineEnd = editor.mapOffset(viewModel.getLineEnd(lineIndex));
+						var annotations = annotationModel.getAnnotations(lineStart, lineEnd);
+						while (annotations.hasNext()) {
+							var annotation = annotations.next();
+							if (!this.isAnnotationTypeVisible(annotation.type)) { continue; }
+							var model = editor.getModel();
+							editor.onGotoLine(model.getLineAtOffset(lineStart), annotation.start - lineStart, annotation.end - lineStart);
+							break;
+						}
+					};
+					ruler.setMultiAnnotationOverlay({html: "<div class='annotationHTML overlay'></div>"});
+					ruler.addAnnotationType(mAnnotations.AnnotationType.ANNOTATION_ERROR);
+					ruler.addAnnotationType(mAnnotations.AnnotationType.ANNOTATION_WARNING);
+					ruler.addAnnotationType(mAnnotations.AnnotationType.ANNOTATION_TASK);
+				}
+				this.setAnnotationRulerVisible(true);
+					
+				ruler = this._overviewRuler = rulers.overviewRuler;
+				if (ruler) {
+					ruler.onClick = function(lineIndex, e) {
+						if (lineIndex === undefined) { return; }
+						var offset = textView.getModel().getLineStart(lineIndex);
+						editor.moveSelection(editor.mapOffset(offset));
+					};
+					ruler.addAnnotationType(mAnnotations.AnnotationType.ANNOTATION_CURRENT_SEARCH);
+					ruler.addAnnotationType(mAnnotations.AnnotationType.ANNOTATION_MATCHING_SEARCH);
+					ruler.addAnnotationType(mAnnotations.AnnotationType.ANNOTATION_ERROR);
+					ruler.addAnnotationType(mAnnotations.AnnotationType.ANNOTATION_WARNING);
+					ruler.addAnnotationType(mAnnotations.AnnotationType.ANNOTATION_TASK);
+					ruler.addAnnotationType(mAnnotations.AnnotationType.ANNOTATION_MATCHING_BRACKET);
+					ruler.addAnnotationType(mAnnotations.AnnotationType.ANNOTATION_CURRENT_BRACKET);
+					ruler.addAnnotationType(mAnnotations.AnnotationType.ANNOTATION_CURRENT_LINE);
+				}
+				this.setOverviewRulerVisible(true);
 			}
 			
 			if (this._lineNumberRulerFactory) {
 				this._lineNumberRuler = this._lineNumberRulerFactory.createLineNumberRuler(this._annotationModel);
-				textView.addRuler(this._lineNumberRuler);
+				this.setLineNumberRulerVisible(true);
 			}
 			
-			this._updateFoldingRuler();
+			if (this._foldingRulerFactory) {
+				this._foldingRuler = this._foldingRulerFactory.createFoldingRuler(this._annotationModel);
+				this._foldingRuler.addAnnotationType(mAnnotations.AnnotationType.ANNOTATION_FOLDING);
+				this.setFoldingRulerVisible(false);
+			}
 			
 			var textViewInstalledEvent = {
 				type: "TextViewInstalled",
@@ -618,7 +665,7 @@ define("orion/editor/editor", ['orion/textview/keyBinding', 'orion/textview/even
 					return;
 				}
 			}
-			this.reportStatus("Line " + (lineIndex + 1) + " : Col " + (offsetInLine + 1));
+			this.reportStatus(mUtil.formatMessage(messages.lineColumn, lineIndex + 1, offsetInLine + 1));
 		},
 		
 		showProblems: function(problems) {
@@ -631,7 +678,7 @@ define("orion/editor/editor", ['orion/textview/keyBinding', 'orion/textview/even
 			var annotations = annotationModel.getAnnotations(0, model.getCharCount()), annotation;
 			while (annotations.hasNext()) {
 				annotation = annotations.next();
-				if (annotation.type === this.errorType || annotation.type === this.warningType) {
+				if (annotation.type === mAnnotations.AnnotationType.ANNOTATION_ERROR || annotation.type === mAnnotations.AnnotationType.ANNOTATION_WARNING) {
 					remove.push(annotation);
 				}
 			}
@@ -645,16 +692,10 @@ define("orion/editor/editor", ['orion/textview/keyBinding', 'orion/textview/even
 						var lineIndex = problem.line - 1;
 						var lineStart = model.getLineStart(lineIndex);
 						var severity = problem.severity;
-						annotation = {
-							type: this[severity + "Type"],
-							start: lineStart + problem.start - 1,
-							end: lineStart + problem.end,
-							title: escapedDescription,
-							html: "<div class='" + "annotationHTML" + " " + severity + "'></div>",
-							style: {styleClass: "annotation" + " " + severity},
-							overviewStyle: {styleClass: "annotationOverview" + " " + severity},
-							rangeStyle: {styleClass: "annotationRange" + " " + severity}
-						};
+						var type = severity === "error" ? mAnnotations.AnnotationType.ANNOTATION_ERROR : mAnnotations.AnnotationType.ANNOTATION_WARNING;
+						var start = lineStart + problem.start - 1;
+						var end = lineStart + problem.end;
+						annotation = mAnnotations.AnnotationType.createAnnotation(type, start, end, escapedDescription);
 						add.push(annotation);
 					}
 				}
@@ -772,10 +813,6 @@ define("orion/editor/editor", ['orion/textview/keyBinding', 'orion/textview/even
 		 */
 		onDirtyChanged: function(dirtyChangedEvent) {
 			return this.dispatchEvent(dirtyChangedEvent);
-		},
-		
-		getTitle: function() {
-			return this._title;
 		}
 	};
 	mEventTarget.EventTarget.addMixin(Editor.prototype);

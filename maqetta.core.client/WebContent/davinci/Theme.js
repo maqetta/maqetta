@@ -1,7 +1,6 @@
 define([
     	"dojo/_base/declare",
     	"dojo/DeferredList",
-
     	"./Workbench",
     	"./library",
     	"./workbench/Preferences",
@@ -61,7 +60,7 @@ define([
 		return resource.getName().indexOf("dojo-theme-editor.html") > -1;
 	},
 
-	CloneTheme: function(name, version, selector, directory, originalTheme, renameFiles){
+	CloneTheme: function(name, version, selector, directory, originalTheme, renameFiles ){
 	    
 		var deferreds = [];
 		var fileBase = originalTheme.file.parent;
@@ -129,14 +128,13 @@ define([
 			var elements = cssModel.find({elementType: 'CSSSelector', cls: oldClass});
 			for(var i=0;i<elements.length;i++){
 				elements[i].cls = selector;
-				
+				if(elements[i].parent.parent.url){
+					toSave[elements[i].parent.parent.url] = elements[i].parent.parent;
+				}
+
 			}
 		}
 		deferreds.push(themeFile.setContents(JSON.stringify(themeJson)));
-		
-		for(var name in toSave){
-		    deferreds.push(toSave[name].save());
-		}
 		/* re-write metadata */
 		var metaToRename = {};
 		for (var i = 0, len = themeJson.meta.length; i < len; i++) {
@@ -167,6 +165,9 @@ define([
 	        element.setAttribute('class',modelAttribute); //#1024
 	        deferreds.push(htmlFile.save());
 		}
+		for(var name in toSave){
+		    deferreds.push(toSave[name].save());
+		}
 	    var defs = new DeferredList(deferreds);
 		Library.themesChanged();
 		defs.toRename = { cssFiles: toSave, metaFile: metaToRename}; // need to save the cssFiles to rename from temp name after saves are done, in postClone
@@ -181,24 +182,27 @@ define([
 			var r = files[name];
 			var f = r.getResource();
 			var name = f.name.replace(this.TEMP_CLONE_PRE, "");
-			f.rename(name);
-			var cssModel = Factory.getModel({url:f.getPath(),
-				includeImports: true,
-				loader:function(url){
-					var r1=  systemResource.findResource(url);
-					return r1.getText();
-				}
-			});
-			var def = cssModel.save();
-			deferreds.push(def);
+			if (f.name != name) {
+				f.rename(name);
+				var cssModel = Factory.getModel({url:f.getPath(),
+					includeImports: true,
+					loader:function(url){
+						var r1=  systemResource.findResource(url);
+						return r1.getText();
+					}
+				});
+				deferreds.push(cssModel.save());
+			}
 		}
 		files = filesToRename.metaFile;
 		for(var name in files){
 			var f = files[name];
 			var name = f.name.replace(this.TEMP_CLONE_PRE, "");
-			f.rename(name);
-			var contents = f.getText();
-			deferreds.push(f.setContents(contents));
+			if (f.name != name){
+				f.rename(name);
+				var contents = f.getText();
+				deferreds.push(f.setContents(contents));
+			}
 		}
 		return  new DeferredList(deferreds);
 	},

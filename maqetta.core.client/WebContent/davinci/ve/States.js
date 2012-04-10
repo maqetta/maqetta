@@ -8,7 +8,7 @@ define([
 declare("davinci.ve.States", davinci.maqetta.States, {
 	
 	_update: function(widget, newState, oldState) {
-console.trace();
+//console.trace();
 		this.inherited(arguments);
 		
 		widget = this._getWidget(widget);
@@ -22,7 +22,7 @@ console.trace();
 	},
 		
 	_updateEvents: function(widget, state, name) {
-console.trace();
+//console.trace();
 		var events = ["onclick", "onmouseover", "onmouseout", "onfocus", "onblur"];
 		var properties;
 		for(var i in events){
@@ -46,7 +46,7 @@ console.trace();
 	},
 	
 	_styleChange: function (widget, styleArray){
-console.trace();
+//console.trace();
 		var currentEditor = top.davinci.Runtime.currentEditor; //TODO: use require?
 		var context = currentEditor.getContext();
 
@@ -56,7 +56,7 @@ console.trace();
 	},
 	
 	normalize: function(type, widget, name, value) {
-console.trace();
+//console.trace();
         switch(type) {
 		    case "style":
 	            var state = davinci.ve.states.getState();
@@ -76,7 +76,7 @@ console.trace();
 	},
 	
 	normalizeArray: function(type, widget, name, valueArray) {
-console.trace();
+//console.trace();
 		switch(type) {
 		    case "style":
 	            var state = davinci.ve.states.getState();
@@ -123,17 +123,18 @@ console.trace();
 
 	// returns a shallow copy of the children
 	getChildren: function(widget) {
-console.trace();
+//console.trace();
 		if (widget && widget.getChildren) {
 			return widget.getChildren().slice();
 		}
 		return [];
 	},
-	_updateSrcState: function (widget)
+	_updateSrcState: function (node)
 	{
-console.trace();
-		if (widget._srcElement) {
-			var str=this.serialize(widget);
+//console.trace();
+		var widget = (node && node._dvWidget);
+		if (widget && widget._srcElement) {
+			var str=this.serialize(node);
 			if (str.trim()) {
 				widget._srcElement.addAttribute(davinci.states.ATTRIBUTE,str);
 			} else {
@@ -142,15 +143,12 @@ console.trace();
 		}
 	},
 
-	_getWidget: function(widget) {
-		if (!widget) {
+	_getWidget: function(node) {
+		if (!node) {
 			var doc = this.getDocument();
-			widget = doc && doc.body;
+			node = doc && doc.body;
 		}
-		if (widget && widget._dvWidget) {
-				return widget._dvWidget;
-		}
-		return widget;
+		return node;
 	},
 	
 
@@ -159,7 +157,7 @@ console.trace();
 		if (!this.subscribed) {
 		
 			this.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(e) { 
-console.trace();
+//console.trace();
 				var editor = this.getEditor();
 				if (!dojo.isObject(e.widget) || !editor || editor.declaredClass != "davinci.ve.PageEditor"){
 					return;
@@ -167,7 +165,8 @@ console.trace();
 
 				dojo.publish("/davinci/states/state/changed/start");
 				// If rootWidget, then loop through children, else loop starting with this widget.
-				var widget = (e.widget == this.getContext().rootWidget) ? e.widget : e.widget.getParent();
+				var widget = (e.node && e.node._dvWidget);
+				var widget = (widget == this.getContext().rootWidget) ? widget : widget.getParent();
 				var children = this.getChildren(widget);
 				while (children.length) {
 					var child = children.shift();
@@ -175,7 +174,7 @@ console.trace();
 						if (!this.isContainer(child)) {
 							children = children.concat(this.getChildren(child));					
 						}
-						this._update(child, e.newState, e.oldState);
+						this._update(child.domNode, e.newState, e.oldState);
 					}
 				}
 				dojo.publish("/davinci/states/state/changed/end");
@@ -195,7 +194,8 @@ console.trace();
 			this.subscribe("/davinci/states/state/renamed", dojo.hitch(this, function(e) { 
 				var editor = this.getEditor();
 				if (!editor || editor.declaredClass == "davinci.themeEditor.ThemeEditor") return; // ignore updates in theme editor
-				var children = this.getChildren(e.widget);
+				var widget = (e.node && e.node._dvWidget);
+				var children = this.getChildren(widget);
 				while (children.length) {
 					var child = children.shift();
 					if (child) {
@@ -208,21 +208,21 @@ console.trace();
 				}
 				var state = this.getState();
 				if (state === e.oldName) {
-					this.setState(e.widget, e.newName, false, true);
+					this.setState(e.node, e.newName, false, true);
 				}
 			}));
 			
 			this.subscribe("/davinci/states/state/style/changed", dojo.hitch(this, function(e) { 
 				var containerState = this.getState();
 				if (containerState == e.state) {
-					this._update(e.widget, e.state, containerState);		
+					this._update(e.node, e.state, containerState);		
 				}
 			}));
 			
 			this.subscribe("/davinci/ui/widget/replaced", dojo.hitch(this, function(newWidget, oldWidget) { 
 				var containerState = this.getState();
 				if (containerState) {
-					this._update(newWidget, containerState, undefined);		
+					this._update(newWidget.domNode, containerState, undefined);		
 				}
 			}));
 			

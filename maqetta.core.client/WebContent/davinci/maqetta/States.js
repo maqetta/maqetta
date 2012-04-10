@@ -25,11 +25,11 @@ davinci.maqetta.States.prototype = {
 	 * 		StatesView.js: _hideShowToolBar
 	 * 		(this routine): isVisible (indirect for VisualEditorOutline.js: isToggleOn)
 	 */ 
-	getStates: function(widget, associative){
-console.trace();
-		widget = this._getWidget(widget); 
+	getStates: function(node, associative){
+//console.trace();
+		node = this._getWidget(node); 
 		var names = associative ? {"Normal": "Normal"} : ["Normal"];
-		var states = widget && widget.states;
+		var states = node && node.states;
 		if (states) {
 			for (var name in states) {
 				if (states[name].origin && name != "Normal") {
@@ -44,31 +44,31 @@ console.trace();
 		return names;
 	},
 	
-	_getWidget: function(widget) {
-console.trace();
-		if (!widget) {
+	_getWidget: function(node) {
+//console.trace();
+		if (!node) {
 			var doc = this.getDocument();
-			widget = doc && doc.body;
+			node = doc && doc.body;
 		}
-		return widget;
+		return node;
 	},
 	
-	_updateSrcState: function (widget)
+	_updateSrcState: function (node)
 	{
-console.trace();
+//console.trace();
 	},
 	
 	/**
-	 * Returns true if the widget declares the state, false otherwise.
+	 * Returns true if the node declares the state, false otherwise.
 	 */
-	hasState: function(widget, state, property){ 
-console.trace();
+	hasState: function(node, state, property){ 
+//console.trace();
 		if (arguments.length < 2) {
 			state = arguments[0];
-			widget = undefined;
+			node = undefined;
 		}
-		widget = this._getWidget(widget);
-		return !!(widget && widget.states && widget.states[state] && (property || widget.states[state].origin));
+		node = this._getWidget(node);
+		return !!(node && node.states && node.states[state] && (property || node.states[state].origin));
 	},
 
 	/**
@@ -83,10 +83,10 @@ console.trace();
 	 *		(anonymous function)States.js:208
 	 *		StyleCommand.js: execute
 	 */
-	getState: function(widget){ 
-console.trace();
-		widget = this._getWidget(widget);
-		return widget && widget.states && widget.states.current;
+	getState: function(node){ 
+//console.trace();
+		node = this._getWidget(node);
+		return node && node.states && node.states.current;
 	},
 	
 	/**
@@ -97,29 +97,29 @@ console.trace();
 	 * 		StatesView.js: (anonymous:81)
 	 * 		StatesView.js: (anonymous function)536 - many, many times
 	 */
-	setState: function(widget, newState, updateWhenCurrent, _silent){
-console.trace();
+	setState: function(node, newState, updateWhenCurrent, _silent){
+//console.trace();
 		if (arguments.length < 2) {
 			newState = arguments[0];
-			widget = undefined;
+			node = undefined;
 		}
-		widget = this._getWidget(widget);
-		if (!widget || !widget.states || (!updateWhenCurrent && widget.states.current == newState)) {
+		node = this._getWidget(node);
+		if (!node || !node.states || (!updateWhenCurrent && node.states.current == newState)) {
 			return;
 		}
-		var oldState = widget.states.current;
+		var oldState = node.states.current;
 		
 		if (this.isNormalState(newState)) {
-			if (!widget.states.current) { return; }
-			delete widget.states.current;
+			if (!node.states.current) { return; }
+			delete node.states.current;
 			newState = undefined;
 		} else {
-			widget.states.current = newState;
+			node.states.current = newState;
 		}
 		if (!_silent) {
-			this.publish("/davinci/states/state/changed", [{widget:widget, newState:newState, oldState:oldState}]);
+			this.publish("/davinci/states/state/changed", [{node:node, newState:newState, oldState:oldState}]);
 		}
-		this._updateSrcState (widget);
+		this._updateSrcState (node);
 		
 	},
 	
@@ -127,11 +127,11 @@ console.trace();
 	 * If the current state is not Normal, force a call to setState
 	 * so that styling properties get reset for a subtree.
 	 */
-	resetState: function(widget){
-console.trace();
-		var currentState = this.getState(widget.getContext().rootWidget);
+	resetState: function(node){
+//console.trace();
+		var currentState = this.getState(node.getContext().rootWidget);
 		if(!this.isNormalState(currentState)){
-			this.setState(widget, currentState, true/*updateWhenCurrent*/, false /*silent*/);
+			this.setState(node, currentState, true/*updateWhenCurrent*/, false /*silent*/);
 		}		
 	},
 	
@@ -152,15 +152,15 @@ console.trace();
 	 * @param name
 	 * @returns
 	 */
-	getStyle: function(widget, state, name) {
-console.trace();
+	getStyle: function(node, state, name) {
+//console.trace();
 		var styleArray;
-		widget = this._getWidget(widget);
+		node = this._getWidget(node);
 		if (arguments.length == 1) {
 			state = this.getState();
 		}
 		// return all styles specific to this state
-		styleArray = widget && widget.states && widget.states[state] && widget.states[state].style;
+		styleArray = node && node.states && node.states[state] && node.states[state].style;
 		if (arguments.length > 2) {
 			// Remove any properties that don't match 'name'
 			if(styleArray){
@@ -178,14 +178,14 @@ console.trace();
 		return styleArray;
 	},
 
-	hasStyle: function(widget, state, name) {
-console.trace();
-		widget = this._getWidget(widget);
+	hasStyle: function(node, state, name) {
+//console.trace();
+		node = this._getWidget(node);
 
-		if (!widget || !name) { return; }
+		if (!node || !name) { return; }
 		
-		if(widget.states && widget.states[state] && widget.states[state].style){
-			var valueArray = widget.states[state].style;
+		if(node.states && node.states[state] && node.states[state].style){
+			var valueArray = node.states[state].style;
 			for(var i=0; i<valueArray[i]; i++){
 				if(valueArray[i].hasProperty(name)){
 					return true;
@@ -206,19 +206,19 @@ console.trace();
 	 * @param name
 	 * @returns
 	 */
-	setStyle: function(widget, state, styleArray, silent) {
-console.trace();
-		widget = this._getWidget(widget);
+	setStyle: function(node, state, styleArray, silent) {
+//console.trace();
+		node = this._getWidget(node);
 
-		if (!widget || !styleArray) { return; }
+		if (!node || !styleArray) { return; }
 			
 
-		widget.states = widget.states || {};
-		widget.states[state] = widget.states[state] || {};
-		widget.states[state].style = widget.states[state].style || [];
+		node.states = node.states || {};
+		node.states[state] = node.states[state] || {};
+		node.states[state].style = node.states[state].style || [];
 		
 		// Remove existing entries that match any of entries in styleArray
-		var oldArray = widget.states[state].style;
+		var oldArray = node.states[state].style;
 		if(styleArray){
 			for (var i=0; i<styleArray.length; i++){
 				var newItem = styleArray[i];
@@ -253,19 +253,19 @@ console.trace();
 			}
 		}
 		if(oldArray && newArray){
-			widget.states[state].style = oldArray.concat(newArray);
+			node.states[state].style = oldArray.concat(newArray);
 		}else if(oldArray){
-			widget.states[state].style = oldArray;
+			node.states[state].style = oldArray;
 		}else if(newArray){
-			widget.states[state].style = newArray;
+			node.states[state].style = newArray;
 		}else{
-			widget.states[state].style = undefined;
+			node.states[state].style = undefined;
 		}
 			
 		if (!silent) {
-			this.publish("/davinci/states/state/style/changed", [{widget:widget, state:state, style:styleArray}]);
+			this.publish("/davinci/states/state/style/changed", [{node:node, state:state, style:styleArray}]);
 		}
-		this._updateSrcState (widget);
+		this._updateSrcState (node);
 	},
 	
 	_convertStyleName: function(name) {
@@ -300,9 +300,9 @@ console.trace();
 		return value;			
 	},
 	
-	_resetAndCacheNormalStyle: function(widget, node, styleArray, newState) {
-console.trace();
-		var normalStyleArray = this.getStyle(widget, undefined);
+	_resetAndCacheNormalStyle: function(node, styleArray, newState) {
+//console.trace();
+		var normalStyleArray = this.getStyle(node, undefined);
 		
 		// Reset normal styles
 		if(normalStyleArray){
@@ -321,12 +321,12 @@ console.trace();
 				for(var i=0; i<styleArray.length; i++){
 					var style = styleArray[i];
 					for (var name in style) {	// should only be one prop in each normalStyle
-						if(!this.hasStyle(widget, undefined, name)) {
+						if(!this.hasStyle(node, undefined, name)) {
 							var convertedName = this._convertStyleName(name);
 							var value = this._getFormattedValue(name, davinci.dojo.style(node, convertedName));
 							var o = {};
 							o[name] = value;
-							this.setStyle(widget, undefined, [o], true);
+							this.setStyle(node, undefined, [o], true);
 						}
 					}
 				}
@@ -334,16 +334,16 @@ console.trace();
 		}
 	},
 	
-	_update: function(widget, newState, oldState) {
-console.trace();
-		widget = this._getWidget(widget);
-		if (!widget) return;
+	_update: function(node, newState, oldState) {
+//console.trace();
+		node = this._getWidget(node);
+		if (!node){
+			return;
+		}
 		
-		var node = widget.domNode || widget;
-
-		var styleArray = this.getStyle(widget, newState);
+		var styleArray = this.getStyle(node, newState);
 		
-		this._resetAndCacheNormalStyle(widget, node, styleArray, newState);
+		this._resetAndCacheNormalStyle(node, styleArray, newState);
 
 		// Apply new style
 		if(styleArray){
@@ -372,11 +372,11 @@ console.trace();
 		}
 	},
 		
-	isContainer: function(widget) {
+	isContainer: function(node) {
 		var result = false;
-		if (widget) {
+		if (node) {
 			var doc = this.getDocument();
-			if (widget === (doc && doc.body) || (widget.domNode && widget.domNode.tagName && widget.domNode.tagName == "BODY")) {
+			if (node === (doc && doc.body) || node.tagName == "BODY") {
 				result = true;
 			}
 		}
@@ -391,96 +391,97 @@ console.trace();
 	 * Adds a state to the list of states declared by the widget.  
 	 * Subscribe using davinci.states.subscribe("/davinci/states/state/added", callback).
 	 */
-	add: function(widget, state){ 
-console.trace();
+	add: function(node, state){ 
+//console.trace();
 		if (arguments.length < 2) {
 			state = arguments[0];
-			widget = undefined;
+			node = undefined;
 		}
-		widget = this._getWidget(widget);
-		if (!widget || this.hasState(widget, state)) {
+		node = this._getWidget(node);
+		if (!node || this.hasState(node, state)) {
 			//FIXME: This should probably be an error of some sort
 			return;
 		}
-		widget.states = widget.states || {};
-		widget.states[state] = widget.states[state] || {};
-		widget.states[state].origin = true;
-		this.publish("/davinci/states/state/added", [{widget:widget, state:state}]);
-		this._updateSrcState (widget);
+		node.states = node.states || {};
+		node.states[state] = node.states[state] || {};
+		node.states[state].origin = true;
+		this.publish("/davinci/states/state/added", [{node:node, state:state}]);
+		this._updateSrcState (node);
 	},
 	
 	/** 
 	 * Removes a state from the list of states declared by the widget.  
 	 * Subscribe using davinci.states.subscribe("/davinci/states/state/removed", callback).
 	 */
-	remove: function(widget, state){ 
+	remove: function(node, state){ 
 		if (arguments.length < 2) {
 			state = arguments[0];
-			widget = undefined;
+			node = undefined;
 		}
-		widget = this._getWidget(widget);
-		if (!widget || !this.hasState(widget, state)) {
+		node = this._getWidget(node);
+		if (!node || !this.hasState(node, state)) {
 			return;
 		}
 		
-		var currentState = this.getState(widget);
+		var currentState = this.getState(node);
 		if (state == currentState) {
-			this.setState(widget, undefined);
+			this.setState(node, undefined);
 		}
 		
-		delete widget.states[state].origin;
-		if (this._isEmpty(widget.states[state])) {
-			delete widget.states[state];
+		delete node.states[state].origin;
+		if (this._isEmpty(node.states[state])) {
+			delete node.states[state];
 		}
-		this.publish("/davinci/states/state/removed", [{widget:widget, state:state}]);
-		this._updateSrcState (widget);
+		this.publish("/davinci/states/state/removed", [{node:node, state:state}]);
+		this._updateSrcState (node);
 	},
 	
 	/**
 	 * Renames a state in the list of states declared by the widget.
 	 * Subscribe using davinci.states.subscribe("/davinci/states/renamed", callback).
 	 */
-	rename: function(widget, oldName, newName, property){ 
+	rename: function(node, oldName, newName, property){ 
 		if (arguments.length < 3) {
 			newName = arguments[1];
 			oldName = arguments[0];
-			widget = undefined;
+			node = undefined;
 		}
-		widget = this._getWidget(widget);
-		if (!widget || !this.hasState(widget, oldName, property) || this.hasState(widget, newName, property)) {
+		node = this._getWidget(node);
+		if (!node || !this.hasState(node, oldName, property) || this.hasState(node, newName, property)) {
 			return false;
 		}
-		widget.states[newName] = widget.states[oldName];
-		delete widget.states[oldName];
+		node.states[newName] = node.states[oldName];
+		delete node.states[oldName];
 		if (!property) {
-			this.publish("/davinci/states/state/renamed", [{widget:widget, oldName:oldName, newName:newName}]);
+			this.publish("/davinci/states/state/renamed", [{node:node, oldName:oldName, newName:newName}]);
 		}
-		this._updateSrcState (widget);
+		this._updateSrcState (node);
 		return true;
 	},
 
 	/**
 	 * Returns true if the widget is set to visible within the current state, false otherwise.
 	 */ 
-	isVisible: function(widget, state){ 
-console.trace();
+	isVisible: function(node, state){ 
+//console.trace();
 		if (arguments.length == 1) {
 			state = this.getState();
 		}
-		widget = this._getWidget(widget);
-		if (!widget) return;
+		node = this._getWidget(node);
+		if (!node){
+			return;
+		}
 		// FIXME: The way the code is now, sometimes there is an "undefined" property
 		// within widget.states. That code seems somewhat accidental and needs
 		// to be studied and cleaned up.
-		var domNode = (widget.domNode || widget);
 		var isNormalState = (typeof state == "undefined" || state == "undefined");
 		if(isNormalState){
-			return domNode.style.display != "none";
+			return node.style.display != "none";
 		}else{
-			if(widget.states && widget.states[state] && widget.states[state].style && typeof widget.states[state].style.display == "string"){
-				return widget.states[state].style.display != "none";
+			if(node.states && node.states[state] && node.states[state].style && typeof node.states[state].style.display == "string"){
+				return node.states[state].style.display != "none";
 			}else{
-				return domNode.style.display != "none";
+				return node.style.display != "none";
 			}
 		}
 	},
@@ -494,12 +495,14 @@ console.trace();
 		return true;
 	},
 	
-	serialize: function(widget) {
-console.trace();
-		if (!widget) return;
+	serialize: function(node) {
+//console.trace();
+		if (!node){
+			return;
+		}
 		var value = "";
-		if (widget.states) {
-			var states = require("dojo/_base/lang").clone(widget.states);
+		if (node.states) {
+			var states = require("dojo/_base/lang").clone(node.states);
 			delete states["undefined"];
 			if (!this._isEmpty(states)) {
 				value = JSON.stringify(states);
@@ -526,7 +529,7 @@ console.trace();
 	 * @return {object}  JavaScript result from JSON.parse
 	 */
 	deserialize: function(states) {
-console.trace();
+//console.trace();
 		if (typeof states == "string") {
 			// Replace unescaped single quotes with double quotes, unescape escaped single quotes
 			states = states.replace(/(\\)?'/g, function($0, $1){ 
@@ -574,14 +577,16 @@ console.trace();
 	 * 				This is the string that is stuffed into the attribute that 
 	 * 				holds widget-specific states information (dvStates)
 	 */
-	store: function(widget, states) {
-console.trace();
-		if (!widget || !states) return;
+	store: function(node, states) {
+//console.trace();
+		if (!node || !states){
+			return;
+		}
 		
-		this.clear(widget);
+		this.clear(node);
 		//FIXME: Shouldn't be stuffing a property with such a generic name ("states") onto DOM elements
-		widget.states = states = this.deserialize(states);
-		this.publish("/davinci/states/stored", [{widget:widget, states:states}]);
+		node.states = states = this.deserialize(node);
+		this.publish("/davinci/states/stored", [{node:node, states:states}]);
 	},
 	
 	/**
@@ -593,12 +598,13 @@ console.trace();
 	 * 		When actually running in browser outside of page editor, it's an Element DOM node.
 	 * @returns {string}  String value for the attribute, or unspecified|null if no such widget or attribute
 	 */
-	retrieve: function(widget) {
-console.trace();
-		if (!widget) return;
+	retrieve: function(node) {
+//console.trace();
+		if (!node){
+			return;
+		}
 		
 		// FIXME: Maybe this check between page editor and runtime should be factored out
-		var node = widget.domNode || widget;
 		var states = node.getAttribute(this.ATTRIBUTE);
 		return states;
 	},
@@ -608,12 +614,12 @@ console.trace();
 	 * Called by store().
 	 * @param widget  A davinci.ve._Widget in page editor and an Element when running directly in browser
 	 */
-	clear: function(widget) {
-console.trace();
-		if (!widget || !widget.states) return;
-		var states = widget.states;
-		delete widget.states;
-		this.publish("/davinci/states/cleared", [{widget:widget, states:states}]);
+	clear: function(node) {
+//console.trace();
+		if (!node || !node.states) return;
+		var states = node.states;
+		delete node.states;
+		this.publish("/davinci/states/cleared", [{node:node, states:states}]);
 	},
 	
 	getDocument: function() {
@@ -621,7 +627,7 @@ console.trace();
 	},
 	
 	_shouldInitialize: function() {
-console.trace();
+//console.trace();
 		var windowFrameElement = window.frameElement;
 		var isDavinciEditor = top.davinci && top.davinci.Runtime && (!windowFrameElement || windowFrameElement.dvContext);
 		return !isDavinciEditor;
@@ -645,26 +651,14 @@ console.trace();
 
 	_getChildrenOfNode: function(node) {
 		var children = [];
-		var child = node.firstChild;
-		while(child) {
-			if (child.nodeType == 1) {
-				children.push(child);
-			}
-			child = child.nextSibling;
-		}
+		node.children.forEach(function(child){
+			children.push(child);
+		});
 		return children;
 	},
 	
-	_getWidgetByNode: function(node) {
-		var widget = node;
-		if (typeof dijit != "undefined") {
-			widget = node.widgetid ? dijit.byId(node.widgetid) : (dijit.byNode(node) || node);
-		}
-		return widget;
-	},
-	
 	initialize: function() {
-console.trace();
+//console.trace();
 	
 		if (!this.subscribed && this._shouldInitialize()) {
 		
@@ -673,14 +667,13 @@ console.trace();
 					// Event targets one of Maqetta's editors, not from runtime events
 					return;
 				}
-				var children = davinci.states._getChildrenOfNode(e.widget.domNode || e.widget);
+				var children = davinci.states._getChildrenOfNode(e.node);
 				while (children.length) {
 					var child = children.shift();
-					var childWidget = davinci.states._getWidgetByNode(child);
-					if (!davinci.states.isContainer(childWidget)) {
-						children = children.concat(davinci.states._getChildrenOfNode(childWidget.domNode || childWidget));				
+					if (!davinci.states.isContainer(child)) {
+						children = children.concat(davinci.states._getChildrenOfNode(child));				
 					}
-					davinci.states._update(childWidget, e.newState, e.oldState);
+					davinci.states._update(child, e.newState, e.oldState);
 				}
 			});
 			
@@ -728,7 +721,7 @@ davinci.states = new davinci.maqetta.States();
 				 * dojo parsing is sandwiched between calls to _preserveStates and _restoreStates.
 				 */
 				var _preserveStates = function (cache) {
-console.trace();
+//console.trace();
 					var doc = davinci.states.getDocument();
 	
 					// Preserve the body states directly on the dom node
@@ -760,29 +753,25 @@ console.trace();
 				 * dojo parsing is sandwiched between calls to _preserveStates and _restoreStates.
 				 */
 				var _restoreStates = function (cache) {
-console.trace();
+//console.trace();
 					var doc = davinci.states.getDocument(),
 						currentStateCache = [];
 					for(var id in cache){
-						var widget = id == "body" ? doc.body : dijit.byId(id) || dojo.byId(id);
-						if (!widget) {
-							console.error("States: Failed to get widget by id: ", id);
+						var node = id == "body" ? doc.body : dojo.byId(id);
+						if (!node) {
+							console.error("States: Failed to get node by id: ", id);
 						}
 						var states = davinci.states.deserialize(cache[id]);
 						delete states.current; // always start in normal state for runtime
-						davinci.states.store(widget, states);
+						davinci.states.store(node, states);
 					}
 				};
 					
-				var _getTemporaryId = function (type) {
-					if (!type) {
+				var _getTemporaryId = function (node) {
+					if (!node || node.nodeType != 1) {	// 1== Element
 						return undefined;
 					}
-					if (type.domNode) { // widget
-						type = type.declaredClass;
-					} else if (type.nodeType === 1) { // Element
-						type = (type.getAttribute("dojoType") || type.nodeName.toLowerCase());
-					}
+					var type = (node.getAttribute("dojoType") || node.nodeName.toLowerCase());
 					type = type ? type.replace(/\./g, "_") : "";
 					return dijit.getUniqueId(type);
 				};
@@ -790,6 +779,8 @@ console.trace();
 		}
 	}
 })();
+
+/*FIXME: Temporarily comment out overlay widget logic
 
 // Bind to watch for overlay widgets at runtime.  Dijit-specific, at this time
 if (!davinci.Workbench && typeof dijit != "undefined"){
@@ -804,4 +795,6 @@ if (!davinci.Workbench && typeof dijit != "undefined"){
 		}
 	});
 }
+*/
+
 });

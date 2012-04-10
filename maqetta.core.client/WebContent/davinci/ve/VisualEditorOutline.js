@@ -186,7 +186,7 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 		},
 		
 		isToggleOn: function(item) {
-			return !states.isVisible(item);
+			return !states.isVisible(item.domNode);
 		},
 		
 		newItem: function(/* Object? */ args, /*Item?*/ parent){
@@ -263,7 +263,11 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 				if (!this._tree) {
 					return;
 				}
-				var children = states.getChildren(e.widget);
+				var widget = (e && e.node && e.node._dvWidget);
+				if(!widget){
+					return;
+				}
+				var children = states.getChildren(widget);
 				while (children.length) {
 					var child = children.shift();
 					if (child) {

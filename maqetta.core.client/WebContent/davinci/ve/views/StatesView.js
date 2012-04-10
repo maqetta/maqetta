@@ -519,7 +519,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		dojo.connect(this._tree, "onClick", this, function(item){
 			var currentEditor = this._editor;
 			var context = currentEditor ? currentEditor.getContext() : null;
-			var bodyWidget = context ? context.rootWidget : null;
+			var bodyNode = context ? context.rootNode : null;
 			if (item && item.type && item.type[0] == 'AppState') {
 				if (this.isThemeEditor()){
 					this.publish("/davinci/states/state/changed", 
@@ -531,15 +531,15 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 							[{editorClass:currentEditor.declaredClass, widget:context ? context.rootWidget : null, 
 							newState:item.name[0]}]);
 				} else {
-					if(context && bodyWidget){
+					if(context && bodyNode){
 						var state = item.name[0];
-						States.setState(bodyWidget, state);
+						States.setState(bodyNode, state);
 						context.deselectInvisible();
 					}
 				}
 			}else{
 				if(bodyWidget){
-					States.setState(bodyWidget, null);
+					States.setState(bodyNode, null);
 				}
 				if(item.sceneId){
 					// Loop through plugin scene managers, eg Dojo Mobile Views

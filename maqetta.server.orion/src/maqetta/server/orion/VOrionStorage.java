@@ -150,7 +150,15 @@ public class VOrionStorage implements IStorage{
 
 
 	public void createNewFile() throws IOException {
-	
+		OutputStream stream;
+		try {
+			stream = this.store.openOutputStream(EFS.NONE, null);
+			stream.flush();
+			stream.close();
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 

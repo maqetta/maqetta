@@ -267,16 +267,16 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 				if(!widget){
 					return;
 				}
-				var children = states.getChildren(widget);
+				var children = widget.getChildren();
 				while (children.length) {
 					var child = children.shift();
 					if (child) {
 						var node = this._tree.getNode(child);
 						if (node) {
-							var visible = states.isVisible(child, e.newState);
+							var visible = states.isVisible(child.domNode, e.newState);
 							node._setToggleAttr(!visible);
 						}
-						children = children.concat(states.getChildren(child));
+						children = children.concat(child.getChildren());
 					}
 				}
 			}

@@ -253,7 +253,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this.loadStyleSheet(this._contentStyleSheet);
 		this._attachAll();
 		this._restoreStates();
-		// The value of widget.states for BODY happens as part of user document onload process,
+		// The initialization of states object for BODY happens as part of user document onload process,
 		// which sometimes happens after context loaded event. So, not good enough for StatesView
 		// to listen to context/loaded event - has to also listen for context/statesLoaded.
 		this._statesLoaded = true;
@@ -1397,7 +1397,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	_attachChildren: function (containerNode)
 	{
 		dojo.query("> *", containerNode).map(Widget.getWidget).forEach(this.attach, this);
+		/*
 		var currentStateCache = [];
+		*/
 		var rootWidget = containerNode._dvWidget;
 		rootWidget._srcElement.visit({ visit: function(element){
 			if (element.elementType=="HTMLElement") {
@@ -1415,18 +1417,22 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					var states = davinci.states.deserialize(stateSrc);
 					delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
 					
-					var state = davinci.ve.states.getState(widget.domNode);
+					/*
+					var state = davinci.ve.states.getState(null);
 					if (state) { // remember which widgets have state other than normal so we can trigger a set later to update styles of their children
 						currentStateCache.push({ node: widget.domNode, state: state});
 					}
+					*/
 				}
 			}
 		}});
+		/*
 		// Wait until after all states attributes are restored before setting states, so all child attributes are updated properly
 		for (var i in currentStateCache) {
 			var item = currentStateCache[i];
 			davinci.ve.states.setState(item.node, item.state, true);
 		}
+		*/
 	},
 	
 	/**
@@ -1684,7 +1690,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			console.error('Context._restoreStates: this._loadFileStatesCache missing');
 			return;
 		}
+		/*
 		var currentStateCache = [];
+		*/
 		for(var id in cache){
 			//FIXME: This logic depends on the user never add ID "body" to any of his widgets.
 			//That's bad. We should find another way to achieve special case logic for BODY widget.
@@ -1707,18 +1715,22 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var states = cache[id];
 			states = davinci.states.deserialize(states);
 			delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
-			davinci.ve.states.store(widget, states);
+			davinci.ve.states.store(widget.domNode, states);
 			
-			var state = davinci.ve.states.getState(widget);
+			/*
+			var state = davinci.ve.states.getState(widget.domNode);
 			if (state) { // remember which widgets have state other than normal so we can trigger a set later to update styles of their children
 				currentStateCache.push({ node: widget.domNode, state: state});
 			}
+			*/
 		}
+		/*
 		// Wait until after all states attributes are restored before setting states, so all child attributes are updated properly
 		for (var i in currentStateCache) {
 			var item = currentStateCache[i];
 			davinci.ve.states.setState(item.node, item.state, true);
 		}
+		*/
 	},
 
 	getDocument: function(){
@@ -2213,11 +2225,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			data.style = bodyElement.getAttribute("style");
 			data.content = bodyElement.getElementText({includeNoPersist:true});
 			
-			/*FIXME: Remove these lines. The store() method takes a widget/node,
-			 * not a "data" object. Does nothing - just returns after assertion fails.
+			/*FIXME: Fix these lines. The store() method should be taking a widget/node,
+				not a "data" object. Just happens to work, sort of by accident. */
 			var states = bodyElement.getAttribute(davinci.ve.states.ATTRIBUTE);
 			davinci.ve.states.store(data, states);
-			*/
 
 			/*this.setPreference("flowLayout", 
 					bodyElement.getAttribute(PREF_LAYOUT_ATTR) !== 'false');*/
@@ -2561,7 +2572,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		
 		var isNormalState = davinci.ve.states.isNormalState();
 		if (!isNormalState) {
-			var stateStyleValuesArray = davinci.ve.states.getStyle(widget);
+			var stateStyleValuesArray = davinci.ve.states.getStyle(widget.domNode);
 			if(stateStyleValuesArray){
 				// Remove entries from vArray that are in stateStyleValuesArray
 				for(var i=0; i<stateStyleValuesArray.length; i++){

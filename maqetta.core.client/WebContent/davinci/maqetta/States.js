@@ -585,7 +585,7 @@ davinci.maqetta.States.prototype = {
 		
 		this.clear(node);
 		//FIXME: Shouldn't be stuffing a property with such a generic name ("states") onto DOM elements
-		node.states = states = this.deserialize(node);
+		node.states = states = this.deserialize(states);
 		this.publish("/davinci/states/stored", [{node:node, states:states}]);
 	},
 	
@@ -651,9 +651,9 @@ davinci.maqetta.States.prototype = {
 
 	_getChildrenOfNode: function(node) {
 		var children = [];
-		node.children.forEach(function(child){
-			children.push(child);
-		});
+		for (var i=0; i<node.children.length; i++){
+			children.push(node.children[i]);
+		}
 		return children;
 	},
 	

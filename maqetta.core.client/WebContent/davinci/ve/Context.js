@@ -1415,9 +1415,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					var states = davinci.states.deserialize(stateSrc);
 					delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
 					
-					var state = davinci.ve.states.getState(widget);
+					var state = davinci.ve.states.getState(widget.domNode);
 					if (state) { // remember which widgets have state other than normal so we can trigger a set later to update styles of their children
-						currentStateCache.push({ widget: widget, state: state});
+						currentStateCache.push({ node: widget.domNode, state: state});
 					}
 				}
 			}
@@ -1425,7 +1425,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// Wait until after all states attributes are restored before setting states, so all child attributes are updated properly
 		for (var i in currentStateCache) {
 			var item = currentStateCache[i];
-			davinci.ve.states.setState(item.widget, item.state, true);
+			davinci.ve.states.setState(item.node, item.state, true);
 		}
 	},
 	
@@ -1711,13 +1711,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			
 			var state = davinci.ve.states.getState(widget);
 			if (state) { // remember which widgets have state other than normal so we can trigger a set later to update styles of their children
-				currentStateCache.push({ widget: widget, state: state});
+				currentStateCache.push({ node: widget.domNode, state: state});
 			}
 		}
 		// Wait until after all states attributes are restored before setting states, so all child attributes are updated properly
 		for (var i in currentStateCache) {
 			var item = currentStateCache[i];
-			davinci.ve.states.setState(item.widget, item.state, true);
+			davinci.ve.states.setState(item.node, item.state, true);
 		}
 	},
 

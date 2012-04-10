@@ -7,22 +7,28 @@ define([
 
 declare("davinci.ve.States", davinci.maqetta.States, {
 	
-	_update: function(widget, newState, oldState) {
+	_update: function(node, newState, oldState) {
 //console.trace();
 		this.inherited(arguments);
 		
-		widget = this._getWidget(widget);
-		if (!widget) return;
+		node = this._getWidget(node);
+		if (!node){
+			return;
+		}
 
-		var styleArray = this.getStyle(widget, newState);
+		var styleArray = this.getStyle(node, newState);
 
 		if (this.isNormalState(newState)) {
-			this._styleChange(widget, styleArray);
+			this._styleChange(node, styleArray);
 		}
 	},
 		
-	_updateEvents: function(widget, state, name) {
+	_updateEvents: function(node, state, name) {
 //console.trace();
+		if(!node || !node._dvWidget){
+			return;
+		}
+		var widget = node._dvWidget;
 		var events = ["onclick", "onmouseover", "onmouseout", "onfocus", "onblur"];
 		var properties;
 		for(var i in events){
@@ -45,8 +51,12 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 		}
 	},
 	
-	_styleChange: function (widget, styleArray){
+	_styleChange: function (node, styleArray){
 //console.trace();
+		if(!node || !node._dvWidget){
+			return;
+		}
+		var widget = node._dvWidget;
 		var currentEditor = top.davinci.Runtime.currentEditor; //TODO: use require?
 		var context = currentEditor.getContext();
 
@@ -55,13 +65,13 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 		context.getCommandStack().execute(command);
 	},
 	
-	normalize: function(type, widget, name, value) {
+	normalize: function(type, node, name, value) {
 //console.trace();
         switch(type) {
 		    case "style":
 	            var state = davinci.ve.states.getState();
 	            if (state) {
-	                var normalValueArray = this.getStyle(widget, undefined, name);
+	                var normalValueArray = this.getStyle(node, undefined, name);
 	                if (normalValueArray) {
 		                for(var i=0; i<normalValueArray.length; i++){
 		                	if(normalValueArray[i][name]){
@@ -75,13 +85,13 @@ declare("davinci.ve.States", davinci.maqetta.States, {
         return value;
 	},
 	
-	normalizeArray: function(type, widget, name, valueArray) {
+	normalizeArray: function(type, node, name, valueArray) {
 //console.trace();
 		switch(type) {
 		    case "style":
 	            var state = davinci.ve.states.getState();
 	            if (state) {
-	                var normalValueArray = this.getStyle(widget, undefined, name);
+	                var normalValueArray = this.getStyle(node, undefined, name);
 	                if (normalValueArray) {
 	                	// Remove all entries from valueArray that are in normalValueArray
 		                for(var i=0; i<normalValueArray.length; i++){
@@ -120,15 +130,6 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 		var context = this.getContext();
 		return context && context.getDocument && context.getDocument();
 	},
-
-	// returns a shallow copy of the children
-	getChildren: function(widget) {
-//console.trace();
-		if (widget && widget.getChildren) {
-			return widget.getChildren().slice();
-		}
-		return [];
-	},
 	_updateSrcState: function (node)
 	{
 //console.trace();
@@ -159,23 +160,23 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 			this.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(e) { 
 //console.trace();
 				var editor = this.getEditor();
-				if (!dojo.isObject(e.widget) || !editor || editor.declaredClass != "davinci.ve.PageEditor"){
+				if (!dojo.isObject(e.node) || !editor || editor.declaredClass != "davinci.ve.PageEditor"){
 					return;
-				} // ignore if e.widget is not an object (eg '$all') and ignore updates in theme editor
+				} // ignore if node is not an object (eg '$all') and ignore updates in theme editor
 
 				dojo.publish("/davinci/states/state/changed/start");
 				// If rootWidget, then loop through children, else loop starting with this widget.
 				var widget = (e.node && e.node._dvWidget);
 				var widget = (widget == this.getContext().rootWidget) ? widget : widget.getParent();
-				var children = this.getChildren(widget);
+				var n = widget.domNode;
+
+				var children = davinci.states._getChildrenOfNode(n);
 				while (children.length) {
 					var child = children.shift();
-					if (child) {
-						if (!this.isContainer(child)) {
-							children = children.concat(this.getChildren(child));					
-						}
-						this._update(child.domNode, e.newState, e.oldState);
+					if (!this.isContainer(child)) {
+						children = children.concat(davinci.states._getChildrenOfNode(child));
 					}
+					this._update(child, e.newState, e.oldState);
 				}
 				dojo.publish("/davinci/states/state/changed/end");
 
@@ -195,17 +196,17 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 				var editor = this.getEditor();
 				if (!editor || editor.declaredClass == "davinci.themeEditor.ThemeEditor") return; // ignore updates in theme editor
 				var widget = (e.node && e.node._dvWidget);
-				var children = this.getChildren(widget);
+
+				var children = davinci.states._getChildrenOfNode(e.node);
 				while (children.length) {
 					var child = children.shift();
-					if (child) {
-						if (!this.isContainer(child)) {
-							children = children.concat(this.getChildren(child));					
-						}
-						this.rename(child, e.oldName, e.newName, true);
-						this._updateEvents(child, e.oldName, e.newName);
+					if (!this.isContainer(child)) {
+						children = children.concat(davinci.states._getChildrenOfNode(child));
 					}
+					this.rename(child, e.oldName, e.newName, true);
+					this._updateEvents(child, e.oldName, e.newName);
 				}
+
 				var state = this.getState();
 				if (state === e.oldName) {
 					this.setState(e.node, e.newName, false, true);

@@ -315,7 +315,7 @@ return declare("davinci.ve._Widget", null, {
 		/* if ordering is given, respect it */
 		
 		if(dojo.isArray(v)){
-			var vArray = davinci.ve.states.normalizeArray("style", this, name, v);
+			var vArray = davinci.ve.states.normalizeArray("style", this.domNode, name, v);
 			for(var i = 0;i<vArray.length;i++) {
 				for(var name in vArray[i]){	// Should be only one property in each array item
 					value = vArray[i][name];
@@ -327,7 +327,7 @@ return declare("davinci.ve._Widget", null, {
 		}else{
 			for(var name in v){
 				
-				value = davinci.ve.states.normalize("style", this, name, v[name]);
+				value = davinci.ve.states.normalize("style", this.domNode, name, v[name]);
 				if(value !== undefined && value != "" && value!=null) {
 					s += name + ": " + v[name] + "; ";
 				}

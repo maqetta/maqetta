@@ -671,7 +671,7 @@ davinci.maqetta.States.prototype = {
 				while (children.length) {
 					var child = children.shift();
 					if (!davinci.states.isContainer(child)) {
-						children = children.concat(davinci.states._getChildrenOfNode(child));				
+						children = children.concat(davinci.states._getChildrenOfNode(child));
 					}
 					davinci.states._update(child, e.newState, e.oldState);
 				}

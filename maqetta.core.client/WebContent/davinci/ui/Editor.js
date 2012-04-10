@@ -1,5 +1,3 @@
-//if (typeof orion == "undefined") { orion = {}; } // workaround because orion code did not declare orion global in a way that works with the Dojo loader
-
 define([
 	"davinci/commands/CommandStack",
 	"dojox/timing/doLater",

@@ -2212,8 +2212,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 			data.style = bodyElement.getAttribute("style");
 			data.content = bodyElement.getElementText({includeNoPersist:true});
+			
+			/*FIXME: Remove these lines. The store() method takes a widget/node,
+			 * not a "data" object. Does nothing - just returns after assertion fails.
 			var states = bodyElement.getAttribute(davinci.ve.states.ATTRIBUTE);
 			davinci.ve.states.store(data, states);
+			*/
 
 			/*this.setPreference("flowLayout", 
 					bodyElement.getAttribute(PREF_LAYOUT_ATTR) !== 'false');*/

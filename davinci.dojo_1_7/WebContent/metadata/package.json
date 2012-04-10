@@ -1979,7 +1979,12 @@
 		            "metadata": {
 		                "property": {
 		                    "fixed": {
-		                        "refreshFromSource": true
+		                        "refreshFromSource": true,
+		                        "mustHaveAncestor": ["dojox.mobile.ScrollableView"]
+		                    },
+		                    "moveTo": {
+		                    	"dropdownQueryValues": ["[data-dojo-type='dojox.mobile.View']", "[data-dojo-type='dojox.mobile.SwapView']", "[data-dojo-type='dojox.mobile.ScrollableView']"],
+		                    	"dropdownQueryAttribute": "id"
 		                    }
 		                }
 		            },
@@ -2004,7 +2009,15 @@
 		                "displayOnCreate": true,
 		                "supportsHTML": true
 		            },
-		            "allowedParent": "dojox.mobile.Heading"
+		            "allowedParent": "dojox.mobile.Heading",
+		            "metadata": {
+		                "property": {
+		                    "moveTo": {
+		                    	"dropdownQueryValues": ["[data-dojo-type='dojox.mobile.View']", "[data-dojo-type='dojox.mobile.SwapView']", "[data-dojo-type='dojox.mobile.ScrollableView']"],
+		                    	"dropdownQueryAttribute": "id"
+		                    }
+		                }
+		            }
 		        },
 		        {
 		            "name": "RoundRect",
@@ -2163,7 +2176,15 @@
 		            },
 		            "children":"List Item",
 		            "allowedParent": "dojox.mobile.RoundRectList, dojox.mobile.EdgeToEdgeList",
-		            "allowedChild": "dojox.mobile.Switch"
+		            "allowedChild": "dojox.mobile.Switch",
+		            "metadata": {
+		                "property": {
+		                    "moveTo": {
+		                    	"dropdownQueryValues": ["[data-dojo-type='dojox.mobile.View']", "[data-dojo-type='dojox.mobile.SwapView']", "[data-dojo-type='dojox.mobile.ScrollableView']"],
+		                    	"dropdownQueryAttribute": "id"
+		                    }
+		                }
+		            }
 		        },
 		        {
 		            "name": "Button",
@@ -2310,7 +2331,8 @@
 		            "metadata": {
 		                "property": {
 		                    "fixed": {
-		                        "refreshFromSource": true
+		                        "refreshFromSource": true,
+		                        "mustHaveAncestor": ["dojox.mobile.ScrollableView"]
 		                    }
 		                }
 		            },
@@ -2349,6 +2371,14 @@
 		                "multiLine": false,
 		                "supportsHTML": true,
 		                "helpText": "If you use any markup characters (&lt;,&gt;,&amp;), you need to specify whether the text represents literal (plain) text or HTML markup that should be parsed (using an innerHTML assignment)."
+		            },
+		            "metadata": {
+		                "property": {
+		                    "moveTo": {
+		                    	"dropdownQueryValues": ["[data-dojo-type='dojox.mobile.View']", "[data-dojo-type='dojox.mobile.SwapView']", "[data-dojo-type='dojox.mobile.ScrollableView']"],
+		                    	"dropdownQueryAttribute": "id"
+		                    }
+		                }
 		            }
 		        },
 		        {
@@ -2404,7 +2434,15 @@
 		            "icon": "resources/images/dx-mbl--icon-item.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAC5KhTBOiW+DrW+DrDNTjTJRijdakzthmTthmD9mnUBonz9pn0RwpkVyp0VwpUh4rEl4rLDN7LTP7Ux+sk1/sk1+sVGEt4i14ZO75JjA557D6KPG6qPH6qTG6qPG6aTG6aTH6abI6ajJ66jJ6qnJ66nK66nJ6q7M6rXR7brT7b7W71CFt1SKvFSKu4O14oS04Ya14Ym55Iq55Iq545G95pG85ZG95ZO95JfA55jB55jB5pjA5Z/F6Z7E6J/F51aOv3qx4IO24oS24oa34Yq65Im544mw0v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEcALAAAAAAQABAAAAefgEeCP4SFhj+Cg0YqjI2NRoiCLSkqEZaXESopLIkWKCUmIyYiJiYkIxIrnSgbHBwgHR4cHyCpiRMnPT0avLq6JxSJDyE6OcU4OsUZIRCJDDw0NjY1NdLTPg6JCjsz3TExRTFEMjsLiQcYLi5B7EHrQjcIiQQXMED3+EAwQwSJAQIvAgoUOCBAoiMAEipcCOCgw4cQFxYwkKBBBYgYDwYCADs=",
 		            "helper": "./dojox/mobile/IconItemHelper",
-		            "allowedParent": "dojox.mobile.IconContainer"
+		            "allowedParent": "dojox.mobile.IconContainer",
+		            "metadata": {
+		                "property": {
+		                    "moveTo": {
+		                    	"dropdownQueryValues": ["[data-dojo-type='dojox.mobile.View']", "[data-dojo-type='dojox.mobile.SwapView']", "[data-dojo-type='dojox.mobile.ScrollableView']"],
+		                    	"dropdownQueryAttribute": "id"
+		                    }
+		                }
+		            }
 		        },
 		        {
 		            "name": "SpinWheel",

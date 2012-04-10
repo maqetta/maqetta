@@ -23,13 +23,13 @@
             class="maqetta.core.server.DavinciPageServlet"
             load-on-startup="true">
            </servlet>
-
+	<!--
      <servlet
             alias="/review"
             class="maqetta.core.server.DavinciReviewServlet"
             load-on-startup="true">
       </servlet>
-
+	-->
    </extension>
    
 

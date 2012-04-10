@@ -98,7 +98,7 @@ public class VDirectory implements IVResource {
         if (name != null && name.length() > 0 && name.charAt(name.length() - 1) == '/') {
             name = name.substring(0, name.length() - 1);
         }
-        if (name != null && name.length() > 0 && name.charAt(0) == '.') {
+        if (name != null && name.length() > 0 && name.indexOf("./")==0 ) {
             name = name.substring(1);
         }
         if (name != null && name.length() > 0 && name.charAt(0) == '/') {

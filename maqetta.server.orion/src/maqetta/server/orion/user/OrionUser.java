@@ -99,12 +99,12 @@ public class OrionUser extends User {
 		return  new VOrionWorkspace((VOrionWorkspaceStorage)this.userDirectory);
 	}
 	
-	public VOrionResource createOrionProject(String name){
+	public IVResource createOrionProject(String name){
 		//make sure required fields are set
 				
 		IVResource existing = this.workspace.get(name);;
 		if(existing!=null)
-			return (VOrionResource)existing;
+			return existing;
 		
 		VOrionResource res =  (VOrionResource)this.workspace.create(name);
 		
@@ -136,9 +136,13 @@ public class OrionUser extends User {
 		}
 	}
 	
+	private IStorage getStorage(){
+		// return storage system
+		return this.userDirectory;
+	}
 	
 	public IVResource createProject(String projectName, String basePath, boolean initFiles){
-		VOrionResource project = createOrionProject(projectName);
+		IVResource project = createOrionProject(projectName);
 		/*
 		 * Load the initial user files extension point and copy the files to the projects root
 		 */
@@ -155,7 +159,7 @@ public class OrionUser extends User {
 	            String path = libraryElement.getAttribute(IDavinciServerConstants.EP_ATTR_INITIAL_USER_FILE_PATH);
 	            String name = libraryElement.getDeclaringExtension().getContributor().getName();
 	            Bundle bundle = Activator.getActivator().getOtherBundle(name);
-	            IStorage file = project.getStorage();
+	            IStorage file =this.getStorage().newInstance(project.getPath());
 			
 					if(basePath!=null && !basePath.equals(""))
 						file = file.newInstance(project.getPath()+ "/" + basePath);
@@ -255,64 +259,64 @@ public class OrionUser extends User {
  		return found;
  	}
 
-	public void rebuildWorkspace() {
-		this.workspace = newWorkspaceRoot();
-		IStorage[] userFiles = this.userDirectory.listFiles();
-		
-		for(int j=0;j<userFiles.length;j++){
-			if(!userFiles[j].isDirectory()) continue;
-			LibrarySettings settings = this.getLibSettings(userFiles[j]);
-			if(!settings.exists()){
-				settings.save();
-			}
-			Vector<ILibInfo> libs = new Vector();
-			libs.addAll(Arrays.asList( settings.allLibs()));
-			
-			
-			IVResource workspace = this.workspace;
-			IVResource firstFolder = new VDirectory(workspace, userFiles[j].getName());
-			this.workspace.add(firstFolder);
-			for (int i = 0; i < libs.size(); i++) {
-				IVResource root = firstFolder;
-				String defaultRoot = libs.get(i).getVirtualRoot();
-				
-				if(defaultRoot==null) continue;
-				
-				Library b = this.getLibrary(libs.get(i));
-				/* library not found on server so avoid adding it to the workspace */
-				if (b == null) {
-					continue;
-				}
-				URL file = b.getURL("");
-				// TODO temp fix to avoid adding virtual library entries that don't
-				// exist to the workspace.
-				if (file == null) {
-					continue;
-				}
-				IPath path = new Path(defaultRoot);
-				for (int k = 0; k < path.segmentCount(); k++) {
-					String segment = path.segment(k);
-					IVResource v = root.get(segment);
-					if (v == null) {
-						/* creating virtual directory structure, so READ ONLY */
-						v = new VDirectory(root, segment,true);
-						root.add(v);
-					}
-					root = v;
-				}
-	
-				
-				IVResource libResource = new VLibraryResource(b, file,"", "");
-				/* need a special case for library items whos root is the project roots */
-				//if(path.segmentCount()==0){
-					
-				IVResource[] children = libResource.listFiles();
-				for(int p=0;p<children.length;p++)
-					root.add(children[p]);
-				//}else{
-				//	root.add(libResource);
-				//}
-			}
-		}
-	}
+//	public void rebuildWorkspace() {
+//		this.workspace = newWorkspaceRoot();
+//		IStorage[] userFiles = this.userDirectory.listFiles();
+//		
+//		for(int j=0;j<userFiles.length;j++){
+//			if(!userFiles[j].isDirectory()) continue;
+//			LibrarySettings settings = this.getLibSettings(userFiles[j]);
+//			if(!settings.exists()){
+//				settings.save();
+//			}
+//			Vector<ILibInfo> libs = new Vector();
+//			libs.addAll(Arrays.asList( settings.allLibs()));
+//			
+//			
+//			IVResource workspace = this.workspace;
+//			IVResource firstFolder = new VDirectory(workspace, userFiles[j].getName());
+//			this.workspace.add(firstFolder);
+//			for (int i = 0; i < libs.size(); i++) {
+//				IVResource root = firstFolder;
+//				String defaultRoot = libs.get(i).getVirtualRoot();
+//				
+//				if(defaultRoot==null) continue;
+//				
+//				Library b = this.getLibrary(libs.get(i));
+//				/* library not found on server so avoid adding it to the workspace */
+//				if (b == null) {
+//					continue;
+//				}
+//				URL file = b.getURL("");
+//				// TODO temp fix to avoid adding virtual library entries that don't
+//				// exist to the workspace.
+//				if (file == null) {
+//					continue;
+//				}
+//				IPath path = new Path(defaultRoot);
+//				for (int k = 0; k < path.segmentCount(); k++) {
+//					String segment = path.segment(k);
+//					IVResource v = root.get(segment);
+//					if (v == null) {
+//						/* creating virtual directory structure, so READ ONLY */
+//						v = new VDirectory(root, segment,true);
+//						root.add(v);
+//					}
+//					root = v;
+//				}
+//	
+//				
+//				IVResource libResource = new VLibraryResource(b, file,"", "");
+//				/* need a special case for library items whos root is the project roots */
+//				//if(path.segmentCount()==0){
+//					
+//				IVResource[] children = libResource.listFiles();
+//				for(int p=0;p<children.length;p++)
+//					root.add(children[p]);
+//				//}else{
+//				//	root.add(libResource);
+//				//}
+//			}
+//		}
+//	}
 }

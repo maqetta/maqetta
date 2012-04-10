@@ -42,10 +42,17 @@
                class="maqetta.core.server.command.GetPreferences" />
          <command path="setPreferences"  isPut="true"
                class="maqetta.core.server.command.SetPreferences" />
+         <!-- orion specific -->
          <command path="getWorkbenchState" 
                class="maqetta.server.orion.command.GetWorkbenchState" />
          <command path="setWorkbenchState"  isPut="true"
                class="maqetta.server.orion.command.SetWorkbenchState" />
+         
+         <command path="configProject"  
+               class="maqetta.server.orion.command.ConfigProject" />
+         
+         
+         
          <command path="removeWorkingCopy" 
                class="maqetta.core.server.command.RemoveWorkingCopy" />
          <command path="logoff" 
@@ -78,6 +85,9 @@
                class="maqetta.core.server.command.TryIt" />         
            <command path="removeUser" noLogin="true"
                class="maqetta.core.server.command.RemoveUser" />
+               
+           <command path="keepalive" 
+               class="maqetta.core.server.command.KeepAlive" />
                 
           <!-- Review and Commenting Commands -->        
           <command path="listVersions"

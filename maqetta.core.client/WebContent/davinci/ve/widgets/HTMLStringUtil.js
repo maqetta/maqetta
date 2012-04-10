@@ -56,14 +56,15 @@ define(["dojo/_base/declare",
 			var extraAttribs = "";
 			
 			jsonString['id'] = id;
-			
+
+			var disabled = (jsonString.disabled ? " disabled='true' " : "");			
 			
 			/*
 			 * 
 			 * when writing dijit markup BE SURE TO INCLUDE class='propertyPaneEditableValue' to signify a onChange target and property target
 			 * as well as the 'extraAttributes' string, which will contain the inputs target as parsed from JSON template.
 			 */
-			
+
 			switch (metaType){
 				case "trblbox":
 					var text="<div dojoType='davinci.ve.widgets.Trblbox' shorthand='\"" + jsonString['shorthand'] + "\"'></div>";
@@ -76,7 +77,7 @@ define(["dojo/_base/declare",
 							+ dojo.toJson(dojo.map(jsonString.values, function(v){ return {value: v}; })) 
 							+ "'";
 					}
-					var text = "<div dojoType='davinci.ve.widgets.MultiInputDropDown' " + valuesText + "  class='propertyPaneEditablevalue' style='display:inline-block; width:100%;' id='"+ id + "'></div>";
+					var text = "<div dojoType='davinci.ve.widgets.MultiInputDropDown' " + valuesText + "  class='propertyPaneEditablevalue' style='display:inline-block; width:100%;' id='"+ id + "'"+disabled+"></div>";
 					
 			        return text;
 				case "boolean":
@@ -85,7 +86,7 @@ define(["dojo/_base/declare",
 			        
 				case "comboEdit":
 					var values = jsonString['values'];
-					var text = "<select  dojoType='dijit.form.ComboBox' style='display:inline-block; width:100%;' id='"+ id + "' >";
+					var text = "<select  dojoType='dijit.form.ComboBox' style='display:inline-block; width:100%;' id='"+ id + "'"+disabled+">";
 					for(var i = 0;i<values.length;i++)
 						text+="<option value='" + values[i] + "'>" + values[i] + "</option>"
 					text+="</select>";
@@ -93,7 +94,7 @@ define(["dojo/_base/declare",
 					
 				case "combo":
 					var values = jsonString['values'];
-					var text = "<select style='display:inline-block; width:100%;' id='"+ id + "' >";
+					var text = "<select style='display:inline-block; width:100%;' id='"+ id + "'"+disabled+">";
 					for(var i = 0;i<values.length;i++)
 						text+="<option value='" + values[i] + "'>" + values[i] + "</option>"
 					text+="</select>";
@@ -280,9 +281,9 @@ define(["dojo/_base/declare",
 			var htmlText = "";
 			
 			if(jsonString['pageTemplate']){
-				if( jsonString['title']){
+				if( jsonString.key){
 					jsonString['id'] = this.getId();
-					htmlText = "<div class='propGroup' id='" + jsonString['id'] +"' propGroup='"+jsonString['title']+"'>";
+					htmlText = "<div class='propGroup' id='" + jsonString['id'] +"' propGroup='"+jsonString.key+"'>";
 				}	
 					
 				htmlText+=this.generateTable(jsonString['pageTemplate']);

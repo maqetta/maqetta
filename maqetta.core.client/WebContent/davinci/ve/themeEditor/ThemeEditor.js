@@ -295,7 +295,9 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 		
 	},
 	supports : function (something){
-		return something =="style" || something == "states";
+		// Note: the propsect_* values need to match the keys in SwitchingStyleView.js
+		var regex = /^style|states|propsect_layout|propsect_paddingMargins|propsect_background|propsect_border|propsect_fontsAndText$/;
+		return something.match(regex) ? true : false;
 	},
 	
 	onSelectionChange : function(a){

@@ -6,7 +6,7 @@ define([
 
 var UserActivityMonitor = {
 	subscriptions: [],
-		
+	
 	subscribe: function(topic,func) {
 		this.subscriptions.push(dojo.subscribe(topic,this,func));
 	},
@@ -19,11 +19,11 @@ var UserActivityMonitor = {
 	/*
 	 *  Sets up Maqetta to monitor interaction with the server and the workspace
 	 */
-	setUpInActivityMonitor: function() {
+	setUpInActivityMonitor: function(doc) {
 		if (!this._runtime){
 			// we need to wait to add runtime to avoid chicken or egg
 			try{
-				this._runtime = dojo.require("davinci/Runtime");
+				this._runtime = require("davinci/Runtime");
 	       }catch(e){
 	            console.warn("FAILED: failure for loading davinci/Runtime");
 	            return;
@@ -32,9 +32,10 @@ var UserActivityMonitor = {
 		if (this._runtime.singleUserMode()) {
 			this._MaxInactiveInterval = -1; // no timeout
 		} else {
-			this._MaxInactiveInterval = 60; // defalt this will be changed when we get from server
+			this._firstPoll = true;
+			this._MaxInactiveInterval = 60 * 5; // defalt this will be changed when we get from server
 			this.keepAlive(); // get the timeout value
-			this.addInActivityMonitor(dojo.doc);
+			this.addInActivityMonitor(doc);
 			this.subscribe('/dojo/io/load', this.lastServerConnection);
 			this.userActivity(); // prime the value
 		}
@@ -98,6 +99,10 @@ var UserActivityMonitor = {
 		deferred.then(function(result) {
 			if (result.MaxInactiveInterval) {
 				this._MaxInactiveInterval = result.MaxInactiveInterval;
+				if (this._firstPoll) {
+					delete this._firstPoll;
+					this.userActivity(null); // reset to server timeout from defaults
+				}
 			} else {
 			    console.warn("Unknown error: result="+result);
 			}
@@ -164,6 +169,5 @@ var UserActivityMonitor = {
 	
 };
 
-davinci.UserActivityMonitor = UserActivityMonitor; 
 return UserActivityMonitor;
 });

@@ -42,7 +42,7 @@ public class MaqettaProjectDecorator implements IWebResourceDecorator {
 				if (checkMaqettaProject(projectObject)){
 					projectObject.put(IDavinciServerConstants.MAQETTA_PROJECT, true);
 				}else{
-					projectObject.put("rootFolder", true);
+					projectObject.put("maqettaProject", false);
 				}
 			}
 		} catch (JSONException e) {

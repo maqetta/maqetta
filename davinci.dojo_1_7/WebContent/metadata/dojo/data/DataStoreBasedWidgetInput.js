@@ -60,7 +60,29 @@ define([
 	/*DropDownSelect*/
 ) {
 
-return declare(SmartInput, {
+// Helper function that will be made available for "static" use
+getStoreId = function(srcElement, useDataDojoProps) {
+	var storeId = "";
+	if (useDataDojoProps) {
+		var dataDojoProps = srcElement.getAttribute("data-dojo-props");
+		if (dataDojoProps) {
+			var keyValuePairs = dataDojoProps.split(",");
+			dojo.some(keyValuePairs, function(pair) {
+				var pairSplit = pair.split(":")
+				if (pairSplit[0].trim() === "store") {
+					storeId = pairSplit[1].trim();
+					return true;
+				}
+			});
+		}
+	} else {
+		storeId = srcElement.getAttribute("store");
+	}
+	
+	return storeId;
+};
+	
+var DataStoreBasedWidgetInput = declare(SmartInput, {
 
 	displayOnCreate: "true",
 	
@@ -75,6 +97,8 @@ return declare(SmartInput, {
 
 	_substitutedMainTemplate: null,
 	_dataType: null,
+	
+	useDataDojoProps: false,
 
 	_getContainer: function(widget){
 		while(widget){
@@ -162,7 +186,7 @@ return declare(SmartInput, {
 	replaceStoreData: function(data) {
 		var store = this._widget.dijitWidget.store;
 
-		var storeId = this._widget.domNode._dvWidget._srcElement.getAttribute("store");
+		var storeId = this._getStoreId(this._widget.domNode._dvWidget._srcElement);
 		var storeWidget = Widget.byId(storeId);
 		var properties = {};
 		properties.data = data;
@@ -266,7 +290,7 @@ return declare(SmartInput, {
 		}
 
 		var store = this._widget.dijitWidget.store;
-		var storeId = this._widget.domNode._dvWidget._srcElement.getAttribute("store");
+		var storeId = this._getStoreId(this._widget.domNode._dvWidget._srcElement);
 		var storeWidget = Widget.byId(storeId);
 		var properties = {};
 		var context = this._getContext();
@@ -327,7 +351,7 @@ return declare(SmartInput, {
 			}
 
 			// allow subclasses to inject their own data
-			var command = this._getModifyCommandForUrlDataStore(widget, context, items, this._urlDataStore);
+			command = this._getModifyCommandForUrlDataStore(widget, context, items, this._urlDataStore);
 			compoundCommand.add(command);
 
 			var mcmd = new ModifyAttributeCommand(widget, {store: sid});
@@ -336,12 +360,22 @@ return declare(SmartInput, {
 			var storeCmd = new ModifyCommand(storeWidget, properties);
 			compoundCommand.add(storeCmd);
 
-			var command = this._getModifyCommandForUrlDataStore(widget, context, items);
+			command = this._getModifyCommandForUrlDataStore(widget, context, items);
 			compoundCommand.add(command);
 		}
 
 		context.getCommandStack().execute(compoundCommand); 
 		context.select(command.newWidget);
+		
+		//Do some clean up
+		this._cleanUpNewWidgetAttributes(command.newWidget);
+	},
+	
+	_cleanUpNewWidgetAttributes: function(widget) {
+		// We don't want to write out "store" (if using data-dojo-props)
+		if (this.useDataDojoProps) {
+			widget._srcElement.removeAttribute("store");
+		}	
 	},
 
 	_getModifyCommandForUrlDataStore: function(widget, context, items, datastore) {
@@ -378,7 +412,7 @@ return declare(SmartInput, {
 		var dataStoreType = dijit.byId("davinci.ve.input.DataGridInput.dataStoreType");
 		this._connection.push(dojo.connect(dataStoreType, "onChange", this, "changeDataStoreType"));
 
-		var storeId = this._widget._srcElement.getAttribute("store"); 
+		var storeId = this._getStoreId(this._widget._srcElement);
  		var storeWidget = Widget.byId(storeId);
 		this._data = storeWidget._srcElement.getAttribute('data'); 
 		this._url = storeWidget._srcElement.getAttribute('url');
@@ -612,6 +646,16 @@ return declare(SmartInput, {
 		}
 
 		return this._substitutedMainTemplate;
+	},
+	
+	_getStoreId: function(srcElement) {
+		return getStoreId(srcElement, this.useDataDojoProps);
 	}
 });
+
+//Make get getStoreId available as a "static" function
+DataStoreBasedWidgetInput.getStoreId = getStoreId;
+
+return DataStoreBasedWidgetInput;
+
 });

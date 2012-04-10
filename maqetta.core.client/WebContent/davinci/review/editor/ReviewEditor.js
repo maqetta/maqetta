@@ -56,11 +56,12 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 	},
 
 	setContent: function(filename, content) {
+		
 		this.fileName = filename;
 		this.basePath = new davinci.model.Path(filename);
 		// URL will always be http://localhost:8080/davinci/review without / at the end at present
 		var locationPath = new davinci.model.Path(davinci.Workbench.location());
-		locationPath = locationPath.removeLastSegments().append("review"); // delete /maqetta
+		//locationPath = locationPath.removeLastSegments().append("review"); // delete /maqetta
 		var baseUrl;
 
 		var designerName = this.resourceFile.parent.designerId;

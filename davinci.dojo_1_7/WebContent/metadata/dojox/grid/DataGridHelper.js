@@ -6,7 +6,8 @@ define([
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/RemoveCommand",
 	"davinci/html/HTMLElement",
-	"davinci/html/HTMLText"
+	"davinci/html/HTMLText",
+	"../../dojo/data/DataStoreBasedWidgetInput"
 ], function(
 	array,
 	form,
@@ -15,13 +16,14 @@ define([
 	CompoundCommand,
 	RemoveCommand,
 	HTMLElement,
-	HTMLText
+	HTMLText,
+	DataStoreBasedWidgetInput
 ) {
 
 var DataGridHelper = function() {};
 DataGridHelper.prototype = {
 
-	getData: function(/*Widget*/ widget, /*Object*/ options){
+	getData: function(/*Widget*/ widget, /*Object*/ options, useDataDojoProps){
 		// summary:
 		//		Serialize the passed DataGrid.
 		//		Writes a dojo/method script tag as a child to the DataGrid to set the structure, if one doesn't already exist.
@@ -54,7 +56,12 @@ DataGridHelper.prototype = {
 			}
 		}
 		if (widget.dijitWidget.store){
-			data.properties.store = widget.dijitWidget.store; // add the data old store if it has one.
+			// add the data old store if it has one.
+			data.properties.store = widget.dijitWidget.store; 
+			
+			if (useDataDojoProps) { 
+				data.properties["data-dojo-props"] = "store: " + data.properties.store._edit_object_id;
+			}
 		}
 		return data;
 	},
@@ -128,8 +135,8 @@ DataGridHelper.prototype = {
 		return "{cells: [" + s + "]}";
 	},
 	
-	create: function(widget, srcElement){
-		var storeId = srcElement.getAttribute("store");
+	create: function(widget, srcElement, useDataDojoProps){ 
+		var storeId = DataStoreBasedWidgetInput.getStoreId(srcElement, useDataDojoProps);
 		if(storeId){
 			// we may have the store as an object
 			var storeWidget = storeId.declaredClass ? Widget.byId(storeId.id) : Widget.byId(storeId);
@@ -140,8 +147,8 @@ DataGridHelper.prototype = {
 		}
 	},
 	
-	reparent: function(widget) {
-		var storeId = widget._srcElement.getAttribute("store");
+	reparent: function(widget, useDataDojoProps){ 
+		var storeId = DataStoreBasedWidgetInput.getStoreId(widget._srcElement, useDataDojoProps);
 		if(storeId){
 			var storeWidget = Widget.byId(storeId);
 			if (storeWidget && widget.dijitWidget && widget.dijitWidget.store){
@@ -165,7 +172,7 @@ DataGridHelper.prototype = {
 		command.execute();
 	},
 	
-	updateStore: function(widget, storeWidget, w) { 
+	updateStore: function(widget, storeWidget, w, useDataDojoProps){
 		var store = widget.dijitWidget.store;
 		var data = storeWidget._srcElement.getAttribute('data'); 
 		var url = storeWidget._srcElement.getAttribute('url');
@@ -210,9 +217,9 @@ DataGridHelper.prototype = {
 	 * 
 	 * This widget has a data store widget that is associated with it and must be deleted also.
 	 */
-	getRemoveCommand: function(widget) {
+	getRemoveCommand: function(widget, useDataDojoProps){
 		var command = new CompoundCommand();
-		var storeId = widget._srcElement.getAttribute("store");
+		var storeId = DataStoreBasedWidgetInput.getStoreId(widget._srcElement, useDataDojoProps);
 		var storeWidget = Widget.byId(storeId);
 		// order is important for undo... 
 		command.add(new RemoveCommand(widget));

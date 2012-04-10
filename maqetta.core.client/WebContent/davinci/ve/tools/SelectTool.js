@@ -251,21 +251,13 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			// Don't process mouse events on focus nodes. Focus.js already takes care of those events.
 			return;
 		}
-		if(this._mover){
-			this._setTarget(null);
-		}else{
-			this._setTarget(event.target);
-		}
+		this._setTarget(event.target);
 	},
 
 	onMouseOut: function(event){
 		// FIXME: sometime an exception occurs...
 		try{
-			if(this._mover){
-				this._setTarget(null);
-			}else{
-				this._setTarget(event.relatedTarget);
-			}
+			this._setTarget(event.relatedTarget);
 		}catch(e){
 		}
 	},
@@ -470,8 +462,18 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 	
 	_updateMoveCursor: function(){
+		var body = this._context.getDocument().body;
 		if(this._moverDragDiv){
-			this._moverDragDiv.style.cursor = this._altKey ? 'copy' : 'move';
+			if(this._altKey){
+				dojo.removeClass(body, 'selectToolDragMove');
+				dojo.addClass(body, 'selectToolDragCopy');
+			}else{
+				dojo.removeClass(body, 'selectToolDragCopy');
+				dojo.addClass(body, 'selectToolDragMove');
+			}
+		}else{
+			dojo.removeClass(body, 'selectToolDragMove');
+			dojo.removeClass(body, 'selectToolDragCopy');
 		}
 	},
 	
@@ -751,6 +753,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		this._mover = null;
 		this._moverBox = null;
 		this._moverLastEventTarget = null;
+		this._updateMoveCursor();
 		context.dragMoveCleanup();
 		cp.parentListDivDelete();
 		context.selectionShowFocus();

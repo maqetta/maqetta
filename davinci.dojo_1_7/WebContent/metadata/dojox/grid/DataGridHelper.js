@@ -219,7 +219,7 @@ DataGridHelper.prototype = {
 	 */
 	getRemoveCommand: function(widget, useDataDojoProps){
 		var command = new CompoundCommand();
-		var storeId = DataStoreBasedWidgetInput.getStoreId(srcElement, useDataDojoProps);
+		var storeId = DataStoreBasedWidgetInput.getStoreId(widget._srcElement, useDataDojoProps);
 		var storeWidget = Widget.byId(storeId);
 		// order is important for undo... 
 		command.add(new RemoveCommand(widget));

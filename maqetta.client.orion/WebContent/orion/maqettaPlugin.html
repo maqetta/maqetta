@@ -26,13 +26,15 @@ http://localhost:8081/plugin/install.html#http://localhost:8081/maqetta/app/orio
 		}
 		
 		function fullPath(item){
-			var path = ".";
+			var path = "";
 			var parent = item;
+			boolean first = false;
+			
 			while(!parent.hasOwnProperty("Projects")){
-				path = path + "/" + parent.Name;
+				path = parent.Name + first?"":"/" + path;
 				parent = parent.parent;
 			}
-			return path;
+			return "./" + path;
 		}
 		
 		/* register a link to the orion landing page */

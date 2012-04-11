@@ -1260,5 +1260,3 @@ davinci_top_bar .dijitButtonNode {
  	width:100%;
   	z-index: 1000;
 }
-
-background-image: -webkit-gradient(linear, left top, left bottom, from(white), to(#ffffcc)); background-image: -o-linear-gradient(white, #ffffcc); background-image: -ms-linear-gradient(white, #ffffcc); background-image: -moz-linear-gradient(white, #ffffcc); background-image: -webkit-linear-gradient(white, #ffffcc); background-image: linear-gradient(white, #ffffcc); width: 219px; height: 104px;"></div>

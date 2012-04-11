@@ -2,6 +2,15 @@ define(function() {
 
 var ToolBarButtonHelper = function() {};
 ToolBarButtonHelper.prototype = {
+
+	preProcessData: function(data) {
+		// doron: the dijit will use "" as a valid label and not use the icon, so remove it here for now
+		if (data.properties && dojo.isString(data.properties.label) && data.properties.label.length == 0) {
+			delete data.properties.label;
+		}
+
+		return data;
+	},
 	
 	create: function(widget, srcElement){
 		// Fix for #705.

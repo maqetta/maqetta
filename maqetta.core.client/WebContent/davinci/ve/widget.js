@@ -257,6 +257,10 @@ getLabel: function(widget) {
 		text += "<span class='propertiesTitleWidgetText'>" + widgetText + "</span> ";
 	}
 
+	if (helper && helper.getWidgetDescriptor) {
+		text += " <span class='propertiesTitleWidgetDescriptor'>" + helper.getWidgetDescriptor(widget) + "</span> ";
+	}
+
 	/* add the class */
 	var srcElement = widget._srcElement;
 	var id = widget.getId();

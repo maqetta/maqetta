@@ -10,8 +10,11 @@ define([
 	"orion/editor/textMateStyler",
 	"orion/textview/textView",
 	"orion/textview/textModel",
+    "orion/editor/contentAssist",
+    "orion/editor/jsContentAssist",
+    "orion/editor/cssContentAssist",
 	"davinci/UserActivityMonitor"
-], function(CommandStack, doLater, declare, Action, TextStyler, mEditor, mEditorFeatures, mHtmlGrammar, mTextMateStyler, mTextView, mTextModel, UserActivityMonitor) {
+], function(CommandStack, doLater, declare, Action, TextStyler, mEditor, mEditorFeatures, mHtmlGrammar, mTextMateStyler, mTextView, mTextModel, mContentAssist, mJSContentAssist, mCSSContentAssist, UserActivityMonitor) {
 	declare("davinci.ui._EditorCutAction", Action, {
 		constructor: function (editor) {
 			this._editor=editor;
@@ -130,6 +133,17 @@ return declare("davinci.ui.Editor", null, {
 	},
 
 	_createEditor: function () {
+        var contentAssist;
+        var contentAssistFactory = {
+                createContentAssistMode: function(editor) {
+                        contentAssist = new mContentAssist.ContentAssist(editor.getTextView());
+                        var contentAssistWidget = new mContentAssist.ContentAssistWidget(contentAssist, "contentassist");
+                        return new mContentAssist.ContentAssistMode(contentAssist, contentAssistWidget);
+                }
+        };
+        var cssContentAssistProvider = new mCSSContentAssist.CssContentAssistProvider();
+        var jsContentAssistProvider = new mJSContentAssist.JavaScriptContentAssistProvider();
+
 		var parent = this.contentDiv,
 			model = this._textModel,
 			options = {
@@ -148,12 +162,20 @@ return declare("davinci.ui.Editor", null, {
 				undoStackFactory: new mEditorFeatures.UndoFactory(),
 				annotationFactory: new mEditorFeatures.AnnotationFactory(),
 				lineNumberRulerFactory: new mEditorFeatures.LineNumberRulerFactory(),
-				contentAssistFactory: null,
+				contentAssistFactory: contentAssistFactory,
 //TODO				keyBindingFactory: keyBindingFactory, 
 				domNode: parent // redundant with textView parent?
 		};
 		this.editor = new mEditor.Editor(options);
 		this.editor.installTextView();
+//      	contentAssist.addEventListener("Activating", function() {
+            if (/\.css$/.test(this.fileName)) {
+                    contentAssist.setProviders([cssContentAssistProvider]);
+            } else if (/\.js$/.test(this.fileName)) {
+                    contentAssist.setProviders([jsContentAssistProvider]);
+            }
+//      	});
+
 		// add the user activity monitoring to the document and save the connects to be 
 		// disconnected latter
 		this._activityConnections = UserActivityMonitor.addInActivityMonitor(this.contentDiv.firstChild.contentDocument);

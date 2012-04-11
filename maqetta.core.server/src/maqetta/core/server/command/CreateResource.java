@@ -16,7 +16,7 @@ public class CreateResource extends Command {
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
         String path = req.getParameter("path");
         boolean isFolder = "true".equalsIgnoreCase(req.getParameter("isFolder"));
-        IVResource newFile = user.createResource(path);
+        IVResource newFile = user.createResource(path,isFolder);
         if (isFolder) {
             if (newFile.exists()) {
                 responseString = "EXISTS";

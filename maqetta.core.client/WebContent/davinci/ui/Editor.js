@@ -1,5 +1,3 @@
-//if (typeof orion == "undefined") { orion = {}; } // workaround because orion code did not declare orion global in a way that works with the Dojo loader
-
 define([
 	"davinci/commands/CommandStack",
 	"dojox/timing/doLater",
@@ -12,8 +10,11 @@ define([
 	"orion/editor/textMateStyler",
 	"orion/textview/textView",
 	"orion/textview/textModel",
+    "orion/editor/contentAssist",
+    "orion/editor/jsContentAssist",
+    "orion/editor/cssContentAssist",
 	"davinci/UserActivityMonitor"
-], function(CommandStack, doLater, declare, Action, TextStyler, mEditor, mEditorFeatures, mHtmlGrammar, mTextMateStyler, mTextView, mTextModel, UserActivityMonitor) {
+], function(CommandStack, doLater, declare, Action, TextStyler, mEditor, mEditorFeatures, mHtmlGrammar, mTextMateStyler, mTextView, mTextModel, mContentAssist, mJSContentAssist, mCSSContentAssist, UserActivityMonitor) {
 	declare("davinci.ui._EditorCutAction", Action, {
 		constructor: function (editor) {
 			this._editor=editor;
@@ -132,6 +133,17 @@ return declare("davinci.ui.Editor", null, {
 	},
 
 	_createEditor: function () {
+        var contentAssist;
+        var contentAssistFactory = {
+                createContentAssistMode: function(editor) {
+                        contentAssist = new mContentAssist.ContentAssist(editor.getTextView());
+                        var contentAssistWidget = new mContentAssist.ContentAssistWidget(contentAssist, "contentassist");
+                        return new mContentAssist.ContentAssistMode(contentAssist, contentAssistWidget);
+                }
+        };
+        var cssContentAssistProvider = new mCSSContentAssist.CssContentAssistProvider();
+        var jsContentAssistProvider = new mJSContentAssist.JavaScriptContentAssistProvider();
+
 		var parent = this.contentDiv,
 			model = this._textModel,
 			options = {
@@ -144,24 +156,29 @@ return declare("davinci.ui.Editor", null, {
 					return new mTextView.TextView({
 						parent: parent,
 						model: model,
-						tabSize: 4,
-						stylesheet: [
-						    "app/davinci/ui/editor/orionEditor.css"
-						]
+						tabSize: 4
 					});
 				},
 				undoStackFactory: new mEditorFeatures.UndoFactory(),
 				annotationFactory: new mEditorFeatures.AnnotationFactory(),
 				lineNumberRulerFactory: new mEditorFeatures.LineNumberRulerFactory(),
-				contentAssistFactory: null,
+				contentAssistFactory: contentAssistFactory,
 //TODO				keyBindingFactory: keyBindingFactory, 
 				domNode: parent // redundant with textView parent?
 		};
 		this.editor = new mEditor.Editor(options);
 		this.editor.installTextView();
+//      	contentAssist.addEventListener("Activating", function() {
+            if (/\.css$/.test(this.fileName)) {
+                    contentAssist.setProviders([cssContentAssistProvider]);
+            } else if (/\.js$/.test(this.fileName)) {
+                    contentAssist.setProviders([jsContentAssistProvider]);
+            }
+//      	});
+
 		// add the user activity monitoring to the document and save the connects to be 
 		// disconnected latter
-		this._activiityConnections = UserActivityMonitor.addInActivityMonitor(this.contentDiv.firstChild.contentDocument);
+		this._activityConnections = UserActivityMonitor.addInActivityMonitor(this.contentDiv.firstChild.contentDocument);
 		this.editor.getTextView().focus();
 
 		dojo.style(this.contentDiv, "overflow", "hidden");
@@ -192,7 +209,7 @@ return declare("davinci.ui.Editor", null, {
 			this._styler = new TextStyler(view, lang, this.editor._annotationModel/*view.annotationModel*/);
 			break;
 		case "html":
-			this._styler = new mTextMateStyler.TextMateStyler(view, (new mHtmlGrammar.HtmlGrammar()).grammar);
+			this._styler = new mTextMateStyler.TextMateStyler(view, new mHtmlGrammar.HtmlGrammar());
 		}
 		view.setText(this.getText());
 	},
@@ -201,7 +218,7 @@ return declare("davinci.ui.Editor", null, {
 	},
 
 	destroy: function () {
-		dojo.forEach(this._activiityConnections, dojo.disconnect);
+		dojo.forEach(this._activityConnections, dojo.disconnect);
 	},
 
 	select: function (selectionInfo) {

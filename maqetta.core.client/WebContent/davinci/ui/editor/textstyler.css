@@ -26,6 +26,10 @@
 	color: blue;
 }
 
+.token_number {
+	color: blue;
+}
+
 .token_keyword {
 	color: darkred;
 	font-weight: bold;

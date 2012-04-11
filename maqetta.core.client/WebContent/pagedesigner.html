@@ -13,7 +13,14 @@
 			height: 100%;
 		}
 	</style>
-	<script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="async: true, parseOnLoad: true, modulePaths:{'preview':'../preview', 'system':'../system'}, cacheBust: '@revision@', ioPublish:true"></script>
+	<script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="
+		async: true,
+		parseOnLoad: true,
+		modulePaths:{'preview':'../preview', 'system':'../system'},
+		aliases:[['i18n', 'dojo/i18n']],
+		cacheBust: '@revision@',
+		ioPublish:true
+	"></script>
 	<script type="text/javascript">
 		require(["dijit/dijit", "davinci/davinci", ], function () {
 			require(["dojo/i18n!davinci/nls/webContent", "davinci/version", "dojo/domReady!"], function (webContent, version) {
@@ -144,5 +151,6 @@
 			</div>
 			<div id="mainBody"></div>
 		</div>
+		<div id="contentassist" class="contentassist"></div>
 	</body>
 </html>

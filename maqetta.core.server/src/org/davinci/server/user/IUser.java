@@ -39,7 +39,7 @@ public interface IUser {
 
 	public IVResource getResource(String path);
 
-	public IVResource createResource(String path);
+	public IVResource createResource(String path, boolean isFolder);
 
 	public IStorage getWorkbenchSettings();
 

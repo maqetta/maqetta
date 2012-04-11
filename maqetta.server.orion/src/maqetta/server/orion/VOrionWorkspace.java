@@ -14,6 +14,8 @@ import java.util.Vector;
 
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.orion.internal.server.servlets.ProtocolConstants;
@@ -71,8 +73,23 @@ public class VOrionWorkspace extends VWorkspaceRoot{
 	}
 	*/
 	public IVResource create(String path) {
-		IStorage file = this.store.create(path);
-		return new VOrionResource(file, this, path);
+		IPath ps = new Path(path);
+		IVResource parent = this;
+		
+		for(int i=0;i<ps.segmentCount();i++){
+			String segment = ps.segment(i);
+			IVResource f= parent.get(segment);
+			if(f==null){
+				IStorage file = this.store.create(path);
+				f = new VOrionResource(file, parent, segment);
+				
+				
+			}
+			parent = f;
+		}
+		
+		
+		return parent;
 	}
 
 }

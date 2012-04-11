@@ -19,7 +19,7 @@ public class Rename extends Command {
         String newName = req.getParameter("newName");
 
         IVResource source = user.getResource(oldName);
-        IVResource newResource = user.createResource(newName);
+        IVResource newResource = user.createResource(newName, source.isDirectory());
         if (source.isDirectory()) {
             newResource.mkdir();
             VResourceUtils.copyDirectory(source, newResource, true);

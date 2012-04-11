@@ -1,4 +1,6 @@
-define(function() {
+define([
+	"dojo/i18n!../nls/dijit"
+], function(dijitNls) {
 
 var ContentPaneHelper = function() {};
 ContentPaneHelper.prototype = {
@@ -45,6 +47,21 @@ ContentPaneHelper.prototype = {
 				return undefined;
 			}
 			return widget.containerNode || widget.domNode;
+		},
+
+		getWidgetDescriptor: function(widget) {
+			var text = "";
+
+			var region = widget.attr("region");
+			if (region) {
+				if (text.length > 0) {
+					text += " ";
+				}
+
+				text+= dojo.replace(dijitNls.paneRegion, [region])
+			}
+
+			return text;
 		}
 	};
 

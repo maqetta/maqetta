@@ -2,12 +2,14 @@ define("davinci/ve/_Widget", [
 	"dojo/_base/declare",
 	"./metadata",
 	"../html/CSSModel",
-	"dojox/html/entities"
+	"dojox/html/entities",
+	"davinci/ve/utils/StyleArray"
 ], function(
 	declare,
 	metadata,
 	CSSModel,
-	htmlEntities
+	htmlEntities,
+	StyleArray
 ) {
 var arrayEquals = function(array1, array2, func){
 	if(array1 == array2){
@@ -441,7 +443,7 @@ return declare("davinci.ve._Widget", null, {
 			data = this._getData( options);
 		}
 
-		data.states=dojo.clone(this.states);
+		data.states=dojo.clone(this.domNode.states);
 		if(!data.properties)
 			data.properties = {};
 
@@ -497,7 +499,7 @@ return declare("davinci.ve._Widget", null, {
 		return this.domNode.nodeName.toLowerCase();
 	},
 
-	getStyleValues: function( options) {
+	getStyleValues: function() {
 
 		function removeProperty(propName){
 			for(var j=values.length-1; j>=0; j--){
@@ -543,6 +545,34 @@ return declare("davinci.ve._Widget", null, {
 			}
 		}
 		return values;
+	},
+
+	/**
+	 * Returns an associative array holding all CSS properties for a given widget
+	 * for all application states that have CSS values.
+	 * The associative array is indexed by the application states in the current page,
+	 * with Normal state named 'undefined'. In the associative array, each property
+	 * is a valueArray: an array of objects, where each object is {<propname>:<propvalue>}.
+	 * For example:
+	 * {'undefined':[{'color':'red},{'font-size':'12px'}],'State1':[{'font-size':'20px'}]}
+	 */
+	getStyleValuesAllStates: function(){
+		//FIXME: Normal states shouldn't accidentally become 'undefined'
+		var normalStyleArray = this.getStyleValues();
+		var styleValuesAllStates = {'undefined':normalStyleArray};
+		var states = this.domNode.states;
+		if(states){
+			for(var state in states){
+				if(states[state].style){
+					if(state == 'undefined'){
+						styleValuesAllStates[state] = StyleArray.mergeStyleArrays(states[state].style, normalStyleArray);
+					}else{
+						styleValuesAllStates[state] = states[state].style;
+					}
+				}
+			}
+		}
+		return styleValuesAllStates;
 	},
 
 	_updateSrcStyle: function() {
@@ -602,6 +632,30 @@ return declare("davinci.ve._Widget", null, {
 
 		//style.cssText = text;
 
+	},
+
+	/**
+	 * Returns an associative array holding all CSS properties for a given widget
+	 * for all application states that have CSS values.
+	 * The associative array is indexed by the application states in the current page,
+	 * with Normal state named 'undefined'. In the associative array, each property
+	 * is a valueArray: an array of objects, where each object is {<propname>:<propvalue>}.
+	 * For example:
+	 * {'undefined':[{'color':'red},{'font-size':'12px'}],'State1':[{'font-size':'20px'}]}
+	 */
+	setStyleValuesAllStates: function(styleValuesAllStates){
+		this.domNode.states = undefined;
+		if(styleValuesAllStates){
+			for(var state in styleValuesAllStates){
+				var styleArray = styleValuesAllStates[state];
+				//FIXME: Normal states shouldn't accidentally become 'undefined'
+				if(state === 'undefined'){
+					this.setStyleValues(styleArray);
+					state = undefined;
+				}
+				davinci.ve.states.setStyle(this.domNode, state, styleArray, true /*silent*/);
+			}
+		}
 	},
 
 	isLayout: function() {

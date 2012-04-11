@@ -12,15 +12,33 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 		this.inherited(arguments);
 		
 		node = this._getWidgetNode(node);
-		if (!node){
+		if (!node || !node._dvWidget){
 			return;
 		}
-
+		var widget = node._dvWidget;
 		var styleArray = this.getStyle(node, newState);
-
+		var styleValuesAllStates = widget.getStyleValuesAllStates();
+		var stateIndex;
+		if(!newState || newState === 'Normal'){
+			//FIXME: we are using 'undefined' as name of Normal state due to accidental programming
+			stateIndex = 'undefined';
+		}else{
+			stateIndex = this._state;
+		}
+		if(styleValuesAllStates[stateIndex]){
+			styleValuesAllStates[stateIndex] = StyleArray.mergeStyleArrays(styleArray, styleValuesAllStates[stateIndex]);
+		}else{
+			styleValuesAllStates[stateIndex] = styleArray;
+		}
+		widget.setStyleValuesAllStates(styleValuesAllStates);
+		this._refresh(widget);
+		// Recompute styling properties in case we aren't in Normal state
+		this.resetState(node);
+/*
 		if (this.isNormalState(newState)) {
 			this._styleChange(node, styleArray);
 		}
+*/
 	},
 		
 	_updateEvents: function(node, state, name) {
@@ -50,7 +68,7 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 			context.getCommandStack().execute(command);
 		}
 	},
-	
+/*
 	_styleChange: function (node, styleArray){
 //console.trace();
 		if(!node || !node._dvWidget){
@@ -64,6 +82,7 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 		
 		context.getCommandStack().execute(command);
 	},
+*/
 	
 	normalize: function(type, node, name, value) {
 //console.trace();

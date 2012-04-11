@@ -270,7 +270,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			left -= (p.x - parentNode.scrollLeft);
 			top -= (p.y - parentNode.scrollTop);
 		}
-		return {left:left, top:top};
+		return {l:left, t:top};
 	},
 
 	onExtentChange: function(index, box, copy){
@@ -316,8 +316,8 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			var position_prop = dojo.style(widget.domNode, 'position');
 			if("l" in box && "t" in box && position_prop == 'absolute'){
 				var p = this._adjustLTOffsetParent(context, widget, box.l, box.t);
-				var left = p.left;
-				var top = p.top;
+				var left = p.l;
+				var top = p.t;
 				var moveCommand = new davinci.ve.commands.MoveCommand(widget, left, top);
 				compoundCommand.add(moveCommand);
 			}
@@ -382,11 +382,8 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				var left = box.l,
 					top = box.t;
 				var p = this._adjustLTOffsetParent(context, widget, left, top);
-				left = p.left;
-				top = p.top;
-				var position = {x: left, y: top};
-				left = position.x;
-				top = position.y;
+				left = p.l;
+				top = p.t;
 				if(!compoundCommand){
 					compoundCommand = new davinci.commands.CompoundCommand();
 				}

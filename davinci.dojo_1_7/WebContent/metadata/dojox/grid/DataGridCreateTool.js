@@ -5,7 +5,8 @@ define([
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/AddCommand",
 	"davinci/ve/commands/MoveCommand",
-	"davinci/ve/commands/ResizeCommand"
+	"davinci/ve/commands/ResizeCommand",
+	"../../dojo/data/DataStoreBasedWidgetInput"
 ], function(
 	declare,
 	CreateTool,
@@ -13,7 +14,8 @@ define([
 	CompoundCommand,
 	AddCommand,
 	MoveCommand,
-	ResizeCommand
+	ResizeCommand,
+	DataStoreBasedWidgetInput
 ) {
 
 return declare(CreateTool, {
@@ -91,8 +93,11 @@ return declare(CreateTool, {
 			store = Widget.createWidget(storeData);
 			dataGridData.properties.store = dj.getObject(storeId);
 			if (this._useDataDojoProps) { 
-				dataGridData.properties["data-dojo-props"] = "store: " + storeId;
+				dataGridData.properties["data-dojo-props"] =
+						DataStoreBasedWidgetInput.setPropInDataDojoProps(
+								dataGridData.properties["data-dojo-props"], "store", storeId); 
 			}
+			this._augmentWidgetCreationProperties(dataGridData.properties);
 			dataGrid = Widget.createWidget(dataGridData);
 		}.bind(this));
 		
@@ -100,10 +105,9 @@ return declare(CreateTool, {
 			return;
 		}
 		
-		//We don't want "store" to be part of the DOM tree since we're using "data-dojo-props" with GridX
-		if (this._useDataDojoProps && dataGrid._srcElement) {
-			dataGrid._srcElement.removeAttribute("store");
-		}
+		// There are some src elements like "store" that we may not want to write out
+		// if using "data-dojo-props"
+		this._cleanUpNewWidgetAttributes(dataGrid);
 	
 		var command = new CompoundCommand();
 		var index = args.index;
@@ -124,6 +128,17 @@ return declare(CreateTool, {
 		/*this._context.getCommandStack().execute(command);
 		this._select(dataGrid);*/
 		return command;
+	},
+	
+	_augmentWidgetCreationProperties: function(properties) {
+		//Intended for subclass
+	},
+	
+	_cleanUpNewWidgetAttributes: function(widget) {
+		//We don't want "store" to be part of the DOM tree since we're using "data-dojo-props" with GridX
+		if (this._useDataDojoProps && widget._srcElement) {
+			widget._srcElement.removeAttribute("store");
+		}
 	},
 	
 	addPasteCreateCommand: function(command, args) {

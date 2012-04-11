@@ -170,9 +170,7 @@ return declare(DataStoreBasedWidgetInput, {
 		if (this.useTableElementsForStructure) {
 			newSrcElement.removeAttribute("structure");
 		}
-		if (this.useDataDojoProps) {
-			newSrcElement.removeAttribute("store");
-		}
+		this._cleanUpNewWidgetAttributes(command.newWidget); 
 	},
 	
 	_buildTableChildrenForStructure: function(structure, tableWidget) {

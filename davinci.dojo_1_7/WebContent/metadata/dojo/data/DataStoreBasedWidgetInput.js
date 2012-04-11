@@ -60,6 +60,58 @@ define([
 	/*DropDownSelect*/
 ) {
 
+/* 
+ * Returns a new string appropriate for data-dojo-props with the property updated (or added if not present before).
+ * For reference, a value for data-dojo-props will be in on the form of:
+ * 
+ *  	"[propId1]:[propValue1],[propId2]:[propValue2],[propId3]:[propValue3],..."
+ *  
+ *  This is a helper function that will be made available for "static" use.
+ *  
+ */  
+setPropInDataDojoProps = function(dojoDataPropsValue, propId, propValue) {
+	var newDataDojoProps = "";
+	if (dojoDataPropsValue) {
+		var keyValuePairs = dojoDataPropsValue.split(",");
+		
+		//Loop on the pairs to see if property of interest is already set
+		var propFound = false;
+		dojo.some(keyValuePairs, function(pair, index) {
+			var pairSplit = pair.split(":");
+			if (pairSplit[0].trim() === propId) {
+				//Found prop of interest, so replace its value with the new value
+				pairSplit[1] = propValue;
+				keyValuePairs[index] = pairSplit.join(":");
+				propFound = true;
+				return propFound;
+			}
+		});
+		
+		if (!propFound) {
+			//Didn't find the prop while looping, so push new key, value pair
+			keyValuePairs.push(propId + ":" + propValue);
+		}
+		
+		//Join all of the pairs back into one comma-delimited string
+		newDataDojoProps = keyValuePairs.join(",");
+	} else {
+		// We had no value for dojoDataPropsValue, so this new property will 
+		// be the first and only entry for now
+		newDataDojoProps = propId + ":" + propValue;
+	}
+	
+	return newDataDojoProps;
+};
+	
+/* 
+ * Returns the id of the data store for this element. If useDataDojoProps is
+ * true, it will split apart the "data-dojo-props" property for the element
+ * and find the store's id. Otherwise, it will look at the element's "store"
+ * property.
+ *
+ *  This is a helper function that will be made available for "static" use.
+ *  
+ */ 
 // Helper function that will be made available for "static" use
 getStoreId = function(srcElement, useDataDojoProps) {
 	var storeId = "";
@@ -371,6 +423,7 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		this._cleanUpNewWidgetAttributes(command.newWidget);
 	},
 	
+	//Subclass can override to do additional clean-up
 	_cleanUpNewWidgetAttributes: function(widget) {
 		// We don't want to write out "store" (if using data-dojo-props)
 		if (this.useDataDojoProps) {
@@ -653,7 +706,10 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 	}
 });
 
-//Make get getStoreId available as a "static" function
+//Make get setPropInDataDojoProps publically available as a "static" function
+DataStoreBasedWidgetInput.setPropInDataDojoProps = setPropInDataDojoProps;
+
+//Make get getStoreId publically available as a "static" function
 DataStoreBasedWidgetInput.getStoreId = getStoreId;
 
 return DataStoreBasedWidgetInput;

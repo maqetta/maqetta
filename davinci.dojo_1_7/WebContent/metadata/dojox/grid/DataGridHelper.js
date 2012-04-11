@@ -58,9 +58,15 @@ DataGridHelper.prototype = {
 		if (widget.dijitWidget.store){
 			// add the data old store if it has one.
 			data.properties.store = widget.dijitWidget.store; 
-			
-			if (useDataDojoProps) { 
-				data.properties["data-dojo-props"] = "store: " + data.properties.store._edit_object_id;
+
+			if (useDataDojoProps) {
+				var currentDataDojoProps =
+						widget.properties ? widget.properties["data-dojo-props"]
+								: widget._srcElement.getAttribute("data-dojo-props");
+				data.properties["data-dojo-props"] =
+						DataStoreBasedWidgetInput.setPropInDataDojoProps(
+								currentDataDojoProps, "store",
+								data.properties.store._edit_object_id);
 			}
 		}
 		return data;

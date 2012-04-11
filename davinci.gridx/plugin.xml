@@ -8,7 +8,7 @@
     
       <extension point="maqetta.core.server.ajaxLibrary">
          <ajaxLibrary name="gridx" id="gridx" version="1.0">
-            <libraryPath location="WebContent/gridx" name="/lib/gridx"></libraryPath>
+            <libraryPath location="WebContent/gridx" name="/lib/dojo/gridx"></libraryPath>
             <metadata location="app/metadata/gridx/1.0" />
     
          </ajaxLibrary>

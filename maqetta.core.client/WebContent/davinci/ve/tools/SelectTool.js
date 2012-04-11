@@ -275,11 +275,9 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 
 	onExtentChange: function(params){
 		var index = params.index;
-		var oldBox = params.oldBox;
 		var newBox = params.newBox;
 		var copy = params.copy;
-		var oldLeft = oldBox ? oldBox.l : undefined;
-		var oldTop = oldBox ? oldBox.t : undefined;
+		var oldBoxes = params.oldBoxes;
 				
 		var context = this._context;
 		var cp = context._chooseParent;
@@ -324,7 +322,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				var p = this._adjustLTOffsetParent(context, widget, newBox.l, newBox.t);
 				var left = p.l;
 				var top = p.t;
-				var moveCommand = new davinci.ve.commands.MoveCommand(widget, left, top, null, oldLeft, oldTop);
+				var moveCommand = new davinci.ve.commands.MoveCommand(widget, left, top, null, oldBoxes[index]);
 				compoundCommand.add(moveCommand);
 			}
 			
@@ -393,7 +391,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				if(!compoundCommand){
 					compoundCommand = new davinci.commands.CompoundCommand();
 				}
-				var first_c = new davinci.ve.commands.MoveCommand(widget, left, top, null, oldLeft, oldTop);
+				var first_c = new davinci.ve.commands.MoveCommand(widget, left, top, null, oldBoxes[index]);
 				var ppw = cp.getProposedParentWidget();
 				var proposedParent = ppw ? ppw.parent : null;
 				compoundCommand.add(first_c);
@@ -406,7 +404,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				var b = widget.getMarginBox(),
 					dx = left - b.l,
 					dy = top - b.t;
-				dojo.forEach(selection, dojo.hitch(this, function(w){
+				dojo.forEach(selection, dojo.hitch(this, function(w, idx){
 					if(w != widget){
 						var mb = w.getMarginBox();
 						var newLeft = mb.l + dx;
@@ -416,7 +414,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 							// way, MoveCommand will store the actual shift amount on the
 							// command object (first_c). MoveCommand will use the shift amount
 							// for first_c for the other move commands.
-							var c = new davinci.ve.commands.MoveCommand(w, newLeft, newTop, first_c);
+							var c = new davinci.ve.commands.MoveCommand(w, newLeft, newTop, first_c, oldBoxes[idx]);
 							compoundCommand.add(c);
 						}
 						var currentParent = w.getParent();
@@ -745,7 +743,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			}
 		}
 		if(doMove){
-			this.onExtentChange({index:index, oldBox:this._moverStartLocations[0], newBox:moverBox, copy:this._altKey});
+			this.onExtentChange({index:index, newBox:moverBox, oldBoxes:this._moverStartLocations, copy:this._altKey});
 		}
 		if(this._moverDragDiv){
 			var parentNode = this._moverDragDiv.parentNode;

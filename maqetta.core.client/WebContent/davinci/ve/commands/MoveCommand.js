@@ -9,7 +9,7 @@ define([
 return declare("davinci.ve.commands.MoveCommand", null, {
 	name: "move",
 
-	constructor: function(widget, left, top, commandForXYDeltas, oldLeft, oldTop, applyToWhichStates){
+	constructor: function(widget, left, top, commandForXYDeltas, oldBox, applyToWhichStates){
 		this._id = (widget ? widget.id : undefined);
 		this._context = widget.getContext();
 		
@@ -22,8 +22,7 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		// by the same amount as the first widget.
 		this._commandForXYDeltas = commandForXYDeltas;
 		
-		this._oldLeft = oldLeft;
-		this._oldTop = oldTop;
+		this._oldBox = oldBox;
 		
 		// applyToWhichStates controls whether style change is attached to Normal or other states
 		//   "current" => apply to currently active state
@@ -123,11 +122,10 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		var newStyleArray = [{left:newLeft+'px'},{top:newTop+'px'}] ;
         var styleValuesAllStates = widget.getStyleValuesAllStates();
 		this._oldStyleValuesAllStates = dojo.clone(styleValuesAllStates);
-		if(typeof this._oldLeft == 'number'){
-			this._oldStyleValuesAllStates[stateIndex] = StyleArray.mergeStyleArrays([{left:this._oldLeft+'px'}], this._oldStyleValuesAllStates[stateIndex]);
-		}
-		if(typeof this._oldTop == 'number'){
-			this._oldStyleValuesAllStates[stateIndex] = StyleArray.mergeStyleArrays([{top:this._oldTop+'px'}], this._oldStyleValuesAllStates[stateIndex]);
+		if(this._oldBox){
+			this._oldStyleValuesAllStates[stateIndex] = 
+					StyleArray.mergeStyleArrays([{left:this._oldBox.l+'px'}, {top:this._oldBox.t+'px'}], 
+								this._oldStyleValuesAllStates[stateIndex]);
 		}
 		var stateIndex;
 		if(!this._state || this._state === 'Normal'){

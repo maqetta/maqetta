@@ -4,13 +4,13 @@ define([
 return /** @scope davinci.ve.utils.StyleArray */ {
 
 	/**
-	 * Merge two styleArray structures set1 and set2 such that set1 overrides values in set2 
+	 * Merge two styleArray structures set1 and set2 such that set2 overrides values in set1 
 	 */
 	mergeStyleArrays: function(set1, set2) {
-		var oldValues = dojo.clone(set2);
+		var oldValues = dojo.clone(set1);
 		// Remove properties from oldValues that are in set1
-		for(var i=0;i<set1.length;i++){
-			for(var name1 in set1[i]){	// should only have one property
+		for(var i=0;i<set2.length;i++){
+			for(var name1 in set2[i]){	// should only have one property
 				for(j=oldValues.length-1; j>=0; j--){
 					var oldItem = oldValues[j];
 					for(var name2 in oldItem){	// should only have one property
@@ -22,7 +22,8 @@ return /** @scope davinci.ve.utils.StyleArray */ {
 				}
 			}
 		}
-		var newValues = set1.concat(oldValues);
+		//FIXME: need to sort values, taking shorthands into account
+		var newValues = oldValues.concat(set2);
 		return newValues;
 	}
 };

@@ -124,8 +124,8 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		this._oldStyleValuesAllStates = dojo.clone(styleValuesAllStates);
 		if(this._oldBox){
 			this._oldStyleValuesAllStates[stateIndex] = 
-					StyleArray.mergeStyleArrays([{left:this._oldBox.l+'px'}, {top:this._oldBox.t+'px'}], 
-								this._oldStyleValuesAllStates[stateIndex]);
+					StyleArray.mergeStyleArrays(this._oldStyleValuesAllStates[stateIndex], 
+								[{left:this._oldBox.l+'px'}, {top:this._oldBox.t+'px'}]);
 		}
 		var stateIndex;
 		if(!this._state || this._state === 'Normal'){
@@ -135,7 +135,7 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 			stateIndex = this._state;
 		}
 		if(styleValuesAllStates[stateIndex]){
-			styleValuesAllStates[stateIndex] = StyleArray.mergeStyleArrays(newStyleArray, styleValuesAllStates[stateIndex]);
+			styleValuesAllStates[stateIndex] = StyleArray.mergeStyleArrays(styleValuesAllStates[stateIndex], newStyleArray);
 		}else{
 			styleValuesAllStates[stateIndex] = newStyleArray;
 		}

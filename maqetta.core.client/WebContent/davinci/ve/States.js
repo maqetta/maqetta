@@ -26,7 +26,7 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 			stateIndex = this._state;
 		}
 		if(styleValuesAllStates[stateIndex]){
-			styleValuesAllStates[stateIndex] = StyleArray.mergeStyleArrays(styleArray, styleValuesAllStates[stateIndex]);
+			styleValuesAllStates[stateIndex] = StyleArray.mergeStyleArrays(styleValuesAllStates[stateIndex], styleArray);
 		}else{
 			styleValuesAllStates[stateIndex] = styleArray;
 		}

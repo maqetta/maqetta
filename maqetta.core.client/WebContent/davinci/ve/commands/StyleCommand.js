@@ -62,7 +62,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 			stateIndex = this._state;
 		}
 		if(styleValuesAllStates[stateIndex]){
-			styleValuesAllStates[stateIndex] = StyleArray.mergeStyleArrays(this._newValues, styleValuesAllStates[stateIndex]);
+			styleValuesAllStates[stateIndex] = StyleArray.mergeStyleArrays(styleValuesAllStates[stateIndex], this._newValues);
 		}else{
 			styleValuesAllStates[stateIndex] = this._newValues;
 		}
@@ -91,7 +91,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 
 		if (isNormalState) {
 
-			cleanValues = StyleArray.mergeStyleArrays(cleanValues, this._oldValues);			
+			cleanValues = StyleArray.mergeStyleArrays(this._oldValues, cleanValues);			
 			widget.setStyleValues( cleanValues);
 			this._refresh(widget);
 			

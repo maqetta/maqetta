@@ -565,7 +565,7 @@ return declare("davinci.ve._Widget", null, {
 			for(var state in states){
 				if(states[state].style){
 					if(state == 'undefined'){
-						styleValuesAllStates[state] = StyleArray.mergeStyleArrays(states[state].style, normalStyleArray);
+						styleValuesAllStates[state] = StyleArray.mergeStyleArrays(normalStyleArray, states[state].style);
 					}else{
 						styleValuesAllStates[state] = states[state].style;
 					}

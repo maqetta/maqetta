@@ -31,6 +31,7 @@ define({ root:
 		"themeAlreadyExists":"Theme already Exists!",
 		"invalidThemeName": "Invalid theme name",
 		"errorCreatingTheme": "Error creating theme: ",
+		"creatingTheme": "Creating theme",
 		
 		//OpenThemeDialog.js
 		"noUserThemes":"No user themes found in workspace. Please create a new theme before editing.",
@@ -111,7 +112,7 @@ define({ root:
 		//newtheme.html
 		"themeToClone":"Theme to clone",
 		"newName":"New Name",
-		
+				
 		//OpenThemeDialog.html
 		"selectTheme":"Select a Theme",
 

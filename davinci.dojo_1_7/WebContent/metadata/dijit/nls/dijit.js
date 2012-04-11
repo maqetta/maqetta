@@ -43,5 +43,8 @@ define({ root: {
 		"typeColHeader":"type",
 		"containerColHeader":"container",
 		"countColHeader":"count",
-		"preview":"Preview:"
+		"preview":"Preview:",
+
+		//ContentPaneHelper
+		"paneRegion": "[region={0}]"
 }});

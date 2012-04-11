@@ -56,58 +56,10 @@ return declare(DataStoreBasedWidgetInput, {
 
 	helpText: "",
 	
+	useTableElementsForStructure: false,
+	
 	constructor : function() {
 		this.helpText = dojoxNls.dataGridInputHelp;
-	},
-
-	serialize: function(widget, callback, value) {
-		var structure = value || widget.attr('structure');
-		var names = [];
-		var fields = [];
-		for (var i=0; i<structure.length; ++i) {
-			fields.push(structure[i].field);
-			names.push(structure[i].name);
-		}
-
-		callback(fields.join(", ") + '\n' + names.join(", ")); 
-	},
-	
-	// splits the input by rows then columns
-	// see @update() for format
-	parse: function(input) {
-		var values = this.parseGrid(input);
-		if (values.length < 2) {
-				alert(dojoxNls.invalidInput1);
-				return input;
-		}
-		var fields = values[0];
-		var names = values[1];
-		if (fields.length < names.length) {
-				alert(dojoxNls.invalidInput2);
-				return input;
-		}
-		var structure = [];
-		for (var i=0; i<fields.length; ++i) {
-				var field = fields[i].text;
-				var name = names[i].text;
-				var width = 'auto';
-				var editor = 'dojox.grid.editors.Input';
-				structure.push({field: field, name: name, width: width, editor: editor});
-		}
-		return structure;
-	},
-	
-	// in this case, the first row is the Fields
-	// the second row is the Display Names (column headers)
-	update: function(widget, structure) {
-		if (structure.length > 0) {
-			var properties = {structure: structure};
-			var command = new ModifyCommand(widget, properties, null, this._getContext());
-			this._getContext().getCommandStack().execute(command);
-			return command.newWidget;
-		}
-
-		return widget;			
 	},
 
 	refreshStoreView: function(){
@@ -116,7 +68,7 @@ return declare(DataStoreBasedWidgetInput, {
 		var value ='';
 		for (var x = 0; x < structure.length; x++){
 			var pre = (x > 0) ? ',' : '';
-			value += pre + structure[x].name;
+			value += pre + structure[x].name.trim();
 		}
 		value += '\n';
 		for (var i = 0; i <	this._widget.dijitWidget.store._arrayOfAllItems.length; i++){
@@ -131,24 +83,13 @@ return declare(DataStoreBasedWidgetInput, {
 		textArea.attr('value', String(value));
 	},
 	
-	addOne: function() {
-		this._gridColDS.newItem({rowid: this._rowid++, width: "auto", editable: true, hidden: false});
-	},
-		
-	removeOne: function() {
-		var gridColDS = this._gridColDS;
-		dojo.forEach(this._gridColumns.selection.getSelected(), function(item) {
-				gridColDS.deleteItem(item);
-		});
-	},
-	
 	updateWidget: function() {
 		var structure = [];
 		
 		var context = this._getContext();
 		var widget = this._widget;
 
-		var storeId = widget.domNode._dvWidget._srcElement.getAttribute("store");
+		var storeId = this._getStoreId(widget.domNode._dvWidget._srcElement);
 		var storeWidget = Widget.byId(storeId);
 
 		var compoundCommand = new OrderedCompoundCommand();
@@ -197,14 +138,19 @@ return declare(DataStoreBasedWidgetInput, {
 			structure: structure,
 			escapeHTMLInData: escapeHTML
 		};
+		
+		//Deal with table column headers
+		var widgetChildren = this._buildTableChildrenForStructure(structure, widget);
 
+		//Deal with store of different type
 		if (storeWidget.type != "dojo.data.ItemFileReadStore") {
-			props.store = newStore;
+			props.store = newStore; 
 		}
 
+		//Build the modify command
 		var command = new ModifyCommand(widget,
 			props,
-			null,
+			widgetChildren,
 			context
 		);
 
@@ -217,7 +163,89 @@ return declare(DataStoreBasedWidgetInput, {
 
 		context.getCommandStack().execute(compoundCommand);	
 		context.select(command.newWidget);
+		
+		// We don't want to write out "structure" (if using table elements to
+		// define columns) or "store" (if using data-dojo-props)
+		var newSrcElement = command.newWidget._srcElement;
+		if (this.useTableElementsForStructure) {
+			newSrcElement.removeAttribute("structure");
+		}
+		if (this.useDataDojoProps) {
+			newSrcElement.removeAttribute("store");
+		}
 	},
+	
+	_buildTableChildrenForStructure: function(structure, tableWidget) {
+		var tableChildren = null;
+		if (structure.length > 0) {
+			if (this.useTableElementsForStructure) {
+				var data = tableWidget.getData();
+				tableChildren = data.children;
+				
+				//Find/create THEAD
+				var tHead = null;
+				dojo.some(tableChildren, function(tableChild) {
+					if (tableChild.type === "html.thead") {
+						tHead = tableChild;
+						return true;
+					}
+				});
+				if (!tHead) {
+					tHead = this._createTableHead();
+					tableChildren.push(tHead);
+				}
+				
+				//Find/create TR
+				var tRow = null;
+				tHeadChildren = tHead.children;
+				dojo.some(tHeadChildren, function(tHeadChild) {
+					if (tHeadChild.type === "html.tr") {
+						tRow = tHeadChild;
+						return true;
+					}
+				});
+				if (!tRow) {
+					tRow = this._createTableRow();
+					tHeadChildren.push(tRow);
+				}
+				
+				// Create TH's as children of TR based on structure (clearing out 
+				// all existing table column headers)
+				tRow.children = []; 
+				dojo.forEach(structure, function(colDef) {
+					tRow.children.push(this._createTableColumnHeader(colDef));
+				}.bind(this));
+			}
+		}
+		return tableChildren;
+	},
+	
+	_createTableHead: function() {
+		return {
+			type: "html.thead",
+			children: []
+		};
+	},
+	
+	_createTableRow: function() {
+		return {
+			type: "html.tr",
+			children: []
+		};
+	},
+	
+	_createTableColumnHeader: function(colDef) {
+		//Maybe do some kind of a mixin??
+		return {
+			type: "html.th",
+			properties: {
+				field: colDef.field,
+				width: colDef.width
+			},
+			children: colDef.name
+		};
+	},
+	
 		
 	buildStructure: function(structure, value) {
 		var oldStructure = structure, // we are defining the structure by row one of text area
@@ -238,14 +266,14 @@ return declare(DataStoreBasedWidgetInput, {
 		}
 
 		this._structure = structure;
-		var data = { identifier: 'uniqe_id', items:[]},
+		var data = { identifier: 'unique_id', items:[]},
 			rows = value.split('\n'),
 			items = data.items;
 		// row 0 of the textarea defines colums in data grid structure
 		for (var r = 1; r < rows.length; r++) {
 			var cols = rows[r].split(',');
 		
-			var item = {uniqe_id: r};
+			var item = {unique_id: r};
 			for (var s = 0; s < structure.length; s++){
 				var fieldName = structure[s].field;
 				if (cols[s]){
@@ -258,23 +286,18 @@ return declare(DataStoreBasedWidgetInput, {
 
 		return data;
 	},
+
+	_cleanUpNewWidgetAttributes: function(widget) {
+		// We don't want to write out "structure" (if using table elements to
+		// define columns) 
+		if (this.useTableElementsForStructure) {
+			widget._srcElement.removeAttribute("structure");
+		}
 		
-	_attr: function(widget, name, value) {
-		var properties = {};
-		properties[name] = value;
-		
-		var command = new ModifyCommand(widget, properties);
-		this._addOrExecCommand(command);
+		//Call superclass
+		this.inherited(arguments);
 	},
 	
-	_addOrExecCommand: function(command) {
-		if (this.command && command) {
-			this.command.add(command);
-		} else {
-			this._getContext().getCommandStack().execute(this.command || command);
-		}	
-	},
-
 	_getModifyCommandForUrlDataStore: function(widget, context, items, datastore) {
 		var structure = [];
 		var attributes = this._urlDataStore.getAttributes(items[0]);
@@ -297,9 +320,12 @@ return declare(DataStoreBasedWidgetInput, {
 		var escapeHTML = (this._format === 'text');
 
 		var props = {
-				structure: structure,
-				escapeHTMLInData: escapeHTML
+			structure: structure,
+			escapeHTMLInData: escapeHTML
 		};
+		
+		//Deal with table column headers
+		var widgetChildren = this._buildTableChildrenForStructure(structure, widget);
 
 		if (datastore) {
 			props.store = datastore;
@@ -307,7 +333,7 @@ return declare(DataStoreBasedWidgetInput, {
 
 		var command = new ModifyCommand(widget,
 			props,
-			null, 
+			widgetChildren, 
 			context,
 			scripts
 		);

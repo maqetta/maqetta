@@ -1,0 +1,58 @@
+{
+    "id": "http://dojotoolkit.org/gridx/Grid",
+    "name": "gridx.Grid",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "css",
+            "src": "dojo/resources/dojo.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "resources/claro/Gridx.css",
+            "$library": "gridx"
+        },
+        {
+            "type": "css",
+            "src": "resources/claro/Gridx_rtl.css",
+            "$library": "gridx"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/io/xhrScriptPlugin",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "gridx/Grid",
+            "$library": "gridx"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/data/CsvStore",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "gridx": {
+            "src": "../../"
+        },
+        "dojo": {
+            "src": "../../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "escapeHTMLInData": {
+            "datatype": "boolean",
+            "description": "This will escape HTML brackets from the data to prevent HTML from user-inputted data being rendered with may contain JavaScript and result in XSS attacks.",
+            "hidden": false,
+            "defaultValue": true
+        }
+    },
+    "content": "<table></table>"
+}

@@ -32,11 +32,14 @@ public class VOrionStorage implements IStorage{
 	
 	String name;
 	IFileStore root;
+	VOrionStorage parent;
 	
-	public VOrionStorage(String name, IFileStore store) {
+	
+	public VOrionStorage(String name, IFileStore store, VOrionStorage parent) {
 		this.store = store;
 		this.root = root;
 		this.name = name;
+		this.parent = parent;
 	}
 	
 	public String getPath() {
@@ -101,7 +104,7 @@ public class VOrionStorage implements IStorage{
 		try {
 			String[] children = this.store.childNames(EFS.NONE, null);
 			for(int i=0;i<children.length;i++){
-				VOrionStorage child = new VOrionStorage(children[i], this.store.getChild(children[i]));
+				VOrionStorage child = new VOrionStorage(children[i], this.store.getChild(children[i]), this);
 				results.add(child);
 			}
 		} catch (CoreException e) {
@@ -120,12 +123,7 @@ public class VOrionStorage implements IStorage{
 
 
 	public VOrionStorage getParentFile() {
-		IFileStore parentStore = store.getParent();
-	
-		if(parentStore==null)
-			return null;
-		
-		return new VOrionStorage(parentStore.getName(), parentStore);		
+		return this.parent;
 	}
 
 
@@ -150,7 +148,15 @@ public class VOrionStorage implements IStorage{
 
 
 	public void createNewFile() throws IOException {
-	
+		OutputStream stream;
+		try {
+			stream = this.store.openOutputStream(EFS.NONE, null);
+			stream.flush();
+			stream.close();
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 
@@ -197,7 +203,7 @@ public class VOrionStorage implements IStorage{
 
 
 	private VOrionStorage get(String segment) {
-		return new VOrionStorage(segment, this.store.getChild(segment));
+		return new VOrionStorage(segment, this.store.getChild(segment), this);
 	}
 
 	public IStorage newInstance(IStorage parent, String name) {
@@ -206,12 +212,15 @@ public class VOrionStorage implements IStorage{
 
 
 	public IStorage create(String name) {
-		IFileStore parentStore = store;
+		
 		IPath path = new Path(name);
+		VOrionStorage parent = this;
 		for(int i=0;i<path.segmentCount();i++){
-			parentStore = parentStore.getChild(path.segment(i));
+			IFileStore parentStore = parent.store;
+			IFileStore childStore = parentStore.getChild(path.segment(i));
+			parent = new VOrionStorage(path.segment(i), childStore, parent);
 		}
-		return new VOrionStorage(name, parentStore);
+		return parent;
 	}
 
 	public IStorage newInstance(URI uri) {

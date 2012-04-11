@@ -76,7 +76,7 @@ public class VOrionWorkspaceStorage extends VOrionProjectStorage{
 		Activator.getDefault().registerProjectLocation(project);
 		
 		try {
-			return new VOrionProjectStorage(name, project.getProjectStore(),project);
+			return new VOrionProjectStorage(name, project.getProjectStore(),project,this);
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -110,7 +110,7 @@ public class VOrionWorkspaceStorage extends VOrionProjectStorage{
 			
 				String name = result.getName();
 				try {
-					projects.add(new VOrionProjectStorage(name, result.getProjectStore()));
+					projects.add(new VOrionProjectStorage(name, result.getProjectStore(), result, this));
 				} catch (CoreException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

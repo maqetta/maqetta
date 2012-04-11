@@ -30,7 +30,7 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 		{
 			this._context=context;
 			this._handles=[];
-			this._connect("onContentChange", "refresh"); // yikes.  this refreshes the entire tree anytime there's a change.  really bad if we're traversing the tree setting styles.
+			this._connect("onCommandStackExecute", "refresh"); // yikes.  this refreshes the entire tree anytime there's a change.  really bad if we're traversing the tree setting styles.
 			this._connect("activate", "refresh");
 			this._connect("setSource", "refresh");
 

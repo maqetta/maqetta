@@ -264,6 +264,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		dojo.addClass(containerNode, "editContextContainer");
 		
 		this._connects = [
+			dojo.connect(this._commandStack, "onExecute", this, "onCommandStackExecute"),
 			// each time the command stack executes, onContentChange sets the focus, which has side-effects
 			// defer this until the stack unwinds in case a caller we don't control iterates on multiple commands
 			dojo.connect(this._commandStack, "onExecute", function(){setTimeout(this.onContentChange.bind(this), 0);}.bind(this)),
@@ -2989,6 +2990,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this.sceneManagers[id] = sceneManager;
 			dojo.publish('/davinci/ui/context/registerSceneManager', [sceneManager]);
 		}
+	},
+
+	onCommandStackExecute: function() {
 	}
 });
 

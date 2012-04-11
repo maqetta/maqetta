@@ -1,5 +1,7 @@
 package maqetta.server.orion.user;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -23,6 +25,7 @@ import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.user.IPerson;
 import org.davinci.server.user.LibrarySettings;
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
@@ -44,6 +47,7 @@ import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
 import org.maqetta.server.StorageFileSystem;
 import org.maqetta.server.VDirectory;
+import org.maqetta.server.VFile;
 import org.maqetta.server.VLibraryResource;
 import org.maqetta.server.VWorkspaceRoot;
 import org.osgi.framework.Bundle;
@@ -101,20 +105,16 @@ public class OrionUser extends User {
 	
 	public IVResource createOrionProject(String name){
 		//make sure required fields are set
-				
-		IVResource existing = this.workspace.get(name);;
-		if(existing!=null)
-			return existing;
 		
-		VOrionResource res =  (VOrionResource)this.workspace.create(name);
-		
-		try {
-			addOrionUserRight(res.getOrionLocation());
-		} catch (ServletException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		IVResource res =  this.workspace.create(name);
+		if(res instanceof VOrionResource){
+			try {
+				addOrionUserRight(((VOrionResource)res).getOrionLocation());
+			} catch (ServletException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		
 		return res;
 			
 	}
@@ -176,7 +176,43 @@ public class OrionUser extends User {
 	public boolean isValid(String path){
 	     return true;
 	}
-	
+	public IVResource createResource(String path, boolean isFolder) {
+		/* serve working copy files if they exist */
+
+		String path1 = path;
+		if (path1.startsWith("./")) {
+			path1 = path.substring(2);
+		} else if (path.length() > 0 && path.charAt(0) == '.') {
+			path1 = path.substring(1);
+		}
+		if(!this.isValid(this.userDirectory.getAbsolutePath() + "/" + path1)) return null;
+		
+		/*
+		ILink link = this.getLinks().hasLink(path1);
+		if (link != null) {
+			path = link.location + "/" + path1.substring(link.path.length());
+			path = path.replace('/', File.separatorChar);
+			VFile linkFile = new VFile(this.userDirectory.newInstance(path));
+			return linkFile;
+		}
+		*/
+//		IStorage directory = this.userDirectory.newInstance(path);
+		/* make sure the new resoruce is within the user directory */
+		
+		IVResource userFile = this.workspace.create(path);
+		if(isFolder){
+			userFile.mkdir();
+		}else{
+				try {
+				userFile.createNewInstance();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return userFile;
+	}
+
 	
 	public IVResource getUserFile(String p1){
 	      
@@ -196,12 +232,13 @@ public class OrionUser extends User {
         
         
         if (!parentStorage.exists()) {
-
+        	
             IPath a2 = new Path(this.userDirectory.getAbsolutePath()).append(path + IDavinciServerConstants.WORKING_COPY_EXTENSION);
             IStorage workingCopy = this.userDirectory.newInstance(a2.toString());
             if (!workingCopy.exists()) {
                 return null;
             }
+        	
         }
      
        

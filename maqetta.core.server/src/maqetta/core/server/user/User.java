@@ -144,7 +144,7 @@ public class User implements IUser {
            	String filePath = (String)key;
            	String xml = (String)eclipseConfig.get(key);
            	IPath resourcePath = new Path(project.getPath()).append(filePath);
-           	IVResource resource = this.createResource(resourcePath.toString());
+           	IVResource resource = this.createResource(resourcePath.toString(), false);
            	
            	VResourceUtils.setText(resource, xml);
            	
@@ -181,7 +181,7 @@ public class User implements IUser {
 	 * @see org.davinci.server.user.IUser#createProject(java.lang.String, java.lang.String, boolean)
 	 */
 	public IVResource createProject(String projectName, String basePath, boolean initFiles){
-		IVResource project = createResource(projectName + "/");
+		IVResource project = createResource(projectName + "/", true);
 		/*
 		 * Load the initial user files extension point and copy the files to the projects root
 		 */
@@ -457,7 +457,7 @@ public class User implements IUser {
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#createResource(java.lang.String)
 	 */
-	public IVResource createResource(String path) {
+	public IVResource createResource(String path, boolean isFolder) {
 		/* serve working copy files if they exist */
 
 		String path1 = path;

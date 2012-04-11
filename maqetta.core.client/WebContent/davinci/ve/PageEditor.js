@@ -110,6 +110,9 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		this._displayMode=newMode;
 		this._bc._layoutChildren(this._srcCP.id, dim-1); // kludge: have to resize twice to get src to draw on some browsers
 		this._bc._layoutChildren(this._srcCP.id, dim);
+		if (newMode!="design") {
+			this.htmlEditor.editor.getTextView().resize();
+		}
 	},
 
 	_modelSelectionChange: function (selection) {

@@ -2181,11 +2181,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		
 	},
 	
-	onExtentChange: function(focus, box, cursorOnly){
+	onExtentChange: function(focus, oldBox, newBox){
 		if(this._activeTool && this._activeTool.onExtentChange && !this._blockChange){
 			var index = dojo.indexOf(this._focuses, focus);
 			if(index >= 0){
-				this._activeTool.onExtentChange(index, box, cursorOnly);
+				this._activeTool.onExtentChange({ index: index, oldBox:oldBox, newBox:newBox});
 			}
 		}
 		this.blockChange(false);

@@ -452,7 +452,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			// Change widget bounds if any dragging has occurred
 			if(this._moverCurrent.l != this._moverStart.l || this._moverCurrent.t != this._moverStart.t ||
 					this._moverCurrent.w != this._moverStart.w || this._moverCurrent.h != this._moverStart.h){
-				this.onExtentChange(this, this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent);
+				this.onExtentChange(this, this._moverStart, this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent);
 			} 
 		}
 		this._moverDoneCleanup();
@@ -538,7 +538,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		}
 	},
 
-	onExtentChange: function(focus, box){
+	onExtentChange: function(focus, oldBox, newBox){
 	},
 
 	/**

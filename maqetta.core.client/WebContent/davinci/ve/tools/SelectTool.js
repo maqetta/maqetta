@@ -273,7 +273,13 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		return {l:left, t:top};
 	},
 
-	onExtentChange: function(index, box, copy){
+	onExtentChange: function(params){
+		var index = params.index;
+		var oldBox = params.oldBox;
+		var newBox = params.newBox;
+		var copy = params.copy;
+		var oldLeft = oldBox ? oldBox.l : undefined;
+		var oldTop = oldBox ? oldBox.t : undefined;
 				
 		var context = this._context;
 		var cp = context._chooseParent;
@@ -285,26 +291,26 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		var widget = selection[index];
 
 		var compoundCommand = undefined;
-		if("w" in box || "h" in box){
+		if("w" in newBox || "h" in newBox){
 			var resizable = davinci.ve.metadata.queryDescriptor(widget.type, "resizable"),
 				w, h;
 			// Adjust dimensions from border-box to content-box
 			var _node = widget.getStyleNode();
 			var e = dojo._getPadBorderExtents(_node);
-//			box.l = Math.round(box.x + e.l);
-//			box.t = Math.round(box.y + e.t);
-			box.w -= e.w;
-			box.h -= e.h;
+//			newBox.l = Math.round(newBox.x + e.l);
+//			box.t = Math.round(newBox.y + e.t);
+			newBox.w -= e.w;
+			newBox.h -= e.h;
 
 			switch(resizable){
 			case "width":
-				w = box.w;
+				w = newBox.w;
 				break;
 			case "height":
-				h = box.h;
+				h = newBox.h;
 			case "both":
-				w = box.w;
-				h = box.h;
+				w = newBox.w;
+				h = newBox.h;
 				break;
 			}
 
@@ -314,11 +320,11 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			}
 			compoundCommand.add(resizeCommand);
 			var position_prop = dojo.style(widget.domNode, 'position');
-			if("l" in box && "t" in box && position_prop == 'absolute'){
-				var p = this._adjustLTOffsetParent(context, widget, box.l, box.t);
+			if("l" in newBox && "t" in newBox && position_prop == 'absolute'){
+				var p = this._adjustLTOffsetParent(context, widget, newBox.l, newBox.t);
 				var left = p.l;
 				var top = p.t;
-				var moveCommand = new davinci.ve.commands.MoveCommand(widget, left, top);
+				var moveCommand = new davinci.ve.commands.MoveCommand(widget, left, top, null, oldLeft, oldTop);
 				compoundCommand.add(moveCommand);
 			}
 			
@@ -379,15 +385,15 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				context.select(null);
 				
 			}else{
-				var left = box.l,
-					top = box.t;
+				var left = newBox.l,
+					top = newBox.t;
 				var p = this._adjustLTOffsetParent(context, widget, left, top);
 				left = p.l;
 				top = p.t;
 				if(!compoundCommand){
 					compoundCommand = new davinci.commands.CompoundCommand();
 				}
-				var first_c = new davinci.ve.commands.MoveCommand(widget, left, top);
+				var first_c = new davinci.ve.commands.MoveCommand(widget, left, top, null, oldLeft, oldTop);
 				var ppw = cp.getProposedParentWidget();
 				var proposedParent = ppw ? ppw.parent : null;
 				compoundCommand.add(first_c);
@@ -727,18 +733,19 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		}
 
 		var doMove = true;
+		var index, moverBox;
 		if(!this._moverBox || !this._moverWidget){
 			doMove = false;
 		}else{
-			var moverBox = this._adjustLTOffsetParent(context, this._moverWidget, this._moverBox.l, this._moverBox.t);
+			moverBox = this._adjustLTOffsetParent(context, this._moverWidget, this._moverBox.l, this._moverBox.t);
 			var selection = context.getSelection();
-			var index = selection.indexOf(this._moverWidget);
+			index = selection.indexOf(this._moverWidget);
 			if(index < 0){
 				doMove = false;
 			}
 		}
 		if(doMove){
-			this.onExtentChange(index, moverBox, this._altKey);
+			this.onExtentChange({index:index, oldBox:this._moverStartLocations[0], newBox:moverBox, copy:this._altKey});
 		}
 		if(this._moverDragDiv){
 			var parentNode = this._moverDragDiv.parentNode;

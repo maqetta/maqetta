@@ -1,14 +1,15 @@
 define([
     	"dojo/_base/declare",
     	"davinci/ve/widget",
-    	"davinci/ve/States"
-], function(declare, Widget, States){
+    	"davinci/ve/States",
+    	"davinci/ve/utils/StyleArray"
+], function(declare, Widget, States, StyleArray){
 
 
 return declare("davinci.ve.commands.MoveCommand", null, {
 	name: "move",
 
-	constructor: function(widget, left, top, commandForXYDeltas){
+	constructor: function(widget, left, top, commandForXYDeltas, oldLeft, oldTop, applyToWhichStates){
 		this._id = (widget ? widget.id : undefined);
 		this._context = widget.getContext();
 		
@@ -20,6 +21,15 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		// to work with snapping such that selected widgets 2-N are shifted
 		// by the same amount as the first widget.
 		this._commandForXYDeltas = commandForXYDeltas;
+		
+		this._oldLeft = oldLeft;
+		this._oldTop = oldTop;
+		
+		// applyToWhichStates controls whether style change is attached to Normal or other states
+		//   "current" => apply to currently active state
+		//   [...array of strings...] => apply to these states (may not yet be implemented)
+		//   any other value (null/undefined/"Normal"/etc) => apply to Normal state
+		this._applyToWhichStates = applyToWhichStates;
 	},
 
 	execute: function(){
@@ -30,12 +40,24 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		if(!widget){
 			return;
 		}
+		var node = widget.domNode;
+/*
 		var node = widget.getStyleNode();
+*/
 		if(!node){
 			return;
 		}
 		var context = this._context;
 
+		var veStates = require("davinci/ve/States");
+		var currentState = veStates.getState();
+		if(this._applyToWhichStates === "current"){
+			this._state = currentState;
+		}else{
+			this._state = undefined;
+		}
+
+//FIXME: This might be wrong
 		if(!this._oldBox){
 			var box = widget.getMarginBox();
 			this._oldBox = {l: box.l, t: box.t, w:box.w, h:box.h};
@@ -48,10 +70,10 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		if(!offsetParentPageBox){
 			return;
 		}
-		
+/*		
 		this._state = States.getState();
 		var isNormalState = States.isNormalState(this._state);
-
+*/
 		if(this._commandForXYDeltas){
 			this._newBox.l = this._oldBox.l + this._commandForXYDeltas._deltaX;
 			this._newBox.t = this._oldBox.t + this._commandForXYDeltas._deltaY;
@@ -88,6 +110,7 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		//var cleanValues = { left: this._newBox.l - parentBorderLeft, top: this._newBox.t - parentBorderTop};
         var newLeft = this._newBox.l - parentBorderLeft;
         var newTop = this._newBox.t - parentBorderTop;
+/*
 		var cleanValues = [{ left: newLeft}, {top: newTop}];
 		States.setStyle(widget.domNode, this._state, cleanValues, isNormalState);	
 		
@@ -96,7 +119,32 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 			var size = { l: newLeft, t: newTop };
 			widget.setMarginBox( size);
 		}
+*/
+		var newStyleArray = [{left:newLeft+'px'},{top:newTop+'px'}] ;
+        var styleValuesAllStates = widget.getStyleValuesAllStates();
+		this._oldStyleValuesAllStates = dojo.clone(styleValuesAllStates);
+		if(typeof this._oldLeft == 'number'){
+			this._oldStyleValuesAllStates[stateIndex] = StyleArray.mergeStyleArrays([{left:this._oldLeft+'px'}], this._oldStyleValuesAllStates[stateIndex]);
+		}
+		if(typeof this._oldTop == 'number'){
+			this._oldStyleValuesAllStates[stateIndex] = StyleArray.mergeStyleArrays([{top:this._oldTop+'px'}], this._oldStyleValuesAllStates[stateIndex]);
+		}
+		var stateIndex;
+		if(!this._state || this._state === 'Normal'){
+			//FIXME: we are using 'undefined' as name of Normal state due to accidental programming
+			stateIndex = 'undefined';
+		}else{
+			stateIndex = this._state;
+		}
+		if(styleValuesAllStates[stateIndex]){
+			styleValuesAllStates[stateIndex] = StyleArray.mergeStyleArrays(newStyleArray, styleValuesAllStates[stateIndex]);
+		}else{
+			styleValuesAllStates[stateIndex] = newStyleArray;
+		}
 		
+		widget.setStyleValuesAllStates(styleValuesAllStates);
+		this._refresh(widget);
+
 		// Recompute styling properties in case we aren't in Normal state
 		States.resetState(widget.domNode);
 		
@@ -117,6 +165,7 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		if(!widget){
 			return;
 		}
+/*
 		var node = widget.getStyleNode();
 		if(!node){
 			return;
@@ -124,11 +173,28 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 
 		widget.setMarginBox( this._oldBox);
 		node.style.position = this._oldPosition;
+*/
+		widget.setStyleValuesAllStates(this._oldStyleValuesAllStates);
+		
+		this._refresh(widget);
 		
 		// Recompute styling properties in case we aren't in Normal state
 		davinci.ve.states.resetState(widget.domNode);
 		
 		dojo.publish("/davinci/ui/widgetPropertiesChanged",[[widget]]);
+	},
+	
+	_refresh: function(widget){
+		/* if the widget is a child of a dijiContainer widget 
+		 * we may need to refresh the parent to make it all look correct in page editor
+		 * */ 
+		var parent = widget.getParent();
+		if (parent.dijitWidget){
+			this._refresh(parent);
+		} else if (widget && widget.resize){
+			widget.resize();
+		}
+		
 	}
 
 });

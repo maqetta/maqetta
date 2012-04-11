@@ -105,20 +105,16 @@ public class OrionUser extends User {
 	
 	public IVResource createOrionProject(String name){
 		//make sure required fields are set
-				
-		IVResource existing = this.workspace.get(name);;
-		if(existing!=null)
-			return existing;
 		
-		VOrionResource res =  (VOrionResource)this.workspace.create(name);
-		
-		try {
-			addOrionUserRight(res.getOrionLocation());
-		} catch (ServletException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		IVResource res =  this.workspace.create(name);
+		if(res instanceof VOrionResource){
+			try {
+				addOrionUserRight(((VOrionResource)res).getOrionLocation());
+			} catch (ServletException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		
 		return res;
 			
 	}

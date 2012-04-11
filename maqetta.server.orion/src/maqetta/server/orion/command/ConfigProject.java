@@ -20,11 +20,7 @@ public class ConfigProject extends Command {
         String projectName = req.getParameter("project");
         String redirectTo = req.getParameter("redirect");
     	user.createProject(projectName);
-        
-    	IEclipsePreferences users = new OrionScope().getNode("Users"); //$NON-NLS-1$
-		IEclipsePreferences result = (IEclipsePreferences) users.node(user.getUserName());
-    	String workbenchSettings = result.get(MaqettaOrionServerConstants.WORKBENCH_PREF, "{}");
-        
+
     	this.responseString = "OK";
     	resp.sendRedirect("/maqetta/?project=" + projectName);
 

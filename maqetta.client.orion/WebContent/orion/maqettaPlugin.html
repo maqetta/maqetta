@@ -28,10 +28,11 @@ http://localhost:8081/plugin/install.html#http://localhost:8081/maqetta/app/orio
 		function fullPath(item){
 			var path = "";
 			var parent = item;
-			boolean first = false;
+			var first = true;
 			
 			while(!parent.hasOwnProperty("Projects")){
-				path = parent.Name + first?"":"/" + path;
+				path = parent.Name + (first?"":"/") + path;
+				first = false;
 				parent = parent.parent;
 			}
 			return "./" + path;

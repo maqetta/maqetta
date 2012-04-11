@@ -17,6 +17,7 @@ define([
 ) {
 
 return declare(CreateTool, {
+	_useDataDojoProps: false,
 
 	constructor: function(data) {
 		this._resizable = "both";
@@ -89,11 +90,19 @@ return declare(CreateTool, {
 		dojo.withDoc(this._context.getDocument(), function(){
 			store = Widget.createWidget(storeData);
 			dataGridData.properties.store = dj.getObject(storeId);
+			if (this._useDataDojoProps) { 
+				dataGridData.properties["data-dojo-props"] = "store: " + storeId;
+			}
 			dataGrid = Widget.createWidget(dataGridData);
-		});
+		}.bind(this));
 		
 		if(!store || !dataGrid){
 			return;
+		}
+		
+		//We don't want "store" to be part of the DOM tree since we're using "data-dojo-props" with GridX
+		if (this._useDataDojoProps && dataGrid._srcElement) {
+			dataGrid._srcElement.removeAttribute("store");
 		}
 	
 		var command = new CompoundCommand();

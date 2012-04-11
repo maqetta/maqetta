@@ -23,7 +23,9 @@ public class VOrionProjectStorage extends VOrionStorage {
 			}
 		}
 	}
-	
+	public boolean isDirectory() {
+		return true;
+	}
 	protected VOrionProjectStorage(String name, IFileStore store) {
 		this(name, store,null);
 	}

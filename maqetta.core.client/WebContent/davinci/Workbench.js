@@ -191,13 +191,11 @@ var initializeWorkbenchState = function(){
 			}
 		}
 	}
+	
 	if (!Workbench._state.hasOwnProperty("editors")) {
-		Workbench._state = {
-			editors: [], 
-			version: davinci.version,
-			project: Runtime._DEFAULT_PROJECT
-		};
+		Workbench._state.editors = [];
 	}
+	
 };
 
 var Workbench = {

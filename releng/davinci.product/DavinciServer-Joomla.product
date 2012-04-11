@@ -27,6 +27,7 @@
 
    <plugins>
       <plugin id="davinci.dojo_1_7"/>
+      <plugin id="davinci.gridx"/>
       <plugin id="davinci.html"/>
       <plugin id="davinci.joomla"/>
       <plugin id="davinci.jqueryui_1_8"/>

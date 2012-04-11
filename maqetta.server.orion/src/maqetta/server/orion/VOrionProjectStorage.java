@@ -11,8 +11,8 @@ import org.maqetta.server.IStorage;
 public class VOrionProjectStorage extends VOrionStorage {
 	WebProject proj;
 	
-	public VOrionProjectStorage(String name, IFileStore store,WebProject proj) {
-		super(name, store);
+	public VOrionProjectStorage(String name, IFileStore store,WebProject proj, VOrionProjectStorage parent) {
+		super(name, store, parent);
 		this.proj = proj;
 		if(store!=null){
 			try {
@@ -26,8 +26,8 @@ public class VOrionProjectStorage extends VOrionStorage {
 	public boolean isDirectory() {
 		return true;
 	}
-	protected VOrionProjectStorage(String name, IFileStore store) {
-		this(name, store,null);
+	protected VOrionProjectStorage(String name, IFileStore store,VOrionProjectStorage parent) {
+		this(name, store,null,parent);
 	}
 	
 	public VOrionStorage getParentFile() {

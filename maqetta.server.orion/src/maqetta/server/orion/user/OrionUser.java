@@ -25,6 +25,7 @@ import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.user.IPerson;
 import org.davinci.server.user.LibrarySettings;
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
@@ -179,8 +180,7 @@ public class OrionUser extends User {
 	public boolean isValid(String path){
 	     return true;
 	}
-	
-	public IVResource createResource(String path) {
+	public IVResource createResource(String path, boolean isFolder) {
 		/* serve working copy files if they exist */
 
 		String path1 = path;
@@ -204,14 +204,19 @@ public class OrionUser extends User {
 		/* make sure the new resoruce is within the user directory */
 		
 		IVResource userFile = this.workspace.create(path);
-		try {
-			userFile.createNewInstance();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(isFolder){
+			userFile.mkdir();
+		}else{
+				try {
+				userFile.createNewInstance();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return userFile;
 	}
+
 	
 	public IVResource getUserFile(String p1){
 	      

@@ -74,8 +74,11 @@ public class DavinciPageServlet extends HttpServlet {
 		IVResource file = user.getResource(path);
 		/* user is trying to save over a library path */
 		if ( file.isVirtual() ) {
-			file = user.createResource(path);
-			file.createNewInstance();
+			file = user.createResource(path, file.isDirectory());
+			if(file.isDirectory())
+				file.mkdir();
+			else
+			   file.createNewInstance();
 
 		}
 		if ( file.exists() ) {

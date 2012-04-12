@@ -267,7 +267,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		var parentNode = widget.domNode.offsetParent;
 		if(parentNode && parentNode != context.getContainerNode()){
 			var p = context.getContentPosition(context.getDojo().position(parentNode, true));
-console.log('_adjustLTOffsetParent. p.x='+p.x+',p.y='+p.y+',parentNode.scrollLeft='+parentNode.scrollLeft+',parentNode.scrollTop='+parentNode.scrollTop);
 			left -= (p.x - parentNode.scrollLeft);
 			top -= (p.y - parentNode.scrollTop);
 		}
@@ -279,8 +278,6 @@ console.log('_adjustLTOffsetParent. p.x='+p.x+',p.y='+p.y+',parentNode.scrollLef
 		var newBox = params.newBox;
 		var copy = params.copy;
 		var oldBoxes = params.oldBoxes;
-console.log('onExtentChange entered. newBox=');
-console.dir(newBox);
 				
 		var context = this._context;
 		var cp = context._chooseParent;
@@ -322,13 +319,13 @@ console.dir(newBox);
 			compoundCommand.add(resizeCommand);
 			var position_prop = dojo.style(widget.domNode, 'position');
 			if("l" in newBox && "t" in newBox && position_prop == 'absolute'){
-/*
 				var p = this._adjustLTOffsetParent(context, widget, newBox.l, newBox.t);
 				var left = p.l;
 				var top = p.t;
-*/
+/*
 				var left = newBox.l;
 				var top = newBox.t;
+*/
 				var moveCommand = new davinci.ve.commands.MoveCommand(widget, left, top);
 				compoundCommand.add(moveCommand);
 			}
@@ -392,16 +389,12 @@ console.dir(newBox);
 			}else{
 				var left = newBox.l,
 					top = newBox.t;
-/*
 				var p = this._adjustLTOffsetParent(context, widget, left, top);
-console.log('after _adjustLTOffsetParent #1. left='+left+',top='+top+',p.l='+p.l+',p.t='+p.t);
 				left = p.l;
 				top = p.t;
-*/
 				if(!compoundCommand){
 					compoundCommand = new davinci.commands.CompoundCommand();
 				}
-console.log('before MoveCommand #1. left='+left+',top='+top+',oldBoxes[index].l='+oldBoxes[index].l+',oldBoxes[index].t='+oldBoxes[index].t);
 				var first_c = new davinci.ve.commands.MoveCommand(widget, left, top, null, oldBoxes[index]);
 				var ppw = cp.getProposedParentWidget();
 				var proposedParent = ppw ? ppw.parent : null;
@@ -411,7 +404,6 @@ console.log('before MoveCommand #1. left='+left+',top='+top+',oldBoxes[index].l=
 					compoundCommand.add(new davinci.ve.commands.ReparentCommand(widget, proposedParent, 'last'));
 
 					var newPos = this._reparentDelta(left, top, widget.getParent(), proposedParent);
-console.log('before MoveCommand #2. newPos.l='+newPos.l+',newPos.t='+newPos.t);
 					compoundCommand.add(new davinci.ve.commands.MoveCommand(widget, newPos.l, newPos.t));
 				}
 				var b = widget.getMarginBox(),
@@ -748,7 +740,7 @@ console.log('before MoveCommand #2. newPos.l='+newPos.l+',newPos.t='+newPos.t);
 		if(!this._moverBox || !this._moverWidget){
 			doMove = false;
 		}else{
-			moverBox = this._adjustLTOffsetParent(context, this._moverWidget, this._moverBox.l, this._moverBox.t);
+			moverBox = {l:this._moverBox.l, t:this._moverBox.t};
 			var selection = context.getSelection();
 			index = selection.indexOf(this._moverWidget);
 			if(index < 0){

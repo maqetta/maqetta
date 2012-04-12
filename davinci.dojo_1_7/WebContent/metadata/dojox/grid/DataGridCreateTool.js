@@ -104,10 +104,6 @@ return declare(CreateTool, {
 		if(!store || !dataGrid){
 			return;
 		}
-		
-		// There are some src elements like "store" that we may not want to write out
-		// if using "data-dojo-props"
-		this._cleanUpNewWidgetAttributes(dataGrid);
 	
 		var command = new CompoundCommand();
 		var index = args.index;
@@ -132,13 +128,6 @@ return declare(CreateTool, {
 	
 	_augmentWidgetCreationProperties: function(properties) {
 		//Intended for subclass
-	},
-	
-	_cleanUpNewWidgetAttributes: function(widget) {
-		//We don't want "store" to be part of the DOM tree since we're using "data-dojo-props" with GridX
-		if (this._useDataDojoProps && widget._srcElement) {
-			widget._srcElement.removeAttribute("store");
-		}
 	},
 	
 	addPasteCreateCommand: function(command, args) {

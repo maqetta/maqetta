@@ -585,6 +585,15 @@ createWidget: function(widgetData, initialCreationArgs) {
 			widget._srcElement.addAttribute(davinci.states.ATTRIBUTE, states_json);
 		}
 	}
+	
+	// In same cases we are handling certain attributes within data-dojo-props 
+	// or via child HTML elements, and we do not want to allow those attributes 
+	// to be written out into the final HTMLHere, we give the helper a chance to 
+	// remove those attributes.
+	var helper = widgetObject.getWidgetHelper(type);
+	if(helper && helper.cleanSrcElement){
+		helper.cleanSrcElement(widget._srcElement);
+	}
 
 	return widget;
 },

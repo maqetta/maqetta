@@ -231,6 +231,18 @@ DataGridHelper.prototype = {
 		command.add(new RemoveCommand(widget));
 		command.add(new RemoveCommand(storeWidget));
 		return command;
+	},
+	
+	/*
+	 * In same cases we are handling certain attributes within data-dojo-props 
+	 * or via child HTML elements, and we do not want to allow those attributes 
+	 * to be written out into the final HTML. So, here, we clean out those
+	 * attributes.
+	*/
+	cleanSrcElement: function(srcElement, useDataDojoProps) {
+		if (useDataDojoProps) {
+			srcElement.removeAttribute("store");
+		}
 	}
 };
 

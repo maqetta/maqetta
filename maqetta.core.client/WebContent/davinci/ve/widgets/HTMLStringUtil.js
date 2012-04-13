@@ -87,16 +87,40 @@ define(["dojo/_base/declare",
 				case "comboEdit":
 					var values = jsonString['values'];
 					var text = "<select  dojoType='dijit.form.ComboBox' style='display:inline-block; width:100%;' id='"+ id + "'"+disabled+">";
-					for(var i = 0;i<values.length;i++)
-						text+="<option value='" + values[i] + "'>" + values[i] + "</option>"
+					for(var i = 0;i<values.length;i++) {
+						var value;
+						var title;
+						// if it is an object use the value and look for a title
+						if (values[i].value) {
+							value = values[i].value;
+							title = values[i].title ? values[i].title : values[i].value;
+							
+						} else {
+							value = values[i];
+							titel = values[i];
+						}
+						text+="<option value='" + value + "'>" + title + "</option>";
+					}
 					text+="</select>";
 					return text;
 					
 				case "combo":
 					var values = jsonString['values'];
 					var text = "<select style='display:inline-block; width:100%;' id='"+ id + "'"+disabled+">";
-					for(var i = 0;i<values.length;i++)
-						text+="<option value='" + values[i] + "'>" + values[i] + "</option>"
+					for(var i = 0;i<values.length;i++) {
+						var value;
+						var title;
+						// if it is an object use the value and look for a title
+						if (values[i].value) {
+							value = values[i].value;
+							title = values[i].title ? values[i].title : values[i].value;
+							
+						} else {
+							value = values[i];
+							titel = values[i];
+						}
+						text+="<option value='" + value + "'>" + title + "</option>";
+					}
 					text+="</select>";
 					return text;
 				case "font":

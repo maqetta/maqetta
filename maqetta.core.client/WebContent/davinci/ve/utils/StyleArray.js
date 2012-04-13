@@ -7,6 +7,12 @@ return /** @scope davinci.ve.utils.StyleArray */ {
 	 * Merge two styleArray structures set1 and set2 such that set2 overrides values in set1 
 	 */
 	mergeStyleArrays: function(set1, set2) {
+		if(!set1){
+			set1 = [];
+		}
+		if(!set2){
+			set2 = [];
+		}
 		var oldValues = dojo.clone(set1);
 		// Remove properties from oldValues that are in set1
 		for(var i=0;i<set2.length;i++){

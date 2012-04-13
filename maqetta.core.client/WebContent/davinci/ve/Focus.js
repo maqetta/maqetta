@@ -498,7 +498,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 	onKeyDown: function(event){
 		if(event && this._moverDragDiv){
 			dojo.stopEvent(event);
-			if(event.keyCode == 16){
+			if(event.keyCode == dojo.keys.SHIFT){
 				this._shiftKey = true;
 				this._updateFocusChrome(
 						this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent, 
@@ -514,7 +514,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 	onKeyUp: function(event){
 		if(event && this._moverDragDiv){
 			dojo.stopEvent(event);
-			if(event.keyCode == 16){
+			if(event.keyCode == dojo.keys.SHIFT){
 				this._shiftKey = false;
 				this._updateFocusChrome(
 						this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent, 

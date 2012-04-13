@@ -583,15 +583,12 @@ return declare("davinci.ve._Widget", null, {
 			this._srcElement.removeAttribute("style");
 		}
 	},
-
-	setStyleValues: function( values) {
-		
+	
+	_getStyleString: function(values){
 		if(!values) {
-			return;
+			return '';
 		}
-		var styleDomNode = this.getStyleNode();
 		var v = this._sortStyleValues(values);
-		
 		/* we used to retrieve the style properties as an array, then flatten the values.
 		 * 
 		 * changed to serialize it as text, then reset the style attribute 
@@ -618,22 +615,39 @@ return declare("davinci.ve._Widget", null, {
 			}
 		}
 		*/
-		
 		var text = this._styleText(v);
+		return text;
+	},
+
+	/**
+	 * Updates element.style for current widget as shown on page canvas
+	 * (The values passed in might be state-specific)
+	 */
+	setStyleValuesCanvas: function( values) {	
+		if(!values) {
+			return;
+		}
+		var text = this._getStyleString(values);
+		var styleDomNode = this.getStyleNode();
+		
 		/* reset the style attribute */
 		dojo.attr(styleDomNode, "style", text);
 		
 		if (this.dijitWidget)
 			this.dijitWidget.style = text;
+	},
+	
+	/**
+	 * Update element.style in model
+	 */
+	setStyleValuesModel: function( values) {
+		var text = this._getStyleString(values);
 		if (text.length>0)
 			this._srcElement.addAttribute("style",text);
 		else
 			this._srcElement.removeAttribute("style");
-
-		//style.cssText = text;
-
 	},
-
+	
 	/**
 	 * Returns an associative array holding all CSS properties for a given widget
 	 * for all application states that have CSS values.
@@ -650,7 +664,6 @@ return declare("davinci.ve._Widget", null, {
 				var styleArray = styleValuesAllStates[state];
 				//FIXME: Normal states shouldn't accidentally become 'undefined'
 				if(state === 'undefined'){
-					this.setStyleValues(styleArray);
 					state = undefined;
 				}
 				davinci.ve.states.setStyle(this.domNode, state, styleArray, true /*silent*/);

@@ -48,14 +48,6 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		}
 		var context = this._context;
 
-		var veStates = require("davinci/ve/States");
-		var currentState = veStates.getState();
-		if(this._applyToWhichStates === "current"){
-			this._state = currentState;
-		}else{
-			this._state = undefined;
-		}
-
 //FIXME: This might be wrong
 		if(!this._oldBox){
 			var box = widget.getMarginBox();
@@ -122,17 +114,11 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		var newStyleArray = [{left:newLeft+'px'},{top:newTop+'px'}] ;
         var styleValuesAllStates = widget.getStyleValuesAllStates();
 		this._oldStyleValuesAllStates = dojo.clone(styleValuesAllStates);
+		var stateIndex = this._getCurrentStateIndex();
 		if(this._oldBox){
 			this._oldStyleValuesAllStates[stateIndex] = 
 					StyleArray.mergeStyleArrays(this._oldStyleValuesAllStates[stateIndex], 
 								[{left:this._oldBox.l+'px'}, {top:this._oldBox.t+'px'}]);
-		}
-		var stateIndex;
-		if(!this._state || this._state === 'Normal'){
-			//FIXME: we are using 'undefined' as name of Normal state due to accidental programming
-			stateIndex = 'undefined';
-		}else{
-			stateIndex = this._state;
 		}
 		if(styleValuesAllStates[stateIndex]){
 			styleValuesAllStates[stateIndex] = StyleArray.mergeStyleArrays(styleValuesAllStates[stateIndex], newStyleArray);
@@ -141,6 +127,9 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		}
 		
 		widget.setStyleValuesAllStates(styleValuesAllStates);
+		var styleValuesCanvas = StyleArray.mergeStyleArrays(styleValuesAllStates['undefined'], styleValuesAllStates[stateIndex]);
+		widget.setStyleValuesCanvas(styleValuesCanvas);
+		widget.setStyleValuesModel(styleValuesAllStates['undefined']);
 		this._refresh(widget);
 
 		// Recompute styling properties in case we aren't in Normal state
@@ -172,7 +161,13 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		widget.setMarginBox( this._oldBox);
 		node.style.position = this._oldPosition;
 */
-		widget.setStyleValuesAllStates(this._oldStyleValuesAllStates);
+
+		var styleValuesAllStates = this._oldStyleValuesAllStates;
+		var stateIndex = this._getCurrentStateIndex();
+		widget.setStyleValuesAllStates(styleValuesAllStates);
+		var styleValuesCanvas = StyleArray.mergeStyleArrays(styleValuesAllStates['undefined'], styleValuesAllStates[stateIndex]);
+		widget.setStyleValuesCanvas(styleValuesCanvas);
+		widget.setStyleValuesModel(this._oldStyleValuesAllStates['undefined']);
 		
 		this._refresh(widget);
 		
@@ -182,6 +177,7 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		dojo.publish("/davinci/ui/widgetPropertiesChanged",[[widget]]);
 	},
 	
+	//FIXME: Right now we duplicate versions of this function in multiple commands
 	_refresh: function(widget){
 		/* if the widget is a child of a dijiContainer widget 
 		 * we may need to refresh the parent to make it all look correct in page editor
@@ -193,6 +189,26 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 			widget.resize();
 		}
 		
+	},
+
+	//FIXME: Right now we duplicate versions of this function in multiple commands
+	_getCurrentStateIndex:function(){
+		var veStates = require("davinci/ve/States");
+		var currentState = veStates.getState();
+		var temp;
+		if(this._applyToWhichStates === "current"){
+			temp = currentState;
+		}else{
+			temp = undefined;
+		}
+		var stateIndex;
+		if(!temp || temp === 'Normal'){
+			//FIXME: we are using 'undefined' as name of Normal state due to accidental programming
+			stateIndex = 'undefined';
+		}else{
+			stateIndex = temp;
+		}
+		return stateIndex;
 	}
 
 });

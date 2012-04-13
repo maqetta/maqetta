@@ -535,6 +535,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 						var state = item.name[0];
 						States.setState(bodyNode, state);
 						context.deselectInvisible();
+						context.updateFocusAll();
 					}
 				}
 			}else{

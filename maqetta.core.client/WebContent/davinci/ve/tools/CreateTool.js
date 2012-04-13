@@ -393,7 +393,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 	onKeyDown: function(event){
 		// Under certain conditions, show list of possible parent widgets
 		var showParentsPref = this._context.getPreference('showPossibleParents');
-		if(event.keyCode==32){	// 32=space key
+		if(event.keyCode==dojo.keys.SPACE){
 			this._spaceKeyDown = true;
 		}else{
 			this._processKeyDown(event.keyCode);
@@ -444,7 +444,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 
 	onKeyUp: function(event){
 		// Under certain conditions, show list of possible parent widgets
-		if(event.keyCode==32){	// 32=space key
+		if(event.keyCode==dojo.keys.SPACE){
 			this._spaceKeyDown = false;
 		}
 		dojo.stopEvent(event);

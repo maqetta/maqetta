@@ -1856,6 +1856,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			
 	},
 	
+	updateFocusAll: function(){
+		var selection = this._selection;
+		if(selection){
+			for(var i=0; i<selection.length; i++){
+				this.updateFocus(selection[i], i);			
+			}
+		}
+	},
+	
 	select: function(widget, add, inline){
 		if(!widget || widget==this.rootWidget){
 			if(!add){

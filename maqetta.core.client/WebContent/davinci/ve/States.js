@@ -2,17 +2,18 @@ define([
         "dojo/_base/declare",
         "davinci/maqetta/States",
         "./commands/EventCommand",
-        "./commands/StyleCommand"
-], function(declare, maqettaStates, EventCommand, StyleCommand){
+        "./commands/StyleCommand",
+    	"davinci/ve/utils/StyleArray"
+], function(declare, maqettaStates, EventCommand, StyleCommand, StyleArray){
 
 declare("davinci.ve.States", davinci.maqetta.States, {
 	
-	_update: function(node, newState, oldState) {
+	_update: function(node, newState) {
 //console.trace();
 		this.inherited(arguments);
 		
 		node = this._getWidgetNode(node);
-		if (!node || !node._dvWidget){
+		if (!node || !node._dvWidget || !node.states){
 			return;
 		}
 		var widget = node._dvWidget;
@@ -23,7 +24,7 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 			//FIXME: we are using 'undefined' as name of Normal state due to accidental programming
 			stateIndex = 'undefined';
 		}else{
-			stateIndex = this._state;
+			stateIndex = newState;
 		}
 		if(styleValuesAllStates[stateIndex]){
 			styleValuesAllStates[stateIndex] = StyleArray.mergeStyleArrays(styleValuesAllStates[stateIndex], styleArray);
@@ -32,13 +33,33 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 		}
 		widget.setStyleValuesAllStates(styleValuesAllStates);
 		this._refresh(widget);
+		var body = node.ownerDocument.body;
+		var currentState = this.getState(body);
+		if(!this.isNormalState(currentState)){
+			this.setState(node, currentState, true/*updateWhenCurrent*/, true /*silent*/);
+		}		
+
+/*
 		// Recompute styling properties in case we aren't in Normal state
 		this.resetState(node);
+*/
 /*
 		if (this.isNormalState(newState)) {
 			this._styleChange(node, styleArray);
 		}
 */
+	},
+	
+	_refresh: function(widget){
+		/* if the widget is a child of a dijiContainer widget 
+		 * we may need to refresh the parent to make it all look correct in page editor
+		 * */ 
+		var parent = widget.getParent();
+		if (parent.dijitWidget){
+			this._refresh(parent);
+		} else if (widget && widget.resize){
+			widget.resize();
+		}
 	},
 		
 	_updateEvents: function(node, state, name) {
@@ -105,6 +126,7 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 	},
 	
 	normalizeArray: function(type, node, name, valueArray) {
+		var newValueArray = dojo.clone(valueArray);
 //console.trace();
 		switch(type) {
 		    case "style":
@@ -116,11 +138,11 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 		                for(var i=0; i<normalValueArray.length; i++){
 		                	var nItem = normalValueArray[i];
 		                	for(var nProp in nItem){	// should be only one property 
-		                		for(var j=valueArray.length-1; j>=0; j--){
-		                			var vItem = valueArray[j];
+		                		for(var j=newValueArray.length-1; j>=0; j--){
+		                			var vItem = newValueArray[j];
 		                			for(var vProp in vItem){	// should be only one property
 		                				if(vProp == nProp){
-		                					valueArray.splice(j, 1);
+		                					newValueArray.splice(j, 1);
 		                					break;
 		                				}
 		                			}
@@ -128,12 +150,12 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 		                	}
 		                }
 		                // Append values from normalValueArray
-		                valueArray = valueArray.concat(normalValueArray);
+		                newValueArray = newValueArray.concat(normalValueArray);
 	                }
 	            }
 	            break;
         }
-        return valueArray;
+        return newValueArray;
 	},
 	
 	getEditor: function() {
@@ -195,7 +217,7 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 					if (!this.isContainer(child)) {
 						children = children.concat(davinci.states._getChildrenOfNode(child));
 					}
-					this._update(child, e.newState, e.oldState);
+					this._update(child, e.newState);
 				}
 				dojo.publish("/davinci/states/state/changed/end");
 

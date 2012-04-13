@@ -314,7 +314,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				break;
 			}
 
-			var resizeCommand = new davinci.ve.commands.ResizeCommand(widget, w, h);
+			var resizeCommand = new davinci.ve.commands.ResizeCommand(widget, w, h, applyToWhichStates);
 			if(!compoundCommand){
 				compoundCommand = new davinci.commands.CompoundCommand();
 			}
@@ -500,7 +500,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			case dojo.keys.SPACE:
 				this._spaceKey = true;
 				break;
-			case 83:	// 's'
+			case 83:	// 's' key means apply only to current state
 				this._sKey = true;
 				break;
 			case dojo.keys.TAB:
@@ -535,7 +535,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			case dojo.keys.SPACE:
 				this._spaceKey = false;
 				break;
-			case 83:	// 's'
+			case 83:	// 's' key means apply only to current state
 				this._sKey = false;
 				break;
 			}

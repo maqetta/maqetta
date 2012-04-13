@@ -97,7 +97,7 @@ define(["dojo/_base/declare",
 							
 						} else {
 							value = values[i];
-							titel = values[i];
+							title = values[i];
 						}
 						text+="<option value='" + value + "'>" + title + "</option>";
 					}
@@ -117,7 +117,7 @@ define(["dojo/_base/declare",
 							
 						} else {
 							value = values[i];
-							titel = values[i];
+							title = values[i];
 						}
 						text+="<option value='" + value + "'>" + title + "</option>";
 					}

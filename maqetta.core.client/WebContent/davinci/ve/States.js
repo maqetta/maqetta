@@ -224,12 +224,7 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 				// Trigger update of the selection box in case the selected widget changed size or moved
 				var context = this.getContext();
 				if (context) {
-					var selection = context.getSelection();
-					if (selection && selection.length == 1) {
-						context.updateFocus(selection[0]);
-					} else if (selection && selection.length > 1) {
-						console.warn("States::TODO: Handle multiple selection");
-					}
+					context.updateFocusAll();
 				}
 			}));
 			

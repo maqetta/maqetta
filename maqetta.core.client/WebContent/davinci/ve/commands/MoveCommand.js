@@ -32,27 +32,25 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 	},
 
 	execute: function(){
-		if(!this._id){
+		if(!this._id || !this._oldBox){
 			return;
 		}
 		var widget = Widget.byId(this._id);
 		if(!widget){
 			return;
 		}
-		var node = widget.domNode;
 /*
+		var node = widget.domNode;
 		var node = widget.getStyleNode();
-*/
 		if(!node){
 			return;
 		}
+*/
 		var context = this._context;
 
-//FIXME: This might be wrong
 		if(!this._oldBox){
 			var box = widget.getMarginBox();
 			this._oldBox = {l: box.l, t: box.t, w:box.w, h:box.h};
-			this._oldPosition = node.style.position;
 		}
 		if(!widget.domNode.offsetParent){
 			return;

@@ -539,7 +539,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					}
 				}
 			}else{
-				if(bodyWidget){
+				if(bodyNode){
 					States.setState(bodyNode, null);
 				}
 				if(item.sceneId){

@@ -736,9 +736,10 @@ davinci.States.prototype = {
 		}
 		var body = node.ownerDocument.body;
 		var currentState = this.getState(body);
-		if(!this.isNormalState(currentState)){
-			this.setState(node, currentState, true/*updateWhenCurrent*/, false /*silent*/);
-		}		
+		//if(!this.isNormalState(currentState)){
+			//this.setState(node, currentState, true/*updateWhenCurrent*/, false /*silent*/);
+			this.setState(node, currentState, true/*updateWhenCurrent*/, true /*silent*/);
+		//}		
 	},
 	
 	isNormalState: function(state) {
@@ -760,28 +761,29 @@ davinci.States.prototype = {
 	 */
 	getStyle: function(node, state, name) {
 //console.trace();
-		var styleArray;
+		var styleArray, newStyleArray;
 		node = this._getWidgetNode(node);
 		if (arguments.length == 1) {
 			state = this.getState();
 		}
 		// return all styles specific to this state
 		styleArray = node && node.states && node.states[state] && node.states[state].style;
+		newStyleArray = dojo.clone(styleArray); // don't want to splice out of original
 		if (arguments.length > 2) {
 			// Remove any properties that don't match 'name'
-			if(styleArray){
-				for(var j=styleArray.length-1; j>=0; j--){
-					var item = styleArray[j];
+			if(newStyleArray){
+				for(var j=newStyleArray.length-1; j>=0; j--){
+					var item = newStyleArray[j];
 					for(var prop in item){		// should be only one prop per item
 						if(prop != name){
-							styleArray.splice(j, 1);
+							newStyleArray.splice(j, 1);
 							break;
 						}
 					}
 				}
 			}
 		}
-		return styleArray;
+		return newStyleArray;
 	},
 
 	hasStyle: function(node, state, name) {
@@ -940,10 +942,10 @@ davinci.States.prototype = {
 		}
 	},
 	
-	_update: function(node, newState, oldState) {
+	_update: function(node, newState) {
 //console.trace();
 		node = this._getWidgetNode(node);
-		if (!node){
+		if (!node || !node.states){
 			return;
 		}
 		
@@ -1279,7 +1281,7 @@ davinci.States.prototype = {
 					if (!davinci.states.isContainer(child)) {
 						children = children.concat(davinci.states._getChildrenOfNode(child));
 					}
-					davinci.states._update(child, e.newState, e.oldState);
+					davinci.states._update(child, e.newState);
 				}
 			});
 			

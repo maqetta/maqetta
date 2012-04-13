@@ -32,7 +32,7 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 	},
 
 	execute: function(){
-		if(!this._id || !this._oldBox){
+		if(!this._id){
 			return;
 		}
 		var widget = Widget.byId(this._id);

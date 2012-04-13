@@ -2194,7 +2194,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if(this._activeTool && this._activeTool.onExtentChange && !this._blockChange){
 			var index = dojo.indexOf(this._focuses, focus);
 			if(index >= 0){
-				this._activeTool.onExtentChange({ index: index, oldBox:oldBox, newBox:newBox});
+				this._activeTool.onExtentChange({ index: index, oldBoxes:[oldBox], newBox:newBox});
 			}
 		}
 		this.blockChange(false);

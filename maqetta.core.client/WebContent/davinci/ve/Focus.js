@@ -305,10 +305,12 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var l = event.pageX - moverDragDivHalf;
 		var t = event.pageY - moverDragDivHalf;
 		var node = this._selectedWidget.domNode;
+console.log('node.offsetWidth='+node.offsetWidth+',node.offsetHeight='+node.offsetHeight);
 		this._moverStart = { moverLeft:l, moverTop:t,
 				l:parseInt(this.domNode.style.left), t:parseInt(this.domNode.style.top),
 				w:node.offsetWidth, h:node.offsetHeight };
 		this._moverCurrent = dojo.mixin({}, this._moverStart);
+console.log('onMouseDown - this._moverCurrent.w='+this._moverCurrent.w+',this._moverCurrent.h'+this._moverCurrent.h);
 		this._moverDragDiv = dojo.create('div', 
 				{className:'focusDragDiv',
 				style:'left:'+l+'px;top:'+t+'px;width:'+moverDragDivSize+'px;height:'+moverDragDivSize+'px'},
@@ -359,8 +361,10 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		
 		// Recompute focus chrome's bounds for normal/unconstrained resizing (via dragging nob or frame)
 		var start = this._moverStart;
+console.log('start.moverLeft='+start.moverLeft+',start.moverTop='+start.moverTop+',box.l='+box.l+',box.t='+box.t);
 		var dx = box.l - start.moverLeft;
 		var dy = box.t - start.moverTop;
+console.log('dx='+dx+',dy='+dy);
 		if(this._frameIndex === LEFT || this._nobIndex === LEFT_TOP || this._nobIndex === LEFT || this._nobIndex === LEFT_BOTTOM){
 			this._moverCurrent.l = start.l + dx;
 			this._moverCurrent.w = start.w - dx;
@@ -373,6 +377,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		}else if(this._frameIndex === BOTTOM || this._nobIndex === LEFT_BOTTOM || this._nobIndex === BOTTOM || this._nobIndex === RIGHT_BOTTOM){
 			this._moverCurrent.h = start.h + dy;
 		}
+console.log('this._moverCurrent.w='+this._moverCurrent.w+',this._moverCurrent.h='+this._moverCurrent.h);
 		
 		// Compute constrained width and height (in case shift key is held down)
 		var constrainedWidth = this._moverCurrent.w;
